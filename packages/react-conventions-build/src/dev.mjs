@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 import { spawnSync } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -16,5 +14,5 @@ const run = (fileName) => {
   }
 };
 
-run("validate-rules.mjs");
-run("build-agents.mjs");
+run("validate.mjs");
+run("build.mjs");

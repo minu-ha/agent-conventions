@@ -8,26 +8,26 @@ A structured repository for creating and maintaining React conventions optimized
   - `_sections.md` - Section metadata
   - `_template.md` - Template for new rules
   - `area-description.md` - Individual rule files
-- `scripts/` - Build and validation utilities
 - `metadata.json` - Compiled guide metadata
 - __`AGENTS.md`__ - Compiled output for agents
 - `deprecated/react.md` - Legacy single-file guide kept for migration review
+- `../../packages/react-conventions-build/` - standalone npm package for build and validation
 
 ## Getting Started
 
 1. Validate rule files:
    ```bash
-   node skill/react/scripts/validate-rules.mjs
+   npm --prefix packages/react-conventions-build run validate
    ```
 
 2. Build `AGENTS.md` from rules:
    ```bash
-   node skill/react/scripts/build-agents.mjs
+   npm --prefix packages/react-conventions-build run build
    ```
 
 3. Validate and build together:
    ```bash
-   node skill/react/scripts/dev.mjs
+   npm --prefix packages/react-conventions-build run dev
    ```
 
 ## Creating a New Rule
@@ -43,7 +43,7 @@ A structured repository for creating and maintaining React conventions optimized
    - `docs-` for Korean comments and JSDoc conventions
 3. Fill in the frontmatter and body
 4. Include clear incorrect/correct examples with explanations
-5. Run `node skill/react/scripts/dev.mjs` to regenerate `AGENTS.md`
+5. Run `npm --prefix packages/react-conventions-build run dev` to regenerate `AGENTS.md`
 
 ## Rule File Structure
 
@@ -94,9 +94,10 @@ Short explanation of the rule and why it matters.
 
 ## Scripts
 
-- `node skill/react/scripts/build-agents.mjs` - Compile rules into `AGENTS.md`
-- `node skill/react/scripts/validate-rules.mjs` - Validate sections and rule frontmatter
-- `node skill/react/scripts/dev.mjs` - Validate and build in sequence
+- `npm --prefix packages/react-conventions-build run build` - Compile rules into `AGENTS.md`
+- `npm --prefix packages/react-conventions-build run validate` - Validate sections and rule frontmatter
+- `npm --prefix packages/react-conventions-build run dev` - Validate and build in sequence
+- `cd packages/react-conventions-build && npm run build` - Run the package-local build script directly
 
 ## Migration Notes
 
@@ -112,4 +113,4 @@ When adding or modifying rules:
 2. Follow the `_template.md` structure
 3. Keep examples concrete and close to real route/component code
 4. Update section metadata if you introduce a new category
-5. Run `node skill/react/scripts/dev.mjs` before finishing
+5. Run `npm --prefix packages/react-conventions-build run dev` before finishing
