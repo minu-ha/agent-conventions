@@ -1,0 +1,11 @@
+{
+  "version": "1.0.0",
+  "organization": "Agent Conventions",
+  "date": "April 2026",
+  "abstract": "React coding conventions for agent-assisted teams. The guide emphasizes clear ownership boundaries between shared and route-local code, explicit typing, predictable handler flow, origin-preserving state access, and concise Korean documentation. Rule files in rules/ are the source of truth and compile into AGENTS.md for agent consumption.",
+  "references": [
+    "https://react.dev",
+    "https://tanstack.com/query/latest",
+    "https://zustand.docs.pmnd.rs"
+  ]
+}
