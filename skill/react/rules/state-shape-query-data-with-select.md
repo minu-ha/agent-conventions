@@ -1,13 +1,13 @@
 ---
 title: Shape React Query Data in query.select
 impact: CRITICAL
-impactDescription: keeps response transformation close to the fetch boundary and avoids repeated render-time mapping
+impactDescription: 응답 변환을 fetch 경계 가까이에 두고 렌더 타임의 반복 매핑을 피함
 tags: state, react-query, select
 ---
 
 ## Shape React Query Data in query.select
 
-**Impact: CRITICAL (keeps response transformation close to the fetch boundary and avoids repeated render-time mapping)**
+**Impact: CRITICAL (응답 변환을 fetch 경계 가까이에 두고 렌더 타임의 반복 매핑을 피함)**
 
 서버 응답 가공은 렌더링 본문이 아니라 `query.select`에서 처리합니다. `data.list` 같은 원시 응답 구조를 화면 여러 군데에서 직접 해석하지 말고, 도메인 의미가 드러나는 필드 이름으로 한 번 변환합니다. 여러 쿼리 데이터를 함께 가공해야 해도 먼저 `select`나 전용 hook 경계에서 풀 수 있는지 검토합니다.
 

@@ -1,13 +1,13 @@
 ---
 title: Avoid Premature Abstraction in Screen Code
 impact: HIGH
-impactDescription: keeps route code grounded in real reuse boundaries instead of speculative extraction
+impactDescription: 추측성 추출 대신 실제 재사용 경계에 맞춰 route 코드를 유지함
 tags: screen, abstraction, reuse
 ---
 
 ## Avoid Premature Abstraction in Screen Code
 
-**Impact: HIGH (keeps route code grounded in real reuse boundaries instead of speculative extraction)**
+**Impact: HIGH (추측성 추출 대신 실제 재사용 경계에 맞춰 route 코드를 유지함)**
 
 반복이 보인다는 이유만으로 즉시 공용 hook, 공용 컴포넌트, 공용 helper로 올리지 않습니다. 실제 재사용 범위가 둘 이상에서 검증되고 계약이 안정되었을 때만 공용화를 허용합니다.
 

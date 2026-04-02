@@ -1,0 +1,12 @@
+{
+  "title": "Playwright Test Conventions",
+  "version": "1.0.0",
+  "organization": "Agent Conventions",
+  "date": "April 2026",
+  "abstract": "Playwright browser test conventions for agent-assisted teams. The guide emphasizes explicit integration vs e2e boundaries, visible setup, deterministic data isolation, accessible locators, web-first assertions, and state-based waiting. Rule files in rules/ are the source of truth and compile into AGENTS.md for agent consumption.",
+  "references": [
+    "https://playwright.dev/docs/intro",
+    "https://playwright.dev/docs/test-assertions",
+    "https://playwright.dev/docs/locators"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "title": "NestJS Conventions",
+  "version": "1.0.0",
+  "organization": "Agent Conventions",
+  "date": "April 2026",
+  "abstract": "NestJS conventions for agent-assisted teams. The guide emphasizes explicit module ownership, thin controllers, service-centered domain logic, intentional DTO contracts, contextual exception handling, and reliable backend test boundaries. Rule files in rules/ are the source of truth and compile into AGENTS.md for agent consumption.",
+  "references": [
+    "https://docs.nestjs.com",
+    "https://docs.nestjs.com/openapi/introduction",
+    "https://www.prisma.io/docs"
+  ]
+}

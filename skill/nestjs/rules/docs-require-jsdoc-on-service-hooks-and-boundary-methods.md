@@ -1,0 +1,31 @@
+---
+title: Require JSDoc on Service Hooks and Boundary Methods
+impact: MEDIUM-HIGH
+impactDescription: makes important backend execution boundaries searchable before readers inspect implementation details
+tags: jsdoc, services, lifecycle
+---
+
+## Require JSDoc on Service Hooks and Boundary Methods
+
+**Impact: MEDIUM-HIGH (makes important backend execution boundaries searchable before readers inspect implementation details)**
+
+Service public 메서드, 외부 API 호출 블록, NestJS 생명주기 훅, 커스텀 `type`/`interface`, Guard/Interceptor/Pipe 핵심 메서드에는 예외 없이 JSDoc을 작성합니다. Controller는 Swagger 데코레이터가 충분하면 JSDoc을 생략할 수 있습니다.
+
+**Incorrect (핵심 서비스 메서드에 헤더 설명이 없음):**
+
+```ts
+async findOneOrThrow(id: number): Promise<SafeUser> {
+	// ...
+}
+```
+
+**Correct (핵심 경계 선언에 JSDoc을 작성):**
+
+```ts
+/**
+ * @summary 사용자 단건 조회 - 미존재 시 NotFoundException 발생
+ */
+async findOneOrThrow(id: number): Promise<SafeUser> {
+	// ...
+}
+```

@@ -53,8 +53,8 @@ test("build script regenerates AGENTS.md for the react skill", async () => {
 	await access(reactAgentsPath);
 
 	const agentsSource = await readFile(reactAgentsPath, "utf8");
-	assert.match(agentsSource, /^# React Conventions$/m);
-	assert.match(agentsSource, /^## Table of Contents$/m);
+	assert.match(agentsSource, /^# React 컨벤션$/m);
+	assert.match(agentsSource, /^## 목차$/m);
 });
 
 test("build:react alias regenerates AGENTS.md for the react skill", async () => {
@@ -64,7 +64,7 @@ test("build:react alias regenerates AGENTS.md for the react skill", async () => 
 	await access(reactAgentsPath);
 
 	const agentsSource = await readFile(reactAgentsPath, "utf8");
-	assert.match(agentsSource, /^# React Conventions$/m);
+	assert.match(agentsSource, /^# React 컨벤션$/m);
 });
 
 test("build:all alias succeeds for every buildable skill", () => {

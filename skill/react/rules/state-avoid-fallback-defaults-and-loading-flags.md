@@ -1,13 +1,13 @@
 ---
 title: Avoid Silent Fallback Defaults and Ad-hoc Loading Branches
 impact: HIGH
-impactDescription: keeps missing data visible and pushes loading UX toward Suspense or explicit exception handling
+impactDescription: 결측 데이터를 숨기지 않고 로딩 UX를 Suspense 또는 명시적 예외 처리 쪽으로 유도함
 tags: state, fallback, loading, suspense
 ---
 
 ## Avoid Silent Fallback Defaults and Ad-hoc Loading Branches
 
-**Impact: HIGH (keeps missing data visible and pushes loading UX toward Suspense or explicit exception handling)**
+**Impact: HIGH (결측 데이터를 숨기지 않고 로딩 UX를 Suspense 또는 명시적 예외 처리 쪽으로 유도함)**
 
 옵셔널 값에 `??`, `||`로 습관적인 기본값을 넣지 않고, `isPending`, `isFetching` 같은 상태를 즉시 렌더링하지 않습니다. 결측값은 드러내고, 로딩은 기본적으로 Suspense 경계나 상위 레이아웃에서 처리합니다. 예외가 필요하면 가까운 한글 주석으로 이유를 남깁니다.
 

@@ -1,13 +1,13 @@
 ---
 title: Use Consistent File and Symbol Naming
 impact: HIGH
-impactDescription: keeps ownership and intent obvious when agents create or move files
+impactDescription: 에이전트가 파일을 만들거나 옮길 때 소유 경계와 의도를 분명하게 유지함
 tags: ownership, naming, files
 ---
 
 ## Use Consistent File and Symbol Naming
 
-**Impact: HIGH (keeps ownership and intent obvious when agents create or move files)**
+**Impact: HIGH (에이전트가 파일을 만들거나 옮길 때 소유 경계와 의도를 분명하게 유지함)**
 
 파일명은 `kebab-case`, 변수와 함수는 `camelCase`, 타입과 컴포넌트는 `PascalCase`, 상수는 `SCREAMING_SNAKE_CASE`를 사용합니다. 파일명과 심볼명이 소유자나 역할을 바로 드러내야 route-local 이동과 공용화 판단이 쉬워집니다.
 

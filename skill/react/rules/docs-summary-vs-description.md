@@ -1,13 +1,13 @@
 ---
 title: Use @description for API Calls and @summary for Everything Else
 impact: MEDIUM
-impactDescription: standardizes JSDoc intent so generated and handwritten declarations read consistently
+impactDescription: JSDoc 의도를 표준화해 생성 코드와 수기 선언을 일관되게 읽히게 함
 tags: docs, jsdoc, api
 ---
 
 ## Use @description for API Calls and @summary for Everything Else
 
-**Impact: MEDIUM (standardizes JSDoc intent so generated and handwritten declarations read consistently)**
+**Impact: MEDIUM (JSDoc 의도를 표준화해 생성 코드와 수기 선언을 일관되게 읽히게 함)**
 
 API 관련 변수 선언은 `@description`, 그 외 handler, `useEffect`, 일반 함수, 타입 선언은 `@summary`를 사용합니다. 문장은 명사형 종결과 개조식 표현을 기본으로 하고, 하나의 선언에 두 태그를 섞지 않습니다.
 

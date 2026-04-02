@@ -4,20 +4,20 @@
 Agent Conventions  
 April 2026
 
-> **Note:**  
-> This document is mainly for agents and LLMs to follow when maintaining,  
-> generating, or refactoring codebases in this convention set.  
-> The source of truth lives in `rules/*.md`; this file is a compiled guide.
+> **안내:**  
+> 이 문서는 에이전트와 LLM이 이 컨벤션 세트의 코드를 유지보수하고,  
+> 생성하고, 리팩터링할 때 따르도록 compile한 가이드입니다.  
+> source of truth는 `rules/*.md`에 있고, 이 파일은 생성 결과물입니다.
 
 ---
 
-## Abstract
+## 개요
 
 TanStack Router conventions for agent-assisted teams. The guide emphasizes layout-shell-first route grouping, searchable file naming, explicit router-boundary declarations, route-local ownership, and protection of generated artifacts. Rule files in rules/ are the source of truth and compile into AGENTS.md for agent consumption.
 
 ---
 
-## Table of Contents
+## 목차
 
 1. [Route Structure and Grouping](#1-route-structure-and-grouping) — **CRITICAL**
    - 1.1 [Avoid Folder-only and Flat-only Route Trees](#11-avoid-folder-only-and-flat-only-route-trees)
@@ -754,7 +754,7 @@ New route work should follow a repeatable setup and review sequence so structure
 - <generated-route-tree-path>를 수동 수정하지 않았는가
 ```
 
-## References
+## 참고 자료
 
 - https://tanstack.com/router/latest
 - https://tanstack.com/router/latest/docs/framework/react/guide/file-based-routing

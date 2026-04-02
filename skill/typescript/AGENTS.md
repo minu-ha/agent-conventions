@@ -4,20 +4,20 @@
 Agent Conventions  
 April 2026
 
-> **Note:**  
-> This document is mainly for agents and LLMs to follow when maintaining,  
-> generating, or refactoring codebases in this convention set.  
-> The source of truth lives in `rules/*.md`; this file is a compiled guide.
+> **안내:**  
+> 이 문서는 에이전트와 LLM이 이 컨벤션 세트의 코드를 유지보수하고,  
+> 생성하고, 리팩터링할 때 따르도록 compile한 가이드입니다.  
+> source of truth는 `rules/*.md`에 있고, 이 파일은 생성 결과물입니다.
 
 ---
 
-## Abstract
+## 개요
 
 TypeScript conventions for agent-assisted teams. The guide emphasizes explicit naming, direct imports, reusable type contracts, disciplined helper extraction, intentional absence handling, and consistent JSDoc annotation boundaries. Rule files in rules/ are the source of truth and compile into AGENTS.md for agent consumption.
 
 ---
 
-## Table of Contents
+## 목차
 
 1. [Naming and Module Boundaries](#1-naming-and-module-boundaries) — **HIGH**
    - 1.1 [Centralize Shared Config and Constants Under One Namespace](#11-centralize-shared-config-and-constants-under-one-namespace)
@@ -673,7 +673,7 @@ if (!config.env.google_api_key) {
 }
 ```
 
-## References
+## 참고 자료
 
 - https://www.typescriptlang.org/docs/
 - https://jsdoc.app

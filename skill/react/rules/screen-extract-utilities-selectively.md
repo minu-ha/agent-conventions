@@ -1,13 +1,13 @@
 ---
 title: Extract Utilities Only When the Boundary Is Real
 impact: HIGH
-impactDescription: prevents route files from being fragmented into helpers that do not carry their own contract
+impactDescription: route 파일이 자기 계약이 없는 helper 조각으로 분해되는 것을 막음
 tags: screen, utils, extraction
 ---
 
 ## Extract Utilities Only When the Boundary Is Real
 
-**Impact: HIGH (prevents route files from being fragmented into helpers that do not carry their own contract)**
+**Impact: HIGH (route 파일이 자기 계약이 없는 helper 조각으로 분해되는 것을 막음)**
 
 유틸 분리는 React state와 직접 결합되지 않고, 입력/출력 계약이 명확하며, 함수명이 도메인 의도를 설명할 때만 검토합니다. 반복, 복잡한 분기, 정규화, 테스트 가치가 실제로 있을 때만 같은 계층 `.ts` 파일로 뺍니다. `queryClient.invalidateQueries`처럼 해당 hook 컨텍스트에 붙어 있을 때 더 읽기 쉬운 동기화 로직은 별도 유틸로 모으지 않습니다.
 

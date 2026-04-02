@@ -30,20 +30,20 @@ export const generateMarkdown = (metadata: SkillMetadata, sections: SkillSection
 		lines.push("");
 	}
 
-	lines.push("> **Note:**  ");
-	lines.push("> This document is mainly for agents and LLMs to follow when maintaining,  ");
-	lines.push("> generating, or refactoring codebases in this convention set.  ");
-	lines.push("> The source of truth lives in `rules/*.md`; this file is a compiled guide.");
+	lines.push("> **안내:**  ");
+	lines.push("> 이 문서는 에이전트와 LLM이 이 컨벤션 세트의 코드를 유지보수하고,  ");
+	lines.push("> 생성하고, 리팩터링할 때 따르도록 compile한 가이드입니다.  ");
+	lines.push("> source of truth는 `rules/*.md`에 있고, 이 파일은 생성 결과물입니다.");
 	lines.push("");
 	lines.push("---");
 	lines.push("");
-	lines.push("## Abstract");
+	lines.push("## 개요");
 	lines.push("");
 	lines.push(metadata.abstract);
 	lines.push("");
 	lines.push("---");
 	lines.push("");
-	lines.push("## Table of Contents");
+	lines.push("## 목차");
 	lines.push("");
 
 	for (const section of sections) {
@@ -77,7 +77,7 @@ export const generateMarkdown = (metadata: SkillMetadata, sections: SkillSection
 	}
 
 	if ((metadata.references?.length ?? 0) > 0) {
-		lines.push("## References");
+		lines.push("## 참고 자료");
 		lines.push("");
 
 		for (const reference of metadata.references ?? []) {

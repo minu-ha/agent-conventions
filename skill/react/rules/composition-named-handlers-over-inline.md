@@ -1,13 +1,13 @@
 ---
 title: Use Named Handlers Instead of Hiding Logic in JSX
 impact: HIGH
-impactDescription: keeps side effects, branching, and async work visible in normal code flow
+impactDescription: 부수효과, 분기, 비동기 흐름을 일반 코드 흐름에서 읽을 수 있게 함
 tags: composition, jsx, handlers
 ---
 
 ## Use Named Handlers Instead of Hiding Logic in JSX
 
-**Impact: HIGH (keeps side effects, branching, and async work visible in normal code flow)**
+**Impact: HIGH (부수효과, 분기, 비동기 흐름을 일반 코드 흐름에서 읽을 수 있게 함)**
 
 JSX에서는 명명된 핸들러 참조를 기본으로 하고, 아주 짧은 단순 위임만 인라인 함수로 허용합니다. 분기, 비동기 호출, 여러 부수효과가 들어가면 반드시 핸들러로 분리합니다.
 

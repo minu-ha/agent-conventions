@@ -1,13 +1,13 @@
 ---
 title: Prefer Function Variable Types Over Parameter Annotations
 impact: HIGH
-impactDescription: keeps handler signatures and callback intent visible at the declaration site
+impactDescription: handler 시그니처와 callback 의도를 선언 위치에서 바로 보이게 함
 tags: typing, handlers, props
 ---
 
 ## Prefer Function Variable Types Over Parameter Annotations
 
-**Impact: HIGH (keeps handler signatures and callback intent visible at the declaration site)**
+**Impact: HIGH (handler 시그니처와 callback 의도를 선언 위치에서 바로 보이게 함)**
 
 이벤트 핸들러나 이미 알려진 함수 타입이 있다면, 매개변수 타입보다 함수 변수 타입 선언을 우선합니다. 표준 함수 타입이 없을 때만 매개변수에 직접 타입을 적습니다.
 

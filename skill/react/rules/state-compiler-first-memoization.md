@@ -1,13 +1,13 @@
 ---
 title: Prefer React Compiler Defaults Over Manual Memoization
 impact: MEDIUM-HIGH
-impactDescription: avoids defensive useMemo and useCallback that add noise without proven value
+impactDescription: 검증되지 않은 값어치 없이 노이즈만 늘리는 방어적 useMemo/useCallback을 피함
 tags: state, react, memoization
 ---
 
 ## Prefer React Compiler Defaults Over Manual Memoization
 
-**Impact: MEDIUM-HIGH (avoids defensive useMemo and useCallback that add noise without proven value)**
+**Impact: MEDIUM-HIGH (검증되지 않은 값어치 없이 노이즈만 늘리는 방어적 useMemo/useCallback을 피함)**
 
 React 19 컴파일러가 처리하는 범위에서는 `useMemo`, `useCallback`을 기본적으로 사용하지 않습니다. 외부 라이브러리가 참조 동일성에 민감하거나, 병목이 실제로 확인된 경우에만 허용하고 바로 위에 한글 주석으로 이유를 남깁니다.
 

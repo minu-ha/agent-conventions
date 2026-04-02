@@ -1,13 +1,13 @@
 ---
 title: Prefer Object Literals with as const Over enum
 impact: MEDIUM
-impactDescription: keeps runtime output simple and type derivation explicit
+impactDescription: 런타임 결과를 단순하게 유지하고 타입 추론 근거를 명시적으로 드러냄
 tags: composition, types, enum
 ---
 
 ## Prefer Object Literals with as const Over enum
 
-**Impact: MEDIUM (keeps runtime output simple and type derivation explicit)**
+**Impact: MEDIUM (런타임 결과를 단순하게 유지하고 타입 추론 근거를 명시적으로 드러냄)**
 
 `enum` 대신 객체 리터럴과 `as const`를 사용합니다. 이렇게 하면 런타임 형태가 단순하고, 값 유니온 타입을 직접 파생하기 쉬워집니다.
 

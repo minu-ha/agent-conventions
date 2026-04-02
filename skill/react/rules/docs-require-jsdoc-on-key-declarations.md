@@ -1,13 +1,13 @@
 ---
 title: Require JSDoc on Key Declarations
 impact: MEDIUM-HIGH
-impactDescription: makes important API, handler, effect, and type declarations easier to review and reuse
+impactDescription: 중요한 API, handler, effect, 타입 선언을 더 쉽게 리뷰하고 재사용할 수 있게 함
 tags: docs, jsdoc, handlers, effects
 ---
 
 ## Require JSDoc on Key Declarations
 
-**Impact: MEDIUM-HIGH (makes important API, handler, effect, and type declarations easier to review and reuse)**
+**Impact: MEDIUM-HIGH (중요한 API, handler, effect, 타입 선언을 더 쉽게 리뷰하고 재사용할 수 있게 함)**
 
 API 호출 훅과 mutation 선언, 이벤트 핸들러, `useEffect`, 주요 유틸 함수, 커스텀 `type`과 `interface`, 그리고 예외적으로 사용하는 `useMemo`/`useCallback`에는 JSDoc을 작성합니다. 상태 변수나 단순 파생값처럼 문맥상 자명한 선언에는 강제하지 않습니다.
 

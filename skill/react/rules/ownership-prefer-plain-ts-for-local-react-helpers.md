@@ -1,13 +1,13 @@
 ---
 title: Prefer Plain .ts Helpers Over Local Custom Hooks
 impact: HIGH
-impactDescription: keeps React-only abstractions reserved for real lifecycle or context coupling
+impactDescription: React 전용 추상화를 실제 lifecycle/context 결합이 있는 경우에만 사용하게 함
 tags: ownership, hooks, helpers, widget
 ---
 
 ## Prefer Plain .ts Helpers Over Local Custom Hooks
 
-**Impact: HIGH (keeps React-only abstractions reserved for real lifecycle or context coupling)**
+**Impact: HIGH (React 전용 추상화를 실제 lifecycle/context 결합이 있는 경우에만 사용하게 함)**
 
 컴포넌트 하나를 위한 계산, 정규화, payload 조립은 기본적으로 일반 `.ts` helper로 둡니다. React 생명주기, state, context, effect에 실제로 묶일 때만 custom hook으로 승격합니다.
 

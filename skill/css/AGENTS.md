@@ -4,20 +4,20 @@
 Agent Conventions  
 April 2026
 
-> **Note:**  
-> This document is mainly for agents and LLMs to follow when maintaining,  
-> generating, or refactoring codebases in this convention set.  
-> The source of truth lives in `rules/*.md`; this file is a compiled guide.
+> **안내:**  
+> 이 문서는 에이전트와 LLM이 이 컨벤션 세트의 코드를 유지보수하고,  
+> 생성하고, 리팩터링할 때 따르도록 compile한 가이드입니다.  
+> source of truth는 `rules/*.md`에 있고, 이 파일은 생성 결과물입니다.
 
 ---
 
-## Abstract
+## 개요
 
 CSS conventions for agent-assisted teams. The guide emphasizes ownership-driven naming, predictable TSX class composition, flat selectors, wrapper-scoped third-party styling, tokenized values, and disciplined stylesheet organization. Rule files in rules/ are the source of truth and compile into AGENTS.md for agent consumption.
 
 ---
 
-## Table of Contents
+## 목차
 
 1. [Naming and Ownership](#1-naming-and-ownership) — **CRITICAL**
    - 1.1 [Keep Each `scope_slug` Unique Per Owner](#11-keep-each-scopeslug-unique-per-owner)
@@ -652,7 +652,7 @@ div {
 }
 ```
 
-## References
+## 참고 자료
 
 - https://developer.mozilla.org/en-US/docs/Web/CSS
 - https://developer.mozilla.org/en-US/docs/Web/CSS/Pseudo-classes
