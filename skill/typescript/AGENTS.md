@@ -6,13 +6,13 @@
 
 > **생성된 문서입니다. 직접 수정하지 마세요.**
 >
-> 현재 skill의 `rules/*.md`, `metadata.json`, `metadata.json.extends`로 연결된 base skill source를 수정한 뒤 `npm --prefix package run build -- --skill=typescript`로 다시 생성하세요.
+> 현재 skill의 `rules/*.md`, `metadata.json`, `metadata.json.extends`를 수정한 뒤 `npm --prefix package run build -- --skill=typescript`로 다시 생성하세요.
 
 ---
 
 ## 개요
 
-에이전트 협업 팀을 위한 TypeScript 코딩 컨벤션입니다. 이 가이드는 명시적인 네이밍, 직접 import, 재사용 가능한 타입 계약, 절제된 helper 추출, 의도적인 결측값 처리, 일관된 JSDoc 경계를 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, React, NestJS, TanStack Route, Playwright Test 같은 TypeScript 기반 skill의 공통 base rule 세트로도 사용됩니다.
+에이전트 협업 팀을 위한 TypeScript 코딩 컨벤션입니다. 이 가이드는 명시적인 네이밍, 직접 import, 재사용 가능한 타입 계약, 절제된 helper 추출, 의도적인 결측값 처리, 일관된 JSDoc 경계를 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, React, NestJS, TanStack Route, Playwright Test 같은 TypeScript 기반 skill과 함께 로드하는 공통 companion rule 세트로도 사용됩니다.
 
 ---
 

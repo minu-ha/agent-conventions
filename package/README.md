@@ -17,10 +17,11 @@ Structured skill의 compile, validate, test, typecheck 흐름을 이 패키지�
 - `npm run typecheck` - Type-check the build package source and tests with `tsc --noEmit`.
 - `npm run test` - Run regression tests for CLI behavior, documentation annotations, and script wiring.
 
-If `metadata.json` declares an `extends` array, build and validate resolve those base skills
-recursively. The child skill keeps its own title and abstract, while the compiled guide
-such as [React AGENTS.md](../skill/react/AGENTS.md) includes inherited base
-sections ahead of the local overlay sections.
+If `metadata.json` declares an `extends` array, validate resolves those companion skills
+recursively and build preserves that relationship in the generated guide.
+
+- Build writes a slim guide such as [React AGENTS.md](../skill/react/AGENTS.md) with local framework rules only.
+- That slim guide adds a companion-skill section that tells readers to load `convention-typescript` together.
 
 ## Per-Skill Aliases
 

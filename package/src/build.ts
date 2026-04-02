@@ -5,6 +5,13 @@ import {getSkillPaths, isBuildableSkill, listSkillNames, parseCliArgs} from "./c
 import {buildRuleAnchor, buildSectionAnchor, normalizeHeadingTitle, readResolvedSkillDocuments, replaceRuleHeading} from "./parser.js";
 import type {CompiledSkillSection, LoadedSkillDocument, SkillMetadata, SkillPaths, SkillRule, SkillSection} from "./types.js";
 
+interface CompanionSkill {
+	skillName: string;
+	conventionName: string;
+	title: string;
+	guidePath: string;
+}
+
 /**
  * @helper section prefix 기준 rule 목록 정렬
  */
@@ -27,6 +34,13 @@ const nestedTocIndent = " ".repeat(4);
  */
 const getConventionTitle = (skillName: string, fallbackTitle: string): string => {
 	return conventionTitleBySkillName[skillName] ?? fallbackTitle;
+};
+
+/**
+ * @helper skill 디렉터리 이름을 companion skill 이름으로 변환
+ */
+const getConventionSkillName = (skillName: string): string => {
+	return `convention-${skillName}`;
 };
 
 /**
@@ -67,12 +81,17 @@ const collectReferenceLinks = (documents: LoadedSkillDocument[]): string[] => {
 };
 
 /**
- * @helper root skill이 포함하는 base skill 제목 목록 계산
+ * @helper root skill과 함께 로드할 companion skill 메타데이터 계산
  */
-const collectBaseSkillTitles = (rootSkillName: string, documents: LoadedSkillDocument[]): string[] => {
+const collectCompanionSkills = (rootSkillName: string, documents: LoadedSkillDocument[]): CompanionSkill[] => {
 	return documents
 		.filter((document) => document.skillName !== rootSkillName)
-		.map((document) => getConventionTitle(document.skillName, document.metadata.title));
+		.map((document) => ({
+			skillName: document.skillName,
+			conventionName: getConventionSkillName(document.skillName),
+			title: getConventionTitle(document.skillName, document.metadata.title),
+			guidePath: `../${document.skillName}/AGENTS.md`,
+		}));
 };
 
 /**
@@ -82,7 +101,7 @@ export const generateMarkdown = (
 	skillName: string,
 	metadata: SkillMetadata,
 	sections: CompiledSkillSection[],
-	baseSkillTitles: string[],
+	companionSkills: CompanionSkill[],
 	references: string[],
 ): string => {
 	const lines: string[] = [];
@@ -99,7 +118,8 @@ export const generateMarkdown = (
 	lines.push("");
 	lines.push("> **생성된 문서입니다. 직접 수정하지 마세요.**");
 	lines.push(">");
-	lines.push(`> 현재 skill의 \`rules/*.md\`, \`metadata.json\`, \`metadata.json.extends\`로 연결된 base skill source를 수정한 뒤 \`npm --prefix package run build -- --skill=${skillName}\`로 다시 생성하세요.`);
+	lines.push(`> 현재 skill의 \`rules/*.md\`, \`metadata.json\`, \`metadata.json.extends\`를 수정한 뒤 \`npm --prefix package run build -- --skill=${skillName}\`로 다시 생성하세요.`);
+
 	lines.push("");
 	lines.push("---");
 	lines.push("");
@@ -107,20 +127,20 @@ export const generateMarkdown = (
 	lines.push("");
 	lines.push(metadata.abstract);
 
-	if (baseSkillTitles.length > 0) {
+	if (companionSkills.length > 0) {
 		lines.push("");
-		lines.push(`이 가이드는 ${baseSkillTitles.map((title) => `\`${title}\``).join(", ")}을 공통 기반 스킬로 함께 포함합니다.`);
+		lines.push(`이 가이드는 local ${metadata.title} 규칙만 담고 있습니다. TypeScript 같은 공통 규칙은 companion skill을 함께 로드해 보완합니다.`);
 	}
 	lines.push("");
 
-	if (baseSkillTitles.length > 0) {
+	if (companionSkills.length > 0) {
 		lines.push("---");
 		lines.push("");
-		lines.push("## 함께 포함된 기반 스킬");
+		lines.push("## 함께 로드할 Companion Skill");
 		lines.push("");
 
-		for (const baseSkillTitle of baseSkillTitles) {
-			lines.push(`- ${baseSkillTitle}`);
+		for (const companionSkill of companionSkills) {
+			lines.push(`- \`${companionSkill.conventionName}\` - ${companionSkill.title} 공통 규칙 guide: [${companionSkill.title}](${companionSkill.guidePath})`);
 		}
 
 		lines.push("");
@@ -182,7 +202,7 @@ export const generateMarkdown = (
 /**
  * @description 단일 skill의 compiled `AGENTS.md` 생성
  */
-export const buildSkill = async (skillPaths: SkillPaths): Promise<void> => {
+export const buildSkill = async (skillPaths: SkillPaths, bundleBase: boolean): Promise<void> => {
 	const documents = await readResolvedSkillDocuments(skillPaths);
 	const rootDocument = documents.find((document) => document.skillName === skillPaths.skillName);
 
@@ -190,12 +210,12 @@ export const buildSkill = async (skillPaths: SkillPaths): Promise<void> => {
 		throw new Error(`Failed to resolve root skill document for "${skillPaths.skillName}".`);
 	}
 
-	const compiledSections = buildCompiledSections(skillPaths.skillName, documents);
-	const baseSkillTitles = collectBaseSkillTitles(skillPaths.skillName, documents);
-	const references = collectReferenceLinks(documents);
-	const markdown = generateMarkdown(skillPaths.skillName, rootDocument.metadata, compiledSections, baseSkillTitles, references);
+	const companionSkills = collectCompanionSkills(skillPaths.skillName, documents);
+	const localSections = buildCompiledSections(skillPaths.skillName, [rootDocument]);
+	const localReferences = collectReferenceLinks([rootDocument]);
+	const localMarkdown = generateMarkdown(skillPaths.skillName, rootDocument.metadata, localSections, companionSkills, localReferences);
 
-	await writeFile(skillPaths.outputPath, markdown, "utf8");
+	await writeFile(skillPaths.outputPath, localMarkdown, "utf8");
 	console.log(`Wrote ${path.relative(skillPaths.skillDir, skillPaths.outputPath)}`);
 };
 
@@ -221,7 +241,7 @@ export const main = async (): Promise<void> => {
 			throw new Error(`Skill "${skillName}" is not buildable yet. Expected rules/_sections.md and metadata.json under skill/${skillName}.`);
 		}
 
-		await buildSkill(getSkillPaths(skillName));
+		await buildSkill(getSkillPaths(skillName), false);
 	}
 };
 

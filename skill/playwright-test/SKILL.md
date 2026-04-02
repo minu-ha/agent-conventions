@@ -10,7 +10,7 @@ metadata:
 
 에이전트 협업 팀을 위한 Playwright 브라우저 테스트 컨벤션 모음입니다. 현재 이 가이드는 7개 카테고리의 25개 local 규칙으로 구성되어 있습니다.  
 테스트 레벨 경계, spec 배치, setup 가시성, 데이터 고립, locator 전략, waiting 규칙을 [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`와 compiled [AGENTS.md](./AGENTS.md)로 관리합니다.  
-compiled guide에는 fixture, seed helper, support type에 공통으로 적용되는 `convention-typescript` base rule이 함께 포함됩니다.
+기본 compiled guide는 local Playwright rule만 담고 fixture, seed helper, support type에는 `convention-typescript`를 companion skill로 함께 사용합니다.
 
 ## 사용할 때
 - Playwright spec, feature-local helper, 공용 support 파일을 만들거나 수정할 때 사용합니다.
@@ -90,9 +90,8 @@ compiled guide에는 fixture, seed helper, support type에 공통으로 적용�
 - `guardrails-review-banned-playwright-shortcuts-before-finishing` - 마무리 전에 금지 Playwright shortcut 점검
 
 ## 함께 쓰기
-- 이 skill의 compiled guide는 `convention-typescript` base rule을 함께 포함합니다.
-  SKILL.md만 읽는 환경이라면 fixture, seed helper, payload builder 변경 시
-  `convention-typescript`도 함께 로드합니다.
+- 이 skill은 fixture, seed helper, payload builder, support type 변경 시 `convention-typescript`와 함께 로드하는 것을 기본으로 합니다.
+- slim [AGENTS.md](./AGENTS.md)는 local Playwright rule만 담고, fixture나 support type의 공통 TypeScript 규칙은 `convention-typescript`를 함께 로드해 보완합니다.
 - 테스트가 화면 구조나 라우팅 규칙과 강하게 묶이면 `convention-react`나 `convention-tanstack-route`를 함께 사용합니다.
 
 ## 사용하는 방법

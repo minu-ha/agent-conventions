@@ -31,7 +31,7 @@
 
 - 각 structured skill의 [rules/_sections.md](./skill/react/rules/_sections.md), [rules/_template.md](./skill/react/rules/_template.md), `rules/*.md`가 source of truth입니다.
 - [skill/react/AGENTS.md](./skill/react/AGENTS.md) 같은 compiled guide는 build 결과물입니다.
-- 일부 skill은 `metadata.json`의 `extends`로 base skill을 함께 compile합니다.
+- 일부 skill은 `metadata.json`의 `extends`로 companion skill 관계를 선언합니다.
 - `metadata.json`, [rules/_sections.md](./skill/react/rules/_sections.md), [README.md](./skill/react/README.md), [SKILL.md](./skill/react/SKILL.md)는 서로 설명이 어긋나지 않게 유지합니다.
 - 이전 단일 문서는 [deprecated/](./skill/react/deprecated/react.md)에 보관합니다.
 
@@ -49,7 +49,7 @@ structured skill을 수정할 때는 아래 순서를 기본으로 사용합니�
 
 1. 먼저 [SKILL.md](./skill/react/SKILL.md), [README.md](./skill/react/README.md), `metadata.json`, [rules/_sections.md](./skill/react/rules/_sections.md)를 훑어 현재 구성을 확인합니다.
 2. 실제 규칙 변경은 [rules/_sections.md](./skill/react/rules/_sections.md), [rules/_template.md](./skill/react/rules/_template.md), `rules/*.md`에서 수행합니다.
-3. `metadata.json`에 `extends`가 있으면 base skill과 overlay skill 중 어디가 정본인지 먼저 판단합니다.
+3. `metadata.json`에 `extends`가 있으면 공통 companion skill과 local overlay skill 중 어디가 정본인지 먼저 판단합니다.
 4. [skill/react/AGENTS.md](./skill/react/AGENTS.md) 같은 generated guide를 수동 source of truth처럼 편집하지 않습니다.
 5. 변경 후에는 validate와 build를 다시 실행해 generated output을 갱신합니다.
 6. skill 인벤토리나 작업 방식이 바뀌면 루트 [README.md](./README.md)도 함께 갱신합니다.
@@ -97,7 +97,8 @@ npm --prefix package run build -- --all
 ## Guardrails
 
 - structured skill에서는 [rules/_sections.md](./skill/react/rules/_sections.md), [rules/_template.md](./skill/react/rules/_template.md), `rules/*.md`를 우선 수정하고 generated [AGENTS.md](./skill/react/AGENTS.md)를 직접 고친 뒤 끝내지 않습니다.
-- generic TypeScript 규칙이면 `typescript` base skill로 올리고, framework skill에는 예외나 overlay만 남기는 쪽을 우선 검토합니다.
+- generic TypeScript 규칙이면 `typescript` companion skill로 올리고, framework skill에는 예외나 overlay만 남기는 쪽을 우선 검토합니다.
+- 기본 [AGENTS.md](./skill/react/AGENTS.md)는 slim local guide이고, 공통 규칙은 companion skill을 함께 로드하는 방식으로 사용합니다.
 - 레포 안의 skill마다 구조가 다를 수 있으므로, 수정 전에 실제 디렉터리 상태를 다시 확인합니다.
 - `reference/agent-skills-main`의 문장을 그대로 가져오기보다, 이 레포의 목적과 현재 구조에 맞게 재서술합니다.
 - skill 이름, 설명, 섹션 구성, generated output이 서로 어긋나면 이후 유지보수가 어려워지므로 한 번에 같이 맞춥니다.

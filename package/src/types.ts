@@ -89,7 +89,7 @@ export interface SkillMetadata {
 	 */
 	abstract: string;
 	/**
-	 * @field 현재 skill이 함께 compile할 base skill 디렉터리 이름 목록
+	 * @field 현재 skill이 함께 로드할 companion skill 디렉터리 이름 목록
 	 */
 	extends?: string[];
 	/**

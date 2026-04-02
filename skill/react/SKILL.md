@@ -10,7 +10,7 @@ metadata:
 
 에이전트 협업 팀을 위한 React 코딩 컨벤션 모음입니다. 현재 이 가이드는 7개 카테고리의 29개 local 규칙으로 구성되어 있습니다.  
 공용 컴포넌트 소유 경계, route-local 분리, React 계약에 맞는 handler/prop 시그니처, 화면 흐름, state 오리진, React 경계 문서화 규칙을 [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`와 compiled [AGENTS.md](./AGENTS.md)로 관리합니다.  
-compiled guide에는 `convention-typescript` base rule이 함께 포함됩니다.
+기본 compiled guide는 local React rule만 담고 `convention-typescript`를 companion skill로 함께 사용합니다.
 
 ## 사용할 때
 
@@ -84,8 +84,8 @@ compiled guide에는 `convention-typescript` base rule이 함께 포함됩니다
 
 ## 함께 쓰기
 
-- 이 skill의 compiled guide는 `convention-typescript` base rule을 함께 포함합니다.
-  SKILL.md만 읽는 환경이라면 필요 시 `convention-typescript`도 함께 로드합니다.
+- 이 skill은 `convention-typescript`와 함께 로드하는 것을 기본으로 합니다.
+- slim [AGENTS.md](./AGENTS.md)는 local React rule만 담고, 공통 TypeScript 규칙은 `convention-typescript`를 함께 로드해 보완합니다.
 - 스타일, `className`, CSS import가 바뀌면 `convention-css`를 함께 사용합니다.
 - route 파일이나 router API가 바뀌면 `convention-tanstack-route`를 함께 사용합니다.
 - Playwright 테스트 범위가 바뀌면 `convention-playwright-test`를 함께 사용합니다.

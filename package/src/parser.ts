@@ -198,7 +198,7 @@ const dedupeResolvedSkillDocuments = (documents: LoadedSkillDocument[]): LoadedS
 };
 
 /**
- * @description `extends`를 따라 base skill까지 포함한 문서 집합 로드
+ * @description `extends`를 따라 companion skill까지 포함한 문서 집합 로드
  */
 export const readResolvedSkillDocuments = async (skillPaths: SkillPaths, lineage: string[] = []): Promise<LoadedSkillDocument[]> => {
 	const document = await readSkillDocument(skillPaths);

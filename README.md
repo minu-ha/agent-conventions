@@ -34,10 +34,10 @@
 
 - [java](./skill/java/SKILL.md)
 
-structured skill은 개별 rule 문서를 조합해 [AGENTS.md](./skill/react/AGENTS.md) 같은 compiled guide를 생성하고, legacy skill은 단일 문서를 직접 참조합니다.
+structured skill은 개별 rule 문서를 조합해 [AGENTS.md](./skill/react/AGENTS.md) 같은 slim compiled guide를 생성하고, legacy skill은 단일 문서를 직접 참조합니다.
 
-현재 `react`, `nestjs`, `tanstack-route`, `playwright-test`는 `metadata.json`의 `extends`를 통해`typescript` base skill을 함께 compile합니다.  
-즉, 언어 공통 규칙은 [skill/typescript/rules/_sections.md](./skill/typescript/rules/_sections.md)와 `rules/*.md` 아래에 두고 프레임워크 skill은 overlay 규칙에 집중합니다.
+현재 `react`, `nestjs`, `tanstack-route`, `playwright-test`는 `metadata.json`의 `extends`로 `typescript` companion skill 관계를 선언합니다.  
+기본 [AGENTS.md](./skill/react/AGENTS.md)는 local framework rule만 담고, 필요한 공통 규칙은 companion skill을 함께 로드하는 방식으로 사용합니다.
 
 ## 저장소 구조
 
@@ -92,16 +92,16 @@ structured skill은 공통적으로 아래 파일을 가집니다.
 - [`SKILL.md`](./skill/react/SKILL.md): skill 이름, 설명, 사용 시점 같은 discovery metadata
 - [`README.md`](./skill/react/README.md): 사람 기준 개요와 규칙 탐색 진입점
 - `metadata.json`: build 입력 메타데이터
-- `metadata.json.extends`: 현재 skill이 함께 포함할 base skill 목록
+- `metadata.json.extends`: 현재 skill이 함께 로드할 companion skill 목록
 - [`rules/_sections.md`](./skill/react/rules/_sections.md): 섹션 순서와 구성 설명
 - [`rules/_template.md`](./skill/react/rules/_template.md): 새 rule 작성 템플릿
 - [rules/_sections.md](./skill/react/rules/_sections.md): 섹션 구성과 우선순위 메타데이터
 - [rules/_template.md](./skill/react/rules/_template.md): 새 rule 작성 템플릿
 - `rules/*.md`: 실제 source of truth rule 문서
-- [`AGENTS.md`](./skill/react/AGENTS.md): build 결과물로 생성되는 통합 가이드
+- [`AGENTS.md`](./skill/react/AGENTS.md): 기본 build 결과물로 생성되는 slim local guide
 - [`deprecated/*.md`](./skill/react/deprecated/react.md): 이전 single-document 버전 보관본
 
-즉, structured skill에서는 로컬 [rules/_sections.md](./skill/react/rules/_sections.md), [rules/_template.md](./skill/react/rules/_template.md), `rules/*.md`와 `metadata.json.extends`로 연결된 base skill의 rule 문서가 정본이고 [AGENTS.md](./skill/react/AGENTS.md)는 생성물입니다.
+즉, structured skill에서는 로컬 [rules/_sections.md](./skill/react/rules/_sections.md), [rules/_template.md](./skill/react/rules/_template.md), `rules/*.md`와 `metadata.json.extends`로 선언한 companion 관계가 정본이고 [AGENTS.md](./skill/react/AGENTS.md)는 생성물입니다.
 
 ## 설치
 
@@ -127,7 +127,7 @@ skill을 수정할 때는 아래 순서를 권장합니다.
 
 1. 대상 skill이 structured인지 legacy인지 먼저 확인합니다.
 2. structured skill이면 [rules/_sections.md](./skill/react/rules/_sections.md), [rules/_template.md](./skill/react/rules/_template.md), `rules/*.md`와 필요한 보조 파일을 수정합니다.
-3. `metadata.json`에 `extends`가 있으면 base skill 쪽이 정본인지 overlay skill 쪽이 정본인지 먼저 판단합니다.
+3. `metadata.json`에 `extends`가 있으면 공통 companion skill 쪽이 정본인지 local overlay skill 쪽이 정본인지 먼저 판단합니다.
 4. generic TypeScript 규칙이면 가능하면 [skill/typescript/rules/_sections.md](./skill/typescript/rules/_sections.md)와 `rules/*.md`를 먼저 수정합니다.
 5. framework-specific overlay만 대상이면 해당 skill의 local rule을 수정합니다.
 6. structured skill 변경 후에는 validate와 build를 다시 실행합니다.
@@ -165,6 +165,9 @@ npm --prefix package run build -- --all
 
 - 공통 스타일, 경계, 문서화 규칙: 이 저장소의 skill
 - 생성 파일 보호, 검증 명령, 배포 규칙: 프로젝트 로컬 `AGENTS.md`
+
+TypeScript 기반 framework 프로젝트에서는 `convention-react` 같은 framework skill과
+`convention-typescript`를 함께 명시하는 구성을 권장합니다.
 
 ## 버전 관리 가이드
 

@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import {access, readFile} from "node:fs/promises";
+import {access, readFile, rm} from "node:fs/promises";
 import {spawnSync} from "node:child_process";
 import path from "node:path";
 import test from "node:test";
@@ -54,11 +54,14 @@ test("build script regenerates AGENTS.md for the react skill", async () => {
 
 	const agentsSource = await readFile(reactAgentsPath, "utf8");
 	assert.match(agentsSource, /^# React 컨벤션$/m);
-	assert.match(agentsSource, /^## 1\. TypeScript Convention Base - Naming and Module Boundaries$/m);
 	assert.match(agentsSource, /^## 목차$/m);
-	assert.match(agentsSource, /^\s+- 5\.3 \[Use @description for External Integration Functions\]\(#53-use-description-for-external-integration-functions\)$/m);
-	assert.match(agentsSource, /^ {4}- 10\.1 \[Avoid Premature Abstraction in Screen Code\]/m);
-	assert.doesNotMatch(agentsSource, /^ {3}- 10\.1 \[Avoid Premature Abstraction in Screen Code\]/m);
+	assert.match(agentsSource, /^## 함께 로드할 Companion Skill$/m);
+	assert.match(agentsSource, /`convention-typescript`/);
+	assert.match(agentsSource, /^## 1\. Ownership and Boundaries$/m);
+	assert.doesNotMatch(agentsSource, /^## 1\. TypeScript Convention Base - Naming and Module Boundaries$/m);
+	assert.doesNotMatch(agentsSource, /TypeScript Convention Base - Naming and Module Boundaries/);
+	assert.match(agentsSource, /^ {4}- 4\.1 \[Avoid Premature Abstraction in Screen Code\]/m);
+	assert.doesNotMatch(agentsSource, /^ {3}- 4\.1 \[Avoid Premature Abstraction in Screen Code\]/m);
 });
 
 test("build:react alias regenerates AGENTS.md for the react skill", async () => {
