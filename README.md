@@ -11,13 +11,13 @@
 
 현재 포함된 skill은 아래와 같습니다.
 
-- [`convention-react`](./skill/react/SKILL.md): React 컴포넌트 경계, route-local 분리, handler 흐름, state 오리진, 문서화 규칙
-- [`convention-css`](./skill/css/SKILL.md): CSS 네이밍, selector 깊이, wrapper 기준 스타일링, 디자인 토큰 규칙
-- [`convention-tanstack-route`](./skill/tanstack-route/SKILL.md): TanStack Router file-based route, layout shell, redirect, search param, route-local helper 규칙
-- [`convention-playwright-test`](./skill/playwright-test/SKILL.md): Playwright integration/e2e 경계, locator 선택, waiting, mocking, 데이터 고립 규칙
-- [`convention-typescript`](./skill/typescript/SKILL.md): TypeScript import, custom type, helper 분리, fallback 처리, JSDoc 규칙
-- [`convention-nestjs`](./skill/nestjs/SKILL.md): NestJS module/controller/service/DTO/Prisma/테스트 경계 규칙
-- [`convention-springboot`](./skill/java/SKILL.md): Spring Boot 기반 백엔드 컨벤션
+- [convention-react](./skill/react/SKILL.md): React 컴포넌트 경계, route-local 분리, handler 흐름, state 오리진, 문서화 규칙
+- [convention-css](./skill/css/SKILL.md): CSS 네이밍, selector 깊이, wrapper 기준 스타일링, 디자인 토큰 규칙
+- [convention-tanstack-route](./skill/tanstack-route/SKILL.md): TanStack Router file-based route, layout shell, redirect, search param, route-local helper 규칙
+- [convention-playwright-test](./skill/playwright-test/SKILL.md): Playwright integration/e2e 경계, locator 선택, waiting, mocking, 데이터 고립 규칙
+- [convention-typescript](./skill/typescript/SKILL.md): TypeScript import, custom type, helper 분리, fallback 처리, JSDoc 규칙
+- [convention-nestjs](./skill/nestjs/SKILL.md): NestJS module/controller/service/DTO/Prisma/테스트 경계 규칙
+- [convention-springboot](./skill/java/SKILL.md): Spring Boot 기반 백엔드 컨벤션
 
 ## 현재 구조 상태
 
@@ -89,17 +89,15 @@ agent-conventions/
 
 structured skill은 공통적으로 아래 파일을 가집니다.
 
-- [`SKILL.md`](./skill/react/SKILL.md): skill 이름, 설명, 사용 시점 같은 discovery metadata
-- [`README.md`](./skill/react/README.md): 사람 기준 개요와 규칙 탐색 진입점
-- `metadata.json`: build 입력 메타데이터
+- [SKILL.md](./skill/react/SKILL.md): skill 이름, 설명, 사용 시점 같은 discovery metadata
+- [README.md](./skill/react/README.md): 사람 기준 개요와 규칙 탐색 진입점
+- [metadata.json](./skill/react/metadata.json): build 입력 메타데이터
 - `metadata.json.extends`: 현재 skill이 함께 로드할 companion skill 목록
-- [`rules/_sections.md`](./skill/react/rules/_sections.md): 섹션 순서와 구성 설명
-- [`rules/_template.md`](./skill/react/rules/_template.md): 새 rule 작성 템플릿
-- [rules/_sections.md](./skill/react/rules/_sections.md): 섹션 구성과 우선순위 메타데이터
+- [rules/_sections.md](./skill/react/rules/_sections.md): 섹션 순서와 구성 설명
 - [rules/_template.md](./skill/react/rules/_template.md): 새 rule 작성 템플릿
 - `rules/*.md`: 실제 source of truth rule 문서
-- [`AGENTS.md`](./skill/react/AGENTS.md): 기본 build 결과물로 생성되는 slim local guide
-- [`deprecated/*.md`](./skill/react/deprecated/react.md): 이전 single-document 버전 보관본
+- [AGENTS.md](./skill/react/AGENTS.md): 기본 build 결과물로 생성되는 slim local guide
+- [deprecated/react.md](./skill/react/deprecated/react.md): 이전 single-document 버전 보관본
 
 즉, structured skill에서는 로컬 [rules/_sections.md](./skill/react/rules/_sections.md), [rules/_template.md](./skill/react/rules/_template.md), `rules/*.md`와 `metadata.json.extends`로 선언한 companion 관계가 정본이고 [AGENTS.md](./skill/react/AGENTS.md)는 생성물입니다.
 
@@ -171,7 +169,7 @@ TypeScript 기반 framework 프로젝트에서는 `convention-react` 같은 fram
 
 ## 버전 관리 가이드
 
-- [`SKILL.md`](./skill/react/SKILL.md)의 `name` 변경은 breaking change로 취급합니다.
+- [SKILL.md](./skill/react/SKILL.md)의 `name` 변경은 breaking change로 취급합니다.
 - 새 skill 추가나 호환되는 규칙 확장은 minor 버전으로 관리합니다.
 - 문구 수정, 예시 보강, 비호환성 없는 보정은 patch 버전으로 관리합니다.
 

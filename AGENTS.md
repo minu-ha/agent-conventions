@@ -20,12 +20,12 @@
 
 대상:
 
-- [`skill/react`](./skill/react/README.md)
-- [`skill/css`](./skill/css/README.md)
-- [`skill/tanstack-route`](./skill/tanstack-route/README.md)
-- [`skill/playwright-test`](./skill/playwright-test/README.md)
-- [`skill/typescript`](./skill/typescript/README.md)
-- [`skill/nestjs`](./skill/nestjs/README.md)
+- [skill/react](./skill/react/README.md)
+- [skill/css](./skill/css/README.md)
+- [skill/tanstack-route](./skill/tanstack-route/README.md)
+- [skill/playwright-test](./skill/playwright-test/README.md)
+- [skill/typescript](./skill/typescript/README.md)
+- [skill/nestjs](./skill/nestjs/README.md)
 
 이 구조에서는 아래 원칙을 지킵니다.
 
@@ -39,7 +39,7 @@
 
 대상:
 
-- [`skill/java`](./skill/java/SKILL.md)
+- [skill/java](./skill/java/SKILL.md)
 
 이 구조에서는 단일 문서가 정본입니다. structured skill 규칙을 억지로 섞지 말고, 실제 파일 구조를 먼저 확인한 뒤 수정합니다.
 

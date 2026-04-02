@@ -118,7 +118,7 @@ export const generateMarkdown = (
 	lines.push("");
 	lines.push("> **생성된 문서입니다. 직접 수정하지 마세요.**");
 	lines.push(">");
-	lines.push(`> 현재 skill의 \`rules/*.md\`, \`metadata.json\`, \`metadata.json.extends\`를 수정한 뒤 \`npm --prefix package run build -- --skill=${skillName}\`로 다시 생성하세요.`);
+	lines.push(`> 현재 skill의 \`rules/*.md\`, \`metadata.json\`, \`metadata.json.extends\`를 수정한 뒤 \`npm --prefix ../../package run build -- --skill=${skillName}\`로 다시 생성하세요.`);
 
 	lines.push("");
 	lines.push("---");
@@ -202,7 +202,7 @@ export const generateMarkdown = (
 /**
  * @description 단일 skill의 compiled `AGENTS.md` 생성
  */
-export const buildSkill = async (skillPaths: SkillPaths, bundleBase: boolean): Promise<void> => {
+export const buildSkill = async (skillPaths: SkillPaths): Promise<void> => {
 	const documents = await readResolvedSkillDocuments(skillPaths);
 	const rootDocument = documents.find((document) => document.skillName === skillPaths.skillName);
 

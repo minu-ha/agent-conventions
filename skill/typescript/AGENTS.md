@@ -6,7 +6,7 @@
 
 > **생성된 문서입니다. 직접 수정하지 마세요.**
 >
-> 현재 skill의 `rules/*.md`, `metadata.json`, `metadata.json.extends`를 수정한 뒤 `npm --prefix package run build -- --skill=typescript`로 다시 생성하세요.
+> 현재 skill의 `rules/*.md`, `metadata.json`, `metadata.json.extends`를 수정한 뒤 `npm --prefix ../../package run build -- --skill=typescript`로 다시 생성하세요.
 
 ---
 

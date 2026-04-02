@@ -7,11 +7,10 @@
 ## 구조
 
 - [rules/_sections.md](./rules/_sections.md) - rule 섹션 구성 메타데이터
-  - [_sections.md](./rules/_sections.md) - 섹션 메타데이터
-  - [_template.md](./rules/_template.md) - 새 rule 작성용 템플릿
-  - `area-description.md` - 실제 rule 파일
-- `metadata.json` - compiled guide 메타데이터
-- __[AGENTS.md](./AGENTS.md)__ - 에이전트가 읽는 compiled 결과물
+- [rules/_template.md](./rules/_template.md) - 새 rule 작성용 템플릿
+- `area-description.md` - 실제 rule 파일 패턴
+- [metadata.json](./metadata.json) - compiled guide 메타데이터
+- [AGENTS.md](./AGENTS.md) - 에이전트가 읽는 compiled 결과물
 - [deprecated/typescript.md](./deprecated/typescript.md) - 마이그레이션 검토용 legacy 단일 문서
 - [package/README.md](../../package/README.md) - `skill/*` build, validation, typecheck, test를 담당하는 standalone TypeScript npm package
 
@@ -19,23 +18,23 @@
 
 1. Validate rule files:
    ```bash
-   npm --prefix package run validate:typescript
+   npm --prefix ../../package run validate:typescript
    ```
 
 2. Build [AGENTS.md](./AGENTS.md) from rules:
    ```bash
-   npm --prefix package run build:typescript
+   npm --prefix ../../package run build:typescript
    ```
 
 3. Validate and build together:
    ```bash
-   npm --prefix package run dev:typescript
+   npm --prefix ../../package run dev:typescript
    ```
 
 4. Verify the build package itself:
    ```bash
-   npm --prefix package run typecheck
-   npm --prefix package run test
+   npm --prefix ../../package run typecheck
+   npm --prefix ../../package run test
    ```
 
 ## 새 Rule 추가하기
@@ -50,7 +49,7 @@
    - `guardrails-` - 금지 shortcut과 review check 규칙
 3. frontmatter와 본문을 작성합니다.
 4. 설명이 포함된 incorrect/correct 예시를 넣습니다.
-5. `npm --prefix package run dev:typescript`를 실행해 [AGENTS.md](./AGENTS.md)를 다시 생성합니다.
+5. `npm --prefix ../../package run dev:typescript`를 실행해 [AGENTS.md](./AGENTS.md)를 다시 생성합니다.
 
 ## Rule 파일 구조
 
@@ -101,15 +100,15 @@ tags: tag1, tag2
 
 ## 스크립트
 
-- `npm --prefix package run build:typescript` - TypeScript rule만 compile해서 [AGENTS.md](./AGENTS.md) 생성
-- `npm --prefix package run validate:typescript` - TypeScript rule만 검증
-- `npm --prefix package run dev:typescript` - TypeScript만 validate 후 build까지 연속 실행
-- `npm --prefix package run build:all` - `skill/` 아래 build 가능한 skill 전체 build
-- `npm --prefix package run validate:all` - `skill/` 아래 build 가능한 skill 전체 validate
-- `npm --prefix package run dev:all` - `skill/` 아래 build 가능한 skill 전체 validate + build
-- `npm --prefix package run typecheck` - standalone build package 타입 검사
-- `npm --prefix package run test` - build package용 CLI/파서/문서 회귀 테스트 실행
-- `cd package && npm run build:typescript` - package 로컬 위치에서 TypeScript build 스크립트 직접 실행
+- `npm --prefix ../../package run build:typescript` - TypeScript rule만 compile해서 [AGENTS.md](./AGENTS.md) 생성
+- `npm --prefix ../../package run validate:typescript` - TypeScript rule만 검증
+- `npm --prefix ../../package run dev:typescript` - TypeScript만 validate 후 build까지 연속 실행
+- `npm --prefix ../../package run build:all` - `skill/` 아래 build 가능한 skill 전체 build
+- `npm --prefix ../../package run validate:all` - `skill/` 아래 build 가능한 skill 전체 validate
+- `npm --prefix ../../package run dev:all` - `skill/` 아래 build 가능한 skill 전체 validate + build
+- `npm --prefix ../../package run typecheck` - standalone build package 타입 검사
+- `npm --prefix ../../package run test` - build package용 CLI/파서/문서 회귀 테스트 실행
+- `cd ../../package && npm run build:typescript` - package 로컬 위치에서 TypeScript build 스크립트 직접 실행
 
 ## 마이그레이션 메모
 
@@ -127,4 +126,4 @@ rule을 추가하거나 수정할 때는 아래 순서를 따릅니다.
 2. [_template.md](./rules/_template.md) 구조를 따릅니다.
 3. 예시는 실제 TypeScript 모듈, helper, 계약 코드와 가깝고 구체적으로 작성합니다.
 4. 새 카테고리를 추가했다면 section metadata도 함께 갱신합니다.
-5. 마무리 전에 `npm --prefix package run dev:typescript`를 실행합니다.
+5. 마무리 전에 `npm --prefix ../../package run dev:typescript`를 실행합니다.

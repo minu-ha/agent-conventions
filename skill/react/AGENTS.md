@@ -6,13 +6,13 @@
 
 > **생성된 문서입니다. 직접 수정하지 마세요.**
 >
-> 현재 skill의 `rules/*.md`, `metadata.json`, `metadata.json.extends`를 수정한 뒤 `npm --prefix package run build -- --skill=react`로 다시 생성하세요.
+> 현재 skill의 `rules/*.md`, `metadata.json`, `metadata.json.extends`를 수정한 뒤 `npm --prefix ../../package run build -- --skill=react`로 다시 생성하세요.
 
 ---
 
 ## 개요
 
-에이전트 협업 팀을 위한 React 코딩 컨벤션입니다. 이 가이드는 shared 코드와 route-local 코드 사이의 명확한 소유 경계, React 계약에 맞는 handler/prop 시그니처, 예측 가능한 화면 흐름, 오리진을 보존하는 state 접근, React 고유 문서화 규칙을 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, 기본 compiled guide는 local React 규칙만 담고 `typescript` companion skill과 함께 사용합니다.
+에이전트 협업 팀을 위한 React 코딩 컨벤션입니다. 이 가이드는 shared 코드와 route-local 코드 사이의 명확한 소유 경계, React 계약에 맞는 handler/prop 시그니처, 예측 가능한 화면 흐름, 오리진을 보존하는 state 접근, React 고유 문서화 규칙을 강조합니다. TanStack Query, Zustand, 그리고 필요 시 React 19 `Activity` 같은 visibility primitive를 쓰는 React codebase를 기본 전제로 하며, `rules/` 아래 rule 파일이 source of truth입니다. 기본 compiled guide는 local React 규칙만 담고 `typescript` companion skill과 함께 사용합니다.
 
 이 가이드는 local React 컨벤션 규칙만 담고 있습니다. TypeScript 같은 공통 규칙은 companion skill을 함께 로드해 보완합니다.
 
@@ -360,7 +360,8 @@ export const updateEntryMediaUploadFileByUid = (params: UpdateEntryMediaUploadFi
 
 **Impact: MEDIUM (표시 여부 결정을 route 화면 전반에서 명시적이고 일관되게 유지함)**
 
-JSX에서 렌더링 노드를 바꾸는 조건부 분기에는 삼항 렌더링 대신 `<Activity />`를 사용합니다. 속성값 계산은 삼항을 허용하지만, 노드 자체의 표시/숨김은 `Activity`로 통일합니다.
+React 19의 `<Activity />` 또는 프로젝트가 이미 채택한 동등한 visibility primitive가 있다면, JSX에서 렌더링 노드를 바꾸는 조건부 분기에는 삼항 렌더링 대신 그 primitive를 사용합니다.   
+속성값 계산은 삼항을 허용하지만, 노드 자체의 표시/숨김은 일관된 visibility primitive로 통일합니다. 코드베이스에 `Activity`가 아직 없다면 이 규칙 때문에 새 추상화를 도입하지 말고 기존 패턴을 따릅니다.
 
 **Incorrect (렌더링 노드 선택을 삼항으로 처리):**
 
@@ -368,7 +369,7 @@ JSX에서 렌더링 노드를 바꾸는 조건부 분기에는 삼항 렌더링 
 return hasItems ? <ItemList /> : <EmptyState />;
 ```
 
-**Correct (표시/숨김을 Activity로 드러냄):**
+**Correct (`Activity`를 이미 쓰는 코드베이스에서는 표시/숨김을 같은 primitive로 드러냄):**
 
 ```tsx
 return (
@@ -674,7 +675,9 @@ return (
 
 **Impact: MEDIUM-HIGH (로컬 UI state, 전역 client state, server state가 서로 흐려지는 것을 막음)**
 
-로컬 UI 상태는 `useState` 또는 `useReducer`, 전역 클라이언트 상태는 `Zustand`, 서버 상태는 `@tanstack/react-query`를 사용합니다. 상태 도구를 수명과 소유자 기준으로 고르면 화면 파일이 더 읽기 쉬워지고 중복 동기화가 줄어듭니다.
+이 convention 세트는 로컬 UI 상태에 `useState` 또는 `useReducer`, 전역 클라이언트 상태에 `Zustand`, 서버 상태에 `@tanstack/react-query`를 기본 전제로 둡니다.   
+상태 도구를 수명과 소유자 기준으로 고르면 화면 파일이 더 읽기 쉬워지고 중복 동기화가 줄어듭니다.   
+프로젝트가 이미 다른 전역 store나 server-state 도구를 표준으로 채택했다면, 이 규칙을 문자 그대로 적용해 `Zustand`나 `react-query`를 새로 들여오지 말고 같은 source-of-truth 원칙만 유지합니다.
 
 **Incorrect (서버 상태를 로컬 상태로 복제):**
 
@@ -859,25 +862,38 @@ export const mapFolderNodeToTreeData = (node: ContentFolderTreeNode, renderers: 
 
 **Impact: MEDIUM-HIGH (중요한 API, handler, effect, 타입 선언을 더 쉽게 리뷰하고 재사용할 수 있게 함)**
 
-API 호출 훅과 mutation 선언, 이벤트 핸들러, `useEffect`, 주요 유틸 함수, 커스텀 `type`과 `interface`, 그리고 예외적으로 사용하는 `useMemo`/`useCallback`에는 JSDoc을 작성합니다. 상태 변수나 단순 파생값처럼 문맥상 자명한 선언에는 강제하지 않습니다.
+원격 API 경계를 넘는 helper나 custom hook wrapper, 분기나 부수효과가 있는 이벤트 핸들러, 동기화 의도가 중요한 `useEffect`, 주요 유틸 함수, 커스텀 `type`과 `interface`, 그리고 예외적으로 사용하는 `useMemo`/`useCallback`에는 JSDoc을 작성합니다.   
+상태 변수, 자명한 generated hook 바인딩, 단순 파생값처럼 문맥상 의미가 분명한 선언에는 강제하지 않습니다.
 
-**Incorrect (중요한 선언에 문맥 설명이 없음):**
+**Incorrect (비자명한 경계 선언에 문맥 설명이 없음):**
 
 ```ts
-const mutationContentTypeRemove = useContentTypeRemove();
+const handleRemoveTableButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
+  if (!selectedTable) {
+    return;
+  }
+
+  await mutationContentTypeRemove.mutateAsync({ params: { projectId } });
+};
 
 useEffect(() => {
   resetForm(userData);
 }, [userData, resetForm]);
 ```
 
-**Correct (선언 의도와 역할을 바로 위에 문서화):**
+**Correct (비자명한 선언 의도와 역할을 바로 위에 문서화):**
 
 ```ts
 /**
- * @description 테이블 삭제 API
+ * @summary 선택된 테이블 삭제와 다음 화면 이동 처리
  */
-const mutationContentTypeRemove = useContentTypeRemove();
+const handleRemoveTableButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
+  if (!selectedTable) {
+    return;
+  }
+
+  await mutationContentTypeRemove.mutateAsync({ params: { projectId } });
+};
 
 /**
  * @summary 사용자 데이터 변경 시 폼 상태 동기화
@@ -891,25 +907,29 @@ useEffect(() => {
 
 **Impact: MEDIUM (JSDoc 의도를 표준화해 생성 코드와 수기 선언을 일관되게 읽히게 함)**
 
-API 관련 변수 선언은 `@description`, 그 외 handler, `useEffect`, 일반 함수, 타입 선언은 `@summary`를 사용합니다. 문장은 명사형 종결과 개조식 표현을 기본으로 하고, 하나의 선언에 두 태그를 섞지 않습니다.
+원격 API 경계를 직접 넘는 helper, custom hook wrapper, query option factory 같은 API boundary 선언은 `@description`, 그 외 handler, `useEffect`, 일반 함수, 타입 선언은 `@summary`를 사용합니다. 이름만으로 충분히 자명한 generated hook 바인딩이나 단순 로컬 변수는 JSDoc을 생략할 수 있습니다. 문장은 명사형 종결과 개조식 표현을 기본으로 하고, 하나의 선언에 두 태그를 섞지 않습니다.
 
-**Incorrect (API 주석에 태그를 혼용):**
+**Incorrect (API boundary 선언에 태그를 혼용):**
 
 ```ts
 /**
- * @description 테이블 목록 조회 API
+ * @description 테이블 목록 조회 query option 조립
  * @summary v1 테이블 목록 조회
  */
-const responseContentTypeGetListSuspense = useContentTypeGetListSuspense();
+const useContentTypeListQueryOptions = (projectId: number) => {
+  return contentTypeListQueryOptions({ projectId });
+};
 ```
 
 **Correct (선언 종류에 맞는 태그 하나만 사용):**
 
 ```ts
 /**
- * @description 테이블 목록 조회 API
+ * @description 테이블 목록 조회 query option 조립
  */
-const responseContentTypeGetListSuspense = useContentTypeGetListSuspense();
+const useContentTypeListQueryOptions = (projectId: number) => {
+  return contentTypeListQueryOptions({ projectId });
+};
 
 /**
  * @summary 테이블 선택 쿼리스트링 갱신

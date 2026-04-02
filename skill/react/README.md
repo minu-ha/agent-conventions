@@ -2,16 +2,15 @@
 
 에이전트 협업, 리뷰, AI 보조 리팩터링에 맞춰 React 컨벤션을 관리하는 구조화된 저장소입니다.  
 현재 React 가이드는 7개 local 섹션의 29개 rule 파일로 구성되어 있습니다.  
-최종적으로 slim [AGENTS.md](./AGENTS.md)로 compile됩니다. local guide는 React 규칙만 담고 `typescript` companion skill을 함께 사용합니다.
+최종적으로 slim [AGENTS.md](./AGENTS.md)로 compile됩니다. local guide는 React 규칙만 담고 `typescript` companion skill을 함께 사용합니다. 이 skill은 TanStack Query, Zustand, 그리고 필요 시 React 19 `Activity` 같은 visibility primitive를 쓰는 React codebase를 기본 전제로 합니다.
 
 ## 구조
 
 - [rules/_sections.md](./rules/_sections.md) - rule 섹션 구성 메타데이터
-  - [_sections.md](./rules/_sections.md) - 섹션 메타데이터
-  - [_template.md](./rules/_template.md) - 새 rule 작성용 템플릿
-  - `area-description.md` - 실제 rule 파일
-- `metadata.json` - compiled guide 메타데이터
-- __[AGENTS.md](./AGENTS.md)__ - 에이전트가 읽는 compiled 결과물
+- [rules/_template.md](./rules/_template.md) - 새 rule 작성용 템플릿
+- `area-description.md` - 실제 rule 파일 패턴
+- [metadata.json](./metadata.json) - compiled guide 메타데이터
+- [AGENTS.md](./AGENTS.md) - 에이전트가 읽는 compiled 결과물
 - [deprecated/react.md](./deprecated/react.md) - 마이그레이션 검토용 legacy 단일 문서
 - [package/README.md](../../package/README.md) - `skill/*` build, validation, typecheck, test를 담당하는 standalone TypeScript npm package
 
@@ -19,23 +18,23 @@
 
 1. Validate rule files:
    ```bash
-   npm --prefix package run validate:react
+   npm --prefix ../../package run validate:react
    ```
 
 2. Build [AGENTS.md](./AGENTS.md) from rules:
    ```bash
-   npm --prefix package run build:react
+   npm --prefix ../../package run build:react
    ```
 
 3. Validate and build together:
    ```bash
-   npm --prefix package run dev:react
+   npm --prefix ../../package run dev:react
    ```
 
 4. Verify the build package itself:
    ```bash
-   npm --prefix package run typecheck
-   npm --prefix package run test
+   npm --prefix ../../package run typecheck
+   npm --prefix ../../package run test
    ```
 
 ## 새 Rule 추가하기
@@ -51,7 +50,7 @@
    - `docs-` - React 경계 JSDoc과 non-obvious logic comment 규칙
 3. frontmatter와 본문을 작성합니다.
 4. 설명이 포함된 incorrect/correct 예시를 넣습니다.
-5. `npm --prefix package run dev:react`를 실행해 [AGENTS.md](./AGENTS.md)를 다시 생성합니다.
+5. `npm --prefix ../../package run dev:react`를 실행해 [AGENTS.md](./AGENTS.md)를 다시 생성합니다.
 
 ## Rule 파일 구조
 
@@ -102,15 +101,15 @@ tags: tag1, tag2
 
 ## 스크립트
 
-- `npm --prefix package run build:react` - React rule만 compile해서 [AGENTS.md](./AGENTS.md) 생성
-- `npm --prefix package run validate:react` - React rule만 검증
-- `npm --prefix package run dev:react` - React만 validate 후 build까지 연속 실행
-- `npm --prefix package run build:all` - `skill/` 아래 build 가능한 skill 전체 build
-- `npm --prefix package run validate:all` - `skill/` 아래 build 가능한 skill 전체 validate
-- `npm --prefix package run dev:all` - `skill/` 아래 build 가능한 skill 전체 validate + build
-- `npm --prefix package run typecheck` - standalone build package 타입 검사
-- `npm --prefix package run test` - build package용 CLI/파서/문서 회귀 테스트 실행
-- `cd package && npm run build:react` - package 로컬 위치에서 React build 스크립트 직접 실행
+- `npm --prefix ../../package run build:react` - React rule만 compile해서 [AGENTS.md](./AGENTS.md) 생성
+- `npm --prefix ../../package run validate:react` - React rule만 검증
+- `npm --prefix ../../package run dev:react` - React만 validate 후 build까지 연속 실행
+- `npm --prefix ../../package run build:all` - `skill/` 아래 build 가능한 skill 전체 build
+- `npm --prefix ../../package run validate:all` - `skill/` 아래 build 가능한 skill 전체 validate
+- `npm --prefix ../../package run dev:all` - `skill/` 아래 build 가능한 skill 전체 validate + build
+- `npm --prefix ../../package run typecheck` - standalone build package 타입 검사
+- `npm --prefix ../../package run test` - build package용 CLI/파서/문서 회귀 테스트 실행
+- `cd ../../package && npm run build:react` - package 로컬 위치에서 React build 스크립트 직접 실행
 
 ## 마이그레이션 메모
 
@@ -129,4 +128,4 @@ rule을 추가하거나 수정할 때는 아래 순서를 따릅니다.
 2. [_template.md](./rules/_template.md) 구조를 따릅니다.
 3. 예시는 실제 route/component 코드와 가깝고 구체적으로 작성합니다.
 4. 새 카테고리를 추가했다면 section metadata도 함께 갱신합니다.
-5. 마무리 전에 `npm --prefix package run dev:react`를 실행합니다.
+5. 마무리 전에 `npm --prefix ../../package run dev:react`를 실행합니다.
