@@ -8,8 +8,9 @@ metadata:
 
 # React 컨벤션
 
-에이전트 협업 팀을 위한 React 코딩 컨벤션 모음입니다. 현재 이 가이드는 7개 카테고리의 33개 규칙으로 구성되어 있으며, 공용 컴포넌트 소유 경계, route-local 분리, 타입 계약, handler 흐름, state 오리진, 한글 문서화
-규칙을 `rules/*.md`와 compiled `AGENTS.md`로 관리합니다.
+에이전트 협업 팀을 위한 React 코딩 컨벤션 모음입니다. 현재 이 가이드는 7개 카테고리의 29개 local 규칙으로 구성되어 있습니다.  
+공용 컴포넌트 소유 경계, route-local 분리, React 계약에 맞는 handler/prop 시그니처, 화면 흐름, state 오리진, React 경계 문서화 규칙을 `rules/*.md`와 compiled `AGENTS.md`로 관리합니다.  
+compiled guide에는 `convention-typescript` base rule이 함께 포함됩니다.
 
 ## 사용할 때
 
@@ -43,14 +44,11 @@ metadata:
 ### 2. Typing and Contracts (HIGH)
 
 - `typing-function-type-first` - 매개변수 타입보다 함수 변수 타입 선언 우선
-- `typing-mark-unused-parameters-with-underscore` - 무시하는 매개변수도 `_`로 명시
 - `typing-reuse-existing-contracts` - 새 타입을 만들기 전에 prop/API 계약 재사용
-- `typing-document-custom-types` - custom interface와 객체 타입을 파일 상단에 문서화
 
 ### 3. Component Structure and JSX (HIGH)
 
 - `composition-prefer-arrow-functions-and-object-params` - 복잡한 시그니처는 화살표 함수와 객체 매개변수 사용
-- `composition-prefer-as-const-over-enum` - `enum` 대신 object literal + `as const` 사용
 - `composition-destructure-props-inside` - `props` 전체를 받고 본문 안에서 구조분해
 - `composition-use-activity-for-render-branches` - 렌더 분기는 `Activity`로 표현
 - `composition-named-handlers-over-inline` - 분기와 비동기 로직을 JSX 바깥으로 드러냄
@@ -83,11 +81,11 @@ metadata:
 - `docs-require-jsdoc-on-key-declarations` - API, handler, effect, custom type에 JSDoc 요구
 - `docs-summary-vs-description` - API 호출은 `@description`, 나머지는 `@summary` 사용
 - `docs-limit-inline-comments-to-non-obvious-logic` - inline comment는 제약과 caveat 설명에만 사용
-- `docs-korean-purpose-comments` - 목적과 제약을 짧은 한글 주석으로 설명
 
 ## 함께 쓰기
 
-- 일반 TypeScript 규칙은 `convention-typescript`를 함께 사용합니다.
+- 이 skill의 compiled guide는 `convention-typescript` base rule을 함께 포함합니다.
+  SKILL.md만 읽는 환경이라면 필요 시 `convention-typescript`도 함께 로드합니다.
 - 스타일, `className`, CSS import가 바뀌면 `convention-css`를 함께 사용합니다.
 - route 파일이나 router API가 바뀌면 `convention-tanstack-route`를 함께 사용합니다.
 - Playwright 테스트 범위가 바뀌면 `convention-playwright-test`를 함께 사용합니다.

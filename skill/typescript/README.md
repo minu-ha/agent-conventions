@@ -1,6 +1,8 @@
 # TypeScript 컨벤션
 
-에이전트 협업, 리뷰, AI 보조 리팩터링에 맞춰 TypeScript 컨벤션을 관리하는 구조화된 저장소입니다. 현재 TypeScript 가이드는 6개 섹션의 22개 rule 파일로 구성되어 있으며, 최종적으로 `AGENTS.md`로 compile됩니다.
+에이전트 협업, 리뷰, AI 보조 리팩터링에 맞춰 TypeScript 컨벤션을 관리하는 구조화된 저장소입니다.  
+현재 TypeScript 가이드는 6개 섹션의 21개 rule 파일로 구성되어 있습니다.  
+최종적으로 `AGENTS.md`로 compile됩니다. 이 skill은 React, NestJS, TanStack Route, Playwright Test의 공통 base rule 세트로도 사용됩니다.
 
 ## 구조
 
@@ -114,6 +116,7 @@ tags: tag1, tag2
 - `rules/*.md`가 source of truth입니다.
 - `AGENTS.md`는 에이전트가 먼저 읽는 compiled 문서입니다.
 - `deprecated/typescript.md`는 원래 단일 문서와 마이그레이션 완성도를 비교하기 위해 남겨 둡니다.
+- 다른 TypeScript 기반 skill은 `metadata.json`의 `extends`로 이 skill을 base로 포함할 수 있습니다.
 - 공용 TypeScript build package는 raw CLI 형태와 per-skill alias를 모두 제공합니다.
 
 ## 기여 가이드

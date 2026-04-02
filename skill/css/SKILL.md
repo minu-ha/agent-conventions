@@ -8,7 +8,8 @@ metadata:
 
 # CSS 컨벤션
 
-에이전트 협업 팀을 위한 CSS 코딩 컨벤션 모음입니다. 현재 이 가이드는 5개 카테고리의 20개 규칙으로 구성되어 있으며, 클래스 네이밍, TSX class 조합, selector 경계, 디자인 토큰, wrapper 기반 서드파티 스타일링 규칙을 `rules/*.md`와 compiled `AGENTS.md`로 관리합니다.
+에이전트 협업 팀을 위한 CSS 코딩 컨벤션 모음입니다. 현재 이 가이드는 5개 카테고리의 20개 규칙으로 구성되어 있습니다.  
+클래스 네이밍, TSX class 조합, selector 경계, 디자인 토큰, wrapper 기반 서드파티 스타일링 규칙을 `rules/*.md`와 compiled `AGENTS.md`로 관리합니다.
 
 ## 사용할 때
 - CSS 파일, route/컴포넌트 전용 `*.css`, TSX의 `className` 조합을 만들거나 수정할 때 사용합니다.

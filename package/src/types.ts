@@ -89,9 +89,65 @@ export interface SkillMetadata {
 	 */
 	abstract: string;
 	/**
+	 * @field 현재 skill이 함께 compile할 base skill 디렉터리 이름 목록
+	 */
+	extends?: string[];
+	/**
 	 * @field compiled guide 마지막에 노출할 참고 링크 목록
 	 */
 	references?: string[];
+}
+
+/**
+ * @summary 단일 skill의 metadata, sections, rules를 함께 읽은 결과
+ */
+export interface LoadedSkillDocument {
+	/**
+	 * @field 로드한 skill 디렉터리 이름
+	 */
+	skillName: string;
+	/**
+	 * @field 로드한 skill의 metadata.json 내용
+	 */
+	metadata: SkillMetadata;
+	/**
+	 * @field 로드한 skill의 section 메타데이터 목록
+	 */
+	sections: SkillSection[];
+	/**
+	 * @field 로드한 skill의 개별 rule 목록
+	 */
+	rules: SkillRule[];
+}
+
+/**
+ * @summary build 단계에서 최종 markdown 순서대로 정렬된 section 단위 결과
+ */
+export interface CompiledSkillSection {
+	/**
+	 * @field section을 제공한 원본 skill 디렉터리 이름
+	 */
+	sourceSkillName: string;
+	/**
+	 * @field section을 제공한 원본 skill 문서 제목
+	 */
+	sourceSkillTitle: string;
+	/**
+	 * @field compiled guide에 표시할 section 제목
+	 */
+	title: string;
+	/**
+	 * @field compiled guide에 표시할 section 중요도
+	 */
+	impact: string;
+	/**
+	 * @field compiled guide에 표시할 section 설명
+	 */
+	description: string;
+	/**
+	 * @field section 안에 포함할 정렬된 rule 목록
+	 */
+	rules: SkillRule[];
 }
 
 /**

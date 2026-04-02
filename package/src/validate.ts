@@ -1,19 +1,32 @@
 import {getSkillPaths, isBuildableSkill, listSkillNames, parseCliArgs} from "./config.js";
-import {readSkillMetadata, readSkillRuleFileNames, readSkillRules, readSkillSections} from "./parser.js";
+import {readSkillDocument, readSkillRuleFileNames} from "./parser.js";
 import type {SkillPaths} from "./types.js";
 
 /**
- * @description 단일 skill의 metadata와 rule 문서 형식 검증
+ * @helper 단일 skill 문서 형식을 local source 기준으로 검증
  */
-export const validateSkill = async (skillPaths: SkillPaths): Promise<void> => {
-	const metadata = await readSkillMetadata(skillPaths);
-	const sections = await readSkillSections(skillPaths);
+const validateLocalSkill = async (skillPaths: SkillPaths): Promise<{extendsCount: number; ruleCount: number; sectionCount: number}> => {
+	const document = await readSkillDocument(skillPaths);
+	const {metadata, rules, sections} = document;
 	const ruleFileNames = await readSkillRuleFileNames(skillPaths);
-	const rules = await readSkillRules(skillPaths);
 
 	for (const requiredKey of ["title", "version", "organization", "abstract"] as const) {
 		if (!metadata[requiredKey]) {
 			throw new Error(`${skillPaths.skillName}: metadata.json must include ${requiredKey}.`);
+		}
+	}
+
+	if (metadata.extends !== undefined) {
+		if (!Array.isArray(metadata.extends)) {
+			throw new Error(`${skillPaths.skillName}: metadata.json field "extends" must be an array of skill names.`);
+		}
+
+		if (metadata.extends.some((skillName) => typeof skillName !== "string" || skillName.trim().length === 0)) {
+			throw new Error(`${skillPaths.skillName}: metadata.json field "extends" must contain non-empty skill names.`);
+		}
+
+		if (new Set(metadata.extends).size !== metadata.extends.length) {
+			throw new Error(`${skillPaths.skillName}: metadata.json field "extends" must not contain duplicates.`);
 		}
 	}
 
@@ -49,7 +62,59 @@ export const validateSkill = async (skillPaths: SkillPaths): Promise<void> => {
 		}
 	}
 
-	console.log(`Validated ${skillPaths.skillName}: ${ruleFileNames.length} rule files across ${sections.length} sections.`);
+	return {
+		extendsCount: metadata.extends?.length ?? 0,
+		ruleCount: ruleFileNames.length,
+		sectionCount: sections.length,
+	};
+};
+
+/**
+ * @helper `extends`를 따라 base skill까지 재귀적으로 검증
+ */
+const validateSkillTree = async (skillPaths: SkillPaths, lineage: string[] = [], validatedSkillNames: Set<string> = new Set()): Promise<void> => {
+	if (validatedSkillNames.has(skillPaths.skillName)) {
+		return;
+	}
+
+	const {extendsCount} = await validateLocalSkill(skillPaths);
+
+	if (extendsCount === 0) {
+		validatedSkillNames.add(skillPaths.skillName);
+		return;
+	}
+
+	const {metadata} = await readSkillDocument(skillPaths);
+	const nextLineage = [...lineage, skillPaths.skillName];
+
+	for (const inheritedSkillName of metadata.extends ?? []) {
+		if (nextLineage.includes(inheritedSkillName)) {
+			throw new Error(`Circular skill extends detected: ${[...nextLineage, inheritedSkillName].join(" -> ")}.`);
+		}
+
+		const buildable = await isBuildableSkill(inheritedSkillName);
+
+		if (!buildable) {
+			throw new Error(`Extended skill "${inheritedSkillName}" referenced by "${skillPaths.skillName}" is not buildable.`);
+		}
+
+		await validateSkillTree(getSkillPaths(inheritedSkillName), nextLineage, validatedSkillNames);
+	}
+
+	validatedSkillNames.add(skillPaths.skillName);
+};
+
+/**
+ * @description 단일 skill의 metadata와 rule 문서 형식 검증
+ */
+export const validateSkill = async (skillPaths: SkillPaths): Promise<void> => {
+	const validatedSkillNames = new Set<string>();
+	const {extendsCount, ruleCount, sectionCount} = await validateLocalSkill(skillPaths);
+
+	await validateSkillTree(skillPaths, [], validatedSkillNames);
+
+	const extendsSummary = extendsCount > 0 ? ` plus ${extendsCount} base skill(s)` : "";
+	console.log(`Validated ${skillPaths.skillName}: ${ruleCount} local rule files across ${sectionCount} sections${extendsSummary}.`);
 };
 
 /**
