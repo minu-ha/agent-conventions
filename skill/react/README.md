@@ -11,23 +11,29 @@ A structured repository for creating and maintaining React conventions optimized
 - `metadata.json` - Compiled guide metadata
 - __`AGENTS.md`__ - Compiled output for agents
 - `deprecated/react.md` - Legacy single-file guide kept for migration review
-- `../../packages/react-conventions-build/` - standalone npm package for build and validation
+- `../../packages/` - standalone TypeScript npm package for build, validation, typecheck, and tests across `skill/*`
 
 ## Getting Started
 
 1. Validate rule files:
    ```bash
-   npm --prefix packages/react-conventions-build run validate
+   npm --prefix packages run validate:react
    ```
 
 2. Build `AGENTS.md` from rules:
    ```bash
-   npm --prefix packages/react-conventions-build run build
+   npm --prefix packages run build:react
    ```
 
 3. Validate and build together:
    ```bash
-   npm --prefix packages/react-conventions-build run dev
+   npm --prefix packages run dev:react
+   ```
+
+4. Verify the build package itself:
+   ```bash
+   npm --prefix packages run typecheck
+   npm --prefix packages run test
    ```
 
 ## Creating a New Rule
@@ -43,7 +49,7 @@ A structured repository for creating and maintaining React conventions optimized
    - `docs-` for Korean comments and JSDoc conventions
 3. Fill in the frontmatter and body
 4. Include clear incorrect/correct examples with explanations
-5. Run `npm --prefix packages/react-conventions-build run dev` to regenerate `AGENTS.md`
+5. Run `npm --prefix packages run dev:react` to regenerate `AGENTS.md`
 
 ## Rule File Structure
 
@@ -94,16 +100,23 @@ Short explanation of the rule and why it matters.
 
 ## Scripts
 
-- `npm --prefix packages/react-conventions-build run build` - Compile rules into `AGENTS.md`
-- `npm --prefix packages/react-conventions-build run validate` - Validate sections and rule frontmatter
-- `npm --prefix packages/react-conventions-build run dev` - Validate and build in sequence
-- `cd packages/react-conventions-build && npm run build` - Run the package-local build script directly
+- `npm --prefix packages run build:react` - Compile only the React rules into `AGENTS.md`
+- `npm --prefix packages run validate:react` - Validate only the React rule files
+- `npm --prefix packages run dev:react` - Validate and build only React in sequence
+- `npm --prefix packages run build:all` - Build every buildable skill under `skill/`
+- `npm --prefix packages run validate:all` - Validate every buildable skill under `skill/`
+- `npm --prefix packages run dev:all` - Validate and build every buildable skill under `skill/`
+- `npm --prefix packages run typecheck` - Type-check the standalone build package
+- `npm --prefix packages run test` - Run CLI and parser regression tests for the build package
+- `cd packages && npm run build:react` - Run the package-local React build script directly
 
 ## Migration Notes
 
 - `rules/*.md` is the source of truth
 - `AGENTS.md` is the compiled document agents should read first
 - `deprecated/react.md` is preserved so we can compare migration completeness against the original single-file guide
+- The generic TypeScript build package exposes both raw CLI forms and per-skill aliases
+- `react` is buildable today, while other skill aliases are predeclared for the migration path and will fail until those skills get `rules/ + metadata.json`
 
 ## Contributing
 
@@ -113,4 +126,4 @@ When adding or modifying rules:
 2. Follow the `_template.md` structure
 3. Keep examples concrete and close to real route/component code
 4. Update section metadata if you introduce a new category
-5. Run `npm --prefix packages/react-conventions-build run dev` before finishing
+5. Run `npm --prefix packages run dev:react` before finishing
