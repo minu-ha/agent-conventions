@@ -1,0 +1,12 @@
+{
+  "title": "CSS Conventions",
+  "version": "1.0.0",
+  "organization": "Agent Conventions",
+  "date": "April 2026",
+  "abstract": "CSS conventions for agent-assisted teams. The guide emphasizes ownership-driven naming, predictable TSX class composition, flat selectors, wrapper-scoped third-party styling, tokenized values, and disciplined stylesheet organization. Rule files in rules/ are the source of truth and compile into AGENTS.md for agent consumption.",
+  "references": [
+    "https://developer.mozilla.org/en-US/docs/Web/CSS",
+    "https://developer.mozilla.org/en-US/docs/Web/CSS/Pseudo-classes",
+    "https://github.com/lukeed/clsx"
+  ]
+}

@@ -1,30 +1,88 @@
 ---
 name: convention-css
-description: CSS 파일이나 TSX 클래스 조합을 수정할 때, 네이밍, selector 깊이, wrapper 기반 스타일링, 상태 modifier 규칙을 함께 적용해야 하면 사용합니다.
+description: Use when editing CSS files, TSX class composition, wrapper-scoped third-party styling, or token-based interactive UI styles.
+metadata:
+  author: agent-conventions
+  version: "1.0.0"
 ---
 
-# CSS 컨벤션
+# CSS Conventions
 
-## 사용할 때
-- CSS 파일을 수정할 때 사용합니다.
-- TSX의 클래스 조합, wrapper 스타일링, selector 구조가 바뀔 때 사용합니다.
-- 디자인 시스템 래퍼나 서드파티 DOM을 제어된 방식으로 스타일링해야 할 때 사용합니다.
+Comprehensive CSS conventions for agent-assisted teams. This guide currently contains 20 rules across 5 categories and organizes naming, class composition, selector depth, token usage, wrapper-based third-party styling, and file-level guardrails into rule files plus a compiled `AGENTS.md`.
 
-## 함께 읽을 것
-- 상세 규칙은 `./css.md`를 읽습니다.
+## When to Use
+- CSS 파일, route/컴포넌트 전용 `*.css`, TSX의 `className` 조합을 만들거나 수정할 때 사용합니다.
+- wrapper 기반 서드파티 DOM 스타일링, modifier 규칙, selector depth, 디자인 토큰 사용이 중요한 변경에 사용합니다.
+- CSS 구조나 클래스 네이밍을 house style 기준으로 리뷰할 때 사용합니다.
+
+## Rule Categories by Priority
+
+| Priority | Category | Impact | Prefix |
+|----------|----------|--------|--------|
+| 1 | Naming and Ownership | CRITICAL | `naming-` |
+| 2 | Class Composition and Wrapper Boundaries | HIGH | `composition-` |
+| 3 | Selectors and Nesting Boundaries | CRITICAL | `selector-` |
+| 4 | Values, Layout, and Interaction States | HIGH | `values-` |
+| 5 | File Organization and Guardrails | MEDIUM | `organization-` |
+
+## Quick Reference
+
+### 1. Naming and Ownership (CRITICAL)
+
+- `naming-use-scope-slug-element-modifier-syntax` - Name classes with explicit scope, slug, element, and modifier segments
+- `naming-name-elements-and-modifiers-by-role` - Name classes after UI role, not structure or spacing
+- `naming-preserve-route-slug-traceability` - Keep route slugs traceable to route hierarchy
+- `naming-keep-scope-slug-unique-per-owner` - Keep each `scope_slug` namespace owned by one route or component
+- `naming-separate-local-and-route-style-scopes` - Separate `loc_*` local styles from route-level `rt_*` styles
+
+### 2. Class Composition and Wrapper Boundaries (HIGH)
+
+- `composition-compose-classes-with-clsx` - Compose TSX classes with `clsx()`
+- `composition-keep-classes-single-purpose` - Give each class one visual responsibility
+- `composition-do-not-build-structural-variants-with-modifiers` - Reserve modifiers for state, not layout structure
+- `composition-style-ui-components-through-owned-wrappers` - Style `Ui*` components through owned wrappers
+- `composition-prefer-ui-wrapper-prop-types` - Prefer wrapper prop types over library-native prop types
+
+### 3. Selectors and Nesting Boundaries (CRITICAL)
+
+- `selector-keep-project-selectors-flat` - Keep project-owned selectors flat
+- `selector-use-pseudo-classes-for-dom-owned-states` - Use pseudo-classes for DOM-owned states
+- `selector-target-third-party-dom-from-owned-roots` - Target third-party DOM only from owned root classes
+- `selector-avoid-deep-descendant-dependencies` - Avoid deep descendant selector dependencies
+
+### 4. Values, Layout, and Interaction States (HIGH)
+
+- `values-tokenize-repeated-visual-values` - Tokenize repeated colors, spacing, type, and shadows
+- `values-always-provide-css-variable-fallbacks` - Always include fallbacks for CSS variables
+- `values-keep-layout-intent-explicit` - Keep layout intent and sticky/fixed context explicit
+- `values-separate-domain-state-modifiers-from-dom-interaction-states` - Separate app state modifiers from browser interaction states
+
+### 5. File Organization and Guardrails (MEDIUM)
+
+- `organization-keep-style-files-owned-by-one-component-or-route` - Keep each stylesheet owned by one route or component
+- `organization-review-banned-css-patterns-before-finishing` - Review banned selector and modifier patterns before finish
+
+## Use With
 - JSX 구조와 스타일 조합이 함께 바뀌면 `convention-react`를 함께 사용합니다.
 - route 레벨 스타일이나 route 로컬 스타일이 바뀌면 `convention-tanstack-route`를 함께 사용합니다.
+- helper, config, wrapper prop 타입이 함께 바뀌면 `convention-typescript`를 함께 사용합니다.
+- 브라우저 기반 스타일 회귀를 검증하면 `convention-playwright-test`를 함께 사용합니다.
 
-## 중점 확인 항목
-- 소유자 기반 네이밍
-- TSX 안의 클래스 조합 방식
-- 플랫한 selector 구조
-- 서드파티 DOM에 대한 wrapper 기반 스타일링
-- 토큰 및 CSS 변수 사용
+## How to Use
 
-## 리뷰 체크리스트
-- 클래스명이 소유자를 기준으로 추적 가능하게 지어졌는가
-- 구조 차이를 임의 modifier로 표현하지 않았는가
-- selector 깊이가 얕고 예측 가능한가
-- 서드파티 스타일링이 명시적인 wrapper 아래에서 제한되는가
-- 재사용되는 값은 토큰이나 변수로 관리되는가
+Read individual rule files for detailed explanations and code examples:
+
+```text
+rules/selector-target-third-party-dom-from-owned-roots.md
+rules/naming-use-scope-slug-element-modifier-syntax.md
+```
+
+Each rule file contains:
+- Brief explanation of why the rule matters
+- Incorrect CSS or TSX example with explanation
+- Correct CSS or TSX example with explanation
+- Guidance that can be applied directly during implementation or review
+
+## Full Compiled Document
+
+For the complete guide with all rules expanded: `./AGENTS.md`

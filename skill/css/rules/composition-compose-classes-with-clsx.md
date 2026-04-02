@@ -1,0 +1,33 @@
+---
+title: Compose Classes With `clsx()`
+impact: HIGH
+impactDescription: keeps TSX class composition readable when base classes and state modifiers need to be combined
+tags: clsx, tsx, className
+---
+
+## Compose Classes With `clsx()`
+
+**Impact: HIGH (keeps TSX class composition readable when base classes and state modifiers need to be combined)**
+
+TSX에서 클래스 조합은 `clsx()` 사용을 기본으로 합니다. 기본 element 클래스와 상태 modifier를 함께 읽기 쉽게 나열하고, 문자열 연결이나 중복 ternary로 `className`을 조립하지 않습니다.
+
+**Incorrect (문자열 연결로 클래스 조합을 숨김):**
+
+```tsx
+<button className={"rt_pctbi__listButton " + (isActive ? "rt_pctbi__listButton--active" : "")}>
+	저장
+</button>
+```
+
+**Correct (기본 클래스와 modifier를 `clsx()`로 조합):**
+
+```tsx
+<button
+	className={clsx(
+		"rt_pctbi__listButton",
+		isActive && "rt_pctbi__listButton--active",
+	)}
+>
+	저장
+</button>
+```

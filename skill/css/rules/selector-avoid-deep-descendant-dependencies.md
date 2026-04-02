@@ -1,0 +1,28 @@
+---
+title: Avoid Deep Descendant Selector Dependencies
+impact: HIGH
+impactDescription: keeps layout changes from breaking styling through long descendant chains
+tags: descendants, selector-depth, guardrails
+---
+
+## Avoid Deep Descendant Selector Dependencies
+
+**Impact: HIGH (keeps layout changes from breaking styling through long descendant chains)**
+
+깊은 후손 선택자 체인에 스타일을 걸지 않습니다. project-owned 스타일은 클래스 자체가 계약이 되어야 하며, `.a .b .c .d` 같은 의존성은 DOM 구조가 조금만 바뀌어도 쉽게 깨집니다.
+
+**Incorrect (깊은 후손 선택자 체인에 의존):**
+
+```css
+.rt_pctbi__layout .rt_pctbi__panel .rt_pctbi__detail .rt_pctbi__item {
+	padding: 8px;
+}
+```
+
+**Correct (대상 element 클래스에 직접 선언):**
+
+```css
+.rt_pctbi__item {
+	padding: 8px;
+}
+```
