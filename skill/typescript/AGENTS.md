@@ -105,7 +105,7 @@ config.env.google_api_key;
 
 **Impact: HIGH (keeps file names, symbols, and shape fields predictable across modules and runtime structures)**
 
-파일명은 `kebab-case`, 일반 변수와 함수는 `camelCase`, 타입은 `PascalCase`를 사용합니다. 공용 설정 객체 키와 enum-like 상수 키는 `snake_case`, state 키와 일반 객체 키, schema 키, 커스텀 타입 필드는 `camelCase`를 유지합니다.
+파일명은 `kebab-case`, 일반 변수와 함수는 `camelCase`, 타입은 `PascalCase`를 사용합니다. 공용 설정 객체 키와 enum-like 상수 객체 이름 및 그 키는 `snake_case`, state 키와 일반 객체 키, schema 키, 커스텀 타입 필드는 `camelCase`를 유지합니다.
 
 **Incorrect (파일명, 심볼명, 필드명이 제각각임):**
 
@@ -207,19 +207,23 @@ const auditResultSchema = z.object({
 
 미사용 매개변수도 생략하지 않고 `_` 접두사로 명시합니다. 이렇게 해야 callback 시그니처 계약을 유지하면서도, 현재 구현에서 의도적으로 쓰지 않는 값이라는 점이 드러납니다.
 
-**Incorrect (계약의 일부인 매개변수를 조용히 생략):**
+**Incorrect (계약의 일부인 callback 매개변수를 조용히 생략):**
 
 ```ts
-const createNoopLogger = (): void => {
-	// no-op
+type LogSink = (message: string, level: "info" | "error") => void;
+
+const noopLog: LogSink = () => {
+	// no-op sink
 };
 ```
 
-**Correct (미사용 매개변수를 `_`로 명시):**
+**Correct (계약은 유지하고 미사용 매개변수만 `_`로 표시):**
 
 ```ts
-const createNoopLogger = (_message: string): void => {
-	// no-op
+type LogSink = (message: string, level: "info" | "error") => void;
+
+const noopLog: LogSink = (_message, _level) => {
+	// no-op sink
 };
 ```
 
@@ -227,7 +231,7 @@ const createNoopLogger = (_message: string): void => {
 
 **Impact: CRITICAL (keeps callable contracts reusable and prevents local parameter annotations from fragmenting shared function types)**
 
-재사용 가능한 콜백이나 함수 타입이 있다면 매개변수 타입 선언보다 함수 변수 타입 선언을 우선합니다. 적절한 함수 타입이 없을 때만 매개변수에 직접 타입을 명시하고, 그렇지 않으면 callable contract를 별도로 선언해 재사용합니다.
+재사용 가능한 콜백이나 함수 타입이 있다면 매개변수 타입 선언보다 함수 변수 타입 선언을 우선합니다. 이미 존재하는 interface, object contract, framework alias를 먼저 재사용하고, 정말 필요한 경우에만 별도 callable contract를 선언합니다. 한 번만 쓰는 로컬 함수 때문에 함수 타입 alias를 늘리는 것은 지양합니다.
 
 **Incorrect (공유 가능한 함수 계약이 있는데 매개변수 타입만 사용):**
 
@@ -237,12 +241,14 @@ const formatState = (state: Record<string, unknown>): string => {
 };
 ```
 
-**Correct (함수 변수 타입 선언을 우선):**
+**Correct (기존 계약을 재사용해 함수 변수 타입을 고정):**
 
 ```ts
-type FormatState = (state: Record<string, unknown>) => string;
+interface WorkflowFormatters {
+	formatState: (state: Record<string, unknown>) => string;
+}
 
-const formatState: FormatState = (state) => {
+const formatState: WorkflowFormatters["formatState"] = (state) => {
 	return JSON.stringify(state);
 };
 ```
@@ -252,6 +258,10 @@ type NormalizeRequest = (request: string) => string;
 
 const normalizeRequest: NormalizeRequest = (request) => {
 	return request.trim();
+};
+
+const normalizeFallbackRequest: NormalizeRequest = (request) => {
+	return request || "default";
 };
 ```
 
@@ -389,7 +399,7 @@ type AuditStatus = (typeof audit_status)[keyof typeof audit_status];
 
 **Impact: HIGH (keeps long function signatures readable and makes grouped inputs easier to extend without positional confusion)**
 
-매개변수가 3개 이상이거나 같은 계열 값이 묶여 전달되면 단일 객체 매개변수로 묶고, 함수 시그니처에서 바로 구조분해하지 않습니다. 객체 매개변수 타입은 파일 최상단에 선언하고, 함수 본문 첫 줄에서 구조분해해 사용합니다.
+매개변수가 3개 이상이거나 같은 계열 값이 묶여 전달되면 단일 객체 매개변수로 묶고, 함수 시그니처에서 바로 구조분해하지 않습니다. 객체 매개변수 타입은 파일 최상단에 선언하고, 함수 본문 첫 줄에서 구조분해해 사용합니다. 구조분해 줄이 길어 formatter 예외가 꼭 필요할 때도 함수 본문 안에서 처리합니다.
 
 **Incorrect (시그니처에서 바로 구조분해):**
 
@@ -399,16 +409,14 @@ const buildPlanningPrompt = ({request, repoPath}: BuildPlanningPromptArgs): stri
 };
 ```
 
-**Correct (객체 전체를 받고 본문에서 구조분해):**
+**Correct (객체 전체를 받고 본문에서 구조분해하며, 길면 formatter 예외를 함수 본문 안에 둠):**
 
 ```ts
 const buildPlanningPrompt = (args: BuildPlanningPromptArgs): string => {
-	const {request, repoPath} = args;
-	return `${request} ${repoPath}`;
+	// biome-ignore format: grouped args destructuring is easier to scan on one line in this helper.
+	const {request, repoPath, taskCategory, projectArea, riskLevel, selectedRuleRefs} = args;
+	return `${request} ${repoPath} ${taskCategory} ${projectArea} ${riskLevel} ${selectedRuleRefs.join(",")}`;
 };
-
-// biome-ignore format: grouped args destructuring is easier to scan on one line in this helper.
-const {request, repoPath, taskCategory, projectArea, riskLevel, selectedRuleRefs} = args;
 ```
 
 ## 4. Absence and Fallback Handling
@@ -468,13 +476,13 @@ if (!normalizedToken) {
 
 **Impact: MEDIUM-HIGH (makes important boundaries searchable and explainable before readers inspect the implementation body)**
 
-외부 연동 함수, 주요 순수 함수, 재사용 함수, 도메인 규칙 함수, 커스텀 `type`/`interface`, 포맷 예외를 둔 함수 선언에는 예외 없이 선언 헤더 JSDoc을 작성합니다. 중요한 경계가 파일 검색에서 바로 보이도록 하는 것이 목적입니다.
+외부 연동 함수, 주요 순수 함수, 재사용 함수, 도메인 규칙 함수, 커스텀 `type`/`interface`, 포맷 예외를 둔 함수 선언에는 예외 없이 선언 헤더 JSDoc을 작성합니다. 중요한 경계가 파일 검색에서 바로 보이도록 하는 것이 목적입니다. annotation 종류는 더 구체적인 규칙을 따라 `@summary`, `@description`, `@helper`, `@tool` 중 하나를 고릅니다.
 
 **Incorrect (주요 선언에 헤더 설명이 없음):**
 
 ```ts
-export const loadWorkflowSource = async (path: string): Promise<string> => {
-	return await Promise.resolve(path);
+export const normalizeRuleRefs = (ruleRefs: string[]): string[] => {
+	return Array.from(new Set(ruleRefs)).sort();
 };
 ```
 
@@ -482,10 +490,10 @@ export const loadWorkflowSource = async (path: string): Promise<string> => {
 
 ```ts
 /**
- * @description 워크플로 원문 파일 로드
+ * @summary 중복 제거 후 규칙 경로 정렬
  */
-export const loadWorkflowSource = async (path: string): Promise<string> => {
-	return await Promise.resolve(path);
+export const normalizeRuleRefs = (ruleRefs: string[]): string[] => {
+	return Array.from(new Set(ruleRefs)).sort();
 };
 ```
 
@@ -493,7 +501,7 @@ export const loadWorkflowSource = async (path: string): Promise<string> => {
 
 **Impact: MEDIUM-HIGH (marks functions that cross filesystem, network, environment, or SDK boundaries as integration points)**
 
-파일 시스템, 네트워크, 환경 변수, 외부 SDK 호출 함수는 `@description`을 사용합니다. 이 annotation은 순수 helper가 아니라 외부 실행 경계를 넘는 함수라는 점을 분명히 드러냅니다.
+파일 시스템, 네트워크, 환경 변수, 외부 SDK 호출 함수는 `@description`을 사용합니다. 이 annotation은 순수 helper가 아니라 외부 실행 경계를 넘는 함수라는 점을 분명히 드러냅니다. 단순히 중요하다는 이유만으로 `@description`을 쓰지 말고, 실제 외부 연동 경계일 때만 사용합니다.
 
 **Incorrect (외부 연동 함수를 일반 helper처럼 표시):**
 

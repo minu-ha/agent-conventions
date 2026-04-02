@@ -13,7 +13,7 @@ metadata:
 이 skill은 React, NestJS, TanStack Route, Playwright Test와 함께 로드하는 공통 TypeScript companion skill로도 사용됩니다.
 
 ## 사용할 때
-- 일반 TypeScript 모듈, 유틸 파일, 설정 파일, React 전용이 아닌 `*.ts` 파일을 만들거나 수정할 때 사용합니다.
+- 일반 TypeScript 모듈, 유틸 파일, 설정 파일, TSX를 포함한 TypeScript 코드를 만들거나 수정할 때 사용합니다.
 - import 구조, 타입 재사용, helper 분리, 옵셔널 값 처리, 주석 규칙이 중요한 변경에 사용합니다.
 - TypeScript house style 기준으로 코드나 문서를 리뷰할 때 사용합니다.
 
@@ -71,9 +71,9 @@ metadata:
 
 ## 함께 쓰기
 - `convention-react`, `convention-nestjs`, `convention-tanstack-route`, `convention-playwright-test`와 함께 로드하면 공통 TypeScript 규칙을 자연스럽게 보완할 수 있습니다.
+- TSX 파일도 기본적으로 이 skill 대상이며, React 문맥이면 `convention-react`를 함께 사용합니다.
 - React, TanStack Route, NestJS 같은 프레임워크 영역이라면 해당 전용 skill을 함께 사용합니다.
 - route helper나 search schema처럼 router 경계가 함께 바뀌면 `convention-tanstack-route`를 함께 사용합니다.
-- TSX 파일과 React component 경계가 함께 바뀌면 `convention-react`를 함께 사용합니다.
 - 타입/주석 규칙을 테스트나 fixture에도 반영하면 `convention-playwright-test` 같은 테스트 전용 skill을 함께 사용합니다.
 
 ## 사용하는 방법
