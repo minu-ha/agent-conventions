@@ -9,7 +9,7 @@ metadata:
 # Playwright Test 컨벤션
 
 에이전트 협업 팀을 위한 Playwright 브라우저 테스트 컨벤션 모음입니다. 현재 이 가이드는 7개 카테고리의 25개 local 규칙으로 구성되어 있습니다.  
-테스트 레벨 경계, spec 배치, setup 가시성, 데이터 고립, locator 전략, waiting 규칙을 `rules/*.md`와 compiled `AGENTS.md`로 관리합니다.  
+테스트 레벨 경계, spec 배치, setup 가시성, 데이터 고립, locator 전략, waiting 규칙을 [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`와 compiled [AGENTS.md](./AGENTS.md)로 관리합니다.  
 compiled guide에는 fixture, seed helper, support type에 공통으로 적용되는 `convention-typescript` base rule이 함께 포함됩니다.
 
 ## 사용할 때
@@ -19,15 +19,27 @@ compiled guide에는 fixture, seed helper, support type에 공통으로 적용�
 
 ## 우선순위별 규칙 카테고리
 
-| 우선순위 | 카테고리 | 영향도 | Prefix |
-|----------|----------|--------|--------|
-| 1 | Strategy and Test Levels | CRITICAL | `strategy-` |
-| 2 | File Placement and Shared Support | HIGH | `naming-` |
-| 3 | General Authoring and Data Isolation | HIGH | `authoring-` |
-| 4 | Integration Boundaries and Mocking | CRITICAL | `integration-` |
-| 5 | E2E Boundaries and Real-system Control | CRITICAL | `e2e-` |
-| 6 | Locators, Assertions, and Waiting | HIGH | `locator-` |
-| 7 | Guardrails and Review Checks | MEDIUM | `guardrails-` |
+1. Strategy and Test Levels
+   영향도: CRITICAL
+   Prefix: `strategy-`
+2. File Placement and Shared Support
+   영향도: HIGH
+   Prefix: `naming-`
+3. General Authoring and Data Isolation
+   영향도: HIGH
+   Prefix: `authoring-`
+4. Integration Boundaries and Mocking
+   영향도: CRITICAL
+   Prefix: `integration-`
+5. E2E Boundaries and Real-system Control
+   영향도: CRITICAL
+   Prefix: `e2e-`
+6. Locators, Assertions, and Waiting
+   영향도: HIGH
+   Prefix: `locator-`
+7. Guardrails and Review Checks
+   영향도: MEDIUM
+   Prefix: `guardrails-`
 
 ## 빠른 참조
 
@@ -87,10 +99,8 @@ compiled guide에는 fixture, seed helper, support type에 공통으로 적용�
 
 자세한 설명과 코드 예시는 개별 rule 파일을 읽으면 됩니다.
 
-```text
-rules/strategy-never-mix-integration-and-e2e-in-one-file.md
-rules/locator-prefer-accessible-playwright-locators.md
-```
+- [rules/strategy-never-mix-integration-and-e2e-in-one-file.md](./rules/strategy-never-mix-integration-and-e2e-in-one-file.md)
+- [rules/locator-prefer-accessible-playwright-locators.md](./rules/locator-prefer-accessible-playwright-locators.md)
 
 각 rule 파일에는 아래 내용이 들어 있습니다.
 - 규칙이 왜 중요한지에 대한 짧은 설명
@@ -100,4 +110,4 @@ rules/locator-prefer-accessible-playwright-locators.md
 
 ## 전체 compiled 문서
 
-모든 규칙이 펼쳐진 전체 가이드는 `./AGENTS.md`에서 확인할 수 있습니다.
+모든 규칙이 펼쳐진 전체 가이드는 [AGENTS.md](./AGENTS.md)에서 확인할 수 있습니다.

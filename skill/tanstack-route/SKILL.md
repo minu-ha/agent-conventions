@@ -9,7 +9,7 @@ metadata:
 # TanStack Route 컨벤션
 
 에이전트 협업 팀을 위한 TanStack Router 컨벤션 모음입니다. 현재 이 가이드는 6개 카테고리의 24개 local 규칙으로 구성되어 있습니다.  
-route 구조, 네이밍, router boundary 선언, route-local 책임, generated artifact, 반복 가능한 route 추가 워크플로우를 `rules/*.md`와 compiled `AGENTS.md`로 관리합니다.  
+route 구조, 네이밍, router boundary 선언, route-local 책임, generated artifact, 반복 가능한 route 추가 워크플로우를 [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`와 compiled [AGENTS.md](./AGENTS.md)로 관리합니다.  
 compiled guide에는 route helper와 search schema에 공통으로 적용되는 `convention-typescript` base rule이 함께 포함됩니다.
 
 ## 사용할 때
@@ -19,14 +19,24 @@ compiled guide에는 route helper와 search schema에 공통으로 적용되는 
 
 ## 우선순위별 규칙 카테고리
 
-| 우선순위 | 카테고리 | 영향도 | Prefix |
-|----------|----------|--------|--------|
-| 1 | Route Structure and Grouping | CRITICAL | `structure-` |
-| 2 | File Naming and Route Assets | HIGH | `naming-` |
-| 3 | Route Definition and Navigation Boundaries | CRITICAL | `declaration-` |
-| 4 | Route-local Ownership and Responsibilities | HIGH | `responsibility-` |
-| 5 | Styles and Generated Artifacts | MEDIUM-HIGH | `styling-` |
-| 6 | Workflow and Verification | MEDIUM | `workflow-` |
+1. Route Structure and Grouping
+   영향도: CRITICAL
+   Prefix: `structure-`
+2. File Naming and Route Assets
+   영향도: HIGH
+   Prefix: `naming-`
+3. Route Definition and Navigation Boundaries
+   영향도: CRITICAL
+   Prefix: `declaration-`
+4. Route-local Ownership and Responsibilities
+   영향도: HIGH
+   Prefix: `responsibility-`
+5. Styles and Generated Artifacts
+   영향도: MEDIUM-HIGH
+   Prefix: `styling-`
+6. Workflow and Verification
+   영향도: MEDIUM
+   Prefix: `workflow-`
 
 ## 빠른 참조
 
@@ -84,10 +94,8 @@ compiled guide에는 route helper와 search schema에 공통으로 적용되는 
 
 자세한 설명과 코드 예시는 개별 rule 파일을 읽으면 됩니다.
 
-```text
-rules/declaration-validate-search-before-using-route-search.md
-rules/structure-split-top-level-route-groups-by-layout-shell.md
-```
+- [rules/declaration-validate-search-before-using-route-search.md](./rules/declaration-validate-search-before-using-route-search.md)
+- [rules/structure-split-top-level-route-groups-by-layout-shell.md](./rules/structure-split-top-level-route-groups-by-layout-shell.md)
 
 각 rule 파일에는 아래 내용이 들어 있습니다.
 - 규칙이 왜 중요한지에 대한 짧은 설명
@@ -97,4 +105,4 @@ rules/structure-split-top-level-route-groups-by-layout-shell.md
 
 ## 전체 compiled 문서
 
-모든 규칙이 펼쳐진 전체 가이드는 `./AGENTS.md`에서 확인할 수 있습니다.
+모든 규칙이 펼쳐진 전체 가이드는 [AGENTS.md](./AGENTS.md)에서 확인할 수 있습니다.

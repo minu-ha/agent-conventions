@@ -14,22 +14,28 @@ tags: methods, async, return-types
 **Incorrect (반환 계약이 불분명하거나 관례가 섞임):**
 
 ```ts
-findOneOrThrow = async (id: number) => {
-	return this.prisma.user.findUnique({where: {id}});
-};
+@Injectable()
+export class UsersService {
+	findOneOrThrow = async (id: number) => {
+		return this.prisma.user.findUnique({where: {id}});
+	};
+}
 ```
 
 **Correct (NestJS 메서드 스타일과 명시적 반환 타입 사용):**
 
 ```ts
-async findOneOrThrow(id: number): Promise<SafeUser> {
-	const user = await this.prisma.user.findUnique({where: {id}});
+@Injectable()
+export class UsersService {
+	async findOneOrThrow(id: number): Promise<SafeUser> {
+		const user = await this.prisma.user.findUnique({where: {id}});
 
-	if (!user) {
-		throw new NotFoundException(`User ${id} not found`);
+		if (!user) {
+			throw new NotFoundException(`User ${id} not found`);
+		}
+
+		return user;
 	}
-
-	return user;
 }
 
 export const buildPaginationMeta = (total: number, params: PaginationParams) => {

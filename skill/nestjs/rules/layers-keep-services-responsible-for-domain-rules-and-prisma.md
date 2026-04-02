@@ -14,13 +14,18 @@ Service는 비즈니스 로직, 도메인 규칙, 트랜잭션 조율을 담당�
 **Incorrect (도메인 규칙이 Controller나 외부 레이어에 흩어짐):**
 
 ```ts
-@Post()
-async create(@Body() dto: CreateUserDto) {
-	if (await this.prisma.user.findUnique({where: {email: dto.email}})) {
-		throw new ConflictException();
-	}
+@Controller("users")
+export class UsersController {
+	constructor(private readonly prisma: PrismaService) {}
 
-	return this.prisma.user.create({data: dto});
+	@Post()
+	async create(@Body() dto: CreateUserDto) {
+		if (await this.prisma.user.findUnique({where: {email: dto.email}})) {
+			throw new ConflictException();
+		}
+
+		return this.prisma.user.create({data: dto});
+	}
 }
 ```
 

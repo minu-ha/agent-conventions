@@ -14,9 +14,14 @@ tags: review, guardrails, banned-patterns
 **Incorrect (금지 패턴을 남긴 채 마무리):**
 
 ```ts
-@Post()
-async create(@Body() dto: CreateUserDto) {
-	return this.prisma.user.create({data: dto});
+@Controller("users")
+export class UsersController {
+	constructor(private readonly prisma: PrismaService) {}
+
+	@Post()
+	async create(@Body() dto: CreateUserDto) {
+		return this.prisma.user.create({data: dto});
+	}
 }
 
 const userName = user?.name ?? "";
@@ -26,9 +31,14 @@ throw new NotFoundException("Not found");
 **Correct (레이어, 결측, 예외 맥락을 명시적으로 유지):**
 
 ```ts
-@Post()
-async create(@Body() dto: CreateUserDto) {
-	return this.usersService.create(dto);
+@Controller("users")
+export class UsersController {
+	constructor(private readonly usersService: UsersService) {}
+
+	@Post()
+	async create(@Body() dto: CreateUserDto) {
+		return this.usersService.create(dto);
+	}
 }
 
 if (!user) {

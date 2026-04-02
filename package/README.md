@@ -18,8 +18,9 @@ Structured skill의 compile, validate, test, typecheck 흐름을 이 패키지�
 - `npm run test` - Run regression tests for CLI behavior, documentation annotations, and script wiring.
 
 If `metadata.json` declares an `extends` array, build and validate resolve those base skills
-recursively. The child skill keeps its own title and abstract, while the compiled `AGENTS.md`
-includes inherited base sections ahead of the local overlay sections.
+recursively. The child skill keeps its own title and abstract, while the compiled guide
+such as [React AGENTS.md](../skill/react/AGENTS.md) includes inherited base
+sections ahead of the local overlay sections.
 
 ## Per-Skill Aliases
 

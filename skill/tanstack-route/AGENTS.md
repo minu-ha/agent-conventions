@@ -40,43 +40,43 @@
 3. [TypeScript Convention Base - Functions and Helper Boundaries](#3-typescript-convention-base---functions-and-helper-boundaries) — **HIGH**
     - 3.1 [Avoid Imperative Assembly in Wide Scopes](#31-avoid-imperative-assembly-in-wide-scopes)
     - 3.2 [Extract Helpers Only When the Boundary Is Real](#32-extract-helpers-only-when-the-boundary-is-real)
-    - 3.3 [Replace `enum` With `as const` Objects](#33-replace-enum-with-as-const-objects)
+    - 3.3 [Replace enum With as const Objects](#33-replace-enum-with-as-const-objects)
     - 3.4 [Use Named Object Params for Complex Signatures](#34-use-named-object-params-for-complex-signatures)
 4. [TypeScript Convention Base - Absence and Fallback Handling](#4-typescript-convention-base---absence-and-fallback-handling) — **HIGH**
     - 4.1 [Expose Optional Values Instead of Silent Fallbacks](#41-expose-optional-values-instead-of-silent-fallbacks)
 5. [TypeScript Convention Base - JSDoc and Comment Conventions](#5-typescript-convention-base---jsdoc-and-comment-conventions) — **MEDIUM-HIGH**
     - 5.1 [Keep Inline Comments for Constraints and Caveats Only](#51-keep-inline-comments-for-constraints-and-caveats-only)
     - 5.2 [Require Header JSDoc on Key Declarations](#52-require-header-jsdoc-on-key-declarations)
-    - 5.3 [Use `@description` for External Integration Functions](#53-use-description-for-external-integration-functions)
-    - 5.4 [Use `@helper` for Reusable Pure Helper Functions](#54-use-helper-for-reusable-pure-helper-functions)
-    - 5.5 [Use `@tool` for Model-callable Tool Factories](#55-use-tool-for-model-callable-tool-factories)
+    - 5.3 [Use @description for External Integration Functions](#53-use-description-for-external-integration-functions)
+    - 5.4 [Use @helper for Reusable Pure Helper Functions](#54-use-helper-for-reusable-pure-helper-functions)
+    - 5.5 [Use @tool for Model-callable Tool Factories](#55-use-tool-for-model-callable-tool-factories)
     - 5.6 [Write Concise Korean Comments About Purpose and Constraints](#56-write-concise-korean-comments-about-purpose-and-constraints)
 6. [TypeScript Convention Base - Guardrails and Review Checks](#6-typescript-convention-base---guardrails-and-review-checks) — **MEDIUM**
     - 6.1 [Review Banned TypeScript Shortcuts Before Finishing](#61-review-banned-typescript-shortcuts-before-finishing)
 7. [Route Structure and Grouping](#7-route-structure-and-grouping) — **CRITICAL**
     - 7.1 [Avoid Folder-only and Flat-only Route Trees](#71-avoid-folder-only-and-flat-only-route-trees)
-    - 7.2 [Keep Root Responsibilities in `__root.tsx`](#72-keep-root-responsibilities-in-roottsx)
+    - 7.2 [Keep Root Responsibilities in root.tsx](#72-keep-root-responsibilities-in-roottsx)
     - 7.3 [Keep Shared-layout Screens Under One Parent Layout](#73-keep-shared-layout-screens-under-one-parent-layout)
     - 7.4 [Split Top-level Route Groups by Layout Shell](#74-split-top-level-route-groups-by-layout-shell)
     - 7.5 [Use Parentheses Folders for Pathless Route Groups](#75-use-parentheses-folders-for-pathless-route-groups)
 8. [File Naming and Route Assets](#8-file-naming-and-route-assets) — **HIGH**
-    - 8.1 [Create Route-local `*.ts` Helper Files Early](#81-create-route-local-ts-helper-files-early)
+    - 8.1 [Create Route-local *.ts Helper Files Early](#81-create-route-local-ts-helper-files-early)
     - 8.2 [Name Top-level Groups by Shell Meaning](#82-name-top-level-groups-by-shell-meaning)
     - 8.3 [Prepare the Basic Route File Set](#83-prepare-the-basic-route-file-set)
     - 8.4 [Start Child Route Sets With Parentheses Folders](#84-start-child-route-sets-with-parentheses-folders)
     - 8.5 [Use Domain-specific Dynamic Segment Names](#85-use-domain-specific-dynamic-segment-names)
     - 8.6 [Use Searchable Feature Route File Names](#86-use-searchable-feature-route-file-names)
 9. [Route Definition and Navigation Boundaries](#9-route-definition-and-navigation-boundaries) — **CRITICAL**
-    - 9.1 [Export `Route` at the Top of the File](#91-export-route-at-the-top-of-the-file)
+    - 9.1 [Export Route at the Top of the File](#91-export-route-at-the-top-of-the-file)
     - 9.2 [Match Route Paths to File Structure](#92-match-route-paths-to-file-structure)
-    - 9.3 [Read Params and Search From the Local `Route`](#93-read-params-and-search-from-the-local-route)
-    - 9.4 [Redirect Empty Entry Routes in `beforeLoad`](#94-redirect-empty-entry-routes-in-beforeload)
-    - 9.5 [Run Auth and Permission Guards in `beforeLoad`](#95-run-auth-and-permission-guards-in-beforeload)
+    - 9.3 [Read Params and Search From the Local Route](#93-read-params-and-search-from-the-local-route)
+    - 9.4 [Redirect Empty Entry Routes in beforeLoad](#94-redirect-empty-entry-routes-in-beforeload)
+    - 9.5 [Run Auth and Permission Guards in beforeLoad](#95-run-auth-and-permission-guards-in-beforeload)
     - 9.6 [Validate Search Before Using Route Search](#96-validate-search-before-using-route-search)
 10. [Route-local Ownership and Responsibilities](#10-route-local-ownership-and-responsibilities) — **HIGH**
-    - 10.1 [Keep `*.index.tsx` Files Focused on Screen Flow](#101-keep-indextsx-files-focused-on-screen-flow)
-    - 10.2 [Limit `*.layout.tsx` Files to Shell Concerns](#102-limit-layouttsx-files-to-shell-concerns)
-    - 10.3 [Place Route-only Modules in `-local/`](#103-place-route-only-modules-in--local)
+    - 10.1 [Keep *.index.tsx Files Focused on Screen Flow](#101-keep-indextsx-files-focused-on-screen-flow)
+    - 10.2 [Limit *.layout.tsx Files to Shell Concerns](#102-limit-layouttsx-files-to-shell-concerns)
+    - 10.3 [Place Route-only Modules in -local/](#103-place-route-only-modules-in--local)
 11. [Styles and Generated Artifacts](#11-styles-and-generated-artifacts) — **MEDIUM-HIGH**
     - 11.1 [Keep Route CSS at Route Scope](#111-keep-route-css-at-route-scope)
     - 11.2 [Never Edit Generated Route Tree Files](#112-never-edit-generated-route-tree-files)
@@ -395,7 +395,7 @@ export const normalizeRuleRefs = (ruleRefs: string[]): string[] => {
 };
 ```
 
-### 3.3 Replace `enum` With `as const` Objects
+### 3.3 Replace enum With as const Objects
 
 **Impact: MEDIUM-HIGH (keeps runtime values explicit and type extraction lightweight without introducing enum-specific behavior)**
 
@@ -527,7 +527,7 @@ export const loadWorkflowSource = async (path: string): Promise<string> => {
 };
 ```
 
-### 5.3 Use `@description` for External Integration Functions
+### 5.3 Use @description for External Integration Functions
 
 **Impact: MEDIUM-HIGH (marks functions that cross filesystem, network, environment, or SDK boundaries as integration points)**
 
@@ -555,7 +555,7 @@ export const loadWorkflowSource = async (path: string): Promise<string> => {
 };
 ```
 
-### 5.4 Use `@helper` for Reusable Pure Helper Functions
+### 5.4 Use @helper for Reusable Pure Helper Functions
 
 **Impact: MEDIUM-HIGH (distinguishes reusable pure support logic from route, node, or integration boundaries)**
 
@@ -583,7 +583,7 @@ const buildAuditFailureMessage = (count: number): string => {
 };
 ```
 
-### 5.5 Use `@tool` for Model-callable Tool Factories
+### 5.5 Use @tool for Model-callable Tool Factories
 
 **Impact: MEDIUM-HIGH (makes tool-creation boundaries explicit so model-callable execution surfaces are not mistaken for ordinary helpers)**
 
@@ -711,7 +711,7 @@ Bad: 플랫 파일명만으로 표현
         members.index.tsx
 ```
 
-### 7.2 Keep Root Responsibilities in `__root.tsx`
+### 7.2 Keep Root Responsibilities in root.tsx
 
 **Impact: HIGH (prevents app-wide route concerns from mixing with feature-specific shells)**
 
@@ -835,7 +835,7 @@ function Root() {
 
 검색 가능한 entry 파일명, 의미 있는 segment 이름, 예측 가능한 route asset 세트는 route를 더 쉽게 찾고 유지보수하게 만듭니다.
 
-### 8.1 Create Route-local `*.ts` Helper Files Early
+### 8.1 Create Route-local *.ts Helper Files Early
 
 **Impact: MEDIUM-HIGH (keeps route files from accumulating normalization and mapping logic before boundaries blur)**
 
@@ -991,7 +991,7 @@ filters.{-$tab}.tsx
 
 route 선언, redirect, guard, search 검증은 화면 안으로 새지 않고 router boundary에 명시적으로 유지되어야 합니다.
 
-### 9.1 Export `Route` at the Top of the File
+### 9.1 Export Route at the Top of the File
 
 **Impact: HIGH (keeps the router contract obvious before the screen implementation details begin)**
 
@@ -1041,12 +1041,12 @@ export const Route = createFileRoute("/settings")({
 **Correct (경로 문자열이 실제 파일 구조를 반영):**
 
 ```tsx
-export const Route = createFileRoute("/app")({...});
-export const Route = createFileRoute("/app/")({...});
-export const Route = createFileRoute("/app/(settings)/settings/")({...});
+createFileRoute("/app")({...});
+createFileRoute("/app/")({...});
+createFileRoute("/app/(settings)/settings/")({...});
 ```
 
-### 9.3 Read Params and Search From the Local `Route`
+### 9.3 Read Params and Search From the Local Route
 
 **Impact: MEDIUM-HIGH (keeps param and search access aligned with the route file that owns the contract)**
 
@@ -1068,7 +1068,7 @@ const params = useParams();
 const search = useSearch();
 ```
 
-### 9.4 Redirect Empty Entry Routes in `beforeLoad`
+### 9.4 Redirect Empty Entry Routes in beforeLoad
 
 **Impact: HIGH (moves entry redirects to the router boundary before screens mount and side effects begin)**
 
@@ -1098,7 +1098,7 @@ export const Route = createFileRoute("/app/(settings)/settings/")({
 });
 ```
 
-### 9.5 Run Auth and Permission Guards in `beforeLoad`
+### 9.5 Run Auth and Permission Guards in beforeLoad
 
 **Impact: CRITICAL (keeps access control in router boundaries instead of after-the-fact screen navigation)**
 
@@ -1162,7 +1162,7 @@ export const Route = createFileRoute("/app/(users)/users/")({
 
 `layout`, `index`, `-local` 파일은 각각 좁은 책임만 가져야 route flow가 보이고 책임이 흐려지지 않습니다.
 
-### 10.1 Keep `*.index.tsx` Files Focused on Screen Flow
+### 10.1 Keep *.index.tsx Files Focused on Screen Flow
 
 **Impact: HIGH (preserves a readable route entry where screen assembly, hooks, and handlers stay visible)**
 
@@ -1200,7 +1200,7 @@ function MembersIndex() {
 }
 ```
 
-### 10.2 Limit `*.layout.tsx` Files to Shell Concerns
+### 10.2 Limit *.layout.tsx Files to Shell Concerns
 
 **Impact: HIGH (prevents parent route shells from absorbing leaf-screen data and form logic)**
 
@@ -1229,7 +1229,7 @@ function AppLayout() {
 }
 ```
 
-### 10.3 Place Route-only Modules in `-local/`
+### 10.3 Place Route-only Modules in -local/
 
 **Impact: HIGH (keeps route-scoped UI and helpers close to the route until their contracts are stable)**
 

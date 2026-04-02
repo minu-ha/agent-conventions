@@ -19,8 +19,8 @@ description: Spring Boot 기반 백엔드 개발 시 일관된 코드 스타일,
 
 ## 함께 읽을 것
 
-- 상세 규칙은 `./springboot.md`를 읽습니다.
-- API 설계 규칙은 `./api.md`를 참고합니다.
+- 상세 규칙은 [springboot.md](./springboot.md)를 읽습니다.
+- API 설계 규칙은 [api.md](./api.md)를 참고합니다.
 
 ---
 

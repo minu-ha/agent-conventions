@@ -274,9 +274,9 @@ const buildSettingsRedirect = (tab: string) => {
 - `layout` route는 보통 끝 슬래시 없이, `index` route는 끝 슬래시가 있는 형태를 사용한다.
 
 ```ts
-export const Route = createFileRoute("/app")({...});
-export const Route = createFileRoute("/app/")({...});
-export const Route = createFileRoute("/app/(settings)/settings/")({...});
+createFileRoute("/app")({...});
+createFileRoute("/app/")({...});
+createFileRoute("/app/(settings)/settings/")({...});
 ```
 
 ### 5.3 기본 진입 리다이렉트

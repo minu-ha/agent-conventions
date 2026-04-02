@@ -14,18 +14,24 @@ Service public 메서드, 외부 API 호출 블록, NestJS 생명주기 훅, 커
 **Incorrect (핵심 서비스 메서드에 헤더 설명이 없음):**
 
 ```ts
-async findOneOrThrow(id: number): Promise<SafeUser> {
-	// ...
+@Injectable()
+export class UsersService {
+	async findOneOrThrow(id: number): Promise<SafeUser> {
+		// ...
+	}
 }
 ```
 
 **Correct (핵심 경계 선언에 JSDoc을 작성):**
 
 ```ts
-/**
- * @summary 사용자 단건 조회 - 미존재 시 NotFoundException 발생
- */
-async findOneOrThrow(id: number): Promise<SafeUser> {
-	// ...
+@Injectable()
+export class UsersService {
+	/**
+	 * @summary 사용자 단건 조회 - 미존재 시 NotFoundException 발생
+	 */
+	async findOneOrThrow(id: number): Promise<SafeUser> {
+		// ...
+	}
 }
 ```

@@ -23,7 +23,7 @@ export const Route = createFileRoute("/settings")({
 **Correct (경로 문자열이 실제 파일 구조를 반영):**
 
 ```tsx
-export const Route = createFileRoute("/app")({...});
-export const Route = createFileRoute("/app/")({...});
-export const Route = createFileRoute("/app/(settings)/settings/")({...});
+createFileRoute("/app")({...});
+createFileRoute("/app/")({...});
+createFileRoute("/app/(settings)/settings/")({...});
 ```

@@ -15,9 +15,17 @@ tags: files, ownership, comments
 
 ```css
 /* entries.css */
-.rt_entries__list { ... }
-.loc_mecf__root { ... }
-.ui_button__root { ... }
+.rt_entries__list {
+	display: grid;
+}
+
+.loc_mecf__root {
+	display: flex;
+}
+
+.ui_button__root {
+	inline-size: 100%;
+}
 ```
 
 **Correct (한 파일당 한 소유자 범위를 유지하고 필요시 섹션 주석을 둠):**

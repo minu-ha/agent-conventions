@@ -14,17 +14,27 @@ tags: dependencies, layering, services
 **Incorrect (Controller가 Prisma에 직접 접근해 서비스 경계를 우회):**
 
 ```ts
-@Post()
-async create(@Body() dto: CreateUserDto) {
-	return this.prisma.user.create({data: dto});
+@Controller("users")
+export class UsersController {
+	constructor(private readonly prisma: PrismaService) {}
+
+	@Post()
+	async create(@Body() dto: CreateUserDto) {
+		return this.prisma.user.create({data: dto});
+	}
 }
 ```
 
 **Correct (Controller에서 Service를 통해 한 방향으로 흐름 유지):**
 
 ```ts
-@Post()
-async create(@Body() dto: CreateUserDto) {
-	return this.usersService.create(dto);
+@Controller("users")
+export class UsersController {
+	constructor(private readonly usersService: UsersService) {}
+
+	@Post()
+	async create(@Body() dto: CreateUserDto) {
+		return this.usersService.create(dto);
+	}
 }
 ```

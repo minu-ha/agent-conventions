@@ -9,7 +9,7 @@ metadata:
 # React 컨벤션
 
 에이전트 협업 팀을 위한 React 코딩 컨벤션 모음입니다. 현재 이 가이드는 7개 카테고리의 29개 local 규칙으로 구성되어 있습니다.  
-공용 컴포넌트 소유 경계, route-local 분리, React 계약에 맞는 handler/prop 시그니처, 화면 흐름, state 오리진, React 경계 문서화 규칙을 `rules/*.md`와 compiled `AGENTS.md`로 관리합니다.  
+공용 컴포넌트 소유 경계, route-local 분리, React 계약에 맞는 handler/prop 시그니처, 화면 흐름, state 오리진, React 경계 문서화 규칙을 [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`와 compiled [AGENTS.md](./AGENTS.md)로 관리합니다.  
 compiled guide에는 `convention-typescript` base rule이 함께 포함됩니다.
 
 ## 사용할 때
@@ -94,10 +94,8 @@ compiled guide에는 `convention-typescript` base rule이 함께 포함됩니다
 
 자세한 설명과 코드 예시는 개별 rule 파일을 읽으면 됩니다.
 
-```text
-rules/state-shape-query-data-with-select.md
-rules/docs-require-jsdoc-on-key-declarations.md
-```
+- [rules/state-shape-query-data-with-select.md](./rules/state-shape-query-data-with-select.md)
+- [rules/docs-require-jsdoc-on-key-declarations.md](./rules/docs-require-jsdoc-on-key-declarations.md)
 
 각 rule 파일에는 아래 내용이 들어 있습니다.
 
@@ -108,4 +106,4 @@ rules/docs-require-jsdoc-on-key-declarations.md
 
 ## 전체 compiled 문서
 
-모든 규칙이 펼쳐진 전체 가이드는 `./AGENTS.md`에서 확인할 수 있습니다.
+모든 규칙이 펼쳐진 전체 가이드는 [AGENTS.md](./AGENTS.md)에서 확인할 수 있습니다.

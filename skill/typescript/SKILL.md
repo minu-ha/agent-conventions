@@ -9,7 +9,7 @@ metadata:
 # TypeScript 컨벤션
 
 에이전트 협업 팀을 위한 TypeScript 코딩 컨벤션 모음입니다. 현재 이 가이드는 6개 카테고리의 21개 규칙으로 구성되어 있습니다.   
-네이밍, import 소유권, 타입 계약, helper 분리, 결측값 처리, JSDoc 규칙을 `rules/*.md`와 compiled `AGENTS.md`로 관리합니다.   
+네이밍, import 소유권, 타입 계약, helper 분리, 결측값 처리, JSDoc 규칙을 [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`와 compiled [AGENTS.md](./AGENTS.md)로 관리합니다.   
 이 skill은 React, NestJS, TanStack Route, Playwright Test compiled guide의 공통 base skill로도 사용됩니다.
 
 ## 사용할 때
@@ -80,10 +80,8 @@ metadata:
 
 자세한 설명과 코드 예시는 개별 rule 파일을 읽으면 됩니다.
 
-```text
-rules/types-document-custom-types-and-shapes.md
-rules/functions-extract-helpers-only-when-the-boundary-is-real.md
-```
+- [rules/types-document-custom-types-and-shapes.md](./rules/types-document-custom-types-and-shapes.md)
+- [rules/functions-extract-helpers-only-when-the-boundary-is-real.md](./rules/functions-extract-helpers-only-when-the-boundary-is-real.md)
 
 각 rule 파일에는 아래 내용이 들어 있습니다.
 - 규칙이 왜 중요한지에 대한 짧은 설명
@@ -93,4 +91,4 @@ rules/functions-extract-helpers-only-when-the-boundary-is-real.md
 
 ## 전체 compiled 문서
 
-모든 규칙이 펼쳐진 전체 가이드는 `./AGENTS.md`에서 확인할 수 있습니다.
+모든 규칙이 펼쳐진 전체 가이드는 [AGENTS.md](./AGENTS.md)에서 확인할 수 있습니다.

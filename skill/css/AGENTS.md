@@ -19,17 +19,17 @@
 ## 목차
 
 1. [Naming and Ownership](#1-naming-and-ownership) — **CRITICAL**
-    - 1.1 [Keep Each `scope_slug` Unique Per Owner](#11-keep-each-scopeslug-unique-per-owner)
+    - 1.1 [Keep Each scope slug Unique Per Owner](#11-keep-each-scope-slug-unique-per-owner)
     - 1.2 [Name Elements and Modifiers by Role](#12-name-elements-and-modifiers-by-role)
     - 1.3 [Preserve Route Slug Traceability](#13-preserve-route-slug-traceability)
     - 1.4 [Separate Local and Route Style Scopes](#14-separate-local-and-route-style-scopes)
     - 1.5 [Use Scope, Slug, Element, and Modifier Syntax](#15-use-scope-slug-element-and-modifier-syntax)
 2. [Class Composition and Wrapper Boundaries](#2-class-composition-and-wrapper-boundaries) — **HIGH**
-    - 2.1 [Compose Classes With `clsx()`](#21-compose-classes-with-clsx)
+    - 2.1 [Compose Classes With clsx()](#21-compose-classes-with-clsx)
     - 2.2 [Do Not Build Structural Variants With Modifiers](#22-do-not-build-structural-variants-with-modifiers)
     - 2.3 [Keep Classes Single-purpose](#23-keep-classes-single-purpose)
-    - 2.4 [Prefer `Ui*` Wrapper Prop Types](#24-prefer-ui-wrapper-prop-types)
-    - 2.5 [Style `Ui*` Components Through Owned Wrappers](#25-style-ui-components-through-owned-wrappers)
+    - 2.4 [Prefer Ui* Wrapper Prop Types](#24-prefer-ui-wrapper-prop-types)
+    - 2.5 [Style Ui* Components Through Owned Wrappers](#25-style-ui-components-through-owned-wrappers)
 3. [Selectors and Nesting Boundaries](#3-selectors-and-nesting-boundaries) — **CRITICAL**
     - 3.1 [Avoid Deep Descendant Selector Dependencies](#31-avoid-deep-descendant-selector-dependencies)
     - 3.2 [Keep Project-owned Selectors Flat](#32-keep-project-owned-selectors-flat)
@@ -52,7 +52,7 @@
 
 클래스 문법, slug 추적성, 네임스페이스 소유권, local-vs-route scope가 명확해야 스타일을 검색하고 안전하게 수정할 수 있습니다.
 
-### 1.1 Keep Each `scope_slug` Unique Per Owner
+### 1.1 Keep Each scope slug Unique Per Owner
 
 **Impact: CRITICAL (prevents unrelated routes or components from sharing the same namespace and colliding in the global class space)**
 
@@ -176,7 +176,7 @@ wg_table__row--selected
 
 TSX class 조합과 wrapper 소유권 규칙은 스타일링 경계를 분명하게 유지하고, UI wrapper가 통제되지 않은 스타일 hook을 노출하는 것을 막습니다.
 
-### 2.1 Compose Classes With `clsx()`
+### 2.1 Compose Classes With clsx()
 
 **Impact: HIGH (keeps TSX class composition readable when base classes and state modifiers need to be combined)**
 
@@ -239,7 +239,7 @@ modifier는 `active`, `hidden`, `disabled`, `selected`, `error` 같은 상태값
 <div className={clsx("rt_pctbi__listButton", isActive && "rt_pctbi__listButton--active")} />
 ```
 
-### 2.4 Prefer `Ui*` Wrapper Prop Types
+### 2.4 Prefer Ui* Wrapper Prop Types
 
 **Impact: MEDIUM-HIGH (preserves wrapper-level styling and API contracts instead of leaking raw library prop types into usage sites)**
 
@@ -261,7 +261,7 @@ import UiCollapse, {type UiCollapseProps} from "<project-alias>/components/ui/co
 const items: NonNullable<UiCollapseProps["items"]> = [];
 ```
 
-### 2.5 Style `Ui*` Components Through Owned Wrappers
+### 2.5 Style Ui* Components Through Owned Wrappers
 
 **Impact: HIGH (prevents shared UI wrappers from exposing uncontrolled styling hooks through ad-hoc className injection)**
 
@@ -586,9 +586,17 @@ stylesheet는 하나의 owner에 맞춰 유지하고, 가벼운 구조 주석만
 
 ```css
 /* entries.css */
-.rt_entries__list { ... }
-.loc_mecf__root { ... }
-.ui_button__root { ... }
+.rt_entries__list {
+	display: grid;
+}
+
+.loc_mecf__root {
+	display: flex;
+}
+
+.ui_button__root {
+	inline-size: 100%;
+}
 ```
 
 **Correct (한 파일당 한 소유자 범위를 유지하고 필요시 섹션 주석을 둠):**

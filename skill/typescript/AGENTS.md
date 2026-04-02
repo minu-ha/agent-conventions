@@ -32,16 +32,16 @@
 3. [Functions and Helper Boundaries](#3-functions-and-helper-boundaries) — **HIGH**
     - 3.1 [Avoid Imperative Assembly in Wide Scopes](#31-avoid-imperative-assembly-in-wide-scopes)
     - 3.2 [Extract Helpers Only When the Boundary Is Real](#32-extract-helpers-only-when-the-boundary-is-real)
-    - 3.3 [Replace `enum` With `as const` Objects](#33-replace-enum-with-as-const-objects)
+    - 3.3 [Replace enum With as const Objects](#33-replace-enum-with-as-const-objects)
     - 3.4 [Use Named Object Params for Complex Signatures](#34-use-named-object-params-for-complex-signatures)
 4. [Absence and Fallback Handling](#4-absence-and-fallback-handling) — **HIGH**
     - 4.1 [Expose Optional Values Instead of Silent Fallbacks](#41-expose-optional-values-instead-of-silent-fallbacks)
 5. [JSDoc and Comment Conventions](#5-jsdoc-and-comment-conventions) — **MEDIUM-HIGH**
     - 5.1 [Keep Inline Comments for Constraints and Caveats Only](#51-keep-inline-comments-for-constraints-and-caveats-only)
     - 5.2 [Require Header JSDoc on Key Declarations](#52-require-header-jsdoc-on-key-declarations)
-    - 5.3 [Use `@description` for External Integration Functions](#53-use-description-for-external-integration-functions)
-    - 5.4 [Use `@helper` for Reusable Pure Helper Functions](#54-use-helper-for-reusable-pure-helper-functions)
-    - 5.5 [Use `@tool` for Model-callable Tool Factories](#55-use-tool-for-model-callable-tool-factories)
+    - 5.3 [Use @description for External Integration Functions](#53-use-description-for-external-integration-functions)
+    - 5.4 [Use @helper for Reusable Pure Helper Functions](#54-use-helper-for-reusable-pure-helper-functions)
+    - 5.5 [Use @tool for Model-callable Tool Factories](#55-use-tool-for-model-callable-tool-factories)
     - 5.6 [Write Concise Korean Comments About Purpose and Constraints](#56-write-concise-korean-comments-about-purpose-and-constraints)
 6. [Guardrails and Review Checks](#6-guardrails-and-review-checks) — **MEDIUM**
     - 6.1 [Review Banned TypeScript Shortcuts Before Finishing](#61-review-banned-typescript-shortcuts-before-finishing)
@@ -357,7 +357,7 @@ export const normalizeRuleRefs = (ruleRefs: string[]): string[] => {
 };
 ```
 
-### 3.3 Replace `enum` With `as const` Objects
+### 3.3 Replace enum With as const Objects
 
 **Impact: MEDIUM-HIGH (keeps runtime values explicit and type extraction lightweight without introducing enum-specific behavior)**
 
@@ -489,7 +489,7 @@ export const loadWorkflowSource = async (path: string): Promise<string> => {
 };
 ```
 
-### 5.3 Use `@description` for External Integration Functions
+### 5.3 Use @description for External Integration Functions
 
 **Impact: MEDIUM-HIGH (marks functions that cross filesystem, network, environment, or SDK boundaries as integration points)**
 
@@ -517,7 +517,7 @@ export const loadWorkflowSource = async (path: string): Promise<string> => {
 };
 ```
 
-### 5.4 Use `@helper` for Reusable Pure Helper Functions
+### 5.4 Use @helper for Reusable Pure Helper Functions
 
 **Impact: MEDIUM-HIGH (distinguishes reusable pure support logic from route, node, or integration boundaries)**
 
@@ -545,7 +545,7 @@ const buildAuditFailureMessage = (count: number): string => {
 };
 ```
 
-### 5.5 Use `@tool` for Model-callable Tool Factories
+### 5.5 Use @tool for Model-callable Tool Factories
 
 **Impact: MEDIUM-HIGH (makes tool-creation boundaries explicit so model-callable execution surfaces are not mistaken for ordinary helpers)**
 

@@ -84,24 +84,37 @@ export const slugify = (value: string): string => {
 };
 
 /**
+ * @helper heading/목차 표시용 제목에서 markdown 장식을 제거
+ */
+export const normalizeHeadingTitle = (value: string): string => {
+	return value
+		.replace(/`([^`]+)`/g, "$1")
+		.replace(/\*\*([^*]+)\*\*/g, "$1")
+		.replace(/\*([^*]+)\*/g, "$1")
+		.replace(/_+/g, " ")
+		.replace(/\s+/g, " ")
+		.trim();
+};
+
+/**
  * @helper section heading anchor 문자열 생성
  */
 export const buildSectionAnchor = (sectionOrder: number, title: string): string => {
-	return `#${slugify(`${sectionOrder}. ${title}`)}`;
+	return `#${slugify(`${sectionOrder}. ${normalizeHeadingTitle(title)}`)}`;
 };
 
 /**
  * @helper 개별 rule heading anchor 문자열 생성
  */
 export const buildRuleAnchor = (sectionOrder: number, ruleOrder: number, title: string): string => {
-	return `#${slugify(`${sectionOrder}.${ruleOrder} ${title}`)}`;
+	return `#${slugify(`${sectionOrder}.${ruleOrder} ${normalizeHeadingTitle(title)}`)}`;
 };
 
 /**
  * @helper rule 본문의 제목을 compiled guide 번호 제목으로 교체
  */
 export const replaceRuleHeading = (body: string, sectionOrder: number, ruleOrder: number, title: string): string => {
-	return body.replace(/^## .+$/m, `### ${sectionOrder}.${ruleOrder} ${title}`);
+	return body.replace(/^## .+$/m, `### ${sectionOrder}.${ruleOrder} ${normalizeHeadingTitle(title)}`);
 };
 
 /**

@@ -2,18 +2,18 @@
 
 에이전트 협업, 리뷰, AI 보조 리팩터링에 맞춰 TypeScript 컨벤션을 관리하는 구조화된 저장소입니다.  
 현재 TypeScript 가이드는 6개 섹션의 21개 rule 파일로 구성되어 있습니다.  
-최종적으로 `AGENTS.md`로 compile됩니다. 이 skill은 React, NestJS, TanStack Route, Playwright Test의 공통 base rule 세트로도 사용됩니다.
+최종적으로 [AGENTS.md](./AGENTS.md)로 compile됩니다. 이 skill은 React, NestJS, TanStack Route, Playwright Test의 공통 base rule 세트로도 사용됩니다.
 
 ## 구조
 
-- `rules/` - 개별 rule 파일
-  - `_sections.md` - 섹션 메타데이터
-  - `_template.md` - 새 rule 작성용 템플릿
+- [rules/_sections.md](./rules/_sections.md) - rule 섹션 구성 메타데이터
+  - [_sections.md](./rules/_sections.md) - 섹션 메타데이터
+  - [_template.md](./rules/_template.md) - 새 rule 작성용 템플릿
   - `area-description.md` - 실제 rule 파일
 - `metadata.json` - compiled guide 메타데이터
-- __`AGENTS.md`__ - 에이전트가 읽는 compiled 결과물
-- `deprecated/typescript.md` - 마이그레이션 검토용 legacy 단일 문서
-- `../../package/` - `skill/*` build, validation, typecheck, test를 담당하는 standalone TypeScript npm package
+- __[AGENTS.md](./AGENTS.md)__ - 에이전트가 읽는 compiled 결과물
+- [deprecated/typescript.md](./deprecated/typescript.md) - 마이그레이션 검토용 legacy 단일 문서
+- [package/README.md](../../package/README.md) - `skill/*` build, validation, typecheck, test를 담당하는 standalone TypeScript npm package
 
 ## 시작하기
 
@@ -22,7 +22,7 @@
    npm --prefix package run validate:typescript
    ```
 
-2. Build `AGENTS.md` from rules:
+2. Build [AGENTS.md](./AGENTS.md) from rules:
    ```bash
    npm --prefix package run build:typescript
    ```
@@ -40,7 +40,7 @@
 
 ## 새 Rule 추가하기
 
-1. `rules/_template.md`를 `rules/area-description.md`로 복사합니다.
+1. [rules/_template.md](./rules/_template.md)를 `rules/area-description.md`로 복사합니다.
 2. 알맞은 area prefix를 고릅니다.
    - `naming-` - 식별자, import, config namespace, 오리진 보존 접근 규칙
    - `types-` - 함수 타입, callback 재사용, unused param, 타입 재사용, custom shape 문서화 규칙
@@ -50,7 +50,7 @@
    - `guardrails-` - 금지 shortcut과 review check 규칙
 3. frontmatter와 본문을 작성합니다.
 4. 설명이 포함된 incorrect/correct 예시를 넣습니다.
-5. `npm --prefix package run dev:typescript`를 실행해 `AGENTS.md`를 다시 생성합니다.
+5. `npm --prefix package run dev:typescript`를 실행해 [AGENTS.md](./AGENTS.md)를 다시 생성합니다.
 
 ## Rule 파일 구조
 
@@ -89,7 +89,7 @@ tags: tag1, tag2
 - Rule 파일은 `area-description.md` 형식을 사용합니다. 예: `types-document-custom-types-and-shapes.md`
 - Section은 파일명 prefix로 결정됩니다.
 - Rule은 각 section 안에서 title 기준 알파벳 순으로 정렬됩니다.
-- `AGENTS.md`의 rule 번호는 자동 생성됩니다.
+- [AGENTS.md](./AGENTS.md)의 rule 번호는 자동 생성됩니다.
 
 ## Impact 레벨
 
@@ -101,7 +101,7 @@ tags: tag1, tag2
 
 ## 스크립트
 
-- `npm --prefix package run build:typescript` - TypeScript rule만 compile해서 `AGENTS.md` 생성
+- `npm --prefix package run build:typescript` - TypeScript rule만 compile해서 [AGENTS.md](./AGENTS.md) 생성
 - `npm --prefix package run validate:typescript` - TypeScript rule만 검증
 - `npm --prefix package run dev:typescript` - TypeScript만 validate 후 build까지 연속 실행
 - `npm --prefix package run build:all` - `skill/` 아래 build 가능한 skill 전체 build
@@ -113,9 +113,9 @@ tags: tag1, tag2
 
 ## 마이그레이션 메모
 
-- `rules/*.md`가 source of truth입니다.
-- `AGENTS.md`는 에이전트가 먼저 읽는 compiled 문서입니다.
-- `deprecated/typescript.md`는 원래 단일 문서와 마이그레이션 완성도를 비교하기 위해 남겨 둡니다.
+- [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`가 source of truth입니다.
+- [AGENTS.md](./AGENTS.md)는 에이전트가 먼저 읽는 compiled 문서입니다.
+- [deprecated/typescript.md](./deprecated/typescript.md)는 원래 단일 문서와 마이그레이션 완성도를 비교하기 위해 남겨 둡니다.
 - 다른 TypeScript 기반 skill은 `metadata.json`의 `extends`로 이 skill을 base로 포함할 수 있습니다.
 - 공용 TypeScript build package는 raw CLI 형태와 per-skill alias를 모두 제공합니다.
 
@@ -124,7 +124,7 @@ tags: tag1, tag2
 rule을 추가하거나 수정할 때는 아래 순서를 따릅니다.
 
 1. section에 맞는 filename prefix를 사용합니다.
-2. `_template.md` 구조를 따릅니다.
+2. [_template.md](./rules/_template.md) 구조를 따릅니다.
 3. 예시는 실제 TypeScript 모듈, helper, 계약 코드와 가깝고 구체적으로 작성합니다.
 4. 새 카테고리를 추가했다면 section metadata도 함께 갱신합니다.
 5. 마무리 전에 `npm --prefix package run dev:typescript`를 실행합니다.

@@ -56,6 +56,7 @@ test("build script regenerates AGENTS.md for the react skill", async () => {
 	assert.match(agentsSource, /^# React 컨벤션$/m);
 	assert.match(agentsSource, /^## 1\. TypeScript Convention Base - Naming and Module Boundaries$/m);
 	assert.match(agentsSource, /^## 목차$/m);
+	assert.match(agentsSource, /^\s+- 5\.3 \[Use @description for External Integration Functions\]\(#53-use-description-for-external-integration-functions\)$/m);
 	assert.match(agentsSource, /^ {4}- 10\.1 \[Avoid Premature Abstraction in Screen Code\]/m);
 	assert.doesNotMatch(agentsSource, /^ {3}- 10\.1 \[Avoid Premature Abstraction in Screen Code\]/m);
 });

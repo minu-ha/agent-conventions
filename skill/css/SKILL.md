@@ -9,7 +9,7 @@ metadata:
 # CSS 컨벤션
 
 에이전트 협업 팀을 위한 CSS 코딩 컨벤션 모음입니다. 현재 이 가이드는 5개 카테고리의 20개 규칙으로 구성되어 있습니다.  
-클래스 네이밍, TSX class 조합, selector 경계, 디자인 토큰, wrapper 기반 서드파티 스타일링 규칙을 `rules/*.md`와 compiled `AGENTS.md`로 관리합니다.
+클래스 네이밍, TSX class 조합, selector 경계, 디자인 토큰, wrapper 기반 서드파티 스타일링 규칙을 [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`와 compiled [AGENTS.md](./AGENTS.md)로 관리합니다.
 
 ## 사용할 때
 - CSS 파일, route/컴포넌트 전용 `*.css`, TSX의 `className` 조합을 만들거나 수정할 때 사용합니다.
@@ -18,13 +18,21 @@ metadata:
 
 ## 우선순위별 규칙 카테고리
 
-| 우선순위 | 카테고리 | 영향도 | Prefix |
-|----------|----------|--------|--------|
-| 1 | Naming and Ownership | CRITICAL | `naming-` |
-| 2 | Class Composition and Wrapper Boundaries | HIGH | `composition-` |
-| 3 | Selectors and Nesting Boundaries | CRITICAL | `selector-` |
-| 4 | Values, Layout, and Interaction States | HIGH | `values-` |
-| 5 | File Organization and Guardrails | MEDIUM | `organization-` |
+1. Naming and Ownership
+   영향도: CRITICAL
+   Prefix: `naming-`
+2. Class Composition and Wrapper Boundaries
+   영향도: HIGH
+   Prefix: `composition-`
+3. Selectors and Nesting Boundaries
+   영향도: CRITICAL
+   Prefix: `selector-`
+4. Values, Layout, and Interaction States
+   영향도: HIGH
+   Prefix: `values-`
+5. File Organization and Guardrails
+   영향도: MEDIUM
+   Prefix: `organization-`
 
 ## 빠른 참조
 
@@ -73,10 +81,8 @@ metadata:
 
 자세한 설명과 코드 예시는 개별 rule 파일을 읽으면 됩니다.
 
-```text
-rules/selector-target-third-party-dom-from-owned-roots.md
-rules/naming-use-scope-slug-element-modifier-syntax.md
-```
+- [rules/selector-target-third-party-dom-from-owned-roots.md](./rules/selector-target-third-party-dom-from-owned-roots.md)
+- [rules/naming-use-scope-slug-element-modifier-syntax.md](./rules/naming-use-scope-slug-element-modifier-syntax.md)
 
 각 rule 파일에는 아래 내용이 들어 있습니다.
 - 규칙이 왜 중요한지에 대한 짧은 설명
@@ -86,4 +92,4 @@ rules/naming-use-scope-slug-element-modifier-syntax.md
 
 ## 전체 compiled 문서
 
-모든 규칙이 펼쳐진 전체 가이드는 `./AGENTS.md`에서 확인할 수 있습니다.
+모든 규칙이 펼쳐진 전체 가이드는 [AGENTS.md](./AGENTS.md)에서 확인할 수 있습니다.

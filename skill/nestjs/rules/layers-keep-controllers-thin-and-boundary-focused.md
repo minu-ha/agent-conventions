@@ -14,23 +14,33 @@ Controller는 요청 수신, 입력 검증 위임, 응답 반환만 담당합니
 **Incorrect (Controller에 Prisma 호출과 비즈니스 로직이 들어감):**
 
 ```ts
-@Get(":id")
-async findOne(@Param("id") id: string) {
-	const user = await this.prisma.user.findUnique({where: {id: Number(id)}});
+@Controller("users")
+export class UsersController {
+	constructor(private readonly prisma: PrismaService) {}
 
-	if (!user) {
-		throw new NotFoundException();
+	@Get(":id")
+	async findOne(@Param("id") id: string) {
+		const user = await this.prisma.user.findUnique({where: {id: Number(id)}});
+
+		if (!user) {
+			throw new NotFoundException();
+		}
+
+		return {...user, displayName: `${user.firstName} ${user.lastName}`};
 	}
-
-	return {...user, displayName: `${user.firstName} ${user.lastName}`};
 }
 ```
 
 **Correct (Controller는 경계만 담당하고 Service로 위임):**
 
 ```ts
-@Get(":id")
-async findOne(@Param("id", ParseIntPipe) id: number) {
-	return this.usersService.findOneOrThrow(id);
+@Controller("users")
+export class UsersController {
+	constructor(private readonly usersService: UsersService) {}
+
+	@Get(":id")
+	async findOne(@Param("id", ParseIntPipe) id: number) {
+		return this.usersService.findOneOrThrow(id);
+	}
 }
 ```

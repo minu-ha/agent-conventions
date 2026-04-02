@@ -40,16 +40,16 @@
 3. [TypeScript Convention Base - Functions and Helper Boundaries](#3-typescript-convention-base---functions-and-helper-boundaries) — **HIGH**
     - 3.1 [Avoid Imperative Assembly in Wide Scopes](#31-avoid-imperative-assembly-in-wide-scopes)
     - 3.2 [Extract Helpers Only When the Boundary Is Real](#32-extract-helpers-only-when-the-boundary-is-real)
-    - 3.3 [Replace `enum` With `as const` Objects](#33-replace-enum-with-as-const-objects)
+    - 3.3 [Replace enum With as const Objects](#33-replace-enum-with-as-const-objects)
     - 3.4 [Use Named Object Params for Complex Signatures](#34-use-named-object-params-for-complex-signatures)
 4. [TypeScript Convention Base - Absence and Fallback Handling](#4-typescript-convention-base---absence-and-fallback-handling) — **HIGH**
     - 4.1 [Expose Optional Values Instead of Silent Fallbacks](#41-expose-optional-values-instead-of-silent-fallbacks)
 5. [TypeScript Convention Base - JSDoc and Comment Conventions](#5-typescript-convention-base---jsdoc-and-comment-conventions) — **MEDIUM-HIGH**
     - 5.1 [Keep Inline Comments for Constraints and Caveats Only](#51-keep-inline-comments-for-constraints-and-caveats-only)
     - 5.2 [Require Header JSDoc on Key Declarations](#52-require-header-jsdoc-on-key-declarations)
-    - 5.3 [Use `@description` for External Integration Functions](#53-use-description-for-external-integration-functions)
-    - 5.4 [Use `@helper` for Reusable Pure Helper Functions](#54-use-helper-for-reusable-pure-helper-functions)
-    - 5.5 [Use `@tool` for Model-callable Tool Factories](#55-use-tool-for-model-callable-tool-factories)
+    - 5.3 [Use @description for External Integration Functions](#53-use-description-for-external-integration-functions)
+    - 5.4 [Use @helper for Reusable Pure Helper Functions](#54-use-helper-for-reusable-pure-helper-functions)
+    - 5.5 [Use @tool for Model-callable Tool Factories](#55-use-tool-for-model-callable-tool-factories)
     - 5.6 [Write Concise Korean Comments About Purpose and Constraints](#56-write-concise-korean-comments-about-purpose-and-constraints)
 6. [TypeScript Convention Base - Guardrails and Review Checks](#6-typescript-convention-base---guardrails-and-review-checks) — **MEDIUM**
     - 6.1 [Review Banned TypeScript Shortcuts Before Finishing](#61-review-banned-typescript-shortcuts-before-finishing)
@@ -67,7 +67,7 @@
 9. [General Authoring and Data Isolation](#9-general-authoring-and-data-isolation) — **HIGH**
     - 9.1 [Follow the Declared Integration or E2E Writing Sequence](#91-follow-the-declared-integration-or-e2e-writing-sequence)
     - 9.2 [Isolate and Clean Up Test Data](#92-isolate-and-clean-up-test-data)
-    - 9.3 [Keep `beforeEach` Limited and Visible](#93-keep-beforeeach-limited-and-visible)
+    - 9.3 [Keep beforeEach Limited and Visible](#93-keep-beforeeach-limited-and-visible)
     - 9.4 [Keep One Behavior Per Test](#94-keep-one-behavior-per-test)
     - 9.5 [Name Tests by User Action and Result](#95-name-tests-by-user-action-and-result)
     - 9.6 [Write Comments Only for Non-obvious Setup Boundaries](#96-write-comments-only-for-non-obvious-setup-boundaries)
@@ -77,7 +77,7 @@
     - 10.3 [Wait for State, Not Time, in Integration Tests](#103-wait-for-state-not-time-in-integration-tests)
 11. [E2E Boundaries and Real-system Control](#11-e2e-boundaries-and-real-system-control) — **CRITICAL**
     - 11.1 [Avoid Destructive Shared-account Scenarios and Parallel Collisions](#111-avoid-destructive-shared-account-scenarios-and-parallel-collisions)
-    - 11.2 [Seed With API Helpers and Clean Up in `finally`](#112-seed-with-api-helpers-and-clean-up-in-finally)
+    - 11.2 [Seed With API Helpers and Clean Up in finally](#112-seed-with-api-helpers-and-clean-up-in-finally)
     - 11.3 [Use Real Backend, Auth, and Routing in E2E](#113-use-real-backend-auth-and-routing-in-e2e)
 12. [Locators, Assertions, and Waiting](#12-locators-assertions-and-waiting) — **HIGH**
     - 12.1 [Allow Explicit Waits Only for Real Async Boundaries](#121-allow-explicit-waits-only-for-real-async-boundaries)
@@ -397,7 +397,7 @@ export const normalizeRuleRefs = (ruleRefs: string[]): string[] => {
 };
 ```
 
-### 3.3 Replace `enum` With `as const` Objects
+### 3.3 Replace enum With as const Objects
 
 **Impact: MEDIUM-HIGH (keeps runtime values explicit and type extraction lightweight without introducing enum-specific behavior)**
 
@@ -529,7 +529,7 @@ export const loadWorkflowSource = async (path: string): Promise<string> => {
 };
 ```
 
-### 5.3 Use `@description` for External Integration Functions
+### 5.3 Use @description for External Integration Functions
 
 **Impact: MEDIUM-HIGH (marks functions that cross filesystem, network, environment, or SDK boundaries as integration points)**
 
@@ -557,7 +557,7 @@ export const loadWorkflowSource = async (path: string): Promise<string> => {
 };
 ```
 
-### 5.4 Use `@helper` for Reusable Pure Helper Functions
+### 5.4 Use @helper for Reusable Pure Helper Functions
 
 **Impact: MEDIUM-HIGH (distinguishes reusable pure support logic from route, node, or integration boundaries)**
 
@@ -585,7 +585,7 @@ const buildAuditFailureMessage = (count: number): string => {
 };
 ```
 
-### 5.5 Use `@tool` for Model-callable Tool Factories
+### 5.5 Use @tool for Model-callable Tool Factories
 
 **Impact: MEDIUM-HIGH (makes tool-creation boundaries explicit so model-callable execution surfaces are not mistaken for ordinary helpers)**
 
@@ -944,7 +944,7 @@ try {
 }
 ```
 
-### 9.3 Keep `beforeEach` Limited and Visible
+### 9.3 Keep beforeEach Limited and Visible
 
 **Impact: HIGH (prevents shared setup from hiding the test's real dependency boundary or main assertions)**
 
@@ -1140,7 +1140,7 @@ e2e 테스트는 실제 backend와 auth 경로를 사용하되 seed, cleanup, sh
 - 공용 계정은 smoke나 읽기 위주 검증에 한정
 ```
 
-### 11.2 Seed With API Helpers and Clean Up in `finally`
+### 11.2 Seed With API Helpers and Clean Up in finally
 
 **Impact: HIGH (keeps e2e setup fast and explicit without turning browser steps into slow seed scripts)**
 

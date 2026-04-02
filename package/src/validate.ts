@@ -21,7 +21,7 @@ const validateLocalSkill = async (skillPaths: SkillPaths): Promise<{extendsCount
 			throw new Error(`${skillPaths.skillName}: metadata.json field "extends" must be an array of skill names.`);
 		}
 
-		if (metadata.extends.some((skillName) => typeof skillName !== "string" || skillName.trim().length === 0)) {
+		if (metadata.extends.some((skillName) => skillName.trim().length === 0)) {
 			throw new Error(`${skillPaths.skillName}: metadata.json field "extends" must contain non-empty skill names.`);
 		}
 

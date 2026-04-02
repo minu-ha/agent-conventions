@@ -2,7 +2,7 @@ import {writeFile} from "node:fs/promises";
 import path from "node:path";
 
 import {getSkillPaths, isBuildableSkill, listSkillNames, parseCliArgs} from "./config.js";
-import {buildRuleAnchor, buildSectionAnchor, readResolvedSkillDocuments, replaceRuleHeading} from "./parser.js";
+import {buildRuleAnchor, buildSectionAnchor, normalizeHeadingTitle, readResolvedSkillDocuments, replaceRuleHeading} from "./parser.js";
 import type {CompiledSkillSection, LoadedSkillDocument, SkillMetadata, SkillPaths, SkillRule, SkillSection} from "./types.js";
 
 /**
@@ -133,11 +133,13 @@ export const generateMarkdown = (
 
 	for (const [sectionIndex, section] of sections.entries()) {
 		const sectionOrder = sectionIndex + 1;
+		const sectionTitle = normalizeHeadingTitle(section.title);
 
-		lines.push(`${sectionOrder}. [${section.title}](${buildSectionAnchor(sectionOrder, section.title)}) — **${section.impact}**`);
+		lines.push(`${sectionOrder}. [${sectionTitle}](${buildSectionAnchor(sectionOrder, sectionTitle)}) — **${section.impact}**`);
 
 		for (const [ruleIndex, rule] of section.rules.entries()) {
-			lines.push(`${nestedTocIndent}- ${sectionOrder}.${ruleIndex + 1} [${rule.title}](${buildRuleAnchor(sectionOrder, ruleIndex + 1, rule.title)})`);
+			const ruleTitle = normalizeHeadingTitle(rule.title);
+			lines.push(`${nestedTocIndent}- ${sectionOrder}.${ruleIndex + 1} [${ruleTitle}](${buildRuleAnchor(sectionOrder, ruleIndex + 1, ruleTitle)})`);
 		}
 	}
 
@@ -147,8 +149,9 @@ export const generateMarkdown = (
 
 	for (const [sectionIndex, section] of sections.entries()) {
 		const sectionOrder = sectionIndex + 1;
+		const sectionTitle = normalizeHeadingTitle(section.title);
 
-		lines.push(`## ${sectionOrder}. ${section.title}`);
+		lines.push(`## ${sectionOrder}. ${sectionTitle}`);
 		lines.push("");
 		lines.push(`**Impact: ${section.impact}**`);
 		lines.push("");

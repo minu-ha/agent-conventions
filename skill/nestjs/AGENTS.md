@@ -40,16 +40,16 @@
 3. [TypeScript Convention Base - Functions and Helper Boundaries](#3-typescript-convention-base---functions-and-helper-boundaries) — **HIGH**
     - 3.1 [Avoid Imperative Assembly in Wide Scopes](#31-avoid-imperative-assembly-in-wide-scopes)
     - 3.2 [Extract Helpers Only When the Boundary Is Real](#32-extract-helpers-only-when-the-boundary-is-real)
-    - 3.3 [Replace `enum` With `as const` Objects](#33-replace-enum-with-as-const-objects)
+    - 3.3 [Replace enum With as const Objects](#33-replace-enum-with-as-const-objects)
     - 3.4 [Use Named Object Params for Complex Signatures](#34-use-named-object-params-for-complex-signatures)
 4. [TypeScript Convention Base - Absence and Fallback Handling](#4-typescript-convention-base---absence-and-fallback-handling) — **HIGH**
     - 4.1 [Expose Optional Values Instead of Silent Fallbacks](#41-expose-optional-values-instead-of-silent-fallbacks)
 5. [TypeScript Convention Base - JSDoc and Comment Conventions](#5-typescript-convention-base---jsdoc-and-comment-conventions) — **MEDIUM-HIGH**
     - 5.1 [Keep Inline Comments for Constraints and Caveats Only](#51-keep-inline-comments-for-constraints-and-caveats-only)
     - 5.2 [Require Header JSDoc on Key Declarations](#52-require-header-jsdoc-on-key-declarations)
-    - 5.3 [Use `@description` for External Integration Functions](#53-use-description-for-external-integration-functions)
-    - 5.4 [Use `@helper` for Reusable Pure Helper Functions](#54-use-helper-for-reusable-pure-helper-functions)
-    - 5.5 [Use `@tool` for Model-callable Tool Factories](#55-use-tool-for-model-callable-tool-factories)
+    - 5.3 [Use @description for External Integration Functions](#53-use-description-for-external-integration-functions)
+    - 5.4 [Use @helper for Reusable Pure Helper Functions](#54-use-helper-for-reusable-pure-helper-functions)
+    - 5.5 [Use @tool for Model-callable Tool Factories](#55-use-tool-for-model-callable-tool-factories)
     - 5.6 [Write Concise Korean Comments About Purpose and Constraints](#56-write-concise-korean-comments-about-purpose-and-constraints)
 6. [TypeScript Convention Base - Guardrails and Review Checks](#6-typescript-convention-base---guardrails-and-review-checks) — **MEDIUM**
     - 6.1 [Review Banned TypeScript Shortcuts Before Finishing](#61-review-banned-typescript-shortcuts-before-finishing)
@@ -64,7 +64,7 @@
 9. [DTOs and Backend Type Contracts](#9-dtos-and-backend-type-contracts) — **HIGH**
     - 9.1 [Document Custom Backend Types and Parameter Objects](#91-document-custom-backend-types-and-parameter-objects)
     - 9.2 [Expose Response DTO Fields Explicitly](#92-expose-response-dto-fields-explicitly)
-    - 9.3 [Replace Local `enum` With `as const` Except Prisma Enums](#93-replace-local-enum-with-as-const-except-prisma-enums)
+    - 9.3 [Replace Local enum With as const Except Prisma Enums](#93-replace-local-enum-with-as-const-except-prisma-enums)
     - 9.4 [Reuse Prisma Generated Types Before New Backend Types](#94-reuse-prisma-generated-types-before-new-backend-types)
     - 9.5 [Validate Request DTOs With Validator, Transformer, and Swagger](#95-validate-request-dtos-with-validator-transformer-and-swagger)
 10. [Methods, Async Flow, and Errors](#10-methods-async-flow-and-errors) — **HIGH**
@@ -74,7 +74,7 @@
 11. [JSDoc and Comment Conventions](#11-jsdoc-and-comment-conventions) — **MEDIUM-HIGH**
     - 11.1 [Keep Inline Comments for Domain Rules and Library Caveats](#111-keep-inline-comments-for-domain-rules-and-library-caveats)
     - 11.2 [Require JSDoc on Service Hooks and Boundary Methods](#112-require-jsdoc-on-service-hooks-and-boundary-methods)
-    - 11.3 [Use `@summary` and `@description` on Service and Prisma Boundaries](#113-use-summary-and-description-on-service-and-prisma-boundaries)
+    - 11.3 [Use @summary and @description on Service and Prisma Boundaries](#113-use-summary-and-description-on-service-and-prisma-boundaries)
 12. [Testing Strategy and Placement](#12-testing-strategy-and-placement) — **CRITICAL**
     - 12.1 [Add Tests When Branches, Endpoints, or Schema Behavior Change](#121-add-tests-when-branches-endpoints-or-schema-behavior-change)
     - 12.2 [Mock Unit Boundaries and Verify E2E Wiring](#122-mock-unit-boundaries-and-verify-e2e-wiring)
@@ -394,7 +394,7 @@ export const normalizeRuleRefs = (ruleRefs: string[]): string[] => {
 };
 ```
 
-### 3.3 Replace `enum` With `as const` Objects
+### 3.3 Replace enum With as const Objects
 
 **Impact: MEDIUM-HIGH (keeps runtime values explicit and type extraction lightweight without introducing enum-specific behavior)**
 
@@ -526,7 +526,7 @@ export const loadWorkflowSource = async (path: string): Promise<string> => {
 };
 ```
 
-### 5.3 Use `@description` for External Integration Functions
+### 5.3 Use @description for External Integration Functions
 
 **Impact: MEDIUM-HIGH (marks functions that cross filesystem, network, environment, or SDK boundaries as integration points)**
 
@@ -554,7 +554,7 @@ export const loadWorkflowSource = async (path: string): Promise<string> => {
 };
 ```
 
-### 5.4 Use `@helper` for Reusable Pure Helper Functions
+### 5.4 Use @helper for Reusable Pure Helper Functions
 
 **Impact: MEDIUM-HIGH (distinguishes reusable pure support logic from route, node, or integration boundaries)**
 
@@ -582,7 +582,7 @@ const buildAuditFailureMessage = (count: number): string => {
 };
 ```
 
-### 5.5 Use `@tool` for Model-callable Tool Factories
+### 5.5 Use @tool for Model-callable Tool Factories
 
 **Impact: MEDIUM-HIGH (makes tool-creation boundaries explicit so model-callable execution surfaces are not mistaken for ordinary helpers)**
 
@@ -771,24 +771,34 @@ Controller는 요청 수신, 입력 검증 위임, 응답 반환만 담당합니
 **Incorrect (Controller에 Prisma 호출과 비즈니스 로직이 들어감):**
 
 ```ts
-@Get(":id")
-async findOne(@Param("id") id: string) {
-	const user = await this.prisma.user.findUnique({where: {id: Number(id)}});
+@Controller("users")
+export class UsersController {
+	constructor(private readonly prisma: PrismaService) {}
 
-	if (!user) {
-		throw new NotFoundException();
+	@Get(":id")
+	async findOne(@Param("id") id: string) {
+		const user = await this.prisma.user.findUnique({where: {id: Number(id)}});
+
+		if (!user) {
+			throw new NotFoundException();
+		}
+
+		return {...user, displayName: `${user.firstName} ${user.lastName}`};
 	}
-
-	return {...user, displayName: `${user.firstName} ${user.lastName}`};
 }
 ```
 
 **Correct (Controller는 경계만 담당하고 Service로 위임):**
 
 ```ts
-@Get(":id")
-async findOne(@Param("id", ParseIntPipe) id: number) {
-	return this.usersService.findOneOrThrow(id);
+@Controller("users")
+export class UsersController {
+	constructor(private readonly usersService: UsersService) {}
+
+	@Get(":id")
+	async findOne(@Param("id", ParseIntPipe) id: number) {
+		return this.usersService.findOneOrThrow(id);
+	}
 }
 ```
 
@@ -801,13 +811,18 @@ Service는 비즈니스 로직, 도메인 규칙, 트랜잭션 조율을 담당�
 **Incorrect (도메인 규칙이 Controller나 외부 레이어에 흩어짐):**
 
 ```ts
-@Post()
-async create(@Body() dto: CreateUserDto) {
-	if (await this.prisma.user.findUnique({where: {email: dto.email}})) {
-		throw new ConflictException();
-	}
+@Controller("users")
+export class UsersController {
+	constructor(private readonly prisma: PrismaService) {}
 
-	return this.prisma.user.create({data: dto});
+	@Post()
+	async create(@Body() dto: CreateUserDto) {
+		if (await this.prisma.user.findUnique({where: {email: dto.email}})) {
+			throw new ConflictException();
+		}
+
+		return this.prisma.user.create({data: dto});
+	}
 }
 ```
 
@@ -842,18 +857,28 @@ export class UsersService {
 **Incorrect (Controller가 Prisma에 직접 접근해 서비스 경계를 우회):**
 
 ```ts
-@Post()
-async create(@Body() dto: CreateUserDto) {
-	return this.prisma.user.create({data: dto});
+@Controller("users")
+export class UsersController {
+	constructor(private readonly prisma: PrismaService) {}
+
+	@Post()
+	async create(@Body() dto: CreateUserDto) {
+		return this.prisma.user.create({data: dto});
+	}
 }
 ```
 
 **Correct (Controller에서 Service를 통해 한 방향으로 흐름 유지):**
 
 ```ts
-@Post()
-async create(@Body() dto: CreateUserDto) {
-	return this.usersService.create(dto);
+@Controller("users")
+export class UsersController {
+	constructor(private readonly usersService: UsersService) {}
+
+	@Post()
+	async create(@Body() dto: CreateUserDto) {
+		return this.usersService.create(dto);
+	}
 }
 ```
 
@@ -933,7 +958,7 @@ export class UserResponseDto {
 }
 ```
 
-### 9.3 Replace Local `enum` With `as const` Except Prisma Enums
+### 9.3 Replace Local enum With as const Except Prisma Enums
 
 **Impact: MEDIUM-HIGH (keeps local runtime values lightweight while still allowing generated Prisma enums to remain the source of truth)**
 
@@ -1089,22 +1114,28 @@ void this.eventsService.emit("user.created", user);
 **Incorrect (반환 계약이 불분명하거나 관례가 섞임):**
 
 ```ts
-findOneOrThrow = async (id: number) => {
-	return this.prisma.user.findUnique({where: {id}});
-};
+@Injectable()
+export class UsersService {
+	findOneOrThrow = async (id: number) => {
+		return this.prisma.user.findUnique({where: {id}});
+	};
+}
 ```
 
 **Correct (NestJS 메서드 스타일과 명시적 반환 타입 사용):**
 
 ```ts
-async findOneOrThrow(id: number): Promise<SafeUser> {
-	const user = await this.prisma.user.findUnique({where: {id}});
+@Injectable()
+export class UsersService {
+	async findOneOrThrow(id: number): Promise<SafeUser> {
+		const user = await this.prisma.user.findUnique({where: {id}});
 
-	if (!user) {
-		throw new NotFoundException(`User ${id} not found`);
+		if (!user) {
+			throw new NotFoundException(`User ${id} not found`);
+		}
+
+		return user;
 	}
-
-	return user;
 }
 
 export const buildPaginationMeta = (total: number, params: PaginationParams) => {
@@ -1147,23 +1178,29 @@ Service public 메서드, 외부 API 호출 블록, NestJS 생명주기 훅, 커
 **Incorrect (핵심 서비스 메서드에 헤더 설명이 없음):**
 
 ```ts
-async findOneOrThrow(id: number): Promise<SafeUser> {
-	// ...
+@Injectable()
+export class UsersService {
+	async findOneOrThrow(id: number): Promise<SafeUser> {
+		// ...
+	}
 }
 ```
 
 **Correct (핵심 경계 선언에 JSDoc을 작성):**
 
 ```ts
-/**
- * @summary 사용자 단건 조회 - 미존재 시 NotFoundException 발생
- */
-async findOneOrThrow(id: number): Promise<SafeUser> {
-	// ...
+@Injectable()
+export class UsersService {
+	/**
+	 * @summary 사용자 단건 조회 - 미존재 시 NotFoundException 발생
+	 */
+	async findOneOrThrow(id: number): Promise<SafeUser> {
+		// ...
+	}
 }
 ```
 
-### 11.3 Use `@summary` and `@description` on Service and Prisma Boundaries
+### 11.3 Use @summary and @description on Service and Prisma Boundaries
 
 **Impact: MEDIUM-HIGH (distinguishes simple backend intent summaries from more complex query explanations where readers need extra context)**
 
@@ -1172,33 +1209,39 @@ Service public 메서드 선언 바로 위에는 `@summary`를 사용하고, 복
 **Incorrect (How 중심의 서술형 주석 또는 경계 누락):**
 
 ```ts
-/**
- * @summary id로 사용자를 찾아서 없으면 예외를 던집니다.
- */
-async findOneOrThrow(id: number): Promise<SafeUser> {
-	// ...
+@Injectable()
+export class UsersService {
+	/**
+	 * @summary id로 사용자를 찾아서 없으면 예외를 던집니다.
+	 */
+	async findOneOrThrow(id: number): Promise<SafeUser> {
+		// ...
+	}
 }
 ```
 
 **Correct (`@summary`와 필요한 경우 `@description`을 역할에 맞게 사용):**
 
 ```ts
-/**
- * @summary 사용자 단건 조회 - 미존재 시 NotFoundException 발생
- */
-async findOneOrThrow(id: number): Promise<SafeUser> {
-	// ...
-}
+@Injectable()
+export class UsersService {
+	/**
+	 * @summary 사용자 단건 조회 - 미존재 시 NotFoundException 발생
+	 */
+	async findOneOrThrow(id: number): Promise<SafeUser> {
+		// ...
+	}
 
-/**
- * @summary 페이지네이션 사용자 목록 조회
- * @description 역할 필터 + 생성일 내림차순 정렬 + 총 건수 병렬 조회
- */
-async findManyWithCount(params: PaginationParams & {role?: Role}) {
-	return this.prisma.$transaction([
-		this.prisma.user.findMany({}),
-		this.prisma.user.count({}),
-	]);
+	/**
+	 * @summary 페이지네이션 사용자 목록 조회
+	 * @description 역할 필터 + 생성일 내림차순 정렬 + 총 건수 병렬 조회
+	 */
+	async findManyWithCount(params: PaginationParams & {role?: Role}) {
+		return this.prisma.$transaction([
+			this.prisma.user.findMany({}),
+			this.prisma.user.count({}),
+		]);
+	}
 }
 ```
 
@@ -1324,9 +1367,14 @@ backend 변경은 NestJS 레이어링, 타입 규율, 테스트 규율을 가장
 **Incorrect (금지 패턴을 남긴 채 마무리):**
 
 ```ts
-@Post()
-async create(@Body() dto: CreateUserDto) {
-	return this.prisma.user.create({data: dto});
+@Controller("users")
+export class UsersController {
+	constructor(private readonly prisma: PrismaService) {}
+
+	@Post()
+	async create(@Body() dto: CreateUserDto) {
+		return this.prisma.user.create({data: dto});
+	}
 }
 
 const userName = user?.name ?? "";
@@ -1336,9 +1384,14 @@ throw new NotFoundException("Not found");
 **Correct (레이어, 결측, 예외 맥락을 명시적으로 유지):**
 
 ```ts
-@Post()
-async create(@Body() dto: CreateUserDto) {
-	return this.usersService.create(dto);
+@Controller("users")
+export class UsersController {
+	constructor(private readonly usersService: UsersService) {}
+
+	@Post()
+	async create(@Body() dto: CreateUserDto) {
+		return this.usersService.create(dto);
+	}
 }
 
 if (!user) {

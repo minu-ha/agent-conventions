@@ -1,51 +1,48 @@
 # NestJS 가이드라인
 
 ## 목차
-- 1. 문서 목적
-- 2. 핵심 원칙
-- 3. 파일 및 네이밍 규칙
-	- 3.1 파일명/식별자
-	- 3.2 모듈 파일 구조
-	- 3.3 export/import
-	- 3.4 상수 관리 규칙
-- 4. 레이어 책임 경계
-	- 4.1 Controller 책임
-	- 4.2 Service 책임
-	- 4.3 레이어 간 의존 방향
-	- 4.4 Bad/Good: 레이어 경계
-- 5. DTO 작성 규칙
-	- 5.1 요청 DTO
-	- 5.2 응답 DTO
-	- 5.3 Prisma 생성 타입 재사용 우선
-	- 5.4 Bad/Good: 타입 중복 선언
-- 6. 타입 선언 원칙
-	- 6.1 enum 대체
-	- 6.2 커스텀 타입/인터페이스 문서화 규칙
-	- 6.3 함수 매개변수 객체화 기준
-- 7. 함수/메서드 작성 규칙
-	- 7.1 함수 선언
-	- 7.2 비동기 처리
-	- 7.3 옵셔널 값 처리 규칙
-	- 7.4 에러 처리 규칙
-- 8. 주석 규칙
-	- 8.1 주석 원칙
-	- 8.2 선언 헤더 JSDoc 필수 지점
-	- 8.3 Service 메서드 주석 (`@summary`)
-	- 8.4 Prisma 쿼리 블록 주석 (`@description`)
-	- 8.5 함수 내부 주석 규칙 (`//`)
-	- 8.6 Bad/Good: 주석 규칙
-- 9. 금지 패턴
--
-	10. 테스트 규칙
-	
-	- 10.1 테스트 종류와 목적
-	- 10.2 파일 위치와 이름
-	- 10.3 테스트 라이브러리
-	- 10.4 Unit Test 작성 규칙
-	- 10.5 E2E Test 작성 규칙
-	- 10.6 테스트 추가 기준
--
-	11. 권장 예시
+- 문서 목적
+- 핵심 원칙
+- 파일 및 네이밍 규칙
+  - 파일명/식별자
+  - 모듈 파일 구조
+  - export/import
+  - 상수 관리 규칙
+- 레이어 책임 경계
+  - Controller 책임
+  - Service 책임
+  - 레이어 간 의존 방향
+  - Bad/Good: 레이어 경계
+- DTO 작성 규칙
+  - 요청 DTO
+  - 응답 DTO
+  - Prisma 생성 타입 재사용 우선
+  - Bad/Good: 타입 중복 선언
+- 타입 선언 원칙
+  - enum 대체
+  - 커스텀 타입/인터페이스 문서화 규칙
+  - 함수 매개변수 객체화 기준
+- 함수/메서드 작성 규칙
+  - 함수 선언
+  - 비동기 처리
+  - 옵셔널 값 처리 규칙
+  - 에러 처리 규칙
+- 주석 규칙
+  - 주석 원칙
+  - 선언 헤더 JSDoc 필수 지점
+  - Service 메서드 주석 (`@summary`)
+  - Prisma 쿼리 블록 주석 (`@description`)
+  - 함수 내부 주석 규칙 (`//`)
+  - Bad/Good: 주석 규칙
+- 금지 패턴
+- 테스트 규칙
+  - 테스트 종류와 목적
+  - 파일 위치와 이름
+  - 테스트 라이브러리
+  - Unit Test 작성 규칙
+  - E2E Test 작성 규칙
+  - 테스트 추가 기준
+- 권장 예시
 
 ---
 
@@ -153,7 +150,7 @@ import { DEFAULT_PAGE_SIZE } from './users.constants';
 - 분기/조건 로직은 Service로 위임한다.
 - `@Body()`, `@Param()`, `@Query()` 에서 꺼낸 값은 DTO 타입으로 받는다.
 
-```ts
+```text
 // Bad: Controller에 비즈니스 로직 포함
 @Get(':id')
 async findOne(@Param('id') id: string) {
@@ -206,7 +203,7 @@ Controller → Service → Prisma
 
 ### 4.4 Bad/Good: 레이어 경계
 
-```ts
+```text
 // Bad: Controller에서 Prisma 직접 사용
 @Post()
 async create(@Body() dto: CreateUserDto) {
@@ -214,7 +211,7 @@ async create(@Body() dto: CreateUserDto) {
 }
 ```
 
-```ts
+```text
 // Good: Controller → Service 순서 준수
 @Post()
 async create(@Body() dto: CreateUserDto) {
@@ -410,7 +407,7 @@ async findMany(params: PaginationParams) {
 - 클래스 외부 유틸 함수는 화살표 함수를 기본으로 한다.
 - 반환 타입은 복잡한 함수에서 명시를 권장하며, `async` 함수는 `Promise<T>` 반환 타입을 명시한다.
 
-```ts
+```text
 // Service 메서드
 async findOneOrThrow(id: number): Promise<SafeUser> {
   const user = await this.prisma.user.findUnique({ where: { id } });
@@ -453,7 +450,7 @@ void this.eventsService.emit('user.created', user);
 	- 코드 바로 위에 한글 주석으로 이유를 남긴다.
 	- `??`, `||`, `?:` 중 가장 직접적인 표현 하나만 사용한다.
 
-```ts
+```text
 // Bad: 결측값을 숨기는 폴백
 const userName = user?.name ?? '';
 
@@ -522,7 +519,7 @@ if (user.role !== USER_ROLE.ADMIN) {
 - Service public 메서드 선언 바로 위에 `@summary` 주석을 작성한다.
 - "무엇을 하는지"보다 "왜 필요한지"를 기준으로 작성한다.
 
-```ts
+```text
 /**
  * @summary 사용자 단건 조회 — 미존재 시 NotFoundException 발생
  */
@@ -589,7 +586,7 @@ const where = includeDeleted ? { id } : { id, deletedAt: null };
  */
 ```
 
-```ts
+```text
 // Bad: Controller 메서드에 JSDoc + Swagger 중복 작성
 /**
  * @summary 사용자 목록 조회
@@ -599,7 +596,7 @@ const where = includeDeleted ? { id } : { id, deletedAt: null };
 async findAll() { ... }
 ```
 
-```ts
+```text
 // Good: Controller는 Swagger 데코레이터로 문서화
 @ApiOperation({ summary: '사용자 목록 조회' })
 @ApiOkResponse({ type: [UserResponseDto] })
@@ -747,7 +744,7 @@ export class UsersService {
 }
 ```
 
-```ts
+```text
 // users.controller.ts
 
 @ApiOperation({ summary: '사용자 단건 조회' })
