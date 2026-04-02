@@ -1,6 +1,7 @@
 # Skills Build Package
 
-Standalone TypeScript package for building and validating convention guides under `../skill/*`.
+Standalone TypeScript package for building and validating convention guides under `../skill/*`.  
+Structured skill의 compile, validate, test, typecheck 흐름을 이 패키지에서 담당합니다.
 
 ## What Each Script Does
 
@@ -16,7 +17,9 @@ Standalone TypeScript package for building and validating convention guides unde
 - `npm run typecheck` - Type-check the build package source and tests with `tsc --noEmit`.
 - `npm run test` - Run regression tests for CLI behavior, documentation annotations, and script wiring.
 
-If `metadata.json` declares an `extends` array, build and validate resolve those base skills recursively. The child skill keeps its own title and abstract, while the compiled `AGENTS.md` includes inherited base sections ahead of the local overlay sections.
+If `metadata.json` declares an `extends` array, build and validate resolve those base skills
+recursively. The child skill keeps its own title and abstract, while the compiled `AGENTS.md`
+includes inherited base sections ahead of the local overlay sections.
 
 ## Per-Skill Aliases
 

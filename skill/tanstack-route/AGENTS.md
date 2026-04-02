@@ -1,13 +1,12 @@
 # TanStack Route 컨벤션
 
-**Version 1.0.0**  
-Agent Conventions  
-2026년 4월
+- 버전: 1.0.0
+- 조직: Agent Conventions
+- 날짜: 2026년 4월
 
-> **안내:**  
-> 이 문서는 에이전트와 LLM이 이 컨벤션 세트의 코드를 유지보수하고,  
-> 생성하고, 리팩터링할 때 따르도록 compile한 가이드입니다.  
-> source of truth는 현재 skill의 `rules/*.md`와, `extends`로 연결된 base skill의 `rules/*.md`에 있고, 이 파일은 생성 결과물입니다.
+> **생성된 문서입니다. 직접 수정하지 마세요.**
+>
+> 현재 skill의 `rules/*.md`, `metadata.json`, `metadata.json.extends`로 연결된 base skill source를 수정한 뒤 `npm --prefix package run build -- --skill=tanstack-route`로 다시 생성하세요.
 
 ---
 
@@ -15,79 +14,79 @@ Agent Conventions
 
 에이전트 협업 팀을 위한 TanStack Router 컨벤션입니다. 이 가이드는 layout-shell-first route grouping, 검색 가능한 파일명, 명시적인 router boundary 선언, route-local 소유권, generated artifact 보호를 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, compiled guide에는 route helper와 search schema에 공통으로 적용되는 `typescript` base skill이 함께 포함됩니다.
 
-이 가이드는 `TypeScript 컨벤션` base skill을 함께 포함합니다.
+이 가이드는 `TypeScript Convention`을 공통 기반 스킬로 함께 포함합니다.
 
 ---
 
-## 포함된 Base Skill
+## 함께 포함된 기반 스킬
 
-- TypeScript 컨벤션
+- TypeScript Convention
 
 ---
 
 ## 목차
 
-1. [TypeScript 컨벤션 Base - Naming and Module Boundaries](#1-typescript-base---naming-and-module-boundaries) — **HIGH**
-   - 1.1 [Centralize Shared Config and Constants Under One Namespace](#11-centralize-shared-config-and-constants-under-one-namespace)
-   - 1.2 [Preserve Config Origin With Chained Access](#12-preserve-config-origin-with-chained-access)
-   - 1.3 [Use Consistent File, Symbol, and Field Naming](#13-use-consistent-file-symbol-and-field-naming)
-   - 1.4 [Use Direct Imports and Dedicated Public Entry Points](#14-use-direct-imports-and-dedicated-public-entry-points)
-2. [TypeScript 컨벤션 Base - Types and Contracts](#2-typescript-base---types-and-contracts) — **CRITICAL**
-   - 2.1 [Document Custom Types and Declarative Shapes](#21-document-custom-types-and-declarative-shapes)
-   - 2.2 [Mark Unused Parameters With an Underscore Prefix](#22-mark-unused-parameters-with-an-underscore-prefix)
-   - 2.3 [Prefer Function Variable Types Over Parameter Annotations](#23-prefer-function-variable-types-over-parameter-annotations)
-   - 2.4 [Reuse Callback Signatures From Existing Contracts](#24-reuse-callback-signatures-from-existing-contracts)
-   - 2.5 [Reuse Existing Contracts Before Declaring New Types](#25-reuse-existing-contracts-before-declaring-new-types)
-3. [TypeScript 컨벤션 Base - Functions and Helper Boundaries](#3-typescript-base---functions-and-helper-boundaries) — **HIGH**
-   - 3.1 [Avoid Imperative Assembly in Wide Scopes](#31-avoid-imperative-assembly-in-wide-scopes)
-   - 3.2 [Extract Helpers Only When the Boundary Is Real](#32-extract-helpers-only-when-the-boundary-is-real)
-   - 3.3 [Replace `enum` With `as const` Objects](#33-replace-enum-with-as-const-objects)
-   - 3.4 [Use Named Object Params for Complex Signatures](#34-use-named-object-params-for-complex-signatures)
-4. [TypeScript 컨벤션 Base - Absence and Fallback Handling](#4-typescript-base---absence-and-fallback-handling) — **HIGH**
-   - 4.1 [Expose Optional Values Instead of Silent Fallbacks](#41-expose-optional-values-instead-of-silent-fallbacks)
-5. [TypeScript 컨벤션 Base - JSDoc and Comment Conventions](#5-typescript-base---jsdoc-and-comment-conventions) — **MEDIUM-HIGH**
-   - 5.1 [Keep Inline Comments for Constraints and Caveats Only](#51-keep-inline-comments-for-constraints-and-caveats-only)
-   - 5.2 [Require Header JSDoc on Key Declarations](#52-require-header-jsdoc-on-key-declarations)
-   - 5.3 [Use `@description` for External Integration Functions](#53-use-description-for-external-integration-functions)
-   - 5.4 [Use `@helper` for Reusable Pure Helper Functions](#54-use-helper-for-reusable-pure-helper-functions)
-   - 5.5 [Use `@tool` for Model-callable Tool Factories](#55-use-tool-for-model-callable-tool-factories)
-   - 5.6 [Write Concise Korean Comments About Purpose and Constraints](#56-write-concise-korean-comments-about-purpose-and-constraints)
-6. [TypeScript 컨벤션 Base - Guardrails and Review Checks](#6-typescript-base---guardrails-and-review-checks) — **MEDIUM**
-   - 6.1 [Review Banned TypeScript Shortcuts Before Finishing](#61-review-banned-typescript-shortcuts-before-finishing)
+1. [TypeScript Convention Base - Naming and Module Boundaries](#1-typescript-convention-base---naming-and-module-boundaries) — **HIGH**
+    - 1.1 [Centralize Shared Config and Constants Under One Namespace](#11-centralize-shared-config-and-constants-under-one-namespace)
+    - 1.2 [Preserve Config Origin With Chained Access](#12-preserve-config-origin-with-chained-access)
+    - 1.3 [Use Consistent File, Symbol, and Field Naming](#13-use-consistent-file-symbol-and-field-naming)
+    - 1.4 [Use Direct Imports and Dedicated Public Entry Points](#14-use-direct-imports-and-dedicated-public-entry-points)
+2. [TypeScript Convention Base - Types and Contracts](#2-typescript-convention-base---types-and-contracts) — **CRITICAL**
+    - 2.1 [Document Custom Types and Declarative Shapes](#21-document-custom-types-and-declarative-shapes)
+    - 2.2 [Mark Unused Parameters With an Underscore Prefix](#22-mark-unused-parameters-with-an-underscore-prefix)
+    - 2.3 [Prefer Function Variable Types Over Parameter Annotations](#23-prefer-function-variable-types-over-parameter-annotations)
+    - 2.4 [Reuse Callback Signatures From Existing Contracts](#24-reuse-callback-signatures-from-existing-contracts)
+    - 2.5 [Reuse Existing Contracts Before Declaring New Types](#25-reuse-existing-contracts-before-declaring-new-types)
+3. [TypeScript Convention Base - Functions and Helper Boundaries](#3-typescript-convention-base---functions-and-helper-boundaries) — **HIGH**
+    - 3.1 [Avoid Imperative Assembly in Wide Scopes](#31-avoid-imperative-assembly-in-wide-scopes)
+    - 3.2 [Extract Helpers Only When the Boundary Is Real](#32-extract-helpers-only-when-the-boundary-is-real)
+    - 3.3 [Replace `enum` With `as const` Objects](#33-replace-enum-with-as-const-objects)
+    - 3.4 [Use Named Object Params for Complex Signatures](#34-use-named-object-params-for-complex-signatures)
+4. [TypeScript Convention Base - Absence and Fallback Handling](#4-typescript-convention-base---absence-and-fallback-handling) — **HIGH**
+    - 4.1 [Expose Optional Values Instead of Silent Fallbacks](#41-expose-optional-values-instead-of-silent-fallbacks)
+5. [TypeScript Convention Base - JSDoc and Comment Conventions](#5-typescript-convention-base---jsdoc-and-comment-conventions) — **MEDIUM-HIGH**
+    - 5.1 [Keep Inline Comments for Constraints and Caveats Only](#51-keep-inline-comments-for-constraints-and-caveats-only)
+    - 5.2 [Require Header JSDoc on Key Declarations](#52-require-header-jsdoc-on-key-declarations)
+    - 5.3 [Use `@description` for External Integration Functions](#53-use-description-for-external-integration-functions)
+    - 5.4 [Use `@helper` for Reusable Pure Helper Functions](#54-use-helper-for-reusable-pure-helper-functions)
+    - 5.5 [Use `@tool` for Model-callable Tool Factories](#55-use-tool-for-model-callable-tool-factories)
+    - 5.6 [Write Concise Korean Comments About Purpose and Constraints](#56-write-concise-korean-comments-about-purpose-and-constraints)
+6. [TypeScript Convention Base - Guardrails and Review Checks](#6-typescript-convention-base---guardrails-and-review-checks) — **MEDIUM**
+    - 6.1 [Review Banned TypeScript Shortcuts Before Finishing](#61-review-banned-typescript-shortcuts-before-finishing)
 7. [Route Structure and Grouping](#7-route-structure-and-grouping) — **CRITICAL**
-   - 7.1 [Avoid Folder-only and Flat-only Route Trees](#71-avoid-folder-only-and-flat-only-route-trees)
-   - 7.2 [Keep Root Responsibilities in `__root.tsx`](#72-keep-root-responsibilities-in-roottsx)
-   - 7.3 [Keep Shared-layout Screens Under One Parent Layout](#73-keep-shared-layout-screens-under-one-parent-layout)
-   - 7.4 [Split Top-level Route Groups by Layout Shell](#74-split-top-level-route-groups-by-layout-shell)
-   - 7.5 [Use Parentheses Folders for Pathless Route Groups](#75-use-parentheses-folders-for-pathless-route-groups)
+    - 7.1 [Avoid Folder-only and Flat-only Route Trees](#71-avoid-folder-only-and-flat-only-route-trees)
+    - 7.2 [Keep Root Responsibilities in `__root.tsx`](#72-keep-root-responsibilities-in-roottsx)
+    - 7.3 [Keep Shared-layout Screens Under One Parent Layout](#73-keep-shared-layout-screens-under-one-parent-layout)
+    - 7.4 [Split Top-level Route Groups by Layout Shell](#74-split-top-level-route-groups-by-layout-shell)
+    - 7.5 [Use Parentheses Folders for Pathless Route Groups](#75-use-parentheses-folders-for-pathless-route-groups)
 8. [File Naming and Route Assets](#8-file-naming-and-route-assets) — **HIGH**
-   - 8.1 [Create Route-local `*.ts` Helper Files Early](#81-create-route-local-ts-helper-files-early)
-   - 8.2 [Name Top-level Groups by Shell Meaning](#82-name-top-level-groups-by-shell-meaning)
-   - 8.3 [Prepare the Basic Route File Set](#83-prepare-the-basic-route-file-set)
-   - 8.4 [Start Child Route Sets With Parentheses Folders](#84-start-child-route-sets-with-parentheses-folders)
-   - 8.5 [Use Domain-specific Dynamic Segment Names](#85-use-domain-specific-dynamic-segment-names)
-   - 8.6 [Use Searchable Feature Route File Names](#86-use-searchable-feature-route-file-names)
+    - 8.1 [Create Route-local `*.ts` Helper Files Early](#81-create-route-local-ts-helper-files-early)
+    - 8.2 [Name Top-level Groups by Shell Meaning](#82-name-top-level-groups-by-shell-meaning)
+    - 8.3 [Prepare the Basic Route File Set](#83-prepare-the-basic-route-file-set)
+    - 8.4 [Start Child Route Sets With Parentheses Folders](#84-start-child-route-sets-with-parentheses-folders)
+    - 8.5 [Use Domain-specific Dynamic Segment Names](#85-use-domain-specific-dynamic-segment-names)
+    - 8.6 [Use Searchable Feature Route File Names](#86-use-searchable-feature-route-file-names)
 9. [Route Definition and Navigation Boundaries](#9-route-definition-and-navigation-boundaries) — **CRITICAL**
-   - 9.1 [Export `Route` at the Top of the File](#91-export-route-at-the-top-of-the-file)
-   - 9.2 [Match Route Paths to File Structure](#92-match-route-paths-to-file-structure)
-   - 9.3 [Read Params and Search From the Local `Route`](#93-read-params-and-search-from-the-local-route)
-   - 9.4 [Redirect Empty Entry Routes in `beforeLoad`](#94-redirect-empty-entry-routes-in-beforeload)
-   - 9.5 [Run Auth and Permission Guards in `beforeLoad`](#95-run-auth-and-permission-guards-in-beforeload)
-   - 9.6 [Validate Search Before Using Route Search](#96-validate-search-before-using-route-search)
+    - 9.1 [Export `Route` at the Top of the File](#91-export-route-at-the-top-of-the-file)
+    - 9.2 [Match Route Paths to File Structure](#92-match-route-paths-to-file-structure)
+    - 9.3 [Read Params and Search From the Local `Route`](#93-read-params-and-search-from-the-local-route)
+    - 9.4 [Redirect Empty Entry Routes in `beforeLoad`](#94-redirect-empty-entry-routes-in-beforeload)
+    - 9.5 [Run Auth and Permission Guards in `beforeLoad`](#95-run-auth-and-permission-guards-in-beforeload)
+    - 9.6 [Validate Search Before Using Route Search](#96-validate-search-before-using-route-search)
 10. [Route-local Ownership and Responsibilities](#10-route-local-ownership-and-responsibilities) — **HIGH**
-   - 10.1 [Keep `*.index.tsx` Files Focused on Screen Flow](#101-keep-indextsx-files-focused-on-screen-flow)
-   - 10.2 [Limit `*.layout.tsx` Files to Shell Concerns](#102-limit-layouttsx-files-to-shell-concerns)
-   - 10.3 [Place Route-only Modules in `-local/`](#103-place-route-only-modules-in--local)
+    - 10.1 [Keep `*.index.tsx` Files Focused on Screen Flow](#101-keep-indextsx-files-focused-on-screen-flow)
+    - 10.2 [Limit `*.layout.tsx` Files to Shell Concerns](#102-limit-layouttsx-files-to-shell-concerns)
+    - 10.3 [Place Route-only Modules in `-local/`](#103-place-route-only-modules-in--local)
 11. [Styles and Generated Artifacts](#11-styles-and-generated-artifacts) — **MEDIUM-HIGH**
-   - 11.1 [Keep Route CSS at Route Scope](#111-keep-route-css-at-route-scope)
-   - 11.2 [Never Edit Generated Route Tree Files](#112-never-edit-generated-route-tree-files)
+    - 11.1 [Keep Route CSS at Route Scope](#111-keep-route-css-at-route-scope)
+    - 11.2 [Never Edit Generated Route Tree Files](#112-never-edit-generated-route-tree-files)
 12. [Workflow and Verification](#12-workflow-and-verification) — **MEDIUM**
-   - 12.1 [Add New Routes in Layout-first Order](#121-add-new-routes-in-layout-first-order)
-   - 12.2 [Review Route Structure Before Finishing](#122-review-route-structure-before-finishing)
+    - 12.1 [Add New Routes in Layout-first Order](#121-add-new-routes-in-layout-first-order)
+    - 12.2 [Review Route Structure Before Finishing](#122-review-route-structure-before-finishing)
 
 ---
 
-## 1. TypeScript 컨벤션 Base - Naming and Module Boundaries
+## 1. TypeScript Convention Base - Naming and Module Boundaries
 
 **Impact: HIGH**
 
@@ -187,7 +186,7 @@ import {mainState} from "<graph-public-import>/main";
 import type {MainState} from "<type-public-import>";
 ```
 
-## 2. TypeScript 컨벤션 Base - Types and Contracts
+## 2. TypeScript Convention Base - Types and Contracts
 
 **Impact: CRITICAL**
 
@@ -345,7 +344,7 @@ interface OrchestrationSnapshot {
 type DevelopmentSnapshot = Pick<DevelopmentOrchestrationState, "request" | "iteration">;
 ```
 
-## 3. TypeScript 컨벤션 Base - Functions and Helper Boundaries
+## 3. TypeScript Convention Base - Functions and Helper Boundaries
 
 **Impact: HIGH**
 
@@ -450,7 +449,7 @@ const buildPlanningPrompt = (args: BuildPlanningPromptArgs): string => {
 const {request, repoPath, taskCategory, projectArea, riskLevel, selectedRuleRefs} = args;
 ```
 
-## 4. TypeScript 컨벤션 Base - Absence and Fallback Handling
+## 4. TypeScript Convention Base - Absence and Fallback Handling
 
 **Impact: HIGH**
 
@@ -475,7 +474,7 @@ const googleApiKey = config.env.google_api_key ?? "demo-key";
 const agentServerPort = process.env.PORT?.trim() || "2024";
 ```
 
-## 5. TypeScript 컨벤션 Base - JSDoc and Comment Conventions
+## 5. TypeScript Convention Base - JSDoc and Comment Conventions
 
 **Impact: MEDIUM-HIGH**
 
@@ -638,7 +637,7 @@ const createReadRepositoryFileTool = (repoPath: string) => {
  */
 ```
 
-## 6. TypeScript 컨벤션 Base - Guardrails and Review Checks
+## 6. TypeScript Convention Base - Guardrails and Review Checks
 
 **Impact: MEDIUM**
 

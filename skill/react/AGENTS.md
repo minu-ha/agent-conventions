@@ -1,13 +1,12 @@
 # React 컨벤션
 
-**Version 1.0.0**  
-Agent Conventions  
-2026년 4월
+- 버전: 1.0.0
+- 조직: Agent Conventions
+- 날짜: 2026년 4월
 
-> **안내:**  
-> 이 문서는 에이전트와 LLM이 이 컨벤션 세트의 코드를 유지보수하고,  
-> 생성하고, 리팩터링할 때 따르도록 compile한 가이드입니다.  
-> source of truth는 현재 skill의 `rules/*.md`와, `extends`로 연결된 base skill의 `rules/*.md`에 있고, 이 파일은 생성 결과물입니다.
+> **생성된 문서입니다. 직접 수정하지 마세요.**
+>
+> 현재 skill의 `rules/*.md`, `metadata.json`, `metadata.json.extends`로 연결된 base skill source를 수정한 뒤 `npm --prefix package run build -- --skill=react`로 다시 생성하세요.
 
 ---
 
@@ -15,85 +14,85 @@ Agent Conventions
 
 에이전트 협업 팀을 위한 React 코딩 컨벤션입니다. 이 가이드는 shared 코드와 route-local 코드 사이의 명확한 소유 경계, React 계약에 맞는 handler/prop 시그니처, 예측 가능한 화면 흐름, 오리진을 보존하는 state 접근, React 고유 문서화 규칙을 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, compiled guide에는 `typescript` base skill이 함께 포함됩니다.
 
-이 가이드는 `TypeScript 컨벤션` base skill을 함께 포함합니다.
+이 가이드는 `TypeScript Convention`을 공통 기반 스킬로 함께 포함합니다.
 
 ---
 
-## 포함된 Base Skill
+## 함께 포함된 기반 스킬
 
-- TypeScript 컨벤션
+- TypeScript Convention
 
 ---
 
 ## 목차
 
-1. [TypeScript 컨벤션 Base - Naming and Module Boundaries](#1-typescript-base---naming-and-module-boundaries) — **HIGH**
-   - 1.1 [Centralize Shared Config and Constants Under One Namespace](#11-centralize-shared-config-and-constants-under-one-namespace)
-   - 1.2 [Preserve Config Origin With Chained Access](#12-preserve-config-origin-with-chained-access)
-   - 1.3 [Use Consistent File, Symbol, and Field Naming](#13-use-consistent-file-symbol-and-field-naming)
-   - 1.4 [Use Direct Imports and Dedicated Public Entry Points](#14-use-direct-imports-and-dedicated-public-entry-points)
-2. [TypeScript 컨벤션 Base - Types and Contracts](#2-typescript-base---types-and-contracts) — **CRITICAL**
-   - 2.1 [Document Custom Types and Declarative Shapes](#21-document-custom-types-and-declarative-shapes)
-   - 2.2 [Mark Unused Parameters With an Underscore Prefix](#22-mark-unused-parameters-with-an-underscore-prefix)
-   - 2.3 [Prefer Function Variable Types Over Parameter Annotations](#23-prefer-function-variable-types-over-parameter-annotations)
-   - 2.4 [Reuse Callback Signatures From Existing Contracts](#24-reuse-callback-signatures-from-existing-contracts)
-   - 2.5 [Reuse Existing Contracts Before Declaring New Types](#25-reuse-existing-contracts-before-declaring-new-types)
-3. [TypeScript 컨벤션 Base - Functions and Helper Boundaries](#3-typescript-base---functions-and-helper-boundaries) — **HIGH**
-   - 3.1 [Avoid Imperative Assembly in Wide Scopes](#31-avoid-imperative-assembly-in-wide-scopes)
-   - 3.2 [Extract Helpers Only When the Boundary Is Real](#32-extract-helpers-only-when-the-boundary-is-real)
-   - 3.3 [Replace `enum` With `as const` Objects](#33-replace-enum-with-as-const-objects)
-   - 3.4 [Use Named Object Params for Complex Signatures](#34-use-named-object-params-for-complex-signatures)
-4. [TypeScript 컨벤션 Base - Absence and Fallback Handling](#4-typescript-base---absence-and-fallback-handling) — **HIGH**
-   - 4.1 [Expose Optional Values Instead of Silent Fallbacks](#41-expose-optional-values-instead-of-silent-fallbacks)
-5. [TypeScript 컨벤션 Base - JSDoc and Comment Conventions](#5-typescript-base---jsdoc-and-comment-conventions) — **MEDIUM-HIGH**
-   - 5.1 [Keep Inline Comments for Constraints and Caveats Only](#51-keep-inline-comments-for-constraints-and-caveats-only)
-   - 5.2 [Require Header JSDoc on Key Declarations](#52-require-header-jsdoc-on-key-declarations)
-   - 5.3 [Use `@description` for External Integration Functions](#53-use-description-for-external-integration-functions)
-   - 5.4 [Use `@helper` for Reusable Pure Helper Functions](#54-use-helper-for-reusable-pure-helper-functions)
-   - 5.5 [Use `@tool` for Model-callable Tool Factories](#55-use-tool-for-model-callable-tool-factories)
-   - 5.6 [Write Concise Korean Comments About Purpose and Constraints](#56-write-concise-korean-comments-about-purpose-and-constraints)
-6. [TypeScript 컨벤션 Base - Guardrails and Review Checks](#6-typescript-base---guardrails-and-review-checks) — **MEDIUM**
-   - 6.1 [Review Banned TypeScript Shortcuts Before Finishing](#61-review-banned-typescript-shortcuts-before-finishing)
+1. [TypeScript Convention Base - Naming and Module Boundaries](#1-typescript-convention-base---naming-and-module-boundaries) — **HIGH**
+    - 1.1 [Centralize Shared Config and Constants Under One Namespace](#11-centralize-shared-config-and-constants-under-one-namespace)
+    - 1.2 [Preserve Config Origin With Chained Access](#12-preserve-config-origin-with-chained-access)
+    - 1.3 [Use Consistent File, Symbol, and Field Naming](#13-use-consistent-file-symbol-and-field-naming)
+    - 1.4 [Use Direct Imports and Dedicated Public Entry Points](#14-use-direct-imports-and-dedicated-public-entry-points)
+2. [TypeScript Convention Base - Types and Contracts](#2-typescript-convention-base---types-and-contracts) — **CRITICAL**
+    - 2.1 [Document Custom Types and Declarative Shapes](#21-document-custom-types-and-declarative-shapes)
+    - 2.2 [Mark Unused Parameters With an Underscore Prefix](#22-mark-unused-parameters-with-an-underscore-prefix)
+    - 2.3 [Prefer Function Variable Types Over Parameter Annotations](#23-prefer-function-variable-types-over-parameter-annotations)
+    - 2.4 [Reuse Callback Signatures From Existing Contracts](#24-reuse-callback-signatures-from-existing-contracts)
+    - 2.5 [Reuse Existing Contracts Before Declaring New Types](#25-reuse-existing-contracts-before-declaring-new-types)
+3. [TypeScript Convention Base - Functions and Helper Boundaries](#3-typescript-convention-base---functions-and-helper-boundaries) — **HIGH**
+    - 3.1 [Avoid Imperative Assembly in Wide Scopes](#31-avoid-imperative-assembly-in-wide-scopes)
+    - 3.2 [Extract Helpers Only When the Boundary Is Real](#32-extract-helpers-only-when-the-boundary-is-real)
+    - 3.3 [Replace `enum` With `as const` Objects](#33-replace-enum-with-as-const-objects)
+    - 3.4 [Use Named Object Params for Complex Signatures](#34-use-named-object-params-for-complex-signatures)
+4. [TypeScript Convention Base - Absence and Fallback Handling](#4-typescript-convention-base---absence-and-fallback-handling) — **HIGH**
+    - 4.1 [Expose Optional Values Instead of Silent Fallbacks](#41-expose-optional-values-instead-of-silent-fallbacks)
+5. [TypeScript Convention Base - JSDoc and Comment Conventions](#5-typescript-convention-base---jsdoc-and-comment-conventions) — **MEDIUM-HIGH**
+    - 5.1 [Keep Inline Comments for Constraints and Caveats Only](#51-keep-inline-comments-for-constraints-and-caveats-only)
+    - 5.2 [Require Header JSDoc on Key Declarations](#52-require-header-jsdoc-on-key-declarations)
+    - 5.3 [Use `@description` for External Integration Functions](#53-use-description-for-external-integration-functions)
+    - 5.4 [Use `@helper` for Reusable Pure Helper Functions](#54-use-helper-for-reusable-pure-helper-functions)
+    - 5.5 [Use `@tool` for Model-callable Tool Factories](#55-use-tool-for-model-callable-tool-factories)
+    - 5.6 [Write Concise Korean Comments About Purpose and Constraints](#56-write-concise-korean-comments-about-purpose-and-constraints)
+6. [TypeScript Convention Base - Guardrails and Review Checks](#6-typescript-convention-base---guardrails-and-review-checks) — **MEDIUM**
+    - 6.1 [Review Banned TypeScript Shortcuts Before Finishing](#61-review-banned-typescript-shortcuts-before-finishing)
 7. [Ownership and Boundaries](#7-ownership-and-boundaries) — **CRITICAL**
-   - 7.1 [Avoid Barrel Exports and React Namespace Types](#71-avoid-barrel-exports-and-react-namespace-types)
-   - 7.2 [Keep UI, Widget, and -local Ownership Separate](#72-keep-ui-widget-and--local-ownership-separate)
-   - 7.3 [Place Route-local Files by Visual Scope](#73-place-route-local-files-by-visual-scope)
-   - 7.4 [Prefer Plain .ts Helpers Over Local Custom Hooks](#74-prefer-plain-ts-helpers-over-local-custom-hooks)
-   - 7.5 [Route Shared Constants Through a Config Entry Point](#75-route-shared-constants-through-a-config-entry-point)
-   - 7.6 [Use Consistent File and Symbol Naming](#76-use-consistent-file-and-symbol-naming)
+    - 7.1 [Avoid Barrel Exports and React Namespace Types](#71-avoid-barrel-exports-and-react-namespace-types)
+    - 7.2 [Keep UI, Widget, and -local Ownership Separate](#72-keep-ui-widget-and--local-ownership-separate)
+    - 7.3 [Place Route-local Files by Visual Scope](#73-place-route-local-files-by-visual-scope)
+    - 7.4 [Prefer Plain .ts Helpers Over Local Custom Hooks](#74-prefer-plain-ts-helpers-over-local-custom-hooks)
+    - 7.5 [Route Shared Constants Through a Config Entry Point](#75-route-shared-constants-through-a-config-entry-point)
+    - 7.6 [Use Consistent File and Symbol Naming](#76-use-consistent-file-and-symbol-naming)
 8. [Typing and Contracts](#8-typing-and-contracts) — **HIGH**
-   - 8.1 [Prefer React Handler Type Aliases Over Inline Event Parameter Annotations](#81-prefer-react-handler-type-aliases-over-inline-event-parameter-annotations)
-   - 8.2 [Reuse Prop and API Contracts Before Creating New Types](#82-reuse-prop-and-api-contracts-before-creating-new-types)
+    - 8.1 [Prefer React Handler Type Aliases Over Inline Event Parameter Annotations](#81-prefer-react-handler-type-aliases-over-inline-event-parameter-annotations)
+    - 8.2 [Reuse Prop and API Contracts Before Creating New Types](#82-reuse-prop-and-api-contracts-before-creating-new-types)
 9. [Component Structure and JSX](#9-component-structure-and-jsx) — **HIGH**
-   - 9.1 [Accept props as a Whole and Destructure Inside the Component](#91-accept-props-as-a-whole-and-destructure-inside-the-component)
-   - 9.2 [Prefer Arrow Functions and Object Parameters for Complex Signatures](#92-prefer-arrow-functions-and-object-parameters-for-complex-signatures)
-   - 9.3 [Use Activity for JSX Render Branches](#93-use-activity-for-jsx-render-branches)
-   - 9.4 [Use Named Handlers Instead of Hiding Logic in JSX](#94-use-named-handlers-instead-of-hiding-logic-in-jsx)
+    - 9.1 [Accept props as a Whole and Destructure Inside the Component](#91-accept-props-as-a-whole-and-destructure-inside-the-component)
+    - 9.2 [Prefer Arrow Functions and Object Parameters for Complex Signatures](#92-prefer-arrow-functions-and-object-parameters-for-complex-signatures)
+    - 9.3 [Use Activity for JSX Render Branches](#93-use-activity-for-jsx-render-branches)
+    - 9.4 [Use Named Handlers Instead of Hiding Logic in JSX](#94-use-named-handlers-instead-of-hiding-logic-in-jsx)
 10. [Screen File Discipline](#10-screen-file-discipline) — **HIGH**
-   - 10.1 [Avoid Premature Abstraction in Screen Code](#101-avoid-premature-abstraction-in-screen-code)
-   - 10.2 [Extract Utilities Only When the Boundary Is Real](#102-extract-utilities-only-when-the-boundary-is-real)
-   - 10.3 [Keep Derived Values Close to Where They Are Used](#103-keep-derived-values-close-to-where-they-are-used)
-   - 10.4 [Keep Route Entry Files Focused on Screen Flow](#104-keep-route-entry-files-focused-on-screen-flow)
-   - 10.5 [Move Pure Support Code Out of Route Entry Files](#105-move-pure-support-code-out-of-route-entry-files)
+    - 10.1 [Avoid Premature Abstraction in Screen Code](#101-avoid-premature-abstraction-in-screen-code)
+    - 10.2 [Extract Utilities Only When the Boundary Is Real](#102-extract-utilities-only-when-the-boundary-is-real)
+    - 10.3 [Keep Derived Values Close to Where They Are Used](#103-keep-derived-values-close-to-where-they-are-used)
+    - 10.4 [Keep Route Entry Files Focused on Screen Flow](#104-keep-route-entry-files-focused-on-screen-flow)
+    - 10.5 [Move Pure Support Code Out of Route Entry Files](#105-move-pure-support-code-out-of-route-entry-files)
 11. [Events and Interaction Flow](#11-events-and-interaction-flow) — **MEDIUM-HIGH**
-   - 11.1 [Keep Screen-specific Handler Flow Inline Until a Real Utility Emerges](#111-keep-screen-specific-handler-flow-inline-until-a-real-utility-emerges)
-   - 11.2 [Name Handlers Predictably and Curry Extra Arguments](#112-name-handlers-predictably-and-curry-extra-arguments)
+    - 11.1 [Keep Screen-specific Handler Flow Inline Until a Real Utility Emerges](#111-keep-screen-specific-handler-flow-inline-until-a-real-utility-emerges)
+    - 11.2 [Name Handlers Predictably and Curry Extra Arguments](#112-name-handlers-predictably-and-curry-extra-arguments)
 12. [State and Data Flow](#12-state-and-data-flow) — **CRITICAL**
-   - 12.1 [Avoid Silent Fallback Defaults and Ad-hoc Loading Branches](#121-avoid-silent-fallback-defaults-and-ad-hoc-loading-branches)
-   - 12.2 [Choose State Tools by Source of Truth](#122-choose-state-tools-by-source-of-truth)
-   - 12.3 [Name Query and Mutation Bindings Consistently](#123-name-query-and-mutation-bindings-consistently)
-   - 12.4 [Prefer React Compiler Defaults Over Manual Memoization](#124-prefer-react-compiler-defaults-over-manual-memoization)
-   - 12.5 [Preserve Response and Store Origin in Wide Scopes](#125-preserve-response-and-store-origin-in-wide-scopes)
-   - 12.6 [Shape React Query Data in query.select](#126-shape-react-query-data-in-queryselect)
-   - 12.7 [Store Shared Role and Authority Decisions Once](#127-store-shared-role-and-authority-decisions-once)
+    - 12.1 [Avoid Silent Fallback Defaults and Ad-hoc Loading Branches](#121-avoid-silent-fallback-defaults-and-ad-hoc-loading-branches)
+    - 12.2 [Choose State Tools by Source of Truth](#122-choose-state-tools-by-source-of-truth)
+    - 12.3 [Name Query and Mutation Bindings Consistently](#123-name-query-and-mutation-bindings-consistently)
+    - 12.4 [Prefer React Compiler Defaults Over Manual Memoization](#124-prefer-react-compiler-defaults-over-manual-memoization)
+    - 12.5 [Preserve Response and Store Origin in Wide Scopes](#125-preserve-response-and-store-origin-in-wide-scopes)
+    - 12.6 [Shape React Query Data in query. select](#126-shape-react-query-data-in-queryselect)
+    - 12.7 [Store Shared Role and Authority Decisions Once](#127-store-shared-role-and-authority-decisions-once)
 13. [Documentation and Comments](#13-documentation-and-comments) — **MEDIUM**
-   - 13.1 [Limit Inline Comments to Non-obvious Logic](#131-limit-inline-comments-to-non-obvious-logic)
-   - 13.2 [Require JSDoc on React Hooks, Handlers, and Key Declarations](#132-require-jsdoc-on-react-hooks-handlers-and-key-declarations)
-   - 13.3 [Use @description for API Calls and @summary for Everything Else](#133-use-description-for-api-calls-and-summary-for-everything-else)
+    - 13.1 [Limit Inline Comments to Non-obvious Logic](#131-limit-inline-comments-to-non-obvious-logic)
+    - 13.2 [Require JSDoc on React Hooks, Handlers, and Key Declarations](#132-require-jsdoc-on-react-hooks-handlers-and-key-declarations)
+    - 13.3 [Use @description for API Calls and @summary for Everything Else](#133-use-description-for-api-calls-and-summary-for-everything-else)
 
 ---
 
-## 1. TypeScript 컨벤션 Base - Naming and Module Boundaries
+## 1. TypeScript Convention Base - Naming and Module Boundaries
 
 **Impact: HIGH**
 
@@ -193,7 +192,7 @@ import {mainState} from "<graph-public-import>/main";
 import type {MainState} from "<type-public-import>";
 ```
 
-## 2. TypeScript 컨벤션 Base - Types and Contracts
+## 2. TypeScript Convention Base - Types and Contracts
 
 **Impact: CRITICAL**
 
@@ -351,7 +350,7 @@ interface OrchestrationSnapshot {
 type DevelopmentSnapshot = Pick<DevelopmentOrchestrationState, "request" | "iteration">;
 ```
 
-## 3. TypeScript 컨벤션 Base - Functions and Helper Boundaries
+## 3. TypeScript Convention Base - Functions and Helper Boundaries
 
 **Impact: HIGH**
 
@@ -456,7 +455,7 @@ const buildPlanningPrompt = (args: BuildPlanningPromptArgs): string => {
 const {request, repoPath, taskCategory, projectArea, riskLevel, selectedRuleRefs} = args;
 ```
 
-## 4. TypeScript 컨벤션 Base - Absence and Fallback Handling
+## 4. TypeScript Convention Base - Absence and Fallback Handling
 
 **Impact: HIGH**
 
@@ -481,7 +480,7 @@ const googleApiKey = config.env.google_api_key ?? "demo-key";
 const agentServerPort = process.env.PORT?.trim() || "2024";
 ```
 
-## 5. TypeScript 컨벤션 Base - JSDoc and Comment Conventions
+## 5. TypeScript Convention Base - JSDoc and Comment Conventions
 
 **Impact: MEDIUM-HIGH**
 
@@ -644,7 +643,7 @@ const createReadRepositoryFileTool = (repoPath: string) => {
  */
 ```
 
-## 6. TypeScript 컨벤션 Base - Guardrails and Review Checks
+## 6. TypeScript Convention Base - Guardrails and Review Checks
 
 **Impact: MEDIUM**
 

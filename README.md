@@ -1,13 +1,11 @@
 # agent-conventions
 
-팀 코딩 컨벤션을 AI coding agent skill 형태로 관리하는 공용 저장소입니다.
-
-이 레포는 두 가지를 함께 제공합니다.
+팀 코딩 컨벤션을 AI coding agent skill 형태로 관리하는 공용 저장소입니다.  
+이 레포는 실제 배포 대상 `skill/`과 build/validate tooling인 `package/`를 함께 제공합니다.  
+프로젝트의 `AGENTS.md`에서 이 저장소의 skill 이름을 참조하면 공통 규칙을 팀 단위로 재사용할 수 있습니다.
 
 - `skill/` 아래의 실제 배포 대상 skill
 - `package/` 아래의 build/validate tooling
-
-프로젝트의 `AGENTS.md`에서 이 저장소의 skill 이름을 참조하면, 공통 규칙을 팀 단위로 재사용할 수 있습니다.
 
 ## 포함된 Skill
 
@@ -38,7 +36,8 @@
 
 structured skill은 개별 rule 문서를 조합해 `AGENTS.md`를 생성하고, legacy skill은 단일 문서를 직접 참조합니다.
 
-현재 `react`, `nestjs`, `tanstack-route`, `playwright-test`는 `metadata.json`의 `extends`를 통해 `typescript` base skill을 함께 compile합니다. 즉, 언어 공통 규칙은 `skill/typescript/rules/*.md`에 두고 프레임워크 skill은 overlay 규칙에 집중합니다.
+현재 `react`, `nestjs`, `tanstack-route`, `playwright-test`는 `metadata.json`의 `extends`를 통해`typescript` base skill을 함께 compile합니다.  
+즉, 언어 공통 규칙은`skill/typescript/rules/*.md`에 두고 프레임워크 skill은 overlay 규칙에 집중합니다.
 
 ## 저장소 구조
 
@@ -173,4 +172,5 @@ npm --prefix package run build -- --all
 
 ## 참고 자료
 
-`reference/agent-skills-main/`은 skill pack 구조와 문서 톤을 비교할 때 참고하는 외부 레퍼런스입니다. 다만 이 레포의 source of truth는 항상 현재 `skill/`과 `package/` 아래 문서/코드입니다.
+`reference/agent-skills-main/`은 skill pack 구조와 문서 톤을 비교할 때 참고하는 외부 레퍼런스입니다.   
+다만 이 레포의 source of truth는 항상 현재 `skill/`과 `package/` 아래 문서/코드입니다.

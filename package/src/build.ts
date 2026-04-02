@@ -12,6 +12,23 @@ const getRulesForSection = (section: SkillSection, rules: SkillRule[]): SkillRul
 	return rules.filter((rule) => rule.prefix === section.prefix).sort((left, right) => left.title.localeCompare(right.title, "en-US"));
 };
 
+const conventionTitleBySkillName: Record<string, string> = {
+	css: "CSS Convention",
+	nestjs: "NestJS Convention",
+	"playwright-test": "Playwright Test Convention",
+	react: "React Convention",
+	"tanstack-route": "TanStack Route Convention",
+	typescript: "TypeScript Convention",
+};
+const nestedTocIndent = " ".repeat(4);
+
+/**
+ * @helper skill 이름 기준 영어 convention 표시명 계산
+ */
+const getConventionTitle = (skillName: string, fallbackTitle: string): string => {
+	return conventionTitleBySkillName[skillName] ?? fallbackTitle;
+};
+
 /**
  * @helper inheritance 결과를 최종 markdown section 묶음으로 변환
  */
@@ -26,11 +43,12 @@ const buildCompiledSections = (rootSkillName: string, documents: LoadedSkillDocu
 
 			const inherited = document.skillName !== rootSkillName;
 			const inheritedDescription = inherited ? `이 섹션은 ${document.metadata.title}에서 상속한 공통 규칙입니다. ` : "";
+			const inheritedSectionTitle = `${getConventionTitle(document.skillName, document.metadata.title)} Base - ${section.title}`;
 
 			return {
 				sourceSkillName: document.skillName,
 				sourceSkillTitle: document.metadata.title,
-				title: inherited ? `${document.metadata.title} Base - ${section.title}` : section.title,
+				title: inherited ? inheritedSectionTitle : section.title,
 				impact: section.impact,
 				description: `${inheritedDescription}${section.description}`.trim(),
 				rules: sectionRules,
@@ -52,31 +70,36 @@ const collectReferenceLinks = (documents: LoadedSkillDocument[]): string[] => {
  * @helper root skill이 포함하는 base skill 제목 목록 계산
  */
 const collectBaseSkillTitles = (rootSkillName: string, documents: LoadedSkillDocument[]): string[] => {
-	return documents.filter((document) => document.skillName !== rootSkillName).map((document) => document.metadata.title);
+	return documents
+		.filter((document) => document.skillName !== rootSkillName)
+		.map((document) => getConventionTitle(document.skillName, document.metadata.title));
 };
 
 /**
  * @helper metadata와 resolved section을 compiled markdown 본문으로 조립
  */
-export const generateMarkdown = (metadata: SkillMetadata, sections: CompiledSkillSection[], baseSkillTitles: string[], references: string[]): string => {
+export const generateMarkdown = (
+	skillName: string,
+	metadata: SkillMetadata,
+	sections: CompiledSkillSection[],
+	baseSkillTitles: string[],
+	references: string[],
+): string => {
 	const lines: string[] = [];
 
 	lines.push(`# ${metadata.title}`);
 	lines.push("");
-	lines.push(`**Version ${metadata.version}**  `);
-	lines.push(`${metadata.organization}  `);
+	lines.push(`- 버전: ${metadata.version}`);
+	lines.push(`- 조직: ${metadata.organization}`);
 
 	if (metadata.date) {
-		lines.push(`${metadata.date}`);
-		lines.push("");
-	} else {
-		lines.push("");
+		lines.push(`- 날짜: ${metadata.date}`);
 	}
 
-	lines.push("> **안내:**  ");
-	lines.push("> 이 문서는 에이전트와 LLM이 이 컨벤션 세트의 코드를 유지보수하고,  ");
-	lines.push("> 생성하고, 리팩터링할 때 따르도록 compile한 가이드입니다.  ");
-	lines.push("> source of truth는 현재 skill의 `rules/*.md`와, `extends`로 연결된 base skill의 `rules/*.md`에 있고, 이 파일은 생성 결과물입니다.");
+	lines.push("");
+	lines.push("> **생성된 문서입니다. 직접 수정하지 마세요.**");
+	lines.push(">");
+	lines.push(`> 현재 skill의 \`rules/*.md\`, \`metadata.json\`, \`metadata.json.extends\`로 연결된 base skill source를 수정한 뒤 \`npm --prefix package run build -- --skill=${skillName}\`로 다시 생성하세요.`);
 	lines.push("");
 	lines.push("---");
 	lines.push("");
@@ -86,14 +109,14 @@ export const generateMarkdown = (metadata: SkillMetadata, sections: CompiledSkil
 
 	if (baseSkillTitles.length > 0) {
 		lines.push("");
-		lines.push(`이 가이드는 ${baseSkillTitles.map((title) => `\`${title}\``).join(", ")} base skill을 함께 포함합니다.`);
+		lines.push(`이 가이드는 ${baseSkillTitles.map((title) => `\`${title}\``).join(", ")}을 공통 기반 스킬로 함께 포함합니다.`);
 	}
 	lines.push("");
 
 	if (baseSkillTitles.length > 0) {
 		lines.push("---");
 		lines.push("");
-		lines.push("## 포함된 Base Skill");
+		lines.push("## 함께 포함된 기반 스킬");
 		lines.push("");
 
 		for (const baseSkillTitle of baseSkillTitles) {
@@ -114,7 +137,7 @@ export const generateMarkdown = (metadata: SkillMetadata, sections: CompiledSkil
 		lines.push(`${sectionOrder}. [${section.title}](${buildSectionAnchor(sectionOrder, section.title)}) — **${section.impact}**`);
 
 		for (const [ruleIndex, rule] of section.rules.entries()) {
-			lines.push(`   - ${sectionOrder}.${ruleIndex + 1} [${rule.title}](${buildRuleAnchor(sectionOrder, ruleIndex + 1, rule.title)})`);
+			lines.push(`${nestedTocIndent}- ${sectionOrder}.${ruleIndex + 1} [${rule.title}](${buildRuleAnchor(sectionOrder, ruleIndex + 1, rule.title)})`);
 		}
 	}
 
@@ -133,7 +156,8 @@ export const generateMarkdown = (metadata: SkillMetadata, sections: CompiledSkil
 		lines.push("");
 
 		for (const [ruleIndex, rule] of section.rules.entries()) {
-			lines.push(replaceRuleHeading(rule.body.trim(), sectionOrder, ruleIndex + 1, rule.title));
+			const ruleOrder = ruleIndex + 1;
+			lines.push(replaceRuleHeading(rule.body.trim(), sectionOrder, ruleOrder, rule.title));
 			lines.push("");
 		}
 	}
@@ -166,7 +190,7 @@ export const buildSkill = async (skillPaths: SkillPaths): Promise<void> => {
 	const compiledSections = buildCompiledSections(skillPaths.skillName, documents);
 	const baseSkillTitles = collectBaseSkillTitles(skillPaths.skillName, documents);
 	const references = collectReferenceLinks(documents);
-	const markdown = generateMarkdown(rootDocument.metadata, compiledSections, baseSkillTitles, references);
+	const markdown = generateMarkdown(skillPaths.skillName, rootDocument.metadata, compiledSections, baseSkillTitles, references);
 
 	await writeFile(skillPaths.outputPath, markdown, "utf8");
 	console.log(`Wrote ${path.relative(skillPaths.skillDir, skillPaths.outputPath)}`);

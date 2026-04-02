@@ -1,13 +1,12 @@
 # Playwright Test 컨벤션
 
-**Version 1.0.0**  
-Agent Conventions  
-2026년 4월
+- 버전: 1.0.0
+- 조직: Agent Conventions
+- 날짜: 2026년 4월
 
-> **안내:**  
-> 이 문서는 에이전트와 LLM이 이 컨벤션 세트의 코드를 유지보수하고,  
-> 생성하고, 리팩터링할 때 따르도록 compile한 가이드입니다.  
-> source of truth는 현재 skill의 `rules/*.md`와, `extends`로 연결된 base skill의 `rules/*.md`에 있고, 이 파일은 생성 결과물입니다.
+> **생성된 문서입니다. 직접 수정하지 마세요.**
+>
+> 현재 skill의 `rules/*.md`, `metadata.json`, `metadata.json.extends`로 연결된 base skill source를 수정한 뒤 `npm --prefix package run build -- --skill=playwright-test`로 다시 생성하세요.
 
 ---
 
@@ -15,81 +14,81 @@ Agent Conventions
 
 에이전트 협업 팀을 위한 Playwright 브라우저 테스트 컨벤션입니다. 이 가이드는 명시적인 integration/e2e 경계, 보이는 setup, 결정적인 데이터 고립, 접근 가능한 locator, web-first assertion, 상태 기반 waiting을 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, compiled guide에는 fixture, seed helper, support type에 공통으로 적용되는 `typescript` base skill이 함께 포함됩니다.
 
-이 가이드는 `TypeScript 컨벤션` base skill을 함께 포함합니다.
+이 가이드는 `TypeScript Convention`을 공통 기반 스킬로 함께 포함합니다.
 
 ---
 
-## 포함된 Base Skill
+## 함께 포함된 기반 스킬
 
-- TypeScript 컨벤션
+- TypeScript Convention
 
 ---
 
 ## 목차
 
-1. [TypeScript 컨벤션 Base - Naming and Module Boundaries](#1-typescript-base---naming-and-module-boundaries) — **HIGH**
-   - 1.1 [Centralize Shared Config and Constants Under One Namespace](#11-centralize-shared-config-and-constants-under-one-namespace)
-   - 1.2 [Preserve Config Origin With Chained Access](#12-preserve-config-origin-with-chained-access)
-   - 1.3 [Use Consistent File, Symbol, and Field Naming](#13-use-consistent-file-symbol-and-field-naming)
-   - 1.4 [Use Direct Imports and Dedicated Public Entry Points](#14-use-direct-imports-and-dedicated-public-entry-points)
-2. [TypeScript 컨벤션 Base - Types and Contracts](#2-typescript-base---types-and-contracts) — **CRITICAL**
-   - 2.1 [Document Custom Types and Declarative Shapes](#21-document-custom-types-and-declarative-shapes)
-   - 2.2 [Mark Unused Parameters With an Underscore Prefix](#22-mark-unused-parameters-with-an-underscore-prefix)
-   - 2.3 [Prefer Function Variable Types Over Parameter Annotations](#23-prefer-function-variable-types-over-parameter-annotations)
-   - 2.4 [Reuse Callback Signatures From Existing Contracts](#24-reuse-callback-signatures-from-existing-contracts)
-   - 2.5 [Reuse Existing Contracts Before Declaring New Types](#25-reuse-existing-contracts-before-declaring-new-types)
-3. [TypeScript 컨벤션 Base - Functions and Helper Boundaries](#3-typescript-base---functions-and-helper-boundaries) — **HIGH**
-   - 3.1 [Avoid Imperative Assembly in Wide Scopes](#31-avoid-imperative-assembly-in-wide-scopes)
-   - 3.2 [Extract Helpers Only When the Boundary Is Real](#32-extract-helpers-only-when-the-boundary-is-real)
-   - 3.3 [Replace `enum` With `as const` Objects](#33-replace-enum-with-as-const-objects)
-   - 3.4 [Use Named Object Params for Complex Signatures](#34-use-named-object-params-for-complex-signatures)
-4. [TypeScript 컨벤션 Base - Absence and Fallback Handling](#4-typescript-base---absence-and-fallback-handling) — **HIGH**
-   - 4.1 [Expose Optional Values Instead of Silent Fallbacks](#41-expose-optional-values-instead-of-silent-fallbacks)
-5. [TypeScript 컨벤션 Base - JSDoc and Comment Conventions](#5-typescript-base---jsdoc-and-comment-conventions) — **MEDIUM-HIGH**
-   - 5.1 [Keep Inline Comments for Constraints and Caveats Only](#51-keep-inline-comments-for-constraints-and-caveats-only)
-   - 5.2 [Require Header JSDoc on Key Declarations](#52-require-header-jsdoc-on-key-declarations)
-   - 5.3 [Use `@description` for External Integration Functions](#53-use-description-for-external-integration-functions)
-   - 5.4 [Use `@helper` for Reusable Pure Helper Functions](#54-use-helper-for-reusable-pure-helper-functions)
-   - 5.5 [Use `@tool` for Model-callable Tool Factories](#55-use-tool-for-model-callable-tool-factories)
-   - 5.6 [Write Concise Korean Comments About Purpose and Constraints](#56-write-concise-korean-comments-about-purpose-and-constraints)
-6. [TypeScript 컨벤션 Base - Guardrails and Review Checks](#6-typescript-base---guardrails-and-review-checks) — **MEDIUM**
-   - 6.1 [Review Banned TypeScript Shortcuts Before Finishing](#61-review-banned-typescript-shortcuts-before-finishing)
+1. [TypeScript Convention Base - Naming and Module Boundaries](#1-typescript-convention-base---naming-and-module-boundaries) — **HIGH**
+    - 1.1 [Centralize Shared Config and Constants Under One Namespace](#11-centralize-shared-config-and-constants-under-one-namespace)
+    - 1.2 [Preserve Config Origin With Chained Access](#12-preserve-config-origin-with-chained-access)
+    - 1.3 [Use Consistent File, Symbol, and Field Naming](#13-use-consistent-file-symbol-and-field-naming)
+    - 1.4 [Use Direct Imports and Dedicated Public Entry Points](#14-use-direct-imports-and-dedicated-public-entry-points)
+2. [TypeScript Convention Base - Types and Contracts](#2-typescript-convention-base---types-and-contracts) — **CRITICAL**
+    - 2.1 [Document Custom Types and Declarative Shapes](#21-document-custom-types-and-declarative-shapes)
+    - 2.2 [Mark Unused Parameters With an Underscore Prefix](#22-mark-unused-parameters-with-an-underscore-prefix)
+    - 2.3 [Prefer Function Variable Types Over Parameter Annotations](#23-prefer-function-variable-types-over-parameter-annotations)
+    - 2.4 [Reuse Callback Signatures From Existing Contracts](#24-reuse-callback-signatures-from-existing-contracts)
+    - 2.5 [Reuse Existing Contracts Before Declaring New Types](#25-reuse-existing-contracts-before-declaring-new-types)
+3. [TypeScript Convention Base - Functions and Helper Boundaries](#3-typescript-convention-base---functions-and-helper-boundaries) — **HIGH**
+    - 3.1 [Avoid Imperative Assembly in Wide Scopes](#31-avoid-imperative-assembly-in-wide-scopes)
+    - 3.2 [Extract Helpers Only When the Boundary Is Real](#32-extract-helpers-only-when-the-boundary-is-real)
+    - 3.3 [Replace `enum` With `as const` Objects](#33-replace-enum-with-as-const-objects)
+    - 3.4 [Use Named Object Params for Complex Signatures](#34-use-named-object-params-for-complex-signatures)
+4. [TypeScript Convention Base - Absence and Fallback Handling](#4-typescript-convention-base---absence-and-fallback-handling) — **HIGH**
+    - 4.1 [Expose Optional Values Instead of Silent Fallbacks](#41-expose-optional-values-instead-of-silent-fallbacks)
+5. [TypeScript Convention Base - JSDoc and Comment Conventions](#5-typescript-convention-base---jsdoc-and-comment-conventions) — **MEDIUM-HIGH**
+    - 5.1 [Keep Inline Comments for Constraints and Caveats Only](#51-keep-inline-comments-for-constraints-and-caveats-only)
+    - 5.2 [Require Header JSDoc on Key Declarations](#52-require-header-jsdoc-on-key-declarations)
+    - 5.3 [Use `@description` for External Integration Functions](#53-use-description-for-external-integration-functions)
+    - 5.4 [Use `@helper` for Reusable Pure Helper Functions](#54-use-helper-for-reusable-pure-helper-functions)
+    - 5.5 [Use `@tool` for Model-callable Tool Factories](#55-use-tool-for-model-callable-tool-factories)
+    - 5.6 [Write Concise Korean Comments About Purpose and Constraints](#56-write-concise-korean-comments-about-purpose-and-constraints)
+6. [TypeScript Convention Base - Guardrails and Review Checks](#6-typescript-convention-base---guardrails-and-review-checks) — **MEDIUM**
+    - 6.1 [Review Banned TypeScript Shortcuts Before Finishing](#61-review-banned-typescript-shortcuts-before-finishing)
 7. [Strategy and Test Levels](#7-strategy-and-test-levels) — **CRITICAL**
-   - 7.1 [Classify E2E Tests by Real Backend and Auth Dependence](#71-classify-e2e-tests-by-real-backend-and-auth-dependence)
-   - 7.2 [Classify Integration Tests by Mocked Dependency Boundary](#72-classify-integration-tests-by-mocked-dependency-boundary)
-   - 7.3 [Default to Integration Plus Minimal Critical E2E](#73-default-to-integration-plus-minimal-critical-e2e)
-   - 7.4 [Keep Vitest Out of Browser UI Tests by Default](#74-keep-vitest-out-of-browser-ui-tests-by-default)
-   - 7.5 [Never Mix Integration and E2E in One File](#75-never-mix-integration-and-e2e-in-one-file)
-   - 7.6 [Use Playwright as the Single Browser UI Tool](#76-use-playwright-as-the-single-browser-ui-tool)
+    - 7.1 [Classify E2E Tests by Real Backend and Auth Dependence](#71-classify-e2e-tests-by-real-backend-and-auth-dependence)
+    - 7.2 [Classify Integration Tests by Mocked Dependency Boundary](#72-classify-integration-tests-by-mocked-dependency-boundary)
+    - 7.3 [Default to Integration Plus Minimal Critical E2E](#73-default-to-integration-plus-minimal-critical-e2e)
+    - 7.4 [Keep Vitest Out of Browser UI Tests by Default](#74-keep-vitest-out-of-browser-ui-tests-by-default)
+    - 7.5 [Never Mix Integration and E2E in One File](#75-never-mix-integration-and-e2e-in-one-file)
+    - 7.6 [Use Playwright as the Single Browser UI Tool](#76-use-playwright-as-the-single-browser-ui-tool)
 8. [File Placement and Shared Support](#8-file-placement-and-shared-support) — **HIGH**
-   - 8.1 [Place Specs by Feature Path](#81-place-specs-by-feature-path)
-   - 8.2 [Promote Shared Support Only After Real Reuse](#82-promote-shared-support-only-after-real-reuse)
-   - 8.3 [Use Discoverable Spec File Names](#83-use-discoverable-spec-file-names)
+    - 8.1 [Place Specs by Feature Path](#81-place-specs-by-feature-path)
+    - 8.2 [Promote Shared Support Only After Real Reuse](#82-promote-shared-support-only-after-real-reuse)
+    - 8.3 [Use Discoverable Spec File Names](#83-use-discoverable-spec-file-names)
 9. [General Authoring and Data Isolation](#9-general-authoring-and-data-isolation) — **HIGH**
-   - 9.1 [Follow the Declared Integration or E2E Writing Sequence](#91-follow-the-declared-integration-or-e2e-writing-sequence)
-   - 9.2 [Isolate and Clean Up Test Data](#92-isolate-and-clean-up-test-data)
-   - 9.3 [Keep `beforeEach` Limited and Visible](#93-keep-beforeeach-limited-and-visible)
-   - 9.4 [Keep One Behavior Per Test](#94-keep-one-behavior-per-test)
-   - 9.5 [Name Tests by User Action and Result](#95-name-tests-by-user-action-and-result)
-   - 9.6 [Write Comments Only for Non-obvious Setup Boundaries](#96-write-comments-only-for-non-obvious-setup-boundaries)
+    - 9.1 [Follow the Declared Integration or E2E Writing Sequence](#91-follow-the-declared-integration-or-e2e-writing-sequence)
+    - 9.2 [Isolate and Clean Up Test Data](#92-isolate-and-clean-up-test-data)
+    - 9.3 [Keep `beforeEach` Limited and Visible](#93-keep-beforeeach-limited-and-visible)
+    - 9.4 [Keep One Behavior Per Test](#94-keep-one-behavior-per-test)
+    - 9.5 [Name Tests by User Action and Result](#95-name-tests-by-user-action-and-result)
+    - 9.6 [Write Comments Only for Non-obvious Setup Boundaries](#96-write-comments-only-for-non-obvious-setup-boundaries)
 10. [Integration Boundaries and Mocking](#10-integration-boundaries-and-mocking) — **CRITICAL**
-   - 10.1 [Cover State Matrices and User-visible Results in Integration](#101-cover-state-matrices-and-user-visible-results-in-integration)
-   - 10.2 [Mock Only the Endpoints Required by the Spec](#102-mock-only-the-endpoints-required-by-the-spec)
-   - 10.3 [Wait for State, Not Time, in Integration Tests](#103-wait-for-state-not-time-in-integration-tests)
+    - 10.1 [Cover State Matrices and User-visible Results in Integration](#101-cover-state-matrices-and-user-visible-results-in-integration)
+    - 10.2 [Mock Only the Endpoints Required by the Spec](#102-mock-only-the-endpoints-required-by-the-spec)
+    - 10.3 [Wait for State, Not Time, in Integration Tests](#103-wait-for-state-not-time-in-integration-tests)
 11. [E2E Boundaries and Real-system Control](#11-e2e-boundaries-and-real-system-control) — **CRITICAL**
-   - 11.1 [Avoid Destructive Shared-account Scenarios and Parallel Collisions](#111-avoid-destructive-shared-account-scenarios-and-parallel-collisions)
-   - 11.2 [Seed With API Helpers and Clean Up in `finally`](#112-seed-with-api-helpers-and-clean-up-in-finally)
-   - 11.3 [Use Real Backend, Auth, and Routing in E2E](#113-use-real-backend-auth-and-routing-in-e2e)
+    - 11.1 [Avoid Destructive Shared-account Scenarios and Parallel Collisions](#111-avoid-destructive-shared-account-scenarios-and-parallel-collisions)
+    - 11.2 [Seed With API Helpers and Clean Up in `finally`](#112-seed-with-api-helpers-and-clean-up-in-finally)
+    - 11.3 [Use Real Backend, Auth, and Routing in E2E](#113-use-real-backend-auth-and-routing-in-e2e)
 12. [Locators, Assertions, and Waiting](#12-locators-assertions-and-waiting) — **HIGH**
-   - 12.1 [Allow Explicit Waits Only for Real Async Boundaries](#121-allow-explicit-waits-only-for-real-async-boundaries)
-   - 12.2 [Prefer Accessible Playwright Locators](#122-prefer-accessible-playwright-locators)
-   - 12.3 [Use Web-first Assertions for UI Results](#123-use-web-first-assertions-for-ui-results)
+    - 12.1 [Allow Explicit Waits Only for Real Async Boundaries](#121-allow-explicit-waits-only-for-real-async-boundaries)
+    - 12.2 [Prefer Accessible Playwright Locators](#122-prefer-accessible-playwright-locators)
+    - 12.3 [Use Web-first Assertions for UI Results](#123-use-web-first-assertions-for-ui-results)
 13. [Guardrails and Review Checks](#13-guardrails-and-review-checks) — **MEDIUM**
-   - 13.1 [Review Banned Playwright Shortcuts Before Finishing](#131-review-banned-playwright-shortcuts-before-finishing)
+    - 13.1 [Review Banned Playwright Shortcuts Before Finishing](#131-review-banned-playwright-shortcuts-before-finishing)
 
 ---
 
-## 1. TypeScript 컨벤션 Base - Naming and Module Boundaries
+## 1. TypeScript Convention Base - Naming and Module Boundaries
 
 **Impact: HIGH**
 
@@ -189,7 +188,7 @@ import {mainState} from "<graph-public-import>/main";
 import type {MainState} from "<type-public-import>";
 ```
 
-## 2. TypeScript 컨벤션 Base - Types and Contracts
+## 2. TypeScript Convention Base - Types and Contracts
 
 **Impact: CRITICAL**
 
@@ -347,7 +346,7 @@ interface OrchestrationSnapshot {
 type DevelopmentSnapshot = Pick<DevelopmentOrchestrationState, "request" | "iteration">;
 ```
 
-## 3. TypeScript 컨벤션 Base - Functions and Helper Boundaries
+## 3. TypeScript Convention Base - Functions and Helper Boundaries
 
 **Impact: HIGH**
 
@@ -452,7 +451,7 @@ const buildPlanningPrompt = (args: BuildPlanningPromptArgs): string => {
 const {request, repoPath, taskCategory, projectArea, riskLevel, selectedRuleRefs} = args;
 ```
 
-## 4. TypeScript 컨벤션 Base - Absence and Fallback Handling
+## 4. TypeScript Convention Base - Absence and Fallback Handling
 
 **Impact: HIGH**
 
@@ -477,7 +476,7 @@ const googleApiKey = config.env.google_api_key ?? "demo-key";
 const agentServerPort = process.env.PORT?.trim() || "2024";
 ```
 
-## 5. TypeScript 컨벤션 Base - JSDoc and Comment Conventions
+## 5. TypeScript Convention Base - JSDoc and Comment Conventions
 
 **Impact: MEDIUM-HIGH**
 
@@ -640,7 +639,7 @@ const createReadRepositoryFileTool = (repoPath: string) => {
  */
 ```
 
-## 6. TypeScript 컨벤션 Base - Guardrails and Review Checks
+## 6. TypeScript Convention Base - Guardrails and Review Checks
 
 **Impact: MEDIUM**
 

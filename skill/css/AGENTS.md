@@ -1,13 +1,12 @@
 # CSS 컨벤션
 
-**Version 1.0.0**  
-Agent Conventions  
-2026년 4월
+- 버전: 1.0.0
+- 조직: Agent Conventions
+- 날짜: 2026년 4월
 
-> **안내:**  
-> 이 문서는 에이전트와 LLM이 이 컨벤션 세트의 코드를 유지보수하고,  
-> 생성하고, 리팩터링할 때 따르도록 compile한 가이드입니다.  
-> source of truth는 현재 skill의 `rules/*.md`와, `extends`로 연결된 base skill의 `rules/*.md`에 있고, 이 파일은 생성 결과물입니다.
+> **생성된 문서입니다. 직접 수정하지 마세요.**
+>
+> 현재 skill의 `rules/*.md`, `metadata.json`, `metadata.json.extends`로 연결된 base skill source를 수정한 뒤 `npm --prefix package run build -- --skill=css`로 다시 생성하세요.
 
 ---
 
@@ -20,30 +19,30 @@ Agent Conventions
 ## 목차
 
 1. [Naming and Ownership](#1-naming-and-ownership) — **CRITICAL**
-   - 1.1 [Keep Each `scope_slug` Unique Per Owner](#11-keep-each-scopeslug-unique-per-owner)
-   - 1.2 [Name Elements and Modifiers by Role](#12-name-elements-and-modifiers-by-role)
-   - 1.3 [Preserve Route Slug Traceability](#13-preserve-route-slug-traceability)
-   - 1.4 [Separate Local and Route Style Scopes](#14-separate-local-and-route-style-scopes)
-   - 1.5 [Use Scope, Slug, Element, and Modifier Syntax](#15-use-scope-slug-element-and-modifier-syntax)
+    - 1.1 [Keep Each `scope_slug` Unique Per Owner](#11-keep-each-scopeslug-unique-per-owner)
+    - 1.2 [Name Elements and Modifiers by Role](#12-name-elements-and-modifiers-by-role)
+    - 1.3 [Preserve Route Slug Traceability](#13-preserve-route-slug-traceability)
+    - 1.4 [Separate Local and Route Style Scopes](#14-separate-local-and-route-style-scopes)
+    - 1.5 [Use Scope, Slug, Element, and Modifier Syntax](#15-use-scope-slug-element-and-modifier-syntax)
 2. [Class Composition and Wrapper Boundaries](#2-class-composition-and-wrapper-boundaries) — **HIGH**
-   - 2.1 [Compose Classes With `clsx()`](#21-compose-classes-with-clsx)
-   - 2.2 [Do Not Build Structural Variants With Modifiers](#22-do-not-build-structural-variants-with-modifiers)
-   - 2.3 [Keep Classes Single-purpose](#23-keep-classes-single-purpose)
-   - 2.4 [Prefer `Ui*` Wrapper Prop Types](#24-prefer-ui-wrapper-prop-types)
-   - 2.5 [Style `Ui*` Components Through Owned Wrappers](#25-style-ui-components-through-owned-wrappers)
+    - 2.1 [Compose Classes With `clsx()`](#21-compose-classes-with-clsx)
+    - 2.2 [Do Not Build Structural Variants With Modifiers](#22-do-not-build-structural-variants-with-modifiers)
+    - 2.3 [Keep Classes Single-purpose](#23-keep-classes-single-purpose)
+    - 2.4 [Prefer `Ui*` Wrapper Prop Types](#24-prefer-ui-wrapper-prop-types)
+    - 2.5 [Style `Ui*` Components Through Owned Wrappers](#25-style-ui-components-through-owned-wrappers)
 3. [Selectors and Nesting Boundaries](#3-selectors-and-nesting-boundaries) — **CRITICAL**
-   - 3.1 [Avoid Deep Descendant Selector Dependencies](#31-avoid-deep-descendant-selector-dependencies)
-   - 3.2 [Keep Project-owned Selectors Flat](#32-keep-project-owned-selectors-flat)
-   - 3.3 [Target Third-party DOM Only From Owned Roots](#33-target-third-party-dom-only-from-owned-roots)
-   - 3.4 [Use Pseudo-classes for DOM-owned States](#34-use-pseudo-classes-for-dom-owned-states)
+    - 3.1 [Avoid Deep Descendant Selector Dependencies](#31-avoid-deep-descendant-selector-dependencies)
+    - 3.2 [Keep Project-owned Selectors Flat](#32-keep-project-owned-selectors-flat)
+    - 3.3 [Target Third-party DOM Only From Owned Roots](#33-target-third-party-dom-only-from-owned-roots)
+    - 3.4 [Use Pseudo-classes for DOM-owned States](#34-use-pseudo-classes-for-dom-owned-states)
 4. [Values, Layout, and Interaction States](#4-values-layout-and-interaction-states) — **HIGH**
-   - 4.1 [Always Provide CSS Variable Fallbacks](#41-always-provide-css-variable-fallbacks)
-   - 4.2 [Keep Layout Intent Explicit](#42-keep-layout-intent-explicit)
-   - 4.3 [Separate Domain State Modifiers From DOM Interaction States](#43-separate-domain-state-modifiers-from-dom-interaction-states)
-   - 4.4 [Tokenize Repeated Visual Values](#44-tokenize-repeated-visual-values)
+    - 4.1 [Always Provide CSS Variable Fallbacks](#41-always-provide-css-variable-fallbacks)
+    - 4.2 [Keep Layout Intent Explicit](#42-keep-layout-intent-explicit)
+    - 4.3 [Separate Domain State Modifiers From DOM Interaction States](#43-separate-domain-state-modifiers-from-dom-interaction-states)
+    - 4.4 [Tokenize Repeated Visual Values](#44-tokenize-repeated-visual-values)
 5. [File Organization and Guardrails](#5-file-organization-and-guardrails) — **MEDIUM**
-   - 5.1 [Keep Style Files Owned by One Component or Route](#51-keep-style-files-owned-by-one-component-or-route)
-   - 5.2 [Review Banned CSS Patterns Before Finishing](#52-review-banned-css-patterns-before-finishing)
+    - 5.1 [Keep Style Files Owned by One Component or Route](#51-keep-style-files-owned-by-one-component-or-route)
+    - 5.2 [Review Banned CSS Patterns Before Finishing](#52-review-banned-css-patterns-before-finishing)
 
 ---
 

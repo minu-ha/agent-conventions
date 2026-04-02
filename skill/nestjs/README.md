@@ -1,6 +1,8 @@
 # NestJS 컨벤션
 
-에이전트 협업, 리뷰, AI 보조 리팩터링에 맞춰 NestJS 컨벤션을 관리하는 구조화된 저장소입니다. 현재 NestJS 가이드는 7개 local 섹션의 22개 rule 파일로 구성되어 있으며, 최종적으로 `AGENTS.md`로 compile됩니다. compiled guide에는 `typescript` base skill이 함께 포함됩니다.
+에이전트 협업, 리뷰, AI 보조 리팩터링에 맞춰 NestJS 컨벤션을 관리하는 구조화된 저장소입니다.  
+현재 NestJS 가이드는 7개 local 섹션의 22개 rule 파일로 구성되어 있습니다.  
+최종적으로 `AGENTS.md`로 compile됩니다. compiled guide에는 `typescript` base skill이 함께 포함됩니다.
 
 ## 구조
 

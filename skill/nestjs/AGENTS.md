@@ -1,13 +1,12 @@
 # NestJS 컨벤션
 
-**Version 1.0.0**  
-Agent Conventions  
-2026년 4월
+- 버전: 1.0.0
+- 조직: Agent Conventions
+- 날짜: 2026년 4월
 
-> **안내:**  
-> 이 문서는 에이전트와 LLM이 이 컨벤션 세트의 코드를 유지보수하고,  
-> 생성하고, 리팩터링할 때 따르도록 compile한 가이드입니다.  
-> source of truth는 현재 skill의 `rules/*.md`와, `extends`로 연결된 base skill의 `rules/*.md`에 있고, 이 파일은 생성 결과물입니다.
+> **생성된 문서입니다. 직접 수정하지 마세요.**
+>
+> 현재 skill의 `rules/*.md`, `metadata.json`, `metadata.json.extends`로 연결된 base skill source를 수정한 뒤 `npm --prefix package run build -- --skill=nestjs`로 다시 생성하세요.
 
 ---
 
@@ -15,78 +14,78 @@ Agent Conventions
 
 에이전트 협업 팀을 위한 NestJS 코딩 컨벤션입니다. 이 가이드는 명시적인 모듈 소유권, 얇은 controller, service 중심 도메인 로직, 의도적인 DTO 계약, NestJS/Prisma 경계에 맞는 예외 처리, 신뢰할 수 있는 backend 테스트 경계를 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, compiled guide에는 `typescript` base skill이 함께 포함됩니다.
 
-이 가이드는 `TypeScript 컨벤션` base skill을 함께 포함합니다.
+이 가이드는 `TypeScript Convention`을 공통 기반 스킬로 함께 포함합니다.
 
 ---
 
-## 포함된 Base Skill
+## 함께 포함된 기반 스킬
 
-- TypeScript 컨벤션
+- TypeScript Convention
 
 ---
 
 ## 목차
 
-1. [TypeScript 컨벤션 Base - Naming and Module Boundaries](#1-typescript-base---naming-and-module-boundaries) — **HIGH**
-   - 1.1 [Centralize Shared Config and Constants Under One Namespace](#11-centralize-shared-config-and-constants-under-one-namespace)
-   - 1.2 [Preserve Config Origin With Chained Access](#12-preserve-config-origin-with-chained-access)
-   - 1.3 [Use Consistent File, Symbol, and Field Naming](#13-use-consistent-file-symbol-and-field-naming)
-   - 1.4 [Use Direct Imports and Dedicated Public Entry Points](#14-use-direct-imports-and-dedicated-public-entry-points)
-2. [TypeScript 컨벤션 Base - Types and Contracts](#2-typescript-base---types-and-contracts) — **CRITICAL**
-   - 2.1 [Document Custom Types and Declarative Shapes](#21-document-custom-types-and-declarative-shapes)
-   - 2.2 [Mark Unused Parameters With an Underscore Prefix](#22-mark-unused-parameters-with-an-underscore-prefix)
-   - 2.3 [Prefer Function Variable Types Over Parameter Annotations](#23-prefer-function-variable-types-over-parameter-annotations)
-   - 2.4 [Reuse Callback Signatures From Existing Contracts](#24-reuse-callback-signatures-from-existing-contracts)
-   - 2.5 [Reuse Existing Contracts Before Declaring New Types](#25-reuse-existing-contracts-before-declaring-new-types)
-3. [TypeScript 컨벤션 Base - Functions and Helper Boundaries](#3-typescript-base---functions-and-helper-boundaries) — **HIGH**
-   - 3.1 [Avoid Imperative Assembly in Wide Scopes](#31-avoid-imperative-assembly-in-wide-scopes)
-   - 3.2 [Extract Helpers Only When the Boundary Is Real](#32-extract-helpers-only-when-the-boundary-is-real)
-   - 3.3 [Replace `enum` With `as const` Objects](#33-replace-enum-with-as-const-objects)
-   - 3.4 [Use Named Object Params for Complex Signatures](#34-use-named-object-params-for-complex-signatures)
-4. [TypeScript 컨벤션 Base - Absence and Fallback Handling](#4-typescript-base---absence-and-fallback-handling) — **HIGH**
-   - 4.1 [Expose Optional Values Instead of Silent Fallbacks](#41-expose-optional-values-instead-of-silent-fallbacks)
-5. [TypeScript 컨벤션 Base - JSDoc and Comment Conventions](#5-typescript-base---jsdoc-and-comment-conventions) — **MEDIUM-HIGH**
-   - 5.1 [Keep Inline Comments for Constraints and Caveats Only](#51-keep-inline-comments-for-constraints-and-caveats-only)
-   - 5.2 [Require Header JSDoc on Key Declarations](#52-require-header-jsdoc-on-key-declarations)
-   - 5.3 [Use `@description` for External Integration Functions](#53-use-description-for-external-integration-functions)
-   - 5.4 [Use `@helper` for Reusable Pure Helper Functions](#54-use-helper-for-reusable-pure-helper-functions)
-   - 5.5 [Use `@tool` for Model-callable Tool Factories](#55-use-tool-for-model-callable-tool-factories)
-   - 5.6 [Write Concise Korean Comments About Purpose and Constraints](#56-write-concise-korean-comments-about-purpose-and-constraints)
-6. [TypeScript 컨벤션 Base - Guardrails and Review Checks](#6-typescript-base---guardrails-and-review-checks) — **MEDIUM**
-   - 6.1 [Review Banned TypeScript Shortcuts Before Finishing](#61-review-banned-typescript-shortcuts-before-finishing)
+1. [TypeScript Convention Base - Naming and Module Boundaries](#1-typescript-convention-base---naming-and-module-boundaries) — **HIGH**
+    - 1.1 [Centralize Shared Config and Constants Under One Namespace](#11-centralize-shared-config-and-constants-under-one-namespace)
+    - 1.2 [Preserve Config Origin With Chained Access](#12-preserve-config-origin-with-chained-access)
+    - 1.3 [Use Consistent File, Symbol, and Field Naming](#13-use-consistent-file-symbol-and-field-naming)
+    - 1.4 [Use Direct Imports and Dedicated Public Entry Points](#14-use-direct-imports-and-dedicated-public-entry-points)
+2. [TypeScript Convention Base - Types and Contracts](#2-typescript-convention-base---types-and-contracts) — **CRITICAL**
+    - 2.1 [Document Custom Types and Declarative Shapes](#21-document-custom-types-and-declarative-shapes)
+    - 2.2 [Mark Unused Parameters With an Underscore Prefix](#22-mark-unused-parameters-with-an-underscore-prefix)
+    - 2.3 [Prefer Function Variable Types Over Parameter Annotations](#23-prefer-function-variable-types-over-parameter-annotations)
+    - 2.4 [Reuse Callback Signatures From Existing Contracts](#24-reuse-callback-signatures-from-existing-contracts)
+    - 2.5 [Reuse Existing Contracts Before Declaring New Types](#25-reuse-existing-contracts-before-declaring-new-types)
+3. [TypeScript Convention Base - Functions and Helper Boundaries](#3-typescript-convention-base---functions-and-helper-boundaries) — **HIGH**
+    - 3.1 [Avoid Imperative Assembly in Wide Scopes](#31-avoid-imperative-assembly-in-wide-scopes)
+    - 3.2 [Extract Helpers Only When the Boundary Is Real](#32-extract-helpers-only-when-the-boundary-is-real)
+    - 3.3 [Replace `enum` With `as const` Objects](#33-replace-enum-with-as-const-objects)
+    - 3.4 [Use Named Object Params for Complex Signatures](#34-use-named-object-params-for-complex-signatures)
+4. [TypeScript Convention Base - Absence and Fallback Handling](#4-typescript-convention-base---absence-and-fallback-handling) — **HIGH**
+    - 4.1 [Expose Optional Values Instead of Silent Fallbacks](#41-expose-optional-values-instead-of-silent-fallbacks)
+5. [TypeScript Convention Base - JSDoc and Comment Conventions](#5-typescript-convention-base---jsdoc-and-comment-conventions) — **MEDIUM-HIGH**
+    - 5.1 [Keep Inline Comments for Constraints and Caveats Only](#51-keep-inline-comments-for-constraints-and-caveats-only)
+    - 5.2 [Require Header JSDoc on Key Declarations](#52-require-header-jsdoc-on-key-declarations)
+    - 5.3 [Use `@description` for External Integration Functions](#53-use-description-for-external-integration-functions)
+    - 5.4 [Use `@helper` for Reusable Pure Helper Functions](#54-use-helper-for-reusable-pure-helper-functions)
+    - 5.5 [Use `@tool` for Model-callable Tool Factories](#55-use-tool-for-model-callable-tool-factories)
+    - 5.6 [Write Concise Korean Comments About Purpose and Constraints](#56-write-concise-korean-comments-about-purpose-and-constraints)
+6. [TypeScript Convention Base - Guardrails and Review Checks](#6-typescript-convention-base---guardrails-and-review-checks) — **MEDIUM**
+    - 6.1 [Review Banned TypeScript Shortcuts Before Finishing](#61-review-banned-typescript-shortcuts-before-finishing)
 7. [Module and Naming Boundaries](#7-module-and-naming-boundaries) — **HIGH**
-   - 7.1 [Organize Domain Modules and Shared Backend Code by Scope](#71-organize-domain-modules-and-shared-backend-code-by-scope)
-   - 7.2 [Place Shared and Module-local Constants by Scope](#72-place-shared-and-module-local-constants-by-scope)
-   - 7.3 [Use Kebab-case Filenames With Nest Role Suffixes](#73-use-kebab-case-filenames-with-nest-role-suffixes)
+    - 7.1 [Organize Domain Modules and Shared Backend Code by Scope](#71-organize-domain-modules-and-shared-backend-code-by-scope)
+    - 7.2 [Place Shared and Module-local Constants by Scope](#72-place-shared-and-module-local-constants-by-scope)
+    - 7.3 [Use Kebab-case Filenames With Nest Role Suffixes](#73-use-kebab-case-filenames-with-nest-role-suffixes)
 8. [Layer Responsibilities and Dependencies](#8-layer-responsibilities-and-dependencies) — **CRITICAL**
-   - 8.1 [Keep Controllers Thin and Boundary-focused](#81-keep-controllers-thin-and-boundary-focused)
-   - 8.2 [Keep Services Responsible for Domain Rules and Prisma](#82-keep-services-responsible-for-domain-rules-and-prisma)
-   - 8.3 [Preserve One-way Dependencies Through Services](#83-preserve-one-way-dependencies-through-services)
+    - 8.1 [Keep Controllers Thin and Boundary-focused](#81-keep-controllers-thin-and-boundary-focused)
+    - 8.2 [Keep Services Responsible for Domain Rules and Prisma](#82-keep-services-responsible-for-domain-rules-and-prisma)
+    - 8.3 [Preserve One-way Dependencies Through Services](#83-preserve-one-way-dependencies-through-services)
 9. [DTOs and Backend Type Contracts](#9-dtos-and-backend-type-contracts) — **HIGH**
-   - 9.1 [Document Custom Backend Types and Parameter Objects](#91-document-custom-backend-types-and-parameter-objects)
-   - 9.2 [Expose Response DTO Fields Explicitly](#92-expose-response-dto-fields-explicitly)
-   - 9.3 [Replace Local `enum` With `as const` Except Prisma Enums](#93-replace-local-enum-with-as-const-except-prisma-enums)
-   - 9.4 [Reuse Prisma Generated Types Before New Backend Types](#94-reuse-prisma-generated-types-before-new-backend-types)
-   - 9.5 [Validate Request DTOs With Validator, Transformer, and Swagger](#95-validate-request-dtos-with-validator-transformer-and-swagger)
+    - 9.1 [Document Custom Backend Types and Parameter Objects](#91-document-custom-backend-types-and-parameter-objects)
+    - 9.2 [Expose Response DTO Fields Explicitly](#92-expose-response-dto-fields-explicitly)
+    - 9.3 [Replace Local `enum` With `as const` Except Prisma Enums](#93-replace-local-enum-with-as-const-except-prisma-enums)
+    - 9.4 [Reuse Prisma Generated Types Before New Backend Types](#94-reuse-prisma-generated-types-before-new-backend-types)
+    - 9.5 [Validate Request DTOs With Validator, Transformer, and Swagger](#95-validate-request-dtos-with-validator-transformer-and-swagger)
 10. [Methods, Async Flow, and Errors](#10-methods-async-flow-and-errors) — **HIGH**
-   - 10.1 [Throw Context-rich NestJS Exceptions](#101-throw-context-rich-nestjs-exceptions)
-   - 10.2 [Use Async/Await and Mark Intentional Fire-and-forget Calls](#102-use-asyncawait-and-mark-intentional-fire-and-forget-calls)
-   - 10.3 [Use NestJS Class Methods and Explicit Async Return Types](#103-use-nestjs-class-methods-and-explicit-async-return-types)
+    - 10.1 [Throw Context-rich NestJS Exceptions](#101-throw-context-rich-nestjs-exceptions)
+    - 10.2 [Use Async/Await and Mark Intentional Fire-and-forget Calls](#102-use-asyncawait-and-mark-intentional-fire-and-forget-calls)
+    - 10.3 [Use NestJS Class Methods and Explicit Async Return Types](#103-use-nestjs-class-methods-and-explicit-async-return-types)
 11. [JSDoc and Comment Conventions](#11-jsdoc-and-comment-conventions) — **MEDIUM-HIGH**
-   - 11.1 [Keep Inline Comments for Domain Rules and Library Caveats](#111-keep-inline-comments-for-domain-rules-and-library-caveats)
-   - 11.2 [Require JSDoc on Service Hooks and Boundary Methods](#112-require-jsdoc-on-service-hooks-and-boundary-methods)
-   - 11.3 [Use `@summary` and `@description` on Service and Prisma Boundaries](#113-use-summary-and-description-on-service-and-prisma-boundaries)
+    - 11.1 [Keep Inline Comments for Domain Rules and Library Caveats](#111-keep-inline-comments-for-domain-rules-and-library-caveats)
+    - 11.2 [Require JSDoc on Service Hooks and Boundary Methods](#112-require-jsdoc-on-service-hooks-and-boundary-methods)
+    - 11.3 [Use `@summary` and `@description` on Service and Prisma Boundaries](#113-use-summary-and-description-on-service-and-prisma-boundaries)
 12. [Testing Strategy and Placement](#12-testing-strategy-and-placement) — **CRITICAL**
-   - 12.1 [Add Tests When Branches, Endpoints, or Schema Behavior Change](#121-add-tests-when-branches-endpoints-or-schema-behavior-change)
-   - 12.2 [Mock Unit Boundaries and Verify E2E Wiring](#122-mock-unit-boundaries-and-verify-e2e-wiring)
-   - 12.3 [Place Test Files by Runtime Scope](#123-place-test-files-by-runtime-scope)
-   - 12.4 [Separate Service Unit Tests From HTTP E2E Tests](#124-separate-service-unit-tests-from-http-e2e-tests)
+    - 12.1 [Add Tests When Branches, Endpoints, or Schema Behavior Change](#121-add-tests-when-branches-endpoints-or-schema-behavior-change)
+    - 12.2 [Mock Unit Boundaries and Verify E2E Wiring](#122-mock-unit-boundaries-and-verify-e2e-wiring)
+    - 12.3 [Place Test Files by Runtime Scope](#123-place-test-files-by-runtime-scope)
+    - 12.4 [Separate Service Unit Tests From HTTP E2E Tests](#124-separate-service-unit-tests-from-http-e2e-tests)
 13. [Guardrails and Review Checks](#13-guardrails-and-review-checks) — **MEDIUM**
-   - 13.1 [Review Banned NestJS Shortcuts Before Finishing](#131-review-banned-nestjs-shortcuts-before-finishing)
+    - 13.1 [Review Banned NestJS Shortcuts Before Finishing](#131-review-banned-nestjs-shortcuts-before-finishing)
 
 ---
 
-## 1. TypeScript 컨벤션 Base - Naming and Module Boundaries
+## 1. TypeScript Convention Base - Naming and Module Boundaries
 
 **Impact: HIGH**
 
@@ -186,7 +185,7 @@ import {mainState} from "<graph-public-import>/main";
 import type {MainState} from "<type-public-import>";
 ```
 
-## 2. TypeScript 컨벤션 Base - Types and Contracts
+## 2. TypeScript Convention Base - Types and Contracts
 
 **Impact: CRITICAL**
 
@@ -344,7 +343,7 @@ interface OrchestrationSnapshot {
 type DevelopmentSnapshot = Pick<DevelopmentOrchestrationState, "request" | "iteration">;
 ```
 
-## 3. TypeScript 컨벤션 Base - Functions and Helper Boundaries
+## 3. TypeScript Convention Base - Functions and Helper Boundaries
 
 **Impact: HIGH**
 
@@ -449,7 +448,7 @@ const buildPlanningPrompt = (args: BuildPlanningPromptArgs): string => {
 const {request, repoPath, taskCategory, projectArea, riskLevel, selectedRuleRefs} = args;
 ```
 
-## 4. TypeScript 컨벤션 Base - Absence and Fallback Handling
+## 4. TypeScript Convention Base - Absence and Fallback Handling
 
 **Impact: HIGH**
 
@@ -474,7 +473,7 @@ const googleApiKey = config.env.google_api_key ?? "demo-key";
 const agentServerPort = process.env.PORT?.trim() || "2024";
 ```
 
-## 5. TypeScript 컨벤션 Base - JSDoc and Comment Conventions
+## 5. TypeScript Convention Base - JSDoc and Comment Conventions
 
 **Impact: MEDIUM-HIGH**
 
@@ -637,7 +636,7 @@ const createReadRepositoryFileTool = (repoPath: string) => {
  */
 ```
 
-## 6. TypeScript 컨벤션 Base - Guardrails and Review Checks
+## 6. TypeScript Convention Base - Guardrails and Review Checks
 
 **Impact: MEDIUM**
 

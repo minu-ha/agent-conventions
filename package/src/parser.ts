@@ -84,17 +84,17 @@ export const slugify = (value: string): string => {
 };
 
 /**
- * @helper 개별 rule heading anchor 문자열 생성
- */
-export const buildRuleAnchor = (sectionOrder: number, ruleOrder: number, title: string): string => {
-	return `#${sectionOrder}${ruleOrder}-${slugify(title)}`;
-};
-
-/**
  * @helper section heading anchor 문자열 생성
  */
 export const buildSectionAnchor = (sectionOrder: number, title: string): string => {
-	return `#${sectionOrder}-${slugify(title)}`;
+	return `#${slugify(`${sectionOrder}. ${title}`)}`;
+};
+
+/**
+ * @helper 개별 rule heading anchor 문자열 생성
+ */
+export const buildRuleAnchor = (sectionOrder: number, ruleOrder: number, title: string): string => {
+	return `#${slugify(`${sectionOrder}.${ruleOrder} ${title}`)}`;
 };
 
 /**

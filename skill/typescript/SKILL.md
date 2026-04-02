@@ -8,7 +8,9 @@ metadata:
 
 # TypeScript 컨벤션
 
-에이전트 협업 팀을 위한 TypeScript 코딩 컨벤션 모음입니다. 현재 이 가이드는 6개 카테고리의 21개 규칙으로 구성되어 있으며, 네이밍, import 소유권, 타입 계약, helper 분리, 결측값 처리, JSDoc 규칙을 `rules/*.md`와 compiled `AGENTS.md`로 관리합니다. 이 skill은 React, NestJS, TanStack Route, Playwright Test compiled guide의 공통 base skill로도 사용됩니다.
+에이전트 협업 팀을 위한 TypeScript 코딩 컨벤션 모음입니다. 현재 이 가이드는 6개 카테고리의 21개 규칙으로 구성되어 있습니다.   
+네이밍, import 소유권, 타입 계약, helper 분리, 결측값 처리, JSDoc 규칙을 `rules/*.md`와 compiled `AGENTS.md`로 관리합니다.   
+이 skill은 React, NestJS, TanStack Route, Playwright Test compiled guide의 공통 base skill로도 사용됩니다.
 
 ## 사용할 때
 - 일반 TypeScript 모듈, 유틸 파일, 설정 파일, React 전용이 아닌 `*.ts` 파일을 만들거나 수정할 때 사용합니다.
@@ -17,14 +19,14 @@ metadata:
 
 ## 우선순위별 규칙 카테고리
 
-| 우선순위 | 카테고리 | 영향도 | Prefix |
-|----------|----------|--------|--------|
-| 1 | Naming and Module Boundaries | HIGH | `naming-` |
-| 2 | Types and Contracts | CRITICAL | `types-` |
-| 3 | Functions and Helper Boundaries | HIGH | `functions-` |
-| 4 | Absence and Fallback Handling | HIGH | `absence-` |
-| 5 | JSDoc and Comment Conventions | MEDIUM-HIGH | `docs-` |
-| 6 | Guardrails and Review Checks | MEDIUM | `guardrails-` |
+| 우선순위 | 카테고리                            | 영향도         | Prefix        |
+|------|---------------------------------|-------------|---------------|
+| 1    | Naming and Module Boundaries    | HIGH        | `naming-`     |
+| 2    | Types and Contracts             | CRITICAL    | `types-`      |
+| 3    | Functions and Helper Boundaries | HIGH        | `functions-`  |
+| 4    | Absence and Fallback Handling   | HIGH        | `absence-`    |
+| 5    | JSDoc and Comment Conventions   | MEDIUM-HIGH | `docs-`       |
+| 6    | Guardrails and Review Checks    | MEDIUM      | `guardrails-` |
 
 ## 빠른 참조
 

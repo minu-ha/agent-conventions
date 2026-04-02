@@ -54,8 +54,10 @@ test("build script regenerates AGENTS.md for the react skill", async () => {
 
 	const agentsSource = await readFile(reactAgentsPath, "utf8");
 	assert.match(agentsSource, /^# React 컨벤션$/m);
-	assert.match(agentsSource, /^## 1\. TypeScript 컨벤션 Base - Naming and Module Boundaries$/m);
+	assert.match(agentsSource, /^## 1\. TypeScript Convention Base - Naming and Module Boundaries$/m);
 	assert.match(agentsSource, /^## 목차$/m);
+	assert.match(agentsSource, /^ {4}- 10\.1 \[Avoid Premature Abstraction in Screen Code\]/m);
+	assert.doesNotMatch(agentsSource, /^ {3}- 10\.1 \[Avoid Premature Abstraction in Screen Code\]/m);
 });
 
 test("build:react alias regenerates AGENTS.md for the react skill", async () => {
