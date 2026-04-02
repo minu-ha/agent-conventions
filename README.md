@@ -48,16 +48,19 @@ agent-conventions/
       SKILL.md
       nestjs.md
   packages/
-    react-conventions-build/
-      package.json
-      src/
-        *.mjs
+    package.json
+    README.md
+    tsconfig.json
+    src/
+      *.ts
+    test/
+      *.test.ts
 ```
 
 - `origin/`은 원문/비교용 문서를 보관하는 디렉터리입니다.
 - 실제 Codex가 읽는 배포 대상 skill은 `skill/` 아래에 둡니다.
 - `skill/react/`는 `reference/react-best-practices`처럼 `rules/` source와 `AGENTS.md` compiled guide를 함께 관리합니다.
-- React guide의 build/validate tooling은 독립 npm package `packages/react-conventions-build/`에 둡니다.
+- `skill/*` guide의 build/validate tooling은 독립 npm package `packages/`에 둡니다.
 
 ## Codex 설치
 
@@ -88,13 +91,19 @@ git pull
 
 변경을 pull한 뒤에는 Codex를 재시작해서 새 skill을 다시 발견하게 합니다.
 
-React rule guide를 다시 생성하거나 검증할 때는 build package를 직접 호출합니다.
+Guide를 다시 생성하거나 검증할 때는 build package를 직접 호출합니다.
 
 ```bash
-npm --prefix packages/react-conventions-build run validate
-npm --prefix packages/react-conventions-build run build
-npm --prefix packages/react-conventions-build run dev
+npm --prefix packages install
+npm --prefix packages run typecheck
+npm --prefix packages run test
+npm --prefix packages run validate:react
+npm --prefix packages run build:react
+npm --prefix packages run build:all
+npm --prefix packages run dev:react
 ```
+
+스크립트 역할 설명과 전체 alias 목록은 [`packages/README.md`](/Users/l-20220017/workspace/agent-conventions/packages/README.md)에 정리해 두었습니다.
 
 ## 팀 배포 방식
 
