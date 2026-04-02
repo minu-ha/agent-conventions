@@ -5,7 +5,7 @@
 이 레포는 두 가지를 함께 제공합니다.
 
 - `skill/` 아래의 실제 배포 대상 skill
-- `packages/` 아래의 build/validate tooling
+- `package/` 아래의 build/validate tooling
 
 프로젝트의 `AGENTS.md`에서 이 저장소의 skill 이름을 참조하면, 공통 규칙을 팀 단위로 재사용할 수 있습니다.
 
@@ -68,7 +68,7 @@ agent-conventions/
       SKILL.md
       api.md
       springboot.md
-  packages/
+  package/
     package.json
     README.md
     src/
@@ -81,7 +81,7 @@ agent-conventions/
 ```
 
 - `skill/`은 실제 agent가 읽는 skill pack입니다.
-- `packages/`는 structured skill의 build/validate tooling입니다.
+- `package/`는 structured skill의 build/validate tooling입니다.
 - `reference/`는 외부 사례나 비교용 레퍼런스를 보관하는 공간입니다.
 
 ## Structured Skill Layout
@@ -130,24 +130,24 @@ skill을 수정할 때는 아래 순서를 권장합니다.
 처음 한 번은 build package 의존성을 설치합니다.
 
 ```bash
-npm --prefix packages install
+npm --prefix package install
 ```
 
 단일 structured skill 검증/생성:
 
 ```bash
-npm --prefix packages run validate -- --skill=react
-npm --prefix packages run build -- --skill=react
+npm --prefix package run validate -- --skill=react
+npm --prefix package run build -- --skill=react
 ```
 
 전체 structured skill 검증/생성:
 
 ```bash
-npm --prefix packages run validate -- --all
-npm --prefix packages run build -- --all
+npm --prefix package run validate -- --all
+npm --prefix package run build -- --all
 ```
 
-추가 alias와 스크립트 설명은 [packages/README.md](/Users/l-20220017/workspace/agent-conventions/packages/README.md)에서 확인할 수 있습니다.
+추가 alias와 스크립트 설명은 [package/README.md](/Users/l-20220017/workspace/agent-conventions/package/README.md)에서 확인할 수 있습니다.
 
 ## 프로젝트 연동
 
@@ -166,4 +166,4 @@ npm --prefix packages run build -- --all
 
 ## 참고 자료
 
-`reference/agent-skills-main/`은 skill pack 구조와 문서 톤을 비교할 때 참고하는 외부 레퍼런스입니다. 다만 이 레포의 source of truth는 항상 현재 `skill/`과 `packages/` 아래 문서/코드입니다.
+`reference/agent-skills-main/`은 skill pack 구조와 문서 톤을 비교할 때 참고하는 외부 레퍼런스입니다. 다만 이 레포의 source of truth는 항상 현재 `skill/`과 `package/` 아래 문서/코드입니다.

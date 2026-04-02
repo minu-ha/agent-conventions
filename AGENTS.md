@@ -7,7 +7,7 @@
 이 레포는 팀 공용 coding convention을 skill pack 형태로 관리합니다.
 
 - 실제 skill은 `skill/` 아래에 있습니다.
-- structured skill의 build/validate tooling은 `packages/` 아래에 있습니다.
+- structured skill의 build/validate tooling은 `package/` 아래에 있습니다.
 - `reference/`는 비교용 레퍼런스이며 source of truth가 아닙니다.
 
 루트 [README.md](/Users/l-20220017/workspace/agent-conventions/README.md)는 사람용 온보딩 문서이고, 이 문서는 agent용 작업 규칙입니다.
@@ -59,26 +59,26 @@ structured skill을 수정할 때는 아래 순서를 기본으로 사용합니�
 의존성 설치:
 
 ```bash
-npm --prefix packages install
+npm --prefix package install
 ```
 
 단일 structured skill 검증:
 
 ```bash
-npm --prefix packages run validate -- --skill=<skill-name>
+npm --prefix package run validate -- --skill=<skill-name>
 ```
 
 단일 structured skill build:
 
 ```bash
-npm --prefix packages run build -- --skill=<skill-name>
+npm --prefix package run build -- --skill=<skill-name>
 ```
 
 전체 structured skill 검증/생성:
 
 ```bash
-npm --prefix packages run validate -- --all
-npm --prefix packages run build -- --all
+npm --prefix package run validate -- --all
+npm --prefix package run build -- --all
 ```
 
 현재 buildable skill alias는 아래와 같습니다.

@@ -11,29 +11,29 @@
 - `metadata.json` - compiled guide 메타데이터
 - __`AGENTS.md`__ - 에이전트가 읽는 compiled 결과물
 - `deprecated/react.md` - 마이그레이션 검토용 legacy 단일 문서
-- `../../packages/` - `skill/*` build, validation, typecheck, test를 담당하는 standalone TypeScript npm package
+- `../../package/` - `skill/*` build, validation, typecheck, test를 담당하는 standalone TypeScript npm package
 
 ## 시작하기
 
 1. Validate rule files:
    ```bash
-   npm --prefix packages run validate:react
+   npm --prefix package run validate:react
    ```
 
 2. Build `AGENTS.md` from rules:
    ```bash
-   npm --prefix packages run build:react
+   npm --prefix package run build:react
    ```
 
 3. Validate and build together:
    ```bash
-   npm --prefix packages run dev:react
+   npm --prefix package run dev:react
    ```
 
 4. Verify the build package itself:
    ```bash
-   npm --prefix packages run typecheck
-   npm --prefix packages run test
+   npm --prefix package run typecheck
+   npm --prefix package run test
    ```
 
 ## 새 Rule 추가하기
@@ -49,7 +49,7 @@
    - `docs-` - 한글 주석과 JSDoc 규칙
 3. frontmatter와 본문을 작성합니다.
 4. 설명이 포함된 incorrect/correct 예시를 넣습니다.
-5. `npm --prefix packages run dev:react`를 실행해 `AGENTS.md`를 다시 생성합니다.
+5. `npm --prefix package run dev:react`를 실행해 `AGENTS.md`를 다시 생성합니다.
 
 ## Rule 파일 구조
 
@@ -100,15 +100,15 @@ tags: tag1, tag2
 
 ## 스크립트
 
-- `npm --prefix packages run build:react` - React rule만 compile해서 `AGENTS.md` 생성
-- `npm --prefix packages run validate:react` - React rule만 검증
-- `npm --prefix packages run dev:react` - React만 validate 후 build까지 연속 실행
-- `npm --prefix packages run build:all` - `skill/` 아래 build 가능한 skill 전체 build
-- `npm --prefix packages run validate:all` - `skill/` 아래 build 가능한 skill 전체 validate
-- `npm --prefix packages run dev:all` - `skill/` 아래 build 가능한 skill 전체 validate + build
-- `npm --prefix packages run typecheck` - standalone build package 타입 검사
-- `npm --prefix packages run test` - build package용 CLI/파서/문서 회귀 테스트 실행
-- `cd packages && npm run build:react` - package 로컬 위치에서 React build 스크립트 직접 실행
+- `npm --prefix package run build:react` - React rule만 compile해서 `AGENTS.md` 생성
+- `npm --prefix package run validate:react` - React rule만 검증
+- `npm --prefix package run dev:react` - React만 validate 후 build까지 연속 실행
+- `npm --prefix package run build:all` - `skill/` 아래 build 가능한 skill 전체 build
+- `npm --prefix package run validate:all` - `skill/` 아래 build 가능한 skill 전체 validate
+- `npm --prefix package run dev:all` - `skill/` 아래 build 가능한 skill 전체 validate + build
+- `npm --prefix package run typecheck` - standalone build package 타입 검사
+- `npm --prefix package run test` - build package용 CLI/파서/문서 회귀 테스트 실행
+- `cd package && npm run build:react` - package 로컬 위치에서 React build 스크립트 직접 실행
 
 ## 마이그레이션 메모
 
@@ -126,4 +126,4 @@ rule을 추가하거나 수정할 때는 아래 순서를 따릅니다.
 2. `_template.md` 구조를 따릅니다.
 3. 예시는 실제 route/component 코드와 가깝고 구체적으로 작성합니다.
 4. 새 카테고리를 추가했다면 section metadata도 함께 갱신합니다.
-5. 마무리 전에 `npm --prefix packages run dev:react`를 실행합니다.
+5. 마무리 전에 `npm --prefix package run dev:react`를 실행합니다.
