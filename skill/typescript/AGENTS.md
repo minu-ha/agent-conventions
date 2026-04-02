@@ -7,13 +7,13 @@ Agent Conventions
 > **안내:**  
 > 이 문서는 에이전트와 LLM이 이 컨벤션 세트의 코드를 유지보수하고,  
 > 생성하고, 리팩터링할 때 따르도록 compile한 가이드입니다.  
-> source of truth는 `rules/*.md`에 있고, 이 파일은 생성 결과물입니다.
+> source of truth는 현재 skill의 `rules/*.md`와, `extends`로 연결된 base skill의 `rules/*.md`에 있고, 이 파일은 생성 결과물입니다.
 
 ---
 
 ## 개요
 
-에이전트 협업 팀을 위한 TypeScript 코딩 컨벤션입니다. 이 가이드는 명시적인 네이밍, 직접 import, 재사용 가능한 타입 계약, 절제된 helper 추출, 의도적인 결측값 처리, 일관된 JSDoc 경계를 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, 최종적으로 에이전트가 읽는 `AGENTS.md`로 compile됩니다.
+에이전트 협업 팀을 위한 TypeScript 코딩 컨벤션입니다. 이 가이드는 명시적인 네이밍, 직접 import, 재사용 가능한 타입 계약, 절제된 helper 추출, 의도적인 결측값 처리, 일관된 JSDoc 경계를 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, React, NestJS, TanStack Route, Playwright Test 같은 TypeScript 기반 skill의 공통 base rule 세트로도 사용됩니다.
 
 ---
 
@@ -38,13 +38,12 @@ Agent Conventions
 4. [Absence and Fallback Handling](#4-absence-and-fallback-handling) — **HIGH**
    - 4.1 [Expose Optional Values Instead of Silent Fallbacks](#41-expose-optional-values-instead-of-silent-fallbacks)
 5. [JSDoc and Comment Conventions](#5-jsdoc-and-comment-conventions) — **MEDIUM-HIGH**
-   - 5.1 [Document Declarative Shapes With `@summary` and `@field`](#51-document-declarative-shapes-with-summary-and-field)
-   - 5.2 [Keep Inline Comments for Constraints and Caveats Only](#52-keep-inline-comments-for-constraints-and-caveats-only)
-   - 5.3 [Require Header JSDoc on Key Declarations](#53-require-header-jsdoc-on-key-declarations)
-   - 5.4 [Use `@description` for External Integration Functions](#54-use-description-for-external-integration-functions)
-   - 5.5 [Use `@helper` for Reusable Pure Helper Functions](#55-use-helper-for-reusable-pure-helper-functions)
-   - 5.6 [Use `@tool` for Model-callable Tool Factories](#56-use-tool-for-model-callable-tool-factories)
-   - 5.7 [Write Concise Korean Comments About Purpose and Constraints](#57-write-concise-korean-comments-about-purpose-and-constraints)
+   - 5.1 [Keep Inline Comments for Constraints and Caveats Only](#51-keep-inline-comments-for-constraints-and-caveats-only)
+   - 5.2 [Require Header JSDoc on Key Declarations](#52-require-header-jsdoc-on-key-declarations)
+   - 5.3 [Use `@description` for External Integration Functions](#53-use-description-for-external-integration-functions)
+   - 5.4 [Use `@helper` for Reusable Pure Helper Functions](#54-use-helper-for-reusable-pure-helper-functions)
+   - 5.5 [Use `@tool` for Model-callable Tool Factories](#55-use-tool-for-model-callable-tool-factories)
+   - 5.6 [Write Concise Korean Comments About Purpose and Constraints](#56-write-concise-korean-comments-about-purpose-and-constraints)
 6. [Guardrails and Review Checks](#6-guardrails-and-review-checks) — **MEDIUM**
    - 6.1 [Review Banned TypeScript Shortcuts Before Finishing](#61-review-banned-typescript-shortcuts-before-finishing)
 
@@ -444,43 +443,7 @@ const agentServerPort = process.env.PORT?.trim() || "2024";
 
 주석과 annotation 규칙은 자명한 코드 동작을 반복하지 않고 목적, 제약, 실행 경계를 설명해야 합니다.
 
-### 5.1 Document Declarative Shapes With `@summary` and `@field`
-
-**Impact: MEDIUM-HIGH (keeps exported shape declarations and runtime maps self-describing without duplicate type-only wrappers)**
-
-shape를 설명하는 타입, 인터페이스, 객체형 상수에는 `@summary`를 작성하고, shape 내부 필드는 각 필드 바로 위 `@field` 블록 주석을 사용합니다. 필드 설명만을 위해 별도 타입을 만드는 대신, 실제 shape를 소유한 선언 위에서 직접 의미를 설명합니다.
-
-**Incorrect (`@property`나 중복된 타입 주석으로 설명을 분산):**
-
-```ts
-/**
- * @summary 채팅 응답의 섹션 제목
- * @property selected_rules 선택된 규칙 문서 섹션 제목
- */
-export const heading = {
-	selected_rules: "Selected rules",
-} as const;
-```
-
-**Correct (헤더 `@summary` + 필드별 `@field`를 사용):**
-
-```ts
-/**
- * @summary 채팅 응답의 섹션 제목
- */
-export const heading = {
-	/**
-	 * @field 선택된 규칙 문서 섹션 제목
-	 */
-	selected_rules: "Selected rules",
-	/**
-	 * @field 요구사항 요약 섹션 제목
-	 */
-	requirement_summary: "Requirement summary",
-} as const;
-```
-
-### 5.2 Keep Inline Comments for Constraints and Caveats Only
+### 5.1 Keep Inline Comments for Constraints and Caveats Only
 
 **Impact: MEDIUM (prevents inline comments from narrating obvious code while preserving notes that avoid real misunderstandings)**
 
@@ -502,7 +465,7 @@ if (!normalizedToken) {
 }
 ```
 
-### 5.3 Require Header JSDoc on Key Declarations
+### 5.2 Require Header JSDoc on Key Declarations
 
 **Impact: MEDIUM-HIGH (makes important boundaries searchable and explainable before readers inspect the implementation body)**
 
@@ -527,7 +490,7 @@ export const loadWorkflowSource = async (path: string): Promise<string> => {
 };
 ```
 
-### 5.4 Use `@description` for External Integration Functions
+### 5.3 Use `@description` for External Integration Functions
 
 **Impact: MEDIUM-HIGH (marks functions that cross filesystem, network, environment, or SDK boundaries as integration points)**
 
@@ -555,7 +518,7 @@ export const loadWorkflowSource = async (path: string): Promise<string> => {
 };
 ```
 
-### 5.5 Use `@helper` for Reusable Pure Helper Functions
+### 5.4 Use `@helper` for Reusable Pure Helper Functions
 
 **Impact: MEDIUM-HIGH (distinguishes reusable pure support logic from route, node, or integration boundaries)**
 
@@ -583,7 +546,7 @@ const buildAuditFailureMessage = (count: number): string => {
 };
 ```
 
-### 5.6 Use `@tool` for Model-callable Tool Factories
+### 5.5 Use `@tool` for Model-callable Tool Factories
 
 **Impact: MEDIUM-HIGH (makes tool-creation boundaries explicit so model-callable execution surfaces are not mistaken for ordinary helpers)**
 
@@ -615,7 +578,7 @@ const createReadRepositoryFileTool = (repoPath: string) => {
 };
 ```
 
-### 5.7 Write Concise Korean Comments About Purpose and Constraints
+### 5.6 Write Concise Korean Comments About Purpose and Constraints
 
 **Impact: MEDIUM (keeps comments focused on intent and constraints instead of narrating code mechanics)**
 

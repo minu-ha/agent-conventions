@@ -8,7 +8,7 @@
 
 ## 2. Typing and Contracts (typing)
 **Impact:** HIGH
-**Description:** 명시적인 함수, prop, API 계약은 모호함을 줄이고 React 코드를 추적 가능하게 유지합니다.
+**Description:** React가 제공하는 handler와 prop 계약은 선언 위치에서 바로 드러나야 하며, props/API 시그니처 재사용도 React 문맥에 맞게 유지해야 합니다.
 
 ## 3. Component Structure and JSX (composition)
 **Impact:** HIGH
@@ -28,4 +28,4 @@
 
 ## 7. Documentation and Comments (docs)
 **Impact:** MEDIUM
-**Description:** 주석은 코드를 반복하지 말고, 의도와 제약, 부수효과를 간결한 한글로 설명해야 합니다.
+**Description:** React 경계 선언에는 역할에 맞는 JSDoc을 남기고, inline comment는 JSX나 handler 흐름에서 비자명한 제약만 설명해야 합니다.

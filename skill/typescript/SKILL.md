@@ -8,7 +8,7 @@ metadata:
 
 # TypeScript 컨벤션
 
-에이전트 협업 팀을 위한 TypeScript 코딩 컨벤션 모음입니다. 현재 이 가이드는 6개 카테고리의 22개 규칙으로 구성되어 있으며, 네이밍, import 소유권, 타입 계약, helper 분리, 결측값 처리, JSDoc 규칙을 `rules/*.md`와 compiled `AGENTS.md`로 관리합니다.
+에이전트 협업 팀을 위한 TypeScript 코딩 컨벤션 모음입니다. 현재 이 가이드는 6개 카테고리의 21개 규칙으로 구성되어 있으며, 네이밍, import 소유권, 타입 계약, helper 분리, 결측값 처리, JSDoc 규칙을 `rules/*.md`와 compiled `AGENTS.md`로 관리합니다. 이 skill은 React, NestJS, TanStack Route, Playwright Test compiled guide의 공통 base skill로도 사용됩니다.
 
 ## 사용할 때
 - 일반 TypeScript 모듈, 유틸 파일, 설정 파일, React 전용이 아닌 `*.ts` 파일을 만들거나 수정할 때 사용합니다.
@@ -62,13 +62,13 @@ metadata:
 - `docs-use-helper-for-reusable-pure-helper-functions` - 재사용 가능한 순수 helper에는 `@helper` 사용
 - `docs-use-tool-for-model-callable-tool-factories` - 모델 호출 가능 tool factory에는 `@tool` 사용
 - `docs-keep-inline-comments-for-constraints-and-caveats` - inline comment는 비자명한 제약에만 사용
-- `docs-document-declarative-shapes-with-summary-and-field-blocks` - 선언형 shape는 `@summary`, `@field`로 문서화
 
 ### 6. Guardrails and Review Checks (MEDIUM)
 
 - `guardrails-review-banned-typescript-shortcuts-before-finishing` - 마무리 전에 금지 TypeScript shortcut 점검
 
 ## 함께 쓰기
+- `convention-react`, `convention-nestjs`, `convention-tanstack-route`, `convention-playwright-test`의 compiled guide는 이 skill을 base rule 세트로 포함합니다.
 - React, TanStack Route, NestJS 같은 프레임워크 영역이라면 해당 전용 skill을 함께 사용합니다.
 - route helper나 search schema처럼 router 경계가 함께 바뀌면 `convention-tanstack-route`를 함께 사용합니다.
 - TSX 파일과 React component 경계가 함께 바뀌면 `convention-react`를 함께 사용합니다.

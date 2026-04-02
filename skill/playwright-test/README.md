@@ -1,6 +1,6 @@
 # Playwright Test 컨벤션
 
-에이전트 협업, 리뷰, AI 보조 리팩터링에 맞춰 Playwright 브라우저 테스트 컨벤션을 관리하는 구조화된 저장소입니다. 현재 Playwright test 가이드는 7개 섹션의 25개 rule 파일로 구성되어 있으며, 최종적으로 `AGENTS.md`로 compile됩니다.
+에이전트 협업, 리뷰, AI 보조 리팩터링에 맞춰 Playwright 브라우저 테스트 컨벤션을 관리하는 구조화된 저장소입니다. 현재 Playwright test 가이드는 7개 local 섹션의 25개 rule 파일로 구성되어 있으며, 최종적으로 `AGENTS.md`로 compile됩니다. compiled guide에는 `typescript` base skill이 함께 포함됩니다.
 
 ## 구조
 
@@ -115,6 +115,8 @@ tags: tag1, tag2
 - `rules/*.md`가 source of truth입니다.
 - `AGENTS.md`는 에이전트가 먼저 읽는 compiled 문서입니다.
 - `deprecated/playwright-test.md`는 원래 단일 문서와 마이그레이션 완성도를 비교하기 위해 남겨 둡니다.
+- `metadata.json`의 `extends`로 `typescript` base skill을 함께 compile합니다.
+- fixture, seed helper, payload builder, support type처럼 generic TypeScript 규칙이 필요한 영역은 `skill/typescript/rules/*.md`를 정본으로 사용합니다.
 - 공용 TypeScript build package는 raw CLI 형태와 per-skill alias를 모두 제공합니다.
 
 ## 기여 가이드

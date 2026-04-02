@@ -1,6 +1,6 @@
 # NestJS 컨벤션
 
-에이전트 협업, 리뷰, AI 보조 리팩터링에 맞춰 NestJS 컨벤션을 관리하는 구조화된 저장소입니다. 현재 NestJS 가이드는 7개 섹션의 25개 rule 파일로 구성되어 있으며, 최종적으로 `AGENTS.md`로 compile됩니다.
+에이전트 협업, 리뷰, AI 보조 리팩터링에 맞춰 NestJS 컨벤션을 관리하는 구조화된 저장소입니다. 현재 NestJS 가이드는 7개 local 섹션의 22개 rule 파일로 구성되어 있으며, 최종적으로 `AGENTS.md`로 compile됩니다. compiled guide에는 `typescript` base skill이 함께 포함됩니다.
 
 ## 구조
 
@@ -40,11 +40,11 @@
 
 1. `rules/_template.md`를 `rules/area-description.md`로 복사합니다.
 2. 알맞은 area prefix를 고릅니다.
-   - `naming-` - Nest 파일명, 모듈 폴더 소유권, 직접 import, 상수 배치 규칙
+   - `naming-` - Nest 파일명, 모듈 폴더 소유권, 상수 배치 규칙
    - `layers-` - controller/service 책임과 의존 방향 규칙
    - `dto-` - DTO 검증, response shaping, Prisma 타입 재사용, backend 타입 문서화 규칙
-   - `methods-` - 메서드 스타일, async 처리, 결측값 처리, exception 패턴 규칙
-   - `docs-` - JSDoc과 inline comment 경계 규칙
+   - `methods-` - 메서드 스타일, async 처리, exception 패턴 규칙
+   - `docs-` - NestJS/Prisma 경계 JSDoc과 inline comment 규칙
    - `testing-` - unit/e2e scope, 배치, 라이브러리, coverage trigger 규칙
    - `guardrails-` - 금지 shortcut과 마무리 review check 규칙
 3. frontmatter와 본문을 작성합니다.
@@ -115,6 +115,8 @@ tags: tag1, tag2
 - `rules/*.md`가 source of truth입니다.
 - `AGENTS.md`는 에이전트가 먼저 읽는 compiled 문서입니다.
 - `deprecated/nestjs.md`는 원래 단일 문서와 마이그레이션 완성도를 비교하기 위해 남겨 둡니다.
+- `metadata.json`의 `extends`로 `typescript` base skill을 함께 compile합니다.
+- generic TypeScript rule은 `skill/typescript/rules/*.md`가 정본이고, NestJS rule은 Prisma/Nest boundary overlay에 집중합니다.
 - 공용 TypeScript build package는 raw CLI 형태와 per-skill alias를 모두 제공합니다.
 
 ## 기여 가이드

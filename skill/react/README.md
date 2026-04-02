@@ -1,6 +1,6 @@
 # React 컨벤션
 
-에이전트 협업, 리뷰, AI 보조 리팩터링에 맞춰 React 컨벤션을 관리하는 구조화된 저장소입니다. 현재 React 가이드는 7개 섹션의 33개 rule 파일로 구성되어 있으며, 최종적으로 `AGENTS.md`로 compile됩니다.
+에이전트 협업, 리뷰, AI 보조 리팩터링에 맞춰 React 컨벤션을 관리하는 구조화된 저장소입니다. 현재 React 가이드는 7개 local 섹션의 29개 rule 파일로 구성되어 있으며, 최종적으로 `AGENTS.md`로 compile됩니다. compiled guide에는 `typescript` base skill이 함께 포함됩니다.
 
 ## 구조
 
@@ -41,12 +41,12 @@
 1. `rules/_template.md`를 `rules/area-description.md`로 복사합니다.
 2. 알맞은 area prefix를 고릅니다.
    - `ownership-` - shared/local 소유 경계와 파일 배치 규칙
-   - `typing-` - 타입, callback, props, API 계약 규칙
-   - `composition-` - 컴포넌트 시그니처, JSX 구조, enum 대체 규칙
+   - `typing-` - React handler, callback, props, API 계약 재사용 규칙
+   - `composition-` - 컴포넌트 시그니처와 JSX 구조 규칙
    - `screen-` - route-entry 규율과 helper 추출 경계 규칙
    - `events-` - handler 네이밍과 상호작용 흐름 규칙
    - `state-` - 서버 상태, store 접근, memoization, fallback 규칙
-   - `docs-` - 한글 주석과 JSDoc 규칙
+   - `docs-` - React 경계 JSDoc과 non-obvious logic comment 규칙
 3. frontmatter와 본문을 작성합니다.
 4. 설명이 포함된 incorrect/correct 예시를 넣습니다.
 5. `npm --prefix package run dev:react`를 실행해 `AGENTS.md`를 다시 생성합니다.
@@ -115,8 +115,9 @@ tags: tag1, tag2
 - `rules/*.md`가 source of truth입니다.
 - `AGENTS.md`는 에이전트가 먼저 읽는 compiled 문서입니다.
 - `deprecated/react.md`는 원래 단일 문서와 마이그레이션 완성도를 비교하기 위해 남겨 둡니다.
+- `metadata.json`의 `extends`로 `typescript` base skill을 함께 compile합니다.
+- generic TypeScript rule은 `skill/typescript/rules/*.md`가 정본이고, React rule은 framework-specific overlay에 집중합니다.
 - 공용 TypeScript build package는 raw CLI 형태와 per-skill alias를 모두 제공합니다.
-- 현재 실제로 build 가능한 건 `react`뿐이고, 나머지 skill alias는 이후 마이그레이션을 위해 미리 선언되어 있으므로 `rules/ + metadata.json`이 준비되기 전까지는 실패합니다.
 
 ## 기여 가이드
 

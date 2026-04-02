@@ -7,7 +7,7 @@ Agent Conventions
 > **안내:**  
 > 이 문서는 에이전트와 LLM이 이 컨벤션 세트의 코드를 유지보수하고,  
 > 생성하고, 리팩터링할 때 따르도록 compile한 가이드입니다.  
-> source of truth는 `rules/*.md`에 있고, 이 파일은 생성 결과물입니다.
+> source of truth는 현재 skill의 `rules/*.md`와, `extends`로 연결된 base skill의 `rules/*.md`에 있고, 이 파일은 생성 결과물입니다.
 
 ---
 

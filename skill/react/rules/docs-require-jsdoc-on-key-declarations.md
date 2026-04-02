@@ -1,11 +1,11 @@
 ---
-title: Require JSDoc on Key Declarations
+title: Require JSDoc on React Hooks, Handlers, and Key Declarations
 impact: MEDIUM-HIGH
 impactDescription: 중요한 API, handler, effect, 타입 선언을 더 쉽게 리뷰하고 재사용할 수 있게 함
 tags: docs, jsdoc, handlers, effects
 ---
 
-## Require JSDoc on Key Declarations
+## Require JSDoc on React Hooks, Handlers, and Key Declarations
 
 **Impact: MEDIUM-HIGH (중요한 API, handler, effect, 타입 선언을 더 쉽게 리뷰하고 재사용할 수 있게 함)**
 

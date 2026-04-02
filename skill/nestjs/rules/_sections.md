@@ -4,7 +4,7 @@
 
 ## 1. Module and Naming Boundaries (naming)
 **Impact:** HIGH
-**Description:** 파일명, 모듈 폴더, import, 상수 배치는 NestJS 소유 경계를 한눈에 드러내야 합니다.
+**Description:** 파일명, 모듈 폴더, 상수 배치는 NestJS 도메인 경계와 역할을 한눈에 드러내야 합니다.
 
 ## 2. Layer Responsibilities and Dependencies (layers)
 **Impact:** CRITICAL
@@ -16,11 +16,11 @@
 
 ## 4. Methods, Async Flow, and Errors (methods)
 **Impact:** HIGH
-**Description:** backend 메서드는 shortcut에 기대지 말고 async 의도, 결측값 처리, exception 맥락을 명시적으로 드러내야 합니다.
+**Description:** backend 메서드는 shortcut에 기대지 말고 async 의도와 exception 맥락을 명시적으로 드러내야 합니다.
 
 ## 5. JSDoc and Comment Conventions (docs)
 **Impact:** MEDIUM-HIGH
-**Description:** 주석과 annotation은 자명한 구현을 반복하지 않고 backend 목적, 위험, 쿼리 복잡성을 설명해야 합니다.
+**Description:** 주석과 annotation은 자명한 구현을 반복하지 않고 NestJS 경계 역할, Prisma 쿼리 의도, backend 위험 요소를 설명해야 합니다.
 
 ## 6. Testing Strategy and Placement (testing)
 **Impact:** CRITICAL
