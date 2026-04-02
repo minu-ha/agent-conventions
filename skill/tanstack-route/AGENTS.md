@@ -1,8 +1,8 @@
-# TanStack Route Conventions
+# TanStack Route 컨벤션
 
 **Version 1.0.0**  
 Agent Conventions  
-April 2026
+2026년 4월
 
 > **안내:**  
 > 이 문서는 에이전트와 LLM이 이 컨벤션 세트의 코드를 유지보수하고,  
@@ -13,7 +13,7 @@ April 2026
 
 ## 개요
 
-TanStack Router conventions for agent-assisted teams. The guide emphasizes layout-shell-first route grouping, searchable file naming, explicit router-boundary declarations, route-local ownership, and protection of generated artifacts. Rule files in rules/ are the source of truth and compile into AGENTS.md for agent consumption.
+에이전트 협업 팀을 위한 TanStack Router 컨벤션입니다. 이 가이드는 layout-shell-first route grouping, 검색 가능한 파일명, 명시적인 router boundary 선언, route-local 소유권, generated artifact 보호를 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, 최종적으로 에이전트가 읽는 `AGENTS.md`로 compile됩니다.
 
 ---
 
@@ -56,7 +56,7 @@ TanStack Router conventions for agent-assisted teams. The guide emphasizes layou
 
 **Impact: CRITICAL**
 
-Layout shell decisions, root boundaries, and pathless grouping rules keep the route tree predictable as features grow.
+layout shell 결정, root 경계, pathless grouping 규칙은 기능이 늘어나도 route tree를 예측 가능하게 유지합니다.
 
 ### 1.1 Avoid Folder-only and Flat-only Route Trees
 
@@ -212,7 +212,7 @@ function Root() {
 
 **Impact: HIGH**
 
-Searchable entry filenames, meaningful segment names, and predictable route asset sets make routes easier to find and maintain.
+검색 가능한 entry 파일명, 의미 있는 segment 이름, 예측 가능한 route asset 세트는 route를 더 쉽게 찾고 유지보수하게 만듭니다.
 
 ### 2.1 Create Route-local `*.ts` Helper Files Early
 
@@ -368,7 +368,7 @@ filters.{-$tab}.tsx
 
 **Impact: CRITICAL**
 
-Route declarations, redirects, guards, and search validation should stay explicit at the router boundary instead of leaking into screens.
+route 선언, redirect, guard, search 검증은 화면 안으로 새지 않고 router boundary에 명시적으로 유지되어야 합니다.
 
 ### 3.1 Export `Route` at the Top of the File
 
@@ -539,7 +539,7 @@ export const Route = createFileRoute("/app/(users)/users/")({
 
 **Impact: HIGH**
 
-`layout`, `index`, and `-local` files should each own a narrow slice so route flow stays visible and responsibilities do not blur.
+`layout`, `index`, `-local` 파일은 각각 좁은 책임만 가져야 route flow가 보이고 책임이 흐려지지 않습니다.
 
 ### 4.1 Keep `*.index.tsx` Files Focused on Screen Flow
 
@@ -635,7 +635,7 @@ function AppLayout() {
 
 **Impact: MEDIUM-HIGH**
 
-Route styles should live with the route that owns them, and generated router outputs must remain derived artifacts only.
+route 스타일은 해당 route와 함께 있어야 하고, generated router output은 derived artifact로만 유지되어야 합니다.
 
 ### 5.1 Keep Route CSS at Route Scope
 
@@ -692,7 +692,7 @@ router generator를 다시 실행한다
 
 **Impact: MEDIUM**
 
-New route work should follow a repeatable setup and review sequence so structure, guards, and router contracts are checked before finish.
+새 route 작업은 반복 가능한 setup과 review 순서를 따라야 구조, guard, router 계약을 마무리 전에 점검할 수 있습니다.
 
 ### 6.1 Add New Routes in Layout-first Order
 

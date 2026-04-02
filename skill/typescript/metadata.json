@@ -1,9 +1,9 @@
 {
-  "title": "TypeScript Conventions",
+  "title": "TypeScript 컨벤션",
   "version": "1.0.0",
   "organization": "Agent Conventions",
-  "date": "April 2026",
-  "abstract": "TypeScript conventions for agent-assisted teams. The guide emphasizes explicit naming, direct imports, reusable type contracts, disciplined helper extraction, intentional absence handling, and consistent JSDoc annotation boundaries. Rule files in rules/ are the source of truth and compile into AGENTS.md for agent consumption.",
+  "date": "2026년 4월",
+  "abstract": "에이전트 협업 팀을 위한 TypeScript 코딩 컨벤션입니다. 이 가이드는 명시적인 네이밍, 직접 import, 재사용 가능한 타입 계약, 절제된 helper 추출, 의도적인 결측값 처리, 일관된 JSDoc 경계를 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, 최종적으로 에이전트가 읽는 `AGENTS.md`로 compile됩니다.",
   "references": [
     "https://www.typescriptlang.org/docs/",
     "https://jsdoc.app",

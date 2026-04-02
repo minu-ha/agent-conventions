@@ -1,23 +1,23 @@
-# Sections
+# 섹션
 
-이 파일은 CSS convention rule들의 섹션 순서, 영향도, 설명을 정의합니다.
+이 파일은 CSS 컨벤션 rule의 섹션 순서, 영향도, 설명을 정의합니다.
 
 ## 1. Naming and Ownership (naming)
 **Impact:** CRITICAL
-**Description:** Class grammar, slug traceability, namespace ownership, and local-vs-route scope must stay explicit so styles remain searchable and safe to change.
+**Description:** 클래스 문법, slug 추적성, 네임스페이스 소유권, local-vs-route scope가 명확해야 스타일을 검색하고 안전하게 수정할 수 있습니다.
 
 ## 2. Class Composition and Wrapper Boundaries (composition)
 **Impact:** HIGH
-**Description:** TSX class composition and wrapper ownership rules keep styling boundaries obvious and prevent UI wrappers from leaking uncontrolled styling hooks.
+**Description:** TSX class 조합과 wrapper 소유권 규칙은 스타일링 경계를 분명하게 유지하고, UI wrapper가 통제되지 않은 스타일 hook을 노출하는 것을 막습니다.
 
 ## 3. Selectors and Nesting Boundaries (selector)
 **Impact:** CRITICAL
-**Description:** Flat project-owned selectors and tightly-scoped third-party targeting reduce cascade surprises and keep selector depth predictable.
+**Description:** 프로젝트 소유 selector를 평평하게 유지하고 서드파티 DOM 타게팅 범위를 좁게 제한해야 cascade surprise를 줄이고 selector 깊이를 예측 가능하게 유지할 수 있습니다.
 
 ## 4. Values, Layout, and Interaction States (values)
 **Impact:** HIGH
-**Description:** Tokens, variable fallbacks, explicit layout intent, and clear separation between app state and DOM state keep styles robust and accessible.
+**Description:** 토큰, 변수 fallback, 명시적인 레이아웃 의도, 앱 상태와 DOM 상태의 분리는 스타일을 더 견고하고 접근 가능하게 유지합니다.
 
 ## 5. File Organization and Guardrails (organization)
 **Impact:** MEDIUM
-**Description:** Stylesheets should stay aligned to one owner, use lightweight structure comments, and be checked against banned patterns before completion.
+**Description:** stylesheet는 하나의 owner에 맞춰 유지하고, 가벼운 구조 주석만 사용하며, 마무리 전에 금지 패턴을 점검해야 합니다.

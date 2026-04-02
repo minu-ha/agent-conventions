@@ -1,8 +1,8 @@
-# Playwright Test Conventions
+# Playwright Test 컨벤션
 
 **Version 1.0.0**  
 Agent Conventions  
-April 2026
+2026년 4월
 
 > **안내:**  
 > 이 문서는 에이전트와 LLM이 이 컨벤션 세트의 코드를 유지보수하고,  
@@ -13,7 +13,7 @@ April 2026
 
 ## 개요
 
-Playwright browser test conventions for agent-assisted teams. The guide emphasizes explicit integration vs e2e boundaries, visible setup, deterministic data isolation, accessible locators, web-first assertions, and state-based waiting. Rule files in rules/ are the source of truth and compile into AGENTS.md for agent consumption.
+에이전트 협업 팀을 위한 Playwright 브라우저 테스트 컨벤션입니다. 이 가이드는 명시적인 integration/e2e 경계, 보이는 setup, 결정적인 데이터 고립, 접근 가능한 locator, web-first assertion, 상태 기반 waiting을 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, 최종적으로 에이전트가 읽는 `AGENTS.md`로 compile됩니다.
 
 ---
 
@@ -58,7 +58,7 @@ Playwright browser test conventions for agent-assisted teams. The guide emphasiz
 
 **Impact: CRITICAL**
 
-Tool choice, level classification, and file-level separation should keep browser tests explicit about what is mocked and what is real.
+도구 선택, 테스트 레벨 분류, 파일 분리 규칙은 브라우저 테스트에서 무엇이 mock이고 무엇이 real인지 분명하게 유지해야 합니다.
 
 ### 1.1 Classify E2E Tests by Real Backend and Auth Dependence
 
@@ -196,7 +196,7 @@ login.e2e.spec.ts
 
 **Impact: HIGH**
 
-Spec placement, file names, and shared support promotion should keep test ownership discoverable and support code proportional.
+spec 배치, 파일명, shared support 승격 규칙은 테스트 소유권을 찾기 쉽게 만들고 support 코드 규모를 적절하게 유지해야 합니다.
 
 ### 2.1 Place Specs by Feature Path
 
@@ -270,7 +270,7 @@ members.e2e.spec.ts
 
 **Impact: HIGH**
 
-Test titles, setup visibility, data isolation, and comment rules should keep specs readable and failures diagnosable.
+테스트 제목, setup 가시성, 데이터 고립, comment 규칙은 spec를 읽기 쉽게 하고 실패 원인을 진단 가능하게 유지해야 합니다.
 
 ### 3.1 Follow the Declared Integration or E2E Writing Sequence
 
@@ -420,7 +420,7 @@ await expect(page.getByRole("heading", {name: "멤버 생성"})).toBeVisible();
 
 **Impact: CRITICAL**
 
-Integration tests should make mocked dependencies explicit, cover state matrices, and wait on observable state instead of time.
+integration 테스트는 mocked dependency를 명시적으로 드러내고, 상태 조합을 커버하며, 시간 대신 관찰 가능한 상태를 기다려야 합니다.
 
 ### 4.1 Cover State Matrices and User-visible Results in Integration
 
@@ -496,7 +496,7 @@ await expect(page.getByRole("heading", {name: "멤버"})).toBeVisible();
 
 **Impact: CRITICAL**
 
-E2E tests should use real backend and auth paths while controlling seed, cleanup, and shared-resource risks intentionally.
+e2e 테스트는 실제 backend와 auth 경로를 사용하되 seed, cleanup, shared resource 위험을 의도적으로 통제해야 합니다.
 
 ### 5.1 Avoid Destructive Shared-account Scenarios and Parallel Collisions
 
@@ -577,7 +577,7 @@ test("실제 로그인 성공 smoke", async ({page}) => {
 
 **Impact: HIGH**
 
-Browser tests should prefer accessible locators, web-first assertions, and explicit waiting only for real asynchronous boundaries.
+브라우저 테스트는 접근 가능한 locator, web-first assertion, 실제 비동기 경계에만 쓰는 explicit waiting을 우선해야 합니다.
 
 ### 6.1 Allow Explicit Waits Only for Real Async Boundaries
 
@@ -642,7 +642,7 @@ await expect(page).toHaveURL(/members/);
 
 **Impact: MEDIUM**
 
-Before finishing, test changes should be checked against the shortcuts that most often blur level meaning or create flaky browser tests.
+마무리 전에는 테스트 레벨 의미를 흐리거나 flaky 브라우저 테스트를 만드는 shortcut을 기준으로 다시 점검해야 합니다.
 
 ### 7.1 Review Banned Playwright Shortcuts Before Finishing
 

@@ -1,8 +1,8 @@
-# CSS Conventions
+# CSS 컨벤션
 
 **Version 1.0.0**  
 Agent Conventions  
-April 2026
+2026년 4월
 
 > **안내:**  
 > 이 문서는 에이전트와 LLM이 이 컨벤션 세트의 코드를 유지보수하고,  
@@ -13,7 +13,7 @@ April 2026
 
 ## 개요
 
-CSS conventions for agent-assisted teams. The guide emphasizes ownership-driven naming, predictable TSX class composition, flat selectors, wrapper-scoped third-party styling, tokenized values, and disciplined stylesheet organization. Rule files in rules/ are the source of truth and compile into AGENTS.md for agent consumption.
+에이전트 협업 팀을 위한 CSS 코딩 컨벤션입니다. 이 가이드는 소유권 기반 네이밍, 예측 가능한 TSX class 조합, 평평한 selector, wrapper 기준 서드파티 스타일링, 토큰화된 값, 절제된 stylesheet 구성을 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, 최종적으로 에이전트가 읽는 `AGENTS.md`로 compile됩니다.
 
 ---
 
@@ -51,7 +51,7 @@ CSS conventions for agent-assisted teams. The guide emphasizes ownership-driven 
 
 **Impact: CRITICAL**
 
-Class grammar, slug traceability, namespace ownership, and local-vs-route scope must stay explicit so styles remain searchable and safe to change.
+클래스 문법, slug 추적성, 네임스페이스 소유권, local-vs-route scope가 명확해야 스타일을 검색하고 안전하게 수정할 수 있습니다.
 
 ### 1.1 Keep Each `scope_slug` Unique Per Owner
 
@@ -175,7 +175,7 @@ wg_table__row--selected
 
 **Impact: HIGH**
 
-TSX class composition and wrapper ownership rules keep styling boundaries obvious and prevent UI wrappers from leaking uncontrolled styling hooks.
+TSX class 조합과 wrapper 소유권 규칙은 스타일링 경계를 분명하게 유지하고, UI wrapper가 통제되지 않은 스타일 hook을 노출하는 것을 막습니다.
 
 ### 2.1 Compose Classes With `clsx()`
 
@@ -294,7 +294,7 @@ const items: NonNullable<UiCollapseProps["items"]> = [];
 
 **Impact: CRITICAL**
 
-Flat project-owned selectors and tightly-scoped third-party targeting reduce cascade surprises and keep selector depth predictable.
+프로젝트 소유 selector를 평평하게 유지하고 서드파티 DOM 타게팅 범위를 좁게 제한해야 cascade surprise를 줄이고 selector 깊이를 예측 가능하게 유지할 수 있습니다.
 
 ### 3.1 Avoid Deep Descendant Selector Dependencies
 
@@ -436,7 +436,7 @@ Flat project-owned selectors and tightly-scoped third-party targeting reduce cas
 
 **Impact: HIGH**
 
-Tokens, variable fallbacks, explicit layout intent, and clear separation between app state and DOM state keep styles robust and accessible.
+토큰, 변수 fallback, 명시적인 레이아웃 의도, 앱 상태와 DOM 상태의 분리는 스타일을 더 견고하고 접근 가능하게 유지합니다.
 
 ### 4.1 Always Provide CSS Variable Fallbacks
 
@@ -575,7 +575,7 @@ CSS 변수 `var(--*)`를 사용할 때는 반드시 폴백 값을 함께 지정�
 
 **Impact: MEDIUM**
 
-Stylesheets should stay aligned to one owner, use lightweight structure comments, and be checked against banned patterns before completion.
+stylesheet는 하나의 owner에 맞춰 유지하고, 가벼운 구조 주석만 사용하며, 마무리 전에 금지 패턴을 점검해야 합니다.
 
 ### 5.1 Keep Style Files Owned by One Component or Route
 

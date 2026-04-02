@@ -8,24 +8,26 @@ metadata:
 
 # React 컨벤션
 
-에이전트 협업 팀을 위한 React 코딩 컨벤션 모음입니다. 현재 이 가이드는 7개 카테고리의 33개 규칙으로 구성되어 있으며, 공용 컴포넌트 소유 경계, route-local 분리, 타입 계약, handler 흐름, state 오리진, 한글 문서화 규칙을 `rules/*.md`와 compiled `AGENTS.md`로 관리합니다.
+에이전트 협업 팀을 위한 React 코딩 컨벤션 모음입니다. 현재 이 가이드는 7개 카테고리의 33개 규칙으로 구성되어 있으며, 공용 컴포넌트 소유 경계, route-local 분리, 타입 계약, handler 흐름, state 오리진, 한글 문서화
+규칙을 `rules/*.md`와 compiled `AGENTS.md`로 관리합니다.
 
 ## 사용할 때
+
 - React 컴포넌트, 화면 파일, TSX 렌더링 흐름, React 인접 `*.ts` 파일을 수정할 때 사용합니다.
 - 컴포넌트 소유 경계, handler 구조, 파생값 위치, React Query/Zustand 데이터 흐름이 중요한 변경에 사용합니다.
 - React 코드를 house style 기준으로 리뷰할 때 사용합니다.
 
 ## 우선순위별 규칙 카테고리
 
-| 우선순위 | 카테고리 | 영향도 | Prefix |
-|----------|----------|--------|--------|
-| 1 | Ownership and Boundaries | CRITICAL | `ownership-` |
-| 2 | Typing and Contracts | HIGH | `typing-` |
-| 3 | Component Structure and JSX | HIGH | `composition-` |
-| 4 | Screen File Discipline | HIGH | `screen-` |
-| 5 | Events and Interaction Flow | MEDIUM-HIGH | `events-` |
-| 6 | State and Data Flow | CRITICAL | `state-` |
-| 7 | Documentation and Comments | MEDIUM | `docs-` |
+| 우선순위 | 카테고리                        | 영향도         | Prefix         |
+|------|-----------------------------|-------------|----------------|
+| 1    | Ownership and Boundaries    | CRITICAL    | `ownership-`   |
+| 2    | Typing and Contracts        | HIGH        | `typing-`      |
+| 3    | Component Structure and JSX | HIGH        | `composition-` |
+| 4    | Screen File Discipline      | HIGH        | `screen-`      |
+| 5    | Events and Interaction Flow | MEDIUM-HIGH | `events-`      |
+| 6    | State and Data Flow         | CRITICAL    | `state-`       |
+| 7    | Documentation and Comments  | MEDIUM      | `docs-`        |
 
 ## 빠른 참조
 
@@ -84,6 +86,7 @@ metadata:
 - `docs-korean-purpose-comments` - 목적과 제약을 짧은 한글 주석으로 설명
 
 ## 함께 쓰기
+
 - 일반 TypeScript 규칙은 `convention-typescript`를 함께 사용합니다.
 - 스타일, `className`, CSS import가 바뀌면 `convention-css`를 함께 사용합니다.
 - route 파일이나 router API가 바뀌면 `convention-tanstack-route`를 함께 사용합니다.
@@ -99,6 +102,7 @@ rules/docs-require-jsdoc-on-key-declarations.md
 ```
 
 각 rule 파일에는 아래 내용이 들어 있습니다.
+
 - 규칙이 왜 중요한지에 대한 짧은 설명
 - 설명이 붙은 Incorrect 코드 예시
 - 설명이 붙은 Correct 코드 예시

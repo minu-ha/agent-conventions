@@ -1,8 +1,8 @@
-# NestJS Conventions
+# NestJS 컨벤션
 
 **Version 1.0.0**  
 Agent Conventions  
-April 2026
+2026년 4월
 
 > **안내:**  
 > 이 문서는 에이전트와 LLM이 이 컨벤션 세트의 코드를 유지보수하고,  
@@ -13,7 +13,7 @@ April 2026
 
 ## 개요
 
-NestJS conventions for agent-assisted teams. The guide emphasizes explicit module ownership, thin controllers, service-centered domain logic, intentional DTO contracts, contextual exception handling, and reliable backend test boundaries. Rule files in rules/ are the source of truth and compile into AGENTS.md for agent consumption.
+에이전트 협업 팀을 위한 NestJS 코딩 컨벤션입니다. 이 가이드는 명시적인 모듈 소유권, 얇은 controller, service 중심 도메인 로직, 의도적인 DTO 계약, 맥락이 풍부한 예외 처리, 신뢰할 수 있는 backend 테스트 경계를 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, 최종적으로 에이전트가 읽는 `AGENTS.md`로 compile됩니다.
 
 ---
 
@@ -58,7 +58,7 @@ NestJS conventions for agent-assisted teams. The guide emphasizes explicit modul
 
 **Impact: HIGH**
 
-File names, module folders, imports, and constants should make NestJS ownership boundaries obvious at a glance.
+파일명, 모듈 폴더, import, 상수 배치는 NestJS 소유 경계를 한눈에 드러내야 합니다.
 
 ### 1.1 Organize Domain Modules and Shared Backend Code by Scope
 
@@ -160,7 +160,7 @@ user-response.dto.ts
 
 **Impact: CRITICAL**
 
-Controllers, services, and Prisma access should keep one-way responsibilities so business logic and runtime boundaries do not blur.
+controller, service, Prisma 접근은 단방향 책임을 유지해야 비즈니스 로직과 런타임 경계가 흐려지지 않습니다.
 
 ### 2.1 Keep Controllers Thin and Boundary-focused
 
@@ -261,7 +261,7 @@ async create(@Body() dto: CreateUserDto) {
 
 **Impact: HIGH**
 
-Request DTOs, response DTOs, Prisma types, and parameter objects should keep backend contracts explicit and reusable.
+request DTO, response DTO, Prisma type, parameter object는 backend 계약을 명시적이고 재사용 가능하게 유지해야 합니다.
 
 ### 3.1 Document Custom Backend Types and Parameter Objects
 
@@ -428,7 +428,7 @@ export class CreateUserDto {
 
 **Impact: HIGH**
 
-Backend methods should make async intent, missing-value handling, and exception context explicit instead of relying on shortcuts.
+backend 메서드는 shortcut에 기대지 말고 async 의도, 결측값 처리, exception 맥락을 명시적으로 드러내야 합니다.
 
 ### 4.1 Expose Missing Values Instead of Silent Fallbacks
 
@@ -542,7 +542,7 @@ export const buildPaginationMeta = (total: number, params: PaginationParams) => 
 
 **Impact: MEDIUM-HIGH**
 
-Comments and annotations should explain backend purpose, risk, and query complexity without duplicating obvious implementation details.
+주석과 annotation은 자명한 구현을 반복하지 않고 backend 목적, 위험, 쿼리 복잡성을 설명해야 합니다.
 
 ### 5.1 Keep Inline Comments for Domain Rules and Library Caveats
 
@@ -653,7 +653,7 @@ async findManyWithCount(params: PaginationParams & {role?: Role}) {
 
 **Impact: CRITICAL**
 
-Unit and e2e tests should be separated by runtime boundary, file placement, and dependency strategy so failures stay diagnosable.
+unit과 e2e 테스트는 runtime 경계, 파일 배치, 의존 전략 기준으로 분리해 실패 원인을 빠르게 진단할 수 있어야 합니다.
 
 ### 6.1 Add Tests When Branches, Endpoints, or Schema Behavior Change
 
@@ -760,7 +760,7 @@ test/
 
 **Impact: MEDIUM**
 
-Backend changes should be checked against the recurring shortcuts that most often erode NestJS layering, typing, and test discipline.
+backend 변경은 NestJS 레이어링, 타입 규율, 테스트 규율을 가장 자주 무너뜨리는 반복 shortcut 기준으로 점검해야 합니다.
 
 ### 7.1 Review Banned NestJS Shortcuts Before Finishing
 
