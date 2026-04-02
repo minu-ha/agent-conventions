@@ -1,0 +1,12 @@
+{
+  "title": "TypeScript Conventions",
+  "version": "1.0.0",
+  "organization": "Agent Conventions",
+  "date": "April 2026",
+  "abstract": "TypeScript conventions for agent-assisted teams. The guide emphasizes explicit naming, direct imports, reusable type contracts, disciplined helper extraction, intentional absence handling, and consistent JSDoc annotation boundaries. Rule files in rules/ are the source of truth and compile into AGENTS.md for agent consumption.",
+  "references": [
+    "https://www.typescriptlang.org/docs/",
+    "https://jsdoc.app",
+    "https://zod.dev"
+  ]
+}
