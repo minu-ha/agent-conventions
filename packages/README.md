@@ -36,4 +36,13 @@ npm run build:all
 
 ## Current Limitation
 
-Right now only `react` has the full `rules/ + metadata.json + AGENTS.md` build pipeline. Aliases for other skill folders already exist so the command surface is stable, but those commands will return a `not buildable yet` error until each skill is migrated to the same structure.
+The current structured, buildable skills are:
+
+- `react`
+- `css`
+- `nestjs`
+- `playwright-test`
+- `tanstack-route`
+- `typescript`
+
+`java` is still a legacy single-document skill, so it is intentionally skipped by the structured build pipeline.
