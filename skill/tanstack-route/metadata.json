@@ -1,0 +1,12 @@
+{
+  "title": "TanStack Route Conventions",
+  "version": "1.0.0",
+  "organization": "Agent Conventions",
+  "date": "April 2026",
+  "abstract": "TanStack Router conventions for agent-assisted teams. The guide emphasizes layout-shell-first route grouping, searchable file naming, explicit router-boundary declarations, route-local ownership, and protection of generated artifacts. Rule files in rules/ are the source of truth and compile into AGENTS.md for agent consumption.",
+  "references": [
+    "https://tanstack.com/router/latest",
+    "https://tanstack.com/router/latest/docs/framework/react/guide/file-based-routing",
+    "https://zod.dev"
+  ]
+}
