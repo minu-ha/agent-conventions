@@ -1,43 +1,49 @@
 # agent-conventions
 
-팀 코딩 컨벤션을 AI coding agent skill 형태로 관리하는 공용 저장소입니다.  
-이 레포는 실제 배포 대상 `skill/`과 build/validate tooling인 [package/](./package/README.md)를 함께 제공합니다.  
-프로젝트의 [AGENTS.md](./AGENTS.md)에서 이 저장소의 skill 이름을 참조하면 공통 규칙을 팀 단위로 재사용할 수 있습니다.
+팀 코딩 컨벤션을 AI coding agent skill 형태로 관리하는 공용 저장소입니다.
+이 레포는 실제로 배포되는 `skill/`과 structured skill을 검증하고 compile하는 [package](./package/README.md)를 함께 포함합니다.
 
-- `skill/` 아래의 실제 배포 대상 skill
-- [package/](./package/README.md) 아래의 build/validate tooling
+프로젝트의 [AGENTS.md](./AGENTS.md)에서 이 저장소의 skill 이름을 참조하면, 팀 단위로 같은 규칙을 재사용할 수 있습니다.
+
+## 이 레포에 있는 것
+
+- `skill/`: 에이전트가 실제로 읽는 skill pack
+- [package](./package/README.md): structured skill build, validate, test tooling
+- [reference](./reference/agent-skills-main/README.md): 외부 skill pack 비교용 레퍼런스
 
 ## 포함된 Skill
 
 현재 포함된 skill은 아래와 같습니다.
 
-- [convention-react](./skill/react/SKILL.md): React 컴포넌트 경계, route-local 분리, handler 흐름, state 오리진, 문서화 규칙
-- [convention-css](./skill/css/SKILL.md): CSS 네이밍, selector 깊이, wrapper 기준 스타일링, 디자인 토큰 규칙
-- [convention-tanstack-route](./skill/tanstack-route/SKILL.md): TanStack Router file-based route, layout shell, redirect, search param, route-local helper 규칙
-- [convention-playwright-test](./skill/playwright-test/SKILL.md): Playwright integration/e2e 경계, locator 선택, waiting, mocking, 데이터 고립 규칙
-- [convention-typescript](./skill/typescript/SKILL.md): TypeScript import, custom type, helper 분리, fallback 처리, JSDoc 규칙
-- [convention-nestjs](./skill/nestjs/SKILL.md): NestJS module/controller/service/DTO/Prisma/테스트 경계 규칙
-- [convention-springboot](./skill/java/SKILL.md): Spring Boot 기반 백엔드 컨벤션
+- [react](./skill/react/README.md) - `convention-react`
+  React 컴포넌트 경계, route-local 분리, handler 흐름, state 오리진, 문서화 규칙
+- [css](./skill/css/README.md) - `convention-css`
+  CSS 네이밍, selector 깊이, wrapper 기준 스타일링, 디자인 토큰 규칙
+- [tanstack-route](./skill/tanstack-route/README.md) - `convention-tanstack-route`
+  TanStack Router file-based route, layout shell, redirect, search param, route-local helper 규칙
+- [playwright-test](./skill/playwright-test/README.md) - `convention-playwright-test`
+  Playwright integration/e2e 경계, locator 선택, waiting, mocking, 데이터 고립 규칙
+- [typescript](./skill/typescript/README.md) - `convention-typescript`
+  TypeScript import, custom type, helper 분리, fallback 처리, JSDoc 규칙
+- [nestjs](./skill/nestjs/README.md) - `convention-nestjs`
+  NestJS module, controller, service, DTO, Prisma, 테스트 경계 규칙
+- [java](./skill/java/SKILL.md) - `convention-springboot`
+  Spring Boot 기반 백엔드 컨벤션
 
-## 현재 구조 상태
+## Structured Skill과 Legacy Skill
 
-다음 skill은 각 폴더의 [rules/_sections.md](./skill/react/rules/_sections.md)와 `rules/*.md`를 source of truth로 사용하는 structured skill입니다.
+이 레포에는 두 가지 형태의 skill이 공존합니다.
 
-- [react](./skill/react/README.md)
-- [css](./skill/css/README.md)
-- [tanstack-route](./skill/tanstack-route/README.md)
-- [playwright-test](./skill/playwright-test/README.md)
-- [typescript](./skill/typescript/README.md)
-- [nestjs](./skill/nestjs/README.md)
+- Structured skill
+  `react`, `css`, `tanstack-route`, `playwright-test`, `typescript`, `nestjs`
+- Legacy single-document skill
+  `java`
 
-다음 skill은 아직 legacy single-document 구조입니다.
+structured skill은 작은 rule 문서를 조합해 slim `AGENTS.md`를 생성합니다.
+legacy skill은 단일 문서를 직접 정본으로 사용합니다.
 
-- [java](./skill/java/SKILL.md)
-
-structured skill은 개별 rule 문서를 조합해 [AGENTS.md](./skill/react/AGENTS.md) 같은 slim compiled guide를 생성하고, legacy skill은 단일 문서를 직접 참조합니다.
-
-현재 `react`, `nestjs`, `tanstack-route`, `playwright-test`는 `metadata.json`의 `extends`로 `typescript` companion skill 관계를 선언합니다.  
-기본 [AGENTS.md](./skill/react/AGENTS.md)는 local framework rule만 담고, 필요한 공통 규칙은 companion skill을 함께 로드하는 방식으로 사용합니다.
+현재 `react`, `nestjs`, `tanstack-route`, `playwright-test`는 `metadata.json.extends`로 `typescript` companion skill 관계를 선언합니다.   
+즉, framework skill은 local 규칙에 집중하고 공통 TypeScript 규칙은 `convention-typescript`를 함께 로드하는 방식으로 사용합니다.
 
 ## 저장소 구조
 
@@ -81,29 +87,51 @@ agent-conventions/
       ...
 ```
 
-- `skill/`은 실제 agent가 읽는 skill pack입니다.
-- [package/](./package/README.md)는 structured skill의 build/validate tooling입니다.
-- [reference/](./reference/agent-skills-main/README.md)는 외부 사례나 비교용 레퍼런스를 보관하는 공간입니다.
+## Structured Skill Anatomy
 
-## Structured Skill Layout
+structured skill 하나는 보통 아래 형태를 가집니다.
 
-structured skill은 공통적으로 아래 파일을 가집니다.
+```text
+skill/react/
+  SKILL.md
+  README.md
+  metadata.json
+  AGENTS.md
+  rules/
+    _sections.md
+    _template.md
+    *.md
+  deprecated/
+    react.md
+```
 
-- [SKILL.md](./skill/react/SKILL.md): skill 이름, 설명, 사용 시점 같은 discovery metadata
-- [README.md](./skill/react/README.md): 사람 기준 개요와 규칙 탐색 진입점
-- [metadata.json](./skill/react/metadata.json): build 입력 메타데이터
-- `metadata.json.extends`: 현재 skill이 함께 로드할 companion skill 목록
-- [rules/_sections.md](./skill/react/rules/_sections.md): 섹션 순서와 구성 설명
-- [rules/_template.md](./skill/react/rules/_template.md): 새 rule 작성 템플릿
-- `rules/*.md`: 실제 source of truth rule 문서
-- [AGENTS.md](./skill/react/AGENTS.md): 기본 build 결과물로 생성되는 slim local guide
-- [deprecated/react.md](./skill/react/deprecated/react.md): 이전 single-document 버전 보관본
+- `SKILL.md`
+  skill 이름, description, discovery metadata를 담습니다.
+- `README.md`
+  사람이 읽는 개요 문서입니다.
+- `metadata.json`
+  build 입력 메타데이터입니다.
+- `metadata.json.extends`
+  함께 로드할 companion skill 관계를 선언합니다.
+- `rules/_sections.md`
+  섹션 순서와 설명을 관리합니다.
+- `rules/_template.md`
+  새 rule 작성 템플릿입니다.
+- `rules/*.md`
+  실제 source of truth rule 문서입니다.
+- `AGENTS.md`
+  build 결과로 생성되는 slim local guide입니다.
+- `deprecated/*.md`
+  이전 single-document 버전을 보관합니다.
 
-즉, structured skill에서는 로컬 [rules/_sections.md](./skill/react/rules/_sections.md), [rules/_template.md](./skill/react/rules/_template.md), `rules/*.md`와 `metadata.json.extends`로 선언한 companion 관계가 정본이고 [AGENTS.md](./skill/react/AGENTS.md)는 생성물입니다.
+정리하면, structured skill에서 사람이 직접 수정하는 정본은
+`rules/_sections.md`, `rules/_template.md`, `rules/*.md`, `metadata.json`이고,
+`AGENTS.md`는 생성물입니다.
 
 ## 설치
 
-에이전트가 시작 시 `~/.agents/skills/`를 스캔하도록 사용하는 경우, 이 저장소의 `skill/` 디렉터리를 symlink로 연결하는 방식이 가장 단순합니다.
+에이전트가 시작 시 `~/.agents/skills/`를 스캔한다면,
+이 저장소의 `skill/` 디렉터리를 symlink로 연결하는 방식이 가장 단순합니다.
 
 ```bash
 mkdir -p ~/.agents/skills
@@ -123,15 +151,20 @@ symlink를 추가하거나 교체한 뒤에는 에이전트를 재시작하는 �
 
 skill을 수정할 때는 아래 순서를 권장합니다.
 
-1. 대상 skill이 structured인지 legacy인지 먼저 확인합니다.
-2. structured skill이면 [rules/_sections.md](./skill/react/rules/_sections.md), [rules/_template.md](./skill/react/rules/_template.md), `rules/*.md`와 필요한 보조 파일을 수정합니다.
-3. `metadata.json`에 `extends`가 있으면 공통 companion skill 쪽이 정본인지 local overlay skill 쪽이 정본인지 먼저 판단합니다.
-4. generic TypeScript 규칙이면 가능하면 [skill/typescript/rules/_sections.md](./skill/typescript/rules/_sections.md)와 `rules/*.md`를 먼저 수정합니다.
-5. framework-specific overlay만 대상이면 해당 skill의 local rule을 수정합니다.
+1. 대상이 structured skill인지 legacy skill인지 먼저 확인합니다.
+2. structured skill이면 `rules/_sections.md`, `rules/_template.md`, `rules/*.md`,
+   그리고 필요한 `metadata.json`을 수정합니다.
+3. `extends`가 있다면 공통 규칙을 companion skill에 둘지, local overlay로 둘지
+   먼저 판단합니다.
+4. generic TypeScript 규칙이면 가능하면
+   [skill/typescript](./skill/typescript/README.md) 쪽을 먼저 수정합니다.
+5. framework-specific 규칙이면 해당 skill의 local rule만 수정합니다.
 6. structured skill 변경 후에는 validate와 build를 다시 실행합니다.
-7. 필요하면 루트 [README.md](./README.md)나 프로젝트 문서의 skill 인벤토리 설명도 함께 갱신합니다.
+7. skill 인벤토리나 구조 설명이 바뀌면 루트 README도 함께 갱신합니다.
 
 legacy skill이면 해당 단일 문서를 직접 수정합니다.
+
+## 자주 쓰는 명령
 
 처음 한 번은 build package 의존성을 설치합니다.
 
@@ -139,11 +172,22 @@ legacy skill이면 해당 단일 문서를 직접 수정합니다.
 npm --prefix package install
 ```
 
-단일 structured skill 검증/생성:
+단일 structured skill 검증:
 
 ```bash
 npm --prefix package run validate -- --skill=react
+```
+
+단일 structured skill build:
+
+```bash
 npm --prefix package run build -- --skill=react
+```
+
+단일 structured skill validate + build:
+
+```bash
+npm --prefix package run dev:react
 ```
 
 전체 structured skill 검증/생성:
@@ -153,27 +197,30 @@ npm --prefix package run validate -- --all
 npm --prefix package run build -- --all
 ```
 
-추가 alias와 스크립트 설명은 [package/README.md](./package/README.md)에서 확인할 수 있습니다.
+더 자세한 script 설명은 [package/README.md](./package/README.md)에서 확인할 수 있습니다.
+각 skill 폴더 안에서 직접 작업할 때는 해당 skill의 `README.md`에 있는
+skill-relative 명령을 사용하는 편이 안전합니다.
 
-## 프로젝트 연동
+## 프로젝트에서 쓰는 방법
 
-각 프로젝트는 자체 `AGENTS.md`에서 필요한 skill 이름을 명시적으로 참조하고, 그 위에 프로젝트 고유 제약을 덧붙이는 방식을 권장합니다.
+각 프로젝트는 자체 `AGENTS.md`에서 필요한 skill 이름을 명시적으로 참조하고,
+그 위에 프로젝트 고유 제약을 덧붙이는 방식을 권장합니다.
 
-예를 들면 아래와 같은 역할 분리가 자연스럽습니다.
+예를 들면 아래처럼 역할을 나누는 구성이 자연스럽습니다.
 
 - 공통 스타일, 경계, 문서화 규칙: 이 저장소의 skill
 - 생성 파일 보호, 검증 명령, 배포 규칙: 프로젝트 로컬 `AGENTS.md`
 
-TypeScript 기반 framework 프로젝트에서는 `convention-react` 같은 framework skill과
-`convention-typescript`를 함께 명시하는 구성을 권장합니다.
+TypeScript 기반 framework 프로젝트에서는 framework skill 하나만 적기보다
+`convention-react` + `convention-typescript`처럼 companion skill을 함께 적는 구성을 권장합니다.
 
 ## 버전 관리 가이드
 
-- [SKILL.md](./skill/react/SKILL.md)의 `name` 변경은 breaking change로 취급합니다.
+- 각 skill의 `SKILL.md`에 있는 `name` 변경은 breaking change로 봅니다.
 - 새 skill 추가나 호환되는 규칙 확장은 minor 버전으로 관리합니다.
 - 문구 수정, 예시 보강, 비호환성 없는 보정은 patch 버전으로 관리합니다.
 
 ## 참고 자료
 
-`reference/agent-skills-main/`은 skill pack 구조와 문서 톤을 비교할 때 참고하는 외부 레퍼런스입니다.   
-다만 이 레포의 source of truth는 항상 현재 `skill/`과 `package/` 아래 문서/코드입니다.
+`reference/agent-skills-main/`은 skill pack 구조와 문서 톤을 비교할 때 참고하는 외부 레퍼런스입니다.
+다만 이 레포의 source of truth는 항상 현재 `skill/`과 `package/` 아래 문서와 코드입니다.
