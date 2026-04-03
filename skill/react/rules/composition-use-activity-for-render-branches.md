@@ -1,34 +1,38 @@
 ---
-title: Use Activity for JSX Render Branches
+title: Use Visibility Primitives Deliberately for Show and Hide Branches
 impact: MEDIUM
 impactDescription: 표시 여부 결정을 route 화면 전반에서 명시적이고 일관되게 유지함
 tags: composition, jsx, activity
 ---
 
-## Use Activity for JSX Render Branches
+## Use Visibility Primitives Deliberately for Show and Hide Branches
 
 **Impact: MEDIUM (표시 여부 결정을 route 화면 전반에서 명시적이고 일관되게 유지함)**
 
-React 19의 `<Activity />` 또는 프로젝트가 이미 채택한 동등한 visibility primitive가 있다면, JSX에서 렌더링 노드를 바꾸는 조건부 분기에는 삼항 렌더링 대신 그 primitive를 사용합니다.   
-속성값 계산은 삼항을 허용하지만, 노드 자체의 표시/숨김은 일관된 visibility primitive로 통일합니다. 코드베이스에 `Activity`가 아직 없다면 이 규칙 때문에 새 추상화를 도입하지 말고 기존 패턴을 따릅니다.
+React 19의 `<Activity />` 또는 프로젝트가 이미 채택한 동등한 visibility primitive가 있다면, 이미 마운트된 subtree를 보여주거나 숨기는 의도일 때만 사용합니다.   
+삼항 렌더링과 visibility primitive는 같은 의미가 아닙니다. 전자는 branch를 아예 unmount할 수 있지만, 후자는 숨겨진 subtree의 state와 effect를 유지할 수 있습니다. mount/unmount 의미가 중요하면 기존 조건부 렌더링을 유지하고, 코드베이스에 `Activity`가 아직 없다면 이 규칙 때문에 새 추상화를 도입하지 말고 기존 패턴을 따릅니다.
 
-**Incorrect (렌더링 노드 선택을 삼항으로 처리):**
-
-```tsx
-return hasItems ? <ItemList /> : <EmptyState />;
-```
-
-**Correct (`Activity`를 이미 쓰는 코드베이스에서는 표시/숨김을 같은 primitive로 드러냄):**
+**Incorrect (lifecycle 의미가 다른 분기를 무비판적으로 visibility primitive로 치환):**
 
 ```tsx
 return (
   <>
-    <Activity mode={hasItems ? "visible" : "hidden"}>
-      <ItemList />
+    <Activity mode={isEditing ? "visible" : "hidden"}>
+      <EditorForm />
     </Activity>
-    <Activity mode={hasItems ? "hidden" : "visible"}>
-      <EmptyState />
+    <Activity mode={isEditing ? "hidden" : "visible"}>
+      <PreviewPane />
     </Activity>
   </>
 );
+```
+
+**Correct (show/hide가 목적일 때만 visibility primitive를 사용하고, mount 의미가 중요하면 조건부 렌더링을 유지):**
+
+```tsx
+return <Activity mode={isSidebarOpen ? "visible" : "hidden"}><EntrySidebar /></Activity>;
+```
+
+```tsx
+return hasItems ? <ItemList /> : <EmptyState />;
 ```

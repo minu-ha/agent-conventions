@@ -9,7 +9,8 @@ tags: state, fallback, loading, suspense
 
 **Impact: HIGH (결측 데이터를 숨기지 않고 로딩 UX를 Suspense 또는 명시적 예외 처리 쪽으로 유도함)**
 
-옵셔널 값에 `??`, `||`로 습관적인 기본값을 넣지 않고, `isPending`, `isFetching` 같은 상태를 즉시 렌더링하지 않습니다. 결측값은 드러내고, 로딩은 기본적으로 Suspense 경계나 상위 레이아웃에서 처리합니다. 예외가 필요하면 가까운 한글 주석으로 이유를 남깁니다.
+옵셔널 값에 `??`, `||`로 습관적인 기본값을 넣지 않고, Suspense query의 초기 blocking 로딩을 화면 본문에서 즉석 분기하지 않습니다. 결측값은 드러내고, 초기 로딩은 기본적으로 Suspense 경계나 상위 레이아웃에서 처리합니다.   
+대신 `isPending`, `isFetching` 같은 상태는 버튼 비활성화, background refetch indicator, 저장 중 배지처럼 기존 UI를 보조하는 좁은 용도로만 사용합니다. 화면 전체를 가리는 로컬 loading 분기가 꼭 필요하면 가까운 한글 주석으로 이유를 남깁니다.
 
 **Incorrect (결측과 로딩을 즉석에서 숨김):**
 
@@ -21,14 +22,16 @@ if (responseUserGetItemSuspense.isPending) {
 }
 ```
 
-**Correct (결측을 드러내고 의도 있는 분기만 허용):**
+**Correct (결측은 명시적으로 드러내고, pending/fetching은 보조 UI에만 사용):**
 
 ```tsx
-const name = responseUserGetItemSuspense.data?.name;
+const userName = responseUserGetItemSuspense.data?.name;
 
 return (
-  <Activity mode={name ? "visible" : "hidden"}>
-    <UserName value={name} />
-  </Activity>
+  <>
+    {userName ? <UserName value={userName} /> : <UserNameEmptyState />}
+    <UiButton disabled={mutationUserSave.isPending}>저장</UiButton>
+    {responseUserGetItemSuspense.isFetching ? <RefreshIndicator /> : null}
+  </>
 );
 ```

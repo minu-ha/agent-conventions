@@ -9,7 +9,7 @@ tags: docs, comments, inline
 
 **Impact: MEDIUM (코드를 해설하기보다 주석을 caveat, 제약, 부수효과 설명에 집중시킴)**
 
-함수 본문 안에서는 JSDoc 대신 `//` 라인 주석을 사용하고, 도메인 규칙, 예외 방어, 라이브러리 제약, 부수효과 순서처럼 코드만 읽어서는 놓치기 쉬운 경우에만 남깁니다. 변수명 반복이나 단순 매핑 설명은 주석으로 적지 않습니다. 함수 시그니처를 한 줄로 유지해야 가독성이 더 좋은 경우에만 헤더 JSDoc 안에서 `biome-ignore format:`를 제한적으로 사용합니다.
+함수 본문 안에서는 `//` 라인 주석을 사용하고, 도메인 규칙, 예외 방어, 라이브러리 제약, 부수효과 순서처럼 코드만 읽어서는 놓치기 쉬운 경우에만 남깁니다. 변수명 반복이나 단순 매핑 설명은 주석으로 적지 않습니다. 헤더 JSDoc과 annotation 태그 선택은 `docs-require-jsdoc-on-key-declarations`와 companion skill인 `convention-typescript`의 표준을 따릅니다.
 
 **Incorrect (코드 그대로를 반복하는 주석):**
 
@@ -26,14 +26,8 @@ const updatedNodes = updateNodeDisplayed(nodes, targetId, true);
 ```
 
 ```ts
-/**
- * @helper 트리 노드 UiTree 데이터 변환
- * biome-ignore format: 매개변수 가독성 목적 시그니처 한 줄 유지
- */
-export const mapFolderNodeToTreeData = (node: ContentFolderTreeNode, renderers: FolderTreeRenderers) => {
-  return {
-    title: renderers.renderTitle(node),
-    icon: renderers.renderIcon(node),
-  };
-};
+// 업로드 직후에는 서버 정렬 기준이 확정되지 않아 optimistic reorder를 막는다.
+if (mutationFileUpload.isPending) {
+  return;
+}
 ```

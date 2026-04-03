@@ -50,7 +50,7 @@ metadata:
 
 - `composition-prefer-arrow-functions-and-object-params` - 복잡한 시그니처는 화살표 함수와 객체 매개변수 사용
 - `composition-destructure-props-inside` - `props` 전체를 받고 본문 안에서 구조분해
-- `composition-use-activity-for-render-branches` - `Activity` 또는 프로젝트 visibility primitive로 렌더 분기 표현
+- `composition-use-activity-for-render-branches` - visibility primitive는 show/hide 의도일 때만 사용
 - `composition-named-handlers-over-inline` - 분기와 비동기 로직을 JSX 바깥으로 드러냄
 
 ### 4. Screen File Discipline (HIGH)
@@ -64,7 +64,7 @@ metadata:
 ### 5. Events and Interaction Flow (MEDIUM-HIGH)
 
 - `events-name-and-curry-handlers` - handler 이름을 예측 가능하게 짓고 추가 인자는 curry로 전달
-- `events-keep-handler-flow-inline` - 실제 utility 경계가 생길 때까지 화면 전용 흐름은 inline으로 유지
+- `events-keep-handler-flow-inline` - 실제 utility 경계가 생길 때까지 named handler 본문에 화면 전용 흐름 유지
 
 ### 6. State and Data Flow (CRITICAL)
 
@@ -78,7 +78,7 @@ metadata:
 
 ### 7. Documentation and Comments (MEDIUM)
 
-- `docs-require-jsdoc-on-key-declarations` - 비자명한 api/event/watch/helper/contract 선언에 JSDoc 요구
+- `docs-require-jsdoc-on-key-declarations` - 비자명한 api/event/watch/helper/summary 선언에 JSDoc 요구
 - `docs-limit-inline-comments-to-non-obvious-logic` - inline comment는 제약과 caveat 설명에만 사용
 
 ## 함께 쓰기

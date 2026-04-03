@@ -39,8 +39,8 @@
 3. [Component Structure and JSX](#3-component-structure-and-jsx) — **HIGH**
     - 3.1 [Accept props as a Whole and Destructure Inside the Component](#31-accept-props-as-a-whole-and-destructure-inside-the-component)
     - 3.2 [Prefer Arrow Functions and Object Parameters for Complex Signatures](#32-prefer-arrow-functions-and-object-parameters-for-complex-signatures)
-    - 3.3 [Use Activity for JSX Render Branches](#33-use-activity-for-jsx-render-branches)
-    - 3.4 [Use Named Handlers Instead of Hiding Logic in JSX](#34-use-named-handlers-instead-of-hiding-logic-in-jsx)
+    - 3.3 [Use Named Handlers Instead of Hiding Logic in JSX](#33-use-named-handlers-instead-of-hiding-logic-in-jsx)
+    - 3.4 [Use Visibility Primitives Deliberately for Show and Hide Branches](#34-use-visibility-primitives-deliberately-for-show-and-hide-branches)
 4. [Screen File Discipline](#4-screen-file-discipline) — **HIGH**
     - 4.1 [Avoid Premature Abstraction in Screen Code](#41-avoid-premature-abstraction-in-screen-code)
     - 4.2 [Extract Utilities Only When the Boundary Is Real](#42-extract-utilities-only-when-the-boundary-is-real)
@@ -48,7 +48,7 @@
     - 4.4 [Keep Route Entry Files Focused on Screen Flow](#44-keep-route-entry-files-focused-on-screen-flow)
     - 4.5 [Move Pure Support Code Out of Route Entry Files](#45-move-pure-support-code-out-of-route-entry-files)
 5. [Events and Interaction Flow](#5-events-and-interaction-flow) — **MEDIUM-HIGH**
-    - 5.1 [Keep Screen-specific Handler Flow Inline Until a Real Utility Emerges](#51-keep-screen-specific-handler-flow-inline-until-a-real-utility-emerges)
+    - 5.1 [Keep Screen-specific Handler Flow Local Until a Real Utility Emerges](#51-keep-screen-specific-handler-flow-local-until-a-real-utility-emerges)
     - 5.2 [Name Handlers Predictably and Curry Extra Arguments](#52-name-handlers-predictably-and-curry-extra-arguments)
 6. [State and Data Flow](#6-state-and-data-flow) — **CRITICAL**
     - 6.1 [Avoid Silent Fallback Defaults and Ad-hoc Loading Branches](#61-avoid-silent-fallback-defaults-and-ad-hoc-loading-branches)
@@ -57,7 +57,7 @@
     - 6.4 [Prefer React Compiler Defaults Over Manual Memoization](#64-prefer-react-compiler-defaults-over-manual-memoization)
     - 6.5 [Preserve Response and Store Origin in Wide Scopes](#65-preserve-response-and-store-origin-in-wide-scopes)
     - 6.6 [Shape React Query Data in query.select](#66-shape-react-query-data-in-queryselect)
-    - 6.7 [Store Shared Role and Authority Decisions Once](#67-store-shared-role-and-authority-decisions-once)
+    - 6.7 [Store Shared Role and Authority Decisions Only When They Are Truly Shared](#67-store-shared-role-and-authority-decisions-only-when-they-are-truly-shared)
 7. [Documentation and Comments](#7-documentation-and-comments) — **MEDIUM**
     - 7.1 [Limit Inline Comments to Non-obvious Logic](#71-limit-inline-comments-to-non-obvious-logic)
     - 7.2 [Require JSDoc on React Hooks, Handlers, and Key Declarations](#72-require-jsdoc-on-react-hooks-handlers-and-key-declarations)
@@ -355,35 +355,7 @@ export const updateEntryMediaUploadFileByUid = (params: UpdateEntryMediaUploadFi
 };
 ```
 
-### 3.3 Use Activity for JSX Render Branches
-
-**Impact: MEDIUM (표시 여부 결정을 route 화면 전반에서 명시적이고 일관되게 유지함)**
-
-React 19의 `<Activity />` 또는 프로젝트가 이미 채택한 동등한 visibility primitive가 있다면, JSX에서 렌더링 노드를 바꾸는 조건부 분기에는 삼항 렌더링 대신 그 primitive를 사용합니다.   
-속성값 계산은 삼항을 허용하지만, 노드 자체의 표시/숨김은 일관된 visibility primitive로 통일합니다. 코드베이스에 `Activity`가 아직 없다면 이 규칙 때문에 새 추상화를 도입하지 말고 기존 패턴을 따릅니다.
-
-**Incorrect (렌더링 노드 선택을 삼항으로 처리):**
-
-```tsx
-return hasItems ? <ItemList /> : <EmptyState />;
-```
-
-**Correct (`Activity`를 이미 쓰는 코드베이스에서는 표시/숨김을 같은 primitive로 드러냄):**
-
-```tsx
-return (
-  <>
-    <Activity mode={hasItems ? "visible" : "hidden"}>
-      <ItemList />
-    </Activity>
-    <Activity mode={hasItems ? "hidden" : "visible"}>
-      <EmptyState />
-    </Activity>
-  </>
-);
-```
-
-### 3.4 Use Named Handlers Instead of Hiding Logic in JSX
+### 3.3 Use Named Handlers Instead of Hiding Logic in JSX
 
 **Impact: HIGH (부수효과, 분기, 비동기 흐름을 일반 코드 흐름에서 읽을 수 있게 함)**
 
@@ -412,6 +384,38 @@ const handleRemoveTableButtonClick: MouseEventHandler<HTMLButtonElement> = async
 };
 
 <UiButton onClick={handleRemoveTableButtonClick} />;
+```
+
+### 3.4 Use Visibility Primitives Deliberately for Show and Hide Branches
+
+**Impact: MEDIUM (표시 여부 결정을 route 화면 전반에서 명시적이고 일관되게 유지함)**
+
+React 19의 `<Activity />` 또는 프로젝트가 이미 채택한 동등한 visibility primitive가 있다면, 이미 마운트된 subtree를 보여주거나 숨기는 의도일 때만 사용합니다.   
+삼항 렌더링과 visibility primitive는 같은 의미가 아닙니다. 전자는 branch를 아예 unmount할 수 있지만, 후자는 숨겨진 subtree의 state와 effect를 유지할 수 있습니다. mount/unmount 의미가 중요하면 기존 조건부 렌더링을 유지하고, 코드베이스에 `Activity`가 아직 없다면 이 규칙 때문에 새 추상화를 도입하지 말고 기존 패턴을 따릅니다.
+
+**Incorrect (lifecycle 의미가 다른 분기를 무비판적으로 visibility primitive로 치환):**
+
+```tsx
+return (
+  <>
+    <Activity mode={isEditing ? "visible" : "hidden"}>
+      <EditorForm />
+    </Activity>
+    <Activity mode={isEditing ? "hidden" : "visible"}>
+      <PreviewPane />
+    </Activity>
+  </>
+);
+```
+
+**Correct (show/hide가 목적일 때만 visibility primitive를 사용하고, mount 의미가 중요하면 조건부 렌더링을 유지):**
+
+```tsx
+return <Activity mode={isSidebarOpen ? "visible" : "hidden"}><EntrySidebar /></Activity>;
+```
+
+```tsx
+return hasItems ? <ItemList /> : <EmptyState />;
 ```
 
 ## 4. Screen File Discipline
@@ -578,11 +582,11 @@ const handleFormFinish = () => {
 
 Event handler는 이름이 예측 가능하고 간접 호출이 최소화된 상태로, 빠르게 훑어볼 수 있어야 합니다.
 
-### 5.1 Keep Screen-specific Handler Flow Inline Until a Real Utility Emerges
+### 5.1 Keep Screen-specific Handler Flow Local Until a Real Utility Emerges
 
 **Impact: MEDIUM (모든 분기를 작은 helper로 쪼개지 않고도 가독성을 유지함)**
 
-핸들러가 길어져도 바로 helper로 쪼개지 않습니다. 먼저 early return, 단계적 지역 변수, 의미 있는 블록 구분으로 읽기 쉽게 유지하고, `screen-extract-utilities-selectively` 규칙을 만족할 때만 분리합니다.
+여기서 `local`은 JSX 인라인 핸들러를 뜻하지 않고, 이미 이름 붙은 handler 본문 안에서 흐름을 계속 읽을 수 있게 유지한다는 뜻입니다. 핸들러가 길어져도 바로 helper로 쪼개지 않습니다. 먼저 early return, 단계적 지역 변수, 의미 있는 블록 구분으로 읽기 쉽게 유지하고, `screen-extract-utilities-selectively` 규칙을 만족할 때만 분리합니다.
 
 **Incorrect (재사용 근거 없이 흐름을 지나치게 분해):**
 
@@ -646,7 +650,8 @@ Server state, store 접근, 파생값은 오리진을 보존해야 하며 데이
 
 **Impact: HIGH (결측 데이터를 숨기지 않고 로딩 UX를 Suspense 또는 명시적 예외 처리 쪽으로 유도함)**
 
-옵셔널 값에 `??`, `||`로 습관적인 기본값을 넣지 않고, `isPending`, `isFetching` 같은 상태를 즉시 렌더링하지 않습니다. 결측값은 드러내고, 로딩은 기본적으로 Suspense 경계나 상위 레이아웃에서 처리합니다. 예외가 필요하면 가까운 한글 주석으로 이유를 남깁니다.
+옵셔널 값에 `??`, `||`로 습관적인 기본값을 넣지 않고, Suspense query의 초기 blocking 로딩을 화면 본문에서 즉석 분기하지 않습니다. 결측값은 드러내고, 초기 로딩은 기본적으로 Suspense 경계나 상위 레이아웃에서 처리합니다.   
+대신 `isPending`, `isFetching` 같은 상태는 버튼 비활성화, background refetch indicator, 저장 중 배지처럼 기존 UI를 보조하는 좁은 용도로만 사용합니다. 화면 전체를 가리는 로컬 loading 분기가 꼭 필요하면 가까운 한글 주석으로 이유를 남깁니다.
 
 **Incorrect (결측과 로딩을 즉석에서 숨김):**
 
@@ -658,15 +663,17 @@ if (responseUserGetItemSuspense.isPending) {
 }
 ```
 
-**Correct (결측을 드러내고 의도 있는 분기만 허용):**
+**Correct (결측은 명시적으로 드러내고, pending/fetching은 보조 UI에만 사용):**
 
 ```tsx
-const name = responseUserGetItemSuspense.data?.name;
+const userName = responseUserGetItemSuspense.data?.name;
 
 return (
-  <Activity mode={name ? "visible" : "hidden"}>
-    <UserName value={name} />
-  </Activity>
+  <>
+    {userName ? <UserName value={userName} /> : <UserNameEmptyState />}
+    <UiButton disabled={mutationUserSave.isPending}>저장</UiButton>
+    {responseUserGetItemSuspense.isFetching ? <RefreshIndicator /> : null}
+  </>
 );
 ```
 
@@ -697,7 +704,7 @@ const responseUserGetItemSuspense = useUserGetItemSuspense();
 
 **Impact: HIGH (생성된 API hook과 로컬 바인딩을 쉽게 훑고 추적할 수 있게 함)**
 
-Swagger 기반 hook 이름은 유지하되, 로컬 바인딩 접두사는 `response`와 `mutation`만 사용합니다. query는 `response...`, mutation은 `mutation...`으로 맞춰야 화면 파일에서 역할과 오리진이 한눈에 보입니다.
+프로젝트가 이미 채택한 query/mutation hook 이름은 유지하되, 로컬 바인딩 접두사는 `response`와 `mutation`만 사용합니다. codegen 여부와 무관하게 query는 `response...`, mutation은 `mutation...`으로 맞춰야 화면 파일에서 역할과 오리진이 한눈에 보입니다.
 
 **Incorrect (query와 mutation 바인딩 이름이 제각각임):**
 
@@ -785,37 +792,42 @@ const responsePermissionGroupGetApiEndpointListSuspense = usePermissionGroupGetA
 });
 ```
 
-### 6.7 Store Shared Role and Authority Decisions Once
+### 6.7 Store Shared Role and Authority Decisions Only When They Are Truly Shared
 
 **Impact: HIGH (중복된 권한 판별 휴리스틱이 여러 화면에 퍼지는 것을 막음)**
 
-역할, 권한, 공용 판별 결과는 스토어에 한 번 적재하고 화면에서는 그 결과만 참조합니다. 화면마다 문자열 비교나 유틸 호출로 다시 계산하지 않고, 스토어 접근도 구조분해보다 원본 객체 체이닝을 우선합니다. Suspense query처럼 `onSuccess`가 없으면 `useEffect` 또는 `useLayoutEffect`에서 동기화하고, selector 최적화는 정말 필요한 경우에만 근거 주석과 함께 예외적으로 사용합니다.
+역할, 권한, 공용 판별 결과가 여러 화면, 메뉴, route guard에서 반복해서 필요할 때만 스토어에 승격합니다. 단일 화면에서 한두 번 읽는 query 필드까지 store로 복제하지 않습니다.   
+store에 올리기로 했다면 문자열 비교나 도메인 판별은 bootstrap/layout 같은 한 경계에만 모으고, 화면은 `roleStore.isSuperAdmin` 같은 결과만 참조합니다. Suspense query처럼 `onSuccess`가 없어서 동기화가 필요하다면 owner가 분명한 경계에서만 `useEffect` 또는 `useLayoutEffect`를 사용하고, selector 최적화는 정말 필요한 경우에만 근거 주석과 함께 예외적으로 사용합니다.
 
-**Incorrect (화면마다 판별을 반복하고 구조분해로 오리진을 잃음):**
-
-```ts
-const isSuperAdmin = isSuperAdminRoleName(roleName);
-const { isEditor } = useRoleStore();
-```
-
-**Correct (공용 판별 결과를 스토어에서 한 번 참조):**
+**Incorrect (화면마다 판별을 반복하면서 단일 화면용 값을 store에도 복제):**
 
 ```ts
 const roleStore = useRoleStore();
+const isSuperAdmin = isSuperAdminRoleName(responseRoleGetItemSuspense.data.role);
 
-if (roleStore.isSuperAdmin) {
+useEffect(() => {
+  roleStore.setRole(responseRoleGetItemSuspense.data.role);
+}, [responseRoleGetItemSuspense.data.role, roleStore]);
+```
+
+**Correct (공용 권한은 owner가 분명한 경계에서만 적재하고 화면은 결과만 참조):**
+
+```ts
+const authStore = useAuthStore();
+
+if (authStore.canManageUsers) {
   // ...
 }
 ```
 
 ```ts
 useEffect(() => {
-  if (!responseRoleGetItemSuspense.data) {
+  if (!responseAuthBootstrapSuspense.data) {
     return;
   }
 
-  roleStore.setRole(responseRoleGetItemSuspense.data.role);
-}, [responseRoleGetItemSuspense.data, roleStore]);
+  authStore.setAuthority(responseAuthBootstrapSuspense.data.authority);
+}, [authStore, responseAuthBootstrapSuspense.data]);
 ```
 
 ## 7. Documentation and Comments
@@ -828,7 +840,7 @@ React 경계 선언에는 companion skill인 `convention-typescript`의 annotati
 
 **Impact: MEDIUM (코드를 해설하기보다 주석을 caveat, 제약, 부수효과 설명에 집중시킴)**
 
-함수 본문 안에서는 JSDoc 대신 `//` 라인 주석을 사용하고, 도메인 규칙, 예외 방어, 라이브러리 제약, 부수효과 순서처럼 코드만 읽어서는 놓치기 쉬운 경우에만 남깁니다. 변수명 반복이나 단순 매핑 설명은 주석으로 적지 않습니다. 함수 시그니처를 한 줄로 유지해야 가독성이 더 좋은 경우에만 헤더 JSDoc 안에서 `biome-ignore format:`를 제한적으로 사용합니다.
+함수 본문 안에서는 `//` 라인 주석을 사용하고, 도메인 규칙, 예외 방어, 라이브러리 제약, 부수효과 순서처럼 코드만 읽어서는 놓치기 쉬운 경우에만 남깁니다. 변수명 반복이나 단순 매핑 설명은 주석으로 적지 않습니다. 헤더 JSDoc과 annotation 태그 선택은 `docs-require-jsdoc-on-key-declarations`와 companion skill인 `convention-typescript`의 표준을 따릅니다.
 
 **Incorrect (코드 그대로를 반복하는 주석):**
 
@@ -845,16 +857,10 @@ const updatedNodes = updateNodeDisplayed(nodes, targetId, true);
 ```
 
 ```ts
-/**
- * @helper 트리 노드 UiTree 데이터 변환
- * biome-ignore format: 매개변수 가독성 목적 시그니처 한 줄 유지
- */
-export const mapFolderNodeToTreeData = (node: ContentFolderTreeNode, renderers: FolderTreeRenderers) => {
-  return {
-    title: renderers.renderTitle(node),
-    icon: renderers.renderIcon(node),
-  };
-};
+// 업로드 직후에는 서버 정렬 기준이 확정되지 않아 optimistic reorder를 막는다.
+if (mutationFileUpload.isPending) {
+  return;
+}
 ```
 
 ### 7.2 Require JSDoc on React Hooks, Handlers, and Key Declarations
