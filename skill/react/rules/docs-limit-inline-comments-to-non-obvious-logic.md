@@ -27,7 +27,7 @@ const updatedNodes = updateNodeDisplayed(nodes, targetId, true);
 
 ```ts
 /**
- * @summary 트리 노드 UiTree 데이터 변환
+ * @helper 트리 노드 UiTree 데이터 변환
  * biome-ignore format: 매개변수 가독성 목적 시그니처 한 줄 유지
  */
 export const mapFolderNodeToTreeData = (node: ContentFolderTreeNode, renderers: FolderTreeRenderers) => {

@@ -1,7 +1,7 @@
 # NestJS 컨벤션
 
 에이전트 협업, 리뷰, AI 보조 리팩터링에 맞춰 NestJS 컨벤션을 관리하는 구조화된 저장소입니다.  
-현재 NestJS 가이드는 7개 local 섹션의 22개 rule 파일로 구성되어 있습니다.  
+현재 NestJS 가이드는 7개 local 섹션의 21개 rule 파일로 구성되어 있습니다.  
 최종적으로 slim [AGENTS.md](./AGENTS.md)로 compile됩니다. local guide는 NestJS 규칙만 담고 `typescript` companion skill을 함께 사용합니다.
 
 ## 구조
@@ -45,7 +45,7 @@
    - `layers-` - controller/service 책임과 의존 방향 규칙
    - `dto-` - DTO 검증, response shaping, Prisma 타입 재사용, backend 타입 문서화 규칙
    - `methods-` - 메서드 스타일, async 처리, exception 패턴 규칙
-   - `docs-` - NestJS/Prisma 경계 JSDoc과 inline comment 규칙
+   - `docs-` - 역할 기반 annotation 태그와 NestJS/Prisma inline comment 규칙
    - `testing-` - unit/e2e scope, 배치, 라이브러리, coverage trigger 규칙
    - `guardrails-` - 금지 shortcut과 마무리 review check 규칙
 3. frontmatter와 본문을 작성합니다.

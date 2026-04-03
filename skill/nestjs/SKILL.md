@@ -8,7 +8,7 @@ metadata:
 
 # NestJS 컨벤션
 
-에이전트 협업 팀을 위한 NestJS 코딩 컨벤션 모음입니다. 현재 이 가이드는 7개 카테고리의 22개 local 규칙으로 구성되어 있습니다.  
+에이전트 협업 팀을 위한 NestJS 코딩 컨벤션 모음입니다. 현재 이 가이드는 7개 카테고리의 21개 local 규칙으로 구성되어 있습니다.  
 모듈 경계, controller-service 레이어링, DTO 계약, backend 메서드 규칙, NestJS/Prisma 문서화 규칙, 테스트 전략을 [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`와 compiled [AGENTS.md](./AGENTS.md)로 관리합니다.  
 기본 compiled guide는 local NestJS rule만 담고 `convention-typescript`를 companion skill로 함께 사용합니다.
 
@@ -72,7 +72,6 @@ metadata:
 ### 5. JSDoc and Comment Conventions (MEDIUM-HIGH)
 
 - `docs-require-jsdoc-on-service-hooks-and-boundary-methods` - service, hook, boundary 선언에 JSDoc 요구
-- `docs-use-summary-and-description-on-service-and-prisma-boundaries` - 적절한 backend 경계에 `@summary`, `@description` 사용
 - `docs-keep-inline-comments-for-domain-rules-and-library-caveats` - inline comment는 비자명한 도메인/라이브러리 제약에만 사용
 
 ### 6. Testing Strategy and Placement (CRITICAL)

@@ -45,7 +45,7 @@
    - `types-` - 함수 타입, callback 재사용, unused param, 타입 재사용, custom shape 문서화 규칙
    - `functions-` - object param, enum 대체, helper 추출, 넓은 scope 조립 규칙
    - `absence-` - optional 값과 fallback 처리 규칙
-   - `docs-` - JSDoc annotation과 inline comment 규칙
+   - `docs-` - 역할 기반 annotation 태그와 inline comment 규칙
    - `guardrails-` - 금지 shortcut과 review check 규칙
 3. frontmatter와 본문을 작성합니다.
 4. 설명이 포함된 incorrect/correct 예시를 넣습니다.

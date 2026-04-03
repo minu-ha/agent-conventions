@@ -61,7 +61,6 @@
 7. [Documentation and Comments](#7-documentation-and-comments) — **MEDIUM**
     - 7.1 [Limit Inline Comments to Non-obvious Logic](#71-limit-inline-comments-to-non-obvious-logic)
     - 7.2 [Require JSDoc on React Hooks, Handlers, and Key Declarations](#72-require-jsdoc-on-react-hooks-handlers-and-key-declarations)
-    - 7.3 [Use @description for API Calls and @summary for Everything Else](#73-use-description-for-api-calls-and-summary-for-everything-else)
 
 ---
 
@@ -823,7 +822,7 @@ useEffect(() => {
 
 **Impact: MEDIUM**
 
-React 경계 선언에는 역할에 맞는 JSDoc을 남기고, inline comment는 JSX나 handler 흐름에서 비자명한 제약만 설명해야 합니다.
+React 경계 선언에는 companion skill인 `convention-typescript`의 annotation 표준을 적용하고, inline comment는 JSX나 handler 흐름에서 비자명한 제약만 설명해야 합니다.
 
 ### 7.1 Limit Inline Comments to Non-obvious Logic
 
@@ -847,7 +846,7 @@ const updatedNodes = updateNodeDisplayed(nodes, targetId, true);
 
 ```ts
 /**
- * @summary 트리 노드 UiTree 데이터 변환
+ * @helper 트리 노드 UiTree 데이터 변환
  * biome-ignore format: 매개변수 가독성 목적 시그니처 한 줄 유지
  */
 export const mapFolderNodeToTreeData = (node: ContentFolderTreeNode, renderers: FolderTreeRenderers) => {
@@ -862,7 +861,7 @@ export const mapFolderNodeToTreeData = (node: ContentFolderTreeNode, renderers: 
 
 **Impact: MEDIUM-HIGH (중요한 API, handler, effect, 타입 선언을 더 쉽게 리뷰하고 재사용할 수 있게 함)**
 
-원격 API 경계를 넘는 helper나 custom hook wrapper, 분기나 부수효과가 있는 이벤트 핸들러, 동기화 의도가 중요한 `useEffect`, 주요 유틸 함수, 커스텀 `type`과 `interface`, 그리고 예외적으로 사용하는 `useMemo`/`useCallback`에는 JSDoc을 작성합니다.   
+원격 API 경계를 넘는 helper나 query/mutation wrapper, 분기나 부수효과가 있는 이벤트 핸들러, 동기화 의도가 중요한 `useEffect`, 주요 유틸 함수, 커스텀 `type`과 `interface`, store 선언, 그리고 예외적으로 사용하는 `useMemo`/`useCallback`에는 JSDoc을 작성합니다. annotation 태그 선택은 companion skill인 `convention-typescript`의 표준인 `@api`, `@event`, `@watch`, `@helper`, `@summary`, `@field`를 따릅니다.   
 상태 변수, 자명한 generated hook 바인딩, 단순 파생값처럼 문맥상 의미가 분명한 선언에는 강제하지 않습니다.
 
 **Incorrect (비자명한 경계 선언에 문맥 설명이 없음):**
@@ -885,7 +884,7 @@ useEffect(() => {
 
 ```ts
 /**
- * @summary 선택된 테이블 삭제와 다음 화면 이동 처리
+ * @event 선택된 테이블 삭제와 다음 화면 이동 처리
  */
 const handleRemoveTableButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
   if (!selectedTable) {
@@ -896,47 +895,11 @@ const handleRemoveTableButtonClick: MouseEventHandler<HTMLButtonElement> = async
 };
 
 /**
- * @summary 사용자 데이터 변경 시 폼 상태 동기화
+ * @watch 사용자 데이터 변경 시 폼 상태 동기화
  */
 useEffect(() => {
   resetForm(userData);
 }, [userData, resetForm]);
-```
-
-### 7.3 Use @description for API Calls and @summary for Everything Else
-
-**Impact: MEDIUM (JSDoc 의도를 표준화해 생성 코드와 수기 선언을 일관되게 읽히게 함)**
-
-원격 API 경계를 직접 넘는 helper, custom hook wrapper, query option factory 같은 API boundary 선언은 `@description`, 그 외 handler, `useEffect`, 일반 함수, 타입 선언은 `@summary`를 사용합니다. 이름만으로 충분히 자명한 generated hook 바인딩이나 단순 로컬 변수는 JSDoc을 생략할 수 있습니다. 문장은 명사형 종결과 개조식 표현을 기본으로 하고, 하나의 선언에 두 태그를 섞지 않습니다.
-
-**Incorrect (API boundary 선언에 태그를 혼용):**
-
-```ts
-/**
- * @description 테이블 목록 조회 query option 조립
- * @summary v1 테이블 목록 조회
- */
-const useContentTypeListQueryOptions = (projectId: number) => {
-  return contentTypeListQueryOptions({ projectId });
-};
-```
-
-**Correct (선언 종류에 맞는 태그 하나만 사용):**
-
-```ts
-/**
- * @description 테이블 목록 조회 query option 조립
- */
-const useContentTypeListQueryOptions = (projectId: number) => {
-  return contentTypeListQueryOptions({ projectId });
-};
-
-/**
- * @summary 테이블 선택 쿼리스트링 갱신
- */
-const handleSelectTable: MouseEventHandler<HTMLButtonElement> = (_event) => {
-  // ...
-};
 ```
 
 ## 참고 자료

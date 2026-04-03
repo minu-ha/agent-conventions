@@ -47,7 +47,6 @@
 5. [JSDoc and Comment Conventions](#5-jsdoc-and-comment-conventions) — **MEDIUM-HIGH**
     - 5.1 [Keep Inline Comments for Domain Rules and Library Caveats](#51-keep-inline-comments-for-domain-rules-and-library-caveats)
     - 5.2 [Require JSDoc on Service Hooks and Boundary Methods](#52-require-jsdoc-on-service-hooks-and-boundary-methods)
-    - 5.3 [Use @summary and @description on Service and Prisma Boundaries](#53-use-summary-and-description-on-service-and-prisma-boundaries)
 6. [Testing Strategy and Placement](#6-testing-strategy-and-placement) — **CRITICAL**
     - 6.1 [Add Tests When Branches, Endpoints, or Schema Behavior Change](#61-add-tests-when-branches-endpoints-or-schema-behavior-change)
     - 6.2 [Mock Unit Boundaries and Verify E2E Wiring](#62-mock-unit-boundaries-and-verify-e2e-wiring)
@@ -220,7 +219,7 @@ export class UsersService {
 	constructor(private readonly prisma: PrismaService) {}
 
 	/**
-	 * @summary 사용자 단건 조회 - 미존재 시 NotFoundException 발생
+	 * @api 사용자 단건 조회 - 미존재 시 NotFoundException 발생
 	 */
 	async findOneOrThrow(id: number): Promise<SafeUser> {
 		const user = await this.prisma.user.findUnique({where: {id}});
@@ -534,7 +533,7 @@ export const buildPaginationMeta = (total: number, params: PaginationParams) => 
 
 **Impact: MEDIUM-HIGH**
 
-주석과 annotation은 자명한 구현을 반복하지 않고 NestJS 경계 역할, Prisma 쿼리 의도, backend 위험 요소를 설명해야 합니다.
+주석과 annotation은 companion skill인 `convention-typescript`의 annotation 표준을 적용해 NestJS 경계 역할과 backend 위험 요소를 빠르게 드러내야 합니다.
 
 ### 5.1 Keep Inline Comments for Domain Rules and Library Caveats
 
@@ -559,7 +558,7 @@ const where = includeDeleted ? {id} : {id, deletedAt: null};
 
 **Impact: MEDIUM-HIGH (makes important backend execution boundaries searchable before readers inspect implementation details)**
 
-Service public 메서드, 외부 API 호출 블록, NestJS 생명주기 훅, 커스텀 `type`/`interface`, Guard/Interceptor/Pipe 핵심 메서드에는 예외 없이 JSDoc을 작성합니다. Controller는 Swagger 데코레이터가 충분하면 JSDoc을 생략할 수 있습니다.
+Service public 메서드, Prisma 접근이나 외부 API 호출 블록, NestJS 생명주기 훅, 커스텀 `type`/`interface`, Guard/Interceptor/Pipe 핵심 메서드에는 예외 없이 JSDoc을 작성합니다. Controller는 Swagger 데코레이터가 충분하면 JSDoc을 생략할 수 있습니다. annotation 태그 선택은 companion skill인 `convention-typescript`의 표준인 `@api`, `@event`, `@watch`, `@helper`, `@summary`, `@field`를 따르되, 일반적인 NestJS 코드에서는 주로 `@api`, `@helper`, `@summary`, `@field`를 사용합니다.
 
 **Incorrect (핵심 서비스 메서드에 헤더 설명이 없음):**
 
@@ -578,55 +577,10 @@ export class UsersService {
 @Injectable()
 export class UsersService {
 	/**
-	 * @summary 사용자 단건 조회 - 미존재 시 NotFoundException 발생
+	 * @api 사용자 단건 조회 - 미존재 시 NotFoundException 발생
 	 */
 	async findOneOrThrow(id: number): Promise<SafeUser> {
 		// ...
-	}
-}
-```
-
-### 5.3 Use @summary and @description on Service and Prisma Boundaries
-
-**Impact: MEDIUM-HIGH (distinguishes simple backend intent summaries from more complex query explanations where readers need extra context)**
-
-Service public 메서드 선언 바로 위에는 `@summary`를 사용하고, 복잡한 Prisma 쿼리나 트랜잭션이 포함된 메서드에는 `@description`을 함께 써서 왜 그런 조회가 필요한지 설명합니다. 단순 `findUnique`나 `create` 수준이면 `@summary`만으로 충분합니다.
-
-**Incorrect (How 중심의 서술형 주석 또는 경계 누락):**
-
-```ts
-@Injectable()
-export class UsersService {
-	/**
-	 * @summary id로 사용자를 찾아서 없으면 예외를 던집니다.
-	 */
-	async findOneOrThrow(id: number): Promise<SafeUser> {
-		// ...
-	}
-}
-```
-
-**Correct (`@summary`와 필요한 경우 `@description`을 역할에 맞게 사용):**
-
-```ts
-@Injectable()
-export class UsersService {
-	/**
-	 * @summary 사용자 단건 조회 - 미존재 시 NotFoundException 발생
-	 */
-	async findOneOrThrow(id: number): Promise<SafeUser> {
-		// ...
-	}
-
-	/**
-	 * @summary 페이지네이션 사용자 목록 조회
-	 * @description 역할 필터 + 생성일 내림차순 정렬 + 총 건수 병렬 조회
-	 */
-	async findManyWithCount(params: PaginationParams & {role?: Role}) {
-		return this.prisma.$transaction([
-			this.prisma.user.findMany({}),
-			this.prisma.user.count({}),
-		]);
 	}
 }
 ```

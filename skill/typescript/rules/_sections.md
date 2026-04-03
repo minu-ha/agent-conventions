@@ -20,7 +20,7 @@
 
 ## 5. JSDoc and Comment Conventions (docs)
 **Impact:** MEDIUM-HIGH
-**Description:** 주석과 annotation 규칙은 자명한 코드 동작을 반복하지 않고 목적, 제약, 실행 경계를 설명해야 합니다.
+**Description:** 주석과 annotation 규칙은 `@api`, `@event`, `@watch`, `@helper`, `@summary`, `@field`처럼 작은 고정 태그 세트로 선언 역할을 빠르게 드러내야 합니다.
 
 ## 6. Guardrails and Review Checks (guardrails)
 **Impact:** MEDIUM

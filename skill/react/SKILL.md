@@ -8,7 +8,7 @@ metadata:
 
 # React 컨벤션
 
-에이전트 협업 팀을 위한 React 코딩 컨벤션 모음입니다. 현재 이 가이드는 7개 카테고리의 29개 local 규칙으로 구성되어 있습니다.  
+에이전트 협업 팀을 위한 React 코딩 컨벤션 모음입니다. 현재 이 가이드는 7개 카테고리의 28개 local 규칙으로 구성되어 있습니다.  
 공용 컴포넌트 소유 경계, route-local 분리, React 계약에 맞는 handler/prop 시그니처, 화면 흐름, state 오리진, React 경계 문서화 규칙을 [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`와 compiled [AGENTS.md](./AGENTS.md)로 관리합니다.  
 이 skill은 TanStack Query, Zustand, 그리고 필요 시 React 19 `Activity` 같은 visibility primitive를 쓰는 React codebase를 기본 전제로 합니다. 기본 compiled guide는 local React rule만 담고 `convention-typescript`를 companion skill로 함께 사용합니다.
 
@@ -78,8 +78,7 @@ metadata:
 
 ### 7. Documentation and Comments (MEDIUM)
 
-- `docs-require-jsdoc-on-key-declarations` - 비자명한 handler/effect, API boundary helper, custom type에 JSDoc 요구
-- `docs-summary-vs-description` - API 호출은 `@description`, 나머지는 `@summary` 사용
+- `docs-require-jsdoc-on-key-declarations` - 비자명한 api/event/watch/helper/contract 선언에 JSDoc 요구
 - `docs-limit-inline-comments-to-non-obvious-logic` - inline comment는 제약과 caveat 설명에만 사용
 
 ## 함께 쓰기

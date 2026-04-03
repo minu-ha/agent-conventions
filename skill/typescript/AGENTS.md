@@ -39,8 +39,8 @@
 5. [JSDoc and Comment Conventions](#5-jsdoc-and-comment-conventions) — **MEDIUM-HIGH**
     - 5.1 [Keep Inline Comments for Constraints and Caveats Only](#51-keep-inline-comments-for-constraints-and-caveats-only)
     - 5.2 [Require Header JSDoc on Key Declarations](#52-require-header-jsdoc-on-key-declarations)
-    - 5.3 [Use @description for External Integration Functions](#53-use-description-for-external-integration-functions)
-    - 5.4 [Use @helper for Reusable Pure Helper Functions](#54-use-helper-for-reusable-pure-helper-functions)
+    - 5.3 [Standardize Annotation Tags by Declaration Role](#53-standardize-annotation-tags-by-declaration-role)
+    - 5.4 [Use @helper on Reusable Support Functions](#54-use-helper-on-reusable-support-functions)
     - 5.5 [Write Concise Korean Comments About Purpose and Constraints](#55-write-concise-korean-comments-about-purpose-and-constraints)
 6. [Guardrails and Review Checks](#6-guardrails-and-review-checks) — **MEDIUM**
     - 6.1 [Review Banned TypeScript Shortcuts Before Finishing](#61-review-banned-typescript-shortcuts-before-finishing)
@@ -157,7 +157,7 @@ import {userRoleLabels} from "<constants-public-import>";
 
 **Impact: CRITICAL (keeps domain-specific contracts understandable without digging through implementation details)**
 
-커스텀 `type`, `interface`, `z.object(...)`, 객체형 상수 같은 선언형 shape에는 JSDoc을 작성합니다. 객체형 계약은 헤더에 `@summary`, 각 필드 바로 위 `@field`를 쓰고, `Pick`/`Omit`/Indexed Access처럼 로컬 필드 선언이 없는 alias는 헤더 `@summary`만 둡니다.
+커스텀 `type`, `interface`, `z.object(...)`, 객체형 상수 같은 선언형 shape에는 JSDoc을 작성합니다. 객체형 계약과 schema root는 헤더에 `@summary`, 각 필드 바로 위에는 `@field`를 씁니다. `Pick`/`Omit`/Indexed Access처럼 로컬 필드 선언이 없는 alias는 헤더 `@summary`만 둡니다.
 
 **Incorrect (필드 설명을 생략하거나 예전 방식으로 헤더에 몰아씀):**
 
@@ -190,7 +190,7 @@ export interface PublishResult {
 }
 
 /**
- * @schema 게시 결과 스키마
+ * @summary 게시 결과 스키마
  */
 const publishResultSchema = z.object({
 	/**
@@ -447,7 +447,7 @@ const pageSize = query.pageSize?.trim() || "20";
 
 **Impact: MEDIUM-HIGH**
 
-주석과 annotation 규칙은 자명한 코드 동작을 반복하지 않고 목적, 제약, 실행 경계를 설명해야 합니다.
+주석과 annotation 규칙은 `@api`, `@event`, `@watch`, `@helper`, `@summary`, `@field`처럼 작은 고정 태그 세트로 선언 역할을 빠르게 드러내야 합니다.
 
 ### 5.1 Keep Inline Comments for Constraints and Caveats Only
 
@@ -475,7 +475,8 @@ if (!normalizedToken) {
 
 **Impact: MEDIUM-HIGH (makes important boundaries searchable and explainable before readers inspect the implementation body)**
 
-외부 연동 함수, 주요 순수 함수, 재사용 함수, 도메인 규칙 함수, 커스텀 `type`/`interface`, 포맷 예외를 둔 함수 선언에는 예외 없이 선언 헤더 JSDoc을 작성합니다. 중요한 경계가 파일 검색에서 바로 보이도록 하는 것이 목적입니다. annotation 종류는 더 구체적인 규칙을 따라 `@summary`, `@description`, `@helper` 중 하나를 고릅니다.
+원격 연동 함수, 이벤트 핸들러, 반응형 동기화 블록, 재사용 helper, 커스텀 `type`/`interface`, store 선언, 포맷 예외를 둔 함수 선언에는 예외 없이 선언 헤더 JSDoc을 작성합니다.   
+중요한 경계가 파일 검색에서 바로 보이도록 하는 것이 목적입니다. annotation 종류는 선언 역할에 따라 `@api`, `@event`, `@watch`, `@helper`, `@summary` 중 하나를 고릅니다.
 
 **Incorrect (주요 선언에 헤더 설명이 없음):**
 
@@ -485,35 +486,26 @@ export const normalizeUserIds = (userIds: string[]): string[] => {
 };
 ```
 
-**Correct (핵심 선언의 헤더 JSDoc을 명시):**
+**Correct (핵심 선언의 헤더 JSDoc과 역할 태그를 명시):**
 
 ```ts
 /**
- * @summary 중복 제거 후 사용자 ID 정렬
+ * @helper 중복 제거 후 사용자 ID 정렬
  */
 export const normalizeUserIds = (userIds: string[]): string[] => {
 	return Array.from(new Set(userIds)).sort();
 };
 ```
 
-### 5.3 Use @description for External Integration Functions
+### 5.3 Standardize Annotation Tags by Declaration Role
 
-**Impact: MEDIUM-HIGH (marks functions that cross filesystem, network, environment, or SDK boundaries as integration points)**
+**Impact: MEDIUM-HIGH (keeps mixed TypeScript and TSX files scannable by using a small fixed annotation set)**
 
-파일 시스템, 네트워크, 환경 변수, 외부 SDK 호출 함수는 `@description`을 사용합니다. 이 annotation은 순수 helper가 아니라 외부 실행 경계를 넘는 함수라는 점을 분명히 드러냅니다. 단순히 중요하다는 이유만으로 `@description`을 쓰지 말고, 실제 외부 연동 경계일 때만 사용합니다.
+annotation 태그는 `@api`, `@event`, `@watch`, `@helper`, `@summary`, `@field` 여섯 개로 고정합니다.   
+원격 데이터와 외부 실행 경계는 `@api`, 이벤트 핸들러는 `@event`, 반응형 동기화 블록은 `@watch`, 재사용 가능한 지원 함수는 `@helper`를 사용합니다.   
+`type`, `interface`, store 선언, custom hook, schema root처럼 선언 종류만 알면 역할이 충분히 드러나는 경우에는 `@summary`를 사용하고, 계약 내부 멤버에는 `@field`만 사용합니다. `@description`, `@schema`, `@shape`, `@contract`, `@data`, `@type`, `@property`는 더 이상 쓰지 않습니다.
 
-**Incorrect (외부 연동 함수를 일반 helper처럼 표시):**
-
-```ts
-/**
- * @helper 프로젝트 설정 파일 로드
- */
-export const loadProjectConfig = async (path: string): Promise<string> => {
-	return await Promise.resolve(path);
-};
-```
-
-**Correct (`@description`으로 외부 연동 경계를 표시):**
+**Incorrect (역할이 드러나지 않는 예전 태그나 혼합 태그를 사용):**
 
 ```ts
 /**
@@ -522,23 +514,65 @@ export const loadProjectConfig = async (path: string): Promise<string> => {
 export const loadProjectConfig = async (path: string): Promise<string> => {
 	return await Promise.resolve(path);
 };
+
+/**
+ * @summary 선택된 테이블 변경 처리
+ */
+const handleSelectTable = (tableName: string) => {
+	return tableName;
+};
+
+/**
+ * @schema 게시 결과 스키마
+ */
+const publishResultSchema = z.object({
+	documentId: z.string(),
+});
 ```
 
-### 5.4 Use @helper for Reusable Pure Helper Functions
-
-**Impact: MEDIUM-HIGH (distinguishes reusable pure support logic from local implementation details or integration boundaries)**
-
-재사용 가능한 순수 helper, 문자열 조립 함수, 정규화 함수, 포맷 함수에는 `@helper`를 사용합니다.   
-한 함수나 한 파일 안에서만 쓰는 작은 계산은 직접 두고, 여러 call site가 공유하거나 밖으로 빼야 읽기 흐름이 명확해질 때만 helper로 승격합니다.
-
-**Incorrect (작은 외부 연동 함수나 단회성 계산을 helper로 혼동):**
+**Correct (선언 역할에 따라 고정 태그를 사용):**
 
 ```ts
 /**
- * @helper 사용자 토큰 조회
+ * @api 프로젝트 설정 파일 로드
  */
-const loadUserToken = async (): Promise<string> => {
-	return await Promise.resolve("token");
+export const loadProjectConfig = async (path: string): Promise<string> => {
+	return await Promise.resolve(path);
+};
+
+/**
+ * @event 선택된 테이블 변경 처리
+ */
+const handleSelectTable = (tableName: string) => {
+	return tableName;
+};
+
+/**
+ * @summary 게시 결과 스키마
+ */
+const publishResultSchema = z.object({
+	/**
+	 * @field 게시 대상 문서 ID
+	 */
+	documentId: z.string(),
+});
+```
+
+### 5.4 Use @helper on Reusable Support Functions
+
+**Impact: MEDIUM-HIGH (distinguishes reusable pure support logic from local implementation details or integration boundaries)**
+
+재사용 가능한 순수 helper, 문자열 조립 함수, 정규화 함수, 포맷 함수, 계약 변환 함수에는 `@helper`를 사용합니다.   
+한 함수나 한 파일 안에서만 쓰는 작은 계산은 직접 두고, 여러 call site가 공유하거나 밖으로 빼야 읽기 흐름이 명확해질 때만 helper로 승격합니다. 외부 I/O 경계는 `@helper`가 아니라 `@api`로 표시합니다.
+
+**Incorrect (외부 연동 함수나 단회성 계산을 helper로 혼동):**
+
+```ts
+/**
+ * @helper 사용자 설정 파일 로드
+ */
+const loadUserSettings = async (): Promise<string> => {
+	return await Promise.resolve("settings");
 };
 ```
 
@@ -557,7 +591,7 @@ export const normalizeUserIds = (userIds: string[]): string[] => {
 
 **Impact: MEDIUM (keeps comments focused on intent and constraints instead of narrating code mechanics)**
 
-주석은 한글로 작성하고, 목적, 제약, 부작용 중심으로 간결하게 적습니다. `@summary`, `@helper`, `@description` 문장은 명사형 종결이나 개조식 표현을 기본으로 하며, 코드 동작 설명보다 도입 이유와 제약 설명을 우선합니다.
+주석은 한글로 작성하고, 목적, 제약, 부작용 중심으로 간결하게 적습니다. `@api`, `@event`, `@watch`, `@helper`, `@summary`, `@field` 문장은 명사형 종결이나 개조식 표현을 기본으로 하며, 코드 동작 설명보다 도입 이유와 제약 설명을 우선합니다.
 
 **Incorrect (영문 또는 How 중심의 장황한 설명):**
 

@@ -28,4 +28,4 @@
 
 ## 7. Documentation and Comments (docs)
 **Impact:** MEDIUM
-**Description:** React 경계 선언에는 역할에 맞는 JSDoc을 남기고, inline comment는 JSX나 handler 흐름에서 비자명한 제약만 설명해야 합니다.
+**Description:** React 경계 선언에는 companion skill인 `convention-typescript`의 annotation 표준을 적용하고, inline comment는 JSX나 handler 흐름에서 비자명한 제약만 설명해야 합니다.

@@ -20,7 +20,7 @@
 
 ## 5. JSDoc and Comment Conventions (docs)
 **Impact:** MEDIUM-HIGH
-**Description:** 주석과 annotation은 자명한 구현을 반복하지 않고 NestJS 경계 역할, Prisma 쿼리 의도, backend 위험 요소를 설명해야 합니다.
+**Description:** 주석과 annotation은 companion skill인 `convention-typescript`의 annotation 표준을 적용해 NestJS 경계 역할과 backend 위험 요소를 빠르게 드러내야 합니다.
 
 ## 6. Testing Strategy and Placement (testing)
 **Impact:** CRITICAL
