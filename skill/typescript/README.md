@@ -1,7 +1,7 @@
 # TypeScript 컨벤션
 
 에이전트 협업, 리뷰, AI 보조 리팩터링에 맞춰 TypeScript 컨벤션을 관리하는 구조화된 저장소입니다.  
-현재 TypeScript 가이드는 6개 섹션의 21개 rule 파일로 구성되어 있습니다.  
+현재 TypeScript 가이드는 6개 섹션의 20개 rule 파일로 구성되어 있습니다.  
 최종적으로 [AGENTS.md](./AGENTS.md)로 compile됩니다. 이 skill은 React, NestJS, TanStack Route, Playwright Test와 함께 로드하는 공통 TypeScript companion skill로도 사용됩니다.
 
 ## 구조
@@ -55,7 +55,7 @@
 
 Each rule file should follow this structure:
 
-```markdown
+````markdown
 ---
 title: Rule Title Here
 impact: MEDIUM
@@ -80,7 +80,7 @@ tags: tag1, tag2
 ```ts
 // 좋은 예시
 ```
-```
+````
 
 ## 파일명 규칙
 

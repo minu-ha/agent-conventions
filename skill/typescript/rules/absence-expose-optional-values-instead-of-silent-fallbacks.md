@@ -14,12 +14,12 @@ tags: optional, fallback, absence
 **Incorrect (결측을 호출부에서 조용히 숨김):**
 
 ```ts
-const googleApiKey = config.env.google_api_key ?? "demo-key";
+const supportEmail = settings.supportEmail ?? "help@example.com";
 ```
 
 **Correct (기본값이 명확한 예외만 이유와 함께 허용):**
 
 ```ts
-// 개발용 Agent Server 기본 포트는 환경 변수가 없으면 2024를 사용한다.
-const agentServerPort = process.env.PORT?.trim() || "2024";
+// 기본 페이지 크기는 제품 명세상 20으로 고정한다.
+const pageSize = query.pageSize?.trim() || "20";
 ```

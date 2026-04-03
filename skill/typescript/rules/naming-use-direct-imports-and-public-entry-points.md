@@ -14,16 +14,15 @@ tags: imports, exports, public-entry
 **Incorrect (barrel과 혼합 import로 경계를 흐림):**
 
 ```ts
-import {config, createChatModel, MainState} from "./index";
+import {config, normalizeUserProfile, UserProfile} from "./index";
 ```
 
 **Correct (직접 import와 공개 진입점을 구분):**
 
 ```ts
-import type {RunnableConfig} from "@langchain/core/runnables";
+import type {UserProfile} from "<type-public-import>";
 import {config} from "<config-public-import>";
-import {analysisStateValueSchema} from "<schema-public-import>";
-import {createChatModel} from "<helper-public-import>";
-import {mainState} from "<graph-public-import>/main";
-import type {MainState} from "<type-public-import>";
+import {userProfileSchema} from "<schema-public-import>";
+import {normalizeUserProfile} from "<helper-public-import>";
+import {userRoleLabels} from "<constants-public-import>";
 ```

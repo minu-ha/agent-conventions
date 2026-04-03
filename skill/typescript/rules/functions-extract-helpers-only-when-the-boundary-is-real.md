@@ -21,7 +21,7 @@ const nextIteration = getNextIteration(iteration);
 **Correct (정규화나 직렬화처럼 실제 경계가 있을 때만 helper로 분리):**
 
 ```ts
-export const normalizeRuleRefs = (ruleRefs: string[]): string[] => {
-	return Array.from(new Set(ruleRefs)).sort();
+export const normalizeUserIds = (userIds: string[]): string[] => {
+	return Array.from(new Set(userIds)).sort();
 };
 ```

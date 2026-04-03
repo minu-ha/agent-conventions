@@ -8,7 +8,7 @@ metadata:
 
 # TypeScript 컨벤션
 
-에이전트 협업 팀을 위한 TypeScript 코딩 컨벤션 모음입니다. 현재 이 가이드는 6개 카테고리의 21개 규칙으로 구성되어 있습니다.   
+에이전트 협업 팀을 위한 TypeScript 코딩 컨벤션 모음입니다. 현재 이 가이드는 6개 카테고리의 20개 규칙으로 구성되어 있습니다.   
 네이밍, import 소유권, 타입 계약, helper 분리, 결측값 처리, JSDoc 규칙을 [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`와 compiled [AGENTS.md](./AGENTS.md)로 관리합니다.   
 이 skill은 React, NestJS, TanStack Route, Playwright Test와 함께 로드하는 공통 TypeScript companion skill로도 사용됩니다.
 
@@ -62,7 +62,6 @@ metadata:
 - `docs-require-header-jsdoc-on-key-declarations` - 핵심 경계 선언에는 header JSDoc 요구
 - `docs-use-description-for-external-integration-functions` - 외부 연동 함수에는 `@description` 사용
 - `docs-use-helper-for-reusable-pure-helper-functions` - 재사용 가능한 순수 helper에는 `@helper` 사용
-- `docs-use-tool-for-model-callable-tool-factories` - 모델 호출 가능 tool factory에는 `@tool` 사용
 - `docs-keep-inline-comments-for-constraints-and-caveats` - inline comment는 비자명한 제약에만 사용
 
 ### 6. Guardrails and Review Checks (MEDIUM)

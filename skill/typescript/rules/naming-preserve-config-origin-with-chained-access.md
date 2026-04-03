@@ -14,16 +14,16 @@ tags: config, chaining, traceability
 **Incorrect (넓은 스코프에서 원본 오리진을 감춤):**
 
 ```ts
-const {env, verification} = config;
-const googleApiKey = env.google_api_key;
-const checkCommand = verification.command.check;
+const {api, features} = config;
+const billingBaseUrl = api.billing_base_url;
+const enableRefunds = features.enable_refunds;
 ```
 
 **Correct (체이닝으로 출처를 유지):**
 
 ```ts
-config.rule.rule_ref.pipeline;
-config.orchestration.task_category.workflow;
-config.verification.command.check;
-config.env.google_api_key;
+config.api.billing_base_url;
+config.features.enable_refunds;
+config.pagination.default_page_size;
+config.env.sentry_dsn;
 ```

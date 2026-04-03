@@ -14,14 +14,14 @@ tags: type-reuse, pick, omit
 **Incorrect (기존 계약과 동일한 구조를 다시 선언):**
 
 ```ts
-interface OrchestrationSnapshot {
-	request: string;
-	iteration: number;
+interface UserPreview {
+	id: string;
+	name: string;
 }
 ```
 
 **Correct (기존 계약에서 필요한 부분만 파생):**
 
 ```ts
-type DevelopmentSnapshot = Pick<DevelopmentOrchestrationState, "request" | "iteration">;
+type UserPreview = Pick<UserRecord, "id" | "name">;
 ```

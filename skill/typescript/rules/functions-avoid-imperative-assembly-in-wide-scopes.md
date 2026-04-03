@@ -14,17 +14,17 @@ tags: imperative, scope, assembly
 **Incorrect (넓은 스코프에서 명령형으로 누적 조립):**
 
 ```ts
-let selectedRuleRefs = ["<convention-doc-root>/pipeline.md"];
+let visibleTabs = ["overview"];
 
-if (request.includes("typescript")) {
-	selectedRuleRefs.push("<convention-doc-root>/typescript.md");
+if (canManageMembers) {
+	visibleTabs.push("members");
 }
 ```
 
 **Correct (좁은 스코프에서 한 번에 계산):**
 
 ```ts
-const selectedRuleRefs = request.includes("typescript")
-	? ["<convention-doc-root>/pipeline.md", "<convention-doc-root>/typescript.md"]
-	: ["<convention-doc-root>/pipeline.md"];
+const visibleTabs = canManageMembers
+	? ["overview", "members"]
+	: ["overview"];
 ```

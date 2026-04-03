@@ -41,8 +41,7 @@
     - 5.2 [Require Header JSDoc on Key Declarations](#52-require-header-jsdoc-on-key-declarations)
     - 5.3 [Use @description for External Integration Functions](#53-use-description-for-external-integration-functions)
     - 5.4 [Use @helper for Reusable Pure Helper Functions](#54-use-helper-for-reusable-pure-helper-functions)
-    - 5.5 [Use @tool for Model-callable Tool Factories](#55-use-tool-for-model-callable-tool-factories)
-    - 5.6 [Write Concise Korean Comments About Purpose and Constraints](#56-write-concise-korean-comments-about-purpose-and-constraints)
+    - 5.5 [Write Concise Korean Comments About Purpose and Constraints](#55-write-concise-korean-comments-about-purpose-and-constraints)
 6. [Guardrails and Review Checks](#6-guardrails-and-review-checks) — **MEDIUM**
     - 6.1 [Review Banned TypeScript Shortcuts Before Finishing](#61-review-banned-typescript-shortcuts-before-finishing)
 
@@ -58,13 +57,14 @@
 
 **Impact: HIGH (prevents shared config values from scattering across leaf files and losing a single public source)**
 
-여러 파일에서 공유되는 설정과 상수는 `<config-entry-path>`를 공개 진입점으로 삼아 한 namespace 아래에 모읍니다. leaf 파일마다 공용 문자열, 키워드 배열, 명령 문자열을 흩뿌리지 말고, `config.*` 체이닝으로 읽을 수 있게 정리합니다.
+여러 파일에서 공유되는 설정과 상수는 `<config-entry-path>`를 공개 진입점으로 삼아 한 namespace 아래에 모읍니다.   
+leaf 파일마다 공용 URL, feature flag, 페이지 크기, 상수 문자열을 흩뿌리지 말고, `config.*` 체이닝으로 읽을 수 있게 정리합니다.
 
 **Incorrect (공용 설정을 leaf 파일마다 흩뿌림):**
 
 ```ts
-const typescriptRuleRef = "<convention-doc-root>/typescript.md";
-const orchestration_keyword = ["workflow", "langgraph"];
+const defaultPageSize = 20;
+const billing_feature_keys = ["invoices", "refunds"];
 ```
 
 **Correct (공용 설정은 공개 namespace에서 읽음):**
@@ -72,10 +72,10 @@ const orchestration_keyword = ["workflow", "langgraph"];
 ```ts
 import {config} from "<config-public-import>";
 
-config.rule.rule_ref.typescript;
-config.model.default.model_name;
-config.model.role.classification.provider;
-config.env.google_api_key;
+config.api.public_base_url;
+config.api.billing_base_url;
+config.features.enable_refunds;
+config.pagination.default_page_size;
 ```
 
 ### 1.2 Preserve Config Origin With Chained Access
@@ -87,31 +87,31 @@ config.env.google_api_key;
 **Incorrect (넓은 스코프에서 원본 오리진을 감춤):**
 
 ```ts
-const {env, verification} = config;
-const googleApiKey = env.google_api_key;
-const checkCommand = verification.command.check;
+const {api, features} = config;
+const billingBaseUrl = api.billing_base_url;
+const enableRefunds = features.enable_refunds;
 ```
 
 **Correct (체이닝으로 출처를 유지):**
 
 ```ts
-config.rule.rule_ref.pipeline;
-config.orchestration.task_category.workflow;
-config.verification.command.check;
-config.env.google_api_key;
+config.api.billing_base_url;
+config.features.enable_refunds;
+config.pagination.default_page_size;
+config.env.sentry_dsn;
 ```
 
 ### 1.3 Use Consistent File, Symbol, and Field Naming
 
 **Impact: HIGH (keeps file names, symbols, and shape fields predictable across modules and runtime structures)**
 
-파일명은 `kebab-case`, 일반 변수와 함수는 `camelCase`, 타입은 `PascalCase`를 사용합니다. 공용 설정 객체 키와 enum-like 상수 객체 이름 및 그 키는 `snake_case`, state 키와 일반 객체 키, schema 키, 커스텀 타입 필드는 `camelCase`를 유지합니다.
+파일명은 `kebab-case`, 일반 변수와 함수는 `camelCase`, 타입은 `PascalCase`를 사용합니다. 공용 설정 객체 키와 enum-like 상수 객체 이름 및 그 키는 `snake_case`, 일반 객체 키, schema 키, 커스텀 타입 필드는 `camelCase`를 유지합니다.
 
 **Incorrect (파일명, 심볼명, 필드명이 제각각임):**
 
 ```ts
 // userSettings.ts
-const Chat_State = new StateSchema({
+const User_ProfileSchema = z.object({
 	repo_path: z.string(),
 });
 ```
@@ -120,7 +120,7 @@ const Chat_State = new StateSchema({
 
 ```ts
 // chat-state.ts
-const chatState = new StateSchema({
+const userProfileSchema = z.object({
 	repoPath: z.string(),
 });
 ```
@@ -134,18 +134,17 @@ const chatState = new StateSchema({
 **Incorrect (barrel과 혼합 import로 경계를 흐림):**
 
 ```ts
-import {config, createChatModel, MainState} from "./index";
+import {config, normalizeUserProfile, UserProfile} from "./index";
 ```
 
 **Correct (직접 import와 공개 진입점을 구분):**
 
 ```ts
-import type {RunnableConfig} from "@langchain/core/runnables";
+import type {UserProfile} from "<type-public-import>";
 import {config} from "<config-public-import>";
-import {analysisStateValueSchema} from "<schema-public-import>";
-import {createChatModel} from "<helper-public-import>";
-import {mainState} from "<graph-public-import>/main";
-import type {MainState} from "<type-public-import>";
+import {userProfileSchema} from "<schema-public-import>";
+import {normalizeUserProfile} from "<helper-public-import>";
+import {userRoleLabels} from "<constants-public-import>";
 ```
 
 ## 2. Types and Contracts
@@ -158,18 +157,18 @@ import type {MainState} from "<type-public-import>";
 
 **Impact: CRITICAL (keeps domain-specific contracts understandable without digging through implementation details)**
 
-커스텀 `type`, `interface`, `z.object(...)`, `StateSchema(...)`, 객체형 상수 같은 선언형 shape에는 JSDoc을 작성합니다. 객체형 계약은 헤더에 `@summary`, 각 필드 바로 위 `@field`를 쓰고, `Pick`/`Omit`/Indexed Access처럼 로컬 필드 선언이 없는 alias는 헤더 `@summary`만 둡니다.
+커스텀 `type`, `interface`, `z.object(...)`, 객체형 상수 같은 선언형 shape에는 JSDoc을 작성합니다. 객체형 계약은 헤더에 `@summary`, 각 필드 바로 위 `@field`를 쓰고, `Pick`/`Omit`/Indexed Access처럼 로컬 필드 선언이 없는 alias는 헤더 `@summary`만 둡니다.
 
 **Incorrect (필드 설명을 생략하거나 예전 방식으로 헤더에 몰아씀):**
 
 ```ts
 /**
- * @summary 오케스트레이션 검증 결과
- * @field ruleRef 검증 대상 규칙 문서 경로
+ * @summary 게시 결과 요약
+ * @field 게시 대상 문서 ID
  */
-interface OrchestrationAuditResult {
-	ruleRef: string;
-	passed: boolean;
+interface PublishResult {
+	documentId: string;
+	published: boolean;
 }
 ```
 
@@ -177,27 +176,27 @@ interface OrchestrationAuditResult {
 
 ```ts
 /**
- * @summary 오케스트레이션 검증 결과
+ * @summary 게시 결과 요약
  */
-export interface OrchestrationAuditResult {
+export interface PublishResult {
 	/**
-	 * @field 검증 대상 규칙 문서 경로
+	 * @field 게시 대상 문서 ID
 	 */
-	ruleRef: string;
+	documentId: string;
 	/**
-	 * @field 검증 통과 여부
+	 * @field 게시 성공 여부
 	 */
-	passed: boolean;
+	published: boolean;
 }
 
 /**
- * @schema 모델 구조화 출력 스키마
+ * @schema 게시 결과 스키마
  */
-const auditResultSchema = z.object({
+const publishResultSchema = z.object({
 	/**
-	 * @field 검증 대상 규칙 문서 경로
+	 * @field 게시 대상 문서 ID
 	 */
-	ruleRef: z.string(),
+	documentId: z.string(),
 });
 ```
 
@@ -231,7 +230,7 @@ const noopLog: LogSink = (_message, _level) => {
 
 **Impact: CRITICAL (keeps callable contracts reusable and prevents local parameter annotations from fragmenting shared function types)**
 
-재사용 가능한 콜백이나 함수 타입이 있다면 매개변수 타입 선언보다 함수 변수 타입 선언을 우선합니다. 이미 존재하는 interface, object contract, framework alias를 먼저 재사용하고, 정말 필요한 경우에만 별도 callable contract를 선언합니다. 한 번만 쓰는 로컬 함수 때문에 함수 타입 alias를 늘리는 것은 지양합니다.
+재사용 가능한 콜백이나 함수 타입이 있다면 매개변수 타입 선언보다 함수 변수 타입 선언을 우선합니다. 이미 존재하는 interface, object contract, framework alias를 먼저 재사용하고, 동일 callable contract를 여러 구현이 공유할 때만 별도 함수 타입 alias를 선언합니다. 한 번만 쓰는 로컬 함수 때문에 함수 타입 alias를 늘리는 것은 지양합니다.
 
 **Incorrect (공유 가능한 함수 계약이 있는데 매개변수 타입만 사용):**
 
@@ -241,14 +240,14 @@ const formatState = (state: Record<string, unknown>): string => {
 };
 ```
 
-**Correct (기존 계약을 재사용해 함수 변수 타입을 고정):**
+**Correct (기존 계약이나 실제 공유되는 callable contract를 재사용해 함수 변수 타입을 고정):**
 
 ```ts
-interface WorkflowFormatters {
+interface UserFormatters {
 	formatState: (state: Record<string, unknown>) => string;
 }
 
-const formatState: WorkflowFormatters["formatState"] = (state) => {
+const formatState: UserFormatters["formatState"] = (state) => {
 	return JSON.stringify(state);
 };
 ```
@@ -260,8 +259,8 @@ const normalizeRequest: NormalizeRequest = (request) => {
 	return request.trim();
 };
 
-const normalizeFallbackRequest: NormalizeRequest = (request) => {
-	return request || "default";
+const normalizeSearchRequest: NormalizeRequest = (request) => {
+	return request.replaceAll(/\s+/g, " ").trim();
 };
 ```
 
@@ -274,24 +273,24 @@ const normalizeFallbackRequest: NormalizeRequest = (request) => {
 **Incorrect (기존 계약이 있는데 콜백 시그니처를 다시 씀):**
 
 ```ts
-interface OrchestrationTransformers {
-	formatLog: (message: string) => string;
+interface ToastFormatters {
+	formatMessage: (message: string) => string;
 }
 
-const formatLog = (message: string): string => {
-	return `[workflow] ${message}`;
+const formatMessage = (message: string): string => {
+	return `[app] ${message}`;
 };
 ```
 
 **Correct (기존 계약의 시그니처를 직접 참조):**
 
 ```ts
-interface OrchestrationTransformers {
-	formatLog: (message: string) => string;
+interface ToastFormatters {
+	formatMessage: (message: string) => string;
 }
 
-const formatLog: OrchestrationTransformers["formatLog"] = (message) => {
-	return `[workflow] ${message}`;
+const formatMessage: ToastFormatters["formatMessage"] = (message) => {
+	return `[app] ${message}`;
 };
 ```
 
@@ -304,16 +303,16 @@ const formatLog: OrchestrationTransformers["formatLog"] = (message) => {
 **Incorrect (기존 계약과 동일한 구조를 다시 선언):**
 
 ```ts
-interface OrchestrationSnapshot {
-	request: string;
-	iteration: number;
+interface UserPreview {
+	id: string;
+	name: string;
 }
 ```
 
 **Correct (기존 계약에서 필요한 부분만 파생):**
 
 ```ts
-type DevelopmentSnapshot = Pick<DevelopmentOrchestrationState, "request" | "iteration">;
+type UserPreview = Pick<UserRecord, "id" | "name">;
 ```
 
 ## 3. Functions and Helper Boundaries
@@ -331,19 +330,19 @@ type DevelopmentSnapshot = Pick<DevelopmentOrchestrationState, "request" | "iter
 **Incorrect (넓은 스코프에서 명령형으로 누적 조립):**
 
 ```ts
-let selectedRuleRefs = ["<convention-doc-root>/pipeline.md"];
+let visibleTabs = ["overview"];
 
-if (request.includes("typescript")) {
-	selectedRuleRefs.push("<convention-doc-root>/typescript.md");
+if (canManageMembers) {
+	visibleTabs.push("members");
 }
 ```
 
 **Correct (좁은 스코프에서 한 번에 계산):**
 
 ```ts
-const selectedRuleRefs = request.includes("typescript")
-	? ["<convention-doc-root>/pipeline.md", "<convention-doc-root>/typescript.md"]
-	: ["<convention-doc-root>/pipeline.md"];
+const visibleTabs = canManageMembers
+	? ["overview", "members"]
+	: ["overview"];
 ```
 
 ### 3.2 Extract Helpers Only When the Boundary Is Real
@@ -362,8 +361,8 @@ const nextIteration = getNextIteration(iteration);
 **Correct (정규화나 직렬화처럼 실제 경계가 있을 때만 helper로 분리):**
 
 ```ts
-export const normalizeRuleRefs = (ruleRefs: string[]): string[] => {
-	return Array.from(new Set(ruleRefs)).sort();
+export const normalizeUserIds = (userIds: string[]): string[] => {
+	return Array.from(new Set(userIds)).sort();
 };
 ```
 
@@ -434,14 +433,14 @@ const buildPlanningPrompt = (args: BuildPlanningPromptArgs): string => {
 **Incorrect (결측을 호출부에서 조용히 숨김):**
 
 ```ts
-const googleApiKey = config.env.google_api_key ?? "demo-key";
+const supportEmail = settings.supportEmail ?? "help@example.com";
 ```
 
 **Correct (기본값이 명확한 예외만 이유와 함께 허용):**
 
 ```ts
-// 개발용 Agent Server 기본 포트는 환경 변수가 없으면 2024를 사용한다.
-const agentServerPort = process.env.PORT?.trim() || "2024";
+// 기본 페이지 크기는 제품 명세상 20으로 고정한다.
+const pageSize = query.pageSize?.trim() || "20";
 ```
 
 ## 5. JSDoc and Comment Conventions
@@ -476,13 +475,13 @@ if (!normalizedToken) {
 
 **Impact: MEDIUM-HIGH (makes important boundaries searchable and explainable before readers inspect the implementation body)**
 
-외부 연동 함수, 주요 순수 함수, 재사용 함수, 도메인 규칙 함수, 커스텀 `type`/`interface`, 포맷 예외를 둔 함수 선언에는 예외 없이 선언 헤더 JSDoc을 작성합니다. 중요한 경계가 파일 검색에서 바로 보이도록 하는 것이 목적입니다. annotation 종류는 더 구체적인 규칙을 따라 `@summary`, `@description`, `@helper`, `@tool` 중 하나를 고릅니다.
+외부 연동 함수, 주요 순수 함수, 재사용 함수, 도메인 규칙 함수, 커스텀 `type`/`interface`, 포맷 예외를 둔 함수 선언에는 예외 없이 선언 헤더 JSDoc을 작성합니다. 중요한 경계가 파일 검색에서 바로 보이도록 하는 것이 목적입니다. annotation 종류는 더 구체적인 규칙을 따라 `@summary`, `@description`, `@helper` 중 하나를 고릅니다.
 
 **Incorrect (주요 선언에 헤더 설명이 없음):**
 
 ```ts
-export const normalizeRuleRefs = (ruleRefs: string[]): string[] => {
-	return Array.from(new Set(ruleRefs)).sort();
+export const normalizeUserIds = (userIds: string[]): string[] => {
+	return Array.from(new Set(userIds)).sort();
 };
 ```
 
@@ -490,10 +489,10 @@ export const normalizeRuleRefs = (ruleRefs: string[]): string[] => {
 
 ```ts
 /**
- * @summary 중복 제거 후 규칙 경로 정렬
+ * @summary 중복 제거 후 사용자 ID 정렬
  */
-export const normalizeRuleRefs = (ruleRefs: string[]): string[] => {
-	return Array.from(new Set(ruleRefs)).sort();
+export const normalizeUserIds = (userIds: string[]): string[] => {
+	return Array.from(new Set(userIds)).sort();
 };
 ```
 
@@ -507,9 +506,9 @@ export const normalizeRuleRefs = (ruleRefs: string[]): string[] => {
 
 ```ts
 /**
- * @helper 워크플로 원문 파일 로드
+ * @helper 프로젝트 설정 파일 로드
  */
-export const loadWorkflowSource = async (path: string): Promise<string> => {
+export const loadProjectConfig = async (path: string): Promise<string> => {
 	return await Promise.resolve(path);
 };
 ```
@@ -518,18 +517,19 @@ export const loadWorkflowSource = async (path: string): Promise<string> => {
 
 ```ts
 /**
- * @description 워크플로 원문 파일 로드
+ * @description 프로젝트 설정 파일 로드
  */
-export const loadWorkflowSource = async (path: string): Promise<string> => {
+export const loadProjectConfig = async (path: string): Promise<string> => {
 	return await Promise.resolve(path);
 };
 ```
 
 ### 5.4 Use @helper for Reusable Pure Helper Functions
 
-**Impact: MEDIUM-HIGH (distinguishes reusable pure support logic from route, node, or integration boundaries)**
+**Impact: MEDIUM-HIGH (distinguishes reusable pure support logic from local implementation details or integration boundaries)**
 
-재사용 가능한 순수 helper, 문자열 조립 함수, 정규화 함수, 포맷 함수에는 `@helper`를 사용합니다. 한 node나 router 안에서만 쓰는 작은 계산은 직접 두고, 최소 3~4곳 이상 재사용되거나 밖으로 빼야 읽기 흐름이 명확해질 때만 helper로 승격합니다.
+재사용 가능한 순수 helper, 문자열 조립 함수, 정규화 함수, 포맷 함수에는 `@helper`를 사용합니다.   
+한 함수나 한 파일 안에서만 쓰는 작은 계산은 직접 두고, 여러 call site가 공유하거나 밖으로 빼야 읽기 흐름이 명확해질 때만 helper로 승격합니다.
 
 **Incorrect (작은 외부 연동 함수나 단회성 계산을 helper로 혼동):**
 
@@ -542,50 +542,18 @@ const loadUserToken = async (): Promise<string> => {
 };
 ```
 
-**Correct (재사용 순수 계산에 `@helper`를 사용):**
+**Correct (여러 caller가 공유하는 순수 정규화 경계에 `@helper`를 사용):**
 
 ```ts
 /**
- * @helper 검증 실패 원인 문구 조립
+ * @helper 목록 화면과 상세 화면이 함께 쓰는 사용자 ID 정규화
  */
-const buildAuditFailureMessage = (count: number): string => {
-	return `${count}건의 검증 실패`;
+export const normalizeUserIds = (userIds: string[]): string[] => {
+	return Array.from(new Set(userIds)).sort();
 };
 ```
 
-### 5.5 Use @tool for Model-callable Tool Factories
-
-**Impact: MEDIUM-HIGH (makes tool-creation boundaries explicit so model-callable execution surfaces are not mistaken for ordinary helpers)**
-
-LangChain `tool(...)` 팩토리나 모델이 호출할 수 있는 도구 생성 함수는 `@tool`을 사용합니다. tool 내부에서만 쓰는 작은 보조 계산은 `@helper` 또는 무주석으로 둘 수 있지만, 도구 생성 경계 자체는 `@tool`로 드러내야 합니다.
-
-**Incorrect (모델 호출 경계를 helper처럼 표기):**
-
-```ts
-/**
- * @helper 저장소 파일 읽기 tool 생성
- */
-const createReadRepositoryFileTool = (repoPath: string) => {
-	return tool(async ({fileRef}) => {
-		return await readRepositoryFile({repoPath, fileRef});
-	});
-};
-```
-
-**Correct (`@tool`로 실행 경계를 표시):**
-
-```ts
-/**
- * @tool 저장소 파일 읽기 tool 생성
- */
-const createReadRepositoryFileTool = (repoPath: string) => {
-	return tool(async ({fileRef}) => {
-		return await readRepositoryFile({repoPath, fileRef});
-	});
-};
-```
-
-### 5.6 Write Concise Korean Comments About Purpose and Constraints
+### 5.5 Write Concise Korean Comments About Purpose and Constraints
 
 **Impact: MEDIUM (keeps comments focused on intent and constraints instead of narrating code mechanics)**
 
@@ -628,18 +596,18 @@ interface RequestSnapshot {
 	request: string;
 }
 
-const googleApiKey = config.env.google_api_key ?? "demo-key";
+const supportEmail = settings.supportEmail ?? "help@example.com";
 ```
 
 **Correct (공개 경계와 결측 처리를 명시적으로 유지):**
 
 ```ts
-import type {MainState} from "<type-public-import>";
+import type {UserRecord} from "<type-public-import>";
 
-type RequestSnapshot = Pick<MainState, "request">;
+type UserPreview = Pick<UserRecord, "id" | "name">;
 
-if (!config.env.google_api_key) {
-	throw new Error("google_api_key is required.");
+if (!settings.supportEmail) {
+	throw new Error("supportEmail is required.");
 }
 ```
 

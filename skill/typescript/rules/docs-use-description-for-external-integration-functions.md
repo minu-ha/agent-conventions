@@ -15,9 +15,9 @@ tags: description, external, integration
 
 ```ts
 /**
- * @helper 워크플로 원문 파일 로드
+ * @helper 프로젝트 설정 파일 로드
  */
-export const loadWorkflowSource = async (path: string): Promise<string> => {
+export const loadProjectConfig = async (path: string): Promise<string> => {
 	return await Promise.resolve(path);
 };
 ```
@@ -26,9 +26,9 @@ export const loadWorkflowSource = async (path: string): Promise<string> => {
 
 ```ts
 /**
- * @description 워크플로 원문 파일 로드
+ * @description 프로젝트 설정 파일 로드
  */
-export const loadWorkflowSource = async (path: string): Promise<string> => {
+export const loadProjectConfig = async (path: string): Promise<string> => {
 	return await Promise.resolve(path);
 };
 ```

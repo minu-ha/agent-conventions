@@ -20,17 +20,17 @@ interface RequestSnapshot {
 	request: string;
 }
 
-const googleApiKey = config.env.google_api_key ?? "demo-key";
+const supportEmail = settings.supportEmail ?? "help@example.com";
 ```
 
 **Correct (공개 경계와 결측 처리를 명시적으로 유지):**
 
 ```ts
-import type {MainState} from "<type-public-import>";
+import type {UserRecord} from "<type-public-import>";
 
-type RequestSnapshot = Pick<MainState, "request">;
+type UserPreview = Pick<UserRecord, "id" | "name">;
 
-if (!config.env.google_api_key) {
-	throw new Error("google_api_key is required.");
+if (!settings.supportEmail) {
+	throw new Error("supportEmail is required.");
 }
 ```

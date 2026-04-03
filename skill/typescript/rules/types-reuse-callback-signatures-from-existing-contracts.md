@@ -14,23 +14,23 @@ tags: callbacks, indexed-access, reuse
 **Incorrect (기존 계약이 있는데 콜백 시그니처를 다시 씀):**
 
 ```ts
-interface OrchestrationTransformers {
-	formatLog: (message: string) => string;
+interface ToastFormatters {
+	formatMessage: (message: string) => string;
 }
 
-const formatLog = (message: string): string => {
-	return `[workflow] ${message}`;
+const formatMessage = (message: string): string => {
+	return `[app] ${message}`;
 };
 ```
 
 **Correct (기존 계약의 시그니처를 직접 참조):**
 
 ```ts
-interface OrchestrationTransformers {
-	formatLog: (message: string) => string;
+interface ToastFormatters {
+	formatMessage: (message: string) => string;
 }
 
-const formatLog: OrchestrationTransformers["formatLog"] = (message) => {
-	return `[workflow] ${message}`;
+const formatMessage: ToastFormatters["formatMessage"] = (message) => {
+	return `[app] ${message}`;
 };
 ```

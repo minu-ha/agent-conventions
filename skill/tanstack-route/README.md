@@ -55,7 +55,7 @@
 
 Each rule file should follow this structure:
 
-```markdown
+````markdown
 ---
 title: Rule Title Here
 impact: MEDIUM
@@ -80,7 +80,7 @@ tags: tag1, tag2
 ```tsx
 // 좋은 예시
 ```
-```
+````
 
 ## 파일명 규칙
 

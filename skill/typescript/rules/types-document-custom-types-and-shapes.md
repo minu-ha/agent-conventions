@@ -9,18 +9,18 @@ tags: types, jsdoc, shapes
 
 **Impact: CRITICAL (keeps domain-specific contracts understandable without digging through implementation details)**
 
-커스텀 `type`, `interface`, `z.object(...)`, `StateSchema(...)`, 객체형 상수 같은 선언형 shape에는 JSDoc을 작성합니다. 객체형 계약은 헤더에 `@summary`, 각 필드 바로 위 `@field`를 쓰고, `Pick`/`Omit`/Indexed Access처럼 로컬 필드 선언이 없는 alias는 헤더 `@summary`만 둡니다.
+커스텀 `type`, `interface`, `z.object(...)`, 객체형 상수 같은 선언형 shape에는 JSDoc을 작성합니다. 객체형 계약은 헤더에 `@summary`, 각 필드 바로 위 `@field`를 쓰고, `Pick`/`Omit`/Indexed Access처럼 로컬 필드 선언이 없는 alias는 헤더 `@summary`만 둡니다.
 
 **Incorrect (필드 설명을 생략하거나 예전 방식으로 헤더에 몰아씀):**
 
 ```ts
 /**
- * @summary 오케스트레이션 검증 결과
- * @field ruleRef 검증 대상 규칙 문서 경로
+ * @summary 게시 결과 요약
+ * @field 게시 대상 문서 ID
  */
-interface OrchestrationAuditResult {
-	ruleRef: string;
-	passed: boolean;
+interface PublishResult {
+	documentId: string;
+	published: boolean;
 }
 ```
 
@@ -28,26 +28,26 @@ interface OrchestrationAuditResult {
 
 ```ts
 /**
- * @summary 오케스트레이션 검증 결과
+ * @summary 게시 결과 요약
  */
-export interface OrchestrationAuditResult {
+export interface PublishResult {
 	/**
-	 * @field 검증 대상 규칙 문서 경로
+	 * @field 게시 대상 문서 ID
 	 */
-	ruleRef: string;
+	documentId: string;
 	/**
-	 * @field 검증 통과 여부
+	 * @field 게시 성공 여부
 	 */
-	passed: boolean;
+	published: boolean;
 }
 
 /**
- * @schema 모델 구조화 출력 스키마
+ * @schema 게시 결과 스키마
  */
-const auditResultSchema = z.object({
+const publishResultSchema = z.object({
 	/**
-	 * @field 검증 대상 규칙 문서 경로
+	 * @field 게시 대상 문서 ID
 	 */
-	ruleRef: z.string(),
+	documentId: z.string(),
 });
 ```
