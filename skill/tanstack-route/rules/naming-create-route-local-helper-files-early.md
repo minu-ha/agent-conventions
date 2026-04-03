@@ -1,38 +1,33 @@
 ---
-title: Create Route-local `*.ts` Helper Files Early
+title: Use Owner-named Route Support Modules Instead of Generic Helper Files
 impact: MEDIUM-HIGH
 impactDescription: keeps route files from accumulating normalization and mapping logic before boundaries blur
 tags: helpers, route-local, typescript
 ---
 
-## Create Route-local `*.ts` Helper Files Early
+## Use Owner-named Route Support Modules Instead of Generic Helper Files
 
 **Impact: MEDIUM-HIGH (keeps route files from accumulating normalization and mapping logic before boundaries blur)**
 
-라우트 전용 유틸, 헬퍼, 변환 함수는 가능하면 시작 시점부터 같은 계층 `*.ts` 파일에 모읍니다. 화면이 커진 뒤 나중에 억지로 분리하는 대신, 초기에 helper 자리를 확보해 route entry가 화면 흐름에 집중하게 만듭니다.
+라우트 전용 순수 support code가 entry file을 흐리기 시작하면 첫 추출 대상은 같은 계층 owner-named module입니다. 예를 들어 `settings.index.tsx`라면 `settings.ts`로 옮기고 named export를 직접 import합니다.   
+`helper.ts`, `helpers.ts`, `utils.ts`, `common.ts` 같은 generic 파일명은 만들지 않고, 화면 하나에서만 쓰는 custom hook으로 우회해 숨기지도 않습니다.
 
-**Incorrect (helper를 route 파일 안에 계속 누적):**
-
-```ts
-// settings.index.tsx
-const normalizeSettingsSearch = (value: string | undefined) => {
-	return value?.trim().toLowerCase() ?? "";
-};
-
-const buildSettingsRedirect = (tab: string) => {
-	return {to: "/app/settings/general", search: {tab}};
-};
-```
-
-**Correct (같은 계층 helper 파일에 순수 로직을 분리):**
+**Incorrect (generic helper 파일명으로 support code를 분산):**
 
 ```txt
 (settings)/
-  settings.css
-  settings.ts
-  settings.layout.tsx
+  helpers.ts
   settings.index.tsx
 ```
+
+```ts
+// helpers.ts
+export const normalizeSettingsSearch = (value: string | undefined) => {
+	return value?.trim().toLowerCase() ?? "";
+};
+```
+
+**Correct (owner-named sibling module에 named export로 유지):**
 
 ```ts
 // settings.ts

@@ -12,7 +12,7 @@
 
 ## 개요
 
-에이전트 협업 팀을 위한 TanStack Router 컨벤션입니다. 이 가이드는 layout-shell-first route grouping, 검색 가능한 파일명, 명시적인 router boundary 선언, route-local 소유권, generated artifact 보호를 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, 기본 compiled guide는 local router 규칙만 담고 route helper와 search schema에는 `typescript` companion skill을 함께 사용합니다.
+에이전트 협업 팀을 위한 TanStack Router 컨벤션입니다. 이 가이드는 layout-shell-first route grouping, 검색 가능한 파일명, 명시적인 router boundary 선언, route-local 소유권, generated artifact 보호를 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, 기본 compiled guide는 local router 규칙만 담고 route support module과 search schema에는 `typescript` companion skill을 함께 사용합니다.
 
 이 가이드는 local TanStack Route 컨벤션 규칙만 담고 있습니다. TypeScript 같은 공통 규칙은 companion skill을 함께 로드해 보완합니다.
 
@@ -33,11 +33,11 @@
     - 1.4 [Split Top-level Route Groups by Layout Shell](#14-split-top-level-route-groups-by-layout-shell)
     - 1.5 [Use Parentheses Folders for Pathless Route Groups](#15-use-parentheses-folders-for-pathless-route-groups)
 2. [File Naming and Route Assets](#2-file-naming-and-route-assets) — **HIGH**
-    - 2.1 [Create Route-local *.ts Helper Files Early](#21-create-route-local-ts-helper-files-early)
-    - 2.2 [Name Top-level Groups by Shell Meaning](#22-name-top-level-groups-by-shell-meaning)
-    - 2.3 [Prepare the Basic Route File Set](#23-prepare-the-basic-route-file-set)
-    - 2.4 [Start Child Route Sets With Parentheses Folders](#24-start-child-route-sets-with-parentheses-folders)
-    - 2.5 [Use Domain-specific Dynamic Segment Names](#25-use-domain-specific-dynamic-segment-names)
+    - 2.1 [Name Top-level Groups by Shell Meaning](#21-name-top-level-groups-by-shell-meaning)
+    - 2.2 [Prepare the Basic Route File Set](#22-prepare-the-basic-route-file-set)
+    - 2.3 [Start Child Route Sets With Parentheses Folders](#23-start-child-route-sets-with-parentheses-folders)
+    - 2.4 [Use Domain-specific Dynamic Segment Names](#24-use-domain-specific-dynamic-segment-names)
+    - 2.5 [Use Owner-named Route Support Modules Instead of Generic Helper Files](#25-use-owner-named-route-support-modules-instead-of-generic-helper-files)
     - 2.6 [Use Searchable Feature Route File Names](#26-use-searchable-feature-route-file-names)
 3. [Route Definition and Navigation Boundaries](#3-route-definition-and-navigation-boundaries) — **CRITICAL**
     - 3.1 [Export Route at the Top of the File](#31-export-route-at-the-top-of-the-file)
@@ -221,47 +221,7 @@ function Root() {
 
 검색 가능한 entry 파일명, 의미 있는 segment 이름, 예측 가능한 route asset 세트는 route를 더 쉽게 찾고 유지보수하게 만듭니다.
 
-### 2.1 Create Route-local *.ts Helper Files Early
-
-**Impact: MEDIUM-HIGH (keeps route files from accumulating normalization and mapping logic before boundaries blur)**
-
-라우트 전용 유틸, 헬퍼, 변환 함수는 가능하면 시작 시점부터 같은 계층 `*.ts` 파일에 모읍니다. 화면이 커진 뒤 나중에 억지로 분리하는 대신, 초기에 helper 자리를 확보해 route entry가 화면 흐름에 집중하게 만듭니다.
-
-**Incorrect (helper를 route 파일 안에 계속 누적):**
-
-```ts
-// settings.index.tsx
-const normalizeSettingsSearch = (value: string | undefined) => {
-	return value?.trim().toLowerCase() ?? "";
-};
-
-const buildSettingsRedirect = (tab: string) => {
-	return {to: "/app/settings/general", search: {tab}};
-};
-```
-
-**Correct (같은 계층 helper 파일에 순수 로직을 분리):**
-
-```txt
-(settings)/
-  settings.css
-  settings.ts
-  settings.layout.tsx
-  settings.index.tsx
-```
-
-```ts
-// settings.ts
-export const normalizeSettingsSearch = (value: string | undefined) => {
-	return value?.trim().toLowerCase() ?? "";
-};
-
-export const buildSettingsRedirect = (tab: string) => {
-	return {to: "/app/settings/general", search: {tab}};
-};
-```
-
-### 2.2 Name Top-level Groups by Shell Meaning
+### 2.1 Name Top-level Groups by Shell Meaning
 
 **Impact: HIGH (makes top-level route groups communicate the shell they belong to instead of the feature they happen to contain)**
 
@@ -283,11 +243,11 @@ export const buildSettingsRedirect = (tab: string) => {
 <route-root>/(workspace)/workspace/(reports)/reports.index.tsx
 ```
 
-### 2.3 Prepare the Basic Route File Set
+### 2.2 Prepare the Basic Route File Set
 
 **Impact: MEDIUM-HIGH (gives nested routes a predictable place for styles, shell code, and pure helpers from the start)**
 
-하위 라우트가 생기면 해당 라우트는 기본적으로 `*.css`, `*.layout.tsx`, `*.index.tsx`, 같은 계층 `*.ts` helper 파일 세트를 함께 준비합니다. 이렇게 해야 라우트가 커져도 스타일, 셸, 화면, 순수 로직의 자리가 처음부터 예측 가능하게 유지됩니다.
+하위 라우트가 생기면 해당 라우트는 기본적으로 `*.css`, `*.layout.tsx`, `*.index.tsx` 파일 세트를 먼저 준비합니다. 순수 support code가 실제로 생겼을 때는 generic helper 파일 대신 같은 owner 이름의 sibling `*.ts` module을 추가합니다. 이렇게 해야 라우트가 커져도 스타일, 셸, 화면, 순수 로직의 자리가 예측 가능하게 유지됩니다.
 
 **Incorrect (화면 파일만 먼저 만들고 나머지 책임이 흩어짐):**
 
@@ -296,7 +256,14 @@ export const buildSettingsRedirect = (tab: string) => {
   settings.index.tsx
 ```
 
-**Correct (기본 route 파일 세트를 함께 마련):**
+**Correct (기본 route 파일 세트를 먼저 마련):**
+
+```txt
+(settings)/
+  settings.css
+  settings.layout.tsx
+  settings.index.tsx
+```
 
 ```txt
 (settings)/
@@ -306,7 +273,9 @@ export const buildSettingsRedirect = (tab: string) => {
   settings.index.tsx
 ```
 
-### 2.4 Start Child Route Sets With Parentheses Folders
+위 `settings.ts`는 support code가 실제로 생겼을 때 추가합니다.
+
+### 2.3 Start Child Route Sets With Parentheses Folders
 
 **Impact: HIGH (makes child route groups explicit before filenames grow long or sibling routes become hard to scan)**
 
@@ -328,7 +297,7 @@ export const buildSettingsRedirect = (tab: string) => {
 <route-root>/app/(settings)/(security)/security.index.tsx
 ```
 
-### 2.5 Use Domain-specific Dynamic Segment Names
+### 2.4 Use Domain-specific Dynamic Segment Names
 
 **Impact: MEDIUM-HIGH (keeps route params self-explanatory at the file level and inside router APIs)**
 
@@ -347,6 +316,41 @@ posts.{-$x}.tsx
 users.{$userId}.index.tsx
 posts.{$postId}.edit.index.tsx
 filters.{-$tab}.tsx
+```
+
+### 2.5 Use Owner-named Route Support Modules Instead of Generic Helper Files
+
+**Impact: MEDIUM-HIGH (keeps route files from accumulating normalization and mapping logic before boundaries blur)**
+
+라우트 전용 순수 support code가 entry file을 흐리기 시작하면 첫 추출 대상은 같은 계층 owner-named module입니다. 예를 들어 `settings.index.tsx`라면 `settings.ts`로 옮기고 named export를 직접 import합니다.   
+`helper.ts`, `helpers.ts`, `utils.ts`, `common.ts` 같은 generic 파일명은 만들지 않고, 화면 하나에서만 쓰는 custom hook으로 우회해 숨기지도 않습니다.
+
+**Incorrect (generic helper 파일명으로 support code를 분산):**
+
+```txt
+(settings)/
+  helpers.ts
+  settings.index.tsx
+```
+
+```ts
+// helpers.ts
+export const normalizeSettingsSearch = (value: string | undefined) => {
+	return value?.trim().toLowerCase() ?? "";
+};
+```
+
+**Correct (owner-named sibling module에 named export로 유지):**
+
+```ts
+// settings.ts
+export const normalizeSettingsSearch = (value: string | undefined) => {
+	return value?.trim().toLowerCase() ?? "";
+};
+
+export const buildSettingsRedirect = (tab: string) => {
+	return {to: "/app/settings/general", search: {tab}};
+};
 ```
 
 ### 2.6 Use Searchable Feature Route File Names
@@ -381,7 +385,7 @@ route 선언, redirect, guard, search 검증은 화면 안으로 새지 않고 r
 
 **Impact: HIGH (keeps the router contract obvious before the screen implementation details begin)**
 
-각 라우트 파일은 `export const Route = createFileRoute("...")({...})` 형태를 기본으로 하고, export 이름은 항상 `Route`로 고정합니다. route definition은 파일 상단에 두고, 화면 컴포넌트나 helper는 그 아래에 배치합니다.
+각 라우트 파일은 `export const Route = createFileRoute("...")({...})` 형태를 기본으로 하고, export 이름은 항상 `Route`로 고정합니다. route definition은 파일 상단에 두고, 화면 컴포넌트나 owner-named support module import는 그 아래에 배치합니다.
 
 **Incorrect (컴포넌트와 보조 코드 뒤에 route definition을 숨김):**
 
@@ -488,7 +492,7 @@ export const Route = createFileRoute("/app/(settings)/settings/")({
 
 **Impact: CRITICAL (keeps access control in router boundaries instead of after-the-fact screen navigation)**
 
-인증과 권한 보장은 라우트 컴포넌트 본문이 아니라 `beforeLoad`에서 처리합니다. 공통 가드 로직은 route 전용 helper로 분리해 재사용하고, 화면 컴포넌트가 렌더링된 뒤 조건부 네비게이션을 하는 패턴은 피합니다.
+인증과 권한 보장은 라우트 컴포넌트 본문이 아니라 `beforeLoad`에서 처리합니다. 공통 가드 로직은 route 전용 support module이나 안정된 shared module로 분리해 재사용하고, 화면 컴포넌트가 렌더링된 뒤 조건부 네비게이션을 하는 패턴은 피합니다.
 
 **Incorrect (컴포넌트 렌더링 이후 조건부 네비게이션):**
 
@@ -552,7 +556,7 @@ export const Route = createFileRoute("/app/(users)/users/")({
 
 **Impact: HIGH (preserves a readable route entry where screen assembly, hooks, and handlers stay visible)**
 
-`*.index.tsx`는 실제 화면 렌더링, API hook, 이벤트 핸들러, search 기반 상태 동기화, 화면 조립을 담당합니다. entry file이 순수 helper, 대형 상수, route 외부 재사용 로직까지 떠안기 시작하면 화면 흐름이 흐려지므로 route-local helper와 `-local/`로 책임을 분리합니다.
+`*.index.tsx`는 실제 화면 렌더링, API hook, 이벤트 핸들러, search 기반 상태 동기화, 화면 조립을 담당합니다. entry file이 순수 helper, 대형 상수, route 외부 재사용 로직까지 떠안기 시작하면 화면 흐름이 흐려지므로 route-local support module과 `-local/`로 책임을 분리합니다. 작은 1회성 guard나 사용 지점 바로 옆이 더 읽기 쉬운 계산은 entry file에 남길 수 있습니다.
 
 **Incorrect (entry file에 화면 흐름과 무관한 support code를 누적):**
 
@@ -568,7 +572,7 @@ export const Route = createFileRoute("/app/(members)/members/")({
 });
 ```
 
-**Correct (entry file은 화면 흐름을 보여주고 support code는 분리):**
+**Correct (entry file은 화면 흐름을 보여주고 support code는 owner-named module로 분리):**
 
 ```tsx
 import {normalizeMembersSearch} from "./members";
@@ -617,9 +621,10 @@ function AppLayout() {
 
 ### 4.3 Place Route-only Modules in -local/
 
-**Impact: HIGH (keeps route-scoped UI and helpers close to the route until their contracts are stable)**
+**Impact: HIGH (keeps route-scoped UI and private modules close to the route until their contracts are stable)**
 
-해당 라우트에서만 쓰는 모달, 폼, 상수, helper는 라우트 하위 `-local/`에 둡니다. 다른 라우트와 계약이 아직 안정되지 않았다면 shared UI나 공용 helper로 올리지 말고, 먼저 route-local 소유를 유지합니다.
+해당 라우트에서만 쓰는 모달, 폼, 보조 컴포넌트, route-private module은 라우트 하위 `-local/`에 둡니다. 다른 라우트와 계약이 아직 안정되지 않았다면 shared UI나 공용 helper로 올리지 말고, 먼저 route-local 소유를 유지합니다.   
+다만 route entry가 직접 가져오는 순수 support function은 먼저 같은 계층 owner-named module(`settings.ts`, `members.ts`)에 두고, `-local/`은 route-private UI와 module 묶음이 실제로 생길 때 사용합니다.
 
 **Incorrect (route 전용 모듈을 성급하게 공용 레이어로 올림):**
 
@@ -705,13 +710,13 @@ router generator를 다시 실행한다
 
 **Impact: MEDIUM (reduces cleanup work by establishing shell, grouping, and search boundaries before route files sprawl)**
 
-신규 라우트를 추가할 때는 화면 파일부터 급하게 만들지 말고, 레이아웃 셸과 그룹 구조를 먼저 고정하는 순서를 따릅니다. 이렇게 해야 route tree, helper 위치, search 검증 경계가 뒤늦게 흔들리지 않습니다.
+신규 라우트를 추가할 때는 화면 파일부터 급하게 만들지 말고, 레이아웃 셸과 그룹 구조를 먼저 고정하는 순서를 따릅니다. 이렇게 해야 route tree, support code 위치, search 검증 경계가 뒤늦게 흔들리지 않습니다.
 
 **Incorrect (leaf 화면부터 만들고 나중에 구조를 끼워 맞춤):**
 
 ```txt
 1. 바로 feature.index.tsx부터 만든다
-2. 화면이 커진 뒤에 layout, helper, -local 위치를 고민한다
+2. 화면이 커진 뒤에 layout, support code, -local 위치를 고민한다
 3. search parsing과 redirect를 화면 본문에서 임시로 처리한다
 ```
 
@@ -722,8 +727,8 @@ router generator를 다시 실행한다
 2. 셸이 다르면 최상위 그룹을 분리하고, 같으면 기존 부모 layout 아래에 둔다
 3. URL에 반영되는 상위 계층은 일반 폴더로 만든다
 4. 하위 라우트가 생기면 (<feature>) 그룹 폴더를 만든다
-5. 기본적으로 feature.css, feature.ts, feature.layout.tsx, feature.index.tsx를 준비한다
-6. feature.ts에 화면 전용 helper와 정규화 로직 자리를 만든다
+5. 기본적으로 feature.css, feature.layout.tsx, feature.index.tsx를 준비한다
+6. support code가 생기면 feature.ts 같은 owner-named sibling module을 추가하고 named export를 사용한다
 7. 동적 세그먼트가 필요하면 {$param}, {-$param} 규칙을 사용한다
 8. search를 읽는 화면이면 validateSearch를 먼저 선언한다
 9. route 전용 보조 모듈이 있으면 같은 계층 -local/에 둔다
@@ -734,14 +739,14 @@ router generator를 다시 실행한다
 
 **Impact: MEDIUM (catches grouping, guard, and ownership drift before a route change is declared complete)**
 
-라우트 작업을 끝냈다고 보기 전에 구조 체크리스트를 다시 확인합니다. 화면이 보인다는 이유만으로 마무리하지 말고, 그룹 구조, helper 배치, guard 위치, generated artifact 처리까지 함께 점검해야 합니다.
+라우트 작업을 끝냈다고 보기 전에 구조 체크리스트를 다시 확인합니다. 화면이 보인다는 이유만으로 마무리하지 말고, 그룹 구조, support code 배치, guard 위치, generated artifact 처리까지 함께 점검해야 합니다.
 
 **Incorrect (렌더링만 확인하고 구조 검토를 생략):**
 
 ```txt
 - 페이지가 뜨는지만 확인한다
 - redirect와 guard 위치는 나중에 정리한다
-- helper가 route 파일 안에 남아 있어도 그대로 둔다
+- support code가 route 파일 안에 과하게 남아 있어도 그대로 둔다
 - generated route tree를 직접 고쳐서 통과시킨다
 ```
 
@@ -752,9 +757,9 @@ router generator를 다시 실행한다
 - 폴더 전용 구조와 플랫 전용 구조 중 하나로 치우치지 않았는가
 - URL에 반영되는 상위는 일반 폴더로 두었는가
 - 하위 route 묶음은 () 그룹 폴더로 분리했는가
-- 하위 route라면 feature.css, feature.ts, feature.layout.tsx, feature.index.tsx 기본 세트를 갖췄는가
+- 하위 route라면 feature.css, feature.layout.tsx, feature.index.tsx 기본 세트를 갖췄는가
 - 그룹 폴더 안의 엔트리 파일명이 feature.index.tsx처럼 검색 가능한가
-- 화면 전용 helper가 route 파일 안에 누적되지 않고 같은 계층 *.ts 파일 자리를 확보했는가
+- 화면 전용 순수 support code가 route 파일 안에 누적되지 않았고, 추출했다면 generic helper 파일 대신 owner-named sibling `*.ts`에 named export로 두었는가
 - 인증/권한 가드를 컴포넌트 본문이 아니라 beforeLoad에 두었는가
 - 쿼리스트링을 읽는 화면에 validateSearch가 선언되어 있는가
 - route 전용 보조 모듈이 -local/에 정리되어 있는가
