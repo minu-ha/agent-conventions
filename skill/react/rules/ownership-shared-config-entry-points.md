@@ -16,9 +16,9 @@ tags: ownership, config, constants
 **Incorrect (공용 상수를 화면 파일에 직접 선언):**
 
 ```ts
-export const DASHBOARD_MENU_KEY = {
-  DASHBOARD: "dashboard",
-  SETTINGS: "settings",
+export const project_menu_key = {
+  dashboard: "dashboard",
+  settings: "settings",
 } as const;
 ```
 
@@ -27,5 +27,5 @@ export const DASHBOARD_MENU_KEY = {
 ```ts
 import { config } from "@/shared/config";
 
-config.navigation.projectMenuKey.dashboard;
+config.navigation.project_menu_key.dashboard;
 ```

@@ -9,22 +9,35 @@ tags: ownership, naming, files
 
 **Impact: HIGH (에이전트가 파일을 만들거나 옮길 때 소유 경계와 의도를 분명하게 유지함)**
 
-파일명은 `kebab-case`, 변수와 함수는 `camelCase`, 타입과 컴포넌트는 `PascalCase`, 상수는 `SCREAMING_SNAKE_CASE`를 사용합니다. 파일명과 심볼명이 소유자나 역할을 바로 드러내야 route-local 이동과 공용화 판단이 쉬워집니다.
+파일명은 `kebab-case`, 일반 변수와 함수는 `camelCase`, 타입과 컴포넌트는 `PascalCase`를 사용합니다.   
+`const`인지 여부로 별도 casing을 두지 않고, 화면과 모듈 안의 로컬 값은 모두 `camelCase`로 맞춥니다.   
+여러 화면이 함께 쓰는 설정과 enum-like 상수는 `shared/config.ts`의 `config.*` 아래에 두고, 그 객체 이름과 키는 `snake_case`를 사용합니다. 파일명과 심볼명이 소유자와 역할을 바로 드러내야 route-local 이동과 공용화 판단이 쉬워집니다.
 
-**Incorrect (파일명과 심볼 규칙이 제각각임):**
+**Incorrect (파일명과 심볼 규칙이 제각각이고 공용 상수를 화면 파일에 직접 둠):**
 
 ```tsx
 // UserCard.tsx
+const active_tab = "overview";
+
+export const projectMenuKey = {
+	dashboard: "dashboard",
+	settings: "settings",
+} as const;
+
 export const user_card = () => {
-  return null;
+	return <section data-tab={active_tab} />;
 };
 ```
 
-**Correct (파일명과 심볼 규칙이 일관됨):**
+**Correct (로컬 값은 `camelCase`, 공용 설정은 `config.*` 체이닝으로 읽음):**
 
 ```tsx
 // user-card.tsx
+import { config } from "@/shared/config";
+
+const activeTab = config.navigation.project_menu_key.dashboard;
+
 export const UserCard = () => {
-  return null;
+	return <section data-tab={activeTab} />;
 };
 ```
