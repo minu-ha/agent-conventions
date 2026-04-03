@@ -53,7 +53,7 @@
 
 ## Rule 파일 구조
 
-Each rule file should follow this structure:
+각 rule 파일은 아래 구조를 따릅니다.
 
 ````markdown
 ---

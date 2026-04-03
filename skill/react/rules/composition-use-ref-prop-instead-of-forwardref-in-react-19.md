@@ -9,9 +9,10 @@ tags: composition, react19, ref, forwardref
 
 **Impact: MEDIUM-HIGH (keeps component definitions simpler in React 19 codebases and avoids adding legacy wrappers by default)**
 
-React 19 codebase에서는 새로운 `forwardRef` wrapper를 기본값으로 추가하지 않습니다. ordinary component라면 `ref`를 일반 prop처럼 받고 그대로 전달합니다.   
+React 19 codebase에서는 새로운 `forwardRef` wrapper를 기본값으로 추가하지 않습니다. 다만 모든 component가 `ref`를 열어야 한다는 뜻도 아닙니다.   
+`ref`가 실제로 public/shared imperative access contract일 때만 API에 노출하고, 그 경우에는 `forwardRef`보다 `ref` prop을 일반 prop처럼 받는 쪽을 우선합니다.   
 기존 `forwardRef`를 바로 다 지우라는 뜻은 아니고, third-party 타입 제약이나 마이그레이션 범위 때문에 유지해야 하는 경우는 예외로 둘 수 있습니다.   
-다만 새 component API를 설계할 때는 `forwardRef`를 습관적으로 복제하지 않습니다.
+새 component API를 설계할 때만 기본값을 바꿉니다.
 
 **Incorrect (React 19에서도 새 `forwardRef`를 추가):**
 
@@ -23,7 +24,7 @@ export const UiSearchInput = forwardRef<HTMLInputElement, UiSearchInputProps>((p
 });
 ```
 
-**Correct (React 19에서는 `ref` prop을 직접 받음):**
+**Correct (`ref`가 실제로 필요한 public API일 때만 React 19 방식으로 직접 받음):**
 
 ```tsx
 import type { Ref } from "react";

@@ -556,9 +556,10 @@ const handleRemoveTableButtonClick: MouseEventHandler<HTMLButtonElement> = async
 
 **Impact: MEDIUM-HIGH (keeps component definitions simpler in React 19 codebases and avoids adding legacy wrappers by default)**
 
-React 19 codebase에서는 새로운 `forwardRef` wrapper를 기본값으로 추가하지 않습니다. ordinary component라면 `ref`를 일반 prop처럼 받고 그대로 전달합니다.   
+React 19 codebase에서는 새로운 `forwardRef` wrapper를 기본값으로 추가하지 않습니다. 다만 모든 component가 `ref`를 열어야 한다는 뜻도 아닙니다.   
+`ref`가 실제로 public/shared imperative access contract일 때만 API에 노출하고, 그 경우에는 `forwardRef`보다 `ref` prop을 일반 prop처럼 받는 쪽을 우선합니다.   
 기존 `forwardRef`를 바로 다 지우라는 뜻은 아니고, third-party 타입 제약이나 마이그레이션 범위 때문에 유지해야 하는 경우는 예외로 둘 수 있습니다.   
-다만 새 component API를 설계할 때는 `forwardRef`를 습관적으로 복제하지 않습니다.
+새 component API를 설계할 때만 기본값을 바꿉니다.
 
 **Incorrect (React 19에서도 새 `forwardRef`를 추가):**
 
@@ -570,7 +571,7 @@ export const UiSearchInput = forwardRef<HTMLInputElement, UiSearchInputProps>((p
 });
 ```
 
-**Correct (React 19에서는 `ref` prop을 직접 받음):**
+**Correct (`ref`가 실제로 필요한 public API일 때만 React 19 방식으로 직접 받음):**
 
 ```tsx
 import type { Ref } from "react";
@@ -866,7 +867,8 @@ const handleListItemClick =
 
 **Impact: HIGH (avoids modeling one-shot user actions as state plus effect replays)**
 
-제출, 저장, 삭제, 닫기 같은 사용자 액션은 해당 handler 안에서 바로 실행합니다. 액션 자체를 state로 올린 뒤 `useEffect`가 나중에 실행하게 만들면 unrelated dependency 변화에도 재실행되기 쉽고, 흐름도 읽기 어려워집니다.
+제출, 저장, 삭제, 닫기 같은 사용자 액션은 해당 handler 안에서 바로 실행합니다.   
+액션 자체를 state로 올린 뒤 `useEffect`가 나중에 실행하게 만들면 unrelated dependency 변화에도 재실행되기 쉽고, 흐름도 읽기 어려워집니다.
 
 **Incorrect (사용자 액션을 state + effect로 모델링):**
 
@@ -1002,7 +1004,9 @@ const mutationContentTypeRemove = useContentTypeRemove();
 
 **Impact: MEDIUM-HIGH (검증되지 않은 값어치 없이 노이즈만 늘리는 방어적 useMemo/useCallback을 피함)**
 
-React 19 컴파일러가 처리하는 범위에서는 `useMemo`, `useCallback`을 기본적으로 사용하지 않습니다. 외부 라이브러리가 참조 동일성에 민감하거나, 병목이 실제로 확인된 경우에만 허용하고 바로 위에 한글 주석으로 이유를 남깁니다.
+React 19 컴파일러가 처리하는 범위에서는 `useMemo`, `useCallback`을 기본적으로 사용하지 않습니다.   
+외부 라이브러리가 참조 동일성에 민감하거나, 병목이 실제로 확인된 경우에만 허용하고 바로 위에 한글 주석으로 이유를 남깁니다.  
+`useDeferredValue`를 기준으로 무거운 파생 계산을 늦추는 경우처럼 render 비용 절감 목적이 분명한 예외는 허용할 수 있지만, 그때도 "정말 무거운 계산인지"가 먼저 확인되어야 합니다.
 
 **Incorrect (단순 가공을 관성적으로 memoization):**
 
@@ -1050,7 +1054,9 @@ useEffect(() => {
 
 **Impact: CRITICAL (응답 변환을 fetch 경계 가까이에 두고 렌더 타임의 반복 매핑을 피함)**
 
-서버 응답 가공은 렌더링 본문이 아니라 `query.select`에서 처리합니다. `data.list` 같은 원시 응답 구조를 화면 여러 군데에서 직접 해석하지 말고, 도메인 의미가 드러나는 필드 이름으로 한 번 변환합니다. 여러 쿼리 데이터를 함께 가공해야 해도 먼저 `select`나 전용 hook 경계에서 풀 수 있는지 검토합니다.
+서버 응답 가공은 렌더링 본문이 아니라 `query.select`에서 처리합니다.   
+`data.list` 같은 원시 응답 구조를 화면 여러 군데에서 직접 해석하지 말고, 도메인 의미가 드러나는 필드 이름으로 한 번 변환합니다.   
+여러 쿼리 데이터를 함께 가공해야 해도 먼저 `select`나 전용 hook 경계에서 풀 수 있는지 검토합니다.
 
 **Incorrect (응답 원형을 화면에서 직접 소비):**
 
@@ -1196,7 +1202,9 @@ const handleStatusFilterChange = (nextStatus: EntryStatusFilter) => {
 
 검색어, 필터, 정렬 입력이 무거운 파생 렌더를 유발하면 원본 입력값을 그대로 expensive view에 연결하지 않습니다.  
 `useDeferredValue`로 한 박자 늦춘 값을 만들고, 필요한 경우 그 값을 기준으로 필터링이나 정렬을 계산합니다.   
-이 규칙은 실제로 렌더 지연이 느껴질 때 적용합니다. 작은 배열이나 단순 문자열 가공까지 습관적으로 defer하지는 않습니다.
+이 규칙은 실제로 렌더 지연이 느껴질 때 적용합니다. 작은 배열이나 단순 문자열 가공까지 습관적으로 defer하지는 않습니다.  
+또한 이 경우의 `useMemo`는 `state-compiler-first-memoization` 규칙의 예외적인 허용 사례입니다.   
+deferred value를 기준으로 expensive 계산을 다시 돌리는 비용이 실제로 크고, render마다 같은 작업을 반복하지 않으려는 목적이 분명할 때만 함께 사용합니다.
 
 **Incorrect (입력과 무거운 파생 렌더를 같은 값에 묶음):**
 
@@ -1205,7 +1213,7 @@ const [keyword, setKeyword] = useState("");
 const filteredRows = rows.filter((row) => fuzzyMatchRow(row, keyword));
 ```
 
-**Correct (입력은 urgent, 무거운 파생 렌더는 deferred 값으로 계산):**
+**Correct (입력은 urgent, 무거운 파생 렌더는 deferred 값과 제한적인 memoization으로 계산):**
 
 ```tsx
 const [keyword, setKeyword] = useState("");
