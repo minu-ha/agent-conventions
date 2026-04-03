@@ -112,8 +112,10 @@ const handleClick: MouseEventHandler<HTMLButtonElement> = (_event) => {
 
 **Impact: HIGH (React 전용 추상화를 실제 lifecycle/context 결합이 있는 경우에만 사용하게 함)**
 
-컴포넌트 하나를 위한 계산, 정규화, payload 조립은 기본적으로 일반 `.ts` support module로 둡니다.   
-route entry 화면이라면 첫 추출 대상은 같은 계층의 `page.ts`이고, screen-owned pure function은 named export로 직접 내보냅니다. 화면 하나에서만 쓰는 custom hook은 기본적으로 만들지 않고, hook은 여러 컴포넌트나 화면이 공유하는 React orchestration 경계일 때만 승격합니다.
+화면 하나에 종속된 계산, 정규화, payload 조립은 custom hook으로 포장하지 말고 먼저 일반 `.ts` support module에 둡니다.   
+route entry 화면이라면 기본 추출 위치는 같은 계층의 `page.ts`이고, screen-owned pure function은 named export를 직접 import해 사용합니다.   
+screen-local custom hook은 lifecycle, context, 다른 hook 호출 순서 같은 React orchestration을 실제로 캡슐화할 때만 허용합니다.   
+단순 계산을 hook처럼 보이게 만드는 추상화는 피합니다.
 
 **Incorrect (로컬 계산을 습관적으로 hook으로 포장):**
 
@@ -123,12 +125,30 @@ export const useMediaUploadPayload = (files: UploadFile[]) => {
 };
 ```
 
+**Incorrect (로컬 support module도 불필요한 `page.*` namespace로 감쌈):**
+
+```ts
+export const page = {
+	buildMediaUploadPayload(files: UploadFile[]) {
+		return files.map((file) => ({ uid: file.uid }));
+	},
+};
+```
+
 **Correct (순수 계산은 sibling `page.ts`의 named export로 유지):**
 
 ```ts
 export const buildMediaUploadPayload = (files: UploadFile[]) => {
   return files.map((file) => ({ uid: file.uid }));
 };
+```
+
+**Correct (sibling `page.ts`도 named export를 직접 가져옴):**
+
+```tsx
+import { buildMediaUploadPayload } from "./page";
+
+const request = buildMediaUploadPayload(files);
 ```
 
 ### 1.3 Keep UI, Widget, and -local Ownership Separate
@@ -556,10 +576,10 @@ const handleRemoveTableButtonClick: MouseEventHandler<HTMLButtonElement> = async
 
 **Impact: MEDIUM-HIGH (keeps component definitions simpler in React 19 codebases and avoids adding legacy wrappers by default)**
 
-React 19 codebase에서는 새로운 `forwardRef` wrapper를 기본값으로 추가하지 않습니다. 다만 모든 component가 `ref`를 열어야 한다는 뜻도 아닙니다.   
-`ref`가 실제로 public/shared imperative access contract일 때만 API에 노출하고, 그 경우에는 `forwardRef`보다 `ref` prop을 일반 prop처럼 받는 쪽을 우선합니다.   
-기존 `forwardRef`를 바로 다 지우라는 뜻은 아니고, third-party 타입 제약이나 마이그레이션 범위 때문에 유지해야 하는 경우는 예외로 둘 수 있습니다.   
-새 component API를 설계할 때만 기본값을 바꿉니다.
+React 19 codebase에서는 `ref`를 "외부에서 실제로 제어해야 하는 public imperative contract"로 다룹니다.   
+따라서 focus, scroll, measure 같은 contract가 있을 때만 `ref` prop을 열고, 그 경우에도 새로운 `forwardRef` wrapper보다 `ref`를 일반 prop처럼 직접 받는 방식을 기본값으로 삼습니다.   
+반대로 외부 제어가 필요 없는 단순 view component에는 `ref` prop 자체를 추가하지 않습니다.   
+기존 `forwardRef`를 모두 지우라는 뜻은 아니며, third-party 타입 제약이나 점진적 마이그레이션 때문에 유지해야 하는 경우는 예외로 둘 수 있습니다.
 
 **Incorrect (React 19에서도 새 `forwardRef`를 추가):**
 
@@ -571,10 +591,26 @@ export const UiSearchInput = forwardRef<HTMLInputElement, UiSearchInputProps>((p
 });
 ```
 
-**Correct (`ref`가 실제로 필요한 public API일 때만 React 19 방식으로 직접 받음):**
+**Incorrect (`ref` contract가 필요 없는 단순 view component에도 습관적으로 `ref`를 노출):**
 
 ```tsx
 import type { Ref } from "react";
+
+export interface UiStatusBadgeProps {
+	ref?: Ref<HTMLSpanElement>;
+	label: string;
+}
+
+export const UiStatusBadge = (props: UiStatusBadgeProps) => {
+	const { ref, label } = props;
+	return <span ref={ref}>{label}</span>;
+};
+```
+
+**Correct (`ref`가 실제로 필요한 public API일 때만 React 19 방식으로 직접 받음):**
+
+```tsx
+import type { ChangeEventHandler, Ref } from "react";
 
 export interface UiSearchInputProps {
 	ref?: Ref<HTMLInputElement>;
@@ -585,6 +621,19 @@ export interface UiSearchInputProps {
 export const UiSearchInput = (props: UiSearchInputProps) => {
 	const { ref, value, onChange } = props;
 	return <input ref={ref} onChange={onChange} value={value} />;
+};
+```
+
+**Correct (`ref`가 실제 contract가 아닐 때는 일반 prop만 유지):**
+
+```tsx
+export interface UiStatusBadgeProps {
+	label: string;
+}
+
+export const UiStatusBadge = (props: UiStatusBadgeProps) => {
+	const { label } = props;
+	return <span>{label}</span>;
 };
 ```
 
@@ -659,8 +708,10 @@ export const useContentEditor = () => {
 
 **Impact: HIGH (route 파일이 자기 계약이 없는 helper 조각으로 분해되는 것을 막음)**
 
-화면 support code 분리는 React state와 직접 결합되지 않고, 입력/출력 계약이 명확하며, 밖으로 빼면 흐름이 더 잘 보일 때만 검토합니다. route entry의 기본 추출 대상은 sibling `page.ts`이고, screen-owned function은 named export로 직접 내보냅니다.   
-`helper.ts`, `helpers.ts`, `utils.ts`, `common.ts` 같은 generic 파일명은 feature 안에서 만들지 않습니다. `queryClient.invalidateQueries`처럼 해당 hook 컨텍스트에 붙어 있을 때 더 읽기 쉬운 동기화 로직은 별도 support code로 모으지 않습니다. 여러 owner가 실제로 재사용하는 범용 순수 함수만 `shared/util.ts`의 `util.*`로 승격합니다.
+화면 support code는 React state와 직접 결합되지 않고, 입력/출력 계약이 분명하며, 밖으로 빼면 entry flow가 더 읽기 쉬워질 때만 추출합니다.   
+기본 추출 대상은 sibling `page.ts`이고, `page.ts`도 named export/direct import를 우선합니다.   
+`helper.ts`, `helpers.ts`, `utils.ts`, `common.ts` 같은 generic 파일명은 feature 안에서 만들지 않습니다.   
+`queryClient.invalidateQueries`처럼 hook 컨텍스트에 붙어 있어야 더 읽기 쉬운 동기화 로직은 handler/effect에 남기고, 여러 owner가 실제로 공유하는 범용 순수 함수만 `shared/util.ts`의 `util.*`로 승격합니다.
 
 **Incorrect (작은 화면 전용 계산을 generic util 파일로 뺌):**
 
@@ -693,7 +744,18 @@ const handleSave = async () => {
 };
 ```
 
-필요하다면 함수 시그니처 가독성을 위해 JSDoc 헤더에 `biome-ignore format:`를 제한적으로 둘 수 있지만, support code 추출의 근거로 사용하면 안 됩니다.
+**Correct (여러 owner가 실제로 공유할 때만 `shared/util.ts`로 승격):**
+
+```ts
+// shared/util.ts
+export const util = {
+	date: {
+		normalize(value: Date | string) {
+			return new Date(value).toISOString();
+		},
+	},
+};
+```
 
 ### 4.3 Keep Derived Values Close to Where They Are Used
 
@@ -758,8 +820,9 @@ return <ContentTypeBuilderScreen onSubmit={handleSubmitButtonClick} />;
 
 **Impact: HIGH (route entry 파일이 preset과 순수 helper를 쌓기보다 orchestration에 집중하게 함)**
 
-화면 전용 불변 설정, 옵션 목록, preset, 컬럼 메타, 순수 support function, 타입 선언은 route entry 상단에 쌓아두지 말고 기본적으로 같은 계층 `page.ts`로 이동합니다. route entry에는 React state, API response/mutation, handler, `useEffect`, 렌더링 흐름을 우선 남기고, 작은 1회성 guard나 사용 지점 바로 옆이 더 읽기 쉬운 계산은 `page.tsx`에 남길 수 있습니다. `page.ts`는 namespace 객체보다 named export를 기본으로 사용합니다.   
-처음부터 `entry-request.ts`, `entry-columns.ts`, `folder-tree.ts`처럼 잘게 쪼개지 말고, `page.ts`가 여러 독립 관심사로 커졌을 때만 추가 분리를 검토합니다.
+화면 전용 불변 설정, 옵션 목록, preset, 컬럼 메타, 순수 support function, 타입 선언은 route entry 상단에 쌓아두지 말고 기본적으로 같은 계층 `page.ts`로 이동합니다.   
+route entry에는 state, response/mutation, handler, `useEffect`, 렌더링 흐름을 남기고, 작은 1회성 guard나 사용 지점 바로 옆이 더 읽기 쉬운 계산은 `page.tsx`에 남길 수 있습니다.   
+`page.ts`는 namespace 객체보다 named export를 기본으로 사용하고, 처음부터 `entry-request.ts`, `entry-columns.ts`처럼 잘게 쪼개기보다 `page.ts`가 여러 독립 관심사로 커졌을 때만 추가 분리를 검토합니다.
 
 **Incorrect (route entry 상단에 순수 지원 코드가 누적됨):**
 
@@ -796,6 +859,15 @@ export const buildFileRequests = (mediaUploadFileListByColumn: Record<string, un
   // ...
   return [];
 };
+```
+
+**Correct (작은 1회성 계산은 render flow 옆에 그대로 둠):**
+
+```tsx
+const isSubmitDisabled =
+	mutationContentTypeUpsert.isPending || mediaUploadFileList.length === 0;
+
+return <UiButton disabled={isSubmitDisabled}>저장</UiButton>;
 ```
 
 ## 5. Events and Interaction Flow

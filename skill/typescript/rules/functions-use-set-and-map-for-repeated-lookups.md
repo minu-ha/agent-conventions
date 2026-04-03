@@ -26,3 +26,13 @@ const allowedEntryIdSet = new Set(allowedEntryIds);
 const visibleEntries = entries.filter((entry) => allowedEntryIdSet.has(entry.id));
 const disabledEntries = archivedEntries.filter((entry) => allowedEntryIdSet.has(entry.id));
 ```
+
+**Correct (반복 keyed access는 `Map`으로 승격):**
+
+```ts
+const userById = new Map(users.map((user) => [user.id, user]));
+
+const owner = userById.get(ownerId);
+const reviewer = userById.get(reviewerId);
+const approver = userById.get(approverId);
+```
