@@ -112,7 +112,8 @@ util.number.clamp(score, 0, 100);
 
 **Impact: HIGH (keeps file names, symbols, and shape fields predictable across modules and runtime structures)**
 
-파일명은 `kebab-case`, 일반 변수와 함수는 `camelCase`, 타입은 `PascalCase`를 사용합니다. `const`인지 여부로 별도 casing을 두지 않고, 모듈 안의 로컬 값은 모두 `camelCase`로 맞춥니다.   
+파일명은 `kebab-case`, 일반 변수와 함수는 `camelCase`, 타입은 `PascalCase`를 사용합니다.   
+`const`인지 여부로 별도 casing을 두지 않고, 모듈 안의 로컬 값은 모두 `camelCase`로 맞춥니다.   
 공용 설정 객체 키와 enum-like 상수 객체 이름 및 그 키는 `snake_case`, 일반 객체 키, schema 키, 커스텀 타입 필드는 `camelCase`를 유지합니다.
 
 **Incorrect (파일명, 심볼명, 필드명이 제각각임):**
@@ -357,8 +358,11 @@ const visibleTabs = canManageMembers
 
 **Impact: HIGH (stops helper extraction from fragmenting local flow when no reusable contract or testable boundary actually exists)**
 
-support function은 입력/출력 계약이 명확하고, 런타임 문맥 없이도 독립 검증이 가능할 때만 분리합니다. 재사용 근거 없이 보기 좋게 만들기 위한 분리나, 한 번만 쓰는 짧은 계산 추출은 피하고 먼저 early return, 단계적 변수, 의미 있는 블록 구분으로 가독성을 확보합니다.   
-feature 안에서는 `helper.ts`, `helpers.ts`, `utils.ts`, `common.ts` 같은 generic 파일명을 만들지 않고, React route라면 sibling `page.ts`, 그 외에는 owner가 보이는 module을 첫 추출 대상으로 삼습니다. feature-local support function은 named export를 직접 import하고, 여러 owner가 실제로 공유하는 범용 순수 함수만 `shared/util.ts`의 `util.*`로 승격합니다.
+support function은 입력/출력 계약이 명확하고, 런타임 문맥 없이도 독립 검증이 가능할 때만 분리합니다.   
+재사용 근거 없이 보기 좋게 만들기 위한 분리나, 한 번만 쓰는 짧은 계산 추출은 피하고 먼저 early return, 단계적 변수, 의미 있는 블록 구분으로 가독성을 확보합니다.   
+feature 안에서는 `helper.ts`, `helpers.ts`, `utils.ts`, `common.ts` 같은 generic 파일명을 만들지 않고, React route라면 sibling `page.ts`, 그 외에는 owner가 보이는 module을 첫 추출 대상으로 삼습니다. support module도 helper warehouse처럼 다루지 말고, export는 도메인 단위 함수만 남기고 작은 단계 반복은 먼저 같은 함수 안에서 정리합니다.   
+export function이 다른 export function만 위해 존재하는 구조는 과분해로 봅니다. support module 바깥의 여러 모듈이 같은 함수를 직접 import해야 하거나, 같은 단계가 여러 exported 함수에서 반복될 때만 helper 추출을 검토합니다.   
+feature-local support function은 named export를 직접 import하고, 여러 owner가 실제로 공유하는 범용 순수 함수만 `shared/util.ts`의 `util.*`로 승격합니다.
 
 **Incorrect (단회성 계산을 generic util 파일로 분리):**
 
@@ -371,17 +375,41 @@ export const util = {
 };
 ```
 
+**Incorrect (support module 안에서도 export helper를 단계별로 누적):**
+
+```ts
+export const normalizeProfileValues = (formValues: ProfileFormValues) => {
+	// ...
+};
+
+export const buildAvatarRequests = (files: UploadFile[]) => {
+	// ...
+};
+
+export const buildProfileUpdatePayload = (
+	formValues: ProfileFormValues,
+	files: UploadFile[],
+) => {
+	return {
+		...normalizeProfileValues(formValues),
+		avatarRequests: buildAvatarRequests(files),
+	};
+};
+```
+
 **Correct (작은 계산은 local flow에 두고, 진짜 shared pure function만 `shared/util.ts`로 올림):**
 
 ```ts
 const nextIteration = iteration + 1;
 ```
 
-**Correct (feature-local support function은 owner module의 named export로 분리):**
+**Correct (feature-local support module은 domain-sized export 안에서 단계별로 정리):**
 
 ```ts
 // page.ts
 export const buildProfileUpdatePayload = (formValues: ProfileFormValues) => {
+	// 1. 문자열 값 정리
+	// 2. payload 형태로 조립
 	return {
 		displayName: formValues.displayName.trim(),
 	};
@@ -657,7 +685,9 @@ const publishResultSchema = z.object({
 **Impact: MEDIUM-HIGH (distinguishes reusable pure support logic from local implementation details or integration boundaries)**
 
 재사용 가능한 순수 helper, 문자열 조립 함수, 정규화 함수, 포맷 함수, 계약 변환 함수에는 `@helper`를 사용합니다.   
-한 함수나 한 파일 안에서만 쓰는 작은 계산은 직접 두고, 여러 call site가 공유하거나 밖으로 빼야 읽기 흐름이 명확해질 때만 helper로 승격합니다. 이런 함수는 `shared/util.ts`의 `util.*`나 owner-named support module 아래에 둘 수 있으며, 외부 I/O 경계는 `@helper`가 아니라 `@api`로 표시합니다.
+한 함수나 한 support module 안에서만 쓰는 작은 단계 계산은 먼저 함수 안에 두고, 여러 call site가 공유하거나 밖으로 빼야 읽기 흐름이 명확해질 때만 helper로 승격합니다.   
+특히 support module 내부의 작은 sub-step마다 `@helper`를 붙여 export helper를 늘리지 않습니다. 반복이 보여도 기본은 local 정리이며, support module 바깥 여러 caller가 같은 helper를 직접 호출하기 전에는 helper 추출을 서두르지 않습니다.   
+이런 함수는 `shared/util.ts`의 `util.*`나 owner-named support module 아래에 둘 수 있으며, 외부 I/O 경계는 `@helper`가 아니라 `@api`로 표시합니다.
 
 **Incorrect (외부 연동 함수나 단회성 계산을 helper로 혼동):**
 
@@ -667,6 +697,17 @@ const publishResultSchema = z.object({
  */
 const loadUserSettings = async (): Promise<string> => {
 	return await Promise.resolve("settings");
+};
+```
+
+**Incorrect (support module 내부 sub-step을 전부 `@helper`로 export):**
+
+```ts
+/**
+ * @helper 프로필 입력 trim
+ */
+export const normalizeProfileValues = (formValues: ProfileFormValues) => {
+	return formValues;
 };
 ```
 

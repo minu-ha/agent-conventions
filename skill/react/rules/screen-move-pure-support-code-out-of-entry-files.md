@@ -11,7 +11,7 @@ tags: screen, routes, helpers, constants
 
 화면 전용 불변 설정, 옵션 목록, preset, 컬럼 메타, 순수 support function, 타입 선언은 route entry 상단에 쌓아두지 말고 기본적으로 같은 계층 `page.ts`로 이동합니다.   
 route entry에는 state, response/mutation, handler, `useEffect`, 렌더링 흐름을 남기고, 작은 1회성 guard나 사용 지점 바로 옆이 더 읽기 쉬운 계산은 `page.tsx`에 남길 수 있습니다.   
-`page.ts`는 namespace 객체보다 named export를 기본으로 사용하고, 처음부터 `entry-request.ts`, `entry-columns.ts`처럼 잘게 쪼개기보다 `page.ts`가 여러 독립 관심사로 커졌을 때만 추가 분리를 검토합니다.
+이 규칙은 무엇을 `page.ts`로 옮길지에 대한 규칙입니다. `page.ts`는 helper 저장소가 아니라 화면 전용 도메인 support module로 다루고, export는 도메인 단위 함수와 계약만 남깁니다. 처음부터 `entry-request.ts`, `entry-columns.ts`처럼 잘게 쪼개기보다 `page.ts`가 여러 독립 관심사로 커졌을 때만 추가 분리를 검토합니다.
 
 **Incorrect (route entry 상단에 순수 지원 코드가 누적됨):**
 
@@ -22,6 +22,22 @@ const getMediaColumnRules = () => {
 
 const buildFileRequests = () => {
   // ...
+};
+```
+
+**Incorrect (`page.ts` 안에서도 작은 단계마다 export helper를 늘림):**
+
+```ts
+export const getEntryMediaUploadExtension = (fileName: string) => {
+	// ...
+};
+
+export const formatEntryMediaUploadSizeMb = (bytes: number) => {
+	// ...
+};
+
+export const validateEntryMediaUploadFile = (file: EntryMediaUploadCandidate) => {
+	// ...
 };
 ```
 
@@ -47,6 +63,17 @@ export const getMediaColumnRules = () => {
 export const buildFileRequests = (mediaUploadFileListByColumn: Record<string, unknown>) => {
   // ...
   return [];
+};
+```
+
+**Correct (`page.ts` 내부 단계는 한 exported 함수 안에서 정리):**
+
+```ts
+export const validateEntryMediaUploadFile = (file: EntryMediaUploadCandidate) => {
+	// 1. 파일 크기 확인
+	// 2. 확장자 확인
+	// 3. 확장자별 제한 확인
+	// 4. 메시지 조립 후 결과 반환
 };
 ```
 

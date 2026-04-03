@@ -692,7 +692,8 @@ Route entry 파일은 화면 흐름을 분명하게 보여줘야 하며, helper 
 
 **Impact: HIGH (추측성 추출 대신 실제 재사용 경계에 맞춰 route 코드를 유지함)**
 
-반복이 보인다는 이유만으로 즉시 공용 hook, 공용 컴포넌트, 공용 helper로 올리지 않습니다. 실제 재사용 범위가 둘 이상에서 검증되고 계약이 안정되었을 때만 공용화를 허용합니다.
+반복이 보인다는 이유만으로 즉시 공용 hook, 공용 컴포넌트, 공용 helper로 올리지 않습니다. 같은 화면, 같은 support module, 같은 exported 함수 안에서 비슷한 단계가 반복되더라도 기본은 한 함수 안에 유지합니다.   
+같은 이름의 계약으로 여러 화면이나 모듈이 직접 호출해야 하는 경계가 분명해질 때만 공용화를 검토합니다. 그 전에는 section comment, 단계 구분 변수, 내부 블록으로 먼저 정리합니다.
 
 **Incorrect (반복만 보고 성급하게 추상화):**
 
@@ -717,14 +718,25 @@ export const useContentEditor = () => {
 };
 ```
 
+**Correct (같은 화면 안 반복은 먼저 한 함수 안에서 local 정리로 해결):**
+
+```ts
+export const buildEntryPayload = (formValues: EntryFormValues) => {
+	// 1. 공통 문자열 값 정규화
+	// 2. API payload 형태로 조립
+	// 3. 결과 반환
+};
+```
+
 ### 4.2 Extract Screen Support Code Only When the Boundary Is Real
 
 **Impact: HIGH (route 파일이 자기 계약이 없는 helper 조각으로 분해되는 것을 막음)**
 
 화면 support code는 React state와 직접 결합되지 않고, 입력/출력 계약이 분명하며, 밖으로 빼면 entry flow가 더 읽기 쉬워질 때만 추출합니다.   
 기본 추출 대상은 sibling `page.ts`이고, `page.ts`도 named export/direct import를 우선합니다.   
+이 규칙은 `page.ts` 안에서 export 경계를 어디까지 둘지에 대한 규칙입니다. 같은 support module 안의 반복은 기본적으로 한 exported 함수 안에 유지하고, 같은 단계가 여러 exported 함수에서 그대로 반복되거나 이름 붙은 도메인 규칙으로 읽힐 때만 private helper를 검토합니다. export helper가 또 다른 export helper만 위해 존재하는 구조는 피합니다.   
 `helper.ts`, `helpers.ts`, `utils.ts`, `common.ts` 같은 generic 파일명은 feature 안에서 만들지 않습니다.   
-`queryClient.invalidateQueries`처럼 hook 컨텍스트에 붙어 있어야 더 읽기 쉬운 동기화 로직은 handler/effect에 남기고, 여러 owner가 실제로 공유하는 범용 순수 함수만 `shared/util.ts`의 `util.*`로 승격합니다.
+`queryClient.invalidateQueries`처럼 hook 컨텍스트에 붙어 있어야 더 읽기 쉬운 동기화 로직은 handler/effect에 남기고, support module 바깥 여러 모듈이 같은 함수를 직접 import해야 할 때만 `shared/util.ts`의 `util.*`나 별도 owner module 승격을 검토합니다.
 
 **Incorrect (작은 화면 전용 계산을 generic util 파일로 뺌):**
 
@@ -734,6 +746,32 @@ export const util = {
   getNextPage(page: number) {
     return page + 1;
   },
+};
+```
+
+**Incorrect (`page.ts`를 export helper 창고처럼 사용):**
+
+```ts
+export const normalizeEntryValues = (formValues: EntryFormValues) => {
+	// ...
+};
+
+export const buildEntryMediaRequests = (files: WidgetMediaUploaderFile[]) => {
+	// ...
+};
+
+export const mergeEntryPayload = (
+	values: EntryFormValues,
+	mediaRequests: UpsertMediaFileRequest[],
+) => {
+	// ...
+};
+
+export const buildEntryPayload = (formValues: EntryFormValues, files: WidgetMediaUploaderFile[]) => {
+	return mergeEntryPayload(
+		normalizeEntryValues(formValues),
+		buildEntryMediaRequests(files),
+	);
 };
 ```
 
@@ -754,6 +792,22 @@ export const normalizeFolderTreeNodes = (nodes: ContentFolderNodeResponse[]) => 
 const handleSave = async () => {
   await mutationContentTypeUpsert.mutateAsync({ data: request });
   await queryClient.invalidateQueries({ queryKey: ["content-type-list"] });
+};
+```
+
+**Correct (`page.ts` 안의 작은 단계는 한 exported 함수 안에서 정리):**
+
+```ts
+export const buildEntryPayload = (
+	formValues: EntryFormValues,
+	files: WidgetMediaUploaderFile[],
+) => {
+	// 1. formValues 정규화
+	// 2. media request 조립
+	// 3. payload 병합
+	return {
+		// ...
+	};
 };
 ```
 
@@ -835,7 +889,7 @@ return <ContentTypeBuilderScreen onSubmit={handleSubmitButtonClick} />;
 
 화면 전용 불변 설정, 옵션 목록, preset, 컬럼 메타, 순수 support function, 타입 선언은 route entry 상단에 쌓아두지 말고 기본적으로 같은 계층 `page.ts`로 이동합니다.   
 route entry에는 state, response/mutation, handler, `useEffect`, 렌더링 흐름을 남기고, 작은 1회성 guard나 사용 지점 바로 옆이 더 읽기 쉬운 계산은 `page.tsx`에 남길 수 있습니다.   
-`page.ts`는 namespace 객체보다 named export를 기본으로 사용하고, 처음부터 `entry-request.ts`, `entry-columns.ts`처럼 잘게 쪼개기보다 `page.ts`가 여러 독립 관심사로 커졌을 때만 추가 분리를 검토합니다.
+이 규칙은 무엇을 `page.ts`로 옮길지에 대한 규칙입니다. `page.ts`는 helper 저장소가 아니라 화면 전용 도메인 support module로 다루고, export는 도메인 단위 함수와 계약만 남깁니다. 처음부터 `entry-request.ts`, `entry-columns.ts`처럼 잘게 쪼개기보다 `page.ts`가 여러 독립 관심사로 커졌을 때만 추가 분리를 검토합니다.
 
 **Incorrect (route entry 상단에 순수 지원 코드가 누적됨):**
 
@@ -846,6 +900,22 @@ const getMediaColumnRules = () => {
 
 const buildFileRequests = () => {
   // ...
+};
+```
+
+**Incorrect (`page.ts` 안에서도 작은 단계마다 export helper를 늘림):**
+
+```ts
+export const getEntryMediaUploadExtension = (fileName: string) => {
+	// ...
+};
+
+export const formatEntryMediaUploadSizeMb = (bytes: number) => {
+	// ...
+};
+
+export const validateEntryMediaUploadFile = (file: EntryMediaUploadCandidate) => {
+	// ...
 };
 ```
 
@@ -871,6 +941,17 @@ export const getMediaColumnRules = () => {
 export const buildFileRequests = (mediaUploadFileListByColumn: Record<string, unknown>) => {
   // ...
   return [];
+};
+```
+
+**Correct (`page.ts` 내부 단계는 한 exported 함수 안에서 정리):**
+
+```ts
+export const validateEntryMediaUploadFile = (file: EntryMediaUploadCandidate) => {
+	// 1. 파일 크기 확인
+	// 2. 확장자 확인
+	// 3. 확장자별 제한 확인
+	// 4. 메시지 조립 후 결과 반환
 };
 ```
 
