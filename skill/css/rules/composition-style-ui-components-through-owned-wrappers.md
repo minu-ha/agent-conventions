@@ -1,23 +1,24 @@
 ---
-title: Style `Ui*` Components Through Owned Wrappers
+title: Prefer Owned Wrappers for `Ui*` Component Styling
 impact: HIGH
 impactDescription: prevents shared UI wrappers from exposing uncontrolled styling hooks through ad-hoc className injection
 tags: ui-components, wrappers, third-party
 ---
 
-## Style `Ui*` Components Through Owned Wrappers
+## Prefer Owned Wrappers for `Ui*` Component Styling
 
 **Impact: HIGH (prevents shared UI wrappers from exposing uncontrolled styling hooks through ad-hoc className injection)**
 
-`Ui*` 컴포넌트(`UiCollapse`, `UiAvatar`, `UiButton` 등)에 직접 `className`을 주입하지 않습니다. 스타일링이 필요하면 화면이나 local 래퍼 클래스를 두고, 그 래퍼 아래에서만 서드파티 라이브러리 내부 DOM을 제한적으로 타겟팅합니다.
+`Ui*` 컴포넌트(`UiCollapse`, `UiAvatar`, `UiButton` 등)의 내부 DOM을 꾸미기 위한 ad-hoc `className` 주입은 기본적으로 피합니다. 스타일링이 필요하면 화면이나 local 래퍼 클래스를 두고, 그 래퍼 아래에서만 서드파티 라이브러리 내부 DOM을 제한적으로 타겟팅합니다.   
+다만 wrapper가 root `className`이나 slot prop을 공식 styling contract로 노출했다면, 레이아웃 참여나 spacing 같은 root-level 스타일에는 그 contract를 그대로 사용할 수 있습니다.
 
-**Incorrect (`Ui*` 컴포넌트에 직접 className을 부여):**
+**Incorrect (내부 DOM을 만지기 위해 `Ui*`에 ad-hoc className을 주입):**
 
 ```tsx
 <UiCollapse className={clsx("rt_srol__collapse")} />
 ```
 
-**Correct (소유 래퍼를 두고 그 아래에서 스타일링):**
+**Correct (내부 DOM 스타일링은 소유 래퍼 아래로 제한하고, 공식 root contract는 예외적으로 허용):**
 
 ```tsx
 <div className={clsx("rt_srol__collapse")}>
@@ -31,4 +32,9 @@ tags: ui-components, wrappers, third-party
 		border-radius: var(--cms-border-radius, 10px);
 	}
 }
+```
+
+```tsx
+// UiButton이 root className contract를 공식적으로 노출하는 경우에만 허용
+<UiButton className={clsx("rt_srol__submitButton")} />
 ```

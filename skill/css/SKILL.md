@@ -48,13 +48,13 @@ metadata:
 
 - `composition-compose-classes-with-clsx` - TSX class 조합은 `clsx()`를 기본으로 사용
 - `composition-keep-classes-single-purpose` - 하나의 클래스에는 하나의 시각적 책임만 부여
-- `composition-do-not-build-structural-variants-with-modifiers` - modifier는 구조가 아니라 상태에만 사용
-- `composition-style-ui-components-through-owned-wrappers` - `Ui*` 컴포넌트는 owner wrapper를 통해 스타일링
+- `composition-do-not-build-structural-variants-with-modifiers` - one-off 구조 patch에 modifier를 남용하지 않음
+- `composition-style-ui-components-through-owned-wrappers` - `Ui*` 내부 DOM 스타일링은 owner wrapper를 기본으로 사용
 - `composition-prefer-ui-wrapper-prop-types` - 라이브러리 native prop보다 wrapper prop 타입 우선
 
 ### 3. Selectors and Nesting Boundaries (CRITICAL)
 
-- `selector-keep-project-selectors-flat` - 프로젝트 소유 selector는 평평하게 유지
+- `selector-keep-project-selectors-flat` - project-owned 클래스 구조는 평평하게 유지
 - `selector-use-pseudo-classes-for-dom-owned-states` - DOM 소유 상태는 pseudo-class 사용
 - `selector-target-third-party-dom-from-owned-roots` - 서드파티 DOM은 owner root 클래스에서만 타게팅
 - `selector-avoid-deep-descendant-dependencies` - 깊은 descendant selector 의존 회피
@@ -62,7 +62,7 @@ metadata:
 ### 4. Values, Layout, and Interaction States (HIGH)
 
 - `values-tokenize-repeated-visual-values` - 반복되는 색상, 간격, 타이포, 그림자는 토큰화
-- `values-always-provide-css-variable-fallbacks` - CSS 변수에는 항상 fallback 포함
+- `values-always-provide-css-variable-fallbacks` - 존재 보장이 없는 CSS 변수에는 fallback 포함
 - `values-keep-layout-intent-explicit` - 레이아웃 의도와 sticky/fixed 맥락을 명시적으로 유지
 - `values-separate-domain-state-modifiers-from-dom-interaction-states` - 앱 상태 modifier와 브라우저 상호작용 상태 분리
 
