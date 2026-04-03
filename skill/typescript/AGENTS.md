@@ -19,8 +19,8 @@
 ## 목차
 
 1. [Naming and Module Boundaries](#1-naming-and-module-boundaries) — **HIGH**
-    - 1.1 [Centralize Shared Config and Constants Under One Namespace](#11-centralize-shared-config-and-constants-under-one-namespace)
-    - 1.2 [Preserve Config Origin With Chained Access](#12-preserve-config-origin-with-chained-access)
+    - 1.1 [Centralize Shared Config Under shared/config.ts](#11-centralize-shared-config-under-sharedconfigts)
+    - 1.2 [Preserve Shared Namespace Origin With Chained Access](#12-preserve-shared-namespace-origin-with-chained-access)
     - 1.3 [Use Consistent File, Symbol, and Field Naming](#13-use-consistent-file-symbol-and-field-naming)
     - 1.4 [Use Direct Imports and Dedicated Public Entry Points](#14-use-direct-imports-and-dedicated-public-entry-points)
 2. [Types and Contracts](#2-types-and-contracts) — **CRITICAL**
@@ -31,7 +31,7 @@
     - 2.5 [Reuse Existing Contracts Before Declaring New Types](#25-reuse-existing-contracts-before-declaring-new-types)
 3. [Functions and Helper Boundaries](#3-functions-and-helper-boundaries) — **HIGH**
     - 3.1 [Avoid Imperative Assembly in Wide Scopes](#31-avoid-imperative-assembly-in-wide-scopes)
-    - 3.2 [Extract Helpers Only When the Boundary Is Real](#32-extract-helpers-only-when-the-boundary-is-real)
+    - 3.2 [Extract Support Functions Only When the Boundary Is Real](#32-extract-support-functions-only-when-the-boundary-is-real)
     - 3.3 [Replace enum With as const Objects](#33-replace-enum-with-as-const-objects)
     - 3.4 [Use Named Object Params for Complex Signatures](#34-use-named-object-params-for-complex-signatures)
 4. [Absence and Fallback Handling](#4-absence-and-fallback-handling) — **HIGH**
@@ -53,12 +53,12 @@
 
 식별자, import, public entry point, config 접근 패턴은 소유권과 오리진을 바로 드러내야 합니다.
 
-### 1.1 Centralize Shared Config and Constants Under One Namespace
+### 1.1 Centralize Shared Config Under shared/config.ts
 
 **Impact: HIGH (prevents shared config values from scattering across leaf files and losing a single public source)**
 
-여러 파일에서 공유되는 설정과 상수는 `<config-entry-path>`를 공개 진입점으로 삼아 한 namespace 아래에 모읍니다.   
-leaf 파일마다 공용 URL, feature flag, 페이지 크기, 상수 문자열을 흩뿌리지 말고, `config.*` 체이닝으로 읽을 수 있게 정리합니다.
+여러 파일에서 공유되는 설정과 상수는 기본적으로 `shared/config.ts` 한 파일을 공개 진입점으로 삼아 `config` namespace 아래에 모읍니다.   
+leaf 파일마다 공용 URL, feature flag, 페이지 크기, 상수 문자열을 흩뿌리지 말고, `config.*` 체이닝으로 읽을 수 있게 정리합니다. 수가 많지 않을 때는 `config/` 폴더로 미리 쪼개지 말고 단일 `config.ts`를 유지하고, 여러 독립 섹션으로 커졌을 때만 분리를 검토합니다.
 
 **Incorrect (공용 설정을 leaf 파일마다 흩뿌림):**
 
@@ -67,10 +67,10 @@ const defaultPageSize = 20;
 const billing_feature_keys = ["invoices", "refunds"];
 ```
 
-**Correct (공용 설정은 공개 namespace에서 읽음):**
+**Correct (공용 설정은 `shared/config.ts` namespace에서 읽음):**
 
 ```ts
-import {config} from "<config-public-import>";
+import {config} from "@/shared/config";
 
 config.api.public_base_url;
 config.api.billing_base_url;
@@ -78,18 +78,21 @@ config.features.enable_refunds;
 config.pagination.default_page_size;
 ```
 
-### 1.2 Preserve Config Origin With Chained Access
+### 1.2 Preserve Shared Namespace Origin With Chained Access
 
 **Impact: HIGH (keeps readers aware of where values come from instead of hiding origin behind wide-scope aliases)**
 
-공용 설정은 leaf 모듈 직접 import보다 `config.*` 체이닝 접근을 기본으로 합니다. 넓은 스코프에서 구조분해하거나 별칭 상수로 끊어 원본 오리진을 흐리지 말고, 필요한 구조분해는 함수 내부의 좁은 스코프에서만 제한적으로 사용합니다.
+공용 설정과 공용 순수 함수는 leaf 모듈 직접 import 뒤에 `config.*`, `util.*` 체이닝 접근을 기본으로 합니다. 넓은 스코프에서 구조분해하거나 별칭 상수로 끊어 원본 오리진을 흐리지 말고, 필요한 구조분해는 함수 내부의 좁은 스코프에서만 제한적으로 사용합니다.   
+특히 `shared/config.ts`와 `shared/util.ts`는 발견성을 위해 namespace를 유지하고, feature-local `helper.ts`나 `utils.ts` 대신 공용 경계에서만 `config`/`util` 이름을 사용합니다.
 
 **Incorrect (넓은 스코프에서 원본 오리진을 감춤):**
 
 ```ts
 const {api, features} = config;
+const {date} = util;
 const billingBaseUrl = api.billing_base_url;
 const enableRefunds = features.enable_refunds;
+const normalizedDate = date.normalize(createdAt);
 ```
 
 **Correct (체이닝으로 출처를 유지):**
@@ -99,6 +102,8 @@ config.api.billing_base_url;
 config.features.enable_refunds;
 config.pagination.default_page_size;
 config.env.sentry_dsn;
+util.date.normalize(createdAt);
+util.number.clamp(score, 0, 100);
 ```
 
 ### 1.3 Use Consistent File, Symbol, and Field Naming
@@ -129,22 +134,22 @@ const userProfileSchema = z.object({
 
 **Impact: HIGH (makes import ownership explicit without relying on barrels or ambiguous re-export layers)**
 
-`index.ts` 기반 barrel export를 만들지 않고 직접 export/import 구조를 유지합니다. 공용 설정, helper, schema, type는 각각의 공개 진입점으로 모으고, 타입 전용 import는 `import type`을 사용해 계약과 런타임 의존을 분리합니다.
+`index.ts` 기반 barrel export를 만들지 않고 직접 export/import 구조를 유지합니다. 공용 설정과 공용 순수 함수는 각각 `shared/config.ts`, `shared/util.ts` 같은 공개 진입점으로 모으고, 타입 전용 import는 `import type`을 사용해 계약과 런타임 의존을 분리합니다. feature 전용 support code는 owner-named module이나 React route의 sibling `page.ts`처럼 소유자가 보이는 파일에서 named export를 직접 import합니다.
 
 **Incorrect (barrel과 혼합 import로 경계를 흐림):**
 
 ```ts
-import {config, normalizeUserProfile, UserProfile} from "./index";
+import {config, util, UserProfile} from "./index";
 ```
 
 **Correct (직접 import와 공개 진입점을 구분):**
 
 ```ts
-import type {UserProfile} from "<type-public-import>";
-import {config} from "<config-public-import>";
-import {userProfileSchema} from "<schema-public-import>";
-import {normalizeUserProfile} from "<helper-public-import>";
-import {userRoleLabels} from "<constants-public-import>";
+import type {UserProfile} from "@/shared/contracts";
+import {config} from "@/shared/config";
+import {util} from "@/shared/util";
+import {userProfileSchema} from "@/shared/schema";
+import {buildUserSaveRequest} from "./page";
 ```
 
 ## 2. Types and Contracts
@@ -345,24 +350,38 @@ const visibleTabs = canManageMembers
 	: ["overview"];
 ```
 
-### 3.2 Extract Helpers Only When the Boundary Is Real
+### 3.2 Extract Support Functions Only When the Boundary Is Real
 
 **Impact: HIGH (stops helper extraction from fragmenting local flow when no reusable contract or testable boundary actually exists)**
 
-유틸이나 helper는 입력/출력 계약이 명확하고, 함수명이 도메인 의도를 설명하며, 런타임 문맥 없이도 독립 검증이 가능할 때만 분리합니다. 재사용 근거 없이 보기 좋게 만들기 위한 분리나, 한 번만 쓰는 짧은 계산 추출은 피하고 먼저 early return, 단계적 변수, 의미 있는 블록 구분으로 가독성을 확보합니다.
+support function은 입력/출력 계약이 명확하고, 런타임 문맥 없이도 독립 검증이 가능할 때만 분리합니다. 재사용 근거 없이 보기 좋게 만들기 위한 분리나, 한 번만 쓰는 짧은 계산 추출은 피하고 먼저 early return, 단계적 변수, 의미 있는 블록 구분으로 가독성을 확보합니다.   
+feature 안에서는 `helper.ts`, `helpers.ts`, `utils.ts`, `common.ts` 같은 generic 파일명을 만들지 않고, React route라면 sibling `page.ts`, 그 외에는 owner가 보이는 module을 첫 추출 대상으로 삼습니다. feature-local support function은 named export를 기본으로 사용하고, 여러 owner가 실제로 공유하는 범용 순수 함수만 `shared/util.ts`의 `util.*`로 승격합니다.
 
-**Incorrect (단회성 계산까지 helper로 분리):**
+**Incorrect (단회성 계산을 generic util 파일로 분리):**
 
 ```ts
-const getNextIteration = (iteration: number) => iteration + 1;
-const nextIteration = getNextIteration(iteration);
+// utils.ts
+export const util = {
+	getNextIteration(iteration: number) {
+		return iteration + 1;
+	},
+};
 ```
 
-**Correct (정규화나 직렬화처럼 실제 경계가 있을 때만 helper로 분리):**
+**Correct (작은 계산은 local flow에 두고, 진짜 shared pure function만 `shared/util.ts`로 올림):**
 
 ```ts
-export const normalizeUserIds = (userIds: string[]): string[] => {
-	return Array.from(new Set(userIds)).sort();
+const nextIteration = iteration + 1;
+```
+
+```ts
+// shared/util.ts
+export const util = {
+	date: {
+		normalize(value: Date | string): string {
+			return new Date(value).toISOString();
+		},
+	},
 };
 ```
 
@@ -563,7 +582,7 @@ const publishResultSchema = z.object({
 **Impact: MEDIUM-HIGH (distinguishes reusable pure support logic from local implementation details or integration boundaries)**
 
 재사용 가능한 순수 helper, 문자열 조립 함수, 정규화 함수, 포맷 함수, 계약 변환 함수에는 `@helper`를 사용합니다.   
-한 함수나 한 파일 안에서만 쓰는 작은 계산은 직접 두고, 여러 call site가 공유하거나 밖으로 빼야 읽기 흐름이 명확해질 때만 helper로 승격합니다. 외부 I/O 경계는 `@helper`가 아니라 `@api`로 표시합니다.
+한 함수나 한 파일 안에서만 쓰는 작은 계산은 직접 두고, 여러 call site가 공유하거나 밖으로 빼야 읽기 흐름이 명확해질 때만 helper로 승격합니다. 이런 함수는 `shared/util.ts`의 `util.*`나 owner-named support module 아래에 둘 수 있으며, 외부 I/O 경계는 `@helper`가 아니라 `@api`로 표시합니다.
 
 **Incorrect (외부 연동 함수나 단회성 계산을 helper로 혼동):**
 

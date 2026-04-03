@@ -44,7 +44,7 @@
    - `ownership-` - shared/local 소유 경계와 파일 배치 규칙
    - `typing-` - React handler, callback, props, API 계약 재사용 규칙
    - `composition-` - 컴포넌트 시그니처와 JSX 구조 규칙
-   - `screen-` - route-entry 규율과 helper 추출 경계 규칙
+   - `screen-` - route-entry 규율과 named export 기반 `page.ts` support code 추출 경계 규칙
    - `events-` - handler 네이밍과 상호작용 흐름 규칙
    - `state-` - 서버 상태, store 접근, memoization, fallback 규칙
    - `docs-` - 역할 기반 annotation 태그와 non-obvious logic comment 규칙
@@ -117,6 +117,7 @@ tags: tag1, tag2
 - [AGENTS.md](./AGENTS.md)는 에이전트가 먼저 읽는 compiled 문서입니다.
 - [deprecated/react.md](./deprecated/react.md)는 원래 단일 문서와 마이그레이션 완성도를 비교하기 위해 남겨 둡니다.
 - `metadata.json`의 `extends`는 `typescript` companion skill 관계를 선언합니다.
+- route entry support code의 기본 구조는 `page.tsx` + sibling `page.ts`를 우선하고, `page.ts`는 named export를 기본으로 사용합니다.
 - generic TypeScript rule은 [../typescript/rules/_sections.md](../typescript/rules/_sections.md)와 `../typescript/rules/*.md`가 정본이고, React rule은 framework-specific overlay에 집중합니다.
 - 공용 TypeScript build package는 raw CLI 형태와 per-skill alias를 모두 제공합니다.
 

@@ -28,10 +28,10 @@
 
 1. [Ownership and Boundaries](#1-ownership-and-boundaries) — **CRITICAL**
     - 1.1 [Avoid Barrel Exports and React Namespace Types](#11-avoid-barrel-exports-and-react-namespace-types)
-    - 1.2 [Keep UI, Widget, and -local Ownership Separate](#12-keep-ui-widget-and--local-ownership-separate)
-    - 1.3 [Place Route-local Files by Visual Scope](#13-place-route-local-files-by-visual-scope)
-    - 1.4 [Prefer Plain .ts Helpers Over Local Custom Hooks](#14-prefer-plain-ts-helpers-over-local-custom-hooks)
-    - 1.5 [Route Shared Constants Through a Config Entry Point](#15-route-shared-constants-through-a-config-entry-point)
+    - 1.2 [Do Not Create Screen-local Custom Hooks for Pure Logic](#12-do-not-create-screen-local-custom-hooks-for-pure-logic)
+    - 1.3 [Keep UI, Widget, and -local Ownership Separate](#13-keep-ui-widget-and--local-ownership-separate)
+    - 1.4 [Place Route-local Files by Visual Scope](#14-place-route-local-files-by-visual-scope)
+    - 1.5 [Route Shared Constants Through shared/config.ts](#15-route-shared-constants-through-sharedconfigts)
     - 1.6 [Use Consistent File and Symbol Naming](#16-use-consistent-file-and-symbol-naming)
 2. [Typing and Contracts](#2-typing-and-contracts) — **HIGH**
     - 2.1 [Prefer React Handler Type Aliases Over Inline Event Parameter Annotations](#21-prefer-react-handler-type-aliases-over-inline-event-parameter-annotations)
@@ -43,10 +43,10 @@
     - 3.4 [Use Visibility Primitives Deliberately for Show and Hide Branches](#34-use-visibility-primitives-deliberately-for-show-and-hide-branches)
 4. [Screen File Discipline](#4-screen-file-discipline) — **HIGH**
     - 4.1 [Avoid Premature Abstraction in Screen Code](#41-avoid-premature-abstraction-in-screen-code)
-    - 4.2 [Extract Utilities Only When the Boundary Is Real](#42-extract-utilities-only-when-the-boundary-is-real)
+    - 4.2 [Extract Screen Support Code Only When the Boundary Is Real](#42-extract-screen-support-code-only-when-the-boundary-is-real)
     - 4.3 [Keep Derived Values Close to Where They Are Used](#43-keep-derived-values-close-to-where-they-are-used)
     - 4.4 [Keep Route Entry Files Focused on Screen Flow](#44-keep-route-entry-files-focused-on-screen-flow)
-    - 4.5 [Move Pure Support Code Out of Route Entry Files](#45-move-pure-support-code-out-of-route-entry-files)
+    - 4.5 [Move Screen-owned Pure Support Code Into page.ts Before Splitting Further](#45-move-screen-owned-pure-support-code-into-pagets-before-splitting-further)
 5. [Events and Interaction Flow](#5-events-and-interaction-flow) — **MEDIUM-HIGH**
     - 5.1 [Keep Screen-specific Handler Flow Local Until a Real Utility Emerges](#51-keep-screen-specific-handler-flow-local-until-a-real-utility-emerges)
     - 5.2 [Name Handlers Predictably and Curry Extra Arguments](#52-name-handlers-predictably-and-curry-extra-arguments)
@@ -97,7 +97,30 @@ const handleClick: MouseEventHandler<HTMLButtonElement> = (_event) => {
 };
 ```
 
-### 1.2 Keep UI, Widget, and -local Ownership Separate
+### 1.2 Do Not Create Screen-local Custom Hooks for Pure Logic
+
+**Impact: HIGH (React 전용 추상화를 실제 lifecycle/context 결합이 있는 경우에만 사용하게 함)**
+
+컴포넌트 하나를 위한 계산, 정규화, payload 조립은 기본적으로 일반 `.ts` support module로 둡니다.   
+route entry 화면이라면 첫 추출 대상은 같은 계층의 `page.ts`이고, screen-owned pure function은 named export로 직접 내보냅니다. 화면 하나에서만 쓰는 custom hook은 기본적으로 만들지 않고, hook은 여러 컴포넌트나 화면이 공유하는 React orchestration 경계일 때만 승격합니다.
+
+**Incorrect (로컬 계산을 습관적으로 hook으로 포장):**
+
+```ts
+export const useMediaUploadPayload = (files: UploadFile[]) => {
+  return files.map((file) => ({ uid: file.uid }));
+};
+```
+
+**Correct (순수 계산은 sibling `page.ts`의 named export로 유지):**
+
+```ts
+export const buildMediaUploadPayload = (files: UploadFile[]) => {
+  return files.map((file) => ({ uid: file.uid }));
+};
+```
+
+### 1.3 Keep UI, Widget, and -local Ownership Separate
 
 **Impact: CRITICAL (공용 책임과 route-local 책임이 같은 레이어로 섞이는 것을 막음)**
 
@@ -136,7 +159,7 @@ const DeleteTableButton = () => {
 };
 ```
 
-### 1.3 Place Route-local Files by Visual Scope
+### 1.4 Place Route-local Files by Visual Scope
 
 **Impact: HIGH (route 전용 component, style, logic를 예측 가능한 위치에 유지함)**
 
@@ -166,33 +189,13 @@ export const mapFolderNodeToTreeData = (node: FolderNode, renderers: FolderTreeR
 <UiTree treeData={nodes.map((node) => mapFolderNodeToTreeData(node, { renderTitle }))} />
 ```
 
-### 1.4 Prefer Plain .ts Helpers Over Local Custom Hooks
-
-**Impact: HIGH (React 전용 추상화를 실제 lifecycle/context 결합이 있는 경우에만 사용하게 함)**
-
-컴포넌트 하나를 위한 계산, 정규화, payload 조립은 기본적으로 일반 `.ts` helper로 둡니다. React 생명주기, state, context, effect에 실제로 묶일 때만 custom hook으로 승격합니다.
-
-**Incorrect (로컬 계산을 습관적으로 hook으로 포장):**
-
-```ts
-export const useMediaUploadPayload = (files: UploadFile[]) => {
-  return files.map((file) => ({ uid: file.uid }));
-};
-```
-
-**Correct (순수 계산은 일반 helper로 유지):**
-
-```ts
-export const buildMediaUploadPayload = (files: UploadFile[]) => {
-  return files.map((file) => ({ uid: file.uid }));
-};
-```
-
-### 1.5 Route Shared Constants Through a Config Entry Point
+### 1.5 Route Shared Constants Through shared/config.ts
 
 **Impact: HIGH (공용 상수가 route와 local component 곳곳에 흩어지는 것을 막음)**
 
-여러 화면에서 쓰는 상수와 설정은 라우트 파일이나 `-local` 컴포넌트에 흩뿌리지 말고 공개 진입점에서 가져옵니다. 사용처는 `config.*` 체이닝으로 접근해 출처를 유지합니다.
+여러 화면에서 쓰는 상수와 설정은 라우트 파일이나 `-local` 컴포넌트에 흩뿌리지 말고 기본적으로 `shared/config.ts` 한 파일에서 가져옵니다.   
+수가 많지 않을 때는 폴더로 쪼개기보다 `export const config = {}` 한 namespace를 유지하고, 사용처는 `config.*` 체이닝으로 접근해 출처를 보존합니다.   
+공용 순수 함수는 `config`에 섞지 말고 `shared/util.ts`의 `util.*` 아래로 분리합니다. route나 feature 전용 support code는 `shared/util.ts`로 올리지 말고 sibling `page.ts`나 owner-named module에 둡니다.
 
 **Incorrect (공용 상수를 화면 파일에 직접 선언):**
 
@@ -203,10 +206,10 @@ export const DASHBOARD_MENU_KEY = {
 } as const;
 ```
 
-**Correct (공용 진입점에서 상수를 사용):**
+**Correct (공용 설정은 `shared/config.ts`의 namespace에서 사용):**
 
 ```ts
-import { config } from "<config-entry-import-path>";
+import { config } from "@/shared/config";
 
 config.navigation.projectMenuKey.dashboard;
 ```
@@ -453,24 +456,28 @@ export const useContentEditor = () => {
 };
 ```
 
-### 4.2 Extract Utilities Only When the Boundary Is Real
+### 4.2 Extract Screen Support Code Only When the Boundary Is Real
 
 **Impact: HIGH (route 파일이 자기 계약이 없는 helper 조각으로 분해되는 것을 막음)**
 
-유틸 분리는 React state와 직접 결합되지 않고, 입력/출력 계약이 명확하며, 함수명이 도메인 의도를 설명할 때만 검토합니다. 반복, 복잡한 분기, 정규화, 테스트 가치가 실제로 있을 때만 같은 계층 `.ts` 파일로 뺍니다. `queryClient.invalidateQueries`처럼 해당 hook 컨텍스트에 붙어 있을 때 더 읽기 쉬운 동기화 로직은 별도 유틸로 모으지 않습니다.
+화면 support code 분리는 React state와 직접 결합되지 않고, 입력/출력 계약이 명확하며, 밖으로 빼면 흐름이 더 잘 보일 때만 검토합니다. route entry의 기본 추출 대상은 sibling `page.ts`이고, screen-owned function은 named export로 직접 내보냅니다.   
+`helper.ts`, `helpers.ts`, `utils.ts`, `common.ts` 같은 generic 파일명은 feature 안에서 만들지 않습니다. `queryClient.invalidateQueries`처럼 해당 hook 컨텍스트에 붙어 있을 때 더 읽기 쉬운 동기화 로직은 별도 support code로 모으지 않습니다. 여러 owner가 실제로 재사용하는 범용 순수 함수만 `shared/util.ts`의 `util.*`로 승격합니다.
 
-**Incorrect (한 줄 계산까지 helper로 쪼갬):**
+**Incorrect (작은 화면 전용 계산을 generic util 파일로 뺌):**
 
 ```ts
-const getNextPage = (page: number) => page + 1;
-const handleMoveNextPage = () => {
-  setPage(getNextPage(page));
+// utils.ts
+export const util = {
+  getNextPage(page: number) {
+    return page + 1;
+  },
 };
 ```
 
-**Correct (정규화나 순회처럼 경계가 선명한 로직만 분리):**
+**Correct (screen-owned support code는 먼저 `page.ts`의 named export로 모으고, 흐름에 묶인 로직은 handler에 남김):**
 
 ```ts
+// page.ts
 export const normalizeFolderTreeNodes = (nodes: ContentFolderNodeResponse[]) => {
   return nodes.map((node) => ({
     id: node.id,
@@ -480,13 +487,14 @@ export const normalizeFolderTreeNodes = (nodes: ContentFolderNodeResponse[]) => 
 ```
 
 ```ts
+// page.tsx
 const handleSave = async () => {
   await mutationContentTypeUpsert.mutateAsync({ data: request });
   await queryClient.invalidateQueries({ queryKey: ["content-type-list"] });
 };
 ```
 
-필요하다면 함수 시그니처 가독성을 위해 JSDoc 헤더에 `biome-ignore format:`를 제한적으로 둘 수 있지만, helper 추출의 근거로 사용하면 안 됩니다.
+필요하다면 함수 시그니처 가독성을 위해 JSDoc 헤더에 `biome-ignore format:`를 제한적으로 둘 수 있지만, support code 추출의 근거로 사용하면 안 됩니다.
 
 ### 4.3 Keep Derived Values Close to Where They Are Used
 
@@ -547,11 +555,12 @@ const handleSubmitButtonClick = async () => {
 return <ContentTypeBuilderScreen onSubmit={handleSubmitButtonClick} />;
 ```
 
-### 4.5 Move Pure Support Code Out of Route Entry Files
+### 4.5 Move Screen-owned Pure Support Code Into page.ts Before Splitting Further
 
 **Impact: HIGH (route entry 파일이 preset과 순수 helper를 쌓기보다 orchestration에 집중하게 함)**
 
-화면 전용 불변 설정, 옵션 목록, preset, 컬럼 메타, 순수 helper, 타입 선언은 route entry 상단에 쌓아두지 말고 같은 계층 `.ts` 파일로 이동합니다. route entry에는 React state, API response/mutation, handler, `useEffect`, 렌더링 흐름만 남기는 것을 기본값으로 삼습니다.
+화면 전용 불변 설정, 옵션 목록, preset, 컬럼 메타, 순수 support function, 타입 선언은 route entry 상단에 쌓아두지 말고 기본적으로 같은 계층 `page.ts`로 이동합니다. route entry에는 React state, API response/mutation, handler, `useEffect`, 렌더링 흐름을 우선 남기고, 작은 1회성 guard나 사용 지점 바로 옆이 더 읽기 쉬운 계산은 `page.tsx`에 남길 수 있습니다. `page.ts`는 namespace 객체보다 named export를 기본으로 사용합니다.   
+처음부터 `entry-request.ts`, `entry-columns.ts`, `folder-tree.ts`처럼 잘게 쪼개지 말고, `page.ts`가 여러 독립 관심사로 커졌을 때만 추가 분리를 검토합니다.
 
 **Incorrect (route entry 상단에 순수 지원 코드가 누적됨):**
 
@@ -565,14 +574,28 @@ const buildFileRequests = () => {
 };
 ```
 
-**Correct (route entry에는 흐름만 남김):**
+**Correct (route entry 흐름은 `page.tsx`에 두고, screen-owned pure support code는 `page.ts`의 named export로 모음):**
 
 ```tsx
+import { buildFileRequests } from "./page";
+
 const [mediaUploadFileListByColumn, setMediaUploadFileListByColumn] = useState({});
 const responseContentManagerGetTableInfo = useContentManagerGetTableInfo();
 
 const handleFormFinish = () => {
+  const request = buildFileRequests(mediaUploadFileListByColumn);
   // ...
+};
+```
+
+```ts
+export const getMediaColumnRules = () => {
+  // ...
+};
+
+export const buildFileRequests = (mediaUploadFileListByColumn: Record<string, unknown>) => {
+  // ...
+  return [];
 };
 ```
 
@@ -586,7 +609,8 @@ Event handler는 이름이 예측 가능하고 간접 호출이 최소화된 상
 
 **Impact: MEDIUM (모든 분기를 작은 helper로 쪼개지 않고도 가독성을 유지함)**
 
-여기서 `local`은 JSX 인라인 핸들러를 뜻하지 않고, 이미 이름 붙은 handler 본문 안에서 흐름을 계속 읽을 수 있게 유지한다는 뜻입니다. 핸들러가 길어져도 바로 helper로 쪼개지 않습니다. 먼저 early return, 단계적 지역 변수, 의미 있는 블록 구분으로 읽기 쉽게 유지하고, `screen-extract-utilities-selectively` 규칙을 만족할 때만 분리합니다.
+여기서 `local`은 JSX 인라인 핸들러를 뜻하지 않고, 이미 이름 붙은 handler 본문 안에서 흐름을 계속 읽을 수 있게 유지한다는 뜻입니다.   
+핸들러가 길어져도 바로 `page.ts`나 shared support code로 쪼개지 않습니다. 먼저 early return, 단계적 지역 변수, 의미 있는 블록 구분으로 읽기 쉽게 유지하고, `screen-extract-utilities-selectively` 규칙을 만족할 때만 분리합니다. 화면 하나에서만 쓰는 custom hook으로 우회해 흐름을 숨기는 것도 기본적으로 피합니다.
 
 **Incorrect (재사용 근거 없이 흐름을 지나치게 분해):**
 

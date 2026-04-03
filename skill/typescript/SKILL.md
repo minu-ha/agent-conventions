@@ -34,8 +34,8 @@ metadata:
 
 - `naming-use-consistent-file-and-symbol-naming` - 파일명, 심볼명, field casing을 예측 가능하게 유지
 - `naming-use-direct-imports-and-public-entry-points` - barrel보다 직접 import와 전용 public entry point를 선호
-- `naming-centralize-shared-config-namespaces` - shared config는 하나의 public namespace를 통해 노출
-- `naming-preserve-config-origin-with-chained-access` - chained access로 config 오리진 보존
+- `naming-centralize-shared-config-namespaces` - shared 설정은 `shared/config.ts`의 `config` namespace로 유지
+- `naming-preserve-config-origin-with-chained-access` - `config.*`, `util.*` 체이닝으로 공용 namespace 오리진 보존
 
 ### 2. Types and Contracts (CRITICAL)
 
@@ -49,7 +49,7 @@ metadata:
 
 - `functions-use-named-object-params-for-complex-signatures` - 복잡한 함수 시그니처는 named object param 사용
 - `functions-replace-enum-with-as-const-objects` - `enum`은 object literal + `as const`로 대체
-- `functions-extract-helpers-only-when-the-boundary-is-real` - helper는 경계가 정당할 때만 추출
+- `functions-extract-helpers-only-when-the-boundary-is-real` - generic helper 파일 대신 named export 기반 owner module이나 `shared/util.ts`를 사용
 - `functions-avoid-imperative-assembly-in-wide-scopes` - 파일 전역 scope의 명령형 조립 회피
 
 ### 4. Absence and Fallback Handling (HIGH)

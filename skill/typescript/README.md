@@ -41,9 +41,9 @@
 
 1. [rules/_template.md](./rules/_template.md)를 `rules/area-description.md`로 복사합니다.
 2. 알맞은 area prefix를 고릅니다.
-   - `naming-` - 식별자, import, config namespace, 오리진 보존 접근 규칙
+   - `naming-` - 식별자, import, `config`/`util` namespace, 오리진 보존 접근 규칙
    - `types-` - 함수 타입, callback 재사용, unused param, 타입 재사용, custom shape 문서화 규칙
-   - `functions-` - object param, enum 대체, helper 추출, 넓은 scope 조립 규칙
+   - `functions-` - object param, enum 대체, `page.ts`/owner module/`shared/util.ts` 추출 규칙
    - `absence-` - optional 값과 fallback 처리 규칙
    - `docs-` - 역할 기반 annotation 태그와 inline comment 규칙
    - `guardrails-` - 금지 shortcut과 review check 규칙
@@ -124,6 +124,6 @@ rule을 추가하거나 수정할 때는 아래 순서를 따릅니다.
 
 1. section에 맞는 filename prefix를 사용합니다.
 2. [_template.md](./rules/_template.md) 구조를 따릅니다.
-3. 예시는 실제 TypeScript 모듈, helper, 계약 코드와 가깝고 구체적으로 작성합니다.
+3. 예시는 실제 TypeScript 모듈, `shared/config.ts`, `shared/util.ts`, owner module, 계약 코드와 가깝고 구체적으로 작성합니다.
 4. 새 카테고리를 추가했다면 section metadata도 함께 갱신합니다.
 5. 마무리 전에 `npm --prefix ../../package run dev:typescript`를 실행합니다.

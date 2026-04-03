@@ -38,8 +38,8 @@ metadata:
 - `ownership-avoid-barrel-and-react-namespace-imports` - barrel export와 `React.*` namespace 타입 사용 금지
 - `ownership-layer-component-boundaries` - `ui`, `widget`, `-local` 소유 경계 분리
 - `ownership-place-route-local-files-by-scope` - route-local 컴포넌트와 helper를 scope 기준으로 배치
-- `ownership-prefer-plain-ts-for-local-react-helpers` - 불필요한 custom hook보다 일반 helper 선호
-- `ownership-shared-config-entry-points` - 공용 상수는 config entry point를 통해 노출
+- `ownership-prefer-plain-ts-for-local-react-helpers` - screen-local custom hook 대신 sibling `.ts` support code를 우선
+- `ownership-shared-config-entry-points` - 공용 상수는 `shared/config.ts`를 통해 노출
 
 ### 2. Typing and Contracts (HIGH)
 
@@ -57,9 +57,9 @@ metadata:
 
 - `screen-keep-route-flow-visible` - route entry 파일은 화면 흐름 중심으로 유지
 - `screen-avoid-premature-abstraction` - 실제 재사용 근거가 생길 때까지 추출 보류
-- `screen-extract-utilities-selectively` - 경계가 정당할 때만 helper 추출
+- `screen-extract-utilities-selectively` - 경계가 정당할 때만 screen support code 추출
 - `screen-keep-derived-values-close` - 파생값과 alias를 사용 위치 가까이에 유지
-- `screen-move-pure-support-code-out-of-entry-files` - route 지원 타입, preset, 순수 helper는 entry 파일 밖으로 이동
+- `screen-move-pure-support-code-out-of-entry-files` - route 지원 코드의 기본 추출 대상은 sibling `page.ts`
 
 ### 5. Events and Interaction Flow (MEDIUM-HIGH)
 
