@@ -8,9 +8,9 @@ metadata:
 
 # React 컨벤션
 
-에이전트 협업 팀을 위한 React 코딩 컨벤션 모음입니다. 현재 이 가이드는 7개 카테고리의 28개 local 규칙으로 구성되어 있습니다.  
-공용 컴포넌트 소유 경계, route-local 분리, React 계약에 맞는 handler/prop 시그니처, 화면 흐름, state 오리진, React 경계 문서화 규칙을 [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`와 compiled [AGENTS.md](./AGENTS.md)로 관리합니다.  
-이 skill은 TanStack Query, Zustand, 그리고 필요 시 React 19 `Activity` 같은 visibility primitive를 쓰는 React codebase를 기본 전제로 합니다. 기본 compiled guide는 local React rule만 담고 `convention-typescript`를 companion skill로 함께 사용합니다.
+에이전트 협업 팀을 위한 React 코딩 컨벤션 모음입니다. 현재 이 가이드는 7개 카테고리의 36개 local 규칙으로 구성되어 있습니다.  
+공용 컴포넌트 소유 경계, route-local 분리, React 계약에 맞는 handler/prop 시그니처, component API 설계, 화면 흐름, state 오리진, transition 패턴, React 경계 문서화 규칙을 [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`와 compiled [AGENTS.md](./AGENTS.md)로 관리합니다.  
+이 skill은 TanStack Query, Zustand, React 19 ref prop/Activity/transition 패턴을 쓰는 React codebase를 기본 전제로 합니다. 기본 compiled guide는 local React rule만 담고 `convention-typescript`를 companion skill로 함께 사용합니다.
 
 ## 사용할 때
 
@@ -48,8 +48,12 @@ metadata:
 
 ### 3. Component Structure and JSX (HIGH)
 
+- `composition-avoid-boolean-prop-proliferation` - shared component API에 boolean prop 조합을 늘리지 않음
+- `composition-do-not-define-components-inside-components` - component 안에서 component를 새로 정의하지 않음
 - `composition-prefer-arrow-functions-and-object-params` - 복잡한 시그니처는 화살표 함수와 객체 매개변수 사용
+- `composition-prefer-children-over-render-props` - 정적인 구조 조립은 children과 slot composition을 우선
 - `composition-destructure-props-inside` - `props` 전체를 받고 본문 안에서 구조분해
+- `composition-use-ref-prop-instead-of-forwardref-in-react-19` - React 19에서는 새 `forwardRef`보다 `ref` prop을 우선
 - `composition-use-activity-for-render-branches` - visibility primitive는 show/hide 의도일 때만 사용
 - `composition-named-handlers-over-inline` - 분기와 비동기 로직을 JSX 바깥으로 드러냄
 
@@ -68,12 +72,16 @@ metadata:
 
 ### 6. State and Data Flow (CRITICAL)
 
+- `state-calculate-derived-values-during-render` - 파생값은 effect/state 동기화 대신 render 중에 계산
 - `state-choose-state-tools-by-source-of-truth` - 소유권과 수명에 맞는 state 도구 선택
 - `state-name-query-and-mutation-bindings-consistently` - response/mutation 바인딩 이름을 예측 가능하게 유지
 - `state-store-derived-authority` - 공용 권한 판별 결과는 한 번만 저장
 - `state-shape-query-data-with-select` - 서버 응답은 `query.select`에서 변환
 - `state-preserve-origin-chaining` - 넓은 스코프에서 response/store 오리진 유지
 - `state-compiler-first-memoization` - 방어적 memoization보다 compiler 기본값 우선
+- `state-use-functional-setstate-updates` - 이전 state 기반 갱신은 functional updater 사용
+- `state-use-starttransition-for-non-urgent-updates` - 무거운 비긴급 시각 업데이트는 transition으로 내림
+- `state-use-usedeferredvalue-for-heavy-derived-renders` - 무거운 파생 렌더는 deferred value로 분리
 - `state-avoid-fallback-defaults-and-loading-flags` - 조용한 fallback과 ad-hoc loading 분기 지양
 
 ### 7. Documentation and Comments (MEDIUM)

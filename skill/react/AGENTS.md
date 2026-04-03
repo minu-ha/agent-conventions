@@ -12,7 +12,7 @@
 
 ## 개요
 
-에이전트 협업 팀을 위한 React 코딩 컨벤션입니다. 이 가이드는 shared 코드와 route-local 코드 사이의 명확한 소유 경계, React 계약에 맞는 handler/prop 시그니처, 예측 가능한 화면 흐름, 오리진을 보존하는 state 접근, React 고유 문서화 규칙을 강조합니다. TanStack Query, Zustand, 그리고 필요 시 React 19 `Activity` 같은 visibility primitive를 쓰는 React codebase를 기본 전제로 하며, `rules/` 아래 rule 파일이 source of truth입니다. 기본 compiled guide는 local React 규칙만 담고 `typescript` companion skill과 함께 사용합니다.
+에이전트 협업 팀을 위한 React 코딩 컨벤션입니다. 이 가이드는 shared 코드와 route-local 코드 사이의 명확한 소유 경계, React 계약에 맞는 handler/prop 시그니처, 예측 가능한 화면 흐름, 오리진을 보존하는 state 접근, React 19 component API와 transition 패턴, React 고유 문서화 규칙을 강조합니다. TanStack Query, Zustand, React 19 ref prop/Activity 같은 visibility primitive를 쓰는 React codebase를 기본 전제로 하며, `rules/` 아래 rule 파일이 source of truth입니다. 기본 compiled guide는 local React 규칙만 담고 `typescript` companion skill과 함께 사용합니다.
 
 이 가이드는 local React 컨벤션 규칙만 담고 있습니다. TypeScript 같은 공통 규칙은 companion skill을 함께 로드해 보완합니다.
 
@@ -38,9 +38,13 @@
     - 2.2 [Reuse Prop and API Contracts Before Creating New Types](#22-reuse-prop-and-api-contracts-before-creating-new-types)
 3. [Component Structure and JSX](#3-component-structure-and-jsx) — **HIGH**
     - 3.1 [Accept props as a Whole and Destructure Inside the Component](#31-accept-props-as-a-whole-and-destructure-inside-the-component)
-    - 3.2 [Prefer Arrow Functions and Object Parameters for Complex Signatures](#32-prefer-arrow-functions-and-object-parameters-for-complex-signatures)
-    - 3.3 [Use Named Handlers Instead of Hiding Logic in JSX](#33-use-named-handlers-instead-of-hiding-logic-in-jsx)
-    - 3.4 [Use Visibility Primitives Deliberately for Show and Hide Branches](#34-use-visibility-primitives-deliberately-for-show-and-hide-branches)
+    - 3.2 [Avoid Boolean Prop Proliferation in Shared Component APIs](#32-avoid-boolean-prop-proliferation-in-shared-component-apis)
+    - 3.3 [Do Not Define Components Inside Components](#33-do-not-define-components-inside-components)
+    - 3.4 [Prefer Arrow Functions and Object Parameters for Complex Signatures](#34-prefer-arrow-functions-and-object-parameters-for-complex-signatures)
+    - 3.5 [Prefer Children Over Render Props for Static Composition](#35-prefer-children-over-render-props-for-static-composition)
+    - 3.6 [Use Named Handlers Instead of Hiding Logic in JSX](#36-use-named-handlers-instead-of-hiding-logic-in-jsx)
+    - 3.7 [Use ref Props Instead of New forwardRef Wrappers in React 19](#37-use-ref-props-instead-of-new-forwardref-wrappers-in-react-19)
+    - 3.8 [Use Visibility Primitives Deliberately for Show and Hide Branches](#38-use-visibility-primitives-deliberately-for-show-and-hide-branches)
 4. [Screen File Discipline](#4-screen-file-discipline) — **HIGH**
     - 4.1 [Avoid Premature Abstraction in Screen Code](#41-avoid-premature-abstraction-in-screen-code)
     - 4.2 [Extract Screen Support Code Only When the Boundary Is Real](#42-extract-screen-support-code-only-when-the-boundary-is-real)
@@ -52,12 +56,16 @@
     - 5.2 [Name Handlers Predictably and Curry Extra Arguments](#52-name-handlers-predictably-and-curry-extra-arguments)
 6. [State and Data Flow](#6-state-and-data-flow) — **CRITICAL**
     - 6.1 [Avoid Silent Fallback Defaults and Ad-hoc Loading Branches](#61-avoid-silent-fallback-defaults-and-ad-hoc-loading-branches)
-    - 6.2 [Choose State Tools by Source of Truth](#62-choose-state-tools-by-source-of-truth)
-    - 6.3 [Name Query and Mutation Bindings Consistently](#63-name-query-and-mutation-bindings-consistently)
-    - 6.4 [Prefer React Compiler Defaults Over Manual Memoization](#64-prefer-react-compiler-defaults-over-manual-memoization)
-    - 6.5 [Preserve Response and Store Origin in Wide Scopes](#65-preserve-response-and-store-origin-in-wide-scopes)
-    - 6.6 [Shape React Query Data in query.select](#66-shape-react-query-data-in-queryselect)
-    - 6.7 [Store Shared Role and Authority Decisions Only When They Are Truly Shared](#67-store-shared-role-and-authority-decisions-only-when-they-are-truly-shared)
+    - 6.2 [Calculate Derived Values During Rendering](#62-calculate-derived-values-during-rendering)
+    - 6.3 [Choose State Tools by Source of Truth](#63-choose-state-tools-by-source-of-truth)
+    - 6.4 [Name Query and Mutation Bindings Consistently](#64-name-query-and-mutation-bindings-consistently)
+    - 6.5 [Prefer React Compiler Defaults Over Manual Memoization](#65-prefer-react-compiler-defaults-over-manual-memoization)
+    - 6.6 [Preserve Response and Store Origin in Wide Scopes](#66-preserve-response-and-store-origin-in-wide-scopes)
+    - 6.7 [Shape React Query Data in query.select](#67-shape-react-query-data-in-queryselect)
+    - 6.8 [Store Shared Role and Authority Decisions Only When They Are Truly Shared](#68-store-shared-role-and-authority-decisions-only-when-they-are-truly-shared)
+    - 6.9 [Use Functional setState Updates When Based on Previous State](#69-use-functional-setstate-updates-when-based-on-previous-state)
+    - 6.10 [Use startTransition for Non-urgent Visual Updates](#610-use-starttransition-for-non-urgent-visual-updates)
+    - 6.11 [Use useDeferredValue for Heavy Derived Renders](#611-use-usedeferredvalue-for-heavy-derived-renders)
 7. [Documentation and Comments](#7-documentation-and-comments) — **MEDIUM**
     - 7.1 [Limit Inline Comments to Non-obvious Logic](#71-limit-inline-comments-to-non-obvious-logic)
     - 7.2 [Require JSDoc on React Hooks, Handlers, and Key Declarations](#72-require-jsdoc-on-react-hooks-handlers-and-key-declarations)
@@ -298,7 +306,7 @@ const handleLinkClick: LinkProps["onLinkClick"] = (event) => {
 
 **Impact: HIGH**
 
-컴포넌트는 계약이 분명하게 드러나야 하며, JSX 안에 동작을 숨기지 않고 렌더링 로직을 읽기 쉽게 유지해야 합니다.
+컴포넌트는 계약과 variant가 분명하게 드러나야 하며, JSX 안에 동작을 숨기지 않고 React 19 기준의 component API를 읽기 쉽게 유지해야 합니다.
 
 ### 3.1 Accept props as a Whole and Destructure Inside the Component
 
@@ -323,7 +331,107 @@ const UserCard = (props: UserCardProps) => {
 };
 ```
 
-### 3.2 Prefer Arrow Functions and Object Parameters for Complex Signatures
+### 3.2 Avoid Boolean Prop Proliferation in Shared Component APIs
+
+**Impact: HIGH (exported component contracts stay explicit instead of accumulating hidden variant combinations)**
+
+여러 파일과 레이어에서 재사용되는 shared component API에 `isCompact`, `isEditing`, `showSearch` 같은 boolean prop을 계속 추가하지 않습니다.   
+boolean이 늘어날수록 가능한 조합이 급증하고, JSX 분기와 스타일 조건도 함께 불어나기 때문입니다.   
+이 규칙은 exported shared component API에 적용합니다.   
+route entry 안의 일회성 분기는 로컬에서 유지할 수 있지만, shared `ui`나 `widget`는 explicit variant component나 children composition으로 드러냅니다.
+
+**Incorrect (boolean prop 조합으로 shared API가 비대해짐):**
+
+```tsx
+export interface WidgetEntryToolbarProps {
+	isCompact?: boolean;
+	isEditing?: boolean;
+	showSearch?: boolean;
+}
+
+export const WidgetEntryToolbar = (props: WidgetEntryToolbarProps) => {
+	const { isCompact, isEditing, showSearch } = props;
+
+	return (
+		<header>
+			{showSearch ? <EntrySearchField /> : null}
+			{isEditing ? <EntryEditActions compact={isCompact} /> : <EntryBrowseActions compact={isCompact} />}
+		</header>
+	);
+};
+```
+
+**Correct (variant를 explicit component와 composition으로 분리):**
+
+```tsx
+export const WidgetEntryBrowseToolbar = () => {
+	return (
+		<WidgetEntryToolbarFrame>
+			<EntrySearchField />
+			<EntryBrowseActions />
+		</WidgetEntryToolbarFrame>
+	);
+};
+
+export const WidgetEntryEditToolbar = () => {
+	return (
+		<WidgetEntryToolbarFrame>
+			<EntryEditActions />
+		</WidgetEntryToolbarFrame>
+	);
+};
+```
+
+### 3.3 Do Not Define Components Inside Components
+
+**Impact: HIGH (prevents remount bugs and hidden state resets caused by recreating component types every render)**
+
+컴포넌트 본문 안에서 다른 컴포넌트를 새로 정의하지 않습니다. parent가 다시 렌더될 때마다 child component type도 새로 만들어져 remount, focus reset, animation restart, effect 재실행이 생길 수 있습니다.   
+로컬에서 JSX 조각을 재사용하고 싶다면 그냥 helper 함수 호출로 남기거나, 독립 component로 빼고 props를 전달합니다.
+
+**Incorrect (렌더마다 새 component type을 생성):**
+
+```tsx
+export const UserProfileCard = (props: UserProfileCardProps) => {
+	const { theme, user } = props;
+
+	const Avatar = () => {
+		return <img className={theme === "dark" ? "avatar-dark" : "avatar-light"} src={user.avatarUrl} />;
+	};
+
+	return (
+		<section>
+			<Avatar />
+		</section>
+	);
+};
+```
+
+**Correct (component를 바깥으로 분리하고 props로 전달):**
+
+```tsx
+export interface UserProfileAvatarProps {
+	theme: "dark" | "light";
+	src: string;
+}
+
+export const UserProfileAvatar = (props: UserProfileAvatarProps) => {
+	const { theme, src } = props;
+	return <img className={theme === "dark" ? "avatar-dark" : "avatar-light"} src={src} />;
+};
+
+export const UserProfileCard = (props: UserProfileCardProps) => {
+	const { theme, user } = props;
+
+	return (
+		<section>
+			<UserProfileAvatar src={user.avatarUrl} theme={theme} />
+		</section>
+	);
+};
+```
+
+### 3.4 Prefer Arrow Functions and Object Parameters for Complex Signatures
 
 **Impact: MEDIUM-HIGH (함수 선언과 다중 인자 계약을 더 쉽게 확장하고 수정할 수 있게 함)**
 
@@ -358,7 +466,59 @@ export const updateEntryMediaUploadFileByUid = (params: UpdateEntryMediaUploadFi
 };
 ```
 
-### 3.3 Use Named Handlers Instead of Hiding Logic in JSX
+### 3.5 Prefer Children Over Render Props for Static Composition
+
+**Impact: MEDIUM (keeps shared component composition readable when the parent does not need to push runtime data through callbacks)**
+
+shared component가 구조를 조립하기만 하면 될 때는 `renderHeader`, `renderFooter` 같은 render prop보다 `children`이나 named slot composition을 우선합니다.   
+render prop은 parent가 child에 item, index, state 같은 runtime 데이터를 전달해야 할 때만 사용합니다.
+
+**Incorrect (정적인 구조를 render prop으로 조립):**
+
+```tsx
+export interface WidgetEntryPanelProps {
+	renderHeader?: () => ReactNode;
+	renderFooter?: () => ReactNode;
+}
+
+export const WidgetEntryPanel = (props: WidgetEntryPanelProps) => {
+	const { renderHeader, renderFooter } = props;
+
+	return (
+		<section>
+			{renderHeader?.()}
+			<EntryBody />
+			{renderFooter?.()}
+		</section>
+	);
+};
+```
+
+**Correct (children과 named slot component로 구조를 드러냄):**
+
+```tsx
+export const WidgetEntryPanel = (props: PropsWithChildren) => {
+	const { children } = props;
+	return <section>{children}</section>;
+};
+
+export const WidgetEntryPanelFooter = (props: PropsWithChildren) => {
+	const { children } = props;
+	return <footer>{children}</footer>;
+};
+
+return (
+	<WidgetEntryPanel>
+		<EntryHeader />
+		<EntryBody />
+		<WidgetEntryPanelFooter>
+			<EntrySaveButton />
+		</WidgetEntryPanelFooter>
+	</WidgetEntryPanel>
+);
+```
+
+### 3.6 Use Named Handlers Instead of Hiding Logic in JSX
 
 **Impact: HIGH (부수효과, 분기, 비동기 흐름을 일반 코드 흐름에서 읽을 수 있게 함)**
 
@@ -389,7 +549,42 @@ const handleRemoveTableButtonClick: MouseEventHandler<HTMLButtonElement> = async
 <UiButton onClick={handleRemoveTableButtonClick} />;
 ```
 
-### 3.4 Use Visibility Primitives Deliberately for Show and Hide Branches
+### 3.7 Use ref Props Instead of New forwardRef Wrappers in React 19
+
+**Impact: MEDIUM-HIGH (keeps component definitions simpler in React 19 codebases and avoids adding legacy wrappers by default)**
+
+React 19 codebase에서는 새로운 `forwardRef` wrapper를 기본값으로 추가하지 않습니다. ordinary component라면 `ref`를 일반 prop처럼 받고 그대로 전달합니다.   
+기존 `forwardRef`를 바로 다 지우라는 뜻은 아니고, third-party 타입 제약이나 마이그레이션 범위 때문에 유지해야 하는 경우는 예외로 둘 수 있습니다.   
+다만 새 component API를 설계할 때는 `forwardRef`를 습관적으로 복제하지 않습니다.
+
+**Incorrect (React 19에서도 새 `forwardRef`를 추가):**
+
+```tsx
+import { forwardRef } from "react";
+
+export const UiSearchInput = forwardRef<HTMLInputElement, UiSearchInputProps>((props, ref) => {
+	return <input ref={ref} {...props} />;
+});
+```
+
+**Correct (React 19에서는 `ref` prop을 직접 받음):**
+
+```tsx
+import type { Ref } from "react";
+
+export interface UiSearchInputProps {
+	ref?: Ref<HTMLInputElement>;
+	value: string;
+	onChange: ChangeEventHandler<HTMLInputElement>;
+}
+
+export const UiSearchInput = (props: UiSearchInputProps) => {
+	const { ref, value, onChange } = props;
+	return <input ref={ref} onChange={onChange} value={value} />;
+};
+```
+
+### 3.8 Use Visibility Primitives Deliberately for Show and Hide Branches
 
 **Impact: MEDIUM (표시 여부 결정을 route 화면 전반에서 명시적이고 일관되게 유지함)**
 
@@ -668,7 +863,7 @@ const handleListItemClick =
 
 **Impact: CRITICAL**
 
-Server state, store 접근, 파생값은 오리진을 보존해야 하며 데이터 변형도 가능한 한 소스 가까이에 있어야 합니다.
+Server state, store 접근, 파생값, transition은 오리진을 보존해야 하며 데이터 변형도 가능한 한 소스 가까이에 있어야 합니다.
 
 ### 6.1 Avoid Silent Fallback Defaults and Ad-hoc Loading Branches
 
@@ -701,7 +896,31 @@ return (
 );
 ```
 
-### 6.2 Choose State Tools by Source of Truth
+### 6.2 Calculate Derived Values During Rendering
+
+**Impact: HIGH (avoids redundant state sync and effect-driven drift when values can be computed from current inputs)**
+
+현재 props, state, search, response에서 바로 계산할 수 있는 값은 `useEffect`와 `useState`로 다시 동기화하지 않습니다.   
+render 중에 계산하면 추가 렌더와 drift를 줄일 수 있고, effect dependency도 억지로 늘어나지 않습니다.   
+이 규칙은 `screen-keep-derived-values-close`와 함께 사용합니다. 파생값은 render 중에 만들고, 사용 지점 가까이에 둡니다.
+
+**Incorrect (파생값을 effect로 다시 state에 동기화):**
+
+```tsx
+const [selectedCount, setSelectedCount] = useState(0);
+
+useEffect(() => {
+	setSelectedCount(selectedIds.length);
+}, [selectedIds]);
+```
+
+**Correct (render 중에 바로 계산):**
+
+```tsx
+const selectedCount = selectedIds.length;
+```
+
+### 6.3 Choose State Tools by Source of Truth
 
 **Impact: MEDIUM-HIGH (로컬 UI state, 전역 client state, server state가 서로 흐려지는 것을 막음)**
 
@@ -724,7 +943,7 @@ const themeStore = useThemeStore();
 const responseUserGetItemSuspense = useUserGetItemSuspense();
 ```
 
-### 6.3 Name Query and Mutation Bindings Consistently
+### 6.4 Name Query and Mutation Bindings Consistently
 
 **Impact: HIGH (생성된 API hook과 로컬 바인딩을 쉽게 훑고 추적할 수 있게 함)**
 
@@ -744,7 +963,7 @@ const responseContentTypeGetListSuspense = useContentTypeGetListSuspense();
 const mutationContentTypeRemove = useContentTypeRemove();
 ```
 
-### 6.4 Prefer React Compiler Defaults Over Manual Memoization
+### 6.5 Prefer React Compiler Defaults Over Manual Memoization
 
 **Impact: MEDIUM-HIGH (검증되지 않은 값어치 없이 노이즈만 늘리는 방어적 useMemo/useCallback을 피함)**
 
@@ -763,7 +982,7 @@ const columns = useMemo(() => buildColumns(response.data.columns), [response.dat
 const columns = useMemo(() => buildColumns(response.data.columns), [response.data.columns]);
 ```
 
-### 6.5 Preserve Response and Store Origin in Wide Scopes
+### 6.6 Preserve Response and Store Origin in Wide Scopes
 
 **Impact: CRITICAL (파일 전체에서 alias를 따라가지 않아도 값의 출처를 바로 알 수 있게 함)**
 
@@ -792,7 +1011,7 @@ useEffect(() => {
 }, [responseContentManagerSearchContentsSuspense]);
 ```
 
-### 6.6 Shape React Query Data in query.select
+### 6.7 Shape React Query Data in query.select
 
 **Impact: CRITICAL (응답 변환을 fetch 경계 가까이에 두고 렌더 타임의 반복 매핑을 피함)**
 
@@ -816,7 +1035,7 @@ const responsePermissionGroupGetApiEndpointListSuspense = usePermissionGroupGetA
 });
 ```
 
-### 6.7 Store Shared Role and Authority Decisions Only When They Are Truly Shared
+### 6.8 Store Shared Role and Authority Decisions Only When They Are Truly Shared
 
 **Impact: HIGH (중복된 권한 판별 휴리스틱이 여러 화면에 퍼지는 것을 막음)**
 
@@ -852,6 +1071,91 @@ useEffect(() => {
 
   authStore.setAuthority(responseAuthBootstrapSuspense.data.authority);
 }, [authStore, responseAuthBootstrapSuspense.data]);
+```
+
+### 6.9 Use Functional setState Updates When Based on Previous State
+
+**Impact: MEDIUM-HIGH (prevents stale closure bugs when the next value depends on the current state)**
+
+다음 state가 현재 state 값에 의존하면 직접 바깥 변수를 참조하지 말고 functional updater를 사용합니다.   
+특히 handler, async callback, 여러 번 연속 호출될 수 있는 갱신에서는 stale closure를 막는 데 중요합니다.
+
+**Incorrect (현재 state를 바깥 closure에서 직접 읽음):**
+
+```tsx
+const handleToggleUser = (userId: string) => {
+	if (selectedUserIds.includes(userId)) {
+		setSelectedUserIds(selectedUserIds.filter((currentUserId) => currentUserId !== userId));
+		return;
+	}
+
+	setSelectedUserIds([...selectedUserIds, userId]);
+};
+```
+
+**Correct (functional updater로 항상 최신 state를 기준으로 갱신):**
+
+```tsx
+const handleToggleUser = (userId: string) => {
+	setSelectedUserIds((currentUserIds) => {
+		if (currentUserIds.includes(userId)) {
+			return currentUserIds.filter((currentUserId) => currentUserId !== userId);
+		}
+
+		return [...currentUserIds, userId];
+	});
+};
+```
+
+### 6.10 Use startTransition for Non-urgent Visual Updates
+
+**Impact: MEDIUM (keeps interactions responsive when a state change triggers a heavy list, table, or tree update)**
+
+클릭이나 선택 이후 무거운 list, table, tree 렌더가 따라오는 비긴급 시각 업데이트는 `startTransition`으로 감쌉니다.   
+입력값 자체, 폼 에러, 즉시 비활성화 같은 urgent feedback까지 transition에 넣지는 않습니다.
+
+**Incorrect (무거운 비긴급 업데이트를 urgent state로 처리):**
+
+```tsx
+const handleStatusFilterChange = (nextStatus: EntryStatusFilter) => {
+	setStatusFilter(nextStatus);
+};
+```
+
+**Correct (비긴급 시각 업데이트는 transition으로 내림):**
+
+```tsx
+const handleStatusFilterChange = (nextStatus: EntryStatusFilter) => {
+	startTransition(() => {
+		setStatusFilter(nextStatus);
+	});
+};
+```
+
+### 6.11 Use useDeferredValue for Heavy Derived Renders
+
+**Impact: MEDIUM (keeps typing and small interactions responsive while expensive derived views catch up)**
+
+검색어, 필터, 정렬 입력이 무거운 파생 렌더를 유발하면 원본 입력값을 그대로 expensive view에 연결하지 않습니다.  
+`useDeferredValue`로 한 박자 늦춘 값을 만들고, 필요한 경우 그 값을 기준으로 필터링이나 정렬을 계산합니다.   
+이 규칙은 실제로 렌더 지연이 느껴질 때 적용합니다. 작은 배열이나 단순 문자열 가공까지 습관적으로 defer하지는 않습니다.
+
+**Incorrect (입력과 무거운 파생 렌더를 같은 값에 묶음):**
+
+```tsx
+const [keyword, setKeyword] = useState("");
+const filteredRows = rows.filter((row) => fuzzyMatchRow(row, keyword));
+```
+
+**Correct (입력은 urgent, 무거운 파생 렌더는 deferred 값으로 계산):**
+
+```tsx
+const [keyword, setKeyword] = useState("");
+const deferredKeyword = useDeferredValue(keyword);
+
+const filteredRows = useMemo(() => {
+	return rows.filter((row) => fuzzyMatchRow(row, deferredKeyword));
+}, [deferredKeyword, rows]);
 ```
 
 ## 7. Documentation and Comments

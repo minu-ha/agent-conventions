@@ -12,7 +12,7 @@
 
 ## 3. Component Structure and JSX (composition)
 **Impact:** HIGH
-**Description:** 컴포넌트는 계약이 분명하게 드러나야 하며, JSX 안에 동작을 숨기지 않고 렌더링 로직을 읽기 쉽게 유지해야 합니다.
+**Description:** 컴포넌트는 계약과 variant가 분명하게 드러나야 하며, JSX 안에 동작을 숨기지 않고 React 19 기준의 component API를 읽기 쉽게 유지해야 합니다.
 
 ## 4. Screen File Discipline (screen)
 **Impact:** HIGH
@@ -24,7 +24,7 @@
 
 ## 6. State and Data Flow (state)
 **Impact:** CRITICAL
-**Description:** Server state, store 접근, 파생값은 오리진을 보존해야 하며 데이터 변형도 가능한 한 소스 가까이에 있어야 합니다.
+**Description:** Server state, store 접근, 파생값, transition은 오리진을 보존해야 하며 데이터 변형도 가능한 한 소스 가까이에 있어야 합니다.
 
 ## 7. Documentation and Comments (docs)
 **Impact:** MEDIUM
