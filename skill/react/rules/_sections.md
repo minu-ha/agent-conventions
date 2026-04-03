@@ -20,11 +20,11 @@
 
 ## 5. Events and Interaction Flow (events)
 **Impact:** MEDIUM-HIGH
-**Description:** Event handler는 이름이 예측 가능하고 간접 호출이 최소화된 상태로, 빠르게 훑어볼 수 있어야 합니다.
+**Description:** Event handler는 이름이 예측 가능하고 effect 재실행을 유발하지 않는 직접적인 사용자 액션 흐름으로 유지해야 합니다.
 
 ## 6. State and Data Flow (state)
 **Impact:** CRITICAL
-**Description:** Server state, store 접근, 파생값, transition은 오리진을 보존해야 하며 데이터 변형도 가능한 한 소스 가까이에 있어야 합니다.
+**Description:** Server state, store 접근, 파생값, effect callback, transition은 오리진을 보존해야 하며 데이터 변형도 가능한 한 소스 가까이에 있어야 합니다.
 
 ## 7. Documentation and Comments (docs)
 **Impact:** MEDIUM

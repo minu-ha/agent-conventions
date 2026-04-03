@@ -12,7 +12,7 @@
 
 ## 개요
 
-에이전트 협업 팀을 위한 React 코딩 컨벤션입니다. 이 가이드는 shared 코드와 route-local 코드 사이의 명확한 소유 경계, React 계약에 맞는 handler/prop 시그니처, 예측 가능한 화면 흐름, 오리진을 보존하는 state 접근, React 19 component API와 transition 패턴, React 고유 문서화 규칙을 강조합니다. TanStack Query, Zustand, React 19 ref prop/Activity 같은 visibility primitive를 쓰는 React codebase를 기본 전제로 하며, `rules/` 아래 rule 파일이 source of truth입니다. 기본 compiled guide는 local React 규칙만 담고 `typescript` companion skill과 함께 사용합니다.
+에이전트 협업 팀을 위한 React 코딩 컨벤션입니다. 이 가이드는 shared 코드와 route-local 코드 사이의 명확한 소유 경계, React 계약에 맞는 handler/prop 시그니처, 예측 가능한 화면 흐름, 오리진을 보존하는 state 접근, React 19 component API와 effect/transition 패턴, React 고유 문서화 규칙을 강조합니다. TanStack Query, Zustand, React 19 ref prop/Activity/useEffectEvent를 쓰는 React codebase를 기본 전제로 하며, `rules/` 아래 rule 파일이 source of truth입니다. 기본 compiled guide는 local React 규칙만 담고 `typescript` companion skill과 함께 사용합니다.
 
 이 가이드는 local React 컨벤션 규칙만 담고 있습니다. TypeScript 같은 공통 규칙은 companion skill을 함께 로드해 보완합니다.
 
@@ -54,6 +54,7 @@
 5. [Events and Interaction Flow](#5-events-and-interaction-flow) — **MEDIUM-HIGH**
     - 5.1 [Keep Screen-specific Handler Flow Local Until a Real Utility Emerges](#51-keep-screen-specific-handler-flow-local-until-a-real-utility-emerges)
     - 5.2 [Name Handlers Predictably and Curry Extra Arguments](#52-name-handlers-predictably-and-curry-extra-arguments)
+    - 5.3 [Run User Actions in Handlers, Not Effects](#53-run-user-actions-in-handlers-not-effects)
 6. [State and Data Flow](#6-state-and-data-flow) — **CRITICAL**
     - 6.1 [Avoid Silent Fallback Defaults and Ad-hoc Loading Branches](#61-avoid-silent-fallback-defaults-and-ad-hoc-loading-branches)
     - 6.2 [Calculate Derived Values During Rendering](#62-calculate-derived-values-during-rendering)
@@ -64,8 +65,10 @@
     - 6.7 [Shape React Query Data in query.select](#67-shape-react-query-data-in-queryselect)
     - 6.8 [Store Shared Role and Authority Decisions Only When They Are Truly Shared](#68-store-shared-role-and-authority-decisions-only-when-they-are-truly-shared)
     - 6.9 [Use Functional setState Updates When Based on Previous State](#69-use-functional-setstate-updates-when-based-on-previous-state)
-    - 6.10 [Use startTransition for Non-urgent Visual Updates](#610-use-starttransition-for-non-urgent-visual-updates)
-    - 6.11 [Use useDeferredValue for Heavy Derived Renders](#611-use-usedeferredvalue-for-heavy-derived-renders)
+    - 6.10 [Use Lazy State Initializers for Expensive Defaults](#610-use-lazy-state-initializers-for-expensive-defaults)
+    - 6.11 [Use startTransition for Non-urgent Visual Updates](#611-use-starttransition-for-non-urgent-visual-updates)
+    - 6.12 [Use useDeferredValue for Heavy Derived Renders](#612-use-usedeferredvalue-for-heavy-derived-renders)
+    - 6.13 [Use useEffectEvent for Non-reactive Effect Callbacks](#613-use-useeffectevent-for-non-reactive-effect-callbacks)
 7. [Documentation and Comments](#7-documentation-and-comments) — **MEDIUM**
     - 7.1 [Limit Inline Comments to Non-obvious Logic](#71-limit-inline-comments-to-non-obvious-logic)
     - 7.2 [Require JSDoc on React Hooks, Handlers, and Key Declarations](#72-require-jsdoc-on-react-hooks-handlers-and-key-declarations)
@@ -798,7 +801,7 @@ export const buildFileRequests = (mediaUploadFileListByColumn: Record<string, un
 
 **Impact: MEDIUM-HIGH**
 
-Event handler는 이름이 예측 가능하고 간접 호출이 최소화된 상태로, 빠르게 훑어볼 수 있어야 합니다.
+Event handler는 이름이 예측 가능하고 effect 재실행을 유발하지 않는 직접적인 사용자 액션 흐름으로 유지해야 합니다.
 
 ### 5.1 Keep Screen-specific Handler Flow Local Until a Real Utility Emerges
 
@@ -859,11 +862,43 @@ const handleListItemClick =
   };
 ```
 
+### 5.3 Run User Actions in Handlers, Not Effects
+
+**Impact: HIGH (avoids modeling one-shot user actions as state plus effect replays)**
+
+제출, 저장, 삭제, 닫기 같은 사용자 액션은 해당 handler 안에서 바로 실행합니다. 액션 자체를 state로 올린 뒤 `useEffect`가 나중에 실행하게 만들면 unrelated dependency 변화에도 재실행되기 쉽고, 흐름도 읽기 어려워집니다.
+
+**Incorrect (사용자 액션을 state + effect로 모델링):**
+
+```tsx
+const [shouldSubmit, setShouldSubmit] = useState(false);
+
+useEffect(() => {
+	if (!shouldSubmit) {
+		return;
+	}
+
+	void createEntryMutation.mutateAsync(formValues);
+}, [createEntryMutation, formValues, shouldSubmit]);
+
+const handleSubmit = () => {
+	setShouldSubmit(true);
+};
+```
+
+**Correct (사용자 액션은 handler 안에서 바로 수행):**
+
+```tsx
+const handleSubmit = async () => {
+	await createEntryMutation.mutateAsync(formValues);
+};
+```
+
 ## 6. State and Data Flow
 
 **Impact: CRITICAL**
 
-Server state, store 접근, 파생값, transition은 오리진을 보존해야 하며 데이터 변형도 가능한 한 소스 가까이에 있어야 합니다.
+Server state, store 접근, 파생값, effect callback, transition은 오리진을 보존해야 하며 데이터 변형도 가능한 한 소스 가까이에 있어야 합니다.
 
 ### 6.1 Avoid Silent Fallback Defaults and Ad-hoc Loading Branches
 
@@ -1107,7 +1142,30 @@ const handleToggleUser = (userId: string) => {
 };
 ```
 
-### 6.10 Use startTransition for Non-urgent Visual Updates
+### 6.10 Use Lazy State Initializers for Expensive Defaults
+
+**Impact: MEDIUM (prevents repeated setup work when the initial state is expensive to compute)**
+
+`useState` 초기값이 localStorage 파싱, 인덱스 생성, 큰 배열 정규화처럼 무거운 계산이라면 값을 바로 넣지 말고 initializer 함수로 감쌉니다. 싼 literal이나 단순 prop passthrough까지 전부 함수형으로 감쌀 필요는 없습니다.
+
+**Incorrect (비싼 초기화가 렌더마다 다시 평가됨):**
+
+```tsx
+const [searchIndex] = useState(buildSearchIndex(entryList));
+const [draftFilter] = useState(JSON.parse(localStorage.getItem("entry-filter") ?? "{}"));
+```
+
+**Correct (비싼 초기화는 최초 렌더에서만 수행):**
+
+```tsx
+const [searchIndex] = useState(() => buildSearchIndex(entryList));
+const [draftFilter] = useState(() => {
+	const storedValue = localStorage.getItem("entry-filter");
+	return storedValue ? JSON.parse(storedValue) : {};
+});
+```
+
+### 6.11 Use startTransition for Non-urgent Visual Updates
 
 **Impact: MEDIUM (keeps interactions responsive when a state change triggers a heavy list, table, or tree update)**
 
@@ -1132,7 +1190,7 @@ const handleStatusFilterChange = (nextStatus: EntryStatusFilter) => {
 };
 ```
 
-### 6.11 Use useDeferredValue for Heavy Derived Renders
+### 6.12 Use useDeferredValue for Heavy Derived Renders
 
 **Impact: MEDIUM (keeps typing and small interactions responsive while expensive derived views catch up)**
 
@@ -1156,6 +1214,47 @@ const deferredKeyword = useDeferredValue(keyword);
 const filteredRows = useMemo(() => {
 	return rows.filter((row) => fuzzyMatchRow(row, deferredKeyword));
 }, [deferredKeyword, rows]);
+```
+
+### 6.13 Use useEffectEvent for Non-reactive Effect Callbacks
+
+**Impact: MEDIUM-HIGH (keeps effects reactive only to true subscriptions while still reading the latest handler logic)**
+
+effect 안에서 최신 prop이나 state를 읽어야 하지만, 그 값 변화 자체가 subscription 재설치를 일으키면 안 되는 경우에는 ref hack 대신 `useEffectEvent`를 우선합니다.   
+이 규칙은 event handler를 effect로 옮기라는 뜻이 아닙니다. 진짜 구독/연결 effect 안에서만 쓰고, 클릭/제출 같은 사용자 액션은 여전히 named handler에 둡니다.
+
+**Incorrect (최신 callback을 위해 ref를 수동 동기화):**
+
+```tsx
+const onMessageRef = useRef(onMessage);
+
+useEffect(() => {
+	onMessageRef.current = onMessage;
+}, [onMessage]);
+
+useEffect(() => {
+	const unsubscribe = socket.subscribe((message) => {
+		onMessageRef.current(message);
+	});
+
+	return unsubscribe;
+}, [socket]);
+```
+
+**Correct (non-reactive callback은 `useEffectEvent`로 분리):**
+
+```tsx
+const handleMessage = useEffectEvent((message: SocketMessage) => {
+	onMessage(message);
+});
+
+useEffect(() => {
+	const unsubscribe = socket.subscribe((message) => {
+		handleMessage(message);
+	});
+
+	return unsubscribe;
+}, [socket]);
 ```
 
 ## 7. Documentation and Comments

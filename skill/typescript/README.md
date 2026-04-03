@@ -1,7 +1,7 @@
 # TypeScript 컨벤션
 
 에이전트 협업, 리뷰, AI 보조 리팩터링에 맞춰 TypeScript 컨벤션을 관리하는 구조화된 저장소입니다.  
-현재 TypeScript 가이드는 6개 섹션의 20개 rule 파일로 구성되어 있습니다.  
+현재 TypeScript 가이드는 6개 섹션의 22개 rule 파일로 구성되어 있습니다.  
 최종적으로 [AGENTS.md](./AGENTS.md)로 compile됩니다. 이 skill은 React, NestJS, TanStack Route, Playwright Test와 함께 로드하는 공통 TypeScript companion skill로도 사용됩니다.
 
 ## 구조
@@ -43,7 +43,7 @@
 2. 알맞은 area prefix를 고릅니다.
    - `naming-` - 식별자, import, `config`/`util` namespace, 오리진 보존 접근 규칙
    - `types-` - 함수 타입, callback 재사용, unused param, 타입 재사용, custom shape 문서화 규칙
-   - `functions-` - object param, enum 대체, `page.ts`/owner module/`shared/util.ts` 추출 규칙
+   - `functions-` - object param, enum 대체, lookup/정렬 불변성, `page.ts`/owner module/`shared/util.ts` 추출 규칙
    - `absence-` - optional 값과 fallback 처리 규칙
    - `docs-` - 역할 기반 annotation 태그와 inline comment 규칙
    - `guardrails-` - 금지 shortcut과 review check 규칙

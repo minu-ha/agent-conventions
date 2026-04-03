@@ -8,9 +8,9 @@ metadata:
 
 # React 컨벤션
 
-에이전트 협업 팀을 위한 React 코딩 컨벤션 모음입니다. 현재 이 가이드는 7개 카테고리의 36개 local 규칙으로 구성되어 있습니다.  
+에이전트 협업 팀을 위한 React 코딩 컨벤션 모음입니다. 현재 이 가이드는 7개 카테고리의 39개 local 규칙으로 구성되어 있습니다.  
 공용 컴포넌트 소유 경계, route-local 분리, React 계약에 맞는 handler/prop 시그니처, component API 설계, 화면 흐름, state 오리진, transition 패턴, React 경계 문서화 규칙을 [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`와 compiled [AGENTS.md](./AGENTS.md)로 관리합니다.  
-이 skill은 TanStack Query, Zustand, React 19 ref prop/Activity/transition 패턴을 쓰는 React codebase를 기본 전제로 합니다. 기본 compiled guide는 local React rule만 담고 `convention-typescript`를 companion skill로 함께 사용합니다.
+이 skill은 TanStack Query, Zustand, React 19 ref prop/Activity/useEffectEvent/transition 패턴을 쓰는 React codebase를 기본 전제로 합니다. 기본 compiled guide는 local React rule만 담고 `convention-typescript`를 companion skill로 함께 사용합니다.
 
 ## 사용할 때
 
@@ -69,6 +69,7 @@ metadata:
 
 - `events-name-and-curry-handlers` - handler 이름을 예측 가능하게 짓고 추가 인자는 curry로 전달
 - `events-keep-handler-flow-inline` - 실제 utility 경계가 생길 때까지 named handler 본문에 화면 전용 흐름 유지
+- `events-run-user-actions-in-handlers-not-effects` - one-shot 사용자 액션은 effect가 아니라 handler에서 실행
 
 ### 6. State and Data Flow (CRITICAL)
 
@@ -79,6 +80,8 @@ metadata:
 - `state-shape-query-data-with-select` - 서버 응답은 `query.select`에서 변환
 - `state-preserve-origin-chaining` - 넓은 스코프에서 response/store 오리진 유지
 - `state-compiler-first-memoization` - 방어적 memoization보다 compiler 기본값 우선
+- `state-use-lazy-state-initializers-for-expensive-defaults` - 무거운 초기값 계산은 lazy initializer 사용
+- `state-use-effectevent-for-non-reactive-effect-callbacks` - 구독 effect 안의 최신 callback은 `useEffectEvent` 사용
 - `state-use-functional-setstate-updates` - 이전 state 기반 갱신은 functional updater 사용
 - `state-use-starttransition-for-non-urgent-updates` - 무거운 비긴급 시각 업데이트는 transition으로 내림
 - `state-use-usedeferredvalue-for-heavy-derived-renders` - 무거운 파생 렌더는 deferred value로 분리

@@ -1,8 +1,8 @@
 # React 컨벤션
 
 에이전트 협업, 리뷰, AI 보조 리팩터링에 맞춰 React 컨벤션을 관리하는 구조화된 저장소입니다.  
-현재 React 가이드는 7개 local 섹션의 36개 rule 파일로 구성되어 있습니다.  
-최종적으로 slim [AGENTS.md](./AGENTS.md)로 compile됩니다. local guide는 React 규칙만 담고 `typescript` companion skill을 함께 사용합니다. 이 skill은 TanStack Query, Zustand, React 19 ref prop/Activity/transition 패턴을 쓰는 React codebase를 기본 전제로 합니다.
+현재 React 가이드는 7개 local 섹션의 39개 rule 파일로 구성되어 있습니다.  
+최종적으로 slim [AGENTS.md](./AGENTS.md)로 compile됩니다. local guide는 React 규칙만 담고 `typescript` companion skill을 함께 사용합니다. 이 skill은 TanStack Query, Zustand, React 19 ref prop/Activity/useEffectEvent/transition 패턴을 쓰는 React codebase를 기본 전제로 합니다.
 
 ## 구조
 
@@ -45,8 +45,8 @@
    - `typing-` - React handler, callback, props, API 계약 재사용 규칙
    - `composition-` - 컴포넌트 시그니처, shared component API, React 19 JSX 구조 규칙
    - `screen-` - route-entry 규율과 named export 기반 `page.ts` support code 추출 경계 규칙
-   - `events-` - handler 네이밍과 상호작용 흐름 규칙
-   - `state-` - 서버 상태, store 접근, 파생값, transition, fallback 규칙
+   - `events-` - handler 네이밍과 effect로 우회하지 않는 상호작용 흐름 규칙
+   - `state-` - 서버 상태, store 접근, 파생값, effect callback, transition, fallback 규칙
    - `docs-` - 역할 기반 annotation 태그와 non-obvious logic comment 규칙
 3. frontmatter와 본문을 작성합니다.
 4. 설명이 포함된 incorrect/correct 예시를 넣습니다.

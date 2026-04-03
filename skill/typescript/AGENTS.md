@@ -12,7 +12,7 @@
 
 ## 개요
 
-에이전트 협업 팀을 위한 TypeScript 코딩 컨벤션입니다. 이 가이드는 명시적인 네이밍, 직접 import, 재사용 가능한 타입 계약, 절제된 helper 추출, 의도적인 결측값 처리, 일관된 JSDoc 경계를 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, React, NestJS, TanStack Route, Playwright Test 같은 TypeScript 기반 skill과 함께 로드하는 공통 companion rule 세트로도 사용됩니다.
+에이전트 협업 팀을 위한 TypeScript 코딩 컨벤션입니다. 이 가이드는 명시적인 네이밍, 직접 import, 재사용 가능한 타입 계약, 절제된 helper 추출, 반복 lookup과 정렬의 불변성, 의도적인 결측값 처리, 일관된 JSDoc 경계를 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, React, NestJS, TanStack Route, Playwright Test 같은 TypeScript 기반 skill과 함께 로드하는 공통 companion rule 세트로도 사용됩니다.
 
 ---
 
@@ -32,8 +32,10 @@
 3. [Functions and Helper Boundaries](#3-functions-and-helper-boundaries) — **HIGH**
     - 3.1 [Avoid Imperative Assembly in Wide Scopes](#31-avoid-imperative-assembly-in-wide-scopes)
     - 3.2 [Extract Support Functions Only When the Boundary Is Real](#32-extract-support-functions-only-when-the-boundary-is-real)
-    - 3.3 [Replace enum With as const Objects](#33-replace-enum-with-as-const-objects)
-    - 3.4 [Use Named Object Params for Complex Signatures](#34-use-named-object-params-for-complex-signatures)
+    - 3.3 [Prefer Immutable Array Sorting](#33-prefer-immutable-array-sorting)
+    - 3.4 [Replace enum With as const Objects](#34-replace-enum-with-as-const-objects)
+    - 3.5 [Use Named Object Params for Complex Signatures](#35-use-named-object-params-for-complex-signatures)
+    - 3.6 [Use Set and Map for Repeated Lookups](#36-use-set-and-map-for-repeated-lookups)
 4. [Absence and Fallback Handling](#4-absence-and-fallback-handling) — **HIGH**
     - 4.1 [Expose Optional Values Instead of Silent Fallbacks](#41-expose-optional-values-instead-of-silent-fallbacks)
 5. [JSDoc and Comment Conventions](#5-jsdoc-and-comment-conventions) — **MEDIUM-HIGH**
@@ -385,7 +387,29 @@ export const util = {
 };
 ```
 
-### 3.3 Replace enum With as const Objects
+### 3.3 Prefer Immutable Array Sorting
+
+**Impact: MEDIUM (avoids mutation bugs when sorted arrays come from props, state, or shared inputs)**
+
+정렬이 필요한데 원본 배열을 계속 써야 한다면 `.sort()`로 제자리 mutation을 하지 않습니다. 최신 런타임이면 `.toSorted()`를 우선하고, 그렇지 않으면 복사 후 정렬합니다.
+
+**Incorrect (원본 배열을 직접 mutation):**
+
+```ts
+const sortedUsers = users.sort((left, right) => left.name.localeCompare(right.name));
+```
+
+**Correct (`toSorted()` 또는 복사 후 정렬로 불변성 유지):**
+
+```ts
+const sortedUsers = users.toSorted((left, right) => left.name.localeCompare(right.name));
+```
+
+```ts
+const sortedUsers = [...users].sort((left, right) => left.name.localeCompare(right.name));
+```
+
+### 3.4 Replace enum With as const Objects
 
 **Impact: MEDIUM-HIGH (keeps runtime values explicit and type extraction lightweight without introducing enum-specific behavior)**
 
@@ -413,7 +437,7 @@ const audit_status = {
 type AuditStatus = (typeof audit_status)[keyof typeof audit_status];
 ```
 
-### 3.4 Use Named Object Params for Complex Signatures
+### 3.5 Use Named Object Params for Complex Signatures
 
 **Impact: HIGH (keeps long function signatures readable and makes grouped inputs easier to extend without positional confusion)**
 
@@ -435,6 +459,28 @@ const buildPlanningPrompt = (args: BuildPlanningPromptArgs): string => {
 	const {request, repoPath, taskCategory, projectArea, riskLevel, selectedRuleRefs} = args;
 	return `${request} ${repoPath} ${taskCategory} ${projectArea} ${riskLevel} ${selectedRuleRefs.join(",")}`;
 };
+```
+
+### 3.6 Use Set and Map for Repeated Lookups
+
+**Impact: MEDIUM (keeps repeated membership and keyed access code explicit once lookup count grows)**
+
+같은 컬렉션에 대해 membership check나 keyed access를 여러 번 반복한다면 배열 `includes`, `find`를 매번 다시 돌리지 말고 `Set`이나 `Map`으로 한 번 정리합니다. 단발성 한두 번 조회면 그대로 두고, 반복 lookup이 실제로 있는 경우에만 승격합니다.
+
+**Incorrect (같은 배열을 반복 순회하며 membership를 확인):**
+
+```ts
+const visibleEntries = entries.filter((entry) => allowedEntryIds.includes(entry.id));
+const disabledEntries = archivedEntries.filter((entry) => allowedEntryIds.includes(entry.id));
+```
+
+**Correct (반복 lookup은 `Set`으로 승격):**
+
+```ts
+const allowedEntryIdSet = new Set(allowedEntryIds);
+
+const visibleEntries = entries.filter((entry) => allowedEntryIdSet.has(entry.id));
+const disabledEntries = archivedEntries.filter((entry) => allowedEntryIdSet.has(entry.id));
 ```
 
 ## 4. Absence and Fallback Handling

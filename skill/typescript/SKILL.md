@@ -8,8 +8,8 @@ metadata:
 
 # TypeScript 컨벤션
 
-에이전트 협업 팀을 위한 TypeScript 코딩 컨벤션 모음입니다. 현재 이 가이드는 6개 카테고리의 20개 규칙으로 구성되어 있습니다.   
-네이밍, import 소유권, 타입 계약, helper 분리, 결측값 처리, JSDoc 규칙을 [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`와 compiled [AGENTS.md](./AGENTS.md)로 관리합니다.   
+에이전트 협업 팀을 위한 TypeScript 코딩 컨벤션 모음입니다. 현재 이 가이드는 6개 카테고리의 22개 규칙으로 구성되어 있습니다.   
+네이밍, import 소유권, 타입 계약, helper 분리, 배열/lookup 불변성, 결측값 처리, JSDoc 규칙을 [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`와 compiled [AGENTS.md](./AGENTS.md)로 관리합니다.   
 이 skill은 React, NestJS, TanStack Route, Playwright Test와 함께 로드하는 공통 TypeScript companion skill로도 사용됩니다.
 
 ## 사용할 때
@@ -51,6 +51,8 @@ metadata:
 - `functions-replace-enum-with-as-const-objects` - `enum`은 object literal + `as const`로 대체
 - `functions-extract-helpers-only-when-the-boundary-is-real` - generic helper 파일 대신 named export 기반 owner module이나 `shared/util.ts`를 사용
 - `functions-avoid-imperative-assembly-in-wide-scopes` - 파일 전역 scope의 명령형 조립 회피
+- `functions-use-set-and-map-for-repeated-lookups` - 반복 membership/key lookup은 `Set`/`Map`으로 승격
+- `functions-prefer-immutable-array-sorting` - 정렬은 `toSorted()` 또는 복사 후 `sort()`로 불변성 유지
 
 ### 4. Absence and Fallback Handling (HIGH)
 
