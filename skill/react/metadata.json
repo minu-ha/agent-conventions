@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "organization": "Agent Conventions",
   "date": "2026년 4월",
-  "abstract": "에이전트 협업 팀을 위한 React 코딩 컨벤션입니다. 이 가이드는 shared 코드와 route-local 코드 사이의 명확한 소유 경계, single component·compound component·explicit variant를 구분하는 composition 전략, React 계약에 맞는 handler/prop 시그니처, 예측 가능한 화면 흐름, 오리진을 보존하는 state 접근, React 19 컴포넌트 구조와 effect/transition 패턴, React 고유 문서화 규칙을 강조합니다. compound component는 state 없는 조립 구조로 시작해 필요할 때 같은 public 이름을 유지한 채 stateful 구조로 자연스럽게 확장될 수 있어야 합니다. TanStack Query, Zustand, React 19 ref prop/Activity/useEffectEvent를 쓰는 React codebase를 기본 전제로 하며, `rules/` 아래 rule 파일이 source of truth입니다. 기본 compiled guide는 local React 규칙만 담고 `typescript` companion skill과 함께 사용합니다.",
+  "abstract": "에이전트 협업 팀을 위한 React 코딩 컨벤션입니다. 이 가이드는 shared 코드와 route-local 코드 사이의 명확한 소유 경계, single component·compound component·explicit variant를 구분하는 composition 전략, React 계약에 맞는 handler/prop 시그니처, 예측 가능한 화면 흐름, 오리진을 보존하는 state 접근, React 19 컴포넌트 구조와 effect/transition 패턴, React 고유 문서화 규칙을 강조합니다. compound component는 state 없는 조립 구조로 시작해 필요할 때 같은 public 이름을 유지한 채 stateful 구조로 자연스럽게 확장될 수 있어야 하고, route-local section component는 async/state/interaction 같은 runtime boundary를 실제로 소유할 때만 추출합니다. TanStack Query, Zustand, React 19 ref prop/Activity/useEffectEvent를 쓰는 React codebase를 기본 전제로 하며, `rules/` 아래 rule 파일이 source of truth입니다. 기본 compiled guide는 local React 규칙만 담고 `typescript` companion skill과 함께 사용합니다.",
   "extends": [
     "typescript"
   ],

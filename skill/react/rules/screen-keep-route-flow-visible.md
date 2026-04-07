@@ -9,7 +9,7 @@ tags: screen, routes, flow
 
 **Impact: HIGH (route 파일을 화면의 주 orchestration 지점으로 읽기 쉽게 만듦)**
 
-라우트 엔트리 파일은 화면 흐름이 드러나게 유지합니다. state, API response/mutation, event handler, `useEffect`, 렌더링 조립이 보이도록 두고, 단순 레이아웃 분리만을 위한 조기 컴포넌트화는 기본값으로 삼지 않습니다.
+라우트 엔트리 파일은 화면 흐름이 드러나게 유지합니다. state, API response/mutation, event handler, `useEffect`, 렌더링 조립이 보이도록 두고, 단순 레이아웃 분리만을 위한 조기 컴포넌트화는 기본값으로 삼지 않습니다. runtime boundary를 소유하는 route-local section component는 추출할 수 있지만, route entry는 여전히 search param, navigate, page-level query/mutation, cross-section effect 같은 orchestration을 보여줘야 합니다.
 
 **Incorrect (흐름보다 분해 자체가 목적이 됨):**
 
@@ -23,7 +23,7 @@ return (
 );
 ```
 
-**Correct (화면 엔트리에서 흐름과 orchestration이 보임):**
+**Correct (화면 엔트리에서 흐름과 orchestration이 보이고, 필요한 section만 runtime boundary 기준으로 분리):**
 
 ```tsx
 const responseContentTypeGetListSuspense = useContentTypeGetListSuspense({ projectId });
@@ -31,5 +31,10 @@ const handleSubmitButtonClick = async () => {
   // ...
 };
 
-return <ContentTypeBuilderScreen onSubmit={handleSubmitButtonClick} />;
+return (
+  <Fragment>
+    <ContentTypeFilterSection />
+    <ContentTypeTableSection onSubmit={handleSubmitButtonClick} />
+  </Fragment>
+);
 ```

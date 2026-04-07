@@ -12,7 +12,7 @@
 
 ## 개요
 
-에이전트 협업 팀을 위한 React 코딩 컨벤션입니다. 이 가이드는 shared 코드와 route-local 코드 사이의 명확한 소유 경계, single component·compound component·explicit variant를 구분하는 composition 전략, React 계약에 맞는 handler/prop 시그니처, 예측 가능한 화면 흐름, 오리진을 보존하는 state 접근, React 19 컴포넌트 구조와 effect/transition 패턴, React 고유 문서화 규칙을 강조합니다. compound component는 state 없는 조립 구조로 시작해 필요할 때 같은 public 이름을 유지한 채 stateful 구조로 자연스럽게 확장될 수 있어야 합니다. TanStack Query, Zustand, React 19 ref prop/Activity/useEffectEvent를 쓰는 React codebase를 기본 전제로 하며, `rules/` 아래 rule 파일이 source of truth입니다. 기본 compiled guide는 local React 규칙만 담고 `typescript` companion skill과 함께 사용합니다.
+에이전트 협업 팀을 위한 React 코딩 컨벤션입니다. 이 가이드는 shared 코드와 route-local 코드 사이의 명확한 소유 경계, single component·compound component·explicit variant를 구분하는 composition 전략, React 계약에 맞는 handler/prop 시그니처, 예측 가능한 화면 흐름, 오리진을 보존하는 state 접근, React 19 컴포넌트 구조와 effect/transition 패턴, React 고유 문서화 규칙을 강조합니다. compound component는 state 없는 조립 구조로 시작해 필요할 때 같은 public 이름을 유지한 채 stateful 구조로 자연스럽게 확장될 수 있어야 하고, route-local section component는 async/state/interaction 같은 runtime boundary를 실제로 소유할 때만 추출합니다. TanStack Query, Zustand, React 19 ref prop/Activity/useEffectEvent를 쓰는 React codebase를 기본 전제로 하며, `rules/` 아래 rule 파일이 source of truth입니다. 기본 compiled guide는 local React 규칙만 담고 `typescript` companion skill과 함께 사용합니다.
 
 이 가이드는 local React 컨벤션 규칙만 담고 있습니다. TypeScript 같은 공통 규칙은 companion skill을 함께 로드해 보완합니다.
 
@@ -49,10 +49,11 @@
     - 4.6 [Use Visibility Primitives Deliberately for Show and Hide Branches](#46-use-visibility-primitives-deliberately-for-show-and-hide-branches)
 5. [Screen File Discipline](#5-screen-file-discipline) — **HIGH**
     - 5.1 [Avoid Premature Abstraction in Screen Code](#51-avoid-premature-abstraction-in-screen-code)
-    - 5.2 [Extract Screen Support Code Only When the Boundary Is Real](#52-extract-screen-support-code-only-when-the-boundary-is-real)
-    - 5.3 [Keep Derived Values Close to Where They Are Used](#53-keep-derived-values-close-to-where-they-are-used)
-    - 5.4 [Keep Route Entry Files Focused on Screen Flow](#54-keep-route-entry-files-focused-on-screen-flow)
-    - 5.5 [Move Screen-owned Pure Support Code Into page.ts Before Splitting Further](#55-move-screen-owned-pure-support-code-into-pagets-before-splitting-further)
+    - 5.2 [Extract Route-local Section Components Only for Runtime Boundaries](#52-extract-route-local-section-components-only-for-runtime-boundaries)
+    - 5.3 [Extract Screen Support Code Only When the Boundary Is Real](#53-extract-screen-support-code-only-when-the-boundary-is-real)
+    - 5.4 [Keep Derived Values Close to Where They Are Used](#54-keep-derived-values-close-to-where-they-are-used)
+    - 5.5 [Keep Route Entry Files Focused on Screen Flow](#55-keep-route-entry-files-focused-on-screen-flow)
+    - 5.6 [Move Screen-owned Pure Support Code Into page.ts Before Splitting Further](#56-move-screen-owned-pure-support-code-into-pagets-before-splitting-further)
 6. [Events and Interaction Flow](#6-events-and-interaction-flow) — **MEDIUM-HIGH**
     - 6.1 [Keep Screen-specific Handler Flow Local Until a Real Utility Emerges](#61-keep-screen-specific-handler-flow-local-until-a-real-utility-emerges)
     - 6.2 [Name Handlers Predictably and Curry Extra Arguments](#62-name-handlers-predictably-and-curry-extra-arguments)
@@ -899,14 +900,14 @@ return hasItems ? <ItemList /> : <EmptyState />;
 
 **Impact: HIGH**
 
-Route entry 파일은 화면 흐름을 분명하게 보여줘야 하며, helper 추출도 경계가 정당할 때만 해야 합니다.
+Route entry 파일은 화면 흐름을 분명하게 보여줘야 하며, helper 추출도 경계가 정당할 때만 해야 합니다. layout-only 분리는 지양하지만 async, state, interaction 같은 runtime boundary를 소유한 route-local section은 추출할 수 있습니다.
 
 ### 5.1 Avoid Premature Abstraction in Screen Code
 
 **Impact: HIGH (추측성 추출 대신 실제 재사용 경계에 맞춰 route 코드를 유지함)**
 
 반복이 보인다는 이유만으로 즉시 공용 hook, 공용 컴포넌트, 공용 helper로 올리지 않습니다. 같은 화면, 같은 support module, 같은 exported 함수 안에서 비슷한 단계가 반복되더라도 기본은 한 함수 안에 유지합니다.   
-같은 이름의 계약으로 여러 화면이나 모듈이 직접 호출해야 하는 경계가 분명해질 때만 공용화를 검토합니다. 그 전에는 section comment, 단계 구분 변수, 내부 블록으로 먼저 정리합니다.
+같은 이름의 계약으로 여러 화면이나 모듈이 직접 호출해야 하는 경계가 분명해질 때만 공용화를 검토합니다. 그 전에는 section comment, 단계 구분 변수, 내부 블록으로 먼저 정리합니다. route-local component 추출도 예외가 아니며, 단순 layout wrapper가 아니라 실제 runtime boundary를 소유할 때만 검토합니다.
 
 **Incorrect (반복만 보고 성급하게 추상화):**
 
@@ -941,7 +942,153 @@ export const buildEntryPayload = (formValues: EntryFormValues) => {
 };
 ```
 
-### 5.2 Extract Screen Support Code Only When the Boundary Is Real
+### 5.2 Extract Route-local Section Components Only for Runtime Boundaries
+
+**Impact: HIGH (route entry의 orchestration은 보이게 유지하면서도 async, state, interaction처럼 실제 경계가 있는 subtree는 안전하게 분리할 수 있게 함)**
+
+route entry에서 local component 추출 여부는 "한 구역처럼 보이느냐"가 아니라 `runtime boundary`를 소유하느냐로 판단합니다.  
+단순 layout wrapper, className grouping, 들여쓰기 감소만을 위한 local component는 만들지 않습니다.  
+반대로 아래 중 하나를 자기 subtree 안에서 직접 소유하면 route-local section component로 추출할 수 있습니다.
+
+- async boundary: `Suspense`, skeleton, loading, error, empty state
+- state boundary: `useState`, `useReducer`, `useEffect` 같은 로컬 state와 동기화
+- provider boundary: form provider, context, scoped store
+- interaction boundary: popover, modal, selection, inline edit, drag, expandable tree
+- library boundary: `UiTable`, `UiTree`, editor, chart처럼 props와 render adapter가 빽빽한 위젯
+- performance boundary: virtualization, transition, deferred value, heavy memoized subtree
+
+route entry는 여전히 화면 orchestration owner로 남습니다.  
+search param, navigation, page-level query/mutation, cross-section effect, invalidate, redirect, 여러 section에 걸친 파생값은 route entry에 둡니다.
+
+**Incorrect (layout wrapper만 분리해 route flow를 숨김):**
+
+```tsx
+const EntrySidebarPanel = () => {
+	return (
+		<section className="entry-layout__sidebar">
+			<SidebarStats />
+			<SearchField />
+			<EntryTree />
+		</section>
+	);
+};
+
+const EntryDetailPanel = () => {
+	return (
+		<section className="entry-layout__detail">
+			<DetailHeader />
+			<EntryTable />
+		</section>
+	);
+};
+
+export const RouteComponent = () => {
+	const responseContentFolderGetListSuspense = useContentFolderGetListSuspense();
+	const responseContentManagerSearchContents = useContentManagerSearchContents();
+
+	return (
+		<div className="entry-layout">
+			<EntrySidebarPanel />
+			<EntryDetailPanel />
+		</div>
+	);
+};
+```
+
+이 구조는 route entry가 어떤 data와 interaction을 오케스트레이션하는지 숨기고, local component도 runtime boundary 없이 layout wrapper 역할만 합니다.
+
+**Correct (runtime boundary를 소유하는 section만 route-local component로 추출):**
+
+```tsx
+interface EntryTreeSectionProps {
+	sidebarNodes: EntrySidebarNode[];
+	selectedTableKey?: string;
+	onTableSelect: (tableName: string) => void;
+}
+
+const EntryTreeSection = (props: EntryTreeSectionProps) => {
+	const { sidebarNodes, selectedTableKey, onTableSelect } = props;
+	const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
+	const [treeSearchKeyword, setTreeSearchKeyword] = useState("");
+
+	const filteredSidebarNodes = getFilteredSidebarNodes(
+		sidebarNodes,
+		treeSearchKeyword,
+	);
+
+	const handleTreeSelect: UiTreeProps["onSelect"] = (keys, _info) => {
+		const selectedKey = keys[0];
+		if (typeof selectedKey !== "string" || !selectedKey.startsWith("table:")) {
+			return;
+		}
+
+		onTableSelect(selectedKey.replace("table:", ""));
+	};
+
+	return (
+		<section className="entry-layout__sidebar">
+			<UiInput
+				value={treeSearchKeyword}
+				onChange={(event) => setTreeSearchKeyword(event.target.value)}
+			/>
+
+			<Activity mode={filteredSidebarNodes.length > 0 ? "visible" : "hidden"}>
+				<UiTree
+					treeData={filteredSidebarNodes.map(mapEntryNodeToTreeData)}
+					expandedKeys={expandedKeys}
+					selectedKeys={selectedTableKey ? [selectedTableKey] : []}
+					onExpand={(keys) => setExpandedKeys(keys.map(String))}
+					onSelect={handleTreeSelect}
+				/>
+			</Activity>
+
+			<Activity mode={filteredSidebarNodes.length > 0 ? "hidden" : "visible"}>
+				<UiEmpty description="No matching results" />
+			</Activity>
+		</section>
+	);
+};
+```
+
+이 `EntryTreeSection`은 tree search state, expand interaction, empty state, `UiTree` adapter라는 runtime boundary를 실제로 소유하므로 local component로 승격할 가치가 있습니다.
+
+**Correct (route entry는 orchestration을 계속 소유):**
+
+```tsx
+export const RouteComponent = () => {
+	const navigate = useNavigate();
+	const search = Route.useSearch();
+
+	const responseContentFolderGetListSuspense =
+		useContentFolderGetListSuspense<EntryTreeSelectData>();
+	const responseContentManagerSearchContents =
+		useContentManagerSearchContents<ContentListSelectData>();
+
+	const handleTableSelect = (tableName: string) => {
+		void navigate({
+			to: "/project/content-manager/entries",
+			search: { page: search.page, size: search.size, table: tableName },
+		});
+	};
+
+	return (
+		<div className="entry-layout">
+			<EntryTreeSection
+				sidebarNodes={responseContentFolderGetListSuspense.data.sidebarNodes}
+				selectedTableKey={search.table}
+				onTableSelect={handleTableSelect}
+			/>
+			<EntryTableSection
+				contents={responseContentManagerSearchContents.data?.contents ?? []}
+			/>
+		</div>
+	);
+};
+```
+
+요약하면 route-local section component는 "화면의 한 덩어리처럼 보이기 때문"이 아니라, async, state, provider, interaction, library, performance 중 하나의 runtime boundary를 실제로 소유할 때만 추출합니다.
+
+### 5.3 Extract Screen Support Code Only When the Boundary Is Real
 
 **Impact: HIGH (route 파일이 자기 계약이 없는 helper 조각으로 분해되는 것을 막음)**
 
@@ -1037,7 +1184,7 @@ export const util = {
 };
 ```
 
-### 5.3 Keep Derived Values Close to Where They Are Used
+### 5.4 Keep Derived Values Close to Where They Are Used
 
 **Impact: HIGH (오리진을 보존하고 route 파일이 alias와 명령형 setup 코드로 채워지는 것을 막음)**
 
@@ -1067,11 +1214,11 @@ const responseContentManagerSearchContents = useContentManagerSearchContentsSusp
 return <UiInput value={selectedNodeContext?.node?.name} />;
 ```
 
-### 5.4 Keep Route Entry Files Focused on Screen Flow
+### 5.5 Keep Route Entry Files Focused on Screen Flow
 
 **Impact: HIGH (route 파일을 화면의 주 orchestration 지점으로 읽기 쉽게 만듦)**
 
-라우트 엔트리 파일은 화면 흐름이 드러나게 유지합니다. state, API response/mutation, event handler, `useEffect`, 렌더링 조립이 보이도록 두고, 단순 레이아웃 분리만을 위한 조기 컴포넌트화는 기본값으로 삼지 않습니다.
+라우트 엔트리 파일은 화면 흐름이 드러나게 유지합니다. state, API response/mutation, event handler, `useEffect`, 렌더링 조립이 보이도록 두고, 단순 레이아웃 분리만을 위한 조기 컴포넌트화는 기본값으로 삼지 않습니다. runtime boundary를 소유하는 route-local section component는 추출할 수 있지만, route entry는 여전히 search param, navigate, page-level query/mutation, cross-section effect 같은 orchestration을 보여줘야 합니다.
 
 **Incorrect (흐름보다 분해 자체가 목적이 됨):**
 
@@ -1085,7 +1232,7 @@ return (
 );
 ```
 
-**Correct (화면 엔트리에서 흐름과 orchestration이 보임):**
+**Correct (화면 엔트리에서 흐름과 orchestration이 보이고, 필요한 section만 runtime boundary 기준으로 분리):**
 
 ```tsx
 const responseContentTypeGetListSuspense = useContentTypeGetListSuspense({ projectId });
@@ -1093,10 +1240,15 @@ const handleSubmitButtonClick = async () => {
   // ...
 };
 
-return <ContentTypeBuilderScreen onSubmit={handleSubmitButtonClick} />;
+return (
+  <Fragment>
+    <ContentTypeFilterSection />
+    <ContentTypeTableSection onSubmit={handleSubmitButtonClick} />
+  </Fragment>
+);
 ```
 
-### 5.5 Move Screen-owned Pure Support Code Into page.ts Before Splitting Further
+### 5.6 Move Screen-owned Pure Support Code Into page.ts Before Splitting Further
 
 **Impact: HIGH (route entry 파일이 preset과 순수 helper를 쌓기보다 orchestration에 집중하게 함)**
 

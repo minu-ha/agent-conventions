@@ -8,7 +8,7 @@ metadata:
 
 # React 컨벤션
 
-에이전트 협업 팀을 위한 React 코딩 컨벤션 모음입니다. 현재 이 가이드는 8개 카테고리의 41개 local 규칙으로 구성되어 있습니다.  
+에이전트 협업 팀을 위한 React 코딩 컨벤션 모음입니다. 현재 이 가이드는 8개 카테고리의 42개 local 규칙으로 구성되어 있습니다.  
 공용 컴포넌트 소유 경계, single component·compound component·explicit variant 사이의 선택, React 계약에 맞는 handler/prop 시그니처, 화면 흐름, state 오리진, transition 패턴, React 경계 문서화 규칙을 [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`와 compiled [AGENTS.md](./AGENTS.md)로 관리합니다.  
 이 skill은 TanStack Query, Zustand, React 19 ref prop/Activity/useEffectEvent/transition 패턴을 쓰는 React codebase를 기본 전제로 합니다. 기본 compiled guide는 local React rule만 담고 `convention-typescript`를 companion skill로 함께 사용합니다.
 
@@ -66,6 +66,7 @@ metadata:
 
 - `screen-keep-route-flow-visible` - route entry 파일은 화면 흐름 중심으로 유지
 - `screen-avoid-premature-abstraction` - 실제 재사용 근거가 생길 때까지 추출 보류
+- `screen-extract-local-section-components-for-runtime-boundaries` - async/state/provider/interaction 같은 runtime boundary가 있을 때만 route-local section component 추출
 - `screen-extract-utilities-selectively` - 경계가 정당할 때만 screen support code 추출
 - `screen-keep-derived-values-close` - 파생값과 alias를 사용 위치 가까이에 유지
 - `screen-move-pure-support-code-out-of-entry-files` - route 지원 코드의 기본 추출 대상은 sibling `page.ts`

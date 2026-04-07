@@ -20,7 +20,7 @@
 
 ## 5. Screen File Discipline (screen)
 **Impact:** HIGH
-**Description:** Route entry 파일은 화면 흐름을 분명하게 보여줘야 하며, helper 추출도 경계가 정당할 때만 해야 합니다.
+**Description:** Route entry 파일은 화면 흐름을 분명하게 보여줘야 하며, helper 추출도 경계가 정당할 때만 해야 합니다. layout-only 분리는 지양하지만 async, state, interaction 같은 runtime boundary를 소유한 route-local section은 추출할 수 있습니다.
 
 ## 6. Events and Interaction Flow (events)
 **Impact:** MEDIUM-HIGH
