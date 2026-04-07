@@ -166,7 +166,8 @@ import {buildUserSaveRequest} from "./page";
 
 **Impact: CRITICAL (keeps domain-specific contracts understandable without digging through implementation details)**
 
-커스텀 `type`, `interface`, `z.object(...)`, 객체형 상수 같은 선언형 shape에는 JSDoc을 작성합니다. 객체형 계약과 schema root는 헤더에 `@summary`, 각 필드 바로 위에는 `@field`를 씁니다. `Pick`/`Omit`/Indexed Access처럼 로컬 필드 선언이 없는 alias는 헤더 `@summary`만 둡니다.
+커스텀 `type`, `interface`, `z.object(...)`, 객체형 상수 같은 선언형 shape에는 JSDoc을 작성합니다. 객체형 계약과 schema root는 헤더에 `@summary`, 각 필드 바로 위에는 `@field`를 씁니다. `Pick`/`Omit`/Indexed Access처럼 로컬 필드 선언이 없는 alias는 헤더 `@summary`만 둡니다.  
+예외적으로 React의 compound component public part props `interface`처럼 component part 경계와 함께 읽혀야 하는 경우에는 `@summary` 대신 `@part`와 `@description`을 사용해도 됩니다.
 
 **Incorrect (필드 설명을 생략하거나 예전 방식으로 헤더에 몰아씀):**
 
@@ -623,11 +624,12 @@ export const normalizeUserIds = (userIds: string[]): string[] => {
 
 **Impact: MEDIUM-HIGH (keeps mixed TypeScript and TSX files scannable by using a small fixed annotation set)**
 
-annotation 태그는 `@api`, `@event`, `@watch`, `@helper`, `@summary`, `@field` 여섯 개로 고정합니다.   
+annotation 태그는 `@api`, `@event`, `@watch`, `@helper`, `@summary`, `@part`, `@description`, `@field` 여덟 개로 고정합니다.   
 원격 데이터와 외부 실행 경계는 `@api`, 이벤트 핸들러는 `@event`, 반응형 동기화 블록은 `@watch`, 재사용 가능한 지원 함수는 `@helper`를 사용합니다.   
-`type`, `interface`, store 선언, custom hook, schema root처럼 선언 종류만 알면 역할이 충분히 드러나는 경우에는 `@summary`를 사용하고, 계약 내부 멤버에는 `@field`만 사용합니다. `@description`, `@schema`, `@shape`, `@contract`, `@data`, `@type`, `@property`는 더 이상 쓰지 않습니다.
+`type`, `interface`, store 선언, custom hook, schema root처럼 선언 종류만 알면 역할이 충분히 드러나는 경우에는 `@summary`를 사용하고, 계약 내부 멤버에는 `@field`만 사용합니다.  
+React의 compound component part처럼 `Dialog.Root`, `Tabs.Trigger` 같은 public part를 문서화할 때는 `@part`와 `@description`을 함께 사용합니다. `@description`은 이 경우에만 허용하고, 일반 함수·타입·schema 설명에는 계속 `@summary`를 사용합니다. `@schema`, `@shape`, `@contract`, `@data`, `@type`, `@property`는 더 이상 쓰지 않습니다.
 
-**Incorrect (역할이 드러나지 않는 예전 태그나 혼합 태그를 사용):**
+**Incorrect (역할이 드러나지 않는 예전 태그나 part 전용 태그를 잘못 사용):**
 
 ```ts
 /**
@@ -678,6 +680,17 @@ const publishResultSchema = z.object({
 	 */
 	documentId: z.string(),
 });
+
+/**
+ * @part dialog root
+ * @description dialog 열림 상태와 compound part 공유 context를 소유하는 루트 컴포넌트
+ */
+interface DialogRootProps {
+	/**
+	 * @field dialog 트리를 감싸는 자식 요소
+	 */
+	children: ReactNode;
+}
 ```
 
 ### 5.4 Use @helper on Reusable Support Functions

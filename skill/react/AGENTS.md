@@ -12,7 +12,7 @@
 
 ## 개요
 
-에이전트 협업 팀을 위한 React 코딩 컨벤션입니다. 이 가이드는 shared 코드와 route-local 코드 사이의 명확한 소유 경계, React 계약에 맞는 handler/prop 시그니처, 예측 가능한 화면 흐름, 오리진을 보존하는 state 접근, React 19 component API와 effect/transition 패턴, React 고유 문서화 규칙을 강조합니다. TanStack Query, Zustand, React 19 ref prop/Activity/useEffectEvent를 쓰는 React codebase를 기본 전제로 하며, `rules/` 아래 rule 파일이 source of truth입니다. 기본 compiled guide는 local React 규칙만 담고 `typescript` companion skill과 함께 사용합니다.
+에이전트 협업 팀을 위한 React 코딩 컨벤션입니다. 이 가이드는 shared 코드와 route-local 코드 사이의 명확한 소유 경계, single component·compound component·explicit variant를 구분하는 composition 전략, React 계약에 맞는 handler/prop 시그니처, 예측 가능한 화면 흐름, 오리진을 보존하는 state 접근, React 19 컴포넌트 구조와 effect/transition 패턴, React 고유 문서화 규칙을 강조합니다. compound component는 state 없는 조립 구조로 시작해 필요할 때 같은 public 이름을 유지한 채 stateful 구조로 자연스럽게 확장될 수 있어야 합니다. TanStack Query, Zustand, React 19 ref prop/Activity/useEffectEvent를 쓰는 React codebase를 기본 전제로 하며, `rules/` 아래 rule 파일이 source of truth입니다. 기본 compiled guide는 local React 규칙만 담고 `typescript` companion skill과 함께 사용합니다.
 
 이 가이드는 local React 컨벤션 규칙만 담고 있습니다. TypeScript 같은 공통 규칙은 companion skill을 함께 로드해 보완합니다.
 
@@ -36,42 +36,45 @@
 2. [Typing and Contracts](#2-typing-and-contracts) — **HIGH**
     - 2.1 [Prefer React Handler Type Aliases Over Inline Event Parameter Annotations](#21-prefer-react-handler-type-aliases-over-inline-event-parameter-annotations)
     - 2.2 [Reuse Prop and API Contracts Before Creating New Types](#22-reuse-prop-and-api-contracts-before-creating-new-types)
-3. [Component Structure and JSX](#3-component-structure-and-jsx) — **HIGH**
-    - 3.1 [Accept props as a Whole and Destructure Inside the Component](#31-accept-props-as-a-whole-and-destructure-inside-the-component)
-    - 3.2 [Avoid Boolean Prop Proliferation in Shared Component APIs](#32-avoid-boolean-prop-proliferation-in-shared-component-apis)
-    - 3.3 [Do Not Define Components Inside Components](#33-do-not-define-components-inside-components)
-    - 3.4 [Prefer Arrow Functions and Object Parameters for Complex Signatures](#34-prefer-arrow-functions-and-object-parameters-for-complex-signatures)
-    - 3.5 [Prefer Children Over Render Props for Static Composition](#35-prefer-children-over-render-props-for-static-composition)
-    - 3.6 [Use Named Handlers Instead of Hiding Logic in JSX](#36-use-named-handlers-instead-of-hiding-logic-in-jsx)
-    - 3.7 [Use ref Props Instead of New forwardRef Wrappers in React 19](#37-use-ref-props-instead-of-new-forwardref-wrappers-in-react-19)
-    - 3.8 [Use Visibility Primitives Deliberately for Show and Hide Branches](#38-use-visibility-primitives-deliberately-for-show-and-hide-branches)
-4. [Screen File Discipline](#4-screen-file-discipline) — **HIGH**
-    - 4.1 [Avoid Premature Abstraction in Screen Code](#41-avoid-premature-abstraction-in-screen-code)
-    - 4.2 [Extract Screen Support Code Only When the Boundary Is Real](#42-extract-screen-support-code-only-when-the-boundary-is-real)
-    - 4.3 [Keep Derived Values Close to Where They Are Used](#43-keep-derived-values-close-to-where-they-are-used)
-    - 4.4 [Keep Route Entry Files Focused on Screen Flow](#44-keep-route-entry-files-focused-on-screen-flow)
-    - 4.5 [Move Screen-owned Pure Support Code Into page.ts Before Splitting Further](#45-move-screen-owned-pure-support-code-into-pagets-before-splitting-further)
-5. [Events and Interaction Flow](#5-events-and-interaction-flow) — **MEDIUM-HIGH**
-    - 5.1 [Keep Screen-specific Handler Flow Local Until a Real Utility Emerges](#51-keep-screen-specific-handler-flow-local-until-a-real-utility-emerges)
-    - 5.2 [Name Handlers Predictably and Curry Extra Arguments](#52-name-handlers-predictably-and-curry-extra-arguments)
-    - 5.3 [Run User Actions in Handlers, Not Effects](#53-run-user-actions-in-handlers-not-effects)
-6. [State and Data Flow](#6-state-and-data-flow) — **CRITICAL**
-    - 6.1 [Avoid Silent Fallback Defaults and Ad-hoc Loading Branches](#61-avoid-silent-fallback-defaults-and-ad-hoc-loading-branches)
-    - 6.2 [Calculate Derived Values During Rendering](#62-calculate-derived-values-during-rendering)
-    - 6.3 [Choose State Tools by Source of Truth](#63-choose-state-tools-by-source-of-truth)
-    - 6.4 [Name Query and Mutation Bindings Consistently](#64-name-query-and-mutation-bindings-consistently)
-    - 6.5 [Prefer React Compiler Defaults Over Manual Memoization](#65-prefer-react-compiler-defaults-over-manual-memoization)
-    - 6.6 [Preserve Response and Store Origin in Wide Scopes](#66-preserve-response-and-store-origin-in-wide-scopes)
-    - 6.7 [Shape React Query Data in query.select](#67-shape-react-query-data-in-queryselect)
-    - 6.8 [Store Shared Role and Authority Decisions Only When They Are Truly Shared](#68-store-shared-role-and-authority-decisions-only-when-they-are-truly-shared)
-    - 6.9 [Use Functional setState Updates When Based on Previous State](#69-use-functional-setstate-updates-when-based-on-previous-state)
-    - 6.10 [Use Lazy State Initializers for Expensive Defaults](#610-use-lazy-state-initializers-for-expensive-defaults)
-    - 6.11 [Use startTransition for Non-urgent Visual Updates](#611-use-starttransition-for-non-urgent-visual-updates)
-    - 6.12 [Use useDeferredValue for Heavy Derived Renders](#612-use-usedeferredvalue-for-heavy-derived-renders)
-    - 6.13 [Use useEffectEvent for Non-reactive Effect Callbacks](#613-use-useeffectevent-for-non-reactive-effect-callbacks)
-7. [Documentation and Comments](#7-documentation-and-comments) — **MEDIUM**
-    - 7.1 [Limit Inline Comments to Non-obvious Logic](#71-limit-inline-comments-to-non-obvious-logic)
-    - 7.2 [Require JSDoc on React Hooks, Handlers, and Key Declarations](#72-require-jsdoc-on-react-hooks-handlers-and-key-declarations)
+3. [Composition Strategy](#3-composition-strategy) — **HIGH**
+    - 3.1 [Avoid Boolean Prop Proliferation in Shared Components](#31-avoid-boolean-prop-proliferation-in-shared-components)
+    - 3.2 [Choose Single Components, Compound Components, and Variants Deliberately](#32-choose-single-components-compound-components-and-variants-deliberately)
+    - 3.3 [Prefer Children Over Render Props for Static Composition](#33-prefer-children-over-render-props-for-static-composition)
+4. [Component Structure and JSX](#4-component-structure-and-jsx) — **HIGH**
+    - 4.1 [Accept props as a Whole and Destructure Inside the Component](#41-accept-props-as-a-whole-and-destructure-inside-the-component)
+    - 4.2 [Do Not Define Components Inside Components](#42-do-not-define-components-inside-components)
+    - 4.3 [Prefer Arrow Functions and Object Parameters for Complex Signatures](#43-prefer-arrow-functions-and-object-parameters-for-complex-signatures)
+    - 4.4 [Use Named Handlers Instead of Hiding Logic in JSX](#44-use-named-handlers-instead-of-hiding-logic-in-jsx)
+    - 4.5 [Use ref Props Instead of New forwardRef Wrappers in React 19](#45-use-ref-props-instead-of-new-forwardref-wrappers-in-react-19)
+    - 4.6 [Use Visibility Primitives Deliberately for Show and Hide Branches](#46-use-visibility-primitives-deliberately-for-show-and-hide-branches)
+5. [Screen File Discipline](#5-screen-file-discipline) — **HIGH**
+    - 5.1 [Avoid Premature Abstraction in Screen Code](#51-avoid-premature-abstraction-in-screen-code)
+    - 5.2 [Extract Screen Support Code Only When the Boundary Is Real](#52-extract-screen-support-code-only-when-the-boundary-is-real)
+    - 5.3 [Keep Derived Values Close to Where They Are Used](#53-keep-derived-values-close-to-where-they-are-used)
+    - 5.4 [Keep Route Entry Files Focused on Screen Flow](#54-keep-route-entry-files-focused-on-screen-flow)
+    - 5.5 [Move Screen-owned Pure Support Code Into page.ts Before Splitting Further](#55-move-screen-owned-pure-support-code-into-pagets-before-splitting-further)
+6. [Events and Interaction Flow](#6-events-and-interaction-flow) — **MEDIUM-HIGH**
+    - 6.1 [Keep Screen-specific Handler Flow Local Until a Real Utility Emerges](#61-keep-screen-specific-handler-flow-local-until-a-real-utility-emerges)
+    - 6.2 [Name Handlers Predictably and Curry Extra Arguments](#62-name-handlers-predictably-and-curry-extra-arguments)
+    - 6.3 [Run User Actions in Handlers, Not Effects](#63-run-user-actions-in-handlers-not-effects)
+7. [State and Data Flow](#7-state-and-data-flow) — **CRITICAL**
+    - 7.1 [Avoid Silent Fallback Defaults and Ad-hoc Loading Branches](#71-avoid-silent-fallback-defaults-and-ad-hoc-loading-branches)
+    - 7.2 [Calculate Derived Values During Rendering](#72-calculate-derived-values-during-rendering)
+    - 7.3 [Choose State Tools by Source of Truth](#73-choose-state-tools-by-source-of-truth)
+    - 7.4 [Name Query and Mutation Bindings Consistently](#74-name-query-and-mutation-bindings-consistently)
+    - 7.5 [Prefer React Compiler Defaults Over Manual Memoization](#75-prefer-react-compiler-defaults-over-manual-memoization)
+    - 7.6 [Preserve Response and Store Origin in Wide Scopes](#76-preserve-response-and-store-origin-in-wide-scopes)
+    - 7.7 [Shape React Query Data in query.select](#77-shape-react-query-data-in-queryselect)
+    - 7.8 [Store Shared Role and Authority Decisions Only When They Are Truly Shared](#78-store-shared-role-and-authority-decisions-only-when-they-are-truly-shared)
+    - 7.9 [Use Functional setState Updates When Based on Previous State](#79-use-functional-setstate-updates-when-based-on-previous-state)
+    - 7.10 [Use Lazy State Initializers for Expensive Defaults](#710-use-lazy-state-initializers-for-expensive-defaults)
+    - 7.11 [Use startTransition for Non-urgent Visual Updates](#711-use-starttransition-for-non-urgent-visual-updates)
+    - 7.12 [Use useDeferredValue for Heavy Derived Renders](#712-use-usedeferredvalue-for-heavy-derived-renders)
+    - 7.13 [Use useEffectEvent for Non-reactive Effect Callbacks](#713-use-useeffectevent-for-non-reactive-effect-callbacks)
+8. [Documentation and Comments](#8-documentation-and-comments) — **MEDIUM**
+    - 8.1 [Document Compound Parts with @part and @description](#81-document-compound-parts-with-part-and-description)
+    - 8.2 [Limit Inline Comments to Non-obvious Logic](#82-limit-inline-comments-to-non-obvious-logic)
+    - 8.3 [Require JSDoc on React Hooks, Handlers, and Key Declarations](#83-require-jsdoc-on-react-hooks-handlers-and-key-declarations)
 
 ---
 
@@ -286,7 +289,7 @@ export const UserCard = () => {
 
 **Impact: HIGH**
 
-React가 제공하는 handler와 prop 계약은 선언 위치에서 바로 드러나야 하며, props/API 시그니처 재사용도 React 문맥에 맞게 유지해야 합니다.
+React가 제공하는 handler와 prop 계약은 선언 위치에서 바로 드러나야 하며, props와 callback 시그니처 재사용도 React 문맥에 맞게 유지해야 합니다.
 
 ### 2.1 Prefer React Handler Type Aliases Over Inline Event Parameter Annotations
 
@@ -338,13 +341,326 @@ const handleLinkClick: LinkProps["onLinkClick"] = (event) => {
 };
 ```
 
-## 3. Component Structure and JSX
+## 3. Composition Strategy
 
 **Impact: HIGH**
 
-컴포넌트는 계약과 variant가 분명하게 드러나야 하며, JSX 안에 동작을 숨기지 않고 React 19 기준의 component API를 읽기 쉽게 유지해야 합니다.
+Shared component는 single component, compound component, explicit variant 중 어떤 구조를 쓸지 먼저 결정해야 하며, compound component는 state 없는 조립 구조에서 시작해 필요할 때 같은 public 이름을 유지한 채 stateful 구조로 확장될 수 있어야 합니다.
 
-### 3.1 Accept props as a Whole and Destructure Inside the Component
+### 3.1 Avoid Boolean Prop Proliferation in Shared Components
+
+**Impact: HIGH (exported shared components stay explicit instead of accumulating hidden variant combinations)**
+
+여러 파일과 레이어에서 재사용되는 shared component에 `isCompact`, `isEditing`, `showSearch` 같은 boolean prop을 계속 추가하지 않습니다.  
+boolean이 늘어날수록 가능한 조합이 급증하고, JSX 분기와 스타일 조건도 함께 불어나기 때문입니다.  
+이 규칙은 exported shared component에 적용합니다.  
+route entry 안의 일회성 분기는 로컬에서 유지할 수 있지만, shared `ui`나 `widget`는 explicit variant component나 compound component로 드러냅니다. `.Root` 같은 namespaced part 문법은 권장 예시일 뿐이고, 이 규칙의 본질은 boolean을 없애고 구조를 명시적으로 드러내는 데 있습니다.
+
+**Incorrect (boolean prop 조합으로 shared component가 비대해짐):**
+
+```tsx
+export interface WidgetEntryToolbarProps {
+	isCompact?: boolean;
+	isEditing?: boolean;
+	showSearch?: boolean;
+}
+
+export const WidgetEntryToolbar = (props: WidgetEntryToolbarProps) => {
+	const { isCompact, isEditing, showSearch } = props;
+
+	return (
+		<header>
+			{showSearch ? <EntrySearchField /> : null}
+			{isEditing ? <EntryEditActions compact={isCompact} /> : <EntryBrowseActions compact={isCompact} />}
+		</header>
+	);
+};
+```
+
+**Correct (variant를 explicit component와 stateless compound component로 분리):**
+
+```tsx
+const WidgetEntryToolbarRoot = (props: { children: ReactNode }) => {
+	const { children } = props;
+	return <header>{children}</header>;
+};
+
+export const WidgetEntryToolbar = {
+	Root: WidgetEntryToolbarRoot,
+	Search: EntrySearchField,
+	BrowseActions: EntryBrowseActions,
+	EditActions: EntryEditActions,
+} as const;
+
+export const WidgetEntryBrowseToolbar = () => {
+	return (
+		<WidgetEntryToolbar.Root>
+			<WidgetEntryToolbar.Search />
+			<WidgetEntryToolbar.BrowseActions />
+		</WidgetEntryToolbar.Root>
+	);
+};
+
+export const WidgetEntryEditToolbar = () => {
+	return (
+		<WidgetEntryToolbar.Root>
+			<WidgetEntryToolbar.EditActions />
+		</WidgetEntryToolbar.Root>
+	);
+};
+```
+
+핵심은 `WidgetEntryToolbar` 하나에 boolean 모드를 계속 추가하지 않는 것입니다.  
+explicit variant는 standalone component여도 되고, 이렇게 compound component 위에서 조립해도 됩니다.
+
+### 3.2 Choose Single Components, Compound Components, and Variants Deliberately
+
+**Impact: HIGH (helps shared components choose the simplest structure that still exposes the right extension points)**
+
+shared component를 설계할 때는 처음부터 모든 것을 하나의 거대한 component에 몰아넣지 않습니다.  
+먼저 고정 구조인지, part 조립이 필요한지, shared state가 필요한지, 같은 조합이 반복되는지를 보고 가장 단순한 구조를 고릅니다.
+
+문서에서는 `composition`을 상위 원칙으로만 사용합니다.  
+실전 선택 단위는 `single component`, `compound component`, `explicit variant component`입니다.  
+`X.Root`, `X.Header`, `X.Footer`처럼 part를 조립하는 구조는 넓게 `compound component`로 보고, shared state, action, context가 없으면 `stateless compound component`, 있으면 `stateful compound component`로 구분합니다.
+
+**빠른 선택표**
+
+| 상황 | 기본 선택 |
+| --- | --- |
+| 한 화면 안에서만 쓰는 고정 UI | `single component` 또는 route-local JSX |
+| part를 조립해야 하지만 shared state, action, context는 없음 | `stateless compound component` |
+| part를 조립하고 여러 part가 같은 state, action, context를 읽음 | `stateful compound component` |
+| 같은 raw compound 조합이 여러 곳에서 반복됨 | `explicit variant component` |
+| parent가 runtime 데이터를 child 콜백에 밀어줘야 함 | `render prop` |
+
+문서에서는 `WorkspaceSection.Root/Header/Footer` 같은 구조도 stateless compound component로 다룹니다.  
+dot notation은 흔한 이름 조직 방식이지만 필수는 아니고, 중요한 점은 part를 조립하는 public surface를 같은 가족으로 유지하는 것입니다.  
+나중에 state가 필요해지면 같은 public 이름을 유지한 채 context만 추가해 stateful compound component로 확장합니다.
+
+public part도 무조건 많이 노출하지 않습니다.  
+`Header`, `Footer`, `Content`, `Trigger`처럼 소비자가 이름으로 조립해야 하는 의미 있는 영역이거나, shared context를 직접 읽는 part만 공개 part로 올립니다.  
+단순 class wrapper나 내부 레이아웃 보정용 DOM은 내부 구현으로 숨깁니다.
+
+**Incorrect (single component, compound component, explicit variant의 경계를 구분하지 않고 하나의 component에 몰아넣음):**
+
+```tsx
+export interface WidgetProfileDialogProps {
+	isCompact?: boolean;
+	showActivity?: boolean;
+	showFocus?: boolean;
+	dialogTitle?: string;
+	renderFooter?: () => ReactNode;
+}
+
+export const WidgetProfileDialog = (props: WidgetProfileDialogProps) => {
+	const { isCompact, showActivity, showFocus, dialogTitle, renderFooter } = props;
+
+	return (
+		<section className={isCompact ? "dialog dialog--compact" : "dialog"}>
+			<header>
+				<h3>{dialogTitle ?? "Profile"}</h3>
+			</header>
+			<ProfileSummary />
+			{showActivity ? <ActivityPanel /> : null}
+			{showFocus ? <FocusPanel /> : null}
+			<footer>{renderFooter?.()}</footer>
+		</section>
+	);
+};
+```
+
+boolean branch, optional slot, render prop, fixed variant를 한 component에 몰아두면 소비자가 실제 구조를 예측하기 어렵습니다.
+
+**Correct (고정 구조면 single component로 유지):**
+
+```tsx
+export interface WorkspaceEmptyStateProps {
+	title: string;
+	description: string;
+}
+
+export const WorkspaceEmptyState = (props: WorkspaceEmptyStateProps) => {
+	const { title, description } = props;
+
+	return (
+		<section className="workspace-empty-state">
+			<EmptyFolderIllustration />
+			<h2>{title}</h2>
+			<p>{description}</p>
+		</section>
+	);
+};
+```
+
+**Correct (구조를 열어야 하면 stateless compound component로 시작):**
+
+```tsx
+export interface WorkspaceSectionProps {
+	children: ReactNode;
+}
+
+const WorkspaceSectionRoot = (props: WorkspaceSectionProps) => {
+	const { children } = props;
+	return <section className="workspace-section">{children}</section>;
+};
+
+const WorkspaceSectionHeader = (props: WorkspaceSectionProps) => {
+	const { children } = props;
+	return <header className="workspace-section-header">{children}</header>;
+};
+
+const WorkspaceSectionFooter = (props: WorkspaceSectionProps) => {
+	const { children } = props;
+	return <footer className="workspace-section-footer">{children}</footer>;
+};
+
+export const WorkspaceSection = {
+	Root: WorkspaceSectionRoot,
+	Header: WorkspaceSectionHeader,
+	Footer: WorkspaceSectionFooter,
+} as const;
+```
+
+이런 구조는 지금은 `stateless compound component`지만, 나중에 state가 필요해지면 같은 이름을 유지한 채 `stateful compound component`로 확장할 수 있습니다.
+
+**Correct (여러 part가 state를 공유하면 stateful compound component로 확장):**
+
+```tsx
+const TabsContext = createContext<TabsContextValue | null>(null);
+
+const TabsRoot = (props: TabsRootProps) => {
+	const { defaultValue, children } = props;
+	const [activeValue, setActiveValue] = useState(defaultValue);
+
+	return (
+		<TabsContext value={{ activeValue, setActiveValue }}>
+			<section>{children}</section>
+		</TabsContext>
+	);
+};
+
+const TabsTrigger = (props: TabsTriggerProps) => {
+	const { value, children } = props;
+	const tabs = useTabsContext();
+	return <button onClick={() => tabs.setActiveValue(value)}>{children}</button>;
+};
+
+const TabsPanel = (props: TabsPanelProps) => {
+	const { value, children } = props;
+	const tabs = useTabsContext();
+	return tabs.activeValue === value ? <section>{children}</section> : null;
+};
+```
+
+`Tabs.Trigger`와 `Tabs.Panel`처럼 여러 part가 같은 state를 읽고 행동을 공유하면, 그 시점부터는 `stateful compound component`입니다.
+
+**Correct (같은 family 조합이 반복되면 explicit variant로 감쌈):**
+
+```tsx
+export const MemberProfileDialog = () => {
+	return (
+		<Dialog.Root>
+			<Dialog.Trigger>View profile</Dialog.Trigger>
+			<Dialog.Content>...</Dialog.Content>
+		</Dialog.Root>
+	);
+};
+```
+
+이 규칙은 `strategy-avoid-boolean-prop-proliferation`, `strategy-prefer-children-over-render-props`, `screen-avoid-premature-abstraction`과 함께 봅니다.
+
+### 3.3 Prefer Children Over Render Props for Static Composition
+
+**Impact: MEDIUM (keeps shared component composition readable when the parent does not need to push runtime data through callbacks)**
+
+shared component가 `stateless compound component`로 충분할 때는 `renderHeader`, `renderFooter` 같은 render prop보다 `children`과 namespaced slot part를 우선합니다.  
+render prop은 parent가 child에 item, index, state 같은 runtime 데이터를 전달해야 할 때만 사용합니다.
+
+**Incorrect (정적인 구조를 render prop으로 조립):**
+
+```tsx
+export interface WorkspaceSectionProps {
+	renderHeader?: () => ReactNode;
+	renderFooter?: () => ReactNode;
+}
+
+export const WorkspaceSection = (props: WorkspaceSectionProps) => {
+	const { renderHeader, renderFooter } = props;
+
+	return (
+		<section className="workspace-section">
+			{renderHeader?.()}
+			<MemberList />
+			{renderFooter?.()}
+		</section>
+	);
+};
+```
+
+**Correct (children과 namespaced slot part로 구조를 드러냄):**
+
+```tsx
+export interface WorkspaceSectionProps {
+	children: ReactNode;
+}
+
+const WorkspaceSectionRoot = (props: WorkspaceSectionProps) => {
+	const { children } = props;
+	return <section className="workspace-section">{children}</section>;
+};
+
+const WorkspaceSectionHeader = (props: WorkspaceSectionProps) => {
+	const { children } = props;
+	return <header className="workspace-section-header">{children}</header>;
+};
+
+const WorkspaceSectionFooter = (props: WorkspaceSectionProps) => {
+	const { children } = props;
+	return <footer className="workspace-section-footer">{children}</footer>;
+};
+
+export const WorkspaceSection = {
+	Root: WorkspaceSectionRoot,
+	Header: WorkspaceSectionHeader,
+	Footer: WorkspaceSectionFooter,
+} as const;
+
+export const WorkspaceSettingsScreen = () => {
+	return (
+		<>
+			<WorkspaceSection.Root>
+				<WorkspaceSection.Header>
+					<h2>Members</h2>
+					<MemberSearchField />
+				</WorkspaceSection.Header>
+				<MemberList />
+				<WorkspaceSection.Footer>
+					<Pagination />
+				</WorkspaceSection.Footer>
+			</WorkspaceSection.Root>
+
+			<WorkspaceSection.Root>
+				<WorkspaceSection.Header>
+					<h2>Invite members</h2>
+				</WorkspaceSection.Header>
+				<InviteMemberForm />
+			</WorkspaceSection.Root>
+		</>
+	);
+};
+```
+
+같은 shell을 재사용하지만 내부 구조는 화면마다 달라질 수 있다면 `stateless compound component`가 더 읽기 쉽습니다.  
+이 경우에는 `showFooter`, `showSearch`, `isInviteMode` 같은 boolean prop도 필요 없고, parent가 runtime 데이터를 child 함수에 밀어줄 이유도 없으므로 render prop보다 단순한 구조 조립이 맞습니다. `WorkspaceSection.Root/Header/Footer`처럼 dot notation으로 묶고, 나중에 state가 필요해지면 같은 이름을 유지한 채 context를 추가합니다.
+
+## 4. Component Structure and JSX
+
+**Impact: HIGH**
+
+컴포넌트는 계약과 variant가 분명하게 드러나야 하며, JSX 안에 동작을 숨기지 않고 React 19 기준의 컴포넌트 구조를 읽기 쉽게 유지해야 합니다.
+
+### 4.1 Accept props as a Whole and Destructure Inside the Component
 
 **Impact: MEDIUM (컴포넌트 계약을 시그니처에 남기고 실제 사용을 본문 가까이에 유지함)**
 
@@ -367,58 +683,7 @@ const UserCard = (props: UserCardProps) => {
 };
 ```
 
-### 3.2 Avoid Boolean Prop Proliferation in Shared Component APIs
-
-**Impact: HIGH (exported component contracts stay explicit instead of accumulating hidden variant combinations)**
-
-여러 파일과 레이어에서 재사용되는 shared component API에 `isCompact`, `isEditing`, `showSearch` 같은 boolean prop을 계속 추가하지 않습니다.   
-boolean이 늘어날수록 가능한 조합이 급증하고, JSX 분기와 스타일 조건도 함께 불어나기 때문입니다.   
-이 규칙은 exported shared component API에 적용합니다.   
-route entry 안의 일회성 분기는 로컬에서 유지할 수 있지만, shared `ui`나 `widget`는 explicit variant component나 children composition으로 드러냅니다.
-
-**Incorrect (boolean prop 조합으로 shared API가 비대해짐):**
-
-```tsx
-export interface WidgetEntryToolbarProps {
-	isCompact?: boolean;
-	isEditing?: boolean;
-	showSearch?: boolean;
-}
-
-export const WidgetEntryToolbar = (props: WidgetEntryToolbarProps) => {
-	const { isCompact, isEditing, showSearch } = props;
-
-	return (
-		<header>
-			{showSearch ? <EntrySearchField /> : null}
-			{isEditing ? <EntryEditActions compact={isCompact} /> : <EntryBrowseActions compact={isCompact} />}
-		</header>
-	);
-};
-```
-
-**Correct (variant를 explicit component와 composition으로 분리):**
-
-```tsx
-export const WidgetEntryBrowseToolbar = () => {
-	return (
-		<WidgetEntryToolbarFrame>
-			<EntrySearchField />
-			<EntryBrowseActions />
-		</WidgetEntryToolbarFrame>
-	);
-};
-
-export const WidgetEntryEditToolbar = () => {
-	return (
-		<WidgetEntryToolbarFrame>
-			<EntryEditActions />
-		</WidgetEntryToolbarFrame>
-	);
-};
-```
-
-### 3.3 Do Not Define Components Inside Components
+### 4.2 Do Not Define Components Inside Components
 
 **Impact: HIGH (prevents remount bugs and hidden state resets caused by recreating component types every render)**
 
@@ -467,7 +732,7 @@ export const UserProfileCard = (props: UserProfileCardProps) => {
 };
 ```
 
-### 3.4 Prefer Arrow Functions and Object Parameters for Complex Signatures
+### 4.3 Prefer Arrow Functions and Object Parameters for Complex Signatures
 
 **Impact: MEDIUM-HIGH (함수 선언과 다중 인자 계약을 더 쉽게 확장하고 수정할 수 있게 함)**
 
@@ -502,59 +767,7 @@ export const updateEntryMediaUploadFileByUid = (params: UpdateEntryMediaUploadFi
 };
 ```
 
-### 3.5 Prefer Children Over Render Props for Static Composition
-
-**Impact: MEDIUM (keeps shared component composition readable when the parent does not need to push runtime data through callbacks)**
-
-shared component가 구조를 조립하기만 하면 될 때는 `renderHeader`, `renderFooter` 같은 render prop보다 `children`이나 named slot composition을 우선합니다.   
-render prop은 parent가 child에 item, index, state 같은 runtime 데이터를 전달해야 할 때만 사용합니다.
-
-**Incorrect (정적인 구조를 render prop으로 조립):**
-
-```tsx
-export interface WidgetEntryPanelProps {
-	renderHeader?: () => ReactNode;
-	renderFooter?: () => ReactNode;
-}
-
-export const WidgetEntryPanel = (props: WidgetEntryPanelProps) => {
-	const { renderHeader, renderFooter } = props;
-
-	return (
-		<section>
-			{renderHeader?.()}
-			<EntryBody />
-			{renderFooter?.()}
-		</section>
-	);
-};
-```
-
-**Correct (children과 named slot component로 구조를 드러냄):**
-
-```tsx
-export const WidgetEntryPanel = (props: PropsWithChildren) => {
-	const { children } = props;
-	return <section>{children}</section>;
-};
-
-export const WidgetEntryPanelFooter = (props: PropsWithChildren) => {
-	const { children } = props;
-	return <footer>{children}</footer>;
-};
-
-return (
-	<WidgetEntryPanel>
-		<EntryHeader />
-		<EntryBody />
-		<WidgetEntryPanelFooter>
-			<EntrySaveButton />
-		</WidgetEntryPanelFooter>
-	</WidgetEntryPanel>
-);
-```
-
-### 3.6 Use Named Handlers Instead of Hiding Logic in JSX
+### 4.4 Use Named Handlers Instead of Hiding Logic in JSX
 
 **Impact: HIGH (부수효과, 분기, 비동기 흐름을 일반 코드 흐름에서 읽을 수 있게 함)**
 
@@ -585,7 +798,7 @@ const handleRemoveTableButtonClick: MouseEventHandler<HTMLButtonElement> = async
 <UiButton onClick={handleRemoveTableButtonClick} />;
 ```
 
-### 3.7 Use ref Props Instead of New forwardRef Wrappers in React 19
+### 4.5 Use ref Props Instead of New forwardRef Wrappers in React 19
 
 **Impact: MEDIUM-HIGH (keeps component definitions simpler in React 19 codebases and avoids adding legacy wrappers by default)**
 
@@ -650,7 +863,7 @@ export const UiStatusBadge = (props: UiStatusBadgeProps) => {
 };
 ```
 
-### 3.8 Use Visibility Primitives Deliberately for Show and Hide Branches
+### 4.6 Use Visibility Primitives Deliberately for Show and Hide Branches
 
 **Impact: MEDIUM (표시 여부 결정을 route 화면 전반에서 명시적이고 일관되게 유지함)**
 
@@ -682,13 +895,13 @@ return <Activity mode={isSidebarOpen ? "visible" : "hidden"}><EntrySidebar /></A
 return hasItems ? <ItemList /> : <EmptyState />;
 ```
 
-## 4. Screen File Discipline
+## 5. Screen File Discipline
 
 **Impact: HIGH**
 
 Route entry 파일은 화면 흐름을 분명하게 보여줘야 하며, helper 추출도 경계가 정당할 때만 해야 합니다.
 
-### 4.1 Avoid Premature Abstraction in Screen Code
+### 5.1 Avoid Premature Abstraction in Screen Code
 
 **Impact: HIGH (추측성 추출 대신 실제 재사용 경계에 맞춰 route 코드를 유지함)**
 
@@ -728,7 +941,7 @@ export const buildEntryPayload = (formValues: EntryFormValues) => {
 };
 ```
 
-### 4.2 Extract Screen Support Code Only When the Boundary Is Real
+### 5.2 Extract Screen Support Code Only When the Boundary Is Real
 
 **Impact: HIGH (route 파일이 자기 계약이 없는 helper 조각으로 분해되는 것을 막음)**
 
@@ -824,7 +1037,7 @@ export const util = {
 };
 ```
 
-### 4.3 Keep Derived Values Close to Where They Are Used
+### 5.3 Keep Derived Values Close to Where They Are Used
 
 **Impact: HIGH (오리진을 보존하고 route 파일이 alias와 명령형 setup 코드로 채워지는 것을 막음)**
 
@@ -854,7 +1067,7 @@ const responseContentManagerSearchContents = useContentManagerSearchContentsSusp
 return <UiInput value={selectedNodeContext?.node?.name} />;
 ```
 
-### 4.4 Keep Route Entry Files Focused on Screen Flow
+### 5.4 Keep Route Entry Files Focused on Screen Flow
 
 **Impact: HIGH (route 파일을 화면의 주 orchestration 지점으로 읽기 쉽게 만듦)**
 
@@ -883,7 +1096,7 @@ const handleSubmitButtonClick = async () => {
 return <ContentTypeBuilderScreen onSubmit={handleSubmitButtonClick} />;
 ```
 
-### 4.5 Move Screen-owned Pure Support Code Into page.ts Before Splitting Further
+### 5.5 Move Screen-owned Pure Support Code Into page.ts Before Splitting Further
 
 **Impact: HIGH (route entry 파일이 preset과 순수 helper를 쌓기보다 orchestration에 집중하게 함)**
 
@@ -964,13 +1177,13 @@ const isSubmitDisabled =
 return <UiButton disabled={isSubmitDisabled}>저장</UiButton>;
 ```
 
-## 5. Events and Interaction Flow
+## 6. Events and Interaction Flow
 
 **Impact: MEDIUM-HIGH**
 
 Event handler는 이름이 예측 가능하고 effect 재실행을 유발하지 않는 직접적인 사용자 액션 흐름으로 유지해야 합니다.
 
-### 5.1 Keep Screen-specific Handler Flow Local Until a Real Utility Emerges
+### 6.1 Keep Screen-specific Handler Flow Local Until a Real Utility Emerges
 
 **Impact: MEDIUM (모든 분기를 작은 helper로 쪼개지 않고도 가독성을 유지함)**
 
@@ -1003,7 +1216,7 @@ const handleSubmitButtonClick: MouseEventHandler<HTMLButtonElement> = async (_ev
 };
 ```
 
-### 5.2 Name Handlers Predictably and Curry Extra Arguments
+### 6.2 Name Handlers Predictably and Curry Extra Arguments
 
 **Impact: MEDIUM-HIGH (이벤트 흐름을 검색 가능하게 유지하고 즉흥적인 handler 시그니처를 피함)**
 
@@ -1029,7 +1242,7 @@ const handleListItemClick =
   };
 ```
 
-### 5.3 Run User Actions in Handlers, Not Effects
+### 6.3 Run User Actions in Handlers, Not Effects
 
 **Impact: HIGH (avoids modeling one-shot user actions as state plus effect replays)**
 
@@ -1062,13 +1275,13 @@ const handleSubmit = async () => {
 };
 ```
 
-## 6. State and Data Flow
+## 7. State and Data Flow
 
 **Impact: CRITICAL**
 
 Server state, store 접근, 파생값, effect callback, transition은 오리진을 보존해야 하며 데이터 변형도 가능한 한 소스 가까이에 있어야 합니다.
 
-### 6.1 Avoid Silent Fallback Defaults and Ad-hoc Loading Branches
+### 7.1 Avoid Silent Fallback Defaults and Ad-hoc Loading Branches
 
 **Impact: HIGH (결측 데이터를 숨기지 않고 로딩 UX를 Suspense 또는 명시적 예외 처리 쪽으로 유도함)**
 
@@ -1099,7 +1312,7 @@ return (
 );
 ```
 
-### 6.2 Calculate Derived Values During Rendering
+### 7.2 Calculate Derived Values During Rendering
 
 **Impact: HIGH (avoids redundant state sync and effect-driven drift when values can be computed from current inputs)**
 
@@ -1123,7 +1336,7 @@ useEffect(() => {
 const selectedCount = selectedIds.length;
 ```
 
-### 6.3 Choose State Tools by Source of Truth
+### 7.3 Choose State Tools by Source of Truth
 
 **Impact: MEDIUM-HIGH (로컬 UI state, 전역 client state, server state가 서로 흐려지는 것을 막음)**
 
@@ -1146,7 +1359,7 @@ const themeStore = useThemeStore();
 const responseUserGetItemSuspense = useUserGetItemSuspense();
 ```
 
-### 6.4 Name Query and Mutation Bindings Consistently
+### 7.4 Name Query and Mutation Bindings Consistently
 
 **Impact: HIGH (생성된 API hook과 로컬 바인딩을 쉽게 훑고 추적할 수 있게 함)**
 
@@ -1166,7 +1379,7 @@ const responseContentTypeGetListSuspense = useContentTypeGetListSuspense();
 const mutationContentTypeRemove = useContentTypeRemove();
 ```
 
-### 6.5 Prefer React Compiler Defaults Over Manual Memoization
+### 7.5 Prefer React Compiler Defaults Over Manual Memoization
 
 **Impact: MEDIUM-HIGH (검증되지 않은 값어치 없이 노이즈만 늘리는 방어적 useMemo/useCallback을 피함)**
 
@@ -1187,7 +1400,7 @@ const columns = useMemo(() => buildColumns(response.data.columns), [response.dat
 const columns = useMemo(() => buildColumns(response.data.columns), [response.data.columns]);
 ```
 
-### 6.6 Preserve Response and Store Origin in Wide Scopes
+### 7.6 Preserve Response and Store Origin in Wide Scopes
 
 **Impact: CRITICAL (파일 전체에서 alias를 따라가지 않아도 값의 출처를 바로 알 수 있게 함)**
 
@@ -1216,7 +1429,7 @@ useEffect(() => {
 }, [responseContentManagerSearchContentsSuspense]);
 ```
 
-### 6.7 Shape React Query Data in query.select
+### 7.7 Shape React Query Data in query.select
 
 **Impact: CRITICAL (응답 변환을 fetch 경계 가까이에 두고 렌더 타임의 반복 매핑을 피함)**
 
@@ -1242,7 +1455,7 @@ const responsePermissionGroupGetApiEndpointListSuspense = usePermissionGroupGetA
 });
 ```
 
-### 6.8 Store Shared Role and Authority Decisions Only When They Are Truly Shared
+### 7.8 Store Shared Role and Authority Decisions Only When They Are Truly Shared
 
 **Impact: HIGH (중복된 권한 판별 휴리스틱이 여러 화면에 퍼지는 것을 막음)**
 
@@ -1280,7 +1493,7 @@ useEffect(() => {
 }, [authStore, responseAuthBootstrapSuspense.data]);
 ```
 
-### 6.9 Use Functional setState Updates When Based on Previous State
+### 7.9 Use Functional setState Updates When Based on Previous State
 
 **Impact: MEDIUM-HIGH (prevents stale closure bugs when the next value depends on the current state)**
 
@@ -1314,7 +1527,7 @@ const handleToggleUser = (userId: string) => {
 };
 ```
 
-### 6.10 Use Lazy State Initializers for Expensive Defaults
+### 7.10 Use Lazy State Initializers for Expensive Defaults
 
 **Impact: MEDIUM (prevents repeated setup work when the initial state is expensive to compute)**
 
@@ -1337,7 +1550,7 @@ const [draftFilter] = useState(() => {
 });
 ```
 
-### 6.11 Use startTransition for Non-urgent Visual Updates
+### 7.11 Use startTransition for Non-urgent Visual Updates
 
 **Impact: MEDIUM (keeps interactions responsive when a state change triggers a heavy list, table, or tree update)**
 
@@ -1362,7 +1575,7 @@ const handleStatusFilterChange = (nextStatus: EntryStatusFilter) => {
 };
 ```
 
-### 6.12 Use useDeferredValue for Heavy Derived Renders
+### 7.12 Use useDeferredValue for Heavy Derived Renders
 
 **Impact: MEDIUM (keeps typing and small interactions responsive while expensive derived views catch up)**
 
@@ -1390,7 +1603,7 @@ const filteredRows = useMemo(() => {
 }, [deferredKeyword, rows]);
 ```
 
-### 6.13 Use useEffectEvent for Non-reactive Effect Callbacks
+### 7.13 Use useEffectEvent for Non-reactive Effect Callbacks
 
 **Impact: MEDIUM-HIGH (keeps effects reactive only to true subscriptions while still reading the latest handler logic)**
 
@@ -1431,13 +1644,107 @@ useEffect(() => {
 }, [socket]);
 ```
 
-## 7. Documentation and Comments
+## 8. Documentation and Comments
 
 **Impact: MEDIUM**
 
-React 경계 선언에는 companion skill인 `convention-typescript`의 annotation 표준을 적용하고, inline comment는 JSX나 handler 흐름에서 비자명한 제약만 설명해야 합니다.
+React 경계 선언에는 companion skill인 `convention-typescript`의 annotation 표준을 적용하고, compound component의 public part는 `@part`와 `@description`으로 읽히게 문서화하며, inline comment는 JSX나 handler 흐름에서 비자명한 제약만 설명해야 합니다.
 
-### 7.1 Limit Inline Comments to Non-obvious Logic
+### 8.1 Document Compound Parts with @part and @description
+
+**Impact: MEDIUM (keeps compound public parts scannable as one named boundary instead of disconnected props and component declarations)**
+
+`Dialog.Root`, `Dialog.Trigger`, `Tabs.List`, `ProfileCard.Footer`처럼 public part를 노출하는 compound component는 각 part를 하나의 경계로 문서화합니다.  
+이때 props `interface`와 component 선언을 따로따로 설명하지 말고, props `interface` 바로 위에 `@part`와 `@description`을 둔 뒤 component를 바로 아래에 이어 붙입니다.  
+part 내부의 field는 `@field`, part 안에서 동작을 일으키는 handler는 `@event`로 설명합니다.
+
+이 규칙은 특히 아래 상황에서 중요합니다.
+
+- `X.Root`, `X.Header`, `X.Footer`처럼 namespaced part를 public surface로 노출할 때
+- state 없는 compound component를 나중에 stateful compound component로 확장할 가능성이 있을 때
+- props `interface`와 component가 멀리 떨어지면 part 의미를 놓치기 쉬울 때
+
+**Incorrect (props와 component 설명이 분리되어 part 경계가 흐려짐):**
+
+```tsx
+/**
+ * @summary dialog header props
+ */
+interface DialogHeaderProps {
+	/**
+	 * @field header 영역 안에 렌더할 자식 요소
+	 */
+	children: ReactNode;
+}
+
+/**
+ * @summary dialog 헤더 슬롯
+ */
+const DialogHeader = (props: DialogHeaderProps) => {
+	const { children } = props;
+
+	return <header className="dialog-header">{children}</header>;
+};
+```
+
+이 방식은 props shape와 component 역할을 따로 읽어야 해서 `Dialog.Header`라는 part 경계가 한눈에 들어오지 않습니다.
+
+**Correct (part 단위로 JSDoc을 묶어 읽히게 유지):**
+
+```tsx
+/**
+ * @part dialog header
+ * @description dialog panel 상단의 제목과 설명 영역을 감싸는 헤더 컴포넌트
+ */
+interface DialogHeaderProps {
+	/**
+	 * @field header 영역 안에 렌더할 자식 요소
+	 */
+	children: ReactNode;
+}
+const DialogHeader = (props: DialogHeaderProps) => {
+	const { children } = props;
+
+	return <header className="dialog-header">{children}</header>;
+};
+```
+
+**Correct (stateful part 내부의 handler도 역할에 맞게 문서화):**
+
+```tsx
+/**
+ * @part dialog close
+ * @description dialog root context를 사용해 닫기 액션을 실행하는 공용 버튼 컴포넌트
+ */
+interface DialogCloseProps {
+	/**
+	 * @field 닫기 버튼 안에 표시할 자식 요소
+	 */
+	children: ReactNode;
+}
+const DialogClose = (props: DialogCloseProps) => {
+	const { children } = props;
+	const dialog = useDialogContext();
+
+	/**
+	 * @event dialog 닫기 버튼 클릭 처리
+	 */
+	const handleCloseButtonClick = () => {
+		dialog.closeDialog();
+	};
+
+	return (
+		<button onClick={handleCloseButtonClick} type="button">
+			{children}
+		</button>
+	);
+};
+```
+
+요약하면 compound part는 props type만의 문서도, component만의 문서도 아닙니다.  
+하나의 public part boundary로 읽히게 `@part`와 `@description`을 props `interface` 위에 두고, component를 바로 아래에 붙입니다.
+
+### 8.2 Limit Inline Comments to Non-obvious Logic
 
 **Impact: MEDIUM (코드를 해설하기보다 주석을 caveat, 제약, 부수효과 설명에 집중시킴)**
 
@@ -1464,11 +1771,11 @@ if (mutationFileUpload.isPending) {
 }
 ```
 
-### 7.2 Require JSDoc on React Hooks, Handlers, and Key Declarations
+### 8.3 Require JSDoc on React Hooks, Handlers, and Key Declarations
 
 **Impact: MEDIUM-HIGH (중요한 API, handler, effect, 타입 선언을 더 쉽게 리뷰하고 재사용할 수 있게 함)**
 
-원격 API 경계를 넘는 helper나 query/mutation wrapper, 분기나 부수효과가 있는 이벤트 핸들러, 동기화 의도가 중요한 `useEffect`, 주요 유틸 함수, 커스텀 `type`과 `interface`, store 선언, 그리고 예외적으로 사용하는 `useMemo`/`useCallback`에는 JSDoc을 작성합니다. annotation 태그 선택은 companion skill인 `convention-typescript`의 표준인 `@api`, `@event`, `@watch`, `@helper`, `@summary`, `@field`를 따릅니다.   
+원격 API 경계를 넘는 helper나 query/mutation wrapper, 분기나 부수효과가 있는 이벤트 핸들러, 동기화 의도가 중요한 `useEffect`, 주요 유틸 함수, 커스텀 `type`과 `interface`, store 선언, compound component의 public part 선언, 그리고 예외적으로 사용하는 `useMemo`/`useCallback`에는 JSDoc을 작성합니다. annotation 태그 선택은 companion skill인 `convention-typescript`의 표준인 `@api`, `@event`, `@watch`, `@helper`, `@summary`, `@part`, `@description`, `@field`를 따릅니다.   
 상태 변수, 자명한 generated hook 바인딩, 단순 파생값처럼 문맥상 의미가 분명한 선언에는 강제하지 않습니다.
 
 **Incorrect (비자명한 경계 선언에 문맥 설명이 없음):**

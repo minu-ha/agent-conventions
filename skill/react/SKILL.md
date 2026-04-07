@@ -8,8 +8,8 @@ metadata:
 
 # React 컨벤션
 
-에이전트 협업 팀을 위한 React 코딩 컨벤션 모음입니다. 현재 이 가이드는 7개 카테고리의 39개 local 규칙으로 구성되어 있습니다.  
-공용 컴포넌트 소유 경계, route-local 분리, React 계약에 맞는 handler/prop 시그니처, component API 설계, 화면 흐름, state 오리진, transition 패턴, React 경계 문서화 규칙을 [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`와 compiled [AGENTS.md](./AGENTS.md)로 관리합니다.  
+에이전트 협업 팀을 위한 React 코딩 컨벤션 모음입니다. 현재 이 가이드는 8개 카테고리의 41개 local 규칙으로 구성되어 있습니다.  
+공용 컴포넌트 소유 경계, single component·compound component·explicit variant 사이의 선택, React 계약에 맞는 handler/prop 시그니처, 화면 흐름, state 오리진, transition 패턴, React 경계 문서화 규칙을 [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`와 compiled [AGENTS.md](./AGENTS.md)로 관리합니다.  
 이 skill은 TanStack Query, Zustand, React 19 ref prop/Activity/useEffectEvent/transition 패턴을 쓰는 React codebase를 기본 전제로 합니다. 기본 compiled guide는 local React rule만 담고 `convention-typescript`를 companion skill로 함께 사용합니다.
 
 ## 사용할 때
@@ -24,11 +24,12 @@ metadata:
 |------|-----------------------------|-------------|----------------|
 | 1    | Ownership and Boundaries    | CRITICAL    | `ownership-`   |
 | 2    | Typing and Contracts        | HIGH        | `typing-`      |
-| 3    | Component Structure and JSX | HIGH        | `composition-` |
-| 4    | Screen File Discipline      | HIGH        | `screen-`      |
-| 5    | Events and Interaction Flow | MEDIUM-HIGH | `events-`      |
-| 6    | State and Data Flow         | CRITICAL    | `state-`       |
-| 7    | Documentation and Comments  | MEDIUM      | `docs-`        |
+| 3    | Composition Strategy       | HIGH        | `strategy-`    |
+| 4    | Component Structure and JSX | HIGH       | `composition-` |
+| 5    | Screen File Discipline      | HIGH       | `screen-`      |
+| 6    | Events and Interaction Flow | MEDIUM-HIGH | `events-`     |
+| 7    | State and Data Flow         | CRITICAL   | `state-`       |
+| 8    | Documentation and Comments  | MEDIUM     | `docs-`        |
 
 ## 빠른 참조
 
@@ -44,20 +45,24 @@ metadata:
 ### 2. Typing and Contracts (HIGH)
 
 - `typing-function-type-first` - 매개변수 타입보다 함수 변수 타입 선언 우선
-- `typing-reuse-existing-contracts` - 새 타입을 만들기 전에 prop/API 계약 재사용
+- `typing-reuse-existing-contracts` - 새 타입을 만들기 전에 prop과 callback 계약 재사용
 
-### 3. Component Structure and JSX (HIGH)
+### 3. Composition Strategy (HIGH)
 
-- `composition-avoid-boolean-prop-proliferation` - shared component API에 boolean prop 조합을 늘리지 않음
+- `strategy-choose-single-composition-compound-and-variants` - single component, compound component, explicit variant를 의도적으로 선택
+- `strategy-avoid-boolean-prop-proliferation` - shared component에 boolean prop 조합을 늘리지 않음
+- `strategy-prefer-children-over-render-props` - stateless compound component는 render prop보다 children과 slot part를 우선
+
+### 4. Component Structure and JSX (HIGH)
+
 - `composition-do-not-define-components-inside-components` - component 안에서 component를 새로 정의하지 않음
 - `composition-prefer-arrow-functions-and-object-params` - 복잡한 시그니처는 화살표 함수와 객체 매개변수 사용
-- `composition-prefer-children-over-render-props` - 정적인 구조 조립은 children과 slot composition을 우선
 - `composition-destructure-props-inside` - `props` 전체를 받고 본문 안에서 구조분해
 - `composition-use-ref-prop-instead-of-forwardref-in-react-19` - React 19에서는 새 `forwardRef`보다 `ref` prop을 우선
 - `composition-use-activity-for-render-branches` - visibility primitive는 show/hide 의도일 때만 사용
 - `composition-named-handlers-over-inline` - 분기와 비동기 로직을 JSX 바깥으로 드러냄
 
-### 4. Screen File Discipline (HIGH)
+### 5. Screen File Discipline (HIGH)
 
 - `screen-keep-route-flow-visible` - route entry 파일은 화면 흐름 중심으로 유지
 - `screen-avoid-premature-abstraction` - 실제 재사용 근거가 생길 때까지 추출 보류
@@ -65,13 +70,13 @@ metadata:
 - `screen-keep-derived-values-close` - 파생값과 alias를 사용 위치 가까이에 유지
 - `screen-move-pure-support-code-out-of-entry-files` - route 지원 코드의 기본 추출 대상은 sibling `page.ts`
 
-### 5. Events and Interaction Flow (MEDIUM-HIGH)
+### 6. Events and Interaction Flow (MEDIUM-HIGH)
 
 - `events-name-and-curry-handlers` - handler 이름을 예측 가능하게 짓고 추가 인자는 curry로 전달
 - `events-keep-handler-flow-inline` - 실제 utility 경계가 생길 때까지 named handler 본문에 화면 전용 흐름 유지
 - `events-run-user-actions-in-handlers-not-effects` - one-shot 사용자 액션은 effect가 아니라 handler에서 실행
 
-### 6. State and Data Flow (CRITICAL)
+### 7. State and Data Flow (CRITICAL)
 
 - `state-calculate-derived-values-during-render` - 파생값은 effect/state 동기화 대신 render 중에 계산
 - `state-choose-state-tools-by-source-of-truth` - 소유권과 수명에 맞는 state 도구 선택
@@ -87,8 +92,9 @@ metadata:
 - `state-use-usedeferredvalue-for-heavy-derived-renders` - 무거운 파생 렌더는 deferred value로 분리
 - `state-avoid-fallback-defaults-and-loading-flags` - 조용한 fallback과 ad-hoc loading 분기 지양
 
-### 7. Documentation and Comments (MEDIUM)
+### 8. Documentation and Comments (MEDIUM)
 
+- `docs-document-compound-parts-with-part-and-description` - compound component의 public part는 `@part`와 `@description`으로 한 경계처럼 문서화
 - `docs-require-jsdoc-on-key-declarations` - 비자명한 api/event/watch/helper/summary 선언에 JSDoc 요구
 - `docs-limit-inline-comments-to-non-obvious-logic` - inline comment는 제약과 caveat 설명에만 사용
 
