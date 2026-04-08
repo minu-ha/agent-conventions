@@ -1,8 +1,8 @@
 # CSS 컨벤션
 
 에이전트 협업, 리뷰, AI 보조 리팩터링에 맞춰 CSS 컨벤션을 관리하는 구조화된 저장소입니다.  
-현재 CSS 가이드는 5개 섹션의 20개 rule 파일로 구성되어 있습니다.  
-최종적으로 [AGENTS.md](./AGENTS.md)로 compile됩니다.
+현재 CSS 가이드는 5개 섹션의 21개 rule 파일로 구성되어 있습니다.  
+최종적으로 [AGENTS.md](./AGENTS.md)로 compile되며, 기본 선택은 plain `*.css`와 전역 고유 클래스명입니다.
 
 ## 구조
 
@@ -41,7 +41,7 @@
 
 1. [rules/_template.md](./rules/_template.md)를 `rules/area-description.md`로 복사합니다.
 2. 알맞은 area prefix를 고릅니다.
-   - `naming-` - 클래스 문법, slug 추적성, 네임스페이스 소유권, local-vs-route scope 규칙
+   - `naming-` - 클래스 문법, slug 추적성, 네임스페이스 소유권, plain CSS 기본값, local-vs-route scope 규칙
    - `composition-` - TSX class 조합과 wrapper 스타일링 경계 규칙
    - `selector-` - flat selector, pseudo-class, 서드파티 DOM 타게팅 규칙
    - `values-` - 토큰, fallback, 레이아웃 의도, 상호작용 상태 규칙

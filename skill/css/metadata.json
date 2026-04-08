@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "organization": "Agent Conventions",
   "date": "2026년 4월",
-  "abstract": "에이전트 협업 팀을 위한 CSS 코딩 컨벤션입니다. 이 가이드는 소유권 기반 네이밍, 예측 가능한 TSX class 조합, 평평한 selector, wrapper 기준 서드파티 스타일링, 토큰화된 값, 절제된 stylesheet 구성을 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, 최종적으로 에이전트가 읽는 `AGENTS.md`로 compile됩니다.",
+  "abstract": "에이전트 협업 팀을 위한 CSS 코딩 컨벤션입니다. 이 가이드는 plain CSS를 기본으로 한 전역 고유 네이밍, 예측 가능한 TSX class 조합, 평평한 selector, wrapper 기준 서드파티 스타일링, 토큰화된 값, 절제된 stylesheet 구성을 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, 최종적으로 에이전트가 읽는 `AGENTS.md`로 compile됩니다.",
   "references": [
     "https://developer.mozilla.org/en-US/docs/Web/CSS",
     "https://developer.mozilla.org/en-US/docs/Web/CSS/Pseudo-classes",

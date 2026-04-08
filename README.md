@@ -18,7 +18,7 @@
 - [react](./skill/react/README.md) - `convention-react`
   React 컴포넌트 경계, route-local 분리, handler 흐름, state 오리진, 문서화 규칙
 - [css](./skill/css/README.md) - `convention-css`
-  CSS 네이밍, selector 깊이, wrapper 기준 스타일링, 디자인 토큰 규칙
+  plain CSS 기본값, 전역 고유 클래스 네이밍, selector 깊이, wrapper 기준 스타일링, 디자인 토큰 규칙
 - [tanstack-route](./skill/tanstack-route/README.md) - `convention-tanstack-route`
   TanStack Router file-based route, layout shell, redirect, search param, route-local helper 규칙
 - [playwright-test](./skill/playwright-test/README.md) - `convention-playwright-test`

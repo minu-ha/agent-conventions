@@ -8,12 +8,13 @@ metadata:
 
 # CSS 컨벤션
 
-에이전트 협업 팀을 위한 CSS 코딩 컨벤션 모음입니다. 현재 이 가이드는 5개 카테고리의 20개 규칙으로 구성되어 있습니다.  
+에이전트 협업 팀을 위한 CSS 코딩 컨벤션 모음입니다. 현재 이 가이드는 5개 카테고리의 21개 규칙으로 구성되어 있습니다.  
 클래스 네이밍, TSX class 조합, selector 경계, 디자인 토큰, wrapper 기반 서드파티 스타일링 규칙을 [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`와 compiled [AGENTS.md](./AGENTS.md)로 관리합니다.
 
 ## 사용할 때
-- CSS 파일, route/컴포넌트 전용 `*.css`, TSX의 `className` 조합을 만들거나 수정할 때 사용합니다.
+- CSS 파일, route/컴포넌트 전용 plain `*.css`, TSX의 `className` 조합을 만들거나 수정할 때 사용합니다.
 - wrapper 기반 서드파티 DOM 스타일링, modifier 규칙, selector depth, 디자인 토큰 사용이 중요한 변경에 사용합니다.
+- 프로젝트가 CSS Modules를 명시적으로 표준화하지 않았다면, 기본은 plain `*.css`와 전역 고유 클래스명을 사용합니다.
 - CSS 구조나 클래스 네이밍을 house style 기준으로 리뷰할 때 사용합니다.
 
 ## 우선순위별 규칙 카테고리
@@ -38,6 +39,7 @@ metadata:
 
 ### 1. Naming and Ownership (CRITICAL)
 
+- `naming-default-to-plain-css-when-no-module-convention` - CSS Modules 표준이 없으면 plain `.css`와 전역 고유 클래스명을 기본으로 사용
 - `naming-use-scope-slug-element-modifier-syntax` - scope, slug, element, modifier를 포함한 클래스 문법 유지
 - `naming-name-elements-and-modifiers-by-role` - 구조나 간격이 아니라 UI 역할 기준으로 이름 지정
 - `naming-preserve-route-slug-traceability` - route 계층과 slug 추적 가능성 유지

@@ -12,18 +12,19 @@
 
 ## 개요
 
-에이전트 협업 팀을 위한 CSS 코딩 컨벤션입니다. 이 가이드는 소유권 기반 네이밍, 예측 가능한 TSX class 조합, 평평한 selector, wrapper 기준 서드파티 스타일링, 토큰화된 값, 절제된 stylesheet 구성을 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, 최종적으로 에이전트가 읽는 `AGENTS.md`로 compile됩니다.
+에이전트 협업 팀을 위한 CSS 코딩 컨벤션입니다. 이 가이드는 plain CSS를 기본으로 한 전역 고유 네이밍, 예측 가능한 TSX class 조합, 평평한 selector, wrapper 기준 서드파티 스타일링, 토큰화된 값, 절제된 stylesheet 구성을 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, 최종적으로 에이전트가 읽는 `AGENTS.md`로 compile됩니다.
 
 ---
 
 ## 목차
 
 1. [Naming and Ownership](#1-naming-and-ownership) — **CRITICAL**
-    - 1.1 [Keep Each scope slug Unique Per Owner](#11-keep-each-scope-slug-unique-per-owner)
-    - 1.2 [Name Elements and Modifiers by Role](#12-name-elements-and-modifiers-by-role)
-    - 1.3 [Preserve Route Slug Traceability](#13-preserve-route-slug-traceability)
-    - 1.4 [Separate Local and Route Style Scopes](#14-separate-local-and-route-style-scopes)
-    - 1.5 [Use Scope, Slug, Element, and Modifier Syntax](#15-use-scope-slug-element-and-modifier-syntax)
+    - 1.1 [Default to Plain CSS Unless the Project Explicitly Standardizes on CSS Modules](#11-default-to-plain-css-unless-the-project-explicitly-standardizes-on-css-modules)
+    - 1.2 [Keep Each scope slug Unique Per Owner](#12-keep-each-scope-slug-unique-per-owner)
+    - 1.3 [Name Elements and Modifiers by Role](#13-name-elements-and-modifiers-by-role)
+    - 1.4 [Preserve Route Slug Traceability](#14-preserve-route-slug-traceability)
+    - 1.5 [Separate Local and Route Style Scopes](#15-separate-local-and-route-style-scopes)
+    - 1.6 [Use Scope, Slug, Element, and Modifier Syntax](#16-use-scope-slug-element-and-modifier-syntax)
 2. [Class Composition and Wrapper Boundaries](#2-class-composition-and-wrapper-boundaries) — **HIGH**
     - 2.1 [Compose Classes With clsx()](#21-compose-classes-with-clsx)
     - 2.2 [Do Not Use Modifiers for One-off Structural Patches](#22-do-not-use-modifiers-for-one-off-structural-patches)
@@ -52,7 +53,55 @@
 
 클래스 문법, slug 추적성, 네임스페이스 소유권, local-vs-route scope가 명확해야 스타일을 검색하고 안전하게 수정할 수 있습니다.
 
-### 1.1 Keep Each scope slug Unique Per Owner
+### 1.1 Default to Plain CSS Unless the Project Explicitly Standardizes on CSS Modules
+
+**Impact: HIGH (keeps the global `scope_slug` naming system meaningful instead of hiding ownership behind local module indirection)**
+
+이 CSS skill은 기본적으로 plain `*.css`와 전역 고유 클래스명을 전제로 합니다. `rt_*`, `ui_*`, `wg_*`, `loc_*` 네임스페이스는 global class space에서 owner를 추적하려고 존재하므로, 프로젝트에 별도 합의가 없다면 `.module.css`와 `styles.foo`를 기본 선택으로 삼지 않습니다. 프로젝트가 이미 CSS Modules를 공식 표준으로 채택했고 그에 맞는 naming/runtime 규칙이 따로 있다면, 그 프로젝트 로컬 규칙이 이 기본값보다 우선합니다.
+
+**Incorrect (프로젝트 표준이 없는데도 CSS Modules를 기본처럼 사용):**
+
+```tsx
+import styles from "./mission-control.module.css";
+
+<div className={styles.rt_star_wars_mission_control__hero}>
+	<span className={styles.rt_star_wars_mission_control__eyebrow}>
+		GraphQL operations deck
+	</span>
+</div>
+```
+
+```css
+.rt_star_wars_mission_control__hero {
+	display: grid;
+}
+
+.rt_star_wars_mission_control__eyebrow {
+	letter-spacing: 0.08em;
+}
+```
+
+**Correct (기본은 plain CSS와 전역 고유 클래스명을 사용):**
+
+```tsx
+import "./mission-control.css";
+
+<div className="rt_swmc__hero">
+	<span className="rt_swmc__eyebrow">GraphQL operations deck</span>
+</div>
+```
+
+```css
+.rt_swmc__hero {
+	display: grid;
+}
+
+.rt_swmc__eyebrow {
+	letter-spacing: 0.08em;
+}
+```
+
+### 1.2 Keep Each scope slug Unique Per Owner
 
 **Impact: CRITICAL (prevents unrelated routes or components from sharing the same namespace and colliding in the global class space)**
 
@@ -78,7 +127,7 @@ rt_pctbi__header
 rt_mgri__header
 ```
 
-### 1.2 Name Elements and Modifiers by Role
+### 1.3 Name Elements and Modifiers by Role
 
 **Impact: HIGH (avoids vague or layout-only names that stop classes from describing what the UI part actually is)**
 
@@ -102,7 +151,7 @@ ui_card__body--active
 rt_pcmei__detailSection
 ```
 
-### 1.3 Preserve Route Slug Traceability
+### 1.4 Preserve Route Slug Traceability
 
 **Impact: HIGH (keeps route-scoped class namespaces readable back to the route hierarchy they belong to)**
 
@@ -124,7 +173,7 @@ project.content-type-builder.index -> rt_pctbi
 rt_pctbi__panel
 ```
 
-### 1.4 Separate Local and Route Style Scopes
+### 1.5 Separate Local and Route Style Scopes
 
 **Impact: HIGH (keeps route-shared styles and `-local` component styles from mixing into the same namespace or file)**
 
@@ -148,7 +197,7 @@ entries.css
   loc_mecf__root
 ```
 
-### 1.5 Use Scope, Slug, Element, and Modifier Syntax
+### 1.6 Use Scope, Slug, Element, and Modifier Syntax
 
 **Impact: CRITICAL (makes class ownership and UI role traceable from the classname alone)**
 
