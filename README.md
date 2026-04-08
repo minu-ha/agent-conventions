@@ -106,7 +106,7 @@ skill/react/
 ```
 
 - `SKILL.md`
-  skill 이름, description, discovery metadata를 담습니다.
+  skill 이름, description, activation checklist, companion skill/load guidance를 담는 엔트리포인트입니다.
 - `README.md`
   사람이 읽는 개요 문서입니다.
 - `metadata.json`
@@ -154,6 +154,7 @@ skill을 수정할 때는 아래 순서를 권장합니다.
 1. 대상이 structured skill인지 legacy skill인지 먼저 확인합니다.
 2. structured skill이면 `rules/_sections.md`, `rules/_template.md`, `rules/*.md`,
    그리고 필요한 `metadata.json`을 수정합니다.
+   skill 사용 흐름이나 companion load 기준이 바뀌면 `SKILL.md`도 함께 갱신합니다.
 3. `extends`가 있다면 공통 규칙을 companion skill에 둘지, local overlay로 둘지
    먼저 판단합니다.
 4. generic TypeScript 규칙이면 가능하면

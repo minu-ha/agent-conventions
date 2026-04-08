@@ -1,6 +1,6 @@
 ---
 name: convention-nestjs
-description: NestJS module, controller, service, DTO, Prisma 접근, 예외 처리, 테스트 경계 규칙을 함께 적용해야 하면 사용합니다.
+description: Use when editing NestJS modules, controllers, services, DTOs, Prisma access, exceptions, or backend tests that need consistent layering and API contracts.
 metadata:
   author: agent-conventions
   version: "1.0.0"
@@ -16,6 +16,12 @@ metadata:
 - NestJS module, controller, service, DTO, Prisma 접근 코드, NestJS 테스트를 만들거나 수정할 때 사용합니다.
 - controller/service 경계, DTO 계약, 예외 처리, backend unit/e2e 테스트 범위를 일관되게 유지해야 할 때 사용합니다.
 - NestJS house style 기준으로 백엔드 변경을 리뷰할 때 사용합니다.
+
+## 활성화 체크리스트
+- 변경 범위가 NestJS module, controller, service, DTO, Prisma access, exception 처리, backend test인지 먼저 확인합니다.
+- 이 skill이 활성화되면 먼저 compiled [AGENTS.md](./AGENTS.md)를 열어 Naming, Layers, DTO, Methods, Docs, Testing, Guardrails 중 어떤 카테고리가 이번 변경과 직접 맞물리는지 확인합니다.
+- 실제로 건드리는 관심사에 해당하는 `rules/*.md`를 추가로 읽습니다. controller/service 경계를 바꾸면 layer rule, DTO shape나 swagger 문서를 바꾸면 dto rule, 예외/async 흐름을 바꾸면 methods rule, 테스트 범위를 바꾸면 testing rule을 봅니다.
+- NestJS 변경은 기본적으로 `convention-typescript`를 함께 로드하고, 프론트엔드와 공유하는 API 계약이 바뀌면 대응되는 frontend skill, 브라우저 E2E 흐름까지 바뀌면 `convention-playwright-test`도 같이 참고합니다.
 
 ## 우선순위별 규칙 카테고리
 
@@ -90,6 +96,11 @@ metadata:
 - slim [AGENTS.md](./AGENTS.md)는 local NestJS rule만 담고, 공통 TypeScript 규칙은 `convention-typescript`를 함께 로드해 보완합니다.
 - DTO나 controller가 React/TanStack Route와 계약을 공유하면 해당 프론트엔드 skill과 함께 사용합니다.
 - 백엔드 E2E와 브라우저 E2E가 함께 바뀌면 `convention-playwright-test`를 함께 사용합니다.
+
+## 마무리 전 셀프 리뷰
+- 이번 변경이 Layers, DTO, Methods, Testing 중 어디에 가장 직접 걸리는지 다시 대조하고 관련 rule을 빠뜨리지 않았는지 확인합니다.
+- NestJS 변경인데 `convention-typescript`를 함께 보지 않았거나, API 계약 또는 E2E 범위가 같이 바뀌는데 companion skill을 누락하지 않았는지 점검합니다.
+- controller가 boundary에 머무는지, service가 도메인 규칙을 책임지는지, DTO/예외/테스트 범위가 일관적인지 마지막으로 확인합니다.
 
 ## 사용하는 방법
 

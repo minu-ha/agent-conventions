@@ -1,6 +1,6 @@
 ---
 name: convention-react
-description: React 또는 TSX 파일을 수정할 때, 컴포넌트 소유 경계, route-local 분리, handler 흐름, state 오리진, 문서화 규칙을 함께 적용해야 하면 사용합니다.
+description: Use when editing React or TSX components, screen files, local UI boundaries, handler flow, state/data flow, or React-adjacent TypeScript that shapes rendered behavior.
 metadata:
   author: agent-conventions
   version: "1.0.0"
@@ -17,6 +17,12 @@ metadata:
 - React 컴포넌트, 화면 파일, TSX 렌더링 흐름, React 인접 `*.ts` 파일을 수정할 때 사용합니다.
 - 컴포넌트 소유 경계, handler 구조, 파생값 위치, React Query/Zustand 데이터 흐름이 중요한 변경에 사용합니다.
 - React 코드를 house style 기준으로 리뷰할 때 사용합니다.
+
+## 활성화 체크리스트
+- 변경 범위가 React 컴포넌트, screen entry, `-local` UI, TSX 렌더링 흐름, React 인접 support code인지 먼저 확인합니다.
+- 이 skill이 활성화되면 먼저 compiled [AGENTS.md](./AGENTS.md)를 열어 Ownership, Typing, Strategy, Composition, Screen, Events, State, Docs 중 어떤 카테고리가 직접 관련되는지 빠르게 훑습니다.
+- 실제로 바꾸는 관심사에 맞는 `rules/*.md`를 추가로 읽습니다. 컴포넌트 경계를 바꾸면 ownership/strategy, handler 흐름을 바꾸면 events, 데이터 흐름을 바꾸면 state, 주석/JSDoc을 바꾸면 docs rule을 확인합니다.
+- React 변경은 기본적으로 `convention-typescript`를 함께 로드하고, `className`/style import가 바뀌면 `convention-css`, route entry나 navigation/search가 바뀌면 `convention-tanstack-route`, 브라우저 테스트까지 바뀌면 `convention-playwright-test`도 같이 로드합니다.
 
 ## 우선순위별 규칙 카테고리
 
@@ -106,6 +112,11 @@ metadata:
 - 스타일, `className`, CSS import가 바뀌면 `convention-css`를 함께 사용합니다.
 - route 파일이나 router API가 바뀌면 `convention-tanstack-route`를 함께 사용합니다.
 - Playwright 테스트 범위가 바뀌면 `convention-playwright-test`를 함께 사용합니다.
+
+## 마무리 전 셀프 리뷰
+- 변경이 Ownership, Strategy, Screen, Events, State 중 어디에 걸리는지 다시 대조하고, 관련 rule을 빠뜨리지 않았는지 확인합니다.
+- React 변경인데 `convention-typescript`를 함께 보지 않았거나, style/router/test 영향이 있는데 해당 companion skill을 빼먹지 않았는지 점검합니다.
+- screen entry 파일이 과도하게 support code를 품고 있지 않은지, handler와 파생값과 state 오리진이 React 규칙에 맞게 남아 있는지 마지막으로 확인합니다.
 
 ## 사용하는 방법
 

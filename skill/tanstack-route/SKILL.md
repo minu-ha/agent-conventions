@@ -1,6 +1,6 @@
 ---
 name: convention-tanstack-route
-description: TanStack Router file-based route, layout shell, pathless group, redirect, search param, route-local support module 규칙을 함께 적용해야 하면 사용합니다.
+description: Use when editing TanStack Router file-based routes, route folders, layout shells, guards, redirects, search params, or route-local support modules.
 metadata:
   author: agent-conventions
   version: "1.0.0"
@@ -16,6 +16,12 @@ route 구조, 네이밍, router boundary 선언, route-local 책임, generated a
 - TanStack Router route 파일, route 폴더, route 인접 owner-named `*.ts` support module을 만들거나 수정할 때 사용합니다.
 - `createFileRoute`, `beforeLoad`, `validateSearch`, pathless group, 동적 세그먼트, route grouping 규칙이 중요한 변경에 사용합니다.
 - route 구조나 redirect/guard 동작을 house style 기준으로 리뷰할 때 사용합니다.
+
+## 활성화 체크리스트
+- 변경 범위가 route 파일, route 폴더 구조, redirect/guard/search schema, route-local support module인지 먼저 확인합니다.
+- 이 skill이 활성화되면 먼저 compiled [AGENTS.md](./AGENTS.md)를 열어 Structure, Naming, Declaration, Responsibility, Styling, Workflow 중 어떤 카테고리가 직접 걸리는지 빠르게 훑습니다.
+- 실제로 바꾸는 관심사에 맞는 `rules/*.md`를 추가로 읽습니다. route 구조와 그룹핑을 바꾸면 structure rule, `createFileRoute`/`beforeLoad`/`validateSearch`를 바꾸면 declaration rule, CSS와 generated artifact를 만지면 styling/workflow rule을 확인합니다.
+- route support module과 search schema를 바꾸면 `convention-typescript`, route entry 화면이나 `-local` UI를 바꾸면 `convention-react`, route CSS를 바꾸면 `convention-css`, navigation 검증을 브라우저 테스트로 확인하면 `convention-playwright-test`도 함께 로드합니다.
 
 ## 우선순위별 규칙 카테고리
 
@@ -88,6 +94,11 @@ route 구조, 네이밍, router boundary 선언, route-local 책임, generated a
 - route entry 화면이나 `-local` 컴포넌트가 바뀌면 `convention-react`를 함께 사용합니다.
 - route 레벨 CSS나 `-local/*.css`가 바뀌면 `convention-css`를 함께 사용합니다.
 - redirect, auth guard, navigation 흐름을 Playwright로 검증하면 `convention-playwright-test`를 함께 사용합니다.
+
+## 마무리 전 셀프 리뷰
+- 이번 변경이 Structure, Declaration, Responsibility, Styling, Workflow 중 어느 카테고리에 걸리는지 다시 대조하고 관련 rule을 빠뜨리지 않았는지 확인합니다.
+- route support/search schema, route UI, route CSS, Playwright 검증까지 번졌는데 `convention-typescript`, `convention-react`, `convention-css`, `convention-playwright-test`를 누락하지 않았는지 점검합니다.
+- route path 문자열, 파일 구조, guard/search 정규화, generated artifact 취급이 모두 router 규칙과 맞는지 마지막으로 확인합니다.
 
 ## 사용하는 방법
 

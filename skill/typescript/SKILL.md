@@ -1,6 +1,6 @@
 ---
 name: convention-typescript
-description: TypeScript 또는 TSX 파일을 수정할 때, 네이밍, import 구조, 타입 선언, helper 분리, 결측값 처리, JSDoc 규칙을 함께 적용해야 하면 사용합니다.
+description: Use when editing TypeScript or TSX modules, shared utilities, configs, types, helper extraction, fallback handling, or JSDoc-heavy declarations.
 metadata:
   author: agent-conventions
   version: "1.0.0"
@@ -16,6 +16,12 @@ metadata:
 - 일반 TypeScript 모듈, 유틸 파일, 설정 파일, TSX를 포함한 TypeScript 코드를 만들거나 수정할 때 사용합니다.
 - import 구조, 타입 재사용, helper 분리, 옵셔널 값 처리, 주석 규칙이 중요한 변경에 사용합니다.
 - TypeScript house style 기준으로 코드나 문서를 리뷰할 때 사용합니다.
+
+## 활성화 체크리스트
+- 변경 범위가 TypeScript 모듈, TSX 인접 support code, 설정 파일, 타입 선언, helper 추출, fallback 처리, JSDoc 규칙에 걸리는지 먼저 확인합니다.
+- 이 skill이 활성화되면 먼저 compiled [AGENTS.md](./AGENTS.md)를 열어 Naming, Types, Functions, Absence, Docs, Guardrails 중 어떤 카테고리가 직접 관련되는지 빠르게 훑습니다.
+- 실제로 바꾸는 관심사에 해당하는 `rules/*.md`를 추가로 읽습니다. 타입 계약과 callback 시그니처를 바꾸면 types rule, helper 추출과 함수 시그니처를 바꾸면 functions rule, fallback/optional 처리와 주석을 바꾸면 absence/docs rule을 확인합니다.
+- 변경이 특정 프레임워크 경계 안에서 일어난다면 `convention-react`, `convention-nestjs`, `convention-tanstack-route`, `convention-playwright-test` 같은 전용 skill을 함께 로드하고, 이 skill은 공통 TypeScript companion으로 사용합니다.
 
 ## 우선순위별 규칙 카테고리
 
@@ -76,6 +82,11 @@ metadata:
 - React, TanStack Route, NestJS 같은 프레임워크 영역이라면 해당 전용 skill을 함께 사용합니다.
 - route helper나 search schema처럼 router 경계가 함께 바뀌면 `convention-tanstack-route`를 함께 사용합니다.
 - 타입/주석 규칙을 테스트나 fixture에도 반영하면 `convention-playwright-test` 같은 테스트 전용 skill을 함께 사용합니다.
+
+## 마무리 전 셀프 리뷰
+- 이번 변경이 Naming, Types, Functions, Absence, Docs 중 어느 카테고리에 걸리는지 다시 대조하고 관련 rule을 빠뜨리지 않았는지 확인합니다.
+- 프레임워크 전용 문맥인데 `convention-react`, `convention-nestjs`, `convention-tanstack-route`, `convention-playwright-test` 같은 companion skill을 빼먹지 않았는지 점검합니다.
+- 새 타입을 불필요하게 만들지 않았는지, helper 경계가 과도하지 않은지, 결측값을 조용한 fallback으로 숨기지 않았는지 마지막으로 확인합니다.
 
 ## 사용하는 방법
 

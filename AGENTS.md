@@ -31,6 +31,7 @@
 
 - 각 structured skill의 [rules/_sections.md](./skill/react/rules/_sections.md), [rules/_template.md](./skill/react/rules/_template.md), `rules/*.md`가 source of truth입니다.
 - [skill/react/AGENTS.md](./skill/react/AGENTS.md) 같은 compiled guide는 build 결과물입니다.
+- [skill/react/SKILL.md](./skill/react/SKILL.md) 같은 entrypoint는 스킬 activation guide이며, agent가 어떤 companion skill과 상세 문서를 추가로 읽어야 하는지 명시해야 합니다.
 - 일부 skill은 `metadata.json`의 `extends`로 companion skill 관계를 선언합니다.
 - `metadata.json`, [rules/_sections.md](./skill/react/rules/_sections.md), [README.md](./skill/react/README.md), [SKILL.md](./skill/react/SKILL.md)는 서로 설명이 어긋나지 않게 유지합니다.
 - 이전 단일 문서는 [deprecated/](./skill/react/deprecated/react.md)에 보관합니다.
@@ -47,12 +48,12 @@
 
 structured skill을 수정할 때는 아래 순서를 기본으로 사용합니다.
 
-1. 먼저 [SKILL.md](./skill/react/SKILL.md), [README.md](./skill/react/README.md), `metadata.json`, [rules/_sections.md](./skill/react/rules/_sections.md)를 훑어 현재 구성을 확인합니다.
+1. 먼저 [SKILL.md](./skill/react/SKILL.md), [README.md](./skill/react/README.md), `metadata.json`, [rules/_sections.md](./skill/react/rules/_sections.md)를 훑어 현재 구성과 activation 흐름을 확인합니다.
 2. 실제 규칙 변경은 [rules/_sections.md](./skill/react/rules/_sections.md), [rules/_template.md](./skill/react/rules/_template.md), `rules/*.md`에서 수행합니다.
 3. `metadata.json`에 `extends`가 있으면 공통 companion skill과 local overlay skill 중 어디가 정본인지 먼저 판단합니다.
 4. [skill/react/AGENTS.md](./skill/react/AGENTS.md) 같은 generated guide를 수동 source of truth처럼 편집하지 않습니다.
 5. 변경 후에는 validate와 build를 다시 실행해 generated output을 갱신합니다.
-6. skill 인벤토리나 작업 방식이 바뀌면 루트 [README.md](./README.md)도 함께 갱신합니다.
+6. skill 인벤토리나 작업 방식, activation 흐름이 바뀌면 루트 [README.md](./README.md)도 함께 갱신합니다.
 
 새 skill을 추가하거나 legacy skill을 structured skill로 마이그레이션할 때는 가능하면 이미 정리된 `react`, `css`, `typescript` 폴더를 기준 템플릿으로 삼는 편이 안전합니다.
 

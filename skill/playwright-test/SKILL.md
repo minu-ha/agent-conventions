@@ -1,6 +1,6 @@
 ---
 name: convention-playwright-test
-description: Playwright 브라우저 테스트, integration/e2e 경계, locator 전략, waiting, mocking, 데이터 고립 규칙을 함께 적용해야 하면 사용합니다.
+description: Use when writing or reviewing Playwright browser tests, deciding integration versus e2e boundaries, locator and waiting strategy, mocking, seed data, or cleanup flow.
 metadata:
   author: agent-conventions
   version: "1.0.0"
@@ -16,6 +16,12 @@ metadata:
 - Playwright spec, feature-local helper, 공용 support 파일을 만들거나 수정할 때 사용합니다.
 - Integration과 E2E 범위를 의도적으로 나누고, locator, mocking, seed, cleanup, waiting 규칙을 일관되게 유지해야 할 때 사용합니다.
 - 브라우저 테스트 house style 기준으로 테스트 코드를 리뷰할 때 사용합니다.
+
+## 활성화 체크리스트
+- 변경 범위가 Playwright spec, fixture, seed helper, support type, integration/e2e 분류, locator, mocking, waiting 규칙에 걸리는지 먼저 확인합니다.
+- 이 skill이 활성화되면 먼저 compiled [AGENTS.md](./AGENTS.md)를 열어 Strategy, Naming, Authoring, Integration, E2E, Locator, Guardrails 중 어떤 카테고리가 직접 관련되는지 빠르게 훑습니다.
+- 실제로 바꾸는 관심사에 맞는 `rules/*.md`를 추가로 읽습니다. integration/e2e 분류를 바꾸면 strategy/integration/e2e rule, locator나 assertion을 바꾸면 locator rule, test data와 cleanup을 바꾸면 authoring rule을 확인합니다.
+- fixture, seed helper, payload builder, support type을 건드리면 `convention-typescript`를 함께 로드하고, 화면 구조나 route 흐름이 직접 관련되면 `convention-react`나 `convention-tanstack-route`도 같이 참고합니다.
 
 ## 우선순위별 규칙 카테고리
 
@@ -93,6 +99,11 @@ metadata:
 - 이 skill은 fixture, seed helper, payload builder, support type 변경 시 `convention-typescript`와 함께 로드하는 것을 기본으로 합니다.
 - slim [AGENTS.md](./AGENTS.md)는 local Playwright rule만 담고, fixture나 support type의 공통 TypeScript 규칙은 `convention-typescript`를 함께 로드해 보완합니다.
 - 테스트가 화면 구조나 라우팅 규칙과 강하게 묶이면 `convention-react`나 `convention-tanstack-route`를 함께 사용합니다.
+
+## 마무리 전 셀프 리뷰
+- 이번 테스트 변경이 integration, e2e, locator, authoring 중 어느 축에 걸리는지 다시 대조하고 관련 rule을 빠뜨리지 않았는지 확인합니다.
+- fixture/support type, 화면 구조, 라우팅 흐름이 함께 바뀌는데 `convention-typescript`, `convention-react`, `convention-tanstack-route` 같은 companion skill을 빼먹지 않았는지 점검합니다.
+- 시간 대기 대신 상태 대기를 쓰는지, integration과 e2e를 한 파일에 섞지 않았는지, seed/cleanup 경계가 명확한지 마지막으로 확인합니다.
 
 ## 사용하는 방법
 

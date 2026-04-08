@@ -1,6 +1,6 @@
 ---
 name: convention-css
-description: CSS 파일, TSX class 조합, wrapper 기준 서드파티 DOM 스타일링, selector 깊이, 디자인 토큰 규칙을 함께 적용해야 하면 사용합니다.
+description: Use when editing CSS files, TSX className composition, wrapper-based third-party DOM styling, selector depth, design tokens, or deciding between plain CSS and CSS Modules.
 metadata:
   author: agent-conventions
   version: "1.0.0"
@@ -16,6 +16,12 @@ metadata:
 - wrapper 기반 서드파티 DOM 스타일링, modifier 규칙, selector depth, 디자인 토큰 사용이 중요한 변경에 사용합니다.
 - 프로젝트가 CSS Modules를 명시적으로 표준화하지 않았다면, 기본은 plain `*.css`와 전역 고유 클래스명을 사용합니다.
 - CSS 구조나 클래스 네이밍을 house style 기준으로 리뷰할 때 사용합니다.
+
+## 활성화 체크리스트
+- 변경 범위에 stylesheet 파일, `className` 조합, CSS import, wrapper 스타일링, selector, 토큰 사용 여부가 포함되는지 먼저 확인합니다.
+- 이 skill이 활성화되면 먼저 compiled [AGENTS.md](./AGENTS.md)를 열어 Naming, Composition, Selector, Values, Organization 중 어떤 카테고리가 이번 변경에 직접 걸리는지 빠르게 훑습니다.
+- 실제로 건드리는 관심사에 해당하는 `rules/*.md`를 추가로 읽습니다. 예를 들어 네이밍을 바꾸면 naming rule, `className` 조합을 바꾸면 composition rule, 서드파티 DOM을 만지면 selector rule을 확인합니다.
+- JSX 구조가 함께 바뀌면 `convention-react`, route 레벨 스타일이면 `convention-tanstack-route`, helper/type이 함께 바뀌면 `convention-typescript`도 같이 로드합니다.
 
 ## 우선순위별 규칙 카테고리
 
@@ -78,6 +84,11 @@ metadata:
 - route 레벨 스타일이나 route-local 스타일이 바뀌면 `convention-tanstack-route`를 함께 사용합니다.
 - helper, config, wrapper prop 타입이 함께 바뀌면 `convention-typescript`를 함께 사용합니다.
 - 브라우저 기반 스타일 회귀를 검증하면 `convention-playwright-test`를 함께 사용합니다.
+
+## 마무리 전 셀프 리뷰
+- 프로젝트가 CSS Modules를 명시적으로 표준화하지 않았는데 `.module.css`나 `styles.*`를 기본처럼 도입하지 않았는지 확인합니다.
+- 바뀐 코드가 Naming, Composition, Selector, Values, Organization 중 어느 카테고리에 걸리는지 다시 대조하고, 해당 규칙을 빠뜨리지 않았는지 점검합니다.
+- 변경이 JSX 구조, route 파일, helper/type, 브라우저 테스트까지 번졌다면 companion skill을 함께 참고했는지 확인합니다.
 
 ## 사용하는 방법
 

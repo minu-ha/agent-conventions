@@ -1,6 +1,6 @@
 ---
 name: convention-springboot
-description: Spring Boot 기반 백엔드 개발 시 일관된 코드 스타일, 아키텍처, 설계 원칙을 유지하기 위한 컨벤션
+description: Use when editing Spring Boot controllers, services, modules, entities or DTOs, repositories, API design, or backend architecture and review flow.
 ---
 
 # Springboot 컨벤션
@@ -17,10 +17,25 @@ description: Spring Boot 기반 백엔드 개발 시 일관된 코드 스타일,
 
 ---
 
+## 활성화 체크리스트
+
+- 변경 범위가 Controller, Service, Repository, DTO/Entity, 트랜잭션, 예외 처리, API 설계, 모듈 구조에 걸리는지 먼저 확인한다.
+- 이 skill이 활성화되면 상세 규칙 문서인 [springboot.md](./springboot.md)를 먼저 읽고, HTTP 계약이나 요청/응답 설계가 바뀌면 [api.md](./api.md)도 반드시 함께 읽는다.
+- 프론트엔드와 공유하는 API 계약이나 테스트 경계가 같이 바뀌면, 해당 프로젝트의 프론트엔드 또는 테스트 skill도 함께 참고한다.
+
+---
+
 ## 함께 읽을 것
 
 - 상세 규칙은 [springboot.md](./springboot.md)를 읽습니다.
 - API 설계 규칙은 [api.md](./api.md)를 참고합니다.
+
+---
+
+## 마무리 전 셀프 리뷰
+
+- Controller에 비즈니스 로직이 새어 들어가지 않았는지, DTO/Entity 분리와 트랜잭션 범위가 적절한지 다시 확인한다.
+- API 계약을 바꿨는데 [api.md](./api.md) 검토를 빼먹지 않았는지, 프론트엔드와 공유하는 계약 변경이 있다면 관련 skill을 함께 참고했는지 점검한다.
 
 ---
 
