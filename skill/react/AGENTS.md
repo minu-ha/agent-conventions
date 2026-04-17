@@ -906,8 +906,9 @@ Route entry 파일은 화면 흐름을 분명하게 보여줘야 하며, helper 
 
 **Impact: HIGH (추측성 추출 대신 실제 재사용 경계에 맞춰 route 코드를 유지함)**
 
-반복이 보인다는 이유만으로 즉시 공용 hook, 공용 컴포넌트, 공용 helper로 올리지 않습니다. 같은 화면, 같은 support module, 같은 exported 함수 안에서 비슷한 단계가 반복되더라도 기본은 한 함수 안에 유지합니다.   
+반복이 보인다는 이유만으로 즉시 공용 hook, 공용 컴포넌트, 공용 helper로 올리지 않습니다. 같은 화면, 같은 support module, 같은 exported 함수 안에서 비슷한 단계가 반복되더라도 기본은 한 함수 안에 유지합니다.
 같은 이름의 계약으로 여러 화면이나 모듈이 직접 호출해야 하는 경계가 분명해질 때만 공용화를 검토합니다. 그 전에는 section comment, 단계 구분 변수, 내부 블록으로 먼저 정리합니다. route-local component 추출도 예외가 아니며, 단순 layout wrapper가 아니라 실제 runtime boundary를 소유할 때만 검토합니다.
+custom hook도 예외가 아닙니다. hook 이름을 붙일 수 있다는 이유만으로 추출하지 말고, state/effect/context/form/store처럼 실제 React orchestration을 묶을 때만 hook 경계를 만듭니다.
 
 **Incorrect (반복만 보고 성급하게 추상화):**
 
@@ -925,10 +926,14 @@ const usePermissionB = () => {
 
 ```ts
 /**
- * @summary 입력 검증, 저장, 오류 표시 계약
+ * @summary form state, 저장 mutation, 오류 노출을 함께 오케스트레이션하는 editor contract
  */
 export const useContentEditor = () => {
-  // ...
+  const form = useForm<ContentEditorFormValues>();
+  const mutationContentSave = useContentSave();
+  const [submitErrorMessage, setSubmitErrorMessage] = useState<string | null>(null);
+
+  return { form, mutationContentSave, setSubmitErrorMessage, submitErrorMessage };
 };
 ```
 
@@ -1002,12 +1007,12 @@ export const RouteComponent = () => {
 ```tsx
 interface EntryTreeSectionProps {
 	sidebarNodes: EntrySidebarNode[];
-	selectedTableKey?: string;
+	selectedTableName?: string;
 	onTableSelect: (tableName: string) => void;
 }
 
 const EntryTreeSection = (props: EntryTreeSectionProps) => {
-	const { sidebarNodes, selectedTableKey, onTableSelect } = props;
+	const { sidebarNodes, selectedTableName, onTableSelect } = props;
 	const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
 	const [treeSearchKeyword, setTreeSearchKeyword] = useState("");
 
@@ -1036,7 +1041,7 @@ const EntryTreeSection = (props: EntryTreeSectionProps) => {
 				<UiTree
 					treeData={filteredSidebarNodes.map(mapEntryNodeToTreeData)}
 					expandedKeys={expandedKeys}
-					selectedKeys={selectedTableKey ? [selectedTableKey] : []}
+					selectedKeys={selectedTableName ? [`table:${selectedTableName}`] : []}
 					onExpand={(keys) => setExpandedKeys(keys.map(String))}
 					onSelect={handleTreeSelect}
 				/>
@@ -1075,11 +1080,11 @@ export const RouteComponent = () => {
 		<div className="entry-layout">
 			<EntryTreeSection
 				sidebarNodes={responseContentFolderGetListSuspense.data.sidebarNodes}
-				selectedTableKey={search.table}
+				selectedTableName={search.table}
 				onTableSelect={handleTableSelect}
 			/>
 			<EntryTableSection
-				contents={responseContentManagerSearchContents.data?.contents ?? []}
+				contents={responseContentManagerSearchContents.data?.contents}
 			/>
 		</div>
 	);
@@ -1092,10 +1097,11 @@ export const RouteComponent = () => {
 
 **Impact: HIGH (route 파일이 자기 계약이 없는 helper 조각으로 분해되는 것을 막음)**
 
-화면 support code는 React state와 직접 결합되지 않고, 입력/출력 계약이 분명하며, 밖으로 빼면 entry flow가 더 읽기 쉬워질 때만 추출합니다.   
-기본 추출 대상은 sibling `page.ts`이고, `page.ts`도 named export/direct import를 우선합니다.   
-이 규칙은 `page.ts` 안에서 export 경계를 어디까지 둘지에 대한 규칙입니다. 같은 support module 안의 반복은 기본적으로 한 exported 함수 안에 유지하고, 같은 단계가 여러 exported 함수에서 그대로 반복되거나 이름 붙은 도메인 규칙으로 읽힐 때만 private helper를 검토합니다. export helper가 또 다른 export helper만 위해 존재하는 구조는 피합니다.   
-`helper.ts`, `helpers.ts`, `utils.ts`, `common.ts` 같은 generic 파일명은 feature 안에서 만들지 않습니다.   
+화면 support code는 React state와 직접 결합되지 않고, 입력/출력 계약이 분명하며, 밖으로 빼면 entry flow가 더 읽기 쉬워질 때만 추출합니다.
+옮기기로 결정한 경우 기본 목적지는 sibling `page.ts`이고, `page.ts`도 named export/direct import를 우선합니다.
+반대로 작은 1회성 guard, 사용 지점 바로 옆이 더 읽기 쉬운 계산, hook context에 붙어 있어야 의미가 분명한 동기화 로직은 `page.tsx`에 남깁니다.
+이 규칙은 `page.ts` 안에서 export 경계를 어디까지 둘지에 대한 규칙입니다. 같은 support module 안의 반복은 기본적으로 한 exported 함수 안에 유지하고, 같은 단계가 여러 exported 함수에서 그대로 반복되거나 이름 붙은 도메인 규칙으로 읽힐 때만 private helper를 검토합니다. export helper가 또 다른 export helper만 위해 존재하는 구조는 피합니다.
+`helper.ts`, `helpers.ts`, `utils.ts`, `common.ts` 같은 generic 파일명은 feature 안에서 만들지 않습니다.
 `queryClient.invalidateQueries`처럼 hook 컨텍스트에 붙어 있어야 더 읽기 쉬운 동기화 로직은 handler/effect에 남기고, support module 바깥 여러 모듈이 같은 함수를 직접 import해야 할 때만 `shared/util.ts`의 `util.*`나 별도 owner module 승격을 검토합니다.
 
 **Incorrect (작은 화면 전용 계산을 generic util 파일로 뺌):**
@@ -1252,9 +1258,10 @@ return (
 
 **Impact: HIGH (route entry 파일이 preset과 순수 helper를 쌓기보다 orchestration에 집중하게 함)**
 
-화면 전용 불변 설정, 옵션 목록, preset, 컬럼 메타, 순수 support function, 타입 선언은 route entry 상단에 쌓아두지 말고 기본적으로 같은 계층 `page.ts`로 이동합니다.   
-route entry에는 state, response/mutation, handler, `useEffect`, 렌더링 흐름을 남기고, 작은 1회성 guard나 사용 지점 바로 옆이 더 읽기 쉬운 계산은 `page.tsx`에 남길 수 있습니다.   
-이 규칙은 무엇을 `page.ts`로 옮길지에 대한 규칙입니다. `page.ts`는 helper 저장소가 아니라 화면 전용 도메인 support module로 다루고, export는 도메인 단위 함수와 계약만 남깁니다. 처음부터 `entry-request.ts`, `entry-columns.ts`처럼 잘게 쪼개기보다 `page.ts`가 여러 독립 관심사로 커졌을 때만 추가 분리를 검토합니다.
+이 규칙은 `screen-extract-utilities-selectively`에서 "route entry 밖으로 빼는 편이 더 낫다"라고 판단된 code를 어디에 둘지 정하는 규칙입니다.
+화면 전용 불변 설정, 옵션 목록, preset, 컬럼 메타, 순수 support function, 타입 선언은 route entry 상단에 쌓아두지 말고 기본적으로 같은 계층 `page.ts`로 이동합니다.
+route entry에는 state, response/mutation, handler, `useEffect`, 렌더링 흐름을 남기고, 작은 1회성 guard나 사용 지점 바로 옆이 더 읽기 쉬운 계산은 `page.tsx`에 남길 수 있습니다.
+즉, 추출 여부 자체를 강제하는 규칙이 아니라 추출하기로 한 screen-owned pure support code의 기본 목적지를 `page.ts`로 고정하는 규칙입니다. `page.ts`는 helper 저장소가 아니라 화면 전용 도메인 support module로 다루고, export는 도메인 단위 함수와 계약만 남깁니다. 처음부터 `entry-request.ts`, `entry-columns.ts`처럼 잘게 쪼개기보다 `page.ts`가 여러 독립 관심사로 커졌을 때만 추가 분리를 검토합니다.
 
 **Incorrect (route entry 상단에 순수 지원 코드가 누적됨):**
 
@@ -1372,7 +1379,9 @@ const handleSubmitButtonClick: MouseEventHandler<HTMLButtonElement> = async (_ev
 
 **Impact: MEDIUM-HIGH (이벤트 흐름을 검색 가능하게 유지하고 즉흥적인 handler 시그니처를 피함)**
 
-이벤트 핸들러는 `handle + Target + Event` 패턴으로 이름 짓습니다. 추가 인자가 필요하면 handler factory 형태의 고차 함수로 감싸고, 최종 반환값은 React handler 타입으로 고정합니다.
+이벤트 핸들러는 `handle` 접두사로 시작하고 역할이 바로 드러나게 이름 짓습니다.
+DOM 이벤트처럼 target과 event가 중요하면 `handle + Target + Event` 패턴을 우선하고, submit/save/message처럼 문맥상 target이 이미 분명한 action callback은 `handle + DomainAction`처럼 더 짧게 둘 수 있습니다.
+추가 인자가 필요하면 handler factory 형태의 고차 함수로 감싸고, 최종 반환값은 React handler 타입으로 고정합니다.
 
 **Incorrect (이름과 시그니처가 제각각임):**
 

@@ -65,12 +65,12 @@ export const RouteComponent = () => {
 ```tsx
 interface EntryTreeSectionProps {
 	sidebarNodes: EntrySidebarNode[];
-	selectedTableKey?: string;
+	selectedTableName?: string;
 	onTableSelect: (tableName: string) => void;
 }
 
 const EntryTreeSection = (props: EntryTreeSectionProps) => {
-	const { sidebarNodes, selectedTableKey, onTableSelect } = props;
+	const { sidebarNodes, selectedTableName, onTableSelect } = props;
 	const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
 	const [treeSearchKeyword, setTreeSearchKeyword] = useState("");
 
@@ -99,7 +99,7 @@ const EntryTreeSection = (props: EntryTreeSectionProps) => {
 				<UiTree
 					treeData={filteredSidebarNodes.map(mapEntryNodeToTreeData)}
 					expandedKeys={expandedKeys}
-					selectedKeys={selectedTableKey ? [selectedTableKey] : []}
+					selectedKeys={selectedTableName ? [`table:${selectedTableName}`] : []}
 					onExpand={(keys) => setExpandedKeys(keys.map(String))}
 					onSelect={handleTreeSelect}
 				/>
@@ -138,11 +138,11 @@ export const RouteComponent = () => {
 		<div className="entry-layout">
 			<EntryTreeSection
 				sidebarNodes={responseContentFolderGetListSuspense.data.sidebarNodes}
-				selectedTableKey={search.table}
+				selectedTableName={search.table}
 				onTableSelect={handleTableSelect}
 			/>
 			<EntryTableSection
-				contents={responseContentManagerSearchContents.data?.contents ?? []}
+				contents={responseContentManagerSearchContents.data?.contents}
 			/>
 		</div>
 	);

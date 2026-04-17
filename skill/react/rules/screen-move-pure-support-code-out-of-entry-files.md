@@ -9,9 +9,10 @@ tags: screen, routes, helpers, constants
 
 **Impact: HIGH (route entry 파일이 preset과 순수 helper를 쌓기보다 orchestration에 집중하게 함)**
 
-화면 전용 불변 설정, 옵션 목록, preset, 컬럼 메타, 순수 support function, 타입 선언은 route entry 상단에 쌓아두지 말고 기본적으로 같은 계층 `page.ts`로 이동합니다.   
-route entry에는 state, response/mutation, handler, `useEffect`, 렌더링 흐름을 남기고, 작은 1회성 guard나 사용 지점 바로 옆이 더 읽기 쉬운 계산은 `page.tsx`에 남길 수 있습니다.   
-이 규칙은 무엇을 `page.ts`로 옮길지에 대한 규칙입니다. `page.ts`는 helper 저장소가 아니라 화면 전용 도메인 support module로 다루고, export는 도메인 단위 함수와 계약만 남깁니다. 처음부터 `entry-request.ts`, `entry-columns.ts`처럼 잘게 쪼개기보다 `page.ts`가 여러 독립 관심사로 커졌을 때만 추가 분리를 검토합니다.
+이 규칙은 `screen-extract-utilities-selectively`에서 "route entry 밖으로 빼는 편이 더 낫다"라고 판단된 code를 어디에 둘지 정하는 규칙입니다.
+화면 전용 불변 설정, 옵션 목록, preset, 컬럼 메타, 순수 support function, 타입 선언은 route entry 상단에 쌓아두지 말고 기본적으로 같은 계층 `page.ts`로 이동합니다.
+route entry에는 state, response/mutation, handler, `useEffect`, 렌더링 흐름을 남기고, 작은 1회성 guard나 사용 지점 바로 옆이 더 읽기 쉬운 계산은 `page.tsx`에 남길 수 있습니다.
+즉, 추출 여부 자체를 강제하는 규칙이 아니라 추출하기로 한 screen-owned pure support code의 기본 목적지를 `page.ts`로 고정하는 규칙입니다. `page.ts`는 helper 저장소가 아니라 화면 전용 도메인 support module로 다루고, export는 도메인 단위 함수와 계약만 남깁니다. 처음부터 `entry-request.ts`, `entry-columns.ts`처럼 잘게 쪼개기보다 `page.ts`가 여러 독립 관심사로 커졌을 때만 추가 분리를 검토합니다.
 
 **Incorrect (route entry 상단에 순수 지원 코드가 누적됨):**
 
