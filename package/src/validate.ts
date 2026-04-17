@@ -62,17 +62,17 @@ const validateLocalSkill = async (skillPaths: SkillPaths): Promise<{extendsCount
 		}
 	}
 
-	return {
-		extendsCount: metadata.extends?.length ?? 0,
-		ruleCount: ruleFileNames.length,
-		sectionCount: sections.length,
-	};
+	return {extendsCount: metadata.extends?.length ?? 0, ruleCount: ruleFileNames.length, sectionCount: sections.length};
 };
 
 /**
  * @helper `extends`를 따라 companion skill까지 재귀적으로 검증
  */
-const validateSkillTree = async (skillPaths: SkillPaths, lineage: string[] = [], validatedSkillNames: Set<string> = new Set()): Promise<void> => {
+const validateSkillTree = async (
+	skillPaths: SkillPaths,
+	lineage: string[] = [],
+	validatedSkillNames: Set<string> = new Set(),
+): Promise<void> => {
 	if (validatedSkillNames.has(skillPaths.skillName)) {
 		return;
 	}

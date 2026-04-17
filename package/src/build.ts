@@ -118,7 +118,9 @@ export const generateMarkdown = (
 	lines.push("");
 	lines.push("> **생성된 문서입니다. 직접 수정하지 마세요.**");
 	lines.push(">");
-	lines.push(`> 현재 skill의 \`rules/*.md\`, \`metadata.json\`, \`metadata.json.extends\`를 수정한 뒤 \`npm --prefix ../../package run build -- --skill=${skillName}\`로 다시 생성하세요.`);
+	lines.push(
+		`> 현재 skill의 \`rules/*.md\`, \`metadata.json\`, \`metadata.json.extends\`를 수정한 뒤 \`npm --prefix ../../package run build -- --skill=${skillName}\`로 다시 생성하세요.`,
+	);
 
 	lines.push("");
 	lines.push("---");
@@ -129,7 +131,9 @@ export const generateMarkdown = (
 
 	if (companionSkills.length > 0) {
 		lines.push("");
-		lines.push(`이 가이드는 local ${metadata.title} 규칙만 담고 있습니다. TypeScript 같은 공통 규칙은 companion skill을 함께 로드해 보완합니다.`);
+		lines.push(
+			`이 가이드는 local ${metadata.title} 규칙만 담고 있습니다. TypeScript 같은 공통 규칙은 companion skill을 함께 로드해 보완합니다.`,
+		);
 	}
 	lines.push("");
 
@@ -140,7 +144,9 @@ export const generateMarkdown = (
 		lines.push("");
 
 		for (const companionSkill of companionSkills) {
-			lines.push(`- \`${companionSkill.conventionName}\` - ${companionSkill.title} 공통 규칙 guide: [${companionSkill.title}](${companionSkill.guidePath})`);
+			lines.push(
+				`- \`${companionSkill.conventionName}\` - ${companionSkill.title} 공통 규칙 guide: [${companionSkill.title}](${companionSkill.guidePath})`,
+			);
 		}
 
 		lines.push("");
@@ -159,7 +165,9 @@ export const generateMarkdown = (
 
 		for (const [ruleIndex, rule] of section.rules.entries()) {
 			const ruleTitle = normalizeHeadingTitle(rule.title);
-			lines.push(`${nestedTocIndent}- ${sectionOrder}.${ruleIndex + 1} [${ruleTitle}](${buildRuleAnchor(sectionOrder, ruleIndex + 1, ruleTitle)})`);
+			lines.push(
+				`${nestedTocIndent}- ${sectionOrder}.${ruleIndex + 1} [${ruleTitle}](${buildRuleAnchor(sectionOrder, ruleIndex + 1, ruleTitle)})`,
+			);
 		}
 	}
 
@@ -241,7 +249,7 @@ export const main = async (): Promise<void> => {
 			throw new Error(`Skill "${skillName}" is not buildable yet. Expected rules/_sections.md and metadata.json under skill/${skillName}.`);
 		}
 
-		await buildSkill(getSkillPaths(skillName), false);
+		await buildSkill(getSkillPaths(skillName));
 	}
 };
 

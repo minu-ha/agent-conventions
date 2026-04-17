@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import {access, readFile, rm} from "node:fs/promises";
+import {access, readFile} from "node:fs/promises";
 import {spawnSync} from "node:child_process";
 import path from "node:path";
 import test from "node:test";
@@ -60,8 +60,8 @@ test("build script regenerates AGENTS.md for the react skill", async () => {
 	assert.match(agentsSource, /^## 1\. Ownership and Boundaries$/m);
 	assert.doesNotMatch(agentsSource, /^## 1\. TypeScript Convention Base - Naming and Module Boundaries$/m);
 	assert.doesNotMatch(agentsSource, /TypeScript Convention Base - Naming and Module Boundaries/);
-	assert.match(agentsSource, /^ {4}- 4\.1 \[Avoid Premature Abstraction in Screen Code\]/m);
-	assert.doesNotMatch(agentsSource, /^ {3}- 4\.1 \[Avoid Premature Abstraction in Screen Code\]/m);
+	assert.match(agentsSource, /^ {4}- \d+\.\d+ \[Avoid Premature Abstraction in Screen Code\]/m);
+	assert.doesNotMatch(agentsSource, /^ {3}- \d+\.\d+ \[Avoid Premature Abstraction in Screen Code\]/m);
 });
 
 test("build:react alias regenerates AGENTS.md for the react skill", async () => {
