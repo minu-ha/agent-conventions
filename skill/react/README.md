@@ -119,6 +119,12 @@ tags: tag1, tag2
 - 병렬 작업은 write scope가 겹치지 않을 때만 허용하고, 최종 통합과 검증은 메인 에이전트가 맡는 구성을 기본값으로 봅니다.
 - 실제 mandatory policy, 예외, 병렬 금지 조건은 consuming project의 `AGENTS.md`에 두는 편이 안전합니다.
 
+## Pressure Tests
+
+- React skill 품질을 회귀 테스트하려면 [pressure-tests.md](./pressure-tests.md)를 사용합니다.
+- 이 문서에는 route entry orchestration, `page.ts` 추출, local hook misuse, query shaping, fallback, compound component, companion skill activation까지 포함한 pressure scenario 세트가 들어 있습니다.
+- rule을 추가하거나 wording을 크게 바꿨다면 관련 scenario도 같이 갱신하는 편이 안전합니다.
+
 ## 마이그레이션 메모
 
 - [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`가 source of truth입니다.
