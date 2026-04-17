@@ -22,6 +22,9 @@ export const renderFolderTitle = () => <span>Folder</span>;
 
 ```ts
 // folders.ts
+/**
+ * @helper folder node를 UiTree data로 변환
+ */
 export const mapFolderNodeToTreeData = (node: FolderNode, renderers: FolderTreeRenderers) => {
   return {
     key: String(node.id),

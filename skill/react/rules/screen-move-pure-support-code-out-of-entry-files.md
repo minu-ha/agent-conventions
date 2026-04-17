@@ -48,6 +48,10 @@ export const validateEntryMediaUploadFile = (file: EntryMediaUploadCandidate) =>
 import { buildFileRequests } from "./page";
 
 const [mediaUploadFileListByColumn, setMediaUploadFileListByColumn] = useState({});
+
+/**
+ * @api table info 조회 API
+ */
 const responseContentManagerGetTableInfo = useContentManagerGetTableInfo();
 
 /**
@@ -60,10 +64,16 @@ const handleFormFinish = () => {
 ```
 
 ```ts
+/**
+ * @helper media column별 검증 규칙 생성
+ */
 export const getMediaColumnRules = () => {
   // ...
 };
 
+/**
+ * @helper 업로드 파일 목록을 저장 request 배열로 변환
+ */
 export const buildFileRequests = (mediaUploadFileListByColumn: Record<string, unknown>) => {
   // ...
   return [];
@@ -73,6 +83,9 @@ export const buildFileRequests = (mediaUploadFileListByColumn: Record<string, un
 **Correct (`page.ts` 내부 단계는 한 exported 함수 안에서 정리):**
 
 ```ts
+/**
+ * @helper 업로드 파일 유효성 검사를 단계별로 수행
+ */
 export const validateEntryMediaUploadFile = (file: EntryMediaUploadCandidate) => {
 	// 1. 파일 크기 확인
 	// 2. 확장자 확인

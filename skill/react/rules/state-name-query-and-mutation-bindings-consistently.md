@@ -21,6 +21,13 @@ const deleteTableApi = useContentTypeRemove();
 **Correct (로컬 바인딩 접두사를 통일):**
 
 ```ts
+/**
+ * @api content type 목록 조회 API
+ */
 const responseContentTypeGetListSuspense = useContentTypeGetListSuspense();
+
+/**
+ * @api content type 삭제 API
+ */
 const mutationContentTypeRemove = useContentTypeRemove();
 ```

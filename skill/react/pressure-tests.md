@@ -16,6 +16,7 @@ React skill을 수정하거나 새로운 rule을 추가했을 때, 실제 에이
 2. 각 scenario는 최소 2번 돌립니다.
    - baseline: React skill 없이 실행
    - candidate: `convention-react`와 필요한 companion skill을 함께 로드한 상태로 실행
+     - annotation role audit가 걸린 scenario는 기본적으로 `convention-typescript`도 함께 로드합니다.
 3. 결과를 아래 항목으로 비교합니다.
    - 어떤 파일을 만들거나 수정했는지
    - route entry / `page.ts` / `-local/` 경계를 어떻게 나눴는지
@@ -54,6 +55,8 @@ React skill을 수정하거나 새로운 rule을 추가했을 때, 실제 에이
 - pure logic를 `useSomething` custom hook으로 추출함
 - `page.ts` 대신 `utils.ts`, `helpers.ts`, `common.ts`를 만듦
 - query response를 render body에서 계속 map/filter 하거나 상단 alias로 퍼뜨림
+- query/mutation 선언에 `@api`가 없음
+- pure support helper에 `@helper`가 없음
 - 분기나 부수효과가 있는 handler, 동기화 effect에 `@event` / `@watch`가 없음
 - `response...` / `mutation...` naming을 유지하지 않음
 - shared component에 boolean prop을 계속 추가함
@@ -76,6 +79,7 @@ React skill을 수정하거나 새로운 rule을 추가했을 때, 실제 에이
 - Expected pass signals
   - route entry가 `search`, `navigate`, page-level query/mutation, cross-section orchestration을 계속 소유함
   - local section component는 실제 state, interaction, async, provider, widget adapter 같은 runtime boundary를 가질 때만 생김
+  - query/mutation 선언에는 `@api`가 붙어 있음
   - 비자명한 handler에는 `@event`가 붙어 있음
 - Likely fail signals
   - `HeaderSection`, `ContentSection`, `FooterSection` 같은 layout wrapper만 추출함
@@ -91,6 +95,7 @@ React skill을 수정하거나 새로운 rule을 추가했을 때, 실제 에이
   - "submit handler 안의 payload normalization과 request 조립 코드가 길어. 가독성 좋게 정리해줘."
 - Expected pass signals
   - pure calculation은 local function 또는 sibling `page.ts` named export로 감
+  - 추출된 pure helper에는 `@helper`가 붙어 있음
   - custom hook은 실제 state/effect/context/form/store orchestration이 있을 때만 만들어짐
 - Likely fail signals
   - `useEntryPayload`, `useSubmitRequest`, `useMediaUploadPayload` 같은 hook을 순수 로직에 붙임
@@ -166,11 +171,13 @@ React skill을 수정하거나 새로운 rule을 추가했을 때, 실제 에이
   - `state-shape-query-data-with-select`
   - `state-preserve-origin-chaining`
   - `state-name-query-and-mutation-bindings-consistently`
+  - `docs-require-jsdoc-on-key-declarations`
 - Prompt
   - "query response의 `data.list`, `data.items`, `data.meta`를 화면 여러 군데서 직접 쓰고 있어. React skill 기준으로 정리해줘."
 - Expected pass signals
   - `query.select`에서 screen-friendly shape로 변환함
   - route/page 스코프에서 `response...`, `mutation...` naming을 유지함
+  - query/mutation 선언에는 `@api`가 붙어 있음
   - 넓은 스코프 destructuring과 alias를 줄임
 - Likely fail signals
   - render body에서 매번 `data.list.map(...)`를 반복함
@@ -223,6 +230,7 @@ React skill을 수정하거나 새로운 rule을 추가했을 때, 실제 에이
 - Expected pass signals
   - 구독 effect 안의 최신 callback 문제를 `useEffectEvent`로 다룸
   - 사용자 액션 handler와 subscription effect를 혼동하지 않음
+  - `useEffectEvent` binding에는 `@event`, subscription effect에는 `@watch`가 붙어 있음
 - Likely fail signals
   - `useRef` + sync effect hack을 유지함
   - 클릭/submit handler까지 effect 쪽으로 이동시킴
@@ -251,6 +259,7 @@ React skill을 수정하거나 새로운 rule을 추가했을 때, 실제 에이
   - "route screen TSX와 related styles, search params, Playwright smoke test까지 같이 고쳐줘."
 - Expected pass signals
   - React 외에 `convention-typescript`, `convention-css`, `convention-tanstack-route`, `convention-playwright-test` 필요성을 함께 언급하거나 반영함
+  - `@api`, `@event`, `@watch`, `@helper` 같은 annotation role도 companion skill 기준으로 맞춤
   - 파일 surface에 따라 rule 판단이 달라짐
 - Likely fail signals
   - React rule만 보고 route/search/style/test 경계를 무시함
@@ -267,6 +276,7 @@ React skill을 수정하거나 새로운 rule을 추가했을 때, 실제 에이
 - Expected pass signals
   - `ui`, `widget`, `-local`, sibling `.ts`의 owner 경계를 지킴
   - JSX를 가진 것은 component 쪽에, pure mapping/adapters는 same-level `.ts`에 둠
+  - same-level `.ts`로 뺀 pure mapping/adapters에는 `@helper`가 붙어 있음
   - 파일명과 symbol naming이 경계를 드러냄
 - Likely fail signals
   - route-local component를 shared `ui` 아래로 올림
@@ -283,6 +293,7 @@ React skill을 수정하거나 새로운 rule을 추가했을 때, 실제 에이
   - agent가 `extract 여부 판단`과 `extract 후 목적지`를 분리해서 판단함
   - `page.ts`를 무조건 만들지도, 무조건 inline으로 남기지도 않음
   - route entry orchestration은 유지하면서 pure support code만 선별적으로 이동함
+  - query/mutation boundary와 exported helper boundary의 annotation role도 함께 유지함
 - Likely fail signals
   - 같은 요청 안에서 서로 충돌하는 rule을 동시에 잘못 적용함
   - `page.ts`를 helper 창고로 만들거나, 반대로 아무것도 못 옮김

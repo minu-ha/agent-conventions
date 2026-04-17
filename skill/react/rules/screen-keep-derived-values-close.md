@@ -22,6 +22,9 @@ const selectedTableNameForQuery = selectedEntryTableState.selectedTableNode?.tab
 **Correct (사용 지점 가까이에서 계산):**
 
 ```ts
+/**
+ * @api content 목록 조회 API
+ */
 const responseContentManagerSearchContents = useContentManagerSearchContentsSuspense({
   tableName: selectedEntryTableState.selectedTableNode?.tableName,
 });

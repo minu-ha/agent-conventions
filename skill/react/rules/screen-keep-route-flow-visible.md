@@ -28,10 +28,18 @@ return (
 ```tsx
 const navigate = useNavigate();
 const search = Route.useSearch();
+
+/**
+ * @api content type 목록 조회 API
+ */
 const responseContentTypeGetListSuspense = useContentTypeGetListSuspense({
   projectId,
   page: search.page,
 });
+
+/**
+ * @api content type 저장 API
+ */
 const mutationContentTypeUpsert = useContentTypeUpsert();
 
 /**

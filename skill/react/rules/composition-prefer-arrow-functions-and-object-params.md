@@ -34,6 +34,9 @@ export interface UpdateEntryMediaUploadFileByUidParams {
   updater: (uploadFile: UploadFile) => UploadFile;
 }
 
+/**
+ * @helper column별 업로드 파일 목록에서 특정 uid 항목 갱신
+ */
 export const updateEntryMediaUploadFileByUid = (params: UpdateEntryMediaUploadFileByUidParams) => {
   const { uploadFileListByColumn, columnName, fileUid, updater } = params;
   // ...

@@ -33,6 +33,10 @@ const usePermissionB = () => {
  */
 export const useContentEditor = () => {
   const form = useForm<ContentEditorFormValues>();
+
+  /**
+   * @api content 저장 API
+   */
   const mutationContentSave = useContentSave();
   const [submitErrorMessage, setSubmitErrorMessage] = useState<string | null>(null);
 
@@ -43,6 +47,9 @@ export const useContentEditor = () => {
 **Correct (같은 화면 안 반복은 먼저 한 함수 안에서 local 정리로 해결):**
 
 ```ts
+/**
+ * @helper entry form values를 API payload로 조립
+ */
 export const buildEntryPayload = (formValues: EntryFormValues) => {
 	// 1. 공통 문자열 값 정규화
 	// 2. API payload 형태로 조립

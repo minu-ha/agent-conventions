@@ -145,6 +145,9 @@ export const page = {
 **Correct (순수 계산은 sibling `page.ts`의 named export로 유지):**
 
 ```ts
+/**
+ * @helper 업로드 파일 목록을 저장 payload로 정규화
+ */
 export const buildMediaUploadPayload = (files: UploadFile[]) => {
   return files.map((file) => ({ uid: file.uid }));
 };
@@ -214,6 +217,9 @@ export const renderFolderTitle = () => <span>Folder</span>;
 
 ```ts
 // folders.ts
+/**
+ * @helper folder node를 UiTree data로 변환
+ */
 export const mapFolderNodeToTreeData = (node: FolderNode, renderers: FolderTreeRenderers) => {
   return {
     key: String(node.id),
@@ -771,6 +777,9 @@ export interface UpdateEntryMediaUploadFileByUidParams {
   updater: (uploadFile: UploadFile) => UploadFile;
 }
 
+/**
+ * @helper column별 업로드 파일 목록에서 특정 uid 항목 갱신
+ */
 export const updateEntryMediaUploadFileByUid = (params: UpdateEntryMediaUploadFileByUidParams) => {
   const { uploadFileListByColumn, columnName, fileUid, updater } = params;
   // ...
@@ -942,6 +951,10 @@ const usePermissionB = () => {
  */
 export const useContentEditor = () => {
   const form = useForm<ContentEditorFormValues>();
+
+  /**
+   * @api content 저장 API
+   */
   const mutationContentSave = useContentSave();
   const [submitErrorMessage, setSubmitErrorMessage] = useState<string | null>(null);
 
@@ -952,6 +965,9 @@ export const useContentEditor = () => {
 **Correct (같은 화면 안 반복은 먼저 한 함수 안에서 local 정리로 해결):**
 
 ```ts
+/**
+ * @helper entry form values를 API payload로 조립
+ */
 export const buildEntryPayload = (formValues: EntryFormValues) => {
 	// 1. 공통 문자열 값 정규화
 	// 2. API payload 형태로 조립
@@ -1079,8 +1095,15 @@ export const RouteComponent = () => {
 	const navigate = useNavigate();
 	const search = Route.useSearch();
 
+	/**
+	 * @api tree sidebar 조회 API
+	 */
 	const responseContentFolderGetListSuspense =
 		useContentFolderGetListSuspense<EntryTreeSelectData>();
+
+	/**
+	 * @api table contents 조회 API
+	 */
 	const responseContentManagerSearchContents =
 		useContentManagerSearchContents<ContentListSelectData>();
 
@@ -1163,6 +1186,9 @@ export const buildEntryPayload = (formValues: EntryFormValues, files: WidgetMedi
 
 ```ts
 // page.ts
+/**
+ * @helper folder tree 응답을 화면용 node shape로 정규화
+ */
 export const normalizeFolderTreeNodes = (nodes: ContentFolderNodeResponse[]) => {
   return nodes.map((node) => ({
     id: node.id,
@@ -1185,6 +1211,9 @@ const handleSave = async () => {
 **Correct (`page.ts` 안의 작은 단계는 한 exported 함수 안에서 정리):**
 
 ```ts
+/**
+ * @helper entry form values와 파일 목록을 저장 payload로 조립
+ */
 export const buildEntryPayload = (
 	formValues: EntryFormValues,
 	files: WidgetMediaUploaderFile[],
@@ -1204,6 +1233,9 @@ export const buildEntryPayload = (
 // shared/util.ts
 export const util = {
 	date: {
+		/**
+		 * @helper date 입력값을 ISO 문자열로 정규화
+		 */
 		normalize(value: Date | string) {
 			return new Date(value).toISOString();
 		},
@@ -1228,6 +1260,9 @@ const selectedTableNameForQuery = selectedEntryTableState.selectedTableNode?.tab
 **Correct (사용 지점 가까이에서 계산):**
 
 ```ts
+/**
+ * @api content 목록 조회 API
+ */
 const responseContentManagerSearchContents = useContentManagerSearchContentsSuspense({
   tableName: selectedEntryTableState.selectedTableNode?.tableName,
 });
@@ -1264,10 +1299,18 @@ return (
 ```tsx
 const navigate = useNavigate();
 const search = Route.useSearch();
+
+/**
+ * @api content type 목록 조회 API
+ */
 const responseContentTypeGetListSuspense = useContentTypeGetListSuspense({
   projectId,
   page: search.page,
 });
+
+/**
+ * @api content type 저장 API
+ */
 const mutationContentTypeUpsert = useContentTypeUpsert();
 
 /**
@@ -1332,6 +1375,10 @@ export const validateEntryMediaUploadFile = (file: EntryMediaUploadCandidate) =>
 import { buildFileRequests } from "./page";
 
 const [mediaUploadFileListByColumn, setMediaUploadFileListByColumn] = useState({});
+
+/**
+ * @api table info 조회 API
+ */
 const responseContentManagerGetTableInfo = useContentManagerGetTableInfo();
 
 /**
@@ -1344,10 +1391,16 @@ const handleFormFinish = () => {
 ```
 
 ```ts
+/**
+ * @helper media column별 검증 규칙 생성
+ */
 export const getMediaColumnRules = () => {
   // ...
 };
 
+/**
+ * @helper 업로드 파일 목록을 저장 request 배열로 변환
+ */
 export const buildFileRequests = (mediaUploadFileListByColumn: Record<string, unknown>) => {
   // ...
   return [];
@@ -1357,6 +1410,9 @@ export const buildFileRequests = (mediaUploadFileListByColumn: Record<string, un
 **Correct (`page.ts` 내부 단계는 한 exported 함수 안에서 정리):**
 
 ```ts
+/**
+ * @helper 업로드 파일 유효성 검사를 단계별로 수행
+ */
 export const validateEntryMediaUploadFile = (file: EntryMediaUploadCandidate) => {
 	// 1. 파일 크기 확인
 	// 2. 확장자 확인
@@ -1572,6 +1628,10 @@ const [userName, setUserName] = useState(responseUserGetItemSuspense.data.name);
 ```ts
 const [isOpen, setIsOpen] = useState(false);
 const themeStore = useThemeStore();
+
+/**
+ * @api 사용자 상세 조회 API
+ */
 const responseUserGetItemSuspense = useUserGetItemSuspense();
 ```
 
@@ -1591,7 +1651,14 @@ const deleteTableApi = useContentTypeRemove();
 **Correct (로컬 바인딩 접두사를 통일):**
 
 ```ts
+/**
+ * @api content type 목록 조회 API
+ */
 const responseContentTypeGetListSuspense = useContentTypeGetListSuspense();
+
+/**
+ * @api content type 삭제 API
+ */
 const mutationContentTypeRemove = useContentTypeRemove();
 ```
 
@@ -1665,6 +1732,9 @@ const endpoints = responsePermissionGroupGetApiEndpointListSuspense.data.list;
 **Correct (패칭 시점에 필요한 모양으로 변환):**
 
 ```ts
+/**
+ * @api permission group endpoint 목록 조회 API
+ */
 const responsePermissionGroupGetApiEndpointListSuspense = usePermissionGroupGetApiEndpointListSuspense({
   query: {
     select: (response) => ({
@@ -2009,8 +2079,9 @@ if (mutationFileUpload.isPending) {
 
 **Impact: MEDIUM-HIGH (중요한 API, handler, effect, 타입 선언을 더 쉽게 리뷰하고 재사용할 수 있게 함)**
 
-원격 API 경계를 넘는 helper나 query/mutation wrapper, 분기나 부수효과가 있는 이벤트 핸들러, 동기화 의도가 중요한 `useEffect`, 주요 유틸 함수, 커스텀 `type`과 `interface`, store 선언, compound component의 public part 선언, 그리고 예외적으로 사용하는 `useMemo`/`useCallback`에는 JSDoc을 작성합니다. annotation 태그 선택은 companion skill인 `convention-typescript`의 표준인 `@api`, `@event`, `@watch`, `@helper`, `@summary`, `@part`, `@description`, `@field`를 따릅니다.   
-상태 변수, 자명한 generated hook 바인딩, 단순 파생값처럼 문맥상 의미가 분명한 선언에는 강제하지 않습니다.
+원격 API 경계를 넘는 helper나 query/mutation wrapper, 분기나 부수효과가 있는 이벤트 핸들러, 동기화 의도가 중요한 `useEffect`, 주요 유틸 함수, 커스텀 `type`과 `interface`, store 선언, compound component의 public part 선언, 그리고 예외적으로 사용하는 `useMemo`/`useCallback`에는 JSDoc을 작성합니다. annotation 태그 선택은 companion skill인 `convention-typescript`의 표준인 `@api`, `@event`, `@watch`, `@helper`, `@summary`, `@part`, `@description`, `@field`를 따릅니다.
+특히 route entry, screen entry, layout owner처럼 화면 흐름을 소유하는 경계에서 선언한 named query/mutation binding은 generated hook이라도 `@api`를 생략하지 않습니다. sibling `page.ts`나 route-local `*.ts`로 뺀 exported pure support function은 helper boundary로 보고 `@helper`를 붙입니다.
+상태 변수, 단순 prop destructuring, 자명한 local 파생값처럼 문맥상 의미가 분명한 선언에는 강제하지 않습니다.
 
 **Incorrect (비자명한 경계 선언에 문맥 설명이 없음):**
 
@@ -2032,6 +2103,11 @@ useEffect(() => {
 
 ```ts
 /**
+ * @api 테이블 삭제 API
+ */
+const mutationContentTypeRemove = useContentTypeRemove();
+
+/**
  * @event 선택된 테이블 삭제와 다음 화면 이동 처리
  */
 const handleRemoveTableButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
@@ -2048,6 +2124,15 @@ const handleRemoveTableButtonClick: MouseEventHandler<HTMLButtonElement> = async
 useEffect(() => {
   resetForm(userData);
 }, [userData, resetForm]);
+
+/**
+ * @helper 테이블 저장 요청 payload 생성
+ */
+export const buildContentTypePayload = (formValues: ContentTypeFormValues) => {
+  return {
+    tableName: formValues.tableName.trim(),
+  };
+};
 ```
 
 ## 참고 자료

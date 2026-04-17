@@ -125,8 +125,15 @@ export const RouteComponent = () => {
 	const navigate = useNavigate();
 	const search = Route.useSearch();
 
+	/**
+	 * @api tree sidebar 조회 API
+	 */
 	const responseContentFolderGetListSuspense =
 		useContentFolderGetListSuspense<EntryTreeSelectData>();
+
+	/**
+	 * @api table contents 조회 API
+	 */
 	const responseContentManagerSearchContents =
 		useContentManagerSearchContents<ContentListSelectData>();
 

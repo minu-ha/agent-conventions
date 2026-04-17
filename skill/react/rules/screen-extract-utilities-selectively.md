@@ -57,6 +57,9 @@ export const buildEntryPayload = (formValues: EntryFormValues, files: WidgetMedi
 
 ```ts
 // page.ts
+/**
+ * @helper folder tree 응답을 화면용 node shape로 정규화
+ */
 export const normalizeFolderTreeNodes = (nodes: ContentFolderNodeResponse[]) => {
   return nodes.map((node) => ({
     id: node.id,
@@ -79,6 +82,9 @@ const handleSave = async () => {
 **Correct (`page.ts` 안의 작은 단계는 한 exported 함수 안에서 정리):**
 
 ```ts
+/**
+ * @helper entry form values와 파일 목록을 저장 payload로 조립
+ */
 export const buildEntryPayload = (
 	formValues: EntryFormValues,
 	files: WidgetMediaUploaderFile[],
@@ -98,6 +104,9 @@ export const buildEntryPayload = (
 // shared/util.ts
 export const util = {
 	date: {
+		/**
+		 * @helper date 입력값을 ISO 문자열로 정규화
+		 */
 		normalize(value: Date | string) {
 			return new Date(value).toISOString();
 		},

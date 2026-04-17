@@ -22,6 +22,9 @@ const endpoints = responsePermissionGroupGetApiEndpointListSuspense.data.list;
 **Correct (패칭 시점에 필요한 모양으로 변환):**
 
 ```ts
+/**
+ * @api permission group endpoint 목록 조회 API
+ */
 const responsePermissionGroupGetApiEndpointListSuspense = usePermissionGroupGetApiEndpointListSuspense({
   query: {
     select: (response) => ({
