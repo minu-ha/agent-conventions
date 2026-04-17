@@ -147,6 +147,21 @@ ln -s /absolute/path/to/agent-conventions/skill ~/.agents/skills/conventions
 
 symlink를 추가하거나 교체한 뒤에는 에이전트를 재시작하는 편이 안전합니다.
 
+## Optional Companion Packs
+
+이 저장소는 standalone convention skill pack으로 사용할 수 있습니다.
+즉, 기본 설치는 이 레포의 `skill/`만 연결해도 충분합니다.
+
+다만 subagent orchestration, plan execution, verification workflow까지 함께 쓰고 싶다면
+별도의 companion pack을 추가로 설치하는 구성을 권장합니다.
+
+- 권장 companion pack: `superpowers`
+- 적합한 경우: 독립 작업 분리, 서브에이전트 review loop, 구현 전후 verification workflow를 팀 공통 방식으로 맞추고 싶을 때
+- 비필수: 이 저장소의 convention skill 자체는 `superpowers` 없이도 사용할 수 있습니다.
+
+consuming project의 `AGENTS.md`가 `subagent-driven-development` 같은 specific skill name을 직접 참조한다면,
+그 프로젝트에서는 해당 companion pack 설치를 전제로 적어 두는 편이 안전합니다.
+
 ## 수정 Workflow
 
 skill을 수정할 때는 아래 순서를 권장합니다.
@@ -206,6 +221,13 @@ skill-relative 명령을 사용하는 편이 안전합니다.
 
 각 프로젝트는 자체 `AGENTS.md`에서 필요한 skill 이름을 명시적으로 참조하고,
 그 위에 프로젝트 고유 제약을 덧붙이는 방식을 권장합니다.
+
+복사해서 시작할 수 있는 공통 예시는 루트에 함께 둡니다.
+
+- [AGENTS.superpowers.md](./AGENTS.superpowers.md)
+  `superpowers` workflow만 고정하고, 코드 규칙은 프로젝트 자체 문서로 관리하는 예시
+- [AGENTS.superpowers.conventions.md](./AGENTS.superpowers.conventions.md)
+  `superpowers` workflow와 `agent-conventions` pack selection/audit까지 함께 운영하는 강한 정책 예시
 
 예를 들면 아래처럼 역할을 나누는 구성이 자연스럽습니다.
 
