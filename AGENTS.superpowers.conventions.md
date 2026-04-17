@@ -22,6 +22,20 @@
 - subagent를 사용할 수 있으면 subagent workflow를 우선합니다.
 - subagent를 사용할 수 없으면 동일한 review gate를 수동으로라도 유지합니다.
 
+## Model Policy
+
+- 이 문서는 subagent 품질을 위해 지나치게 약한 모델 사용을 금지합니다.
+- 기본 모델 floor는 frontier-capable model + `medium` reasoning입니다.
+- mini/economy-class subagent는 구현, 디버깅, 리뷰, 검증 task에 사용하지 않습니다.
+- 역할별 기본값은 아래를 따릅니다.
+  - 기계적 구현, 1~2파일 수준, 명확한 spec: frontier model + `medium`
+  - 다중 파일 구현, 통합 변경, refactor, debugging, 상태/라우팅/계약 변경: frontier model + `high`
+  - spec reviewer: frontier model + `high`
+  - code quality reviewer: frontier model + `high`
+  - final reviewer, architecture judgment, 반복 실패 task, ambiguous bug: frontier model + `xhigh`
+- 플랫폼이 모델이나 reasoning override를 지원하지 않으면, 더 약한 subagent로 억지 위임하지 말고 메인 에이전트가 직접 수행합니다.
+- subagent가 reasoning 부족으로 `BLOCKED` 또는 `NEEDS_CONTEXT`를 반환하면 같은 약한 설정으로 재시도하지 말고 더 강한 모델 또는 더 높은 reasoning으로 재디스패치합니다.
+
 ## Superpowers Coverage
 
 - `using-superpowers`: 모든 대화 시작 시 skill discovery와 적용 강제
@@ -121,6 +135,7 @@
 - 작성된 plan은 있지만 subagent를 사용할 수 없으면 `executing-plans`를 사용하되, spec review와 code quality review gate는 생략하지 않습니다.
 - 기능 구현과 버그 수정은 기본적으로 `test-driven-development`를 적용합니다.
 - 여러 independent failure나 조사 대상이 있으면 `dispatching-parallel-agents`를 사용합니다.
+- subagent 모델 선택은 위 `Model Policy`의 floor와 역할별 기본값을 따릅니다.
 
 ### Stage 6. Implementation
 
@@ -142,6 +157,7 @@
 - Critical 또는 Important 이슈를 남긴 채 다음 단계로 진행하지 않습니다.
 - spec review가 pass되기 전에는 code quality review로 넘어가지 않습니다.
 - review가 open 상태면 task 완료로 간주하지 않습니다.
+- reviewer subagent는 `Model Policy`의 reviewer floor 아래로 내리지 않습니다.
 
 ### Stage 8. Verification
 
@@ -165,6 +181,7 @@
 
 - bootstrap stage에서 relevant skill 확인 없이 구현하지 않습니다.
 - required workflow pack 또는 required `agent-conventions` skill이 없는데도 진행하지 않습니다.
+- `Model Policy` floor 아래 모델로 subagent를 dispatch하지 않습니다.
 - 요청 정리와 convention selection 없이 구현하지 않습니다.
 - plan이 필요한 작업은 execution strategy를 정하기 전에는 구현하지 않습니다.
 - review 미통과 상태로 다음 task나 완료 단계로 넘어가지 않습니다.
