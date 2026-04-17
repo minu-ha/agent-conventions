@@ -107,6 +107,9 @@ const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 ```ts
 import type { MouseEventHandler } from "react";
 
+/**
+ * @event 버튼 클릭 기본 동작 차단
+ */
 const handleClick: MouseEventHandler<HTMLButtonElement> = (_event) => {
   // ...
 };
@@ -311,6 +314,9 @@ const handleAddButtonClick = (event: MouseEvent<HTMLButtonElement>): void => {
 ```ts
 import type { MouseEventHandler } from "react";
 
+/**
+ * @event 추가 버튼 클릭 기본 동작 차단
+ */
 const handleAddButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => {
   // ...
 };
@@ -337,6 +343,9 @@ interface PermissionMemberEditValues {
 ```ts
 type PermissionGroupAdminSummary = Pick<PermissionGroupAdminResponse, "id" | "name">;
 
+/**
+ * @event 링크 클릭 기본 이동 차단
+ */
 const handleLinkClick: LinkProps["onLinkClick"] = (event) => {
   event.preventDefault();
 };
@@ -792,6 +801,9 @@ JSX에서는 명명된 핸들러 참조를 기본으로 하고, 아주 짧은 �
 **Correct (로직을 명명된 핸들러로 노출):**
 
 ```tsx
+/**
+ * @event 선택된 테이블 삭제와 다음 화면 이동 처리
+ */
 const handleRemoveTableButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
   // ...
 };
@@ -1021,6 +1033,9 @@ const EntryTreeSection = (props: EntryTreeSectionProps) => {
 		treeSearchKeyword,
 	);
 
+	/**
+	 * @event tree에서 선택한 table key를 route search용 tableName으로 변환
+	 */
 	const handleTreeSelect: UiTreeProps["onSelect"] = (keys, _info) => {
 		const selectedKey = keys[0];
 		if (typeof selectedKey !== "string" || !selectedKey.startsWith("table:")) {
@@ -1069,7 +1084,10 @@ export const RouteComponent = () => {
 	const responseContentManagerSearchContents =
 		useContentManagerSearchContents<ContentListSelectData>();
 
-	const handleTableSelect = (tableName: string) => {
+	/**
+	 * @event tree에서 선택한 테이블로 route search를 갱신
+	 */
+	const handleTableSelect: EntryTreeSectionProps["onTableSelect"] = (tableName) => {
 		void navigate({
 			to: "/project/content-manager/entries",
 			search: { page: search.page, size: search.size, table: tableName },
@@ -1155,6 +1173,9 @@ export const normalizeFolderTreeNodes = (nodes: ContentFolderNodeResponse[]) => 
 
 ```ts
 // page.tsx
+/**
+ * @event 저장 요청 후 목록 query를 무효화
+ */
 const handleSave = async () => {
   await mutationContentTypeUpsert.mutateAsync({ data: request });
   await queryClient.invalidateQueries({ queryKey: ["content-type-list"] });
@@ -1241,9 +1262,23 @@ return (
 **Correct (화면 엔트리에서 흐름과 orchestration이 보이고, 필요한 section만 runtime boundary 기준으로 분리):**
 
 ```tsx
-const responseContentTypeGetListSuspense = useContentTypeGetListSuspense({ projectId });
-const handleSubmitButtonClick = async () => {
-  // ...
+const navigate = useNavigate();
+const search = Route.useSearch();
+const responseContentTypeGetListSuspense = useContentTypeGetListSuspense({
+  projectId,
+  page: search.page,
+});
+const mutationContentTypeUpsert = useContentTypeUpsert();
+
+/**
+ * @event 선택된 테이블 저장 후 현재 화면 흐름을 유지한 채 route search를 갱신
+ */
+const handleSubmitButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
+  await mutationContentTypeUpsert.mutateAsync({ data: request });
+  void navigate({
+    to: "/content-type-builder",
+    search: { ...search, page: 1 },
+  });
 };
 
 return (
@@ -1299,6 +1334,9 @@ import { buildFileRequests } from "./page";
 const [mediaUploadFileListByColumn, setMediaUploadFileListByColumn] = useState({});
 const responseContentManagerGetTableInfo = useContentManagerGetTableInfo();
 
+/**
+ * @event 업로드 파일 목록으로 요청 payload 조립
+ */
 const handleFormFinish = () => {
   const request = buildFileRequests(mediaUploadFileListByColumn);
   // ...
@@ -1361,6 +1399,9 @@ const postProcess = () => {/* ... */};
 **Correct (핸들러에서 흐름을 직접 읽을 수 있게 유지):**
 
 ```ts
+/**
+ * @event 선택된 테이블 저장과 화면 이동 처리
+ */
 const handleSubmitButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
   if (!responseContentTypeGetListSuspense.data.selectedTable) {
     return;
@@ -1396,6 +1437,9 @@ const onSelect = (id: string, event: MouseEvent<HTMLLIElement>) => {
 ```ts
 import type { MouseEventHandler } from "react";
 
+/**
+ * @event 목록 항목 클릭 시 선택된 ID 전달
+ */
 const handleListItemClick =
   (id: string): MouseEventHandler<HTMLLIElement> =>
   (_event) => {
@@ -1431,6 +1475,9 @@ const handleSubmit = () => {
 **Correct (사용자 액션은 handler 안에서 바로 수행):**
 
 ```tsx
+/**
+ * @event 제출 버튼 클릭 시 생성 요청 실행
+ */
 const handleSubmit = async () => {
 	await createEntryMutation.mutateAsync(formValues);
 };
@@ -1462,11 +1509,19 @@ if (responseUserGetItemSuspense.isPending) {
 **Correct (결측은 명시적으로 드러내고, pending/fetching은 보조 UI에만 사용):**
 
 ```tsx
-const userName = responseUserGetItemSuspense.data?.name;
+if (!responseUserGetItemSuspense.data?.name) {
+  return (
+    <>
+      <UserNameEmptyState />
+      <UiButton disabled={mutationUserSave.isPending}>저장</UiButton>
+      {responseUserGetItemSuspense.isFetching ? <RefreshIndicator /> : null}
+    </>
+  );
+}
 
 return (
   <>
-    {userName ? <UserName value={userName} /> : <UserNameEmptyState />}
+    <UserName value={responseUserGetItemSuspense.data.name} />
     <UiButton disabled={mutationUserSave.isPending}>저장</UiButton>
     {responseUserGetItemSuspense.isFetching ? <RefreshIndicator /> : null}
   </>
@@ -1494,7 +1549,7 @@ useEffect(() => {
 **Correct (render 중에 바로 계산):**
 
 ```tsx
-const selectedCount = selectedIds.length;
+return <SelectedCountBadge count={selectedIds.length} />;
 ```
 
 ### 7.3 Choose State Tools by Source of Truth
@@ -1581,6 +1636,9 @@ const { tables, selectedTable } = responseContentTypeGetListSuspense.data;
 ```
 
 ```ts
+/**
+ * @watch 검색 응답이 비어 있을 때만 후속 동기화를 건너뜀
+ */
 useEffect(() => {
   const { data, isFetching } = responseContentManagerSearchContentsSuspense;
 
@@ -1609,8 +1667,8 @@ const endpoints = responsePermissionGroupGetApiEndpointListSuspense.data.list;
 ```ts
 const responsePermissionGroupGetApiEndpointListSuspense = usePermissionGroupGetApiEndpointListSuspense({
   query: {
-    select: ({ data }) => ({
-      endpoints: data.list,
+    select: (response) => ({
+      endpoints: response.data.list,
     }),
   },
 });
@@ -1645,6 +1703,9 @@ if (authStore.canManageUsers) {
 ```
 
 ```ts
+/**
+ * @watch bootstrap authority 응답을 auth store에 동기화
+ */
 useEffect(() => {
   if (!responseAuthBootstrapSuspense.data) {
     return;
@@ -1677,6 +1738,9 @@ const handleToggleUser = (userId: string) => {
 **Correct (functional updater로 항상 최신 state를 기준으로 갱신):**
 
 ```tsx
+/**
+ * @event 사용자 선택 목록 토글 처리
+ */
 const handleToggleUser = (userId: string) => {
 	setSelectedUserIds((currentUserIds) => {
 		if (currentUserIds.includes(userId)) {
@@ -1729,6 +1793,9 @@ const handleStatusFilterChange = (nextStatus: EntryStatusFilter) => {
 **Correct (비긴급 시각 업데이트는 transition으로 내림):**
 
 ```tsx
+/**
+ * @event 상태 필터 변경으로 인한 무거운 목록 갱신을 transition으로 예약
+ */
 const handleStatusFilterChange = (nextStatus: EntryStatusFilter) => {
 	startTransition(() => {
 		setStatusFilter(nextStatus);
@@ -1792,10 +1859,16 @@ useEffect(() => {
 **Correct (non-reactive callback은 `useEffectEvent`로 분리):**
 
 ```tsx
+/**
+ * @event socket message 수신 시 최신 onMessage 로직 실행
+ */
 const handleMessage = useEffectEvent((message: SocketMessage) => {
 	onMessage(message);
 });
 
+/**
+ * @watch socket subscription lifecycle 유지
+ */
 useEffect(() => {
 	const unsubscribe = socket.subscribe((message) => {
 		handleMessage(message);

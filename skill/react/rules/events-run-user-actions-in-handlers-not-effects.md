@@ -33,6 +33,9 @@ const handleSubmit = () => {
 **Correct (사용자 액션은 handler 안에서 바로 수행):**
 
 ```tsx
+/**
+ * @event 제출 버튼 클릭 시 생성 요청 실행
+ */
 const handleSubmit = async () => {
 	await createEntryMutation.mutateAsync(formValues);
 };

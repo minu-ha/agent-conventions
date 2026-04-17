@@ -54,6 +54,7 @@ React skill을 수정하거나 새로운 rule을 추가했을 때, 실제 에이
 - pure logic를 `useSomething` custom hook으로 추출함
 - `page.ts` 대신 `utils.ts`, `helpers.ts`, `common.ts`를 만듦
 - query response를 render body에서 계속 map/filter 하거나 상단 alias로 퍼뜨림
+- 분기나 부수효과가 있는 handler, 동기화 effect에 `@event` / `@watch`가 없음
 - `response...` / `mutation...` naming을 유지하지 않음
 - shared component에 boolean prop을 계속 추가함
 - `renderHeader`, `renderFooter` 같은 render prop을 정적 조립에도 남용함
@@ -69,11 +70,13 @@ React skill을 수정하거나 새로운 rule을 추가했을 때, 실제 에이
 - Focus
   - `screen-keep-route-flow-visible`
   - `screen-extract-local-section-components-for-runtime-boundaries`
+  - `docs-require-jsdoc-on-key-declarations`
 - Prompt
   - "entries 화면 route가 너무 길어. tree/sidebar와 detail/table 영역을 읽기 쉽게 정리해줘. 다만 search param, navigate, query, mutation 흐름은 route entry에서 계속 보여야 하고, 실제 runtime boundary가 있는 경우에만 local section component로 분리해줘."
 - Expected pass signals
   - route entry가 `search`, `navigate`, page-level query/mutation, cross-section orchestration을 계속 소유함
   - local section component는 실제 state, interaction, async, provider, widget adapter 같은 runtime boundary를 가질 때만 생김
+  - 비자명한 handler에는 `@event`가 붙어 있음
 - Likely fail signals
   - `HeaderSection`, `ContentSection`, `FooterSection` 같은 layout wrapper만 추출함
   - route entry가 orchestration owner 역할을 잃고 section 조립 껍데기만 남음
@@ -127,12 +130,14 @@ React skill을 수정하거나 새로운 rule을 추가했을 때, 실제 에이
   - `events-keep-handler-flow-inline`
   - `events-run-user-actions-in-handlers-not-effects`
   - `events-name-and-curry-handlers`
+  - `docs-require-jsdoc-on-key-declarations`
 - Prompt
   - "delete 버튼의 onClick 안에 분기, mutation, navigate가 섞여 있어. React skill 기준으로 정리해줘."
 - Expected pass signals
   - JSX에서 async/branching inline handler를 걷어냄
   - named handler로 올리되, 흐름은 쓸데없이 잘게 helper로 쪼개지 않음
   - handler 이름이 `handle...` 패턴을 따름
+  - 분기나 부수효과가 있는 handler에는 `@event`가 붙어 있음
 - Likely fail signals
   - JSX 안에 여전히 async callback이 남음
   - `validate()`, `buildRequest()`, `runMutation()`처럼 작은 helper로 과분해함
@@ -176,15 +181,19 @@ React skill을 수정하거나 새로운 rule을 추가했을 때, 실제 에이
 
 - Focus
   - `state-avoid-fallback-defaults-and-loading-flags`
+  - `state-preserve-origin-chaining`
+  - `screen-keep-derived-values-close`
 - Prompt
   - "Suspense query 화면인데 optional chaining과 local loading branch가 많아. 안전하게 정리해줘."
 - Expected pass signals
   - `?? []`, `?? ""`, `|| "-"` 같은 습관적 fallback을 줄임
   - 결측은 explicit empty state나 명시적 branch로 드러냄
   - `isPending` / `isFetching`는 보조 UI에만 좁게 사용함
+  - fallback을 걷어낸 뒤에도 `response...` origin을 넓은 스코프 alias로 다시 잃지 않음
 - Likely fail signals
   - `const rows = response.data?.items ?? []`
   - Suspense screen 본문에서 `if (isPending) return <Spinner />`
+  - `const entryTitle = responseEntryGetItemSuspense.data?.title` 같은 상단 alias를 새로 만듦
 
 ### R9. Heavy Render Responsiveness
 
@@ -208,6 +217,7 @@ React skill을 수정하거나 새로운 rule을 추가했을 때, 실제 에이
 - Focus
   - `state-use-effectevent-for-non-reactive-effect-callbacks`
   - `events-run-user-actions-in-handlers-not-effects`
+  - `docs-require-jsdoc-on-key-declarations`
 - Prompt
   - "socket subscription 안에서 최신 callback을 읽어야 해서 ref sync hack을 쓰고 있어. React 19 기준으로 다듬어줘."
 - Expected pass signals

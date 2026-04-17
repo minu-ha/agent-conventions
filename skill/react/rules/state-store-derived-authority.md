@@ -34,6 +34,9 @@ if (authStore.canManageUsers) {
 ```
 
 ```ts
+/**
+ * @watch bootstrap authority 응답을 auth store에 동기화
+ */
 useEffect(() => {
   if (!responseAuthBootstrapSuspense.data) {
     return;

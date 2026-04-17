@@ -33,10 +33,16 @@ useEffect(() => {
 **Correct (non-reactive callback은 `useEffectEvent`로 분리):**
 
 ```tsx
+/**
+ * @event socket message 수신 시 최신 onMessage 로직 실행
+ */
 const handleMessage = useEffectEvent((message: SocketMessage) => {
 	onMessage(message);
 });
 
+/**
+ * @watch socket subscription lifecycle 유지
+ */
 useEffect(() => {
 	const unsubscribe = socket.subscribe((message) => {
 		handleMessage(message);

@@ -79,6 +79,9 @@ const EntryTreeSection = (props: EntryTreeSectionProps) => {
 		treeSearchKeyword,
 	);
 
+	/**
+	 * @event tree에서 선택한 table key를 route search용 tableName으로 변환
+	 */
 	const handleTreeSelect: UiTreeProps["onSelect"] = (keys, _info) => {
 		const selectedKey = keys[0];
 		if (typeof selectedKey !== "string" || !selectedKey.startsWith("table:")) {
@@ -127,7 +130,10 @@ export const RouteComponent = () => {
 	const responseContentManagerSearchContents =
 		useContentManagerSearchContents<ContentListSelectData>();
 
-	const handleTableSelect = (tableName: string) => {
+	/**
+	 * @event tree에서 선택한 테이블로 route search를 갱신
+	 */
+	const handleTableSelect: EntryTreeSectionProps["onTableSelect"] = (tableName) => {
 		void navigate({
 			to: "/project/content-manager/entries",
 			search: { page: search.page, size: search.size, table: tableName },

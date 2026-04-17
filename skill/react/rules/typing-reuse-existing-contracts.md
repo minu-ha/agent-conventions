@@ -26,6 +26,9 @@ interface PermissionMemberEditValues {
 ```ts
 type PermissionGroupAdminSummary = Pick<PermissionGroupAdminResponse, "id" | "name">;
 
+/**
+ * @event 링크 클릭 기본 이동 차단
+ */
 const handleLinkClick: LinkProps["onLinkClick"] = (event) => {
   event.preventDefault();
 };

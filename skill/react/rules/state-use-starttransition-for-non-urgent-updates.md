@@ -23,6 +23,9 @@ const handleStatusFilterChange = (nextStatus: EntryStatusFilter) => {
 **Correct (비긴급 시각 업데이트는 transition으로 내림):**
 
 ```tsx
+/**
+ * @event 상태 필터 변경으로 인한 무거운 목록 갱신을 transition으로 예약
+ */
 const handleStatusFilterChange = (nextStatus: EntryStatusFilter) => {
 	startTransition(() => {
 		setStatusFilter(nextStatus);

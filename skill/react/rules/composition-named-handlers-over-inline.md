@@ -29,6 +29,9 @@ JSX에서는 명명된 핸들러 참조를 기본으로 하고, 아주 짧은 �
 **Correct (로직을 명명된 핸들러로 노출):**
 
 ```tsx
+/**
+ * @event 선택된 테이블 삭제와 다음 화면 이동 처리
+ */
 const handleRemoveTableButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
   // ...
 };

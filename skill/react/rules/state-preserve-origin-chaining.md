@@ -25,6 +25,9 @@ const { tables, selectedTable } = responseContentTypeGetListSuspense.data;
 ```
 
 ```ts
+/**
+ * @watch 검색 응답이 비어 있을 때만 후속 동기화를 건너뜀
+ */
 useEffect(() => {
   const { data, isFetching } = responseContentManagerSearchContentsSuspense;
 

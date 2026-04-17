@@ -26,9 +26,23 @@ return (
 **Correct (화면 엔트리에서 흐름과 orchestration이 보이고, 필요한 section만 runtime boundary 기준으로 분리):**
 
 ```tsx
-const responseContentTypeGetListSuspense = useContentTypeGetListSuspense({ projectId });
-const handleSubmitButtonClick = async () => {
-  // ...
+const navigate = useNavigate();
+const search = Route.useSearch();
+const responseContentTypeGetListSuspense = useContentTypeGetListSuspense({
+  projectId,
+  page: search.page,
+});
+const mutationContentTypeUpsert = useContentTypeUpsert();
+
+/**
+ * @event 선택된 테이블 저장 후 현재 화면 흐름을 유지한 채 route search를 갱신
+ */
+const handleSubmitButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
+  await mutationContentTypeUpsert.mutateAsync({ data: request });
+  void navigate({
+    to: "/content-type-builder",
+    search: { ...search, page: 1 },
+  });
 };
 
 return (

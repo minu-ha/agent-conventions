@@ -27,6 +27,9 @@ const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 ```ts
 import type { MouseEventHandler } from "react";
 
+/**
+ * @event 버튼 클릭 기본 동작 차단
+ */
 const handleClick: MouseEventHandler<HTMLButtonElement> = (_event) => {
   // ...
 };

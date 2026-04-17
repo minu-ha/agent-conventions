@@ -26,5 +26,5 @@ useEffect(() => {
 **Correct (render 중에 바로 계산):**
 
 ```tsx
-const selectedCount = selectedIds.length;
+return <SelectedCountBadge count={selectedIds.length} />;
 ```

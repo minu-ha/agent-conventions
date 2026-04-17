@@ -24,6 +24,9 @@ const postProcess = () => {/* ... */};
 **Correct (핸들러에서 흐름을 직접 읽을 수 있게 유지):**
 
 ```ts
+/**
+ * @event 선택된 테이블 저장과 화면 이동 처리
+ */
 const handleSubmitButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
   if (!responseContentTypeGetListSuspense.data.selectedTable) {
     return;

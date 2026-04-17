@@ -67,6 +67,9 @@ export const normalizeFolderTreeNodes = (nodes: ContentFolderNodeResponse[]) => 
 
 ```ts
 // page.tsx
+/**
+ * @event 저장 요청 후 목록 query를 무효화
+ */
 const handleSave = async () => {
   await mutationContentTypeUpsert.mutateAsync({ data: request });
   await queryClient.invalidateQueries({ queryKey: ["content-type-list"] });

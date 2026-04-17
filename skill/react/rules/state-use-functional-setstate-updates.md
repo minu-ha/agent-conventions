@@ -28,6 +28,9 @@ const handleToggleUser = (userId: string) => {
 **Correct (functional updater로 항상 최신 state를 기준으로 갱신):**
 
 ```tsx
+/**
+ * @event 사용자 선택 목록 토글 처리
+ */
 const handleToggleUser = (userId: string) => {
 	setSelectedUserIds((currentUserIds) => {
 		if (currentUserIds.includes(userId)) {

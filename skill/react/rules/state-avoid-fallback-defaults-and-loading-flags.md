@@ -25,11 +25,19 @@ if (responseUserGetItemSuspense.isPending) {
 **Correct (결측은 명시적으로 드러내고, pending/fetching은 보조 UI에만 사용):**
 
 ```tsx
-const userName = responseUserGetItemSuspense.data?.name;
+if (!responseUserGetItemSuspense.data?.name) {
+  return (
+    <>
+      <UserNameEmptyState />
+      <UiButton disabled={mutationUserSave.isPending}>저장</UiButton>
+      {responseUserGetItemSuspense.isFetching ? <RefreshIndicator /> : null}
+    </>
+  );
+}
 
 return (
   <>
-    {userName ? <UserName value={userName} /> : <UserNameEmptyState />}
+    <UserName value={responseUserGetItemSuspense.data.name} />
     <UiButton disabled={mutationUserSave.isPending}>저장</UiButton>
     {responseUserGetItemSuspense.isFetching ? <RefreshIndicator /> : null}
   </>

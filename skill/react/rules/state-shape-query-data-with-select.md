@@ -24,8 +24,8 @@ const endpoints = responsePermissionGroupGetApiEndpointListSuspense.data.list;
 ```ts
 const responsePermissionGroupGetApiEndpointListSuspense = usePermissionGroupGetApiEndpointListSuspense({
   query: {
-    select: ({ data }) => ({
-      endpoints: data.list,
+    select: (response) => ({
+      endpoints: response.data.list,
     }),
   },
 });

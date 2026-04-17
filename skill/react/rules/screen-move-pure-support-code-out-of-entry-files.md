@@ -50,6 +50,9 @@ import { buildFileRequests } from "./page";
 const [mediaUploadFileListByColumn, setMediaUploadFileListByColumn] = useState({});
 const responseContentManagerGetTableInfo = useContentManagerGetTableInfo();
 
+/**
+ * @event 업로드 파일 목록으로 요청 payload 조립
+ */
 const handleFormFinish = () => {
   const request = buildFileRequests(mediaUploadFileListByColumn);
   // ...
