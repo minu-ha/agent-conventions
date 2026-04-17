@@ -212,6 +212,15 @@ skill-relative 명령을 사용하는 편이 안전합니다.
 - 공통 스타일, 경계, 문서화 규칙: 이 저장소의 skill
 - 생성 파일 보호, 검증 명령, 배포 규칙: 프로젝트 로컬 `AGENTS.md`
 
+서브에이전트 workflow도 같은 원칙으로 나누는 편이 유지보수에 유리합니다.
+
+- 여러 프로젝트에 공통으로 적용할 수 있는 권장 협업 방식: 이 저장소의 skill 또는 companion/orchestration skill
+- 이 프로젝트에서 반드시 지켜야 하는 서브에이전트 사용 조건, 예외, 병렬 실행 범위, 최종 검증 책임: 프로젝트 로컬 `AGENTS.md`
+
+즉, 이 저장소에는 "이런 상황에서는 context를 분리한 서브에이전트 협업을 권장한다" 같은 재사용 가능한 가이드를 두고,
+실제 consuming project에서는 "이 조건에서는 반드시 쓴다", "이 경우에는 병렬 금지", "최종 통합은 메인 에이전트가 맡는다" 같은
+강제 정책을 두는 구성을 기본값으로 권장합니다.
+
 TypeScript 기반 framework 프로젝트에서는 framework skill 하나만 적기보다
 `convention-react` + `convention-typescript`처럼 companion skill을 함께 적는 구성을 권장합니다.
 

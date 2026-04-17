@@ -113,6 +113,13 @@ metadata:
 - route 파일이나 router API가 바뀌면 `convention-tanstack-route`를 함께 사용합니다.
 - Playwright 테스트 범위가 바뀌면 `convention-playwright-test`를 함께 사용합니다.
 
+## 권장 협업 방식
+
+- 이 skill은 React 코드의 local rule과 리뷰 기준을 정의합니다. 서브에이전트 사용 자체를 직접 강제하지는 않습니다.
+- 변경이 여러 독립 concern으로 나뉘거나 구현 후 review loop가 중요한 작업이면 context를 분리한 서브에이전트 협업을 우선 검토합니다.
+- 병렬 작업은 write scope가 겹치지 않을 때만 허용하고, 최종 통합과 검증은 메인 에이전트가 담당합니다.
+- 실제로 언제 서브에이전트 사용이 필수인지, 어떤 orchestration skill을 함께 쓸지는 consuming project의 `AGENTS.md`를 우선합니다.
+
 ## 마무리 전 셀프 리뷰
 - 변경이 Ownership, Strategy, Screen, Events, State 중 어디에 걸리는지 다시 대조하고, 관련 rule을 빠뜨리지 않았는지 확인합니다.
 - React 변경인데 `convention-typescript`를 함께 보지 않았거나, style/router/test 영향이 있는데 해당 companion skill을 빼먹지 않았는지 점검합니다.

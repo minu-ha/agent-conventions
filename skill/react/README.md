@@ -112,6 +112,13 @@ tags: tag1, tag2
 - `npm --prefix ../../package run test` - build package용 CLI/파서/문서 회귀 테스트 실행
 - `cd ../../package && npm run build:react` - package 로컬 위치에서 React build 스크립트 직접 실행
 
+## 권장 협업 방식
+
+- React skill은 local React rule과 리뷰 기준을 정의합니다. 서브에이전트 사용 정책 자체를 source of truth로 삼지는 않습니다.
+- 변경이 여러 독립 concern으로 나뉘거나 리뷰 루프가 중요한 작업이면 context를 분리한 서브에이전트 협업을 권장합니다.
+- 병렬 작업은 write scope가 겹치지 않을 때만 허용하고, 최종 통합과 검증은 메인 에이전트가 맡는 구성을 기본값으로 봅니다.
+- 실제 mandatory policy, 예외, 병렬 금지 조건은 consuming project의 `AGENTS.md`에 두는 편이 안전합니다.
+
 ## 마이그레이션 메모
 
 - [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`가 source of truth입니다.
