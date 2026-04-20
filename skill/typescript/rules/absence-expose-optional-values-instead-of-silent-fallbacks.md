@@ -20,6 +20,17 @@ const supportEmail = settings.supportEmail ?? "help@example.com";
 **Correct (기본값이 명확한 예외만 이유와 함께 허용):**
 
 ```ts
-// 기본 페이지 크기는 제품 명세상 20으로 고정한다.
-const pageSize = query.pageSize?.trim() || "20";
+/**
+ * @helper 제품 명세에 따라 페이지 크기 기본값 적용
+ */
+const resolvePageSize = (query: SearchQuery): string => {
+	const normalizedPageSize = query.pageSize?.trim();
+
+	if (!normalizedPageSize) {
+		// 기본 페이지 크기는 제품 명세상 20으로 고정한다.
+		return "20";
+	}
+
+	return normalizedPageSize;
+};
 ```

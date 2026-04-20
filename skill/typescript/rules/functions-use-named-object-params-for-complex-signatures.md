@@ -22,6 +22,9 @@ const buildPlanningPrompt = ({request, repoPath}: BuildPlanningPromptArgs): stri
 **Correct (객체 전체를 받고 본문에서 구조분해하며, 길면 formatter 예외를 함수 본문 안에 둠):**
 
 ```ts
+/**
+ * @summary grouped args로 planning prompt 생성
+ */
 const buildPlanningPrompt = (args: BuildPlanningPromptArgs): string => {
 	// biome-ignore format: grouped args destructuring is easier to scan on one line in this helper.
 	const {request, repoPath, taskCategory, projectArea, riskLevel, selectedRuleRefs} = args;

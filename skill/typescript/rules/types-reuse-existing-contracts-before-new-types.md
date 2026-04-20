@@ -23,5 +23,8 @@ interface UserPreview {
 **Correct (기존 계약에서 필요한 부분만 파생):**
 
 ```ts
+/**
+ * @summary 사용자 미리보기 계약
+ */
 type UserPreview = Pick<UserRecord, "id" | "name">;
 ```

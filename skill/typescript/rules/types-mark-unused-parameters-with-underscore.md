@@ -24,9 +24,10 @@ const noopLog: LogSink = () => {
 **Correct (계약은 유지하고 미사용 매개변수만 `_`로 표시):**
 
 ```ts
+/**
+ * @summary 로그 sink 콜백 계약
+ */
 type LogSink = (message: string, level: "info" | "error") => void;
 
-const noopLog: LogSink = (_message, _level) => {
-	// no-op sink
-};
+const noopLog: LogSink = (_message, _level) => {};
 ```

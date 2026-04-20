@@ -58,11 +58,14 @@ const nextIteration = iteration + 1;
 
 ```ts
 // page.ts
+/**
+ * @helper profile form 값을 저장 payload로 조립
+ */
 export const buildProfileUpdatePayload = (formValues: ProfileFormValues) => {
-	// 1. 문자열 값 정리
-	// 2. payload 형태로 조립
+	const normalizedDisplayName = formValues.displayName.trim();
+
 	return {
-		displayName: formValues.displayName.trim(),
+		displayName: normalizedDisplayName,
 	};
 };
 ```
@@ -76,6 +79,9 @@ import { buildProfileUpdatePayload } from "./page";
 // shared/util.ts
 export const util = {
 	date: {
+		/**
+		 * @helper date 입력값을 ISO 문자열로 정규화
+		 */
 		normalize(value: Date | string): string {
 			return new Date(value).toISOString();
 		},

@@ -26,7 +26,13 @@ const User_ProfileSchema = z.object({
 
 ```ts
 // chat-state.ts
+/**
+ * @summary 사용자 프로필 스키마
+ */
 const userProfileSchema = z.object({
+	/**
+	 * @field 저장소 경로
+	 */
 	repoPath: z.string(),
 });
 ```

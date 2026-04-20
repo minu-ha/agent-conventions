@@ -3,6 +3,7 @@
 에이전트 협업, 리뷰, AI 보조 리팩터링에 맞춰 TypeScript 컨벤션을 관리하는 구조화된 저장소입니다.  
 현재 TypeScript 가이드는 6개 섹션의 22개 rule 파일로 구성되어 있습니다.  
 최종적으로 [AGENTS.md](./AGENTS.md)로 compile됩니다. 이 skill은 React, NestJS, TanStack Route, Playwright Test와 함께 로드하는 공통 TypeScript companion skill로도 사용됩니다.
+[pressure-tests.md](./pressure-tests.md)는 skill 품질 회귀를 점검하는 synthetic/real-world pressure scenario 모음입니다.
 
 ## 구조
 

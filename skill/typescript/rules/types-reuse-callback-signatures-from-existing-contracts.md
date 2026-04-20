@@ -26,7 +26,13 @@ const formatMessage = (message: string): string => {
 **Correct (기존 계약의 시그니처를 직접 참조):**
 
 ```ts
+/**
+ * @summary toast formatter 계약
+ */
 interface ToastFormatters {
+	/**
+	 * @field toast 메시지 포맷 함수
+	 */
 	formatMessage: (message: string) => string;
 }
 

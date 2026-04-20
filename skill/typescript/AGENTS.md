@@ -129,7 +129,13 @@ const User_ProfileSchema = z.object({
 
 ```ts
 // chat-state.ts
+/**
+ * @summary 사용자 프로필 스키마
+ */
 const userProfileSchema = z.object({
+	/**
+	 * @field 저장소 경로
+	 */
 	repoPath: z.string(),
 });
 ```
@@ -229,11 +235,12 @@ const noopLog: LogSink = () => {
 **Correct (계약은 유지하고 미사용 매개변수만 `_`로 표시):**
 
 ```ts
+/**
+ * @summary 로그 sink 콜백 계약
+ */
 type LogSink = (message: string, level: "info" | "error") => void;
 
-const noopLog: LogSink = (_message, _level) => {
-	// no-op sink
-};
+const noopLog: LogSink = (_message, _level) => {};
 ```
 
 ### 2.3 Prefer Function Variable Types Over Parameter Annotations
@@ -253,7 +260,13 @@ const formatState = (state: Record<string, unknown>): string => {
 **Correct (기존 계약이나 실제 공유되는 callable contract를 재사용해 함수 변수 타입을 고정):**
 
 ```ts
+/**
+ * @summary 사용자 formatter 계약
+ */
 interface UserFormatters {
+	/**
+	 * @field 상태 문자열 formatter
+	 */
 	formatState: (state: Record<string, unknown>) => string;
 }
 
@@ -263,6 +276,9 @@ const formatState: UserFormatters["formatState"] = (state) => {
 ```
 
 ```ts
+/**
+ * @summary request 정규화 계약
+ */
 type NormalizeRequest = (request: string) => string;
 
 const normalizeRequest: NormalizeRequest = (request) => {
@@ -295,7 +311,13 @@ const formatMessage = (message: string): string => {
 **Correct (기존 계약의 시그니처를 직접 참조):**
 
 ```ts
+/**
+ * @summary toast formatter 계약
+ */
 interface ToastFormatters {
+	/**
+	 * @field toast 메시지 포맷 함수
+	 */
 	formatMessage: (message: string) => string;
 }
 
@@ -322,6 +344,9 @@ interface UserPreview {
 **Correct (기존 계약에서 필요한 부분만 파생):**
 
 ```ts
+/**
+ * @summary 사용자 미리보기 계약
+ */
 type UserPreview = Pick<UserRecord, "id" | "name">;
 ```
 
@@ -408,11 +433,14 @@ const nextIteration = iteration + 1;
 
 ```ts
 // page.ts
+/**
+ * @helper profile form 값을 저장 payload로 조립
+ */
 export const buildProfileUpdatePayload = (formValues: ProfileFormValues) => {
-	// 1. 문자열 값 정리
-	// 2. payload 형태로 조립
+	const normalizedDisplayName = formValues.displayName.trim();
+
 	return {
-		displayName: formValues.displayName.trim(),
+		displayName: normalizedDisplayName,
 	};
 };
 ```
@@ -426,6 +454,9 @@ import { buildProfileUpdatePayload } from "./page";
 // shared/util.ts
 export const util = {
 	date: {
+		/**
+		 * @helper date 입력값을 ISO 문자열로 정규화
+		 */
 		normalize(value: Date | string): string {
 			return new Date(value).toISOString();
 		},
@@ -482,6 +513,9 @@ const audit_status = {
 	failed: "failed",
 } as const;
 
+/**
+ * @summary 감사 상태 값 집합
+ */
 type AuditStatus = (typeof audit_status)[keyof typeof audit_status];
 ```
 
@@ -502,6 +536,9 @@ const buildPlanningPrompt = ({request, repoPath}: BuildPlanningPromptArgs): stri
 **Correct (객체 전체를 받고 본문에서 구조분해하며, 길면 formatter 예외를 함수 본문 안에 둠):**
 
 ```ts
+/**
+ * @summary grouped args로 planning prompt 생성
+ */
 const buildPlanningPrompt = (args: BuildPlanningPromptArgs): string => {
 	// biome-ignore format: grouped args destructuring is easier to scan on one line in this helper.
 	const {request, repoPath, taskCategory, projectArea, riskLevel, selectedRuleRefs} = args;
@@ -562,8 +599,19 @@ const supportEmail = settings.supportEmail ?? "help@example.com";
 **Correct (기본값이 명확한 예외만 이유와 함께 허용):**
 
 ```ts
-// 기본 페이지 크기는 제품 명세상 20으로 고정한다.
-const pageSize = query.pageSize?.trim() || "20";
+/**
+ * @helper 제품 명세에 따라 페이지 크기 기본값 적용
+ */
+const resolvePageSize = (query: SearchQuery): string => {
+	const normalizedPageSize = query.pageSize?.trim();
+
+	if (!normalizedPageSize) {
+		// 기본 페이지 크기는 제품 명세상 20으로 고정한다.
+		return "20";
+	}
+
+	return normalizedPageSize;
+};
 ```
 
 ## 5. JSDoc and Comment Conventions
@@ -786,6 +834,9 @@ const supportEmail = settings.supportEmail ?? "help@example.com";
 ```ts
 import type {UserRecord} from "<type-public-import>";
 
+/**
+ * @summary 사용자 미리보기 계약
+ */
 type UserPreview = Pick<UserRecord, "id" | "name">;
 
 if (!settings.supportEmail) {
