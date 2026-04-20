@@ -52,9 +52,7 @@ tags: third-party, wrappers, nesting
 	& .ant-tree-title {
 		color: #999;
 	}
-}
 
-.rt_pcmei__treeBox {
 	& .ant-tree-node-content-wrapper .ant-tree-iconEle .ant-tree-title {
 		color: #999;
 	}

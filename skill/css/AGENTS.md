@@ -84,10 +84,11 @@ import styles from "./mission-control.module.css";
 **Correct (기본은 plain CSS와 전역 고유 클래스명을 사용):**
 
 ```tsx
+import { clsx } from "clsx";
 import "./mission-control.css";
 
-<div className="rt_mc__hero">
-	<span className="rt_mc__eyebrow">GraphQL operations deck</span>
+<div className={clsx("rt_mc__hero")}>
+	<span className={clsx("rt_mc__eyebrow")}>GraphQL operations deck</span>
 </div>
 ```
 
@@ -235,7 +236,7 @@ TSX class 조합과 wrapper 소유권 규칙은 스타일링 경계를 분명하
 
 **Impact: HIGH (keeps TSX class composition readable when base classes and state modifiers need to be combined)**
 
-TSX에서 클래스 조합은 `clsx()` 사용을 기본으로 합니다. 기본 element 클래스와 상태 modifier를 함께 읽기 쉽게 나열하고, 문자열 연결이나 중복 ternary로 `className`을 조립하지 않습니다.
+TSX에서 `className`은 `clsx()` 사용을 기본으로 합니다. 기본 element 클래스 하나만 넣는 경우도 같은 기준을 유지하고, 상태 modifier나 optional class가 붙어도 읽기 쉽게 확장합니다. 문자열 연결이나 중복 ternary로 `className`을 조립하지 않습니다.
 
 **Incorrect (문자열 연결로 클래스 조합을 숨김):**
 
@@ -468,9 +469,7 @@ const items: NonNullable<UiCollapseProps["items"]> = [];
 	& .ant-tree-title {
 		color: #999;
 	}
-}
 
-.rt_pcmei__treeBox {
 	& .ant-tree-node-content-wrapper .ant-tree-iconEle .ant-tree-title {
 		color: #999;
 	}

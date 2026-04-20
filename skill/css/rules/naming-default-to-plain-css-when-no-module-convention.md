@@ -36,10 +36,11 @@ import styles from "./mission-control.module.css";
 **Correct (기본은 plain CSS와 전역 고유 클래스명을 사용):**
 
 ```tsx
+import { clsx } from "clsx";
 import "./mission-control.css";
 
-<div className="rt_mc__hero">
-	<span className="rt_mc__eyebrow">GraphQL operations deck</span>
+<div className={clsx("rt_mc__hero")}>
+	<span className={clsx("rt_mc__eyebrow")}>GraphQL operations deck</span>
 </div>
 ```
 
