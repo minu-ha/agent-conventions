@@ -24,6 +24,7 @@ CSS skill을 수정하거나 새로운 rule을 추가했을 때, 실제 에이�
 ## Common Red Flags
 
 - `.module.css`와 `styles.*`를 기본처럼 사용함
+- TSX `className`에 문자열 리터럴이나 문자열 연결을 직접 넣음
 - `rt_*`, `loc_*`, `ui_*` namespace가 owner와 맞지 않음
 - one-off layout patch를 modifier로 추가함
 - `.a .b .c .d` 같은 깊은 project-owned descendant selector를 만듦
@@ -111,6 +112,22 @@ CSS skill을 수정하거나 새로운 rule을 추가했을 때, 실제 에이�
 - Likely fail signals
   - 하나의 CSS 파일에 `rt_*`와 `loc_*`가 섞임
   - route 공용 스타일을 local CSS 안에 넣음
+
+### C6. TSX Class Composition Discipline
+
+- Focus
+  - `composition-compose-classes-with-clsx`
+  - `composition-style-ui-components-through-owned-wrappers`
+- Prompt
+  - "TSX에서 route class와 상태 modifier, Ui wrapper class를 같이 정리해줘. CSS skill 기준으로 className 조합도 맞춰줘."
+- Expected pass signals
+  - TSX `className`은 기본 element class 하나만 있어도 `clsx()`를 사용함
+  - route class와 modifier가 문자열 연결 대신 `clsx()`에서 읽기 쉽게 조합됨
+  - `Ui*` 내부 DOM 스타일링은 wrapper class를 통해 접근하고, wrapper class 주입도 `clsx()` 기준을 따름
+- Likely fail signals
+  - `className="rt_pctbi__panel"`
+  - `className={"rt_pctbi__panel " + (isActive ? "rt_pctbi__panel--active" : "")}`
+  - `UiButton` 내부 DOM을 wrapper 없이 직접 selector로 제어함
 
 ## 유지보수 원칙
 

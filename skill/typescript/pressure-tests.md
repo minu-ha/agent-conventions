@@ -33,6 +33,8 @@ TypeScript skill을 수정하거나 새로운 rule을 추가했을 때, 실제 �
 - callback 시그니처를 기존 계약에서 재사용하지 않고 다시 씀
 - 미사용 callback parameter를 생략하거나 `_` 접두사를 붙이지 않음
 - `config`, `util` 오리진을 넓은 스코프 alias로 끊음
+- `enum`을 그대로 도입하거나 enum-like 상수에 `as const`를 쓰지 않음
+- 재사용 가능한 callable contract가 있는데 parameter annotation만으로 함수 타입을 고정함
 
 ## Scenario Set
 
@@ -116,6 +118,39 @@ TypeScript skill을 수정하거나 새로운 rule을 추가했을 때, 실제 �
 - Likely fail signals
   - `const {api, features} = config`
   - `import {config, util} from "./index"`
+
+### T6. Enum-like Runtime Value Discipline
+
+- Focus
+  - `functions-replace-enum-with-as-const-objects`
+  - `naming-use-consistent-file-and-symbol-naming`
+- Prompt
+  - "상태 값 집합을 타입과 런타임에서 같이 써야 해. TypeScript skill 기준으로 정리해줘."
+- Expected pass signals
+  - `enum` 대신 object literal + `as const`를 사용함
+  - 파생 타입에는 `@summary`를 유지함
+  - enum-like 값 집합 이름과 키 casing이 naming rule과 맞음
+- Likely fail signals
+  - `enum AuditStatus { ... }`
+  - object는 만들었지만 `as const`가 없음
+  - 파생 타입 설명이 빠짐
+
+### T7. Callable Contract Reuse
+
+- Focus
+  - `types-prefer-function-variable-types-over-parameter-annotations`
+  - `types-reuse-callback-signatures-from-existing-contracts`
+  - `types-mark-unused-parameters-with-underscore`
+- Prompt
+  - "formatter, normalizer, callback 함수 시그니처를 TypeScript skill 기준으로 정리해줘. 기존 계약 재사용이 우선이었으면 좋겠어."
+- Expected pass signals
+  - 기존 interface, object contract, framework alias가 있으면 함수 변수 타입으로 재사용함
+  - 같은 callable contract를 여러 구현이 공유할 때만 별도 type alias를 선언함
+  - 미사용 callback parameter는 `_` 접두사로 남김
+- Likely fail signals
+  - `const formatState = (state: Record<string, unknown>): string => { ... }`
+  - 기존 계약이 있는데도 각 구현마다 parameter annotation을 다시 씀
+  - 미사용 parameter를 생략하거나 이름만 남김
 
 ## 유지보수 원칙
 
