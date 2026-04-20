@@ -27,7 +27,7 @@ tags: review, workflow, checklist
 - 폴더 전용 구조와 플랫 전용 구조 중 하나로 치우치지 않았는가
 - URL에 반영되는 상위는 일반 폴더로 두었는가
 - 하위 route 묶음은 () 그룹 폴더로 분리했는가
-- 하위 route라면 feature.css, feature.layout.tsx, feature.index.tsx 기본 세트를 갖췄는가
+- 하위 route라면 feature.css, feature.ts, feature.layout.tsx, feature.index.tsx 4-file set을 갖췄는가
 - 그룹 폴더 안의 엔트리 파일명이 feature.index.tsx처럼 검색 가능한가
 - 화면 전용 순수 support code가 route 파일 안에 누적되지 않았고, 추출했다면 generic helper 파일 대신 owner-named sibling `*.ts`에 named export로 두었는가
 - 인증/권한 가드를 컴포넌트 본문이 아니라 beforeLoad에 두었는가

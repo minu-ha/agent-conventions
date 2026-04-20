@@ -11,6 +11,7 @@ metadata:
 에이전트 협업 팀을 위한 TanStack Router 컨벤션 모음입니다. 현재 이 가이드는 6개 카테고리의 24개 local 규칙으로 구성되어 있습니다.  
 route 구조, 네이밍, router boundary 선언, route-local 책임, generated artifact, 반복 가능한 route 추가 워크플로우를 [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`와 compiled [AGENTS.md](./AGENTS.md)로 관리합니다.  
 기본 compiled guide는 local router rule만 담고 route support module과 search schema에는 `convention-typescript`를 companion skill로 함께 사용합니다.
+이 skill은 TanStack Router의 mixed route tree와 프로젝트의 custom route naming 전제를 함께 따릅니다. 특히 `routeToken: "layout"`과 feature-named `*.layout.tsx` / `*.index.tsx` 파일 세트를 전제로 설명합니다.
 
 ## 사용할 때
 - TanStack Router route 파일, route 폴더, route 인접 owner-named `*.ts` support module을 만들거나 수정할 때 사용합니다.
@@ -56,7 +57,7 @@ route 구조, 네이밍, router boundary 선언, route-local 책임, generated a
 
 ### 2. File Naming and Route Assets (HIGH)
 
-- `naming-prepare-the-basic-route-file-set` - CSS, layout, index를 먼저 준비하고 support module은 필요할 때 추가
+- `naming-prepare-the-basic-route-file-set` - CSS, support module, layout, index 4-file set을 먼저 준비
 - `naming-use-searchable-feature-route-file-names` - entry 파일명은 feature 기준으로 검색 가능하게 유지
 - `naming-start-child-route-sets-with-parentheses-folders` - 중첩 route set은 group 폴더로 시작
 - `naming-use-domain-specific-dynamic-segment-names` - generic id보다 의미 있는 param 이름 사용

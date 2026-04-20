@@ -146,7 +146,7 @@ function Root() {
 
 **Impact: HIGH (avoids duplicating top-level route shells when screens share the same layout)**
 
-여러 화면이 같은 레이아웃 셸을 쓰면 같은 부모 `layout` 아래에 두고 하위 그룹만 늘립니다. 기능이 다르다는 이유만으로 최상위 레이아웃을 새로 만들지 말고, 동일 셸이라면 기존 부모 아래에서 확장합니다.
+여러 화면이 같은 레이아웃 셸을 쓰면 같은 부모 `layout` 아래에 두고 하위 그룹만 늘립니다. 기능이 다르다는 이유만으로 최상위 레이아웃을 새로 만들지 말고, 동일 셸이라면 기존 부모 아래에서 확장합니다. 각 feature가 자기 `feature.layout.tsx` tunnel route를 따로 가질 수는 있지만, 공통 shell을 대신하는 상위 layout를 feature별로 중복 만들지는 않습니다.
 
 **Incorrect (같은 셸인데 기능별로 상위 layout을 새로 만듦):**
 
@@ -162,8 +162,11 @@ function Root() {
 ```txt
 <route-root>/app.layout.tsx
 <route-root>/app.index.tsx
+<route-root>/app/(orders)/orders.layout.tsx
 <route-root>/app/(orders)/orders.index.tsx
+<route-root>/app/(members)/members.layout.tsx
 <route-root>/app/(members)/members.index.tsx
+<route-root>/app/(settings)/settings.layout.tsx
 <route-root>/app/(settings)/settings.index.tsx
 ```
 
@@ -247,23 +250,16 @@ function Root() {
 
 **Impact: MEDIUM-HIGH (gives nested routes a predictable place for styles, shell code, and pure helpers from the start)**
 
-하위 라우트가 생기면 해당 라우트는 기본적으로 `*.css`, `*.layout.tsx`, `*.index.tsx` 파일 세트를 먼저 준비합니다. 순수 support code가 실제로 생겼을 때는 generic helper 파일 대신 같은 owner 이름의 sibling `*.ts` module을 추가합니다. 이렇게 해야 라우트가 커져도 스타일, 셸, 화면, 순수 로직의 자리가 예측 가능하게 유지됩니다.
+이 프로젝트의 route file set은 `feature.css`, `feature.ts`, `feature.layout.tsx`, `feature.index.tsx` 4개를 기본 세트로 봅니다. `*.layout.tsx`는 눈에 띄는 shell UI가 아직 없더라도 route tunnel과 향후 layout 책임을 받을 경계로 미리 두고, `*.ts`는 route support code가 자라날 기본 자리로 둡니다. 이렇게 해야 라우트가 커져도 스타일, 셸, 화면, 순수 로직의 자리가 예측 가능하게 유지됩니다.
 
-**Incorrect (화면 파일만 먼저 만들고 나머지 책임이 흩어짐):**
+**Incorrect (4-file set 없이 화면 파일만 먼저 만들어 책임 경계가 사라짐):**
 
 ```txt
 (settings)/
   settings.index.tsx
 ```
 
-**Correct (기본 route 파일 세트를 먼저 마련):**
-
-```txt
-(settings)/
-  settings.css
-  settings.layout.tsx
-  settings.index.tsx
-```
+**Correct (기본 4-file route 세트를 먼저 마련):**
 
 ```txt
 (settings)/
@@ -273,13 +269,11 @@ function Root() {
   settings.index.tsx
 ```
 
-위 `settings.ts`는 support code가 실제로 생겼을 때 추가합니다.
-
 ### 2.3 Start Child Route Sets With Parentheses Folders
 
 **Impact: HIGH (makes child route groups explicit before filenames grow long or sibling routes become hard to scan)**
 
-하위 라우트가 생기면 기본적으로 먼저 `(<feature>)` 그룹 폴더를 만들고, 그 안에 해당 feature 파일을 둡니다. 이렇게 하면 pathless 그룹 단위가 분명해지고, sibling route가 늘어나도 파일명이 불필요하게 길어지지 않습니다.
+하위 라우트가 생기면 기본적으로 먼저 `(<feature>)` 그룹 폴더를 만들고, 그 안에 해당 feature의 4-file set(`feature.css`, `feature.ts`, `feature.layout.tsx`, `feature.index.tsx`)과 `-local/`을 정리합니다. 이 규칙의 목적은 URL semantics를 바꾸는 것이 아니라 route asset 묶음을 한 feature 단위로 보이게 유지하는 것입니다. 이렇게 하면 sibling route가 늘어나도 같은 계층의 route asset이 서로 섞이지 않고, 파일명이 불필요하게 길어지지 않습니다.
 
 **Incorrect (하위 라우트를 플랫 파일명으로 계속 누적):**
 
@@ -292,6 +286,9 @@ function Root() {
 **Correct (하위 라우트 묶음을 그룹 폴더로 먼저 감쌈):**
 
 ```txt
+<route-root>/app/(settings)/settings.css
+<route-root>/app/(settings)/settings.ts
+<route-root>/app/(settings)/settings.layout.tsx
 <route-root>/app/(settings)/settings.index.tsx
 <route-root>/app/(settings)/(profile)/profile.index.tsx
 <route-root>/app/(settings)/(security)/security.index.tsx
@@ -322,8 +319,9 @@ filters.{-$tab}.tsx
 
 **Impact: MEDIUM-HIGH (keeps route files from accumulating normalization and mapping logic before boundaries blur)**
 
-라우트 전용 순수 support code가 entry file을 흐리기 시작하면 첫 추출 대상은 같은 계층 owner-named module입니다. 예를 들어 `settings.index.tsx`라면 `settings.ts`로 옮기고 named export를 직접 import합니다.   
-`helper.ts`, `helpers.ts`, `utils.ts`, `common.ts` 같은 generic 파일명은 만들지 않고, 화면 하나에서만 쓰는 custom hook으로 우회해 숨기지도 않습니다.
+라우트 전용 순수 support code가 entry file을 흐리기 시작하면 첫 추출 대상은 같은 계층 owner-named module입니다. 예를 들어 `settings.index.tsx`라면 `settings.ts`로 옮기고 named export를 직접 import합니다.
+
+exported support helper는 `convention-typescript` 규칙에 맞춰 `@helper` JSDoc을 붙이고, silent fallback으로 결측을 숨기지 않습니다. `helper.ts`, `helpers.ts`, `utils.ts`, `common.ts` 같은 generic 파일명은 만들지 않고, 화면 하나에서만 쓰는 custom hook으로 우회해 숨기지도 않습니다.
 
 **Incorrect (generic helper 파일명으로 support code를 분산):**
 
@@ -344,10 +342,22 @@ export const normalizeSettingsSearch = (value: string | undefined) => {
 
 ```ts
 // settings.ts
+/**
+ * @helper settings 검색어 trim/lower 정규화
+ */
 export const normalizeSettingsSearch = (value: string | undefined) => {
-	return value?.trim().toLowerCase() ?? "";
+	const normalizedValue = value?.trim().toLowerCase();
+
+	if (!normalizedValue) {
+		return undefined;
+	}
+
+	return normalizedValue;
 };
 
+/**
+ * @helper settings 기본 redirect destination 조립
+ */
 export const buildSettingsRedirect = (tab: string) => {
 	return {to: "/app/settings/general", search: {tab}};
 };
@@ -357,7 +367,7 @@ export const buildSettingsRedirect = (tab: string) => {
 
 **Impact: HIGH (keeps route entries easy to find in file search even when group folders are already present)**
 
-그룹 폴더를 쓰더라도 엔트리 파일명은 `feature.index.tsx`, `feature.layout.tsx`처럼 feature 이름을 유지합니다. 그룹 폴더 아래 파일명을 모두 `index.tsx`, `layout.tsx`로 두면 검색성과 탐색성이 크게 떨어집니다.
+이 프로젝트는 mixed route tree와 `routeToken: "layout"` 전제를 사용하므로, 그룹 폴더를 쓰더라도 엔트리 파일명은 `feature.index.tsx`, `feature.layout.tsx`처럼 feature 이름을 유지합니다. 그룹 폴더 아래 파일명을 모두 `index.tsx`, `layout.tsx`로 두면 검색성과 탐색성이 크게 떨어집니다.
 
 **Incorrect (그룹 폴더 안에서 익명 파일명을 사용):**
 
@@ -594,7 +604,7 @@ function MembersIndex() {
 
 **Impact: HIGH (prevents parent route shells from absorbing leaf-screen data and form logic)**
 
-`*.layout.tsx`는 부모 경로 등록, 접근 제어, 공통 래퍼, 메뉴 상태 동기화, `<Outlet />`까지만 담당합니다. 하위 leaf 화면만 쓰는 API 호출이나 상세 폼 로직은 layout에 넣지 않고 해당 `index`나 `-local`로 내립니다.
+`*.layout.tsx`는 부모 경로 등록, 접근 제어, 공통 래퍼, 메뉴 상태 동기화, `<Outlet />`까지만 담당합니다. 이 프로젝트에서는 `*.layout.tsx`를 4-file set의 기본 tunnel route로 항상 두지만, 파일이 있다는 이유로 leaf 화면 전용 API 호출이나 상세 폼 로직을 흡수시키지는 않습니다. 하위 leaf 화면만 쓰는 로직은 layout에 넣지 않고 해당 `index`나 `-local`로 내립니다.
 
 **Incorrect (layout 파일이 leaf 화면 전용 로직까지 가짐):**
 
@@ -611,10 +621,14 @@ function SettingsLayout() {
 }
 ```
 
-**Correct (layout은 셸과 outlet 책임만 유지):**
+**Correct (layout route는 최소 tunnel이어도 `Route` export와 outlet 책임만 유지):**
 
 ```tsx
-function AppLayout() {
+export const Route = createFileRoute("/app/(settings)/settings")({
+	component: SettingsLayout,
+});
+
+function SettingsLayout() {
 	return <Outlet />;
 }
 ```
@@ -710,7 +724,7 @@ router generator를 다시 실행한다
 
 **Impact: MEDIUM (reduces cleanup work by establishing shell, grouping, and search boundaries before route files sprawl)**
 
-신규 라우트를 추가할 때는 화면 파일부터 급하게 만들지 말고, 레이아웃 셸과 그룹 구조를 먼저 고정하는 순서를 따릅니다. 이렇게 해야 route tree, support code 위치, search 검증 경계가 뒤늦게 흔들리지 않습니다.
+신규 라우트를 추가할 때는 화면 파일부터 급하게 만들지 말고, 레이아웃 셸과 그룹 구조를 먼저 고정하는 순서를 따릅니다. 이 프로젝트에서는 `feature.css`, `feature.ts`, `feature.layout.tsx`, `feature.index.tsx` 4-file set을 route 기본 단위로 보고, layout file은 최소 tunnel이어도 먼저 자리를 확보합니다. 이렇게 해야 route tree, support code 위치, search 검증 경계가 뒤늦게 흔들리지 않습니다.
 
 **Incorrect (leaf 화면부터 만들고 나중에 구조를 끼워 맞춤):**
 
@@ -727,8 +741,8 @@ router generator를 다시 실행한다
 2. 셸이 다르면 최상위 그룹을 분리하고, 같으면 기존 부모 layout 아래에 둔다
 3. URL에 반영되는 상위 계층은 일반 폴더로 만든다
 4. 하위 라우트가 생기면 (<feature>) 그룹 폴더를 만든다
-5. 기본적으로 feature.css, feature.layout.tsx, feature.index.tsx를 준비한다
-6. support code가 생기면 feature.ts 같은 owner-named sibling module을 추가하고 named export를 사용한다
+5. 기본적으로 feature.css, feature.ts, feature.layout.tsx, feature.index.tsx 4-file set을 준비한다
+6. feature.layout.tsx는 shell UI가 아직 없더라도 route tunnel 경계로 두고, support code는 feature.ts에 named export로 모은다
 7. 동적 세그먼트가 필요하면 {$param}, {-$param} 규칙을 사용한다
 8. search를 읽는 화면이면 validateSearch를 먼저 선언한다
 9. route 전용 보조 모듈이 있으면 같은 계층 -local/에 둔다
@@ -757,7 +771,7 @@ router generator를 다시 실행한다
 - 폴더 전용 구조와 플랫 전용 구조 중 하나로 치우치지 않았는가
 - URL에 반영되는 상위는 일반 폴더로 두었는가
 - 하위 route 묶음은 () 그룹 폴더로 분리했는가
-- 하위 route라면 feature.css, feature.layout.tsx, feature.index.tsx 기본 세트를 갖췄는가
+- 하위 route라면 feature.css, feature.ts, feature.layout.tsx, feature.index.tsx 4-file set을 갖췄는가
 - 그룹 폴더 안의 엔트리 파일명이 feature.index.tsx처럼 검색 가능한가
 - 화면 전용 순수 support code가 route 파일 안에 누적되지 않았고, 추출했다면 generic helper 파일 대신 owner-named sibling `*.ts`에 named export로 두었는가
 - 인증/권한 가드를 컴포넌트 본문이 아니라 beforeLoad에 두었는가

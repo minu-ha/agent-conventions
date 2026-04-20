@@ -9,23 +9,16 @@ tags: file-set, route-assets, naming
 
 **Impact: MEDIUM-HIGH (gives nested routes a predictable place for styles, shell code, and pure helpers from the start)**
 
-하위 라우트가 생기면 해당 라우트는 기본적으로 `*.css`, `*.layout.tsx`, `*.index.tsx` 파일 세트를 먼저 준비합니다. 순수 support code가 실제로 생겼을 때는 generic helper 파일 대신 같은 owner 이름의 sibling `*.ts` module을 추가합니다. 이렇게 해야 라우트가 커져도 스타일, 셸, 화면, 순수 로직의 자리가 예측 가능하게 유지됩니다.
+이 프로젝트의 route file set은 `feature.css`, `feature.ts`, `feature.layout.tsx`, `feature.index.tsx` 4개를 기본 세트로 봅니다. `*.layout.tsx`는 눈에 띄는 shell UI가 아직 없더라도 route tunnel과 향후 layout 책임을 받을 경계로 미리 두고, `*.ts`는 route support code가 자라날 기본 자리로 둡니다. 이렇게 해야 라우트가 커져도 스타일, 셸, 화면, 순수 로직의 자리가 예측 가능하게 유지됩니다.
 
-**Incorrect (화면 파일만 먼저 만들고 나머지 책임이 흩어짐):**
+**Incorrect (4-file set 없이 화면 파일만 먼저 만들어 책임 경계가 사라짐):**
 
 ```txt
 (settings)/
   settings.index.tsx
 ```
 
-**Correct (기본 route 파일 세트를 먼저 마련):**
-
-```txt
-(settings)/
-  settings.css
-  settings.layout.tsx
-  settings.index.tsx
-```
+**Correct (기본 4-file route 세트를 먼저 마련):**
 
 ```txt
 (settings)/
@@ -34,5 +27,3 @@ tags: file-set, route-assets, naming
   settings.layout.tsx
   settings.index.tsx
 ```
-
-위 `settings.ts`는 support code가 실제로 생겼을 때 추가합니다.
