@@ -86,17 +86,17 @@ import styles from "./mission-control.module.css";
 ```tsx
 import "./mission-control.css";
 
-<div className="rt_swmc__hero">
-	<span className="rt_swmc__eyebrow">GraphQL operations deck</span>
+<div className="rt_mc__hero">
+	<span className="rt_mc__eyebrow">GraphQL operations deck</span>
 </div>
 ```
 
 ```css
-.rt_swmc__hero {
+.rt_mc__hero {
 	display: grid;
 }
 
-.rt_swmc__eyebrow {
+.rt_mc__eyebrow {
 	letter-spacing: 0.08em;
 }
 ```
@@ -155,7 +155,7 @@ rt_pcmei__detailSection
 
 **Impact: HIGH (keeps route-scoped class namespaces readable back to the route hierarchy they belong to)**
 
-라우트 slug는 길이보다 추적 가능성을 우선하고, 상위에서 하위로 이어지는 라우트 트리 순서를 반영해 축약합니다. 너무 짧아 의미가 사라지거나, 계층 순서가 뒤섞이면 클래스명만 봐서는 어느 route 소유인지 추적하기 어려워집니다.
+라우트 slug는 길이보다 추적 가능성을 우선하고, 상위에서 하위로 이어지는 라우트 트리 순서를 반영해 축약합니다. route 이름을 전부 다 적을 필요는 없고 `mission-control -> mc`, `project.content-type-builder.index -> pctbi`처럼 팀이 owner를 다시 찾을 수 있을 정도로만 줄이면 됩니다. 너무 짧아 의미가 완전히 사라지거나, 계층 순서가 뒤섞이면 클래스명만 봐서는 어느 route 소유인지 추적하기 어려워집니다.
 
 **Incorrect (의미가 약하거나 계층 순서가 흐려진 slug):**
 
@@ -168,8 +168,10 @@ rt_ibpct__panel
 **Correct (도메인 의미와 계층 순서가 보존된 slug):**
 
 ```txt
+mission-control -> rt_mc
 project.content-type-builder -> rt_pctb
 project.content-type-builder.index -> rt_pctbi
+rt_mc__hero
 rt_pctbi__panel
 ```
 
@@ -261,7 +263,7 @@ TSX에서 클래스 조합은 `clsx()` 사용을 기본으로 합니다. 기본 
 **Impact: HIGH (keeps modifiers reserved for state instead of turning them into a second layout naming system)**
 
 modifier는 `active`, `hidden`, `disabled`, `selected`, `error` 같은 상태값에 우선 사용합니다. spacing patch, 방향 보정, 특정 화면에서만 필요한 구조 차이를 덧붙이는 용도로 modifier를 늘리지 않습니다.   
-다만 `dense`, `horizontal`, `compact`처럼 컴포넌트 API로 반복해서 쓰이는 명시적 variant라면 modifier를 허용할 수 있습니다. 이런 경우에도 one-off layout fix가 아니라 재사용 가능한 variant라는 근거가 있어야 합니다.
+다만 `dense`, `horizontal`, `compact`처럼 컴포넌트 API로 반복해서 쓰이는 명시적 variant라면 modifier를 허용할 수 있습니다. 이런 경우에도 one-off layout fix가 아니라 재사용 가능한 variant라는 근거가 있어야 합니다. guardrail에서 금지하는 대상도 "상태 의미가 아닌 modifier 전체"가 아니라 이런 one-off structural modifier입니다.
 
 **Incorrect (특정 화면용 구조 patch를 modifier로 덧붙임):**
 
@@ -363,7 +365,7 @@ const items: NonNullable<UiCollapseProps["items"]> = [];
 
 **Impact: HIGH (keeps layout changes from breaking styling through long descendant chains)**
 
-깊은 후손 선택자 체인에 스타일을 걸지 않습니다. 이 규칙은 nested 문법 사용 여부와 무관하게, selector가 DOM 구조에 과도하게 묶이는 것을 금지합니다. project-owned 스타일은 클래스 자체가 계약이 되어야 하며, `.a .b .c .d` 같은 의존성은 DOM 구조가 조금만 바뀌어도 쉽게 깨집니다.
+깊은 후손 선택자 체인에 스타일을 걸지 않습니다. 이 규칙은 nested 문법 사용 여부와 무관하게, selector가 DOM 구조에 과도하게 묶이는 것을 금지합니다. project-owned 스타일은 클래스 자체가 계약이 되어야 하며, `.a .b .c .d` 같은 의존성은 DOM 구조가 조금만 바뀌어도 쉽게 깨집니다. owned root 아래의 third-party DOM path는 `selector-target-third-party-dom-from-owned-roots`가 다루는 예외이며, 그 경우에도 shortest viable chain만 허용합니다.
 
 **Incorrect (깊은 후손 선택자 체인에 의존):**
 
@@ -423,8 +425,9 @@ const items: NonNullable<UiCollapseProps["items"]> = [];
 
 **Impact: CRITICAL (limits third-party styling to explicit wrapper ownership instead of leaking across the app)**
 
-서드파티 라이브러리 내부 DOM 클래스(`.ant-*`, `.rc-*`, `.tippy-*`)는 반드시 프로젝트가 소유한 루트 클래스 블록 아래에서만 타겟팅합니다. 핵심은 selector가 항상 owned root에 anchor되어 있어야 한다는 점입니다.   
-루트 없는 단독 타겟팅과 project-owned 클래스끼리의 깊은 descendant coupling은 피합니다. nested 문법은 owned root 아래 한 단계까지만 사용하고, 더 깊은 서드파티 경로가 필요하면 nested 안에서 다시 nested block을 열지 말고 한 줄 selector chain으로 표현합니다.
+서드파티 라이브러리 내부 DOM 클래스(`.ant-*`, `.rc-*`, `.tippy-*`)는 반드시 프로젝트가 소유한 루트 클래스 블록 아래에서만 타겟팅합니다. 핵심은 selector가 항상 owned root block에서 시작되어야 한다는 점입니다.
+
+루트 없는 단독 타겟팅과 project-owned 클래스끼리의 깊은 descendant coupling은 피합니다. third-party DOM을 잡을 때도 `.rt_* .ant-*` 같은 one-line selector로 owned root를 체이닝하지 말고, 항상 owned root block을 연 뒤 그 안에서 `& .ant-*`처럼 nested로 표현합니다. 더 깊은 third-party DOM 경로가 꼭 필요하면 owned root block 아래에서 shortest viable chain만 한 번에 적고, 이 예외는 third-party DOM 경로에만 적용합니다. nested 안에서 다시 nested block을 열어 의미를 흐리는 방식은 여전히 금지합니다.
 
 **Incorrect (루트 없이 타겟팅하거나 nested 안에서 다시 nested를 열어 의미를 흐림):**
 
@@ -433,8 +436,8 @@ const items: NonNullable<UiCollapseProps["items"]> = [];
 	border-radius: 4px;
 }
 
-.rt_pcmei__treeBox .ant-tree-node-content-wrapper {
-	border-radius: 4px;
+.rt_pcmei__treeBox .ant-tree-title {
+	color: #999;
 }
 
 .rt_pcmei__treeBox {
@@ -446,7 +449,7 @@ const items: NonNullable<UiCollapseProps["items"]> = [];
 }
 ```
 
-**Correct (항상 owned root에 anchor하고, 깊은 경로는 한 줄 selector chain으로 적음):**
+**Correct (항상 owned root block을 열고, 그 안에서 third-party DOM path를 nested로 적음):**
 
 ```css
 .rt_pcmei__treeBox {
@@ -455,15 +458,21 @@ const items: NonNullable<UiCollapseProps["items"]> = [];
 	}
 }
 
+.rt_pctb__lnbTop {
+	& > .ant-btn-icon {
+		color: var(--cms-color-text-tertiary, rgba(0, 0, 0, 0.45));
+	}
+}
+
 .rt_pcmei__treeBox {
-	& .ant-tree-node-content-wrapper .ant-tree-iconEle .ant-tree-title {
+	& .ant-tree-title {
 		color: #999;
 	}
 }
 
-.rt_pctb__lnbTop {
-	& > .ant-btn-icon {
-		color: var(--cms-color-text-tertiary, rgba(0, 0, 0, 0.45));
+.rt_pcmei__treeBox {
+	& .ant-tree-node-content-wrapper .ant-tree-iconEle .ant-tree-title {
+		color: #999;
 	}
 }
 ```
@@ -702,7 +711,7 @@ stylesheet는 하나의 owner에 맞춰 유지하고, 가벼운 구조 주석만
 
 **Impact: MEDIUM (catches unsafe selector, modifier, and library-targeting shortcuts before they become part of the shared style system)**
 
-작업을 마치기 전에 금지 패턴을 다시 확인합니다. 요소 선택자 중심 스타일링, 깊은 후손 체인, 상태 의미가 아닌 modifier, 루트 없는 라이브러리 클래스 타겟팅, `!important` 남용 같은 지름길은 빠르게 작성되더라도 장기적으로 구조를 깨뜨립니다.
+작업을 마치기 전에 금지 패턴을 다시 확인합니다. 요소 선택자 중심 스타일링, 깊은 project-owned 후손 체인, 재사용 근거 없는 구조 modifier, 루트 없는 라이브러리 클래스 타겟팅, `!important` 남용 같은 지름길은 빠르게 작성되더라도 장기적으로 구조를 깨뜨립니다. 반복되는 명시적 variant modifier나 owned root 아래의 최소한의 third-party selector chain은 별도 규칙이 허용하는 범위에서 예외가 될 수 있습니다.
 
 **Incorrect (금지 패턴을 그대로 남김):**
 
@@ -720,7 +729,7 @@ div {
 }
 ```
 
-**Correct (소유 클래스와 허용된 상태 표현으로 정리):**
+**Correct (소유 클래스와 허용된 구조/상태 표현으로 정리):**
 
 ```css
 .rt_pctbi__item {

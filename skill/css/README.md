@@ -3,6 +3,7 @@
 에이전트 협업, 리뷰, AI 보조 리팩터링에 맞춰 CSS 컨벤션을 관리하는 구조화된 저장소입니다.  
 현재 CSS 가이드는 5개 섹션의 21개 rule 파일로 구성되어 있습니다.  
 최종적으로 [AGENTS.md](./AGENTS.md)로 compile되며, 기본 선택은 plain `*.css`와 전역 고유 클래스명입니다.
+[pressure-tests.md](./pressure-tests.md)는 CSS skill 품질 회귀를 점검하는 synthetic/real-world pressure scenario 모음입니다.
 
 ## 구조
 

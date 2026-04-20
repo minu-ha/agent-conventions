@@ -38,17 +38,17 @@ import styles from "./mission-control.module.css";
 ```tsx
 import "./mission-control.css";
 
-<div className="rt_swmc__hero">
-	<span className="rt_swmc__eyebrow">GraphQL operations deck</span>
+<div className="rt_mc__hero">
+	<span className="rt_mc__eyebrow">GraphQL operations deck</span>
 </div>
 ```
 
 ```css
-.rt_swmc__hero {
+.rt_mc__hero {
 	display: grid;
 }
 
-.rt_swmc__eyebrow {
+.rt_mc__eyebrow {
 	letter-spacing: 0.08em;
 }
 ```
