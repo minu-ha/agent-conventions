@@ -25,6 +25,7 @@ recursively and build preserves that relationship in the generated guide.
 
 ## Per-Skill Aliases
 
+- `astro`
 - `react`
 - `css`
 - `nestjs`
@@ -45,6 +46,7 @@ npm run build:all
 
 The current structured, buildable skills are:
 
+- `astro`
 - `react`
 - `css`
 - `nestjs`

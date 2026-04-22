@@ -15,6 +15,8 @@
 
 현재 포함된 skill은 아래와 같습니다.
 
+- [astro](./skill/astro/README.md) - `convention-astro`
+  Astro page/layout/component, island hydration, content collections, Actions/server islands 규칙
 - [react](./skill/react/README.md) - `convention-react`
   React 컴포넌트 경계, route-local 분리, handler 흐름, state 오리진, 문서화 규칙
 - [css](./skill/css/README.md) - `convention-css`
@@ -35,14 +37,14 @@
 이 레포에는 두 가지 형태의 skill이 공존합니다.
 
 - Structured skill
-  `react`, `css`, `tanstack-route`, `playwright-test`, `typescript`, `nestjs`
+  `astro`, `react`, `css`, `tanstack-route`, `playwright-test`, `typescript`, `nestjs`
 - Legacy single-document skill
   `java`
 
 structured skill은 작은 rule 문서를 조합해 slim `AGENTS.md`를 생성합니다.
 legacy skill은 단일 문서를 직접 정본으로 사용합니다.
 
-현재 `react`, `nestjs`, `tanstack-route`, `playwright-test`는 `metadata.json.extends`로 `typescript` companion skill 관계를 선언합니다.   
+현재 `astro`, `react`, `nestjs`, `tanstack-route`, `playwright-test`는 `metadata.json.extends`로 `typescript` companion skill 관계를 선언합니다.   
 즉, framework skill은 local 규칙에 집중하고 공통 TypeScript 규칙은 `convention-typescript`를 함께 로드하는 방식으로 사용합니다.
 
 ## 저장소 구조
@@ -50,6 +52,15 @@ legacy skill은 단일 문서를 직접 정본으로 사용합니다.
 ```text
 agent-conventions/
   skill/
+    astro/
+      AGENTS.md
+      README.md
+      SKILL.md
+      metadata.json
+      rules/
+        _sections.md
+        _template.md
+        *.md
     react/
       AGENTS.md
       README.md
@@ -244,7 +255,7 @@ skill-relative 명령을 사용하는 편이 안전합니다.
 강제 정책을 두는 구성을 기본값으로 권장합니다.
 
 TypeScript 기반 framework 프로젝트에서는 framework skill 하나만 적기보다
-`convention-react` + `convention-typescript`처럼 companion skill을 함께 적는 구성을 권장합니다.
+`convention-astro` + `convention-typescript` 또는 `convention-react` + `convention-typescript`처럼 companion skill을 함께 적는 구성을 권장합니다.
 
 ## 버전 관리 가이드
 

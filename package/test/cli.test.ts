@@ -8,9 +8,10 @@ import {fileURLToPath} from "node:url";
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
 const repoDir = path.resolve(currentDir, "../..");
 const packageDir = path.join(repoDir, "package");
+const astroAgentsPath = path.join(repoDir, "skill/astro/AGENTS.md");
 const reactAgentsPath = path.join(repoDir, "skill/react/AGENTS.md");
 const npmCommand = process.platform === "win32" ? "npm.cmd" : "npm";
-const expectedSkillScriptNames = ["react", "css", "nestjs", "playwright-test", "tanstack-route", "typescript"] as const;
+const expectedSkillScriptNames = ["astro", "react", "css", "nestjs", "playwright-test", "tanstack-route", "typescript"] as const;
 
 /**
  * @description `package/` npm script를 실제 CLI처럼 실행
@@ -46,6 +47,13 @@ test("validate:react alias succeeds for the react skill", () => {
 	assert.match(result.stdout, /Validated react:/);
 });
 
+test("validate:astro alias succeeds for the astro skill", () => {
+	const result = runPackageCommand(["--prefix", packageDir, "run", "validate:astro"]);
+
+	assert.equal(result.status, 0, result.stderr);
+	assert.match(result.stdout, /Validated astro:/);
+});
+
 test("build script regenerates AGENTS.md for the react skill", async () => {
 	const result = runPackageCommand(["--prefix", packageDir, "run", "build", "--", "--skill=react"]);
 
@@ -72,6 +80,18 @@ test("build:react alias regenerates AGENTS.md for the react skill", async () => 
 
 	const agentsSource = await readFile(reactAgentsPath, "utf8");
 	assert.match(agentsSource, /^# React 컨벤션$/m);
+});
+
+test("build:astro alias regenerates AGENTS.md for the astro skill", async () => {
+	const result = runPackageCommand(["--prefix", packageDir, "run", "build:astro"]);
+
+	assert.equal(result.status, 0, result.stderr);
+	await access(astroAgentsPath);
+
+	const agentsSource = await readFile(astroAgentsPath, "utf8");
+	assert.match(agentsSource, /^# Astro 컨벤션$/m);
+	assert.match(agentsSource, /^## 함께 로드할 Companion Skill$/m);
+	assert.match(agentsSource, /`convention-typescript`/);
 });
 
 test("build:all alias succeeds for every buildable skill", () => {

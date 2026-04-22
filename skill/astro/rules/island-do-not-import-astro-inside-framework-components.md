@@ -1,0 +1,35 @@
+---
+title: Do Not Import `.astro` Components Inside Framework Components
+impact: CRITICAL
+impactDescription: preserves Astro's component boundary and avoids unsupported cross-runtime composition
+tags: islands, react, slots
+---
+
+## Do Not Import `.astro` Components Inside Framework Components
+
+**Impact: CRITICAL (preserves Astro's component boundary and avoids unsupported cross-runtime composition)**
+
+React 같은 framework component 안에서는 `.astro` component를 직접 import하지 않습니다. Astro에서 framework island를 감싸고, 필요한 정적 조립은 slot이나 children으로 전달합니다.
+
+**Incorrect (framework component에서 `.astro`를 직접 import해 runtime 경계를 깨뜨림):**
+
+```tsx
+import PromoCard from "../PromoCard.astro";
+
+export const Sidebar = () => {
+	return <PromoCard />;
+};
+```
+
+**Correct (Astro parent가 정적 조립을 소유하고 framework component는 island 역할만 담당):**
+
+```astro
+---
+import Sidebar from "./Sidebar.tsx";
+import PromoCard from "./PromoCard.astro";
+---
+
+<Sidebar client:idle>
+	<PromoCard slot="promo" />
+</Sidebar>
+```

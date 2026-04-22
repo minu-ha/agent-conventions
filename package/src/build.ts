@@ -20,6 +20,7 @@ const getRulesForSection = (section: SkillSection, rules: SkillRule[]): SkillRul
 };
 
 const conventionTitleBySkillName: Record<string, string> = {
+	astro: "Astro Convention",
 	css: "CSS Convention",
 	nestjs: "NestJS Convention",
 	"playwright-test": "Playwright Test Convention",

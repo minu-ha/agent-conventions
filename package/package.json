@@ -7,6 +7,7 @@
 	"scripts": {
 		"build": "tsx src/build.ts",
 		"build:all": "tsx src/build.ts --all",
+		"build:astro": "tsx src/build.ts --skill=astro",
 		"build:react": "tsx src/build.ts --skill=react",
 		"build:css": "tsx src/build.ts --skill=css",
 		"build:nestjs": "tsx src/build.ts --skill=nestjs",
@@ -15,6 +16,7 @@
 		"build:typescript": "tsx src/build.ts --skill=typescript",
 		"validate": "tsx src/validate.ts",
 		"validate:all": "tsx src/validate.ts --all",
+		"validate:astro": "tsx src/validate.ts --skill=astro",
 		"validate:react": "tsx src/validate.ts --skill=react",
 		"validate:css": "tsx src/validate.ts --skill=css",
 		"validate:nestjs": "tsx src/validate.ts --skill=nestjs",
@@ -23,6 +25,7 @@
 		"validate:typescript": "tsx src/validate.ts --skill=typescript",
 		"dev": "tsx src/dev.ts",
 		"dev:all": "tsx src/dev.ts --all",
+		"dev:astro": "tsx src/dev.ts --skill=astro",
 		"dev:react": "tsx src/dev.ts --skill=react",
 		"dev:css": "tsx src/dev.ts --skill=css",
 		"dev:nestjs": "tsx src/dev.ts --skill=nestjs",
