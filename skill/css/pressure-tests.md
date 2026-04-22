@@ -26,8 +26,12 @@ CSS skill을 수정하거나 새로운 rule을 추가했을 때, 실제 에이�
 - `.module.css`와 `styles.*`를 기본처럼 사용함
 - TSX `className`에 문자열 리터럴이나 문자열 연결을 직접 넣음
 - `rt_*`, `loc_*`, `ui_*` namespace가 owner와 맞지 않음
+- `rt_*` route slug 규칙을 `wg_*`, `ui_*`, `loc_*` owner slug에 그대로 덮어씀
 - one-off layout patch를 modifier로 추가함
 - `.a .b .c .d` 같은 깊은 project-owned descendant selector를 만듦
+- top-level `.foo:hover`, `.foo:visited`를 다시 열어 둠
+- `.foo:hover .foo__bar`처럼 parent state와 child class를 직접 결합함
+- `.owner__prose h2`, `.owner__copy > :first-child`를 owner block 밖 top-level selector로 둠
 - owned root 없이 `.ant-*`, `.rc-*`를 바로 타겟팅함
 - owned root를 `.rt_* .ant-*` 같은 one-line selector로 다시 체이닝함
 - 반복되는 색상, 간격, radius를 하드코딩함
@@ -128,6 +132,24 @@ CSS skill을 수정하거나 새로운 rule을 추가했을 때, 실제 에이�
   - `className="rt_pctbi__panel"`
   - `className={"rt_pctbi__panel " + (isActive ? "rt_pctbi__panel--active" : "")}`
   - `UiButton` 내부 DOM을 wrapper 없이 직접 selector로 제어함
+
+### C7. Pseudo and Prose Nesting Discipline
+
+- Focus
+  - `selector-use-pseudo-classes-for-dom-owned-states`
+  - `selector-keep-project-selectors-flat`
+  - `organization-review-banned-css-patterns-before-finishing`
+- Prompt
+  - "link hover/visited 상태와 prose wrapper 타이포를 CSS skill 기준으로 정리해줘."
+- Expected pass signals
+  - `:hover`, `:visited` 같은 DOM state가 같은 클래스 block 안 nested `&:`로 정리됨
+  - `__prose`, `__copy`, `__content` 같은 owner wrapper는 자기 block 안에서만 `& h2`, `& p`, `& > :first-child`를 사용함
+  - parent hover가 child에 영향을 주면 descendant coupling 대신 CSS 변수나 명시적 contract를 사용함
+- Likely fail signals
+  - `.foo:hover { ... }`
+  - `.foo:hover .foo__icon { ... }`
+  - `.owner__prose h2 { ... }`
+  - `.owner__copy > :first-child { ... }`
 
 ## 유지보수 원칙
 

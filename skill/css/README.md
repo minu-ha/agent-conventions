@@ -42,9 +42,9 @@
 
 1. [rules/_template.md](./rules/_template.md)를 `rules/area-description.md`로 복사합니다.
 2. 알맞은 area prefix를 고릅니다.
-   - `naming-` - 클래스 문법, slug 추적성, 네임스페이스 소유권, plain CSS 기본값, local-vs-route scope 규칙
+   - `naming-` - 클래스 문법, scope별 slug 규칙, 네임스페이스 소유권, plain CSS 기본값, local-vs-route scope 규칙
    - `composition-` - TSX class 조합과 wrapper 스타일링 경계 규칙
-   - `selector-` - flat selector, pseudo-class, 서드파티 DOM 타게팅 규칙
+   - `selector-` - flat selector, same-block pseudo-class nesting, rich text wrapper 예외, 서드파티 DOM 타게팅 규칙
    - `values-` - 토큰, fallback, 레이아웃 의도, 상호작용 상태 규칙
    - `organization-` - stylesheet 소유권, section comment, 금지 패턴 점검 규칙
 3. frontmatter와 본문을 작성합니다.

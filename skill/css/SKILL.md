@@ -46,7 +46,7 @@ metadata:
 ### 1. Naming and Ownership (CRITICAL)
 
 - `naming-default-to-plain-css-when-no-module-convention` - CSS Modules 표준이 없으면 plain `.css`와 전역 고유 클래스명을 기본으로 사용
-- `naming-use-scope-slug-element-modifier-syntax` - scope, slug, element, modifier를 포함한 클래스 문법 유지
+- `naming-use-scope-slug-element-modifier-syntax` - scope, slug, element, modifier를 포함한 클래스 문법과 scope별 slug casing 유지
 - `naming-name-elements-and-modifiers-by-role` - 구조나 간격이 아니라 UI 역할 기준으로 이름 지정
 - `naming-preserve-route-slug-traceability` - route 계층과 slug 추적 가능성 유지
 - `naming-keep-scope-slug-unique-per-owner` - 하나의 `scope_slug` 네임스페이스는 한 owner만 사용
@@ -62,8 +62,8 @@ metadata:
 
 ### 3. Selectors and Nesting Boundaries (CRITICAL)
 
-- `selector-keep-project-selectors-flat` - project-owned 클래스 구조는 평평하게 유지
-- `selector-use-pseudo-classes-for-dom-owned-states` - DOM 소유 상태는 pseudo-class 사용
+- `selector-keep-project-selectors-flat` - project-owned 클래스 구조는 평평하게 유지하고 rich text wrapper 예외는 owner block 안에 국한
+- `selector-use-pseudo-classes-for-dom-owned-states` - DOM 소유 상태는 같은 클래스 block 안 nested `&:`로 유지
 - `selector-target-third-party-dom-from-owned-roots` - 서드파티 DOM은 owner root 클래스에서만 타게팅
 - `selector-avoid-deep-descendant-dependencies` - 깊은 descendant selector 의존 회피
 

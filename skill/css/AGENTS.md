@@ -51,7 +51,7 @@
 
 **Impact: CRITICAL**
 
-클래스 문법, slug 추적성, 네임스페이스 소유권, local-vs-route scope가 명확해야 스타일을 검색하고 안전하게 수정할 수 있습니다.
+클래스 문법, scope별 slug 규칙, 네임스페이스 소유권, local-vs-route scope가 명확해야 스타일을 검색하고 안전하게 수정할 수 있습니다.
 
 ### 1.1 Default to Plain CSS Unless the Project Explicitly Standardizes on CSS Modules
 
@@ -156,7 +156,11 @@ rt_pcmei__detailSection
 
 **Impact: HIGH (keeps route-scoped class namespaces readable back to the route hierarchy they belong to)**
 
-라우트 slug는 길이보다 추적 가능성을 우선하고, 상위에서 하위로 이어지는 라우트 트리 순서를 반영해 축약합니다. route 이름을 전부 다 적을 필요는 없고 `mission-control -> mc`, `project.content-type-builder.index -> pctbi`처럼 팀이 owner를 다시 찾을 수 있을 정도로만 줄이면 됩니다. 너무 짧아 의미가 완전히 사라지거나, 계층 순서가 뒤섞이면 클래스명만 봐서는 어느 route 소유인지 추적하기 어려워집니다.
+이 규칙은 `rt_*` route scope의 slug를 다룹니다. route slug는 길이보다 추적 가능성을 우선하고, 상위에서 하위로 이어지는 라우트 트리 순서를 반영해 lower-case 축약을 유지합니다. route 이름을 전부 다 적을 필요는 없고 `mission-control -> mc`, `project.content-type-builder.index -> pctbi`처럼 팀이 owner를 다시 찾을 수 있을 정도로만 줄이면 됩니다.
+
+이 lower-case route slug 규칙을 `wg_*`, `ui_*`, `loc_*` 같은 다른 scope의 owner slug에 그대로 확장 적용하지는 않습니다. component/local scope는 해당 프로젝트가 정한 owner naming style을 따르되, route scope만큼은 route traceability를 우선합니다.
+
+너무 짧아 의미가 완전히 사라지거나, 계층 순서가 뒤섞이면 클래스명만 봐서는 어느 route 소유인지 추적하기 어려워집니다.
 
 **Incorrect (의미가 약하거나 계층 순서가 흐려진 slug):**
 
@@ -204,24 +208,28 @@ entries.css
 
 **Impact: CRITICAL (makes class ownership and UI role traceable from the classname alone)**
 
-클래스명은 `<scope>_<slug>__<element>[--<modifier>]` 문법을 사용합니다. `scope`는 소유 범위, `slug`는 소유자 축약, `element`는 역할, `modifier`는 상태나 변형을 나타내며, 각 구분자는 `_`, `__`, `--`를 일관되게 유지합니다. `scope`와 `slug`는 소문자 축약을 유지하고, `element`와 `modifier`는 `listButton`, `detailExpanded`, `submitButton`, `emptyState`처럼 camelCase로 작성합니다. element/modifier 내부에서 `list-button`, `list_button`처럼 추가 구분자를 다시 도입하지 않습니다.
+클래스명은 `<scope>_<slug>__<element>[--<modifier>]` 문법을 사용합니다. `scope`는 소유 범위, `slug`는 소유자 식별자, `element`는 역할, `modifier`는 상태나 변형을 나타내며, 각 구분자는 `_`, `__`, `--`를 일관되게 유지합니다. `scope` 자체는 `rt`, `wg`, `ui`, `loc`처럼 소문자 namespace를 유지합니다.
 
-**Incorrect (구분자 의미가 섞이거나 element/modifier casing이 흔들림):**
+`slug`는 모든 scope에 동일한 casing을 강제하지 말고, 해당 scope의 house style을 따릅니다. 예를 들어 `rt_*` route slug는 lower-case 축약으로 route traceability를 유지하는 경우가 많고, `wg_*`, `ui_*`, `loc_*` 같은 component/local scope는 프로젝트가 owner slug를 camelCase로 굳혀 두었다면 그 표기를 그대로 유지할 수 있습니다. 중요한 것은 scope별 규칙을 섞지 않고, 같은 owner에서 slug 표기가 흔들리지 않게 유지하는 것입니다.
+
+`element`와 `modifier`는 `listButton`, `detailExpanded`, `submitButton`, `emptyState`처럼 camelCase로 작성합니다. element/modifier 내부에서 `list-button`, `list_button`처럼 추가 구분자를 다시 도입하지 않습니다.
+
+**Incorrect (scope별 slug 규칙을 섞거나 element/modifier casing이 흔들림):**
 
 ```txt
-ui_button_container
-rt_pctbi_item_active
-wgtable-row-selected
+ui_tag_list__root
+rt_siteHeader__panel
+wg_site_header__brandLink
 rt_pctbi__list-button
 rt_pctbi__listButton--detail_expanded
 ```
 
-**Correct (scope/slug는 소문자 축약, element/modifier는 camelCase로 표기):**
+**Correct (scope는 lowercase namespace를 유지하고, slug는 scope별 house style을 따르며, element/modifier는 camelCase로 표기):**
 
 ```txt
-ui_button__root
+ui_tagList__root
 rt_pctbi__item--active
-wg_table__row--selected
+wg_siteHeader__brandLink
 rt_pctbi__listButton
 rt_pctbi__listButton--detailExpanded
 ```
@@ -360,7 +368,7 @@ const items: NonNullable<UiCollapseProps["items"]> = [];
 
 **Impact: CRITICAL**
 
-프로젝트 소유 selector를 평평하게 유지하고 서드파티 DOM 타게팅 범위를 좁게 제한해야 cascade surprise를 줄이고 selector 깊이를 예측 가능하게 유지할 수 있습니다.
+프로젝트 소유 selector를 평평하게 유지하고, DOM pseudo-state는 같은 block 안에 접고, rich text wrapper 예외와 서드파티 DOM 타게팅 범위를 명시해야 cascade surprise를 줄이고 selector 깊이를 예측 가능하게 유지할 수 있습니다.
 
 ### 3.1 Avoid Deep Descendant Selector Dependencies
 
@@ -394,19 +402,27 @@ const items: NonNullable<UiCollapseProps["items"]> = [];
 
 프로젝트가 직접 소유한 선택자는 플랫 구조를 기본으로 작성합니다. 전처리기 중첩 문법은 project-owned 클래스끼리 부모-자식 관계를 표현하는 데 쓰지 말고, 각 element 클래스가 독립적으로 읽히도록 유지합니다. 이 규칙은 project-owned 클래스 선언 자체의 구조를 다루며, 서드파티 DOM anchor 규칙은 별도로 `selector-target-third-party-dom-from-owned-roots`에서 다룹니다.
 
-**Incorrect (project-owned 클래스 구조를 중첩 selector로 표현):**
+예외는 owner가 rich text나 uncontrolled markup wrapper를 직접 소유하는 경우입니다. `__prose`, `__copy`, `__content`처럼 wrapper 자체가 raw element styling의 경계라면, 그 owner block 안에서만 `& h2`, `& p`, `& > :first-child` 같은 nested element selector를 사용할 수 있습니다. 이 예외는 raw HTML element나 structural pseudo에만 적용되며, 다른 project-owned 클래스를 `.owner__prose .owner__child`처럼 다시 체이닝하는 근거가 되지는 않습니다.
+
+**Incorrect (project-owned 클래스 관계를 descendant selector로 표현하거나, owner wrapper element styling을 block 밖으로 흩뿌림):**
 
 ```css
 .rt_pctbi__layout {
 	& .rt_pctbi__panel {
-		& .rt_pctbi__item {
-			padding: 8px;
-		}
+		padding: 8px;
 	}
+}
+
+.wg_entryDetail__prose h2 {
+	margin: 24px 0 12px;
+}
+
+.wg_entryDetail__prose > :first-child {
+	margin-top: 0;
 }
 ```
 
-**Correct (플랫한 클래스 단위로 선언):**
+**Correct (project-owned 클래스는 플랫하게 두고, rich text wrapper 예외는 같은 block 안에 국한함):**
 
 ```css
 .rt_pctbi__layout {
@@ -414,11 +430,17 @@ const items: NonNullable<UiCollapseProps["items"]> = [];
 }
 
 .rt_pctbi__panel {
-	border: 1px solid var(--cms-color-border, #d9d9d9);
+	padding: 8px;
 }
 
-.rt_pctbi__item {
-	padding: 8px;
+.wg_entryDetail__prose {
+	& h2 {
+		margin: 24px 0 12px;
+	}
+
+	& > :first-child {
+		margin-top: 0;
+	}
 }
 ```
 
@@ -480,11 +502,21 @@ const items: NonNullable<UiCollapseProps["items"]> = [];
 
 **Impact: HIGH (keeps browser-owned interaction states separate from app-owned state modifiers)**
 
-`:hover`, `:focus`, `:focus-visible`, `:disabled`, `:checked`처럼 브라우저와 DOM이 직접 부여하는 상태는 같은 클래스 블록 내부 nested pseudo-class로 표현합니다. 반대로 `selected`, `active`, `error`처럼 화면이나 도메인이 결정하는 상태는 modifier 클래스로 유지합니다.
+`:hover`, `:visited`, `:focus`, `:focus-visible`, `:disabled`, `:checked`처럼 브라우저와 DOM이 직접 부여하는 상태는 반드시 같은 클래스 블록 내부 nested `&:` 형태로 표현합니다. top-level `.foo:hover {}`처럼 selector를 다시 열지 말고, `.foo { &:hover {} }`로 owner block 안에 접어 넣습니다. 반대로 `selected`, `active`, `error`처럼 화면이나 도메인이 결정하는 상태는 modifier 클래스로 유지합니다.
 
-**Incorrect (도메인 상태를 pseudo-class처럼 표현):**
+DOM state가 자식 element의 시각적 결과에 영향을 주더라도 pseudo는 부모 owner block에 붙인 채로 유지합니다. 이런 경우 `.foo:hover .foo__icon`처럼 project-owned descendant coupling을 만들기보다, 부모 block에서 CSS 변수나 명시적 상태 contract를 바꾸고 자식 block이 그 값을 읽게 하는 쪽을 기본으로 삼습니다.
+
+**Incorrect (pseudo-class를 top-level selector로 다시 열거나, parent state를 child selector coupling으로 표현함):**
 
 ```css
+.wg_siteHeader__brandLink:hover {
+	color: var(--mk-color-link-hover);
+}
+
+.wg_siteHeader__brandLink:hover .wg_siteHeader__brandMark {
+	transform: rotate(-2deg);
+}
+
 .rt_pmli__assetCard {
 	&:selected {
 		border-color: var(--cms-color-primary, #1677ff);
@@ -492,9 +524,23 @@ const items: NonNullable<UiCollapseProps["items"]> = [];
 }
 ```
 
-**Correct (DOM 상태는 pseudo-class, 화면 상태는 modifier로 분리):**
+**Correct (DOM 상태는 같은 block 안 nested `&:`로 두고, 화면 상태는 modifier로 분리):**
 
 ```css
+.wg_siteHeader__brandLink {
+	--wg-site-header-brand-mark-transform: translateY(1px);
+	color: var(--mk-color-link);
+
+	&:hover {
+		--wg-site-header-brand-mark-transform: translateY(1px) rotate(-2deg);
+		color: var(--mk-color-link-hover);
+	}
+}
+
+.wg_siteHeader__brandMark {
+	transform: var(--wg-site-header-brand-mark-transform);
+}
+
 .rt_pmli__assetCardButton {
 	cursor: default;
 
@@ -714,7 +760,7 @@ stylesheet는 하나의 owner에 맞춰 유지하고, 가벼운 구조 주석만
 
 **Impact: MEDIUM (catches unsafe selector, modifier, and library-targeting shortcuts before they become part of the shared style system)**
 
-작업을 마치기 전에 금지 패턴을 다시 확인합니다. 요소 선택자 중심 스타일링, 깊은 project-owned 후손 체인, 재사용 근거 없는 구조 modifier, 루트 없는 라이브러리 클래스 타겟팅, `!important` 남용 같은 지름길은 빠르게 작성되더라도 장기적으로 구조를 깨뜨립니다. 반복되는 명시적 variant modifier나 owned root 아래의 최소한의 third-party selector chain은 별도 규칙이 허용하는 범위에서 예외가 될 수 있습니다.
+작업을 마치기 전에 금지 패턴을 다시 확인합니다. 요소 선택자 중심 스타일링, 깊은 project-owned 후손 체인, 재사용 근거 없는 구조 modifier, 루트 없는 라이브러리 클래스 타겟팅, top-level pseudo selector 재오픈, project-owned parent state descendant coupling, `!important` 남용 같은 지름길은 빠르게 작성되더라도 장기적으로 구조를 깨뜨립니다. 반복되는 명시적 variant modifier, owner block 안 rich text wrapper의 nested element selector, owned root 아래의 최소한의 third-party selector chain은 별도 규칙이 허용하는 범위에서 예외가 될 수 있습니다.
 
 **Incorrect (금지 패턴을 그대로 남김):**
 
@@ -723,8 +769,12 @@ div {
 	padding: 8px !important;
 }
 
-.scope_slug__section--leftPanel {
-	width: 280px;
+.wg_siteHeader__brandLink:hover .wg_siteHeader__brandMark {
+	transform: rotate(-2deg);
+}
+
+.wg_entryDetail__prose h2 {
+	margin: 24px 0 12px;
 }
 
 .ant-tree-node-content-wrapper {
@@ -735,12 +785,22 @@ div {
 **Correct (소유 클래스와 허용된 구조/상태 표현으로 정리):**
 
 ```css
-.rt_pctbi__item {
-	padding: 8px;
+.wg_siteHeader__brandLink {
+	--wg-site-header-brand-mark-transform: none;
+
+	&:hover {
+		--wg-site-header-brand-mark-transform: rotate(-2deg);
+	}
 }
 
-.rt_pctbi__sidePanel {
-	width: 280px;
+.wg_siteHeader__brandMark {
+	transform: var(--wg-site-header-brand-mark-transform);
+}
+
+.wg_entryDetail__prose {
+	& h2 {
+		margin: 24px 0 12px;
+	}
 }
 
 .rt_pctbi__treeBox {

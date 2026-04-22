@@ -4,7 +4,7 @@
 
 ## 1. Naming and Ownership (naming)
 **Impact:** CRITICAL
-**Description:** 클래스 문법, slug 추적성, 네임스페이스 소유권, local-vs-route scope가 명확해야 스타일을 검색하고 안전하게 수정할 수 있습니다.
+**Description:** 클래스 문법, scope별 slug 규칙, 네임스페이스 소유권, local-vs-route scope가 명확해야 스타일을 검색하고 안전하게 수정할 수 있습니다.
 
 ## 2. Class Composition and Wrapper Boundaries (composition)
 **Impact:** HIGH
@@ -12,7 +12,7 @@
 
 ## 3. Selectors and Nesting Boundaries (selector)
 **Impact:** CRITICAL
-**Description:** 프로젝트 소유 selector를 평평하게 유지하고 서드파티 DOM 타게팅 범위를 좁게 제한해야 cascade surprise를 줄이고 selector 깊이를 예측 가능하게 유지할 수 있습니다.
+**Description:** 프로젝트 소유 selector를 평평하게 유지하고, DOM pseudo-state는 같은 block 안에 접고, rich text wrapper 예외와 서드파티 DOM 타게팅 범위를 명시해야 cascade surprise를 줄이고 selector 깊이를 예측 가능하게 유지할 수 있습니다.
 
 ## 4. Values, Layout, and Interaction States (values)
 **Impact:** HIGH
