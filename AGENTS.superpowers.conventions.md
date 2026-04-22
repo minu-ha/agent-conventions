@@ -104,7 +104,9 @@ Astro 프로젝트에서 `convention-astro`를 선택했다면 아래를 기본 
 - Astro의 기본 companion은 `convention-typescript`와 `convention-css`입니다.
 - React island나 TSX가 있으면 `convention-react`를 추가합니다.
 - hydration, form action, server island, navigation 회귀를 브라우저에서 확인하면 `convention-playwright-test`를 추가합니다.
-- `src/layouts`는 필수 디렉터리가 아니라 관례이므로, shared shell이면 shared owner 아래에 두고 feature 전용 shell이면 feature 아래에 둘 수 있습니다.
+- layout file은 shared component tier가 아니라 owning feature의 shell로 보고 `src/features/<feature>` 아래에 둡니다.
+- layout 내부 조립은 `convention-react`의 ownership 경계와 유사하게 `ui` primitive와 `widget` reusable block만 사용합니다.
+- redirect, rewrite, auth guard owner는 layout이 아니라 page boundary나 `src/middleware.ts`에 둡니다.
 - Astro frontmatter, `getStaticPaths()`, feature support helper처럼 비자명한 경계 선언에는 JSDoc을 요구하고, inline comment는 rendering/ownership/integration caveat에만 제한합니다.
 
 ## Workflow Pipeline

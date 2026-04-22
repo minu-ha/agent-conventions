@@ -12,7 +12,7 @@
 
 ## 개요
 
-에이전트 협업 팀을 위한 Astro 코딩 컨벤션입니다. 이 가이드는 thin `src/pages` route adapter와 `src/features/<feature>` 기반 screen implementation, 의미 있는 dynamic segment와 owner-named feature file naming, `.astro` 컴포넌트와 layout/page/island/private의 명확한 책임 경계, feature page orchestration과 selective extraction 기준, static과 on-demand rendering의 의도적인 선택, build-time/live collections, Actions/endpoints/server islands 같은 Astro 고유 기능의 신중한 사용을 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, Astro local rule은 기본 companion인 `typescript`와 `css` skill과 함께 사용합니다.
+에이전트 협업 팀을 위한 Astro 코딩 컨벤션입니다. 이 가이드는 thin `src/pages` route adapter와 `src/features/<feature>` 기반 screen implementation, 의미 있는 dynamic segment와 owner-named feature file naming, feature-owned layout shell과 `ui`/`widget` taxonomy, `.astro` 컴포넌트와 page/island/private의 명확한 책임 경계, feature page orchestration과 selective extraction 기준, static과 on-demand rendering의 의도적인 선택, build-time/live collections, Actions/endpoints/server islands 같은 Astro 고유 기능의 신중한 사용을 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, Astro local rule은 기본 companion인 `typescript`와 `css` skill과 함께 사용합니다.
 
 이 가이드는 local Astro 컨벤션 규칙만 담고 있습니다. 공통 규칙은 companion skill을 함께 로드해 보완합니다.
 
@@ -54,14 +54,17 @@
     - 7.3 [Give Collections Explicit Zod Schemas](#73-give-collections-explicit-zod-schemas)
 8. [Server Features and Mutation Boundaries](#8-server-features-and-mutation-boundaries) — **HIGH**
     - 8.1 [Choose Actions vs. Endpoints by Caller and Response Needs](#81-choose-actions-vs-endpoints-by-caller-and-response-needs)
-    - 8.2 [Keep Server Islands Serializable and Slot Fallbacks Ready](#82-keep-server-islands-serializable-and-slot-fallbacks-ready)
+    - 8.2 [Keep Redirects, Rewrites, and Auth Ownership at the Page or Middleware Boundary](#82-keep-redirects-rewrites-and-auth-ownership-at-the-page-or-middleware-boundary)
+    - 8.3 [Keep Server Islands Serializable and Slot Fallbacks Ready](#83-keep-server-islands-serializable-and-slot-fallbacks-ready)
 9. [Page, Layout, and Island Responsibilities](#9-page-layout-and-island-responsibilities) — **HIGH**
-    - 9.1 [Extract Feature Support Code Only When the Astro Boundary Is Real](#91-extract-feature-support-code-only-when-the-astro-boundary-is-real)
-    - 9.2 [Extract Feature-private Sections Only for Rendering or Interaction Boundaries](#92-extract-feature-private-sections-only-for-rendering-or-interaction-boundaries)
-    - 9.3 [Keep Feature Page Files Focused on Screen Flow](#93-keep-feature-page-files-focused-on-screen-flow)
-    - 9.4 [Keep Page Files Focused on Route Contract and Data Handoff](#94-keep-page-files-focused-on-route-contract-and-data-handoff)
-    - 9.5 [Limit Layouts to Shell and Composition](#95-limit-layouts-to-shell-and-composition)
-    - 9.6 [Place Feature-private UI Under private/](#96-place-feature-private-ui-under-private)
+    - 9.1 [Compose Layouts from Widget and UI Only](#91-compose-layouts-from-widget-and-ui-only)
+    - 9.2 [Extract Feature Support Code Only When the Astro Boundary Is Real](#92-extract-feature-support-code-only-when-the-astro-boundary-is-real)
+    - 9.3 [Extract Feature-private Sections Only for Rendering or Interaction Boundaries](#93-extract-feature-private-sections-only-for-rendering-or-interaction-boundaries)
+    - 9.4 [Keep Feature Page Files Focused on Screen Flow](#94-keep-feature-page-files-focused-on-screen-flow)
+    - 9.5 [Keep Page Files Focused on Route Contract and Data Handoff](#95-keep-page-files-focused-on-route-contract-and-data-handoff)
+    - 9.6 [Limit Layouts to Shell and Composition](#96-limit-layouts-to-shell-and-composition)
+    - 9.7 [Place Feature-private UI Under private/](#97-place-feature-private-ui-under-private)
+    - 9.8 [Place Layout Shells Under Owning Features](#98-place-layout-shells-under-owning-features)
 10. [Documentation and Comments](#10-documentation-and-comments) — **MEDIUM**
     - 10.1 [Limit Inline Comments to Rendering, Ownership, and Integration Caveats](#101-limit-inline-comments-to-rendering-ownership-and-integration-caveats)
     - 10.2 [Require JSDoc on Key Frontmatter and Feature Support Declarations](#102-require-jsdoc-on-key-frontmatter-and-feature-support-declarations)
@@ -282,7 +285,7 @@ const successMessage = "Subscribed";
 
 **Impact: CRITICAL (reduces unnecessary client framework surface and keeps Astro's zero-JS default intact)**
 
-state, effect, client runtime가 필요 없는 page shell, layout, wrapper, content section은 기본적으로 `.astro`로 작성합니다. React component를 이미 쓴다는 이유만으로 정적 layout까지 TSX로 밀어 넣지 말고, interactive leaf만 island로 분리합니다. layout이라는 역할은 `src/layouts`에만 둘 필요가 없고, shared owner나 feature owner 아래에 있어도 괜찮습니다. page content가 주입되는 자리는 `<slot />`로 드러내고, full page shell을 만드는 layout이라면 `<html>`이 최상위 parent가 되게 유지합니다.
+state, effect, client runtime가 필요 없는 page shell, layout, wrapper, content section은 기본적으로 `.astro`로 작성합니다. React component를 이미 쓴다는 이유만으로 정적 layout까지 TSX로 밀어 넣지 말고, interactive leaf만 island로 분리합니다. 이 프로젝트에서 layout file은 shared component tier가 아니라 feature-owned shell이므로 owning feature 아래에 두고, shared 조각은 `widget`과 `ui`에서 가져와 조립합니다. page content가 주입되는 자리는 `<slot />`로 드러내고, full page shell을 만드는 layout이라면 `<html>`이 최상위 parent가 되게 유지합니다.
 
 **Incorrect (정적 shell을 React component로 올려 불필요한 framework surface를 늘림):**
 
@@ -711,7 +714,63 @@ Actions, endpoints, server islands는 각각 caller와 response shape, adapter �
 - static mode에서 request-time form 처리: adapter와 prerender 전제를 함께 확인
 ```
 
-### 8.2 Keep Server Islands Serializable and Slot Fallbacks Ready
+### 8.2 Keep Redirects, Rewrites, and Auth Ownership at the Page or Middleware Boundary
+
+**Impact: HIGH (keeps request-time guards and navigation side effects out of layout shells that should stay visual)**
+
+layout은 shell 조립 역할만 하므로 redirect, rewrite, auth guard의 owner가 되지 않습니다. feature-specific request gate가 route param, query, page-level data selection과 결합되어 있으면 `src/pages/**` page boundary에서 처리하고, 여러 route에 공통인 auth, locale, tenant, request locals 주입처럼 cross-cutting concern이면 `src/middleware.ts`의 `onRequest()`에서 처리합니다. layout은 page나 middleware가 이미 결정한 결과를 props나 `Astro.locals`로 받아 시각적으로만 반영합니다. Astro 공식 문서상 `Astro.redirect()`는 page가 `return`해야 하고, middleware interception은 `src/middleware.ts`에서 수행합니다.
+
+**Incorrect (layout이 request-time guard와 redirect를 직접 소유):**
+
+```astro
+---
+const session = Astro.locals.session;
+
+if (!session) {
+	return Astro.redirect("/login");
+}
+---
+
+<slot />
+```
+
+이 구조는 시각 shell인 layout이 request gate와 navigation side effect까지 떠안아 page/layout 경계를 흐립니다.
+
+**Correct (feature-specific guard는 page boundary에서 처리):**
+
+```astro
+---
+import AccountLayout from "../../features/account/account-layout.astro";
+
+const session = Astro.locals.session;
+
+if (!session) {
+	return Astro.redirect("/login");
+}
+---
+
+<AccountLayout title="Account">
+	<p>Account page</p>
+</AccountLayout>
+```
+
+**Correct (cross-cutting auth는 middleware에서 처리):**
+
+```ts
+import { defineMiddleware } from "astro:middleware";
+
+export const onRequest = defineMiddleware((context, next) => {
+	if (!context.locals.session && context.url.pathname.startsWith("/account")) {
+		return context.redirect("/login", 302);
+	}
+
+	return next();
+});
+```
+
+이 구조에서는 page나 middleware가 request-time guard를 소유하고, layout은 결과가 확정된 뒤 shell만 조립합니다.
+
+### 8.3 Keep Server Islands Serializable and Slot Fallbacks Ready
 
 **Impact: HIGH (keeps deferred rendering portable and avoids broken props or blank loading states)**
 
@@ -748,9 +807,60 @@ import GenericAvatar from "../components/GenericAvatar.astro";
 
 **Impact: HIGH**
 
-layout은 shell, page는 route adapter contract, feature page는 screen flow owner, `private/`와 support module은 진짜 rendering/interaction/data boundary가 있을 때만 분리해야 Astro의 server-first 구조가 읽히고 유지보수도 쉬워집니다.
+layout은 feature-owned shell, page는 route adapter contract, feature page는 screen flow owner, `private/`와 support module은 진짜 rendering/interaction/data boundary가 있을 때만 분리해야 Astro의 server-first 구조와 `ui`/`widget` 경계가 함께 읽히고 유지보수도 쉬워집니다.
 
-### 9.1 Extract Feature Support Code Only When the Astro Boundary Is Real
+### 9.1 Compose Layouts from Widget and UI Only
+
+**Impact: HIGH (keeps layout files as feature shells instead of letting them become domain-specific shared blocks)**
+
+layout file이 feature-owned shell이라면, 그 안에서 조립하는 shared piece는 `src/components/widget/**`와 `src/components/ui/**`로 제한합니다. `ui`는 button, input, card, table, box, stack, surface, text, tag-list 같은 primitive이고, `widget`은 search-table, site-header, entry-feed, entry-detail처럼 `ui`를 조립한 reusable block입니다. layout은 이 둘과 `<slot />`을 사용해 shell을 조립하고, 그 자체를 `ui-*`나 `widget-*`로 이름 붙여 shared component처럼 승격하지 않습니다. layout 안에서 재사용 가능한 시각 조각이 자라면 먼저 `widget` 또는 `ui`로 추출하고, layout file은 feature shell 역할에 남깁니다.
+
+**Incorrect (layout 역할을 ui/widget로 위장함):**
+
+```text
+src/components/ui/page-shell/ui-page-shell.astro
+src/components/widget/app-shell/widget-app-shell.astro
+```
+
+```astro
+---
+import UiPageShell from "@/components/ui/page-shell/ui-page-shell.astro";
+---
+
+<UiPageShell>
+	<slot />
+</UiPageShell>
+```
+
+`page-shell`은 primitive가 아니고, route shell을 직접 소유하므로 `ui`도 `widget`도 아니라 layout 역할이어야 합니다.
+
+**Correct (layout은 feature shell에 남기고 shared piece만 ui/widget에서 조립):**
+
+```astro
+---
+import UiBox from "@/components/ui/box/ui-box.astro";
+import UiStack from "@/components/ui/stack/ui-stack.astro";
+import UiSurface from "@/components/ui/surface/ui-surface.astro";
+import WidgetSiteHeader from "@/components/widget/site-header/widget-site-header.astro";
+import WidgetSidebarNav from "@/components/widget/sidebar-nav/widget-sidebar-nav.astro";
+
+const { title } = Astro.props;
+---
+
+<UiSurface class="account-layout">
+	<WidgetSiteHeader title={title} />
+	<UiStack class="account-layout__body">
+		<WidgetSidebarNav />
+		<UiBox class="account-layout__content">
+			<slot />
+		</UiBox>
+	</UiStack>
+</UiSurface>
+```
+
+이 예시에서 layout은 account feature shell을 소유하고, 재사용 가능한 block은 전부 `widget`과 `ui`로 분리되어 있습니다.
+
+### 9.2 Extract Feature Support Code Only When the Astro Boundary Is Real
 
 **Impact: HIGH (prevents feature pages from scattering one-off frontmatter logic into generic helpers)**
 
@@ -816,7 +926,7 @@ const emptyMessage = hasActiveTag
 
 이 구조에서는 collection normalization 같은 실제 data boundary만 `post.ts`에 두고, 현재 feature page 흐름을 읽는 데 필요한 작은 분기와 문구 선택은 frontmatter에 남겨 둡니다.
 
-### 9.2 Extract Feature-private Sections Only for Rendering or Interaction Boundaries
+### 9.3 Extract Feature-private Sections Only for Rendering or Interaction Boundaries
 
 **Impact: HIGH (keeps feature pages readable while avoiding premature `private/` section extraction)**
 
@@ -883,7 +993,7 @@ const { pageModel } = Astro.props;
 
 이 예시에서는 deferred related posts와 hydrated signup widget처럼 실제 boundary가 있는 부분만 `private/` component로 추출하고, 단순한 header/meta/body markup은 feature page에 남겨 화면 흐름을 보이게 유지합니다.
 
-### 9.3 Keep Feature Page Files Focused on Screen Flow
+### 9.4 Keep Feature Page Files Focused on Screen Flow
 
 **Impact: HIGH (keeps `src/features/<feature>/*-page.astro` readable as the main screen orchestration layer after route handoff)**
 
@@ -956,7 +1066,7 @@ const hasVisiblePosts = visiblePosts.length > 0;
 
 이 예시는 filter island와 list item처럼 경계가 있는 subtree만 분리하고, 전체 화면 순서와 empty state 선택은 feature page에서 계속 읽히게 유지합니다.
 
-### 9.4 Keep Page Files Focused on Route Contract and Data Handoff
+### 9.5 Keep Page Files Focused on Route Contract and Data Handoff
 
 **Impact: HIGH (keeps `src/pages` readable as route boundaries instead of turning them into giant mixed concerns)**
 
@@ -996,11 +1106,11 @@ const pageData = await getPostListPageData({ tab });
 <PostListPage {...pageData} />
 ```
 
-### 9.5 Limit Layouts to Shell and Composition
+### 9.6 Limit Layouts to Shell and Composition
 
 **Impact: HIGH (prevents shared layout files from absorbing leaf-page data and interaction logic)**
 
-layout component는 공통 frame, metadata wrapper, `<slot />` 기반 composition, shared chrome까지만 담당합니다. 이 component가 `src/layouts`, `src/components`, `src/features/<feature>` 중 어디에 있든 역할은 같습니다. Astro 공식 문서 기준으로 `src/layouts`는 관례일 뿐 필수가 아니므로, 이 프로젝트에서는 shared shell이면 shared owner 아래에, feature 전용 shell이면 feature 아래에 둘 수 있습니다. full page shell을 렌더링하는 layout이면 `<html>`이 최상위 parent가 되게 유지하고, 특정 page만 쓰는 fetch, mutation, form state, detail query는 layout으로 끌어올리지 말고 해당 page나 island에 남겨 둡니다.
+layout component는 공통 frame, metadata wrapper, `<slot />` 기반 composition, shared chrome까지만 담당합니다. Astro 공식 문서 기준으로 layout component는 어디에 둘 수 있지만, 이 프로젝트에서는 layout file 자체를 owning feature 아래에만 둡니다. full page shell을 렌더링하는 layout이면 `<html>`이 최상위 parent가 되게 유지하고, shell 조립에는 `widget`과 `ui`만 사용합니다. 특정 page만 쓰는 fetch, mutation, form state, detail query, redirect, auth guard를 layout으로 끌어올리지 말고 page boundary나 middleware, 해당 island에 남겨 둡니다.
 
 **Incorrect (layout이 leaf page 전용 데이터와 form 로직까지 흡수함):**
 
@@ -1015,19 +1125,23 @@ const formState = buildInvoiceForm(invoice);
 </DashboardFrame>
 ```
 
-**Correct (layout은 shell과 slot 조립만 담당):**
+**Correct (layout은 feature-owned shell과 slot 조립만 담당):**
 
 ```astro
 ---
+import UiSurface from "@/components/ui/surface/ui-surface.astro";
+import WidgetSiteHeader from "@/components/widget/site-header/widget-site-header.astro";
+
 const { title } = Astro.props;
 ---
 
-<DashboardFrame title={title}>
+<UiSurface>
+	<WidgetSiteHeader title={title} />
 	<slot />
-</DashboardFrame>
+</UiSurface>
 ```
 
-### 9.6 Place Feature-private UI Under private/
+### 9.7 Place Feature-private UI Under private/
 
 **Impact: HIGH (makes the boundary between feature-local implementation and shared public surface obvious)**
 
@@ -1062,6 +1176,53 @@ src/
         post-remove-modal.astro
         post-remove-modal.css
 ```
+
+### 9.8 Place Layout Shells Under Owning Features
+
+**Impact: HIGH (prevents layout files from becoming a blurry shared component tier between features and reusable building blocks)**
+
+이 프로젝트에서 layout file은 shared component tier가 아니라 feature-owned route shell입니다. 따라서 layout file 자체는 `src/features/<feature>/` 아래에 두고, `src/components/layouts`, `src/layouts`, `src/components/ui/ui-page-shell.astro`, `src/components/widget/widget-page-shell.astro` 같은 형태로 승격하지 않습니다. 여러 화면이 같은 shell을 공유하더라도 "shared layout"이라는 새 공용 레이어를 만들기보다, 그 shell을 소유하는 상위 feature를 만들고 그 아래에 둡니다. shared visual pieces가 필요하면 layout file을 올리는 대신 `ui`와 `widget`을 재사용합니다.
+
+**Incorrect (layout file이 shared component 레이어로 떠다님):**
+
+```text
+src/
+  components/
+    layouts/
+      account-layout.astro
+    ui/
+      page-shell/
+        ui-page-shell.astro
+    widget/
+      page-shell/
+        widget-page-shell.astro
+  features/
+    account/
+      account-detail-page.astro
+```
+
+이 구조는 layout 역할이 `layouts`, `ui`, `widget` 어디에 속하는지 흐리게 만들고, shell ownership도 feature 밖으로 밀어냅니다.
+
+**Correct (layout은 owning feature 아래에 두고 shared 조각만 ui/widget으로 재사용):**
+
+```text
+src/
+  components/
+    ui/
+      box/ui-box.astro
+      stack/ui-stack.astro
+      surface/ui-surface.astro
+    widget/
+      site-header/widget-site-header.astro
+      sidebar-nav/widget-sidebar-nav.astro
+  features/
+    account/
+      account-layout.astro
+      account-detail-page.astro
+      account.ts
+```
+
+이 구조에서는 `account-layout.astro`가 account feature shell을 소유하고, shared visual block만 `ui`와 `widget`에서 가져와 조립합니다.
 
 ## 10. Documentation and Comments
 
@@ -1169,7 +1330,7 @@ Astro 기능은 버전과 adapter 조건에 민감하므로 문서 확인과 lay
 
 **Impact: MEDIUM (reduces cleanup work by deciding shell, rendering mode, and island boundaries before files sprawl)**
 
-새 page를 추가할 때는 화면 마크업부터 급하게 만들지 말고, 먼저 layout shell, static/on-demand 여부, dynamic route 여부, island 필요 여부를 정합니다. 이 순서를 따르면 `client:load` 남용이나 `src/pages` monolith를 뒤늦게 뜯어내는 일을 줄일 수 있습니다.
+새 page를 추가할 때는 화면 마크업부터 급하게 만들지 말고, 먼저 owning feature의 layout shell, guard owner, static/on-demand 여부, dynamic route 여부, island 필요 여부를 정합니다. 이 순서를 따르면 `client:load` 남용이나 `src/pages` monolith를 뒤늦게 뜯어내는 일을 줄일 수 있습니다.
 
 **Incorrect (page 파일부터 만들고 나중에 rendering과 shell을 끼워 맞춤):**
 
@@ -1182,11 +1343,12 @@ Astro 기능은 버전과 adapter 조건에 민감하므로 문서 확인과 lay
 **Correct (layout과 rendering 결정을 먼저 고정하고 page를 연다):**
 
 ```text
-1. 이 page가 어떤 layout shell 아래에 있어야 하는지 먼저 판단한다
-2. static, `prerender = false`, `output: "server"` 중 어떤 rendering 전제가 맞는지 고른다
-3. dynamic route면 `getStaticPaths()`가 필요한지 page boundary에서 정한다
-4. interactive 부분만 island로 빼고 `client:*` 또는 `client:only` 필요성을 고른다
-5. page가 커지면 owner-named asset set으로 support module과 render detail을 분리한다
+1. 이 page를 소유하는 feature와 그 feature 아래의 layout shell이 무엇인지 먼저 판단한다
+2. auth, redirect, rewrite owner가 page boundary인지 `src/middleware.ts`인지 먼저 정한다
+3. static, `prerender = false`, `output: "server"` 중 어떤 rendering 전제가 맞는지 고른다
+4. dynamic route면 `getStaticPaths()`가 필요한지 page boundary에서 정한다
+5. interactive 부분만 island로 빼고 `client:*` 또는 `client:only` 필요성을 고른다
+6. layout은 `widget` + `ui` 조립으로 두고, page가 커지면 owner-named asset set으로 support module과 render detail을 분리한다
 ```
 
 ### 11.2 Consult Official Docs for Version-sensitive Astro Features

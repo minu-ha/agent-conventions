@@ -9,7 +9,7 @@ tags: workflow, pages, checklist
 
 **Impact: MEDIUM (reduces cleanup work by deciding shell, rendering mode, and island boundaries before files sprawl)**
 
-새 page를 추가할 때는 화면 마크업부터 급하게 만들지 말고, 먼저 layout shell, static/on-demand 여부, dynamic route 여부, island 필요 여부를 정합니다. 이 순서를 따르면 `client:load` 남용이나 `src/pages` monolith를 뒤늦게 뜯어내는 일을 줄일 수 있습니다.
+새 page를 추가할 때는 화면 마크업부터 급하게 만들지 말고, 먼저 owning feature의 layout shell, guard owner, static/on-demand 여부, dynamic route 여부, island 필요 여부를 정합니다. 이 순서를 따르면 `client:load` 남용이나 `src/pages` monolith를 뒤늦게 뜯어내는 일을 줄일 수 있습니다.
 
 **Incorrect (page 파일부터 만들고 나중에 rendering과 shell을 끼워 맞춤):**
 
@@ -22,9 +22,10 @@ tags: workflow, pages, checklist
 **Correct (layout과 rendering 결정을 먼저 고정하고 page를 연다):**
 
 ```text
-1. 이 page가 어떤 layout shell 아래에 있어야 하는지 먼저 판단한다
-2. static, `prerender = false`, `output: "server"` 중 어떤 rendering 전제가 맞는지 고른다
-3. dynamic route면 `getStaticPaths()`가 필요한지 page boundary에서 정한다
-4. interactive 부분만 island로 빼고 `client:*` 또는 `client:only` 필요성을 고른다
-5. page가 커지면 owner-named asset set으로 support module과 render detail을 분리한다
+1. 이 page를 소유하는 feature와 그 feature 아래의 layout shell이 무엇인지 먼저 판단한다
+2. auth, redirect, rewrite owner가 page boundary인지 `src/middleware.ts`인지 먼저 정한다
+3. static, `prerender = false`, `output: "server"` 중 어떤 rendering 전제가 맞는지 고른다
+4. dynamic route면 `getStaticPaths()`가 필요한지 page boundary에서 정한다
+5. interactive 부분만 island로 빼고 `client:*` 또는 `client:only` 필요성을 고른다
+6. layout은 `widget` + `ui` 조립으로 두고, page가 커지면 owner-named asset set으로 support module과 render detail을 분리한다
 ```
