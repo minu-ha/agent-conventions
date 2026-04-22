@@ -55,6 +55,7 @@
 
 ## Agent-Conventions Coverage
 
+- `convention-astro`: Astro thin `src/pages` adapter, `src/features/<feature>` 구조, rendering mode, island hydration, content collections, Actions/endpoints, Astro frontmatter/docs 규칙
 - `convention-react`: React 컴포넌트, TSX 렌더링 흐름, 화면 구조
 - `convention-css`: 스타일, `className`, CSS 구조, selector, token 사용
 - `convention-typescript`: 공통 TypeScript 규칙, 타입 계약, helper 분리, JSDoc
@@ -86,12 +87,25 @@
 - framework rule과 공통 언어 rule이 분리돼 있다면 companion convention skill을 함께 적용합니다.
 - 애매한 규칙만 해당 원문을 다시 읽고, 무관한 규칙은 불필요하게 확장하지 않습니다.
 - 기본 선택 예시는 아래와 같습니다.
+  - Astro page/route/rendering/content 변경: `convention-astro` + `convention-typescript` + `convention-css`
+  - Astro + React island/TSX 변경: `convention-astro` + `convention-react` + `convention-typescript` + `convention-css`
+  - Astro hydration/form/server 흐름을 브라우저에서 검증: `convention-astro` + 필요 시 `convention-playwright-test`
   - React/TSX/UI 상태 변경: `convention-react` + `convention-typescript`
   - 스타일과 `className` 변경: `convention-css`
   - route/search/navigation 변경: `convention-tanstack-route` + 필요 시 `convention-typescript`
   - Playwright 테스트 변경: `convention-playwright-test` + 필요 시 관련 companion skill
   - NestJS backend 변경: `convention-nestjs` + `convention-typescript`
   - Spring Boot backend 변경: `convention-springboot`
+
+Astro 프로젝트에서 `convention-astro`를 선택했다면 아래를 기본 전제로 봅니다.
+
+- `src/pages`는 Astro의 required route adapter layer로만 얇게 유지합니다.
+- 실제 화면 구현은 `src/features/<feature>` 아래에 둡니다.
+- Astro의 기본 companion은 `convention-typescript`와 `convention-css`입니다.
+- React island나 TSX가 있으면 `convention-react`를 추가합니다.
+- hydration, form action, server island, navigation 회귀를 브라우저에서 확인하면 `convention-playwright-test`를 추가합니다.
+- `src/layouts`는 필수 디렉터리가 아니라 관례이므로, shared shell이면 shared owner 아래에 두고 feature 전용 shell이면 feature 아래에 둘 수 있습니다.
+- Astro frontmatter, `getStaticPaths()`, feature support helper처럼 비자명한 경계 선언에는 JSDoc을 요구하고, inline comment는 rendering/ownership/integration caveat에만 제한합니다.
 
 ## Workflow Pipeline
 
