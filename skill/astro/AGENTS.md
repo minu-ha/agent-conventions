@@ -12,7 +12,7 @@
 
 ## 개요
 
-에이전트 협업 팀을 위한 Astro 코딩 컨벤션입니다. 이 가이드는 thin `src/pages` route adapter와 `src/features/<feature>` 기반 screen implementation, 의미 있는 dynamic segment와 owner-named feature file naming, `.astro` 컴포넌트와 layout/page/island/private의 명확한 책임 경계, static과 on-demand rendering의 의도적인 선택, build-time/live collections, Actions/endpoints/server islands 같은 Astro 고유 기능의 신중한 사용을 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, Astro local rule은 기본 companion인 `typescript`와 `css` skill과 함께 사용합니다.
+에이전트 협업 팀을 위한 Astro 코딩 컨벤션입니다. 이 가이드는 thin `src/pages` route adapter와 `src/features/<feature>` 기반 screen implementation, 의미 있는 dynamic segment와 owner-named feature file naming, `.astro` 컴포넌트와 layout/page/island/private의 명확한 책임 경계, feature page orchestration과 selective extraction 기준, static과 on-demand rendering의 의도적인 선택, build-time/live collections, Actions/endpoints/server islands 같은 Astro 고유 기능의 신중한 사용을 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, Astro local rule은 기본 companion인 `typescript`와 `css` skill과 함께 사용합니다.
 
 이 가이드는 local Astro 컨벤션 규칙만 담고 있습니다. 공통 규칙은 companion skill을 함께 로드해 보완합니다.
 
@@ -56,9 +56,12 @@
     - 8.1 [Choose Actions vs. Endpoints by Caller and Response Needs](#81-choose-actions-vs-endpoints-by-caller-and-response-needs)
     - 8.2 [Keep Server Islands Serializable and Slot Fallbacks Ready](#82-keep-server-islands-serializable-and-slot-fallbacks-ready)
 9. [Page, Layout, and Island Responsibilities](#9-page-layout-and-island-responsibilities) — **HIGH**
-    - 9.1 [Keep Page Files Focused on Route Contract and Data Handoff](#91-keep-page-files-focused-on-route-contract-and-data-handoff)
-    - 9.2 [Limit Layouts to Shell and Composition](#92-limit-layouts-to-shell-and-composition)
-    - 9.3 [Place Feature-private UI Under private/](#93-place-feature-private-ui-under-private)
+    - 9.1 [Extract Feature Support Code Only When the Astro Boundary Is Real](#91-extract-feature-support-code-only-when-the-astro-boundary-is-real)
+    - 9.2 [Extract Feature-private Sections Only for Rendering or Interaction Boundaries](#92-extract-feature-private-sections-only-for-rendering-or-interaction-boundaries)
+    - 9.3 [Keep Feature Page Files Focused on Screen Flow](#93-keep-feature-page-files-focused-on-screen-flow)
+    - 9.4 [Keep Page Files Focused on Route Contract and Data Handoff](#94-keep-page-files-focused-on-route-contract-and-data-handoff)
+    - 9.5 [Limit Layouts to Shell and Composition](#95-limit-layouts-to-shell-and-composition)
+    - 9.6 [Place Feature-private UI Under private/](#96-place-feature-private-ui-under-private)
 10. [Documentation and Comments](#10-documentation-and-comments) — **MEDIUM**
     - 10.1 [Limit Inline Comments to Rendering, Ownership, and Integration Caveats](#101-limit-inline-comments-to-rendering-ownership-and-integration-caveats)
     - 10.2 [Require JSDoc on Key Frontmatter and Feature Support Declarations](#102-require-jsdoc-on-key-frontmatter-and-feature-support-declarations)
@@ -79,7 +82,7 @@
 
 **Impact: CRITICAL (keeps Astro's required routing directory from turning into the place where full screens and private UI sprawl)**
 
-Astro에서 `src/pages`는 required reserved directory이므로 route file 자체는 여기에 둡니다. 다만 이 프로젝트에서는 `src/pages`를 framework-required route adapter layer로만 보고 가능한 한 얇게 유지합니다. route file은 file-based route contract, `getStaticPaths()`, search param 해석, page-level data loading, feature entry 선택까지만 담당하고, 실제 화면 조립은 `src/features/<feature>`로 위임합니다.
+Astro에서 `src/pages`는 required reserved directory이므로 route file 자체는 여기에 둡니다. 다만 이 프로젝트에서는 `src/pages`를 framework-required route adapter layer로만 보고 가능한 한 얇게 유지합니다. route file은 file-based route contract, `getStaticPaths()`, search param 해석, page-level data loading, feature entry 선택까지만 담당하고, 실제 화면 조립은 `src/features/<feature>`로 위임합니다. `Astro.url.searchParams`를 읽더라도 prerendered HTML이 그 값에 의존하지 않으면 static 기본값을 유지할 수 있습니다. 반대로 page HTML이나 server-side data loading이 request-time query state에 직접 의존하면 `prerender = false` 같은 rendering 선택도 page boundary에서 같이 드러냅니다.
 
 **Incorrect (`src/pages` 안에서 full screen과 route-private UI까지 함께 키움):**
 
@@ -105,6 +108,8 @@ const posts = await getPosts({ search });
 ---
 import PostListPage from "../../features/post/post-list-page.astro";
 import { getPostListPageData } from "../../features/post/post.ts";
+
+export const prerender = false;
 
 const search = Astro.url.searchParams.get("search") ?? "";
 const pageData = await getPostListPageData({ search });
@@ -232,7 +237,7 @@ src/
 
 **Impact: HIGH (prevents browser behavior from leaking into Astro's server-side component preparation phase)**
 
-Astro frontmatter는 import, props 해석, fetch, server-side 파생값 계산처럼 HTML을 준비하는 코드에 집중합니다. 브라우저 이벤트 핸들러나 DOM 접근은 template의 `<script>`나 framework island로 넘기고, frontmatter 안에서 client runtime을 흉내 내지 않습니다.
+Astro frontmatter는 server-only component script입니다. import, `Astro.props` 해석, fetch, server-side 파생값 계산처럼 HTML을 준비하는 코드에 집중하고, 이 값이 브라우저에서 그대로 살아 있을 것처럼 가정하지 않습니다. 브라우저 이벤트 핸들러나 DOM 접근은 template의 `<script>`나 framework island로 넘기고, frontmatter 값이 browser script에 필요하면 `data-*` attribute 같은 명시적인 handoff를 사용합니다.
 
 **Incorrect (frontmatter 안에서 browser handler를 정의하고 template에 직접 연결하려 함):**
 
@@ -246,19 +251,30 @@ const handleClick = () => {
 <button onclick={handleClick}>Subscribe</button>
 ```
 
-**Correct (server 준비 코드는 frontmatter에 두고 browser 동작은 template script로 분리):**
+**Correct (server 준비 코드는 frontmatter에 두고 browser 동작은 template script로 명시적으로 handoff):**
 
 ```astro
 ---
-const buttonId = "newsletter-subscribe";
+const successMessage = "Subscribed";
 ---
 
-<button id={buttonId}>Subscribe</button>
+<astro-subscribe data-success-message={successMessage}>
+	<button type="button">Subscribe</button>
+</astro-subscribe>
 
 <script>
-	document.getElementById("newsletter-subscribe")?.addEventListener("click", () => {
-		window.alert("Subscribed");
-	});
+	class AstroSubscribe extends HTMLElement {
+		connectedCallback() {
+			const button = this.querySelector("button");
+			const successMessage = this.dataset.successMessage;
+
+			button?.addEventListener("click", () => {
+				window.alert(successMessage ?? "Subscribed");
+			});
+		}
+	}
+
+	customElements.define("astro-subscribe", AstroSubscribe);
 </script>
 ```
 
@@ -266,7 +282,7 @@ const buttonId = "newsletter-subscribe";
 
 **Impact: CRITICAL (reduces unnecessary client framework surface and keeps Astro's zero-JS default intact)**
 
-state, effect, client runtime가 필요 없는 page shell, layout, wrapper, content section은 기본적으로 `.astro`로 작성합니다. React component를 이미 쓴다는 이유만으로 정적 layout까지 TSX로 밀어 넣지 말고, interactive leaf만 island로 분리합니다. layout이라는 역할은 `src/layouts`에만 둘 필요가 없고, shared owner나 feature owner 아래에 있어도 괜찮습니다.
+state, effect, client runtime가 필요 없는 page shell, layout, wrapper, content section은 기본적으로 `.astro`로 작성합니다. React component를 이미 쓴다는 이유만으로 정적 layout까지 TSX로 밀어 넣지 말고, interactive leaf만 island로 분리합니다. layout이라는 역할은 `src/layouts`에만 둘 필요가 없고, shared owner나 feature owner 아래에 있어도 괜찮습니다. page content가 주입되는 자리는 `<slot />`로 드러내고, full page shell을 만드는 layout이라면 `<html>`이 최상위 parent가 되게 유지합니다.
 
 **Incorrect (정적 shell을 React component로 올려 불필요한 framework surface를 늘림):**
 
@@ -732,13 +748,219 @@ import GenericAvatar from "../components/GenericAvatar.astro";
 
 **Impact: HIGH**
 
-layout은 shell, page는 route adapter contract, feature page는 screen composition, `private/`는 local implementation detail을 맡도록 좁게 분리해야 Astro의 server-first 구조가 읽히고 유지보수도 쉬워집니다.
+layout은 shell, page는 route adapter contract, feature page는 screen flow owner, `private/`와 support module은 진짜 rendering/interaction/data boundary가 있을 때만 분리해야 Astro의 server-first 구조가 읽히고 유지보수도 쉬워집니다.
 
-### 9.1 Keep Page Files Focused on Route Contract and Data Handoff
+### 9.1 Extract Feature Support Code Only When the Astro Boundary Is Real
+
+**Impact: HIGH (prevents feature pages from scattering one-off frontmatter logic into generic helpers)**
+
+feature page frontmatter의 support code는 입력과 출력 계약이 분명하고, 페이지에서 치우면 화면 흐름이 더 잘 읽히며, 다른 entry에서도 같은 owner가 재사용할 가치가 있을 때만 `src/features/<feature>/<feature>.ts` 같은 support module로 옮깁니다. 컬렉션 응답 정규화, page model 조립, metadata helper, shared query argument 생성처럼 server-side data shaping 역할은 옮길 수 있습니다. 반대로 작은 1회성 boolean branch, `Astro.props` destructuring 바로 옆이 가장 읽기 쉬운 계산, 현재 page에만 붙는 `class:list` 조건, 짧은 empty-state label 선택은 feature page frontmatter에 남깁니다. `utils.ts`, `helpers.ts`, `common.ts` 같은 generic 파일명은 만들지 않고 owner-named module을 사용합니다.
+
+**Incorrect (작은 page-local 계산을 generic helper로 흩뿌림):**
+
+```ts
+// src/features/post/utils.ts
+export const getHasActiveTag = (selectedTag?: string) => {
+	return typeof selectedTag === "string" && selectedTag.length > 0;
+};
+
+export const getEmptyMessage = (selectedTag?: string) => {
+	return selectedTag ? "No posts match this filter." : "No published posts yet.";
+};
+```
+
+이 정도 로직은 feature page frontmatter 바로 옆이 더 읽기 쉽고, `utils.ts`라는 이름도 ownership을 흐립니다.
+
+**Correct (owner-named support module에는 진짜 data boundary만 둠):**
+
+```ts
+// src/features/post/post.ts
+/**
+ * @helper post collection 응답을 목록 화면 model로 정규화
+ */
+export const buildPostListPageModel = (posts: PostCollectionEntry[]) => {
+	return {
+		title: "Posts",
+		description: "Latest writing from the team.",
+		availableTags: [...new Set(posts.flatMap((post) => post.data.tags))].sort(),
+		posts: posts.map((post) => ({
+			id: post.id,
+			title: post.data.title,
+			description: post.data.description,
+			tags: post.data.tags,
+			href: `/post/${post.slug}/`,
+		})),
+	};
+};
+```
+
+```astro
+---
+import type { PostListPageModel } from "./post";
+
+/**
+ * @summary 포스트 목록 feature screen props
+ */
+interface Props {
+	pageModel: PostListPageModel;
+	selectedTag?: string;
+}
+
+const { pageModel, selectedTag } = Astro.props;
+const hasActiveTag = typeof selectedTag === "string" && selectedTag.length > 0;
+const emptyMessage = hasActiveTag
+	? "No posts match this filter."
+	: "No published posts yet.";
+---
+```
+
+이 구조에서는 collection normalization 같은 실제 data boundary만 `post.ts`에 두고, 현재 feature page 흐름을 읽는 데 필요한 작은 분기와 문구 선택은 frontmatter에 남겨 둡니다.
+
+### 9.2 Extract Feature-private Sections Only for Rendering or Interaction Boundaries
+
+**Impact: HIGH (keeps feature pages readable while avoiding premature `private/` section extraction)**
+
+feature page에서 `private/` component를 추출할지는 "섹션처럼 보이느냐"가 아니라 실제 rendering boundary나 interaction boundary를 소유하느냐로 판단합니다. Astro 기준으로는 `client:*`나 `client:only` hydration, `server:defer`와 fallback slot, form/action ownership, custom element나 inline `<script>`가 붙는 브라우저 동작, props adapter가 복잡한 third-party widget, slot contract를 가진 reusable partial 같은 경우에만 `private/` section으로 분리할 가치가 있습니다. 반대로 단순 layout wrapper, heading/body/footer grouping, 들여쓰기 감소만을 위한 component 추출은 feature page의 흐름만 숨기므로 기본값으로 삼지 않습니다.
+
+**Incorrect (단순한 화면 덩어리를 모두 `private/` section으로 쪼갬):**
+
+```astro
+---
+import PostBodySection from "./private/post-body-section.astro";
+import PostHeaderSection from "./private/post-header-section.astro";
+import PostMetaSection from "./private/post-meta-section.astro";
+
+const { pageModel } = Astro.props;
+---
+
+<article class="post-detail-page">
+	<PostHeaderSection post={pageModel.post} />
+	<PostMetaSection post={pageModel.post} />
+	<PostBodySection html={pageModel.post.html} />
+</article>
+```
+
+이 세 section이 하는 일이 단순 markup grouping뿐이라면 분리 이유가 약합니다. 읽는 사람은 실제로 boundary가 있는 부분과 아닌 부분을 구분하기 어려워집니다.
+
+**Correct (boundary가 있는 subtree만 `private/`로 분리):**
+
+```astro
+---
+import NewsletterSignupIsland from "./private/newsletter-signup-island.tsx";
+import RelatedPostsPanel from "./private/related-posts-panel.astro";
+import type { PostDetailPageModel } from "./post";
+
+/**
+ * @summary 포스트 상세 feature screen props
+ */
+interface Props {
+	pageModel: PostDetailPageModel;
+}
+
+const { pageModel } = Astro.props;
+---
+
+<article class="post-detail-page">
+	<header class="post-detail-page__header">
+		<h1>{pageModel.post.title}</h1>
+		<p>{pageModel.post.description}</p>
+	</header>
+
+	<div class="post-detail-page__meta">
+		<span>{pageModel.post.author}</span>
+		<span>{pageModel.post.publishedAtLabel}</span>
+	</div>
+
+	<div class="post-detail-page__body" set:html={pageModel.post.html} />
+
+	<RelatedPostsPanel server:defer posts={pageModel.relatedPosts}>
+		<p slot="fallback">Loading related posts...</p>
+	</RelatedPostsPanel>
+
+	<NewsletterSignupIsland client:visible postId={pageModel.post.id} />
+</article>
+```
+
+이 예시에서는 deferred related posts와 hydrated signup widget처럼 실제 boundary가 있는 부분만 `private/` component로 추출하고, 단순한 header/meta/body markup은 feature page에 남겨 화면 흐름을 보이게 유지합니다.
+
+### 9.3 Keep Feature Page Files Focused on Screen Flow
+
+**Impact: HIGH (keeps `src/features/<feature>/*-page.astro` readable as the main screen orchestration layer after route handoff)**
+
+`src/pages`가 route contract와 data handoff를 끝내고 나면 `src/features/<feature>/*-page.astro`가 화면의 주 orchestration owner가 됩니다. 이 파일에는 section 순서, page-scoped derived value, `Astro.props`에서 받은 data의 화면용 분기, empty state 선택, slot/layout 조립, island prop handoff 같은 화면 흐름이 계속 보여야 합니다. 단순히 마크업 덩어리가 커 보인다는 이유만으로 feature page를 `private/` section wrapper들의 나열로 바꾸지 않습니다. 실제 rendering boundary나 interaction boundary를 가진 subtree만 아래로 내리고, 나머지 화면 흐름은 feature page에서 읽히게 둡니다.
+
+**Incorrect (feature page가 단순 wrapper 나열만 남아 화면 흐름을 숨김):**
+
+```astro
+---
+import PostHeroSection from "./private/post-hero-section.astro";
+import PostFilterSection from "./private/post-filter-section.astro";
+import PostListSection from "./private/post-list-section.astro";
+import PostPaginationSection from "./private/post-pagination-section.astro";
+---
+
+<PostHeroSection />
+<PostFilterSection />
+<PostListSection />
+<PostPaginationSection />
+```
+
+이 구조만 보면 어떤 data를 기준으로 분기하는지, 어떤 island가 선택을 바꾸는지, empty state가 어디서 결정되는지 feature page에서 전혀 보이지 않습니다.
+
+**Correct (feature page가 screen flow와 page-level handoff를 계속 소유):**
+
+```astro
+---
+import PostListItem from "./private/post-list-item.astro";
+import PostFiltersIsland from "./private/post-filters-island.tsx";
+import type { PostListPageModel } from "./post";
+
+/**
+ * @summary 포스트 목록 feature screen props
+ */
+interface Props {
+	pageModel: PostListPageModel;
+	selectedTag?: string;
+}
+
+const { pageModel, selectedTag } = Astro.props;
+const visiblePosts = selectedTag
+	? pageModel.posts.filter((post) => post.tags.includes(selectedTag))
+	: pageModel.posts;
+const hasVisiblePosts = visiblePosts.length > 0;
+---
+
+<section class="post-list-page">
+	<header class="post-list-page__header">
+		<h1>{pageModel.title}</h1>
+		<p>{pageModel.description}</p>
+	</header>
+
+	<PostFiltersIsland
+		client:idle
+		availableTags={pageModel.availableTags}
+		selectedTag={selectedTag}
+	/>
+
+	{hasVisiblePosts ? (
+		<ul class="post-list-page__list">
+			{visiblePosts.map((post) => (
+				<PostListItem post={post} />
+			))}
+		</ul>
+	) : (
+		<p class="post-list-page__empty">No posts match this filter.</p>
+	)}
+</section>
+```
+
+이 예시는 filter island와 list item처럼 경계가 있는 subtree만 분리하고, 전체 화면 순서와 empty state 선택은 feature page에서 계속 읽히게 유지합니다.
+
+### 9.4 Keep Page Files Focused on Route Contract and Data Handoff
 
 **Impact: HIGH (keeps `src/pages` readable as route boundaries instead of turning them into giant mixed concerns)**
 
-page file은 URL contract, `getStaticPaths()`, `prerender`, search param 해석, page-level data selection, feature entry 선택과 같은 route boundary 책임을 가집니다. 재사용 가능한 render detail, large markup block, browser interaction은 `src/features/<feature>`나 island로 내려 page가 thin adapter 역할을 유지하게 둡니다.
+page file은 URL contract, `getStaticPaths()`, `prerender`, search param 해석, page-level data selection, feature entry 선택과 같은 route boundary 책임을 가집니다. 재사용 가능한 render detail, large markup block, browser interaction은 `src/features/<feature>`나 island로 내려 page가 thin adapter 역할을 유지하게 둡니다. 특히 page HTML이나 server-side data selection이 `Astro.url.searchParams` 같은 request-time state에 직접 의존하는 경우에는 `prerender = false` 여부도 이 경계에서 같이 보이게 유지합니다. 반대로 query state를 client island에 넘기기만 하고 prerendered HTML은 그대로라면 static 기본값을 유지할 수 있습니다.
 
 **Incorrect (page 파일이 route contract와 재사용 렌더링 상세를 한꺼번에 가짐):**
 
@@ -765,6 +987,8 @@ const posts = await getPosts({ tab });
 import PostListPage from "../../features/post/post-list-page.astro";
 import { getPostListPageData } from "../../features/post/post.ts";
 
+export const prerender = false;
+
 const tab = Astro.url.searchParams.get("tab") ?? "all";
 const pageData = await getPostListPageData({ tab });
 ---
@@ -772,11 +996,11 @@ const pageData = await getPostListPageData({ tab });
 <PostListPage {...pageData} />
 ```
 
-### 9.2 Limit Layouts to Shell and Composition
+### 9.5 Limit Layouts to Shell and Composition
 
 **Impact: HIGH (prevents shared layout files from absorbing leaf-page data and interaction logic)**
 
-layout component는 공통 frame, metadata wrapper, slot composition, shared chrome까지만 담당합니다. 이 component가 `src/layouts`, `src/components`, `src/features/<feature>` 중 어디에 있든 역할은 같습니다. Astro 공식 문서 기준으로 `src/layouts`는 관례일 뿐 필수가 아니므로, 이 프로젝트에서는 shared shell이면 shared owner 아래에, feature 전용 shell이면 feature 아래에 둘 수 있습니다. 특정 page만 쓰는 fetch, mutation, form state, detail query를 layout으로 끌어올리지 말고 해당 page나 island에 남겨 둡니다.
+layout component는 공통 frame, metadata wrapper, `<slot />` 기반 composition, shared chrome까지만 담당합니다. 이 component가 `src/layouts`, `src/components`, `src/features/<feature>` 중 어디에 있든 역할은 같습니다. Astro 공식 문서 기준으로 `src/layouts`는 관례일 뿐 필수가 아니므로, 이 프로젝트에서는 shared shell이면 shared owner 아래에, feature 전용 shell이면 feature 아래에 둘 수 있습니다. full page shell을 렌더링하는 layout이면 `<html>`이 최상위 parent가 되게 유지하고, 특정 page만 쓰는 fetch, mutation, form state, detail query는 layout으로 끌어올리지 말고 해당 page나 island에 남겨 둡니다.
 
 **Incorrect (layout이 leaf page 전용 데이터와 form 로직까지 흡수함):**
 
@@ -803,11 +1027,11 @@ const { title } = Astro.props;
 </DashboardFrame>
 ```
 
-### 9.3 Place Feature-private UI Under private/
+### 9.6 Place Feature-private UI Under private/
 
 **Impact: HIGH (makes the boundary between feature-local implementation and shared public surface obvious)**
 
-shared로 승격되지 않은 route-private UI, modal, form, 보조 renderer, feature 전용 CSS는 `src/features/<feature>/private/` 아래에 둡니다. `private/`는 재사용 가능한 public surface가 아니라 현재 feature 내부 전용 구현이라는 소유권을 드러내는 이름입니다. 다른 feature에서도 쓰이기 시작하면 `private/`에 두지 말고 shared layer로 승격합니다.
+shared로 승격되지 않은 route-private UI, modal, form, 보조 renderer, feature 전용 CSS는 `src/features/<feature>/private/` 아래에 둡니다. `private/`는 재사용 가능한 public surface가 아니라 현재 feature 내부 전용 구현이라는 소유권을 드러내는 이름입니다. 다른 feature에서도 쓰이기 시작하면 `private/`에 두지 말고 shared layer로 승격합니다. 다만 feature page의 screen orchestration까지 `private/`로 옮기지는 말고, 실제 leaf UI나 local implementation detail만 내려 ownership을 분명히 합니다.
 
 **Incorrect (feature-local UI가 feature root나 shared components에 섞여 ownership이 흐려짐):**
 

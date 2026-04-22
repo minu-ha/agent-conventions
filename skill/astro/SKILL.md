@@ -8,8 +8,8 @@ metadata:
 
 # Astro 컨벤션
 
-에이전트 협업 팀을 위한 Astro 코딩 컨벤션 모음입니다. 현재 이 가이드는 11개 카테고리의 28개 local 규칙으로 구성되어 있습니다.  
-Astro entry 구조, thin `src/pages` adapter layer, feature-based page implementation, owner-named asset naming, `.astro` 컴포넌트 경계, framework island 사용법, file-based routing, SSG/SSR/CSR rendering 선택, build-time/live collections, Actions와 endpoints, layout/page/island/private 책임, Astro 전용 문서화 규칙, Astro 전용 검토 흐름을 [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`와 compiled [AGENTS.md](./AGENTS.md)로 관리합니다.  
+에이전트 협업 팀을 위한 Astro 코딩 컨벤션 모음입니다. 현재 이 가이드는 11개 카테고리의 31개 local 규칙으로 구성되어 있습니다.  
+Astro entry 구조, thin `src/pages` adapter layer, feature-based page implementation, owner-named asset naming, `.astro` 컴포넌트 경계, framework island 사용법, file-based routing, SSG/SSR/CSR rendering 선택, build-time/live collections, Actions와 endpoints, layout/page/island/private 책임, feature page orchestration과 selective extraction 기준, Astro 전용 문서화 규칙, Astro 전용 검토 흐름을 [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`와 compiled [AGENTS.md](./AGENTS.md)로 관리합니다.  
 Astro local rule은 기본 companion인 `convention-typescript`와 `convention-css`를 함께 사용하고, React island나 브라우저 테스트는 필요할 때 추가로 로드합니다.
 
 ## 사용할 때
@@ -114,6 +114,9 @@ Astro local rule은 기본 companion인 `convention-typescript`와 `convention-c
 
 - `responsibility-limit-layouts-to-shell-and-composition` - layout은 shell, slot, shared wrapper에 집중
 - `responsibility-keep-page-files-focused-on-route-contract-and-data-handoff` - page는 route contract와 data handoff를 소유하고 feature entry로 위임
+- `responsibility-keep-feature-page-files-focused-on-screen-flow` - feature page는 screen flow와 page-level orchestration을 계속 보여줌
+- `responsibility-extract-feature-private-sections-only-for-rendering-or-interaction-boundaries` - `private/` section은 진짜 rendering/interaction boundary가 있을 때만 추출
+- `responsibility-extract-feature-support-code-only-when-the-astro-boundary-is-real` - `post.ts` 같은 support module은 진짜 data boundary가 있을 때만 사용
 - `responsibility-place-feature-private-ui-under-private` - feature-local UI와 CSS는 `private/` 아래에 둠
 
 ### 10. Documentation and Comments (MEDIUM)
@@ -140,7 +143,7 @@ Astro local rule은 기본 companion인 `convention-typescript`와 `convention-c
 - 이번 변경이 Naming, Rendering, Responsibility, Docs까지 포함한 어느 카테고리에 걸리는지 다시 대조하고 관련 rule을 빠뜨리지 않았는지 확인합니다.
 - React island, CSS, TypeScript config/action schema, JSDoc/comment, Playwright 검증까지 번졌는데 companion skill을 빼먹지 않았는지 점검합니다.
 - static, on-demand, `output: "server"`, `client:only` 중 현재 선택이 과한지 다시 확인합니다.
-- `src/pages` thin adapter, `src/features/<feature>`, `private/` 경계, build-time/live collection 구분, layout/page/island ownership, endpoint와 Actions의 역할 분리, 핵심 frontmatter 선언의 JSDoc/comment가 마지막 diff에도 그대로 보이는지 확인합니다.
+- `src/pages` thin adapter, `src/features/<feature>`, feature page orchestration, `private/`와 support module extraction 기준, build-time/live collection 구분, layout/page/island ownership, endpoint와 Actions의 역할 분리, 핵심 frontmatter 선언의 JSDoc/comment가 마지막 diff에도 그대로 보이는지 확인합니다.
 
 ## 사용하는 방법
 
