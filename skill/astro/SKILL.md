@@ -9,7 +9,7 @@ metadata:
 # Astro 컨벤션
 
 에이전트 협업 팀을 위한 Astro 코딩 컨벤션 모음입니다. 현재 이 가이드는 11개 카테고리의 38개 local 규칙으로 구성되어 있습니다.  
-Astro entry 구조, thin `src/pages` adapter layer, page-adjacent `_document/_head/_page-chrome` shell, feature-based page implementation, owner-named asset naming, `.astro` 컴포넌트 경계, framework island 사용법, file-based routing, SSG/SSR/CSR rendering 선택, build-time/live collections, Actions와 endpoints, feature-owned layout/page/island/private 책임, `ui`/`widget` taxonomy, feature page orchestration과 selective extraction 기준, Astro 전용 문서화 규칙, Astro 전용 검토 흐름을 [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`와 compiled [AGENTS.md](./AGENTS.md)로 관리합니다.  
+Astro entry 구조, thin `src/pages` adapter layer, pages-local `_document.astro`/`_head.astro`/`_document.css`, feature-based page implementation, owner-named asset naming, `.astro` 컴포넌트 경계, framework island 사용법, file-based routing, SSG/SSR/CSR rendering 선택, build-time/live collections, Actions와 endpoints, feature-owned layout/page/island/private 책임, `ui`/`widget` taxonomy, feature page orchestration과 selective extraction 기준, Astro 전용 문서화 규칙, Astro 전용 검토 흐름을 [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`와 compiled [AGENTS.md](./AGENTS.md)로 관리합니다.  
 Astro local rule은 기본 companion인 `convention-typescript`와 `convention-css`를 함께 사용하고, React island나 브라우저 테스트는 필요할 때 추가로 로드합니다.
 
 ## 사용할 때
@@ -69,18 +69,18 @@ Astro local rule은 기본 companion인 `convention-typescript`와 `convention-c
 ### 1. Project Structure and File Ownership (CRITICAL)
 
 - `structure-keep-src-pages-thin-and-use-it-as-route-adapter-layer` - `src/pages`는 route adapter layer로만 얇게 유지
-- `structure-place-page-adjacent-document-shells-under-src-pages-with-underscore-prefix` - `_document`, `_head`, `_page-chrome`은 `src/pages/_*.astro` 아래에 둠
+- `structure-place-page-adjacent-document-shells-under-src-pages-with-underscore-prefix` - `_document`, `_head`, `_document.css`는 `src/pages/_*` 아래에 둠
 - `structure-place-route-implementations-under-src-features` - 실제 route 구현은 `src/features/<feature>` 아래에 모음
 
 ### 2. File Naming and Page Assets (HIGH)
 
-- `naming-use-underscore-prefixed-page-shell-names-for-document-head-and-chrome` - page-adjacent shell은 `_document`, `_head`, `_page-chrome` 같은 이름 사용
+- `naming-use-underscore-prefixed-page-shell-names-for-document-head-and-chrome` - pages-local helper는 `_document`, `_head`, `_document.css` 같은 이름 사용
 - `naming-use-owner-named-feature-files-instead-of-generic-page-slug-index` - feature 파일은 `page/slug/index` 대신 owner-named로 유지
 - `naming-use-domain-specific-dynamic-segment-names` - `[param]`과 `[...param]` 이름은 도메인 의미를 드러내기
 
 ### 3. Astro Components and Layout Composition (HIGH)
 
-- `component-compose-page-level-documents-through-_document-and-page-adjacent-shells` - page-level document는 `_document`가 `_head`와 `_page-chrome`을 조립
+- `component-compose-page-level-documents-through-_document-and-page-adjacent-shells` - page-level document는 `_document`가 `_head`와 `_document.css`를 조립
 - `component-prefer-astro-for-static-shells-and-layouts` - 정적 shell과 layout은 React보다 `.astro`를 우선
 - `component-keep-frontmatter-server-only-and-template-focused` - frontmatter는 server-only 준비 코드에 집중하고 browser 동작은 template `<script>`나 island로 넘김
 
@@ -120,7 +120,7 @@ Astro local rule은 기본 companion인 `convention-typescript`와 `convention-c
 - `responsibility-place-layout-shells-under-owning-features` - layout file은 shared tier로 올리지 않고 owning feature 아래에 둠
 - `responsibility-compose-layouts-from-widget-and-ui-only` - layout 내부 조립은 `widget`과 `ui`로 제한
 - `responsibility-keep-page-files-focused-on-route-contract-and-data-handoff` - page는 route contract와 data handoff를 소유하고 feature entry로 위임
-- `responsibility-keep-page-adjacent-shells-imported-only-by-pages` - `_document`, `_head`, `_page-chrome`는 pages만 import
+- `responsibility-keep-page-adjacent-shells-imported-only-by-pages` - `_document`, `_head`, `_document.css`는 pages만 소유
 - `responsibility-keep-feature-page-files-focused-on-screen-flow` - feature page는 screen flow와 page-level orchestration을 계속 보여줌
 - `responsibility-extract-feature-private-sections-only-for-rendering-or-interaction-boundaries` - `private/` section은 진짜 rendering/interaction boundary가 있을 때만 추출
 - `responsibility-extract-feature-support-code-only-when-the-astro-boundary-is-real` - `post.ts` 같은 support module은 진짜 data boundary가 있을 때만 사용
@@ -150,7 +150,7 @@ Astro local rule은 기본 companion인 `convention-typescript`와 `convention-c
 - 이번 변경이 Naming, Rendering, Responsibility, Docs까지 포함한 어느 카테고리에 걸리는지 다시 대조하고 관련 rule을 빠뜨리지 않았는지 확인합니다.
 - React island, CSS, TypeScript config/action schema, JSDoc/comment, Playwright 검증까지 번졌는데 companion skill을 빼먹지 않았는지 점검합니다.
 - static, on-demand, `output: "server"`, `client:only` 중 현재 선택이 과한지 다시 확인합니다.
-- `src/pages` thin adapter, `src/pages/_*.astro` page-adjacent shell, `src/features/<feature>`, feature-owned layout, `ui`/`widget` taxonomy, feature page orchestration, `private/`와 support module extraction 기준, build-time/live collection 구분, layout/page/island ownership, endpoint와 Actions의 역할 분리, 핵심 frontmatter 선언의 JSDoc/comment가 마지막 diff에도 그대로 보이는지 확인합니다.
+- `src/pages` thin adapter, `src/pages/_document.astro`/`_head.astro`/`_document.css`, `src/features/<feature>`, feature-owned layout, `ui`/`widget` taxonomy, feature page orchestration, `private/`와 support module extraction 기준, build-time/live collection 구분, layout/page/island ownership, endpoint와 Actions의 역할 분리, 핵심 frontmatter 선언의 JSDoc/comment가 마지막 diff에도 그대로 보이는지 확인합니다.
 
 ## 사용하는 방법
 
