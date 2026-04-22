@@ -12,7 +12,7 @@
 
 ## 개요
 
-에이전트 협업 팀을 위한 Astro 코딩 컨벤션입니다. 이 가이드는 thin `src/pages` route adapter와 `src/features/<feature>` 기반 screen implementation, 의미 있는 dynamic segment와 owner-named feature file naming, feature-owned layout shell과 `ui`/`widget` taxonomy, `.astro` 컴포넌트와 page/island/private의 명확한 책임 경계, feature page orchestration과 selective extraction 기준, static과 on-demand rendering의 의도적인 선택, build-time/live collections, Actions/endpoints/server islands 같은 Astro 고유 기능의 신중한 사용을 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, Astro local rule은 기본 companion인 `typescript`와 `css` skill과 함께 사용합니다.
+에이전트 협업 팀을 위한 Astro 코딩 컨벤션입니다. 이 가이드는 thin `src/pages` route adapter와 `src/pages/_*.astro` page-adjacent document shell, `src/features/<feature>` 기반 screen implementation, 의미 있는 dynamic segment와 owner-named feature file naming, feature-owned layout shell과 `ui`/`widget` taxonomy, `.astro` 컴포넌트와 page/island/private의 명확한 책임 경계, feature page orchestration과 selective extraction 기준, static과 on-demand rendering의 의도적인 선택, build-time/live collections, Actions/endpoints/server islands 같은 Astro 고유 기능의 신중한 사용을 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, Astro local rule은 기본 companion인 `typescript`와 `css` skill과 함께 사용합니다.
 
 이 가이드는 local Astro 컨벤션 규칙만 담고 있습니다. 공통 규칙은 companion skill을 함께 로드해 보완합니다.
 
@@ -29,13 +29,16 @@
 
 1. [Project Structure and File Ownership](#1-project-structure-and-file-ownership) — **CRITICAL**
     - 1.1 [Keep src/pages Thin and Use It as the Route Adapter Layer](#11-keep-srcpages-thin-and-use-it-as-the-route-adapter-layer)
-    - 1.2 [Place Route Implementations Under src/features/<feature>](#12-place-route-implementations-under-srcfeaturesfeature)
+    - 1.2 [Place Page-adjacent Document Shells Under src/pages with an Underscore Prefix](#12-place-page-adjacent-document-shells-under-srcpages-with-an-underscore-prefix)
+    - 1.3 [Place Route Implementations Under src/features/<feature>](#13-place-route-implementations-under-srcfeaturesfeature)
 2. [File Naming and Page Assets](#2-file-naming-and-page-assets) — **HIGH**
     - 2.1 [Use Domain-specific Dynamic Segment Names](#21-use-domain-specific-dynamic-segment-names)
     - 2.2 [Use Owner-named Feature Files Instead of Generic page, slug, and index](#22-use-owner-named-feature-files-instead-of-generic-page-slug-and-index)
+    - 2.3 [Use Underscore-prefixed Page Shell Names for Document, Head, and Chrome](#23-use-underscore-prefixed-page-shell-names-for-document-head-and-chrome)
 3. [Astro Components and Layout Composition](#3-astro-components-and-layout-composition) — **HIGH**
-    - 3.1 [Keep Frontmatter Server-only and Template-focused](#31-keep-frontmatter-server-only-and-template-focused)
-    - 3.2 [Prefer .astro for Static Shells and Layouts](#32-prefer-astro-for-static-shells-and-layouts)
+    - 3.1 [Compose Page-level Documents Through a Page-adjacent Document Shell](#31-compose-page-level-documents-through-a-page-adjacent-document-shell)
+    - 3.2 [Keep Frontmatter Server-only and Template-focused](#32-keep-frontmatter-server-only-and-template-focused)
+    - 3.3 [Prefer .astro for Static Shells and Layouts](#33-prefer-astro-for-static-shells-and-layouts)
 4. [Islands and Framework Boundaries](#4-islands-and-framework-boundaries) — **CRITICAL**
     - 4.1 [Choose client:* Directives by Visibility and Urgency](#41-choose-client-directives-by-visibility-and-urgency)
     - 4.2 [Do Not Import .astro Components Inside Framework Components](#42-do-not-import-astro-components-inside-framework-components)
@@ -62,9 +65,10 @@
     - 9.3 [Extract Feature-private Sections Only for Rendering or Interaction Boundaries](#93-extract-feature-private-sections-only-for-rendering-or-interaction-boundaries)
     - 9.4 [Keep Feature Page Files Focused on Screen Flow](#94-keep-feature-page-files-focused-on-screen-flow)
     - 9.5 [Keep Page Files Focused on Route Contract and Data Handoff](#95-keep-page-files-focused-on-route-contract-and-data-handoff)
-    - 9.6 [Limit Layouts to Shell and Composition](#96-limit-layouts-to-shell-and-composition)
-    - 9.7 [Place Feature-private UI Under private/](#97-place-feature-private-ui-under-private)
-    - 9.8 [Place Layout Shells Under Owning Features](#98-place-layout-shells-under-owning-features)
+    - 9.6 [Keep Page-adjacent Shells Imported Only by Pages](#96-keep-page-adjacent-shells-imported-only-by-pages)
+    - 9.7 [Limit Layouts to Shell and Composition](#97-limit-layouts-to-shell-and-composition)
+    - 9.8 [Place Feature-private UI Under private/](#98-place-feature-private-ui-under-private)
+    - 9.9 [Place Layout Shells Under Owning Features](#99-place-layout-shells-under-owning-features)
 10. [Documentation and Comments](#10-documentation-and-comments) — **MEDIUM**
     - 10.1 [Limit Inline Comments to Rendering, Ownership, and Integration Caveats](#101-limit-inline-comments-to-rendering-ownership-and-integration-caveats)
     - 10.2 [Require JSDoc on Key Frontmatter and Feature Support Declarations](#102-require-jsdoc-on-key-frontmatter-and-feature-support-declarations)
@@ -79,13 +83,13 @@
 
 **Impact: CRITICAL**
 
-`src/pages`는 Astro의 required route adapter layer로 얇게 유지하고, 실제 route 구현은 `src/features/<feature>`로 분리해야 entry 흐름과 ownership이 예측 가능하게 유지됩니다.
+`src/pages`는 Astro의 required route adapter layer로 얇게 유지하고, top-level document helper는 `src/pages/_*.astro`에 두며, 실제 route body 구현은 `src/features/<feature>`로 분리해야 entry 흐름과 ownership이 예측 가능하게 유지됩니다.
 
 ### 1.1 Keep src/pages Thin and Use It as the Route Adapter Layer
 
 **Impact: CRITICAL (keeps Astro's required routing directory from turning into the place where full screens and private UI sprawl)**
 
-Astro에서 `src/pages`는 required reserved directory이므로 route file 자체는 여기에 둡니다. 다만 이 프로젝트에서는 `src/pages`를 framework-required route adapter layer로만 보고 가능한 한 얇게 유지합니다. route file은 file-based route contract, `getStaticPaths()`, search param 해석, page-level data loading, feature entry 선택까지만 담당하고, 실제 화면 조립은 `src/features/<feature>`로 위임합니다. `Astro.url.searchParams`를 읽더라도 prerendered HTML이 그 값에 의존하지 않으면 static 기본값을 유지할 수 있습니다. 반대로 page HTML이나 server-side data loading이 request-time query state에 직접 의존하면 `prerender = false` 같은 rendering 선택도 page boundary에서 같이 드러냅니다.
+Astro에서 `src/pages`는 required reserved directory이므로 route file 자체는 여기에 둡니다. 다만 이 프로젝트에서는 `src/pages`를 framework-required route adapter layer로만 보고 가능한 한 얇게 유지합니다. route file은 file-based route contract, `getStaticPaths()`, search param 해석, page-level data loading, feature entry 선택, page-adjacent `_document.astro` 조립까지만 담당하고, 실제 화면 body 구현은 `src/features/<feature>`로 위임합니다. `Astro.url.searchParams`를 읽더라도 prerendered HTML이 그 값에 의존하지 않으면 static 기본값을 유지할 수 있습니다. 반대로 page HTML이나 server-side data loading이 request-time query state에 직접 의존하면 `prerender = false` 같은 rendering 선택도 page boundary에서 같이 드러냅니다.
 
 **Incorrect (`src/pages` 안에서 full screen과 route-private UI까지 함께 키움):**
 
@@ -105,10 +109,11 @@ const posts = await getPosts({ search });
 </section>
 ```
 
-**Correct (`src/pages`는 thin adapter로 두고 feature 구현으로 handoff):**
+**Correct (`src/pages`는 thin adapter와 document entry로 두고 feature 구현으로 handoff):**
 
 ```astro
 ---
+import Document from "../_document.astro";
 import PostListPage from "../../features/post/post-list-page.astro";
 import { getPostListPageData } from "../../features/post/post.ts";
 
@@ -118,14 +123,59 @@ const search = Astro.url.searchParams.get("search") ?? "";
 const pageData = await getPostListPageData({ search });
 ---
 
-<PostListPage {...pageData} />
+<Document pageTitle="posts" pageDescription="Recent posts">
+	<PostListPage {...pageData} />
+</Document>
 ```
 
-### 1.2 Place Route Implementations Under src/features/<feature>
+### 1.2 Place Page-adjacent Document Shells Under src/pages with an Underscore Prefix
+
+**Impact: HIGH (keeps top-level document helpers close to route adapters without turning them into routed pages or feature dependencies)**
+
+Astro는 `src/pages` 안에서 `_`로 시작하는 파일과 폴더를 router에서 제외합니다. 이 프로젝트에서는 이 성질을 이용해 top-level document composition helper를 `src/pages/_*.astro` 아래에 둡니다. `_document.astro`, `_head.astro`, `_page-chrome.astro`처럼 route가 아닌 page-adjacent shell/helper는 `src/pages`에 두되, 실제 route body 구현은 여전히 `src/features/<feature>`가 소유합니다. 이렇게 하면 page entry와 document helper는 가깝게 두고, feature body 렌더링과 top-level document 조립은 분리할 수 있습니다.
+
+**Incorrect (document helper와 body 구현 경계가 흐려짐):**
+
+```text
+src/
+  features/
+    recent/
+      _document.astro
+      _head.astro
+      recent-list-page.astro
+  pages/
+    index.astro
+```
+
+이 구조는 top-level document helper가 feature 안으로 들어가 pages와 features의 의존 방향을 흐리게 만듭니다.
+
+**Correct (page-adjacent document shell은 `src/pages/_*.astro`, body 구현은 `src/features`):**
+
+```text
+src/
+  pages/
+    _document.astro
+    _head.astro
+    _page-chrome.astro
+    index.astro
+    404.astro
+    posts/
+      index.astro
+    post/
+      [slug].astro
+  features/
+    recent/
+      recent-list-page.astro
+      recent.ts
+```
+
+이 구조에서는 `_document`, `_head`, `_page-chrome`이 page-adjacent helper라는 점이 파일 위치만으로도 드러나고, routed page는 계속 `src/pages/**`만 담당합니다.
+
+### 1.3 Place Route Implementations Under src/features/<feature>
 
 **Impact: HIGH (keeps Astro's reserved route files small while giving each route family a stable feature-local home)**
 
-Astro가 예약한 디렉터리는 `src/pages`뿐이므로, 실제 route 구현은 `src/features/<feature>` 아래에 두어도 됩니다. 이 프로젝트에서는 list/detail screen, feature-owned support module, feature-owned CSS, feature-private UI를 `src/features/<feature>` 아래에 모으고, `src/pages`는 adapter 역할만 맡깁니다. shared public surface는 `src/components`, structured content는 `src/content`에 남기고, feature-local implementation은 `src/features`에서 소유합니다.
+Astro가 예약한 디렉터리는 `src/pages`뿐이므로, 실제 route 구현은 `src/features/<feature>` 아래에 두어도 됩니다. 이 프로젝트에서는 list/detail screen, feature-owned support module, feature-owned CSS, feature-private UI를 `src/features/<feature>` 아래에 모으고, `src/pages`는 route adapter와 top-level document entry 역할만 맡깁니다. `src/pages/_*.astro`는 page-adjacent document helper의 예외적인 자리이고, shared public surface는 `src/components`, structured content는 `src/content`에 남기며, feature-local implementation은 `src/features`에서 소유합니다.
 
 **Incorrect (route implementation이 전부 `src/pages` 안으로 자라남):**
 
@@ -145,6 +195,9 @@ src/
 ```text
 src/
   pages/
+    _document.astro
+    _head.astro
+    _page-chrome.astro
     posts/
       index.astro
     post/
@@ -169,7 +222,7 @@ src/
 
 **Impact: HIGH**
 
-의미 있는 dynamic segment 이름과 owner-named feature file은 file-based routing과 support module 탐색을 함께 쉽게 만듭니다.
+`_document`/`_head`/`_page-chrome` 같은 underscore page shell 이름, 의미 있는 dynamic segment 이름, owner-named feature file은 file-based routing과 support module 탐색을 함께 쉽게 만듭니다.
 
 ### 2.1 Use Domain-specific Dynamic Segment Names
 
@@ -230,13 +283,116 @@ src/
         post-meta.astro
 ```
 
+### 2.3 Use Underscore-prefixed Page Shell Names for Document, Head, and Chrome
+
+**Impact: MEDIUM-HIGH (keeps page-adjacent non-routes recognizable in file trees and prevents generic shell names from blurring ownership)**
+
+`src/pages` 아래의 page-adjacent non-route shell은 `_` prefix와 역할 이름을 함께 사용합니다. 기본적으로 top-level document entry는 `_document.astro`, head concern은 `_head.astro`, body chrome은 `_page-chrome.astro`처럼 둡니다. `_layout.astro`, `_shell.astro`, `_wrapper.astro`, `_base.astro`처럼 generic한 이름은 피하고, feature 이름이 섞인 shell 이름도 `src/pages` 아래에서는 만들지 않습니다. 이렇게 해야 이 파일들이 "route가 아닌 page-adjacent helper"이면서도 각각 어떤 조립 책임을 갖는지 파일명만 보고 바로 알 수 있습니다.
+
+**Incorrect (generic shell 이름이나 feature 이름이 섞여 역할이 흐려짐):**
+
+```text
+src/pages/_layout.astro
+src/pages/_shell.astro
+src/pages/_base.astro
+src/pages/_recent-layout.astro
+```
+
+**Correct (underscore prefix와 역할 이름으로 document helper를 드러냄):**
+
+```text
+src/pages/_document.astro
+src/pages/_head.astro
+src/pages/_page-chrome.astro
+```
+
 ## 3. Astro Components and Layout Composition
 
 **Impact: HIGH**
 
-`.astro` 컴포넌트는 기본적으로 정적 HTML shell과 server-side 준비 코드를 담당하고, template와 slot 구조는 framework island 없이도 읽히게 유지해야 합니다.
+`.astro` 컴포넌트는 기본적으로 정적 HTML shell과 server-side 준비 코드를 담당하고, `_document`/`_head`/`_page-chrome` 같은 page-adjacent document composition과 template/slot 구조는 framework island 없이도 읽히게 유지해야 합니다.
 
-### 3.1 Keep Frontmatter Server-only and Template-focused
+### 3.1 Compose Page-level Documents Through a Page-adjacent Document Shell
+
+**Impact: HIGH (keeps repeated document, head, and body chrome composition out of feature screens while preserving a single page-level entry point)**
+
+반복되는 top-level document composition이 필요하면 page entry가 `src/pages/_document.astro` 하나만 import하고, `_document.astro`가 내부적으로 `_head.astro`와 `_page-chrome.astro`를 조립하게 둡니다. `_document.astro`는 `<html>`, `<head>`, `<body>`의 최상위 문서 조립을 맡고, `_head.astro`는 SEO/meta/favicon/manifest 같은 head concern을 맡고, `_page-chrome.astro`는 header/nav/main wrapper 같은 바깥 chrome을 맡습니다. feature screen은 이 helper들을 모르고 `<slot />`에 들어갈 body content만 렌더링합니다.
+
+**Incorrect (각 page가 head/body chrome을 반복 조립하거나 feature가 document helper를 직접 앎):**
+
+```astro
+---
+import RecentListPage from "@/features/recent/recent-list-page.astro";
+import Head from "./_head.astro";
+import PageChrome from "./_page-chrome.astro";
+---
+
+<html lang="ko">
+	<head>
+		<Head pageTitle="recent" pageDescription="Recent posts" />
+	</head>
+	<body>
+		<PageChrome>
+			<RecentListPage />
+		</PageChrome>
+	</body>
+</html>
+```
+
+이 방식은 각 page마다 top-level document 조립이 반복되고, 나중에 문서 셸 변경이 생기면 page 파일 전체를 건드리기 쉬워집니다.
+
+**Correct (page는 `_document.astro` 하나만 import하고 feature body를 slot으로 전달):**
+
+```astro
+---
+import Document from "./_document.astro";
+import RecentListPage from "@/features/recent/recent-list-page.astro";
+import { getRecentEntries, getRecentListPageProps } from "@/features/recent/recent";
+
+const entries = await getRecentEntries();
+const pageProps = getRecentListPageProps({ entries, currentPage: 1 });
+---
+
+<Document pageTitle="recent" pageDescription="Recent posts and notes from meepin">
+	<RecentListPage {...pageProps} />
+</Document>
+```
+
+```astro
+---
+import Head from "./_head.astro";
+import PageChrome from "./_page-chrome.astro";
+
+const { pageTitle, pageDescription } = Astro.props;
+---
+
+<html lang="ko">
+	<head>
+		<Head pageTitle={pageTitle} pageDescription={pageDescription} />
+	</head>
+	<body>
+		<PageChrome>
+			<slot />
+		</PageChrome>
+	</body>
+</html>
+```
+
+```astro
+---
+import { SEO } from "astro-seo";
+
+const { pageTitle, pageDescription } = Astro.props;
+---
+
+<SEO title={pageTitle} description={pageDescription} />
+<link rel="icon" href="/favicon.ico" />
+<link rel="manifest" href="/site.webmanifest" />
+```
+
+이 구조에서는 page는 route adapter와 top-level document 진입점만 소유하고, `_document`가 document helper를 감싸며, feature는 body content만 렌더링합니다.
+
+### 3.2 Keep Frontmatter Server-only and Template-focused
 
 **Impact: HIGH (prevents browser behavior from leaking into Astro's server-side component preparation phase)**
 
@@ -281,11 +437,11 @@ const successMessage = "Subscribed";
 </script>
 ```
 
-### 3.2 Prefer .astro for Static Shells and Layouts
+### 3.3 Prefer .astro for Static Shells and Layouts
 
 **Impact: CRITICAL (reduces unnecessary client framework surface and keeps Astro's zero-JS default intact)**
 
-state, effect, client runtime가 필요 없는 page shell, layout, wrapper, content section은 기본적으로 `.astro`로 작성합니다. React component를 이미 쓴다는 이유만으로 정적 layout까지 TSX로 밀어 넣지 말고, interactive leaf만 island로 분리합니다. 이 프로젝트에서 layout file은 shared component tier가 아니라 feature-owned shell이므로 owning feature 아래에 두고, shared 조각은 `widget`과 `ui`에서 가져와 조립합니다. page content가 주입되는 자리는 `<slot />`로 드러내고, full page shell을 만드는 layout이라면 `<html>`이 최상위 parent가 되게 유지합니다.
+state, effect, client runtime가 필요 없는 page shell, layout, wrapper, content section은 기본적으로 `.astro`로 작성합니다. React component를 이미 쓴다는 이유만으로 정적 layout까지 TSX로 밀어 넣지 말고, interactive leaf만 island로 분리합니다. 이 프로젝트에서 feature-owned layout file은 owning feature 아래에 두고, `_document.astro`, `_head.astro`, `_page-chrome.astro` 같은 page-adjacent shell은 `src/pages/_*.astro` 아래에 둡니다. 두 종류 모두 shared component tier가 아니며, shared 조각은 `widget`과 `ui`에서 가져와 조립합니다. page content가 주입되는 자리는 `<slot />`로 드러내고, full page shell을 만드는 document shell이라면 `<html>`이 최상위 parent가 되게 유지합니다.
 
 **Incorrect (정적 shell을 React component로 올려 불필요한 framework surface를 늘림):**
 
@@ -718,7 +874,7 @@ Actions, endpoints, server islands는 각각 caller와 response shape, adapter �
 
 **Impact: HIGH (keeps request-time guards and navigation side effects out of layout shells that should stay visual)**
 
-layout은 shell 조립 역할만 하므로 redirect, rewrite, auth guard의 owner가 되지 않습니다. feature-specific request gate가 route param, query, page-level data selection과 결합되어 있으면 `src/pages/**` page boundary에서 처리하고, 여러 route에 공통인 auth, locale, tenant, request locals 주입처럼 cross-cutting concern이면 `src/middleware.ts`의 `onRequest()`에서 처리합니다. layout은 page나 middleware가 이미 결정한 결과를 props나 `Astro.locals`로 받아 시각적으로만 반영합니다. Astro 공식 문서상 `Astro.redirect()`는 page가 `return`해야 하고, middleware interception은 `src/middleware.ts`에서 수행합니다.
+feature-owned layout과 `src/pages/_*.astro` page-adjacent shell은 shell 조립 역할만 하므로 redirect, rewrite, auth guard의 owner가 되지 않습니다. feature-specific request gate가 route param, query, page-level data selection과 결합되어 있으면 `src/pages/**` page boundary에서 처리하고, 여러 route에 공통인 auth, locale, tenant, request locals 주입처럼 cross-cutting concern이면 `src/middleware.ts`의 `onRequest()`에서 처리합니다. shell은 page나 middleware가 이미 결정한 결과를 props나 `Astro.locals`로 받아 시각적으로만 반영합니다. Astro 공식 문서상 `Astro.redirect()`는 page가 `return`해야 하고, middleware interception은 `src/middleware.ts`에서 수행합니다.
 
 **Incorrect (layout이 request-time guard와 redirect를 직접 소유):**
 
@@ -807,13 +963,13 @@ import GenericAvatar from "../components/GenericAvatar.astro";
 
 **Impact: HIGH**
 
-layout은 feature-owned shell, page는 route adapter contract, feature page는 screen flow owner, `private/`와 support module은 진짜 rendering/interaction/data boundary가 있을 때만 분리해야 Astro의 server-first 구조와 `ui`/`widget` 경계가 함께 읽히고 유지보수도 쉬워집니다.
+page-adjacent document shell은 top-level document composition, layout은 feature-owned shell, page는 route adapter contract, feature page는 screen flow owner, `private/`와 support module은 진짜 rendering/interaction/data boundary가 있을 때만 분리해야 Astro의 server-first 구조와 `ui`/`widget` 경계가 함께 읽히고 유지보수도 쉬워집니다.
 
 ### 9.1 Compose Layouts from Widget and UI Only
 
 **Impact: HIGH (keeps layout files as feature shells instead of letting them become domain-specific shared blocks)**
 
-layout file이 feature-owned shell이라면, 그 안에서 조립하는 shared piece는 `src/components/widget/**`와 `src/components/ui/**`로 제한합니다. `ui`는 button, input, card, table, box, stack, surface, text, tag-list 같은 primitive이고, `widget`은 search-table, site-header, entry-feed, entry-detail처럼 `ui`를 조립한 reusable block입니다. layout은 이 둘과 `<slot />`을 사용해 shell을 조립하고, 그 자체를 `ui-*`나 `widget-*`로 이름 붙여 shared component처럼 승격하지 않습니다. layout 안에서 재사용 가능한 시각 조각이 자라면 먼저 `widget` 또는 `ui`로 추출하고, layout file은 feature shell 역할에 남깁니다.
+feature-owned layout이나 `_page-chrome.astro` 같은 page-adjacent shell이 shell composition을 맡는다면, 그 안에서 조립하는 shared piece는 `src/components/widget/**`와 `src/components/ui/**`로 제한합니다. `ui`는 button, input, card, table, box, stack, surface, text, tag-list 같은 primitive이고, `widget`은 search-table, site-header, entry-feed, entry-detail처럼 `ui`를 조립한 reusable block입니다. shell은 이 둘과 `<slot />`을 사용해 조립하고, 그 자체를 `ui-*`나 `widget-*`로 이름 붙여 shared component처럼 승격하지 않습니다. shell 안에서 재사용 가능한 시각 조각이 자라면 먼저 `widget` 또는 `ui`로 추출하고, shell file은 composition owner 역할에 남깁니다.
 
 **Incorrect (layout 역할을 ui/widget로 위장함):**
 
@@ -1106,11 +1262,66 @@ const pageData = await getPostListPageData({ tab });
 <PostListPage {...pageData} />
 ```
 
-### 9.6 Limit Layouts to Shell and Composition
+### 9.6 Keep Page-adjacent Shells Imported Only by Pages
+
+**Impact: HIGH (preserves one-way dependency flow from pages to page-adjacent shells to features, instead of letting feature code depend on routing helpers)**
+
+`src/pages/_document.astro`, `_head.astro`, `_page-chrome.astro` 같은 page-adjacent shell은 `src/pages/**`만 import합니다. `src/features/**`는 이 파일들을 모르고, page가 넘겨주는 props와 `<slot />` 안의 body rendering에만 집중합니다. 의존 방향은 `pages -> pages/_*.astro -> widget/ui`와 `pages -> features`가 되고, `features -> pages` 방향 import는 금지합니다. 이렇게 해야 feature는 라우터와 top-level document composition에 독립적인 body layer로 유지됩니다.
+
+**Incorrect (feature가 page-adjacent shell을 직접 import함):**
+
+```astro
+---
+import Document from "@/pages/_document.astro";
+import type { RecentListPageProps } from "./recent";
+
+const props = Astro.props as RecentListPageProps;
+---
+
+<Document pageTitle="recent" pageDescription="Recent posts">
+	<section>
+		<!-- feature body -->
+	</section>
+</Document>
+```
+
+이 구조는 feature가 page-adjacent document helper를 직접 알아야 하므로 pages와 features의 경계를 깨뜨립니다.
+
+**Correct (page만 document shell을 알고, feature는 body만 렌더링):**
+
+```astro
+---
+import Document from "../_document.astro";
+import RecentListPage from "@/features/recent/recent-list-page.astro";
+import { getRecentListPageProps } from "@/features/recent/recent";
+
+const pageProps = getRecentListPageProps({ entries: [], currentPage: 1 });
+---
+
+<Document pageTitle="recent" pageDescription="Recent posts">
+	<RecentListPage {...pageProps} />
+</Document>
+```
+
+```astro
+---
+import type { RecentListPageProps } from "./recent";
+
+const props = Astro.props as RecentListPageProps;
+---
+
+<section>
+	<!-- feature body -->
+</section>
+```
+
+이 구조에서는 page만 top-level shell을 조립하고, feature는 routed body surface에만 집중합니다.
+
+### 9.7 Limit Layouts to Shell and Composition
 
 **Impact: HIGH (prevents shared layout files from absorbing leaf-page data and interaction logic)**
 
-layout component는 공통 frame, metadata wrapper, `<slot />` 기반 composition, shared chrome까지만 담당합니다. Astro 공식 문서 기준으로 layout component는 어디에 둘 수 있지만, 이 프로젝트에서는 layout file 자체를 owning feature 아래에만 둡니다. full page shell을 렌더링하는 layout이면 `<html>`이 최상위 parent가 되게 유지하고, shell 조립에는 `widget`과 `ui`만 사용합니다. 특정 page만 쓰는 fetch, mutation, form state, detail query, redirect, auth guard를 layout으로 끌어올리지 말고 page boundary나 middleware, 해당 island에 남겨 둡니다.
+feature-owned layout과 page-adjacent document shell은 공통 frame, metadata wrapper, `<slot />` 기반 composition, shared chrome까지만 담당합니다. Astro 공식 문서 기준으로 layout component는 어디에 둘 수 있지만, 이 프로젝트에서는 feature-owned layout은 owning feature 아래에, `_document.astro`, `_head.astro`, `_page-chrome.astro` 같은 top-level document helper는 `src/pages/_*.astro` 아래에 둡니다. full page shell을 렌더링하는 document shell이면 `<html>`이 최상위 parent가 되게 유지하고, shell 조립에는 `widget`과 `ui`만 사용합니다. 특정 page만 쓰는 fetch, mutation, form state, detail query, redirect, auth guard를 layout이나 document shell로 끌어올리지 말고 page boundary나 middleware, 해당 island에 남겨 둡니다.
 
 **Incorrect (layout이 leaf page 전용 데이터와 form 로직까지 흡수함):**
 
@@ -1141,7 +1352,7 @@ const { title } = Astro.props;
 </UiSurface>
 ```
 
-### 9.7 Place Feature-private UI Under private/
+### 9.8 Place Feature-private UI Under private/
 
 **Impact: HIGH (makes the boundary between feature-local implementation and shared public surface obvious)**
 
@@ -1177,11 +1388,11 @@ src/
         post-remove-modal.css
 ```
 
-### 9.8 Place Layout Shells Under Owning Features
+### 9.9 Place Layout Shells Under Owning Features
 
 **Impact: HIGH (prevents layout files from becoming a blurry shared component tier between features and reusable building blocks)**
 
-이 프로젝트에서 layout file은 shared component tier가 아니라 feature-owned route shell입니다. 따라서 layout file 자체는 `src/features/<feature>/` 아래에 두고, `src/components/layouts`, `src/layouts`, `src/components/ui/ui-page-shell.astro`, `src/components/widget/widget-page-shell.astro` 같은 형태로 승격하지 않습니다. 여러 화면이 같은 shell을 공유하더라도 "shared layout"이라는 새 공용 레이어를 만들기보다, 그 shell을 소유하는 상위 feature를 만들고 그 아래에 둡니다. shared visual pieces가 필요하면 layout file을 올리는 대신 `ui`와 `widget`을 재사용합니다.
+이 규칙은 feature-owned route shell에 대한 규칙입니다. 그런 layout file은 shared component tier가 아니라 feature-owned route shell이므로 `src/features/<feature>/` 아래에 두고, `src/components/layouts`, `src/layouts`, `src/components/ui/ui-page-shell.astro`, `src/components/widget/widget-page-shell.astro` 같은 형태로 승격하지 않습니다. 여러 화면이 같은 shell을 공유하더라도 "shared layout"이라는 새 공용 레이어를 만들기보다, 그 shell을 소유하는 상위 feature를 만들고 그 아래에 둡니다. shared visual pieces가 필요하면 layout file을 올리는 대신 `ui`와 `widget`을 재사용합니다. 단, `_document.astro`, `_head.astro`, `_page-chrome.astro` 같은 page-adjacent top-level shell은 `src/pages/_*.astro` 아래에 둘 수 있는 별도 예외입니다.
 
 **Incorrect (layout file이 shared component 레이어로 떠다님):**
 
@@ -1330,7 +1541,7 @@ Astro 기능은 버전과 adapter 조건에 민감하므로 문서 확인과 lay
 
 **Impact: MEDIUM (reduces cleanup work by deciding shell, rendering mode, and island boundaries before files sprawl)**
 
-새 page를 추가할 때는 화면 마크업부터 급하게 만들지 말고, 먼저 owning feature의 layout shell, guard owner, static/on-demand 여부, dynamic route 여부, island 필요 여부를 정합니다. 이 순서를 따르면 `client:load` 남용이나 `src/pages` monolith를 뒤늦게 뜯어내는 일을 줄일 수 있습니다.
+새 page를 추가할 때는 화면 마크업부터 급하게 만들지 말고, 먼저 page-adjacent `_document.astro` 패턴을 쓸지, owning feature의 layout shell이 필요한지, guard owner, static/on-demand 여부, dynamic route 여부, island 필요 여부를 정합니다. 이 순서를 따르면 `client:load` 남용이나 `src/pages` monolith를 뒤늦게 뜯어내는 일을 줄일 수 있습니다.
 
 **Incorrect (page 파일부터 만들고 나중에 rendering과 shell을 끼워 맞춤):**
 
@@ -1343,12 +1554,13 @@ Astro 기능은 버전과 adapter 조건에 민감하므로 문서 확인과 lay
 **Correct (layout과 rendering 결정을 먼저 고정하고 page를 연다):**
 
 ```text
-1. 이 page를 소유하는 feature와 그 feature 아래의 layout shell이 무엇인지 먼저 판단한다
-2. auth, redirect, rewrite owner가 page boundary인지 `src/middleware.ts`인지 먼저 정한다
-3. static, `prerender = false`, `output: "server"` 중 어떤 rendering 전제가 맞는지 고른다
-4. dynamic route면 `getStaticPaths()`가 필요한지 page boundary에서 정한다
-5. interactive 부분만 island로 빼고 `client:*` 또는 `client:only` 필요성을 고른다
-6. layout은 `widget` + `ui` 조립으로 두고, page가 커지면 owner-named asset set으로 support module과 render detail을 분리한다
+1. 이 page가 `src/pages/_document.astro` 같은 page-adjacent document shell을 쓸지 먼저 판단한다
+2. 이 page를 소유하는 feature와 그 feature 아래의 layout shell이 필요한지 판단한다
+3. auth, redirect, rewrite owner가 page boundary인지 `src/middleware.ts`인지 먼저 정한다
+4. static, `prerender = false`, `output: "server"` 중 어떤 rendering 전제가 맞는지 고른다
+5. dynamic route면 `getStaticPaths()`가 필요한지 page boundary에서 정한다
+6. interactive 부분만 island로 빼고 `client:*` 또는 `client:only` 필요성을 고른다
+7. page-adjacent shell과 feature layout은 `widget` + `ui` 조립으로 두고, page가 커지면 owner-named asset set으로 support module과 render detail을 분리한다
 ```
 
 ### 11.2 Consult Official Docs for Version-sensitive Astro Features

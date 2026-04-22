@@ -9,7 +9,7 @@ tags: responsibility, layouts, features, ownership
 
 **Impact: HIGH (prevents layout files from becoming a blurry shared component tier between features and reusable building blocks)**
 
-이 프로젝트에서 layout file은 shared component tier가 아니라 feature-owned route shell입니다. 따라서 layout file 자체는 `src/features/<feature>/` 아래에 두고, `src/components/layouts`, `src/layouts`, `src/components/ui/ui-page-shell.astro`, `src/components/widget/widget-page-shell.astro` 같은 형태로 승격하지 않습니다. 여러 화면이 같은 shell을 공유하더라도 "shared layout"이라는 새 공용 레이어를 만들기보다, 그 shell을 소유하는 상위 feature를 만들고 그 아래에 둡니다. shared visual pieces가 필요하면 layout file을 올리는 대신 `ui`와 `widget`을 재사용합니다.
+이 규칙은 feature-owned route shell에 대한 규칙입니다. 그런 layout file은 shared component tier가 아니라 feature-owned route shell이므로 `src/features/<feature>/` 아래에 두고, `src/components/layouts`, `src/layouts`, `src/components/ui/ui-page-shell.astro`, `src/components/widget/widget-page-shell.astro` 같은 형태로 승격하지 않습니다. 여러 화면이 같은 shell을 공유하더라도 "shared layout"이라는 새 공용 레이어를 만들기보다, 그 shell을 소유하는 상위 feature를 만들고 그 아래에 둡니다. shared visual pieces가 필요하면 layout file을 올리는 대신 `ui`와 `widget`을 재사용합니다. 단, `_document.astro`, `_head.astro`, `_page-chrome.astro` 같은 page-adjacent top-level shell은 `src/pages/_*.astro` 아래에 둘 수 있는 별도 예외입니다.
 
 **Incorrect (layout file이 shared component 레이어로 떠다님):**
 

@@ -16,7 +16,7 @@
 현재 포함된 skill은 아래와 같습니다.
 
 - [astro](./skill/astro/README.md) - `convention-astro`
-  Astro thin page adapter, feature-based route implementation, feature-owned layout shell, `ui`/`widget` taxonomy, rendering mode, island hydration, content collections, Actions/endpoints/server islands 규칙
+  Astro thin page adapter, page-adjacent `_document/_head/_page-chrome`, feature-based route implementation, feature-owned layout shell, `ui`/`widget` taxonomy, rendering mode, island hydration, content collections, Actions/endpoints/server islands 규칙
 - [react](./skill/react/README.md) - `convention-react`
   React 컴포넌트 경계, route-local 분리, handler 흐름, state 오리진, 문서화 규칙
 - [css](./skill/css/README.md) - `convention-css`

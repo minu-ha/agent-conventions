@@ -9,7 +9,7 @@ tags: responsibility, layouts, ui, widget, composition
 
 **Impact: HIGH (keeps layout files as feature shells instead of letting them become domain-specific shared blocks)**
 
-layout file이 feature-owned shell이라면, 그 안에서 조립하는 shared piece는 `src/components/widget/**`와 `src/components/ui/**`로 제한합니다. `ui`는 button, input, card, table, box, stack, surface, text, tag-list 같은 primitive이고, `widget`은 search-table, site-header, entry-feed, entry-detail처럼 `ui`를 조립한 reusable block입니다. layout은 이 둘과 `<slot />`을 사용해 shell을 조립하고, 그 자체를 `ui-*`나 `widget-*`로 이름 붙여 shared component처럼 승격하지 않습니다. layout 안에서 재사용 가능한 시각 조각이 자라면 먼저 `widget` 또는 `ui`로 추출하고, layout file은 feature shell 역할에 남깁니다.
+feature-owned layout이나 `_page-chrome.astro` 같은 page-adjacent shell이 shell composition을 맡는다면, 그 안에서 조립하는 shared piece는 `src/components/widget/**`와 `src/components/ui/**`로 제한합니다. `ui`는 button, input, card, table, box, stack, surface, text, tag-list 같은 primitive이고, `widget`은 search-table, site-header, entry-feed, entry-detail처럼 `ui`를 조립한 reusable block입니다. shell은 이 둘과 `<slot />`을 사용해 조립하고, 그 자체를 `ui-*`나 `widget-*`로 이름 붙여 shared component처럼 승격하지 않습니다. shell 안에서 재사용 가능한 시각 조각이 자라면 먼저 `widget` 또는 `ui`로 추출하고, shell file은 composition owner 역할에 남깁니다.
 
 **Incorrect (layout 역할을 ui/widget로 위장함):**
 

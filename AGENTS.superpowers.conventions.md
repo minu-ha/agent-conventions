@@ -100,7 +100,9 @@
 Astro 프로젝트에서 `convention-astro`를 선택했다면 아래를 기본 전제로 봅니다.
 
 - `src/pages`는 Astro의 required route adapter layer로만 얇게 유지합니다.
+- `src/pages/_*.astro`는 route가 아닌 page-adjacent document shell/helper 자리로 두고, `_document`, `_head`, `_page-chrome` 같은 top-level helper를 colocate할 수 있습니다.
 - 실제 화면 구현은 `src/features/<feature>` 아래에 둡니다.
+- page-adjacent shell은 `pages`만 import하고, `features`는 이 파일들을 모르도록 유지합니다.
 - Astro의 기본 companion은 `convention-typescript`와 `convention-css`입니다.
 - React island나 TSX가 있으면 `convention-react`를 추가합니다.
 - hydration, form action, server island, navigation 회귀를 브라우저에서 확인하면 `convention-playwright-test`를 추가합니다.

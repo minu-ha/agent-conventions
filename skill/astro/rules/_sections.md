@@ -4,15 +4,15 @@
 
 ## 1. Project Structure and File Ownership (structure)
 **Impact:** CRITICAL
-**Description:** `src/pages`는 Astro의 required route adapter layer로 얇게 유지하고, 실제 route 구현은 `src/features/<feature>`로 분리해야 entry 흐름과 ownership이 예측 가능하게 유지됩니다.
+**Description:** `src/pages`는 Astro의 required route adapter layer로 얇게 유지하고, top-level document helper는 `src/pages/_*.astro`에 두며, 실제 route body 구현은 `src/features/<feature>`로 분리해야 entry 흐름과 ownership이 예측 가능하게 유지됩니다.
 
 ## 2. File Naming and Page Assets (naming)
 **Impact:** HIGH
-**Description:** 의미 있는 dynamic segment 이름과 owner-named feature file은 file-based routing과 support module 탐색을 함께 쉽게 만듭니다.
+**Description:** `_document`/`_head`/`_page-chrome` 같은 underscore page shell 이름, 의미 있는 dynamic segment 이름, owner-named feature file은 file-based routing과 support module 탐색을 함께 쉽게 만듭니다.
 
 ## 3. Astro Components and Layout Composition (component)
 **Impact:** HIGH
-**Description:** `.astro` 컴포넌트는 기본적으로 정적 HTML shell과 server-side 준비 코드를 담당하고, template와 slot 구조는 framework island 없이도 읽히게 유지해야 합니다.
+**Description:** `.astro` 컴포넌트는 기본적으로 정적 HTML shell과 server-side 준비 코드를 담당하고, `_document`/`_head`/`_page-chrome` 같은 page-adjacent document composition과 template/slot 구조는 framework island 없이도 읽히게 유지해야 합니다.
 
 ## 4. Islands and Framework Boundaries (island)
 **Impact:** CRITICAL
@@ -36,7 +36,7 @@
 
 ## 9. Page, Layout, and Island Responsibilities (responsibility)
 **Impact:** HIGH
-**Description:** layout은 feature-owned shell, page는 route adapter contract, feature page는 screen flow owner, `private/`와 support module은 진짜 rendering/interaction/data boundary가 있을 때만 분리해야 Astro의 server-first 구조와 `ui`/`widget` 경계가 함께 읽히고 유지보수도 쉬워집니다.
+**Description:** page-adjacent document shell은 top-level document composition, layout은 feature-owned shell, page는 route adapter contract, feature page는 screen flow owner, `private/`와 support module은 진짜 rendering/interaction/data boundary가 있을 때만 분리해야 Astro의 server-first 구조와 `ui`/`widget` 경계가 함께 읽히고 유지보수도 쉬워집니다.
 
 ## 10. Documentation and Comments (docs)
 **Impact:** MEDIUM

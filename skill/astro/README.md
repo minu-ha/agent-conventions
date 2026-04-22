@@ -1,7 +1,7 @@
 # Astro 컨벤션
 
 에이전트 협업, 리뷰, AI 보조 리팩터링에 맞춰 Astro 컨벤션을 관리하는 구조화된 저장소입니다.  
-현재 Astro 가이드는 11개 local 섹션의 34개 rule 파일로 구성되어 있습니다.  
+현재 Astro 가이드는 11개 local 섹션의 38개 rule 파일로 구성되어 있습니다.  
 최종적으로 slim [AGENTS.md](./AGENTS.md)로 compile됩니다. Astro local guide는 기본 companion인 `typescript`와 `css` skill을 함께 사용합니다.
 
 ## 구조
@@ -40,15 +40,15 @@
 
 1. [rules/_template.md](./rules/_template.md)를 `rules/area-description.md`로 복사합니다.
 2. 알맞은 area prefix를 고릅니다.
-   - `structure-` - thin `src/pages` adapter, `src/features`, `src/content` ownership 규칙
-   - `naming-` - owner-named feature file, dynamic segment, searchable support module 규칙
-   - `component-` - `.astro` layout/shell, frontmatter, slot, template composition 규칙
+   - `structure-` - thin `src/pages` adapter, `src/pages/_*.astro`, `src/features`, `src/content` ownership 규칙
+   - `naming-` - owner-named feature file, underscore page shell, dynamic segment, searchable support module 규칙
+   - `component-` - `.astro` layout/shell, `_document`/`_head`/`_page-chrome`, frontmatter, slot, template composition 규칙
    - `island-` - framework island, `client:*`, `client:only`, hydration 경계 규칙
    - `routing-` - file-based routing, `<a>`, dynamic route generation, page contract 규칙
    - `rendering-` - `output`, `prerender`, SSG/SSR/CSR 선택, delivery mode 규칙
    - `content-` - build-time/live collections, loader, schema, collection query 규칙
    - `server-` - Actions, endpoint 선택, `server:defer`, adapter 전제 규칙
-   - `responsibility-` - feature-owned layout/page/island/private ownership, `ui`/`widget` taxonomy, feature page orchestration, selective extraction 규칙
+   - `responsibility-` - page-adjacent document shell, feature-owned layout/page/island/private ownership, `ui`/`widget` taxonomy, feature page orchestration, selective extraction 규칙
    - `docs-` - frontmatter/support module JSDoc, inline comment 규칙
    - `workflow-` - docs lookup, page setup, adapter/output/hydration review 규칙
 3. frontmatter와 본문을 작성합니다.
@@ -119,7 +119,7 @@ tags: tag1, tag2
 - [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`가 source of truth입니다.
 - [AGENTS.md](./AGENTS.md)는 에이전트가 먼저 읽는 compiled 문서입니다.
 - `metadata.json`의 `extends`는 `typescript`, `css` companion skill 관계를 선언합니다.
-- Astro local rule은 thin `src/pages` adapter, `src/features/<feature>`, `.astro` 경계, rendering mode, dynamic segment naming, file-based routing, build-time/live collections, Actions/endpoints, feature-owned layout/page/island/private ownership, `ui`/`widget` taxonomy, feature page orchestration, frontmatter/support module 문서화에 집중하고, generic TypeScript/CSS 규칙은 companion skill을 함께 읽어 보완합니다.
+- Astro local rule은 thin `src/pages` adapter, `src/pages/_*.astro` page-adjacent shell, `src/features/<feature>`, `.astro` 경계, rendering mode, dynamic segment naming, file-based routing, build-time/live collections, Actions/endpoints, feature-owned layout/page/island/private ownership, `ui`/`widget` taxonomy, feature page orchestration, frontmatter/support module 문서화에 집중하고, generic TypeScript/CSS 규칙은 companion skill을 함께 읽어 보완합니다.
 - Astro 공식 기능은 버전 변화가 비교적 빠르므로 `client:*`, `client:only`, `server:defer`, Actions, endpoints, content collections처럼 API/behavior가 민감한 주제는 공식 문서를 먼저 확인하는 흐름을 기본으로 둡니다.
 - 공용 TypeScript build package는 raw CLI 형태와 per-skill alias를 모두 제공합니다.
 
