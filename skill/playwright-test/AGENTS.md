@@ -14,7 +14,7 @@
 
 에이전트 협업 팀을 위한 Playwright 브라우저 테스트 컨벤션입니다. 이 가이드는 명시적인 integration/e2e 경계, 보이는 setup, 결정적인 데이터 고립, 접근 가능한 locator, web-first assertion, 상태 기반 waiting을 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, 기본 compiled guide는 local Playwright 규칙만 담고 fixture, seed helper, support type에는 `typescript` companion skill을 함께 사용합니다.
 
-이 가이드는 local Playwright Test 컨벤션 규칙만 담고 있습니다. TypeScript 같은 공통 규칙은 companion skill을 함께 로드해 보완합니다.
+이 가이드는 local Playwright Test 컨벤션 규칙만 담고 있습니다. 공통 규칙은 companion skill을 함께 로드해 보완합니다.
 
 ---
 

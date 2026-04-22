@@ -44,8 +44,9 @@
 structured skill은 작은 rule 문서를 조합해 slim `AGENTS.md`를 생성합니다.
 legacy skill은 단일 문서를 직접 정본으로 사용합니다.
 
-현재 `astro`, `react`, `nestjs`, `tanstack-route`, `playwright-test`는 `metadata.json.extends`로 `typescript` companion skill 관계를 선언합니다.   
-즉, framework skill은 local 규칙에 집중하고 공통 TypeScript 규칙은 `convention-typescript`를 함께 로드하는 방식으로 사용합니다.
+현재 `react`, `nestjs`, `tanstack-route`, `playwright-test`는 `metadata.json.extends`로 `typescript` companion skill 관계를 선언합니다.  
+`astro`는 `metadata.json.extends`로 `typescript`, `css` companion skill 관계를 선언합니다.  
+즉, framework skill은 local 규칙에 집중하고 공통 TypeScript/CSS 규칙은 companion skill을 함께 로드하는 방식으로 사용합니다.
 
 ## 저장소 구조
 

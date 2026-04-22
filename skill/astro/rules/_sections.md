@@ -38,6 +38,10 @@
 **Impact:** HIGH
 **Description:** layout은 shell, page는 route adapter contract, feature page는 screen composition, `private/`는 local implementation detail을 맡도록 좁게 분리해야 Astro의 server-first 구조가 읽히고 유지보수도 쉬워집니다.
 
-## 10. Workflow and Review Checks (workflow)
+## 10. Documentation and Comments (docs)
+**Impact:** MEDIUM
+**Description:** Astro frontmatter와 feature support module의 핵심 선언에는 JSDoc을 남기고, inline comment는 rendering, ownership, integration caveat처럼 없으면 오해될 제약만 설명해야 합니다.
+
+## 11. Workflow and Review Checks (workflow)
 **Impact:** MEDIUM
 **Description:** Astro 기능은 버전과 adapter 조건에 민감하므로 문서 확인과 layout/rendering/hydration review를 마무리 전에 함께 수행해야 합니다.

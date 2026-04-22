@@ -14,7 +14,7 @@
 
 에이전트 협업 팀을 위한 NestJS 코딩 컨벤션입니다. 이 가이드는 명시적인 모듈 소유권, 얇은 controller, service 중심 도메인 로직, 의도적인 DTO 계약, NestJS/Prisma 경계에 맞는 예외 처리, 신뢰할 수 있는 backend 테스트 경계를 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, 기본 compiled guide는 local NestJS 규칙만 담고 `typescript` companion skill과 함께 사용합니다.
 
-이 가이드는 local NestJS 컨벤션 규칙만 담고 있습니다. TypeScript 같은 공통 규칙은 companion skill을 함께 로드해 보완합니다.
+이 가이드는 local NestJS 컨벤션 규칙만 담고 있습니다. 공통 규칙은 companion skill을 함께 로드해 보완합니다.
 
 ---
 

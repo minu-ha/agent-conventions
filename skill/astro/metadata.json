@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "organization": "Agent Conventions",
   "date": "2026년 4월",
-  "abstract": "에이전트 협업 팀을 위한 Astro 코딩 컨벤션입니다. 이 가이드는 thin `src/pages` route adapter와 `src/features/<feature>` 기반 screen implementation, 의미 있는 dynamic segment와 owner-named feature file naming, `.astro` 컴포넌트와 layout/page/island/private의 명확한 책임 경계, static과 on-demand rendering의 의도적인 선택, build-time/live collections, Actions/endpoints/server islands 같은 Astro 고유 기능의 신중한 사용을 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, 기본 compiled guide는 local Astro 규칙만 담고 공통 TypeScript 규칙은 `typescript` companion skill과 함께 사용합니다.",
+  "abstract": "에이전트 협업 팀을 위한 Astro 코딩 컨벤션입니다. 이 가이드는 thin `src/pages` route adapter와 `src/features/<feature>` 기반 screen implementation, 의미 있는 dynamic segment와 owner-named feature file naming, `.astro` 컴포넌트와 layout/page/island/private의 명확한 책임 경계, static과 on-demand rendering의 의도적인 선택, build-time/live collections, Actions/endpoints/server islands 같은 Astro 고유 기능의 신중한 사용을 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, Astro local rule은 기본 companion인 `typescript`와 `css` skill과 함께 사용합니다.",
   "extends": [
-    "typescript"
+    "typescript",
+    "css"
   ],
   "references": [
     "https://docs.astro.build/en/basics/astro-components/",

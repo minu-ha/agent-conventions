@@ -12,15 +12,16 @@
 
 ## 개요
 
-에이전트 협업 팀을 위한 Astro 코딩 컨벤션입니다. 이 가이드는 thin `src/pages` route adapter와 `src/features/<feature>` 기반 screen implementation, 의미 있는 dynamic segment와 owner-named feature file naming, `.astro` 컴포넌트와 layout/page/island/private의 명확한 책임 경계, static과 on-demand rendering의 의도적인 선택, build-time/live collections, Actions/endpoints/server islands 같은 Astro 고유 기능의 신중한 사용을 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, 기본 compiled guide는 local Astro 규칙만 담고 공통 TypeScript 규칙은 `typescript` companion skill과 함께 사용합니다.
+에이전트 협업 팀을 위한 Astro 코딩 컨벤션입니다. 이 가이드는 thin `src/pages` route adapter와 `src/features/<feature>` 기반 screen implementation, 의미 있는 dynamic segment와 owner-named feature file naming, `.astro` 컴포넌트와 layout/page/island/private의 명확한 책임 경계, static과 on-demand rendering의 의도적인 선택, build-time/live collections, Actions/endpoints/server islands 같은 Astro 고유 기능의 신중한 사용을 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, Astro local rule은 기본 companion인 `typescript`와 `css` skill과 함께 사용합니다.
 
-이 가이드는 local Astro 컨벤션 규칙만 담고 있습니다. TypeScript 같은 공통 규칙은 companion skill을 함께 로드해 보완합니다.
+이 가이드는 local Astro 컨벤션 규칙만 담고 있습니다. 공통 규칙은 companion skill을 함께 로드해 보완합니다.
 
 ---
 
 ## 함께 로드할 Companion Skill
 
 - `convention-typescript` - TypeScript Convention 공통 규칙 guide: [TypeScript Convention](../typescript/AGENTS.md)
+- `convention-css` - CSS Convention 공통 규칙 guide: [CSS Convention](../css/AGENTS.md)
 
 ---
 
@@ -58,10 +59,13 @@
     - 9.1 [Keep Page Files Focused on Route Contract and Data Handoff](#91-keep-page-files-focused-on-route-contract-and-data-handoff)
     - 9.2 [Limit Layouts to Shell and Composition](#92-limit-layouts-to-shell-and-composition)
     - 9.3 [Place Feature-private UI Under private/](#93-place-feature-private-ui-under-private)
-10. [Workflow and Review Checks](#10-workflow-and-review-checks) — **MEDIUM**
-    - 10.1 [Add New Pages in Layout-and-rendering-first Order](#101-add-new-pages-in-layout-and-rendering-first-order)
-    - 10.2 [Consult Official Docs for Version-sensitive Astro Features](#102-consult-official-docs-for-version-sensitive-astro-features)
-    - 10.3 [Review Adapter, Output Mode, and Hydration Before Finishing](#103-review-adapter-output-mode-and-hydration-before-finishing)
+10. [Documentation and Comments](#10-documentation-and-comments) — **MEDIUM**
+    - 10.1 [Limit Inline Comments to Rendering, Ownership, and Integration Caveats](#101-limit-inline-comments-to-rendering-ownership-and-integration-caveats)
+    - 10.2 [Require JSDoc on Key Frontmatter and Feature Support Declarations](#102-require-jsdoc-on-key-frontmatter-and-feature-support-declarations)
+11. [Workflow and Review Checks](#11-workflow-and-review-checks) — **MEDIUM**
+    - 11.1 [Add New Pages in Layout-and-rendering-first Order](#111-add-new-pages-in-layout-and-rendering-first-order)
+    - 11.2 [Consult Official Docs for Version-sensitive Astro Features](#112-consult-official-docs-for-version-sensitive-astro-features)
+    - 11.3 [Review Adapter, Output Mode, and Hydration Before Finishing](#113-review-adapter-output-mode-and-hydration-before-finishing)
 
 ---
 
@@ -262,7 +266,7 @@ const buttonId = "newsletter-subscribe";
 
 **Impact: CRITICAL (reduces unnecessary client framework surface and keeps Astro's zero-JS default intact)**
 
-state, effect, client runtime가 필요 없는 page shell, layout, wrapper, content section은 기본적으로 `.astro`로 작성합니다. React component를 이미 쓴다는 이유만으로 정적 layout까지 TSX로 밀어 넣지 말고, interactive leaf만 island로 분리합니다.
+state, effect, client runtime가 필요 없는 page shell, layout, wrapper, content section은 기본적으로 `.astro`로 작성합니다. React component를 이미 쓴다는 이유만으로 정적 layout까지 TSX로 밀어 넣지 말고, interactive leaf만 island로 분리합니다. layout이라는 역할은 `src/layouts`에만 둘 필요가 없고, shared owner나 feature owner 아래에 있어도 괜찮습니다.
 
 **Incorrect (정적 shell을 React component로 올려 불필요한 framework surface를 늘림):**
 
@@ -772,7 +776,7 @@ const pageData = await getPostListPageData({ tab });
 
 **Impact: HIGH (prevents shared layout files from absorbing leaf-page data and interaction logic)**
 
-`src/layouts/*`와 상위 shell component는 공통 frame, metadata wrapper, slot composition, shared chrome까지만 담당합니다. 특정 page만 쓰는 fetch, mutation, form state, detail query를 layout으로 끌어올리지 말고 해당 page나 island에 남겨 둡니다.
+layout component는 공통 frame, metadata wrapper, slot composition, shared chrome까지만 담당합니다. 이 component가 `src/layouts`, `src/components`, `src/features/<feature>` 중 어디에 있든 역할은 같습니다. Astro 공식 문서 기준으로 `src/layouts`는 관례일 뿐 필수가 아니므로, 이 프로젝트에서는 shared shell이면 shared owner 아래에, feature 전용 shell이면 feature 아래에 둘 수 있습니다. 특정 page만 쓰는 fetch, mutation, form state, detail query를 layout으로 끌어올리지 말고 해당 page나 island에 남겨 둡니다.
 
 **Incorrect (layout이 leaf page 전용 데이터와 form 로직까지 흡수함):**
 
@@ -835,13 +839,109 @@ src/
         post-remove-modal.css
 ```
 
-## 10. Workflow and Review Checks
+## 10. Documentation and Comments
+
+**Impact: MEDIUM**
+
+Astro frontmatter와 feature support module의 핵심 선언에는 JSDoc을 남기고, inline comment는 rendering, ownership, integration caveat처럼 없으면 오해될 제약만 설명해야 합니다.
+
+### 10.1 Limit Inline Comments to Rendering, Ownership, and Integration Caveats
+
+**Impact: MEDIUM (keeps Astro comments focused on the constraints readers are most likely to miss)**
+
+Astro의 inline comment는 rendering mode, serialization, feature ownership handoff, adapter requirement, integration caveat처럼 없으면 오해되기 쉬운 제약에만 남깁니다. frontmatter 안에서는 `//` 주석을 사용하고, template 내부 설명이 필요하면 HTML comment로 남기기보다 frontmatter나 support module로 경계를 옮겨 문서화합니다. 변수명이나 template 구조를 그대로 읽어주는 주석은 남기지 않습니다.
+
+**Incorrect (자명한 동작을 그대로 설명하는 주석):**
+
+```astro
+---
+const tab = Astro.url.searchParams.get("tab") ?? "all";
+// 탭을 가져온다
+const pageData = await getPostListPageData({ tab });
+// 데이터를 불러온다
+---
+```
+
+**Correct (rendering/ownership 제약만 짧게 설명):**
+
+```astro
+---
+export const prerender = false;
+
+// 쿠키 기반 개인화가 있어 build-time prerender로 고정하면 안 됨.
+const tab = Astro.url.searchParams.get("tab") ?? "all";
+
+// route adapter는 param 해석까지만 맡고 실제 화면 조립은 feature entry로 넘김.
+const pageData = await getPostListPageData({ tab });
+---
+```
+
+### 10.2 Require JSDoc on Key Frontmatter and Feature Support Declarations
+
+**Impact: MEDIUM-HIGH (makes Astro route boundaries and feature support helpers searchable before readers inspect implementation details)**
+
+Astro frontmatter와 `src/features/<feature>/<feature>.ts` 같은 support module에서 중요한 경계를 선언할 때는 헤더 JSDoc을 작성합니다. `Props` interface, `getStaticPaths()`, exported page data loader, 외부 연동 helper, rendering mode 판단이 섞인 helper는 문맥 설명 없이 지나가기 쉬우므로 `@summary`, `@helper`, `@api`, `@field` 같은 태그를 companion skill인 `convention-typescript` 표준에 맞춰 남깁니다. 단순 local destructuring이나 자명한 alias까지 전부 문서화할 필요는 없습니다.
+
+**Incorrect (route/feature 경계 선언에 문맥 설명이 없음):**
+
+```astro
+---
+interface Props {
+	title: string;
+	description: string;
+}
+
+export async function getStaticPaths() {
+	const posts = await getCollection("blog");
+	return posts.map((post) => ({ params: { slug: post.slug } }));
+}
+
+const buildHeadModel = (post: Post) => ({
+	title: post.title,
+	description: post.description,
+});
+---
+```
+
+**Correct (핵심 선언의 역할과 의도를 바로 위에 문서화):**
+
+```astro
+---
+/**
+ * @summary 포스트 상세 페이지 메타 props
+ */
+interface Props {
+	/** @field 문서 제목 */
+	title: string;
+	/** @field description 메타 태그 내용 */
+	description: string;
+}
+
+/**
+ * @helper 정적 상세 페이지 slug 목록 생성
+ */
+export async function getStaticPaths() {
+	const posts = await getCollection("blog");
+	return posts.map((post) => ({ params: { slug: post.slug } }));
+}
+
+/**
+ * @helper 포스트 헤드 메타 모델 생성
+ */
+const buildHeadModel = (post: Post) => ({
+	title: post.title,
+	description: post.description,
+});
+---
+```
+
+## 11. Workflow and Review Checks
 
 **Impact: MEDIUM**
 
 Astro 기능은 버전과 adapter 조건에 민감하므로 문서 확인과 layout/rendering/hydration review를 마무리 전에 함께 수행해야 합니다.
 
-### 10.1 Add New Pages in Layout-and-rendering-first Order
+### 11.1 Add New Pages in Layout-and-rendering-first Order
 
 **Impact: MEDIUM (reduces cleanup work by deciding shell, rendering mode, and island boundaries before files sprawl)**
 
@@ -865,7 +965,7 @@ Astro 기능은 버전과 adapter 조건에 민감하므로 문서 확인과 lay
 5. page가 커지면 owner-named asset set으로 support module과 render detail을 분리한다
 ```
 
-### 10.2 Consult Official Docs for Version-sensitive Astro Features
+### 11.2 Consult Official Docs for Version-sensitive Astro Features
 
 **Impact: MEDIUM (reduces stale assumptions around fast-moving Astro features and directives)**
 
@@ -885,7 +985,7 @@ Astro 기능은 버전과 adapter 조건에 민감하므로 문서 확인과 lay
 - "확인 후 adapter requirement, serializable props, action 호출 방식에 맞춰 구현한다."
 ```
 
-### 10.3 Review Adapter, Output Mode, and Hydration Before Finishing
+### 11.3 Review Adapter, Output Mode, and Hydration Before Finishing
 
 **Impact: MEDIUM (catches Astro-specific deployment and rendering mismatches before they ship)**
 

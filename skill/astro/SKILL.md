@@ -8,9 +8,9 @@ metadata:
 
 # Astro 컨벤션
 
-에이전트 협업 팀을 위한 Astro 코딩 컨벤션 모음입니다. 현재 이 가이드는 10개 카테고리의 26개 local 규칙으로 구성되어 있습니다.  
-Astro entry 구조, thin `src/pages` adapter layer, feature-based page implementation, owner-named asset naming, `.astro` 컴포넌트 경계, framework island 사용법, file-based routing, SSG/SSR/CSR rendering 선택, build-time/live collections, Actions와 endpoints, layout/page/island/private 책임, Astro 전용 검토 흐름을 [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`와 compiled [AGENTS.md](./AGENTS.md)로 관리합니다.  
-기본 compiled guide는 local Astro 규칙만 담고, 공통 TypeScript 규칙은 `convention-typescript` companion skill로 함께 사용합니다.
+에이전트 협업 팀을 위한 Astro 코딩 컨벤션 모음입니다. 현재 이 가이드는 11개 카테고리의 28개 local 규칙으로 구성되어 있습니다.  
+Astro entry 구조, thin `src/pages` adapter layer, feature-based page implementation, owner-named asset naming, `.astro` 컴포넌트 경계, framework island 사용법, file-based routing, SSG/SSR/CSR rendering 선택, build-time/live collections, Actions와 endpoints, layout/page/island/private 책임, Astro 전용 문서화 규칙, Astro 전용 검토 흐름을 [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`와 compiled [AGENTS.md](./AGENTS.md)로 관리합니다.  
+Astro local rule은 기본 companion인 `convention-typescript`와 `convention-css`를 함께 사용하고, React island나 브라우저 테스트는 필요할 때 추가로 로드합니다.
 
 ## 사용할 때
 
@@ -25,7 +25,7 @@ Astro entry 구조, thin `src/pages` adapter layer, feature-based page implement
 - 변경 범위가 `.astro` 페이지/레이아웃/컴포넌트, `src/features/<feature>` 구조, rendering mode, file-based route, content collection, Actions/endpoints, server islands, framework island인지 먼저 확인합니다.
 - 이 skill이 활성화되면 먼저 compiled [AGENTS.md](./AGENTS.md)를 열어 Structure, Naming, Component, Island, Routing, Rendering, Content, Server, Responsibility, Workflow 중 어떤 카테고리가 직접 걸리는지 빠르게 훑습니다.
 - 실제로 바꾸는 관심사에 맞는 `rules/*.md`를 추가로 읽습니다. `src/pages` thin adapter와 `src/features` 배치를 조정하면 structure rule, owner-named feature file과 dynamic segment 이름을 바꾸면 naming rule, static/on-demand/server mode 판단이면 rendering rule, layout/page/island/private 경계를 조정하면 responsibility rule을 확인합니다.
-- Astro 변경은 기본적으로 `convention-typescript`를 함께 로드하고, React island나 TSX를 만지면 `convention-react`, 스타일과 `class`/`class:list` 조합을 바꾸면 `convention-css`, hydration/form/server 흐름을 브라우저 테스트로 검증하면 `convention-playwright-test`도 함께 로드합니다.
+- Astro 변경은 기본적으로 `convention-typescript`와 `convention-css`를 함께 로드하고, React island나 TSX를 만지면 `convention-react`, hydration/form/server 흐름을 브라우저 테스트로 검증하면 `convention-playwright-test`도 함께 로드합니다.
 - `client:*`, `client:only`, `server:defer`, Actions, endpoints, content collections처럼 버전 민감한 Astro API를 건드리면 가능하면 `astro-docs` MCP 같은 공식 문서 경로를 먼저 확인합니다.
 
 ## 우선순위별 규칙 카테고리
@@ -57,7 +57,10 @@ Astro entry 구조, thin `src/pages` adapter layer, feature-based page implement
 9. Page, Layout, and Island Responsibilities
    영향도: HIGH
    Prefix: `responsibility-`
-10. Workflow and Review Checks
+10. Documentation and Comments
+    영향도: MEDIUM
+    Prefix: `docs-`
+11. Workflow and Review Checks
     영향도: MEDIUM
     Prefix: `workflow-`
 
@@ -113,7 +116,12 @@ Astro entry 구조, thin `src/pages` adapter layer, feature-based page implement
 - `responsibility-keep-page-files-focused-on-route-contract-and-data-handoff` - page는 route contract와 data handoff를 소유하고 feature entry로 위임
 - `responsibility-place-feature-private-ui-under-private` - feature-local UI와 CSS는 `private/` 아래에 둠
 
-### 10. Workflow and Review Checks (MEDIUM)
+### 10. Documentation and Comments (MEDIUM)
+
+- `docs-require-jsdoc-on-key-frontmatter-and-feature-support-declarations` - frontmatter와 feature support module의 핵심 선언에는 JSDoc 요구
+- `docs-limit-inline-comments-to-rendering-ownership-and-integration-caveats` - inline comment는 rendering, ownership, integration caveat에만 제한
+
+### 11. Workflow and Review Checks (MEDIUM)
 
 - `workflow-add-new-pages-in-layout-and-rendering-first-order` - 새 page는 layout, rendering mode, island boundary부터 정리
 - `workflow-consult-official-docs-for-version-sensitive-astro-features` - 버전 민감한 Astro 기능은 공식 문서 기준으로 확인
@@ -121,18 +129,18 @@ Astro entry 구조, thin `src/pages` adapter layer, feature-based page implement
 
 ## 함께 쓰기
 
-- 이 skill은 `convention-typescript`와 함께 로드하는 것을 기본으로 합니다.
-- slim [AGENTS.md](./AGENTS.md)는 local Astro 규칙만 담고, support module과 config/action schema의 공통 TypeScript 규칙은 `convention-typescript`를 함께 로드해 보완합니다.
-- React island, TSX component, client framework support code가 바뀌면 `convention-react`를 함께 사용합니다.
-- Astro component의 class 조합, stylesheet import, plain CSS 구조가 바뀌면 `convention-css`를 함께 사용합니다.
+- 이 skill은 `convention-typescript`와 `convention-css`를 함께 로드하는 것을 기본으로 합니다.
+- `convention-typescript`는 frontmatter TypeScript, feature support module, JSDoc 태그 표준을 보완합니다.
+- `convention-css`는 `.astro` template의 `class`/`class:list`, feature-owned stylesheet, wrapper 스타일링을 보완합니다.
+- React island, TSX component, client framework support code가 바뀌면 `convention-react`를 추가로 함께 사용합니다.
 - hydration, form action, server island fallback, navigation 회귀를 브라우저에서 검증하면 `convention-playwright-test`를 함께 사용합니다.
 
 ## 마무리 전 셀프 리뷰
 
-- 이번 변경이 Naming, Rendering, Responsibility까지 포함한 어느 카테고리에 걸리는지 다시 대조하고 관련 rule을 빠뜨리지 않았는지 확인합니다.
-- React island, CSS, TypeScript config/action schema, Playwright 검증까지 번졌는데 companion skill을 빼먹지 않았는지 점검합니다.
+- 이번 변경이 Naming, Rendering, Responsibility, Docs까지 포함한 어느 카테고리에 걸리는지 다시 대조하고 관련 rule을 빠뜨리지 않았는지 확인합니다.
+- React island, CSS, TypeScript config/action schema, JSDoc/comment, Playwright 검증까지 번졌는데 companion skill을 빼먹지 않았는지 점검합니다.
 - static, on-demand, `output: "server"`, `client:only` 중 현재 선택이 과한지 다시 확인합니다.
-- `src/pages` thin adapter, `src/features/<feature>`, `private/` 경계, build-time/live collection 구분, layout/page/island ownership, endpoint와 Actions의 역할 분리가 마지막 diff에도 그대로 보이는지 확인합니다.
+- `src/pages` thin adapter, `src/features/<feature>`, `private/` 경계, build-time/live collection 구분, layout/page/island ownership, endpoint와 Actions의 역할 분리, 핵심 frontmatter 선언의 JSDoc/comment가 마지막 diff에도 그대로 보이는지 확인합니다.
 
 ## 사용하는 방법
 
