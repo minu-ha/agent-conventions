@@ -9,34 +9,36 @@ tags: pages, routing, responsibility
 
 **Impact: HIGH (keeps `src/pages` readable as route boundaries instead of turning them into giant mixed concerns)**
 
-page file은 URL contract, `getStaticPaths()`, `prerender`, page-level data selection, layout 조립과 같은 route boundary 책임을 가집니다. 재사용 가능한 render detail, large markup block, browser interaction은 component나 island로 내려 page가 경계 역할을 유지하게 둡니다.
+page file은 URL contract, `getStaticPaths()`, `prerender`, search param 해석, page-level data selection, feature entry 선택과 같은 route boundary 책임을 가집니다. 재사용 가능한 render detail, large markup block, browser interaction은 `src/features/<feature>`나 island로 내려 page가 thin adapter 역할을 유지하게 둡니다.
 
 **Incorrect (page 파일이 route contract와 재사용 렌더링 상세를 한꺼번에 가짐):**
 
 ```astro
 ---
-const products = await getProducts();
+const tab = Astro.url.searchParams.get("tab") ?? "all";
+const posts = await getPosts({ tab });
 ---
 
 <section>
-	{products.map((product) => (
+	{posts.map((post) => (
 		<article class="card">
-			<h2>{product.name}</h2>
-			<p>{product.description}</p>
-			<button data-id={product.id}>Add to cart</button>
+			<h2>{post.title}</h2>
+			<PostRemoveModal postId={post.id} />
 		</article>
 	))}
 </section>
 ```
 
-**Correct (page는 route/data handoff를 소유하고 render detail은 component로 넘김):**
+**Correct (page는 route/data handoff를 소유하고 feature entry로 위임):**
 
 ```astro
 ---
-import ProductsIndexPage from "../../components/products/ProductsIndexPage.astro";
+import PostListPage from "../../features/post/post-list-page.astro";
+import { getPostListPageData } from "../../features/post/post.ts";
 
-const products = await getProducts();
+const tab = Astro.url.searchParams.get("tab") ?? "all";
+const pageData = await getPostListPageData({ tab });
 ---
 
-<ProductsIndexPage products={products} />
+<PostListPage {...pageData} />
 ```

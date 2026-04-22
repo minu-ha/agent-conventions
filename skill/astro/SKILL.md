@@ -8,23 +8,23 @@ metadata:
 
 # Astro 컨벤션
 
-에이전트 협업 팀을 위한 Astro 코딩 컨벤션 모음입니다. 현재 이 가이드는 10개 카테고리의 25개 local 규칙으로 구성되어 있습니다.  
-Astro entry 구조, page asset naming, `.astro` 컴포넌트 경계, framework island 사용법, file-based routing, SSG/SSR/CSR rendering 선택, build-time/live collections, Actions와 endpoints, layout/page/island 책임, Astro 전용 검토 흐름을 [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`와 compiled [AGENTS.md](./AGENTS.md)로 관리합니다.  
+에이전트 협업 팀을 위한 Astro 코딩 컨벤션 모음입니다. 현재 이 가이드는 10개 카테고리의 26개 local 규칙으로 구성되어 있습니다.  
+Astro entry 구조, thin `src/pages` adapter layer, feature-based page implementation, owner-named asset naming, `.astro` 컴포넌트 경계, framework island 사용법, file-based routing, SSG/SSR/CSR rendering 선택, build-time/live collections, Actions와 endpoints, layout/page/island/private 책임, Astro 전용 검토 흐름을 [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`와 compiled [AGENTS.md](./AGENTS.md)로 관리합니다.  
 기본 compiled guide는 local Astro 규칙만 담고, 공통 TypeScript 규칙은 `convention-typescript` companion skill로 함께 사용합니다.
 
 ## 사용할 때
 
-- `src/pages`, `src/layouts`, `src/components`의 `.astro` 파일과 Astro page entry를 만들거나 수정할 때 사용합니다.
+- `src/pages`, `src/features/<feature>`, `src/components`의 `.astro` 파일과 Astro page entry를 만들거나 수정할 때 사용합니다.
 - `output`, `prerender`, `getStaticPaths()`, dynamic route, `client:*`, `client:only`, `server:defer`처럼 rendering mode나 delivery mode 판단이 필요한 변경에 사용합니다.
 - React/Preact/Vue/Svelte island를 Astro 안에서 연결하거나 hydration directive를 고를 때 사용합니다.
 - `src/content.config.ts`, `src/live.config.ts`, `src/actions/index.ts`, API endpoint, content collection query가 중요한 변경에 사용합니다.
-- Astro 프로젝트 구조나 page/layout/island ownership을 house style 기준으로 리뷰할 때 사용합니다.
+- Astro 프로젝트 구조나 page/layout/island/private ownership을 house style 기준으로 리뷰할 때 사용합니다.
 
 ## 활성화 체크리스트
 
-- 변경 범위가 `.astro` 페이지/레이아웃/컴포넌트, rendering mode, file-based route, content collection, Actions/endpoints, server islands, framework island인지 먼저 확인합니다.
+- 변경 범위가 `.astro` 페이지/레이아웃/컴포넌트, `src/features/<feature>` 구조, rendering mode, file-based route, content collection, Actions/endpoints, server islands, framework island인지 먼저 확인합니다.
 - 이 skill이 활성화되면 먼저 compiled [AGENTS.md](./AGENTS.md)를 열어 Structure, Naming, Component, Island, Routing, Rendering, Content, Server, Responsibility, Workflow 중 어떤 카테고리가 직접 걸리는지 빠르게 훑습니다.
-- 실제로 바꾸는 관심사에 맞는 `rules/*.md`를 추가로 읽습니다. page asset과 dynamic segment 이름을 바꾸면 naming rule, static/on-demand/server mode 판단이면 rendering rule, layout/page/island 경계를 조정하면 responsibility rule을 확인합니다.
+- 실제로 바꾸는 관심사에 맞는 `rules/*.md`를 추가로 읽습니다. `src/pages` thin adapter와 `src/features` 배치를 조정하면 structure rule, owner-named feature file과 dynamic segment 이름을 바꾸면 naming rule, static/on-demand/server mode 판단이면 rendering rule, layout/page/island/private 경계를 조정하면 responsibility rule을 확인합니다.
 - Astro 변경은 기본적으로 `convention-typescript`를 함께 로드하고, React island나 TSX를 만지면 `convention-react`, 스타일과 `class`/`class:list` 조합을 바꾸면 `convention-css`, hydration/form/server 흐름을 브라우저 테스트로 검증하면 `convention-playwright-test`도 함께 로드합니다.
 - `client:*`, `client:only`, `server:defer`, Actions, endpoints, content collections처럼 버전 민감한 Astro API를 건드리면 가능하면 `astro-docs` MCP 같은 공식 문서 경로를 먼저 확인합니다.
 
@@ -65,12 +65,12 @@ Astro entry 구조, page asset naming, `.astro` 컴포넌트 경계, framework i
 
 ### 1. Project Structure and File Ownership (CRITICAL)
 
-- `structure-prefer-src-pages-for-page-entrypoints` - URL을 만드는 page entry는 `src/pages`에서 소유
-- `structure-keep-pages-layouts-components-and-content-in-native-directories` - pages/layouts/components/content를 고유 디렉터리에 분리
+- `structure-keep-src-pages-thin-and-use-it-as-route-adapter-layer` - `src/pages`는 route adapter layer로만 얇게 유지
+- `structure-place-route-implementations-under-src-features` - 실제 route 구현은 `src/features/<feature>` 아래에 모음
 
 ### 2. File Naming and Page Assets (HIGH)
 
-- `naming-grow-complex-pages-into-a-predictable-asset-set` - 복잡한 page는 owner-named asset set으로 자라나게 유지
+- `naming-use-owner-named-feature-files-instead-of-generic-page-slug-index` - feature 파일은 `page/slug/index` 대신 owner-named로 유지
 - `naming-use-domain-specific-dynamic-segment-names` - `[param]`과 `[...param]` 이름은 도메인 의미를 드러내기
 
 ### 3. Astro Components and Layout Composition (HIGH)
@@ -110,7 +110,8 @@ Astro entry 구조, page asset naming, `.astro` 컴포넌트 경계, framework i
 ### 9. Page, Layout, and Island Responsibilities (HIGH)
 
 - `responsibility-limit-layouts-to-shell-and-composition` - layout은 shell, slot, shared wrapper에 집중
-- `responsibility-keep-page-files-focused-on-route-contract-and-data-handoff` - page는 route contract와 data handoff를 소유하고 렌더링 상세는 component로 분리
+- `responsibility-keep-page-files-focused-on-route-contract-and-data-handoff` - page는 route contract와 data handoff를 소유하고 feature entry로 위임
+- `responsibility-place-feature-private-ui-under-private` - feature-local UI와 CSS는 `private/` 아래에 둠
 
 ### 10. Workflow and Review Checks (MEDIUM)
 
@@ -131,7 +132,7 @@ Astro entry 구조, page asset naming, `.astro` 컴포넌트 경계, framework i
 - 이번 변경이 Naming, Rendering, Responsibility까지 포함한 어느 카테고리에 걸리는지 다시 대조하고 관련 rule을 빠뜨리지 않았는지 확인합니다.
 - React island, CSS, TypeScript config/action schema, Playwright 검증까지 번졌는데 companion skill을 빼먹지 않았는지 점검합니다.
 - static, on-demand, `output: "server"`, `client:only` 중 현재 선택이 과한지 다시 확인합니다.
-- build-time/live collection 구분, layout/page/island ownership, endpoint와 Actions의 역할 분리가 마지막 diff에도 그대로 보이는지 확인합니다.
+- `src/pages` thin adapter, `src/features/<feature>`, `private/` 경계, build-time/live collection 구분, layout/page/island ownership, endpoint와 Actions의 역할 분리가 마지막 diff에도 그대로 보이는지 확인합니다.
 
 ## 사용하는 방법
 

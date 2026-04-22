@@ -12,7 +12,7 @@
 
 ## 개요
 
-에이전트 협업 팀을 위한 Astro 코딩 컨벤션입니다. 이 가이드는 `src/pages` 중심의 file-based entry 구조, 의미 있는 dynamic segment naming, `.astro` 컴포넌트와 layout/page/island의 명확한 책임 경계, static과 on-demand rendering의 의도적인 선택, build-time/live collections, Actions/endpoints/server islands 같은 Astro 고유 기능의 신중한 사용을 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, 기본 compiled guide는 local Astro 규칙만 담고 공통 TypeScript 규칙은 `typescript` companion skill과 함께 사용합니다.
+에이전트 협업 팀을 위한 Astro 코딩 컨벤션입니다. 이 가이드는 thin `src/pages` route adapter와 `src/features/<feature>` 기반 screen implementation, 의미 있는 dynamic segment와 owner-named feature file naming, `.astro` 컴포넌트와 layout/page/island/private의 명확한 책임 경계, static과 on-demand rendering의 의도적인 선택, build-time/live collections, Actions/endpoints/server islands 같은 Astro 고유 기능의 신중한 사용을 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, 기본 compiled guide는 local Astro 규칙만 담고 공통 TypeScript 규칙은 `typescript` companion skill과 함께 사용합니다.
 
 이 가이드는 local Astro 컨벤션 규칙만 담고 있습니다. TypeScript 같은 공통 규칙은 companion skill을 함께 로드해 보완합니다.
 
@@ -27,11 +27,11 @@
 ## 목차
 
 1. [Project Structure and File Ownership](#1-project-structure-and-file-ownership) — **CRITICAL**
-    - 1.1 [Keep Pages, Layouts, Components, and Content in Native Directories](#11-keep-pages-layouts-components-and-content-in-native-directories)
-    - 1.2 [Prefer src/pages for Page Entrypoints](#12-prefer-srcpages-for-page-entrypoints)
+    - 1.1 [Keep src/pages Thin and Use It as the Route Adapter Layer](#11-keep-srcpages-thin-and-use-it-as-the-route-adapter-layer)
+    - 1.2 [Place Route Implementations Under src/features/<feature>](#12-place-route-implementations-under-srcfeaturesfeature)
 2. [File Naming and Page Assets](#2-file-naming-and-page-assets) — **HIGH**
-    - 2.1 [Grow Complex Pages into a Predictable Asset Set](#21-grow-complex-pages-into-a-predictable-asset-set)
-    - 2.2 [Use Domain-specific Dynamic Segment Names](#22-use-domain-specific-dynamic-segment-names)
+    - 2.1 [Use Domain-specific Dynamic Segment Names](#21-use-domain-specific-dynamic-segment-names)
+    - 2.2 [Use Owner-named Feature Files Instead of Generic page, slug, and index](#22-use-owner-named-feature-files-instead-of-generic-page-slug-and-index)
 3. [Astro Components and Layout Composition](#3-astro-components-and-layout-composition) — **HIGH**
     - 3.1 [Keep Frontmatter Server-only and Template-focused](#31-keep-frontmatter-server-only-and-template-focused)
     - 3.2 [Prefer .astro for Static Shells and Layouts](#32-prefer-astro-for-static-shells-and-layouts)
@@ -57,6 +57,7 @@
 9. [Page, Layout, and Island Responsibilities](#9-page-layout-and-island-responsibilities) — **HIGH**
     - 9.1 [Keep Page Files Focused on Route Contract and Data Handoff](#91-keep-page-files-focused-on-route-contract-and-data-handoff)
     - 9.2 [Limit Layouts to Shell and Composition](#92-limit-layouts-to-shell-and-composition)
+    - 9.3 [Place Feature-private UI Under private/](#93-place-feature-private-ui-under-private)
 10. [Workflow and Review Checks](#10-workflow-and-review-checks) — **MEDIUM**
     - 10.1 [Add New Pages in Layout-and-rendering-first Order](#101-add-new-pages-in-layout-and-rendering-first-order)
     - 10.2 [Consult Official Docs for Version-sensitive Astro Features](#102-consult-official-docs-for-version-sensitive-astro-features)
@@ -68,109 +69,97 @@
 
 **Impact: CRITICAL**
 
-`src/pages`, `src/layouts`, `src/components`, `src/content`의 역할이 분명해야 Astro 프로젝트의 entry 흐름과 asset ownership을 예측 가능하게 유지할 수 있습니다.
+`src/pages`는 Astro의 required route adapter layer로 얇게 유지하고, 실제 route 구현은 `src/features/<feature>`로 분리해야 entry 흐름과 ownership이 예측 가능하게 유지됩니다.
 
-### 1.1 Keep Pages, Layouts, Components, and Content in Native Directories
+### 1.1 Keep src/pages Thin and Use It as the Route Adapter Layer
 
-**Impact: HIGH (keeps Astro-specific responsibilities obvious before reading implementation details)**
+**Impact: CRITICAL (keeps Astro's required routing directory from turning into the place where full screens and private UI sprawl)**
 
-`src/pages`, `src/layouts`, `src/components`, `src/content`는 각자 역할이 다릅니다. page와 layout과 reusable component와 content source를 한 디렉터리 트리 안에 섞지 말고, Astro 기본 디렉터리 의미를 그대로 살리는 편이 탐색과 유지보수에 유리합니다.
+Astro에서 `src/pages`는 required reserved directory이므로 route file 자체는 여기에 둡니다. 다만 이 프로젝트에서는 `src/pages`를 framework-required route adapter layer로만 보고 가능한 한 얇게 유지합니다. route file은 file-based route contract, `getStaticPaths()`, search param 해석, page-level data loading, feature entry 선택까지만 담당하고, 실제 화면 조립은 `src/features/<feature>`로 위임합니다.
 
-**Incorrect (페이지, 레이아웃, 콘텐츠 소스를 하나의 feature 트리 안에 섞음):**
+**Incorrect (`src/pages` 안에서 full screen과 route-private UI까지 함께 키움):**
 
-```text
-src/
-  feature/
-    blog/
-      BlogLayout.astro
-      page.astro
-      posts/
-        hello-world.md
+```astro
+---
+const search = Astro.url.searchParams.get("search") ?? "";
+const posts = await getPosts({ search });
+---
+
+<section>
+	{posts.map((post) => (
+		<article class="post-card">
+			<h2>{post.title}</h2>
+			<PostRemoveModal postId={post.id} />
+		</article>
+	))}
+</section>
 ```
 
-**Correct (Astro 고유 디렉터리 의미를 살려 ownership을 분리):**
+**Correct (`src/pages`는 thin adapter로 두고 feature 구현으로 handoff):**
+
+```astro
+---
+import PostListPage from "../../features/post/post-list-page.astro";
+import { getPostListPageData } from "../../features/post/post.ts";
+
+const search = Astro.url.searchParams.get("search") ?? "";
+const pageData = await getPostListPageData({ search });
+---
+
+<PostListPage {...pageData} />
+```
+
+### 1.2 Place Route Implementations Under src/features/<feature>
+
+**Impact: HIGH (keeps Astro's reserved route files small while giving each route family a stable feature-local home)**
+
+Astro가 예약한 디렉터리는 `src/pages`뿐이므로, 실제 route 구현은 `src/features/<feature>` 아래에 두어도 됩니다. 이 프로젝트에서는 list/detail screen, feature-owned support module, feature-owned CSS, feature-private UI를 `src/features/<feature>` 아래에 모으고, `src/pages`는 adapter 역할만 맡깁니다. shared public surface는 `src/components`, structured content는 `src/content`에 남기고, feature-local implementation은 `src/features`에서 소유합니다.
+
+**Incorrect (route implementation이 전부 `src/pages` 안으로 자라남):**
 
 ```text
 src/
   pages/
-    blog/
+    posts/
+      index.astro
+      post-list-item.astro
+      post-meta.astro
+      post-remove-modal.astro
+      post-remove-modal.css
+```
+
+**Correct (route adapter와 feature implementation의 자리를 분리):**
+
+```text
+src/
+  pages/
+    posts/
+      index.astro
+    post/
       [slug].astro
-  layouts/
-    BlogLayout.astro
-  components/
-    blog/
-      BlogHeader.astro
+  features/
+    post/
+      post-list-page.astro
+      post-detail-page.astro
+      post.css
+      post.ts
+      private/
+        post-list-item.astro
+        post-meta.astro
+        post-remove-modal.astro
+        post-remove-modal.css
   content/
     blog/
       hello-world.md
-```
-
-### 1.2 Prefer src/pages for Page Entrypoints
-
-**Impact: CRITICAL (keeps URL-producing entry files searchable and aligned with Astro's file-based routing contract)**
-
-URL을 직접 만드는 page entry는 `src/pages` 아래에서 소유합니다. `components/`, `features/`, `app/` 폴더 안에 page처럼 동작하는 진입 파일을 숨기지 말고, 페이지가 공용 조립을 재사용하더라도 route contract 자체는 `src/pages`에 남겨 둡니다.
-
-**Incorrect (page entry를 feature 폴더 깊숙이 숨겨 file-based routing을 흐림):**
-
-```text
-src/
-  components/
-    marketing/
-      pricing-page.astro
-  pages/
-    pricing.astro   -> imports and re-exports hidden page file
-```
-
-**Correct (`src/pages`가 URL entry를 직접 소유하고 조립은 별도 컴포넌트로 위임):**
-
-```text
-src/
-  pages/
-    pricing.astro
-  components/
-    marketing/
-      PricingPage.astro
 ```
 
 ## 2. File Naming and Page Assets
 
 **Impact: HIGH**
 
-의미 있는 dynamic segment 이름과 searchable한 page asset naming은 file-based routing과 support module 탐색을 함께 쉽게 만듭니다.
+의미 있는 dynamic segment 이름과 owner-named feature file은 file-based routing과 support module 탐색을 함께 쉽게 만듭니다.
 
-### 2.1 Grow Complex Pages into a Predictable Asset Set
-
-**Impact: MEDIUM-HIGH (gives larger pages searchable homes for helpers, islands, and render parts before they collapse into a monolith)**
-
-page가 server query 준비, client island, page-only helper를 함께 가지기 시작하면 owner-named asset set으로 키웁니다. URL entry는 `src/pages`에 남기고, render shell과 island, support module은 searchable한 feature 이름으로 분리합니다. 모든 page에 고정된 파일 세트를 강제할 필요는 없지만, 복잡해진 뒤에도 `index.astro`, `utils.ts`, `helper.ts`만 남는 상태는 피합니다.
-
-**Incorrect (page entry 하나에 모든 책임이 뭉치고 support file 이름도 generic함):**
-
-```text
-src/
-  pages/
-    pricing.astro
-    utils.ts
-    helper.ts
-```
-
-**Correct (page가 커지면 owner-named asset set으로 자라나게 유지):**
-
-```text
-src/
-  pages/
-    pricing.astro
-  components/
-    marketing/
-      PricingPage.astro
-      PricingCalculator.tsx
-  lib/
-    marketing/
-      pricing-page.ts
-```
-
-### 2.2 Use Domain-specific Dynamic Segment Names
+### 2.1 Use Domain-specific Dynamic Segment Names
 
 **Impact: MEDIUM-HIGH (keeps route params self-explanatory in file trees and inside Astro.params)**
 
@@ -191,6 +180,42 @@ src/pages/posts/[postId].astro
 src/pages/docs/[...docsPath].astro
 src/pages/authors/[author].astro
 src/pages/blog/[slug].astro
+```
+
+### 2.2 Use Owner-named Feature Files Instead of Generic page, slug, and index
+
+**Impact: MEDIUM-HIGH (keeps feature roots searchable even after the number of screens and support files grows)**
+
+`src/features/<feature>` 아래의 파일은 generic name보다 owner-named file을 우선합니다. 즉 `page.astro`, `slug.astro`, `index.css`, `index.ts`처럼 의미가 약한 이름보다 `post-list-page.astro`, `post-detail-page.astro`, `post.css`, `post.ts`처럼 feature 이름과 역할이 함께 드러나는 이름을 사용합니다. 이 규칙은 grep/search 탐색성을 높이고, feature 수가 많아져도 파일명이 서로 구분되게 만듭니다. route adapter 파일인 `src/pages/**/[slug].astro` 같은 이름은 Astro route contract 자체이므로 예외입니다.
+
+**Incorrect (`src/features` 안에서 generic file name을 남발함):**
+
+```text
+src/
+  features/
+    post/
+      page.astro
+      slug.astro
+      index.css
+      index.ts
+      private/
+        modal.astro
+        meta.astro
+```
+
+**Correct (feature 이름과 역할이 함께 드러나는 owner-named file을 사용):**
+
+```text
+src/
+  features/
+    post/
+      post-list-page.astro
+      post-detail-page.astro
+      post.css
+      post.ts
+      private/
+        post-remove-modal.astro
+        post-meta.astro
 ```
 
 ## 3. Astro Components and Layout Composition
@@ -703,42 +728,44 @@ import GenericAvatar from "../components/GenericAvatar.astro";
 
 **Impact: HIGH**
 
-layout은 shell, page는 route contract, island는 interaction을 맡도록 좁게 분리해야 Astro의 server-first 구조가 읽히고 유지보수도 쉬워집니다.
+layout은 shell, page는 route adapter contract, feature page는 screen composition, `private/`는 local implementation detail을 맡도록 좁게 분리해야 Astro의 server-first 구조가 읽히고 유지보수도 쉬워집니다.
 
 ### 9.1 Keep Page Files Focused on Route Contract and Data Handoff
 
 **Impact: HIGH (keeps `src/pages` readable as route boundaries instead of turning them into giant mixed concerns)**
 
-page file은 URL contract, `getStaticPaths()`, `prerender`, page-level data selection, layout 조립과 같은 route boundary 책임을 가집니다. 재사용 가능한 render detail, large markup block, browser interaction은 component나 island로 내려 page가 경계 역할을 유지하게 둡니다.
+page file은 URL contract, `getStaticPaths()`, `prerender`, search param 해석, page-level data selection, feature entry 선택과 같은 route boundary 책임을 가집니다. 재사용 가능한 render detail, large markup block, browser interaction은 `src/features/<feature>`나 island로 내려 page가 thin adapter 역할을 유지하게 둡니다.
 
 **Incorrect (page 파일이 route contract와 재사용 렌더링 상세를 한꺼번에 가짐):**
 
 ```astro
 ---
-const products = await getProducts();
+const tab = Astro.url.searchParams.get("tab") ?? "all";
+const posts = await getPosts({ tab });
 ---
 
 <section>
-	{products.map((product) => (
+	{posts.map((post) => (
 		<article class="card">
-			<h2>{product.name}</h2>
-			<p>{product.description}</p>
-			<button data-id={product.id}>Add to cart</button>
+			<h2>{post.title}</h2>
+			<PostRemoveModal postId={post.id} />
 		</article>
 	))}
 </section>
 ```
 
-**Correct (page는 route/data handoff를 소유하고 render detail은 component로 넘김):**
+**Correct (page는 route/data handoff를 소유하고 feature entry로 위임):**
 
 ```astro
 ---
-import ProductsIndexPage from "../../components/products/ProductsIndexPage.astro";
+import PostListPage from "../../features/post/post-list-page.astro";
+import { getPostListPageData } from "../../features/post/post.ts";
 
-const products = await getProducts();
+const tab = Astro.url.searchParams.get("tab") ?? "all";
+const pageData = await getPostListPageData({ tab });
 ---
 
-<ProductsIndexPage products={products} />
+<PostListPage {...pageData} />
 ```
 
 ### 9.2 Limit Layouts to Shell and Composition
@@ -770,6 +797,42 @@ const { title } = Astro.props;
 <DashboardFrame title={title}>
 	<slot />
 </DashboardFrame>
+```
+
+### 9.3 Place Feature-private UI Under private/
+
+**Impact: HIGH (makes the boundary between feature-local implementation and shared public surface obvious)**
+
+shared로 승격되지 않은 route-private UI, modal, form, 보조 renderer, feature 전용 CSS는 `src/features/<feature>/private/` 아래에 둡니다. `private/`는 재사용 가능한 public surface가 아니라 현재 feature 내부 전용 구현이라는 소유권을 드러내는 이름입니다. 다른 feature에서도 쓰이기 시작하면 `private/`에 두지 말고 shared layer로 승격합니다.
+
+**Incorrect (feature-local UI가 feature root나 shared components에 섞여 ownership이 흐려짐):**
+
+```text
+src/
+  components/
+    PostMeta.astro
+  features/
+    post/
+      post-list-page.astro
+      post-remove-modal.astro
+      post-remove-modal.css
+```
+
+**Correct (feature-local implementation detail은 `private/` 아래에 둠):**
+
+```text
+src/
+  components/
+    Avatar.astro
+  features/
+    post/
+      post-list-page.astro
+      post.ts
+      private/
+        post-list-item.astro
+        post-meta.astro
+        post-remove-modal.astro
+        post-remove-modal.css
 ```
 
 ## 10. Workflow and Review Checks
@@ -849,6 +912,8 @@ Astro 변경을 마무리할 때는 코드 diff만 보지 말고 adapter, `outpu
 ## 참고 자료
 
 - https://docs.astro.build/en/basics/astro-components/
+- https://docs.astro.build/en/basics/project-structure/
+- https://docs.astro.build/en/basics/astro-pages/
 - https://docs.astro.build/en/guides/framework-components/
 - https://docs.astro.build/en/guides/routing/
 - https://docs.astro.build/en/guides/on-demand-rendering/

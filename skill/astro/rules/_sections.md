@@ -4,11 +4,11 @@
 
 ## 1. Project Structure and File Ownership (structure)
 **Impact:** CRITICAL
-**Description:** `src/pages`, `src/layouts`, `src/components`, `src/content`의 역할이 분명해야 Astro 프로젝트의 entry 흐름과 asset ownership을 예측 가능하게 유지할 수 있습니다.
+**Description:** `src/pages`는 Astro의 required route adapter layer로 얇게 유지하고, 실제 route 구현은 `src/features/<feature>`로 분리해야 entry 흐름과 ownership이 예측 가능하게 유지됩니다.
 
 ## 2. File Naming and Page Assets (naming)
 **Impact:** HIGH
-**Description:** 의미 있는 dynamic segment 이름과 searchable한 page asset naming은 file-based routing과 support module 탐색을 함께 쉽게 만듭니다.
+**Description:** 의미 있는 dynamic segment 이름과 owner-named feature file은 file-based routing과 support module 탐색을 함께 쉽게 만듭니다.
 
 ## 3. Astro Components and Layout Composition (component)
 **Impact:** HIGH
@@ -36,7 +36,7 @@
 
 ## 9. Page, Layout, and Island Responsibilities (responsibility)
 **Impact:** HIGH
-**Description:** layout은 shell, page는 route contract, island는 interaction을 맡도록 좁게 분리해야 Astro의 server-first 구조가 읽히고 유지보수도 쉬워집니다.
+**Description:** layout은 shell, page는 route adapter contract, feature page는 screen composition, `private/`는 local implementation detail을 맡도록 좁게 분리해야 Astro의 server-first 구조가 읽히고 유지보수도 쉬워집니다.
 
 ## 10. Workflow and Review Checks (workflow)
 **Impact:** MEDIUM
