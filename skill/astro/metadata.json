@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "organization": "Agent Conventions",
   "date": "2026년 4월",
-  "abstract": "에이전트 협업 팀을 위한 Astro 코딩 컨벤션입니다. 이 가이드는 `src/pages` 중심의 file-based entry 구조, `.astro` 컴포넌트와 layout의 명확한 경계, 과한 hydration을 피하는 island 설계, content collections와 Actions/server islands 같은 Astro 고유 기능의 의도적인 사용을 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, 기본 compiled guide는 local Astro 규칙만 담고 공통 TypeScript 규칙은 `typescript` companion skill과 함께 사용합니다.",
+  "abstract": "에이전트 협업 팀을 위한 Astro 코딩 컨벤션입니다. 이 가이드는 `src/pages` 중심의 file-based entry 구조, 의미 있는 dynamic segment naming, `.astro` 컴포넌트와 layout/page/island의 명확한 책임 경계, static과 on-demand rendering의 의도적인 선택, build-time/live collections, Actions/endpoints/server islands 같은 Astro 고유 기능의 신중한 사용을 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, 기본 compiled guide는 local Astro 규칙만 담고 공통 TypeScript 규칙은 `typescript` companion skill과 함께 사용합니다.",
   "extends": [
     "typescript"
   ],
@@ -11,8 +11,11 @@
     "https://docs.astro.build/en/basics/astro-components/",
     "https://docs.astro.build/en/guides/framework-components/",
     "https://docs.astro.build/en/guides/routing/",
+    "https://docs.astro.build/en/guides/on-demand-rendering/",
     "https://docs.astro.build/en/guides/content-collections/",
     "https://docs.astro.build/en/guides/actions/",
-    "https://docs.astro.build/en/guides/server-islands/"
+    "https://docs.astro.build/en/guides/endpoints/",
+    "https://docs.astro.build/en/guides/server-islands/",
+    "https://docs.astro.build/en/reference/directives-reference/"
   ]
 }
