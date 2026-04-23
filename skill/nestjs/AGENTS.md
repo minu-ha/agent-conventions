@@ -37,12 +37,12 @@
 3. [DTOs and Backend Type Contracts](#3-dtos-and-backend-type-contracts) — **HIGH**
     - 3.1 [Document Custom Backend Types and Parameter Objects](#31-document-custom-backend-types-and-parameter-objects)
     - 3.2 [Expose Response DTO Fields Explicitly](#32-expose-response-dto-fields-explicitly)
-    - 3.3 [Replace Local enum With as const Except Prisma Enums](#33-replace-local-enum-with-as-const-except-prisma-enums)
+    - 3.3 [Replace Local `enum` With `as const` Except Prisma Enums](#33-replace-local-enum-with-as-const-except-prisma-enums)
     - 3.4 [Reuse Prisma Generated Types Before New Backend Types](#34-reuse-prisma-generated-types-before-new-backend-types)
     - 3.5 [Validate Request DTOs With Validator, Transformer, and Swagger](#35-validate-request-dtos-with-validator-transformer-and-swagger)
 4. [Methods, Async Flow, and Errors](#4-methods-async-flow-and-errors) — **HIGH**
     - 4.1 [Throw Context-rich NestJS Exceptions](#41-throw-context-rich-nestjs-exceptions)
-    - 4.2 [Use Async/Await and Mark Intentional Fire-and-forget Calls](#42-use-asyncawait-and-mark-intentional-fire-and-forget-calls)
+    - 4.2 [Use Async/Await and Mark Intentional Fire-and-forget Calls](#42-use-async-await-and-mark-intentional-fire-and-forget-calls)
     - 4.3 [Use NestJS Class Methods and Explicit Async Return Types](#43-use-nestjs-class-methods-and-explicit-async-return-types)
 5. [JSDoc and Comment Conventions](#5-jsdoc-and-comment-conventions) — **MEDIUM-HIGH**
     - 5.1 [Keep Inline Comments for Domain Rules and Library Caveats](#51-keep-inline-comments-for-domain-rules-and-library-caveats)
@@ -343,7 +343,7 @@ export class UserResponseDto {
 }
 ```
 
-### 3.3 Replace Local enum With as const Except Prisma Enums
+### 3.3 Replace Local `enum` With `as const` Except Prisma Enums
 
 **Impact: MEDIUM-HIGH (keeps local runtime values lightweight while still allowing generated Prisma enums to remain the source of truth)**
 

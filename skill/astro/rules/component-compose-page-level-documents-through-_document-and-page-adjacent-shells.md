@@ -9,7 +9,7 @@ tags: component, document, head, pages, seo
 
 **Impact: HIGH (keeps repeated document, head, and body shell composition out of route files while preserving a single page-level entry point)**
 
-반복되는 top-level document composition이 필요하면 page entry가 `src/pages/_document.astro` 하나만 import하게 둡니다. `_document.astro`는 내부적으로 `_head.astro`, `_document.css`를 사용해 `<html>`, `<head>`, `<body>`와 route-shared body shell을 직접 조립합니다. `_document.astro`는 문서 셸 contract를 자기 로컬 `Props`로 직접 소유하고, `_head.astro`도 head/meta 전용 contract를 자기 로컬 `Props`로 직접 소유합니다. `Props extends DocumentMetaProps` 같은 얇은 타입 확장이나 `_document.ts` 같은 중간 타입 파일은 두지 않습니다. `_head.astro`는 `astro-seo`를 기본 SEO surface로 사용하고, favicon, manifest, RSS alternate, theme/app meta, JSON-LD 같은 프로젝트 고유 메타는 계속 로컬 구현으로 유지합니다. 특별한 재사용 경계가 생기지 않는 한 body shell 전용 helper를 `_page-chrome.astro`처럼 한 단계 더 분리하지 않고 `_document.astro` 안에 둡니다. feature screen은 이 helper들을 모르고 `<slot />`에 들어갈 body content만 렌더링합니다.
+반복되는 top-level document composition이 필요하면 page entry가 `src/pages/_document.astro` 하나만 import하게 둡니다. `_document.astro`는 내부적으로 `_head.astro`, `_document.css`, base stylesheet를 사용해 `<html>`, `<head>`, `<body>`와 route-shared body shell을 직접 조립합니다. `_document.astro`는 문서 셸 contract를 자기 로컬 `Props`로 직접 소유하고, `_head.astro`도 head/meta 전용 contract를 자기 로컬 `Props`로 직접 소유합니다. `Props extends DocumentMetaProps` 같은 얇은 타입 확장이나 `_document.ts` 같은 중간 타입 파일은 두지 않습니다. `_head.astro`는 `astro-seo`를 기본 SEO surface로 사용하고, canonical, favicon, manifest, RSS alternate, theme/app meta, JSON-LD 같은 프로젝트 고유 메타는 계속 로컬 구현으로 유지합니다. 특별한 재사용 경계가 생기지 않는 한 body shell 전용 helper를 `_page-chrome.astro`처럼 한 단계 더 분리하지 않고 `_document.astro` 안에 둡니다. feature screen은 이 helper들을 모르고 `<slot />`에 들어갈 body content만 렌더링합니다.
 
 **Incorrect (각 page가 문서 조립을 반복하거나 body shell을 불필요하게 한 단계 더 분리함):**
 
@@ -38,30 +38,37 @@ import RecentPage from "@/features/recent/recent-page.astro";
 
 ```astro
 ---
-import DocumentShell from "@/pages/_document.astro";
+import Document from "@/pages/_document.astro";
 import RecentPage from "@/features/recent/recent-page.astro";
-import { getRecentEntries, getRecentPageProps } from "@/features/recent/recent";
+import { getRecentEntries, getRecentListPageProps } from "@/features/recent/recent";
 
-const entries = await getRecentEntries();
-const pageProps = getRecentPageProps({ entries, currentPage: 1 });
+const recentEntries = await getRecentEntries();
+const pageProps = getRecentListPageProps({
+	entries: recentEntries,
+	currentPage: 1,
+});
 ---
 
-<DocumentShell currentPathname={Astro.url.pathname} pageTitle="recent" pageDescription="Recent posts and notes from meepin">
+<Document currentPathname={Astro.url.pathname} pageTitle="recent" pageDescription="Recent posts and notes from meepin">
 	<RecentPage {...pageProps} />
-</DocumentShell>
+</Document>
 ```
 
 ```astro
 ---
 import "./_document.css";
-import HeadMeta from "./_head.astro";
+import "@/styles/base.css";
+import Head from "./_head.astro";
 import UiBox from "@/components/ui/box/ui-box.astro";
 import UiStack from "@/components/ui/stack/ui-stack.astro";
 import UiSurface from "@/components/ui/surface/ui-surface.astro";
-import WidgetSiteHeader from "@/components/widget/site-header/widget-site-header.astro";
+import WgSiteFooter from "@/components/widget/site-footer/wg-site-footer.astro";
+import WgSiteHeader from "@/components/widget/site-header/wg-site-header.astro";
+import { config } from "@/shared/config";
 
 interface Props {
 	currentPathname: string;
+	pageShellVariant?: "default" | "wide";
 	pageTitle?: string;
 	pageDescription?: string;
 	pageImagePath?: string;
@@ -75,6 +82,7 @@ interface Props {
 
 const {
 	currentPathname,
+	pageShellVariant = "default",
 	pageTitle,
 	pageDescription,
 	pageImagePath,
@@ -87,8 +95,9 @@ const {
 } = Astro.props as Props;
 ---
 
-<html lang="ko">
-	<HeadMeta
+<!doctype html>
+<html lang={config.site.language}>
+	<Head
 		pageTitle={pageTitle}
 		pageDescription={pageDescription}
 		pageImagePath={pageImagePath}
@@ -103,13 +112,16 @@ const {
 		<UiSurface class="rt_document__surface">
 			<UiStack class="rt_document__stack">
 				<UiBox class="rt_document__header">
-					<WidgetSiteHeader currentPathname={currentPathname} />
+					<WgSiteHeader currentPathname={currentPathname} />
 				</UiBox>
-				<main class="rt_document__main">
+				<main class:list={["rt_document__main", pageShellVariant === "wide" && "rt_document__main--wide"]}>
 					<UiBox class="rt_document__content">
 						<slot />
 					</UiBox>
 				</main>
+				<UiBox class:list={["rt_document__footer", pageShellVariant === "wide" && "rt_document__footer--wide"]}>
+					<WgSiteFooter />
+				</UiBox>
 			</UiStack>
 		</UiSurface>
 	</body>
@@ -119,23 +131,78 @@ const {
 ```astro
 ---
 import { SEO } from "astro-seo";
+import { config } from "@/shared/config";
+import { util } from "@/shared/util";
 
 interface Props {
 	pageTitle?: string;
 	pageDescription?: string;
+	pageImagePath?: string;
+	pageType?: "website" | "article";
+	pageKeywords?: string[];
+	pagePublishedTime?: Date;
+	pageModifiedTime?: Date;
 	pageNoIndex?: boolean;
 	pageNoFollow?: boolean;
 }
 
-const { pageTitle, pageDescription, pageNoIndex = false, pageNoFollow = false } = Astro.props as Props;
+const {
+	pageTitle,
+	pageDescription,
+	pageImagePath,
+	pageType = "website",
+	pageKeywords,
+	pagePublishedTime,
+	pageModifiedTime,
+	pageNoIndex = false,
+	pageNoFollow = false,
+} = Astro.props as Props;
+const documentTitle = pageTitle ? `${pageTitle} | ${config.site.name}` : config.site.name;
+const description = pageDescription ?? config.site.description;
+const canonicalUrl = Astro.site ? new URL(Astro.url.pathname, Astro.site) : undefined;
+const socialImagePath = pageImagePath ?? config.site.defaultSocialImagePath;
+const socialImageUrl = Astro.site ? new URL(util.path.withBasePath(socialImagePath), Astro.site) : undefined;
 ---
 
-<SEO title={pageTitle} description={pageDescription} noindex={pageNoIndex} nofollow={pageNoFollow} />
-<link rel="icon" href="/favicon.ico" />
-<link rel="manifest" href="/site.webmanifest" />
-<link rel="alternate" type="application/rss+xml" title="meepin RSS" href="/rss.xml" />
-<meta name="theme-color" content="#ffffff" />
-<script is:inline type="application/ld+json" set:html={JSON.stringify({ "@context": "https://schema.org" })} />
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="theme-color" content={config.site.themeColor} />
+	<link rel="icon" href={util.path.withBasePath(config.site.faviconIcoPath)} sizes="any" />
+	<link rel="manifest" href={util.path.withBasePath(config.site.manifestPath)} />
+	<link rel="alternate" type="application/rss+xml" title={`${config.site.name} RSS`} href={util.path.withBasePath("/rss.xml")} />
+	<SEO
+		title={documentTitle}
+		description={description}
+		canonical={canonicalUrl}
+		noindex={pageNoIndex}
+		nofollow={pageNoFollow}
+		openGraph={
+			socialImageUrl
+				? {
+						basic: {
+							title: documentTitle,
+							type: pageType,
+							image: socialImageUrl.toString(),
+							url: canonicalUrl,
+						},
+						optional: {
+							description,
+							siteName: config.site.name,
+						},
+						article:
+							pageType === "article"
+								? {
+										publishedTime: pagePublishedTime?.toISOString(),
+										modifiedTime: pageModifiedTime?.toISOString(),
+										tags: pageKeywords,
+									}
+								: undefined,
+				  }
+				: undefined
+		}
+	/>
+</head>
 ```
 
-이 구조에서는 page는 route adapter와 meta props handoff만 소유하고, `_document.astro`가 top-level document와 shared body shell을 직접 감싸며, feature는 body content만 렌더링합니다.
+이 구조에서는 page는 route adapter와 meta props handoff만 소유하고, `_document.astro`가 top-level document와 shared body shell을 직접 감싸며, `_head.astro`가 SEO/meta 계산을 자기 contract로 직접 소유하고, feature는 body content만 렌더링합니다.

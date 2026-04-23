@@ -15,29 +15,29 @@ CSS 변수 `var(--*)`를 사용할 때는 토큰 존재가 보장되지 않는 �
 **Incorrect (존재 보장이 없는 토큰을 fallback 없이 사용):**
 
 ```css
-.rt_pcmei__detailPanel {
-	border: 1px solid var(--cms-color-border);
-	background: var(--cms-color-bg-base);
+.loc_postFilterDialog__panel {
+	border: 1px solid var(--mk-color-border-default);
+	background: var(--mk-color-bg-surface);
 }
 ```
 
 **Correct (불안정한 경계에는 fallback을 두고, 보장된 core token은 의도적으로 fail-loud 할 수 있음):**
 
 ```css
-.rt_pcmei__detailPanel {
-	border: 1px solid var(--cms-color-border, #d9d9d9);
-	border-radius: var(--cms-border-radius, 4px);
-	background-color: var(--cms-color-bg-base, #fff);
+.loc_postFilterDialog__panel {
+	border: 1px solid var(--mk-color-border-default, #d9d9d9);
+	border-radius: var(--mk-size-radius-card, 4px);
+	background-color: var(--mk-color-bg-surface, #fff);
 }
 
-.rt_srol__collapse {
+.loc_postFilterDialog__collapse {
 	& .ant-collapse-item {
-		border-radius: var(--cms-border-radius, 10px);
-		background: var(--cms-color-bg-base, #fff);
+		border-radius: var(--mk-size-radius-card, 10px);
+		background: var(--mk-color-bg-surface, #fff);
 	}
 }
 
 .ui_theme__root {
-	color: var(--cms-color-text-primary);
+	color: var(--mk-color-text-primary);
 }
 ```

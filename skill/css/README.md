@@ -42,7 +42,7 @@
 
 1. [rules/_template.md](./rules/_template.md)를 `rules/area-description.md`로 복사합니다.
 2. 알맞은 area prefix를 고릅니다.
-   - `naming-` - 클래스 문법, scope별 slug 규칙, `ft_/rt_/wg_/ui_/loc_` 네임스페이스 소유권, plain CSS 기본값, feature-vs-local-vs-route scope 규칙
+   - `naming-` - 클래스 문법, scope별 slug 규칙, `ft_/rt_/wg_/ui_/loc_` 네임스페이스 소유권, meepin 최신 `ft_*` feature surface와 `rt_document__*` document shell, plain CSS 기본값, feature-vs-local-vs-route scope 규칙
    - `composition-` - TSX class 조합과 wrapper 스타일링 경계 규칙
    - `selector-` - flat selector, same-block pseudo-class nesting, rich text wrapper 예외, 서드파티 DOM 타게팅 규칙
    - `values-` - 토큰, fallback, 레이아웃 의도, 상호작용 상태 규칙

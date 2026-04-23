@@ -33,47 +33,33 @@ import PostPaginationSection from "./private/post-pagination-section.astro";
 
 ```astro
 ---
-import PostListItem from "./private/post-list-item.astro";
-import PostFiltersIsland from "./private/post-filters-island.tsx";
-import type { PostsPageModel } from "./post";
+import "./post.css";
+import WgEntryFeed from "@/components/widget/entry-feed/wg-entry-feed.astro";
+import type { PostListPageProps } from "./post";
 
 /**
  * @summary 포스트 목록 feature screen props
  */
 interface Props {
-	pageModel: PostsPageModel;
-	selectedTag?: string;
+	pagination: PostListPageProps["pagination"];
 }
 
-const { pageModel, selectedTag } = Astro.props;
-const visiblePosts = selectedTag
-	? pageModel.posts.filter((post) => post.tags.includes(selectedTag))
-	: pageModel.posts;
-const hasVisiblePosts = visiblePosts.length > 0;
+const { pagination } = Astro.props as Props;
+const hasEntries = pagination.entries.length > 0;
 ---
 
 <section class="ft_posts__root">
-	<header class="ft_posts__header">
-		<h1>{pageModel.title}</h1>
-		<p>{pageModel.description}</p>
-	</header>
-
-	<PostFiltersIsland
-		client:idle
-		availableTags={pageModel.availableTags}
-		selectedTag={selectedTag}
-	/>
-
-	{hasVisiblePosts ? (
-		<ul class="ft_posts__list">
-			{visiblePosts.map((post) => (
-				<PostListItem post={post} />
-			))}
-		</ul>
+	{hasEntries ? (
+		<WgEntryFeed
+			entries={pagination.entries}
+			title="posts"
+			emptyMessage="No posts were found for this page."
+			pagination={pagination}
+		/>
 	) : (
-		<p class="ft_posts__empty">No posts match this filter.</p>
+		<p class="ft_posts__empty">No published posts yet.</p>
 	)}
 </section>
 ```
 
-이 예시는 filter island와 list item처럼 경계가 있는 subtree만 분리하고, 전체 화면 순서와 empty state 선택은 feature page에서 계속 읽히게 유지합니다.
+이 예시는 shared widget을 조립하더라도 empty state 선택과 page-level surface owner는 feature page에 남기고, 실제 runtime boundary가 생길 때만 `private/`나 island로 분리하는 흐름을 보여 줍니다.

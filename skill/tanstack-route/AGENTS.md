@@ -28,7 +28,7 @@
 
 1. [Route Structure and Grouping](#1-route-structure-and-grouping) — **CRITICAL**
     - 1.1 [Avoid Folder-only and Flat-only Route Trees](#11-avoid-folder-only-and-flat-only-route-trees)
-    - 1.2 [Keep Root Responsibilities in root.tsx](#12-keep-root-responsibilities-in-roottsx)
+    - 1.2 [Keep Root Responsibilities in `__root.tsx`](#12-keep-root-responsibilities-in-root-tsx)
     - 1.3 [Keep Shared-layout Screens Under One Parent Layout](#13-keep-shared-layout-screens-under-one-parent-layout)
     - 1.4 [Split Top-level Route Groups by Layout Shell](#14-split-top-level-route-groups-by-layout-shell)
     - 1.5 [Use Parentheses Folders for Pathless Route Groups](#15-use-parentheses-folders-for-pathless-route-groups)
@@ -40,16 +40,16 @@
     - 2.5 [Use Owner-named Route Support Modules Instead of Generic Helper Files](#25-use-owner-named-route-support-modules-instead-of-generic-helper-files)
     - 2.6 [Use Searchable Feature Route File Names](#26-use-searchable-feature-route-file-names)
 3. [Route Definition and Navigation Boundaries](#3-route-definition-and-navigation-boundaries) — **CRITICAL**
-    - 3.1 [Export Route at the Top of the File](#31-export-route-at-the-top-of-the-file)
+    - 3.1 [Export `Route` at the Top of the File](#31-export-route-at-the-top-of-the-file)
     - 3.2 [Match Route Paths to File Structure](#32-match-route-paths-to-file-structure)
-    - 3.3 [Read Params and Search From the Local Route](#33-read-params-and-search-from-the-local-route)
-    - 3.4 [Redirect Empty Entry Routes in beforeLoad](#34-redirect-empty-entry-routes-in-beforeload)
-    - 3.5 [Run Auth and Permission Guards in beforeLoad](#35-run-auth-and-permission-guards-in-beforeload)
+    - 3.3 [Read Params and Search From the Local `Route`](#33-read-params-and-search-from-the-local-route)
+    - 3.4 [Redirect Empty Entry Routes in `beforeLoad`](#34-redirect-empty-entry-routes-in-beforeload)
+    - 3.5 [Run Auth and Permission Guards in `beforeLoad`](#35-run-auth-and-permission-guards-in-beforeload)
     - 3.6 [Validate Search Before Using Route Search](#36-validate-search-before-using-route-search)
 4. [Route-local Ownership and Responsibilities](#4-route-local-ownership-and-responsibilities) — **HIGH**
-    - 4.1 [Keep *.index.tsx Files Focused on Screen Flow](#41-keep-indextsx-files-focused-on-screen-flow)
-    - 4.2 [Limit *.layout.tsx Files to Shell Concerns](#42-limit-layouttsx-files-to-shell-concerns)
-    - 4.3 [Place Route-only Modules in -local/](#43-place-route-only-modules-in--local)
+    - 4.1 [Keep `*.index.tsx` Files Focused on Screen Flow](#41-keep-index-tsx-files-focused-on-screen-flow)
+    - 4.2 [Limit `*.layout.tsx` Files to Shell Concerns](#42-limit-layout-tsx-files-to-shell-concerns)
+    - 4.3 [Place Route-only Modules in `-local/`](#43-place-route-only-modules-in--local)
 5. [Styles and Generated Artifacts](#5-styles-and-generated-artifacts) — **MEDIUM-HIGH**
     - 5.1 [Keep Route CSS at Route Scope](#51-keep-route-css-at-route-scope)
     - 5.2 [Never Edit Generated Route Tree Files](#52-never-edit-generated-route-tree-files)
@@ -97,7 +97,7 @@ Bad: 플랫 파일명만으로 표현
         members.index.tsx
 ```
 
-### 1.2 Keep Root Responsibilities in root.tsx
+### 1.2 Keep Root Responsibilities in `__root.tsx`
 
 **Impact: HIGH (prevents app-wide route concerns from mixing with feature-specific shells)**
 
@@ -391,7 +391,7 @@ export const buildSettingsRedirect = (tab: string) => {
 
 route 선언, redirect, guard, search 검증은 화면 안으로 새지 않고 router boundary에 명시적으로 유지되어야 합니다.
 
-### 3.1 Export Route at the Top of the File
+### 3.1 Export `Route` at the Top of the File
 
 **Impact: HIGH (keeps the router contract obvious before the screen implementation details begin)**
 
@@ -446,7 +446,7 @@ createFileRoute("/app/")({...});
 createFileRoute("/app/(settings)/settings/")({...});
 ```
 
-### 3.3 Read Params and Search From the Local Route
+### 3.3 Read Params and Search From the Local `Route`
 
 **Impact: MEDIUM-HIGH (keeps param and search access aligned with the route file that owns the contract)**
 
@@ -468,7 +468,7 @@ const params = useParams();
 const search = useSearch();
 ```
 
-### 3.4 Redirect Empty Entry Routes in beforeLoad
+### 3.4 Redirect Empty Entry Routes in `beforeLoad`
 
 **Impact: HIGH (moves entry redirects to the router boundary before screens mount and side effects begin)**
 
@@ -498,7 +498,7 @@ export const Route = createFileRoute("/app/(settings)/settings/")({
 });
 ```
 
-### 3.5 Run Auth and Permission Guards in beforeLoad
+### 3.5 Run Auth and Permission Guards in `beforeLoad`
 
 **Impact: CRITICAL (keeps access control in router boundaries instead of after-the-fact screen navigation)**
 
@@ -562,7 +562,7 @@ export const Route = createFileRoute("/app/(users)/users/")({
 
 `layout`, `index`, `-local` 파일은 각각 좁은 책임만 가져야 route flow가 보이고 책임이 흐려지지 않습니다.
 
-### 4.1 Keep *.index.tsx Files Focused on Screen Flow
+### 4.1 Keep `*.index.tsx` Files Focused on Screen Flow
 
 **Impact: HIGH (preserves a readable route entry where screen assembly, hooks, and handlers stay visible)**
 
@@ -600,7 +600,7 @@ function MembersIndex() {
 }
 ```
 
-### 4.2 Limit *.layout.tsx Files to Shell Concerns
+### 4.2 Limit `*.layout.tsx` Files to Shell Concerns
 
 **Impact: HIGH (prevents parent route shells from absorbing leaf-screen data and form logic)**
 
@@ -633,7 +633,7 @@ function SettingsLayout() {
 }
 ```
 
-### 4.3 Place Route-only Modules in -local/
+### 4.3 Place Route-only Modules in `-local/`
 
 **Impact: HIGH (keeps route-scoped UI and private modules close to the route until their contracts are stable)**
 

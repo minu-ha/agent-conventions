@@ -31,7 +31,7 @@
     - 1.2 [Do Not Create Screen-local Custom Hooks for Pure Logic](#12-do-not-create-screen-local-custom-hooks-for-pure-logic)
     - 1.3 [Keep UI, Widget, and -local Ownership Separate](#13-keep-ui-widget-and--local-ownership-separate)
     - 1.4 [Place Route-local Files by Visual Scope](#14-place-route-local-files-by-visual-scope)
-    - 1.5 [Route Shared Constants Through shared/config.ts](#15-route-shared-constants-through-sharedconfigts)
+    - 1.5 [Route Shared Constants Through `shared/config.ts`](#15-route-shared-constants-through-shared-config-ts)
     - 1.6 [Use Consistent File and Symbol Naming](#16-use-consistent-file-and-symbol-naming)
 2. [Typing and Contracts](#2-typing-and-contracts) — **HIGH**
     - 2.1 [Prefer React Handler Type Aliases Over Inline Event Parameter Annotations](#21-prefer-react-handler-type-aliases-over-inline-event-parameter-annotations)
@@ -53,7 +53,7 @@
     - 5.3 [Extract Screen Support Code Only When the Boundary Is Real](#53-extract-screen-support-code-only-when-the-boundary-is-real)
     - 5.4 [Keep Derived Values Close to Where They Are Used](#54-keep-derived-values-close-to-where-they-are-used)
     - 5.5 [Keep Route Entry Files Focused on Screen Flow](#55-keep-route-entry-files-focused-on-screen-flow)
-    - 5.6 [Move Screen-owned Pure Support Code Into page.ts Before Splitting Further](#56-move-screen-owned-pure-support-code-into-pagets-before-splitting-further)
+    - 5.6 [Move Screen-owned Pure Support Code Into `page.ts` Before Splitting Further](#56-move-screen-owned-pure-support-code-into-page-ts-before-splitting-further)
 6. [Events and Interaction Flow](#6-events-and-interaction-flow) — **MEDIUM-HIGH**
     - 6.1 [Keep Screen-specific Handler Flow Local Until a Real Utility Emerges](#61-keep-screen-specific-handler-flow-local-until-a-real-utility-emerges)
     - 6.2 [Name Handlers Predictably and Curry Extra Arguments](#62-name-handlers-predictably-and-curry-extra-arguments)
@@ -65,7 +65,7 @@
     - 7.4 [Name Query and Mutation Bindings Consistently](#74-name-query-and-mutation-bindings-consistently)
     - 7.5 [Prefer React Compiler Defaults Over Manual Memoization](#75-prefer-react-compiler-defaults-over-manual-memoization)
     - 7.6 [Preserve Response and Store Origin in Wide Scopes](#76-preserve-response-and-store-origin-in-wide-scopes)
-    - 7.7 [Shape React Query Data in query.select](#77-shape-react-query-data-in-queryselect)
+    - 7.7 [Shape React Query Data in query.select](#77-shape-react-query-data-in-query-select)
     - 7.8 [Store Shared Role and Authority Decisions Only When They Are Truly Shared](#78-store-shared-role-and-authority-decisions-only-when-they-are-truly-shared)
     - 7.9 [Use Functional setState Updates When Based on Previous State](#79-use-functional-setstate-updates-when-based-on-previous-state)
     - 7.10 [Use Lazy State Initializers for Expensive Defaults](#710-use-lazy-state-initializers-for-expensive-defaults)
@@ -245,7 +245,7 @@ export const mapFolderNodeToTreeData = (node: FolderNode, renderers: FolderTreeR
 <UiTree treeData={nodes.map((node) => mapFolderNodeToTreeData(node, { renderTitle }))} />
 ```
 
-### 1.5 Route Shared Constants Through shared/config.ts
+### 1.5 Route Shared Constants Through `shared/config.ts`
 
 **Impact: HIGH (공용 상수가 route와 local component 곳곳에 흩어지는 것을 막음)**
 
@@ -1344,7 +1344,7 @@ return (
 );
 ```
 
-### 5.6 Move Screen-owned Pure Support Code Into page.ts Before Splitting Further
+### 5.6 Move Screen-owned Pure Support Code Into `page.ts` Before Splitting Further
 
 **Impact: HIGH (route entry 파일이 preset과 순수 helper를 쌓기보다 orchestration에 집중하게 함)**
 

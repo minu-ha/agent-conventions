@@ -8,7 +8,7 @@
 
 ## 2. File Naming and Page Assets (naming)
 **Impact:** HIGH
-**Description:** `_document`/`_head`/`_document.css` 같은 pages-local helper 이름, `recent/posts/postDetail/tags/tagEntries`처럼 route role이 드러나는 feature file과 `ft_*` surface owner, 의미 있는 dynamic segment 이름은 file-based routing과 support module 탐색을 함께 쉽게 만듭니다.
+**Description:** `_document`/`_head`/`_document.css` 같은 pages-local helper 이름, `home/recent/posts/postDetail/notes/noteDetail/tags/tag`처럼 route role이 드러나는 feature file과 `ft_*` surface owner, 의미 있는 dynamic segment 이름은 file-based routing과 support module 탐색을 함께 쉽게 만듭니다.
 
 ## 3. Astro Components and Layout Composition (component)
 **Impact:** HIGH

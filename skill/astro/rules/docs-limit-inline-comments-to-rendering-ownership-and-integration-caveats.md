@@ -15,10 +15,10 @@ Astro의 inline comment는 rendering mode, serialization, feature ownership hand
 
 ```astro
 ---
-const tab = Astro.url.searchParams.get("tab") ?? "all";
-// 탭을 가져온다
-const pageData = await getPostsPageData({ tab });
-// 데이터를 불러온다
+const postEntries = await getPostEntries();
+// post 목록을 가져온다
+const pageProps = getPostListPageProps({ entries: postEntries, currentPage: 1 });
+// props를 만든다
 ---
 ```
 
@@ -26,12 +26,10 @@ const pageData = await getPostsPageData({ tab });
 
 ```astro
 ---
-export const prerender = false;
+// route adapter는 collection query와 canonical/meta handoff까지만 소유한다.
+const postEntries = await getPostEntries();
 
-// 쿠키 기반 개인화가 있어 build-time prerender로 고정하면 안 됨.
-const tab = Astro.url.searchParams.get("tab") ?? "all";
-
-// route adapter는 param 해석까지만 맡고 실제 화면 조립은 feature entry로 넘김.
-const pageData = await getPostsPageData({ tab });
+// pagination/basePath 계산은 owner-named support helper에 맡기고 body rendering은 feature page로 넘긴다.
+const pageProps = getPostListPageProps({ entries: postEntries, currentPage: 1 });
 ---
 ```

@@ -20,18 +20,18 @@
 
 1. [Naming and Ownership](#1-naming-and-ownership) — **CRITICAL**
     - 1.1 [Default to Plain CSS Unless the Project Explicitly Standardizes on CSS Modules](#11-default-to-plain-css-unless-the-project-explicitly-standardizes-on-css-modules)
-    - 1.2 [Keep Each scope slug Unique Per Owner](#12-keep-each-scope-slug-unique-per-owner)
+    - 1.2 [Keep Each `scope_slug` Unique Per Owner](#12-keep-each-scope-slug-unique-per-owner)
     - 1.3 [Name Elements and Modifiers by Role](#13-name-elements-and-modifiers-by-role)
     - 1.4 [Preserve Route-adjacent Slug Traceability](#14-preserve-route-adjacent-slug-traceability)
     - 1.5 [Separate Feature, Local, and Route-adjacent Style Scopes](#15-separate-feature-local-and-route-adjacent-style-scopes)
-    - 1.6 [Use ft Scope for Feature-owned Page Surfaces](#16-use-ft-scope-for-feature-owned-page-surfaces)
+    - 1.6 [Use `ft_` Scope for Feature-owned Page Surfaces](#16-use-ft-scope-for-feature-owned-page-surfaces)
     - 1.7 [Use Scope, Slug, Element, and Modifier Syntax](#17-use-scope-slug-element-and-modifier-syntax)
 2. [Class Composition and Wrapper Boundaries](#2-class-composition-and-wrapper-boundaries) — **HIGH**
-    - 2.1 [Compose Classes With clsx()](#21-compose-classes-with-clsx)
+    - 2.1 [Compose Classes With `clsx()`](#21-compose-classes-with-clsx)
     - 2.2 [Do Not Use Modifiers for One-off Structural Patches](#22-do-not-use-modifiers-for-one-off-structural-patches)
     - 2.3 [Keep Classes Single-purpose](#23-keep-classes-single-purpose)
-    - 2.4 [Prefer Ui* Wrapper Prop Types](#24-prefer-ui-wrapper-prop-types)
-    - 2.5 [Prefer Owned Wrappers for Ui* Component Styling](#25-prefer-owned-wrappers-for-ui-component-styling)
+    - 2.4 [Prefer `Ui*` Wrapper Prop Types](#24-prefer-ui-wrapper-prop-types)
+    - 2.5 [Prefer Owned Wrappers for `Ui*` Component Styling](#25-prefer-owned-wrappers-for-ui-component-styling)
 3. [Selectors and Nesting Boundaries](#3-selectors-and-nesting-boundaries) — **CRITICAL**
     - 3.1 [Avoid Deep Descendant Selector Dependencies](#31-avoid-deep-descendant-selector-dependencies)
     - 3.2 [Keep Project-owned Selectors Flat](#32-keep-project-owned-selectors-flat)
@@ -86,24 +86,24 @@ import styles from "./mission-control.module.css";
 
 ```tsx
 import { clsx } from "clsx";
-import "./mission-control.css";
+import "./posts.css";
 
-<div className={clsx("rt_mc__hero")}>
-	<span className={clsx("rt_mc__eyebrow")}>GraphQL operations deck</span>
-</div>
+<section className={clsx("ft_posts__hero")}>
+	<span className={clsx("ft_posts__eyebrow")}>Archived posts</span>
+</section>
 ```
 
 ```css
-.rt_mc__hero {
+.ft_posts__hero {
 	display: grid;
 }
 
-.rt_mc__eyebrow {
+.ft_posts__eyebrow {
 	letter-spacing: 0.08em;
 }
 ```
 
-### 1.2 Keep Each scope slug Unique Per Owner
+### 1.2 Keep Each `scope_slug` Unique Per Owner
 
 **Impact: CRITICAL (prevents unrelated routes or components from sharing the same namespace and colliding in the global class space)**
 
@@ -157,9 +157,9 @@ rt_pcmei__detailSection
 
 **Impact: HIGH (keeps route-scoped class namespaces readable back to the route hierarchy they belong to)**
 
-이 규칙은 `rt_*` route-adjacent scope의 slug를 다룹니다. 현재 Astro feature-based 구조에서는 실제 screen surface를 `ft_*`가 소유하므로, `rt_*`는 `src/pages/_document.astro`, `_head.astro`, `_document.css` 같은 pages-local document helper나 route adapter 가까운 예외 owner에만 남는 경우가 많습니다. 이런 `rt_*` slug는 길이보다 추적 가능성을 우선하고, route나 document shell 역할을 읽을 수 있게 유지합니다. 꼭 모든 이름을 다 적을 필요는 없지만, `document`, `feedIndex`, `tagArchive`처럼 owner를 다시 찾을 수 있는 수준의 의미는 남겨 둡니다.
+이 규칙은 `rt_*` route-adjacent scope의 slug를 다룹니다. 현재 Astro feature-based 구조에서는 실제 screen surface를 `ft_*`가 소유하므로, `rt_*`는 `src/pages/_document.astro`, `_head.astro`, `_document.css` 같은 pages-local document helper나 route adapter 가까운 예외 owner에만 남는 경우가 많습니다. 특히 meepin 최신 구조에서는 `rt_*`가 사실상 `rt_document__*` document shell ownership으로 수렴합니다. 이런 `rt_*` slug는 길이보다 추적 가능성을 우선하고, route나 document shell 역할을 읽을 수 있게 유지합니다. 꼭 모든 이름을 다 적을 필요는 없지만, `document`처럼 owner를 다시 찾을 수 있는 수준의 의미는 남겨 둡니다.
 
-이 route-adjacent slug 규칙을 `ft_*`, `wg_*`, `ui_*`, `loc_*` 같은 다른 scope의 owner slug에 그대로 덮어쓰지 않습니다. feature page surface는 `ft_posts`, `ft_postDetail`처럼 feature naming 규칙을 따르고, component/local scope는 해당 프로젝트가 정한 owner naming style을 따르되, `rt_*`만큼은 route-adjacent traceability를 우선합니다.
+이 route-adjacent slug 규칙을 `ft_*`, `wg_*`, `ui_*`, `loc_*` 같은 다른 scope의 owner slug에 그대로 덮어쓰지 않습니다. feature page surface는 `ft_posts`, `ft_postDetail`, `ft_tag`처럼 feature naming 규칙을 따르고, component/local scope는 해당 프로젝트가 정한 owner naming style을 따르되, `rt_*`만큼은 route-adjacent traceability를 우선합니다.
 
 너무 짧아 의미가 완전히 사라지거나, 계층 순서가 뒤섞이면 클래스명만 봐서는 어느 route 소유인지 추적하기 어려워집니다.
 
@@ -175,10 +175,9 @@ rt_doc__content
 
 ```txt
 document shell -> rt_document
-feed index helper -> rt_feedIndex
-tag archive helper -> rt_tagArchive
+document footer shell -> rt_document
 rt_document__body
-rt_feedIndex__panel
+rt_document__footer
 ```
 
 ### 1.5 Separate Feature, Local, and Route-adjacent Style Scopes
@@ -212,11 +211,11 @@ private/post-filter-dialog.css
   loc_postFilterDialog__root
 ```
 
-### 1.6 Use ft Scope for Feature-owned Page Surfaces
+### 1.6 Use `ft_` Scope for Feature-owned Page Surfaces
 
 **Impact: CRITICAL (makes Astro feature pages and their CSS surfaces line up with the owning route role instead of inventing ad-hoc local namespaces)**
 
-`src/features/<feature>/*-page.astro`와 그 page를 직접 지원하는 feature-private markup/CSS는 `ft_*`를 기본 scope로 사용합니다. list, hub, directory screen은 route 이름 그대로 `ft_recent__*`, `ft_posts__*`, `ft_notes__*`, `ft_tags__*`처럼 짧게 두고, detail screen은 `ft_postDetail__*`, `ft_noteDetail__*`처럼 singular + `Detail`을 사용합니다. 홈은 `ft_home__*`를 사용하고, 단수 resource route가 실제로는 목록을 렌더링한다면 `ft_tagEntries__*`처럼 역할이 보이는 singular owner도 허용합니다. 클래스명에는 `Page`를 넣지 않습니다.
+`src/features/<feature>/*-page.astro`와 그 page를 직접 지원하는 feature-private markup/CSS는 `ft_*`를 기본 scope로 사용합니다. list, hub, directory screen은 route 이름 그대로 `ft_recent__*`, `ft_posts__*`, `ft_notes__*`, `ft_tags__*`처럼 짧게 두고, detail screen은 `ft_postDetail__*`, `ft_noteDetail__*`처럼 singular + `Detail`을 사용합니다. 홈은 `ft_home__*`를 사용하고, 복수형 family 아래의 단일 resource page는 `ft_tag__*`처럼 route resource owner를 그대로 사용합니다. 클래스명에는 `Page`를 넣지 않습니다.
 
 feature-private 파일도 같은 page surface owner를 설명한다면 `loc_*`로 새 namespace를 만들지 않고 같은 `ft_*` owner를 유지합니다. `loc_*`는 truly local helper가 자기 독립 owner를 가질 때만 사용합니다.
 
@@ -239,7 +238,7 @@ ft_postDetail__body
 ft_notes__root
 ft_noteDetail__meta
 ft_tags__list
-ft_tagEntries__root
+ft_tag__root
 ```
 
 ### 1.7 Use Scope, Slug, Element, and Modifier Syntax
@@ -248,7 +247,7 @@ ft_tagEntries__root
 
 클래스명은 `<scope>_<slug>__<element>[--<modifier>]` 문법을 사용합니다. `scope`는 소유 범위, `slug`는 소유자 식별자, `element`는 역할, `modifier`는 상태나 변형을 나타내며, 각 구분자는 `_`, `__`, `--`를 일관되게 유지합니다. `scope` 자체는 `ft`, `rt`, `wg`, `ui`, `loc`처럼 소문자 namespace를 유지합니다.
 
-`slug`는 모든 scope에 동일한 casing을 강제하지 말고, 해당 scope의 house style을 따릅니다. 현재 Astro feature-based 구조에서는 `ft_*`가 feature page surface의 기본 scope이고, `ft_home`, `ft_recent`, `ft_posts`, `ft_postDetail`, `ft_notes`, `ft_noteDetail`, `ft_tags`, `ft_tagEntries`처럼 route role이 드러나는 owner slug를 우선합니다. `rt_*`는 pages-local document shell처럼 route-adjacent owner를 나타낼 때 쓰고, `wg_*`, `ui_*`, `loc_*` 같은 component/local scope는 프로젝트가 owner slug를 camelCase로 굳혀 두었다면 그 표기를 그대로 유지할 수 있습니다. 중요한 것은 scope별 규칙을 섞지 않고, 같은 owner에서 slug 표기가 흔들리지 않게 유지하는 것입니다.
+`slug`는 모든 scope에 동일한 casing을 강제하지 말고, 해당 scope의 house style을 따릅니다. 현재 Astro feature-based 구조에서는 `ft_*`가 feature page surface의 기본 scope이고, `ft_home`, `ft_recent`, `ft_posts`, `ft_postDetail`, `ft_notes`, `ft_noteDetail`, `ft_tags`, `ft_tag`처럼 route role이 드러나는 owner slug를 우선합니다. `rt_*`는 pages-local document shell처럼 route-adjacent owner를 나타낼 때 쓰고, `wg_*`, `ui_*`, `loc_*` 같은 component/local scope는 프로젝트가 owner slug를 camelCase로 굳혀 두었다면 그 표기를 그대로 유지할 수 있습니다. 중요한 것은 scope별 규칙을 섞지 않고, 같은 owner에서 slug 표기가 흔들리지 않게 유지하는 것입니다.
 
 `element`와 `modifier`는 `listButton`, `detailExpanded`, `submitButton`, `emptyState`처럼 camelCase로 작성합니다. element/modifier 내부에서 `list-button`, `list_button`처럼 추가 구분자를 다시 도입하지 않습니다.
 
@@ -280,7 +279,7 @@ rt_document__main--routeActive
 
 TSX class 조합과 wrapper 소유권 규칙은 스타일링 경계를 분명하게 유지하고, UI wrapper가 통제되지 않은 스타일 hook을 노출하는 것을 막습니다.
 
-### 2.1 Compose Classes With clsx()
+### 2.1 Compose Classes With `clsx()`
 
 **Impact: HIGH (keeps TSX class composition readable when base classes and state modifiers need to be combined)**
 
@@ -348,7 +347,7 @@ modifier는 `active`, `hidden`, `disabled`, `selected`, `error` 같은 상태값
 <div className={clsx("rt_pctbi__listButton", isActive && "rt_pctbi__listButton--active")} />
 ```
 
-### 2.4 Prefer Ui* Wrapper Prop Types
+### 2.4 Prefer `Ui*` Wrapper Prop Types
 
 **Impact: MEDIUM-HIGH (preserves wrapper-level styling and API contracts instead of leaking raw library prop types into usage sites)**
 
@@ -370,7 +369,7 @@ import UiCollapse, {type UiCollapseProps} from "<project-alias>/components/ui/co
 const items: NonNullable<UiCollapseProps["items"]> = [];
 ```
 
-### 2.5 Prefer Owned Wrappers for Ui* Component Styling
+### 2.5 Prefer Owned Wrappers for `Ui*` Component Styling
 
 **Impact: HIGH (prevents shared UI wrappers from exposing uncontrolled styling hooks through ad-hoc className injection)**
 
@@ -380,28 +379,28 @@ const items: NonNullable<UiCollapseProps["items"]> = [];
 **Incorrect (내부 DOM을 만지기 위해 `Ui*`에 ad-hoc className을 주입):**
 
 ```tsx
-<UiCollapse className={clsx("rt_srol__collapse")} />
+<UiCollapse className={clsx("loc_postFilterDialog__collapse")} />
 ```
 
 **Correct (내부 DOM 스타일링은 소유 래퍼 아래로 제한하고, 공식 root contract는 예외적으로 허용):**
 
 ```tsx
-<div className={clsx("rt_srol__collapse")}>
+<div className={clsx("loc_postFilterDialog__collapse")}>
 	<UiCollapse />
 </div>
 ```
 
 ```css
-.rt_srol__collapse {
+.loc_postFilterDialog__collapse {
 	& .ant-collapse-item {
-		border-radius: var(--cms-border-radius, 10px);
+		border-radius: var(--mk-size-radius-card, 10px);
 	}
 }
 ```
 
 ```tsx
 // UiButton이 root className contract를 공식적으로 노출하는 경우에만 허용
-<UiButton className={clsx("rt_srol__submitButton")} />
+<UiButton className={clsx("loc_postFilterDialog__submitButton")} />
 ```
 
 ## 3. Selectors and Nesting Boundaries
@@ -648,30 +647,30 @@ CSS 변수 `var(--*)`를 사용할 때는 토큰 존재가 보장되지 않는 �
 **Incorrect (존재 보장이 없는 토큰을 fallback 없이 사용):**
 
 ```css
-.rt_pcmei__detailPanel {
-	border: 1px solid var(--cms-color-border);
-	background: var(--cms-color-bg-base);
+.loc_postFilterDialog__panel {
+	border: 1px solid var(--mk-color-border-default);
+	background: var(--mk-color-bg-surface);
 }
 ```
 
 **Correct (불안정한 경계에는 fallback을 두고, 보장된 core token은 의도적으로 fail-loud 할 수 있음):**
 
 ```css
-.rt_pcmei__detailPanel {
-	border: 1px solid var(--cms-color-border, #d9d9d9);
-	border-radius: var(--cms-border-radius, 4px);
-	background-color: var(--cms-color-bg-base, #fff);
+.loc_postFilterDialog__panel {
+	border: 1px solid var(--mk-color-border-default, #d9d9d9);
+	border-radius: var(--mk-size-radius-card, 4px);
+	background-color: var(--mk-color-bg-surface, #fff);
 }
 
-.rt_srol__collapse {
+.loc_postFilterDialog__collapse {
 	& .ant-collapse-item {
-		border-radius: var(--cms-border-radius, 10px);
-		background: var(--cms-color-bg-base, #fff);
+		border-radius: var(--mk-size-radius-card, 10px);
+		background: var(--mk-color-bg-surface, #fff);
 	}
 }
 
 .ui_theme__root {
-	color: var(--cms-color-text-primary);
+	color: var(--mk-color-text-primary);
 }
 ```
 

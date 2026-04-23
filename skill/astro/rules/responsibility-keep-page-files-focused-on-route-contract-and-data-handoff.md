@@ -33,17 +33,33 @@ const posts = await getPosts({ tab });
 
 ```astro
 ---
-import DocumentShell from "@/pages/_document.astro";
-import PostsPage from "../../features/post/posts-page.astro";
-import { getPostsPageData } from "../../features/post/post.ts";
+import Document from "@/pages/_document.astro";
+import TagPage from "@/features/tag/tag-page.astro";
+import { getTagEntries, getTagNames, getTagPageProps } from "@/features/tag/tag";
+import { util } from "@/shared/util";
 
-export const prerender = false;
+export async function getStaticPaths() {
+	const tagEntries = await getTagEntries();
+	const tagNames = getTagNames({ entries: tagEntries });
 
-const tab = Astro.url.searchParams.get("tab") ?? "all";
-const pageData = await getPostsPageData({ tab });
+	return tagNames.map((tag) => ({
+		params: {
+			tag: util.entry.toTagSlug(tag),
+		},
+		props: {
+			pageProps: getTagPageProps({
+				entries: tagEntries,
+				tag,
+				currentPage: 1,
+			}),
+		},
+	}));
+}
+
+const { pageProps } = Astro.props;
 ---
 
-<DocumentShell currentPathname={Astro.url.pathname} pageTitle="posts" pageDescription="Recent posts">
-	<PostsPage {...pageData} />
-</DocumentShell>
+<Document currentPathname={Astro.url.pathname} pageTitle={`tagged ${pageProps.tag}`} pageDescription={`Entries tagged ${pageProps.tag}`}>
+	<TagPage {...pageProps} />
+</Document>
 ```

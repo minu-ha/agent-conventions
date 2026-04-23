@@ -19,7 +19,7 @@
 ## 목차
 
 1. [Naming and Module Boundaries](#1-naming-and-module-boundaries) — **HIGH**
-    - 1.1 [Centralize Shared Config Under shared/config.ts](#11-centralize-shared-config-under-sharedconfigts)
+    - 1.1 [Centralize Shared Config Under `shared/config.ts`](#11-centralize-shared-config-under-shared-config-ts)
     - 1.2 [Preserve Shared Namespace Origin With Chained Access](#12-preserve-shared-namespace-origin-with-chained-access)
     - 1.3 [Use Consistent File, Symbol, and Field Naming](#13-use-consistent-file-symbol-and-field-naming)
     - 1.4 [Use Direct Imports and Dedicated Public Entry Points](#14-use-direct-imports-and-dedicated-public-entry-points)
@@ -33,7 +33,7 @@
     - 3.1 [Avoid Imperative Assembly in Wide Scopes](#31-avoid-imperative-assembly-in-wide-scopes)
     - 3.2 [Extract Support Functions Only When the Boundary Is Real](#32-extract-support-functions-only-when-the-boundary-is-real)
     - 3.3 [Prefer Immutable Array Sorting](#33-prefer-immutable-array-sorting)
-    - 3.4 [Replace enum With as const Objects](#34-replace-enum-with-as-const-objects)
+    - 3.4 [Replace `enum` With `as const` Objects](#34-replace-enum-with-as-const-objects)
     - 3.5 [Use Named Object Params for Complex Signatures](#35-use-named-object-params-for-complex-signatures)
     - 3.6 [Use Set and Map for Repeated Lookups](#36-use-set-and-map-for-repeated-lookups)
 4. [Absence and Fallback Handling](#4-absence-and-fallback-handling) — **HIGH**
@@ -42,7 +42,7 @@
     - 5.1 [Keep Inline Comments for Constraints and Caveats Only](#51-keep-inline-comments-for-constraints-and-caveats-only)
     - 5.2 [Require Header JSDoc on Key Declarations](#52-require-header-jsdoc-on-key-declarations)
     - 5.3 [Standardize Annotation Tags by Declaration Role](#53-standardize-annotation-tags-by-declaration-role)
-    - 5.4 [Use @helper on Reusable Support Functions](#54-use-helper-on-reusable-support-functions)
+    - 5.4 [Use `@helper` on Reusable Support Functions](#54-use-helper-on-reusable-support-functions)
     - 5.5 [Write Concise Korean Comments About Purpose and Constraints](#55-write-concise-korean-comments-about-purpose-and-constraints)
 6. [Guardrails and Review Checks](#6-guardrails-and-review-checks) — **MEDIUM**
     - 6.1 [Review Banned TypeScript Shortcuts Before Finishing](#61-review-banned-typescript-shortcuts-before-finishing)
@@ -55,7 +55,7 @@
 
 식별자, import, public entry point, config 접근 패턴은 소유권과 오리진을 바로 드러내야 합니다.
 
-### 1.1 Centralize Shared Config Under shared/config.ts
+### 1.1 Centralize Shared Config Under `shared/config.ts`
 
 **Impact: HIGH (prevents shared config values from scattering across leaf files and losing a single public source)**
 
@@ -488,7 +488,7 @@ const sortedUsers = users.toSorted((left, right) => left.name.localeCompare(righ
 const sortedUsers = [...users].sort((left, right) => left.name.localeCompare(right.name));
 ```
 
-### 3.4 Replace enum With as const Objects
+### 3.4 Replace `enum` With `as const` Objects
 
 **Impact: MEDIUM-HIGH (keeps runtime values explicit and type extraction lightweight without introducing enum-specific behavior)**
 
@@ -741,7 +741,7 @@ interface DialogRootProps {
 }
 ```
 
-### 5.4 Use @helper on Reusable Support Functions
+### 5.4 Use `@helper` on Reusable Support Functions
 
 **Impact: MEDIUM-HIGH (distinguishes reusable pure support logic from local implementation details or integration boundaries)**
 

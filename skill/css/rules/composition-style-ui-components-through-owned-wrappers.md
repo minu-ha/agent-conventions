@@ -15,26 +15,26 @@ tags: ui-components, wrappers, third-party
 **Incorrect (내부 DOM을 만지기 위해 `Ui*`에 ad-hoc className을 주입):**
 
 ```tsx
-<UiCollapse className={clsx("rt_srol__collapse")} />
+<UiCollapse className={clsx("loc_postFilterDialog__collapse")} />
 ```
 
 **Correct (내부 DOM 스타일링은 소유 래퍼 아래로 제한하고, 공식 root contract는 예외적으로 허용):**
 
 ```tsx
-<div className={clsx("rt_srol__collapse")}>
+<div className={clsx("loc_postFilterDialog__collapse")}>
 	<UiCollapse />
 </div>
 ```
 
 ```css
-.rt_srol__collapse {
+.loc_postFilterDialog__collapse {
 	& .ant-collapse-item {
-		border-radius: var(--cms-border-radius, 10px);
+		border-radius: var(--mk-size-radius-card, 10px);
 	}
 }
 ```
 
 ```tsx
 // UiButton이 root className contract를 공식적으로 노출하는 경우에만 허용
-<UiButton className={clsx("rt_srol__submitButton")} />
+<UiButton className={clsx("loc_postFilterDialog__submitButton")} />
 ```

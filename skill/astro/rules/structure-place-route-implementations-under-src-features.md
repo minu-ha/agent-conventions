@@ -32,7 +32,11 @@ src/
     _document.astro
     _head.astro
     _document.css
-    [page].astro
+    404.astro
+    index.astro
+    recent/
+      index.astro
+      [page].astro
     posts/
       index.astro
       [page].astro
@@ -46,15 +50,17 @@ src/
       [tag]/
         index.astro
         [page].astro
-    post/
-      [slug].astro
+    rss.xml.ts
+    robots.txt.ts
   features/
+    error/
+      not-found-page.astro
     home/
       home-page.astro
       home.css
+      home.ts
     recent/
       recent-page.astro
-      recent.css
       recent.ts
     post/
       posts-page.astro
@@ -73,7 +79,7 @@ src/
       note.ts
     tag/
       tags-page.astro
-      tag-entries-page.astro
+      tag-page.astro
       tag.css
       tag.ts
   content/
@@ -81,4 +87,4 @@ src/
       hello-world.md
 ```
 
-새 route family를 설계할 때는 `posts/index.astro`, `posts/[page].astro`, `posts/[slug].astro`처럼 list/detail/pagination을 한 폴더에 모으는 편을 우선할 수 있습니다. feature file 이름은 `posts-page.astro`, `post-detail-page.astro`, `notes-page.astro`, `note-detail-page.astro`, `tags-page.astro`처럼 route role이 드러나게 유지합니다. 다만 현재 public URL이 이미 `/post/:slug`, `/note/:slug`, `/page/:n`처럼 굳어져 있다면 convention도 그 URL contract를 존중하도록 맞춥니다.
+meepin 최신 구조처럼 paginated list를 `recent/`, `posts/`, `notes/`, `tags/[tag]/` family 아래에 모으고 홈은 `src/pages/index.astro`에 분리해 두면, route adapter tree와 feature implementation tree가 함께 읽기 쉬워집니다. feature file 이름은 `recent-page.astro`, `posts-page.astro`, `post-detail-page.astro`, `notes-page.astro`, `note-detail-page.astro`, `tags-page.astro`, `tag-page.astro`처럼 route role이 드러나게 유지합니다.

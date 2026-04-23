@@ -33,17 +33,18 @@ const posts = await getPosts({ search });
 
 ```astro
 ---
-import Document from "../_document.astro";
-import PostsPage from "../../features/post/posts-page.astro";
-import { getPostsPageData } from "../../features/post/post.ts";
+import Document from "@/pages/_document.astro";
+import PostsPage from "@/features/post/posts-page.astro";
+import { getPostEntries, getPostListPageProps } from "@/features/post/post";
 
-export const prerender = false;
-
-const search = Astro.url.searchParams.get("search") ?? "";
-const pageData = await getPostsPageData({ search });
+const postEntries = await getPostEntries();
+const pageProps = getPostListPageProps({
+	entries: postEntries,
+	currentPage: 1,
+});
 ---
 
-<Document currentPathname={Astro.url.pathname} pageTitle="posts" pageDescription="Recent posts">
-	<PostsPage {...pageData} />
+<Document currentPathname={Astro.url.pathname} pageTitle="posts" pageDescription="Archived posts from meepin">
+	<PostsPage {...pageProps} />
 </Document>
 ```

@@ -40,7 +40,7 @@
 3. [General Authoring and Data Isolation](#3-general-authoring-and-data-isolation) — **HIGH**
     - 3.1 [Follow the Declared Integration or E2E Writing Sequence](#31-follow-the-declared-integration-or-e2e-writing-sequence)
     - 3.2 [Isolate and Clean Up Test Data](#32-isolate-and-clean-up-test-data)
-    - 3.3 [Keep beforeEach Limited and Visible](#33-keep-beforeeach-limited-and-visible)
+    - 3.3 [Keep `beforeEach` Limited and Visible](#33-keep-beforeeach-limited-and-visible)
     - 3.4 [Keep One Behavior Per Test](#34-keep-one-behavior-per-test)
     - 3.5 [Name Tests by User Action and Result](#35-name-tests-by-user-action-and-result)
     - 3.6 [Write Comments Only for Non-obvious Setup Boundaries](#36-write-comments-only-for-non-obvious-setup-boundaries)
@@ -50,7 +50,7 @@
     - 4.3 [Wait for State, Not Time, in Integration Tests](#43-wait-for-state-not-time-in-integration-tests)
 5. [E2E Boundaries and Real-system Control](#5-e2e-boundaries-and-real-system-control) — **CRITICAL**
     - 5.1 [Avoid Destructive Shared-account Scenarios and Parallel Collisions](#51-avoid-destructive-shared-account-scenarios-and-parallel-collisions)
-    - 5.2 [Seed With API Helpers and Clean Up in finally](#52-seed-with-api-helpers-and-clean-up-in-finally)
+    - 5.2 [Seed With API Helpers and Clean Up in `finally`](#52-seed-with-api-helpers-and-clean-up-in-finally)
     - 5.3 [Use Real Backend, Auth, and Routing in E2E](#53-use-real-backend-auth-and-routing-in-e2e)
 6. [Locators, Assertions, and Waiting](#6-locators-assertions-and-waiting) — **HIGH**
     - 6.1 [Allow Explicit Waits Only for Real Async Boundaries](#61-allow-explicit-waits-only-for-real-async-boundaries)
@@ -330,7 +330,7 @@ try {
 }
 ```
 
-### 3.3 Keep beforeEach Limited and Visible
+### 3.3 Keep `beforeEach` Limited and Visible
 
 **Impact: HIGH (prevents shared setup from hiding the test's real dependency boundary or main assertions)**
 
@@ -526,7 +526,7 @@ e2e 테스트는 실제 backend와 auth 경로를 사용하되 seed, cleanup, sh
 - 공용 계정은 smoke나 읽기 위주 검증에 한정
 ```
 
-### 5.2 Seed With API Helpers and Clean Up in finally
+### 5.2 Seed With API Helpers and Clean Up in `finally`
 
 **Impact: HIGH (keeps e2e setup fast and explicit without turning browser steps into slow seed scripts)**
 

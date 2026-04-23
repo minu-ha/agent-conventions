@@ -30,43 +30,41 @@ export const getEmptyMessage = (selectedTag?: string) => {
 
 ```ts
 // src/features/post/post.ts
+import type { Entry, EntryPagination } from "@/shared/util";
+import { util } from "@/shared/util";
+
 /**
- * @helper post collection 응답을 posts 화면 model로 정규화
+ * @summary post 목록 화면에 전달할 계약
  */
-export const buildPostsPageModel = (posts: PostCollectionEntry[]) => {
-	return {
-		title: "Posts",
-		description: "Latest writing from the team.",
-		availableTags: [...new Set(posts.flatMap((post) => post.data.tags))].sort(),
-		posts: posts.map((post) => ({
-			id: post.id,
-			title: post.data.title,
-			description: post.data.description,
-			tags: post.data.tags,
-			href: `/post/${post.slug}/`,
-		})),
-	};
-};
+export interface PostListPageProps {
+	/**
+	 * @field 현재 posts 목록 페이지네이션 정보
+	 */
+	pagination: EntryPagination;
+}
+
+/**
+ * @helper post 목록 화면 props를 계산한다.
+ */
+export const getPostListPageProps = ({ entries, currentPage }: { entries: Entry[]; currentPage: number }): PostListPageProps => ({
+	pagination: util.entry.buildPagination({
+		entries,
+		currentPage,
+		basePathname: "/posts/",
+	}),
+});
 ```
 
 ```astro
 ---
-import type { PostsPageModel } from "./post";
+import type { PostListPageProps } from "./post";
 
-/**
- * @summary 포스트 목록 feature screen props
- */
-interface Props {
-	pageModel: PostsPageModel;
-	selectedTag?: string;
-}
-
-const { pageModel, selectedTag } = Astro.props;
-const hasActiveTag = typeof selectedTag === "string" && selectedTag.length > 0;
-const emptyMessage = hasActiveTag
-	? "No posts match this filter."
-	: "No published posts yet.";
+const { pagination } = Astro.props as PostListPageProps;
+const isFirstPage = pagination.currentPage === 1;
+const emptyMessage = isFirstPage
+	? "No published posts yet."
+	: "No posts were found for this page.";
 ---
 ```
 
-이 구조에서는 collection normalization 같은 실제 data boundary만 `post.ts`에 두고, 현재 feature page 흐름을 읽는 데 필요한 작은 분기와 문구 선택은 frontmatter에 남겨 둡니다.
+이 구조에서는 pagination/basePath 계산 같은 실제 data boundary만 `post.ts`에 두고, 현재 feature page 흐름을 읽는 데 필요한 작은 분기와 문구 선택은 frontmatter에 남겨 둡니다.

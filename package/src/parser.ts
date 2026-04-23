@@ -87,11 +87,27 @@ export const slugify = (value: string): string => {
  * @helper heading/목차 표시용 제목에서 markdown 장식을 제거
  */
 export const normalizeHeadingTitle = (value: string): string => {
-	return value
-		.replace(/`([^`]+)`/g, "$1")
+	const codeSpans: string[] = [];
+	const placeholderSource = value.replace(/`[^`]+`/g, (match) => {
+		codeSpans.push(match);
+		return `@@CODE_SPAN_${codeSpans.length - 1}@@`;
+	});
+	const normalized = placeholderSource
 		.replace(/\*\*([^*]+)\*\*/g, "$1")
 		.replace(/\*([^*]+)\*/g, "$1")
-		.replace(/_+/g, " ")
+		.replace(/\s+/g, " ")
+		.trim();
+
+	return normalized.replace(/@@CODE_SPAN_(\d+)@@/g, (_, rawIndex: string) => codeSpans[Number(rawIndex)] ?? "");
+};
+
+/**
+ * @helper heading anchor용 제목에서 markdown/code token을 slug-friendly 텍스트로 정리
+ */
+const normalizeAnchorTitle = (value: string): string => {
+	return normalizeHeadingTitle(value)
+		.replace(/`/g, "")
+		.replace(/[_./]+/g, " ")
 		.replace(/\s+/g, " ")
 		.trim();
 };
@@ -100,14 +116,14 @@ export const normalizeHeadingTitle = (value: string): string => {
  * @helper section heading anchor 문자열 생성
  */
 export const buildSectionAnchor = (sectionOrder: number, title: string): string => {
-	return `#${slugify(`${sectionOrder}. ${normalizeHeadingTitle(title)}`)}`;
+	return `#${slugify(`${sectionOrder}. ${normalizeAnchorTitle(title)}`)}`;
 };
 
 /**
  * @helper 개별 rule heading anchor 문자열 생성
  */
 export const buildRuleAnchor = (sectionOrder: number, ruleOrder: number, title: string): string => {
-	return `#${slugify(`${sectionOrder}.${ruleOrder} ${normalizeHeadingTitle(title)}`)}`;
+	return `#${slugify(`${sectionOrder}.${ruleOrder} ${normalizeAnchorTitle(title)}`)}`;
 };
 
 /**

@@ -9,33 +9,37 @@ tags: routing, pagination, pages, route-families
 
 **Impact: HIGH (keeps paginated route families shallow and makes list plus pagination contracts readable from one folder)**
 
-페이지네이션이 있는 list route family는 가능하면 같은 폴더 안에서 `index.astro`와 `[page].astro`를 sibling으로 둡니다. 루트 recent라면 `src/pages/index.astro`와 `src/pages/[page].astro`, section list라면 `src/pages/posts/index.astro`와 `src/pages/posts/[page].astro`처럼 둡니다. 동적 resource 아래에 pagination이 붙는 경우에는 `src/pages/tags/[tag]/index.astro`와 `src/pages/tags/[tag]/[page].astro`처럼 resource folder 안에서 entry page와 pagination page를 나란히 둡니다. 이렇게 해야 list entry와 pagination contract가 한 route family 안에 모여 더 읽기 쉬워집니다.
+페이지네이션이 있는 list route family는 가능하면 같은 폴더 안에서 `index.astro`와 `[page].astro`를 sibling으로 둡니다. 홈처럼 별도 landing screen이 있는 경우에는 `src/pages/index.astro`를 유지하고, 실제 paginated archive는 `src/pages/recent/index.astro`와 `src/pages/recent/[page].astro`처럼 전용 family 아래에 둡니다. section list라면 `src/pages/posts/index.astro`와 `src/pages/posts/[page].astro`처럼 두고, 동적 resource 아래에 pagination이 붙는 경우에는 `src/pages/tags/[tag]/index.astro`와 `src/pages/tags/[tag]/[page].astro`처럼 resource folder 안에서 entry page와 pagination page를 나란히 둡니다. 이렇게 해야 list entry와 pagination contract가 한 route family 안에 모여 더 읽기 쉬워집니다.
 
 **Incorrect (pagination route를 `page/` 하위 폴더로 한 단계 더 감쌈):**
 
 ```text
-src/pages/page/[page].astro
+src/pages/[page].astro
 src/pages/posts/page/[page].astro
 src/pages/notes/page/[page].astro
 src/pages/tags/[tag]/page/[page].astro
 ```
 
-이 구조는 같은 route family를 불필요한 `page/` 서브폴더로 나눠, tree를 훑을 때 list와 pagination contract를 한눈에 보기 어렵게 만듭니다.
+이 구조는 홈과 archive의 역할을 섞거나, 같은 route family를 불필요한 `page/` 서브폴더로 나눠 tree를 훑을 때 list와 pagination contract를 한눈에 보기 어렵게 만듭니다.
 
 **Correct (list와 pagination을 sibling file로 둠):**
 
 ```text
 src/pages/index.astro
-src/pages/[page].astro
+src/pages/recent/index.astro
+src/pages/recent/[page].astro
 
 src/pages/posts/index.astro
 src/pages/posts/[page].astro
+src/pages/posts/[slug].astro
 
 src/pages/notes/index.astro
 src/pages/notes/[page].astro
+src/pages/notes/[slug].astro
 
+src/pages/tags/index.astro
 src/pages/tags/[tag]/index.astro
 src/pages/tags/[tag]/[page].astro
 ```
 
-이 구조에서는 각 route family의 entry page와 pagination page가 같은 폴더에 모여 있어 URL contract를 file tree만 보고도 바로 이해할 수 있습니다.
+이 구조에서는 홈은 별도 route로 남고, 각 paginated route family의 entry page와 pagination page가 같은 폴더에 모여 있어 URL contract를 file tree만 보고도 바로 이해할 수 있습니다.

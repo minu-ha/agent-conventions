@@ -34,16 +34,20 @@ const props = Astro.props as RecentPageProps;
 
 ```astro
 ---
-import DocumentShell from "@/pages/_document.astro";
+import Document from "@/pages/_document.astro";
 import RecentPage from "@/features/recent/recent-page.astro";
-import { getRecentPageProps } from "@/features/recent/recent";
+import { getRecentEntries, getRecentListPageProps } from "@/features/recent/recent";
 
-const pageProps = getRecentPageProps({ entries: [], currentPage: 1 });
+const recentEntries = await getRecentEntries();
+const pageProps = getRecentListPageProps({
+	entries: recentEntries,
+	currentPage: 1,
+});
 ---
 
-<DocumentShell currentPathname={Astro.url.pathname} pageTitle="recent" pageDescription="Recent posts">
+<Document currentPathname={Astro.url.pathname} pageTitle="recent" pageDescription="Recent posts">
 	<RecentPage {...pageProps} />
-</DocumentShell>
+</Document>
 ```
 
 ```astro

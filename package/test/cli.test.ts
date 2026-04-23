@@ -92,6 +92,8 @@ test("build:astro alias regenerates AGENTS.md for the astro skill", async () => 
 	assert.match(agentsSource, /^# Astro 컨벤션$/m);
 	assert.match(agentsSource, /^## 함께 로드할 Companion Skill$/m);
 	assert.match(agentsSource, /`convention-typescript`/);
+	assert.match(agentsSource, /^ {4}- \d+\.\d+ \[Align Feature Page Files and `ft_\*` Surface Classes with Route Role\]/m);
+	assert.match(agentsSource, /^### \d+\.\d+ Compose Page-level Documents Through `_document\.astro` and `_head\.astro`$/m);
 });
 
 test("build:all alias succeeds for every buildable skill", () => {

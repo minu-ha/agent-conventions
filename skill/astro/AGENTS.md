@@ -28,34 +28,34 @@
 ## 목차
 
 1. [Project Structure and File Ownership](#1-project-structure-and-file-ownership) — **CRITICAL**
-    - 1.1 [Keep src/pages Thin and Use It as the Route Adapter Layer](#11-keep-srcpages-thin-and-use-it-as-the-route-adapter-layer)
-    - 1.2 [Place Pages-local Document Helpers Under src/pages with an Underscore Prefix](#12-place-pages-local-document-helpers-under-srcpages-with-an-underscore-prefix)
-    - 1.3 [Place Route Implementations Under src/features/<feature>](#13-place-route-implementations-under-srcfeaturesfeature)
+    - 1.1 [Keep `src/pages` Thin and Use It as the Route Adapter Layer](#11-keep-src-pages-thin-and-use-it-as-the-route-adapter-layer)
+    - 1.2 [Place Pages-local Document Helpers Under `src/pages` with an Underscore Prefix](#12-place-pages-local-document-helpers-under-src-pages-with-an-underscore-prefix)
+    - 1.3 [Place Route Implementations Under `src/features/<feature>`](#13-place-route-implementations-under-src-features-feature)
 2. [File Naming and Page Assets](#2-file-naming-and-page-assets) — **HIGH**
-    - 2.1 [Align Feature Page Files and ft * Surface Classes with Route Role](#21-align-feature-page-files-and-ft-surface-classes-with-route-role)
+    - 2.1 [Align Feature Page Files and `ft_*` Surface Classes with Route Role](#21-align-feature-page-files-and-ft-surface-classes-with-route-role)
     - 2.2 [Use Domain-specific Dynamic Segment Names](#22-use-domain-specific-dynamic-segment-names)
-    - 2.3 [Use Owner-named Feature Files Instead of Generic page, slug, and index](#23-use-owner-named-feature-files-instead-of-generic-page-slug-and-index)
+    - 2.3 [Use Owner-named Feature Files Instead of Generic `page`, `slug`, and `index`](#23-use-owner-named-feature-files-instead-of-generic-page-slug-and-index)
     - 2.4 [Use Underscore-prefixed Pages-local Helper Names for Document Files](#24-use-underscore-prefixed-pages-local-helper-names-for-document-files)
 3. [Astro Components and Layout Composition](#3-astro-components-and-layout-composition) — **HIGH**
-    - 3.1 [Compose Page-level Documents Through document.astro and head.astro](#31-compose-page-level-documents-through-documentastro-and-headastro)
+    - 3.1 [Compose Page-level Documents Through `_document.astro` and `_head.astro`](#31-compose-page-level-documents-through-document-astro-and-head-astro)
     - 3.2 [Keep Frontmatter Server-only and Template-focused](#32-keep-frontmatter-server-only-and-template-focused)
-    - 3.3 [Prefer .astro for Static Shells and Layouts](#33-prefer-astro-for-static-shells-and-layouts)
+    - 3.3 [Prefer `.astro` for Static Shells and Layouts](#33-prefer-astro-for-static-shells-and-layouts)
 4. [Islands and Framework Boundaries](#4-islands-and-framework-boundaries) — **CRITICAL**
-    - 4.1 [Choose client:* Directives by Visibility and Urgency](#41-choose-client-directives-by-visibility-and-urgency)
-    - 4.2 [Do Not Import .astro Components Inside Framework Components](#42-do-not-import-astro-components-inside-framework-components)
+    - 4.1 [Choose `client:*` Directives by Visibility and Urgency](#41-choose-client-directives-by-visibility-and-urgency)
+    - 4.2 [Do Not Import `.astro` Components Inside Framework Components](#42-do-not-import-astro-components-inside-framework-components)
     - 4.3 [Hydrate Only Truly Interactive Widgets](#43-hydrate-only-truly-interactive-widgets)
-    - 4.4 [Reserve client:only for SSR-incompatible Components](#44-reserve-clientonly-for-ssr-incompatible-components)
+    - 4.4 [Reserve `client:only` for SSR-incompatible Components](#44-reserve-clientonly-for-ssr-incompatible-components)
 5. [Routing and Navigation Contracts](#5-routing-and-navigation-contracts) — **HIGH**
     - 5.1 [Keep Dynamic Route Generation at the Page Boundary](#51-keep-dynamic-route-generation-at-the-page-boundary)
-    - 5.2 [Prefer Sibling index.astro and [page].astro Files for Paginated Route Families](#52-prefer-sibling-indexastro-and-pageastro-files-for-paginated-route-families)
+    - 5.2 [Prefer Sibling `index.astro` and `[page].astro` Files for Paginated Route Families](#52-prefer-sibling-index-astro-and-page-astro-files-for-paginated-route-families)
     - 5.3 [Preserve Established Public URL Contracts When Normalizing Route Folders](#53-preserve-established-public-url-contracts-when-normalizing-route-folders)
     - 5.4 [Use HTML Anchors Before Framework Link Abstractions](#54-use-html-anchors-before-framework-link-abstractions)
 6. [Rendering Strategy and Delivery Modes](#6-rendering-strategy-and-delivery-modes) — **CRITICAL**
     - 6.1 [Default to Static Until Most Pages Need On-demand Rendering](#61-default-to-static-until-most-pages-need-on-demand-rendering)
-    - 6.2 [Reserve output: "server" for Mostly Dynamic Apps](#62-reserve-output-server-for-mostly-dynamic-apps)
-    - 6.3 [Use prerender = false for Request-bound or Personalized Routes](#63-use-prerender-false-for-request-bound-or-personalized-routes)
+    - 6.2 [Reserve `output: "server"` for Mostly Dynamic Apps](#62-reserve-output-server-for-mostly-dynamic-apps)
+    - 6.3 [Use `prerender = false` for Request-bound or Personalized Routes](#63-use-prerender-false-for-request-bound-or-personalized-routes)
 7. [Content Collections and Data Loading](#7-content-collections-and-data-loading) — **HIGH**
-    - 7.1 [Define Build-time Collections in src/content.config.ts](#71-define-build-time-collections-in-srccontentconfigts)
+    - 7.1 [Define Build-time Collections in `src/content.config.ts`](#71-define-build-time-collections-in-src-content-config-ts)
     - 7.2 [Distinguish Build-time and Live Collections](#72-distinguish-build-time-and-live-collections)
     - 7.3 [Give Collections Explicit Zod Schemas](#73-give-collections-explicit-zod-schemas)
 8. [Server Features and Mutation Boundaries](#8-server-features-and-mutation-boundaries) — **HIGH**
@@ -70,7 +70,7 @@
     - 9.5 [Keep Page Files Focused on Route Contract and Data Handoff](#95-keep-page-files-focused-on-route-contract-and-data-handoff)
     - 9.6 [Keep Pages-local Document Helpers Imported Only by Pages](#96-keep-pages-local-document-helpers-imported-only-by-pages)
     - 9.7 [Limit Layouts to Shell and Composition](#97-limit-layouts-to-shell-and-composition)
-    - 9.8 [Place Feature-private UI Under private/](#98-place-feature-private-ui-under-private)
+    - 9.8 [Place Feature-private UI Under `private/`](#98-place-feature-private-ui-under-private)
     - 9.9 [Place Layout Shells Under Owning Features](#99-place-layout-shells-under-owning-features)
 10. [Documentation and Comments](#10-documentation-and-comments) — **MEDIUM**
     - 10.1 [Limit Inline Comments to Rendering, Ownership, and Integration Caveats](#101-limit-inline-comments-to-rendering-ownership-and-integration-caveats)
@@ -88,7 +88,7 @@
 
 `src/pages`는 Astro의 required route adapter layer로 얇게 유지하고, `_document.astro`/`_head.astro`/`_document.css` 같은 pages-local document helper는 `src/pages/_*`에 두며, 실제 route body 구현은 `src/features/<feature>`로 분리해야 entry 흐름과 ownership이 예측 가능하게 유지됩니다.
 
-### 1.1 Keep src/pages Thin and Use It as the Route Adapter Layer
+### 1.1 Keep `src/pages` Thin and Use It as the Route Adapter Layer
 
 **Impact: CRITICAL (keeps Astro's required routing directory from turning into the place where full screens and private UI sprawl)**
 
@@ -116,22 +116,23 @@ const posts = await getPosts({ search });
 
 ```astro
 ---
-import Document from "../_document.astro";
-import PostsPage from "../../features/post/posts-page.astro";
-import { getPostsPageData } from "../../features/post/post.ts";
+import Document from "@/pages/_document.astro";
+import PostsPage from "@/features/post/posts-page.astro";
+import { getPostEntries, getPostListPageProps } from "@/features/post/post";
 
-export const prerender = false;
-
-const search = Astro.url.searchParams.get("search") ?? "";
-const pageData = await getPostsPageData({ search });
+const postEntries = await getPostEntries();
+const pageProps = getPostListPageProps({
+	entries: postEntries,
+	currentPage: 1,
+});
 ---
 
-<Document currentPathname={Astro.url.pathname} pageTitle="posts" pageDescription="Recent posts">
-	<PostsPage {...pageData} />
+<Document currentPathname={Astro.url.pathname} pageTitle="posts" pageDescription="Archived posts from meepin">
+	<PostsPage {...pageProps} />
 </Document>
 ```
 
-### 1.2 Place Pages-local Document Helpers Under src/pages with an Underscore Prefix
+### 1.2 Place Pages-local Document Helpers Under `src/pages` with an Underscore Prefix
 
 **Impact: HIGH (keeps route-shared document helpers and support files close to route adapters without turning them into routed pages or feature dependencies)**
 
@@ -175,7 +176,7 @@ src/
 
 이 구조에서는 `_document`, `_head`, `_document.css`가 pages-local helper라는 점이 파일 위치만으로도 드러나고, routed page는 계속 `src/pages/**`만 담당합니다.
 
-### 1.3 Place Route Implementations Under src/features/<feature>
+### 1.3 Place Route Implementations Under `src/features/<feature>`
 
 **Impact: HIGH (keeps Astro's reserved route files small while giving each route family a stable feature-local home)**
 
@@ -202,7 +203,11 @@ src/
     _document.astro
     _head.astro
     _document.css
-    [page].astro
+    404.astro
+    index.astro
+    recent/
+      index.astro
+      [page].astro
     posts/
       index.astro
       [page].astro
@@ -216,15 +221,17 @@ src/
       [tag]/
         index.astro
         [page].astro
-    post/
-      [slug].astro
+    rss.xml.ts
+    robots.txt.ts
   features/
+    error/
+      not-found-page.astro
     home/
       home-page.astro
       home.css
+      home.ts
     recent/
       recent-page.astro
-      recent.css
       recent.ts
     post/
       posts-page.astro
@@ -243,7 +250,7 @@ src/
       note.ts
     tag/
       tags-page.astro
-      tag-entries-page.astro
+      tag-page.astro
       tag.css
       tag.ts
   content/
@@ -251,21 +258,21 @@ src/
       hello-world.md
 ```
 
-새 route family를 설계할 때는 `posts/index.astro`, `posts/[page].astro`, `posts/[slug].astro`처럼 list/detail/pagination을 한 폴더에 모으는 편을 우선할 수 있습니다. feature file 이름은 `posts-page.astro`, `post-detail-page.astro`, `notes-page.astro`, `note-detail-page.astro`, `tags-page.astro`처럼 route role이 드러나게 유지합니다. 다만 현재 public URL이 이미 `/post/:slug`, `/note/:slug`, `/page/:n`처럼 굳어져 있다면 convention도 그 URL contract를 존중하도록 맞춥니다.
+meepin 최신 구조처럼 paginated list를 `recent/`, `posts/`, `notes/`, `tags/[tag]/` family 아래에 모으고 홈은 `src/pages/index.astro`에 분리해 두면, route adapter tree와 feature implementation tree가 함께 읽기 쉬워집니다. feature file 이름은 `recent-page.astro`, `posts-page.astro`, `post-detail-page.astro`, `notes-page.astro`, `note-detail-page.astro`, `tags-page.astro`, `tag-page.astro`처럼 route role이 드러나게 유지합니다.
 
 ## 2. File Naming and Page Assets
 
 **Impact: HIGH**
 
-`_document`/`_head`/`_document.css` 같은 pages-local helper 이름, `recent/posts/postDetail/tags/tagEntries`처럼 route role이 드러나는 feature file과 `ft_*` surface owner, 의미 있는 dynamic segment 이름은 file-based routing과 support module 탐색을 함께 쉽게 만듭니다.
+`_document`/`_head`/`_document.css` 같은 pages-local helper 이름, `home/recent/posts/postDetail/notes/noteDetail/tags/tag`처럼 route role이 드러나는 feature file과 `ft_*` surface owner, 의미 있는 dynamic segment 이름은 file-based routing과 support module 탐색을 함께 쉽게 만듭니다.
 
-### 2.1 Align Feature Page Files and ft * Surface Classes with Route Role
+### 2.1 Align Feature Page Files and `ft_*` Surface Classes with Route Role
 
 **Impact: HIGH (keeps Astro feature page files, CSS owners, and route semantics aligned without bloated or ambiguous page namespaces)**
 
 `src/features/<feature>/*-page.astro` 파일은 route role이 드러나는 owner 이름을 사용하고, 그 screen surface CSS는 같은 owner를 `ft_*` scope로 유지합니다. list, hub, directory screen은 route 이름 그대로 `recent-page.astro`, `posts-page.astro`, `notes-page.astro`, `tags-page.astro`처럼 두고, surface class는 `ft_recent__*`, `ft_posts__*`, `ft_notes__*`, `ft_tags__*`처럼 짧게 둡니다. detail screen은 `post-detail-page.astro`, `note-detail-page.astro`처럼 singular + `detail-page`를 사용하고, surface class는 `ft_postDetail__*`, `ft_noteDetail__*`처럼 singular + `Detail`을 사용합니다. 홈은 `home-page.astro`와 `ft_home__*`를 사용합니다.
 
-단수 resource route가 실제로는 collection/archive를 렌더링한다면 `tag-entries-page.astro`와 `ft_tagEntries__*`처럼 역할을 드러내는 singular owner를 허용합니다. 반대로 class에 `Page`를 넣거나 `loc_*`를 만들어 feature screen ownership을 쪼개지 않습니다.
+복수형 family 아래의 단일 resource page도 URL contract가 `src/pages/tags/[tag]/index.astro`처럼 singular resource를 가리킨다면 `tag-page.astro`와 `ft_tag__*`처럼 route resource owner를 그대로 유지합니다. 반대로 class에 `Page`를 넣거나 `loc_*`를 만들어 feature screen ownership을 쪼개지 않습니다.
 
 **Incorrect (파일명과 screen surface owner가 route role과 어긋남):**
 
@@ -273,7 +280,7 @@ src/
 home-page.astro -> loc_homePage__grid
 posts-page.astro -> ft_postsPage__root
 post-detail-page.astro -> ft_posts__body
-tags-page.astro -> loc_tagDirectoryList__root
+tag-page.astro -> ft_tags__root
 ```
 
 **Correct (파일명과 `ft_*` surface owner가 route role에 맞게 정렬됨):**
@@ -286,7 +293,7 @@ post-detail-page.astro -> ft_postDetail__body
 notes-page.astro -> ft_notes__root
 note-detail-page.astro -> ft_noteDetail__meta
 tags-page.astro -> ft_tags__list
-tag-entries-page.astro -> ft_tagEntries__root
+tag-page.astro -> ft_tag__root
 ```
 
 ### 2.2 Use Domain-specific Dynamic Segment Names
@@ -312,11 +319,11 @@ src/pages/authors/[author].astro
 src/pages/blog/[slug].astro
 ```
 
-### 2.3 Use Owner-named Feature Files Instead of Generic page, slug, and index
+### 2.3 Use Owner-named Feature Files Instead of Generic `page`, `slug`, and `index`
 
 **Impact: MEDIUM-HIGH (keeps feature roots searchable even after the number of screens and support files grows)**
 
-`src/features/<feature>` 아래의 파일은 generic name보다 owner-named file을 우선합니다. 즉 `page.astro`, `slug.astro`, `index.css`, `index.ts`처럼 의미가 약한 이름보다 `recent-page.astro`, `posts-page.astro`, `post-detail-page.astro`, `notes-page.astro`, `note-detail-page.astro`, `tags-page.astro`, `tag-entries-page.astro`, `post.css`, `post.ts`처럼 feature 이름과 역할이 함께 드러나는 이름을 사용합니다. list, hub, directory screen은 route 이름을 그대로 따르고, detail screen은 singular + `detail-page`를 우선합니다. 이 규칙은 grep/search 탐색성을 높이고, feature 수가 많아져도 파일명이 서로 구분되게 만듭니다. route adapter 파일인 `src/pages/**/[slug].astro` 같은 이름은 Astro route contract 자체이므로 예외입니다.
+`src/features/<feature>` 아래의 파일은 generic name보다 owner-named file을 우선합니다. 즉 `page.astro`, `slug.astro`, `index.css`, `index.ts`처럼 의미가 약한 이름보다 `home-page.astro`, `recent-page.astro`, `posts-page.astro`, `post-detail-page.astro`, `notes-page.astro`, `note-detail-page.astro`, `tags-page.astro`, `tag-page.astro`, `post.css`, `post.ts`처럼 feature 이름과 역할이 함께 드러나는 이름을 사용합니다. list, hub, directory screen은 route 이름을 그대로 따르고, detail screen은 singular + `detail-page`를 우선합니다. 복수형 family 아래의 singular resource page는 `tag-page.astro`처럼 resource owner를 그대로 사용합니다. 이 규칙은 grep/search 탐색성을 높이고, feature 수가 많아져도 파일명이 서로 구분되게 만듭니다. route adapter 파일인 `src/pages/**/[slug].astro` 같은 이름은 Astro route contract 자체이므로 예외입니다.
 
 **Incorrect (`src/features` 안에서 generic file name을 남발함):**
 
@@ -378,11 +385,11 @@ src/pages/_head.astro
 
 `.astro` 컴포넌트는 기본적으로 정적 HTML shell과 server-side 준비 코드를 담당하고, `_document`/`_head`를 통한 pages-local document composition과 template/slot 구조는 framework island 없이도 읽히게 유지해야 합니다.
 
-### 3.1 Compose Page-level Documents Through document.astro and head.astro
+### 3.1 Compose Page-level Documents Through `_document.astro` and `_head.astro`
 
 **Impact: HIGH (keeps repeated document, head, and body shell composition out of route files while preserving a single page-level entry point)**
 
-반복되는 top-level document composition이 필요하면 page entry가 `src/pages/_document.astro` 하나만 import하게 둡니다. `_document.astro`는 내부적으로 `_head.astro`, `_document.css`를 사용해 `<html>`, `<head>`, `<body>`와 route-shared body shell을 직접 조립합니다. `_document.astro`는 문서 셸 contract를 자기 로컬 `Props`로 직접 소유하고, `_head.astro`도 head/meta 전용 contract를 자기 로컬 `Props`로 직접 소유합니다. `Props extends DocumentMetaProps` 같은 얇은 타입 확장이나 `_document.ts` 같은 중간 타입 파일은 두지 않습니다. `_head.astro`는 `astro-seo`를 기본 SEO surface로 사용하고, favicon, manifest, RSS alternate, theme/app meta, JSON-LD 같은 프로젝트 고유 메타는 계속 로컬 구현으로 유지합니다. 특별한 재사용 경계가 생기지 않는 한 body shell 전용 helper를 `_page-chrome.astro`처럼 한 단계 더 분리하지 않고 `_document.astro` 안에 둡니다. feature screen은 이 helper들을 모르고 `<slot />`에 들어갈 body content만 렌더링합니다.
+반복되는 top-level document composition이 필요하면 page entry가 `src/pages/_document.astro` 하나만 import하게 둡니다. `_document.astro`는 내부적으로 `_head.astro`, `_document.css`, base stylesheet를 사용해 `<html>`, `<head>`, `<body>`와 route-shared body shell을 직접 조립합니다. `_document.astro`는 문서 셸 contract를 자기 로컬 `Props`로 직접 소유하고, `_head.astro`도 head/meta 전용 contract를 자기 로컬 `Props`로 직접 소유합니다. `Props extends DocumentMetaProps` 같은 얇은 타입 확장이나 `_document.ts` 같은 중간 타입 파일은 두지 않습니다. `_head.astro`는 `astro-seo`를 기본 SEO surface로 사용하고, canonical, favicon, manifest, RSS alternate, theme/app meta, JSON-LD 같은 프로젝트 고유 메타는 계속 로컬 구현으로 유지합니다. 특별한 재사용 경계가 생기지 않는 한 body shell 전용 helper를 `_page-chrome.astro`처럼 한 단계 더 분리하지 않고 `_document.astro` 안에 둡니다. feature screen은 이 helper들을 모르고 `<slot />`에 들어갈 body content만 렌더링합니다.
 
 **Incorrect (각 page가 문서 조립을 반복하거나 body shell을 불필요하게 한 단계 더 분리함):**
 
@@ -411,30 +418,37 @@ import RecentPage from "@/features/recent/recent-page.astro";
 
 ```astro
 ---
-import DocumentShell from "@/pages/_document.astro";
+import Document from "@/pages/_document.astro";
 import RecentPage from "@/features/recent/recent-page.astro";
-import { getRecentEntries, getRecentPageProps } from "@/features/recent/recent";
+import { getRecentEntries, getRecentListPageProps } from "@/features/recent/recent";
 
-const entries = await getRecentEntries();
-const pageProps = getRecentPageProps({ entries, currentPage: 1 });
+const recentEntries = await getRecentEntries();
+const pageProps = getRecentListPageProps({
+	entries: recentEntries,
+	currentPage: 1,
+});
 ---
 
-<DocumentShell currentPathname={Astro.url.pathname} pageTitle="recent" pageDescription="Recent posts and notes from meepin">
+<Document currentPathname={Astro.url.pathname} pageTitle="recent" pageDescription="Recent posts and notes from meepin">
 	<RecentPage {...pageProps} />
-</DocumentShell>
+</Document>
 ```
 
 ```astro
 ---
 import "./_document.css";
-import HeadMeta from "./_head.astro";
+import "@/styles/base.css";
+import Head from "./_head.astro";
 import UiBox from "@/components/ui/box/ui-box.astro";
 import UiStack from "@/components/ui/stack/ui-stack.astro";
 import UiSurface from "@/components/ui/surface/ui-surface.astro";
-import WidgetSiteHeader from "@/components/widget/site-header/widget-site-header.astro";
+import WgSiteFooter from "@/components/widget/site-footer/wg-site-footer.astro";
+import WgSiteHeader from "@/components/widget/site-header/wg-site-header.astro";
+import { config } from "@/shared/config";
 
 interface Props {
 	currentPathname: string;
+	pageShellVariant?: "default" | "wide";
 	pageTitle?: string;
 	pageDescription?: string;
 	pageImagePath?: string;
@@ -448,6 +462,7 @@ interface Props {
 
 const {
 	currentPathname,
+	pageShellVariant = "default",
 	pageTitle,
 	pageDescription,
 	pageImagePath,
@@ -460,8 +475,9 @@ const {
 } = Astro.props as Props;
 ---
 
-<html lang="ko">
-	<HeadMeta
+<!doctype html>
+<html lang={config.site.language}>
+	<Head
 		pageTitle={pageTitle}
 		pageDescription={pageDescription}
 		pageImagePath={pageImagePath}
@@ -476,13 +492,16 @@ const {
 		<UiSurface class="rt_document__surface">
 			<UiStack class="rt_document__stack">
 				<UiBox class="rt_document__header">
-					<WidgetSiteHeader currentPathname={currentPathname} />
+					<WgSiteHeader currentPathname={currentPathname} />
 				</UiBox>
-				<main class="rt_document__main">
+				<main class:list={["rt_document__main", pageShellVariant === "wide" && "rt_document__main--wide"]}>
 					<UiBox class="rt_document__content">
 						<slot />
 					</UiBox>
 				</main>
+				<UiBox class:list={["rt_document__footer", pageShellVariant === "wide" && "rt_document__footer--wide"]}>
+					<WgSiteFooter />
+				</UiBox>
 			</UiStack>
 		</UiSurface>
 	</body>
@@ -492,26 +511,81 @@ const {
 ```astro
 ---
 import { SEO } from "astro-seo";
+import { config } from "@/shared/config";
+import { util } from "@/shared/util";
 
 interface Props {
 	pageTitle?: string;
 	pageDescription?: string;
+	pageImagePath?: string;
+	pageType?: "website" | "article";
+	pageKeywords?: string[];
+	pagePublishedTime?: Date;
+	pageModifiedTime?: Date;
 	pageNoIndex?: boolean;
 	pageNoFollow?: boolean;
 }
 
-const { pageTitle, pageDescription, pageNoIndex = false, pageNoFollow = false } = Astro.props as Props;
+const {
+	pageTitle,
+	pageDescription,
+	pageImagePath,
+	pageType = "website",
+	pageKeywords,
+	pagePublishedTime,
+	pageModifiedTime,
+	pageNoIndex = false,
+	pageNoFollow = false,
+} = Astro.props as Props;
+const documentTitle = pageTitle ? `${pageTitle} | ${config.site.name}` : config.site.name;
+const description = pageDescription ?? config.site.description;
+const canonicalUrl = Astro.site ? new URL(Astro.url.pathname, Astro.site) : undefined;
+const socialImagePath = pageImagePath ?? config.site.defaultSocialImagePath;
+const socialImageUrl = Astro.site ? new URL(util.path.withBasePath(socialImagePath), Astro.site) : undefined;
 ---
 
-<SEO title={pageTitle} description={pageDescription} noindex={pageNoIndex} nofollow={pageNoFollow} />
-<link rel="icon" href="/favicon.ico" />
-<link rel="manifest" href="/site.webmanifest" />
-<link rel="alternate" type="application/rss+xml" title="meepin RSS" href="/rss.xml" />
-<meta name="theme-color" content="#ffffff" />
-<script is:inline type="application/ld+json" set:html={JSON.stringify({ "@context": "https://schema.org" })} />
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="theme-color" content={config.site.themeColor} />
+	<link rel="icon" href={util.path.withBasePath(config.site.faviconIcoPath)} sizes="any" />
+	<link rel="manifest" href={util.path.withBasePath(config.site.manifestPath)} />
+	<link rel="alternate" type="application/rss+xml" title={`${config.site.name} RSS`} href={util.path.withBasePath("/rss.xml")} />
+	<SEO
+		title={documentTitle}
+		description={description}
+		canonical={canonicalUrl}
+		noindex={pageNoIndex}
+		nofollow={pageNoFollow}
+		openGraph={
+			socialImageUrl
+				? {
+						basic: {
+							title: documentTitle,
+							type: pageType,
+							image: socialImageUrl.toString(),
+							url: canonicalUrl,
+						},
+						optional: {
+							description,
+							siteName: config.site.name,
+						},
+						article:
+							pageType === "article"
+								? {
+										publishedTime: pagePublishedTime?.toISOString(),
+										modifiedTime: pageModifiedTime?.toISOString(),
+										tags: pageKeywords,
+									}
+								: undefined,
+				  }
+				: undefined
+		}
+	/>
+</head>
 ```
 
-이 구조에서는 page는 route adapter와 meta props handoff만 소유하고, `_document.astro`가 top-level document와 shared body shell을 직접 감싸며, feature는 body content만 렌더링합니다.
+이 구조에서는 page는 route adapter와 meta props handoff만 소유하고, `_document.astro`가 top-level document와 shared body shell을 직접 감싸며, `_head.astro`가 SEO/meta 계산을 자기 contract로 직접 소유하고, feature는 body content만 렌더링합니다.
 
 ### 3.2 Keep Frontmatter Server-only and Template-focused
 
@@ -558,7 +632,7 @@ const successMessage = "Subscribed";
 </script>
 ```
 
-### 3.3 Prefer .astro for Static Shells and Layouts
+### 3.3 Prefer `.astro` for Static Shells and Layouts
 
 **Impact: CRITICAL (reduces unnecessary client framework surface and keeps Astro's zero-JS default intact)**
 
@@ -602,7 +676,7 @@ const { title } = Astro.props;
 
 hydration은 진짜 상호작용이 필요한 widget에만 제한하고, framework component와 Astro component 사이의 import/slot 경계도 명확하게 유지해야 합니다.
 
-### 4.1 Choose client:* Directives by Visibility and Urgency
+### 4.1 Choose `client:*` Directives by Visibility and Urgency
 
 **Impact: HIGH (makes hydration cost intentional instead of defaulting everything to eager loading)**
 
@@ -624,7 +698,7 @@ hydration은 진짜 상호작용이 필요한 widget에만 제한하고, framewo
 <FaqAccordion client:visible />
 ```
 
-### 4.2 Do Not Import .astro Components Inside Framework Components
+### 4.2 Do Not Import `.astro` Components Inside Framework Components
 
 **Impact: CRITICAL (preserves Astro's component boundary and avoids unsupported cross-runtime composition)**
 
@@ -681,7 +755,7 @@ import FeatureSearch from "../components/FeatureSearch.tsx";
 <FeatureSearch client:visible />
 ```
 
-### 4.4 Reserve client:only for SSR-incompatible Components
+### 4.4 Reserve `client:only` for SSR-incompatible Components
 
 **Impact: HIGH (preserves server-rendered HTML for interactive widgets that can hydrate normally)**
 
@@ -750,75 +824,96 @@ const { post } = Astro.props;
 <BlogPostPage post={post} />
 ```
 
-### 5.2 Prefer Sibling index.astro and [page].astro Files for Paginated Route Families
+### 5.2 Prefer Sibling `index.astro` and `[page].astro` Files for Paginated Route Families
 
 **Impact: HIGH (keeps paginated route families shallow and makes list plus pagination contracts readable from one folder)**
 
-페이지네이션이 있는 list route family는 가능하면 같은 폴더 안에서 `index.astro`와 `[page].astro`를 sibling으로 둡니다. 루트 recent라면 `src/pages/index.astro`와 `src/pages/[page].astro`, section list라면 `src/pages/posts/index.astro`와 `src/pages/posts/[page].astro`처럼 둡니다. 동적 resource 아래에 pagination이 붙는 경우에는 `src/pages/tags/[tag]/index.astro`와 `src/pages/tags/[tag]/[page].astro`처럼 resource folder 안에서 entry page와 pagination page를 나란히 둡니다. 이렇게 해야 list entry와 pagination contract가 한 route family 안에 모여 더 읽기 쉬워집니다.
+페이지네이션이 있는 list route family는 가능하면 같은 폴더 안에서 `index.astro`와 `[page].astro`를 sibling으로 둡니다. 홈처럼 별도 landing screen이 있는 경우에는 `src/pages/index.astro`를 유지하고, 실제 paginated archive는 `src/pages/recent/index.astro`와 `src/pages/recent/[page].astro`처럼 전용 family 아래에 둡니다. section list라면 `src/pages/posts/index.astro`와 `src/pages/posts/[page].astro`처럼 두고, 동적 resource 아래에 pagination이 붙는 경우에는 `src/pages/tags/[tag]/index.astro`와 `src/pages/tags/[tag]/[page].astro`처럼 resource folder 안에서 entry page와 pagination page를 나란히 둡니다. 이렇게 해야 list entry와 pagination contract가 한 route family 안에 모여 더 읽기 쉬워집니다.
 
 **Incorrect (pagination route를 `page/` 하위 폴더로 한 단계 더 감쌈):**
 
 ```text
-src/pages/page/[page].astro
+src/pages/[page].astro
 src/pages/posts/page/[page].astro
 src/pages/notes/page/[page].astro
 src/pages/tags/[tag]/page/[page].astro
 ```
 
-이 구조는 같은 route family를 불필요한 `page/` 서브폴더로 나눠, tree를 훑을 때 list와 pagination contract를 한눈에 보기 어렵게 만듭니다.
+이 구조는 홈과 archive의 역할을 섞거나, 같은 route family를 불필요한 `page/` 서브폴더로 나눠 tree를 훑을 때 list와 pagination contract를 한눈에 보기 어렵게 만듭니다.
 
 **Correct (list와 pagination을 sibling file로 둠):**
 
 ```text
 src/pages/index.astro
-src/pages/[page].astro
+src/pages/recent/index.astro
+src/pages/recent/[page].astro
 
 src/pages/posts/index.astro
 src/pages/posts/[page].astro
+src/pages/posts/[slug].astro
 
 src/pages/notes/index.astro
 src/pages/notes/[page].astro
+src/pages/notes/[slug].astro
 
+src/pages/tags/index.astro
 src/pages/tags/[tag]/index.astro
 src/pages/tags/[tag]/[page].astro
 ```
 
-이 구조에서는 각 route family의 entry page와 pagination page가 같은 폴더에 모여 있어 URL contract를 file tree만 보고도 바로 이해할 수 있습니다.
+이 구조에서는 홈은 별도 route로 남고, 각 paginated route family의 entry page와 pagination page가 같은 폴더에 모여 있어 URL contract를 file tree만 보고도 바로 이해할 수 있습니다.
 
 ### 5.3 Preserve Established Public URL Contracts When Normalizing Route Folders
 
 **Impact: HIGH (prevents file tree cleanup from silently changing published URLs that users and crawlers already rely on)**
 
-route folder를 더 예쁘게 정리할 수 있더라도, 이미 공개된 URL contract가 있다면 그 계약을 먼저 존중합니다. 새 route family를 만들 때는 `posts/index.astro`, `posts/[page].astro`, `posts/[slug].astro`처럼 list/detail/pagination을 한 폴더에 모으는 쪽을 우선할 수 있지만, 현재 사이트가 이미 `/post/:slug`, `/note/:slug`, `/page/:n` 같은 경로를 쓰고 있다면 폴더 대칭성만을 이유로 URL을 바꾸지 않습니다. 이 skill에서는 "새로 설계할 때의 선호 구조"와 "이미 배포된 공개 URL"을 분리해서 판단합니다.
+route folder를 더 예쁘게 정리할 수 있더라도, 이미 공개된 URL contract가 있다면 그 계약을 먼저 존중합니다. meepin 최신 구조처럼 현재 사이트가 이미 `/recent/:page?`, `/posts/:page?`, `/posts/:slug`, `/notes/:page?`, `/notes/:slug`, `/tags/:tag/:page?` 같은 경로를 쓰고 있다면 폴더 대칭성만을 이유로 root pagination, singular folder, 다른 slug family로 URL을 바꾸지 않습니다. 이 skill에서는 "새로 설계할 때의 선호 구조"와 "이미 배포된 공개 URL"을 분리해서 판단합니다.
 
 **Incorrect (폴더 모양을 맞추려는 이유만으로 공개 URL을 바꿈):**
 
 ```text
 before:
-src/pages/posts/index.astro
-src/pages/posts/[page].astro
-src/pages/post/[slug].astro
-
-after:
+src/pages/index.astro
+src/pages/recent/index.astro
+src/pages/recent/[page].astro
 src/pages/posts/index.astro
 src/pages/posts/[page].astro
 src/pages/posts/[slug].astro
+src/pages/notes/index.astro
+src/pages/notes/[page].astro
+src/pages/notes/[slug].astro
+src/pages/tags/index.astro
+src/pages/tags/[tag]/index.astro
+src/pages/tags/[tag]/[page].astro
+
+after:
+src/pages/index.astro
+src/pages/[page].astro
+src/pages/posts/index.astro
+src/pages/posts/[page].astro
+src/pages/post/[slug].astro
+src/pages/notes/index.astro
+src/pages/notes/[page].astro
+src/pages/note/[slug].astro
+src/pages/tag/[tag]/index.astro
+src/pages/tag/[tag]/[page].astro
 ```
 
-이 변경은 file tree는 더 대칭적으로 보일 수 있지만, 기존 `/post/:slug` 링크를 `/posts/:slug`로 바꾸는 공개 URL 변경이므로 별도 migration이나 redirect 계획 없이 수행하면 안 됩니다.
+이 변경은 file tree는 더 대칭적으로 보일 수 있지만, 이미 배포된 `/recent/*`, `/posts/*`, `/notes/*`, `/tags/*` 링크와 canonical을 깨뜨리는 공개 URL 변경이므로 별도 migration이나 redirect 계획 없이 수행하면 안 됩니다.
 
 **Correct (현재 공개 URL을 유지하거나, 바꾼다면 명시적 migration으로 다룸):**
 
 ```text
 current public contract:
 src/pages/index.astro
-src/pages/page/[page].astro
+src/pages/recent/index.astro
+src/pages/recent/[page].astro
 src/pages/posts/index.astro
-src/pages/posts/page/[page].astro
-src/pages/post/[slug].astro
+src/pages/posts/[page].astro
+src/pages/posts/[slug].astro
 src/pages/notes/index.astro
-src/pages/notes/page/[page].astro
-src/pages/note/[slug].astro
+src/pages/notes/[page].astro
+src/pages/notes/[slug].astro
 src/pages/tags/index.astro
 src/pages/tags/[tag]/index.astro
 src/pages/tags/[tag]/[page].astro
@@ -889,7 +984,7 @@ export default defineConfig({
 });
 ```
 
-### 6.2 Reserve output: "server" for Mostly Dynamic Apps
+### 6.2 Reserve `output: "server"` for Mostly Dynamic Apps
 
 **Impact: HIGH (makes full-project SSR a deliberate app-level choice instead of a convenience toggle)**
 
@@ -917,7 +1012,7 @@ export default defineConfig({
 <AboutPage />
 ```
 
-### 6.3 Use prerender = false for Request-bound or Personalized Routes
+### 6.3 Use `prerender = false` for Request-bound or Personalized Routes
 
 **Impact: CRITICAL (keeps request-time logic on routes that actually execute per request)**
 
@@ -951,7 +1046,7 @@ const session = await getSession(Astro.request.headers);
 
 structured content는 build-time/live collection 경계를 분명히 하고 config와 schema를 중심으로 관리해야 page 파일 안의 ad-hoc parsing과 freshness 오해를 줄일 수 있습니다.
 
-### 7.1 Define Build-time Collections in src/content.config.ts
+### 7.1 Define Build-time Collections in `src/content.config.ts`
 
 **Impact: HIGH (centralizes content ownership and keeps collection shape from being redefined across pages)**
 
@@ -1240,52 +1335,50 @@ export const getEmptyMessage = (selectedTag?: string) => {
 
 ```ts
 // src/features/post/post.ts
+import type { Entry, EntryPagination } from "@/shared/util";
+import { util } from "@/shared/util";
+
 /**
- * @helper post collection 응답을 posts 화면 model로 정규화
+ * @summary post 목록 화면에 전달할 계약
  */
-export const buildPostsPageModel = (posts: PostCollectionEntry[]) => {
-	return {
-		title: "Posts",
-		description: "Latest writing from the team.",
-		availableTags: [...new Set(posts.flatMap((post) => post.data.tags))].sort(),
-		posts: posts.map((post) => ({
-			id: post.id,
-			title: post.data.title,
-			description: post.data.description,
-			tags: post.data.tags,
-			href: `/post/${post.slug}/`,
-		})),
-	};
-};
+export interface PostListPageProps {
+	/**
+	 * @field 현재 posts 목록 페이지네이션 정보
+	 */
+	pagination: EntryPagination;
+}
+
+/**
+ * @helper post 목록 화면 props를 계산한다.
+ */
+export const getPostListPageProps = ({ entries, currentPage }: { entries: Entry[]; currentPage: number }): PostListPageProps => ({
+	pagination: util.entry.buildPagination({
+		entries,
+		currentPage,
+		basePathname: "/posts/",
+	}),
+});
 ```
 
 ```astro
 ---
-import type { PostsPageModel } from "./post";
+import type { PostListPageProps } from "./post";
 
-/**
- * @summary 포스트 목록 feature screen props
- */
-interface Props {
-	pageModel: PostsPageModel;
-	selectedTag?: string;
-}
-
-const { pageModel, selectedTag } = Astro.props;
-const hasActiveTag = typeof selectedTag === "string" && selectedTag.length > 0;
-const emptyMessage = hasActiveTag
-	? "No posts match this filter."
-	: "No published posts yet.";
+const { pagination } = Astro.props as PostListPageProps;
+const isFirstPage = pagination.currentPage === 1;
+const emptyMessage = isFirstPage
+	? "No published posts yet."
+	: "No posts were found for this page.";
 ---
 ```
 
-이 구조에서는 collection normalization 같은 실제 data boundary만 `post.ts`에 두고, 현재 feature page 흐름을 읽는 데 필요한 작은 분기와 문구 선택은 frontmatter에 남겨 둡니다.
+이 구조에서는 pagination/basePath 계산 같은 실제 data boundary만 `post.ts`에 두고, 현재 feature page 흐름을 읽는 데 필요한 작은 분기와 문구 선택은 frontmatter에 남겨 둡니다.
 
 ### 9.3 Extract Feature-private Sections Only for Rendering or Interaction Boundaries
 
 **Impact: HIGH (keeps feature pages readable while avoiding premature `private/` section extraction)**
 
-feature page에서 `private/` component를 추출할지는 "섹션처럼 보이느냐"가 아니라 실제 rendering boundary나 interaction boundary를 소유하느냐로 판단합니다. Astro 기준으로는 `client:*`나 `client:only` hydration, `server:defer`와 fallback slot, form/action ownership, custom element나 inline `<script>`가 붙는 브라우저 동작, props adapter가 복잡한 third-party widget, slot contract를 가진 reusable partial 같은 경우에만 `private/` section으로 분리할 가치가 있습니다. 반대로 단순 layout wrapper, heading/body/footer grouping, 들여쓰기 감소만을 위한 component 추출은 feature page의 흐름만 숨기므로 기본값으로 삼지 않습니다. 이때 `private/`로 내린 subtree도 여전히 같은 page surface owner를 설명한다면 `loc_*`로 namespace를 새로 만들지 말고 `ft_postDetail__*`처럼 같은 `ft_*` ownership을 유지합니다.
+feature page에서 `private/` component를 추출할지는 "섹션처럼 보이느냐"가 아니라 실제 rendering boundary나 interaction boundary를 소유하느냐로 판단합니다. Astro 기준으로는 `client:*`나 `client:only` hydration, `server:defer`와 fallback slot, form/action ownership, custom element나 inline `<script>`가 붙는 브라우저 동작, props adapter가 복잡한 third-party widget, slot contract를 가진 reusable partial 같은 경우에만 `private/` section으로 분리할 가치가 있습니다. 반대로 단순 layout wrapper, heading/body/footer grouping, 들여쓰기 감소만을 위한 component 추출은 feature page의 흐름만 숨기므로 기본값으로 삼지 않습니다. 이때 `private/`로 내린 subtree도 여전히 같은 page surface owner를 설명한다면 `loc_*`로 namespace를 새로 만들지 말고 `ft_postDetail__*`처럼 같은 `ft_*` ownership을 유지합니다. `loc_*`는 독립 dialog/helper wrapper처럼 정말 별도 owner를 세워야 하는 leaf에서만 예외적으로 사용합니다.
 
 **Incorrect (단순한 화면 덩어리를 모두 `private/` section으로 쪼갬):**
 
@@ -1376,50 +1469,36 @@ import PostPaginationSection from "./private/post-pagination-section.astro";
 
 ```astro
 ---
-import PostListItem from "./private/post-list-item.astro";
-import PostFiltersIsland from "./private/post-filters-island.tsx";
-import type { PostsPageModel } from "./post";
+import "./post.css";
+import WgEntryFeed from "@/components/widget/entry-feed/wg-entry-feed.astro";
+import type { PostListPageProps } from "./post";
 
 /**
  * @summary 포스트 목록 feature screen props
  */
 interface Props {
-	pageModel: PostsPageModel;
-	selectedTag?: string;
+	pagination: PostListPageProps["pagination"];
 }
 
-const { pageModel, selectedTag } = Astro.props;
-const visiblePosts = selectedTag
-	? pageModel.posts.filter((post) => post.tags.includes(selectedTag))
-	: pageModel.posts;
-const hasVisiblePosts = visiblePosts.length > 0;
+const { pagination } = Astro.props as Props;
+const hasEntries = pagination.entries.length > 0;
 ---
 
 <section class="ft_posts__root">
-	<header class="ft_posts__header">
-		<h1>{pageModel.title}</h1>
-		<p>{pageModel.description}</p>
-	</header>
-
-	<PostFiltersIsland
-		client:idle
-		availableTags={pageModel.availableTags}
-		selectedTag={selectedTag}
-	/>
-
-	{hasVisiblePosts ? (
-		<ul class="ft_posts__list">
-			{visiblePosts.map((post) => (
-				<PostListItem post={post} />
-			))}
-		</ul>
+	{hasEntries ? (
+		<WgEntryFeed
+			entries={pagination.entries}
+			title="posts"
+			emptyMessage="No posts were found for this page."
+			pagination={pagination}
+		/>
 	) : (
-		<p class="ft_posts__empty">No posts match this filter.</p>
+		<p class="ft_posts__empty">No published posts yet.</p>
 	)}
 </section>
 ```
 
-이 예시는 filter island와 list item처럼 경계가 있는 subtree만 분리하고, 전체 화면 순서와 empty state 선택은 feature page에서 계속 읽히게 유지합니다.
+이 예시는 shared widget을 조립하더라도 empty state 선택과 page-level surface owner는 feature page에 남기고, 실제 runtime boundary가 생길 때만 `private/`나 island로 분리하는 흐름을 보여 줍니다.
 
 ### 9.5 Keep Page Files Focused on Route Contract and Data Handoff
 
@@ -1449,19 +1528,35 @@ const posts = await getPosts({ tab });
 
 ```astro
 ---
-import DocumentShell from "@/pages/_document.astro";
-import PostsPage from "../../features/post/posts-page.astro";
-import { getPostsPageData } from "../../features/post/post.ts";
+import Document from "@/pages/_document.astro";
+import TagPage from "@/features/tag/tag-page.astro";
+import { getTagEntries, getTagNames, getTagPageProps } from "@/features/tag/tag";
+import { util } from "@/shared/util";
 
-export const prerender = false;
+export async function getStaticPaths() {
+	const tagEntries = await getTagEntries();
+	const tagNames = getTagNames({ entries: tagEntries });
 
-const tab = Astro.url.searchParams.get("tab") ?? "all";
-const pageData = await getPostsPageData({ tab });
+	return tagNames.map((tag) => ({
+		params: {
+			tag: util.entry.toTagSlug(tag),
+		},
+		props: {
+			pageProps: getTagPageProps({
+				entries: tagEntries,
+				tag,
+				currentPage: 1,
+			}),
+		},
+	}));
+}
+
+const { pageProps } = Astro.props;
 ---
 
-<DocumentShell currentPathname={Astro.url.pathname} pageTitle="posts" pageDescription="Recent posts">
-	<PostsPage {...pageData} />
-</DocumentShell>
+<Document currentPathname={Astro.url.pathname} pageTitle={`tagged ${pageProps.tag}`} pageDescription={`Entries tagged ${pageProps.tag}`}>
+	<TagPage {...pageProps} />
+</Document>
 ```
 
 ### 9.6 Keep Pages-local Document Helpers Imported Only by Pages
@@ -1493,16 +1588,20 @@ const props = Astro.props as RecentPageProps;
 
 ```astro
 ---
-import DocumentShell from "@/pages/_document.astro";
+import Document from "@/pages/_document.astro";
 import RecentPage from "@/features/recent/recent-page.astro";
-import { getRecentPageProps } from "@/features/recent/recent";
+import { getRecentEntries, getRecentListPageProps } from "@/features/recent/recent";
 
-const pageProps = getRecentPageProps({ entries: [], currentPage: 1 });
+const recentEntries = await getRecentEntries();
+const pageProps = getRecentListPageProps({
+	entries: recentEntries,
+	currentPage: 1,
+});
 ---
 
-<DocumentShell currentPathname={Astro.url.pathname} pageTitle="recent" pageDescription="Recent posts">
+<Document currentPathname={Astro.url.pathname} pageTitle="recent" pageDescription="Recent posts">
 	<RecentPage {...pageProps} />
-</DocumentShell>
+</Document>
 ```
 
 ```astro
@@ -1554,11 +1653,11 @@ const { currentPathname } = Astro.props;
 </UiSurface>
 ```
 
-### 9.8 Place Feature-private UI Under private/
+### 9.8 Place Feature-private UI Under `private/`
 
 **Impact: HIGH (makes the boundary between feature-local implementation and shared public surface obvious)**
 
-shared로 승격되지 않은 route-private UI, modal, form, 보조 renderer, feature 전용 CSS는 `src/features/<feature>/private/` 아래에 둡니다. `private/`는 재사용 가능한 public surface가 아니라 현재 feature 내부 전용 구현이라는 소유권을 드러내는 이름입니다. 다른 feature에서도 쓰이기 시작하면 `private/`에 두지 말고 shared layer로 승격합니다. 다만 feature page의 screen orchestration까지 `private/`로 옮기지는 말고, 실제 leaf UI나 local implementation detail만 내려 ownership을 분명히 합니다. 이때 같은 page surface를 설명하는 private markup/CSS는 `loc_*`로 새 namespace를 만드는 대신 기존 `ft_*` owner를 유지합니다.
+shared로 승격되지 않은 route-private UI, modal, form, 보조 renderer, feature 전용 CSS는 `src/features/<feature>/private/` 아래에 둡니다. `private/`는 재사용 가능한 public surface가 아니라 현재 feature 내부 전용 구현이라는 소유권을 드러내는 이름입니다. 다른 feature에서도 쓰이기 시작하면 `private/`에 두지 말고 shared layer로 승격합니다. 다만 feature page의 screen orchestration까지 `private/`로 옮기지는 말고, 실제 leaf UI나 local implementation detail만 내려 ownership을 분명히 합니다. 이때 같은 page surface를 설명하는 private markup/CSS는 `loc_*`로 새 namespace를 만드는 대신 기존 `ft_*` owner를 유지합니다. 예외는 dialog나 helper wrapper가 feature 안에서도 자기만의 독립 owner contract를 가져야 할 때뿐이며, 이 경우에만 `loc_postFilterDialog__*` 같은 `loc_*`를 씁니다.
 
 **Incorrect (feature-local UI가 feature root나 shared components에 섞여 ownership이 흐려짐):**
 
@@ -1658,10 +1757,10 @@ Astro의 inline comment는 rendering mode, serialization, feature ownership hand
 
 ```astro
 ---
-const tab = Astro.url.searchParams.get("tab") ?? "all";
-// 탭을 가져온다
-const pageData = await getPostsPageData({ tab });
-// 데이터를 불러온다
+const postEntries = await getPostEntries();
+// post 목록을 가져온다
+const pageProps = getPostListPageProps({ entries: postEntries, currentPage: 1 });
+// props를 만든다
 ---
 ```
 
@@ -1669,13 +1768,11 @@ const pageData = await getPostsPageData({ tab });
 
 ```astro
 ---
-export const prerender = false;
+// route adapter는 collection query와 canonical/meta handoff까지만 소유한다.
+const postEntries = await getPostEntries();
 
-// 쿠키 기반 개인화가 있어 build-time prerender로 고정하면 안 됨.
-const tab = Astro.url.searchParams.get("tab") ?? "all";
-
-// route adapter는 param 해석까지만 맡고 실제 화면 조립은 feature entry로 넘김.
-const pageData = await getPostsPageData({ tab });
+// pagination/basePath 계산은 owner-named support helper에 맡기고 body rendering은 feature page로 넘긴다.
+const pageProps = getPostListPageProps({ entries: postEntries, currentPage: 1 });
 ---
 ```
 

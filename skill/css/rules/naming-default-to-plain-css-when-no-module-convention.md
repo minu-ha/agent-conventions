@@ -37,19 +37,19 @@ import styles from "./mission-control.module.css";
 
 ```tsx
 import { clsx } from "clsx";
-import "./mission-control.css";
+import "./posts.css";
 
-<div className={clsx("rt_mc__hero")}>
-	<span className={clsx("rt_mc__eyebrow")}>GraphQL operations deck</span>
-</div>
+<section className={clsx("ft_posts__hero")}>
+	<span className={clsx("ft_posts__eyebrow")}>Archived posts</span>
+</section>
 ```
 
 ```css
-.rt_mc__hero {
+.ft_posts__hero {
 	display: grid;
 }
 
-.rt_mc__eyebrow {
+.ft_posts__eyebrow {
 	letter-spacing: 0.08em;
 }
 ```
