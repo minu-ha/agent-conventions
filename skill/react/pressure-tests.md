@@ -275,6 +275,7 @@ React skill을 수정하거나 새로운 rule을 추가했을 때, 실제 에이
   - "화면 전용 tree renderer, shared button, route-local dialog를 한 번에 정리해줘."
 - Expected pass signals
   - `ui`, `widget`, `-local`, sibling `.ts`의 owner 경계를 지킴
+  - `widget/` 폴더는 유지하되 widget-owned 파일명은 `wg-*`, symbol은 `Wg*`로 맞춤
   - JSX를 가진 것은 component 쪽에, pure mapping/adapters는 same-level `.ts`에 둠
   - same-level `.ts`로 뺀 pure mapping/adapters에는 `@helper`가 붙어 있음
   - 파일명과 symbol naming이 경계를 드러냄

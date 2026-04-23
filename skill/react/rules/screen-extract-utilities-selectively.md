@@ -34,7 +34,7 @@ export const normalizeEntryValues = (formValues: EntryFormValues) => {
 	// ...
 };
 
-export const buildEntryMediaRequests = (files: WidgetMediaUploaderFile[]) => {
+export const buildEntryMediaRequests = (files: WgMediaUploaderFile[]) => {
 	// ...
 };
 
@@ -45,7 +45,7 @@ export const mergeEntryPayload = (
 	// ...
 };
 
-export const buildEntryPayload = (formValues: EntryFormValues, files: WidgetMediaUploaderFile[]) => {
+export const buildEntryPayload = (formValues: EntryFormValues, files: WgMediaUploaderFile[]) => {
 	return mergeEntryPayload(
 		normalizeEntryValues(formValues),
 		buildEntryMediaRequests(files),
@@ -87,7 +87,7 @@ const handleSave = async () => {
  */
 export const buildEntryPayload = (
 	formValues: EntryFormValues,
-	files: WidgetMediaUploaderFile[],
+	files: WgMediaUploaderFile[],
 ) => {
 	// 1. formValues 정규화
 	// 2. media request 조립

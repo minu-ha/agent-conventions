@@ -37,7 +37,7 @@ public part도 무조건 많이 노출하지 않습니다.
 **Incorrect (single component, compound component, explicit variant의 경계를 구분하지 않고 하나의 component에 몰아넣음):**
 
 ```tsx
-export interface WidgetProfileDialogProps {
+export interface WgProfileDialogProps {
 	isCompact?: boolean;
 	showActivity?: boolean;
 	showFocus?: boolean;
@@ -45,7 +45,7 @@ export interface WidgetProfileDialogProps {
 	renderFooter?: () => ReactNode;
 }
 
-export const WidgetProfileDialog = (props: WidgetProfileDialogProps) => {
+export const WgProfileDialog = (props: WgProfileDialogProps) => {
 	const { isCompact, showActivity, showFocus, dialogTitle, renderFooter } = props;
 
 	return (

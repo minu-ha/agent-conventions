@@ -165,7 +165,7 @@ const request = buildMediaUploadPayload(files);
 
 **Impact: CRITICAL (공용 책임과 route-local 책임이 같은 레이어로 섞이는 것을 막음)**
 
-`ui`는 순수 view, `widget`은 여러 화면에서 재사용되는 공용 조합, `-local`은 특정 route 맥락을 아는 화면 전용 코드로 유지합니다. 파일명도 `ui-*`, `widget-*` 접두사로 소유자를 바로 드러내야 합니다.
+`ui`는 순수 view, `widget`은 여러 화면에서 재사용되는 공용 조합, `-local`은 특정 route 맥락을 아는 화면 전용 코드로 유지합니다. `widget` 레이어 폴더명은 유지하되, widget-owned 파일과 심볼은 `wg-*`, `Wg*` 규칙으로 소유자를 바로 드러내야 합니다. `ui`는 계속 `ui-*`, `Ui*` 규칙을 사용합니다.
 
 **Incorrect (view 레이어와 화면 전용 로직이 섞임):**
 
@@ -189,6 +189,18 @@ export interface UiButtonProps {
 export const UiButton = (props: UiButtonProps) => {
   const { onClick } = props;
   return <button onClick={onClick} />;
+};
+```
+
+```tsx
+// <component-root>/widget/entry-toolbar/wg-entry-toolbar.tsx
+export interface WgEntryToolbarProps {
+  onClose: () => void;
+}
+
+export const WgEntryToolbar = (props: WgEntryToolbarProps) => {
+  const { onClose } = props;
+  return <UiButton onClick={onClose} />;
 };
 ```
 
@@ -375,13 +387,13 @@ route entry 안의 일회성 분기는 로컬에서 유지할 수 있지만, sha
 **Incorrect (boolean prop 조합으로 shared component가 비대해짐):**
 
 ```tsx
-export interface WidgetEntryToolbarProps {
+export interface WgEntryToolbarProps {
 	isCompact?: boolean;
 	isEditing?: boolean;
 	showSearch?: boolean;
 }
 
-export const WidgetEntryToolbar = (props: WidgetEntryToolbarProps) => {
+export const WgEntryToolbar = (props: WgEntryToolbarProps) => {
 	const { isCompact, isEditing, showSearch } = props;
 
 	return (
@@ -396,37 +408,37 @@ export const WidgetEntryToolbar = (props: WidgetEntryToolbarProps) => {
 **Correct (variant를 explicit component와 stateless compound component로 분리):**
 
 ```tsx
-const WidgetEntryToolbarRoot = (props: { children: ReactNode }) => {
+const WgEntryToolbarRoot = (props: { children: ReactNode }) => {
 	const { children } = props;
 	return <header>{children}</header>;
 };
 
-export const WidgetEntryToolbar = {
-	Root: WidgetEntryToolbarRoot,
+export const WgEntryToolbar = {
+	Root: WgEntryToolbarRoot,
 	Search: EntrySearchField,
 	BrowseActions: EntryBrowseActions,
 	EditActions: EntryEditActions,
 } as const;
 
-export const WidgetEntryBrowseToolbar = () => {
+export const WgEntryBrowseToolbar = () => {
 	return (
-		<WidgetEntryToolbar.Root>
-			<WidgetEntryToolbar.Search />
-			<WidgetEntryToolbar.BrowseActions />
-		</WidgetEntryToolbar.Root>
+		<WgEntryToolbar.Root>
+			<WgEntryToolbar.Search />
+			<WgEntryToolbar.BrowseActions />
+		</WgEntryToolbar.Root>
 	);
 };
 
-export const WidgetEntryEditToolbar = () => {
+export const WgEntryEditToolbar = () => {
 	return (
-		<WidgetEntryToolbar.Root>
-			<WidgetEntryToolbar.EditActions />
-		</WidgetEntryToolbar.Root>
+		<WgEntryToolbar.Root>
+			<WgEntryToolbar.EditActions />
+		</WgEntryToolbar.Root>
 	);
 };
 ```
 
-핵심은 `WidgetEntryToolbar` 하나에 boolean 모드를 계속 추가하지 않는 것입니다.  
+핵심은 `WgEntryToolbar` 하나에 boolean 모드를 계속 추가하지 않는 것입니다.  
 explicit variant는 standalone component여도 되고, 이렇게 compound component 위에서 조립해도 됩니다.
 
 ### 3.2 Choose Single Components, Compound Components, and Variants Deliberately
@@ -461,7 +473,7 @@ public part도 무조건 많이 노출하지 않습니다.
 **Incorrect (single component, compound component, explicit variant의 경계를 구분하지 않고 하나의 component에 몰아넣음):**
 
 ```tsx
-export interface WidgetProfileDialogProps {
+export interface WgProfileDialogProps {
 	isCompact?: boolean;
 	showActivity?: boolean;
 	showFocus?: boolean;
@@ -469,7 +481,7 @@ export interface WidgetProfileDialogProps {
 	renderFooter?: () => ReactNode;
 }
 
-export const WidgetProfileDialog = (props: WidgetProfileDialogProps) => {
+export const WgProfileDialog = (props: WgProfileDialogProps) => {
 	const { isCompact, showActivity, showFocus, dialogTitle, renderFooter } = props;
 
 	return (
@@ -1163,7 +1175,7 @@ export const normalizeEntryValues = (formValues: EntryFormValues) => {
 	// ...
 };
 
-export const buildEntryMediaRequests = (files: WidgetMediaUploaderFile[]) => {
+export const buildEntryMediaRequests = (files: WgMediaUploaderFile[]) => {
 	// ...
 };
 
@@ -1174,7 +1186,7 @@ export const mergeEntryPayload = (
 	// ...
 };
 
-export const buildEntryPayload = (formValues: EntryFormValues, files: WidgetMediaUploaderFile[]) => {
+export const buildEntryPayload = (formValues: EntryFormValues, files: WgMediaUploaderFile[]) => {
 	return mergeEntryPayload(
 		normalizeEntryValues(formValues),
 		buildEntryMediaRequests(files),
@@ -1216,7 +1228,7 @@ const handleSave = async () => {
  */
 export const buildEntryPayload = (
 	formValues: EntryFormValues,
-	files: WidgetMediaUploaderFile[],
+	files: WgMediaUploaderFile[],
 ) => {
 	// 1. formValues 정규화
 	// 2. media request 조립

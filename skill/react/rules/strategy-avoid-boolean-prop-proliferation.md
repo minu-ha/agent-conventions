@@ -17,13 +17,13 @@ route entry 안의 일회성 분기는 로컬에서 유지할 수 있지만, sha
 **Incorrect (boolean prop 조합으로 shared component가 비대해짐):**
 
 ```tsx
-export interface WidgetEntryToolbarProps {
+export interface WgEntryToolbarProps {
 	isCompact?: boolean;
 	isEditing?: boolean;
 	showSearch?: boolean;
 }
 
-export const WidgetEntryToolbar = (props: WidgetEntryToolbarProps) => {
+export const WgEntryToolbar = (props: WgEntryToolbarProps) => {
 	const { isCompact, isEditing, showSearch } = props;
 
 	return (
@@ -38,35 +38,35 @@ export const WidgetEntryToolbar = (props: WidgetEntryToolbarProps) => {
 **Correct (variant를 explicit component와 stateless compound component로 분리):**
 
 ```tsx
-const WidgetEntryToolbarRoot = (props: { children: ReactNode }) => {
+const WgEntryToolbarRoot = (props: { children: ReactNode }) => {
 	const { children } = props;
 	return <header>{children}</header>;
 };
 
-export const WidgetEntryToolbar = {
-	Root: WidgetEntryToolbarRoot,
+export const WgEntryToolbar = {
+	Root: WgEntryToolbarRoot,
 	Search: EntrySearchField,
 	BrowseActions: EntryBrowseActions,
 	EditActions: EntryEditActions,
 } as const;
 
-export const WidgetEntryBrowseToolbar = () => {
+export const WgEntryBrowseToolbar = () => {
 	return (
-		<WidgetEntryToolbar.Root>
-			<WidgetEntryToolbar.Search />
-			<WidgetEntryToolbar.BrowseActions />
-		</WidgetEntryToolbar.Root>
+		<WgEntryToolbar.Root>
+			<WgEntryToolbar.Search />
+			<WgEntryToolbar.BrowseActions />
+		</WgEntryToolbar.Root>
 	);
 };
 
-export const WidgetEntryEditToolbar = () => {
+export const WgEntryEditToolbar = () => {
 	return (
-		<WidgetEntryToolbar.Root>
-			<WidgetEntryToolbar.EditActions />
-		</WidgetEntryToolbar.Root>
+		<WgEntryToolbar.Root>
+			<WgEntryToolbar.EditActions />
+		</WgEntryToolbar.Root>
 	);
 };
 ```
 
-핵심은 `WidgetEntryToolbar` 하나에 boolean 모드를 계속 추가하지 않는 것입니다.  
+핵심은 `WgEntryToolbar` 하나에 boolean 모드를 계속 추가하지 않는 것입니다.  
 explicit variant는 standalone component여도 되고, 이렇게 compound component 위에서 조립해도 됩니다.
