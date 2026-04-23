@@ -40,8 +40,8 @@ src/pages/notes/index.astro
 src/pages/notes/page/[page].astro
 src/pages/note/[slug].astro
 src/pages/tags/index.astro
-src/pages/tag/[tag]/index.astro
-src/pages/tag/[tag]/page/[page].astro
+src/pages/tags/[tag]/index.astro
+src/pages/tags/[tag]/[page].astro
 ```
 
 이 경우에는 convention이 현재 공개 URL을 존중하도록 맞추고, 정말 URL을 바꾸고 싶다면 redirect, canonical, internal link, sitemap까지 포함한 migration 작업으로 분리합니다.

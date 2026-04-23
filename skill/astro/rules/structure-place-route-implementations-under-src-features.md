@@ -43,7 +43,6 @@ src/
       [slug].astro
     tags/
       index.astro
-    tag/
       [tag]/
         index.astro
         [page].astro
