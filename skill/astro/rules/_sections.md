@@ -20,7 +20,7 @@
 
 ## 5. Routing and Navigation Contracts (routing)
 **Impact:** HIGH
-**Description:** Astro의 file-based routing과 page boundary 책임은 page file에서 직접 드러나야 하며 navigation도 plain HTML 기본값을 우선해야 합니다.
+**Description:** Astro의 file-based routing과 page boundary 책임은 page file에서 직접 드러나야 하며, paginated route family는 얕은 sibling 구조를 우선하되 이미 공개된 URL contract는 함부로 바꾸지 않아야 합니다.
 
 ## 6. Rendering Strategy and Delivery Modes (rendering)
 **Impact:** CRITICAL

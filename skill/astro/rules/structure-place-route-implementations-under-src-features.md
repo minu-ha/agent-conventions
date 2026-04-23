@@ -32,8 +32,21 @@ src/
     _document.astro
     _head.astro
     _document.css
+    [page].astro
     posts/
       index.astro
+      [page].astro
+      [slug].astro
+    notes/
+      index.astro
+      [page].astro
+      [slug].astro
+    tags/
+      index.astro
+    tag/
+      [tag]/
+        index.astro
+        [page].astro
     post/
       [slug].astro
   features/
@@ -51,3 +64,5 @@ src/
     blog/
       hello-world.md
 ```
+
+새 route family를 설계할 때는 `posts/index.astro`, `posts/[page].astro`, `posts/[slug].astro`처럼 list/detail/pagination을 한 폴더에 모으는 편을 우선할 수 있습니다. 다만 현재 public URL이 이미 `/post/:slug`, `/note/:slug`, `/page/:n`처럼 굳어져 있다면 convention도 그 URL contract를 존중하도록 맞춥니다.

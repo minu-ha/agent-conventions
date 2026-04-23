@@ -1,7 +1,7 @@
 # Astro 컨벤션
 
 에이전트 협업, 리뷰, AI 보조 리팩터링에 맞춰 Astro 컨벤션을 관리하는 구조화된 저장소입니다.  
-현재 Astro 가이드는 11개 local 섹션의 38개 rule 파일로 구성되어 있습니다.  
+현재 Astro 가이드는 11개 local 섹션의 40개 rule 파일로 구성되어 있습니다.  
 최종적으로 slim [AGENTS.md](./AGENTS.md)로 compile됩니다. Astro local guide는 기본 companion인 `typescript`와 `css` skill을 함께 사용합니다.
 
 ## 구조
@@ -44,7 +44,7 @@
    - `naming-` - owner-named feature file, underscore document helper, dynamic segment, searchable support module 규칙
    - `component-` - `.astro` layout/shell, `_document`/`_head`, frontmatter, slot, template composition 규칙
    - `island-` - framework island, `client:*`, `client:only`, hydration 경계 규칙
-   - `routing-` - file-based routing, `<a>`, dynamic route generation, page contract 규칙
+   - `routing-` - file-based routing, `<a>`, dynamic route generation, paginated route family, public URL contract 규칙
    - `rendering-` - `output`, `prerender`, SSG/SSR/CSR 선택, delivery mode 규칙
    - `content-` - build-time/live collections, loader, schema, collection query 규칙
    - `server-` - Actions, endpoint 선택, `server:defer`, adapter 전제 규칙

@@ -12,7 +12,7 @@
 
 ## 개요
 
-에이전트 협업 팀을 위한 Astro 코딩 컨벤션입니다. 이 가이드는 thin `src/pages` route adapter와 `src/pages/_document.astro`/`_head.astro`/`_document.css` 기반 pages-local document helper, `src/features/<feature>` 기반 screen implementation, 의미 있는 dynamic segment와 owner-named feature file naming, feature-owned layout shell과 `ui`/`widget` taxonomy, `.astro` 컴포넌트와 page/island/private의 명확한 책임 경계, feature page orchestration과 selective extraction 기준, static과 on-demand rendering의 의도적인 선택, build-time/live collections, Actions/endpoints/server islands 같은 Astro 고유 기능의 신중한 사용을 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, Astro local rule은 기본 companion인 `typescript`와 `css` skill과 함께 사용합니다.
+에이전트 협업 팀을 위한 Astro 코딩 컨벤션입니다. 이 가이드는 thin `src/pages` route adapter와 `src/pages/_document.astro`/`_head.astro`/`_document.css` 기반 pages-local document helper, `src/features/<feature>` 기반 screen implementation, 의미 있는 dynamic segment와 owner-named feature file naming, paginated route family와 공개 URL contract 정리 기준, feature-owned layout shell과 `ui`/`widget` taxonomy, `.astro` 컴포넌트와 page/island/private의 명확한 책임 경계, feature page orchestration과 selective extraction 기준, static과 on-demand rendering의 의도적인 선택, build-time/live collections, Actions/endpoints/server islands 같은 Astro 고유 기능의 신중한 사용을 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, Astro local rule은 기본 companion인 `typescript`와 `css` skill과 함께 사용합니다.
 
 이 가이드는 local Astro 컨벤션 규칙만 담고 있습니다. 공통 규칙은 companion skill을 함께 로드해 보완합니다.
 
@@ -46,7 +46,9 @@
     - 4.4 [Reserve client:only for SSR-incompatible Components](#44-reserve-clientonly-for-ssr-incompatible-components)
 5. [Routing and Navigation Contracts](#5-routing-and-navigation-contracts) — **HIGH**
     - 5.1 [Keep Dynamic Route Generation at the Page Boundary](#51-keep-dynamic-route-generation-at-the-page-boundary)
-    - 5.2 [Use HTML Anchors Before Framework Link Abstractions](#52-use-html-anchors-before-framework-link-abstractions)
+    - 5.2 [Prefer Sibling index.astro and [page].astro Files for Paginated Route Families](#52-prefer-sibling-indexastro-and-pageastro-files-for-paginated-route-families)
+    - 5.3 [Preserve Established Public URL Contracts When Normalizing Route Folders](#53-preserve-established-public-url-contracts-when-normalizing-route-folders)
+    - 5.4 [Use HTML Anchors Before Framework Link Abstractions](#54-use-html-anchors-before-framework-link-abstractions)
 6. [Rendering Strategy and Delivery Modes](#6-rendering-strategy-and-delivery-modes) — **CRITICAL**
     - 6.1 [Default to Static Until Most Pages Need On-demand Rendering](#61-default-to-static-until-most-pages-need-on-demand-rendering)
     - 6.2 [Reserve output: "server" for Mostly Dynamic Apps](#62-reserve-output-server-for-mostly-dynamic-apps)
@@ -199,8 +201,21 @@ src/
     _document.astro
     _head.astro
     _document.css
+    [page].astro
     posts/
       index.astro
+      [page].astro
+      [slug].astro
+    notes/
+      index.astro
+      [page].astro
+      [slug].astro
+    tags/
+      index.astro
+    tag/
+      [tag]/
+        index.astro
+        [page].astro
     post/
       [slug].astro
   features/
@@ -218,6 +233,8 @@ src/
     blog/
       hello-world.md
 ```
+
+새 route family를 설계할 때는 `posts/index.astro`, `posts/[page].astro`, `posts/[slug].astro`처럼 list/detail/pagination을 한 폴더에 모으는 편을 우선할 수 있습니다. 다만 현재 public URL이 이미 `/post/:slug`, `/note/:slug`, `/page/:n`처럼 굳어져 있다면 convention도 그 URL contract를 존중하도록 맞춥니다.
 
 ## 2. File Naming and Page Assets
 
@@ -645,7 +662,7 @@ import FeatureSearch from "../components/FeatureSearch.tsx";
 
 **Impact: HIGH**
 
-Astro의 file-based routing과 page boundary 책임은 page file에서 직접 드러나야 하며 navigation도 plain HTML 기본값을 우선해야 합니다.
+Astro의 file-based routing과 page boundary 책임은 page file에서 직접 드러나야 하며, paginated route family는 얕은 sibling 구조를 우선하되 이미 공개된 URL contract는 함부로 바꾸지 않아야 합니다.
 
 ### 5.1 Keep Dynamic Route Generation at the Page Boundary
 
@@ -686,7 +703,83 @@ const { post } = Astro.props;
 <BlogPostPage post={post} />
 ```
 
-### 5.2 Use HTML Anchors Before Framework Link Abstractions
+### 5.2 Prefer Sibling index.astro and [page].astro Files for Paginated Route Families
+
+**Impact: HIGH (keeps paginated route families shallow and makes list plus pagination contracts readable from one folder)**
+
+페이지네이션이 있는 list route family는 가능하면 같은 폴더 안에서 `index.astro`와 `[page].astro`를 sibling으로 둡니다. 루트 recent라면 `src/pages/index.astro`와 `src/pages/[page].astro`, section list라면 `src/pages/posts/index.astro`와 `src/pages/posts/[page].astro`, filtered tag list라면 `src/pages/tag/[tag]/index.astro`와 `src/pages/tag/[tag]/[page].astro`처럼 둡니다. 이렇게 해야 list entry와 pagination contract가 한 폴더에 모여 route family 전체가 더 얕고 읽기 쉬워집니다.
+
+**Incorrect (pagination route를 `page/` 하위 폴더로 한 단계 더 감쌈):**
+
+```text
+src/pages/page/[page].astro
+src/pages/posts/page/[page].astro
+src/pages/notes/page/[page].astro
+src/pages/tag/[tag]/page/[page].astro
+```
+
+이 구조는 같은 route family를 불필요한 `page/` 서브폴더로 나눠, tree를 훑을 때 list와 pagination contract를 한눈에 보기 어렵게 만듭니다.
+
+**Correct (list와 pagination을 sibling file로 둠):**
+
+```text
+src/pages/index.astro
+src/pages/[page].astro
+
+src/pages/posts/index.astro
+src/pages/posts/[page].astro
+
+src/pages/notes/index.astro
+src/pages/notes/[page].astro
+
+src/pages/tag/[tag]/index.astro
+src/pages/tag/[tag]/[page].astro
+```
+
+이 구조에서는 각 route family의 entry page와 pagination page가 같은 폴더에 모여 있어 URL contract를 file tree만 보고도 바로 이해할 수 있습니다.
+
+### 5.3 Preserve Established Public URL Contracts When Normalizing Route Folders
+
+**Impact: HIGH (prevents file tree cleanup from silently changing published URLs that users and crawlers already rely on)**
+
+route folder를 더 예쁘게 정리할 수 있더라도, 이미 공개된 URL contract가 있다면 그 계약을 먼저 존중합니다. 새 route family를 만들 때는 `posts/index.astro`, `posts/[page].astro`, `posts/[slug].astro`처럼 list/detail/pagination을 한 폴더에 모으는 쪽을 우선할 수 있지만, 현재 사이트가 이미 `/post/:slug`, `/note/:slug`, `/page/:n` 같은 경로를 쓰고 있다면 폴더 대칭성만을 이유로 URL을 바꾸지 않습니다. 이 skill에서는 "새로 설계할 때의 선호 구조"와 "이미 배포된 공개 URL"을 분리해서 판단합니다.
+
+**Incorrect (폴더 모양을 맞추려는 이유만으로 공개 URL을 바꿈):**
+
+```text
+before:
+src/pages/posts/index.astro
+src/pages/posts/[page].astro
+src/pages/post/[slug].astro
+
+after:
+src/pages/posts/index.astro
+src/pages/posts/[page].astro
+src/pages/posts/[slug].astro
+```
+
+이 변경은 file tree는 더 대칭적으로 보일 수 있지만, 기존 `/post/:slug` 링크를 `/posts/:slug`로 바꾸는 공개 URL 변경이므로 별도 migration이나 redirect 계획 없이 수행하면 안 됩니다.
+
+**Correct (현재 공개 URL을 유지하거나, 바꾼다면 명시적 migration으로 다룸):**
+
+```text
+current public contract:
+src/pages/index.astro
+src/pages/page/[page].astro
+src/pages/posts/index.astro
+src/pages/posts/page/[page].astro
+src/pages/post/[slug].astro
+src/pages/notes/index.astro
+src/pages/notes/page/[page].astro
+src/pages/note/[slug].astro
+src/pages/tags/index.astro
+src/pages/tag/[tag]/index.astro
+src/pages/tag/[tag]/page/[page].astro
+```
+
+이 경우에는 convention이 현재 공개 URL을 존중하도록 맞추고, 정말 URL을 바꾸고 싶다면 redirect, canonical, internal link, sitemap까지 포함한 migration 작업으로 분리합니다.
+
+### 5.4 Use HTML Anchors Before Framework Link Abstractions
 
 **Impact: HIGH (aligns navigation with Astro's default routing model and avoids importing foreign router habits)**
 
