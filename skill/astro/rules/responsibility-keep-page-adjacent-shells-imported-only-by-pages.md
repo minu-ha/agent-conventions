@@ -16,9 +16,9 @@ tags: responsibility, pages, features, imports, dependency-direction, document-h
 ```astro
 ---
 import DocumentShell from "@/pages/_document.astro";
-import type { RecentListPageProps } from "./recent";
+import type { RecentPageProps } from "./recent";
 
-const props = Astro.props as RecentListPageProps;
+const props = Astro.props as RecentPageProps;
 ---
 
 <DocumentShell currentPathname="/" pageTitle="recent" pageDescription="Recent posts">
@@ -35,22 +35,22 @@ const props = Astro.props as RecentListPageProps;
 ```astro
 ---
 import DocumentShell from "@/pages/_document.astro";
-import RecentListPage from "@/features/recent/recent-list-page.astro";
-import { getRecentListPageProps } from "@/features/recent/recent";
+import RecentPage from "@/features/recent/recent-page.astro";
+import { getRecentPageProps } from "@/features/recent/recent";
 
-const pageProps = getRecentListPageProps({ entries: [], currentPage: 1 });
+const pageProps = getRecentPageProps({ entries: [], currentPage: 1 });
 ---
 
 <DocumentShell currentPathname={Astro.url.pathname} pageTitle="recent" pageDescription="Recent posts">
-	<RecentListPage {...pageProps} />
+	<RecentPage {...pageProps} />
 </DocumentShell>
 ```
 
 ```astro
 ---
-import type { RecentListPageProps } from "./recent";
+import type { RecentPageProps } from "./recent";
 
-const props = Astro.props as RecentListPageProps;
+const props = Astro.props as RecentPageProps;
 ---
 
 <section>

@@ -55,7 +55,7 @@
 
 ## Agent-Conventions Coverage
 
-- `convention-astro`: Astro thin `src/pages` adapter, `src/features/<feature>` 구조, rendering mode, island hydration, content collections, Actions/endpoints, Astro frontmatter/docs 규칙
+- `convention-astro`: Astro thin `src/pages` adapter, `src/features/<feature>` 구조, route-role aligned feature page/file naming, `ft_*` page surface ownership, rendering mode, island hydration, content collections, Actions/endpoints, Astro frontmatter/docs 규칙
 - `convention-react`: React 컴포넌트, TSX 렌더링 흐름, 화면 구조
 - `convention-css`: 스타일, `className`, CSS 구조, selector, token 사용
 - `convention-typescript`: 공통 TypeScript 규칙, 타입 계약, helper 분리, JSDoc
@@ -103,7 +103,9 @@ Astro 프로젝트에서 `convention-astro`를 선택했다면 아래를 기본 
 - `src/pages/_document.astro`, `_head.astro`, `_document.css`는 route가 아닌 pages-local document helper/support file 자리로 둡니다.
 - 새 paginated route family는 가능하면 `index.astro`와 sibling `[page].astro`를 우선하고, 이미 공개된 URL contract가 있으면 그 계약을 먼저 존중합니다.
 - 실제 화면 구현은 `src/features/<feature>` 아래에 둡니다.
+- feature page surface class는 `ft_*`를 기본으로 두고, list/hub/directory는 route 이름 그대로, detail은 singular + `Detail`, home은 `ft_home__*`를 기본으로 봅니다.
 - pages-local document helper는 `pages`만 소유하고, `features`는 이 파일들을 모르도록 유지합니다.
+- pages-local document shell은 `rt_document__*`, shared primitive는 `ui_*`, reusable block은 `wg_*`, truly local helper만 `loc_*`를 사용합니다.
 - Astro의 기본 companion은 `convention-typescript`와 `convention-css`입니다.
 - React island나 TSX가 있으면 `convention-react`를 추가합니다.
 - hydration, form action, server island, navigation 회귀를 브라우저에서 확인하면 `convention-playwright-test`를 추가합니다.

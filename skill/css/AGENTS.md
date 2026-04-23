@@ -12,7 +12,7 @@
 
 ## 개요
 
-에이전트 협업 팀을 위한 CSS 코딩 컨벤션입니다. 이 가이드는 plain CSS를 기본으로 한 전역 고유 네이밍, 예측 가능한 TSX class 조합, 평평한 selector, wrapper 기준 서드파티 스타일링, 토큰화된 값, 절제된 stylesheet 구성을 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, 최종적으로 에이전트가 읽는 `AGENTS.md`로 compile됩니다.
+에이전트 협업 팀을 위한 CSS 코딩 컨벤션입니다. 이 가이드는 plain CSS를 기본으로 한 전역 고유 네이밍, `ft_/rt_/wg_/ui_/loc_` owner scope, 예측 가능한 TSX class 조합, 평평한 selector, wrapper 기준 서드파티 스타일링, 토큰화된 값, 절제된 stylesheet 구성을 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, 최종적으로 에이전트가 읽는 `AGENTS.md`로 compile됩니다.
 
 ---
 
@@ -22,9 +22,10 @@
     - 1.1 [Default to Plain CSS Unless the Project Explicitly Standardizes on CSS Modules](#11-default-to-plain-css-unless-the-project-explicitly-standardizes-on-css-modules)
     - 1.2 [Keep Each scope slug Unique Per Owner](#12-keep-each-scope-slug-unique-per-owner)
     - 1.3 [Name Elements and Modifiers by Role](#13-name-elements-and-modifiers-by-role)
-    - 1.4 [Preserve Route Slug Traceability](#14-preserve-route-slug-traceability)
-    - 1.5 [Separate Local and Route Style Scopes](#15-separate-local-and-route-style-scopes)
-    - 1.6 [Use Scope, Slug, Element, and Modifier Syntax](#16-use-scope-slug-element-and-modifier-syntax)
+    - 1.4 [Preserve Route-adjacent Slug Traceability](#14-preserve-route-adjacent-slug-traceability)
+    - 1.5 [Separate Feature, Local, and Route-adjacent Style Scopes](#15-separate-feature-local-and-route-adjacent-style-scopes)
+    - 1.6 [Use ft Scope for Feature-owned Page Surfaces](#16-use-ft-scope-for-feature-owned-page-surfaces)
+    - 1.7 [Use Scope, Slug, Element, and Modifier Syntax](#17-use-scope-slug-element-and-modifier-syntax)
 2. [Class Composition and Wrapper Boundaries](#2-class-composition-and-wrapper-boundaries) — **HIGH**
     - 2.1 [Compose Classes With clsx()](#21-compose-classes-with-clsx)
     - 2.2 [Do Not Use Modifiers for One-off Structural Patches](#22-do-not-use-modifiers-for-one-off-structural-patches)
@@ -42,7 +43,7 @@
     - 4.3 [Separate Domain State Modifiers From DOM Interaction States](#43-separate-domain-state-modifiers-from-dom-interaction-states)
     - 4.4 [Tokenize Repeated Visual Values](#44-tokenize-repeated-visual-values)
 5. [File Organization and Guardrails](#5-file-organization-and-guardrails) — **MEDIUM**
-    - 5.1 [Keep Style Files Owned by One Component or Route](#51-keep-style-files-owned-by-one-component-or-route)
+    - 5.1 [Keep Style Files Owned by One Component, Feature Surface, or Route-adjacent Shell](#51-keep-style-files-owned-by-one-component-feature-surface-or-route-adjacent-shell)
     - 5.2 [Review Banned CSS Patterns Before Finishing](#52-review-banned-css-patterns-before-finishing)
 
 ---
@@ -51,13 +52,13 @@
 
 **Impact: CRITICAL**
 
-클래스 문법, scope별 slug 규칙, 네임스페이스 소유권, local-vs-route scope가 명확해야 스타일을 검색하고 안전하게 수정할 수 있습니다.
+클래스 문법, `ft_/rt_/wg_/ui_/loc_` scope별 slug 규칙, 네임스페이스 소유권, feature-vs-local-vs-route-adjacent scope가 명확해야 스타일을 검색하고 안전하게 수정할 수 있습니다.
 
 ### 1.1 Default to Plain CSS Unless the Project Explicitly Standardizes on CSS Modules
 
 **Impact: HIGH (keeps the global `scope_slug` naming system meaningful instead of hiding ownership behind local module indirection)**
 
-이 CSS skill은 기본적으로 plain `*.css`와 전역 고유 클래스명을 전제로 합니다. `rt_*`, `ui_*`, `wg_*`, `loc_*` 네임스페이스는 global class space에서 owner를 추적하려고 존재하므로, 프로젝트에 별도 합의가 없다면 `.module.css`와 `styles.foo`를 기본 선택으로 삼지 않습니다. 프로젝트가 이미 CSS Modules를 공식 표준으로 채택했고 그에 맞는 naming/runtime 규칙이 따로 있다면, 그 프로젝트 로컬 규칙이 이 기본값보다 우선합니다.
+이 CSS skill은 기본적으로 plain `*.css`와 전역 고유 클래스명을 전제로 합니다. `ft_*`, `rt_*`, `ui_*`, `wg_*`, `loc_*` 네임스페이스는 global class space에서 owner를 추적하려고 존재하므로, 프로젝트에 별도 합의가 없다면 `.module.css`와 `styles.foo`를 기본 선택으로 삼지 않습니다. 프로젝트가 이미 CSS Modules를 공식 표준으로 채택했고 그에 맞는 naming/runtime 규칙이 따로 있다면, 그 프로젝트 로컬 규칙이 이 기본값보다 우선합니다.
 
 **Incorrect (프로젝트 표준이 없는데도 CSS Modules를 기본처럼 사용):**
 
@@ -152,65 +153,102 @@ ui_card__body--active
 rt_pcmei__detailSection
 ```
 
-### 1.4 Preserve Route Slug Traceability
+### 1.4 Preserve Route-adjacent Slug Traceability
 
 **Impact: HIGH (keeps route-scoped class namespaces readable back to the route hierarchy they belong to)**
 
-이 규칙은 `rt_*` route scope의 slug를 다룹니다. route slug는 길이보다 추적 가능성을 우선하고, 상위에서 하위로 이어지는 라우트 트리 순서를 반영해 lower-case 축약을 유지합니다. route 이름을 전부 다 적을 필요는 없고 `mission-control -> mc`, `project.content-type-builder.index -> pctbi`처럼 팀이 owner를 다시 찾을 수 있을 정도로만 줄이면 됩니다.
+이 규칙은 `rt_*` route-adjacent scope의 slug를 다룹니다. 현재 Astro feature-based 구조에서는 실제 screen surface를 `ft_*`가 소유하므로, `rt_*`는 `src/pages/_document.astro`, `_head.astro`, `_document.css` 같은 pages-local document helper나 route adapter 가까운 예외 owner에만 남는 경우가 많습니다. 이런 `rt_*` slug는 길이보다 추적 가능성을 우선하고, route나 document shell 역할을 읽을 수 있게 유지합니다. 꼭 모든 이름을 다 적을 필요는 없지만, `document`, `feedIndex`, `tagArchive`처럼 owner를 다시 찾을 수 있는 수준의 의미는 남겨 둡니다.
 
-이 lower-case route slug 규칙을 `wg_*`, `ui_*`, `loc_*` 같은 다른 scope의 owner slug에 그대로 확장 적용하지는 않습니다. component/local scope는 해당 프로젝트가 정한 owner naming style을 따르되, route scope만큼은 route traceability를 우선합니다.
+이 route-adjacent slug 규칙을 `ft_*`, `wg_*`, `ui_*`, `loc_*` 같은 다른 scope의 owner slug에 그대로 덮어쓰지 않습니다. feature page surface는 `ft_posts`, `ft_postDetail`처럼 feature naming 규칙을 따르고, component/local scope는 해당 프로젝트가 정한 owner naming style을 따르되, `rt_*`만큼은 route-adjacent traceability를 우선합니다.
 
 너무 짧아 의미가 완전히 사라지거나, 계층 순서가 뒤섞이면 클래스명만 봐서는 어느 route 소유인지 추적하기 어려워집니다.
 
 **Incorrect (의미가 약하거나 계층 순서가 흐려진 slug):**
 
 ```txt
-rt_builder__panel
-rt_ctp__panel
-rt_ibpct__panel
+rt_shell__body
+rt_pageChrome__main
+rt_doc__content
 ```
 
 **Correct (도메인 의미와 계층 순서가 보존된 slug):**
 
 ```txt
-mission-control -> rt_mc
-project.content-type-builder -> rt_pctb
-project.content-type-builder.index -> rt_pctbi
-rt_mc__hero
-rt_pctbi__panel
+document shell -> rt_document
+feed index helper -> rt_feedIndex
+tag archive helper -> rt_tagArchive
+rt_document__body
+rt_feedIndex__panel
 ```
 
-### 1.5 Separate Local and Route Style Scopes
+### 1.5 Separate Feature, Local, and Route-adjacent Style Scopes
 
-**Impact: HIGH (keeps route-shared styles and `-local` component styles from mixing into the same namespace or file)**
+**Impact: HIGH (keeps feature-owned page styles, pages-local document styles, and truly local helper styles from mixing into the same namespace or file)**
 
-`-local` 폴더 컴포넌트의 스타일은 반드시 같은 `-local` 계층의 전용 `*.css` 파일에 작성하고, 클래스는 `loc_` 스코프를 사용합니다. 반대로 route 공용 스타일은 route 소유 CSS 파일에서 `rt_*` 스코프를 사용하며, 두 범위를 한 파일에 섞지 않습니다.
+feature-based Astro 프로젝트에서는 `src/features/<feature>/*-page.astro`와 그 feature-private 보조 UI가 같은 screen owner를 설명한다면 `ft_*` 스코프를 기본으로 사용합니다. 즉 `private/` 파일이라고 해서 자동으로 `loc_*`를 새로 만들지 말고, 여전히 같은 page surface를 설명한다면 `ft_posts__*`, `ft_postDetail__*`, `ft_tags__*` 같은 기존 feature owner namespace를 유지합니다. 반대로 `rt_*`는 `src/pages/_document.css`처럼 pages-local document shell이나 route-adjacent helper CSS에만 남기고, `loc_*`는 독립 owner를 가진 truly local helper 스타일일 때만 사용합니다. 서로 다른 owner 범위는 한 파일에 섞지 않습니다.
 
-**Incorrect (route 공용 CSS와 local 전용 CSS를 섞음):**
+**Incorrect (feature page surface와 local helper, document shell을 한 파일/네임스페이스에 섞음):**
 
 ```txt
-entries.css
-  rt_entries__list
-  loc_modalEntryColumnForm__root
+post.css
+  ft_posts__root
+  loc_postFilterDialog__root
+  rt_document__content
 ```
 
-**Correct (route와 local 스타일의 파일/스코프를 분리):**
+**Correct (feature/page owner, document shell owner, local helper owner를 분리):**
 
 ```txt
-entries.css
-  rt_entries__list
+features/post/post.css
+  ft_posts__root
+  ft_posts__list
+  ft_posts__empty
 
--local/modal-entry-column-form.css
-  loc_mecf__root
+pages/_document.css
+  rt_document__body
+  rt_document__content
+
+private/post-filter-dialog.css
+  loc_postFilterDialog__root
 ```
 
-### 1.6 Use Scope, Slug, Element, and Modifier Syntax
+### 1.6 Use ft Scope for Feature-owned Page Surfaces
+
+**Impact: CRITICAL (makes Astro feature pages and their CSS surfaces line up with the owning route role instead of inventing ad-hoc local namespaces)**
+
+`src/features/<feature>/*-page.astro`와 그 page를 직접 지원하는 feature-private markup/CSS는 `ft_*`를 기본 scope로 사용합니다. list, hub, directory screen은 route 이름 그대로 `ft_recent__*`, `ft_posts__*`, `ft_notes__*`, `ft_tags__*`처럼 짧게 두고, detail screen은 `ft_postDetail__*`, `ft_noteDetail__*`처럼 singular + `Detail`을 사용합니다. 홈은 `ft_home__*`를 사용하고, 단수 resource route가 실제로는 목록을 렌더링한다면 `ft_tagEntries__*`처럼 역할이 보이는 singular owner도 허용합니다. 클래스명에는 `Page`를 넣지 않습니다.
+
+feature-private 파일도 같은 page surface owner를 설명한다면 `loc_*`로 새 namespace를 만들지 않고 같은 `ft_*` owner를 유지합니다. `loc_*`는 truly local helper가 자기 독립 owner를 가질 때만 사용합니다.
+
+**Incorrect (page surface인데 `loc_*`나 `Page` suffix로 흐려짐):**
+
+```txt
+loc_homePage__grid
+loc_tagDirectoryList__root
+ft_postsPage__root
+ft_noteList__root
+```
+
+**Correct (route role이 보이는 `ft_*` owner로 정리):**
+
+```txt
+ft_home__grid
+ft_recent__root
+ft_posts__root
+ft_postDetail__body
+ft_notes__root
+ft_noteDetail__meta
+ft_tags__list
+ft_tagEntries__root
+```
+
+### 1.7 Use Scope, Slug, Element, and Modifier Syntax
 
 **Impact: CRITICAL (makes class ownership and UI role traceable from the classname alone)**
 
-클래스명은 `<scope>_<slug>__<element>[--<modifier>]` 문법을 사용합니다. `scope`는 소유 범위, `slug`는 소유자 식별자, `element`는 역할, `modifier`는 상태나 변형을 나타내며, 각 구분자는 `_`, `__`, `--`를 일관되게 유지합니다. `scope` 자체는 `rt`, `wg`, `ui`, `loc`처럼 소문자 namespace를 유지합니다.
+클래스명은 `<scope>_<slug>__<element>[--<modifier>]` 문법을 사용합니다. `scope`는 소유 범위, `slug`는 소유자 식별자, `element`는 역할, `modifier`는 상태나 변형을 나타내며, 각 구분자는 `_`, `__`, `--`를 일관되게 유지합니다. `scope` 자체는 `ft`, `rt`, `wg`, `ui`, `loc`처럼 소문자 namespace를 유지합니다.
 
-`slug`는 모든 scope에 동일한 casing을 강제하지 말고, 해당 scope의 house style을 따릅니다. 예를 들어 `rt_*` route slug는 lower-case 축약으로 route traceability를 유지하는 경우가 많고, `wg_*`, `ui_*`, `loc_*` 같은 component/local scope는 프로젝트가 owner slug를 camelCase로 굳혀 두었다면 그 표기를 그대로 유지할 수 있습니다. 중요한 것은 scope별 규칙을 섞지 않고, 같은 owner에서 slug 표기가 흔들리지 않게 유지하는 것입니다.
+`slug`는 모든 scope에 동일한 casing을 강제하지 말고, 해당 scope의 house style을 따릅니다. 현재 Astro feature-based 구조에서는 `ft_*`가 feature page surface의 기본 scope이고, `ft_home`, `ft_recent`, `ft_posts`, `ft_postDetail`, `ft_notes`, `ft_noteDetail`, `ft_tags`, `ft_tagEntries`처럼 route role이 드러나는 owner slug를 우선합니다. `rt_*`는 pages-local document shell처럼 route-adjacent owner를 나타낼 때 쓰고, `wg_*`, `ui_*`, `loc_*` 같은 component/local scope는 프로젝트가 owner slug를 camelCase로 굳혀 두었다면 그 표기를 그대로 유지할 수 있습니다. 중요한 것은 scope별 규칙을 섞지 않고, 같은 owner에서 slug 표기가 흔들리지 않게 유지하는 것입니다.
 
 `element`와 `modifier`는 `listButton`, `detailExpanded`, `submitButton`, `emptyState`처럼 camelCase로 작성합니다. element/modifier 내부에서 `list-button`, `list_button`처럼 추가 구분자를 다시 도입하지 않습니다.
 
@@ -218,20 +256,22 @@ entries.css
 
 ```txt
 ui_tag_list__root
-rt_siteHeader__panel
+ft_postsPage__root
+ft_post_detail__body
 wg_site_header__brandLink
-rt_pctbi__list-button
-rt_pctbi__listButton--detail_expanded
+rt_document__main-content
+rt_document__main--route_active
 ```
 
 **Correct (scope는 lowercase namespace를 유지하고, slug는 scope별 house style을 따르며, element/modifier는 camelCase로 표기):**
 
 ```txt
 ui_tagList__root
-rt_pctbi__item--active
+ft_posts__root
+ft_postDetail__body
 wg_siteHeader__brandLink
-rt_pctbi__listButton
-rt_pctbi__listButton--detailExpanded
+rt_document__main
+rt_document__main--routeActive
 ```
 
 ## 2. Class Composition and Wrapper Boundaries
@@ -712,22 +752,22 @@ CSS 변수 `var(--*)`를 사용할 때는 토큰 존재가 보장되지 않는 �
 
 stylesheet는 하나의 owner에 맞춰 유지하고, 가벼운 구조 주석만 사용하며, 마무리 전에 금지 패턴을 점검해야 합니다.
 
-### 5.1 Keep Style Files Owned by One Component or Route
+### 5.1 Keep Style Files Owned by One Component, Feature Surface, or Route-adjacent Shell
 
 **Impact: MEDIUM (keeps stylesheets aligned to a single owner so comments, ordering, and scope remain understandable)**
 
-스타일 파일은 하나의 컴포넌트나 route 책임 범위를 기본 단위로 유지합니다. 가장 중요한 기준은 한 파일 안의 클래스들이 하나의 owner를 설명하느냐입니다.   
+스타일 파일은 하나의 컴포넌트, feature page surface, 또는 route-adjacent shell 책임 범위를 기본 단위로 유지합니다. 가장 중요한 기준은 한 파일 안의 클래스들이 하나의 owner를 설명하느냐입니다.   
 파일이 길어질 경우 가벼운 섹션 주석이나 선언 순서 규약을 보조적으로 둘 수 있지만, 이 규칙의 핵심은 주석 스타일이 아니라 ownership을 섞지 않는 것입니다.
 
 **Incorrect (여러 소유자의 스타일이 한 파일에 섞이고 구조 주석이 없음):**
 
 ```css
-/* entries.css */
-.rt_entries__list {
+/* posts.css */
+.ft_posts__root {
 	display: grid;
 }
 
-.loc_mecf__root {
+.rt_document__content {
 	display: flex;
 }
 
@@ -739,19 +779,19 @@ stylesheet는 하나의 owner에 맞춰 유지하고, 가벼운 구조 주석만
 **Correct (한 파일당 한 소유자 범위를 유지하고 필요시 섹션 주석을 둠):**
 
 ```css
-/* entries.css */
+/* posts.css */
 /* layout */
-.rt_entries__layout {
+.ft_posts__root {
 	display: grid;
 }
 
 /* visual */
-.rt_entries__panel {
+.ft_posts__panel {
 	background: var(--cms-color-bg-base, #fff);
 }
 
 /* state */
-.rt_entries__panel--active {
+.ft_posts__panel--active {
 	border-color: var(--cms-color-primary, #1677ff);
 }
 ```

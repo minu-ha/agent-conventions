@@ -4,7 +4,7 @@
 
 ## 1. Naming and Ownership (naming)
 **Impact:** CRITICAL
-**Description:** 클래스 문법, scope별 slug 규칙, 네임스페이스 소유권, local-vs-route scope가 명확해야 스타일을 검색하고 안전하게 수정할 수 있습니다.
+**Description:** 클래스 문법, `ft_/rt_/wg_/ui_/loc_` scope별 slug 규칙, 네임스페이스 소유권, feature-vs-local-vs-route-adjacent scope가 명확해야 스타일을 검색하고 안전하게 수정할 수 있습니다.
 
 ## 2. Class Composition and Wrapper Boundaries (composition)
 **Impact:** HIGH

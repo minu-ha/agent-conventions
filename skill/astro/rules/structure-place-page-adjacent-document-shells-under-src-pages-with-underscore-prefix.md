@@ -20,7 +20,7 @@ src/
       _document.astro
       _head.astro
       _document.css
-      recent-list-page.astro
+      recent-page.astro
   pages/
     index.astro
 ```
@@ -43,7 +43,7 @@ src/
       [slug].astro
   features/
     recent/
-      recent-list-page.astro
+      recent-page.astro
       recent.ts
 ```
 

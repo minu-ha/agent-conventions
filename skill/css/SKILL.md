@@ -8,8 +8,8 @@ metadata:
 
 # CSS 컨벤션
 
-에이전트 협업 팀을 위한 CSS 코딩 컨벤션 모음입니다. 현재 이 가이드는 5개 카테고리의 21개 규칙으로 구성되어 있습니다.  
-클래스 네이밍, TSX class 조합, selector 경계, 디자인 토큰, wrapper 기반 서드파티 스타일링 규칙을 [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`와 compiled [AGENTS.md](./AGENTS.md)로 관리합니다.
+에이전트 협업 팀을 위한 CSS 코딩 컨벤션 모음입니다. 현재 이 가이드는 5개 카테고리의 22개 규칙으로 구성되어 있습니다.  
+클래스 네이밍, `ft_/rt_/wg_/ui_/loc_` ownership, TSX class 조합, selector 경계, 디자인 토큰, wrapper 기반 서드파티 스타일링 규칙을 [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`와 compiled [AGENTS.md](./AGENTS.md)로 관리합니다.
 
 ## 사용할 때
 - CSS 파일, route/컴포넌트 전용 plain `*.css`, TSX의 `className` 조합을 만들거나 수정할 때 사용합니다.
@@ -47,10 +47,11 @@ metadata:
 
 - `naming-default-to-plain-css-when-no-module-convention` - CSS Modules 표준이 없으면 plain `.css`와 전역 고유 클래스명을 기본으로 사용
 - `naming-use-scope-slug-element-modifier-syntax` - scope, slug, element, modifier를 포함한 클래스 문법과 scope별 slug casing 유지
+- `naming-use-ft-scope-for-feature-owned-page-surfaces` - feature-owned page surface와 feature-private markup은 `ft_*`를 기본으로 사용
 - `naming-name-elements-and-modifiers-by-role` - 구조나 간격이 아니라 UI 역할 기준으로 이름 지정
-- `naming-preserve-route-slug-traceability` - route 계층과 slug 추적 가능성 유지
+- `naming-preserve-route-slug-traceability` - pages-local document shell 같은 `rt_*` owner의 slug traceability 유지
 - `naming-keep-scope-slug-unique-per-owner` - 하나의 `scope_slug` 네임스페이스는 한 owner만 사용
-- `naming-separate-local-and-route-style-scopes` - `loc_*` local 스타일과 `rt_*` route 스타일 분리
+- `naming-separate-local-and-route-style-scopes` - `ft_*`, `rt_*`, `loc_*` owner 범위를 파일과 namespace에서 분리
 
 ### 2. Class Composition and Wrapper Boundaries (HIGH)
 
@@ -81,7 +82,7 @@ metadata:
 
 ## 함께 쓰기
 - JSX 구조와 스타일 조합이 함께 바뀌면 `convention-react`를 함께 사용합니다.
-- route 레벨 스타일이나 route-local 스타일이 바뀌면 `convention-tanstack-route`를 함께 사용합니다.
+- Astro feature page나 pages-local document shell처럼 route-adjacent 스타일이 바뀌면 `convention-astro`를 함께 사용하는 편이 좋고, TanStack Router route-local 스타일이면 `convention-tanstack-route`를 함께 사용합니다.
 - helper, config, wrapper prop 타입이 함께 바뀌면 `convention-typescript`를 함께 사용합니다.
 - 브라우저 기반 스타일 회귀를 검증하면 `convention-playwright-test`를 함께 사용합니다.
 

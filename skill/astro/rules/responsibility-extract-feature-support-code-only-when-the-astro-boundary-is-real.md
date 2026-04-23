@@ -31,9 +31,9 @@ export const getEmptyMessage = (selectedTag?: string) => {
 ```ts
 // src/features/post/post.ts
 /**
- * @helper post collection 응답을 목록 화면 model로 정규화
+ * @helper post collection 응답을 posts 화면 model로 정규화
  */
-export const buildPostListPageModel = (posts: PostCollectionEntry[]) => {
+export const buildPostsPageModel = (posts: PostCollectionEntry[]) => {
 	return {
 		title: "Posts",
 		description: "Latest writing from the team.",
@@ -51,13 +51,13 @@ export const buildPostListPageModel = (posts: PostCollectionEntry[]) => {
 
 ```astro
 ---
-import type { PostListPageModel } from "./post";
+import type { PostsPageModel } from "./post";
 
 /**
  * @summary 포스트 목록 feature screen props
  */
 interface Props {
-	pageModel: PostListPageModel;
+	pageModel: PostsPageModel;
 	selectedTag?: string;
 }
 

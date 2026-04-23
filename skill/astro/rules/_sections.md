@@ -8,7 +8,7 @@
 
 ## 2. File Naming and Page Assets (naming)
 **Impact:** HIGH
-**Description:** `_document`/`_head`/`_document.css` 같은 pages-local helper 이름, 의미 있는 dynamic segment 이름, owner-named feature file은 file-based routing과 support module 탐색을 함께 쉽게 만듭니다.
+**Description:** `_document`/`_head`/`_document.css` 같은 pages-local helper 이름, `recent/posts/postDetail/tags/tagEntries`처럼 route role이 드러나는 feature file과 `ft_*` surface owner, 의미 있는 dynamic segment 이름은 file-based routing과 support module 탐색을 함께 쉽게 만듭니다.
 
 ## 3. Astro Components and Layout Composition (component)
 **Impact:** HIGH
@@ -36,7 +36,7 @@
 
 ## 9. Page, Layout, and Island Responsibilities (responsibility)
 **Impact:** HIGH
-**Description:** pages-local document helper는 top-level document composition, layout은 feature-owned shell, page는 route adapter contract, feature page는 screen flow owner, `private/`와 support module은 진짜 rendering/interaction/data boundary가 있을 때만 분리해야 Astro의 server-first 구조와 `ui`/`widget` 경계가 함께 읽히고 유지보수도 쉬워집니다.
+**Description:** pages-local document helper는 top-level document composition, layout은 feature-owned shell, page는 route adapter contract, feature page는 `ft_*` screen flow owner, `private/`와 support module은 진짜 rendering/interaction/data boundary가 있을 때만 분리해야 Astro의 server-first 구조와 `ui`/`widget` 경계가 함께 읽히고 유지보수도 쉬워집니다.
 
 ## 10. Documentation and Comments (docs)
 **Impact:** MEDIUM

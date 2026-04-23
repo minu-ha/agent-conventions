@@ -34,16 +34,16 @@ const posts = await getPosts({ search });
 ```astro
 ---
 import Document from "../_document.astro";
-import PostListPage from "../../features/post/post-list-page.astro";
-import { getPostListPageData } from "../../features/post/post.ts";
+import PostsPage from "../../features/post/posts-page.astro";
+import { getPostsPageData } from "../../features/post/post.ts";
 
 export const prerender = false;
 
 const search = Astro.url.searchParams.get("search") ?? "";
-const pageData = await getPostListPageData({ search });
+const pageData = await getPostsPageData({ search });
 ---
 
 <Document currentPathname={Astro.url.pathname} pageTitle="posts" pageDescription="Recent posts">
-	<PostListPage {...pageData} />
+	<PostsPage {...pageData} />
 </Document>
 ```

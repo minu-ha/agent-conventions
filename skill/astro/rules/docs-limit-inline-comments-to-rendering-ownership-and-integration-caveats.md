@@ -17,7 +17,7 @@ Astro의 inline comment는 rendering mode, serialization, feature ownership hand
 ---
 const tab = Astro.url.searchParams.get("tab") ?? "all";
 // 탭을 가져온다
-const pageData = await getPostListPageData({ tab });
+const pageData = await getPostsPageData({ tab });
 // 데이터를 불러온다
 ---
 ```
@@ -32,6 +32,6 @@ export const prerender = false;
 const tab = Astro.url.searchParams.get("tab") ?? "all";
 
 // route adapter는 param 해석까지만 맡고 실제 화면 조립은 feature entry로 넘김.
-const pageData = await getPostListPageData({ tab });
+const pageData = await getPostsPageData({ tab });
 ---
 ```

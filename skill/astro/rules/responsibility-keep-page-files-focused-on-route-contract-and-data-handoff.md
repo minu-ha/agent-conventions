@@ -34,16 +34,16 @@ const posts = await getPosts({ tab });
 ```astro
 ---
 import DocumentShell from "@/pages/_document.astro";
-import PostListPage from "../../features/post/post-list-page.astro";
-import { getPostListPageData } from "../../features/post/post.ts";
+import PostsPage from "../../features/post/posts-page.astro";
+import { getPostsPageData } from "../../features/post/post.ts";
 
 export const prerender = false;
 
 const tab = Astro.url.searchParams.get("tab") ?? "all";
-const pageData = await getPostListPageData({ tab });
+const pageData = await getPostsPageData({ tab });
 ---
 
 <DocumentShell currentPathname={Astro.url.pathname} pageTitle="posts" pageDescription="Recent posts">
-	<PostListPage {...pageData} />
+	<PostsPage {...pageData} />
 </DocumentShell>
 ```

@@ -16,7 +16,7 @@ tags: component, document, head, pages, seo
 ```astro
 ---
 import DocumentHead from "./_head.astro";
-import RecentListPage from "@/features/recent/recent-list-page.astro";
+import RecentPage from "@/features/recent/recent-page.astro";
 ---
 
 <html lang="ko">
@@ -26,7 +26,7 @@ import RecentListPage from "@/features/recent/recent-list-page.astro";
 	<body class="shell">
 		<header>...</header>
 		<main>
-			<RecentListPage />
+			<RecentPage />
 		</main>
 	</body>
 </html>
@@ -39,15 +39,15 @@ import RecentListPage from "@/features/recent/recent-list-page.astro";
 ```astro
 ---
 import DocumentShell from "@/pages/_document.astro";
-import RecentListPage from "@/features/recent/recent-list-page.astro";
-import { getRecentEntries, getRecentListPageProps } from "@/features/recent/recent";
+import RecentPage from "@/features/recent/recent-page.astro";
+import { getRecentEntries, getRecentPageProps } from "@/features/recent/recent";
 
 const entries = await getRecentEntries();
-const pageProps = getRecentListPageProps({ entries, currentPage: 1 });
+const pageProps = getRecentPageProps({ entries, currentPage: 1 });
 ---
 
 <DocumentShell currentPathname={Astro.url.pathname} pageTitle="recent" pageDescription="Recent posts and notes from meepin">
-	<RecentListPage {...pageProps} />
+	<RecentPage {...pageProps} />
 </DocumentShell>
 ```
 
