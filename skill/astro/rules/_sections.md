@@ -4,11 +4,11 @@
 
 ## 1. Project Structure and File Ownership (structure)
 **Impact:** CRITICAL
-**Description:** `src/pages`는 Astro의 required route adapter layer로 얇게 유지하고, `_document.astro`/`_head.astro`/`_document.css` 같은 pages-local document helper는 `src/pages/_*`에 두며, 실제 route body 구현은 `src/features/<feature>`로 분리해야 entry 흐름과 ownership이 예측 가능하게 유지됩니다.
+**Description:** `src/pages`는 Astro의 required route tree이자 route-local owner layer입니다. routed entry는 URL/rendering/server data/document handoff와 화면 흐름을 직접 소유하고, `_document.astro`/`_head.astro`/`_document.css`, `_local/`, owner-named support file처럼 `_` prefix로 제외되는 route-local 파일만 함께 둡니다.
 
 ## 2. File Naming and Page Assets (naming)
 **Impact:** HIGH
-**Description:** `_document`/`_head`/`_document.css` 같은 pages-local helper 이름, `home/recent/posts/postDetail/notes/noteDetail/tags/tag`처럼 route role이 드러나는 feature file과 `ft_*` surface owner, 의미 있는 dynamic segment 이름은 file-based routing과 support module 탐색을 함께 쉽게 만듭니다.
+**Description:** `_document`/`_head`/`_document.css` 같은 pages-local helper, route entry와 짝을 이루는 `_index.ts`/`_slug.ts`/`_post-admin.ts`, `_local/post-editor.tsx`처럼 owner가 드러나는 route-local asset, `rt_*` route surface owner, 의미 있는 dynamic segment 이름은 file-based routing과 support module 탐색을 함께 쉽게 만듭니다.
 
 ## 3. Astro Components and Layout Composition (component)
 **Impact:** HIGH
@@ -36,11 +36,11 @@
 
 ## 9. Page, Layout, and Island Responsibilities (responsibility)
 **Impact:** HIGH
-**Description:** pages-local document helper는 top-level document composition, layout은 feature-owned shell, page는 route adapter contract, feature page는 `ft_*` screen flow owner, `private/`와 support module은 진짜 rendering/interaction/data boundary가 있을 때만 분리해야 Astro의 server-first 구조와 `ui`/`widget` 경계가 함께 읽히고 유지보수도 쉬워집니다.
+**Description:** pages-local document helper는 top-level document composition, routed page는 route contract와 `rt_*` screen flow, `_local/`은 route-local UI/runtime boundary, owner-named support module은 진짜 data/rendering boundary를 소유합니다. shared `ui`/`widget`으로 올릴 수 없는 route-only 조각은 같은 route folder 안에 남겨 Astro의 server-first 구조와 ownership이 함께 읽히게 합니다.
 
 ## 10. Documentation and Comments (docs)
 **Impact:** MEDIUM
-**Description:** Astro frontmatter, `src/pages/_document.astro`/`_head.astro`, feature support module의 핵심 선언에는 JSDoc을 남기고, inline comment는 rendering, ownership, integration caveat처럼 없으면 오해될 제약만 설명해야 합니다.
+**Description:** Astro frontmatter, `src/pages/_document.astro`/`_head.astro`, route-local support module의 핵심 선언에는 JSDoc을 남기고, inline comment는 rendering, ownership, integration caveat처럼 없으면 오해될 제약만 설명해야 합니다.
 
 ## 11. Workflow and Review Checks (workflow)
 **Impact:** MEDIUM

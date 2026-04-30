@@ -8,23 +8,23 @@ metadata:
 
 # Astro 컨벤션
 
-에이전트 협업 팀을 위한 Astro 코딩 컨벤션 모음입니다. 현재 이 가이드는 11개 카테고리의 41개 local 규칙으로 구성되어 있습니다.  
-Astro entry 구조, thin `src/pages` adapter layer, pages-local `_document.astro`/`_head.astro`/`_document.css`, meepin 최신 route family(`index`, `recent`, `posts`, `notes`, `tags/[tag]`)와 feature-based page implementation, route-role aligned feature file naming과 `ft_*` surface ownership, `.astro` 컴포넌트 경계, framework island 사용법, file-based routing, SSG/SSR/CSR rendering 선택, build-time/live collections, Actions와 endpoints, feature-owned layout/page/island/private 책임, `ui` primitive/`widget` reusable block taxonomy, feature page orchestration과 selective extraction 기준, Astro 전용 문서화 규칙, Astro 전용 검토 흐름을 [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`와 compiled [AGENTS.md](./AGENTS.md)로 관리합니다.  
+에이전트 협업 팀을 위한 Astro 코딩 컨벤션 모음입니다. 현재 이 가이드는 11개 카테고리의 41개 local 규칙으로 구성되어 있습니다.
+Astro entry 구조, route-local owner layer인 `src/pages`, pages-local `_document.astro`/`_head.astro`/`_document.css`, meepin 최신 route family(`index`, `recent`, `posts`, `notes`, `tags/[tag]`, `admin/**`)와 page-owned implementation, route-role aligned page asset naming과 `rt_*` surface ownership, `_local/` route-local UI/runtime boundary, owner-named support file, `.astro` 컴포넌트 경계, framework island 사용법, file-based routing, SSG/SSR/CSR rendering 선택, build-time/live collections, Actions와 endpoints, page/local/island 책임, `ui` primitive/`widget` reusable block taxonomy, selective extraction 기준, Astro 전용 문서화 규칙, Astro 전용 검토 흐름을 [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`와 compiled [AGENTS.md](./AGENTS.md)로 관리합니다.
 Astro local rule은 기본 companion인 `convention-typescript`와 `convention-css`를 함께 사용하고, React island나 브라우저 테스트는 필요할 때 추가로 로드합니다.
 
 ## 사용할 때
 
-- `src/pages`, `src/features/<feature>`, `src/components`의 `.astro` 파일과 Astro page entry를 만들거나 수정할 때 사용합니다.
+- `src/pages`, `src/pages/**/_local`, `src/components`의 `.astro` 파일과 Astro page entry를 만들거나 수정할 때 사용합니다.
 - `output`, `prerender`, `getStaticPaths()`, dynamic route, `client:*`, `client:only`, `server:defer`처럼 rendering mode나 delivery mode 판단이 필요한 변경에 사용합니다.
 - React/Preact/Vue/Svelte island를 Astro 안에서 연결하거나 hydration directive를 고를 때 사용합니다.
 - `src/content.config.ts`, `src/live.config.ts`, `src/actions/index.ts`, API endpoint, content collection query가 중요한 변경에 사용합니다.
-- Astro 프로젝트 구조나 page/layout/island/private ownership을 house style 기준으로 리뷰할 때 사용합니다.
+- Astro 프로젝트 구조나 page/local/island/support ownership을 house style 기준으로 리뷰할 때 사용합니다.
 
 ## 활성화 체크리스트
 
-- 변경 범위가 `.astro` 페이지/레이아웃/컴포넌트, `src/features/<feature>` 구조, rendering mode, file-based route, content collection, Actions/endpoints, server islands, framework island인지 먼저 확인합니다.
+- 변경 범위가 `.astro` 페이지/레이아웃/컴포넌트, `src/pages` route-local 구조, rendering mode, file-based route, content collection, Actions/endpoints, server islands, framework island인지 먼저 확인합니다.
 - 이 skill이 활성화되면 먼저 compiled [AGENTS.md](./AGENTS.md)를 열어 Structure, Naming, Component, Island, Routing, Rendering, Content, Server, Responsibility, Workflow 중 어떤 카테고리가 직접 걸리는지 빠르게 훑습니다.
-- 실제로 바꾸는 관심사에 맞는 `rules/*.md`를 추가로 읽습니다. `src/pages` thin adapter와 `src/features` 배치를 조정하면 structure rule, owner-named feature file과 dynamic segment 이름을 바꾸면 naming rule, static/on-demand/server mode 판단이면 rendering rule, layout/page/island/private 경계를 조정하면 responsibility rule을 확인합니다.
+- 실제로 바꾸는 관심사에 맞는 `rules/*.md`를 추가로 읽습니다. `src/pages` route-local 배치와 `_local/` 구조를 조정하면 structure rule, owner-named route asset과 dynamic segment 이름을 바꾸면 naming rule, static/on-demand/server mode 판단이면 rendering rule, page/local/island/support 경계를 조정하면 responsibility rule을 확인합니다.
 - Astro 변경은 기본적으로 `convention-typescript`와 `convention-css`를 함께 로드하고, React island나 TSX를 만지면 `convention-react`, hydration/form/server 흐름을 브라우저 테스트로 검증하면 `convention-playwright-test`도 함께 로드합니다.
 - `client:*`, `client:only`, `server:defer`, Actions, endpoints, content collections처럼 버전 민감한 Astro API를 건드리면 가능하면 `astro-docs` MCP 같은 공식 문서 경로를 먼저 확인합니다.
 
@@ -68,15 +68,15 @@ Astro local rule은 기본 companion인 `convention-typescript`와 `convention-c
 
 ### 1. Project Structure and File Ownership (CRITICAL)
 
-- `structure-keep-src-pages-thin-and-use-it-as-route-adapter-layer` - `src/pages`는 route adapter layer로만 얇게 유지
+- `structure-keep-src-pages-as-route-local-owner-layer` - `src/pages`는 route entry와 route-local 구현을 함께 소유
 - `structure-place-page-adjacent-document-shells-under-src-pages-with-underscore-prefix` - `_document`, `_head`, `_document.css`는 `src/pages/_*` 아래에 둠
-- `structure-place-route-implementations-under-src-features` - 실제 route 구현은 `src/features/<feature>` 아래에 모음
+- `structure-place-route-implementations-under-src-pages` - 실제 route 구현은 routed page와 `_local/` 아래에 둠
 
 ### 2. File Naming and Page Assets (HIGH)
 
 - `naming-use-underscore-prefixed-page-shell-names-for-document-head-and-chrome` - pages-local helper는 `_document`, `_head`, `_document.css` 같은 이름 사용
-- `naming-align-feature-page-files-and-ft-surface-classes-with-route-role` - feature page 파일과 `ft_*` surface class를 route role 기준으로 정렬
-- `naming-use-owner-named-feature-files-instead-of-generic-page-slug-index` - feature 파일은 `page/slug/index` 대신 owner-named로 유지
+- `naming-align-route-page-assets-and-rt-surface-classes-with-route-role` - route page asset과 `rt_*` surface class를 route role 기준으로 정렬
+- `naming-use-owner-named-route-support-files-instead-of-generic-local-files` - route-local support file은 generic `_local.ts` 대신 owner-named로 유지
 - `naming-use-domain-specific-dynamic-segment-names` - `[param]`과 `[...param]` 이름은 도메인 의미를 드러내기
 
 ### 3. Astro Components and Layout Composition (HIGH)
@@ -119,19 +119,19 @@ Astro local rule은 기본 companion인 `convention-typescript`와 `convention-c
 
 ### 9. Page, Layout, and Island Responsibilities (HIGH)
 
-- `responsibility-limit-layouts-to-shell-and-composition` - layout은 feature-owned shell, slot, shared wrapper에 집중
-- `responsibility-place-layout-shells-under-owning-features` - layout file은 shared tier로 올리지 않고 owning feature 아래에 둠
+- `responsibility-limit-layouts-to-shell-and-composition` - layout은 document/route shell, slot, shared wrapper에 집중
+- `responsibility-place-route-shells-under-owning-route-local-folder` - route shell은 shared tier로 올리지 않고 owning route의 `_local/` 아래에 둠
 - `responsibility-compose-layouts-from-widget-and-ui-only` - layout 내부 조립은 `widget`과 `ui`로 제한
-- `responsibility-keep-page-files-focused-on-route-contract-and-data-handoff` - page는 route contract와 data handoff를 소유하고 feature entry로 위임
+- `responsibility-keep-page-files-focused-on-route-contract-and-data-handoff` - page는 route contract, data handoff, 화면 흐름을 소유
 - `responsibility-keep-page-adjacent-shells-imported-only-by-pages` - `_document`, `_head`, `_document.css`는 pages만 소유
-- `responsibility-keep-feature-page-files-focused-on-screen-flow` - feature page는 `ft_*` surface owner이자 screen flow owner로 남음
-- `responsibility-extract-feature-private-sections-only-for-rendering-or-interaction-boundaries` - `private/` section은 진짜 rendering/interaction boundary가 있을 때만 추출
-- `responsibility-extract-feature-support-code-only-when-the-astro-boundary-is-real` - `post.ts` 같은 support module은 진짜 data boundary가 있을 때만 사용
-- `responsibility-place-feature-private-ui-under-private` - feature-local UI와 CSS는 `private/` 아래에 둠
+- `responsibility-keep-route-page-files-focused-on-screen-flow` - route page는 `rt_*` surface owner이자 screen flow owner로 남음
+- `responsibility-extract-route-local-sections-only-for-rendering-or-interaction-boundaries` - `_local/` section은 진짜 rendering/interaction boundary가 있을 때만 추출
+- `responsibility-extract-route-support-code-only-when-the-boundary-is-real` - `_post-admin.ts` 같은 support module은 진짜 data boundary가 있을 때만 사용
+- `responsibility-place-route-local-ui-under-local` - route-local UI와 CSS는 `_local/` 아래에 둠
 
 ### 10. Documentation and Comments (MEDIUM)
 
-- `docs-require-jsdoc-on-key-frontmatter-and-feature-support-declarations` - frontmatter와 feature support module의 핵심 선언에는 JSDoc 요구
+- `docs-require-jsdoc-on-key-frontmatter-and-route-support-declarations` - frontmatter와 route-local support module의 핵심 선언에는 JSDoc 요구
 - `docs-limit-inline-comments-to-rendering-ownership-and-integration-caveats` - inline comment는 rendering, ownership, integration caveat에만 제한
 
 ### 11. Workflow and Review Checks (MEDIUM)
@@ -143,8 +143,8 @@ Astro local rule은 기본 companion인 `convention-typescript`와 `convention-c
 ## 함께 쓰기
 
 - 이 skill은 `convention-typescript`와 `convention-css`를 함께 로드하는 것을 기본으로 합니다.
-- `convention-typescript`는 frontmatter TypeScript, feature support module, JSDoc 태그 표준을 보완합니다.
-- `convention-css`는 `.astro` template의 `class`/`class:list`, `ft_home/ft_recent/ft_posts/ft_postDetail/ft_notes/ft_noteDetail/ft_tags/ft_tag` surface ownership, `rt_document__*`, `wg_*`, `ui_*`, 드문 `loc_*` helper ownership, feature-owned stylesheet, wrapper 스타일링을 보완합니다.
+- `convention-typescript`는 frontmatter TypeScript, route-local support module, JSDoc 태그 표준을 보완합니다.
+- `convention-css`는 `.astro` template의 `class`/`class:list`, `rt_*` route surface ownership, `rt_document__*`, `wg_*`, `ui_*`, 드문 `loc_*` helper ownership, route-local stylesheet, wrapper 스타일링을 보완합니다.
 - React island, TSX component, client framework support code가 바뀌면 `convention-react`를 추가로 함께 사용합니다.
 - hydration, form action, server island fallback, navigation 회귀를 브라우저에서 검증하면 `convention-playwright-test`를 함께 사용합니다.
 
@@ -153,7 +153,7 @@ Astro local rule은 기본 companion인 `convention-typescript`와 `convention-c
 - 이번 변경이 Naming, Rendering, Responsibility, Docs까지 포함한 어느 카테고리에 걸리는지 다시 대조하고 관련 rule을 빠뜨리지 않았는지 확인합니다.
 - React island, CSS, TypeScript config/action schema, JSDoc/comment, Playwright 검증까지 번졌는데 companion skill을 빼먹지 않았는지 점검합니다.
 - static, on-demand, `output: "server"`, `client:only` 중 현재 선택이 과한지 다시 확인합니다.
-- `src/pages` thin adapter, `src/pages/_document.astro`/`_head.astro`/`_document.css`, meepin 최신 route family(`index`, `recent`, `posts`, `notes`, `tags/[tag]`), `src/features/<feature>`, route role에 맞는 feature page file naming, `ft_*` surface ownership, `rt_document__*`/`wg_*`/`ui_*`/드문 `loc_*` ownership, feature-owned layout, `ui`/`widget` taxonomy, feature page orchestration, `private/`와 support module extraction 기준, build-time/live collection 구분, layout/page/island ownership, endpoint와 Actions의 역할 분리, 핵심 frontmatter 선언의 JSDoc/comment가 마지막 diff에도 그대로 보이는지 확인합니다.
+- `src/pages` route-local owner layer, `src/pages/_document.astro`/`_head.astro`/`_document.css`, meepin 최신 route family(`index`, `recent`, `posts`, `notes`, `tags/[tag]`, `admin/**`), route role에 맞는 page-adjacent asset naming, `rt_*` surface ownership, `rt_document__*`/`wg_*`/`ui_*`/드문 `loc_*` ownership, `_local/` route shell/runtime/component CSS, `ui`/`widget` taxonomy, route page orchestration, owner-named support module extraction 기준, build-time/live collection 구분, page/island ownership, endpoint와 Actions의 역할 분리, 핵심 frontmatter 선언의 JSDoc/comment가 마지막 diff에도 그대로 보이는지 확인합니다.
 
 ## 사용하는 방법
 

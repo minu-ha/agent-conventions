@@ -1,15 +1,15 @@
 ---
 title: Compose Layouts from Widget and UI Only
 impact: HIGH
-impactDescription: keeps layout files as feature shells instead of letting them become domain-specific shared blocks
+impactDescription: keeps layout files as route shells instead of letting them become domain-specific shared blocks
 tags: responsibility, layouts, ui, widget, composition
 ---
 
 ## Compose Layouts from Widget and UI Only
 
-**Impact: HIGH (keeps layout files as feature shells instead of letting them become domain-specific shared blocks)**
+**Impact: HIGH (keeps layout files as route shells instead of letting them become domain-specific shared blocks)**
 
-route-shared body shell을 소유하는 `_document.astro`나 feature-owned layout이 shell composition을 맡는다면, 그 안에서 조립하는 shared piece는 `src/components/widget/**`와 `src/components/ui/**`로 제한합니다. `ui`는 button, input, card, table, box, stack, surface, text, tag-list 같은 primitive이고, `widget`은 search-table, site-header, entry-feed, entry-detail처럼 `ui`를 조립한 reusable block입니다. shell은 이 둘과 `<slot />`을 사용해 조립하고, 그 자체를 `ui-*`나 `widget-*`로 이름 붙여 shared component처럼 승격하지 않습니다. route-shared body shell style은 `_document.css`가 소유하고, shell class는 `rt_document__*`처럼 문서 셸 소유권이 드러나게 유지합니다.
+route-shared body shell을 소유하는 `_document.astro`나 route-local shell이 shell composition을 맡는다면, 그 안에서 조립하는 shared piece는 `src/components/widget/**`와 `src/components/ui/**`로 제한합니다. `ui`는 button, input, card, table, box, stack, surface, text, tag-list 같은 primitive이고, `widget`은 search-table, site-header, entry-feed, entry-detail처럼 `ui`를 조립한 reusable block입니다. shell은 이 둘과 `<slot />`을 사용해 조립하고, 그 자체를 `ui-*`나 `widget-*`로 이름 붙여 shared component처럼 승격하지 않습니다. route-shared body shell style은 `_document.css`가 소유하고, shell class는 `rt_document__*`처럼 문서 셸 소유권이 드러나게 유지합니다.
 
 **Incorrect (layout 역할을 ui/widget로 위장함):**
 

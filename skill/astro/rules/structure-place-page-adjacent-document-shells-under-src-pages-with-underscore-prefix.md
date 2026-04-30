@@ -1,33 +1,36 @@
 ---
 title: Place Pages-local Document Helpers Under `src/pages` with an Underscore Prefix
 impact: HIGH
-impactDescription: keeps route-shared document helpers and support files close to route adapters without turning them into routed pages or feature dependencies
+impactDescription: keeps route-shared document helpers and route-local support files close to route owners without turning them into routed pages
 tags: structure, pages, underscore, document-helpers
 ---
 
 ## Place Pages-local Document Helpers Under `src/pages` with an Underscore Prefix
 
-**Impact: HIGH (keeps route-shared document helpers and support files close to route adapters without turning them into routed pages or feature dependencies)**
+**Impact: HIGH (keeps route-shared document helpers and route-local support files close to route owners without turning them into routed pages)**
 
-Astro는 `src/pages` 안에서 `_`로 시작하는 파일과 폴더를 router에서 제외합니다. 이 프로젝트에서는 이 성질을 이용해 pages-local document helper와 support file을 `src/pages/_*`에 둡니다. 기본 세트는 `_document.astro`, `_head.astro`, `_document.css`입니다. `_document.astro`는 `<html>`, `<head>`, `<body>`와 route-shared body shell을 소유하면서 문서 셸 contract도 자기 로컬 `Props`로 직접 가집니다. `_head.astro`는 head/meta 전용 contract를 자기 로컬 `Props`로 직접 소유하고, `_document.css`는 route-shared body shell 스타일을 소유합니다. 실제 route body 구현은 여전히 `src/features/<feature>`가 소유합니다.
+Astro는 `src/pages` 안에서 `_`로 시작하는 파일과 폴더를 router에서 제외합니다. 이 프로젝트에서는 이 성질을 이용해 pages-local document helper와 route-local support file을 `src/pages/_*` 또는 `src/pages/**/_*`에 둡니다. top-level 기본 세트는 `_document.astro`, `_head.astro`, `_document.css`입니다. route subtree 안에서는 `_index.ts`, `_slug.ts`, `_post-admin.ts`, `_local/post-editor.tsx`처럼 routed entry와 짝을 이루는 owner-named 파일을 둡니다. `_document.astro`는 `<html>`, `<head>`, `<body>`와 route-shared body shell을 소유하면서 문서 셸 contract도 자기 로컬 `Props`로 직접 가집니다.
 
-**Incorrect (pages-local document helper와 body 구현 경계가 흐려짐):**
+**Incorrect (document helper와 route-local 구현이 route tree 밖으로 밀려남):**
 
 ```text
 src/
-  features/
-    recent/
+  components/
+    layout/
       _document.astro
       _head.astro
       _document.css
-      recent-page.astro
+    admin/
+      post-editor.tsx
   pages/
-    index.astro
+    admin/
+      posts/
+        index.astro
 ```
 
-이 구조는 route-shared document helper가 feature 안으로 들어가 pages와 features의 의존 방향을 흐리게 만듭니다.
+이 구조는 Astro route와 route-only 구현의 ownership을 흐립니다. `components`는 public shared surface처럼 보이므로 route 전용 파일을 두기에 부적절합니다.
 
-**Correct (pages-local document helper는 `src/pages/_*`, body 구현은 `src/features`):**
+**Correct (pages-local document helper와 route-local 구현을 `_` prefix로 route tree 안에 둠):**
 
 ```text
 src/
@@ -39,12 +42,20 @@ src/
     404.astro
     posts/
       index.astro
-    post/
+      _index.ts
+      _index.css
       [slug].astro
-  features/
-    recent/
-      recent-page.astro
-      recent.ts
+      _slug.ts
+    admin/
+      _local/
+        admin-shell.astro
+        admin-shell.css
+      posts/
+        index.astro
+        _post-admin.ts
+        _local/
+          post-editor.tsx
+          post-editor.css
 ```
 
-이 구조에서는 `_document`, `_head`, `_document.css`가 pages-local helper라는 점이 파일 위치만으로도 드러나고, routed page는 계속 `src/pages/**`만 담당합니다.
+이 구조에서는 `_document`, `_head`, `_document.css`가 pages-local document helper라는 점과, `_local/` 및 owner-named support file이 route-local 구현이라는 점이 파일 위치만으로 드러납니다.
