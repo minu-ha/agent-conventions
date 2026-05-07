@@ -14,12 +14,12 @@ Routed entry file names follow Astro routing (`index.astro`, `[slug].astro`, `ne
 **Incorrect (route depth and generic names leak into file/class names):**
 
 ```txt
-admin/posts/index.astro -> ft_adminPosts__root
+admin/posts/index.astro -> loc_adminPostsPage__root
 admin/posts/_admin-posts.ts
 admin/posts/_local.ts
 admin/posts/_local.css
 admin/posts/_local/provider.tsx
-posts/[slug].astro -> ft_postsDetailPage__body
+posts/[slug].astro -> loc_postDetailPage__body
 ```
 
 **Correct (route role and asset owner are short, searchable, and aligned):**

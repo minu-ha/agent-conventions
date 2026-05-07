@@ -269,12 +269,12 @@ Routed entry file names follow Astro routing (`index.astro`, `[slug].astro`, `ne
 **Incorrect (route depth and generic names leak into file/class names):**
 
 ```txt
-admin/posts/index.astro -> ft_adminPosts__root
+admin/posts/index.astro -> loc_adminPostsPage__root
 admin/posts/_admin-posts.ts
 admin/posts/_local.ts
 admin/posts/_local.css
 admin/posts/_local/provider.tsx
-posts/[slug].astro -> ft_postsDetailPage__body
+posts/[slug].astro -> loc_postDetailPage__body
 ```
 
 **Correct (route role and asset owner are short, searchable, and aligned):**
@@ -440,7 +440,7 @@ const pageProps = getRecentListPageProps({
 });
 ---
 
-<Document currentPathname={Astro.url.pathname} pageTitle="recent" pageDescription="Recent posts and notes from meepin">
+<Document currentPathname={Astro.url.pathname} pageTitle="recent" pageDescription="Recent entries">
 	<section class="rt_ri__root">
 		<WgEntryFeed entries={pageProps.entries} />
 	</section>
@@ -880,7 +880,7 @@ src/pages/tags/[tag]/[page].astro
 
 **Impact: HIGH (prevents file tree cleanup from silently changing published URLs that users and crawlers already rely on)**
 
-route folder를 더 예쁘게 정리할 수 있더라도, 이미 공개된 URL contract가 있다면 그 계약을 먼저 존중합니다. meepin 최신 구조처럼 현재 사이트가 이미 `/recent/:page?`, `/posts/:page?`, `/posts/:slug`, `/notes/:page?`, `/notes/:slug`, `/tags/:tag/:page?` 같은 경로를 쓰고 있다면 폴더 대칭성만을 이유로 root pagination, singular folder, 다른 slug family로 URL을 바꾸지 않습니다. 이 skill에서는 "새로 설계할 때의 선호 구조"와 "이미 배포된 공개 URL"을 분리해서 판단합니다.
+route folder를 더 예쁘게 정리할 수 있더라도, 이미 공개된 URL contract가 있다면 그 계약을 먼저 존중합니다. 현재 사이트가 이미 `/recent/:page?`, `/posts/:page?`, `/posts/:slug`, `/tags/:tag/:page?` 같은 경로를 쓰고 있다면 폴더 대칭성만을 이유로 root pagination, singular folder, 다른 slug family로 URL을 바꾸지 않습니다. 이 skill에서는 "새로 설계할 때의 선호 구조"와 "이미 배포된 공개 URL"을 분리해서 판단합니다.
 
 **Incorrect (폴더 모양을 맞추려는 이유만으로 공개 URL을 바꿈):**
 

@@ -1,37 +1,38 @@
 ---
-title: Separate Feature, Local, and Route-adjacent Style Scopes
+title: Separate Route, Local, and Shared Style Scopes
 impact: HIGH
-impactDescription: keeps feature-owned page styles, pages-local document styles, and truly local helper styles from mixing into the same namespace or file
-tags: feature-scope, local-scope, route-scope, css-files
+impactDescription: keeps route-owned page styles, shared component styles, and truly local helper styles from mixing into the same namespace or file
+tags: route-scope, local-scope, shared-scope, css-files
 ---
 
-## Separate Feature, Local, and Route-adjacent Style Scopes
+## Separate Route, Local, and Shared Style Scopes
 
-**Impact: HIGH (keeps feature-owned page styles, pages-local document styles, and truly local helper styles from mixing into the same namespace or file)**
+**Impact: HIGH (keeps route-owned page styles, shared component styles, and truly local helper styles from mixing into the same namespace or file)**
 
-feature-based Astro 프로젝트에서는 `src/features/<feature>/*-page.astro`와 그 feature-private 보조 UI가 같은 screen owner를 설명한다면 `ft_*` 스코프를 기본으로 사용합니다. 즉 `private/` 파일이라고 해서 자동으로 `loc_*`를 새로 만들지 말고, 여전히 같은 page surface를 설명한다면 `ft_posts__*`, `ft_postDetail__*`, `ft_tags__*` 같은 기존 feature owner namespace를 유지합니다. 반대로 `rt_*`는 `src/pages/_document.css`처럼 pages-local document shell이나 route-adjacent helper CSS에만 남기고, `loc_*`는 독립 owner를 가진 truly local helper 스타일일 때만 사용합니다. 서로 다른 owner 범위는 한 파일에 섞지 않습니다.
+Astro route page, route-local support UI, route-local runtime CSS가 같은 screen owner를 설명한다면 `rt_*` scope를 기본으로 사용합니다. `_local/` 아래로 파일이 내려갔다는 이유만으로 main screen surface를 `loc_*`로 바꾸지 않습니다. `loc_*`는 route surface와 독립된 leaf helper가 자기 owner를 가질 때만 사용합니다. 여러 route에서 재사용되는 block은 `wg_*`, primitive는 `ui_*`, pages-local document shell은 `rt_document__*`처럼 owner 범위를 분리합니다. 서로 다른 owner 범위는 한 파일에 섞지 않습니다.
 
-**Incorrect (feature page surface와 local helper, document shell을 한 파일/네임스페이스에 섞음):**
+**Incorrect (route surface, local helper, shared component owner를 한 파일/네임스페이스에 섞음):**
 
 ```txt
-post.css
-  ft_posts__root
-  loc_postFilterDialog__root
+posts/_index.css
+  rt_postsIndex__root
+  loc_filterDialog__root
   rt_document__content
+  ui_button__root
 ```
 
-**Correct (feature/page owner, document shell owner, local helper owner를 분리):**
+**Correct (route owner, document owner, local helper owner를 분리):**
 
 ```txt
-features/post/post.css
-  ft_posts__root
-  ft_posts__list
-  ft_posts__empty
+posts/_index.css
+  rt_postsIndex__root
+  rt_postsIndex__list
+  rt_postsIndex__empty
 
 pages/_document.css
   rt_document__body
   rt_document__content
 
-private/post-filter-dialog.css
-  loc_postFilterDialog__root
+posts/_local/filter-dialog.css
+  loc_filterDialog__root
 ```

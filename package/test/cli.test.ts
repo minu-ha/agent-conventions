@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import {access, readFile} from "node:fs/promises";
+import {access, readFile, readdir} from "node:fs/promises";
 import {spawnSync} from "node:child_process";
 import path from "node:path";
 import test from "node:test";
@@ -12,6 +12,29 @@ const astroAgentsPath = path.join(repoDir, "skill/astro/AGENTS.md");
 const reactAgentsPath = path.join(repoDir, "skill/react/AGENTS.md");
 const npmCommand = process.platform === "win32" ? "npm.cmd" : "npm";
 const expectedSkillScriptNames = ["astro", "react", "css", "nestjs", "playwright-test", "tanstack-route", "typescript"] as const;
+
+/**
+ * @helper skill markdown 파일 목록을 재귀적으로 조회
+ */
+const listMarkdownFiles = async (dirPath: string): Promise<string[]> => {
+	const dirents = await readdir(dirPath, {withFileTypes: true});
+	const files: string[] = [];
+
+	for (const dirent of dirents) {
+		const filePath = path.join(dirPath, dirent.name);
+
+		if (dirent.isDirectory()) {
+			files.push(...(await listMarkdownFiles(filePath)));
+			continue;
+		}
+
+		if (dirent.isFile() && filePath.endsWith(".md")) {
+			files.push(filePath);
+		}
+	}
+
+	return files.sort();
+};
 
 /**
  * @description `package/` npm script를 실제 CLI처럼 실행
@@ -94,6 +117,27 @@ test("build:astro alias regenerates AGENTS.md for the astro skill", async () => 
 	assert.match(agentsSource, /`convention-typescript`/);
 	assert.match(agentsSource, /^ {4}- \d+\.\d+ \[Align Route Page Assets and `rt_\*` Surface Classes with Route Role\]/m);
 	assert.match(agentsSource, /^### \d+\.\d+ Compose Page-level Documents Through `_document\.astro` and `_head\.astro`$/m);
+});
+
+test("css and astro skills do not keep stale project-specific route naming guidance", async () => {
+	const cssFiles = (await listMarkdownFiles(path.join(repoDir, "skill/css"))).filter(
+		(filePath) => !filePath.includes(`${path.sep}deprecated${path.sep}`),
+	);
+	const astroFiles = await listMarkdownFiles(path.join(repoDir, "skill/astro"));
+	const checkedFiles = [...cssFiles, ...astroFiles];
+
+	for (const filePath of checkedFiles) {
+		const relativePath = path.relative(repoDir, filePath);
+		const source = await readFile(filePath, "utf8");
+
+		assert.doesNotMatch(relativePath, /naming-use-ft-scope/, relativePath);
+		assert.doesNotMatch(source, /\bmeepin\b/i, relativePath);
+		assert.doesNotMatch(source, /\bft_[A-Za-z0-9_]*\b/, relativePath);
+
+		if (relativePath.startsWith("skill/css/")) {
+			assert.doesNotMatch(source, /src\/features|feature-private|feature page surface|feature surface|route-adjacent/i, relativePath);
+		}
+	}
 });
 
 test("build:all alias succeeds for every buildable skill", () => {

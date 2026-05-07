@@ -19,15 +19,15 @@ CSS skill을 수정하거나 새로운 rule을 추가했을 때, 실제 에이�
 3. 결과를 아래 항목으로 비교합니다.
    - 어떤 CSS 파일과 TSX를 만들거나 수정했는지
    - class naming, wrapper ownership, selector depth, token usage가 skill 기준과 맞는지
-  - feature scope, route-adjacent scope, local scope가 섞이지 않았는지
+   - route scope, shared component scope, local scope가 섞이지 않았는지
 
 ## Common Red Flags
 
 - `.module.css`와 `styles.*`를 기본처럼 사용함
 - TSX `className`에 문자열 리터럴이나 문자열 연결을 직접 넣음
-- `ft_*`, `rt_*`, `loc_*`, `ui_*`, `wg_*` namespace가 owner와 맞지 않음
-- `ft_*`가 되어야 할 feature page surface를 `loc_*`나 `rt_*`로 잡음
-- `rt_*` route slug 규칙을 `ft_*`, `wg_*`, `ui_*`, `loc_*` owner slug에 그대로 덮어씀
+- `rt_*`, `loc_*`, `ui_*`, `wg_*` namespace가 owner와 맞지 않음
+- route-owned page surface를 `loc_*`나 shared component namespace로 잡음
+- `rt_*` route slug 규칙을 `wg_*`, `ui_*`, `loc_*` owner slug에 그대로 덮어씀
 - one-off layout patch를 modifier로 추가함
 - `.a .b .c .d` 같은 깊은 project-owned descendant selector를 만듦
 - top-level `.foo:hover`, `.foo:visited`를 다시 열어 둠
@@ -37,7 +37,7 @@ CSS skill을 수정하거나 새로운 rule을 추가했을 때, 실제 에이�
 - owned root를 `.rt_* .ant-*` 같은 one-line selector로 다시 체이닝함
 - 반복되는 색상, 간격, radius를 하드코딩함
 - 존재 보장이 없는 CSS 변수에 fallback이 없음
-- feature CSS와 document/local CSS를 한 파일에 섞음
+- route CSS와 document/local/shared component CSS를 한 파일에 섞음
 
 ## Scenario Set
 
@@ -104,22 +104,21 @@ CSS skill을 수정하거나 새로운 rule을 추가했을 때, 실제 에이�
   - `#f5f5f5`, `12px`, `4px`가 그대로 반복됨
   - `var(--cms-color-border)`를 불안정한 경계에서 fallback 없이 사용함
 
-### C5. Feature vs Local vs Document Ownership
+### C5. Route vs Local vs Document Ownership
 
 - Focus
   - `naming-separate-local-and-route-style-scopes`
-  - `naming-use-ft-scope-for-feature-owned-page-surfaces`
   - `organization-keep-style-files-owned-by-one-component-or-route`
 - Prompt
-  - "feature page CSS와 `private/` modal CSS, `_document.css`를 같이 정리해줘."
+  - "route page CSS와 `_local/` dialog CSS, `_document.css`를 같이 정리해줘."
 - Expected pass signals
-  - feature page surface는 `ft_*`를 사용함
-  - pages-local document shell은 `rt_*`, truly local helper는 `loc_*`로 분리함
-  - 파일도 feature owner, document owner, local owner 단위로 나뉨
+  - route page surface는 `rt_*`를 사용함
+  - pages-local document shell은 `rt_document__*`, truly local helper는 `loc_*`로 분리함
+  - 파일도 route owner, document owner, local owner 단위로 나뉨
 - Likely fail signals
-  - 하나의 CSS 파일에 `ft_*`와 `rt_*`와 `loc_*`가 섞임
-  - `private/` 파일이라는 이유만으로 `loc_*`를 남발함
-  - document shell 스타일을 feature CSS 안에 넣음
+  - 하나의 CSS 파일에 서로 다른 `rt_*`, `loc_*`, `ui_*` owner가 섞임
+  - `_local/` 파일이라는 이유만으로 main route surface까지 `loc_*`로 바꿈
+  - document shell 스타일을 route CSS 안에 넣음
 
 ### C6. TSX Class Composition Discipline
 

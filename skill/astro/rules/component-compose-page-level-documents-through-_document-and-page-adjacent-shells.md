@@ -48,7 +48,7 @@ const pageProps = getRecentListPageProps({
 });
 ---
 
-<Document currentPathname={Astro.url.pathname} pageTitle="recent" pageDescription="Recent posts and notes from meepin">
+<Document currentPathname={Astro.url.pathname} pageTitle="recent" pageDescription="Recent entries">
 	<section class="rt_ri__root">
 		<WgEntryFeed entries={pageProps.entries} />
 	</section>

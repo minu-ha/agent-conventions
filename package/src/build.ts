@@ -130,10 +130,10 @@ export const generateMarkdown = (
 	lines.push("");
 	lines.push(metadata.abstract);
 
-		if (companionSkills.length > 0) {
-			lines.push("");
-			lines.push(`이 가이드는 local ${metadata.title} 규칙만 담고 있습니다. 공통 규칙은 companion skill을 함께 로드해 보완합니다.`);
-		}
+	if (companionSkills.length > 0) {
+		lines.push("");
+		lines.push(`이 가이드는 local ${metadata.title} 규칙만 담고 있습니다. 공통 규칙은 companion skill을 함께 로드해 보완합니다.`);
+	}
 	lines.push("");
 
 	if (companionSkills.length > 0) {
