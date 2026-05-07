@@ -9,7 +9,7 @@ metadata:
 # CSS 컨벤션
 
 에이전트 협업 팀을 위한 CSS 코딩 컨벤션 모음입니다. 현재 이 가이드는 5개 카테고리의 21개 규칙으로 구성되어 있습니다.
-클래스 네이밍, `rt_/wg_/ui_/loc_` ownership, route-owned page surface, pages-local document shell, TSX class 조합, selector 경계, 디자인 토큰, wrapper 기반 서드파티 스타일링 규칙을 [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`와 compiled [AGENTS.md](./AGENTS.md)로 관리합니다.
+클래스 네이밍, `rt_/wg_/ui_/loc_` ownership, TSX class 조합, selector 경계, 디자인 토큰, wrapper 기반 서드파티 스타일링 규칙을 [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`와 compiled [AGENTS.md](./AGENTS.md)로 관리합니다.
 
 ## 사용할 때
 - CSS 파일, route/컴포넌트 전용 plain `*.css`, TSX의 `className` 조합을 만들거나 수정할 때 사용합니다.
@@ -21,7 +21,7 @@ metadata:
 - 변경 범위에 stylesheet 파일, `className` 조합, CSS import, wrapper 스타일링, selector, 토큰 사용 여부가 포함되는지 먼저 확인합니다.
 - 이 skill이 활성화되면 먼저 compiled [AGENTS.md](./AGENTS.md)를 열어 Naming, Composition, Selector, Values, Organization 중 어떤 카테고리가 이번 변경에 직접 걸리는지 빠르게 훑습니다.
 - 실제로 건드리는 관심사에 해당하는 `rules/*.md`를 추가로 읽습니다. 예를 들어 네이밍을 바꾸면 naming rule, `className` 조합을 바꾸면 composition rule, 서드파티 DOM을 만지면 selector rule을 확인합니다.
-- JSX 구조가 함께 바뀌면 `convention-react`, route 레벨 스타일이면 `convention-tanstack-route`, helper/type이 함께 바뀌면 `convention-typescript`도 같이 로드합니다.
+- JSX 구조가 함께 바뀌면 `convention-react`, route 레벨 스타일이면 활성화된 route/framework convention, helper/type이 함께 바뀌면 `convention-typescript`도 같이 로드합니다.
 
 ## 우선순위별 규칙 카테고리
 
@@ -48,7 +48,7 @@ metadata:
 - `naming-default-to-plain-css-when-no-module-convention` - CSS Modules 표준이 없으면 plain `.css`와 전역 고유 클래스명을 기본으로 사용
 - `naming-use-scope-slug-element-modifier-syntax` - scope, slug, element, modifier를 포함한 클래스 문법과 scope별 slug casing 유지
 - `naming-name-elements-and-modifiers-by-role` - 구조나 간격이 아니라 UI 역할 기준으로 이름 지정
-- `naming-preserve-route-slug-traceability` - route-owned screen과 pages-local document shell의 `rt_*` slug traceability 유지
+- `naming-preserve-route-slug-traceability` - route/framework skill이 선택한 `rt_*` owner의 slug traceability 유지
 - `naming-keep-scope-slug-unique-per-owner` - 하나의 `scope_slug` 네임스페이스는 한 owner만 사용
 - `naming-separate-local-and-route-style-scopes` - `rt_*`, `wg_*`, `ui_*`, `loc_*` owner 범위를 파일과 namespace에서 분리
 
@@ -81,7 +81,7 @@ metadata:
 
 ## 함께 쓰기
 - JSX 구조와 스타일 조합이 함께 바뀌면 `convention-react`를 함께 사용합니다.
-- Astro route page나 pages-local document shell 스타일이 바뀌면 `convention-astro`를 함께 사용하는 편이 좋고, TanStack Router route-local 스타일이면 `convention-tanstack-route`를 함께 사용합니다. Astro route surface와 document shell은 `rt_*`, reusable block은 `wg_*`, primitive는 `ui_*`, 드문 leaf helper만 `loc_*`를 사용합니다.
+- Route-owned style이 바뀌면 해당 framework convention을 함께 사용합니다. CSS skill은 owner scope를 일관되게 적용하고, 어떤 파일이 route/document/local owner인지는 framework skill의 소유권 규칙을 따릅니다.
 - helper, config, wrapper prop 타입이 함께 바뀌면 `convention-typescript`를 함께 사용합니다.
 - 브라우저 기반 스타일 회귀를 검증하면 `convention-playwright-test`를 함께 사용합니다.
 

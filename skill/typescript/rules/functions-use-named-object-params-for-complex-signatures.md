@@ -14,20 +14,33 @@ tags: functions, params, signatures
 **Incorrect (시그니처에서 바로 구조분해):**
 
 ```ts
-const buildPlanningPrompt = ({request, repoPath}: BuildPlanningPromptArgs): string => {
-	return `${request} ${repoPath}`;
+const buildRequestUrl = ({baseUrl, resourcePath, searchParams}: BuildRequestUrlArgs): URL => {
+	const requestUrl = new URL(resourcePath, baseUrl);
+
+	for (const [key, value] of Object.entries(searchParams)) {
+		requestUrl.searchParams.set(key, value);
+	}
+
+	return requestUrl;
 };
 ```
 
-**Correct (객체 전체를 받고 본문에서 구조분해하며, 길면 formatter 예외를 함수 본문 안에 둠):**
+**Correct (객체 전체를 받고 본문에서 구조분해):**
 
 ```ts
 /**
- * @summary grouped args로 planning prompt 생성
+ * @summary grouped args로 API request URL 생성
  */
-const buildPlanningPrompt = (args: BuildPlanningPromptArgs): string => {
-	// biome-ignore format: grouped args destructuring is easier to scan on one line in this helper.
-	const {request, repoPath, taskCategory, projectArea, riskLevel, selectedRuleRefs} = args;
-	return `${request} ${repoPath} ${taskCategory} ${projectArea} ${riskLevel} ${selectedRuleRefs.join(",")}`;
+const buildRequestUrl = (args: BuildRequestUrlArgs): URL => {
+	const {baseUrl, resourcePath, searchParams} = args;
+	const requestUrl = new URL(resourcePath, baseUrl);
+
+	for (const [key, value] of Object.entries(searchParams)) {
+		requestUrl.searchParams.set(key, value);
+	}
+
+	return requestUrl;
 };
 ```
+
+구조분해 줄이 정말 길어 formatter 예외가 필요하다면 함수 본문 안에서만 적용합니다.

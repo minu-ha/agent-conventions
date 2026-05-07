@@ -9,23 +9,35 @@ tags: responsibility, local, islands, boundaries
 
 **Impact: HIGH (keeps routed pages readable while avoiding premature `_local/` section extraction)**
 
-Move a section into `src/pages/**/_local/` only when it owns a real boundary: `client:*` or `client:only` hydration, `server:defer` with fallback, form/action ownership, provider setup, browser-only custom element/script behavior, a third-party widget adapter, or a repeated slot contract. Do not extract a component just because a heading/body/footer group looks like a section. If the subtree still describes the same route surface, keep the route `rt_*` owner instead of inventing a `loc_*` namespace.
+Move a section into `src/pages/**/_local/` only when it owns a real rendering or interaction boundary.
+
+추출할 수 있는 경계:
+
+- `client:*` or `client:only` hydration
+- `server:defer` with fallback
+- form/action ownership
+- provider setup
+- browser-only custom element or script behavior
+- third-party widget adapter
+- repeated slot contract
+
+Do not extract a component just because a heading/body/footer group looks like a section. If the subtree still describes the same route surface, keep the route `rt_*` owner instead of inventing a `loc_*` namespace.
 
 **Incorrect (simple page markup is split into `_local/` wrappers):**
 
 ```astro
 ---
-import PostBodySection from "./_local/post-body-section.astro";
-import PostHeaderSection from "./_local/post-header-section.astro";
-import PostMetaSection from "./_local/post-meta-section.astro";
+import EntryBodySection from "./_local/entry-body-section.astro";
+import EntryHeaderSection from "./_local/entry-header-section.astro";
+import EntryMetaSection from "./_local/entry-meta-section.astro";
 
-const { post } = Astro.props;
+const { entry } = Astro.props;
 ---
 
-<article class="rt_ps__root">
-	<PostHeaderSection post={post} />
-	<PostMetaSection post={post} />
-	<PostBodySection html={post.html} />
+<article class="rt_entryDetail__root">
+	<EntryHeaderSection entry={entry} />
+	<EntryMetaSection entry={entry} />
+	<EntryBodySection html={entry.html} />
 </article>
 ```
 
@@ -35,30 +47,30 @@ const { post } = Astro.props;
 
 ```astro
 ---
-import RelatedPostsPanel from "./_local/related-posts-panel.astro";
-import PostReactionIsland from "./_local/post-reaction-island.tsx";
+import RelatedEntriesPanel from "./_local/related-entries-panel.astro";
+import EntryReactionIsland from "./_local/entry-reaction-island.tsx";
 
-const { post, relatedPosts } = Astro.props;
+const { entry, relatedEntries } = Astro.props;
 ---
 
-<article class="rt_ps__root">
-	<header class="rt_ps__header">
-		<h1>{post.title}</h1>
-		<p>{post.description}</p>
+<article class="rt_entryDetail__root">
+	<header class="rt_entryDetail__header">
+		<h1>{entry.title}</h1>
+		<p>{entry.description}</p>
 	</header>
 
-	<div class="rt_ps__meta">
-		<span>{post.author}</span>
-		<span>{post.publishedAtLabel}</span>
+	<div class="rt_entryDetail__meta">
+		<span>{entry.author}</span>
+		<span>{entry.publishedAtLabel}</span>
 	</div>
 
-	<div class="rt_ps__body" set:html={post.html} />
+	<div class="rt_entryDetail__body" set:html={entry.html} />
 
-	<RelatedPostsPanel server:defer posts={relatedPosts}>
-		<p slot="fallback">Loading related posts...</p>
-	</RelatedPostsPanel>
+	<RelatedEntriesPanel server:defer entries={relatedEntries}>
+		<p slot="fallback">Loading related entries...</p>
+	</RelatedEntriesPanel>
 
-	<PostReactionIsland client:visible postId={post.id} />
+	<EntryReactionIsland client:visible entryId={entry.id} />
 </article>
 ```
 

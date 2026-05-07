@@ -9,7 +9,16 @@ tags: responsibility, layouts, ui, widget, composition
 
 **Impact: HIGH (keeps layout files as route shells instead of letting them become domain-specific shared blocks)**
 
-route-shared body shell을 소유하는 `_document.astro`나 route-local shell이 shell composition을 맡는다면, 그 안에서 조립하는 shared piece는 `src/components/widget/**`와 `src/components/ui/**`로 제한합니다. `ui`는 button, input, card, table, box, stack, surface, text, tag-list 같은 primitive이고, `widget`은 search-table, site-header, entry-feed, entry-detail처럼 `ui`를 조립한 reusable block입니다. shell은 이 둘과 `<slot />`을 사용해 조립하고, 그 자체를 `ui-*`나 `widget-*`로 이름 붙여 shared component처럼 승격하지 않습니다. route-shared body shell style은 `_document.css`가 소유하고, shell class는 `rt_document__*`처럼 문서 셸 소유권이 드러나게 유지합니다.
+`_document.astro`나 route-local shell이 shell composition을 맡는다면, 그 안에서 조립하는 shared piece는 `src/components/widget/**`와 `src/components/ui/**`로 제한합니다.
+
+구분 기준:
+
+- `ui`: button, input, card, table, box, stack, surface, text 같은 primitive
+- `widget`: search-table, site-header, entry-feed, entry-detail처럼 `ui`를 조립한 reusable block
+- Document shell: `_document.astro` and `_document.css`
+- Route shell: owning route의 `_local/`
+
+Shell 자체를 `ui-*`나 `widget-*`로 이름 붙여 shared component처럼 승격하지 않습니다. Shell class는 `rt_document__*`처럼 owner가 드러나게 유지합니다.
 
 **Incorrect (layout 역할을 ui/widget로 위장함):**
 
@@ -37,7 +46,7 @@ import UiPageShell from "@/components/ui/page-shell/ui-page-shell.astro";
 import UiBox from "@/components/ui/box/ui-box.astro";
 import UiStack from "@/components/ui/stack/ui-stack.astro";
 import UiSurface from "@/components/ui/surface/ui-surface.astro";
-import WidgetSiteHeader from "@/components/widget/site-header/widget-site-header.astro";
+import WgSiteHeader from "@/components/widget/site-header/wg-site-header.astro";
 
 const { currentPathname } = Astro.props;
 ---
@@ -45,7 +54,7 @@ const { currentPathname } = Astro.props;
 <UiSurface class="rt_document__surface">
 	<UiStack class="rt_document__stack">
 		<UiBox class="rt_document__header">
-			<WidgetSiteHeader currentPathname={currentPathname} />
+			<WgSiteHeader currentPathname={currentPathname} />
 		</UiBox>
 		<main class="rt_document__main">
 			<UiBox class="rt_document__content">

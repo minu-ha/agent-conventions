@@ -9,21 +9,31 @@ tags: responsibility, pages, screen-flow
 
 **Impact: HIGH (keeps routed `.astro` files readable as the main route orchestration layer instead of turning them into import-only adapters)**
 
-`src/pages/**/index.astro`, `[slug].astro`, and similar route files own more than the URL. They should show the route contract, data selection, document props, empty/error branch, and the high-level screen order. Do not reduce every route file to a one-line import of a page component just to keep `src/pages` thin. Extract only the pieces that have a real rendering boundary, browser runtime boundary, provider boundary, third-party library boundary, or data-shaping boundary.
+`src/pages/**/index.astro`, `[slug].astro`, and similar route files own more than the URL.
+
+Page file에서 보여야 하는 것:
+
+- route contract
+- data selection
+- document props
+- empty/error branch
+- high-level screen order
+
+Do not reduce every route file to a one-line import of a page component just to keep `src/pages` thin. Extract only pieces with real rendering, browser runtime, provider, third-party library, or data-shaping boundaries.
 
 **Incorrect (route page hides all screen flow behind route-local components):**
 
 ```astro
 ---
-import AdminPostsRuntime from "./_local/post-admin-runtime.tsx";
-import PostAdminShell from "./_local/post-admin-shell.astro";
+import AdminEntriesRuntime from "./_local/entry-admin-runtime.tsx";
+import EntryAdminShell from "./_local/entry-admin-shell.astro";
 import Document from "@/pages/_document.astro";
 ---
 
-<Document currentPathname={Astro.url.pathname} pageTitle="posts">
-	<PostAdminShell>
-		<AdminPostsRuntime client:load />
-	</PostAdminShell>
+<Document currentPathname={Astro.url.pathname} pageTitle="entries">
+	<EntryAdminShell>
+		<AdminEntriesRuntime client:load />
+	</EntryAdminShell>
 </Document>
 ```
 
@@ -33,25 +43,25 @@ import Document from "@/pages/_document.astro";
 
 ```astro
 ---
-import "./_post-admin.css";
+import "./_entry-admin.css";
 import Document from "@/pages/_document.astro";
-import PostAdminRuntime from "./_local/post-admin-runtime.tsx";
-import { getPostAdminInitialState } from "./_post-admin";
+import EntryAdminRuntime from "./_local/entry-admin-runtime.tsx";
+import { getEntryAdminInitialState } from "./_entry-admin";
 
-const initialState = await getPostAdminInitialState();
-const hasPosts = initialState.posts.length > 0;
+const initialState = await getEntryAdminInitialState();
+const hasEntries = initialState.entries.length > 0;
 ---
 
-<Document currentPathname={Astro.url.pathname} pageTitle="admin posts" pageNoIndex>
-	<section class="rt_pi__root">
-		<header class="rt_pi__header">
-			<h1>Posts</h1>
+<Document currentPathname={Astro.url.pathname} pageTitle="admin entries" pageNoIndex>
+	<section class="rt_adminEntriesIndex__root">
+		<header class="rt_adminEntriesIndex__header">
+			<h1>Entries</h1>
 		</header>
 
-		{hasPosts ? (
-			<PostAdminRuntime client:load initialState={initialState} />
+		{hasEntries ? (
+			<EntryAdminRuntime client:load initialState={initialState} />
 		) : (
-			<p class="rt_pi__empty">No posts yet.</p>
+			<p class="rt_adminEntriesIndex__empty">No entries yet.</p>
 		)}
 	</section>
 </Document>

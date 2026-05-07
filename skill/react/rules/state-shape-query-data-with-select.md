@@ -16,19 +16,19 @@ tags: state, react-query, select
 **Incorrect (응답 원형을 화면에서 직접 소비):**
 
 ```ts
-const endpoints = responsePermissionGroupGetApiEndpointListSuspense.data.list;
+const items = responseEntryListSuspense.data.list;
 ```
 
 **Correct (패칭 시점에 필요한 모양으로 변환):**
 
 ```ts
 /**
- * @api permission group endpoint 목록 조회 API
+ * @api entry 목록 조회 API
  */
-const responsePermissionGroupGetApiEndpointListSuspense = usePermissionGroupGetApiEndpointListSuspense({
+const responseEntryListSuspense = useEntryListSuspense({
   query: {
     select: (response) => ({
-      endpoints: response.data.list,
+      items: response.data.list,
     }),
   },
 });

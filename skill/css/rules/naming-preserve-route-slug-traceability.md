@@ -9,11 +9,15 @@ tags: slug, route-scope, traceability
 
 **Impact: HIGH (keeps route-scoped class namespaces readable back to the route hierarchy they belong to)**
 
-이 규칙은 `rt_*` route scope의 slug를 다룹니다. Astro route-owned screen, route-local support stylesheet, pages-local document helper는 모두 `rt_*` owner를 사용합니다. `rt_*` slug는 길이보다 추적 가능성을 우선하고, route role이나 document shell 역할을 읽을 수 있게 유지합니다. 꼭 전체 folder path를 다 적을 필요는 없지만, route family와 screen role을 다시 찾을 수 있는 수준의 의미는 남겨 둡니다.
+활성화된 route/framework skill이 `rt_*` owner를 선택했다면, CSS는 그 owner slug를 route까지 다시 추적할 수 있게 유지합니다. CSS skill은 어떤 파일이 route-owned인지 결정하지 않고, 이미 선택된 route owner가 클래스명에서 흐려지지 않게 지키는 역할을 합니다.
 
-이 route slug 규칙을 `wg_*`, `ui_*`, `loc_*` 같은 다른 scope의 owner slug에 그대로 덮어쓰지 않습니다. reusable block, primitive, local helper는 각자의 owner naming style을 따르되, routed page와 document shell의 main surface는 `rt_*` traceability를 우선합니다.
+기본 판단:
 
-너무 짧아 의미가 완전히 사라지거나, 계층 순서가 뒤섞이면 클래스명만 봐서는 어느 route 소유인지 추적하기 어려워집니다.
+- `rt_*` slug는 짧음보다 추적 가능성을 우선합니다.
+- 전체 folder path를 모두 쓰지는 않아도, route family와 screen role은 읽혀야 합니다.
+- 팀이 공유하는 route map이 없는 opaque acronym은 피합니다.
+- `wg_*`, `ui_*`, `loc_*`는 각 owner scope의 naming style을 따릅니다.
+- document, local helper, reusable widget의 owner 판단은 companion framework skill의 소유권 규칙을 우선합니다.
 
 **Incorrect (의미가 약하거나 계층 순서가 흐려진 slug):**
 
@@ -21,7 +25,7 @@ tags: slug, route-scope, traceability
 rt_shell__body
 rt_pageChrome__main
 rt_doc__content
-rt_pi__root
+rt_x__root
 ```
 
 **Correct (도메인 의미와 계층 순서가 보존된 slug):**

@@ -8,7 +8,7 @@
 
 ## 2. File Naming and Page Assets (naming)
 **Impact:** HIGH
-**Description:** `_document`/`_head`/`_document.css` 같은 pages-local helper, route entry와 짝을 이루는 `_index.ts`/`_slug.ts`/`_post-admin.ts`, `_local/post-editor.tsx`처럼 owner가 드러나는 route-local asset, `rt_*` route surface owner, 의미 있는 dynamic segment 이름은 file-based routing과 support module 탐색을 함께 쉽게 만듭니다.
+**Description:** `_document`/`_head`/`_document.css` 같은 pages-local helper, route entry와 짝을 이루는 `_index.ts`/`_slug.ts`/`_entry-admin.ts`, `_local/entry-editor.tsx`처럼 owner가 드러나는 route-local asset, `rt_*` route surface owner, 의미 있는 dynamic segment 이름은 file-based routing과 support module 탐색을 함께 쉽게 만듭니다.
 
 ## 3. Astro Components and Layout Composition (component)
 **Impact:** HIGH

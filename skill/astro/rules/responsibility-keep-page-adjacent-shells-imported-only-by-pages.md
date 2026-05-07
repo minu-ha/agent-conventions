@@ -9,7 +9,16 @@ tags: responsibility, pages, imports, dependency-direction, document-helpers
 
 **Impact: HIGH (preserves one-way dependency flow from routed pages to pages-local document helpers instead of letting shared code depend on routing helpers)**
 
-`src/pages/_document.astro`, `_head.astro`, `_document.css` 같은 pages-local document helper는 `src/pages/**`만 소유합니다. route file이 `_document.astro`를 import하고, `_document.astro`가 `_head.astro`, `_document.css`, `widget`, `ui`를 조립합니다. `_document.astro`와 `_head.astro`는 각자 자기 로컬 `Props`를 직접 소유하고, `src/components/**`, shared utility, route-local `_local/` leaf는 이 파일들을 직접 import하지 않습니다. 의존 방향은 `pages -> _document.astro -> _head.astro + _document.css + widget/ui`가 됩니다. 이렇게 해야 top-level document composition은 route boundary에 남고 shared component tier가 routing helper에 묶이지 않습니다.
+`src/pages/_document.astro`, `_head.astro`, `_document.css` 같은 pages-local document helper는 routed page만 import합니다.
+
+의존 방향:
+
+- Page entry imports `_document.astro`
+- `_document.astro` imports `_head.astro`, `_document.css`, `widget`, `ui`
+- `_document.astro`와 `_head.astro`는 각자 자기 로컬 `Props`를 직접 소유
+- `src/components/**`, shared utility, route-local `_local/` leaf는 document helper를 직접 import하지 않음
+
+이 흐름을 지켜야 top-level document composition은 route boundary에 남고 shared component tier가 routing helper에 묶이지 않습니다.
 
 **Incorrect (route-local leaf가 pages-local document helper를 직접 import함):**
 
@@ -18,7 +27,7 @@ tags: responsibility, pages, imports, dependency-direction, document-helpers
 import DocumentShell from "@/pages/_document.astro";
 ---
 
-<DocumentShell currentPathname="/" pageTitle="recent" pageDescription="Recent posts">
+<DocumentShell currentPathname="/" pageTitle="entries" pageDescription="Archived entries">
 	<section>
 		<!-- route-local body -->
 	</section>
@@ -32,26 +41,26 @@ import DocumentShell from "@/pages/_document.astro";
 ```astro
 ---
 import Document from "@/pages/_document.astro";
-import RecentList from "./_local/recent-list.astro";
-import { getRecentEntries, getRecentListPageProps } from "./_index";
+import EntryList from "./_local/entry-list.astro";
+import { getEntries, getEntryListPageProps } from "./_index";
 
-const recentEntries = await getRecentEntries();
-const pageProps = getRecentListPageProps({
-	entries: recentEntries,
+const entries = await getEntries();
+const pageProps = getEntryListPageProps({
+	entries,
 	currentPage: 1,
 });
 ---
 
-<Document currentPathname={Astro.url.pathname} pageTitle="recent" pageDescription="Recent posts">
-	<RecentList entries={pageProps.entries} />
+<Document currentPathname={Astro.url.pathname} pageTitle="entries" pageDescription="Archived entries">
+	<EntryList entries={pageProps.entries} />
 </Document>
 ```
 
 ```astro
 ---
-import type { RecentEntry } from "../_index";
+import type { EntryListItem } from "../_index";
 
-const { entries } = Astro.props as { entries: RecentEntry[] };
+const { entries } = Astro.props as { entries: EntryListItem[] };
 ---
 
 <section>

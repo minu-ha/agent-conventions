@@ -30,7 +30,7 @@ tags: layout, comments, sticky
 	/* sticky toolbar pinned inside the scrollable content pane */
 	position: sticky;
 	top: 0;
-	z-index: var(--cms-z-index-toolbar, 10);
+	z-index: var(--app-z-index-toolbar, 10);
 }
 
 .rt_dashboard__content {

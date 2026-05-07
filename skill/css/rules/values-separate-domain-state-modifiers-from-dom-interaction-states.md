@@ -21,7 +21,7 @@ tags: state, focus, accessibility
 }
 
 .ui_button__root--hover {
-	background: var(--cms-color-primary, #1677ff);
+	background: var(--app-color-accent, #1677ff);
 }
 ```
 
@@ -29,12 +29,12 @@ tags: state, focus, accessibility
 
 ```css
 .ui_button__root--active {
-	background: var(--cms-color-primary, #1677ff);
+	background: var(--app-color-accent, #1677ff);
 }
 
 .ui_button__root {
 	&:focus-visible {
-		outline: 2px solid var(--cms-color-primary, #1677ff);
+		outline: 2px solid var(--app-color-accent, #1677ff);
 		outline-offset: 2px;
 	}
 

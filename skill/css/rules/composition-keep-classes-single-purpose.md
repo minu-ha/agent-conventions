@@ -14,11 +14,11 @@ tags: composition, modifiers, responsibility
 **Incorrect (상태 의미를 별도 클래스 역할처럼 합쳐 버림):**
 
 ```tsx
-<div className={clsx("rt_pctbi__listButtonActive")} />
+<div className={clsx("rt_catalogIndex__listButtonActive")} />
 ```
 
 **Correct (기본 클래스와 상태 modifier를 분리):**
 
 ```tsx
-<div className={clsx("rt_pctbi__listButton", isActive && "rt_pctbi__listButton--active")} />
+<div className={clsx("rt_catalogIndex__listButton", isActive && "rt_catalogIndex__listButton--active")} />
 ```

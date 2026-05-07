@@ -66,7 +66,7 @@
     - 7.5 [Prefer React Compiler Defaults Over Manual Memoization](#75-prefer-react-compiler-defaults-over-manual-memoization)
     - 7.6 [Preserve Response and Store Origin in Wide Scopes](#76-preserve-response-and-store-origin-in-wide-scopes)
     - 7.7 [Shape React Query Data in query.select](#77-shape-react-query-data-in-query-select)
-    - 7.8 [Store Shared Role and Authority Decisions Only When They Are Truly Shared](#78-store-shared-role-and-authority-decisions-only-when-they-are-truly-shared)
+    - 7.8 [Store Shared Derived Decisions Only When They Are Truly Shared](#78-store-shared-derived-decisions-only-when-they-are-truly-shared)
     - 7.9 [Use Functional setState Updates When Based on Previous State](#79-use-functional-setstate-updates-when-based-on-previous-state)
     - 7.10 [Use Lazy State Initializers for Expensive Defaults](#710-use-lazy-state-initializers-for-expensive-defaults)
     - 7.11 [Use startTransition for Non-urgent Visual Updates](#711-use-starttransition-for-non-urgent-visual-updates)
@@ -953,11 +953,11 @@ Route entry 파일은 화면 흐름을 분명하게 보여줘야 하며, helper 
 **Incorrect (반복만 보고 성급하게 추상화):**
 
 ```ts
-const usePermissionA = () => {
+const useEntryAccessA = () => {
   // 유사 로직
 };
 
-const usePermissionB = () => {
+const useEntryAccessB = () => {
   // 유사 로직
 };
 ```
@@ -1210,7 +1210,7 @@ export const RouteComponent = () => {
 
 남길 것:
 
-- 작은 1회성 guard, URL 조립, `trim() || undefined` 같은 호출 지점 계산
+- 작은 1회성 guard, URL 조립, 빈 검색어 생략 같은 호출 지점 계산
 - handler/effect 안에 있어야 문맥이 보이는 query invalidation, navigation, fallback 처리
 - 한 component나 한 query `select`만 쓰는 작은 mapper
 
@@ -1260,7 +1260,10 @@ export const buildEntryPayload = (formValues: EntryFormValues, files: UploadFile
 **Incorrect (`_local` component 하나만 쓰는 private helper를 누적):**
 
 ```tsx
-const readOptionalFilter = (value: string) => value.trim() || undefined;
+const readOptionalFilter = (value: string) => {
+	const trimmedValue = value.trim();
+	return trimmedValue ? trimmedValue : undefined;
+};
 
 const buildEditHref = ({ editHrefBase, row }: { editHrefBase: string; row: EntryRow }) =>
 	`${editHrefBase}${row.id}/`;
@@ -1326,8 +1329,9 @@ export const buildEntryPayload = (
 ```tsx
 export const EntryTable = (props: EntryTableProps) => {
 	const { editHrefBase, filters } = props;
+	const trimmedQuery = filters.q.trim();
 	const responseEntriesQuery = useListEntriesSuspense({
-		q: filters.q.trim() || undefined,
+		q: trimmedQuery ? trimmedQuery : undefined,
 	});
 
 	return responseEntriesQuery.data.map((row) => (
@@ -1848,63 +1852,64 @@ useEffect(() => {
 **Incorrect (응답 원형을 화면에서 직접 소비):**
 
 ```ts
-const endpoints = responsePermissionGroupGetApiEndpointListSuspense.data.list;
+const items = responseEntryListSuspense.data.list;
 ```
 
 **Correct (패칭 시점에 필요한 모양으로 변환):**
 
 ```ts
 /**
- * @api permission group endpoint 목록 조회 API
+ * @api entry 목록 조회 API
  */
-const responsePermissionGroupGetApiEndpointListSuspense = usePermissionGroupGetApiEndpointListSuspense({
+const responseEntryListSuspense = useEntryListSuspense({
   query: {
     select: (response) => ({
-      endpoints: response.data.list,
+      items: response.data.list,
     }),
   },
 });
 ```
 
-### 7.8 Store Shared Role and Authority Decisions Only When They Are Truly Shared
+### 7.8 Store Shared Derived Decisions Only When They Are Truly Shared
 
-**Impact: HIGH (중복된 권한 판별 휴리스틱이 여러 화면에 퍼지는 것을 막음)**
+**Impact: HIGH (중복된 도메인 판별 휴리스틱이 여러 화면에 퍼지는 것을 막음)**
 
-역할, 권한, 공용 판별 결과가 여러 화면, 메뉴, route guard에서 반복해서 필요할 때만 스토어에 승격합니다. 단일 화면에서 한두 번 읽는 query 필드까지 store로 복제하지 않습니다.   
-store에 올리기로 했다면 문자열 비교나 도메인 판별은 bootstrap/layout 같은 한 경계에만 모으고, 화면은 `roleStore.isSuperAdmin` 같은 결과만 참조합니다. Suspense query처럼 `onSuccess`가 없어서 동기화가 필요하다면 owner가 분명한 경계에서만 `useEffect` 또는 `useLayoutEffect`를 사용하고, selector 최적화는 정말 필요한 경우에만 근거 주석과 함께 예외적으로 사용합니다.
+여러 화면, 메뉴, route guard에서 반복해서 필요한 derived decision만 store에 승격합니다. 단일 화면에서 한두 번 읽는 query 필드까지 store로 복제하지 않습니다.
+
+store에 올리기로 했다면 문자열 비교나 도메인 판별은 bootstrap/layout 같은 한 경계에만 모으고, 화면은 `accessStore.canEditRecord` 같은 결과만 참조합니다. Suspense query처럼 `onSuccess`가 없어서 동기화가 필요하다면 owner가 분명한 경계에서만 `useEffect` 또는 `useLayoutEffect`를 사용하고, selector 최적화는 정말 필요한 경우에만 근거 주석과 함께 예외적으로 사용합니다.
 
 **Incorrect (화면마다 판별을 반복하면서 단일 화면용 값을 store에도 복제):**
 
 ```ts
-const roleStore = useRoleStore();
-const isSuperAdmin = isSuperAdminRoleName(responseRoleGetItemSuspense.data.role);
+const accessStore = useAccessStore();
+const canEditRecord = responseRecordGetItemSuspense.data.ownerId === currentUserId;
 
 useEffect(() => {
-  roleStore.setRole(responseRoleGetItemSuspense.data.role);
-}, [responseRoleGetItemSuspense.data.role, roleStore]);
+  accessStore.setCanEditRecord(canEditRecord);
+}, [accessStore, canEditRecord]);
 ```
 
-**Correct (공용 권한은 owner가 분명한 경계에서만 적재하고 화면은 결과만 참조):**
+**Correct (공용 derived decision은 owner가 분명한 경계에서만 적재하고 화면은 결과만 참조):**
 
 ```ts
-const authStore = useAuthStore();
+const accessStore = useAccessStore();
 
-if (authStore.canManageUsers) {
+if (accessStore.canEditRecord) {
   // ...
 }
 ```
 
 ```ts
 /**
- * @watch bootstrap authority 응답을 auth store에 동기화
+ * @watch bootstrap capability 응답을 access store에 동기화
  */
 useEffect(() => {
-  if (!responseAuthBootstrapSuspense.data) {
+  if (!responseAccessBootstrapSuspense.data) {
     return;
   }
 
-  authStore.setAuthority(responseAuthBootstrapSuspense.data.authority);
-}, [authStore, responseAuthBootstrapSuspense.data]);
+  accessStore.setCapabilities(responseAccessBootstrapSuspense.data.capabilities);
+}, [accessStore, responseAccessBootstrapSuspense.data]);
 ```
 
 ### 7.9 Use Functional setState Updates When Based on Previous State

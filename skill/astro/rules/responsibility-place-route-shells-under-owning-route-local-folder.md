@@ -9,7 +9,16 @@ tags: responsibility, layouts, local, ownership
 
 **Impact: HIGH (prevents route shell files from becoming a blurry shared component tier between pages and reusable building blocks)**
 
-Route-specific shell files are not shared layouts. Put them under the owning route's `_local/` folder, such as `src/pages/admin/_local/admin-shell.astro` and `admin-shell.css`. Do not create `src/layouts`, `src/components/layouts`, `ui-page-shell`, or `widget-page-shell` just because several children in one route subtree share a shell. Shared visual pieces should come from `ui` and `widget`; the route shell that combines them stays route-local. Site-wide document shell remains the top-level pages-local `_document.astro`, `_head.astro`, and `_document.css`.
+Route-specific shell files are not shared layouts. Put them under the owning route's `_local/` folder.
+
+기준:
+
+- Route subtree shell: `src/pages/admin/_local/admin-shell.astro`
+- Shell style: same owner file, such as `admin-shell.css`
+- Shared visual pieces: `ui` and `widget`
+- Site-wide document shell: top-level `_document.astro`, `_head.astro`, `_document.css`
+
+Do not create `src/layouts`, `src/components/layouts`, `ui-page-shell`, or `widget-page-shell` just because several children in one route subtree share a shell.
 
 **Incorrect (route shell floats as a shared component layer):**
 
@@ -23,7 +32,7 @@ src/
       page-shell/ui-page-shell.astro
   pages/
     admin/
-      posts/
+      entries/
         index.astro
 ```
 
@@ -47,7 +56,7 @@ src/
       _local/
         admin-shell.astro
         admin-shell.css
-      posts/
+      entries/
         index.astro
 ```
 

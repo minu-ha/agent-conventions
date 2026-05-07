@@ -17,7 +17,7 @@ tags: naming, semantics, modifiers
 ui_card__wrapper
 ui_card__box
 ui_card__body--gap12
-rt_pcmei__section--compactTop
+rt_catalogDetail__section--compactTop
 ```
 
 **Correct (역할과 상태를 기준으로 이름을 붙임):**
@@ -26,5 +26,5 @@ rt_pcmei__section--compactTop
 ui_card__toolbar
 ui_card__body
 ui_card__body--active
-rt_pcmei__detailSection
+rt_catalogDetail__detailSection
 ```

@@ -9,7 +9,23 @@ tags: pages, routing, responsibility
 
 **Impact: HIGH (keeps `src/pages` readable as route owners without reducing page files to import-only adapters)**
 
-page file은 URL contract, `getStaticPaths()`, `prerender`, search param 해석, page-level data selection, `currentPathname`과 문서 메타 props handoff, 그리고 high-level screen flow 같은 route owner 책임을 가집니다. 재사용 가능한 shared render detail은 `ui`/`widget`으로 올리고, route-only browser interaction이나 provider boundary는 `_local/`로 내립니다. 특히 page HTML이나 server-side data selection이 `Astro.url.searchParams` 같은 request-time state에 직접 의존하는 경우에는 `prerender = false` 여부도 이 경계에서 같이 보이게 유지합니다. 반대로 query state를 client island에 넘기기만 하고 prerendered HTML은 그대로라면 static 기본값을 유지할 수 있습니다.
+Page file은 route owner 책임을 한눈에 보이게 유지합니다.
+
+Page file이 소유:
+
+- URL contract
+- `getStaticPaths()` and `prerender`
+- search param 해석
+- page-level data selection
+- `currentPathname` and document meta handoff
+- high-level screen flow
+
+분리 기준:
+
+- Reusable render detail: `ui` or `widget`
+- Route-only browser interaction/provider: `_local/`
+- Request-time HTML/data selection: page boundary에서 `prerender = false` 여부도 함께 표시
+- Client island에 query state만 넘기는 경우: static 기본값 유지 가능
 
 **Incorrect (page 파일이 route contract와 browser runtime detail을 한꺼번에 가짐):**
 
@@ -34,12 +50,12 @@ const posts = await getPosts({ tab });
 ```astro
 ---
 import Document from "@/pages/_document.astro";
-import PostAdminRuntime from "./_local/post-admin-runtime.tsx";
-import { getPostAdminInitialState, getPostAdminPreviewSlugs } from "./_post-admin";
+import EntryAdminRuntime from "./_local/entry-admin-runtime.tsx";
+import { getEntryAdminInitialState, getEntryAdminPreviewSlugs } from "./_entry-admin";
 import { util } from "@/shared/util";
 
 export async function getStaticPaths() {
-	const slugs = await getPostAdminPreviewSlugs();
+	const slugs = await getEntryAdminPreviewSlugs();
 
 	return slugs.map((slug) => ({
 		params: {
@@ -48,15 +64,15 @@ export async function getStaticPaths() {
 	}));
 }
 
-const initialState = await getPostAdminInitialState();
+const initialState = await getEntryAdminInitialState();
 ---
 
-<Document currentPathname={Astro.url.pathname} pageTitle="admin posts" pageNoIndex>
-	<section class="rt_pi__root">
-		<header class="rt_pi__header">
-			<h1>Posts</h1>
+<Document currentPathname={Astro.url.pathname} pageTitle="admin entries" pageNoIndex>
+	<section class="rt_adminEntriesIndex__root">
+		<header class="rt_adminEntriesIndex__header">
+			<h1>Entries</h1>
 		</header>
-		<PostAdminRuntime client:load initialState={initialState} />
+		<EntryAdminRuntime client:load initialState={initialState} />
 	</section>
 </Document>
 ```

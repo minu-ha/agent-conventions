@@ -28,11 +28,11 @@ tags: tokens, variables, reuse
 
 ```css
 .ui_table__toolbar {
-	gap: var(--cms-spacing-3, 12px);
+	gap: var(--app-space-3, 12px);
 }
 
 .ui_table__row--selected {
-	background: var(--cms-color-fill-secondary, #f5f5f5);
-	border-radius: var(--cms-border-radius, 4px);
+	background: var(--app-color-fill-muted, #f5f5f5);
+	border-radius: var(--app-radius-control, 4px);
 }
 ```

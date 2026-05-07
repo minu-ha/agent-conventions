@@ -12,7 +12,6 @@
 - `area-description.md` - 실제 rule 파일 패턴
 - [metadata.json](./metadata.json) - compiled guide 메타데이터
 - [AGENTS.md](./AGENTS.md) - 에이전트가 읽는 compiled 결과물
-- [deprecated/css.md](./deprecated/css.md) - 마이그레이션 검토용 legacy 단일 문서
 - [package/README.md](../../package/README.md) - `skill/*` build, validation, typecheck, test를 담당하는 standalone TypeScript npm package
 
 ## 시작하기
@@ -114,7 +113,6 @@ tags: tag1, tag2
 
 - [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`가 source of truth입니다.
 - [AGENTS.md](./AGENTS.md)는 에이전트가 먼저 읽는 compiled 문서입니다.
-- [deprecated/css.md](./deprecated/css.md)는 원래 단일 문서와 마이그레이션 완성도를 비교하기 위해 남겨 둡니다.
 - 공용 TypeScript build package는 raw CLI 형태와 per-skill alias를 모두 제공합니다.
 
 ## 기여 가이드

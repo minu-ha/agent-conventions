@@ -14,7 +14,7 @@ tags: descendants, selector-depth, guardrails
 **Incorrect (깊은 후손 선택자 체인에 의존):**
 
 ```css
-.rt_pctbi__layout .rt_pctbi__panel .rt_pctbi__detail .rt_pctbi__item {
+.rt_catalogIndex__layout .rt_catalogIndex__panel .rt_catalogIndex__detail .rt_catalogIndex__item {
 	padding: 8px;
 }
 ```
@@ -22,11 +22,11 @@ tags: descendants, selector-depth, guardrails
 **Correct (대상 element 클래스나 직접 owner root 계약에 스타일을 둠):**
 
 ```css
-.rt_pctbi__item {
+.rt_catalogIndex__item {
 	padding: 8px;
 }
 
-.rt_pctbi__detailHeader {
-	gap: var(--cms-spacing-2, 8px);
+.rt_catalogIndex__detailHeader {
+	gap: var(--app-space-2, 8px);
 }
 ```

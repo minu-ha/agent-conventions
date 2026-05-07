@@ -23,7 +23,8 @@ Astro local rule은 기본 companion인 `convention-typescript`와 `convention-c
 ## 활성화 체크리스트
 
 - 변경 범위가 `.astro` 페이지/레이아웃/컴포넌트, `src/pages` route-local 구조, rendering mode, file-based route, content collection, Actions/endpoints, server islands, framework island인지 먼저 확인합니다.
-- 이 skill이 활성화되면 먼저 compiled [AGENTS.md](./AGENTS.md)를 열어 Structure, Naming, Component, Island, Routing, Rendering, Content, Server, Responsibility, Workflow 중 어떤 카테고리가 직접 걸리는지 빠르게 훑습니다.
+- convention을 적용만 할 때는 compiled [AGENTS.md](./AGENTS.md)를 열어 Structure, Naming, Component, Island, Routing, Rendering, Content, Server, Responsibility, Workflow 중 어떤 카테고리가 직접 걸리는지 빠르게 훑습니다.
+- 이 skill 자체를 편집하거나 리뷰할 때는 `rules/_sections.md`, `SKILL.md`, `README.md`, `metadata.json`, 관련 `rules/*.md`를 source of truth로 먼저 읽습니다. `AGENTS.md`는 build 결과 확인용으로만 사용합니다.
 - 실제로 바꾸는 관심사에 맞는 `rules/*.md`를 추가로 읽습니다. `src/pages` route-local 배치와 `_local/` 구조를 조정하면 structure rule, owner-named route asset과 dynamic segment 이름을 바꾸면 naming rule, static/on-demand/server mode 판단이면 rendering rule, page/local/island/support 경계를 조정하면 responsibility rule을 확인합니다.
 - Astro 변경은 기본적으로 `convention-typescript`와 `convention-css`를 함께 로드하고, React island나 TSX를 만지면 `convention-react`, hydration/form/server 흐름을 브라우저 테스트로 검증하면 `convention-playwright-test`도 함께 로드합니다.
 - `client:*`, `client:only`, `server:defer`, Actions, endpoints, content collections처럼 버전 민감한 Astro API를 건드리면 가능하면 `astro-docs` MCP 같은 공식 문서 경로를 먼저 확인합니다.
@@ -126,7 +127,7 @@ Astro local rule은 기본 companion인 `convention-typescript`와 `convention-c
 - `responsibility-keep-page-adjacent-shells-imported-only-by-pages` - `_document`, `_head`, `_document.css`는 pages만 소유
 - `responsibility-keep-route-page-files-focused-on-screen-flow` - route page는 `rt_*` surface owner이자 screen flow owner로 남음
 - `responsibility-extract-route-local-sections-only-for-rendering-or-interaction-boundaries` - `_local/` section은 진짜 rendering/interaction boundary가 있을 때만 추출
-- `responsibility-extract-route-support-code-only-when-the-boundary-is-real` - `_post-admin.ts` 같은 support module은 진짜 data boundary가 있을 때만 사용
+- `responsibility-extract-route-support-code-only-when-the-boundary-is-real` - `_entry-admin.ts` 같은 support module은 진짜 data boundary가 있을 때만 사용
 - `responsibility-place-route-local-ui-under-local` - route-local UI와 CSS는 `_local/` 아래에 둠
 
 ### 10. Documentation and Comments (MEDIUM)

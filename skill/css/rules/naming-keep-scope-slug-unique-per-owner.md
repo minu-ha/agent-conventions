@@ -14,19 +14,19 @@ tags: namespace, ownership, uniqueness
 **Incorrect (이미 다른 소유자가 쓰는 `scope_slug`를 재사용):**
 
 ```txt
-// route A
-rt_pctbi__header
+// catalog/index route
+rt_catalogIndex__header
 
-// route B
-rt_pctbi__toolbar
+// dashboard/index route
+rt_catalogIndex__toolbar
 ```
 
 **Correct (소유자가 다르면 별도 slug를 부여):**
 
 ```txt
-// content-type-builder.index
-rt_pctbi__header
+// catalog/index route
+rt_catalogIndex__header
 
-// members-group-role.index
-rt_mgri__header
+// dashboard/index route
+rt_dashboardIndex__header
 ```

@@ -9,16 +9,32 @@ tags: responsibility, support-code, frontmatter, naming
 
 **Impact: HIGH (prevents routed pages from scattering one-off frontmatter logic into generic helper files)**
 
-Route page frontmatter support code should move into `_index.ts`, `_slug.ts`, `_post-admin.ts`, or another owner-named route support module only when the input/output contract is clear and the code represents a real data, validation, auth, serialization, or model-building boundary. Keep small one-off booleans, `Astro.props` destructuring, page-local labels, `class:list` conditions, and empty-state branch choices in the page file. Do not create `_form.ts`, `_api.ts`, `utils.ts`, `helpers.ts`, or `common.ts` unless the owner name makes the boundary explicit.
+Route page frontmatter support code should move into owner-named support modules only when the boundary is real.
+
+추출할 수 있는 것:
+
+- clear input/output data boundary
+- validation, auth, serialization, model building
+- shared route-family data loader
+
+Page file에 남길 것:
+
+- small one-off booleans
+- `Astro.props` destructuring
+- page-local labels
+- `class:list` conditions
+- empty-state branch choices
+
+Do not create `_form.ts`, `_api.ts`, `utils.ts`, `helpers.ts`, or `common.ts` unless the owner name makes the boundary explicit.
 
 **Incorrect (small route-local calculations are scattered into generic helpers):**
 
 ```ts
-// src/pages/admin/posts/_form.ts
+// src/pages/admin/entries/_form.ts
 export const getHasActiveFilter = (filter?: string) => Boolean(filter);
 
 export const getEmptyMessage = (filter?: string) => {
-	return filter ? "No posts match this filter." : "No posts yet.";
+	return filter ? "No entries match this filter." : "No entries yet.";
 };
 ```
 
@@ -27,28 +43,28 @@ export const getEmptyMessage = (filter?: string) => {
 **Correct (owner-named support module에는 실제 route data boundary만 둠):**
 
 ```ts
-// src/pages/admin/posts/_post-admin.ts
-import type { PostAdminInitialState } from "./_local/post-admin-runtime";
+// src/pages/admin/entries/_entry-admin.ts
+import type { EntryAdminInitialState } from "./_local/entry-admin-runtime";
 
 /**
- * @summary admin posts 화면의 초기 server state를 만든다.
+ * @summary admin entries 화면의 초기 server state를 만든다.
  */
-export const getPostAdminInitialState = async (): Promise<PostAdminInitialState> => {
-	const posts = await postAdminApi.listPosts();
+export const getEntryAdminInitialState = async (): Promise<EntryAdminInitialState> => {
+	const entries = await entryAdminApi.listEntries();
 
 	return {
-		posts: posts.map(toPostAdminRow),
+		entries: entries.map(toEntryAdminRow),
 	};
 };
 ```
 
 ```astro
 ---
-import { getPostAdminInitialState } from "./_post-admin";
+import { getEntryAdminInitialState } from "./_entry-admin";
 
-const initialState = await getPostAdminInitialState();
-const hasPosts = initialState.posts.length > 0;
-const emptyMessage = hasPosts ? undefined : "No posts yet.";
+const initialState = await getEntryAdminInitialState();
+const hasEntries = initialState.entries.length > 0;
+const emptyMessage = hasEntries ? undefined : "No entries yet.";
 ---
 ```
 

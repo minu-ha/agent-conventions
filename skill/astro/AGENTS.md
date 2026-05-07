@@ -92,24 +92,33 @@
 
 **Impact: CRITICAL (keeps Astro route ownership close to the file-based route without leaking screen implementation into shared or generic helper layers)**
 
-Astro에서 `src/pages`는 required route tree입니다. 이 프로젝트에서는 route file을 단순 adapter로만 보지 않고, URL contract, `getStaticPaths()`, `prerender`, request-time data selection, document handoff, 그리고 화면 흐름을 함께 소유하는 route-local owner로 봅니다. 화면 구현이 현재 route에만 속한다면 routed `index.astro`, `[slug].astro`, `new.astro` 같은 entry에 직접 둡니다. 분리가 필요해지면 `src/pages/**/_local/`과 owner-named support file로 내리고, shared `ui`/`widget`이나 generic helper layer로 먼저 올리지 않습니다.
+Astro에서 `src/pages`는 required route tree입니다. Route file은 얇은 import adapter가 아니라 URL contract와 route-local screen flow를 함께 소유합니다.
 
-**Incorrect (`src/pages`를 얇게 만들기 위해 route-only 구현을 shared/feature layer로 밀어냄):**
+`src/pages`가 소유하는 것:
+
+- URL contract와 file-based route
+- `getStaticPaths()`, `prerender`, request-time data selection
+- document helper로 넘기는 page meta handoff
+- 현재 route에만 속한 screen implementation
+
+분리가 필요하면 `src/pages/**/_local/`과 owner-named support file로 내립니다. Shared `ui`/`widget`이나 generic helper layer로 먼저 올리지 않습니다.
+
+**Incorrect (`src/pages`를 얇게 만들기 위해 route-only 구현을 shared layer로 밀어냄):**
 
 ```text
 src/
   pages/
     admin/
-      posts/
+      entries/
         index.astro
-  features/
-    admin-posts/
-      admin-posts-page.astro
-      private/
-        post-editor.tsx
+  components/
+    layout/
+      admin-entries-page.astro
+    internal/
+      entry-editor.tsx
 ```
 
-이 구조는 실제 route와 구현 owner가 멀어지고, `admin/posts` 같은 route depth가 feature 이름으로 다시 중복됩니다.
+이 구조는 실제 route와 구현 owner가 멀어지고, route-only file이 shared component처럼 보이게 만듭니다.
 
 **Correct (route entry와 route-local 구현을 같은 route folder에 둠):**
 
@@ -127,16 +136,16 @@ src/
         admin-shell.astro
         admin-shell.css
         admin-query-provider.tsx
-      posts/
+      entries/
         index.astro
-        _post-admin.ts
-        _post-admin.css
+        _entry-admin.ts
+        _entry-admin.css
         _local/
-          post-admin-runtime.tsx
-          post-admin-table.tsx
-          post-admin-table.css
-          post-editor.tsx
-          post-editor.css
+          entry-admin-runtime.tsx
+          entry-admin-table.tsx
+          entry-admin-table.css
+          entry-editor.tsx
+          entry-editor.css
 ```
 
 이 구조에서는 route contract와 route-only 구현이 함께 움직입니다. `src/components/ui`와 `src/components/widget`은 여러 route에서 재사용되는 public surface만 받습니다.
@@ -145,7 +154,15 @@ src/
 
 **Impact: HIGH (keeps route-shared document helpers and route-local support files close to route owners without turning them into routed pages)**
 
-Astro는 `src/pages` 안에서 `_`로 시작하는 파일과 폴더를 router에서 제외합니다. 이 프로젝트에서는 이 성질을 이용해 pages-local document helper와 route-local support file을 `src/pages/_*` 또는 `src/pages/**/_*`에 둡니다. top-level 기본 세트는 `_document.astro`, `_head.astro`, `_document.css`입니다. route subtree 안에서는 `_index.ts`, `_slug.ts`, `_post-admin.ts`, `_local/post-editor.tsx`처럼 routed entry와 짝을 이루는 owner-named 파일을 둡니다. `_document.astro`는 `<html>`, `<head>`, `<body>`와 route-shared body shell을 소유하면서 문서 셸 contract도 자기 로컬 `Props`로 직접 가집니다.
+Astro는 `src/pages` 안에서 `_`로 시작하는 파일과 폴더를 router에서 제외합니다. 이 성질을 이용해 pages-local document helper와 route-local support file을 `src/pages/_*` 또는 `src/pages/**/_*`에 둡니다.
+
+기본 배치:
+
+- Top-level document helper: `_document.astro`, `_head.astro`, `_document.css`
+- Route support module: `_index.ts`, `_slug.ts`, `_entry-admin.ts`
+- Route-local implementation: `_local/entry-editor.tsx`, `_local/entry-editor.css`
+
+`_document.astro`는 `<html>`, `<head>`, `<body>`와 route-shared body shell을 소유하면서 document shell `Props`를 자기 파일 안에 직접 가집니다.
 
 **Incorrect (document helper와 route-local 구현이 route tree 밖으로 밀려남):**
 
@@ -157,10 +174,10 @@ src/
       _head.astro
       _document.css
     admin/
-      post-editor.tsx
+      entry-editor.tsx
   pages/
     admin/
-      posts/
+      entries/
         index.astro
 ```
 
@@ -186,12 +203,12 @@ src/
       _local/
         admin-shell.astro
         admin-shell.css
-      posts/
+      entries/
         index.astro
-        _post-admin.ts
+        _entry-admin.ts
         _local/
-          post-editor.tsx
-          post-editor.css
+          entry-editor.tsx
+          entry-editor.css
 ```
 
 이 구조에서는 `_document`, `_head`, `_document.css`가 pages-local document helper라는 점과, `_local/` 및 owner-named support file이 route-local 구현이라는 점이 파일 위치만으로 드러납니다.
@@ -200,18 +217,26 @@ src/
 
 **Impact: HIGH (keeps page implementation near the file-based route while using underscore-prefixed files to avoid accidental routes)**
 
-Astro가 file-based routing을 `src/pages`에서 결정하므로, route 구현도 가능한 한 같은 route subtree에 둡니다. Routed entry는 `index.astro`, `[slug].astro`, `new.astro`처럼 URL을 그대로 표현하고, route-only data helpers, CSS, React runtime, modal, form, table, provider는 `_` prefix가 붙은 non-route file이나 `_local/` folder에 둡니다. 여러 route에서 진짜로 재사용되는 primitive나 block만 `src/components/ui` 또는 `src/components/widget`으로 올립니다.
+Astro가 file-based routing을 `src/pages`에서 결정하므로, route 구현도 가능한 한 같은 route subtree에 둡니다.
+
+배치 기준:
+
+- Routed entry: `index.astro`, `[slug].astro`, `new.astro`
+- Route support: `_index.ts`, `_slug.ts`, `_entry-admin.ts`
+- Route CSS: `_index.css`, `_slug.css`, `_entry-admin.css`
+- Route-only runtime/UI: `_local/`
+- Shared primitive/block: `src/components/ui` or `src/components/widget`
 
 **Incorrect (route 구현이 `src/features`와 generic helper 이름으로 흩어짐):**
 
 ```text
 src/
   pages/
-    posts/
+    entries/
       index.astro
       [slug].astro
   features/
-    post/
+    entry/
       page.astro
       slug.astro
       index.ts
@@ -228,7 +253,7 @@ src/
     index.astro
     _index.ts
     _index.css
-    posts/
+    entries/
       index.astro
       _index.ts
       _index.css
@@ -239,60 +264,68 @@ src/
       _new.ts
       _new.css
       _local/
-        post-editor.tsx
-        post-editor.css
+        entry-editor.tsx
+        entry-editor.css
     admin/
-      posts/
+      entries/
         index.astro
-        _post-admin.ts
-        _post-admin.css
+        _entry-admin.ts
+        _entry-admin.css
         _local/
-          post-admin-runtime.tsx
-          post-admin-table.tsx
-          post-admin-table.css
+          entry-admin-runtime.tsx
+          entry-admin-table.tsx
+          entry-admin-table.css
 ```
 
-`src/pages` 안에서 `_`로 시작하는 파일과 폴더는 route가 아니므로 route-local implementation을 안전하게 둘 수 있습니다. 단, `_local/`은 dump folder가 아닙니다. 파일명은 `post-editor.tsx`, `admin-query-provider.tsx`, `bookmark-admin-table.css`처럼 실제 owner와 역할이 드러나야 합니다.
+`src/pages` 안에서 `_`로 시작하는 파일과 폴더는 route가 아니므로 route-local implementation을 안전하게 둘 수 있습니다. 단, `_local/`은 dump folder가 아닙니다. 파일명은 `entry-editor.tsx`, `admin-query-provider.tsx`, `entry-admin-table.css`처럼 실제 owner와 역할이 드러나야 합니다.
 
 ## 2. File Naming and Page Assets
 
 **Impact: HIGH**
 
-`_document`/`_head`/`_document.css` 같은 pages-local helper, route entry와 짝을 이루는 `_index.ts`/`_slug.ts`/`_post-admin.ts`, `_local/post-editor.tsx`처럼 owner가 드러나는 route-local asset, `rt_*` route surface owner, 의미 있는 dynamic segment 이름은 file-based routing과 support module 탐색을 함께 쉽게 만듭니다.
+`_document`/`_head`/`_document.css` 같은 pages-local helper, route entry와 짝을 이루는 `_index.ts`/`_slug.ts`/`_entry-admin.ts`, `_local/entry-editor.tsx`처럼 owner가 드러나는 route-local asset, `rt_*` route surface owner, 의미 있는 dynamic segment 이름은 file-based routing과 support module 탐색을 함께 쉽게 만듭니다.
 
 ### 2.1 Align Route Page Assets and `rt_*` Surface Classes with Route Role
 
 **Impact: HIGH (keeps Astro route files, route-local assets, CSS owners, and URL semantics aligned without duplicating folder depth in names)**
 
-Routed entry file names follow Astro routing (`index.astro`, `[slug].astro`, `new.astro`). Route-local support files and CSS use the route role as owner, not the whole folder path. Surface class names use `rt_*__*` for route-owned screens. Use short, stable route abbreviations when the route is nested enough that full names become noisy, such as `rt_pi__root` for `posts/index.astro` or `rt_bi__root` for `bookmarks/index.astro`. Document shell keeps `rt_document__*`.
+Routed entry file names follow Astro routing (`index.astro`, `[slug].astro`, `new.astro`). Route-local support files and CSS use the route role as owner, not the whole folder path.
+
+Naming 기준:
+
+- Route-owned surface class는 `rt_*__*`를 사용합니다.
+- `rt_*` slug는 route family와 screen role이 읽히는 이름을 기본으로 합니다.
+- 팀이 공유하는 route map이 없는 짧은 acronym은 정답 예시로 쓰지 않습니다.
+- 같은 route family가 충돌하면 더 명시적인 owner name을 선택합니다.
+- Document shell은 `rt_document__*`를 유지합니다.
 
 **Incorrect (route depth and generic names leak into file/class names):**
 
 ```txt
-admin/posts/index.astro -> loc_adminPostsPage__root
-admin/posts/_admin-posts.ts
-admin/posts/_local.ts
-admin/posts/_local.css
-admin/posts/_local/provider.tsx
-posts/[slug].astro -> loc_postDetailPage__body
+admin/entries/index.astro -> loc_adminEntriesPage__root
+admin/entries/_admin-entries.ts
+admin/entries/_local.ts
+admin/entries/_local.css
+admin/entries/_local/provider.tsx
+entries/[slug].astro -> loc_entryDetailPage__body
 ```
 
 **Correct (route role and asset owner are short, searchable, and aligned):**
 
 ```txt
-index.astro -> rt_hi__root
-posts/index.astro -> rt_pi__root
-posts/[slug].astro -> rt_ps__root
-admin/posts/index.astro -> rt_pi__root
-admin/posts/_post-admin.ts
-admin/posts/_post-admin.css
-admin/posts/_local/post-admin-runtime.tsx
-admin/posts/_local/post-editor.tsx
-admin/posts/_local/post-editor.css
+index.astro -> rt_home__root
+entries/index.astro -> rt_entriesIndex__root
+entries/[slug].astro -> rt_entryDetail__root
+admin/entries/index.astro -> rt_adminEntriesIndex__root
+admin/entries/_entry-admin.ts
+admin/entries/_entry-admin.css
+admin/entries/_local/entry-admin-runtime.tsx
+admin/entries/_local/entry-editor.tsx
+admin/entries/_local/entry-editor.css
 _document.astro -> rt_document__body
 ```
 
-When two route families would collide, choose the smallest owner name that disambiguates the local route, for example `rt_adminPosts__root` only if `rt_pi__root` is ambiguous inside the same stylesheet or review context. Do not switch to `loc_*` for the main page surface just because markup moved into `_local/`; the screen owner remains the route.
+When two route families would collide, choose the smallest owner name that disambiguates the local route. Do not switch to `loc_*` for the main page surface just because markup moved into `_local/`; the screen owner remains the route.
 
 ### 2.2 Use Domain-specific Dynamic Segment Names
 
@@ -321,7 +354,23 @@ src/pages/blog/[slug].astro
 
 **Impact: MEDIUM-HIGH (keeps route-local files searchable even when a route owns several helpers, runtime components, and stylesheets)**
 
-Route-local files should name the owner and responsibility directly. Avoid generic `_local.ts`, `_local.css`, `_api.ts`, `_form.ts`, `_provider.tsx`, `index.ts`, or `page.css` names. Prefer `_admin.ts`, `_admin-api.ts`, `_admin-form.ts`, `_post-admin.ts`, `_post-admin.css`, `_local/admin-query-provider.tsx`, `_local/admin-state-notice.tsx`, `_local/post-editor.tsx`, and `_local/post-editor.css`. The routed `index.astro` or `[slug].astro` is the only place where generic route file names are expected, because Astro owns that naming contract.
+Route-local files should name the owner and responsibility directly.
+
+피할 이름:
+
+- `_local.ts`, `_local.css`
+- `_api.ts`, `_form.ts`, `_provider.tsx`
+- `index.ts`, `page.css`
+
+권장 이름:
+
+- `_admin.ts`, `_admin-api.ts`, `_admin-form.ts`
+- `_entry-admin.ts`, `_entry-admin.css`
+- `_local/admin-query-provider.tsx`
+- `_local/admin-state-notice.tsx`
+- `_local/entry-editor.tsx`, `_local/entry-editor.css`
+
+The routed `index.astro` or `[slug].astro` is the only place where generic route file names are expected, because Astro owns that naming contract.
 
 **Incorrect (support files hide ownership behind generic names):**
 
@@ -329,7 +378,7 @@ Route-local files should name the owner and responsibility directly. Avoid gener
 src/
   pages/
     admin/
-      posts/
+      entries/
         index.astro
         _local.ts
         _local.css
@@ -353,25 +402,39 @@ src/
       _local/
         admin-query-provider.tsx
         admin-state-notice.tsx
-      posts/
+      entries/
         index.astro
-        _post-admin.ts
-        _post-admin.css
+        _entry-admin.ts
+        _entry-admin.css
         _local/
-          post-admin-runtime.tsx
-          post-admin-table.tsx
-          post-admin-table.css
-          post-editor.tsx
-          post-editor.css
+          entry-admin-runtime.tsx
+          entry-admin-table.tsx
+          entry-admin-table.css
+          entry-editor.tsx
+          entry-editor.css
 ```
 
-If a helper is used by exactly one component, place it beside that component with the same owner name, such as `post-editor.ts` next to `post-editor.tsx`. If it is shared across the route family, use the route support owner, such as `_post-admin.ts`. Promote it to `shared` or `components` only after the dependency crosses route ownership.
+If a helper is used by exactly one component, place it beside that component with the same owner name, such as `entry-editor.ts` next to `entry-editor.tsx`. If it is shared across the route family, use the route support owner, such as `_entry-admin.ts`. Promote it to `shared` or `components` only after the dependency crosses route ownership.
 
 ### 2.4 Use Underscore-prefixed Pages-local Helper Names for Document Files
 
 **Impact: MEDIUM-HIGH (keeps page-adjacent non-routes recognizable in file trees and prevents generic shell names from blurring ownership)**
 
-`src/pages` 아래의 pages-local document helper와 support file은 `_` prefix와 역할 이름을 함께 사용합니다. 기본적으로 top-level document entry는 `_document.astro`, route-shared body shell style은 `_document.css`, head concern은 `_head.astro`처럼 둡니다. `_layout.astro`, `_shell.astro`, `_wrapper.astro`, `_base.astro`, `site-layout.astro`처럼 generic한 이름은 피하고, 특별한 이유 없이 `_page-chrome.astro` 같은 추가 body-shell helper도 만들지 않습니다. `_document.astro`와 `_head.astro`의 contract는 각 파일 안의 로컬 `Props`가 직접 소유합니다. 이렇게 해야 이 파일들이 "route가 아닌 pages-local document helper"이면서도 각각 어떤 조립 책임을 갖는지 파일명만 보고 바로 알 수 있습니다.
+`src/pages` 아래의 pages-local document helper와 support file은 `_` prefix와 역할 이름을 함께 사용합니다.
+
+기본 이름:
+
+- `_document.astro`: top-level document entry
+- `_document.css`: route-shared body shell style
+- `_head.astro`: head/meta concern
+
+피할 이름:
+
+- `_layout.astro`, `_shell.astro`, `_wrapper.astro`, `_base.astro`
+- `site-layout.astro`
+- 실제 재사용 경계 없는 `_page-chrome.astro`
+
+`_document.astro`와 `_head.astro`의 contract는 각 파일 안의 로컬 `Props`가 직접 소유합니다.
 
 **Incorrect (generic shell 이름이나 feature 이름이 섞여 역할이 흐려짐):**
 
@@ -401,48 +464,55 @@ src/pages/_head.astro
 
 **Impact: HIGH (keeps repeated document, head, and body shell composition out of route files while preserving a single page-level entry point)**
 
-반복되는 top-level document composition이 필요하면 page entry가 `src/pages/_document.astro` 하나만 import하게 둡니다. `_document.astro`는 내부적으로 `_head.astro`, `_document.css`, base stylesheet를 사용해 `<html>`, `<head>`, `<body>`와 route-shared body shell을 직접 조립합니다. `_document.astro`는 문서 셸 contract를 자기 로컬 `Props`로 직접 소유하고, `_head.astro`도 head/meta 전용 contract를 자기 로컬 `Props`로 직접 소유합니다. `Props extends DocumentMetaProps` 같은 얇은 타입 확장이나 `_document.ts` 같은 중간 타입 파일은 두지 않습니다. `_head.astro`는 `astro-seo`를 기본 SEO surface로 사용하고, canonical, favicon, manifest, RSS alternate, theme/app meta, JSON-LD 같은 프로젝트 고유 메타는 계속 로컬 구현으로 유지합니다. 특별한 재사용 경계가 생기지 않는 한 body shell 전용 helper를 `_page-chrome.astro`처럼 한 단계 더 분리하지 않고 `_document.astro` 안에 둡니다. Routed page는 이 document helper에 body content를 slot으로 전달하고, route-local runtime이나 section은 필요할 때만 `_local/`로 분리합니다.
+반복되는 top-level document composition이 필요하면 routed page는 `src/pages/_document.astro` 하나만 import합니다.
 
-**Incorrect (각 page가 문서 조립을 반복하거나 body shell을 불필요하게 한 단계 더 분리함):**
+소유권:
+
+- Routed page: route data, page meta handoff, body content flow
+- `_document.astro`: `<html>`, `<head>` 연결, `<body>`, shared body shell, base CSS import, `<slot />`
+- `_head.astro`: SEO/meta/canonical/link/JSON-LD 계산과 head 전용 `Props`
+- `_document.css`: document shell style
+
+금지:
+
+- 각 page가 `<html>`, `<head>`, `<body>` 조립을 반복
+- `_document.ts` 같은 중간 type-only contract 파일 추가
+- `Props extends DocumentMetaProps`처럼 얇은 타입 확장으로 contract 숨기기
+- 실제 재사용 경계 없는 `_page-chrome.astro` helper 추가
+
+SEO library는 `_head.astro` 내부 구현 선택지일 뿐 필수 contract가 아닙니다. 중요한 기준은 page, document, head의 책임이 한눈에 보이고, routed page가 body content를 slot으로 전달한다는 점입니다.
+
+**Incorrect (각 page가 문서 조립을 반복함):**
 
 ```astro
 ---
-import DocumentHead from "./_head.astro";
+import Head from "./_head.astro";
 ---
 
 <html lang="ko">
-	<head>
-		<DocumentHead pageTitle="recent" pageDescription="Recent posts" />
-	</head>
-	<body class="shell">
+	<Head pageTitle="archive" pageDescription="Archived entries" />
+	<body>
 		<header>...</header>
 		<main>
-			<section>recent route body...</section>
+			<section class="rt_entriesIndex__root">...</section>
 		</main>
 	</body>
 </html>
 ```
 
-이 방식은 각 page마다 top-level document 조립이 반복되고, body shell 수정이 생길 때 route file 전체를 다시 건드리기 쉬워집니다.
-
-**Correct (page는 `_document.astro` 하나만 import하고 route body를 slot으로 전달):**
+**Correct (page는 document helper에 route body를 slot으로 전달):**
 
 ```astro
 ---
 import Document from "@/pages/_document.astro";
 import WgEntryFeed from "@/components/widget/entry-feed/wg-entry-feed.astro";
-import { getRecentEntries, getRecentListPageProps } from "./_index";
 
-const recentEntries = await getRecentEntries();
-const pageProps = getRecentListPageProps({
-	entries: recentEntries,
-	currentPage: 1,
-});
+const entries = await listEntries();
 ---
 
-<Document currentPathname={Astro.url.pathname} pageTitle="recent" pageDescription="Recent entries">
-	<section class="rt_ri__root">
-		<WgEntryFeed entries={pageProps.entries} />
+<Document currentPathname={Astro.url.pathname} pageTitle="entries" pageDescription="Archived entries">
+	<section class="rt_entriesIndex__root">
+		<WgEntryFeed entries={entries} />
 	</section>
 </Document>
 ```
@@ -452,153 +522,50 @@ const pageProps = getRecentListPageProps({
 import "./_document.css";
 import "@/styles/base.css";
 import Head from "./_head.astro";
-import UiBox from "@/components/ui/box/ui-box.astro";
-import UiStack from "@/components/ui/stack/ui-stack.astro";
-import UiSurface from "@/components/ui/surface/ui-surface.astro";
 import WgSiteFooter from "@/components/widget/site-footer/wg-site-footer.astro";
 import WgSiteHeader from "@/components/widget/site-header/wg-site-header.astro";
-import { config } from "@/shared/config";
 
 interface Props {
 	currentPathname: string;
-	pageShellVariant?: "default" | "wide";
 	pageTitle?: string;
 	pageDescription?: string;
-	pageImagePath?: string;
-	pageType?: "website" | "article";
-	pageKeywords?: string[];
-	pagePublishedTime?: Date;
-	pageModifiedTime?: Date;
-	pageNoIndex?: boolean;
-	pageNoFollow?: boolean;
 }
 
-const {
-	currentPathname,
-	pageShellVariant = "default",
-	pageTitle,
-	pageDescription,
-	pageImagePath,
-	pageType,
-	pageKeywords,
-	pagePublishedTime,
-	pageModifiedTime,
-	pageNoIndex,
-	pageNoFollow,
-} = Astro.props as Props;
+const {currentPathname, pageTitle, pageDescription} = Astro.props as Props;
 ---
 
 <!doctype html>
-<html lang={config.site.language}>
-	<Head
-		pageTitle={pageTitle}
-		pageDescription={pageDescription}
-		pageImagePath={pageImagePath}
-		pageType={pageType}
-		pageKeywords={pageKeywords}
-		pagePublishedTime={pagePublishedTime}
-		pageModifiedTime={pageModifiedTime}
-		pageNoIndex={pageNoIndex}
-		pageNoFollow={pageNoFollow}
-	/>
+<html lang="ko">
+	<Head pageTitle={pageTitle} pageDescription={pageDescription} />
 	<body class="rt_document__body">
-		<UiSurface class="rt_document__surface">
-			<UiStack class="rt_document__stack">
-				<UiBox class="rt_document__header">
-					<WgSiteHeader currentPathname={currentPathname} />
-				</UiBox>
-				<main class:list={["rt_document__main", pageShellVariant === "wide" && "rt_document__main--wide"]}>
-					<UiBox class="rt_document__content">
-						<slot />
-					</UiBox>
-				</main>
-				<UiBox class:list={["rt_document__footer", pageShellVariant === "wide" && "rt_document__footer--wide"]}>
-					<WgSiteFooter />
-				</UiBox>
-			</UiStack>
-		</UiSurface>
+		<WgSiteHeader currentPathname={currentPathname} />
+		<main class="rt_document__main">
+			<slot />
+		</main>
+		<WgSiteFooter />
 	</body>
 </html>
 ```
 
 ```astro
 ---
-import { SEO } from "astro-seo";
-import { config } from "@/shared/config";
-import { util } from "@/shared/util";
-
 interface Props {
 	pageTitle?: string;
 	pageDescription?: string;
-	pageImagePath?: string;
-	pageType?: "website" | "article";
-	pageKeywords?: string[];
-	pagePublishedTime?: Date;
-	pageModifiedTime?: Date;
-	pageNoIndex?: boolean;
-	pageNoFollow?: boolean;
 }
 
-const {
-	pageTitle,
-	pageDescription,
-	pageImagePath,
-	pageType = "website",
-	pageKeywords,
-	pagePublishedTime,
-	pageModifiedTime,
-	pageNoIndex = false,
-	pageNoFollow = false,
-} = Astro.props as Props;
-const documentTitle = pageTitle ? `${pageTitle} | ${config.site.name}` : config.site.name;
-const description = pageDescription ?? config.site.description;
-const canonicalUrl = Astro.site ? new URL(Astro.url.pathname, Astro.site) : undefined;
-const socialImagePath = pageImagePath ?? config.site.defaultSocialImagePath;
-const socialImageUrl = Astro.site ? new URL(util.path.withBasePath(socialImagePath), Astro.site) : undefined;
+const {pageTitle, pageDescription} = Astro.props as Props;
+const title = pageTitle ? `${pageTitle} | Site` : "Site";
+const description = pageDescription ?? "Default site description";
 ---
 
 <head>
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	<meta name="theme-color" content={config.site.themeColor} />
-	<link rel="icon" href={util.path.withBasePath(config.site.faviconIcoPath)} sizes="any" />
-	<link rel="manifest" href={util.path.withBasePath(config.site.manifestPath)} />
-	<link rel="alternate" type="application/rss+xml" title={`${config.site.name} RSS`} href={util.path.withBasePath("/rss.xml")} />
-	<SEO
-		title={documentTitle}
-		description={description}
-		canonical={canonicalUrl}
-		noindex={pageNoIndex}
-		nofollow={pageNoFollow}
-		openGraph={
-			socialImageUrl
-				? {
-						basic: {
-							title: documentTitle,
-							type: pageType,
-							image: socialImageUrl.toString(),
-							url: canonicalUrl,
-						},
-						optional: {
-							description,
-							siteName: config.site.name,
-						},
-						article:
-							pageType === "article"
-								? {
-										publishedTime: pagePublishedTime?.toISOString(),
-										modifiedTime: pageModifiedTime?.toISOString(),
-										tags: pageKeywords,
-									}
-								: undefined,
-				  }
-				: undefined
-		}
-	/>
+	<title>{title}</title>
+	<meta name="description" content={description} />
 </head>
 ```
-
-이 구조에서는 page가 route contract와 meta props handoff, body content의 high-level flow를 소유하고, `_document.astro`가 top-level document와 shared body shell을 직접 감싸며, `_head.astro`가 SEO/meta 계산을 자기 contract로 직접 소유합니다.
 
 ### 3.2 Keep Frontmatter Server-only and Template-focused
 
@@ -649,7 +616,16 @@ const successMessage = "Subscribed";
 
 **Impact: CRITICAL (reduces unnecessary client framework surface and keeps Astro's zero-JS default intact)**
 
-state, effect, client runtime가 필요 없는 page shell, route shell, wrapper, content section은 기본적으로 `.astro`로 작성합니다. React component를 이미 쓴다는 이유만으로 정적 shell까지 TSX로 밀어 넣지 말고, interactive leaf만 island로 분리합니다. 이 프로젝트에서 site-wide document shell은 `_document.astro`, `_head.astro`, `_document.css`처럼 `src/pages` 아래의 pages-local helper로 두고, `_document.astro`와 `_head.astro`는 각자 자기 로컬 `Props`로 contract를 직접 소유합니다. route-specific shell은 owning route의 `_local/` 아래에 둡니다. 특별한 재사용 경계가 없으면 body shell을 `_page-chrome.astro`처럼 별도 helper로 나누지 않고 `_document.astro` 안에 유지합니다. 두 종류 모두 shared component tier가 아니며, shared 조각은 `widget`과 `ui`에서 가져와 조립합니다. page content가 주입되는 자리는 `<slot />`로 드러내고, full page shell을 만드는 document shell이라면 `<html>`이 최상위 parent가 되게 유지합니다.
+state, effect, client runtime가 필요 없는 shell은 기본적으로 `.astro`로 작성합니다.
+
+기준:
+
+- `.astro`: page shell, route shell, wrapper, static content section, document/head helper
+- Framework island: browser state, event handler, effect, client-only library가 필요한 leaf
+- `src/pages/_document.astro`: top-level document와 shared body shell
+- `src/pages/**/_local/*.astro`: 특정 route subtree만 쓰는 route shell
+
+React component를 이미 쓴다는 이유만으로 정적 shell까지 TSX로 밀어 넣지 않습니다. page content가 주입되는 자리는 `<slot />`로 드러내고, full document shell이라면 `<html>`이 최상위 parent가 되게 유지합니다.
 
 **Incorrect (정적 shell을 React component로 올려 불필요한 framework surface를 늘림):**
 
@@ -841,15 +817,22 @@ const { post } = Astro.props;
 
 **Impact: HIGH (keeps paginated route families shallow and makes list plus pagination contracts readable from one folder)**
 
-페이지네이션이 있는 list route family는 가능하면 같은 폴더 안에서 `index.astro`와 `[page].astro`를 sibling으로 둡니다. 홈처럼 별도 landing screen이 있는 경우에는 `src/pages/index.astro`를 유지하고, 실제 paginated archive는 `src/pages/recent/index.astro`와 `src/pages/recent/[page].astro`처럼 전용 family 아래에 둡니다. section list라면 `src/pages/posts/index.astro`와 `src/pages/posts/[page].astro`처럼 두고, 동적 resource 아래에 pagination이 붙는 경우에는 `src/pages/tags/[tag]/index.astro`와 `src/pages/tags/[tag]/[page].astro`처럼 resource folder 안에서 entry page와 pagination page를 나란히 둡니다. 이렇게 해야 list entry와 pagination contract가 한 route family 안에 모여 더 읽기 쉬워집니다.
+페이지네이션이 있는 list route family는 가능하면 같은 폴더 안에서 `index.astro`와 `[page].astro`를 sibling으로 둡니다.
+
+배치 기준:
+
+- Home이 별도 landing이면 `src/pages/index.astro`는 그대로 둡니다.
+- Paginated archive는 `src/pages/archive/index.astro`와 `src/pages/archive/[page].astro`처럼 전용 family 아래에 둡니다.
+- Section list는 `src/pages/articles/index.astro`와 `src/pages/articles/[page].astro`처럼 둡니다.
+- Dynamic resource 아래 pagination은 `src/pages/topics/[topic]/index.astro`와 `src/pages/topics/[topic]/[page].astro`처럼 resource folder 안에 둡니다.
 
 **Incorrect (pagination route를 `page/` 하위 폴더로 한 단계 더 감쌈):**
 
 ```text
 src/pages/[page].astro
-src/pages/posts/page/[page].astro
-src/pages/notes/page/[page].astro
-src/pages/tags/[tag]/page/[page].astro
+src/pages/articles/page/[page].astro
+src/pages/docs/page/[page].astro
+src/pages/topics/[topic]/page/[page].astro
 ```
 
 이 구조는 홈과 archive의 역할을 섞거나, 같은 route family를 불필요한 `page/` 서브폴더로 나눠 tree를 훑을 때 list와 pagination contract를 한눈에 보기 어렵게 만듭니다.
@@ -858,20 +841,20 @@ src/pages/tags/[tag]/page/[page].astro
 
 ```text
 src/pages/index.astro
-src/pages/recent/index.astro
-src/pages/recent/[page].astro
+src/pages/archive/index.astro
+src/pages/archive/[page].astro
 
-src/pages/posts/index.astro
-src/pages/posts/[page].astro
-src/pages/posts/[slug].astro
+src/pages/articles/index.astro
+src/pages/articles/[page].astro
+src/pages/articles/[slug].astro
 
-src/pages/notes/index.astro
-src/pages/notes/[page].astro
-src/pages/notes/[slug].astro
+src/pages/docs/index.astro
+src/pages/docs/[page].astro
+src/pages/docs/[slug].astro
 
-src/pages/tags/index.astro
-src/pages/tags/[tag]/index.astro
-src/pages/tags/[tag]/[page].astro
+src/pages/topics/index.astro
+src/pages/topics/[topic]/index.astro
+src/pages/topics/[topic]/[page].astro
 ```
 
 이 구조에서는 홈은 별도 route로 남고, 각 paginated route family의 entry page와 pagination page가 같은 폴더에 모여 있어 URL contract를 file tree만 보고도 바로 이해할 수 있습니다.
@@ -1179,7 +1162,15 @@ Actions, endpoints, server islands는 각각 caller와 response shape, adapter �
 
 **Impact: HIGH (keeps request-time guards and navigation side effects out of layout shells that should stay visual)**
 
-route-local shell과 pages-local document helper는 shell 조립 역할만 하므로 redirect, rewrite, auth guard의 owner가 되지 않습니다. route-specific request gate가 route param, query, page-level data selection과 결합되어 있으면 `src/pages/**` page boundary에서 처리하고, 여러 route에 공통인 auth, locale, tenant, request locals 주입처럼 cross-cutting concern이면 `src/middleware.ts`의 `onRequest()`에서 처리합니다. shell은 page나 middleware가 이미 결정한 결과를 props나 `Astro.locals`로 받아 시각적으로만 반영합니다. Astro 공식 문서상 `Astro.redirect()`는 page가 `return`해야 하고, middleware interception은 `src/middleware.ts`에서 수행합니다.
+Route-local shell과 pages-local document helper는 shell 조립 역할만 하므로 redirect, rewrite, auth guard의 owner가 되지 않습니다.
+
+Owner 기준:
+
+- Route-specific request gate: `src/pages/**` page boundary
+- Cross-cutting concern: `src/middleware.ts`의 `onRequest()`
+- Visual shell: page나 middleware가 결정한 결과를 props 또는 `Astro.locals`로 받아 표현
+
+Route param, query, page-level data selection과 결합된 guard는 page에서 처리합니다. 여러 route에 공통인 auth, locale, tenant, request locals 주입은 middleware에서 처리합니다. Astro 공식 문서상 `Astro.redirect()`는 page가 `return`해야 하고, middleware interception은 `src/middleware.ts`에서 수행합니다.
 
 **Incorrect (layout이 request-time guard와 redirect를 직접 소유):**
 
@@ -1274,7 +1265,16 @@ pages-local document helper는 top-level document composition, routed page는 ro
 
 **Impact: HIGH (keeps layout files as route shells instead of letting them become domain-specific shared blocks)**
 
-route-shared body shell을 소유하는 `_document.astro`나 route-local shell이 shell composition을 맡는다면, 그 안에서 조립하는 shared piece는 `src/components/widget/**`와 `src/components/ui/**`로 제한합니다. `ui`는 button, input, card, table, box, stack, surface, text, tag-list 같은 primitive이고, `widget`은 search-table, site-header, entry-feed, entry-detail처럼 `ui`를 조립한 reusable block입니다. shell은 이 둘과 `<slot />`을 사용해 조립하고, 그 자체를 `ui-*`나 `widget-*`로 이름 붙여 shared component처럼 승격하지 않습니다. route-shared body shell style은 `_document.css`가 소유하고, shell class는 `rt_document__*`처럼 문서 셸 소유권이 드러나게 유지합니다.
+`_document.astro`나 route-local shell이 shell composition을 맡는다면, 그 안에서 조립하는 shared piece는 `src/components/widget/**`와 `src/components/ui/**`로 제한합니다.
+
+구분 기준:
+
+- `ui`: button, input, card, table, box, stack, surface, text 같은 primitive
+- `widget`: search-table, site-header, entry-feed, entry-detail처럼 `ui`를 조립한 reusable block
+- Document shell: `_document.astro` and `_document.css`
+- Route shell: owning route의 `_local/`
+
+Shell 자체를 `ui-*`나 `widget-*`로 이름 붙여 shared component처럼 승격하지 않습니다. Shell class는 `rt_document__*`처럼 owner가 드러나게 유지합니다.
 
 **Incorrect (layout 역할을 ui/widget로 위장함):**
 
@@ -1302,7 +1302,7 @@ import UiPageShell from "@/components/ui/page-shell/ui-page-shell.astro";
 import UiBox from "@/components/ui/box/ui-box.astro";
 import UiStack from "@/components/ui/stack/ui-stack.astro";
 import UiSurface from "@/components/ui/surface/ui-surface.astro";
-import WidgetSiteHeader from "@/components/widget/site-header/widget-site-header.astro";
+import WgSiteHeader from "@/components/widget/site-header/wg-site-header.astro";
 
 const { currentPathname } = Astro.props;
 ---
@@ -1310,7 +1310,7 @@ const { currentPathname } = Astro.props;
 <UiSurface class="rt_document__surface">
 	<UiStack class="rt_document__stack">
 		<UiBox class="rt_document__header">
-			<WidgetSiteHeader currentPathname={currentPathname} />
+			<WgSiteHeader currentPathname={currentPathname} />
 		</UiBox>
 		<main class="rt_document__main">
 			<UiBox class="rt_document__content">
@@ -1327,16 +1327,32 @@ const { currentPathname } = Astro.props;
 
 **Impact: HIGH (prevents routed pages from scattering one-off frontmatter logic into generic helper files)**
 
-Route page frontmatter support code should move into `_index.ts`, `_slug.ts`, `_post-admin.ts`, or another owner-named route support module only when the input/output contract is clear and the code represents a real data, validation, auth, serialization, or model-building boundary. Keep small one-off booleans, `Astro.props` destructuring, page-local labels, `class:list` conditions, and empty-state branch choices in the page file. Do not create `_form.ts`, `_api.ts`, `utils.ts`, `helpers.ts`, or `common.ts` unless the owner name makes the boundary explicit.
+Route page frontmatter support code should move into owner-named support modules only when the boundary is real.
+
+추출할 수 있는 것:
+
+- clear input/output data boundary
+- validation, auth, serialization, model building
+- shared route-family data loader
+
+Page file에 남길 것:
+
+- small one-off booleans
+- `Astro.props` destructuring
+- page-local labels
+- `class:list` conditions
+- empty-state branch choices
+
+Do not create `_form.ts`, `_api.ts`, `utils.ts`, `helpers.ts`, or `common.ts` unless the owner name makes the boundary explicit.
 
 **Incorrect (small route-local calculations are scattered into generic helpers):**
 
 ```ts
-// src/pages/admin/posts/_form.ts
+// src/pages/admin/entries/_form.ts
 export const getHasActiveFilter = (filter?: string) => Boolean(filter);
 
 export const getEmptyMessage = (filter?: string) => {
-	return filter ? "No posts match this filter." : "No posts yet.";
+	return filter ? "No entries match this filter." : "No entries yet.";
 };
 ```
 
@@ -1345,28 +1361,28 @@ export const getEmptyMessage = (filter?: string) => {
 **Correct (owner-named support module에는 실제 route data boundary만 둠):**
 
 ```ts
-// src/pages/admin/posts/_post-admin.ts
-import type { PostAdminInitialState } from "./_local/post-admin-runtime";
+// src/pages/admin/entries/_entry-admin.ts
+import type { EntryAdminInitialState } from "./_local/entry-admin-runtime";
 
 /**
- * @summary admin posts 화면의 초기 server state를 만든다.
+ * @summary admin entries 화면의 초기 server state를 만든다.
  */
-export const getPostAdminInitialState = async (): Promise<PostAdminInitialState> => {
-	const posts = await postAdminApi.listPosts();
+export const getEntryAdminInitialState = async (): Promise<EntryAdminInitialState> => {
+	const entries = await entryAdminApi.listEntries();
 
 	return {
-		posts: posts.map(toPostAdminRow),
+		entries: entries.map(toEntryAdminRow),
 	};
 };
 ```
 
 ```astro
 ---
-import { getPostAdminInitialState } from "./_post-admin";
+import { getEntryAdminInitialState } from "./_entry-admin";
 
-const initialState = await getPostAdminInitialState();
-const hasPosts = initialState.posts.length > 0;
-const emptyMessage = hasPosts ? undefined : "No posts yet.";
+const initialState = await getEntryAdminInitialState();
+const hasEntries = initialState.entries.length > 0;
+const emptyMessage = hasEntries ? undefined : "No entries yet.";
 ---
 ```
 
@@ -1376,23 +1392,35 @@ const emptyMessage = hasPosts ? undefined : "No posts yet.";
 
 **Impact: HIGH (keeps routed pages readable while avoiding premature `_local/` section extraction)**
 
-Move a section into `src/pages/**/_local/` only when it owns a real boundary: `client:*` or `client:only` hydration, `server:defer` with fallback, form/action ownership, provider setup, browser-only custom element/script behavior, a third-party widget adapter, or a repeated slot contract. Do not extract a component just because a heading/body/footer group looks like a section. If the subtree still describes the same route surface, keep the route `rt_*` owner instead of inventing a `loc_*` namespace.
+Move a section into `src/pages/**/_local/` only when it owns a real rendering or interaction boundary.
+
+추출할 수 있는 경계:
+
+- `client:*` or `client:only` hydration
+- `server:defer` with fallback
+- form/action ownership
+- provider setup
+- browser-only custom element or script behavior
+- third-party widget adapter
+- repeated slot contract
+
+Do not extract a component just because a heading/body/footer group looks like a section. If the subtree still describes the same route surface, keep the route `rt_*` owner instead of inventing a `loc_*` namespace.
 
 **Incorrect (simple page markup is split into `_local/` wrappers):**
 
 ```astro
 ---
-import PostBodySection from "./_local/post-body-section.astro";
-import PostHeaderSection from "./_local/post-header-section.astro";
-import PostMetaSection from "./_local/post-meta-section.astro";
+import EntryBodySection from "./_local/entry-body-section.astro";
+import EntryHeaderSection from "./_local/entry-header-section.astro";
+import EntryMetaSection from "./_local/entry-meta-section.astro";
 
-const { post } = Astro.props;
+const { entry } = Astro.props;
 ---
 
-<article class="rt_ps__root">
-	<PostHeaderSection post={post} />
-	<PostMetaSection post={post} />
-	<PostBodySection html={post.html} />
+<article class="rt_entryDetail__root">
+	<EntryHeaderSection entry={entry} />
+	<EntryMetaSection entry={entry} />
+	<EntryBodySection html={entry.html} />
 </article>
 ```
 
@@ -1402,30 +1430,30 @@ const { post } = Astro.props;
 
 ```astro
 ---
-import RelatedPostsPanel from "./_local/related-posts-panel.astro";
-import PostReactionIsland from "./_local/post-reaction-island.tsx";
+import RelatedEntriesPanel from "./_local/related-entries-panel.astro";
+import EntryReactionIsland from "./_local/entry-reaction-island.tsx";
 
-const { post, relatedPosts } = Astro.props;
+const { entry, relatedEntries } = Astro.props;
 ---
 
-<article class="rt_ps__root">
-	<header class="rt_ps__header">
-		<h1>{post.title}</h1>
-		<p>{post.description}</p>
+<article class="rt_entryDetail__root">
+	<header class="rt_entryDetail__header">
+		<h1>{entry.title}</h1>
+		<p>{entry.description}</p>
 	</header>
 
-	<div class="rt_ps__meta">
-		<span>{post.author}</span>
-		<span>{post.publishedAtLabel}</span>
+	<div class="rt_entryDetail__meta">
+		<span>{entry.author}</span>
+		<span>{entry.publishedAtLabel}</span>
 	</div>
 
-	<div class="rt_ps__body" set:html={post.html} />
+	<div class="rt_entryDetail__body" set:html={entry.html} />
 
-	<RelatedPostsPanel server:defer posts={relatedPosts}>
-		<p slot="fallback">Loading related posts...</p>
-	</RelatedPostsPanel>
+	<RelatedEntriesPanel server:defer entries={relatedEntries}>
+		<p slot="fallback">Loading related entries...</p>
+	</RelatedEntriesPanel>
 
-	<PostReactionIsland client:visible postId={post.id} />
+	<EntryReactionIsland client:visible entryId={entry.id} />
 </article>
 ```
 
@@ -1435,7 +1463,23 @@ const { post, relatedPosts } = Astro.props;
 
 **Impact: HIGH (keeps `src/pages` readable as route owners without reducing page files to import-only adapters)**
 
-page file은 URL contract, `getStaticPaths()`, `prerender`, search param 해석, page-level data selection, `currentPathname`과 문서 메타 props handoff, 그리고 high-level screen flow 같은 route owner 책임을 가집니다. 재사용 가능한 shared render detail은 `ui`/`widget`으로 올리고, route-only browser interaction이나 provider boundary는 `_local/`로 내립니다. 특히 page HTML이나 server-side data selection이 `Astro.url.searchParams` 같은 request-time state에 직접 의존하는 경우에는 `prerender = false` 여부도 이 경계에서 같이 보이게 유지합니다. 반대로 query state를 client island에 넘기기만 하고 prerendered HTML은 그대로라면 static 기본값을 유지할 수 있습니다.
+Page file은 route owner 책임을 한눈에 보이게 유지합니다.
+
+Page file이 소유:
+
+- URL contract
+- `getStaticPaths()` and `prerender`
+- search param 해석
+- page-level data selection
+- `currentPathname` and document meta handoff
+- high-level screen flow
+
+분리 기준:
+
+- Reusable render detail: `ui` or `widget`
+- Route-only browser interaction/provider: `_local/`
+- Request-time HTML/data selection: page boundary에서 `prerender = false` 여부도 함께 표시
+- Client island에 query state만 넘기는 경우: static 기본값 유지 가능
 
 **Incorrect (page 파일이 route contract와 browser runtime detail을 한꺼번에 가짐):**
 
@@ -1460,12 +1504,12 @@ const posts = await getPosts({ tab });
 ```astro
 ---
 import Document from "@/pages/_document.astro";
-import PostAdminRuntime from "./_local/post-admin-runtime.tsx";
-import { getPostAdminInitialState, getPostAdminPreviewSlugs } from "./_post-admin";
+import EntryAdminRuntime from "./_local/entry-admin-runtime.tsx";
+import { getEntryAdminInitialState, getEntryAdminPreviewSlugs } from "./_entry-admin";
 import { util } from "@/shared/util";
 
 export async function getStaticPaths() {
-	const slugs = await getPostAdminPreviewSlugs();
+	const slugs = await getEntryAdminPreviewSlugs();
 
 	return slugs.map((slug) => ({
 		params: {
@@ -1474,15 +1518,15 @@ export async function getStaticPaths() {
 	}));
 }
 
-const initialState = await getPostAdminInitialState();
+const initialState = await getEntryAdminInitialState();
 ---
 
-<Document currentPathname={Astro.url.pathname} pageTitle="admin posts" pageNoIndex>
-	<section class="rt_pi__root">
-		<header class="rt_pi__header">
-			<h1>Posts</h1>
+<Document currentPathname={Astro.url.pathname} pageTitle="admin entries" pageNoIndex>
+	<section class="rt_adminEntriesIndex__root">
+		<header class="rt_adminEntriesIndex__header">
+			<h1>Entries</h1>
 		</header>
-		<PostAdminRuntime client:load initialState={initialState} />
+		<EntryAdminRuntime client:load initialState={initialState} />
 	</section>
 </Document>
 ```
@@ -1491,7 +1535,16 @@ const initialState = await getPostAdminInitialState();
 
 **Impact: HIGH (preserves one-way dependency flow from routed pages to pages-local document helpers instead of letting shared code depend on routing helpers)**
 
-`src/pages/_document.astro`, `_head.astro`, `_document.css` 같은 pages-local document helper는 `src/pages/**`만 소유합니다. route file이 `_document.astro`를 import하고, `_document.astro`가 `_head.astro`, `_document.css`, `widget`, `ui`를 조립합니다. `_document.astro`와 `_head.astro`는 각자 자기 로컬 `Props`를 직접 소유하고, `src/components/**`, shared utility, route-local `_local/` leaf는 이 파일들을 직접 import하지 않습니다. 의존 방향은 `pages -> _document.astro -> _head.astro + _document.css + widget/ui`가 됩니다. 이렇게 해야 top-level document composition은 route boundary에 남고 shared component tier가 routing helper에 묶이지 않습니다.
+`src/pages/_document.astro`, `_head.astro`, `_document.css` 같은 pages-local document helper는 routed page만 import합니다.
+
+의존 방향:
+
+- Page entry imports `_document.astro`
+- `_document.astro` imports `_head.astro`, `_document.css`, `widget`, `ui`
+- `_document.astro`와 `_head.astro`는 각자 자기 로컬 `Props`를 직접 소유
+- `src/components/**`, shared utility, route-local `_local/` leaf는 document helper를 직접 import하지 않음
+
+이 흐름을 지켜야 top-level document composition은 route boundary에 남고 shared component tier가 routing helper에 묶이지 않습니다.
 
 **Incorrect (route-local leaf가 pages-local document helper를 직접 import함):**
 
@@ -1500,7 +1553,7 @@ const initialState = await getPostAdminInitialState();
 import DocumentShell from "@/pages/_document.astro";
 ---
 
-<DocumentShell currentPathname="/" pageTitle="recent" pageDescription="Recent posts">
+<DocumentShell currentPathname="/" pageTitle="entries" pageDescription="Archived entries">
 	<section>
 		<!-- route-local body -->
 	</section>
@@ -1514,26 +1567,26 @@ import DocumentShell from "@/pages/_document.astro";
 ```astro
 ---
 import Document from "@/pages/_document.astro";
-import RecentList from "./_local/recent-list.astro";
-import { getRecentEntries, getRecentListPageProps } from "./_index";
+import EntryList from "./_local/entry-list.astro";
+import { getEntries, getEntryListPageProps } from "./_index";
 
-const recentEntries = await getRecentEntries();
-const pageProps = getRecentListPageProps({
-	entries: recentEntries,
+const entries = await getEntries();
+const pageProps = getEntryListPageProps({
+	entries,
 	currentPage: 1,
 });
 ---
 
-<Document currentPathname={Astro.url.pathname} pageTitle="recent" pageDescription="Recent posts">
-	<RecentList entries={pageProps.entries} />
+<Document currentPathname={Astro.url.pathname} pageTitle="entries" pageDescription="Archived entries">
+	<EntryList entries={pageProps.entries} />
 </Document>
 ```
 
 ```astro
 ---
-import type { RecentEntry } from "../_index";
+import type { EntryListItem } from "../_index";
 
-const { entries } = Astro.props as { entries: RecentEntry[] };
+const { entries } = Astro.props as { entries: EntryListItem[] };
 ---
 
 <section>
@@ -1547,21 +1600,31 @@ const { entries } = Astro.props as { entries: RecentEntry[] };
 
 **Impact: HIGH (keeps routed `.astro` files readable as the main route orchestration layer instead of turning them into import-only adapters)**
 
-`src/pages/**/index.astro`, `[slug].astro`, and similar route files own more than the URL. They should show the route contract, data selection, document props, empty/error branch, and the high-level screen order. Do not reduce every route file to a one-line import of a page component just to keep `src/pages` thin. Extract only the pieces that have a real rendering boundary, browser runtime boundary, provider boundary, third-party library boundary, or data-shaping boundary.
+`src/pages/**/index.astro`, `[slug].astro`, and similar route files own more than the URL.
+
+Page file에서 보여야 하는 것:
+
+- route contract
+- data selection
+- document props
+- empty/error branch
+- high-level screen order
+
+Do not reduce every route file to a one-line import of a page component just to keep `src/pages` thin. Extract only pieces with real rendering, browser runtime, provider, third-party library, or data-shaping boundaries.
 
 **Incorrect (route page hides all screen flow behind route-local components):**
 
 ```astro
 ---
-import AdminPostsRuntime from "./_local/post-admin-runtime.tsx";
-import PostAdminShell from "./_local/post-admin-shell.astro";
+import AdminEntriesRuntime from "./_local/entry-admin-runtime.tsx";
+import EntryAdminShell from "./_local/entry-admin-shell.astro";
 import Document from "@/pages/_document.astro";
 ---
 
-<Document currentPathname={Astro.url.pathname} pageTitle="posts">
-	<PostAdminShell>
-		<AdminPostsRuntime client:load />
-	</PostAdminShell>
+<Document currentPathname={Astro.url.pathname} pageTitle="entries">
+	<EntryAdminShell>
+		<AdminEntriesRuntime client:load />
+	</EntryAdminShell>
 </Document>
 ```
 
@@ -1571,25 +1634,25 @@ import Document from "@/pages/_document.astro";
 
 ```astro
 ---
-import "./_post-admin.css";
+import "./_entry-admin.css";
 import Document from "@/pages/_document.astro";
-import PostAdminRuntime from "./_local/post-admin-runtime.tsx";
-import { getPostAdminInitialState } from "./_post-admin";
+import EntryAdminRuntime from "./_local/entry-admin-runtime.tsx";
+import { getEntryAdminInitialState } from "./_entry-admin";
 
-const initialState = await getPostAdminInitialState();
-const hasPosts = initialState.posts.length > 0;
+const initialState = await getEntryAdminInitialState();
+const hasEntries = initialState.entries.length > 0;
 ---
 
-<Document currentPathname={Astro.url.pathname} pageTitle="admin posts" pageNoIndex>
-	<section class="rt_pi__root">
-		<header class="rt_pi__header">
-			<h1>Posts</h1>
+<Document currentPathname={Astro.url.pathname} pageTitle="admin entries" pageNoIndex>
+	<section class="rt_adminEntriesIndex__root">
+		<header class="rt_adminEntriesIndex__header">
+			<h1>Entries</h1>
 		</header>
 
-		{hasPosts ? (
-			<PostAdminRuntime client:load initialState={initialState} />
+		{hasEntries ? (
+			<EntryAdminRuntime client:load initialState={initialState} />
 		) : (
-			<p class="rt_pi__empty">No posts yet.</p>
+			<p class="rt_adminEntriesIndex__empty">No entries yet.</p>
 		)}
 	</section>
 </Document>
@@ -1601,7 +1664,24 @@ const hasPosts = initialState.posts.length > 0;
 
 **Impact: HIGH (prevents shared layout files from absorbing leaf-page data and interaction logic)**
 
-route-local shell과 pages-local document helper는 공통 frame, metadata wrapper, `<slot />` 기반 composition, shared chrome까지만 담당합니다. 이 프로젝트에서는 `_document.astro`가 `<html>`, `<head>`, `<body>`와 route-shared body shell을 직접 소유하면서 자기 로컬 `Props`로 문서 셸 contract를 가지고, `_head.astro`는 head/meta 전용 contract를 자기 로컬 `Props`로 직접 소유하며, `_document.css`는 route-shared body shell style 전용으로 둡니다. route-specific shell이 있다면 owning route의 `_local/` 아래에 둡니다. shell 조립에는 `widget`과 `ui`만 사용하고, 특정 page만 쓰는 fetch, mutation, form state, detail query, redirect, auth guard를 layout이나 document helper로 끌어올리지 말고 page boundary나 middleware, 해당 island에 남겨 둡니다.
+route-local shell과 pages-local document helper는 shell composition만 담당합니다.
+
+소유할 수 있는 것:
+
+- common frame
+- metadata wrapper
+- `<slot />` 기반 composition
+- shared chrome 조립
+- document/head helper의 local `Props`
+
+소유하지 않는 것:
+
+- 특정 page만 쓰는 fetch/query/mutation
+- form state와 submit handler
+- detail query, redirect, auth guard
+- island 내부 browser state
+
+Data, redirect, auth 판단은 page boundary, middleware, 또는 해당 island에 남깁니다.
 
 **Incorrect (layout이 leaf page 전용 데이터와 form 로직까지 흡수함):**
 
@@ -1621,13 +1701,13 @@ const formState = buildInvoiceForm(invoice);
 ```astro
 ---
 import UiSurface from "@/components/ui/surface/ui-surface.astro";
-import WidgetSiteHeader from "@/components/widget/site-header/widget-site-header.astro";
+import WgSiteHeader from "@/components/widget/site-header/wg-site-header.astro";
 
 const { currentPathname } = Astro.props;
 ---
 
 <UiSurface>
-	<WidgetSiteHeader currentPathname={currentPathname} />
+	<WgSiteHeader currentPathname={currentPathname} />
 	<slot />
 </UiSurface>
 ```
@@ -1636,7 +1716,16 @@ const { currentPathname } = Astro.props;
 
 **Impact: HIGH (prevents route shell files from becoming a blurry shared component tier between pages and reusable building blocks)**
 
-Route-specific shell files are not shared layouts. Put them under the owning route's `_local/` folder, such as `src/pages/admin/_local/admin-shell.astro` and `admin-shell.css`. Do not create `src/layouts`, `src/components/layouts`, `ui-page-shell`, or `widget-page-shell` just because several children in one route subtree share a shell. Shared visual pieces should come from `ui` and `widget`; the route shell that combines them stays route-local. Site-wide document shell remains the top-level pages-local `_document.astro`, `_head.astro`, and `_document.css`.
+Route-specific shell files are not shared layouts. Put them under the owning route's `_local/` folder.
+
+기준:
+
+- Route subtree shell: `src/pages/admin/_local/admin-shell.astro`
+- Shell style: same owner file, such as `admin-shell.css`
+- Shared visual pieces: `ui` and `widget`
+- Site-wide document shell: top-level `_document.astro`, `_head.astro`, `_document.css`
+
+Do not create `src/layouts`, `src/components/layouts`, `ui-page-shell`, or `widget-page-shell` just because several children in one route subtree share a shell.
 
 **Incorrect (route shell floats as a shared component layer):**
 
@@ -1650,7 +1739,7 @@ src/
       page-shell/ui-page-shell.astro
   pages/
     admin/
-      posts/
+      entries/
         index.astro
 ```
 
@@ -1674,7 +1763,7 @@ src/
       _local/
         admin-shell.astro
         admin-shell.css
-      posts/
+      entries/
         index.astro
 ```
 
@@ -1684,20 +1773,29 @@ src/
 
 **Impact: HIGH (makes the boundary between route-only implementation and shared public surface obvious)**
 
-Shared로 승격되지 않은 route-only UI, modal, form, table, provider, runtime component, 보조 renderer, component CSS는 owning route folder의 `_local/` 아래에 둡니다. `_local/`은 재사용 가능한 public surface가 아니라 현재 route subtree 전용 구현이라는 소유권을 드러내는 이름입니다. 다른 route에서도 쓰이기 시작하면 `_local/`에 남기지 말고 `ui`, `widget`, 또는 shared domain layer로 승격합니다. 다만 route page의 screen orchestration까지 `_local/`로 옮기지는 말고, 실제 leaf UI나 runtime boundary만 내려 ownership을 분명히 합니다.
+Shared로 승격되지 않은 route-only UI는 owning route folder의 `_local/` 아래에 둡니다.
+
+`_local/`에 둘 수 있는 것:
+
+- modal, form, table
+- provider, runtime component
+- 보조 renderer
+- component CSS
+
+`_local/`은 현재 route subtree 전용 구현이라는 소유권을 드러내는 이름입니다. 다른 route에서도 쓰이기 시작하면 `ui`, `widget`, 또는 shared domain layer로 승격합니다. Route page의 screen orchestration까지 `_local/`로 옮기지는 않습니다.
 
 **Incorrect (route-local UI가 shared components나 route root에 섞임):**
 
 ```text
 src/
   components/
-    post-editor.tsx
+    entry-editor.tsx
   pages/
     admin/
-      posts/
+      entries/
         index.astro
-        post-admin-table.tsx
-        post-admin-table.css
+        entry-admin-table.tsx
+        entry-admin-table.css
 ```
 
 **Correct (route-local implementation detail은 `_local/` 아래에 둠):**
@@ -1709,19 +1807,19 @@ src/
       button/ui-button.tsx
   pages/
     admin/
-      posts/
+      entries/
         index.astro
-        _post-admin.ts
-        _post-admin.css
+        _entry-admin.ts
+        _entry-admin.css
         _local/
-          post-admin-runtime.tsx
-          post-admin-table.tsx
-          post-admin-table.css
-          post-editor.tsx
-          post-editor.css
+          entry-admin-runtime.tsx
+          entry-admin-table.tsx
+          entry-admin-table.css
+          entry-editor.tsx
+          entry-editor.css
 ```
 
-같은 page surface를 설명하는 `_local/` markup과 CSS는 `loc_*`로 새 namespace를 만들지 말고 `rt_*` owner를 유지합니다. 예외적으로 dialog나 helper wrapper가 route 안에서도 독립 owner contract를 가져야 할 때만 `loc_postFilterDialog__*` 같은 `loc_*`를 사용합니다.
+같은 page surface를 설명하는 `_local/` markup과 CSS는 `loc_*`로 새 namespace를 만들지 말고 `rt_*` owner를 유지합니다. 예외적으로 dialog나 helper wrapper가 route 안에서도 독립 owner contract를 가져야 할 때만 `loc_entryFilterDialog__*` 같은 `loc_*`를 사용합니다.
 
 ## 10. Documentation and Comments
 
@@ -1762,7 +1860,17 @@ const pageProps = getPostListPageProps({ entries: postEntries, currentPage: 1 })
 
 **Impact: MEDIUM-HIGH (makes Astro route boundaries and route-local support helpers searchable before readers inspect implementation details)**
 
-Astro frontmatter와 `src/pages/_document.astro`, `src/pages/_head.astro`, `src/pages/**/_post-admin.ts`, `src/pages/**/_local/post-editor.ts` 같은 route-local support module에서 중요한 경계를 선언할 때는 헤더 JSDoc을 작성합니다. pages-local 문서 셸 contract, head/SEO contract, `Props` interface, `getStaticPaths()`, exported page data loader, 외부 연동 helper, rendering mode 판단이 섞인 helper는 문맥 설명 없이 지나가기 쉬우므로 `@summary`, `@helper`, `@api`, `@field` 같은 태그를 companion skill인 `convention-typescript` 표준에 맞춰 남깁니다. 단순 local destructuring이나 자명한 alias까지 전부 문서화할 필요는 없습니다.
+Astro frontmatter와 `src/pages/_document.astro`, `src/pages/_head.astro`, `src/pages/**/_entry-admin.ts`, `src/pages/**/_local/entry-editor.ts` 같은 route-local support module에서 중요한 경계를 선언할 때는 헤더 JSDoc을 작성합니다.
+
+문서화 대상:
+
+- pages-local document/head `Props`
+- `getStaticPaths()`
+- exported page data loader
+- 외부 연동 helper
+- rendering mode 판단이 섞인 helper
+
+`@summary`, `@helper`, `@api`, `@field` 같은 태그는 companion skill인 `convention-typescript` 표준에 맞춥니다. 단순 local destructuring이나 자명한 alias까지 전부 문서화할 필요는 없습니다.
 
 **Incorrect (document props/route/support 경계 선언에 문맥 설명이 없음):**
 
@@ -1783,6 +1891,24 @@ const buildHeadModel = (post: Post) => ({
 	description: post.description,
 });
 ---
+```
+
+Route support module에서도 exported contract는 같은 기준을 따릅니다.
+
+```ts
+/**
+ * @api entry 목록 페이지 데이터 조회
+ */
+export const listEntryPageItems = async () => {
+	return api.entry.list();
+};
+
+/**
+ * @helper entry 목록 응답을 route view model로 변환
+ */
+export const toEntryListView = (response: EntryListResponse) => ({
+	entries: response.data,
+});
 ```
 
 **Correct (핵심 선언의 역할과 의도를 바로 위에 문서화):**

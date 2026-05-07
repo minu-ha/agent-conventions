@@ -9,7 +9,23 @@ tags: naming, pages, local, support-modules
 
 **Impact: MEDIUM-HIGH (keeps route-local files searchable even when a route owns several helpers, runtime components, and stylesheets)**
 
-Route-local files should name the owner and responsibility directly. Avoid generic `_local.ts`, `_local.css`, `_api.ts`, `_form.ts`, `_provider.tsx`, `index.ts`, or `page.css` names. Prefer `_admin.ts`, `_admin-api.ts`, `_admin-form.ts`, `_post-admin.ts`, `_post-admin.css`, `_local/admin-query-provider.tsx`, `_local/admin-state-notice.tsx`, `_local/post-editor.tsx`, and `_local/post-editor.css`. The routed `index.astro` or `[slug].astro` is the only place where generic route file names are expected, because Astro owns that naming contract.
+Route-local files should name the owner and responsibility directly.
+
+피할 이름:
+
+- `_local.ts`, `_local.css`
+- `_api.ts`, `_form.ts`, `_provider.tsx`
+- `index.ts`, `page.css`
+
+권장 이름:
+
+- `_admin.ts`, `_admin-api.ts`, `_admin-form.ts`
+- `_entry-admin.ts`, `_entry-admin.css`
+- `_local/admin-query-provider.tsx`
+- `_local/admin-state-notice.tsx`
+- `_local/entry-editor.tsx`, `_local/entry-editor.css`
+
+The routed `index.astro` or `[slug].astro` is the only place where generic route file names are expected, because Astro owns that naming contract.
 
 **Incorrect (support files hide ownership behind generic names):**
 
@@ -17,7 +33,7 @@ Route-local files should name the owner and responsibility directly. Avoid gener
 src/
   pages/
     admin/
-      posts/
+      entries/
         index.astro
         _local.ts
         _local.css
@@ -41,16 +57,16 @@ src/
       _local/
         admin-query-provider.tsx
         admin-state-notice.tsx
-      posts/
+      entries/
         index.astro
-        _post-admin.ts
-        _post-admin.css
+        _entry-admin.ts
+        _entry-admin.css
         _local/
-          post-admin-runtime.tsx
-          post-admin-table.tsx
-          post-admin-table.css
-          post-editor.tsx
-          post-editor.css
+          entry-admin-runtime.tsx
+          entry-admin-table.tsx
+          entry-admin-table.css
+          entry-editor.tsx
+          entry-editor.css
 ```
 
-If a helper is used by exactly one component, place it beside that component with the same owner name, such as `post-editor.ts` next to `post-editor.tsx`. If it is shared across the route family, use the route support owner, such as `_post-admin.ts`. Promote it to `shared` or `components` only after the dependency crosses route ownership.
+If a helper is used by exactly one component, place it beside that component with the same owner name, such as `entry-editor.ts` next to `entry-editor.tsx`. If it is shared across the route family, use the route support owner, such as `_entry-admin.ts`. Promote it to `shared` or `components` only after the dependency crosses route ownership.

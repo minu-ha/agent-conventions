@@ -9,11 +9,16 @@ tags: naming, class-grammar, ownership
 
 **Impact: CRITICAL (makes class ownership and UI role traceable from the classname alone)**
 
-클래스명은 `<scope>_<slug>__<element>[--<modifier>]` 문법을 사용합니다. `scope`는 소유 범위, `slug`는 소유자 식별자, `element`는 역할, `modifier`는 상태나 변형을 나타내며, 각 구분자는 `_`, `__`, `--`를 일관되게 유지합니다. `scope` 자체는 `rt`, `wg`, `ui`, `loc`처럼 소문자 namespace를 유지합니다.
+클래스명은 `<scope>_<slug>__<element>[--<modifier>]` 문법을 사용합니다. 구분자는 `_`, `__`, `--`를 고정하고, 각 부분의 책임을 섞지 않습니다.
 
-`slug`는 모든 scope에 동일한 casing을 강제하지 말고, 해당 scope의 house style을 따릅니다. Astro route-owned screen과 pages-local document shell은 `rt_*`를 사용하고, `wg_*`, `ui_*`, `loc_*` 같은 component/local scope는 해당 owner의 naming style을 따릅니다. 중요한 것은 scope별 규칙을 섞지 않고, 같은 owner에서 slug 표기가 흔들리지 않게 유지하는 것입니다.
+구성 요소:
 
-`element`와 `modifier`는 `listButton`, `detailExpanded`, `submitButton`, `emptyState`처럼 camelCase로 작성합니다. element/modifier 내부에서 `list-button`, `list_button`처럼 추가 구분자를 다시 도입하지 않습니다.
+- `scope`: `rt`, `wg`, `ui`, `loc` 같은 lowercase owner namespace
+- `slug`: owner 식별자. casing은 해당 scope의 house style을 따름
+- `element`: owner 안의 UI 역할. `listButton`, `emptyState`처럼 camelCase
+- `modifier`: 상태나 반복 variant. `routeActive`, `selected`처럼 camelCase
+
+중요한 것은 모든 scope에 같은 slug casing을 강제하는 것이 아니라, 같은 owner 안에서 표기가 흔들리지 않게 유지하는 것입니다.
 
 **Incorrect (scope별 slug 규칙을 섞거나 element/modifier casing이 흔들림):**
 

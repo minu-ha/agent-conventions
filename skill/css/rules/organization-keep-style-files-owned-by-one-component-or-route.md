@@ -40,11 +40,11 @@ tags: files, ownership, comments
 
 /* visual */
 .rt_catalogIndex__panel {
-	background: var(--cms-color-bg-base, #fff);
+	background: var(--app-color-bg-surface, #fff);
 }
 
 /* state */
 .rt_catalogIndex__panel--active {
-	border-color: var(--cms-color-primary, #1677ff);
+	border-color: var(--app-color-accent, #1677ff);
 }
 ```

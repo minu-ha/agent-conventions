@@ -20,7 +20,7 @@ tags: screen, utils, extraction
 
 남길 것:
 
-- 작은 1회성 guard, URL 조립, `trim() || undefined` 같은 호출 지점 계산
+- 작은 1회성 guard, URL 조립, 빈 검색어 생략 같은 호출 지점 계산
 - handler/effect 안에 있어야 문맥이 보이는 query invalidation, navigation, fallback 처리
 - 한 component나 한 query `select`만 쓰는 작은 mapper
 
@@ -70,7 +70,10 @@ export const buildEntryPayload = (formValues: EntryFormValues, files: UploadFile
 **Incorrect (`_local` component 하나만 쓰는 private helper를 누적):**
 
 ```tsx
-const readOptionalFilter = (value: string) => value.trim() || undefined;
+const readOptionalFilter = (value: string) => {
+	const trimmedValue = value.trim();
+	return trimmedValue ? trimmedValue : undefined;
+};
 
 const buildEditHref = ({ editHrefBase, row }: { editHrefBase: string; row: EntryRow }) =>
 	`${editHrefBase}${row.id}/`;
@@ -136,8 +139,9 @@ export const buildEntryPayload = (
 ```tsx
 export const EntryTable = (props: EntryTableProps) => {
 	const { editHrefBase, filters } = props;
+	const trimmedQuery = filters.q.trim();
 	const responseEntriesQuery = useListEntriesSuspense({
-		q: filters.q.trim() || undefined,
+		q: trimmedQuery ? trimmedQuery : undefined,
 	});
 
 	return responseEntriesQuery.data.map((row) => (

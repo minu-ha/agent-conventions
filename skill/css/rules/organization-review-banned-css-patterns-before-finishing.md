@@ -9,7 +9,25 @@ tags: review, banned-patterns, guardrails
 
 **Impact: MEDIUM (catches unsafe selector, modifier, and library-targeting shortcuts before they become part of the shared style system)**
 
-작업을 마치기 전에 금지 패턴을 다시 확인합니다. 요소 선택자 중심 스타일링, 깊은 project-owned 후손 체인, 재사용 근거 없는 구조 modifier, 루트 없는 라이브러리 클래스 타겟팅, top-level pseudo selector 재오픈, project-owned parent state descendant coupling, `!important` 남용 같은 지름길은 빠르게 작성되더라도 장기적으로 구조를 깨뜨립니다. 반복되는 명시적 variant modifier, owner block 안 rich text wrapper의 nested element selector, owned root 아래의 최소한의 third-party selector chain은 별도 규칙이 허용하는 범위에서 예외가 될 수 있습니다.
+작업을 마치기 전에 금지 패턴을 다시 확인합니다.
+
+금지:
+
+- 요소 선택자 중심 스타일링
+- 깊은 project-owned descendant chain
+- 재사용 근거 없는 structural modifier
+- root 없는 library class targeting
+- top-level pseudo selector 재오픈
+- project-owned parent state descendant coupling
+- `!important` 남용
+
+허용 가능한 예외:
+
+- 반복되는 명시적 variant modifier
+- owner block 안 rich text wrapper의 nested raw element selector
+- owned root 아래의 최소 third-party selector chain
+
+예외는 관련 rule에서 허용한 범위 안에서만 사용합니다.
 
 **Incorrect (금지 패턴을 그대로 남김):**
 
@@ -52,9 +70,9 @@ div {
 	}
 }
 
-.rt_pctbi__treeBox {
+.rt_treePanel__root {
 	& .ant-tree-node-content-wrapper {
-		border-radius: var(--cms-border-radius, 4px);
+		border-radius: var(--app-radius-control, 4px);
 	}
 }
 ```

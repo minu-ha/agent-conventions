@@ -111,21 +111,21 @@ import "./_index.css";
 **Incorrect (이미 다른 소유자가 쓰는 `scope_slug`를 재사용):**
 
 ```txt
-// route A
-rt_pctbi__header
+// catalog/index route
+rt_catalogIndex__header
 
-// route B
-rt_pctbi__toolbar
+// dashboard/index route
+rt_catalogIndex__toolbar
 ```
 
 **Correct (소유자가 다르면 별도 slug를 부여):**
 
 ```txt
-// content-type-builder.index
-rt_pctbi__header
+// catalog/index route
+rt_catalogIndex__header
 
-// members-group-role.index
-rt_mgri__header
+// dashboard/index route
+rt_dashboardIndex__header
 ```
 
 ### 1.3 Name Elements and Modifiers by Role
@@ -140,7 +140,7 @@ rt_mgri__header
 ui_card__wrapper
 ui_card__box
 ui_card__body--gap12
-rt_pcmei__section--compactTop
+rt_catalogDetail__section--compactTop
 ```
 
 **Correct (역할과 상태를 기준으로 이름을 붙임):**
@@ -149,18 +149,22 @@ rt_pcmei__section--compactTop
 ui_card__toolbar
 ui_card__body
 ui_card__body--active
-rt_pcmei__detailSection
+rt_catalogDetail__detailSection
 ```
 
 ### 1.4 Preserve Route Slug Traceability
 
 **Impact: HIGH (keeps route-scoped class namespaces readable back to the route hierarchy they belong to)**
 
-이 규칙은 `rt_*` route scope의 slug를 다룹니다. Astro route-owned screen, route-local support stylesheet, pages-local document helper는 모두 `rt_*` owner를 사용합니다. `rt_*` slug는 길이보다 추적 가능성을 우선하고, route role이나 document shell 역할을 읽을 수 있게 유지합니다. 꼭 전체 folder path를 다 적을 필요는 없지만, route family와 screen role을 다시 찾을 수 있는 수준의 의미는 남겨 둡니다.
+활성화된 route/framework skill이 `rt_*` owner를 선택했다면, CSS는 그 owner slug를 route까지 다시 추적할 수 있게 유지합니다. CSS skill은 어떤 파일이 route-owned인지 결정하지 않고, 이미 선택된 route owner가 클래스명에서 흐려지지 않게 지키는 역할을 합니다.
 
-이 route slug 규칙을 `wg_*`, `ui_*`, `loc_*` 같은 다른 scope의 owner slug에 그대로 덮어쓰지 않습니다. reusable block, primitive, local helper는 각자의 owner naming style을 따르되, routed page와 document shell의 main surface는 `rt_*` traceability를 우선합니다.
+기본 판단:
 
-너무 짧아 의미가 완전히 사라지거나, 계층 순서가 뒤섞이면 클래스명만 봐서는 어느 route 소유인지 추적하기 어려워집니다.
+- `rt_*` slug는 짧음보다 추적 가능성을 우선합니다.
+- 전체 folder path를 모두 쓰지는 않아도, route family와 screen role은 읽혀야 합니다.
+- 팀이 공유하는 route map이 없는 opaque acronym은 피합니다.
+- `wg_*`, `ui_*`, `loc_*`는 각 owner scope의 naming style을 따릅니다.
+- document, local helper, reusable widget의 owner 판단은 companion framework skill의 소유권 규칙을 우선합니다.
 
 **Incorrect (의미가 약하거나 계층 순서가 흐려진 slug):**
 
@@ -168,7 +172,7 @@ rt_pcmei__detailSection
 rt_shell__body
 rt_pageChrome__main
 rt_doc__content
-rt_pi__root
+rt_x__root
 ```
 
 **Correct (도메인 의미와 계층 순서가 보존된 slug):**
@@ -186,13 +190,22 @@ rt_document__body
 
 **Impact: HIGH (keeps route-owned page styles, shared component styles, and truly local helper styles from mixing into the same namespace or file)**
 
-Astro route page, route-local support UI, route-local runtime CSS가 같은 screen owner를 설명한다면 `rt_*` scope를 기본으로 사용합니다. `_local/` 아래로 파일이 내려갔다는 이유만으로 main screen surface를 `loc_*`로 바꾸지 않습니다. `loc_*`는 route surface와 독립된 leaf helper가 자기 owner를 가질 때만 사용합니다. 여러 route에서 재사용되는 block은 `wg_*`, primitive는 `ui_*`, pages-local document shell은 `rt_document__*`처럼 owner 범위를 분리합니다. 서로 다른 owner 범위는 한 파일에 섞지 않습니다.
+route/framework skill이 route-owned surface로 판단한 스타일은 `rt_*` scope를 유지합니다. 파일이 route-local helper folder로 내려갔다는 이유만으로 main screen surface를 `loc_*`로 바꾸지 않습니다.
+
+scope 기준:
+
+- `rt_*`: route-owned screen, route support surface, route/document owner
+- `loc_*`: route surface와 독립된 leaf helper
+- `wg_*`: 여러 route에서 재사용되는 block
+- `ui_*`: primitive component
+
+서로 다른 owner 범위는 한 파일에 섞지 않습니다. 어떤 markup이 route-owned인지 판단하는 책임은 활성화된 framework convention이 가집니다.
 
 **Incorrect (route surface, local helper, shared component owner를 한 파일/네임스페이스에 섞음):**
 
 ```txt
-posts/_index.css
-  rt_postsIndex__root
+entries/_index.css
+  rt_entriesIndex__root
   loc_filterDialog__root
   rt_document__content
   ui_button__root
@@ -201,16 +214,16 @@ posts/_index.css
 **Correct (route owner, document owner, local helper owner를 분리):**
 
 ```txt
-posts/_index.css
-  rt_postsIndex__root
-  rt_postsIndex__list
-  rt_postsIndex__empty
+entries/_index.css
+  rt_entriesIndex__root
+  rt_entriesIndex__list
+  rt_entriesIndex__empty
 
 pages/_document.css
   rt_document__body
   rt_document__content
 
-posts/_local/filter-dialog.css
+entries/_local/filter-dialog.css
   loc_filterDialog__root
 ```
 
@@ -218,11 +231,16 @@ posts/_local/filter-dialog.css
 
 **Impact: CRITICAL (makes class ownership and UI role traceable from the classname alone)**
 
-클래스명은 `<scope>_<slug>__<element>[--<modifier>]` 문법을 사용합니다. `scope`는 소유 범위, `slug`는 소유자 식별자, `element`는 역할, `modifier`는 상태나 변형을 나타내며, 각 구분자는 `_`, `__`, `--`를 일관되게 유지합니다. `scope` 자체는 `rt`, `wg`, `ui`, `loc`처럼 소문자 namespace를 유지합니다.
+클래스명은 `<scope>_<slug>__<element>[--<modifier>]` 문법을 사용합니다. 구분자는 `_`, `__`, `--`를 고정하고, 각 부분의 책임을 섞지 않습니다.
 
-`slug`는 모든 scope에 동일한 casing을 강제하지 말고, 해당 scope의 house style을 따릅니다. Astro route-owned screen과 pages-local document shell은 `rt_*`를 사용하고, `wg_*`, `ui_*`, `loc_*` 같은 component/local scope는 해당 owner의 naming style을 따릅니다. 중요한 것은 scope별 규칙을 섞지 않고, 같은 owner에서 slug 표기가 흔들리지 않게 유지하는 것입니다.
+구성 요소:
 
-`element`와 `modifier`는 `listButton`, `detailExpanded`, `submitButton`, `emptyState`처럼 camelCase로 작성합니다. element/modifier 내부에서 `list-button`, `list_button`처럼 추가 구분자를 다시 도입하지 않습니다.
+- `scope`: `rt`, `wg`, `ui`, `loc` 같은 lowercase owner namespace
+- `slug`: owner 식별자. casing은 해당 scope의 house style을 따름
+- `element`: owner 안의 UI 역할. `listButton`, `emptyState`처럼 camelCase
+- `modifier`: 상태나 반복 variant. `routeActive`, `selected`처럼 camelCase
+
+중요한 것은 모든 scope에 같은 slug casing을 강제하는 것이 아니라, 같은 owner 안에서 표기가 흔들리지 않게 유지하는 것입니다.
 
 **Incorrect (scope별 slug 규칙을 섞거나 element/modifier casing이 흔들림):**
 
@@ -261,7 +279,7 @@ TSX에서 `className`은 `clsx()` 사용을 기본으로 합니다. 기본 eleme
 **Incorrect (문자열 연결로 클래스 조합을 숨김):**
 
 ```tsx
-<button className={"rt_pctbi__listButton " + (isActive ? "rt_pctbi__listButton--active" : "")}>
+<button className={"rt_catalogIndex__listButton " + (isActive ? "rt_catalogIndex__listButton--active" : "")}>
 	저장
 </button>
 ```
@@ -271,8 +289,8 @@ TSX에서 `className`은 `clsx()` 사용을 기본으로 합니다. 기본 eleme
 ```tsx
 <button
 	className={clsx(
-		"rt_pctbi__listButton",
-		isActive && "rt_pctbi__listButton--active",
+		"rt_catalogIndex__listButton",
+		isActive && "rt_catalogIndex__listButton--active",
 	)}
 >
 	저장
@@ -283,19 +301,31 @@ TSX에서 `className`은 `clsx()` 사용을 기본으로 합니다. 기본 eleme
 
 **Impact: HIGH (keeps modifiers reserved for state instead of turning them into a second layout naming system)**
 
-modifier는 `active`, `hidden`, `disabled`, `selected`, `error` 같은 상태값에 우선 사용합니다. spacing patch, 방향 보정, 특정 화면에서만 필요한 구조 차이를 덧붙이는 용도로 modifier를 늘리지 않습니다.   
-다만 `dense`, `horizontal`, `compact`처럼 컴포넌트 API로 반복해서 쓰이는 명시적 variant라면 modifier를 허용할 수 있습니다. 이런 경우에도 one-off layout fix가 아니라 재사용 가능한 variant라는 근거가 있어야 합니다. guardrail에서 금지하는 대상도 "상태 의미가 아닌 modifier 전체"가 아니라 이런 one-off structural modifier입니다.
+modifier는 상태나 반복 variant를 표현할 때만 사용합니다.
+
+금지:
+
+- spacing patch
+- 방향 보정
+- 특정 화면 하나에서만 필요한 구조 차이
+
+허용:
+
+- `active`, `hidden`, `disabled`, `selected`, `error` 같은 상태
+- `dense`, `horizontal`, `compact`처럼 component API로 반복 노출되는 variant
+
+금지 대상은 "상태 의미가 아닌 모든 modifier"가 아니라, 재사용 contract 없이 생긴 one-off structural modifier입니다.
 
 **Incorrect (특정 화면용 구조 patch를 modifier로 덧붙임):**
 
 ```tsx
-<div className={clsx("rt_pcmei__section", "rt_pcmei__section--compactTop")} />
+<div className={clsx("rt_catalogDetail__section", "rt_catalogDetail__section--compactTop")} />
 ```
 
 **Correct (one-off patch는 별도 element로 풀고, 반복되는 variant만 제한적으로 허용):**
 
 ```tsx
-<div className={clsx("rt_pcmei__detailSection")} />
+<div className={clsx("rt_catalogDetail__detailSection")} />
 ```
 
 ```tsx
@@ -311,13 +341,13 @@ modifier는 `active`, `hidden`, `disabled`, `selected`, `error` 같은 상태값
 **Incorrect (상태 의미를 별도 클래스 역할처럼 합쳐 버림):**
 
 ```tsx
-<div className={clsx("rt_pctbi__listButtonActive")} />
+<div className={clsx("rt_catalogIndex__listButtonActive")} />
 ```
 
 **Correct (기본 클래스와 상태 modifier를 분리):**
 
 ```tsx
-<div className={clsx("rt_pctbi__listButton", isActive && "rt_pctbi__listButton--active")} />
+<div className={clsx("rt_catalogIndex__listButton", isActive && "rt_catalogIndex__listButton--active")} />
 ```
 
 ### 2.4 Prefer `Ui*` Wrapper Prop Types
@@ -391,7 +421,7 @@ const items: NonNullable<UiCollapseProps["items"]> = [];
 **Incorrect (깊은 후손 선택자 체인에 의존):**
 
 ```css
-.rt_pctbi__layout .rt_pctbi__panel .rt_pctbi__detail .rt_pctbi__item {
+.rt_catalogIndex__layout .rt_catalogIndex__panel .rt_catalogIndex__detail .rt_catalogIndex__item {
 	padding: 8px;
 }
 ```
@@ -399,12 +429,12 @@ const items: NonNullable<UiCollapseProps["items"]> = [];
 **Correct (대상 element 클래스나 직접 owner root 계약에 스타일을 둠):**
 
 ```css
-.rt_pctbi__item {
+.rt_catalogIndex__item {
 	padding: 8px;
 }
 
-.rt_pctbi__detailHeader {
-	gap: var(--cms-spacing-2, 8px);
+.rt_catalogIndex__detailHeader {
+	gap: var(--app-space-2, 8px);
 }
 ```
 
@@ -412,15 +442,22 @@ const items: NonNullable<UiCollapseProps["items"]> = [];
 
 **Impact: CRITICAL (reduces cascade coupling by keeping project-owned selectors independent instead of descendant-driven)**
 
-프로젝트가 직접 소유한 선택자는 플랫 구조를 기본으로 작성합니다. 전처리기 중첩 문법은 project-owned 클래스끼리 부모-자식 관계를 표현하는 데 쓰지 말고, 각 element 클래스가 독립적으로 읽히도록 유지합니다. 이 규칙은 project-owned 클래스 선언 자체의 구조를 다루며, 서드파티 DOM anchor 규칙은 별도로 `selector-target-third-party-dom-from-owned-roots`에서 다룹니다.
+프로젝트가 직접 소유한 선택자는 플랫 구조를 기본으로 작성합니다.
 
-예외는 owner가 rich text나 uncontrolled markup wrapper를 직접 소유하는 경우입니다. `__prose`, `__copy`, `__content`처럼 wrapper 자체가 raw element styling의 경계라면, 그 owner block 안에서만 `& h2`, `& p`, `& > :first-child` 같은 nested element selector를 사용할 수 있습니다. 이 예외는 raw HTML element나 structural pseudo에만 적용되며, 다른 project-owned 클래스를 `.owner__prose .owner__child`처럼 다시 체이닝하는 근거가 되지는 않습니다.
+판단 기준:
+
+- 기본값: project-owned class는 각각 top-level block으로 선언합니다.
+- 금지: project-owned class끼리 부모-자식 관계를 descendant selector로 표현하지 않습니다.
+- 예외: `__prose`, `__copy`, `__content`처럼 raw HTML wrapper가 owner boundary라면 같은 block 안에서 `& h2`, `& p`, `& > :first-child`를 허용합니다.
+- 별도 규칙: third-party DOM anchor는 `selector-target-third-party-dom-from-owned-roots`를 따릅니다.
+
+rich text 예외는 raw element styling에만 적용됩니다. `.owner__prose .owner__child`처럼 다른 project-owned class를 다시 체이닝하는 근거로 쓰지 않습니다.
 
 **Incorrect (project-owned 클래스 관계를 descendant selector로 표현하거나, owner wrapper element styling을 block 밖으로 흩뿌림):**
 
 ```css
-.rt_pctbi__layout {
-	& .rt_pctbi__panel {
+.rt_catalogIndex__layout {
+	& .rt_catalogIndex__panel {
 		padding: 8px;
 	}
 }
@@ -437,11 +474,11 @@ const items: NonNullable<UiCollapseProps["items"]> = [];
 **Correct (project-owned 클래스는 플랫하게 두고, rich text wrapper 예외는 같은 block 안에 국한함):**
 
 ```css
-.rt_pctbi__layout {
+.rt_catalogIndex__layout {
 	display: grid;
 }
 
-.rt_pctbi__panel {
+.rt_catalogIndex__panel {
 	padding: 8px;
 }
 
@@ -460,9 +497,17 @@ const items: NonNullable<UiCollapseProps["items"]> = [];
 
 **Impact: CRITICAL (limits third-party styling to explicit wrapper ownership instead of leaking across the app)**
 
-서드파티 라이브러리 내부 DOM 클래스(`.ant-*`, `.rc-*`, `.tippy-*`)는 반드시 프로젝트가 소유한 루트 클래스 블록 아래에서만 타겟팅합니다. 핵심은 selector가 항상 owned root block에서 시작되어야 한다는 점입니다.
+서드파티 라이브러리 내부 DOM 클래스(`.ant-*`, `.rc-*`, `.tippy-*`)는 프로젝트가 소유한 root block 아래에서만 타겟팅합니다.
 
-루트 없는 단독 타겟팅과 project-owned 클래스끼리의 깊은 descendant coupling은 피합니다. third-party DOM을 잡을 때도 `.rt_* .ant-*` 같은 one-line selector로 owned root를 체이닝하지 말고, 항상 owned root block을 연 뒤 그 안에서 `& .ant-*`처럼 nested로 표현합니다. 더 깊은 third-party DOM 경로가 꼭 필요하면 owned root block 아래에서 shortest viable chain만 한 번에 적고, 이 예외는 third-party DOM 경로에만 적용합니다. nested 안에서 다시 nested block을 열어 의미를 흐리는 방식은 여전히 금지합니다.
+판단 기준:
+
+- 항상 owned root class block을 먼저 엽니다.
+- root 없는 `.ant-*` 단독 selector는 금지합니다.
+- `.rt_* .ant-*` 같은 one-line chaining보다 root block 안의 `& .ant-*`를 사용합니다.
+- third-party DOM 경로는 shortest viable chain만 허용합니다.
+- nested block 안에서 다시 nested block을 열지 않습니다.
+
+이 예외는 third-party DOM path에만 적용됩니다. project-owned class끼리의 깊은 descendant coupling은 여전히 금지입니다.
 
 **Incorrect (루트 없이 타겟팅하거나 nested 안에서 다시 nested를 열어 의미를 흐림):**
 
@@ -471,11 +516,11 @@ const items: NonNullable<UiCollapseProps["items"]> = [];
 	border-radius: 4px;
 }
 
-.rt_pcmei__treeBox .ant-tree-title {
+.rt_treePanel__root .ant-tree-title {
 	color: #999;
 }
 
-.rt_pcmei__treeBox {
+.rt_treePanel__root {
 	& .ant-tree-node-content-wrapper {
 		& .ant-tree-iconEle {
 			display: inline-flex;
@@ -487,25 +532,23 @@ const items: NonNullable<UiCollapseProps["items"]> = [];
 **Correct (항상 owned root block을 열고, 그 안에서 third-party DOM path를 nested로 적음):**
 
 ```css
-.rt_pcmei__treeBox {
+.rt_treePanel__root {
 	& .ant-tree-node-content-wrapper {
 		display: inline-flex;
 	}
-}
 
-.rt_pctb__lnbTop {
-	& > .ant-btn-icon {
-		color: var(--cms-color-text-tertiary, rgba(0, 0, 0, 0.45));
-	}
-}
-
-.rt_pcmei__treeBox {
 	& .ant-tree-title {
 		color: #999;
 	}
 
-	& .ant-tree-node-content-wrapper .ant-tree-iconEle .ant-tree-title {
-		color: #999;
+	& .ant-tree-switcher {
+		color: var(--app-color-text-muted, #777);
+	}
+}
+
+.rt_treePanel__toolbar {
+	& > .ant-btn-icon {
+		color: var(--app-color-text-muted, rgba(0, 0, 0, 0.45));
 	}
 }
 ```
@@ -514,9 +557,14 @@ const items: NonNullable<UiCollapseProps["items"]> = [];
 
 **Impact: HIGH (keeps browser-owned interaction states separate from app-owned state modifiers)**
 
-`:hover`, `:visited`, `:focus`, `:focus-visible`, `:disabled`, `:checked`처럼 브라우저와 DOM이 직접 부여하는 상태는 반드시 같은 클래스 블록 내부 nested `&:` 형태로 표현합니다. top-level `.foo:hover {}`처럼 selector를 다시 열지 말고, `.foo { &:hover {} }`로 owner block 안에 접어 넣습니다. 반대로 `selected`, `active`, `error`처럼 화면이나 도메인이 결정하는 상태는 modifier 클래스로 유지합니다.
+브라우저와 DOM이 직접 부여하는 상태는 같은 클래스 block 안의 nested `&:`로 표현합니다. 화면이나 도메인이 결정하는 상태는 modifier class로 분리합니다.
 
-DOM state가 자식 element의 시각적 결과에 영향을 주더라도 pseudo는 부모 owner block에 붙인 채로 유지합니다. 이런 경우 `.foo:hover .foo__icon`처럼 project-owned descendant coupling을 만들기보다, 부모 block에서 CSS 변수나 명시적 상태 contract를 바꾸고 자식 block이 그 값을 읽게 하는 쪽을 기본으로 삼습니다.
+구분 기준:
+
+- DOM-owned: `:hover`, `:visited`, `:focus`, `:focus-visible`, `:disabled`, `:checked`
+- App-owned: `selected`, `active`, `error`, `expanded`, `current`
+- DOM state가 child element를 바꿔야 하면 parent block에서 CSS 변수를 바꾸고 child block이 그 값을 읽게 합니다.
+- `.foo:hover .foo__icon`처럼 project-owned descendant coupling으로 상태를 전달하지 않습니다.
 
 **Incorrect (pseudo-class를 top-level selector로 다시 열거나, parent state를 child selector coupling으로 표현함):**
 
@@ -531,7 +579,7 @@ DOM state가 자식 element의 시각적 결과에 영향을 주더라도 pseudo
 
 .rt_pmli__assetCard {
 	&:selected {
-		border-color: var(--cms-color-primary, #1677ff);
+		border-color: var(--app-color-accent, #1677ff);
 	}
 }
 ```
@@ -566,7 +614,7 @@ DOM state가 자식 element의 시각적 결과에 영향을 주더라도 pseudo
 }
 
 .rt_pmli__assetCard--selected {
-	border-color: var(--cms-color-primary, #1677ff);
+	border-color: var(--app-color-accent, #1677ff);
 }
 ```
 
@@ -601,7 +649,7 @@ DOM state가 자식 element의 시각적 결과에 영향을 주더라도 pseudo
 	/* sticky toolbar pinned inside the scrollable content pane */
 	position: sticky;
 	top: 0;
-	z-index: var(--cms-z-index-toolbar, 10);
+	z-index: var(--app-z-index-toolbar, 10);
 }
 
 .rt_dashboard__content {
@@ -663,7 +711,7 @@ CSS 변수 `var(--*)`를 사용할 때는 토큰 존재가 보장되지 않는 �
 }
 
 .ui_button__root--hover {
-	background: var(--cms-color-primary, #1677ff);
+	background: var(--app-color-accent, #1677ff);
 }
 ```
 
@@ -671,12 +719,12 @@ CSS 변수 `var(--*)`를 사용할 때는 토큰 존재가 보장되지 않는 �
 
 ```css
 .ui_button__root--active {
-	background: var(--cms-color-primary, #1677ff);
+	background: var(--app-color-accent, #1677ff);
 }
 
 .ui_button__root {
 	&:focus-visible {
-		outline: 2px solid var(--cms-color-primary, #1677ff);
+		outline: 2px solid var(--app-color-accent, #1677ff);
 		outline-offset: 2px;
 	}
 
@@ -709,12 +757,12 @@ CSS 변수 `var(--*)`를 사용할 때는 토큰 존재가 보장되지 않는 �
 
 ```css
 .ui_table__toolbar {
-	gap: var(--cms-spacing-3, 12px);
+	gap: var(--app-space-3, 12px);
 }
 
 .ui_table__row--selected {
-	background: var(--cms-color-fill-secondary, #f5f5f5);
-	border-radius: var(--cms-border-radius, 4px);
+	background: var(--app-color-fill-muted, #f5f5f5);
+	border-radius: var(--app-radius-control, 4px);
 }
 ```
 
@@ -759,12 +807,12 @@ stylesheet는 하나의 owner에 맞춰 유지하고, 가벼운 구조 주석만
 
 /* visual */
 .rt_catalogIndex__panel {
-	background: var(--cms-color-bg-base, #fff);
+	background: var(--app-color-bg-surface, #fff);
 }
 
 /* state */
 .rt_catalogIndex__panel--active {
-	border-color: var(--cms-color-primary, #1677ff);
+	border-color: var(--app-color-accent, #1677ff);
 }
 ```
 
@@ -772,7 +820,25 @@ stylesheet는 하나의 owner에 맞춰 유지하고, 가벼운 구조 주석만
 
 **Impact: MEDIUM (catches unsafe selector, modifier, and library-targeting shortcuts before they become part of the shared style system)**
 
-작업을 마치기 전에 금지 패턴을 다시 확인합니다. 요소 선택자 중심 스타일링, 깊은 project-owned 후손 체인, 재사용 근거 없는 구조 modifier, 루트 없는 라이브러리 클래스 타겟팅, top-level pseudo selector 재오픈, project-owned parent state descendant coupling, `!important` 남용 같은 지름길은 빠르게 작성되더라도 장기적으로 구조를 깨뜨립니다. 반복되는 명시적 variant modifier, owner block 안 rich text wrapper의 nested element selector, owned root 아래의 최소한의 third-party selector chain은 별도 규칙이 허용하는 범위에서 예외가 될 수 있습니다.
+작업을 마치기 전에 금지 패턴을 다시 확인합니다.
+
+금지:
+
+- 요소 선택자 중심 스타일링
+- 깊은 project-owned descendant chain
+- 재사용 근거 없는 structural modifier
+- root 없는 library class targeting
+- top-level pseudo selector 재오픈
+- project-owned parent state descendant coupling
+- `!important` 남용
+
+허용 가능한 예외:
+
+- 반복되는 명시적 variant modifier
+- owner block 안 rich text wrapper의 nested raw element selector
+- owned root 아래의 최소 third-party selector chain
+
+예외는 관련 rule에서 허용한 범위 안에서만 사용합니다.
 
 **Incorrect (금지 패턴을 그대로 남김):**
 
@@ -815,9 +881,9 @@ div {
 	}
 }
 
-.rt_pctbi__treeBox {
+.rt_treePanel__root {
 	& .ant-tree-node-content-wrapper {
-		border-radius: var(--cms-border-radius, 4px);
+		border-radius: var(--app-radius-control, 4px);
 	}
 }
 ```

@@ -9,18 +9,26 @@ tags: structure, pages, route-implementations, local
 
 **Impact: HIGH (keeps page implementation near the file-based route while using underscore-prefixed files to avoid accidental routes)**
 
-Astro가 file-based routing을 `src/pages`에서 결정하므로, route 구현도 가능한 한 같은 route subtree에 둡니다. Routed entry는 `index.astro`, `[slug].astro`, `new.astro`처럼 URL을 그대로 표현하고, route-only data helpers, CSS, React runtime, modal, form, table, provider는 `_` prefix가 붙은 non-route file이나 `_local/` folder에 둡니다. 여러 route에서 진짜로 재사용되는 primitive나 block만 `src/components/ui` 또는 `src/components/widget`으로 올립니다.
+Astro가 file-based routing을 `src/pages`에서 결정하므로, route 구현도 가능한 한 같은 route subtree에 둡니다.
+
+배치 기준:
+
+- Routed entry: `index.astro`, `[slug].astro`, `new.astro`
+- Route support: `_index.ts`, `_slug.ts`, `_entry-admin.ts`
+- Route CSS: `_index.css`, `_slug.css`, `_entry-admin.css`
+- Route-only runtime/UI: `_local/`
+- Shared primitive/block: `src/components/ui` or `src/components/widget`
 
 **Incorrect (route 구현이 `src/features`와 generic helper 이름으로 흩어짐):**
 
 ```text
 src/
   pages/
-    posts/
+    entries/
       index.astro
       [slug].astro
   features/
-    post/
+    entry/
       page.astro
       slug.astro
       index.ts
@@ -37,7 +45,7 @@ src/
     index.astro
     _index.ts
     _index.css
-    posts/
+    entries/
       index.astro
       _index.ts
       _index.css
@@ -48,17 +56,17 @@ src/
       _new.ts
       _new.css
       _local/
-        post-editor.tsx
-        post-editor.css
+        entry-editor.tsx
+        entry-editor.css
     admin/
-      posts/
+      entries/
         index.astro
-        _post-admin.ts
-        _post-admin.css
+        _entry-admin.ts
+        _entry-admin.css
         _local/
-          post-admin-runtime.tsx
-          post-admin-table.tsx
-          post-admin-table.css
+          entry-admin-runtime.tsx
+          entry-admin-table.tsx
+          entry-admin-table.css
 ```
 
-`src/pages` 안에서 `_`로 시작하는 파일과 폴더는 route가 아니므로 route-local implementation을 안전하게 둘 수 있습니다. 단, `_local/`은 dump folder가 아닙니다. 파일명은 `post-editor.tsx`, `admin-query-provider.tsx`, `bookmark-admin-table.css`처럼 실제 owner와 역할이 드러나야 합니다.
+`src/pages` 안에서 `_`로 시작하는 파일과 폴더는 route가 아니므로 route-local implementation을 안전하게 둘 수 있습니다. 단, `_local/`은 dump folder가 아닙니다. 파일명은 `entry-editor.tsx`, `admin-query-provider.tsx`, `entry-admin-table.css`처럼 실제 owner와 역할이 드러나야 합니다.

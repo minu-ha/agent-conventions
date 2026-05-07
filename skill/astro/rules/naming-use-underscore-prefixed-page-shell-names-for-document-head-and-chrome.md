@@ -9,7 +9,21 @@ tags: naming, pages, underscore, document-helpers
 
 **Impact: MEDIUM-HIGH (keeps page-adjacent non-routes recognizable in file trees and prevents generic shell names from blurring ownership)**
 
-`src/pages` 아래의 pages-local document helper와 support file은 `_` prefix와 역할 이름을 함께 사용합니다. 기본적으로 top-level document entry는 `_document.astro`, route-shared body shell style은 `_document.css`, head concern은 `_head.astro`처럼 둡니다. `_layout.astro`, `_shell.astro`, `_wrapper.astro`, `_base.astro`, `site-layout.astro`처럼 generic한 이름은 피하고, 특별한 이유 없이 `_page-chrome.astro` 같은 추가 body-shell helper도 만들지 않습니다. `_document.astro`와 `_head.astro`의 contract는 각 파일 안의 로컬 `Props`가 직접 소유합니다. 이렇게 해야 이 파일들이 "route가 아닌 pages-local document helper"이면서도 각각 어떤 조립 책임을 갖는지 파일명만 보고 바로 알 수 있습니다.
+`src/pages` 아래의 pages-local document helper와 support file은 `_` prefix와 역할 이름을 함께 사용합니다.
+
+기본 이름:
+
+- `_document.astro`: top-level document entry
+- `_document.css`: route-shared body shell style
+- `_head.astro`: head/meta concern
+
+피할 이름:
+
+- `_layout.astro`, `_shell.astro`, `_wrapper.astro`, `_base.astro`
+- `site-layout.astro`
+- 실제 재사용 경계 없는 `_page-chrome.astro`
+
+`_document.astro`와 `_head.astro`의 contract는 각 파일 안의 로컬 `Props`가 직접 소유합니다.
 
 **Incorrect (generic shell 이름이나 feature 이름이 섞여 역할이 흐려짐):**
 

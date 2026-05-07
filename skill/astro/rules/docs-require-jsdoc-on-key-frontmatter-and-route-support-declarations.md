@@ -9,7 +9,17 @@ tags: docs, jsdoc, frontmatter, route-support
 
 **Impact: MEDIUM-HIGH (makes Astro route boundaries and route-local support helpers searchable before readers inspect implementation details)**
 
-Astro frontmatter와 `src/pages/_document.astro`, `src/pages/_head.astro`, `src/pages/**/_post-admin.ts`, `src/pages/**/_local/post-editor.ts` 같은 route-local support module에서 중요한 경계를 선언할 때는 헤더 JSDoc을 작성합니다. pages-local 문서 셸 contract, head/SEO contract, `Props` interface, `getStaticPaths()`, exported page data loader, 외부 연동 helper, rendering mode 판단이 섞인 helper는 문맥 설명 없이 지나가기 쉬우므로 `@summary`, `@helper`, `@api`, `@field` 같은 태그를 companion skill인 `convention-typescript` 표준에 맞춰 남깁니다. 단순 local destructuring이나 자명한 alias까지 전부 문서화할 필요는 없습니다.
+Astro frontmatter와 `src/pages/_document.astro`, `src/pages/_head.astro`, `src/pages/**/_entry-admin.ts`, `src/pages/**/_local/entry-editor.ts` 같은 route-local support module에서 중요한 경계를 선언할 때는 헤더 JSDoc을 작성합니다.
+
+문서화 대상:
+
+- pages-local document/head `Props`
+- `getStaticPaths()`
+- exported page data loader
+- 외부 연동 helper
+- rendering mode 판단이 섞인 helper
+
+`@summary`, `@helper`, `@api`, `@field` 같은 태그는 companion skill인 `convention-typescript` 표준에 맞춥니다. 단순 local destructuring이나 자명한 alias까지 전부 문서화할 필요는 없습니다.
 
 **Incorrect (document props/route/support 경계 선언에 문맥 설명이 없음):**
 
@@ -30,6 +40,24 @@ const buildHeadModel = (post: Post) => ({
 	description: post.description,
 });
 ---
+```
+
+Route support module에서도 exported contract는 같은 기준을 따릅니다.
+
+```ts
+/**
+ * @api entry 목록 페이지 데이터 조회
+ */
+export const listEntryPageItems = async () => {
+	return api.entry.list();
+};
+
+/**
+ * @helper entry 목록 응답을 route view model로 변환
+ */
+export const toEntryListView = (response: EntryListResponse) => ({
+	entries: response.data,
+});
 ```
 
 **Correct (핵심 선언의 역할과 의도를 바로 위에 문서화):**

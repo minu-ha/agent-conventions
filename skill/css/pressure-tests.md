@@ -69,7 +69,7 @@ CSS skill을 수정하거나 새로운 rule을 추가했을 때, 실제 에이�
   - third-party path가 필요할 때도 shortest viable chain만 사용함
 - Likely fail signals
   - `.ant-tree-node-content-wrapper { ... }`
-  - `.rt_pcmei__treeBox .ant-tree-title { ... }`
+  - `.rt_treePanel__root .ant-tree-title { ... }`
   - nested 안에서 다시 nested block을 여는 깊은 chain
   - project-owned 클래스끼리 깊은 descendant chain을 만듦
 
@@ -102,7 +102,7 @@ CSS skill을 수정하거나 새로운 rule을 추가했을 때, 실제 에이�
   - 존재 보장이 없는 token surface에는 fallback을 둠
 - Likely fail signals
   - `#f5f5f5`, `12px`, `4px`가 그대로 반복됨
-  - `var(--cms-color-border)`를 불안정한 경계에서 fallback 없이 사용함
+  - `var(--app-color-border)`를 불안정한 경계에서 fallback 없이 사용함
 
 ### C5. Route vs Local vs Document Ownership
 
@@ -132,8 +132,8 @@ CSS skill을 수정하거나 새로운 rule을 추가했을 때, 실제 에이�
   - route class와 modifier가 문자열 연결 대신 `clsx()`에서 읽기 쉽게 조합됨
   - `Ui*` 내부 DOM 스타일링은 wrapper class를 통해 접근하고, wrapper class 주입도 `clsx()` 기준을 따름
 - Likely fail signals
-  - `className="rt_pctbi__panel"`
-  - `className={"rt_pctbi__panel " + (isActive ? "rt_pctbi__panel--active" : "")}`
+  - `className="rt_catalogIndex__panel"`
+  - `className={"rt_catalogIndex__panel " + (isActive ? "rt_catalogIndex__panel--active" : "")}`
   - `UiButton` 내부 DOM을 wrapper 없이 직접 selector로 제어함
 
 ### C7. Pseudo and Prose Nesting Discipline

@@ -272,7 +272,7 @@ React skill을 수정하거나 새로운 rule을 추가했을 때, 실제 에이
   - `screen-extract-utilities-selectively`
   - `state-shape-query-data-with-select`
 - Prompt
-  - "admin table component에 `buildEditHref`, `readOptionalFilter`, `mapResponseToRows` 같은 작은 helper가 많아. React skill 기준으로 과한 모듈화 없이 정리해줘."
+  - "record list screen에 `buildEditHref`, `readOptionalFilter`, `mapResponseToRows` 같은 작은 helper가 많아. React skill 기준으로 과한 모듈화 없이 정리해줘."
 - Expected pass signals
   - component 하나만 쓰는 href/filter helper는 사용 지점으로 접음
   - query response shape는 필요하면 `query.select`에서 직접 보이게 변환함
@@ -280,7 +280,7 @@ React skill을 수정하거나 새로운 rule을 추가했을 때, 실제 에이
   - `response...` / `mutation...` naming과 origin chaining은 유지함
 - Likely fail signals
   - helper 이름만 바꾸거나 JSDoc만 추가하고 경계를 유지함
-  - `_local/helpers.ts`, `utils.ts`, `table-utils.ts`를 새로 만듦
+  - `_local/helpers.ts`, `utils.ts`, `row-utils.ts`를 새로 만듦
   - query result를 상단 alias로 퍼뜨리거나 `data` destructuring으로 origin을 잃음
 
 ### R14. File Placement and Owner Naming

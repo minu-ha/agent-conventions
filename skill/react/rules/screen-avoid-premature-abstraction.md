@@ -32,11 +32,11 @@ tags: screen, abstraction, reuse
 **Incorrect (반복만 보고 성급하게 추상화):**
 
 ```ts
-const usePermissionA = () => {
+const useEntryAccessA = () => {
   // 유사 로직
 };
 
-const usePermissionB = () => {
+const useEntryAccessB = () => {
   // 유사 로직
 };
 ```
