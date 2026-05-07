@@ -67,8 +67,6 @@ agent-conventions/
       README.md
       SKILL.md
       metadata.json
-      deprecated/
-        react.md
       rules/
         _sections.md
         _template.md
@@ -113,8 +111,6 @@ skill/react/
     _sections.md
     _template.md
     *.md
-  deprecated/
-    react.md
 ```
 
 - `SKILL.md`
@@ -133,8 +129,6 @@ skill/react/
   실제 source of truth rule 문서입니다.
 - `AGENTS.md`
   build 결과로 생성되는 slim local guide입니다.
-- `deprecated/*.md`
-  이전 single-document 버전을 보관합니다.
 
 정리하면, structured skill에서 사람이 직접 수정하는 정본은
 `rules/_sections.md`, `rules/_template.md`, `rules/*.md`, `metadata.json`이고,

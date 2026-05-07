@@ -22,6 +22,6 @@ const columns = useMemo(() => buildColumns(response.data.columns), [response.dat
 **Correct (필요할 때만 이유를 적고 사용):**
 
 ```ts
-// 테이블 라이브러리가 columns 참조 동일성을 요구하여 리렌더 폭증을 방지한다.
+// list library가 columns 참조 동일성을 요구하여 리렌더 폭증을 방지한다.
 const columns = useMemo(() => buildColumns(response.data.columns), [response.data.columns]);
 ```

@@ -16,11 +16,11 @@ JSX에서는 명명된 핸들러 참조를 기본으로 하고, 아주 짧은 �
 ```tsx
 <UiButton
   onClick={async () => {
-    if (!selectedTable) {
+    if (!selectedEntry) {
       return;
     }
 
-    await mutationContentTypeRemove.mutateAsync({ params: { projectId } });
+    await mutationEntryRemove.mutateAsync({ params: { entryId: selectedEntry.id } });
     void navigate({ to: "/next" });
   }}
 />
@@ -30,11 +30,11 @@ JSX에서는 명명된 핸들러 참조를 기본으로 하고, 아주 짧은 �
 
 ```tsx
 /**
- * @event 선택된 테이블 삭제와 다음 화면 이동 처리
+ * @event 선택된 entry 삭제와 다음 화면 이동 처리
  */
-const handleRemoveTableButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
+const handleRemoveEntryButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
   // ...
 };
 
-<UiButton onClick={handleRemoveTableButtonClick} />;
+<UiButton onClick={handleRemoveEntryButtonClick} />;
 ```

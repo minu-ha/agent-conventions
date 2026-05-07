@@ -11,7 +11,6 @@
 - `area-description.md` - 실제 rule 파일 패턴
 - [metadata.json](./metadata.json) - compiled guide 메타데이터
 - [AGENTS.md](./AGENTS.md) - 에이전트가 읽는 compiled 결과물
-- [deprecated/react.md](./deprecated/react.md) - 마이그레이션 검토용 legacy 단일 문서
 - [package/README.md](../../package/README.md) - `skill/*` build, validation, typecheck, test를 담당하는 standalone TypeScript npm package
 
 ## 시작하기
@@ -129,7 +128,7 @@ tags: tag1, tag2
 
 - [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`가 source of truth입니다.
 - [AGENTS.md](./AGENTS.md)는 에이전트가 먼저 읽는 compiled 문서입니다.
-- [deprecated/react.md](./deprecated/react.md)는 원래 단일 문서와 마이그레이션 완성도를 비교하기 위해 남겨 둡니다.
+- 예전 단일 문서는 보존하지 않습니다. 오래된 문맥은 Git history에서만 확인하고, 현재 판단은 source rule과 compiled guide만 기준으로 합니다.
 - `metadata.json`의 `extends`는 `typescript` companion skill 관계를 선언합니다.
 - route entry support code의 기본 구조는 `page.tsx` + sibling `page.ts`를 우선하고, `page.ts`는 named export를 기본으로 사용합니다.
 - generic TypeScript rule은 [../typescript/rules/_sections.md](../typescript/rules/_sections.md)와 `../typescript/rules/*.md`가 정본이고, React rule은 framework-specific overlay에 집중합니다.

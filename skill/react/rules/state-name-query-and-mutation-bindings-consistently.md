@@ -14,20 +14,20 @@ tags: state, query, mutation, naming
 **Incorrect (query와 mutation 바인딩 이름이 제각각임):**
 
 ```ts
-const tableList = useContentTypeGetListSuspense();
-const deleteTableApi = useContentTypeRemove();
+const list = useEntryListSuspense();
+const removeApi = useEntryRemove();
 ```
 
 **Correct (로컬 바인딩 접두사를 통일):**
 
 ```ts
 /**
- * @api content type 목록 조회 API
+ * @api entry 목록 조회 API
  */
-const responseContentTypeGetListSuspense = useContentTypeGetListSuspense();
+const responseEntryListSuspense = useEntryListSuspense();
 
 /**
- * @api content type 삭제 API
+ * @api entry 삭제 API
  */
-const mutationContentTypeRemove = useContentTypeRemove();
+const mutationEntryRemove = useEntryRemove();
 ```

@@ -15,18 +15,18 @@ render prop은 parent가 child에 item, index, state 같은 runtime 데이터를
 **Incorrect (정적인 구조를 render prop으로 조립):**
 
 ```tsx
-export interface WorkspaceSectionProps {
+export interface PanelProps {
 	renderHeader?: () => ReactNode;
 	renderFooter?: () => ReactNode;
 }
 
-export const WorkspaceSection = (props: WorkspaceSectionProps) => {
+export const Panel = (props: PanelProps) => {
 	const { renderHeader, renderFooter } = props;
 
 	return (
-		<section className="workspace-section">
+		<section className="panel">
 			{renderHeader?.()}
-			<MemberList />
+			<ItemList />
 			{renderFooter?.()}
 		</section>
 	);
@@ -36,55 +36,55 @@ export const WorkspaceSection = (props: WorkspaceSectionProps) => {
 **Correct (children과 namespaced slot part로 구조를 드러냄):**
 
 ```tsx
-export interface WorkspaceSectionProps {
+export interface PanelProps {
 	children: ReactNode;
 }
 
-const WorkspaceSectionRoot = (props: WorkspaceSectionProps) => {
+const PanelRoot = (props: PanelProps) => {
 	const { children } = props;
-	return <section className="workspace-section">{children}</section>;
+	return <section className="panel">{children}</section>;
 };
 
-const WorkspaceSectionHeader = (props: WorkspaceSectionProps) => {
+const PanelHeader = (props: PanelProps) => {
 	const { children } = props;
-	return <header className="workspace-section-header">{children}</header>;
+	return <header className="panel__header">{children}</header>;
 };
 
-const WorkspaceSectionFooter = (props: WorkspaceSectionProps) => {
+const PanelFooter = (props: PanelProps) => {
 	const { children } = props;
-	return <footer className="workspace-section-footer">{children}</footer>;
+	return <footer className="panel__footer">{children}</footer>;
 };
 
-export const WorkspaceSection = {
-	Root: WorkspaceSectionRoot,
-	Header: WorkspaceSectionHeader,
-	Footer: WorkspaceSectionFooter,
+export const Panel = {
+	Root: PanelRoot,
+	Header: PanelHeader,
+	Footer: PanelFooter,
 } as const;
 
-export const WorkspaceSettingsScreen = () => {
+export const EntryScreen = () => {
 	return (
 		<>
-			<WorkspaceSection.Root>
-				<WorkspaceSection.Header>
-					<h2>Members</h2>
-					<MemberSearchField />
-				</WorkspaceSection.Header>
-				<MemberList />
-				<WorkspaceSection.Footer>
+			<Panel.Root>
+				<Panel.Header>
+					<h2>Entries</h2>
+					<EntrySearchField />
+				</Panel.Header>
+				<EntryList />
+				<Panel.Footer>
 					<Pagination />
-				</WorkspaceSection.Footer>
-			</WorkspaceSection.Root>
+				</Panel.Footer>
+			</Panel.Root>
 
-			<WorkspaceSection.Root>
-				<WorkspaceSection.Header>
-					<h2>Invite members</h2>
-				</WorkspaceSection.Header>
-				<InviteMemberForm />
-			</WorkspaceSection.Root>
+			<Panel.Root>
+				<Panel.Header>
+					<h2>Create entry</h2>
+				</Panel.Header>
+				<EntryCreateForm />
+			</Panel.Root>
 		</>
 	);
 };
 ```
 
 같은 shell을 재사용하지만 내부 구조는 화면마다 달라질 수 있다면 `stateless compound component`가 더 읽기 쉽습니다.  
-이 경우에는 `showFooter`, `showSearch`, `isInviteMode` 같은 boolean prop도 필요 없고, parent가 runtime 데이터를 child 함수에 밀어줄 이유도 없으므로 render prop보다 단순한 구조 조립이 맞습니다. `WorkspaceSection.Root/Header/Footer`처럼 dot notation으로 묶고, 나중에 state가 필요해지면 같은 이름을 유지한 채 context를 추가합니다.
+이 경우에는 `showFooter`, `showSearch`, `isCreateMode` 같은 boolean prop도 필요 없고, parent가 runtime 데이터를 child 함수에 밀어줄 이유도 없으므로 render prop보다 단순한 구조 조립이 맞습니다. `Panel.Root/Header/Footer`처럼 dot notation으로 묶고, 나중에 state가 필요해지면 같은 이름을 유지한 채 context를 추가합니다.

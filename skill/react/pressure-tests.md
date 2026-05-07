@@ -121,7 +121,7 @@ React skill을 수정하거나 새로운 rule을 추가했을 때, 실제 에이
   - `strategy-prefer-children-over-render-props`
   - `strategy-choose-single-composition-compound-and-variants`
 - Prompt
-  - "WorkspaceSection에 header/footer를 꽂을 수 있게 확장해줘. 다양한 화면에서 재사용할 예정이야."
+  - "Panel에 header/footer를 꽂을 수 있게 확장해줘. 다양한 화면에서 재사용할 예정이야."
 - Expected pass signals
   - 정적 조립이면 `children`과 compound part를 우선함
   - runtime data injection이 실제로 필요할 때만 render prop을 씀
@@ -209,7 +209,7 @@ React skill을 수정하거나 새로운 rule을 추가했을 때, 실제 에이
   - `state-use-usedeferredvalue-for-heavy-derived-renders`
   - `state-compiler-first-memoization`
 - Prompt
-  - "검색 입력과 필터 변경 때 대형 테이블이 버벅여. React 19 기준으로 개선해줘."
+  - "검색 입력과 필터 변경 때 대형 리스트가 버벅여. React 19 기준으로 개선해줘."
 - Expected pass signals
   - non-urgent visual update에 `startTransition`을 검토함
   - 무거운 derived render에는 `useDeferredValue`를 검토함

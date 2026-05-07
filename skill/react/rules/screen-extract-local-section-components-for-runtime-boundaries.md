@@ -9,18 +9,16 @@ tags: screen, routes, local-components, boundaries
 
 **Impact: HIGH (route entry의 orchestration은 보이게 유지하면서도 async, state, interaction처럼 실제 경계가 있는 subtree는 안전하게 분리할 수 있게 함)**
 
-route entry에서 local component 추출 여부는 "한 구역처럼 보이느냐"가 아니라 `runtime boundary`를 소유하느냐로 판단합니다.  
-단순 layout wrapper, className grouping, 들여쓰기 감소만을 위한 local component는 만들지 않습니다.  
-반대로 아래 중 하나를 자기 subtree 안에서 직접 소유하면 route-local section component로 추출할 수 있습니다.
+route entry의 local component는 `runtime boundary`가 있을 때만 추출합니다.
+단순 layout wrapper, className grouping, 들여쓰기 감소만으로는 추출하지 않습니다.
 
-- async boundary: `Suspense`, skeleton, loading, error, empty state
-- state boundary: `useState`, `useReducer`, `useEffect` 같은 로컬 state와 동기화
-- provider boundary: form provider, context, scoped store
-- interaction boundary: popover, modal, selection, inline edit, drag, expandable tree
-- library boundary: `UiTable`, `UiTree`, editor, chart처럼 props와 render adapter가 빽빽한 위젯
-- performance boundary: virtualization, transition, deferred value, heavy memoized subtree
+추출 가능한 boundary:
 
-route entry는 여전히 화면 orchestration owner로 남습니다.  
+- async: `Suspense`, skeleton, loading, error, empty state
+- state/provider: local state, effect sync, form provider, context, scoped store
+- interaction: popover, modal, selection, inline edit, drag, expandable tree
+- library/performance: dense widget adapter, virtualization, transition, deferred value
+
 search param, navigation, page-level query/mutation, cross-section effect, invalidate, redirect, 여러 section에 걸친 파생값은 route entry에 둡니다.
 
 **Incorrect (layout wrapper만 분리해 route flow를 숨김):**
@@ -46,8 +44,8 @@ const EntryDetailPanel = () => {
 };
 
 export const RouteComponent = () => {
-	const responseContentFolderGetListSuspense = useContentFolderGetListSuspense();
-	const responseContentManagerSearchContents = useContentManagerSearchContents();
+	const responseEntryTreeSuspense = useEntryTreeSuspense();
+	const responseEntryListSuspense = useEntryListSuspense();
 
 	return (
 		<div className="entry-layout">
@@ -64,31 +62,31 @@ export const RouteComponent = () => {
 
 ```tsx
 interface EntryTreeSectionProps {
-	sidebarNodes: EntrySidebarNode[];
-	selectedTableName?: string;
-	onTableSelect: (tableName: string) => void;
+	categoryNodes: EntryCategoryNode[];
+	selectedCategoryId?: string;
+	onCategorySelect: (categoryId: string) => void;
 }
 
 const EntryTreeSection = (props: EntryTreeSectionProps) => {
-	const { sidebarNodes, selectedTableName, onTableSelect } = props;
+	const { categoryNodes, selectedCategoryId, onCategorySelect } = props;
 	const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
 	const [treeSearchKeyword, setTreeSearchKeyword] = useState("");
 
-	const filteredSidebarNodes = getFilteredSidebarNodes(
-		sidebarNodes,
+	const filteredCategoryNodes = getFilteredCategoryNodes(
+		categoryNodes,
 		treeSearchKeyword,
 	);
 
 	/**
-	 * @event tree에서 선택한 table key를 route search용 tableName으로 변환
+	 * @event tree에서 선택한 category key를 route search용 categoryId로 변환
 	 */
 	const handleTreeSelect: UiTreeProps["onSelect"] = (keys, _info) => {
 		const selectedKey = keys[0];
-		if (typeof selectedKey !== "string" || !selectedKey.startsWith("table:")) {
+		if (typeof selectedKey !== "string" || !selectedKey.startsWith("category:")) {
 			return;
 		}
 
-		onTableSelect(selectedKey.replace("table:", ""));
+		onCategorySelect(selectedKey.replace("category:", ""));
 	};
 
 	return (
@@ -98,17 +96,17 @@ const EntryTreeSection = (props: EntryTreeSectionProps) => {
 				onChange={(event) => setTreeSearchKeyword(event.target.value)}
 			/>
 
-			<Activity mode={filteredSidebarNodes.length > 0 ? "visible" : "hidden"}>
+			<Activity mode={filteredCategoryNodes.length > 0 ? "visible" : "hidden"}>
 				<UiTree
-					treeData={filteredSidebarNodes.map(mapEntryNodeToTreeData)}
+					treeData={filteredCategoryNodes.map(mapEntryNodeToTreeData)}
 					expandedKeys={expandedKeys}
-					selectedKeys={selectedTableName ? [`table:${selectedTableName}`] : []}
+					selectedKeys={selectedCategoryId ? [`category:${selectedCategoryId}`] : []}
 					onExpand={(keys) => setExpandedKeys(keys.map(String))}
 					onSelect={handleTreeSelect}
 				/>
 			</Activity>
 
-			<Activity mode={filteredSidebarNodes.length > 0 ? "hidden" : "visible"}>
+			<Activity mode={filteredCategoryNodes.length > 0 ? "hidden" : "visible"}>
 				<UiEmpty description="No matching results" />
 			</Activity>
 		</section>
@@ -128,34 +126,32 @@ export const RouteComponent = () => {
 	/**
 	 * @api tree sidebar 조회 API
 	 */
-	const responseContentFolderGetListSuspense =
-		useContentFolderGetListSuspense<EntryTreeSelectData>();
+	const responseEntryTreeSuspense = useEntryTreeSuspense<EntryTreeSelectData>();
 
 	/**
-	 * @api table contents 조회 API
+	 * @api entry 목록 조회 API
 	 */
-	const responseContentManagerSearchContents =
-		useContentManagerSearchContents<ContentListSelectData>();
+	const responseEntryListSuspense = useEntryListSuspense<EntryListSelectData>();
 
 	/**
-	 * @event tree에서 선택한 테이블로 route search를 갱신
+	 * @event tree에서 선택한 category로 route search를 갱신
 	 */
-	const handleTableSelect: EntryTreeSectionProps["onTableSelect"] = (tableName) => {
+	const handleCategorySelect: EntryTreeSectionProps["onCategorySelect"] = (categoryId) => {
 		void navigate({
-			to: "/project/content-manager/entries",
-			search: { page: search.page, size: search.size, table: tableName },
+			to: "/entries",
+			search: { page: search.page, size: search.size, categoryId },
 		});
 	};
 
 	return (
 		<div className="entry-layout">
 			<EntryTreeSection
-				sidebarNodes={responseContentFolderGetListSuspense.data.sidebarNodes}
-				selectedTableName={search.table}
-				onTableSelect={handleTableSelect}
+				categoryNodes={responseEntryTreeSuspense.data.categoryNodes}
+				selectedCategoryId={search.categoryId}
+				onCategorySelect={handleCategorySelect}
 			/>
 			<EntryTableSection
-				contents={responseContentManagerSearchContents.data?.contents}
+				entries={responseEntryListSuspense.data?.entries}
 			/>
 		</div>
 	);

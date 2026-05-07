@@ -14,19 +14,19 @@ tags: screen, derived-values, origin
 **Incorrect (화면 상단에서 파생값과 별칭을 누적):**
 
 ```ts
-const tableInfoData = responseContentManagerGetTableInfo.data;
+const entrySchemaData = responseEntrySchema.data;
 const hasSelectedRows = selectedRows.length > 0;
-const selectedTableNameForQuery = selectedEntryTableState.selectedTableNode?.tableName;
+const selectedCategoryIdForQuery = selectedCategoryState.selectedCategoryNode?.id;
 ```
 
 **Correct (사용 지점 가까이에서 계산):**
 
 ```ts
 /**
- * @api content 목록 조회 API
+ * @api entry 목록 조회 API
  */
-const responseContentManagerSearchContents = useContentManagerSearchContentsSuspense({
-  tableName: selectedEntryTableState.selectedTableNode?.tableName,
+const responseEntryListSuspense = useEntryListSuspense({
+  categoryId: selectedCategoryState.selectedCategoryNode?.id,
 });
 ```
 

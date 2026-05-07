@@ -9,13 +9,26 @@ tags: screen, utils, extraction
 
 **Impact: HIGH (route 파일이 자기 계약이 없는 helper 조각으로 분해되는 것을 막음)**
 
-화면 support code는 React state와 직접 결합되지 않고, 입력/출력 계약이 분명하며, 밖으로 빼면 entry flow가 더 읽기 쉬워질 때만 추출합니다.
-옮기기로 결정한 경우 기본 목적지는 sibling `page.ts`이고, `page.ts`도 named export/direct import를 우선합니다.
-반대로 작은 1회성 guard, 사용 지점 바로 옆이 더 읽기 쉬운 계산, hook context에 붙어 있어야 의미가 분명한 동기화 로직은 `page.tsx`에 남깁니다.
-이 규칙은 `page.ts` 안에서 export 경계를 어디까지 둘지에 대한 규칙입니다. 같은 support module 안의 반복은 기본적으로 한 exported 함수 안에 유지하고, 같은 단계가 여러 exported 함수에서 그대로 반복되거나 이름 붙은 도메인 규칙으로 읽힐 때만 private helper를 검토합니다. export helper가 또 다른 export helper만 위해 존재하는 구조는 피합니다.
-`page.ts`나 `_local/*.ts`에 한 component만 쓰는 private helper를 쌓는 것도 피합니다. URL 문자열 조립, query filter trim, 단순 API response mapper, mutation error fallback처럼 호출 위치에서 한두 단계로 읽히는 코드는 component나 handler 본문에 둡니다.
-`helper.ts`, `helpers.ts`, `utils.ts`, `common.ts` 같은 generic 파일명은 feature 안에서 만들지 않습니다.
-`queryClient.invalidateQueries`처럼 hook 컨텍스트에 붙어 있어야 더 읽기 쉬운 동기화 로직은 handler/effect에 남기고, support module 바깥 여러 모듈이 같은 함수를 직접 import해야 할 때만 `shared/util.ts`의 `util.*`나 별도 owner module 승격을 검토합니다.
+화면 support code는 "이름 붙일 수 있다"가 아니라 "경계가 있다"일 때만 추출합니다.
+
+추출 후보:
+
+- React state/hook과 직접 결합되지 않은 pure function
+- 입력/출력 계약이 명확한 화면 전용 변환, preset, option, column meta
+- 밖으로 빼면 route entry의 response, state, handler, render flow가 더 잘 보이는 코드
+- 여러 exported 함수에서 같은 단계가 반복되는 이름 있는 도메인 규칙
+
+남길 것:
+
+- 작은 1회성 guard, URL 조립, `trim() || undefined` 같은 호출 지점 계산
+- handler/effect 안에 있어야 문맥이 보이는 query invalidation, navigation, fallback 처리
+- 한 component나 한 query `select`만 쓰는 작은 mapper
+
+배치:
+
+- route sibling `page.ts`에 named export로 둡니다.
+- `helper.ts`, `helpers.ts`, `utils.ts`, `common.ts` 같은 generic 파일명은 만들지 않습니다.
+- support module 안에서도 작은 private helper를 쌓지 말고, 기본은 한 exported 함수 안에서 단계별로 정리합니다.
 
 **Incorrect (작은 화면 전용 계산을 generic util 파일로 뺌):**
 
@@ -35,21 +48,21 @@ export const normalizeEntryValues = (formValues: EntryFormValues) => {
 	// ...
 };
 
-export const buildEntryMediaRequests = (files: WgMediaUploaderFile[]) => {
+export const buildEntryUploadRequests = (files: UploadFile[]) => {
 	// ...
 };
 
 export const mergeEntryPayload = (
 	values: EntryFormValues,
-	mediaRequests: UpsertMediaFileRequest[],
+	uploadRequests: SaveUploadRequest[],
 ) => {
 	// ...
 };
 
-export const buildEntryPayload = (formValues: EntryFormValues, files: WgMediaUploaderFile[]) => {
+export const buildEntryPayload = (formValues: EntryFormValues, files: UploadFile[]) => {
 	return mergeEntryPayload(
 		normalizeEntryValues(formValues),
-		buildEntryMediaRequests(files),
+		buildEntryUploadRequests(files),
 	);
 };
 ```
@@ -59,7 +72,8 @@ export const buildEntryPayload = (formValues: EntryFormValues, files: WgMediaUpl
 ```tsx
 const readOptionalFilter = (value: string) => value.trim() || undefined;
 
-const buildEditHref = ({editHrefBase, row}: {editHrefBase: string; row: EntryRow}) => `${editHrefBase}${row.id}/`;
+const buildEditHref = ({ editHrefBase, row }: { editHrefBase: string; row: EntryRow }) =>
+	`${editHrefBase}${row.id}/`;
 
 export const EntryTable = (props: EntryTableProps) => {
 	const responseEntriesQuery = useListEntries({
@@ -77,9 +91,9 @@ export const EntryTable = (props: EntryTableProps) => {
 ```ts
 // page.ts
 /**
- * @helper folder tree 응답을 화면용 node shape로 정규화
+ * @helper tree 응답을 화면용 node shape로 정규화
  */
-export const normalizeFolderTreeNodes = (nodes: ContentFolderNodeResponse[]) => {
+export const normalizeTreeNodes = (nodes: TreeNodeResponse[]) => {
   return nodes.map((node) => ({
     id: node.id,
     name: node.name,
@@ -93,8 +107,8 @@ export const normalizeFolderTreeNodes = (nodes: ContentFolderNodeResponse[]) => 
  * @event 저장 요청 후 목록 query를 무효화
  */
 const handleSave = async () => {
-  await mutationContentTypeUpsert.mutateAsync({ data: request });
-  await queryClient.invalidateQueries({ queryKey: ["content-type-list"] });
+  await mutationEntrySave.mutateAsync({ data: request });
+  await queryClient.invalidateQueries({ queryKey: ["entry-list"] });
 };
 ```
 
@@ -106,10 +120,10 @@ const handleSave = async () => {
  */
 export const buildEntryPayload = (
 	formValues: EntryFormValues,
-	files: WgMediaUploaderFile[],
+	files: UploadFile[],
 ) => {
 	// 1. formValues 정규화
-	// 2. media request 조립
+	// 2. upload request 조립
 	// 3. payload 병합
 	return {
 		// ...
@@ -121,11 +135,16 @@ export const buildEntryPayload = (
 
 ```tsx
 export const EntryTable = (props: EntryTableProps) => {
-	const responseEntriesQuery = useListEntries({
+	const { editHrefBase, filters } = props;
+	const responseEntriesQuery = useListEntriesSuspense({
 		q: filters.q.trim() || undefined,
 	});
 
-	return <a href={`${props.editHrefBase}${row.id}/`}>{row.title}</a>;
+	return responseEntriesQuery.data.map((row) => (
+		<a href={`${editHrefBase}${row.id}/`} key={row.id}>
+			{row.title}
+		</a>
+	));
 };
 ```
 

@@ -30,33 +30,32 @@ const navigate = useNavigate();
 const search = Route.useSearch();
 
 /**
- * @api content type 목록 조회 API
+ * @api entry 목록 조회 API
  */
-const responseContentTypeGetListSuspense = useContentTypeGetListSuspense({
-  projectId,
+const responseEntryListSuspense = useEntryListSuspense({
   page: search.page,
 });
 
 /**
- * @api content type 저장 API
+ * @api entry 저장 API
  */
-const mutationContentTypeUpsert = useContentTypeUpsert();
+const mutationEntrySave = useEntrySave();
 
 /**
- * @event 선택된 테이블 저장 후 현재 화면 흐름을 유지한 채 route search를 갱신
+ * @event entry 저장 후 현재 화면 흐름을 유지한 채 route search를 갱신
  */
 const handleSubmitButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
-  await mutationContentTypeUpsert.mutateAsync({ data: request });
+  await mutationEntrySave.mutateAsync({ data: request });
   void navigate({
-    to: "/content-type-builder",
+    to: "/entries",
     search: { ...search, page: 1 },
   });
 };
 
 return (
   <Fragment>
-    <ContentTypeFilterSection />
-    <ContentTypeTableSection onSubmit={handleSubmitButtonClick} />
+    <EntryFilterSection />
+    <EntryListSection onSubmit={handleSubmitButtonClick} />
   </Fragment>
 );
 ```

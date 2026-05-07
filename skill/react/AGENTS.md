@@ -170,11 +170,11 @@ const request = buildMediaUploadPayload(files);
 **Incorrect (view 레이어와 화면 전용 로직이 섞임):**
 
 ```tsx
-// <component-root>/ui/button/ui-delete-table-button.tsx
-const UiDeleteTableButton = () => {
+// <component-root>/ui/button/ui-delete-entry-button.tsx
+const UiDeleteEntryButton = () => {
   const navigate = useNavigate();
 
-  return <button onClick={() => void navigate({ to: "/tables" })}>삭제</button>;
+  return <button onClick={() => void navigate({ to: "/entries" })}>삭제</button>;
 };
 ```
 
@@ -205,10 +205,10 @@ export const WgEntryToolbar = (props: WgEntryToolbarProps) => {
 ```
 
 ```tsx
-// <route-root>/tables/-local/delete-table-button.tsx
-const DeleteTableButton = () => {
+// <route-root>/entries/-local/delete-entry-button.tsx
+const DeleteEntryButton = () => {
   const navigate = useNavigate();
-  return <UiButton onClick={() => void navigate({ to: "/tables" })} />;
+  return <UiButton onClick={() => void navigate({ to: "/entries" })} />;
 };
 ```
 
@@ -349,17 +349,17 @@ Props 콜백 구현 시에는 Props 시그니처를 재사용하고, API 응답 
 **Incorrect (같은 계약을 새 타입으로 다시 정의):**
 
 ```ts
-interface PermissionMemberEditValues {
+interface EntrySummaryValues {
   id: number;
-  name: string;
-  role: string;
+  title: string;
+  status: string;
 }
 ```
 
 **Correct (기존 계약을 직접 재사용):**
 
 ```ts
-type PermissionGroupAdminSummary = Pick<PermissionGroupAdminResponse, "id" | "name">;
+type EntrySummary = Pick<EntrySummaryResponse, "id" | "title">;
 
 /**
  * @event 링크 클릭 기본 이동 차단
@@ -445,35 +445,26 @@ explicit variant는 standalone component여도 되고, 이렇게 compound compon
 
 **Impact: HIGH (helps shared components choose the simplest structure that still exposes the right extension points)**
 
-shared component를 설계할 때는 처음부터 모든 것을 하나의 거대한 component에 몰아넣지 않습니다.  
-먼저 고정 구조인지, part 조립이 필요한지, shared state가 필요한지, 같은 조합이 반복되는지를 보고 가장 단순한 구조를 고릅니다.
-
-문서에서는 `composition`을 상위 원칙으로만 사용합니다.  
-실전 선택 단위는 `single component`, `compound component`, `explicit variant component`입니다.  
-`X.Root`, `X.Header`, `X.Footer`처럼 part를 조립하는 구조는 넓게 `compound component`로 보고, shared state, action, context가 없으면 `stateless compound component`, 있으면 `stateful compound component`로 구분합니다.
+shared component는 props보다 구조를 먼저 고릅니다.
+고정 UI, public part 조립, shared state/action/context, 반복 preset 중 무엇이 필요한지 순서대로 봅니다.
 
 **빠른 선택표**
 
-| 상황 | 기본 선택 |
+| 상황 | 선택 |
 | --- | --- |
-| 한 화면 안에서만 쓰는 고정 UI | `single component` 또는 route-local JSX |
-| part를 조립해야 하지만 shared state, action, context는 없음 | `stateless compound component` |
-| part를 조립하고 여러 part가 같은 state, action, context를 읽음 | `stateful compound component` |
-| 같은 raw compound 조합이 여러 곳에서 반복됨 | `explicit variant component` |
+| 고정 UI | `single component` 또는 route-local JSX |
+| part 조립만 필요함 | `stateless compound component` |
+| 여러 part가 같은 state/action/context를 읽음 | `stateful compound component` |
+| 같은 compound 조합이 반복됨 | `explicit variant component` |
 | parent가 runtime 데이터를 child 콜백에 밀어줘야 함 | `render prop` |
 
-문서에서는 `WorkspaceSection.Root/Header/Footer` 같은 구조도 stateless compound component로 다룹니다.  
-dot notation은 흔한 이름 조직 방식이지만 필수는 아니고, 중요한 점은 part를 조립하는 public surface를 같은 가족으로 유지하는 것입니다.  
-나중에 state가 필요해지면 같은 public 이름을 유지한 채 context만 추가해 stateful compound component로 확장합니다.
-
-public part도 무조건 많이 노출하지 않습니다.  
-`Header`, `Footer`, `Content`, `Trigger`처럼 소비자가 이름으로 조립해야 하는 의미 있는 영역이거나, shared context를 직접 읽는 part만 공개 part로 올립니다.  
-단순 class wrapper나 내부 레이아웃 보정용 DOM은 내부 구현으로 숨깁니다.
+public part는 소비자가 이름으로 조립해야 하거나 shared context/action을 직접 쓰는 영역만 공개합니다.
+단순 class wrapper, spacing 보정 DOM, 내부 layout helper는 숨깁니다. stateless compound에 state가 필요해지면 public 이름은 유지하고 context만 추가합니다.
 
 **Incorrect (single component, compound component, explicit variant의 경계를 구분하지 않고 하나의 component에 몰아넣음):**
 
 ```tsx
-export interface WgProfileDialogProps {
+export interface ProfileDialogProps {
 	isCompact?: boolean;
 	showActivity?: boolean;
 	showFocus?: boolean;
@@ -481,7 +472,7 @@ export interface WgProfileDialogProps {
 	renderFooter?: () => ReactNode;
 }
 
-export const WgProfileDialog = (props: WgProfileDialogProps) => {
+export const ProfileDialog = (props: ProfileDialogProps) => {
 	const { isCompact, showActivity, showFocus, dialogTitle, renderFooter } = props;
 
 	return (
@@ -503,16 +494,16 @@ boolean branch, optional slot, render prop, fixed variant를 한 component에 �
 **Correct (고정 구조면 single component로 유지):**
 
 ```tsx
-export interface WorkspaceEmptyStateProps {
+export interface EmptyStateProps {
 	title: string;
 	description: string;
 }
 
-export const WorkspaceEmptyState = (props: WorkspaceEmptyStateProps) => {
+export const EmptyState = (props: EmptyStateProps) => {
 	const { title, description } = props;
 
 	return (
-		<section className="workspace-empty-state">
+		<section className="empty-state">
 			<EmptyFolderIllustration />
 			<h2>{title}</h2>
 			<p>{description}</p>
@@ -524,29 +515,29 @@ export const WorkspaceEmptyState = (props: WorkspaceEmptyStateProps) => {
 **Correct (구조를 열어야 하면 stateless compound component로 시작):**
 
 ```tsx
-export interface WorkspaceSectionProps {
+export interface SectionProps {
 	children: ReactNode;
 }
 
-const WorkspaceSectionRoot = (props: WorkspaceSectionProps) => {
+const SectionRoot = (props: SectionProps) => {
 	const { children } = props;
-	return <section className="workspace-section">{children}</section>;
+	return <section className="section">{children}</section>;
 };
 
-const WorkspaceSectionHeader = (props: WorkspaceSectionProps) => {
+const SectionHeader = (props: SectionProps) => {
 	const { children } = props;
-	return <header className="workspace-section-header">{children}</header>;
+	return <header className="section__header">{children}</header>;
 };
 
-const WorkspaceSectionFooter = (props: WorkspaceSectionProps) => {
+const SectionFooter = (props: SectionProps) => {
 	const { children } = props;
-	return <footer className="workspace-section-footer">{children}</footer>;
+	return <footer className="section__footer">{children}</footer>;
 };
 
-export const WorkspaceSection = {
-	Root: WorkspaceSectionRoot,
-	Header: WorkspaceSectionHeader,
-	Footer: WorkspaceSectionFooter,
+export const Section = {
+	Root: SectionRoot,
+	Header: SectionHeader,
+	Footer: SectionFooter,
 } as const;
 ```
 
@@ -586,7 +577,7 @@ const TabsPanel = (props: TabsPanelProps) => {
 **Correct (같은 family 조합이 반복되면 explicit variant로 감쌈):**
 
 ```tsx
-export const MemberProfileDialog = () => {
+export const ReadOnlyProfileDialog = () => {
 	return (
 		<Dialog.Root>
 			<Dialog.Trigger>View profile</Dialog.Trigger>
@@ -608,18 +599,18 @@ render prop은 parent가 child에 item, index, state 같은 runtime 데이터를
 **Incorrect (정적인 구조를 render prop으로 조립):**
 
 ```tsx
-export interface WorkspaceSectionProps {
+export interface PanelProps {
 	renderHeader?: () => ReactNode;
 	renderFooter?: () => ReactNode;
 }
 
-export const WorkspaceSection = (props: WorkspaceSectionProps) => {
+export const Panel = (props: PanelProps) => {
 	const { renderHeader, renderFooter } = props;
 
 	return (
-		<section className="workspace-section">
+		<section className="panel">
 			{renderHeader?.()}
-			<MemberList />
+			<ItemList />
 			{renderFooter?.()}
 		</section>
 	);
@@ -629,58 +620,58 @@ export const WorkspaceSection = (props: WorkspaceSectionProps) => {
 **Correct (children과 namespaced slot part로 구조를 드러냄):**
 
 ```tsx
-export interface WorkspaceSectionProps {
+export interface PanelProps {
 	children: ReactNode;
 }
 
-const WorkspaceSectionRoot = (props: WorkspaceSectionProps) => {
+const PanelRoot = (props: PanelProps) => {
 	const { children } = props;
-	return <section className="workspace-section">{children}</section>;
+	return <section className="panel">{children}</section>;
 };
 
-const WorkspaceSectionHeader = (props: WorkspaceSectionProps) => {
+const PanelHeader = (props: PanelProps) => {
 	const { children } = props;
-	return <header className="workspace-section-header">{children}</header>;
+	return <header className="panel__header">{children}</header>;
 };
 
-const WorkspaceSectionFooter = (props: WorkspaceSectionProps) => {
+const PanelFooter = (props: PanelProps) => {
 	const { children } = props;
-	return <footer className="workspace-section-footer">{children}</footer>;
+	return <footer className="panel__footer">{children}</footer>;
 };
 
-export const WorkspaceSection = {
-	Root: WorkspaceSectionRoot,
-	Header: WorkspaceSectionHeader,
-	Footer: WorkspaceSectionFooter,
+export const Panel = {
+	Root: PanelRoot,
+	Header: PanelHeader,
+	Footer: PanelFooter,
 } as const;
 
-export const WorkspaceSettingsScreen = () => {
+export const EntryScreen = () => {
 	return (
 		<>
-			<WorkspaceSection.Root>
-				<WorkspaceSection.Header>
-					<h2>Members</h2>
-					<MemberSearchField />
-				</WorkspaceSection.Header>
-				<MemberList />
-				<WorkspaceSection.Footer>
+			<Panel.Root>
+				<Panel.Header>
+					<h2>Entries</h2>
+					<EntrySearchField />
+				</Panel.Header>
+				<EntryList />
+				<Panel.Footer>
 					<Pagination />
-				</WorkspaceSection.Footer>
-			</WorkspaceSection.Root>
+				</Panel.Footer>
+			</Panel.Root>
 
-			<WorkspaceSection.Root>
-				<WorkspaceSection.Header>
-					<h2>Invite members</h2>
-				</WorkspaceSection.Header>
-				<InviteMemberForm />
-			</WorkspaceSection.Root>
+			<Panel.Root>
+				<Panel.Header>
+					<h2>Create entry</h2>
+				</Panel.Header>
+				<EntryCreateForm />
+			</Panel.Root>
 		</>
 	);
 };
 ```
 
 같은 shell을 재사용하지만 내부 구조는 화면마다 달라질 수 있다면 `stateless compound component`가 더 읽기 쉽습니다.  
-이 경우에는 `showFooter`, `showSearch`, `isInviteMode` 같은 boolean prop도 필요 없고, parent가 runtime 데이터를 child 함수에 밀어줄 이유도 없으므로 render prop보다 단순한 구조 조립이 맞습니다. `WorkspaceSection.Root/Header/Footer`처럼 dot notation으로 묶고, 나중에 state가 필요해지면 같은 이름을 유지한 채 context를 추가합니다.
+이 경우에는 `showFooter`, `showSearch`, `isCreateMode` 같은 boolean prop도 필요 없고, parent가 runtime 데이터를 child 함수에 밀어줄 이유도 없으므로 render prop보다 단순한 구조 조립이 맞습니다. `Panel.Root/Header/Footer`처럼 dot notation으로 묶고, 나중에 state가 필요해지면 같은 이름을 유지한 채 context를 추가합니다.
 
 ## 4. Component Structure and JSX
 
@@ -809,11 +800,11 @@ JSX에서는 명명된 핸들러 참조를 기본으로 하고, 아주 짧은 �
 ```tsx
 <UiButton
   onClick={async () => {
-    if (!selectedTable) {
+    if (!selectedEntry) {
       return;
     }
 
-    await mutationContentTypeRemove.mutateAsync({ params: { projectId } });
+    await mutationEntryRemove.mutateAsync({ params: { entryId: selectedEntry.id } });
     void navigate({ to: "/next" });
   }}
 />
@@ -823,13 +814,13 @@ JSX에서는 명명된 핸들러 참조를 기본으로 하고, 아주 짧은 �
 
 ```tsx
 /**
- * @event 선택된 테이블 삭제와 다음 화면 이동 처리
+ * @event 선택된 entry 삭제와 다음 화면 이동 처리
  */
-const handleRemoveTableButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
+const handleRemoveEntryButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
   // ...
 };
 
-<UiButton onClick={handleRemoveTableButtonClick} />;
+<UiButton onClick={handleRemoveEntryButtonClick} />;
 ```
 
 ### 4.5 Use ref Props Instead of New forwardRef Wrappers in React 19
@@ -939,10 +930,25 @@ Route entry 파일은 화면 흐름을 분명하게 보여줘야 하며, helper 
 
 **Impact: HIGH (추측성 추출 대신 실제 재사용 경계에 맞춰 route 코드를 유지함)**
 
-반복이 보인다는 이유만으로 즉시 공용 hook, 공용 컴포넌트, 공용 helper로 올리지 않습니다. 같은 화면, 같은 support module, 같은 exported 함수 안에서 비슷한 단계가 반복되더라도 기본은 한 함수 안에 유지합니다.
-같은 이름의 계약으로 여러 화면이나 모듈이 직접 호출해야 하는 경계가 분명해질 때만 공용화를 검토합니다. 그 전에는 section comment, 단계 구분 변수, 내부 블록으로 먼저 정리합니다. route-local component 추출도 예외가 아니며, 단순 layout wrapper가 아니라 실제 runtime boundary를 소유할 때만 검토합니다.
-custom hook도 예외가 아닙니다. hook 이름을 붙일 수 있다는 이유만으로 추출하지 말고, state/effect/context/form/store처럼 실제 React orchestration을 묶을 때만 hook 경계를 만듭니다.
-screen support module이나 React-adjacent `.ts` 파일에서도 같은 기준을 적용합니다. `readMutationFieldErrors`, `buildEditHref`, `mapResponseToRows`처럼 한 component, 한 handler, 한 query `select`만 위해 존재하는 작은 함수는 호출 위치에 둡니다. 함수 이름이 설명처럼 보이더라도 사용자가 실제 흐름을 따라가려고 파일 안을 왕복해야 한다면 추상화 비용이 더 큽니다.
+반복이 보인다는 이유만으로 공용 hook, component, helper를 만들지 않습니다.
+
+먼저 시도할 것:
+
+- 한 함수 안에서 단계 변수, section comment, 내부 블록으로 정리
+- route-local JSX에 남기고 흐름을 보이게 유지
+- 작은 mapper, href 조립, fallback 처리는 호출 위치에 유지
+
+추출할 수 있는 때:
+
+- 여러 화면/모듈이 같은 이름의 계약으로 직접 호출함
+- state/effect/context/form/store orchestration을 한 custom hook이 실제로 소유함
+- route-local component가 async/state/provider/interaction 같은 runtime boundary를 소유함
+
+금지:
+
+- 한 component, 한 handler, 한 query `select`만 쓰는 helper를 support module에 쌓기
+- export helper가 다른 export helper 하나만 위해 존재하는 구조
+- 이름이 그럴듯하다는 이유로 흐름을 파일 왕복으로 숨기기
 
 **Incorrect (반복만 보고 성급하게 추상화):**
 
@@ -958,16 +964,23 @@ const usePermissionB = () => {
 
 **Incorrect (component 하나만 쓰는 단계 helper를 support module에 남김):**
 
-```ts
-const buildEditHref = ({editHrefBase, row}: {editHrefBase: string; row: EntryRow}) => `${editHrefBase}${row.id}/`;
+```tsx
+const buildEditHref = ({ editHrefBase, row }: { editHrefBase: string; row: EntryRow }) =>
+	`${editHrefBase}${row.id}/`;
 
 const mapResponseToRows = (response: EntryListResponse) =>
-	response.data.map((entry) => ({id: entry.id, title: entry.title}));
+	response.data.map((entry) => ({ id: entry.id, title: entry.title }));
 
 export const EntryTable = (props: EntryTableProps) => {
-	const responseEntriesQuery = useListEntries<EntryRow[]>({}, {query: {select: mapResponseToRows}});
+	const responseEntriesQuery = useListEntriesSuspense<EntryRow[]>({}, {
+		query: { select: mapResponseToRows },
+	});
 
-	return responseEntriesQuery.data.map((row) => <a href={buildEditHref({editHrefBase: props.editHrefBase, row})}>{row.title}</a>);
+	return responseEntriesQuery.data.map((row) => (
+		<a href={buildEditHref({ editHrefBase: props.editHrefBase, row })} key={row.id}>
+			{row.title}
+		</a>
+	));
 };
 ```
 
@@ -979,16 +992,16 @@ export const EntryTable = (props: EntryTableProps) => {
 /**
  * @summary form state, 저장 mutation, 오류 노출을 함께 오케스트레이션하는 editor contract
  */
-export const useContentEditor = () => {
-  const form = useForm<ContentEditorFormValues>();
+export const useEntryEditor = () => {
+  const form = useForm<EntryEditorFormValues>();
 
   /**
-   * @api content 저장 API
+   * @api entry 저장 API
    */
-  const mutationContentSave = useContentSave();
+  const mutationEntrySave = useEntrySave();
   const [submitErrorMessage, setSubmitErrorMessage] = useState<string | null>(null);
 
-  return { form, mutationContentSave, setSubmitErrorMessage, submitErrorMessage };
+  return { form, mutationEntrySave, setSubmitErrorMessage, submitErrorMessage };
 };
 ```
 
@@ -1007,14 +1020,23 @@ export const buildEntryPayload = (formValues: EntryFormValues) => {
 
 **Correct (작은 query shaping과 href 조립은 사용 지점에 둠):**
 
-```ts
+```tsx
 export const EntryTable = (props: EntryTableProps) => {
-	const responseEntriesQuery = useListEntries<EntryRow[]>(
+	const responseEntriesQuery = useListEntriesSuspense<EntryRow[]>(
 		{},
-		{query: {select: (response) => response.data.map((entry) => ({id: entry.id, title: entry.title}))}},
+		{
+			query: {
+				select: (response) =>
+					response.data.map((entry) => ({ id: entry.id, title: entry.title })),
+			},
+		},
 	);
 
-	return responseEntriesQuery.data.map((row) => <a href={`${props.editHrefBase}${row.id}/`}>{row.title}</a>);
+	return responseEntriesQuery.data.map((row) => (
+		<a href={`${props.editHrefBase}${row.id}/`} key={row.id}>
+			{row.title}
+		</a>
+	));
 };
 ```
 
@@ -1022,18 +1044,16 @@ export const EntryTable = (props: EntryTableProps) => {
 
 **Impact: HIGH (route entry의 orchestration은 보이게 유지하면서도 async, state, interaction처럼 실제 경계가 있는 subtree는 안전하게 분리할 수 있게 함)**
 
-route entry에서 local component 추출 여부는 "한 구역처럼 보이느냐"가 아니라 `runtime boundary`를 소유하느냐로 판단합니다.  
-단순 layout wrapper, className grouping, 들여쓰기 감소만을 위한 local component는 만들지 않습니다.  
-반대로 아래 중 하나를 자기 subtree 안에서 직접 소유하면 route-local section component로 추출할 수 있습니다.
+route entry의 local component는 `runtime boundary`가 있을 때만 추출합니다.
+단순 layout wrapper, className grouping, 들여쓰기 감소만으로는 추출하지 않습니다.
 
-- async boundary: `Suspense`, skeleton, loading, error, empty state
-- state boundary: `useState`, `useReducer`, `useEffect` 같은 로컬 state와 동기화
-- provider boundary: form provider, context, scoped store
-- interaction boundary: popover, modal, selection, inline edit, drag, expandable tree
-- library boundary: `UiTable`, `UiTree`, editor, chart처럼 props와 render adapter가 빽빽한 위젯
-- performance boundary: virtualization, transition, deferred value, heavy memoized subtree
+추출 가능한 boundary:
 
-route entry는 여전히 화면 orchestration owner로 남습니다.  
+- async: `Suspense`, skeleton, loading, error, empty state
+- state/provider: local state, effect sync, form provider, context, scoped store
+- interaction: popover, modal, selection, inline edit, drag, expandable tree
+- library/performance: dense widget adapter, virtualization, transition, deferred value
+
 search param, navigation, page-level query/mutation, cross-section effect, invalidate, redirect, 여러 section에 걸친 파생값은 route entry에 둡니다.
 
 **Incorrect (layout wrapper만 분리해 route flow를 숨김):**
@@ -1059,8 +1079,8 @@ const EntryDetailPanel = () => {
 };
 
 export const RouteComponent = () => {
-	const responseContentFolderGetListSuspense = useContentFolderGetListSuspense();
-	const responseContentManagerSearchContents = useContentManagerSearchContents();
+	const responseEntryTreeSuspense = useEntryTreeSuspense();
+	const responseEntryListSuspense = useEntryListSuspense();
 
 	return (
 		<div className="entry-layout">
@@ -1077,31 +1097,31 @@ export const RouteComponent = () => {
 
 ```tsx
 interface EntryTreeSectionProps {
-	sidebarNodes: EntrySidebarNode[];
-	selectedTableName?: string;
-	onTableSelect: (tableName: string) => void;
+	categoryNodes: EntryCategoryNode[];
+	selectedCategoryId?: string;
+	onCategorySelect: (categoryId: string) => void;
 }
 
 const EntryTreeSection = (props: EntryTreeSectionProps) => {
-	const { sidebarNodes, selectedTableName, onTableSelect } = props;
+	const { categoryNodes, selectedCategoryId, onCategorySelect } = props;
 	const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
 	const [treeSearchKeyword, setTreeSearchKeyword] = useState("");
 
-	const filteredSidebarNodes = getFilteredSidebarNodes(
-		sidebarNodes,
+	const filteredCategoryNodes = getFilteredCategoryNodes(
+		categoryNodes,
 		treeSearchKeyword,
 	);
 
 	/**
-	 * @event tree에서 선택한 table key를 route search용 tableName으로 변환
+	 * @event tree에서 선택한 category key를 route search용 categoryId로 변환
 	 */
 	const handleTreeSelect: UiTreeProps["onSelect"] = (keys, _info) => {
 		const selectedKey = keys[0];
-		if (typeof selectedKey !== "string" || !selectedKey.startsWith("table:")) {
+		if (typeof selectedKey !== "string" || !selectedKey.startsWith("category:")) {
 			return;
 		}
 
-		onTableSelect(selectedKey.replace("table:", ""));
+		onCategorySelect(selectedKey.replace("category:", ""));
 	};
 
 	return (
@@ -1111,17 +1131,17 @@ const EntryTreeSection = (props: EntryTreeSectionProps) => {
 				onChange={(event) => setTreeSearchKeyword(event.target.value)}
 			/>
 
-			<Activity mode={filteredSidebarNodes.length > 0 ? "visible" : "hidden"}>
+			<Activity mode={filteredCategoryNodes.length > 0 ? "visible" : "hidden"}>
 				<UiTree
-					treeData={filteredSidebarNodes.map(mapEntryNodeToTreeData)}
+					treeData={filteredCategoryNodes.map(mapEntryNodeToTreeData)}
 					expandedKeys={expandedKeys}
-					selectedKeys={selectedTableName ? [`table:${selectedTableName}`] : []}
+					selectedKeys={selectedCategoryId ? [`category:${selectedCategoryId}`] : []}
 					onExpand={(keys) => setExpandedKeys(keys.map(String))}
 					onSelect={handleTreeSelect}
 				/>
 			</Activity>
 
-			<Activity mode={filteredSidebarNodes.length > 0 ? "hidden" : "visible"}>
+			<Activity mode={filteredCategoryNodes.length > 0 ? "hidden" : "visible"}>
 				<UiEmpty description="No matching results" />
 			</Activity>
 		</section>
@@ -1141,34 +1161,32 @@ export const RouteComponent = () => {
 	/**
 	 * @api tree sidebar 조회 API
 	 */
-	const responseContentFolderGetListSuspense =
-		useContentFolderGetListSuspense<EntryTreeSelectData>();
+	const responseEntryTreeSuspense = useEntryTreeSuspense<EntryTreeSelectData>();
 
 	/**
-	 * @api table contents 조회 API
+	 * @api entry 목록 조회 API
 	 */
-	const responseContentManagerSearchContents =
-		useContentManagerSearchContents<ContentListSelectData>();
+	const responseEntryListSuspense = useEntryListSuspense<EntryListSelectData>();
 
 	/**
-	 * @event tree에서 선택한 테이블로 route search를 갱신
+	 * @event tree에서 선택한 category로 route search를 갱신
 	 */
-	const handleTableSelect: EntryTreeSectionProps["onTableSelect"] = (tableName) => {
+	const handleCategorySelect: EntryTreeSectionProps["onCategorySelect"] = (categoryId) => {
 		void navigate({
-			to: "/project/content-manager/entries",
-			search: { page: search.page, size: search.size, table: tableName },
+			to: "/entries",
+			search: { page: search.page, size: search.size, categoryId },
 		});
 	};
 
 	return (
 		<div className="entry-layout">
 			<EntryTreeSection
-				sidebarNodes={responseContentFolderGetListSuspense.data.sidebarNodes}
-				selectedTableName={search.table}
-				onTableSelect={handleTableSelect}
+				categoryNodes={responseEntryTreeSuspense.data.categoryNodes}
+				selectedCategoryId={search.categoryId}
+				onCategorySelect={handleCategorySelect}
 			/>
 			<EntryTableSection
-				contents={responseContentManagerSearchContents.data?.contents}
+				entries={responseEntryListSuspense.data?.entries}
 			/>
 		</div>
 	);
@@ -1181,13 +1199,26 @@ export const RouteComponent = () => {
 
 **Impact: HIGH (route 파일이 자기 계약이 없는 helper 조각으로 분해되는 것을 막음)**
 
-화면 support code는 React state와 직접 결합되지 않고, 입력/출력 계약이 분명하며, 밖으로 빼면 entry flow가 더 읽기 쉬워질 때만 추출합니다.
-옮기기로 결정한 경우 기본 목적지는 sibling `page.ts`이고, `page.ts`도 named export/direct import를 우선합니다.
-반대로 작은 1회성 guard, 사용 지점 바로 옆이 더 읽기 쉬운 계산, hook context에 붙어 있어야 의미가 분명한 동기화 로직은 `page.tsx`에 남깁니다.
-이 규칙은 `page.ts` 안에서 export 경계를 어디까지 둘지에 대한 규칙입니다. 같은 support module 안의 반복은 기본적으로 한 exported 함수 안에 유지하고, 같은 단계가 여러 exported 함수에서 그대로 반복되거나 이름 붙은 도메인 규칙으로 읽힐 때만 private helper를 검토합니다. export helper가 또 다른 export helper만 위해 존재하는 구조는 피합니다.
-`page.ts`나 `_local/*.ts`에 한 component만 쓰는 private helper를 쌓는 것도 피합니다. URL 문자열 조립, query filter trim, 단순 API response mapper, mutation error fallback처럼 호출 위치에서 한두 단계로 읽히는 코드는 component나 handler 본문에 둡니다.
-`helper.ts`, `helpers.ts`, `utils.ts`, `common.ts` 같은 generic 파일명은 feature 안에서 만들지 않습니다.
-`queryClient.invalidateQueries`처럼 hook 컨텍스트에 붙어 있어야 더 읽기 쉬운 동기화 로직은 handler/effect에 남기고, support module 바깥 여러 모듈이 같은 함수를 직접 import해야 할 때만 `shared/util.ts`의 `util.*`나 별도 owner module 승격을 검토합니다.
+화면 support code는 "이름 붙일 수 있다"가 아니라 "경계가 있다"일 때만 추출합니다.
+
+추출 후보:
+
+- React state/hook과 직접 결합되지 않은 pure function
+- 입력/출력 계약이 명확한 화면 전용 변환, preset, option, column meta
+- 밖으로 빼면 route entry의 response, state, handler, render flow가 더 잘 보이는 코드
+- 여러 exported 함수에서 같은 단계가 반복되는 이름 있는 도메인 규칙
+
+남길 것:
+
+- 작은 1회성 guard, URL 조립, `trim() || undefined` 같은 호출 지점 계산
+- handler/effect 안에 있어야 문맥이 보이는 query invalidation, navigation, fallback 처리
+- 한 component나 한 query `select`만 쓰는 작은 mapper
+
+배치:
+
+- route sibling `page.ts`에 named export로 둡니다.
+- `helper.ts`, `helpers.ts`, `utils.ts`, `common.ts` 같은 generic 파일명은 만들지 않습니다.
+- support module 안에서도 작은 private helper를 쌓지 말고, 기본은 한 exported 함수 안에서 단계별로 정리합니다.
 
 **Incorrect (작은 화면 전용 계산을 generic util 파일로 뺌):**
 
@@ -1207,21 +1238,21 @@ export const normalizeEntryValues = (formValues: EntryFormValues) => {
 	// ...
 };
 
-export const buildEntryMediaRequests = (files: WgMediaUploaderFile[]) => {
+export const buildEntryUploadRequests = (files: UploadFile[]) => {
 	// ...
 };
 
 export const mergeEntryPayload = (
 	values: EntryFormValues,
-	mediaRequests: UpsertMediaFileRequest[],
+	uploadRequests: SaveUploadRequest[],
 ) => {
 	// ...
 };
 
-export const buildEntryPayload = (formValues: EntryFormValues, files: WgMediaUploaderFile[]) => {
+export const buildEntryPayload = (formValues: EntryFormValues, files: UploadFile[]) => {
 	return mergeEntryPayload(
 		normalizeEntryValues(formValues),
-		buildEntryMediaRequests(files),
+		buildEntryUploadRequests(files),
 	);
 };
 ```
@@ -1231,7 +1262,8 @@ export const buildEntryPayload = (formValues: EntryFormValues, files: WgMediaUpl
 ```tsx
 const readOptionalFilter = (value: string) => value.trim() || undefined;
 
-const buildEditHref = ({editHrefBase, row}: {editHrefBase: string; row: EntryRow}) => `${editHrefBase}${row.id}/`;
+const buildEditHref = ({ editHrefBase, row }: { editHrefBase: string; row: EntryRow }) =>
+	`${editHrefBase}${row.id}/`;
 
 export const EntryTable = (props: EntryTableProps) => {
 	const responseEntriesQuery = useListEntries({
@@ -1249,9 +1281,9 @@ export const EntryTable = (props: EntryTableProps) => {
 ```ts
 // page.ts
 /**
- * @helper folder tree 응답을 화면용 node shape로 정규화
+ * @helper tree 응답을 화면용 node shape로 정규화
  */
-export const normalizeFolderTreeNodes = (nodes: ContentFolderNodeResponse[]) => {
+export const normalizeTreeNodes = (nodes: TreeNodeResponse[]) => {
   return nodes.map((node) => ({
     id: node.id,
     name: node.name,
@@ -1265,8 +1297,8 @@ export const normalizeFolderTreeNodes = (nodes: ContentFolderNodeResponse[]) => 
  * @event 저장 요청 후 목록 query를 무효화
  */
 const handleSave = async () => {
-  await mutationContentTypeUpsert.mutateAsync({ data: request });
-  await queryClient.invalidateQueries({ queryKey: ["content-type-list"] });
+  await mutationEntrySave.mutateAsync({ data: request });
+  await queryClient.invalidateQueries({ queryKey: ["entry-list"] });
 };
 ```
 
@@ -1278,10 +1310,10 @@ const handleSave = async () => {
  */
 export const buildEntryPayload = (
 	formValues: EntryFormValues,
-	files: WgMediaUploaderFile[],
+	files: UploadFile[],
 ) => {
 	// 1. formValues 정규화
-	// 2. media request 조립
+	// 2. upload request 조립
 	// 3. payload 병합
 	return {
 		// ...
@@ -1293,11 +1325,16 @@ export const buildEntryPayload = (
 
 ```tsx
 export const EntryTable = (props: EntryTableProps) => {
-	const responseEntriesQuery = useListEntries({
+	const { editHrefBase, filters } = props;
+	const responseEntriesQuery = useListEntriesSuspense({
 		q: filters.q.trim() || undefined,
 	});
 
-	return <a href={`${props.editHrefBase}${row.id}/`}>{row.title}</a>;
+	return responseEntriesQuery.data.map((row) => (
+		<a href={`${editHrefBase}${row.id}/`} key={row.id}>
+			{row.title}
+		</a>
+	));
 };
 ```
 
@@ -1326,19 +1363,19 @@ export const util = {
 **Incorrect (화면 상단에서 파생값과 별칭을 누적):**
 
 ```ts
-const tableInfoData = responseContentManagerGetTableInfo.data;
+const entrySchemaData = responseEntrySchema.data;
 const hasSelectedRows = selectedRows.length > 0;
-const selectedTableNameForQuery = selectedEntryTableState.selectedTableNode?.tableName;
+const selectedCategoryIdForQuery = selectedCategoryState.selectedCategoryNode?.id;
 ```
 
 **Correct (사용 지점 가까이에서 계산):**
 
 ```ts
 /**
- * @api content 목록 조회 API
+ * @api entry 목록 조회 API
  */
-const responseContentManagerSearchContents = useContentManagerSearchContentsSuspense({
-  tableName: selectedEntryTableState.selectedTableNode?.tableName,
+const responseEntryListSuspense = useEntryListSuspense({
+  categoryId: selectedCategoryState.selectedCategoryNode?.id,
 });
 ```
 
@@ -1375,33 +1412,32 @@ const navigate = useNavigate();
 const search = Route.useSearch();
 
 /**
- * @api content type 목록 조회 API
+ * @api entry 목록 조회 API
  */
-const responseContentTypeGetListSuspense = useContentTypeGetListSuspense({
-  projectId,
+const responseEntryListSuspense = useEntryListSuspense({
   page: search.page,
 });
 
 /**
- * @api content type 저장 API
+ * @api entry 저장 API
  */
-const mutationContentTypeUpsert = useContentTypeUpsert();
+const mutationEntrySave = useEntrySave();
 
 /**
- * @event 선택된 테이블 저장 후 현재 화면 흐름을 유지한 채 route search를 갱신
+ * @event entry 저장 후 현재 화면 흐름을 유지한 채 route search를 갱신
  */
 const handleSubmitButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
-  await mutationContentTypeUpsert.mutateAsync({ data: request });
+  await mutationEntrySave.mutateAsync({ data: request });
   void navigate({
-    to: "/content-type-builder",
+    to: "/entries",
     search: { ...search, page: 1 },
   });
 };
 
 return (
   <Fragment>
-    <ContentTypeFilterSection />
-    <ContentTypeTableSection onSubmit={handleSubmitButtonClick} />
+    <EntryFilterSection />
+    <EntryListSection onSubmit={handleSubmitButtonClick} />
   </Fragment>
 );
 ```
@@ -1410,10 +1446,22 @@ return (
 
 **Impact: HIGH (route entry 파일이 preset과 순수 helper를 쌓기보다 orchestration에 집중하게 함)**
 
-이 규칙은 `screen-extract-utilities-selectively`에서 "route entry 밖으로 빼는 편이 더 낫다"라고 판단된 code를 어디에 둘지 정하는 규칙입니다.
-화면 전용 불변 설정, 옵션 목록, preset, 컬럼 메타, 순수 support function, 타입 선언은 route entry 상단에 쌓아두지 말고 기본적으로 같은 계층 `page.ts`로 이동합니다.
-route entry에는 state, response/mutation, handler, `useEffect`, 렌더링 흐름을 남기고, 작은 1회성 guard나 사용 지점 바로 옆이 더 읽기 쉬운 계산은 entry file에 남길 수 있습니다.
-즉, 추출 여부 자체를 강제하는 규칙이 아니라 추출하기로 한 screen-owned pure support code의 기본 목적지를 `page.ts`로 고정하는 규칙입니다. `page.ts`는 helper 저장소가 아니라 화면 전용 도메인 support module로 다루고, export는 도메인 단위 함수와 계약만 남깁니다. 처음부터 `entry-request.ts`, `entry-columns.ts`처럼 잘게 쪼개기보다 `page.ts`가 여러 독립 관심사로 커졌을 때만 추가 분리를 검토합니다.
+이 규칙은 추출하기로 결정한 화면 전용 pure support code의 목적지를 정합니다.
+
+`page.ts`로 옮길 것:
+
+- 화면 전용 불변 설정, 옵션 목록, preset, column meta
+- React hook 없이 동작하는 pure support function
+- 화면 전용 type/interface
+- 여러 줄로 커진 request/response shaping
+
+`page.tsx`에 남길 것:
+
+- response/mutation, state, handler, effect, render flow
+- 작은 1회성 guard와 사용 지점 옆이 더 빠른 계산
+- query invalidation, navigation처럼 hook context가 필요한 흐름
+
+`page.ts`는 helper 창고가 아니라 화면 전용 support module입니다. 처음부터 `*-request.ts`, `*-columns.ts`로 쪼개지 말고, `page.ts`가 여러 독립 관심사로 커졌을 때만 추가 분리를 검토합니다.
 
 **Incorrect (route entry 상단에 순수 지원 코드가 누적됨):**
 
@@ -1430,15 +1478,15 @@ const buildFileRequests = () => {
 **Incorrect (`page.ts` 안에서도 작은 단계마다 export helper를 늘림):**
 
 ```ts
-export const getEntryMediaUploadExtension = (fileName: string) => {
+export const getUploadFileExtension = (fileName: string) => {
 	// ...
 };
 
-export const formatEntryMediaUploadSizeMb = (bytes: number) => {
+export const formatUploadFileSizeMb = (bytes: number) => {
 	// ...
 };
 
-export const validateEntryMediaUploadFile = (file: EntryMediaUploadCandidate) => {
+export const validateUploadFile = (file: UploadFileCandidate) => {
 	// ...
 };
 ```
@@ -1448,34 +1496,34 @@ export const validateEntryMediaUploadFile = (file: EntryMediaUploadCandidate) =>
 ```tsx
 import { buildFileRequests } from "./page";
 
-const [mediaUploadFileListByColumn, setMediaUploadFileListByColumn] = useState({});
+const [uploadFilesByField, setUploadFilesByField] = useState({});
 
 /**
- * @api table info 조회 API
+ * @api entry form schema 조회 API
  */
-const responseContentManagerGetTableInfo = useContentManagerGetTableInfo();
+const responseEntryFormSchema = useEntryFormSchema();
 
 /**
  * @event 업로드 파일 목록으로 요청 payload 조립
  */
 const handleFormFinish = () => {
-  const request = buildFileRequests(mediaUploadFileListByColumn);
+  const request = buildFileRequests(uploadFilesByField);
   // ...
 };
 ```
 
 ```ts
 /**
- * @helper media column별 검증 규칙 생성
+ * @helper upload field별 검증 규칙 생성
  */
-export const getMediaColumnRules = () => {
+export const getUploadFieldRules = () => {
   // ...
 };
 
 /**
  * @helper 업로드 파일 목록을 저장 request 배열로 변환
  */
-export const buildFileRequests = (mediaUploadFileListByColumn: Record<string, unknown>) => {
+export const buildFileRequests = (uploadFilesByField: Record<string, unknown>) => {
   // ...
   return [];
 };
@@ -1487,7 +1535,7 @@ export const buildFileRequests = (mediaUploadFileListByColumn: Record<string, un
 /**
  * @helper 업로드 파일 유효성 검사를 단계별로 수행
  */
-export const validateEntryMediaUploadFile = (file: EntryMediaUploadCandidate) => {
+export const validateUploadFile = (file: UploadFileCandidate) => {
 	// 1. 파일 크기 확인
 	// 2. 확장자 확인
 	// 3. 확장자별 제한 확인
@@ -1499,7 +1547,7 @@ export const validateEntryMediaUploadFile = (file: EntryMediaUploadCandidate) =>
 
 ```tsx
 const isSubmitDisabled =
-	mutationContentTypeUpsert.isPending || mediaUploadFileList.length === 0;
+	mutationEntrySave.isPending || uploadFileList.length === 0;
 
 return <UiButton disabled={isSubmitDisabled}>저장</UiButton>;
 ```
@@ -1530,19 +1578,19 @@ const postProcess = () => {/* ... */};
 
 ```ts
 /**
- * @event 선택된 테이블 저장과 화면 이동 처리
+ * @event 선택된 entry 저장과 화면 이동 처리
  */
 const handleSubmitButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
-  if (!responseContentTypeGetListSuspense.data.selectedTable) {
+  if (!responseEntryListSuspense.data.selectedEntry) {
     return;
   }
 
-  if (mutationContentTypeUpsert.isPending) {
+  if (mutationEntrySave.isPending) {
     return;
   }
 
-  await mutationContentTypeUpsert.mutateAsync({ data: request });
-  void navigate({ to: "/content-type-builder" });
+  await mutationEntrySave.mutateAsync({ data: request });
+  void navigate({ to: "/entries" });
 };
 ```
 
@@ -1718,22 +1766,22 @@ const responseUserGetItemSuspense = useUserGetItemSuspense();
 **Incorrect (query와 mutation 바인딩 이름이 제각각임):**
 
 ```ts
-const tableList = useContentTypeGetListSuspense();
-const deleteTableApi = useContentTypeRemove();
+const list = useEntryListSuspense();
+const removeApi = useEntryRemove();
 ```
 
 **Correct (로컬 바인딩 접두사를 통일):**
 
 ```ts
 /**
- * @api content type 목록 조회 API
+ * @api entry 목록 조회 API
  */
-const responseContentTypeGetListSuspense = useContentTypeGetListSuspense();
+const responseEntryListSuspense = useEntryListSuspense();
 
 /**
- * @api content type 삭제 API
+ * @api entry 삭제 API
  */
-const mutationContentTypeRemove = useContentTypeRemove();
+const mutationEntryRemove = useEntryRemove();
 ```
 
 ### 7.5 Prefer React Compiler Defaults Over Manual Memoization
@@ -1753,7 +1801,7 @@ const columns = useMemo(() => buildColumns(response.data.columns), [response.dat
 **Correct (필요할 때만 이유를 적고 사용):**
 
 ```ts
-// 테이블 라이브러리가 columns 참조 동일성을 요구하여 리렌더 폭증을 방지한다.
+// list library가 columns 참조 동일성을 요구하여 리렌더 폭증을 방지한다.
 const columns = useMemo(() => buildColumns(response.data.columns), [response.data.columns]);
 ```
 
@@ -1766,14 +1814,14 @@ const columns = useMemo(() => buildColumns(response.data.columns), [response.dat
 **Incorrect (넓은 스코프 구조분해로 출처가 흐려짐):**
 
 ```ts
-const { tables, selectedTable } = responseContentTypeGetListSuspense.data;
+const { entries, selectedEntry } = responseEntryListSuspense.data;
 ```
 
 **Correct (원본 체이닝으로 출처를 유지):**
 
 ```tsx
-<UiList dataSource={responseContentTypeGetListSuspense.data.tables} />
-<UiTable dataSource={responseContentTypeGetListSuspense.data.selectedTable.columns} />
+<UiList dataSource={responseEntryListSuspense.data.entries} />
+<UiTable dataSource={responseEntryListSuspense.data.selectedEntry.fields} />
 ```
 
 ```ts
@@ -1781,12 +1829,12 @@ const { tables, selectedTable } = responseContentTypeGetListSuspense.data;
  * @watch 검색 응답이 비어 있을 때만 후속 동기화를 건너뜀
  */
 useEffect(() => {
-  const { data, isFetching } = responseContentManagerSearchContentsSuspense;
+  const { data, isFetching } = responseEntrySearchSuspense;
 
-  if (!isFetching && data.contents.length === 0) {
+  if (!isFetching && data.entries.length === 0) {
     return;
   }
-}, [responseContentManagerSearchContentsSuspense]);
+}, [responseEntrySearchSuspense]);
 ```
 
 ### 7.7 Shape React Query Data in query.select
@@ -2032,15 +2080,14 @@ React 경계 선언에는 companion skill인 `convention-typescript`의 annotati
 
 **Impact: MEDIUM (keeps compound public parts scannable as one named boundary instead of disconnected props and component declarations)**
 
-`Dialog.Root`, `Dialog.Trigger`, `Tabs.List`, `ProfileCard.Footer`처럼 public part를 노출하는 compound component는 각 part를 하나의 경계로 문서화합니다.  
-이때 props `interface`와 component 선언을 따로따로 설명하지 말고, props `interface` 바로 위에 `@part`와 `@description`을 둔 뒤 component를 바로 아래에 이어 붙입니다.  
-part 내부의 field는 `@field`, part 안에서 동작을 일으키는 handler는 `@event`로 설명합니다.
+compound component가 public part를 노출하면 part 단위로 문서화합니다.
 
-이 규칙은 특히 아래 상황에서 중요합니다.
+작성 방식:
 
-- `X.Root`, `X.Header`, `X.Footer`처럼 namespaced part를 public surface로 노출할 때
-- state 없는 compound component를 나중에 stateful compound component로 확장할 가능성이 있을 때
-- props `interface`와 component가 멀리 떨어지면 part 의미를 놓치기 쉬울 때
+- props `interface` 바로 위에 `@part`와 `@description`을 둡니다.
+- component 선언은 그 `interface` 바로 아래에 둡니다.
+- part field는 `@field`, part 내부 handler는 `@event`로 설명합니다.
+- 단순 내부 wrapper에는 public part 문서를 만들지 않습니다.
 
 **Incorrect (props와 component 설명이 분리되어 part 경계가 흐려짐):**
 
@@ -2063,6 +2110,10 @@ const DialogHeader = (props: DialogHeaderProps) => {
 
 	return <header className="dialog-header">{children}</header>;
 };
+
+export const Dialog = {
+	Header: DialogHeader,
+} as const;
 ```
 
 이 방식은 props shape와 component 역할을 따로 읽어야 해서 `Dialog.Header`라는 part 경계가 한눈에 들어오지 않습니다.
@@ -2153,19 +2204,28 @@ if (mutationFileUpload.isPending) {
 
 **Impact: MEDIUM-HIGH (중요한 API, handler, effect, 타입 선언을 더 쉽게 리뷰하고 재사용할 수 있게 함)**
 
-원격 API 경계를 넘는 helper나 query/mutation wrapper, 분기나 부수효과가 있는 이벤트 핸들러, 동기화 의도가 중요한 `useEffect`, 주요 유틸 함수, 커스텀 `type`과 `interface`, store 선언, compound component의 public part 선언, 그리고 예외적으로 사용하는 `useMemo`/`useCallback`에는 JSDoc을 작성합니다. annotation 태그 선택은 companion skill인 `convention-typescript`의 표준인 `@api`, `@event`, `@watch`, `@helper`, `@summary`, `@part`, `@description`, `@field`를 따릅니다.
-특히 route entry, screen entry, layout owner처럼 화면 흐름을 소유하는 경계에서 선언한 named query/mutation binding은 generated hook이라도 `@api`를 생략하지 않습니다. sibling `page.ts`나 route-local `*.ts`로 뺀 exported pure support function은 helper boundary로 보고 `@helper`를 붙입니다.
-상태 변수, 단순 prop destructuring, 자명한 local 파생값처럼 문맥상 의미가 분명한 선언에는 강제하지 않습니다.
+JSDoc은 경계를 설명할 때만 붙입니다. 자명한 local 변수에는 강제하지 않습니다.
+
+필수 대상:
+
+- route/screen/layout owner의 named query/mutation binding
+- 분기, async, navigation, invalidation을 가진 event handler
+- 동기화 의도가 중요한 `useEffect`
+- exported pure support function, custom hook, store 선언
+- public `type`/`interface`, compound component public part
+- 예외적으로 남긴 `useMemo`/`useCallback`
+
+태그는 `convention-typescript`의 `@api`, `@event`, `@watch`, `@helper`, `@summary`, `@part`, `@description`, `@field`를 사용합니다.
 
 **Incorrect (비자명한 경계 선언에 문맥 설명이 없음):**
 
 ```ts
-const handleRemoveTableButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
-  if (!selectedTable) {
+const handleRemoveEntryButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
+  if (!selectedEntry) {
     return;
   }
 
-  await mutationContentTypeRemove.mutateAsync({ params: { projectId } });
+  await mutationEntryRemove.mutateAsync({ params: { entryId } });
 };
 
 useEffect(() => {
@@ -2177,19 +2237,19 @@ useEffect(() => {
 
 ```ts
 /**
- * @api 테이블 삭제 API
+ * @api entry 삭제 API
  */
-const mutationContentTypeRemove = useContentTypeRemove();
+const mutationEntryRemove = useEntryRemove();
 
 /**
- * @event 선택된 테이블 삭제와 다음 화면 이동 처리
+ * @event 선택된 entry 삭제와 다음 화면 이동 처리
  */
-const handleRemoveTableButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
-  if (!selectedTable) {
+const handleRemoveEntryButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
+  if (!selectedEntry) {
     return;
   }
 
-  await mutationContentTypeRemove.mutateAsync({ params: { projectId } });
+  await mutationEntryRemove.mutateAsync({ params: { entryId } });
 };
 
 /**
@@ -2200,11 +2260,11 @@ useEffect(() => {
 }, [userData, resetForm]);
 
 /**
- * @helper 테이블 저장 요청 payload 생성
+ * @helper entry 저장 요청 payload 생성
  */
-export const buildContentTypePayload = (formValues: ContentTypeFormValues) => {
+export const buildEntryPayload = (formValues: EntryFormValues) => {
   return {
-    tableName: formValues.tableName.trim(),
+    title: formValues.title.trim(),
   };
 };
 ```

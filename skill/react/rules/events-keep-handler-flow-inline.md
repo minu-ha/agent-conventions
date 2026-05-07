@@ -25,18 +25,18 @@ const postProcess = () => {/* ... */};
 
 ```ts
 /**
- * @event 선택된 테이블 저장과 화면 이동 처리
+ * @event 선택된 entry 저장과 화면 이동 처리
  */
 const handleSubmitButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
-  if (!responseContentTypeGetListSuspense.data.selectedTable) {
+  if (!responseEntryListSuspense.data.selectedEntry) {
     return;
   }
 
-  if (mutationContentTypeUpsert.isPending) {
+  if (mutationEntrySave.isPending) {
     return;
   }
 
-  await mutationContentTypeUpsert.mutateAsync({ data: request });
-  void navigate({ to: "/content-type-builder" });
+  await mutationEntrySave.mutateAsync({ data: request });
+  void navigate({ to: "/entries" });
 };
 ```

@@ -9,10 +9,22 @@ tags: screen, routes, helpers, constants
 
 **Impact: HIGH (route entry 파일이 preset과 순수 helper를 쌓기보다 orchestration에 집중하게 함)**
 
-이 규칙은 `screen-extract-utilities-selectively`에서 "route entry 밖으로 빼는 편이 더 낫다"라고 판단된 code를 어디에 둘지 정하는 규칙입니다.
-화면 전용 불변 설정, 옵션 목록, preset, 컬럼 메타, 순수 support function, 타입 선언은 route entry 상단에 쌓아두지 말고 기본적으로 같은 계층 `page.ts`로 이동합니다.
-route entry에는 state, response/mutation, handler, `useEffect`, 렌더링 흐름을 남기고, 작은 1회성 guard나 사용 지점 바로 옆이 더 읽기 쉬운 계산은 entry file에 남길 수 있습니다.
-즉, 추출 여부 자체를 강제하는 규칙이 아니라 추출하기로 한 screen-owned pure support code의 기본 목적지를 `page.ts`로 고정하는 규칙입니다. `page.ts`는 helper 저장소가 아니라 화면 전용 도메인 support module로 다루고, export는 도메인 단위 함수와 계약만 남깁니다. 처음부터 `entry-request.ts`, `entry-columns.ts`처럼 잘게 쪼개기보다 `page.ts`가 여러 독립 관심사로 커졌을 때만 추가 분리를 검토합니다.
+이 규칙은 추출하기로 결정한 화면 전용 pure support code의 목적지를 정합니다.
+
+`page.ts`로 옮길 것:
+
+- 화면 전용 불변 설정, 옵션 목록, preset, column meta
+- React hook 없이 동작하는 pure support function
+- 화면 전용 type/interface
+- 여러 줄로 커진 request/response shaping
+
+`page.tsx`에 남길 것:
+
+- response/mutation, state, handler, effect, render flow
+- 작은 1회성 guard와 사용 지점 옆이 더 빠른 계산
+- query invalidation, navigation처럼 hook context가 필요한 흐름
+
+`page.ts`는 helper 창고가 아니라 화면 전용 support module입니다. 처음부터 `*-request.ts`, `*-columns.ts`로 쪼개지 말고, `page.ts`가 여러 독립 관심사로 커졌을 때만 추가 분리를 검토합니다.
 
 **Incorrect (route entry 상단에 순수 지원 코드가 누적됨):**
 
@@ -29,15 +41,15 @@ const buildFileRequests = () => {
 **Incorrect (`page.ts` 안에서도 작은 단계마다 export helper를 늘림):**
 
 ```ts
-export const getEntryMediaUploadExtension = (fileName: string) => {
+export const getUploadFileExtension = (fileName: string) => {
 	// ...
 };
 
-export const formatEntryMediaUploadSizeMb = (bytes: number) => {
+export const formatUploadFileSizeMb = (bytes: number) => {
 	// ...
 };
 
-export const validateEntryMediaUploadFile = (file: EntryMediaUploadCandidate) => {
+export const validateUploadFile = (file: UploadFileCandidate) => {
 	// ...
 };
 ```
@@ -47,34 +59,34 @@ export const validateEntryMediaUploadFile = (file: EntryMediaUploadCandidate) =>
 ```tsx
 import { buildFileRequests } from "./page";
 
-const [mediaUploadFileListByColumn, setMediaUploadFileListByColumn] = useState({});
+const [uploadFilesByField, setUploadFilesByField] = useState({});
 
 /**
- * @api table info 조회 API
+ * @api entry form schema 조회 API
  */
-const responseContentManagerGetTableInfo = useContentManagerGetTableInfo();
+const responseEntryFormSchema = useEntryFormSchema();
 
 /**
  * @event 업로드 파일 목록으로 요청 payload 조립
  */
 const handleFormFinish = () => {
-  const request = buildFileRequests(mediaUploadFileListByColumn);
+  const request = buildFileRequests(uploadFilesByField);
   // ...
 };
 ```
 
 ```ts
 /**
- * @helper media column별 검증 규칙 생성
+ * @helper upload field별 검증 규칙 생성
  */
-export const getMediaColumnRules = () => {
+export const getUploadFieldRules = () => {
   // ...
 };
 
 /**
  * @helper 업로드 파일 목록을 저장 request 배열로 변환
  */
-export const buildFileRequests = (mediaUploadFileListByColumn: Record<string, unknown>) => {
+export const buildFileRequests = (uploadFilesByField: Record<string, unknown>) => {
   // ...
   return [];
 };
@@ -86,7 +98,7 @@ export const buildFileRequests = (mediaUploadFileListByColumn: Record<string, un
 /**
  * @helper 업로드 파일 유효성 검사를 단계별로 수행
  */
-export const validateEntryMediaUploadFile = (file: EntryMediaUploadCandidate) => {
+export const validateUploadFile = (file: UploadFileCandidate) => {
 	// 1. 파일 크기 확인
 	// 2. 확장자 확인
 	// 3. 확장자별 제한 확인
@@ -98,7 +110,7 @@ export const validateEntryMediaUploadFile = (file: EntryMediaUploadCandidate) =>
 
 ```tsx
 const isSubmitDisabled =
-	mutationContentTypeUpsert.isPending || mediaUploadFileList.length === 0;
+	mutationEntrySave.isPending || uploadFileList.length === 0;
 
 return <UiButton disabled={isSubmitDisabled}>저장</UiButton>;
 ```

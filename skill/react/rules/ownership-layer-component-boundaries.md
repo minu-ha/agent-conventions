@@ -14,11 +14,11 @@ tags: ownership, ui, widget, local, naming
 **Incorrect (view 레이어와 화면 전용 로직이 섞임):**
 
 ```tsx
-// <component-root>/ui/button/ui-delete-table-button.tsx
-const UiDeleteTableButton = () => {
+// <component-root>/ui/button/ui-delete-entry-button.tsx
+const UiDeleteEntryButton = () => {
   const navigate = useNavigate();
 
-  return <button onClick={() => void navigate({ to: "/tables" })}>삭제</button>;
+  return <button onClick={() => void navigate({ to: "/entries" })}>삭제</button>;
 };
 ```
 
@@ -49,9 +49,9 @@ export const WgEntryToolbar = (props: WgEntryToolbarProps) => {
 ```
 
 ```tsx
-// <route-root>/tables/-local/delete-table-button.tsx
-const DeleteTableButton = () => {
+// <route-root>/entries/-local/delete-entry-button.tsx
+const DeleteEntryButton = () => {
   const navigate = useNavigate();
-  return <UiButton onClick={() => void navigate({ to: "/tables" })} />;
+  return <UiButton onClick={() => void navigate({ to: "/entries" })} />;
 };
 ```

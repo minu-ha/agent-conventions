@@ -14,17 +14,17 @@ Props 콜백 구현 시에는 Props 시그니처를 재사용하고, API 응답 
 **Incorrect (같은 계약을 새 타입으로 다시 정의):**
 
 ```ts
-interface PermissionMemberEditValues {
+interface EntrySummaryValues {
   id: number;
-  name: string;
-  role: string;
+  title: string;
+  status: string;
 }
 ```
 
 **Correct (기존 계약을 직접 재사용):**
 
 ```ts
-type PermissionGroupAdminSummary = Pick<PermissionGroupAdminResponse, "id" | "name">;
+type EntrySummary = Pick<EntrySummaryResponse, "id" | "title">;
 
 /**
  * @event 링크 클릭 기본 이동 차단

@@ -34,7 +34,7 @@
 - [skill/react/SKILL.md](./skill/react/SKILL.md) 같은 entrypoint는 스킬 activation guide이며, agent가 어떤 companion skill과 상세 문서를 추가로 읽어야 하는지 명시해야 합니다.
 - 일부 skill은 `metadata.json`의 `extends`로 companion skill 관계를 선언합니다.
 - `metadata.json`, [rules/_sections.md](./skill/react/rules/_sections.md), [README.md](./skill/react/README.md), [SKILL.md](./skill/react/SKILL.md)는 서로 설명이 어긋나지 않게 유지합니다.
-- 이전 단일 문서는 [deprecated/](./skill/react/deprecated/react.md)에 보관합니다.
+- 이전 단일 문서를 보존하지 않습니다. 오래된 단일 문서가 필요하면 Git history에서 확인하고, 현재 skill 판단은 `rules/*.md`와 compiled `AGENTS.md`만 기준으로 삼습니다.
 
 ### 2. Legacy Skill
 

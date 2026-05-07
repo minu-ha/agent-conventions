@@ -14,14 +14,14 @@ tags: state, origin, response, store
 **Incorrect (넓은 스코프 구조분해로 출처가 흐려짐):**
 
 ```ts
-const { tables, selectedTable } = responseContentTypeGetListSuspense.data;
+const { entries, selectedEntry } = responseEntryListSuspense.data;
 ```
 
 **Correct (원본 체이닝으로 출처를 유지):**
 
 ```tsx
-<UiList dataSource={responseContentTypeGetListSuspense.data.tables} />
-<UiTable dataSource={responseContentTypeGetListSuspense.data.selectedTable.columns} />
+<UiList dataSource={responseEntryListSuspense.data.entries} />
+<UiTable dataSource={responseEntryListSuspense.data.selectedEntry.fields} />
 ```
 
 ```ts
@@ -29,10 +29,10 @@ const { tables, selectedTable } = responseContentTypeGetListSuspense.data;
  * @watch 검색 응답이 비어 있을 때만 후속 동기화를 건너뜀
  */
 useEffect(() => {
-  const { data, isFetching } = responseContentManagerSearchContentsSuspense;
+  const { data, isFetching } = responseEntrySearchSuspense;
 
-  if (!isFetching && data.contents.length === 0) {
+  if (!isFetching && data.entries.length === 0) {
     return;
   }
-}, [responseContentManagerSearchContentsSuspense]);
+}, [responseEntrySearchSuspense]);
 ```
