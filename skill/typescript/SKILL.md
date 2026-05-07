@@ -68,7 +68,7 @@ metadata:
 
 - `docs-write-concise-korean-comments-about-purpose-and-constraints` - 목적과 제약을 짧은 한글 주석으로 설명
 - `docs-require-header-jsdoc-on-key-declarations` - 핵심 경계 선언에는 header JSDoc 요구
-- `docs-standardize-annotation-tags-by-declaration-role` - 선언 역할에 따라 `@api`, `@event`, `@watch`, `@helper`, `@summary`, `@field` 사용
+- `docs-standardize-annotation-tags-by-declaration-role` - 선언 역할에 따라 `@api`, `@event`, `@watch`, `@helper`, `@summary`, `@field`, `@part`, `@description` 사용
 - `docs-use-helper-for-reusable-pure-helper-functions` - 재사용 가능한 지원 함수에는 `@helper` 사용
 - `docs-keep-inline-comments-for-constraints-and-caveats` - inline comment는 비자명한 제약에만 사용
 

@@ -158,7 +158,7 @@ TypeScript skill을 수정하거나 새로운 rule을 추가했을 때, 실제 �
   - `functions-extract-helpers-only-when-the-boundary-is-real`
   - `functions-avoid-imperative-assembly-in-wide-scopes`
 - Prompt
-  - "API namespace 안에 `mapBookmarkToEntryView`, `readApiResponseHeaders`, `readOptionalDate` 같은 helper가 많아. TypeScript skill 기준으로 이해 비용이 낮게 정리해줘."
+  - "API namespace 안에 `mapRecordToEntryView`, `readApiResponseHeaders`, `readOptionalDate` 같은 helper가 많아. TypeScript skill 기준으로 이해 비용이 낮게 정리해줘."
 - Expected pass signals
   - 한 namespace method만 쓰는 mapper/helper는 호출 method 본문으로 접음
   - adapter의 한 단계 변환은 adapter 함수 본문에서 순서대로 보이게 둠

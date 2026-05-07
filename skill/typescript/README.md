@@ -12,7 +12,6 @@
 - `area-description.md` - 실제 rule 파일 패턴
 - [metadata.json](./metadata.json) - compiled guide 메타데이터
 - [AGENTS.md](./AGENTS.md) - 에이전트가 읽는 compiled 결과물
-- [deprecated/typescript.md](./deprecated/typescript.md) - 마이그레이션 검토용 legacy 단일 문서
 - [package/README.md](../../package/README.md) - `skill/*` build, validation, typecheck, test를 담당하는 standalone TypeScript npm package
 
 ## 시작하기
@@ -44,7 +43,7 @@
 2. 알맞은 area prefix를 고릅니다.
    - `naming-` - 식별자, import, `config`/`util` namespace, 오리진 보존 접근 규칙
    - `types-` - 함수 타입, callback 재사용, unused param, 타입 재사용, custom shape 문서화 규칙
-   - `functions-` - object param, enum 대체, lookup/정렬 불변성, `page.ts`/owner module/`shared/util.ts` 추출 규칙
+   - `functions-` - object param, enum 대체, lookup/정렬 불변성, owner module/`shared/util.ts` 추출 규칙
    - `absence-` - optional 값과 fallback 처리 규칙
    - `docs-` - 역할 기반 annotation 태그와 inline comment 규칙
    - `guardrails-` - 금지 shortcut과 review check 규칙
@@ -115,7 +114,7 @@ tags: tag1, tag2
 
 - [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`가 source of truth입니다.
 - [AGENTS.md](./AGENTS.md)는 에이전트가 먼저 읽는 compiled 문서입니다.
-- [deprecated/typescript.md](./deprecated/typescript.md)는 원래 단일 문서와 마이그레이션 완성도를 비교하기 위해 남겨 둡니다.
+- 예전 단일 문서는 보존하지 않습니다. 오래된 문맥은 Git history에서만 확인하고, 현재 판단은 source rule과 compiled guide만 기준으로 합니다.
 - 다른 TypeScript 기반 skill은 `metadata.json`의 `extends`로 이 skill을 companion 관계로 선언할 수 있습니다.
 - 공용 TypeScript build package는 raw CLI 형태와 per-skill alias를 모두 제공합니다.
 

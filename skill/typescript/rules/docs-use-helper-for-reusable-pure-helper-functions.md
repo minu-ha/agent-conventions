@@ -9,10 +9,19 @@ tags: helper, pure-functions, reuse
 
 **Impact: MEDIUM-HIGH (distinguishes reusable pure support logic from local implementation details or integration boundaries)**
 
-재사용 가능한 순수 helper, 문자열 조립 함수, 정규화 함수, 포맷 함수, 계약 변환 함수에는 `@helper`를 사용합니다.   
-한 함수나 한 support module 안에서만 쓰는 작은 단계 계산은 먼저 함수 안에 두고, 여러 call site가 공유하거나 밖으로 빼야 읽기 흐름이 명확해질 때만 helper로 승격합니다.   
-특히 support module 내부의 작은 sub-step마다 `@helper`를 붙여 export helper를 늘리지 않습니다. 반복이 보여도 기본은 local 정리이며, support module 바깥 여러 caller가 같은 helper를 직접 호출하기 전에는 helper 추출을 서두르지 않습니다.   
-이런 함수는 `shared/util.ts`의 `util.*`나 owner-named support module 아래에 둘 수 있으며, 외부 I/O 경계는 `@helper`가 아니라 `@api`로 표시합니다.
+`@helper`는 재사용 가능한 pure support function에만 붙입니다.
+
+사용 대상:
+
+- 여러 caller가 직접 호출하는 문자열 조립, 정규화, 포맷, 계약 변환 함수
+- owner-named support module의 domain-sized exported pure function
+- 여러 owner가 공유하는 `shared/util.ts`의 `util.*` 함수
+
+사용하지 않을 대상:
+
+- 외부 I/O, 원격 데이터, 파일 접근 같은 `@api` 경계
+- 한 함수나 한 support module 안에서만 쓰는 작은 sub-step
+- 반복이 보이지만 아직 caller surface가 넓지 않은 local 계산
 
 **Incorrect (외부 연동 함수나 단회성 계산을 helper로 혼동):**
 
@@ -33,6 +42,13 @@ const loadUserSettings = async (): Promise<string> => {
  */
 export const normalizeProfileValues = (formValues: ProfileFormValues) => {
 	return formValues;
+};
+
+/**
+ * @helper 프로필 저장 payload 조립
+ */
+export const buildProfilePayload = (formValues: ProfileFormValues) => {
+	return normalizeProfileValues(formValues);
 };
 ```
 

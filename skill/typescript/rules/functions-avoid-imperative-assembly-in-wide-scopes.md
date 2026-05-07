@@ -16,15 +16,15 @@ tags: imperative, scope, assembly
 ```ts
 let visibleTabs = ["overview"];
 
-if (canManageMembers) {
-	visibleTabs.push("members");
+if (canManageItems) {
+	visibleTabs.push("items");
 }
 ```
 
 **Correct (좁은 스코프에서 한 번에 계산):**
 
 ```ts
-const visibleTabs = canManageMembers
-	? ["overview", "members"]
+const visibleTabs = canManageItems
+	? ["overview", "items"]
 	: ["overview"];
 ```

@@ -144,7 +144,7 @@ const userProfileSchema = z.object({
 
 **Impact: HIGH (makes import ownership explicit without relying on barrels or ambiguous re-export layers)**
 
-`index.ts` 기반 barrel export를 만들지 않고 직접 export/import 구조를 유지합니다. 공용 설정과 공용 순수 함수는 각각 `shared/config.ts`, `shared/util.ts` 같은 공개 진입점으로 모으고, 타입 전용 import는 `import type`을 사용해 계약과 런타임 의존을 분리합니다. feature 전용 support code는 owner-named module이나 React route의 sibling `page.ts`처럼 소유자가 보이는 파일에서 named export를 직접 import합니다.
+`index.ts` 기반 barrel export를 만들지 않고 직접 export/import 구조를 유지합니다. 공용 설정과 공용 순수 함수는 각각 `shared/config.ts`, `shared/util.ts` 같은 공개 진입점으로 모으고, 타입 전용 import는 `import type`을 사용해 계약과 런타임 의존을 분리합니다. feature 전용 support code는 owner-named module처럼 소유자가 보이는 파일에서 named export를 직접 import합니다.
 
 **Incorrect (barrel과 혼합 import로 경계를 흐림):**
 
@@ -159,7 +159,7 @@ import type {UserProfile} from "@/shared/contracts";
 import {config} from "@/shared/config";
 import {util} from "@/shared/util";
 import {userProfileSchema} from "@/shared/schema";
-import {buildUserSaveRequest} from "./page";
+import {buildUserSaveRequest} from "./user-profile-support";
 ```
 
 ## 2. Types and Contracts
@@ -172,8 +172,12 @@ import {buildUserSaveRequest} from "./page";
 
 **Impact: CRITICAL (keeps domain-specific contracts understandable without digging through implementation details)**
 
-커스텀 `type`, `interface`, `z.object(...)`, 객체형 상수 같은 선언형 shape에는 JSDoc을 작성합니다. 객체형 계약과 schema root는 헤더에 `@summary`, 각 필드 바로 위에는 `@field`를 씁니다. `Pick`/`Omit`/Indexed Access처럼 로컬 필드 선언이 없는 alias는 헤더 `@summary`만 둡니다.  
-예외적으로 React의 compound component public part props `interface`처럼 component part 경계와 함께 읽혀야 하는 경우에는 `@summary` 대신 `@part`와 `@description`을 사용해도 됩니다.
+선언형 shape는 헤더와 필드를 나눠 문서화합니다.
+
+- custom `type`, `interface`, schema root, 객체형 상수: 헤더 `@summary`
+- 객체형 계약과 schema field: 각 필드 바로 위 `@field`
+- `Pick`/`Omit`/Indexed Access alias: 필드가 없으므로 헤더 `@summary`만 사용
+- compound component public part props: React rule에 따라 `@part` + `@description` 허용
 
 **Incorrect (필드 설명을 생략하거나 예전 방식으로 헤더에 몰아씀):**
 
@@ -367,16 +371,16 @@ type UserPreview = Pick<UserRecord, "id" | "name">;
 ```ts
 let visibleTabs = ["overview"];
 
-if (canManageMembers) {
-	visibleTabs.push("members");
+if (canManageItems) {
+	visibleTabs.push("items");
 }
 ```
 
 **Correct (좁은 스코프에서 한 번에 계산):**
 
 ```ts
-const visibleTabs = canManageMembers
-	? ["overview", "members"]
+const visibleTabs = canManageItems
+	? ["overview", "items"]
 	: ["overview"];
 ```
 
@@ -384,12 +388,13 @@ const visibleTabs = canManageMembers
 
 **Impact: HIGH (stops helper extraction from fragmenting local flow when no reusable contract or testable boundary actually exists)**
 
-support function은 입력/출력 계약이 명확하고, 런타임 문맥 없이도 독립 검증이 가능할 때만 분리합니다.
-재사용 근거 없이 보기 좋게 만들기 위한 분리나, 한 번만 쓰는 짧은 계산 추출은 피하고 먼저 early return, 단계적 변수, 의미 있는 블록 구분으로 가독성을 확보합니다.
-`map*`, `read*`, `create*`, `build*`, `normalize*`라는 이름이 붙어도 호출자가 하나이고 호출 위치에서 5~15줄 안에 의도가 드러나면 helper 경계가 아닙니다. 특히 API payload mapper, response header/body adapter의 한 단계, optional field 보정, tag label fallback처럼 한 owner namespace의 메서드만 위해 존재하는 함수는 해당 메서드 본문에 둡니다.
-feature 안에서는 `helper.ts`, `helpers.ts`, `utils.ts`, `common.ts` 같은 generic 파일명을 만들지 않고, React route라면 sibling `page.ts`, 그 외에는 owner가 보이는 module을 첫 추출 대상으로 삼습니다. support module도 helper warehouse처럼 다루지 말고, export는 도메인 단위 함수만 남기고 작은 단계 반복은 먼저 같은 함수 안에서 정리합니다.
-export function이 다른 export function만 위해 존재하거나, private helper가 한 exported namespace method만 위해 존재하는 구조는 과분해로 봅니다. support module 바깥의 여러 모듈이 같은 함수를 직접 import해야 하거나, 같은 단계가 여러 exported 함수에서 반복될 때만 helper 추출을 검토합니다.
-feature-local support function은 named export를 직접 import하고, 여러 owner가 실제로 공유하는 범용 순수 함수만 `shared/util.ts`의 `util.*`로 승격합니다.
+support function은 "이름"이 아니라 "호출 경계"가 있을 때만 분리합니다.
+
+- 필수: 명확한 input/output, 런타임 문맥 없는 독립 검증 가능성
+- 추출 신호: 여러 owner의 직접 호출, 여러 export에서 반복되는 도메인 규칙
+- 유지: 한 번만 쓰는 짧은 계산, optional 보정, label fallback, 단일 namespace method 전용 mapper
+- 배치: generic `helper.ts`/`utils.ts` 금지, owner-named support module 우선
+- 승격: 여러 owner가 실제 공유하는 범용 pure function만 `shared/util.ts`의 `util.*`
 
 **Incorrect (단회성 계산을 generic util 파일로 분리):**
 
@@ -427,33 +432,33 @@ export const buildProfileUpdatePayload = (
 **Incorrect (한 namespace method만 위해 mapper/helper를 쪼갬):**
 
 ```ts
-const readTagLabel = (tag: Tag) => tag.label.trim() || tag.slug;
+const readLabelText = (label: Label) => label.name.trim() || label.code;
 
-const mapBookmarkToEntryView = (bookmark: Bookmark): EntryView => {
-	const summary = bookmark.description ?? bookmark.note;
+const mapRecordToEntryView = (record: RecordItem): EntryView => {
+	const summary = record.description ?? record.memo;
 
 	return {
-		id: bookmark.id,
-		url: bookmark.url,
+		id: record.id,
+		url: record.url,
 		data: {
-			type: "bookmark",
-			title: bookmark.title,
+			type: "record",
+			title: record.title,
 			summary,
-			tags: bookmark.tags.map(readTagLabel),
+			labels: record.labels.map(readLabelText),
 		},
 	};
 };
 
 export const api = {
-	bookmark: {
-		mapEntry: (bookmark: Bookmark) => mapBookmarkToEntryView(bookmark),
+	record: {
+		mapEntry: (record: RecordItem) => mapRecordToEntryView(record),
 	},
 };
 ```
 
-`mapBookmarkToEntryView`와 `readTagLabel`이 `api.bookmark.mapEntry`만 위해 존재한다면 호출 경계가 늘어난 만큼 이해 시간이 늘어납니다.
+`mapRecordToEntryView`와 `readLabelText`가 `api.record.mapEntry`만 위해 존재한다면 호출 경계가 늘어난 만큼 이해 시간이 늘어납니다.
 
-**Correct (작은 계산은 local flow에 두고, 진짜 shared pure function만 `shared/util.ts`로 올림):**
+**Correct (작은 계산은 local flow에 둠):**
 
 ```ts
 const nextIteration = iteration + 1;
@@ -462,7 +467,7 @@ const nextIteration = iteration + 1;
 **Correct (feature-local support module은 domain-sized export 안에서 단계별로 정리):**
 
 ```ts
-// page.ts
+// profile-support.ts
 /**
  * @helper profile form 값을 저장 payload로 조립
  */
@@ -479,18 +484,18 @@ export const buildProfileUpdatePayload = (formValues: ProfileFormValues) => {
 
 ```ts
 export const api = {
-	bookmark: {
-		mapEntry: (bookmark: Bookmark): EntryView => {
-			const summary = bookmark.description ?? bookmark.note;
+	record: {
+		mapEntry: (record: RecordItem): EntryView => {
+			const summary = record.description ?? record.memo;
 
 			return {
-				id: bookmark.id,
-				url: bookmark.url,
+				id: record.id,
+				url: record.url,
 				data: {
-					type: "bookmark",
-					title: bookmark.title,
+					type: "record",
+					title: record.title,
 					summary,
-					tags: bookmark.tags.map((tag) => tag.label.trim() || tag.slug),
+					labels: record.labels.map((label) => label.name.trim() || label.code),
 				},
 			};
 		},
@@ -499,8 +504,8 @@ export const api = {
 ```
 
 ```ts
-// page.tsx
-import { buildProfileUpdatePayload } from "./page";
+// profile-form.ts
+import { buildProfileUpdatePayload } from "./profile-support";
 ```
 
 ```ts
@@ -725,10 +730,20 @@ export const normalizeUserIds = (userIds: string[]): string[] => {
 
 **Impact: MEDIUM-HIGH (keeps mixed TypeScript and TSX files scannable by using a small fixed annotation set)**
 
-annotation 태그는 `@api`, `@event`, `@watch`, `@helper`, `@summary`, `@part`, `@description`, `@field` 여덟 개로 고정합니다.   
-원격 데이터와 외부 실행 경계는 `@api`, 이벤트 핸들러는 `@event`, 반응형 동기화 블록은 `@watch`, 재사용 가능한 지원 함수는 `@helper`를 사용합니다.   
-`type`, `interface`, store 선언, custom hook, schema root처럼 선언 종류만 알면 역할이 충분히 드러나는 경우에는 `@summary`를 사용하고, 계약 내부 멤버에는 `@field`만 사용합니다.  
-React의 compound component part처럼 `Dialog.Root`, `Tabs.Trigger` 같은 public part를 문서화할 때는 `@part`와 `@description`을 함께 사용합니다. `@description`은 이 경우에만 허용하고, 일반 함수·타입·schema 설명에는 계속 `@summary`를 사용합니다. `@schema`, `@shape`, `@contract`, `@data`, `@type`, `@property`는 더 이상 쓰지 않습니다.
+annotation 태그는 아래 여덟 개만 사용합니다.
+
+| 태그 | 대상 |
+| --- | --- |
+| `@api` | 원격 데이터, 파일, 외부 실행 경계 |
+| `@event` | 이벤트 핸들러, 사용자 액션 처리 |
+| `@watch` | 반응형 동기화 블록, subscription |
+| `@helper` | 재사용 가능한 pure support function |
+| `@summary` | type, interface, store, custom hook, schema root |
+| `@field` | 계약 내부 필드 |
+| `@part` | compound component public part |
+| `@description` | `@part`와 함께 쓰는 part 설명 |
+
+`@description`은 `@part`와 함께만 사용합니다. `@schema`, `@shape`, `@contract`, `@data`, `@type`, `@property`는 쓰지 않습니다.
 
 **Incorrect (역할이 드러나지 않는 예전 태그나 part 전용 태그를 잘못 사용):**
 
@@ -741,10 +756,10 @@ export const loadProjectConfig = async (path: string): Promise<string> => {
 };
 
 /**
- * @summary 선택된 테이블 변경 처리
+ * @summary 선택된 entry 변경 처리
  */
-const handleSelectTable = (tableName: string) => {
-	return tableName;
+const handleSelectEntry = (entryId: string) => {
+	return entryId;
 };
 
 /**
@@ -766,10 +781,10 @@ export const loadProjectConfig = async (path: string): Promise<string> => {
 };
 
 /**
- * @event 선택된 테이블 변경 처리
+ * @event 선택된 entry 변경 처리
  */
-const handleSelectTable = (tableName: string) => {
-	return tableName;
+const handleSelectEntry = (entryId: string) => {
+	return entryId;
 };
 
 /**
@@ -798,10 +813,19 @@ interface DialogRootProps {
 
 **Impact: MEDIUM-HIGH (distinguishes reusable pure support logic from local implementation details or integration boundaries)**
 
-재사용 가능한 순수 helper, 문자열 조립 함수, 정규화 함수, 포맷 함수, 계약 변환 함수에는 `@helper`를 사용합니다.   
-한 함수나 한 support module 안에서만 쓰는 작은 단계 계산은 먼저 함수 안에 두고, 여러 call site가 공유하거나 밖으로 빼야 읽기 흐름이 명확해질 때만 helper로 승격합니다.   
-특히 support module 내부의 작은 sub-step마다 `@helper`를 붙여 export helper를 늘리지 않습니다. 반복이 보여도 기본은 local 정리이며, support module 바깥 여러 caller가 같은 helper를 직접 호출하기 전에는 helper 추출을 서두르지 않습니다.   
-이런 함수는 `shared/util.ts`의 `util.*`나 owner-named support module 아래에 둘 수 있으며, 외부 I/O 경계는 `@helper`가 아니라 `@api`로 표시합니다.
+`@helper`는 재사용 가능한 pure support function에만 붙입니다.
+
+사용 대상:
+
+- 여러 caller가 직접 호출하는 문자열 조립, 정규화, 포맷, 계약 변환 함수
+- owner-named support module의 domain-sized exported pure function
+- 여러 owner가 공유하는 `shared/util.ts`의 `util.*` 함수
+
+사용하지 않을 대상:
+
+- 외부 I/O, 원격 데이터, 파일 접근 같은 `@api` 경계
+- 한 함수나 한 support module 안에서만 쓰는 작은 sub-step
+- 반복이 보이지만 아직 caller surface가 넓지 않은 local 계산
 
 **Incorrect (외부 연동 함수나 단회성 계산을 helper로 혼동):**
 
@@ -822,6 +846,13 @@ const loadUserSettings = async (): Promise<string> => {
  */
 export const normalizeProfileValues = (formValues: ProfileFormValues) => {
 	return formValues;
+};
+
+/**
+ * @helper 프로필 저장 payload 조립
+ */
+export const buildProfilePayload = (formValues: ProfileFormValues) => {
+	return normalizeProfileValues(formValues);
 };
 ```
 
