@@ -265,7 +265,25 @@ React skill을 수정하거나 새로운 rule을 추가했을 때, 실제 에이
   - React rule만 보고 route/search/style/test 경계를 무시함
   - CSS나 route rule을 React 내부 스타일처럼 처리함
 
-### R13. File Placement and Owner Naming
+### R13. Single-component Helper Collapse
+
+- Focus
+  - `screen-avoid-premature-abstraction`
+  - `screen-extract-utilities-selectively`
+  - `state-shape-query-data-with-select`
+- Prompt
+  - "admin table component에 `buildEditHref`, `readOptionalFilter`, `mapResponseToRows` 같은 작은 helper가 많아. React skill 기준으로 과한 모듈화 없이 정리해줘."
+- Expected pass signals
+  - component 하나만 쓰는 href/filter helper는 사용 지점으로 접음
+  - query response shape는 필요하면 `query.select`에서 직접 보이게 변환함
+  - handler 안의 mutation/query invalidation flow는 helper로 과분해하지 않음
+  - `response...` / `mutation...` naming과 origin chaining은 유지함
+- Likely fail signals
+  - helper 이름만 바꾸거나 JSDoc만 추가하고 경계를 유지함
+  - `_local/helpers.ts`, `utils.ts`, `table-utils.ts`를 새로 만듦
+  - query result를 상단 alias로 퍼뜨리거나 `data` destructuring으로 origin을 잃음
+
+### R14. File Placement and Owner Naming
 
 - Focus
   - `ownership-layer-component-boundaries`
@@ -284,7 +302,7 @@ React skill을 수정하거나 새로운 rule을 추가했을 때, 실제 에이
   - JSX를 `folders.ts` 같은 pure module에 넣음
   - naming casing과 owner prefix가 섞임
 
-### R14. Pressure Scenario for Rule Conflicts
+### R15. Pressure Scenario for Rule Conflicts
 
 - Focus
   - cross-rule consistency
@@ -303,13 +321,13 @@ React skill을 수정하거나 새로운 rule을 추가했을 때, 실제 에이
 
 1. R8, R7, R5
    - state/data flow와 handler 규칙은 가장 자주 깨집니다.
-2. R1, R2, R14
+2. R1, R2, R13, R15
    - route entry / `page.ts` / `-local` 경계와 rule 충돌을 점검합니다.
 3. R3, R4, R11
    - shared component 설계와 docs 품질을 점검합니다.
 4. R9, R10
    - React 19 성능/구독 패턴을 점검합니다.
-5. R12, R13
+5. R12, R14
    - companion skill activation과 file placement discipline을 점검합니다.
 
 ## 유지보수 원칙

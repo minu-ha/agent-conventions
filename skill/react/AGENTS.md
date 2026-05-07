@@ -942,6 +942,7 @@ Route entry 파일은 화면 흐름을 분명하게 보여줘야 하며, helper 
 반복이 보인다는 이유만으로 즉시 공용 hook, 공용 컴포넌트, 공용 helper로 올리지 않습니다. 같은 화면, 같은 support module, 같은 exported 함수 안에서 비슷한 단계가 반복되더라도 기본은 한 함수 안에 유지합니다.
 같은 이름의 계약으로 여러 화면이나 모듈이 직접 호출해야 하는 경계가 분명해질 때만 공용화를 검토합니다. 그 전에는 section comment, 단계 구분 변수, 내부 블록으로 먼저 정리합니다. route-local component 추출도 예외가 아니며, 단순 layout wrapper가 아니라 실제 runtime boundary를 소유할 때만 검토합니다.
 custom hook도 예외가 아닙니다. hook 이름을 붙일 수 있다는 이유만으로 추출하지 말고, state/effect/context/form/store처럼 실제 React orchestration을 묶을 때만 hook 경계를 만듭니다.
+screen support module이나 React-adjacent `.ts` 파일에서도 같은 기준을 적용합니다. `readMutationFieldErrors`, `buildEditHref`, `mapResponseToRows`처럼 한 component, 한 handler, 한 query `select`만 위해 존재하는 작은 함수는 호출 위치에 둡니다. 함수 이름이 설명처럼 보이더라도 사용자가 실제 흐름을 따라가려고 파일 안을 왕복해야 한다면 추상화 비용이 더 큽니다.
 
 **Incorrect (반복만 보고 성급하게 추상화):**
 
@@ -954,6 +955,23 @@ const usePermissionB = () => {
   // 유사 로직
 };
 ```
+
+**Incorrect (component 하나만 쓰는 단계 helper를 support module에 남김):**
+
+```ts
+const buildEditHref = ({editHrefBase, row}: {editHrefBase: string; row: EntryRow}) => `${editHrefBase}${row.id}/`;
+
+const mapResponseToRows = (response: EntryListResponse) =>
+	response.data.map((entry) => ({id: entry.id, title: entry.title}));
+
+export const EntryTable = (props: EntryTableProps) => {
+	const responseEntriesQuery = useListEntries<EntryRow[]>({}, {query: {select: mapResponseToRows}});
+
+	return responseEntriesQuery.data.map((row) => <a href={buildEditHref({editHrefBase: props.editHrefBase, row})}>{row.title}</a>);
+};
+```
+
+이 helper들이 다른 화면의 계약으로 쓰이지 않는다면 component를 읽는 사람이 helper 정의로 이동해야 하는 비용만 생깁니다.
 
 **Correct (계약이 생긴 뒤에 공용화):**
 
@@ -984,6 +1002,19 @@ export const buildEntryPayload = (formValues: EntryFormValues) => {
 	// 1. 공통 문자열 값 정규화
 	// 2. API payload 형태로 조립
 	// 3. 결과 반환
+};
+```
+
+**Correct (작은 query shaping과 href 조립은 사용 지점에 둠):**
+
+```ts
+export const EntryTable = (props: EntryTableProps) => {
+	const responseEntriesQuery = useListEntries<EntryRow[]>(
+		{},
+		{query: {select: (response) => response.data.map((entry) => ({id: entry.id, title: entry.title}))}},
+	);
+
+	return responseEntriesQuery.data.map((row) => <a href={`${props.editHrefBase}${row.id}/`}>{row.title}</a>);
 };
 ```
 
@@ -1154,6 +1185,7 @@ export const RouteComponent = () => {
 옮기기로 결정한 경우 기본 목적지는 sibling `page.ts`이고, `page.ts`도 named export/direct import를 우선합니다.
 반대로 작은 1회성 guard, 사용 지점 바로 옆이 더 읽기 쉬운 계산, hook context에 붙어 있어야 의미가 분명한 동기화 로직은 `page.tsx`에 남깁니다.
 이 규칙은 `page.ts` 안에서 export 경계를 어디까지 둘지에 대한 규칙입니다. 같은 support module 안의 반복은 기본적으로 한 exported 함수 안에 유지하고, 같은 단계가 여러 exported 함수에서 그대로 반복되거나 이름 붙은 도메인 규칙으로 읽힐 때만 private helper를 검토합니다. export helper가 또 다른 export helper만 위해 존재하는 구조는 피합니다.
+`page.ts`나 `_local/*.ts`에 한 component만 쓰는 private helper를 쌓는 것도 피합니다. URL 문자열 조립, query filter trim, 단순 API response mapper, mutation error fallback처럼 호출 위치에서 한두 단계로 읽히는 코드는 component나 handler 본문에 둡니다.
 `helper.ts`, `helpers.ts`, `utils.ts`, `common.ts` 같은 generic 파일명은 feature 안에서 만들지 않습니다.
 `queryClient.invalidateQueries`처럼 hook 컨텍스트에 붙어 있어야 더 읽기 쉬운 동기화 로직은 handler/effect에 남기고, support module 바깥 여러 모듈이 같은 함수를 직접 import해야 할 때만 `shared/util.ts`의 `util.*`나 별도 owner module 승격을 검토합니다.
 
@@ -1193,6 +1225,24 @@ export const buildEntryPayload = (formValues: EntryFormValues, files: WgMediaUpl
 	);
 };
 ```
+
+**Incorrect (`_local` component 하나만 쓰는 private helper를 누적):**
+
+```tsx
+const readOptionalFilter = (value: string) => value.trim() || undefined;
+
+const buildEditHref = ({editHrefBase, row}: {editHrefBase: string; row: EntryRow}) => `${editHrefBase}${row.id}/`;
+
+export const EntryTable = (props: EntryTableProps) => {
+	const responseEntriesQuery = useListEntries({
+		q: readOptionalFilter(filters.q),
+	});
+
+	return <a href={buildEditHref({editHrefBase: props.editHrefBase, row})}>{row.title}</a>;
+};
+```
+
+이 정도는 helper 이름을 따라가는 것보다 component 안에서 직접 읽는 편이 빠릅니다.
 
 **Correct (screen-owned support code는 먼저 `page.ts`의 named export로 모으고, 흐름에 묶인 로직은 handler에 남김):**
 
@@ -1236,6 +1286,18 @@ export const buildEntryPayload = (
 	return {
 		// ...
 	};
+};
+```
+
+**Correct (component 전용 작은 단계는 호출 위치에 유지):**
+
+```tsx
+export const EntryTable = (props: EntryTableProps) => {
+	const responseEntriesQuery = useListEntries({
+		q: filters.q.trim() || undefined,
+	});
+
+	return <a href={`${props.editHrefBase}${row.id}/`}>{row.title}</a>;
 };
 ```
 

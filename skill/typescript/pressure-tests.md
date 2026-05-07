@@ -152,6 +152,23 @@ TypeScript skill을 수정하거나 새로운 rule을 추가했을 때, 실제 �
   - 기존 계약이 있는데도 각 구현마다 parameter annotation을 다시 씀
   - 미사용 parameter를 생략하거나 이름만 남김
 
+### T8. Single-owner Helper Collapse
+
+- Focus
+  - `functions-extract-helpers-only-when-the-boundary-is-real`
+  - `functions-avoid-imperative-assembly-in-wide-scopes`
+- Prompt
+  - "API namespace 안에 `mapBookmarkToEntryView`, `readApiResponseHeaders`, `readOptionalDate` 같은 helper가 많아. TypeScript skill 기준으로 이해 비용이 낮게 정리해줘."
+- Expected pass signals
+  - 한 namespace method만 쓰는 mapper/helper는 호출 method 본문으로 접음
+  - adapter의 한 단계 변환은 adapter 함수 본문에서 순서대로 보이게 둠
+  - 여러 owner가 직접 import하지 않는 helper를 `shared/util.ts`로 승격하지 않음
+  - 줄 수 감소보다 파일 왕복 감소와 owner flow 가시성을 우선 설명함
+- Likely fail signals
+  - 단회성 helper에 JSDoc만 추가하고 경계를 유지함
+  - `read*`, `map*`, `create*` 이름을 붙였다는 이유로 helper를 남김
+  - mapper를 별도 파일이나 generic util로 옮김
+
 ## 유지보수 원칙
 
 - 새로운 TypeScript rule을 추가했다면, 최소 1개의 pressure scenario를 이 문서에 추가합니다.

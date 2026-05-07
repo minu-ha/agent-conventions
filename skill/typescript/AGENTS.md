@@ -384,10 +384,11 @@ const visibleTabs = canManageMembers
 
 **Impact: HIGH (stops helper extraction from fragmenting local flow when no reusable contract or testable boundary actually exists)**
 
-support function은 입력/출력 계약이 명확하고, 런타임 문맥 없이도 독립 검증이 가능할 때만 분리합니다.   
-재사용 근거 없이 보기 좋게 만들기 위한 분리나, 한 번만 쓰는 짧은 계산 추출은 피하고 먼저 early return, 단계적 변수, 의미 있는 블록 구분으로 가독성을 확보합니다.   
-feature 안에서는 `helper.ts`, `helpers.ts`, `utils.ts`, `common.ts` 같은 generic 파일명을 만들지 않고, React route라면 sibling `page.ts`, 그 외에는 owner가 보이는 module을 첫 추출 대상으로 삼습니다. support module도 helper warehouse처럼 다루지 말고, export는 도메인 단위 함수만 남기고 작은 단계 반복은 먼저 같은 함수 안에서 정리합니다.   
-export function이 다른 export function만 위해 존재하는 구조는 과분해로 봅니다. support module 바깥의 여러 모듈이 같은 함수를 직접 import해야 하거나, 같은 단계가 여러 exported 함수에서 반복될 때만 helper 추출을 검토합니다.   
+support function은 입력/출력 계약이 명확하고, 런타임 문맥 없이도 독립 검증이 가능할 때만 분리합니다.
+재사용 근거 없이 보기 좋게 만들기 위한 분리나, 한 번만 쓰는 짧은 계산 추출은 피하고 먼저 early return, 단계적 변수, 의미 있는 블록 구분으로 가독성을 확보합니다.
+`map*`, `read*`, `create*`, `build*`, `normalize*`라는 이름이 붙어도 호출자가 하나이고 호출 위치에서 5~15줄 안에 의도가 드러나면 helper 경계가 아닙니다. 특히 API payload mapper, response header/body adapter의 한 단계, optional field 보정, tag label fallback처럼 한 owner namespace의 메서드만 위해 존재하는 함수는 해당 메서드 본문에 둡니다.
+feature 안에서는 `helper.ts`, `helpers.ts`, `utils.ts`, `common.ts` 같은 generic 파일명을 만들지 않고, React route라면 sibling `page.ts`, 그 외에는 owner가 보이는 module을 첫 추출 대상으로 삼습니다. support module도 helper warehouse처럼 다루지 말고, export는 도메인 단위 함수만 남기고 작은 단계 반복은 먼저 같은 함수 안에서 정리합니다.
+export function이 다른 export function만 위해 존재하거나, private helper가 한 exported namespace method만 위해 존재하는 구조는 과분해로 봅니다. support module 바깥의 여러 모듈이 같은 함수를 직접 import해야 하거나, 같은 단계가 여러 exported 함수에서 반복될 때만 helper 추출을 검토합니다.
 feature-local support function은 named export를 직접 import하고, 여러 owner가 실제로 공유하는 범용 순수 함수만 `shared/util.ts`의 `util.*`로 승격합니다.
 
 **Incorrect (단회성 계산을 generic util 파일로 분리):**
@@ -423,6 +424,35 @@ export const buildProfileUpdatePayload = (
 };
 ```
 
+**Incorrect (한 namespace method만 위해 mapper/helper를 쪼갬):**
+
+```ts
+const readTagLabel = (tag: Tag) => tag.label.trim() || tag.slug;
+
+const mapBookmarkToEntryView = (bookmark: Bookmark): EntryView => {
+	const summary = bookmark.description ?? bookmark.note;
+
+	return {
+		id: bookmark.id,
+		url: bookmark.url,
+		data: {
+			type: "bookmark",
+			title: bookmark.title,
+			summary,
+			tags: bookmark.tags.map(readTagLabel),
+		},
+	};
+};
+
+export const api = {
+	bookmark: {
+		mapEntry: (bookmark: Bookmark) => mapBookmarkToEntryView(bookmark),
+	},
+};
+```
+
+`mapBookmarkToEntryView`와 `readTagLabel`이 `api.bookmark.mapEntry`만 위해 존재한다면 호출 경계가 늘어난 만큼 이해 시간이 늘어납니다.
+
 **Correct (작은 계산은 local flow에 두고, 진짜 shared pure function만 `shared/util.ts`로 올림):**
 
 ```ts
@@ -442,6 +472,29 @@ export const buildProfileUpdatePayload = (formValues: ProfileFormValues) => {
 	return {
 		displayName: normalizedDisplayName,
 	};
+};
+```
+
+**Correct (단일 owner namespace의 단계는 메서드 본문에 둠):**
+
+```ts
+export const api = {
+	bookmark: {
+		mapEntry: (bookmark: Bookmark): EntryView => {
+			const summary = bookmark.description ?? bookmark.note;
+
+			return {
+				id: bookmark.id,
+				url: bookmark.url,
+				data: {
+					type: "bookmark",
+					title: bookmark.title,
+					summary,
+					tags: bookmark.tags.map((tag) => tag.label.trim() || tag.slug),
+				},
+			};
+		},
+	},
 };
 ```
 
