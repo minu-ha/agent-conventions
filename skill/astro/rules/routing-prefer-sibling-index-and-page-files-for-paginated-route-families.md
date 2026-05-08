@@ -14,6 +14,7 @@ tags: routing, pagination, pages, route-families
 배치 기준:
 
 - Home이 별도 landing이면 `src/pages/index.astro`는 그대로 둡니다.
+- 하위 route가 없는 dynamic leaf는 `src/pages/articles/[slug].astro`처럼 flat file로 둡니다.
 - Paginated archive는 `src/pages/archive/index.astro`와 `src/pages/archive/[page].astro`처럼 전용 family 아래에 둡니다.
 - Section list는 `src/pages/articles/index.astro`와 `src/pages/articles/[page].astro`처럼 둡니다.
 - Dynamic resource 아래 pagination은 `src/pages/topics/[topic]/index.astro`와 `src/pages/topics/[topic]/[page].astro`처럼 resource folder 안에 둡니다.

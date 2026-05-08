@@ -8,7 +8,7 @@ metadata:
 
 # Astro 컨벤션
 
-에이전트 협업 팀을 위한 Astro 코딩 컨벤션 모음입니다. 현재 이 가이드는 11개 카테고리의 41개 local 규칙으로 구성되어 있습니다.
+에이전트 협업 팀을 위한 Astro 코딩 컨벤션 모음입니다. 현재 이 가이드는 11개 카테고리의 42개 local 규칙으로 구성되어 있습니다.
 Astro entry 구조, route-local owner layer인 `src/pages`, pages-local `_document.astro`/`_head.astro`/`_document.css`, page-owned implementation, route-role aligned page asset naming과 `rt_*` surface ownership, `_local/` route-local UI/runtime boundary, owner-named support file, `.astro` 컴포넌트 경계, framework island 사용법, file-based routing, SSG/SSR/CSR rendering 선택, build-time/live collections, Actions와 endpoints, page/local/island 책임, `ui` primitive/`widget` reusable block taxonomy, selective extraction 기준, Astro 전용 문서화 규칙, Astro 전용 검토 흐름을 [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`와 compiled [AGENTS.md](./AGENTS.md)로 관리합니다.
 Astro local rule은 기본 companion인 `convention-typescript`와 `convention-css`를 함께 사용하고, React island나 브라우저 테스트는 필요할 때 추가로 로드합니다.
 
@@ -97,6 +97,7 @@ Astro local rule은 기본 companion인 `convention-typescript`와 `convention-c
 
 - `routing-use-html-anchors-before-framework-link-abstractions` - Astro page navigation은 기본적으로 plain `<a>` 사용
 - `routing-keep-dynamic-route-generation-at-page-boundary` - `getStaticPaths()`와 동적 route 생성 책임은 page boundary에 유지
+- `routing-prefer-flat-files-for-leaf-dynamic-routes` - 하위 route가 없는 dynamic leaf는 folder보다 flat `[slug].astro` 우선
 - `routing-prefer-sibling-index-and-page-files-for-paginated-route-families` - pagination route는 `page/` 하위보다 sibling `[page].astro`를 우선
 - `routing-preserve-established-public-url-contracts-when-normalizing-route-folders` - 폴더 정리를 위해 기존 공개 URL을 함부로 바꾸지 않음
 

@@ -47,9 +47,10 @@
     - 4.4 [Reserve `client:only` for SSR-incompatible Components](#44-reserve-clientonly-for-ssr-incompatible-components)
 5. [Routing and Navigation Contracts](#5-routing-and-navigation-contracts) — **HIGH**
     - 5.1 [Keep Dynamic Route Generation at the Page Boundary](#51-keep-dynamic-route-generation-at-the-page-boundary)
-    - 5.2 [Prefer Sibling `index.astro` and `[page].astro` Files for Paginated Route Families](#52-prefer-sibling-index-astro-and-page-astro-files-for-paginated-route-families)
-    - 5.3 [Preserve Established Public URL Contracts When Normalizing Route Folders](#53-preserve-established-public-url-contracts-when-normalizing-route-folders)
-    - 5.4 [Use HTML Anchors Before Framework Link Abstractions](#54-use-html-anchors-before-framework-link-abstractions)
+    - 5.2 [Prefer Flat Files for Leaf Dynamic Routes](#52-prefer-flat-files-for-leaf-dynamic-routes)
+    - 5.3 [Prefer Sibling `index.astro` and `[page].astro` Files for Paginated Route Families](#53-prefer-sibling-index-astro-and-page-astro-files-for-paginated-route-families)
+    - 5.4 [Preserve Established Public URL Contracts When Normalizing Route Folders](#54-preserve-established-public-url-contracts-when-normalizing-route-folders)
+    - 5.5 [Use HTML Anchors Before Framework Link Abstractions](#55-use-html-anchors-before-framework-link-abstractions)
 6. [Rendering Strategy and Delivery Modes](#6-rendering-strategy-and-delivery-modes) — **CRITICAL**
     - 6.1 [Default to Static Until Most Pages Need On-demand Rendering](#61-default-to-static-until-most-pages-need-on-demand-rendering)
     - 6.2 [Reserve `output: "server"` for Mostly Dynamic Apps](#62-reserve-output-server-for-mostly-dynamic-apps)
@@ -772,7 +773,7 @@ import FeatureSearch from "../components/FeatureSearch.tsx";
 
 **Impact: HIGH**
 
-Astro의 file-based routing과 page boundary 책임은 page file에서 직접 드러나야 하며, paginated route family는 얕은 sibling 구조를 우선하되 이미 공개된 URL contract는 함부로 바꾸지 않아야 합니다.
+Astro의 file-based routing과 page boundary 책임은 page file에서 직접 드러나야 하며, 하위 route가 없는 dynamic leaf는 flat file로 두고 paginated route family는 얕은 sibling 구조를 우선하되 이미 공개된 URL contract는 함부로 바꾸지 않아야 합니다.
 
 ### 5.1 Keep Dynamic Route Generation at the Page Boundary
 
@@ -813,7 +814,46 @@ const { post } = Astro.props;
 <BlogPostPage post={post} />
 ```
 
-### 5.2 Prefer Sibling `index.astro` and `[page].astro` Files for Paginated Route Families
+### 5.2 Prefer Flat Files for Leaf Dynamic Routes
+
+**Impact: HIGH (keeps dynamic route trees shallow until a route actually owns child routes)**
+
+하위 route가 없는 dynamic page는 folder로 감싸지 말고 flat file로 둡니다. `index.astro` folder는 같은 resource 아래에 child route가 실제로 생겼을 때 사용합니다.
+
+판단 기준:
+
+- Leaf public detail은 `src/pages/posts/[slug].astro`처럼 둡니다.
+- Leaf filtered list도 child route가 없으면 `src/pages/tags/[slug].astro`처럼 둡니다.
+- 같은 dynamic resource 아래에 `feed.xml`, `[page].astro`, settings 같은 child route가 생기면 그때 `src/pages/tags/[slug]/index.astro`로 승격합니다.
+- 공개 URL contract가 이미 배포됐다면 파일 구조 선호보다 URL 보존과 redirect 계획을 먼저 봅니다.
+
+**Incorrect (하위 route가 없는데 dynamic route를 folder로 감쌈):**
+
+```text
+src/pages/posts/[slug]/index.astro
+src/pages/tags/[slug]/index.astro
+src/pages/authors/[author]/index.astro
+```
+
+이 구조는 route tree depth만 늘리고, route entry와 page-adjacent `_slug.css`/`_author.css` 같은 support asset의 대응도 흐립니다.
+
+**Correct (leaf route는 flat file, child route가 있을 때만 folder):**
+
+```text
+src/pages/posts/[slug].astro
+src/pages/posts/_slug.css
+
+src/pages/tags/[slug].astro
+src/pages/tags/_slug.css
+
+src/pages/topics/[topic]/index.astro
+src/pages/topics/[topic]/[page].astro
+src/pages/topics/[topic]/feed.xml.ts
+```
+
+`topics/[topic]/index.astro`는 child route를 실제로 가지므로 folder가 route owner입니다. 반대로 `posts/[slug].astro`와 `tags/[slug].astro`는 leaf route라 flat file이 더 읽기 쉽습니다.
+
+### 5.3 Prefer Sibling `index.astro` and `[page].astro` Files for Paginated Route Families
 
 **Impact: HIGH (keeps paginated route families shallow and makes list plus pagination contracts readable from one folder)**
 
@@ -822,6 +862,7 @@ const { post } = Astro.props;
 배치 기준:
 
 - Home이 별도 landing이면 `src/pages/index.astro`는 그대로 둡니다.
+- 하위 route가 없는 dynamic leaf는 `src/pages/articles/[slug].astro`처럼 flat file로 둡니다.
 - Paginated archive는 `src/pages/archive/index.astro`와 `src/pages/archive/[page].astro`처럼 전용 family 아래에 둡니다.
 - Section list는 `src/pages/articles/index.astro`와 `src/pages/articles/[page].astro`처럼 둡니다.
 - Dynamic resource 아래 pagination은 `src/pages/topics/[topic]/index.astro`와 `src/pages/topics/[topic]/[page].astro`처럼 resource folder 안에 둡니다.
@@ -859,11 +900,11 @@ src/pages/topics/[topic]/[page].astro
 
 이 구조에서는 홈은 별도 route로 남고, 각 paginated route family의 entry page와 pagination page가 같은 폴더에 모여 있어 URL contract를 file tree만 보고도 바로 이해할 수 있습니다.
 
-### 5.3 Preserve Established Public URL Contracts When Normalizing Route Folders
+### 5.4 Preserve Established Public URL Contracts When Normalizing Route Folders
 
 **Impact: HIGH (prevents file tree cleanup from silently changing published URLs that users and crawlers already rely on)**
 
-route folder를 더 예쁘게 정리할 수 있더라도, 이미 공개된 URL contract가 있다면 그 계약을 먼저 존중합니다. 현재 사이트가 이미 `/recent/:page?`, `/posts/:page?`, `/posts/:slug`, `/tags/:tag/:page?` 같은 경로를 쓰고 있다면 폴더 대칭성만을 이유로 root pagination, singular folder, 다른 slug family로 URL을 바꾸지 않습니다. 이 skill에서는 "새로 설계할 때의 선호 구조"와 "이미 배포된 공개 URL"을 분리해서 판단합니다.
+route folder를 더 예쁘게 정리할 수 있더라도, 이미 공개된 URL contract가 있다면 그 계약을 먼저 존중합니다. 현재 사이트가 이미 `/recent/:page?`, `/posts/:page?`, `/posts/:slug`, `/tags/:slug` 같은 경로를 쓰고 있다면 폴더 대칭성만을 이유로 root pagination, singular folder, 다른 slug family로 URL을 바꾸지 않습니다. 이 skill에서는 "새로 설계할 때의 선호 구조"와 "이미 배포된 공개 URL"을 분리해서 판단합니다.
 
 **Incorrect (폴더 모양을 맞추려는 이유만으로 공개 URL을 바꿈):**
 
@@ -879,8 +920,7 @@ src/pages/notes/index.astro
 src/pages/notes/[page].astro
 src/pages/notes/[slug].astro
 src/pages/tags/index.astro
-src/pages/tags/[tag]/index.astro
-src/pages/tags/[tag]/[page].astro
+src/pages/tags/[slug].astro
 
 after:
 src/pages/index.astro
@@ -891,8 +931,7 @@ src/pages/post/[slug].astro
 src/pages/notes/index.astro
 src/pages/notes/[page].astro
 src/pages/note/[slug].astro
-src/pages/tag/[tag]/index.astro
-src/pages/tag/[tag]/[page].astro
+src/pages/tag/[slug].astro
 ```
 
 이 변경은 file tree는 더 대칭적으로 보일 수 있지만, 이미 배포된 `/recent/*`, `/posts/*`, `/notes/*`, `/tags/*` 링크와 canonical을 깨뜨리는 공개 URL 변경이므로 별도 migration이나 redirect 계획 없이 수행하면 안 됩니다.
@@ -911,13 +950,12 @@ src/pages/notes/index.astro
 src/pages/notes/[page].astro
 src/pages/notes/[slug].astro
 src/pages/tags/index.astro
-src/pages/tags/[tag]/index.astro
-src/pages/tags/[tag]/[page].astro
+src/pages/tags/[slug].astro
 ```
 
 이 경우에는 convention이 현재 공개 URL을 존중하도록 맞추고, 정말 URL을 바꾸고 싶다면 redirect, canonical, internal link, sitemap까지 포함한 migration 작업으로 분리합니다.
 
-### 5.4 Use HTML Anchors Before Framework Link Abstractions
+### 5.5 Use HTML Anchors Before Framework Link Abstractions
 
 **Impact: HIGH (aligns navigation with Astro's default routing model and avoids importing foreign router habits)**
 
