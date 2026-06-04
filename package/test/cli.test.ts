@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import {access, readFile, readdir} from "node:fs/promises";
+import {readFileSync} from "node:fs";
 import {spawnSync} from "node:child_process";
 import path from "node:path";
 import test from "node:test";
@@ -11,7 +12,19 @@ const packageDir = path.join(repoDir, "package");
 const astroAgentsPath = path.join(repoDir, "skill/astro/AGENTS.md");
 const reactAgentsPath = path.join(repoDir, "skill/react/AGENTS.md");
 const npmCommand = process.platform === "win32" ? "npm.cmd" : "npm";
-const expectedSkillScriptNames = ["astro", "react", "css", "nestjs", "playwright-test", "tanstack-route", "typescript"] as const;
+const packageBinDir = path.join(packageDir, "node_modules/.bin");
+const nodeBinDir = path.dirname(process.execPath);
+const commandEnv = {...process.env, PATH: [packageBinDir, nodeBinDir, process.env.PATH ?? ""].join(path.delimiter)};
+const expectedSkillScriptNames = [
+	"astro",
+	"react",
+	"css",
+	"figma-visual-parity",
+	"nestjs",
+	"playwright-test",
+	"tanstack-route",
+	"typescript",
+] as const;
 
 /**
  * @helper skill markdown 파일 목록을 재귀적으로 조회
@@ -40,7 +53,32 @@ const listMarkdownFiles = async (dirPath: string): Promise<string[]> => {
  * @description `package/` npm script를 실제 CLI처럼 실행
  */
 const runPackageCommand = (args: string[]) => {
-	return spawnSync(npmCommand, args, {cwd: repoDir, encoding: "utf8"});
+	const npmCheckResult = spawnSync(npmCommand, ["--version"], {cwd: repoDir, encoding: "utf8", env: commandEnv});
+
+	if (npmCheckResult.status === 0) {
+		return spawnSync(npmCommand, args, {cwd: repoDir, encoding: "utf8", env: commandEnv});
+	}
+
+	const runIndex = args.indexOf("run");
+	const scriptName = args[runIndex + 1];
+
+	if (runIndex === -1 || !scriptName) {
+		throw new Error(`Unsupported package command without npm: ${args.join(" ")}`);
+	}
+
+	const separatorIndex = args.indexOf("--", runIndex + 2);
+	const passthroughArgs = separatorIndex === -1 ? args.slice(runIndex + 2) : args.slice(separatorIndex + 1);
+	const packageSource = readFileSync(path.join(packageDir, "package.json"), "utf8");
+	const packageJson = JSON.parse(packageSource) as {scripts: Record<string, string>};
+	const scriptCommand = packageJson.scripts[scriptName];
+
+	if (!scriptCommand) {
+		throw new Error(`Unknown package script: ${scriptName}`);
+	}
+
+	const [command, ...scriptArgs] = scriptCommand.split(/\s+/);
+
+	return spawnSync(command, [...scriptArgs, ...passthroughArgs], {cwd: packageDir, encoding: "utf8", env: commandEnv});
 };
 
 test("package.json exposes all-skill and per-skill script aliases", async () => {
