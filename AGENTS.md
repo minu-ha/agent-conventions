@@ -26,6 +26,7 @@
 - [skill/playwright-test](./skill/playwright-test/README.md)
 - [skill/typescript](./skill/typescript/README.md)
 - [skill/nestjs](./skill/nestjs/README.md)
+- [skill/figma-visual-parity](./skill/figma-visual-parity/README.md)
 
 이 구조에서는 아래 원칙을 지킵니다.
 
@@ -88,6 +89,7 @@ npm --prefix package run build -- --all
 
 - `react`
 - `css`
+- `figma-visual-parity`
 - `nestjs`
 - `playwright-test`
 - `tanstack-route`

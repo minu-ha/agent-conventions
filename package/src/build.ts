@@ -22,12 +22,14 @@ const getRulesForSection = (section: SkillSection, rules: SkillRule[]): SkillRul
 const conventionTitleBySkillName: Record<string, string> = {
 	astro: "Astro Convention",
 	css: "CSS Convention",
+	"figma-visual-parity": "Figma Visual Parity",
 	nestjs: "NestJS Convention",
 	"playwright-test": "Playwright Test Convention",
 	react: "React Convention",
 	"tanstack-route": "TanStack Route Convention",
 	typescript: "TypeScript Convention",
 };
+const conventionSkillNameBySkillName: Record<string, string> = {"figma-visual-parity": "figma-visual-parity"};
 const nestedTocIndent = " ".repeat(4);
 
 /**
@@ -41,6 +43,10 @@ const getConventionTitle = (skillName: string, fallbackTitle: string): string =>
  * @helper skill 디렉터리 이름을 companion skill 이름으로 변환
  */
 const getConventionSkillName = (skillName: string): string => {
+	if (conventionSkillNameBySkillName[skillName]) {
+		return conventionSkillNameBySkillName[skillName];
+	}
+
 	return `convention-${skillName}`;
 };
 
