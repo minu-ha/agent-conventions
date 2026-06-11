@@ -28,6 +28,7 @@ recursively and build preserves that relationship in the generated guide.
 - `astro`
 - `react`
 - `css`
+- `convention-audit`
 - `figma-visual-parity`
 - `nestjs`
 - `playwright-test`
@@ -50,6 +51,7 @@ The current structured, buildable skills are:
 - `astro`
 - `react`
 - `css`
+- `convention-audit`
 - `figma-visual-parity`
 - `nestjs`
 - `playwright-test`

@@ -21,6 +21,7 @@ const getRulesForSection = (section: SkillSection, rules: SkillRule[]): SkillRul
 
 const conventionTitleBySkillName: Record<string, string> = {
 	astro: "Astro Convention",
+	"convention-audit": "Convention Audit",
 	css: "CSS Convention",
 	"figma-visual-parity": "Figma Visual Parity",
 	nestjs: "NestJS Convention",
@@ -29,7 +30,10 @@ const conventionTitleBySkillName: Record<string, string> = {
 	"tanstack-route": "TanStack Route Convention",
 	typescript: "TypeScript Convention",
 };
-const conventionSkillNameBySkillName: Record<string, string> = {"figma-visual-parity": "figma-visual-parity"};
+const conventionSkillNameBySkillName: Record<string, string> = {
+	"convention-audit": "convention-audit",
+	"figma-visual-parity": "figma-visual-parity",
+};
 const nestedTocIndent = " ".repeat(4);
 
 /**

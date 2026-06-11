@@ -21,6 +21,8 @@
   React 컴포넌트 경계, route-local 분리, handler 흐름, state 오리진, 문서화 규칙
 - [css](./skill/css/README.md) - `convention-css`
   plain CSS 기본값, `rt_/wg_/ui_/loc_` owner namespace, 전역 고유 클래스 네이밍, selector 깊이, wrapper 기준 스타일링, 디자인 토큰 규칙
+- [convention-audit](./skill/convention-audit/README.md) - `convention-audit`
+  React/CSS/TypeScript convention 준수를 audit packet, rule coverage matrix, semantic reviewer, FAIL/UNKNOWN repair loop로 검증하는 완료 gate
 - [figma-visual-parity](./skill/figma-visual-parity/README.md) - `figma-visual-parity`
   Figma 링크, node, screenshot을 기준으로 실제 브라우저 구현 화면과의 visual parity를 맞추는 workflow 규칙
 - [tanstack-route](./skill/tanstack-route/README.md) - `convention-tanstack-route`
@@ -39,7 +41,7 @@
 이 레포에는 두 가지 형태의 skill이 공존합니다.
 
 - Structured skill
-  `astro`, `react`, `css`, `figma-visual-parity`, `tanstack-route`, `playwright-test`, `typescript`, `nestjs`
+  `astro`, `react`, `css`, `convention-audit`, `figma-visual-parity`, `tanstack-route`, `playwright-test`, `typescript`, `nestjs`
 - Legacy single-document skill
   `java`
 
@@ -48,6 +50,7 @@ legacy skill은 단일 문서를 직접 정본으로 사용합니다.
 
 현재 `react`, `nestjs`, `tanstack-route`, `playwright-test`는 `metadata.json.extends`로 `typescript` companion skill 관계를 선언합니다.  
 `astro`는 `metadata.json.extends`로 `typescript`, `css` companion skill 관계를 선언합니다.  
+`convention-audit`는 `metadata.json.extends`로 `react`, `css`, `typescript` companion skill 관계를 선언합니다.  
 `figma-visual-parity`는 `metadata.json.extends`로 `react`, `css`, `playwright-test` companion skill 관계를 선언합니다.  
 즉, framework skill은 local 규칙에 집중하고 공통 TypeScript/CSS 규칙은 companion skill을 함께 로드하는 방식으로 사용합니다.
 
@@ -76,6 +79,16 @@ agent-conventions/
         *.md
     css/
       ...
+    convention-audit/
+      AGENTS.md
+      README.md
+      SKILL.md
+      metadata.json
+      pressure-tests.md
+      rules/
+        _sections.md
+        _template.md
+        *.md
     figma-visual-parity/
       AGENTS.md
       README.md

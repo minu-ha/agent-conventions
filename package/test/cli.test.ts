@@ -19,6 +19,7 @@ const expectedSkillScriptNames = [
 	"astro",
 	"react",
 	"css",
+	"convention-audit",
 	"figma-visual-parity",
 	"nestjs",
 	"playwright-test",
