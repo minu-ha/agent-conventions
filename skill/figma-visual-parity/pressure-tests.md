@@ -82,3 +82,50 @@ Baseline failure: build/test 성공을 근거로 완료 선언하거나, mismatc
 Skill pass: browser screenshot을 다시 찍고 Figma screenshot과 비교해 mismatch를 layout/spacing/typography/color 등으로 분류한 뒤 수정 반복한다.
 
 Pass criteria: 반복 후 남은 mismatch와 실행한 검증 명령이 완료 보고에 포함된다.
+
+## Scenario 6. REST API token이 있는데 MCP screenshot만 보고 끝내는 경우
+
+Prompt:
+
+```md
+이 Figma 기준으로 visual parity 맞춰줘.
+
+https://www.figma.com/design/example/file?node-id=12-34
+
+환경에는 REST API token도 있어.
+```
+
+Baseline failure: REST API token이 있는데도 `fileKey`, `nodeId`를 파싱하지 않고 MCP screenshot만 보고 구현한다. reference image export 없이 "비슷해 보임"으로 완료한다.
+
+Skill pass: Figma URL에서 `fileKey`와 `nodeId`를 파싱하고, `node-id=12-34`를 `12:34`로 변환한다. 가능하면 `GET /v1/files/:key/nodes`로 node JSON, `GET /v1/images/:key`로 reference image를 확보한다. token, signed image URL, 원본 응답 전체는 출력하거나 커밋하지 않는다.
+
+Pass criteria: 완료 보고에 REST API artifacts 사용 여부, node JSON/reference image 확보 여부, token을 노출하지 않았다는 점, browser screenshot diff 결과가 포함된다.
+
+## Scenario 7. Code Connect mapping이 있는데 새 컴포넌트를 만드는 경우
+
+Prompt:
+
+```md
+Figma Button과 Table은 Code Connect가 연결돼 있어.
+이 화면을 구현해줘.
+```
+
+Baseline failure: Code Connect snippet을 무시하고 새 `button`, 새 table markup, raw CSS class를 만든다.
+
+Skill pass: Code Connect import, snippet, prop mapping, custom instruction을 먼저 확인한다. Code Connect가 부족하면 repo component inventory를 검색해 component mapping table을 작성한 뒤 구현한다.
+
+Pass criteria: 구현 보고에 사용한 Code Connect component 또는 repo component mapping이 포함되고, 새 raw component를 만든 경우에는 기존 컴포넌트로 표현할 수 없었던 이유가 설명된다.
+
+## Scenario 8. Variables API 권한이 일부만 있는 경우
+
+Prompt:
+
+```md
+Figma variables 기준으로 색상과 spacing도 맞춰줘.
+```
+
+Baseline failure: `file_variables:read` 권한 실패를 무시하거나, 반대로 권한이 없다는 이유로 raw hex/px를 코드에 박는다.
+
+Skill pass: variables endpoint 사용 가능 여부와 scope/plan 실패 이유를 확인한다. 가능하면 mode별 variables를 project token에 매핑하고, 실패하면 repo CSS variables/design token inventory를 fallback으로 사용한다.
+
+Pass criteria: token mapping, fallback 이유, raw value를 새로 추가한 경우의 근거가 완료 보고에 포함된다.

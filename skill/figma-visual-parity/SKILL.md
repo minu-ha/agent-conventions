@@ -27,6 +27,10 @@ Figma를 대략 참고하는 skill이 아니라, Figma evidence와 실제 브라
 ## 활성화 체크리스트
 
 - Figma tool을 쓸 수 있으면 먼저 Figma node/design context/screenshot을 확보합니다. Figma MCP의 `use_figma`를 호출해야 한다면 먼저 `figma:figma-use` skill을 로드합니다.
+- 사용 가능한 integration을 먼저 audit합니다. Figma MCP, Code Connect, Figma REST API token, Figma variables/components metadata, repo design system inventory, browser screenshot diff 중 쓸 수 있는 것은 전부 사용하고, 못 쓰는 것은 이유를 기록합니다.
+- Figma REST API를 쓸 수 있으면 Figma URL에서 `fileKey`와 `nodeId`를 파싱합니다. `node-id=1-2`는 API용 `1:2`로 변환합니다.
+- REST API token이 있으면 `GET /v1/files/:key/nodes`로 node JSON을, `GET /v1/images/:key`로 reference image를 확보합니다. variables 권한이 있으면 `file_variables:read` scope 기반 variables endpoint도 확인합니다.
+- Code Connect context가 있으면 import, component snippet, prop mapping, custom instruction을 우선 구현 힌트로 사용하고 raw JSX/CSS 재구현을 피합니다.
 - node가 너무 크면 더 작은 node, parent section, screenshot, metadata fallback 중 가능한 evidence를 확보하고 포기하지 않습니다.
 - 구현 전 현재 브라우저 화면도 확인합니다. local app이면 dev server와 실제 route를 열어 screenshot을 봅니다.
 - 구현 전 아래 visual diff 표를 작성합니다.
@@ -50,6 +54,19 @@ Figma를 대략 참고하는 skill이 아니라, Figma evidence와 실제 브라
 | static copy |  |  |  |
 | states |  |  |  |
 | responsive behavior |  |  |  |
+
+## Evidence Integration Ladder
+
+사용 가능한 integration은 아래 순서로 조합합니다. 한 계층이 실패해도 다음 계층으로 내려가며, 완료 보고에 사용/미사용 이유를 남깁니다.
+
+| 계층 | 사용 목적 | 없거나 실패하면 |
+| --- | --- | --- |
+| Figma MCP design context/screenshot | layout, hierarchy, visible copy, component hint 확보 | metadata, screenshot, smaller node fallback |
+| Code Connect | 실제 repo component import, snippet, prop mapping 확보 | repo component inventory를 직접 검색 |
+| Figma REST API node JSON | absolute bounds, layout, styles, component/style reference를 구조적으로 확인 | MCP output과 screenshot 기준으로만 판단 |
+| Figma REST API image export | Figma reference PNG/SVG를 browser screenshot diff 기준으로 저장 | MCP screenshot 또는 사용자 제공 screenshot 사용 |
+| Figma variables/components/styles | token, mode, published component/style metadata 매핑 | repo token과 CSS 변수 inventory 기준으로 추정 |
+| Browser screenshot diff | 구현 결과와 Figma reference 비교 | 미검증으로 보고하고 완료 선언 금지 |
 
 ## 정적 값과 동적 값
 
@@ -79,6 +96,8 @@ Figma를 대략 참고하는 skill이 아니라, Figma evidence와 실제 브라
 
 - 사용한 Figma 링크/node
 - 수정 scope
+- 사용 가능한 integration과 실제 사용/미사용 이유
+- REST API로 확보한 artifacts: node JSON, reference image, variables/components/styles metadata
 - 구현한 visual parity 항목
 - 동적 데이터라서 하드코딩하지 않은 항목
 - 정적 UI copy로 맞춘 항목
@@ -96,6 +115,10 @@ Figma를 대략 참고하는 skill이 아니라, Figma evidence와 실제 브라
 - UI polish 중 visible heading/label을 임의 삭제하는 것
 - node가 너무 크다고 Figma 분석을 포기하는 것
 - 기존 디자인 시스템을 무시하고 raw CSS만 늘리는 것
+- Code Connect snippet이 있는데 무시하고 임의 컴포넌트를 새로 만드는 것
+- Figma REST API token, fileKey, nodeId가 있는데 reference image/node JSON을 확보하지 않는 것
+- variables/components/styles metadata를 확인할 수 있는데 raw color/spacing/font 값을 그대로 박는 것
+- REST API token이나 응답 원문을 로그/커밋/완료 보고에 노출하는 것
 
 ## 상세 규칙
 

@@ -36,6 +36,23 @@ test("figma visual parity skill documents required parity workflow guardrails", 
 	}
 });
 
+test("figma visual parity skill requires available advanced Figma integrations", async () => {
+	const source = await readSkillFile("SKILL.md");
+
+	for (const expectedText of [
+		"Code Connect",
+		"Figma REST API",
+		"fileKey",
+		"nodeId",
+		"GET /v1/files/:key/nodes",
+		"GET /v1/images/:key",
+		"file_variables:read",
+		"사용 가능한 integration",
+	]) {
+		assert.match(source, new RegExp(expectedText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")), expectedText);
+	}
+});
+
 test("figma visual parity pressure tests cover failure-prone scenarios", async () => {
 	const source = await readSkillFile("pressure-tests.md");
 
@@ -46,6 +63,8 @@ test("figma visual parity pressure tests cover failure-prone scenarios", async (
 		"API 값",
 		"node가 너무 커서",
 		"browser screenshot",
+		"REST API token",
+		"Code Connect",
 	]) {
 		assert.match(source, new RegExp(expectedText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")), expectedText);
 	}
