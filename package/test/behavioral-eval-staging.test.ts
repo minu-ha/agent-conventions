@@ -339,6 +339,13 @@ test("initial artifacts preserve the existing run coordinate and completely seal
 		);
 		assert.match(first.exactDispatch, new RegExp(first.requestPath.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
 		assert.equal(first.request.assignedChildPayloadPath, first.childPayloadPath);
+		assert.equal(first.request.childPayloadContract.exactObjectKeysOnly, true);
+		assert.match(String(first.request.childPayloadContract.routingTrace), /generatedIndexDigests:Record<string,sha256>/);
+		assert.match(String(first.request.childPayloadContract.routingTrace), /selected:Record<string,string\[\]>/);
+		assert.match(
+			String(first.request.childPayloadContract.semanticVerdicts),
+			/criterion:string,verdict:'PASS'\|'FAIL'\|'UNKNOWN',reason:string/,
+		);
 
 		const untrackedSkillSource = path.join(fixture.skillRootDir, "react", "untracked-staged-source.md");
 		await writeFile(untrackedSkillSource, "untracked\n", "utf8");

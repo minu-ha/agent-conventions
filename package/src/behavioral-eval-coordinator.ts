@@ -4,7 +4,12 @@ import {link, mkdir, readFile, readdir, realpath, unlink, writeFile} from "node:
 import path from "node:path";
 import {promisify} from "node:util";
 
-import {createBehavioralEvalDispatchEnvelope, type BehavioralEvalDispatchEnvelope, validateBehavioralEvalRun} from "./behavioral-evals.js";
+import {
+	createBehavioralChildPayloadContract,
+	createBehavioralEvalDispatchEnvelope,
+	type BehavioralEvalDispatchEnvelope,
+	validateBehavioralEvalRun,
+} from "./behavioral-evals.js";
 import {packagePaths} from "./config.js";
 import {isDirectExecution} from "./entrypoint.js";
 
@@ -303,48 +308,8 @@ const childForbiddenFields = new Set([
 ]);
 
 const childPayloadContract: Record<string, unknown> = {
-	requiredFields: [
-		"runtime",
-		"declaredLoadedFiles",
-		"activatedSkills",
-		"receipts",
-		"routingTrace",
-		"driftReceipt",
-		"semanticVerdicts",
-		"completion",
-		"limitations",
-		"response",
-		"virtualPatch",
-	],
+	...createBehavioralChildPayloadContract(),
 	forbiddenCoordinatorFields: [...childForbiddenFields].sort(),
-	runtime: {
-		evidenceClass: "declared-telemetry-only",
-		declared: {
-			runtime: "Codex collaboration child agent",
-			requestedModel: "gpt-5.6-sol",
-			requestedReasoning: "high",
-			forkTurns: "none",
-			oneChildPerTrial: true,
-		},
-		unavailable: {
-			runtimeVersion: null,
-			exactModelBuild: null,
-			actualReasoningTelemetry: null,
-			observedFileReads: null,
-			childTokenUsage: null,
-		},
-	},
-	declaredLoadedFiles: "{kind:'declared',paths:string[]}; paths are declared child evidence, not observed telemetry",
-	routingTrace:
-		"{passes:[{pass,activatedSkills,scopeEvidence,generatedIndexDigests,selected,notApplicable,unknown,requiresSelectedAdded,requiresSelectedEvaluated:[{source,target,sourceStatus:'Selected'|'N/A'|'Unknown',outcome:'selected'|'not-propagated-unknown'|'not-propagated-na'}],reviewWithReevaluated,completionGateAdded,completionGatesEvaluated:[{rule,outcome:'selected'}]}],stablePair:[n,n+1],stable:true}; candidate arms use at least three passes and the final two are identical with empty selection-changing deltas",
-	receipts:
-		"[{skill,indexDigest,selected:[{ordinal,id}],notApplicable:[{ordinal,id}],unknown:[{ordinal,id}],excludedGroups:[{ordinals,reason}],expanded:[{ordinal,id,contractPath,fullRulePath,reason,mandatoryCritical}]}]",
-	completion:
-		"{status:'COMPLETE'|'BLOCKED',blocked,coverageFailCount,semanticFailCount,unknownCount,reason}; any fail or Unknown blocks completion",
-	virtualPatch:
-		"null for protocol-allowed baseline/mutation runs; mixed runs return {files:[{path,beforeState,beforeSha256,afterState,after,afterSha256}],summary} with exact virtualFiles path/before state/digest coverage",
-	returnBoundary:
-		"The coordinator supplies the one allowed payload path per run. Write exactly that JSON file with apply_patch, modify no other file, do not echo prompt or coordinator bindings, then return only concise status.",
 };
 
 /** @helper unknown JSON value를 plain object로 제한 */

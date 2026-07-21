@@ -234,10 +234,18 @@ test("coordinator persists a deterministic short dispatch and sealed child reque
 		assert.deepEqual(first.request.virtualFiles, []);
 		const payloadContract = first.request.childPayloadContract as Record<string, unknown>;
 		assert.equal(payloadContract.assignedChildPayloadPath, first.childPayloadPath);
+		assert.equal(payloadContract.exactObjectKeysOnly, true);
 		assert.deepEqual(payloadContract.runtime, createNoSkillChildPayload().runtime);
-		assert.match(String(payloadContract.routingTrace), /generatedIndexDigests/);
+		assert.match(String(payloadContract.activatedSkills), /string\[\]/);
+		assert.match(String(payloadContract.routingTrace), /generatedIndexDigests:Record<string,sha256>/);
+		assert.match(String(payloadContract.routingTrace), /selected:Record<string,string\[\]>/);
 		assert.match(String(payloadContract.routingTrace), /requiresSelectedEvaluated/);
+		assert.match(String(payloadContract.routingTrace), /reviewWithReevaluated.*evidence/);
 		assert.match(String(payloadContract.routingTrace), /completionGatesEvaluated/);
+		assert.match(String(payloadContract.receipts), /ordinal:string/);
+		assert.match(String(payloadContract.semanticVerdicts), /criterion:string,verdict:'PASS'\|'FAIL'\|'UNKNOWN',reason:string/);
+		assert.match(String(payloadContract.limitations), /string\[\]/);
+		assert.match(String(payloadContract.response), /non-empty string/);
 		assert.equal(first.envelope.skillRootDir, protocol.skillRootDir);
 		assert.deepEqual(Object.keys(first.envelope.routingEvalRawSha256).sort(), [
 			"skill/css/routing-evals.json",

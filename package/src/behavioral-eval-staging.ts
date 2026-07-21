@@ -6,6 +6,7 @@ import {promisify} from "node:util";
 
 import {scoreBehavioralEvalRun} from "./behavioral-eval-coordinator.js";
 import {
+	createBehavioralChildPayloadContract,
 	createBehavioralEvalDispatchEnvelope,
 	type BehavioralEvalDispatchEnvelope,
 	validateBehavioralEvalRun,
@@ -798,6 +799,7 @@ const getCandidateEntrypoints = (arm: string): string[] =>
 	arm === "no-skill" ? [] : progressiveSkillNames.map((skillName) => `skill/${skillName}/SKILL.md`);
 
 const getInitialPayloadContract = (assignedPath: string): Record<string, unknown> => ({
+	...createBehavioralChildPayloadContract(),
 	requiredFields: [...initialPayloadKeys],
 	driftReceipt: "must be null; future scope drift has not been disclosed",
 	virtualPatch:
@@ -806,7 +808,9 @@ const getInitialPayloadContract = (assignedPath: string): Record<string, unknown
 });
 
 const getDriftPayloadContract = (assignedPath: string): Record<string, unknown> => ({
+	...createBehavioralChildPayloadContract(),
 	requiredFields: [...driftPayloadKeys],
+	driftReceipt: "omitted from this drift-stage payload; the coordinator constructs final driftReceipt after validating this stage",
 	virtualPatch:
 		"Return the complete replacement-final virtual snapshot. Paths and before state/digest exactly match this follow-up request virtualFiles.",
 	writeBoundary: `Write exactly ${assignedPath} with apply_patch; do not edit the sealed initial payload or any virtual source path.`,

@@ -587,6 +587,66 @@ interface ValidatedRoutingEpisode {
 	expandedBySkill: Map<string, ExpandedRecord[]>;
 }
 
+/**
+ * @api strict validator와 같은 child-owned payload shape를 request에 공개
+ */
+export const createBehavioralChildPayloadContract = (): Record<string, unknown> => ({
+	exactObjectKeysOnly: true,
+	requiredFields: [
+		"runtime",
+		"declaredLoadedFiles",
+		"activatedSkills",
+		"receipts",
+		"routingTrace",
+		"driftReceipt",
+		"semanticVerdicts",
+		"completion",
+		"limitations",
+		"response",
+		"virtualPatch",
+	],
+	formats: {
+		sha256: "sha256:<64 lowercase hex>",
+		ordinal: "uppercase prefix plus two digits, for example R07, T05, or C14",
+		qualifiedRuleRef: "<skill>/<stable-rule-id>; never include an ordinal in routing edge references",
+	},
+	runtime: {
+		evidenceClass: "declared-telemetry-only",
+		declared: {
+			runtime: "Codex collaboration child agent",
+			requestedModel: "gpt-5.6-sol",
+			requestedReasoning: "high",
+			forkTurns: "none",
+			oneChildPerTrial: true,
+		},
+		unavailable: {
+			runtimeVersion: null,
+			exactModelBuild: null,
+			actualReasoningTelemetry: null,
+			observedFileReads: null,
+			childTokenUsage: null,
+		},
+	},
+	declaredLoadedFiles: "{kind:'declared',paths:string[]}; exact keys only; paths are declarations, not observed telemetry",
+	activatedSkills: "string[] in canonical activation order; [] for no-skill",
+	receipts:
+		"Array<{skill:string,indexDigest:sha256|null,selected:Array<{ordinal:string,id:string}>,notApplicable:Array<{ordinal:string,id:string}>,unknown:Array<{ordinal:string,id:string}>,excludedGroups:Array<{ordinals:string[],reason:string}>,expanded:Array<{ordinal:string,id:string,contractPath:string,fullRulePath:string,reason:string,mandatoryCritical:boolean}>}>; exact keys only; ordinal is a string such as T05; full-handbook indexDigest is null, progressive/mutation uses the current digest",
+	routingTrace:
+		"null or {passes:Array<{pass:positive-integer,activatedSkills:string[],scopeEvidence:string[],generatedIndexDigests:Record<string,sha256>,selected:Record<string,string[]>,notApplicable:Record<string,string[]>,unknown:Record<string,string[]>,requiresSelectedEvaluated:Array<{source:string,target:string,sourceStatus:'Selected'|'N/A'|'Unknown',outcome:'selected'|'not-propagated-unknown'|'not-propagated-na'}>,requiresSelectedAdded:Array<{source:string,target:string}>,reviewWithReevaluated:Array<{source:string,target:string,outcome:'Selected'|'N/A'|'Unknown'|'INACTIVE',evidence:string}>,completionGatesEvaluated:Array<{rule:string,outcome:'selected'}>,completionGateAdded:string[]}>,stablePair:[positive-integer,positive-integer],stable:true}; exact keys only; selected/notApplicable/unknown values are stable rule ID strings without ordinals; source, target, and rule use qualifiedRuleRef; candidate arms require at least three passes and an identical final stable pair with empty selection-changing deltas",
+	driftReceipt:
+		"null outside replacement-final RTE02; otherwise {routingTrace:<same exact routingTrace object>,activatedSkills:string[],receipts:<same exact receipts array>}; exact keys only",
+	semanticVerdicts:
+		"Array<{criterion:string,verdict:'PASS'|'FAIL'|'UNKNOWN',reason:string}>; exact keys only; use [] when no criterion is declared",
+	completion:
+		"{status:'COMPLETE'|'BLOCKED',blocked:boolean,coverageFailCount:non-negative-integer,semanticFailCount:non-negative-integer,unknownCount:non-negative-integer,reason:string}; exact keys only; counts must equal the payload evidence and any fail or Unknown blocks completion",
+	limitations: "string[]; use [] when none",
+	response: "non-empty string",
+	virtualPatch:
+		"null or {files:Array<{path:string,beforeState:'present'|'absent',beforeSha256:sha256|null,afterState:'present'|'absent',after:string|null,afterSha256:sha256|null}>,summary:string}; exact keys only; file order and before state/digest exactly match virtualFiles; afterSha256 hashes exact UTF-8 after bytes",
+	returnBoundary:
+		"The coordinator supplies the one allowed payload path per run. Write exactly that JSON file with apply_patch, modify no other file, do not echo prompt or coordinator bindings, then return only concise status.",
+});
+
 const tracePassKeys = [
 	"pass",
 	"activatedSkills",
