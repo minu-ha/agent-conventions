@@ -187,6 +187,7 @@ receipt의 selected/unknown rule 파일은 원문 전체를 읽고 구현한다.
 
 - React는 TSX/TypeScript 언어 계약 때문에 TypeScript를 기본 companion으로 활성화한다.
 - CSS는 stylesheet, selector, class contract 또는 visual styling surface가 실제로 변경될 때 활성화한다.
+- CSS rule이 TS/TSX class contract, wrapper Props 또는 style import를 함께 다룰 때만 TypeScript를 conditional companion으로 활성화하며 pure CSS에서는 활성화하지 않는다.
 - pure TypeScript 작업은 React/CSS를 자동 활성화하지 않는다.
 - 기존 `metadata.json.extends`는 required와 conditional을 구분하지 못하므로 progressive skill의 activation 정본으로 사용하지 않는다. 대신 `metadata.json.companions`가 skill, mode, 적용 조건을 명시한다.
 - 향후 Astro, NestJS 등도 같은 index contract로 migration할 수 있지만 이번 변경의 필수 범위는 아니다.
@@ -257,7 +258,7 @@ package 구현은 다음 계약을 지원한다.
 - `SkillRule.reviewWith?: string[]`
 - `SkillMetadata.progressiveDisclosure?: boolean`
 - required/conditional을 구분하는 `SkillMetadata.companions?`
-- `SkillPaths.rulesIndexOutputPath`
+- `SkillPaths.rulesIndexPath`
 - rule index markdown generator
 - canonical routing metadata digest와 compact ordinal generator
 - progressive skill의 `appliesWhen` 존재, 한 줄, 길이 검증
