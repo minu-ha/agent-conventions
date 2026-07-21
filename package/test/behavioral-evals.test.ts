@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import {createHash} from "node:crypto";
-import {mkdtemp, readFile, rm, writeFile} from "node:fs/promises";
+import {cp, mkdtemp, readFile, rm, writeFile} from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import {test} from "node:test";
@@ -70,11 +70,11 @@ const createDeclaredRuntime = (): Record<string, unknown> => {
 /**
  * @helper 현재 TypeScript source와 digest에 맞는 완료 run fixture 생성
  */
-const createValidFixture = async (): Promise<BehavioralFixture> => {
+const createValidFixture = async (skillRootDir: string = packagePaths.skillRootDir): Promise<BehavioralFixture> => {
 	const promptRendererVersion = "behavioral-child-wrapper-v3";
 	const scenarioPrompt = "named query declaration의 header JSDoc을 규칙에 맞게 정리한다.";
 	const exactPrompt = `${scenarioPrompt}\n\nReturn a digest-bound exact routing receipt.`;
-	const document = await readSkillDocument(getSkillPaths("typescript"));
+	const document = await readSkillDocument(getSkillPaths("typescript", skillRootDir));
 	const ruleIds = getCanonicalRoutingRuleIds(document);
 	const selectedIds = [
 		"naming-centralize-shared-config-namespaces",
@@ -102,7 +102,7 @@ const createValidFixture = async (): Promise<BehavioralFixture> => {
 		exactPrompt,
 		promptRendererVersion,
 		routingSkillNames: ["typescript"],
-		skillRootDir: packagePaths.skillRootDir,
+		skillRootDir,
 	});
 
 	const createStablePartition = () => ({
@@ -410,6 +410,29 @@ test("validator accepts a dispatch-bound stable fixed-point receipt", async () =
 	const fixture = await createValidFixture();
 
 	await validateBehavioralEvalRun({run: fixture.run, dispatchEnvelope: fixture.dispatch, skillRootDir: packagePaths.skillRootDir});
+});
+
+test("validator uses the canonical generated target order instead of raw frontmatter order", async () => {
+	const fixtureDir = await mkdtemp(path.join(os.tmpdir(), "behavioral-canonical-target-order-"));
+	const skillRootDir = path.join(fixtureDir, "skill");
+
+	try {
+		await cp(packagePaths.skillRootDir, skillRootDir, {recursive: true});
+		const rulePath = path.join(skillRootDir, "typescript", "rules", "docs-require-header-jsdoc-on-key-declarations.md");
+		const source = await readFile(rulePath, "utf8");
+		const reordered = source.replace(
+			"requiresSelected: docs-standardize-annotation-tags-by-declaration-role, docs-write-concise-korean-comments-about-purpose-and-constraints",
+			"requiresSelected: docs-write-concise-korean-comments-about-purpose-and-constraints, docs-standardize-annotation-tags-by-declaration-role",
+		);
+
+		assert.notEqual(reordered, source);
+		await writeFile(rulePath, reordered, "utf8");
+		const fixture = await createValidFixture(skillRootDir);
+
+		await validateBehavioralEvalRun({run: fixture.run, dispatchEnvelope: fixture.dispatch, skillRootDir});
+	} finally {
+		await rm(fixtureDir, {recursive: true, force: true});
+	}
 });
 
 test("stage evidence validator rejects an initial Selected contract omitted from declared loads", async () => {

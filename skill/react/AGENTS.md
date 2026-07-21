@@ -174,7 +174,7 @@ const request = buildMediaUploadPayload(files);
 
 **Applies when:** 컴포넌트를 ui·widget·route-local 중 어느 소유 레이어에 둘지 결정하거나 레이어 사이에서 이동·공용화한다.
 
-**Review with:** `ownership-place-route-local-files-by-scope`, `css/naming-separate-local-and-route-style-scopes`
+**Review with:** `css/naming-separate-local-and-route-style-scopes`, `ownership-place-route-local-files-by-scope`
 
 **Impact: CRITICAL (공용 책임과 route-local 책임이 같은 레이어로 섞이는 것을 막음)**
 
@@ -481,7 +481,7 @@ export const WgEntryEditToolbar = () => {
 
 **Applies when:** exported shared component에 slot·public part·shared context/action·반복 preset·mode API를 추가하거나 조립 구조를 재설계한다.
 
-**Review with:** `strategy-avoid-boolean-prop-proliferation`, `strategy-prefer-children-over-render-props`, `screen-avoid-premature-abstraction`
+**Review with:** `screen-avoid-premature-abstraction`, `strategy-avoid-boolean-prop-proliferation`, `strategy-prefer-children-over-render-props`
 
 **Impact: HIGH (helps shared components choose the simplest structure that still exposes the right extension points)**
 
@@ -1665,7 +1665,7 @@ const handleSubmitButtonClick: MouseEventHandler<HTMLButtonElement> = async (_ev
 
 **Applies when:** 이벤트 핸들러를 새로 만들거나 이름, target/event 표현, 추가 인자 전달 방식 또는 최종 React handler 시그니처를 바꾼다.
 
-**Review with:** `typing-function-type-first`, `typescript/naming-use-consistent-file-and-symbol-naming`
+**Review with:** `typescript/naming-use-consistent-file-and-symbol-naming`, `typing-function-type-first`
 
 **Impact: MEDIUM-HIGH (이벤트 흐름을 검색 가능하게 유지하고 즉흥적인 handler 시그니처를 피함)**
 
@@ -1744,7 +1744,7 @@ Server state, store 접근, 파생값, effect callback, transition은 오리진�
 
 **Applies when:** optional 응답에 \`??\`·\`||\` 기본값을 넣거나 Suspense 화면 본문에 초기 loading return을 추가·변경하고 결측·로딩 UX를 다룬다.
 
-**Review with:** `state-preserve-origin-chaining`, `screen-keep-derived-values-close`, `typescript/absence-expose-optional-values-instead-of-silent-fallbacks`
+**Review with:** `screen-keep-derived-values-close`, `state-preserve-origin-chaining`, `typescript/absence-expose-optional-values-instead-of-silent-fallbacks`
 
 **Impact: HIGH (결측 데이터를 숨기지 않고 로딩 UX를 Suspense 또는 명시적 예외 처리 쪽으로 유도함)**
 
@@ -1846,7 +1846,7 @@ const responseUserGetItemSuspense = useUserGetItemSuspense();
 
 **Applies when:** React Query query·mutation hook의 로컬 binding을 추가·이름 변경하거나 역할이 드러나지 않는 별칭이 diff에 보인다.
 
-**Requires selected:** `typescript/naming-use-consistent-file-and-symbol-naming`, `docs-require-jsdoc-on-key-declarations` · N/A 불가
+**Requires selected:** `docs-require-jsdoc-on-key-declarations`, `typescript/naming-use-consistent-file-and-symbol-naming` · N/A 불가
 
 **Review with:** `state-preserve-origin-chaining`
 

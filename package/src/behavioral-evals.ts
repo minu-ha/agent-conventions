@@ -5,7 +5,7 @@ import path from "node:path";
 import {getSkillPaths, packagePaths} from "./config.js";
 import {parseDependencyDeclaration} from "./dependencies.js";
 import {readSkillDocument} from "./parser.js";
-import {generateRulesIndexMarkdown, getCanonicalRoutingRuleIds, getRuleId} from "./routing.js";
+import {generateRulesIndexMarkdown, getCanonicalRoutingRuleIds, getCanonicalRoutingTargets, getRuleId} from "./routing.js";
 import type {LoadedSkillDocument, SkillRule} from "./types.js";
 
 /**
@@ -645,7 +645,7 @@ export const createBehavioralChildPayloadContract = (): Record<string, unknown> 
 		stablePair:
 			"stablePair names the final two consecutive passes. Their canonical state is identical, stable is true, and both requiresSelectedAdded and completionGateAdded arrays are empty.",
 		transitionOrder:
-			"requiresSelectedEvaluated, requiresSelectedAdded, reviewWithReevaluated, completionGatesEvaluated, and completionGateAdded use canonical activated-skill, source-rule, and metadata order with no duplicate edge or gate.",
+			"requiresSelectedEvaluated, requiresSelectedAdded, and reviewWithReevaluated use canonical activated-skill and source-rule order, then the code-point ascending target order printed by generated contracts/indexes/handbooks; completion arrays use canonical rule order; no edge or gate is duplicated.",
 		reviewWith:
 			"Every reviewWith outcome exactly matches the target partition: Selected, N/A, Unknown, or INACTIVE when the target skill is inactive. reviewWith never forces or selects a target. Every reviewWith record requires non-empty evidence.",
 		finalClosure:
@@ -1641,7 +1641,7 @@ const assertMandatoryRuleClosure = (finalPass: RoutingTracePass, snapshots: Map<
 				continue;
 			}
 
-			for (const target of rule.requiresSelected) {
+			for (const target of getCanonicalRoutingTargets(rule.requiresSelected)) {
 				const qualifiedTarget = getQualifiedTarget(skillName, target);
 				const [targetSkill, targetRuleId] = getQualifiedRuleParts(qualifiedTarget, `${skillName}/${ruleId} requiresSelected`);
 
@@ -1979,7 +1979,7 @@ const createExpectedRequiresSelectedEdges = (args: CreateExpectedRequiresSelecte
 		for (const ruleId of pass.selected[skillName] ?? []) {
 			const rule = snapshot.ruleById.get(ruleId)!;
 
-			for (const target of rule.requiresSelected) {
+			for (const target of getCanonicalRoutingTargets(rule.requiresSelected)) {
 				const qualifiedTarget = getQualifiedTarget(skillName, target);
 				const [targetSkill, targetRuleId] = getQualifiedRuleParts(qualifiedTarget, `${skillName}/${ruleId} requiresSelected`);
 				const targetIsNew = !(previousPass?.selected[targetSkill] ?? []).includes(targetRuleId);
@@ -2028,7 +2028,7 @@ const createExpectedRequiresSelectedEvaluations = (args: CreateExpectedRequiresS
 				continue;
 			}
 
-			for (const target of rule.requiresSelected) {
+			for (const target of getCanonicalRoutingTargets(rule.requiresSelected)) {
 				const qualifiedTarget = getQualifiedTarget(skillName, target);
 				const [targetSkill, targetRuleId] = getQualifiedRuleParts(qualifiedTarget, `${source} requiresSelected`);
 				let outcome: RequiresSelectedOutcome;
@@ -2068,7 +2068,7 @@ const createExpectedReviewOutcomes = (
 
 			const rule = snapshot.ruleById.get(ruleId)!;
 
-			for (const target of rule.reviewWith) {
+			for (const target of getCanonicalRoutingTargets(rule.reviewWith)) {
 				const qualifiedTarget = getQualifiedTarget(skillName, target);
 				const [targetSkill, targetRuleId] = getQualifiedRuleParts(qualifiedTarget, `${skillName}/${ruleId} reviewWith`);
 				let outcome: ReviewWithOutcome["outcome"] = "INACTIVE";

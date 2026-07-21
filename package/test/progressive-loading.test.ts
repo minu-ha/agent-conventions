@@ -425,6 +425,21 @@ test("critical contracts require the full source while non-critical contracts re
 	assert.throws(() => generateRuleContractMarkdown(hiddenNormRule), /state-observe.*prose.*after.*Incorrect/i);
 });
 
+test("generated contracts use canonical requiresSelected target order", () => {
+	const rule = createRoutingDocument().rules[2]!;
+	rule.requiresSelected = ["typescript/types-reuse-contracts", "state-observe"];
+	rule.body =
+		"## First Composition\n\n**Impact: CRITICAL (First impact.)**\n\nKeep the critical boundary.\n\n**Incorrect**\n\n```ts\nconst bad = true;\n```\n\n**Correct**\n\n```ts\nconst good = true;\n```";
+
+	const contract = generateRuleContractMarkdown(rule);
+	const crossSkillOffset = contract.indexOf("typescript/types-reuse-contracts");
+	const localOffset = contract.indexOf("state-observe");
+
+	assert.ok(crossSkillOffset >= 0);
+	assert.ok(localOffset >= 0);
+	assert.ok(localOffset < crossSkillOffset, "contract targets must use deterministic code-point order");
+});
+
 test("non-critical contracts support every documented impact level", () => {
 	const lowImpactRule = createRoutingDocument().rules[0]!;
 	lowImpactRule.impact = "LOW";

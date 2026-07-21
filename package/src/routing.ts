@@ -57,6 +57,11 @@ interface CanonicalRoutingSourceArgs {
 export const getRuleId = (rule: SkillRule): string => rule.fileName.replace(/\.md$/, "");
 
 /**
+ * @helper routing edge target를 generated surface와 validator가 공유하는 code-point 순서로 정렬
+ */
+export const getCanonicalRoutingTargets = (targets: string[]): string[] => [...targets].sort(compareRoutingText);
+
+/**
  * @helper section prefix 기준 local rule 목록 정렬
  */
 export const getRulesForSection = (section: SkillSection, rules: SkillRule[]): SkillRule[] => {
@@ -238,7 +243,7 @@ export const generateRuleContractMarkdown = (rule: SkillRule): string => {
 	const routingMetadata = [
 		rule.requiresSelected.length === 0
 			? undefined
-			: `**Requires selected:** ${[...rule.requiresSelected].sort(compareRoutingText).map(formatInlineCode).join(", ")} · N/A 불가`,
+			: `**Requires selected:** ${getCanonicalRoutingTargets(rule.requiresSelected).map(formatInlineCode).join(", ")} · N/A 불가`,
 		rule.requiredOnCompletion ? "**Required on completion:** 활성 skill의 완료 receipt에서 Selected이며 N/A 불가" : undefined,
 	]
 		.filter((line): line is string => line !== undefined)
@@ -377,9 +382,9 @@ const createCanonicalRoutingSource = (args: CanonicalRoutingSourceArgs): string 
 				title: rule.title,
 				impact: rule.impact,
 				appliesWhen: rule.appliesWhen,
-				requiresSelected: [...rule.requiresSelected].sort(compareRoutingText),
+				requiresSelected: getCanonicalRoutingTargets(rule.requiresSelected),
 				requiredOnCompletion: rule.requiredOnCompletion,
-				reviewWith: [...rule.reviewWith].sort(compareRoutingText),
+				reviewWith: getCanonicalRoutingTargets(rule.reviewWith),
 				tags: [...rule.tags].sort(compareRoutingText),
 			})),
 		})),
@@ -445,9 +450,7 @@ export const generateRulesIndexMarkdown = (document: LoadedSkillDocument, direct
 			localOrdinal += 1;
 			const ordinal = `${ordinalPrefix}${String(localOrdinal).padStart(2, "0")}`;
 			const reviewWith =
-				rule.reviewWith.length > 0
-					? ` · reviewWith: ${[...rule.reviewWith].sort(compareRoutingText).map(formatInlineCode).join(", ")}`
-					: "";
+				rule.reviewWith.length > 0 ? ` · reviewWith: ${getCanonicalRoutingTargets(rule.reviewWith).map(formatInlineCode).join(", ")}` : "";
 			const completionGate = rule.requiredOnCompletion ? " · completionGate" : "";
 			lines.push(
 				`- ${formatInlineCode(ordinal)} · ${formatInlineCode(getRuleId(rule))} · ${escapeMarkdownText(rule.appliesWhen ?? "")}${completionGate}${reviewWith}`,

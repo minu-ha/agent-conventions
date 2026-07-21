@@ -414,7 +414,7 @@ const visibleTabs = canManageItems
 
 **Applies when:** support function을 추출·이동·export·공유하거나 generic helper 파일, 단일 owner 전용 mapper 또는 작은 sub-step 경계를 바꾼다.
 
-**Review with:** `docs-use-helper-for-reusable-pure-helper-functions`, `docs-require-header-jsdoc-on-key-declarations`
+**Review with:** `docs-require-header-jsdoc-on-key-declarations`, `docs-use-helper-for-reusable-pure-helper-functions`
 
 **Impact: HIGH (stops helper extraction from fragmenting local flow when no reusable contract or testable boundary actually exists)**
 

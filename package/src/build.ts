@@ -6,7 +6,13 @@ import {parseDependencyDeclaration} from "./dependencies.js";
 import {isDirectExecution} from "./entrypoint.js";
 import {readGeneratedDirectoryFileNames, replaceGeneratedFiles} from "./generated-files.js";
 import {buildRuleAnchor, buildSectionAnchor, normalizeHeadingTitle, readResolvedSkillDocuments, replaceRuleHeading} from "./parser.js";
-import {escapeMarkdownText, generateRuleContractMarkdown, generateRulesIndexMarkdown, getRulesForSection} from "./routing.js";
+import {
+	escapeMarkdownText,
+	generateRuleContractMarkdown,
+	generateRulesIndexMarkdown,
+	getCanonicalRoutingTargets,
+	getRulesForSection,
+} from "./routing.js";
 import type {CompiledSkillSection, LoadedSkillDocument, SkillCompanion, SkillMetadata, SkillPaths} from "./types.js";
 
 /**
@@ -319,7 +325,9 @@ export const generateMarkdown = (args: GenerateMarkdownArgs): string => {
 
 				if (rule.requiresSelected.length > 0) {
 					routingMetadata.push(
-						`**Requires selected:** ${rule.requiresSelected.map((target) => `\`${escapeMarkdownText(target)}\``).join(", ")} · N/A 불가`,
+						`**Requires selected:** ${getCanonicalRoutingTargets(rule.requiresSelected)
+							.map((target) => `\`${escapeMarkdownText(target)}\``)
+							.join(", ")} · N/A 불가`,
 					);
 				}
 
@@ -328,7 +336,11 @@ export const generateMarkdown = (args: GenerateMarkdownArgs): string => {
 				}
 
 				if (rule.reviewWith.length > 0) {
-					routingMetadata.push(`**Review with:** ${rule.reviewWith.map((target) => `\`${escapeMarkdownText(target)}\``).join(", ")}`);
+					routingMetadata.push(
+						`**Review with:** ${getCanonicalRoutingTargets(rule.reviewWith)
+							.map((target) => `\`${escapeMarkdownText(target)}\``)
+							.join(", ")}`,
+					);
 				}
 
 				renderedRule = `${renderedRule.slice(0, headingEnd)}\n\n${routingMetadata.join("\n\n")}${renderedRule.slice(headingEnd)}`;
