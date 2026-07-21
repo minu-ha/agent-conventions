@@ -4,20 +4,20 @@
 
 ## 1. Trigger and Scope (trigger)
 **Impact:** CRITICAL
-**Description:** React/CSS/TypeScript convention이 걸리는 변경에서는 audit을 선택 사항으로 두지 않고, 변경 표면과 companion skill을 먼저 확정해야 합니다.
+**Description:** local audit gate를 먼저 고정하고 actual changed surface로 React, TypeScript, CSS companion을 조건부 활성화합니다.
 
 ## 2. Evidence Packet (evidence)
 **Impact:** CRITICAL
-**Description:** 판단형 rule은 감으로 검토하지 않고 diff, 파일 outline, import/export, component/state/data flow, CSS selector 같은 구조 증거를 먼저 모아야 합니다.
+**Description:** diff, owner/data/style 경계, runtime evidence와 자동 검증을 audit packet에 분리 기록하고 구현자 receipt는 독립 selection 뒤에만 비교합니다.
 
-## 3. Rule Coverage Matrix (coverage)
+## 3. Exact Rule Coverage (coverage)
 **Impact:** CRITICAL
-**Description:** 변경 파일마다 적용되는 React/CSS/TypeScript rule을 명시적으로 매핑해야 누락된 companion rule과 애매한 경계를 드러낼 수 있습니다.
+**Description:** activated index 전체를 current digest 기준 exact ordinal partition으로 덮고 N/A exclusion evidence와 conditional companion 결정을 검증합니다.
 
-## 4. Semantic Review Gate (review)
+## 4. Independent Semantic Review (review)
 **Impact:** CRITICAL
-**Description:** 자동 검사로 끝내지 않고 독립 reviewer 또는 main-agent reviewer가 rule 원문과 증거를 대조해 PASS/FAIL/UNKNOWN을 판정해야 합니다.
+**Description:** auditor가 구현자 selection을 보기 전에 독립 scan을 수행하고 reviewWith closure와 selected/unknown 원문을 실제 증거에 대조합니다.
 
 ## 5. Repair and Completion (completion)
 **Impact:** CRITICAL
-**Description:** FAIL 또는 UNKNOWN을 남긴 채 완료하지 않고, 수정 반복과 최종 verdict 보고를 완료 조건으로 삼아야 합니다.
+**Description:** coverage mismatch, unsupported N/A, semantic FAIL/UNKNOWN 또는 scope drift를 고치고 exact receipt와 verdict를 다시 검증한 뒤 한계까지 보고합니다.

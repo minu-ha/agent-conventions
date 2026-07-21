@@ -8,124 +8,38 @@ metadata:
 
 # Convention Audit
 
-React/CSS/TypeScript convention skill을 "사용했다"고 말하는 데서 끝내지 않고, 실제 diff가 룰을 지켰는지 증거 기반 semantic review로 검증하는 완료 gate입니다.
+구현자가 convention skill을 읽었다는 주장과 자동 검사 성공을 신뢰하지 않고, 현재 diff에 적용할 rule selection과 semantic verdict를 독립적으로 재검증하는 완료 gate입니다.
 
-## 사용할 때
+## 로드 계약
 
-- React, TSX, TypeScript support code, CSS, className, shared/helper/config 경계가 바뀐 뒤 완료를 주장하기 전
-- 사용자가 "컨벤션을 완벽하게 지켜", "react/css/typescript 스킬 룰 확인", "모듈화/캡슐화가 맞는지 봐"라고 요구한 경우
-- route entry, local component 분리, helper 추출, query shaping, shared 승격, CSS ownership처럼 자동 lint가 판단하기 어려운 변경
-- 기존 lint/build/test가 통과했지만 convention 준수 여부가 불확실한 경우
-
-## 핵심 원칙
-
-- 이 skill은 `convention-react`, `convention-css`, `convention-typescript`를 대체하지 않습니다. 반드시 함께 로드해 rule 원문을 기준으로 삼습니다.
-- 자동 checker가 있으면 최종 판정자가 아니라 audit packet 생성기로 사용합니다.
-- PASS는 rule 원문과 변경 증거가 함께 있을 때만 허용합니다.
-- FAIL 또는 UNKNOWN이 하나라도 있으면 완료하지 않습니다.
+- 이 skill은 local progressive router가 아닙니다. 먼저 local [AGENTS.md](./AGENTS.md)의 8개 audit gate rule을 전체 읽습니다.
+- React, TypeScript, CSS companion은 실제 변경 surface에 해당할 때만 조건부 활성화합니다.
+- companion은 각 `SKILL.md`를 router로 사용하고 activated `RULES_INDEX.md`를 scan합니다. companion full `AGENTS.md`는 기본 로드하지 않는다.
 
 ## 필수 Workflow
 
-1. 적용할 companion skill을 확정합니다.
-   - TSX/React: `convention-react` + `convention-typescript`
-   - CSS/className: `convention-css`
-   - TS helper/type/config: `convention-typescript`
-2. 변경 파일과 primary scope를 확정합니다.
-3. audit packet을 만듭니다.
-   - 프로젝트에 `tools/conventions/check.ts`, `npm run convention:audit`, `npm run lint:conventions`가 있으면 실행합니다.
-   - 없으면 diff, file outline, import/export, state/data flow, CSS selector map, helper callsite를 수동으로 요약합니다.
-4. Rule Coverage Matrix를 작성합니다.
-   - 파일별로 관련 rule id를 적습니다.
-   - 무관한 rule은 근거와 함께 `NOT_APPLICABLE`로 둡니다.
-5. semantic reviewer를 실행합니다.
-   - subagent/reviewer tool이 있으면 독립 reviewer를 사용합니다.
-   - 없으면 main agent가 reviewer mode로 전환하고 같은 matrix를 작성합니다.
-6. verdict를 작성합니다.
-   - `PASS`, `FAIL`, `UNKNOWN`, `NOT_APPLICABLE`
-   - 각 verdict에는 evidence와 reasoning을 붙입니다.
-7. FAIL/UNKNOWN이 있으면 수정 후 audit packet과 review를 반복합니다.
-8. 완료 보고에 최종 matrix 요약을 포함합니다.
+아래 순서를 바꾸지 않습니다.
 
-## Reviewer Prompt Template
+1. changed files, diff, owner boundary, runtime/visual evidence와 검증 결과로 audit packet의 auditor selection packet을 만듭니다. implementer receipt, selection, verdict는 포함하지 않고 별도 sealed comparison artifact에 보관합니다.
+2. 실제 변경 surface로 companion을 활성화합니다.
+3. 각 activated `RULES_INDEX.md` 전체를 applicability 수준으로 scan합니다.
+4. 각 receipt는 current index와 같은 routing digest에 묶인 exact ordinal partition을 작성합니다: `Selected`, `N/A`, `Unknown`은 서로 겹치지 않고 합집합이 `1..N` 전체여야 합니다. 구현자와 auditor receipt 모두 이 구조를 독립 검증합니다.
+5. auditor는 구현자 receipt의 verdict와 selection을 입력으로 사용하지 않고 독립적으로 판단합니다. 구현자 receipt를 보기 전에 auditor selection packet만으로 독립 selection receipt를 작성합니다. auditor receipt를 완성한 뒤 sealed comparison artifact를 공개합니다.
+6. 그 뒤 구현자와 auditor의 `Selected/N/A/Unknown` set을 모두 비교합니다. 같은 count라도 member나 분류가 하나라도 다르면 selection coverage `FAIL`입니다.
+7. 구현자와 auditor 각 receipt의 `N/A` exclusion group을 서로 독립적으로 검증합니다.
+   - N/A set과 exclusion group ordinal의 합집합이 정확히 같고 누락과 중복이 없어야 합니다.
+   - 각 exclusion reason은 변경 파일과 diff에 근거해야 하며 비어 있으면 selection coverage `FAIL`입니다.
+8. 모든 `reviewWith` target은 자동 선택 대상이 아니며 독립적으로 재평가합니다.
+   - activated skill의 local/companion target은 `Selected`, `N/A`, `Unknown` 중 하나에 있어야 합니다.
+   - inactive cross-skill target은 target ID와 non-empty inactive evidence를 companion activation decision에 기록합니다.
+   - cross-skill condition 또는 target `appliesWhen`이 맞으면 companion을 활성화하고 index 전체 exact partition을 만듭니다.
+9. auditor가 `Selected` 또는 `Unknown`으로 분류한 rule 원문만 읽습니다. `Unknown`은 원문과 증거로 `Selected`/`N/A`를 확정하거나 semantic `UNKNOWN`으로 차단합니다.
+10. 빠진 applicable rule은 코드가 우연히 준수해도 selection coverage `FAIL`입니다. 근거가 지지하지 않는 `N/A`도 selection coverage `FAIL`입니다.
+11. 확정된 selected rule마다 evidence와 reasoning을 붙여 semantic verdict `PASS`, `FAIL`, `UNKNOWN`을 작성합니다. lint, typecheck, build, test, browser 결과는 verification evidence일 뿐 semantic `PASS`를 대신하지 않는다.
+12. scope drift, coverage `FAIL`, semantic `FAIL`/`UNKNOWN`이 있으면 packet, activation, index scan, receipt, review를 다시 수행합니다. `FAIL = 0`, `UNKNOWN = 0`일 때만 완료합니다.
 
-```md
-You are a strict convention semantic reviewer.
+## Reviewer와 보고
 
-Review the diff against these skills:
-- convention-react
-- convention-css
-- convention-typescript
-
-Inputs:
-- Changed files:
-- Audit packet:
-- Rule coverage matrix:
-- Diff summary:
-
-Instructions:
-- Do not treat lint/build/test success as convention success.
-- For every listed rule, return PASS, FAIL, UNKNOWN, or NOT_APPLICABLE.
-- PASS requires concrete evidence from the diff or audit packet.
-- FAIL/UNKNOWN must include file, reason, and required fix.
-- Pay special attention to modularity, encapsulation, route-local ownership, helper extraction, query select/data shaping, shared promotion, CSS owner prefixes, selector boundaries, and fallback handling.
-- If evidence is missing, return UNKNOWN instead of guessing.
-```
-
-## Audit Packet Template
-
-```md
-# Convention Audit Packet
-
-## Changed Files
-- path:
-  - concern:
-  - scope owner:
-  - added/removed exports:
-  - imports crossing owner boundary:
-
-## React Evidence
-- route entries:
-- local components:
-- components declared inside components:
-- handlers:
-- hooks:
-- state/store/query origin:
-- query select and post-select shaping:
-
-## TypeScript Evidence
-- new/changed types:
-- helpers extracted:
-- helper callsites:
-- shared/config/util promotion:
-- fallback/optional handling:
-- JSDoc boundary declarations:
-
-## CSS Evidence
-- stylesheets:
-- owner class prefixes:
-- third-party selectors:
-- selector depth/nesting:
-- token and CSS variable fallback:
-
-## Verification
-- automatic checks:
-- semantic review:
-- browser/runtime checks if relevant:
-```
-
-## Final Report Template
-
-```md
-Convention audit:
-- skills: convention-react, convention-css, convention-typescript
-- packet: <command or manual>
-- reviewer: <independent reviewer | main-agent reviewer>
-- verdict: PASS <n>, FAIL 0, UNKNOWN 0, NOT_APPLICABLE <n>
-- exceptions: none
-```
-
-## 상세 규칙
-
-- [AGENTS.md](./AGENTS.md) - compiled local guide
-- [pressure-tests.md](./pressure-tests.md) - baseline failure와 pressure scenario 검증 세트
-- [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md` - source of truth
+- subagent/reviewer를 사용할 수 있으면 independent reviewer가 위 순서를 수행합니다. 없으면 main agent가 별도 reviewer mode로 전환하고 그 한계를 보고합니다.
+- 파일 읽기 telemetry가 없으면 document list를 `declared`로만 표시하고 actual read/non-read를 observed로 주장하지 않습니다.
+- 최종 보고에는 activated index별 digest와 rule count, selected/N/A/unknown count, exclusion groups, coverage/semantic verdict, reviewer mode, telemetry limitations, 실행한 검증을 포함합니다.

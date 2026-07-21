@@ -1,37 +1,32 @@
 ---
 title: Run Convention Audit for React, CSS, and TypeScript Diffs
 impact: CRITICAL
-impactDescription: convention skill을 로드했다는 말만 남기고 판단형 rule 검증을 건너뛰는 것을 막음
+impactDescription: 변경된 domain만 정확히 활성화하면서 audit 자체 gate는 빠뜨리지 않음
 tags: trigger, scope, companion
 ---
 
 ## Run Convention Audit for React, CSS, and TypeScript Diffs
 
-**Impact: CRITICAL (convention skill을 로드했다는 말만 남기고 판단형 rule 검증을 건너뛰는 것을 막음)**
+**Impact: CRITICAL (변경된 domain만 정확히 활성화하면서 audit 자체 gate는 빠뜨리지 않음)**
 
-React 컴포넌트, TSX 화면 흐름, TypeScript support code, CSS/className, shared/helper/config 경계가 바뀌면 이 audit을 완료 전 필수 단계로 사용합니다. 이 skill은 `convention-react`, `convention-css`, `convention-typescript`를 대체하지 않습니다. 세 companion skill의 rule 원문을 실제 diff에 적용했는지 검증하는 마지막 gate입니다.
+React/TypeScript/CSS convention이 걸리는 변경은 완료 전 audit 대상입니다. audit은 non-progressive local skill이므로 먼저 local `AGENTS.md`의 8개 audit gate rule 전체를 읽습니다. 그 뒤 actual changed surface를 diff와 파일 목록으로 판별해 companion을 조건부 활성화합니다.
 
-시작 시 확정할 것:
+- React: component, TSX render, screen/route-local 경계, hook, handler, state/query, rendered behavior
+- TypeScript: type, schema, config, API, helper, import/export, fallback, JSDoc
+- CSS: stylesheet, selector, token/CSS variable, className contract, visual styling surface
 
-- 변경 파일 목록
-- 변경 intent와 primary scope
-- 적용할 companion skill
-- 자동 checker 또는 수동 audit packet 생성 방식
-- 완료 전 reviewer 방식: subagent reviewer, 별도 세션 reviewer, 또는 main-agent strict reviewer
+TSX 변경은 `react`와 `typescript`를 함께 활성화합니다. CSS는 TSX 확장자만으로 켜지 않으며 stylesheet, selector, token/CSS variable, className contract 또는 visual styling 변경이 있어야 합니다. 반대로 `.ts`라도 React hook ownership을 바꾸면 React와 TypeScript를 활성화합니다. scope drift가 생기면 activation을 다시 판단합니다.
 
-**Incorrect (스킬 이름만 나열):**
+**Incorrect (세 companion을 무조건 켜거나 한 domain만 대충 선택):**
 
 ```md
-React/CSS/TypeScript 스킬을 적용했습니다. lint와 build가 통과했습니다.
+TSX 파일이 있으므로 React, TypeScript, CSS 전체 handbook을 읽었습니다.
 ```
 
-**Correct (audit을 완료 조건으로 고정):**
+**Correct (변경 surface로 activation을 고정):**
 
 ```md
-Convention audit 대상:
-- skill: convention-react, convention-css, convention-typescript
-- changed files: src/pages/detail/local/**, src/pages/detail/detail-page.css
-- evidence: diff, file outline, imports, exports, CSS selector map, query select chain
-- reviewer: independent code quality reviewer
-- completion rule: FAIL/UNKNOWN 0개
+Audit local gate: AGENTS.md 8 rules loaded
+Activated: react, typescript
+Inactive: css — stylesheet, selector, token, className, visual styling 변경 없음
 ```

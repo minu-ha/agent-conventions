@@ -583,12 +583,14 @@ git commit -m "feat: add progressive CSS convention routing"
 **Files:**
 - Modify: `skill/convention-audit/metadata.json`
 - Modify: `skill/convention-audit/SKILL.md`
+- Modify: `skill/convention-audit/rules/_sections.md`
+- Modify: `skill/convention-audit/rules/*.md`
 - Modify: `skill/convention-audit/pressure-tests.md`
 - Modify: `skill/convention-audit/README.md`
 - Modify: `package/test/convention-audit.test.ts`
 - Rebuild: `skill/convention-audit/AGENTS.md`
 
-- [ ] **Step 1: Write audit RED tests**
+- [x] **Step 1: Write audit RED tests**
 
 Replace keyword-only assertions with contract assertions for:
 
@@ -603,15 +605,15 @@ Replace keyword-only assertions with contract assertions for:
 - lint/build/browser evidence not substituting for semantic verdict;
 - full companion `AGENTS.md` not being default-loaded.
 
-- [ ] **Step 2: Verify audit RED**
+- [x] **Step 2: Verify audit RED**
 
 Run `test/convention-audit.test.ts`; expected failure on old full-handbook workflow.
 
-- [ ] **Step 3: Migrate audit companions**
+- [x] **Step 3: Migrate audit companions**
 
 Remove `extends` and declare all three as conditional companions with surface-specific one-line conditions. Audit remains non-progressive locally because its eight workflow rules are the gate itself; it routes companion convention bodies selectively.
 
-- [ ] **Step 4: Rewrite the audit workflow**
+- [x] **Step 4: Rewrite the audit workflow**
 
 The audit SKILL must:
 
@@ -619,24 +621,24 @@ The audit SKILL must:
 2. activate domains by actual surface;
 3. independently scan complete companion indexes;
 4. produce an exact digest-bound partition;
-5. compare implementer/auditor selected sets;
+5. compare implementer/auditor `Selected`, `N/A`, and `Unknown` sets exactly;
 6. verify each receipt's N/A exclusion groups exactly cover its N/A set and independently assess the exclusion evidence;
 7. read only auditor-selected/ambiguous full rule bodies;
 8. mark missing applicable selection or unsupported N/A evidence as FAIL;
 9. repair until FAIL=0 and UNKNOWN=0;
 10. report reviewer mode and telemetry limitations.
 
-- [ ] **Step 5: Add mutation pressure scenario**
+- [x] **Step 5: Add mutation pressure scenario**
 
-Feed an otherwise-valid React `RTE08-delete-handler-flow` receipt with `events-run-user-actions-in-handlers-not-effects` removed. Expected: audit blocks completion due selection mismatch even if lint/build pass and the code happens to comply.
+Feed an otherwise-valid React `RTE08-delete-handler-flow` receipt bound to the current digest and complete non-overlapping ordinal/ID partition. Move `R26 (events-run-user-actions-in-handlers-not-effects)` from `Selected` to `N/A` and add a non-empty but unsupported exclusion reason. Expected: audit blocks completion due all-set mismatch and unsupported N/A even if lint/build pass and the code happens to comply.
 
-- [ ] **Step 6: Build, test, and commit audit**
+- [x] **Step 6: Build, test, and commit audit**
 
 ```bash
 npm --prefix package run validate:convention-audit
 npm --prefix package run build:convention-audit
 ./package/node_modules/.bin/tsx --test package/test/convention-audit.test.ts package/test/routing-evals.test.ts
-git add skill/convention-audit package/test/convention-audit.test.ts
+git add skill/convention-audit/metadata.json skill/convention-audit/SKILL.md skill/convention-audit/rules skill/convention-audit/pressure-tests.md skill/convention-audit/README.md skill/convention-audit/AGENTS.md package/test/convention-audit.test.ts docs/superpowers/plans/2026-07-21-progressive-convention-loading.md
 git commit -m "feat: audit progressive convention selections"
 ```
 
@@ -710,7 +712,7 @@ Fresh agents read only the relevant `SKILL.md`, every activated `RULES_INDEX.md`
 
 - [ ] **Step 4: Run scope-drift and mutation RED**
 
-For CSS, add an unstable variable after initial selection and require a revised receipt. For audit, remove `events-run-user-actions-in-handlers-not-effects` from the applicable `RTE08-delete-handler-flow` receipt and verify completion is blocked as FAIL or UNKNOWN.
+For CSS, add an unstable variable after initial selection and require a revised receipt. For audit, keep the applicable `RTE08-delete-handler-flow` receipt structurally valid and on the current digest while moving `R26 (events-run-user-actions-in-handlers-not-effects)` from `Selected` to `N/A` with a non-empty unsupported exclusion reason; verify completion is blocked as FAIL or UNKNOWN.
 
 - [ ] **Step 5: Measure implementation and end-to-end tokens**
 
