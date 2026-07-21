@@ -353,6 +353,8 @@ git commit -m "feat: generate compact convention indexes"
 
 ### Task 4: Migrate TypeScript as the Progressive Pilot
 
+> **Execution dependency amendment:** progressive router는 모든 direct companion source가 `progressiveDisclosure: true`이고 전체 build/check 뒤 각 generated `RULES_INDEX.md`가 존재한다는 계약을 사용한다. 따라서 아래 숫자 표기는 설계 추적성을 위해 유지하되 단계별 실행 순서는 **Task 4 TypeScript → Task 6 CSS → Task 5 React**로 고정한다. Task 6에서는 CSS와 이미 progressive인 TypeScript partition을 먼저 완성하고, React↔CSS exact partition은 Task 5에서 React manifest를 만들고 CSS manifest를 갱신할 때 한 번에 추가한다.
+
 **Files:**
 - Modify: `skill/typescript/metadata.json`
 - Modify: `skill/typescript/rules/_template.md`
@@ -464,11 +466,12 @@ git commit -m "feat: add progressive TypeScript convention routing"
 - Modify: `skill/react/SKILL.md`
 - Modify: `skill/react/pressure-tests.md`
 - Modify: `skill/react/README.md`
+- Modify: `skill/css/routing-evals.json`
 - Modify: `package/test/routing-evals.test.ts`
 
 - [ ] **Step 1: Add React RED assertions**
 
-Tests require 42 exact local IDs, all Appendix B routing metadata, required TypeScript companion, conditional CSS companion with a non-empty condition, valid cross-skill `reviewWith`, complete fixture partitions, and 100% positive coverage.
+Tests require 42 exact local IDs, all Appendix B routing metadata, required TypeScript companion, conditional CSS companion with a non-empty condition, valid cross-skill `reviewWith`, complete fixture partitions, and 100% positive coverage. 또한 Appendix D의 CSS mixed fixture 5개가 React exact selected/N/A partition을 모두 갖도록 요구한다.
 
 - [ ] **Step 2: Verify React RED**
 
@@ -490,7 +493,7 @@ Apply Appendix B `appliesWhen`/`reviewWith` values exactly.
 
 - [ ] **Step 4: Add realistic React routing fixtures**
 
-Use Appendix B scenario matrix. Every scenario activates TypeScript; styling/class-contract scenarios also activate CSS. Store exact qualified selected/N/A partitions for every currently progressive activated index and include an initial-selection → scope-drift selection pair. During Task 5, CSS is activation evidence only because it is not progressive yet; Task 6 must add its exact partition immediately after CSS becomes progressive.
+Use Appendix B scenario matrix. Every scenario activates TypeScript; styling/class-contract scenarios also activate CSS. TypeScript와 CSS는 이 시점에 모두 progressive이므로 활성화된 각 index의 exact qualified selected/N/A partition을 처음부터 저장하고 initial-selection → scope-drift selection pair를 포함한다. CSS를 activation evidence만으로 남기는 중간 상태는 허용하지 않는다. 같은 변경에서 `skill/css/routing-evals.json`의 Appendix D mixed fixture 5개에도 React exact selected/N/A map을 materialize한다. Eval의 `expectedSkills`는 dependency edge가 아니므로 CSS metadata에 React companion을 추가하지 않는다.
 
 - [ ] **Step 5: Replace React SKILL with compact router and update docs**
 
@@ -504,7 +507,7 @@ npm --prefix package run build:react
 npm --prefix package run check:generated:react
 ./package/node_modules/.bin/tsx --test package/test/progressive-loading.test.ts package/test/routing-evals.test.ts
 npm --prefix package run typecheck
-git add skill/react package/test/routing-evals.test.ts
+git add skill/react skill/css/routing-evals.json package/test/routing-evals.test.ts
 git commit -m "feat: add progressive React convention routing"
 ```
 
@@ -522,11 +525,10 @@ git commit -m "feat: add progressive React convention routing"
 - Modify: `skill/css/pressure-tests.md`
 - Modify: `skill/css/README.md`
 - Modify: `package/test/routing-evals.test.ts`
-- Modify: `skill/react/routing-evals.json`
 
 - [ ] **Step 1: Add and verify CSS RED assertions**
 
-Require 21 exact IDs, Appendix C routing metadata, complete exact fixture partitions, and 100% positive rule coverage. Also require every React fixture that already activates CSS to gain an exact CSS selected/N/A partition once CSS becomes progressive. Run focused tests and confirm failure is missing feature data.
+Require 21 exact IDs, Appendix C routing metadata, complete exact CSS fixture partitions, and 100% positive rule coverage. Pure CSS fixture는 CSS만 partition하고, Appendix D mixed fixture는 이미 progressive인 TypeScript의 exact selected/N/A partition을 즉시 materialize한다. React는 아직 non-progressive activation evidence로만 남기며 Task 5가 React exact partition을 추가한다. Run focused tests and confirm failure is missing feature data.
 
 - [ ] **Step 2: Migrate CSS metadata, rules, and template**
 
@@ -534,7 +536,7 @@ Set `progressiveDisclosure: true`, keep no unconditional companion, and declare 
 
 - [ ] **Step 3: Add CSS routing fixtures and scope drift**
 
-Use Appendix C scenario matrix. Include both route styling activation drift and the `css-ui-wrapper-third-party-dom` optional-variable drift so `values-always-provide-css-variable-fallbacks` is added only after the variable concern appears. Materialize the React `RTE02-owner-placement-css-drift` CSS partition from Appendix D in `skill/react/routing-evals.json`; before CSS is progressive the fixture lists CSS only as expected activation evidence, and after this step it must include both CSS partition maps.
+Use Appendix C scenario matrix. Include both route styling activation drift and the `css-ui-wrapper-third-party-dom` optional-variable drift so `values-always-provide-css-variable-fallbacks` is added only after the variable concern appears. Appendix D mixed fixture의 TypeScript exact partitions를 함께 저장하되 React는 expected skill evidence만 기록한다. Appendix D의 React `RTE02-owner-placement-css-drift` CSS partition은 Task 5에서 React manifest를 생성할 때 함께 materialize한다.
 
 - [ ] **Step 4: Replace CSS SKILL with compact router and update docs**
 
@@ -548,7 +550,7 @@ npm --prefix package run build:css
 npm --prefix package run check:generated:css
 ./package/node_modules/.bin/tsx --test package/test/progressive-loading.test.ts package/test/routing-evals.test.ts
 npm --prefix package run typecheck
-git add skill/css skill/react/routing-evals.json package/test/routing-evals.test.ts
+git add skill/css package/test/routing-evals.test.ts
 git commit -m "feat: add progressive CSS convention routing"
 ```
 
@@ -1124,7 +1126,7 @@ Each activated progressive index requires a complete selected/N/A partition in J
 - `RTE02-owner-placement-css-drift` activates CSS only after drift and selects `naming-default-to-plain-css-when-no-module-convention`, `naming-keep-scope-slug-unique-per-owner`, `naming-name-elements-and-modifiers-by-role`, `naming-separate-local-and-route-style-scopes`, `naming-use-scope-slug-element-modifier-syntax`, `composition-compose-classes-with-clsx`, `organization-keep-style-files-owned-by-one-component-or-route`, `organization-review-banned-css-patterns-before-finishing`.
 - Every other React fixture keeps CSS absent from `expectedSkills` because it does not change a class contract, stylesheet, selector, token, or visual styling surface.
 
-Materialize `U_CSS - selected` as the drift `expectedNotApplicable.css` array when Task 6 makes CSS progressive. Task 5 records only CSS activation evidence for this drift because no CSS index exists yet.
+Task 5 creates this React fixture after CSS is already progressive. Therefore materialize `U_CSS - selected` as the drift `expectedNotApplicable.css` array immediately; activation-only CSS evidence is not allowed.
 
 ### CSS mixed fixtures: companion selection
 
@@ -1146,4 +1148,4 @@ Pure CSS fixtures intentionally activate no React or TypeScript index. The mixed
   - TypeScript: `naming-use-direct-imports-and-public-entry-points`, `types-document-custom-types-and-shapes`, `types-reuse-existing-contracts-before-new-types`, `docs-require-header-jsdoc-on-key-declarations`, `docs-standardize-annotation-tags-by-declaration-role`, `docs-write-concise-korean-comments-about-purpose-and-constraints`, `guardrails-review-banned-typescript-shortcuts-before-finishing`.
   - React: `composition-destructure-props-inside`, `docs-require-jsdoc-on-key-declarations`.
 
-For every mixed fixture, materialize `U_TS - TypeScript selected` and `U_REACT - React selected` in the JSON. An empty React selected set therefore has all 42 React IDs in `expectedNotApplicable`; it is not permission to skip scanning the React index.
+Task 6 materializes `U_TS - TypeScript selected` immediately because TypeScript is already progressive, while React remains activation evidence without a partition. Task 5 then materializes `U_REACT - React selected` for all five mixed fixtures in the same change that makes React progressive. An empty React selected set therefore has all 42 React IDs in `expectedNotApplicable`; it is not permission to skip scanning the React index. `expectedSkills` is evaluation evidence, not a metadata dependency edge: CSS must not add a React companion and create a React↔CSS cycle.
