@@ -4,7 +4,7 @@
 
 - Skill: `css`
 - Version: `1.0.0`
-- Routing digest: `sha256:6ccc113bdb521f4b15b57a2884aa2a3ffab9b645216de49661598bdafc7f26aa`
+- Routing digest: `sha256:b9c8fe78ce9066c8baedec798e707f18bfe3845e6fdf4137a6f724d8e94bb1ff`
 - Local rules: 21
 
 ## Direct Companions
@@ -28,14 +28,14 @@
 - `C08` · `composition-do-not-build-structural-variants-with-modifiers` · spacing·방향·특정 화면의 구조 차이를 \`--modifier\`로 추가하려 하거나 modifier가 반복 가능한 상태 또는 API variant인지 판단한다. · reviewWith: `naming-name-elements-and-modifiers-by-role`
 - `C09` · `composition-keep-classes-single-purpose` · base class 이름에 상태·variant 의미를 합치거나 한 class에 서로 독립적인 시각 책임을 추가·재사용·분리한다.
 - `C10` · `composition-style-ui-components-through-owned-wrappers` · 실제 \`Ui\*\` React wrapper 사용처·API에서 내부 DOM styling 경계를 정하거나 root \`className\`·slot prop hook을 주입·노출·사용한다. 기존 CSS owner root 아래 third-party selector만 수정하면 제외한다. · reviewWith: `selector-target-third-party-dom-from-owned-roots`
-- `C11` · `composition-prefer-ui-wrapper-prop-types` · \`Ui\*\` wrapper 사용처나 wrapper API에서 Props 타입을 선언·추론·재사용하고 라이브러리 원본 Props 참조를 검토한다. · reviewWith: `typescript/types-reuse-existing-contracts-before-new-types`
+- `C11` · `composition-prefer-ui-wrapper-prop-types` · \`Ui\*\` wrapper 사용처나 wrapper API에서 Props 타입을 선언·추론·재사용하고 라이브러리 원본 Props 참조를 검토한다.
 
 ### 3. Selectors and Nesting Boundaries (4)
 
 - `C12` · `selector-avoid-deep-descendant-dependencies` · descendant 또는 child selector chain을 추가·수정하거나 DOM 계층에 의존하는 project-owned·third-party selector를 검토한다.
 - `C13` · `selector-keep-project-selectors-flat` · project-owned class를 중첩·descendant selector로 연결하거나 raw HTML prose·copy·content wrapper 안 element selector를 추가·수정한다.
-- `C14` · `selector-target-third-party-dom-from-owned-roots` · \`.ant-\*\`, \`.rc-\*\`, \`.tippy-\*\` 등 third-party 내부 DOM selector를 추가·수정하거나 owned wrapper 아래로 범위를 제한한다. · reviewWith: `selector-avoid-deep-descendant-dependencies`
-- `C15` · `selector-use-pseudo-classes-for-dom-owned-states` · \`:hover\`, \`:visited\`, \`:focus\*\`, \`:disabled\`, \`:checked\`를 추가·수정하거나 parent DOM state가 child styling에 영향을 준다. · reviewWith: `values-separate-domain-state-modifiers-from-dom-interaction-states`
+- `C14` · `selector-target-third-party-dom-from-owned-roots` · \`.ant-\*\`, \`.rc-\*\`, \`.tippy-\*\` 등 third-party 내부 DOM selector를 추가·수정하거나 owned wrapper 아래로 범위를 제한한다.
+- `C15` · `selector-use-pseudo-classes-for-dom-owned-states` · \`:hover\`, \`:visited\`, \`:focus\*\`, \`:disabled\`, \`:checked\`를 추가·수정하거나 parent DOM state가 child styling에 영향을 준다.
 
 ### 4. Values, Layout, and Interaction States (4)
 
@@ -47,4 +47,4 @@
 ### 5. File Organization and Guardrails (2)
 
 - `C20` · `organization-keep-style-files-owned-by-one-component-or-route` · stylesheet를 새로 만들거나 이동·분할·병합하고 한 파일에 component, route, document, local, shared owner가 섞일 가능성이 있다.
-- `C21` · `organization-review-banned-css-patterns-before-finishing` · CSS 또는 TSX class contract 변경이 완료 단계에 들어간다.
+- `C21` · `organization-review-banned-css-patterns-before-finishing` · CSS 또는 TSX class contract 변경이 완료 단계에 들어간다. · completionGate

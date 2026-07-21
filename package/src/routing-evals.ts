@@ -420,6 +420,44 @@ const validateExpectedPartition = async (args: ValidateExpectedPartitionArgs): P
 			selected: partition.expectedSelected[skillName] ?? [],
 			notApplicable: partition.expectedNotApplicable[skillName] ?? [],
 		});
+
+		const selectedRuleIds = new Set(partition.expectedSelected[skillName] ?? []);
+		const missingCompletionRule = document.rules.find(
+			(rule) => rule.requiredOnCompletion && !selectedRuleIds.has(rule.fileName.replace(/\.md$/, "")),
+		);
+
+		if (missingCompletionRule) {
+			throw new Error(
+				`${label} must select requiredOnCompletion rule "${skillName}/${missingCompletionRule.fileName.replace(/\.md$/, "")}".`,
+			);
+		}
+
+		for (const selectedRuleId of selectedRuleIds) {
+			const selectedRule = document.rules.find((rule) => rule.fileName.replace(/\.md$/, "") === selectedRuleId);
+
+			if (!selectedRule) {
+				continue;
+			}
+
+			for (const target of selectedRule.requiresSelected) {
+				const separatorIndex = target.indexOf("/");
+				const targetSkillName = separatorIndex === -1 ? skillName : target.slice(0, separatorIndex);
+				const targetRuleId = separatorIndex === -1 ? target : target.slice(separatorIndex + 1);
+				const targetDocument = documents.get(targetSkillName);
+
+				if (!expectedSkillSet.has(targetSkillName) || targetDocument?.metadata.progressiveDisclosure !== true) {
+					throw new Error(
+						`${label} selected rule "${skillName}/${selectedRuleId}" requiresSelected target skill "${targetSkillName}" to be activated and progressive.`,
+					);
+				}
+
+				if (!(partition.expectedSelected[targetSkillName] ?? []).includes(targetRuleId)) {
+					throw new Error(
+						`${label} selected rule "${skillName}/${selectedRuleId}" requiresSelected target "${targetSkillName}/${targetRuleId}".`,
+					);
+				}
+			}
+		}
 	}
 
 	for (const skillName of partition.expectedSkills) {

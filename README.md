@@ -80,7 +80,10 @@ framework 공통 규칙은 companion skill이 소유하고, framework 또는 con
 | `className` / CSS / styling surface | Add `convention-css`. |
 | Activated progressive skill | Scan every activated `RULES_INDEX.md` completely; never stop at the first match. |
 | Selected guidance | Read every `Selected` + `Unknown` stable-ID-matched `contracts/*.md`; CRITICAL contracts require their full `rules/*.md`. |
-| `reviewWith` closure | Add only mandatory changes from `Selected` contracts and resolved `Unknown → Selected` rules to scope evidence; exclude examples, optional alternatives, and unresolved hypotheticals, then repeat contract loading and rescans to a fixed point. |
+| `completionGate` | Select every marked entry in each activated progressive skill; it can never be N/A. |
+| `requiresSelected` closure | Resolve Unknown first, then apply only final Selected contracts: immediately select every target, activate its companion, and never classify the target N/A. |
+| `reviewWith` closure | Re-evaluate every target against current evidence; do not auto-select it, and allow evidence-backed N/A. |
+| Fixed point | Add only requirements from final Selected contracts to scope evidence; exclude examples and optional alternatives, then repeat contracts and scans until activation, partition, and evidence stop changing. |
 | Full rule expansion | Expand non-CRITICAL full rules only for exact syntax, exceptions, unresolved Unknown, or missing audit evidence; record `Expanded: ID: reason`. |
 | Progressive full handbook | React/TypeScript/CSS `AGENTS.md` is opt-in, never default-loaded. |
 | Scope drift | Restart activation and rescan every activated progressive index. |
@@ -222,7 +225,7 @@ skill/react/
 - `rules/*.md`
   실제 source of truth rule 문서입니다.
 - `RULES_INDEX.md`
-  stable ID, ordinal, `appliesWhen`, `reviewWith`, routing digest를 담는 generated compact index입니다.
+  stable ID, ordinal, `appliesWhen`, `completionGate`, `reviewWith`, routing digest를 담는 generated compact index입니다. `requiresSelected`는 선택된 contract에서만 로드합니다.
 - `routing-evals.json`
   runtime에는 로드하지 않는 test oracle이며 scenario별 exact Selected/N/A partition과 scope drift를 검증합니다.
 - `AGENTS.md`
@@ -332,6 +335,8 @@ skill-relative 명령을 사용하는 편이 안전합니다.
 
 복사해서 시작할 수 있는 공통 예시는 루트에 함께 둡니다.
 
+- [AGENTS.frontend-conventions.md](./AGENTS.frontend-conventions.md)
+  React + TypeScript + CSS 프로젝트에 바로 복사하는 compact activation·loading·audit policy
 - [AGENTS.superpowers.md](./AGENTS.superpowers.md)
   `superpowers` workflow만 고정하고, 코드 규칙은 프로젝트 자체 문서로 관리하는 예시
 - [AGENTS.superpowers.conventions.md](./AGENTS.superpowers.conventions.md)

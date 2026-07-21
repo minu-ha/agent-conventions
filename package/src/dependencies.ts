@@ -72,17 +72,17 @@ export const assertValidRoutingIdentifier = (value: unknown, owner: string): str
 };
 
 /**
- * @helper local 또는 cross-skill reviewWith target stable identifier 검증
+ * @helper local 또는 cross-skill rule target stable identifier 검증
  */
-export const assertValidReviewTarget = (value: unknown, owner: string): string => {
+export const assertValidRuleTarget = (value: unknown, owner: string, fieldName: "requiresSelected" | "reviewWith"): string => {
 	if (typeof value !== "string") {
-		throw new Error(`${owner}: invalid reviewWith routing identifier "${String(value)}".`);
+		throw new Error(`${owner}: invalid ${fieldName} routing identifier "${String(value)}".`);
 	}
 
 	const segments = value.split("/");
 
 	if (segments.length < 1 || segments.length > 2) {
-		throw new Error(`${owner}: invalid reviewWith routing identifier "${value}".`);
+		throw new Error(`${owner}: invalid ${fieldName} routing identifier "${value}".`);
 	}
 
 	for (const segment of segments) {

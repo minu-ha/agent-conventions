@@ -1,7 +1,7 @@
 import path from "node:path";
 
 import {getSkillPaths, isBuildableSkill, listSkillNames, packagePaths, parseCliArgs} from "./config.js";
-import {assertRoutingCondition, assertValidReviewTarget, assertValidRoutingIdentifier, parseDependencyDeclaration} from "./dependencies.js";
+import {assertRoutingCondition, assertValidRoutingIdentifier, assertValidRuleTarget, parseDependencyDeclaration} from "./dependencies.js";
 import type {DependencyDeclaration} from "./dependencies.js";
 import {isDirectExecution} from "./entrypoint.js";
 import {readSkillDocument, readSkillRuleFileNames} from "./parser.js";
@@ -74,6 +74,8 @@ const validateLocalSkill = async (skillPaths: SkillPaths): Promise<LocalValidati
 	const validPrefixes = new Set(sections.map((section) => section.prefix));
 
 	for (const rule of rules) {
+		const ruleId = rule.fileName.replace(/\.md$/, "");
+
 		if (!validPrefixes.has(rule.prefix)) {
 			throw new Error(`${skillPaths.skillName}: unknown prefix "${rule.prefix}" in ${rule.fileName}.`);
 		}
@@ -95,7 +97,6 @@ const validateLocalSkill = async (skillPaths: SkillPaths): Promise<LocalValidati
 		}
 
 		if (metadata.progressiveDisclosure === true) {
-			const ruleId = rule.fileName.replace(/\.md$/, "");
 			assertValidRoutingIdentifier(ruleId, `${skillPaths.skillName}: ${rule.fileName} stable ID`);
 			assertValidRoutingIdentifier(rule.prefix, `${skillPaths.skillName}: ${rule.fileName} section prefix`);
 
@@ -104,15 +105,39 @@ const validateLocalSkill = async (skillPaths: SkillPaths): Promise<LocalValidati
 			}
 
 			for (const reviewTarget of rule.reviewWith) {
-				assertValidReviewTarget(reviewTarget, `${skillPaths.skillName}: ${rule.fileName}`);
+				assertValidRuleTarget(reviewTarget, `${skillPaths.skillName}: ${rule.fileName}`, "reviewWith");
+			}
+
+			for (const requiredTarget of rule.requiresSelected) {
+				assertValidRuleTarget(requiredTarget, `${skillPaths.skillName}: ${rule.fileName}`, "requiresSelected");
 			}
 
 			assertRoutingCondition(rule.appliesWhen, `${skillPaths.skillName}: ${rule.fileName} appliesWhen`);
 			generateRuleContractMarkdown(rule);
+		} else if (rule.requiresSelected.length > 0 || rule.requiredOnCompletion) {
+			throw new Error(
+				`${skillPaths.skillName}: ${rule.fileName} requiresSelected and requiredOnCompletion are progressive-only routing metadata.`,
+			);
 		}
 
 		if (new Set(rule.reviewWith).size !== rule.reviewWith.length) {
 			throw new Error(`${skillPaths.skillName}: ${rule.fileName} reviewWith must not contain duplicates.`);
+		}
+
+		if (new Set(rule.requiresSelected).size !== rule.requiresSelected.length) {
+			throw new Error(`${skillPaths.skillName}: ${rule.fileName} requiresSelected must not contain duplicates.`);
+		}
+
+		if (rule.reviewWith.includes(ruleId) || rule.requiresSelected.includes(ruleId)) {
+			throw new Error(`${skillPaths.skillName}: ${rule.fileName} routing targets must not reference the rule itself.`);
+		}
+
+		const overlappingTargets = rule.requiresSelected.filter((target) => rule.reviewWith.includes(target));
+
+		if (overlappingTargets.length > 0) {
+			throw new Error(
+				`${skillPaths.skillName}: ${rule.fileName} targets must not appear in both requiresSelected and reviewWith: ${overlappingTargets.join(", ")}.`,
+			);
 		}
 
 		if (!rule.body.includes("**Incorrect") || !rule.body.includes("**Correct")) {
@@ -196,9 +221,9 @@ const collectReachableSkillNames = (
 };
 
 /**
- * @helper local 및 reachable companion reviewWith stable ID 검증
+ * @helper local 및 reachable companion routing target stable ID 검증
  */
-const validateReviewTargets = (
+const validateRoutingTargets = (
 	documents: Map<string, LoadedSkillDocument>,
 	dependenciesBySkill: Map<string, DependencyDeclaration>,
 ): void => {
@@ -207,29 +232,38 @@ const validateReviewTargets = (
 		const reachableSkillNames = collectReachableSkillNames(skillName, dependenciesBySkill);
 
 		for (const rule of document.rules) {
-			for (const target of rule.reviewWith) {
-				const separatorIndex = target.indexOf("/");
+			for (const [fieldName, targets] of [
+				["reviewWith", rule.reviewWith],
+				["requiresSelected", rule.requiresSelected],
+			] as const) {
+				for (const target of targets) {
+					const separatorIndex = target.indexOf("/");
 
-				if (separatorIndex === -1) {
-					if (!localRuleIds.has(target)) {
-						throw new Error(`${skillName}: ${rule.fileName} has unknown reviewWith target "${target}".`);
+					if (separatorIndex === -1) {
+						if (!localRuleIds.has(target)) {
+							throw new Error(`${skillName}: ${rule.fileName} has unknown ${fieldName} target "${target}".`);
+						}
+
+						continue;
 					}
 
-					continue;
-				}
+					const targetSkillName = target.slice(0, separatorIndex);
+					const targetRuleId = target.slice(separatorIndex + 1);
 
-				const targetSkillName = target.slice(0, separatorIndex);
-				const targetRuleId = target.slice(separatorIndex + 1);
+					if (!targetSkillName || !targetRuleId || targetRuleId.includes("/") || !reachableSkillNames.has(targetSkillName)) {
+						throw new Error(`${skillName}: ${rule.fileName} has unreachable ${fieldName} target "${target}".`);
+					}
 
-				if (!targetSkillName || !targetRuleId || targetRuleId.includes("/") || !reachableSkillNames.has(targetSkillName)) {
-					throw new Error(`${skillName}: ${rule.fileName} has unreachable reviewWith target "${target}".`);
-				}
+					const targetDocument = documents.get(targetSkillName);
+					const targetExists = targetDocument?.rules.some((targetRule) => targetRule.fileName.replace(/\.md$/, "") === targetRuleId);
 
-				const targetDocument = documents.get(targetSkillName);
-				const targetExists = targetDocument?.rules.some((targetRule) => targetRule.fileName.replace(/\.md$/, "") === targetRuleId);
+					if (!targetExists) {
+						throw new Error(`${skillName}: ${rule.fileName} has unknown ${fieldName} target "${target}".`);
+					}
 
-				if (!targetExists) {
-					throw new Error(`${skillName}: ${rule.fileName} has unknown reviewWith target "${target}".`);
+					if (fieldName === "requiresSelected" && targetDocument?.metadata.progressiveDisclosure !== true) {
+						throw new Error(`${skillName}: ${rule.fileName} requiresSelected target "${target}" must belong to a progressive skill.`);
+					}
 				}
 			}
 		}
@@ -245,7 +279,7 @@ export const validateSkill = async (skillPaths: SkillPaths): Promise<void> => {
 	const dependenciesBySkill = new Map<string, DependencyDeclaration>();
 	const rootResult = await validateSkillTree(skillPaths, [], validatedSkillNames, documents, dependenciesBySkill);
 
-	validateReviewTargets(documents, dependenciesBySkill);
+	validateRoutingTargets(documents, dependenciesBySkill);
 
 	if (rootResult.document.metadata.progressiveDisclosure === true) {
 		await validateRoutingEvalManifest(skillPaths);

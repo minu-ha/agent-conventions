@@ -4,7 +4,7 @@
 
 **Goal:** React, TypeScript, CSS 작업이 applicable rule을 빠짐없이 선택·적용·감사하면서 full handbook 기본 로딩을 제거하도록 structured skill pack과 검증 도구를 개선한다.
 
-**Architecture:** `rules/*.md`에 observable routing metadata와 normative-first body를 두고 build package가 compact `RULES_INDEX.md`, rule별 `contracts/*.md`, source-bound digest를 생성한다. 각 progressive `SKILL.md`는 scope → full index scan → exact receipt → Selected/Unknown contract와 CRITICAL/근거 기반 full-rule expansion → 확정된 필수 scope와 `reviewWith` closure의 고정점 판정 → drift → audit router가 되며, package test는 schema/index/contract/fixture 무결성을, behavioral evaluation은 실제 agent selection을 검증한다. Progressive React/TypeScript/CSS의 full `AGENTS.md`는 opt-in handbook으로 계속 생성하고, non-progressive skill은 각 `SKILL.md`의 기존 load 계약을 유지한다.
+**Architecture:** `rules/*.md`에 observable `appliesWhen`, conditional `reviewWith`, mandatory `requiresSelected`, completion `requiredOnCompletion` metadata와 normative-first body를 두고 build package가 compact `RULES_INDEX.md`, rule별 `contracts/*.md`, source-bound digest를 생성한다. 각 progressive `SKILL.md`는 scope → full index scan과 completion gate → exact receipt → Selected/Unknown contract → Unknown 해소 → final Selected mandatory closure → `reviewWith` 재평가와 고정점 → drift → audit router가 된다. Progressive React/TypeScript/CSS의 full `AGENTS.md`는 opt-in handbook으로 계속 생성하고 non-progressive skill은 각 `SKILL.md`의 기존 load 계약을 유지한다.
 
 **Tech Stack:** Node.js 22, TypeScript 5.9, `tsx --test`, Node `crypto`, Markdown/JSON structured skills, Biome 2.2, Python `tiktoken` 0.11.0 (`o200k_base`) for evaluation snapshots.
 
@@ -21,7 +21,7 @@
 - `package/src/routing-evals.ts`: manifest partition/coverage/companion closure 검증.
 - `package/src/build.ts`: full `AGENTS.md`, progressive `RULES_INDEX.md`, selected-rule `contracts/*.md`를 함께 생성.
 - `package/src/check-generated.ts`: source에서 다시 render해 tracked index stale 여부 확인.
-- `package/src/validate.ts`: progressive metadata/rule/reviewWith/companion schema 검증.
+- `package/src/validate.ts`: progressive metadata/rule/conditional·mandatory target/completion gate/companion schema 검증.
 - `package/test/progressive-loading.test.ts`: parser, schema, index, digest, clean build, stale output 회귀 테스트.
 - `package/test/routing-evals.test.ts`: 실제 manifest의 exact partition과 100% positive rule coverage 테스트.
 - `package/test/cli.test.ts`, `config.test.ts`, `documentation.test.ts`: CLI/경로/JSDoc 계약 보강.
@@ -30,7 +30,7 @@
 ### Progressive skills
 
 - `skill/{react,typescript,css}/metadata.json`: `progressiveDisclosure`, required/conditional `companions`.
-- `skill/{react,typescript,css}/rules/_template.md`: `appliesWhen`, optional `reviewWith` template.
+- `skill/{react,typescript,css}/rules/_template.md`: `appliesWhen`, optional `reviewWith`/`requiresSelected`/`requiredOnCompletion` 작성 기준.
 - `skill/{react,typescript,css}/rules/*.md`: Appendix A-C의 routing metadata.
 - `skill/{react,typescript,css}/RULES_INDEX.md`: generated compact index.
 - `skill/{react,typescript,css}/routing-evals.json`: exact behavioral oracle fixture.
@@ -189,6 +189,8 @@ export interface SkillRule {
 	tags: string[];
 	body: string;
 	appliesWhen?: string;
+	requiresSelected: string[];
+	requiredOnCompletion: boolean;
 	reviewWith: string[];
 }
 
@@ -211,10 +213,12 @@ Add a direct-execution guard around `validate.ts`'s `main()` call so tests can i
 
 - [ ] **Step 4: Make rule frontmatter strict**
 
-`parseFrontmatter` must allow only `title`, `impact`, `impactDescription`, `appliesWhen`, `reviewWith`, `tags`; reject non-empty continuation lines, duplicate keys, unknown keys, and unmatched frontmatter. Continue splitting scalar lists by comma in `readSkillRules`:
+`parseFrontmatter` must allow only `title`, `impact`, `impactDescription`, `appliesWhen`, `requiresSelected`, `requiredOnCompletion`, `reviewWith`, `tags`; reject non-empty continuation lines, duplicate keys, unknown keys, and unmatched frontmatter. Parse routing lists by comma and require the completion scalar to be exactly `true` or `false`:
 
 ```ts
 appliesWhen: frontmatter.appliesWhen,
+requiresSelected: splitScalarList(frontmatter.requiresSelected),
+requiredOnCompletion: parseBooleanScalar(frontmatter.requiredOnCompletion, "requiredOnCompletion"),
 reviewWith: splitScalarList(frontmatter.reviewWith),
 tags: splitScalarList(frontmatter.tags),
 ```
@@ -230,7 +234,7 @@ Implement helpers that:
 - require `appliesWhen` only for conditional companions;
 - reject conditions over 160 characters or containing newline;
 - require every local progressive rule to have a non-empty one-line `appliesWhen` of at most 160 characters;
-- resolve every local and `<skill>/<rule-id>` `reviewWith` target, reject duplicate/unknown targets, and require cross-skill targets to be reachable through declared companions;
+- resolve every local and `<skill>/<rule-id>` `reviewWith`/`requiresSelected` target; reject duplicate, self, overlap, unknown, unreachable targets; require mandatory metadata to be progressive-only;
 - recursively validate both legacy `extends` and new `companions` without flattening rule bodies.
 
 Add an explicit non-progressive fixture proving that an existing four-key rule frontmatter and legacy `extends` still validate without `appliesWhen`.
@@ -287,7 +291,7 @@ assert.doesNotMatch(first, /typescript\/rules\//);
 assert.equal((first.match(/composition-first/g) ?? []).length, 1);
 ```
 
-Add a mutation assertion that changing `appliesWhen`, `reviewWith`, title, impact, tags, section order, or metadata version changes the digest.
+Add a mutation assertion that changing `appliesWhen`, `requiresSelected`, `requiredOnCompletion`, `reviewWith`, title, impact, tags, section order, renderer version, or metadata version changes the digest.
 
 - [ ] **Step 2: Verify renderer RED**
 
@@ -303,7 +307,7 @@ export const getRulesForSection = (section: SkillSection, rules: SkillRule[]): S
 export const generateRulesIndexMarkdown = (document: LoadedSkillDocument, companions: SkillCompanion[]): string => /* compact index */;
 ```
 
-Derive the ordinal prefix from the first alphanumeric character of `skillName`, uppercased, and pad the one-based local ordinal to two digits (`react → R01`, `typescript → T01`, `css → C01`). Canonical digest input must be `JSON.stringify` over skill name/version, direct companion skill/mode/condition, ordered section order/title/prefix/impact, and ordered rule id/title/impact/appliesWhen/reviewWith/tags. Use `createHash("sha256")`; do not hash timestamps or absolute paths.
+Derive the ordinal prefix from the first alphanumeric character of `skillName`, uppercased, and pad the one-based local ordinal to two digits (`react → R01`, `typescript → T01`, `css → C01`). Canonical digest input must be `JSON.stringify` over skill name/version, direct companion skill/mode/condition, ordered section metadata, and ordered rule id/title/impact/appliesWhen/requiresSelected/requiredOnCompletion/reviewWith/tags plus source body hash and contract renderer version. Use `createHash("sha256")`; do not hash timestamps or absolute paths.
 
 - [ ] **Step 4: Wire build output without changing full handbook bodies**
 
@@ -338,7 +342,7 @@ Add scripts:
 
 Tests must copy a progressive fixture into a temp directory, prove first build works without index, mutate source, prove check fails, rebuild, prove check passes, rebuild again, and compare bytes.
 
-Export `getRulesIndexByteBudget(ruleCount) = 2_000 + 400 * ruleCount + 150 * Math.max(0, ruleCount - 22)` from `routing.ts` and make the fixture test reject an index above that deterministic UTF-8 byte budget. The first 22 rules preserve the original 400-byte allowance, so the TypeScript and CSS caps stay at 10,800 and 10,400 bytes. Only the portion above 22 rules receives the 150-byte large-index allowance; this raises the 42-rule React cap from 18,800 to 21,800 bytes, just above the 21,477-byte exact Appendix B index without loosening smaller skills. The resulting deterministic caps are React 21,800, CSS 10,400, and TypeScript 10,800 bytes. Real-skill tests apply the same formula after each migration. Router tests separately require each `SKILL.md` to stay below both 500 words and 6,000 UTF-8 bytes. Token gates remain the authoritative end-to-end metric; these byte limits are only the deterministic regression guardrail when the tokenizer is unavailable.
+Export `getRulesIndexByteBudget(ruleCount) = 1_200 + 340 * ruleCount` from `routing.ts` and make the fixture test reject an index above that deterministic UTF-8 byte budget. The resulting caps are React 15,480, TypeScript 8,680, and CSS 8,340 bytes. Real-skill tests apply the same formula after each migration. Router tests separately require each `SKILL.md` to stay below both 500 words and 6,000 UTF-8 bytes. Token gates remain the authoritative end-to-end metric; these byte limits are only the deterministic regression guardrail when the tokenizer is unavailable.
 
 - [ ] **Step 7: Run package verification and commit**
 
@@ -370,7 +374,7 @@ git commit -m "feat: generate compact convention indexes"
 
 - [ ] **Step 1: Write failing real-skill validation and manifest tests**
 
-Assert TypeScript is progressive, every rule has non-empty `appliesWhen` ≤160 characters, all `reviewWith` targets exist, the generated index contains exactly 22 local IDs, and routing fixtures partition the TypeScript index exactly.
+Assert TypeScript is progressive, every rule has non-empty `appliesWhen` ≤160 characters, all conditional/mandatory targets exist, completion gates are selected, the generated index contains exactly 22 local IDs, and routing fixtures partition the TypeScript index exactly.
 Also assert the generated index and router satisfy the deterministic byte/word budgets defined in Task 3; keep these assertions data-driven so React and CSS join automatically when they become progressive.
 
 - [ ] **Step 2: Verify RED**
@@ -379,7 +383,7 @@ Run the two focused tests. Expected: FAIL because TypeScript metadata, rule fiel
 
 - [ ] **Step 3: Add TypeScript routing metadata**
 
-Set `"progressiveDisclosure": true`; TypeScript has no required companion. Apply Appendix A values exactly and update `_template.md` with `appliesWhen` plus optional `reviewWith`.
+Set `"progressiveDisclosure": true`; TypeScript has no required companion. Apply Appendix A values exactly and update `_template.md` with all three routing semantics.
 
 - [ ] **Step 4: Add exact routing oracle fixtures**
 
@@ -422,7 +426,7 @@ export const validateRoutingEvalManifests = async (skillRootDir?: string): Promi
 
 They use the same fixture-aware skill-root resolution as build/validate. `validateSkill` requires and validates the owner manifest once `progressiveDisclosure` is true, while the all-manifest API additionally enforces cross-manifest positive coverage and duplicate scenario IDs. Do not execute a CLI on module import.
 
-Every activated progressive skill must have both map entries, even when `expectedSelected[skill]` is empty. Non-progressive expected skills may be listed for activation evidence but have no partition. Every TypeScript rule must appear in at least one `expectedSelected`. The validator rejects invalid JSON/shape/version, owner mismatch, unknown skills/IDs, duplicate scenario IDs or array values, overlap, incomplete partitions, unexpected partition keys, missing required companion closure, a conditional companion partition that is absent after the fixture explicitly activates that companion, drift that removes an already activated skill or selected rule, and rules with zero positive fixture coverage. The normative scope-drift fixtures are monotonic additions.
+Every activated progressive skill must have both map entries, even when `expectedSelected[skill]` is empty. Non-progressive expected skills may be listed for activation evidence but have no partition. Every TypeScript rule must appear in at least one `expectedSelected`. The validator also rejects an activated completion gate or final Selected rule's `requiresSelected` target in N/A/missing, including cross-skill activation omissions. It rejects invalid shape/version, unknown/duplicate/overlap/incomplete partitions, missing companion closure, non-monotonic drift, and zero positive coverage.
 
 - [ ] **Step 5: Replace the TypeScript entrypoint with a compact router**
 
@@ -431,11 +435,12 @@ Keep trigger-only frontmatter. The body must be under 500 words and require:
 1. scope snapshot;
 2. entire `RULES_INDEX.md` scan;
 3. digest-bound exact selected/N/A/unknown receipt plus N/A exclusion groups whose ordinal union equals the exact N/A set and whose scope-evidence reasons are non-empty;
-4. selected and unknown contract reads plus deterministic full-rule expansion;
-5. `reviewWith` closure;
-6. scope-drift rescan;
-7. final `convention-audit` with FAIL/UNKNOWN zero;
-8. full `AGENTS.md` only for explicit handbook/onboarding/fallback use.
+4. completion gates Selected and selected/unknown contract reads plus deterministic full-rule expansion;
+5. Unknown-first resolution followed by final Selected `requiresSelected` closure;
+6. conditional `reviewWith` reevaluation and fixed-point loop;
+7. scope-drift rescan;
+8. final `convention-audit` with FAIL/UNKNOWN zero;
+9. full `AGENTS.md` only for explicit handbook/onboarding/fallback use.
 
 - [ ] **Step 6: Update TypeScript pressure and human docs**
 
@@ -480,7 +485,7 @@ git commit -m "feat: add progressive TypeScript convention routing"
 
 - [x] **Step 1: Add React RED assertions**
 
-Tests require 42 exact local IDs, all Appendix B routing metadata, required TypeScript companion, conditional CSS companion with a non-empty condition, valid cross-skill `reviewWith`, complete fixture partitions, and 100% positive coverage. 또한 Appendix D의 CSS mixed fixture 5개가 React exact selected/N/A partition을 모두 갖도록 요구한다.
+Tests require 42 exact local IDs, all Appendix B routing metadata, required TypeScript companion, conditional CSS companion, valid conditional/mandatory cross-skill targets, completion gates, complete fixture partitions, and 100% positive coverage. 또한 Appendix D의 CSS mixed fixture 5개가 React exact selected/N/A partition을 모두 갖도록 요구한다.
 
 - [x] **Step 2: Verify React RED**
 
@@ -498,7 +503,7 @@ Replace legacy `extends` with:
 ]
 ```
 
-Apply Appendix B `appliesWhen`/`reviewWith` values exactly.
+Apply Appendix B `appliesWhen`/`requiresSelected`/`requiredOnCompletion`/`reviewWith` values exactly.
 
 - [x] **Step 4: Add realistic React routing fixtures**
 
@@ -599,7 +604,9 @@ Replace keyword-only assertions with contract assertions for:
 - same-digest exact ordinal partition;
 - N/A exclusion groups whose ordinals exactly cover the N/A set and whose evidence reasons are non-empty;
 - independent reviewer selection rather than trusting implementer receipt;
-- `reviewWith` closure;
+- `reviewWith` conditional reevaluation;
+- activated `completionGate` and final Selected `requiresSelected` target N/A/omission blocking;
+- Unknown→N/A source가 mandatory target을 과잉 선택하지 않는 순서;
 - missing applicable rule as coverage FAIL;
 - semantic PASS/FAIL/UNKNOWN and zero gate;
 - lint/build/browser evidence not substituting for semantic verdict;
@@ -714,13 +721,13 @@ Task 8 source inventory is the six files above. `build:all` should not add Task 
 
 - [x] **Step 0: Correct the reproduced token-architecture failure**
 
-The first actual measurement on HEAD `1c2636d` failed all token gates: implementation median 13,380, max 19,723, one-load reduction 64.8837%, cumulative reduction 48.698%. Preserve rule-selection oracles, compact the index to ordinal + ID + `appliesWhen` + optional `reviewWith`, generate normative contracts from the source prefix, require CRITICAL full rules, include source body hashes and renderer version in the routing digest, reject prose after the first Incorrect marker, and validate missing/stale/orphan contracts. The corrected fixed contexts, including named-handler/owner-selector representatives and an actual reasoned HIGH full-rule expansion, now pass with implementation median 8,667, max 11,783, one-load reduction median 78.9922%, and cumulative reduction median 65.5705%; behavioral GREEN remains independently required.
+The first actual measurement on HEAD `1c2636d` failed all token gates: implementation median 13,380, max 19,723, one-load reduction 64.8837%, cumulative reduction 48.698%. Preserve rule-selection oracles, compact the index to ordinal + ID + `appliesWhen` + optional `completionGate` + optional `reviewWith`, keep `requiresSelected` in selected contracts, require CRITICAL full rules, include all routing fields/source body/renderer version in the digest, and validate missing/stale/orphan contracts. The corrected fixed contexts pass the token gates; behavioral GREEN remains independently required.
 
 The first schema-valid full-handbook mixed trial then reproduced an over-selection, while discarded schema-invalid attempts showed the same tendency but were not scored: generated handbooks contained normative bodies but omitted the same `appliesWhen` boundaries used by the compact indexes. Preserve the valid failed old-HEAD trial as discovery evidence, add a RED renderer assertion, render escaped `Applies when` immediately below every progressive handbook rule heading, rebuild the three opt-in handbooks, and restart the fixed matrix on the new committed HEAD. This does not change the default progressive load path or its routing digest; it makes the explicit full-handbook control precise enough to act as an oracle.
 
 - [ ] **Step 1: Fix the evaluation protocol**
 
-Record repository HEAD, generated index digests, model/runtime/version, reasoning level, exact prompt, scorer/rubric version, trial count, arm, declared loaded files, exact receipt, semantic verdicts, and tokens. If file-read telemetry is unavailable, label the list “declared” and do not claim observed non-read.
+Use protocol v3. Render the exact child dispatch before spawning, preserve its raw UTF-8 bytes, SHA-256, byte length, and renderer version in a coordinator-owned envelope, and never ask the child to echo its own prompt. Record repository HEAD, generated digests, model/runtime, reasoning, scorer/rubric, trial, arm, declared files, receipt, semantic verdicts, and tokens. Each progressive/full-handbook run includes a routing trace with completion gates, conditional reviewWith outcomes, final-Selected mandatory additions, and two consecutive identical fixed-point passes. If file-read telemetry is unavailable, label it “declared.”
 
 - [ ] **Step 2: Run no-skill baseline and full-handbook oracle**
 
@@ -728,7 +735,7 @@ Repeat BASELINE-R/T/C at least twice per arm. In addition, run the design's eigh
 
 - [ ] **Step 3: Run progressive candidates**
 
-Fresh agents read only the relevant `SKILL.md`, every activated `RULES_INDEX.md`, selected/unknown stable-ID-matched contracts, and CRITICAL or receipt-reasoned full-rule expansions. Run each mixed scenario at least twice and critical scenarios three times. Score exact selected and N/A partitions against independently reviewed manifests, reject unrecorded full-rule loads, and reject any receipt whose N/A exclusion groups do not exactly cover the N/A ordinals or give evidence-grounded reasons.
+Fresh agents read only the relevant `SKILL.md`, every activated `RULES_INDEX.md`, selected/unknown contracts, and CRITICAL or reasoned full-rule expansions. Resolve Unknown before applying final Selected `requiresSelected`, select every `completionGate`, and repeat to the two-pass fixed point. Run each mixed scenario at least twice and critical scenarios three times. Reject mandatory/completion omissions, unrecorded full-rule loads, invalid N/A groups, or a trace that does not equal the final receipt.
 
 - [ ] **Step 4: Run scope-drift and mutation RED**
 
@@ -779,7 +786,7 @@ Required results:
 - mutation arm blocked;
 - default full handbook loads 0 by declared context, with telemetry limitation stated.
 
-If a behavioral gate fails, update only the minimal `appliesWhen`, `reviewWith`, router wording, contract source placement, or fixture oracle justified by the failure. If a measured token gate exposes structural loading overhead, change only the minimal index/contract renderer and load contract without weakening rule recall; repeat the same arm before moving on.
+If a behavioral gate fails, update only the minimal `appliesWhen`, `reviewWith`, `requiresSelected`, `requiredOnCompletion`, router wording, contract placement, or fixture oracle justified by the failure. If a measured token gate exposes structural overhead, change only the minimal renderer/load contract without weakening recall; repeat the same arm before moving on.
 
 - [ ] **Step 7: Commit evaluation evidence**
 
@@ -838,7 +845,7 @@ Stage only the concrete files named in reviewer findings after inspecting their 
 
 ## Appendix A: TypeScript Routing Metadata and Scenario Oracle
 
-Every value below is normative implementation input. `—` means omit `reviewWith`. All `appliesWhen` values are one sentence and at most 160 characters.
+Every value below is normative implementation input. The main table records `appliesWhen` and conditional `reviewWith`; `—` means omit `reviewWith`. The mandatory-routing overlay immediately after it is equally normative. A rule omitted from that overlay has no `requiresSelected` target and `requiredOnCompletion: false`. All `appliesWhen` values are one sentence and at most 160 characters.
 
 | Rule ID | `appliesWhen` | `reviewWith` |
 |---|---|---|
@@ -849,21 +856,30 @@ Every value below is normative implementation input. `—` means omit `reviewWit
 | `types-document-custom-types-and-shapes` | custom type·interface, schema root, 객체형 상수, 계약 field 또는 Pick·Omit·Indexed Access alias를 추가·변경한다. | — |
 | `types-mark-unused-parameters-with-underscore` | 기존 callback이나 framework 계약을 구현·변경하며 계약 매개변수 일부를 생략하거나 사용하지 않는다. | — |
 | `types-prefer-function-variable-types-over-parameter-annotations` | 기존 callable 계약이 있는 함수 구현을 추가·변경하거나 같은 시그니처를 여러 구현이 공유하도록 리팩터링한다. | — |
-| `types-reuse-callback-signatures-from-existing-contracts` | interface, 객체 또는 framework가 이미 정의한 callback을 구현·전달하면서 시그니처를 새로 적거나 바꾼다. | `types-prefer-function-variable-types-over-parameter-annotations` |
+| `types-reuse-callback-signatures-from-existing-contracts` | interface, 객체 또는 framework가 이미 정의한 callback을 구현·전달하면서 시그니처를 새로 적거나 바꾼다. | — |
 | `types-reuse-existing-contracts-before-new-types` | 기존 type, interface 또는 schema와 같거나 일부만 다른 shape를 새로 선언·변경하려 한다. | `types-document-custom-types-and-shapes` |
 | `functions-avoid-imperative-assembly-in-wide-scopes` | 파일 상단이나 넓은 스코프에서 `let` 재대입, 배열 `push` 또는 조건부 누적으로 값을 조립하거나 이를 리팩터링한다. | — |
 | `functions-extract-helpers-only-when-the-boundary-is-real` | support function을 추출·이동·export·공유하거나 generic helper 파일, 단일 owner 전용 mapper 또는 작은 sub-step 경계를 바꾼다. | `docs-use-helper-for-reusable-pure-helper-functions`, `docs-require-header-jsdoc-on-key-declarations` |
 | `functions-prefer-immutable-array-sorting` | props, state, 매개변수 또는 공유 입력에서 온 배열을 정렬하거나 기존 `.sort()` 호출을 추가·변경한다. | — |
-| `functions-replace-enum-with-as-const-objects` | `enum` 또는 타입과 런타임에서 함께 쓰는 enum-like 값 집합을 추가·변경한다. | `naming-use-consistent-file-and-symbol-naming`, `types-document-custom-types-and-shapes` |
+| `functions-replace-enum-with-as-const-objects` | `enum` 또는 타입과 런타임에서 함께 쓰는 enum-like 값 집합을 추가·변경한다. | — |
 | `functions-use-named-object-params-for-complex-signatures` | 매개변수 3개 이상 또는 같은 계열 인자를 받는 함수를 추가·변경하거나 객체 매개변수를 시그니처에서 구조분해한다. | — |
 | `functions-use-set-and-map-for-repeated-lookups` | 같은 컬렉션에 `includes`, `find` 또는 keyed lookup을 여러 번 수행하는 코드를 추가·변경한다. | — |
 | `absence-expose-optional-values-instead-of-silent-fallbacks` | optional 값의 읽기·정규화·전달을 바꾸거나 `??`, `\|\|`, 기본값 또는 빈 값 대체 분기를 추가·변경한다. | `docs-keep-inline-comments-for-constraints-and-caveats` |
 | `docs-keep-inline-comments-for-constraints-and-caveats` | 함수 본문의 `//` 주석을 추가·수정·유지하거나 도메인 규칙, 예외 방어, 외부 제약 또는 부수효과 순서를 주석으로 설명한다. | — |
-| `docs-require-header-jsdoc-on-key-declarations` | named query·mutation binding, 원격 연동 함수, 이벤트 handler, reactive sync block, reusable helper, custom type·interface, store 또는 formatter 예외 선언을 추가·변경한다. | `docs-standardize-annotation-tags-by-declaration-role`, `docs-write-concise-korean-comments-about-purpose-and-constraints` |
+| `docs-require-header-jsdoc-on-key-declarations` | named query·mutation, 원격 함수, 비자명한 handler/effect, reusable/exported helper·custom hook, custom type·interface, store, formatter 또는 예외 memo 선언을 추가·변경한다. | — |
 | `docs-standardize-annotation-tags-by-declaration-role` | TypeScript/TSX 선언의 JSDoc 태그를 추가·변경하거나 선언 역할에 맞는 annotation을 검토한다. | — |
 | `docs-use-helper-for-reusable-pure-helper-functions` | 여러 caller가 쓰는 pure support function, owner-named exported helper 또는 `shared/util.ts` 함수를 추가·변경하거나 `@helper`를 붙이려 한다. | — |
 | `docs-write-concise-korean-comments-about-purpose-and-constraints` | TypeScript/TSX의 JSDoc이나 inline comment 문구를 추가·수정·번역하거나 리뷰한다. | — |
 | `guardrails-review-banned-typescript-shortcuts-before-finishing` | TypeScript/TSX 변경을 완료 판정하거나 diff에서 barrel, 중복 타입, 조기 helper, 넓은 조립, 무근거 fallback 또는 자명한 주석을 점검한다. | — |
+
+### TypeScript mandatory-routing overlay
+
+| Rule ID | `requiresSelected` | `requiredOnCompletion` |
+|---|---|---|
+| `types-reuse-callback-signatures-from-existing-contracts` | `types-prefer-function-variable-types-over-parameter-annotations` | `false` |
+| `functions-replace-enum-with-as-const-objects` | `naming-use-consistent-file-and-symbol-naming`, `types-document-custom-types-and-shapes` | `false` |
+| `docs-require-header-jsdoc-on-key-declarations` | `docs-standardize-annotation-tags-by-declaration-role`, `docs-write-concise-korean-comments-about-purpose-and-constraints` | `false` |
+| `guardrails-review-banned-typescript-shortcuts-before-finishing` | — | `true` |
 
 Define the canonical TypeScript universe `U_TS` as the 22 IDs in the table. Every final fixture explicitly materializes `expectedNotApplicable = U_TS - expectedSelected`; the test rejects a computed/missing field. Because these are final receipts, the guardrail rule is selected in all nine fixtures.
 
@@ -890,7 +906,7 @@ Define the canonical TypeScript universe `U_TS` as the 22 IDs in the table. Ever
 
 4. `helper-boundary-scope-drift`
    - Initial evidence: inline a single-owner mapper/sub-step into `profile-api.ts`.
-   - Initial selected: `functions-extract-helpers-only-when-the-boundary-is-real`
+   - Initial selected: `functions-extract-helpers-only-when-the-boundary-is-real`, `guardrails-review-banned-typescript-shortcuts-before-finishing`
    - Drift evidence: the same normalization becomes necessary for a second owner, so move the existing named function to `profile-support.ts`, export it, directly import it from `bulk-profile.ts`, and add concise Korean `@helper` docs.
    - Final files: `src/profile/profile-api.ts`, `src/profile/profile-support.ts`, `src/bulk/bulk-profile.ts`
    - Skills: `typescript`
@@ -934,17 +950,17 @@ Define the canonical TypeScript universe `U_TS` as the 22 IDs in the table. Ever
 
 ## Appendix B: React Routing Metadata and Scenario Oracle
 
-Every value below is normative implementation input. `—` means omit `reviewWith`.
+Every value below is normative implementation input. The main table records `appliesWhen` and conditional `reviewWith`; `—` means omit `reviewWith`. The mandatory-routing overlay immediately after it is equally normative. A React rule omitted from that overlay has no `requiresSelected` target, and every React rule has `requiredOnCompletion: false`.
 
 | Rule ID | `appliesWhen` | `reviewWith` |
 |---|---|---|
-| `ownership-use-consistent-file-and-symbol-naming` | React/TSX 파일 자체·컴포넌트·exported symbol·공용 설정의 이름을 새로 정하거나 바꾸며 casing, ui/wg prefix 또는 config key naming을 판단한다. local query·mutation binding만 바꾸면 제외한다. | `typescript/naming-use-consistent-file-and-symbol-naming` |
-| `ownership-avoid-barrel-and-react-namespace-imports` | `index.ts`·barrel 재노출, `React.*` namespace 타입, type/value 혼합 import 또는 소유 출처를 숨긴 경로를 직접 추가·수정한다. 일반 direct value import는 제외한다. | `typescript/naming-use-direct-imports-and-public-entry-points` |
+| `ownership-use-consistent-file-and-symbol-naming` | React/TSX 파일 자체·컴포넌트·exported symbol·공용 설정의 이름을 새로 정하거나 바꾸며 casing, ui/wg prefix 또는 config key naming을 판단한다. local query·mutation binding만 바꾸면 제외한다. | — |
+| `ownership-avoid-barrel-and-react-namespace-imports` | `index.ts`·barrel 재노출, `React.*` namespace 타입, type/value 혼합 import 또는 소유 출처를 숨긴 경로를 직접 추가·수정한다. 일반 direct value import는 제외한다. | — |
 | `ownership-layer-component-boundaries` | 컴포넌트를 ui·widget·route-local 중 어느 소유 레이어에 둘지 결정하거나 레이어 사이에서 이동·공용화한다. | `ownership-place-route-local-files-by-scope`, `css/naming-separate-local-and-route-style-scopes` |
 | `ownership-place-route-local-files-by-scope` | route 전용 컴포넌트·스타일·순수 로직을 새로 만들거나 `-local`과 route sibling `.ts` 사이에서 위치를 바꾼다. | `css/naming-separate-local-and-route-style-scopes`, `css/organization-keep-style-files-owned-by-one-component-or-route` |
 | `ownership-prefer-plain-ts-for-local-react-helpers` | 화면 전용 계산·정규화·payload 조립을 custom hook 또는 별도 support module로 추출·이동하려 한다. | `screen-extract-utilities-selectively`, `screen-move-pure-support-code-out-of-entry-files`, `typescript/functions-extract-helpers-only-when-the-boundary-is-real` |
 | `ownership-shared-config-entry-points` | 둘 이상의 화면이 쓰는 상수·설정·순수 함수를 추가·이동하거나 leaf 파일에 중복 선언된 공용 값을 정리한다. | `typescript/naming-centralize-shared-config-namespaces`, `typescript/naming-preserve-config-origin-with-chained-access` |
-| `typing-function-type-first` | React 이벤트 핸들러나 prop callback의 선언·시그니처를 추가·변경하며 기존 React alias 또는 callback 계약을 쓸 수 있다. | `typing-reuse-existing-contracts`, `typescript/types-prefer-function-variable-types-over-parameter-annotations`, `typescript/types-reuse-callback-signatures-from-existing-contracts` |
+| `typing-function-type-first` | React 이벤트 핸들러나 prop callback의 선언·시그니처를 추가·변경하며 기존 React alias 또는 callback 계약을 쓸 수 있다. | `typing-reuse-existing-contracts` |
 | `typing-reuse-existing-contracts` | Props callback 구현이나 API 응답 기반 view type을 추가·변경하며 기존 prop·API 계약과 같은 shape가 보인다. | `typescript/types-reuse-callback-signatures-from-existing-contracts`, `typescript/types-reuse-existing-contracts-before-new-types` |
 | `strategy-choose-single-composition-compound-and-variants` | exported shared component에 slot·public part·shared context/action·반복 preset·mode API를 추가하거나 조립 구조를 재설계한다. | `strategy-avoid-boolean-prop-proliferation`, `strategy-prefer-children-over-render-props`, `screen-avoid-premature-abstraction` |
 | `strategy-avoid-boolean-prop-proliferation` | 여러 곳에서 쓰는 shared component에 boolean mode·visibility prop을 추가하거나 기존 boolean 조합과 JSX 분기가 늘어난다. | — |
@@ -954,32 +970,48 @@ Every value below is normative implementation input. `—` means omit `reviewWit
 | `composition-destructure-props-inside` | 함수 컴포넌트의 props 시그니처나 본문 구조분해 방식을 추가·변경한다. | — |
 | `composition-use-ref-prop-instead-of-forwardref-in-react-19` | React 19 컴포넌트에 focus·scroll·measure용 ref 공개 API를 추가·변경하거나 새 `forwardRef` wrapper를 도입한다. | — |
 | `composition-use-activity-for-render-branches` | 이미 마운트된 subtree의 표시 상태를 보존하려고 조건부 렌더링과 Activity 또는 동등한 visibility primitive 사이를 바꾼다. | — |
-| `composition-named-handlers-over-inline` | TSX event prop에 인라인 callback을 추가·수정하고 그 안에 분기, 비동기 호출, 상태 변경 또는 여러 동작이 들어간다. | `events-name-and-curry-handlers`, `events-keep-handler-flow-inline`, `events-run-user-actions-in-handlers-not-effects`, `docs-require-jsdoc-on-key-declarations` |
+| `composition-named-handlers-over-inline` | TSX event prop의 인라인 callback에 분기, 비동기 호출, 여러 동작·부수효과 또는 비자명한 state transition을 추가·수정한다. 단순 setter·인자 전달 한 줄 위임은 제외한다. | `events-keep-handler-flow-inline`, `events-run-user-actions-in-handlers-not-effects` |
 | `screen-keep-route-flow-visible` | route entry의 search·navigate·query·mutation·effect·section 조립을 이동·분리하거나 화면 흐름을 재구성한다. | `screen-extract-local-section-components-for-runtime-boundaries`, `screen-move-pure-support-code-out-of-entry-files` |
 | `screen-avoid-premature-abstraction` | screen 코드를 helper·hook·component·module로 추출하거나 한 곳에서만 쓰는 기존 추상화를 접어 넣는다. | `screen-extract-local-section-components-for-runtime-boundaries`, `screen-extract-utilities-selectively`, `typescript/functions-extract-helpers-only-when-the-boundary-is-real` |
 | `screen-extract-local-section-components-for-runtime-boundaries` | route-local section component를 새로 추출하거나 기존 section이 async·state·provider·interaction·library·performance 경계를 소유하는지 바꾼다. | — |
 | `screen-extract-utilities-selectively` | 화면 계산·변환·preset·option·column meta를 별도 함수/support module로 추출·이동하거나 support 경계를 바꾼다. query `select` 내부 shaping만이면 제외한다. | `screen-move-pure-support-code-out-of-entry-files`, `typescript/functions-extract-helpers-only-when-the-boundary-is-real` |
-| `screen-keep-derived-values-close` | response·state·search·props의 오리진을 끊는 alias·flag·표시값을 넓은 screen scope에 추가·이동하거나 `let`/`push` 기반 조립을 만든다. | — |
+| `screen-keep-derived-values-close` | response·state·search·props의 오리진을 끊는 alias·flag·표시값을 넓은 screen scope에 추가·이동·제거하거나 `let`/`push` 조립을 바꾼다. | — |
 | `screen-move-pure-support-code-out-of-entry-files` | route entry에 여러 줄 pure helper·preset·option·화면 전용 type이 쌓이거나 추출한 support code의 목적지 파일을 정한다. | `docs-require-jsdoc-on-key-declarations` |
-| `events-name-and-curry-handlers` | 이벤트 핸들러를 새로 만들거나 이름, target/event 표현, 추가 인자 전달 방식 또는 최종 React handler 시그니처를 바꾼다. | `typing-function-type-first` |
+| `events-name-and-curry-handlers` | 이벤트 핸들러를 새로 만들거나 이름, target/event 표현, 추가 인자 전달 방식 또는 최종 React handler 시그니처를 바꾼다. | `typing-function-type-first`, `typescript/naming-use-consistent-file-and-symbol-naming` |
 | `events-keep-handler-flow-inline` | 화면 전용 named handler의 분기·mutation·navigation·후처리를 여러 helper나 hook으로 나누거나 다시 합친다. | `screen-extract-utilities-selectively` |
 | `events-run-user-actions-in-handlers-not-effects` | 제출·저장·삭제·닫기 같은 one-shot 사용자 액션을 handler와 state+effect 사이에서 이동하거나 실행 흐름을 바꾼다. | — |
-| `state-calculate-derived-values-during-render` | 현재 props·state·search·response에서 계산 가능한 값을 별도 state와 effect로 동기화하거나 그 동기화를 제거한다. | `screen-keep-derived-values-close` |
+| `state-calculate-derived-values-during-render` | 현재 props·state·search·response에서 계산 가능한 값을 별도 state와 effect로 동기화하거나 그 동기화를 제거한다. | — |
 | `state-choose-state-tools-by-source-of-truth` | 로컬 UI·전역 client·server 데이터를 새 state 도구로 옮기거나 서로 다른 source of truth 사이에 복제·동기화한다. | `state-store-derived-authority` |
-| `state-name-query-and-mutation-bindings-consistently` | React Query query·mutation hook의 로컬 binding을 추가·이름 변경하거나 역할이 드러나지 않는 별칭이 diff에 보인다. | `state-preserve-origin-chaining`, `docs-require-jsdoc-on-key-declarations` |
+| `state-name-query-and-mutation-bindings-consistently` | React Query query·mutation hook의 로컬 binding을 추가·이름 변경하거나 역할이 드러나지 않는 별칭이 diff에 보인다. | `state-preserve-origin-chaining` |
 | `state-store-derived-authority` | 여러 화면·메뉴·route guard가 쓰는 권한·capability 같은 derived decision을 store에 저장·동기화하거나 단일 화면 값까지 store로 올린다. | `docs-require-jsdoc-on-key-declarations` |
-| `state-shape-query-data-with-select` | 서버 응답의 list·items·meta 등을 렌더에서 가공·반복 소비하거나 React Query `select`의 결과 shape를 추가·변경한다. | `state-name-query-and-mutation-bindings-consistently`, `state-preserve-origin-chaining`, `docs-require-jsdoc-on-key-declarations` |
-| `state-preserve-origin-chaining` | page·layout·screen 넓은 스코프에서 response·mutation·store를 구조분해하거나 별칭으로 끊고 원본 값 접근을 바꾼다. | — |
+| `state-shape-query-data-with-select` | 서버 응답의 list·items·meta 등을 렌더에서 가공·반복 소비하거나 React Query `select`의 결과 shape를 추가·변경한다. | `state-name-query-and-mutation-bindings-consistently`, `state-preserve-origin-chaining` |
+| `state-preserve-origin-chaining` | page·layout·screen 넓은 스코프에서 response·mutation·store를 구조분해하거나 별칭으로 끊고 원본 값 접근을 바꾼다. | `screen-keep-derived-values-close` |
 | `state-compiler-first-memoization` | `useMemo`·`useCallback`을 추가·제거하거나 참조 동일성·실측 병목·무거운 deferred 계산을 이유로 수동 memoization을 검토한다. | — |
 | `state-use-lazy-state-initializers-for-expensive-defaults` | `useState` 초기값에 localStorage 파싱, 인덱스 생성, 큰 배열 정규화 같은 비용 있는 계산을 추가·변경한다. | — |
-| `state-use-effectevent-for-non-reactive-effect-callbacks` | subscription effect가 최신 prop·state callback을 읽도록 ref 동기화 hack, dependency 재설치 또는 `useEffectEvent`를 추가·변경한다. | `events-run-user-actions-in-handlers-not-effects`, `docs-require-jsdoc-on-key-declarations` |
+| `state-use-effectevent-for-non-reactive-effect-callbacks` | subscription effect가 최신 prop·state callback을 읽도록 ref 동기화 hack, dependency 재설치 또는 `useEffectEvent`를 추가·변경한다. | `events-run-user-actions-in-handlers-not-effects` |
 | `state-use-functional-setstate-updates` | 다음 state가 현재 state에 의존하는 handler·async callback·반복 갱신에서 `setState` 호출 방식을 추가·변경한다. | — |
 | `state-use-starttransition-for-non-urgent-updates` | 클릭·선택·필터 변경 뒤 큰 list·table·tree를 다시 그리는 state update의 우선순위나 transition 처리를 바꾼다. | — |
 | `state-use-usedeferredvalue-for-heavy-derived-renders` | 검색어·필터·정렬 입력이 무거운 파생 view를 갱신해 typing 지연이 생기거나 `useDeferredValue` 기반 계산을 추가·변경한다. | `state-compiler-first-memoization`, `state-use-starttransition-for-non-urgent-updates` |
 | `state-avoid-fallback-defaults-and-loading-flags` | optional 응답에 `??`·`\|\|` 기본값을 넣거나 Suspense 화면 본문에 초기 loading return을 추가·변경하고 결측·로딩 UX를 다룬다. | `state-preserve-origin-chaining`, `screen-keep-derived-values-close`, `typescript/absence-expose-optional-values-instead-of-silent-fallbacks` |
-| `docs-document-compound-parts-with-part-and-description` | compound component의 exported public part·props interface·part 내부 handler를 추가·변경하거나 public part 문서를 수정한다. | `docs-require-jsdoc-on-key-declarations`, `typescript/docs-standardize-annotation-tags-by-declaration-role` |
-| `docs-require-jsdoc-on-key-declarations` | query·mutation, 비자명한 handler/effect, exported helper/custom hook/store, public type/interface 또는 예외 memo 선언을 추가·변경한다. | `typescript/docs-require-header-jsdoc-on-key-declarations`, `typescript/docs-standardize-annotation-tags-by-declaration-role` |
-| `docs-limit-inline-comments-to-non-obvious-logic` | React 함수·handler·JSX 인접 로직 안의 `//` 주석을 추가·수정하거나 자명한 설명과 실제 제약을 구분해 정리한다. | `typescript/docs-keep-inline-comments-for-constraints-and-caveats` |
+| `docs-document-compound-parts-with-part-and-description` | compound component의 exported public part·props interface·part 내부 handler를 추가·변경하거나 public part 문서를 수정한다. | — |
+| `docs-require-jsdoc-on-key-declarations` | query·mutation, 비자명한 handler/effect, exported helper/custom hook/store, public type/interface 또는 예외 memo 선언을 추가·변경한다. | — |
+| `docs-limit-inline-comments-to-non-obvious-logic` | React 함수·handler·JSX 인접 로직 안의 `//` 주석을 추가·수정하거나 자명한 설명과 실제 제약을 구분해 정리한다. | — |
+
+### React mandatory-routing overlay
+
+| Rule ID | `requiresSelected` |
+|---|---|
+| `ownership-use-consistent-file-and-symbol-naming` | `typescript/naming-use-consistent-file-and-symbol-naming` |
+| `ownership-avoid-barrel-and-react-namespace-imports` | `typescript/naming-use-direct-imports-and-public-entry-points` |
+| `typing-function-type-first` | `typescript/types-reuse-callback-signatures-from-existing-contracts` |
+| `composition-named-handlers-over-inline` | `docs-require-jsdoc-on-key-declarations`, `events-name-and-curry-handlers` |
+| `state-calculate-derived-values-during-render` | `screen-keep-derived-values-close` |
+| `state-name-query-and-mutation-bindings-consistently` | `typescript/naming-use-consistent-file-and-symbol-naming`, `docs-require-jsdoc-on-key-declarations` |
+| `state-shape-query-data-with-select` | `docs-require-jsdoc-on-key-declarations` |
+| `state-use-effectevent-for-non-reactive-effect-callbacks` | `docs-require-jsdoc-on-key-declarations` |
+| `docs-document-compound-parts-with-part-and-description` | `docs-require-jsdoc-on-key-declarations` |
+| `docs-require-jsdoc-on-key-declarations` | `typescript/docs-require-header-jsdoc-on-key-declarations` |
+| `docs-limit-inline-comments-to-non-obvious-logic` | `typescript/docs-keep-inline-comments-for-constraints-and-caveats` |
 
 Define `U_REACT` as these 42 IDs. Every fixture stores the full stable-ID array `expectedNotApplicable = U_REACT - expectedSelected`. Companion partitions are defined in Appendix D.
 
@@ -1083,7 +1115,7 @@ Define `U_REACT` as these 42 IDs. Every fixture stores the full stable-ID array 
 
 ## Appendix C: CSS Routing Metadata and Scenario Oracle
 
-Every value below is normative implementation input. `organization-review-banned-css-patterns-before-finishing` is selected in every final CSS/class-contract fixture but is not a `reviewWith` hub.
+Every value below is normative implementation input. The main table records `appliesWhen` and conditional `reviewWith`; `—` means omit `reviewWith`. The mandatory-routing overlay immediately after it is equally normative. A rule omitted from that overlay has no `requiresSelected` target and `requiredOnCompletion: false`. `organization-review-banned-css-patterns-before-finishing` is selected in every final CSS/class-contract fixture because it is the completion gate, not because it is a `reviewWith` hub.
 
 CSS metadata declares one conditional companion exactly: `{"skill":"typescript","mode":"conditional","appliesWhen":"TS/TSX class contract, wrapper Props 또는 style import를 함께 변경한다."}`. Pure CSS fixtures do not activate it.
 
@@ -1099,17 +1131,26 @@ CSS metadata declares one conditional companion exactly: `{"skill":"typescript",
 | `composition-do-not-build-structural-variants-with-modifiers` | spacing·방향·특정 화면의 구조 차이를 `--modifier`로 추가하려 하거나 modifier가 반복 가능한 상태 또는 API variant인지 판단한다. | `naming-name-elements-and-modifiers-by-role` |
 | `composition-keep-classes-single-purpose` | base class 이름에 상태·variant 의미를 합치거나 한 class에 서로 독립적인 시각 책임을 추가·재사용·분리한다. | — |
 | `composition-style-ui-components-through-owned-wrappers` | 실제 `Ui*` React wrapper 사용처·API에서 내부 DOM styling 경계를 정하거나 root `className`·slot prop hook을 주입·노출·사용한다. 기존 CSS owner root 아래 third-party selector만 수정하면 제외한다. | `selector-target-third-party-dom-from-owned-roots` |
-| `composition-prefer-ui-wrapper-prop-types` | `Ui*` wrapper 사용처나 wrapper API에서 Props 타입을 선언·추론·재사용하고 라이브러리 원본 Props 참조를 검토한다. | `typescript/types-reuse-existing-contracts-before-new-types` |
+| `composition-prefer-ui-wrapper-prop-types` | `Ui*` wrapper 사용처나 wrapper API에서 Props 타입을 선언·추론·재사용하고 라이브러리 원본 Props 참조를 검토한다. | — |
 | `selector-avoid-deep-descendant-dependencies` | descendant 또는 child selector chain을 추가·수정하거나 DOM 계층에 의존하는 project-owned·third-party selector를 검토한다. | — |
 | `selector-keep-project-selectors-flat` | project-owned class를 중첩·descendant selector로 연결하거나 raw HTML prose·copy·content wrapper 안 element selector를 추가·수정한다. | — |
-| `selector-target-third-party-dom-from-owned-roots` | `.ant-*`, `.rc-*`, `.tippy-*` 등 third-party 내부 DOM selector를 추가·수정하거나 owned wrapper 아래로 범위를 제한한다. | `selector-avoid-deep-descendant-dependencies` |
-| `selector-use-pseudo-classes-for-dom-owned-states` | `:hover`, `:visited`, `:focus*`, `:disabled`, `:checked`를 추가·수정하거나 parent DOM state가 child styling에 영향을 준다. | `values-separate-domain-state-modifiers-from-dom-interaction-states` |
+| `selector-target-third-party-dom-from-owned-roots` | `.ant-*`, `.rc-*`, `.tippy-*` 등 third-party 내부 DOM selector를 추가·수정하거나 owned wrapper 아래로 범위를 제한한다. | — |
+| `selector-use-pseudo-classes-for-dom-owned-states` | `:hover`, `:visited`, `:focus*`, `:disabled`, `:checked`를 추가·수정하거나 parent DOM state가 child styling에 영향을 준다. | — |
 | `values-keep-layout-intent-explicit` | `sticky`·`fixed`, `z-index`, 강제 width·height 또는 부모·자식의 layout responsibility를 추가·변경한다. | — |
 | `values-always-provide-css-variable-fallbacks` | `var(--*)`를 추가·수정하거나 theme provider·third-party wrapper·optional token·overlay처럼 변수 주입이 보장되지 않는 경계를 스타일링한다. | — |
 | `values-separate-domain-state-modifiers-from-dom-interaction-states` | app/domain state modifier와 hover·focus·disabled 같은 DOM interaction state를 추가·변경하거나 focus ring에 손댄다. | — |
 | `values-tokenize-repeated-visual-values` | 색상·간격·radius·타이포·그림자 등 같은 시각 값이 2회 이상 반복되거나 새 shared visual value를 하드코딩한다. | `values-always-provide-css-variable-fallbacks` |
 | `organization-keep-style-files-owned-by-one-component-or-route` | stylesheet를 새로 만들거나 이동·분할·병합하고 한 파일에 component, route, document, local, shared owner가 섞일 가능성이 있다. | — |
 | `organization-review-banned-css-patterns-before-finishing` | CSS 또는 TSX class contract 변경이 완료 단계에 들어간다. | — |
+
+### CSS mandatory-routing overlay
+
+| Rule ID | `requiresSelected` | `requiredOnCompletion` |
+|---|---|---|
+| `composition-prefer-ui-wrapper-prop-types` | `typescript/types-reuse-existing-contracts-before-new-types` | `false` |
+| `selector-target-third-party-dom-from-owned-roots` | `selector-avoid-deep-descendant-dependencies` | `false` |
+| `selector-use-pseudo-classes-for-dom-owned-states` | `values-separate-domain-state-modifiers-from-dom-interaction-states` | `false` |
+| `organization-review-banned-css-patterns-before-finishing` | — | `true` |
 
 Define `U_CSS` as these 21 IDs. Every final fixture explicitly stores `expectedNotApplicable = U_CSS - expectedSelected`; mixed companion partitions appear in Appendix D.
 
@@ -1204,7 +1245,7 @@ Each activated progressive index requires a complete selected/N/A partition in J
 - `RTE07-visibility-lifecycle`: `guardrails-review-banned-typescript-shortcuts-before-finishing`; the fixture states that Activity is already imported.
 - `RTE08-delete-handler-flow`: `naming-use-consistent-file-and-symbol-naming`, `naming-use-direct-imports-and-public-entry-points`, `types-mark-unused-parameters-with-underscore`, `types-prefer-function-variable-types-over-parameter-annotations`, `types-reuse-callback-signatures-from-existing-contracts`, `functions-extract-helpers-only-when-the-boundary-is-real`, `docs-require-header-jsdoc-on-key-declarations`, `docs-standardize-annotation-tags-by-declaration-role`, `docs-write-concise-korean-comments-about-purpose-and-constraints`, `guardrails-review-banned-typescript-shortcuts-before-finishing`; the fixture keeps an unused React event as `_event` and directly imports the reused callback type.
 - `RTE09-route-runtime-section`: `naming-use-consistent-file-and-symbol-naming`, `naming-use-direct-imports-and-public-entry-points`, `types-document-custom-types-and-shapes`, `types-prefer-function-variable-types-over-parameter-annotations`, `types-reuse-callback-signatures-from-existing-contracts`, `docs-require-header-jsdoc-on-key-declarations`, `docs-standardize-annotation-tags-by-declaration-role`, `docs-write-concise-korean-comments-about-purpose-and-constraints`, `guardrails-review-banned-typescript-shortcuts-before-finishing`.
-- `RTE10-derived-selection-state`: `docs-require-header-jsdoc-on-key-declarations`, `docs-standardize-annotation-tags-by-declaration-role`, `docs-write-concise-korean-comments-about-purpose-and-constraints`, `guardrails-review-banned-typescript-shortcuts-before-finishing`.
+- `RTE10-derived-selection-state`: `naming-use-consistent-file-and-symbol-naming`, `docs-require-header-jsdoc-on-key-declarations`, `docs-standardize-annotation-tags-by-declaration-role`, `docs-write-concise-korean-comments-about-purpose-and-constraints`, `guardrails-review-banned-typescript-shortcuts-before-finishing`.
 - `RTE11-shared-authority`: `naming-use-consistent-file-and-symbol-naming`, `naming-use-direct-imports-and-public-entry-points`, `types-document-custom-types-and-shapes`, `docs-require-header-jsdoc-on-key-declarations`, `docs-standardize-annotation-tags-by-declaration-role`, `docs-write-concise-korean-comments-about-purpose-and-constraints`, `guardrails-review-banned-typescript-shortcuts-before-finishing`.
 - `RTE12-query-shaping`: `naming-use-consistent-file-and-symbol-naming`, `docs-require-header-jsdoc-on-key-declarations`, `docs-standardize-annotation-tags-by-declaration-role`, `docs-write-concise-korean-comments-about-purpose-and-constraints`, `guardrails-review-banned-typescript-shortcuts-before-finishing`.
 - `RTE13-heavy-search`: `naming-use-consistent-file-and-symbol-naming`, `naming-use-direct-imports-and-public-entry-points`, `docs-keep-inline-comments-for-constraints-and-caveats`, `docs-require-header-jsdoc-on-key-declarations`, `docs-standardize-annotation-tags-by-declaration-role`, `docs-write-concise-korean-comments-about-purpose-and-constraints`, `guardrails-review-banned-typescript-shortcuts-before-finishing`.

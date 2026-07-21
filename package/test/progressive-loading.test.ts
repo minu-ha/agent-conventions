@@ -35,6 +35,8 @@ interface RuleFixture {
 	impact?: string;
 	impactDescription?: string;
 	appliesWhen?: string;
+	requiredOnCompletion?: boolean;
+	requiresSelected?: string[];
 	reviewWith?: string[];
 	tags?: string[];
 }
@@ -74,6 +76,8 @@ const toFrontmatter = (rule: RuleFixture): string => {
 		`impact: ${rule.impact ?? "HIGH"}`,
 		`impactDescription: ${rule.impactDescription ?? "Fixture impact description."}`,
 		rule.appliesWhen === undefined ? undefined : `appliesWhen: ${rule.appliesWhen}`,
+		rule.requiresSelected === undefined ? undefined : `requiresSelected: ${rule.requiresSelected.join(", ")}`,
+		rule.requiredOnCompletion === undefined ? undefined : `requiredOnCompletion: ${String(rule.requiredOnCompletion)}`,
 		rule.reviewWith === undefined ? undefined : `reviewWith: ${rule.reviewWith.join(", ")}`,
 		`tags: ${(rule.tags ?? ["fixture"]).join(", ")}`,
 	]
@@ -213,6 +217,8 @@ const createRoutingDocument = (): LoadedSkillDocument => ({
 			impactDescription: "State impact.",
 			tags: ["state", "watch"],
 			appliesWhen: "Reading state from an external owner.",
+			requiredOnCompletion: true,
+			requiresSelected: [],
 			reviewWith: [],
 			body: "## Observe State\n\n**Incorrect** hidden body\n\n**Correct** hidden body",
 		},
@@ -224,6 +230,8 @@ const createRoutingDocument = (): LoadedSkillDocument => ({
 			impactDescription: "Second impact.",
 			tags: ["composition", "owner"],
 			appliesWhen: "Adding the second composition boundary.",
+			requiredOnCompletion: false,
+			requiresSelected: [],
 			reviewWith: [],
 			body: "## Second Composition\n\n**Incorrect** hidden body\n\n**Correct** hidden body",
 		},
@@ -235,6 +243,8 @@ const createRoutingDocument = (): LoadedSkillDocument => ({
 			impactDescription: "First impact.",
 			tags: ["owner", "composition"],
 			appliesWhen: "Adding the first composition boundary.",
+			requiredOnCompletion: false,
+			requiresSelected: ["state-observe", "typescript/types-reuse-contracts"],
 			reviewWith: ["state-observe", "typescript/types-reuse-contracts"],
 			body: "## First Composition\n\n**Incorrect** hidden body\n\n**Correct** hidden body",
 		},
@@ -281,6 +291,8 @@ test("compact rule index is deterministic, complete, direct-only, and body-free"
 	assert.match(first, /Adding the first composition boundary\./);
 	assert.match(first, /`contracts\/<stable-id>\.md`/);
 	assert.match(first, /reviewWith:/);
+	assert.match(first, /completionGate/);
+	assert.doesNotMatch(first, /requiresSelected/);
 	assert.doesNotMatch(first, /Impact:|Tags:|First Composition/);
 	assert.match(first, /`typescript` \(`required`\).*\.\.\/typescript\/SKILL\.md.*\.\.\/typescript\/RULES_INDEX\.md/);
 	assert.match(first, /`css` \(`conditional`\).*Changing a class contract\./);
@@ -332,6 +344,7 @@ test("generated rule contract preserves the normative prefix and defers examples
 	assert.match(contract, /Keep the observable owner contract\./);
 	assert.match(contract, /Keep the observable owner contract\.\\\nContinue on the next rendered line\./);
 	assert.match(contract, /Preserve the source of truth\./);
+	assert.match(contract, /Required on completion:[^\n]+Selected[^\n]+N\/A/i);
 	assert.match(contract, /\[full rule\]\(\.\.\/rules\/state-observe\.md\)/);
 	assert.doesNotMatch(contract, /Incorrect|Correct|hiddenBad|hiddenGood|```/);
 	assert.doesNotMatch(contract, /[ \t]+$/m);
@@ -383,6 +396,7 @@ test("critical contracts require the full source while non-critical contracts re
 		"## First Composition\n\n**Impact: CRITICAL (First impact.)**\n\nKeep the critical boundary.\n\n**Incorrect**\n\n```ts\nconst bad = true;\n```\n\n**Correct**\n\n```ts\nconst good = true;\n```";
 	const criticalContract = generateRuleContractMarkdown(criticalRule);
 	assert.match(criticalContract, /CRITICAL/);
+	assert.match(criticalContract, /Requires selected:[^\n]+state-observe[^\n]+typescript\/types-reuse-contracts[^\n]+N\/A/i);
 	assert.match(criticalContract, /must read.*\[full rule\]\(\.\.\/rules\/composition-first\.md\)/i);
 	assert.doesNotMatch(criticalContract, /hidden body/);
 
@@ -429,6 +443,7 @@ test("routing digest covers every routing field and ignores unsorted input order
 	reversedDocument.rules.reverse();
 
 	for (const rule of reversedDocument.rules) {
+		rule.requiresSelected.reverse();
 		rule.reviewWith.reverse();
 		rule.tags.reverse();
 	}
@@ -457,6 +472,18 @@ test("routing digest covers every routing field and ignores unsorted input order
 			"appliesWhen",
 			(document) => {
 				document.rules[0]!.appliesWhen = "A changed routing condition.";
+			},
+		],
+		[
+			"requiresSelected",
+			(document) => {
+				document.rules[0]!.requiresSelected.push("composition-second");
+			},
+		],
+		[
+			"requiredOnCompletion",
+			(document) => {
+				document.rules[0]!.requiredOnCompletion = false;
 			},
 		],
 		[
@@ -1114,6 +1141,8 @@ test("strict rule frontmatter accepts only documented scalar keys", () => {
 		"impact: HIGH",
 		"impactDescription: Keep: the first-colon scalar behavior.",
 		"appliesWhen: Editing a matching owner.",
+		"requiresSelected: local-rule, typescript/cross-rule",
+		"requiredOnCompletion: true",
 		"reviewWith: local-rule, typescript/cross-rule",
 		"tags: one, two",
 		"",
@@ -1126,6 +1155,8 @@ test("strict rule frontmatter accepts only documented scalar keys", () => {
 		impact: "HIGH",
 		impactDescription: "Keep: the first-colon scalar behavior.",
 		appliesWhen: "Editing a matching owner.",
+		requiresSelected: "local-rule, typescript/cross-rule",
+		requiredOnCompletion: "true",
 		reviewWith: "local-rule, typescript/cross-rule",
 		tags: "one, two",
 	});
@@ -1148,16 +1179,47 @@ test("strict rule frontmatter rejects malformed, duplicate, unknown, and unmatch
 	assert.throws(() => parseFrontmatter("---\ntitle: A\n## A"), /frontmatter block/i);
 });
 
-test("readSkillRules always parses tags and reviewWith as arrays", async () => {
+test("readSkillRules parses routing target arrays and the completion gate", async () => {
 	await withFixtureRoot(async (skillRootDir) => {
 		await writeSkillFixture(skillRootDir, "owner", {
-			rules: [{appliesWhen: "Editing the fixture.", reviewWith: ["fixture-peer"], tags: ["one", "two"]}],
+			rules: [
+				{
+					appliesWhen: "Editing the fixture.",
+					requiredOnCompletion: true,
+					requiresSelected: ["fixture-required"],
+					reviewWith: ["fixture-peer"],
+					tags: ["one", "two"],
+				},
+			],
 		});
 		const [rule] = await readSkillRules(getSkillPaths("owner", skillRootDir));
 
 		assert.deepEqual(rule?.tags, ["one", "two"]);
+		assert.deepEqual(rule?.requiresSelected, ["fixture-required"]);
+		assert.equal(rule?.requiredOnCompletion, true);
 		assert.deepEqual(rule?.reviewWith, ["fixture-peer"]);
 		assert.equal(rule?.appliesWhen, "Editing the fixture.");
+	});
+});
+
+test("readSkillRules rejects a non-boolean completion gate", async () => {
+	await withFixtureRoot(async (skillRootDir) => {
+		await writeSkillFixture(skillRootDir, "owner", {
+			rules: [
+				{
+					frontmatter: [
+						"title: Fixture Rule",
+						"impact: HIGH",
+						"impactDescription: Fixture impact.",
+						"appliesWhen: Editing the fixture.",
+						"requiredOnCompletion: yes",
+						"tags: fixture",
+					].join("\n"),
+				},
+			],
+		});
+
+		await assert.rejects(() => readSkillRules(getSkillPaths("owner", skillRootDir)), /requiredOnCompletion.*true or false/i);
 	});
 });
 
@@ -1511,7 +1573,7 @@ test("legacy non-progressive rules and extends remain valid without appliesWhen"
 	});
 });
 
-test("reviewWith resolves local and reachable companion rule IDs", async () => {
+test("reviewWith and requiresSelected resolve local and reachable companion rule IDs", async () => {
 	await withFixtureRoot(async (skillRootDir) => {
 		await writeSkillFixture(skillRootDir, "dependency", {
 			metadata: {progressiveDisclosure: true},
@@ -1521,7 +1583,12 @@ test("reviewWith resolves local and reachable companion rule IDs", async () => {
 			metadata: {progressiveDisclosure: true, companions: [{skill: "dependency", mode: "required"}]},
 			rules: [
 				{fileName: "fixture-local.md", appliesWhen: "Editing local code."},
-				{fileName: "fixture-owner.md", appliesWhen: "Editing owner code.", reviewWith: ["fixture-local", "dependency/fixture-cross"]},
+				{
+					fileName: "fixture-owner.md",
+					appliesWhen: "Editing owner code.",
+					requiresSelected: ["fixture-local"],
+					reviewWith: ["dependency/fixture-cross"],
+				},
 			],
 		});
 		await writeFile(
@@ -1554,6 +1621,7 @@ test("reviewWith resolves local and reachable companion rule IDs", async () => {
 test("reviewWith rejects duplicate, unknown, and unreachable targets", async () => {
 	const invalidCases = [
 		{reviewWith: ["fixture-local", "fixture-local"], expected: /reviewWith.*duplicates/i},
+		{reviewWith: ["fixture-owner"], expected: /routing targets.*reference.*itself/i},
 		{reviewWith: ["missing-local"], expected: /unknown reviewWith target "missing-local"/i},
 		{reviewWith: ["dependency/missing-cross"], expected: /unknown reviewWith target "dependency\/missing-cross"/i},
 		{reviewWith: ["unreachable/fixture-cross"], expected: /unreachable reviewWith target "unreachable\/fixture-cross"/i},
@@ -1577,6 +1645,69 @@ test("reviewWith rejects duplicate, unknown, and unreachable targets", async () 
 				],
 			});
 			await assert.rejects(() => validateSkill(getSkillPaths("owner", skillRootDir)), invalidCase.expected);
+		});
+	}
+});
+
+test("requiresSelected rejects duplicate, unknown, and unreachable targets", async () => {
+	const invalidCases = [
+		{requiresSelected: ["fixture-local", "fixture-local"], expected: /requiresSelected.*duplicates/i},
+		{requiresSelected: ["fixture-owner"], expected: /routing targets.*reference.*itself/i},
+		{requiresSelected: ["missing-local"], expected: /unknown requiresSelected target "missing-local"/i},
+		{requiresSelected: ["dependency/missing-cross"], expected: /unknown requiresSelected target "dependency\/missing-cross"/i},
+		{requiresSelected: ["unreachable/fixture-cross"], expected: /unreachable requiresSelected target "unreachable\/fixture-cross"/i},
+	] as const;
+
+	for (const invalidCase of invalidCases) {
+		await withFixtureRoot(async (skillRootDir) => {
+			await writeSkillFixture(skillRootDir, "dependency", {
+				metadata: {progressiveDisclosure: true},
+				rules: [{fileName: "fixture-cross.md", appliesWhen: "Editing the dependency."}],
+			});
+			await writeSkillFixture(skillRootDir, "unreachable", {
+				metadata: {progressiveDisclosure: true},
+				rules: [{fileName: "fixture-cross.md", appliesWhen: "Editing an unreachable skill."}],
+			});
+			await writeSkillFixture(skillRootDir, "owner", {
+				metadata: {progressiveDisclosure: true, companions: [{skill: "dependency", mode: "required"}]},
+				rules: [
+					{fileName: "fixture-local.md", appliesWhen: "Editing local code."},
+					{fileName: "fixture-owner.md", appliesWhen: "Editing owner code.", requiresSelected: [...invalidCase.requiresSelected]},
+				],
+			});
+			await assert.rejects(() => validateSkill(getSkillPaths("owner", skillRootDir)), invalidCase.expected);
+		});
+	}
+});
+
+test("mandatory and conditional routing targets stay disjoint and progressive-only", async () => {
+	await withFixtureRoot(async (skillRootDir) => {
+		await writeSkillFixture(skillRootDir, "owner", {
+			metadata: {progressiveDisclosure: true},
+			rules: [
+				{fileName: "fixture-local.md", appliesWhen: "Editing local code."},
+				{
+					fileName: "fixture-owner.md",
+					appliesWhen: "Editing owner code.",
+					requiresSelected: ["fixture-local"],
+					reviewWith: ["fixture-local"],
+				},
+			],
+		});
+
+		await assert.rejects(() => validateSkill(getSkillPaths("owner", skillRootDir)), /both requiresSelected and reviewWith.*fixture-local/i);
+	});
+
+	const nonProgressiveRoutingCases: RuleFixture[] = [{requiresSelected: ["fixture-peer"]}, {requiredOnCompletion: true}];
+
+	for (const routing of nonProgressiveRoutingCases) {
+		await withFixtureRoot(async (skillRootDir) => {
+			await writeSkillFixture(skillRootDir, "owner", {rules: [{fileName: "fixture-peer.md"}, {fileName: "fixture-owner.md", ...routing}]});
+
+			await assert.rejects(
+				() => validateSkill(getSkillPaths("owner", skillRootDir)),
+				/requiresSelected and requiredOnCompletion are progressive-only/i,
+			);
 		});
 	}
 });

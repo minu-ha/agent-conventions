@@ -11,7 +11,7 @@ tags: review, evidence, verdict
 
 독립 partition 뒤 auditor-selected/unknown rule의 stable ID와 같은 이름인 contract만 읽습니다. `CRITICAL` contract는 full rule을 반드시 읽고, non-CRITICAL도 exact syntax·예외·Unknown 해소·PASS 근거에 필요하면 full rule로 확장해 ID와 이유를 기록합니다. `N/A` contract/body는 읽지 않고 index의 `appliesWhen`과 packet evidence로 exclusion을 재검증합니다. contract와 필요한 full rule을 읽은 뒤 applicability를 `Selected` 또는 근거 있는 `N/A`로 확정하지 못하면 semantic `UNKNOWN`으로 완료를 막습니다.
 
-Selected contract가 요구한 구체적 필수 변경과 Unknown을 Selected로 해소하며 확정한 필수 변경만 scope evidence에 합칩니다. 예시, 선택적 대안, 아직 해소되지 않은 Unknown의 가상 변경은 evidence가 아닙니다. 새 surface, companion, Selected/Unknown이 생기면 activated index 전체, `reviewWith` closure, 새 contract를 다시 읽어 activation, partition, scope evidence의 고정점까지 반복 판정합니다. 고정점 auditor receipt를 완성하기 전에는 sealed implementer receipt를 공개하지 않습니다.
+Unknown을 Selected/N/A로 먼저 해소하며 N/A로 해소한 contract의 `requiresSelected`는 적용하지 않습니다. Selected로 확정한 contract의 `requiresSelected` target은 companion까지 활성화해 즉시 Selected로 두며 N/A 불가입니다. Selected contract가 요구한 구체적 필수 변경만 scope evidence에 합칩니다. 예시, 선택적 대안, 아직 해소되지 않은 Unknown의 가상 변경은 evidence가 아닙니다. 새 surface, companion, Selected가 생기면 activated index 전체, `reviewWith` closure, 새 contract를 다시 읽어 activation, partition, scope evidence의 고정점까지 반복 판정합니다. 고정점 auditor receipt를 완성하기 전에는 sealed implementer receipt를 공개하지 않습니다.
 
 구현자와 auditor의 `Selected/N/A/Unknown` set을 current same-digest exact ID로 모두 비교합니다. 같은 count라도 member나 분류가 다르면 selection coverage `FAIL`입니다. 구현자에게 빠진 applicable rule, unsupported N/A, stale digest도 coverage `FAIL`이며 semantic verdict로 덮지 않습니다.
 

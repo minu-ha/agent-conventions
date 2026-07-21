@@ -14,6 +14,7 @@ tags: completion, repair, gate
 - stale digest, ordinal 누락/중복/unknown, partition overlap
 - 구현자/auditor `Selected/N/A/Unknown` mismatch
 - unsupported N/A 또는 exclusion group coverage/reason 오류
+- `completionGate` 또는 `requiresSelected` target의 N/A/누락
 - 분류되지 않은 `reviewWith` target
 - activation, partition, scope evidence가 고정점에 도달하지 않음
 - selection coverage `FAIL`

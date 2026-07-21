@@ -60,7 +60,7 @@ skill/react/
 
 ### `rules/*.md`
 
-각 rule frontmatter에 한 줄짜리 `appliesWhen`을 추가한다.
+progressive rule frontmatter는 applicability와 세 종류의 routing edge를 명시한다.
 
 ```yaml
 ---
@@ -68,7 +68,8 @@ title: Prefer Named Handlers Over Inline Callbacks
 impact: HIGH
 impactDescription: keeps JSX readable and event flow auditable
 appliesWhen: TSX event prop에 분기, 비동기 작업, 상태 변경 또는 두 단계 이상의 동작이 들어간다.
-reviewWith: events-keep-handler-flow-inline, typescript/docs-standardize-annotation-tags-by-declaration-role
+requiresSelected: docs-require-jsdoc-on-key-declarations, events-name-and-curry-handlers
+reviewWith: events-keep-handler-flow-inline, events-run-user-actions-in-handlers-not-effects
 tags: composition, jsx, handlers
 ---
 ```
@@ -83,9 +84,15 @@ tags: composition, jsx, handlers
 
 rule body의 heading/Impact 뒤 규범과 예외는 첫 anchored `Incorrect` marker 앞에 완결한다. 첫 `Incorrect` 뒤에는 `Incorrect`/`Correct` label, fenced code, 빈 줄만 허용한다. build/validate가 fence 밖 marker와 후반 prose를 검사해 generated contract가 규범을 조용히 누락하지 못하게 한다.
 
-선택 누락이 반복되기 쉬운 multi-rule concern은 optional `reviewWith` scalar에 comma-separated stable rule id를 선언한다. 다른 skill rule은 `<skill>/<rule-id>`로 적는다. `reviewWith`는 대상 rule을 자동 PASS하거나 무조건 selected로 만들지 않고, 해당 target의 `appliesWhen`을 명시적으로 재판정하게 하는 closure hint다. 초기 partition 뒤 Selected/Unknown contract를 먼저 읽고, Selected contract와 Unknown→Selected로 확정된 필수 변경만 scope evidence에 합친다. 예시, 선택적 대안, 아직 해소되지 않은 Unknown의 가상 변경은 evidence에서 제외한다. 새 변경 surface나 Selected/Unknown이 생기면 새 contract 로드와 모든 activated index/`reviewWith` closure 판정을 activation, partition, scope evidence가 더 이상 바뀌지 않는 고정점까지 반복한다.
+optional routing scalar는 쉼표로 구분한 stable rule id를 사용하고 다른 skill rule은 `<skill>/<rule-id>`로 적는다.
 
-이 필드는 우선 React, TypeScript, CSS에서 필수다. 다른 structured skill은 migration 전까지 기존 schema로 계속 build할 수 있어야 한다.
+- `reviewWith`: 관련 target의 `appliesWhen`을 다시 판정하는 conditional hint다. 자동 Selected가 아니며 근거 있는 N/A가 가능하다.
+- `requiresSelected`: source rule이 final Selected이면 target도 반드시 Selected인 edge다. target companion을 활성화하고 N/A를 금지한다.
+- `requiredOnCompletion: true`: 활성 skill 전체의 완료 receipt에서 항상 Selected인 finish gate다. compact index에는 `completionGate` marker로 렌더한다.
+
+Unknown contract는 applicability 해소에만 사용하며 Unknown을 Selected/N/A로 먼저 확정한다. N/A source의 `requiresSelected`는 전이하지 않는다. final Selected contract의 mandatory target과 필수 변경만 scope evidence에 합치고, 예시·선택적 대안·미해소 Unknown은 제외한다. 새 surface, companion, Selected가 생기면 contract 로드와 모든 activated index/`reviewWith` 판정을 activation, partition, scope evidence가 더 이상 바뀌지 않는 고정점까지 반복한다. 같은 target을 `requiresSelected`와 `reviewWith`에 중복 선언하지 않는다.
+
+이 routing schema는 progressive React, TypeScript, CSS에 적용한다. 다른 structured skill은 migration 전까지 기존 schema로 계속 build할 수 있어야 한다.
 
 ### `RULES_INDEX.md`
 
@@ -93,28 +100,29 @@ build가 `_sections.md` 순서와 rule 정렬 순서를 이용해 생성한다. 
 
 - stable rule id: 확장자를 뺀 filename
 - `appliesWhen`
+- optional `completionGate`
 - optional `reviewWith`
 - stable rule id와 같은 이름의 generated `contracts/<stable-id>.md` 결정 규칙
 
-문서 header에는 전체 local rule 수와 canonical routing/source SHA-256 digest를 함께 생성한다. 각 entry에는 현재 index 안에서만 쓰는 compact ordinal도 붙인다. digest에는 routing metadata, full source body hash, contract renderer version이 들어가므로 규범·예시·renderer가 바뀌면 기존 receipt도 stale이다. router와 auditor는 이 값들을 coverage reconciliation의 기준으로 사용하며 숫자나 index version을 수동으로 관리하지 않는다.
+문서 header에는 전체 local rule 수와 canonical routing/source SHA-256 digest를 함께 생성한다. 각 entry에는 현재 index 안에서만 쓰는 compact ordinal도 붙인다. `requiresSelected` 목록은 초기 token 비용을 늘리지 않도록 index에서 제외하고 selected/unknown contract에서만 읽는다. digest에는 `requiresSelected`, `requiredOnCompletion`, `reviewWith`, full source body hash, contract renderer version이 모두 들어가므로 규범·예시·renderer가 바뀌면 기존 receipt도 stale이다.
 
 예시:
 
 ```md
-- `R12` · `composition-named-handlers-over-inline` · TSX event prop에 분기, 비동기 작업, 상태 변경 또는 두 단계 이상의 동작이 들어간다. · reviewWith: `events-keep-handler-flow-inline`
+- `R15` · `composition-named-handlers-over-inline` · TSX event prop에 분기, 비동기 작업, 상태 변경 또는 두 단계 이상의 동작이 들어간다. · reviewWith: `events-keep-handler-flow-inline`, `events-run-user-actions-in-handlers-not-effects`
 ```
 
 stable identity는 filename 기반 rule id이고 ordinal은 exact set을 짧게 기록하기 위한 index-local 표현이다. rule 순서나 source body가 달라지면 digest도 달라지므로 서로 다른 index version의 ordinal을 섞을 수 없다. index에는 title/impact/tag, rule 설명, Incorrect/Correct 예시, full body를 넣지 않는다.
 
 ### `contracts/*.md`
 
-build가 source `rules/*.md`에서 자동 생성하고 직접 편집을 금지한다. non-CRITICAL contract는 heading, Impact, 첫 Incorrect 전 normative prose를 보존하고 예시는 full rule 링크로 미룬다. CRITICAL contract는 짧은 redirect만 생성해 full rule을 반드시 읽게 한다. non-CRITICAL도 exact syntax·예외 판단, unresolved Unknown, audit PASS evidence 부족이면 full rule로 확장하고 receipt에 `Expanded: ordinal + ID: reason`을 기록한다.
+build가 source `rules/*.md`에서 자동 생성하고 직접 편집을 금지한다. contract는 `requiresSelected`와 completion metadata를 포함한다. non-CRITICAL contract는 heading, Impact, 첫 Incorrect 전 normative prose를 보존하고 예시는 full rule 링크로 미룬다. CRITICAL contract는 routing metadata와 짧은 redirect만 생성해 full rule을 반드시 읽게 한다. non-CRITICAL도 exact syntax·예외 판단, unresolved Unknown, audit PASS evidence 부족이면 full rule로 확장하고 receipt에 `Expanded: ordinal + ID: reason`을 기록한다.
 
 ### `AGENTS.md`
 
 현재와 같이 local full handbook을 생성한다. 다음 경우에만 명시적으로 읽는다.
 
-progressive full handbook은 각 local rule heading 바로 아래에 source frontmatter의 escaped `Applies when`을 생성한다. 따라서 전체 원문을 opt-in한 agent도 규범 내용만 보고 범위를 과도하게 넓히지 않으며, index와 같은 적용 조건으로 exact partition을 만들 수 있어야 한다.
+progressive full handbook은 각 local rule heading 바로 아래에 source frontmatter의 escaped `Applies when`, `Requires selected`, `Required on completion`, `Review with`를 생성한다. 따라서 전체 원문을 opt-in한 agent도 compact 경로와 같은 fixed-point selection을 수행할 수 있어야 한다.
 
 - 사람의 전체 convention 온보딩
 - skill 자체 유지보수
@@ -148,9 +156,10 @@ progressive full handbook은 각 local rule heading 바로 아래에 source fron
 - title/tag만으로 배제하지 않는다.
 - 기존 tag vocabulary는 단수/복수와 유사어가 섞여 있으므로 자동 keyword matcher의 selection 근거로 사용하지 않는다. tag는 탐색 보조 정보이고 `appliesWhen` 전체 scan과 실제 scope evidence가 판정 기준이다.
 - companion skill은 파일과 concern 기준으로 동일하게 선택한다.
+- 활성 index의 `completionGate` entry는 항상 `Selected`이며 N/A 불가다.
 - 아직 diff가 없다면 계획된 변경 surface를 기준으로 1차 선택하고, 구현 후 다시 확인한다.
 - 하나의 concern이 여러 React section과 TypeScript/CSS companion rule을 동시에 활성화할 수 있다. 첫 match에서 멈추지 않고 모든 activated index entry를 끝까지 판정한다.
-- selected rule의 `reviewWith` target은 초기 exact partition에서 `Selected`, 근거 있는 `N/A`, `Unknown` 중 하나여야 한다. 그 뒤 Selected/Unknown contract를 읽어 `Unknown`을 해소하고, Selected contract와 Unknown→Selected로 확정된 필수 변경만 scope evidence에 합친다. 예시·선택적 대안·아직 해소되지 않은 Unknown의 가상 변경은 제외하며, 새 Selected/Unknown contract 로드와 activated index/`reviewWith` closure를 고정점까지 반복 판정한다. cross-skill target이면 companion activation도 매번 다시 판정한다.
+- selected rule의 `reviewWith` target은 `Selected`, 근거 있는 `N/A`, `Unknown` 중 하나로 조건부 재평가한다. Selected/Unknown contract를 읽은 뒤 Unknown을 먼저 해소한다. final Selected contract의 `requiresSelected` target만 companion까지 즉시 Selected로 두고 N/A를 금지한다. final Selected의 필수 변경만 scope evidence에 합친 뒤 새 Selected contract 로드와 activated index/`reviewWith` 판정을 고정점까지 반복한다.
 
 ### 3. Rule Selection Receipt
 
@@ -163,13 +172,13 @@ Indexes:
 - typescript@sha256:<digest>
 - css@sha256:<digest>
 Selected:
-- react: R12,R31 (composition-named-handlers-over-inline, state-use-functional-setstate-updates)
-- typescript: T08 (docs-require-header-jsdoc-on-key-declarations)
-- css: C04 (composition-compose-classes-with-clsx)
+- react: R15,R25,R35,R42 (named handler, handler naming, functional update, React JSDoc)
+- typescript: T03,T18,T19,T21,T22 (naming, JSDoc closure, completion gate)
+- css: C07,C21 (clsx, completion gate)
 Not applicable:
-- react: R01-R11,R13-R30,R32-R42
-- typescript: T01-T07,T09-T22
-- css: C01-C03,C05-C21
+- react: R01-R14,R16-R24,R26-R34,R36-R41
+- typescript: T01-T02,T04-T17,T20
+- css: C01-C06,C08-C20
 Excluded groups:
 - react strategy: shared component API를 변경하지 않음
 - css selector/values: selector와 token 값을 변경하지 않음
@@ -183,7 +192,7 @@ receipt는 작업 중 audit packet으로 전달되는 ephemeral artifact이며 c
 
 ### 4. Read selected contracts and deterministic full rules
 
-receipt의 selected/unknown stable ID와 같은 이름인 `contracts/<stable-id>.md`를 모두 읽는다. CRITICAL contract는 full rule을 반드시 읽는다. non-CRITICAL은 exact syntax·예외 판단, contract와 코드만으로 해소되지 않는 Unknown, audit PASS evidence 부족일 때만 full rule로 확장하고 이유를 기록한다. `Unknown`은 contract와 필요한 full rule로 applicability를 확정한 뒤 비워야 한다.
+receipt의 selected/unknown stable ID와 같은 이름인 `contracts/<stable-id>.md`를 모두 읽는다. CRITICAL contract는 full rule을 반드시 읽는다. non-CRITICAL은 exact syntax·예외 판단, contract와 코드만으로 해소되지 않는 Unknown, audit PASS evidence 부족일 때만 full rule로 확장한다. Unknown을 먼저 Selected/N/A로 비운 뒤 final Selected의 `requiresSelected` closure를 전이한다. N/A source의 mandatory target은 전이하지 않는다.
 
 ### 5. Scope drift
 
@@ -242,6 +251,7 @@ lint, typecheck, build, browser 확인은 중요한 verification evidence지만 
 ## Project `AGENTS.md` Policy
 
 consuming project는 규칙 본문을 복사하지 않고 아래와 같은 짧은 activation policy만 둔다.
+복사 가능한 정본은 루트 `AGENTS.frontend-conventions.md`이며, 아래는 핵심 축약본이다.
 
 ```md
 ## Frontend conventions
@@ -261,7 +271,9 @@ consuming project는 규칙 본문을 복사하지 않고 아래와 같은 짧�
 package 구현은 다음 계약을 지원한다.
 
 - `SkillRule.appliesWhen?: string`
-- `SkillRule.reviewWith?: string[]`
+- `SkillRule.requiresSelected: string[]`
+- `SkillRule.requiredOnCompletion: boolean`
+- `SkillRule.reviewWith: string[]`
 - `SkillMetadata.progressiveDisclosure?: boolean`
 - required/conditional을 구분하는 `SkillMetadata.companions?`
 - `SkillPaths.rulesIndexPath`
@@ -271,7 +283,7 @@ package 구현은 다음 계약을 지원한다.
 - canonical routing metadata digest와 compact ordinal generator
 - progressive skill의 `appliesWhen` 존재, 한 줄, 길이 검증
 - rule frontmatter의 unknown key, duplicate key, continuation line을 거부하는 strict scalar parser
-- `reviewWith` target 존재 여부, companion 접근 가능성, 중복 id 검증
+- `reviewWith`/`requiresSelected` target 존재 여부, companion 접근 가능성, 중복/self/교집합 검증과 mandatory metadata의 progressive-only 검증
 - index의 section/rule 순서, stable id, count와 같은 이름의 generated contract 1:1 검증
 - `extends`/`companions` 상호 배타성, companion mode/condition, cycle, dedup 검증
 - 기존 full `AGENTS.md` build 유지
@@ -306,13 +318,15 @@ progressive 여부는 코드에 skill 이름을 흩뿌리지 않고 `metadata.js
 
 ### GREEN: 구조 테스트
 
-- parser가 `appliesWhen`을 읽는다.
+- parser가 `appliesWhen`, `requiresSelected`, strict boolean `requiredOnCompletion`, `reviewWith`를 읽는다.
 - progressive skill에서 누락, 빈 값, 줄바꿈, duplicate/unknown key, 160자 초과를 거부한다.
 - non-progressive skill은 기존 schema로 통과한다.
 - build가 local rule을 정확히 한 번씩 index에 포함한다.
 - index stable ID와 같은 이름의 generated contract가 정확히 하나 존재한다.
-- generated digest가 routing metadata 변경에 반응하고 동일 입력에서는 byte-for-byte 재현된다.
-- `reviewWith` local/cross-skill target이 모두 존재하고 selection closure가 fixture에서 검증된다.
+- generated digest가 네 routing metadata와 renderer version 변경에 반응하고 동일 입력에서는 byte-for-byte 재현된다.
+- `reviewWith` local/cross-skill target의 조건부 재평가와 `requiresSelected` mandatory closure가 분리 검증된다.
+- completion gate와 mandatory target의 N/A/누락, Unknown→N/A source target의 과잉 선택을 manifest/audit validator가 거부한다.
+- contract와 full handbook이 mandatory/completion metadata를 렌더하고 compact index는 `completionGate`만 표시한다.
 - index가 없는 clean fixture에서 첫 build가 성공하고, source 변경 후 rebuild하지 않은 stale index를 generated-output check가 거부한다.
 - section 및 rule 순서가 deterministic하다.
 - React/TypeScript/CSS `SKILL.md`가 scope, full index scan, selected contract/required full expansion, receipt, drift, audit를 요구한다.
@@ -346,13 +360,13 @@ behavioral pressure 평가는 네 arm으로 비교한다.
 
 candidate는 oracle보다 추가 convention `FAIL`/`UNKNOWN`을 만들면 실패다. mutation arm은 coverage mismatch 또는 `UNKNOWN`으로 반드시 완료를 차단해야 한다. 각 mixed scenario는 최소 두 번, CRITICAL scenario는 가능하면 세 번 실행한다. oracle fixture는 `appliesWhen` 작성자와 다른 reviewer가 full rule body를 기준으로 승인해 self-validating evaluation을 피한다.
 
-package test는 schema, build determinism, manifest integrity만 자동 검증할 수 있다. 실제 agent가 index를 읽고 scope drift 뒤 재선택하는 행동은 별도 behavioral run이 필요하다. 각 run은 repository HEAD, index digest, model/runtime/version, reasoning level, exact prompt, scorer와 rubric version, trial count, arm, declared loaded files, selection receipt, scorer verdict, token count를 `docs/evaluations/` snapshot으로 남긴다. runtime이 file-read telemetry를 제공하지 않으면 `declared loaded files`임을 명시하며 관측하지 못한 사실을 자동 PASS로 표현하지 않는다.
+package test는 schema, build determinism, manifest integrity만 자동 검증할 수 있다. 실제 agent가 index를 읽고 scope drift 뒤 재선택하는 행동은 별도 behavioral run이 필요하다. protocol v3 coordinator는 child dispatch 전에 exact UTF-8 prompt를 렌더하고 raw text, SHA-256, byte length, renderer version, repository HEAD, arm/scenario/trial, generated index digest를 저장한다. child에게 prompt를 되받아 적게 하지 않고 coordinator가 run envelope에 provenance를 주입한다. progressive/full-handbook run은 completion gate, conditional `reviewWith` outcome, final-Selected `requiresSelected` addition을 포함한 routing trace를 기록하며, delta가 없는 연속 두 pass와 final receipt가 정확히 같아야 완료할 수 있다. 각 run은 model/runtime/version, reasoning level, scorer/rubric version, declared loaded files, semantic verdict와 token evidence도 `docs/evaluations/` snapshot으로 남긴다. runtime이 file-read telemetry를 제공하지 않으면 `declared loaded files`임을 명시하며 관측하지 못한 사실을 자동 PASS로 표현하지 않는다.
 
 ## Token 및 품질 합격선
 
-최초 HEAD pilot 기준선은 React + TypeScript + CSS entrypoint와 full compiled guide를 한 번 로드한 38,102 `o200k_base` token이었다. contract-first source를 반영한 fixed context의 최종 one-load 기준선은 37,857 token이다. 선택 rule의 중복 로딩과 독립 audit/reviewer 재로딩은 이 수치에 포함하지 않는다.
+최초 HEAD pilot 기준선은 React + TypeScript + CSS entrypoint와 full compiled guide를 한 번 로드한 38,102 `o200k_base` token이었다. mandatory routing과 completion gate를 반영한 현재 fixed context의 one-load 기준선은 42,710 token이다. 선택 rule의 중복 로딩과 독립 audit/reviewer 재로딩은 이 수치에 포함하지 않는다.
 
-최초 index + selected full-rule 구현을 실제 8개 context에 대입한 pilot은 implementation median 13,380, max 19,723, one-load 절감 64.8837%, cumulative 절감 48.698%로 네 token gate를 모두 실패했다. 따라서 routing 조건을 약화하지 않고 index의 중복 title/impact/tag를 제거하고 generated contract + CRITICAL full-rule expansion을 추가했다. named-handler/owner-selector 대표군과 실제 HIGH full-rule expansion까지 포함한 fixed context 재측정은 implementation median 8,669, max 11,785, one-load 절감 median 77.1007%, cumulative 절감 median 62.825%로 네 gate를 통과했으며, 최종 evidence에는 고정 HEAD, measured-file hash manifest와 contexts digest를 함께 기록한다.
+최초 index + selected full-rule 구현을 실제 8개 context에 대입한 pilot은 implementation median 13,380, max 19,723, one-load 절감 64.8837%, cumulative 절감 48.698%로 네 token gate를 모두 실패했다. 따라서 routing 조건을 약화하지 않고 index의 중복 title/impact/tag를 제거하고 generated contract + CRITICAL full-rule expansion을 추가했다. mandatory closure까지 포함한 현재 fixed context 재측정은 implementation median 8,731.5, max 11,864, one-load 절감 median 79.5564%, cumulative 절감 median 66.1857%로 네 gate를 통과했다. 이 측정은 `tiktoken==0.11.0`, `o200k_base`, contexts SHA-256 `8ce48aa0cdc09af0776d274e7777d33c4288e5eff2f40abbcdde349c9973a1ca`에 묶이며, 최종 evidence에는 committed HEAD와 measured-file hash manifest도 함께 기록한다.
 
 후보 구조의 목표는 다음과 같다.
 

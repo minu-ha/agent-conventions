@@ -22,4 +22,6 @@
 
 예외는 관련 rule에서 허용한 범위 안에서만 사용합니다.
 
+**Required on completion:** 활성 skill의 완료 receipt에서 Selected이며 N/A 불가
+
 > 예시·예외가 필요할 때만 [full rule](../rules/organization-review-banned-css-patterns-before-finishing.md)을 추가로 읽고 fallback 사유를 기록합니다.

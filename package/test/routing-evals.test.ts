@@ -8,12 +8,13 @@ import {fileURLToPath} from "node:url";
 import {getSkillPaths} from "../src/config.js";
 import {readSkillDocument} from "../src/parser.js";
 import {readRoutingEvalManifest, validateRoutingEvalManifest, validateRoutingEvalManifests} from "../src/routing-evals.js";
-import {getRulesIndexByteBudget} from "../src/routing.js";
+import {getCanonicalRoutingRuleIds, getRuleId, getRulesIndexByteBudget} from "../src/routing.js";
 import type {RoutingEvalManifest, RoutingExpectedPartition, SkillCompanion} from "../src/types.js";
 
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
 const repoDir = path.resolve(currentDir, "../..");
 const realSkillRootDir = path.join(repoDir, "skill");
+const behavioralProtocolPath = path.join(repoDir, "docs/evaluations/2026-07-21-progressive-loading-behavioral-protocol.json");
 
 const typescriptRuleUniverse = [
 	"naming-centralize-shared-config-namespaces",
@@ -112,6 +113,64 @@ const reactRuleUniverse = [
 	"docs-require-jsdoc-on-key-declarations",
 ] as const;
 
+test("behavioral protocol mandatory routing contract exactly mirrors current rule frontmatter", async () => {
+	const skillNames = ["react", "typescript", "css"] as const;
+	const documents = new Map(
+		await Promise.all(
+			skillNames.map(async (skillName) => [skillName, await readSkillDocument(getSkillPaths(skillName, realSkillRootDir))] as const),
+		),
+	);
+	const ruleReferenceByQualifiedId = new Map<string, string>();
+
+	for (const skillName of skillNames) {
+		const document = documents.get(skillName)!;
+		const prefix = skillName.slice(0, 1).toUpperCase();
+
+		for (const [index, ruleId] of getCanonicalRoutingRuleIds(document).entries()) {
+			ruleReferenceByQualifiedId.set(`${skillName}/${ruleId}`, `${skillName}:${prefix}${String(index + 1).padStart(2, "0")} ${ruleId}`);
+		}
+	}
+
+	const expectedRequiresSelected: Record<string, string[]> = {};
+	const expectedCompletionGates: Record<string, string[]> = {};
+
+	for (const skillName of skillNames) {
+		const document = documents.get(skillName)!;
+		expectedCompletionGates[skillName] = [];
+
+		for (const rule of document.rules) {
+			const ruleId = getRuleId(rule);
+			const sourceReference = ruleReferenceByQualifiedId.get(`${skillName}/${ruleId}`)!;
+
+			if (rule.requiredOnCompletion) expectedCompletionGates[skillName]!.push(sourceReference.slice(sourceReference.indexOf(":") + 1));
+
+			if (rule.requiresSelected.length > 0) {
+				expectedRequiresSelected[sourceReference] = rule.requiresSelected.map((target) => {
+					const qualifiedTarget = target.includes("/") ? target : `${skillName}/${target}`;
+					const targetReference = ruleReferenceByQualifiedId.get(qualifiedTarget);
+
+					assert.ok(targetReference, `missing current target identity for ${qualifiedTarget}`);
+					return targetReference;
+				});
+			}
+		}
+	}
+
+	const protocol = JSON.parse(await readFile(behavioralProtocolPath, "utf8")) as {
+		execution: {mandatoryRoutingContract: {completionGates: Record<string, string[]>; requiresSelected: Record<string, string[]>}};
+	};
+	const actualContract = protocol.execution.mandatoryRoutingContract;
+	const normalizeRequiresSelected = (record: Record<string, string[]>): Record<string, string[]> =>
+		Object.fromEntries(
+			Object.entries(record)
+				.sort(([left], [right]) => left.localeCompare(right, "en"))
+				.map(([source, targets]) => [source, [...targets].sort((left, right) => left.localeCompare(right, "en"))]),
+		);
+
+	assert.deepEqual(actualContract.completionGates, expectedCompletionGates);
+	assert.deepEqual(normalizeRequiresSelected(actualContract.requiresSelected), normalizeRequiresSelected(expectedRequiresSelected));
+});
+
 /**
  * @summary Appendix A의 TypeScript rule별 exact routing metadata oracle
  */
@@ -126,11 +185,8 @@ const typescriptRuleRouting = {
 	},
 	"docs-require-header-jsdoc-on-key-declarations": {
 		appliesWhen:
-			"named query·mutation binding, 원격 연동 함수, 이벤트 handler, reactive sync block, reusable helper, custom type·interface, store 또는 formatter 예외 선언을 추가·변경한다.",
-		reviewWith: [
-			"docs-standardize-annotation-tags-by-declaration-role",
-			"docs-write-concise-korean-comments-about-purpose-and-constraints",
-		],
+			"named query·mutation, 원격 함수, 비자명한 handler/effect, reusable/exported helper·custom hook, custom type·interface, store, formatter 또는 예외 memo 선언을 추가·변경한다.",
+		reviewWith: [],
 	},
 	"docs-standardize-annotation-tags-by-declaration-role": {
 		appliesWhen: "TypeScript/TSX 선언의 JSDoc 태그를 추가·변경하거나 선언 역할에 맞는 annotation을 검토한다.",
@@ -160,7 +216,7 @@ const typescriptRuleRouting = {
 	},
 	"functions-replace-enum-with-as-const-objects": {
 		appliesWhen: "`enum` 또는 타입과 런타임에서 함께 쓰는 enum-like 값 집합을 추가·변경한다.",
-		reviewWith: ["naming-use-consistent-file-and-symbol-naming", "types-document-custom-types-and-shapes"],
+		reviewWith: [],
 	},
 	"functions-use-named-object-params-for-complex-signatures": {
 		appliesWhen: "매개변수 3개 이상 또는 같은 계열 인자를 받는 함수를 추가·변경하거나 객체 매개변수를 시그니처에서 구조분해한다.",
@@ -207,7 +263,7 @@ const typescriptRuleRouting = {
 	},
 	"types-reuse-callback-signatures-from-existing-contracts": {
 		appliesWhen: "interface, 객체 또는 framework가 이미 정의한 callback을 구현·전달하면서 시그니처를 새로 적거나 바꾼다.",
-		reviewWith: ["types-prefer-function-variable-types-over-parameter-annotations"],
+		reviewWith: [],
 	},
 	"types-reuse-existing-contracts-before-new-types": {
 		appliesWhen: "기존 type, interface 또는 schema와 같거나 일부만 다른 shape를 새로 선언·변경하려 한다.",
@@ -234,7 +290,7 @@ const cssRuleRouting = {
 	},
 	"composition-prefer-ui-wrapper-prop-types": {
 		appliesWhen: "`Ui*` wrapper 사용처나 wrapper API에서 Props 타입을 선언·추론·재사용하고 라이브러리 원본 Props 참조를 검토한다.",
-		reviewWith: ["typescript/types-reuse-existing-contracts-before-new-types"],
+		reviewWith: [],
 	},
 	"composition-style-ui-components-through-owned-wrappers": {
 		appliesWhen:
@@ -288,12 +344,12 @@ const cssRuleRouting = {
 	},
 	"selector-target-third-party-dom-from-owned-roots": {
 		appliesWhen: "`.ant-*`, `.rc-*`, `.tippy-*` 등 third-party 내부 DOM selector를 추가·수정하거나 owned wrapper 아래로 범위를 제한한다.",
-		reviewWith: ["selector-avoid-deep-descendant-dependencies"],
+		reviewWith: [],
 	},
 	"selector-use-pseudo-classes-for-dom-owned-states": {
 		appliesWhen:
 			"`:hover`, `:visited`, `:focus*`, `:disabled`, `:checked`를 추가·수정하거나 parent DOM state가 child styling에 영향을 준다.",
-		reviewWith: ["values-separate-domain-state-modifiers-from-dom-interaction-states"],
+		reviewWith: [],
 	},
 	"values-always-provide-css-variable-fallbacks": {
 		appliesWhen:
@@ -327,13 +383,9 @@ const reactRuleRouting = {
 		reviewWith: [],
 	},
 	"composition-named-handlers-over-inline": {
-		appliesWhen: "TSX event prop에 인라인 callback을 추가·수정하고 그 안에 분기, 비동기 호출, 상태 변경 또는 여러 동작이 들어간다.",
-		reviewWith: [
-			"events-name-and-curry-handlers",
-			"events-keep-handler-flow-inline",
-			"events-run-user-actions-in-handlers-not-effects",
-			"docs-require-jsdoc-on-key-declarations",
-		],
+		appliesWhen:
+			"TSX event prop의 인라인 callback에 분기, 비동기 호출, 여러 동작·부수효과 또는 비자명한 state transition을 추가·수정한다. 단순 setter·인자 전달 한 줄 위임은 제외한다.",
+		reviewWith: ["events-keep-handler-flow-inline", "events-run-user-actions-in-handlers-not-effects"],
 	},
 	"composition-prefer-arrow-functions-and-object-params": {
 		appliesWhen: "React 인접 코드에 function 선언이 생기거나 함수가 3개 이상 매개변수 또는 함께 이동하는 같은 계열 값을 받는다.",
@@ -350,19 +402,16 @@ const reactRuleRouting = {
 	"docs-document-compound-parts-with-part-and-description": {
 		appliesWhen:
 			"compound component의 exported public part·props interface·part 내부 handler를 추가·변경하거나 public part 문서를 수정한다.",
-		reviewWith: ["docs-require-jsdoc-on-key-declarations", "typescript/docs-standardize-annotation-tags-by-declaration-role"],
+		reviewWith: [],
 	},
 	"docs-limit-inline-comments-to-non-obvious-logic": {
 		appliesWhen: "React 함수·handler·JSX 인접 로직 안의 `//` 주석을 추가·수정하거나 자명한 설명과 실제 제약을 구분해 정리한다.",
-		reviewWith: ["typescript/docs-keep-inline-comments-for-constraints-and-caveats"],
+		reviewWith: [],
 	},
 	"docs-require-jsdoc-on-key-declarations": {
 		appliesWhen:
 			"query·mutation, 비자명한 handler/effect, exported helper/custom hook/store, public type/interface 또는 예외 memo 선언을 추가·변경한다.",
-		reviewWith: [
-			"typescript/docs-require-header-jsdoc-on-key-declarations",
-			"typescript/docs-standardize-annotation-tags-by-declaration-role",
-		],
+		reviewWith: [],
 	},
 	"events-keep-handler-flow-inline": {
 		appliesWhen: "화면 전용 named handler의 분기·mutation·navigation·후처리를 여러 helper나 hook으로 나누거나 다시 합친다.",
@@ -370,7 +419,7 @@ const reactRuleRouting = {
 	},
 	"events-name-and-curry-handlers": {
 		appliesWhen: "이벤트 핸들러를 새로 만들거나 이름, target/event 표현, 추가 인자 전달 방식 또는 최종 React handler 시그니처를 바꾼다.",
-		reviewWith: ["typing-function-type-first"],
+		reviewWith: ["typing-function-type-first", "typescript/naming-use-consistent-file-and-symbol-naming"],
 	},
 	"events-run-user-actions-in-handlers-not-effects": {
 		appliesWhen: "제출·저장·삭제·닫기 같은 one-shot 사용자 액션을 handler와 state+effect 사이에서 이동하거나 실행 흐름을 바꾼다.",
@@ -379,7 +428,7 @@ const reactRuleRouting = {
 	"ownership-avoid-barrel-and-react-namespace-imports": {
 		appliesWhen:
 			"`index.ts`·barrel 재노출, `React.*` namespace 타입, type/value 혼합 import 또는 소유 출처를 숨긴 경로를 직접 추가·수정한다. 일반 direct value import는 제외한다.",
-		reviewWith: ["typescript/naming-use-direct-imports-and-public-entry-points"],
+		reviewWith: [],
 	},
 	"ownership-layer-component-boundaries": {
 		appliesWhen: "컴포넌트를 ui·widget·route-local 중 어느 소유 레이어에 둘지 결정하거나 레이어 사이에서 이동·공용화한다.",
@@ -404,7 +453,7 @@ const reactRuleRouting = {
 	"ownership-use-consistent-file-and-symbol-naming": {
 		appliesWhen:
 			"React/TSX 파일 자체·컴포넌트·exported symbol·공용 설정의 이름을 새로 정하거나 바꾸며 casing, ui/wg prefix 또는 config key naming을 판단한다. local query·mutation binding만 바꾸면 제외한다.",
-		reviewWith: ["typescript/naming-use-consistent-file-and-symbol-naming"],
+		reviewWith: [],
 	},
 	"screen-avoid-premature-abstraction": {
 		appliesWhen: "screen 코드를 helper·hook·component·module로 추출하거나 한 곳에서만 쓰는 기존 추상화를 접어 넣는다.",
@@ -426,7 +475,7 @@ const reactRuleRouting = {
 	},
 	"screen-keep-derived-values-close": {
 		appliesWhen:
-			"response·state·search·props의 오리진을 끊는 alias·flag·표시값을 넓은 screen scope에 추가·이동하거나 `let`/`push` 기반 조립을 만든다.",
+			"response·state·search·props의 오리진을 끊는 alias·flag·표시값을 넓은 screen scope에 추가·이동·제거하거나 `let`/`push` 조립을 바꾼다.",
 		reviewWith: [],
 	},
 	"screen-keep-route-flow-visible": {
@@ -448,7 +497,7 @@ const reactRuleRouting = {
 	},
 	"state-calculate-derived-values-during-render": {
 		appliesWhen: "현재 props·state·search·response에서 계산 가능한 값을 별도 state와 effect로 동기화하거나 그 동기화를 제거한다.",
-		reviewWith: ["screen-keep-derived-values-close"],
+		reviewWith: [],
 	},
 	"state-choose-state-tools-by-source-of-truth": {
 		appliesWhen: "로컬 UI·전역 client·server 데이터를 새 state 도구로 옮기거나 서로 다른 source of truth 사이에 복제·동기화한다.",
@@ -461,19 +510,15 @@ const reactRuleRouting = {
 	},
 	"state-name-query-and-mutation-bindings-consistently": {
 		appliesWhen: "React Query query·mutation hook의 로컬 binding을 추가·이름 변경하거나 역할이 드러나지 않는 별칭이 diff에 보인다.",
-		reviewWith: ["state-preserve-origin-chaining", "docs-require-jsdoc-on-key-declarations"],
+		reviewWith: ["state-preserve-origin-chaining"],
 	},
 	"state-preserve-origin-chaining": {
 		appliesWhen: "page·layout·screen 넓은 스코프에서 response·mutation·store를 구조분해하거나 별칭으로 끊고 원본 값 접근을 바꾼다.",
-		reviewWith: [],
+		reviewWith: ["screen-keep-derived-values-close"],
 	},
 	"state-shape-query-data-with-select": {
 		appliesWhen: "서버 응답의 list·items·meta 등을 렌더에서 가공·반복 소비하거나 React Query `select`의 결과 shape를 추가·변경한다.",
-		reviewWith: [
-			"state-name-query-and-mutation-bindings-consistently",
-			"state-preserve-origin-chaining",
-			"docs-require-jsdoc-on-key-declarations",
-		],
+		reviewWith: ["state-name-query-and-mutation-bindings-consistently", "state-preserve-origin-chaining"],
 	},
 	"state-store-derived-authority": {
 		appliesWhen:
@@ -483,7 +528,7 @@ const reactRuleRouting = {
 	"state-use-effectevent-for-non-reactive-effect-callbacks": {
 		appliesWhen:
 			"subscription effect가 최신 prop·state callback을 읽도록 ref 동기화 hack, dependency 재설치 또는 `useEffectEvent`를 추가·변경한다.",
-		reviewWith: ["events-run-user-actions-in-handlers-not-effects", "docs-require-jsdoc-on-key-declarations"],
+		reviewWith: ["events-run-user-actions-in-handlers-not-effects"],
 	},
 	"state-use-functional-setstate-updates": {
 		appliesWhen: "다음 state가 현재 state에 의존하는 handler·async callback·반복 갱신에서 `setState` 호출 방식을 추가·변경한다.",
@@ -521,11 +566,7 @@ const reactRuleRouting = {
 	},
 	"typing-function-type-first": {
 		appliesWhen: "React 이벤트 핸들러나 prop callback의 선언·시그니처를 추가·변경하며 기존 React alias 또는 callback 계약을 쓸 수 있다.",
-		reviewWith: [
-			"typing-reuse-existing-contracts",
-			"typescript/types-prefer-function-variable-types-over-parameter-annotations",
-			"typescript/types-reuse-callback-signatures-from-existing-contracts",
-		],
+		reviewWith: ["typing-reuse-existing-contracts"],
 	},
 	"typing-reuse-existing-contracts": {
 		appliesWhen: "Props callback 구현이나 API 응답 기반 view type을 추가·변경하며 기존 prop·API 계약과 같은 shape가 보인다.",
@@ -534,6 +575,50 @@ const reactRuleRouting = {
 			"typescript/types-reuse-existing-contracts-before-new-types",
 		],
 	},
+} as const;
+
+/**
+ * @summary 조건부 reviewWith와 달리 Selected가 반드시 닫혀야 하는 exact routing oracle
+ */
+const mandatoryRuleRouting = {
+	react: {
+		"composition-named-handlers-over-inline": ["docs-require-jsdoc-on-key-declarations", "events-name-and-curry-handlers"],
+		"docs-document-compound-parts-with-part-and-description": ["docs-require-jsdoc-on-key-declarations"],
+		"docs-limit-inline-comments-to-non-obvious-logic": ["typescript/docs-keep-inline-comments-for-constraints-and-caveats"],
+		"docs-require-jsdoc-on-key-declarations": ["typescript/docs-require-header-jsdoc-on-key-declarations"],
+		"ownership-avoid-barrel-and-react-namespace-imports": ["typescript/naming-use-direct-imports-and-public-entry-points"],
+		"ownership-use-consistent-file-and-symbol-naming": ["typescript/naming-use-consistent-file-and-symbol-naming"],
+		"state-calculate-derived-values-during-render": ["screen-keep-derived-values-close"],
+		"state-name-query-and-mutation-bindings-consistently": [
+			"typescript/naming-use-consistent-file-and-symbol-naming",
+			"docs-require-jsdoc-on-key-declarations",
+		],
+		"state-shape-query-data-with-select": ["docs-require-jsdoc-on-key-declarations"],
+		"state-use-effectevent-for-non-reactive-effect-callbacks": ["docs-require-jsdoc-on-key-declarations"],
+		"typing-function-type-first": ["typescript/types-reuse-callback-signatures-from-existing-contracts"],
+	},
+	typescript: {
+		"docs-require-header-jsdoc-on-key-declarations": [
+			"docs-standardize-annotation-tags-by-declaration-role",
+			"docs-write-concise-korean-comments-about-purpose-and-constraints",
+		],
+		"functions-replace-enum-with-as-const-objects": [
+			"naming-use-consistent-file-and-symbol-naming",
+			"types-document-custom-types-and-shapes",
+		],
+		"types-reuse-callback-signatures-from-existing-contracts": ["types-prefer-function-variable-types-over-parameter-annotations"],
+	},
+	css: {
+		"composition-prefer-ui-wrapper-prop-types": ["typescript/types-reuse-existing-contracts-before-new-types"],
+		"selector-target-third-party-dom-from-owned-roots": ["selector-avoid-deep-descendant-dependencies"],
+		"selector-use-pseudo-classes-for-dom-owned-states": ["values-separate-domain-state-modifiers-from-dom-interaction-states"],
+	},
+} as const;
+
+const completionGateRouting = {
+	react: [],
+	typescript: ["guardrails-review-banned-typescript-shortcuts-before-finishing"],
+	css: ["organization-review-banned-css-patterns-before-finishing"],
 } as const;
 
 /**
@@ -570,7 +655,10 @@ const typescriptSelections = {
 		"docs-write-concise-korean-comments-about-purpose-and-constraints",
 		"guardrails-review-banned-typescript-shortcuts-before-finishing",
 	],
-	"helper-boundary-scope-drift": ["functions-extract-helpers-only-when-the-boundary-is-real"],
+	"helper-boundary-scope-drift": [
+		"functions-extract-helpers-only-when-the-boundary-is-real",
+		"guardrails-review-banned-typescript-shortcuts-before-finishing",
+	],
 	"named-object-param": [
 		"naming-use-consistent-file-and-symbol-naming",
 		"functions-use-named-object-params-for-complex-signatures",
@@ -923,6 +1011,7 @@ const reactScenarioStages = {
 					"docs-require-jsdoc-on-key-declarations",
 				],
 				typescript: [
+					"naming-use-consistent-file-and-symbol-naming",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-standardize-annotation-tags-by-declaration-role",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
@@ -1297,6 +1386,10 @@ interface SkillFixtureOptions {
 	 */
 	ruleIds?: string[];
 	/**
+	 * @field stable ID별 mandatory selection routing metadata
+	 */
+	ruleRouting?: Record<string, {requiredOnCompletion?: boolean; requiresSelected?: string[]}>;
+	/**
 	 * @field stable ID별 custom rule title
 	 */
 	ruleTitles?: Record<string, string>;
@@ -1355,7 +1448,14 @@ const createValidManifest = (skill: string = "owner"): RoutingEvalManifest => ({
 
 const writeFixtureSkill = async (args: WriteFixtureSkillArgs): Promise<void> => {
 	const {skillRootDir, skillName, options = {}} = args;
-	const {companions = [], extends: extendedSkills = [], progressive = true, ruleIds = [...fixtureRuleIds], ruleTitles = {}} = options;
+	const {
+		companions = [],
+		extends: extendedSkills = [],
+		progressive = true,
+		ruleIds = [...fixtureRuleIds],
+		ruleRouting = {},
+		ruleTitles = {},
+	} = options;
 	const skillDir = path.join(skillRootDir, skillName);
 	const rulesDir = path.join(skillDir, "rules");
 	await mkdir(rulesDir, {recursive: true});
@@ -1391,9 +1491,16 @@ const writeFixtureSkill = async (args: WriteFixtureSkillArgs): Promise<void> => 
 
 	for (const ruleId of ruleIds) {
 		const ruleTitle = ruleTitles[ruleId] ?? ruleId;
+		const routing = ruleRouting[ruleId];
+		const mandatoryRouting = [
+			routing?.requiresSelected === undefined ? undefined : `requiresSelected: ${routing.requiresSelected.join(", ")}`,
+			routing?.requiredOnCompletion === undefined ? undefined : `requiredOnCompletion: ${String(routing.requiredOnCompletion)}`,
+		]
+			.filter((line): line is string => line !== undefined)
+			.join("\n");
 		await writeFile(
 			path.join(rulesDir, `${ruleId}.md`),
-			`---\ntitle: ${ruleTitle}\nimpact: HIGH\nimpactDescription: Fixture impact.\nappliesWhen: Editing ${ruleId}.\ntags: fixture\n---\n\n## ${ruleTitle}\n\n**Incorrect**\n\nBad.\n\n**Correct**\n\nGood.\n`,
+			`---\ntitle: ${ruleTitle}\nimpact: HIGH\nimpactDescription: Fixture impact.\nappliesWhen: Editing ${ruleId}.\n${mandatoryRouting.length === 0 ? "" : `${mandatoryRouting}\n`}tags: fixture\n---\n\n## ${ruleTitle}\n\n**Incorrect**\n\nBad.\n\n**Correct**\n\nGood.\n`,
 			"utf8",
 		);
 	}
@@ -1437,8 +1544,11 @@ test("TypeScript progressive metadata matches Appendix A exactly", async () => {
 	);
 	const headerJsdocRule = await readFile(path.join(skillPaths.rulesDir, "docs-require-header-jsdoc-on-key-declarations.md"), "utf8");
 	assert.match(headerJsdocRule, /named query·mutation binding[^\n]+@api/i);
-	assert.match(headerJsdocRule, /이 규칙을 선택하면[^\n]+두 `reviewWith` target[^\n]+Selected[^\n]+N\/A/i);
-	assert.doesNotMatch(headerJsdocRule, /이 규칙이[^\n]+요구하면[^\n]+두 `reviewWith` target/i);
+	assert.match(
+		headerJsdocRule,
+		/^requiresSelected: docs-standardize-annotation-tags-by-declaration-role, docs-write-concise-korean-comments-about-purpose-and-constraints$/m,
+	);
+	assert.doesNotMatch(headerJsdocRule, /^reviewWith:/m);
 });
 
 test("TypeScript routing manifest is an exact nine-scenario partition with full positive coverage", async () => {
@@ -1565,6 +1675,85 @@ test("JSDoc routing closure and query-select ownership stay exact across every m
 	assert.equal(queryShaping.expectedSelected.react?.includes("screen-extract-utilities-selectively"), false);
 });
 
+test("induced naming closure and activated finish gates stay mandatory across every manifest stage", async () => {
+	for (const skillName of ["react", "typescript", "css"] as const) {
+		const manifest = await readRoutingEvalManifest(getSkillPaths(skillName, realSkillRootDir));
+		const document = await readSkillDocument(getSkillPaths(skillName, realSkillRootDir));
+
+		assert.deepEqual(
+			Object.fromEntries(
+				document.rules
+					.filter((rule) => rule.requiresSelected.length > 0)
+					.map((rule) => [rule.fileName.replace(/\.md$/, ""), rule.requiresSelected]),
+			),
+			mandatoryRuleRouting[skillName],
+			`${skillName} requiresSelected metadata must match the exact mandatory-routing oracle`,
+		);
+		assert.deepEqual(
+			document.rules.filter((rule) => rule.requiredOnCompletion).map((rule) => rule.fileName.replace(/\.md$/, "")),
+			completionGateRouting[skillName],
+			`${skillName} completion gates must match the exact oracle`,
+		);
+
+		for (const scenario of manifest.scenarios) {
+			for (const stage of [scenario, scenario.scopeDrift].filter((candidate) => candidate !== undefined)) {
+				if (stage.expectedSkills.includes("typescript")) {
+					assert.ok(
+						stage.expectedSelected.typescript?.includes("guardrails-review-banned-typescript-shortcuts-before-finishing"),
+						`${skillName}/${scenario.id} must select the TypeScript finish gate`,
+					);
+				}
+
+				if (stage.expectedSkills.includes("css")) {
+					assert.ok(
+						stage.expectedSelected.css?.includes("organization-review-banned-css-patterns-before-finishing"),
+						`${skillName}/${scenario.id} must select the CSS finish gate`,
+					);
+				}
+
+				if (stage.expectedSelected.react?.includes("state-name-query-and-mutation-bindings-consistently")) {
+					assert.ok(
+						stage.expectedSelected.typescript?.includes("naming-use-consistent-file-and-symbol-naming"),
+						`${skillName}/${scenario.id} must close React binding naming to TypeScript symbol naming`,
+					);
+				}
+			}
+		}
+	}
+
+	const reactRulesDir = getSkillPaths("react", realSkillRootDir).rulesDir;
+	const derivedRule = await readFile(path.join(reactRulesDir, "screen-keep-derived-values-close.md"), "utf8");
+	const bindingRule = await readFile(path.join(reactRulesDir, "state-name-query-and-mutation-bindings-consistently.md"), "utf8");
+	const originRule = await readFile(path.join(reactRulesDir, "state-preserve-origin-chaining.md"), "utf8");
+	const typescriptFinishRule = await readFile(
+		path.join(getSkillPaths("typescript", realSkillRootDir).rulesDir, "guardrails-review-banned-typescript-shortcuts-before-finishing.md"),
+		"utf8",
+	);
+	const cssFinishRule = await readFile(
+		path.join(getSkillPaths("css", realSkillRootDir).rulesDir, "organization-review-banned-css-patterns-before-finishing.md"),
+		"utf8",
+	);
+
+	assert.match(derivedRule, /^appliesWhen:[^\n]+alias[^\n]+추가·이동·제거/m);
+	assert.match(originRule, /^reviewWith:[^\n]+screen-keep-derived-values-close/m);
+	assert.match(bindingRule, /^requiresSelected:[^\n]+typescript\/naming-use-consistent-file-and-symbol-naming/m);
+	assert.match(typescriptFinishRule, /^requiredOnCompletion: true$/m);
+	assert.match(cssFinishRule, /^requiredOnCompletion: true$/m);
+
+	const typescriptSkill = await readFile(path.join(realSkillRootDir, "typescript", "SKILL.md"), "utf8");
+	const cssSkill = await readFile(path.join(realSkillRootDir, "css", "SKILL.md"), "utf8");
+	assert.match(typescriptSkill, /completionGate[^\n]+완료[^\n]+Selected[^\n]+N\/A/i);
+	assert.match(cssSkill, /completionGate[^\n]+완료[^\n]+Selected[^\n]+N\/A/i);
+	assert.match(typescriptSkill, /requiresSelected[^\n]+즉시 Selected[^\n]+N\/A/i);
+	assert.match(cssSkill, /requiresSelected[^\n]+즉시 Selected[^\n]+N\/A/i);
+
+	const reactManifest = await readRoutingEvalManifest(getSkillPaths("react", realSkillRootDir));
+	const sharedAuthority = reactManifest.scenarios.find(({id}) => id === "RTE11-shared-authority");
+	assert.ok(sharedAuthority);
+	assert.ok(sharedAuthority.expectedSelected.react?.includes("state-preserve-origin-chaining"));
+	assert.ok(sharedAuthority.expectedNotApplicable.react?.includes("screen-keep-derived-values-close"));
+});
+
 test("TypeScript SKILL.md is a compact trigger-only router with every receipt and audit gate", async () => {
 	const source = await readFile(path.join(realSkillRootDir, "typescript", "SKILL.md"), "utf8");
 	const frontmatterSource = source.match(/^---\n([\s\S]*?)\n---/)?.[1] ?? "";
@@ -1585,13 +1774,15 @@ test("TypeScript SKILL.md is a compact trigger-only router with every receipt an
 	assert.match(body, /Not applicable|N\/A/i);
 	assert.match(body, /Unknown/);
 	assert.match(body, /Selected와 Unknown.*stable ID.*contracts\/<stable-id>\.md.*전부 읽는다/i);
-	assert.match(body, /contract가 `CRITICAL`이면[^\n]+full rule도 반드시 읽는다/i);
+	assert.match(body, /`CRITICAL`이면[^\n]+full rule도 반드시 읽는다/i);
 	assert.match(body, /exclusion|배제.*그룹/i);
 	assert.match(body, /ordinal.*union|합집합.*ordinal|ordinal.*합집합/i);
 	assert.match(body, /이유는 비어 있으면 안 된다/i);
 	assert.match(body, /reviewWith/);
-	assert.match(body, /Selected contract[^\n]+Unknown[^\n]+Selected[^\n]+필수 변경[^\n]+scope evidence/i);
-	assert.match(body, /예시[^\n]+선택적 대안[^\n]+해소되지 않은 Unknown[^\n]+가상 변경[^\n]+evidence가 아니다/i);
+	assert.match(body, /Unknown[^\n]+Selected\/N\/A[^\n]+먼저 해소[^\n]+N\/A[^\n]+requiresSelected[^\n]+적용하지/i);
+	assert.match(body, /Selected로 확정한 contract[^\n]+requiresSelected[^\n]+즉시 Selected[^\n]+N\/A/i);
+	assert.match(body, /Selected contract[^\n]+필수 변경[^\n]+scope evidence/i);
+	assert.match(body, /예시[^\n]+선택적 대안[^\n]+해소되지 않은 Unknown[^\n]+가상 변경[^\n]+(?:evidence가 아니다|제외)/i);
 	assert.match(body, /reviewWith[^\n]+고정점[^\n]+반복/i);
 	assert.match(body, /고정점[^\n]+Selected contract[^\n]+Expanded 원문[^\n]+구현·리뷰 기준/i);
 	assert.ok(body.indexOf("contracts/<stable-id>.md") < body.indexOf("고정점"));
@@ -1857,13 +2048,15 @@ test("React SKILL.md is a compact full-index router with required TypeScript and
 	assert.match(body, /Not applicable|N\/A/i);
 	assert.match(body, /Unknown/);
 	assert.match(body, /Selected와 Unknown.*stable ID.*contracts\/<stable-id>\.md.*전부 읽는다/i);
-	assert.match(body, /contract가 `CRITICAL`이면[^\n]+full rule도 반드시 읽는다/i);
+	assert.match(body, /`CRITICAL`이면[^\n]+full rule도 반드시 읽는다/i);
 	assert.match(body, /exclusion|배제.*그룹/i);
 	assert.match(body, /비어 있지 않은|비어 있으면 안 된다/i);
 	assert.match(body, /ordinal.*union|합집합.*ordinal|ordinal.*합집합/i);
 	assert.match(body, /reviewWith/);
-	assert.match(body, /Selected contract[^\n]+Unknown[^\n]+Selected[^\n]+필수 변경[^\n]+scope evidence/i);
-	assert.match(body, /예시[^\n]+선택적 대안[^\n]+해소되지 않은 Unknown[^\n]+가상 변경[^\n]+evidence가 아니다/i);
+	assert.match(body, /Unknown[^\n]+Selected\/N\/A[^\n]+먼저 해소[^\n]+N\/A[^\n]+requiresSelected[^\n]+적용하지/i);
+	assert.match(body, /Selected로 확정한 contract[^\n]+requiresSelected[^\n]+즉시 Selected[^\n]+N\/A/i);
+	assert.match(body, /Selected contract[^\n]+필수 변경[^\n]+scope evidence/i);
+	assert.match(body, /예시[^\n]+선택적 대안[^\n]+해소되지 않은 Unknown[^\n]+가상 변경[^\n]+(?:evidence가 아니다|제외)/i);
 	assert.match(body, /reviewWith[^\n]+고정점[^\n]+반복/i);
 	assert.match(body, /고정점[^\n]+Selected contract[^\n]+Expanded 원문[^\n]+구현·리뷰 기준/i);
 	assert.ok(body.indexOf("contracts/<stable-id>.md") < body.indexOf("고정점"));
@@ -2136,13 +2329,15 @@ test("CSS SKILL.md is a compact full-index router with exact receipts and compan
 	assert.match(body, /Not applicable|N\/A/i);
 	assert.match(body, /Unknown/);
 	assert.match(body, /Selected와 Unknown.*stable ID.*contracts\/<stable-id>\.md.*전부 읽는다/i);
-	assert.match(body, /contract가 `CRITICAL`이면[^\n]+full rule도 반드시 읽는다/i);
+	assert.match(body, /`CRITICAL`이면[^\n]+full rule도 반드시 읽는다/i);
 	assert.match(body, /exclusion|배제.*그룹/i);
 	assert.match(body, /비어 있지 않은|비어 있으면 안 된다/i);
 	assert.match(body, /ordinal.*union|합집합.*ordinal|ordinal.*합집합/i);
 	assert.match(body, /reviewWith/);
-	assert.match(body, /Selected contract[^\n]+Unknown[^\n]+Selected[^\n]+필수 변경[^\n]+scope evidence/i);
-	assert.match(body, /예시[^\n]+선택적 대안[^\n]+해소되지 않은 Unknown[^\n]+가상 변경[^\n]+evidence가 아니다/i);
+	assert.match(body, /Unknown[^\n]+Selected\/N\/A[^\n]+먼저 해소[^\n]+N\/A[^\n]+requiresSelected[^\n]+적용하지/i);
+	assert.match(body, /Selected로 확정한 contract[^\n]+requiresSelected[^\n]+즉시 Selected[^\n]+N\/A/i);
+	assert.match(body, /Selected contract[^\n]+필수 변경[^\n]+scope evidence/i);
+	assert.match(body, /예시[^\n]+선택적 대안[^\n]+해소되지 않은 Unknown[^\n]+가상 변경[^\n]+(?:evidence가 아니다|제외)/i);
 	assert.match(body, /reviewWith[^\n]+고정점[^\n]+반복/i);
 	assert.match(body, /고정점[^\n]+Selected contract[^\n]+Expanded 원문[^\n]+구현·리뷰 기준/i);
 	assert.ok(body.indexOf("contracts/<stable-id>.md") < body.indexOf("고정점"));
@@ -2398,6 +2593,38 @@ test("manifest validator enforces required closure and partitions an explicitly 
 		manifest.scenarios[0]!.expectedNotApplicable.conditional = [];
 		await writeManifest({skillRootDir, skillName: "owner", manifest});
 		await validateRoutingEvalManifest(getSkillPaths("owner", skillRootDir));
+	});
+});
+
+test("manifest validator enforces requiresSelected and requiredOnCompletion rule closure", async () => {
+	await withFixtureRoot(async (skillRootDir) => {
+		await writeFixtureSkill({
+			skillRootDir,
+			skillName: "owner",
+			options: {ruleRouting: {"fixture-first": {requiresSelected: ["fixture-second"]}}},
+		});
+		const manifest = createValidManifest();
+		manifest.scenarios[0]!.expectedSelected.owner = ["fixture-first"];
+		manifest.scenarios[0]!.expectedNotApplicable.owner = ["fixture-second"];
+		await writeManifest({skillRootDir, skillName: "owner", manifest});
+
+		await assert.rejects(
+			() => validateRoutingEvalManifest(getSkillPaths("owner", skillRootDir)),
+			/requiresSelected target "owner\/fixture-second"/i,
+		);
+	});
+
+	await withFixtureRoot(async (skillRootDir) => {
+		await writeFixtureSkill({skillRootDir, skillName: "owner", options: {ruleRouting: {"fixture-second": {requiredOnCompletion: true}}}});
+		const manifest = createValidManifest();
+		manifest.scenarios[0]!.expectedSelected.owner = ["fixture-first"];
+		manifest.scenarios[0]!.expectedNotApplicable.owner = ["fixture-second"];
+		await writeManifest({skillRootDir, skillName: "owner", manifest});
+
+		await assert.rejects(
+			() => validateRoutingEvalManifest(getSkillPaths("owner", skillRootDir)),
+			/requiredOnCompletion rule "owner\/fixture-second"/i,
+		);
 	});
 });
 

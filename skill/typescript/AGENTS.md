@@ -314,7 +314,7 @@ const normalizeSearchRequest: NormalizeRequest = (request) => {
 
 **Applies when:** interface, 객체 또는 framework가 이미 정의한 callback을 구현·전달하면서 시그니처를 새로 적거나 바꾼다.
 
-**Review with:** `types-prefer-function-variable-types-over-parameter-annotations`
+**Requires selected:** `types-prefer-function-variable-types-over-parameter-annotations` · N/A 불가
 
 **Impact: HIGH (prevents callback signatures from drifting when an existing interface or object contract already defines them)**
 
@@ -580,7 +580,7 @@ const sortedUsers = [...users].sort((left, right) => left.name.localeCompare(rig
 
 **Applies when:** \`enum\` 또는 타입과 런타임에서 함께 쓰는 enum-like 값 집합을 추가·변경한다.
 
-**Review with:** `naming-use-consistent-file-and-symbol-naming`, `types-document-custom-types-and-shapes`
+**Requires selected:** `naming-use-consistent-file-and-symbol-naming`, `types-document-custom-types-and-shapes` · N/A 불가
 
 **Impact: MEDIUM-HIGH (keeps runtime values explicit and type extraction lightweight without introducing enum-specific behavior)**
 
@@ -757,14 +757,13 @@ if (!normalizedToken) {
 
 ### 5.2 Require Header JSDoc on Key Declarations
 
-**Applies when:** named query·mutation binding, 원격 연동 함수, 이벤트 handler, reactive sync block, reusable helper, custom type·interface, store 또는 formatter 예외 선언을 추가·변경한다.
+**Applies when:** named query·mutation, 원격 함수, 비자명한 handler/effect, reusable/exported helper·custom hook, custom type·interface, store, formatter 또는 예외 memo 선언을 추가·변경한다.
 
-**Review with:** `docs-standardize-annotation-tags-by-declaration-role`, `docs-write-concise-korean-comments-about-purpose-and-constraints`
+**Requires selected:** `docs-standardize-annotation-tags-by-declaration-role`, `docs-write-concise-korean-comments-about-purpose-and-constraints` · N/A 불가
 
 **Impact: MEDIUM-HIGH (makes important boundaries searchable and explainable before readers inspect the implementation body)**
 
-named query·mutation binding과 원격 연동 함수에는 `@api` 헤더 JSDoc을 작성하고, 이벤트 핸들러, 반응형 동기화 블록, 재사용 helper, 커스텀 `type`/`interface`, store 선언, 포맷 예외를 둔 함수 선언에도 예외 없이 선언 헤더 JSDoc을 작성합니다.
-이 규칙을 선택하면 역할 태그와 한국어 JSDoc을 추가·유지하므로 두 `reviewWith` target의 `appliesWhen`도 충족되어 Selected이며 N/A가 아닙니다.
+named query·mutation binding과 원격 함수에는 `@api` 헤더 JSDoc을 작성하고, 비자명한 handler/effect, reusable/exported helper·custom hook, 커스텀 `type`/`interface`, store, formatter와 예외 memo 선언에도 헤더 JSDoc을 작성합니다.
 중요한 경계가 파일 검색에서 바로 보이도록 하는 것이 목적입니다. annotation 종류는 선언 역할에 따라 `@api`, `@event`, `@watch`, `@helper`, `@summary` 중 하나를 고릅니다.
 
 **Incorrect (주요 선언에 헤더 설명이 없음):**
@@ -964,6 +963,8 @@ export const normalizeUserIds = (userIds: string[]): string[] => {
 ### 6.1 Review Banned TypeScript Shortcuts Before Finishing
 
 **Applies when:** TypeScript/TSX 변경을 완료 판정하거나 diff에서 barrel, 중복 타입, 조기 helper, 넓은 조립, 무근거 fallback 또는 자명한 주석을 점검한다.
+
+**Required on completion:** 활성 skill의 완료 receipt에서 Selected이며 N/A 불가
 
 **Impact: MEDIUM (catches the recurring shortcuts that most often erode import, type, helper, fallback, and comment discipline)**
 

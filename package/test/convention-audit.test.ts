@@ -335,7 +335,9 @@ test("convention audit router orders independent index selection before semantic
 	assert.match(source, /exclusion reason[^\n]+비어 있으면[^\n]+`FAIL`/);
 	assert.match(steps[8] ?? "", /구현자와 auditor 각 receipt[^\n]+서로 독립적으로/);
 	assert.match(source, /`reviewWith`[^\n]+자동 선택[^\n]+아니며[^\n]+독립적으로 재평가/);
-	assert.match(steps[6] ?? "", /Selected contract[^\n]+Unknown[^\n]+Selected[^\n]+실제로 필수[^\n]+scope evidence/i);
+	assert.match(steps[6] ?? "", /Unknown[^\n]+Selected\/N\/A[^\n]+먼저 해소[^\n]+N\/A[^\n]+requiresSelected[^\n]+적용하지/i);
+	assert.match(steps[6] ?? "", /Selected로 확정한 contract[^\n]+requiresSelected[^\n]+즉시 `Selected`[^\n]+N\/A/i);
+	assert.match(steps[6] ?? "", /Selected contract[^\n]+필수 변경[^\n]+scope evidence/i);
 	assert.match(steps[6] ?? "", /예시[^\n]+선택적 대안[^\n]+해소되지 않은 Unknown[^\n]+가상 변경[^\n]+제외/);
 	assert.match(steps[6] ?? "", /reviewWith[^\n]+고정점[^\n]+반복 판정/i);
 	assert.match(source, /activated[^\n]+target[^\n]+`Selected`, `N\/A`, `Unknown`/);
@@ -348,6 +350,7 @@ test("convention audit distinguishes coverage failures, semantic evidence, and c
 	const source = await readSkillFile("SKILL.md");
 
 	assert.match(source, /빠진 applicable rule[^\n]+selection coverage `FAIL`/);
+	assert.match(source, /completionGate[^\n]+requiresSelected[^\n]+누락·N\/A[^\n]+selection coverage `FAIL`/);
 	assert.match(source, /근거가 지지하지 않는 `N\/A`[^\n]+selection coverage `FAIL`/);
 	assert.match(source, /lint, typecheck, build, test, browser[^\n]+semantic `PASS`를 대신하지 않는다/);
 	assert.match(source, /`PASS`, `FAIL`, `UNKNOWN`/);
@@ -507,16 +510,22 @@ test("compiled audit rules preserve exact receipt and independent reviewer gates
 	assert.doesNotMatch(source, /세 companion skill[^\n]+필수/);
 });
 
-test("compiled exact-partition example lists the full concrete N/A complement", async () => {
+test("compiled exact-partition example closes mandatory targets, companions, and completion gates", async () => {
 	const sourceRule = await readSkillFile("rules/coverage-map-files-to-rule-ids.md");
 	const correctExample = sourceRule.match(/\*\*Correct \(digest와 exact partition을 검증\):\*\*\n\n```md\n([\s\S]*?)\n```/)?.[1];
 	assert.ok(correctExample);
-	assert.match(correctExample, /Selected: R15,R23,R24,R26,R42/);
-	assert.match(correctExample, /N\/A 37/);
+	assert.match(correctExample, /React Selected: R15,R23,R24,R25,R26,R42/);
+	assert.match(correctExample, /React N\/A 36/);
 	assert.match(correctExample, /R01-R14 — [^\n]+/);
 	assert.match(correctExample, /R16-R22 — [^\n]+/);
-	assert.match(correctExample, /R25 — [^\n]+/);
 	assert.match(correctExample, /R27-R41 — [^\n]+/);
+	assert.match(correctExample, /TypeScript Selected: T03,T18,T19,T21,T22/);
+	assert.match(correctExample, /TypeScript N\/A 17/);
+	assert.match(correctExample, /T01-T02 — [^\n]+/);
+	assert.match(correctExample, /T04-T17 — [^\n]+/);
+	assert.match(correctExample, /T20 — [^\n]+/);
+	assert.match(correctExample, /Mandatory: R15->R25,R42; R25->T03; R42->T18; T18->T19,T21/);
+	assert.match(correctExample, /Completion: T22/);
 	assert.doesNotMatch(correctExample, /\.\.\./);
 });
 
@@ -606,6 +615,9 @@ test("convention audit pressure tests cover reviewer, N/A, telemetry, and repair
 		"duplicate/overlap ordinal",
 		"same count, different member",
 		"reviewWith target auto-select overreach",
+		"completionGate target N/A 또는 누락",
+		"final Selected의 requiresSelected target N/A 또는 누락",
+		"Unknown→N/A source의 requiresSelected target 강제 선택",
 		"evidence-backed valid N/A",
 	]) {
 		assert.match(source, new RegExp(escapePattern(expectedText)), expectedText);

@@ -111,7 +111,10 @@ framework/project 고유 규칙은 해당 skill이나 consuming project의 proje
 | `className` / CSS / styling surface | Add `convention-css`. |
 | Activated progressive skill | Scan every activated `RULES_INDEX.md` completely; never stop at the first match. |
 | Selected guidance | Read every `Selected` + `Unknown` stable-ID-matched `contracts/*.md`; CRITICAL contracts require their full `rules/*.md`. |
-| `reviewWith` closure | Add only mandatory changes from `Selected` contracts and resolved `Unknown → Selected` rules to scope evidence; exclude examples, optional alternatives, and unresolved hypotheticals, then repeat contract loading and rescans to a fixed point. |
+| `completionGate` | Select every marked entry in each activated progressive skill; it can never be N/A. |
+| `requiresSelected` closure | Resolve Unknown first, then apply only final Selected contracts: immediately select every target, activate its companion, and never classify the target N/A. |
+| `reviewWith` closure | Re-evaluate every target against current evidence; do not auto-select it, and allow evidence-backed N/A. |
+| Fixed point | Add only requirements from final Selected contracts to scope evidence; exclude examples and optional alternatives, then repeat contracts and scans until activation, partition, and evidence stop changing. |
 | Full rule expansion | Expand non-CRITICAL full rules only for exact syntax, exceptions, unresolved Unknown, or missing audit evidence; record `Expanded: ID: reason`. |
 | Progressive full handbook | React/TypeScript/CSS `AGENTS.md` is opt-in, never default-loaded. |
 | Scope drift | Restart activation and rescan every activated progressive index. |
@@ -176,9 +179,12 @@ Pure CSS는 TypeScript를 자동 활성화하지 않고, pure TypeScript는 Reac
 - 변경 근거가 되는 파일과 검증 포인트를 먼저 확보합니다.
 - 각 activated skill의 `SKILL.md`를 먼저 읽습니다.
 - activated progressive skill마다 `RULES_INDEX.md` 전체를 scan하고 digest-bound `Selected`/`N/A`/`Unknown` exact partition을 작성합니다.
+- 각 activated index의 `completionGate` entry를 `Selected`로 두며 N/A로 분류하지 않습니다.
 - `Selected`와 `Unknown` stable ID에 대응하는 generated contract를 읽고, CRITICAL 또는 근거가 더 필요한 경우만 full rule로 확장해 이유를 기록합니다.
-- Selected contract와 Unknown→Selected로 확정된 필수 변경만 scope evidence에 합치며, 예시·선택적 대안·아직 해소되지 않은 Unknown의 가상 변경은 제외합니다.
-- 새 surface·companion·Selected/Unknown이 생기면 모든 activated index와 `reviewWith`를 재판정하고 새 contract를 읽어 activation·partition·scope evidence의 고정점까지 반복합니다.
+- Unknown을 Selected/N/A로 먼저 해소하며, N/A로 해소한 contract의 `requiresSelected`는 적용하지 않습니다.
+- final Selected contract의 `requiresSelected` target은 companion까지 활성화해 즉시 `Selected`로 두며 N/A로 분류하지 않습니다.
+- final Selected contract의 필수 변경만 scope evidence에 합치며, 예시·선택적 대안·아직 해소되지 않은 Unknown의 가상 변경은 제외합니다.
+- 새 surface·companion·Selected가 생기면 모든 activated index와 `reviewWith`를 재판정하고 새 contract를 읽어 activation·partition·scope evidence의 고정점까지 반복합니다.
 - progressive React/TypeScript/CSS full `AGENTS.md`는 전체 handbook이 명시적으로 필요한 경우에만 opt-in합니다.
 - non-progressive owner가 `SKILL.md`에서 local `AGENTS.md` 전체를 요구하면 그 계약을 따릅니다.
 

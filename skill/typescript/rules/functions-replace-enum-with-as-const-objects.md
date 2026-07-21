@@ -3,7 +3,7 @@ title: Replace `enum` With `as const` Objects
 impact: MEDIUM-HIGH
 impactDescription: keeps runtime values explicit and type extraction lightweight without introducing enum-specific behavior
 appliesWhen: `enum` 또는 타입과 런타임에서 함께 쓰는 enum-like 값 집합을 추가·변경한다.
-reviewWith: naming-use-consistent-file-and-symbol-naming, types-document-custom-types-and-shapes
+requiresSelected: naming-use-consistent-file-and-symbol-naming, types-document-custom-types-and-shapes
 tags: enum, as-const, values
 ---
 

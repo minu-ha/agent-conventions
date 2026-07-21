@@ -134,7 +134,8 @@
       ],
       "expectedSelected": {
         "typescript": [
-          "functions-extract-helpers-only-when-the-boundary-is-real"
+          "functions-extract-helpers-only-when-the-boundary-is-real",
+          "guardrails-review-banned-typescript-shortcuts-before-finishing"
         ]
       },
       "expectedNotApplicable": {
@@ -158,8 +159,7 @@
           "docs-require-header-jsdoc-on-key-declarations",
           "docs-standardize-annotation-tags-by-declaration-role",
           "docs-use-helper-for-reusable-pure-helper-functions",
-          "docs-write-concise-korean-comments-about-purpose-and-constraints",
-          "guardrails-review-banned-typescript-shortcuts-before-finishing"
+          "docs-write-concise-korean-comments-about-purpose-and-constraints"
         ]
       },
       "scopeDrift": {

@@ -3,6 +3,7 @@ title: Review Banned CSS Patterns Before Finishing
 impact: MEDIUM
 impactDescription: catches unsafe selector, modifier, and library-targeting shortcuts before they become part of the shared style system
 appliesWhen: CSS 또는 TSX class contract 변경이 완료 단계에 들어간다.
+requiredOnCompletion: true
 tags: review, banned-patterns, guardrails
 ---
 

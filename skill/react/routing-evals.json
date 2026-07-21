@@ -927,6 +927,7 @@
           "docs-require-jsdoc-on-key-declarations"
         ],
         "typescript": [
+          "naming-use-consistent-file-and-symbol-naming",
           "docs-require-header-jsdoc-on-key-declarations",
           "docs-standardize-annotation-tags-by-declaration-role",
           "docs-write-concise-korean-comments-about-purpose-and-constraints",
@@ -975,7 +976,6 @@
         "typescript": [
           "naming-centralize-shared-config-namespaces",
           "naming-preserve-config-origin-with-chained-access",
-          "naming-use-consistent-file-and-symbol-naming",
           "naming-use-direct-imports-and-public-entry-points",
           "types-document-custom-types-and-shapes",
           "types-mark-unused-parameters-with-underscore",

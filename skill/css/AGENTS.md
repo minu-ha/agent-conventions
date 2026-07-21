@@ -384,7 +384,7 @@ modifier는 상태나 반복 variant를 표현할 때만 사용합니다.
 
 **Applies when:** \`Ui\*\` wrapper 사용처나 wrapper API에서 Props 타입을 선언·추론·재사용하고 라이브러리 원본 Props 참조를 검토한다.
 
-**Review with:** `typescript/types-reuse-existing-contracts-before-new-types`
+**Requires selected:** `typescript/types-reuse-existing-contracts-before-new-types` · N/A 불가
 
 **Impact: MEDIUM-HIGH (preserves wrapper-level styling and API contracts instead of leaking raw library prop types into usage sites)**
 
@@ -541,7 +541,7 @@ rich text 예외는 raw element styling에만 적용됩니다. `.owner__prose .o
 
 **Applies when:** \`.ant-\*\`, \`.rc-\*\`, \`.tippy-\*\` 등 third-party 내부 DOM selector를 추가·수정하거나 owned wrapper 아래로 범위를 제한한다.
 
-**Review with:** `selector-avoid-deep-descendant-dependencies`
+**Requires selected:** `selector-avoid-deep-descendant-dependencies` · N/A 불가
 
 **Impact: CRITICAL (limits third-party styling to explicit wrapper ownership instead of leaking across the app)**
 
@@ -605,7 +605,7 @@ rich text 예외는 raw element styling에만 적용됩니다. `.owner__prose .o
 
 **Applies when:** \`:hover\`, \`:visited\`, \`:focus\*\`, \`:disabled\`, \`:checked\`를 추가·수정하거나 parent DOM state가 child styling에 영향을 준다.
 
-**Review with:** `values-separate-domain-state-modifiers-from-dom-interaction-states`
+**Requires selected:** `values-separate-domain-state-modifiers-from-dom-interaction-states` · N/A 불가
 
 **Impact: HIGH (keeps browser-owned interaction states separate from app-owned state modifiers)**
 
@@ -883,6 +883,8 @@ stylesheet는 하나의 owner에 맞춰 유지하고, 가벼운 구조 주석만
 ### 5.2 Review Banned CSS Patterns Before Finishing
 
 **Applies when:** CSS 또는 TSX class contract 변경이 완료 단계에 들어간다.
+
+**Required on completion:** 활성 skill의 완료 receipt에서 Selected이며 N/A 불가
 
 **Impact: MEDIUM (catches unsafe selector, modifier, and library-targeting shortcuts before they become part of the shared style system)**
 

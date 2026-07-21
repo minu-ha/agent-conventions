@@ -13,8 +13,8 @@
 - `area-description.md` - 실제 rule 파일 패턴
 - [metadata.json](./metadata.json) - progressive routing과 conditional companion 메타데이터
 - [SKILL.md](./SKILL.md) - 전체 index scan과 exact receipt를 요구하는 compact router
-- [RULES_INDEX.md](./RULES_INDEX.md) - ordinal, stable ID, `appliesWhen`, `reviewWith`, digest를 담은 generated index
-- `contracts/*.md` - selected/unknown용 generated normative contract; CRITICAL은 linked full rule을 필수로 읽게 함
+- [RULES_INDEX.md](./RULES_INDEX.md) - ordinal, stable ID, `appliesWhen`, `completionGate`, `reviewWith`, digest를 담은 generated index
+- `contracts/*.md` - selected/unknown용 generated normative contract와 `requiresSelected` metadata; CRITICAL은 linked full rule을 필수로 읽게 함
 - [routing-evals.json](./routing-evals.json) - 11개 scenario와 13개 stage의 exact Selected/N/A routing oracle
 - [AGENTS.md](./AGENTS.md) - full handbook 요청 또는 generated index/contract/필요 rule 손상·누락 fallback에만 읽는 compiled 결과물
 - [package/README.md](../../package/README.md) - `skill/*` build, validation, typecheck, test를 담당하는 standalone TypeScript npm package
@@ -70,6 +70,9 @@ title: Rule Title Here
 impact: MEDIUM
 impactDescription: 선택적 영향도 설명
 appliesWhen: 이 rule을 선택해야 하는 변경 surface와 evidence를 한 문장으로 설명
+requiresSelected: source가 Selected이면 반드시 Selected일 local-rule-id, companion-skill/cross-rule-id
+requiredOnCompletion: true
+reviewWith: 조건부로 다시 판정할 local-rule-id, companion-skill/cross-rule-id
 tags: tag1, tag2
 ---
 
@@ -93,8 +96,9 @@ tags: tag1, tag2
 ````
 
 - `appliesWhen`은 observable 변경 surface와 evidence를 설명하는 비어 있지 않은 한 줄 문장으로 작성하며 160자를 넘기지 않습니다.
-- `reviewWith`는 다른 rule을 자동 선택하는 명령이 아니라 현재 scope에서 다시 판정하게 하는 재평가 hint입니다. Selected contract와 Unknown→Selected로 확정된 필수 변경만 scope evidence에 합치고, 예시·선택적 대안·아직 해소되지 않은 Unknown의 가상 변경은 제외한 채 고정점까지 반복 판정합니다.
-- 재평가할 대상이 없으면 `reviewWith` key를 생략합니다. 대상이 있을 때만 local stable ID 또는 `companion/rule-id`를 쉼표로 구분해 선언합니다.
+- `requiresSelected`는 source가 최종 Selected일 때 target도 반드시 Selected인 경우만 사용하며 N/A를 허용하지 않습니다.
+- `reviewWith`는 다른 rule을 자동 선택하는 명령이 아니라 현재 scope에서 조건부로 다시 판정하는 재평가 hint이고, `requiredOnCompletion: true`는 활성 skill 전체의 실제 finish gate에만 사용합니다.
+- 재평가하거나 필수 전이할 대상이 없으면 해당 optional key를 생략하고 같은 target을 `requiresSelected`와 `reviewWith`에 중복하지 않습니다.
 
 ## 파일명 규칙
 
@@ -108,10 +112,11 @@ tags: tag1, tag2
 
 1. [SKILL.md](./SKILL.md)에서 scope snapshot을 고정합니다.
 2. [RULES_INDEX.md](./RULES_INDEX.md)를 처음부터 끝까지 scan하고 첫 match에서 멈추지 않습니다.
-3. digest에 묶인 `Selected`, `N/A`, `Unknown` exact partition과 비어 있지 않은 exclusion evidence를 기록합니다.
+3. digest에 묶인 `Selected`, `N/A`, `Unknown` exact partition과 비어 있지 않은 exclusion evidence를 기록하고 `completionGate`는 Selected로 둡니다.
 4. `Selected`와 `Unknown` stable ID와 같은 이름인 `contracts/<stable-id>.md`를 읽습니다. CRITICAL은 full rule을 필수로 읽고, 나머지는 exact syntax·예외·Unknown·audit 근거에 필요할 때만 확장해 `Expanded: ID: reason`을 남깁니다.
-5. `Unknown`을 해소하고, Selected contract와 Unknown→Selected로 확정된 필수 변경만 scope evidence에 합칩니다. 예시·선택적 대안·아직 해소되지 않은 Unknown의 가상 변경은 제외하고 새 Selected/Unknown contract 로드와 모든 활성 index/`reviewWith` 재판정을 고정점까지 반복합니다.
-6. 고정점의 Selected 규범을 구현하고 scope drift가 생기면 전체 index와 receipt를 다시 계산합니다.
+5. `Unknown`을 먼저 Selected/N/A로 해소합니다. N/A contract는 전이시키지 않고 final Selected contract의 `requiresSelected` target만 companion까지 즉시 Selected로 닫습니다.
+6. final Selected contract의 필수 변경만 scope evidence에 합칩니다. 예시·선택적 대안·미해소 Unknown은 제외하고 새 contract 로드와 모든 활성 index/`reviewWith` 재판정을 고정점까지 반복합니다.
+7. 고정점의 Selected 규범을 구현하고 scope drift가 생기면 전체 index와 receipt를 다시 계산합니다.
 
 TypeScript는 `TS/TSX class contract, wrapper Props 또는 style import를 함께 변경한다.`는 조건에서만 companion으로 활성화합니다. React는 CSS metadata dependency가 아니며, TSX component/state 변경이 실제로 있을 때 별도 activation evidence로 판정합니다.
 Machine-readable oracle의 mixed fixture 5개는 React가 활성화될 때 React exact partition을 저장하지만, 이 evaluation evidence가 CSS metadata dependency를 만들지는 않습니다.

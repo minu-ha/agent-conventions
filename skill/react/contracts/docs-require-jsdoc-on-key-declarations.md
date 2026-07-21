@@ -15,4 +15,6 @@ JSDoc은 경계를 설명할 때만 붙입니다. 자명한 local 변수에는 �
 
 태그는 `convention-typescript`의 `@api`, `@event`, `@watch`, `@helper`, `@summary`, `@part`, `@description`, `@field`를 사용합니다.
 
+**Requires selected:** `typescript/docs-require-header-jsdoc-on-key-declarations` · N/A 불가
+
 > 예시·예외가 필요할 때만 [full rule](../rules/docs-require-jsdoc-on-key-declarations.md)을 추가로 읽고 fallback 사유를 기록합니다.

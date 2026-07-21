@@ -32,11 +32,11 @@ Unknown: <ordinal + stable ID 또는 none>
 Expanded: <full rule을 추가로 읽은 ordinal + stable ID: 이유 또는 none>
 ```
 
-각 ordinal은 Selected/N/A/Unknown 중 하나다. exclusion group ordinal의 합집합은 exact N/A이고 이유는 비어 있으면 안 된다. `reviewWith`는 자동 선택이 아닌 재평가 신호다. target을 scope evidence로 분류하고 cross-skill companion도 판정한다.
+각 ordinal은 Selected/N/A/Unknown 중 하나다. exclusion group ordinal의 합집합은 exact N/A이고 이유는 비어 있으면 안 된다. `reviewWith`는 재평가 신호다. `completionGate`는 완료 receipt에서 Selected이며 N/A 불가다. target과 cross-skill companion을 판정한다.
 
 ## 4. Read and implement
 
-Selected와 Unknown은 stable ID와 같은 `contracts/<stable-id>.md`를 전부 읽는다. contract가 `CRITICAL`이면 연결한 `rules/*.md` full rule도 반드시 읽는다. 그 밖의 full rule은 exact 판단·Unknown 해소·audit 근거에 필요할 때만 읽고 `Expanded: ID: 이유`를 남긴다. Unknown은 Selected/N/A로 해소한다. Selected contract의 필수 변경과 Unknown을 Selected로 해소해 확정한 필수 변경만 scope evidence에 합친다. 예시·선택적 대안·해소되지 않은 Unknown의 가상 변경은 evidence가 아니다. 새 surface·companion·Selected/Unknown이 생기면 활성 index와 `reviewWith`를 재판정하고 새 contract를 읽는다. 활성 skill·partition·scope evidence의 고정점까지 반복하고 Selected contract와 Expanded 원문만 구현·리뷰 기준으로 쓴다.
+Selected와 Unknown은 stable ID와 같은 `contracts/<stable-id>.md`를 전부 읽는다. `CRITICAL`이면 연결한 full rule도 반드시 읽는다. 그 밖의 full rule은 exact 판단·Unknown 해소·audit 근거에 필요할 때만 읽고 `Expanded: ID: 이유`를 남긴다. Unknown을 Selected/N/A로 먼저 해소하고 N/A로 해소한 contract의 `requiresSelected`는 적용하지 않는다. Selected로 확정한 contract의 `requiresSelected` target은 companion까지 활성화해 즉시 Selected로 두며 N/A 불가다. Selected contract의 필수 변경만 scope evidence에 합치고 예시·선택적 대안·해소되지 않은 Unknown의 가상 변경은 제외한다. 새 surface·companion·Selected가 생기면 활성 index와 `reviewWith`를 재판정하고 새 contract를 읽는다. 활성 skill·partition·scope evidence의 고정점까지 반복하고 Selected contract와 Expanded 원문만 구현·리뷰 기준으로 쓴다.
 
 ## 5. Scope drift
 

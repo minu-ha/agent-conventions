@@ -20,7 +20,7 @@ React skill을 수정하거나 routing metadata를 바꿀 때 실제 agent가 pr
 
 각 arm은 manifest의 `expectedSkills`, exact `expectedSelected`, exact `expectedNotApplicable`, scope drift와 비교합니다. all-rules selection도 exact precision 실패입니다. candidate는 activation/selected/N/A exact match, exclusion-group ordinal 합집합, `FAIL 0`, `UNKNOWN 0`을 모두 만족해야 합니다.
 
-결과에는 repository HEAD, index digest, model/runtime/version, reasoning level, exact prompt, scorer/rubric version, trial, arm, declared loaded files, receipt의 `Expanded`와 이유, verdict, input token을 기록합니다. file-read telemetry가 없으면 observed라고 표현하지 않습니다. router+index+selected contract+expanded full rule implementation의 중앙값(median)/최대와 full-handbook oracle 대비 절감률을 함께 보고하고, scope drift·audit·reviewer phase 반복 load도 누적 token에 포함합니다.
+protocol v3 결과에는 coordinator가 dispatch 전에 고정한 repository HEAD, index digest, arm/scenario/trial, exact UTF-8 prompt와 SHA-256/byte length/renderer version, model/runtime/reasoning, scorer/rubric, declared loaded files, receipt의 `Expanded`와 이유, verdict, input token을 기록합니다. progressive/full-handbook은 completion gate·conditional `reviewWith`·final-Selected `requiresSelected` trace와 delta 없는 연속 두 stable pass를 남깁니다. file-read telemetry가 없으면 observed라고 표현하지 않습니다. router+index+selected contract+expanded full rule implementation의 중앙값(median)/최대와 full-handbook oracle 대비 절감률을 함께 보고하고, scope drift·audit·reviewer phase 반복 load도 누적 token에 포함합니다.
 
 ## Progressive Routing Regression Set
 
@@ -52,16 +52,21 @@ Scope drift 뒤에는 file, activated skill, 기존 Selected rule을 제거하�
 - styling surface가 없는데 CSS를 자동 활성화하거나, styling drift가 생겼는데 CSS를 누락함
 - index 첫 match 뒤 scan을 멈춤
 - `reviewWith` target을 자동 선택하거나 재평가하지 않음
+- `completionGate`를 N/A로 두거나 final Selected의 `requiresSelected` target을 누락함
+- Unknown→N/A source의 `requiresSelected` target을 잘못 강제 선택함
 - `Unknown`을 남긴 채 완료함
 - exact N/A 대신 “나머지”라고 축약하거나 exclusion evidence가 비어 있음
 - route entry를 layout wrapper로 과분해하거나 pure logic을 screen-local hook으로 감춤
 - inline async handler, state+effect one-shot replay, derived state sync를 남김
+- 단순 setter·인자 전달 한 줄 위임까지 named handler/JSDoc 대상으로 과선택함
+- preset·option·column meta만 이동했는데 TypeScript function-helper rule을 강제함
+- 기존 handler 이름은 그대로인데 currying/signature 변경만으로 TypeScript naming rule을 강제함
 - query/store origin을 넓은 alias나 destructuring으로 끊음
 - `?? []`, `|| "-"`, ad-hoc Spinner로 absence/loading을 숨김
 - compound public part, handler/effect/query boundary 문서가 빠짐
 
 ## 유지보수 원칙
 
-- rule, `appliesWhen`, `reviewWith`를 바꾸기 전에 같은 fixture로 RED를 재현하고 수정 후 candidate/mutation arm을 다시 실행합니다.
+- rule, `appliesWhen`, `reviewWith`, `requiresSelected`, `requiredOnCompletion`을 바꾸기 전에 같은 fixture로 RED를 재현하고 수정 후 candidate/mutation arm을 다시 실행합니다.
 - 새 rule은 최소 한 scenario에서 positive coverage를 가져야 하며 manifest의 exact complement도 함께 갱신합니다.
 - deterministic manifest/byte 검증은 실제 agent 행동과 tokenizer 기반 token gate를 대체하지 않습니다.

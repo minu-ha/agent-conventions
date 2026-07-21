@@ -21,7 +21,7 @@ TypeScript skill을 수정하거나 새로운 rule을 추가했을 때, 실제 �
 
 각 arm은 `routing-evals.json`의 `expectedSkills`, exact `expectedSelected`, exact `expectedNotApplicable`, scope drift와 비교합니다. all-rules selection도 precision 실패입니다. candidate는 activation/selected/N/A exact match, exclusion-group ordinal 합집합, `FAIL 0`, `UNKNOWN 0`을 모두 만족해야 합니다.
 
-결과에는 repository HEAD, index digest, model/runtime/version, reasoning level, exact prompt, scorer/rubric version, trial, arm, declared loaded files, receipt의 `Expanded`와 이유, verdict, input token을 기록합니다. file-read telemetry가 없으면 observed라고 표현하지 않습니다. router+index+selected contract+expanded full rule의 implementation median/최대와 full-handbook oracle 대비 절감률을 함께 보고하고, scope drift·audit·reviewer phase의 반복 load도 누적 token에 포함합니다.
+protocol v3 결과에는 coordinator가 dispatch 전에 고정한 repository HEAD, index digest, arm/scenario/trial, exact UTF-8 prompt와 SHA-256/byte length/renderer version, model/runtime/reasoning, scorer/rubric, declared loaded files, receipt의 `Expanded`와 이유, verdict, input token을 기록합니다. progressive/full-handbook은 completion gate·conditional `reviewWith`·final-Selected `requiresSelected` trace와 delta 없는 연속 두 stable pass를 남깁니다. file-read telemetry가 없으면 observed라고 표현하지 않습니다. router+index+selected contract+expanded full rule의 implementation median/최대와 full-handbook oracle 대비 절감률을 함께 보고하고, scope drift·audit·reviewer phase의 반복 load도 누적 token에 포함합니다.
 
 ## Common Red Flags
 
@@ -175,4 +175,4 @@ TypeScript skill을 수정하거나 새로운 rule을 추가했을 때, 실제 �
 - 새로운 TypeScript rule을 추가했다면, 최소 1개의 pressure scenario를 이 문서에 추가합니다.
 - 반복해서 같은 오작동이 나오면 prompt를 더 구체적으로 고치고, rule 본문과 positive example도 함께 보정합니다.
 - scenario는 특정 프레임워크보다 여러 TypeScript codebase에 공통으로 나타나는 판단 오류를 우선 다룹니다.
-- rule 본문이나 `appliesWhen`을 바꾸기 전에 같은 fixture로 RED를 재현하고, 수정 후 동일 candidate/mutation arm을 다시 실행합니다.
+- rule 본문이나 `appliesWhen`, `reviewWith`, `requiresSelected`, `requiredOnCompletion`을 바꾸기 전에 같은 fixture로 RED를 재현하고, 수정 후 동일 candidate/mutation arm을 다시 실행합니다.

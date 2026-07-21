@@ -6,7 +6,31 @@ import {assertMetadataObject, parseDependencyDeclaration} from "./dependencies.j
 import {assertProgressiveCompanionSource, assertProgressiveSkillEntrypoint} from "./progressive.js";
 import type {LoadedSkillDocument, SkillMetadata, SkillPaths, SkillRule, SkillSection} from "./types.js";
 
-const allowedRuleFrontmatterKeys = new Set(["title", "impact", "impactDescription", "appliesWhen", "reviewWith", "tags"]);
+const allowedRuleFrontmatterKeys = new Set([
+	"title",
+	"impact",
+	"impactDescription",
+	"appliesWhen",
+	"requiresSelected",
+	"requiredOnCompletion",
+	"reviewWith",
+	"tags",
+]);
+
+/**
+ * @helper optional boolean frontmatter scalar 해석
+ */
+const parseBooleanScalar = (value: string | undefined, key: string): boolean => {
+	if (value === undefined) {
+		return false;
+	}
+
+	if (value !== "true" && value !== "false") {
+		throw new Error(`Frontmatter key "${key}" must be true or false.`);
+	}
+
+	return value === "true";
+};
 
 /**
  * @helper frontmatter scalar의 matching quote pair 해제
@@ -213,6 +237,8 @@ export const readSkillRules = async (skillPaths: SkillPaths): Promise<SkillRule[
 			impactDescription: frontmatter.impactDescription ?? "",
 			tags: splitScalarList(frontmatter.tags),
 			appliesWhen: frontmatter.appliesWhen,
+			requiresSelected: splitScalarList(frontmatter.requiresSelected),
+			requiredOnCompletion: parseBooleanScalar(frontmatter.requiredOnCompletion, "requiredOnCompletion"),
 			reviewWith: splitScalarList(frontmatter.reviewWith),
 			body,
 		});

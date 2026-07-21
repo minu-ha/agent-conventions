@@ -1,11 +1,11 @@
 import {createHash} from "node:crypto";
 
-import {assertRoutingCondition, assertValidReviewTarget, assertValidRoutingIdentifier} from "./dependencies.js";
+import {assertRoutingCondition, assertValidRoutingIdentifier, assertValidRuleTarget} from "./dependencies.js";
 import type {LoadedSkillDocument, SkillCompanion, SkillRule, SkillSection} from "./types.js";
 
 const compareRoutingText = (left: string, right: string): number => (left < right ? -1 : left > right ? 1 : 0);
 const compareHandbookText = (left: string, right: string): number => left.localeCompare(right, "en-US");
-const contractRendererVersion = 3;
+const contractRendererVersion = 4;
 const supportedImpactLevels = new Set(["CRITICAL", "HIGH", "MEDIUM-HIGH", "MEDIUM", "LOW"]);
 
 /**
@@ -235,10 +235,19 @@ export const generateRuleContractMarkdown = (rule: SkillRule): string => {
 
 	const normativeBody = readNormativeRuleContract(rule);
 	const fullRuleLink = `../rules/${encodePathSegment(rule.fileName)}`;
+	const routingMetadata = [
+		rule.requiresSelected.length === 0
+			? undefined
+			: `**Requires selected:** ${[...rule.requiresSelected].sort(compareRoutingText).map(formatInlineCode).join(", ")} · N/A 불가`,
+		rule.requiredOnCompletion ? "**Required on completion:** 활성 skill의 완료 receipt에서 Selected이며 N/A 불가" : undefined,
+	]
+		.filter((line): line is string => line !== undefined)
+		.join("\n\n");
+	const routingMetadataBlock = routingMetadata.length === 0 ? "" : `\n\n${routingMetadata}`;
 	const markdown =
 		rule.impact === "CRITICAL"
-			? `# ${escapeMarkdownText(rule.title)}\n\n**Impact: CRITICAL**\n\n> CRITICAL rule: must read the [full rule](${fullRuleLink}) before implementation or review.\n`
-			: `${normativeBody}\n\n> 예시·예외가 필요할 때만 [full rule](${fullRuleLink})을 추가로 읽고 fallback 사유를 기록합니다.\n`;
+			? `# ${escapeMarkdownText(rule.title)}\n\n**Impact: CRITICAL**${routingMetadataBlock}\n\n> CRITICAL rule: must read the [full rule](${fullRuleLink}) before implementation or review.\n`
+			: `${normativeBody}${routingMetadataBlock}\n\n> 예시·예외가 필요할 때만 [full rule](${fullRuleLink})을 추가로 읽고 fallback 사유를 기록합니다.\n`;
 	const byteLength = Buffer.byteLength(markdown, "utf8");
 	const byteBudget = getRuleContractByteBudget();
 
@@ -310,7 +319,11 @@ const assertRuleAssignments = (document: LoadedSkillDocument, sections: SkillSec
 		}
 
 		for (const reviewTarget of rule.reviewWith) {
-			assertValidReviewTarget(reviewTarget, `${document.skillName}: ${rule.fileName}`);
+			assertValidRuleTarget(reviewTarget, `${document.skillName}: ${rule.fileName}`, "reviewWith");
+		}
+
+		for (const requiredTarget of rule.requiresSelected) {
+			assertValidRuleTarget(requiredTarget, `${document.skillName}: ${rule.fileName}`, "requiresSelected");
 		}
 
 		const assignmentCount = sections.filter((section) => section.prefix === rule.prefix).length;
@@ -364,6 +377,8 @@ const createCanonicalRoutingSource = (args: CanonicalRoutingSourceArgs): string 
 				title: rule.title,
 				impact: rule.impact,
 				appliesWhen: rule.appliesWhen,
+				requiresSelected: [...rule.requiresSelected].sort(compareRoutingText),
+				requiredOnCompletion: rule.requiredOnCompletion,
 				reviewWith: [...rule.reviewWith].sort(compareRoutingText),
 				tags: [...rule.tags].sort(compareRoutingText),
 			})),
@@ -433,8 +448,9 @@ export const generateRulesIndexMarkdown = (document: LoadedSkillDocument, direct
 				rule.reviewWith.length > 0
 					? ` · reviewWith: ${[...rule.reviewWith].sort(compareRoutingText).map(formatInlineCode).join(", ")}`
 					: "";
+			const completionGate = rule.requiredOnCompletion ? " · completionGate" : "";
 			lines.push(
-				`- ${formatInlineCode(ordinal)} · ${formatInlineCode(getRuleId(rule))} · ${escapeMarkdownText(rule.appliesWhen ?? "")}${reviewWith}`,
+				`- ${formatInlineCode(ordinal)} · ${formatInlineCode(getRuleId(rule))} · ${escapeMarkdownText(rule.appliesWhen ?? "")}${completionGate}${reviewWith}`,
 			);
 		}
 

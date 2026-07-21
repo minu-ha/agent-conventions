@@ -16,6 +16,8 @@
 
 `progressiveDisclosure: true`인 skill은 `RULES_INDEX.md`와 `contracts/*.md`를 생성합니다. non-progressive skill은 `SKILL.md`가 안내하는 `AGENTS.md`와 rule 원문을 사용합니다. `convention-audit`는 local 8-rule `AGENTS.md` 전체를 읽고 progressive companion만 index/contract로 라우팅합니다.
 
+progressive rule frontmatter의 `reviewWith`는 조건부 재평가, `requiresSelected`는 source가 final Selected일 때 target도 반드시 Selected인 전이, `requiredOnCompletion: true`는 활성 skill의 완료 gate입니다. compact index에는 `completionGate` marker와 `reviewWith`만 렌더하고, 필수 target 목록은 selected/unknown contract에서만 로드해 초기 token 비용을 제한합니다. Unknown을 먼저 해소하며 N/A contract의 필수 target은 전이하지 않습니다.
+
 `metadata.json.companions`는 progressive companion 관계를 선언합니다. `required`는 owner와 항상 활성화하고 `conditional`은 non-empty `appliesWhen`이 실제 변경 surface와 맞을 때만 활성화합니다. `metadata.json.extends`는 progressive migration 전 non-progressive skill의 recursive companion 호환 계약입니다.
 
 공통 rule은 companion skill이 소유하고 framework/project 전용 규칙은 local overlay에 남깁니다. build 결과를 직접 편집해 overlay를 우회하지 않습니다.
@@ -57,6 +59,34 @@ npm --prefix package run measurement:tokens
 
 `check:generated`는 progressive router/index/contract의 missing·stale·orphan·symlink와 recursive companion closure, non-progressive skill의 unexpected index/contract 부재를 검사합니다. full `AGENTS.md` freshness는 `check:handbooks:all`이 별도로 read-only 검증하며, token 측정은 두 checker를 묶은 `check:measurement-artifacts`를 자동 preflight합니다.
 
+## Behavioral Evidence Workflow
+
+행동 평가는 clean source commit과 digest가 채워진 protocol을 먼저 고정한 뒤 실행합니다. 일반 좌표는 coordinator가 oracle-free request와 전용 payload 경로를 no-overwrite로 만들고, fresh child가 그 payload 하나만 작성한 뒤 merge가 source·request·payload·routing 고정점을 다시 검증합니다. RTE02는 initial payload를 봉인한 다음 같은 사전 바인딩 agent target에 drift를 공개하고, staged finalizer가 두 trace와 composed virtual patch를 검증합니다.
+
+```bash
+npm --prefix package run behavioral:coordinator -- matrix --protocol=<protocol.json>
+npm --prefix package run behavioral:coordinator -- prepare --protocol=<protocol.json> --head=<commit> --run-id=<id> --arm=<arm> --scenario=<id> --trial=<n> --output-dir=<runs-dir>
+npm --prefix package run behavioral:coordinator -- merge --envelope=<dispatch-envelope.json> --payload=<child-payload.json> --output-dir=<runs-dir>
+
+npm --prefix package run behavioral:staging -- prepare-initial --protocol=<protocol.json> --head=<commit> --run-id=<id> --arm=<arm> --trial=<n> --agent-target=/root/behavioral_eval_agent --output-dir=<runs-dir>
+npm --prefix package run behavioral:staging -- seal-initial --envelope=<initial-envelope.json> --payload=<initial-child-payload.json> --agent-target=/root/behavioral_eval_agent --output-dir=<runs-dir>
+npm --prefix package run behavioral:staging -- prepare-followup --initial-envelope=<initial-envelope.json> --initial-seal=<initial-seal.json> --output-dir=<runs-dir>
+npm --prefix package run behavioral:staging -- merge-staged --initial-envelope=<initial-envelope.json> --initial-seal=<initial-seal.json> --followup-envelope=<followup-envelope.json> --initial-payload=<initial-child-payload.json> --drift-payload=<drift-child-payload.json> --agent-target=/root/behavioral_eval_agent --output-dir=<runs-dir>
+npm --prefix package run behavioral:staging -- finalize-staged --initial-envelope=<initial-envelope.json> --initial-seal=<initial-seal.json> --followup-envelope=<followup-envelope.json> --combined-payload=<combined-child-payload.json> --merge-provenance=<staged-merge-provenance.json> --output-dir=<runs-dir>
+```
+
+34개 candidate run이 immutable해진 뒤 semantic audit은 30개 regular merge와 4개 staged finalize를 fresh temp directory에서 재생해 run JSON byte equality를 먼저 확인합니다. 그 다음 committed criteria로 만든 8개 opaque batch를 각각 fresh reviewer에게 보내고, candidate 34/34 PASS·negative control 8/8 탐지·FAIL 0·UNKNOWN 0일 때만 aggregate가 통과합니다.
+
+```bash
+npm --prefix package run behavioral:semantic-audit -- commit-criteria --criteria=<criteria.json> --commitment=<commitment.json> --skill-root=<skill-root> --protocol=<protocol.json>
+npm --prefix package run behavioral:semantic-audit -- matrix --criteria=<criteria.json> --commitment=<commitment.json> --runs-dir=<runs-dir> --skill-root=<skill-root> --protocol=<protocol.json> --output=<matrix.json>
+npm --prefix package run behavioral:semantic-audit -- prepare --matrix=<matrix.json> --batch=<opaque-id> --output-dir=<semantic-dir> --skill-root=<skill-root> --protocol=<protocol.json>
+npm --prefix package run behavioral:semantic-audit -- merge --envelope=<review-envelope.json> --payload=<reviewer-payload.json> --output-dir=<semantic-dir> --skill-root=<skill-root> --protocol=<protocol.json>
+npm --prefix package run behavioral:semantic-audit -- aggregate --matrix=<matrix.json> --results-dir=<semantic-dir> --skill-root=<skill-root> --protocol=<protocol.json> --output=<aggregate.json>
+```
+
+child와 reviewer의 `declaredLoadedFiles`는 선언 telemetry입니다. exact served model build, 실제 reasoning setting, observed file reads, agent token usage, 플랫폼 차원의 fresh/same-agent attestation은 현재 API로 관측할 수 없으므로 결과 보고서에서도 관측 사실처럼 표현하지 않습니다.
+
 ## Buildable Loading Topology
 
 | Skill | Loading | Companion contract |
@@ -71,7 +101,7 @@ npm --prefix package run measurement:tokens
 | `tanstack-route` | non-progressive | extends `typescript` |
 | `typescript` | progressive | none |
 
-Progressive skill은 `SKILL.md` → activated `RULES_INDEX.md` 전체 scan → Selected/Unknown `contracts/*.md` → CRITICAL 또는 근거가 필요한 `rules/*.md` full expansion 순서로 소비합니다. non-progressive structured skill은 각자의 `SKILL.md`가 기존 full-handbook 계약을 결정합니다. legacy single-document `java`는 structured build pipeline에서 의도적으로 제외합니다.
+Progressive skill은 `SKILL.md` → activated `RULES_INDEX.md` 전체 scan과 completion gate → Selected/Unknown `contracts/*.md` → CRITICAL 또는 판정 근거가 필요한 `rules/*.md` full expansion → Unknown 해소 → final Selected의 `requiresSelected` closure 순서로 소비합니다. 새 selection이나 companion이 생기면 고정점까지 반복합니다. non-progressive structured skill은 각자의 `SKILL.md`가 기존 full-handbook 계약을 결정합니다. legacy single-document `java`는 structured build pipeline에서 의도적으로 제외합니다.
 
 progressive owner는 `extends` 대신 `companions`를 사용하고 companion target도 progressive여야 합니다. non-progressive owner의 legacy `extends`와 local `AGENTS.md` 계약은 계속 지원합니다.
 

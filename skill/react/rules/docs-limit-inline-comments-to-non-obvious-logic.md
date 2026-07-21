@@ -3,7 +3,7 @@ title: Limit Inline Comments to Non-obvious Logic
 impact: MEDIUM
 impactDescription: 코드를 해설하기보다 주석을 caveat, 제약, 부수효과 설명에 집중시킴
 appliesWhen: React 함수·handler·JSX 인접 로직 안의 `//` 주석을 추가·수정하거나 자명한 설명과 실제 제약을 구분해 정리한다.
-reviewWith: typescript/docs-keep-inline-comments-for-constraints-and-caveats
+requiresSelected: typescript/docs-keep-inline-comments-for-constraints-and-caveats
 tags: docs, comments, inline
 ---
 

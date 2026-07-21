@@ -90,7 +90,7 @@ Shared UI, widget, route-local 코드는 소유 경계가 분명해야 에이전
 
 **Applies when:** \`index.ts\`·barrel 재노출, \`React.\*\` namespace 타입, type/value 혼합 import 또는 소유 출처를 숨긴 경로를 직접 추가·수정한다. 일반 direct value import는 제외한다.
 
-**Review with:** `typescript/naming-use-direct-imports-and-public-entry-points`
+**Requires selected:** `typescript/naming-use-direct-imports-and-public-entry-points` · N/A 불가
 
 **Impact: HIGH (import 경로를 명시적으로 유지하고 타입 import 스타일 혼용을 막음)**
 
@@ -295,7 +295,7 @@ config.navigation.project_menu_key.dashboard;
 
 **Applies when:** React/TSX 파일 자체·컴포넌트·exported symbol·공용 설정의 이름을 새로 정하거나 바꾸며 casing, ui/wg prefix 또는 config key naming을 판단한다. local query·mutation binding만 바꾸면 제외한다.
 
-**Review with:** `typescript/naming-use-consistent-file-and-symbol-naming`
+**Requires selected:** `typescript/naming-use-consistent-file-and-symbol-naming` · N/A 불가
 
 **Impact: HIGH (에이전트가 파일을 만들거나 옮길 때 소유 경계와 의도를 분명하게 유지함)**
 
@@ -344,7 +344,9 @@ React가 제공하는 handler와 prop 계약은 선언 위치에서 바로 드�
 
 **Applies when:** React 이벤트 핸들러나 prop callback의 선언·시그니처를 추가·변경하며 기존 React alias 또는 callback 계약을 쓸 수 있다.
 
-**Review with:** `typing-reuse-existing-contracts`, `typescript/types-prefer-function-variable-types-over-parameter-annotations`, `typescript/types-reuse-callback-signatures-from-existing-contracts`
+**Requires selected:** `typescript/types-reuse-callback-signatures-from-existing-contracts` · N/A 불가
+
+**Review with:** `typing-reuse-existing-contracts`
 
 **Impact: HIGH (React handler 시그니처와 callback 의도를 선언 위치에서 바로 보이게 함)**
 
@@ -828,9 +830,11 @@ export const updateEntryMediaUploadFileByUid = (params: UpdateEntryMediaUploadFi
 
 ### 4.4 Use Named Handlers Instead of Hiding Logic in JSX
 
-**Applies when:** TSX event prop에 인라인 callback을 추가·수정하고 그 안에 분기, 비동기 호출, 상태 변경 또는 여러 동작이 들어간다.
+**Applies when:** TSX event prop의 인라인 callback에 분기, 비동기 호출, 여러 동작·부수효과 또는 비자명한 state transition을 추가·수정한다. 단순 setter·인자 전달 한 줄 위임은 제외한다.
 
-**Review with:** `events-name-and-curry-handlers`, `events-keep-handler-flow-inline`, `events-run-user-actions-in-handlers-not-effects`, `docs-require-jsdoc-on-key-declarations`
+**Requires selected:** `docs-require-jsdoc-on-key-declarations`, `events-name-and-curry-handlers` · N/A 불가
+
+**Review with:** `events-keep-handler-flow-inline`, `events-run-user-actions-in-handlers-not-effects`
 
 **Impact: HIGH (부수효과, 분기, 비동기 흐름을 일반 코드 흐름에서 읽을 수 있게 함)**
 
@@ -1405,11 +1409,11 @@ export const util = {
 
 ### 5.4 Keep Derived Values Close to Where They Are Used
 
-**Applies when:** response·state·search·props의 오리진을 끊는 alias·flag·표시값을 넓은 screen scope에 추가·이동하거나 \`let\`/\`push\` 기반 조립을 만든다.
+**Applies when:** response·state·search·props의 오리진을 끊는 alias·flag·표시값을 넓은 screen scope에 추가·이동·제거하거나 \`let\`/\`push\` 조립을 바꾼다.
 
 **Impact: HIGH (오리진을 보존하고 route 파일이 alias와 명령형 setup 코드로 채워지는 것을 막음)**
 
-화면 상단에서 오리진을 잃는 별칭 상수, `let` 재할당, 배열 `push` 기반 명령형 조립을 금지합니다. Hook 파라미터, JSX 표시값, effect 내부 계산은 실제 사용하는 좁은 스코프에서 직접 계산합니다. JSX에서만 쓰는 표시값은 특히 화면 상단 `const`로 빼지 말고 원본 체이닝으로 직접 참조합니다.
+화면 상단에서 오리진을 잃는 별칭 상수, `let` 재할당, 배열 `push` 기반 명령형 조립을 추가·유지하지 않고 기존 항목은 제거합니다. Hook 파라미터, JSX 표시값, effect 내부 계산은 실제 사용하는 좁은 스코프에서 직접 계산합니다. JSX 전용 표시값은 화면 상단 `const`로 빼지 말고 원본 체이닝으로 직접 참조합니다.
 
 **Incorrect (화면 상단에서 파생값과 별칭을 누적):**
 
@@ -1661,7 +1665,7 @@ const handleSubmitButtonClick: MouseEventHandler<HTMLButtonElement> = async (_ev
 
 **Applies when:** 이벤트 핸들러를 새로 만들거나 이름, target/event 표현, 추가 인자 전달 방식 또는 최종 React handler 시그니처를 바꾼다.
 
-**Review with:** `typing-function-type-first`
+**Review with:** `typing-function-type-first`, `typescript/naming-use-consistent-file-and-symbol-naming`
 
 **Impact: MEDIUM-HIGH (이벤트 흐름을 검색 가능하게 유지하고 즉흥적인 handler 시그니처를 피함)**
 
@@ -1783,7 +1787,7 @@ return (
 
 **Applies when:** 현재 props·state·search·response에서 계산 가능한 값을 별도 state와 effect로 동기화하거나 그 동기화를 제거한다.
 
-**Review with:** `screen-keep-derived-values-close`
+**Requires selected:** `screen-keep-derived-values-close` · N/A 불가
 
 **Impact: HIGH (avoids redundant state sync and effect-driven drift when values can be computed from current inputs)**
 
@@ -1842,7 +1846,9 @@ const responseUserGetItemSuspense = useUserGetItemSuspense();
 
 **Applies when:** React Query query·mutation hook의 로컬 binding을 추가·이름 변경하거나 역할이 드러나지 않는 별칭이 diff에 보인다.
 
-**Review with:** `state-preserve-origin-chaining`, `docs-require-jsdoc-on-key-declarations`
+**Requires selected:** `typescript/naming-use-consistent-file-and-symbol-naming`, `docs-require-jsdoc-on-key-declarations` · N/A 불가
+
+**Review with:** `state-preserve-origin-chaining`
 
 **Impact: HIGH (생성된 API hook과 로컬 바인딩을 쉽게 훑고 추적할 수 있게 함)**
 
@@ -1896,6 +1902,8 @@ const columns = useMemo(() => buildColumns(response.data.columns), [response.dat
 
 **Applies when:** page·layout·screen 넓은 스코프에서 response·mutation·store를 구조분해하거나 별칭으로 끊고 원본 값 접근을 바꾼다.
 
+**Review with:** `screen-keep-derived-values-close`
+
 **Impact: CRITICAL (파일 전체에서 alias를 따라가지 않아도 값의 출처를 바로 알 수 있게 함)**
 
 페이지, 레이아웃, 화면 스코프에서는 `response...`, `mutation...`, `*Store` 원본을 유지합니다. 넓은 스코프 구조분해와 별칭 상수는 피하고, 정말 필요할 때만 handler나 effect 내부의 좁은 스코프에서 제한적으로 구조분해합니다. `props`를 본문 첫 줄에서 구조분해하는 패턴만 예외로 봅니다.
@@ -1930,7 +1938,9 @@ useEffect(() => {
 
 **Applies when:** 서버 응답의 list·items·meta 등을 렌더에서 가공·반복 소비하거나 React Query \`select\`의 결과 shape를 추가·변경한다.
 
-**Review with:** `state-name-query-and-mutation-bindings-consistently`, `state-preserve-origin-chaining`, `docs-require-jsdoc-on-key-declarations`
+**Requires selected:** `docs-require-jsdoc-on-key-declarations` · N/A 불가
+
+**Review with:** `state-name-query-and-mutation-bindings-consistently`, `state-preserve-origin-chaining`
 
 **Impact: CRITICAL (응답 변환을 fetch 경계 가까이에 두고 렌더 타임의 반복 매핑을 피함)**
 
@@ -2135,7 +2145,9 @@ const filteredRows = useMemo(() => {
 
 **Applies when:** subscription effect가 최신 prop·state callback을 읽도록 ref 동기화 hack, dependency 재설치 또는 \`useEffectEvent\`를 추가·변경한다.
 
-**Review with:** `events-run-user-actions-in-handlers-not-effects`, `docs-require-jsdoc-on-key-declarations`
+**Requires selected:** `docs-require-jsdoc-on-key-declarations` · N/A 불가
+
+**Review with:** `events-run-user-actions-in-handlers-not-effects`
 
 **Impact: MEDIUM-HIGH (keeps effects reactive only to true subscriptions while still reading the latest handler logic)**
 
@@ -2192,7 +2204,7 @@ React 경계 선언에는 companion skill인 `convention-typescript`의 annotati
 
 **Applies when:** compound component의 exported public part·props interface·part 내부 handler를 추가·변경하거나 public part 문서를 수정한다.
 
-**Review with:** `docs-require-jsdoc-on-key-declarations`, `typescript/docs-standardize-annotation-tags-by-declaration-role`
+**Requires selected:** `docs-require-jsdoc-on-key-declarations` · N/A 불가
 
 **Impact: MEDIUM (keeps compound public parts scannable as one named boundary instead of disconnected props and component declarations)**
 
@@ -2288,7 +2300,7 @@ const DialogClose = (props: DialogCloseProps) => {
 
 **Applies when:** React 함수·handler·JSX 인접 로직 안의 \`//\` 주석을 추가·수정하거나 자명한 설명과 실제 제약을 구분해 정리한다.
 
-**Review with:** `typescript/docs-keep-inline-comments-for-constraints-and-caveats`
+**Requires selected:** `typescript/docs-keep-inline-comments-for-constraints-and-caveats` · N/A 불가
 
 **Impact: MEDIUM (코드를 해설하기보다 주석을 caveat, 제약, 부수효과 설명에 집중시킴)**
 
@@ -2319,7 +2331,7 @@ if (mutationFileUpload.isPending) {
 
 **Applies when:** query·mutation, 비자명한 handler/effect, exported helper/custom hook/store, public type/interface 또는 예외 memo 선언을 추가·변경한다.
 
-**Review with:** `typescript/docs-require-header-jsdoc-on-key-declarations`, `typescript/docs-standardize-annotation-tags-by-declaration-role`
+**Requires selected:** `typescript/docs-require-header-jsdoc-on-key-declarations` · N/A 불가
 
 **Impact: MEDIUM-HIGH (중요한 API, handler, effect, 타입 선언을 더 쉽게 리뷰하고 재사용할 수 있게 함)**
 

@@ -317,6 +317,16 @@ export const generateMarkdown = (args: GenerateMarkdownArgs): string => {
 
 				const routingMetadata = [`**Applies when:** ${escapeMarkdownText(rule.appliesWhen)}`];
 
+				if (rule.requiresSelected.length > 0) {
+					routingMetadata.push(
+						`**Requires selected:** ${rule.requiresSelected.map((target) => `\`${escapeMarkdownText(target)}\``).join(", ")} · N/A 불가`,
+					);
+				}
+
+				if (rule.requiredOnCompletion) {
+					routingMetadata.push("**Required on completion:** 활성 skill의 완료 receipt에서 Selected이며 N/A 불가");
+				}
+
 				if (rule.reviewWith.length > 0) {
 					routingMetadata.push(`**Review with:** ${rule.reviewWith.map((target) => `\`${escapeMarkdownText(target)}\``).join(", ")}`);
 				}

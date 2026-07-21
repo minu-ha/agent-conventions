@@ -260,6 +260,14 @@ export interface SkillRule {
 	 */
 	appliesWhen?: string;
 	/**
+	 * @field 이 rule이 Selected이면 함께 Selected여야 하는 local 또는 companion rule stable ID 목록
+	 */
+	requiresSelected: string[];
+	/**
+	 * @field 활성 skill의 완료 receipt에서 항상 선택해야 하는 rule인지 여부
+	 */
+	requiredOnCompletion: boolean;
+	/**
 	 * @field 함께 검토할 local 또는 companion rule stable ID 목록
 	 */
 	reviewWith: string[];

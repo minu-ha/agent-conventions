@@ -8,7 +8,8 @@
 - independent reviewer가 구현자 receipt를 보기 전에 current index 전체를 scan합니다.
 - 양쪽 receipt가 current same-digest의 exact ordinal partition이고 모든 set이 exact match입니다.
 - 각 receipt의 N/A exclusion group이 자체 N/A를 정확히 한 번 덮고 reason evidence가 비어 있지 않습니다.
-- reviewWith closure, selected/unknown contract, `Expanded` full rule과 이유, semantic verdict, reviewer mode, telemetry limitation을 보고합니다.
+- completion gate, conditional `reviewWith`, final Selected의 `requiresSelected` closure, selected/unknown contract, `Expanded`와 이유를 보고합니다.
+- coordinator-bound HEAD/digest/prompt provenance와 delta 없는 연속 두 stable routing pass가 final receipt와 정확히 일치합니다.
 - coverage `FAIL`, semantic `FAIL`, `UNKNOWN`이 모두 0일 때만 완료합니다.
 
 대표 surface activation oracle:
@@ -51,6 +52,9 @@ Pass criteria: receipt exposure timing이 기록되고 all-set exact comparison�
 | blank/generic reason | non-empty scope evidence 부재로 `FAIL` |
 | reviewWith target unclassified | closure `FAIL` |
 | reviewWith target auto-select overreach | applicability/activation 재평가 누락으로 `FAIL` |
+| completionGate target N/A 또는 누락 | 활성 skill 완료 gate 위반으로 `FAIL` |
+| final Selected의 requiresSelected target N/A 또는 누락 | mandatory closure 위반으로 `FAIL` |
+| Unknown→N/A source의 requiresSelected target 강제 선택 | conditional source 해소 순서 위반으로 `FAIL` |
 | evidence-backed valid N/A | 해당 ordinal을 정확히 한 번 제외하고 통과 |
 
 ## Scenario 3. RTE08 missing-action structurally-valid mutation RED
