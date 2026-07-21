@@ -241,6 +241,7 @@ test("coordinator persists a deterministic short dispatch and sealed child reque
 		assert.match(String(payloadContract.routingTrace), /selected:Record<string,string\[\]>/);
 		assert.match(String(payloadContract.routingTrace), /requiresSelectedEvaluated/);
 		assert.match(String(payloadContract.routingTrace), /Selected or Unknown source.*omit N\/A sources/i);
+		assert.match(String(payloadContract.routingTrace), /requiresSelectedAdded.*previous pass.*pass 1.*empty.*independently applicable/i);
 		assert.match(String(payloadContract.routingTrace), /reviewWithReevaluated.*evidence/);
 		assert.match(String(payloadContract.routingTrace), /completionGatesEvaluated/);
 		assert.match(String(payloadContract.receipts), /ordinal:string/);
