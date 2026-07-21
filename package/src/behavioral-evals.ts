@@ -672,7 +672,7 @@ export const createBehavioralChildPayloadContract = (): Record<string, unknown> 
 	semanticVerdicts:
 		"Array<{criterion:string,verdict:'PASS'|'FAIL'|'UNKNOWN',reason:string}>; exact keys only; use [] when no criterion is declared",
 	completion:
-		"{status:'COMPLETE'|'BLOCKED',blocked:boolean,coverageFailCount:non-negative-integer,semanticFailCount:non-negative-integer,unknownCount:non-negative-integer,reason:string}; exact keys only; counts must equal the payload evidence and any fail or Unknown blocks completion",
+		"{status:'COMPLETE'|'BLOCKED',blocked:boolean,coverageFailCount:non-negative-integer,semanticFailCount:non-negative-integer,unknownCount:non-negative-integer,reason:string}; exact keys only; counts must equal the payload evidence; COMPLETE iff all three counts are zero; BLOCKED iff at least one count is non-zero; task infeasibility, missing virtualFiles, or a null virtualPatch is recorded in reason/limitations and is not an additional blocker",
 	limitations: "string[]; use [] when none",
 	response: "non-empty string",
 	virtualPatch:

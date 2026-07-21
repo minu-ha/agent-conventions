@@ -247,6 +247,10 @@ test("coordinator persists a deterministic short dispatch and sealed child reque
 		assert.match(String(payloadContract.routingTrace), /completionGatesEvaluated/);
 		assert.match(String(payloadContract.receipts), /ordinal:string/);
 		assert.match(String(payloadContract.semanticVerdicts), /criterion:string,verdict:'PASS'\|'FAIL'\|'UNKNOWN',reason:string/);
+		assert.match(
+			String(payloadContract.completion),
+			/COMPLETE iff all three counts are zero.*BLOCKED iff at least one count is non-zero.*missing virtualFiles.*not an additional blocker/i,
+		);
 		assert.match(String(payloadContract.limitations), /string\[\]/);
 		assert.match(String(payloadContract.response), /non-empty string/);
 		const routingValidation = JSON.stringify(payloadContract.routingValidation);
