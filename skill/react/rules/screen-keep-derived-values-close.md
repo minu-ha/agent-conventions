@@ -2,6 +2,7 @@
 title: Keep Derived Values Close to Where They Are Used
 impact: HIGH
 impactDescription: 오리진을 보존하고 route 파일이 alias와 명령형 setup 코드로 채워지는 것을 막음
+appliesWhen: response·state·search·props의 오리진을 끊는 alias·flag·표시값을 넓은 screen scope에 추가·이동하거나 `let`/`push` 기반 조립을 만든다.
 tags: screen, derived-values, origin
 ---
 

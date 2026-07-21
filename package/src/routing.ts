@@ -75,7 +75,7 @@ const getRoutingRulesForSection = (section: SkillSection, rules: SkillRule[]): S
 /**
  * @helper local rule 수 기준 compact index UTF-8 byte 상한 계산
  */
-export const getRulesIndexByteBudget = (ruleCount: number): number => 2_000 + ruleCount * 400;
+export const getRulesIndexByteBudget = (ruleCount: number): number => 2_000 + ruleCount * 400 + 150 * Math.max(0, ruleCount - 22);
 
 /**
  * @helper section을 선언 순서와 stable tie-breaker로 정렬

@@ -2,6 +2,8 @@
 title: Use Consistent File and Symbol Naming
 impact: HIGH
 impactDescription: 에이전트가 파일을 만들거나 옮길 때 소유 경계와 의도를 분명하게 유지함
+appliesWhen: React/TSX 파일·컴포넌트·exported symbol·공용 설정의 이름을 새로 정하거나 바꾸며 casing, ui/wg prefix 또는 config key naming 판단이 필요하다.
+reviewWith: typescript/naming-use-consistent-file-and-symbol-naming
 tags: ownership, naming, files
 ---
 

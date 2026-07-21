@@ -259,11 +259,18 @@ test("build script regenerates AGENTS.md for the react skill", async () => {
 	const agentsSource = await readFile(reactAgentsPath, "utf8");
 	assert.match(agentsSource, /^# React 컨벤션$/m);
 	assert.match(agentsSource, /^## 목차$/m);
-	assert.match(agentsSource, /^## 함께 로드할 Companion Skill$/m);
-	assert.match(agentsSource, /`convention-typescript`/);
-	assert.match(agentsSource, /metadata\.json\.extends/);
-	assert.match(agentsSource, /\.\.\/typescript\/AGENTS\.md/);
-	assert.doesNotMatch(agentsSource, /\.\.\/typescript\/(?:SKILL|RULES_INDEX)\.md/);
+	assert.match(agentsSource, /^## Companion Skill 활성화$/m);
+	assert.match(agentsSource, /metadata\.json\.companions/);
+	assert.doesNotMatch(agentsSource, /metadata\.json\.extends/);
+	assert.match(
+		agentsSource,
+		/^- `convention-typescript`[^\n]*mode: `required`[^\n]*\.\.\/typescript\/SKILL\.md[^\n]*\.\.\/typescript\/RULES_INDEX\.md[^\n]*$/m,
+	);
+	assert.match(
+		agentsSource,
+		/^- `convention-css`[^\n]*mode: `conditional`[^\n]*appliesWhen: class contract, stylesheet 또는 styling surface를 변경한다\.[^\n]*\.\.\/css\/SKILL\.md[^\n]*\.\.\/css\/RULES_INDEX\.md[^\n]*$/m,
+	);
+	assert.doesNotMatch(agentsSource, /\.\.\/(?:typescript|css)\/AGENTS\.md/);
 	assert.match(agentsSource, /^## 1\. Ownership and Boundaries$/m);
 	assert.doesNotMatch(agentsSource, /^## 1\. TypeScript Convention Base - Naming and Module Boundaries$/m);
 	assert.doesNotMatch(agentsSource, /TypeScript Convention Base - Naming and Module Boundaries/);

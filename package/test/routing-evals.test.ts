@@ -65,6 +65,54 @@ const cssRuleUniverse = [
 ] as const;
 
 /**
+ * @summary generated React index의 canonical codepoint rule universe
+ */
+const reactRuleUniverse = [
+	"ownership-avoid-barrel-and-react-namespace-imports",
+	"ownership-prefer-plain-ts-for-local-react-helpers",
+	"ownership-layer-component-boundaries",
+	"ownership-place-route-local-files-by-scope",
+	"ownership-shared-config-entry-points",
+	"ownership-use-consistent-file-and-symbol-naming",
+	"typing-function-type-first",
+	"typing-reuse-existing-contracts",
+	"strategy-avoid-boolean-prop-proliferation",
+	"strategy-choose-single-composition-compound-and-variants",
+	"strategy-prefer-children-over-render-props",
+	"composition-destructure-props-inside",
+	"composition-do-not-define-components-inside-components",
+	"composition-prefer-arrow-functions-and-object-params",
+	"composition-named-handlers-over-inline",
+	"composition-use-activity-for-render-branches",
+	"composition-use-ref-prop-instead-of-forwardref-in-react-19",
+	"screen-avoid-premature-abstraction",
+	"screen-extract-local-section-components-for-runtime-boundaries",
+	"screen-extract-utilities-selectively",
+	"screen-keep-derived-values-close",
+	"screen-keep-route-flow-visible",
+	"screen-move-pure-support-code-out-of-entry-files",
+	"events-keep-handler-flow-inline",
+	"events-name-and-curry-handlers",
+	"events-run-user-actions-in-handlers-not-effects",
+	"state-avoid-fallback-defaults-and-loading-flags",
+	"state-calculate-derived-values-during-render",
+	"state-choose-state-tools-by-source-of-truth",
+	"state-name-query-and-mutation-bindings-consistently",
+	"state-compiler-first-memoization",
+	"state-preserve-origin-chaining",
+	"state-shape-query-data-with-select",
+	"state-store-derived-authority",
+	"state-use-functional-setstate-updates",
+	"state-use-lazy-state-initializers-for-expensive-defaults",
+	"state-use-starttransition-for-non-urgent-updates",
+	"state-use-usedeferredvalue-for-heavy-derived-renders",
+	"state-use-effectevent-for-non-reactive-effect-callbacks",
+	"docs-document-compound-parts-with-part-and-description",
+	"docs-limit-inline-comments-to-non-obvious-logic",
+	"docs-require-jsdoc-on-key-declarations",
+] as const;
+
+/**
  * @summary Appendix A의 TypeScript rule별 exact routing metadata oracle
  */
 const typescriptRuleRouting = {
@@ -266,6 +314,227 @@ const cssRuleRouting = {
 } as const;
 
 /**
+ * @summary Appendix B의 React rule별 exact routing metadata oracle
+ */
+const reactRuleRouting = {
+	"composition-destructure-props-inside": {
+		appliesWhen: "함수 컴포넌트의 props 시그니처나 본문 구조분해 방식을 추가·변경한다.",
+		reviewWith: [],
+	},
+	"composition-do-not-define-components-inside-components": {
+		appliesWhen: "컴포넌트 본문 안에 JSX를 반환하는 로컬 함수·컴포넌트를 추가·이동하거나 재렌더 시 remount·focus reset 징후를 다룬다.",
+		reviewWith: [],
+	},
+	"composition-named-handlers-over-inline": {
+		appliesWhen: "TSX event prop에 인라인 callback을 추가·수정하고 그 안에 분기, 비동기 호출, 상태 변경 또는 여러 동작이 들어간다.",
+		reviewWith: [
+			"events-name-and-curry-handlers",
+			"events-keep-handler-flow-inline",
+			"events-run-user-actions-in-handlers-not-effects",
+			"docs-require-jsdoc-on-key-declarations",
+		],
+	},
+	"composition-prefer-arrow-functions-and-object-params": {
+		appliesWhen: "React 인접 코드에 function 선언이 생기거나 함수가 3개 이상 매개변수 또는 함께 이동하는 같은 계열 값을 받는다.",
+		reviewWith: ["typescript/functions-use-named-object-params-for-complex-signatures"],
+	},
+	"composition-use-activity-for-render-branches": {
+		appliesWhen: "이미 마운트된 subtree의 표시 상태를 보존하려고 조건부 렌더링과 Activity 또는 동등한 visibility primitive 사이를 바꾼다.",
+		reviewWith: [],
+	},
+	"composition-use-ref-prop-instead-of-forwardref-in-react-19": {
+		appliesWhen: "React 19 컴포넌트에 focus·scroll·measure용 ref 공개 API를 추가·변경하거나 새 `forwardRef` wrapper를 도입한다.",
+		reviewWith: [],
+	},
+	"docs-document-compound-parts-with-part-and-description": {
+		appliesWhen:
+			"compound component의 exported public part·props interface·part 내부 handler를 추가·변경하거나 public part 문서를 수정한다.",
+		reviewWith: ["docs-require-jsdoc-on-key-declarations", "typescript/docs-standardize-annotation-tags-by-declaration-role"],
+	},
+	"docs-limit-inline-comments-to-non-obvious-logic": {
+		appliesWhen: "React 함수·handler·JSX 인접 로직 안의 `//` 주석을 추가·수정하거나 자명한 설명과 실제 제약을 구분해 정리한다.",
+		reviewWith: ["typescript/docs-keep-inline-comments-for-constraints-and-caveats"],
+	},
+	"docs-require-jsdoc-on-key-declarations": {
+		appliesWhen:
+			"query·mutation, 비자명한 handler/effect, exported helper/custom hook/store, public type/interface 또는 예외 memo 선언을 추가·변경한다.",
+		reviewWith: [
+			"typescript/docs-require-header-jsdoc-on-key-declarations",
+			"typescript/docs-standardize-annotation-tags-by-declaration-role",
+		],
+	},
+	"events-keep-handler-flow-inline": {
+		appliesWhen: "화면 전용 named handler의 분기·mutation·navigation·후처리를 여러 helper나 hook으로 나누거나 다시 합친다.",
+		reviewWith: ["screen-extract-utilities-selectively"],
+	},
+	"events-name-and-curry-handlers": {
+		appliesWhen: "이벤트 핸들러를 새로 만들거나 이름, target/event 표현, 추가 인자 전달 방식 또는 최종 React handler 시그니처를 바꾼다.",
+		reviewWith: ["typing-function-type-first"],
+	},
+	"events-run-user-actions-in-handlers-not-effects": {
+		appliesWhen: "제출·저장·삭제·닫기 같은 one-shot 사용자 액션을 handler와 state+effect 사이에서 이동하거나 실행 흐름을 바꾼다.",
+		reviewWith: [],
+	},
+	"ownership-avoid-barrel-and-react-namespace-imports": {
+		appliesWhen:
+			"`index.ts`·barrel 재노출을 추가·수정하거나 `React.*` namespace 타입, type/value 혼합 import 또는 소유 출처가 숨은 import 경로가 diff에 보인다.",
+		reviewWith: ["typescript/naming-use-direct-imports-and-public-entry-points"],
+	},
+	"ownership-layer-component-boundaries": {
+		appliesWhen: "컴포넌트를 ui·widget·route-local 중 어느 소유 레이어에 둘지 결정하거나 레이어 사이에서 이동·공용화한다.",
+		reviewWith: ["ownership-place-route-local-files-by-scope", "css/naming-separate-local-and-route-style-scopes"],
+	},
+	"ownership-place-route-local-files-by-scope": {
+		appliesWhen: "route 전용 컴포넌트·스타일·순수 로직을 새로 만들거나 `-local`과 route sibling `.ts` 사이에서 위치를 바꾼다.",
+		reviewWith: ["css/naming-separate-local-and-route-style-scopes", "css/organization-keep-style-files-owned-by-one-component-or-route"],
+	},
+	"ownership-prefer-plain-ts-for-local-react-helpers": {
+		appliesWhen: "화면 전용 계산·정규화·payload 조립을 custom hook 또는 별도 support module로 추출·이동하려 한다.",
+		reviewWith: [
+			"screen-extract-utilities-selectively",
+			"screen-move-pure-support-code-out-of-entry-files",
+			"typescript/functions-extract-helpers-only-when-the-boundary-is-real",
+		],
+	},
+	"ownership-shared-config-entry-points": {
+		appliesWhen: "둘 이상의 화면이 쓰는 상수·설정·순수 함수를 추가·이동하거나 leaf 파일에 중복 선언된 공용 값을 정리한다.",
+		reviewWith: ["typescript/naming-centralize-shared-config-namespaces", "typescript/naming-preserve-config-origin-with-chained-access"],
+	},
+	"ownership-use-consistent-file-and-symbol-naming": {
+		appliesWhen:
+			"React/TSX 파일·컴포넌트·exported symbol·공용 설정의 이름을 새로 정하거나 바꾸며 casing, ui/wg prefix 또는 config key naming 판단이 필요하다.",
+		reviewWith: ["typescript/naming-use-consistent-file-and-symbol-naming"],
+	},
+	"screen-avoid-premature-abstraction": {
+		appliesWhen: "screen 코드를 helper·hook·component·module로 추출하거나 한 곳에서만 쓰는 기존 추상화를 접어 넣는다.",
+		reviewWith: [
+			"screen-extract-local-section-components-for-runtime-boundaries",
+			"screen-extract-utilities-selectively",
+			"typescript/functions-extract-helpers-only-when-the-boundary-is-real",
+		],
+	},
+	"screen-extract-local-section-components-for-runtime-boundaries": {
+		appliesWhen:
+			"route-local section component를 새로 추출하거나 기존 section이 async·state·provider·interaction·library·performance 경계를 소유하는지 바꾼다.",
+		reviewWith: [],
+	},
+	"screen-extract-utilities-selectively": {
+		appliesWhen: "화면 전용 계산·변환·preset·option·column meta를 함수나 support module로 추출·통합·재배치한다.",
+		reviewWith: ["screen-move-pure-support-code-out-of-entry-files", "typescript/functions-extract-helpers-only-when-the-boundary-is-real"],
+	},
+	"screen-keep-derived-values-close": {
+		appliesWhen:
+			"response·state·search·props의 오리진을 끊는 alias·flag·표시값을 넓은 screen scope에 추가·이동하거나 `let`/`push` 기반 조립을 만든다.",
+		reviewWith: [],
+	},
+	"screen-keep-route-flow-visible": {
+		appliesWhen: "route entry의 search·navigate·query·mutation·effect·section 조립을 이동·분리하거나 화면 흐름을 재구성한다.",
+		reviewWith: ["screen-extract-local-section-components-for-runtime-boundaries", "screen-move-pure-support-code-out-of-entry-files"],
+	},
+	"screen-move-pure-support-code-out-of-entry-files": {
+		appliesWhen: "route entry에 여러 줄 pure helper·preset·option·화면 전용 type이 쌓이거나 추출한 support code의 목적지 파일을 정한다.",
+		reviewWith: ["docs-require-jsdoc-on-key-declarations"],
+	},
+	"state-avoid-fallback-defaults-and-loading-flags": {
+		appliesWhen:
+			"optional 응답에 `??`·`||` 기본값을 넣거나 Suspense 화면 본문에 초기 loading return을 추가·변경하고 결측·로딩 UX를 다룬다.",
+		reviewWith: [
+			"state-preserve-origin-chaining",
+			"screen-keep-derived-values-close",
+			"typescript/absence-expose-optional-values-instead-of-silent-fallbacks",
+		],
+	},
+	"state-calculate-derived-values-during-render": {
+		appliesWhen: "현재 props·state·search·response에서 계산 가능한 값을 별도 state와 effect로 동기화하거나 그 동기화를 제거한다.",
+		reviewWith: ["screen-keep-derived-values-close"],
+	},
+	"state-choose-state-tools-by-source-of-truth": {
+		appliesWhen: "로컬 UI·전역 client·server 데이터를 새 state 도구로 옮기거나 서로 다른 source of truth 사이에 복제·동기화한다.",
+		reviewWith: ["state-store-derived-authority"],
+	},
+	"state-compiler-first-memoization": {
+		appliesWhen:
+			"`useMemo`·`useCallback`을 추가·제거하거나 참조 동일성·실측 병목·무거운 deferred 계산을 이유로 수동 memoization을 검토한다.",
+		reviewWith: [],
+	},
+	"state-name-query-and-mutation-bindings-consistently": {
+		appliesWhen: "React Query query·mutation hook의 로컬 binding을 추가·이름 변경하거나 역할이 드러나지 않는 별칭이 diff에 보인다.",
+		reviewWith: ["state-preserve-origin-chaining", "docs-require-jsdoc-on-key-declarations"],
+	},
+	"state-preserve-origin-chaining": {
+		appliesWhen: "page·layout·screen 넓은 스코프에서 response·mutation·store를 구조분해하거나 별칭으로 끊고 원본 값 접근을 바꾼다.",
+		reviewWith: [],
+	},
+	"state-shape-query-data-with-select": {
+		appliesWhen: "서버 응답의 list·items·meta 등을 렌더에서 가공·반복 소비하거나 React Query `select`의 결과 shape를 추가·변경한다.",
+		reviewWith: [
+			"state-name-query-and-mutation-bindings-consistently",
+			"state-preserve-origin-chaining",
+			"docs-require-jsdoc-on-key-declarations",
+		],
+	},
+	"state-store-derived-authority": {
+		appliesWhen:
+			"여러 화면·메뉴·route guard가 쓰는 권한·capability 같은 derived decision을 store에 저장·동기화하거나 단일 화면 값까지 store로 올린다.",
+		reviewWith: ["docs-require-jsdoc-on-key-declarations"],
+	},
+	"state-use-effectevent-for-non-reactive-effect-callbacks": {
+		appliesWhen:
+			"subscription effect가 최신 prop·state callback을 읽도록 ref 동기화 hack, dependency 재설치 또는 `useEffectEvent`를 추가·변경한다.",
+		reviewWith: ["events-run-user-actions-in-handlers-not-effects", "docs-require-jsdoc-on-key-declarations"],
+	},
+	"state-use-functional-setstate-updates": {
+		appliesWhen: "다음 state가 현재 state에 의존하는 handler·async callback·반복 갱신에서 `setState` 호출 방식을 추가·변경한다.",
+		reviewWith: [],
+	},
+	"state-use-lazy-state-initializers-for-expensive-defaults": {
+		appliesWhen: "`useState` 초기값에 localStorage 파싱, 인덱스 생성, 큰 배열 정규화 같은 비용 있는 계산을 추가·변경한다.",
+		reviewWith: [],
+	},
+	"state-use-starttransition-for-non-urgent-updates": {
+		appliesWhen: "클릭·선택·필터 변경 뒤 큰 list·table·tree를 다시 그리는 state update의 우선순위나 transition 처리를 바꾼다.",
+		reviewWith: [],
+	},
+	"state-use-usedeferredvalue-for-heavy-derived-renders": {
+		appliesWhen: "검색어·필터·정렬 입력이 무거운 파생 view를 갱신해 typing 지연이 생기거나 `useDeferredValue` 기반 계산을 추가·변경한다.",
+		reviewWith: ["state-compiler-first-memoization", "state-use-starttransition-for-non-urgent-updates"],
+	},
+	"strategy-avoid-boolean-prop-proliferation": {
+		appliesWhen: "여러 곳에서 쓰는 shared component에 boolean mode·visibility prop을 추가하거나 기존 boolean 조합과 JSX 분기가 늘어난다.",
+		reviewWith: [],
+	},
+	"strategy-choose-single-composition-compound-and-variants": {
+		appliesWhen:
+			"exported shared component에 slot·public part·shared context/action·반복 preset·mode API를 추가하거나 조립 구조를 재설계한다.",
+		reviewWith: [
+			"strategy-avoid-boolean-prop-proliferation",
+			"strategy-prefer-children-over-render-props",
+			"screen-avoid-premature-abstraction",
+		],
+	},
+	"strategy-prefer-children-over-render-props": {
+		appliesWhen:
+			"shared component에 header·footer·action 같은 정적 slot 또는 render prop을 추가·변경하며 runtime data 주입 필요가 불분명하다.",
+		reviewWith: [],
+	},
+	"typing-function-type-first": {
+		appliesWhen: "React 이벤트 핸들러나 prop callback의 선언·시그니처를 추가·변경하며 기존 React alias 또는 callback 계약을 쓸 수 있다.",
+		reviewWith: [
+			"typing-reuse-existing-contracts",
+			"typescript/types-prefer-function-variable-types-over-parameter-annotations",
+			"typescript/types-reuse-callback-signatures-from-existing-contracts",
+		],
+	},
+	"typing-reuse-existing-contracts": {
+		appliesWhen: "Props callback 구현이나 API 응답 기반 view type을 추가·변경하며 기존 prop·API 계약과 같은 shape가 보인다.",
+		reviewWith: [
+			"typescript/types-reuse-callback-signatures-from-existing-contracts",
+			"typescript/types-reuse-existing-contracts-before-new-types",
+		],
+	},
+} as const;
+
+/**
  * @summary Appendix A scenario별 initial exact selected rule oracle
  */
 const typescriptSelections = {
@@ -373,6 +642,415 @@ const typescriptScenarioEvidence = {
 } as const;
 
 /**
+ * @summary Appendix B와 D의 React scenario별 exact stage oracle
+ */
+const reactScenarioStages = {
+	"RTE01-import-contract-cleanup": {
+		initial: {
+			prompt:
+				"rename UserCard.tsx to user-card.tsx, remove index.ts barrel, replace React.MouseEvent and a duplicate API view type with existing contracts in src/components/ui/user-card.tsx and src/components/ui/index.ts.",
+			files: ["src/components/ui/user-card.tsx", "src/components/ui/index.ts"],
+			expectedSkills: ["react", "typescript"],
+			expectedSelected: {
+				react: [
+					"ownership-avoid-barrel-and-react-namespace-imports",
+					"ownership-use-consistent-file-and-symbol-naming",
+					"typing-function-type-first",
+					"typing-reuse-existing-contracts",
+					"events-name-and-curry-handlers",
+				],
+				typescript: [
+					"naming-use-consistent-file-and-symbol-naming",
+					"naming-use-direct-imports-and-public-entry-points",
+					"types-document-custom-types-and-shapes",
+					"types-prefer-function-variable-types-over-parameter-annotations",
+					"types-reuse-callback-signatures-from-existing-contracts",
+					"types-reuse-existing-contracts-before-new-types",
+					"docs-require-header-jsdoc-on-key-declarations",
+					"docs-standardize-annotation-tags-by-declaration-role",
+					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"guardrails-review-banned-typescript-shortcuts-before-finishing",
+				],
+			},
+		},
+	},
+	"RTE02-owner-placement-css-drift": {
+		initial: {
+			prompt:
+				"move a route-only tree renderer from shared UI to src/routes/entries/-local/entry-tree.tsx and rename it as route-local; keep styling unchanged.",
+			files: ["src/components/ui/entry-tree.tsx", "src/routes/entries/-local/entry-tree.tsx"],
+			expectedSkills: ["react", "typescript"],
+			expectedSelected: {
+				react: [
+					"ownership-layer-component-boundaries",
+					"ownership-place-route-local-files-by-scope",
+					"ownership-use-consistent-file-and-symbol-naming",
+				],
+				typescript: [
+					"naming-use-consistent-file-and-symbol-naming",
+					"naming-use-direct-imports-and-public-entry-points",
+					"guardrails-review-banned-typescript-shortcuts-before-finishing",
+				],
+			},
+		},
+		scopeDrift: {
+			evidence:
+				"in a project without a CSS Modules standard, add directly imported src/routes/entries/-local/entry-tree.css, create owner-unique role-named classes, and compose the changed className contract with the existing direct clsx import; final skills add CSS with no additional React rule.",
+			files: ["src/components/ui/entry-tree.tsx", "src/routes/entries/-local/entry-tree.tsx", "src/routes/entries/-local/entry-tree.css"],
+			expectedSkills: ["react", "typescript", "css"],
+			expectedSelected: {
+				react: [
+					"ownership-layer-component-boundaries",
+					"ownership-place-route-local-files-by-scope",
+					"ownership-use-consistent-file-and-symbol-naming",
+				],
+				typescript: [
+					"naming-use-consistent-file-and-symbol-naming",
+					"naming-use-direct-imports-and-public-entry-points",
+					"guardrails-review-banned-typescript-shortcuts-before-finishing",
+				],
+				css: [
+					"naming-default-to-plain-css-when-no-module-convention",
+					"naming-keep-scope-slug-unique-per-owner",
+					"naming-name-elements-and-modifiers-by-role",
+					"naming-separate-local-and-route-style-scopes",
+					"naming-use-scope-slug-element-modifier-syntax",
+					"composition-compose-classes-with-clsx",
+					"organization-keep-style-files-owned-by-one-component-or-route",
+					"organization-review-banned-css-patterns-before-finishing",
+				],
+			},
+		},
+	},
+	"RTE03-route-support-extraction": {
+		initial: {
+			prompt:
+				"move one real four-argument multi-line payload boundary from src/routes/entries/page.tsx to sibling page.ts; do not create a hook, generic utils file, or helper soup.",
+			files: ["src/routes/entries/page.tsx", "src/routes/entries/page.ts"],
+			expectedSkills: ["react", "typescript"],
+			expectedSelected: {
+				react: [
+					"ownership-prefer-plain-ts-for-local-react-helpers",
+					"ownership-place-route-local-files-by-scope",
+					"ownership-use-consistent-file-and-symbol-naming",
+					"composition-prefer-arrow-functions-and-object-params",
+					"screen-avoid-premature-abstraction",
+					"screen-extract-utilities-selectively",
+					"screen-move-pure-support-code-out-of-entry-files",
+					"docs-require-jsdoc-on-key-declarations",
+				],
+				typescript: [
+					"naming-use-consistent-file-and-symbol-naming",
+					"naming-use-direct-imports-and-public-entry-points",
+					"types-document-custom-types-and-shapes",
+					"functions-extract-helpers-only-when-the-boundary-is-real",
+					"functions-use-named-object-params-for-complex-signatures",
+					"docs-require-header-jsdoc-on-key-declarations",
+					"docs-standardize-annotation-tags-by-declaration-role",
+					"docs-use-helper-for-reusable-pure-helper-functions",
+					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"guardrails-review-banned-typescript-shortcuts-before-finishing",
+				],
+			},
+		},
+	},
+	"RTE04-shared-config": {
+		initial: {
+			prompt:
+				"move a duplicated menu key and default page size from two screens into a documented snake_case as const config object in src/shared/config.ts and directly import and use config.* from both route pages.",
+			files: ["src/routes/entries/page.tsx", "src/routes/reports/page.tsx", "src/shared/config.ts"],
+			expectedSkills: ["react", "typescript"],
+			expectedSelected: {
+				react: ["ownership-shared-config-entry-points", "ownership-use-consistent-file-and-symbol-naming"],
+				typescript: [
+					"naming-centralize-shared-config-namespaces",
+					"naming-preserve-config-origin-with-chained-access",
+					"naming-use-consistent-file-and-symbol-naming",
+					"naming-use-direct-imports-and-public-entry-points",
+					"types-document-custom-types-and-shapes",
+					"functions-replace-enum-with-as-const-objects",
+					"docs-standardize-annotation-tags-by-declaration-role",
+					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"guardrails-review-banned-typescript-shortcuts-before-finishing",
+				],
+			},
+		},
+	},
+	"RTE05-toolbar-composition": {
+		initial: {
+			prompt:
+				"replace compact/edit/search/focus booleans and static render props on wg-entry-toolbar.tsx with stateless compound parts plus repeated explicit variants, and document public parts.",
+			files: ["src/components/widgets/entry-toolbar/wg-entry-toolbar.tsx"],
+			expectedSkills: ["react", "typescript"],
+			expectedSelected: {
+				react: [
+					"ownership-use-consistent-file-and-symbol-naming",
+					"strategy-avoid-boolean-prop-proliferation",
+					"strategy-choose-single-composition-compound-and-variants",
+					"strategy-prefer-children-over-render-props",
+					"composition-destructure-props-inside",
+					"docs-document-compound-parts-with-part-and-description",
+					"docs-require-jsdoc-on-key-declarations",
+				],
+				typescript: [
+					"naming-use-consistent-file-and-symbol-naming",
+					"naming-use-direct-imports-and-public-entry-points",
+					"types-document-custom-types-and-shapes",
+					"docs-require-header-jsdoc-on-key-declarations",
+					"docs-standardize-annotation-tags-by-declaration-role",
+					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"guardrails-review-banned-typescript-shortcuts-before-finishing",
+				],
+			},
+		},
+	},
+	"RTE06-nested-forwardref": {
+		initial: {
+			prompt:
+				"hoist an existing nested forwardRef search input that resets focus to module scope and convert it to a React 19 ref prop in ui-search-card.tsx.",
+			files: ["src/components/ui/search-card/ui-search-card.tsx"],
+			expectedSkills: ["react", "typescript"],
+			expectedSelected: {
+				react: [
+					"composition-destructure-props-inside",
+					"composition-do-not-define-components-inside-components",
+					"composition-use-ref-prop-instead-of-forwardref-in-react-19",
+					"docs-require-jsdoc-on-key-declarations",
+				],
+				typescript: [
+					"naming-use-consistent-file-and-symbol-naming",
+					"naming-use-direct-imports-and-public-entry-points",
+					"types-document-custom-types-and-shapes",
+					"docs-require-header-jsdoc-on-key-declarations",
+					"docs-standardize-annotation-tags-by-declaration-role",
+					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"guardrails-review-banned-typescript-shortcuts-before-finishing",
+				],
+			},
+		},
+	},
+	"RTE07-visibility-lifecycle": {
+		initial: {
+			prompt:
+				"change only the show/hide branch for an already-mounted sidebar to the already-imported project Activity primitive to preserve expanded state; keep empty-state unmount behavior.",
+			files: ["src/routes/entries/-local/entry-sidebar.tsx"],
+			expectedSkills: ["react", "typescript"],
+			expectedSelected: {
+				react: ["composition-use-activity-for-render-branches"],
+				typescript: ["guardrails-review-banned-typescript-shortcuts-before-finishing"],
+			},
+		},
+	},
+	"RTE08-delete-handler-flow": {
+		initial: {
+			prompt:
+				"move a row delete inline async branch, mutation, navigation, and state+effect replay into one curried named handler, keep an unused React event as _event, directly import its reused callback type, and keep screen-only flow inside page.tsx.",
+			files: ["src/routes/entries/page.tsx"],
+			expectedSkills: ["react", "typescript", "tanstack-route"],
+			expectedSelected: {
+				react: [
+					"typing-function-type-first",
+					"composition-named-handlers-over-inline",
+					"events-keep-handler-flow-inline",
+					"events-name-and-curry-handlers",
+					"events-run-user-actions-in-handlers-not-effects",
+					"docs-require-jsdoc-on-key-declarations",
+				],
+				typescript: [
+					"naming-use-consistent-file-and-symbol-naming",
+					"naming-use-direct-imports-and-public-entry-points",
+					"types-mark-unused-parameters-with-underscore",
+					"types-prefer-function-variable-types-over-parameter-annotations",
+					"types-reuse-callback-signatures-from-existing-contracts",
+					"functions-extract-helpers-only-when-the-boundary-is-real",
+					"docs-require-header-jsdoc-on-key-declarations",
+					"docs-standardize-annotation-tags-by-declaration-role",
+					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"guardrails-review-banned-typescript-shortcuts-before-finishing",
+				],
+			},
+		},
+	},
+	"RTE09-route-runtime-section": {
+		initial: {
+			prompt:
+				'extract only the tree section that owns local search and expanded state plus a tree adapter into -local, implement a named selection handler from EntryTreeSectionProps["onCategorySelect"], and keep search params, navigation, page query, and mutation in the route entry.',
+			files: ["src/routes/entries/page.tsx", "src/routes/entries/-local/entry-tree-section.tsx"],
+			expectedSkills: ["react", "typescript", "tanstack-route"],
+			expectedSelected: {
+				react: [
+					"ownership-layer-component-boundaries",
+					"ownership-place-route-local-files-by-scope",
+					"ownership-use-consistent-file-and-symbol-naming",
+					"typing-function-type-first",
+					"typing-reuse-existing-contracts",
+					"composition-destructure-props-inside",
+					"screen-avoid-premature-abstraction",
+					"screen-extract-local-section-components-for-runtime-boundaries",
+					"screen-keep-route-flow-visible",
+					"events-name-and-curry-handlers",
+					"docs-require-jsdoc-on-key-declarations",
+				],
+				typescript: [
+					"naming-use-consistent-file-and-symbol-naming",
+					"naming-use-direct-imports-and-public-entry-points",
+					"types-document-custom-types-and-shapes",
+					"types-prefer-function-variable-types-over-parameter-annotations",
+					"types-reuse-callback-signatures-from-existing-contracts",
+					"docs-require-header-jsdoc-on-key-declarations",
+					"docs-standardize-annotation-tags-by-declaration-role",
+					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"guardrails-review-banned-typescript-shortcuts-before-finishing",
+				],
+			},
+		},
+	},
+	"RTE10-derived-selection-state": {
+		initial: {
+			prompt:
+				"replace selectedIds-derived count and flag effect+state synchronization with render calculation near use and change toggle to a functional updater.",
+			files: ["src/routes/entries/page.tsx"],
+			expectedSkills: ["react", "typescript"],
+			expectedSelected: {
+				react: [
+					"screen-keep-derived-values-close",
+					"state-calculate-derived-values-during-render",
+					"state-use-functional-setstate-updates",
+					"docs-require-jsdoc-on-key-declarations",
+				],
+				typescript: [
+					"docs-require-header-jsdoc-on-key-declarations",
+					"docs-standardize-annotation-tags-by-declaration-role",
+					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"guardrails-review-banned-typescript-shortcuts-before-finishing",
+				],
+			},
+		},
+	},
+	"RTE11-shared-authority": {
+		initial: {
+			prompt:
+				"synchronize shared capability once at the owning layout and store for multiple screens, menu, and guards; do not copy single-screen server fields into the store.",
+			files: ["src/routes/_authenticated/layout.tsx", "src/stores/capability-store.ts"],
+			expectedSkills: ["react", "typescript"],
+			expectedSelected: {
+				react: [
+					"state-choose-state-tools-by-source-of-truth",
+					"state-preserve-origin-chaining",
+					"state-store-derived-authority",
+					"docs-require-jsdoc-on-key-declarations",
+				],
+				typescript: [
+					"naming-use-consistent-file-and-symbol-naming",
+					"naming-use-direct-imports-and-public-entry-points",
+					"types-document-custom-types-and-shapes",
+					"docs-require-header-jsdoc-on-key-declarations",
+					"docs-standardize-annotation-tags-by-declaration-role",
+					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"guardrails-review-banned-typescript-shortcuts-before-finishing",
+				],
+			},
+		},
+	},
+	"RTE12-query-shaping": {
+		initial: {
+			prompt:
+				"move repeated raw list, items, and meta render shaping into query select, rename bindings to response... and mutation..., and remove wide aliases.",
+			files: ["src/routes/entries/page.tsx"],
+			expectedSkills: ["react", "typescript"],
+			expectedSelected: {
+				react: [
+					"screen-keep-derived-values-close",
+					"state-name-query-and-mutation-bindings-consistently",
+					"state-preserve-origin-chaining",
+					"state-shape-query-data-with-select",
+					"docs-require-jsdoc-on-key-declarations",
+				],
+				typescript: [
+					"naming-use-consistent-file-and-symbol-naming",
+					"docs-require-header-jsdoc-on-key-declarations",
+					"docs-standardize-annotation-tags-by-declaration-role",
+					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"guardrails-review-banned-typescript-shortcuts-before-finishing",
+				],
+			},
+		},
+	},
+	"RTE13-heavy-search": {
+		initial: {
+			prompt:
+				"for a 50k-row search, directly import newly used React hooks, use lazy initialization, urgent input plus deferred result, a non-urgent category transition, and only evidence-backed memoization; update the constraint comment.",
+			files: ["src/routes/entries/-local/entry-search.tsx"],
+			expectedSkills: ["react", "typescript"],
+			expectedSelected: {
+				react: [
+					"state-compiler-first-memoization",
+					"state-use-lazy-state-initializers-for-expensive-defaults",
+					"state-use-starttransition-for-non-urgent-updates",
+					"state-use-usedeferredvalue-for-heavy-derived-renders",
+					"docs-limit-inline-comments-to-non-obvious-logic",
+					"docs-require-jsdoc-on-key-declarations",
+				],
+				typescript: [
+					"naming-use-consistent-file-and-symbol-naming",
+					"naming-use-direct-imports-and-public-entry-points",
+					"docs-keep-inline-comments-for-constraints-and-caveats",
+					"docs-require-header-jsdoc-on-key-declarations",
+					"docs-standardize-annotation-tags-by-declaration-role",
+					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"guardrails-review-banned-typescript-shortcuts-before-finishing",
+				],
+			},
+		},
+	},
+	"RTE14-subscription-effectevent": {
+		initial: {
+			prompt:
+				"directly import useEffectEvent, replace only a socket subscription latest-callback ref-sync hack with a named handleMessage = useEffectEvent(...), and update subscription lifecycle JSDoc; do not change click or submit actions.",
+			files: ["src/routes/entries/-local/entry-socket.tsx"],
+			expectedSkills: ["react", "typescript"],
+			expectedSelected: {
+				react: [
+					"events-name-and-curry-handlers",
+					"state-use-effectevent-for-non-reactive-effect-callbacks",
+					"docs-require-jsdoc-on-key-declarations",
+				],
+				typescript: [
+					"naming-use-consistent-file-and-symbol-naming",
+					"naming-use-direct-imports-and-public-entry-points",
+					"docs-require-header-jsdoc-on-key-declarations",
+					"docs-standardize-annotation-tags-by-declaration-role",
+					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"guardrails-review-banned-typescript-shortcuts-before-finishing",
+				],
+			},
+		},
+	},
+	"RTE15-suspense-absence": {
+		initial: {
+			prompt:
+				'replace Suspense detail ?? [], || "-", a local pending Spinner, and top-level aliases with an explicit empty state and origin chaining; remove an ungrounded explanatory comment.',
+			files: ["src/routes/entries/detail.tsx"],
+			expectedSkills: ["react", "typescript"],
+			expectedSelected: {
+				react: [
+					"screen-keep-derived-values-close",
+					"state-avoid-fallback-defaults-and-loading-flags",
+					"state-preserve-origin-chaining",
+					"docs-limit-inline-comments-to-non-obvious-logic",
+				],
+				typescript: [
+					"absence-expose-optional-values-instead-of-silent-fallbacks",
+					"docs-keep-inline-comments-for-constraints-and-caveats",
+					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"guardrails-review-banned-typescript-shortcuts-before-finishing",
+				],
+			},
+		},
+	},
+} as const;
+
+/**
  * @summary Appendix C와 D의 CSS scenario별 exact stage oracle
  */
 const cssScenarioStages = {
@@ -381,7 +1059,7 @@ const cssScenarioStages = {
 			prompt: "pure rendering change in src/routes/catalog/index.tsx, with React and TypeScript only.",
 			files: ["src/routes/catalog/index.tsx"],
 			expectedSkills: ["react", "typescript"],
-			expectedSelected: {typescript: ["guardrails-review-banned-typescript-shortcuts-before-finishing"]},
+			expectedSelected: {react: [], typescript: ["guardrails-review-banned-typescript-shortcuts-before-finishing"]},
 		},
 		scopeDrift: {
 			evidence:
@@ -389,6 +1067,7 @@ const cssScenarioStages = {
 			files: ["src/routes/catalog/index.tsx", "src/routes/catalog/_index.css"],
 			expectedSkills: ["react", "typescript", "css"],
 			expectedSelected: {
+				react: ["ownership-place-route-local-files-by-scope"],
 				typescript: ["naming-use-direct-imports-and-public-entry-points", "guardrails-review-banned-typescript-shortcuts-before-finishing"],
 				css: [
 					"naming-default-to-plain-css-when-no-module-convention",
@@ -426,6 +1105,7 @@ const cssScenarioStages = {
 			files: ["src/routes/catalog/index.tsx", "src/routes/catalog/_index.css"],
 			expectedSkills: ["react", "typescript", "css"],
 			expectedSelected: {
+				react: [],
 				typescript: ["naming-use-direct-imports-and-public-entry-points", "guardrails-review-banned-typescript-shortcuts-before-finishing"],
 				css: [
 					"naming-name-elements-and-modifiers-by-role",
@@ -445,6 +1125,7 @@ const cssScenarioStages = {
 			files: ["src/routes/catalog/detail.tsx", "src/routes/catalog/detail.css"],
 			expectedSkills: ["react", "typescript", "css"],
 			expectedSelected: {
+				react: [],
 				typescript: ["guardrails-review-banned-typescript-shortcuts-before-finishing"],
 				css: [
 					"naming-name-elements-and-modifiers-by-role",
@@ -463,6 +1144,7 @@ const cssScenarioStages = {
 			files: ["src/routes/posts/_local/post-filter-dialog.tsx", "src/routes/posts/_local/post-filter-dialog.css"],
 			expectedSkills: ["react", "typescript", "css"],
 			expectedSelected: {
+				react: [],
 				typescript: ["naming-use-direct-imports-and-public-entry-points", "guardrails-review-banned-typescript-shortcuts-before-finishing"],
 				css: [
 					"naming-name-elements-and-modifiers-by-role",
@@ -480,6 +1162,7 @@ const cssScenarioStages = {
 			files: ["src/routes/posts/_local/post-filter-dialog.tsx", "src/routes/posts/_local/post-filter-dialog.css"],
 			expectedSkills: ["react", "typescript", "css"],
 			expectedSelected: {
+				react: [],
 				typescript: ["naming-use-direct-imports-and-public-entry-points", "guardrails-review-banned-typescript-shortcuts-before-finishing"],
 				css: [
 					"naming-name-elements-and-modifiers-by-role",
@@ -501,6 +1184,7 @@ const cssScenarioStages = {
 			files: ["src/components/ui/button/ui-button.tsx", "src/routes/orders/order-actions.tsx"],
 			expectedSkills: ["react", "typescript", "css"],
 			expectedSelected: {
+				react: ["composition-destructure-props-inside", "docs-require-jsdoc-on-key-declarations"],
 				typescript: [
 					"naming-use-direct-imports-and-public-entry-points",
 					"types-document-custom-types-and-shapes",
@@ -825,6 +1509,7 @@ test("TypeScript generated index is complete and within the deterministic byte b
 
 	assert.deepEqual(ids, expectedIds);
 	assert.equal(ids.length, 22);
+	assert.equal(getRulesIndexByteBudget(ids.length), 10_800);
 	assert.equal(Buffer.byteLength(source, "utf8") <= getRulesIndexByteBudget(ids.length), true);
 
 	for (const entry of entries) {
@@ -871,6 +1556,314 @@ test("TypeScript SKILL.md is a compact trigger-only router with every receipt an
 	assert.match(body, /FAIL.*0/);
 	assert.match(body, /UNKNOWN.*0/);
 	assert.match(body, /AGENTS\.md.*handbook|handbook.*AGENTS\.md|fallback.*AGENTS\.md/i);
+});
+
+test("React progressive metadata and all 42 rule routes match Appendix B exactly", async () => {
+	const skillPaths = getSkillPaths("react", realSkillRootDir);
+	const document = await readSkillDocument(skillPaths);
+
+	assert.equal(document.metadata.progressiveDisclosure, true);
+	assert.match(document.metadata.abstract, /SKILL\.md.*RULES_INDEX\.md/);
+	assert.match(document.metadata.abstract, /AGENTS\.md.*opt-in.*full handbook/i);
+	assert.deepEqual(document.metadata.companions, [
+		{skill: "typescript", mode: "required"},
+		{skill: "css", mode: "conditional", appliesWhen: "class contract, stylesheet 또는 styling surface를 변경한다."},
+	]);
+	assert.equal(document.rules.length, 42);
+	assert.deepEqual(
+		Object.fromEntries(
+			document.rules.map((rule) => [rule.fileName.replace(/\.md$/, ""), {appliesWhen: rule.appliesWhen, reviewWith: rule.reviewWith}]),
+		),
+		reactRuleRouting,
+	);
+	assert.equal(
+		document.rules.every((rule) => Boolean(rule.appliesWhen) && Buffer.byteLength(rule.appliesWhen ?? "", "utf8") > 0),
+		true,
+	);
+	assert.equal(
+		document.rules.every((rule) => (rule.appliesWhen?.length ?? 0) <= 160),
+		true,
+	);
+	for (const [ruleId, routing] of Object.entries(reactRuleRouting)) {
+		const ruleSource = await readFile(path.join(skillPaths.rulesDir, `${ruleId}.md`), "utf8");
+
+		if (routing.reviewWith.length === 0) {
+			assert.doesNotMatch(ruleSource, /^reviewWith:/m, `${ruleId} must omit an empty reviewWith key`);
+		}
+	}
+
+	const template = await readFile(path.join(skillPaths.rulesDir, "_template.md"), "utf8");
+	assert.match(template, /^appliesWhen: /m);
+	assert.doesNotMatch(template, /^reviewWith: /m);
+
+	const readme = await readFile(path.join(skillPaths.skillDir, "README.md"), "utf8");
+	assert.match(readme, /appliesWhen.*한 줄.*160/);
+	assert.match(readme, /reviewWith.*자동 선택.*아니.*재평가/i);
+	assert.match(readme, /대상.*없으면.*key.*생략/i);
+});
+
+test("React routing manifest is the exact fifteen-scenario Appendix B/D oracle with full positive coverage", async () => {
+	const skillPaths = getSkillPaths("react", realSkillRootDir);
+	await validateRoutingEvalManifest(skillPaths);
+	await validateRoutingEvalManifests(realSkillRootDir);
+	const manifest = await readRoutingEvalManifest(skillPaths);
+	const expectedScenarioIds = Object.keys(reactScenarioStages);
+	const scenarioById = new Map(manifest.scenarios.map((scenario) => [scenario.id, scenario]));
+
+	assert.equal(manifest.version, 1);
+	assert.equal(manifest.skill, "react");
+	assert.deepEqual(
+		manifest.scenarios.map((scenario) => scenario.id),
+		expectedScenarioIds,
+	);
+	assert.equal(manifest.scenarios.length, 15);
+	assert.equal(
+		manifest.scenarios.reduce((count, scenario) => count + (scenario.scopeDrift ? 2 : 1), 0),
+		16,
+	);
+
+	const universeBySkillName: Record<string, readonly string[]> = {
+		css: cssRuleUniverse,
+		react: reactRuleUniverse,
+		typescript: typescriptRuleUniverse,
+	};
+	const coveredReactRules = new Set<string>();
+
+	for (const [scenarioId, expectedScenario] of Object.entries(reactScenarioStages)) {
+		const scenario = scenarioById.get(scenarioId);
+		assert.ok(scenario, `${scenarioId} should exist`);
+		const stagePairs: Array<{
+			label: string;
+			expectedText: string;
+			expectedFiles: readonly string[];
+			expectedSkills: readonly string[];
+			expectedSelected: Readonly<Record<string, readonly string[]>>;
+			actualText: string;
+			actual: RoutingExpectedPartition & {files: string[]};
+		}> = [
+			{
+				label: "initial",
+				expectedText: expectedScenario.initial.prompt,
+				expectedFiles: expectedScenario.initial.files,
+				expectedSkills: expectedScenario.initial.expectedSkills,
+				expectedSelected: expectedScenario.initial.expectedSelected,
+				actualText: scenario.prompt,
+				actual: scenario,
+			},
+		];
+
+		if ("scopeDrift" in expectedScenario) {
+			assert.ok(scenario.scopeDrift, `${scenarioId} should include scopeDrift`);
+			stagePairs.push({
+				label: "scopeDrift",
+				expectedText: expectedScenario.scopeDrift.evidence,
+				expectedFiles: expectedScenario.scopeDrift.files,
+				expectedSkills: expectedScenario.scopeDrift.expectedSkills,
+				expectedSelected: expectedScenario.scopeDrift.expectedSelected,
+				actualText: scenario.scopeDrift.evidence,
+				actual: scenario.scopeDrift,
+			});
+		} else {
+			assert.equal(scenario.scopeDrift, undefined, `${scenarioId} should not include scopeDrift`);
+		}
+
+		for (const {label, expectedText, expectedFiles, expectedSkills, expectedSelected, actualText, actual} of stagePairs) {
+			assert.equal(actualText, expectedText, `${scenarioId} ${label} evidence must be exact`);
+			assert.deepEqual(actual.files, expectedFiles, `${scenarioId} ${label} files must be exact`);
+			assert.deepEqual(actual.expectedSkills, expectedSkills, `${scenarioId} ${label} expectedSkills must be exact`);
+			assert.deepEqual(actual.expectedSelected, expectedSelected, `${scenarioId} ${label} selected maps must be exact`);
+			assert.deepEqual(
+				Object.keys(actual.expectedNotApplicable),
+				Object.keys(expectedSelected),
+				`${scenarioId} ${label} N/A map keys must match activated progressive skills`,
+			);
+
+			for (const [skillName, selectedRuleIds] of Object.entries(expectedSelected)) {
+				const universe = universeBySkillName[skillName];
+				assert.ok(universe, `${scenarioId} ${label} ${skillName} must have a known progressive universe`);
+				const selected = new Set(selectedRuleIds);
+				assert.deepEqual(
+					actual.expectedNotApplicable[skillName],
+					universe.filter((ruleId) => !selected.has(ruleId)),
+					`${scenarioId} ${label} ${skillName} N/A partition must be exact`,
+				);
+			}
+
+			for (const ruleId of actual.expectedSelected.react ?? []) {
+				coveredReactRules.add(ruleId);
+			}
+		}
+	}
+
+	assert.deepEqual([...coveredReactRules].sort(), [...reactRuleUniverse].sort());
+	const cssDrift = scenarioById.get("RTE02-owner-placement-css-drift")?.scopeDrift;
+	assert.ok(cssDrift);
+	assert.equal(cssDrift.expectedSelected.css?.includes("naming-preserve-route-slug-traceability"), false);
+	assert.equal(cssDrift.expectedNotApplicable.css?.includes("naming-preserve-route-slug-traceability"), true);
+});
+
+test("React generated index and handbook preserve canonical local rules and compact companion links", async () => {
+	const skillPaths = getSkillPaths("react", realSkillRootDir);
+	const source = await readFile(skillPaths.rulesIndexPath, "utf8");
+	const entries = Array.from(source.matchAll(/^- `R\d+` · ID `([^`]+)` · \[[^\]]+\]\(rules\/([^)]+)\)/gm), (match) => ({
+		id: match[1],
+		fileName: decodeURIComponent(match[2] ?? ""),
+	}));
+	const document = await readSkillDocument(skillPaths);
+
+	assert.deepEqual(
+		entries.map((entry) => entry.id),
+		reactRuleUniverse,
+	);
+	assert.equal(entries.length, 42);
+	assert.equal(getRulesIndexByteBudget(entries.length), 21_800);
+	assert.equal(Buffer.byteLength(source, "utf8") <= getRulesIndexByteBudget(entries.length), true);
+
+	for (const entry of entries) {
+		assert.equal(entry.fileName, `${entry.id}.md`);
+		await access(path.join(skillPaths.rulesDir, entry.fileName));
+	}
+
+	const handbook = await readFile(skillPaths.outputPath, "utf8");
+	assert.match(handbook, /metadata\.json\.companions/);
+	assert.doesNotMatch(handbook, /metadata\.json\.extends/);
+	assert.match(handbook, /^## Companion Skill 활성화$/m);
+	assert.match(
+		handbook,
+		/^- `convention-typescript`[^\n]*mode: `required`[^\n]*\.\.\/typescript\/SKILL\.md[^\n]*\.\.\/typescript\/RULES_INDEX\.md[^\n]*$/m,
+	);
+	assert.match(
+		handbook,
+		/^- `convention-css`[^\n]*mode: `conditional`[^\n]*appliesWhen: class contract, stylesheet 또는 styling surface를 변경한다\.[^\n]*\.\.\/css\/SKILL\.md[^\n]*\.\.\/css\/RULES_INDEX\.md[^\n]*$/m,
+	);
+	assert.doesNotMatch(handbook, /\.\.\/(?:typescript|css)\/AGENTS\.md/);
+
+	for (const rule of document.rules) {
+		const bodyWithoutHeading = rule.body.replace(/^## .+\n+/, "");
+		assert.equal(handbook.includes(bodyWithoutHeading), true, `${rule.fileName} body must remain verbatim in React AGENTS.md`);
+	}
+
+	for (const companionName of ["typescript", "css"] as const) {
+		const companionDocument = await readSkillDocument(getSkillPaths(companionName, realSkillRootDir));
+
+		for (const rule of companionDocument.rules) {
+			const bodyWithoutHeading = rule.body.replace(/^## .+\n+/, "");
+			assert.equal(handbook.includes(bodyWithoutHeading), false, `${companionName}/${rule.fileName} body must not be embedded`);
+		}
+	}
+
+	const companionSection = handbook.match(/^## Companion Skill 활성화$[\s\S]*?(?=\n---\n)/m)?.[0] ?? "";
+	assert.equal((companionSection.match(/`convention-typescript`/g) ?? []).length, 1);
+	assert.equal((companionSection.match(/`convention-css`/g) ?? []).length, 1);
+});
+
+test("React SKILL.md is a compact full-index router with required TypeScript and conditional CSS", async () => {
+	const skillDir = path.join(realSkillRootDir, "react");
+	const source = await readFile(path.join(skillDir, "SKILL.md"), "utf8");
+	const frontmatterSource = source.match(/^---\n([\s\S]*?)\n---/)?.[1] ?? "";
+	const body = source.replace(/^---\n[\s\S]*?\n---\n?/, "");
+	const wordCount = body.trim().split(/\s+/).filter(Boolean).length;
+
+	assert.match(frontmatterSource, /^name: convention-react$/m);
+	assert.match(frontmatterSource, /^description: Use when /m);
+	assert.doesNotMatch(frontmatterSource, /scan|read|load|receipt|audit/i);
+	assert.equal(wordCount < 500, true, `router has ${wordCount} words`);
+	assert.equal(Buffer.byteLength(source, "utf8") < 6_000, true);
+	assert.match(body, /scope snapshot/i);
+	assert.match(body, /RULES_INDEX\.md/);
+	assert.match(body, /처음부터 끝까지|전체.*scan|전부.*scan/i);
+	assert.match(body, /첫 match.*절대 멈추지 않는다/i);
+	assert.match(body, /모든 활성(?:화된)? skill[^\n]{0,160}SKILL\.md[^\n]{0,120}(?:계약|따른|읽)/i);
+	assert.match(
+		body,
+		/progressiveDisclosure[^\n]{0,40}true[^\n]{0,160}RULES_INDEX\.md[^\n]{0,160}(?:전체|처음부터 끝까지|full)[^\n]{0,80}(?:scan|판정|읽)[^\n]{0,160}(?:digest|receipt)/i,
+	);
+	assert.match(body, /non-progressive skill[^\n]{0,160}SKILL\.md[^\n]{0,160}AGENTS\.md[^\n]{0,100}(?:계약|따른|읽|로드)/i);
+
+	const sectionSources = new Map<string, string>();
+	for (const sectionSource of body.split(/^## /m)) {
+		const sectionMatch = sectionSource.match(/^([2-6])\.[^\n]*\n([\s\S]*)$/);
+
+		if (sectionMatch) {
+			sectionSources.set(sectionMatch[1] ?? "", sectionMatch[2] ?? "");
+		}
+	}
+	for (const sectionNumber of ["2", "3", "5", "6"]) {
+		assert.match(
+			sectionSources.get(sectionNumber) ?? "",
+			/(?:활성(?:화된)?[^\n]{0,80}progressive[^\n]{0,80}index|progressive[^\n]{0,80}활성(?:화된)?[^\n]{0,80}index)/i,
+			`section ${sectionNumber} must qualify the contract as activated progressive indexes`,
+		);
+	}
+
+	for (const legacySkillName of ["tanstack-route", "playwright-test"] as const) {
+		const legacySkillPaths = getSkillPaths(legacySkillName, realSkillRootDir);
+		const legacyMetadata = JSON.parse(await readFile(legacySkillPaths.metadataPath, "utf8")) as {progressiveDisclosure?: boolean};
+
+		assert.notEqual(legacyMetadata.progressiveDisclosure, true, `${legacySkillName} must remain non-progressive`);
+		await assert.rejects(access(legacySkillPaths.rulesIndexPath), {code: "ENOENT"});
+	}
+	assert.match(body, /sha256|digest/i);
+	assert.match(body, /Selected/);
+	assert.match(body, /Not applicable|N\/A/i);
+	assert.match(body, /Unknown/);
+	assert.match(body, /Selected와 Unknown.*원문.*전부 읽는다/i);
+	assert.match(body, /exclusion|배제.*그룹/i);
+	assert.match(body, /비어 있지 않은|비어 있으면 안 된다/i);
+	assert.match(body, /ordinal.*union|합집합.*ordinal|ordinal.*합집합/i);
+	assert.match(body, /reviewWith/);
+	assert.match(body, /scope drift/i);
+	assert.match(body, /convention-typescript.*필수|필수.*convention-typescript/i);
+	assert.match(
+		body,
+		/(?:(?:조건부|때만|일치(?:하면|할 때| 시)?)[^\n]{0,160}`?convention-css`?[^\n]{0,80}(?:활성화|activation)|`?convention-css`?[^\n]{0,160}(?:조건부|때만|일치(?:하면|할 때| 시)?)[^\n]{0,80}(?:활성화|activation))/i,
+	);
+	assert.match(
+		body,
+		/(?:(?:조건(?:이)? 없으면|그 외(?:에는)?|otherwise)[^\n]{0,160}(?:CSS|convention-css)[^\n]{0,80}(?:제외|비활성|활성화하지 않)|(?:CSS|convention-css)[^\n]{0,160}(?:조건(?:이)? 없으면|그 외(?:에는)?|otherwise)[^\n]{0,80}(?:제외|비활성|활성화하지 않))/i,
+	);
+	assert.match(body, /convention-audit/);
+	assert.match(body, /FAIL.*0/);
+	assert.match(body, /UNKNOWN.*0/);
+	assert.match(body, /AGENTS\.md.*handbook|handbook.*AGENTS\.md|opt-in.*AGENTS\.md/i);
+	assert.match(body, /AGENTS\.md[\s\S]*?(?:명시적으로 요청|fallback)[\s\S]*?때만 읽/i);
+	assert.doesNotMatch(body, /(?:먼저|우선)[^\n]{0,80}AGENTS\.md[^\n]{0,80}(?:열|읽|로드|훑)/i);
+
+	const readme = await readFile(path.join(skillDir, "README.md"), "utf8");
+	assert.match(readme, /RULES_INDEX\.md/);
+	assert.match(readme, /routing-evals\.json/);
+	assert.match(readme, /Selected/);
+	assert.match(readme, /N\/A|Not applicable/);
+	assert.match(readme, /Unknown/);
+	assert.match(readme, /check:generated:react/);
+	assert.match(readme, /AGENTS\.md.*opt-in.*full handbook/i);
+	assert.doesNotMatch(readme, /(?:먼저|우선)[^\n]{0,80}AGENTS\.md[^\n]{0,80}(?:열|읽|로드|훑)/i);
+
+	const pressureTests = await readFile(path.join(skillDir, "pressure-tests.md"), "utf8");
+	assert.match(pressureTests, /RTE02-owner-placement-css-drift/);
+	assert.match(pressureTests, /RTE15-suspense-absence/);
+	assert.match(pressureTests, /15개 scenario, 16개 stage/);
+	for (const scenarioId of Object.keys(reactScenarioStages)) {
+		assert.equal((pressureTests.match(new RegExp(scenarioId, "g")) ?? []).length >= 1, true, `${scenarioId} must be documented`);
+	}
+	assert.match(pressureTests, /scope drift/i);
+	assert.match(pressureTests, /no-skill baseline/);
+	assert.match(pressureTests, /full-handbook oracle/);
+	assert.match(pressureTests, /progressive candidate/);
+	assert.match(pressureTests, /mutation RED/);
+	assert.match(pressureTests, /최소 2회.*3회|2회.*CRITICAL.*3회/i);
+	assert.match(pressureTests, /exact.*precision|precision.*exact/i);
+	assert.match(pressureTests, /input token/i);
+	assert.match(pressureTests, /telemetry/i);
+	assert.match(pressureTests, /median|중앙값/i);
+	assert.match(pressureTests, /절감률/);
+	assert.doesNotMatch(pressureTests, /^\s*-\s*(?:baseline|candidate):/im);
+
+	const cssPressureTests = await readFile(path.join(realSkillRootDir, "css", "pressure-tests.md"), "utf8");
+	assert.doesNotMatch(cssPressureTests, /React는 아직 non-progressive|react partition을 만들지 않는다/i);
+	assert.match(cssPressureTests, /mixed fixture 5개.*React.*exact partition/i);
+	const cssReadme = await readFile(path.join(realSkillRootDir, "css", "README.md"), "utf8");
+	assert.match(cssReadme, /mixed fixture 5개.*React.*exact partition/i);
 });
 
 test("CSS progressive metadata and rule routing match Appendix C exactly", async () => {
@@ -980,7 +1973,13 @@ test("CSS routing manifest is the exact eleven-scenario and thirteen-stage Appen
 			);
 
 			for (const [skillName, selectedRuleIds] of Object.entries(expectedSelected)) {
-				const universe = skillName === "css" ? [...cssRuleUniverse] : [...typescriptRuleUniverse];
+				const universeBySkillName: Record<string, readonly string[]> = {
+					css: cssRuleUniverse,
+					react: reactRuleUniverse,
+					typescript: typescriptRuleUniverse,
+				};
+				const universe = universeBySkillName[skillName];
+				assert.ok(universe, `${scenarioId} ${label} ${skillName} must have a known progressive universe`);
 				const selected = new Set(selectedRuleIds);
 				assert.deepEqual(
 					actual.expectedNotApplicable[skillName],
@@ -988,17 +1987,6 @@ test("CSS routing manifest is the exact eleven-scenario and thirteen-stage Appen
 					`${scenarioId} ${label} ${skillName} N/A partition must be exact`,
 				);
 			}
-
-			assert.equal(
-				Object.hasOwn(actual.expectedSelected, "react"),
-				false,
-				`${scenarioId} ${label} must not partition non-progressive React`,
-			);
-			assert.equal(
-				Object.hasOwn(actual.expectedNotApplicable, "react"),
-				false,
-				`${scenarioId} ${label} must not materialize non-progressive React N/A`,
-			);
 
 			for (const ruleId of actual.expectedSelected.css ?? []) {
 				coveredCssRules.add(ruleId);
@@ -1008,7 +1996,11 @@ test("CSS routing manifest is the exact eleven-scenario and thirteen-stage Appen
 
 	assert.deepEqual([...coveredCssRules].sort(), [...cssRuleUniverse].sort());
 	const routeDrift = scenarioById.get("css-route-style-scope-drift");
-	assert.deepEqual(routeDrift?.expectedSelected, {typescript: ["guardrails-review-banned-typescript-shortcuts-before-finishing"]});
+	assert.deepEqual(routeDrift?.expectedSelected, {
+		react: [],
+		typescript: ["guardrails-review-banned-typescript-shortcuts-before-finishing"],
+	});
+	assert.deepEqual(routeDrift?.scopeDrift?.expectedSelected.react, ["ownership-place-route-local-files-by-scope"]);
 	assert.deepEqual(routeDrift?.scopeDrift?.expectedSelected.typescript, [
 		"naming-use-direct-imports-and-public-entry-points",
 		"guardrails-review-banned-typescript-shortcuts-before-finishing",
@@ -1034,6 +2026,7 @@ test("CSS generated index is canonical, complete, body-preserving, and within it
 		cssRuleUniverse,
 	);
 	assert.equal(entries.length, 21);
+	assert.equal(getRulesIndexByteBudget(entries.length), 10_400);
 	assert.equal(Buffer.byteLength(source, "utf8") <= getRulesIndexByteBudget(entries.length), true);
 
 	for (const entry of entries) {

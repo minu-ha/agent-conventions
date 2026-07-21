@@ -2,6 +2,7 @@
 title: Prefer React Compiler Defaults Over Manual Memoization
 impact: MEDIUM-HIGH
 impactDescription: 검증되지 않은 값어치 없이 노이즈만 늘리는 방어적 useMemo/useCallback을 피함
+appliesWhen: `useMemo`·`useCallback`을 추가·제거하거나 참조 동일성·실측 병목·무거운 deferred 계산을 이유로 수동 memoization을 검토한다.
 tags: state, react, memoization
 ---
 

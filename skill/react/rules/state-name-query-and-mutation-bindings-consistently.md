@@ -2,6 +2,8 @@
 title: Name Query and Mutation Bindings Consistently
 impact: HIGH
 impactDescription: 생성된 API hook과 로컬 바인딩을 쉽게 훑고 추적할 수 있게 함
+appliesWhen: React Query query·mutation hook의 로컬 binding을 추가·이름 변경하거나 역할이 드러나지 않는 별칭이 diff에 보인다.
+reviewWith: state-preserve-origin-chaining, docs-require-jsdoc-on-key-declarations
 tags: state, query, mutation, naming
 ---
 

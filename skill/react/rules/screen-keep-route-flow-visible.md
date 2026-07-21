@@ -2,6 +2,8 @@
 title: Keep Route Entry Files Focused on Screen Flow
 impact: HIGH
 impactDescription: route 파일을 화면의 주 orchestration 지점으로 읽기 쉽게 만듦
+appliesWhen: route entry의 search·navigate·query·mutation·effect·section 조립을 이동·분리하거나 화면 흐름을 재구성한다.
+reviewWith: screen-extract-local-section-components-for-runtime-boundaries, screen-move-pure-support-code-out-of-entry-files
 tags: screen, routes, flow
 ---
 

@@ -523,7 +523,12 @@ test("rule index rejects duplicate IDs, missing or duplicate section assignments
 	const oversizedDocument = createRoutingDocument();
 	oversizedDocument.rules[0]!.tags = ["x".repeat(getRulesIndexByteBudget(oversizedDocument.rules.length))];
 	assert.throws(() => generateRulesIndexMarkdown(oversizedDocument, directCompanions), /RULES_INDEX\.md.*byte budget/i);
+	assert.equal(getRulesIndexByteBudget(0), 2_000);
 	assert.equal(getRulesIndexByteBudget(3), 3_200);
+	assert.equal(getRulesIndexByteBudget(21), 10_400);
+	assert.equal(getRulesIndexByteBudget(22), 10_800);
+	assert.equal(getRulesIndexByteBudget(23), 11_350);
+	assert.equal(getRulesIndexByteBudget(42), 21_800);
 });
 
 test("temporary progressive build and stale check are deterministic without repository writes", async () => {

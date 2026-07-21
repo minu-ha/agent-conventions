@@ -2,6 +2,8 @@
 title: Avoid Barrel Exports and React Namespace Types
 impact: HIGH
 impactDescription: import 경로를 명시적으로 유지하고 타입 import 스타일 혼용을 막음
+appliesWhen: `index.ts`·barrel 재노출을 추가·수정하거나 `React.*` namespace 타입, type/value 혼합 import 또는 소유 출처가 숨은 import 경로가 diff에 보인다.
+reviewWith: typescript/naming-use-direct-imports-and-public-entry-points
 tags: ownership, imports, barrel, react
 ---
 

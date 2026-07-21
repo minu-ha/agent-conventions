@@ -338,7 +338,7 @@ Add scripts:
 
 Tests must copy a progressive fixture into a temp directory, prove first build works without index, mutate source, prove check fails, rebuild, prove check passes, rebuild again, and compare bytes.
 
-Export `getRulesIndexByteBudget(ruleCount) = 2_000 + ruleCount * 400` from `routing.ts` and make the fixture test reject an index above that deterministic UTF-8 byte budget. Real-skill tests apply the same formula after each migration. Router tests separately require each `SKILL.md` to stay below both 500 words and 6,000 UTF-8 bytes. Token gates remain the authoritative end-to-end metric; these byte limits are the deterministic regression guardrail when the tokenizer is unavailable.
+Export `getRulesIndexByteBudget(ruleCount) = 2_000 + 400 * ruleCount + 150 * Math.max(0, ruleCount - 22)` from `routing.ts` and make the fixture test reject an index above that deterministic UTF-8 byte budget. The first 22 rules preserve the original 400-byte allowance, so the TypeScript and CSS caps stay at 10,800 and 10,400 bytes. Only the portion above 22 rules receives the 150-byte large-index allowance; this raises the 42-rule React cap from 18,800 to 21,800 bytes, just above the 21,477-byte exact Appendix B index without loosening smaller skills. The resulting deterministic caps are React 21,800, CSS 10,400, and TypeScript 10,800 bytes. Real-skill tests apply the same formula after each migration. Router tests separately require each `SKILL.md` to stay below both 500 words and 6,000 UTF-8 bytes. Token gates remain the authoritative end-to-end metric; these byte limits are only the deterministic regression guardrail when the tokenizer is unavailable.
 
 - [ ] **Step 7: Run package verification and commit**
 
@@ -463,21 +463,30 @@ git commit -m "feat: add progressive TypeScript convention routing"
 - Modify: all 42 `skill/react/rules/*.md`
 - Create: `skill/react/routing-evals.json`
 - Create: `skill/react/RULES_INDEX.md` through build
+- Modify: `skill/react/AGENTS.md` through build
 - Modify: `skill/react/SKILL.md`
 - Modify: `skill/react/pressure-tests.md`
 - Modify: `skill/react/README.md`
 - Modify: `skill/css/routing-evals.json`
+- Modify: `skill/css/pressure-tests.md`
+- Modify: `skill/css/README.md`
+- Modify: `skill/convention-audit/AGENTS.md` through the all-skill build after React dependency topology changes
+- Modify: `skill/figma-visual-parity/AGENTS.md` through the all-skill build after React dependency topology changes
+- Modify: `package/src/routing.ts`
+- Modify: `package/test/cli.test.ts`
+- Modify: `package/test/progressive-loading.test.ts`
 - Modify: `package/test/routing-evals.test.ts`
+- Modify: `docs/superpowers/plans/2026-07-21-progressive-convention-loading.md`
 
-- [ ] **Step 1: Add React RED assertions**
+- [x] **Step 1: Add React RED assertions**
 
 Tests require 42 exact local IDs, all Appendix B routing metadata, required TypeScript companion, conditional CSS companion with a non-empty condition, valid cross-skill `reviewWith`, complete fixture partitions, and 100% positive coverage. 또한 Appendix D의 CSS mixed fixture 5개가 React exact selected/N/A partition을 모두 갖도록 요구한다.
 
-- [ ] **Step 2: Verify React RED**
+- [x] **Step 2: Verify React RED**
 
 Run focused tests. Expected: FAIL on missing progressive metadata/fields/manifest/index.
 
-- [ ] **Step 3: Migrate metadata and all rules**
+- [x] **Step 3: Migrate metadata and all rules**
 
 Replace legacy `extends` with:
 
@@ -491,23 +500,25 @@ Replace legacy `extends` with:
 
 Apply Appendix B `appliesWhen`/`reviewWith` values exactly.
 
-- [ ] **Step 4: Add realistic React routing fixtures**
+- [x] **Step 4: Add realistic React routing fixtures**
 
 Use Appendix B scenario matrix. Every scenario activates TypeScript; styling/class-contract scenarios also activate CSS. TypeScript와 CSS는 이 시점에 모두 progressive이므로 활성화된 각 index의 exact qualified selected/N/A partition을 처음부터 저장하고 initial-selection → scope-drift selection pair를 포함한다. CSS를 activation evidence만으로 남기는 중간 상태는 허용하지 않는다. 같은 변경에서 `skill/css/routing-evals.json`의 Appendix D mixed fixture 5개에도 React exact selected/N/A map을 materialize한다. Eval의 `expectedSkills`는 dependency edge가 아니므로 CSS metadata에 React companion을 추가하지 않는다.
 
-- [ ] **Step 5: Replace React SKILL with compact router and update docs**
+- [x] **Step 5: Replace React SKILL with compact router and update docs**
 
-The router stays under 500 words, explicitly prevents stopping after the first match, requires TypeScript, conditionally activates CSS, and sends the exact partition plus N/A exclusion-group evidence to final audit. Update pressure tests and README accordingly.
+The router stays under 500 words, explicitly prevents stopping after the first match, requires TypeScript, conditionally activates CSS, and sends the exact partition plus N/A exclusion-group evidence to final audit. Every activated skill follows its own `SKILL.md`; only skills with `progressiveDisclosure: true` and `RULES_INDEX.md` perform the full index scan and digest receipt, while non-progressive skills follow their `SKILL.md`/`AGENTS.md` loading contract. Update pressure tests and README accordingly.
 
-- [ ] **Step 6: Build, verify, and commit React**
+- [x] **Step 6: Build, verify, and commit React**
 
 ```bash
 npm --prefix package run validate:react
 npm --prefix package run build:react
 npm --prefix package run check:generated:react
-./package/node_modules/.bin/tsx --test package/test/progressive-loading.test.ts package/test/routing-evals.test.ts
+npm --prefix package run build:all
+npm --prefix package run check:generated:all
+./package/node_modules/.bin/tsx --test package/test/progressive-loading.test.ts package/test/routing-evals.test.ts package/test/cli.test.ts
 npm --prefix package run typecheck
-git add skill/react skill/css/routing-evals.json package/test/routing-evals.test.ts
+git add skill/react skill/css/routing-evals.json skill/css/pressure-tests.md skill/css/README.md skill/convention-audit/AGENTS.md skill/figma-visual-parity/AGENTS.md package/src/routing.ts package/test/cli.test.ts package/test/progressive-loading.test.ts package/test/routing-evals.test.ts docs/superpowers/plans/2026-07-21-progressive-convention-loading.md
 git commit -m "feat: add progressive React convention routing"
 ```
 
@@ -1021,6 +1032,29 @@ Define `U_REACT` as these 42 IDs. Every fixture stores the full stable-ID array 
     - Evidence/files: replace Suspense detail `?? []`, `\|\| "-"`, local pending Spinner, and top-level aliases with explicit empty state and origin chaining; remove an ungrounded explanatory comment.
     - Skills: `react`, `typescript`
     - React selected: `screen-keep-derived-values-close`, `state-preserve-origin-chaining`, `state-avoid-fallback-defaults-and-loading-flags`, `docs-limit-inline-comments-to-non-obvious-logic`
+
+### React fixture prompt and file normalization
+
+아래 문자열과 경로는 Task 5 JSON manifest와 test oracle이 공유하는 exact 값입니다. Appendix B의 abbreviated file evidence를 결정적으로 정규화하며 routing 의미는 바꾸지 않습니다.
+
+| Scenario/stage | Exact prompt or drift evidence | Exact files |
+|---|---|---|
+| `RTE01-import-contract-cleanup` initial | `rename UserCard.tsx to user-card.tsx, remove index.ts barrel, replace React.MouseEvent and a duplicate API view type with existing contracts in src/components/ui/user-card.tsx and src/components/ui/index.ts.` | `src/components/ui/user-card.tsx`, `src/components/ui/index.ts` |
+| `RTE02-owner-placement-css-drift` initial | `move a route-only tree renderer from shared UI to src/routes/entries/-local/entry-tree.tsx and rename it as route-local; keep styling unchanged.` | `src/components/ui/entry-tree.tsx`, `src/routes/entries/-local/entry-tree.tsx` |
+| `RTE02-owner-placement-css-drift` drift | `in a project without a CSS Modules standard, add directly imported src/routes/entries/-local/entry-tree.css, create owner-unique role-named classes, and compose the changed className contract with the existing direct clsx import; final skills add CSS with no additional React rule.` | `src/components/ui/entry-tree.tsx`, `src/routes/entries/-local/entry-tree.tsx`, `src/routes/entries/-local/entry-tree.css` |
+| `RTE03-route-support-extraction` initial | `move one real four-argument multi-line payload boundary from src/routes/entries/page.tsx to sibling page.ts; do not create a hook, generic utils file, or helper soup.` | `src/routes/entries/page.tsx`, `src/routes/entries/page.ts` |
+| `RTE04-shared-config` initial | `move a duplicated menu key and default page size from two screens into a documented snake_case as const config object in src/shared/config.ts and directly import and use config.* from both route pages.` | `src/routes/entries/page.tsx`, `src/routes/reports/page.tsx`, `src/shared/config.ts` |
+| `RTE05-toolbar-composition` initial | `replace compact/edit/search/focus booleans and static render props on wg-entry-toolbar.tsx with stateless compound parts plus repeated explicit variants, and document public parts.` | `src/components/widgets/entry-toolbar/wg-entry-toolbar.tsx` |
+| `RTE06-nested-forwardref` initial | `hoist an existing nested forwardRef search input that resets focus to module scope and convert it to a React 19 ref prop in ui-search-card.tsx.` | `src/components/ui/search-card/ui-search-card.tsx` |
+| `RTE07-visibility-lifecycle` initial | `change only the show/hide branch for an already-mounted sidebar to the already-imported project Activity primitive to preserve expanded state; keep empty-state unmount behavior.` | `src/routes/entries/-local/entry-sidebar.tsx` |
+| `RTE08-delete-handler-flow` initial | `move a row delete inline async branch, mutation, navigation, and state+effect replay into one curried named handler, keep an unused React event as _event, directly import its reused callback type, and keep screen-only flow inside page.tsx.` | `src/routes/entries/page.tsx` |
+| `RTE09-route-runtime-section` initial | `extract only the tree section that owns local search and expanded state plus a tree adapter into -local, implement a named selection handler from EntryTreeSectionProps["onCategorySelect"], and keep search params, navigation, page query, and mutation in the route entry.` | `src/routes/entries/page.tsx`, `src/routes/entries/-local/entry-tree-section.tsx` |
+| `RTE10-derived-selection-state` initial | `replace selectedIds-derived count and flag effect+state synchronization with render calculation near use and change toggle to a functional updater.` | `src/routes/entries/page.tsx` |
+| `RTE11-shared-authority` initial | `synchronize shared capability once at the owning layout and store for multiple screens, menu, and guards; do not copy single-screen server fields into the store.` | `src/routes/_authenticated/layout.tsx`, `src/stores/capability-store.ts` |
+| `RTE12-query-shaping` initial | `move repeated raw list, items, and meta render shaping into query select, rename bindings to response... and mutation..., and remove wide aliases.` | `src/routes/entries/page.tsx` |
+| `RTE13-heavy-search` initial | `for a 50k-row search, directly import newly used React hooks, use lazy initialization, urgent input plus deferred result, a non-urgent category transition, and only evidence-backed memoization; update the constraint comment.` | `src/routes/entries/-local/entry-search.tsx` |
+| `RTE14-subscription-effectevent` initial | `directly import useEffectEvent, replace only a socket subscription latest-callback ref-sync hack with a named handleMessage = useEffectEvent(...), and update subscription lifecycle JSDoc; do not change click or submit actions.` | `src/routes/entries/-local/entry-socket.tsx` |
+| `RTE15-suspense-absence` initial | `replace Suspense detail ?? [], \|\| "-", a local pending Spinner, and top-level aliases with an explicit empty state and origin chaining; remove an ungrounded explanatory comment.` | `src/routes/entries/detail.tsx` |
 
 ## Appendix C: CSS Routing Metadata and Scenario Oracle
 

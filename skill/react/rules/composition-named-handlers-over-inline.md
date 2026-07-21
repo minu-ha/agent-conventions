@@ -2,6 +2,8 @@
 title: Use Named Handlers Instead of Hiding Logic in JSX
 impact: HIGH
 impactDescription: 부수효과, 분기, 비동기 흐름을 일반 코드 흐름에서 읽을 수 있게 함
+appliesWhen: TSX event prop에 인라인 callback을 추가·수정하고 그 안에 분기, 비동기 호출, 상태 변경 또는 여러 동작이 들어간다.
+reviewWith: events-name-and-curry-handlers, events-keep-handler-flow-inline, events-run-user-actions-in-handlers-not-effects, docs-require-jsdoc-on-key-declarations
 tags: composition, jsx, handlers
 ---
 

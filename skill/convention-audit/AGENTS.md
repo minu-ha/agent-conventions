@@ -21,8 +21,8 @@ React, CSS, TypeScript convention skill을 실제 구현 diff에 끝까지 적�
 ## 함께 로드할 Companion Skill
 
 - `convention-typescript` - TypeScript Convention 공통 규칙 guide: [TypeScript Convention](../typescript/AGENTS.md)
-- `convention-react` - React Convention 공통 규칙 guide: [React Convention](../react/AGENTS.md)
 - `convention-css` - CSS Convention 공통 규칙 guide: [CSS Convention](../css/AGENTS.md)
+- `convention-react` - React Convention 공통 규칙 guide: [React Convention](../react/AGENTS.md)
 
 ---
 

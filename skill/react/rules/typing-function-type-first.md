@@ -2,6 +2,8 @@
 title: Prefer React Handler Type Aliases Over Inline Event Parameter Annotations
 impact: HIGH
 impactDescription: React handler 시그니처와 callback 의도를 선언 위치에서 바로 보이게 함
+appliesWhen: React 이벤트 핸들러나 prop callback의 선언·시그니처를 추가·변경하며 기존 React alias 또는 callback 계약을 쓸 수 있다.
+reviewWith: typing-reuse-existing-contracts, typescript/types-prefer-function-variable-types-over-parameter-annotations, typescript/types-reuse-callback-signatures-from-existing-contracts
 tags: typing, handlers, props
 ---
 

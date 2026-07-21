@@ -2,6 +2,7 @@
 title: Do Not Define Components Inside Components
 impact: HIGH
 impactDescription: prevents remount bugs and hidden state resets caused by recreating component types every render
+appliesWhen: 컴포넌트 본문 안에 JSX를 반환하는 로컬 함수·컴포넌트를 추가·이동하거나 재렌더 시 remount·focus reset 징후를 다룬다.
 tags: composition, components, remount, performance
 ---
 

@@ -39,7 +39,7 @@ CSS skill을 수정하거나 새로운 rule을 추가했을 때, 실제 에이�
 - `css-sticky-layout-intent`: sticky, z-index, size responsibility만 선택합니다.
 - `css-deep-project-descendant-chain`: deep dependency와 flat selector를 함께 선택합니다.
 
-Pure CSS fixture는 CSS만 partition합니다. Mixed fixture 5개는 progressive TypeScript의 exact partition을 저장하지만 React는 아직 non-progressive activation evidence이므로 `expectedSelected.react`나 `expectedNotApplicable.react`를 만들지 않습니다. CSS metadata에는 React companion을 추가하지 않습니다.
+Pure CSS fixture는 CSS만 partition합니다. Mixed fixture 5개는 progressive TypeScript와 React의 exact partition을 모두 저장합니다. React selected가 비어 있어도 42개 전체를 `expectedNotApplicable.react`에 materialize하며, CSS metadata에는 React companion을 추가하지 않습니다.
 
 Scope drift 뒤에는 file, activated skill, 기존 Selected rule을 제거하지 않고 전체 index를 다시 scan합니다. 모든 CSS rule은 전체 scenario set에서 한 번 이상 positive coverage를 가져야 하며, 마지막 `convention-audit`에서 `FAIL 0`, `UNKNOWN 0`을 확인합니다.
 

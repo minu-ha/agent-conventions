@@ -1,0 +1,1435 @@
+{
+  "version": 1,
+  "skill": "react",
+  "scenarios": [
+    {
+      "id": "RTE01-import-contract-cleanup",
+      "prompt": "rename UserCard.tsx to user-card.tsx, remove index.ts barrel, replace React.MouseEvent and a duplicate API view type with existing contracts in src/components/ui/user-card.tsx and src/components/ui/index.ts.",
+      "files": [
+        "src/components/ui/user-card.tsx",
+        "src/components/ui/index.ts"
+      ],
+      "expectedSkills": [
+        "react",
+        "typescript"
+      ],
+      "expectedSelected": {
+        "react": [
+          "ownership-avoid-barrel-and-react-namespace-imports",
+          "ownership-use-consistent-file-and-symbol-naming",
+          "typing-function-type-first",
+          "typing-reuse-existing-contracts",
+          "events-name-and-curry-handlers"
+        ],
+        "typescript": [
+          "naming-use-consistent-file-and-symbol-naming",
+          "naming-use-direct-imports-and-public-entry-points",
+          "types-document-custom-types-and-shapes",
+          "types-prefer-function-variable-types-over-parameter-annotations",
+          "types-reuse-callback-signatures-from-existing-contracts",
+          "types-reuse-existing-contracts-before-new-types",
+          "docs-require-header-jsdoc-on-key-declarations",
+          "docs-standardize-annotation-tags-by-declaration-role",
+          "docs-write-concise-korean-comments-about-purpose-and-constraints",
+          "guardrails-review-banned-typescript-shortcuts-before-finishing"
+        ]
+      },
+      "expectedNotApplicable": {
+        "react": [
+          "ownership-prefer-plain-ts-for-local-react-helpers",
+          "ownership-layer-component-boundaries",
+          "ownership-place-route-local-files-by-scope",
+          "ownership-shared-config-entry-points",
+          "strategy-avoid-boolean-prop-proliferation",
+          "strategy-choose-single-composition-compound-and-variants",
+          "strategy-prefer-children-over-render-props",
+          "composition-destructure-props-inside",
+          "composition-do-not-define-components-inside-components",
+          "composition-prefer-arrow-functions-and-object-params",
+          "composition-named-handlers-over-inline",
+          "composition-use-activity-for-render-branches",
+          "composition-use-ref-prop-instead-of-forwardref-in-react-19",
+          "screen-avoid-premature-abstraction",
+          "screen-extract-local-section-components-for-runtime-boundaries",
+          "screen-extract-utilities-selectively",
+          "screen-keep-derived-values-close",
+          "screen-keep-route-flow-visible",
+          "screen-move-pure-support-code-out-of-entry-files",
+          "events-keep-handler-flow-inline",
+          "events-run-user-actions-in-handlers-not-effects",
+          "state-avoid-fallback-defaults-and-loading-flags",
+          "state-calculate-derived-values-during-render",
+          "state-choose-state-tools-by-source-of-truth",
+          "state-name-query-and-mutation-bindings-consistently",
+          "state-compiler-first-memoization",
+          "state-preserve-origin-chaining",
+          "state-shape-query-data-with-select",
+          "state-store-derived-authority",
+          "state-use-functional-setstate-updates",
+          "state-use-lazy-state-initializers-for-expensive-defaults",
+          "state-use-starttransition-for-non-urgent-updates",
+          "state-use-usedeferredvalue-for-heavy-derived-renders",
+          "state-use-effectevent-for-non-reactive-effect-callbacks",
+          "docs-document-compound-parts-with-part-and-description",
+          "docs-limit-inline-comments-to-non-obvious-logic",
+          "docs-require-jsdoc-on-key-declarations"
+        ],
+        "typescript": [
+          "naming-centralize-shared-config-namespaces",
+          "naming-preserve-config-origin-with-chained-access",
+          "types-mark-unused-parameters-with-underscore",
+          "functions-avoid-imperative-assembly-in-wide-scopes",
+          "functions-extract-helpers-only-when-the-boundary-is-real",
+          "functions-prefer-immutable-array-sorting",
+          "functions-replace-enum-with-as-const-objects",
+          "functions-use-named-object-params-for-complex-signatures",
+          "functions-use-set-and-map-for-repeated-lookups",
+          "absence-expose-optional-values-instead-of-silent-fallbacks",
+          "docs-keep-inline-comments-for-constraints-and-caveats",
+          "docs-use-helper-for-reusable-pure-helper-functions"
+        ]
+      }
+    },
+    {
+      "id": "RTE02-owner-placement-css-drift",
+      "prompt": "move a route-only tree renderer from shared UI to src/routes/entries/-local/entry-tree.tsx and rename it as route-local; keep styling unchanged.",
+      "files": [
+        "src/components/ui/entry-tree.tsx",
+        "src/routes/entries/-local/entry-tree.tsx"
+      ],
+      "expectedSkills": [
+        "react",
+        "typescript"
+      ],
+      "expectedSelected": {
+        "react": [
+          "ownership-layer-component-boundaries",
+          "ownership-place-route-local-files-by-scope",
+          "ownership-use-consistent-file-and-symbol-naming"
+        ],
+        "typescript": [
+          "naming-use-consistent-file-and-symbol-naming",
+          "naming-use-direct-imports-and-public-entry-points",
+          "guardrails-review-banned-typescript-shortcuts-before-finishing"
+        ]
+      },
+      "expectedNotApplicable": {
+        "react": [
+          "ownership-avoid-barrel-and-react-namespace-imports",
+          "ownership-prefer-plain-ts-for-local-react-helpers",
+          "ownership-shared-config-entry-points",
+          "typing-function-type-first",
+          "typing-reuse-existing-contracts",
+          "strategy-avoid-boolean-prop-proliferation",
+          "strategy-choose-single-composition-compound-and-variants",
+          "strategy-prefer-children-over-render-props",
+          "composition-destructure-props-inside",
+          "composition-do-not-define-components-inside-components",
+          "composition-prefer-arrow-functions-and-object-params",
+          "composition-named-handlers-over-inline",
+          "composition-use-activity-for-render-branches",
+          "composition-use-ref-prop-instead-of-forwardref-in-react-19",
+          "screen-avoid-premature-abstraction",
+          "screen-extract-local-section-components-for-runtime-boundaries",
+          "screen-extract-utilities-selectively",
+          "screen-keep-derived-values-close",
+          "screen-keep-route-flow-visible",
+          "screen-move-pure-support-code-out-of-entry-files",
+          "events-keep-handler-flow-inline",
+          "events-name-and-curry-handlers",
+          "events-run-user-actions-in-handlers-not-effects",
+          "state-avoid-fallback-defaults-and-loading-flags",
+          "state-calculate-derived-values-during-render",
+          "state-choose-state-tools-by-source-of-truth",
+          "state-name-query-and-mutation-bindings-consistently",
+          "state-compiler-first-memoization",
+          "state-preserve-origin-chaining",
+          "state-shape-query-data-with-select",
+          "state-store-derived-authority",
+          "state-use-functional-setstate-updates",
+          "state-use-lazy-state-initializers-for-expensive-defaults",
+          "state-use-starttransition-for-non-urgent-updates",
+          "state-use-usedeferredvalue-for-heavy-derived-renders",
+          "state-use-effectevent-for-non-reactive-effect-callbacks",
+          "docs-document-compound-parts-with-part-and-description",
+          "docs-limit-inline-comments-to-non-obvious-logic",
+          "docs-require-jsdoc-on-key-declarations"
+        ],
+        "typescript": [
+          "naming-centralize-shared-config-namespaces",
+          "naming-preserve-config-origin-with-chained-access",
+          "types-document-custom-types-and-shapes",
+          "types-mark-unused-parameters-with-underscore",
+          "types-prefer-function-variable-types-over-parameter-annotations",
+          "types-reuse-callback-signatures-from-existing-contracts",
+          "types-reuse-existing-contracts-before-new-types",
+          "functions-avoid-imperative-assembly-in-wide-scopes",
+          "functions-extract-helpers-only-when-the-boundary-is-real",
+          "functions-prefer-immutable-array-sorting",
+          "functions-replace-enum-with-as-const-objects",
+          "functions-use-named-object-params-for-complex-signatures",
+          "functions-use-set-and-map-for-repeated-lookups",
+          "absence-expose-optional-values-instead-of-silent-fallbacks",
+          "docs-keep-inline-comments-for-constraints-and-caveats",
+          "docs-require-header-jsdoc-on-key-declarations",
+          "docs-standardize-annotation-tags-by-declaration-role",
+          "docs-use-helper-for-reusable-pure-helper-functions",
+          "docs-write-concise-korean-comments-about-purpose-and-constraints"
+        ]
+      },
+      "scopeDrift": {
+        "evidence": "in a project without a CSS Modules standard, add directly imported src/routes/entries/-local/entry-tree.css, create owner-unique role-named classes, and compose the changed className contract with the existing direct clsx import; final skills add CSS with no additional React rule.",
+        "files": [
+          "src/components/ui/entry-tree.tsx",
+          "src/routes/entries/-local/entry-tree.tsx",
+          "src/routes/entries/-local/entry-tree.css"
+        ],
+        "expectedSkills": [
+          "react",
+          "typescript",
+          "css"
+        ],
+        "expectedSelected": {
+          "react": [
+            "ownership-layer-component-boundaries",
+            "ownership-place-route-local-files-by-scope",
+            "ownership-use-consistent-file-and-symbol-naming"
+          ],
+          "typescript": [
+            "naming-use-consistent-file-and-symbol-naming",
+            "naming-use-direct-imports-and-public-entry-points",
+            "guardrails-review-banned-typescript-shortcuts-before-finishing"
+          ],
+          "css": [
+            "naming-default-to-plain-css-when-no-module-convention",
+            "naming-keep-scope-slug-unique-per-owner",
+            "naming-name-elements-and-modifiers-by-role",
+            "naming-separate-local-and-route-style-scopes",
+            "naming-use-scope-slug-element-modifier-syntax",
+            "composition-compose-classes-with-clsx",
+            "organization-keep-style-files-owned-by-one-component-or-route",
+            "organization-review-banned-css-patterns-before-finishing"
+          ]
+        },
+        "expectedNotApplicable": {
+          "react": [
+            "ownership-avoid-barrel-and-react-namespace-imports",
+            "ownership-prefer-plain-ts-for-local-react-helpers",
+            "ownership-shared-config-entry-points",
+            "typing-function-type-first",
+            "typing-reuse-existing-contracts",
+            "strategy-avoid-boolean-prop-proliferation",
+            "strategy-choose-single-composition-compound-and-variants",
+            "strategy-prefer-children-over-render-props",
+            "composition-destructure-props-inside",
+            "composition-do-not-define-components-inside-components",
+            "composition-prefer-arrow-functions-and-object-params",
+            "composition-named-handlers-over-inline",
+            "composition-use-activity-for-render-branches",
+            "composition-use-ref-prop-instead-of-forwardref-in-react-19",
+            "screen-avoid-premature-abstraction",
+            "screen-extract-local-section-components-for-runtime-boundaries",
+            "screen-extract-utilities-selectively",
+            "screen-keep-derived-values-close",
+            "screen-keep-route-flow-visible",
+            "screen-move-pure-support-code-out-of-entry-files",
+            "events-keep-handler-flow-inline",
+            "events-name-and-curry-handlers",
+            "events-run-user-actions-in-handlers-not-effects",
+            "state-avoid-fallback-defaults-and-loading-flags",
+            "state-calculate-derived-values-during-render",
+            "state-choose-state-tools-by-source-of-truth",
+            "state-name-query-and-mutation-bindings-consistently",
+            "state-compiler-first-memoization",
+            "state-preserve-origin-chaining",
+            "state-shape-query-data-with-select",
+            "state-store-derived-authority",
+            "state-use-functional-setstate-updates",
+            "state-use-lazy-state-initializers-for-expensive-defaults",
+            "state-use-starttransition-for-non-urgent-updates",
+            "state-use-usedeferredvalue-for-heavy-derived-renders",
+            "state-use-effectevent-for-non-reactive-effect-callbacks",
+            "docs-document-compound-parts-with-part-and-description",
+            "docs-limit-inline-comments-to-non-obvious-logic",
+            "docs-require-jsdoc-on-key-declarations"
+          ],
+          "typescript": [
+            "naming-centralize-shared-config-namespaces",
+            "naming-preserve-config-origin-with-chained-access",
+            "types-document-custom-types-and-shapes",
+            "types-mark-unused-parameters-with-underscore",
+            "types-prefer-function-variable-types-over-parameter-annotations",
+            "types-reuse-callback-signatures-from-existing-contracts",
+            "types-reuse-existing-contracts-before-new-types",
+            "functions-avoid-imperative-assembly-in-wide-scopes",
+            "functions-extract-helpers-only-when-the-boundary-is-real",
+            "functions-prefer-immutable-array-sorting",
+            "functions-replace-enum-with-as-const-objects",
+            "functions-use-named-object-params-for-complex-signatures",
+            "functions-use-set-and-map-for-repeated-lookups",
+            "absence-expose-optional-values-instead-of-silent-fallbacks",
+            "docs-keep-inline-comments-for-constraints-and-caveats",
+            "docs-require-header-jsdoc-on-key-declarations",
+            "docs-standardize-annotation-tags-by-declaration-role",
+            "docs-use-helper-for-reusable-pure-helper-functions",
+            "docs-write-concise-korean-comments-about-purpose-and-constraints"
+          ],
+          "css": [
+            "naming-preserve-route-slug-traceability",
+            "composition-do-not-build-structural-variants-with-modifiers",
+            "composition-keep-classes-single-purpose",
+            "composition-style-ui-components-through-owned-wrappers",
+            "composition-prefer-ui-wrapper-prop-types",
+            "selector-avoid-deep-descendant-dependencies",
+            "selector-keep-project-selectors-flat",
+            "selector-target-third-party-dom-from-owned-roots",
+            "selector-use-pseudo-classes-for-dom-owned-states",
+            "values-keep-layout-intent-explicit",
+            "values-always-provide-css-variable-fallbacks",
+            "values-separate-domain-state-modifiers-from-dom-interaction-states",
+            "values-tokenize-repeated-visual-values"
+          ]
+        }
+      }
+    },
+    {
+      "id": "RTE03-route-support-extraction",
+      "prompt": "move one real four-argument multi-line payload boundary from src/routes/entries/page.tsx to sibling page.ts; do not create a hook, generic utils file, or helper soup.",
+      "files": [
+        "src/routes/entries/page.tsx",
+        "src/routes/entries/page.ts"
+      ],
+      "expectedSkills": [
+        "react",
+        "typescript"
+      ],
+      "expectedSelected": {
+        "react": [
+          "ownership-prefer-plain-ts-for-local-react-helpers",
+          "ownership-place-route-local-files-by-scope",
+          "ownership-use-consistent-file-and-symbol-naming",
+          "composition-prefer-arrow-functions-and-object-params",
+          "screen-avoid-premature-abstraction",
+          "screen-extract-utilities-selectively",
+          "screen-move-pure-support-code-out-of-entry-files",
+          "docs-require-jsdoc-on-key-declarations"
+        ],
+        "typescript": [
+          "naming-use-consistent-file-and-symbol-naming",
+          "naming-use-direct-imports-and-public-entry-points",
+          "types-document-custom-types-and-shapes",
+          "functions-extract-helpers-only-when-the-boundary-is-real",
+          "functions-use-named-object-params-for-complex-signatures",
+          "docs-require-header-jsdoc-on-key-declarations",
+          "docs-standardize-annotation-tags-by-declaration-role",
+          "docs-use-helper-for-reusable-pure-helper-functions",
+          "docs-write-concise-korean-comments-about-purpose-and-constraints",
+          "guardrails-review-banned-typescript-shortcuts-before-finishing"
+        ]
+      },
+      "expectedNotApplicable": {
+        "react": [
+          "ownership-avoid-barrel-and-react-namespace-imports",
+          "ownership-layer-component-boundaries",
+          "ownership-shared-config-entry-points",
+          "typing-function-type-first",
+          "typing-reuse-existing-contracts",
+          "strategy-avoid-boolean-prop-proliferation",
+          "strategy-choose-single-composition-compound-and-variants",
+          "strategy-prefer-children-over-render-props",
+          "composition-destructure-props-inside",
+          "composition-do-not-define-components-inside-components",
+          "composition-named-handlers-over-inline",
+          "composition-use-activity-for-render-branches",
+          "composition-use-ref-prop-instead-of-forwardref-in-react-19",
+          "screen-extract-local-section-components-for-runtime-boundaries",
+          "screen-keep-derived-values-close",
+          "screen-keep-route-flow-visible",
+          "events-keep-handler-flow-inline",
+          "events-name-and-curry-handlers",
+          "events-run-user-actions-in-handlers-not-effects",
+          "state-avoid-fallback-defaults-and-loading-flags",
+          "state-calculate-derived-values-during-render",
+          "state-choose-state-tools-by-source-of-truth",
+          "state-name-query-and-mutation-bindings-consistently",
+          "state-compiler-first-memoization",
+          "state-preserve-origin-chaining",
+          "state-shape-query-data-with-select",
+          "state-store-derived-authority",
+          "state-use-functional-setstate-updates",
+          "state-use-lazy-state-initializers-for-expensive-defaults",
+          "state-use-starttransition-for-non-urgent-updates",
+          "state-use-usedeferredvalue-for-heavy-derived-renders",
+          "state-use-effectevent-for-non-reactive-effect-callbacks",
+          "docs-document-compound-parts-with-part-and-description",
+          "docs-limit-inline-comments-to-non-obvious-logic"
+        ],
+        "typescript": [
+          "naming-centralize-shared-config-namespaces",
+          "naming-preserve-config-origin-with-chained-access",
+          "types-mark-unused-parameters-with-underscore",
+          "types-prefer-function-variable-types-over-parameter-annotations",
+          "types-reuse-callback-signatures-from-existing-contracts",
+          "types-reuse-existing-contracts-before-new-types",
+          "functions-avoid-imperative-assembly-in-wide-scopes",
+          "functions-prefer-immutable-array-sorting",
+          "functions-replace-enum-with-as-const-objects",
+          "functions-use-set-and-map-for-repeated-lookups",
+          "absence-expose-optional-values-instead-of-silent-fallbacks",
+          "docs-keep-inline-comments-for-constraints-and-caveats"
+        ]
+      }
+    },
+    {
+      "id": "RTE04-shared-config",
+      "prompt": "move a duplicated menu key and default page size from two screens into a documented snake_case as const config object in src/shared/config.ts and directly import and use config.* from both route pages.",
+      "files": [
+        "src/routes/entries/page.tsx",
+        "src/routes/reports/page.tsx",
+        "src/shared/config.ts"
+      ],
+      "expectedSkills": [
+        "react",
+        "typescript"
+      ],
+      "expectedSelected": {
+        "react": [
+          "ownership-shared-config-entry-points",
+          "ownership-use-consistent-file-and-symbol-naming"
+        ],
+        "typescript": [
+          "naming-centralize-shared-config-namespaces",
+          "naming-preserve-config-origin-with-chained-access",
+          "naming-use-consistent-file-and-symbol-naming",
+          "naming-use-direct-imports-and-public-entry-points",
+          "types-document-custom-types-and-shapes",
+          "functions-replace-enum-with-as-const-objects",
+          "docs-standardize-annotation-tags-by-declaration-role",
+          "docs-write-concise-korean-comments-about-purpose-and-constraints",
+          "guardrails-review-banned-typescript-shortcuts-before-finishing"
+        ]
+      },
+      "expectedNotApplicable": {
+        "react": [
+          "ownership-avoid-barrel-and-react-namespace-imports",
+          "ownership-prefer-plain-ts-for-local-react-helpers",
+          "ownership-layer-component-boundaries",
+          "ownership-place-route-local-files-by-scope",
+          "typing-function-type-first",
+          "typing-reuse-existing-contracts",
+          "strategy-avoid-boolean-prop-proliferation",
+          "strategy-choose-single-composition-compound-and-variants",
+          "strategy-prefer-children-over-render-props",
+          "composition-destructure-props-inside",
+          "composition-do-not-define-components-inside-components",
+          "composition-prefer-arrow-functions-and-object-params",
+          "composition-named-handlers-over-inline",
+          "composition-use-activity-for-render-branches",
+          "composition-use-ref-prop-instead-of-forwardref-in-react-19",
+          "screen-avoid-premature-abstraction",
+          "screen-extract-local-section-components-for-runtime-boundaries",
+          "screen-extract-utilities-selectively",
+          "screen-keep-derived-values-close",
+          "screen-keep-route-flow-visible",
+          "screen-move-pure-support-code-out-of-entry-files",
+          "events-keep-handler-flow-inline",
+          "events-name-and-curry-handlers",
+          "events-run-user-actions-in-handlers-not-effects",
+          "state-avoid-fallback-defaults-and-loading-flags",
+          "state-calculate-derived-values-during-render",
+          "state-choose-state-tools-by-source-of-truth",
+          "state-name-query-and-mutation-bindings-consistently",
+          "state-compiler-first-memoization",
+          "state-preserve-origin-chaining",
+          "state-shape-query-data-with-select",
+          "state-store-derived-authority",
+          "state-use-functional-setstate-updates",
+          "state-use-lazy-state-initializers-for-expensive-defaults",
+          "state-use-starttransition-for-non-urgent-updates",
+          "state-use-usedeferredvalue-for-heavy-derived-renders",
+          "state-use-effectevent-for-non-reactive-effect-callbacks",
+          "docs-document-compound-parts-with-part-and-description",
+          "docs-limit-inline-comments-to-non-obvious-logic",
+          "docs-require-jsdoc-on-key-declarations"
+        ],
+        "typescript": [
+          "types-mark-unused-parameters-with-underscore",
+          "types-prefer-function-variable-types-over-parameter-annotations",
+          "types-reuse-callback-signatures-from-existing-contracts",
+          "types-reuse-existing-contracts-before-new-types",
+          "functions-avoid-imperative-assembly-in-wide-scopes",
+          "functions-extract-helpers-only-when-the-boundary-is-real",
+          "functions-prefer-immutable-array-sorting",
+          "functions-use-named-object-params-for-complex-signatures",
+          "functions-use-set-and-map-for-repeated-lookups",
+          "absence-expose-optional-values-instead-of-silent-fallbacks",
+          "docs-keep-inline-comments-for-constraints-and-caveats",
+          "docs-require-header-jsdoc-on-key-declarations",
+          "docs-use-helper-for-reusable-pure-helper-functions"
+        ]
+      }
+    },
+    {
+      "id": "RTE05-toolbar-composition",
+      "prompt": "replace compact/edit/search/focus booleans and static render props on wg-entry-toolbar.tsx with stateless compound parts plus repeated explicit variants, and document public parts.",
+      "files": [
+        "src/components/widgets/entry-toolbar/wg-entry-toolbar.tsx"
+      ],
+      "expectedSkills": [
+        "react",
+        "typescript"
+      ],
+      "expectedSelected": {
+        "react": [
+          "ownership-use-consistent-file-and-symbol-naming",
+          "strategy-avoid-boolean-prop-proliferation",
+          "strategy-choose-single-composition-compound-and-variants",
+          "strategy-prefer-children-over-render-props",
+          "composition-destructure-props-inside",
+          "docs-document-compound-parts-with-part-and-description",
+          "docs-require-jsdoc-on-key-declarations"
+        ],
+        "typescript": [
+          "naming-use-consistent-file-and-symbol-naming",
+          "naming-use-direct-imports-and-public-entry-points",
+          "types-document-custom-types-and-shapes",
+          "docs-require-header-jsdoc-on-key-declarations",
+          "docs-standardize-annotation-tags-by-declaration-role",
+          "docs-write-concise-korean-comments-about-purpose-and-constraints",
+          "guardrails-review-banned-typescript-shortcuts-before-finishing"
+        ]
+      },
+      "expectedNotApplicable": {
+        "react": [
+          "ownership-avoid-barrel-and-react-namespace-imports",
+          "ownership-prefer-plain-ts-for-local-react-helpers",
+          "ownership-layer-component-boundaries",
+          "ownership-place-route-local-files-by-scope",
+          "ownership-shared-config-entry-points",
+          "typing-function-type-first",
+          "typing-reuse-existing-contracts",
+          "composition-do-not-define-components-inside-components",
+          "composition-prefer-arrow-functions-and-object-params",
+          "composition-named-handlers-over-inline",
+          "composition-use-activity-for-render-branches",
+          "composition-use-ref-prop-instead-of-forwardref-in-react-19",
+          "screen-avoid-premature-abstraction",
+          "screen-extract-local-section-components-for-runtime-boundaries",
+          "screen-extract-utilities-selectively",
+          "screen-keep-derived-values-close",
+          "screen-keep-route-flow-visible",
+          "screen-move-pure-support-code-out-of-entry-files",
+          "events-keep-handler-flow-inline",
+          "events-name-and-curry-handlers",
+          "events-run-user-actions-in-handlers-not-effects",
+          "state-avoid-fallback-defaults-and-loading-flags",
+          "state-calculate-derived-values-during-render",
+          "state-choose-state-tools-by-source-of-truth",
+          "state-name-query-and-mutation-bindings-consistently",
+          "state-compiler-first-memoization",
+          "state-preserve-origin-chaining",
+          "state-shape-query-data-with-select",
+          "state-store-derived-authority",
+          "state-use-functional-setstate-updates",
+          "state-use-lazy-state-initializers-for-expensive-defaults",
+          "state-use-starttransition-for-non-urgent-updates",
+          "state-use-usedeferredvalue-for-heavy-derived-renders",
+          "state-use-effectevent-for-non-reactive-effect-callbacks",
+          "docs-limit-inline-comments-to-non-obvious-logic"
+        ],
+        "typescript": [
+          "naming-centralize-shared-config-namespaces",
+          "naming-preserve-config-origin-with-chained-access",
+          "types-mark-unused-parameters-with-underscore",
+          "types-prefer-function-variable-types-over-parameter-annotations",
+          "types-reuse-callback-signatures-from-existing-contracts",
+          "types-reuse-existing-contracts-before-new-types",
+          "functions-avoid-imperative-assembly-in-wide-scopes",
+          "functions-extract-helpers-only-when-the-boundary-is-real",
+          "functions-prefer-immutable-array-sorting",
+          "functions-replace-enum-with-as-const-objects",
+          "functions-use-named-object-params-for-complex-signatures",
+          "functions-use-set-and-map-for-repeated-lookups",
+          "absence-expose-optional-values-instead-of-silent-fallbacks",
+          "docs-keep-inline-comments-for-constraints-and-caveats",
+          "docs-use-helper-for-reusable-pure-helper-functions"
+        ]
+      }
+    },
+    {
+      "id": "RTE06-nested-forwardref",
+      "prompt": "hoist an existing nested forwardRef search input that resets focus to module scope and convert it to a React 19 ref prop in ui-search-card.tsx.",
+      "files": [
+        "src/components/ui/search-card/ui-search-card.tsx"
+      ],
+      "expectedSkills": [
+        "react",
+        "typescript"
+      ],
+      "expectedSelected": {
+        "react": [
+          "composition-destructure-props-inside",
+          "composition-do-not-define-components-inside-components",
+          "composition-use-ref-prop-instead-of-forwardref-in-react-19",
+          "docs-require-jsdoc-on-key-declarations"
+        ],
+        "typescript": [
+          "naming-use-consistent-file-and-symbol-naming",
+          "naming-use-direct-imports-and-public-entry-points",
+          "types-document-custom-types-and-shapes",
+          "docs-require-header-jsdoc-on-key-declarations",
+          "docs-standardize-annotation-tags-by-declaration-role",
+          "docs-write-concise-korean-comments-about-purpose-and-constraints",
+          "guardrails-review-banned-typescript-shortcuts-before-finishing"
+        ]
+      },
+      "expectedNotApplicable": {
+        "react": [
+          "ownership-avoid-barrel-and-react-namespace-imports",
+          "ownership-prefer-plain-ts-for-local-react-helpers",
+          "ownership-layer-component-boundaries",
+          "ownership-place-route-local-files-by-scope",
+          "ownership-shared-config-entry-points",
+          "ownership-use-consistent-file-and-symbol-naming",
+          "typing-function-type-first",
+          "typing-reuse-existing-contracts",
+          "strategy-avoid-boolean-prop-proliferation",
+          "strategy-choose-single-composition-compound-and-variants",
+          "strategy-prefer-children-over-render-props",
+          "composition-prefer-arrow-functions-and-object-params",
+          "composition-named-handlers-over-inline",
+          "composition-use-activity-for-render-branches",
+          "screen-avoid-premature-abstraction",
+          "screen-extract-local-section-components-for-runtime-boundaries",
+          "screen-extract-utilities-selectively",
+          "screen-keep-derived-values-close",
+          "screen-keep-route-flow-visible",
+          "screen-move-pure-support-code-out-of-entry-files",
+          "events-keep-handler-flow-inline",
+          "events-name-and-curry-handlers",
+          "events-run-user-actions-in-handlers-not-effects",
+          "state-avoid-fallback-defaults-and-loading-flags",
+          "state-calculate-derived-values-during-render",
+          "state-choose-state-tools-by-source-of-truth",
+          "state-name-query-and-mutation-bindings-consistently",
+          "state-compiler-first-memoization",
+          "state-preserve-origin-chaining",
+          "state-shape-query-data-with-select",
+          "state-store-derived-authority",
+          "state-use-functional-setstate-updates",
+          "state-use-lazy-state-initializers-for-expensive-defaults",
+          "state-use-starttransition-for-non-urgent-updates",
+          "state-use-usedeferredvalue-for-heavy-derived-renders",
+          "state-use-effectevent-for-non-reactive-effect-callbacks",
+          "docs-document-compound-parts-with-part-and-description",
+          "docs-limit-inline-comments-to-non-obvious-logic"
+        ],
+        "typescript": [
+          "naming-centralize-shared-config-namespaces",
+          "naming-preserve-config-origin-with-chained-access",
+          "types-mark-unused-parameters-with-underscore",
+          "types-prefer-function-variable-types-over-parameter-annotations",
+          "types-reuse-callback-signatures-from-existing-contracts",
+          "types-reuse-existing-contracts-before-new-types",
+          "functions-avoid-imperative-assembly-in-wide-scopes",
+          "functions-extract-helpers-only-when-the-boundary-is-real",
+          "functions-prefer-immutable-array-sorting",
+          "functions-replace-enum-with-as-const-objects",
+          "functions-use-named-object-params-for-complex-signatures",
+          "functions-use-set-and-map-for-repeated-lookups",
+          "absence-expose-optional-values-instead-of-silent-fallbacks",
+          "docs-keep-inline-comments-for-constraints-and-caveats",
+          "docs-use-helper-for-reusable-pure-helper-functions"
+        ]
+      }
+    },
+    {
+      "id": "RTE07-visibility-lifecycle",
+      "prompt": "change only the show/hide branch for an already-mounted sidebar to the already-imported project Activity primitive to preserve expanded state; keep empty-state unmount behavior.",
+      "files": [
+        "src/routes/entries/-local/entry-sidebar.tsx"
+      ],
+      "expectedSkills": [
+        "react",
+        "typescript"
+      ],
+      "expectedSelected": {
+        "react": [
+          "composition-use-activity-for-render-branches"
+        ],
+        "typescript": [
+          "guardrails-review-banned-typescript-shortcuts-before-finishing"
+        ]
+      },
+      "expectedNotApplicable": {
+        "react": [
+          "ownership-avoid-barrel-and-react-namespace-imports",
+          "ownership-prefer-plain-ts-for-local-react-helpers",
+          "ownership-layer-component-boundaries",
+          "ownership-place-route-local-files-by-scope",
+          "ownership-shared-config-entry-points",
+          "ownership-use-consistent-file-and-symbol-naming",
+          "typing-function-type-first",
+          "typing-reuse-existing-contracts",
+          "strategy-avoid-boolean-prop-proliferation",
+          "strategy-choose-single-composition-compound-and-variants",
+          "strategy-prefer-children-over-render-props",
+          "composition-destructure-props-inside",
+          "composition-do-not-define-components-inside-components",
+          "composition-prefer-arrow-functions-and-object-params",
+          "composition-named-handlers-over-inline",
+          "composition-use-ref-prop-instead-of-forwardref-in-react-19",
+          "screen-avoid-premature-abstraction",
+          "screen-extract-local-section-components-for-runtime-boundaries",
+          "screen-extract-utilities-selectively",
+          "screen-keep-derived-values-close",
+          "screen-keep-route-flow-visible",
+          "screen-move-pure-support-code-out-of-entry-files",
+          "events-keep-handler-flow-inline",
+          "events-name-and-curry-handlers",
+          "events-run-user-actions-in-handlers-not-effects",
+          "state-avoid-fallback-defaults-and-loading-flags",
+          "state-calculate-derived-values-during-render",
+          "state-choose-state-tools-by-source-of-truth",
+          "state-name-query-and-mutation-bindings-consistently",
+          "state-compiler-first-memoization",
+          "state-preserve-origin-chaining",
+          "state-shape-query-data-with-select",
+          "state-store-derived-authority",
+          "state-use-functional-setstate-updates",
+          "state-use-lazy-state-initializers-for-expensive-defaults",
+          "state-use-starttransition-for-non-urgent-updates",
+          "state-use-usedeferredvalue-for-heavy-derived-renders",
+          "state-use-effectevent-for-non-reactive-effect-callbacks",
+          "docs-document-compound-parts-with-part-and-description",
+          "docs-limit-inline-comments-to-non-obvious-logic",
+          "docs-require-jsdoc-on-key-declarations"
+        ],
+        "typescript": [
+          "naming-centralize-shared-config-namespaces",
+          "naming-preserve-config-origin-with-chained-access",
+          "naming-use-consistent-file-and-symbol-naming",
+          "naming-use-direct-imports-and-public-entry-points",
+          "types-document-custom-types-and-shapes",
+          "types-mark-unused-parameters-with-underscore",
+          "types-prefer-function-variable-types-over-parameter-annotations",
+          "types-reuse-callback-signatures-from-existing-contracts",
+          "types-reuse-existing-contracts-before-new-types",
+          "functions-avoid-imperative-assembly-in-wide-scopes",
+          "functions-extract-helpers-only-when-the-boundary-is-real",
+          "functions-prefer-immutable-array-sorting",
+          "functions-replace-enum-with-as-const-objects",
+          "functions-use-named-object-params-for-complex-signatures",
+          "functions-use-set-and-map-for-repeated-lookups",
+          "absence-expose-optional-values-instead-of-silent-fallbacks",
+          "docs-keep-inline-comments-for-constraints-and-caveats",
+          "docs-require-header-jsdoc-on-key-declarations",
+          "docs-standardize-annotation-tags-by-declaration-role",
+          "docs-use-helper-for-reusable-pure-helper-functions",
+          "docs-write-concise-korean-comments-about-purpose-and-constraints"
+        ]
+      }
+    },
+    {
+      "id": "RTE08-delete-handler-flow",
+      "prompt": "move a row delete inline async branch, mutation, navigation, and state+effect replay into one curried named handler, keep an unused React event as _event, directly import its reused callback type, and keep screen-only flow inside page.tsx.",
+      "files": [
+        "src/routes/entries/page.tsx"
+      ],
+      "expectedSkills": [
+        "react",
+        "typescript",
+        "tanstack-route"
+      ],
+      "expectedSelected": {
+        "react": [
+          "typing-function-type-first",
+          "composition-named-handlers-over-inline",
+          "events-keep-handler-flow-inline",
+          "events-name-and-curry-handlers",
+          "events-run-user-actions-in-handlers-not-effects",
+          "docs-require-jsdoc-on-key-declarations"
+        ],
+        "typescript": [
+          "naming-use-consistent-file-and-symbol-naming",
+          "naming-use-direct-imports-and-public-entry-points",
+          "types-mark-unused-parameters-with-underscore",
+          "types-prefer-function-variable-types-over-parameter-annotations",
+          "types-reuse-callback-signatures-from-existing-contracts",
+          "functions-extract-helpers-only-when-the-boundary-is-real",
+          "docs-require-header-jsdoc-on-key-declarations",
+          "docs-standardize-annotation-tags-by-declaration-role",
+          "docs-write-concise-korean-comments-about-purpose-and-constraints",
+          "guardrails-review-banned-typescript-shortcuts-before-finishing"
+        ]
+      },
+      "expectedNotApplicable": {
+        "react": [
+          "ownership-avoid-barrel-and-react-namespace-imports",
+          "ownership-prefer-plain-ts-for-local-react-helpers",
+          "ownership-layer-component-boundaries",
+          "ownership-place-route-local-files-by-scope",
+          "ownership-shared-config-entry-points",
+          "ownership-use-consistent-file-and-symbol-naming",
+          "typing-reuse-existing-contracts",
+          "strategy-avoid-boolean-prop-proliferation",
+          "strategy-choose-single-composition-compound-and-variants",
+          "strategy-prefer-children-over-render-props",
+          "composition-destructure-props-inside",
+          "composition-do-not-define-components-inside-components",
+          "composition-prefer-arrow-functions-and-object-params",
+          "composition-use-activity-for-render-branches",
+          "composition-use-ref-prop-instead-of-forwardref-in-react-19",
+          "screen-avoid-premature-abstraction",
+          "screen-extract-local-section-components-for-runtime-boundaries",
+          "screen-extract-utilities-selectively",
+          "screen-keep-derived-values-close",
+          "screen-keep-route-flow-visible",
+          "screen-move-pure-support-code-out-of-entry-files",
+          "state-avoid-fallback-defaults-and-loading-flags",
+          "state-calculate-derived-values-during-render",
+          "state-choose-state-tools-by-source-of-truth",
+          "state-name-query-and-mutation-bindings-consistently",
+          "state-compiler-first-memoization",
+          "state-preserve-origin-chaining",
+          "state-shape-query-data-with-select",
+          "state-store-derived-authority",
+          "state-use-functional-setstate-updates",
+          "state-use-lazy-state-initializers-for-expensive-defaults",
+          "state-use-starttransition-for-non-urgent-updates",
+          "state-use-usedeferredvalue-for-heavy-derived-renders",
+          "state-use-effectevent-for-non-reactive-effect-callbacks",
+          "docs-document-compound-parts-with-part-and-description",
+          "docs-limit-inline-comments-to-non-obvious-logic"
+        ],
+        "typescript": [
+          "naming-centralize-shared-config-namespaces",
+          "naming-preserve-config-origin-with-chained-access",
+          "types-document-custom-types-and-shapes",
+          "types-reuse-existing-contracts-before-new-types",
+          "functions-avoid-imperative-assembly-in-wide-scopes",
+          "functions-prefer-immutable-array-sorting",
+          "functions-replace-enum-with-as-const-objects",
+          "functions-use-named-object-params-for-complex-signatures",
+          "functions-use-set-and-map-for-repeated-lookups",
+          "absence-expose-optional-values-instead-of-silent-fallbacks",
+          "docs-keep-inline-comments-for-constraints-and-caveats",
+          "docs-use-helper-for-reusable-pure-helper-functions"
+        ]
+      }
+    },
+    {
+      "id": "RTE09-route-runtime-section",
+      "prompt": "extract only the tree section that owns local search and expanded state plus a tree adapter into -local, implement a named selection handler from EntryTreeSectionProps[\"onCategorySelect\"], and keep search params, navigation, page query, and mutation in the route entry.",
+      "files": [
+        "src/routes/entries/page.tsx",
+        "src/routes/entries/-local/entry-tree-section.tsx"
+      ],
+      "expectedSkills": [
+        "react",
+        "typescript",
+        "tanstack-route"
+      ],
+      "expectedSelected": {
+        "react": [
+          "ownership-layer-component-boundaries",
+          "ownership-place-route-local-files-by-scope",
+          "ownership-use-consistent-file-and-symbol-naming",
+          "typing-function-type-first",
+          "typing-reuse-existing-contracts",
+          "composition-destructure-props-inside",
+          "screen-avoid-premature-abstraction",
+          "screen-extract-local-section-components-for-runtime-boundaries",
+          "screen-keep-route-flow-visible",
+          "events-name-and-curry-handlers",
+          "docs-require-jsdoc-on-key-declarations"
+        ],
+        "typescript": [
+          "naming-use-consistent-file-and-symbol-naming",
+          "naming-use-direct-imports-and-public-entry-points",
+          "types-document-custom-types-and-shapes",
+          "types-prefer-function-variable-types-over-parameter-annotations",
+          "types-reuse-callback-signatures-from-existing-contracts",
+          "docs-require-header-jsdoc-on-key-declarations",
+          "docs-standardize-annotation-tags-by-declaration-role",
+          "docs-write-concise-korean-comments-about-purpose-and-constraints",
+          "guardrails-review-banned-typescript-shortcuts-before-finishing"
+        ]
+      },
+      "expectedNotApplicable": {
+        "react": [
+          "ownership-avoid-barrel-and-react-namespace-imports",
+          "ownership-prefer-plain-ts-for-local-react-helpers",
+          "ownership-shared-config-entry-points",
+          "strategy-avoid-boolean-prop-proliferation",
+          "strategy-choose-single-composition-compound-and-variants",
+          "strategy-prefer-children-over-render-props",
+          "composition-do-not-define-components-inside-components",
+          "composition-prefer-arrow-functions-and-object-params",
+          "composition-named-handlers-over-inline",
+          "composition-use-activity-for-render-branches",
+          "composition-use-ref-prop-instead-of-forwardref-in-react-19",
+          "screen-extract-utilities-selectively",
+          "screen-keep-derived-values-close",
+          "screen-move-pure-support-code-out-of-entry-files",
+          "events-keep-handler-flow-inline",
+          "events-run-user-actions-in-handlers-not-effects",
+          "state-avoid-fallback-defaults-and-loading-flags",
+          "state-calculate-derived-values-during-render",
+          "state-choose-state-tools-by-source-of-truth",
+          "state-name-query-and-mutation-bindings-consistently",
+          "state-compiler-first-memoization",
+          "state-preserve-origin-chaining",
+          "state-shape-query-data-with-select",
+          "state-store-derived-authority",
+          "state-use-functional-setstate-updates",
+          "state-use-lazy-state-initializers-for-expensive-defaults",
+          "state-use-starttransition-for-non-urgent-updates",
+          "state-use-usedeferredvalue-for-heavy-derived-renders",
+          "state-use-effectevent-for-non-reactive-effect-callbacks",
+          "docs-document-compound-parts-with-part-and-description",
+          "docs-limit-inline-comments-to-non-obvious-logic"
+        ],
+        "typescript": [
+          "naming-centralize-shared-config-namespaces",
+          "naming-preserve-config-origin-with-chained-access",
+          "types-mark-unused-parameters-with-underscore",
+          "types-reuse-existing-contracts-before-new-types",
+          "functions-avoid-imperative-assembly-in-wide-scopes",
+          "functions-extract-helpers-only-when-the-boundary-is-real",
+          "functions-prefer-immutable-array-sorting",
+          "functions-replace-enum-with-as-const-objects",
+          "functions-use-named-object-params-for-complex-signatures",
+          "functions-use-set-and-map-for-repeated-lookups",
+          "absence-expose-optional-values-instead-of-silent-fallbacks",
+          "docs-keep-inline-comments-for-constraints-and-caveats",
+          "docs-use-helper-for-reusable-pure-helper-functions"
+        ]
+      }
+    },
+    {
+      "id": "RTE10-derived-selection-state",
+      "prompt": "replace selectedIds-derived count and flag effect+state synchronization with render calculation near use and change toggle to a functional updater.",
+      "files": [
+        "src/routes/entries/page.tsx"
+      ],
+      "expectedSkills": [
+        "react",
+        "typescript"
+      ],
+      "expectedSelected": {
+        "react": [
+          "screen-keep-derived-values-close",
+          "state-calculate-derived-values-during-render",
+          "state-use-functional-setstate-updates",
+          "docs-require-jsdoc-on-key-declarations"
+        ],
+        "typescript": [
+          "docs-require-header-jsdoc-on-key-declarations",
+          "docs-standardize-annotation-tags-by-declaration-role",
+          "docs-write-concise-korean-comments-about-purpose-and-constraints",
+          "guardrails-review-banned-typescript-shortcuts-before-finishing"
+        ]
+      },
+      "expectedNotApplicable": {
+        "react": [
+          "ownership-avoid-barrel-and-react-namespace-imports",
+          "ownership-prefer-plain-ts-for-local-react-helpers",
+          "ownership-layer-component-boundaries",
+          "ownership-place-route-local-files-by-scope",
+          "ownership-shared-config-entry-points",
+          "ownership-use-consistent-file-and-symbol-naming",
+          "typing-function-type-first",
+          "typing-reuse-existing-contracts",
+          "strategy-avoid-boolean-prop-proliferation",
+          "strategy-choose-single-composition-compound-and-variants",
+          "strategy-prefer-children-over-render-props",
+          "composition-destructure-props-inside",
+          "composition-do-not-define-components-inside-components",
+          "composition-prefer-arrow-functions-and-object-params",
+          "composition-named-handlers-over-inline",
+          "composition-use-activity-for-render-branches",
+          "composition-use-ref-prop-instead-of-forwardref-in-react-19",
+          "screen-avoid-premature-abstraction",
+          "screen-extract-local-section-components-for-runtime-boundaries",
+          "screen-extract-utilities-selectively",
+          "screen-keep-route-flow-visible",
+          "screen-move-pure-support-code-out-of-entry-files",
+          "events-keep-handler-flow-inline",
+          "events-name-and-curry-handlers",
+          "events-run-user-actions-in-handlers-not-effects",
+          "state-avoid-fallback-defaults-and-loading-flags",
+          "state-choose-state-tools-by-source-of-truth",
+          "state-name-query-and-mutation-bindings-consistently",
+          "state-compiler-first-memoization",
+          "state-preserve-origin-chaining",
+          "state-shape-query-data-with-select",
+          "state-store-derived-authority",
+          "state-use-lazy-state-initializers-for-expensive-defaults",
+          "state-use-starttransition-for-non-urgent-updates",
+          "state-use-usedeferredvalue-for-heavy-derived-renders",
+          "state-use-effectevent-for-non-reactive-effect-callbacks",
+          "docs-document-compound-parts-with-part-and-description",
+          "docs-limit-inline-comments-to-non-obvious-logic"
+        ],
+        "typescript": [
+          "naming-centralize-shared-config-namespaces",
+          "naming-preserve-config-origin-with-chained-access",
+          "naming-use-consistent-file-and-symbol-naming",
+          "naming-use-direct-imports-and-public-entry-points",
+          "types-document-custom-types-and-shapes",
+          "types-mark-unused-parameters-with-underscore",
+          "types-prefer-function-variable-types-over-parameter-annotations",
+          "types-reuse-callback-signatures-from-existing-contracts",
+          "types-reuse-existing-contracts-before-new-types",
+          "functions-avoid-imperative-assembly-in-wide-scopes",
+          "functions-extract-helpers-only-when-the-boundary-is-real",
+          "functions-prefer-immutable-array-sorting",
+          "functions-replace-enum-with-as-const-objects",
+          "functions-use-named-object-params-for-complex-signatures",
+          "functions-use-set-and-map-for-repeated-lookups",
+          "absence-expose-optional-values-instead-of-silent-fallbacks",
+          "docs-keep-inline-comments-for-constraints-and-caveats",
+          "docs-use-helper-for-reusable-pure-helper-functions"
+        ]
+      }
+    },
+    {
+      "id": "RTE11-shared-authority",
+      "prompt": "synchronize shared capability once at the owning layout and store for multiple screens, menu, and guards; do not copy single-screen server fields into the store.",
+      "files": [
+        "src/routes/_authenticated/layout.tsx",
+        "src/stores/capability-store.ts"
+      ],
+      "expectedSkills": [
+        "react",
+        "typescript"
+      ],
+      "expectedSelected": {
+        "react": [
+          "state-choose-state-tools-by-source-of-truth",
+          "state-preserve-origin-chaining",
+          "state-store-derived-authority",
+          "docs-require-jsdoc-on-key-declarations"
+        ],
+        "typescript": [
+          "naming-use-consistent-file-and-symbol-naming",
+          "naming-use-direct-imports-and-public-entry-points",
+          "types-document-custom-types-and-shapes",
+          "docs-require-header-jsdoc-on-key-declarations",
+          "docs-standardize-annotation-tags-by-declaration-role",
+          "docs-write-concise-korean-comments-about-purpose-and-constraints",
+          "guardrails-review-banned-typescript-shortcuts-before-finishing"
+        ]
+      },
+      "expectedNotApplicable": {
+        "react": [
+          "ownership-avoid-barrel-and-react-namespace-imports",
+          "ownership-prefer-plain-ts-for-local-react-helpers",
+          "ownership-layer-component-boundaries",
+          "ownership-place-route-local-files-by-scope",
+          "ownership-shared-config-entry-points",
+          "ownership-use-consistent-file-and-symbol-naming",
+          "typing-function-type-first",
+          "typing-reuse-existing-contracts",
+          "strategy-avoid-boolean-prop-proliferation",
+          "strategy-choose-single-composition-compound-and-variants",
+          "strategy-prefer-children-over-render-props",
+          "composition-destructure-props-inside",
+          "composition-do-not-define-components-inside-components",
+          "composition-prefer-arrow-functions-and-object-params",
+          "composition-named-handlers-over-inline",
+          "composition-use-activity-for-render-branches",
+          "composition-use-ref-prop-instead-of-forwardref-in-react-19",
+          "screen-avoid-premature-abstraction",
+          "screen-extract-local-section-components-for-runtime-boundaries",
+          "screen-extract-utilities-selectively",
+          "screen-keep-derived-values-close",
+          "screen-keep-route-flow-visible",
+          "screen-move-pure-support-code-out-of-entry-files",
+          "events-keep-handler-flow-inline",
+          "events-name-and-curry-handlers",
+          "events-run-user-actions-in-handlers-not-effects",
+          "state-avoid-fallback-defaults-and-loading-flags",
+          "state-calculate-derived-values-during-render",
+          "state-name-query-and-mutation-bindings-consistently",
+          "state-compiler-first-memoization",
+          "state-shape-query-data-with-select",
+          "state-use-functional-setstate-updates",
+          "state-use-lazy-state-initializers-for-expensive-defaults",
+          "state-use-starttransition-for-non-urgent-updates",
+          "state-use-usedeferredvalue-for-heavy-derived-renders",
+          "state-use-effectevent-for-non-reactive-effect-callbacks",
+          "docs-document-compound-parts-with-part-and-description",
+          "docs-limit-inline-comments-to-non-obvious-logic"
+        ],
+        "typescript": [
+          "naming-centralize-shared-config-namespaces",
+          "naming-preserve-config-origin-with-chained-access",
+          "types-mark-unused-parameters-with-underscore",
+          "types-prefer-function-variable-types-over-parameter-annotations",
+          "types-reuse-callback-signatures-from-existing-contracts",
+          "types-reuse-existing-contracts-before-new-types",
+          "functions-avoid-imperative-assembly-in-wide-scopes",
+          "functions-extract-helpers-only-when-the-boundary-is-real",
+          "functions-prefer-immutable-array-sorting",
+          "functions-replace-enum-with-as-const-objects",
+          "functions-use-named-object-params-for-complex-signatures",
+          "functions-use-set-and-map-for-repeated-lookups",
+          "absence-expose-optional-values-instead-of-silent-fallbacks",
+          "docs-keep-inline-comments-for-constraints-and-caveats",
+          "docs-use-helper-for-reusable-pure-helper-functions"
+        ]
+      }
+    },
+    {
+      "id": "RTE12-query-shaping",
+      "prompt": "move repeated raw list, items, and meta render shaping into query select, rename bindings to response... and mutation..., and remove wide aliases.",
+      "files": [
+        "src/routes/entries/page.tsx"
+      ],
+      "expectedSkills": [
+        "react",
+        "typescript"
+      ],
+      "expectedSelected": {
+        "react": [
+          "screen-keep-derived-values-close",
+          "state-name-query-and-mutation-bindings-consistently",
+          "state-preserve-origin-chaining",
+          "state-shape-query-data-with-select",
+          "docs-require-jsdoc-on-key-declarations"
+        ],
+        "typescript": [
+          "naming-use-consistent-file-and-symbol-naming",
+          "docs-require-header-jsdoc-on-key-declarations",
+          "docs-standardize-annotation-tags-by-declaration-role",
+          "docs-write-concise-korean-comments-about-purpose-and-constraints",
+          "guardrails-review-banned-typescript-shortcuts-before-finishing"
+        ]
+      },
+      "expectedNotApplicable": {
+        "react": [
+          "ownership-avoid-barrel-and-react-namespace-imports",
+          "ownership-prefer-plain-ts-for-local-react-helpers",
+          "ownership-layer-component-boundaries",
+          "ownership-place-route-local-files-by-scope",
+          "ownership-shared-config-entry-points",
+          "ownership-use-consistent-file-and-symbol-naming",
+          "typing-function-type-first",
+          "typing-reuse-existing-contracts",
+          "strategy-avoid-boolean-prop-proliferation",
+          "strategy-choose-single-composition-compound-and-variants",
+          "strategy-prefer-children-over-render-props",
+          "composition-destructure-props-inside",
+          "composition-do-not-define-components-inside-components",
+          "composition-prefer-arrow-functions-and-object-params",
+          "composition-named-handlers-over-inline",
+          "composition-use-activity-for-render-branches",
+          "composition-use-ref-prop-instead-of-forwardref-in-react-19",
+          "screen-avoid-premature-abstraction",
+          "screen-extract-local-section-components-for-runtime-boundaries",
+          "screen-extract-utilities-selectively",
+          "screen-keep-route-flow-visible",
+          "screen-move-pure-support-code-out-of-entry-files",
+          "events-keep-handler-flow-inline",
+          "events-name-and-curry-handlers",
+          "events-run-user-actions-in-handlers-not-effects",
+          "state-avoid-fallback-defaults-and-loading-flags",
+          "state-calculate-derived-values-during-render",
+          "state-choose-state-tools-by-source-of-truth",
+          "state-compiler-first-memoization",
+          "state-store-derived-authority",
+          "state-use-functional-setstate-updates",
+          "state-use-lazy-state-initializers-for-expensive-defaults",
+          "state-use-starttransition-for-non-urgent-updates",
+          "state-use-usedeferredvalue-for-heavy-derived-renders",
+          "state-use-effectevent-for-non-reactive-effect-callbacks",
+          "docs-document-compound-parts-with-part-and-description",
+          "docs-limit-inline-comments-to-non-obvious-logic"
+        ],
+        "typescript": [
+          "naming-centralize-shared-config-namespaces",
+          "naming-preserve-config-origin-with-chained-access",
+          "naming-use-direct-imports-and-public-entry-points",
+          "types-document-custom-types-and-shapes",
+          "types-mark-unused-parameters-with-underscore",
+          "types-prefer-function-variable-types-over-parameter-annotations",
+          "types-reuse-callback-signatures-from-existing-contracts",
+          "types-reuse-existing-contracts-before-new-types",
+          "functions-avoid-imperative-assembly-in-wide-scopes",
+          "functions-extract-helpers-only-when-the-boundary-is-real",
+          "functions-prefer-immutable-array-sorting",
+          "functions-replace-enum-with-as-const-objects",
+          "functions-use-named-object-params-for-complex-signatures",
+          "functions-use-set-and-map-for-repeated-lookups",
+          "absence-expose-optional-values-instead-of-silent-fallbacks",
+          "docs-keep-inline-comments-for-constraints-and-caveats",
+          "docs-use-helper-for-reusable-pure-helper-functions"
+        ]
+      }
+    },
+    {
+      "id": "RTE13-heavy-search",
+      "prompt": "for a 50k-row search, directly import newly used React hooks, use lazy initialization, urgent input plus deferred result, a non-urgent category transition, and only evidence-backed memoization; update the constraint comment.",
+      "files": [
+        "src/routes/entries/-local/entry-search.tsx"
+      ],
+      "expectedSkills": [
+        "react",
+        "typescript"
+      ],
+      "expectedSelected": {
+        "react": [
+          "state-compiler-first-memoization",
+          "state-use-lazy-state-initializers-for-expensive-defaults",
+          "state-use-starttransition-for-non-urgent-updates",
+          "state-use-usedeferredvalue-for-heavy-derived-renders",
+          "docs-limit-inline-comments-to-non-obvious-logic",
+          "docs-require-jsdoc-on-key-declarations"
+        ],
+        "typescript": [
+          "naming-use-consistent-file-and-symbol-naming",
+          "naming-use-direct-imports-and-public-entry-points",
+          "docs-keep-inline-comments-for-constraints-and-caveats",
+          "docs-require-header-jsdoc-on-key-declarations",
+          "docs-standardize-annotation-tags-by-declaration-role",
+          "docs-write-concise-korean-comments-about-purpose-and-constraints",
+          "guardrails-review-banned-typescript-shortcuts-before-finishing"
+        ]
+      },
+      "expectedNotApplicable": {
+        "react": [
+          "ownership-avoid-barrel-and-react-namespace-imports",
+          "ownership-prefer-plain-ts-for-local-react-helpers",
+          "ownership-layer-component-boundaries",
+          "ownership-place-route-local-files-by-scope",
+          "ownership-shared-config-entry-points",
+          "ownership-use-consistent-file-and-symbol-naming",
+          "typing-function-type-first",
+          "typing-reuse-existing-contracts",
+          "strategy-avoid-boolean-prop-proliferation",
+          "strategy-choose-single-composition-compound-and-variants",
+          "strategy-prefer-children-over-render-props",
+          "composition-destructure-props-inside",
+          "composition-do-not-define-components-inside-components",
+          "composition-prefer-arrow-functions-and-object-params",
+          "composition-named-handlers-over-inline",
+          "composition-use-activity-for-render-branches",
+          "composition-use-ref-prop-instead-of-forwardref-in-react-19",
+          "screen-avoid-premature-abstraction",
+          "screen-extract-local-section-components-for-runtime-boundaries",
+          "screen-extract-utilities-selectively",
+          "screen-keep-derived-values-close",
+          "screen-keep-route-flow-visible",
+          "screen-move-pure-support-code-out-of-entry-files",
+          "events-keep-handler-flow-inline",
+          "events-name-and-curry-handlers",
+          "events-run-user-actions-in-handlers-not-effects",
+          "state-avoid-fallback-defaults-and-loading-flags",
+          "state-calculate-derived-values-during-render",
+          "state-choose-state-tools-by-source-of-truth",
+          "state-name-query-and-mutation-bindings-consistently",
+          "state-preserve-origin-chaining",
+          "state-shape-query-data-with-select",
+          "state-store-derived-authority",
+          "state-use-functional-setstate-updates",
+          "state-use-effectevent-for-non-reactive-effect-callbacks",
+          "docs-document-compound-parts-with-part-and-description"
+        ],
+        "typescript": [
+          "naming-centralize-shared-config-namespaces",
+          "naming-preserve-config-origin-with-chained-access",
+          "types-document-custom-types-and-shapes",
+          "types-mark-unused-parameters-with-underscore",
+          "types-prefer-function-variable-types-over-parameter-annotations",
+          "types-reuse-callback-signatures-from-existing-contracts",
+          "types-reuse-existing-contracts-before-new-types",
+          "functions-avoid-imperative-assembly-in-wide-scopes",
+          "functions-extract-helpers-only-when-the-boundary-is-real",
+          "functions-prefer-immutable-array-sorting",
+          "functions-replace-enum-with-as-const-objects",
+          "functions-use-named-object-params-for-complex-signatures",
+          "functions-use-set-and-map-for-repeated-lookups",
+          "absence-expose-optional-values-instead-of-silent-fallbacks",
+          "docs-use-helper-for-reusable-pure-helper-functions"
+        ]
+      }
+    },
+    {
+      "id": "RTE14-subscription-effectevent",
+      "prompt": "directly import useEffectEvent, replace only a socket subscription latest-callback ref-sync hack with a named handleMessage = useEffectEvent(...), and update subscription lifecycle JSDoc; do not change click or submit actions.",
+      "files": [
+        "src/routes/entries/-local/entry-socket.tsx"
+      ],
+      "expectedSkills": [
+        "react",
+        "typescript"
+      ],
+      "expectedSelected": {
+        "react": [
+          "events-name-and-curry-handlers",
+          "state-use-effectevent-for-non-reactive-effect-callbacks",
+          "docs-require-jsdoc-on-key-declarations"
+        ],
+        "typescript": [
+          "naming-use-consistent-file-and-symbol-naming",
+          "naming-use-direct-imports-and-public-entry-points",
+          "docs-require-header-jsdoc-on-key-declarations",
+          "docs-standardize-annotation-tags-by-declaration-role",
+          "docs-write-concise-korean-comments-about-purpose-and-constraints",
+          "guardrails-review-banned-typescript-shortcuts-before-finishing"
+        ]
+      },
+      "expectedNotApplicable": {
+        "react": [
+          "ownership-avoid-barrel-and-react-namespace-imports",
+          "ownership-prefer-plain-ts-for-local-react-helpers",
+          "ownership-layer-component-boundaries",
+          "ownership-place-route-local-files-by-scope",
+          "ownership-shared-config-entry-points",
+          "ownership-use-consistent-file-and-symbol-naming",
+          "typing-function-type-first",
+          "typing-reuse-existing-contracts",
+          "strategy-avoid-boolean-prop-proliferation",
+          "strategy-choose-single-composition-compound-and-variants",
+          "strategy-prefer-children-over-render-props",
+          "composition-destructure-props-inside",
+          "composition-do-not-define-components-inside-components",
+          "composition-prefer-arrow-functions-and-object-params",
+          "composition-named-handlers-over-inline",
+          "composition-use-activity-for-render-branches",
+          "composition-use-ref-prop-instead-of-forwardref-in-react-19",
+          "screen-avoid-premature-abstraction",
+          "screen-extract-local-section-components-for-runtime-boundaries",
+          "screen-extract-utilities-selectively",
+          "screen-keep-derived-values-close",
+          "screen-keep-route-flow-visible",
+          "screen-move-pure-support-code-out-of-entry-files",
+          "events-keep-handler-flow-inline",
+          "events-run-user-actions-in-handlers-not-effects",
+          "state-avoid-fallback-defaults-and-loading-flags",
+          "state-calculate-derived-values-during-render",
+          "state-choose-state-tools-by-source-of-truth",
+          "state-name-query-and-mutation-bindings-consistently",
+          "state-compiler-first-memoization",
+          "state-preserve-origin-chaining",
+          "state-shape-query-data-with-select",
+          "state-store-derived-authority",
+          "state-use-functional-setstate-updates",
+          "state-use-lazy-state-initializers-for-expensive-defaults",
+          "state-use-starttransition-for-non-urgent-updates",
+          "state-use-usedeferredvalue-for-heavy-derived-renders",
+          "docs-document-compound-parts-with-part-and-description",
+          "docs-limit-inline-comments-to-non-obvious-logic"
+        ],
+        "typescript": [
+          "naming-centralize-shared-config-namespaces",
+          "naming-preserve-config-origin-with-chained-access",
+          "types-document-custom-types-and-shapes",
+          "types-mark-unused-parameters-with-underscore",
+          "types-prefer-function-variable-types-over-parameter-annotations",
+          "types-reuse-callback-signatures-from-existing-contracts",
+          "types-reuse-existing-contracts-before-new-types",
+          "functions-avoid-imperative-assembly-in-wide-scopes",
+          "functions-extract-helpers-only-when-the-boundary-is-real",
+          "functions-prefer-immutable-array-sorting",
+          "functions-replace-enum-with-as-const-objects",
+          "functions-use-named-object-params-for-complex-signatures",
+          "functions-use-set-and-map-for-repeated-lookups",
+          "absence-expose-optional-values-instead-of-silent-fallbacks",
+          "docs-keep-inline-comments-for-constraints-and-caveats",
+          "docs-use-helper-for-reusable-pure-helper-functions"
+        ]
+      }
+    },
+    {
+      "id": "RTE15-suspense-absence",
+      "prompt": "replace Suspense detail ?? [], || \"-\", a local pending Spinner, and top-level aliases with an explicit empty state and origin chaining; remove an ungrounded explanatory comment.",
+      "files": [
+        "src/routes/entries/detail.tsx"
+      ],
+      "expectedSkills": [
+        "react",
+        "typescript"
+      ],
+      "expectedSelected": {
+        "react": [
+          "screen-keep-derived-values-close",
+          "state-avoid-fallback-defaults-and-loading-flags",
+          "state-preserve-origin-chaining",
+          "docs-limit-inline-comments-to-non-obvious-logic"
+        ],
+        "typescript": [
+          "absence-expose-optional-values-instead-of-silent-fallbacks",
+          "docs-keep-inline-comments-for-constraints-and-caveats",
+          "docs-write-concise-korean-comments-about-purpose-and-constraints",
+          "guardrails-review-banned-typescript-shortcuts-before-finishing"
+        ]
+      },
+      "expectedNotApplicable": {
+        "react": [
+          "ownership-avoid-barrel-and-react-namespace-imports",
+          "ownership-prefer-plain-ts-for-local-react-helpers",
+          "ownership-layer-component-boundaries",
+          "ownership-place-route-local-files-by-scope",
+          "ownership-shared-config-entry-points",
+          "ownership-use-consistent-file-and-symbol-naming",
+          "typing-function-type-first",
+          "typing-reuse-existing-contracts",
+          "strategy-avoid-boolean-prop-proliferation",
+          "strategy-choose-single-composition-compound-and-variants",
+          "strategy-prefer-children-over-render-props",
+          "composition-destructure-props-inside",
+          "composition-do-not-define-components-inside-components",
+          "composition-prefer-arrow-functions-and-object-params",
+          "composition-named-handlers-over-inline",
+          "composition-use-activity-for-render-branches",
+          "composition-use-ref-prop-instead-of-forwardref-in-react-19",
+          "screen-avoid-premature-abstraction",
+          "screen-extract-local-section-components-for-runtime-boundaries",
+          "screen-extract-utilities-selectively",
+          "screen-keep-route-flow-visible",
+          "screen-move-pure-support-code-out-of-entry-files",
+          "events-keep-handler-flow-inline",
+          "events-name-and-curry-handlers",
+          "events-run-user-actions-in-handlers-not-effects",
+          "state-calculate-derived-values-during-render",
+          "state-choose-state-tools-by-source-of-truth",
+          "state-name-query-and-mutation-bindings-consistently",
+          "state-compiler-first-memoization",
+          "state-shape-query-data-with-select",
+          "state-store-derived-authority",
+          "state-use-functional-setstate-updates",
+          "state-use-lazy-state-initializers-for-expensive-defaults",
+          "state-use-starttransition-for-non-urgent-updates",
+          "state-use-usedeferredvalue-for-heavy-derived-renders",
+          "state-use-effectevent-for-non-reactive-effect-callbacks",
+          "docs-document-compound-parts-with-part-and-description",
+          "docs-require-jsdoc-on-key-declarations"
+        ],
+        "typescript": [
+          "naming-centralize-shared-config-namespaces",
+          "naming-preserve-config-origin-with-chained-access",
+          "naming-use-consistent-file-and-symbol-naming",
+          "naming-use-direct-imports-and-public-entry-points",
+          "types-document-custom-types-and-shapes",
+          "types-mark-unused-parameters-with-underscore",
+          "types-prefer-function-variable-types-over-parameter-annotations",
+          "types-reuse-callback-signatures-from-existing-contracts",
+          "types-reuse-existing-contracts-before-new-types",
+          "functions-avoid-imperative-assembly-in-wide-scopes",
+          "functions-extract-helpers-only-when-the-boundary-is-real",
+          "functions-prefer-immutable-array-sorting",
+          "functions-replace-enum-with-as-const-objects",
+          "functions-use-named-object-params-for-complex-signatures",
+          "functions-use-set-and-map-for-repeated-lookups",
+          "docs-require-header-jsdoc-on-key-declarations",
+          "docs-standardize-annotation-tags-by-declaration-role",
+          "docs-use-helper-for-reusable-pure-helper-functions"
+        ]
+      }
+    }
+  ]
+}
+

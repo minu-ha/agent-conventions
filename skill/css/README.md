@@ -112,6 +112,7 @@ tags: tag1, tag2
 5. scope drift가 생기면 전체 index와 receipt를 다시 계산합니다.
 
 TypeScript는 `TS/TSX class contract, wrapper Props 또는 style import를 함께 변경한다.`는 조건에서만 companion으로 활성화합니다. React는 CSS metadata dependency가 아니며, TSX component/state 변경이 실제로 있을 때 별도 activation evidence로 판정합니다.
+Machine-readable oracle의 mixed fixture 5개는 React가 활성화될 때 React exact partition을 저장하지만, 이 evaluation evidence가 CSS metadata dependency를 만들지는 않습니다.
 
 ## Impact 레벨
 

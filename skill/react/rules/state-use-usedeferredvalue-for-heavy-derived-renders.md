@@ -2,6 +2,8 @@
 title: Use useDeferredValue for Heavy Derived Renders
 impact: MEDIUM
 impactDescription: keeps typing and small interactions responsive while expensive derived views catch up
+appliesWhen: 검색어·필터·정렬 입력이 무거운 파생 view를 갱신해 typing 지연이 생기거나 `useDeferredValue` 기반 계산을 추가·변경한다.
+reviewWith: state-compiler-first-memoization, state-use-starttransition-for-non-urgent-updates
 tags: state, usedeferredvalue, performance, derived
 ---
 

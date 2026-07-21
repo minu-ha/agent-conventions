@@ -1,145 +1,88 @@
 # React 컨벤션
 
-에이전트 협업, 리뷰, AI 보조 리팩터링에 맞춰 React 컨벤션을 관리하는 구조화된 저장소입니다.  
-현재 React 가이드는 8개 local 섹션의 42개 rule 파일로 구성되어 있습니다.  
-최종적으로 slim [AGENTS.md](./AGENTS.md)로 compile됩니다. local guide는 React 규칙만 담고 `typescript` companion skill을 함께 사용합니다. 이 skill은 TanStack Query, Zustand, React 19 ref prop/Activity/useEffectEvent/transition 패턴을 쓰는 React codebase를 기본 전제로 합니다.
+에이전트 협업, 리뷰, AI 보조 리팩터링에 맞춰 React 컨벤션을 관리하는 구조화된 저장소입니다.
+현재 React 가이드는 8개 local 섹션의 42개 rule 파일로 구성되어 있습니다.
+기본 진입점은 compact [SKILL.md](./SKILL.md) router와 generated [RULES_INDEX.md](./RULES_INDEX.md)이며, 전체 [AGENTS.md](./AGENTS.md)는 opt-in full handbook입니다.
+이 skill은 TanStack Query, Zustand, React 19 ref prop/Activity/useEffectEvent/transition 패턴을 쓰는 React codebase를 기본 전제로 합니다.
 
 ## 구조
 
 - [rules/_sections.md](./rules/_sections.md) - rule 섹션 구성 메타데이터
 - [rules/_template.md](./rules/_template.md) - 새 rule 작성용 템플릿
 - `area-description.md` - 실제 rule 파일 패턴
-- [metadata.json](./metadata.json) - compiled guide 메타데이터
-- [AGENTS.md](./AGENTS.md) - 에이전트가 읽는 compiled 결과물
-- [package/README.md](../../package/README.md) - `skill/*` build, validation, typecheck, test를 담당하는 standalone TypeScript npm package
+- [metadata.json](./metadata.json) - progressive routing과 companion activation 메타데이터
+- [SKILL.md](./SKILL.md) - 전체 index scan과 exact receipt를 요구하는 compact router
+- [RULES_INDEX.md](./RULES_INDEX.md) - ordinal, stable ID, `appliesWhen`, `reviewWith`, digest를 담은 generated index
+- [routing-evals.json](./routing-evals.json) - 15개 scenario와 16개 stage의 exact Selected/N/A routing oracle
+- [AGENTS.md](./AGENTS.md) - full handbook 요청 또는 index 손상 fallback에만 읽는 compiled 결과물
+- [pressure-tests.md](./pressure-tests.md) - behavioral/token 회귀 실행 절차
+- [package/README.md](../../package/README.md) - build, validation, typecheck, test tooling
 
 ## 시작하기
 
-1. Validate rule files:
-   ```bash
-   npm --prefix ../../package run validate:react
-   ```
+```bash
+npm --prefix ../../package run validate:react
+npm --prefix ../../package run build:react
+npm --prefix ../../package run check:generated:react
+npm --prefix ../../package run typecheck
+npm --prefix ../../package run test
+```
 
-2. Build [AGENTS.md](./AGENTS.md) from rules:
-   ```bash
-   npm --prefix ../../package run build:react
-   ```
-
-3. Validate and build together:
-   ```bash
-   npm --prefix ../../package run dev:react
-   ```
-
-4. Verify the build package itself:
-   ```bash
-   npm --prefix ../../package run typecheck
-   npm --prefix ../../package run test
-   ```
+`dev:react`는 validate 후 build를 연속 실행합니다. generated 파일이 source와 일치하는지만 확인할 때는 `check:generated:react`를 사용합니다.
 
 ## 새 Rule 추가하기
 
 1. [rules/_template.md](./rules/_template.md)를 `rules/area-description.md`로 복사합니다.
-2. 알맞은 area prefix를 고릅니다.
-   - `ownership-` - shared/local 소유 경계와 파일 배치 규칙
-   - `typing-` - React handler, callback, props, component 계약 재사용 규칙
-   - `strategy-` - single component, compound component, explicit variant 중 어떤 구조를 선택할지 정하는 규칙
-   - `composition-` - 컴포넌트 시그니처, JSX 구조, handler 노출, React 19 component 작성 규칙
-   - `screen-` - route-entry 규율, runtime boundary 기준 route-local section 추출, named export 기반 `page.ts` support code 추출 경계 규칙
-   - `events-` - handler 네이밍과 effect로 우회하지 않는 상호작용 흐름 규칙
-   - `state-` - 서버 상태, store 접근, 파생값, effect callback, transition, fallback 규칙
-   - `docs-` - 역할 기반 annotation 태그와 non-obvious logic comment 규칙
-3. frontmatter와 본문을 작성합니다.
-4. 설명이 포함된 incorrect/correct 예시를 넣습니다.
-5. `npm --prefix ../../package run dev:react`를 실행해 [AGENTS.md](./AGENTS.md)를 다시 생성합니다.
+2. 알맞은 prefix를 선택합니다.
+   - `ownership-` - shared/local 소유 경계와 파일 배치
+   - `typing-` - React handler, callback, props 계약
+   - `strategy-` - single, compound, explicit variant 선택
+   - `composition-` - component signature, JSX, React 19 구조
+   - `screen-` - route entry와 support code 추출 경계
+   - `events-` - handler naming과 interaction flow
+   - `state-` - server/store/derived state와 transition
+   - `docs-` - React boundary documentation과 comments
+3. observable 변경 surface를 설명하는 `appliesWhen`을 작성합니다.
+4. 함께 재평가할 rule이 있을 때만 `reviewWith`를 추가합니다.
+5. incorrect/correct 예시와 본문을 작성하고 validate/build/check를 실행합니다.
 
-## Rule 파일 구조
+## Rule frontmatter
 
-각 rule 파일은 아래 구조를 따릅니다.
-
-````markdown
+```markdown
 ---
 title: Rule Title Here
 impact: MEDIUM
 impactDescription: 선택적 영향도 설명
+appliesWhen: 이 rule을 선택해야 하는 변경 surface와 evidence를 한 문장으로 설명
 tags: tag1, tag2
 ---
-
-## Rule Title Here
-
-**Impact: MEDIUM (선택적 영향도 설명)**
-
-규칙의 핵심과 왜 중요한지를 짧게 설명합니다.
-
-**Incorrect (무엇이 문제인지 설명):**
-
-```tsx
-// 나쁜 예시
 ```
 
-**Correct (무엇이 좋아졌는지 설명):**
+- `appliesWhen`은 비어 있지 않은 한 줄 문장이며 160자를 넘기지 않습니다.
+- `reviewWith`는 다른 rule을 자동 선택하는 명령이 아니라 현재 scope에서 다시 판정하게 하는 재평가 hint입니다.
+- 재평가 대상이 없으면 `reviewWith` key를 생략합니다. 대상이 있을 때만 local stable ID 또는 `companion/rule-id`를 쉼표로 구분합니다.
+- `_`로 시작하는 파일은 generated guide에서 제외합니다.
+- section은 filename prefix로 결정되고 ordinal은 title codepoint 순서로 자동 생성됩니다.
 
-```tsx
-// 좋은 예시
-```
-````
+## Progressive routing workflow
 
-## 파일명 규칙
+1. [SKILL.md](./SKILL.md)에서 scope snapshot과 companion activation을 고정합니다.
+2. [RULES_INDEX.md](./RULES_INDEX.md)를 처음부터 끝까지 scan하고 첫 match에서 멈추지 않습니다.
+3. digest에 묶인 `Selected`, `N/A`, `Unknown` exact partition과 비어 있지 않은 exclusion evidence를 기록합니다.
+4. `Selected`와 `Unknown` 원문을 모두 읽고 `Unknown`을 해소합니다.
+5. scope drift가 생기면 모든 활성 progressive index와 receipt를 다시 계산합니다.
 
-- `_`로 시작하는 파일은 특수 파일이며 compiled guide에서 제외됩니다.
-- Rule 파일은 `area-description.md` 형식을 사용합니다. 예: `state-shape-query-data-with-select.md`
-- Section은 파일명 prefix로 결정됩니다.
-- Rule은 각 section 안에서 title 기준 알파벳 순으로 정렬됩니다.
-- [AGENTS.md](./AGENTS.md)의 rule 번호는 자동 생성됩니다.
-
-## Impact 레벨
-
-- `CRITICAL` - 정확성이나 대규모 일관성에 직접 영향할 가능성이 큰 최우선 규칙
-- `HIGH` - 유지보수성과 가독성에 큰 영향을 주는 규칙
-- `MEDIUM-HIGH` - 일반적인 기능 작업에서 강하게 권장되는 규칙
-- `MEDIUM` - 일관성에는 중요하지만 핵심 흐름 규칙보다는 우선순위가 낮은 규칙
-- `LOW` - 상황이 맞을 때 적용하면 좋은 보강 규칙
-
-## 스크립트
-
-- `npm --prefix ../../package run build:react` - React rule만 compile해서 [AGENTS.md](./AGENTS.md) 생성
-- `npm --prefix ../../package run validate:react` - React rule만 검증
-- `npm --prefix ../../package run dev:react` - React만 validate 후 build까지 연속 실행
-- `npm --prefix ../../package run build:all` - `skill/` 아래 build 가능한 skill 전체 build
-- `npm --prefix ../../package run validate:all` - `skill/` 아래 build 가능한 skill 전체 validate
-- `npm --prefix ../../package run dev:all` - `skill/` 아래 build 가능한 skill 전체 validate + build
-- `npm --prefix ../../package run typecheck` - standalone build package 타입 검사
-- `npm --prefix ../../package run test` - build package용 CLI/파서/문서 회귀 테스트 실행
-- `cd ../../package && npm run build:react` - package 로컬 위치에서 React build 스크립트 직접 실행
-
-## 권장 협업 방식
-
-- React skill은 local React rule과 리뷰 기준을 정의합니다. 서브에이전트 사용 정책 자체를 source of truth로 삼지는 않습니다.
-- 변경이 여러 독립 concern으로 나뉘거나 리뷰 루프가 중요한 작업이면 context를 분리한 서브에이전트 협업을 권장합니다.
-- 병렬 작업은 write scope가 겹치지 않을 때만 허용하고, 최종 통합과 검증은 메인 에이전트가 맡는 구성을 기본값으로 봅니다.
-- 실제 mandatory policy, 예외, 병렬 금지 조건은 consuming project의 `AGENTS.md`에 두는 편이 안전합니다.
+React가 활성화되면 TypeScript companion은 항상 required입니다. CSS는 `class contract, stylesheet 또는 styling surface를 변경한다.`는 조건에서만 활성화합니다. Route/search/navigation이나 browser test surface가 바뀌면 각각의 전용 skill도 별도로 판정합니다.
+모든 활성 skill은 자신의 `SKILL.md`를 먼저 따릅니다. `progressiveDisclosure: true`이고 `RULES_INDEX.md`가 있는 skill만 전체 index와 digest receipt를 사용하며, non-progressive skill은 해당 `SKILL.md`가 안내하는 `AGENTS.md`와 rule 원문을 읽습니다.
 
 ## Pressure Tests
 
-- React skill 품질을 회귀 테스트하려면 [pressure-tests.md](./pressure-tests.md)를 사용합니다.
-- 이 문서에는 route entry orchestration, `page.ts` 추출, local hook misuse, query shaping, fallback, compound component, companion skill activation까지 포함한 pressure scenario 세트가 들어 있습니다.
-- rule을 추가하거나 wording을 크게 바꿨다면 관련 scenario도 같이 갱신하는 편이 안전합니다.
+[pressure-tests.md](./pressure-tests.md)는 같은 fixture를 no-skill baseline, full-handbook oracle, progressive candidate, mutation RED 네 arm으로 실행합니다. exact selection recall/precision과 input token을 함께 비교하며, deterministic manifest 검증은 실제 agent 행동 평가를 대체하지 않습니다.
 
-## 마이그레이션 메모
+## 마이그레이션과 유지보수
 
 - [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`가 source of truth입니다.
-- [AGENTS.md](./AGENTS.md)는 에이전트가 먼저 읽는 compiled 문서입니다.
-- 예전 단일 문서는 보존하지 않습니다. 오래된 문맥은 Git history에서만 확인하고, 현재 판단은 source rule과 compiled guide만 기준으로 합니다.
-- `metadata.json`의 `extends`는 `typescript` companion skill 관계를 선언합니다.
-- route entry support code의 기본 구조는 `page.tsx` + sibling `page.ts`를 우선하고, `page.ts`는 named export를 기본으로 사용합니다.
-- generic TypeScript rule은 [../typescript/rules/_sections.md](../typescript/rules/_sections.md)와 `../typescript/rules/*.md`가 정본이고, React rule은 framework-specific overlay에 집중합니다.
-- 공용 TypeScript build package는 raw CLI 형태와 per-skill alias를 모두 제공합니다.
-
-## 기여 가이드
-
-rule을 추가하거나 수정할 때는 아래 순서를 따릅니다.
-
-1. section에 맞는 filename prefix를 사용합니다.
-2. [_template.md](./rules/_template.md) 구조를 따릅니다.
-3. 예시는 실제 route/component 코드와 가깝고 구체적으로 작성합니다.
-4. 새 카테고리를 추가했다면 section metadata도 함께 갱신합니다.
-5. 마무리 전에 `npm --prefix ../../package run dev:react`를 실행합니다.
+- [RULES_INDEX.md](./RULES_INDEX.md)와 [AGENTS.md](./AGENTS.md)는 generated 결과물이므로 직접 수정하지 않습니다.
+- [routing-evals.json](./routing-evals.json)은 모든 activated progressive index의 exact selected/N/A partition과 100% positive rule coverage를 유지합니다.
+- generic TypeScript 규칙은 [../typescript](../typescript/README.md), styling 규칙은 [../css](../css/README.md)가 정본이고 React에는 framework overlay만 둡니다.
+- 예전 단일 문서는 보존하지 않으며 필요한 이력은 Git history에서 확인합니다.

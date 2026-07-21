@@ -2,6 +2,7 @@
 title: Prefer Children Over Render Props for Static Composition
 impact: MEDIUM
 impactDescription: keeps shared component composition readable when the parent does not need to push runtime data through callbacks
+appliesWhen: shared component에 header·footer·action 같은 정적 slot 또는 render prop을 추가·변경하며 runtime data 주입 필요가 불분명하다.
 tags: composition, children, render-props, component-design
 ---
 

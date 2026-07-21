@@ -2,6 +2,7 @@
 title: Accept props as a Whole and Destructure Inside the Component
 impact: MEDIUM
 impactDescription: 컴포넌트 계약을 시그니처에 남기고 실제 사용을 본문 가까이에 유지함
+appliesWhen: 함수 컴포넌트의 props 시그니처나 본문 구조분해 방식을 추가·변경한다.
 tags: composition, props
 ---
 

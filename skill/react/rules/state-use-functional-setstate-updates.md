@@ -2,6 +2,7 @@
 title: Use Functional setState Updates When Based on Previous State
 impact: MEDIUM-HIGH
 impactDescription: prevents stale closure bugs when the next value depends on the current state
+appliesWhen: 다음 state가 현재 state에 의존하는 handler·async callback·반복 갱신에서 `setState` 호출 방식을 추가·변경한다.
 tags: state, setstate, closures, handlers
 ---
 

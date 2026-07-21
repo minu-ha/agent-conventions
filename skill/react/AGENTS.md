@@ -6,21 +6,22 @@
 
 > **생성된 문서입니다. 직접 수정하지 마세요.**
 >
-> 현재 skill의 `rules/*.md`, `metadata.json`, `metadata.json.extends`를 수정한 뒤 `npm --prefix ../../package run build -- --skill=react`로 다시 생성하세요.
+> 현재 skill의 `rules/*.md`, `metadata.json`, `metadata.json.companions`를 수정한 뒤 `npm --prefix ../../package run build -- --skill=react`로 다시 생성하세요.
 
 ---
 
 ## 개요
 
-에이전트 협업 팀을 위한 React 코딩 컨벤션입니다. 이 가이드는 shared 코드와 route-local 코드 사이의 명확한 소유 경계, single component·compound component·explicit variant를 구분하는 composition 전략, React 계약에 맞는 handler/prop 시그니처, 예측 가능한 화면 흐름, 오리진을 보존하는 state 접근, React 19 컴포넌트 구조와 effect/transition 패턴, React 고유 문서화 규칙을 강조합니다. compound component는 state 없는 조립 구조로 시작해 필요할 때 같은 public 이름을 유지한 채 stateful 구조로 자연스럽게 확장될 수 있어야 하고, route-local section component는 async/state/interaction 같은 runtime boundary를 실제로 소유할 때만 추출합니다. TanStack Query, Zustand, React 19 ref prop/Activity/useEffectEvent를 쓰는 React codebase를 기본 전제로 하며, `rules/` 아래 rule 파일이 source of truth입니다. 기본 compiled guide는 local React 규칙만 담고 `typescript` companion skill과 함께 사용합니다.
+에이전트 협업 팀을 위한 React 코딩 컨벤션입니다. shared와 route-local 소유 경계, composition 전략, React handler/prop 계약, 화면 흐름, state 오리진, React 19 component/effect/transition 패턴과 문서화를 다룹니다. 기본 진입점은 SKILL.md와 generated RULES_INDEX.md이며, AGENTS.md는 opt-in full handbook입니다. TypeScript는 required companion이고 class contract, stylesheet 또는 styling surface가 바뀔 때만 CSS를 conditional companion으로 활성화합니다. `rules/` 아래 rule 파일이 source of truth입니다.
 
-이 가이드는 local React 컨벤션 규칙만 담고 있습니다. 공통 규칙은 companion skill을 함께 로드해 보완합니다.
+이 가이드는 local React 컨벤션 규칙만 담고 있습니다. companion skill은 아래 mode와 appliesWhen에 따라 활성화합니다.
 
 ---
 
-## 함께 로드할 Companion Skill
+## Companion Skill 활성화
 
-- `convention-typescript` - TypeScript Convention 공통 규칙 guide: [TypeScript Convention](../typescript/AGENTS.md)
+- `convention-typescript` - TypeScript Convention · mode: `required` · [SKILL.md](../typescript/SKILL.md) · [RULES_INDEX.md](../typescript/RULES_INDEX.md)
+- `convention-css` - CSS Convention · mode: `conditional` · appliesWhen: class contract, stylesheet 또는 styling surface를 변경한다. · [SKILL.md](../css/SKILL.md) · [RULES_INDEX.md](../css/RULES_INDEX.md)
 
 ---
 

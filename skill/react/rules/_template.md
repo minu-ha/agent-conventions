@@ -2,6 +2,7 @@
 title: Rule Title Here
 impact: MEDIUM
 impactDescription: 선택적 영향도 설명
+appliesWhen: 이 rule을 선택해야 하는 변경 surface와 evidence를 한 문장으로 설명
 tags: tag1, tag2
 ---
 
