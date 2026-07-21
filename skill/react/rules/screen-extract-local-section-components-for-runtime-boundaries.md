@@ -57,8 +57,6 @@ export const RouteComponent = () => {
 };
 ```
 
-이 구조는 route entry가 어떤 data와 interaction을 오케스트레이션하는지 숨기고, local component도 runtime boundary 없이 layout wrapper 역할만 합니다.
-
 **Correct (runtime boundary를 소유하는 section만 route-local component로 추출):**
 
 ```tsx
@@ -115,8 +113,6 @@ const EntryTreeSection = (props: EntryTreeSectionProps) => {
 };
 ```
 
-이 `EntryTreeSection`은 tree search state, expand interaction, empty state, `UiTree` adapter라는 runtime boundary를 실제로 소유하므로 local component로 승격할 가치가 있습니다.
-
 **Correct (route entry는 orchestration을 계속 소유):**
 
 ```tsx
@@ -158,5 +154,3 @@ export const RouteComponent = () => {
 	);
 };
 ```
-
-요약하면 route-local section component는 "화면의 한 덩어리처럼 보이기 때문"이 아니라, async, state, provider, interaction, library, performance 중 하나의 runtime boundary를 실제로 소유할 때만 추출합니다.

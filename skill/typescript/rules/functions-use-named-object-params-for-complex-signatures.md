@@ -43,5 +43,3 @@ const buildRequestUrl = (args: BuildRequestUrlArgs): URL => {
 	return requestUrl;
 };
 ```
-
-구조분해 줄이 정말 길어 formatter 예외가 필요하다면 함수 본문 안에서만 적용합니다.

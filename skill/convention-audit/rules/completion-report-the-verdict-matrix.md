@@ -15,6 +15,7 @@ tags: completion, report, matrix
 - coverage: selected, N/A, unknown count와 exact partition 검증 결과
 - excluded groups: ordinal/ID 범위와 non-empty evidence reason
 - selection comparison: 구현자/auditor `Selected/N/A/Unknown` all-set exact match 여부
+- expanded guidance: full rule로 확장한 ordinal/ID와 CRITICAL 또는 예외 판단 이유
 - reviewWith closure와 inactive cross-skill decision
 - semantic verdicts: PASS/FAIL/UNKNOWN count와 예외
 - reviewer mode, receipt exposure timing, independent reviewer 미사용 사유

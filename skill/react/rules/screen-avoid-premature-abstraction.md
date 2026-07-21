@@ -65,8 +65,6 @@ export const EntryTable = (props: EntryTableProps) => {
 };
 ```
 
-이 helper들이 다른 화면의 계약으로 쓰이지 않는다면 component를 읽는 사람이 helper 정의로 이동해야 하는 비용만 생깁니다.
-
 **Correct (계약이 생긴 뒤에 공용화):**
 
 ```ts

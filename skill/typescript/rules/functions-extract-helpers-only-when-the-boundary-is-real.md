@@ -79,8 +79,6 @@ export const api = {
 };
 ```
 
-`mapRecordToEntryView`와 `readLabelText`가 `api.record.mapEntry`만 위해 존재한다면 호출 경계가 늘어난 만큼 이해 시간이 늘어납니다.
-
 **Correct (작은 계산은 local flow에 둠):**
 
 ```ts

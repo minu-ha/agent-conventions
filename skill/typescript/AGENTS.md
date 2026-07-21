@@ -12,7 +12,7 @@
 
 ## 개요
 
-에이전트 협업 팀을 위한 TypeScript 코딩 컨벤션입니다. 이 가이드는 명시적인 네이밍, 직접 import, 재사용 가능한 타입 계약, 절제된 helper 추출, 반복 lookup과 정렬의 불변성, 의도적인 결측값 처리, 일관된 JSDoc 경계를 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, React, NestJS, TanStack Route, Playwright Test 같은 TypeScript 기반 skill과 함께 로드하는 공통 companion rule 세트로도 사용됩니다.
+에이전트 협업 팀을 위한 TypeScript 코딩 컨벤션입니다. 이 가이드는 명시적인 네이밍, 직접 import, 재사용 가능한 타입 계약, 절제된 helper 추출, 반복 lookup과 정렬의 불변성, 의도적인 결측값 처리, 일관된 JSDoc 경계를 강조합니다. `rules/` 아래 rule 파일이 source of truth이고 일반 작업은 SKILL.md, generated RULES_INDEX.md, selected contracts/*.md를 사용하며 CRITICAL 또는 근거가 더 필요한 rule만 full source로 확장합니다. React, NestJS, TanStack Route, Playwright Test 같은 TypeScript 기반 skill과 함께 로드하는 공통 companion rule 세트로도 사용됩니다.
 
 ---
 
@@ -456,8 +456,6 @@ export const api = {
 };
 ```
 
-`mapRecordToEntryView`와 `readLabelText`가 `api.record.mapEntry`만 위해 존재한다면 호출 경계가 늘어난 만큼 이해 시간이 늘어납니다.
-
 **Correct (작은 계산은 local flow에 둠):**
 
 ```ts
@@ -614,8 +612,6 @@ const buildRequestUrl = (args: BuildRequestUrlArgs): URL => {
 	return requestUrl;
 };
 ```
-
-구조분해 줄이 정말 길어 formatter 예외가 필요하다면 함수 본문 안에서만 적용합니다.
 
 ### 3.6 Use Set and Map for Repeated Lookups
 

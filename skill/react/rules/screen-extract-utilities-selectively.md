@@ -89,8 +89,6 @@ export const EntryTable = (props: EntryTableProps) => {
 };
 ```
 
-이 정도는 helper 이름을 따라가는 것보다 component 안에서 직접 읽는 편이 빠릅니다.
-
 **Correct (screen-owned support code는 먼저 `page.ts`의 named export로 모으고, 흐름에 묶인 로직은 handler에 남김):**
 
 ```ts

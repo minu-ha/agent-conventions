@@ -33,7 +33,7 @@ metadata:
    - activated skill의 local/companion target은 `Selected`, `N/A`, `Unknown` 중 하나에 있어야 합니다.
    - inactive cross-skill target은 target ID와 non-empty inactive evidence를 companion activation decision에 기록합니다.
    - cross-skill condition 또는 target `appliesWhen`이 맞으면 companion을 활성화하고 index 전체 exact partition을 만듭니다.
-9. auditor가 `Selected` 또는 `Unknown`으로 분류한 rule 원문만 읽습니다. `Unknown`은 원문과 증거로 `Selected`/`N/A`를 확정하거나 semantic `UNKNOWN`으로 차단합니다.
+9. auditor가 `Selected` 또는 `Unknown`으로 분류한 stable ID와 같은 이름의 contract만 읽습니다. `CRITICAL` contract는 full rule을 반드시 읽고, non-CRITICAL도 exact syntax·예외·Unknown 해소·PASS 근거에 필요하면 full rule로 확장해 ordinal·ID와 이유를 `Expanded`에 기록합니다. `Unknown`은 contract/full rule과 증거로 `Selected`/`N/A`를 확정하거나 semantic `UNKNOWN`으로 차단합니다.
 10. 빠진 applicable rule은 코드가 우연히 준수해도 selection coverage `FAIL`입니다. 근거가 지지하지 않는 `N/A`도 selection coverage `FAIL`입니다.
 11. 확정된 selected rule마다 evidence와 reasoning을 붙여 semantic verdict `PASS`, `FAIL`, `UNKNOWN`을 작성합니다. lint, typecheck, build, test, browser 결과는 verification evidence일 뿐 semantic `PASS`를 대신하지 않는다.
 12. scope drift, coverage `FAIL`, semantic `FAIL`/`UNKNOWN`이 있으면 packet, activation, index scan, receipt, review를 다시 수행합니다. `FAIL = 0`, `UNKNOWN = 0`일 때만 완료합니다.
@@ -42,4 +42,4 @@ metadata:
 
 - subagent/reviewer를 사용할 수 있으면 independent reviewer가 위 순서를 수행합니다. 없으면 main agent가 별도 reviewer mode로 전환하고 그 한계를 보고합니다.
 - 파일 읽기 telemetry가 없으면 document list를 `declared`로만 표시하고 actual read/non-read를 observed로 주장하지 않습니다.
-- 최종 보고에는 activated index별 digest와 rule count, selected/N/A/unknown count, exclusion groups, coverage/semantic verdict, reviewer mode, telemetry limitations, 실행한 검증을 포함합니다.
+- 최종 보고에는 activated index별 digest와 rule count, selected/N/A/unknown count, exclusion groups, `Expanded` full rule과 이유, coverage/semantic verdict, reviewer mode, telemetry limitations, 실행한 검증을 포함합니다.

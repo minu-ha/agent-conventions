@@ -22,7 +22,7 @@ auditor selection packet:
 
 sealed comparison artifact:
 
-- 구현자의 activated indexes와 digest-bound `Selected/N/A/Unknown` receipt
+- 구현자의 activated indexes와 digest-bound `Selected/N/A/Unknown`, `Expanded` receipt
 - 구현자가 읽었다고 선언한 document list와 자체 verdict
 
 auditor에게는 selection packet만 전달합니다. auditor receipt를 완성한 뒤 sealed comparison artifact를 공개해 exact partition을 비교합니다.

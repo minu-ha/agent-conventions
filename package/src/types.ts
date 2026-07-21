@@ -75,6 +75,10 @@ export interface SkillPaths {
 	 */
 	rulesIndexPath: string;
 	/**
+	 * @field selected rule별 generated compact contract 디렉터리 경로
+	 */
+	ruleContractsDir: string;
+	/**
 	 * @field routing evaluation manifest 파일 경로
 	 */
 	routingEvalsPath: string;

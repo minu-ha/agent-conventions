@@ -908,12 +908,14 @@ const reactScenarioStages = {
 	"RTE10-derived-selection-state": {
 		initial: {
 			prompt:
-				"replace selectedIds-derived count and flag effect+state synchronization with render calculation near use and change toggle to a functional updater.",
+				"extract the inline selection toggle into a named handleSelectionToggle handler, replace selectedIds-derived count and flag effect+state synchronization with render calculation near use, and use a functional updater; do not change navigation or styling.",
 			files: ["src/routes/entries/page.tsx"],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
 				react: [
+					"composition-named-handlers-over-inline",
 					"screen-keep-derived-values-close",
+					"events-name-and-curry-handlers",
 					"state-calculate-derived-values-during-render",
 					"state-use-functional-setstate-updates",
 					"docs-require-jsdoc-on-key-declarations",
@@ -1230,11 +1232,13 @@ const cssScenarioStages = {
 	"css-repeated-values-and-optional-token": {
 		initial: {
 			prompt:
-				"replace repeated color/spacing/radius in theme-preview.css with optional CSS variables and fallbacks; selectors and ownership stay unchanged.",
+				"scope a global .ant-tree selector under the existing .ui_themePreview owner root with one descendant level, and replace repeated color/spacing/radius with optional CSS variables and fallbacks; keep the file and owner name unchanged.",
 			files: ["src/components/ui/theme-preview/theme-preview.css"],
 			expectedSkills: ["css"],
 			expectedSelected: {
 				css: [
+					"selector-avoid-deep-descendant-dependencies",
+					"selector-target-third-party-dom-from-owned-roots",
 					"values-always-provide-css-variable-fallbacks",
 					"values-tokenize-repeated-visual-values",
 					"organization-review-banned-css-patterns-before-finishing",
@@ -1499,22 +1503,19 @@ test("TypeScript routing manifest is an exact nine-scenario partition with full 
 test("TypeScript generated index is complete and within the deterministic byte budget", async () => {
 	const skillPaths = getSkillPaths("typescript", realSkillRootDir);
 	const source = await readFile(skillPaths.rulesIndexPath, "utf8");
-	const entries = Array.from(source.matchAll(/^- `T\d+` · ID `([^`]+)` · \[[^\]]+\]\(rules\/([^)]+)\)/gm), (match) => ({
-		id: match[1],
-		fileName: decodeURIComponent(match[2] ?? ""),
-	}));
+	const entries = Array.from(source.matchAll(/^- `T\d+` · `([^`]+)` ·/gm), (match) => ({id: match[1], fileName: `${match[1]}.md`}));
 	const ids = entries.map((entry) => entry.id).sort();
 	const document = await readSkillDocument(skillPaths);
 	const expectedIds = document.rules.map((rule) => rule.fileName.replace(/\.md$/, "")).sort();
 
 	assert.deepEqual(ids, expectedIds);
 	assert.equal(ids.length, 22);
-	assert.equal(getRulesIndexByteBudget(ids.length), 10_800);
+	assert.equal(getRulesIndexByteBudget(ids.length), 8_680);
 	assert.equal(Buffer.byteLength(source, "utf8") <= getRulesIndexByteBudget(ids.length), true);
 
 	for (const entry of entries) {
 		assert.equal(entry.fileName, `${entry.id}.md`);
-		await access(path.join(skillPaths.rulesDir, entry.fileName));
+		await access(path.join(skillPaths.ruleContractsDir, entry.fileName));
 	}
 
 	const handbook = await readFile(skillPaths.outputPath, "utf8");
@@ -1546,7 +1547,8 @@ test("TypeScript SKILL.md is a compact trigger-only router with every receipt an
 	assert.match(body, /Selected/);
 	assert.match(body, /Not applicable|N\/A/i);
 	assert.match(body, /Unknown/);
-	assert.match(body, /Selected와 Unknown.*원문.*전부 읽는다/i);
+	assert.match(body, /Selected와 Unknown.*stable ID.*contracts\/<stable-id>\.md.*전부 읽는다/i);
+	assert.match(body, /contract가 `CRITICAL`이면[^\n]+full rule도 반드시 읽는다/i);
 	assert.match(body, /exclusion|배제.*그룹/i);
 	assert.match(body, /ordinal.*union|합집합.*ordinal|ordinal.*합집합/i);
 	assert.match(body, /이유는 비어 있으면 안 된다/i);
@@ -1705,10 +1707,7 @@ test("React routing manifest is the exact fifteen-scenario Appendix B/D oracle w
 test("React generated index and handbook preserve canonical local rules and compact companion links", async () => {
 	const skillPaths = getSkillPaths("react", realSkillRootDir);
 	const source = await readFile(skillPaths.rulesIndexPath, "utf8");
-	const entries = Array.from(source.matchAll(/^- `R\d+` · ID `([^`]+)` · \[[^\]]+\]\(rules\/([^)]+)\)/gm), (match) => ({
-		id: match[1],
-		fileName: decodeURIComponent(match[2] ?? ""),
-	}));
+	const entries = Array.from(source.matchAll(/^- `R\d+` · `([^`]+)` ·/gm), (match) => ({id: match[1], fileName: `${match[1]}.md`}));
 	const document = await readSkillDocument(skillPaths);
 
 	assert.deepEqual(
@@ -1716,12 +1715,12 @@ test("React generated index and handbook preserve canonical local rules and comp
 		reactRuleUniverse,
 	);
 	assert.equal(entries.length, 42);
-	assert.equal(getRulesIndexByteBudget(entries.length), 21_800);
+	assert.equal(getRulesIndexByteBudget(entries.length), 15_480);
 	assert.equal(Buffer.byteLength(source, "utf8") <= getRulesIndexByteBudget(entries.length), true);
 
 	for (const entry of entries) {
 		assert.equal(entry.fileName, `${entry.id}.md`);
-		await access(path.join(skillPaths.rulesDir, entry.fileName));
+		await access(path.join(skillPaths.ruleContractsDir, entry.fileName));
 	}
 
 	const handbook = await readFile(skillPaths.outputPath, "utf8");
@@ -1807,7 +1806,8 @@ test("React SKILL.md is a compact full-index router with required TypeScript and
 	assert.match(body, /Selected/);
 	assert.match(body, /Not applicable|N\/A/i);
 	assert.match(body, /Unknown/);
-	assert.match(body, /Selected와 Unknown.*원문.*전부 읽는다/i);
+	assert.match(body, /Selected와 Unknown.*stable ID.*contracts\/<stable-id>\.md.*전부 읽는다/i);
+	assert.match(body, /contract가 `CRITICAL`이면[^\n]+full rule도 반드시 읽는다/i);
 	assert.match(body, /exclusion|배제.*그룹/i);
 	assert.match(body, /비어 있지 않은|비어 있으면 안 된다/i);
 	assert.match(body, /ordinal.*union|합집합.*ordinal|ordinal.*합집합/i);
@@ -2015,10 +2015,7 @@ test("CSS routing manifest is the exact eleven-scenario and thirteen-stage Appen
 test("CSS generated index is canonical, complete, body-preserving, and within its byte budget", async () => {
 	const skillPaths = getSkillPaths("css", realSkillRootDir);
 	const source = await readFile(skillPaths.rulesIndexPath, "utf8");
-	const entries = Array.from(source.matchAll(/^- `C\d+` · ID `([^`]+)` · \[[^\]]+\]\(rules\/([^)]+)\)/gm), (match) => ({
-		id: match[1],
-		fileName: decodeURIComponent(match[2] ?? ""),
-	}));
+	const entries = Array.from(source.matchAll(/^- `C\d+` · `([^`]+)` ·/gm), (match) => ({id: match[1], fileName: `${match[1]}.md`}));
 	const document = await readSkillDocument(skillPaths);
 
 	assert.deepEqual(
@@ -2026,12 +2023,12 @@ test("CSS generated index is canonical, complete, body-preserving, and within it
 		cssRuleUniverse,
 	);
 	assert.equal(entries.length, 21);
-	assert.equal(getRulesIndexByteBudget(entries.length), 10_400);
+	assert.equal(getRulesIndexByteBudget(entries.length), 8_340);
 	assert.equal(Buffer.byteLength(source, "utf8") <= getRulesIndexByteBudget(entries.length), true);
 
 	for (const entry of entries) {
 		assert.equal(entry.fileName, `${entry.id}.md`);
-		await access(path.join(skillPaths.rulesDir, entry.fileName));
+		await access(path.join(skillPaths.ruleContractsDir, entry.fileName));
 	}
 
 	const handbook = await readFile(skillPaths.outputPath, "utf8");
@@ -2077,7 +2074,8 @@ test("CSS SKILL.md is a compact full-index router with exact receipts and compan
 	assert.match(body, /Selected/);
 	assert.match(body, /Not applicable|N\/A/i);
 	assert.match(body, /Unknown/);
-	assert.match(body, /Selected와 Unknown.*원문.*전부 읽는다/i);
+	assert.match(body, /Selected와 Unknown.*stable ID.*contracts\/<stable-id>\.md.*전부 읽는다/i);
+	assert.match(body, /contract가 `CRITICAL`이면[^\n]+full rule도 반드시 읽는다/i);
 	assert.match(body, /exclusion|배제.*그룹/i);
 	assert.match(body, /비어 있지 않은|비어 있으면 안 된다/i);
 	assert.match(body, /ordinal.*union|합집합.*ordinal|ordinal.*합집합/i);

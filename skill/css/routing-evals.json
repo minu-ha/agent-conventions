@@ -887,7 +887,7 @@
     },
     {
       "id": "css-repeated-values-and-optional-token",
-      "prompt": "replace repeated color/spacing/radius in theme-preview.css with optional CSS variables and fallbacks; selectors and ownership stay unchanged.",
+      "prompt": "scope a global .ant-tree selector under the existing .ui_themePreview owner root with one descendant level, and replace repeated color/spacing/radius with optional CSS variables and fallbacks; keep the file and owner name unchanged.",
       "files": [
         "src/components/ui/theme-preview/theme-preview.css"
       ],
@@ -896,6 +896,8 @@
       ],
       "expectedSelected": {
         "css": [
+          "selector-avoid-deep-descendant-dependencies",
+          "selector-target-third-party-dom-from-owned-roots",
           "values-always-provide-css-variable-fallbacks",
           "values-tokenize-repeated-visual-values",
           "organization-review-banned-css-patterns-before-finishing"
@@ -914,9 +916,7 @@
           "composition-keep-classes-single-purpose",
           "composition-style-ui-components-through-owned-wrappers",
           "composition-prefer-ui-wrapper-prop-types",
-          "selector-avoid-deep-descendant-dependencies",
           "selector-keep-project-selectors-flat",
-          "selector-target-third-party-dom-from-owned-roots",
           "selector-use-pseudo-classes-for-dom-owned-states",
           "values-keep-layout-intent-explicit",
           "values-separate-domain-state-modifiers-from-dom-interaction-states",

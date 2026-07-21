@@ -317,7 +317,7 @@ test("convention audit router orders independent index selection before semantic
 		"구현자와 auditor의 `Selected/N/A/Unknown` set",
 		"`N/A` exclusion group",
 		"`reviewWith`",
-		"auditor가 `Selected` 또는 `Unknown`으로 분류한 rule 원문만",
+		"auditor가 `Selected` 또는 `Unknown`으로 분류한 stable ID와 같은 이름의 contract만",
 		"selection coverage `FAIL`",
 		"semantic verdict",
 		"`FAIL = 0`, `UNKNOWN = 0`",
@@ -368,7 +368,7 @@ test("auditor selection packet excludes the sealed implementer comparison artifa
 	assert.doesNotMatch(evidenceRule, /구현자 receipt는 packet에 첨부/);
 });
 
-test("convention audit defaults to compact companion routers and selected bodies", async () => {
+test("convention audit defaults to compact companion routers and selected contracts", async () => {
 	const source = await readSkillFile("SKILL.md");
 	const readme = await readSkillFile("README.md");
 	const compiledGuide = await readSkillFile("AGENTS.md");
@@ -394,9 +394,11 @@ test("convention audit defaults to compact companion routers and selected bodies
 	assert.match(compiledGuide, /`metadata\.json\.companions`/);
 	assert.doesNotMatch(compiledGuide, /metadata\.json\.extends/);
 
-	assert.match(source, /companion full `AGENTS\.md`는 기본 로드하지 않는다/);
+	assert.match(source, /companion full `AGENTS\.md`(?:는|를) 기본 로드하지 않는다/);
 	assert.match(source, /local \[AGENTS\.md\]\(\.\/AGENTS\.md\)[^\n]+8개 audit gate rule[^\n]+전체/);
-	assert.match(readme, /companion full `AGENTS\.md`를 기본 로드하지 않습니다/);
+	assert.match(readme, /companion full `AGENTS\.md`(?:는|를) 기본 로드하지 않습니다/);
+	assert.match(source, /stable ID와 같은 이름의 contract/);
+	assert.match(source, /`CRITICAL` contract는 full rule을 반드시 읽고/);
 });
 
 test("compiled audit guide contains each local gate once without companion rule bodies", async () => {
@@ -490,7 +492,7 @@ test("compiled audit rules preserve exact receipt and independent reviewer gates
 		"구현자와 auditor의 `Selected/N/A/Unknown` set",
 		"reviewWith",
 		"selection coverage `FAIL`",
-		"auditor-selected/unknown rule 원문",
+		"auditor-selected/unknown rule의 stable ID와 같은 이름인 contract",
 		"semantic PASS",
 		"파일 읽기 telemetry",
 	]) {
@@ -526,7 +528,7 @@ test("RTE08 missing-action mutation is a documented blocking coverage failure", 
 	const rulesIndexSource = await readFile(path.join(repoDir, "skill/react/RULES_INDEX.md"), "utf8");
 	const currentDigest = rulesIndexSource.match(/Routing digest: `(sha256:[a-f0-9]{64})`/)?.[1];
 	assert.ok(currentDigest);
-	const canonicalRules = Array.from(rulesIndexSource.matchAll(/^- `(R\d{2})` · ID `([^`]+)`/gm), (match) => {
+	const canonicalRules = Array.from(rulesIndexSource.matchAll(/^- `(R\d{2})` · `([^`]+)` ·/gm), (match) => {
 		const ordinal = match[1];
 		const ruleId = match[2];
 

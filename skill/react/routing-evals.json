@@ -909,7 +909,7 @@
     },
     {
       "id": "RTE10-derived-selection-state",
-      "prompt": "replace selectedIds-derived count and flag effect+state synchronization with render calculation near use and change toggle to a functional updater.",
+      "prompt": "extract the inline selection toggle into a named handleSelectionToggle handler, replace selectedIds-derived count and flag effect+state synchronization with render calculation near use, and use a functional updater; do not change navigation or styling.",
       "files": [
         "src/routes/entries/page.tsx"
       ],
@@ -919,7 +919,9 @@
       ],
       "expectedSelected": {
         "react": [
+          "composition-named-handlers-over-inline",
           "screen-keep-derived-values-close",
+          "events-name-and-curry-handlers",
           "state-calculate-derived-values-during-render",
           "state-use-functional-setstate-updates",
           "docs-require-jsdoc-on-key-declarations"
@@ -947,7 +949,6 @@
           "composition-destructure-props-inside",
           "composition-do-not-define-components-inside-components",
           "composition-prefer-arrow-functions-and-object-params",
-          "composition-named-handlers-over-inline",
           "composition-use-activity-for-render-branches",
           "composition-use-ref-prop-instead-of-forwardref-in-react-19",
           "screen-avoid-premature-abstraction",
@@ -956,7 +957,6 @@
           "screen-keep-route-flow-visible",
           "screen-move-pure-support-code-out-of-entry-files",
           "events-keep-handler-flow-inline",
-          "events-name-and-curry-handlers",
           "events-run-user-actions-in-handlers-not-effects",
           "state-avoid-fallback-defaults-and-loading-flags",
           "state-choose-state-tools-by-source-of-truth",
@@ -1432,4 +1432,3 @@
     }
   ]
 }
-

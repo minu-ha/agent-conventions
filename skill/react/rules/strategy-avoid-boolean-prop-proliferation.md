@@ -68,6 +68,3 @@ export const WgEntryEditToolbar = () => {
 	);
 };
 ```
-
-핵심은 `WgEntryToolbar` 하나에 boolean 모드를 계속 추가하지 않는 것입니다.  
-explicit variant는 standalone component여도 되고, 이렇게 compound component 위에서 조립해도 됩니다.

@@ -12,6 +12,8 @@ tags: tag1, tag2
 
 규칙의 핵심과 이유를 짧고 분명하게 설명합니다.
 
+규범과 예외는 이 지점까지 완결합니다. 아래에는 `Incorrect`/`Correct` label, fenced code, 빈 줄만 두며 예시가 여러 개면 Incorrect를 먼저 모두 배치합니다.
+
 **Incorrect (무엇이 문제인지 설명):**
 
 ```tsx

@@ -12,7 +12,7 @@
 
 ## 개요
 
-에이전트 협업 팀을 위한 React 코딩 컨벤션입니다. shared와 route-local 소유 경계, composition 전략, React handler/prop 계약, 화면 흐름, state 오리진, React 19 component/effect/transition 패턴과 문서화를 다룹니다. 기본 진입점은 SKILL.md와 generated RULES_INDEX.md이며, AGENTS.md는 opt-in full handbook입니다. TypeScript는 required companion이고 class contract, stylesheet 또는 styling surface가 바뀔 때만 CSS를 conditional companion으로 활성화합니다. `rules/` 아래 rule 파일이 source of truth입니다.
+에이전트 협업 팀을 위한 React 코딩 컨벤션입니다. shared와 route-local 소유 경계, composition 전략, React handler/prop 계약, 화면 흐름, state 오리진, React 19 component/effect/transition 패턴과 문서화를 다룹니다. 기본 진입점은 SKILL.md, generated RULES_INDEX.md, selected contracts/*.md이며 CRITICAL 또는 근거가 더 필요한 rule만 full source로 확장합니다. AGENTS.md는 opt-in full handbook입니다. TypeScript는 required companion이고 class contract, stylesheet 또는 styling surface가 바뀔 때만 CSS를 conditional companion으로 활성화합니다. `rules/` 아래 rule 파일이 source of truth입니다.
 
 이 가이드는 local React 컨벤션 규칙만 담고 있습니다. companion skill은 아래 mode와 appliesWhen에 따라 활성화합니다.
 
@@ -439,9 +439,6 @@ export const WgEntryEditToolbar = () => {
 };
 ```
 
-핵심은 `WgEntryToolbar` 하나에 boolean 모드를 계속 추가하지 않는 것입니다.  
-explicit variant는 standalone component여도 되고, 이렇게 compound component 위에서 조립해도 됩니다.
-
 ### 3.2 Choose Single Components, Compound Components, and Variants Deliberately
 
 **Impact: HIGH (helps shared components choose the simplest structure that still exposes the right extension points)**
@@ -489,8 +486,6 @@ export const ProfileDialog = (props: ProfileDialogProps) => {
 	);
 };
 ```
-
-boolean branch, optional slot, render prop, fixed variant를 한 component에 몰아두면 소비자가 실제 구조를 예측하기 어렵습니다.
 
 **Correct (고정 구조면 single component로 유지):**
 
@@ -542,8 +537,6 @@ export const Section = {
 } as const;
 ```
 
-이런 구조는 지금은 `stateless compound component`지만, 나중에 state가 필요해지면 같은 이름을 유지한 채 `stateful compound component`로 확장할 수 있습니다.
-
 **Correct (여러 part가 state를 공유하면 stateful compound component로 확장):**
 
 ```tsx
@@ -573,8 +566,6 @@ const TabsPanel = (props: TabsPanelProps) => {
 };
 ```
 
-`Tabs.Trigger`와 `Tabs.Panel`처럼 여러 part가 같은 state를 읽고 행동을 공유하면, 그 시점부터는 `stateful compound component`입니다.
-
 **Correct (같은 family 조합이 반복되면 explicit variant로 감쌈):**
 
 ```tsx
@@ -587,8 +578,6 @@ export const ReadOnlyProfileDialog = () => {
 	);
 };
 ```
-
-이 규칙은 `strategy-avoid-boolean-prop-proliferation`, `strategy-prefer-children-over-render-props`, `screen-avoid-premature-abstraction`과 함께 봅니다.
 
 ### 3.3 Prefer Children Over Render Props for Static Composition
 
@@ -670,9 +659,6 @@ export const EntryScreen = () => {
 	);
 };
 ```
-
-같은 shell을 재사용하지만 내부 구조는 화면마다 달라질 수 있다면 `stateless compound component`가 더 읽기 쉽습니다.  
-이 경우에는 `showFooter`, `showSearch`, `isCreateMode` 같은 boolean prop도 필요 없고, parent가 runtime 데이터를 child 함수에 밀어줄 이유도 없으므로 render prop보다 단순한 구조 조립이 맞습니다. `Panel.Root/Header/Footer`처럼 dot notation으로 묶고, 나중에 state가 필요해지면 같은 이름을 유지한 채 context를 추가합니다.
 
 ## 4. Component Structure and JSX
 
@@ -985,8 +971,6 @@ export const EntryTable = (props: EntryTableProps) => {
 };
 ```
 
-이 helper들이 다른 화면의 계약으로 쓰이지 않는다면 component를 읽는 사람이 helper 정의로 이동해야 하는 비용만 생깁니다.
-
 **Correct (계약이 생긴 뒤에 공용화):**
 
 ```ts
@@ -1092,8 +1076,6 @@ export const RouteComponent = () => {
 };
 ```
 
-이 구조는 route entry가 어떤 data와 interaction을 오케스트레이션하는지 숨기고, local component도 runtime boundary 없이 layout wrapper 역할만 합니다.
-
 **Correct (runtime boundary를 소유하는 section만 route-local component로 추출):**
 
 ```tsx
@@ -1150,8 +1132,6 @@ const EntryTreeSection = (props: EntryTreeSectionProps) => {
 };
 ```
 
-이 `EntryTreeSection`은 tree search state, expand interaction, empty state, `UiTree` adapter라는 runtime boundary를 실제로 소유하므로 local component로 승격할 가치가 있습니다.
-
 **Correct (route entry는 orchestration을 계속 소유):**
 
 ```tsx
@@ -1193,8 +1173,6 @@ export const RouteComponent = () => {
 	);
 };
 ```
-
-요약하면 route-local section component는 "화면의 한 덩어리처럼 보이기 때문"이 아니라, async, state, provider, interaction, library, performance 중 하나의 runtime boundary를 실제로 소유할 때만 추출합니다.
 
 ### 5.3 Extract Screen Support Code Only When the Boundary Is Real
 
@@ -1277,8 +1255,6 @@ export const EntryTable = (props: EntryTableProps) => {
 	return <a href={buildEditHref({editHrefBase: props.editHrefBase, row})}>{row.title}</a>;
 };
 ```
-
-이 정도는 helper 이름을 따라가는 것보다 component 안에서 직접 읽는 편이 빠릅니다.
 
 **Correct (screen-owned support code는 먼저 `page.ts`의 named export로 모으고, 흐름에 묶인 로직은 handler에 남김):**
 
@@ -2122,8 +2098,6 @@ export const Dialog = {
 } as const;
 ```
 
-이 방식은 props shape와 component 역할을 따로 읽어야 해서 `Dialog.Header`라는 part 경계가 한눈에 들어오지 않습니다.
-
 **Correct (part 단위로 JSDoc을 묶어 읽히게 유지):**
 
 ```tsx
@@ -2175,9 +2149,6 @@ const DialogClose = (props: DialogCloseProps) => {
 	);
 };
 ```
-
-요약하면 compound part는 props type만의 문서도, component만의 문서도 아닙니다.  
-하나의 public part boundary로 읽히게 `@part`와 `@description`을 props `interface` 위에 두고, component를 바로 아래에 붙입니다.
 
 ### 8.2 Limit Inline Comments to Non-obvious Logic
 

@@ -1,6 +1,6 @@
 import {randomUUID} from "node:crypto";
 import type {Stats} from "node:fs";
-import {lstat, rename, rm, writeFile} from "node:fs/promises";
+import {lstat, readFile, readdir, rename, rm, writeFile} from "node:fs/promises";
 import path from "node:path";
 
 /**
@@ -75,6 +75,50 @@ const defaultGeneratedFileOperations: GeneratedFileOperations = {
 	rename: async (sourcePath, targetPath) => await rename(sourcePath, targetPath),
 	rm: async (targetPath, options) => await rm(targetPath, options),
 	writeFile: async (targetPath, content, options) => await writeFile(targetPath, content, options),
+};
+
+/**
+ * @api optional generated directory가 실제 directory인지 확인하고 regular file 이름을 정렬해 반환
+ */
+export const readGeneratedDirectoryFileNames = async (directoryPath: string): Promise<string[]> => {
+	let directoryStats: Stats;
+
+	try {
+		directoryStats = await lstat(directoryPath);
+	} catch (error) {
+		if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+			return [];
+		}
+
+		throw error;
+	}
+
+	if (!directoryStats.isDirectory()) {
+		throw new Error(`Generated file path must be a real directory: ${directoryPath}`);
+	}
+
+	const entries = await readdir(directoryPath, {withFileTypes: true});
+
+	for (const entry of entries) {
+		if (!entry.isFile()) {
+			throw new Error(`Generated directory entry must be a regular file: ${path.join(directoryPath, entry.name)}`);
+		}
+	}
+
+	return entries.map((entry) => entry.name).sort((left, right) => left.localeCompare(right, "en-US"));
+};
+
+/**
+ * @api generated Markdown가 symlink가 아닌 regular file인지 확인한 뒤 UTF-8 본문 반환
+ */
+export const readGeneratedRegularFile = async (targetPath: string): Promise<string> => {
+	const stats = await lstat(targetPath);
+
+	if (!stats.isFile()) {
+		throw new Error(`Generated file must be a regular file, not a symlink or directory: ${targetPath}`);
+	}
+
+	return await readFile(targetPath, "utf8");
 };
 
 /**

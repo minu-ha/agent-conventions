@@ -16,12 +16,12 @@ CSS skill을 수정하거나 새로운 rule을 추가했을 때, 실제 에이�
 
 1. `no-skill baseline`: convention 문서를 주지 않습니다.
 2. `full-handbook oracle`: 독립 reviewer가 전체 `AGENTS.md`와 rule body로 exact 기대 partition을 승인합니다.
-3. `progressive candidate`: `SKILL.md` → 전체 `RULES_INDEX.md` → selected/unknown rule body만 읽습니다.
+3. `progressive candidate`: `SKILL.md` → 전체 `RULES_INDEX.md` → selected/unknown stable-ID-matched contract를 읽고, CRITICAL 또는 deterministic expansion 조건에 맞는 full rule만 추가합니다.
 4. `mutation RED`: candidate receipt에서 expected rule 하나를 제거합니다. coverage mismatch 또는 `UNKNOWN`이 완료를 반드시 차단해야 합니다.
 
 각 arm은 [routing-evals.json](./routing-evals.json)의 `expectedSkills`, exact `expectedSelected`, exact `expectedNotApplicable`, scope drift와 비교합니다. all-rules selection도 precision 실패입니다. candidate는 activation/selected/N/A exact match, exclusion-group ordinal 합집합, `FAIL 0`, `UNKNOWN 0`을 모두 만족해야 합니다.
 
-결과에는 repository HEAD, index digest, model/runtime/version, reasoning level, exact prompt, scorer/rubric version, trial, arm, declared loaded files, receipt, verdict, input token을 기록합니다. file-read telemetry가 없으면 observed라고 표현하지 않습니다. router+index+selected body의 implementation median/최대와 full-handbook oracle 대비 절감률을 함께 보고하고, scope drift·audit·reviewer phase의 반복 load도 누적 token에 포함합니다.
+결과에는 repository HEAD, index digest, model/runtime/version, reasoning level, exact prompt, scorer/rubric version, trial, arm, declared loaded files, receipt의 `Expanded`와 이유, verdict, input token을 기록합니다. file-read telemetry가 없으면 observed라고 표현하지 않습니다. router+index+selected contract+expanded full rule의 implementation median/최대와 full-handbook oracle 대비 절감률을 함께 보고하고, scope drift·audit·reviewer phase의 반복 load도 누적 token에 포함합니다.
 
 ## Progressive Routing Regression Set
 
@@ -35,7 +35,7 @@ CSS skill을 수정하거나 새로운 rule을 추가했을 때, 실제 에이�
 - `css-ui-wrapper-root-prop-contract`: C10 wrapper styling, C11 wrapper Props와 conditional TypeScript contract를 함께 판정합니다.
 - `css-rich-text-owner-block`: raw element nesting의 owner block 예외만 선택합니다.
 - `css-dom-interaction-states`: same-block pseudo-state와 domain/DOM state 분리를 선택합니다.
-- `css-repeated-values-and-optional-token`: repeated value token과 fallback을 함께 선택합니다.
+- `css-repeated-values-and-optional-token`: existing owner-root selector, repeated value token과 fallback을 함께 선택합니다.
 - `css-sticky-layout-intent`: sticky, z-index, size responsibility만 선택합니다.
 - `css-deep-project-descendant-chain`: deep dependency와 flat selector를 함께 선택합니다.
 

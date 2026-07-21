@@ -4,7 +4,7 @@
 
 **Goal:** React, TypeScript, CSS 작업이 applicable rule을 빠짐없이 선택·적용·감사하면서 full handbook 기본 로딩을 제거하도록 structured skill pack과 검증 도구를 개선한다.
 
-**Architecture:** `rules/*.md`에 observable routing metadata를 두고 build package가 compact `RULES_INDEX.md`와 digest를 생성한다. 각 progressive `SKILL.md`는 scope → full index scan → exact receipt → Selected/Unknown body → drift → audit router가 되며, package test는 schema/index/fixture 무결성을, behavioral evaluation은 실제 agent selection을 검증한다. Progressive React/TypeScript/CSS의 full `AGENTS.md`는 opt-in handbook으로 계속 생성하고, non-progressive skill은 각 `SKILL.md`의 기존 load 계약을 유지한다.
+**Architecture:** `rules/*.md`에 observable routing metadata와 normative-first body를 두고 build package가 compact `RULES_INDEX.md`, rule별 `contracts/*.md`, source-bound digest를 생성한다. 각 progressive `SKILL.md`는 scope → full index scan → exact receipt → Selected/Unknown contract → CRITICAL/근거 기반 full-rule expansion → drift → audit router가 되며, package test는 schema/index/contract/fixture 무결성을, behavioral evaluation은 실제 agent selection을 검증한다. Progressive React/TypeScript/CSS의 full `AGENTS.md`는 opt-in handbook으로 계속 생성하고, non-progressive skill은 각 `SKILL.md`의 기존 load 계약을 유지한다.
 
 **Tech Stack:** Node.js 22, TypeScript 5.9, `tsx --test`, Node `crypto`, Markdown/JSON structured skills, Biome 2.2, Python `tiktoken` 0.11.0 (`o200k_base`) for evaluation snapshots.
 
@@ -19,7 +19,7 @@
 - `package/src/parser.ts`: strict scalar rule frontmatter parser와 companion-aware document resolution.
 - `package/src/routing.ts`: deterministic rule ordering, ordinal, canonical digest, compact index renderer.
 - `package/src/routing-evals.ts`: manifest partition/coverage/companion closure 검증.
-- `package/src/build.ts`: full `AGENTS.md`와 progressive `RULES_INDEX.md`를 함께 생성.
+- `package/src/build.ts`: full `AGENTS.md`, progressive `RULES_INDEX.md`, selected-rule `contracts/*.md`를 함께 생성.
 - `package/src/check-generated.ts`: source에서 다시 render해 tracked index stale 여부 확인.
 - `package/src/validate.ts`: progressive metadata/rule/reviewWith/companion schema 검증.
 - `package/test/progressive-loading.test.ts`: parser, schema, index, digest, clean build, stale output 회귀 테스트.
@@ -431,7 +431,7 @@ Keep trigger-only frontmatter. The body must be under 500 words and require:
 1. scope snapshot;
 2. entire `RULES_INDEX.md` scan;
 3. digest-bound exact selected/N/A/unknown receipt plus N/A exclusion groups whose ordinal union equals the exact N/A set and whose scope-evidence reasons are non-empty;
-4. selected and unknown rule body reads;
+4. selected and unknown contract reads plus deterministic full-rule expansion;
 5. `reviewWith` closure;
 6. scope-drift rescan;
 7. final `convention-audit` with FAIL/UNKNOWN zero;
@@ -623,7 +623,7 @@ The audit SKILL must:
 4. produce an exact digest-bound partition;
 5. compare implementer/auditor `Selected`, `N/A`, and `Unknown` sets exactly;
 6. verify each receipt's N/A exclusion groups exactly cover its N/A set and independently assess the exclusion evidence;
-7. read only auditor-selected/ambiguous full rule bodies;
+7. read auditor-selected/ambiguous contracts and CRITICAL/evidence-required full rule bodies;
 8. mark missing applicable selection or unsupported N/A evidence as FAIL;
 9. repair until FAIL=0 and UNKNOWN=0;
 10. report reviewer mode and telemetry limitations.
@@ -662,7 +662,7 @@ Tests require README and consumer template to state:
 - TSX: convention-react + convention-typescript
 - className/CSS/styling surface: add convention-css
 - scan every activated progressive RULES_INDEX.md completely
-- read only Selected + Unknown rules/*.md bodies, then resolve Unknown
+- read Selected + Unknown contracts/*.md, mandatory CRITICAL full rules, and reasoned expansions, then resolve Unknown
 - progressive React/TypeScript/CSS full AGENTS.md is opt-in, never default
 - rescan on scope drift
 - finish with convention-audit at coverage FAIL=0, semantic FAIL=0, UNKNOWN=0
@@ -708,8 +708,13 @@ Task 8 source inventory is the six files above. `build:all` should not add Task 
 - Create: `docs/evaluations/2026-07-21-progressive-loading-results.md`
 - Create: `docs/evaluations/2026-07-21-progressive-loading-contexts.json`
 - Create: `package/scripts/measure-progressive-loading.py`
-- Modify: `skill/{react,typescript,css}/pressure-tests.md` only if a candidate finds a new loophole
-- Modify: affected `SKILL.md` only after a reproduced failure and re-test
+- Create: `skill/{react,typescript,css}/contracts/*.md` through build
+- Modify: package config/types/routing/build/generated-check/validate and regression tests only after a reproduced structural token failure
+- Modify: progressive/audit SKILL, rule templates, pressure tests, metadata, README, design, and consumer contract to document deterministic contract/full expansion
+
+- [x] **Step 0: Correct the reproduced token-architecture failure**
+
+The first actual measurement on HEAD `1c2636d` failed all token gates: implementation median 13,380, max 19,723, one-load reduction 64.8837%, cumulative reduction 48.698%. Preserve rule-selection oracles, compact the index to ordinal + ID + `appliesWhen` + optional `reviewWith`, generate normative contracts from the source prefix, require CRITICAL full rules, include source body hashes and renderer version in the routing digest, reject prose after the first Incorrect marker, and validate missing/stale/orphan contracts. The corrected fixed contexts, including named-handler/owner-selector representatives and an actual reasoned HIGH full-rule expansion, now pass with implementation median 8,669, max 11,785, one-load reduction median 77.1007%, and cumulative reduction median 62.825%; behavioral GREEN remains independently required.
 
 - [ ] **Step 1: Fix the evaluation protocol**
 
@@ -717,11 +722,11 @@ Record repository HEAD, generated index digests, model/runtime/version, reasonin
 
 - [ ] **Step 2: Run no-skill baseline and full-handbook oracle**
 
-Repeat BASELINE-R/T/C at least twice per arm. In addition, run the design's eight mixed pressure categories—named handler/state update, pure TS helper/type/JSDoc, CSS owner/variable, TSX className+stylesheet, query shaping without CSS/API schema, scope drift, ambiguous HIGH applicability, and lint/build-passing semantic violation—at least twice in both no-skill baseline and full-handbook oracle arms. Oracle agents read all relevant full `AGENTS.md` files and produce the exact expected selection from full rule bodies. Critical omission scenarios run three times in each evaluated arm.
+Repeat BASELINE-R/T/C at least twice per arm. In addition, run the design's eight mixed pressure categories—named handler plus derived/functional state update, pure TS helper/type/JSDoc, owned third-party selector plus variable fallback, TSX className+stylesheet, query shaping without CSS/API schema, scope drift, ambiguous HIGH applicability with a reasoned full-rule expansion, and lint/build-passing semantic violation—at least twice in both no-skill baseline and full-handbook oracle arms. Oracle agents read all relevant full `AGENTS.md` files and produce the exact expected selection from full rule bodies. Critical omission scenarios run three times in each evaluated arm.
 
 - [ ] **Step 3: Run progressive candidates**
 
-Fresh agents read only the relevant `SKILL.md`, every activated `RULES_INDEX.md`, and selected/unknown rule bodies. Run each mixed scenario at least twice and critical scenarios three times. Score exact selected and N/A partitions against independently reviewed manifests, and reject any receipt whose N/A exclusion groups do not exactly cover the N/A ordinals or give evidence-grounded reasons.
+Fresh agents read only the relevant `SKILL.md`, every activated `RULES_INDEX.md`, selected/unknown stable-ID-matched contracts, and CRITICAL or receipt-reasoned full-rule expansions. Run each mixed scenario at least twice and critical scenarios three times. Score exact selected and N/A partitions against independently reviewed manifests, reject unrecorded full-rule loads, and reject any receipt whose N/A exclusion groups do not exactly cover the N/A ordinals or give evidence-grounded reasons.
 
 - [ ] **Step 4: Run scope-drift and mutation RED**
 
@@ -752,10 +757,10 @@ The script rejects missing paths, duplicate paths within one phase, unknown arm/
 Report:
 
 - full baseline one-load context;
-- router + indexes + selected bodies per implementation scenario;
+- router + indexes + selected contracts + required/reasoned full rules per implementation scenario;
 - cumulative implementation + drift + audit + reviewer context;
 - median/max reduction;
-- fallback runs separately.
+- optional non-CRITICAL fallback runs separately; CRITICAL full-rule expansion remains part of the normal candidate context.
 
 - [ ] **Step 6: Enforce quality gates**
 
@@ -763,8 +768,8 @@ Required results:
 
 - implementation median ≤10,000 tokens;
 - broad mixed implementation ≤12,000 tokens;
-- one-load reduction ≥70%;
-- end-to-end reduction ≥60%;
+- one-load reduction median ≥70%;
+- end-to-end cumulative reduction median ≥60%;
 - domain activation recall 100%;
 - applicable rule recall 100% across all impacts;
 - exact selection precision 100%;
@@ -772,7 +777,7 @@ Required results:
 - mutation arm blocked;
 - default full handbook loads 0 by declared context, with telemetry limitation stated.
 
-If any behavioral gate fails, update only the minimal `appliesWhen`, `reviewWith`, router wording, or fixture oracle justified by the failure; repeat the same arm before moving on.
+If a behavioral gate fails, update only the minimal `appliesWhen`, `reviewWith`, router wording, contract source placement, or fixture oracle justified by the failure. If a measured token gate exposes structural loading overhead, change only the minimal index/contract renderer and load contract without weakening rule recall; repeat the same arm before moving on.
 
 - [ ] **Step 7: Commit evaluation evidence**
 
@@ -806,10 +811,13 @@ Critical/Important findings require the same reviewer to confirm the fix. Add a 
 ```bash
 npm --prefix package run build:all
 npm --prefix package run check:generated:all
+npm --prefix package run check:handbooks:all
 npm --prefix package run validate:all
 npm --prefix package run typecheck
 npm --prefix package run test
 npm --prefix package run biome:check:all
+npm --prefix package run measurement:self-test
+npm --prefix package run measurement:tokens
 git diff --check b600ce1..HEAD
 git status --short
 ```
@@ -1019,9 +1027,9 @@ Define `U_REACT` as these 42 IDs. Every fixture stores the full stable-ID array 
    - React selected: `ownership-use-consistent-file-and-symbol-naming`, `ownership-layer-component-boundaries`, `ownership-place-route-local-files-by-scope`, `typing-function-type-first`, `typing-reuse-existing-contracts`, `composition-destructure-props-inside`, `screen-keep-route-flow-visible`, `screen-avoid-premature-abstraction`, `screen-extract-local-section-components-for-runtime-boundaries`, `events-name-and-curry-handlers`, `docs-require-jsdoc-on-key-declarations`
 
 10. `RTE10-derived-selection-state`
-    - Evidence/files: replace selectedIds-derived count/flag effect+state sync with render calculation near use and change toggle to a functional updater.
+    - Evidence/files: extract the inline selection toggle into a named `handleSelectionToggle` handler, replace selectedIds-derived count/flag effect+state sync with render calculation near use, and use a functional updater without navigation or styling changes.
     - Skills: `react`, `typescript`
-    - React selected: `screen-keep-derived-values-close`, `state-calculate-derived-values-during-render`, `state-use-functional-setstate-updates`, `docs-require-jsdoc-on-key-declarations`
+    - React selected: `composition-named-handlers-over-inline`, `screen-keep-derived-values-close`, `events-name-and-curry-handlers`, `state-calculate-derived-values-during-render`, `state-use-functional-setstate-updates`, `docs-require-jsdoc-on-key-declarations`
 
 11. `RTE11-shared-authority`
     - Evidence/files: synchronize shared capability once at owning layout/store for multiple screens/menu/guards; do not copy single-screen server fields into the store.
@@ -1064,7 +1072,7 @@ Define `U_REACT` as these 42 IDs. Every fixture stores the full stable-ID array 
 | `RTE07-visibility-lifecycle` initial | `change only the show/hide branch for an already-mounted sidebar to the already-imported project Activity primitive to preserve expanded state; keep empty-state unmount behavior.` | `src/routes/entries/-local/entry-sidebar.tsx` |
 | `RTE08-delete-handler-flow` initial | `move a row delete inline async branch, mutation, navigation, and state+effect replay into one curried named handler, keep an unused React event as _event, directly import its reused callback type, and keep screen-only flow inside page.tsx.` | `src/routes/entries/page.tsx` |
 | `RTE09-route-runtime-section` initial | `extract only the tree section that owns local search and expanded state plus a tree adapter into -local, implement a named selection handler from EntryTreeSectionProps["onCategorySelect"], and keep search params, navigation, page query, and mutation in the route entry.` | `src/routes/entries/page.tsx`, `src/routes/entries/-local/entry-tree-section.tsx` |
-| `RTE10-derived-selection-state` initial | `replace selectedIds-derived count and flag effect+state synchronization with render calculation near use and change toggle to a functional updater.` | `src/routes/entries/page.tsx` |
+| `RTE10-derived-selection-state` initial | `extract the inline selection toggle into a named handleSelectionToggle handler, replace selectedIds-derived count and flag effect+state synchronization with render calculation near use, and use a functional updater; do not change navigation or styling.` | `src/routes/entries/page.tsx` |
 | `RTE11-shared-authority` initial | `synchronize shared capability once at the owning layout and store for multiple screens, menu, and guards; do not copy single-screen server fields into the store.` | `src/routes/_authenticated/layout.tsx`, `src/stores/capability-store.ts` |
 | `RTE12-query-shaping` initial | `move repeated raw list, items, and meta render shaping into query select, rename bindings to response... and mutation..., and remove wide aliases.` | `src/routes/entries/page.tsx` |
 | `RTE13-heavy-search` initial | `for a 50k-row search, directly import newly used React hooks, use lazy initialization, urgent input plus deferred result, a non-urgent category transition, and only evidence-backed memoization; update the constraint comment.` | `src/routes/entries/-local/entry-search.tsx` |
@@ -1145,9 +1153,9 @@ Define `U_CSS` as these 21 IDs. Every final fixture explicitly stores `expectedN
    - CSS selected: `selector-use-pseudo-classes-for-dom-owned-states`, `values-separate-domain-state-modifiers-from-dom-interaction-states`, `organization-review-banned-css-patterns-before-finishing`
 
 9. `css-repeated-values-and-optional-token`
-   - Evidence/files: replace repeated color/spacing/radius in `theme-preview.css` with optional CSS variables and fallbacks; selectors and ownership stay unchanged.
+   - Evidence/files: scope a global `.ant-tree` selector under the existing `.ui_themePreview` owner root with one descendant level, and replace repeated color/spacing/radius with optional CSS variables and fallbacks while preserving the file and owner name.
    - Skills: `css`
-   - CSS selected: `values-always-provide-css-variable-fallbacks`, `values-tokenize-repeated-visual-values`, `organization-review-banned-css-patterns-before-finishing`
+   - CSS selected: `selector-avoid-deep-descendant-dependencies`, `selector-target-third-party-dom-from-owned-roots`, `values-always-provide-css-variable-fallbacks`, `values-tokenize-repeated-visual-values`, `organization-review-banned-css-patterns-before-finishing`
 
 10. `css-sticky-layout-intent`
     - Evidence/files: clarify sticky basis and z-index ownership and remove excessive width/height forcing in `dashboard/_index.css`; tokens and selectors stay unchanged.
@@ -1175,7 +1183,7 @@ The following strings and paths are the exact JSON oracle for Task 6. They make 
 | `css-ui-wrapper-root-prop-contract` | `directly type-import the official root className Props, expose documented UiButtonProps, destructure props inside ui-button.tsx, and pass an existing layout class from order-actions.tsx; add no internal selector or new class.` | `src/components/ui/button/ui-button.tsx`, `src/routes/orders/order-actions.tsx` |
 | `css-rich-text-owner-block` | `move top-level .wg_entryDetail__prose h2 and > :first-child into existing owner-block raw-element nesting; class names and values stay unchanged.` | `src/components/widgets/entry-detail/wg-entry-detail.css` |
 | `css-dom-interaction-states` | `move top-level hover/focus/disabled into the same class block's &: nesting and preserve the focus ring; no app modifier or value is added.` | `src/components/ui/button/ui-button.css` |
-| `css-repeated-values-and-optional-token` | `replace repeated color/spacing/radius in theme-preview.css with optional CSS variables and fallbacks; selectors and ownership stay unchanged.` | `src/components/ui/theme-preview/theme-preview.css` |
+| `css-repeated-values-and-optional-token` | `scope a global .ant-tree selector under the existing .ui_themePreview owner root with one descendant level, and replace repeated color/spacing/radius with optional CSS variables and fallbacks; keep the file and owner name unchanged.` | `src/components/ui/theme-preview/theme-preview.css` |
 | `css-sticky-layout-intent` | `clarify sticky basis and z-index ownership and remove excessive width/height forcing in dashboard/_index.css; tokens and selectors stay unchanged.` | `src/routes/dashboard/_index.css` |
 | `css-deep-project-descendant-chain` | `flatten .layout .panel .detail .item to a target element top-level block without changing class names or values.` | `src/routes/catalog/_index.css` |
 

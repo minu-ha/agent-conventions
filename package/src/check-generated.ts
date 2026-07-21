@@ -1,26 +1,43 @@
-import {constants} from "node:fs";
-import {access, readFile} from "node:fs/promises";
 import path from "node:path";
 
 import {getSkillPaths, isBuildableSkill, listSkillNames, packagePaths, parseCliArgs} from "./config.js";
 import {parseDependencyDeclaration} from "./dependencies.js";
 import {isDirectExecution} from "./entrypoint.js";
+import {readGeneratedDirectoryFileNames, readGeneratedRegularFile} from "./generated-files.js";
 import {readSkillDocument} from "./parser.js";
 import {assertProgressiveCompanionSource, assertProgressiveSkillEntrypoint} from "./progressive.js";
-import {generateRulesIndexMarkdown} from "./routing.js";
+import {generateRuleContractMarkdown, generateRulesIndexMarkdown} from "./routing.js";
 import type {SkillPaths} from "./types.js";
 
 /**
- * @description 단일 skill의 generated routing index 최신 상태 확인
+ * @helper progressive companion closure를 순회하며 generated output 최신 상태 확인
  */
-export const checkGeneratedSkill = async (skillPaths: SkillPaths): Promise<boolean> => {
+const checkGeneratedSkillTree = async (skillPaths: SkillPaths, visiting: Set<string>, completed: Set<string>): Promise<boolean> => {
+	if (completed.has(skillPaths.skillName)) {
+		return true;
+	}
+
+	if (visiting.has(skillPaths.skillName)) {
+		throw new Error(`Circular generated companion check detected at "${skillPaths.skillName}".`);
+	}
+
+	visiting.add(skillPaths.skillName);
 	const localDocument = await readSkillDocument(skillPaths);
+	const actualContractFileNames = await readGeneratedDirectoryFileNames(skillPaths.ruleContractsDir);
 
 	if (localDocument.metadata.progressiveDisclosure !== true) {
 		try {
-			await access(skillPaths.rulesIndexPath, constants.F_OK);
+			await readGeneratedRegularFile(skillPaths.rulesIndexPath);
 		} catch (error) {
 			if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+				if (actualContractFileNames.length > 0) {
+					throw new Error(
+						`${skillPaths.skillName}: unexpected generated contract files while progressiveDisclosure is disabled: ${actualContractFileNames.join(", ")}. Run the skill build to remove them.`,
+					);
+				}
+
+				visiting.delete(skillPaths.skillName);
+				completed.add(skillPaths.skillName);
 				return false;
 			}
 
@@ -53,7 +70,7 @@ export const checkGeneratedSkill = async (skillPaths: SkillPaths): Promise<boole
 	let actualMarkdown: string;
 
 	try {
-		actualMarkdown = await readFile(skillPaths.rulesIndexPath, "utf8");
+		actualMarkdown = await readGeneratedRegularFile(skillPaths.rulesIndexPath);
 	} catch (error) {
 		const errorCode = (error as NodeJS.ErrnoException).code;
 
@@ -68,26 +85,49 @@ export const checkGeneratedSkill = async (skillPaths: SkillPaths): Promise<boole
 		throw new Error(`${skillPaths.skillName}: stale generated RULES_INDEX.md at ${skillPaths.rulesIndexPath}. Run the skill build.`);
 	}
 
-	for (const companionPaths of directCompanionPaths) {
-		try {
-			await readFile(companionPaths.rulesIndexPath, "utf8");
-		} catch (error) {
-			const errorCode = (error as NodeJS.ErrnoException).code;
+	const expectedContracts = new Map(localDocument.rules.map((rule) => [rule.fileName, generateRuleContractMarkdown(rule)] as const));
 
-			if (errorCode === "ENOENT") {
-				throw new Error(
-					`${skillPaths.skillName}: generated companion RULES_INDEX.md link is missing for "${companionPaths.skillName}" at ${companionPaths.rulesIndexPath}. Build the companion skill first.`,
-				);
+	for (const [fileName, expectedContract] of expectedContracts) {
+		const contractPath = path.join(skillPaths.ruleContractsDir, fileName);
+		let actualContract: string;
+
+		try {
+			actualContract = await readGeneratedRegularFile(contractPath);
+		} catch (error) {
+			if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+				throw new Error(`${skillPaths.skillName}: missing generated contract "${fileName}" at ${contractPath}. Run the skill build.`);
 			}
 
-			throw new Error(
-				`${skillPaths.skillName}: companion RULES_INDEX.md for "${companionPaths.skillName}" is not a readable file at ${companionPaths.rulesIndexPath}.`,
-				{cause: error},
-			);
+			throw error;
+		}
+
+		if (actualContract !== expectedContract) {
+			throw new Error(`${skillPaths.skillName}: stale generated contract "${fileName}" at ${contractPath}. Run the skill build.`);
 		}
 	}
 
+	const unexpectedContractFileNames = actualContractFileNames.filter((fileName) => !expectedContracts.has(fileName));
+
+	if (unexpectedContractFileNames.length > 0) {
+		throw new Error(
+			`${skillPaths.skillName}: unexpected generated contract files: ${unexpectedContractFileNames.join(", ")}. Run the skill build.`,
+		);
+	}
+
+	for (const companionPaths of directCompanionPaths) {
+		await checkGeneratedSkillTree(companionPaths, visiting, completed);
+	}
+
+	visiting.delete(skillPaths.skillName);
+	completed.add(skillPaths.skillName);
 	return true;
+};
+
+/**
+ * @description 단일 skill과 progressive companion closure의 generated routing 산출물 최신 상태 확인
+ */
+export const checkGeneratedSkill = async (skillPaths: SkillPaths): Promise<boolean> => {
+	return await checkGeneratedSkillTree(skillPaths, new Set(), new Set());
 };
 
 /**

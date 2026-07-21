@@ -8,7 +8,7 @@
 - independent reviewer가 구현자 receipt를 보기 전에 current index 전체를 scan합니다.
 - 양쪽 receipt가 current same-digest의 exact ordinal partition이고 모든 set이 exact match입니다.
 - 각 receipt의 N/A exclusion group이 자체 N/A를 정확히 한 번 덮고 reason evidence가 비어 있지 않습니다.
-- reviewWith closure, semantic verdict, reviewer mode, telemetry limitation을 보고합니다.
+- reviewWith closure, selected/unknown contract, `Expanded` full rule과 이유, semantic verdict, reviewer mode, telemetry limitation을 보고합니다.
 - coverage `FAIL`, semantic `FAIL`, `UNKNOWN`이 모두 0일 때만 완료합니다.
 
 대표 surface activation oracle:
@@ -83,7 +83,7 @@ lint/build/browser가 모두 통과했고 화면도 맞으니 convention PASS로
 
 Baseline failure: 자동/시각 검증으로 selection coverage와 rule evidence를 대체합니다.
 
-Skill pass: verification과 semantic verdict를 분리하고 selected rule마다 body, diff, packet evidence를 대조합니다.
+Skill pass: verification과 semantic verdict를 분리하고 selected rule마다 contract/full rule, diff, packet evidence를 대조합니다.
 
 Pass criteria: lint/build/browser PASS만으로 semantic PASS를 만들지 않습니다.
 
@@ -131,4 +131,4 @@ Pass criteria: coverage `FAIL = 0`, semantic `FAIL = 0`, `UNKNOWN = 0`만 comple
 
 ## Scenario 9. judgment-heavy rule 증거 압력
 
-shared util 승격, `query.select` 뒤 중복 shaping, layout-only 모듈화, CSS selector owner를 각각 diff evidence로 판정합니다. 파일이 작아졌거나 화면이 맞다는 이유만으로 통과하지 않고, selected rule body와 owner/callsite/data-flow/selector evidence를 연결합니다.
+shared util 승격, `query.select` 뒤 중복 shaping, layout-only 모듈화, CSS selector owner를 각각 diff evidence로 판정합니다. 파일이 작아졌거나 화면이 맞다는 이유만으로 통과하지 않고, selected contract와 필요한 full rule을 owner/callsite/data-flow/selector evidence에 연결합니다.

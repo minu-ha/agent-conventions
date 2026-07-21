@@ -7,6 +7,7 @@ import {isDirectExecution} from "./entrypoint.js";
 import {readSkillDocument, readSkillRuleFileNames} from "./parser.js";
 import {assertProgressiveCompanionSource, assertProgressiveSkillEntrypoint} from "./progressive.js";
 import {validateRoutingEvalManifest} from "./routing-evals.js";
+import {generateRuleContractMarkdown} from "./routing.js";
 import type {LoadedSkillDocument, SkillMetadata, SkillPaths} from "./types.js";
 
 interface LocalValidationResult {
@@ -107,6 +108,7 @@ const validateLocalSkill = async (skillPaths: SkillPaths): Promise<LocalValidati
 			}
 
 			assertRoutingCondition(rule.appliesWhen, `${skillPaths.skillName}: ${rule.fileName} appliesWhen`);
+			generateRuleContractMarkdown(rule);
 		}
 
 		if (new Set(rule.reviewWith).size !== rule.reviewWith.length) {

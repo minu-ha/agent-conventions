@@ -1,0 +1,7 @@
+# Write Concise Korean Comments About Purpose and Constraints
+
+**Impact: MEDIUM (keeps comments focused on intent and constraints instead of narrating code mechanics)**
+
+주석은 한글로 작성하고, 목적, 제약, 부작용 중심으로 간결하게 적습니다. `@api`, `@event`, `@watch`, `@helper`, `@summary`, `@field` 문장은 명사형 종결이나 개조식 표현을 기본으로 하며, 코드 동작 설명보다 도입 이유와 제약 설명을 우선합니다.
+
+> 예시·예외가 필요할 때만 [full rule](../rules/docs-write-concise-korean-comments-about-purpose-and-constraints.md)을 추가로 읽고 fallback 사유를 기록합니다.

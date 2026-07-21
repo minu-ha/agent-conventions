@@ -55,8 +55,6 @@ export const ProfileDialog = (props: ProfileDialogProps) => {
 };
 ```
 
-boolean branch, optional slot, render prop, fixed variant를 한 component에 몰아두면 소비자가 실제 구조를 예측하기 어렵습니다.
-
 **Correct (고정 구조면 single component로 유지):**
 
 ```tsx
@@ -107,8 +105,6 @@ export const Section = {
 } as const;
 ```
 
-이런 구조는 지금은 `stateless compound component`지만, 나중에 state가 필요해지면 같은 이름을 유지한 채 `stateful compound component`로 확장할 수 있습니다.
-
 **Correct (여러 part가 state를 공유하면 stateful compound component로 확장):**
 
 ```tsx
@@ -138,8 +134,6 @@ const TabsPanel = (props: TabsPanelProps) => {
 };
 ```
 
-`Tabs.Trigger`와 `Tabs.Panel`처럼 여러 part가 같은 state를 읽고 행동을 공유하면, 그 시점부터는 `stateful compound component`입니다.
-
 **Correct (같은 family 조합이 반복되면 explicit variant로 감쌈):**
 
 ```tsx
@@ -152,5 +146,3 @@ export const ReadOnlyProfileDialog = () => {
 	);
 };
 ```
-
-이 규칙은 `strategy-avoid-boolean-prop-proliferation`, `strategy-prefer-children-over-render-props`, `screen-avoid-premature-abstraction`과 함께 봅니다.

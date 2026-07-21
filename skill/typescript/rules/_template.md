@@ -12,6 +12,10 @@ tags: tag1, tag2
 
 규칙의 핵심과 이유를 짧고 분명하게 설명합니다.
 
+규범과 예외는 이 지점까지 완결합니다. 아래에는 `Incorrect`/`Correct` label, fenced code, 빈 줄만 두며 예시가 여러 개면 Incorrect를 먼저 모두 배치합니다.
+
+관련 rule을 함께 재평가해야 할 때만 frontmatter에 `reviewWith: local-rule-id, companion-skill/cross-rule-id`를 추가하고, 대상이 없으면 key를 두지 않습니다.
+
 **Incorrect (무엇이 문제인지 설명):**
 
 ```ts
@@ -23,7 +27,3 @@ tags: tag1, tag2
 ```ts
 // 좋은 예시
 ```
-
-예시가 여러 개 필요하면 `Incorrect` 예시를 먼저 모두 배치한 뒤 `Correct` 예시를 이어서 배치합니다.
-
-관련 rule을 함께 재평가해야 할 때만 frontmatter에 `reviewWith: local-rule-id, companion-skill/cross-rule-id`를 추가하고, 대상이 없으면 key를 두지 않습니다.

@@ -110,7 +110,8 @@ framework/project 고유 규칙은 해당 skill이나 consuming project의 proje
 | TSX | Activate `convention-react` + `convention-typescript`. |
 | `className` / CSS / styling surface | Add `convention-css`. |
 | Activated progressive skill | Scan every activated `RULES_INDEX.md` completely; never stop at the first match. |
-| Rule bodies | Read only `Selected` + `Unknown` `rules/*.md` bodies; resolve `Unknown` before completion. |
+| Selected guidance | Read every `Selected` + `Unknown` stable-ID-matched `contracts/*.md`; CRITICAL contracts require their full `rules/*.md`. |
+| Full rule expansion | Expand non-CRITICAL full rules only for exact syntax, exceptions, unresolved Unknown, or missing audit evidence; record `Expanded: ID: reason`. |
 | Progressive full handbook | React/TypeScript/CSS `AGENTS.md` is opt-in, never default-loaded. |
 | Scope drift | Restart activation and rescan every activated progressive index. |
 | Completion | Finish with `convention-audit`: coverage `FAIL = 0`, semantic `FAIL = 0`, `UNKNOWN = 0`. |
@@ -174,7 +175,7 @@ Pure CSS는 TypeScript를 자동 활성화하지 않고, pure TypeScript는 Reac
 - 변경 근거가 되는 파일과 검증 포인트를 먼저 확보합니다.
 - 각 activated skill의 `SKILL.md`를 먼저 읽습니다.
 - activated progressive skill마다 `RULES_INDEX.md` 전체를 scan하고 digest-bound `Selected`/`N/A`/`Unknown` exact partition을 작성합니다.
-- progressive rule body는 `Selected`와 `Unknown`만 읽고, `Unknown`은 구현 전후 증거로 해소합니다.
+- `Selected`와 `Unknown` stable ID에 대응하는 generated contract를 읽고, CRITICAL 또는 근거가 더 필요한 경우만 full rule로 확장해 이유를 기록합니다.
 - progressive React/TypeScript/CSS full `AGENTS.md`는 전체 handbook이 명시적으로 필요한 경우에만 opt-in합니다.
 - non-progressive owner가 `SKILL.md`에서 local `AGENTS.md` 전체를 요구하면 그 계약을 따릅니다.
 
@@ -222,6 +223,7 @@ Pure CSS는 TypeScript를 자동 활성화하지 않고, pure TypeScript는 Reac
 
 - 마지막 gate로 `convention-audit`을 실행하고 local 8-rule `AGENTS.md` 전체를 따릅니다.
 - auditor는 변경 surface와 activated progressive index를 독립적으로 다시 선택하고 implementer receipt와 exact partition을 비교합니다.
+- auditor는 selected/unknown contract를 읽고 CRITICAL 또는 근거가 필요한 full rule expansion과 이유를 독립 검증합니다.
 - 자동 검사 결과는 evidence일 뿐 semantic convention PASS를 대신하지 않습니다.
 - coverage `FAIL = 0`, semantic `FAIL = 0`, `UNKNOWN = 0`이 아니면 Stage 3 또는 Stage 6으로 돌아가 재선택·수정·재검증합니다.
 - convention 예외는 기본 금지이며, 예외가 필요하면 근거와 제거 조건을 함께 남깁니다.

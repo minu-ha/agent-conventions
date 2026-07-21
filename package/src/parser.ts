@@ -1,7 +1,7 @@
 import {readFile, readdir} from "node:fs/promises";
 import path from "node:path";
 
-import {getSkillPaths, isBuildableSkill} from "./config.js";
+import {assertRealSkillDirectory, getSkillPaths, isBuildableSkill} from "./config.js";
 import {assertMetadataObject, parseDependencyDeclaration} from "./dependencies.js";
 import {assertProgressiveCompanionSource, assertProgressiveSkillEntrypoint} from "./progressive.js";
 import type {LoadedSkillDocument, SkillMetadata, SkillPaths, SkillRule, SkillSection} from "./types.js";
@@ -235,6 +235,8 @@ const splitScalarList = (value: string | undefined): string[] => {
  * @description 단일 skill의 metadata, sections, rules를 함께 로드
  */
 export const readSkillDocument = async (skillPaths: SkillPaths): Promise<LoadedSkillDocument> => {
+	await assertRealSkillDirectory(skillPaths);
+
 	return {
 		skillName: skillPaths.skillName,
 		metadata: await readSkillMetadata(skillPaths),

@@ -16,7 +16,7 @@
 
 ## 4. Independent Semantic Review (review)
 **Impact:** CRITICAL
-**Description:** auditor가 구현자 selection을 보기 전에 독립 scan을 수행하고 reviewWith closure와 selected/unknown 원문을 실제 증거에 대조합니다.
+**Description:** auditor가 구현자 selection을 보기 전에 독립 scan을 수행하고 reviewWith closure와 selected/unknown contract, 필요한 full rule을 실제 증거에 대조합니다.
 
 ## 5. Repair and Completion (completion)
 **Impact:** CRITICAL

@@ -12,7 +12,7 @@
 
 ## 개요
 
-React, CSS, TypeScript convention이 실제 구현 diff에 끝까지 적용됐는지 검증하는 semantic audit gate입니다. 실제 변경 surface로 companion을 조건부 활성화하고, auditor가 각 activated RULES_INDEX.md 전체를 독립적으로 scan해 digest-bound exact partition을 다시 만듭니다. 구현자 receipt와 비교해 빠진 applicable rule이나 근거 없는 N/A를 coverage FAIL로 막고, auditor-selected/unknown rule 원문과 변경 증거로 PASS/FAIL/UNKNOWN을 판정합니다. lint, build, test, browser 결과는 보조 증거일 뿐 semantic PASS를 대신하지 않으며, FAIL과 UNKNOWN이 모두 0일 때만 완료합니다.
+React, CSS, TypeScript convention이 실제 구현 diff에 끝까지 적용됐는지 검증하는 semantic audit gate입니다. 실제 변경 surface로 companion을 조건부 활성화하고, auditor가 각 activated RULES_INDEX.md 전체를 독립적으로 scan해 digest-bound exact partition을 다시 만듭니다. 구현자 receipt와 비교해 빠진 applicable rule이나 근거 없는 N/A를 coverage FAIL로 막고, auditor-selected/unknown contract와 CRITICAL 또는 근거가 더 필요한 full rule, 변경 증거로 PASS/FAIL/UNKNOWN을 판정합니다. lint, build, test, browser 결과는 보조 증거일 뿐 semantic PASS를 대신하지 않으며, FAIL과 UNKNOWN이 모두 0일 때만 완료합니다.
 
 이 가이드는 local Convention Audit 규칙만 담고 있습니다. companion skill은 아래 mode와 appliesWhen에 따라 활성화합니다.
 
@@ -99,7 +99,7 @@ auditor selection packet:
 
 sealed comparison artifact:
 
-- 구현자의 activated indexes와 digest-bound `Selected/N/A/Unknown` receipt
+- 구현자의 activated indexes와 digest-bound `Selected/N/A/Unknown`, `Expanded` receipt
 - 구현자가 읽었다고 선언한 document list와 자체 verdict
 
 auditor에게는 selection packet만 전달합니다. auditor receipt를 완성한 뒤 sealed comparison artifact를 공개해 exact partition을 비교합니다.
@@ -191,7 +191,7 @@ Check: disjoint=true, union=R01..R42, exclusion-union=N/A
 
 **Impact: CRITICAL**
 
-auditor가 구현자 selection을 보기 전에 독립 scan을 수행하고 reviewWith closure와 selected/unknown 원문을 실제 증거에 대조합니다.
+auditor가 구현자 selection을 보기 전에 독립 scan을 수행하고 reviewWith closure와 selected/unknown contract, 필요한 full rule을 실제 증거에 대조합니다.
 
 ### 4.1 Dispatch an Independent Semantic Reviewer When Available
 
@@ -219,15 +219,15 @@ Document telemetry: unavailable; declared list reported
 
 ### 4.2 Ground Every Verdict in Rule Text and Evidence
 
-**Impact: CRITICAL (exact selection과 원문 증거 없이 취향이나 자동 검사로 PASS를 만드는 것을 막음)**
+**Impact: CRITICAL (exact selection과 contract/full rule 증거 없이 취향이나 자동 검사로 PASS를 만드는 것을 막음)**
 
-독립 partition 뒤 auditor-selected/unknown rule 원문만 읽습니다. `N/A` body는 읽지 않고 index의 `appliesWhen`과 packet evidence로 exclusion을 재검증합니다. `Unknown` body를 읽은 뒤 applicability를 `Selected` 또는 근거 있는 `N/A`로 확정하지 못하면 semantic `UNKNOWN`으로 완료를 막습니다.
+독립 partition 뒤 auditor-selected/unknown rule의 stable ID와 같은 이름인 contract만 읽습니다. `CRITICAL` contract는 full rule을 반드시 읽고, non-CRITICAL도 exact syntax·예외·Unknown 해소·PASS 근거에 필요하면 full rule로 확장해 ID와 이유를 기록합니다. `N/A` contract/body는 읽지 않고 index의 `appliesWhen`과 packet evidence로 exclusion을 재검증합니다. contract와 필요한 full rule을 읽은 뒤 applicability를 `Selected` 또는 근거 있는 `N/A`로 확정하지 못하면 semantic `UNKNOWN`으로 완료를 막습니다.
 
 구현자와 auditor의 `Selected/N/A/Unknown` set을 current same-digest exact ID로 모두 비교합니다. 같은 count라도 member나 분류가 다르면 selection coverage `FAIL`입니다. 구현자에게 빠진 applicable rule, unsupported N/A, stale digest도 coverage `FAIL`이며 semantic verdict로 덮지 않습니다.
 
 모든 `reviewWith` target을 독립적으로 재평가합니다. activated/local target은 `Selected`, `N/A`, `Unknown` 중 하나여야 합니다. inactive cross-skill target은 activation condition과 target `appliesWhen`을 다시 확인하고 non-empty inactive evidence를 남깁니다.
 
-확정된 selected rule은 `PASS`, `FAIL`, `UNKNOWN` 중 하나와 file/line, rule text, packet evidence, reasoning, required fix를 기록합니다. lint/build/browser 성공은 semantic PASS 근거를 대신할 수 없습니다.
+확정된 selected rule은 `PASS`, `FAIL`, `UNKNOWN` 중 하나와 file/line, contract/full rule text, packet evidence, reasoning, required fix를 기록합니다. lint/build/browser 성공은 semantic PASS 근거를 대신할 수 없습니다.
 
 **Incorrect (누락된 rule을 코드가 지킨다는 이유로 허용):**
 
@@ -289,6 +289,7 @@ Final gate: coverage FAIL 0, semantic FAIL 0, UNKNOWN 0
 - coverage: selected, N/A, unknown count와 exact partition 검증 결과
 - excluded groups: ordinal/ID 범위와 non-empty evidence reason
 - selection comparison: 구현자/auditor `Selected/N/A/Unknown` all-set exact match 여부
+- expanded guidance: full rule로 확장한 ordinal/ID와 CRITICAL 또는 예외 판단 이유
 - reviewWith closure와 inactive cross-skill decision
 - semantic verdicts: PASS/FAIL/UNKNOWN count와 예외
 - reviewer mode, receipt exposure timing, independent reviewer 미사용 사유

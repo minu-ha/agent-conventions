@@ -47,8 +47,6 @@ export const Dialog = {
 } as const;
 ```
 
-이 방식은 props shape와 component 역할을 따로 읽어야 해서 `Dialog.Header`라는 part 경계가 한눈에 들어오지 않습니다.
-
 **Correct (part 단위로 JSDoc을 묶어 읽히게 유지):**
 
 ```tsx
@@ -100,6 +98,3 @@ const DialogClose = (props: DialogCloseProps) => {
 	);
 };
 ```
-
-요약하면 compound part는 props type만의 문서도, component만의 문서도 아닙니다.  
-하나의 public part boundary로 읽히게 `@part`와 `@description`을 props `interface` 위에 두고, component를 바로 아래에 붙입니다.

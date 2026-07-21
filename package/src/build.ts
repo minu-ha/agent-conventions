@@ -1,11 +1,12 @@
+import {mkdir} from "node:fs/promises";
 import path from "node:path";
 
 import {getSkillPaths, isBuildableSkill, listSkillNames, packagePaths, parseCliArgs} from "./config.js";
 import {parseDependencyDeclaration} from "./dependencies.js";
 import {isDirectExecution} from "./entrypoint.js";
-import {replaceGeneratedFiles} from "./generated-files.js";
+import {readGeneratedDirectoryFileNames, replaceGeneratedFiles} from "./generated-files.js";
 import {buildRuleAnchor, buildSectionAnchor, normalizeHeadingTitle, readResolvedSkillDocuments, replaceRuleHeading} from "./parser.js";
-import {escapeMarkdownText, generateRulesIndexMarkdown, getRulesForSection} from "./routing.js";
+import {escapeMarkdownText, generateRuleContractMarkdown, generateRulesIndexMarkdown, getRulesForSection} from "./routing.js";
 import type {CompiledSkillSection, LoadedSkillDocument, SkillCompanion, SkillMetadata, SkillPaths} from "./types.js";
 
 /**
@@ -70,6 +71,20 @@ interface GenerateMarkdownArgs {
 	 * @field handbook 마지막에 표시할 참고 링크 목록
 	 */
 	references: string[];
+}
+
+/**
+ * @summary read-only renderer와 transactional build가 공유하는 compiled handbook 입력
+ */
+interface PreparedSkillBuild {
+	/**
+	 * @field source resolution이 끝난 root skill 문서
+	 */
+	rootDocument: LoadedSkillDocument;
+	/**
+	 * @field 현재 source에서 렌더링한 expected AGENTS.md
+	 */
+	localMarkdown: string;
 }
 
 const conventionTitleBySkillName: Record<string, string> = {
@@ -311,9 +326,9 @@ export const generateMarkdown = (args: GenerateMarkdownArgs): string => {
 };
 
 /**
- * @description 단일 skill의 compiled `AGENTS.md` 생성
+ * @helper skill source와 companion closure에서 현재 compiled handbook 입력 준비
  */
-export const buildSkill = async (skillPaths: SkillPaths): Promise<void> => {
+const prepareSkillBuild = async (skillPaths: SkillPaths): Promise<PreparedSkillBuild> => {
 	const documents = await readResolvedSkillDocuments(skillPaths);
 	const rootDocument = documents.find((document) => document.skillName === skillPaths.skillName);
 
@@ -324,19 +339,55 @@ export const buildSkill = async (skillPaths: SkillPaths): Promise<void> => {
 	const companionSkills = collectCompanionSkills(rootDocument, documents);
 	const localSections = buildCompiledSections(skillPaths.skillName, [rootDocument]);
 	const localReferences = collectReferenceLinks([rootDocument]);
-	const localMarkdown = generateMarkdown({
-		skillName: skillPaths.skillName,
-		metadata: rootDocument.metadata,
-		sections: localSections,
-		companionSkills,
-		references: localReferences,
-	});
+
+	return {
+		rootDocument,
+		localMarkdown: generateMarkdown({
+			skillName: skillPaths.skillName,
+			metadata: rootDocument.metadata,
+			sections: localSections,
+			companionSkills,
+			references: localReferences,
+		}),
+	};
+};
+
+/**
+ * @description 단일 skill의 현재 source 기준 expected `AGENTS.md`를 write 없이 렌더링
+ */
+export const generateCompiledSkillMarkdown = async (skillPaths: SkillPaths): Promise<string> => {
+	return (await prepareSkillBuild(skillPaths)).localMarkdown;
+};
+
+/**
+ * @description 단일 skill의 compiled `AGENTS.md` 생성
+ */
+export const buildSkill = async (skillPaths: SkillPaths): Promise<void> => {
+	const {rootDocument, localMarkdown} = await prepareSkillBuild(skillPaths);
 	const dependencies = parseDependencyDeclaration(rootDocument.skillName, rootDocument.metadata);
 	const rulesIndexMarkdown =
 		rootDocument.metadata.progressiveDisclosure === true ? generateRulesIndexMarkdown(rootDocument, dependencies.companions) : undefined;
+	const contractMarkdownByFileName = new Map(
+		rootDocument.metadata.progressiveDisclosure === true
+			? rootDocument.rules.map((rule) => [rule.fileName, generateRuleContractMarkdown(rule)] as const)
+			: [],
+	);
+	const existingContractFileNames = await readGeneratedDirectoryFileNames(skillPaths.ruleContractsDir);
+	const contractFileNames = Array.from(new Set([...existingContractFileNames, ...contractMarkdownByFileName.keys()])).sort((left, right) =>
+		left.localeCompare(right, "en-US"),
+	);
+
+	if (contractMarkdownByFileName.size > 0) {
+		await mkdir(skillPaths.ruleContractsDir, {recursive: true});
+	}
+
 	const generatedResult = await replaceGeneratedFiles([
 		{targetPath: skillPaths.outputPath, content: localMarkdown},
 		{targetPath: skillPaths.rulesIndexPath, ...(rulesIndexMarkdown === undefined ? {} : {content: rulesIndexMarkdown})},
+		...contractFileNames.map((fileName) => ({
+			targetPath: path.join(skillPaths.ruleContractsDir, fileName),
+			...(contractMarkdownByFileName.has(fileName) ? {content: contractMarkdownByFileName.get(fileName)} : {}),
+		})),
 	]);
 
 	console.log(`Wrote ${path.relative(skillPaths.skillDir, skillPaths.outputPath)}`);
@@ -345,6 +396,18 @@ export const buildSkill = async (skillPaths: SkillPaths): Promise<void> => {
 		console.log(`Wrote ${path.relative(skillPaths.skillDir, skillPaths.rulesIndexPath)}`);
 	} else if (generatedResult.deletedPaths.includes(skillPaths.rulesIndexPath)) {
 		console.log(`Removed ${path.relative(skillPaths.skillDir, skillPaths.rulesIndexPath)}`);
+	}
+
+	if (contractMarkdownByFileName.size > 0) {
+		console.log(`Wrote contracts (${contractMarkdownByFileName.size})`);
+	} else {
+		const removedContractCount = generatedResult.deletedPaths.filter(
+			(targetPath) => path.dirname(targetPath) === skillPaths.ruleContractsDir,
+		).length;
+
+		if (removedContractCount > 0) {
+			console.log(`Removed contracts (${removedContractCount})`);
+		}
 	}
 };
 

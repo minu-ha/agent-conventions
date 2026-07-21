@@ -24,6 +24,8 @@ const commandEnv = {...process.env, PATH: [packageBinDir, nodeBinDir, process.en
 const tsxCliPath = path.join(packageDir, "node_modules", "tsx", "dist", "cli.mjs");
 const buildModulePath = path.join(packageDir, "src", "build.ts");
 const checkGeneratedModulePath = path.join(packageDir, "src", "check-generated.ts");
+const checkHandbooksModulePath = path.join(packageDir, "src", "check-handbooks.ts");
+const measurementScriptPath = path.join(packageDir, "scripts", "measure-progressive-loading.py");
 const expectedSkillScriptNames = [
 	"astro",
 	"react",
@@ -364,10 +366,31 @@ test("package.json exposes all-skill and per-skill script aliases", async () => 
 
 	assert.ok(packageJson.scripts["check:generated"]);
 	assert.ok(packageJson.scripts["check:generated:all"]);
+	assert.equal(packageJson.scripts["check:handbooks:all"], "tsx src/check-handbooks.ts --all");
+	assert.equal(packageJson.scripts["check:measurement-artifacts"], "npm run check:generated:all && npm run check:handbooks:all");
+	assert.equal(packageJson.scripts["measurement:self-test"], "python3 scripts/measure-progressive-loading.py --self-test");
+	assert.equal(packageJson.scripts["measurement:tokens"], "uv run --with tiktoken==0.11.0 python scripts/measure-progressive-loading.py");
 
 	for (const skillName of ["react", "css", "typescript"] as const) {
 		assert.ok(packageJson.scripts[`check:generated:${skillName}`]);
 	}
+});
+
+test("measurement revalidates contexts after routing-oracle snapshot", async () => {
+	const source = await readFile(measurementScriptPath, "utf8");
+	const runMeasurementStart = source.indexOf("def run_measurement(");
+	const runMeasurementEnd = source.indexOf("\n\nMutation =", runMeasurementStart);
+	const runMeasurementSource = source.slice(runMeasurementStart, runMeasurementEnd);
+	const snapshotIndex = runMeasurementSource.indexOf("routing_oracle_snapshot = {");
+	const revalidationIndex = runMeasurementSource.indexOf("validate_contexts(contexts, repo_root)", snapshotIndex);
+	const metadataIndex = runMeasurementSource.indexOf('"type": "metadata"');
+
+	assert.notEqual(runMeasurementStart, -1);
+	assert.notEqual(runMeasurementEnd, -1);
+	assert.notEqual(snapshotIndex, -1);
+	assert.notEqual(revalidationIndex, -1);
+	assert.ok(revalidationIndex > snapshotIndex);
+	assert.ok(revalidationIndex < metadataIndex);
 });
 
 test("consumer documentation enforces the exact progressive convention policy", async () => {
@@ -377,7 +400,14 @@ test("consumer documentation enforces the exact progressive convention policy", 
 		["TSX", "Activate `convention-react` + `convention-typescript`."],
 		["`className` / CSS / styling surface", "Add `convention-css`."],
 		["Activated progressive skill", "Scan every activated `RULES_INDEX.md` completely; never stop at the first match."],
-		["Rule bodies", "Read only `Selected` + `Unknown` `rules/*.md` bodies; resolve `Unknown` before completion."],
+		[
+			"Selected guidance",
+			"Read every `Selected` + `Unknown` stable-ID-matched `contracts/*.md`; CRITICAL contracts require their full `rules/*.md`.",
+		],
+		[
+			"Full rule expansion",
+			"Expand non-CRITICAL full rules only for exact syntax, exceptions, unresolved Unknown, or missing audit evidence; record `Expanded: ID: reason`.",
+		],
 		["Progressive full handbook", "React/TypeScript/CSS `AGENTS.md` is opt-in, never default-loaded."],
 		["Scope drift", "Restart activation and rescan every activated progressive index."],
 		["Completion", "Finish with `convention-audit`: coverage `FAIL = 0`, semantic `FAIL = 0`, `UNKNOWN = 0`."],
@@ -475,6 +505,7 @@ test("consumer documentation enforces the exact progressive convention policy", 
 	const expectedAuditBullets = [
 		"- 마지막 gate로 `convention-audit`을 실행하고 local 8-rule `AGENTS.md` 전체를 따릅니다.",
 		"- auditor는 변경 surface와 activated progressive index를 독립적으로 다시 선택하고 implementer receipt와 exact partition을 비교합니다.",
+		"- auditor는 selected/unknown contract를 읽고 CRITICAL 또는 근거가 필요한 full rule expansion과 이유를 독립 검증합니다.",
 		"- 자동 검사 결과는 evidence일 뿐 semantic convention PASS를 대신하지 않습니다.",
 		"- coverage `FAIL = 0`, semantic `FAIL = 0`, `UNKNOWN = 0`이 아니면 Stage 3 또는 Stage 6으로 돌아가 재선택·수정·재검증합니다.",
 		"- convention 예외는 기본 금지이며, 예외가 필요하면 근거와 제거 조건을 함께 남깁니다.",
@@ -507,7 +538,7 @@ test("consumer documentation enforces the exact progressive convention policy", 
 
 	const policyNextHeading = "\n## Progressive Activation Matrix";
 	for (const contradiction of [
-		"Read only `Selected` `rules/*.md` bodies.",
+		"Read only `Selected` `contracts/*.md` bodies.",
 		"Keep the initial receipt.",
 		"Never load any `AGENTS.md`.",
 		"High severity checks are enough to complete.",
@@ -521,8 +552,8 @@ test("consumer documentation enforces the exact progressive convention policy", 
 	for (const [currentText, mutatedText] of [
 		["Activate `convention-react` + `convention-typescript`.", "Activate `convention-react`."],
 		[
-			"Read only `Selected` + `Unknown` `rules/*.md` bodies; resolve `Unknown` before completion.",
-			"Read only `Selected` `rules/*.md` bodies.",
+			"Read every `Selected` + `Unknown` stable-ID-matched `contracts/*.md`; CRITICAL contracts require their full `rules/*.md`.",
+			"Read only `Selected` `contracts/*.md` bodies.",
 		],
 		["Restart activation and rescan every activated progressive index.", "Keep the initial receipt."],
 		["React/TypeScript/CSS `AGENTS.md` is opt-in, never default-loaded.", "Never load any `AGENTS.md`."],
@@ -613,6 +644,7 @@ test("repository documentation distinguishes source, router, generated artifacts
 		["`metadata.json`", "Editable build and companion activation contract."],
 		["`SKILL.md`", "Editable activation/load router; compact for progressive skills."],
 		["`RULES_INDEX.md`", "Progressive-only generated compact index."],
+		["`contracts/*.md`", "Progressive-only generated selected-rule contract; never edit directly."],
 		["`AGENTS.md`", "Generated full handbook; opt-in for progressive React/TypeScript/CSS."],
 		["`routing-evals.json`", "Progressive-only editable test oracle; never runtime context."],
 	];
@@ -692,7 +724,7 @@ test("repository documentation distinguishes source, router, generated artifacts
 });
 
 test("build and generated-check modules import without running their CLI main", () => {
-	for (const modulePath of [buildModulePath, checkGeneratedModulePath]) {
+	for (const modulePath of [buildModulePath, checkGeneratedModulePath, checkHandbooksModulePath]) {
 		const result = spawnSync(process.execPath, [tsxCliPath, "--eval", `import(${JSON.stringify(pathToFileURL(modulePath).href)})`], {
 			cwd: packageDir,
 			encoding: "utf8",

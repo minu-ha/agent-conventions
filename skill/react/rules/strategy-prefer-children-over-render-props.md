@@ -86,6 +86,3 @@ export const EntryScreen = () => {
 	);
 };
 ```
-
-같은 shell을 재사용하지만 내부 구조는 화면마다 달라질 수 있다면 `stateless compound component`가 더 읽기 쉽습니다.  
-이 경우에는 `showFooter`, `showSearch`, `isCreateMode` 같은 boolean prop도 필요 없고, parent가 runtime 데이터를 child 함수에 밀어줄 이유도 없으므로 render prop보다 단순한 구조 조립이 맞습니다. `Panel.Root/Header/Footer`처럼 dot notation으로 묶고, 나중에 state가 필요해지면 같은 이름을 유지한 채 context를 추가합니다.
