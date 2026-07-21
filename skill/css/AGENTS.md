@@ -63,6 +63,8 @@
 
 ### 1.1 Default to Plain CSS Unless the Project Explicitly Standardizes on CSS Modules
 
+**Applies when:** 프로젝트의 CSS Modules 표준이 확인되지 않은 상태에서 새 stylesheet 또는 class contract를 만들거나 \`.module.css\`/\`styles.\*\` 도입을 검토한다.
+
 **Impact: HIGH (keeps the global `scope_slug` naming system meaningful instead of hiding ownership behind local module indirection)**
 
 이 CSS skill은 기본적으로 plain `*.css`와 전역 고유 클래스명을 전제로 합니다. `rt_*`, `ui_*`, `wg_*`, `loc_*` 네임스페이스는 global class space에서 owner를 추적하려고 존재하므로, 프로젝트에 별도 합의가 없다면 `.module.css`와 `styles.foo`를 기본 선택으로 삼지 않습니다. 프로젝트가 이미 CSS Modules를 공식 표준으로 채택했고 그에 맞는 naming/runtime 규칙이 따로 있다면, 그 프로젝트 로컬 규칙이 이 기본값보다 우선합니다.
@@ -112,6 +114,8 @@ import "./_index.css";
 
 ### 1.2 Keep Each `scope_slug` Unique Per Owner
 
+**Applies when:** 새 \`scope\_slug\` namespace를 추가·복사·이름 변경하거나 서로 다른 owner의 class가 같은 namespace를 사용할 가능성이 있다.
+
 **Impact: CRITICAL (prevents unrelated routes or components from sharing the same namespace and colliding in the global class space)**
 
 클래스명은 프로젝트 전역에서 고유해야 하며, 동일한 `scope_slug` 조합은 단일 소유자만 사용할 수 있습니다. 새 스타일을 추가할 때는 먼저 기존 `scope_slug` 충돌 여부를 확인하고, 의미가 겹치더라도 파일이 다르면 별도 slug를 부여합니다.
@@ -138,6 +142,8 @@ rt_dashboardIndex__header
 
 ### 1.3 Name Elements and Modifiers by Role
 
+**Applies when:** element 또는 modifier class를 새로 짓거나 \`container\`, \`wrapper\`, \`box\`, 치수·간격 중심 이름을 변경한다.
+
 **Impact: HIGH (avoids vague or layout-only names that stop classes from describing what the UI part actually is)**
 
 `element`와 `modifier` 이름은 구조나 치수가 아니라 UI 역할을 표현해야 합니다. `container`, `wrapper`, `box` 같은 포괄 단어 단독 사용이나 `gap12` 같은 숫자 기반 의미는 피하고, 실제 역할과 상태를 드러내는 이름을 씁니다.
@@ -161,6 +167,8 @@ rt_catalogDetail__detailSection
 ```
 
 ### 1.4 Preserve Route Slug Traceability
+
+**Applies when:** route/framework 규칙이 \`rt\_\*\` owner를 선택한 화면에서 route class slug를 새로 만들거나 이름을 변경한다.
 
 **Impact: HIGH (keeps route-scoped class namespaces readable back to the route hierarchy they belong to)**
 
@@ -195,6 +203,8 @@ rt_document__body
 ```
 
 ### 1.5 Separate Route, Local, and Shared Style Scopes
+
+**Applies when:** 스타일 owner를 route, document, local helper, reusable widget, UI primitive 중에서 결정하거나 서로 다른 owner를 이동·분리한다.
 
 **Impact: HIGH (keeps route-owned page styles, shared component styles, and truly local helper styles from mixing into the same namespace or file)**
 
@@ -236,6 +246,8 @@ entries/_local/filter-dialog.css
 ```
 
 ### 1.6 Use Scope, Slug, Element, and Modifier Syntax
+
+**Applies when:** plain CSS의 project-owned class를 새로 만들거나 이름, scope, slug, element, modifier 구분자 또는 casing을 변경한다.
 
 **Impact: CRITICAL (makes class ownership and UI role traceable from the classname alone)**
 
@@ -280,6 +292,8 @@ TSX class 조합과 wrapper 소유권 규칙은 스타일링 경계를 분명하
 
 ### 2.1 Compose Classes With `clsx()`
 
+**Applies when:** TSX의 \`className\`을 추가·수정하거나 base class, modifier, optional class를 조합한다.
+
 **Impact: HIGH (keeps TSX class composition readable when base classes and state modifiers need to be combined)**
 
 TSX에서 `className`은 `clsx()` 사용을 기본으로 합니다. 기본 element 클래스 하나만 넣는 경우도 같은 기준을 유지하고, 상태 modifier나 optional class가 붙어도 읽기 쉽게 확장합니다. 문자열 연결이나 중복 ternary로 `className`을 조립하지 않습니다.
@@ -306,6 +320,8 @@ TSX에서 `className`은 `clsx()` 사용을 기본으로 합니다. 기본 eleme
 ```
 
 ### 2.2 Do Not Use Modifiers for One-off Structural Patches
+
+**Applies when:** spacing·방향·특정 화면의 구조 차이를 \`--modifier\`로 추가하려 하거나 modifier가 반복 가능한 상태 또는 API variant인지 판단한다.
 
 **Impact: HIGH (keeps modifiers reserved for state instead of turning them into a second layout naming system)**
 
@@ -342,6 +358,8 @@ modifier는 상태나 반복 variant를 표현할 때만 사용합니다.
 
 ### 2.3 Keep Classes Single-purpose
 
+**Applies when:** base class 이름에 상태·variant 의미를 합치거나 한 class에 서로 독립적인 시각 책임을 추가·재사용·분리한다.
+
 **Impact: HIGH (stops one class from carrying both base styling and multiple state or structural meanings at once)**
 
 하나의 클래스는 하나의 시각적 책임만 가져야 합니다. 상태나 변형이 필요하면 modifier를 별도로 두고, 기본 클래스에 모든 의미를 몰아넣지 않습니다.
@@ -359,6 +377,8 @@ modifier는 상태나 반복 variant를 표현할 때만 사용합니다.
 ```
 
 ### 2.4 Prefer `Ui*` Wrapper Prop Types
+
+**Applies when:** \`Ui\*\` wrapper 사용처나 wrapper API에서 Props 타입을 선언·추론·재사용하고 라이브러리 원본 Props 참조를 검토한다.
 
 **Impact: MEDIUM-HIGH (preserves wrapper-level styling and API contracts instead of leaking raw library prop types into usage sites)**
 
@@ -381,6 +401,8 @@ const items: NonNullable<UiCollapseProps["items"]> = [];
 ```
 
 ### 2.5 Prefer Owned Wrappers for `Ui*` Component Styling
+
+**Applies when:** \`Ui\*\` wrapper의 내부 DOM을 스타일링하거나 root \`className\` 또는 slot prop을 styling hook으로 주입·노출·사용한다.
 
 **Impact: HIGH (prevents shared UI wrappers from exposing uncontrolled styling hooks through ad-hoc className injection)**
 
@@ -422,6 +444,8 @@ const items: NonNullable<UiCollapseProps["items"]> = [];
 
 ### 3.1 Avoid Deep Descendant Selector Dependencies
 
+**Applies when:** descendant 또는 child selector chain을 추가·수정하거나 DOM 계층에 의존하는 project-owned·third-party selector를 검토한다.
+
 **Impact: HIGH (keeps layout changes from breaking styling through long descendant chains)**
 
 깊은 후손 선택자 체인에 스타일을 걸지 않습니다. 이 규칙은 nested 문법 사용 여부와 무관하게, selector가 DOM 구조에 과도하게 묶이는 것을 금지합니다. project-owned 스타일은 클래스 자체가 계약이 되어야 하며, `.a .b .c .d` 같은 의존성은 DOM 구조가 조금만 바뀌어도 쉽게 깨집니다. owned root 아래의 third-party DOM path는 `selector-target-third-party-dom-from-owned-roots`가 다루는 예외이며, 그 경우에도 shortest viable chain만 허용합니다.
@@ -447,6 +471,8 @@ const items: NonNullable<UiCollapseProps["items"]> = [];
 ```
 
 ### 3.2 Keep Project-owned Selectors Flat
+
+**Applies when:** project-owned class를 중첩·descendant selector로 연결하거나 raw HTML prose·copy·content wrapper 안 element selector를 추가·수정한다.
 
 **Impact: CRITICAL (reduces cascade coupling by keeping project-owned selectors independent instead of descendant-driven)**
 
@@ -502,6 +528,8 @@ rich text 예외는 raw element styling에만 적용됩니다. `.owner__prose .o
 ```
 
 ### 3.3 Target Third-party DOM Only From Owned Roots
+
+**Applies when:** \`.ant-\*\`, \`.rc-\*\`, \`.tippy-\*\` 등 third-party 내부 DOM selector를 추가·수정하거나 owned wrapper 아래로 범위를 제한한다.
 
 **Impact: CRITICAL (limits third-party styling to explicit wrapper ownership instead of leaking across the app)**
 
@@ -562,6 +590,8 @@ rich text 예외는 raw element styling에만 적용됩니다. `.owner__prose .o
 ```
 
 ### 3.4 Use Pseudo-classes for DOM-owned States
+
+**Applies when:** \`:hover\`, \`:visited\`, \`:focus\*\`, \`:disabled\`, \`:checked\`를 추가·수정하거나 parent DOM state가 child styling에 영향을 준다.
 
 **Impact: HIGH (keeps browser-owned interaction states separate from app-owned state modifiers)**
 
@@ -634,6 +664,8 @@ rich text 예외는 raw element styling에만 적용됩니다. `.owner__prose .o
 
 ### 4.1 Keep Layout Intent Explicit
 
+**Applies when:** \`sticky\`·\`fixed\`, \`z-index\`, 강제 width·height 또는 부모·자식의 layout responsibility를 추가·변경한다.
+
 **Impact: MEDIUM-HIGH (makes sticky, fixed, and box responsibilities understandable without reverse-engineering the DOM)**
 
 레이아웃 의도는 클래스명과 선언에서 즉시 확인 가능해야 합니다. `position`, `width`, `height` 강제는 최소화하고 부모와 자식의 레이아웃 책임을 분리하며, `sticky`나 `fixed`를 쓸 때는 기준 컨테이너와 `z-index` 의도를 주석으로 남깁니다.
@@ -667,6 +699,8 @@ rich text 예외는 raw element styling에만 적용됩니다. `.owner__prose .o
 ```
 
 ### 4.2 Provide CSS Variable Fallbacks When Token Presence Is Not Guaranteed
+
+**Applies when:** \`var\(--\*\)\`를 추가·수정하거나 theme provider·third-party wrapper·optional token·overlay처럼 변수 주입이 보장되지 않는 경계를 스타일링한다.
 
 **Impact: HIGH (prevents missing tokens from degrading styles unpredictably when variables are absent)**
 
@@ -704,6 +738,8 @@ CSS 변수 `var(--*)`를 사용할 때는 토큰 존재가 보장되지 않는 �
 ```
 
 ### 4.3 Separate Domain State Modifiers From DOM Interaction States
+
+**Applies when:** app/domain state modifier와 hover·focus·disabled 같은 DOM interaction state를 추가·변경하거나 focus ring에 손댄다.
 
 **Impact: HIGH (keeps app state, focus visibility, and hover behavior readable and accessible without mixing their responsibilities)**
 
@@ -744,6 +780,8 @@ CSS 변수 `var(--*)`를 사용할 때는 토큰 존재가 보장되지 않는 �
 
 ### 4.4 Tokenize Repeated Visual Values
 
+**Applies when:** 색상·간격·radius·타이포·그림자 등 같은 시각 값이 2회 이상 반복되거나 새 shared visual value를 하드코딩한다.
+
 **Impact: HIGH (keeps repeated colors, spacing, and radius values aligned with shared design tokens instead of drifting into magic numbers)**
 
 색상, 간격, 타이포, 그림자 같은 반복 가능한 시각 값은 CSS 변수와 디자인 토큰을 우선 사용합니다. 같은 값이 2회 이상 반복되면 하드코딩을 늘리기 전에 토큰화 여부를 먼저 검토합니다.
@@ -781,6 +819,8 @@ CSS 변수 `var(--*)`를 사용할 때는 토큰 존재가 보장되지 않는 �
 stylesheet는 하나의 owner에 맞춰 유지하고, 가벼운 구조 주석만 사용하며, 마무리 전에 금지 패턴을 점검해야 합니다.
 
 ### 5.1 Keep Style Files Owned by One Component or Route Surface
+
+**Applies when:** stylesheet를 새로 만들거나 이동·분할·병합하고 한 파일에 component, route, document, local, shared owner가 섞일 가능성이 있다.
 
 **Impact: MEDIUM (keeps stylesheets aligned to a single owner so comments, ordering, and scope remain understandable)**
 
@@ -825,6 +865,8 @@ stylesheet는 하나의 owner에 맞춰 유지하고, 가벼운 구조 주석만
 ```
 
 ### 5.2 Review Banned CSS Patterns Before Finishing
+
+**Applies when:** CSS 또는 TSX class contract 변경이 완료 단계에 들어간다.
 
 **Impact: MEDIUM (catches unsafe selector, modifier, and library-targeting shortcuts before they become part of the shared style system)**
 

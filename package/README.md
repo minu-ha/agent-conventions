@@ -11,7 +11,7 @@
 | `SKILL.md` | Editable activation/load router; compact for progressive skills. |
 | `RULES_INDEX.md` | Progressive-only generated compact index. |
 | `contracts/*.md` | Progressive-only generated selected-rule contract; never edit directly. |
-| `AGENTS.md` | Generated full handbook; opt-in for progressive React/TypeScript/CSS. |
+| `AGENTS.md` | Generated full handbook; progressive rules include `Applies when`; opt-in for React/TypeScript/CSS. |
 | `routing-evals.json` | Progressive-only editable test oracle; never runtime context. |
 
 `progressiveDisclosure: true`인 skill은 `RULES_INDEX.md`와 `contracts/*.md`를 생성합니다. non-progressive skill은 `SKILL.md`가 안내하는 `AGENTS.md`와 rule 원문을 사용합니다. `convention-audit`는 local 8-rule `AGENTS.md` 전체를 읽고 progressive companion만 index/contract로 라우팅합니다.

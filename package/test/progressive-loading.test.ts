@@ -762,6 +762,11 @@ test("temporary progressive build and stale check are deterministic without repo
 		assert.doesNotMatch(firstIndex, /Fixture Rule|leaf\/rules|dependency\/rules/);
 		assert.equal(Buffer.byteLength(firstIndex, "utf8") <= getRulesIndexByteBudget(2), true);
 		assert.match(firstHandbook, /^### 1\.1 Own Composition$/m);
+		assert.match(
+			firstHandbook,
+			/^### 1\.1 Own Composition\n\n\*\*Applies when:\*\* Changing fixture composition\.\n\n\*\*Impact:/m,
+			"the opt-in full handbook must preserve routing applicability next to each progressive rule",
+		);
 		assert.match(firstHandbook, /metadata\.json\.companions/);
 		assert.doesNotMatch(firstHandbook, /metadata\.json\.extends/);
 		assert.match(firstHandbook, /`convention-dependency`[\s\S]*?mode: `conditional`/);
@@ -931,7 +936,7 @@ test("companion appliesWhen stays literal Markdown for progressive and non-progr
 					...(progressiveDisclosure ? {progressiveDisclosure: true} : {}),
 					companions: [{skill: "target", mode: "conditional", appliesWhen: hostileCondition}],
 				},
-				rules: progressiveDisclosure ? [{appliesWhen: "Editing owner code."}] : undefined,
+				rules: progressiveDisclosure ? [{appliesWhen: hostileCondition}] : undefined,
 			});
 			const ownerPaths = getSkillPaths(owner, skillRootDir);
 			await captureConsoleLogs(async () => buildSkill(ownerPaths));
@@ -941,6 +946,10 @@ test("companion appliesWhen stays literal Markdown for progressive and non-progr
 			assert.doesNotMatch(handbook, /\[x\]\(https:\/\/example\.invalid\)/);
 			assert.doesNotMatch(handbook, /\*strong\*/);
 			assert.doesNotMatch(handbook, /`code`/);
+
+			if (progressiveDisclosure) {
+				assert.match(handbook, /\*\*Applies when:\*\* \\\[x\\\]\\\(https:\/\/example\.invalid\\\) \\\*strong\\\* \\`code\\`/);
+			}
 		}
 	});
 });

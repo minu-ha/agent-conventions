@@ -36,7 +36,7 @@
 - `SKILL.md`는 사람이 수정하는 activation/load router이며, progressive skill에서는 compact하게 유지합니다.
 - `progressiveDisclosure: true`인 skill은 [RULES_INDEX.md](./skill/react/RULES_INDEX.md)를 generated compact index로 사용합니다.
 - progressive skill의 `contracts/*.md`는 source `rules/*.md`에서 build한 selected-rule contract입니다. CRITICAL contract는 full rule을 반드시 가리킵니다.
-- progressive React/TypeScript/CSS의 `AGENTS.md`는 generated opt-in full handbook이며 기본 진입점으로 로드하지 않습니다.
+- progressive React/TypeScript/CSS의 `AGENTS.md`는 각 rule의 escaped `Applies when`을 포함하는 generated opt-in full handbook이며 기본 진입점으로 로드하지 않습니다.
 - `metadata.json.companions`는 `required` companion과 `conditional` companion의 활성화 관계를 선언합니다. `extends`는 아직 progressive migration을 하지 않은 non-progressive skill의 호환 계약입니다.
 - `routing-evals.json`은 runtime에 로드하지 않는 test oracle이며 exact Selected/N/A partition과 scope-drift 시나리오를 검증합니다.
 - `metadata.json`, [rules/_sections.md](./skill/react/rules/_sections.md), [README.md](./skill/react/README.md), [SKILL.md](./skill/react/SKILL.md)는 서로 설명이 어긋나지 않게 유지합니다.
@@ -59,7 +59,7 @@
 | `SKILL.md` | Editable activation/load router; compact for progressive skills. |
 | `RULES_INDEX.md` | Progressive-only generated compact index. |
 | `contracts/*.md` | Progressive-only generated selected-rule contract; never edit directly. |
-| `AGENTS.md` | Generated full handbook; opt-in for progressive React/TypeScript/CSS. |
+| `AGENTS.md` | Generated full handbook; progressive rules include `Applies when`; opt-in for React/TypeScript/CSS. |
 | `routing-evals.json` | Progressive-only editable test oracle; never runtime context. |
 
 non-progressive structured skill은 각 `SKILL.md`가 지정한 local `AGENTS.md`와 rule body 계약을 그대로 따릅니다. 위 opt-in 제한은 progressive React/TypeScript/CSS full handbook에만 적용합니다.

@@ -306,7 +306,19 @@ export const generateMarkdown = (args: GenerateMarkdownArgs): string => {
 
 		for (const [ruleIndex, rule] of section.rules.entries()) {
 			const ruleOrder = ruleIndex + 1;
-			lines.push(replaceRuleHeading(rule.body.trim(), sectionOrder, ruleOrder, rule.title));
+			let renderedRule = replaceRuleHeading(rule.body.trim(), sectionOrder, ruleOrder, rule.title);
+
+			if (metadata.progressiveDisclosure === true && rule.appliesWhen !== undefined) {
+				const headingEnd = renderedRule.indexOf("\n");
+
+				if (headingEnd < 0) {
+					throw new Error(`Rule "${rule.title}" is missing a heading boundary for handbook rendering.`);
+				}
+
+				renderedRule = `${renderedRule.slice(0, headingEnd)}\n\n**Applies when:** ${escapeMarkdownText(rule.appliesWhen)}${renderedRule.slice(headingEnd)}`;
+			}
+
+			lines.push(renderedRule);
 			lines.push("");
 		}
 	}

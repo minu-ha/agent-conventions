@@ -44,7 +44,7 @@
 - Non-progressive structured skill: `astro`, `convention-audit`, `figma-visual-parity`, `tanstack-route`, `playwright-test`, `nestjs`
 - Legacy single-document skill: `java`
 
-모든 structured skill은 작은 source rule을 조합해 generated full handbook인 `AGENTS.md`를 만듭니다. progressive skill은 compact `RULES_INDEX.md`와 rule별 `contracts/*.md`를 함께 생성해 일반 작업을 router → index → selected contract 경로로 처리합니다. CRITICAL rule과 contract만으로 exact 판단할 수 없는 경우에만 source `rules/*.md` full rule을 확장 로드합니다. non-progressive skill과 legacy skill은 각 `SKILL.md`의 load 계약을 따르며, 필요하면 local `AGENTS.md` 전체를 읽습니다. 예를 들어 `convention-audit`는 local 8-rule `AGENTS.md` 전체를 요구합니다.
+모든 structured skill은 작은 source rule을 조합해 generated full handbook인 `AGENTS.md`를 만듭니다. progressive skill은 compact `RULES_INDEX.md`와 rule별 `contracts/*.md`를 함께 생성해 일반 작업을 router → index → selected contract 경로로 처리합니다. CRITICAL rule과 contract만으로 exact 판단할 수 없는 경우에만 source `rules/*.md` full rule을 확장 로드합니다. progressive full handbook에는 각 규칙의 generated `Applies when`도 함께 표시해 opt-in fallback에서도 규칙 내용과 적용 범위를 혼동하지 않게 합니다. non-progressive skill과 legacy skill은 각 `SKILL.md`의 load 계약을 따르며, 필요하면 local `AGENTS.md` 전체를 읽습니다. 예를 들어 `convention-audit`는 local 8-rule `AGENTS.md` 전체를 요구합니다.
 
 - `metadata.json.companions`의 `required`는 owner와 항상 함께 활성화하고, `conditional`은 `appliesWhen`이 실제 변경 surface와 맞을 때만 활성화합니다.
 - `react`는 `typescript`를 required, `css`를 styling surface 조건부 companion으로 둡니다.
@@ -185,7 +185,7 @@ structured skill 하나는 보통 아래 형태를 가집니다.
 | `SKILL.md` | Editable activation/load router; compact for progressive skills. |
 | `RULES_INDEX.md` | Progressive-only generated compact index. |
 | `contracts/*.md` | Progressive-only generated selected-rule contract; never edit directly. |
-| `AGENTS.md` | Generated full handbook; opt-in for progressive React/TypeScript/CSS. |
+| `AGENTS.md` | Generated full handbook; progressive rules include `Applies when`; opt-in for React/TypeScript/CSS. |
 | `routing-evals.json` | Progressive-only editable test oracle; never runtime context. |
 
 ```text

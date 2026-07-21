@@ -114,6 +114,8 @@ build가 source `rules/*.md`에서 자동 생성하고 직접 편집을 금지�
 
 현재와 같이 local full handbook을 생성한다. 다음 경우에만 명시적으로 읽는다.
 
+progressive full handbook은 각 local rule heading 바로 아래에 source frontmatter의 escaped `Applies when`을 생성한다. 따라서 전체 원문을 opt-in한 agent도 규범 내용만 보고 범위를 과도하게 넓히지 않으며, index와 같은 적용 조건으로 exact partition을 만들 수 있어야 한다.
+
 - 사람의 전체 convention 온보딩
 - skill 자체 유지보수
 - 전체 규칙 문구 비교 또는 comprehensive handbook review를 사용자가 요청한 경우

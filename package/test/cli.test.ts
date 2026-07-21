@@ -645,7 +645,7 @@ test("repository documentation distinguishes source, router, generated artifacts
 		["`SKILL.md`", "Editable activation/load router; compact for progressive skills."],
 		["`RULES_INDEX.md`", "Progressive-only generated compact index."],
 		["`contracts/*.md`", "Progressive-only generated selected-rule contract; never edit directly."],
-		["`AGENTS.md`", "Generated full handbook; opt-in for progressive React/TypeScript/CSS."],
+		["`AGENTS.md`", "Generated full handbook; progressive rules include `Applies when`; opt-in for React/TypeScript/CSS."],
 		["`routing-evals.json`", "Progressive-only editable test oracle; never runtime context."],
 	];
 	const artifactDocuments = [

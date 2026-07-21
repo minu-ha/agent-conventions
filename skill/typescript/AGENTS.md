@@ -57,6 +57,8 @@
 
 ### 1.1 Centralize Shared Config Under `shared/config.ts`
 
+**Applies when:** 여러 leaf 모듈이 함께 쓰는 URL, feature flag, 페이지 크기나 상수를 추가·이동·중복 정의하거나 shared config 경계를 바꾼다.
+
 **Impact: HIGH (prevents shared config values from scattering across leaf files and losing a single public source)**
 
 여러 파일에서 공유되는 설정과 상수는 기본적으로 `shared/config.ts` 한 파일을 공개 진입점으로 삼아 `config` namespace 아래에 모읍니다.   
@@ -81,6 +83,8 @@ config.pagination.default_page_size;
 ```
 
 ### 1.2 Preserve Shared Namespace Origin With Chained Access
+
+**Applies when:** \`config\` 또는 \`util\` 값을 leaf 모듈에서 접근하며 넓은 스코프 구조분해, 별칭 또는 feature-local namespace를 추가·변경한다.
 
 **Impact: HIGH (keeps readers aware of where values come from instead of hiding origin behind wide-scope aliases)**
 
@@ -109,6 +113,8 @@ util.number.clamp(score, 0, 100);
 ```
 
 ### 1.3 Use Consistent File, Symbol, and Field Naming
+
+**Applies when:** TypeScript 파일, 변수·함수·타입, 객체·schema field 또는 enum-like 상수의 이름을 새로 만들거나 바꾼다.
 
 **Impact: HIGH (keeps file names, symbols, and shape fields predictable across modules and runtime structures)**
 
@@ -142,6 +148,8 @@ const userProfileSchema = z.object({
 
 ### 1.4 Use Direct Imports and Dedicated Public Entry Points
 
+**Applies when:** TypeScript import/export, barrel, type-only 의존, shared 공개 진입점 또는 feature support module 경계를 추가·변경한다.
+
 **Impact: HIGH (makes import ownership explicit without relying on barrels or ambiguous re-export layers)**
 
 `index.ts` 기반 barrel export를 만들지 않고 직접 export/import 구조를 유지합니다. 공용 설정과 공용 순수 함수는 각각 `shared/config.ts`, `shared/util.ts` 같은 공개 진입점으로 모으고, 타입 전용 import는 `import type`을 사용해 계약과 런타임 의존을 분리합니다. feature 전용 support code는 owner-named module처럼 소유자가 보이는 파일에서 named export를 직접 import합니다.
@@ -169,6 +177,8 @@ import {buildUserSaveRequest} from "./user-profile-support";
 함수 시그니처, callback 재사용, 타입 중복 제거, custom shape 문서화는 계약을 명시적이고 재사용 가능하게 유지해야 합니다.
 
 ### 2.1 Document Custom Types and Declarative Shapes
+
+**Applies when:** custom type·interface, schema root, 객체형 상수, 계약 field 또는 Pick·Omit·Indexed Access alias를 추가·변경한다.
 
 **Impact: CRITICAL (keeps domain-specific contracts understandable without digging through implementation details)**
 
@@ -222,6 +232,8 @@ const publishResultSchema = z.object({
 
 ### 2.2 Mark Unused Parameters With an Underscore Prefix
 
+**Applies when:** 기존 callback이나 framework 계약을 구현·변경하며 계약 매개변수 일부를 생략하거나 사용하지 않는다.
+
 **Impact: MEDIUM-HIGH (makes intentionally ignored callback parameters explicit instead of silently dropping parts of a contract)**
 
 미사용 매개변수도 생략하지 않고 `_` 접두사로 명시합니다. 이렇게 해야 callback 시그니처 계약을 유지하면서도, 현재 구현에서 의도적으로 쓰지 않는 값이라는 점이 드러납니다.
@@ -248,6 +260,8 @@ const noopLog: LogSink = (_message, _level) => {};
 ```
 
 ### 2.3 Prefer Function Variable Types Over Parameter Annotations
+
+**Applies when:** 기존 callable 계약이 있는 함수 구현을 추가·변경하거나 같은 시그니처를 여러 구현이 공유하도록 리팩터링한다.
 
 **Impact: CRITICAL (keeps callable contracts reusable and prevents local parameter annotations from fragmenting shared function types)**
 
@@ -296,6 +310,8 @@ const normalizeSearchRequest: NormalizeRequest = (request) => {
 
 ### 2.4 Reuse Callback Signatures From Existing Contracts
 
+**Applies when:** interface, 객체 또는 framework가 이미 정의한 callback을 구현·전달하면서 시그니처를 새로 적거나 바꾼다.
+
 **Impact: HIGH (prevents callback signatures from drifting when an existing interface or object contract already defines them)**
 
 콜백 구현 시 매개변수를 다시 타이핑하기보다, 이미 존재하는 인터페이스나 계약의 시그니처를 Indexed Access로 재사용합니다. 이렇게 해야 구현과 계약 사이의 타입 정의가 한곳에서 유지됩니다.
@@ -332,6 +348,8 @@ const formatMessage: ToastFormatters["formatMessage"] = (message) => {
 
 ### 2.5 Reuse Existing Contracts Before Declaring New Types
 
+**Applies when:** 기존 type, interface 또는 schema와 같거나 일부만 다른 shape를 새로 선언·변경하려 한다.
+
 **Impact: HIGH (reduces duplicate shape declarations by deriving from existing types and schemas when semantics have not changed)**
 
 기존 타입이나 스키마가 이미 존재하면 동일 구조의 별도 타입 선언을 만들지 않습니다. 의미 차이가 실제로 있을 때만 신규 타입을 만들고, 그 외에는 직접 참조하거나 `Pick`/`Omit`/Indexed Access로 파생합니다.
@@ -362,6 +380,8 @@ type UserPreview = Pick<UserRecord, "id" | "name">;
 
 ### 3.1 Avoid Imperative Assembly in Wide Scopes
 
+**Applies when:** 파일 상단이나 넓은 스코프에서 \`let\` 재대입, 배열 \`push\` 또는 조건부 누적으로 값을 조립하거나 이를 리팩터링한다.
+
 **Impact: HIGH (keeps file-wide logic declarative instead of mutating shared locals through branching assembly)**
 
 파일 상단이나 넓은 스코프에서 `let` 재대입, 배열 `push`, 조건부 누적 조립을 하지 않습니다. 단회성 사용이면 실제 사용하는 좁은 스코프에서 직접 계산하고, 분기와 보정이 결합된 계산은 `resolve*`, `build*`, `normalize*` 형태 유틸로 분리합니다.
@@ -385,6 +405,8 @@ const visibleTabs = canManageItems
 ```
 
 ### 3.2 Extract Support Functions Only When the Boundary Is Real
+
+**Applies when:** support function을 추출·이동·export·공유하거나 generic helper 파일, 단일 owner 전용 mapper 또는 작은 sub-step 경계를 바꾼다.
 
 **Impact: HIGH (stops helper extraction from fragmenting local flow when no reusable contract or testable boundary actually exists)**
 
@@ -522,6 +544,8 @@ export const util = {
 
 ### 3.3 Prefer Immutable Array Sorting
 
+**Applies when:** props, state, 매개변수 또는 공유 입력에서 온 배열을 정렬하거나 기존 \`.sort\(\)\` 호출을 추가·변경한다.
+
 **Impact: MEDIUM (avoids mutation bugs when sorted arrays come from props, state, or shared inputs)**
 
 정렬이 필요한데 원본 배열을 계속 써야 한다면 `.sort()`로 제자리 mutation을 하지 않습니다.   
@@ -545,6 +569,8 @@ const sortedUsers = [...users].sort((left, right) => left.name.localeCompare(rig
 ```
 
 ### 3.4 Replace `enum` With `as const` Objects
+
+**Applies when:** \`enum\` 또는 타입과 런타임에서 함께 쓰는 enum-like 값 집합을 추가·변경한다.
 
 **Impact: MEDIUM-HIGH (keeps runtime values explicit and type extraction lightweight without introducing enum-specific behavior)**
 
@@ -576,6 +602,8 @@ type AuditStatus = (typeof audit_status)[keyof typeof audit_status];
 ```
 
 ### 3.5 Use Named Object Params for Complex Signatures
+
+**Applies when:** 매개변수 3개 이상 또는 같은 계열 인자를 받는 함수를 추가·변경하거나 객체 매개변수를 시그니처에서 구조분해한다.
 
 **Impact: HIGH (keeps long function signatures readable and makes grouped inputs easier to extend without positional confusion)**
 
@@ -615,6 +643,8 @@ const buildRequestUrl = (args: BuildRequestUrlArgs): URL => {
 
 ### 3.6 Use Set and Map for Repeated Lookups
 
+**Applies when:** 같은 컬렉션에 \`includes\`, \`find\` 또는 keyed lookup을 여러 번 수행하는 코드를 추가·변경한다.
+
 **Impact: MEDIUM (keeps repeated membership and keyed access code explicit once lookup count grows)**
 
 같은 컬렉션에 대해 membership check나 keyed access를 여러 번 반복한다면 배열 `includes`, `find`를 매번 다시 돌리지 말고 `Set`이나 `Map`으로 한 번 정리합니다. 단발성 한두 번 조회면 그대로 두고, 반복 lookup이 실제로 있는 경우에만 승격합니다.
@@ -653,6 +683,8 @@ const approver = userById.get(approverId);
 
 ### 4.1 Expose Optional Values Instead of Silent Fallbacks
 
+**Applies when:** optional 값의 읽기·정규화·전달을 바꾸거나 \`??\`, \`||\`, 기본값 또는 빈 값 대체 분기를 추가·변경한다.
+
 **Impact: HIGH (makes missing data visible instead of quietly masking absence with generic defaults)**
 
 옵셔널 값에 대해 `??`, `||`로 기본값을 넣는 폴백 처리를 기본 금지합니다. 값이 없을 수 있음을 명확히 드러내고, 꼭 필요할 때만 도메인상 기본값이 명확하며 코드 바로 위 이유 주석이 있을 때 제한적으로 허용합니다.
@@ -689,6 +721,8 @@ const resolvePageSize = (query: SearchQuery): string => {
 
 ### 5.1 Keep Inline Comments for Constraints and Caveats Only
 
+**Applies when:** 함수 본문의 \`//\` 주석을 추가·수정·유지하거나 도메인 규칙, 예외 방어, 외부 제약 또는 부수효과 순서를 주석으로 설명한다.
+
 **Impact: MEDIUM (prevents inline comments from narrating obvious code while preserving notes that avoid real misunderstandings)**
 
 함수 본문 내부에서는 JSDoc 블록 주석을 사용하지 않고, `//` 주석은 도메인 규칙, 예외 방어 의도, 외부 라이브러리 제약, 부수효과 순서처럼 없으면 오해될 수 있는 경우에만 씁니다. 변수명 그대로 반복하는 설명은 남기지 않습니다.
@@ -710,6 +744,8 @@ if (!normalizedToken) {
 ```
 
 ### 5.2 Require Header JSDoc on Key Declarations
+
+**Applies when:** 원격 연동 함수, 이벤트 handler, reactive sync block, reusable helper, custom type·interface, store 또는 formatter 예외 함수를 추가·변경한다.
 
 **Impact: MEDIUM-HIGH (makes important boundaries searchable and explainable before readers inspect the implementation body)**
 
@@ -736,6 +772,8 @@ export const normalizeUserIds = (userIds: string[]): string[] => {
 ```
 
 ### 5.3 Standardize Annotation Tags by Declaration Role
+
+**Applies when:** TypeScript/TSX 선언의 JSDoc 태그를 추가·변경하거나 선언 역할에 맞는 annotation을 검토한다.
 
 **Impact: MEDIUM-HIGH (keeps mixed TypeScript and TSX files scannable by using a small fixed annotation set)**
 
@@ -820,6 +858,8 @@ interface DialogRootProps {
 
 ### 5.4 Use `@helper` on Reusable Support Functions
 
+**Applies when:** 여러 caller가 쓰는 pure support function, owner-named exported helper 또는 \`shared/util.ts\` 함수를 추가·변경하거나 \`@helper\`를 붙이려 한다.
+
 **Impact: MEDIUM-HIGH (distinguishes reusable pure support logic from local implementation details or integration boundaries)**
 
 `@helper`는 재사용 가능한 pure support function에만 붙입니다.
@@ -878,6 +918,8 @@ export const normalizeUserIds = (userIds: string[]): string[] => {
 
 ### 5.5 Write Concise Korean Comments About Purpose and Constraints
 
+**Applies when:** TypeScript/TSX의 JSDoc이나 inline comment 문구를 추가·수정·번역하거나 리뷰한다.
+
 **Impact: MEDIUM (keeps comments focused on intent and constraints instead of narrating code mechanics)**
 
 주석은 한글로 작성하고, 목적, 제약, 부작용 중심으로 간결하게 적습니다. `@api`, `@event`, `@watch`, `@helper`, `@summary`, `@field` 문장은 명사형 종결이나 개조식 표현을 기본으로 하며, 코드 동작 설명보다 도입 이유와 제약 설명을 우선합니다.
@@ -905,6 +947,8 @@ export const normalizeUserIds = (userIds: string[]): string[] => {
 마무리 전에는 TypeScript 컨벤션을 가장 자주 무너뜨리는 반복 shortcut 기준으로 코드를 점검해야 합니다.
 
 ### 6.1 Review Banned TypeScript Shortcuts Before Finishing
+
+**Applies when:** TypeScript/TSX 변경을 완료 판정하거나 diff에서 barrel, 중복 타입, 조기 helper, 넓은 조립, 무근거 fallback 또는 자명한 주석을 점검한다.
 
 **Impact: MEDIUM (catches the recurring shortcuts that most often erode import, type, helper, fallback, and comment discipline)**
 
