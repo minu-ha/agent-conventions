@@ -21,6 +21,7 @@ export interface DependencyDeclaration {
 }
 
 const maximumConditionLength = 160;
+const safeStableNamePattern = /^[A-Za-z0-9][A-Za-z0-9._@-]*$/;
 
 /**
  * @helper unknown 값의 metadata object 여부 검증
@@ -55,6 +56,40 @@ export const assertValidSkillName = (value: unknown, owner: string = "Skill"): s
 	}
 
 	return value as string;
+};
+
+/**
+ * @helper Markdown routing에서 code span과 path segment로 쓰는 stable identifier 검증
+ */
+export const assertValidRoutingIdentifier = (value: unknown, owner: string): string => {
+	if (typeof value !== "string" || !safeStableNamePattern.test(value)) {
+		throw new Error(
+			`${owner}: invalid routing identifier "${String(value)}". Stable identifiers must start with an alphanumeric character and use only letters, numbers, dot, underscore, at-sign, or hyphen.`,
+		);
+	}
+
+	return value;
+};
+
+/**
+ * @helper local 또는 cross-skill reviewWith target stable identifier 검증
+ */
+export const assertValidReviewTarget = (value: unknown, owner: string): string => {
+	if (typeof value !== "string") {
+		throw new Error(`${owner}: invalid reviewWith routing identifier "${String(value)}".`);
+	}
+
+	const segments = value.split("/");
+
+	if (segments.length < 1 || segments.length > 2) {
+		throw new Error(`${owner}: invalid reviewWith routing identifier "${value}".`);
+	}
+
+	for (const segment of segments) {
+		assertValidRoutingIdentifier(segment, owner);
+	}
+
+	return value;
 };
 
 /**
@@ -147,6 +182,11 @@ const parseCompanions = (skillName: string, rawCompanions: unknown): SkillCompan
  */
 export const parseDependencyDeclaration = (skillName: string, metadata: unknown): DependencyDeclaration => {
 	const metadataObject = assertMetadataObject(metadata, skillName);
+	const progressiveDisclosure = metadataObject.progressiveDisclosure === true;
+
+	if (progressiveDisclosure) {
+		assertValidRoutingIdentifier(skillName, `${skillName}: progressive skill name`);
+	}
 
 	if (metadataObject.extends !== undefined && metadataObject.companions !== undefined) {
 		throw new Error(`${skillName}: metadata.json cannot declare both "extends" and "companions".`);
@@ -162,6 +202,12 @@ export const parseDependencyDeclaration = (skillName: string, metadata: unknown)
 
 	if (metadataObject.companions !== undefined) {
 		const companions = parseCompanions(skillName, metadataObject.companions);
+
+		if (progressiveDisclosure) {
+			for (const companion of companions) {
+				assertValidRoutingIdentifier(companion.skill, `${skillName}: companion "${companion.skill}"`);
+			}
+		}
 
 		return {kind: "companions", skillNames: companions.map((companion) => companion.skill), companions};
 	}

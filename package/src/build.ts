@@ -1,9 +1,9 @@
-import {writeFile} from "node:fs/promises";
 import path from "node:path";
 
-import {getSkillPaths, isBuildableSkill, listSkillNames, parseCliArgs} from "./config.js";
+import {getSkillPaths, isBuildableSkill, listSkillNames, packagePaths, parseCliArgs} from "./config.js";
 import {parseDependencyDeclaration} from "./dependencies.js";
 import {isDirectExecution} from "./entrypoint.js";
+import {replaceGeneratedFiles} from "./generated-files.js";
 import {buildRuleAnchor, buildSectionAnchor, normalizeHeadingTitle, readResolvedSkillDocuments, replaceRuleHeading} from "./parser.js";
 import {generateRulesIndexMarkdown, getRulesForSection} from "./routing.js";
 import type {CompiledSkillSection, LoadedSkillDocument, SkillMetadata, SkillPaths} from "./types.js";
@@ -228,13 +228,19 @@ export const buildSkill = async (skillPaths: SkillPaths): Promise<void> => {
 	const localReferences = collectReferenceLinks([rootDocument]);
 	const localMarkdown = generateMarkdown(skillPaths.skillName, rootDocument.metadata, localSections, companionSkills, localReferences);
 	const dependencies = parseDependencyDeclaration(rootDocument.skillName, rootDocument.metadata);
+	const rulesIndexMarkdown =
+		rootDocument.metadata.progressiveDisclosure === true ? generateRulesIndexMarkdown(rootDocument, dependencies.companions) : undefined;
+	const generatedResult = await replaceGeneratedFiles([
+		{targetPath: skillPaths.outputPath, content: localMarkdown},
+		{targetPath: skillPaths.rulesIndexPath, ...(rulesIndexMarkdown === undefined ? {} : {content: rulesIndexMarkdown})},
+	]);
 
-	await writeFile(skillPaths.outputPath, localMarkdown, "utf8");
 	console.log(`Wrote ${path.relative(skillPaths.skillDir, skillPaths.outputPath)}`);
 
-	if (rootDocument.metadata.progressiveDisclosure === true) {
-		await writeFile(skillPaths.rulesIndexPath, generateRulesIndexMarkdown(rootDocument, dependencies.companions), "utf8");
+	if (rulesIndexMarkdown !== undefined) {
 		console.log(`Wrote ${path.relative(skillPaths.skillDir, skillPaths.rulesIndexPath)}`);
+	} else if (generatedResult.deletedPaths.includes(skillPaths.rulesIndexPath)) {
+		console.log(`Removed ${path.relative(skillPaths.skillDir, skillPaths.rulesIndexPath)}`);
 	}
 };
 
@@ -242,15 +248,15 @@ export const buildSkill = async (skillPaths: SkillPaths): Promise<void> => {
  * @description CLI 입력 기준 build 대상 skill compiled guide 생성
  */
 export const main = async (): Promise<void> => {
-	const {all, skill} = parseCliArgs(process.argv.slice(2));
-	const targetSkillNames = all ? await listSkillNames() : [skill];
+	const {all, skill, skillRootDir = packagePaths.skillRootDir} = parseCliArgs(process.argv.slice(2));
+	const targetSkillNames = all ? await listSkillNames(skillRootDir) : [skill];
 
 	for (const skillName of targetSkillNames) {
 		if (!skillName) {
 			continue;
 		}
 
-		const buildable = await isBuildableSkill(skillName);
+		const buildable = await isBuildableSkill(skillName, skillRootDir);
 
 		if (!buildable) {
 			if (all) {
@@ -260,7 +266,7 @@ export const main = async (): Promise<void> => {
 			throw new Error(`Skill "${skillName}" is not buildable yet. Expected rules/_sections.md and metadata.json under skill/${skillName}.`);
 		}
 
-		await buildSkill(getSkillPaths(skillName));
+		await buildSkill(getSkillPaths(skillName, skillRootDir));
 	}
 };
 

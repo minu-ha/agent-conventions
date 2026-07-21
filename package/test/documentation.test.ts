@@ -14,33 +14,37 @@ const readPackageFile = async (relativePath: string): Promise<string> => {
 	return await readFile(path.join(packagesDir, relativePath), "utf8");
 };
 
-test("object-shaped interfaces in types.ts document every field with @field", async () => {
-	const source = await readPackageFile("src/types.ts");
-	const lines = source.split("\n");
-	let currentInterfaceName: string | undefined;
+test("object-shaped interfaces in contract modules document summaries and every field", async () => {
+	for (const relativePath of ["src/types.ts", "src/generated-files.ts"] as const) {
+		const source = await readPackageFile(relativePath);
+		const lines = source.split("\n");
+		let currentInterfaceName: string | undefined;
 
-	for (const [lineIndex, line] of lines.entries()) {
-		const interfaceMatch = line.match(/^export interface (\w+) \{$/);
-		if (interfaceMatch) {
-			currentInterfaceName = interfaceMatch[1];
-			continue;
+		for (const [lineIndex, line] of lines.entries()) {
+			const interfaceMatch = line.match(/^(?:export )?interface (\w+)(?: extends [^{]+)? \{$/);
+			if (interfaceMatch) {
+				currentInterfaceName = interfaceMatch[1];
+				const commentWindow = lines.slice(Math.max(0, lineIndex - 4), lineIndex).join("\n");
+				assert.match(commentWindow, /@summary /, `${relativePath}:${currentInterfaceName} is missing an @summary block comment.`);
+				continue;
+			}
+
+			if (currentInterfaceName && line === "}") {
+				currentInterfaceName = undefined;
+				continue;
+			}
+
+			if (!currentInterfaceName) {
+				continue;
+			}
+
+			if (!/^\s{2}[A-Za-z][A-Za-z0-9]*\??: /.test(line)) {
+				continue;
+			}
+
+			const commentWindow = lines.slice(Math.max(0, lineIndex - 4), lineIndex).join("\n");
+			assert.match(commentWindow, /@field /, `${relativePath}:${currentInterfaceName}.${line.trim()} is missing an @field block comment.`);
 		}
-
-		if (currentInterfaceName && line === "}") {
-			currentInterfaceName = undefined;
-			continue;
-		}
-
-		if (!currentInterfaceName) {
-			continue;
-		}
-
-		if (!/^\s{2}[A-Za-z][A-Za-z0-9]*\??: /.test(line)) {
-			continue;
-		}
-
-		const commentWindow = lines.slice(Math.max(0, lineIndex - 4), lineIndex).join("\n");
-		assert.match(commentWindow, /@field /, `${currentInterfaceName}.${line.trim()} is missing an @field block comment.`);
 	}
 });
 
@@ -74,6 +78,9 @@ test("source files use convention-specific JSDoc tags for helper and boundary fu
 		["src/check-generated.ts", "checkGeneratedSkill", "@description"],
 		["src/check-generated.ts", "main", "@description"],
 		["src/entrypoint.ts", "isDirectExecution", "@helper"],
+		["src/generated-files.ts", "replaceGeneratedFiles", "@api"],
+		["src/progressive.ts", "assertProgressiveSkillEntrypoint", "@api"],
+		["src/progressive.ts", "assertProgressiveCompanionSource", "@helper"],
 		["src/validate.ts", "validateSkill", "@description"],
 		["src/validate.ts", "main", "@description"],
 		["src/dev.ts", "run", "@description"],
@@ -96,6 +103,8 @@ test("package TypeScript files avoid named function declarations in favor of arr
 		"src/build.ts",
 		"src/check-generated.ts",
 		"src/entrypoint.ts",
+		"src/generated-files.ts",
+		"src/progressive.ts",
 		"src/validate.ts",
 		"src/dev.ts",
 		"test/cli.test.ts",
@@ -121,6 +130,8 @@ test("package function JSDoc stays lightweight without @param and @returns tags"
 		"src/build.ts",
 		"src/check-generated.ts",
 		"src/entrypoint.ts",
+		"src/generated-files.ts",
+		"src/progressive.ts",
 		"src/validate.ts",
 		"src/dev.ts",
 		"test/cli.test.ts",

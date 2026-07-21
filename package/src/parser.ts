@@ -3,6 +3,7 @@ import path from "node:path";
 
 import {getSkillPaths, isBuildableSkill} from "./config.js";
 import {assertMetadataObject, parseDependencyDeclaration} from "./dependencies.js";
+import {assertProgressiveCompanionSource, assertProgressiveSkillEntrypoint} from "./progressive.js";
 import type {LoadedSkillDocument, SkillMetadata, SkillPaths, SkillRule, SkillSection} from "./types.js";
 
 const allowedRuleFrontmatterKeys = new Set(["title", "impact", "impactDescription", "appliesWhen", "reviewWith", "tags"]);
@@ -283,6 +284,7 @@ const resolveSkillDocuments = async (skillPaths: SkillPaths, lineage: string[], 
 
 	if (!document) {
 		document = await readSkillDocument(skillPaths);
+		await assertProgressiveSkillEntrypoint(skillPaths, document);
 		state.documentCache.set(skillPaths.skillName, document);
 	}
 
@@ -303,7 +305,16 @@ const resolveSkillDocuments = async (skillPaths: SkillPaths, lineage: string[], 
 			throw new Error(`${dependencyLabel} skill "${inheritedSkillName}" referenced by "${skillPaths.skillName}" is not buildable.`);
 		}
 
-		inheritedDocuments.push(...(await resolveSkillDocuments(getSkillPaths(inheritedSkillName, targetSkillRootDir), nextLineage, state)));
+		const inheritedSkillPaths = getSkillPaths(inheritedSkillName, targetSkillRootDir);
+		const resolvedInheritedDocuments = await resolveSkillDocuments(inheritedSkillPaths, nextLineage, state);
+		const inheritedRootDocument = resolvedInheritedDocuments.find((resolvedDocument) => resolvedDocument.skillName === inheritedSkillName);
+
+		if (!inheritedRootDocument) {
+			throw new Error(`Failed to resolve dependency skill document for "${inheritedSkillName}".`);
+		}
+
+		assertProgressiveCompanionSource(document, inheritedRootDocument);
+		inheritedDocuments.push(...resolvedInheritedDocuments);
 	}
 
 	const resolvedDocuments = dedupeResolvedSkillDocuments([...inheritedDocuments, document]);

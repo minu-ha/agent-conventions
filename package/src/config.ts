@@ -23,16 +23,29 @@ export const parseCliArgs = (args: string[]): CliArgs => {
 	const all = args.includes("--all");
 	const skillArg = args.find((arg) => arg.startsWith("--skill="));
 	const skill = skillArg ? skillArg.slice("--skill=".length) : undefined;
+	const skillRootArgs = args.filter((arg) => arg.startsWith("--skill-root="));
+
+	if (skillRootArgs.length > 1) {
+		throw new Error("Use --skill-root=<absolute-path> at most once.");
+	}
+
+	const rawSkillRootDir = skillRootArgs[0]?.slice("--skill-root=".length);
+
+	if (rawSkillRootDir !== undefined && (!rawSkillRootDir || !path.isAbsolute(rawSkillRootDir))) {
+		throw new Error("--skill-root must be a non-empty absolute path.");
+	}
+
+	const parsedSkillRoot = rawSkillRootDir ? {skillRootDir: path.resolve(rawSkillRootDir)} : {};
 
 	if (!all && !skill) {
-		return {all: true, skill: undefined};
+		return {all: true, skill: undefined, ...parsedSkillRoot};
 	}
 
 	if (all && skill) {
 		throw new Error("Use either --all or --skill=<name>, not both.");
 	}
 
-	return {all, skill};
+	return {all, skill, ...parsedSkillRoot};
 };
 
 /**
@@ -52,6 +65,7 @@ export const getSkillPaths = (skillName: string, targetSkillRootDir: string = sk
 		skillDir,
 		rulesDir: path.join(skillDir, "rules"),
 		metadataPath: path.join(skillDir, "metadata.json"),
+		skillEntrypointPath: path.join(skillDir, "SKILL.md"),
 		sectionsPath: path.join(skillDir, "rules", "_sections.md"),
 		outputPath: path.join(skillDir, "AGENTS.md"),
 		rulesIndexPath: path.join(skillDir, "RULES_INDEX.md"),

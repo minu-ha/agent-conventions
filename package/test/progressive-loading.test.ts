@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import {spawnSync} from "node:child_process";
-import {access, mkdtemp, mkdir, readFile, readdir, rm, symlink, writeFile} from "node:fs/promises";
+import {access, lstat, mkdtemp, mkdir, readFile, readdir, rename, rm, symlink, writeFile} from "node:fs/promises";
 import {tmpdir} from "node:os";
 import path from "node:path";
 import test from "node:test";
@@ -9,6 +9,8 @@ import {fileURLToPath, pathToFileURL} from "node:url";
 import {buildSkill} from "../src/build.js";
 import {checkGeneratedSkill} from "../src/check-generated.js";
 import {getSkillPaths, isBuildableSkill, listSkillNames} from "../src/config.js";
+import {replaceGeneratedFiles} from "../src/generated-files.js";
+import type {GeneratedFileOperations} from "../src/generated-files.js";
 import {parseFrontmatter, readResolvedSkillDocuments, readSkillRules} from "../src/parser.js";
 import {generateRulesIndexMarkdown, getRulesIndexByteBudget} from "../src/routing.js";
 import type {LoadedSkillDocument, SkillCompanion} from "../src/types.js";
@@ -20,6 +22,7 @@ const tsxCliPath = path.join(packageDir, "node_modules", "tsx", "dist", "cli.mjs
 const validateModulePath = path.join(packageDir, "src", "validate.ts");
 
 interface RuleFixture {
+	bodyMarker?: string;
 	fileName?: string;
 	frontmatter?: string;
 	title?: string;
@@ -34,6 +37,7 @@ interface SkillFixture {
 	metadata?: Record<string, unknown>;
 	rules?: RuleFixture[];
 	sections?: SectionFixture[];
+	withEntrypoint?: boolean;
 }
 
 interface SectionFixture {
@@ -77,6 +81,10 @@ const writeSkillFixture = async (skillRootDir: string, skillName: string, fixtur
 	const sections = fixture.sections ?? [{order: 1, title: "Fixture Rules", prefix: "fixture", impact: "HIGH"}];
 	await mkdir(rulesDir, {recursive: true});
 	await writeFile(path.join(skillDir, "metadata.json"), `${JSON.stringify({...defaultMetadata, ...fixture.metadata}, null, 2)}\n`, "utf8");
+
+	if (fixture.withEntrypoint !== false) {
+		await writeFile(path.join(skillDir, "SKILL.md"), `---\nname: ${skillName}\ndescription: Fixture skill.\n---\n`, "utf8");
+	}
 	await writeFile(
 		path.join(rulesDir, "_sections.md"),
 		sections
@@ -92,7 +100,7 @@ const writeSkillFixture = async (skillRootDir: string, skillName: string, fixtur
 		const fileName = rule.fileName ?? `fixture-rule-${index + 1}.md`;
 		await writeFile(
 			path.join(rulesDir, fileName),
-			`---\n${toFrontmatter(rule)}\n---\n## ${rule.title ?? "Fixture Rule"}\n\n**Incorrect**\n\n\`\`\`ts\nconst bad = true;\n\`\`\`\n\n**Correct**\n\n\`\`\`ts\nconst good = true;\n\`\`\`\n`,
+			`---\n${toFrontmatter(rule)}\n---\n## ${rule.title ?? "Fixture Rule"}\n\n${rule.bodyMarker ?? ""}\n\n**Incorrect**\n\n\`\`\`ts\nconst bad = true;\n\`\`\`\n\n**Correct**\n\n\`\`\`ts\nconst good = true;\n\`\`\`\n`,
 			"utf8",
 		);
 	}
@@ -267,6 +275,12 @@ test("routing digest covers every routing field and ignores unsorted input order
 	const reversedDocument = structuredClone(sourceDocument);
 	reversedDocument.sections.reverse();
 	reversedDocument.rules.reverse();
+
+	for (const rule of reversedDocument.rules) {
+		rule.reviewWith.reverse();
+		rule.tags.reverse();
+	}
+
 	const reversedCompanions = structuredClone(directCompanions).reverse();
 
 	assert.equal(
@@ -275,6 +289,18 @@ test("routing digest covers every routing field and ignores unsorted input order
 	);
 
 	const mutations: [string, (document: LoadedSkillDocument, companions: SkillCompanion[]) => void][] = [
+		[
+			"skill name",
+			(document) => {
+				document.skillName = "react-v2";
+			},
+		],
+		[
+			"metadata title",
+			(document) => {
+				document.metadata.title = "React Convention v2";
+			},
+		],
 		[
 			"appliesWhen",
 			(document) => {
@@ -291,6 +317,18 @@ test("routing digest covers every routing field and ignores unsorted input order
 			"rule title",
 			(document) => {
 				document.rules[0]!.title = "Changed State Title";
+			},
+		],
+		[
+			"rule stable id",
+			(document) => {
+				document.rules[0]!.fileName = "state-observe-v2.md";
+			},
+		],
+		[
+			"rule section assignment",
+			(document) => {
+				document.rules[0]!.prefix = "composition";
 			},
 		],
 		[
@@ -312,6 +350,25 @@ test("routing digest covers every routing field and ignores unsorted input order
 			},
 		],
 		[
+			"section title",
+			(document) => {
+				document.sections[0]!.title = "State Ownership";
+			},
+		],
+		[
+			"section prefix",
+			(document) => {
+				document.sections[0]!.prefix = "state-v2";
+				document.rules[0]!.prefix = "state-v2";
+			},
+		],
+		[
+			"section impact",
+			(document) => {
+				document.sections[0]!.impact = "CRITICAL";
+			},
+		],
+		[
 			"metadata version",
 			(document) => {
 				document.metadata.version = "2.0.1";
@@ -321,6 +378,12 @@ test("routing digest covers every routing field and ignores unsorted input order
 			"companion mode",
 			(_document, companions) => {
 				companions[0]!.mode = "conditional";
+			},
+		],
+		[
+			"companion skill",
+			(_document, companions) => {
+				companions[0]!.skill = "typescript-v2";
 			},
 		],
 		[
@@ -337,6 +400,105 @@ test("routing digest covers every routing field and ignores unsorted input order
 		mutate(document, companions);
 		assert.notEqual(readRoutingDigest(generateRulesIndexMarkdown(document, companions)), sourceDigest, label);
 	}
+
+	const nonRoutingDocument = structuredClone(sourceDocument);
+	nonRoutingDocument.metadata.organization = "Changed Team";
+	nonRoutingDocument.metadata.abstract = "Changed abstract.";
+	nonRoutingDocument.metadata.date = "2099-01-01";
+	nonRoutingDocument.metadata.references = ["https://example.com/reference"];
+	nonRoutingDocument.metadata.progressiveDisclosure = false;
+	nonRoutingDocument.sections[0]!.description = "Changed section description.";
+	nonRoutingDocument.rules[0]!.impactDescription = "Changed impact explanation.";
+	nonRoutingDocument.rules[0]!.body = "## Changed body\n\n**Incorrect** changed\n\n**Correct** changed";
+	assert.equal(
+		readRoutingDigest(generateRulesIndexMarkdown(nonRoutingDocument, structuredClone(directCompanions))),
+		sourceDigest,
+		"non-routing handbook fields must not invalidate the routing digest",
+	);
+});
+
+test("rule index escapes hostile display text and encodes safe path segments", () => {
+	const document = createRoutingDocument();
+	document.skillName = "react_v2.preview@team";
+	document.metadata.title = "React [Core](https://evil.example) # `Guide`";
+	document.sections[0]!.title = "State [Owner](https://evil.example)";
+	document.sections[0]!.impact = "HIGH `priority`";
+	document.rules[0]!.fileName = "state-observe@v2.md";
+	document.rules[0]!.title = "Observe ](https://evil.example) *State*";
+	document.rules[0]!.appliesWhen = "When [state](https://evil.example) or *markup* changes.";
+	const companions: SkillCompanion[] = [
+		{skill: "typescript_v2.preview@team", mode: "conditional", appliesWhen: "When [types](https://evil.example) or `contracts` change."},
+	];
+
+	const markdown = generateRulesIndexMarkdown(document, companions);
+
+	assert.doesNotMatch(markdown, /\]\(https:\/\/evil\.example\)/);
+	assert.match(markdown, /react_v2\.preview@team/);
+	assert.match(markdown, /\.\.\/typescript_v2\.preview%40team\/SKILL\.md/);
+	assert.match(markdown, /rules\/state-observe%40v2\.md/);
+	assert.match(markdown, /\\\[Core\\\]\\\(https:\/\/evil\.example\\\)/);
+	assert.match(markdown, /When \\\[state\\\]\\\(https:\/\/evil\.example\\\) or \\\*markup\\\* changes\./);
+});
+
+test("rule index rejects unsafe skill names and routing identifiers", () => {
+	const invalidCases: [string, (document: LoadedSkillDocument) => void][] = [
+		[
+			"skill name",
+			(document) => {
+				document.skillName = "react](unsafe";
+			},
+		],
+		[
+			"rule stable id",
+			(document) => {
+				document.rules[0]!.fileName = "state unsafe.md";
+			},
+		],
+		[
+			"section prefix",
+			(document) => {
+				document.sections[0]!.prefix = "state unsafe";
+			},
+		],
+		[
+			"tag",
+			(document) => {
+				document.rules[0]!.tags = ["unsafe`tag"];
+			},
+		],
+		[
+			"reviewWith",
+			(document) => {
+				document.rules[2]!.reviewWith = ["unsafe]target"];
+			},
+		],
+	];
+
+	for (const [label, mutate] of invalidCases) {
+		const document = createRoutingDocument();
+		mutate(document);
+		assert.throws(() => generateRulesIndexMarkdown(document, directCompanions), /invalid.*(skill name|routing|stable|identifier)/i, label);
+	}
+
+	assert.throws(
+		() => generateRulesIndexMarkdown(createRoutingDocument(), [{skill: "unsafe companion", mode: "required"}]),
+		/companion routing skill name.*invalid routing identifier/i,
+	);
+});
+
+test("progressive validation rejects an unsafe routing prefix even when its section is empty", async () => {
+	await withFixtureRoot(async (skillRootDir) => {
+		await writeSkillFixture(skillRootDir, "owner", {
+			metadata: {progressiveDisclosure: true},
+			sections: [
+				{order: 1, title: "Fixture Rules", prefix: "fixture", impact: "HIGH"},
+				{order: 2, title: "Unused Rules", prefix: "unsafe prefix", impact: "HIGH"},
+			],
+			rules: [{appliesWhen: "Editing fixture code."}],
+		});
+
+		await assert.rejects(() => validateSkill(getSkillPaths("owner", skillRootDir)), /section prefix.*invalid routing identifier/i);
+	});
 });
 
 test("rule index rejects duplicate IDs, missing or duplicate section assignments, and oversized output", () => {
@@ -368,8 +530,14 @@ test("temporary progressive build and stale check are deterministic without repo
 	const realSkillStatusBefore = readRealSkillGitStatus();
 
 	await withFixtureRoot(async (skillRootDir) => {
-		await writeSkillFixture(skillRootDir, "leaf");
-		await writeSkillFixture(skillRootDir, "dependency", {metadata: {companions: [{skill: "leaf", mode: "required"}]}});
+		await writeSkillFixture(skillRootDir, "leaf", {
+			metadata: {progressiveDisclosure: true},
+			rules: [{appliesWhen: "Editing leaf code.", bodyMarker: "LEAF_BODY_MARKER"}],
+		});
+		await writeSkillFixture(skillRootDir, "dependency", {
+			metadata: {progressiveDisclosure: true, companions: [{skill: "leaf", mode: "required"}]},
+			rules: [{appliesWhen: "Editing dependency code.", bodyMarker: "DEPENDENCY_BODY_MARKER"}],
+		});
 		await writeSkillFixture(skillRootDir, "owner", {
 			metadata: {
 				progressiveDisclosure: true,
@@ -380,23 +548,40 @@ test("temporary progressive build and stale check are deterministic without repo
 				{order: 1, title: "Composition", prefix: "composition", impact: "CRITICAL"},
 			],
 			rules: [
-				{fileName: "state-watch.md", title: "Watch State", appliesWhen: "Watching fixture state."},
-				{fileName: "composition-owner.md", title: "Own Composition", appliesWhen: "Changing fixture composition."},
+				{fileName: "state-watch.md", title: "Watch State", appliesWhen: "Watching fixture state.", bodyMarker: "STATE_BODY_MARKER"},
+				{
+					fileName: "composition-owner.md",
+					title: "Own Composition",
+					appliesWhen: "Changing fixture composition.",
+					bodyMarker: "COMPOSITION_BODY_MARKER",
+				},
 			],
 		});
 		await writeSkillFixture(skillRootDir, "legacy");
 
 		const ownerPaths = getSkillPaths("owner", skillRootDir);
+		const dependencyPaths = getSkillPaths("dependency", skillRootDir);
+		const leafPaths = getSkillPaths("leaf", skillRootDir);
 		const legacyPaths = getSkillPaths("legacy", skillRootDir);
 		assert.equal(await isBuildableSkill("owner", skillRootDir), true);
 		await assert.rejects(() => checkGeneratedSkill(ownerPaths), /owner.*missing.*RULES_INDEX\.md/i);
 
 		const buildLogs = await captureConsoleLogs(async () => {
+			await buildSkill(leafPaths);
+			await buildSkill(dependencyPaths);
 			await buildSkill(ownerPaths);
 			await buildSkill(legacyPaths);
 		});
 
-		assert.deepEqual(buildLogs, ["Wrote AGENTS.md", "Wrote RULES_INDEX.md", "Wrote AGENTS.md"]);
+		assert.deepEqual(buildLogs, [
+			"Wrote AGENTS.md",
+			"Wrote RULES_INDEX.md",
+			"Wrote AGENTS.md",
+			"Wrote RULES_INDEX.md",
+			"Wrote AGENTS.md",
+			"Wrote RULES_INDEX.md",
+			"Wrote AGENTS.md",
+		]);
 		await access(ownerPaths.outputPath);
 		await access(ownerPaths.rulesIndexPath);
 		await access(legacyPaths.outputPath);
@@ -413,11 +598,24 @@ test("temporary progressive build and stale check are deterministic without repo
 		assert.match(firstHandbook, /\.\.\/leaf\/AGENTS\.md/);
 		assert.doesNotMatch(firstHandbook, /^### \d+\.\d+ Fixture Rule$/m);
 
+		for (const localMarker of ["STATE_BODY_MARKER", "COMPOSITION_BODY_MARKER"] as const) {
+			assert.equal((firstHandbook.match(new RegExp(localMarker, "g")) ?? []).length, 1, localMarker);
+		}
+
+		assert.doesNotMatch(firstHandbook, /LEAF_BODY_MARKER|DEPENDENCY_BODY_MARKER/);
+
 		const beforeCheckSnapshot = await readFileTreeSnapshot(skillRootDir);
 		await checkGeneratedSkill(ownerPaths);
 		await checkGeneratedSkill(legacyPaths);
 		const checkedSnapshot = await readFileTreeSnapshot(skillRootDir);
 		assert.deepEqual(checkedSnapshot, beforeCheckSnapshot, "generated-output checks must never mutate files");
+		await rm(dependencyPaths.rulesIndexPath);
+		await assert.rejects(() => checkGeneratedSkill(ownerPaths), /owner.*companion.*RULES_INDEX\.md.*missing.*dependency/i);
+		await mkdir(dependencyPaths.rulesIndexPath);
+		await assert.rejects(() => checkGeneratedSkill(ownerPaths), /owner.*companion.*RULES_INDEX\.md.*dependency.*readable/i);
+		await rm(dependencyPaths.rulesIndexPath, {recursive: true});
+		await captureConsoleLogs(async () => buildSkill(dependencyPaths));
+		await checkGeneratedSkill(ownerPaths);
 		const rulePath = path.join(ownerPaths.rulesDir, "composition-owner.md");
 		const ruleSource = await readFile(rulePath, "utf8");
 		await writeFile(rulePath, ruleSource.replace("Changing fixture composition.", "Changing fixture composition ownership."), "utf8");
@@ -444,6 +642,121 @@ test("temporary progressive build and stale check are deterministic without repo
 	});
 
 	assert.equal(readRealSkillGitStatus(), realSkillStatusBefore);
+});
+
+test("progressive owners require progressive companion sources and SKILL.md entrypoints", async () => {
+	await withFixtureRoot(async (skillRootDir) => {
+		await writeSkillFixture(skillRootDir, "dependency");
+		await writeSkillFixture(skillRootDir, "owner", {
+			metadata: {progressiveDisclosure: true, companions: [{skill: "dependency", mode: "required"}]},
+			rules: [{appliesWhen: "Editing owner code."}],
+		});
+
+		const ownerPaths = getSkillPaths("owner", skillRootDir);
+		await assert.rejects(() => validateSkill(ownerPaths), /owner.*companion.*dependency.*progressiveDisclosure/i);
+		await assert.rejects(() => buildSkill(ownerPaths), /owner.*companion.*dependency.*progressiveDisclosure/i);
+		await assert.rejects(() => checkGeneratedSkill(ownerPaths), /owner.*companion.*dependency.*progressiveDisclosure/i);
+	});
+
+	await withFixtureRoot(async (skillRootDir) => {
+		await writeSkillFixture(skillRootDir, "dependency", {metadata: {progressiveDisclosure: true}, withEntrypoint: false});
+		await writeSkillFixture(skillRootDir, "owner", {
+			metadata: {progressiveDisclosure: true, companions: [{skill: "dependency", mode: "required"}]},
+			rules: [{appliesWhen: "Editing owner code."}],
+		});
+
+		await assert.rejects(() => validateSkill(getSkillPaths("owner", skillRootDir)), /dependency.*missing.*SKILL\.md/i);
+	});
+});
+
+test("build renders and prepares every output before replacing existing generated files", async () => {
+	await withFixtureRoot(async (skillRootDir) => {
+		await writeSkillFixture(skillRootDir, "owner", {
+			metadata: {progressiveDisclosure: true},
+			rules: [{appliesWhen: "Editing owner code.", tags: ["x".repeat(4_000)]}],
+		});
+		const ownerPaths = getSkillPaths("owner", skillRootDir);
+		await writeFile(ownerPaths.outputPath, "ORIGINAL AGENTS\n", "utf8");
+		await writeFile(ownerPaths.rulesIndexPath, "ORIGINAL INDEX\n", "utf8");
+
+		await assert.rejects(() => buildSkill(ownerPaths), /RULES_INDEX\.md.*byte budget/i);
+		assert.equal(await readFile(ownerPaths.outputPath, "utf8"), "ORIGINAL AGENTS\n");
+		assert.equal(await readFile(ownerPaths.rulesIndexPath, "utf8"), "ORIGINAL INDEX\n");
+	});
+
+	await withFixtureRoot(async (skillRootDir) => {
+		await writeSkillFixture(skillRootDir, "owner", {
+			metadata: {progressiveDisclosure: true},
+			rules: [{appliesWhen: "Editing owner code."}],
+		});
+		const ownerPaths = getSkillPaths("owner", skillRootDir);
+		await writeFile(ownerPaths.outputPath, "ORIGINAL AGENTS\n", "utf8");
+		await mkdir(ownerPaths.rulesIndexPath);
+
+		await assert.rejects(() => buildSkill(ownerPaths), /(regular file|directory|EISDIR)/i);
+		assert.equal(await readFile(ownerPaths.outputPath, "utf8"), "ORIGINAL AGENTS\n");
+	});
+});
+
+test("generated file transaction restores every original after a mid-install failure", async () => {
+	await withFixtureRoot(async (skillRootDir) => {
+		const firstPath = path.join(skillRootDir, "FIRST.md");
+		const secondPath = path.join(skillRootDir, "SECOND.md");
+		await writeFile(firstPath, "ORIGINAL FIRST\n", "utf8");
+		await writeFile(secondPath, "ORIGINAL SECOND\n", "utf8");
+		let temporaryInstallCount = 0;
+		const operations = {
+			lstat: async (targetPath) => await lstat(targetPath),
+			rename: async (sourcePath, targetPath) => {
+				if (sourcePath.endsWith(".tmp")) {
+					temporaryInstallCount += 1;
+
+					if (temporaryInstallCount === 2) {
+						throw new Error("INJECTED_SECOND_INSTALL_FAILURE");
+					}
+				}
+
+				await rename(sourcePath, targetPath);
+			},
+			rm: async (targetPath, options) => await rm(targetPath, options),
+			writeFile: async (targetPath, content, options) => await writeFile(targetPath, content, options),
+		} satisfies GeneratedFileOperations;
+
+		await assert.rejects(
+			() =>
+				replaceGeneratedFiles(
+					[
+						{targetPath: firstPath, content: "NEW FIRST\n"},
+						{targetPath: secondPath, content: "NEW SECOND\n"},
+					],
+					operations,
+				),
+			/INJECTED_SECOND_INSTALL_FAILURE/,
+		);
+
+		assert.equal(await readFile(firstPath, "utf8"), "ORIGINAL FIRST\n");
+		assert.equal(await readFile(secondPath, "utf8"), "ORIGINAL SECOND\n");
+		assert.deepEqual(
+			(await readdir(skillRootDir)).sort(),
+			["FIRST.md", "SECOND.md"],
+			"transaction temp and backup files must be cleaned after rollback",
+		);
+	});
+});
+
+test("non-progressive checks reject stale indexes and build removes them deliberately", async () => {
+	await withFixtureRoot(async (skillRootDir) => {
+		await writeSkillFixture(skillRootDir, "legacy", {metadata: {extends: ["missing-dependency"]}});
+		const legacyPaths = getSkillPaths("legacy", skillRootDir);
+		await writeFile(legacyPaths.rulesIndexPath, "STALE INDEX\n", "utf8");
+
+		await assert.rejects(() => checkGeneratedSkill(legacyPaths), /legacy.*unexpected.*RULES_INDEX\.md/i);
+		await writeSkillFixture(skillRootDir, "missing-dependency");
+		const logs = await captureConsoleLogs(async () => buildSkill(legacyPaths));
+		assert.deepEqual(logs, ["Wrote AGENTS.md", "Removed RULES_INDEX.md"]);
+		await assert.rejects(() => access(legacyPaths.rulesIndexPath), /ENOENT/);
+		assert.equal(await checkGeneratedSkill(legacyPaths), false);
+	});
 });
 
 test("generated-output check skips non-progressive skills before dependency resolution", async () => {
@@ -530,6 +843,7 @@ test("skill discovery and buildability checks stay inside the provided fixture r
 test("skill paths reject unsafe names before constructing paths", () => {
 	const fixtureRoot = path.join(tmpdir(), "fixture-skill-root");
 	assert.equal(getSkillPaths("react_v2.preview@team", fixtureRoot).skillDir, path.join(fixtureRoot, "react_v2.preview@team"));
+	assert.equal(getSkillPaths("공통 규칙", fixtureRoot).skillDir, path.join(fixtureRoot, "공통 규칙"));
 	const invalidNames = [
 		"",
 		" react",
@@ -545,6 +859,46 @@ test("skill paths reject unsafe names before constructing paths", () => {
 	for (const invalidName of invalidNames) {
 		assert.throws(() => getSkillPaths(invalidName, fixtureRoot), /invalid skill name/i, invalidName);
 	}
+});
+
+test("legacy skills preserve Unicode and internal-space immediate-child names", async () => {
+	await withFixtureRoot(async (skillRootDir) => {
+		await writeSkillFixture(skillRootDir, "공통 규칙");
+		await writeSkillFixture(skillRootDir, "legacy owner", {metadata: {extends: ["공통 규칙"]}});
+
+		await validateSkill(getSkillPaths("legacy owner", skillRootDir));
+		assert.deepEqual(
+			(await readResolvedSkillDocuments(getSkillPaths("legacy owner", skillRootDir))).map((document) => document.skillName),
+			["공통 규칙", "legacy owner"],
+		);
+	});
+});
+
+test("progressive skills reject Unicode or internal-space routing names", async () => {
+	await withFixtureRoot(async (skillRootDir) => {
+		await writeSkillFixture(skillRootDir, "리액트 규칙", {
+			metadata: {progressiveDisclosure: true},
+			rules: [{appliesWhen: "Editing progressive code."}],
+		});
+
+		await assert.rejects(
+			() => validateSkill(getSkillPaths("리액트 규칙", skillRootDir)),
+			/progressive skill name.*invalid routing identifier/i,
+		);
+	});
+
+	await withFixtureRoot(async (skillRootDir) => {
+		await writeSkillFixture(skillRootDir, "타입 규칙", {
+			metadata: {progressiveDisclosure: true},
+			rules: [{appliesWhen: "Editing type code."}],
+		});
+		await writeSkillFixture(skillRootDir, "owner", {
+			metadata: {progressiveDisclosure: true, companions: [{skill: "타입 규칙", mode: "required"}]},
+			rules: [{appliesWhen: "Editing owner code."}],
+		});
+
+		await assert.rejects(() => validateSkill(getSkillPaths("owner", skillRootDir)), /companion.*타입 규칙.*invalid routing identifier/i);
+	});
 });
 
 test("progressive metadata requires a boolean mode and mutually exclusive dependency declarations", async () => {

@@ -1,10 +1,11 @@
 import path from "node:path";
 
-import {getSkillPaths, isBuildableSkill, listSkillNames, parseCliArgs} from "./config.js";
-import {assertRoutingCondition, parseDependencyDeclaration} from "./dependencies.js";
+import {getSkillPaths, isBuildableSkill, listSkillNames, packagePaths, parseCliArgs} from "./config.js";
+import {assertRoutingCondition, assertValidReviewTarget, assertValidRoutingIdentifier, parseDependencyDeclaration} from "./dependencies.js";
 import type {DependencyDeclaration} from "./dependencies.js";
 import {isDirectExecution} from "./entrypoint.js";
 import {readSkillDocument, readSkillRuleFileNames} from "./parser.js";
+import {assertProgressiveCompanionSource, assertProgressiveSkillEntrypoint} from "./progressive.js";
 import type {LoadedSkillDocument, SkillMetadata, SkillPaths} from "./types.js";
 
 interface LocalValidationResult {
@@ -56,9 +57,16 @@ const validateLocalSkill = async (skillPaths: SkillPaths): Promise<LocalValidati
 	const {metadata, rules, sections} = document;
 	const ruleFileNames = await readSkillRuleFileNames(skillPaths);
 	const dependencies = validateMetadata(skillPaths.skillName, metadata);
+	await assertProgressiveSkillEntrypoint(skillPaths, document);
 
 	if (sections.length === 0) {
 		throw new Error(`${skillPaths.skillName}: rules/_sections.md must define at least one section.`);
+	}
+
+	if (metadata.progressiveDisclosure === true) {
+		for (const section of sections) {
+			assertValidRoutingIdentifier(section.prefix, `${skillPaths.skillName}: section prefix`);
+		}
 	}
 
 	const validPrefixes = new Set(sections.map((section) => section.prefix));
@@ -85,6 +93,18 @@ const validateLocalSkill = async (skillPaths: SkillPaths): Promise<LocalValidati
 		}
 
 		if (metadata.progressiveDisclosure === true) {
+			const ruleId = rule.fileName.replace(/\.md$/, "");
+			assertValidRoutingIdentifier(ruleId, `${skillPaths.skillName}: ${rule.fileName} stable ID`);
+			assertValidRoutingIdentifier(rule.prefix, `${skillPaths.skillName}: ${rule.fileName} section prefix`);
+
+			for (const tag of rule.tags) {
+				assertValidRoutingIdentifier(tag, `${skillPaths.skillName}: ${rule.fileName} tag`);
+			}
+
+			for (const reviewTarget of rule.reviewWith) {
+				assertValidReviewTarget(reviewTarget, `${skillPaths.skillName}: ${rule.fileName}`);
+			}
+
 			assertRoutingCondition(rule.appliesWhen, `${skillPaths.skillName}: ${rule.fileName} appliesWhen`);
 		}
 
@@ -138,13 +158,14 @@ const validateSkillTree = async (
 			throw new Error(`${dependencyLabel} skill "${dependencyName}" referenced by "${skillPaths.skillName}" is not buildable.`);
 		}
 
-		await validateSkillTree(
+		const dependencyResult = await validateSkillTree(
 			getSkillPaths(dependencyName, targetSkillRootDir),
 			nextLineage,
 			validatedSkillNames,
 			documents,
 			dependenciesBySkill,
 		);
+		assertProgressiveCompanionSource(localResult.document, dependencyResult.document);
 	}
 
 	validatedSkillNames.add(skillPaths.skillName);
@@ -234,15 +255,15 @@ export const validateSkill = async (skillPaths: SkillPaths): Promise<void> => {
  * @description CLI 입력 기준 skill 문서 형식 검증 실행
  */
 export const main = async (): Promise<void> => {
-	const {all, skill} = parseCliArgs(process.argv.slice(2));
-	const targetSkillNames = all ? await listSkillNames() : [skill];
+	const {all, skill, skillRootDir = packagePaths.skillRootDir} = parseCliArgs(process.argv.slice(2));
+	const targetSkillNames = all ? await listSkillNames(skillRootDir) : [skill];
 
 	for (const skillName of targetSkillNames) {
 		if (!skillName) {
 			continue;
 		}
 
-		const buildable = await isBuildableSkill(skillName);
+		const buildable = await isBuildableSkill(skillName, skillRootDir);
 
 		if (!buildable) {
 			if (all) {
@@ -252,7 +273,7 @@ export const main = async (): Promise<void> => {
 			throw new Error(`Skill "${skillName}" is not buildable yet. Expected rules/_sections.md and metadata.json under skill/${skillName}.`);
 		}
 
-		await validateSkill(getSkillPaths(skillName));
+		await validateSkill(getSkillPaths(skillName, skillRootDir));
 	}
 };
 

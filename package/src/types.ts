@@ -32,6 +32,10 @@ export interface CliArgs {
 	 * @field 단일 skill만 대상으로 실행할 때의 skill 이름
 	 */
 	skill?: string;
+	/**
+	 * @field fixture나 별도 checkout을 대상으로 할 absolute skill root
+	 */
+	skillRootDir?: string;
 }
 
 /**
@@ -54,6 +58,10 @@ export interface SkillPaths {
 	 * @field 대상 skill metadata.json 파일 경로
 	 */
 	metadataPath: string;
+	/**
+	 * @field activation entrypoint인 SKILL.md 파일 경로
+	 */
+	skillEntrypointPath: string;
 	/**
 	 * @field 대상 skill rules/_sections.md 파일 경로
 	 */

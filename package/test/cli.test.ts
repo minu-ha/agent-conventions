@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import {access, mkdtemp, readFile, readdir, rm, symlink} from "node:fs/promises";
+import {access, mkdir, mkdtemp, readFile, readdir, rm, symlink, writeFile} from "node:fs/promises";
 import {readFileSync} from "node:fs";
 import {spawnSync} from "node:child_process";
 import {tmpdir} from "node:os";
@@ -30,6 +30,30 @@ const expectedSkillScriptNames = [
 	"tanstack-route",
 	"typescript",
 ] as const;
+
+/**
+ * @helper CLI build 격리 검증용 최소 structured skill 작성
+ */
+const writeCliSkillFixture = async (skillRootDir: string, skillName: string): Promise<void> => {
+	const skillDir = path.join(skillRootDir, skillName);
+	const rulesDir = path.join(skillDir, "rules");
+	await mkdir(rulesDir, {recursive: true});
+	await writeFile(
+		path.join(skillDir, "metadata.json"),
+		`${JSON.stringify({title: "CLI Fixture", version: "1.0.0", organization: "Fixture", abstract: "CLI fixture."}, null, 2)}\n`,
+		"utf8",
+	);
+	await writeFile(
+		path.join(rulesDir, "_sections.md"),
+		"## 1. Fixture (fixture)\n\n**Impact:** HIGH\n\n**Description:** Fixture rules.\n",
+		"utf8",
+	);
+	await writeFile(
+		path.join(rulesDir, "fixture-rule.md"),
+		"---\ntitle: Fixture Rule\nimpact: HIGH\nimpactDescription: Fixture impact.\ntags: fixture\n---\n## Fixture Rule\n\n**Incorrect**\n\nBad.\n\n**Correct**\n\nGood.\n",
+		"utf8",
+	);
+};
 
 /**
  * @helper skill markdown 파일 목록을 재귀적으로 조회
@@ -119,7 +143,10 @@ test("build and generated-check modules import without running their CLI main", 
 });
 
 test("build CLI executes once for direct and symlinked entry paths", async (context) => {
-	const directResult = spawnSync(process.execPath, [tsxCliPath, buildModulePath, "--skill=typescript"], {
+	const temporaryDir = await mkdtemp(path.join(tmpdir(), "agent-conventions-build-cli-"));
+	const skillRootDir = path.join(temporaryDir, "skill");
+	await writeCliSkillFixture(skillRootDir, "fixture");
+	const directResult = spawnSync(process.execPath, [tsxCliPath, buildModulePath, "--skill=fixture", `--skill-root=${skillRootDir}`], {
 		cwd: packageDir,
 		encoding: "utf8",
 	});
@@ -127,7 +154,6 @@ test("build CLI executes once for direct and symlinked entry paths", async (cont
 	assert.equal(directResult.status, 0, directResult.stderr);
 	assert.equal((directResult.stdout.match(/Wrote AGENTS\.md/g) ?? []).length, 1, directResult.stdout);
 
-	const temporaryDir = await mkdtemp(path.join(tmpdir(), "agent-conventions-build-symlink-"));
 	const linkedBuildPath = path.join(temporaryDir, "build-link.ts");
 
 	try {
@@ -144,7 +170,7 @@ test("build CLI executes once for direct and symlinked entry paths", async (cont
 			throw error;
 		}
 
-		const linkedResult = spawnSync(process.execPath, [tsxCliPath, linkedBuildPath, "--skill=typescript"], {
+		const linkedResult = spawnSync(process.execPath, [tsxCliPath, linkedBuildPath, "--skill=fixture", `--skill-root=${skillRootDir}`], {
 			cwd: packageDir,
 			encoding: "utf8",
 		});
