@@ -1,13 +1,17 @@
 import assert from "node:assert/strict";
 import {spawnSync} from "node:child_process";
-import {mkdtemp, mkdir, readFile, rm, symlink, writeFile} from "node:fs/promises";
+import {access, mkdtemp, mkdir, readFile, readdir, rm, symlink, writeFile} from "node:fs/promises";
 import {tmpdir} from "node:os";
 import path from "node:path";
 import test from "node:test";
 import {fileURLToPath, pathToFileURL} from "node:url";
 
+import {buildSkill} from "../src/build.js";
+import {checkGeneratedSkill} from "../src/check-generated.js";
 import {getSkillPaths, isBuildableSkill, listSkillNames} from "../src/config.js";
 import {parseFrontmatter, readResolvedSkillDocuments, readSkillRules} from "../src/parser.js";
+import {generateRulesIndexMarkdown, getRulesIndexByteBudget} from "../src/routing.js";
+import type {LoadedSkillDocument, SkillCompanion} from "../src/types.js";
 import {validateSkill} from "../src/validate.js";
 
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
@@ -29,6 +33,14 @@ interface RuleFixture {
 interface SkillFixture {
 	metadata?: Record<string, unknown>;
 	rules?: RuleFixture[];
+	sections?: SectionFixture[];
+}
+
+interface SectionFixture {
+	impact?: string;
+	order: number;
+	prefix: string;
+	title: string;
 }
 
 const defaultMetadata = {
@@ -62,11 +74,17 @@ const toFrontmatter = (rule: RuleFixture): string => {
 const writeSkillFixture = async (skillRootDir: string, skillName: string, fixture: SkillFixture = {}): Promise<void> => {
 	const skillDir = path.join(skillRootDir, skillName);
 	const rulesDir = path.join(skillDir, "rules");
+	const sections = fixture.sections ?? [{order: 1, title: "Fixture Rules", prefix: "fixture", impact: "HIGH"}];
 	await mkdir(rulesDir, {recursive: true});
 	await writeFile(path.join(skillDir, "metadata.json"), `${JSON.stringify({...defaultMetadata, ...fixture.metadata}, null, 2)}\n`, "utf8");
 	await writeFile(
 		path.join(rulesDir, "_sections.md"),
-		"## 1. Fixture Rules (fixture)\n\n**Impact:** HIGH\n\n**Description:** Fixture rules.\n",
+		sections
+			.map(
+				(section) =>
+					`## ${section.order}. ${section.title} (${section.prefix})\n\n**Impact:** ${section.impact ?? "HIGH"}\n\n**Description:** ${section.title} rules.`,
+			)
+			.join("\n\n"),
 		"utf8",
 	);
 
@@ -89,6 +107,352 @@ const withFixtureRoot = async (run: (skillRootDir: string) => Promise<void>): Pr
 		await rm(skillRootDir, {recursive: true, force: true});
 	}
 };
+
+/**
+ * @helper build 단계의 deterministic log 목록 수집
+ */
+const captureConsoleLogs = async (run: () => Promise<void>): Promise<string[]> => {
+	const logs: string[] = [];
+	const originalConsoleLog = console.log;
+	console.log = (message?: unknown) => logs.push(String(message));
+
+	try {
+		await run();
+	} finally {
+		console.log = originalConsoleLog;
+	}
+
+	return logs;
+};
+
+/**
+ * @helper 파일 트리의 상대 경로와 본문 snapshot 생성
+ */
+const readFileTreeSnapshot = async (rootDir: string, currentDir: string = rootDir): Promise<[string, string][]> => {
+	const entries = await readdir(currentDir, {withFileTypes: true});
+	const snapshot: [string, string][] = [];
+
+	for (const entry of entries) {
+		const entryPath = path.join(currentDir, entry.name);
+
+		if (entry.isDirectory()) {
+			snapshot.push(...(await readFileTreeSnapshot(rootDir, entryPath)));
+			continue;
+		}
+
+		if (entry.isFile()) {
+			snapshot.push([path.relative(rootDir, entryPath), (await readFile(entryPath)).toString("base64")]);
+		}
+	}
+
+	return snapshot.sort(([leftPath], [rightPath]) => leftPath.localeCompare(rightPath, "en-US"));
+};
+
+/**
+ * @helper renderer 단위 테스트용 progressive skill 문서 생성
+ */
+const createRoutingDocument = (): LoadedSkillDocument => ({
+	skillName: "react",
+	metadata: {
+		title: "React Convention",
+		version: "2.0.0",
+		organization: "Fixture Team",
+		abstract: "Routing fixture.",
+		progressiveDisclosure: true,
+	},
+	sections: [
+		{order: 2, title: "State", prefix: "state", impact: "HIGH", description: "State rules."},
+		{order: 1, title: "Composition", prefix: "composition", impact: "CRITICAL", description: "Composition rules."},
+	],
+	rules: [
+		{
+			fileName: "state-observe.md",
+			prefix: "state",
+			title: "Observe State",
+			impact: "HIGH",
+			impactDescription: "State impact.",
+			tags: ["state", "watch"],
+			appliesWhen: "Reading state from an external owner.",
+			reviewWith: [],
+			body: "## Observe State\n\n**Incorrect** hidden body\n\n**Correct** hidden body",
+		},
+		{
+			fileName: "composition-second.md",
+			prefix: "composition",
+			title: "Second Composition",
+			impact: "HIGH",
+			impactDescription: "Second impact.",
+			tags: ["composition", "owner"],
+			appliesWhen: "Adding the second composition boundary.",
+			reviewWith: [],
+			body: "## Second Composition\n\n**Incorrect** hidden body\n\n**Correct** hidden body",
+		},
+		{
+			fileName: "composition-first.md",
+			prefix: "composition",
+			title: "First Composition",
+			impact: "CRITICAL",
+			impactDescription: "First impact.",
+			tags: ["owner", "composition"],
+			appliesWhen: "Adding the first composition boundary.",
+			reviewWith: ["state-observe", "typescript/types-reuse-contracts"],
+			body: "## First Composition\n\n**Incorrect** hidden body\n\n**Correct** hidden body",
+		},
+	],
+});
+
+const directCompanions: SkillCompanion[] = [
+	{skill: "typescript", mode: "required"},
+	{skill: "css", mode: "conditional", appliesWhen: "Changing a class contract."},
+];
+
+const readRoutingDigest = (source: string): string => {
+	const digest = source.match(/Routing digest: `(sha256:[a-f0-9]{64})`/)?.[1];
+
+	assert.ok(digest, "routing digest should be rendered");
+	return digest;
+};
+
+/**
+ * @helper 실제 skill root의 content-level Git 상태 조회
+ */
+const readRealSkillGitStatus = (): string => {
+	const result = spawnSync("git", ["status", "--short", "--untracked-files=all", "--", "skill"], {
+		cwd: path.resolve(packageDir, ".."),
+		encoding: "utf8",
+	});
+
+	assert.equal(result.status, 0, result.stderr);
+	return result.stdout;
+};
+
+test("compact rule index is deterministic, complete, direct-only, and body-free", () => {
+	const document = createRoutingDocument();
+	const first = generateRulesIndexMarkdown(document, directCompanions);
+	const second = generateRulesIndexMarkdown(document, directCompanions);
+
+	assert.equal(first, second);
+	assert.match(first, /Routing digest: `sha256:[a-f0-9]{64}`/);
+	assert.match(first, /Skill: `react`/);
+	assert.match(first, /Version: `2\.0\.0`/);
+	assert.match(first, /Local rules: 3/);
+	assert.match(first, /Section counts: `composition` 2, `state` 1/);
+	assert.match(first, /^### 1\. Composition — CRITICAL \(2 rules\)$/m);
+	assert.match(first, /^### 2\. State — HIGH \(1 rule\)$/m);
+	assert.match(first, /Applies when:/);
+	assert.match(first, /Review with:/);
+	assert.match(first, /Tags:/);
+	assert.match(first, /`typescript` \(`required`\).*\.\.\/typescript\/SKILL\.md.*\.\.\/typescript\/RULES_INDEX\.md/);
+	assert.match(first, /`css` \(`conditional`\).*Changing a class contract\./);
+	assert.doesNotMatch(first, /Incorrect|Correct|hidden body/);
+	assert.doesNotMatch(first, /typescript\/rules\//);
+
+	const entries = Array.from(first.matchAll(/^- `([A-Z0-9]\d+)` · ID `([^`]+)` · \[[^\]]+\]\(rules\/([^)]+)\)/gm), (match) => ({
+		ordinal: match[1],
+		id: match[2],
+		fileName: match[3],
+	}));
+
+	assert.deepEqual(entries, [
+		{ordinal: "R01", id: "composition-first", fileName: "composition-first.md"},
+		{ordinal: "R02", id: "composition-second", fileName: "composition-second.md"},
+		{ordinal: "R03", id: "state-observe", fileName: "state-observe.md"},
+	]);
+	assert.equal(Buffer.byteLength(first, "utf8") <= getRulesIndexByteBudget(document.rules.length), true);
+});
+
+test("routing digest covers every routing field and ignores unsorted input order", () => {
+	const sourceDocument = createRoutingDocument();
+	const sourceDigest = readRoutingDigest(generateRulesIndexMarkdown(sourceDocument, directCompanions));
+	const reversedDocument = structuredClone(sourceDocument);
+	reversedDocument.sections.reverse();
+	reversedDocument.rules.reverse();
+	const reversedCompanions = structuredClone(directCompanions).reverse();
+
+	assert.equal(
+		generateRulesIndexMarkdown(reversedDocument, reversedCompanions),
+		generateRulesIndexMarkdown(sourceDocument, directCompanions),
+	);
+
+	const mutations: [string, (document: LoadedSkillDocument, companions: SkillCompanion[]) => void][] = [
+		[
+			"appliesWhen",
+			(document) => {
+				document.rules[0]!.appliesWhen = "A changed routing condition.";
+			},
+		],
+		[
+			"reviewWith",
+			(document) => {
+				document.rules[2]!.reviewWith.push("composition-second");
+			},
+		],
+		[
+			"rule title",
+			(document) => {
+				document.rules[0]!.title = "Changed State Title";
+			},
+		],
+		[
+			"rule impact",
+			(document) => {
+				document.rules[0]!.impact = "CRITICAL";
+			},
+		],
+		[
+			"tags",
+			(document) => {
+				document.rules[0]!.tags.push("changed");
+			},
+		],
+		[
+			"section order",
+			(document) => {
+				document.sections[0]!.order = 3;
+			},
+		],
+		[
+			"metadata version",
+			(document) => {
+				document.metadata.version = "2.0.1";
+			},
+		],
+		[
+			"companion mode",
+			(_document, companions) => {
+				companions[0]!.mode = "conditional";
+			},
+		],
+		[
+			"companion condition",
+			(_document, companions) => {
+				companions[1]!.appliesWhen = "Changing stylesheet ownership.";
+			},
+		],
+	];
+
+	for (const [label, mutate] of mutations) {
+		const document = structuredClone(sourceDocument);
+		const companions = structuredClone(directCompanions);
+		mutate(document, companions);
+		assert.notEqual(readRoutingDigest(generateRulesIndexMarkdown(document, companions)), sourceDigest, label);
+	}
+});
+
+test("rule index rejects duplicate IDs, missing or duplicate section assignments, and oversized output", () => {
+	const duplicateIdDocument = createRoutingDocument();
+	duplicateIdDocument.rules[1]!.fileName = duplicateIdDocument.rules[0]!.fileName;
+	assert.throws(() => generateRulesIndexMarkdown(duplicateIdDocument, directCompanions), /duplicate.*stable.*id/i);
+
+	const missingAssignmentDocument = createRoutingDocument();
+	missingAssignmentDocument.rules[0]!.prefix = "missing";
+	assert.throws(() => generateRulesIndexMarkdown(missingAssignmentDocument, directCompanions), /assigned exactly once.*state-observe/i);
+
+	const duplicateAssignmentDocument = createRoutingDocument();
+	duplicateAssignmentDocument.sections.push({
+		order: 3,
+		title: "Duplicate State",
+		prefix: "state",
+		impact: "HIGH",
+		description: "Duplicate assignment.",
+	});
+	assert.throws(() => generateRulesIndexMarkdown(duplicateAssignmentDocument, directCompanions), /assigned exactly once.*state-observe/i);
+
+	const oversizedDocument = createRoutingDocument();
+	oversizedDocument.rules[0]!.tags = ["x".repeat(getRulesIndexByteBudget(oversizedDocument.rules.length))];
+	assert.throws(() => generateRulesIndexMarkdown(oversizedDocument, directCompanions), /RULES_INDEX\.md.*byte budget/i);
+	assert.equal(getRulesIndexByteBudget(3), 3_200);
+});
+
+test("temporary progressive build and stale check are deterministic without repository writes", async () => {
+	const realSkillStatusBefore = readRealSkillGitStatus();
+
+	await withFixtureRoot(async (skillRootDir) => {
+		await writeSkillFixture(skillRootDir, "leaf");
+		await writeSkillFixture(skillRootDir, "dependency", {metadata: {companions: [{skill: "leaf", mode: "required"}]}});
+		await writeSkillFixture(skillRootDir, "owner", {
+			metadata: {
+				progressiveDisclosure: true,
+				companions: [{skill: "dependency", mode: "conditional", appliesWhen: "Editing dependency-facing code."}],
+			},
+			sections: [
+				{order: 2, title: "State", prefix: "state", impact: "HIGH"},
+				{order: 1, title: "Composition", prefix: "composition", impact: "CRITICAL"},
+			],
+			rules: [
+				{fileName: "state-watch.md", title: "Watch State", appliesWhen: "Watching fixture state."},
+				{fileName: "composition-owner.md", title: "Own Composition", appliesWhen: "Changing fixture composition."},
+			],
+		});
+		await writeSkillFixture(skillRootDir, "legacy");
+
+		const ownerPaths = getSkillPaths("owner", skillRootDir);
+		const legacyPaths = getSkillPaths("legacy", skillRootDir);
+		assert.equal(await isBuildableSkill("owner", skillRootDir), true);
+		await assert.rejects(() => checkGeneratedSkill(ownerPaths), /owner.*missing.*RULES_INDEX\.md/i);
+
+		const buildLogs = await captureConsoleLogs(async () => {
+			await buildSkill(ownerPaths);
+			await buildSkill(legacyPaths);
+		});
+
+		assert.deepEqual(buildLogs, ["Wrote AGENTS.md", "Wrote RULES_INDEX.md", "Wrote AGENTS.md"]);
+		await access(ownerPaths.outputPath);
+		await access(ownerPaths.rulesIndexPath);
+		await access(legacyPaths.outputPath);
+		await assert.rejects(() => access(legacyPaths.rulesIndexPath), /ENOENT/);
+
+		const firstIndex = await readFile(ownerPaths.rulesIndexPath, "utf8");
+		const firstHandbook = await readFile(ownerPaths.outputPath, "utf8");
+		assert.match(firstIndex, /`dependency` \(`conditional`\)/);
+		assert.doesNotMatch(firstIndex, /`leaf` \(`/);
+		assert.doesNotMatch(firstIndex, /Fixture Rule|leaf\/rules|dependency\/rules/);
+		assert.equal(Buffer.byteLength(firstIndex, "utf8") <= getRulesIndexByteBudget(2), true);
+		assert.match(firstHandbook, /^### 1\.1 Own Composition$/m);
+		assert.match(firstHandbook, /\.\.\/dependency\/AGENTS\.md/);
+		assert.match(firstHandbook, /\.\.\/leaf\/AGENTS\.md/);
+		assert.doesNotMatch(firstHandbook, /^### \d+\.\d+ Fixture Rule$/m);
+
+		const beforeCheckSnapshot = await readFileTreeSnapshot(skillRootDir);
+		await checkGeneratedSkill(ownerPaths);
+		await checkGeneratedSkill(legacyPaths);
+		const checkedSnapshot = await readFileTreeSnapshot(skillRootDir);
+		assert.deepEqual(checkedSnapshot, beforeCheckSnapshot, "generated-output checks must never mutate files");
+		const rulePath = path.join(ownerPaths.rulesDir, "composition-owner.md");
+		const ruleSource = await readFile(rulePath, "utf8");
+		await writeFile(rulePath, ruleSource.replace("Changing fixture composition.", "Changing fixture composition ownership."), "utf8");
+		await assert.rejects(() => checkGeneratedSkill(ownerPaths), /owner.*stale.*RULES_INDEX\.md/i);
+		assert.equal(await readFile(ownerPaths.rulesIndexPath, "utf8"), firstIndex);
+
+		const firstRebuildLogs = await captureConsoleLogs(async () => {
+			await buildSkill(ownerPaths);
+		});
+		assert.deepEqual(firstRebuildLogs, ["Wrote AGENTS.md", "Wrote RULES_INDEX.md"]);
+		await checkGeneratedSkill(ownerPaths);
+		const rebuiltIndex = await readFile(ownerPaths.rulesIndexPath, "utf8");
+		assert.notEqual(rebuiltIndex, firstIndex);
+		const secondRebuildLogs = await captureConsoleLogs(async () => {
+			await buildSkill(ownerPaths);
+		});
+		assert.deepEqual(secondRebuildLogs, ["Wrote AGENTS.md", "Wrote RULES_INDEX.md"]);
+		assert.equal(await readFile(ownerPaths.rulesIndexPath, "utf8"), rebuiltIndex);
+		assert.notDeepEqual(
+			await readFileTreeSnapshot(skillRootDir),
+			checkedSnapshot,
+			"only the intentional source mutation and rebuild may change fixture bytes",
+		);
+	});
+
+	assert.equal(readRealSkillGitStatus(), realSkillStatusBefore);
+});
+
+test("generated-output check skips non-progressive skills before dependency resolution", async () => {
+	await withFixtureRoot(async (skillRootDir) => {
+		await writeSkillFixture(skillRootDir, "legacy", {metadata: {extends: ["missing-dependency"]}});
+
+		assert.equal(await checkGeneratedSkill(getSkillPaths("legacy", skillRootDir)), false);
+	});
+});
 
 test("strict rule frontmatter accepts only documented scalar keys", () => {
 	const source = [
@@ -190,6 +554,15 @@ test("progressive metadata requires a boolean mode and mutually exclusive depend
 			rules: [{appliesWhen: "Editing the fixture."}],
 		});
 		await assert.rejects(() => validateSkill(getSkillPaths("owner", skillRootDir)), /progressiveDisclosure.*boolean/i);
+	});
+
+	await withFixtureRoot(async (skillRootDir) => {
+		await writeSkillFixture(skillRootDir, "dependency");
+		await writeSkillFixture(skillRootDir, "owner", {
+			metadata: {progressiveDisclosure: true, extends: ["dependency"]},
+			rules: [{appliesWhen: "Editing the fixture."}],
+		});
+		await assert.rejects(() => validateSkill(getSkillPaths("owner", skillRootDir)), /progressive.*must use.*companions.*legacy.*extends/i);
 	});
 
 	await withFixtureRoot(async (skillRootDir) => {

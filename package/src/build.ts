@@ -2,8 +2,11 @@ import {writeFile} from "node:fs/promises";
 import path from "node:path";
 
 import {getSkillPaths, isBuildableSkill, listSkillNames, parseCliArgs} from "./config.js";
+import {parseDependencyDeclaration} from "./dependencies.js";
+import {isDirectExecution} from "./entrypoint.js";
 import {buildRuleAnchor, buildSectionAnchor, normalizeHeadingTitle, readResolvedSkillDocuments, replaceRuleHeading} from "./parser.js";
-import type {CompiledSkillSection, LoadedSkillDocument, SkillMetadata, SkillPaths, SkillRule, SkillSection} from "./types.js";
+import {generateRulesIndexMarkdown, getRulesForSection} from "./routing.js";
+import type {CompiledSkillSection, LoadedSkillDocument, SkillMetadata, SkillPaths} from "./types.js";
 
 interface CompanionSkill {
 	skillName: string;
@@ -11,13 +14,6 @@ interface CompanionSkill {
 	title: string;
 	guidePath: string;
 }
-
-/**
- * @helper section prefix 기준 rule 목록 정렬
- */
-const getRulesForSection = (section: SkillSection, rules: SkillRule[]): SkillRule[] => {
-	return rules.filter((rule) => rule.prefix === section.prefix).sort((left, right) => left.title.localeCompare(right.title, "en-US"));
-};
 
 const conventionTitleBySkillName: Record<string, string> = {
 	astro: "Astro Convention",
@@ -231,9 +227,15 @@ export const buildSkill = async (skillPaths: SkillPaths): Promise<void> => {
 	const localSections = buildCompiledSections(skillPaths.skillName, [rootDocument]);
 	const localReferences = collectReferenceLinks([rootDocument]);
 	const localMarkdown = generateMarkdown(skillPaths.skillName, rootDocument.metadata, localSections, companionSkills, localReferences);
+	const dependencies = parseDependencyDeclaration(rootDocument.skillName, rootDocument.metadata);
 
 	await writeFile(skillPaths.outputPath, localMarkdown, "utf8");
 	console.log(`Wrote ${path.relative(skillPaths.skillDir, skillPaths.outputPath)}`);
+
+	if (rootDocument.metadata.progressiveDisclosure === true) {
+		await writeFile(skillPaths.rulesIndexPath, generateRulesIndexMarkdown(rootDocument, dependencies.companions), "utf8");
+		console.log(`Wrote ${path.relative(skillPaths.skillDir, skillPaths.rulesIndexPath)}`);
+	}
 };
 
 /**
@@ -262,4 +264,6 @@ export const main = async (): Promise<void> => {
 	}
 };
 
-await main();
+if (await isDirectExecution(import.meta.url)) {
+	await main();
+}

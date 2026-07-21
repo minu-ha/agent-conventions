@@ -14,6 +14,10 @@ export interface DependencyDeclaration {
 	 * @field 검증된 직접 dependency skill 이름 목록
 	 */
 	skillNames: string[];
+	/**
+	 * @field 같은 schema 계약으로 정규화한 direct companion 목록
+	 */
+	companions: SkillCompanion[];
 }
 
 const maximumConditionLength = 160;
@@ -149,12 +153,18 @@ export const parseDependencyDeclaration = (skillName: string, metadata: unknown)
 	}
 
 	if (metadataObject.extends !== undefined) {
-		return {kind: "extends", skillNames: parseExtends(skillName, metadataObject.extends)};
+		if (metadataObject.progressiveDisclosure === true) {
+			throw new Error(`${skillName}: progressive skill must use "companions" instead of legacy "extends".`);
+		}
+
+		return {kind: "extends", skillNames: parseExtends(skillName, metadataObject.extends), companions: []};
 	}
 
 	if (metadataObject.companions !== undefined) {
-		return {kind: "companions", skillNames: parseCompanions(skillName, metadataObject.companions).map((companion) => companion.skill)};
+		const companions = parseCompanions(skillName, metadataObject.companions);
+
+		return {kind: "companions", skillNames: companions.map((companion) => companion.skill), companions};
 	}
 
-	return {kind: "extends", skillNames: []};
+	return {kind: "extends", skillNames: [], companions: []};
 };

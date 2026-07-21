@@ -1,10 +1,9 @@
-import {realpath} from "node:fs/promises";
 import path from "node:path";
-import {fileURLToPath} from "node:url";
 
 import {getSkillPaths, isBuildableSkill, listSkillNames, parseCliArgs} from "./config.js";
 import {assertRoutingCondition, parseDependencyDeclaration} from "./dependencies.js";
 import type {DependencyDeclaration} from "./dependencies.js";
+import {isDirectExecution} from "./entrypoint.js";
 import {readSkillDocument, readSkillRuleFileNames} from "./parser.js";
 import type {LoadedSkillDocument, SkillMetadata, SkillPaths} from "./types.js";
 
@@ -257,28 +256,6 @@ export const main = async (): Promise<void> => {
 	}
 };
 
-/**
- * @helper CLI entry와 현재 module의 real path 동일성 확인
- */
-const isDirectExecution = async (): Promise<boolean> => {
-	const entryPath = process.argv[1];
-
-	if (!entryPath) {
-		return false;
-	}
-
-	try {
-		const [realEntryPath, realModulePath] = await Promise.all([
-			realpath(path.resolve(entryPath)),
-			realpath(fileURLToPath(import.meta.url)),
-		]);
-
-		return realEntryPath === realModulePath;
-	} catch {
-		return false;
-	}
-};
-
-if (await isDirectExecution()) {
+if (await isDirectExecution(import.meta.url)) {
 	await main();
 }
