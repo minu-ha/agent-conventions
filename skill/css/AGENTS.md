@@ -206,6 +206,8 @@ rt_document__body
 
 **Applies when:** 스타일 owner를 route, document, local helper, reusable widget, UI primitive 중에서 결정하거나 서로 다른 owner를 이동·분리한다.
 
+**Review with:** `organization-keep-style-files-owned-by-one-component-or-route`
+
 **Impact: HIGH (keeps route-owned page styles, shared component styles, and truly local helper styles from mixing into the same namespace or file)**
 
 route/framework skill이 route-owned surface로 판단한 스타일은 `rt_*` scope를 유지합니다. 파일이 route-local helper folder로 내려갔다는 이유만으로 main screen surface를 `loc_*`로 바꾸지 않습니다.
@@ -323,6 +325,8 @@ TSX에서 `className`은 `clsx()` 사용을 기본으로 합니다. 기본 eleme
 
 **Applies when:** spacing·방향·특정 화면의 구조 차이를 \`--modifier\`로 추가하려 하거나 modifier가 반복 가능한 상태 또는 API variant인지 판단한다.
 
+**Review with:** `naming-name-elements-and-modifiers-by-role`
+
 **Impact: HIGH (keeps modifiers reserved for state instead of turning them into a second layout naming system)**
 
 modifier는 상태나 반복 variant를 표현할 때만 사용합니다.
@@ -380,6 +384,8 @@ modifier는 상태나 반복 variant를 표현할 때만 사용합니다.
 
 **Applies when:** \`Ui\*\` wrapper 사용처나 wrapper API에서 Props 타입을 선언·추론·재사용하고 라이브러리 원본 Props 참조를 검토한다.
 
+**Review with:** `typescript/types-reuse-existing-contracts-before-new-types`
+
 **Impact: MEDIUM-HIGH (preserves wrapper-level styling and API contracts instead of leaking raw library prop types into usage sites)**
 
 `Ui*` 래퍼 컴포넌트를 사용할 때는 라이브러리 원본 Props 타입이 아니라 래퍼가 노출한 `Ui*Props` 타입을 우선 사용합니다. 그래야 wrapper가 의도적으로 제한하거나 보강한 스타일링 계약과 API 경계를 유지할 수 있습니다.
@@ -402,9 +408,13 @@ const items: NonNullable<UiCollapseProps["items"]> = [];
 
 ### 2.5 Prefer Owned Wrappers for `Ui*` Component Styling
 
-**Applies when:** \`Ui\*\` wrapper의 내부 DOM을 스타일링하거나 root \`className\` 또는 slot prop을 styling hook으로 주입·노출·사용한다.
+**Applies when:** 실제 \`Ui\*\` React wrapper 사용처·API에서 내부 DOM styling 경계를 정하거나 root \`className\`·slot prop hook을 주입·노출·사용한다. 기존 CSS owner root 아래 third-party selector만 수정하면 제외한다.
+
+**Review with:** `selector-target-third-party-dom-from-owned-roots`
 
 **Impact: HIGH (prevents shared UI wrappers from exposing uncontrolled styling hooks through ad-hoc className injection)**
+
+이 규칙은 실제 `Ui*` React wrapper 컴포넌트/API 경계에만 적용합니다. `.ui_*` 같은 기존 CSS owner root 아래에서 third-party selector만 스코프하는 CSS-only 변경은 `selector-target-third-party-dom-from-owned-roots`가 담당합니다.
 
 `Ui*` 컴포넌트(`UiCollapse`, `UiAvatar`, `UiButton` 등)의 내부 DOM을 꾸미기 위한 ad-hoc `className` 주입은 기본적으로 피합니다. 스타일링이 필요하면 화면이나 local 래퍼 클래스를 두고, 그 래퍼 아래에서만 서드파티 라이브러리 내부 DOM을 제한적으로 타겟팅합니다.   
 다만 wrapper가 root `className`이나 slot prop을 공식 styling contract로 노출했다면, 레이아웃 참여나 spacing 같은 root-level 스타일에는 그 contract를 그대로 사용할 수 있습니다.
@@ -531,6 +541,8 @@ rich text 예외는 raw element styling에만 적용됩니다. `.owner__prose .o
 
 **Applies when:** \`.ant-\*\`, \`.rc-\*\`, \`.tippy-\*\` 등 third-party 내부 DOM selector를 추가·수정하거나 owned wrapper 아래로 범위를 제한한다.
 
+**Review with:** `selector-avoid-deep-descendant-dependencies`
+
 **Impact: CRITICAL (limits third-party styling to explicit wrapper ownership instead of leaking across the app)**
 
 서드파티 라이브러리 내부 DOM 클래스(`.ant-*`, `.rc-*`, `.tippy-*`)는 프로젝트가 소유한 root block 아래에서만 타겟팅합니다.
@@ -592,6 +604,8 @@ rich text 예외는 raw element styling에만 적용됩니다. `.owner__prose .o
 ### 3.4 Use Pseudo-classes for DOM-owned States
 
 **Applies when:** \`:hover\`, \`:visited\`, \`:focus\*\`, \`:disabled\`, \`:checked\`를 추가·수정하거나 parent DOM state가 child styling에 영향을 준다.
+
+**Review with:** `values-separate-domain-state-modifiers-from-dom-interaction-states`
 
 **Impact: HIGH (keeps browser-owned interaction states separate from app-owned state modifiers)**
 
@@ -781,6 +795,8 @@ CSS 변수 `var(--*)`를 사용할 때는 토큰 존재가 보장되지 않는 �
 ### 4.4 Tokenize Repeated Visual Values
 
 **Applies when:** 색상·간격·radius·타이포·그림자 등 같은 시각 값이 2회 이상 반복되거나 새 shared visual value를 하드코딩한다.
+
+**Review with:** `values-always-provide-css-variable-fallbacks`
 
 **Impact: HIGH (keeps repeated colors, spacing, and radius values aligned with shared design tokens instead of drifting into magic numbers)**
 

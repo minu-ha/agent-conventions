@@ -126,7 +126,7 @@ const typescriptRuleRouting = {
 	},
 	"docs-require-header-jsdoc-on-key-declarations": {
 		appliesWhen:
-			"원격 연동 함수, 이벤트 handler, reactive sync block, reusable helper, custom type·interface, store 또는 formatter 예외 함수를 추가·변경한다.",
+			"named query·mutation binding, 원격 연동 함수, 이벤트 handler, reactive sync block, reusable helper, custom type·interface, store 또는 formatter 예외 선언을 추가·변경한다.",
 		reviewWith: [
 			"docs-standardize-annotation-tags-by-declaration-role",
 			"docs-write-concise-korean-comments-about-purpose-and-constraints",
@@ -237,7 +237,8 @@ const cssRuleRouting = {
 		reviewWith: ["typescript/types-reuse-existing-contracts-before-new-types"],
 	},
 	"composition-style-ui-components-through-owned-wrappers": {
-		appliesWhen: "`Ui*` wrapper의 내부 DOM을 스타일링하거나 root `className` 또는 slot prop을 styling hook으로 주입·노출·사용한다.",
+		appliesWhen:
+			"실제 `Ui*` React wrapper 사용처·API에서 내부 DOM styling 경계를 정하거나 root `className`·slot prop hook을 주입·노출·사용한다. 기존 CSS owner root 아래 third-party selector만 수정하면 제외한다.",
 		reviewWith: ["selector-target-third-party-dom-from-owned-roots"],
 	},
 	"naming-default-to-plain-css-when-no-module-convention": {
@@ -402,7 +403,7 @@ const reactRuleRouting = {
 	},
 	"ownership-use-consistent-file-and-symbol-naming": {
 		appliesWhen:
-			"React/TSX 파일·컴포넌트·exported symbol·공용 설정의 이름을 새로 정하거나 바꾸며 casing, ui/wg prefix 또는 config key naming 판단이 필요하다.",
+			"React/TSX 파일 자체·컴포넌트·exported symbol·공용 설정의 이름을 새로 정하거나 바꾸며 casing, ui/wg prefix 또는 config key naming을 판단한다. local query·mutation binding만 바꾸면 제외한다.",
 		reviewWith: ["typescript/naming-use-consistent-file-and-symbol-naming"],
 	},
 	"screen-avoid-premature-abstraction": {
@@ -1433,6 +1434,8 @@ test("TypeScript progressive metadata matches Appendix A exactly", async () => {
 		document.rules.every((rule) => (rule.appliesWhen?.length ?? 0) <= 160),
 		true,
 	);
+	const headerJsdocRule = await readFile(path.join(skillPaths.rulesDir, "docs-require-header-jsdoc-on-key-declarations.md"), "utf8");
+	assert.match(headerJsdocRule, /named query·mutation binding[^\n]+@api/i);
 });
 
 test("TypeScript routing manifest is an exact nine-scenario partition with full positive coverage", async () => {
@@ -1594,6 +1597,11 @@ test("React progressive metadata and all 42 rule routes match Appendix B exactly
 			assert.doesNotMatch(ruleSource, /^reviewWith:/m, `${ruleId} must omit an empty reviewWith key`);
 		}
 	}
+	const ownershipNamingRule = await readFile(path.join(skillPaths.rulesDir, "ownership-use-consistent-file-and-symbol-naming.md"), "utf8");
+	assert.match(
+		ownershipNamingRule,
+		/local query·mutation binding[^\n]+state-name-query-and-mutation-bindings-consistently|state-name-query-and-mutation-bindings-consistently[^\n]+local query·mutation binding/i,
+	);
 
 	const template = await readFile(path.join(skillPaths.rulesDir, "_template.md"), "utf8");
 	assert.match(template, /^appliesWhen: /m);
@@ -1892,6 +1900,11 @@ test("CSS progressive metadata and rule routing match Appendix C exactly", async
 		document.rules.every((rule) => (rule.appliesWhen?.length ?? 0) <= 160),
 		true,
 	);
+	const wrapperStylingRule = await readFile(
+		path.join(skillPaths.rulesDir, "composition-style-ui-components-through-owned-wrappers.md"),
+		"utf8",
+	);
+	assert.match(wrapperStylingRule, /실제 `Ui\*` React wrapper[^\n]+CSS-only[^\n]+selector-target-third-party-dom-from-owned-roots/i);
 
 	const template = await readFile(path.join(skillPaths.rulesDir, "_template.md"), "utf8");
 	assert.match(template, /^appliesWhen: /m);

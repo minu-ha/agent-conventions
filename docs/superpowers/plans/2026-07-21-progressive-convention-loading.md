@@ -859,7 +859,7 @@ Every value below is normative implementation input. `—` means omit `reviewWit
 | `functions-use-set-and-map-for-repeated-lookups` | 같은 컬렉션에 `includes`, `find` 또는 keyed lookup을 여러 번 수행하는 코드를 추가·변경한다. | — |
 | `absence-expose-optional-values-instead-of-silent-fallbacks` | optional 값의 읽기·정규화·전달을 바꾸거나 `??`, `\|\|`, 기본값 또는 빈 값 대체 분기를 추가·변경한다. | `docs-keep-inline-comments-for-constraints-and-caveats` |
 | `docs-keep-inline-comments-for-constraints-and-caveats` | 함수 본문의 `//` 주석을 추가·수정·유지하거나 도메인 규칙, 예외 방어, 외부 제약 또는 부수효과 순서를 주석으로 설명한다. | — |
-| `docs-require-header-jsdoc-on-key-declarations` | 원격 연동 함수, 이벤트 handler, reactive sync block, reusable helper, custom type·interface, store 또는 formatter 예외 함수를 추가·변경한다. | `docs-standardize-annotation-tags-by-declaration-role`, `docs-write-concise-korean-comments-about-purpose-and-constraints` |
+| `docs-require-header-jsdoc-on-key-declarations` | named query·mutation binding, 원격 연동 함수, 이벤트 handler, reactive sync block, reusable helper, custom type·interface, store 또는 formatter 예외 선언을 추가·변경한다. | `docs-standardize-annotation-tags-by-declaration-role`, `docs-write-concise-korean-comments-about-purpose-and-constraints` |
 | `docs-standardize-annotation-tags-by-declaration-role` | TypeScript/TSX 선언의 JSDoc 태그를 추가·변경하거나 선언 역할에 맞는 annotation을 검토한다. | — |
 | `docs-use-helper-for-reusable-pure-helper-functions` | 여러 caller가 쓰는 pure support function, owner-named exported helper 또는 `shared/util.ts` 함수를 추가·변경하거나 `@helper`를 붙이려 한다. | — |
 | `docs-write-concise-korean-comments-about-purpose-and-constraints` | TypeScript/TSX의 JSDoc이나 inline comment 문구를 추가·수정·번역하거나 리뷰한다. | — |
@@ -938,7 +938,7 @@ Every value below is normative implementation input. `—` means omit `reviewWit
 
 | Rule ID | `appliesWhen` | `reviewWith` |
 |---|---|---|
-| `ownership-use-consistent-file-and-symbol-naming` | React/TSX 파일·컴포넌트·exported symbol·공용 설정의 이름을 새로 정하거나 바꾸며 casing, ui/wg prefix 또는 config key naming 판단이 필요하다. | `typescript/naming-use-consistent-file-and-symbol-naming` |
+| `ownership-use-consistent-file-and-symbol-naming` | React/TSX 파일 자체·컴포넌트·exported symbol·공용 설정의 이름을 새로 정하거나 바꾸며 casing, ui/wg prefix 또는 config key naming을 판단한다. local query·mutation binding만 바꾸면 제외한다. | `typescript/naming-use-consistent-file-and-symbol-naming` |
 | `ownership-avoid-barrel-and-react-namespace-imports` | `index.ts`·barrel 재노출, `React.*` namespace 타입, type/value 혼합 import 또는 소유 출처를 숨긴 경로를 직접 추가·수정한다. 일반 direct value import는 제외한다. | `typescript/naming-use-direct-imports-and-public-entry-points` |
 | `ownership-layer-component-boundaries` | 컴포넌트를 ui·widget·route-local 중 어느 소유 레이어에 둘지 결정하거나 레이어 사이에서 이동·공용화한다. | `ownership-place-route-local-files-by-scope`, `css/naming-separate-local-and-route-style-scopes` |
 | `ownership-place-route-local-files-by-scope` | route 전용 컴포넌트·스타일·순수 로직을 새로 만들거나 `-local`과 route sibling `.ts` 사이에서 위치를 바꾼다. | `css/naming-separate-local-and-route-style-scopes`, `css/organization-keep-style-files-owned-by-one-component-or-route` |
@@ -1098,7 +1098,7 @@ CSS metadata declares one conditional companion exactly: `{"skill":"typescript",
 | `composition-compose-classes-with-clsx` | TSX의 `className`을 추가·수정하거나 base class, modifier, optional class를 조합한다. | — |
 | `composition-do-not-build-structural-variants-with-modifiers` | spacing·방향·특정 화면의 구조 차이를 `--modifier`로 추가하려 하거나 modifier가 반복 가능한 상태 또는 API variant인지 판단한다. | `naming-name-elements-and-modifiers-by-role` |
 | `composition-keep-classes-single-purpose` | base class 이름에 상태·variant 의미를 합치거나 한 class에 서로 독립적인 시각 책임을 추가·재사용·분리한다. | — |
-| `composition-style-ui-components-through-owned-wrappers` | `Ui*` wrapper의 내부 DOM을 스타일링하거나 root `className` 또는 slot prop을 styling hook으로 주입·노출·사용한다. | `selector-target-third-party-dom-from-owned-roots` |
+| `composition-style-ui-components-through-owned-wrappers` | 실제 `Ui*` React wrapper 사용처·API에서 내부 DOM styling 경계를 정하거나 root `className`·slot prop hook을 주입·노출·사용한다. 기존 CSS owner root 아래 third-party selector만 수정하면 제외한다. | `selector-target-third-party-dom-from-owned-roots` |
 | `composition-prefer-ui-wrapper-prop-types` | `Ui*` wrapper 사용처나 wrapper API에서 Props 타입을 선언·추론·재사용하고 라이브러리 원본 Props 참조를 검토한다. | `typescript/types-reuse-existing-contracts-before-new-types` |
 | `selector-avoid-deep-descendant-dependencies` | descendant 또는 child selector chain을 추가·수정하거나 DOM 계층에 의존하는 project-owned·third-party selector를 검토한다. | — |
 | `selector-keep-project-selectors-flat` | project-owned class를 중첩·descendant selector로 연결하거나 raw HTML prose·copy·content wrapper 안 element selector를 추가·수정한다. | — |

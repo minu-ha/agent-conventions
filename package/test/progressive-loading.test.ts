@@ -714,6 +714,7 @@ test("temporary progressive build and stale check are deterministic without repo
 					fileName: "composition-owner.md",
 					title: "Own Composition",
 					appliesWhen: "Changing fixture composition.",
+					reviewWith: ["state-watch"],
 					bodyMarker: "COMPOSITION_BODY_MARKER",
 				},
 			],
@@ -764,8 +765,8 @@ test("temporary progressive build and stale check are deterministic without repo
 		assert.match(firstHandbook, /^### 1\.1 Own Composition$/m);
 		assert.match(
 			firstHandbook,
-			/^### 1\.1 Own Composition\n\n\*\*Applies when:\*\* Changing fixture composition\.\n\n\*\*Impact:/m,
-			"the opt-in full handbook must preserve routing applicability next to each progressive rule",
+			/^### 1\.1 Own Composition\n\n\*\*Applies when:\*\* Changing fixture composition\.\n\n\*\*Review with:\*\* `state-watch`\n\n\*\*Impact:/m,
+			"the opt-in full handbook must preserve applicability and review routing next to each progressive rule",
 		);
 		assert.match(firstHandbook, /metadata\.json\.companions/);
 		assert.doesNotMatch(firstHandbook, /metadata\.json\.extends/);

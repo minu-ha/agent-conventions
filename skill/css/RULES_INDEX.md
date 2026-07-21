@@ -4,7 +4,7 @@
 
 - Skill: `css`
 - Version: `1.0.0`
-- Routing digest: `sha256:ee7c1a8cd0bf6aa977884fa8c956f77703a755a7b7f9688ae572418f5c0f0c45`
+- Routing digest: `sha256:6ccc113bdb521f4b15b57a2884aa2a3ffab9b645216de49661598bdafc7f26aa`
 - Local rules: 21
 
 ## Direct Companions
@@ -27,7 +27,7 @@
 - `C07` · `composition-compose-classes-with-clsx` · TSX의 \`className\`을 추가·수정하거나 base class, modifier, optional class를 조합한다.
 - `C08` · `composition-do-not-build-structural-variants-with-modifiers` · spacing·방향·특정 화면의 구조 차이를 \`--modifier\`로 추가하려 하거나 modifier가 반복 가능한 상태 또는 API variant인지 판단한다. · reviewWith: `naming-name-elements-and-modifiers-by-role`
 - `C09` · `composition-keep-classes-single-purpose` · base class 이름에 상태·variant 의미를 합치거나 한 class에 서로 독립적인 시각 책임을 추가·재사용·분리한다.
-- `C10` · `composition-style-ui-components-through-owned-wrappers` · \`Ui\*\` wrapper의 내부 DOM을 스타일링하거나 root \`className\` 또는 slot prop을 styling hook으로 주입·노출·사용한다. · reviewWith: `selector-target-third-party-dom-from-owned-roots`
+- `C10` · `composition-style-ui-components-through-owned-wrappers` · 실제 \`Ui\*\` React wrapper 사용처·API에서 내부 DOM styling 경계를 정하거나 root \`className\`·slot prop hook을 주입·노출·사용한다. 기존 CSS owner root 아래 third-party selector만 수정하면 제외한다. · reviewWith: `selector-target-third-party-dom-from-owned-roots`
 - `C11` · `composition-prefer-ui-wrapper-prop-types` · \`Ui\*\` wrapper 사용처나 wrapper API에서 Props 타입을 선언·추론·재사용하고 라이브러리 원본 Props 참조를 검토한다. · reviewWith: `typescript/types-reuse-existing-contracts-before-new-types`
 
 ### 3. Selectors and Nesting Boundaries (4)

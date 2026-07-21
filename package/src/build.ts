@@ -315,7 +315,13 @@ export const generateMarkdown = (args: GenerateMarkdownArgs): string => {
 					throw new Error(`Rule "${rule.title}" is missing a heading boundary for handbook rendering.`);
 				}
 
-				renderedRule = `${renderedRule.slice(0, headingEnd)}\n\n**Applies when:** ${escapeMarkdownText(rule.appliesWhen)}${renderedRule.slice(headingEnd)}`;
+				const routingMetadata = [`**Applies when:** ${escapeMarkdownText(rule.appliesWhen)}`];
+
+				if (rule.reviewWith.length > 0) {
+					routingMetadata.push(`**Review with:** ${rule.reviewWith.map((target) => `\`${escapeMarkdownText(target)}\``).join(", ")}`);
+				}
+
+				renderedRule = `${renderedRule.slice(0, headingEnd)}\n\n${routingMetadata.join("\n\n")}${renderedRule.slice(headingEnd)}`;
 			}
 
 			lines.push(renderedRule);

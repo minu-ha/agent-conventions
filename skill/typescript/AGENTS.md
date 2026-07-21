@@ -59,6 +59,8 @@
 
 **Applies when:** 여러 leaf 모듈이 함께 쓰는 URL, feature flag, 페이지 크기나 상수를 추가·이동·중복 정의하거나 shared config 경계를 바꾼다.
 
+**Review with:** `naming-preserve-config-origin-with-chained-access`, `naming-use-direct-imports-and-public-entry-points`
+
 **Impact: HIGH (prevents shared config values from scattering across leaf files and losing a single public source)**
 
 여러 파일에서 공유되는 설정과 상수는 기본적으로 `shared/config.ts` 한 파일을 공개 진입점으로 삼아 `config` namespace 아래에 모읍니다.   
@@ -312,6 +314,8 @@ const normalizeSearchRequest: NormalizeRequest = (request) => {
 
 **Applies when:** interface, 객체 또는 framework가 이미 정의한 callback을 구현·전달하면서 시그니처를 새로 적거나 바꾼다.
 
+**Review with:** `types-prefer-function-variable-types-over-parameter-annotations`
+
 **Impact: HIGH (prevents callback signatures from drifting when an existing interface or object contract already defines them)**
 
 콜백 구현 시 매개변수를 다시 타이핑하기보다, 이미 존재하는 인터페이스나 계약의 시그니처를 Indexed Access로 재사용합니다. 이렇게 해야 구현과 계약 사이의 타입 정의가 한곳에서 유지됩니다.
@@ -349,6 +353,8 @@ const formatMessage: ToastFormatters["formatMessage"] = (message) => {
 ### 2.5 Reuse Existing Contracts Before Declaring New Types
 
 **Applies when:** 기존 type, interface 또는 schema와 같거나 일부만 다른 shape를 새로 선언·변경하려 한다.
+
+**Review with:** `types-document-custom-types-and-shapes`
 
 **Impact: HIGH (reduces duplicate shape declarations by deriving from existing types and schemas when semantics have not changed)**
 
@@ -407,6 +413,8 @@ const visibleTabs = canManageItems
 ### 3.2 Extract Support Functions Only When the Boundary Is Real
 
 **Applies when:** support function을 추출·이동·export·공유하거나 generic helper 파일, 단일 owner 전용 mapper 또는 작은 sub-step 경계를 바꾼다.
+
+**Review with:** `docs-use-helper-for-reusable-pure-helper-functions`, `docs-require-header-jsdoc-on-key-declarations`
 
 **Impact: HIGH (stops helper extraction from fragmenting local flow when no reusable contract or testable boundary actually exists)**
 
@@ -572,6 +580,8 @@ const sortedUsers = [...users].sort((left, right) => left.name.localeCompare(rig
 
 **Applies when:** \`enum\` 또는 타입과 런타임에서 함께 쓰는 enum-like 값 집합을 추가·변경한다.
 
+**Review with:** `naming-use-consistent-file-and-symbol-naming`, `types-document-custom-types-and-shapes`
+
 **Impact: MEDIUM-HIGH (keeps runtime values explicit and type extraction lightweight without introducing enum-specific behavior)**
 
 `enum` 대신 객체 리터럴과 `as const`를 사용합니다. 이렇게 하면 런타임 값과 타입 추론을 함께 유지하면서도 enum 고유 문법과 번들 영향을 피할 수 있습니다.
@@ -685,6 +695,8 @@ const approver = userById.get(approverId);
 
 **Applies when:** optional 값의 읽기·정규화·전달을 바꾸거나 \`??\`, \`||\`, 기본값 또는 빈 값 대체 분기를 추가·변경한다.
 
+**Review with:** `docs-keep-inline-comments-for-constraints-and-caveats`
+
 **Impact: HIGH (makes missing data visible instead of quietly masking absence with generic defaults)**
 
 옵셔널 값에 대해 `??`, `||`로 기본값을 넣는 폴백 처리를 기본 금지합니다. 값이 없을 수 있음을 명확히 드러내고, 꼭 필요할 때만 도메인상 기본값이 명확하며 코드 바로 위 이유 주석이 있을 때 제한적으로 허용합니다.
@@ -745,11 +757,13 @@ if (!normalizedToken) {
 
 ### 5.2 Require Header JSDoc on Key Declarations
 
-**Applies when:** 원격 연동 함수, 이벤트 handler, reactive sync block, reusable helper, custom type·interface, store 또는 formatter 예외 함수를 추가·변경한다.
+**Applies when:** named query·mutation binding, 원격 연동 함수, 이벤트 handler, reactive sync block, reusable helper, custom type·interface, store 또는 formatter 예외 선언을 추가·변경한다.
+
+**Review with:** `docs-standardize-annotation-tags-by-declaration-role`, `docs-write-concise-korean-comments-about-purpose-and-constraints`
 
 **Impact: MEDIUM-HIGH (makes important boundaries searchable and explainable before readers inspect the implementation body)**
 
-원격 연동 함수, 이벤트 핸들러, 반응형 동기화 블록, 재사용 helper, 커스텀 `type`/`interface`, store 선언, 포맷 예외를 둔 함수 선언에는 예외 없이 선언 헤더 JSDoc을 작성합니다.   
+named query·mutation binding과 원격 연동 함수에는 `@api` 헤더 JSDoc을 작성하고, 이벤트 핸들러, 반응형 동기화 블록, 재사용 helper, 커스텀 `type`/`interface`, store 선언, 포맷 예외를 둔 함수 선언에도 예외 없이 선언 헤더 JSDoc을 작성합니다.
 중요한 경계가 파일 검색에서 바로 보이도록 하는 것이 목적입니다. annotation 종류는 선언 역할에 따라 `@api`, `@event`, `@watch`, `@helper`, `@summary` 중 하나를 고릅니다.
 
 **Incorrect (주요 선언에 헤더 설명이 없음):**

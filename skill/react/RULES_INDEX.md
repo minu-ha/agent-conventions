@@ -4,7 +4,7 @@
 
 - Skill: `react`
 - Version: `1.0.0`
-- Routing digest: `sha256:f177b0528b90637f69e85c3f2f8ea2206134bad8191812e219b5201fb510db66`
+- Routing digest: `sha256:9489a3576d05df5cffaf5db15221d500109cfae40e1636985af71275eac2936a`
 - Local rules: 42
 
 ## Direct Companions
@@ -21,7 +21,7 @@
 - `R03` · `ownership-layer-component-boundaries` · 컴포넌트를 ui·widget·route-local 중 어느 소유 레이어에 둘지 결정하거나 레이어 사이에서 이동·공용화한다. · reviewWith: `css/naming-separate-local-and-route-style-scopes`, `ownership-place-route-local-files-by-scope`
 - `R04` · `ownership-place-route-local-files-by-scope` · route 전용 컴포넌트·스타일·순수 로직을 새로 만들거나 \`-local\`과 route sibling \`.ts\` 사이에서 위치를 바꾼다. · reviewWith: `css/naming-separate-local-and-route-style-scopes`, `css/organization-keep-style-files-owned-by-one-component-or-route`
 - `R05` · `ownership-shared-config-entry-points` · 둘 이상의 화면이 쓰는 상수·설정·순수 함수를 추가·이동하거나 leaf 파일에 중복 선언된 공용 값을 정리한다. · reviewWith: `typescript/naming-centralize-shared-config-namespaces`, `typescript/naming-preserve-config-origin-with-chained-access`
-- `R06` · `ownership-use-consistent-file-and-symbol-naming` · React/TSX 파일·컴포넌트·exported symbol·공용 설정의 이름을 새로 정하거나 바꾸며 casing, ui/wg prefix 또는 config key naming 판단이 필요하다. · reviewWith: `typescript/naming-use-consistent-file-and-symbol-naming`
+- `R06` · `ownership-use-consistent-file-and-symbol-naming` · React/TSX 파일 자체·컴포넌트·exported symbol·공용 설정의 이름을 새로 정하거나 바꾸며 casing, ui/wg prefix 또는 config key naming을 판단한다. local query·mutation binding만 바꾸면 제외한다. · reviewWith: `typescript/naming-use-consistent-file-and-symbol-naming`
 
 ### 2. Typing and Contracts (2)
 

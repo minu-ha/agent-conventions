@@ -2,7 +2,7 @@
 
 **Impact: MEDIUM-HIGH (makes important boundaries searchable and explainable before readers inspect the implementation body)**
 
-원격 연동 함수, 이벤트 핸들러, 반응형 동기화 블록, 재사용 helper, 커스텀 `type`/`interface`, store 선언, 포맷 예외를 둔 함수 선언에는 예외 없이 선언 헤더 JSDoc을 작성합니다.\
+named query·mutation binding과 원격 연동 함수에는 `@api` 헤더 JSDoc을 작성하고, 이벤트 핸들러, 반응형 동기화 블록, 재사용 helper, 커스텀 `type`/`interface`, store 선언, 포맷 예외를 둔 함수 선언에도 예외 없이 선언 헤더 JSDoc을 작성합니다.
 중요한 경계가 파일 검색에서 바로 보이도록 하는 것이 목적입니다. annotation 종류는 선언 역할에 따라 `@api`, `@event`, `@watch`, `@helper`, `@summary` 중 하나를 고릅니다.
 
 > 예시·예외가 필요할 때만 [full rule](../rules/docs-require-header-jsdoc-on-key-declarations.md)을 추가로 읽고 fallback 사유를 기록합니다.

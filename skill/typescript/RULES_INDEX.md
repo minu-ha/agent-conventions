@@ -4,7 +4,7 @@
 
 - Skill: `typescript`
 - Version: `1.0.0`
-- Routing digest: `sha256:467724cd06de7af33459b278bc0d59fc87623fc50f98ae9bd2705cac18aadcd5`
+- Routing digest: `sha256:4158a2e16636353d7bce96ed8cd825136e96e89073febdf103665a769b1b1dc8`
 - Local rules: 22
 
 ## Local Rules
@@ -40,7 +40,7 @@
 ### 5. JSDoc and Comment Conventions (5)
 
 - `T17` · `docs-keep-inline-comments-for-constraints-and-caveats` · 함수 본문의 \`//\` 주석을 추가·수정·유지하거나 도메인 규칙, 예외 방어, 외부 제약 또는 부수효과 순서를 주석으로 설명한다.
-- `T18` · `docs-require-header-jsdoc-on-key-declarations` · 원격 연동 함수, 이벤트 handler, reactive sync block, reusable helper, custom type·interface, store 또는 formatter 예외 함수를 추가·변경한다. · reviewWith: `docs-standardize-annotation-tags-by-declaration-role`, `docs-write-concise-korean-comments-about-purpose-and-constraints`
+- `T18` · `docs-require-header-jsdoc-on-key-declarations` · named query·mutation binding, 원격 연동 함수, 이벤트 handler, reactive sync block, reusable helper, custom type·interface, store 또는 formatter 예외 선언을 추가·변경한다. · reviewWith: `docs-standardize-annotation-tags-by-declaration-role`, `docs-write-concise-korean-comments-about-purpose-and-constraints`
 - `T19` · `docs-standardize-annotation-tags-by-declaration-role` · TypeScript/TSX 선언의 JSDoc 태그를 추가·변경하거나 선언 역할에 맞는 annotation을 검토한다.
 - `T20` · `docs-use-helper-for-reusable-pure-helper-functions` · 여러 caller가 쓰는 pure support function, owner-named exported helper 또는 \`shared/util.ts\` 함수를 추가·변경하거나 \`@helper\`를 붙이려 한다.
 - `T21` · `docs-write-concise-korean-comments-about-purpose-and-constraints` · TypeScript/TSX의 JSDoc이나 inline comment 문구를 추가·수정·번역하거나 리뷰한다.
