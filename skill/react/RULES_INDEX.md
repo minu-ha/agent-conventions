@@ -4,7 +4,7 @@
 
 - Skill: `react`
 - Version: `1.0.0`
-- Routing digest: `sha256:e0a42f6920e9b189eaa721aec3b04f562e6a4b40b37f88dbdd71d7ec63db1a24`
+- Routing digest: `sha256:f177b0528b90637f69e85c3f2f8ea2206134bad8191812e219b5201fb510db66`
 - Local rules: 42
 
 ## Direct Companions
@@ -16,7 +16,7 @@
 
 ### 1. Ownership and Boundaries (6)
 
-- `R01` · `ownership-avoid-barrel-and-react-namespace-imports` · \`index.ts\`·barrel 재노출을 추가·수정하거나 \`React.\*\` namespace 타입, type/value 혼합 import 또는 소유 출처가 숨은 import 경로가 diff에 보인다. · reviewWith: `typescript/naming-use-direct-imports-and-public-entry-points`
+- `R01` · `ownership-avoid-barrel-and-react-namespace-imports` · \`index.ts\`·barrel 재노출, \`React.\*\` namespace 타입, type/value 혼합 import 또는 소유 출처를 숨긴 경로를 직접 추가·수정한다. 일반 direct value import는 제외한다. · reviewWith: `typescript/naming-use-direct-imports-and-public-entry-points`
 - `R02` · `ownership-prefer-plain-ts-for-local-react-helpers` · 화면 전용 계산·정규화·payload 조립을 custom hook 또는 별도 support module로 추출·이동하려 한다. · reviewWith: `screen-extract-utilities-selectively`, `screen-move-pure-support-code-out-of-entry-files`, `typescript/functions-extract-helpers-only-when-the-boundary-is-real`
 - `R03` · `ownership-layer-component-boundaries` · 컴포넌트를 ui·widget·route-local 중 어느 소유 레이어에 둘지 결정하거나 레이어 사이에서 이동·공용화한다. · reviewWith: `css/naming-separate-local-and-route-style-scopes`, `ownership-place-route-local-files-by-scope`
 - `R04` · `ownership-place-route-local-files-by-scope` · route 전용 컴포넌트·스타일·순수 로직을 새로 만들거나 \`-local\`과 route sibling \`.ts\` 사이에서 위치를 바꾼다. · reviewWith: `css/naming-separate-local-and-route-style-scopes`, `css/organization-keep-style-files-owned-by-one-component-or-route`

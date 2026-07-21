@@ -88,7 +88,7 @@ Shared UI, widget, route-local 코드는 소유 경계가 분명해야 에이전
 
 ### 1.1 Avoid Barrel Exports and React Namespace Types
 
-**Applies when:** \`index.ts\`·barrel 재노출을 추가·수정하거나 \`React.\*\` namespace 타입, type/value 혼합 import 또는 소유 출처가 숨은 import 경로가 diff에 보인다.
+**Applies when:** \`index.ts\`·barrel 재노출, \`React.\*\` namespace 타입, type/value 혼합 import 또는 소유 출처를 숨긴 경로를 직접 추가·수정한다. 일반 direct value import는 제외한다.
 
 **Impact: HIGH (import 경로를 명시적으로 유지하고 타입 import 스타일 혼용을 막음)**
 

@@ -377,7 +377,7 @@ const reactRuleRouting = {
 	},
 	"ownership-avoid-barrel-and-react-namespace-imports": {
 		appliesWhen:
-			"`index.ts`·barrel 재노출을 추가·수정하거나 `React.*` namespace 타입, type/value 혼합 import 또는 소유 출처가 숨은 import 경로가 diff에 보인다.",
+			"`index.ts`·barrel 재노출, `React.*` namespace 타입, type/value 혼합 import 또는 소유 출처를 숨긴 경로를 직접 추가·수정한다. 일반 direct value import는 제외한다.",
 		reviewWith: ["typescript/naming-use-direct-imports-and-public-entry-points"],
 	},
 	"ownership-layer-component-boundaries": {
