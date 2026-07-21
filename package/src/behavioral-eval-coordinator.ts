@@ -740,7 +740,27 @@ const createChildRequest = (args: CreateChildRequestArgs): BehavioralChildReques
 		"promptSuffix",
 		"ordinalSemantics",
 	];
-	const armPolicy = Object.fromEntries(approvedArmFields.filter((key) => armConfig[key] !== undefined).map((key) => [key, armConfig[key]]));
+	const armPolicy: Record<string, unknown> = Object.fromEntries(
+		approvedArmFields.filter((key) => armConfig[key] !== undefined).map((key) => [key, armConfig[key]]),
+	);
+
+	if (arm !== "no-skill") {
+		const generatedIndexes = asObject(protocol.generatedIndexes, "protocol.generatedIndexes");
+		armPolicy.currentGeneratedIndexDigests = Object.fromEntries(
+			progressiveSkillNames.map((skillName) => {
+				const generatedIndex = asObject(generatedIndexes[skillName], `protocol.generatedIndexes.${skillName}`);
+				const digest = asString(generatedIndex.digest, `protocol.generatedIndexes.${skillName}.digest`);
+
+				if (!sha256Pattern.test(digest)) {
+					throw new Error(`protocol.generatedIndexes.${skillName}.digest must be SHA-256.`);
+				}
+
+				return [skillName, digest];
+			}),
+		);
+		armPolicy.generatedIndexDigestContract =
+			"This mechanical dictionary contains all three current routing digests and discloses no activated-skill oracle. generatedIndexDigests must contain exactly activatedSkills in every routing pass, preserve activatedSkills order, and use the matching values from this dictionary.";
+	}
 	const identityDictionary: Record<string, string[]> = {};
 
 	if (arm === "full-handbook") {

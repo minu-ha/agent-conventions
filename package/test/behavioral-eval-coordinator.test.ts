@@ -274,6 +274,14 @@ test("coordinator persists a deterministic short dispatch and sealed child reque
 			"skill/typescript/SKILL.md",
 			"skill/css/SKILL.md",
 		]);
+		assert.deepEqual(
+			(fullHandbook.request.armPolicy as Record<string, unknown>).currentGeneratedIndexDigests,
+			fullHandbook.envelope.dispatchEnvelope.generatedIndexDigests,
+		);
+		assert.match(
+			String((fullHandbook.request.armPolicy as Record<string, unknown>).generatedIndexDigestContract),
+			/all three.*activatedSkills.*every routing pass/i,
+		);
 		assert.notEqual(fullHandbook.childPayloadPath, first.childPayloadPath);
 		assert.notEqual(fullHandbook.envelope.requestContentDigest, first.envelope.requestContentDigest);
 
