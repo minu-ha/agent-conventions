@@ -249,6 +249,23 @@ test("coordinator persists a deterministic short dispatch and sealed child reque
 		assert.match(String(payloadContract.semanticVerdicts), /criterion:string,verdict:'PASS'\|'FAIL'\|'UNKNOWN',reason:string/);
 		assert.match(String(payloadContract.limitations), /string\[\]/);
 		assert.match(String(payloadContract.response), /non-empty string/);
+		const routingValidation = JSON.stringify(payloadContract.routingValidation);
+		assert.match(routingValidation, /pass numbers.*consecutive.*1/i);
+		assert.match(routingValidation, /all string arrays.*non-empty.*unique.*no duplicate/i);
+		assert.match(routingValidation, /activatedSkills.*Selected.*append-only/i);
+		assert.match(routingValidation, /partition.*complete.*disjoint.*canonical rule order/i);
+		assert.match(routingValidation, /stablePair.*final two consecutive.*canonical state.*empty/i);
+		assert.match(routingValidation, /requiresSelected.*canonical.*order/i);
+		assert.match(routingValidation, /reviewWith.*target partition.*non-empty evidence/i);
+		assert.match(routingValidation, /reviewWith.*never.*select.*target/i);
+		const receiptValidation = JSON.stringify(payloadContract.receiptValidation);
+		assert.match(receiptValidation, /exactly.*final routing pass/i);
+		assert.match(receiptValidation, /excludedGroups.*exact.*N\/A.*duplicate/i);
+		assert.match(receiptValidation, /Expanded.*CRITICAL.*Selected or Unknown/i);
+		const declaredLoadValidation = JSON.stringify(payloadContract.declaredLoadValidation);
+		assert.match(declaredLoadValidation, /full-handbook.*SKILL\.md.*AGENTS\.md/i);
+		assert.match(declaredLoadValidation, /progressive.*SKILL\.md.*RULES_INDEX\.md.*Selected or Unknown.*CRITICAL.*full rule/i);
+		assert.match(JSON.stringify(payloadContract.driftValidation), /RTE02.*preserve.*initially activated.*Selected/i);
 		assert.equal(first.envelope.skillRootDir, protocol.skillRootDir);
 		assert.deepEqual(Object.keys(first.envelope.routingEvalRawSha256).sort(), [
 			"skill/css/routing-evals.json",
@@ -350,6 +367,35 @@ test("prepare and merge require the canonical clean repository skill source", as
 				skillRootDir: fixture.skillRootDir,
 			}),
 			/routing-evals.*raw bytes changed/i,
+		);
+	} finally {
+		await rm(fixtureDir, {recursive: true, force: true});
+	}
+});
+
+test("full-handbook identity dictionaries must exactly match current canonical source identities", async () => {
+	const fixtureDir = await mkdtemp(path.join(tmpdir(), "behavioral-identity-binding-"));
+
+	try {
+		const fixture = await createCleanRepositoryFixture(fixtureDir);
+		const protocol = JSON.parse(await readFile(fixture.protocolPath, "utf8")) as Record<string, unknown>;
+		const dictionaries = protocol.fullHandbookIdentityDictionaries as Record<string, string[]>;
+		dictionaries.react![0] = "R01|Stale title|components-keep-screen-files-thin";
+		await writeFile(fixture.protocolPath, `${JSON.stringify(protocol, null, 2)}\n`, "utf8");
+
+		await assert.rejects(
+			createBehavioralCoordinatorArtifacts({
+				protocolPath: fixture.protocolPath,
+				repositoryHead: fixture.head,
+				runId: "full-handbook--BASELINE-T--t1",
+				arm: "full-handbook",
+				scenarioId: "BASELINE-T",
+				trial: 1,
+				outputDir: path.join(fixtureDir, "runs"),
+				repositoryDir: fixture.repositoryDir,
+				skillRootDir: fixture.skillRootDir,
+			}),
+			/full-handbook identity dictionary.*react.*current canonical source/i,
 		);
 	} finally {
 		await rm(fixtureDir, {recursive: true, force: true});

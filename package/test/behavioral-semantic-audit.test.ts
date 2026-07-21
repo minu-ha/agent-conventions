@@ -322,6 +322,10 @@ const createFixture = async (): Promise<SemanticAuditFixture> => {
 	const criteriaRaw = `${JSON.stringify(criteria, null, 2)}\n`;
 	(protocol.repository as Record<string, unknown>).sourceHead = repositoryHead;
 	(protocol.repository as Record<string, unknown>).bindingStatus = "bound";
+	const identityDictionaries = protocol.fullHandbookIdentityDictionaries as Record<string, unknown>;
+	identityDictionaries.react = ["R01|Rule A|rule-a"];
+	identityDictionaries.typescript = ["T01|Rule A|rule-a"];
+	identityDictionaries.css = ["C01|Rule A|rule-a"];
 	for (const [skillName, digest] of Object.entries(generatedIndexDigests)) {
 		((protocol.generatedIndexes as Record<string, Record<string, unknown>>)[skillName] ?? {}).digest = digest;
 	}
@@ -544,6 +548,20 @@ test("criteria commitment, 34/8/8 blind matrix, merge, and aggregate form an ind
 				/"(?:arm|runId|trial|receipts|scoring|semanticVerdicts|completion)"\s*:|full-handbook|progressive|child self verdict/i,
 			);
 			const request = JSON.parse(requestRaw) as Record<string, unknown>;
+			const reviewerPayloadContract = request.reviewerPayloadContract as Record<string, unknown>;
+			assert.equal(reviewerPayloadContract.exactObjectKeysOnly, true);
+			assert.match(String(reviewerPayloadContract.topLevel), /schemaVersion:1.*batchId.*reviews.*limitations/i);
+			assert.match(String(reviewerPayloadContract.review), /sampleId.*criteria.*exact keys/i);
+			assert.match(
+				String(reviewerPayloadContract.criterion),
+				/criterionId.*verdict:'PASS'\|'FAIL'\|'UNKNOWN'.*reason.*evidence.*exact keys/i,
+			);
+			assert.match(String(reviewerPayloadContract.quoteEvidence), /kind:'quote'.*path.*state.*quote.*occurrence.*exact keys/i);
+			assert.match(String(reviewerPayloadContract.absenceEvidence), /kind:'absence'.*path.*state.*needle.*exact keys/i);
+			assert.match(
+				String(reviewerPayloadContract.coverage),
+				/every sample.*exactly once.*every committed criterion.*exactly once.*PASS\/FAIL.*at least one.*UNKNOWN.*empty/i,
+			);
 			const firstArtifact = (((request.samples as Record<string, unknown>[])[0]!.artifacts as Record<string, unknown>[])[0] ??
 				{}) as Record<string, unknown>;
 			assert.deepEqual(firstArtifact.before, {state: "absent", content: null, sha256: null});

@@ -354,6 +354,8 @@ export interface SemanticAuditReviewerRequest {
 	samples: SemanticAuditReviewerSample[];
 	/** @field reviewer payload evidence 계약 */
 	evidenceContract: string;
+	/** @field reviewer가 작성할 strict payload의 exact nested schema */
+	reviewerPayloadContract: Record<string, unknown>;
 	/** @field reviewer가 단독 작성할 payload 절대 경로 */
 	assignedReviewerPayloadPath: string;
 }
@@ -2228,6 +2230,20 @@ const createReviewerDispatch = (args: CreateReviewerDispatchArgs): string =>
 		"Use only the blinded task, committed criteria, current rule text, and before/after artifacts in the request; return concise status after writing.",
 	].join("\n");
 
+/** @helper strict parser와 동일한 reviewer-owned payload 계약 */
+const createReviewerPayloadContract = (): Record<string, unknown> => ({
+	exactObjectKeysOnly: true,
+	topLevel: "{schemaVersion:1,batchId:<request batchId>,reviews:Review[],limitations:string[]}; exact keys only",
+	review: "{sampleId:string,criteria:CriterionReview[]}; exact keys only",
+	criterion: "{criterionId:string,verdict:'PASS'|'FAIL'|'UNKNOWN',reason:non-empty-string,evidence:Evidence[]}; exact keys only",
+	quoteEvidence:
+		"{kind:'quote',path:<criterion evidencePath>,state:'before'|'after',quote:non-empty exact substring,occurrence:positive exact non-overlapping occurrence count}; exact keys only",
+	absenceEvidence:
+		"{kind:'absence',path:<criterion evidencePath>,state:'before'|'after',needle:non-empty substring absent from that artifact state}; exact keys only",
+	coverage:
+		"Review every sample exactly once and every committed criterion exactly once. PASS/FAIL require at least one verified evidence item; UNKNOWN may use an empty evidence array.",
+});
+
 /** @helper persisted matrix에서 deterministic request/envelope 재생성 */
 const createSemanticAuditBatchArtifacts = async (args: CreateSemanticAuditBatchArtifactsArgs): Promise<SemanticAuditBatchArtifacts> => {
 	const batch = args.matrix.batches.find(({batchId}) => batchId === args.batchId);
@@ -2267,6 +2283,7 @@ const createSemanticAuditBatchArtifacts = async (args: CreateSemanticAuditBatchA
 		samples,
 		evidenceContract:
 			"Review every sample and criterion exactly once. PASS/FAIL require verified evidence. quote evidence must name before or after and be an actual substring with its exact non-overlapping occurrence count; absence evidence must name before or after and a substring absent from that artifact. Do not infer source provenance or trust unverified source claims.",
+		reviewerPayloadContract: createReviewerPayloadContract(),
 		assignedReviewerPayloadPath: paths.reviewerPayloadPath,
 	};
 	assertBlindReviewerValue(request, "reviewer request");

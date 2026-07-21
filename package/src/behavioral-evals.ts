@@ -635,6 +635,40 @@ export const createBehavioralChildPayloadContract = (): Record<string, unknown> 
 		"null or {passes:Array<{pass:positive-integer,activatedSkills:string[],scopeEvidence:string[],generatedIndexDigests:Record<string,sha256>,selected:Record<string,string[]>,notApplicable:Record<string,string[]>,unknown:Record<string,string[]>,requiresSelectedEvaluated:Array<{source:string,target:string,sourceStatus:'Selected'|'Unknown',outcome:'selected'|'not-propagated-unknown'}>,requiresSelectedAdded:Array<{source:string,target:string}>,reviewWithReevaluated:Array<{source:string,target:string,outcome:'Selected'|'N/A'|'Unknown'|'INACTIVE',evidence:string}>,completionGatesEvaluated:Array<{rule:string,outcome:'selected'}>,completionGateAdded:string[]}>,stablePair:[positive-integer,positive-integer],stable:true}; exact keys only; selected/notApplicable/unknown values are stable rule ID strings without ordinals; source, target, and rule use qualifiedRuleRef; scopeEvidence is append-only across passes: preserve every prior string and append only new task facts or final-Selected mandatory requirements; never remove, replace, or rewrite earlier evidence; every pass exactly evaluates every disclosed mandatory edge from each Selected or Unknown source and must omit N/A sources because their contracts are not loaded; requiresSelectedAdded exactly lists every Selected mandatory edge whose target was not Selected in the previous pass; for pass 1 treat the previous selection as empty and include the edge even when the target is independently applicable; reviewWith exactly covers Selected sources; completionGatesEvaluated exactly covers every active completion gate; completionGateAdded exactly lists each completion gate that was not Selected in the previous pass, treating the previous selection for pass 1 as empty; candidate arms require at least three passes and an identical final stable pair with empty selection-changing deltas",
 	driftReceipt:
 		"null outside replacement-final RTE02; otherwise {routingTrace:<same exact routingTrace object>,activatedSkills:string[],receipts:<same exact receipts array>}; exact keys only",
+	routingValidation: {
+		passSequence: "Pass numbers are consecutive integers from 1 through N with no gap.",
+		arrayValues: "All string arrays contain non-empty unique values; edge, evaluation, and gate arrays contain no duplicate item.",
+		monotonic:
+			"activatedSkills and every per-skill Selected set are append-only across passes; scopeEvidence follows the same append-only rule declared in routingTrace.",
+		partitions:
+			"In every pass, selected/notApplicable/unknown record keys exactly equal activatedSkills in the same order. Each activated skill's current rule universe is complete, disjoint, duplicate-free, and each subset follows canonical rule order.",
+		stablePair:
+			"stablePair names the final two consecutive passes. Their canonical state is identical, stable is true, and both requiresSelectedAdded and completionGateAdded arrays are empty.",
+		transitionOrder:
+			"requiresSelectedEvaluated, requiresSelectedAdded, reviewWithReevaluated, completionGatesEvaluated, and completionGateAdded use canonical activated-skill, source-rule, and metadata order with no duplicate edge or gate.",
+		reviewWith:
+			"Every reviewWith outcome exactly matches the target partition: Selected, N/A, Unknown, or INACTIVE when the target skill is inactive. reviewWith never forces or selects a target. Every reviewWith record requires non-empty evidence.",
+		finalClosure:
+			"Final Unknown is empty; every required companion is activated; every completion gate and every requiresSelected target from a final Selected source is Selected.",
+	},
+	receiptValidation: {
+		finalMatch:
+			"Receipt skill order exactly matches activatedSkills, and every Selected/N/A/Unknown ordinal-stable-ID partition exactly matches the final routing pass in canonical rule order.",
+		exclusions:
+			"excludedGroups use non-empty reasons; their ordinal union exactly equals N/A, with no missing ordinal and no duplicate ordinal across groups.",
+		expansion:
+			"Expanded records are unique, use exact contract/full-rule paths, and belong to a rule that was Selected or Unknown in some pass. Every CRITICAL Selected or Unknown rule has exactly one Expanded record; full-handbook uses Expanded=[].",
+	},
+	declaredLoadValidation: {
+		fullHandbook:
+			"full-handbook paths are exactly each activated skill's SKILL.md then AGENTS.md in activatedSkills order; no contract, RULES_INDEX, rule, or extra path is allowed.",
+		progressive:
+			"progressive paths first list every activated SKILL.md then RULES_INDEX.md pair in activatedSkills order; next, per activated skill and canonical rule order, list each rule that was Selected or Unknown in any pass as its contract followed immediately, when CRITICAL or explicitly Expanded, by its full rule. No extra path is allowed.",
+		mutation:
+			"mutation prefixes skill/convention-audit/SKILL.md and skill/convention-audit/AGENTS.md, then follows the progressive sequence for its receipt-backed Selected/Unknown rules.",
+	},
+	driftValidation:
+		"For RTE02, the initial payload keeps driftReceipt null. The replacement-final episode uses the same routing/receipt validation and must preserve every initially activated skill and every initially Selected rule; the coordinator constructs final driftReceipt from the validated drift-stage top-level routingTrace, activatedSkills, and receipts.",
 	semanticVerdicts:
 		"Array<{criterion:string,verdict:'PASS'|'FAIL'|'UNKNOWN',reason:string}>; exact keys only; use [] when no criterion is declared",
 	completion:
@@ -1374,6 +1408,38 @@ const readSkillRoutingSnapshot = async (skillName: string, skillRootDir: string)
 		ordinalByRuleId: new Map(ruleIds.map((ruleId, index) => [ruleId, `${ordinalPrefix}${String(index + 1).padStart(2, "0")}`])),
 		ruleById: new Map(document.rules.map((rule) => [getRuleId(rule), rule])),
 	};
+};
+
+/**
+ * @api full-handbook ordinal/title/stable-ID dictionary를 current canonical source와 exact 비교
+ */
+export const assertBehavioralFullHandbookIdentityDictionary = async (
+	value: unknown,
+	skillRootDir = packagePaths.skillRootDir,
+): Promise<void> => {
+	const dictionary = assertJsonObject(value, "full-handbook identity dictionary");
+	const skillNames = ["react", "typescript", "css"];
+	const allowedKeys = new Set(["semantics", "promptOverheadLimitation", ...skillNames]);
+	const unexpectedKey = Object.keys(dictionary).find((key) => !allowedKeys.has(key));
+
+	if (unexpectedKey) {
+		throw new Error(`full-handbook identity dictionary contains unexpected key "${unexpectedKey}".`);
+	}
+
+	for (const skillName of skillNames) {
+		const snapshot = await readSkillRoutingSnapshot(skillName, skillRootDir);
+		const ordinalPrefix = getOrdinalPrefix(skillName);
+		const expected = snapshot.ruleIds.map((ruleId, index) => {
+			const title = snapshot.ruleById.get(ruleId)!.title.replace(/`/g, "");
+			return `${ordinalPrefix}${String(index + 1).padStart(2, "0")}|${title}|${ruleId}`;
+		});
+		const actual = parseStringArray(dictionary[skillName], `full-handbook identity dictionary.${skillName}`);
+		assertExactStringArray({
+			actual,
+			expected,
+			message: `full-handbook identity dictionary for ${skillName} must exactly match current canonical source identities.`,
+		});
+	}
 };
 
 const assertExactStringArray = (args: AssertExactStringArrayArgs): void => {

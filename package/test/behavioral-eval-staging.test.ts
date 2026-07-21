@@ -346,6 +346,19 @@ test("initial artifacts preserve the existing run coordinate and completely seal
 			String(first.request.childPayloadContract.semanticVerdicts),
 			/criterion:string,verdict:'PASS'\|'FAIL'\|'UNKNOWN',reason:string/,
 		);
+		const fullHandbook = await createStagedInitialArtifacts({
+			...args,
+			runId: `full-handbook--${scenarioId}--t1`,
+			arm: "full-handbook",
+			agentTarget: "/root/rte02-full-handbook-t1",
+		});
+		assert.deepEqual(
+			fullHandbook.request.armPolicy.currentGeneratedIndexDigests,
+			fullHandbook.envelope.dispatchEnvelope.generatedIndexDigests,
+		);
+		assert.match(String(fullHandbook.request.armPolicy.generatedIndexDigestContract), /all three.*activatedSkills.*every routing pass/i);
+		assert.doesNotMatch(String(fullHandbook.request.armPolicy.promptSuffix), /also return driftReceipt/i);
+		assert.match(String(fullHandbook.request.armPolicy.promptSuffix), /initial-stage.*top-level.*driftReceipt.*null/i);
 
 		const untrackedSkillSource = path.join(fixture.skillRootDir, "react", "untracked-staged-source.md");
 		await writeFile(untrackedSkillSource, "untracked\n", "utf8");
@@ -492,6 +505,11 @@ test("follow-up preparation reveals drift only after the sealed initial payload 
 		assert.equal(followup.envelope.initialSeal.sha256, sealed.sealSha256);
 		assert.equal(followup.envelope.initialPayload.sha256, sealed.seal.initialPayload.sha256);
 		assert.doesNotMatch(followup.requestRaw, /expectedSkills|expectedSelected|expectedNotApplicable|routing-evals/);
+		assert.doesNotMatch(String(followup.request.armPolicy.promptSuffix), /also return driftReceipt/i);
+		assert.match(
+			String(followup.request.armPolicy.promptSuffix),
+			/replacement-final.*top-level.*routingTrace.*activatedSkills.*receipts.*declaredLoadedFiles.*complete cumulative.*coordinator.*driftReceipt/i,
+		);
 
 		await writeFile(prepared.childPayloadPath, `${JSON.stringify({...fixture.initialPayload, response: "mutated"}, null, 2)}\n`, "utf8");
 		await assert.rejects(

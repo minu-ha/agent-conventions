@@ -5,6 +5,7 @@ import path from "node:path";
 import {promisify} from "node:util";
 
 import {
+	assertBehavioralFullHandbookIdentityDictionary,
 	createBehavioralChildPayloadContract,
 	createBehavioralEvalDispatchEnvelope,
 	type BehavioralEvalDispatchEnvelope,
@@ -1172,6 +1173,11 @@ export const createBehavioralCoordinatorArtifacts = async (
 
 	const protocolResult = await readJsonObject(path.resolve(args.protocolPath), "protocol");
 	const protocol = protocolResult.value;
+
+	if (args.arm === "full-handbook") {
+		await assertBehavioralFullHandbookIdentityDictionary(protocol.fullHandbookIdentityDictionaries, skillRootDir);
+	}
+
 	const coordinate = enumerateBehavioralEvalRunMatrix(protocol).find(
 		(item) => item.runId === args.runId && item.arm === args.arm && item.scenarioId === args.scenarioId && item.trial === args.trial,
 	);

@@ -6,6 +6,7 @@ import {promisify} from "node:util";
 
 import {scoreBehavioralEvalRun} from "./behavioral-eval-coordinator.js";
 import {
+	assertBehavioralFullHandbookIdentityDictionary,
 	createBehavioralChildPayloadContract,
 	createBehavioralEvalDispatchEnvelope,
 	type BehavioralEvalDispatchEnvelope,
@@ -760,7 +761,10 @@ const assertMatrixCoordinate = (protocol: JsonObject, arm: string, trial: number
 	}
 };
 
-const getApprovedArmPolicy = (protocol: JsonObject, arm: string): Record<string, unknown> => {
+const scopeDriftReceiptDirective =
+	"For scope drift, also return driftReceipt {routingTrace,activatedSkills,receipts} with an independently stable replacement-final trace that preserves initial activated skills and Selected rules.";
+
+const getApprovedArmPolicy = (protocol: JsonObject, arm: string, stage: "initial" | "drift"): Record<string, unknown> => {
 	const armConfig = asObject(asObject(protocol.arms, "protocol.arms")[arm], `protocol.arms.${arm}`);
 	const approvedFields = [
 		"allowedReads",
@@ -769,11 +773,44 @@ const getApprovedArmPolicy = (protocol: JsonObject, arm: string): Record<string,
 		"forbiddenReads",
 		"routingPassesRequired",
 		"receiptContract",
-		"promptSuffix",
 		"ordinalSemantics",
 	];
 
-	return Object.fromEntries(approvedFields.filter((key) => armConfig[key] !== undefined).map((key) => [key, armConfig[key]]));
+	const armPolicy: Record<string, unknown> = Object.fromEntries(
+		approvedFields.filter((key) => armConfig[key] !== undefined).map((key) => [key, armConfig[key]]),
+	);
+
+	if (arm !== "no-skill") {
+		const generatedIndexes = asObject(protocol.generatedIndexes, "protocol.generatedIndexes");
+		armPolicy.currentGeneratedIndexDigests = Object.fromEntries(
+			progressiveSkillNames.map((skillName) => {
+				const generatedIndex = asObject(generatedIndexes[skillName], `protocol.generatedIndexes.${skillName}`);
+				const digest = asString(generatedIndex.digest, `protocol.generatedIndexes.${skillName}.digest`);
+
+				if (!sha256Pattern.test(digest)) {
+					throw new Error(`protocol.generatedIndexes.${skillName}.digest must be SHA-256.`);
+				}
+
+				return [skillName, digest];
+			}),
+		);
+		armPolicy.generatedIndexDigestContract =
+			"This mechanical dictionary contains all three current routing digests and discloses no activated-skill oracle. generatedIndexDigests must contain exactly activatedSkills in every routing pass, preserve activatedSkills order, and use the matching values from this dictionary.";
+	}
+
+	const rawPromptSuffix = asString(armConfig.promptSuffix, `protocol.arms.${arm}.promptSuffix`);
+
+	if ((arm === "full-handbook" || arm === "progressive") && !rawPromptSuffix.includes(scopeDriftReceiptDirective)) {
+		throw new Error(`protocol.arms.${arm}.promptSuffix must contain the known scope-drift receipt directive before staged sanitization.`);
+	}
+
+	const stageSafePromptSuffix = rawPromptSuffix.replace(scopeDriftReceiptDirective, "").replace(/\s+/g, " ").trim();
+	armPolicy.promptSuffix =
+		stage === "initial"
+			? `${stageSafePromptSuffix} Initial-stage output uses the disclosed task only: return a complete top-level stage payload and keep driftReceipt null.`
+			: `${stageSafePromptSuffix} Replacement-final stage output returns complete top-level routingTrace, activatedSkills, receipts, and declaredLoadedFiles as the complete cumulative context, not a stage delta. Omit driftReceipt; the coordinator constructs final driftReceipt from these validated top-level fields.`;
+
+	return armPolicy;
 };
 
 const getIdentityDictionary = (protocol: JsonObject, arm: string): Record<string, string[]> => {
@@ -927,6 +964,11 @@ export const createStagedInitialArtifacts = async (args: CreateStagedInitialArti
 	await assertRepositoryBinding(repositoryDir, skillRootDir, args.repositoryHead);
 	const protocolResult = await readJsonObject(protocolPath, "protocol");
 	const protocol = protocolResult.value;
+
+	if (args.arm === "full-handbook") {
+		await assertBehavioralFullHandbookIdentityDictionary(protocol.fullHandbookIdentityDictionaries, skillRootDir);
+	}
+
 	assertMatrixCoordinate(protocol, args.arm, args.trial, args.runId);
 	const scenario = asObject(asObject(protocol.scenarios, "protocol.scenarios")[stagedScenarioId], `protocol.scenarios.${stagedScenarioId}`);
 	const initialTask = asString(scenario.basePrompt, `protocol.scenarios.${stagedScenarioId}.basePrompt`);
@@ -949,7 +991,7 @@ export const createStagedInitialArtifacts = async (args: CreateStagedInitialArti
 		virtualFiles,
 		activationPolicy: getActivationPolicy(args.arm, repositoryDir),
 		candidateSkillEntrypoints: getCandidateEntrypoints(args.arm),
-		armPolicy: getApprovedArmPolicy(protocol, args.arm),
+		armPolicy: getApprovedArmPolicy(protocol, args.arm, "initial"),
 		identityDictionary: getIdentityDictionary(protocol, args.arm),
 		childPayloadContract: getInitialPayloadContract(paths.initialChildPayloadPath),
 	};
@@ -1388,7 +1430,7 @@ export const createStagedFollowupArtifacts = async (args: CreateStagedFollowupAr
 		virtualFiles,
 		activationPolicy: getActivationPolicy(seal.arm, verifiedInitial.envelope.repositoryDir),
 		candidateSkillEntrypoints: getCandidateEntrypoints(seal.arm),
-		armPolicy: getApprovedArmPolicy(verifiedInitial.protocol, seal.arm),
+		armPolicy: getApprovedArmPolicy(verifiedInitial.protocol, seal.arm, "drift"),
 		identityDictionary: getIdentityDictionary(verifiedInitial.protocol, seal.arm),
 		childPayloadContract: getDriftPayloadContract(paths.driftChildPayloadPath),
 	};
