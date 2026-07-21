@@ -515,6 +515,8 @@ git commit -m "feat: add progressive React convention routing"
 
 ### Task 6: Migrate CSS Progressive Routing
 
+> **Execution oracle clarification:** a manifest scenario may activate its owner in the initial partition or first add it in a monotonic `scopeDrift`; it is invalid only when neither partition activates the owner. `css-route-style-scope-drift` therefore starts with React activation evidence plus a TypeScript partition and adds the CSS partition in drift. CSS ordinals and every selected/N/A array follow the generated `RULES_INDEX.md` codepoint order. The two existing `Prefer ...` titles make `composition-style-ui-components-through-owned-wrappers` C10 and `composition-prefer-ui-wrapper-prop-types` C11.
+
 **Files:**
 - Modify: `skill/css/metadata.json`
 - Modify: `skill/css/rules/_template.md`
@@ -524,11 +526,14 @@ git commit -m "feat: add progressive React convention routing"
 - Modify: `skill/css/SKILL.md`
 - Modify: `skill/css/pressure-tests.md`
 - Modify: `skill/css/README.md`
+- Modify: `package/src/routing-evals.ts`
 - Modify: `package/test/routing-evals.test.ts`
+- Modify: `package/test/documentation.test.ts`
 
 - [ ] **Step 1: Add and verify CSS RED assertions**
 
 Require 21 exact IDs, Appendix C routing metadata, complete exact CSS fixture partitions, and 100% positive rule coverage. Pure CSS fixture는 CSS만 partition하고, Appendix D mixed fixture는 이미 progressive인 TypeScript의 exact selected/N/A partition을 즉시 materialize한다. React는 아직 non-progressive activation evidence로만 남기며 Task 5가 React exact partition을 추가한다. Run focused tests and confirm failure is missing feature data.
+Also add a validator RED proving the owner may be absent initially and added in monotonic drift, while a scenario that omits the owner from both stages is rejected.
 
 - [ ] **Step 2: Migrate CSS metadata, rules, and template**
 
@@ -550,7 +555,7 @@ npm --prefix package run build:css
 npm --prefix package run check:generated:css
 ./package/node_modules/.bin/tsx --test package/test/progressive-loading.test.ts package/test/routing-evals.test.ts
 npm --prefix package run typecheck
-git add skill/css package/test/routing-evals.test.ts
+git add skill/css package/src/routing-evals.ts package/test/routing-evals.test.ts package/test/documentation.test.ts
 git commit -m "feat: add progressive CSS convention routing"
 ```
 
@@ -1028,8 +1033,8 @@ CSS metadata declares one conditional companion exactly: `{"skill":"typescript",
 | `composition-compose-classes-with-clsx` | TSX의 `className`을 추가·수정하거나 base class, modifier, optional class를 조합한다. | — |
 | `composition-do-not-build-structural-variants-with-modifiers` | spacing·방향·특정 화면의 구조 차이를 `--modifier`로 추가하려 하거나 modifier가 반복 가능한 상태 또는 API variant인지 판단한다. | `naming-name-elements-and-modifiers-by-role` |
 | `composition-keep-classes-single-purpose` | base class 이름에 상태·variant 의미를 합치거나 한 class에 서로 독립적인 시각 책임을 추가·재사용·분리한다. | — |
-| `composition-prefer-ui-wrapper-prop-types` | `Ui*` wrapper 사용처나 wrapper API에서 Props 타입을 선언·추론·재사용하고 라이브러리 원본 Props 참조를 검토한다. | `typescript/types-reuse-existing-contracts-before-new-types` |
 | `composition-style-ui-components-through-owned-wrappers` | `Ui*` wrapper의 내부 DOM을 스타일링하거나 root `className` 또는 slot prop을 styling hook으로 주입·노출·사용한다. | `selector-target-third-party-dom-from-owned-roots` |
+| `composition-prefer-ui-wrapper-prop-types` | `Ui*` wrapper 사용처나 wrapper API에서 Props 타입을 선언·추론·재사용하고 라이브러리 원본 Props 참조를 검토한다. | `typescript/types-reuse-existing-contracts-before-new-types` |
 | `selector-avoid-deep-descendant-dependencies` | descendant 또는 child selector chain을 추가·수정하거나 DOM 계층에 의존하는 project-owned·third-party selector를 검토한다. | — |
 | `selector-keep-project-selectors-flat` | project-owned class를 중첩·descendant selector로 연결하거나 raw HTML prose·copy·content wrapper 안 element selector를 추가·수정한다. | — |
 | `selector-target-third-party-dom-from-owned-roots` | `.ant-*`, `.rc-*`, `.tippy-*` 등 third-party 내부 DOM selector를 추가·수정하거나 owned wrapper 아래로 범위를 제한한다. | `selector-avoid-deep-descendant-dependencies` |
@@ -1072,7 +1077,7 @@ Define `U_CSS` as these 21 IDs. Every final fixture explicitly stores `expectedN
 6. `css-ui-wrapper-root-prop-contract`
    - Evidence/files: directly type-import the official root className Props, expose documented `UiButtonProps`, destructure props inside `ui-button.tsx`, and pass an existing layout class from `order-actions.tsx`; add no internal selector or new class.
    - Skills: `react`, `typescript`, `css`
-   - CSS selected: `composition-compose-classes-with-clsx`, `composition-prefer-ui-wrapper-prop-types`, `composition-style-ui-components-through-owned-wrappers`, `organization-review-banned-css-patterns-before-finishing`
+   - CSS selected: `composition-compose-classes-with-clsx`, `composition-style-ui-components-through-owned-wrappers`, `composition-prefer-ui-wrapper-prop-types`, `organization-review-banned-css-patterns-before-finishing`
 
 7. `css-rich-text-owner-block`
    - Evidence/files: move top-level `.wg_entryDetail__prose h2` and `> :first-child` into existing owner-block raw-element nesting; class names and values stay unchanged.
@@ -1098,6 +1103,26 @@ Define `U_CSS` as these 21 IDs. Every final fixture explicitly stores `expectedN
     - Evidence/files: flatten `.layout .panel .detail .item` to a target element top-level block without changing class names or values.
     - Skills: `css`
     - CSS selected: `selector-avoid-deep-descendant-dependencies`, `selector-keep-project-selectors-flat`, `organization-review-banned-css-patterns-before-finishing`
+
+### CSS fixture prompt and file normalization
+
+The following strings and paths are the exact JSON oracle for Task 6. They make the abbreviated Appendix C file references deterministic without changing the routing meaning.
+
+| Scenario/stage | Exact prompt or drift evidence | Exact files |
+|---|---|---|
+| `css-route-style-scope-drift` initial | `pure rendering change in src/routes/catalog/index.tsx, with React and TypeScript only.` | `src/routes/catalog/index.tsx` |
+| `css-route-style-scope-drift` drift | `add route-owned empty-state className, src/routes/catalog/_index.css, and its direct side-effect import in a project without a CSS Modules standard; final skills add CSS.` | `src/routes/catalog/index.tsx`, `src/routes/catalog/_index.css` |
+| `css-owner-boundary-split` | `split mixed route/document/local ownership from posts/_index.css into pages/_document.css and posts/_local/filter-dialog.css; class names do not change.` | `src/routes/posts/_index.css`, `src/pages/_document.css`, `src/routes/posts/_local/filter-dialog.css` |
+| `css-domain-state-class-contract` | `split listButtonActive into base plus --active, add a direct clsx import, and compose with clsx() in catalog/index.tsx and _index.css; do not change pseudo-states.` | `src/routes/catalog/index.tsx`, `src/routes/catalog/_index.css` |
+| `css-one-off-structural-modifier` | `replace non-repeatable section--compactTop spacing patch with a role-named element in catalog/detail.tsx and detail.css; keep the existing clsx import.` | `src/routes/catalog/detail.tsx`, `src/routes/catalog/detail.css` |
+| `css-ui-wrapper-third-party-dom` initial | `add a direct clsx import and style UiCollapse Ant DOM from a new owned wrapper with the shortest chain in post-filter-dialog.tsx and post-filter-dialog.css; keep the existing hard-coded wrapper color.` | `src/routes/posts/_local/post-filter-dialog.tsx`, `src/routes/posts/_local/post-filter-dialog.css` |
+| `css-ui-wrapper-third-party-dom` drift | `replace the hard-coded wrapper color with an optional CSS variable and provide its fallback.` | `src/routes/posts/_local/post-filter-dialog.tsx`, `src/routes/posts/_local/post-filter-dialog.css` |
+| `css-ui-wrapper-root-prop-contract` | `directly type-import the official root className Props, expose documented UiButtonProps, destructure props inside ui-button.tsx, and pass an existing layout class from order-actions.tsx; add no internal selector or new class.` | `src/components/ui/button/ui-button.tsx`, `src/routes/orders/order-actions.tsx` |
+| `css-rich-text-owner-block` | `move top-level .wg_entryDetail__prose h2 and > :first-child into existing owner-block raw-element nesting; class names and values stay unchanged.` | `src/components/widgets/entry-detail/wg-entry-detail.css` |
+| `css-dom-interaction-states` | `move top-level hover/focus/disabled into the same class block's &: nesting and preserve the focus ring; no app modifier or value is added.` | `src/components/ui/button/ui-button.css` |
+| `css-repeated-values-and-optional-token` | `replace repeated color/spacing/radius in theme-preview.css with optional CSS variables and fallbacks; selectors and ownership stay unchanged.` | `src/components/ui/theme-preview/theme-preview.css` |
+| `css-sticky-layout-intent` | `clarify sticky basis and z-index ownership and remove excessive width/height forcing in dashboard/_index.css; tokens and selectors stay unchanged.` | `src/routes/dashboard/_index.css` |
+| `css-deep-project-descendant-chain` | `flatten .layout .panel .detail .item to a target element top-level block without changing class names or values.` | `src/routes/catalog/_index.css` |
 
 ## Appendix D: Cross-Skill Companion Oracle
 
@@ -1133,7 +1158,8 @@ Task 5 creates this React fixture after CSS is already progressive. Therefore ma
 Pure CSS fixtures intentionally activate no React or TypeScript index. The mixed sets are:
 
 - `css-route-style-scope-drift`
-  - TypeScript: `naming-use-direct-imports-and-public-entry-points`, `guardrails-review-banned-typescript-shortcuts-before-finishing`.
+  - Initial TypeScript: `guardrails-review-banned-typescript-shortcuts-before-finishing`.
+  - Drift TypeScript: `naming-use-direct-imports-and-public-entry-points`, `guardrails-review-banned-typescript-shortcuts-before-finishing`.
   - React: `ownership-place-route-local-files-by-scope`, added only after drift.
 - `css-domain-state-class-contract`
   - TypeScript: `naming-use-direct-imports-and-public-entry-points`, `guardrails-review-banned-typescript-shortcuts-before-finishing`.
