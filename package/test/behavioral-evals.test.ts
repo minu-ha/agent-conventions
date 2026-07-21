@@ -115,24 +115,6 @@ const createValidFixture = async (): Promise<BehavioralFixture> => {
 	});
 	const createRequiresSelectedEvaluations = () => [
 		{
-			source: "typescript/types-reuse-callback-signatures-from-existing-contracts",
-			target: "typescript/types-prefer-function-variable-types-over-parameter-annotations",
-			sourceStatus: "N/A",
-			outcome: "not-propagated-na",
-		},
-		{
-			source: "typescript/functions-replace-enum-with-as-const-objects",
-			target: "typescript/naming-use-consistent-file-and-symbol-naming",
-			sourceStatus: "N/A",
-			outcome: "not-propagated-na",
-		},
-		{
-			source: "typescript/functions-replace-enum-with-as-const-objects",
-			target: "typescript/types-document-custom-types-and-shapes",
-			sourceStatus: "N/A",
-			outcome: "not-propagated-na",
-		},
-		{
 			source: "typescript/docs-require-header-jsdoc-on-key-declarations",
 			target: "typescript/docs-standardize-annotation-tags-by-declaration-role",
 			sourceStatus: "Selected",
@@ -959,7 +941,19 @@ test("COMPLETE status rejects nonzero coverage, semantic FAIL, or semantic UNKNO
 	);
 });
 
-test("validator records Unknown-first and N/A negative requiresSelected outcomes without propagation", async () => {
+test("validator omits hidden N/A mandatory edges that the progressive index does not disclose", async () => {
+	const fixture = await createValidFixture();
+	const run = cloneJson(fixture.run);
+	const trace = run.routingTrace as {passes: Array<{requiresSelectedEvaluated: Array<{sourceStatus: string}>}>};
+
+	for (const pass of trace.passes) {
+		pass.requiresSelectedEvaluated = pass.requiresSelectedEvaluated.filter(({sourceStatus}) => sourceStatus !== "N/A");
+	}
+
+	await validateBehavioralEvalRun({run, dispatchEnvelope: fixture.dispatch, skillRootDir: packagePaths.skillRootDir});
+});
+
+test("validator records Unknown mandatory outcomes and omits N/A source edges without propagation", async () => {
 	const fixture = await createValidFixture();
 	const mutatedRun = cloneJson(fixture.run);
 	const sourceRuleId = "docs-require-header-jsdoc-on-key-declarations";
@@ -997,11 +991,7 @@ test("validator records Unknown-first and N/A negative requiresSelected outcomes
 		pass.selected.typescript = pass.selected.typescript.filter((ruleId) => ruleId !== sourceRuleId);
 		pass.notApplicable.typescript.push(sourceRuleId);
 		sortRuleIds(pass.notApplicable.typescript);
-
-		for (const evaluation of pass.requiresSelectedEvaluated.filter(({source}) => source === `typescript/${sourceRuleId}`)) {
-			evaluation.sourceStatus = "N/A";
-			evaluation.outcome = "not-propagated-na";
-		}
+		pass.requiresSelectedEvaluated = pass.requiresSelectedEvaluated.filter(({source}) => source !== `typescript/${sourceRuleId}`);
 	}
 
 	const movedReference = receipts[0]?.selected.find(({id}) => id === sourceRuleId);

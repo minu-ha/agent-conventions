@@ -632,7 +632,7 @@ export const createBehavioralChildPayloadContract = (): Record<string, unknown> 
 	receipts:
 		"Array<{skill:string,indexDigest:sha256|null,selected:Array<{ordinal:string,id:string}>,notApplicable:Array<{ordinal:string,id:string}>,unknown:Array<{ordinal:string,id:string}>,excludedGroups:Array<{ordinals:string[],reason:string}>,expanded:Array<{ordinal:string,id:string,contractPath:string,fullRulePath:string,reason:string,mandatoryCritical:boolean}>}>; exact keys only; ordinal is a string such as T05; full-handbook indexDigest is null, progressive/mutation uses the current digest",
 	routingTrace:
-		"null or {passes:Array<{pass:positive-integer,activatedSkills:string[],scopeEvidence:string[],generatedIndexDigests:Record<string,sha256>,selected:Record<string,string[]>,notApplicable:Record<string,string[]>,unknown:Record<string,string[]>,requiresSelectedEvaluated:Array<{source:string,target:string,sourceStatus:'Selected'|'N/A'|'Unknown',outcome:'selected'|'not-propagated-unknown'|'not-propagated-na'}>,requiresSelectedAdded:Array<{source:string,target:string}>,reviewWithReevaluated:Array<{source:string,target:string,outcome:'Selected'|'N/A'|'Unknown'|'INACTIVE',evidence:string}>,completionGatesEvaluated:Array<{rule:string,outcome:'selected'}>,completionGateAdded:string[]}>,stablePair:[positive-integer,positive-integer],stable:true}; exact keys only; selected/notApplicable/unknown values are stable rule ID strings without ordinals; source, target, and rule use qualifiedRuleRef; candidate arms require at least three passes and an identical final stable pair with empty selection-changing deltas",
+		"null or {passes:Array<{pass:positive-integer,activatedSkills:string[],scopeEvidence:string[],generatedIndexDigests:Record<string,sha256>,selected:Record<string,string[]>,notApplicable:Record<string,string[]>,unknown:Record<string,string[]>,requiresSelectedEvaluated:Array<{source:string,target:string,sourceStatus:'Selected'|'Unknown',outcome:'selected'|'not-propagated-unknown'}>,requiresSelectedAdded:Array<{source:string,target:string}>,reviewWithReevaluated:Array<{source:string,target:string,outcome:'Selected'|'N/A'|'Unknown'|'INACTIVE',evidence:string}>,completionGatesEvaluated:Array<{rule:string,outcome:'selected'}>,completionGateAdded:string[]}>,stablePair:[positive-integer,positive-integer],stable:true}; exact keys only; selected/notApplicable/unknown values are stable rule ID strings without ordinals; source, target, and rule use qualifiedRuleRef; every pass exactly evaluates every disclosed mandatory edge from each Selected or Unknown source and must omit N/A sources because their contracts are not loaded; reviewWith exactly covers Selected sources; completionGatesEvaluated exactly covers every active completion gate; candidate arms require at least three passes and an identical final stable pair with empty selection-changing deltas",
 	driftReceipt:
 		"null outside replacement-final RTE02; otherwise {routingTrace:<same exact routingTrace object>,activatedSkills:string[],receipts:<same exact receipts array>}; exact keys only",
 	semanticVerdicts:
@@ -1958,6 +1958,10 @@ const createExpectedRequiresSelectedEvaluations = (args: CreateExpectedRequiresS
 			const source = `${skillName}/${ruleId}`;
 			const sourceStatus = getRulePartitionStatus({pass, skillName, ruleId, label: `requiresSelected source "${source}"`});
 
+			if (sourceStatus === "N/A") {
+				continue;
+			}
+
 			for (const target of rule.requiresSelected) {
 				const qualifiedTarget = getQualifiedTarget(skillName, target);
 				const [targetSkill, targetRuleId] = getQualifiedRuleParts(qualifiedTarget, `${source} requiresSelected`);
@@ -1971,9 +1975,7 @@ const createExpectedRequiresSelectedEvaluations = (args: CreateExpectedRequiresS
 					outcome = "selected";
 				} else if (sourceStatus === "Unknown") {
 					outcome = "not-propagated-unknown";
-				} else {
-					outcome = "not-propagated-na";
-				}
+				} else outcome = "not-propagated-unknown";
 
 				evaluations.push({source, target: qualifiedTarget, sourceStatus, outcome});
 			}
@@ -2082,7 +2084,7 @@ const assertTraceTransitions = (trace: RoutingTrace, snapshots: Map<string, Skil
 		assertExactStringArray({
 			actual: pass.requiresSelectedEvaluated.map(({source, target}) => `${source}->${target}`),
 			expected: expectedRequiresSelectedEvaluations.map(({source, target}) => `${source}->${target}`),
-			message: `run.routingTrace pass ${pass.pass}.requiresSelectedEvaluated must exactly cover every current mandatory edge.`,
+			message: `run.routingTrace pass ${pass.pass}.requiresSelectedEvaluated must exactly cover every disclosed mandatory edge from Selected or Unknown sources.`,
 		});
 
 		for (const [evaluationIndex, actualEvaluation] of pass.requiresSelectedEvaluated.entries()) {
