@@ -62,6 +62,37 @@ export interface SkillPaths {
 	 * @field compiled AGENTS.md 출력 파일 경로
 	 */
 	outputPath: string;
+	/**
+	 * @field compact RULES_INDEX.md 출력 파일 경로
+	 */
+	rulesIndexPath: string;
+	/**
+	 * @field routing evaluation manifest 파일 경로
+	 */
+	routingEvalsPath: string;
+}
+
+/**
+ * @summary companion skill 활성화 방식
+ */
+export type CompanionMode = "required" | "conditional";
+
+/**
+ * @summary progressive skill이 선언한 companion skill 관계
+ */
+export interface SkillCompanion {
+	/**
+	 * @field companion skill 디렉터리 이름
+	 */
+	skill: string;
+	/**
+	 * @field companion skill을 항상 또는 조건부로 활성화할지 여부
+	 */
+	mode: CompanionMode;
+	/**
+	 * @field conditional companion 활성화 조건
+	 */
+	appliesWhen?: string;
 }
 
 /**
@@ -96,6 +127,14 @@ export interface SkillMetadata {
 	 * @field compiled guide 마지막에 노출할 참고 링크 목록
 	 */
 	references?: string[];
+	/**
+	 * @field compact routing index를 사용하는 progressive skill 여부
+	 */
+	progressiveDisclosure?: boolean;
+	/**
+	 * @field 현재 skill이 직접 선언한 companion skill 관계 목록
+	 */
+	companions?: SkillCompanion[];
 }
 
 /**
@@ -204,6 +243,14 @@ export interface SkillRule {
 	 * @field rule 탐색과 분류용 태그 목록
 	 */
 	tags: string[];
+	/**
+	 * @field 작업 범위에 rule을 선택해야 하는 한 줄 조건
+	 */
+	appliesWhen?: string;
+	/**
+	 * @field 함께 검토할 local 또는 companion rule stable ID 목록
+	 */
+	reviewWith: string[];
 	/**
 	 * @field frontmatter를 제외한 markdown 본문
 	 */

@@ -3,6 +3,7 @@ import {access, readdir} from "node:fs/promises";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
 
+import {assertValidSkillName} from "./dependencies.js";
 import type {CliArgs, PackagePaths, SkillPaths} from "./types.js";
 
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
@@ -37,8 +38,14 @@ export const parseCliArgs = (args: string[]): CliArgs => {
 /**
  * @helper 단일 skill 작업용 경로 묶음 계산
  */
-export const getSkillPaths = (skillName: string): SkillPaths => {
-	const skillDir = path.join(skillRootDir, skillName);
+export const getSkillPaths = (skillName: string, targetSkillRootDir: string = skillRootDir): SkillPaths => {
+	assertValidSkillName(skillName);
+	const resolvedSkillRootDir = path.resolve(targetSkillRootDir);
+	const skillDir = path.resolve(resolvedSkillRootDir, skillName);
+
+	if (path.dirname(skillDir) !== resolvedSkillRootDir) {
+		throw new Error(`Skill: invalid skill name "${skillName}". Resolved path must remain an immediate child of the skill root.`);
+	}
 
 	return {
 		skillName,
@@ -47,14 +54,16 @@ export const getSkillPaths = (skillName: string): SkillPaths => {
 		metadataPath: path.join(skillDir, "metadata.json"),
 		sectionsPath: path.join(skillDir, "rules", "_sections.md"),
 		outputPath: path.join(skillDir, "AGENTS.md"),
+		rulesIndexPath: path.join(skillDir, "RULES_INDEX.md"),
+		routingEvalsPath: path.join(skillDir, "routing-evals.json"),
 	};
 };
 
 /**
  * @description `skill/` 루트 디렉터리 아래 build 후보 skill 목록 조회
  */
-export const listSkillNames = async (): Promise<string[]> => {
-	const entries = await readdir(skillRootDir, {withFileTypes: true});
+export const listSkillNames = async (targetSkillRootDir: string = skillRootDir): Promise<string[]> => {
+	const entries = await readdir(targetSkillRootDir, {withFileTypes: true});
 
 	return entries
 		.filter((entry) => entry.isDirectory())
@@ -65,8 +74,8 @@ export const listSkillNames = async (): Promise<string[]> => {
 /**
  * @description `rules/` 기반 build/validate 대상 skill 여부 확인
  */
-export const isBuildableSkill = async (skillName: string): Promise<boolean> => {
-	const skillPaths = getSkillPaths(skillName);
+export const isBuildableSkill = async (skillName: string, targetSkillRootDir: string = skillRootDir): Promise<boolean> => {
+	const skillPaths = getSkillPaths(skillName, targetSkillRootDir);
 
 	try {
 		await access(skillPaths.metadataPath, constants.F_OK);

@@ -1,34 +1,62 @@
+import {realpath} from "node:fs/promises";
+import path from "node:path";
+import {fileURLToPath} from "node:url";
+
 import {getSkillPaths, isBuildableSkill, listSkillNames, parseCliArgs} from "./config.js";
+import {assertRoutingCondition, parseDependencyDeclaration} from "./dependencies.js";
+import type {DependencyDeclaration} from "./dependencies.js";
 import {readSkillDocument, readSkillRuleFileNames} from "./parser.js";
-import type {SkillPaths} from "./types.js";
+import type {LoadedSkillDocument, SkillMetadata, SkillPaths} from "./types.js";
+
+interface LocalValidationResult {
+	/**
+	 * @field 검증한 local skill 문서
+	 */
+	document: LoadedSkillDocument;
+	/**
+	 * @field 직접 dependency 선언 정보
+	 */
+	dependencies: DependencyDeclaration;
+	/**
+	 * @field local rule 파일 개수
+	 */
+	ruleCount: number;
+	/**
+	 * @field local section 개수
+	 */
+	sectionCount: number;
+}
+
+/**
+ * @helper metadata dependency 선언을 상호 배타적으로 검증하고 정규화
+ */
+const validateMetadata = (skillName: string, metadata: SkillMetadata): DependencyDeclaration => {
+	const rawMetadata = metadata as unknown as Record<string, unknown>;
+	const dependencies = parseDependencyDeclaration(skillName, metadata);
+
+	for (const requiredKey of ["title", "version", "organization", "abstract"] as const) {
+		const value = rawMetadata[requiredKey];
+
+		if (typeof value !== "string" || value.trim().length === 0) {
+			throw new Error(`${skillName}: metadata.json must include ${requiredKey}.`);
+		}
+	}
+
+	if (rawMetadata.progressiveDisclosure !== undefined && typeof rawMetadata.progressiveDisclosure !== "boolean") {
+		throw new Error(`${skillName}: metadata.json field "progressiveDisclosure" must be a boolean.`);
+	}
+
+	return dependencies;
+};
 
 /**
  * @helper 단일 skill 문서 형식을 local source 기준으로 검증
  */
-const validateLocalSkill = async (skillPaths: SkillPaths): Promise<{extendsCount: number; ruleCount: number; sectionCount: number}> => {
+const validateLocalSkill = async (skillPaths: SkillPaths): Promise<LocalValidationResult> => {
 	const document = await readSkillDocument(skillPaths);
 	const {metadata, rules, sections} = document;
 	const ruleFileNames = await readSkillRuleFileNames(skillPaths);
-
-	for (const requiredKey of ["title", "version", "organization", "abstract"] as const) {
-		if (!metadata[requiredKey]) {
-			throw new Error(`${skillPaths.skillName}: metadata.json must include ${requiredKey}.`);
-		}
-	}
-
-	if (metadata.extends !== undefined) {
-		if (!Array.isArray(metadata.extends)) {
-			throw new Error(`${skillPaths.skillName}: metadata.json field "extends" must be an array of skill names.`);
-		}
-
-		if (metadata.extends.some((skillName) => skillName.trim().length === 0)) {
-			throw new Error(`${skillPaths.skillName}: metadata.json field "extends" must contain non-empty skill names.`);
-		}
-
-		if (new Set(metadata.extends).size !== metadata.extends.length) {
-			throw new Error(`${skillPaths.skillName}: metadata.json field "extends" must not contain duplicates.`);
-		}
-	}
+	const dependencies = validateMetadata(skillPaths.skillName, metadata);
 
 	if (sections.length === 0) {
 		throw new Error(`${skillPaths.skillName}: rules/_sections.md must define at least one section.`);
@@ -57,51 +85,132 @@ const validateLocalSkill = async (skillPaths: SkillPaths): Promise<{extendsCount
 			throw new Error(`${skillPaths.skillName}: ${rule.fileName} is missing frontmatter key "tags".`);
 		}
 
+		if (metadata.progressiveDisclosure === true) {
+			assertRoutingCondition(rule.appliesWhen, `${skillPaths.skillName}: ${rule.fileName} appliesWhen`);
+		}
+
+		if (new Set(rule.reviewWith).size !== rule.reviewWith.length) {
+			throw new Error(`${skillPaths.skillName}: ${rule.fileName} reviewWith must not contain duplicates.`);
+		}
+
 		if (!rule.body.includes("**Incorrect") || !rule.body.includes("**Correct")) {
 			throw new Error(`${skillPaths.skillName}: ${rule.fileName} must contain Incorrect and Correct sections.`);
 		}
 	}
 
-	return {extendsCount: metadata.extends?.length ?? 0, ruleCount: ruleFileNames.length, sectionCount: sections.length};
+	return {document, dependencies, ruleCount: ruleFileNames.length, sectionCount: sections.length};
 };
 
 /**
- * @helper `extends`를 따라 companion skill까지 재귀적으로 검증
+ * @helper dependency 그래프를 순회하며 각 skill을 한 번씩 검증
  */
 const validateSkillTree = async (
 	skillPaths: SkillPaths,
-	lineage: string[] = [],
-	validatedSkillNames: Set<string> = new Set(),
-): Promise<void> => {
-	if (validatedSkillNames.has(skillPaths.skillName)) {
-		return;
+	lineage: string[],
+	validatedSkillNames: Set<string>,
+	documents: Map<string, LoadedSkillDocument>,
+	dependenciesBySkill: Map<string, DependencyDeclaration>,
+): Promise<LocalValidationResult> => {
+	const cachedDocument = documents.get(skillPaths.skillName);
+	const cachedDependencies = dependenciesBySkill.get(skillPaths.skillName);
+
+	if (validatedSkillNames.has(skillPaths.skillName) && cachedDocument && cachedDependencies) {
+		return {
+			document: cachedDocument,
+			dependencies: cachedDependencies,
+			ruleCount: cachedDocument.rules.length,
+			sectionCount: cachedDocument.sections.length,
+		};
 	}
 
-	const {extendsCount} = await validateLocalSkill(skillPaths);
-
-	if (extendsCount === 0) {
-		validatedSkillNames.add(skillPaths.skillName);
-		return;
-	}
-
-	const {metadata} = await readSkillDocument(skillPaths);
+	const localResult = await validateLocalSkill(skillPaths);
+	documents.set(skillPaths.skillName, localResult.document);
+	dependenciesBySkill.set(skillPaths.skillName, localResult.dependencies);
 	const nextLineage = [...lineage, skillPaths.skillName];
+	const targetSkillRootDir = path.dirname(skillPaths.skillDir);
 
-	for (const inheritedSkillName of metadata.extends ?? []) {
-		if (nextLineage.includes(inheritedSkillName)) {
-			throw new Error(`Circular skill extends detected: ${[...nextLineage, inheritedSkillName].join(" -> ")}.`);
+	for (const dependencyName of localResult.dependencies.skillNames) {
+		if (nextLineage.includes(dependencyName)) {
+			throw new Error(`Circular skill ${localResult.dependencies.kind} detected: ${[...nextLineage, dependencyName].join(" -> ")}.`);
 		}
 
-		const buildable = await isBuildableSkill(inheritedSkillName);
-
-		if (!buildable) {
-			throw new Error(`Extended skill "${inheritedSkillName}" referenced by "${skillPaths.skillName}" is not buildable.`);
+		if (!(await isBuildableSkill(dependencyName, targetSkillRootDir))) {
+			const dependencyLabel = localResult.dependencies.kind === "extends" ? "Extended" : "Companion";
+			throw new Error(`${dependencyLabel} skill "${dependencyName}" referenced by "${skillPaths.skillName}" is not buildable.`);
 		}
 
-		await validateSkillTree(getSkillPaths(inheritedSkillName), nextLineage, validatedSkillNames);
+		await validateSkillTree(
+			getSkillPaths(dependencyName, targetSkillRootDir),
+			nextLineage,
+			validatedSkillNames,
+			documents,
+			dependenciesBySkill,
+		);
 	}
 
 	validatedSkillNames.add(skillPaths.skillName);
+	return localResult;
+};
+
+/**
+ * @helper skill dependency 그래프에서 도달 가능한 skill 이름 수집
+ */
+const collectReachableSkillNames = (
+	skillName: string,
+	dependenciesBySkill: Map<string, DependencyDeclaration>,
+	collected: Set<string> = new Set(),
+): Set<string> => {
+	for (const dependencyName of dependenciesBySkill.get(skillName)?.skillNames ?? []) {
+		if (collected.has(dependencyName)) {
+			continue;
+		}
+
+		collected.add(dependencyName);
+		collectReachableSkillNames(dependencyName, dependenciesBySkill, collected);
+	}
+
+	return collected;
+};
+
+/**
+ * @helper local 및 reachable companion reviewWith stable ID 검증
+ */
+const validateReviewTargets = (
+	documents: Map<string, LoadedSkillDocument>,
+	dependenciesBySkill: Map<string, DependencyDeclaration>,
+): void => {
+	for (const [skillName, document] of documents) {
+		const localRuleIds = new Set(document.rules.map((rule) => rule.fileName.replace(/\.md$/, "")));
+		const reachableSkillNames = collectReachableSkillNames(skillName, dependenciesBySkill);
+
+		for (const rule of document.rules) {
+			for (const target of rule.reviewWith) {
+				const separatorIndex = target.indexOf("/");
+
+				if (separatorIndex === -1) {
+					if (!localRuleIds.has(target)) {
+						throw new Error(`${skillName}: ${rule.fileName} has unknown reviewWith target "${target}".`);
+					}
+
+					continue;
+				}
+
+				const targetSkillName = target.slice(0, separatorIndex);
+				const targetRuleId = target.slice(separatorIndex + 1);
+
+				if (!targetSkillName || !targetRuleId || targetRuleId.includes("/") || !reachableSkillNames.has(targetSkillName)) {
+					throw new Error(`${skillName}: ${rule.fileName} has unreachable reviewWith target "${target}".`);
+				}
+
+				const targetDocument = documents.get(targetSkillName);
+				const targetExists = targetDocument?.rules.some((targetRule) => targetRule.fileName.replace(/\.md$/, "") === targetRuleId);
+
+				if (!targetExists) {
+					throw new Error(`${skillName}: ${rule.fileName} has unknown reviewWith target "${target}".`);
+				}
+			}
+		}
+	}
 };
 
 /**
@@ -109,12 +218,17 @@ const validateSkillTree = async (
  */
 export const validateSkill = async (skillPaths: SkillPaths): Promise<void> => {
 	const validatedSkillNames = new Set<string>();
-	const {extendsCount, ruleCount, sectionCount} = await validateLocalSkill(skillPaths);
+	const documents = new Map<string, LoadedSkillDocument>();
+	const dependenciesBySkill = new Map<string, DependencyDeclaration>();
+	const rootResult = await validateSkillTree(skillPaths, [], validatedSkillNames, documents, dependenciesBySkill);
 
-	await validateSkillTree(skillPaths, [], validatedSkillNames);
+	validateReviewTargets(documents, dependenciesBySkill);
 
-	const extendsSummary = extendsCount > 0 ? ` plus ${extendsCount} companion skill(s)` : "";
-	console.log(`Validated ${skillPaths.skillName}: ${ruleCount} local rule files across ${sectionCount} sections${extendsSummary}.`);
+	const dependencyCount = rootResult.dependencies.skillNames.length;
+	const dependencySummary = dependencyCount > 0 ? ` plus ${dependencyCount} companion skill(s)` : "";
+	console.log(
+		`Validated ${skillPaths.skillName}: ${rootResult.ruleCount} local rule files across ${rootResult.sectionCount} sections${dependencySummary}.`,
+	);
 };
 
 /**
@@ -143,4 +257,28 @@ export const main = async (): Promise<void> => {
 	}
 };
 
-await main();
+/**
+ * @helper CLI entry와 현재 module의 real path 동일성 확인
+ */
+const isDirectExecution = async (): Promise<boolean> => {
+	const entryPath = process.argv[1];
+
+	if (!entryPath) {
+		return false;
+	}
+
+	try {
+		const [realEntryPath, realModulePath] = await Promise.all([
+			realpath(path.resolve(entryPath)),
+			realpath(fileURLToPath(import.meta.url)),
+		]);
+
+		return realEntryPath === realModulePath;
+	} catch {
+		return false;
+	}
+};
+
+if (await isDirectExecution()) {
+	await main();
+}

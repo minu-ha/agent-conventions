@@ -2,7 +2,28 @@ import {readFile, readdir} from "node:fs/promises";
 import path from "node:path";
 
 import {getSkillPaths, isBuildableSkill} from "./config.js";
+import {assertMetadataObject, parseDependencyDeclaration} from "./dependencies.js";
 import type {LoadedSkillDocument, SkillMetadata, SkillPaths, SkillRule, SkillSection} from "./types.js";
+
+const allowedRuleFrontmatterKeys = new Set(["title", "impact", "impactDescription", "appliesWhen", "reviewWith", "tags"]);
+
+/**
+ * @helper frontmatter scalar의 matching quote pair 해제
+ */
+const parseScalarValue = (rawValueSource: string, key: string): string => {
+	const rawValue = rawValueSource.trim();
+	const openingQuote = rawValue[0];
+
+	if (openingQuote !== '"' && openingQuote !== "'") {
+		return rawValue;
+	}
+
+	if (rawValue.length < 2 || rawValue.at(-1) !== openingQuote) {
+		throw new Error(`Unmatched quoted scalar for frontmatter key "${key}".`);
+	}
+
+	return rawValue.slice(1, -1);
+};
 
 /**
  * @helper markdown frontmatter와 본문 분리
@@ -12,22 +33,34 @@ export const parseFrontmatter = (source: string): {frontmatter: Record<string, s
 	const match = normalizedSource.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/);
 
 	if (!match) {
-		throw new Error("Missing frontmatter block.");
+		throw new Error("Missing or unmatched frontmatter block.");
 	}
 
 	const [, frontmatterSource, body] = match;
 	const frontmatter: Record<string, string> = {};
 
 	for (const line of frontmatterSource.split("\n")) {
-		const separatorIndex = line.indexOf(":");
-
-		if (separatorIndex === -1) {
+		if (line.trim().length === 0) {
 			continue;
 		}
 
-		const key = line.slice(0, separatorIndex).trim();
-		const rawValue = line.slice(separatorIndex + 1).trim();
-		frontmatter[key] = rawValue.replace(/^["']|["']$/g, "");
+		const scalarMatch = line.match(/^([A-Za-z][A-Za-z0-9]*):(.*)$/);
+
+		if (!scalarMatch) {
+			throw new Error(`Invalid frontmatter line "${line}". Scalar values must stay on one line.`);
+		}
+
+		const [, key, rawValueSource] = scalarMatch;
+
+		if (!allowedRuleFrontmatterKeys.has(key)) {
+			throw new Error(`Unknown frontmatter key "${key}".`);
+		}
+
+		if (Object.hasOwn(frontmatter, key)) {
+			throw new Error(`Duplicate frontmatter key "${key}".`);
+		}
+
+		frontmatter[key] = parseScalarValue(rawValueSource, key);
 	}
 
 	return {frontmatter, body: body.trimStart()};
@@ -137,7 +170,10 @@ export const replaceRuleHeading = (body: string, sectionOrder: number, ruleOrder
  * @description skill metadata.json 파일 로드
  */
 export const readSkillMetadata = async (skillPaths: SkillPaths): Promise<SkillMetadata> => {
-	return JSON.parse(await readFile(skillPaths.metadataPath, "utf8")) as SkillMetadata;
+	const metadata: unknown = JSON.parse(await readFile(skillPaths.metadataPath, "utf8"));
+	const metadataObject = assertMetadataObject(metadata, skillPaths.skillName);
+
+	return metadataObject as unknown as SkillMetadata;
 };
 
 /**
@@ -174,15 +210,24 @@ export const readSkillRules = async (skillPaths: SkillPaths): Promise<SkillRule[
 			title: frontmatter.title ?? "",
 			impact: frontmatter.impact ?? "",
 			impactDescription: frontmatter.impactDescription ?? "",
-			tags: (frontmatter.tags ?? "")
-				.split(",")
-				.map((tag) => tag.trim())
-				.filter(Boolean),
+			tags: splitScalarList(frontmatter.tags),
+			appliesWhen: frontmatter.appliesWhen,
+			reviewWith: splitScalarList(frontmatter.reviewWith),
 			body,
 		});
 	}
 
 	return rules;
+};
+
+/**
+ * @helper 쉼표 구분 frontmatter scalar를 정리된 목록으로 변환
+ */
+const splitScalarList = (value: string | undefined): string[] => {
+	return (value ?? "")
+		.split(",")
+		.map((item) => item.trim())
+		.filter(Boolean);
 };
 
 /**
@@ -213,33 +258,63 @@ const dedupeResolvedSkillDocuments = (documents: LoadedSkillDocument[]): LoadedS
 	});
 };
 
+interface ResolutionState {
+	/**
+	 * @field 단일 resolution 호출 안에서 읽은 local 문서 cache
+	 */
+	documentCache: Map<string, LoadedSkillDocument>;
+	/**
+	 * @field dependency까지 정렬 완료한 문서 배열 cache
+	 */
+	resolvedDocumentCache: Map<string, LoadedSkillDocument[]>;
+}
+
+/**
+ * @helper cache를 공유하며 dependency 문서 집합 재귀 해석
+ */
+const resolveSkillDocuments = async (skillPaths: SkillPaths, lineage: string[], state: ResolutionState): Promise<LoadedSkillDocument[]> => {
+	const cachedDocuments = state.resolvedDocumentCache.get(skillPaths.skillName);
+
+	if (cachedDocuments) {
+		return cachedDocuments;
+	}
+
+	let document = state.documentCache.get(skillPaths.skillName);
+
+	if (!document) {
+		document = await readSkillDocument(skillPaths);
+		state.documentCache.set(skillPaths.skillName, document);
+	}
+
+	const dependencyDeclaration = parseDependencyDeclaration(skillPaths.skillName, document.metadata);
+	const targetSkillRootDir = path.dirname(skillPaths.skillDir);
+	const nextLineage = [...lineage, skillPaths.skillName];
+	const inheritedDocuments: LoadedSkillDocument[] = [];
+
+	for (const inheritedSkillName of dependencyDeclaration.skillNames) {
+		if (nextLineage.includes(inheritedSkillName)) {
+			throw new Error(`Circular skill ${dependencyDeclaration.kind} detected: ${[...nextLineage, inheritedSkillName].join(" -> ")}.`);
+		}
+
+		const buildable = await isBuildableSkill(inheritedSkillName, targetSkillRootDir);
+
+		if (!buildable) {
+			const dependencyLabel = dependencyDeclaration.kind === "extends" ? "Extended" : "Companion";
+			throw new Error(`${dependencyLabel} skill "${inheritedSkillName}" referenced by "${skillPaths.skillName}" is not buildable.`);
+		}
+
+		inheritedDocuments.push(...(await resolveSkillDocuments(getSkillPaths(inheritedSkillName, targetSkillRootDir), nextLineage, state)));
+	}
+
+	const resolvedDocuments = dedupeResolvedSkillDocuments([...inheritedDocuments, document]);
+	state.resolvedDocumentCache.set(skillPaths.skillName, resolvedDocuments);
+
+	return resolvedDocuments;
+};
+
 /**
  * @description `extends`를 따라 companion skill까지 포함한 문서 집합 로드
  */
 export const readResolvedSkillDocuments = async (skillPaths: SkillPaths, lineage: string[] = []): Promise<LoadedSkillDocument[]> => {
-	const document = await readSkillDocument(skillPaths);
-	const inheritedSkillNames = document.metadata.extends;
-
-	if (inheritedSkillNames && !Array.isArray(inheritedSkillNames)) {
-		throw new Error(`${skillPaths.skillName}: metadata.json field "extends" must be an array of skill names.`);
-	}
-
-	const nextLineage = [...lineage, skillPaths.skillName];
-	const inheritedDocuments: LoadedSkillDocument[] = [];
-
-	for (const inheritedSkillName of inheritedSkillNames ?? []) {
-		if (nextLineage.includes(inheritedSkillName)) {
-			throw new Error(`Circular skill extends detected: ${[...nextLineage, inheritedSkillName].join(" -> ")}.`);
-		}
-
-		const buildable = await isBuildableSkill(inheritedSkillName);
-
-		if (!buildable) {
-			throw new Error(`Extended skill "${inheritedSkillName}" referenced by "${skillPaths.skillName}" is not buildable.`);
-		}
-
-		inheritedDocuments.push(...(await readResolvedSkillDocuments(getSkillPaths(inheritedSkillName), nextLineage)));
-	}
-
-	return dedupeResolvedSkillDocuments([...inheritedDocuments, document]);
+	return await resolveSkillDocuments(skillPaths, lineage, {documentCache: new Map(), resolvedDocumentCache: new Map()});
 };

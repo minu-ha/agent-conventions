@@ -46,6 +46,10 @@ test("object-shaped interfaces in types.ts document every field with @field", as
 
 test("source files use convention-specific JSDoc tags for helper and boundary functions", async () => {
 	const functionTagExpectations = [
+		["src/dependencies.ts", "assertMetadataObject", "@helper"],
+		["src/dependencies.ts", "assertValidSkillName", "@helper"],
+		["src/dependencies.ts", "assertRoutingCondition", "@helper"],
+		["src/dependencies.ts", "parseDependencyDeclaration", "@helper"],
 		["src/config.ts", "parseCliArgs", "@helper"],
 		["src/config.ts", "getSkillPaths", "@helper"],
 		["src/config.ts", "listSkillNames", "@description"],
@@ -78,7 +82,15 @@ test("source files use convention-specific JSDoc tags for helper and boundary fu
 });
 
 test("package TypeScript files avoid named function declarations in favor of arrow functions", async () => {
-	const targetFiles = ["src/config.ts", "src/parser.ts", "src/build.ts", "src/validate.ts", "src/dev.ts", "test/cli.test.ts"] as const;
+	const targetFiles = [
+		"src/dependencies.ts",
+		"src/config.ts",
+		"src/parser.ts",
+		"src/build.ts",
+		"src/validate.ts",
+		"src/dev.ts",
+		"test/cli.test.ts",
+	] as const;
 
 	for (const relativePath of targetFiles) {
 		const source = await readPackageFile(relativePath);
@@ -92,7 +104,15 @@ test("package TypeScript files avoid named function declarations in favor of arr
 });
 
 test("package function JSDoc stays lightweight without @param and @returns tags", async () => {
-	const targetFiles = ["src/config.ts", "src/parser.ts", "src/build.ts", "src/validate.ts", "src/dev.ts", "test/cli.test.ts"] as const;
+	const targetFiles = [
+		"src/dependencies.ts",
+		"src/config.ts",
+		"src/parser.ts",
+		"src/build.ts",
+		"src/validate.ts",
+		"src/dev.ts",
+		"test/cli.test.ts",
+	] as const;
 
 	for (const relativePath of targetFiles) {
 		const source = await readPackageFile(relativePath);
