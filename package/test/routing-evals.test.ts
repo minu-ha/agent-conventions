@@ -420,7 +420,8 @@ const reactRuleRouting = {
 		reviewWith: [],
 	},
 	"screen-extract-utilities-selectively": {
-		appliesWhen: "화면 전용 계산·변환·preset·option·column meta를 함수나 support module로 추출·통합·재배치한다.",
+		appliesWhen:
+			"화면 계산·변환·preset·option·column meta를 별도 함수/support module로 추출·이동하거나 support 경계를 바꾼다. query `select` 내부 shaping만이면 제외한다.",
 		reviewWith: ["screen-move-pure-support-code-out-of-entry-files", "typescript/functions-extract-helpers-only-when-the-boundary-is-real"],
 	},
 	"screen-keep-derived-values-close": {
@@ -1436,6 +1437,8 @@ test("TypeScript progressive metadata matches Appendix A exactly", async () => {
 	);
 	const headerJsdocRule = await readFile(path.join(skillPaths.rulesDir, "docs-require-header-jsdoc-on-key-declarations.md"), "utf8");
 	assert.match(headerJsdocRule, /named query·mutation binding[^\n]+@api/i);
+	assert.match(headerJsdocRule, /이 규칙을 선택하면[^\n]+두 `reviewWith` target[^\n]+Selected[^\n]+N\/A/i);
+	assert.doesNotMatch(headerJsdocRule, /이 규칙이[^\n]+요구하면[^\n]+두 `reviewWith` target/i);
 });
 
 test("TypeScript routing manifest is an exact nine-scenario partition with full positive coverage", async () => {
@@ -1532,6 +1535,36 @@ test("TypeScript generated index is complete and within the deterministic byte b
 	}
 });
 
+test("JSDoc routing closure and query-select ownership stay exact across every manifest stage", async () => {
+	for (const skillName of ["react", "typescript", "css"] as const) {
+		const manifest = await readRoutingEvalManifest(getSkillPaths(skillName, realSkillRootDir));
+
+		for (const scenario of manifest.scenarios) {
+			for (const stage of [scenario, scenario.scopeDrift].filter((candidate) => candidate !== undefined)) {
+				const selected = stage.expectedSelected.typescript ?? [];
+
+				if (selected.includes("docs-require-header-jsdoc-on-key-declarations")) {
+					assert.ok(
+						selected.includes("docs-standardize-annotation-tags-by-declaration-role"),
+						`${skillName}/${scenario.id} must close T18 to T19`,
+					);
+					assert.ok(
+						selected.includes("docs-write-concise-korean-comments-about-purpose-and-constraints"),
+						`${skillName}/${scenario.id} must close T18 to T21`,
+					);
+				}
+			}
+		}
+	}
+
+	const reactManifest = await readRoutingEvalManifest(getSkillPaths("react", realSkillRootDir));
+	const queryShaping = reactManifest.scenarios.find(({id}) => id === "RTE12-query-shaping");
+	assert.ok(queryShaping);
+	assert.ok(queryShaping.expectedSelected.react?.includes("state-shape-query-data-with-select"));
+	assert.ok(queryShaping.expectedNotApplicable.react?.includes("screen-extract-utilities-selectively"));
+	assert.equal(queryShaping.expectedSelected.react?.includes("screen-extract-utilities-selectively"), false);
+});
+
 test("TypeScript SKILL.md is a compact trigger-only router with every receipt and audit gate", async () => {
 	const source = await readFile(path.join(realSkillRootDir, "typescript", "SKILL.md"), "utf8");
 	const frontmatterSource = source.match(/^---\n([\s\S]*?)\n---/)?.[1] ?? "";
@@ -1557,11 +1590,17 @@ test("TypeScript SKILL.md is a compact trigger-only router with every receipt an
 	assert.match(body, /ordinal.*union|합집합.*ordinal|ordinal.*합집합/i);
 	assert.match(body, /이유는 비어 있으면 안 된다/i);
 	assert.match(body, /reviewWith/);
+	assert.match(body, /Selected contract[^\n]+Unknown[^\n]+Selected[^\n]+필수 변경[^\n]+scope evidence/i);
+	assert.match(body, /예시[^\n]+선택적 대안[^\n]+해소되지 않은 Unknown[^\n]+가상 변경[^\n]+evidence가 아니다/i);
+	assert.match(body, /reviewWith[^\n]+고정점[^\n]+반복/i);
+	assert.match(body, /고정점[^\n]+Selected contract[^\n]+Expanded 원문[^\n]+구현·리뷰 기준/i);
+	assert.ok(body.indexOf("contracts/<stable-id>.md") < body.indexOf("고정점"));
 	assert.match(body, /scope drift/i);
 	assert.match(body, /convention-audit/);
 	assert.match(body, /FAIL.*0/);
 	assert.match(body, /UNKNOWN.*0/);
 	assert.match(body, /AGENTS\.md.*handbook|handbook.*AGENTS\.md|fallback.*AGENTS\.md/i);
+	assert.match(body, /index\/contract\/필요 rule 손상·누락/i);
 });
 
 test("React progressive metadata and all 42 rule routes match Appendix B exactly", async () => {
@@ -1602,6 +1641,8 @@ test("React progressive metadata and all 42 rule routes match Appendix B exactly
 		ownershipNamingRule,
 		/local query·mutation binding[^\n]+state-name-query-and-mutation-bindings-consistently|state-name-query-and-mutation-bindings-consistently[^\n]+local query·mutation binding/i,
 	);
+	const screenExtractionRule = await readFile(path.join(skillPaths.rulesDir, "screen-extract-utilities-selectively.md"), "utf8");
+	assert.match(screenExtractionRule, /query `select`[^\n]+state-shape-query-data-with-select[^\n]+별도 함수\/support module[^\n]+N\/A/i);
 
 	const template = await readFile(path.join(skillPaths.rulesDir, "_template.md"), "utf8");
 	assert.match(template, /^appliesWhen: /m);
@@ -1821,6 +1862,11 @@ test("React SKILL.md is a compact full-index router with required TypeScript and
 	assert.match(body, /비어 있지 않은|비어 있으면 안 된다/i);
 	assert.match(body, /ordinal.*union|합집합.*ordinal|ordinal.*합집합/i);
 	assert.match(body, /reviewWith/);
+	assert.match(body, /Selected contract[^\n]+Unknown[^\n]+Selected[^\n]+필수 변경[^\n]+scope evidence/i);
+	assert.match(body, /예시[^\n]+선택적 대안[^\n]+해소되지 않은 Unknown[^\n]+가상 변경[^\n]+evidence가 아니다/i);
+	assert.match(body, /reviewWith[^\n]+고정점[^\n]+반복/i);
+	assert.match(body, /고정점[^\n]+Selected contract[^\n]+Expanded 원문[^\n]+구현·리뷰 기준/i);
+	assert.ok(body.indexOf("contracts/<stable-id>.md") < body.indexOf("고정점"));
 	assert.match(body, /scope drift/i);
 	assert.match(body, /convention-typescript.*필수|필수.*convention-typescript/i);
 	assert.match(
@@ -1836,6 +1882,7 @@ test("React SKILL.md is a compact full-index router with required TypeScript and
 	assert.match(body, /UNKNOWN.*0/);
 	assert.match(body, /AGENTS\.md.*handbook|handbook.*AGENTS\.md|opt-in.*AGENTS\.md/i);
 	assert.match(body, /AGENTS\.md[\s\S]*?(?:명시적으로 요청|fallback)[\s\S]*?때만 읽/i);
+	assert.match(body, /index\/contract\/필요 rule 손상·누락/i);
 	assert.doesNotMatch(body, /(?:먼저|우선)[^\n]{0,80}AGENTS\.md[^\n]{0,80}(?:열|읽|로드|훑)/i);
 
 	const readme = await readFile(path.join(skillDir, "README.md"), "utf8");
@@ -2094,6 +2141,11 @@ test("CSS SKILL.md is a compact full-index router with exact receipts and compan
 	assert.match(body, /비어 있지 않은|비어 있으면 안 된다/i);
 	assert.match(body, /ordinal.*union|합집합.*ordinal|ordinal.*합집합/i);
 	assert.match(body, /reviewWith/);
+	assert.match(body, /Selected contract[^\n]+Unknown[^\n]+Selected[^\n]+필수 변경[^\n]+scope evidence/i);
+	assert.match(body, /예시[^\n]+선택적 대안[^\n]+해소되지 않은 Unknown[^\n]+가상 변경[^\n]+evidence가 아니다/i);
+	assert.match(body, /reviewWith[^\n]+고정점[^\n]+반복/i);
+	assert.match(body, /고정점[^\n]+Selected contract[^\n]+Expanded 원문[^\n]+구현·리뷰 기준/i);
+	assert.ok(body.indexOf("contracts/<stable-id>.md") < body.indexOf("고정점"));
 	assert.match(body, /scope drift/i);
 	assert.match(body, /TS\/TSX class contract, wrapper Props 또는 style import/);
 	assert.match(body, /TSX.*component|component.*TSX/i);
@@ -2103,6 +2155,7 @@ test("CSS SKILL.md is a compact full-index router with exact receipts and compan
 	assert.match(body, /FAIL.*0/);
 	assert.match(body, /UNKNOWN.*0/);
 	assert.match(body, /AGENTS\.md.*handbook|handbook.*AGENTS\.md|opt-in.*AGENTS\.md/i);
+	assert.match(body, /index\/contract\/필요 rule 손상·누락/i);
 
 	const readme = await readFile(path.join(skillDir, "README.md"), "utf8");
 	assert.match(readme, /RULES_INDEX\.md/);

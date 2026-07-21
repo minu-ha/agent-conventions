@@ -405,6 +405,10 @@ test("consumer documentation enforces the exact progressive convention policy", 
 			"Read every `Selected` + `Unknown` stable-ID-matched `contracts/*.md`; CRITICAL contracts require their full `rules/*.md`.",
 		],
 		[
+			"`reviewWith` closure",
+			"Add only mandatory changes from `Selected` contracts and resolved `Unknown → Selected` rules to scope evidence; exclude examples, optional alternatives, and unresolved hypotheticals, then repeat contract loading and rescans to a fixed point.",
+		],
+		[
 			"Full rule expansion",
 			"Expand non-CRITICAL full rules only for exact syntax, exceptions, unresolved Unknown, or missing audit evidence; record `Expanded: ID: reason`.",
 		],
@@ -517,11 +521,27 @@ test("consumer documentation enforces the exact progressive convention policy", 
 		"- scoped exception은 근거와 제거 조건을 함께 적습니다.",
 		"- 공통 convention과 충돌하면 약화하지 않고 명시적으로 보고합니다.",
 	];
+	const expectedContextBullets = [
+		"- 관련 코드, 테스트, 기존 구현 패턴, 인접 경계를 확인합니다.",
+		"- 변경 근거가 되는 파일과 검증 포인트를 먼저 확보합니다.",
+		"- 각 activated skill의 `SKILL.md`를 먼저 읽습니다.",
+		"- activated progressive skill마다 `RULES_INDEX.md` 전체를 scan하고 digest-bound `Selected`/`N/A`/`Unknown` exact partition을 작성합니다.",
+		"- `Selected`와 `Unknown` stable ID에 대응하는 generated contract를 읽고, CRITICAL 또는 근거가 더 필요한 경우만 full rule로 확장해 이유를 기록합니다.",
+		"- Selected contract와 Unknown→Selected로 확정된 필수 변경만 scope evidence에 합치며, 예시·선택적 대안·아직 해소되지 않은 Unknown의 가상 변경은 제외합니다.",
+		"- 새 surface·companion·Selected/Unknown이 생기면 모든 activated index와 `reviewWith`를 재판정하고 새 contract를 읽어 activation·partition·scope evidence의 고정점까지 반복합니다.",
+		"- progressive React/TypeScript/CSS full `AGENTS.md`는 전체 handbook이 명시적으로 필요한 경우에만 opt-in합니다.",
+		"- non-progressive owner가 `SKILL.md`에서 local `AGENTS.md` 전체를 요구하면 그 계약을 따릅니다.",
+	];
 	/**
 	 * @helper source mutation마다 consumer template의 audit와 overlay 계약을 재검증
 	 */
 	const assertConsumerTemplateSource = (source: string): void => {
 		assertConsumerPolicySource(source, "AGENTS.superpowers.conventions.md");
+		const contextSection = extractMarkdownSection({source, heading: "Stage 4. Context Collection", level: 3});
+		assert.deepEqual(
+			contextSection.split("\n").filter((line) => line.trim().length > 0),
+			expectedContextBullets,
+		);
 		const auditSection = extractMarkdownSection({source, heading: "Stage 9. Convention Audit", level: 3});
 		assert.deepEqual(
 			auditSection.split("\n").filter((line) => line.trim().length > 0),

@@ -17,12 +17,12 @@ React/CSS/TypeScript 변경의 progressive rule selection과 semantic compliance
 1. diff와 audit packet의 actual changed surface로 companion을 활성화합니다.
 2. 각 activated index 전체를 current routing digest 기준으로 독립 scan합니다.
 3. `Selected`, `N/A`, `Unknown`이 모든 ordinal을 중복·누락 없이 덮는 exact partition을 만듭니다.
-4. Selected/Unknown contract를 읽고 CRITICAL 또는 exact 판단에 필요한 full rule만 `Expanded` 이유와 함께 로드합니다.
-5. 구현자 receipt를 보기 전에 auditor receipt를 완성하고, 같은 digest의 모든 partition set을 비교합니다.
-6. 양쪽 receipt의 N/A exclusion group이 각 N/A set을 정확히 한 번 덮는지와 reason evidence를 독립 검증합니다.
-7. `reviewWith` target의 applicability와 cross-skill activation을 재평가합니다.
+4. N/A exclusion group과 `reviewWith` target의 applicability/cross-skill activation을 독립 검증합니다.
+5. Selected/Unknown contract를 읽고 CRITICAL 또는 exact 판단에 필요한 full rule만 `Expanded` 이유와 함께 로드합니다.
+6. Selected와 Unknown→Selected 규칙이 실제로 요구한 필수 변경만 scope evidence에 합치고, 예시·선택적 대안·아직 해소되지 않은 Unknown의 가상 변경은 제외한 채 activation·partition·evidence의 고정점까지 1~5를 반복합니다.
+7. 구현자 receipt를 보기 전에 고정점 auditor receipt를 완성하고, 그 뒤 같은 digest의 모든 partition set과 양쪽 N/A exclusion group을 비교합니다.
 8. contract와 필요한 full rule을 실제 증거에 대조해 semantic `PASS`/`FAIL`/`UNKNOWN`을 판정합니다.
-9. coverage `FAIL`, semantic `FAIL`, `UNKNOWN` 또는 scope drift가 있으면 rescan하고 둘 다 0일 때만 완료합니다.
+9. coverage `FAIL`, semantic `FAIL`, `UNKNOWN` 또는 scope drift가 있으면 고정점까지 rescan하고 둘 다 0일 때만 완료합니다.
 
 lint, typecheck, build, test, browser는 evidence이지 semantic PASS가 아닙니다. reviewer mode와 파일 읽기 telemetry limitation도 최종 보고에 남깁니다.
 

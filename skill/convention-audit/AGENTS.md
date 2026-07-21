@@ -223,6 +223,8 @@ Document telemetry: unavailable; declared list reported
 
 독립 partition 뒤 auditor-selected/unknown rule의 stable ID와 같은 이름인 contract만 읽습니다. `CRITICAL` contract는 full rule을 반드시 읽고, non-CRITICAL도 exact syntax·예외·Unknown 해소·PASS 근거에 필요하면 full rule로 확장해 ID와 이유를 기록합니다. `N/A` contract/body는 읽지 않고 index의 `appliesWhen`과 packet evidence로 exclusion을 재검증합니다. contract와 필요한 full rule을 읽은 뒤 applicability를 `Selected` 또는 근거 있는 `N/A`로 확정하지 못하면 semantic `UNKNOWN`으로 완료를 막습니다.
 
+Selected contract가 요구한 구체적 필수 변경과 Unknown을 Selected로 해소하며 확정한 필수 변경만 scope evidence에 합칩니다. 예시, 선택적 대안, 아직 해소되지 않은 Unknown의 가상 변경은 evidence가 아닙니다. 새 surface, companion, Selected/Unknown이 생기면 activated index 전체, `reviewWith` closure, 새 contract를 다시 읽어 activation, partition, scope evidence의 고정점까지 반복 판정합니다. 고정점 auditor receipt를 완성하기 전에는 sealed implementer receipt를 공개하지 않습니다.
+
 구현자와 auditor의 `Selected/N/A/Unknown` set을 current same-digest exact ID로 모두 비교합니다. 같은 count라도 member나 분류가 다르면 selection coverage `FAIL`입니다. 구현자에게 빠진 applicable rule, unsupported N/A, stale digest도 coverage `FAIL`이며 semantic verdict로 덮지 않습니다.
 
 모든 `reviewWith` target을 독립적으로 재평가합니다. activated/local target은 `Selected`, `N/A`, `Unknown` 중 하나여야 합니다. inactive cross-skill target은 activation condition과 target `appliesWhen`을 다시 확인하고 non-empty inactive evidence를 남깁니다.
@@ -259,11 +261,12 @@ coverage mismatch, unsupported N/A, semantic FAIL/UNKNOWN 또는 scope drift를 
 - 구현자/auditor `Selected/N/A/Unknown` mismatch
 - unsupported N/A 또는 exclusion group coverage/reason 오류
 - 분류되지 않은 `reviewWith` target
+- activation, partition, scope evidence가 고정점에 도달하지 않음
 - selection coverage `FAIL`
 - semantic `FAIL` 또는 `UNKNOWN`
 - scope drift 뒤 activation/index receipt 미갱신
 
-문제에 따라 구현 또는 evidence를 고치고, current index를 다시 읽어 activation, exact partition, exclusion groups, reviewWith closure, semantic verdict를 처음부터 갱신합니다. `warning`이나 사용자 미승인 exception으로 zero gate를 우회하지 않습니다. coverage와 semantic 양쪽 모두 `FAIL = 0`, `UNKNOWN = 0`인 경우에만 완료하며, 하나라도 0이 아니면 repair/rescan합니다.
+문제에 따라 구현 또는 evidence를 고치고, current index와 새 Selected/Unknown contract를 다시 읽어 activation, exact partition, exclusion groups, reviewWith closure, semantic verdict를 고정점까지 갱신합니다. `warning`이나 사용자 미승인 exception으로 zero gate를 우회하지 않습니다. coverage와 semantic 양쪽 모두 `FAIL = 0`, `UNKNOWN = 0`인 경우에만 완료하며, 하나라도 0이 아니면 repair/rescan합니다.
 
 **Incorrect (문제를 경고로 남기고 종료):**
 

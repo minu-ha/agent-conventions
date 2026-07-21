@@ -100,7 +100,16 @@ tags: tag1, tag2
 - Section은 파일명 prefix로 결정됩니다.
 - Rule은 각 section 안에서 title 기준 알파벳 순으로 정렬됩니다.
 - [AGENTS.md](./AGENTS.md)의 rule 번호는 자동 생성됩니다.
-- `appliesWhen`은 한 줄, 160자 이하로 작성합니다. `reviewWith`는 자동 선택 목록이 아니라 관련 rule 재평가 hint이며 대상이 없으면 key 자체를 생략합니다.
+- `appliesWhen`은 한 줄, 160자 이하로 작성합니다. `reviewWith`는 자동 선택 목록이 아니라 관련 rule 재평가 hint입니다. Selected contract와 Unknown→Selected로 확정된 필수 변경만 scope evidence에 합치고, 예시·선택적 대안·아직 해소되지 않은 Unknown의 가상 변경은 제외한 채 고정점까지 반복 판정하며, 대상이 없으면 key 자체를 생략합니다.
+
+## Progressive routing workflow
+
+1. [SKILL.md](./SKILL.md)에서 scope snapshot을 고정합니다.
+2. [RULES_INDEX.md](./RULES_INDEX.md)를 처음부터 끝까지 scan하고 첫 match에서 멈추지 않습니다.
+3. digest에 묶인 `Selected`, `N/A`, `Unknown` exact partition과 비어 있지 않은 exclusion evidence를 기록합니다.
+4. `Selected`와 `Unknown` stable ID와 같은 이름인 `contracts/<stable-id>.md`를 읽습니다. CRITICAL은 full rule을 필수로 읽고, 나머지는 exact syntax·예외·Unknown·audit 근거에 필요할 때만 확장해 `Expanded: ID: reason`을 남깁니다.
+5. `Unknown`을 해소하고, Selected contract와 Unknown→Selected로 확정된 필수 변경만 scope evidence에 합칩니다. 예시·선택적 대안·아직 해소되지 않은 Unknown의 가상 변경은 제외하고 새 Selected/Unknown contract 로드와 전체 index/`reviewWith` 재판정을 고정점까지 반복합니다.
+6. 고정점의 Selected 규범을 구현하고 scope drift가 생기면 전체 index와 receipt를 다시 계산합니다.
 
 ## Impact 레벨
 

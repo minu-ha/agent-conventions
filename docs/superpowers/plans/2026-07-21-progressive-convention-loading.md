@@ -4,7 +4,7 @@
 
 **Goal:** React, TypeScript, CSS 작업이 applicable rule을 빠짐없이 선택·적용·감사하면서 full handbook 기본 로딩을 제거하도록 structured skill pack과 검증 도구를 개선한다.
 
-**Architecture:** `rules/*.md`에 observable routing metadata와 normative-first body를 두고 build package가 compact `RULES_INDEX.md`, rule별 `contracts/*.md`, source-bound digest를 생성한다. 각 progressive `SKILL.md`는 scope → full index scan → exact receipt → Selected/Unknown contract → CRITICAL/근거 기반 full-rule expansion → drift → audit router가 되며, package test는 schema/index/contract/fixture 무결성을, behavioral evaluation은 실제 agent selection을 검증한다. Progressive React/TypeScript/CSS의 full `AGENTS.md`는 opt-in handbook으로 계속 생성하고, non-progressive skill은 각 `SKILL.md`의 기존 load 계약을 유지한다.
+**Architecture:** `rules/*.md`에 observable routing metadata와 normative-first body를 두고 build package가 compact `RULES_INDEX.md`, rule별 `contracts/*.md`, source-bound digest를 생성한다. 각 progressive `SKILL.md`는 scope → full index scan → exact receipt → Selected/Unknown contract와 CRITICAL/근거 기반 full-rule expansion → 확정된 필수 scope와 `reviewWith` closure의 고정점 판정 → drift → audit router가 되며, package test는 schema/index/contract/fixture 무결성을, behavioral evaluation은 실제 agent selection을 검증한다. Progressive React/TypeScript/CSS의 full `AGENTS.md`는 opt-in handbook으로 계속 생성하고, non-progressive skill은 각 `SKILL.md`의 기존 load 계약을 유지한다.
 
 **Tech Stack:** Node.js 22, TypeScript 5.9, `tsx --test`, Node `crypto`, Markdown/JSON structured skills, Biome 2.2, Python `tiktoken` 0.11.0 (`o200k_base`) for evaluation snapshots.
 
@@ -958,7 +958,7 @@ Every value below is normative implementation input. `—` means omit `reviewWit
 | `screen-keep-route-flow-visible` | route entry의 search·navigate·query·mutation·effect·section 조립을 이동·분리하거나 화면 흐름을 재구성한다. | `screen-extract-local-section-components-for-runtime-boundaries`, `screen-move-pure-support-code-out-of-entry-files` |
 | `screen-avoid-premature-abstraction` | screen 코드를 helper·hook·component·module로 추출하거나 한 곳에서만 쓰는 기존 추상화를 접어 넣는다. | `screen-extract-local-section-components-for-runtime-boundaries`, `screen-extract-utilities-selectively`, `typescript/functions-extract-helpers-only-when-the-boundary-is-real` |
 | `screen-extract-local-section-components-for-runtime-boundaries` | route-local section component를 새로 추출하거나 기존 section이 async·state·provider·interaction·library·performance 경계를 소유하는지 바꾼다. | — |
-| `screen-extract-utilities-selectively` | 화면 전용 계산·변환·preset·option·column meta를 함수나 support module로 추출·통합·재배치한다. | `screen-move-pure-support-code-out-of-entry-files`, `typescript/functions-extract-helpers-only-when-the-boundary-is-real` |
+| `screen-extract-utilities-selectively` | 화면 계산·변환·preset·option·column meta를 별도 함수/support module로 추출·이동하거나 support 경계를 바꾼다. query `select` 내부 shaping만이면 제외한다. | `screen-move-pure-support-code-out-of-entry-files`, `typescript/functions-extract-helpers-only-when-the-boundary-is-real` |
 | `screen-keep-derived-values-close` | response·state·search·props의 오리진을 끊는 alias·flag·표시값을 넓은 screen scope에 추가·이동하거나 `let`/`push` 기반 조립을 만든다. | — |
 | `screen-move-pure-support-code-out-of-entry-files` | route entry에 여러 줄 pure helper·preset·option·화면 전용 type이 쌓이거나 추출한 support code의 목적지 파일을 정한다. | `docs-require-jsdoc-on-key-declarations` |
 | `events-name-and-curry-handlers` | 이벤트 핸들러를 새로 만들거나 이름, target/event 표현, 추가 인자 전달 방식 또는 최종 React handler 시그니처를 바꾼다. | `typing-function-type-first` |

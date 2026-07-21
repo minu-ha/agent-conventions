@@ -80,6 +80,7 @@ framework 공통 규칙은 companion skill이 소유하고, framework 또는 con
 | `className` / CSS / styling surface | Add `convention-css`. |
 | Activated progressive skill | Scan every activated `RULES_INDEX.md` completely; never stop at the first match. |
 | Selected guidance | Read every `Selected` + `Unknown` stable-ID-matched `contracts/*.md`; CRITICAL contracts require their full `rules/*.md`. |
+| `reviewWith` closure | Add only mandatory changes from `Selected` contracts and resolved `Unknown → Selected` rules to scope evidence; exclude examples, optional alternatives, and unresolved hypotheticals, then repeat contract loading and rescans to a fixed point. |
 | Full rule expansion | Expand non-CRITICAL full rules only for exact syntax, exceptions, unresolved Unknown, or missing audit evidence; record `Expanded: ID: reason`. |
 | Progressive full handbook | React/TypeScript/CSS `AGENTS.md` is opt-in, never default-loaded. |
 | Scope drift | Restart activation and rescan every activated progressive index. |

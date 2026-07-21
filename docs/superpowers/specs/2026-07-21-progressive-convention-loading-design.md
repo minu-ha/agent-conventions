@@ -83,7 +83,7 @@ tags: composition, jsx, handlers
 
 rule body의 heading/Impact 뒤 규범과 예외는 첫 anchored `Incorrect` marker 앞에 완결한다. 첫 `Incorrect` 뒤에는 `Incorrect`/`Correct` label, fenced code, 빈 줄만 허용한다. build/validate가 fence 밖 marker와 후반 prose를 검사해 generated contract가 규범을 조용히 누락하지 못하게 한다.
 
-선택 누락이 반복되기 쉬운 multi-rule concern은 optional `reviewWith` scalar에 comma-separated stable rule id를 선언한다. 다른 skill rule은 `<skill>/<rule-id>`로 적는다. `reviewWith`는 대상 rule을 자동 PASS하거나 무조건 selected로 만들지 않고, 해당 target의 `appliesWhen`을 명시적으로 재판정하게 하는 closure hint다.
+선택 누락이 반복되기 쉬운 multi-rule concern은 optional `reviewWith` scalar에 comma-separated stable rule id를 선언한다. 다른 skill rule은 `<skill>/<rule-id>`로 적는다. `reviewWith`는 대상 rule을 자동 PASS하거나 무조건 selected로 만들지 않고, 해당 target의 `appliesWhen`을 명시적으로 재판정하게 하는 closure hint다. 초기 partition 뒤 Selected/Unknown contract를 먼저 읽고, Selected contract와 Unknown→Selected로 확정된 필수 변경만 scope evidence에 합친다. 예시, 선택적 대안, 아직 해소되지 않은 Unknown의 가상 변경은 evidence에서 제외한다. 새 변경 surface나 Selected/Unknown이 생기면 새 contract 로드와 모든 activated index/`reviewWith` closure 판정을 activation, partition, scope evidence가 더 이상 바뀌지 않는 고정점까지 반복한다.
 
 이 필드는 우선 React, TypeScript, CSS에서 필수다. 다른 structured skill은 migration 전까지 기존 schema로 계속 build할 수 있어야 한다.
 
@@ -150,7 +150,7 @@ progressive full handbook은 각 local rule heading 바로 아래에 source fron
 - companion skill은 파일과 concern 기준으로 동일하게 선택한다.
 - 아직 diff가 없다면 계획된 변경 surface를 기준으로 1차 선택하고, 구현 후 다시 확인한다.
 - 하나의 concern이 여러 React section과 TypeScript/CSS companion rule을 동시에 활성화할 수 있다. 첫 match에서 멈추지 않고 모든 activated index entry를 끝까지 판정한다.
-- selected rule의 `reviewWith` target은 초기 exact partition에서 `Selected`, 근거 있는 `N/A`, `Unknown` 중 하나여야 한다. `Unknown`은 contract/full-rule 증거로 완료 전에 해소하고, cross-skill target이면 companion activation도 다시 판정한다.
+- selected rule의 `reviewWith` target은 초기 exact partition에서 `Selected`, 근거 있는 `N/A`, `Unknown` 중 하나여야 한다. 그 뒤 Selected/Unknown contract를 읽어 `Unknown`을 해소하고, Selected contract와 Unknown→Selected로 확정된 필수 변경만 scope evidence에 합친다. 예시·선택적 대안·아직 해소되지 않은 Unknown의 가상 변경은 제외하며, 새 Selected/Unknown contract 로드와 activated index/`reviewWith` closure를 고정점까지 반복 판정한다. cross-skill target이면 companion activation도 매번 다시 판정한다.
 
 ### 3. Rule Selection Receipt
 

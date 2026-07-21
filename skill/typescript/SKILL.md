@@ -32,18 +32,18 @@ Unknown: <ordinal + stable ID 또는 none>
 Expanded: <full rule을 추가로 읽은 ordinal + stable ID: 이유 또는 none>
 ```
 
-모든 ordinal은 `Selected`, `Not applicable`, `Unknown` 중 정확히 하나에만 있어야 한다. exclusion group의 ordinal 합집합은 exact N/A set과 같아야 하며 이유는 비어 있으면 안 된다. `reviewWith`는 자동 선택 명령이 아니라 재평가 신호다. 각 target을 scope로 다시 판정해 세 집합 중 하나에 넣고, cross-skill target이면 companion 활성화도 다시 판정한다. `Unknown`은 contract/full-rule 증거로 완료 전에 해소한다.
+각 ordinal은 Selected/N/A/Unknown 중 하나다. exclusion group ordinal의 합집합은 exact N/A이고 이유는 비어 있으면 안 된다. `reviewWith`는 자동 선택이 아닌 재평가 신호다. target을 scope evidence로 분류하고 cross-skill companion도 판정한다.
 
 ## 4. Read and implement
 
-Selected와 Unknown은 stable ID와 같은 이름의 `contracts/<stable-id>.md`를 전부 읽는다. contract가 `CRITICAL`이면 contract가 연결한 `rules/*.md` full rule도 반드시 읽는다. non-CRITICAL도 exact syntax·예외 판단이 필요하거나 Unknown이 contract와 코드만으로 해소되지 않거나 audit PASS 근거가 부족하면 full rule로 확장한다. 확장한 ordinal·ID와 이유를 `Expanded`에 기록하고 Unknown은 완료 전 `none`으로 만든다. contract의 규범과 확장 원문의 예시를 구현·리뷰 기준으로 사용한다.
+Selected와 Unknown은 stable ID와 같은 `contracts/<stable-id>.md`를 전부 읽는다. contract가 `CRITICAL`이면 연결한 `rules/*.md` full rule도 반드시 읽는다. 그 밖의 full rule은 exact 판단·Unknown 해소·audit 근거에 필요할 때만 읽고 `Expanded: ID: 이유`를 남긴다. Unknown은 Selected/N/A로 해소한다. Selected contract의 필수 변경과 Unknown을 Selected로 해소해 확정한 필수 변경만 scope evidence에 합친다. 예시·선택적 대안·해소되지 않은 Unknown의 가상 변경은 evidence가 아니다. 새 surface·companion·Selected/Unknown이 생기면 활성 index와 `reviewWith`를 재판정하고 새 contract를 읽는다. 활성 skill·partition·scope evidence의 고정점까지 반복하고 Selected contract와 Expanded 원문만 구현·리뷰 기준으로 쓴다.
 
 ## 5. Scope drift
 
-새 파일, abstraction, import, type/API, fallback, 주석 surface가 생기면 scope snapshot부터 index 전체 scan과 receipt를 다시 수행한다. digest가 달라져도 이전 receipt를 폐기한다.
+`scope drift`면 scope snapshot부터 활성 progressive index scan/receipt를 다시 하고 stale digest receipt를 폐기한다.
 
 ## 6. Finish gate
 
-마지막 diff 기준으로 `convention-audit`이 index를 독립 재선택하게 한다. digest, exact partition, exclusion evidence, selected contracts, `Expanded` full rules, 검증 결과를 넘기고 `FAIL 0`, `UNKNOWN 0`일 때만 완료한다.
+`convention-audit`이 마지막 diff로 활성 progressive index를 독립 재선택한다. digest, receipt, evidence, `Expanded`와 검증을 넘기고 `FAIL 0`, `UNKNOWN 0`만 완료한다.
 
-전체 [AGENTS.md](./AGENTS.md)는 사용자가 full handbook/onboarding을 명시적으로 요청했거나 generated index/contract 또는 필요한 rule 원문이 손상·누락되어 fallback이 필요할 때만 읽는다.
+[AGENTS.md](./AGENTS.md)는 full handbook 요청이나 index/contract/필요 rule 손상·누락으로 fallback할 때만 읽는다.

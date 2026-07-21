@@ -15,7 +15,7 @@
 
 - 작은 1회성 guard, URL 조립, 빈 검색어 생략 같은 호출 지점 계산
 - handler/effect 안에 있어야 문맥이 보이는 query invalidation, navigation, fallback 처리
-- 한 component나 한 query `select`만 쓰는 작은 mapper
+- query `select` 내부 mapper는 `state-shape-query-data-with-select` 소유이며 별도 함수/support module 경계가 없으면 이 규칙은 N/A
 
 배치:
 

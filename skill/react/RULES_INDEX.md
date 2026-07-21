@@ -4,7 +4,7 @@
 
 - Skill: `react`
 - Version: `1.0.0`
-- Routing digest: `sha256:9489a3576d05df5cffaf5db15221d500109cfae40e1636985af71275eac2936a`
+- Routing digest: `sha256:ffd71bdb3fc12556af66c107ec43328ddc173e0db76184d8b17f6260e5afb9a5`
 - Local rules: 42
 
 ## Direct Companions
@@ -47,7 +47,7 @@
 
 - `R18` · `screen-avoid-premature-abstraction` · screen 코드를 helper·hook·component·module로 추출하거나 한 곳에서만 쓰는 기존 추상화를 접어 넣는다. · reviewWith: `screen-extract-local-section-components-for-runtime-boundaries`, `screen-extract-utilities-selectively`, `typescript/functions-extract-helpers-only-when-the-boundary-is-real`
 - `R19` · `screen-extract-local-section-components-for-runtime-boundaries` · route-local section component를 새로 추출하거나 기존 section이 async·state·provider·interaction·library·performance 경계를 소유하는지 바꾼다.
-- `R20` · `screen-extract-utilities-selectively` · 화면 전용 계산·변환·preset·option·column meta를 함수나 support module로 추출·통합·재배치한다. · reviewWith: `screen-move-pure-support-code-out-of-entry-files`, `typescript/functions-extract-helpers-only-when-the-boundary-is-real`
+- `R20` · `screen-extract-utilities-selectively` · 화면 계산·변환·preset·option·column meta를 별도 함수/support module로 추출·이동하거나 support 경계를 바꾼다. query \`select\` 내부 shaping만이면 제외한다. · reviewWith: `screen-move-pure-support-code-out-of-entry-files`, `typescript/functions-extract-helpers-only-when-the-boundary-is-real`
 - `R21` · `screen-keep-derived-values-close` · response·state·search·props의 오리진을 끊는 alias·flag·표시값을 넓은 screen scope에 추가·이동하거나 \`let\`/\`push\` 기반 조립을 만든다.
 - `R22` · `screen-keep-route-flow-visible` · route entry의 search·navigate·query·mutation·effect·section 조립을 이동·분리하거나 화면 흐름을 재구성한다. · reviewWith: `screen-extract-local-section-components-for-runtime-boundaries`, `screen-move-pure-support-code-out-of-entry-files`
 - `R23` · `screen-move-pure-support-code-out-of-entry-files` · route entry에 여러 줄 pure helper·preset·option·화면 전용 type이 쌓이거나 추출한 support code의 목적지 파일을 정한다. · reviewWith: `docs-require-jsdoc-on-key-declarations`

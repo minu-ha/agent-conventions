@@ -1240,7 +1240,7 @@ export const RouteComponent = () => {
 
 ### 5.3 Extract Screen Support Code Only When the Boundary Is Real
 
-**Applies when:** 화면 전용 계산·변환·preset·option·column meta를 함수나 support module로 추출·통합·재배치한다.
+**Applies when:** 화면 계산·변환·preset·option·column meta를 별도 함수/support module로 추출·이동하거나 support 경계를 바꾼다. query \`select\` 내부 shaping만이면 제외한다.
 
 **Review with:** `screen-move-pure-support-code-out-of-entry-files`, `typescript/functions-extract-helpers-only-when-the-boundary-is-real`
 
@@ -1259,7 +1259,7 @@ export const RouteComponent = () => {
 
 - 작은 1회성 guard, URL 조립, 빈 검색어 생략 같은 호출 지점 계산
 - handler/effect 안에 있어야 문맥이 보이는 query invalidation, navigation, fallback 처리
-- 한 component나 한 query `select`만 쓰는 작은 mapper
+- query `select` 내부 mapper는 `state-shape-query-data-with-select` 소유이며 별도 함수/support module 경계가 없으면 이 규칙은 N/A
 
 배치:
 

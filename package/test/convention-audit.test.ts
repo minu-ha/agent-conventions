@@ -313,11 +313,11 @@ test("convention audit router orders independent index selection before semantic
 		"실제 변경 surface",
 		"activated `RULES_INDEX.md` 전체",
 		"같은 routing digest",
-		"구현자 receipt를 보기 전에",
-		"구현자와 auditor의 `Selected/N/A/Unknown` set",
 		"`N/A` exclusion group",
 		"`reviewWith`",
 		"auditor가 `Selected` 또는 `Unknown`으로 분류한 stable ID와 같은 이름의 contract만",
+		"sealed comparison artifact",
+		"구현자와 auditor의 `Selected/N/A/Unknown` set",
 		"selection coverage `FAIL`",
 		"semantic verdict",
 		"`FAIL = 0`, `UNKNOWN = 0`",
@@ -328,13 +328,16 @@ test("convention audit router orders independent index selection before semantic
 	}
 
 	assert.match(source, /auditor는 구현자 receipt의 verdict와 selection을 입력으로 사용하지 않고[^\n]+독립적으로/);
-	assert.match(source, /구현자 receipt를 보기 전에[^\n]+독립 selection receipt/);
-	assert.match(steps[3] ?? "", /구현자와 auditor receipt 모두[^\n]+독립 검증/);
-	assert.match(steps[5] ?? "", /같은 count라도 member나 분류[^\n]+`FAIL`/);
+	assert.match(steps[6] ?? "", /구현자 receipt를 보기 전에[^\n]+독립 selection receipt/);
+	assert.match(steps[3] ?? "", /exact ordinal partition/);
+	assert.match(steps[8] ?? "", /같은 count라도 member나 분류[^\n]+`FAIL`/);
 	assert.match(source, /N\/A set과 exclusion group ordinal의 합집합이 정확히 같고[^\n]+중복[^\n]+없어야/);
 	assert.match(source, /exclusion reason[^\n]+비어 있으면[^\n]+`FAIL`/);
-	assert.match(steps[6] ?? "", /구현자와 auditor 각 receipt[^\n]+서로 독립적으로/);
+	assert.match(steps[8] ?? "", /구현자와 auditor 각 receipt[^\n]+서로 독립적으로/);
 	assert.match(source, /`reviewWith`[^\n]+자동 선택[^\n]+아니며[^\n]+독립적으로 재평가/);
+	assert.match(steps[6] ?? "", /Selected contract[^\n]+Unknown[^\n]+Selected[^\n]+실제로 필수[^\n]+scope evidence/i);
+	assert.match(steps[6] ?? "", /예시[^\n]+선택적 대안[^\n]+해소되지 않은 Unknown[^\n]+가상 변경[^\n]+제외/);
+	assert.match(steps[6] ?? "", /reviewWith[^\n]+고정점[^\n]+반복 판정/i);
 	assert.match(source, /activated[^\n]+target[^\n]+`Selected`, `N\/A`, `Unknown`/);
 	assert.match(source, /inactive cross-skill target[^\n]+non-empty inactive evidence/);
 	assert.match(source, /cross-skill condition[^\n]+맞으면[^\n]+companion[^\n]+활성화[^\n]+exact partition/);
@@ -493,6 +496,8 @@ test("compiled audit rules preserve exact receipt and independent reviewer gates
 		"reviewWith",
 		"selection coverage `FAIL`",
 		"auditor-selected/unknown rule의 stable ID와 같은 이름인 contract",
+		"Selected contract가 요구한 구체적 필수 변경",
+		"고정점까지 반복 판정",
 		"semantic PASS",
 		"파일 읽기 telemetry",
 	]) {

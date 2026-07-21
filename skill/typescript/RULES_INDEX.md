@@ -4,7 +4,7 @@
 
 - Skill: `typescript`
 - Version: `1.0.0`
-- Routing digest: `sha256:4158a2e16636353d7bce96ed8cd825136e96e89073febdf103665a769b1b1dc8`
+- Routing digest: `sha256:fbde2ddd61c5f90530228542fc8efa961a921b1952189e61be56a95daeb81f0c`
 - Local rules: 22
 
 ## Local Rules
