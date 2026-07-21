@@ -2,6 +2,7 @@
 title: Avoid Deep Descendant Selector Dependencies
 impact: HIGH
 impactDescription: keeps layout changes from breaking styling through long descendant chains
+appliesWhen: descendant 또는 child selector chain을 추가·수정하거나 DOM 계층에 의존하는 project-owned·third-party selector를 검토한다.
 tags: descendants, selector-depth, guardrails
 ---
 

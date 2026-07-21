@@ -2,6 +2,7 @@
 title: Keep Classes Single-purpose
 impact: HIGH
 impactDescription: stops one class from carrying both base styling and multiple state or structural meanings at once
+appliesWhen: base class 이름에 상태·variant 의미를 합치거나 한 class에 서로 독립적인 시각 책임을 추가·재사용·분리한다.
 tags: composition, modifiers, responsibility
 ---
 

@@ -261,6 +261,9 @@ test("build script regenerates AGENTS.md for the react skill", async () => {
 	assert.match(agentsSource, /^## 목차$/m);
 	assert.match(agentsSource, /^## 함께 로드할 Companion Skill$/m);
 	assert.match(agentsSource, /`convention-typescript`/);
+	assert.match(agentsSource, /metadata\.json\.extends/);
+	assert.match(agentsSource, /\.\.\/typescript\/AGENTS\.md/);
+	assert.doesNotMatch(agentsSource, /\.\.\/typescript\/(?:SKILL|RULES_INDEX)\.md/);
 	assert.match(agentsSource, /^## 1\. Ownership and Boundaries$/m);
 	assert.doesNotMatch(agentsSource, /^## 1\. TypeScript Convention Base - Naming and Module Boundaries$/m);
 	assert.doesNotMatch(agentsSource, /TypeScript Convention Base - Naming and Module Boundaries/);
@@ -288,6 +291,9 @@ test("build:astro alias regenerates AGENTS.md for the astro skill", async () => 
 	assert.match(agentsSource, /^# Astro 컨벤션$/m);
 	assert.match(agentsSource, /^## 함께 로드할 Companion Skill$/m);
 	assert.match(agentsSource, /`convention-typescript`/);
+	assert.match(agentsSource, /metadata\.json\.extends/);
+	assert.match(agentsSource, /\.\.\/typescript\/AGENTS\.md/);
+	assert.doesNotMatch(agentsSource, /\.\.\/typescript\/(?:SKILL|RULES_INDEX)\.md/);
 	assert.match(agentsSource, /^ {4}- \d+\.\d+ \[Align Route Page Assets and `rt_\*` Surface Classes with Route Role\]/m);
 	assert.match(agentsSource, /^### \d+\.\d+ Compose Page-level Documents Through `_document\.astro` and `_head\.astro`$/m);
 });

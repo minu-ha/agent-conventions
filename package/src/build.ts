@@ -5,14 +5,71 @@ import {parseDependencyDeclaration} from "./dependencies.js";
 import {isDirectExecution} from "./entrypoint.js";
 import {replaceGeneratedFiles} from "./generated-files.js";
 import {buildRuleAnchor, buildSectionAnchor, normalizeHeadingTitle, readResolvedSkillDocuments, replaceRuleHeading} from "./parser.js";
-import {generateRulesIndexMarkdown, getRulesForSection} from "./routing.js";
-import type {CompiledSkillSection, LoadedSkillDocument, SkillMetadata, SkillPaths} from "./types.js";
+import {escapeMarkdownText, generateRulesIndexMarkdown, getRulesForSection} from "./routing.js";
+import type {CompiledSkillSection, LoadedSkillDocument, SkillCompanion, SkillMetadata, SkillPaths} from "./types.js";
 
+/**
+ * @summary compiled handbook에 표시할 companion skill 링크와 activation 선언
+ */
 interface CompanionSkill {
+	/**
+	 * @field companion skill 디렉터리 이름
+	 */
 	skillName: string;
+	/**
+	 * @field agent가 활성화할 convention skill 이름
+	 */
 	conventionName: string;
+	/**
+	 * @field handbook에 표시할 companion 제목
+	 */
 	title: string;
-	guidePath: string;
+	/**
+	 * @field legacy companion의 full handbook 상대 경로
+	 */
+	agentsGuidePath: string;
+	/**
+	 * @field progressive companion의 activation router 상대 경로
+	 */
+	skillEntrypointPath: string;
+	/**
+	 * @field progressive companion의 compact routing index 상대 경로
+	 */
+	rulesIndexPath: string;
+	/**
+	 * @field owner metadata의 companions가 선언한 direct activation mode와 조건
+	 */
+	declaration?: SkillCompanion;
+	/**
+	 * @field companion target이 compact routing index를 제공하는지 여부
+	 */
+	progressiveDisclosure: boolean;
+}
+
+/**
+ * @summary compiled handbook markdown renderer 입력
+ */
+interface GenerateMarkdownArgs {
+	/**
+	 * @field build 대상 root skill 디렉터리 이름
+	 */
+	skillName: string;
+	/**
+	 * @field handbook header와 progressive mode를 제공하는 root metadata
+	 */
+	metadata: SkillMetadata;
+	/**
+	 * @field handbook 본문에 포함할 local compiled section 목록
+	 */
+	sections: CompiledSkillSection[];
+	/**
+	 * @field handbook에 안내할 direct 또는 legacy resolved companion 목록
+	 */
+	companionSkills: CompanionSkill[];
+	/**
+	 * @field handbook 마지막에 표시할 참고 링크 목록
+	 */
+	references: string[];
 }
 
 const conventionTitleBySkillName: Record<string, string> = {
@@ -90,28 +147,48 @@ const collectReferenceLinks = (documents: LoadedSkillDocument[]): string[] => {
 /**
  * @helper root skill과 함께 로드할 companion skill 메타데이터 계산
  */
-const collectCompanionSkills = (rootSkillName: string, documents: LoadedSkillDocument[]): CompanionSkill[] => {
-	return documents
-		.filter((document) => document.skillName !== rootSkillName)
-		.map((document) => ({
-			skillName: document.skillName,
-			conventionName: getConventionSkillName(document.skillName),
-			title: getConventionTitle(document.skillName, document.metadata.title),
-			guidePath: `../${document.skillName}/AGENTS.md`,
-		}));
+const collectCompanionSkills = (rootDocument: LoadedSkillDocument, documents: LoadedSkillDocument[]): CompanionSkill[] => {
+	const dependencyDeclaration = parseDependencyDeclaration(rootDocument.skillName, rootDocument.metadata);
+	const documentBySkillName = new Map(documents.map((document) => [document.skillName, document]));
+	const companionDeclarationBySkillName = new Map(dependencyDeclaration.companions.map((companion) => [companion.skill, companion]));
+	const companionSkillNames =
+		dependencyDeclaration.kind === "companions"
+			? dependencyDeclaration.skillNames
+			: documents.filter((document) => document.skillName !== rootDocument.skillName).map((document) => document.skillName);
+
+	return companionSkillNames.map((skillName) => {
+		const document = documentBySkillName.get(skillName);
+
+		if (!document) {
+			throw new Error(`Failed to resolve companion skill document for "${skillName}".`);
+		}
+
+		const declaration = companionDeclarationBySkillName.get(skillName);
+
+		return {
+			skillName,
+			conventionName: getConventionSkillName(skillName),
+			title: getConventionTitle(skillName, document.metadata.title),
+			agentsGuidePath: `../${skillName}/AGENTS.md`,
+			skillEntrypointPath: `../${skillName}/SKILL.md`,
+			rulesIndexPath: `../${skillName}/RULES_INDEX.md`,
+			...(declaration === undefined ? {} : {declaration}),
+			progressiveDisclosure: document.metadata.progressiveDisclosure === true,
+		};
+	});
 };
 
 /**
  * @helper metadata와 resolved section을 compiled markdown 본문으로 조립
  */
-export const generateMarkdown = (
-	skillName: string,
-	metadata: SkillMetadata,
-	sections: CompiledSkillSection[],
-	companionSkills: CompanionSkill[],
-	references: string[],
-): string => {
+export const generateMarkdown = (args: GenerateMarkdownArgs): string => {
+	const {skillName, metadata, sections, companionSkills, references} = args;
 	const lines: string[] = [];
+	const dependencyDeclaration = parseDependencyDeclaration(skillName, metadata);
+	const usesCompanionDeclarations = dependencyDeclaration.kind === "companions";
+	const dependencySourceKey =
+		metadata.companions !== undefined ? "metadata.json.companions" : metadata.extends !== undefined ? "metadata.json.extends" : undefined;
+	const sourcePaths = ["`rules/*.md`", "`metadata.json`", ...(dependencySourceKey === undefined ? [] : [`\`${dependencySourceKey}\``])];
 
 	lines.push(`# ${metadata.title}`);
 	lines.push("");
@@ -126,7 +203,7 @@ export const generateMarkdown = (
 	lines.push("> **생성된 문서입니다. 직접 수정하지 마세요.**");
 	lines.push(">");
 	lines.push(
-		`> 현재 skill의 \`rules/*.md\`, \`metadata.json\`, \`metadata.json.extends\`를 수정한 뒤 \`npm --prefix ../../package run build -- --skill=${skillName}\`로 다시 생성하세요.`,
+		`> 현재 skill의 ${sourcePaths.join(", ")}를 수정한 뒤 \`npm --prefix ../../package run build -- --skill=${skillName}\`로 다시 생성하세요.`,
 	);
 
 	lines.push("");
@@ -138,19 +215,40 @@ export const generateMarkdown = (
 
 	if (companionSkills.length > 0) {
 		lines.push("");
-		lines.push(`이 가이드는 local ${metadata.title} 규칙만 담고 있습니다. 공통 규칙은 companion skill을 함께 로드해 보완합니다.`);
+		lines.push(
+			usesCompanionDeclarations
+				? `이 가이드는 local ${metadata.title} 규칙만 담고 있습니다. companion skill은 아래 mode와 appliesWhen에 따라 활성화합니다.`
+				: `이 가이드는 local ${metadata.title} 규칙만 담고 있습니다. 공통 규칙은 companion skill을 함께 로드해 보완합니다.`,
+		);
 	}
 	lines.push("");
 
 	if (companionSkills.length > 0) {
 		lines.push("---");
 		lines.push("");
-		lines.push("## 함께 로드할 Companion Skill");
+		lines.push(usesCompanionDeclarations ? "## Companion Skill 활성화" : "## 함께 로드할 Companion Skill");
 		lines.push("");
 
 		for (const companionSkill of companionSkills) {
+			if (usesCompanionDeclarations) {
+				const declaration = companionSkill.declaration;
+
+				if (!declaration) {
+					throw new Error(`Skill "${skillName}" is missing companion declaration for "${companionSkill.skillName}".`);
+				}
+
+				const condition = declaration.appliesWhen === undefined ? "" : ` · appliesWhen: ${escapeMarkdownText(declaration.appliesWhen)}`;
+				const companionGuide = companionSkill.progressiveDisclosure
+					? `[RULES_INDEX.md](${companionSkill.rulesIndexPath})`
+					: `[AGENTS.md](${companionSkill.agentsGuidePath})`;
+				lines.push(
+					`- \`${companionSkill.conventionName}\` - ${companionSkill.title} · mode: \`${declaration.mode}\`${condition} · [SKILL.md](${companionSkill.skillEntrypointPath}) · ${companionGuide}`,
+				);
+				continue;
+			}
+
 			lines.push(
-				`- \`${companionSkill.conventionName}\` - ${companionSkill.title} 공통 규칙 guide: [${companionSkill.title}](${companionSkill.guidePath})`,
+				`- \`${companionSkill.conventionName}\` - ${companionSkill.title} 공통 규칙 guide: [${companionSkill.title}](${companionSkill.agentsGuidePath})`,
 			);
 		}
 
@@ -223,10 +321,16 @@ export const buildSkill = async (skillPaths: SkillPaths): Promise<void> => {
 		throw new Error(`Failed to resolve root skill document for "${skillPaths.skillName}".`);
 	}
 
-	const companionSkills = collectCompanionSkills(skillPaths.skillName, documents);
+	const companionSkills = collectCompanionSkills(rootDocument, documents);
 	const localSections = buildCompiledSections(skillPaths.skillName, [rootDocument]);
 	const localReferences = collectReferenceLinks([rootDocument]);
-	const localMarkdown = generateMarkdown(skillPaths.skillName, rootDocument.metadata, localSections, companionSkills, localReferences);
+	const localMarkdown = generateMarkdown({
+		skillName: skillPaths.skillName,
+		metadata: rootDocument.metadata,
+		sections: localSections,
+		companionSkills,
+		references: localReferences,
+	});
 	const dependencies = parseDependencyDeclaration(rootDocument.skillName, rootDocument.metadata);
 	const rulesIndexMarkdown =
 		rootDocument.metadata.progressiveDisclosure === true ? generateRulesIndexMarkdown(rootDocument, dependencies.companions) : undefined;

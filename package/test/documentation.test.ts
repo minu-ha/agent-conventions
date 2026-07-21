@@ -87,8 +87,45 @@ const assertOracleSummary = (source: string, oracleName: string): void => {
 	assert.match(commentBlock ?? "", /@summary /, `${oracleName} should have a concise @summary header.`);
 };
 
+/**
+ * @summary function const 선언의 기대 role tag 검증 정보
+ */
+interface FunctionRoleTagExpectation {
+	/**
+	 * @field 오류 메시지에 사용할 package 상대 경로
+	 */
+	relativePath: string;
+	/**
+	 * @field role tag를 검사할 const 함수 이름
+	 */
+	functionName: string;
+	/**
+	 * @field 선언 직전 JSDoc에 필요한 role tag
+	 */
+	tag: string;
+}
+
+/**
+ * @helper const 함수 선언의 role tag 검증
+ */
+const assertFunctionRoleTag = (source: string, expectation: FunctionRoleTagExpectation): void => {
+	const {relativePath, functionName, tag} = expectation;
+	const declarationPattern = new RegExp(String.raw`(?:export )?const ${functionName}\s*=`, "m");
+	const declaration = declarationPattern.exec(source);
+	assert.ok(declaration, `${relativePath} should declare ${functionName}.`);
+	const commentBlock = readImmediateJsDocBlock(source, declaration.index);
+
+	assert.match(commentBlock ?? "", new RegExp(`${tag}\\b`), `${relativePath} should document ${functionName} with ${tag}.`);
+};
+
 test("object-shaped interfaces in contract modules document summaries and every field", async () => {
-	for (const relativePath of ["src/types.ts", "src/generated-files.ts", "src/routing-evals.ts", "test/routing-evals.test.ts"] as const) {
+	for (const relativePath of [
+		"src/types.ts",
+		"src/generated-files.ts",
+		"src/routing-evals.ts",
+		"src/build.ts",
+		"test/routing-evals.test.ts",
+	] as const) {
 		const source = await readPackageFile(relativePath);
 		assertDocumentedInterfaces(source, relativePath);
 	}
@@ -136,6 +173,7 @@ test("source files use convention-specific JSDoc tags for helper and boundary fu
 		["src/parser.ts", "readSkillSections", "@description"],
 		["src/parser.ts", "readSkillRuleFileNames", "@description"],
 		["src/parser.ts", "readSkillRules", "@description"],
+		["src/routing.ts", "escapeMarkdownText", "@helper"],
 		["src/routing.ts", "getRuleId", "@helper"],
 		["src/routing.ts", "getRulesForSection", "@helper"],
 		["src/routing.ts", "getRulesIndexByteBudget", "@helper"],
@@ -160,10 +198,25 @@ test("source files use convention-specific JSDoc tags for helper and boundary fu
 
 	for (const [relativePath, functionName, tag] of functionTagExpectations) {
 		const source = await readPackageFile(relativePath);
-		const declarationPattern = new RegExp(String.raw`/\*\*[\s\S]*?${tag}[\s\S]*?\*/\n(?:export )?const ${functionName}\s*=`, "m");
-
-		assert.match(source, declarationPattern, `${relativePath} should document ${functionName} with ${tag}.`);
+		assertFunctionRoleTag(source, {relativePath, functionName, tag});
 	}
+});
+
+test("function role guard rejects an immediate JSDoc retag or removal", async () => {
+	const relativePath = "src/dependencies.ts";
+	const functionName = "assertValidSkillName";
+	const tag = "@helper";
+	const source = await readPackageFile(relativePath);
+	const declarationIndex = source.indexOf(`export const ${functionName} =`);
+	const block = readImmediateJsDocBlock(source, declarationIndex);
+	assert.ok(block);
+	const blockStart = source.lastIndexOf(block, declarationIndex);
+
+	const retaggedSource = `${source.slice(0, blockStart)}${block.replace(tag, "@summary")}${source.slice(blockStart + block.length)}`;
+	assert.throws(() => assertFunctionRoleTag(retaggedSource, {relativePath, functionName, tag}), /should document.*@helper/);
+
+	const blockRemovedSource = `${source.slice(0, blockStart)}${source.slice(blockStart + block.length)}`;
+	assert.throws(() => assertFunctionRoleTag(blockRemovedSource, {relativePath, functionName, tag}), /should document.*@helper/);
 });
 
 test("package TypeScript files avoid named function declarations in favor of arrow functions", async () => {
@@ -224,12 +277,38 @@ test("routing eval module reserves role tags for exported file boundaries", asyn
 
 	assert.doesNotMatch(source, /@helper /, "module-local parsing and validation sub-steps should not claim reusable helper boundaries.");
 	assert.match(source, /@summary strict JSON object/, "JsonObject should have a summary declaration.");
+	assert.doesNotMatch(
+		source,
+		/scenario\.scopeDrift\?\.[^\n]+\?\? false/,
+		"scope drift absence should be expressed as an explicit boolean branch.",
+	);
+	assert.match(
+		source,
+		/scenario\.scopeDrift\?\.expectedSkills\.includes\(skillPaths\.skillName\) === true/,
+		"scope drift activation should make the absent case explicitly false without a fallback.",
+	);
+});
+
+test("build markdown renderer uses one documented argument object and destructures inside the body", async () => {
+	const source = await readPackageFile("src/build.ts");
+
+	assert.match(source, /export const generateMarkdown = \(args: GenerateMarkdownArgs\): string => \{/);
+	assert.match(
+		source,
+		/export const generateMarkdown = \(args: GenerateMarkdownArgs\): string => \{\n\tconst \{[\s\S]*?\} = args;\n\tconst lines:/,
+	);
 });
 
 test("routing eval test oracles document their exact contract purpose", async () => {
 	const source = await readPackageFile("test/routing-evals.test.ts");
 
-	for (const oracleName of ["typescriptRuleRouting", "typescriptSelections", "typescriptScenarioEvidence"] as const) {
+	for (const oracleName of [
+		"typescriptRuleRouting",
+		"typescriptSelections",
+		"typescriptScenarioEvidence",
+		"cssRuleRouting",
+		"cssScenarioStages",
+	] as const) {
 		assertOracleSummary(source, oracleName);
 		const declarationIndex = source.indexOf(`const ${oracleName} =`);
 		const block = readImmediateJsDocBlock(source, declarationIndex);

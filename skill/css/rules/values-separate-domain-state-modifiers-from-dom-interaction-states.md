@@ -2,6 +2,7 @@
 title: Separate Domain State Modifiers From DOM Interaction States
 impact: HIGH
 impactDescription: keeps app state, focus visibility, and hover behavior readable and accessible without mixing their responsibilities
+appliesWhen: app/domain state modifier와 hover·focus·disabled 같은 DOM interaction state를 추가·변경하거나 focus ring에 손댄다.
 tags: state, focus, accessibility
 ---
 

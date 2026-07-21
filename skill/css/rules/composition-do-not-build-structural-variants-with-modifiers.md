@@ -2,6 +2,8 @@
 title: Do Not Use Modifiers for One-off Structural Patches
 impact: HIGH
 impactDescription: keeps modifiers reserved for state instead of turning them into a second layout naming system
+appliesWhen: spacing·방향·특정 화면의 구조 차이를 `--modifier`로 추가하려 하거나 modifier가 반복 가능한 상태 또는 API variant인지 판단한다.
+reviewWith: naming-name-elements-and-modifiers-by-role
 tags: modifiers, structure, naming
 ---
 

@@ -3,7 +3,15 @@
   "version": "1.0.0",
   "organization": "Agent Conventions",
   "date": "2026년 4월",
-  "abstract": "에이전트 협업 팀을 위한 CSS 코딩 컨벤션입니다. 이 가이드는 plain CSS를 기본으로 한 전역 고유 네이밍, `rt_/wg_/ui_/loc_` owner scope, 예측 가능한 TSX class 조합, 평평한 selector, wrapper 기준 서드파티 스타일링, 토큰화된 값, 절제된 stylesheet 구성을 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, 최종적으로 에이전트가 읽는 `AGENTS.md`로 compile됩니다.",
+  "abstract": "에이전트 협업 팀을 위한 CSS 코딩 컨벤션입니다. 이 가이드는 plain CSS를 기본으로 한 전역 고유 네이밍, `rt_/wg_/ui_/loc_` owner scope, 예측 가능한 TSX class 조합, 평평한 selector, wrapper 기준 서드파티 스타일링, 토큰화된 값, 절제된 stylesheet 구성을 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, 기본 경로는 `SKILL.md` router에서 `RULES_INDEX.md` 전체를 scan하고 선택한 rule 원문만 읽는 방식입니다. `AGENTS.md`는 명시적으로 요청할 때만 읽는 opt-in full handbook입니다.",
+  "progressiveDisclosure": true,
+  "companions": [
+    {
+      "skill": "typescript",
+      "mode": "conditional",
+      "appliesWhen": "TS/TSX class contract, wrapper Props 또는 style import를 함께 변경한다."
+    }
+  ],
   "references": [
     "https://developer.mozilla.org/en-US/docs/Web/CSS",
     "https://developer.mozilla.org/en-US/docs/Web/CSS/Pseudo-classes",

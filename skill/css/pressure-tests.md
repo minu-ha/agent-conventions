@@ -12,14 +12,36 @@ CSS skill을 수정하거나 새로운 rule을 추가했을 때, 실제 에이�
 
 ## 실행 방법
 
-1. 가능하면 실제 TSX + CSS 코드베이스에서 실행합니다.
-2. 각 scenario는 최소 2번 돌립니다.
-   - baseline: CSS skill 없이 실행
-   - candidate: `convention-css`와 필요한 companion skill을 함께 로드한 상태로 실행
-3. 결과를 아래 항목으로 비교합니다.
-   - 어떤 CSS 파일과 TSX를 만들거나 수정했는지
-   - class naming, wrapper ownership, selector depth, token usage가 skill 기준과 맞는지
-   - route scope, shared component scope, local scope가 섞이지 않았는지
+각 scenario를 같은 prompt와 파일 evidence로 최소 2회, CRITICAL 누락 위험이 크면 3회 실행합니다.
+
+1. `no-skill baseline`: convention 문서를 주지 않습니다.
+2. `full-handbook oracle`: 독립 reviewer가 전체 `AGENTS.md`와 rule body로 exact 기대 partition을 승인합니다.
+3. `progressive candidate`: `SKILL.md` → 전체 `RULES_INDEX.md` → selected/unknown rule body만 읽습니다.
+4. `mutation RED`: candidate receipt에서 expected rule 하나를 제거합니다. coverage mismatch 또는 `UNKNOWN`이 완료를 반드시 차단해야 합니다.
+
+각 arm은 [routing-evals.json](./routing-evals.json)의 `expectedSkills`, exact `expectedSelected`, exact `expectedNotApplicable`, scope drift와 비교합니다. all-rules selection도 precision 실패입니다. candidate는 activation/selected/N/A exact match, exclusion-group ordinal 합집합, `FAIL 0`, `UNKNOWN 0`을 모두 만족해야 합니다.
+
+결과에는 repository HEAD, index digest, model/runtime/version, reasoning level, exact prompt, scorer/rubric version, trial, arm, declared loaded files, receipt, verdict, input token을 기록합니다. file-read telemetry가 없으면 observed라고 표현하지 않습니다. router+index+selected body의 implementation median/최대와 full-handbook oracle 대비 절감률을 함께 보고하고, scope drift·audit·reviewer phase의 반복 load도 누적 token에 포함합니다.
+
+## Progressive Routing Regression Set
+
+[routing-evals.json](./routing-evals.json)이 exact prompt, files, expected skills, Selected/N/A 배열의 machine-readable oracle입니다. 아래 11개 scenario, 13개 stage를 같은 evidence로 재실행합니다.
+
+- `css-route-style-scope-drift`: initial은 React activation evidence와 TypeScript partition만 유지하고, scope drift에서 CSS owner partition을 추가합니다.
+- `css-owner-boundary-split`: pure CSS owner/file 분리를 판정합니다.
+- `css-domain-state-class-contract`: React evidence, TypeScript direct import, CSS domain-state contract를 함께 판정합니다.
+- `css-one-off-structural-modifier`: non-repeatable modifier 제거와 role naming을 판정합니다.
+- `css-ui-wrapper-third-party-dom`: initial에는 C17을 N/A로 두고 optional variable scope drift에서만 C17을 Selected로 추가합니다.
+- `css-ui-wrapper-root-prop-contract`: C10 wrapper styling, C11 wrapper Props와 conditional TypeScript contract를 함께 판정합니다.
+- `css-rich-text-owner-block`: raw element nesting의 owner block 예외만 선택합니다.
+- `css-dom-interaction-states`: same-block pseudo-state와 domain/DOM state 분리를 선택합니다.
+- `css-repeated-values-and-optional-token`: repeated value token과 fallback을 함께 선택합니다.
+- `css-sticky-layout-intent`: sticky, z-index, size responsibility만 선택합니다.
+- `css-deep-project-descendant-chain`: deep dependency와 flat selector를 함께 선택합니다.
+
+Pure CSS fixture는 CSS만 partition합니다. Mixed fixture 5개는 progressive TypeScript의 exact partition을 저장하지만 React는 아직 non-progressive activation evidence이므로 `expectedSelected.react`나 `expectedNotApplicable.react`를 만들지 않습니다. CSS metadata에는 React companion을 추가하지 않습니다.
+
+Scope drift 뒤에는 file, activated skill, 기존 Selected rule을 제거하지 않고 전체 index를 다시 scan합니다. 모든 CSS rule은 전체 scenario set에서 한 번 이상 positive coverage를 가져야 하며, 마지막 `convention-audit`에서 `FAIL 0`, `UNKNOWN 0`을 확인합니다.
 
 ## Common Red Flags
 

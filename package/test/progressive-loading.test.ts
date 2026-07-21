@@ -594,8 +594,14 @@ test("temporary progressive build and stale check are deterministic without repo
 		assert.doesNotMatch(firstIndex, /Fixture Rule|leaf\/rules|dependency\/rules/);
 		assert.equal(Buffer.byteLength(firstIndex, "utf8") <= getRulesIndexByteBudget(2), true);
 		assert.match(firstHandbook, /^### 1\.1 Own Composition$/m);
-		assert.match(firstHandbook, /\.\.\/dependency\/AGENTS\.md/);
-		assert.match(firstHandbook, /\.\.\/leaf\/AGENTS\.md/);
+		assert.match(firstHandbook, /metadata\.json\.companions/);
+		assert.doesNotMatch(firstHandbook, /metadata\.json\.extends/);
+		assert.match(firstHandbook, /`convention-dependency`[\s\S]*?mode: `conditional`/);
+		assert.match(firstHandbook, /appliesWhen: Editing dependency-facing code\./);
+		assert.match(firstHandbook, /\.\.\/dependency\/SKILL\.md/);
+		assert.match(firstHandbook, /\.\.\/dependency\/RULES_INDEX\.md/);
+		assert.doesNotMatch(firstHandbook, /\.\.\/(?:dependency|leaf)\/AGENTS\.md/);
+		assert.doesNotMatch(firstHandbook, /\.\.\/leaf\/(?:SKILL|RULES_INDEX)\.md/);
 		assert.doesNotMatch(firstHandbook, /^### \d+\.\d+ Fixture Rule$/m);
 
 		for (const localMarker of ["STATE_BODY_MARKER", "COMPOSITION_BODY_MARKER"] as const) {
@@ -642,6 +648,70 @@ test("temporary progressive build and stale check are deterministic without repo
 	});
 
 	assert.equal(readRealSkillGitStatus(), realSkillStatusBefore);
+});
+
+test("non-progressive owners preserve companion modes and link each target to its available routing sources", async () => {
+	await withFixtureRoot(async (skillRootDir) => {
+		await writeSkillFixture(skillRootDir, "progressive-target", {
+			metadata: {progressiveDisclosure: true},
+			rules: [{appliesWhen: "Editing progressive target code."}],
+		});
+		await writeSkillFixture(skillRootDir, "legacy-target");
+		await writeSkillFixture(skillRootDir, "owner", {
+			metadata: {
+				companions: [
+					{skill: "progressive-target", mode: "conditional", appliesWhen: "Editing progressive target contracts."},
+					{skill: "legacy-target", mode: "required"},
+				],
+			},
+		});
+
+		const ownerPaths = getSkillPaths("owner", skillRootDir);
+		await captureConsoleLogs(async () => buildSkill(ownerPaths));
+		const handbook = await readFile(ownerPaths.outputPath, "utf8");
+
+		assert.match(handbook, /metadata\.json\.companions/);
+		assert.doesNotMatch(handbook, /metadata\.json\.extends/);
+		assert.match(handbook, /^## Companion Skill 활성화$/m);
+		assert.match(handbook, /`convention-progressive-target`[\s\S]*?mode: `conditional`/);
+		assert.match(handbook, /appliesWhen: Editing progressive target contracts\./);
+		assert.match(handbook, /\.\.\/progressive-target\/SKILL\.md/);
+		assert.match(handbook, /\.\.\/progressive-target\/RULES_INDEX\.md/);
+		assert.doesNotMatch(handbook, /\.\.\/progressive-target\/AGENTS\.md/);
+		assert.match(handbook, /`convention-legacy-target`[\s\S]*?mode: `required`/);
+		assert.match(handbook, /\.\.\/legacy-target\/SKILL\.md/);
+		assert.match(handbook, /\.\.\/legacy-target\/AGENTS\.md/);
+		assert.doesNotMatch(handbook, /\.\.\/legacy-target\/RULES_INDEX\.md/);
+	});
+});
+
+test("companion appliesWhen stays literal Markdown for progressive and non-progressive owners", async () => {
+	await withFixtureRoot(async (skillRootDir) => {
+		const hostileCondition = "[x](https://example.invalid) *strong* `code`";
+		await writeSkillFixture(skillRootDir, "target", {
+			metadata: {progressiveDisclosure: true},
+			rules: [{appliesWhen: "Editing target code."}],
+		});
+
+		for (const progressiveDisclosure of [true, false] as const) {
+			const owner = progressiveDisclosure ? "progressive-owner" : "non-progressive-owner";
+			await writeSkillFixture(skillRootDir, owner, {
+				metadata: {
+					...(progressiveDisclosure ? {progressiveDisclosure: true} : {}),
+					companions: [{skill: "target", mode: "conditional", appliesWhen: hostileCondition}],
+				},
+				rules: progressiveDisclosure ? [{appliesWhen: "Editing owner code."}] : undefined,
+			});
+			const ownerPaths = getSkillPaths(owner, skillRootDir);
+			await captureConsoleLogs(async () => buildSkill(ownerPaths));
+			const handbook = await readFile(ownerPaths.outputPath, "utf8");
+
+			assert.match(handbook, /appliesWhen: \\\[x\\\]\\\(https:\/\/example\.invalid\\\) \\\*strong\\\* \\`code\\`/);
+			assert.doesNotMatch(handbook, /\[x\]\(https:\/\/example\.invalid\)/);
+			assert.doesNotMatch(handbook, /\*strong\*/);
+			assert.doesNotMatch(handbook, /`code`/);
+		}
+	});
 });
 
 test("progressive owners require progressive companion sources and SKILL.md entrypoints", async () => {

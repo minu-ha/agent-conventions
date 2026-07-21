@@ -322,8 +322,18 @@ const readExpectedSkillDocument = async (args: ReadExpectedSkillDocumentArgs): P
 		throw new Error(`Routing fixture references unknown skill "${skillName}".`);
 	}
 
-	const document = await readSkillDocument(getSkillPaths(skillName, skillRootDir));
-	documents.set(skillName, document);
+	const resolvedDocuments = await readResolvedSkillDocuments(getSkillPaths(skillName, skillRootDir));
+
+	for (const resolvedDocument of resolvedDocuments) {
+		documents.set(resolvedDocument.skillName, resolvedDocument);
+	}
+
+	const document = documents.get(skillName);
+
+	if (!document) {
+		throw new Error(`Routing fixture failed to resolve activated skill "${skillName}".`);
+	}
+
 	return document;
 };
 
@@ -410,11 +420,28 @@ const validateExpectedPartition = async (args: ValidateExpectedPartitionArgs): P
 			selected: partition.expectedSelected[skillName] ?? [],
 			notApplicable: partition.expectedNotApplicable[skillName] ?? [],
 		});
+	}
 
-		for (const companion of parseDependencyDeclaration(skillName, document.metadata).companions) {
-			if (companion.mode === "required" && !expectedSkillSet.has(companion.skill)) {
-				throw new Error(`${label} is missing required companion skill "${companion.skill}" for "${skillName}".`);
+	for (const skillName of partition.expectedSkills) {
+		const document = documents.get(skillName);
+
+		if (!document) {
+			throw new Error(`${label}: failed to cache activated skill "${skillName}".`);
+		}
+
+		const dependencyDeclaration = parseDependencyDeclaration(skillName, document.metadata);
+		const requiredDependencyNames =
+			dependencyDeclaration.kind === "extends"
+				? dependencyDeclaration.skillNames
+				: dependencyDeclaration.companions.filter((companion) => companion.mode === "required").map((companion) => companion.skill);
+
+		for (const dependencyName of requiredDependencyNames) {
+			if (expectedSkillSet.has(dependencyName)) {
+				continue;
 			}
+
+			const dependencyLabel = dependencyDeclaration.kind === "extends" ? "dependency" : "companion";
+			throw new Error(`${label} is missing required ${dependencyLabel} skill "${dependencyName}" for "${skillName}".`);
 		}
 	}
 };
@@ -458,9 +485,11 @@ const validateManifest = async (skillPaths: SkillPaths): Promise<ManifestValidat
 
 	for (const scenario of manifest.scenarios) {
 		const label = `${skillPaths.skillName}: scenario "${scenario.id}"`;
+		const ownerActivatedInitially = scenario.expectedSkills.includes(skillPaths.skillName);
+		const ownerActivatedAfterDrift = scenario.scopeDrift?.expectedSkills.includes(skillPaths.skillName) === true;
 
-		if (!scenario.expectedSkills.includes(skillPaths.skillName)) {
-			throw new Error(`${label} must activate its owner skill "${skillPaths.skillName}".`);
+		if (!ownerActivatedInitially && !ownerActivatedAfterDrift) {
+			throw new Error(`${label} must activate its owner skill "${skillPaths.skillName}" in the initial stage or scopeDrift.`);
 		}
 
 		await validateExpectedPartition({label, partition: scenario, skillRootDir, documents});

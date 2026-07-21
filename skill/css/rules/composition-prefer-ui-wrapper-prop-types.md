@@ -2,6 +2,8 @@
 title: Prefer `Ui*` Wrapper Prop Types
 impact: MEDIUM-HIGH
 impactDescription: preserves wrapper-level styling and API contracts instead of leaking raw library prop types into usage sites
+appliesWhen: `Ui*` wrapper 사용처나 wrapper API에서 Props 타입을 선언·추론·재사용하고 라이브러리 원본 Props 참조를 검토한다.
+reviewWith: typescript/types-reuse-existing-contracts-before-new-types
 tags: props, wrappers, types
 ---
 

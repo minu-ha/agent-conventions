@@ -6,103 +6,45 @@ metadata:
   version: "1.0.0"
 ---
 
-# CSS 컨벤션
+# CSS Convention Router
 
-에이전트 협업 팀을 위한 CSS 코딩 컨벤션 모음입니다. 현재 이 가이드는 5개 카테고리의 21개 규칙으로 구성되어 있습니다.
-클래스 네이밍, `rt_/wg_/ui_/loc_` ownership, TSX class 조합, selector 경계, 디자인 토큰, wrapper 기반 서드파티 스타일링 규칙을 [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`와 compiled [AGENTS.md](./AGENTS.md)로 관리합니다.
+이 문서는 규칙집이 아니라 필요한 CSS 원문을 고르는 router다. 일반 작업에서 전체 handbook을 먼저 읽지 않는다.
 
-## 사용할 때
-- CSS 파일, route/컴포넌트 전용 plain `*.css`, TSX의 `className` 조합을 만들거나 수정할 때 사용합니다.
-- wrapper 기반 서드파티 DOM 스타일링, modifier 규칙, selector depth, 디자인 토큰 사용이 중요한 변경에 사용합니다.
-- 프로젝트가 CSS Modules를 명시적으로 표준화하지 않았다면, 기본은 plain `*.css`와 전역 고유 클래스명을 사용합니다.
-- CSS 구조나 클래스 네이밍을 house style 기준으로 리뷰할 때 사용합니다.
+## 1. Scope snapshot
 
-## 활성화 체크리스트
-- 변경 범위에 stylesheet 파일, `className` 조합, CSS import, wrapper 스타일링, selector, 토큰 사용 여부가 포함되는지 먼저 확인합니다.
-- 이 skill이 활성화되면 먼저 compiled [AGENTS.md](./AGENTS.md)를 열어 Naming, Composition, Selector, Values, Organization 중 어떤 카테고리가 이번 변경에 직접 걸리는지 빠르게 훑습니다.
-- 실제로 건드리는 관심사에 해당하는 `rules/*.md`를 추가로 읽습니다. 예를 들어 네이밍을 바꾸면 naming rule, `className` 조합을 바꾸면 composition rule, 서드파티 DOM을 만지면 selector rule을 확인합니다.
-- JSX 구조가 함께 바뀌면 `convention-react`, route 레벨 스타일이면 활성화된 route/framework convention, helper/type이 함께 바뀌면 `convention-typescript`도 같이 로드합니다.
+수정 전에 요청, 계획된 파일, 현재 diff를 한 줄로 고정한다. stylesheet, selector, token·CSS variable, `className` contract, visual styling을 만들거나 바꾸면 이 skill을 활성화한다.
 
-## 우선순위별 규칙 카테고리
+TSX의 component 구조·render·state·handler 자체는 `convention-react`로 보내고, TypeScript type·import·helper 계약은 `convention-typescript`로 보낸다. 특히 `TS/TSX class contract, wrapper Props 또는 style import를 함께 변경한다.`면 conditional TypeScript companion을 활성화한다. 순수 CSS 작업에는 TypeScript를 자동 활성화하지 않는다.
 
-1. Naming and Ownership
-   영향도: CRITICAL
-   Prefix: `naming-`
-2. Class Composition and Wrapper Boundaries
-   영향도: HIGH
-   Prefix: `composition-`
-3. Selectors and Nesting Boundaries
-   영향도: CRITICAL
-   Prefix: `selector-`
-4. Values, Layout, and Interaction States
-   영향도: HIGH
-   Prefix: `values-`
-5. File Organization and Guardrails
-   영향도: MEDIUM
-   Prefix: `organization-`
+## 2. Index scan
 
-## 빠른 참조
+[RULES_INDEX.md](./RULES_INDEX.md)를 처음부터 끝까지 읽고 모든 local entry의 `appliesWhen`을 scope evidence와 대조한다. 첫 match에서 절대 멈추지 않는다. title과 tag는 탐색 보조일 뿐 배제 근거가 아니다. 애매한 항목은 `Unknown`으로 둔다.
 
-### 1. Naming and Ownership (CRITICAL)
+## 3. Digest-bound receipt
 
-- `naming-default-to-plain-css-when-no-module-convention` - CSS Modules 표준이 없으면 plain `.css`와 전역 고유 클래스명을 기본으로 사용
-- `naming-use-scope-slug-element-modifier-syntax` - scope, slug, element, modifier를 포함한 클래스 문법과 scope별 slug casing 유지
-- `naming-name-elements-and-modifiers-by-role` - 구조나 간격이 아니라 UI 역할 기준으로 이름 지정
-- `naming-preserve-route-slug-traceability` - route/framework skill이 선택한 `rt_*` owner의 slug traceability 유지
-- `naming-keep-scope-slug-unique-per-owner` - 하나의 `scope_slug` 네임스페이스는 한 owner만 사용
-- `naming-separate-local-and-route-style-scopes` - `rt_*`, `wg_*`, `ui_*`, `loc_*` owner 범위를 파일과 namespace에서 분리
+index의 `sha256` digest에 묶인 exact receipt를 유지한다.
 
-### 2. Class Composition and Wrapper Boundaries (HIGH)
+```md
+Activated: css, <conditional companions>
+Index: css@sha256:<digest>
+Selected: <ordinal + stable ID>
+Not applicable: <나머지 전체 ordinal>
+Excluded groups: <N/A ordinal group>: <비어 있지 않은 scope-evidence 이유>
+Unknown: <ordinal + stable ID 또는 none>
+```
 
-- `composition-compose-classes-with-clsx` - TSX class 조합은 `clsx()`를 기본으로 사용
-- `composition-keep-classes-single-purpose` - 하나의 클래스에는 하나의 시각적 책임만 부여
-- `composition-do-not-build-structural-variants-with-modifiers` - one-off 구조 patch에 modifier를 남용하지 않음
-- `composition-style-ui-components-through-owned-wrappers` - `Ui*` 내부 DOM 스타일링은 owner wrapper를 기본으로 사용
-- `composition-prefer-ui-wrapper-prop-types` - 라이브러리 native prop보다 wrapper prop 타입 우선
+모든 ordinal은 `Selected`, `Not applicable`, `Unknown` 중 정확히 하나에만 있어야 한다. exclusion group의 ordinal 합집합은 exact N/A set과 같아야 하며 각 이유는 비어 있으면 안 된다. `reviewWith`는 자동 선택이 아니라 재평가 신호다. 각 target을 현재 scope로 다시 판정하고 cross-skill target이면 companion 활성화도 다시 판정한다.
 
-### 3. Selectors and Nesting Boundaries (CRITICAL)
+## 4. Read and implement
 
-- `selector-keep-project-selectors-flat` - project-owned 클래스 구조는 평평하게 유지하고 rich text wrapper 예외는 owner block 안에 국한
-- `selector-use-pseudo-classes-for-dom-owned-states` - DOM 소유 상태는 같은 클래스 block 안 nested `&:`로 유지
-- `selector-target-third-party-dom-from-owned-roots` - 서드파티 DOM은 owner root 클래스에서만 타게팅
-- `selector-avoid-deep-descendant-dependencies` - 깊은 descendant selector 의존 회피
+Selected와 Unknown의 `rules/*.md` 원문을 전부 읽는다. Unknown은 원문과 실제 코드로 적용 여부를 해소해 완료 전 `none`으로 만든다. 선택 원문의 Incorrect/Correct, owner, wrapper, selector 경계를 구현과 리뷰 기준으로 사용한다.
 
-### 4. Values, Layout, and Interaction States (HIGH)
+## 5. Scope drift
 
-- `values-tokenize-repeated-visual-values` - 반복되는 색상, 간격, 타이포, 그림자는 토큰화
-- `values-always-provide-css-variable-fallbacks` - 존재 보장이 없는 CSS 변수에는 fallback 포함
-- `values-keep-layout-intent-explicit` - 레이아웃 의도와 sticky/fixed 맥락을 명시적으로 유지
-- `values-separate-domain-state-modifiers-from-dom-interaction-states` - 앱 상태 modifier와 브라우저 상호작용 상태 분리
+새 stylesheet, class hook, selector, token, wrapper Props, style import가 생기면 scope snapshot부터 index 전체 scan과 receipt를 다시 수행한다. digest가 달라져도 이전 receipt를 폐기한다.
 
-### 5. File Organization and Guardrails (MEDIUM)
+## 6. Finish gate
 
-- `organization-keep-style-files-owned-by-one-component-or-route` - 각 stylesheet는 한 route 또는 컴포넌트가 소유
-- `organization-review-banned-css-patterns-before-finishing` - 마무리 전에 금지 selector/modifier 패턴 점검
+마지막 diff 기준으로 `convention-audit`이 index를 독립 재선택하게 한다. digest, exact partition, exclusion evidence, 선택 원문, 검증 결과를 넘기고 `FAIL 0`, `UNKNOWN 0`일 때만 완료한다.
 
-## 함께 쓰기
-- JSX 구조와 스타일 조합이 함께 바뀌면 `convention-react`를 함께 사용합니다.
-- Route-owned style이 바뀌면 해당 framework convention을 함께 사용합니다. CSS skill은 owner scope를 일관되게 적용하고, 어떤 파일이 route/document/local owner인지는 framework skill의 소유권 규칙을 따릅니다.
-- helper, config, wrapper prop 타입이 함께 바뀌면 `convention-typescript`를 함께 사용합니다.
-- 브라우저 기반 스타일 회귀를 검증하면 `convention-playwright-test`를 함께 사용합니다.
-
-## 마무리 전 셀프 리뷰
-- 프로젝트가 CSS Modules를 명시적으로 표준화하지 않았는데 `.module.css`나 `styles.*`를 기본처럼 도입하지 않았는지 확인합니다.
-- 바뀐 코드가 Naming, Composition, Selector, Values, Organization 중 어느 카테고리에 걸리는지 다시 대조하고, 해당 규칙을 빠뜨리지 않았는지 점검합니다.
-- 변경이 JSX 구조, route 파일, helper/type, 브라우저 테스트까지 번졌다면 companion skill을 함께 참고했는지 확인합니다.
-
-## 사용하는 방법
-
-자세한 설명과 코드 예시는 개별 rule 파일을 읽으면 됩니다.
-
-- [rules/selector-target-third-party-dom-from-owned-roots.md](./rules/selector-target-third-party-dom-from-owned-roots.md)
-- [rules/naming-use-scope-slug-element-modifier-syntax.md](./rules/naming-use-scope-slug-element-modifier-syntax.md)
-
-각 rule 파일에는 아래 내용이 들어 있습니다.
-- 규칙이 왜 중요한지에 대한 짧은 설명
-- 설명이 붙은 Incorrect CSS 또는 TSX 예시
-- 설명이 붙은 Correct CSS 또는 TSX 예시
-- 구현이나 리뷰에 바로 적용할 수 있는 가이드
-
-## 전체 compiled 문서
-
-모든 규칙이 펼쳐진 전체 가이드는 [AGENTS.md](./AGENTS.md)에서 확인할 수 있습니다.
+전체 [AGENTS.md](./AGENTS.md)는 사용자가 full handbook/onboarding을 명시적으로 요청했거나 index 생성물이 손상되어 fallback이 필요할 때만 읽는 opt-in 문서다.

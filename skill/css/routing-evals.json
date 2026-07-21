@@ -1,0 +1,689 @@
+{
+  "version": 1,
+  "skill": "css",
+  "scenarios": [
+    {
+      "id": "css-route-style-scope-drift",
+      "prompt": "pure rendering change in src/routes/catalog/index.tsx, with React and TypeScript only.",
+      "files": [
+        "src/routes/catalog/index.tsx"
+      ],
+      "expectedSkills": [
+        "react",
+        "typescript"
+      ],
+      "expectedSelected": {
+        "typescript": [
+          "guardrails-review-banned-typescript-shortcuts-before-finishing"
+        ]
+      },
+      "expectedNotApplicable": {
+        "typescript": [
+          "naming-centralize-shared-config-namespaces",
+          "naming-preserve-config-origin-with-chained-access",
+          "naming-use-consistent-file-and-symbol-naming",
+          "naming-use-direct-imports-and-public-entry-points",
+          "types-document-custom-types-and-shapes",
+          "types-mark-unused-parameters-with-underscore",
+          "types-prefer-function-variable-types-over-parameter-annotations",
+          "types-reuse-callback-signatures-from-existing-contracts",
+          "types-reuse-existing-contracts-before-new-types",
+          "functions-avoid-imperative-assembly-in-wide-scopes",
+          "functions-extract-helpers-only-when-the-boundary-is-real",
+          "functions-prefer-immutable-array-sorting",
+          "functions-replace-enum-with-as-const-objects",
+          "functions-use-named-object-params-for-complex-signatures",
+          "functions-use-set-and-map-for-repeated-lookups",
+          "absence-expose-optional-values-instead-of-silent-fallbacks",
+          "docs-keep-inline-comments-for-constraints-and-caveats",
+          "docs-require-header-jsdoc-on-key-declarations",
+          "docs-standardize-annotation-tags-by-declaration-role",
+          "docs-use-helper-for-reusable-pure-helper-functions",
+          "docs-write-concise-korean-comments-about-purpose-and-constraints"
+        ]
+      },
+      "scopeDrift": {
+        "evidence": "add route-owned empty-state className, src/routes/catalog/_index.css, and its direct side-effect import in a project without a CSS Modules standard; final skills add CSS.",
+        "files": [
+          "src/routes/catalog/index.tsx",
+          "src/routes/catalog/_index.css"
+        ],
+        "expectedSkills": [
+          "react",
+          "typescript",
+          "css"
+        ],
+        "expectedSelected": {
+          "typescript": [
+            "naming-use-direct-imports-and-public-entry-points",
+            "guardrails-review-banned-typescript-shortcuts-before-finishing"
+          ],
+          "css": [
+            "naming-default-to-plain-css-when-no-module-convention",
+            "naming-keep-scope-slug-unique-per-owner",
+            "naming-name-elements-and-modifiers-by-role",
+            "naming-preserve-route-slug-traceability",
+            "naming-separate-local-and-route-style-scopes",
+            "naming-use-scope-slug-element-modifier-syntax",
+            "composition-compose-classes-with-clsx",
+            "organization-keep-style-files-owned-by-one-component-or-route",
+            "organization-review-banned-css-patterns-before-finishing"
+          ]
+        },
+        "expectedNotApplicable": {
+          "typescript": [
+            "naming-centralize-shared-config-namespaces",
+            "naming-preserve-config-origin-with-chained-access",
+            "naming-use-consistent-file-and-symbol-naming",
+            "types-document-custom-types-and-shapes",
+            "types-mark-unused-parameters-with-underscore",
+            "types-prefer-function-variable-types-over-parameter-annotations",
+            "types-reuse-callback-signatures-from-existing-contracts",
+            "types-reuse-existing-contracts-before-new-types",
+            "functions-avoid-imperative-assembly-in-wide-scopes",
+            "functions-extract-helpers-only-when-the-boundary-is-real",
+            "functions-prefer-immutable-array-sorting",
+            "functions-replace-enum-with-as-const-objects",
+            "functions-use-named-object-params-for-complex-signatures",
+            "functions-use-set-and-map-for-repeated-lookups",
+            "absence-expose-optional-values-instead-of-silent-fallbacks",
+            "docs-keep-inline-comments-for-constraints-and-caveats",
+            "docs-require-header-jsdoc-on-key-declarations",
+            "docs-standardize-annotation-tags-by-declaration-role",
+            "docs-use-helper-for-reusable-pure-helper-functions",
+            "docs-write-concise-korean-comments-about-purpose-and-constraints"
+          ],
+          "css": [
+            "composition-do-not-build-structural-variants-with-modifiers",
+            "composition-keep-classes-single-purpose",
+            "composition-style-ui-components-through-owned-wrappers",
+            "composition-prefer-ui-wrapper-prop-types",
+            "selector-avoid-deep-descendant-dependencies",
+            "selector-keep-project-selectors-flat",
+            "selector-target-third-party-dom-from-owned-roots",
+            "selector-use-pseudo-classes-for-dom-owned-states",
+            "values-keep-layout-intent-explicit",
+            "values-always-provide-css-variable-fallbacks",
+            "values-separate-domain-state-modifiers-from-dom-interaction-states",
+            "values-tokenize-repeated-visual-values"
+          ]
+        }
+      }
+    },
+    {
+      "id": "css-owner-boundary-split",
+      "prompt": "split mixed route/document/local ownership from posts/_index.css into pages/_document.css and posts/_local/filter-dialog.css; class names do not change.",
+      "files": [
+        "src/routes/posts/_index.css",
+        "src/pages/_document.css",
+        "src/routes/posts/_local/filter-dialog.css"
+      ],
+      "expectedSkills": [
+        "css"
+      ],
+      "expectedSelected": {
+        "css": [
+          "naming-separate-local-and-route-style-scopes",
+          "organization-keep-style-files-owned-by-one-component-or-route",
+          "organization-review-banned-css-patterns-before-finishing"
+        ]
+      },
+      "expectedNotApplicable": {
+        "css": [
+          "naming-default-to-plain-css-when-no-module-convention",
+          "naming-keep-scope-slug-unique-per-owner",
+          "naming-name-elements-and-modifiers-by-role",
+          "naming-preserve-route-slug-traceability",
+          "naming-use-scope-slug-element-modifier-syntax",
+          "composition-compose-classes-with-clsx",
+          "composition-do-not-build-structural-variants-with-modifiers",
+          "composition-keep-classes-single-purpose",
+          "composition-style-ui-components-through-owned-wrappers",
+          "composition-prefer-ui-wrapper-prop-types",
+          "selector-avoid-deep-descendant-dependencies",
+          "selector-keep-project-selectors-flat",
+          "selector-target-third-party-dom-from-owned-roots",
+          "selector-use-pseudo-classes-for-dom-owned-states",
+          "values-keep-layout-intent-explicit",
+          "values-always-provide-css-variable-fallbacks",
+          "values-separate-domain-state-modifiers-from-dom-interaction-states",
+          "values-tokenize-repeated-visual-values"
+        ]
+      }
+    },
+    {
+      "id": "css-domain-state-class-contract",
+      "prompt": "split listButtonActive into base plus --active, add a direct clsx import, and compose with clsx() in catalog/index.tsx and _index.css; do not change pseudo-states.",
+      "files": [
+        "src/routes/catalog/index.tsx",
+        "src/routes/catalog/_index.css"
+      ],
+      "expectedSkills": [
+        "react",
+        "typescript",
+        "css"
+      ],
+      "expectedSelected": {
+        "typescript": [
+          "naming-use-direct-imports-and-public-entry-points",
+          "guardrails-review-banned-typescript-shortcuts-before-finishing"
+        ],
+        "css": [
+          "naming-name-elements-and-modifiers-by-role",
+          "naming-use-scope-slug-element-modifier-syntax",
+          "composition-compose-classes-with-clsx",
+          "composition-keep-classes-single-purpose",
+          "values-separate-domain-state-modifiers-from-dom-interaction-states",
+          "organization-review-banned-css-patterns-before-finishing"
+        ]
+      },
+      "expectedNotApplicable": {
+        "typescript": [
+          "naming-centralize-shared-config-namespaces",
+          "naming-preserve-config-origin-with-chained-access",
+          "naming-use-consistent-file-and-symbol-naming",
+          "types-document-custom-types-and-shapes",
+          "types-mark-unused-parameters-with-underscore",
+          "types-prefer-function-variable-types-over-parameter-annotations",
+          "types-reuse-callback-signatures-from-existing-contracts",
+          "types-reuse-existing-contracts-before-new-types",
+          "functions-avoid-imperative-assembly-in-wide-scopes",
+          "functions-extract-helpers-only-when-the-boundary-is-real",
+          "functions-prefer-immutable-array-sorting",
+          "functions-replace-enum-with-as-const-objects",
+          "functions-use-named-object-params-for-complex-signatures",
+          "functions-use-set-and-map-for-repeated-lookups",
+          "absence-expose-optional-values-instead-of-silent-fallbacks",
+          "docs-keep-inline-comments-for-constraints-and-caveats",
+          "docs-require-header-jsdoc-on-key-declarations",
+          "docs-standardize-annotation-tags-by-declaration-role",
+          "docs-use-helper-for-reusable-pure-helper-functions",
+          "docs-write-concise-korean-comments-about-purpose-and-constraints"
+        ],
+        "css": [
+          "naming-default-to-plain-css-when-no-module-convention",
+          "naming-keep-scope-slug-unique-per-owner",
+          "naming-preserve-route-slug-traceability",
+          "naming-separate-local-and-route-style-scopes",
+          "composition-do-not-build-structural-variants-with-modifiers",
+          "composition-style-ui-components-through-owned-wrappers",
+          "composition-prefer-ui-wrapper-prop-types",
+          "selector-avoid-deep-descendant-dependencies",
+          "selector-keep-project-selectors-flat",
+          "selector-target-third-party-dom-from-owned-roots",
+          "selector-use-pseudo-classes-for-dom-owned-states",
+          "values-keep-layout-intent-explicit",
+          "values-always-provide-css-variable-fallbacks",
+          "values-tokenize-repeated-visual-values",
+          "organization-keep-style-files-owned-by-one-component-or-route"
+        ]
+      }
+    },
+    {
+      "id": "css-one-off-structural-modifier",
+      "prompt": "replace non-repeatable section--compactTop spacing patch with a role-named element in catalog/detail.tsx and detail.css; keep the existing clsx import.",
+      "files": [
+        "src/routes/catalog/detail.tsx",
+        "src/routes/catalog/detail.css"
+      ],
+      "expectedSkills": [
+        "react",
+        "typescript",
+        "css"
+      ],
+      "expectedSelected": {
+        "typescript": [
+          "guardrails-review-banned-typescript-shortcuts-before-finishing"
+        ],
+        "css": [
+          "naming-name-elements-and-modifiers-by-role",
+          "naming-use-scope-slug-element-modifier-syntax",
+          "composition-compose-classes-with-clsx",
+          "composition-do-not-build-structural-variants-with-modifiers",
+          "organization-review-banned-css-patterns-before-finishing"
+        ]
+      },
+      "expectedNotApplicable": {
+        "typescript": [
+          "naming-centralize-shared-config-namespaces",
+          "naming-preserve-config-origin-with-chained-access",
+          "naming-use-consistent-file-and-symbol-naming",
+          "naming-use-direct-imports-and-public-entry-points",
+          "types-document-custom-types-and-shapes",
+          "types-mark-unused-parameters-with-underscore",
+          "types-prefer-function-variable-types-over-parameter-annotations",
+          "types-reuse-callback-signatures-from-existing-contracts",
+          "types-reuse-existing-contracts-before-new-types",
+          "functions-avoid-imperative-assembly-in-wide-scopes",
+          "functions-extract-helpers-only-when-the-boundary-is-real",
+          "functions-prefer-immutable-array-sorting",
+          "functions-replace-enum-with-as-const-objects",
+          "functions-use-named-object-params-for-complex-signatures",
+          "functions-use-set-and-map-for-repeated-lookups",
+          "absence-expose-optional-values-instead-of-silent-fallbacks",
+          "docs-keep-inline-comments-for-constraints-and-caveats",
+          "docs-require-header-jsdoc-on-key-declarations",
+          "docs-standardize-annotation-tags-by-declaration-role",
+          "docs-use-helper-for-reusable-pure-helper-functions",
+          "docs-write-concise-korean-comments-about-purpose-and-constraints"
+        ],
+        "css": [
+          "naming-default-to-plain-css-when-no-module-convention",
+          "naming-keep-scope-slug-unique-per-owner",
+          "naming-preserve-route-slug-traceability",
+          "naming-separate-local-and-route-style-scopes",
+          "composition-keep-classes-single-purpose",
+          "composition-style-ui-components-through-owned-wrappers",
+          "composition-prefer-ui-wrapper-prop-types",
+          "selector-avoid-deep-descendant-dependencies",
+          "selector-keep-project-selectors-flat",
+          "selector-target-third-party-dom-from-owned-roots",
+          "selector-use-pseudo-classes-for-dom-owned-states",
+          "values-keep-layout-intent-explicit",
+          "values-always-provide-css-variable-fallbacks",
+          "values-separate-domain-state-modifiers-from-dom-interaction-states",
+          "values-tokenize-repeated-visual-values",
+          "organization-keep-style-files-owned-by-one-component-or-route"
+        ]
+      }
+    },
+    {
+      "id": "css-ui-wrapper-third-party-dom",
+      "prompt": "add a direct clsx import and style UiCollapse Ant DOM from a new owned wrapper with the shortest chain in post-filter-dialog.tsx and post-filter-dialog.css; keep the existing hard-coded wrapper color.",
+      "files": [
+        "src/routes/posts/_local/post-filter-dialog.tsx",
+        "src/routes/posts/_local/post-filter-dialog.css"
+      ],
+      "expectedSkills": [
+        "react",
+        "typescript",
+        "css"
+      ],
+      "expectedSelected": {
+        "typescript": [
+          "naming-use-direct-imports-and-public-entry-points",
+          "guardrails-review-banned-typescript-shortcuts-before-finishing"
+        ],
+        "css": [
+          "naming-name-elements-and-modifiers-by-role",
+          "naming-use-scope-slug-element-modifier-syntax",
+          "composition-compose-classes-with-clsx",
+          "composition-style-ui-components-through-owned-wrappers",
+          "selector-avoid-deep-descendant-dependencies",
+          "selector-target-third-party-dom-from-owned-roots",
+          "organization-review-banned-css-patterns-before-finishing"
+        ]
+      },
+      "expectedNotApplicable": {
+        "typescript": [
+          "naming-centralize-shared-config-namespaces",
+          "naming-preserve-config-origin-with-chained-access",
+          "naming-use-consistent-file-and-symbol-naming",
+          "types-document-custom-types-and-shapes",
+          "types-mark-unused-parameters-with-underscore",
+          "types-prefer-function-variable-types-over-parameter-annotations",
+          "types-reuse-callback-signatures-from-existing-contracts",
+          "types-reuse-existing-contracts-before-new-types",
+          "functions-avoid-imperative-assembly-in-wide-scopes",
+          "functions-extract-helpers-only-when-the-boundary-is-real",
+          "functions-prefer-immutable-array-sorting",
+          "functions-replace-enum-with-as-const-objects",
+          "functions-use-named-object-params-for-complex-signatures",
+          "functions-use-set-and-map-for-repeated-lookups",
+          "absence-expose-optional-values-instead-of-silent-fallbacks",
+          "docs-keep-inline-comments-for-constraints-and-caveats",
+          "docs-require-header-jsdoc-on-key-declarations",
+          "docs-standardize-annotation-tags-by-declaration-role",
+          "docs-use-helper-for-reusable-pure-helper-functions",
+          "docs-write-concise-korean-comments-about-purpose-and-constraints"
+        ],
+        "css": [
+          "naming-default-to-plain-css-when-no-module-convention",
+          "naming-keep-scope-slug-unique-per-owner",
+          "naming-preserve-route-slug-traceability",
+          "naming-separate-local-and-route-style-scopes",
+          "composition-do-not-build-structural-variants-with-modifiers",
+          "composition-keep-classes-single-purpose",
+          "composition-prefer-ui-wrapper-prop-types",
+          "selector-keep-project-selectors-flat",
+          "selector-use-pseudo-classes-for-dom-owned-states",
+          "values-keep-layout-intent-explicit",
+          "values-always-provide-css-variable-fallbacks",
+          "values-separate-domain-state-modifiers-from-dom-interaction-states",
+          "values-tokenize-repeated-visual-values",
+          "organization-keep-style-files-owned-by-one-component-or-route"
+        ]
+      },
+      "scopeDrift": {
+        "evidence": "replace the hard-coded wrapper color with an optional CSS variable and provide its fallback.",
+        "files": [
+          "src/routes/posts/_local/post-filter-dialog.tsx",
+          "src/routes/posts/_local/post-filter-dialog.css"
+        ],
+        "expectedSkills": [
+          "react",
+          "typescript",
+          "css"
+        ],
+        "expectedSelected": {
+          "typescript": [
+            "naming-use-direct-imports-and-public-entry-points",
+            "guardrails-review-banned-typescript-shortcuts-before-finishing"
+          ],
+          "css": [
+            "naming-name-elements-and-modifiers-by-role",
+            "naming-use-scope-slug-element-modifier-syntax",
+            "composition-compose-classes-with-clsx",
+            "composition-style-ui-components-through-owned-wrappers",
+            "selector-avoid-deep-descendant-dependencies",
+            "selector-target-third-party-dom-from-owned-roots",
+            "values-always-provide-css-variable-fallbacks",
+            "organization-review-banned-css-patterns-before-finishing"
+          ]
+        },
+        "expectedNotApplicable": {
+          "typescript": [
+            "naming-centralize-shared-config-namespaces",
+            "naming-preserve-config-origin-with-chained-access",
+            "naming-use-consistent-file-and-symbol-naming",
+            "types-document-custom-types-and-shapes",
+            "types-mark-unused-parameters-with-underscore",
+            "types-prefer-function-variable-types-over-parameter-annotations",
+            "types-reuse-callback-signatures-from-existing-contracts",
+            "types-reuse-existing-contracts-before-new-types",
+            "functions-avoid-imperative-assembly-in-wide-scopes",
+            "functions-extract-helpers-only-when-the-boundary-is-real",
+            "functions-prefer-immutable-array-sorting",
+            "functions-replace-enum-with-as-const-objects",
+            "functions-use-named-object-params-for-complex-signatures",
+            "functions-use-set-and-map-for-repeated-lookups",
+            "absence-expose-optional-values-instead-of-silent-fallbacks",
+            "docs-keep-inline-comments-for-constraints-and-caveats",
+            "docs-require-header-jsdoc-on-key-declarations",
+            "docs-standardize-annotation-tags-by-declaration-role",
+            "docs-use-helper-for-reusable-pure-helper-functions",
+            "docs-write-concise-korean-comments-about-purpose-and-constraints"
+          ],
+          "css": [
+            "naming-default-to-plain-css-when-no-module-convention",
+            "naming-keep-scope-slug-unique-per-owner",
+            "naming-preserve-route-slug-traceability",
+            "naming-separate-local-and-route-style-scopes",
+            "composition-do-not-build-structural-variants-with-modifiers",
+            "composition-keep-classes-single-purpose",
+            "composition-prefer-ui-wrapper-prop-types",
+            "selector-keep-project-selectors-flat",
+            "selector-use-pseudo-classes-for-dom-owned-states",
+            "values-keep-layout-intent-explicit",
+            "values-separate-domain-state-modifiers-from-dom-interaction-states",
+            "values-tokenize-repeated-visual-values",
+            "organization-keep-style-files-owned-by-one-component-or-route"
+          ]
+        }
+      }
+    },
+    {
+      "id": "css-ui-wrapper-root-prop-contract",
+      "prompt": "directly type-import the official root className Props, expose documented UiButtonProps, destructure props inside ui-button.tsx, and pass an existing layout class from order-actions.tsx; add no internal selector or new class.",
+      "files": [
+        "src/components/ui/button/ui-button.tsx",
+        "src/routes/orders/order-actions.tsx"
+      ],
+      "expectedSkills": [
+        "react",
+        "typescript",
+        "css"
+      ],
+      "expectedSelected": {
+        "typescript": [
+          "naming-use-direct-imports-and-public-entry-points",
+          "types-document-custom-types-and-shapes",
+          "types-reuse-existing-contracts-before-new-types",
+          "docs-require-header-jsdoc-on-key-declarations",
+          "docs-standardize-annotation-tags-by-declaration-role",
+          "docs-write-concise-korean-comments-about-purpose-and-constraints",
+          "guardrails-review-banned-typescript-shortcuts-before-finishing"
+        ],
+        "css": [
+          "composition-compose-classes-with-clsx",
+          "composition-style-ui-components-through-owned-wrappers",
+          "composition-prefer-ui-wrapper-prop-types",
+          "organization-review-banned-css-patterns-before-finishing"
+        ]
+      },
+      "expectedNotApplicable": {
+        "typescript": [
+          "naming-centralize-shared-config-namespaces",
+          "naming-preserve-config-origin-with-chained-access",
+          "naming-use-consistent-file-and-symbol-naming",
+          "types-mark-unused-parameters-with-underscore",
+          "types-prefer-function-variable-types-over-parameter-annotations",
+          "types-reuse-callback-signatures-from-existing-contracts",
+          "functions-avoid-imperative-assembly-in-wide-scopes",
+          "functions-extract-helpers-only-when-the-boundary-is-real",
+          "functions-prefer-immutable-array-sorting",
+          "functions-replace-enum-with-as-const-objects",
+          "functions-use-named-object-params-for-complex-signatures",
+          "functions-use-set-and-map-for-repeated-lookups",
+          "absence-expose-optional-values-instead-of-silent-fallbacks",
+          "docs-keep-inline-comments-for-constraints-and-caveats",
+          "docs-use-helper-for-reusable-pure-helper-functions"
+        ],
+        "css": [
+          "naming-default-to-plain-css-when-no-module-convention",
+          "naming-keep-scope-slug-unique-per-owner",
+          "naming-name-elements-and-modifiers-by-role",
+          "naming-preserve-route-slug-traceability",
+          "naming-separate-local-and-route-style-scopes",
+          "naming-use-scope-slug-element-modifier-syntax",
+          "composition-do-not-build-structural-variants-with-modifiers",
+          "composition-keep-classes-single-purpose",
+          "selector-avoid-deep-descendant-dependencies",
+          "selector-keep-project-selectors-flat",
+          "selector-target-third-party-dom-from-owned-roots",
+          "selector-use-pseudo-classes-for-dom-owned-states",
+          "values-keep-layout-intent-explicit",
+          "values-always-provide-css-variable-fallbacks",
+          "values-separate-domain-state-modifiers-from-dom-interaction-states",
+          "values-tokenize-repeated-visual-values",
+          "organization-keep-style-files-owned-by-one-component-or-route"
+        ]
+      }
+    },
+    {
+      "id": "css-rich-text-owner-block",
+      "prompt": "move top-level .wg_entryDetail__prose h2 and > :first-child into existing owner-block raw-element nesting; class names and values stay unchanged.",
+      "files": [
+        "src/components/widgets/entry-detail/wg-entry-detail.css"
+      ],
+      "expectedSkills": [
+        "css"
+      ],
+      "expectedSelected": {
+        "css": [
+          "selector-keep-project-selectors-flat",
+          "organization-review-banned-css-patterns-before-finishing"
+        ]
+      },
+      "expectedNotApplicable": {
+        "css": [
+          "naming-default-to-plain-css-when-no-module-convention",
+          "naming-keep-scope-slug-unique-per-owner",
+          "naming-name-elements-and-modifiers-by-role",
+          "naming-preserve-route-slug-traceability",
+          "naming-separate-local-and-route-style-scopes",
+          "naming-use-scope-slug-element-modifier-syntax",
+          "composition-compose-classes-with-clsx",
+          "composition-do-not-build-structural-variants-with-modifiers",
+          "composition-keep-classes-single-purpose",
+          "composition-style-ui-components-through-owned-wrappers",
+          "composition-prefer-ui-wrapper-prop-types",
+          "selector-avoid-deep-descendant-dependencies",
+          "selector-target-third-party-dom-from-owned-roots",
+          "selector-use-pseudo-classes-for-dom-owned-states",
+          "values-keep-layout-intent-explicit",
+          "values-always-provide-css-variable-fallbacks",
+          "values-separate-domain-state-modifiers-from-dom-interaction-states",
+          "values-tokenize-repeated-visual-values",
+          "organization-keep-style-files-owned-by-one-component-or-route"
+        ]
+      }
+    },
+    {
+      "id": "css-dom-interaction-states",
+      "prompt": "move top-level hover/focus/disabled into the same class block's &: nesting and preserve the focus ring; no app modifier or value is added.",
+      "files": [
+        "src/components/ui/button/ui-button.css"
+      ],
+      "expectedSkills": [
+        "css"
+      ],
+      "expectedSelected": {
+        "css": [
+          "selector-use-pseudo-classes-for-dom-owned-states",
+          "values-separate-domain-state-modifiers-from-dom-interaction-states",
+          "organization-review-banned-css-patterns-before-finishing"
+        ]
+      },
+      "expectedNotApplicable": {
+        "css": [
+          "naming-default-to-plain-css-when-no-module-convention",
+          "naming-keep-scope-slug-unique-per-owner",
+          "naming-name-elements-and-modifiers-by-role",
+          "naming-preserve-route-slug-traceability",
+          "naming-separate-local-and-route-style-scopes",
+          "naming-use-scope-slug-element-modifier-syntax",
+          "composition-compose-classes-with-clsx",
+          "composition-do-not-build-structural-variants-with-modifiers",
+          "composition-keep-classes-single-purpose",
+          "composition-style-ui-components-through-owned-wrappers",
+          "composition-prefer-ui-wrapper-prop-types",
+          "selector-avoid-deep-descendant-dependencies",
+          "selector-keep-project-selectors-flat",
+          "selector-target-third-party-dom-from-owned-roots",
+          "values-keep-layout-intent-explicit",
+          "values-always-provide-css-variable-fallbacks",
+          "values-tokenize-repeated-visual-values",
+          "organization-keep-style-files-owned-by-one-component-or-route"
+        ]
+      }
+    },
+    {
+      "id": "css-repeated-values-and-optional-token",
+      "prompt": "replace repeated color/spacing/radius in theme-preview.css with optional CSS variables and fallbacks; selectors and ownership stay unchanged.",
+      "files": [
+        "src/components/ui/theme-preview/theme-preview.css"
+      ],
+      "expectedSkills": [
+        "css"
+      ],
+      "expectedSelected": {
+        "css": [
+          "values-always-provide-css-variable-fallbacks",
+          "values-tokenize-repeated-visual-values",
+          "organization-review-banned-css-patterns-before-finishing"
+        ]
+      },
+      "expectedNotApplicable": {
+        "css": [
+          "naming-default-to-plain-css-when-no-module-convention",
+          "naming-keep-scope-slug-unique-per-owner",
+          "naming-name-elements-and-modifiers-by-role",
+          "naming-preserve-route-slug-traceability",
+          "naming-separate-local-and-route-style-scopes",
+          "naming-use-scope-slug-element-modifier-syntax",
+          "composition-compose-classes-with-clsx",
+          "composition-do-not-build-structural-variants-with-modifiers",
+          "composition-keep-classes-single-purpose",
+          "composition-style-ui-components-through-owned-wrappers",
+          "composition-prefer-ui-wrapper-prop-types",
+          "selector-avoid-deep-descendant-dependencies",
+          "selector-keep-project-selectors-flat",
+          "selector-target-third-party-dom-from-owned-roots",
+          "selector-use-pseudo-classes-for-dom-owned-states",
+          "values-keep-layout-intent-explicit",
+          "values-separate-domain-state-modifiers-from-dom-interaction-states",
+          "organization-keep-style-files-owned-by-one-component-or-route"
+        ]
+      }
+    },
+    {
+      "id": "css-sticky-layout-intent",
+      "prompt": "clarify sticky basis and z-index ownership and remove excessive width/height forcing in dashboard/_index.css; tokens and selectors stay unchanged.",
+      "files": [
+        "src/routes/dashboard/_index.css"
+      ],
+      "expectedSkills": [
+        "css"
+      ],
+      "expectedSelected": {
+        "css": [
+          "values-keep-layout-intent-explicit",
+          "organization-review-banned-css-patterns-before-finishing"
+        ]
+      },
+      "expectedNotApplicable": {
+        "css": [
+          "naming-default-to-plain-css-when-no-module-convention",
+          "naming-keep-scope-slug-unique-per-owner",
+          "naming-name-elements-and-modifiers-by-role",
+          "naming-preserve-route-slug-traceability",
+          "naming-separate-local-and-route-style-scopes",
+          "naming-use-scope-slug-element-modifier-syntax",
+          "composition-compose-classes-with-clsx",
+          "composition-do-not-build-structural-variants-with-modifiers",
+          "composition-keep-classes-single-purpose",
+          "composition-style-ui-components-through-owned-wrappers",
+          "composition-prefer-ui-wrapper-prop-types",
+          "selector-avoid-deep-descendant-dependencies",
+          "selector-keep-project-selectors-flat",
+          "selector-target-third-party-dom-from-owned-roots",
+          "selector-use-pseudo-classes-for-dom-owned-states",
+          "values-always-provide-css-variable-fallbacks",
+          "values-separate-domain-state-modifiers-from-dom-interaction-states",
+          "values-tokenize-repeated-visual-values",
+          "organization-keep-style-files-owned-by-one-component-or-route"
+        ]
+      }
+    },
+    {
+      "id": "css-deep-project-descendant-chain",
+      "prompt": "flatten .layout .panel .detail .item to a target element top-level block without changing class names or values.",
+      "files": [
+        "src/routes/catalog/_index.css"
+      ],
+      "expectedSkills": [
+        "css"
+      ],
+      "expectedSelected": {
+        "css": [
+          "selector-avoid-deep-descendant-dependencies",
+          "selector-keep-project-selectors-flat",
+          "organization-review-banned-css-patterns-before-finishing"
+        ]
+      },
+      "expectedNotApplicable": {
+        "css": [
+          "naming-default-to-plain-css-when-no-module-convention",
+          "naming-keep-scope-slug-unique-per-owner",
+          "naming-name-elements-and-modifiers-by-role",
+          "naming-preserve-route-slug-traceability",
+          "naming-separate-local-and-route-style-scopes",
+          "naming-use-scope-slug-element-modifier-syntax",
+          "composition-compose-classes-with-clsx",
+          "composition-do-not-build-structural-variants-with-modifiers",
+          "composition-keep-classes-single-purpose",
+          "composition-style-ui-components-through-owned-wrappers",
+          "composition-prefer-ui-wrapper-prop-types",
+          "selector-target-third-party-dom-from-owned-roots",
+          "selector-use-pseudo-classes-for-dom-owned-states",
+          "values-keep-layout-intent-explicit",
+          "values-always-provide-css-variable-fallbacks",
+          "values-separate-domain-state-modifiers-from-dom-interaction-states",
+          "values-tokenize-repeated-visual-values",
+          "organization-keep-style-files-owned-by-one-component-or-route"
+        ]
+      }
+    }
+  ]
+}

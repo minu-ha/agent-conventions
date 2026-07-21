@@ -9,7 +9,7 @@ const compareHandbookText = (left: string, right: string): number => left.locale
 /**
  * @helper generated Markdown display text를 단일 행 literal text로 escape
  */
-const escapeMarkdownText = (value: string): string => {
+export const escapeMarkdownText = (value: string): string => {
 	return value.replace(/[\r\n]+/g, " ").replace(/([\\`*_[\]()<>!])/g, "\\$1");
 };
 

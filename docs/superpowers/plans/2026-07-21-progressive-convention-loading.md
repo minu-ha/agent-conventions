@@ -526,28 +526,34 @@ git commit -m "feat: add progressive React convention routing"
 - Modify: `skill/css/SKILL.md`
 - Modify: `skill/css/pressure-tests.md`
 - Modify: `skill/css/README.md`
+- Modify: `skill/css/AGENTS.md` through build
+- Modify: `skill/typescript/AGENTS.md` through build so its source hint matches declared metadata keys
+- Modify: `package/src/build.ts`
 - Modify: `package/src/routing-evals.ts`
+- Modify: `package/src/routing.ts`
+- Modify: `package/test/cli.test.ts`
 - Modify: `package/test/routing-evals.test.ts`
+- Modify: `package/test/progressive-loading.test.ts`
 - Modify: `package/test/documentation.test.ts`
 
-- [ ] **Step 1: Add and verify CSS RED assertions**
+- [x] **Step 1: Add and verify CSS RED assertions**
 
 Require 21 exact IDs, Appendix C routing metadata, complete exact CSS fixture partitions, and 100% positive rule coverage. Pure CSS fixture는 CSS만 partition하고, Appendix D mixed fixture는 이미 progressive인 TypeScript의 exact selected/N/A partition을 즉시 materialize한다. React는 아직 non-progressive activation evidence로만 남기며 Task 5가 React exact partition을 추가한다. Run focused tests and confirm failure is missing feature data.
 Also add a validator RED proving the owner may be absent initially and added in monotonic drift, while a scenario that omits the owner from both stages is rejected.
 
-- [ ] **Step 2: Migrate CSS metadata, rules, and template**
+- [x] **Step 2: Migrate CSS metadata, rules, and template**
 
 Set `progressiveDisclosure: true`, keep no unconditional companion, and declare TypeScript as conditional only when TS/TSX class contracts, wrapper Props, or style imports also change. This makes `composition-prefer-ui-wrapper-prop-types` → `typescript/types-reuse-existing-contracts-before-new-types` reachable without activating TypeScript for pure CSS. Apply Appendix C values exactly.
 
-- [ ] **Step 3: Add CSS routing fixtures and scope drift**
+- [x] **Step 3: Add CSS routing fixtures and scope drift**
 
 Use Appendix C scenario matrix. Include both route styling activation drift and the `css-ui-wrapper-third-party-dom` optional-variable drift so `values-always-provide-css-variable-fallbacks` is added only after the variable concern appears. Appendix D mixed fixture의 TypeScript exact partitions를 함께 저장하되 React는 expected skill evidence만 기록한다. Appendix D의 React `RTE02-owner-placement-css-drift` CSS partition은 Task 5에서 React manifest를 생성할 때 함께 materialize한다.
 
-- [ ] **Step 4: Replace CSS SKILL with compact router and update docs**
+- [x] **Step 4: Replace CSS SKILL with compact router and update docs**
 
 Require CSS for stylesheet, selector, token, class contract and visual styling changes; direct TSX component/state concerns back to React/TypeScript companions. Require exact N/A exclusion-group coverage and keep full handbook opt-in only.
 
-- [ ] **Step 5: Build, verify, and commit CSS**
+- [x] **Step 5: Build, verify, and commit CSS**
 
 ```bash
 npm --prefix package run validate:css
@@ -555,7 +561,7 @@ npm --prefix package run build:css
 npm --prefix package run check:generated:css
 ./package/node_modules/.bin/tsx --test package/test/progressive-loading.test.ts package/test/routing-evals.test.ts
 npm --prefix package run typecheck
-git add skill/css package/src/routing-evals.ts package/test/routing-evals.test.ts package/test/documentation.test.ts
+git add skill/css skill/typescript/AGENTS.md package/src/build.ts package/src/routing-evals.ts package/src/routing.ts package/test/cli.test.ts package/test/documentation.test.ts package/test/progressive-loading.test.ts package/test/routing-evals.test.ts docs/superpowers/plans/2026-07-21-progressive-convention-loading.md
 git commit -m "feat: add progressive CSS convention routing"
 ```
 

@@ -2,6 +2,7 @@
 title: Provide CSS Variable Fallbacks When Token Presence Is Not Guaranteed
 impact: HIGH
 impactDescription: prevents missing tokens from degrading styles unpredictably when variables are absent
+appliesWhen: `var(--*)`를 추가·수정하거나 theme provider·third-party wrapper·optional token·overlay처럼 변수 주입이 보장되지 않는 경계를 스타일링한다.
 tags: variables, fallbacks, tokens
 ---
 
