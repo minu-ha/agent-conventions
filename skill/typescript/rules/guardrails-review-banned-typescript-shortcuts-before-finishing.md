@@ -2,6 +2,7 @@
 title: Review Banned TypeScript Shortcuts Before Finishing
 impact: MEDIUM
 impactDescription: catches the recurring shortcuts that most often erode import, type, helper, fallback, and comment discipline
+appliesWhen: TypeScript/TSX 변경을 완료 판정하거나 diff에서 barrel, 중복 타입, 조기 helper, 넓은 조립, 무근거 fallback 또는 자명한 주석을 점검한다.
 tags: review, banned-patterns, guardrails
 ---
 

@@ -2,6 +2,7 @@
 title: Mark Unused Parameters With an Underscore Prefix
 impact: MEDIUM-HIGH
 impactDescription: makes intentionally ignored callback parameters explicit instead of silently dropping parts of a contract
+appliesWhen: 기존 callback이나 framework 계약을 구현·변경하며 계약 매개변수 일부를 생략하거나 사용하지 않는다.
 tags: parameters, callbacks, naming
 ---
 

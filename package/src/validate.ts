@@ -6,6 +6,7 @@ import type {DependencyDeclaration} from "./dependencies.js";
 import {isDirectExecution} from "./entrypoint.js";
 import {readSkillDocument, readSkillRuleFileNames} from "./parser.js";
 import {assertProgressiveCompanionSource, assertProgressiveSkillEntrypoint} from "./progressive.js";
+import {validateRoutingEvalManifest} from "./routing-evals.js";
 import type {LoadedSkillDocument, SkillMetadata, SkillPaths} from "./types.js";
 
 interface LocalValidationResult {
@@ -243,6 +244,10 @@ export const validateSkill = async (skillPaths: SkillPaths): Promise<void> => {
 	const rootResult = await validateSkillTree(skillPaths, [], validatedSkillNames, documents, dependenciesBySkill);
 
 	validateReviewTargets(documents, dependenciesBySkill);
+
+	if (rootResult.document.metadata.progressiveDisclosure === true) {
+		await validateRoutingEvalManifest(skillPaths);
+	}
 
 	const dependencyCount = rootResult.dependencies.skillNames.length;
 	const dependencySummary = dependencyCount > 0 ? ` plus ${dependencyCount} companion skill(s)` : "";

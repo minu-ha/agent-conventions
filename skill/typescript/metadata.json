@@ -4,6 +4,7 @@
   "organization": "Agent Conventions",
   "date": "2026년 4월",
   "abstract": "에이전트 협업 팀을 위한 TypeScript 코딩 컨벤션입니다. 이 가이드는 명시적인 네이밍, 직접 import, 재사용 가능한 타입 계약, 절제된 helper 추출, 반복 lookup과 정렬의 불변성, 의도적인 결측값 처리, 일관된 JSDoc 경계를 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, React, NestJS, TanStack Route, Playwright Test 같은 TypeScript 기반 skill과 함께 로드하는 공통 companion rule 세트로도 사용됩니다.",
+  "progressiveDisclosure": true,
   "references": [
     "https://www.typescriptlang.org/docs/",
     "https://jsdoc.app",

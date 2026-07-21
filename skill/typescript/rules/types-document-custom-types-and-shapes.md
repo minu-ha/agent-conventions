@@ -2,6 +2,7 @@
 title: Document Custom Types and Declarative Shapes
 impact: CRITICAL
 impactDescription: keeps domain-specific contracts understandable without digging through implementation details
+appliesWhen: custom type·interface, schema root, 객체형 상수, 계약 field 또는 Pick·Omit·Indexed Access alias를 추가·변경한다.
 tags: types, jsdoc, shapes
 ---
 

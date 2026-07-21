@@ -2,6 +2,7 @@
 title: Prefer Function Variable Types Over Parameter Annotations
 impact: CRITICAL
 impactDescription: keeps callable contracts reusable and prevents local parameter annotations from fragmenting shared function types
+appliesWhen: 기존 callable 계약이 있는 함수 구현을 추가·변경하거나 같은 시그니처를 여러 구현이 공유하도록 리팩터링한다.
 tags: function-types, annotations, contracts
 ---
 

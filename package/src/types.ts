@@ -264,3 +264,75 @@ export interface SkillRule {
 	 */
 	body: string;
 }
+
+/**
+ * @summary routing fixture가 기대하는 activated skill별 exact rule partition
+ */
+export interface RoutingExpectedPartition {
+	/**
+	 * @field fixture evidence로 활성화해야 하는 skill 이름 목록
+	 */
+	expectedSkills: string[];
+	/**
+	 * @field activated progressive skill별 선택 rule stable ID 목록
+	 */
+	expectedSelected: Record<string, string[]>;
+	/**
+	 * @field activated progressive skill별 비적용 rule stable ID 목록
+	 */
+	expectedNotApplicable: Record<string, string[]>;
+}
+
+/**
+ * @summary 최초 selection 뒤 작업 범위가 확장될 때의 monotonic routing oracle
+ */
+export interface RoutingScopeDrift extends RoutingExpectedPartition {
+	/**
+	 * @field 범위 확장을 입증하는 구체적인 변경 근거
+	 */
+	evidence: string;
+	/**
+	 * @field 범위 확장 뒤 최종 변경 파일 목록
+	 */
+	files: string[];
+}
+
+/**
+ * @summary 한 작업 surface의 exact progressive routing oracle
+ */
+export interface RoutingEvalScenario extends RoutingExpectedPartition {
+	/**
+	 * @field 전체 manifest에서 고유한 scenario 식별자
+	 */
+	id: string;
+	/**
+	 * @field agent에게 전달할 작업 요청과 scope evidence
+	 */
+	prompt: string;
+	/**
+	 * @field 최초 selection 시점의 변경 파일 목록
+	 */
+	files: string[];
+	/**
+	 * @field 작업 중 범위 확장이 있는 경우의 최종 routing oracle
+	 */
+	scopeDrift?: RoutingScopeDrift;
+}
+
+/**
+ * @summary progressive skill 하나가 소유하는 routing evaluation manifest
+ */
+export interface RoutingEvalManifest {
+	/**
+	 * @field manifest schema version
+	 */
+	version: 1;
+	/**
+	 * @field manifest를 소유하는 skill 디렉터리 이름
+	 */
+	skill: string;
+	/**
+	 * @field exact selection과 N/A partition을 검증할 scenario 목록
+	 */
+	scenarios: RoutingEvalScenario[];
+}

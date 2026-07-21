@@ -1133,6 +1133,28 @@ test("reviewWith resolves local and reachable companion rule IDs", async () => {
 				{fileName: "fixture-owner.md", appliesWhen: "Editing owner code.", reviewWith: ["fixture-local", "dependency/fixture-cross"]},
 			],
 		});
+		await writeFile(
+			path.join(skillRootDir, "owner", "routing-evals.json"),
+			`${JSON.stringify(
+				{
+					version: 1,
+					skill: "owner",
+					scenarios: [
+						{
+							id: "owner-review-targets",
+							prompt: "Review every local and companion fixture rule.",
+							files: ["src/owner.ts"],
+							expectedSkills: ["owner", "dependency"],
+							expectedSelected: {owner: ["fixture-local", "fixture-owner"], dependency: ["fixture-cross"]},
+							expectedNotApplicable: {owner: [], dependency: []},
+						},
+					],
+				},
+				null,
+				2,
+			)}\n`,
+			"utf8",
+		);
 
 		await validateSkill(getSkillPaths("owner", skillRootDir));
 	});

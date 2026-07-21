@@ -2,6 +2,7 @@
 title: Write Concise Korean Comments About Purpose and Constraints
 impact: MEDIUM
 impactDescription: keeps comments focused on intent and constraints instead of narrating code mechanics
+appliesWhen: TypeScript/TSX의 JSDoc이나 inline comment 문구를 추가·수정·번역하거나 리뷰한다.
 tags: comments, korean, purpose
 ---
 

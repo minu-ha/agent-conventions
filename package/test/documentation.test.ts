@@ -14,38 +14,106 @@ const readPackageFile = async (relativePath: string): Promise<string> => {
 	return await readFile(path.join(packagesDir, relativePath), "utf8");
 };
 
-test("object-shaped interfaces in contract modules document summaries and every field", async () => {
-	for (const relativePath of ["src/types.ts", "src/generated-files.ts"] as const) {
-		const source = await readPackageFile(relativePath);
-		const lines = source.split("\n");
-		let currentInterfaceName: string | undefined;
+/**
+ * @helper declaration 바로 앞의 단일 JSDoc block 추출
+ */
+const readImmediateJsDocBlock = (source: string, declarationIndex: number): string | undefined => {
+	const prefix = source.slice(0, declarationIndex).trimEnd();
 
-		for (const [lineIndex, line] of lines.entries()) {
-			const interfaceMatch = line.match(/^(?:export )?interface (\w+)(?: extends [^{]+)? \{$/);
-			if (interfaceMatch) {
-				currentInterfaceName = interfaceMatch[1];
-				const commentWindow = lines.slice(Math.max(0, lineIndex - 4), lineIndex).join("\n");
-				assert.match(commentWindow, /@summary /, `${relativePath}:${currentInterfaceName} is missing an @summary block comment.`);
-				continue;
-			}
-
-			if (currentInterfaceName && line === "}") {
-				currentInterfaceName = undefined;
-				continue;
-			}
-
-			if (!currentInterfaceName) {
-				continue;
-			}
-
-			if (!/^\s{2}[A-Za-z][A-Za-z0-9]*\??: /.test(line)) {
-				continue;
-			}
-
-			const commentWindow = lines.slice(Math.max(0, lineIndex - 4), lineIndex).join("\n");
-			assert.match(commentWindow, /@field /, `${relativePath}:${currentInterfaceName}.${line.trim()} is missing an @field block comment.`);
-		}
+	if (!prefix.endsWith("*/")) {
+		return undefined;
 	}
+
+	const blockStart = prefix.lastIndexOf("/**");
+
+	if (blockStart === -1) {
+		return undefined;
+	}
+
+	const block = prefix.slice(blockStart);
+	return block.indexOf("*/") === block.length - 2 ? block : undefined;
+};
+
+/**
+ * @helper interface와 field의 직전 JSDoc 계약 검증
+ */
+const assertDocumentedInterfaces = (source: string, relativePath: string): void => {
+	const lines = source.split("\n");
+	const lineOffsets: number[] = [];
+	let sourceOffset = 0;
+
+	for (const line of lines) {
+		lineOffsets.push(sourceOffset);
+		sourceOffset += line.length + 1;
+	}
+
+	let currentInterfaceName: string | undefined;
+
+	for (const [lineIndex, line] of lines.entries()) {
+		const declarationIndex = lineOffsets[lineIndex] ?? 0;
+		const interfaceMatch = line.match(/^(?:export )?interface (\w+)(?: extends [^{]+)? \{$/);
+		if (interfaceMatch) {
+			currentInterfaceName = interfaceMatch[1];
+			const commentBlock = readImmediateJsDocBlock(source, declarationIndex);
+			assert.match(commentBlock ?? "", /@summary /, `${relativePath}:${currentInterfaceName} is missing an @summary block comment.`);
+			continue;
+		}
+
+		if (currentInterfaceName && line === "}") {
+			currentInterfaceName = undefined;
+			continue;
+		}
+
+		if (!currentInterfaceName || !/^\s+[A-Za-z][A-Za-z0-9]*\??: /.test(line)) {
+			continue;
+		}
+
+		const commentBlock = readImmediateJsDocBlock(source, declarationIndex);
+		assert.match(
+			commentBlock ?? "",
+			/@field /,
+			`${relativePath}:${currentInterfaceName}.${line.trim()} is missing an @field block comment.`,
+		);
+	}
+};
+
+/**
+ * @helper routing oracle 선언의 직전 summary JSDoc 검증
+ */
+const assertOracleSummary = (source: string, oracleName: string): void => {
+	const declarationIndex = source.indexOf(`const ${oracleName} =`);
+	assert.notEqual(declarationIndex, -1, `${oracleName} declaration should exist.`);
+	const commentBlock = readImmediateJsDocBlock(source, declarationIndex);
+	assert.match(commentBlock ?? "", /@summary /, `${oracleName} should have a concise @summary header.`);
+};
+
+test("object-shaped interfaces in contract modules document summaries and every field", async () => {
+	for (const relativePath of ["src/types.ts", "src/generated-files.ts", "src/routing-evals.ts", "test/routing-evals.test.ts"] as const) {
+		const source = await readPackageFile(relativePath);
+		assertDocumentedInterfaces(source, relativePath);
+	}
+});
+
+test("interface guard rejects an immediate field block removal or retag", async () => {
+	const source = await readPackageFile("test/routing-evals.test.ts");
+	const interfaceIndex = source.indexOf("interface WriteFixtureSkillArgs {");
+	const declarationIndex = source.indexOf("\tskillName: string;", interfaceIndex);
+	const block = readImmediateJsDocBlock(source, declarationIndex);
+	assert.ok(block);
+	const blockStart = source.lastIndexOf(block, declarationIndex);
+	assert.match(block, /@field 생성할 fixture skill 디렉터리 이름/);
+
+	const retaggedSource = `${source.slice(0, blockStart)}${block.replace("@field", "@helper")}\n${source.slice(declarationIndex)}`;
+	assert.throws(
+		() => assertDocumentedInterfaces(retaggedSource, "test/routing-evals.test.ts"),
+		/WriteFixtureSkillArgs\.skillName.*missing an @field/,
+	);
+
+	const blockRemovedSource = `${source.slice(0, blockStart)}${source.slice(declarationIndex)}`;
+	assert.throws(
+		() => assertDocumentedInterfaces(blockRemovedSource, "test/routing-evals.test.ts"),
+		/WriteFixtureSkillArgs\.skillName.*missing an @field/,
+	);
 });
 
 test("source files use convention-specific JSDoc tags for helper and boundary functions", async () => {
@@ -71,7 +139,11 @@ test("source files use convention-specific JSDoc tags for helper and boundary fu
 		["src/routing.ts", "getRuleId", "@helper"],
 		["src/routing.ts", "getRulesForSection", "@helper"],
 		["src/routing.ts", "getRulesIndexByteBudget", "@helper"],
+		["src/routing.ts", "getCanonicalRoutingRuleIds", "@helper"],
 		["src/routing.ts", "generateRulesIndexMarkdown", "@helper"],
+		["src/routing-evals.ts", "readRoutingEvalManifest", "@api"],
+		["src/routing-evals.ts", "validateRoutingEvalManifest", "@api"],
+		["src/routing-evals.ts", "validateRoutingEvalManifests", "@api"],
 		["src/build.ts", "generateMarkdown", "@helper"],
 		["src/build.ts", "buildSkill", "@description"],
 		["src/build.ts", "main", "@description"],
@@ -100,6 +172,7 @@ test("package TypeScript files avoid named function declarations in favor of arr
 		"src/config.ts",
 		"src/parser.ts",
 		"src/routing.ts",
+		"src/routing-evals.ts",
 		"src/build.ts",
 		"src/check-generated.ts",
 		"src/entrypoint.ts",
@@ -127,6 +200,7 @@ test("package function JSDoc stays lightweight without @param and @returns tags"
 		"src/config.ts",
 		"src/parser.ts",
 		"src/routing.ts",
+		"src/routing-evals.ts",
 		"src/build.ts",
 		"src/check-generated.ts",
 		"src/entrypoint.ts",
@@ -142,5 +216,30 @@ test("package function JSDoc stays lightweight without @param and @returns tags"
 
 		assert.doesNotMatch(source, /@param /, `${relativePath} should not include @param tags.`);
 		assert.doesNotMatch(source, /@returns? /, `${relativePath} should not include @returns tags.`);
+	}
+});
+
+test("routing eval module reserves role tags for exported file boundaries", async () => {
+	const source = await readPackageFile("src/routing-evals.ts");
+
+	assert.doesNotMatch(source, /@helper /, "module-local parsing and validation sub-steps should not claim reusable helper boundaries.");
+	assert.match(source, /@summary strict JSON object/, "JsonObject should have a summary declaration.");
+});
+
+test("routing eval test oracles document their exact contract purpose", async () => {
+	const source = await readPackageFile("test/routing-evals.test.ts");
+
+	for (const oracleName of ["typescriptRuleRouting", "typescriptSelections", "typescriptScenarioEvidence"] as const) {
+		assertOracleSummary(source, oracleName);
+		const declarationIndex = source.indexOf(`const ${oracleName} =`);
+		const block = readImmediateJsDocBlock(source, declarationIndex);
+		assert.ok(block, `${oracleName} mutation fixture should find its immediate summary block.`);
+		const blockStart = source.lastIndexOf(block, declarationIndex);
+
+		const retaggedSource = `${source.slice(0, blockStart)}${block.replace("@summary", "@helper")}${source.slice(blockStart + block.length)}`;
+		assert.throws(() => assertOracleSummary(retaggedSource, oracleName), /concise @summary header/);
+
+		const blockRemovedSource = `${source.slice(0, blockStart)}${source.slice(blockStart + block.length)}`;
+		assert.throws(() => assertOracleSummary(blockRemovedSource, oracleName), /concise @summary header/);
 	}
 });

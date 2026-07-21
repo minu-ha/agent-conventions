@@ -2,6 +2,7 @@
 title: Use Named Object Params for Complex Signatures
 impact: HIGH
 impactDescription: keeps long function signatures readable and makes grouped inputs easier to extend without positional confusion
+appliesWhen: 매개변수 3개 이상 또는 같은 계열 인자를 받는 함수를 추가·변경하거나 객체 매개변수를 시그니처에서 구조분해한다.
 tags: functions, params, signatures
 ---
 

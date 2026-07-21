@@ -2,6 +2,7 @@
 title: Use Set and Map for Repeated Lookups
 impact: MEDIUM
 impactDescription: keeps repeated membership and keyed access code explicit once lookup count grows
+appliesWhen: 같은 컬렉션에 `includes`, `find` 또는 keyed lookup을 여러 번 수행하는 코드를 추가·변경한다.
 tags: functions, set, map, lookups, performance
 ---
 

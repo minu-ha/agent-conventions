@@ -2,6 +2,8 @@
 title: Extract Support Functions Only When the Boundary Is Real
 impact: HIGH
 impactDescription: stops helper extraction from fragmenting local flow when no reusable contract or testable boundary actually exists
+appliesWhen: support function을 추출·이동·export·공유하거나 generic helper 파일, 단일 owner 전용 mapper 또는 작은 sub-step 경계를 바꾼다.
+reviewWith: docs-use-helper-for-reusable-pure-helper-functions, docs-require-header-jsdoc-on-key-declarations
 tags: helpers, extraction, boundaries
 ---
 

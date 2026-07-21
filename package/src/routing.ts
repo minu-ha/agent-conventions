@@ -88,6 +88,13 @@ const getOrderedSections = (sections: SkillSection[]): SkillSection[] => {
 };
 
 /**
+ * @helper compact index와 같은 순서의 local rule stable ID 목록 계산
+ */
+export const getCanonicalRoutingRuleIds = (document: LoadedSkillDocument): string[] => {
+	return getOrderedSections(document.sections).flatMap((section) => getRoutingRulesForSection(section, document.rules).map(getRuleId));
+};
+
+/**
  * @helper direct companion을 stable routing 순서로 정렬
  */
 const getOrderedCompanions = (companions: SkillCompanion[]): SkillCompanion[] => {

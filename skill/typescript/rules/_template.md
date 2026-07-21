@@ -2,6 +2,7 @@
 title: Rule Title Here
 impact: MEDIUM
 impactDescription: 선택적 영향도 설명
+appliesWhen: 이 rule을 선택해야 하는 변경 surface와 evidence를 한 문장으로 설명
 tags: tag1, tag2
 ---
 
@@ -24,3 +25,5 @@ tags: tag1, tag2
 ```
 
 예시가 여러 개 필요하면 `Incorrect` 예시를 먼저 모두 배치한 뒤 `Correct` 예시를 이어서 배치합니다.
+
+관련 rule을 함께 재평가해야 할 때만 frontmatter에 `reviewWith: local-rule-id, companion-skill/cross-rule-id`를 추가하고, 대상이 없으면 key를 두지 않습니다.

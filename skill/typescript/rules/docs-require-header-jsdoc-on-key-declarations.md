@@ -2,6 +2,8 @@
 title: Require Header JSDoc on Key Declarations
 impact: MEDIUM-HIGH
 impactDescription: makes important boundaries searchable and explainable before readers inspect the implementation body
+appliesWhen: 원격 연동 함수, 이벤트 handler, reactive sync block, reusable helper, custom type·interface, store 또는 formatter 예외 함수를 추가·변경한다.
+reviewWith: docs-standardize-annotation-tags-by-declaration-role, docs-write-concise-korean-comments-about-purpose-and-constraints
 tags: jsdoc, declarations, boundaries
 ---
 

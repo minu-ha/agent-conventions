@@ -1,106 +1,48 @@
 ---
 name: convention-typescript
-description: Use when editing TypeScript or TSX modules, shared utilities, configs, types, helper extraction, fallback handling, or JSDoc-heavy declarations.
+description: Use when editing TypeScript or TSX modules, shared utilities, configs, types, helper boundaries, fallback handling, or JSDoc-heavy declarations.
 metadata:
   author: agent-conventions
   version: "1.0.0"
 ---
 
-# TypeScript 컨벤션
+# TypeScript Convention Router
 
-에이전트 협업 팀을 위한 TypeScript 코딩 컨벤션 모음입니다. 현재 이 가이드는 6개 카테고리의 22개 규칙으로 구성되어 있습니다.   
-네이밍, import 소유권, 타입 계약, helper 분리, 배열/lookup 불변성, 결측값 처리, JSDoc 규칙을 [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`와 compiled [AGENTS.md](./AGENTS.md)로 관리합니다.   
-이 skill은 React, NestJS, TanStack Route, Playwright Test와 함께 로드하는 공통 TypeScript companion skill로도 사용됩니다.
+이 문서는 규칙집이 아니라 필요한 원문을 고르는 router다. 일반 작업에서 전체 handbook을 먼저 읽지 않는다.
 
-## 사용할 때
-- 일반 TypeScript 모듈, 유틸 파일, 설정 파일, TSX를 포함한 TypeScript 코드를 만들거나 수정할 때 사용합니다.
-- import 구조, 타입 재사용, helper 분리, 옵셔널 값 처리, 주석 규칙이 중요한 변경에 사용합니다.
-- TypeScript house style 기준으로 코드나 문서를 리뷰할 때 사용합니다.
+## 1. Scope snapshot
 
-## 활성화 체크리스트
-- 변경 범위가 TypeScript 모듈, TSX 인접 support code, 설정 파일, 타입 선언, helper 추출, fallback 처리, JSDoc 규칙에 걸리는지 먼저 확인합니다.
-- 이 skill이 활성화되면 먼저 compiled [AGENTS.md](./AGENTS.md)를 열어 Naming, Types, Functions, Absence, Docs, Guardrails 중 어떤 카테고리가 직접 관련되는지 빠르게 훑습니다.
-- 실제로 바꾸는 관심사에 해당하는 `rules/*.md`를 추가로 읽습니다. 타입 계약과 callback 시그니처를 바꾸면 types rule, helper 추출과 함수 시그니처를 바꾸면 functions rule, fallback/optional 처리와 주석을 바꾸면 absence/docs rule을 확인합니다.
-- 변경이 특정 프레임워크 경계 안에서 일어난다면 `convention-react`, `convention-nestjs`, `convention-tanstack-route`, `convention-playwright-test` 같은 전용 skill을 함께 로드하고, 이 skill은 공통 TypeScript companion으로 사용합니다.
+수정 전에 요청, 계획된 파일, 현재 diff를 한 줄로 고정한다. `.ts`/`.tsx`, type·schema·config·API·helper, import/export, fallback, JSDoc 변경이면 이 skill을 활성화한다. React 경계나 CSS class contract까지 바꾸면 해당 companion skill도 별도로 활성화한다.
 
-## 우선순위별 규칙 카테고리
+## 2. Index scan
 
-| 우선순위 | 카테고리                            | 영향도         | Prefix        |
-|------|---------------------------------|-------------|---------------|
-| 1    | Naming and Module Boundaries    | HIGH        | `naming-`     |
-| 2    | Types and Contracts             | CRITICAL    | `types-`      |
-| 3    | Functions and Helper Boundaries | HIGH        | `functions-`  |
-| 4    | Absence and Fallback Handling   | HIGH        | `absence-`    |
-| 5    | JSDoc and Comment Conventions   | MEDIUM-HIGH | `docs-`       |
-| 6    | Guardrails and Review Checks    | MEDIUM      | `guardrails-` |
+[RULES_INDEX.md](./RULES_INDEX.md)를 처음부터 끝까지 읽고 모든 local entry의 `appliesWhen`을 scope evidence와 대조한다. 첫 match에서 절대 멈추지 않는다. title/tag는 탐색 보조일 뿐 배제 근거가 아니다. 애매한 항목은 `Unknown`으로 둔다.
 
-## 빠른 참조
+## 3. Digest-bound receipt
 
-### 1. Naming and Module Boundaries (HIGH)
+index의 `sha256` digest에 묶인 exact receipt를 유지한다.
 
-- `naming-use-consistent-file-and-symbol-naming` - 파일명, 심볼명, field casing을 예측 가능하게 유지
-- `naming-use-direct-imports-and-public-entry-points` - barrel보다 직접 import와 전용 public entry point를 선호
-- `naming-centralize-shared-config-namespaces` - shared 설정은 `shared/config.ts`의 `config` namespace로 유지
-- `naming-preserve-config-origin-with-chained-access` - `config.*`, `util.*` 체이닝으로 공용 namespace 오리진 보존
+```md
+Activated: typescript, <companions>
+Index: typescript@sha256:<digest>
+Selected: <ordinal + stable ID>
+Not applicable: <나머지 전체 ordinal>
+Excluded groups: <N/A ordinal group>: <비어 있지 않은 scope-evidence 이유>
+Unknown: <ordinal + stable ID 또는 none>
+```
 
-### 2. Types and Contracts (CRITICAL)
+모든 ordinal은 `Selected`, `Not applicable`, `Unknown` 중 정확히 하나에만 있어야 한다. exclusion group의 ordinal 합집합은 exact N/A set과 같아야 하며 이유는 비어 있으면 안 된다. `reviewWith`는 자동 선택 명령이 아니라 재평가 신호다. 각 target을 scope로 다시 판정해 Selected 또는 근거가 있는 N/A에 넣고, cross-skill target이면 companion 활성화도 다시 판정한다.
 
-- `types-prefer-function-variable-types-over-parameter-annotations` - callable contract가 있으면 parameter annotation보다 함수 변수 타입 우선
-- `types-reuse-callback-signatures-from-existing-contracts` - 기존 계약에서 callback 시그니처 재사용
-- `types-mark-unused-parameters-with-underscore` - 무시하는 parameter도 `_`로 명시
-- `types-reuse-existing-contracts-before-new-types` - 새 타입 선언 전 기존 계약 우선 재사용
-- `types-document-custom-types-and-shapes` - custom type과 선언형 shape는 field-level JSDoc으로 문서화
+## 4. Read and implement
 
-### 3. Functions and Helper Boundaries (HIGH)
+Selected와 Unknown의 `rules/*.md` 원문을 전부 읽는다. Unknown은 원문과 실제 코드로 적용 여부를 해소해 완료 전 `none`으로 만든다. 원문의 Incorrect/Correct와 owner 계약을 구현 및 리뷰 기준으로 사용한다.
 
-- `functions-use-named-object-params-for-complex-signatures` - 복잡한 함수 시그니처는 named object param 사용
-- `functions-replace-enum-with-as-const-objects` - `enum`은 object literal + `as const`로 대체
-- `functions-extract-helpers-only-when-the-boundary-is-real` - generic helper 파일 대신 named export 기반 owner module이나 `shared/util.ts`를 사용
-- `functions-avoid-imperative-assembly-in-wide-scopes` - 파일 전역 scope의 명령형 조립 회피
-- `functions-use-set-and-map-for-repeated-lookups` - 반복 membership/key lookup은 `Set`/`Map`으로 승격
-- `functions-prefer-immutable-array-sorting` - 정렬은 `toSorted()` 또는 복사 후 `sort()`로 불변성 유지
+## 5. Scope drift
 
-### 4. Absence and Fallback Handling (HIGH)
+새 파일, abstraction, import, type/API, fallback, 주석 surface가 생기면 scope snapshot부터 index 전체 scan과 receipt를 다시 수행한다. digest가 달라져도 이전 receipt를 폐기한다.
 
-- `absence-expose-optional-values-instead-of-silent-fallbacks` - casual fallback으로 숨기지 말고 결측값을 드러냄
+## 6. Finish gate
 
-### 5. JSDoc and Comment Conventions (MEDIUM-HIGH)
+마지막 diff 기준으로 `convention-audit`이 index를 독립 재선택하게 한다. digest, exact partition, exclusion evidence, 선택 원문, 검증 결과를 넘기고 `FAIL 0`, `UNKNOWN 0`일 때만 완료한다.
 
-- `docs-write-concise-korean-comments-about-purpose-and-constraints` - 목적과 제약을 짧은 한글 주석으로 설명
-- `docs-require-header-jsdoc-on-key-declarations` - 핵심 경계 선언에는 header JSDoc 요구
-- `docs-standardize-annotation-tags-by-declaration-role` - 선언 역할에 따라 `@api`, `@event`, `@watch`, `@helper`, `@summary`, `@field`, `@part`, `@description` 사용
-- `docs-use-helper-for-reusable-pure-helper-functions` - 재사용 가능한 지원 함수에는 `@helper` 사용
-- `docs-keep-inline-comments-for-constraints-and-caveats` - inline comment는 비자명한 제약에만 사용
-
-### 6. Guardrails and Review Checks (MEDIUM)
-
-- `guardrails-review-banned-typescript-shortcuts-before-finishing` - 마무리 전에 금지 TypeScript shortcut 점검
-
-## 함께 쓰기
-- `convention-react`, `convention-nestjs`, `convention-tanstack-route`, `convention-playwright-test`와 함께 로드하면 공통 TypeScript 규칙을 자연스럽게 보완할 수 있습니다.
-- TSX 파일도 기본적으로 이 skill 대상이며, React 문맥이면 `convention-react`를 함께 사용합니다.
-- React, TanStack Route, NestJS 같은 프레임워크 영역이라면 해당 전용 skill을 함께 사용합니다.
-- route helper나 search schema처럼 router 경계가 함께 바뀌면 `convention-tanstack-route`를 함께 사용합니다.
-- 타입/주석 규칙을 테스트나 fixture에도 반영하면 `convention-playwright-test` 같은 테스트 전용 skill을 함께 사용합니다.
-
-## 마무리 전 셀프 리뷰
-- 이번 변경이 Naming, Types, Functions, Absence, Docs 중 어느 카테고리에 걸리는지 다시 대조하고 관련 rule을 빠뜨리지 않았는지 확인합니다.
-- 프레임워크 전용 문맥인데 `convention-react`, `convention-nestjs`, `convention-tanstack-route`, `convention-playwright-test` 같은 companion skill을 빼먹지 않았는지 점검합니다.
-- 새 타입을 불필요하게 만들지 않았는지, helper 경계가 과도하지 않은지, 결측값을 조용한 fallback으로 숨기지 않았는지 마지막으로 확인합니다.
-
-## 사용하는 방법
-
-자세한 설명과 코드 예시는 개별 rule 파일을 읽으면 됩니다.
-
-- [rules/types-document-custom-types-and-shapes.md](./rules/types-document-custom-types-and-shapes.md)
-- [rules/functions-extract-helpers-only-when-the-boundary-is-real.md](./rules/functions-extract-helpers-only-when-the-boundary-is-real.md)
-
-각 rule 파일에는 아래 내용이 들어 있습니다.
-- 규칙이 왜 중요한지에 대한 짧은 설명
-- 설명이 붙은 Incorrect 코드 예시
-- 설명이 붙은 Correct 코드 예시
-- 구현이나 리뷰에 바로 적용할 수 있는 가이드
-
-## 전체 compiled 문서
-
-모든 규칙이 펼쳐진 전체 가이드는 [AGENTS.md](./AGENTS.md)에서 확인할 수 있습니다.
+전체 [AGENTS.md](./AGENTS.md)는 사용자가 full handbook/onboarding을 명시적으로 요청했거나 index 생성물이 손상되어 fallback이 필요할 때만 읽는다.
