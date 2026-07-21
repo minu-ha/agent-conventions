@@ -55,7 +55,7 @@
 
 ## Agent-Conventions Coverage
 
-- `convention-astro`: Astro thin `src/pages` adapter, `src/features/<feature>` 구조, route-role aligned feature page/file naming, `ft_*` page surface ownership, rendering mode, island hydration, content collections, Actions/endpoints, Astro frontmatter/docs 규칙
+- `convention-astro`: Astro route adapter, rendering mode, island hydration, content collections, Actions/endpoints, frontmatter/docs 규칙
 - `convention-react`: React 컴포넌트, TSX 렌더링 흐름, 화면 구조
 - `convention-css`: 스타일, `className`, CSS 구조, selector, token 사용
 - `convention-typescript`: 공통 TypeScript 규칙, 타입 계약, helper 분리, JSDoc
@@ -85,34 +85,57 @@
 - 구현 전에 이번 요청에 적용할 `agent-conventions` skill을 먼저 고릅니다.
 - 변경 표면과 작업 단계에 직접 관련된 skill만 선택합니다.
 - framework rule과 공통 언어 rule이 분리돼 있다면 companion convention skill을 함께 적용합니다.
-- 애매한 규칙만 해당 원문을 다시 읽고, 무관한 규칙은 불필요하게 확장하지 않습니다.
+- 각 activated skill은 먼저 자신의 `SKILL.md` load 계약을 따릅니다.
 - 기본 선택 예시는 아래와 같습니다.
   - Astro page/route/rendering/content 변경: `convention-astro` + `convention-typescript` + `convention-css`
   - Astro + React island/TSX 변경: `convention-astro` + `convention-react` + `convention-typescript` + `convention-css`
   - Astro hydration/form/server 흐름을 브라우저에서 검증: `convention-astro` + 필요 시 `convention-playwright-test`
   - React/TSX/UI 상태 변경: `convention-react` + `convention-typescript`
-  - 스타일과 `className` 변경: `convention-css`
+  - 스타일, CSS, `className` 변경: 위 선택에 `convention-css` 추가
   - route/search/navigation 변경: `convention-tanstack-route` + 필요 시 `convention-typescript`
   - Playwright 테스트 변경: `convention-playwright-test` + 필요 시 관련 companion skill
   - NestJS backend 변경: `convention-nestjs` + `convention-typescript`
   - Spring Boot backend 변경: `convention-springboot`
 
-Astro 프로젝트에서 `convention-astro`를 선택했다면 아래를 기본 전제로 봅니다.
+framework/project 고유 규칙은 해당 skill이나 consuming project의 project-local overlay가 소유합니다. 이 공통 template에 Astro route/class naming 같은 rule body를 복제하지 않습니다.
 
-- `src/pages`는 Astro의 required route adapter layer로만 얇게 유지합니다.
-- `src/pages/_document.astro`, `_head.astro`, `_document.css`는 route가 아닌 pages-local document helper/support file 자리로 둡니다.
-- 새 paginated route family는 가능하면 `index.astro`와 sibling `[page].astro`를 우선하고, 이미 공개된 URL contract가 있으면 그 계약을 먼저 존중합니다.
-- 실제 화면 구현은 `src/features/<feature>` 아래에 둡니다.
-- feature page surface class는 `ft_*`를 기본으로 두고, home은 `ft_home__*`, list/hub/directory는 route 이름 그대로 `ft_recent__*`, `ft_posts__*`, `ft_notes__*`, `ft_tags__*`, detail은 singular + `Detail`, `src/pages/tags/[tag]/index.astro` 같은 single-tag resource page는 `ft_tag__*`를 기본으로 봅니다.
-- pages-local document helper는 `pages`만 소유하고, `features`는 이 파일들을 모르도록 유지합니다.
-- pages-local document shell은 사실상 `rt_document__*`, shared primitive는 `ui_*`, reusable block은 `wg_*`, truly local helper만 드물게 `loc_*`를 사용합니다.
-- Astro의 기본 companion은 `convention-typescript`와 `convention-css`입니다.
-- React island나 TSX가 있으면 `convention-react`를 추가합니다.
-- hydration, form action, server island, navigation 회귀를 브라우저에서 확인하면 `convention-playwright-test`를 추가합니다.
-- layout file은 shared component tier가 아니라 owning feature의 shell로 보고 `src/features/<feature>` 아래에 둡니다.
-- layout 내부 조립은 `convention-react`의 ownership 경계와 유사하게 `ui` primitive와 `widget` reusable block만 사용합니다.
-- redirect, rewrite, auth guard owner는 layout이 아니라 page boundary나 `src/middleware.ts`에 둡니다.
-- Astro frontmatter, `getStaticPaths()`, feature support helper처럼 비자명한 경계 선언에는 JSDoc을 요구하고, inline comment는 rendering/ownership/integration caveat에만 제한합니다.
+## Progressive Convention Consumer Contract
+
+아래 표는 progressive React/TypeScript/CSS skill에만 적용합니다. non-progressive owner는 자신의 `SKILL.md`가 지정한 local `AGENTS.md`/rule body 계약을 유지합니다.
+
+| Surface or stage | Required contract |
+| --- | --- |
+| Activated skill | Follow its own `SKILL.md` load contract. |
+| Non-progressive owner | Use the local `AGENTS.md` / rule bodies required by that `SKILL.md`. |
+| TSX | Activate `convention-react` + `convention-typescript`. |
+| `className` / CSS / styling surface | Add `convention-css`. |
+| Activated progressive skill | Scan every activated `RULES_INDEX.md` completely; never stop at the first match. |
+| Rule bodies | Read only `Selected` + `Unknown` `rules/*.md` bodies; resolve `Unknown` before completion. |
+| Progressive full handbook | React/TypeScript/CSS `AGENTS.md` is opt-in, never default-loaded. |
+| Scope drift | Restart activation and rescan every activated progressive index. |
+| Completion | Finish with `convention-audit`: coverage `FAIL = 0`, semantic `FAIL = 0`, `UNKNOWN = 0`. |
+
+## Progressive Activation Matrix
+
+확장자만으로 결정하지 않고 실제 ownership과 changed surface를 기준으로 아래 closure를 적용합니다.
+
+| Changed surface | Activate |
+| --- | --- |
+| Pure TypeScript / type / schema / helper / API / config | `convention-typescript` |
+| Pure CSS / selector / token / stylesheet | `convention-css` |
+| React `.ts` hook / ownership | `convention-react` + `convention-typescript` |
+| TSX | `convention-react` + `convention-typescript` |
+| TSX `className` / style import / styling surface | `convention-react` + `convention-typescript` + `convention-css` |
+
+Pure CSS는 TypeScript를 자동 활성화하지 않고, pure TypeScript는 React/CSS를 자동 활성화하지 않습니다.
+
+## Project-local Overlay Contract
+
+- 공통 rule body를 복제하지 않습니다.
+- 프로젝트 디렉터리/owner/허용 파일/금지 영역만 추가합니다.
+- 실제 build/lint/test/browser 명령과 generated-file 보호를 추가합니다.
+- scoped exception은 근거와 제거 조건을 함께 적습니다.
+- 공통 convention과 충돌하면 약화하지 않고 명시적으로 보고합니다.
 
 ## Workflow Pipeline
 
@@ -140,13 +163,20 @@ Astro 프로젝트에서 `convention-astro`를 선택했다면 아래를 기본 
 - 적용할 `agent-conventions` skill을 먼저 확정합니다.
 - 어떤 convention skill을 적용할지 정하기 전에는 구현하지 않습니다.
 - 완료조건은 확인 가능한 문장으로 정리합니다.
-- convention skill이 둘 이상 걸리면 더 좁은 surface skill과 공통 companion skill을 함께 선택합니다.
+- TSX는 `convention-react`와 `convention-typescript`를 함께 활성화합니다.
+- `className`, CSS, styling surface가 있으면 `convention-css`를 추가합니다.
+- owner의 `metadata.json.companions`에서 `required`는 항상, `conditional`은 실제 surface가 `appliesWhen`과 맞을 때 활성화합니다.
+- non-progressive skill은 기존 `extends`와 자신의 `SKILL.md` load 계약을 유지합니다.
 
 ### Stage 4. Context Collection
 
 - 관련 코드, 테스트, 기존 구현 패턴, 인접 경계를 확인합니다.
 - 변경 근거가 되는 파일과 검증 포인트를 먼저 확보합니다.
-- 선택한 `agent-conventions` skill이 전제하는 구조와 기존 패턴을 함께 확인합니다.
+- 각 activated skill의 `SKILL.md`를 먼저 읽습니다.
+- activated progressive skill마다 `RULES_INDEX.md` 전체를 scan하고 digest-bound `Selected`/`N/A`/`Unknown` exact partition을 작성합니다.
+- progressive rule body는 `Selected`와 `Unknown`만 읽고, `Unknown`은 구현 전후 증거로 해소합니다.
+- progressive React/TypeScript/CSS full `AGENTS.md`는 전체 handbook이 명시적으로 필요한 경우에만 opt-in합니다.
+- non-progressive owner가 `SKILL.md`에서 local `AGENTS.md` 전체를 요구하면 그 계약을 따릅니다.
 
 ### Stage 5. Planning and Isolation
 
@@ -164,6 +194,7 @@ Astro 프로젝트에서 `convention-astro`를 선택했다면 아래를 기본 
 - 생성 산출물은 직접 수정하지 않습니다.
 - 구현 중에도 선택한 convention skill을 계속 기준으로 사용합니다.
 - plan이 있다면 task 단위 완료조건을 유지합니다.
+- changed file, surface, companion activation, applicable rule에 scope drift가 생기면 Stage 3으로 돌아가 모든 activated progressive index를 다시 scan합니다.
 
 ### Stage 7. Review Loop
 
@@ -189,9 +220,10 @@ Astro 프로젝트에서 `convention-astro`를 선택했다면 아래를 기본 
 
 ### Stage 9. Convention Audit
 
-- Stage 2에서 확정한 convention skill 기준으로 변경 파일을 다시 점검합니다.
-- 자동 검사로 확인된 것과 수동으로 확인한 것을 구분합니다.
-- high severity convention 위반이 있으면 구현 단계로 돌아갑니다.
+- 마지막 gate로 `convention-audit`을 실행하고 local 8-rule `AGENTS.md` 전체를 따릅니다.
+- auditor는 변경 surface와 activated progressive index를 독립적으로 다시 선택하고 implementer receipt와 exact partition을 비교합니다.
+- 자동 검사 결과는 evidence일 뿐 semantic convention PASS를 대신하지 않습니다.
+- coverage `FAIL = 0`, semantic `FAIL = 0`, `UNKNOWN = 0`이 아니면 Stage 3 또는 Stage 6으로 돌아가 재선택·수정·재검증합니다.
 - convention 예외는 기본 금지이며, 예외가 필요하면 근거와 제거 조건을 함께 남깁니다.
 
 ### Stage 10. Completion
@@ -207,7 +239,8 @@ Astro 프로젝트에서 `convention-astro`를 선택했다면 아래를 기본 
 - plan이 필요한 작업은 execution strategy를 정하기 전에는 구현하지 않습니다.
 - review 미통과 상태로 다음 task나 완료 단계로 넘어가지 않습니다.
 - fresh verification 없이 완료 처리하지 않습니다.
-- high severity convention 위반을 문서화만 하고 종료하지 않습니다.
+- scope drift 뒤 기존 receipt를 재사용하지 않습니다.
+- convention-audit의 coverage/semantic `FAIL` 또는 `UNKNOWN`을 문서화만 하고 종료하지 않습니다.
 - spec review 또는 code quality review를 생략하고 완료 처리하지 않습니다.
 
 ## Final Report

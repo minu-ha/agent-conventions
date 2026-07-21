@@ -4,7 +4,7 @@
 
 **Goal:** React, TypeScript, CSS 작업이 applicable rule을 빠짐없이 선택·적용·감사하면서 full handbook 기본 로딩을 제거하도록 structured skill pack과 검증 도구를 개선한다.
 
-**Architecture:** `rules/*.md`에 observable routing metadata를 두고 build package가 compact `RULES_INDEX.md`와 digest를 생성한다. 각 `SKILL.md`는 scope → full index scan → exact receipt → selected body → drift → audit router가 되며, package test는 schema/index/fixture 무결성을, behavioral evaluation은 실제 agent selection을 검증한다. Full `AGENTS.md`는 opt-in handbook으로 계속 생성한다.
+**Architecture:** `rules/*.md`에 observable routing metadata를 두고 build package가 compact `RULES_INDEX.md`와 digest를 생성한다. 각 progressive `SKILL.md`는 scope → full index scan → exact receipt → Selected/Unknown body → drift → audit router가 되며, package test는 schema/index/fixture 무결성을, behavioral evaluation은 실제 agent selection을 검증한다. Progressive React/TypeScript/CSS의 full `AGENTS.md`는 opt-in handbook으로 계속 생성하고, non-progressive skill은 각 `SKILL.md`의 기존 load 계약을 유지한다.
 
 **Tech Stack:** Node.js 22, TypeScript 5.9, `tsx --test`, Node `crypto`, Markdown/JSON structured skills, Biome 2.2, Python `tiktoken` 0.11.0 (`o200k_base`) for evaluation snapshots.
 
@@ -652,40 +652,53 @@ git commit -m "feat: audit progressive convention selections"
 - Modify: `package/README.md`
 - Modify: root `AGENTS.md`
 - Modify: `package/test/cli.test.ts`
+- Modify: `docs/superpowers/plans/2026-07-21-progressive-convention-loading.md`
 
-- [ ] **Step 1: Add documentation RED assertions**
+- [x] **Step 1: Add documentation RED assertions**
 
 Tests require README and consumer template to state:
 
 ```md
 - TSX: convention-react + convention-typescript
 - className/CSS/styling surface: add convention-css
-- scan every activated RULES_INDEX.md
-- read only selected rules/*.md bodies
-- do not default-load compiled AGENTS.md
+- scan every activated progressive RULES_INDEX.md completely
+- read only Selected + Unknown rules/*.md bodies, then resolve Unknown
+- progressive React/TypeScript/CSS full AGENTS.md is opt-in, never default
 - rescan on scope drift
-- finish with convention-audit and FAIL/UNKNOWN zero
+- finish with convention-audit at coverage FAIL=0, semantic FAIL=0, UNKNOWN=0
 ```
 
-- [ ] **Step 2: Verify documentation RED**
+- [x] **Step 2: Verify documentation RED**
 
-Run `test/cli.test.ts`; expected failure because current docs call `AGENTS.md` the default/slim entry.
+Ran `test/cli.test.ts`; the new exact-section/table assertions failed as expected with 16 passing and 2 failing tests because the consumer contract and artifact tables did not exist.
 
-- [ ] **Step 3: Update all human and agent documentation**
+후속 source-mutation review에서도 실제 consumer template의 policy table을 4-space indented code block으로 바꾼 경우가 먼저 `Missing expected exception`으로 RED였고, 그 차단 뒤 동일 policy를 HTML comment 안으로 옮긴 경우가 다시 RED였다. Markdown visibility parser가 indented code, HTML comment, fence character/length를 구분하도록 수정한 뒤 focused CLI 19/19와 full suite 114/114가 GREEN이 됐다.
 
-Describe source files, generated compact index, opt-in handbook, companion modes, check-generated command, routing-evals purpose, and the exact consumer policy. Remove stale “slim AGENTS.md is read first” claims without deleting full handbook documentation.
+- [x] **Step 3: Update all human and agent documentation**
 
-- [ ] **Step 4: Rebuild all outputs and commit docs**
+Describe source files, generated compact index, progressive-only opt-in handbook, companion modes, check-generated command, routing-evals purpose, non-progressive compatibility, project-local overlay, and the exact consumer policy. Remove stale “slim AGENTS.md is read first” and duplicated Astro project-rule claims without deleting full handbook documentation.
+
+- [x] **Step 4: Rebuild and verify all outputs**
 
 ```bash
 npm --prefix package run build:all
 npm --prefix package run check:generated:all
+npm --prefix package run typecheck
 npm --prefix package run test
-git add AGENTS.md AGENTS.superpowers.conventions.md README.md package/README.md package/test/cli.test.ts skill/*/AGENTS.md skill/*/RULES_INDEX.md
+npm --prefix package run biome:check:all
+git diff --check
+```
+
+Fresh verification passed: all 9 buildable skills validated/built, all 3 progressive indexes passed generated checks, typecheck passed, 114/114 tests passed, Biome passed, and `git diff --check` passed.
+
+- [x] **Step 5: Integrator commit**
+
+```bash
+git add AGENTS.md AGENTS.superpowers.conventions.md README.md package/README.md package/test/cli.test.ts docs/superpowers/plans/2026-07-21-progressive-convention-loading.md
 git commit -m "docs: route projects through compact convention indexes"
 ```
 
-Only generated files changed by the build are staged; unrelated skill output changes must be inspected before staging.
+Task 8 source inventory is the six files above. `build:all` should not add Task 8 generated diffs because no skill source changed; any generated file already modified by another task remains outside this commit inventory unless inspection proves Task 8 caused it.
 
 ---
 

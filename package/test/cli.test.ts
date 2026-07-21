@@ -6,10 +6,15 @@ import {tmpdir} from "node:os";
 import path from "node:path";
 import test from "node:test";
 import {fileURLToPath, pathToFileURL} from "node:url";
+import type {SkillCompanion, SkillMetadata} from "../src/types.js";
 
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
 const repoDir = path.resolve(currentDir, "../..");
 const packageDir = path.join(repoDir, "package");
+const repositoryAgentsPath = path.join(repoDir, "AGENTS.md");
+const consumerTemplatePath = path.join(repoDir, "AGENTS.superpowers.conventions.md");
+const repositoryReadmePath = path.join(repoDir, "README.md");
+const packageReadmePath = path.join(packageDir, "README.md");
 const astroAgentsPath = path.join(repoDir, "skill/astro/AGENTS.md");
 const reactAgentsPath = path.join(repoDir, "skill/react/AGENTS.md");
 const npmCommand = process.platform === "win32" ? "npm.cmd" : "npm";
@@ -30,6 +35,39 @@ const expectedSkillScriptNames = [
 	"tanstack-route",
 	"typescript",
 ] as const;
+const expectedProgressiveSkillNames = ["css", "react", "typescript"] as const;
+
+/**
+ * @summary exact Markdown section 조회 조건
+ */
+interface MarkdownSectionQuery {
+	/**
+	 * @field 검사할 Markdown 원문
+	 */
+	source: string;
+	/**
+	 * @field `#` prefix를 제외한 exact heading
+	 */
+	heading: string;
+	/**
+	 * @field heading level
+	 */
+	level: number;
+}
+
+/**
+ * @summary exact Markdown table 조회 조건
+ */
+interface MarkdownTableQuery {
+	/**
+	 * @field table을 포함해야 하는 section body
+	 */
+	section: string;
+	/**
+	 * @field table header의 exact cell 목록
+	 */
+	expectedHeader: readonly string[];
+}
 
 /**
  * @helper CLI build 격리 검증용 최소 structured skill 작성
@@ -76,6 +114,208 @@ const listMarkdownFiles = async (dirPath: string): Promise<string[]> => {
 	}
 
 	return files.sort();
+};
+
+/**
+ * @helper fenced/indented code와 HTML 주석을 제외한 Markdown 렌더링 line 목록 생성
+ */
+const getRenderableMarkdownLines = (sourceLines: readonly string[]): string[] => {
+	const renderableLines: string[] = [];
+	let fenceCharacter: "`" | "~" | undefined;
+	let fenceLength = 0;
+	let insideHtmlComment = false;
+
+	for (const sourceLine of sourceLines) {
+		if (fenceCharacter !== undefined) {
+			const leadingSpacesMatch = /^ */.exec(sourceLine);
+			if (leadingSpacesMatch === null) {
+				throw new Error("Markdown fence indentation could not be resolved.");
+			}
+			const leadingSpaceCount = leadingSpacesMatch[0].length;
+			if (leadingSpaceCount <= 3) {
+				const fenceCandidate = sourceLine.slice(leadingSpaceCount);
+				const closingFenceMatch = fenceCharacter === "`" ? /^`+/.exec(fenceCandidate) : /^~+/.exec(fenceCandidate);
+				const closingFence = closingFenceMatch === null ? undefined : closingFenceMatch[0];
+				if (
+					closingFence !== undefined &&
+					closingFence.length >= fenceLength &&
+					fenceCandidate.slice(closingFence.length).trim().length === 0
+				) {
+					fenceCharacter = undefined;
+					fenceLength = 0;
+				}
+			}
+			renderableLines.push("");
+			continue;
+		}
+
+		let uncommentedLine = "";
+		let remainingLine = sourceLine;
+		while (remainingLine.length > 0) {
+			if (insideHtmlComment) {
+				const commentEndIndex = remainingLine.indexOf("-->");
+				if (commentEndIndex === -1) {
+					remainingLine = "";
+					continue;
+				}
+				insideHtmlComment = false;
+				remainingLine = remainingLine.slice(commentEndIndex + 3);
+				continue;
+			}
+
+			const commentStartIndex = remainingLine.indexOf("<!--");
+			if (commentStartIndex === -1) {
+				uncommentedLine += remainingLine;
+				remainingLine = "";
+				continue;
+			}
+
+			uncommentedLine += remainingLine.slice(0, commentStartIndex);
+			const commentEndIndex = remainingLine.indexOf("-->", commentStartIndex + 4);
+			if (commentEndIndex === -1) {
+				insideHtmlComment = true;
+				remainingLine = "";
+				continue;
+			}
+			remainingLine = remainingLine.slice(commentEndIndex + 3);
+		}
+
+		const leadingSpacesMatch = /^ */.exec(uncommentedLine);
+		if (leadingSpacesMatch === null) {
+			throw new Error("Markdown line indentation could not be resolved.");
+		}
+		const leadingSpaceCount = leadingSpacesMatch[0].length;
+		if (leadingSpaceCount >= 4 || uncommentedLine.startsWith("\t")) {
+			renderableLines.push("");
+			continue;
+		}
+
+		const fenceCandidate = uncommentedLine.slice(leadingSpaceCount);
+		const openingFenceMatch = /^(`{3,}|~{3,})/.exec(fenceCandidate);
+		if (openingFenceMatch !== null) {
+			const openingFence = openingFenceMatch[1];
+			if (openingFence === undefined) {
+				throw new Error("Markdown opening fence is missing after a successful match.");
+			}
+			const openingCharacter = openingFence.charAt(0);
+			if (openingCharacter !== "`" && openingCharacter !== "~") {
+				throw new Error(`Unsupported Markdown fence character: ${openingCharacter}`);
+			}
+			fenceCharacter = openingCharacter;
+			fenceLength = openingFence.length;
+			renderableLines.push("");
+			continue;
+		}
+
+		renderableLines.push(uncommentedLine);
+	}
+
+	return renderableLines;
+};
+
+/**
+ * @helper 렌더링 가능한 exact heading으로 원본 Markdown section body 추출
+ */
+const extractMarkdownSection = (query: MarkdownSectionQuery): string => {
+	const {source, heading, level} = query;
+	const sourceLines = source.split("\n");
+	const renderableLines = getRenderableMarkdownLines(sourceLines);
+	const marker = `${"#".repeat(level)} ${heading}`;
+	const markerIndexes: number[] = [];
+	const headingLevelsByLine = new Map<number, number>();
+
+	for (const [index, line] of renderableLines.entries()) {
+		if (line === marker) {
+			markerIndexes.push(index);
+		}
+
+		const headingMatch = /^(#+) /.exec(line);
+		const headingPrefix = headingMatch?.[1];
+		if (headingPrefix !== undefined) {
+			headingLevelsByLine.set(index, headingPrefix.length);
+		}
+	}
+
+	if (markerIndexes.length !== 1) {
+		throw new Error(`Expected exactly one Markdown section ${marker}, found ${markerIndexes.length}.`);
+	}
+
+	const markerIndex = markerIndexes[0];
+	if (markerIndex === undefined) {
+		throw new Error(`Markdown section index is missing after resolving ${marker}.`);
+	}
+
+	let sectionEnd = sourceLines.length;
+	for (const [lineIndex, headingLevel] of headingLevelsByLine) {
+		if (lineIndex > markerIndex && headingLevel <= level) {
+			sectionEnd = lineIndex;
+			break;
+		}
+	}
+
+	return sourceLines
+		.slice(markerIndex + 1, sectionEnd)
+		.join("\n")
+		.trim();
+};
+
+/**
+ * @helper unfenced contiguous Markdown table을 exact header와 column shape로 검증
+ */
+const parseMarkdownTableRows = (query: MarkdownTableQuery): string[][] => {
+	const {section, expectedHeader} = query;
+	const lines = getRenderableMarkdownLines(section.split("\n"));
+	const tableLineIndexes: number[] = [];
+
+	for (const [index, line] of lines.entries()) {
+		if (/^ {0,3}\|.*\|[ \t]*$/.test(line)) {
+			tableLineIndexes.push(index);
+		}
+	}
+
+	if (tableLineIndexes.length < 3) {
+		throw new Error("Markdown section must contain an unfenced header, separator, and data row.");
+	}
+
+	for (let index = 1; index < tableLineIndexes.length; index += 1) {
+		const previousLineIndex = tableLineIndexes[index - 1];
+		const currentLineIndex = tableLineIndexes[index];
+		if (previousLineIndex === undefined || currentLineIndex === undefined || currentLineIndex !== previousLineIndex + 1) {
+			throw new Error("Markdown section must contain exactly one contiguous unfenced table.");
+		}
+	}
+
+	const tableLines = tableLineIndexes.map((lineIndex) => {
+		const line = lines[lineIndex];
+		if (line === undefined) {
+			throw new Error(`Markdown table line ${lineIndex} is missing.`);
+		}
+		return line;
+	});
+	const tableCells = tableLines.map((line) =>
+		line
+			.trim()
+			.slice(1, -1)
+			.split("|")
+			.map((cell) => cell.trim()),
+	);
+	const headerCells = tableCells[0];
+	const separatorCells = tableCells[1];
+	if (headerCells === undefined || separatorCells === undefined) {
+		throw new Error("Markdown table header or separator is missing.");
+	}
+
+	assert.deepEqual(headerCells, expectedHeader, "Markdown table header mismatch");
+	if (separatorCells.length !== expectedHeader.length || separatorCells.some((cell) => !/^:?-{3,}:?$/.test(cell))) {
+		throw new Error("Markdown table separator must match the exact header column count.");
+	}
+
+	return tableCells.slice(2).map((cells) => {
+		if (cells.length !== expectedHeader.length || cells.some((cell) => cell.length === 0)) {
+			throw new Error("Markdown table data rows must have non-empty cells matching the header column count.");
+		}
+		return cells;
+	});
 };
 
 /**
@@ -130,6 +370,327 @@ test("package.json exposes all-skill and per-skill script aliases", async () => 
 	}
 });
 
+test("consumer documentation enforces the exact progressive convention policy", async () => {
+	const expectedPolicyRows = [
+		["Activated skill", "Follow its own `SKILL.md` load contract."],
+		["Non-progressive owner", "Use the local `AGENTS.md` / rule bodies required by that `SKILL.md`."],
+		["TSX", "Activate `convention-react` + `convention-typescript`."],
+		["`className` / CSS / styling surface", "Add `convention-css`."],
+		["Activated progressive skill", "Scan every activated `RULES_INDEX.md` completely; never stop at the first match."],
+		["Rule bodies", "Read only `Selected` + `Unknown` `rules/*.md` bodies; resolve `Unknown` before completion."],
+		["Progressive full handbook", "React/TypeScript/CSS `AGENTS.md` is opt-in, never default-loaded."],
+		["Scope drift", "Restart activation and rescan every activated progressive index."],
+		["Completion", "Finish with `convention-audit`: coverage `FAIL = 0`, semantic `FAIL = 0`, `UNKNOWN = 0`."],
+	];
+	const consumerTemplate = await readFile(consumerTemplatePath, "utf8");
+	const expectedActivationRows = [
+		["Pure TypeScript / type / schema / helper / API / config", "`convention-typescript`"],
+		["Pure CSS / selector / token / stylesheet", "`convention-css`"],
+		["React `.ts` hook / ownership", "`convention-react` + `convention-typescript`"],
+		["TSX", "`convention-react` + `convention-typescript`"],
+		["TSX `className` / style import / styling surface", "`convention-react` + `convention-typescript` + `convention-css`"],
+	];
+	const policyDocuments = [
+		["README.md", await readFile(repositoryReadmePath, "utf8")],
+		["AGENTS.superpowers.conventions.md", consumerTemplate],
+	] as const;
+	const expectedPolicyNarrativeByDocument = new Map<string, readonly string[]>([
+		[
+			"README.md",
+			[
+				"각 activated skill은 먼저 자신의 `SKILL.md`를 따릅니다. 아래 계약은 progressive React/TypeScript/CSS skill에 적용합니다.",
+				"non-progressive owner는 자신의 `SKILL.md`가 안내하는 local `AGENTS.md`/rule 원문을 그대로 사용합니다. 이 호환 경로를 progressive handbook 최적화와 혼동하지 않습니다.",
+			],
+		],
+		[
+			"AGENTS.superpowers.conventions.md",
+			[
+				"아래 표는 progressive React/TypeScript/CSS skill에만 적용합니다. non-progressive owner는 자신의 `SKILL.md`가 지정한 local `AGENTS.md`/rule body 계약을 유지합니다.",
+			],
+		],
+	]);
+	const expectedActivationNarrativeByDocument = new Map<string, readonly string[]>([
+		[
+			"README.md",
+			[
+				"파일 확장자는 최소 신호일 뿐이며 실제 ownership과 changed surface를 함께 판정합니다.",
+				"Pure CSS는 TypeScript를 자동 활성화하지 않고, pure TypeScript는 React/CSS를 자동 활성화하지 않습니다.",
+			],
+		],
+		[
+			"AGENTS.superpowers.conventions.md",
+			[
+				"확장자만으로 결정하지 않고 실제 ownership과 changed surface를 기준으로 아래 closure를 적용합니다.",
+				"Pure CSS는 TypeScript를 자동 활성화하지 않고, pure TypeScript는 React/CSS를 자동 활성화하지 않습니다.",
+			],
+		],
+	]);
+	/**
+	 * @helper source mutation마다 consumer policy와 activation 계약을 재검증
+	 */
+	const assertConsumerPolicySource = (source: string, documentName: string): void => {
+		const section = extractMarkdownSection({source, heading: "Progressive Convention Consumer Contract", level: 2});
+		assert.deepEqual(
+			parseMarkdownTableRows({section, expectedHeader: ["Surface or stage", "Required contract"]}),
+			expectedPolicyRows,
+			documentName,
+		);
+		const activationSection = extractMarkdownSection({source, heading: "Progressive Activation Matrix", level: 2});
+		assert.deepEqual(
+			parseMarkdownTableRows({section: activationSection, expectedHeader: ["Changed surface", "Activate"]}),
+			expectedActivationRows,
+			documentName,
+		);
+
+		for (const contradiction of [
+			/Read only `Selected` `rules\/\*\.md` bodies\./,
+			/Keep the initial receipt\./,
+			/Never load any `AGENTS\.md`\./,
+			/High severity checks are enough to complete\./,
+		]) {
+			assert.doesNotMatch(source, contradiction, documentName);
+		}
+
+		const expectedPolicyNarrative = expectedPolicyNarrativeByDocument.get(documentName);
+		const expectedActivationNarrative = expectedActivationNarrativeByDocument.get(documentName);
+		if (expectedPolicyNarrative === undefined || expectedActivationNarrative === undefined) {
+			throw new Error(`Missing exact narrative fixture for ${documentName}.`);
+		}
+		const policyNarrative = section
+			.split("\n")
+			.map((line) => line.trim())
+			.filter((line) => line.length > 0 && !line.startsWith("|"));
+		const activationNarrative = activationSection
+			.split("\n")
+			.map((line) => line.trim())
+			.filter((line) => line.length > 0 && !line.startsWith("|"));
+		assert.deepEqual(policyNarrative, expectedPolicyNarrative, documentName);
+		assert.deepEqual(activationNarrative, expectedActivationNarrative, documentName);
+	};
+
+	for (const [documentName, source] of policyDocuments) {
+		assertConsumerPolicySource(source, documentName);
+	}
+
+	const expectedAuditBullets = [
+		"- 마지막 gate로 `convention-audit`을 실행하고 local 8-rule `AGENTS.md` 전체를 따릅니다.",
+		"- auditor는 변경 surface와 activated progressive index를 독립적으로 다시 선택하고 implementer receipt와 exact partition을 비교합니다.",
+		"- 자동 검사 결과는 evidence일 뿐 semantic convention PASS를 대신하지 않습니다.",
+		"- coverage `FAIL = 0`, semantic `FAIL = 0`, `UNKNOWN = 0`이 아니면 Stage 3 또는 Stage 6으로 돌아가 재선택·수정·재검증합니다.",
+		"- convention 예외는 기본 금지이며, 예외가 필요하면 근거와 제거 조건을 함께 남깁니다.",
+	];
+	const expectedOverlayBullets = [
+		"- 공통 rule body를 복제하지 않습니다.",
+		"- 프로젝트 디렉터리/owner/허용 파일/금지 영역만 추가합니다.",
+		"- 실제 build/lint/test/browser 명령과 generated-file 보호를 추가합니다.",
+		"- scoped exception은 근거와 제거 조건을 함께 적습니다.",
+		"- 공통 convention과 충돌하면 약화하지 않고 명시적으로 보고합니다.",
+	];
+	/**
+	 * @helper source mutation마다 consumer template의 audit와 overlay 계약을 재검증
+	 */
+	const assertConsumerTemplateSource = (source: string): void => {
+		assertConsumerPolicySource(source, "AGENTS.superpowers.conventions.md");
+		const auditSection = extractMarkdownSection({source, heading: "Stage 9. Convention Audit", level: 3});
+		assert.deepEqual(
+			auditSection.split("\n").filter((line) => line.trim().length > 0),
+			expectedAuditBullets,
+		);
+		const overlaySection = extractMarkdownSection({source, heading: "Project-local Overlay Contract", level: 2});
+		assert.deepEqual(
+			overlaySection.split("\n").filter((line) => line.trim().length > 0),
+			expectedOverlayBullets,
+		);
+	};
+
+	assert.doesNotThrow(() => assertConsumerTemplateSource(consumerTemplate));
+
+	const policyNextHeading = "\n## Progressive Activation Matrix";
+	for (const contradiction of [
+		"Read only `Selected` `rules/*.md` bodies.",
+		"Keep the initial receipt.",
+		"Never load any `AGENTS.md`.",
+		"High severity checks are enough to complete.",
+		"초기 receipt를 그대로 재사용합니다.",
+	]) {
+		const mutatedSource = consumerTemplate.replace(policyNextHeading, `\n${contradiction}\n${policyNextHeading}`);
+		assert.notEqual(mutatedSource, consumerTemplate);
+		assert.throws(() => assertConsumerTemplateSource(mutatedSource));
+	}
+
+	for (const [currentText, mutatedText] of [
+		["Activate `convention-react` + `convention-typescript`.", "Activate `convention-react`."],
+		[
+			"Read only `Selected` + `Unknown` `rules/*.md` bodies; resolve `Unknown` before completion.",
+			"Read only `Selected` `rules/*.md` bodies.",
+		],
+		["Restart activation and rescan every activated progressive index.", "Keep the initial receipt."],
+		["React/TypeScript/CSS `AGENTS.md` is opt-in, never default-loaded.", "Never load any `AGENTS.md`."],
+		[
+			"| TSX `className` / style import / styling surface | `convention-react` + `convention-typescript` + `convention-css` |",
+			"| TSX `className` / style import / styling surface | `convention-react` + `convention-css` |",
+		],
+	] as const) {
+		const mutatedSource = consumerTemplate.replace(currentText, mutatedText);
+		assert.notEqual(mutatedSource, consumerTemplate);
+		assert.throws(() => assertConsumerTemplateSource(mutatedSource));
+	}
+
+	const auditGateBullet = expectedAuditBullets[3];
+	if (!auditGateBullet) {
+		throw new Error("Audit policy fixture must include the zero-gate bullet.");
+	}
+	const mutatedAuditSource = consumerTemplate.replace(auditGateBullet, "- High severity checks are enough to complete.");
+	assert.notEqual(mutatedAuditSource, consumerTemplate);
+	assert.throws(() => assertConsumerTemplateSource(mutatedAuditSource));
+
+	for (const [currentText, mutatedText] of [
+		["| Surface or stage | Required contract |", "| Keyword dump | Required contract |"],
+		["| --- | --- |", "| invalid | --- |"],
+	] as const) {
+		const mutatedSource = consumerTemplate.replace(currentText, mutatedText);
+		assert.notEqual(mutatedSource, consumerTemplate);
+		assert.throws(() => assertConsumerTemplateSource(mutatedSource));
+	}
+
+	const policySection = extractMarkdownSection({source: consumerTemplate, heading: "Progressive Convention Consumer Contract", level: 2});
+	const policyBlock = `## Progressive Convention Consumer Contract\n\n${policySection}\n\n`;
+	const sourceWithoutPolicy = consumerTemplate.replace(policyBlock, "");
+	assert.notEqual(sourceWithoutPolicy, consumerTemplate);
+	const fencedPolicySource = `${sourceWithoutPolicy}\n\n\`\`\`md\n${policyBlock}\`\`\`\n`;
+	assert.throws(() => assertConsumerTemplateSource(fencedPolicySource));
+	const nestedFencePolicySource = `${sourceWithoutPolicy}\n\n\`\`\`\`md\n\`\`\`\n${policyBlock}\`\`\`\`\n`;
+	assert.throws(() => assertConsumerTemplateSource(nestedFencePolicySource));
+
+	const policyTable = [
+		"| Surface or stage | Required contract |",
+		"| --- | --- |",
+		...expectedPolicyRows.map((row) => `| ${row.join(" | ")} |`),
+	].join("\n");
+	const indentedPolicyTableSource = consumerTemplate.replace(
+		policyTable,
+		policyTable
+			.split("\n")
+			.map((line) => `    ${line}`)
+			.join("\n"),
+	);
+	assert.notEqual(indentedPolicyTableSource, consumerTemplate);
+	assert.throws(() => assertConsumerTemplateSource(indentedPolicyTableSource));
+
+	const commentedPolicySource = `${sourceWithoutPolicy}\n\n<!--\n${policyBlock}## Hidden policy boundary\n-->\n`;
+	assert.throws(() => assertConsumerTemplateSource(commentedPolicySource));
+
+	const scatteredTableSource = consumerTemplate.replace(
+		policyNextHeading,
+		"\npolicy prose\n| stray | table row |\n\n## Progressive Activation Matrix",
+	);
+	assert.notEqual(scatteredTableSource, consumerTemplate);
+	assert.throws(() => assertConsumerTemplateSource(scatteredTableSource));
+	const multipleTableSource = consumerTemplate.replace(
+		policyNextHeading,
+		"\n| Extra | Table |\n| --- | --- |\n| duplicate | context |\n\n## Progressive Activation Matrix",
+	);
+	assert.notEqual(multipleTableSource, consumerTemplate);
+	assert.throws(() => assertConsumerTemplateSource(multipleTableSource));
+
+	assert.throws(() => extractMarkdownSection({source: "## Convention Selection extra\nbody", heading: "Convention Selection", level: 2}));
+	assert.throws(() =>
+		extractMarkdownSection({
+			source: "## Convention Selection\nfirst\n## Convention Selection\nsecond",
+			heading: "Convention Selection",
+			level: 2,
+		}),
+	);
+});
+
+test("repository documentation distinguishes source, router, generated artifacts, and compatibility modes", async () => {
+	const repositoryAgents = await readFile(repositoryAgentsPath, "utf8");
+	const consumerTemplate = await readFile(consumerTemplatePath, "utf8");
+	const repositoryReadme = await readFile(repositoryReadmePath, "utf8");
+	const packageReadme = await readFile(packageReadmePath, "utf8");
+	const expectedArtifactRows = [
+		["`rules/_sections.md`, `rules/_template.md`, `rules/*.md`", "Editable rule source of truth."],
+		["`metadata.json`", "Editable build and companion activation contract."],
+		["`SKILL.md`", "Editable activation/load router; compact for progressive skills."],
+		["`RULES_INDEX.md`", "Progressive-only generated compact index."],
+		["`AGENTS.md`", "Generated full handbook; opt-in for progressive React/TypeScript/CSS."],
+		["`routing-evals.json`", "Progressive-only editable test oracle; never runtime context."],
+	];
+	const artifactDocuments = [
+		["AGENTS.md", repositoryAgents, "Structured Skill Artifact Contract"],
+		["README.md", repositoryReadme, "Structured Skill Artifact Contract"],
+		["package/README.md", packageReadme, "Artifact Model"],
+	] as const;
+
+	for (const [documentName, source, heading] of artifactDocuments) {
+		const section = extractMarkdownSection({source, heading, level: 2});
+		assert.deepEqual(parseMarkdownTableRows({section, expectedHeader: ["Artifact", "Role"]}), expectedArtifactRows, documentName);
+	}
+
+	const progressiveSkillNames = new Set<string>(expectedProgressiveSkillNames);
+	const expectedTopologyRows = await Promise.all(
+		expectedSkillScriptNames.map(async (skillName) => {
+			const metadataSource = await readFile(path.join(repoDir, "skill", skillName, "metadata.json"), "utf8");
+			const metadata = JSON.parse(metadataSource) as SkillMetadata;
+			const shouldBeProgressive = progressiveSkillNames.has(skillName);
+			assert.equal(metadata.progressiveDisclosure === true, shouldBeProgressive, `${skillName} progressive mode`);
+
+			let loadingMode = "non-progressive";
+			if (shouldBeProgressive) {
+				loadingMode = "progressive";
+			} else if (skillName === "convention-audit") {
+				loadingMode = "non-progressive local";
+			}
+
+			let companionContract = "none";
+			if (metadata.companions !== undefined) {
+				const companionGroups: string[] = [];
+				const companions: SkillCompanion[] = metadata.companions;
+				for (const mode of ["required", "conditional"] as const) {
+					const names = companions.filter((companion) => companion.mode === mode).map((companion) => `\`${companion.skill}\``);
+					if (names.length > 0) {
+						companionGroups.push(`${mode} ${names.join(", ")}`);
+					}
+				}
+				if (companionGroups.length > 0) {
+					companionContract = companionGroups.join("; ");
+				}
+			} else if (metadata.extends !== undefined) {
+				companionContract = `extends ${metadata.extends.map((skill) => `\`${skill}\``).join(", ")}`;
+			}
+
+			return [`\`${skillName}\``, loadingMode, companionContract];
+		}),
+	);
+	for (const [documentName, source] of [
+		["README.md", repositoryReadme],
+		["package/README.md", packageReadme],
+	] as const) {
+		const topologySection = extractMarkdownSection({source, heading: "Buildable Loading Topology", level: 2});
+		assert.deepEqual(
+			parseMarkdownTableRows({section: topologySection, expectedHeader: ["Skill", "Loading", "Companion contract"]}),
+			expectedTopologyRows,
+			documentName,
+		);
+	}
+
+	const skillTypes = extractMarkdownSection({source: repositoryAgents, heading: "Skill Types", level: 2});
+	assert.match(skillTypes, /\[skill\/astro\]\(\.\/skill\/astro\/README\.md\)/);
+	const editingRules = extractMarkdownSection({source: repositoryAgents, heading: "Editing Rules", level: 2});
+	assert.match(editingRules, /`rules\/_sections\.md`, `rules\/_template\.md`, `rules\/\*\.md`를 수정/);
+	assert.match(editingRules, /activation[^\n]*load[^\n]*`SKILL\.md`[^\n]*수정/i);
+	assert.match(editingRules, /project[^\n]*local overlay/i);
+	const commands = extractMarkdownSection({source: repositoryAgents, heading: "Commands", level: 2});
+	assert.match(commands, /validate -- --all[\s\S]*build -- --all[\s\S]*check:generated:all/);
+
+	const conventionSelection = extractMarkdownSection({source: consumerTemplate, heading: "Convention Selection", level: 2});
+	assert.doesNotMatch(conventionSelection, /\bft_[A-Za-z0-9_*]*\b/);
+	const artifactSection = extractMarkdownSection({source: repositoryReadme, heading: "Structured Skill Artifact Contract", level: 2});
+	assert.match(artifactSection, /사람이 직접 수정[^\n]*[\s\S]*`SKILL\.md`/);
+	const consumerUsage = extractMarkdownSection({source: repositoryReadme, heading: "프로젝트에서 쓰는 방법", level: 2});
+	assert.match(consumerUsage, /`convention-astro` \+ `convention-typescript` \+ `convention-css`/);
+});
+
 test("build and generated-check modules import without running their CLI main", () => {
 	for (const modulePath of [buildModulePath, checkGeneratedModulePath]) {
 		const result = spawnSync(process.execPath, [tsxCliPath, "--eval", `import(${JSON.stringify(pathToFileURL(modulePath).href)})`], {
@@ -182,12 +743,18 @@ test("build CLI executes once for direct and symlinked entry paths", async (cont
 	}
 });
 
-test("generated-output check scripts preserve non-progressive compatibility", () => {
+test("generated-output check scripts support progressive TypeScript", () => {
 	const directResult = runPackageCommand(["--prefix", packageDir, "run", "check:generated", "--", "--skill=typescript"]);
 	const aliasResult = runPackageCommand(["--prefix", packageDir, "run", "check:generated:typescript"]);
 
 	assert.equal(directResult.status, 0, directResult.stderr);
 	assert.equal(aliasResult.status, 0, aliasResult.stderr);
+});
+
+test("generated-output check preserves non-progressive Astro compatibility", () => {
+	const result = runPackageCommand(["--prefix", packageDir, "run", "check:generated", "--", "--skill=astro"]);
+
+	assert.equal(result.status, 0, result.stderr);
 });
 
 test("generated-output check CLI executes for direct and symlinked entry paths", async (context) => {
