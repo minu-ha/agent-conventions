@@ -714,9 +714,9 @@ Task 8 source inventory is the six files above. `build:all` should not add Task 
 
 - [x] **Step 0: Correct the reproduced token-architecture failure**
 
-The first actual measurement on HEAD `1c2636d` failed all token gates: implementation median 13,380, max 19,723, one-load reduction 64.8837%, cumulative reduction 48.698%. Preserve rule-selection oracles, compact the index to ordinal + ID + `appliesWhen` + optional `reviewWith`, generate normative contracts from the source prefix, require CRITICAL full rules, include source body hashes and renderer version in the routing digest, reject prose after the first Incorrect marker, and validate missing/stale/orphan contracts. The corrected fixed contexts, including named-handler/owner-selector representatives and an actual reasoned HIGH full-rule expansion, now pass with implementation median 8,669, max 11,785, one-load reduction median 78.9838%, and cumulative reduction median 65.5609%; behavioral GREEN remains independently required.
+The first actual measurement on HEAD `1c2636d` failed all token gates: implementation median 13,380, max 19,723, one-load reduction 64.8837%, cumulative reduction 48.698%. Preserve rule-selection oracles, compact the index to ordinal + ID + `appliesWhen` + optional `reviewWith`, generate normative contracts from the source prefix, require CRITICAL full rules, include source body hashes and renderer version in the routing digest, reject prose after the first Incorrect marker, and validate missing/stale/orphan contracts. The corrected fixed contexts, including named-handler/owner-selector representatives and an actual reasoned HIGH full-rule expansion, now pass with implementation median 8,669, max 11,785, one-load reduction median 78.9853%, and cumulative reduction median 65.5609%; behavioral GREEN remains independently required.
 
-The first schema-valid full-handbook mixed trials then reproduced systematic over-selection: generated handbooks contained normative bodies but omitted the same `appliesWhen` boundaries used by the compact indexes. Preserve those failed old-HEAD trials as discovery evidence, add a RED renderer assertion, render escaped `Applies when` immediately below every progressive handbook rule heading, rebuild the three opt-in handbooks, and restart the fixed matrix on the new committed HEAD. This does not change the default progressive load path or its routing digest; it makes the explicit full-handbook control precise enough to act as an oracle.
+The first schema-valid full-handbook mixed trial then reproduced an over-selection, while discarded schema-invalid attempts showed the same tendency but were not scored: generated handbooks contained normative bodies but omitted the same `appliesWhen` boundaries used by the compact indexes. Preserve the valid failed old-HEAD trial as discovery evidence, add a RED renderer assertion, render escaped `Applies when` immediately below every progressive handbook rule heading, rebuild the three opt-in handbooks, and restart the fixed matrix on the new committed HEAD. This does not change the default progressive load path or its routing digest; it makes the explicit full-handbook control precise enough to act as an oracle.
 
 - [ ] **Step 1: Fix the evaluation protocol**
 
@@ -1089,7 +1089,7 @@ CSS metadata declares one conditional companion exactly: `{"skill":"typescript",
 
 | Rule ID | `appliesWhen` | `reviewWith` |
 |---|---|---|
-| `naming-default-to-plain-css-when-no-module-convention` | 프로젝트의 CSS Modules 표준이 확인되지 않은 상태에서 새 stylesheet 또는 class contract를 만들거나 `.module.css`/`styles.*` 도입을 검토한다. | — |
+| `naming-default-to-plain-css-when-no-module-convention` | 프로젝트 표준이 확정되지 않은 상태에서 새 stylesheet 또는 class contract의 형식을 결정하거나 `.module.css`/`styles.*` 도입·전환을 검토한다. | — |
 | `naming-keep-scope-slug-unique-per-owner` | 새 `scope_slug` namespace를 추가·복사·이름 변경하거나 서로 다른 owner의 class가 같은 namespace를 사용할 가능성이 있다. | — |
 | `naming-name-elements-and-modifiers-by-role` | element 또는 modifier class를 새로 짓거나 `container`, `wrapper`, `box`, 치수·간격 중심 이름을 변경한다. | — |
 | `naming-preserve-route-slug-traceability` | route/framework 규칙이 `rt_*` owner를 선택한 화면에서 route class slug를 새로 만들거나 이름을 변경한다. | — |
@@ -1126,7 +1126,7 @@ Define `U_CSS` as these 21 IDs. Every final fixture explicitly stores `expectedN
 3. `css-domain-state-class-contract`
    - Evidence/files: split `listButtonActive` into base plus `--active`, add a direct `clsx` import, and compose with `clsx()` in `catalog/index.tsx` and `_index.css`; do not change pseudo-states.
    - Skills: `react`, `typescript`, `css`
-   - CSS selected: `naming-name-elements-and-modifiers-by-role`, `naming-use-scope-slug-element-modifier-syntax`, `composition-compose-classes-with-clsx`, `composition-keep-classes-single-purpose`, `values-separate-domain-state-modifiers-from-dom-interaction-states`, `organization-review-banned-css-patterns-before-finishing`
+   - CSS selected: `naming-name-elements-and-modifiers-by-role`, `naming-use-scope-slug-element-modifier-syntax`, `composition-compose-classes-with-clsx`, `composition-do-not-build-structural-variants-with-modifiers`, `composition-keep-classes-single-purpose`, `values-separate-domain-state-modifiers-from-dom-interaction-states`, `organization-review-banned-css-patterns-before-finishing`
 
 4. `css-one-off-structural-modifier`
    - Evidence/files: replace non-repeatable `section--compactTop` spacing patch with a role-named element in `catalog/detail.tsx` and `detail.css`; keep the existing `clsx` import.

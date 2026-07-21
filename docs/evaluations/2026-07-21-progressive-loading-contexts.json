@@ -317,6 +317,7 @@
 							"skill/css/contracts/naming-use-scope-slug-element-modifier-syntax.md",
 							"skill/css/rules/naming-use-scope-slug-element-modifier-syntax.md",
 							"skill/css/contracts/composition-compose-classes-with-clsx.md",
+							"skill/css/contracts/composition-do-not-build-structural-variants-with-modifiers.md",
 							"skill/css/contracts/composition-keep-classes-single-purpose.md",
 							"skill/css/contracts/values-separate-domain-state-modifiers-from-dom-interaction-states.md",
 							"skill/css/contracts/organization-review-banned-css-patterns-before-finishing.md"
@@ -336,6 +337,7 @@
 							"skill/css/contracts/naming-use-scope-slug-element-modifier-syntax.md",
 							"skill/css/rules/naming-use-scope-slug-element-modifier-syntax.md",
 							"skill/css/contracts/composition-compose-classes-with-clsx.md",
+							"skill/css/contracts/composition-do-not-build-structural-variants-with-modifiers.md",
 							"skill/css/contracts/composition-keep-classes-single-purpose.md",
 							"skill/css/contracts/values-separate-domain-state-modifiers-from-dom-interaction-states.md",
 							"skill/css/contracts/organization-review-banned-css-patterns-before-finishing.md"
@@ -355,6 +357,7 @@
 							"skill/css/contracts/naming-use-scope-slug-element-modifier-syntax.md",
 							"skill/css/rules/naming-use-scope-slug-element-modifier-syntax.md",
 							"skill/css/contracts/composition-compose-classes-with-clsx.md",
+							"skill/css/contracts/composition-do-not-build-structural-variants-with-modifiers.md",
 							"skill/css/contracts/composition-keep-classes-single-purpose.md",
 							"skill/css/contracts/values-separate-domain-state-modifiers-from-dom-interaction-states.md",
 							"skill/css/contracts/organization-review-banned-css-patterns-before-finishing.md"

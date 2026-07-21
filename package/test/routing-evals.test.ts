@@ -242,7 +242,7 @@ const cssRuleRouting = {
 	},
 	"naming-default-to-plain-css-when-no-module-convention": {
 		appliesWhen:
-			"프로젝트의 CSS Modules 표준이 확인되지 않은 상태에서 새 stylesheet 또는 class contract를 만들거나 `.module.css`/`styles.*` 도입을 검토한다.",
+			"프로젝트 표준이 확정되지 않은 상태에서 새 stylesheet 또는 class contract의 형식을 결정하거나 `.module.css`/`styles.*` 도입·전환을 검토한다.",
 		reviewWith: [],
 	},
 	"naming-keep-scope-slug-unique-per-owner": {
@@ -1113,6 +1113,7 @@ const cssScenarioStages = {
 					"naming-name-elements-and-modifiers-by-role",
 					"naming-use-scope-slug-element-modifier-syntax",
 					"composition-compose-classes-with-clsx",
+					"composition-do-not-build-structural-variants-with-modifiers",
 					"composition-keep-classes-single-purpose",
 					"values-separate-domain-state-modifiers-from-dom-interaction-states",
 					"organization-review-banned-css-patterns-before-finishing",

@@ -4,7 +4,7 @@
 
 - Skill: `css`
 - Version: `1.0.0`
-- Routing digest: `sha256:8718626b74d87415835cee2ec1d737aba943d1226b8e9bcbe7666320eae9836e`
+- Routing digest: `sha256:ee7c1a8cd0bf6aa977884fa8c956f77703a755a7b7f9688ae572418f5c0f0c45`
 - Local rules: 21
 
 ## Direct Companions
@@ -15,7 +15,7 @@
 
 ### 1. Naming and Ownership (6)
 
-- `C01` · `naming-default-to-plain-css-when-no-module-convention` · 프로젝트의 CSS Modules 표준이 확인되지 않은 상태에서 새 stylesheet 또는 class contract를 만들거나 \`.module.css\`/\`styles.\*\` 도입을 검토한다.
+- `C01` · `naming-default-to-plain-css-when-no-module-convention` · 프로젝트 표준이 확정되지 않은 상태에서 새 stylesheet 또는 class contract의 형식을 결정하거나 \`.module.css\`/\`styles.\*\` 도입·전환을 검토한다.
 - `C02` · `naming-keep-scope-slug-unique-per-owner` · 새 \`scope\_slug\` namespace를 추가·복사·이름 변경하거나 서로 다른 owner의 class가 같은 namespace를 사용할 가능성이 있다.
 - `C03` · `naming-name-elements-and-modifiers-by-role` · element 또는 modifier class를 새로 짓거나 \`container\`, \`wrapper\`, \`box\`, 치수·간격 중심 이름을 변경한다.
 - `C04` · `naming-preserve-route-slug-traceability` · route/framework 규칙이 \`rt\_\*\` owner를 선택한 화면에서 route class slug를 새로 만들거나 이름을 변경한다.

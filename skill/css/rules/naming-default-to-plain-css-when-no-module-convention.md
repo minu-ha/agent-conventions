@@ -2,7 +2,7 @@
 title: Default to Plain CSS Unless the Project Explicitly Standardizes on CSS Modules
 impact: HIGH
 impactDescription: keeps the global `scope_slug` naming system meaningful instead of hiding ownership behind local module indirection
-appliesWhen: 프로젝트의 CSS Modules 표준이 확인되지 않은 상태에서 새 stylesheet 또는 class contract를 만들거나 `.module.css`/`styles.*` 도입을 검토한다.
+appliesWhen: 프로젝트 표준이 확정되지 않은 상태에서 새 stylesheet 또는 class contract의 형식을 결정하거나 `.module.css`/`styles.*` 도입·전환을 검토한다.
 tags: naming, css-modules, ownership
 ---
 
