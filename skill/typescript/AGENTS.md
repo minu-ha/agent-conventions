@@ -159,11 +159,13 @@ const userProfileSchema = z.object({
 
 **Rule:** `T04` · `naming-use-direct-imports-and-public-entry-points`
 
-**Applies when:** TypeScript import/export, barrel, type-only 의존, shared 공개 진입점 또는 feature support module 경계를 추가·변경한다.
+**Applies when:** TypeScript import/export, barrel, shared 공개 진입점·feature support module 경계를 추가·변경하거나 같은 module path의 value/type specifier를 추가·삭제·전환한다.
 
 **Impact: HIGH (makes import ownership explicit without relying on barrels or ambiguous re-export layers)**
 
 `index.ts` 기반 barrel export를 만들지 않고 직접 export/import 구조를 유지합니다. 공용 설정과 공용 순수 함수는 각각 `shared/config.ts`, `shared/util.ts` 같은 공개 진입점으로 모으고, 타입 전용 import는 `import type`을 사용해 계약과 런타임 의존을 분리합니다. feature 전용 support code는 owner-named module처럼 소유자가 보이는 파일에서 named export를 직접 import합니다.
+
+같은 module path를 계속 사용하더라도 import specifier의 value/type 구성이 추가·삭제·전환되면 import 계약 변경이므로 Selected입니다. 예를 들어 React value import에서 `useEffect`를 제거하거나 같은 `react` 경로에 handler type import를 추가하는 작업을 "module path가 같다"는 이유로 N/A 처리하지 않습니다.
 
 **Incorrect (barrel과 혼합 import로 경계를 흐림):**
 
@@ -191,7 +193,7 @@ import {buildUserSaveRequest} from "./user-profile-support";
 
 **Rule:** `T05` · `types-document-custom-types-and-shapes`
 
-**Applies when:** custom type·interface, schema root, 객체형 상수, 계약 field 또는 Pick·Omit·Indexed Access alias를 추가·변경한다.
+**Applies when:** custom type·interface, schema root, 객체형 상수, 계약 field·파생 alias를 추가·변경하거나 기존 named shape를 새 callable 입출력 계약 역할에 연결한다. 익명 inferred 반환 literal은 제외한다.
 
 **Impact: CRITICAL (keeps domain-specific contracts understandable without digging through implementation details)**
 
@@ -201,6 +203,10 @@ import {buildUserSaveRequest} from "./user-profile-support";
 - 객체형 계약과 schema field: 각 필드 바로 위 `@field`
 - `Pick`/`Omit`/Indexed Access alias: 필드가 없으므로 헤더 `@summary`만 사용
 - compound component public part props: React rule에 따라 `@part` + `@description` 허용
+
+기존 named shape의 field가 byte-equivalent여도, positional 인자를 대체하는 새 callable input이나 함수 결과를 고정하는 output 계약 역할에 처음 연결되면 이 규칙은 Selected입니다. 선언의 새 계약 역할을 `@summary`와 각 `@field`로 설명합니다.
+
+반대로 별도 named type·interface·schema root·객체형 상수 없이 구현 안에서만 추론되는 익명 객체 literal은 이 규칙의 선언형 shape가 아닙니다. 특히 query `select`의 익명 inferred 반환 literal은 N/A이며, 이 규칙을 스스로 활성화하려고 field JSDoc이나 새 type alias를 추가하지 않습니다.
 
 **Incorrect (필드 설명을 생략하거나 예전 방식으로 헤더에 몰아씀):**
 
@@ -247,11 +253,13 @@ const publishResultSchema = z.object({
 
 **Rule:** `T06` · `types-mark-unused-parameters-with-underscore`
 
-**Applies when:** 기존 callback이나 framework 계약을 구현·변경하며 계약 매개변수 일부를 생략하거나 사용하지 않는다.
+**Applies when:** 기존 callback·framework 계약 구현을 추가·변경하며 parameter를 생략하거나 사용하지 않는다. curried handler가 반환하는 최종 callback의 생략도 포함한다.
 
 **Impact: MEDIUM-HIGH (makes intentionally ignored callback parameters explicit instead of silently dropping parts of a contract)**
 
 미사용 매개변수도 생략하지 않고 `_` 접두사로 명시합니다. 이렇게 해야 callback 시그니처 계약을 유지하면서도, 현재 구현에서 의도적으로 쓰지 않는 값이라는 점이 드러납니다.
+
+curried handler의 최종 callback을 포함해, framework alias나 기존 callback 계약이 선언한 매개변수를 구현 함수에서 생략하는 경우도 Selected입니다. `MouseEventHandler`를 반환하면서 event 매개변수를 쓰지 않는다면 매개변수 생략은 N/A 근거가 아니며, `() =>` 대신 `_event`를 받는 `(_event) =>`로 계약을 보존합니다.
 
 **Incorrect (계약의 일부인 callback 매개변수를 조용히 생략):**
 
@@ -278,11 +286,13 @@ const noopLog: LogSink = (_message, _level) => {};
 
 **Rule:** `T07` · `types-prefer-function-variable-types-over-parameter-annotations`
 
-**Applies when:** 기존 callable 계약이 있는 함수 구현을 추가·변경하거나 같은 시그니처를 여러 구현이 공유하도록 리팩터링한다.
+**Applies when:** 기존 callable 계약을 named·shared 함수 구현에 재사용하거나 같은 시그니처를 여러 구현이 공유하도록 바꾼다. annotation 없는 one-off contextually typed inline callback은 제외한다.
 
 **Impact: CRITICAL (keeps callable contracts reusable and prevents local parameter annotations from fragmenting shared function types)**
 
 재사용 가능한 콜백이나 함수 타입이 있다면 매개변수 타입 선언보다 함수 변수 타입 선언을 우선합니다. 이미 존재하는 interface, object contract, framework alias를 먼저 재사용하고, 동일 callable contract를 여러 구현이 공유할 때만 별도 함수 타입 alias를 선언합니다. 한 번만 쓰는 로컬 함수 때문에 함수 타입 alias를 늘리는 것은 지양합니다.
+
+객체 literal 안에서 한 번만 쓰이고 매개변수·반환 타입 annotation이 없는 contextually typed inline callback은 named/shared 함수 구현 계약이 아니므로 N/A입니다. 예를 들어 `query.select: (response) => ({...})`를 이 규칙 때문에 밖으로 빼거나 별도 함수 타입으로 고정하지 않습니다. 반대로 named handler나 curried factory의 반환 handler를 기존 framework alias로 고정하는 변경은 Selected입니다.
 
 **Incorrect (공유 가능한 함수 계약이 있는데 매개변수 타입만 사용):**
 
@@ -329,7 +339,7 @@ const normalizeSearchRequest: NormalizeRequest = (request) => {
 
 **Rule:** `T08` · `types-reuse-callback-signatures-from-existing-contracts`
 
-**Applies when:** interface, 객체 또는 framework가 이미 정의한 callback을 구현·전달하면서 시그니처를 새로 적거나 바꾼다.
+**Applies when:** interface·객체·framework의 named·shared callback 구현에서 기존 시그니처를 재사용·변경한다. annotation 없는 one-off contextually typed inline callback은 제외한다.
 
 **Requires selected:** `types-prefer-function-variable-types-over-parameter-annotations` · N/A 불가
 
@@ -338,6 +348,8 @@ const normalizeSearchRequest: NormalizeRequest = (request) => {
 **Impact: HIGH (prevents callback signatures from drifting when an existing interface or object contract already defines them)**
 
 콜백 구현 시 매개변수를 다시 타이핑하기보다, 이미 존재하는 인터페이스나 계약의 시그니처를 Indexed Access로 재사용합니다. 재사용한 계약에 현재 구현이 쓰지 않는 parameter가 있으면 `types-mark-unused-parameters-with-underscore`를 다시 판정합니다. 이렇게 해야 구현과 계약 사이의 타입 정의가 한곳에서 유지됩니다.
+
+annotation 없는 one-off contextually typed inline callback은 시그니처를 재선언한 것이 아니므로 N/A입니다. 예를 들어 framework option 객체의 `select: (response) => ...`는 contextual inference를 그대로 사용합니다. 반대로 named callback과 curried factory의 최종 반환 handler를 interface·객체·framework alias로 고정하는 작업은 기존 callback 계약 재사용이므로 Selected입니다.
 
 **Incorrect (기존 계약이 있는데 콜백 시그니처를 다시 씀):**
 
@@ -373,13 +385,15 @@ const formatMessage: ToastFormatters["formatMessage"] = (message) => {
 
 **Rule:** `T09` · `types-reuse-existing-contracts-before-new-types`
 
-**Applies when:** 기존 type/interface/schema shape를 before/after 기준으로 새로 선언·변경·복제·파생한다. 유일한 선언을 owner와 함께 옮기며 선언 수·field type·optionality·의미를 보존하고 symbol 이름·JSDoc만 바꾸면 제외한다.
+**Applies when:** 기존 type·interface·schema shape를 새로 선언·변경·복제·파생한다. 동일 선언 owner 이동·이름/JSDoc 변경이나 unchanged contract의 새 사용처만 추가하면 제외한다.
 
 **Review with:** `types-document-custom-types-and-shapes`
 
 **Impact: HIGH (reduces duplicate shape declarations by deriving from existing types and schemas when semantics have not changed)**
 
 기존 타입이나 스키마가 이미 존재하면 동일 구조의 별도 타입 선언을 만들지 않습니다. 의미 차이가 실제로 있을 때만 신규 타입을 만들고, 그 외에는 직접 참조하거나 `Pick`/`Omit`/Indexed Access로 파생합니다. before/after의 선언 수, field type, optionality와 의미를 먼저 정규화합니다. 유일한 선언을 owner 파일로 옮기면서 symbol 이름이나 JSDoc만 owner에 맞게 바꾼 relocation은 diff에 삭제+추가로 보여도 새 shape나 중복 계약이 아니므로 이 규칙의 대상이 아닙니다.
+
+unchanged contract를 새 함수 인자나 새 call site에서 처음 사용하더라도 shape를 선언·변경·복제·파생하지 않았다면 이 규칙은 N/A입니다. 그 사용이 새 callable 계약 역할을 만든다면 `types-document-custom-types-and-shapes`를 별도로 판정하되, 단순 사용 자체를 중복 타입 재사용 근거로 세지 않습니다.
 
 **Incorrect (기존 계약과 동일한 구조를 다시 선언):**
 

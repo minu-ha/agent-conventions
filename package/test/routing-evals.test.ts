@@ -247,28 +247,33 @@ const typescriptRuleRouting = {
 		reviewWith: [],
 	},
 	"naming-use-direct-imports-and-public-entry-points": {
-		appliesWhen: "TypeScript import/export, barrel, type-only 의존, shared 공개 진입점 또는 feature support module 경계를 추가·변경한다.",
+		appliesWhen:
+			"TypeScript import/export, barrel, shared 공개 진입점·feature support module 경계를 추가·변경하거나 같은 module path의 value/type specifier를 추가·삭제·전환한다.",
 		reviewWith: [],
 	},
 	"types-document-custom-types-and-shapes": {
-		appliesWhen: "custom type·interface, schema root, 객체형 상수, 계약 field 또는 Pick·Omit·Indexed Access alias를 추가·변경한다.",
+		appliesWhen:
+			"custom type·interface, schema root, 객체형 상수, 계약 field·파생 alias를 추가·변경하거나 기존 named shape를 새 callable 입출력 계약 역할에 연결한다. 익명 inferred 반환 literal은 제외한다.",
 		reviewWith: [],
 	},
 	"types-mark-unused-parameters-with-underscore": {
-		appliesWhen: "기존 callback이나 framework 계약을 구현·변경하며 계약 매개변수 일부를 생략하거나 사용하지 않는다.",
+		appliesWhen:
+			"기존 callback·framework 계약 구현을 추가·변경하며 parameter를 생략하거나 사용하지 않는다. curried handler가 반환하는 최종 callback의 생략도 포함한다.",
 		reviewWith: [],
 	},
 	"types-prefer-function-variable-types-over-parameter-annotations": {
-		appliesWhen: "기존 callable 계약이 있는 함수 구현을 추가·변경하거나 같은 시그니처를 여러 구현이 공유하도록 리팩터링한다.",
+		appliesWhen:
+			"기존 callable 계약을 named·shared 함수 구현에 재사용하거나 같은 시그니처를 여러 구현이 공유하도록 바꾼다. annotation 없는 one-off contextually typed inline callback은 제외한다.",
 		reviewWith: [],
 	},
 	"types-reuse-callback-signatures-from-existing-contracts": {
-		appliesWhen: "interface, 객체 또는 framework가 이미 정의한 callback을 구현·전달하면서 시그니처를 새로 적거나 바꾼다.",
+		appliesWhen:
+			"interface·객체·framework의 named·shared callback 구현에서 기존 시그니처를 재사용·변경한다. annotation 없는 one-off contextually typed inline callback은 제외한다.",
 		reviewWith: ["types-mark-unused-parameters-with-underscore"],
 	},
 	"types-reuse-existing-contracts-before-new-types": {
 		appliesWhen:
-			"기존 type/interface/schema shape를 before/after 기준으로 새로 선언·변경·복제·파생한다. 유일한 선언을 owner와 함께 옮기며 선언 수·field type·optionality·의미를 보존하고 symbol 이름·JSDoc만 바꾸면 제외한다.",
+			"기존 type·interface·schema shape를 새로 선언·변경·복제·파생한다. 동일 선언 owner 이동·이름/JSDoc 변경이나 unchanged contract의 새 사용처만 추가하면 제외한다.",
 		reviewWith: ["types-document-custom-types-and-shapes"],
 	},
 } as const;
@@ -283,7 +288,7 @@ const cssRuleRouting = {
 	},
 	"composition-do-not-build-structural-variants-with-modifiers": {
 		appliesWhen:
-			"spacing·방향·특정 화면의 구조 차이를 `--modifier`로 추가하려 하거나 modifier가 반복 가능한 상태 또는 API variant인지 판단한다.",
+			"modifier를 추가·변경하거나 반복 가능한 state·API variant와 one-off structural patch 사이를 판정한다. 허용된 state로 결론 나도 변경된 modifier 분류는 Selected다.",
 		reviewWith: ["naming-name-elements-and-modifiers-by-role"],
 	},
 	"composition-keep-classes-single-purpose": {
@@ -302,7 +307,7 @@ const cssRuleRouting = {
 	},
 	"naming-default-to-plain-css-when-no-module-convention": {
 		appliesWhen:
-			"프로젝트 표준이 확정되지 않은 상태에서 새 stylesheet 또는 class contract의 형식을 결정하거나 `.module.css`/`styles.*` 도입·전환을 검토한다.",
+			"프로젝트 표준 미확정 상태에서 새 stylesheet 접근 형식(plain CSS·CSS Modules)을 선택하거나 `.module.css`·`styles.*`로 전환한다. 기존 plain CSS class rename은 제외한다.",
 		reviewWith: [],
 	},
 	"naming-keep-scope-slug-unique-per-owner": {
@@ -356,12 +361,12 @@ const cssRuleRouting = {
 	},
 	"values-always-provide-css-variable-fallbacks": {
 		appliesWhen:
-			"실제 semantic delta에 `var(--*)` 사용이 있거나 token이 주입 보장 없는 경계를 지난다. 아직 diff에 없는 변수를 규칙 적용 목적으로 가정·도입하거나 새 stylesheet만 만드는 것은 제외한다.",
+			"새·변경된 `var(--*)` 사용이나 token 주입 보장 경계를 바꾼다. 같은 stylesheet·주입 경계에서 기존 `var()` 선언을 selector 사이 byte-equivalent 이동만 하면 제외한다.",
 		reviewWith: [],
 	},
 	"values-keep-layout-intent-explicit": {
 		appliesWhen:
-			"`sticky`·`fixed`, `z-index`, 강제 width·height 또는 부모·자식 layout 책임을 추가·변경한다. 같은 element의 기존 `display`·spacing을 동작 변화 없이 base와 modifier 사이에서 옮기기만 하면 제외한다.",
+			"`sticky`·`fixed`, `z-index`, 강제 width·height 또는 부모·자식 layout 책임을 추가·변경한다. 같은 element의 base/modifier 분리에서 기존 `display`·spacing 선언을 값 그대로 재배치하면 제외한다.",
 		reviewWith: [],
 	},
 	"values-separate-domain-state-modifiers-from-dom-interaction-states": {
@@ -484,7 +489,7 @@ const reactRuleRouting = {
 	},
 	"screen-keep-route-flow-visible": {
 		appliesWhen:
-			"route entry의 search·navigate·query·mutation·effect·section 조립을 이동·분리하거나 재구성한다. 순수 type·payload builder만 sibling `.ts`로 옮기고 이 orchestration을 그대로 두면 제외한다.",
+			"route entry의 search·navigate·query·mutation·cross-section effect를 component/module 사이에서 이동·분리하거나 page section 조립의 순서·owner를 바꾼다. 같은 owner 안 표현 변경은 제외한다.",
 		reviewWith: ["screen-extract-local-section-components-for-runtime-boundaries", "screen-move-pure-support-code-out-of-entry-files"],
 	},
 	"screen-move-pure-support-code-out-of-entry-files": {
@@ -570,7 +575,8 @@ const reactRuleRouting = {
 		reviewWith: [],
 	},
 	"typing-function-type-first": {
-		appliesWhen: "React 이벤트 핸들러나 prop callback의 선언·시그니처를 추가·변경하며 기존 React alias 또는 callback 계약을 쓸 수 있다.",
+		appliesWhen:
+			"React 이벤트 핸들러나 prop callback의 선언·시그니처를 추가·변경하며 기존 React alias·callback 계약을 쓸 수 있다. curried factory의 최종 반환 handler도 포함한다.",
 		reviewWith: ["typing-reuse-existing-contracts", "ownership-avoid-barrel-and-react-namespace-imports"],
 	},
 	"typing-reuse-existing-contracts": {
@@ -2199,9 +2205,9 @@ test("CSS progressive metadata and rule routing match Appendix C exactly", async
 	const singlePurposeRule = await readFile(path.join(skillPaths.rulesDir, "composition-keep-classes-single-purpose.md"), "utf8");
 	assert.match(singlePurposeRule, /^appliesWhen:[^\n]+기존 결합 책임[^\n]+처음부터 새 single-purpose pair/m);
 	const layoutIntentRule = await readFile(path.join(skillPaths.rulesDir, "values-keep-layout-intent-explicit.md"), "utf8");
-	assert.match(layoutIntentRule, /^appliesWhen:[^\n]+`display`·spacing[^\n]+동작 변화 없이/m);
+	assert.match(layoutIntentRule, /^appliesWhen:[^\n]+base\/modifier[^\n]+`display`·spacing[^\n]+값 그대로/m);
 	const fallbackRule = await readFile(path.join(skillPaths.rulesDir, "values-always-provide-css-variable-fallbacks.md"), "utf8");
-	assert.match(fallbackRule, /^appliesWhen:[^\n]+실제 semantic delta[^\n]+`var\(--\*\)`[^\n]+아직 diff에 없는 변수/m);
+	assert.match(fallbackRule, /^appliesWhen:[^\n]+`var\(--\*\)`[^\n]+같은 stylesheet[^\n]+byte-equivalent/m);
 	assert.match(fallbackRule, /실제 diff에 새 CSS variable 사용[^\n]+요청 여부와 무관하게[^\n]+다시 선택/i);
 
 	const template = await readFile(path.join(skillPaths.rulesDir, "_template.md"), "utf8");
@@ -2366,6 +2372,198 @@ test("routing activation and generated indexes use only the changed semantic del
 
 	const routeOwnerRule = await readFile(path.join(realSkillRootDir, "css", "rules", "naming-preserve-route-slug-traceability.md"), "utf8");
 	assert.match(routeOwnerRule, /route\/framework 규칙이 `rt_\*` owner를 선택한 화면/);
+});
+
+test("v16 boundary contracts distinguish semantic role changes from contextual and byte-equivalent noise", async () => {
+	const readRule = async (skillName: "react" | "typescript" | "css", ruleId: string): Promise<string> => {
+		return await readFile(path.join(realSkillRootDir, skillName, "rules", `${ruleId}.md`), "utf8");
+	};
+
+	const routeFlow = await readRule("react", "screen-keep-route-flow-visible");
+	assert.match(routeFlow, /orchestration[\s\S]*(?:owner|소유)[\s\S]*(?:page-section|section)[\s\S]*topology/i);
+	assert.match(
+		routeFlow,
+		/같은 (?:route )?owner[\s\S]*(?:`query\.select`|query `select`)[\s\S]*binding·alias[\s\S]*derived-state effect[\s\S]*render 계산[\s\S]*N\/A/i,
+	);
+
+	const curriedHandler = await readRule("react", "events-name-and-curry-handlers");
+	assert.match(curriedHandler, /DOM React event prop[\s\S]*인라인 callback[\s\S]*추가 인자[\s\S]*wrapper[\s\S]*(?:완료가 아|우회)/i);
+	assert.match(curriedHandler, /최종 반환[\s\S]*React handler[\s\S]*typing-function-type-first[\s\S]*Selected/i);
+	assert.match(
+		curriedHandler,
+		/UI-agnostic domain[\s\S]*custom component prop callback[\s\S]*`useEffectEvent`[\s\S]*(?:DOM event|curry)[\s\S]*(?:만들지 않|N\/A)/i,
+	);
+
+	const reactHandlerType = await readRule("react", "typing-function-type-first");
+	assert.match(reactHandlerType, /curried|고차 함수/i);
+	assert.match(reactHandlerType, /반환(?:된|하는)? (?:함수|handler)[\s\S]*contextual typing[\s\S]*N\/A.*아니/i);
+	assert.match(reactHandlerType, /`query\.select`[\s\S]*one-off contextual callback[\s\S]*UI-agnostic domain function[\s\S]*N\/A/i);
+
+	const reactContracts = await Promise.all(
+		["screen-keep-route-flow-visible", "events-name-and-curry-handlers", "typing-function-type-first"].map((ruleId) =>
+			readFile(path.join(realSkillRootDir, "react", "contracts", `${ruleId}.md`), "utf8"),
+		),
+	);
+	assert.match(reactContracts[0]!, /(?:`query\.select`|query `select`)[\s\S]*derived-state effect[\s\S]*N\/A/i);
+	assert.match(reactContracts[1]!, /DOM React event prop[\s\S]*custom component prop callback/i);
+	assert.match(reactContracts[2]!, /curried[\s\S]*one-off contextual callback/i);
+
+	const typescriptRouter = await readFile(path.join(realSkillRootDir, "typescript", "SKILL.md"), "utf8");
+	assert.match(
+		typescriptRouter,
+		/byte-equivalent[\s\S]*named shape[\s\S]*callable (?:input|입력)[\s\S]*(?:output|출력)[\s\S]*semantic delta/i,
+	);
+
+	const documentedShape = await readRule("typescript", "types-document-custom-types-and-shapes");
+	assert.match(documentedShape, /기존 named shape[\s\S]*새 callable (?:input|입력)[\s\S]*(?:output|출력)[\s\S]*Selected/i);
+	assert.match(documentedShape, /익명[\s\S]*(?:inferred|추론)[\s\S]*(?:query )?`select`[\s\S]*N\/A/i);
+	assert.match(documentedShape, /JSDoc[\s\S]*(?:스스로|자기)[\s\S]*(?:활성화|Selected)[\s\S]*(?:하지 않|금지)/i);
+
+	const directImports = await readRule("typescript", "naming-use-direct-imports-and-public-entry-points");
+	assert.match(directImports, /^appliesWhen:[^\n]+같은 module path[^\n]+(?:value|type) specifier[^\n]+추가·삭제·전환/m);
+
+	const unusedParameters = await readRule("typescript", "types-mark-unused-parameters-with-underscore");
+	assert.match(unusedParameters, /^appliesWhen:[^\n]+curried handler[^\n]+최종 callback[^\n]+(?:생략|사용하지 않)/m);
+	assert.match(unusedParameters, /framework alias[\s\S]*매개변수 생략[\s\S]*N\/A.*아니[\s\S]*`_event`/i);
+
+	for (const ruleId of [
+		"types-prefer-function-variable-types-over-parameter-annotations",
+		"types-reuse-callback-signatures-from-existing-contracts",
+	]) {
+		const contextualCallback = await readRule("typescript", ruleId);
+		assert.match(contextualCallback, /annotation 없는[\s\S]*one-off[\s\S]*contextual(?:ly)? typed[\s\S]*(?:N\/A|제외)/i);
+	}
+
+	const existingContract = await readRule("typescript", "types-reuse-existing-contracts-before-new-types");
+	assert.match(existingContract, /unchanged contract[\s\S]*새 사용처[\s\S]*(?:N\/A|제외)/i);
+
+	const typescriptContracts = await Promise.all(
+		[
+			"naming-use-direct-imports-and-public-entry-points",
+			"types-document-custom-types-and-shapes",
+			"types-mark-unused-parameters-with-underscore",
+			"types-prefer-function-variable-types-over-parameter-annotations",
+			"types-reuse-callback-signatures-from-existing-contracts",
+			"types-reuse-existing-contracts-before-new-types",
+		].map((ruleId) => readFile(path.join(realSkillRootDir, "typescript", "contracts", `${ruleId}.md`), "utf8")),
+	);
+	assert.match(typescriptContracts[0]!, /same module path|같은 module path/i);
+	assert.match(typescriptContracts[1]!, /CRITICAL rule[\s\S]*full rule/i);
+	assert.match(typescriptContracts[2]!, /curried handler[\s\S]*최종 callback/i);
+	assert.match(typescriptContracts[3]!, /CRITICAL rule[\s\S]*full rule/i);
+	assert.match(typescriptContracts[4]!, /one-off contextually typed inline callback/i);
+	assert.match(typescriptContracts[5]!, /unchanged contract[\s\S]*(?:새 함수 인자|새 call site)/i);
+
+	const stylesheetFormat = await readRule("css", "naming-default-to-plain-css-when-no-module-convention");
+	assert.match(stylesheetFormat, /stylesheet 접근 형식[\s\S]*plain CSS[\s\S]*CSS Modules/i);
+	assert.match(stylesheetFormat, /기존 plain CSS[\s\S]*(?:class|selector)[\s\S]*(?:rename|이름 변경)[\s\S]*(?:N\/A|제외)/i);
+
+	const modifierClassification = await readRule("css", "composition-do-not-build-structural-variants-with-modifiers");
+	assert.match(modifierClassification, /허용(?:된| 가능한)? (?:domain )?state[\s\S]*Selected[\s\S]*(?:N\/A.*아니|pass)/i);
+
+	const layoutIntent = await readRule("css", "values-keep-layout-intent-explicit");
+	assert.match(
+		layoutIntent,
+		/같은 (?:DOM )?element[\s\S]*base(?:와|\/|·)modifier[\s\S]*기존 `display`[\s\S]*(?:값 그대로|property-value)[\s\S]*(?:N\/A|제외)/i,
+	);
+	assert.doesNotMatch(layoutIntent, /동작 변화 없이/);
+
+	const variableFallback = await readRule("css", "values-always-provide-css-variable-fallbacks");
+	assert.match(
+		variableFallback,
+		/같은 stylesheet[\s\S]*(?:주입|injection) 경계[\s\S]*기존 `var\(\)`[\s\S]*byte-equivalent[\s\S]*(?:N\/A|제외)/i,
+	);
+
+	for (const ruleId of [
+		"selector-use-pseudo-classes-for-dom-owned-states",
+		"values-separate-domain-state-modifiers-from-dom-interaction-states",
+	]) {
+		const interactionState = await readRule("css", ruleId);
+		assert.match(
+			interactionState,
+			/(?:hover|focus|disabled)[\s\S]*unconditional base element block[\s\S]*modifier 아래[\s\S]*(?:좁히지 않|두지 않)/i,
+		);
+	}
+	const cssInteractionContracts = await Promise.all(
+		["selector-use-pseudo-classes-for-dom-owned-states", "values-separate-domain-state-modifiers-from-dom-interaction-states"].map(
+			(ruleId) => readFile(path.join(realSkillRootDir, "css", "contracts", `${ruleId}.md`), "utf8"),
+		),
+	);
+	for (const contract of cssInteractionContracts) {
+		assert.match(contract, /base(?: element)? block[\s\S]*modifier 아래/i);
+	}
+
+	const mixedManifest = await readRoutingEvalManifest(getSkillPaths("react", realSkillRootDir));
+	const mixedScenarioById = new Map(mixedManifest.scenarios.map((scenario) => [scenario.id, scenario]));
+	const tsSelected = (scenarioId: string, ruleId: string): boolean =>
+		mixedScenarioById.get(scenarioId)?.expectedSelected.typescript?.includes(ruleId) ?? false;
+	const tsNotApplicable = (scenarioId: string, ruleId: string): boolean =>
+		mixedScenarioById.get(scenarioId)?.expectedNotApplicable.typescript?.includes(ruleId) ?? false;
+	assert.equal(tsSelected("RTE03-route-support-extraction", "types-document-custom-types-and-shapes"), true);
+	assert.equal(tsNotApplicable("RTE03-route-support-extraction", "types-reuse-existing-contracts-before-new-types"), true);
+	for (const ruleId of [
+		"naming-use-direct-imports-and-public-entry-points",
+		"types-mark-unused-parameters-with-underscore",
+		"types-prefer-function-variable-types-over-parameter-annotations",
+		"types-reuse-callback-signatures-from-existing-contracts",
+	]) {
+		assert.equal(tsSelected("RTE10-derived-selection-state", ruleId), true);
+	}
+	for (const ruleId of [
+		"types-document-custom-types-and-shapes",
+		"types-prefer-function-variable-types-over-parameter-annotations",
+		"types-reuse-callback-signatures-from-existing-contracts",
+		"types-reuse-existing-contracts-before-new-types",
+	]) {
+		assert.equal(tsNotApplicable("RTE12-query-shaping", ruleId), true);
+	}
+
+	const cssManifest = await readRoutingEvalManifest(getSkillPaths("css", realSkillRootDir));
+	const cssScenarioById = new Map(cssManifest.scenarios.map((scenario) => [scenario.id, scenario]));
+	const domainState = cssScenarioById.get("css-domain-state-class-contract");
+	assert.equal(domainState?.expectedSelected.css?.includes("composition-do-not-build-structural-variants-with-modifiers"), true);
+	for (const ruleId of [
+		"naming-default-to-plain-css-when-no-module-convention",
+		"values-keep-layout-intent-explicit",
+		"values-always-provide-css-variable-fallbacks",
+		"values-tokenize-repeated-visual-values",
+	]) {
+		assert.equal(domainState?.expectedNotApplicable.css?.includes(ruleId), true);
+	}
+	const ownerDrift = mixedScenarioById.get("RTE02-owner-placement-css-drift")?.scopeDrift;
+	for (const ruleId of [
+		"naming-default-to-plain-css-when-no-module-convention",
+		"composition-do-not-build-structural-variants-with-modifiers",
+	]) {
+		assert.equal(ownerDrift?.expectedSelected.css?.includes(ruleId), true);
+	}
+	for (const ruleId of ["values-keep-layout-intent-explicit", "values-always-provide-css-variable-fallbacks"]) {
+		assert.equal(ownerDrift?.expectedNotApplicable.css?.includes(ruleId), true);
+	}
+
+	const selected = (scenarioId: string, ruleId: string): boolean =>
+		mixedScenarioById.get(scenarioId)?.expectedSelected.react?.includes(ruleId) ?? false;
+	const notApplicable = (scenarioId: string, ruleId: string): boolean =>
+		mixedScenarioById.get(scenarioId)?.expectedNotApplicable.react?.includes(ruleId) ?? false;
+
+	assert.equal(selected("RTE09-route-runtime-section", "screen-keep-route-flow-visible"), true);
+	assert.equal(notApplicable("RTE10-derived-selection-state", "screen-keep-route-flow-visible"), true);
+	assert.equal(notApplicable("RTE12-query-shaping", "screen-keep-route-flow-visible"), true);
+	for (const ruleId of [
+		"ownership-avoid-barrel-and-react-namespace-imports",
+		"typing-function-type-first",
+		"events-name-and-curry-handlers",
+	]) {
+		assert.equal(selected("RTE10-derived-selection-state", ruleId), true);
+	}
+	for (const scenarioId of ["RTE08-delete-handler-flow", "RTE09-route-runtime-section"]) {
+		assert.equal(selected(scenarioId, "events-name-and-curry-handlers"), true);
+		assert.equal(selected(scenarioId, "typing-function-type-first"), true);
+		assert.equal(notApplicable(scenarioId, "ownership-avoid-barrel-and-react-namespace-imports"), true);
+	}
+	assert.equal(selected("RTE14-subscription-effectevent", "events-name-and-curry-handlers"), true);
+	assert.equal(notApplicable("RTE14-subscription-effectevent", "typing-function-type-first"), true);
+	assert.equal(notApplicable("RTE14-subscription-effectevent", "ownership-avoid-barrel-and-react-namespace-imports"), true);
 });
 
 test("CSS generated index is canonical, complete, body-preserving, and within its byte budget", async () => {

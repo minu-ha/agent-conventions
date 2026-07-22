@@ -65,11 +65,13 @@
 
 **Rule:** `C01` · `naming-default-to-plain-css-when-no-module-convention`
 
-**Applies when:** 프로젝트 표준이 확정되지 않은 상태에서 새 stylesheet 또는 class contract의 형식을 결정하거나 \`.module.css\`/\`styles.\*\` 도입·전환을 검토한다.
+**Applies when:** 프로젝트 표준 미확정 상태에서 새 stylesheet 접근 형식\(plain CSS·CSS Modules\)을 선택하거나 \`.module.css\`·\`styles.\*\`로 전환한다. 기존 plain CSS class rename은 제외한다.
 
 **Impact: HIGH (keeps the global `scope_slug` naming system meaningful instead of hiding ownership behind local module indirection)**
 
 이 CSS skill은 기본적으로 plain `*.css`와 전역 고유 클래스명을 전제로 합니다. `rt_*`, `ui_*`, `wg_*`, `loc_*` 네임스페이스는 global class space에서 owner를 추적하려고 존재하므로, 프로젝트에 별도 합의가 없다면 `.module.css`와 `styles.foo`를 기본 선택으로 삼지 않습니다. 프로젝트가 이미 CSS Modules를 공식 표준으로 채택했고 그에 맞는 naming/runtime 규칙이 따로 있다면, 그 프로젝트 로컬 규칙이 이 기본값보다 우선합니다.
+
+이 규칙은 stylesheet 접근 형식을 새로 결정하거나 전환할 때 선택합니다. 이미 plain CSS를 직접 import하는 owner 안에서 기존 plain CSS class·selector 이름이나 base/modifier 구조만 바꾸는 작업은 접근 형식을 결정하지 않으므로 N/A입니다.
 
 **Incorrect (프로젝트 표준이 없는데도 CSS Modules를 기본처럼 사용):**
 
@@ -339,7 +341,7 @@ TSX에서 `className`은 `clsx()` 사용을 기본으로 합니다. 기본 eleme
 
 **Rule:** `C08` · `composition-do-not-build-structural-variants-with-modifiers`
 
-**Applies when:** spacing·방향·특정 화면의 구조 차이를 \`--modifier\`로 추가하려 하거나 modifier가 반복 가능한 상태 또는 API variant인지 판단한다.
+**Applies when:** modifier를 추가·변경하거나 반복 가능한 state·API variant와 one-off structural patch 사이를 판정한다. 허용된 state로 결론 나도 변경된 modifier 분류는 Selected다.
 
 **Review with:** `naming-name-elements-and-modifiers-by-role`
 
@@ -359,6 +361,8 @@ modifier는 상태나 반복 variant를 표현할 때만 사용합니다.
 - `dense`, `horizontal`, `compact`처럼 component API로 반복 노출되는 variant
 
 금지 대상은 "상태 의미가 아닌 모든 modifier"가 아니라, 재사용 contract 없이 생긴 one-off structural modifier입니다.
+
+이 규칙의 Selected는 modifier가 금지됐다는 뜻이 아니라 변경된 modifier의 계약을 분류했다는 뜻입니다. `active`·`selected` 같은 허용된 domain state로 결론 나면 `Selected + pass`이며, 위반이 없다는 이유로 N/A로 돌리지 않습니다.
 
 **Incorrect (특정 화면용 구조 patch를 modifier로 덧붙임):**
 
@@ -641,6 +645,8 @@ rich text 예외는 raw element styling에만 적용됩니다. `.owner__prose .o
 
 브라우저와 DOM이 직접 부여하는 상태는 같은 클래스 block 안의 nested `&:`로 표현합니다. 화면이나 도메인이 결정하는 상태는 modifier class로 분리합니다.
 
+base/modifier 분리에서는 domain state와 무관한 hover, focus, disabled interaction을 unconditional base element block에 둡니다. interaction selector를 modifier 아래로 옮겨 적용 대상을 좁히지 않습니다. modifier가 켜진 경우에만 interaction이 달라져야 한다는 별도 제품 요구가 있을 때만 그 예외를 명시합니다.
+
 구분 기준:
 
 - DOM-owned: `:hover`, `:visited`, `:focus`, `:focus-visible`, `:disabled`, `:checked`
@@ -710,11 +716,11 @@ rich text 예외는 raw element styling에만 적용됩니다. `.owner__prose .o
 
 **Rule:** `C16` · `values-keep-layout-intent-explicit`
 
-**Applies when:** \`sticky\`·\`fixed\`, \`z-index\`, 강제 width·height 또는 부모·자식 layout 책임을 추가·변경한다. 같은 element의 기존 \`display\`·spacing을 동작 변화 없이 base와 modifier 사이에서 옮기기만 하면 제외한다.
+**Applies when:** \`sticky\`·\`fixed\`, \`z-index\`, 강제 width·height 또는 부모·자식 layout 책임을 추가·변경한다. 같은 element의 base/modifier 분리에서 기존 \`display\`·spacing 선언을 값 그대로 재배치하면 제외한다.
 
 **Impact: MEDIUM-HIGH (makes sticky, fixed, and box responsibilities understandable without reverse-engineering the DOM)**
 
-레이아웃 의도는 클래스명과 선언에서 즉시 확인 가능해야 합니다. `position`, `width`, `height` 강제는 최소화하고 부모와 자식의 레이아웃 책임을 분리하며, `sticky`나 `fixed`를 쓸 때는 기준 컨테이너와 `z-index` 의도를 주석으로 남깁니다. 같은 DOM element의 base와 modifier 사이에서 기존 `display`나 spacing 선언을 재배치하되 position, z-index, 강제 geometry, 부모·자식 책임과 실제 layout 동작이 그대로라면 이 규칙은 N/A입니다.
+레이아웃 의도는 클래스명과 선언에서 즉시 확인 가능해야 합니다. `position`, `width`, `height` 강제는 최소화하고 부모와 자식의 레이아웃 책임을 분리하며, `sticky`나 `fixed`를 쓸 때는 기준 컨테이너와 `z-index` 의도를 주석으로 남깁니다. 같은 DOM element의 base/modifier 책임을 분리하면서 기존 `display`나 spacing property-value를 값 그대로 재배치하는 작업은 class responsibility 규칙이 소유하며 이 규칙은 N/A입니다. position, z-index, 강제 geometry 또는 부모·자식 layout 책임이 바뀌면 다시 Selected입니다.
 
 **Incorrect (레이아웃 강제가 많고 기준 설명이 없음):**
 
@@ -748,13 +754,15 @@ rich text 예외는 raw element styling에만 적용됩니다. `.owner__prose .o
 
 **Rule:** `C17` · `values-always-provide-css-variable-fallbacks`
 
-**Applies when:** 실제 semantic delta에 \`var\(--\*\)\` 사용이 있거나 token이 주입 보장 없는 경계를 지난다. 아직 diff에 없는 변수를 규칙 적용 목적으로 가정·도입하거나 새 stylesheet만 만드는 것은 제외한다.
+**Applies when:** 새·변경된 \`var\(--\*\)\` 사용이나 token 주입 보장 경계를 바꾼다. 같은 stylesheet·주입 경계에서 기존 \`var\(\)\` 선언을 selector 사이 byte-equivalent 이동만 하면 제외한다.
 
 **Impact: HIGH (prevents missing tokens from degrading styles unpredictably when variables are absent)**
 
 CSS 변수 `var(--*)`를 사용할 때는 토큰 존재가 보장되지 않는 경계에서 fallback 값을 함께 지정합니다. theme provider, 서드파티 wrapper, 선택적 토큰, 임시 overlay처럼 변수가 빠질 수 있는 surface에서는 안전한 기본값을 둬야 합니다. 요청이나 기존 token contract에 없는 CSS variable을 이 규칙 때문에 새로 발명하지 않으며, 새 stylesheet나 class를 만든다는 사실만으로 이 규칙을 선택하지 않습니다.
 다만 실제 diff에 새 CSS variable 사용이 들어오면, 요청 여부와 무관하게 이 규칙을 다시 선택하고 주입 보장·fallback을 검사합니다.
 반대로 프로젝트 전역에서 반드시 주입되는 core design token이라면, 누락을 빨리 드러내기 위해 fallback을 생략할 수도 있습니다.
+
+같은 stylesheet와 같은 token 주입 경계 안에서 기존 `var()` 선언을 base와 modifier 또는 rename 전후 selector 사이로 byte-equivalent 이동만 하는 경우는 N/A입니다. 변수 이름·fallback·주입 owner·사용 횟수·의미 중 하나라도 바뀌면 다시 Selected로 판정합니다.
 
 **Incorrect (존재 보장이 없는 토큰을 fallback 없이 사용):**
 
@@ -797,6 +805,8 @@ CSS 변수 `var(--*)`를 사용할 때는 토큰 존재가 보장되지 않는 �
 **Impact: HIGH (keeps app state, focus visibility, and hover behavior readable and accessible without mixing their responsibilities)**
 
 화면 상태나 도메인 상태는 `--active`, `--selected`, `--error` 같은 modifier로 표현하고, 브라우저 상호작용 상태는 같은 클래스 블록 내부 nested `&:hover`, `&:focus-visible`, `&:disabled` 같은 pseudo-class로 표현합니다. 새 modifier를 다루면 실제 domain state인지 one-off structural patch인지 확인하기 위해 `composition-do-not-build-structural-variants-with-modifiers`를 다시 판정합니다. 포커스 링 제거는 금지하며, 대체 포커스 스타일을 반드시 제공합니다.
+
+base/modifier 분리에서는 domain state와 무관한 hover, focus, disabled interaction을 unconditional base element block에 둡니다. interaction selector를 modifier 아래로 옮겨 적용 대상을 좁히지 않습니다. modifier block에는 active·selected·error처럼 app state가 소유하는 presentation만 남깁니다.
 
 **Incorrect (포커스 스타일을 제거하거나 상태 경계를 섞음):**
 

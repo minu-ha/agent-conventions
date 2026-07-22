@@ -356,7 +356,7 @@ React가 제공하는 handler와 prop 계약은 선언 위치에서 바로 드�
 
 **Rule:** `R07` · `typing-function-type-first`
 
-**Applies when:** React 이벤트 핸들러나 prop callback의 선언·시그니처를 추가·변경하며 기존 React alias 또는 callback 계약을 쓸 수 있다.
+**Applies when:** React 이벤트 핸들러나 prop callback의 선언·시그니처를 추가·변경하며 기존 React alias·callback 계약을 쓸 수 있다. curried factory의 최종 반환 handler도 포함한다.
 
 **Requires selected:** `typescript/types-reuse-callback-signatures-from-existing-contracts` · N/A 불가
 
@@ -364,7 +364,11 @@ React가 제공하는 handler와 prop 계약은 선언 위치에서 바로 드�
 
 **Impact: HIGH (React handler 시그니처와 callback 의도를 선언 위치에서 바로 보이게 함)**
 
-React가 제공하는 이벤트 핸들러 타입이나 prop callback 계약이 이미 있다면, 매개변수 타입보다 함수 변수 타입 선언을 우선합니다. React alias를 쓰기 위해 type import를 추가·변경하면 `ownership-avoid-barrel-and-react-namespace-imports`를 다시 판정합니다. 일반 TypeScript 함수 타입 규칙은 companion skill인 `convention-typescript`에서 다루고, 여기서는 React handler alias를 바로 쓰는 경우를 강조합니다.
+React가 제공하는 이벤트 핸들러 타입이나 prop callback 계약이 이미 있다면, 매개변수 타입보다 함수 변수 타입 선언을 우선합니다. curried handler factory가 반환하는 함수도 JSX event prop에 전달되는 React handler 선언입니다. JSX가 나중에 contextual typing을 제공한다는 이유는 반환 함수 타입을 N/A로 둘 근거가 아니며, factory 반환 타입을 `MouseEventHandler<...>` 같은 기존 alias로 고정합니다.
+
+`query.select` 같은 hook option의 one-off contextual callback과 UI-agnostic domain function은 React event handler나 prop callback 구현이 아니므로 이 규칙은 N/A입니다.
+
+React alias를 쓰기 위해 type import를 추가·변경하면 `ownership-avoid-barrel-and-react-namespace-imports`를 다시 판정합니다. 일반 TypeScript 함수 타입 규칙은 companion skill인 `convention-typescript`에서 다루고, 여기서는 React handler alias를 바로 쓰는 경우를 강조합니다.
 
 **Incorrect (핸들러 타입이 있는데 매개변수만 타입 지정):**
 
@@ -1488,13 +1492,17 @@ return <UiInput value={selectedNodeContext?.node?.name} />;
 
 **Rule:** `R22` · `screen-keep-route-flow-visible`
 
-**Applies when:** route entry의 search·navigate·query·mutation·effect·section 조립을 이동·분리하거나 재구성한다. 순수 type·payload builder만 sibling \`.ts\`로 옮기고 이 orchestration을 그대로 두면 제외한다.
+**Applies when:** route entry의 search·navigate·query·mutation·cross-section effect를 component/module 사이에서 이동·분리하거나 page section 조립의 순서·owner를 바꾼다. 같은 owner 안 표현 변경은 제외한다.
 
 **Review with:** `screen-extract-local-section-components-for-runtime-boundaries`, `screen-move-pure-support-code-out-of-entry-files`
 
 **Impact: HIGH (route 파일을 화면의 주 orchestration 지점으로 읽기 쉽게 만듦)**
 
-라우트 엔트리 파일은 화면 흐름이 드러나게 유지합니다. state, API response/mutation, event handler, `useEffect`, 렌더링 조립이 보이도록 두고, 단순 레이아웃 분리만을 위한 조기 컴포넌트화는 기본값으로 삼지 않습니다. runtime boundary를 소유하는 route-local section component는 추출할 수 있지만, route entry는 여전히 search param, navigate, page-level query/mutation, cross-section effect 같은 orchestration을 보여줘야 합니다. 이 orchestration은 건드리지 않고 순수 type, payload builder, preset만 sibling support `.ts`로 옮기는 작업은 `screen-extract-utilities-selectively`와 `screen-move-pure-support-code-out-of-entry-files`가 소유하며 이 규칙은 N/A입니다.
+Route entry는 search, navigate, page query·mutation, cross-section effect와 render 조립을 보여줍니다. runtime boundary section은 추출해도 주 orchestration은 route entry에 둡니다.
+
+이 규칙은 route orchestration owner와 page-section topology가 바뀔 때 Selected입니다. 흐름을 hook·support module·section component로 이동·분리하거나 section 순서·owner를 바꾸면 적용합니다.
+
+같은 route owner 안 `query.select` shape, binding·alias 정리, derived-state effect의 render 계산 전환은 N/A입니다. 순수 type·payload builder·preset의 sibling `.ts` 이동도 support-code 규칙이 소유하며 N/A입니다.
 
 **Incorrect (흐름보다 분해 자체가 목적이 됨):**
 
@@ -1720,9 +1728,12 @@ const handleSubmitButtonClick: MouseEventHandler<HTMLButtonElement> = async (_ev
 
 **Impact: MEDIUM-HIGH (이벤트 흐름을 검색 가능하게 유지하고 즉흥적인 handler 시그니처를 피함)**
 
-이벤트 핸들러는 `handle` 접두사로 시작하고 역할이 바로 드러나게 이름 짓습니다.
-DOM 이벤트처럼 target과 event가 중요하면 `handle + Target + Event` 패턴을 우선하고, submit/save/message처럼 문맥상 target이 이미 분명한 action callback은 `handle + DomainAction`처럼 더 짧게 둘 수 있습니다.
-추가 인자가 필요하면 handler factory 형태의 고차 함수로 감싸고, 최종 반환값은 React handler 타입으로 고정합니다.
+이벤트 핸들러는 `handle` 접두사와 역할명을 사용합니다. DOM event면 `handle + Target + Event`, action 문맥이 분명하면 `handle + DomainAction`을 사용합니다.
+DOM React event prop의 인라인 callback을 새 `handle*`로 추출하며 event 외 추가 인자가 필요하면 factory가 event boundary를 소유합니다. `onClick={() => handleSelectionToggle(id)}` wrapper는 완료가 아닙니다. `(id): MouseEventHandler<Element> => (_event) => ...` 반환값을 JSX에 직접 전달합니다.
+
+최종 반환 React handler는 `typing-function-type-first`를 재판정합니다. alias나 prop callback 계약을 쓸 수 있으면 그 규칙은 Selected이며 contextual typing으로 숨기지 않습니다.
+
+기존 UI-agnostic domain command나 custom component prop callback이 `(id) => void`이면 direct callback이나 최소 adapter를 유지합니다. `useEffectEvent`에도 계약에 없는 DOM event 또는 curry를 만들지 않으며 이 경우 React DOM handler typing은 N/A입니다.
 
 **Incorrect (이름과 시그니처가 제각각임):**
 
@@ -1730,6 +1741,12 @@ DOM 이벤트처럼 target과 event가 중요하면 `handle + Target + Event` �
 const onSelect = (id: string, event: MouseEvent<HTMLLIElement>) => {
   console.log(id, event.currentTarget);
 };
+
+const handleSelectionToggle = (id: string) => {
+  console.log(id);
+};
+
+<button onClick={() => handleSelectionToggle(entry.id)} />;
 ```
 
 **Correct (추가 인자는 바깥 함수, 이벤트는 안쪽 handler):**

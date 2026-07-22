@@ -212,11 +212,36 @@ Scope drift 뒤에는 file, activated skill, 기존 Selected rule을 제거하�
   - "선택 상태 modifier와 hover/focus 스타일을 정리해줘. 새 modifier가 상태인지 one-off 구조 patch인지도 확인해줘."
 - Expected pass signals
   - domain/DOM state rule의 `reviewWith`로 structural modifier rule을 재평가함
-  - `--selected` 같은 domain state는 modifier로, hover/focus는 pseudo-class로 유지함
+  - `--selected` 같은 허용 domain state여도 변경된 modifier 분류 rule은 `Selected + pass`로 기록함
+  - hover/focus/disabled는 unconditional base element block의 pseudo-class로 유지함
   - spacing 보정 modifier는 반복 가능한 상태로 오인하지 않음
 - Likely fail signals
   - domain state rule만 보고 one-off modifier 여부를 검토하지 않음
+  - 허용 state라서 위반이 없다는 이유로 modifier 분류 rule을 N/A 처리함
   - hover/focus를 modifier로 바꾸거나 structural patch를 상태처럼 남김
+
+### C11. Base/Modifier Split Precision
+
+- Focus
+  - `naming-default-to-plain-css-when-no-module-convention`
+  - `values-keep-layout-intent-explicit`
+  - `values-always-provide-css-variable-fallbacks`
+  - `values-tokenize-repeated-visual-values`
+- Prompt
+  - "기존 plain `_index.css`의 fused active class를 base와 `--active`로 분리하되 기존 display, token, raw value를 그대로 재배치해줘."
+- Expected pass signals
+  - 기존 plain stylesheet 접근 형식을 유지하므로 plain-vs-module rule은 N/A
+  - 같은 element의 기존 `display`·spacing property-value 재배치이므로 layout rule은 N/A
+  - 같은 owner·주입 경계의 동일 `var()` 이동이므로 fallback rule은 N/A
+  - 새 반복 visual value가 없으므로 tokenization rule은 N/A
+  - domain state와 무관한 hover/focus/disabled는 modifier 아래가 아니라 unconditional base block에 남음
+- Counter-controls
+  - 새 stylesheet 접근 형식 결정이나 module 전환은 plain-vs-module rule Selected
+  - sticky/z-index/geometry/부모·자식 책임 변화는 layout rule Selected
+  - token/fallback/property/injection boundary 변화는 fallback rule Selected
+- Likely fail signals
+  - 삭제+추가 line만 보고 동일 property-value 이동을 새 layout/token 사용으로 과선택함
+  - base/modifier 이름은 맞지만 hover를 `--active` 아래에 넣어 interaction 대상을 좁힘
 
 ## 유지보수 원칙
 

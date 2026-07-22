@@ -123,6 +123,39 @@ Scope drift 뒤에는 file, activated skill, 기존 Selected rule을 제거하�
   - 모든 file-local type/interface를 public declaration으로 간주함
   - exported/re-exported type의 header JSDoc을 누락함
 
+### RP5. DOM Handler Curry Closure
+
+- Focus
+  - `events-name-and-curry-handlers`
+  - `typing-function-type-first`
+  - TypeScript callback contract rules
+- Prompt
+  - "inline button selection toggle을 `handleSelectionToggle`로 추출하고 functional updater로 바꿔줘."
+- Expected pass signals
+  - DOM event 외 `entryId`가 필요하므로 `(entryId): MouseEventHandler<HTMLButtonElement> => (_event) => ...` 형태로 닫힘
+  - JSX에는 `onClick={handleSelectionToggle(entry.id)}`로 factory 반환값을 직접 전달함
+  - React type import와 미사용 event parameter까지 companion rules에서 Selected로 판정함
+- Likely fail signals
+  - `onClick={() => handleSelectionToggle(entry.id)}` wrapper를 남겨 handler contract를 우회함
+  - 최종 handler를 `() =>`로 두고 event parameter 생략을 N/A 처리함
+  - 기존 `(id) => void` custom component callback이나 `useEffectEvent`에 실제 계약에 없는 DOM event를 추가함
+
+### RP6. Route Orchestration Owner Boundary
+
+- Focus
+  - `screen-keep-route-flow-visible`
+- Positive control
+  - page-level query/state를 소유한 runtime section을 별도 route-local component로 이동하면 Selected
+- Negative controls
+  - 같은 route owner 안 `query.select` shaping
+  - binding/alias 정리
+  - derived-state effect를 render 계산으로 교체
+- Expected pass signals
+  - route orchestration owner나 page-section topology가 바뀔 때만 Selected
+  - 같은-owner 표현 변경은 각 query/origin/derived-state rule이 소유하고 이 규칙은 N/A
+- Likely fail signals
+  - `query`, `effect`, `section` 키워드만 보고 같은-owner 변경을 과선택함
+
 ## 유지보수 원칙
 
 - rule, `appliesWhen`, `reviewWith`, `requiresSelected`, `requiredOnCompletion`을 바꾸기 전에 같은 fixture로 RED를 재현하고 수정 후 candidate/mutation arm을 다시 실행합니다.

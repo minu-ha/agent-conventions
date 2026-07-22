@@ -14,7 +14,7 @@ metadata:
 
 수정 전 요청·계획·diff를 한 줄로 고정한다. `.ts`/`.tsx`, type·schema·config·API·helper, import/export, fallback, JSDoc 변경 시 활성화한다. React 경계나 CSS class contract 변경은 companion도 활성화한다.
 
-변경 semantic delta만 판정한다. 추가·삭제·이동·이름 변경·재선언은 포함하고, read-only 문맥과 byte-equivalent 내부 구문은 제외한다. 파일 이동에서 이름·shape·동작이 같은 내부 선언·본문·class·value는 diff에 삭제+추가로 보여도 별도 추가·변경·재선언으로 다시 세지 않는다. N/A rule의 optional pattern을 새로 도입해 스스로 활성화하지 말고 요청을 충족하는 최소 semantic patch만 구현한다.
+변경 semantic delta만 판정한다. 추가·삭제·이동·이름 변경·재선언은 포함하고, read-only 문맥과 byte-equivalent 내부 구문은 제외한다. 파일 이동에서 이름·shape·동작이 같은 내부 선언·본문·class·value는 diff에 삭제+추가로 보여도 별도 추가·변경·재선언으로 다시 세지 않는다. 단, byte-equivalent named shape라도 새 callable input 또는 output 계약 역할에 연결되면 role semantic delta로 판정한다. N/A rule의 optional pattern을 새로 도입해 스스로 활성화하지 말고 요청을 충족하는 최소 semantic patch만 구현한다.
 
 ## 2. Index scan
 

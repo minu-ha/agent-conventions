@@ -4,7 +4,7 @@
 
 - Skill: `react`
 - Version: `1.0.0`
-- Routing digest: `sha256:624e51ea96f2dea6b775450def20d36142d70ffcf7960cf5169eacdf0ebb57c6`
+- Routing digest: `sha256:30f0c6d798cd558f19a99ecc118ffe185b5e9534d8073aebc30e92a08831bd6d`
 - Local rules: 42
 
 ## Direct Companions
@@ -25,7 +25,7 @@
 
 ### 2. Typing and Contracts (2)
 
-- `R07` · `typing-function-type-first` · React 이벤트 핸들러나 prop callback의 선언·시그니처를 추가·변경하며 기존 React alias 또는 callback 계약을 쓸 수 있다. · reviewWith: `ownership-avoid-barrel-and-react-namespace-imports`, `typing-reuse-existing-contracts`
+- `R07` · `typing-function-type-first` · React 이벤트 핸들러나 prop callback의 선언·시그니처를 추가·변경하며 기존 React alias·callback 계약을 쓸 수 있다. curried factory의 최종 반환 handler도 포함한다. · reviewWith: `ownership-avoid-barrel-and-react-namespace-imports`, `typing-reuse-existing-contracts`
 - `R08` · `typing-reuse-existing-contracts` · Props callback 구현이나 API 응답 기반 view type을 추가·변경하며 기존 prop·API 계약과 같은 shape가 보인다. · reviewWith: `typescript/types-reuse-callback-signatures-from-existing-contracts`, `typescript/types-reuse-existing-contracts-before-new-types`
 
 ### 3. Composition Strategy (3)
@@ -49,7 +49,7 @@
 - `R19` · `screen-extract-local-section-components-for-runtime-boundaries` · route-local section component를 새로 추출하거나 기존 section이 async·state·provider·interaction·library·performance 경계를 소유하는지 바꾼다.
 - `R20` · `screen-extract-utilities-selectively` · 화면 계산·변환·preset·option·column meta를 별도 함수/support module로 추출·이동하거나 support 경계를 바꾼다. query \`select\` 내부 shaping만이면 제외한다. · reviewWith: `screen-move-pure-support-code-out-of-entry-files`, `typescript/functions-extract-helpers-only-when-the-boundary-is-real`
 - `R21` · `screen-keep-derived-values-close` · response·state·search·props의 오리진을 끊는 alias·flag·표시값을 넓은 screen scope에 추가·이동·제거하거나 \`let\`/\`push\` 조립을 바꾼다.
-- `R22` · `screen-keep-route-flow-visible` · route entry의 search·navigate·query·mutation·effect·section 조립을 이동·분리하거나 재구성한다. 순수 type·payload builder만 sibling \`.ts\`로 옮기고 이 orchestration을 그대로 두면 제외한다. · reviewWith: `screen-extract-local-section-components-for-runtime-boundaries`, `screen-move-pure-support-code-out-of-entry-files`
+- `R22` · `screen-keep-route-flow-visible` · route entry의 search·navigate·query·mutation·cross-section effect를 component/module 사이에서 이동·분리하거나 page section 조립의 순서·owner를 바꾼다. 같은 owner 안 표현 변경은 제외한다. · reviewWith: `screen-extract-local-section-components-for-runtime-boundaries`, `screen-move-pure-support-code-out-of-entry-files`
 - `R23` · `screen-move-pure-support-code-out-of-entry-files` · route entry에 여러 줄 pure helper·preset·option·화면 전용 type이 쌓이거나 추출한 support code의 목적지 파일을 정한다. · reviewWith: `docs-require-jsdoc-on-key-declarations`
 
 ### 6. Events and Interaction Flow (3)

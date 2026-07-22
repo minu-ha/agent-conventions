@@ -199,6 +199,38 @@ protocol v3 결과에는 coordinator가 dispatch 전에 고정한 repository HEA
   - type 파일 이동 자체만으로 contract reuse rule을 과선택함
   - 원본을 남겨 중복 declaration을 만듦
 
+### T11. Callable Role and Contextual Callback Precision
+
+- Focus
+  - `types-document-custom-types-and-shapes`
+  - `types-reuse-existing-contracts-before-new-types`
+  - `types-prefer-function-variable-types-over-parameter-annotations`
+  - `types-reuse-callback-signatures-from-existing-contracts`
+- Positive control
+  - 기존 named shape가 positional 함수의 새 object input 계약 역할을 얻으면 shape가 같아도 문서화 rule은 Selected
+- Negative controls
+  - unchanged contract를 새 call site에서 참조만 하면 reuse rule은 N/A
+  - annotation 없는 one-off `query.select` callback과 익명 inferred 반환 literal은 callback/shape rules에서 N/A
+- Likely fail signals
+  - 동일 owner 이동이라는 이유로 새 callable input 역할을 무시함
+  - query option literal에 불필요한 type alias나 field JSDoc을 추가해 규칙을 스스로 활성화함
+
+### T12. Curried Framework Handler Completion
+
+- Focus
+  - `naming-use-direct-imports-and-public-entry-points`
+  - `types-mark-unused-parameters-with-underscore`
+  - `types-prefer-function-variable-types-over-parameter-annotations`
+  - `types-reuse-callback-signatures-from-existing-contracts`
+- Prompt
+  - "entry id를 받는 curried button handler를 기존 `MouseEventHandler` 계약으로 구현해줘."
+- Expected pass signals
+  - 같은 `react` module path라도 value/type specifier 추가·삭제를 import 변경으로 Selected 처리함
+  - 최종 callback은 `(_event) =>`로 계약 parameter를 보존함
+- Likely fail signals
+  - module path가 같다는 이유로 import specifier 변경을 N/A 처리함
+  - handler가 event를 쓰지 않는다는 이유로 parameter를 통째로 생략함
+
 ## 유지보수 원칙
 
 - 새로운 TypeScript rule을 추가했다면, 최소 1개의 pressure scenario를 이 문서에 추가합니다.
