@@ -266,6 +266,7 @@
           "composition-compose-classes-with-clsx",
           "composition-do-not-build-structural-variants-with-modifiers",
           "composition-keep-classes-single-purpose",
+          "selector-use-pseudo-classes-for-dom-owned-states",
           "values-separate-domain-state-modifiers-from-dom-interaction-states",
           "organization-review-banned-css-patterns-before-finishing"
         ]
@@ -347,7 +348,6 @@
           "selector-avoid-deep-descendant-dependencies",
           "selector-keep-project-selectors-flat",
           "selector-target-third-party-dom-from-owned-roots",
-          "selector-use-pseudo-classes-for-dom-owned-states",
           "values-keep-layout-intent-explicit",
           "values-always-provide-css-variable-fallbacks",
           "values-tokenize-repeated-visual-values",
@@ -898,7 +898,9 @@
         "css": [
           "selector-avoid-deep-descendant-dependencies",
           "selector-target-third-party-dom-from-owned-roots",
+          "selector-use-pseudo-classes-for-dom-owned-states",
           "values-always-provide-css-variable-fallbacks",
+          "values-separate-domain-state-modifiers-from-dom-interaction-states",
           "values-tokenize-repeated-visual-values",
           "organization-review-banned-css-patterns-before-finishing"
         ]
@@ -917,9 +919,7 @@
           "composition-style-ui-components-through-owned-wrappers",
           "composition-prefer-ui-wrapper-prop-types",
           "selector-keep-project-selectors-flat",
-          "selector-use-pseudo-classes-for-dom-owned-states",
           "values-keep-layout-intent-explicit",
-          "values-separate-domain-state-modifiers-from-dom-interaction-states",
           "organization-keep-style-files-owned-by-one-component-or-route"
         ]
       }

@@ -170,6 +170,35 @@ protocol v3 결과에는 coordinator가 dispatch 전에 고정한 repository HEA
   - `read*`, `map*`, `create*` 이름을 붙였다는 이유로 helper를 남김
   - mapper를 별도 파일이나 generic util로 옮김
 
+### T9. Callback and Naming Applicability Precision
+
+- Focus
+  - `types-reuse-callback-signatures-from-existing-contracts`
+  - `types-mark-unused-parameters-with-underscore`
+  - `naming-use-consistent-file-and-symbol-naming`
+- Prompt
+  - "기존 callback 계약을 재사용해 구현하고 미사용 parameter를 남겨야 해. 같은 diff에 `import { createPortal } from \"react-dom\"`도 추가하지만 alias나 local rename은 없어."
+- Expected pass signals
+  - callback 계약 재사용 rule의 `reviewWith`로 unused parameter rule을 재평가함
+  - 계약상 남겨야 하는 미사용 parameter에는 `_` prefix를 붙임
+  - alias 없는 third-party import binding 추가만으로 symbol naming rule을 선택하지 않음
+- Likely fail signals
+  - callback 계약을 재사용하면서 미사용 parameter 검토를 누락함
+  - 변경하지 않은 third-party export 이름을 local naming 대상으로 과선택함
+
+### T10. Existing Contract Relocation Precision
+
+- Focus
+  - `types-reuse-existing-contracts-before-new-types`
+- Prompt
+  - "유일한 기존 `UserPreview` type 선언을 내용과 이름 변경 없이 owner 파일로 옮겨줘. 복제나 파생 type 추가는 없어."
+- Expected pass signals
+  - sole existing declaration의 pure relocation은 새·중복 shape 판단이 아니므로 rule을 N/A로 둠
+  - 같은 shape를 두 번째로 선언하거나 이동 중 shape를 바꿀 때만 다시 선택함
+- Likely fail signals
+  - type 파일 이동 자체만으로 contract reuse rule을 과선택함
+  - 원본을 남겨 중복 declaration을 만듦
+
 ## 유지보수 원칙
 
 - 새로운 TypeScript rule을 추가했다면, 최소 1개의 pressure scenario를 이 문서에 추가합니다.

@@ -65,6 +65,64 @@ Scope drift 뒤에는 file, activated skill, 기존 Selected rule을 제거하�
 - `?? []`, `|| "-"`, ad-hoc Spinner로 absence/loading을 숨김
 - compound public part, handler/effect/query boundary 문서가 빠짐
 
+## Applicability Precision Scenarios
+
+### RP1. React Type Import Decision
+
+- Focus
+  - `ownership-avoid-barrel-and-react-namespace-imports`
+  - `typing-function-type-first`
+- Prompt
+  - "기존 `React.MouseEvent` parameter annotation을 `MouseEventHandler<HTMLButtonElement>` 함수 변수 타입과 direct `import type`으로 바꿔줘."
+- Expected pass signals
+  - React type을 namespace로 둘지 direct `import type`으로 가져올지 판단하므로 두 rule을 모두 Selected로 둠
+  - `typing-function-type-first`의 `reviewWith`로 import rule을 다시 판정함
+  - 일반 third-party direct value import만 추가하는 fixture에서는 import rule을 N/A로 둠
+- Likely fail signals
+  - handler alias rule만 선택하고 React type import 결정을 import rule에서 누락함
+  - 모든 direct value import를 React ownership rule로 과선택함
+
+### RP2. Moved or Renamed Component Props
+
+- Focus
+  - `composition-destructure-props-inside`
+- Prompt
+  - "props field는 그대로 두고 `UserCard`를 다른 TSX 파일로 이동하면서 `AccountCard`로 이름만 바꿔줘. 현재 signature에서 props를 바로 구조분해하고 있어."
+- Expected pass signals
+  - component 이동·이름 변경도 signature를 다시 검토하는 surface이므로 rule을 Selected로 둠
+  - 새 파일에서도 component는 `props` 전체를 받고 본문에서 구조분해함
+- Likely fail signals
+  - props field가 바뀌지 않았다는 이유로 rule을 N/A 처리함
+  - 이동한 component의 parameter destructuring을 그대로 복사함
+
+### RP3. Handler Extraction Boundary
+
+- Focus
+  - `composition-named-handlers-over-inline`
+  - `events-name-and-curry-handlers`
+  - `events-keep-handler-flow-inline`
+- Prompt
+  - "분기와 mutation이 있는 inline callback을 같은 component 안의 `handleDeleteButtonClick`으로만 옮겨줘. helper나 hook으로 쪼개지는 않아."
+- Expected pass signals
+  - inline callback을 named handler로 바꾸는 두 rule은 Selected로 둠
+  - 이미 named handler인 흐름을 helper/hook으로 분리·병합하는 변경이 아니므로 `events-keep-handler-flow-inline`은 N/A로 둠
+- Likely fail signals
+  - named handler로 옮겼다는 사실만으로 handler-flow extraction rule까지 과선택함
+  - named handler 본문을 근거 없이 helper나 hook으로 분해함
+
+### RP4. Public Declaration Documentation Boundary
+
+- Focus
+  - `docs-require-jsdoc-on-key-declarations`
+- Prompt
+  - "파일 내부에서만 쓰는 local type과 exported type을 함께 추가해줘. 둘 다 구조는 비자명하지 않아."
+- Expected pass signals
+  - public type/interface는 실제 exported 또는 re-exported 선언으로만 판정함
+  - 자명한 file-local type은 public이라는 이유로 JSDoc 대상에 포함하지 않음
+- Likely fail signals
+  - 모든 file-local type/interface를 public declaration으로 간주함
+  - exported/re-exported type의 header JSDoc을 누락함
+
 ## 유지보수 원칙
 
 - rule, `appliesWhen`, `reviewWith`, `requiresSelected`, `requiredOnCompletion`을 바꾸기 전에 같은 fixture로 RED를 재현하고 수정 후 candidate/mutation arm을 다시 실행합니다.

@@ -313,6 +313,10 @@ const childPayloadContract: Record<string, unknown> = {
 	forbiddenCoordinatorFields: [...childForbiddenFields].sort(),
 };
 
+/** @summary mutation arm의 단일 coverage failure 완료 계약 */
+const mutationCompletionContract =
+	"semanticVerdicts must be empty ([]); completion accounting is exact: coverageFailCount=1, semanticFailCount=0, unknownCount=0, status=BLOCKED, and blocked=true.";
+
 /** @helper unknown JSON value를 plain object로 제한 */
 const asObject = (value: unknown, label: string): JsonObject => {
 	if (typeof value !== "object" || value === null || Array.isArray(value)) {
@@ -745,6 +749,10 @@ const createChildRequest = (args: CreateChildRequestArgs): BehavioralChildReques
 		approvedArmFields.filter((key) => armConfig[key] !== undefined).map((key) => [key, armConfig[key]]),
 	);
 
+	if (arm === "mutation") {
+		armPolicy.receiptContract = mutationCompletionContract;
+	}
+
 	if (arm !== "no-skill") {
 		const generatedIndexes = asObject(protocol.generatedIndexes, "protocol.generatedIndexes");
 		armPolicy.currentGeneratedIndexDigests = Object.fromEntries(
@@ -796,10 +804,11 @@ const createChildRequest = (args: CreateChildRequestArgs): BehavioralChildReques
 			arm === "no-skill"
 				? "routingTrace and driftReceipt are null; activatedSkills, receipts, and declaredLoadedFiles.paths are empty."
 				: arm === "mutation"
-					? "routingTrace and driftReceipt are null; return the independent auditor receipt and BLOCKED completion with coverageFailCount or unknownCount above zero."
+					? `routingTrace and driftReceipt are null; return the independent auditor receipt. ${mutationCompletionContract}`
 					: "routingTrace contains at least three passes; its final two passes are identical with no selection-changing delta, final Unknown is empty, and receipts exactly match the final pass.",
 		childPayloadContract: {
 			...childPayloadContract,
+			completion: arm === "mutation" ? mutationCompletionContract : childPayloadContract.completion,
 			assignedChildPayloadPath,
 			virtualPatchPolicy:
 				coordinate.group === "mixed"
@@ -1422,7 +1431,13 @@ export const scoreBehavioralEvalRun = async (args: ScoreBehavioralEvalRunArgs): 
 	if (args.arm === "mutation") {
 		const completion = asObject(run.completion, "run.completion");
 		const blockedGatePassed =
-			completion.status === "BLOCKED" && (Number(completion.coverageFailCount) > 0 || Number(completion.unknownCount) > 0);
+			Array.isArray(run.semanticVerdicts) &&
+			run.semanticVerdicts.length === 0 &&
+			completion.status === "BLOCKED" &&
+			completion.blocked === true &&
+			completion.coverageFailCount === 1 &&
+			completion.semanticFailCount === 0 &&
+			completion.unknownCount === 0;
 		return {kind: "mutation", eligible: true, blockedGatePassed};
 	}
 
@@ -1668,9 +1683,10 @@ export const mergeBehavioralEvalChildPayload = async (args: MergeBehavioralEvalC
 
 const helpText = `Behavioral v3 coordinator (manual orchestration boundary)
 
-This CLI creates and validates coordinator-owned files only. It never spawns a collaboration child.
-An external orchestrator must send the exactDispatch bytes unchanged. The child writes exactly its
-assigned childPayload path with apply_patch and no other file; the orchestrator then invokes merge.
+This CLI creates and validates coordinator-owned files only. It never spawns an isolated Codex child session.
+An external orchestrator must create one fresh isolated Codex CLI child session per trial with no inherited
+conversation turns (forkTurns=none), then send the exactDispatch bytes unchanged. The child writes exactly
+its assigned childPayload path with apply_patch and no other file; the orchestrator then invokes merge.
 
 Commands:
   matrix --protocol=<absolute-path>

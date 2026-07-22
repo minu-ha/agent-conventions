@@ -1,10 +1,10 @@
 # React 컨벤션 Rule Index
 
-> 모든 entry를 스캔합니다. Selected/Unknown guidance path는 `contracts/<stable-id>.md`입니다.
+> 모든 entry를 변경 semantic delta로 스캔합니다. 추가·삭제·이동·재선언은 포함하고 read-only 문맥은 제외합니다. Selected/Unknown guidance path는 `contracts/<stable-id>.md`입니다.
 
 - Skill: `react`
 - Version: `1.0.0`
-- Routing digest: `sha256:c2036ebd5ca4d70b5e6734a53f9a3b8227cb93fa068bda03e318eb0a88ddc4bc`
+- Routing digest: `sha256:f229054372cd355e6ca0a1828ecc98cb0341ab33f72a3a087591125e6d6f685b`
 - Local rules: 42
 
 ## Direct Companions
@@ -16,7 +16,7 @@
 
 ### 1. Ownership and Boundaries (6)
 
-- `R01` · `ownership-avoid-barrel-and-react-namespace-imports` · \`index.ts\`·barrel 재노출, \`React.\*\` namespace 타입, type/value 혼합 import 또는 소유 출처를 숨긴 경로를 직접 추가·수정한다. 일반 direct value import는 제외한다.
+- `R01` · `ownership-avoid-barrel-and-react-namespace-imports` · \`index.ts\`·barrel 재노출, \`React.\*\` namespace 타입과 direct \`import type\` 중 선택, type/value 혼합 import 또는 소유 출처를 숨긴 경로를 추가·수정한다. 일반 direct value import는 제외한다.
 - `R02` · `ownership-prefer-plain-ts-for-local-react-helpers` · 화면 전용 계산·정규화·payload 조립을 custom hook 또는 별도 support module로 추출·이동하려 한다. · reviewWith: `screen-extract-utilities-selectively`, `screen-move-pure-support-code-out-of-entry-files`, `typescript/functions-extract-helpers-only-when-the-boundary-is-real`
 - `R03` · `ownership-layer-component-boundaries` · 컴포넌트를 ui·widget·route-local 중 어느 소유 레이어에 둘지 결정하거나 레이어 사이에서 이동·공용화한다. · reviewWith: `css/naming-separate-local-and-route-style-scopes`, `ownership-place-route-local-files-by-scope`
 - `R04` · `ownership-place-route-local-files-by-scope` · route 전용 컴포넌트·스타일·순수 로직을 새로 만들거나 \`-local\`과 route sibling \`.ts\` 사이에서 위치를 바꾼다. · reviewWith: `css/naming-separate-local-and-route-style-scopes`, `css/organization-keep-style-files-owned-by-one-component-or-route`
@@ -25,7 +25,7 @@
 
 ### 2. Typing and Contracts (2)
 
-- `R07` · `typing-function-type-first` · React 이벤트 핸들러나 prop callback의 선언·시그니처를 추가·변경하며 기존 React alias 또는 callback 계약을 쓸 수 있다. · reviewWith: `typing-reuse-existing-contracts`
+- `R07` · `typing-function-type-first` · React 이벤트 핸들러나 prop callback의 선언·시그니처를 추가·변경하며 기존 React alias 또는 callback 계약을 쓸 수 있다. · reviewWith: `ownership-avoid-barrel-and-react-namespace-imports`, `typing-reuse-existing-contracts`
 - `R08` · `typing-reuse-existing-contracts` · Props callback 구현이나 API 응답 기반 view type을 추가·변경하며 기존 prop·API 계약과 같은 shape가 보인다. · reviewWith: `typescript/types-reuse-callback-signatures-from-existing-contracts`, `typescript/types-reuse-existing-contracts-before-new-types`
 
 ### 3. Composition Strategy (3)
@@ -36,7 +36,7 @@
 
 ### 4. Component Structure and JSX (6)
 
-- `R12` · `composition-destructure-props-inside` · 함수 컴포넌트의 props 시그니처나 본문 구조분해 방식을 추가·변경한다.
+- `R12` · `composition-destructure-props-inside` · props를 받는 함수 컴포넌트의 시그니처·본문 구조분해 방식을 추가·변경하거나 그 컴포넌트를 다른 파일로 이동·이름 변경한다.
 - `R13` · `composition-do-not-define-components-inside-components` · 컴포넌트 본문 안에 JSX를 반환하는 로컬 함수·컴포넌트를 추가·이동하거나 재렌더 시 remount·focus reset 징후를 다룬다.
 - `R14` · `composition-prefer-arrow-functions-and-object-params` · React 인접 코드에 function 선언이 생기거나 함수가 3개 이상 매개변수 또는 함께 이동하는 같은 계열 값을 받는다. · reviewWith: `typescript/functions-use-named-object-params-for-complex-signatures`
 - `R15` · `composition-named-handlers-over-inline` · TSX event prop의 인라인 callback에 분기, 비동기 호출, 여러 동작·부수효과 또는 비자명한 state transition을 추가·수정한다. 단순 setter·인자 전달 한 줄 위임은 제외한다. · reviewWith: `events-keep-handler-flow-inline`, `events-run-user-actions-in-handlers-not-effects`
@@ -78,4 +78,4 @@
 
 - `R40` · `docs-document-compound-parts-with-part-and-description` · compound component의 exported public part·props interface·part 내부 handler를 추가·변경하거나 public part 문서를 수정한다.
 - `R41` · `docs-limit-inline-comments-to-non-obvious-logic` · React 함수·handler·JSX 인접 로직 안의 \`//\` 주석을 추가·수정하거나 자명한 설명과 실제 제약을 구분해 정리한다.
-- `R42` · `docs-require-jsdoc-on-key-declarations` · query·mutation, 비자명한 handler/effect, exported helper/custom hook/store, public type/interface 또는 예외 memo 선언을 추가·변경한다.
+- `R42` · `docs-require-jsdoc-on-key-declarations` · query·mutation, 비자명한 handler/effect, exported helper/custom hook/store, exported 또는 re-exported public type/interface, 예외 memo 선언을 추가·변경한다.

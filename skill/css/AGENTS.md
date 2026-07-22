@@ -204,18 +204,18 @@ rt_document__body
 
 ### 1.5 Separate Route, Local, and Shared Style Scopes
 
-**Applies when:** 스타일 owner를 route, document, local helper, reusable widget, UI primitive 중에서 결정하거나 서로 다른 owner를 이동·분리한다.
+**Applies when:** 스타일 owner를 route screen/support, document, 독립 leaf helper, reusable widget, UI primitive 중에서 결정하거나 서로 다른 owner를 이동·분리한다.
 
 **Review with:** `organization-keep-style-files-owned-by-one-component-or-route`
 
 **Impact: HIGH (keeps route-owned page styles, shared component styles, and truly local helper styles from mixing into the same namespace or file)**
 
-route/framework skill이 route-owned surface로 판단한 스타일은 `rt_*` scope를 유지합니다. 파일이 route-local helper folder로 내려갔다는 이유만으로 main screen surface를 `loc_*`로 바꾸지 않습니다.
+route/framework skill이 route-owned surface로 판단한 스타일은 `rt_*` scope를 유지합니다. route screen의 흐름을 구성하거나 지원하는 route support surface는 파일이 `_local/` 같은 helper folder로 내려가도 `rt_*`입니다. route 맥락을 몰라도 되는 독립 leaf helper만 `loc_*`를 사용합니다. 파일 위치만으로 main screen 또는 route support surface를 `loc_*`로 바꾸지 않습니다.
 
 scope 기준:
 
 - `rt_*`: route-owned screen, route support surface, route/document owner
-- `loc_*`: route surface와 독립된 leaf helper
+- `loc_*`: route 맥락과 독립된 leaf helper
 - `wg_*`: 여러 route에서 재사용되는 block
 - `ui_*`: primitive component
 
@@ -362,11 +362,11 @@ modifier는 상태나 반복 variant를 표현할 때만 사용합니다.
 
 ### 2.3 Keep Classes Single-purpose
 
-**Applies when:** base class 이름에 상태·variant 의미를 합치거나 한 class에 서로 독립적인 시각 책임을 추가·재사용·분리한다.
+**Applies when:** base class 이름에 상태·variant 의미를 합치거나 한 class에 독립 시각 책임을 추가·재사용·분리한다. 책임 보존 owner prefix/single-purpose rename은 제외한다.
 
 **Impact: HIGH (stops one class from carrying both base styling and multiple state or structural meanings at once)**
 
-하나의 클래스는 하나의 시각적 책임만 가져야 합니다. 상태나 변형이 필요하면 modifier를 별도로 두고, 기본 클래스에 모든 의미를 몰아넣지 않습니다.
+하나의 클래스는 하나의 시각적 책임만 가져야 합니다. 상태나 변형이 필요하면 modifier를 별도로 두고, 기본 클래스에 모든 의미를 몰아넣지 않습니다. 스타일 선언과 책임을 그대로 보존한 responsibility-preserving owner prefix 수정이나 single-purpose class rename만으로는 이 규칙을 선택하지 않습니다.
 
 **Incorrect (상태 의미를 별도 클래스 역할처럼 합쳐 버림):**
 
@@ -755,9 +755,11 @@ CSS 변수 `var(--*)`를 사용할 때는 토큰 존재가 보장되지 않는 �
 
 **Applies when:** app/domain state modifier와 hover·focus·disabled 같은 DOM interaction state를 추가·변경하거나 focus ring에 손댄다.
 
+**Review with:** `composition-do-not-build-structural-variants-with-modifiers`
+
 **Impact: HIGH (keeps app state, focus visibility, and hover behavior readable and accessible without mixing their responsibilities)**
 
-화면 상태나 도메인 상태는 `--active`, `--selected`, `--error` 같은 modifier로 표현하고, 브라우저 상호작용 상태는 같은 클래스 블록 내부 nested `&:hover`, `&:focus-visible`, `&:disabled` 같은 pseudo-class로 표현합니다. 포커스 링 제거는 금지하며, 대체 포커스 스타일을 반드시 제공합니다.
+화면 상태나 도메인 상태는 `--active`, `--selected`, `--error` 같은 modifier로 표현하고, 브라우저 상호작용 상태는 같은 클래스 블록 내부 nested `&:hover`, `&:focus-visible`, `&:disabled` 같은 pseudo-class로 표현합니다. 새 modifier를 다루면 실제 domain state인지 one-off structural patch인지 확인하기 위해 `composition-do-not-build-structural-variants-with-modifiers`를 다시 판정합니다. 포커스 링 제거는 금지하며, 대체 포커스 스타일을 반드시 제공합니다.
 
 **Incorrect (포커스 스타일을 제거하거나 상태 경계를 섞음):**
 

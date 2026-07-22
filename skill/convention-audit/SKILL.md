@@ -14,6 +14,7 @@ metadata:
 
 - 먼저 local [AGENTS.md](./AGENTS.md)의 8개 audit gate rule을 전체 읽습니다.
 - React, TypeScript, CSS companion은 실제 변경 surface에만 활성화합니다.
+- 활성화와 rule selection은 현재 diff의 변경 semantic delta로만 판단합니다. 추가·삭제·이동·이름 변경·재선언된 surface는 포함하고, read-only 문맥과 owner 이동에 byte-equivalent로 따라온 내부 import·class contract는 별도 rule 근거에서 제외합니다.
 - companion은 `SKILL.md`와 activated `RULES_INDEX.md`를 사용하며 companion full `AGENTS.md`는 기본 로드하지 않는다.
 
 ## 필수 Workflow

@@ -54,6 +54,12 @@
 
 framework 공통 규칙은 companion skill이 소유하고, framework 또는 consuming project에만 필요한 제약은 project-local overlay로 유지합니다.
 
+### 운영 기본값: compact AGENTS + progressive skill
+
+프로젝트마다 React/TypeScript/CSS 전체 규칙을 하나의 큰 Markdown으로 복사하지 않습니다. 프로젝트 `AGENTS.md`에는 [AGENTS.frontend-conventions.md](./AGENTS.frontend-conventions.md)의 compact activation·loading·audit policy와 프로젝트 고유 overlay만 둡니다. 공통 규칙의 정본은 이 저장소의 skill에 한 번만 유지합니다.
+
+일반 작업은 `SKILL.md` router, activated `RULES_INDEX.md` 전체, Selected/Unknown contract 순서로 읽습니다. CSS는 실제 styling semantic delta가 있을 때만 추가하고, full `AGENTS.md` handbook은 명시적인 전체 검토나 fallback에서만 읽습니다. 완료 전에는 `convention-audit`이 최종 diff에서 독립 partition과 semantic verdict를 다시 만듭니다. 이 구조는 규칙 누락을 줄이면서 매 작업마다 세 handbook 전체를 반복 로드하는 비용을 피하기 위한 기본 계약입니다.
+
 ## Buildable Loading Topology
 
 | Skill | Loading | Companion contract |
@@ -102,6 +108,7 @@ non-progressive owner는 자신의 `SKILL.md`가 안내하는 local `AGENTS.md`/
 | React `.ts` hook / ownership | `convention-react` + `convention-typescript` |
 | TSX | `convention-react` + `convention-typescript` |
 | TSX `className` / style import / styling surface | `convention-react` + `convention-typescript` + `convention-css` |
+| TSX owner 이동에 기존 `className` / style import가 byte-equivalent로 따라오기만 함 | `convention-react` + `convention-typescript`; CSS 비활성 |
 
 Pure CSS는 TypeScript를 자동 활성화하지 않고, pure TypeScript는 React/CSS를 자동 활성화하지 않습니다.
 

@@ -4,6 +4,7 @@
 
 ## Activation
 
+- 활성화와 rule selection은 현재 작업의 변경 semantic delta만 기준으로 삼는다. 추가·삭제·이동·이름 변경·재선언된 owner/API/selector는 변경 surface다. 반면 diff의 read-only 문맥이나 owner 이동에 byte-equivalent로 따라온 내부 type, import, `className`, style import는 그 자체로 별도 domain 활성화 근거가 아니다.
 - React, TSX, React hook·state·event·ownership 변경은 `convention-react` + `convention-typescript`를 활성화한다.
 - pure TypeScript의 type·schema·API·helper·config 변경은 `convention-typescript`만 활성화한다.
 - CSS, stylesheet, selector, token, `className`, style import 또는 styling surface를 변경하면 `convention-css`도 활성화한다.

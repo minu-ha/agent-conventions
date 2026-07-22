@@ -88,13 +88,13 @@ Shared UI, widget, route-local 코드는 소유 경계가 분명해야 에이전
 
 ### 1.1 Avoid Barrel Exports and React Namespace Types
 
-**Applies when:** \`index.ts\`·barrel 재노출, \`React.\*\` namespace 타입, type/value 혼합 import 또는 소유 출처를 숨긴 경로를 직접 추가·수정한다. 일반 direct value import는 제외한다.
+**Applies when:** \`index.ts\`·barrel 재노출, \`React.\*\` namespace 타입과 direct \`import type\` 중 선택, type/value 혼합 import 또는 소유 출처를 숨긴 경로를 추가·수정한다. 일반 direct value import는 제외한다.
 
 **Requires selected:** `typescript/naming-use-direct-imports-and-public-entry-points` · N/A 불가
 
 **Impact: HIGH (import 경로를 명시적으로 유지하고 타입 import 스타일 혼용을 막음)**
 
-`index.ts` 기반 barrel export를 만들지 않고, React 타입은 `React.MouseEvent` 같은 전역 네임스페이스 대신 `import type`으로 직접 가져옵니다. 이렇게 해야 import 경로와 타입 출처가 더 명시적으로 유지됩니다.
+`index.ts` 기반 barrel export를 만들지 않고, React 타입은 `React.MouseEvent` 같은 전역 네임스페이스 대신 `import type`으로 직접 가져옵니다. React 타입을 namespace로 둘지 direct `import type`으로 가져올지 결정하는 변경도 이 규칙의 판단 대상입니다. 일반 third-party value를 alias 없이 직접 import하는 변경만으로는 이 규칙을 선택하지 않습니다. 이렇게 해야 import 경로와 타입 출처가 더 명시적으로 유지됩니다.
 
 **Incorrect (barrel export와 namespace 타입 혼용):**
 
@@ -346,11 +346,11 @@ React가 제공하는 handler와 prop 계약은 선언 위치에서 바로 드�
 
 **Requires selected:** `typescript/types-reuse-callback-signatures-from-existing-contracts` · N/A 불가
 
-**Review with:** `typing-reuse-existing-contracts`
+**Review with:** `ownership-avoid-barrel-and-react-namespace-imports`, `typing-reuse-existing-contracts`
 
 **Impact: HIGH (React handler 시그니처와 callback 의도를 선언 위치에서 바로 보이게 함)**
 
-React가 제공하는 이벤트 핸들러 타입이나 prop callback 계약이 이미 있다면, 매개변수 타입보다 함수 변수 타입 선언을 우선합니다. 일반 TypeScript 함수 타입 규칙은 companion skill인 `convention-typescript`에서 다루고, 여기서는 React handler alias를 바로 쓰는 경우를 강조합니다.
+React가 제공하는 이벤트 핸들러 타입이나 prop callback 계약이 이미 있다면, 매개변수 타입보다 함수 변수 타입 선언을 우선합니다. React alias를 쓰기 위해 type import를 추가·변경하면 `ownership-avoid-barrel-and-react-namespace-imports`를 다시 판정합니다. 일반 TypeScript 함수 타입 규칙은 companion skill인 `convention-typescript`에서 다루고, 여기서는 React handler alias를 바로 쓰는 경우를 강조합니다.
 
 **Incorrect (핸들러 타입이 있는데 매개변수만 타입 지정):**
 
@@ -712,11 +712,11 @@ export const EntryScreen = () => {
 
 ### 4.1 Accept props as a Whole and Destructure Inside the Component
 
-**Applies when:** 함수 컴포넌트의 props 시그니처나 본문 구조분해 방식을 추가·변경한다.
+**Applies when:** props를 받는 함수 컴포넌트의 시그니처·본문 구조분해 방식을 추가·변경하거나 그 컴포넌트를 다른 파일로 이동·이름 변경한다.
 
 **Impact: MEDIUM (컴포넌트 계약을 시그니처에 남기고 실제 사용을 본문 가까이에 유지함)**
 
-컴포넌트 시그니처는 `props` 전체를 받고, 함수 본문 첫 줄에서 구조분해합니다. 이렇게 하면 시그니처에서 계약을 한눈에 읽고, 본문에서 실제 사용하는 값을 좁은 스코프에 둘 수 있습니다.
+컴포넌트 시그니처는 `props` 전체를 받고, 함수 본문 첫 줄에서 구조분해합니다. props를 받는 컴포넌트를 다른 파일로 이동하거나 이름을 바꾸는 작업도 시그니처를 복사·재작성하는 surface이므로, props field가 그대로여도 이 형태를 다시 확인합니다. props가 없는 컴포넌트 이동만으로는 이 규칙을 선택하지 않습니다. 이렇게 하면 시그니처에서 계약을 한눈에 읽고, 본문에서 실제 사용하는 값을 좁은 스코프에 둘 수 있습니다.
 
 **Incorrect (시그니처에서 바로 구조분해):**
 
@@ -1630,6 +1630,7 @@ Event handler는 이름이 예측 가능하고 effect 재실행을 유발하지 
 **Impact: MEDIUM (모든 분기를 작은 helper로 쪼개지 않고도 가독성을 유지함)**
 
 여기서 `local`은 JSX 인라인 핸들러를 뜻하지 않고, 이미 이름 붙은 handler 본문 안에서 흐름을 계속 읽을 수 있게 유지한다는 뜻입니다.   
+인라인 callback을 같은 component 안의 named handler로만 옮기는 변경은 이 rule의 대상이 아닙니다. 이미 named handler인 흐름을 여러 helper·hook으로 분리하거나 다시 합칠 때 선택합니다.
 핸들러가 길어져도 바로 `page.ts`나 shared support code로 쪼개지 않습니다. 먼저 early return, 단계적 지역 변수, 의미 있는 블록 구분으로 읽기 쉽게 유지하고, `screen-extract-utilities-selectively` 규칙을 만족할 때만 분리합니다. 화면 하나에서만 쓰는 custom hook으로 우회해 흐름을 숨기는 것도 기본적으로 피합니다.
 
 **Incorrect (재사용 근거 없이 흐름을 지나치게 분해):**
@@ -2329,7 +2330,7 @@ if (mutationFileUpload.isPending) {
 
 ### 8.3 Require JSDoc on React Hooks, Handlers, and Key Declarations
 
-**Applies when:** query·mutation, 비자명한 handler/effect, exported helper/custom hook/store, public type/interface 또는 예외 memo 선언을 추가·변경한다.
+**Applies when:** query·mutation, 비자명한 handler/effect, exported helper/custom hook/store, exported 또는 re-exported public type/interface, 예외 memo 선언을 추가·변경한다.
 
 **Requires selected:** `typescript/docs-require-header-jsdoc-on-key-declarations` · N/A 불가
 
@@ -2337,13 +2338,15 @@ if (mutationFileUpload.isPending) {
 
 JSDoc은 경계를 설명할 때만 붙입니다. 자명한 local 변수에는 강제하지 않습니다.
 
+여기서 public 선언은 다른 module이 소비할 수 있도록 실제 exported 또는 re-exported 된 선언만 뜻합니다. export되지 않은 file-local `type`/`interface`는 public이라는 이유만으로 이 규칙을 선택하지 않습니다.
+
 필수 대상:
 
 - route/screen/layout owner의 named query/mutation binding
 - 분기, async, navigation, invalidation을 가진 event handler
 - 동기화 의도가 중요한 `useEffect`
 - exported pure support function, custom hook, store 선언
-- public `type`/`interface`, compound component public part
+- exported/re-exported public `type`/`interface`, compound component public part
 - 예외적으로 남긴 `useMemo`/`useCallback`
 
 태그는 `convention-typescript`의 `@api`, `@event`, `@watch`, `@helper`, `@summary`, `@part`, `@description`, `@field`를 사용합니다.

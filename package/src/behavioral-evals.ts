@@ -588,6 +588,18 @@ interface ValidatedRoutingEpisode {
 }
 
 /**
+ * @summary behavioral trial을 실행하는 fresh isolated Codex CLI child session 선언
+ * @description forkTurns="none"은 parent conversation turn을 하나도 상속하지 않는다는 뜻이다. RTE02 후속 stage는 새 child를 만들지 않고 같은 trial session에 전달한다.
+ */
+const declaredBehavioralRuntime = {
+	runtime: "Codex CLI isolated child session",
+	requestedModel: "gpt-5.6-sol",
+	requestedReasoning: "high",
+	forkTurns: "none",
+	oneChildPerTrial: true,
+} as const;
+
+/**
  * @api strict validator와 같은 child-owned payload shape를 request에 공개
  */
 export const createBehavioralChildPayloadContract = (): Record<string, unknown> => ({
@@ -612,13 +624,7 @@ export const createBehavioralChildPayloadContract = (): Record<string, unknown> 
 	},
 	runtime: {
 		evidenceClass: "declared-telemetry-only",
-		declared: {
-			runtime: "Codex collaboration child agent",
-			requestedModel: "gpt-5.6-sol",
-			requestedReasoning: "high",
-			forkTurns: "none",
-			oneChildPerTrial: true,
-		},
+		declared: {...declaredBehavioralRuntime},
 		unavailable: {
 			runtimeVersion: null,
 			exactModelBuild: null,
@@ -938,10 +944,10 @@ const assertRuntimeDisclosureShape = (value: unknown): void => {
 		label: "run.runtime.declared",
 	});
 	const declaredStringValues = {
-		runtime: "Codex collaboration child agent",
-		requestedModel: "gpt-5.6-sol",
-		requestedReasoning: "high",
-		forkTurns: "none",
+		runtime: declaredBehavioralRuntime.runtime,
+		requestedModel: declaredBehavioralRuntime.requestedModel,
+		requestedReasoning: declaredBehavioralRuntime.requestedReasoning,
+		forkTurns: declaredBehavioralRuntime.forkTurns,
 	} as const;
 
 	for (const [fieldName, expectedValue] of Object.entries(declaredStringValues)) {
@@ -950,7 +956,7 @@ const assertRuntimeDisclosureShape = (value: unknown): void => {
 		}
 	}
 
-	if (declared.oneChildPerTrial !== true) {
+	if (declared.oneChildPerTrial !== declaredBehavioralRuntime.oneChildPerTrial) {
 		throw new Error("run.runtime.declared.oneChildPerTrial must be true.");
 	}
 
@@ -2281,6 +2287,28 @@ const assertCompletion = (run: JsonObject, finalPass?: RoutingTracePass): void =
 	}
 };
 
+/** @helper mutation arm을 단일 coverage failure 증거로 제한 */
+const assertMutationCompletionAccounting = (run: JsonObject): void => {
+	if (!Array.isArray(run.semanticVerdicts) || run.semanticVerdicts.length !== 0) {
+		throw new Error(
+			"mutation arm requires exact coverage-only accounting: semanticVerdicts=[], BLOCKED, blocked=true, coverageFailCount=1, semanticFailCount=0, and unknownCount=0.",
+		);
+	}
+
+	const completion = assertJsonObject(run.completion, "run.completion");
+	const status = parseNonEmptyString(completion.status, "run.completion.status");
+	const blocked = parseBoolean(completion.blocked, "run.completion.blocked");
+	const coverageFailCount = parseNonNegativeInteger(completion.coverageFailCount, "run.completion.coverageFailCount");
+	const semanticFailCount = parseNonNegativeInteger(completion.semanticFailCount, "run.completion.semanticFailCount");
+	const unknownCount = parseNonNegativeInteger(completion.unknownCount, "run.completion.unknownCount");
+
+	if (status !== "BLOCKED" || blocked !== true || coverageFailCount !== 1 || semanticFailCount !== 0 || unknownCount !== 0) {
+		throw new Error(
+			"mutation arm requires exact coverage-only accounting: semanticVerdicts=[], BLOCKED, blocked=true, coverageFailCount=1, semanticFailCount=0, and unknownCount=0.",
+		);
+	}
+};
+
 const createReceiptBackedPass = (run: JsonObject): RoutingTracePass => {
 	const activatedSkills = parseStringArray(run.activatedSkills, "run.activatedSkills");
 	const runDigests = parseDigestRecord(run.generatedIndexDigests, "run.generatedIndexDigests");
@@ -2568,14 +2596,8 @@ export const validateBehavioralEvalRun = async (args: ValidateBehavioralEvalRunA
 
 		await assertDeclaredLoads({run, arm, trace: mutationTrace, finalPass, snapshots, expandedBySkill, skillRootDir});
 
+		assertMutationCompletionAccounting(run);
 		assertCompletion(run, finalPass);
-		const mutationCompletion = assertJsonObject(run.completion, "run.completion");
-		const coverageFailCount = parseNonNegativeInteger(mutationCompletion.coverageFailCount, "run.completion.coverageFailCount");
-		const unknownCount = parseNonNegativeInteger(mutationCompletion.unknownCount, "run.completion.unknownCount");
-
-		if (mutationCompletion.status !== "BLOCKED" || (coverageFailCount === 0 && unknownCount === 0)) {
-			throw new Error("mutation arm must remain BLOCKED with coverageFailCount or Unknown greater than zero.");
-		}
 
 		return;
 	}

@@ -97,7 +97,7 @@ const createNoSkillChildPayload = (): Record<string, unknown> => {
 		runtime: {
 			evidenceClass: "declared-telemetry-only",
 			declared: {
-				runtime: "Codex collaboration child agent",
+				runtime: "Codex CLI isolated child session",
 				requestedModel: "gpt-5.6-sol",
 				requestedReasoning: "high",
 				forkTurns: "none",
@@ -306,6 +306,25 @@ test("coordinator persists a deterministic short dispatch and sealed child reque
 		);
 		assert.notEqual(fullHandbook.childPayloadPath, first.childPayloadPath);
 		assert.notEqual(fullHandbook.envelope.requestContentDigest, first.envelope.requestContentDigest);
+		const mutation = await createBehavioralCoordinatorArtifacts({
+			...args,
+			runId: "mutation--RTE08-mutation-selected-to-na--t1",
+			arm: "mutation",
+			scenarioId: "RTE08-mutation-selected-to-na",
+		});
+		assert.match(
+			mutation.request.armRoutingContract,
+			/semanticVerdicts.*empty.*coverageFailCount.*1.*semanticFailCount.*0.*unknownCount.*0.*BLOCKED.*blocked.*true/i,
+		);
+		assert.match(
+			String((mutation.request.armPolicy as Record<string, unknown>).receiptContract),
+			/semanticVerdicts.*empty.*coverageFailCount.*1.*semanticFailCount.*0.*unknownCount.*0.*BLOCKED.*blocked.*true/i,
+		);
+		assert.match(
+			String((mutation.request.childPayloadContract as Record<string, unknown>).completion),
+			/semanticVerdicts.*empty.*coverageFailCount.*1.*semanticFailCount.*0.*unknownCount.*0.*BLOCKED.*blocked.*true/i,
+		);
+		assert.doesNotMatch(mutation.requestRaw, /coverage FAIL or UNKNOWN/i);
 
 		const prepared = await prepareBehavioralEvalDispatch(args);
 		assert.equal(await readFile(prepared.requestPath, "utf8"), first.requestRaw);
@@ -780,13 +799,31 @@ test("post-hoc scorer measures exact candidate partitions, drift-final state, an
 		assert.equal(blockedCandidateScore.driftFinalExactMatch, true);
 		assert.equal(blockedCandidateScore.exactMatch, false);
 
-		const mutationScore = await scoreBehavioralEvalRun({
-			run: {completion: {status: "BLOCKED", coverageFailCount: 1, unknownCount: 0}},
-			arm: "mutation",
-			scenarioId: "mutation",
-			skillRootDir,
-		});
+		const mutationRun = {
+			semanticVerdicts: [],
+			completion: {status: "BLOCKED", blocked: true, coverageFailCount: 1, semanticFailCount: 0, unknownCount: 0},
+		};
+		const mutationScore = await scoreBehavioralEvalRun({run: mutationRun, arm: "mutation", scenarioId: "mutation", skillRootDir});
 		assert.deepEqual(mutationScore, {kind: "mutation", eligible: true, blockedGatePassed: true});
+
+		const invalidMutationRuns = [
+			{...mutationRun, semanticVerdicts: [{criterion: "fixture", verdict: "PASS", reason: "unexpected semantic evidence"}]},
+			{...mutationRun, semanticVerdicts: [{criterion: "fixture", verdict: "FAIL", reason: "semantic mismatch"}]},
+			{
+				...mutationRun,
+				semanticVerdicts: [{criterion: "fixture", verdict: "FAIL", reason: "semantic mismatch"}],
+				completion: {...mutationRun.completion, semanticFailCount: 1},
+			},
+			{...mutationRun, completion: {...mutationRun.completion, coverageFailCount: 0}},
+			{...mutationRun, completion: {...mutationRun.completion, coverageFailCount: 2}},
+			{...mutationRun, completion: {...mutationRun.completion, unknownCount: 1}},
+			{...mutationRun, completion: {...mutationRun.completion, blocked: false}},
+		];
+
+		for (const invalidRun of invalidMutationRuns) {
+			const invalidScore = await scoreBehavioralEvalRun({run: invalidRun, arm: "mutation", scenarioId: "mutation", skillRootDir});
+			assert.deepEqual(invalidScore, {kind: "mutation", eligible: true, blockedGatePassed: false});
+		}
 	} finally {
 		await rm(fixtureDir, {recursive: true, force: true});
 	}

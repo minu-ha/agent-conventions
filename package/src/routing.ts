@@ -419,7 +419,7 @@ export const generateRulesIndexMarkdown = (document: LoadedSkillDocument, direct
 	const lines = [
 		`# ${escapeMarkdownText(document.metadata.title)} Rule Index`,
 		"",
-		"> 모든 entry를 스캔합니다. Selected/Unknown guidance path는 `contracts/<stable-id>.md`입니다.",
+		"> 모든 entry를 변경 semantic delta로 스캔합니다. 추가·삭제·이동·재선언은 포함하고 read-only 문맥은 제외합니다. Selected/Unknown guidance path는 `contracts/<stable-id>.md`입니다.",
 		"",
 		`- Skill: ${formatInlineCode(document.skillName)}`,
 		`- Version: ${formatInlineCode(document.metadata.version)}`,

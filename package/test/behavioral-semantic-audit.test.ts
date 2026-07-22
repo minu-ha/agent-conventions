@@ -80,7 +80,7 @@ const createVirtualPatch = (
 const createDeclaredRuntime = (): Record<string, unknown> => ({
 	evidenceClass: "declared-telemetry-only",
 	declared: {
-		runtime: "Codex collaboration child agent",
+		runtime: "Codex CLI isolated child session",
 		requestedModel: "gpt-5.6-sol",
 		requestedReasoning: "high",
 		forkTurns: "none",

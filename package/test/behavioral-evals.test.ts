@@ -51,7 +51,7 @@ const createDeclaredRuntime = (): Record<string, unknown> => {
 	return {
 		evidenceClass: "declared-telemetry-only",
 		declared: {
-			runtime: "Codex collaboration child agent",
+			runtime: "Codex CLI isolated child session",
 			requestedModel: "gpt-5.6-sol",
 			requestedReasoning: "high",
 			forkTurns: "none",
@@ -363,13 +363,7 @@ const createMutationFixture = async (): Promise<BehavioralFixture> => {
 			receipts,
 			routingTrace: null,
 			driftReceipt: null,
-			semanticVerdicts: [
-				{
-					criterion: "R26 supplied N/A mutation을 독립적으로 거부",
-					verdict: "PASS",
-					reason: "R26 is Selected in the auditor receipt and the supplied coverage mismatch blocks completion.",
-				},
-			],
+			semanticVerdicts: [],
 			completion: {
 				status: "BLOCKED",
 				blocked: true,
@@ -502,6 +496,19 @@ test("validator rejects missing or unknown top-level and receipt fields", async 
 
 test("validator enforces the protocol-declared runtime provenance shape", async () => {
 	const fixture = await createValidFixture();
+	const legacyCollaborationRuntimeRun = cloneJson(fixture.run);
+	const legacyCollaborationRuntime = (legacyCollaborationRuntimeRun.runtime as {declared: Record<string, unknown>}).declared;
+	legacyCollaborationRuntime.runtime = "Codex collaboration child agent";
+
+	await assert.rejects(
+		validateBehavioralEvalRun({
+			run: legacyCollaborationRuntimeRun,
+			dispatchEnvelope: fixture.dispatch,
+			skillRootDir: packagePaths.skillRootDir,
+		}),
+		/run\.runtime\.declared\.runtime must be "Codex CLI isolated child session"/i,
+	);
+
 	const unknownRuntimeFieldRun = cloneJson(fixture.run);
 	const unknownRuntime = unknownRuntimeFieldRun.runtime as Record<string, unknown>;
 	unknownRuntime.observedRuntime = "not allowed";
@@ -944,6 +951,85 @@ test("mutation arm independently selects disputed R26 and must remain BLOCKED", 
 	await assert.rejects(
 		validateBehavioralEvalRun({run: mutatedRun, dispatchEnvelope: fixture.dispatch, skillRootDir: packagePaths.skillRootDir}),
 		/mutation audit must not leave disputed React R26 in N\/A/i,
+	);
+});
+
+test("mutation arm requires exact coverage-only completion accounting", async () => {
+	const fixture = await createMutationFixture();
+
+	await validateBehavioralEvalRun({run: fixture.run, dispatchEnvelope: fixture.dispatch, skillRootDir: packagePaths.skillRootDir});
+
+	const semanticPassRun = cloneJson(fixture.run);
+	semanticPassRun.semanticVerdicts = [{criterion: "fixture", verdict: "PASS", reason: "unexpected semantic evidence"}];
+
+	await assert.rejects(
+		validateBehavioralEvalRun({run: semanticPassRun, dispatchEnvelope: fixture.dispatch, skillRootDir: packagePaths.skillRootDir}),
+		/mutation arm requires exact coverage-only accounting/i,
+	);
+
+	const semanticFailWithZeroCountRun = cloneJson(fixture.run);
+	semanticFailWithZeroCountRun.semanticVerdicts = [{criterion: "fixture", verdict: "FAIL", reason: "semantic mismatch"}];
+
+	await assert.rejects(
+		validateBehavioralEvalRun({
+			run: semanticFailWithZeroCountRun,
+			dispatchEnvelope: fixture.dispatch,
+			skillRootDir: packagePaths.skillRootDir,
+		}),
+		/mutation arm requires exact coverage-only accounting/i,
+	);
+
+	const semanticFailWithMatchingCountRun = cloneJson(semanticFailWithZeroCountRun);
+	(semanticFailWithMatchingCountRun.completion as {semanticFailCount: number}).semanticFailCount = 1;
+
+	await assert.rejects(
+		validateBehavioralEvalRun({
+			run: semanticFailWithMatchingCountRun,
+			dispatchEnvelope: fixture.dispatch,
+			skillRootDir: packagePaths.skillRootDir,
+		}),
+		/mutation arm requires exact coverage-only accounting/i,
+	);
+
+	for (const coverageFailCount of [0, 2]) {
+		const coverageRun = cloneJson(fixture.run);
+		(coverageRun.completion as {coverageFailCount: number}).coverageFailCount = coverageFailCount;
+
+		await assert.rejects(
+			validateBehavioralEvalRun({run: coverageRun, dispatchEnvelope: fixture.dispatch, skillRootDir: packagePaths.skillRootDir}),
+			/mutation arm requires exact coverage-only accounting/i,
+		);
+	}
+
+	const unknownRun = cloneJson(fixture.run);
+	const reactReceipt = (
+		unknownRun.receipts as Array<{
+			skill: string;
+			notApplicable: Array<{ordinal: string; id: string}>;
+			unknown: Array<{ordinal: string; id: string}>;
+			excludedGroups: Array<{ordinals: string[]}>;
+		}>
+	).find(({skill}) => skill === "react")!;
+	const unknownReference = reactReceipt.notApplicable.find(({id}) => id === "composition-destructure-props-inside")!;
+	reactReceipt.notApplicable = reactReceipt.notApplicable.filter(({id}) => id !== unknownReference.id);
+	reactReceipt.unknown = [unknownReference];
+	reactReceipt.excludedGroups[0]!.ordinals = reactReceipt.excludedGroups[0]!.ordinals.filter(
+		(ordinal) => ordinal !== unknownReference.ordinal,
+	);
+	(unknownRun.declaredLoadedFiles as {paths: string[]}).paths.splice(6, 0, "skill/react/contracts/composition-destructure-props-inside.md");
+	(unknownRun.completion as {unknownCount: number}).unknownCount = 1;
+
+	await assert.rejects(
+		validateBehavioralEvalRun({run: unknownRun, dispatchEnvelope: fixture.dispatch, skillRootDir: packagePaths.skillRootDir}),
+		/mutation arm requires exact coverage-only accounting/i,
+	);
+
+	const unblockedRun = cloneJson(fixture.run);
+	(unblockedRun.completion as {blocked: boolean}).blocked = false;
+
+	await assert.rejects(
+		validateBehavioralEvalRun({run: unblockedRun, dispatchEnvelope: fixture.dispatch, skillRootDir: packagePaths.skillRootDir}),
+		/mutation arm requires exact coverage-only accounting/i,
 	);
 });
 

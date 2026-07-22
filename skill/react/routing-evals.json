@@ -92,7 +92,7 @@
     },
     {
       "id": "RTE02-owner-placement-css-drift",
-      "prompt": "move a route-only tree renderer from shared UI to src/routes/entries/-local/entry-tree.tsx and rename it as route-local; keep styling unchanged.",
+      "prompt": "move a route-only tree renderer from shared UI to src/routes/entries/-local/entry-tree.tsx and rename it as route-local; carry its existing className and style import through unchanged and make no styling change.",
       "files": [
         "src/components/ui/entry-tree.tsx",
         "src/routes/entries/-local/entry-tree.tsx"
@@ -105,11 +105,16 @@
         "react": [
           "ownership-layer-component-boundaries",
           "ownership-place-route-local-files-by-scope",
-          "ownership-use-consistent-file-and-symbol-naming"
+          "ownership-use-consistent-file-and-symbol-naming",
+          "composition-destructure-props-inside"
         ],
         "typescript": [
           "naming-use-consistent-file-and-symbol-naming",
           "naming-use-direct-imports-and-public-entry-points",
+          "types-document-custom-types-and-shapes",
+          "docs-require-header-jsdoc-on-key-declarations",
+          "docs-standardize-annotation-tags-by-declaration-role",
+          "docs-write-concise-korean-comments-about-purpose-and-constraints",
           "guardrails-review-banned-typescript-shortcuts-before-finishing"
         ]
       },
@@ -123,7 +128,6 @@
           "strategy-avoid-boolean-prop-proliferation",
           "strategy-choose-single-composition-compound-and-variants",
           "strategy-prefer-children-over-render-props",
-          "composition-destructure-props-inside",
           "composition-do-not-define-components-inside-components",
           "composition-prefer-arrow-functions-and-object-params",
           "composition-named-handlers-over-inline",
@@ -158,7 +162,6 @@
         "typescript": [
           "naming-centralize-shared-config-namespaces",
           "naming-preserve-config-origin-with-chained-access",
-          "types-document-custom-types-and-shapes",
           "types-mark-unused-parameters-with-underscore",
           "types-prefer-function-variable-types-over-parameter-annotations",
           "types-reuse-callback-signatures-from-existing-contracts",
@@ -171,14 +174,11 @@
           "functions-use-set-and-map-for-repeated-lookups",
           "absence-expose-optional-values-instead-of-silent-fallbacks",
           "docs-keep-inline-comments-for-constraints-and-caveats",
-          "docs-require-header-jsdoc-on-key-declarations",
-          "docs-standardize-annotation-tags-by-declaration-role",
-          "docs-use-helper-for-reusable-pure-helper-functions",
-          "docs-write-concise-korean-comments-about-purpose-and-constraints"
+          "docs-use-helper-for-reusable-pure-helper-functions"
         ]
       },
       "scopeDrift": {
-        "evidence": "in a project without a CSS Modules standard, add directly imported src/routes/entries/-local/entry-tree.css, create owner-unique role-named classes, and compose the changed className contract with the existing direct clsx import; final skills add CSS with no additional React rule.",
+        "evidence": "in a project without a CSS Modules standard, add directly imported src/routes/entries/-local/entry-tree.css, create route-support rt_* owner-unique role-named classes, and compose the changed className contract with the existing direct clsx import; final skills add CSS with no additional React rule.",
         "files": [
           "src/components/ui/entry-tree.tsx",
           "src/routes/entries/-local/entry-tree.tsx",
@@ -193,20 +193,28 @@
           "react": [
             "ownership-layer-component-boundaries",
             "ownership-place-route-local-files-by-scope",
-            "ownership-use-consistent-file-and-symbol-naming"
+            "ownership-use-consistent-file-and-symbol-naming",
+            "composition-destructure-props-inside"
           ],
           "typescript": [
             "naming-use-consistent-file-and-symbol-naming",
             "naming-use-direct-imports-and-public-entry-points",
+            "types-document-custom-types-and-shapes",
+            "docs-require-header-jsdoc-on-key-declarations",
+            "docs-standardize-annotation-tags-by-declaration-role",
+            "docs-write-concise-korean-comments-about-purpose-and-constraints",
             "guardrails-review-banned-typescript-shortcuts-before-finishing"
           ],
           "css": [
             "naming-default-to-plain-css-when-no-module-convention",
             "naming-keep-scope-slug-unique-per-owner",
             "naming-name-elements-and-modifiers-by-role",
+            "naming-preserve-route-slug-traceability",
             "naming-separate-local-and-route-style-scopes",
             "naming-use-scope-slug-element-modifier-syntax",
             "composition-compose-classes-with-clsx",
+            "composition-do-not-build-structural-variants-with-modifiers",
+            "values-separate-domain-state-modifiers-from-dom-interaction-states",
             "organization-keep-style-files-owned-by-one-component-or-route",
             "organization-review-banned-css-patterns-before-finishing"
           ]
@@ -221,7 +229,6 @@
             "strategy-avoid-boolean-prop-proliferation",
             "strategy-choose-single-composition-compound-and-variants",
             "strategy-prefer-children-over-render-props",
-            "composition-destructure-props-inside",
             "composition-do-not-define-components-inside-components",
             "composition-prefer-arrow-functions-and-object-params",
             "composition-named-handlers-over-inline",
@@ -256,7 +263,6 @@
           "typescript": [
             "naming-centralize-shared-config-namespaces",
             "naming-preserve-config-origin-with-chained-access",
-            "types-document-custom-types-and-shapes",
             "types-mark-unused-parameters-with-underscore",
             "types-prefer-function-variable-types-over-parameter-annotations",
             "types-reuse-callback-signatures-from-existing-contracts",
@@ -269,14 +275,9 @@
             "functions-use-set-and-map-for-repeated-lookups",
             "absence-expose-optional-values-instead-of-silent-fallbacks",
             "docs-keep-inline-comments-for-constraints-and-caveats",
-            "docs-require-header-jsdoc-on-key-declarations",
-            "docs-standardize-annotation-tags-by-declaration-role",
-            "docs-use-helper-for-reusable-pure-helper-functions",
-            "docs-write-concise-korean-comments-about-purpose-and-constraints"
+            "docs-use-helper-for-reusable-pure-helper-functions"
           ],
           "css": [
-            "naming-preserve-route-slug-traceability",
-            "composition-do-not-build-structural-variants-with-modifiers",
             "composition-keep-classes-single-purpose",
             "composition-style-ui-components-through-owned-wrappers",
             "composition-prefer-ui-wrapper-prop-types",
@@ -286,7 +287,6 @@
             "selector-use-pseudo-classes-for-dom-owned-states",
             "values-keep-layout-intent-explicit",
             "values-always-provide-css-variable-fallbacks",
-            "values-separate-domain-state-modifiers-from-dom-interaction-states",
             "values-tokenize-repeated-visual-values"
           ]
         }

@@ -1,10 +1,10 @@
 # TypeScript 컨벤션 Rule Index
 
-> 모든 entry를 스캔합니다. Selected/Unknown guidance path는 `contracts/<stable-id>.md`입니다.
+> 모든 entry를 변경 semantic delta로 스캔합니다. 추가·삭제·이동·재선언은 포함하고 read-only 문맥은 제외합니다. Selected/Unknown guidance path는 `contracts/<stable-id>.md`입니다.
 
 - Skill: `typescript`
 - Version: `1.0.0`
-- Routing digest: `sha256:9891aafd9a34683772d5d7653b4fa82d10e0bee8b8b4412acdd9d2889f832a7e`
+- Routing digest: `sha256:f72208d0e31d3fe580300782d0e3c7eb1341339c911149a44789546076799f09`
 - Local rules: 22
 
 ## Local Rules
@@ -13,7 +13,7 @@
 
 - `T01` · `naming-centralize-shared-config-namespaces` · 여러 leaf 모듈이 함께 쓰는 URL, feature flag, 페이지 크기나 상수를 추가·이동·중복 정의하거나 shared config 경계를 바꾼다. · reviewWith: `naming-preserve-config-origin-with-chained-access`, `naming-use-direct-imports-and-public-entry-points`
 - `T02` · `naming-preserve-config-origin-with-chained-access` · \`config\` 또는 \`util\` 값을 leaf 모듈에서 접근하며 넓은 스코프 구조분해, 별칭 또는 feature-local namespace를 추가·변경한다.
-- `T03` · `naming-use-consistent-file-and-symbol-naming` · TypeScript 파일, 변수·함수·타입, 객체·schema field 또는 enum-like 상수의 이름을 새로 만들거나 바꾼다.
+- `T03` · `naming-use-consistent-file-and-symbol-naming` · TypeScript 파일, local 변수·함수·타입, 객체·schema field 또는 enum-like 상수의 이름을 새로 만들거나 바꾼다. alias 없는 third-party import binding 추가는 제외한다.
 - `T04` · `naming-use-direct-imports-and-public-entry-points` · TypeScript import/export, barrel, type-only 의존, shared 공개 진입점 또는 feature support module 경계를 추가·변경한다.
 
 ### 2. Types and Contracts (5)
@@ -21,8 +21,8 @@
 - `T05` · `types-document-custom-types-and-shapes` · custom type·interface, schema root, 객체형 상수, 계약 field 또는 Pick·Omit·Indexed Access alias를 추가·변경한다.
 - `T06` · `types-mark-unused-parameters-with-underscore` · 기존 callback이나 framework 계약을 구현·변경하며 계약 매개변수 일부를 생략하거나 사용하지 않는다.
 - `T07` · `types-prefer-function-variable-types-over-parameter-annotations` · 기존 callable 계약이 있는 함수 구현을 추가·변경하거나 같은 시그니처를 여러 구현이 공유하도록 리팩터링한다.
-- `T08` · `types-reuse-callback-signatures-from-existing-contracts` · interface, 객체 또는 framework가 이미 정의한 callback을 구현·전달하면서 시그니처를 새로 적거나 바꾼다.
-- `T09` · `types-reuse-existing-contracts-before-new-types` · 기존 type, interface 또는 schema와 같거나 일부만 다른 shape를 새로 선언·변경하려 한다. · reviewWith: `types-document-custom-types-and-shapes`
+- `T08` · `types-reuse-callback-signatures-from-existing-contracts` · interface, 객체 또는 framework가 이미 정의한 callback을 구현·전달하면서 시그니처를 새로 적거나 바꾼다. · reviewWith: `types-mark-unused-parameters-with-underscore`
+- `T09` · `types-reuse-existing-contracts-before-new-types` · 기존 type, interface 또는 schema와 같거나 일부만 다른 shape를 새로 선언·변경·복제·파생한다. 유일한 기존 선언의 내용·이름 불변 pure relocation은 제외한다. · reviewWith: `types-document-custom-types-and-shapes`
 
 ### 3. Functions and Helper Boundaries (6)
 

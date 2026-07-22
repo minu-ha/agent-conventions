@@ -8,7 +8,7 @@ import {fileURLToPath} from "node:url";
 import {getSkillPaths} from "../src/config.js";
 import {readSkillDocument} from "../src/parser.js";
 import {readRoutingEvalManifest, validateRoutingEvalManifest, validateRoutingEvalManifests} from "../src/routing-evals.js";
-import {getCanonicalRoutingRuleIds, getRuleId, getRulesIndexByteBudget} from "../src/routing.js";
+import {generateRulesIndexMarkdown, getCanonicalRoutingRuleIds, getRuleId, getRulesIndexByteBudget} from "../src/routing.js";
 import type {RoutingEvalManifest, RoutingExpectedPartition, SkillCompanion} from "../src/types.js";
 
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
@@ -242,7 +242,8 @@ const typescriptRuleRouting = {
 		reviewWith: [],
 	},
 	"naming-use-consistent-file-and-symbol-naming": {
-		appliesWhen: "TypeScript 파일, 변수·함수·타입, 객체·schema field 또는 enum-like 상수의 이름을 새로 만들거나 바꾼다.",
+		appliesWhen:
+			"TypeScript 파일, local 변수·함수·타입, 객체·schema field 또는 enum-like 상수의 이름을 새로 만들거나 바꾼다. alias 없는 third-party import binding 추가는 제외한다.",
 		reviewWith: [],
 	},
 	"naming-use-direct-imports-and-public-entry-points": {
@@ -263,10 +264,11 @@ const typescriptRuleRouting = {
 	},
 	"types-reuse-callback-signatures-from-existing-contracts": {
 		appliesWhen: "interface, 객체 또는 framework가 이미 정의한 callback을 구현·전달하면서 시그니처를 새로 적거나 바꾼다.",
-		reviewWith: [],
+		reviewWith: ["types-mark-unused-parameters-with-underscore"],
 	},
 	"types-reuse-existing-contracts-before-new-types": {
-		appliesWhen: "기존 type, interface 또는 schema와 같거나 일부만 다른 shape를 새로 선언·변경하려 한다.",
+		appliesWhen:
+			"기존 type, interface 또는 schema와 같거나 일부만 다른 shape를 새로 선언·변경·복제·파생한다. 유일한 기존 선언의 내용·이름 불변 pure relocation은 제외한다.",
 		reviewWith: ["types-document-custom-types-and-shapes"],
 	},
 } as const;
@@ -285,7 +287,8 @@ const cssRuleRouting = {
 		reviewWith: ["naming-name-elements-and-modifiers-by-role"],
 	},
 	"composition-keep-classes-single-purpose": {
-		appliesWhen: "base class 이름에 상태·variant 의미를 합치거나 한 class에 서로 독립적인 시각 책임을 추가·재사용·분리한다.",
+		appliesWhen:
+			"base class 이름에 상태·variant 의미를 합치거나 한 class에 독립 시각 책임을 추가·재사용·분리한다. 책임 보존 owner prefix/single-purpose rename은 제외한다.",
 		reviewWith: [],
 	},
 	"composition-prefer-ui-wrapper-prop-types": {
@@ -316,7 +319,7 @@ const cssRuleRouting = {
 	},
 	"naming-separate-local-and-route-style-scopes": {
 		appliesWhen:
-			"스타일 owner를 route, document, local helper, reusable widget, UI primitive 중에서 결정하거나 서로 다른 owner를 이동·분리한다.",
+			"스타일 owner를 route screen/support, document, 독립 leaf helper, reusable widget, UI primitive 중에서 결정하거나 서로 다른 owner를 이동·분리한다.",
 		reviewWith: ["organization-keep-style-files-owned-by-one-component-or-route"],
 	},
 	"naming-use-scope-slug-element-modifier-syntax": {
@@ -362,7 +365,7 @@ const cssRuleRouting = {
 	},
 	"values-separate-domain-state-modifiers-from-dom-interaction-states": {
 		appliesWhen: "app/domain state modifier와 hover·focus·disabled 같은 DOM interaction state를 추가·변경하거나 focus ring에 손댄다.",
-		reviewWith: [],
+		reviewWith: ["composition-do-not-build-structural-variants-with-modifiers"],
 	},
 	"values-tokenize-repeated-visual-values": {
 		appliesWhen: "색상·간격·radius·타이포·그림자 등 같은 시각 값이 2회 이상 반복되거나 새 shared visual value를 하드코딩한다.",
@@ -375,7 +378,8 @@ const cssRuleRouting = {
  */
 const reactRuleRouting = {
 	"composition-destructure-props-inside": {
-		appliesWhen: "함수 컴포넌트의 props 시그니처나 본문 구조분해 방식을 추가·변경한다.",
+		appliesWhen:
+			"props를 받는 함수 컴포넌트의 시그니처·본문 구조분해 방식을 추가·변경하거나 그 컴포넌트를 다른 파일로 이동·이름 변경한다.",
 		reviewWith: [],
 	},
 	"composition-do-not-define-components-inside-components": {
@@ -410,7 +414,7 @@ const reactRuleRouting = {
 	},
 	"docs-require-jsdoc-on-key-declarations": {
 		appliesWhen:
-			"query·mutation, 비자명한 handler/effect, exported helper/custom hook/store, public type/interface 또는 예외 memo 선언을 추가·변경한다.",
+			"query·mutation, 비자명한 handler/effect, exported helper/custom hook/store, exported 또는 re-exported public type/interface, 예외 memo 선언을 추가·변경한다.",
 		reviewWith: [],
 	},
 	"events-keep-handler-flow-inline": {
@@ -427,7 +431,7 @@ const reactRuleRouting = {
 	},
 	"ownership-avoid-barrel-and-react-namespace-imports": {
 		appliesWhen:
-			"`index.ts`·barrel 재노출, `React.*` namespace 타입, type/value 혼합 import 또는 소유 출처를 숨긴 경로를 직접 추가·수정한다. 일반 direct value import는 제외한다.",
+			"`index.ts`·barrel 재노출, `React.*` namespace 타입과 direct `import type` 중 선택, type/value 혼합 import 또는 소유 출처를 숨긴 경로를 추가·수정한다. 일반 direct value import는 제외한다.",
 		reviewWith: [],
 	},
 	"ownership-layer-component-boundaries": {
@@ -566,7 +570,7 @@ const reactRuleRouting = {
 	},
 	"typing-function-type-first": {
 		appliesWhen: "React 이벤트 핸들러나 prop callback의 선언·시그니처를 추가·변경하며 기존 React alias 또는 callback 계약을 쓸 수 있다.",
-		reviewWith: ["typing-reuse-existing-contracts"],
+		reviewWith: ["typing-reuse-existing-contracts", "ownership-avoid-barrel-and-react-namespace-imports"],
 	},
 	"typing-reuse-existing-contracts": {
 		appliesWhen: "Props callback 구현이나 API 응답 기반 view type을 추가·변경하며 기존 prop·API 계약과 같은 shape가 보인다.",
@@ -767,7 +771,7 @@ const reactScenarioStages = {
 	"RTE02-owner-placement-css-drift": {
 		initial: {
 			prompt:
-				"move a route-only tree renderer from shared UI to src/routes/entries/-local/entry-tree.tsx and rename it as route-local; keep styling unchanged.",
+				"move a route-only tree renderer from shared UI to src/routes/entries/-local/entry-tree.tsx and rename it as route-local; carry its existing className and style import through unchanged and make no styling change.",
 			files: ["src/components/ui/entry-tree.tsx", "src/routes/entries/-local/entry-tree.tsx"],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
@@ -775,17 +779,22 @@ const reactScenarioStages = {
 					"ownership-layer-component-boundaries",
 					"ownership-place-route-local-files-by-scope",
 					"ownership-use-consistent-file-and-symbol-naming",
+					"composition-destructure-props-inside",
 				],
 				typescript: [
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
+					"types-document-custom-types-and-shapes",
+					"docs-require-header-jsdoc-on-key-declarations",
+					"docs-standardize-annotation-tags-by-declaration-role",
+					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"guardrails-review-banned-typescript-shortcuts-before-finishing",
 				],
 			},
 		},
 		scopeDrift: {
 			evidence:
-				"in a project without a CSS Modules standard, add directly imported src/routes/entries/-local/entry-tree.css, create owner-unique role-named classes, and compose the changed className contract with the existing direct clsx import; final skills add CSS with no additional React rule.",
+				"in a project without a CSS Modules standard, add directly imported src/routes/entries/-local/entry-tree.css, create route-support rt_* owner-unique role-named classes, and compose the changed className contract with the existing direct clsx import; final skills add CSS with no additional React rule.",
 			files: ["src/components/ui/entry-tree.tsx", "src/routes/entries/-local/entry-tree.tsx", "src/routes/entries/-local/entry-tree.css"],
 			expectedSkills: ["react", "typescript", "css"],
 			expectedSelected: {
@@ -793,19 +802,27 @@ const reactScenarioStages = {
 					"ownership-layer-component-boundaries",
 					"ownership-place-route-local-files-by-scope",
 					"ownership-use-consistent-file-and-symbol-naming",
+					"composition-destructure-props-inside",
 				],
 				typescript: [
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
+					"types-document-custom-types-and-shapes",
+					"docs-require-header-jsdoc-on-key-declarations",
+					"docs-standardize-annotation-tags-by-declaration-role",
+					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"guardrails-review-banned-typescript-shortcuts-before-finishing",
 				],
 				css: [
 					"naming-default-to-plain-css-when-no-module-convention",
 					"naming-keep-scope-slug-unique-per-owner",
 					"naming-name-elements-and-modifiers-by-role",
+					"naming-preserve-route-slug-traceability",
 					"naming-separate-local-and-route-style-scopes",
 					"naming-use-scope-slug-element-modifier-syntax",
 					"composition-compose-classes-with-clsx",
+					"composition-do-not-build-structural-variants-with-modifiers",
+					"values-separate-domain-state-modifiers-from-dom-interaction-states",
 					"organization-keep-style-files-owned-by-one-component-or-route",
 					"organization-review-banned-css-patterns-before-finishing",
 				],
@@ -1212,6 +1229,7 @@ const cssScenarioStages = {
 					"composition-compose-classes-with-clsx",
 					"composition-do-not-build-structural-variants-with-modifiers",
 					"composition-keep-classes-single-purpose",
+					"selector-use-pseudo-classes-for-dom-owned-states",
 					"values-separate-domain-state-modifiers-from-dom-interaction-states",
 					"organization-review-banned-css-patterns-before-finishing",
 				],
@@ -1337,7 +1355,9 @@ const cssScenarioStages = {
 				css: [
 					"selector-avoid-deep-descendant-dependencies",
 					"selector-target-third-party-dom-from-owned-roots",
+					"selector-use-pseudo-classes-for-dom-owned-states",
 					"values-always-provide-css-variable-fallbacks",
+					"values-separate-domain-state-modifiers-from-dom-interaction-states",
 					"values-tokenize-repeated-visual-values",
 					"organization-review-banned-css-patterns-before-finishing",
 				],
@@ -1945,10 +1965,33 @@ test("React routing manifest is the exact fifteen-scenario Appendix B/D oracle w
 	}
 
 	assert.deepEqual([...coveredReactRules].sort(), [...reactRuleUniverse].sort());
-	const cssDrift = scenarioById.get("RTE02-owner-placement-css-drift")?.scopeDrift;
+	const ownerMove = scenarioById.get("RTE02-owner-placement-css-drift");
+	assert.ok(ownerMove);
+	assert.equal(ownerMove.expectedSkills.includes("css"), false);
+	assert.match(ownerMove.prompt, /className and style import through unchanged.*no styling change/i);
+	assert.equal(ownerMove.expectedSelected.react?.includes("composition-destructure-props-inside"), true);
+	assert.equal(ownerMove.expectedSelected.typescript?.includes("types-document-custom-types-and-shapes"), true);
+	assert.equal(ownerMove.expectedSelected.typescript?.includes("docs-require-header-jsdoc-on-key-declarations"), true);
+	assert.equal(ownerMove.expectedSelected.typescript?.includes("docs-standardize-annotation-tags-by-declaration-role"), true);
+	assert.equal(ownerMove.expectedSelected.typescript?.includes("docs-write-concise-korean-comments-about-purpose-and-constraints"), true);
+	const cssDrift = ownerMove.scopeDrift;
 	assert.ok(cssDrift);
-	assert.equal(cssDrift.expectedSelected.css?.includes("naming-preserve-route-slug-traceability"), false);
-	assert.equal(cssDrift.expectedNotApplicable.css?.includes("naming-preserve-route-slug-traceability"), true);
+	assert.equal(cssDrift.expectedSelected.react?.includes("composition-destructure-props-inside"), true);
+	assert.equal(cssDrift.expectedSelected.typescript?.includes("types-document-custom-types-and-shapes"), true);
+	assert.equal(cssDrift.expectedSelected.typescript?.includes("docs-require-header-jsdoc-on-key-declarations"), true);
+	assert.equal(cssDrift.expectedSelected.typescript?.includes("docs-standardize-annotation-tags-by-declaration-role"), true);
+	assert.equal(cssDrift.expectedSelected.typescript?.includes("docs-write-concise-korean-comments-about-purpose-and-constraints"), true);
+	assert.equal(cssDrift.expectedSelected.css?.includes("composition-do-not-build-structural-variants-with-modifiers"), true);
+	assert.equal(cssDrift.expectedSelected.css?.includes("values-separate-domain-state-modifiers-from-dom-interaction-states"), true);
+	assert.equal(cssDrift.expectedSelected.css?.includes("naming-preserve-route-slug-traceability"), true);
+	assert.equal(cssDrift.expectedNotApplicable.css?.includes("naming-preserve-route-slug-traceability"), false);
+
+	const routeSupport = scenarioById.get("RTE03-route-support-extraction");
+	assert.equal(routeSupport?.expectedSelected.typescript?.includes("types-reuse-existing-contracts-before-new-types"), false);
+	assert.equal(routeSupport?.expectedNotApplicable.typescript?.includes("types-reuse-existing-contracts-before-new-types"), true);
+	const derivedSelection = scenarioById.get("RTE10-derived-selection-state");
+	assert.equal(derivedSelection?.expectedSelected.react?.includes("events-keep-handler-flow-inline"), false);
+	assert.equal(derivedSelection?.expectedNotApplicable.react?.includes("events-keep-handler-flow-inline"), true);
 });
 
 test("React generated index and handbook preserve canonical local rules and compact companion links", async () => {
@@ -2265,11 +2308,51 @@ test("CSS routing manifest is the exact eleven-scenario and thirteen-stage Appen
 		"naming-use-direct-imports-and-public-entry-points",
 		"guardrails-review-banned-typescript-shortcuts-before-finishing",
 	]);
+	const domainState = scenarioById.get("css-domain-state-class-contract");
+	assert.equal(domainState?.expectedSelected.css?.includes("selector-use-pseudo-classes-for-dom-owned-states"), true);
+
+	const oneOffStructuralModifier = scenarioById.get("css-one-off-structural-modifier");
+	assert.equal(oneOffStructuralModifier?.expectedSelected.css?.includes("composition-keep-classes-single-purpose"), false);
+	assert.equal(oneOffStructuralModifier?.expectedNotApplicable.css?.includes("composition-keep-classes-single-purpose"), true);
+
+	const repeatedValues = scenarioById.get("css-repeated-values-and-optional-token");
+	assert.equal(repeatedValues?.expectedSelected.css?.includes("selector-use-pseudo-classes-for-dom-owned-states"), true);
+	assert.equal(repeatedValues?.expectedSelected.css?.includes("values-separate-domain-state-modifiers-from-dom-interaction-states"), true);
 
 	const wrapperDrift = scenarioById.get("css-ui-wrapper-third-party-dom");
 	assert.equal(wrapperDrift?.expectedSelected.css?.includes("values-always-provide-css-variable-fallbacks"), false);
 	assert.equal(wrapperDrift?.expectedNotApplicable.css?.includes("values-always-provide-css-variable-fallbacks"), true);
 	assert.equal(wrapperDrift?.scopeDrift?.expectedSelected.css?.includes("values-always-provide-css-variable-fallbacks"), true);
+});
+
+test("routing activation and generated indexes use only the changed semantic delta", async () => {
+	const routerPaths = [
+		path.join(realSkillRootDir, "react", "SKILL.md"),
+		path.join(realSkillRootDir, "typescript", "SKILL.md"),
+		path.join(realSkillRootDir, "css", "SKILL.md"),
+		path.join(realSkillRootDir, "convention-audit", "SKILL.md"),
+	];
+	const templatePaths = [
+		path.join(realSkillRootDir, "react", "rules", "_template.md"),
+		path.join(realSkillRootDir, "typescript", "rules", "_template.md"),
+		path.join(realSkillRootDir, "css", "rules", "_template.md"),
+		path.join(repoDir, "AGENTS.frontend-conventions.md"),
+	];
+
+	for (const source of await Promise.all([...routerPaths, ...templatePaths].map((filePath) => readFile(filePath, "utf8")))) {
+		assert.match(source, /변경 (?:semantic )?delta/i);
+		assert.match(source, /추가·삭제·이동|추가·삭제·이동·이름 변경/);
+		assert.match(source, /read-only|byte-equivalent/);
+	}
+
+	const typescriptDocument = await readSkillDocument(getSkillPaths("typescript", realSkillRootDir));
+	const generatedIndex = generateRulesIndexMarkdown(typescriptDocument, []);
+	assert.match(generatedIndex, /변경 (?:semantic )?delta/i);
+	assert.match(generatedIndex, /추가·삭제·이동·재선언/);
+	assert.match(generatedIndex, /read-only/);
+
+	const routeOwnerRule = await readFile(path.join(realSkillRootDir, "css", "rules", "naming-preserve-route-slug-traceability.md"), "utf8");
+	assert.match(routeOwnerRule, /route\/framework 규칙이 `rt_\*` owner를 선택한 화면/);
 });
 
 test("CSS generated index is canonical, complete, body-preserving, and within its byte budget", async () => {

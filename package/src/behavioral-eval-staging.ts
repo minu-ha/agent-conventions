@@ -913,7 +913,7 @@ const createExactDispatch = (
 ): string =>
 	[
 		`Read and execute ${requestPath} (${requestSha256}).`,
-		`Bound collaboration target: ${agentTarget}. The external orchestrator must dispatch this stage to exactly this target.`,
+		`Bound isolated Codex child session: ${agentTarget}. The external orchestrator must dispatch this stage to exactly this external child session target.`,
 		`Assigned ${stage} payload path: ${childPayloadPath}. Write exactly this one file with apply_patch; create or modify no other file.`,
 		"Do not echo coordinator-owned fields; after writing valid JSON, return only concise status.",
 	].join("\n");
@@ -954,7 +954,7 @@ export const createStagedInitialArtifacts = async (args: CreateStagedInitialArti
 	}
 
 	if (!agentTargetPattern.test(args.agentTarget)) {
-		throw new Error("agentTarget must be one canonical /root/... collaboration target before initial dispatch.");
+		throw new Error("agentTarget must be one canonical /root/... external child session target before initial dispatch.");
 	}
 
 	const protocolPath = assertAbsolutePath(args.protocolPath, "protocolPath");
@@ -1202,7 +1202,7 @@ export const sealStagedInitialPayload = async (args: SealStagedInitialPayloadArg
 	}
 
 	if (!agentTargetPattern.test(args.agentTarget)) {
-		throw new Error("agentTarget must be one canonical /root/... collaboration target.");
+		throw new Error("agentTarget must be one canonical /root/... external child session target.");
 	}
 
 	if (args.agentTarget !== verified.envelope.agentTarget) {
@@ -1864,6 +1864,9 @@ export const finalizeStagedBehavioralRun = async (args: FinalizeStagedBehavioral
 };
 
 const helpText = `Behavioral staged RTE02 coordinator
+
+The external orchestrator creates one fresh isolated Codex CLI child session per trial with no inherited
+conversation turns (forkTurns=none), then dispatches both stages to that same bound child session target.
 
 Commands:
   prepare-initial --protocol=<absolute-path> --head=<commit> --run-id=<id> --arm=<arm> --trial=<n> --agent-target=</root/...> --output-dir=<absolute-path> [--repository-dir=<path>] [--skill-root=<path>]

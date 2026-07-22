@@ -178,6 +178,46 @@ Scope drift 뒤에는 file, activated skill, 기존 Selected rule을 제거하�
   - `.owner__prose h2 { ... }`
   - `.owner__copy > :first-child { ... }`
 
+### C8. Route Support and Leaf-local Ownership
+
+- Focus
+  - `naming-separate-local-and-route-style-scopes`
+- Prompt
+  - "route entry를 지원하는 toolbar section과 `_local/`의 독립 filter dialog 스타일 owner를 정리해줘."
+- Expected pass signals
+  - route screen 흐름을 구성·지원하는 surface는 파일 위치와 무관하게 `rt_*`를 유지함
+  - route 맥락을 몰라도 되는 독립 leaf helper만 `loc_*`를 사용함
+- Likely fail signals
+  - `_local/` 폴더에 있다는 이유만으로 route support surface를 `loc_*`로 바꿈
+  - 독립 leaf dialog를 main route owner namespace에 섞음
+
+### C9. Responsibility-preserving Rename Precision
+
+- Focus
+  - `composition-keep-classes-single-purpose`
+- Prompt
+  - "스타일 선언과 책임은 그대로 두고 잘못된 owner prefix만 `loc_`에서 `rt_`로 고쳐. class를 합치거나 책임을 추가하지는 않아."
+- Expected pass signals
+  - 책임을 보존하는 owner prefix 수정이나 single-purpose class rename만으로는 rule을 선택하지 않음
+  - base class에 상태·variant 의미를 합치거나 독립 책임을 추가할 때만 다시 선택함
+- Likely fail signals
+  - 모든 class rename을 single-purpose composition 변경으로 과선택함
+
+### C10. Domain State Review Edge
+
+- Focus
+  - `values-separate-domain-state-modifiers-from-dom-interaction-states`
+  - `composition-do-not-build-structural-variants-with-modifiers`
+- Prompt
+  - "선택 상태 modifier와 hover/focus 스타일을 정리해줘. 새 modifier가 상태인지 one-off 구조 patch인지도 확인해줘."
+- Expected pass signals
+  - domain/DOM state rule의 `reviewWith`로 structural modifier rule을 재평가함
+  - `--selected` 같은 domain state는 modifier로, hover/focus는 pseudo-class로 유지함
+  - spacing 보정 modifier는 반복 가능한 상태로 오인하지 않음
+- Likely fail signals
+  - domain state rule만 보고 one-off modifier 여부를 검토하지 않음
+  - hover/focus를 modifier로 바꾸거나 structural patch를 상태처럼 남김
+
 ## 유지보수 원칙
 
 - 새로운 CSS rule을 추가했다면, 최소 1개의 pressure scenario를 이 문서에 추가합니다.

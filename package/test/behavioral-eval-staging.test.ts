@@ -39,7 +39,7 @@ const createSha256 = (value: string): string => `sha256:${createHash("sha256").u
 const createRuntime = (): Record<string, unknown> => ({
 	evidenceClass: "declared-telemetry-only",
 	declared: {
-		runtime: "Codex collaboration child agent",
+		runtime: "Codex CLI isolated child session",
 		requestedModel: "gpt-5.6-sol",
 		requestedReasoning: "high",
 		forkTurns: "none",
@@ -338,6 +338,9 @@ test("initial artifacts preserve the existing run coordinate and completely seal
 			/scopeDriftPrompt|filesFinal|entry-tree\.css|CSS Modules|final skills|trialPrompt|expectedSkills|expectedSelected|expectedNotApplicable/,
 		);
 		assert.match(first.exactDispatch, new RegExp(first.requestPath.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+		assert.match(first.exactDispatch, /Bound isolated Codex child session:/);
+		assert.match(first.exactDispatch, /exactly this external child session target/);
+		assert.doesNotMatch(first.exactDispatch, /collaboration child|collaboration target/i);
 		assert.equal(first.request.assignedChildPayloadPath, first.childPayloadPath);
 		assert.equal(first.request.childPayloadContract.exactObjectKeysOnly, true);
 		assert.match(String(first.request.childPayloadContract.routingTrace), /generatedIndexDigests:Record<string,sha256>/);

@@ -3,6 +3,7 @@ title: Separate Domain State Modifiers From DOM Interaction States
 impact: HIGH
 impactDescription: keeps app state, focus visibility, and hover behavior readable and accessible without mixing their responsibilities
 appliesWhen: app/domain state modifier와 hover·focus·disabled 같은 DOM interaction state를 추가·변경하거나 focus ring에 손댄다.
+reviewWith: composition-do-not-build-structural-variants-with-modifiers
 tags: state, focus, accessibility
 ---
 
@@ -10,7 +11,7 @@ tags: state, focus, accessibility
 
 **Impact: HIGH (keeps app state, focus visibility, and hover behavior readable and accessible without mixing their responsibilities)**
 
-화면 상태나 도메인 상태는 `--active`, `--selected`, `--error` 같은 modifier로 표현하고, 브라우저 상호작용 상태는 같은 클래스 블록 내부 nested `&:hover`, `&:focus-visible`, `&:disabled` 같은 pseudo-class로 표현합니다. 포커스 링 제거는 금지하며, 대체 포커스 스타일을 반드시 제공합니다.
+화면 상태나 도메인 상태는 `--active`, `--selected`, `--error` 같은 modifier로 표현하고, 브라우저 상호작용 상태는 같은 클래스 블록 내부 nested `&:hover`, `&:focus-visible`, `&:disabled` 같은 pseudo-class로 표현합니다. 새 modifier를 다루면 실제 domain state인지 one-off structural patch인지 확인하기 위해 `composition-do-not-build-structural-variants-with-modifiers`를 다시 판정합니다. 포커스 링 제거는 금지하며, 대체 포커스 스타일을 반드시 제공합니다.
 
 **Incorrect (포커스 스타일을 제거하거나 상태 경계를 섞음):**
 

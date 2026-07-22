@@ -14,6 +14,8 @@ metadata:
 
 수정 전에 요청, 계획된 파일, 현재 diff를 한 줄로 고정한다. stylesheet, selector, token·CSS variable, `className` contract, visual styling을 만들거나 바꾸면 이 skill을 활성화한다.
 
+판정은 변경 semantic delta만 본다. 추가·삭제·이동·이름 변경·재선언 surface는 포함한다. TSX owner 이동에 byte-equivalent로 따라온 `className`, style import, 기존 stylesheet는 CSS 근거가 아니다.
+
 TSX의 component 구조·render·state·handler 자체는 `convention-react`로 보내고, TypeScript type·import·helper 계약은 `convention-typescript`로 보낸다. 특히 `TS/TSX class contract, wrapper Props 또는 style import를 함께 변경한다.`면 conditional TypeScript companion을 활성화한다. 순수 CSS 작업에는 TypeScript를 자동 활성화하지 않는다.
 
 ## 2. Index scan
@@ -34,11 +36,11 @@ Unknown: <ordinal + stable ID 또는 none>
 Expanded: <full rule을 추가로 읽은 ordinal + stable ID: 이유 또는 none>
 ```
 
-각 ordinal은 Selected/N/A/Unknown 중 하나다. exclusion group ordinal의 합집합은 exact N/A이고 이유는 비어 있으면 안 된다. `reviewWith`는 재평가 신호다. `completionGate`는 완료 receipt에서 Selected이며 N/A 불가다. target과 cross-skill companion을 판정한다.
+각 ordinal은 셋 중 하나다. exclusion group 합집합은 exact N/A이고 이유는 필수다. `reviewWith`는 재평가 신호이며, `completionGate`는 완료 receipt에서 Selected다.
 
 ## 4. Read and implement
 
-Selected와 Unknown은 stable ID와 같은 `contracts/<stable-id>.md`를 전부 읽는다. `CRITICAL`이면 연결한 full rule도 반드시 읽는다. 그 밖의 full rule은 exact 판단·Unknown 해소·audit 근거에 필요할 때만 읽고 `Expanded: ID: 이유`를 남긴다. Unknown을 Selected/N/A로 먼저 해소하고 N/A로 해소한 contract의 `requiresSelected`는 적용하지 않는다. Selected로 확정한 contract의 `requiresSelected` target은 companion까지 활성화해 즉시 Selected로 두며 N/A 불가다. Selected contract의 필수 변경만 scope evidence에 합치고 예시·선택적 대안·해소되지 않은 Unknown의 가상 변경은 제외한다. 새 surface·companion·Selected가 생기면 활성 index와 `reviewWith`를 재판정하고 새 contract를 읽는다. 활성 skill·partition·scope evidence의 고정점까지 반복하고 Selected contract와 Expanded 원문만 구현·리뷰 기준으로 쓴다.
+Selected/Unknown의 matching contract를 모두 읽고, `CRITICAL`은 full rule도 즉시 읽는다. 다른 full rule은 exact 판단·Unknown·audit에 필요할 때만 `Expanded: ID: 이유`와 함께 읽는다. Unknown을 먼저 해소한다. final N/A는 `requiresSelected`를 전파하지 않고, final Selected의 target은 companion까지 활성화해 Selected로 고정한다. 필수 변경만 scope evidence에 더한 뒤 새 surface·companion·Selected가 생기면 index와 `reviewWith`를 다시 판정한다. 고정점에서 Selected contract와 Expanded 원문만 구현·리뷰한다.
 
 ## 5. Scope drift
 

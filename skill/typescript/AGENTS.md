@@ -116,13 +116,14 @@ util.number.clamp(score, 0, 100);
 
 ### 1.3 Use Consistent File, Symbol, and Field Naming
 
-**Applies when:** TypeScript 파일, 변수·함수·타입, 객체·schema field 또는 enum-like 상수의 이름을 새로 만들거나 바꾼다.
+**Applies when:** TypeScript 파일, local 변수·함수·타입, 객체·schema field 또는 enum-like 상수의 이름을 새로 만들거나 바꾼다. alias 없는 third-party import binding 추가는 제외한다.
 
 **Impact: HIGH (keeps file names, symbols, and shape fields predictable across modules and runtime structures)**
 
 파일명은 `kebab-case`, 일반 변수와 함수는 `camelCase`, 타입은 `PascalCase`를 사용합니다.   
 `const`인지 여부로 별도 casing을 두지 않고, 모듈 안의 로컬 값은 모두 `camelCase`로 맞춥니다.   
 공용 설정 객체 키와 enum-like 상수 객체 이름 및 그 키는 `snake_case`, 일반 객체 키, schema 키, 커스텀 타입 필드는 `camelCase`를 유지합니다.
+외부 package가 export한 이름을 alias 없이 그대로 가져오는 third-party import binding은 local symbol을 새로 작명하는 변경이 아니므로 이 규칙의 대상이 아닙니다. local alias를 추가하거나 import binding 이름을 바꿀 때만 다시 판정합니다.
 
 **Incorrect (파일명, 심볼명, 필드명이 제각각임):**
 
@@ -316,9 +317,11 @@ const normalizeSearchRequest: NormalizeRequest = (request) => {
 
 **Requires selected:** `types-prefer-function-variable-types-over-parameter-annotations` · N/A 불가
 
+**Review with:** `types-mark-unused-parameters-with-underscore`
+
 **Impact: HIGH (prevents callback signatures from drifting when an existing interface or object contract already defines them)**
 
-콜백 구현 시 매개변수를 다시 타이핑하기보다, 이미 존재하는 인터페이스나 계약의 시그니처를 Indexed Access로 재사용합니다. 이렇게 해야 구현과 계약 사이의 타입 정의가 한곳에서 유지됩니다.
+콜백 구현 시 매개변수를 다시 타이핑하기보다, 이미 존재하는 인터페이스나 계약의 시그니처를 Indexed Access로 재사용합니다. 재사용한 계약에 현재 구현이 쓰지 않는 parameter가 있으면 `types-mark-unused-parameters-with-underscore`를 다시 판정합니다. 이렇게 해야 구현과 계약 사이의 타입 정의가 한곳에서 유지됩니다.
 
 **Incorrect (기존 계약이 있는데 콜백 시그니처를 다시 씀):**
 
@@ -352,13 +355,13 @@ const formatMessage: ToastFormatters["formatMessage"] = (message) => {
 
 ### 2.5 Reuse Existing Contracts Before Declaring New Types
 
-**Applies when:** 기존 type, interface 또는 schema와 같거나 일부만 다른 shape를 새로 선언·변경하려 한다.
+**Applies when:** 기존 type, interface 또는 schema와 같거나 일부만 다른 shape를 새로 선언·변경·복제·파생한다. 유일한 기존 선언의 내용·이름 불변 pure relocation은 제외한다.
 
 **Review with:** `types-document-custom-types-and-shapes`
 
 **Impact: HIGH (reduces duplicate shape declarations by deriving from existing types and schemas when semantics have not changed)**
 
-기존 타입이나 스키마가 이미 존재하면 동일 구조의 별도 타입 선언을 만들지 않습니다. 의미 차이가 실제로 있을 때만 신규 타입을 만들고, 그 외에는 직접 참조하거나 `Pick`/`Omit`/Indexed Access로 파생합니다.
+기존 타입이나 스키마가 이미 존재하면 동일 구조의 별도 타입 선언을 만들지 않습니다. 의미 차이가 실제로 있을 때만 신규 타입을 만들고, 그 외에는 직접 참조하거나 `Pick`/`Omit`/Indexed Access로 파생합니다. sole existing declaration을 내용과 이름 변경 없이 owner 파일로 옮기는 pure relocation은 새 shape나 중복 계약을 만드는 변경이 아니므로 이 규칙의 대상이 아닙니다.
 
 **Incorrect (기존 계약과 동일한 구조를 다시 선언):**
 
