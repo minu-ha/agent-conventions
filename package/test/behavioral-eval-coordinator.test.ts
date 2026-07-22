@@ -337,6 +337,13 @@ test("coordinator persists a deterministic short dispatch and sealed child reque
 			String((mutation.request.childPayloadContract as Record<string, unknown>).completion),
 			/semanticVerdicts.*empty.*coverageFailCount.*1.*semanticFailCount.*0.*unknownCount.*0.*BLOCKED.*blocked.*true/i,
 		);
+		for (const completionContract of [
+			mutation.request.armRoutingContract,
+			String((mutation.request.armPolicy as Record<string, unknown>).receiptContract),
+			String((mutation.request.childPayloadContract as Record<string, unknown>).completion),
+		]) {
+			assert.match(completionContract, /reason.*required.*non-empty|non-empty.*reason.*required/i);
+		}
 		assert.doesNotMatch(mutation.requestRaw, /coverage FAIL or UNKNOWN/i);
 
 		const prepared = await prepareBehavioralEvalDispatch(args);

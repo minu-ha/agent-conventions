@@ -316,7 +316,7 @@ const childPayloadContract: Record<string, unknown> = {
 
 /** @summary mutation arm의 단일 coverage failure 완료 계약 */
 const mutationCompletionContract =
-	"semanticVerdicts must be empty ([]); completion accounting is exact: coverageFailCount=1, semanticFailCount=0, unknownCount=0, status=BLOCKED, and blocked=true.";
+	"semanticVerdicts must be empty ([]); completion accounting is exact: coverageFailCount=1, semanticFailCount=0, unknownCount=0, status=BLOCKED, and blocked=true; reason is required and must be a non-empty string explaining why completion is blocked.";
 
 /** @helper unknown JSON value를 plain object로 제한 */
 const asObject = (value: unknown, label: string): JsonObject => {
