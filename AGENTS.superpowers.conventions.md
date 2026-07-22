@@ -131,6 +131,7 @@ framework/project 고유 규칙은 해당 skill이나 consuming project의 proje
 | React `.ts` hook / ownership | `convention-react` + `convention-typescript` |
 | TSX | `convention-react` + `convention-typescript` |
 | TSX `className` / style import / styling surface | `convention-react` + `convention-typescript` + `convention-css` |
+| TSX owner 이동에 기존 `className` / style import가 byte-equivalent로 따라오기만 함 | `convention-react` + `convention-typescript`; CSS 비활성 |
 
 Pure CSS는 TypeScript를 자동 활성화하지 않고, pure TypeScript는 React/CSS를 자동 활성화하지 않습니다.
 

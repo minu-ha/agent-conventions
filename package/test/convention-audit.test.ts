@@ -460,9 +460,12 @@ test("RTE02 cross-skill reviewWith keeps CSS inactive until styling drift activa
 	const driftCssNotApplicable = scenario.scopeDrift.expectedNotApplicable.css;
 	assert.ok(driftCssSelected);
 	assert.ok(driftCssNotApplicable);
-	assert.equal(driftCssSelected.length, 8);
-	assert.equal(driftCssNotApplicable.length, 13);
+	assert.equal(driftCssSelected.length, 11);
+	assert.equal(driftCssNotApplicable.length, 10);
 	assert.ok(driftCssSelected.includes("naming-separate-local-and-route-style-scopes"));
+	assert.ok(driftCssSelected.includes("naming-preserve-route-slug-traceability"));
+	assert.ok(driftCssSelected.includes("composition-do-not-build-structural-variants-with-modifiers"));
+	assert.ok(driftCssSelected.includes("values-separate-domain-state-modifiers-from-dom-interaction-states"));
 
 	const pressureSource = await readSkillFile("pressure-tests.md");
 	assert.match(pressureSource, /RTE02-owner-placement-css-drift/);

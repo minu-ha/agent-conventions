@@ -913,7 +913,7 @@ const createExactDispatch = (
 ): string =>
 	[
 		`Read and execute ${requestPath} (${requestSha256}).`,
-		`Bound isolated Codex child session: ${agentTarget}. The external orchestrator must dispatch this stage to exactly this external child session target.`,
+		`This exact dispatch is already running in the bound isolated Codex CLI child session: ${agentTarget}. Treat that identifier as this current session; do not spawn, hand off, or redispatch to another agent.`,
 		`Assigned ${stage} payload path: ${childPayloadPath}. Write exactly this one file with apply_patch; create or modify no other file.`,
 		"Do not echo coordinator-owned fields; after writing valid JSON, return only concise status.",
 	].join("\n");

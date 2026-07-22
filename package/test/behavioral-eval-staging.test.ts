@@ -338,8 +338,10 @@ test("initial artifacts preserve the existing run coordinate and completely seal
 			/scopeDriftPrompt|filesFinal|entry-tree\.css|CSS Modules|final skills|trialPrompt|expectedSkills|expectedSelected|expectedNotApplicable/,
 		);
 		assert.match(first.exactDispatch, new RegExp(first.requestPath.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
-		assert.match(first.exactDispatch, /Bound isolated Codex child session:/);
-		assert.match(first.exactDispatch, /exactly this external child session target/);
+		assert.match(first.exactDispatch, /already running in the bound isolated Codex CLI child session:/);
+		assert.match(first.exactDispatch, /treat that identifier as this current session/i);
+		assert.match(first.exactDispatch, /do not spawn, hand off, or redispatch to another agent/);
+		assert.doesNotMatch(first.exactDispatch, /external orchestrator must dispatch/i);
 		assert.doesNotMatch(first.exactDispatch, /collaboration child|collaboration target/i);
 		assert.equal(first.request.assignedChildPayloadPath, first.childPayloadPath);
 		assert.equal(first.request.childPayloadContract.exactObjectKeysOnly, true);
@@ -507,6 +509,8 @@ test("follow-up preparation reveals drift only after the sealed initial payload 
 		);
 		assert.equal(followup.envelope.initialSeal.sha256, sealed.sealSha256);
 		assert.equal(followup.envelope.initialPayload.sha256, sealed.seal.initialPayload.sha256);
+		assert.match(followup.exactDispatch, /already running in the bound isolated Codex CLI child session:/);
+		assert.match(followup.exactDispatch, /do not spawn, hand off, or redispatch to another agent/);
 		assert.doesNotMatch(followup.requestRaw, /expectedSkills|expectedSelected|expectedNotApplicable|routing-evals/);
 		assert.doesNotMatch(String(followup.request.armPolicy.promptSuffix), /also return driftReceipt/i);
 		assert.match(
