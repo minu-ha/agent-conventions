@@ -645,7 +645,7 @@ export const createBehavioralChildPayloadContract = (): Record<string, unknown> 
 		stablePair:
 			"stablePair names the final two consecutive passes. Their canonical state is identical, stable is true, and both requiresSelectedAdded and completionGateAdded arrays are empty.",
 		transitionOrder:
-			"requiresSelectedEvaluated, requiresSelectedAdded, and reviewWithReevaluated use canonical activated-skill and source-rule order, then the code-point ascending target order printed by generated contracts/indexes/handbooks; completion arrays use canonical rule order; no edge or gate is duplicated.",
+			"requiresSelectedEvaluated and requiresSelectedAdded use canonical activated-skill and source-rule order, then the code-point ascending target order printed by generated contracts/indexes/handbooks; reviewWithReevaluated is an exact unique edge set whose array order is non-semantic; completion arrays use canonical rule order; no edge or gate is duplicated.",
 		reviewWith:
 			"Every reviewWith outcome exactly matches the target partition: Selected, N/A, Unknown, or INACTIVE when the target skill is inactive. reviewWith never forces or selects a target. Every reviewWith record requires non-empty evidence.",
 		finalClosure:
@@ -2185,16 +2185,18 @@ const assertTraceTransitions = (trace: RoutingTrace, snapshots: Map<string, Skil
 			label: `run.routingTrace pass ${pass.pass}.requiresSelectedAdded`,
 		});
 		const expectedReviewOutcomes = createExpectedReviewOutcomes(pass, snapshots);
-		const actualReviewEdges = pass.reviewWithReevaluated.map(({source, target}) => `${source}->${target}`);
-		const expectedReviewEdges = expectedReviewOutcomes.map(({source, target}) => `${source}->${target}`);
-		assertExactStringArray({
-			actual: actualReviewEdges,
-			expected: expectedReviewEdges,
-			message: `run.routingTrace pass ${pass.pass}.reviewWithReevaluated must exactly cover final Selected source edges.`,
-		});
+		const expectedReviewOutcomeByEdge = new Map(expectedReviewOutcomes.map((outcome) => [`${outcome.source}->${outcome.target}`, outcome]));
 
-		for (const [reviewIndex, actualOutcome] of pass.reviewWithReevaluated.entries()) {
-			const expectedOutcome = expectedReviewOutcomes[reviewIndex]!;
+		if (
+			pass.reviewWithReevaluated.length !== expectedReviewOutcomes.length ||
+			pass.reviewWithReevaluated.some(({source, target}) => !expectedReviewOutcomeByEdge.has(`${source}->${target}`))
+		) {
+			throw new Error(`run.routingTrace pass ${pass.pass}.reviewWithReevaluated must exactly cover final Selected source edges.`);
+		}
+
+		for (const actualOutcome of pass.reviewWithReevaluated) {
+			const edge = `${actualOutcome.source}->${actualOutcome.target}`;
+			const expectedOutcome = expectedReviewOutcomeByEdge.get(edge)!;
 
 			if (actualOutcome.outcome !== expectedOutcome.outcome) {
 				throw new Error(

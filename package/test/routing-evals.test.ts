@@ -1003,6 +1003,8 @@ const reactScenarioStages = {
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
 				react: [
+					"ownership-avoid-barrel-and-react-namespace-imports",
+					"typing-function-type-first",
 					"composition-named-handlers-over-inline",
 					"screen-keep-derived-values-close",
 					"events-name-and-curry-handlers",
@@ -1012,6 +1014,10 @@ const reactScenarioStages = {
 				],
 				typescript: [
 					"naming-use-consistent-file-and-symbol-naming",
+					"naming-use-direct-imports-and-public-entry-points",
+					"types-mark-unused-parameters-with-underscore",
+					"types-prefer-function-variable-types-over-parameter-annotations",
+					"types-reuse-callback-signatures-from-existing-contracts",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-standardize-annotation-tags-by-declaration-role",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",

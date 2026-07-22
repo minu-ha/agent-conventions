@@ -842,6 +842,18 @@ test("validator requires exact reviewWith outcome coverage without auto-selectin
 	);
 });
 
+test("validator treats reviewWith edge order as non-semantic while preserving exact coverage", async () => {
+	const fixture = await createValidFixture();
+	const reorderedRun = cloneJson(fixture.run);
+	const reorderedTrace = reorderedRun.routingTrace as {passes: Array<{reviewWithReevaluated: Record<string, unknown>[]}>};
+
+	for (const pass of reorderedTrace.passes) {
+		pass.reviewWithReevaluated.reverse();
+	}
+
+	await validateBehavioralEvalRun({run: reorderedRun, dispatchEnvelope: fixture.dispatch, skillRootDir: packagePaths.skillRootDir});
+});
+
 test("progressive load validation rejects missing CRITICAL expansion and unrecorded full-rule loads", async () => {
 	const fixture = await createValidFixture();
 	const missingCriticalRun = cloneJson(fixture.run);
