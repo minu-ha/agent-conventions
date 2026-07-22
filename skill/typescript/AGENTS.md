@@ -57,6 +57,8 @@
 
 ### 1.1 Centralize Shared Config Under `shared/config.ts`
 
+**Rule:** `T01` · `naming-centralize-shared-config-namespaces`
+
 **Applies when:** 여러 leaf 모듈이 함께 쓰는 URL, feature flag, 페이지 크기나 상수를 추가·이동·중복 정의하거나 shared config 경계를 바꾼다.
 
 **Review with:** `naming-preserve-config-origin-with-chained-access`, `naming-use-direct-imports-and-public-entry-points`
@@ -85,6 +87,8 @@ config.pagination.default_page_size;
 ```
 
 ### 1.2 Preserve Shared Namespace Origin With Chained Access
+
+**Rule:** `T02` · `naming-preserve-config-origin-with-chained-access`
 
 **Applies when:** \`config\` 또는 \`util\` 값을 leaf 모듈에서 접근하며 넓은 스코프 구조분해, 별칭 또는 feature-local namespace를 추가·변경한다.
 
@@ -115,6 +119,8 @@ util.number.clamp(score, 0, 100);
 ```
 
 ### 1.3 Use Consistent File, Symbol, and Field Naming
+
+**Rule:** `T03` · `naming-use-consistent-file-and-symbol-naming`
 
 **Applies when:** TypeScript 파일, local 변수·함수·타입, 객체·schema field 또는 enum-like 상수의 이름을 새로 만들거나 바꾼다. alias 없는 third-party import binding 추가는 제외한다.
 
@@ -151,6 +157,8 @@ const userProfileSchema = z.object({
 
 ### 1.4 Use Direct Imports and Dedicated Public Entry Points
 
+**Rule:** `T04` · `naming-use-direct-imports-and-public-entry-points`
+
 **Applies when:** TypeScript import/export, barrel, type-only 의존, shared 공개 진입점 또는 feature support module 경계를 추가·변경한다.
 
 **Impact: HIGH (makes import ownership explicit without relying on barrels or ambiguous re-export layers)**
@@ -180,6 +188,8 @@ import {buildUserSaveRequest} from "./user-profile-support";
 함수 시그니처, callback 재사용, 타입 중복 제거, custom shape 문서화는 계약을 명시적이고 재사용 가능하게 유지해야 합니다.
 
 ### 2.1 Document Custom Types and Declarative Shapes
+
+**Rule:** `T05` · `types-document-custom-types-and-shapes`
 
 **Applies when:** custom type·interface, schema root, 객체형 상수, 계약 field 또는 Pick·Omit·Indexed Access alias를 추가·변경한다.
 
@@ -235,6 +245,8 @@ const publishResultSchema = z.object({
 
 ### 2.2 Mark Unused Parameters With an Underscore Prefix
 
+**Rule:** `T06` · `types-mark-unused-parameters-with-underscore`
+
 **Applies when:** 기존 callback이나 framework 계약을 구현·변경하며 계약 매개변수 일부를 생략하거나 사용하지 않는다.
 
 **Impact: MEDIUM-HIGH (makes intentionally ignored callback parameters explicit instead of silently dropping parts of a contract)**
@@ -263,6 +275,8 @@ const noopLog: LogSink = (_message, _level) => {};
 ```
 
 ### 2.3 Prefer Function Variable Types Over Parameter Annotations
+
+**Rule:** `T07` · `types-prefer-function-variable-types-over-parameter-annotations`
 
 **Applies when:** 기존 callable 계약이 있는 함수 구현을 추가·변경하거나 같은 시그니처를 여러 구현이 공유하도록 리팩터링한다.
 
@@ -313,6 +327,8 @@ const normalizeSearchRequest: NormalizeRequest = (request) => {
 
 ### 2.4 Reuse Callback Signatures From Existing Contracts
 
+**Rule:** `T08` · `types-reuse-callback-signatures-from-existing-contracts`
+
 **Applies when:** interface, 객체 또는 framework가 이미 정의한 callback을 구현·전달하면서 시그니처를 새로 적거나 바꾼다.
 
 **Requires selected:** `types-prefer-function-variable-types-over-parameter-annotations` · N/A 불가
@@ -355,6 +371,8 @@ const formatMessage: ToastFormatters["formatMessage"] = (message) => {
 
 ### 2.5 Reuse Existing Contracts Before Declaring New Types
 
+**Rule:** `T09` · `types-reuse-existing-contracts-before-new-types`
+
 **Applies when:** 기존 type, interface 또는 schema와 같거나 일부만 다른 shape를 새로 선언·변경·복제·파생한다. 유일한 기존 선언의 내용·이름 불변 pure relocation은 제외한다.
 
 **Review with:** `types-document-custom-types-and-shapes`
@@ -389,6 +407,8 @@ type UserPreview = Pick<UserRecord, "id" | "name">;
 
 ### 3.1 Avoid Imperative Assembly in Wide Scopes
 
+**Rule:** `T10` · `functions-avoid-imperative-assembly-in-wide-scopes`
+
 **Applies when:** 파일 상단이나 넓은 스코프에서 \`let\` 재대입, 배열 \`push\` 또는 조건부 누적으로 값을 조립하거나 이를 리팩터링한다.
 
 **Impact: HIGH (keeps file-wide logic declarative instead of mutating shared locals through branching assembly)**
@@ -414,6 +434,8 @@ const visibleTabs = canManageItems
 ```
 
 ### 3.2 Extract Support Functions Only When the Boundary Is Real
+
+**Rule:** `T11` · `functions-extract-helpers-only-when-the-boundary-is-real`
 
 **Applies when:** support function을 추출·이동·export·공유하거나 generic helper 파일, 단일 owner 전용 mapper 또는 작은 sub-step 경계를 바꾼다.
 
@@ -555,6 +577,8 @@ export const util = {
 
 ### 3.3 Prefer Immutable Array Sorting
 
+**Rule:** `T12` · `functions-prefer-immutable-array-sorting`
+
 **Applies when:** props, state, 매개변수 또는 공유 입력에서 온 배열을 정렬하거나 기존 \`.sort\(\)\` 호출을 추가·변경한다.
 
 **Impact: MEDIUM (avoids mutation bugs when sorted arrays come from props, state, or shared inputs)**
@@ -580,6 +604,8 @@ const sortedUsers = [...users].sort((left, right) => left.name.localeCompare(rig
 ```
 
 ### 3.4 Replace `enum` With `as const` Objects
+
+**Rule:** `T13` · `functions-replace-enum-with-as-const-objects`
 
 **Applies when:** \`enum\` 또는 타입과 런타임에서 함께 쓰는 enum-like 값 집합을 추가·변경한다.
 
@@ -615,6 +641,8 @@ type AuditStatus = (typeof audit_status)[keyof typeof audit_status];
 ```
 
 ### 3.5 Use Named Object Params for Complex Signatures
+
+**Rule:** `T14` · `functions-use-named-object-params-for-complex-signatures`
 
 **Applies when:** 매개변수 3개 이상 또는 같은 계열 인자를 받는 함수를 추가·변경하거나 객체 매개변수를 시그니처에서 구조분해한다.
 
@@ -656,6 +684,8 @@ const buildRequestUrl = (args: BuildRequestUrlArgs): URL => {
 
 ### 3.6 Use Set and Map for Repeated Lookups
 
+**Rule:** `T15` · `functions-use-set-and-map-for-repeated-lookups`
+
 **Applies when:** 같은 컬렉션에 \`includes\`, \`find\` 또는 keyed lookup을 여러 번 수행하는 코드를 추가·변경한다.
 
 **Impact: MEDIUM (keeps repeated membership and keyed access code explicit once lookup count grows)**
@@ -695,6 +725,8 @@ const approver = userById.get(approverId);
 결측값은 casual fallback 연산자로 숨기지 말고 의도적으로 드러내야 합니다.
 
 ### 4.1 Expose Optional Values Instead of Silent Fallbacks
+
+**Rule:** `T16` · `absence-expose-optional-values-instead-of-silent-fallbacks`
 
 **Applies when:** optional 값의 읽기·정규화·전달을 바꾸거나 \`??\`, \`||\`, 기본값 또는 빈 값 대체 분기를 추가·변경한다.
 
@@ -736,6 +768,8 @@ const resolvePageSize = (query: SearchQuery): string => {
 
 ### 5.1 Keep Inline Comments for Constraints and Caveats Only
 
+**Rule:** `T17` · `docs-keep-inline-comments-for-constraints-and-caveats`
+
 **Applies when:** 함수 본문의 \`//\` 주석을 추가·수정·유지하거나 도메인 규칙, 예외 방어, 외부 제약 또는 부수효과 순서를 주석으로 설명한다.
 
 **Impact: MEDIUM (prevents inline comments from narrating obvious code while preserving notes that avoid real misunderstandings)**
@@ -759,6 +793,8 @@ if (!normalizedToken) {
 ```
 
 ### 5.2 Require Header JSDoc on Key Declarations
+
+**Rule:** `T18` · `docs-require-header-jsdoc-on-key-declarations`
 
 **Applies when:** named query·mutation, 원격 함수, 비자명한 handler/effect, reusable/exported helper·custom hook, custom type·interface, store, formatter 또는 예외 memo 선언을 추가·변경한다.
 
@@ -789,6 +825,8 @@ export const normalizeUserIds = (userIds: string[]): string[] => {
 ```
 
 ### 5.3 Standardize Annotation Tags by Declaration Role
+
+**Rule:** `T19` · `docs-standardize-annotation-tags-by-declaration-role`
 
 **Applies when:** TypeScript/TSX 선언의 JSDoc 태그를 추가·변경하거나 선언 역할에 맞는 annotation을 검토한다.
 
@@ -875,6 +913,8 @@ interface DialogRootProps {
 
 ### 5.4 Use `@helper` on Reusable Support Functions
 
+**Rule:** `T20` · `docs-use-helper-for-reusable-pure-helper-functions`
+
 **Applies when:** 여러 caller가 쓰는 pure support function, owner-named exported helper 또는 \`shared/util.ts\` 함수를 추가·변경하거나 \`@helper\`를 붙이려 한다.
 
 **Impact: MEDIUM-HIGH (distinguishes reusable pure support logic from local implementation details or integration boundaries)**
@@ -935,6 +975,8 @@ export const normalizeUserIds = (userIds: string[]): string[] => {
 
 ### 5.5 Write Concise Korean Comments About Purpose and Constraints
 
+**Rule:** `T21` · `docs-write-concise-korean-comments-about-purpose-and-constraints`
+
 **Applies when:** TypeScript/TSX의 JSDoc이나 inline comment 문구를 추가·수정·번역하거나 리뷰한다.
 
 **Impact: MEDIUM (keeps comments focused on intent and constraints instead of narrating code mechanics)**
@@ -964,6 +1006,8 @@ export const normalizeUserIds = (userIds: string[]): string[] => {
 마무리 전에는 TypeScript 컨벤션을 가장 자주 무너뜨리는 반복 shortcut 기준으로 코드를 점검해야 합니다.
 
 ### 6.1 Review Banned TypeScript Shortcuts Before Finishing
+
+**Rule:** `T22` · `guardrails-review-banned-typescript-shortcuts-before-finishing`
 
 **Applies when:** TypeScript/TSX 변경을 완료 판정하거나 diff에서 barrel, 중복 타입, 조기 helper, 넓은 조립, 무근거 fallback 또는 자명한 주석을 점검한다.
 

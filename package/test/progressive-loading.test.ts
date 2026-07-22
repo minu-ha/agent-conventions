@@ -807,9 +807,10 @@ test("temporary progressive build and stale check are deterministic without repo
 		assert.match(firstHandbook, /^### 1\.1 Own Composition$/m);
 		assert.match(
 			firstHandbook,
-			/^### 1\.1 Own Composition\n\n\*\*Applies when:\*\* Changing fixture composition\.\n\n\*\*Review with:\*\* `state-watch`\n\n\*\*Impact:/m,
-			"the opt-in full handbook must preserve applicability and review routing next to each progressive rule",
+			/^### 1\.1 Own Composition\n\n\*\*Rule:\*\* `O01` · `composition-owner`\n\n\*\*Applies when:\*\* Changing fixture composition\.\n\n\*\*Review with:\*\* `state-watch`\n\n\*\*Impact:/m,
+			"the opt-in full handbook must expose canonical identity, applicability, and review routing next to each progressive rule",
 		);
+		assert.match(firstHandbook, /^### 2\.1 Watch State\n\n\*\*Rule:\*\* `O02` · `state-watch`$/m);
 		assert.match(firstHandbook, /metadata\.json\.companions/);
 		assert.doesNotMatch(firstHandbook, /metadata\.json\.extends/);
 		assert.match(firstHandbook, /`convention-dependency`[\s\S]*?mode: `conditional`/);

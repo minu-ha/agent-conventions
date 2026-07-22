@@ -88,6 +88,8 @@ Shared UI, widget, route-local 코드는 소유 경계가 분명해야 에이전
 
 ### 1.1 Avoid Barrel Exports and React Namespace Types
 
+**Rule:** `R01` · `ownership-avoid-barrel-and-react-namespace-imports`
+
 **Applies when:** \`index.ts\`·barrel 재노출, \`React.\*\` namespace 타입과 direct \`import type\` 중 선택, type/value 혼합 import 또는 소유 출처를 숨긴 경로를 추가·수정한다. 일반 direct value import는 제외한다.
 
 **Requires selected:** `typescript/naming-use-direct-imports-and-public-entry-points` · N/A 불가
@@ -121,6 +123,8 @@ const handleClick: MouseEventHandler<HTMLButtonElement> = (_event) => {
 ```
 
 ### 1.2 Do Not Create Screen-local Custom Hooks for Pure Logic
+
+**Rule:** `R02` · `ownership-prefer-plain-ts-for-local-react-helpers`
 
 **Applies when:** 화면 전용 계산·정규화·payload 조립을 custom hook 또는 별도 support module로 추출·이동하려 한다.
 
@@ -171,6 +175,8 @@ const request = buildMediaUploadPayload(files);
 ```
 
 ### 1.3 Keep UI, Widget, and -local Ownership Separate
+
+**Rule:** `R03` · `ownership-layer-component-boundaries`
 
 **Applies when:** 컴포넌트를 ui·widget·route-local 중 어느 소유 레이어에 둘지 결정하거나 레이어 사이에서 이동·공용화한다.
 
@@ -227,6 +233,8 @@ const DeleteEntryButton = () => {
 
 ### 1.4 Place Route-local Files by Visual Scope
 
+**Rule:** `R04` · `ownership-place-route-local-files-by-scope`
+
 **Applies when:** route 전용 컴포넌트·스타일·순수 로직을 새로 만들거나 \`-local\`과 route sibling \`.ts\` 사이에서 위치를 바꾼다.
 
 **Review with:** `css/naming-separate-local-and-route-style-scopes`, `css/organization-keep-style-files-owned-by-one-component-or-route`
@@ -264,6 +272,8 @@ export const mapFolderNodeToTreeData = (node: FolderNode, renderers: FolderTreeR
 
 ### 1.5 Route Shared Constants Through `shared/config.ts`
 
+**Rule:** `R05` · `ownership-shared-config-entry-points`
+
 **Applies when:** 둘 이상의 화면이 쓰는 상수·설정·순수 함수를 추가·이동하거나 leaf 파일에 중복 선언된 공용 값을 정리한다.
 
 **Review with:** `typescript/naming-centralize-shared-config-namespaces`, `typescript/naming-preserve-config-origin-with-chained-access`
@@ -292,6 +302,8 @@ config.navigation.project_menu_key.dashboard;
 ```
 
 ### 1.6 Use Consistent File and Symbol Naming
+
+**Rule:** `R06` · `ownership-use-consistent-file-and-symbol-naming`
 
 **Applies when:** React/TSX 파일 자체·컴포넌트·exported symbol·공용 설정의 이름을 새로 정하거나 바꾸며 casing, ui/wg prefix 또는 config key naming을 판단한다. local query·mutation binding만 바꾸면 제외한다.
 
@@ -342,6 +354,8 @@ React가 제공하는 handler와 prop 계약은 선언 위치에서 바로 드�
 
 ### 2.1 Prefer React Handler Type Aliases Over Inline Event Parameter Annotations
 
+**Rule:** `R07` · `typing-function-type-first`
+
 **Applies when:** React 이벤트 핸들러나 prop callback의 선언·시그니처를 추가·변경하며 기존 React alias 또는 callback 계약을 쓸 수 있다.
 
 **Requires selected:** `typescript/types-reuse-callback-signatures-from-existing-contracts` · N/A 불가
@@ -374,6 +388,8 @@ const handleAddButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => {
 ```
 
 ### 2.2 Reuse Prop and API Contracts Before Creating New Types
+
+**Rule:** `R08` · `typing-reuse-existing-contracts`
 
 **Applies when:** Props callback 구현이나 API 응답 기반 view type을 추가·변경하며 기존 prop·API 계약과 같은 shape가 보인다.
 
@@ -413,6 +429,8 @@ const handleLinkClick: LinkProps["onLinkClick"] = (event) => {
 Shared component는 single component, compound component, explicit variant 중 어떤 구조를 쓸지 먼저 결정해야 하며, compound component는 state 없는 조립 구조에서 시작해 필요할 때 같은 public 이름을 유지한 채 stateful 구조로 확장될 수 있어야 합니다.
 
 ### 3.1 Avoid Boolean Prop Proliferation in Shared Components
+
+**Rule:** `R09` · `strategy-avoid-boolean-prop-proliferation`
 
 **Applies when:** 여러 곳에서 쓰는 shared component에 boolean mode·visibility prop을 추가하거나 기존 boolean 조합과 JSX 분기가 늘어난다.
 
@@ -478,6 +496,8 @@ export const WgEntryEditToolbar = () => {
 ```
 
 ### 3.2 Choose Single Components, Compound Components, and Variants Deliberately
+
+**Rule:** `R10` · `strategy-choose-single-composition-compound-and-variants`
 
 **Applies when:** exported shared component에 slot·public part·shared context/action·반복 preset·mode API를 추가하거나 조립 구조를 재설계한다.
 
@@ -623,6 +643,8 @@ export const ReadOnlyProfileDialog = () => {
 
 ### 3.3 Prefer Children Over Render Props for Static Composition
 
+**Rule:** `R11` · `strategy-prefer-children-over-render-props`
+
 **Applies when:** shared component에 header·footer·action 같은 정적 slot 또는 render prop을 추가·변경하며 runtime data 주입 필요가 불분명하다.
 
 **Impact: MEDIUM (keeps shared component composition readable when the parent does not need to push runtime data through callbacks)**
@@ -712,6 +734,8 @@ export const EntryScreen = () => {
 
 ### 4.1 Accept props as a Whole and Destructure Inside the Component
 
+**Rule:** `R12` · `composition-destructure-props-inside`
+
 **Applies when:** props를 받는 함수 컴포넌트의 시그니처·본문 구조분해 방식을 추가·변경하거나 그 컴포넌트를 다른 파일로 이동·이름 변경한다.
 
 **Impact: MEDIUM (컴포넌트 계약을 시그니처에 남기고 실제 사용을 본문 가까이에 유지함)**
@@ -736,6 +760,8 @@ const UserCard = (props: UserCardProps) => {
 ```
 
 ### 4.2 Do Not Define Components Inside Components
+
+**Rule:** `R13` · `composition-do-not-define-components-inside-components`
 
 **Applies when:** 컴포넌트 본문 안에 JSX를 반환하는 로컬 함수·컴포넌트를 추가·이동하거나 재렌더 시 remount·focus reset 징후를 다룬다.
 
@@ -788,6 +814,8 @@ export const UserProfileCard = (props: UserProfileCardProps) => {
 
 ### 4.3 Prefer Arrow Functions and Object Parameters for Complex Signatures
 
+**Rule:** `R14` · `composition-prefer-arrow-functions-and-object-params`
+
 **Applies when:** React 인접 코드에 function 선언이 생기거나 함수가 3개 이상 매개변수 또는 함께 이동하는 같은 계열 값을 받는다.
 
 **Review with:** `typescript/functions-use-named-object-params-for-complex-signatures`
@@ -830,6 +858,8 @@ export const updateEntryMediaUploadFileByUid = (params: UpdateEntryMediaUploadFi
 
 ### 4.4 Use Named Handlers Instead of Hiding Logic in JSX
 
+**Rule:** `R15` · `composition-named-handlers-over-inline`
+
 **Applies when:** TSX event prop의 인라인 callback에 분기, 비동기 호출, 여러 동작·부수효과 또는 비자명한 state transition을 추가·수정한다. 단순 setter·인자 전달 한 줄 위임은 제외한다.
 
 **Requires selected:** `docs-require-jsdoc-on-key-declarations`, `events-name-and-curry-handlers` · N/A 불가
@@ -869,6 +899,8 @@ const handleRemoveEntryButtonClick: MouseEventHandler<HTMLButtonElement> = async
 ```
 
 ### 4.5 Use ref Props Instead of New forwardRef Wrappers in React 19
+
+**Rule:** `R17` · `composition-use-ref-prop-instead-of-forwardref-in-react-19`
 
 **Applies when:** React 19 컴포넌트에 focus·scroll·measure용 ref 공개 API를 추가·변경하거나 새 \`forwardRef\` wrapper를 도입한다.
 
@@ -937,6 +969,8 @@ export const UiStatusBadge = (props: UiStatusBadgeProps) => {
 
 ### 4.6 Use Visibility Primitives Deliberately for Show and Hide Branches
 
+**Rule:** `R16` · `composition-use-activity-for-render-branches`
+
 **Applies when:** 이미 마운트된 subtree의 표시 상태를 보존하려고 조건부 렌더링과 Activity 또는 동등한 visibility primitive 사이를 바꾼다.
 
 **Impact: MEDIUM (표시 여부 결정을 route 화면 전반에서 명시적이고 일관되게 유지함)**
@@ -976,6 +1010,8 @@ return hasItems ? <ItemList /> : <EmptyState />;
 Route entry 파일은 화면 흐름을 분명하게 보여줘야 하며, helper 추출도 경계가 정당할 때만 해야 합니다. layout-only 분리는 지양하지만 async, state, interaction 같은 runtime boundary를 소유한 route-local section은 추출할 수 있습니다.
 
 ### 5.1 Avoid Premature Abstraction in Screen Code
+
+**Rule:** `R18` · `screen-avoid-premature-abstraction`
 
 **Applies when:** screen 코드를 helper·hook·component·module로 추출하거나 한 곳에서만 쓰는 기존 추상화를 접어 넣는다.
 
@@ -1092,6 +1128,8 @@ export const EntryTable = (props: EntryTableProps) => {
 ```
 
 ### 5.2 Extract Route-local Section Components Only for Runtime Boundaries
+
+**Rule:** `R19` · `screen-extract-local-section-components-for-runtime-boundaries`
 
 **Applies when:** route-local section component를 새로 추출하거나 기존 section이 async·state·provider·interaction·library·performance 경계를 소유하는지 바꾼다.
 
@@ -1243,6 +1281,8 @@ export const RouteComponent = () => {
 ```
 
 ### 5.3 Extract Screen Support Code Only When the Boundary Is Real
+
+**Rule:** `R20` · `screen-extract-utilities-selectively`
 
 **Applies when:** 화면 계산·변환·preset·option·column meta를 별도 함수/support module로 추출·이동하거나 support 경계를 바꾼다. query \`select\` 내부 shaping만이면 제외한다.
 
@@ -1409,6 +1449,8 @@ export const util = {
 
 ### 5.4 Keep Derived Values Close to Where They Are Used
 
+**Rule:** `R21` · `screen-keep-derived-values-close`
+
 **Applies when:** response·state·search·props의 오리진을 끊는 alias·flag·표시값을 넓은 screen scope에 추가·이동·제거하거나 \`let\`/\`push\` 조립을 바꾼다.
 
 **Impact: HIGH (오리진을 보존하고 route 파일이 alias와 명령형 setup 코드로 채워지는 것을 막음)**
@@ -1443,6 +1485,8 @@ return <UiInput value={selectedNodeContext?.node?.name} />;
 ```
 
 ### 5.5 Keep Route Entry Files Focused on Screen Flow
+
+**Rule:** `R22` · `screen-keep-route-flow-visible`
 
 **Applies when:** route entry의 search·navigate·query·mutation·effect·section 조립을 이동·분리하거나 화면 흐름을 재구성한다.
 
@@ -1502,6 +1546,8 @@ return (
 ```
 
 ### 5.6 Move Screen-owned Pure Support Code Into `page.ts` Before Splitting Further
+
+**Rule:** `R23` · `screen-move-pure-support-code-out-of-entry-files`
 
 **Applies when:** route entry에 여러 줄 pure helper·preset·option·화면 전용 type이 쌓이거나 추출한 support code의 목적지 파일을 정한다.
 
@@ -1623,6 +1669,8 @@ Event handler는 이름이 예측 가능하고 effect 재실행을 유발하지 
 
 ### 6.1 Keep Screen-specific Handler Flow Local Until a Real Utility Emerges
 
+**Rule:** `R24` · `events-keep-handler-flow-inline`
+
 **Applies when:** 화면 전용 named handler의 분기·mutation·navigation·후처리를 여러 helper나 hook으로 나누거나 다시 합친다.
 
 **Review with:** `screen-extract-utilities-selectively`
@@ -1664,6 +1712,8 @@ const handleSubmitButtonClick: MouseEventHandler<HTMLButtonElement> = async (_ev
 
 ### 6.2 Name Handlers Predictably and Curry Extra Arguments
 
+**Rule:** `R25` · `events-name-and-curry-handlers`
+
 **Applies when:** 이벤트 핸들러를 새로 만들거나 이름, target/event 표현, 추가 인자 전달 방식 또는 최종 React handler 시그니처를 바꾼다.
 
 **Review with:** `typescript/naming-use-consistent-file-and-symbol-naming`, `typing-function-type-first`
@@ -1698,6 +1748,8 @@ const handleListItemClick =
 ```
 
 ### 6.3 Run User Actions in Handlers, Not Effects
+
+**Rule:** `R26` · `events-run-user-actions-in-handlers-not-effects`
 
 **Applies when:** 제출·저장·삭제·닫기 같은 one-shot 사용자 액션을 handler와 state+effect 사이에서 이동하거나 실행 흐름을 바꾼다.
 
@@ -1743,6 +1795,8 @@ Server state, store 접근, 파생값, effect callback, transition은 오리진�
 
 ### 7.1 Avoid Silent Fallback Defaults and Ad-hoc Loading Branches
 
+**Rule:** `R27` · `state-avoid-fallback-defaults-and-loading-flags`
+
 **Applies when:** optional 응답에 \`??\`·\`||\` 기본값을 넣거나 Suspense 화면 본문에 초기 loading return을 추가·변경하고 결측·로딩 UX를 다룬다.
 
 **Review with:** `screen-keep-derived-values-close`, `state-preserve-origin-chaining`, `typescript/absence-expose-optional-values-instead-of-silent-fallbacks`
@@ -1786,6 +1840,8 @@ return (
 
 ### 7.2 Calculate Derived Values During Rendering
 
+**Rule:** `R28` · `state-calculate-derived-values-during-render`
+
 **Applies when:** 현재 props·state·search·response에서 계산 가능한 값을 별도 state와 effect로 동기화하거나 그 동기화를 제거한다.
 
 **Requires selected:** `screen-keep-derived-values-close` · N/A 불가
@@ -1813,6 +1869,8 @@ return <SelectedCountBadge count={selectedIds.length} />;
 ```
 
 ### 7.3 Choose State Tools by Source of Truth
+
+**Rule:** `R29` · `state-choose-state-tools-by-source-of-truth`
 
 **Applies when:** 로컬 UI·전역 client·server 데이터를 새 state 도구로 옮기거나 서로 다른 source of truth 사이에 복제·동기화한다.
 
@@ -1844,6 +1902,8 @@ const responseUserGetItemSuspense = useUserGetItemSuspense();
 ```
 
 ### 7.4 Name Query and Mutation Bindings Consistently
+
+**Rule:** `R30` · `state-name-query-and-mutation-bindings-consistently`
 
 **Applies when:** React Query query·mutation hook의 로컬 binding을 추가·이름 변경하거나 역할이 드러나지 않는 별칭이 diff에 보인다.
 
@@ -1878,6 +1938,8 @@ const mutationEntryRemove = useEntryRemove();
 
 ### 7.5 Prefer React Compiler Defaults Over Manual Memoization
 
+**Rule:** `R31` · `state-compiler-first-memoization`
+
 **Applies when:** \`useMemo\`·\`useCallback\`을 추가·제거하거나 참조 동일성·실측 병목·무거운 deferred 계산을 이유로 수동 memoization을 검토한다.
 
 **Impact: MEDIUM-HIGH (검증되지 않은 값어치 없이 노이즈만 늘리는 방어적 useMemo/useCallback을 피함)**
@@ -1900,6 +1962,8 @@ const columns = useMemo(() => buildColumns(response.data.columns), [response.dat
 ```
 
 ### 7.6 Preserve Response and Store Origin in Wide Scopes
+
+**Rule:** `R32` · `state-preserve-origin-chaining`
 
 **Applies when:** page·layout·screen 넓은 스코프에서 response·mutation·store를 구조분해하거나 별칭으로 끊고 원본 값 접근을 바꾼다.
 
@@ -1937,6 +2001,8 @@ useEffect(() => {
 
 ### 7.7 Shape React Query Data in query.select
 
+**Rule:** `R33` · `state-shape-query-data-with-select`
+
 **Applies when:** 서버 응답의 list·items·meta 등을 렌더에서 가공·반복 소비하거나 React Query \`select\`의 결과 shape를 추가·변경한다.
 
 **Requires selected:** `docs-require-jsdoc-on-key-declarations` · N/A 불가
@@ -1971,6 +2037,8 @@ const responseEntryListSuspense = useEntryListSuspense({
 ```
 
 ### 7.8 Store Shared Derived Decisions Only When They Are Truly Shared
+
+**Rule:** `R34` · `state-store-derived-authority`
 
 **Applies when:** 여러 화면·메뉴·route guard가 쓰는 권한·capability 같은 derived decision을 store에 저장·동기화하거나 단일 화면 값까지 store로 올린다.
 
@@ -2018,6 +2086,8 @@ useEffect(() => {
 
 ### 7.9 Use Functional setState Updates When Based on Previous State
 
+**Rule:** `R35` · `state-use-functional-setstate-updates`
+
 **Applies when:** 다음 state가 현재 state에 의존하는 handler·async callback·반복 갱신에서 \`setState\` 호출 방식을 추가·변경한다.
 
 **Impact: MEDIUM-HIGH (prevents stale closure bugs when the next value depends on the current state)**
@@ -2057,6 +2127,8 @@ const handleToggleUser = (userId: string) => {
 
 ### 7.10 Use Lazy State Initializers for Expensive Defaults
 
+**Rule:** `R36` · `state-use-lazy-state-initializers-for-expensive-defaults`
+
 **Applies when:** \`useState\` 초기값에 localStorage 파싱, 인덱스 생성, 큰 배열 정규화 같은 비용 있는 계산을 추가·변경한다.
 
 **Impact: MEDIUM (prevents repeated setup work when the initial state is expensive to compute)**
@@ -2081,6 +2153,8 @@ const [draftFilter] = useState(() => {
 ```
 
 ### 7.11 Use startTransition for Non-urgent Visual Updates
+
+**Rule:** `R37` · `state-use-starttransition-for-non-urgent-updates`
 
 **Applies when:** 클릭·선택·필터 변경 뒤 큰 list·table·tree를 다시 그리는 state update의 우선순위나 transition 처리를 바꾼다.
 
@@ -2111,6 +2185,8 @@ const handleStatusFilterChange = (nextStatus: EntryStatusFilter) => {
 ```
 
 ### 7.12 Use useDeferredValue for Heavy Derived Renders
+
+**Rule:** `R38` · `state-use-usedeferredvalue-for-heavy-derived-renders`
 
 **Applies when:** 검색어·필터·정렬 입력이 무거운 파생 view를 갱신해 typing 지연이 생기거나 \`useDeferredValue\` 기반 계산을 추가·변경한다.
 
@@ -2143,6 +2219,8 @@ const filteredRows = useMemo(() => {
 ```
 
 ### 7.13 Use useEffectEvent for Non-reactive Effect Callbacks
+
+**Rule:** `R39` · `state-use-effectevent-for-non-reactive-effect-callbacks`
 
 **Applies when:** subscription effect가 최신 prop·state callback을 읽도록 ref 동기화 hack, dependency 재설치 또는 \`useEffectEvent\`를 추가·변경한다.
 
@@ -2202,6 +2280,8 @@ useEffect(() => {
 React 경계 선언에는 companion skill인 `convention-typescript`의 annotation 표준을 적용하고, compound component의 public part는 `@part`와 `@description`으로 읽히게 문서화하며, inline comment는 JSX나 handler 흐름에서 비자명한 제약만 설명해야 합니다.
 
 ### 8.1 Document Compound Parts with @part and @description
+
+**Rule:** `R40` · `docs-document-compound-parts-with-part-and-description`
 
 **Applies when:** compound component의 exported public part·props interface·part 내부 handler를 추가·변경하거나 public part 문서를 수정한다.
 
@@ -2299,6 +2379,8 @@ const DialogClose = (props: DialogCloseProps) => {
 
 ### 8.2 Limit Inline Comments to Non-obvious Logic
 
+**Rule:** `R41` · `docs-limit-inline-comments-to-non-obvious-logic`
+
 **Applies when:** React 함수·handler·JSX 인접 로직 안의 \`//\` 주석을 추가·수정하거나 자명한 설명과 실제 제약을 구분해 정리한다.
 
 **Requires selected:** `typescript/docs-keep-inline-comments-for-constraints-and-caveats` · N/A 불가
@@ -2329,6 +2411,8 @@ if (mutationFileUpload.isPending) {
 ```
 
 ### 8.3 Require JSDoc on React Hooks, Handlers, and Key Declarations
+
+**Rule:** `R42` · `docs-require-jsdoc-on-key-declarations`
 
 **Applies when:** query·mutation, 비자명한 handler/effect, exported helper/custom hook/store, exported 또는 re-exported public type/interface, 예외 memo 선언을 추가·변경한다.
 

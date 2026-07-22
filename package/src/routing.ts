@@ -394,7 +394,7 @@ const createCanonicalRoutingSource = (args: CanonicalRoutingSourceArgs): string 
 /**
  * @helper skill 이름 기준 local ordinal prefix 계산
  */
-const getOrdinalPrefix = (skillName: string): string => {
+export const getRoutingOrdinalPrefix = (skillName: string): string => {
 	const firstAlphanumericCharacter = Array.from(skillName).find((character) => /[A-Za-z0-9]/.test(character));
 
 	if (!firstAlphanumericCharacter) {
@@ -415,7 +415,7 @@ export const generateRulesIndexMarkdown = (document: LoadedSkillDocument, direct
 
 	const canonicalRoutingSource = createCanonicalRoutingSource({document, sections: orderedSections, companions: orderedCompanions});
 	const digest = createHash("sha256").update(canonicalRoutingSource).digest("hex");
-	const ordinalPrefix = getOrdinalPrefix(document.skillName);
+	const ordinalPrefix = getRoutingOrdinalPrefix(document.skillName);
 	const lines = [
 		`# ${escapeMarkdownText(document.metadata.title)} Rule Index`,
 		"",

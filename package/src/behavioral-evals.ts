@@ -5,7 +5,13 @@ import path from "node:path";
 import {getSkillPaths, packagePaths} from "./config.js";
 import {parseDependencyDeclaration} from "./dependencies.js";
 import {readSkillDocument} from "./parser.js";
-import {generateRulesIndexMarkdown, getCanonicalRoutingRuleIds, getCanonicalRoutingTargets, getRuleId} from "./routing.js";
+import {
+	generateRulesIndexMarkdown,
+	getCanonicalRoutingRuleIds,
+	getCanonicalRoutingTargets,
+	getRoutingOrdinalPrefix,
+	getRuleId,
+} from "./routing.js";
 import type {LoadedSkillDocument, SkillRule} from "./types.js";
 
 /**
@@ -635,6 +641,8 @@ export const createBehavioralChildPayloadContract = (): Record<string, unknown> 
 	},
 	declaredLoadedFiles: "{kind:'declared',paths:string[]}; exact keys only; paths are declarations, not observed telemetry",
 	activatedSkills: "string[] in canonical activation order; [] for no-skill",
+	identityDictionaryUse:
+		"For full-handbook, copy from identityDictionary every ordinal and stable ID verbatim; never infer, shorten, or rewrite a stable ID from its heading. Before writing, verify each activated skill partition union exactly equals that skill's identityDictionary stable-ID sequence with no missing, extra, overlap, or duplicate value.",
 	receipts:
 		"Array<{skill:string,indexDigest:sha256|null,selected:Array<{ordinal:string,id:string}>,notApplicable:Array<{ordinal:string,id:string}>,unknown:Array<{ordinal:string,id:string}>,excludedGroups:Array<{ordinals:string[],reason:string}>,expanded:Array<{ordinal:string,id:string,contractPath:string,fullRulePath:string,reason:string,mandatoryCritical:boolean}>}>; exact keys only; ordinal is a string such as T05; full-handbook indexDigest is null, progressive/mutation uses the current digest",
 	routingTrace:
@@ -1376,16 +1384,6 @@ const getQualifiedRuleParts = (qualifiedRuleId: string, label: string): [string,
 	return [qualifiedRuleId.slice(0, separatorIndex), qualifiedRuleId.slice(separatorIndex + 1)];
 };
 
-const getOrdinalPrefix = (skillName: string): string => {
-	const prefix = Array.from(skillName).find((character) => /[A-Za-z0-9]/.test(character));
-
-	if (!prefix) {
-		throw new Error(`Skill "${skillName}" has no ordinal prefix character.`);
-	}
-
-	return prefix.toUpperCase();
-};
-
 /**
  * @api structured skill source와 generated index identity 로드
  */
@@ -1405,7 +1403,7 @@ const readSkillRoutingSnapshot = async (skillName: string, skillRootDir: string)
 	}
 
 	const ruleIds = getCanonicalRoutingRuleIds(document);
-	const ordinalPrefix = getOrdinalPrefix(skillName);
+	const ordinalPrefix = getRoutingOrdinalPrefix(skillName);
 
 	return {
 		document,
@@ -1434,7 +1432,7 @@ export const assertBehavioralFullHandbookIdentityDictionary = async (
 
 	for (const skillName of skillNames) {
 		const snapshot = await readSkillRoutingSnapshot(skillName, skillRootDir);
-		const ordinalPrefix = getOrdinalPrefix(skillName);
+		const ordinalPrefix = getRoutingOrdinalPrefix(skillName);
 		const expected = snapshot.ruleIds.map((ruleId, index) => {
 			const title = snapshot.ruleById.get(ruleId)!.title.replace(/`/g, "");
 			return `${ordinalPrefix}${String(index + 1).padStart(2, "0")}|${title}|${ruleId}`;

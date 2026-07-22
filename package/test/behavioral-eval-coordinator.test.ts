@@ -237,6 +237,10 @@ test("coordinator persists a deterministic short dispatch and sealed child reque
 		assert.equal(payloadContract.exactObjectKeysOnly, true);
 		assert.deepEqual(payloadContract.runtime, createNoSkillChildPayload().runtime);
 		assert.match(String(payloadContract.activatedSkills), /string\[\]/);
+		assert.match(
+			String(payloadContract.identityDictionaryUse),
+			/copy.*identityDictionary.*ordinal.*stable ID.*verbatim.*never infer.*heading.*verify.*union/i,
+		);
 		assert.match(String(payloadContract.routingTrace), /generatedIndexDigests:Record<string,sha256>/);
 		assert.match(String(payloadContract.routingTrace), /selected:Record<string,string\[\]>/);
 		assert.match(String(payloadContract.routingTrace), /scopeEvidence.*append-only.*never remove/i);
@@ -291,6 +295,10 @@ test("coordinator persists a deterministic short dispatch and sealed child reque
 		});
 		assert.deepEqual(Object.keys(fullHandbook.request.identityDictionary).sort(), ["css", "react", "typescript"]);
 		assert.equal(Object.values(fullHandbook.request.identityDictionary).flat().length, 85);
+		assert.match(
+			String((fullHandbook.request.armPolicy as Record<string, unknown>).promptSuffix),
+			/identityDictionary.*verbatim.*never infer.*heading.*union/i,
+		);
 		assert.deepEqual(fullHandbook.request.candidateSkillEntrypoints, [
 			"skill/react/SKILL.md",
 			"skill/typescript/SKILL.md",

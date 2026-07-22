@@ -8,9 +8,12 @@ import {readGeneratedDirectoryFileNames, replaceGeneratedFiles} from "./generate
 import {buildRuleAnchor, buildSectionAnchor, normalizeHeadingTitle, readResolvedSkillDocuments, replaceRuleHeading} from "./parser.js";
 import {
 	escapeMarkdownText,
+	getCanonicalRoutingRuleIds,
 	generateRuleContractMarkdown,
 	generateRulesIndexMarkdown,
 	getCanonicalRoutingTargets,
+	getRoutingOrdinalPrefix,
+	getRuleId,
 	getRulesForSection,
 } from "./routing.js";
 import type {CompiledSkillSection, LoadedSkillDocument, SkillCompanion, SkillMetadata, SkillPaths} from "./types.js";
@@ -77,6 +80,10 @@ interface GenerateMarkdownArgs {
 	 * @field handbook 마지막에 표시할 참고 링크 목록
 	 */
 	references: string[];
+	/**
+	 * @field progressive full handbook에서 그대로 노출할 stable rule ID별 canonical ordinal
+	 */
+	routingOrdinalByRuleId: Map<string, string>;
 }
 
 /**
@@ -203,7 +210,7 @@ const collectCompanionSkills = (rootDocument: LoadedSkillDocument, documents: Lo
  * @helper metadata와 resolved section을 compiled markdown 본문으로 조립
  */
 export const generateMarkdown = (args: GenerateMarkdownArgs): string => {
-	const {skillName, metadata, sections, companionSkills, references} = args;
+	const {skillName, metadata, sections, companionSkills, references, routingOrdinalByRuleId} = args;
 	const lines: string[] = [];
 	const dependencyDeclaration = parseDependencyDeclaration(skillName, metadata);
 	const usesCompanionDeclarations = dependencyDeclaration.kind === "companions";
@@ -321,7 +328,17 @@ export const generateMarkdown = (args: GenerateMarkdownArgs): string => {
 					throw new Error(`Rule "${rule.title}" is missing a heading boundary for handbook rendering.`);
 				}
 
-				const routingMetadata = [`**Applies when:** ${escapeMarkdownText(rule.appliesWhen)}`];
+				const ruleId = getRuleId(rule);
+				const ordinal = routingOrdinalByRuleId.get(ruleId);
+
+				if (!ordinal) {
+					throw new Error(`Rule "${rule.title}" is missing its canonical routing ordinal.`);
+				}
+
+				const routingMetadata = [
+					`**Rule:** \`${escapeMarkdownText(ordinal)}\` · \`${escapeMarkdownText(ruleId)}\``,
+					`**Applies when:** ${escapeMarkdownText(rule.appliesWhen)}`,
+				];
 
 				if (rule.requiresSelected.length > 0) {
 					routingMetadata.push(
@@ -379,6 +396,10 @@ const prepareSkillBuild = async (skillPaths: SkillPaths): Promise<PreparedSkillB
 	const companionSkills = collectCompanionSkills(rootDocument, documents);
 	const localSections = buildCompiledSections(skillPaths.skillName, [rootDocument]);
 	const localReferences = collectReferenceLinks([rootDocument]);
+	const ordinalPrefix = getRoutingOrdinalPrefix(rootDocument.skillName);
+	const routingOrdinalByRuleId = new Map(
+		getCanonicalRoutingRuleIds(rootDocument).map((ruleId, index) => [ruleId, `${ordinalPrefix}${String(index + 1).padStart(2, "0")}`]),
+	);
 
 	return {
 		rootDocument,
@@ -388,6 +409,7 @@ const prepareSkillBuild = async (skillPaths: SkillPaths): Promise<PreparedSkillB
 			sections: localSections,
 			companionSkills,
 			references: localReferences,
+			routingOrdinalByRuleId,
 		}),
 	};
 };
