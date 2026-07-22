@@ -1,0 +1,136 @@
+{
+  "activationPolicy": "This observational arm activates no convention skill and reads no repository convention document.",
+  "arm": "no-skill",
+  "armPolicy": {
+    "allowedReads": [],
+    "forbiddenReads": [
+      "all repository files",
+      "all skill files",
+      "all convention documents"
+    ],
+    "promptSuffix": "Do not use any convention skill or repository convention document. Declare loaded files as an empty array. Treat virtualFiles as the immutable before state; modify virtual code only in the returned virtualPatch and never edit repository source files.",
+    "receiptContract": "No exact routing receipt is required. The response is an observational baseline for domain/rule recall and completion discipline.",
+    "routingPassesRequired": false
+  },
+  "armRoutingContract": "routingTrace and driftReceipt are null; activatedSkills, receipts, and declaredLoadedFiles.paths are empty.",
+  "assignedChildPayloadPath": "/Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v11-runs/no-skill--css-repeated-values-and-optional-token--t2.child-payload.json",
+  "candidateSkillEntrypoints": [],
+  "childPayloadContract": {
+    "activatedSkills": "string[] in canonical activation order; [] for no-skill",
+    "assignedChildPayloadPath": "/Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v11-runs/no-skill--css-repeated-values-and-optional-token--t2.child-payload.json",
+    "completion": "{status:'COMPLETE'|'BLOCKED',blocked:boolean,coverageFailCount:non-negative-integer,semanticFailCount:non-negative-integer,unknownCount:non-negative-integer,reason:string}; exact keys only; counts must equal the payload evidence; COMPLETE iff all three counts are zero; BLOCKED iff at least one count is non-zero; task infeasibility, missing virtualFiles, or a null virtualPatch is recorded in reason/limitations and is not an additional blocker",
+    "declaredLoadedFiles": "{kind:'declared',paths:string[]}; exact keys only; paths are declarations, not observed telemetry",
+    "declaredLoadValidation": {
+      "fullHandbook": "full-handbook paths are exactly each activated skill's SKILL.md then AGENTS.md in activatedSkills order; no contract, RULES_INDEX, rule, or extra path is allowed.",
+      "mutation": "mutation prefixes skill/convention-audit/SKILL.md and skill/convention-audit/AGENTS.md, then follows the progressive sequence for its receipt-backed Selected/Unknown rules.",
+      "progressive": "progressive paths first list every activated SKILL.md then RULES_INDEX.md pair in activatedSkills order; next, per activated skill and canonical rule order, list each rule that was Selected or Unknown in any pass as its contract followed immediately, when CRITICAL or explicitly Expanded, by its full rule. No extra path is allowed."
+    },
+    "driftReceipt": "null outside replacement-final RTE02; otherwise {routingTrace:<same exact routingTrace object>,activatedSkills:string[],receipts:<same exact receipts array>}; exact keys only",
+    "driftValidation": "For RTE02, the initial payload keeps driftReceipt null. The replacement-final episode uses the same routing/receipt validation and must preserve every initially activated skill and every initially Selected rule; the coordinator constructs final driftReceipt from the validated drift-stage top-level routingTrace, activatedSkills, and receipts.",
+    "exactObjectKeysOnly": true,
+    "forbiddenCoordinatorFields": [
+      "arm",
+      "armSha256",
+      "assignedChildPayloadPath",
+      "childPayloadSha256",
+      "childRequestSha256",
+      "exactPrompt",
+      "generatedIndexDigests",
+      "promptByteLength",
+      "promptRendererVersion",
+      "promptSha256",
+      "protocolId",
+      "protocolSha256",
+      "repositoryHead",
+      "repositoryRoot",
+      "requestContentDigest",
+      "runId",
+      "scenarioId",
+      "scenarioPrompt",
+      "scenarioSha256",
+      "schemaVersion",
+      "scoring",
+      "stagedProvenanceSha256",
+      "trial"
+    ],
+    "formats": {
+      "ordinal": "uppercase prefix plus two digits, for example R07, T05, or C14",
+      "qualifiedRuleRef": "<skill>/<stable-rule-id>; never include an ordinal in routing edge references",
+      "sha256": "sha256:<64 lowercase hex>"
+    },
+    "limitations": "string[]; use [] when none",
+    "receipts": "Array<{skill:string,indexDigest:sha256|null,selected:Array<{ordinal:string,id:string}>,notApplicable:Array<{ordinal:string,id:string}>,unknown:Array<{ordinal:string,id:string}>,excludedGroups:Array<{ordinals:string[],reason:string}>,expanded:Array<{ordinal:string,id:string,contractPath:string,fullRulePath:string,reason:string,mandatoryCritical:boolean}>}>; exact keys only; ordinal is a string such as T05; full-handbook indexDigest is null, progressive/mutation uses the current digest",
+    "receiptValidation": {
+      "exclusions": "excludedGroups use non-empty reasons; their ordinal union exactly equals N/A, with no missing ordinal and no duplicate ordinal across groups.",
+      "expansion": "Expanded records are unique, use exact contract/full-rule paths, and belong to a rule that was Selected or Unknown in some pass. Every CRITICAL Selected or Unknown rule has exactly one Expanded record; full-handbook uses Expanded=[].",
+      "finalMatch": "Receipt skill order exactly matches activatedSkills, and every Selected/N/A/Unknown ordinal-stable-ID partition exactly matches the final routing pass in canonical rule order."
+    },
+    "requiredFields": [
+      "runtime",
+      "declaredLoadedFiles",
+      "activatedSkills",
+      "receipts",
+      "routingTrace",
+      "driftReceipt",
+      "semanticVerdicts",
+      "completion",
+      "limitations",
+      "response",
+      "virtualPatch"
+    ],
+    "response": "non-empty string",
+    "returnBoundary": "The coordinator supplies the one allowed payload path per run. Write exactly that JSON file with apply_patch, modify no other file, do not echo prompt or coordinator bindings, then return only concise status.",
+    "routingTrace": "null or {passes:Array<{pass:positive-integer,activatedSkills:string[],scopeEvidence:string[],generatedIndexDigests:Record<string,sha256>,selected:Record<string,string[]>,notApplicable:Record<string,string[]>,unknown:Record<string,string[]>,requiresSelectedEvaluated:Array<{source:string,target:string,sourceStatus:'Selected'|'Unknown',outcome:'selected'|'not-propagated-unknown'}>,requiresSelectedAdded:Array<{source:string,target:string}>,reviewWithReevaluated:Array<{source:string,target:string,outcome:'Selected'|'N/A'|'Unknown'|'INACTIVE',evidence:string}>,completionGatesEvaluated:Array<{rule:string,outcome:'selected'}>,completionGateAdded:string[]}>,stablePair:[positive-integer,positive-integer],stable:true}; exact keys only; selected/notApplicable/unknown values are stable rule ID strings without ordinals; source, target, and rule use qualifiedRuleRef; scopeEvidence is append-only across passes: preserve every prior string and append only new task facts or final-Selected mandatory requirements; never remove, replace, or rewrite earlier evidence; every pass exactly evaluates every disclosed mandatory edge from each Selected or Unknown source and must omit N/A sources because their contracts are not loaded; requiresSelectedAdded exactly lists every Selected mandatory edge whose target was not Selected in the previous pass; for pass 1 treat the previous selection as empty and include the edge even when the target is independently applicable; reviewWith exactly covers Selected sources; completionGatesEvaluated exactly covers every active completion gate; completionGateAdded exactly lists each completion gate that was not Selected in the previous pass, treating the previous selection for pass 1 as empty; candidate arms require at least three passes and an identical final stable pair with empty selection-changing deltas",
+    "routingValidation": {
+      "arrayValues": "All string arrays contain non-empty unique values; edge, evaluation, and gate arrays contain no duplicate item.",
+      "finalClosure": "Final Unknown is empty; every required companion is activated; every completion gate and every requiresSelected target from a final Selected source is Selected.",
+      "monotonic": "activatedSkills and every per-skill Selected set are append-only across passes; scopeEvidence follows the same append-only rule declared in routingTrace.",
+      "partitions": "In every pass, selected/notApplicable/unknown record keys exactly equal activatedSkills in the same order. Each activated skill's current rule universe is complete, disjoint, duplicate-free, and each subset follows canonical rule order.",
+      "passSequence": "Pass numbers are consecutive integers from 1 through N with no gap.",
+      "reviewWith": "Every reviewWith outcome exactly matches the target partition: Selected, N/A, Unknown, or INACTIVE when the target skill is inactive. reviewWith never forces or selects a target. Every reviewWith record requires non-empty evidence.",
+      "stablePair": "stablePair names the final two consecutive passes. Their canonical state is identical, stable is true, and both requiresSelectedAdded and completionGateAdded arrays are empty.",
+      "transitionOrder": "requiresSelectedEvaluated and requiresSelectedAdded use canonical activated-skill and source-rule order, then the code-point ascending target order printed by generated contracts/indexes/handbooks; reviewWithReevaluated is an exact unique edge set whose array order is non-semantic; completion arrays use canonical rule order; no edge or gate is duplicated."
+    },
+    "runtime": {
+      "declared": {
+        "forkTurns": "none",
+        "oneChildPerTrial": true,
+        "requestedModel": "gpt-5.6-sol",
+        "requestedReasoning": "high",
+        "runtime": "Codex CLI isolated child session"
+      },
+      "evidenceClass": "declared-telemetry-only",
+      "unavailable": {
+        "actualReasoningTelemetry": null,
+        "childTokenUsage": null,
+        "exactModelBuild": null,
+        "observedFileReads": null,
+        "runtimeVersion": null
+      }
+    },
+    "semanticVerdicts": "Array<{criterion:string,verdict:'PASS'|'FAIL'|'UNKNOWN',reason:string}>; exact keys only; use [] when no criterion is declared",
+    "virtualPatch": "null or {files:Array<{path:string,beforeState:'present'|'absent',beforeSha256:sha256|null,afterState:'present'|'absent',after:string|null,afterSha256:sha256|null}>,summary:string}; exact keys only; file order and before state/digest exactly match virtualFiles; afterSha256 hashes exact UTF-8 after bytes",
+    "virtualPatchPolicy": "Return a non-null virtualPatch whose paths, beforeState, and beforeSha256 values exactly cover virtualFiles in order.",
+    "writeScope": "Write exactly /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v11-runs/no-skill--css-repeated-values-and-optional-token--t2.child-payload.json with apply_patch and do not create or modify any other file."
+  },
+  "files": [
+    "src/components/ui/theme-preview/theme-preview.css"
+  ],
+  "identityDictionary": {},
+  "protocolId": "progressive-loading-behavioral-v3",
+  "repositoryRoot": "/Users/l-20220017/workspace/agent-conventions-progressive-loading",
+  "runId": "no-skill--css-repeated-values-and-optional-token--t2",
+  "scenarioId": "css-repeated-values-and-optional-token",
+  "scenarioInput": null,
+  "schemaVersion": 3,
+  "task": "scope a global .ant-tree selector under the existing .ui_themePreview owner root with one descendant level, and replace repeated color/spacing/radius with optional CSS variables and fallbacks; keep the file and owner name unchanged.",
+  "trial": 2,
+  "virtualFiles": [
+    {
+      "content": ".ui_themePreview {\n  display: block;\n}\n\n.ant-tree .ant-tree-node-content-wrapper {\n  color: #334155;\n  padding: 8px 12px;\n  border-radius: 6px;\n}\n\n.ant-tree .ant-tree-node-content-wrapper:hover {\n  background: #334155;\n  padding: 8px 12px;\n  border-radius: 6px;\n}\n",
+      "path": "src/components/ui/theme-preview/theme-preview.css",
+      "sha256": "sha256:7912322f693959a55c484b7fca64222ab87daf66f22eb32927e1d5419cb81184",
+      "state": "present"
+    }
+  ]
+}

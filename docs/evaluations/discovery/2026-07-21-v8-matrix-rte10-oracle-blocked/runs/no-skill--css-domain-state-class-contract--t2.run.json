@@ -1,0 +1,88 @@
+{
+  "activatedSkills": [],
+  "arm": "no-skill",
+  "armSha256": "sha256:7f56dd3946274dc5773019c34c4a3ac33bb3344ab1942290396bc73550f33164",
+  "childPayloadSha256": "sha256:8aed6843ccb9f893b955e9cf0493a4688912c12743b7bfb13bae50b3b8d36f73",
+  "childRequestSha256": "sha256:de989e523712363ef1740cf25c8324c8eab78c9c0761d34cbb9ae219ba7d47e9",
+  "completion": {
+    "blocked": false,
+    "coverageFailCount": 0,
+    "reason": "The virtual patch covers both supplied files and satisfies the requested class split, direct clsx composition, and pseudo-state preservation.",
+    "semanticFailCount": 0,
+    "status": "COMPLETE",
+    "unknownCount": 0
+  },
+  "declaredLoadedFiles": {
+    "kind": "declared",
+    "paths": []
+  },
+  "driftReceipt": null,
+  "exactPrompt": "Read and execute /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v3-runs/no-skill--css-domain-state-class-contract--t2.child-request.json (sha256:de989e523712363ef1740cf25c8324c8eab78c9c0761d34cbb9ae219ba7d47e9).\nAssigned payload path: /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v3-runs/no-skill--css-domain-state-class-contract--t2.child-payload.json. Write exactly this one file with apply_patch; create or modify no other file.\nDo not echo the dispatch prompt or coordinator-owned fields; after writing valid childPayload JSON, return only concise status.",
+  "generatedIndexDigests": {
+    "css": "sha256:b9c8fe78ce9066c8baedec798e707f18bfe3845e6fdf4137a6f724d8e94bb1ff",
+    "react": "sha256:c2036ebd5ca4d70b5e6734a53f9a3b8227cb93fa068bda03e318eb0a88ddc4bc",
+    "typescript": "sha256:9891aafd9a34683772d5d7653b4fa82d10e0bee8b8b4412acdd9d2889f832a7e"
+  },
+  "limitations": [],
+  "promptByteLength": 695,
+  "promptRendererVersion": "behavioral-prompt-renderer-v3",
+  "promptSha256": "sha256:19ba50b9907a3ccbec3312996260475b55b5f7460136ecfe75dd3f42fff2b815",
+  "protocolId": "progressive-loading-behavioral-v3",
+  "protocolSha256": "sha256:59112f681d1593bb976868637a3b935f6d942f0ecef13301d8c7cecf958e9c61",
+  "receipts": [],
+  "repositoryHead": "be060c52db94b6d344439c5fe2a7bf96349b49be",
+  "requestContentDigest": "sha256:40fd44216cd4a387e4d11298cf23d5349bef56c18c1c443c39fe5575de20d617",
+  "response": "기본 버튼 클래스와 활성 modifier를 분리하고 clsx로 조합했으며, 기존 hover 동작은 활성 버튼에만 유지했습니다.",
+  "routingTrace": null,
+  "runId": "no-skill--css-domain-state-class-contract--t2",
+  "runtime": {
+    "declared": {
+      "forkTurns": "none",
+      "oneChildPerTrial": true,
+      "requestedModel": "gpt-5.6-sol",
+      "requestedReasoning": "high",
+      "runtime": "Codex collaboration child agent"
+    },
+    "evidenceClass": "declared-telemetry-only",
+    "unavailable": {
+      "actualReasoningTelemetry": null,
+      "childTokenUsage": null,
+      "exactModelBuild": null,
+      "observedFileReads": null,
+      "runtimeVersion": null
+    }
+  },
+  "scenarioId": "css-domain-state-class-contract",
+  "scenarioPrompt": "split listButtonActive into base plus --active, add a direct clsx import, and compose with clsx() in catalog/index.tsx and _index.css; do not change pseudo-states.",
+  "scenarioSha256": "sha256:7a9bb033ab57cd27ddfedb8967a0d5469648ae6ebc548bf17cc95b87aabcce94",
+  "schemaVersion": 3,
+  "scoring": {
+    "eligible": false,
+    "kind": "observational",
+    "reason": "no-skill arm"
+  },
+  "semanticVerdicts": [],
+  "stagedProvenanceSha256": null,
+  "trial": 2,
+  "virtualPatch": {
+    "files": [
+      {
+        "after": "import clsx from \"clsx\";\nimport \"./_index.css\";\n\ninterface CatalogEntry {\n  id: string;\n  label: string;\n  active: boolean;\n}\n\nexport const CatalogPage = ({entries}: {entries: CatalogEntry[]}) => (\n  <nav className=\"route_catalog\">\n    {entries.map((entry) => (\n      <button\n        key={entry.id}\n        className={clsx(\"route_catalog__listButton\", {\n          \"route_catalog__listButton--active\": entry.active,\n        })}\n      >\n        {entry.label}\n      </button>\n    ))}\n  </nav>\n);\n",
+        "afterSha256": "sha256:7704294c88f4e7610d069e8e4bf6c730cc16fe059dd31b71d28115c849707fac",
+        "afterState": "present",
+        "beforeSha256": "sha256:abb019ed5a3c45ab86dfa1ffee120ac20468d10e0d9489ba5b237b9a8ef31d94",
+        "beforeState": "present",
+        "path": "src/routes/catalog/index.tsx"
+      },
+      {
+        "after": ".route_catalog__listButton {\n  display: flex;\n}\n\n.route_catalog__listButton--active {\n  color: var(--color-accent);\n  font-weight: 700;\n}\n\n.route_catalog__listButton--active:hover {\n  text-decoration: underline;\n}\n",
+        "afterSha256": "sha256:dea9ac6974fad93eec8f2e65fe3ae84575054da3b0e57b470076536d72793431",
+        "afterState": "present",
+        "beforeSha256": "sha256:380447b980dedb2ae1260f1fb22e0ab14ddaf07d1a4a9a3a013e784501262bf7",
+        "beforeState": "present",
+        "path": "src/routes/catalog/_index.css"
+      }
+    ],
+    "summary": "Split the catalog button class into a base class and an active modifier, compose them with a direct clsx import, and preserve the active-only hover behavior."
+  }
+}

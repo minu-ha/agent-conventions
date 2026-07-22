@@ -1,0 +1,88 @@
+{
+  "activatedSkills": [],
+  "arm": "no-skill",
+  "armSha256": "sha256:7f56dd3946274dc5773019c34c4a3ac33bb3344ab1942290396bc73550f33164",
+  "childPayloadSha256": "sha256:a9f841a4ef73c13defe18a269b52261c212060454722fc7ee76cd15a6b3a63f0",
+  "childRequestSha256": "sha256:e6e34cbd308ce350b9ce70486869b3557d39c7c85bb682f96ca28fb6309424a8",
+  "completion": {
+    "blocked": false,
+    "coverageFailCount": 0,
+    "reason": "The virtual patch fully applies the requested base/modifier class split, direct clsx import, conditional clsx composition, and preserves the active hover behavior.",
+    "semanticFailCount": 0,
+    "status": "COMPLETE",
+    "unknownCount": 0
+  },
+  "declaredLoadedFiles": {
+    "kind": "declared",
+    "paths": []
+  },
+  "driftReceipt": null,
+  "exactPrompt": "Read and execute /tmp/v12-no-skill--css-domain-state-class-contract--t1-attempt1.GR4apL/no-skill--css-domain-state-class-contract--t1.child-request.json (sha256:e6e34cbd308ce350b9ce70486869b3557d39c7c85bb682f96ca28fb6309424a8).\nAssigned payload path: /tmp/v12-no-skill--css-domain-state-class-contract--t1-attempt1.GR4apL/no-skill--css-domain-state-class-contract--t1.child-payload.json. Write exactly this one file with apply_patch; create or modify no other file.\nDo not echo the dispatch prompt or coordinator-owned fields; after writing valid childPayload JSON, return only concise status.",
+  "generatedIndexDigests": {
+    "css": "sha256:6ac4c965197283a2eeea007a5837f0760f8df25b666658465f177e2026a2a4f1",
+    "react": "sha256:f229054372cd355e6ca0a1828ecc98cb0341ab33f72a3a087591125e6d6f685b",
+    "typescript": "sha256:f72208d0e31d3fe580300782d0e3c7eb1341339c911149a44789546076799f09"
+  },
+  "limitations": [],
+  "promptByteLength": 593,
+  "promptRendererVersion": "behavioral-prompt-renderer-v3",
+  "promptSha256": "sha256:5154bb31d547deb4f7f06674e0010180ed105a82ae293e1fc9a7f151e1b155f6",
+  "protocolId": "progressive-loading-behavioral-v3",
+  "protocolSha256": "sha256:ec9c8a55307ad899c5532f72bde0a9f9c1707cb0045edbd704f4debdb30d766b",
+  "receipts": [],
+  "repositoryHead": "ec328c1eb1a87a8d13f2c222e748250cea7585c5",
+  "requestContentDigest": "sha256:e32261642c41315c4bd9dc723eb79ce4f675d91d40ca0cc24bb4760eec9ae3c7",
+  "response": "Prepared a virtual patch that always applies the catalog list-button base class, conditionally applies its --active modifier with clsx(), and preserves the active hover pseudo-state behavior.",
+  "routingTrace": null,
+  "runId": "no-skill--css-domain-state-class-contract--t1",
+  "runtime": {
+    "declared": {
+      "forkTurns": "none",
+      "oneChildPerTrial": true,
+      "requestedModel": "gpt-5.6-sol",
+      "requestedReasoning": "high",
+      "runtime": "Codex CLI isolated child session"
+    },
+    "evidenceClass": "declared-telemetry-only",
+    "unavailable": {
+      "actualReasoningTelemetry": null,
+      "childTokenUsage": null,
+      "exactModelBuild": null,
+      "observedFileReads": null,
+      "runtimeVersion": null
+    }
+  },
+  "scenarioId": "css-domain-state-class-contract",
+  "scenarioPrompt": "split listButtonActive into base plus --active, add a direct clsx import, and compose with clsx() in catalog/index.tsx and _index.css; do not change pseudo-states.",
+  "scenarioSha256": "sha256:7a9bb033ab57cd27ddfedb8967a0d5469648ae6ebc548bf17cc95b87aabcce94",
+  "schemaVersion": 3,
+  "scoring": {
+    "eligible": false,
+    "kind": "observational",
+    "reason": "no-skill arm"
+  },
+  "semanticVerdicts": [],
+  "stagedProvenanceSha256": null,
+  "trial": 1,
+  "virtualPatch": {
+    "files": [
+      {
+        "after": "import clsx from \"clsx\";\n\nimport \"./_index.css\";\n\ninterface CatalogEntry {\n  id: string;\n  label: string;\n  active: boolean;\n}\n\nexport const CatalogPage = ({entries}: {entries: CatalogEntry[]}) => (\n  <nav className=\"route_catalog\">\n    {entries.map((entry) => (\n      <button\n        key={entry.id}\n        className={clsx(\n          \"route_catalog__listButton\",\n          entry.active && \"route_catalog__listButton--active\",\n        )}\n      >\n        {entry.label}\n      </button>\n    ))}\n  </nav>\n);\n",
+        "afterSha256": "sha256:276764ee1ef2bd64f79956a3b0db957ee568d31264e77812ef6c68acd382b1e3",
+        "afterState": "present",
+        "beforeSha256": "sha256:abb019ed5a3c45ab86dfa1ffee120ac20468d10e0d9489ba5b237b9a8ef31d94",
+        "beforeState": "present",
+        "path": "src/routes/catalog/index.tsx"
+      },
+      {
+        "after": ".route_catalog__listButton {\n  display: flex;\n}\n\n.route_catalog__listButton--active {\n  color: var(--color-accent);\n  font-weight: 700;\n}\n\n.route_catalog__listButton--active:hover {\n  text-decoration: underline;\n}\n",
+        "afterSha256": "sha256:dea9ac6974fad93eec8f2e65fe3ae84575054da3b0e57b470076536d72793431",
+        "afterState": "present",
+        "beforeSha256": "sha256:380447b980dedb2ae1260f1fb22e0ab14ddaf07d1a4a9a3a013e784501262bf7",
+        "beforeState": "present",
+        "path": "src/routes/catalog/_index.css"
+      }
+    ],
+    "summary": "Split the catalog list button styling into a base class and an active modifier, composed conditionally through a direct clsx import while retaining the existing active hover rule."
+  }
+}

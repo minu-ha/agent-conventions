@@ -1,0 +1,43 @@
+{
+  "assignedChildPayloadPath": "/Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v3-runs/no-skill--derive-existing-contract-with-docs--t2.child-payload.json",
+  "childRequest": {
+    "path": "/Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v3-runs/no-skill--derive-existing-contract-with-docs--t2.child-request.json",
+    "sha256": "sha256:c2dc63ea8dac5ea4eb0f674fcb9b90b938b547d9c54750131b7e373ead058201",
+    "utf8ByteLength": 12067
+  },
+  "dispatchEnvelope": {
+    "arm": "no-skill",
+    "exactPrompt": "Read and execute /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v3-runs/no-skill--derive-existing-contract-with-docs--t2.child-request.json (sha256:c2dc63ea8dac5ea4eb0f674fcb9b90b938b547d9c54750131b7e373ead058201).\nAssigned payload path: /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v3-runs/no-skill--derive-existing-contract-with-docs--t2.child-payload.json. Write exactly this one file with apply_patch; create or modify no other file.\nDo not echo the dispatch prompt or coordinator-owned fields; after writing valid childPayload JSON, return only concise status.",
+    "generatedIndexDigests": {
+      "css": "sha256:b9c8fe78ce9066c8baedec798e707f18bfe3845e6fdf4137a6f724d8e94bb1ff",
+      "react": "sha256:c2036ebd5ca4d70b5e6734a53f9a3b8227cb93fa068bda03e318eb0a88ddc4bc",
+      "typescript": "sha256:9891aafd9a34683772d5d7653b4fa82d10e0bee8b8b4412acdd9d2889f832a7e"
+    },
+    "promptByteLength": 701,
+    "promptRendererVersion": "behavioral-prompt-renderer-v3",
+    "promptSha256": "sha256:9ec7f385db187bfc9095ecb00961904067c8ec7a951fba7b703c63aef7922027",
+    "protocolId": "progressive-loading-behavioral-v3",
+    "repositoryHead": "6a73a0a733579667ecf98a0a1fd18bec2af0108e",
+    "runId": "no-skill--derive-existing-contract-with-docs--t2",
+    "scenarioId": "derive-existing-contract-with-docs",
+    "scenarioPrompt": "replace a duplicate `UserPreview` interface with a same-name `Pick<UserRecord, ...>` alias and add concise Korean `@summary`; imports and names otherwise stay unchanged.",
+    "schemaVersion": 3,
+    "trial": 2
+  },
+  "protocol": {
+    "armSha256": "sha256:7f56dd3946274dc5773019c34c4a3ac33bb3344ab1942290396bc73550f33164",
+    "path": "/Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-behavioral-protocol.json",
+    "scenarioSha256": "sha256:2c2f1e677732141c2499d40f5b9aaaa3599802c9a49991090c7cc298fd8cde4c",
+    "sha256": "sha256:3bb92a82504457d1fd8f5a935d573e62ca97fc10208117327cc47f91eaf85006"
+  },
+  "repositoryDir": "/Users/l-20220017/workspace/agent-conventions-progressive-loading",
+  "requestContentDigest": "sha256:e2197bfa6d971567459eb5b57f76011c9a736ef5fac511f05fa97e9c595b354f",
+  "routingEvalRawSha256": {
+    "skill/css/routing-evals.json": "sha256:9f456bb7e96e9692fe2b0992966d19ea6997fb39845d36137de05e5e78f579fc",
+    "skill/react/routing-evals.json": "sha256:520751d02af9eb831d506caded1cb884ad8fe7e9623de9946130bbcdfef05133",
+    "skill/typescript/routing-evals.json": "sha256:913796f35afae16b9db3ae344837189cc0cfc47942ebd2611da76b5597c1e199"
+  },
+  "runId": "no-skill--derive-existing-contract-with-docs--t2",
+  "schemaVersion": 1,
+  "skillRootDir": "/Users/l-20220017/workspace/agent-conventions-progressive-loading/skill"
+}

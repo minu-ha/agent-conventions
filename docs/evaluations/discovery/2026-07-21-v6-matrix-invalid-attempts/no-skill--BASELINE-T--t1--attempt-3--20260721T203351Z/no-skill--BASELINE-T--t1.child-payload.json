@@ -1,0 +1,42 @@
+{
+  "runtime": {
+    "declared": {
+      "forkTurns": "none",
+      "oneChildPerTrial": true,
+      "requestedModel": "gpt-5.6-sol",
+      "requestedReasoning": "high",
+      "runtime": "Codex collaboration child agent"
+    },
+    "evidenceClass": "declared-telemetry-only",
+    "unavailable": {
+      "actualReasoningTelemetry": null,
+      "childTokenUsage": null,
+      "exactModelBuild": null,
+      "observedFileReads": null,
+      "runtimeVersion": null
+    }
+  },
+  "declaredLoadedFiles": {
+    "kind": "declared",
+    "paths": []
+  },
+  "activatedSkills": [],
+  "receipts": [],
+  "routingTrace": null,
+  "driftReceipt": null,
+  "semanticVerdicts": [],
+  "completion": {
+    "status": "BLOCKED",
+    "blocked": true,
+    "coverageFailCount": 0,
+    "semanticFailCount": 0,
+    "unknownCount": 0,
+    "reason": "No virtual files were supplied, so there is no TypeScript source to clean up or typecheck."
+  },
+  "limitations": [
+    "The scenario supplies no virtual files, so no code changes or typecheck verification can be produced.",
+    "No convention skill or repository convention document was used, so there are no repository-defined rules to enumerate."
+  ],
+  "response": "BLOCKED: No virtual TypeScript files were provided, so the requested cleanup and typecheck verification cannot be performed. Rules checked: none; convention skills and repository convention documents were intentionally not used.",
+  "virtualPatch": null
+}

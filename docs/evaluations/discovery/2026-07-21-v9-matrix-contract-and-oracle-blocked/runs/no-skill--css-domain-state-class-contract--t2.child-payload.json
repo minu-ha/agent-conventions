@@ -1,0 +1,59 @@
+{
+  "runtime": {
+    "declared": {
+      "forkTurns": "none",
+      "oneChildPerTrial": true,
+      "requestedModel": "gpt-5.6-sol",
+      "requestedReasoning": "high",
+      "runtime": "Codex collaboration child agent"
+    },
+    "evidenceClass": "declared-telemetry-only",
+    "unavailable": {
+      "actualReasoningTelemetry": null,
+      "childTokenUsage": null,
+      "exactModelBuild": null,
+      "observedFileReads": null,
+      "runtimeVersion": null
+    }
+  },
+  "declaredLoadedFiles": {
+    "kind": "declared",
+    "paths": []
+  },
+  "activatedSkills": [],
+  "receipts": [],
+  "routingTrace": null,
+  "driftReceipt": null,
+  "semanticVerdicts": [],
+  "completion": {
+    "status": "COMPLETE",
+    "blocked": false,
+    "coverageFailCount": 0,
+    "semanticFailCount": 0,
+    "unknownCount": 0,
+    "reason": "The virtual patch covers both supplied files, splits the base and active-state classes, uses a direct clsx import, and preserves the hover pseudo-state behavior."
+  },
+  "limitations": [],
+  "response": "Updated the virtual catalog button contract to always apply the base class and conditionally apply the --active modifier with clsx, while retaining the existing hover behavior.",
+  "virtualPatch": {
+    "files": [
+      {
+        "path": "src/routes/catalog/index.tsx",
+        "beforeState": "present",
+        "beforeSha256": "sha256:abb019ed5a3c45ab86dfa1ffee120ac20468d10e0d9489ba5b237b9a8ef31d94",
+        "afterState": "present",
+        "after": "import clsx from \"clsx\";\n\nimport \"./_index.css\";\n\ninterface CatalogEntry {\n  id: string;\n  label: string;\n  active: boolean;\n}\n\nexport const CatalogPage = ({entries}: {entries: CatalogEntry[]}) => (\n  <nav className=\"route_catalog\">\n    {entries.map((entry) => (\n      <button\n        key={entry.id}\n        className={clsx(\n          \"route_catalog__listButton\",\n          entry.active && \"route_catalog__listButton--active\",\n        )}\n      >\n        {entry.label}\n      </button>\n    ))}\n  </nav>\n);\n",
+        "afterSha256": "sha256:276764ee1ef2bd64f79956a3b0db957ee568d31264e77812ef6c68acd382b1e3"
+      },
+      {
+        "path": "src/routes/catalog/_index.css",
+        "beforeState": "present",
+        "beforeSha256": "sha256:380447b980dedb2ae1260f1fb22e0ab14ddaf07d1a4a9a3a013e784501262bf7",
+        "afterState": "present",
+        "after": ".route_catalog__listButton {\n  display: flex;\n}\n\n.route_catalog__listButton--active {\n  color: var(--color-accent);\n  font-weight: 700;\n}\n\n.route_catalog__listButton:hover {\n  text-decoration: underline;\n}\n",
+        "afterSha256": "sha256:52de7301826413a93c60eac19faa401cd6021264d4f8ab11480a5bad94e78e92"
+      }
+    ],
+    "summary": "Split listButtonActive into a persistent base class and a conditional --active modifier, composed through a direct clsx import, without changing the hover pseudo-state declaration."
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "runtime": {
+    "declared": {
+      "forkTurns": "none",
+      "oneChildPerTrial": true,
+      "requestedModel": "gpt-5.6-sol",
+      "requestedReasoning": "high",
+      "runtime": "Codex CLI isolated child session"
+    },
+    "evidenceClass": "declared-telemetry-only",
+    "unavailable": {
+      "actualReasoningTelemetry": null,
+      "childTokenUsage": null,
+      "exactModelBuild": null,
+      "observedFileReads": null,
+      "runtimeVersion": null
+    }
+  },
+  "declaredLoadedFiles": {
+    "kind": "declared",
+    "paths": []
+  },
+  "activatedSkills": [],
+  "receipts": [],
+  "routingTrace": null,
+  "driftReceipt": null,
+  "semanticVerdicts": [],
+  "completion": {
+    "status": "COMPLETE",
+    "blocked": false,
+    "coverageFailCount": 0,
+    "semanticFailCount": 0,
+    "unknownCount": 0,
+    "reason": "No semantic criteria were declared. No virtual files were supplied, so no virtual code change could be produced; this task infeasibility is recorded as a limitation and is not an additional blocker."
+  },
+  "limitations": [
+    "No virtualFiles were supplied, so there was no immutable before state to inspect or modify."
+  ],
+  "response": "No convention skill or convention document was used, so no convention rules were checked. Because no virtual files were provided, there is no code available to fix and no virtual patch can be produced.",
+  "virtualPatch": null
+}

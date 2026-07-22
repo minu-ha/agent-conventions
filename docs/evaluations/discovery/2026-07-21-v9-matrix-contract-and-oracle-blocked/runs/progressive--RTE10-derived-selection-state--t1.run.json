@@ -1,0 +1,1344 @@
+{
+  "activatedSkills": [
+    "react",
+    "typescript"
+  ],
+  "arm": "progressive",
+  "armSha256": "sha256:ce85daeb6c52e884592a3c7e6f17f94a9b58e8202c012ac9e40d5c8fd1b350c2",
+  "childPayloadSha256": "sha256:1b00625ad22d54816cf3e409ae8ed9068a212f701ab63b47aa0233a7eeafbd36",
+  "childRequestSha256": "sha256:44f602d1ca11a81fde9b05f55d866b74a90cd5e56aa1e972d69a02ba2f511338",
+  "completion": {
+    "blocked": false,
+    "coverageFailCount": 0,
+    "reason": "All activated rule partitions are complete, the final two routing passes are stable with no transitions, all semantic criteria pass, and the virtual patch covers the sole virtual file.",
+    "semanticFailCount": 0,
+    "status": "COMPLETE",
+    "unknownCount": 0
+  },
+  "declaredLoadedFiles": {
+    "kind": "declared",
+    "paths": [
+      "skill/react/SKILL.md",
+      "skill/react/RULES_INDEX.md",
+      "skill/typescript/SKILL.md",
+      "skill/typescript/RULES_INDEX.md",
+      "skill/react/contracts/typing-function-type-first.md",
+      "skill/react/rules/typing-function-type-first.md",
+      "skill/react/contracts/composition-named-handlers-over-inline.md",
+      "skill/react/contracts/screen-keep-derived-values-close.md",
+      "skill/react/contracts/events-name-and-curry-handlers.md",
+      "skill/react/rules/events-name-and-curry-handlers.md",
+      "skill/react/contracts/state-calculate-derived-values-during-render.md",
+      "skill/react/contracts/state-use-functional-setstate-updates.md",
+      "skill/react/contracts/docs-require-jsdoc-on-key-declarations.md",
+      "skill/typescript/contracts/naming-use-consistent-file-and-symbol-naming.md",
+      "skill/typescript/contracts/naming-use-direct-imports-and-public-entry-points.md",
+      "skill/typescript/contracts/types-prefer-function-variable-types-over-parameter-annotations.md",
+      "skill/typescript/rules/types-prefer-function-variable-types-over-parameter-annotations.md",
+      "skill/typescript/contracts/types-reuse-callback-signatures-from-existing-contracts.md",
+      "skill/typescript/contracts/docs-require-header-jsdoc-on-key-declarations.md",
+      "skill/typescript/contracts/docs-standardize-annotation-tags-by-declaration-role.md",
+      "skill/typescript/contracts/docs-write-concise-korean-comments-about-purpose-and-constraints.md",
+      "skill/typescript/contracts/guardrails-review-banned-typescript-shortcuts-before-finishing.md"
+    ]
+  },
+  "driftReceipt": null,
+  "exactPrompt": "Read and execute /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v3-runs/progressive--RTE10-derived-selection-state--t1.child-request.json (sha256:44f602d1ca11a81fde9b05f55d866b74a90cd5e56aa1e972d69a02ba2f511338).\nAssigned payload path: /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v3-runs/progressive--RTE10-derived-selection-state--t1.child-payload.json. Write exactly this one file with apply_patch; create or modify no other file.\nDo not echo the dispatch prompt or coordinator-owned fields; after writing valid childPayload JSON, return only concise status.",
+  "generatedIndexDigests": {
+    "css": "sha256:b9c8fe78ce9066c8baedec798e707f18bfe3845e6fdf4137a6f724d8e94bb1ff",
+    "react": "sha256:c2036ebd5ca4d70b5e6734a53f9a3b8227cb93fa068bda03e318eb0a88ddc4bc",
+    "typescript": "sha256:9891aafd9a34683772d5d7653b4fa82d10e0bee8b8b4412acdd9d2889f832a7e"
+  },
+  "limitations": [],
+  "promptByteLength": 697,
+  "promptRendererVersion": "behavioral-prompt-renderer-v3",
+  "promptSha256": "sha256:8175a669390975bf9d72c512e547adbda4f66a0529e5aa535ce7dc7963635153",
+  "protocolId": "progressive-loading-behavioral-v3",
+  "protocolSha256": "sha256:3bb92a82504457d1fd8f5a935d573e62ca97fc10208117327cc47f91eaf85006",
+  "receipts": [
+    {
+      "excludedGroups": [
+        {
+          "ordinals": [
+            "R01",
+            "R02",
+            "R03",
+            "R04",
+            "R05",
+            "R06"
+          ],
+          "reason": "No barrel, namespace, ownership layer, route-local placement, shared config, file, component, or exported-symbol boundary changes are requested."
+        },
+        {
+          "ordinals": [
+            "R08",
+            "R09",
+            "R10",
+            "R11",
+            "R12",
+            "R13",
+            "R14"
+          ],
+          "reason": "No prop or API view contract, shared composition API, props structure, nested component, function declaration, or complex multi-parameter signature changes occur."
+        },
+        {
+          "ordinals": [
+            "R16",
+            "R17",
+            "R18",
+            "R19",
+            "R20"
+          ],
+          "reason": "No Activity, ref API, component or support-module extraction, or runtime section boundary is changed."
+        },
+        {
+          "ordinals": [
+            "R22",
+            "R23",
+            "R24"
+          ],
+          "reason": "Route navigation and assembly remain unchanged, no support code is moved, and the named handler remains a single inline flow rather than being split across helpers."
+        },
+        {
+          "ordinals": [
+            "R26",
+            "R27"
+          ],
+          "reason": "The removed effect only mirrors derived state; it does not execute a one-shot user action, loading branch, optional fallback, or response default."
+        },
+        {
+          "ordinals": [
+            "R29",
+            "R30",
+            "R31",
+            "R32",
+            "R33",
+            "R34"
+          ],
+          "reason": "No state tool, query or mutation binding, memoization, response origin, query shaping, store, or authority boundary changes are present."
+        },
+        {
+          "ordinals": [
+            "R36",
+            "R37",
+            "R38",
+            "R39",
+            "R40",
+            "R41"
+          ],
+          "reason": "No expensive initializer, transition, deferred rendering, subscription callback, compound public part, or inline comment surface is changed."
+        }
+      ],
+      "expanded": [
+        {
+          "contractPath": "skill/react/contracts/typing-function-type-first.md",
+          "fullRulePath": "skill/react/rules/typing-function-type-first.md",
+          "id": "typing-function-type-first",
+          "mandatoryCritical": false,
+          "ordinal": "R07",
+          "reason": "Exact React handler alias syntax was required to resolve the initial handler-signature Unknown."
+        },
+        {
+          "contractPath": "skill/react/contracts/events-name-and-curry-handlers.md",
+          "fullRulePath": "skill/react/rules/events-name-and-curry-handlers.md",
+          "id": "events-name-and-curry-handlers",
+          "mandatoryCritical": false,
+          "ordinal": "R25",
+          "reason": "Exact handler-factory syntax was required to pass the entry ID while keeping a typed final React handler."
+        }
+      ],
+      "indexDigest": "sha256:c2036ebd5ca4d70b5e6734a53f9a3b8227cb93fa068bda03e318eb0a88ddc4bc",
+      "notApplicable": [
+        {
+          "id": "ownership-avoid-barrel-and-react-namespace-imports",
+          "ordinal": "R01"
+        },
+        {
+          "id": "ownership-prefer-plain-ts-for-local-react-helpers",
+          "ordinal": "R02"
+        },
+        {
+          "id": "ownership-layer-component-boundaries",
+          "ordinal": "R03"
+        },
+        {
+          "id": "ownership-place-route-local-files-by-scope",
+          "ordinal": "R04"
+        },
+        {
+          "id": "ownership-shared-config-entry-points",
+          "ordinal": "R05"
+        },
+        {
+          "id": "ownership-use-consistent-file-and-symbol-naming",
+          "ordinal": "R06"
+        },
+        {
+          "id": "typing-reuse-existing-contracts",
+          "ordinal": "R08"
+        },
+        {
+          "id": "strategy-avoid-boolean-prop-proliferation",
+          "ordinal": "R09"
+        },
+        {
+          "id": "strategy-choose-single-composition-compound-and-variants",
+          "ordinal": "R10"
+        },
+        {
+          "id": "strategy-prefer-children-over-render-props",
+          "ordinal": "R11"
+        },
+        {
+          "id": "composition-destructure-props-inside",
+          "ordinal": "R12"
+        },
+        {
+          "id": "composition-do-not-define-components-inside-components",
+          "ordinal": "R13"
+        },
+        {
+          "id": "composition-prefer-arrow-functions-and-object-params",
+          "ordinal": "R14"
+        },
+        {
+          "id": "composition-use-activity-for-render-branches",
+          "ordinal": "R16"
+        },
+        {
+          "id": "composition-use-ref-prop-instead-of-forwardref-in-react-19",
+          "ordinal": "R17"
+        },
+        {
+          "id": "screen-avoid-premature-abstraction",
+          "ordinal": "R18"
+        },
+        {
+          "id": "screen-extract-local-section-components-for-runtime-boundaries",
+          "ordinal": "R19"
+        },
+        {
+          "id": "screen-extract-utilities-selectively",
+          "ordinal": "R20"
+        },
+        {
+          "id": "screen-keep-route-flow-visible",
+          "ordinal": "R22"
+        },
+        {
+          "id": "screen-move-pure-support-code-out-of-entry-files",
+          "ordinal": "R23"
+        },
+        {
+          "id": "events-keep-handler-flow-inline",
+          "ordinal": "R24"
+        },
+        {
+          "id": "events-run-user-actions-in-handlers-not-effects",
+          "ordinal": "R26"
+        },
+        {
+          "id": "state-avoid-fallback-defaults-and-loading-flags",
+          "ordinal": "R27"
+        },
+        {
+          "id": "state-choose-state-tools-by-source-of-truth",
+          "ordinal": "R29"
+        },
+        {
+          "id": "state-name-query-and-mutation-bindings-consistently",
+          "ordinal": "R30"
+        },
+        {
+          "id": "state-compiler-first-memoization",
+          "ordinal": "R31"
+        },
+        {
+          "id": "state-preserve-origin-chaining",
+          "ordinal": "R32"
+        },
+        {
+          "id": "state-shape-query-data-with-select",
+          "ordinal": "R33"
+        },
+        {
+          "id": "state-store-derived-authority",
+          "ordinal": "R34"
+        },
+        {
+          "id": "state-use-lazy-state-initializers-for-expensive-defaults",
+          "ordinal": "R36"
+        },
+        {
+          "id": "state-use-starttransition-for-non-urgent-updates",
+          "ordinal": "R37"
+        },
+        {
+          "id": "state-use-usedeferredvalue-for-heavy-derived-renders",
+          "ordinal": "R38"
+        },
+        {
+          "id": "state-use-effectevent-for-non-reactive-effect-callbacks",
+          "ordinal": "R39"
+        },
+        {
+          "id": "docs-document-compound-parts-with-part-and-description",
+          "ordinal": "R40"
+        },
+        {
+          "id": "docs-limit-inline-comments-to-non-obvious-logic",
+          "ordinal": "R41"
+        }
+      ],
+      "selected": [
+        {
+          "id": "typing-function-type-first",
+          "ordinal": "R07"
+        },
+        {
+          "id": "composition-named-handlers-over-inline",
+          "ordinal": "R15"
+        },
+        {
+          "id": "screen-keep-derived-values-close",
+          "ordinal": "R21"
+        },
+        {
+          "id": "events-name-and-curry-handlers",
+          "ordinal": "R25"
+        },
+        {
+          "id": "state-calculate-derived-values-during-render",
+          "ordinal": "R28"
+        },
+        {
+          "id": "state-use-functional-setstate-updates",
+          "ordinal": "R35"
+        },
+        {
+          "id": "docs-require-jsdoc-on-key-declarations",
+          "ordinal": "R42"
+        }
+      ],
+      "skill": "react",
+      "unknown": []
+    },
+    {
+      "excludedGroups": [
+        {
+          "ordinals": [
+            "T01",
+            "T02"
+          ],
+          "reason": "No shared config, feature flag, constant namespace, or config-origin access changes occur."
+        },
+        {
+          "ordinals": [
+            "T05",
+            "T06",
+            "T09"
+          ],
+          "reason": "No custom shape is changed, no required callback parameter is left unused, and no new duplicate type contract is introduced."
+        },
+        {
+          "ordinals": [
+            "T10",
+            "T11",
+            "T12",
+            "T13",
+            "T14",
+            "T15"
+          ],
+          "reason": "No wide-scope imperative assembly, support helper extraction, sorting, enum-like object, complex signature, or repeated collection lookup is introduced."
+        },
+        {
+          "ordinals": [
+            "T16",
+            "T17",
+            "T20"
+          ],
+          "reason": "No optional fallback, inline explanatory comment, or reusable pure helper is changed."
+        }
+      ],
+      "expanded": [
+        {
+          "contractPath": "skill/typescript/contracts/types-prefer-function-variable-types-over-parameter-annotations.md",
+          "fullRulePath": "skill/typescript/rules/types-prefer-function-variable-types-over-parameter-annotations.md",
+          "id": "types-prefer-function-variable-types-over-parameter-annotations",
+          "mandatoryCritical": true,
+          "ordinal": "T07",
+          "reason": "The selected contract is CRITICAL and mandates loading its full rule before implementation or review."
+        }
+      ],
+      "indexDigest": "sha256:9891aafd9a34683772d5d7653b4fa82d10e0bee8b8b4412acdd9d2889f832a7e",
+      "notApplicable": [
+        {
+          "id": "naming-centralize-shared-config-namespaces",
+          "ordinal": "T01"
+        },
+        {
+          "id": "naming-preserve-config-origin-with-chained-access",
+          "ordinal": "T02"
+        },
+        {
+          "id": "types-document-custom-types-and-shapes",
+          "ordinal": "T05"
+        },
+        {
+          "id": "types-mark-unused-parameters-with-underscore",
+          "ordinal": "T06"
+        },
+        {
+          "id": "types-reuse-existing-contracts-before-new-types",
+          "ordinal": "T09"
+        },
+        {
+          "id": "functions-avoid-imperative-assembly-in-wide-scopes",
+          "ordinal": "T10"
+        },
+        {
+          "id": "functions-extract-helpers-only-when-the-boundary-is-real",
+          "ordinal": "T11"
+        },
+        {
+          "id": "functions-prefer-immutable-array-sorting",
+          "ordinal": "T12"
+        },
+        {
+          "id": "functions-replace-enum-with-as-const-objects",
+          "ordinal": "T13"
+        },
+        {
+          "id": "functions-use-named-object-params-for-complex-signatures",
+          "ordinal": "T14"
+        },
+        {
+          "id": "functions-use-set-and-map-for-repeated-lookups",
+          "ordinal": "T15"
+        },
+        {
+          "id": "absence-expose-optional-values-instead-of-silent-fallbacks",
+          "ordinal": "T16"
+        },
+        {
+          "id": "docs-keep-inline-comments-for-constraints-and-caveats",
+          "ordinal": "T17"
+        },
+        {
+          "id": "docs-use-helper-for-reusable-pure-helper-functions",
+          "ordinal": "T20"
+        }
+      ],
+      "selected": [
+        {
+          "id": "naming-use-consistent-file-and-symbol-naming",
+          "ordinal": "T03"
+        },
+        {
+          "id": "naming-use-direct-imports-and-public-entry-points",
+          "ordinal": "T04"
+        },
+        {
+          "id": "types-prefer-function-variable-types-over-parameter-annotations",
+          "ordinal": "T07"
+        },
+        {
+          "id": "types-reuse-callback-signatures-from-existing-contracts",
+          "ordinal": "T08"
+        },
+        {
+          "id": "docs-require-header-jsdoc-on-key-declarations",
+          "ordinal": "T18"
+        },
+        {
+          "id": "docs-standardize-annotation-tags-by-declaration-role",
+          "ordinal": "T19"
+        },
+        {
+          "id": "docs-write-concise-korean-comments-about-purpose-and-constraints",
+          "ordinal": "T21"
+        },
+        {
+          "id": "guardrails-review-banned-typescript-shortcuts-before-finishing",
+          "ordinal": "T22"
+        }
+      ],
+      "skill": "typescript",
+      "unknown": []
+    }
+  ],
+  "repositoryHead": "6a73a0a733579667ecf98a0a1fd18bec2af0108e",
+  "requestContentDigest": "sha256:6a850b108819353228eb7afb8f482b303495c85a1f195b962ac67f5b7366a3e3",
+  "response": "선택 토글을 타입이 지정된 handleSelectionToggle 핸들러와 functional updater로 분리하고, 파생 count/flag 상태 및 동기화 effect를 제거해 selectedIds.length를 렌더 사용 지점에서 직접 계산했습니다. 탐색과 스타일은 변경하지 않았습니다.",
+  "routingTrace": {
+    "passes": [
+      {
+        "activatedSkills": [
+          "react",
+          "typescript"
+        ],
+        "completionGateAdded": [
+          "typescript/guardrails-review-banned-typescript-shortcuts-before-finishing"
+        ],
+        "completionGatesEvaluated": [
+          {
+            "outcome": "selected",
+            "rule": "typescript/guardrails-review-banned-typescript-shortcuts-before-finishing"
+          }
+        ],
+        "generatedIndexDigests": {
+          "react": "sha256:c2036ebd5ca4d70b5e6734a53f9a3b8227cb93fa068bda03e318eb0a88ddc4bc",
+          "typescript": "sha256:9891aafd9a34683772d5d7653b4fa82d10e0bee8b8b4412acdd9d2889f832a7e"
+        },
+        "notApplicable": {
+          "react": [
+            "ownership-avoid-barrel-and-react-namespace-imports",
+            "ownership-prefer-plain-ts-for-local-react-helpers",
+            "ownership-layer-component-boundaries",
+            "ownership-place-route-local-files-by-scope",
+            "ownership-shared-config-entry-points",
+            "ownership-use-consistent-file-and-symbol-naming",
+            "typing-reuse-existing-contracts",
+            "strategy-avoid-boolean-prop-proliferation",
+            "strategy-choose-single-composition-compound-and-variants",
+            "strategy-prefer-children-over-render-props",
+            "composition-destructure-props-inside",
+            "composition-do-not-define-components-inside-components",
+            "composition-prefer-arrow-functions-and-object-params",
+            "composition-use-activity-for-render-branches",
+            "composition-use-ref-prop-instead-of-forwardref-in-react-19",
+            "screen-avoid-premature-abstraction",
+            "screen-extract-local-section-components-for-runtime-boundaries",
+            "screen-extract-utilities-selectively",
+            "screen-keep-route-flow-visible",
+            "screen-move-pure-support-code-out-of-entry-files",
+            "events-keep-handler-flow-inline",
+            "events-run-user-actions-in-handlers-not-effects",
+            "state-avoid-fallback-defaults-and-loading-flags",
+            "state-choose-state-tools-by-source-of-truth",
+            "state-name-query-and-mutation-bindings-consistently",
+            "state-compiler-first-memoization",
+            "state-preserve-origin-chaining",
+            "state-shape-query-data-with-select",
+            "state-store-derived-authority",
+            "state-use-lazy-state-initializers-for-expensive-defaults",
+            "state-use-starttransition-for-non-urgent-updates",
+            "state-use-usedeferredvalue-for-heavy-derived-renders",
+            "state-use-effectevent-for-non-reactive-effect-callbacks",
+            "docs-document-compound-parts-with-part-and-description",
+            "docs-limit-inline-comments-to-non-obvious-logic"
+          ],
+          "typescript": [
+            "naming-centralize-shared-config-namespaces",
+            "naming-preserve-config-origin-with-chained-access",
+            "types-document-custom-types-and-shapes",
+            "types-mark-unused-parameters-with-underscore",
+            "types-prefer-function-variable-types-over-parameter-annotations",
+            "types-reuse-callback-signatures-from-existing-contracts",
+            "types-reuse-existing-contracts-before-new-types",
+            "functions-avoid-imperative-assembly-in-wide-scopes",
+            "functions-extract-helpers-only-when-the-boundary-is-real",
+            "functions-prefer-immutable-array-sorting",
+            "functions-replace-enum-with-as-const-objects",
+            "functions-use-named-object-params-for-complex-signatures",
+            "functions-use-set-and-map-for-repeated-lookups",
+            "absence-expose-optional-values-instead-of-silent-fallbacks",
+            "docs-keep-inline-comments-for-constraints-and-caveats",
+            "docs-use-helper-for-reusable-pure-helper-functions"
+          ]
+        },
+        "pass": 1,
+        "requiresSelectedAdded": [
+          {
+            "source": "react/composition-named-handlers-over-inline",
+            "target": "react/docs-require-jsdoc-on-key-declarations"
+          },
+          {
+            "source": "react/composition-named-handlers-over-inline",
+            "target": "react/events-name-and-curry-handlers"
+          },
+          {
+            "source": "react/state-calculate-derived-values-during-render",
+            "target": "react/screen-keep-derived-values-close"
+          },
+          {
+            "source": "react/docs-require-jsdoc-on-key-declarations",
+            "target": "typescript/docs-require-header-jsdoc-on-key-declarations"
+          },
+          {
+            "source": "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "target": "typescript/docs-standardize-annotation-tags-by-declaration-role"
+          },
+          {
+            "source": "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "target": "typescript/docs-write-concise-korean-comments-about-purpose-and-constraints"
+          }
+        ],
+        "requiresSelectedEvaluated": [
+          {
+            "outcome": "not-propagated-unknown",
+            "source": "react/typing-function-type-first",
+            "sourceStatus": "Unknown",
+            "target": "typescript/types-reuse-callback-signatures-from-existing-contracts"
+          },
+          {
+            "outcome": "selected",
+            "source": "react/composition-named-handlers-over-inline",
+            "sourceStatus": "Selected",
+            "target": "react/docs-require-jsdoc-on-key-declarations"
+          },
+          {
+            "outcome": "selected",
+            "source": "react/composition-named-handlers-over-inline",
+            "sourceStatus": "Selected",
+            "target": "react/events-name-and-curry-handlers"
+          },
+          {
+            "outcome": "selected",
+            "source": "react/state-calculate-derived-values-during-render",
+            "sourceStatus": "Selected",
+            "target": "react/screen-keep-derived-values-close"
+          },
+          {
+            "outcome": "selected",
+            "source": "react/docs-require-jsdoc-on-key-declarations",
+            "sourceStatus": "Selected",
+            "target": "typescript/docs-require-header-jsdoc-on-key-declarations"
+          },
+          {
+            "outcome": "selected",
+            "source": "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "sourceStatus": "Selected",
+            "target": "typescript/docs-standardize-annotation-tags-by-declaration-role"
+          },
+          {
+            "outcome": "selected",
+            "source": "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "sourceStatus": "Selected",
+            "target": "typescript/docs-write-concise-korean-comments-about-purpose-and-constraints"
+          }
+        ],
+        "reviewWithReevaluated": [
+          {
+            "evidence": "The named handler keeps the complete selection branch and state update together; it is not decomposed across helpers.",
+            "outcome": "N/A",
+            "source": "react/composition-named-handlers-over-inline",
+            "target": "react/events-keep-handler-flow-inline"
+          },
+          {
+            "evidence": "The removed effect mirrors selectedIds into derived state and does not execute the click action.",
+            "outcome": "N/A",
+            "source": "react/composition-named-handlers-over-inline",
+            "target": "react/events-run-user-actions-in-handlers-not-effects"
+          },
+          {
+            "evidence": "The requested handleSelectionToggle symbol is a newly named camelCase handler.",
+            "outcome": "Selected",
+            "source": "react/events-name-and-curry-handlers",
+            "target": "typescript/naming-use-consistent-file-and-symbol-naming"
+          },
+          {
+            "evidence": "Pass 1 has not yet resolved whether the entry ID should be curried into a framework-typed returned handler.",
+            "outcome": "Unknown",
+            "source": "react/events-name-and-curry-handlers",
+            "target": "react/typing-function-type-first"
+          }
+        ],
+        "scopeEvidence": [
+          "The only virtual file is src/routes/entries/page.tsx, a React TSX route component.",
+          "The task extracts a branching inline selection toggle into a named handler without changing navigation or styling.",
+          "The task removes selectedIds-derived effect and state synchronization and calculates the count and flag during render near use.",
+          "The next selectedIds value depends on the previous selection and therefore requires a functional updater.",
+          "R15 requires the named-handler and key-declaration documentation rules.",
+          "R28 requires the derived value to remain close to its render use.",
+          "R42 requires the TypeScript key-declaration JSDoc rule.",
+          "T18 requires standardized annotation tags and concise Korean purpose comments."
+        ],
+        "selected": {
+          "react": [
+            "composition-named-handlers-over-inline",
+            "screen-keep-derived-values-close",
+            "events-name-and-curry-handlers",
+            "state-calculate-derived-values-during-render",
+            "state-use-functional-setstate-updates",
+            "docs-require-jsdoc-on-key-declarations"
+          ],
+          "typescript": [
+            "naming-use-consistent-file-and-symbol-naming",
+            "docs-require-header-jsdoc-on-key-declarations",
+            "docs-standardize-annotation-tags-by-declaration-role",
+            "docs-write-concise-korean-comments-about-purpose-and-constraints",
+            "guardrails-review-banned-typescript-shortcuts-before-finishing"
+          ]
+        },
+        "unknown": {
+          "react": [
+            "typing-function-type-first"
+          ],
+          "typescript": [
+            "naming-use-direct-imports-and-public-entry-points"
+          ]
+        }
+      },
+      {
+        "activatedSkills": [
+          "react",
+          "typescript"
+        ],
+        "completionGateAdded": [],
+        "completionGatesEvaluated": [
+          {
+            "outcome": "selected",
+            "rule": "typescript/guardrails-review-banned-typescript-shortcuts-before-finishing"
+          }
+        ],
+        "generatedIndexDigests": {
+          "react": "sha256:c2036ebd5ca4d70b5e6734a53f9a3b8227cb93fa068bda03e318eb0a88ddc4bc",
+          "typescript": "sha256:9891aafd9a34683772d5d7653b4fa82d10e0bee8b8b4412acdd9d2889f832a7e"
+        },
+        "notApplicable": {
+          "react": [
+            "ownership-avoid-barrel-and-react-namespace-imports",
+            "ownership-prefer-plain-ts-for-local-react-helpers",
+            "ownership-layer-component-boundaries",
+            "ownership-place-route-local-files-by-scope",
+            "ownership-shared-config-entry-points",
+            "ownership-use-consistent-file-and-symbol-naming",
+            "typing-reuse-existing-contracts",
+            "strategy-avoid-boolean-prop-proliferation",
+            "strategy-choose-single-composition-compound-and-variants",
+            "strategy-prefer-children-over-render-props",
+            "composition-destructure-props-inside",
+            "composition-do-not-define-components-inside-components",
+            "composition-prefer-arrow-functions-and-object-params",
+            "composition-use-activity-for-render-branches",
+            "composition-use-ref-prop-instead-of-forwardref-in-react-19",
+            "screen-avoid-premature-abstraction",
+            "screen-extract-local-section-components-for-runtime-boundaries",
+            "screen-extract-utilities-selectively",
+            "screen-keep-route-flow-visible",
+            "screen-move-pure-support-code-out-of-entry-files",
+            "events-keep-handler-flow-inline",
+            "events-run-user-actions-in-handlers-not-effects",
+            "state-avoid-fallback-defaults-and-loading-flags",
+            "state-choose-state-tools-by-source-of-truth",
+            "state-name-query-and-mutation-bindings-consistently",
+            "state-compiler-first-memoization",
+            "state-preserve-origin-chaining",
+            "state-shape-query-data-with-select",
+            "state-store-derived-authority",
+            "state-use-lazy-state-initializers-for-expensive-defaults",
+            "state-use-starttransition-for-non-urgent-updates",
+            "state-use-usedeferredvalue-for-heavy-derived-renders",
+            "state-use-effectevent-for-non-reactive-effect-callbacks",
+            "docs-document-compound-parts-with-part-and-description",
+            "docs-limit-inline-comments-to-non-obvious-logic"
+          ],
+          "typescript": [
+            "naming-centralize-shared-config-namespaces",
+            "naming-preserve-config-origin-with-chained-access",
+            "types-document-custom-types-and-shapes",
+            "types-mark-unused-parameters-with-underscore",
+            "types-reuse-existing-contracts-before-new-types",
+            "functions-avoid-imperative-assembly-in-wide-scopes",
+            "functions-extract-helpers-only-when-the-boundary-is-real",
+            "functions-prefer-immutable-array-sorting",
+            "functions-replace-enum-with-as-const-objects",
+            "functions-use-named-object-params-for-complex-signatures",
+            "functions-use-set-and-map-for-repeated-lookups",
+            "absence-expose-optional-values-instead-of-silent-fallbacks",
+            "docs-keep-inline-comments-for-constraints-and-caveats",
+            "docs-use-helper-for-reusable-pure-helper-functions"
+          ]
+        },
+        "pass": 2,
+        "requiresSelectedAdded": [
+          {
+            "source": "react/typing-function-type-first",
+            "target": "typescript/types-reuse-callback-signatures-from-existing-contracts"
+          },
+          {
+            "source": "typescript/types-reuse-callback-signatures-from-existing-contracts",
+            "target": "typescript/types-prefer-function-variable-types-over-parameter-annotations"
+          }
+        ],
+        "requiresSelectedEvaluated": [
+          {
+            "outcome": "selected",
+            "source": "react/typing-function-type-first",
+            "sourceStatus": "Selected",
+            "target": "typescript/types-reuse-callback-signatures-from-existing-contracts"
+          },
+          {
+            "outcome": "selected",
+            "source": "react/composition-named-handlers-over-inline",
+            "sourceStatus": "Selected",
+            "target": "react/docs-require-jsdoc-on-key-declarations"
+          },
+          {
+            "outcome": "selected",
+            "source": "react/composition-named-handlers-over-inline",
+            "sourceStatus": "Selected",
+            "target": "react/events-name-and-curry-handlers"
+          },
+          {
+            "outcome": "selected",
+            "source": "react/state-calculate-derived-values-during-render",
+            "sourceStatus": "Selected",
+            "target": "react/screen-keep-derived-values-close"
+          },
+          {
+            "outcome": "selected",
+            "source": "react/docs-require-jsdoc-on-key-declarations",
+            "sourceStatus": "Selected",
+            "target": "typescript/docs-require-header-jsdoc-on-key-declarations"
+          },
+          {
+            "outcome": "selected",
+            "source": "typescript/types-reuse-callback-signatures-from-existing-contracts",
+            "sourceStatus": "Selected",
+            "target": "typescript/types-prefer-function-variable-types-over-parameter-annotations"
+          },
+          {
+            "outcome": "selected",
+            "source": "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "sourceStatus": "Selected",
+            "target": "typescript/docs-standardize-annotation-tags-by-declaration-role"
+          },
+          {
+            "outcome": "selected",
+            "source": "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "sourceStatus": "Selected",
+            "target": "typescript/docs-write-concise-korean-comments-about-purpose-and-constraints"
+          }
+        ],
+        "reviewWithReevaluated": [
+          {
+            "evidence": "The handler is local and no prop callback or API response view shape is added or changed.",
+            "outcome": "N/A",
+            "source": "react/typing-function-type-first",
+            "target": "react/typing-reuse-existing-contracts"
+          },
+          {
+            "evidence": "The named handler keeps the complete selection branch and state update together; it is not decomposed across helpers.",
+            "outcome": "N/A",
+            "source": "react/composition-named-handlers-over-inline",
+            "target": "react/events-keep-handler-flow-inline"
+          },
+          {
+            "evidence": "The removed effect mirrors selectedIds into derived state and does not execute the click action.",
+            "outcome": "N/A",
+            "source": "react/composition-named-handlers-over-inline",
+            "target": "react/events-run-user-actions-in-handlers-not-effects"
+          },
+          {
+            "evidence": "The requested handleSelectionToggle symbol is a newly named camelCase handler.",
+            "outcome": "Selected",
+            "source": "react/events-name-and-curry-handlers",
+            "target": "typescript/naming-use-consistent-file-and-symbol-naming"
+          },
+          {
+            "evidence": "The entry ID is curried and the returned button click handler is typed with React MouseEventHandler.",
+            "outcome": "Selected",
+            "source": "react/events-name-and-curry-handlers",
+            "target": "react/typing-function-type-first"
+          }
+        ],
+        "scopeEvidence": [
+          "The only virtual file is src/routes/entries/page.tsx, a React TSX route component.",
+          "The task extracts a branching inline selection toggle into a named handler without changing navigation or styling.",
+          "The task removes selectedIds-derived effect and state synchronization and calculates the count and flag during render near use.",
+          "The next selectedIds value depends on the previous selection and therefore requires a functional updater.",
+          "R15 requires the named-handler and key-declaration documentation rules.",
+          "R28 requires the derived value to remain close to its render use.",
+          "R42 requires the TypeScript key-declaration JSDoc rule.",
+          "T18 requires standardized annotation tags and concise Korean purpose comments.",
+          "R25 requires currying the entry ID and typing the returned click handler with the React MouseEventHandler alias, selecting R07 and a type-only React import.",
+          "R07 requires callback-contract reuse, and T08 requires the critical function-variable contract rule."
+        ],
+        "selected": {
+          "react": [
+            "typing-function-type-first",
+            "composition-named-handlers-over-inline",
+            "screen-keep-derived-values-close",
+            "events-name-and-curry-handlers",
+            "state-calculate-derived-values-during-render",
+            "state-use-functional-setstate-updates",
+            "docs-require-jsdoc-on-key-declarations"
+          ],
+          "typescript": [
+            "naming-use-consistent-file-and-symbol-naming",
+            "naming-use-direct-imports-and-public-entry-points",
+            "types-prefer-function-variable-types-over-parameter-annotations",
+            "types-reuse-callback-signatures-from-existing-contracts",
+            "docs-require-header-jsdoc-on-key-declarations",
+            "docs-standardize-annotation-tags-by-declaration-role",
+            "docs-write-concise-korean-comments-about-purpose-and-constraints",
+            "guardrails-review-banned-typescript-shortcuts-before-finishing"
+          ]
+        },
+        "unknown": {
+          "react": [],
+          "typescript": []
+        }
+      },
+      {
+        "activatedSkills": [
+          "react",
+          "typescript"
+        ],
+        "completionGateAdded": [],
+        "completionGatesEvaluated": [
+          {
+            "outcome": "selected",
+            "rule": "typescript/guardrails-review-banned-typescript-shortcuts-before-finishing"
+          }
+        ],
+        "generatedIndexDigests": {
+          "react": "sha256:c2036ebd5ca4d70b5e6734a53f9a3b8227cb93fa068bda03e318eb0a88ddc4bc",
+          "typescript": "sha256:9891aafd9a34683772d5d7653b4fa82d10e0bee8b8b4412acdd9d2889f832a7e"
+        },
+        "notApplicable": {
+          "react": [
+            "ownership-avoid-barrel-and-react-namespace-imports",
+            "ownership-prefer-plain-ts-for-local-react-helpers",
+            "ownership-layer-component-boundaries",
+            "ownership-place-route-local-files-by-scope",
+            "ownership-shared-config-entry-points",
+            "ownership-use-consistent-file-and-symbol-naming",
+            "typing-reuse-existing-contracts",
+            "strategy-avoid-boolean-prop-proliferation",
+            "strategy-choose-single-composition-compound-and-variants",
+            "strategy-prefer-children-over-render-props",
+            "composition-destructure-props-inside",
+            "composition-do-not-define-components-inside-components",
+            "composition-prefer-arrow-functions-and-object-params",
+            "composition-use-activity-for-render-branches",
+            "composition-use-ref-prop-instead-of-forwardref-in-react-19",
+            "screen-avoid-premature-abstraction",
+            "screen-extract-local-section-components-for-runtime-boundaries",
+            "screen-extract-utilities-selectively",
+            "screen-keep-route-flow-visible",
+            "screen-move-pure-support-code-out-of-entry-files",
+            "events-keep-handler-flow-inline",
+            "events-run-user-actions-in-handlers-not-effects",
+            "state-avoid-fallback-defaults-and-loading-flags",
+            "state-choose-state-tools-by-source-of-truth",
+            "state-name-query-and-mutation-bindings-consistently",
+            "state-compiler-first-memoization",
+            "state-preserve-origin-chaining",
+            "state-shape-query-data-with-select",
+            "state-store-derived-authority",
+            "state-use-lazy-state-initializers-for-expensive-defaults",
+            "state-use-starttransition-for-non-urgent-updates",
+            "state-use-usedeferredvalue-for-heavy-derived-renders",
+            "state-use-effectevent-for-non-reactive-effect-callbacks",
+            "docs-document-compound-parts-with-part-and-description",
+            "docs-limit-inline-comments-to-non-obvious-logic"
+          ],
+          "typescript": [
+            "naming-centralize-shared-config-namespaces",
+            "naming-preserve-config-origin-with-chained-access",
+            "types-document-custom-types-and-shapes",
+            "types-mark-unused-parameters-with-underscore",
+            "types-reuse-existing-contracts-before-new-types",
+            "functions-avoid-imperative-assembly-in-wide-scopes",
+            "functions-extract-helpers-only-when-the-boundary-is-real",
+            "functions-prefer-immutable-array-sorting",
+            "functions-replace-enum-with-as-const-objects",
+            "functions-use-named-object-params-for-complex-signatures",
+            "functions-use-set-and-map-for-repeated-lookups",
+            "absence-expose-optional-values-instead-of-silent-fallbacks",
+            "docs-keep-inline-comments-for-constraints-and-caveats",
+            "docs-use-helper-for-reusable-pure-helper-functions"
+          ]
+        },
+        "pass": 3,
+        "requiresSelectedAdded": [],
+        "requiresSelectedEvaluated": [
+          {
+            "outcome": "selected",
+            "source": "react/typing-function-type-first",
+            "sourceStatus": "Selected",
+            "target": "typescript/types-reuse-callback-signatures-from-existing-contracts"
+          },
+          {
+            "outcome": "selected",
+            "source": "react/composition-named-handlers-over-inline",
+            "sourceStatus": "Selected",
+            "target": "react/docs-require-jsdoc-on-key-declarations"
+          },
+          {
+            "outcome": "selected",
+            "source": "react/composition-named-handlers-over-inline",
+            "sourceStatus": "Selected",
+            "target": "react/events-name-and-curry-handlers"
+          },
+          {
+            "outcome": "selected",
+            "source": "react/state-calculate-derived-values-during-render",
+            "sourceStatus": "Selected",
+            "target": "react/screen-keep-derived-values-close"
+          },
+          {
+            "outcome": "selected",
+            "source": "react/docs-require-jsdoc-on-key-declarations",
+            "sourceStatus": "Selected",
+            "target": "typescript/docs-require-header-jsdoc-on-key-declarations"
+          },
+          {
+            "outcome": "selected",
+            "source": "typescript/types-reuse-callback-signatures-from-existing-contracts",
+            "sourceStatus": "Selected",
+            "target": "typescript/types-prefer-function-variable-types-over-parameter-annotations"
+          },
+          {
+            "outcome": "selected",
+            "source": "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "sourceStatus": "Selected",
+            "target": "typescript/docs-standardize-annotation-tags-by-declaration-role"
+          },
+          {
+            "outcome": "selected",
+            "source": "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "sourceStatus": "Selected",
+            "target": "typescript/docs-write-concise-korean-comments-about-purpose-and-constraints"
+          }
+        ],
+        "reviewWithReevaluated": [
+          {
+            "evidence": "The handler is local and no prop callback or API response view shape is added or changed.",
+            "outcome": "N/A",
+            "source": "react/typing-function-type-first",
+            "target": "react/typing-reuse-existing-contracts"
+          },
+          {
+            "evidence": "The named handler keeps the complete selection branch and state update together; it is not decomposed across helpers.",
+            "outcome": "N/A",
+            "source": "react/composition-named-handlers-over-inline",
+            "target": "react/events-keep-handler-flow-inline"
+          },
+          {
+            "evidence": "The removed effect mirrors selectedIds into derived state and does not execute the click action.",
+            "outcome": "N/A",
+            "source": "react/composition-named-handlers-over-inline",
+            "target": "react/events-run-user-actions-in-handlers-not-effects"
+          },
+          {
+            "evidence": "The requested handleSelectionToggle symbol is a newly named camelCase handler.",
+            "outcome": "Selected",
+            "source": "react/events-name-and-curry-handlers",
+            "target": "typescript/naming-use-consistent-file-and-symbol-naming"
+          },
+          {
+            "evidence": "The entry ID is curried and the returned button click handler is typed with React MouseEventHandler.",
+            "outcome": "Selected",
+            "source": "react/events-name-and-curry-handlers",
+            "target": "react/typing-function-type-first"
+          }
+        ],
+        "scopeEvidence": [
+          "The only virtual file is src/routes/entries/page.tsx, a React TSX route component.",
+          "The task extracts a branching inline selection toggle into a named handler without changing navigation or styling.",
+          "The task removes selectedIds-derived effect and state synchronization and calculates the count and flag during render near use.",
+          "The next selectedIds value depends on the previous selection and therefore requires a functional updater.",
+          "R15 requires the named-handler and key-declaration documentation rules.",
+          "R28 requires the derived value to remain close to its render use.",
+          "R42 requires the TypeScript key-declaration JSDoc rule.",
+          "T18 requires standardized annotation tags and concise Korean purpose comments.",
+          "R25 requires currying the entry ID and typing the returned click handler with the React MouseEventHandler alias, selecting R07 and a type-only React import.",
+          "R07 requires callback-contract reuse, and T08 requires the critical function-variable contract rule."
+        ],
+        "selected": {
+          "react": [
+            "typing-function-type-first",
+            "composition-named-handlers-over-inline",
+            "screen-keep-derived-values-close",
+            "events-name-and-curry-handlers",
+            "state-calculate-derived-values-during-render",
+            "state-use-functional-setstate-updates",
+            "docs-require-jsdoc-on-key-declarations"
+          ],
+          "typescript": [
+            "naming-use-consistent-file-and-symbol-naming",
+            "naming-use-direct-imports-and-public-entry-points",
+            "types-prefer-function-variable-types-over-parameter-annotations",
+            "types-reuse-callback-signatures-from-existing-contracts",
+            "docs-require-header-jsdoc-on-key-declarations",
+            "docs-standardize-annotation-tags-by-declaration-role",
+            "docs-write-concise-korean-comments-about-purpose-and-constraints",
+            "guardrails-review-banned-typescript-shortcuts-before-finishing"
+          ]
+        },
+        "unknown": {
+          "react": [],
+          "typescript": []
+        }
+      },
+      {
+        "activatedSkills": [
+          "react",
+          "typescript"
+        ],
+        "completionGateAdded": [],
+        "completionGatesEvaluated": [
+          {
+            "outcome": "selected",
+            "rule": "typescript/guardrails-review-banned-typescript-shortcuts-before-finishing"
+          }
+        ],
+        "generatedIndexDigests": {
+          "react": "sha256:c2036ebd5ca4d70b5e6734a53f9a3b8227cb93fa068bda03e318eb0a88ddc4bc",
+          "typescript": "sha256:9891aafd9a34683772d5d7653b4fa82d10e0bee8b8b4412acdd9d2889f832a7e"
+        },
+        "notApplicable": {
+          "react": [
+            "ownership-avoid-barrel-and-react-namespace-imports",
+            "ownership-prefer-plain-ts-for-local-react-helpers",
+            "ownership-layer-component-boundaries",
+            "ownership-place-route-local-files-by-scope",
+            "ownership-shared-config-entry-points",
+            "ownership-use-consistent-file-and-symbol-naming",
+            "typing-reuse-existing-contracts",
+            "strategy-avoid-boolean-prop-proliferation",
+            "strategy-choose-single-composition-compound-and-variants",
+            "strategy-prefer-children-over-render-props",
+            "composition-destructure-props-inside",
+            "composition-do-not-define-components-inside-components",
+            "composition-prefer-arrow-functions-and-object-params",
+            "composition-use-activity-for-render-branches",
+            "composition-use-ref-prop-instead-of-forwardref-in-react-19",
+            "screen-avoid-premature-abstraction",
+            "screen-extract-local-section-components-for-runtime-boundaries",
+            "screen-extract-utilities-selectively",
+            "screen-keep-route-flow-visible",
+            "screen-move-pure-support-code-out-of-entry-files",
+            "events-keep-handler-flow-inline",
+            "events-run-user-actions-in-handlers-not-effects",
+            "state-avoid-fallback-defaults-and-loading-flags",
+            "state-choose-state-tools-by-source-of-truth",
+            "state-name-query-and-mutation-bindings-consistently",
+            "state-compiler-first-memoization",
+            "state-preserve-origin-chaining",
+            "state-shape-query-data-with-select",
+            "state-store-derived-authority",
+            "state-use-lazy-state-initializers-for-expensive-defaults",
+            "state-use-starttransition-for-non-urgent-updates",
+            "state-use-usedeferredvalue-for-heavy-derived-renders",
+            "state-use-effectevent-for-non-reactive-effect-callbacks",
+            "docs-document-compound-parts-with-part-and-description",
+            "docs-limit-inline-comments-to-non-obvious-logic"
+          ],
+          "typescript": [
+            "naming-centralize-shared-config-namespaces",
+            "naming-preserve-config-origin-with-chained-access",
+            "types-document-custom-types-and-shapes",
+            "types-mark-unused-parameters-with-underscore",
+            "types-reuse-existing-contracts-before-new-types",
+            "functions-avoid-imperative-assembly-in-wide-scopes",
+            "functions-extract-helpers-only-when-the-boundary-is-real",
+            "functions-prefer-immutable-array-sorting",
+            "functions-replace-enum-with-as-const-objects",
+            "functions-use-named-object-params-for-complex-signatures",
+            "functions-use-set-and-map-for-repeated-lookups",
+            "absence-expose-optional-values-instead-of-silent-fallbacks",
+            "docs-keep-inline-comments-for-constraints-and-caveats",
+            "docs-use-helper-for-reusable-pure-helper-functions"
+          ]
+        },
+        "pass": 4,
+        "requiresSelectedAdded": [],
+        "requiresSelectedEvaluated": [
+          {
+            "outcome": "selected",
+            "source": "react/typing-function-type-first",
+            "sourceStatus": "Selected",
+            "target": "typescript/types-reuse-callback-signatures-from-existing-contracts"
+          },
+          {
+            "outcome": "selected",
+            "source": "react/composition-named-handlers-over-inline",
+            "sourceStatus": "Selected",
+            "target": "react/docs-require-jsdoc-on-key-declarations"
+          },
+          {
+            "outcome": "selected",
+            "source": "react/composition-named-handlers-over-inline",
+            "sourceStatus": "Selected",
+            "target": "react/events-name-and-curry-handlers"
+          },
+          {
+            "outcome": "selected",
+            "source": "react/state-calculate-derived-values-during-render",
+            "sourceStatus": "Selected",
+            "target": "react/screen-keep-derived-values-close"
+          },
+          {
+            "outcome": "selected",
+            "source": "react/docs-require-jsdoc-on-key-declarations",
+            "sourceStatus": "Selected",
+            "target": "typescript/docs-require-header-jsdoc-on-key-declarations"
+          },
+          {
+            "outcome": "selected",
+            "source": "typescript/types-reuse-callback-signatures-from-existing-contracts",
+            "sourceStatus": "Selected",
+            "target": "typescript/types-prefer-function-variable-types-over-parameter-annotations"
+          },
+          {
+            "outcome": "selected",
+            "source": "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "sourceStatus": "Selected",
+            "target": "typescript/docs-standardize-annotation-tags-by-declaration-role"
+          },
+          {
+            "outcome": "selected",
+            "source": "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "sourceStatus": "Selected",
+            "target": "typescript/docs-write-concise-korean-comments-about-purpose-and-constraints"
+          }
+        ],
+        "reviewWithReevaluated": [
+          {
+            "evidence": "The handler is local and no prop callback or API response view shape is added or changed.",
+            "outcome": "N/A",
+            "source": "react/typing-function-type-first",
+            "target": "react/typing-reuse-existing-contracts"
+          },
+          {
+            "evidence": "The named handler keeps the complete selection branch and state update together; it is not decomposed across helpers.",
+            "outcome": "N/A",
+            "source": "react/composition-named-handlers-over-inline",
+            "target": "react/events-keep-handler-flow-inline"
+          },
+          {
+            "evidence": "The removed effect mirrors selectedIds into derived state and does not execute the click action.",
+            "outcome": "N/A",
+            "source": "react/composition-named-handlers-over-inline",
+            "target": "react/events-run-user-actions-in-handlers-not-effects"
+          },
+          {
+            "evidence": "The requested handleSelectionToggle symbol is a newly named camelCase handler.",
+            "outcome": "Selected",
+            "source": "react/events-name-and-curry-handlers",
+            "target": "typescript/naming-use-consistent-file-and-symbol-naming"
+          },
+          {
+            "evidence": "The entry ID is curried and the returned button click handler is typed with React MouseEventHandler.",
+            "outcome": "Selected",
+            "source": "react/events-name-and-curry-handlers",
+            "target": "react/typing-function-type-first"
+          }
+        ],
+        "scopeEvidence": [
+          "The only virtual file is src/routes/entries/page.tsx, a React TSX route component.",
+          "The task extracts a branching inline selection toggle into a named handler without changing navigation or styling.",
+          "The task removes selectedIds-derived effect and state synchronization and calculates the count and flag during render near use.",
+          "The next selectedIds value depends on the previous selection and therefore requires a functional updater.",
+          "R15 requires the named-handler and key-declaration documentation rules.",
+          "R28 requires the derived value to remain close to its render use.",
+          "R42 requires the TypeScript key-declaration JSDoc rule.",
+          "T18 requires standardized annotation tags and concise Korean purpose comments.",
+          "R25 requires currying the entry ID and typing the returned click handler with the React MouseEventHandler alias, selecting R07 and a type-only React import.",
+          "R07 requires callback-contract reuse, and T08 requires the critical function-variable contract rule."
+        ],
+        "selected": {
+          "react": [
+            "typing-function-type-first",
+            "composition-named-handlers-over-inline",
+            "screen-keep-derived-values-close",
+            "events-name-and-curry-handlers",
+            "state-calculate-derived-values-during-render",
+            "state-use-functional-setstate-updates",
+            "docs-require-jsdoc-on-key-declarations"
+          ],
+          "typescript": [
+            "naming-use-consistent-file-and-symbol-naming",
+            "naming-use-direct-imports-and-public-entry-points",
+            "types-prefer-function-variable-types-over-parameter-annotations",
+            "types-reuse-callback-signatures-from-existing-contracts",
+            "docs-require-header-jsdoc-on-key-declarations",
+            "docs-standardize-annotation-tags-by-declaration-role",
+            "docs-write-concise-korean-comments-about-purpose-and-constraints",
+            "guardrails-review-banned-typescript-shortcuts-before-finishing"
+          ]
+        },
+        "unknown": {
+          "react": [],
+          "typescript": []
+        }
+      }
+    ],
+    "stable": true,
+    "stablePair": [
+      3,
+      4
+    ]
+  },
+  "runId": "progressive--RTE10-derived-selection-state--t1",
+  "runtime": {
+    "declared": {
+      "forkTurns": "none",
+      "oneChildPerTrial": true,
+      "requestedModel": "gpt-5.6-sol",
+      "requestedReasoning": "high",
+      "runtime": "Codex collaboration child agent"
+    },
+    "evidenceClass": "declared-telemetry-only",
+    "unavailable": {
+      "actualReasoningTelemetry": null,
+      "childTokenUsage": null,
+      "exactModelBuild": null,
+      "observedFileReads": null,
+      "runtimeVersion": null
+    }
+  },
+  "scenarioId": "RTE10-derived-selection-state",
+  "scenarioPrompt": "extract the inline selection toggle into a named handleSelectionToggle handler, replace selectedIds-derived count and flag effect+state synchronization with render calculation near use, and use a functional updater; do not change navigation or styling.",
+  "scenarioSha256": "sha256:a685f5de3d76a3dae5a36609e864980e112b866347e8e3ec3110e89a8b01fd0e",
+  "schemaVersion": 3,
+  "scoring": {
+    "driftFinalExactMatch": null,
+    "eligible": true,
+    "exactMatch": false,
+    "initialExactMatch": false,
+    "kind": "candidate",
+    "metrics": {
+      "applicableRuleRecall": 0.8823529411764706,
+      "domainActivationRecall": 1,
+      "exactSelectionPrecision": 1
+    }
+  },
+  "semanticVerdicts": [
+    {
+      "criterion": "Extract the inline selection toggle into a named handleSelectionToggle handler and use a functional updater.",
+      "reason": "The virtual patch adds a curried handleSelectionToggle handler and computes the next selectedIds value from previousSelectedIds.",
+      "verdict": "PASS"
+    },
+    {
+      "criterion": "Replace selectedIds-derived count and flag effect/state synchronization with render calculation near use.",
+      "reason": "The virtual patch removes useEffect, selectedCount, and hasSelection state and reads selectedIds.length directly in the paragraph render.",
+      "verdict": "PASS"
+    },
+    {
+      "criterion": "Do not change navigation or styling.",
+      "reason": "The virtual patch changes only imports, local selection state flow, handler wiring, and rendered selection derivation; it adds no navigation or styling changes.",
+      "verdict": "PASS"
+    }
+  ],
+  "stagedProvenanceSha256": null,
+  "trial": 1,
+  "virtualPatch": {
+    "files": [
+      {
+        "after": "import {useState} from \"react\";\nimport type {MouseEventHandler} from \"react\";\n\ninterface Entry {\n  id: string;\n  label: string;\n}\n\nexport const EntriesPage = ({entries}: {entries: Entry[]}) => {\n  const [selectedIds, setSelectedIds] = useState<string[]>([]);\n\n  /**\n   * @event 선택 항목 토글\n   */\n  const handleSelectionToggle =\n    (entryId: string): MouseEventHandler<HTMLButtonElement> =>\n    () => {\n      setSelectedIds((previousSelectedIds) =>\n        previousSelectedIds.includes(entryId)\n          ? previousSelectedIds.filter((selectedId) => selectedId !== entryId)\n          : [...previousSelectedIds, entryId],\n      );\n    };\n\n  return (\n    <section>\n      <p>{selectedIds.length > 0 ? `${selectedIds.length} selected` : \"No selection\"}</p>\n      {entries.map((entry) => (\n        <button key={entry.id} onClick={handleSelectionToggle(entry.id)}>\n          {entry.label}\n        </button>\n      ))}\n    </section>\n  );\n};\n",
+        "afterSha256": "sha256:422a8d993b116d104b8b5a0ab772f7b5e83413c43952c1a6db9d41471574dc58",
+        "afterState": "present",
+        "beforeSha256": "sha256:1db519f16f8b3708846dc5187357527cf27a91923ac9d72752d31ac1641c030a",
+        "beforeState": "present",
+        "path": "src/routes/entries/page.tsx"
+      }
+    ],
+    "summary": "Extract the selection toggle into a typed named handler with a functional updater and render selectedIds-derived display values directly, without navigation or styling changes."
+  }
+}

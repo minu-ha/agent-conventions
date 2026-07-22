@@ -1,0 +1,43 @@
+{
+  "assignedChildPayloadPath": "/Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v15-candidate-runs/progressive--RTE10-derived-selection-state--t2.child-payload.json",
+  "childRequest": {
+    "path": "/Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v15-candidate-runs/progressive--RTE10-derived-selection-state--t2.child-request.json",
+    "sha256": "sha256:bec05baa034e5f510cf4f561c0a674b15ad04960af8ba5619ee94fc82d7af6f5",
+    "utf8ByteLength": 16259
+  },
+  "dispatchEnvelope": {
+    "arm": "progressive",
+    "exactPrompt": "Read and execute /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v15-candidate-runs/progressive--RTE10-derived-selection-state--t2.child-request.json (sha256:bec05baa034e5f510cf4f561c0a674b15ad04960af8ba5619ee94fc82d7af6f5).\nAssigned payload path: /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v15-candidate-runs/progressive--RTE10-derived-selection-state--t2.child-payload.json. Write exactly this one file with apply_patch; create or modify no other file.\nDo not echo the dispatch prompt or coordinator-owned fields; after writing valid childPayload JSON, return only concise status.",
+    "generatedIndexDigests": {
+      "css": "sha256:6dacc6f6fbe940681ab2734d8c9281c46ff07be133ee9c9d68de91bddb039d79",
+      "react": "sha256:624e51ea96f2dea6b775450def20d36142d70ffcf7960cf5169eacdf0ebb57c6",
+      "typescript": "sha256:e0bd359aa2321150229960df8fb663e528e93b3d5d25173d3a20ebf3a1b9b259"
+    },
+    "promptByteLength": 719,
+    "promptRendererVersion": "behavioral-prompt-renderer-v3",
+    "promptSha256": "sha256:116fbe2620356e0ffdae01b0963a4dfea22875f0c37eac78d681315e3aa4701c",
+    "protocolId": "progressive-loading-behavioral-v3",
+    "repositoryHead": "8eb5b60ab5686e45f80b8cbcc49c731f6851915c",
+    "runId": "progressive--RTE10-derived-selection-state--t2",
+    "scenarioId": "RTE10-derived-selection-state",
+    "scenarioPrompt": "extract the inline selection toggle into a named handleSelectionToggle handler, replace selectedIds-derived count and flag effect+state synchronization with render calculation near use, and use a functional updater; do not change navigation or styling.",
+    "schemaVersion": 3,
+    "trial": 2
+  },
+  "protocol": {
+    "armSha256": "sha256:ce85daeb6c52e884592a3c7e6f17f94a9b58e8202c012ac9e40d5c8fd1b350c2",
+    "path": "/Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-behavioral-protocol.json",
+    "scenarioSha256": "sha256:a685f5de3d76a3dae5a36609e864980e112b866347e8e3ec3110e89a8b01fd0e",
+    "sha256": "sha256:13face170d72a68d57df6e4eb051b3720b12baa2eeb63af0f429bbcb87543d0c"
+  },
+  "repositoryDir": "/Users/l-20220017/workspace/agent-conventions-progressive-loading",
+  "requestContentDigest": "sha256:d48b4302891215a7576999903f2432965e1bc2ac3590ba2bacb1a3c96a0d3ba2",
+  "routingEvalRawSha256": {
+    "skill/css/routing-evals.json": "sha256:f3ab3800bdbbe9f4f29d02dce65896ca3fdd108dc5bed087ca2b86ff12518268",
+    "skill/react/routing-evals.json": "sha256:f0c46f6118cc29550ffde4b9922210aa0c5cb34437735fe1ecbfde4440632ba9",
+    "skill/typescript/routing-evals.json": "sha256:913796f35afae16b9db3ae344837189cc0cfc47942ebd2611da76b5597c1e199"
+  },
+  "runId": "progressive--RTE10-derived-selection-state--t2",
+  "schemaVersion": 1,
+  "skillRootDir": "/Users/l-20220017/workspace/agent-conventions-progressive-loading/skill"
+}

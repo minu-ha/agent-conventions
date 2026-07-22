@@ -1,0 +1,43 @@
+{
+  "assignedChildPayloadPath": "/Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v12-runs/full-handbook--css-one-off-structural-modifier--t2.child-payload.json",
+  "childRequest": {
+    "path": "/Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v12-runs/full-handbook--css-one-off-structural-modifier--t2.child-request.json",
+    "sha256": "sha256:62660532e7416659d24b968786ac72a644e8ddafe1c9e0510309addd4fd2db9c",
+    "utf8ByteLength": 24707
+  },
+  "dispatchEnvelope": {
+    "arm": "full-handbook",
+    "exactPrompt": "Read and execute /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v12-runs/full-handbook--css-one-off-structural-modifier--t2.child-request.json (sha256:62660532e7416659d24b968786ac72a644e8ddafe1c9e0510309addd4fd2db9c).\nAssigned payload path: /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v12-runs/full-handbook--css-one-off-structural-modifier--t2.child-payload.json. Write exactly this one file with apply_patch; create or modify no other file.\nDo not echo the dispatch prompt or coordinator-owned fields; after writing valid childPayload JSON, return only concise status.",
+    "generatedIndexDigests": {
+      "css": "sha256:6ac4c965197283a2eeea007a5837f0760f8df25b666658465f177e2026a2a4f1",
+      "react": "sha256:f229054372cd355e6ca0a1828ecc98cb0341ab33f72a3a087591125e6d6f685b",
+      "typescript": "sha256:f72208d0e31d3fe580300782d0e3c7eb1341339c911149a44789546076799f09"
+    },
+    "promptByteLength": 707,
+    "promptRendererVersion": "behavioral-prompt-renderer-v3",
+    "promptSha256": "sha256:80be7a1c2ca451cfaa5cc4dd58655cf41df7bc7ba2f5f24768333da1771e2750",
+    "protocolId": "progressive-loading-behavioral-v3",
+    "repositoryHead": "ec328c1eb1a87a8d13f2c222e748250cea7585c5",
+    "runId": "full-handbook--css-one-off-structural-modifier--t2",
+    "scenarioId": "css-one-off-structural-modifier",
+    "scenarioPrompt": "replace non-repeatable section--compactTop spacing patch with a role-named element in catalog/detail.tsx and detail.css; keep the existing clsx import.",
+    "schemaVersion": 3,
+    "trial": 2
+  },
+  "protocol": {
+    "armSha256": "sha256:19d3956f9181fa05f1d11e3fe76a55849b1fe0daf4054fb539479cbc6edb9470",
+    "path": "/Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-behavioral-protocol.json",
+    "scenarioSha256": "sha256:9043393aaf1dc65e3a6b994057002320c052def638d9d2f39b56063e578a3769",
+    "sha256": "sha256:ec9c8a55307ad899c5532f72bde0a9f9c1707cb0045edbd704f4debdb30d766b"
+  },
+  "repositoryDir": "/Users/l-20220017/workspace/agent-conventions-progressive-loading",
+  "requestContentDigest": "sha256:3c84d6b22850cbccbce8c0919ed3b3d29bd3b3236ba072e168fe1b9b76648ce7",
+  "routingEvalRawSha256": {
+    "skill/css/routing-evals.json": "sha256:f3ab3800bdbbe9f4f29d02dce65896ca3fdd108dc5bed087ca2b86ff12518268",
+    "skill/react/routing-evals.json": "sha256:f0c46f6118cc29550ffde4b9922210aa0c5cb34437735fe1ecbfde4440632ba9",
+    "skill/typescript/routing-evals.json": "sha256:913796f35afae16b9db3ae344837189cc0cfc47942ebd2611da76b5597c1e199"
+  },
+  "runId": "full-handbook--css-one-off-structural-modifier--t2",
+  "schemaVersion": 1,
+  "skillRootDir": "/Users/l-20220017/workspace/agent-conventions-progressive-loading/skill"
+}

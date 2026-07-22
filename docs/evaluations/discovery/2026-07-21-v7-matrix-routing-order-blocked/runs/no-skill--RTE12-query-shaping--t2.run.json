@@ -1,0 +1,80 @@
+{
+  "activatedSkills": [],
+  "arm": "no-skill",
+  "armSha256": "sha256:7f56dd3946274dc5773019c34c4a3ac33bb3344ab1942290396bc73550f33164",
+  "childPayloadSha256": "sha256:411aa1ab2b588dff4aa97bfb95b133820fbee154e5ba7eec577f053ca94dc8f7",
+  "childRequestSha256": "sha256:ed7f0615918acb71a5a3a5dae669d3744e6583230f5ed4e9917e3a01ebbfac22",
+  "completion": {
+    "blocked": false,
+    "coverageFailCount": 0,
+    "reason": "The virtual patch completes the requested query shaping and binding rename.",
+    "semanticFailCount": 0,
+    "status": "COMPLETE",
+    "unknownCount": 0
+  },
+  "declaredLoadedFiles": {
+    "kind": "declared",
+    "paths": []
+  },
+  "driftReceipt": null,
+  "exactPrompt": "Read and execute /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v3-runs/no-skill--RTE12-query-shaping--t2.child-request.json (sha256:ed7f0615918acb71a5a3a5dae669d3744e6583230f5ed4e9917e3a01ebbfac22).\nAssigned payload path: /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v3-runs/no-skill--RTE12-query-shaping--t2.child-payload.json. Write exactly this one file with apply_patch; create or modify no other file.\nDo not echo the dispatch prompt or coordinator-owned fields; after writing valid childPayload JSON, return only concise status.",
+  "generatedIndexDigests": {
+    "css": "sha256:b9c8fe78ce9066c8baedec798e707f18bfe3845e6fdf4137a6f724d8e94bb1ff",
+    "react": "sha256:c2036ebd5ca4d70b5e6734a53f9a3b8227cb93fa068bda03e318eb0a88ddc4bc",
+    "typescript": "sha256:9891aafd9a34683772d5d7653b4fa82d10e0bee8b8b4412acdd9d2889f832a7e"
+  },
+  "limitations": [],
+  "promptByteLength": 671,
+  "promptRendererVersion": "behavioral-prompt-renderer-v3",
+  "promptSha256": "sha256:5415658c897d710ba0ca9efdff3be552fff8f8a1fa65708208ef298f3b21608d",
+  "protocolId": "progressive-loading-behavioral-v3",
+  "protocolSha256": "sha256:38081fa0741d60b38463d3628d669abce23f5d2cac0af75a1c26c224208219f1",
+  "receipts": [],
+  "repositoryHead": "aa4083efa812dfbcb319493980243efcb799747e",
+  "requestContentDigest": "sha256:037741a1fca486d4af53b30aea514e00dea1af7d5957152acfd9bdead8fe1a94",
+  "response": "Moved list and metadata shaping into query select, replaced broad query and mutation aliases with response and mutation bindings, and preserved the rendered behavior.",
+  "routingTrace": null,
+  "runId": "no-skill--RTE12-query-shaping--t2",
+  "runtime": {
+    "declared": {
+      "forkTurns": "none",
+      "oneChildPerTrial": true,
+      "requestedModel": "gpt-5.6-sol",
+      "requestedReasoning": "high",
+      "runtime": "Codex collaboration child agent"
+    },
+    "evidenceClass": "declared-telemetry-only",
+    "unavailable": {
+      "actualReasoningTelemetry": null,
+      "childTokenUsage": null,
+      "exactModelBuild": null,
+      "observedFileReads": null,
+      "runtimeVersion": null
+    }
+  },
+  "scenarioId": "RTE12-query-shaping",
+  "scenarioPrompt": "move repeated raw list, items, and meta render shaping into query select, rename bindings to response... and mutation..., and remove wide aliases.",
+  "scenarioSha256": "sha256:a75a308db77e01228c4a6a831c7b426683fce81b79aca806494d9ae1c983ac4d",
+  "schemaVersion": 3,
+  "scoring": {
+    "eligible": false,
+    "kind": "observational",
+    "reason": "no-skill arm"
+  },
+  "semanticVerdicts": [],
+  "stagedProvenanceSha256": null,
+  "trial": 2,
+  "virtualPatch": {
+    "files": [
+      {
+        "after": "import {useMutation, useSuspenseQuery} from \"@tanstack/react-query\";\n\nimport {EntryList} from \"./-local/entry-list\";\nimport {fetchEntries, postEntry} from \"./entry-api\";\n\nexport const EntriesPage = () => {\n  const {data: responseEntries} = useSuspenseQuery({\n    queryKey: [\"entries\"],\n    queryFn: fetchEntries,\n    select: ({entries, total}) => ({\n      items: entries.map((entry) => ({id: entry.id, label: entry.title.trim()})),\n      meta: {total},\n    }),\n  });\n  const {mutate: mutationCreateEntry} = useMutation({mutationFn: postEntry});\n\n  return (\n    <EntryList\n      items={responseEntries.items}\n      total={responseEntries.meta.total}\n      onCreate={mutationCreateEntry}\n    />\n  );\n};\n",
+        "afterSha256": "sha256:409d929a722c8599baa8d3aabd14b44fd873abc347afa22a7126bed930f33637",
+        "afterState": "present",
+        "beforeSha256": "sha256:d4fb4cd10a6cf8d4185cb19a49a86a500e2bc9e48ef0faeb6f0cd04250d3d800",
+        "beforeState": "present",
+        "path": "src/routes/entries/page.tsx"
+      }
+    ],
+    "summary": "Shape entry-list render data in the query select and expose only response data and mutation callbacks."
+  }
+}

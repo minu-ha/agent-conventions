@@ -1,0 +1,7 @@
+{
+  "childPayloadPath": "/tmp/v12-no-skill--css-repeated-values-and-optional-token--t1-attempt2.XkNZtG/no-skill--css-repeated-values-and-optional-token--t1.child-payload.json",
+  "envelopePath": "/tmp/v12-no-skill--css-repeated-values-and-optional-token--t1-attempt2.XkNZtG/no-skill--css-repeated-values-and-optional-token--t1.dispatch-envelope.json",
+  "exactDispatch": "Read and execute /tmp/v12-no-skill--css-repeated-values-and-optional-token--t1-attempt2.XkNZtG/no-skill--css-repeated-values-and-optional-token--t1.child-request.json (sha256:625cc9e3f25d27b0dc9cc5f633b38c3a9c7f180c9c591d8d0b72fb9436187fb4).\nAssigned payload path: /tmp/v12-no-skill--css-repeated-values-and-optional-token--t1-attempt2.XkNZtG/no-skill--css-repeated-values-and-optional-token--t1.child-payload.json. Write exactly this one file with apply_patch; create or modify no other file.\nDo not echo the dispatch prompt or coordinator-owned fields; after writing valid childPayload JSON, return only concise status.",
+  "requestPath": "/tmp/v12-no-skill--css-repeated-values-and-optional-token--t1-attempt2.XkNZtG/no-skill--css-repeated-values-and-optional-token--t1.child-request.json",
+  "runPath": "/tmp/v12-no-skill--css-repeated-values-and-optional-token--t1-attempt2.XkNZtG/no-skill--css-repeated-values-and-optional-token--t1.run.json"
+}

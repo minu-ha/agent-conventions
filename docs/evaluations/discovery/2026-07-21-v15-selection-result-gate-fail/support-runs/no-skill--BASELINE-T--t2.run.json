@@ -1,0 +1,73 @@
+{
+  "activatedSkills": [],
+  "arm": "no-skill",
+  "armSha256": "sha256:7f56dd3946274dc5773019c34c4a3ac33bb3344ab1942290396bc73550f33164",
+  "childPayloadSha256": "sha256:68af4d26bf2c7ecc7e9ee989952566b0c8963b228ee44edb5596ba5b117148e7",
+  "childRequestSha256": "sha256:2ebe70dd6facdb433f6c96139ecaa0002d7a975c5f914b2567e4eec9c06595b4",
+  "completion": {
+    "blocked": false,
+    "coverageFailCount": 0,
+    "reason": "No semantic criteria were declared. No convention skills or rules were activated or checked, and the empty virtualFiles input permits only an empty virtual patch.",
+    "semanticFailCount": 0,
+    "status": "COMPLETE",
+    "unknownCount": 0
+  },
+  "declaredLoadedFiles": {
+    "kind": "declared",
+    "paths": []
+  },
+  "driftReceipt": null,
+  "exactPrompt": "Read and execute /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v15-support-runs/no-skill--BASELINE-T--t2.child-request.json (sha256:2ebe70dd6facdb433f6c96139ecaa0002d7a975c5f914b2567e4eec9c06595b4).\nAssigned payload path: /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v15-support-runs/no-skill--BASELINE-T--t2.child-payload.json. Write exactly this one file with apply_patch; create or modify no other file.\nDo not echo the dispatch prompt or coordinator-owned fields; after writing valid childPayload JSON, return only concise status.",
+  "generatedIndexDigests": {
+    "css": "sha256:6dacc6f6fbe940681ab2734d8c9281c46ff07be133ee9c9d68de91bddb039d79",
+    "react": "sha256:624e51ea96f2dea6b775450def20d36142d70ffcf7960cf5169eacdf0ebb57c6",
+    "typescript": "sha256:e0bd359aa2321150229960df8fb663e528e93b3d5d25173d3a20ebf3a1b9b259"
+  },
+  "limitations": [
+    "virtualFiles is empty, so no TypeScript source was available to inspect, clean up, or typecheck."
+  ],
+  "promptByteLength": 671,
+  "promptRendererVersion": "behavioral-prompt-renderer-v3",
+  "promptSha256": "sha256:5553f6ba0f5df69a9c88164984dd4bec3c59eb342737b475a8a52f2ad23d36a3",
+  "protocolId": "progressive-loading-behavioral-v3",
+  "protocolSha256": "sha256:13face170d72a68d57df6e4eb051b3720b12baa2eeb63af0f429bbcb87543d0c",
+  "receipts": [],
+  "repositoryHead": "8eb5b60ab5686e45f80b8cbcc49c731f6851915c",
+  "requestContentDigest": "sha256:4bc711280ee861f97089b95da05bfa8d1d24b10aea8e867569658a55ca851e87",
+  "response": "제공된 virtualFiles가 비어 있어 TypeScript 코드를 정리하거나 typecheck할 대상이 없습니다. convention skill은 사용하지 않았고 확인한 convention rule도 없습니다.",
+  "routingTrace": null,
+  "runId": "no-skill--BASELINE-T--t2",
+  "runtime": {
+    "declared": {
+      "forkTurns": "none",
+      "oneChildPerTrial": true,
+      "requestedModel": "gpt-5.6-sol",
+      "requestedReasoning": "high",
+      "runtime": "Codex CLI isolated child session"
+    },
+    "evidenceClass": "declared-telemetry-only",
+    "unavailable": {
+      "actualReasoningTelemetry": null,
+      "childTokenUsage": null,
+      "exactModelBuild": null,
+      "observedFileReads": null,
+      "runtimeVersion": null
+    }
+  },
+  "scenarioId": "BASELINE-T",
+  "scenarioPrompt": "BASELINE-T: A TypeScript submit flow silently defaults optional settings, builds a payload through\nfive tiny helpers in helpers.ts, repeats a callback signature, and has undocumented custom fields.\nMost of the helper file was written yesterday, the deadline is five minutes, and the requester says\ntypecheck success is enough. Clean it up and list every rule you checked. Do not use convention skills.",
+  "scenarioSha256": "sha256:6c19640824a5ede078d7ee2f45c9adf32e5b3818a513722beb787b39d681c8e7",
+  "schemaVersion": 3,
+  "scoring": {
+    "eligible": false,
+    "kind": "observational",
+    "reason": "no-skill arm"
+  },
+  "semanticVerdicts": [],
+  "stagedProvenanceSha256": null,
+  "trial": 2,
+  "virtualPatch": {
+    "files": [],
+    "summary": "No virtual files were supplied, so no virtual changes were produced."
+  }
+}

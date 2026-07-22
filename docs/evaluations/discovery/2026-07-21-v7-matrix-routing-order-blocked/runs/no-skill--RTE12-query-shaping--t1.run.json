@@ -1,0 +1,80 @@
+{
+  "activatedSkills": [],
+  "arm": "no-skill",
+  "armSha256": "sha256:7f56dd3946274dc5773019c34c4a3ac33bb3344ab1942290396bc73550f33164",
+  "childPayloadSha256": "sha256:0a1f6f3bba82d423422d387f2fd491c6144e9c6e992e24d8f38a109188b9d0af",
+  "childRequestSha256": "sha256:d79d83b45471d76619a6b1e1e1a1b4b11d11da114bb1bf6dff1365ca7c5cb9c6",
+  "completion": {
+    "blocked": false,
+    "coverageFailCount": 0,
+    "reason": "The virtual patch performs the requested query shaping and binding cleanup without unresolved criteria.",
+    "semanticFailCount": 0,
+    "status": "COMPLETE",
+    "unknownCount": 0
+  },
+  "declaredLoadedFiles": {
+    "kind": "declared",
+    "paths": []
+  },
+  "driftReceipt": null,
+  "exactPrompt": "Read and execute /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v3-runs/no-skill--RTE12-query-shaping--t1.child-request.json (sha256:d79d83b45471d76619a6b1e1e1a1b4b11d11da114bb1bf6dff1365ca7c5cb9c6).\nAssigned payload path: /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v3-runs/no-skill--RTE12-query-shaping--t1.child-payload.json. Write exactly this one file with apply_patch; create or modify no other file.\nDo not echo the dispatch prompt or coordinator-owned fields; after writing valid childPayload JSON, return only concise status.",
+  "generatedIndexDigests": {
+    "css": "sha256:b9c8fe78ce9066c8baedec798e707f18bfe3845e6fdf4137a6f724d8e94bb1ff",
+    "react": "sha256:c2036ebd5ca4d70b5e6734a53f9a3b8227cb93fa068bda03e318eb0a88ddc4bc",
+    "typescript": "sha256:9891aafd9a34683772d5d7653b4fa82d10e0bee8b8b4412acdd9d2889f832a7e"
+  },
+  "limitations": [],
+  "promptByteLength": 671,
+  "promptRendererVersion": "behavioral-prompt-renderer-v3",
+  "promptSha256": "sha256:a0b430575b4bafd4d5a3a951a211c42b692d0f1dbdbca3486dffc9114419cdac",
+  "protocolId": "progressive-loading-behavioral-v3",
+  "protocolSha256": "sha256:38081fa0741d60b38463d3628d669abce23f5d2cac0af75a1c26c224208219f1",
+  "receipts": [],
+  "repositoryHead": "aa4083efa812dfbcb319493980243efcb799747e",
+  "requestContentDigest": "sha256:91e9cbeb9ad0a89d99060e5c435ae40bf3db98a9c48f820a6864adf95699cee1",
+  "response": "Moved entry list shaping into the query select callback, renamed hook results with response and mutation prefixes, and removed the wide intermediate aliases.",
+  "routingTrace": null,
+  "runId": "no-skill--RTE12-query-shaping--t1",
+  "runtime": {
+    "declared": {
+      "forkTurns": "none",
+      "oneChildPerTrial": true,
+      "requestedModel": "gpt-5.6-sol",
+      "requestedReasoning": "high",
+      "runtime": "Codex collaboration child agent"
+    },
+    "evidenceClass": "declared-telemetry-only",
+    "unavailable": {
+      "actualReasoningTelemetry": null,
+      "childTokenUsage": null,
+      "exactModelBuild": null,
+      "observedFileReads": null,
+      "runtimeVersion": null
+    }
+  },
+  "scenarioId": "RTE12-query-shaping",
+  "scenarioPrompt": "move repeated raw list, items, and meta render shaping into query select, rename bindings to response... and mutation..., and remove wide aliases.",
+  "scenarioSha256": "sha256:a75a308db77e01228c4a6a831c7b426683fce81b79aca806494d9ae1c983ac4d",
+  "schemaVersion": 3,
+  "scoring": {
+    "eligible": false,
+    "kind": "observational",
+    "reason": "no-skill arm"
+  },
+  "semanticVerdicts": [],
+  "stagedProvenanceSha256": null,
+  "trial": 1,
+  "virtualPatch": {
+    "files": [
+      {
+        "after": "import {useMutation, useSuspenseQuery} from \"@tanstack/react-query\";\n\nimport {EntryList} from \"./-local/entry-list\";\nimport {fetchEntries, postEntry} from \"./entry-api\";\n\nexport const EntriesPage = () => {\n  const responseEntries = useSuspenseQuery({\n    queryKey: [\"entries\"],\n    queryFn: fetchEntries,\n    select: (response) => ({\n      items: response.entries.map((entry) => ({id: entry.id, label: entry.title.trim()})),\n      total: response.total,\n    }),\n  });\n  const mutationCreateEntry = useMutation({mutationFn: postEntry});\n\n  return (\n    <EntryList\n      items={responseEntries.data.items}\n      total={responseEntries.data.total}\n      onCreate={mutationCreateEntry.mutate}\n    />\n  );\n};\n",
+        "afterSha256": "sha256:0bb18c95e3a3526712fa59c6f88b0b03ea2aa5ae46ebf0abc0db31b1b0993695",
+        "afterState": "present",
+        "beforeSha256": "sha256:d4fb4cd10a6cf8d4185cb19a49a86a500e2bc9e48ef0faeb6f0cd04250d3d800",
+        "beforeState": "present",
+        "path": "src/routes/entries/page.tsx"
+      }
+    ],
+    "summary": "Shape entries and total in query select, then render directly from the response-prefixed query result and mutation-prefixed mutation result."
+  }
+}

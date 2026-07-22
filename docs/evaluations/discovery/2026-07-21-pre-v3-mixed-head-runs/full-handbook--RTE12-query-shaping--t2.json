@@ -1,0 +1,452 @@
+{
+  "schemaVersion": 2,
+  "runId": "full-handbook--RTE12-query-shaping--t2",
+  "protocolId": "progressive-loading-behavioral-v2",
+  "repositoryHead": "74e084923ade859e383519777ea027832568c11e",
+  "arm": "full-handbook",
+  "scenarioId": "RTE12-query-shaping",
+  "trial": 2,
+  "exactPrompt": "move repeated raw list, items, and meta render shaping into query select, rename bindings to response... and mutation..., and remove wide aliases.",
+  "runtime": {
+    "requestedModel": "gpt-5.6-sol",
+    "exactModelBuild": null,
+    "requestedReasoning": "high",
+    "actualReasoningTelemetry": null,
+    "forkTurns": "none"
+  },
+  "declaredLoadedFiles": {
+    "kind": "declared",
+    "paths": [
+      "skill/react/SKILL.md",
+      "skill/react/AGENTS.md",
+      "skill/typescript/SKILL.md",
+      "skill/typescript/AGENTS.md"
+    ]
+  },
+  "activatedSkills": [
+    "react",
+    "typescript"
+  ],
+  "receipts": [
+    {
+      "skill": "react",
+      "indexDigest": null,
+      "selected": [
+        {
+          "ordinal": "R21",
+          "id": "screen-keep-derived-values-close"
+        },
+        {
+          "ordinal": "R30",
+          "id": "state-name-query-and-mutation-bindings-consistently"
+        },
+        {
+          "ordinal": "R32",
+          "id": "state-preserve-origin-chaining"
+        },
+        {
+          "ordinal": "R33",
+          "id": "state-shape-query-data-with-select"
+        },
+        {
+          "ordinal": "R42",
+          "id": "docs-require-jsdoc-on-key-declarations"
+        }
+      ],
+      "notApplicable": [
+        {
+          "ordinal": "R01",
+          "id": "ownership-avoid-barrel-and-react-namespace-imports"
+        },
+        {
+          "ordinal": "R02",
+          "id": "ownership-prefer-plain-ts-for-local-react-helpers"
+        },
+        {
+          "ordinal": "R03",
+          "id": "ownership-layer-component-boundaries"
+        },
+        {
+          "ordinal": "R04",
+          "id": "ownership-place-route-local-files-by-scope"
+        },
+        {
+          "ordinal": "R05",
+          "id": "ownership-shared-config-entry-points"
+        },
+        {
+          "ordinal": "R06",
+          "id": "ownership-use-consistent-file-and-symbol-naming"
+        },
+        {
+          "ordinal": "R07",
+          "id": "typing-function-type-first"
+        },
+        {
+          "ordinal": "R08",
+          "id": "typing-reuse-existing-contracts"
+        },
+        {
+          "ordinal": "R09",
+          "id": "strategy-avoid-boolean-prop-proliferation"
+        },
+        {
+          "ordinal": "R10",
+          "id": "strategy-choose-single-composition-compound-and-variants"
+        },
+        {
+          "ordinal": "R11",
+          "id": "strategy-prefer-children-over-render-props"
+        },
+        {
+          "ordinal": "R12",
+          "id": "composition-destructure-props-inside"
+        },
+        {
+          "ordinal": "R13",
+          "id": "composition-do-not-define-components-inside-components"
+        },
+        {
+          "ordinal": "R14",
+          "id": "composition-prefer-arrow-functions-and-object-params"
+        },
+        {
+          "ordinal": "R15",
+          "id": "composition-named-handlers-over-inline"
+        },
+        {
+          "ordinal": "R16",
+          "id": "composition-use-activity-for-render-branches"
+        },
+        {
+          "ordinal": "R17",
+          "id": "composition-use-ref-prop-instead-of-forwardref-in-react-19"
+        },
+        {
+          "ordinal": "R18",
+          "id": "screen-avoid-premature-abstraction"
+        },
+        {
+          "ordinal": "R19",
+          "id": "screen-extract-local-section-components-for-runtime-boundaries"
+        },
+        {
+          "ordinal": "R20",
+          "id": "screen-extract-utilities-selectively"
+        },
+        {
+          "ordinal": "R22",
+          "id": "screen-keep-route-flow-visible"
+        },
+        {
+          "ordinal": "R23",
+          "id": "screen-move-pure-support-code-out-of-entry-files"
+        },
+        {
+          "ordinal": "R24",
+          "id": "events-keep-handler-flow-inline"
+        },
+        {
+          "ordinal": "R25",
+          "id": "events-name-and-curry-handlers"
+        },
+        {
+          "ordinal": "R26",
+          "id": "events-run-user-actions-in-handlers-not-effects"
+        },
+        {
+          "ordinal": "R27",
+          "id": "state-avoid-fallback-defaults-and-loading-flags"
+        },
+        {
+          "ordinal": "R28",
+          "id": "state-calculate-derived-values-during-render"
+        },
+        {
+          "ordinal": "R29",
+          "id": "state-choose-state-tools-by-source-of-truth"
+        },
+        {
+          "ordinal": "R31",
+          "id": "state-compiler-first-memoization"
+        },
+        {
+          "ordinal": "R34",
+          "id": "state-store-derived-authority"
+        },
+        {
+          "ordinal": "R35",
+          "id": "state-use-functional-setstate-updates"
+        },
+        {
+          "ordinal": "R36",
+          "id": "state-use-lazy-state-initializers-for-expensive-defaults"
+        },
+        {
+          "ordinal": "R37",
+          "id": "state-use-starttransition-for-non-urgent-updates"
+        },
+        {
+          "ordinal": "R38",
+          "id": "state-use-usedeferredvalue-for-heavy-derived-renders"
+        },
+        {
+          "ordinal": "R39",
+          "id": "state-use-effectevent-for-non-reactive-effect-callbacks"
+        },
+        {
+          "ordinal": "R40",
+          "id": "docs-document-compound-parts-with-part-and-description"
+        },
+        {
+          "ordinal": "R41",
+          "id": "docs-limit-inline-comments-to-non-obvious-logic"
+        }
+      ],
+      "unknown": [],
+      "excludedGroups": [
+        {
+          "ordinals": [
+            "R01",
+            "R02",
+            "R03",
+            "R04",
+            "R05",
+            "R06"
+          ],
+          "reason": "The prompt does not change imports, helper modules, ownership layers, file placement, shared config, or exported/file naming; R06 explicitly excludes local query and mutation binding-only naming."
+        },
+        {
+          "ordinals": [
+            "R07",
+            "R08",
+            "R09",
+            "R10",
+            "R11",
+            "R12",
+            "R13",
+            "R14",
+            "R15",
+            "R16",
+            "R17"
+          ],
+          "reason": "No callable contract, prop type, component composition, JSX handler, visibility primitive, or ref API changes are requested."
+        },
+        {
+          "ordinals": [
+            "R18",
+            "R19",
+            "R20",
+            "R22",
+            "R23",
+            "R24",
+            "R25",
+            "R26"
+          ],
+          "reason": "The requested select-local shaping does not introduce or move helpers, hooks, components, route sections, route orchestration, or event flows; R20 explicitly excludes query select-only shaping."
+        },
+        {
+          "ordinals": [
+            "R27",
+            "R28",
+            "R29",
+            "R31",
+            "R34",
+            "R35",
+            "R36",
+            "R37",
+            "R38",
+            "R39"
+          ],
+          "reason": "No fallback, derived-state synchronization, state-tool, memoization, store, setState, initialization, transition, deferred render, or effect-event behavior is changed."
+        },
+        {
+          "ordinals": [
+            "R40",
+            "R41"
+          ],
+          "reason": "No compound parts or inline comments are added or changed."
+        }
+      ],
+      "expanded": []
+    },
+    {
+      "skill": "typescript",
+      "indexDigest": null,
+      "selected": [
+        {
+          "ordinal": "T03",
+          "id": "naming-use-consistent-file-and-symbol-naming"
+        },
+        {
+          "ordinal": "T18",
+          "id": "docs-require-header-jsdoc-on-key-declarations"
+        },
+        {
+          "ordinal": "T19",
+          "id": "docs-standardize-annotation-tags-by-declaration-role"
+        },
+        {
+          "ordinal": "T21",
+          "id": "docs-write-concise-korean-comments-about-purpose-and-constraints"
+        },
+        {
+          "ordinal": "T22",
+          "id": "guardrails-review-banned-typescript-shortcuts-before-finishing"
+        }
+      ],
+      "notApplicable": [
+        {
+          "ordinal": "T01",
+          "id": "naming-centralize-shared-config-namespaces"
+        },
+        {
+          "ordinal": "T02",
+          "id": "naming-preserve-config-origin-with-chained-access"
+        },
+        {
+          "ordinal": "T04",
+          "id": "naming-use-direct-imports-and-public-entry-points"
+        },
+        {
+          "ordinal": "T05",
+          "id": "types-document-custom-types-and-shapes"
+        },
+        {
+          "ordinal": "T06",
+          "id": "types-mark-unused-parameters-with-underscore"
+        },
+        {
+          "ordinal": "T07",
+          "id": "types-prefer-function-variable-types-over-parameter-annotations"
+        },
+        {
+          "ordinal": "T08",
+          "id": "types-reuse-callback-signatures-from-existing-contracts"
+        },
+        {
+          "ordinal": "T09",
+          "id": "types-reuse-existing-contracts-before-new-types"
+        },
+        {
+          "ordinal": "T10",
+          "id": "functions-avoid-imperative-assembly-in-wide-scopes"
+        },
+        {
+          "ordinal": "T11",
+          "id": "functions-extract-helpers-only-when-the-boundary-is-real"
+        },
+        {
+          "ordinal": "T12",
+          "id": "functions-prefer-immutable-array-sorting"
+        },
+        {
+          "ordinal": "T13",
+          "id": "functions-replace-enum-with-as-const-objects"
+        },
+        {
+          "ordinal": "T14",
+          "id": "functions-use-named-object-params-for-complex-signatures"
+        },
+        {
+          "ordinal": "T15",
+          "id": "functions-use-set-and-map-for-repeated-lookups"
+        },
+        {
+          "ordinal": "T16",
+          "id": "absence-expose-optional-values-instead-of-silent-fallbacks"
+        },
+        {
+          "ordinal": "T17",
+          "id": "docs-keep-inline-comments-for-constraints-and-caveats"
+        },
+        {
+          "ordinal": "T20",
+          "id": "docs-use-helper-for-reusable-pure-helper-functions"
+        }
+      ],
+      "unknown": [],
+      "excludedGroups": [
+        {
+          "ordinals": [
+            "T01",
+            "T02",
+            "T04"
+          ],
+          "reason": "No shared config, util namespace, import, export, barrel, or public entry-point boundary changes are requested."
+        },
+        {
+          "ordinals": [
+            "T05",
+            "T06",
+            "T07",
+            "T08",
+            "T09"
+          ],
+          "reason": "No custom shape, unused callback parameter, callable signature, callback contract, or type declaration is added or changed."
+        },
+        {
+          "ordinals": [
+            "T10",
+            "T11",
+            "T12",
+            "T13",
+            "T14",
+            "T15"
+          ],
+          "reason": "The prompt does not add imperative assembly, helper extraction, sorting, enum-like values, complex signatures, or repeated collection lookups."
+        },
+        {
+          "ordinals": [
+            "T16"
+          ],
+          "reason": "No optional-value fallback or absence-handling behavior is requested."
+        },
+        {
+          "ordinals": [
+            "T17",
+            "T20"
+          ],
+          "reason": "No inline comments or reusable pure helper declarations are added or changed."
+        }
+      ],
+      "expanded": []
+    }
+  ],
+  "driftReceipt": null,
+  "semanticVerdicts": [
+    {
+      "criterion": "Repeated raw list, items, and meta render shaping is centralized at the React Query boundary.",
+      "verdict": "PASS",
+      "reason": "The response directs the shaping into query.select and treats its returned object as the screen-ready data contract."
+    },
+    {
+      "criterion": "Query and mutation bindings use role-revealing response... and mutation... prefixes.",
+      "verdict": "PASS",
+      "reason": "The response explicitly requires response... for query bindings and mutation... for mutation bindings."
+    },
+    {
+      "criterion": "Wide aliases are removed while response and mutation origins remain visible.",
+      "verdict": "PASS",
+      "reason": "The response requires direct origin-preserving chains from the named query and mutation bindings instead of screen-scope aliases."
+    },
+    {
+      "criterion": "Changed key declarations remain documented according to the handbook.",
+      "verdict": "PASS",
+      "reason": "The response calls for concise Korean @api JSDoc on renamed query and mutation bindings."
+    }
+  ],
+  "completion": {
+    "status": "COMPLETE",
+    "blocked": false,
+    "coverageFailCount": 0,
+    "semanticFailCount": 0,
+    "unknownCount": 0,
+    "reason": "All 42 React and 22 TypeScript handbook identities are completely partitioned, and the response covers each requested behavioral change."
+  },
+  "limitations": [
+    "No application source was provided or inspected; this trial records convention guidance rather than an applied code change."
+  ],
+  "response": "Move the repeated raw list, items, and meta transformation into each React Query hook's query.select and return one screen-ready object from that boundary. Rename query bindings to response... and mutation bindings to mutation..., add or update concise Korean @api JSDoc for those named bindings, and consume response....data or mutation... directly so their origin stays visible. Remove screen-scope aliases that only rename response data; keep any one-off access at its use site.",
+  "scoring": null
+}

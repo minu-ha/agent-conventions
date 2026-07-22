@@ -1,0 +1,620 @@
+{
+  "activatedSkills": [
+    "typescript"
+  ],
+  "arm": "full-handbook",
+  "armSha256": "sha256:6316fd6282f7968127ddc7af46327cc3f4eafcc669d2d7170b699f0f93961238",
+  "childPayloadSha256": "sha256:1f80bf8d6e07bf95a8de234bc4174f35862b613d67c6e01a55f718b82251e93a",
+  "childRequestSha256": "sha256:6082fab86d7b9cac6ebad578d8b43d70009f0ec32a7d23d1dfd91a1bceb45f3e",
+  "completion": {
+    "blocked": false,
+    "coverageFailCount": 0,
+    "reason": "TypeScript 전체 22개 규칙을 분할하고 필수 전파 및 완료 게이트가 포함된 4-pass 안정 라우팅을 완성했다. virtualFiles가 비어 있어 실제 코드 변경은 수행할 수 없으며 virtualPatch는 null이다.",
+    "semanticFailCount": 0,
+    "status": "COMPLETE",
+    "unknownCount": 0
+  },
+  "declaredLoadedFiles": {
+    "kind": "declared",
+    "paths": [
+      "skill/typescript/SKILL.md",
+      "skill/typescript/AGENTS.md"
+    ]
+  },
+  "driftReceipt": null,
+  "exactPrompt": "Read and execute /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v3-runs/full-handbook--BASELINE-T--t2.child-request.json (sha256:6082fab86d7b9cac6ebad578d8b43d70009f0ec32a7d23d1dfd91a1bceb45f3e).\nAssigned payload path: /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v3-runs/full-handbook--BASELINE-T--t2.child-payload.json. Write exactly this one file with apply_patch; create or modify no other file.\nDo not echo the dispatch prompt or coordinator-owned fields; after writing valid childPayload JSON, return only concise status.",
+  "generatedIndexDigests": {
+    "css": "sha256:b9c8fe78ce9066c8baedec798e707f18bfe3845e6fdf4137a6f724d8e94bb1ff",
+    "react": "sha256:c2036ebd5ca4d70b5e6734a53f9a3b8227cb93fa068bda03e318eb0a88ddc4bc",
+    "typescript": "sha256:9891aafd9a34683772d5d7653b4fa82d10e0bee8b8b4412acdd9d2889f832a7e"
+  },
+  "limitations": [
+    "virtualFiles가 비어 있어 submit flow와 helpers.ts의 실제 코드를 수정하거나 typecheck를 실행할 수 없다."
+  ],
+  "promptByteLength": 663,
+  "promptRendererVersion": "behavioral-prompt-renderer-v3",
+  "promptSha256": "sha256:0715c18eff87295df679109c212f3b95a58ea7ab3f2f81ac123e43ee0d021760",
+  "protocolId": "progressive-loading-behavioral-v3",
+  "protocolSha256": "sha256:3bb92a82504457d1fd8f5a935d573e62ca97fc10208117327cc47f91eaf85006",
+  "receipts": [
+    {
+      "excludedGroups": [
+        {
+          "ordinals": [
+            "T01",
+            "T02",
+            "T03",
+            "T04"
+          ],
+          "reason": "공유 config, namespace origin, 식별자 casing, import 또는 public entry point 변경이 과업에 없다."
+        },
+        {
+          "ordinals": [
+            "T06",
+            "T09"
+          ],
+          "reason": "미사용 매개변수나 기존 shape를 중복 선언하는 변경은 제시되지 않았다."
+        },
+        {
+          "ordinals": [
+            "T10",
+            "T12",
+            "T13",
+            "T14",
+            "T15"
+          ],
+          "reason": "넓은 스코프 명령형 조립, 배열 정렬, enum, 복잡한 positional signature, 반복 lookup 표면이 없다."
+        },
+        {
+          "ordinals": [
+            "T17"
+          ],
+          "reason": "무근거 fallback은 제거 대상으로 판정했으며 예외 제약을 설명하는 inline comment 변경은 필요하지 않다."
+        },
+        {
+          "ordinals": [
+            "T20"
+          ],
+          "reason": "다섯 개의 tiny helper를 정리해야 하지만 여러 caller가 공유하는 reusable pure helper를 유지한다는 근거는 없다."
+        }
+      ],
+      "expanded": [],
+      "indexDigest": null,
+      "notApplicable": [
+        {
+          "id": "naming-centralize-shared-config-namespaces",
+          "ordinal": "T01"
+        },
+        {
+          "id": "naming-preserve-config-origin-with-chained-access",
+          "ordinal": "T02"
+        },
+        {
+          "id": "naming-use-consistent-file-and-symbol-naming",
+          "ordinal": "T03"
+        },
+        {
+          "id": "naming-use-direct-imports-and-public-entry-points",
+          "ordinal": "T04"
+        },
+        {
+          "id": "types-mark-unused-parameters-with-underscore",
+          "ordinal": "T06"
+        },
+        {
+          "id": "types-reuse-existing-contracts-before-new-types",
+          "ordinal": "T09"
+        },
+        {
+          "id": "functions-avoid-imperative-assembly-in-wide-scopes",
+          "ordinal": "T10"
+        },
+        {
+          "id": "functions-prefer-immutable-array-sorting",
+          "ordinal": "T12"
+        },
+        {
+          "id": "functions-replace-enum-with-as-const-objects",
+          "ordinal": "T13"
+        },
+        {
+          "id": "functions-use-named-object-params-for-complex-signatures",
+          "ordinal": "T14"
+        },
+        {
+          "id": "functions-use-set-and-map-for-repeated-lookups",
+          "ordinal": "T15"
+        },
+        {
+          "id": "docs-keep-inline-comments-for-constraints-and-caveats",
+          "ordinal": "T17"
+        },
+        {
+          "id": "docs-use-helper-for-reusable-pure-helper-functions",
+          "ordinal": "T20"
+        }
+      ],
+      "selected": [
+        {
+          "id": "types-document-custom-types-and-shapes",
+          "ordinal": "T05"
+        },
+        {
+          "id": "types-prefer-function-variable-types-over-parameter-annotations",
+          "ordinal": "T07"
+        },
+        {
+          "id": "types-reuse-callback-signatures-from-existing-contracts",
+          "ordinal": "T08"
+        },
+        {
+          "id": "functions-extract-helpers-only-when-the-boundary-is-real",
+          "ordinal": "T11"
+        },
+        {
+          "id": "absence-expose-optional-values-instead-of-silent-fallbacks",
+          "ordinal": "T16"
+        },
+        {
+          "id": "docs-require-header-jsdoc-on-key-declarations",
+          "ordinal": "T18"
+        },
+        {
+          "id": "docs-standardize-annotation-tags-by-declaration-role",
+          "ordinal": "T19"
+        },
+        {
+          "id": "docs-write-concise-korean-comments-about-purpose-and-constraints",
+          "ordinal": "T21"
+        },
+        {
+          "id": "guardrails-review-banned-typescript-shortcuts-before-finishing",
+          "ordinal": "T22"
+        }
+      ],
+      "skill": "typescript",
+      "unknown": []
+    }
+  ],
+  "repositoryHead": "6a73a0a733579667ecf98a0a1fd18bec2af0108e",
+  "requestContentDigest": "sha256:4c82ea7831595a5a952e4a1594a8252a8dd3d44f81a9dadc1ae26279042cfda8",
+  "response": "virtualFiles가 제공되지 않아 코드 자체는 변경할 수 없다. 적용 가능한 정리 방향은 optional settings의 silent fallback 제거, 다섯 tiny helper를 submit 흐름 또는 실제 owner 경계로 통합, 기존 callback 계약의 Indexed Access 재사용, custom shape에 @summary와 각 @field를 한글로 추가하는 것이다. 확인한 전체 규칙 중 Selected는 T05 types-document-custom-types-and-shapes, T07 types-prefer-function-variable-types-over-parameter-annotations, T08 types-reuse-callback-signatures-from-existing-contracts, T11 functions-extract-helpers-only-when-the-boundary-is-real, T16 absence-expose-optional-values-instead-of-silent-fallbacks, T18 docs-require-header-jsdoc-on-key-declarations, T19 docs-standardize-annotation-tags-by-declaration-role, T21 docs-write-concise-korean-comments-about-purpose-and-constraints, T22 guardrails-review-banned-typescript-shortcuts-before-finishing이다. N/A는 T01 naming-centralize-shared-config-namespaces, T02 naming-preserve-config-origin-with-chained-access, T03 naming-use-consistent-file-and-symbol-naming, T04 naming-use-direct-imports-and-public-entry-points, T06 types-mark-unused-parameters-with-underscore, T09 types-reuse-existing-contracts-before-new-types, T10 functions-avoid-imperative-assembly-in-wide-scopes, T12 functions-prefer-immutable-array-sorting, T13 functions-replace-enum-with-as-const-objects, T14 functions-use-named-object-params-for-complex-signatures, T15 functions-use-set-and-map-for-repeated-lookups, T17 docs-keep-inline-comments-for-constraints-and-caveats, T20 docs-use-helper-for-reusable-pure-helper-functions이며 Unknown은 없다. typecheck 성공만으로는 완료 게이트를 대신할 수 없다.",
+  "routingTrace": {
+    "passes": [
+      {
+        "activatedSkills": [
+          "typescript"
+        ],
+        "completionGateAdded": [
+          "typescript/guardrails-review-banned-typescript-shortcuts-before-finishing"
+        ],
+        "completionGatesEvaluated": [
+          {
+            "outcome": "selected",
+            "rule": "typescript/guardrails-review-banned-typescript-shortcuts-before-finishing"
+          }
+        ],
+        "generatedIndexDigests": {
+          "typescript": "sha256:9891aafd9a34683772d5d7653b4fa82d10e0bee8b8b4412acdd9d2889f832a7e"
+        },
+        "notApplicable": {
+          "typescript": [
+            "naming-centralize-shared-config-namespaces",
+            "naming-preserve-config-origin-with-chained-access",
+            "naming-use-consistent-file-and-symbol-naming",
+            "naming-use-direct-imports-and-public-entry-points",
+            "types-mark-unused-parameters-with-underscore",
+            "types-prefer-function-variable-types-over-parameter-annotations",
+            "types-reuse-existing-contracts-before-new-types",
+            "functions-avoid-imperative-assembly-in-wide-scopes",
+            "functions-prefer-immutable-array-sorting",
+            "functions-replace-enum-with-as-const-objects",
+            "functions-use-named-object-params-for-complex-signatures",
+            "functions-use-set-and-map-for-repeated-lookups",
+            "docs-keep-inline-comments-for-constraints-and-caveats",
+            "docs-standardize-annotation-tags-by-declaration-role",
+            "docs-use-helper-for-reusable-pure-helper-functions",
+            "docs-write-concise-korean-comments-about-purpose-and-constraints"
+          ]
+        },
+        "pass": 1,
+        "requiresSelectedAdded": [],
+        "requiresSelectedEvaluated": [
+          {
+            "outcome": "not-propagated-unknown",
+            "source": "typescript/types-reuse-callback-signatures-from-existing-contracts",
+            "sourceStatus": "Unknown",
+            "target": "typescript/types-prefer-function-variable-types-over-parameter-annotations"
+          },
+          {
+            "outcome": "not-propagated-unknown",
+            "source": "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "sourceStatus": "Unknown",
+            "target": "typescript/docs-standardize-annotation-tags-by-declaration-role"
+          },
+          {
+            "outcome": "not-propagated-unknown",
+            "source": "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "sourceStatus": "Unknown",
+            "target": "typescript/docs-write-concise-korean-comments-about-purpose-and-constraints"
+          }
+        ],
+        "reviewWithReevaluated": [],
+        "scopeEvidence": [
+          "과업은 TypeScript submit flow 정리를 명시한다.",
+          "optional settings를 조용히 기본값으로 대체하는 동작이 있다.",
+          "helpers.ts의 다섯 tiny helper가 payload 조립 흐름을 분절한다.",
+          "기존 callback signature가 반복 선언되어 있다.",
+          "custom fields가 문서화되지 않았다.",
+          "5분 마감과 typecheck-only 요청은 완료 guardrail을 면제하지 않는다."
+        ],
+        "selected": {
+          "typescript": [
+            "guardrails-review-banned-typescript-shortcuts-before-finishing"
+          ]
+        },
+        "unknown": {
+          "typescript": [
+            "types-document-custom-types-and-shapes",
+            "types-reuse-callback-signatures-from-existing-contracts",
+            "functions-extract-helpers-only-when-the-boundary-is-real",
+            "absence-expose-optional-values-instead-of-silent-fallbacks",
+            "docs-require-header-jsdoc-on-key-declarations"
+          ]
+        }
+      },
+      {
+        "activatedSkills": [
+          "typescript"
+        ],
+        "completionGateAdded": [],
+        "completionGatesEvaluated": [
+          {
+            "outcome": "selected",
+            "rule": "typescript/guardrails-review-banned-typescript-shortcuts-before-finishing"
+          }
+        ],
+        "generatedIndexDigests": {
+          "typescript": "sha256:9891aafd9a34683772d5d7653b4fa82d10e0bee8b8b4412acdd9d2889f832a7e"
+        },
+        "notApplicable": {
+          "typescript": [
+            "naming-centralize-shared-config-namespaces",
+            "naming-preserve-config-origin-with-chained-access",
+            "naming-use-consistent-file-and-symbol-naming",
+            "naming-use-direct-imports-and-public-entry-points",
+            "types-mark-unused-parameters-with-underscore",
+            "types-reuse-existing-contracts-before-new-types",
+            "functions-avoid-imperative-assembly-in-wide-scopes",
+            "functions-prefer-immutable-array-sorting",
+            "functions-replace-enum-with-as-const-objects",
+            "functions-use-named-object-params-for-complex-signatures",
+            "functions-use-set-and-map-for-repeated-lookups",
+            "docs-keep-inline-comments-for-constraints-and-caveats",
+            "docs-use-helper-for-reusable-pure-helper-functions"
+          ]
+        },
+        "pass": 2,
+        "requiresSelectedAdded": [
+          {
+            "source": "typescript/types-reuse-callback-signatures-from-existing-contracts",
+            "target": "typescript/types-prefer-function-variable-types-over-parameter-annotations"
+          },
+          {
+            "source": "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "target": "typescript/docs-standardize-annotation-tags-by-declaration-role"
+          },
+          {
+            "source": "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "target": "typescript/docs-write-concise-korean-comments-about-purpose-and-constraints"
+          }
+        ],
+        "requiresSelectedEvaluated": [
+          {
+            "outcome": "selected",
+            "source": "typescript/types-reuse-callback-signatures-from-existing-contracts",
+            "sourceStatus": "Selected",
+            "target": "typescript/types-prefer-function-variable-types-over-parameter-annotations"
+          },
+          {
+            "outcome": "selected",
+            "source": "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "sourceStatus": "Selected",
+            "target": "typescript/docs-standardize-annotation-tags-by-declaration-role"
+          },
+          {
+            "outcome": "selected",
+            "source": "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "sourceStatus": "Selected",
+            "target": "typescript/docs-write-concise-korean-comments-about-purpose-and-constraints"
+          }
+        ],
+        "reviewWithReevaluated": [
+          {
+            "evidence": "custom fields를 문서화하는 변경이 별도로 T18에 직접 해당한다.",
+            "outcome": "Selected",
+            "source": "typescript/functions-extract-helpers-only-when-the-boundary-is-real",
+            "target": "typescript/docs-require-header-jsdoc-on-key-declarations"
+          },
+          {
+            "evidence": "tiny helper 제거 후 여러 caller가 공유할 reusable pure helper를 유지한다는 근거가 없다.",
+            "outcome": "N/A",
+            "source": "typescript/functions-extract-helpers-only-when-the-boundary-is-real",
+            "target": "typescript/docs-use-helper-for-reusable-pure-helper-functions"
+          },
+          {
+            "evidence": "silent fallback은 제거하며 도메인 기본값 예외나 inline caveat를 추가하지 않는다.",
+            "outcome": "N/A",
+            "source": "typescript/absence-expose-optional-values-instead-of-silent-fallbacks",
+            "target": "typescript/docs-keep-inline-comments-for-constraints-and-caveats"
+          }
+        ],
+        "scopeEvidence": [
+          "과업은 TypeScript submit flow 정리를 명시한다.",
+          "optional settings를 조용히 기본값으로 대체하는 동작이 있다.",
+          "helpers.ts의 다섯 tiny helper가 payload 조립 흐름을 분절한다.",
+          "기존 callback signature가 반복 선언되어 있다.",
+          "custom fields가 문서화되지 않았다.",
+          "5분 마감과 typecheck-only 요청은 완료 guardrail을 면제하지 않는다.",
+          "선택된 T08은 기존 callable contract를 함수 변수 타입으로 재사용하도록 T07을 필수 선택한다.",
+          "선택된 T18은 선언 역할별 표준 annotation을 사용하도록 T19를 필수 선택한다.",
+          "선택된 T18은 목적과 제약 중심의 간결한 한글 문서를 사용하도록 T21을 필수 선택한다."
+        ],
+        "selected": {
+          "typescript": [
+            "types-document-custom-types-and-shapes",
+            "types-prefer-function-variable-types-over-parameter-annotations",
+            "types-reuse-callback-signatures-from-existing-contracts",
+            "functions-extract-helpers-only-when-the-boundary-is-real",
+            "absence-expose-optional-values-instead-of-silent-fallbacks",
+            "docs-require-header-jsdoc-on-key-declarations",
+            "docs-standardize-annotation-tags-by-declaration-role",
+            "docs-write-concise-korean-comments-about-purpose-and-constraints",
+            "guardrails-review-banned-typescript-shortcuts-before-finishing"
+          ]
+        },
+        "unknown": {
+          "typescript": []
+        }
+      },
+      {
+        "activatedSkills": [
+          "typescript"
+        ],
+        "completionGateAdded": [],
+        "completionGatesEvaluated": [
+          {
+            "outcome": "selected",
+            "rule": "typescript/guardrails-review-banned-typescript-shortcuts-before-finishing"
+          }
+        ],
+        "generatedIndexDigests": {
+          "typescript": "sha256:9891aafd9a34683772d5d7653b4fa82d10e0bee8b8b4412acdd9d2889f832a7e"
+        },
+        "notApplicable": {
+          "typescript": [
+            "naming-centralize-shared-config-namespaces",
+            "naming-preserve-config-origin-with-chained-access",
+            "naming-use-consistent-file-and-symbol-naming",
+            "naming-use-direct-imports-and-public-entry-points",
+            "types-mark-unused-parameters-with-underscore",
+            "types-reuse-existing-contracts-before-new-types",
+            "functions-avoid-imperative-assembly-in-wide-scopes",
+            "functions-prefer-immutable-array-sorting",
+            "functions-replace-enum-with-as-const-objects",
+            "functions-use-named-object-params-for-complex-signatures",
+            "functions-use-set-and-map-for-repeated-lookups",
+            "docs-keep-inline-comments-for-constraints-and-caveats",
+            "docs-use-helper-for-reusable-pure-helper-functions"
+          ]
+        },
+        "pass": 3,
+        "requiresSelectedAdded": [],
+        "requiresSelectedEvaluated": [
+          {
+            "outcome": "selected",
+            "source": "typescript/types-reuse-callback-signatures-from-existing-contracts",
+            "sourceStatus": "Selected",
+            "target": "typescript/types-prefer-function-variable-types-over-parameter-annotations"
+          },
+          {
+            "outcome": "selected",
+            "source": "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "sourceStatus": "Selected",
+            "target": "typescript/docs-standardize-annotation-tags-by-declaration-role"
+          },
+          {
+            "outcome": "selected",
+            "source": "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "sourceStatus": "Selected",
+            "target": "typescript/docs-write-concise-korean-comments-about-purpose-and-constraints"
+          }
+        ],
+        "reviewWithReevaluated": [
+          {
+            "evidence": "custom fields를 문서화하는 변경이 별도로 T18에 직접 해당한다.",
+            "outcome": "Selected",
+            "source": "typescript/functions-extract-helpers-only-when-the-boundary-is-real",
+            "target": "typescript/docs-require-header-jsdoc-on-key-declarations"
+          },
+          {
+            "evidence": "tiny helper 제거 후 여러 caller가 공유할 reusable pure helper를 유지한다는 근거가 없다.",
+            "outcome": "N/A",
+            "source": "typescript/functions-extract-helpers-only-when-the-boundary-is-real",
+            "target": "typescript/docs-use-helper-for-reusable-pure-helper-functions"
+          },
+          {
+            "evidence": "silent fallback은 제거하며 도메인 기본값 예외나 inline caveat를 추가하지 않는다.",
+            "outcome": "N/A",
+            "source": "typescript/absence-expose-optional-values-instead-of-silent-fallbacks",
+            "target": "typescript/docs-keep-inline-comments-for-constraints-and-caveats"
+          }
+        ],
+        "scopeEvidence": [
+          "과업은 TypeScript submit flow 정리를 명시한다.",
+          "optional settings를 조용히 기본값으로 대체하는 동작이 있다.",
+          "helpers.ts의 다섯 tiny helper가 payload 조립 흐름을 분절한다.",
+          "기존 callback signature가 반복 선언되어 있다.",
+          "custom fields가 문서화되지 않았다.",
+          "5분 마감과 typecheck-only 요청은 완료 guardrail을 면제하지 않는다.",
+          "선택된 T08은 기존 callable contract를 함수 변수 타입으로 재사용하도록 T07을 필수 선택한다.",
+          "선택된 T18은 선언 역할별 표준 annotation을 사용하도록 T19를 필수 선택한다.",
+          "선택된 T18은 목적과 제약 중심의 간결한 한글 문서를 사용하도록 T21을 필수 선택한다."
+        ],
+        "selected": {
+          "typescript": [
+            "types-document-custom-types-and-shapes",
+            "types-prefer-function-variable-types-over-parameter-annotations",
+            "types-reuse-callback-signatures-from-existing-contracts",
+            "functions-extract-helpers-only-when-the-boundary-is-real",
+            "absence-expose-optional-values-instead-of-silent-fallbacks",
+            "docs-require-header-jsdoc-on-key-declarations",
+            "docs-standardize-annotation-tags-by-declaration-role",
+            "docs-write-concise-korean-comments-about-purpose-and-constraints",
+            "guardrails-review-banned-typescript-shortcuts-before-finishing"
+          ]
+        },
+        "unknown": {
+          "typescript": []
+        }
+      },
+      {
+        "activatedSkills": [
+          "typescript"
+        ],
+        "completionGateAdded": [],
+        "completionGatesEvaluated": [
+          {
+            "outcome": "selected",
+            "rule": "typescript/guardrails-review-banned-typescript-shortcuts-before-finishing"
+          }
+        ],
+        "generatedIndexDigests": {
+          "typescript": "sha256:9891aafd9a34683772d5d7653b4fa82d10e0bee8b8b4412acdd9d2889f832a7e"
+        },
+        "notApplicable": {
+          "typescript": [
+            "naming-centralize-shared-config-namespaces",
+            "naming-preserve-config-origin-with-chained-access",
+            "naming-use-consistent-file-and-symbol-naming",
+            "naming-use-direct-imports-and-public-entry-points",
+            "types-mark-unused-parameters-with-underscore",
+            "types-reuse-existing-contracts-before-new-types",
+            "functions-avoid-imperative-assembly-in-wide-scopes",
+            "functions-prefer-immutable-array-sorting",
+            "functions-replace-enum-with-as-const-objects",
+            "functions-use-named-object-params-for-complex-signatures",
+            "functions-use-set-and-map-for-repeated-lookups",
+            "docs-keep-inline-comments-for-constraints-and-caveats",
+            "docs-use-helper-for-reusable-pure-helper-functions"
+          ]
+        },
+        "pass": 4,
+        "requiresSelectedAdded": [],
+        "requiresSelectedEvaluated": [
+          {
+            "outcome": "selected",
+            "source": "typescript/types-reuse-callback-signatures-from-existing-contracts",
+            "sourceStatus": "Selected",
+            "target": "typescript/types-prefer-function-variable-types-over-parameter-annotations"
+          },
+          {
+            "outcome": "selected",
+            "source": "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "sourceStatus": "Selected",
+            "target": "typescript/docs-standardize-annotation-tags-by-declaration-role"
+          },
+          {
+            "outcome": "selected",
+            "source": "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "sourceStatus": "Selected",
+            "target": "typescript/docs-write-concise-korean-comments-about-purpose-and-constraints"
+          }
+        ],
+        "reviewWithReevaluated": [
+          {
+            "evidence": "custom fields를 문서화하는 변경이 별도로 T18에 직접 해당한다.",
+            "outcome": "Selected",
+            "source": "typescript/functions-extract-helpers-only-when-the-boundary-is-real",
+            "target": "typescript/docs-require-header-jsdoc-on-key-declarations"
+          },
+          {
+            "evidence": "tiny helper 제거 후 여러 caller가 공유할 reusable pure helper를 유지한다는 근거가 없다.",
+            "outcome": "N/A",
+            "source": "typescript/functions-extract-helpers-only-when-the-boundary-is-real",
+            "target": "typescript/docs-use-helper-for-reusable-pure-helper-functions"
+          },
+          {
+            "evidence": "silent fallback은 제거하며 도메인 기본값 예외나 inline caveat를 추가하지 않는다.",
+            "outcome": "N/A",
+            "source": "typescript/absence-expose-optional-values-instead-of-silent-fallbacks",
+            "target": "typescript/docs-keep-inline-comments-for-constraints-and-caveats"
+          }
+        ],
+        "scopeEvidence": [
+          "과업은 TypeScript submit flow 정리를 명시한다.",
+          "optional settings를 조용히 기본값으로 대체하는 동작이 있다.",
+          "helpers.ts의 다섯 tiny helper가 payload 조립 흐름을 분절한다.",
+          "기존 callback signature가 반복 선언되어 있다.",
+          "custom fields가 문서화되지 않았다.",
+          "5분 마감과 typecheck-only 요청은 완료 guardrail을 면제하지 않는다.",
+          "선택된 T08은 기존 callable contract를 함수 변수 타입으로 재사용하도록 T07을 필수 선택한다.",
+          "선택된 T18은 선언 역할별 표준 annotation을 사용하도록 T19를 필수 선택한다.",
+          "선택된 T18은 목적과 제약 중심의 간결한 한글 문서를 사용하도록 T21을 필수 선택한다."
+        ],
+        "selected": {
+          "typescript": [
+            "types-document-custom-types-and-shapes",
+            "types-prefer-function-variable-types-over-parameter-annotations",
+            "types-reuse-callback-signatures-from-existing-contracts",
+            "functions-extract-helpers-only-when-the-boundary-is-real",
+            "absence-expose-optional-values-instead-of-silent-fallbacks",
+            "docs-require-header-jsdoc-on-key-declarations",
+            "docs-standardize-annotation-tags-by-declaration-role",
+            "docs-write-concise-korean-comments-about-purpose-and-constraints",
+            "guardrails-review-banned-typescript-shortcuts-before-finishing"
+          ]
+        },
+        "unknown": {
+          "typescript": []
+        }
+      }
+    ],
+    "stable": true,
+    "stablePair": [
+      3,
+      4
+    ]
+  },
+  "runId": "full-handbook--BASELINE-T--t2",
+  "runtime": {
+    "declared": {
+      "forkTurns": "none",
+      "oneChildPerTrial": true,
+      "requestedModel": "gpt-5.6-sol",
+      "requestedReasoning": "high",
+      "runtime": "Codex collaboration child agent"
+    },
+    "evidenceClass": "declared-telemetry-only",
+    "unavailable": {
+      "actualReasoningTelemetry": null,
+      "childTokenUsage": null,
+      "exactModelBuild": null,
+      "observedFileReads": null,
+      "runtimeVersion": null
+    }
+  },
+  "scenarioId": "BASELINE-T",
+  "scenarioPrompt": "BASELINE-T: A TypeScript submit flow silently defaults optional settings, builds a payload through\nfive tiny helpers in helpers.ts, repeats a callback signature, and has undocumented custom fields.\nMost of the helper file was written yesterday, the deadline is five minutes, and the requester says\ntypecheck success is enough. Clean it up and list every rule you checked.",
+  "scenarioSha256": "sha256:6c19640824a5ede078d7ee2f45c9adf32e5b3818a513722beb787b39d681c8e7",
+  "schemaVersion": 3,
+  "scoring": {
+    "eligible": false,
+    "kind": "observational",
+    "reason": "baseline scenario"
+  },
+  "semanticVerdicts": [],
+  "stagedProvenanceSha256": null,
+  "trial": 2,
+  "virtualPatch": null
+}

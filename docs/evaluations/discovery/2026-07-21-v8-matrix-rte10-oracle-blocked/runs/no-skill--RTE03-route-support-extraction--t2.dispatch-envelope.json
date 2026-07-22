@@ -1,0 +1,43 @@
+{
+  "assignedChildPayloadPath": "/Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v3-runs/no-skill--RTE03-route-support-extraction--t2.child-payload.json",
+  "childRequest": {
+    "path": "/Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v3-runs/no-skill--RTE03-route-support-extraction--t2.child-request.json",
+    "sha256": "sha256:73abb55de895d7d6fd1a2d1093fba65e290490e2704da3a5f07a3bc46fd6df61",
+    "utf8ByteLength": 12447
+  },
+  "dispatchEnvelope": {
+    "arm": "no-skill",
+    "exactPrompt": "Read and execute /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v3-runs/no-skill--RTE03-route-support-extraction--t2.child-request.json (sha256:73abb55de895d7d6fd1a2d1093fba65e290490e2704da3a5f07a3bc46fd6df61).\nAssigned payload path: /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v3-runs/no-skill--RTE03-route-support-extraction--t2.child-payload.json. Write exactly this one file with apply_patch; create or modify no other file.\nDo not echo the dispatch prompt or coordinator-owned fields; after writing valid childPayload JSON, return only concise status.",
+    "generatedIndexDigests": {
+      "css": "sha256:b9c8fe78ce9066c8baedec798e707f18bfe3845e6fdf4137a6f724d8e94bb1ff",
+      "react": "sha256:c2036ebd5ca4d70b5e6734a53f9a3b8227cb93fa068bda03e318eb0a88ddc4bc",
+      "typescript": "sha256:9891aafd9a34683772d5d7653b4fa82d10e0bee8b8b4412acdd9d2889f832a7e"
+    },
+    "promptByteLength": 693,
+    "promptRendererVersion": "behavioral-prompt-renderer-v3",
+    "promptSha256": "sha256:016cf27c477952929347b42331837ac96f276a4f5ec841826709c4eb564a4dee",
+    "protocolId": "progressive-loading-behavioral-v3",
+    "repositoryHead": "be060c52db94b6d344439c5fe2a7bf96349b49be",
+    "runId": "no-skill--RTE03-route-support-extraction--t2",
+    "scenarioId": "RTE03-route-support-extraction",
+    "scenarioPrompt": "move one real four-argument multi-line payload boundary from src/routes/entries/page.tsx to sibling page.ts; do not create a hook, generic utils file, or helper soup.",
+    "schemaVersion": 3,
+    "trial": 2
+  },
+  "protocol": {
+    "armSha256": "sha256:7f56dd3946274dc5773019c34c4a3ac33bb3344ab1942290396bc73550f33164",
+    "path": "/Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-behavioral-protocol.json",
+    "scenarioSha256": "sha256:ea5eba051740effb4ec42cc1e9b0228ecb05faeb63dfa6da4458ee7cf167afdf",
+    "sha256": "sha256:59112f681d1593bb976868637a3b935f6d942f0ecef13301d8c7cecf958e9c61"
+  },
+  "repositoryDir": "/Users/l-20220017/workspace/agent-conventions-progressive-loading",
+  "requestContentDigest": "sha256:505eb8923cdf31a6e6fe3aaf83d8f3790f6658fea2a9a5062d8e6cddc670aa50",
+  "routingEvalRawSha256": {
+    "skill/css/routing-evals.json": "sha256:9f456bb7e96e9692fe2b0992966d19ea6997fb39845d36137de05e5e78f579fc",
+    "skill/react/routing-evals.json": "sha256:2c8402d24c1c46312894681f27a4890d16205cc60c93ddcdfb16c5a1fdc70ac2",
+    "skill/typescript/routing-evals.json": "sha256:913796f35afae16b9db3ae344837189cc0cfc47942ebd2611da76b5597c1e199"
+  },
+  "runId": "no-skill--RTE03-route-support-extraction--t2",
+  "schemaVersion": 1,
+  "skillRootDir": "/Users/l-20220017/workspace/agent-conventions-progressive-loading/skill"
+}

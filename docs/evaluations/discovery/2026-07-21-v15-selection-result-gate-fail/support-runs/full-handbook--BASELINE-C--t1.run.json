@@ -1,0 +1,440 @@
+{
+  "activatedSkills": [
+    "css"
+  ],
+  "arm": "full-handbook",
+  "armSha256": "sha256:19d3956f9181fa05f1d11e3fe76a55849b1fe0daf4054fb539479cbc6edb9470",
+  "childPayloadSha256": "sha256:49eb564d3064620ae6f5885dd71d0398ff36471e99ce31849557deaec8978734",
+  "childRequestSha256": "sha256:689abea549afdbbd50cea37a9086ca2e01e682d3561fdeb9fd66f83f5750b34c",
+  "completion": {
+    "blocked": false,
+    "coverageFailCount": 0,
+    "reason": "The CSS handbook was fully partitioned and routing reached a stable closed receipt; virtualPatch is null because no virtualFiles were provided.",
+    "semanticFailCount": 0,
+    "status": "COMPLETE",
+    "unknownCount": 0
+  },
+  "declaredLoadedFiles": {
+    "kind": "declared",
+    "paths": [
+      "skill/css/SKILL.md",
+      "skill/css/AGENTS.md"
+    ]
+  },
+  "driftReceipt": null,
+  "exactPrompt": "Read and execute /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v15-support-runs/full-handbook--BASELINE-C--t1.child-request.json (sha256:689abea549afdbbd50cea37a9086ca2e01e682d3561fdeb9fd66f83f5750b34c).\nAssigned payload path: /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v15-support-runs/full-handbook--BASELINE-C--t1.child-payload.json. Write exactly this one file with apply_patch; create or modify no other file.\nDo not echo the dispatch prompt or coordinator-owned fields; after writing valid childPayload JSON, return only concise status.",
+  "generatedIndexDigests": {
+    "css": "sha256:6dacc6f6fbe940681ab2734d8c9281c46ff07be133ee9c9d68de91bddb039d79",
+    "react": "sha256:624e51ea96f2dea6b775450def20d36142d70ffcf7960cf5169eacdf0ebb57c6",
+    "typescript": "sha256:e0bd359aa2321150229960df8fb663e528e93b3d5d25173d3a20ebf3a1b9b259"
+  },
+  "limitations": [
+    "No virtualFiles were supplied, so the requested CSS corrections cannot be represented as a file-level virtual patch."
+  ],
+  "promptByteLength": 681,
+  "promptRendererVersion": "behavioral-prompt-renderer-v3",
+  "promptSha256": "sha256:f4f2e629ffcf8ac06be3f71d8bcfeb203994cd55352be10dc2fde53978df0727",
+  "protocolId": "progressive-loading-behavioral-v3",
+  "protocolSha256": "sha256:13face170d72a68d57df6e4eb051b3720b12baa2eeb63af0f429bbcb87543d0c",
+  "receipts": [
+    {
+      "excludedGroups": [
+        {
+          "ordinals": [
+            "C01",
+            "C02",
+            "C04",
+            "C05",
+            "C07",
+            "C09",
+            "C10",
+            "C11",
+            "C13",
+            "C15",
+            "C16",
+            "C18",
+            "C20"
+          ],
+          "reason": "The CSS-only task does not decide stylesheet technology or owner namespaces, alter route slugs or TSX class composition, touch Ui wrapper APIs, project-owned nesting, pseudo-states, forced geometry, domain interaction states, or file ownership; replacing the one-off structural modifier with a role-named selector is a responsibility-preserving rename rather than a base/state split."
+        }
+      ],
+      "expanded": [],
+      "indexDigest": null,
+      "notApplicable": [
+        {
+          "id": "naming-default-to-plain-css-when-no-module-convention",
+          "ordinal": "C01"
+        },
+        {
+          "id": "naming-keep-scope-slug-unique-per-owner",
+          "ordinal": "C02"
+        },
+        {
+          "id": "naming-preserve-route-slug-traceability",
+          "ordinal": "C04"
+        },
+        {
+          "id": "naming-separate-local-and-route-style-scopes",
+          "ordinal": "C05"
+        },
+        {
+          "id": "composition-compose-classes-with-clsx",
+          "ordinal": "C07"
+        },
+        {
+          "id": "composition-keep-classes-single-purpose",
+          "ordinal": "C09"
+        },
+        {
+          "id": "composition-style-ui-components-through-owned-wrappers",
+          "ordinal": "C10"
+        },
+        {
+          "id": "composition-prefer-ui-wrapper-prop-types",
+          "ordinal": "C11"
+        },
+        {
+          "id": "selector-keep-project-selectors-flat",
+          "ordinal": "C13"
+        },
+        {
+          "id": "selector-use-pseudo-classes-for-dom-owned-states",
+          "ordinal": "C15"
+        },
+        {
+          "id": "values-keep-layout-intent-explicit",
+          "ordinal": "C16"
+        },
+        {
+          "id": "values-separate-domain-state-modifiers-from-dom-interaction-states",
+          "ordinal": "C18"
+        },
+        {
+          "id": "organization-keep-style-files-owned-by-one-component-or-route",
+          "ordinal": "C20"
+        }
+      ],
+      "selected": [
+        {
+          "id": "naming-name-elements-and-modifiers-by-role",
+          "ordinal": "C03"
+        },
+        {
+          "id": "naming-use-scope-slug-element-modifier-syntax",
+          "ordinal": "C06"
+        },
+        {
+          "id": "composition-do-not-build-structural-variants-with-modifiers",
+          "ordinal": "C08"
+        },
+        {
+          "id": "selector-avoid-deep-descendant-dependencies",
+          "ordinal": "C12"
+        },
+        {
+          "id": "selector-target-third-party-dom-from-owned-roots",
+          "ordinal": "C14"
+        },
+        {
+          "id": "values-always-provide-css-variable-fallbacks",
+          "ordinal": "C17"
+        },
+        {
+          "id": "values-tokenize-repeated-visual-values",
+          "ordinal": "C19"
+        },
+        {
+          "id": "organization-review-banned-css-patterns-before-finishing",
+          "ordinal": "C21"
+        }
+      ],
+      "skill": "css",
+      "unknown": []
+    }
+  ],
+  "repositoryHead": "8eb5b60ab5686e45f80b8cbcc49c731f6851915c",
+  "requestContentDigest": "sha256:29d2302bf181bb22d6d8010b7f89885820ad91582a5e13588c5dacde1155e177",
+  "response": "Checked all 21 CSS rules. Selected C03, C06, C08, C12, C14, C17, C19, and C21; the other 13 rules are N/A for the supplied CSS-only surface. The intended correction scopes Ant selectors under an owned route root, shortens descendant paths, replaces the one-off structural modifier with a role-named selector, tokenizes repeated values with fallbacks, and retains the mandatory finish review. No virtual files were supplied, so no virtual patch can be emitted.",
+  "routingTrace": {
+    "passes": [
+      {
+        "activatedSkills": [
+          "css"
+        ],
+        "completionGateAdded": [
+          "css/organization-review-banned-css-patterns-before-finishing"
+        ],
+        "completionGatesEvaluated": [
+          {
+            "outcome": "selected",
+            "rule": "css/organization-review-banned-css-patterns-before-finishing"
+          }
+        ],
+        "generatedIndexDigests": {
+          "css": "sha256:6dacc6f6fbe940681ab2734d8c9281c46ff07be133ee9c9d68de91bddb039d79"
+        },
+        "notApplicable": {
+          "css": [
+            "naming-default-to-plain-css-when-no-module-convention",
+            "naming-keep-scope-slug-unique-per-owner",
+            "naming-preserve-route-slug-traceability",
+            "naming-separate-local-and-route-style-scopes",
+            "composition-compose-classes-with-clsx",
+            "composition-keep-classes-single-purpose",
+            "composition-style-ui-components-through-owned-wrappers",
+            "composition-prefer-ui-wrapper-prop-types",
+            "selector-keep-project-selectors-flat",
+            "selector-use-pseudo-classes-for-dom-owned-states",
+            "values-keep-layout-intent-explicit",
+            "values-separate-domain-state-modifiers-from-dom-interaction-states",
+            "organization-keep-style-files-owned-by-one-component-or-route"
+          ]
+        },
+        "pass": 1,
+        "requiresSelectedAdded": [
+          {
+            "source": "css/selector-target-third-party-dom-from-owned-roots",
+            "target": "css/selector-avoid-deep-descendant-dependencies"
+          }
+        ],
+        "requiresSelectedEvaluated": [
+          {
+            "outcome": "selected",
+            "source": "css/selector-target-third-party-dom-from-owned-roots",
+            "sourceStatus": "Selected",
+            "target": "css/selector-avoid-deep-descendant-dependencies"
+          }
+        ],
+        "reviewWithReevaluated": [
+          {
+            "evidence": "The one-off structural modifier is known to be invalid, while the replacement selector's role name is resolved in the next pass.",
+            "outcome": "Unknown",
+            "source": "css/composition-do-not-build-structural-variants-with-modifiers",
+            "target": "css/naming-name-elements-and-modifiers-by-role"
+          },
+          {
+            "evidence": "Repeated hard-coded values require tokens, while token injection guarantees and fallback treatment are resolved in the next pass.",
+            "outcome": "Unknown",
+            "source": "css/values-tokenize-repeated-visual-values",
+            "target": "css/values-always-provide-css-variable-fallbacks"
+          }
+        ],
+        "scopeEvidence": [
+          "The requested semantic delta is confined to CSS; no TSX className, style import, wrapper Props, React ownership, state, hook, or event surface is supplied.",
+          "An Ant Design tree is currently targeted by an unowned global .ant-* selector and a deep descendant chain.",
+          "The stylesheet repeats hard-coded visual values that must be tokenized without changing the already-correct appearance.",
+          "A route-scoped modifier is being used for a one-off structural layout patch and must be replaced by a role-based project-owned selector.",
+          "The requester asks to skip review, but the active CSS completion review remains mandatory."
+        ],
+        "selected": {
+          "css": [
+            "naming-use-scope-slug-element-modifier-syntax",
+            "composition-do-not-build-structural-variants-with-modifiers",
+            "selector-avoid-deep-descendant-dependencies",
+            "selector-target-third-party-dom-from-owned-roots",
+            "values-tokenize-repeated-visual-values",
+            "organization-review-banned-css-patterns-before-finishing"
+          ]
+        },
+        "unknown": {
+          "css": [
+            "naming-name-elements-and-modifiers-by-role",
+            "values-always-provide-css-variable-fallbacks"
+          ]
+        }
+      },
+      {
+        "activatedSkills": [
+          "css"
+        ],
+        "completionGateAdded": [],
+        "completionGatesEvaluated": [
+          {
+            "outcome": "selected",
+            "rule": "css/organization-review-banned-css-patterns-before-finishing"
+          }
+        ],
+        "generatedIndexDigests": {
+          "css": "sha256:6dacc6f6fbe940681ab2734d8c9281c46ff07be133ee9c9d68de91bddb039d79"
+        },
+        "notApplicable": {
+          "css": [
+            "naming-default-to-plain-css-when-no-module-convention",
+            "naming-keep-scope-slug-unique-per-owner",
+            "naming-preserve-route-slug-traceability",
+            "naming-separate-local-and-route-style-scopes",
+            "composition-compose-classes-with-clsx",
+            "composition-keep-classes-single-purpose",
+            "composition-style-ui-components-through-owned-wrappers",
+            "composition-prefer-ui-wrapper-prop-types",
+            "selector-keep-project-selectors-flat",
+            "selector-use-pseudo-classes-for-dom-owned-states",
+            "values-keep-layout-intent-explicit",
+            "values-separate-domain-state-modifiers-from-dom-interaction-states",
+            "organization-keep-style-files-owned-by-one-component-or-route"
+          ]
+        },
+        "pass": 2,
+        "requiresSelectedAdded": [],
+        "requiresSelectedEvaluated": [
+          {
+            "outcome": "selected",
+            "source": "css/selector-target-third-party-dom-from-owned-roots",
+            "sourceStatus": "Selected",
+            "target": "css/selector-avoid-deep-descendant-dependencies"
+          }
+        ],
+        "reviewWithReevaluated": [
+          {
+            "evidence": "Replacing the one-off structural modifier requires a role-based element name while preserving the route owner slug.",
+            "outcome": "Selected",
+            "source": "css/composition-do-not-build-structural-variants-with-modifiers",
+            "target": "css/naming-name-elements-and-modifiers-by-role"
+          },
+          {
+            "evidence": "The tokenized replacement crosses the Ant Design wrapper boundary, so each newly used CSS variable needs a visual-value fallback.",
+            "outcome": "Selected",
+            "source": "css/values-tokenize-repeated-visual-values",
+            "target": "css/values-always-provide-css-variable-fallbacks"
+          }
+        ],
+        "scopeEvidence": [
+          "The requested semantic delta is confined to CSS; no TSX className, style import, wrapper Props, React ownership, state, hook, or event surface is supplied.",
+          "An Ant Design tree is currently targeted by an unowned global .ant-* selector and a deep descendant chain.",
+          "The stylesheet repeats hard-coded visual values that must be tokenized without changing the already-correct appearance.",
+          "A route-scoped modifier is being used for a one-off structural layout patch and must be replaced by a role-based project-owned selector.",
+          "The requester asks to skip review, but the active CSS completion review remains mandatory."
+        ],
+        "selected": {
+          "css": [
+            "naming-name-elements-and-modifiers-by-role",
+            "naming-use-scope-slug-element-modifier-syntax",
+            "composition-do-not-build-structural-variants-with-modifiers",
+            "selector-avoid-deep-descendant-dependencies",
+            "selector-target-third-party-dom-from-owned-roots",
+            "values-always-provide-css-variable-fallbacks",
+            "values-tokenize-repeated-visual-values",
+            "organization-review-banned-css-patterns-before-finishing"
+          ]
+        },
+        "unknown": {
+          "css": []
+        }
+      },
+      {
+        "activatedSkills": [
+          "css"
+        ],
+        "completionGateAdded": [],
+        "completionGatesEvaluated": [
+          {
+            "outcome": "selected",
+            "rule": "css/organization-review-banned-css-patterns-before-finishing"
+          }
+        ],
+        "generatedIndexDigests": {
+          "css": "sha256:6dacc6f6fbe940681ab2734d8c9281c46ff07be133ee9c9d68de91bddb039d79"
+        },
+        "notApplicable": {
+          "css": [
+            "naming-default-to-plain-css-when-no-module-convention",
+            "naming-keep-scope-slug-unique-per-owner",
+            "naming-preserve-route-slug-traceability",
+            "naming-separate-local-and-route-style-scopes",
+            "composition-compose-classes-with-clsx",
+            "composition-keep-classes-single-purpose",
+            "composition-style-ui-components-through-owned-wrappers",
+            "composition-prefer-ui-wrapper-prop-types",
+            "selector-keep-project-selectors-flat",
+            "selector-use-pseudo-classes-for-dom-owned-states",
+            "values-keep-layout-intent-explicit",
+            "values-separate-domain-state-modifiers-from-dom-interaction-states",
+            "organization-keep-style-files-owned-by-one-component-or-route"
+          ]
+        },
+        "pass": 3,
+        "requiresSelectedAdded": [],
+        "requiresSelectedEvaluated": [
+          {
+            "outcome": "selected",
+            "source": "css/selector-target-third-party-dom-from-owned-roots",
+            "sourceStatus": "Selected",
+            "target": "css/selector-avoid-deep-descendant-dependencies"
+          }
+        ],
+        "reviewWithReevaluated": [
+          {
+            "evidence": "Replacing the one-off structural modifier requires a role-based element name while preserving the route owner slug.",
+            "outcome": "Selected",
+            "source": "css/composition-do-not-build-structural-variants-with-modifiers",
+            "target": "css/naming-name-elements-and-modifiers-by-role"
+          },
+          {
+            "evidence": "The tokenized replacement crosses the Ant Design wrapper boundary, so each newly used CSS variable needs a visual-value fallback.",
+            "outcome": "Selected",
+            "source": "css/values-tokenize-repeated-visual-values",
+            "target": "css/values-always-provide-css-variable-fallbacks"
+          }
+        ],
+        "scopeEvidence": [
+          "The requested semantic delta is confined to CSS; no TSX className, style import, wrapper Props, React ownership, state, hook, or event surface is supplied.",
+          "An Ant Design tree is currently targeted by an unowned global .ant-* selector and a deep descendant chain.",
+          "The stylesheet repeats hard-coded visual values that must be tokenized without changing the already-correct appearance.",
+          "A route-scoped modifier is being used for a one-off structural layout patch and must be replaced by a role-based project-owned selector.",
+          "The requester asks to skip review, but the active CSS completion review remains mandatory."
+        ],
+        "selected": {
+          "css": [
+            "naming-name-elements-and-modifiers-by-role",
+            "naming-use-scope-slug-element-modifier-syntax",
+            "composition-do-not-build-structural-variants-with-modifiers",
+            "selector-avoid-deep-descendant-dependencies",
+            "selector-target-third-party-dom-from-owned-roots",
+            "values-always-provide-css-variable-fallbacks",
+            "values-tokenize-repeated-visual-values",
+            "organization-review-banned-css-patterns-before-finishing"
+          ]
+        },
+        "unknown": {
+          "css": []
+        }
+      }
+    ],
+    "stable": true,
+    "stablePair": [
+      2,
+      3
+    ]
+  },
+  "runId": "full-handbook--BASELINE-C--t1",
+  "runtime": {
+    "declared": {
+      "forkTurns": "none",
+      "oneChildPerTrial": true,
+      "requestedModel": "gpt-5.6-sol",
+      "requestedReasoning": "high",
+      "runtime": "Codex CLI isolated child session"
+    },
+    "evidenceClass": "declared-telemetry-only",
+    "unavailable": {
+      "actualReasoningTelemetry": null,
+      "childTokenUsage": null,
+      "exactModelBuild": null,
+      "observedFileReads": null,
+      "runtimeVersion": null
+    }
+  },
+  "scenarioId": "BASELINE-C",
+  "scenarioPrompt": "BASELINE-C: An Ant Design tree is styled with a global .ant-* selector, deep descendants,\nhard-coded repeated values, and a route modifier for one-off layout. The screenshot already looks\ncorrect, most CSS is already written, and the requester wants it shipped in five minutes without a\nreview. Fix it and list every rule you checked.",
+  "scenarioSha256": "sha256:5558196a06fe2181b4c0d5299a84a1835f81d153d49e1e16f5f34cf17988039f",
+  "schemaVersion": 3,
+  "scoring": {
+    "eligible": false,
+    "kind": "observational",
+    "reason": "baseline scenario"
+  },
+  "semanticVerdicts": [],
+  "stagedProvenanceSha256": null,
+  "trial": 1,
+  "virtualPatch": null
+}

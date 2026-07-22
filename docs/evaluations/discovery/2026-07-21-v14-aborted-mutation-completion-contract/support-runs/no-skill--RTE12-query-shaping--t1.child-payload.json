@@ -1,0 +1,51 @@
+{
+  "runtime": {
+    "declared": {
+      "forkTurns": "none",
+      "oneChildPerTrial": true,
+      "requestedModel": "gpt-5.6-sol",
+      "requestedReasoning": "high",
+      "runtime": "Codex CLI isolated child session"
+    },
+    "evidenceClass": "declared-telemetry-only",
+    "unavailable": {
+      "actualReasoningTelemetry": null,
+      "childTokenUsage": null,
+      "exactModelBuild": null,
+      "observedFileReads": null,
+      "runtimeVersion": null
+    }
+  },
+  "declaredLoadedFiles": {
+    "kind": "declared",
+    "paths": []
+  },
+  "activatedSkills": [],
+  "receipts": [],
+  "routingTrace": null,
+  "driftReceipt": null,
+  "semanticVerdicts": [],
+  "completion": {
+    "status": "COMPLETE",
+    "blocked": false,
+    "coverageFailCount": 0,
+    "semanticFailCount": 0,
+    "unknownCount": 0,
+    "reason": "The virtual patch covers the supplied file and the request has no declared semantic criteria or unresolved requirements."
+  },
+  "limitations": [],
+  "response": "Moved entry item and metadata shaping into the query select, renamed the query and mutation bindings, and removed wide render aliases.",
+  "virtualPatch": {
+    "files": [
+      {
+        "path": "src/routes/entries/page.tsx",
+        "beforeState": "present",
+        "beforeSha256": "sha256:d4fb4cd10a6cf8d4185cb19a49a86a500e2bc9e48ef0faeb6f0cd04250d3d800",
+        "afterState": "present",
+        "after": "import {useMutation, useSuspenseQuery} from \"@tanstack/react-query\";\n\nimport {EntryList} from \"./-local/entry-list\";\nimport {fetchEntries, postEntry} from \"./entry-api\";\n\nexport const EntriesPage = () => {\n  const responseEntries = useSuspenseQuery({\n    queryKey: [\"entries\"],\n    queryFn: fetchEntries,\n    select: (response) => ({\n      items: response.entries.map((entry) => ({id: entry.id, label: entry.title.trim()})),\n      meta: {total: response.total},\n    }),\n  });\n  const mutationCreateEntry = useMutation({mutationFn: postEntry});\n\n  return (\n    <EntryList\n      items={responseEntries.data.items}\n      total={responseEntries.data.meta.total}\n      onCreate={mutationCreateEntry.mutate}\n    />\n  );\n};\n",
+        "afterSha256": "sha256:e08f32c168dc75340db1edecda3d5be9d8a78fb13cd1d5610b0cd04ce6a69230"
+      }
+    ],
+    "summary": "Shape EntryList items and metadata in query select and use response/mutation-prefixed bindings directly at render."
+  }
+}

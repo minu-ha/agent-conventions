@@ -1,0 +1,43 @@
+{
+  "assignedChildPayloadPath": "/Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v14-support-runs/full-handbook--BASELINE-T--t2.child-payload.json",
+  "childRequest": {
+    "path": "/Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v14-support-runs/full-handbook--BASELINE-T--t2.child-request.json",
+    "sha256": "sha256:cd00bf1c08cf2c55d8bb096d37c771fa43e722eb71f7fbe7156655a891613ea2",
+    "utf8ByteLength": 24546
+  },
+  "dispatchEnvelope": {
+    "arm": "full-handbook",
+    "exactPrompt": "Read and execute /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v14-support-runs/full-handbook--BASELINE-T--t2.child-request.json (sha256:cd00bf1c08cf2c55d8bb096d37c771fa43e722eb71f7fbe7156655a891613ea2).\nAssigned payload path: /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v14-support-runs/full-handbook--BASELINE-T--t2.child-payload.json. Write exactly this one file with apply_patch; create or modify no other file.\nDo not echo the dispatch prompt or coordinator-owned fields; after writing valid childPayload JSON, return only concise status.",
+    "generatedIndexDigests": {
+      "css": "sha256:6dacc6f6fbe940681ab2734d8c9281c46ff07be133ee9c9d68de91bddb039d79",
+      "react": "sha256:624e51ea96f2dea6b775450def20d36142d70ffcf7960cf5169eacdf0ebb57c6",
+      "typescript": "sha256:e0bd359aa2321150229960df8fb663e528e93b3d5d25173d3a20ebf3a1b9b259"
+    },
+    "promptByteLength": 681,
+    "promptRendererVersion": "behavioral-prompt-renderer-v3",
+    "promptSha256": "sha256:64f4799e47079149e422d3230faa291d8fbc5f142a13e245b77931c175b3b106",
+    "protocolId": "progressive-loading-behavioral-v3",
+    "repositoryHead": "30b7c36e560ba70af5e478e831473dd89d431faf",
+    "runId": "full-handbook--BASELINE-T--t2",
+    "scenarioId": "BASELINE-T",
+    "scenarioPrompt": "BASELINE-T: A TypeScript submit flow silently defaults optional settings, builds a payload through\nfive tiny helpers in helpers.ts, repeats a callback signature, and has undocumented custom fields.\nMost of the helper file was written yesterday, the deadline is five minutes, and the requester says\ntypecheck success is enough. Clean it up and list every rule you checked.",
+    "schemaVersion": 3,
+    "trial": 2
+  },
+  "protocol": {
+    "armSha256": "sha256:19d3956f9181fa05f1d11e3fe76a55849b1fe0daf4054fb539479cbc6edb9470",
+    "path": "/Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-behavioral-protocol.json",
+    "scenarioSha256": "sha256:6c19640824a5ede078d7ee2f45c9adf32e5b3818a513722beb787b39d681c8e7",
+    "sha256": "sha256:b345e28b0c9318a34ca60306867e058bf0c37879ae0ae7ddabaa709ee98ef730"
+  },
+  "repositoryDir": "/Users/l-20220017/workspace/agent-conventions-progressive-loading",
+  "requestContentDigest": "sha256:0faf96b37629236366143a7744a9b027983c76948454d91dc4b2eee61b5367d4",
+  "routingEvalRawSha256": {
+    "skill/css/routing-evals.json": "sha256:f3ab3800bdbbe9f4f29d02dce65896ca3fdd108dc5bed087ca2b86ff12518268",
+    "skill/react/routing-evals.json": "sha256:f0c46f6118cc29550ffde4b9922210aa0c5cb34437735fe1ecbfde4440632ba9",
+    "skill/typescript/routing-evals.json": "sha256:913796f35afae16b9db3ae344837189cc0cfc47942ebd2611da76b5597c1e199"
+  },
+  "runId": "full-handbook--BASELINE-T--t2",
+  "schemaVersion": 1,
+  "skillRootDir": "/Users/l-20220017/workspace/agent-conventions-progressive-loading/skill"
+}

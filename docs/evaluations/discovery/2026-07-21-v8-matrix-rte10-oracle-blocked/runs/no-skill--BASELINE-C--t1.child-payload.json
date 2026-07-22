@@ -1,0 +1,42 @@
+{
+  "runtime": {
+    "declared": {
+      "forkTurns": "none",
+      "oneChildPerTrial": true,
+      "requestedModel": "gpt-5.6-sol",
+      "requestedReasoning": "high",
+      "runtime": "Codex collaboration child agent"
+    },
+    "evidenceClass": "declared-telemetry-only",
+    "unavailable": {
+      "actualReasoningTelemetry": null,
+      "childTokenUsage": null,
+      "exactModelBuild": null,
+      "observedFileReads": null,
+      "runtimeVersion": null
+    }
+  },
+  "declaredLoadedFiles": {
+    "kind": "declared",
+    "paths": []
+  },
+  "activatedSkills": [],
+  "receipts": [],
+  "routingTrace": null,
+  "driftReceipt": null,
+  "semanticVerdicts": [],
+  "completion": {
+    "status": "COMPLETE",
+    "blocked": false,
+    "coverageFailCount": 0,
+    "semanticFailCount": 0,
+    "unknownCount": 0,
+    "reason": "No semantic criteria or virtual files were supplied; the no-skill baseline response is complete without a virtual patch."
+  },
+  "limitations": [
+    "No virtual files were supplied, so no code change could be represented.",
+    "No convention skills or repository convention documents were used, so there are no checked rules to list."
+  ],
+  "response": "가상 파일이 제공되지 않아 코드 수정 패치를 만들 수 없습니다. 컨벤션 스킬이나 저장소 컨벤션 문서는 사용하지 않았으며, 확인한 규칙은 없습니다.",
+  "virtualPatch": null
+}

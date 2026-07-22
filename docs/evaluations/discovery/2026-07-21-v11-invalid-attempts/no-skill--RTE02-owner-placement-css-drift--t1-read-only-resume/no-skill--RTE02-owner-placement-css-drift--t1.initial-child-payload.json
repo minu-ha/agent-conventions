@@ -1,0 +1,59 @@
+{
+  "runtime": {
+    "declared": {
+      "forkTurns": "none",
+      "oneChildPerTrial": true,
+      "requestedModel": "gpt-5.6-sol",
+      "requestedReasoning": "high",
+      "runtime": "Codex CLI isolated child session"
+    },
+    "evidenceClass": "declared-telemetry-only",
+    "unavailable": {
+      "actualReasoningTelemetry": null,
+      "childTokenUsage": null,
+      "exactModelBuild": null,
+      "observedFileReads": null,
+      "runtimeVersion": null
+    }
+  },
+  "declaredLoadedFiles": {
+    "kind": "declared",
+    "paths": []
+  },
+  "virtualPatch": {
+    "files": [
+      {
+        "path": "src/components/ui/entry-tree.tsx",
+        "beforeState": "present",
+        "beforeSha256": "sha256:f445d8933df7ebd3f909bbeb3c7c1838c935b2c2b9510d30610b786bd590f1c6",
+        "afterState": "absent",
+        "after": null,
+        "afterSha256": null
+      },
+      {
+        "path": "src/routes/entries/-local/entry-tree.tsx",
+        "beforeState": "absent",
+        "beforeSha256": null,
+        "afterState": "present",
+        "after": "import clsx from \"clsx\";\n\ninterface RouteEntryTreeProps {\n  entries: Array<{id: string; label: string}>;\n  selectedId?: string;\n}\n\nexport const RouteEntryTree = ({entries, selectedId}: RouteEntryTreeProps) => (\n  <ul className={clsx(\"ui_entryTree\", selectedId && \"ui_entryTree--selected\")}>\n    {entries.map((entry) => (\n      <li key={entry.id}>{entry.label}</li>\n    ))}\n  </ul>\n);\n",
+        "afterSha256": "sha256:018aa8b4f1f47e4a555ce5c67d57f8e5ab28c7058b2d5092bd2632894a26cdec"
+      }
+    ],
+    "summary": "Route-only tree renderer를 shared UI에서 entries route의 -local 경계로 이동하고 RouteEntryTree로 이름을 변경했다. 기존 clsx import와 className은 그대로 유지했다."
+  },
+  "activatedSkills": [],
+  "receipts": [],
+  "routingTrace": null,
+  "driftReceipt": null,
+  "semanticVerdicts": [],
+  "completion": {
+    "status": "COMPLETE",
+    "blocked": false,
+    "coverageFailCount": 0,
+    "semanticFailCount": 0,
+    "unknownCount": 0,
+    "reason": "요청된 route-local 이동과 이름 변경을 가상 패치에 반영했고 기존 import 및 className을 보존했다."
+  },
+  "limitations": [],
+  "response": "Route-only tree renderer를 entries route의 -local 경계로 옮기고 RouteEntryTree로 변경했으며 기존 clsx import와 className은 그대로 유지했습니다."
+}

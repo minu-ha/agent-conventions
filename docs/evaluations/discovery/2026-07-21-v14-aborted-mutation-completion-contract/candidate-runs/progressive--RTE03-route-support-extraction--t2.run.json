@@ -1,0 +1,1153 @@
+{
+  "activatedSkills": [
+    "react",
+    "typescript"
+  ],
+  "arm": "progressive",
+  "armSha256": "sha256:ce85daeb6c52e884592a3c7e6f17f94a9b58e8202c012ac9e40d5c8fd1b350c2",
+  "childPayloadSha256": "sha256:2445b636ee52727c4c47f5add9335986c6de3ef7b14beba4a6222b09db4e7cd2",
+  "childRequestSha256": "sha256:4ecd78f25a31cc2beaf4cc5c882d6171b48420850ca4482483fcb57b174f7d51",
+  "completion": {
+    "blocked": false,
+    "coverageFailCount": 0,
+    "reason": "활성 규칙의 최종 partition과 필수 전이가 고정점에 도달했고 요청한 semantic delta를 virtualPatch로 완전하게 표현했다.",
+    "semanticFailCount": 0,
+    "status": "COMPLETE",
+    "unknownCount": 0
+  },
+  "declaredLoadedFiles": {
+    "kind": "declared",
+    "paths": [
+      "skill/react/SKILL.md",
+      "skill/react/RULES_INDEX.md",
+      "skill/typescript/SKILL.md",
+      "skill/typescript/RULES_INDEX.md",
+      "skill/react/contracts/ownership-prefer-plain-ts-for-local-react-helpers.md",
+      "skill/react/contracts/ownership-place-route-local-files-by-scope.md",
+      "skill/react/contracts/ownership-use-consistent-file-and-symbol-naming.md",
+      "skill/react/contracts/composition-prefer-arrow-functions-and-object-params.md",
+      "skill/react/contracts/screen-avoid-premature-abstraction.md",
+      "skill/react/contracts/screen-extract-utilities-selectively.md",
+      "skill/react/contracts/screen-move-pure-support-code-out-of-entry-files.md",
+      "skill/react/contracts/docs-require-jsdoc-on-key-declarations.md",
+      "skill/typescript/contracts/naming-use-consistent-file-and-symbol-naming.md",
+      "skill/typescript/contracts/naming-use-direct-imports-and-public-entry-points.md",
+      "skill/typescript/contracts/types-document-custom-types-and-shapes.md",
+      "skill/typescript/rules/types-document-custom-types-and-shapes.md",
+      "skill/typescript/contracts/functions-extract-helpers-only-when-the-boundary-is-real.md",
+      "skill/typescript/contracts/functions-use-named-object-params-for-complex-signatures.md",
+      "skill/typescript/contracts/docs-require-header-jsdoc-on-key-declarations.md",
+      "skill/typescript/contracts/docs-standardize-annotation-tags-by-declaration-role.md",
+      "skill/typescript/contracts/docs-use-helper-for-reusable-pure-helper-functions.md",
+      "skill/typescript/contracts/docs-write-concise-korean-comments-about-purpose-and-constraints.md",
+      "skill/typescript/contracts/guardrails-review-banned-typescript-shortcuts-before-finishing.md"
+    ]
+  },
+  "driftReceipt": null,
+  "exactPrompt": "Read and execute /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v14-candidate-runs/progressive--RTE03-route-support-extraction--t2.child-request.json (sha256:4ecd78f25a31cc2beaf4cc5c882d6171b48420850ca4482483fcb57b174f7d51).\nAssigned payload path: /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v14-candidate-runs/progressive--RTE03-route-support-extraction--t2.child-payload.json. Write exactly this one file with apply_patch; create or modify no other file.\nDo not echo the dispatch prompt or coordinator-owned fields; after writing valid childPayload JSON, return only concise status.",
+  "generatedIndexDigests": {
+    "css": "sha256:6dacc6f6fbe940681ab2734d8c9281c46ff07be133ee9c9d68de91bddb039d79",
+    "react": "sha256:624e51ea96f2dea6b775450def20d36142d70ffcf7960cf5169eacdf0ebb57c6",
+    "typescript": "sha256:e0bd359aa2321150229960df8fb663e528e93b3d5d25173d3a20ebf3a1b9b259"
+  },
+  "limitations": [],
+  "promptByteLength": 721,
+  "promptRendererVersion": "behavioral-prompt-renderer-v3",
+  "promptSha256": "sha256:67d33fef23851ae9a4842a2c83815889e872c03608f761e0f8efe66f114347be",
+  "protocolId": "progressive-loading-behavioral-v3",
+  "protocolSha256": "sha256:b345e28b0c9318a34ca60306867e058bf0c37879ae0ae7ddabaa709ee98ef730",
+  "receipts": [
+    {
+      "excludedGroups": [
+        {
+          "ordinals": [
+            "R01",
+            "R03",
+            "R05",
+            "R07",
+            "R08",
+            "R09",
+            "R10",
+            "R11",
+            "R12",
+            "R13",
+            "R15",
+            "R16",
+            "R17",
+            "R19",
+            "R21",
+            "R22",
+            "R24",
+            "R25",
+            "R26",
+            "R27",
+            "R28",
+            "R29",
+            "R30",
+            "R31",
+            "R32",
+            "R33",
+            "R34",
+            "R35",
+            "R36",
+            "R37",
+            "R38",
+            "R39",
+            "R40",
+            "R41"
+          ],
+          "reason": "변경은 route-local pure payload support의 소유 모듈과 호출 계약에 한정되며 component/props, event, state/query, render orchestration, shared config, styling, compound API 또는 inline comment surface를 바꾸지 않는다."
+        }
+      ],
+      "expanded": [],
+      "indexDigest": "sha256:624e51ea96f2dea6b775450def20d36142d70ffcf7960cf5169eacdf0ebb57c6",
+      "notApplicable": [
+        {
+          "id": "ownership-avoid-barrel-and-react-namespace-imports",
+          "ordinal": "R01"
+        },
+        {
+          "id": "ownership-layer-component-boundaries",
+          "ordinal": "R03"
+        },
+        {
+          "id": "ownership-shared-config-entry-points",
+          "ordinal": "R05"
+        },
+        {
+          "id": "typing-function-type-first",
+          "ordinal": "R07"
+        },
+        {
+          "id": "typing-reuse-existing-contracts",
+          "ordinal": "R08"
+        },
+        {
+          "id": "strategy-avoid-boolean-prop-proliferation",
+          "ordinal": "R09"
+        },
+        {
+          "id": "strategy-choose-single-composition-compound-and-variants",
+          "ordinal": "R10"
+        },
+        {
+          "id": "strategy-prefer-children-over-render-props",
+          "ordinal": "R11"
+        },
+        {
+          "id": "composition-destructure-props-inside",
+          "ordinal": "R12"
+        },
+        {
+          "id": "composition-do-not-define-components-inside-components",
+          "ordinal": "R13"
+        },
+        {
+          "id": "composition-named-handlers-over-inline",
+          "ordinal": "R15"
+        },
+        {
+          "id": "composition-use-activity-for-render-branches",
+          "ordinal": "R16"
+        },
+        {
+          "id": "composition-use-ref-prop-instead-of-forwardref-in-react-19",
+          "ordinal": "R17"
+        },
+        {
+          "id": "screen-extract-local-section-components-for-runtime-boundaries",
+          "ordinal": "R19"
+        },
+        {
+          "id": "screen-keep-derived-values-close",
+          "ordinal": "R21"
+        },
+        {
+          "id": "screen-keep-route-flow-visible",
+          "ordinal": "R22"
+        },
+        {
+          "id": "events-keep-handler-flow-inline",
+          "ordinal": "R24"
+        },
+        {
+          "id": "events-name-and-curry-handlers",
+          "ordinal": "R25"
+        },
+        {
+          "id": "events-run-user-actions-in-handlers-not-effects",
+          "ordinal": "R26"
+        },
+        {
+          "id": "state-avoid-fallback-defaults-and-loading-flags",
+          "ordinal": "R27"
+        },
+        {
+          "id": "state-calculate-derived-values-during-render",
+          "ordinal": "R28"
+        },
+        {
+          "id": "state-choose-state-tools-by-source-of-truth",
+          "ordinal": "R29"
+        },
+        {
+          "id": "state-name-query-and-mutation-bindings-consistently",
+          "ordinal": "R30"
+        },
+        {
+          "id": "state-compiler-first-memoization",
+          "ordinal": "R31"
+        },
+        {
+          "id": "state-preserve-origin-chaining",
+          "ordinal": "R32"
+        },
+        {
+          "id": "state-shape-query-data-with-select",
+          "ordinal": "R33"
+        },
+        {
+          "id": "state-store-derived-authority",
+          "ordinal": "R34"
+        },
+        {
+          "id": "state-use-functional-setstate-updates",
+          "ordinal": "R35"
+        },
+        {
+          "id": "state-use-lazy-state-initializers-for-expensive-defaults",
+          "ordinal": "R36"
+        },
+        {
+          "id": "state-use-starttransition-for-non-urgent-updates",
+          "ordinal": "R37"
+        },
+        {
+          "id": "state-use-usedeferredvalue-for-heavy-derived-renders",
+          "ordinal": "R38"
+        },
+        {
+          "id": "state-use-effectevent-for-non-reactive-effect-callbacks",
+          "ordinal": "R39"
+        },
+        {
+          "id": "docs-document-compound-parts-with-part-and-description",
+          "ordinal": "R40"
+        },
+        {
+          "id": "docs-limit-inline-comments-to-non-obvious-logic",
+          "ordinal": "R41"
+        }
+      ],
+      "selected": [
+        {
+          "id": "ownership-prefer-plain-ts-for-local-react-helpers",
+          "ordinal": "R02"
+        },
+        {
+          "id": "ownership-place-route-local-files-by-scope",
+          "ordinal": "R04"
+        },
+        {
+          "id": "ownership-use-consistent-file-and-symbol-naming",
+          "ordinal": "R06"
+        },
+        {
+          "id": "composition-prefer-arrow-functions-and-object-params",
+          "ordinal": "R14"
+        },
+        {
+          "id": "screen-avoid-premature-abstraction",
+          "ordinal": "R18"
+        },
+        {
+          "id": "screen-extract-utilities-selectively",
+          "ordinal": "R20"
+        },
+        {
+          "id": "screen-move-pure-support-code-out-of-entry-files",
+          "ordinal": "R23"
+        },
+        {
+          "id": "docs-require-jsdoc-on-key-declarations",
+          "ordinal": "R42"
+        }
+      ],
+      "skill": "react",
+      "unknown": []
+    },
+    {
+      "excludedGroups": [
+        {
+          "ordinals": [
+            "T01",
+            "T02",
+            "T05",
+            "T06",
+            "T07",
+            "T08",
+            "T09",
+            "T10",
+            "T12",
+            "T13",
+            "T15",
+            "T16",
+            "T17"
+          ],
+          "reason": "새 shared config, callback 계약, enum, collection lookup, fallback, imperative assembly 또는 inline comment가 없고, CreateEntryPayload는 이름·shape·field 의미를 보존해 owner와 함께 이동하며 기존 객체 계약으로 재사용된다."
+        }
+      ],
+      "expanded": [
+        {
+          "contractPath": "skill/typescript/contracts/types-document-custom-types-and-shapes.md",
+          "fullRulePath": "skill/typescript/rules/types-document-custom-types-and-shapes.md",
+          "id": "types-document-custom-types-and-shapes",
+          "mandatoryCritical": true,
+          "ordinal": "T05",
+          "reason": "첫 pass에서 객체 매개변수 전환이 새 custom shape를 요구하는지 Unknown이었고 CRITICAL 계약이므로 즉시 원문을 확장했다."
+        }
+      ],
+      "indexDigest": "sha256:e0bd359aa2321150229960df8fb663e528e93b3d5d25173d3a20ebf3a1b9b259",
+      "notApplicable": [
+        {
+          "id": "naming-centralize-shared-config-namespaces",
+          "ordinal": "T01"
+        },
+        {
+          "id": "naming-preserve-config-origin-with-chained-access",
+          "ordinal": "T02"
+        },
+        {
+          "id": "types-document-custom-types-and-shapes",
+          "ordinal": "T05"
+        },
+        {
+          "id": "types-mark-unused-parameters-with-underscore",
+          "ordinal": "T06"
+        },
+        {
+          "id": "types-prefer-function-variable-types-over-parameter-annotations",
+          "ordinal": "T07"
+        },
+        {
+          "id": "types-reuse-callback-signatures-from-existing-contracts",
+          "ordinal": "T08"
+        },
+        {
+          "id": "types-reuse-existing-contracts-before-new-types",
+          "ordinal": "T09"
+        },
+        {
+          "id": "functions-avoid-imperative-assembly-in-wide-scopes",
+          "ordinal": "T10"
+        },
+        {
+          "id": "functions-prefer-immutable-array-sorting",
+          "ordinal": "T12"
+        },
+        {
+          "id": "functions-replace-enum-with-as-const-objects",
+          "ordinal": "T13"
+        },
+        {
+          "id": "functions-use-set-and-map-for-repeated-lookups",
+          "ordinal": "T15"
+        },
+        {
+          "id": "absence-expose-optional-values-instead-of-silent-fallbacks",
+          "ordinal": "T16"
+        },
+        {
+          "id": "docs-keep-inline-comments-for-constraints-and-caveats",
+          "ordinal": "T17"
+        }
+      ],
+      "selected": [
+        {
+          "id": "naming-use-consistent-file-and-symbol-naming",
+          "ordinal": "T03"
+        },
+        {
+          "id": "naming-use-direct-imports-and-public-entry-points",
+          "ordinal": "T04"
+        },
+        {
+          "id": "functions-extract-helpers-only-when-the-boundary-is-real",
+          "ordinal": "T11"
+        },
+        {
+          "id": "functions-use-named-object-params-for-complex-signatures",
+          "ordinal": "T14"
+        },
+        {
+          "id": "docs-require-header-jsdoc-on-key-declarations",
+          "ordinal": "T18"
+        },
+        {
+          "id": "docs-standardize-annotation-tags-by-declaration-role",
+          "ordinal": "T19"
+        },
+        {
+          "id": "docs-use-helper-for-reusable-pure-helper-functions",
+          "ordinal": "T20"
+        },
+        {
+          "id": "docs-write-concise-korean-comments-about-purpose-and-constraints",
+          "ordinal": "T21"
+        },
+        {
+          "id": "guardrails-review-banned-typescript-shortcuts-before-finishing",
+          "ordinal": "T22"
+        }
+      ],
+      "skill": "typescript",
+      "unknown": []
+    }
+  ],
+  "repositoryHead": "30b7c36e560ba70af5e478e831473dd89d431faf",
+  "requestContentDigest": "sha256:f9024fa4dfa97aec5a71a3ffc951394cb1b61359added863a2c73903a0ba5beb",
+  "response": "네 positional 인자를 named object parameter로 바꾸고, route-owned payload builder와 기존 payload type을 sibling page.ts로 이동하는 최소 패치다.",
+  "routingTrace": {
+    "passes": [
+      {
+        "activatedSkills": [
+          "react",
+          "typescript"
+        ],
+        "completionGateAdded": [
+          "typescript/guardrails-review-banned-typescript-shortcuts-before-finishing"
+        ],
+        "completionGatesEvaluated": [
+          {
+            "outcome": "selected",
+            "rule": "typescript/guardrails-review-banned-typescript-shortcuts-before-finishing"
+          }
+        ],
+        "generatedIndexDigests": {
+          "react": "sha256:624e51ea96f2dea6b775450def20d36142d70ffcf7960cf5169eacdf0ebb57c6",
+          "typescript": "sha256:e0bd359aa2321150229960df8fb663e528e93b3d5d25173d3a20ebf3a1b9b259"
+        },
+        "notApplicable": {
+          "react": [
+            "ownership-avoid-barrel-and-react-namespace-imports",
+            "ownership-layer-component-boundaries",
+            "ownership-shared-config-entry-points",
+            "typing-function-type-first",
+            "typing-reuse-existing-contracts",
+            "strategy-avoid-boolean-prop-proliferation",
+            "strategy-choose-single-composition-compound-and-variants",
+            "strategy-prefer-children-over-render-props",
+            "composition-destructure-props-inside",
+            "composition-do-not-define-components-inside-components",
+            "composition-named-handlers-over-inline",
+            "composition-use-activity-for-render-branches",
+            "composition-use-ref-prop-instead-of-forwardref-in-react-19",
+            "screen-extract-local-section-components-for-runtime-boundaries",
+            "screen-keep-derived-values-close",
+            "screen-keep-route-flow-visible",
+            "events-keep-handler-flow-inline",
+            "events-name-and-curry-handlers",
+            "events-run-user-actions-in-handlers-not-effects",
+            "state-avoid-fallback-defaults-and-loading-flags",
+            "state-calculate-derived-values-during-render",
+            "state-choose-state-tools-by-source-of-truth",
+            "state-name-query-and-mutation-bindings-consistently",
+            "state-compiler-first-memoization",
+            "state-preserve-origin-chaining",
+            "state-shape-query-data-with-select",
+            "state-store-derived-authority",
+            "state-use-functional-setstate-updates",
+            "state-use-lazy-state-initializers-for-expensive-defaults",
+            "state-use-starttransition-for-non-urgent-updates",
+            "state-use-usedeferredvalue-for-heavy-derived-renders",
+            "state-use-effectevent-for-non-reactive-effect-callbacks",
+            "docs-document-compound-parts-with-part-and-description",
+            "docs-limit-inline-comments-to-non-obvious-logic"
+          ],
+          "typescript": [
+            "naming-centralize-shared-config-namespaces",
+            "naming-preserve-config-origin-with-chained-access",
+            "types-mark-unused-parameters-with-underscore",
+            "types-prefer-function-variable-types-over-parameter-annotations",
+            "types-reuse-callback-signatures-from-existing-contracts",
+            "types-reuse-existing-contracts-before-new-types",
+            "functions-avoid-imperative-assembly-in-wide-scopes",
+            "functions-prefer-immutable-array-sorting",
+            "functions-replace-enum-with-as-const-objects",
+            "functions-use-set-and-map-for-repeated-lookups",
+            "absence-expose-optional-values-instead-of-silent-fallbacks",
+            "docs-keep-inline-comments-for-constraints-and-caveats"
+          ]
+        },
+        "pass": 1,
+        "requiresSelectedAdded": [
+          {
+            "source": "react/ownership-use-consistent-file-and-symbol-naming",
+            "target": "typescript/naming-use-consistent-file-and-symbol-naming"
+          },
+          {
+            "source": "react/docs-require-jsdoc-on-key-declarations",
+            "target": "typescript/docs-require-header-jsdoc-on-key-declarations"
+          },
+          {
+            "source": "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "target": "typescript/docs-standardize-annotation-tags-by-declaration-role"
+          },
+          {
+            "source": "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "target": "typescript/docs-write-concise-korean-comments-about-purpose-and-constraints"
+          }
+        ],
+        "requiresSelectedEvaluated": [
+          {
+            "outcome": "selected",
+            "source": "react/ownership-use-consistent-file-and-symbol-naming",
+            "sourceStatus": "Selected",
+            "target": "typescript/naming-use-consistent-file-and-symbol-naming"
+          },
+          {
+            "outcome": "selected",
+            "source": "react/docs-require-jsdoc-on-key-declarations",
+            "sourceStatus": "Selected",
+            "target": "typescript/docs-require-header-jsdoc-on-key-declarations"
+          },
+          {
+            "outcome": "selected",
+            "source": "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "sourceStatus": "Selected",
+            "target": "typescript/docs-standardize-annotation-tags-by-declaration-role"
+          },
+          {
+            "outcome": "selected",
+            "source": "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "sourceStatus": "Selected",
+            "target": "typescript/docs-write-concise-korean-comments-about-purpose-and-constraints"
+          }
+        ],
+        "reviewWithReevaluated": [
+          {
+            "evidence": "pure payload 조립을 route sibling support module로 추출한다.",
+            "outcome": "Selected",
+            "source": "react/ownership-prefer-plain-ts-for-local-react-helpers",
+            "target": "react/screen-extract-utilities-selectively"
+          },
+          {
+            "evidence": "여러 줄 route-owned pure helper와 type의 목적지가 page.ts다.",
+            "outcome": "Selected",
+            "source": "react/ownership-prefer-plain-ts-for-local-react-helpers",
+            "target": "react/screen-move-pure-support-code-out-of-entry-files"
+          },
+          {
+            "evidence": "명확한 네 입력과 payload 출력 계약을 가진 domain-sized boundary다.",
+            "outcome": "Selected",
+            "source": "react/ownership-prefer-plain-ts-for-local-react-helpers",
+            "target": "typescript/functions-extract-helpers-only-when-the-boundary-is-real"
+          },
+          {
+            "evidence": "스타일 파일, selector, className 또는 styling contract를 변경하지 않는다.",
+            "outcome": "INACTIVE",
+            "source": "react/ownership-place-route-local-files-by-scope",
+            "target": "css/naming-separate-local-and-route-style-scopes"
+          },
+          {
+            "evidence": "스타일 소유권 변경이 없어 CSS skill이 비활성이다.",
+            "outcome": "INACTIVE",
+            "source": "react/ownership-place-route-local-files-by-scope",
+            "target": "css/organization-keep-style-files-owned-by-one-component-or-route"
+          },
+          {
+            "evidence": "네 positional 인자를 단일 named object parameter로 전환한다.",
+            "outcome": "Selected",
+            "source": "react/composition-prefer-arrow-functions-and-object-params",
+            "target": "typescript/functions-use-named-object-params-for-complex-signatures"
+          },
+          {
+            "evidence": "component나 runtime boundary를 추출하지 않고 pure function만 이동한다.",
+            "outcome": "N/A",
+            "source": "react/screen-avoid-premature-abstraction",
+            "target": "react/screen-extract-local-section-components-for-runtime-boundaries"
+          },
+          {
+            "evidence": "payload builder 자체가 명확한 입력/출력 support 경계다.",
+            "outcome": "Selected",
+            "source": "react/screen-avoid-premature-abstraction",
+            "target": "react/screen-extract-utilities-selectively"
+          },
+          {
+            "evidence": "추가 sub-helper 없이 실제 payload boundary 하나만 추출한다.",
+            "outcome": "Selected",
+            "source": "react/screen-avoid-premature-abstraction",
+            "target": "typescript/functions-extract-helpers-only-when-the-boundary-is-real"
+          },
+          {
+            "evidence": "route entry 밖으로 옮길 pure support의 목적지는 sibling page.ts다.",
+            "outcome": "Selected",
+            "source": "react/screen-extract-utilities-selectively",
+            "target": "react/screen-move-pure-support-code-out-of-entry-files"
+          },
+          {
+            "evidence": "generic helper soup 없이 domain-sized exported function 하나를 유지한다.",
+            "outcome": "Selected",
+            "source": "react/screen-extract-utilities-selectively",
+            "target": "typescript/functions-extract-helpers-only-when-the-boundary-is-real"
+          },
+          {
+            "evidence": "page.ts로 이동한 pure support function이 exported declaration이 된다.",
+            "outcome": "Selected",
+            "source": "react/screen-move-pure-support-code-out-of-entry-files",
+            "target": "react/docs-require-jsdoc-on-key-declarations"
+          },
+          {
+            "evidence": "owner-named module의 exported pure helper에 header JSDoc이 필요하다.",
+            "outcome": "Selected",
+            "source": "typescript/functions-extract-helpers-only-when-the-boundary-is-real",
+            "target": "typescript/docs-require-header-jsdoc-on-key-declarations"
+          },
+          {
+            "evidence": "owner-named support module의 domain-sized exported pure function이다.",
+            "outcome": "Selected",
+            "source": "typescript/functions-extract-helpers-only-when-the-boundary-is-real",
+            "target": "typescript/docs-use-helper-for-reusable-pure-helper-functions"
+          }
+        ],
+        "scopeEvidence": [
+          "src/routes/entries/page.tsx의 React 소유 payload 조립을 sibling page.ts로 이동한다.",
+          "createEntryPayload는 네 개의 관련 positional 인자를 받는 여러 줄 pure function이며 모듈 경계에서 named export로 바뀐다.",
+          "React hook, state, event, render flow와 styling contract는 변경하지 않는다.",
+          "새 generic utils/helper 파일이나 추가 helper 분해를 만들지 않는다.",
+          "page.tsx와 page.ts의 TypeScript import/export 및 호출 시그니처가 변경된다."
+        ],
+        "selected": {
+          "react": [
+            "ownership-prefer-plain-ts-for-local-react-helpers",
+            "ownership-place-route-local-files-by-scope",
+            "ownership-use-consistent-file-and-symbol-naming",
+            "composition-prefer-arrow-functions-and-object-params",
+            "screen-avoid-premature-abstraction",
+            "screen-extract-utilities-selectively",
+            "screen-move-pure-support-code-out-of-entry-files",
+            "docs-require-jsdoc-on-key-declarations"
+          ],
+          "typescript": [
+            "naming-use-consistent-file-and-symbol-naming",
+            "naming-use-direct-imports-and-public-entry-points",
+            "functions-extract-helpers-only-when-the-boundary-is-real",
+            "functions-use-named-object-params-for-complex-signatures",
+            "docs-require-header-jsdoc-on-key-declarations",
+            "docs-standardize-annotation-tags-by-declaration-role",
+            "docs-use-helper-for-reusable-pure-helper-functions",
+            "docs-write-concise-korean-comments-about-purpose-and-constraints",
+            "guardrails-review-banned-typescript-shortcuts-before-finishing"
+          ]
+        },
+        "unknown": {
+          "react": [],
+          "typescript": [
+            "types-document-custom-types-and-shapes"
+          ]
+        }
+      },
+      {
+        "activatedSkills": [
+          "react",
+          "typescript"
+        ],
+        "completionGateAdded": [],
+        "completionGatesEvaluated": [
+          {
+            "outcome": "selected",
+            "rule": "typescript/guardrails-review-banned-typescript-shortcuts-before-finishing"
+          }
+        ],
+        "generatedIndexDigests": {
+          "react": "sha256:624e51ea96f2dea6b775450def20d36142d70ffcf7960cf5169eacdf0ebb57c6",
+          "typescript": "sha256:e0bd359aa2321150229960df8fb663e528e93b3d5d25173d3a20ebf3a1b9b259"
+        },
+        "notApplicable": {
+          "react": [
+            "ownership-avoid-barrel-and-react-namespace-imports",
+            "ownership-layer-component-boundaries",
+            "ownership-shared-config-entry-points",
+            "typing-function-type-first",
+            "typing-reuse-existing-contracts",
+            "strategy-avoid-boolean-prop-proliferation",
+            "strategy-choose-single-composition-compound-and-variants",
+            "strategy-prefer-children-over-render-props",
+            "composition-destructure-props-inside",
+            "composition-do-not-define-components-inside-components",
+            "composition-named-handlers-over-inline",
+            "composition-use-activity-for-render-branches",
+            "composition-use-ref-prop-instead-of-forwardref-in-react-19",
+            "screen-extract-local-section-components-for-runtime-boundaries",
+            "screen-keep-derived-values-close",
+            "screen-keep-route-flow-visible",
+            "events-keep-handler-flow-inline",
+            "events-name-and-curry-handlers",
+            "events-run-user-actions-in-handlers-not-effects",
+            "state-avoid-fallback-defaults-and-loading-flags",
+            "state-calculate-derived-values-during-render",
+            "state-choose-state-tools-by-source-of-truth",
+            "state-name-query-and-mutation-bindings-consistently",
+            "state-compiler-first-memoization",
+            "state-preserve-origin-chaining",
+            "state-shape-query-data-with-select",
+            "state-store-derived-authority",
+            "state-use-functional-setstate-updates",
+            "state-use-lazy-state-initializers-for-expensive-defaults",
+            "state-use-starttransition-for-non-urgent-updates",
+            "state-use-usedeferredvalue-for-heavy-derived-renders",
+            "state-use-effectevent-for-non-reactive-effect-callbacks",
+            "docs-document-compound-parts-with-part-and-description",
+            "docs-limit-inline-comments-to-non-obvious-logic"
+          ],
+          "typescript": [
+            "naming-centralize-shared-config-namespaces",
+            "naming-preserve-config-origin-with-chained-access",
+            "types-document-custom-types-and-shapes",
+            "types-mark-unused-parameters-with-underscore",
+            "types-prefer-function-variable-types-over-parameter-annotations",
+            "types-reuse-callback-signatures-from-existing-contracts",
+            "types-reuse-existing-contracts-before-new-types",
+            "functions-avoid-imperative-assembly-in-wide-scopes",
+            "functions-prefer-immutable-array-sorting",
+            "functions-replace-enum-with-as-const-objects",
+            "functions-use-set-and-map-for-repeated-lookups",
+            "absence-expose-optional-values-instead-of-silent-fallbacks",
+            "docs-keep-inline-comments-for-constraints-and-caveats"
+          ]
+        },
+        "pass": 2,
+        "requiresSelectedAdded": [],
+        "requiresSelectedEvaluated": [
+          {
+            "outcome": "selected",
+            "source": "react/ownership-use-consistent-file-and-symbol-naming",
+            "sourceStatus": "Selected",
+            "target": "typescript/naming-use-consistent-file-and-symbol-naming"
+          },
+          {
+            "outcome": "selected",
+            "source": "react/docs-require-jsdoc-on-key-declarations",
+            "sourceStatus": "Selected",
+            "target": "typescript/docs-require-header-jsdoc-on-key-declarations"
+          },
+          {
+            "outcome": "selected",
+            "source": "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "sourceStatus": "Selected",
+            "target": "typescript/docs-standardize-annotation-tags-by-declaration-role"
+          },
+          {
+            "outcome": "selected",
+            "source": "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "sourceStatus": "Selected",
+            "target": "typescript/docs-write-concise-korean-comments-about-purpose-and-constraints"
+          }
+        ],
+        "reviewWithReevaluated": [
+          {
+            "evidence": "pure payload 조립을 route sibling support module로 추출한다.",
+            "outcome": "Selected",
+            "source": "react/ownership-prefer-plain-ts-for-local-react-helpers",
+            "target": "react/screen-extract-utilities-selectively"
+          },
+          {
+            "evidence": "여러 줄 route-owned pure helper와 type의 목적지가 page.ts다.",
+            "outcome": "Selected",
+            "source": "react/ownership-prefer-plain-ts-for-local-react-helpers",
+            "target": "react/screen-move-pure-support-code-out-of-entry-files"
+          },
+          {
+            "evidence": "명확한 네 입력과 payload 출력 계약을 가진 domain-sized boundary다.",
+            "outcome": "Selected",
+            "source": "react/ownership-prefer-plain-ts-for-local-react-helpers",
+            "target": "typescript/functions-extract-helpers-only-when-the-boundary-is-real"
+          },
+          {
+            "evidence": "스타일 파일, selector, className 또는 styling contract를 변경하지 않는다.",
+            "outcome": "INACTIVE",
+            "source": "react/ownership-place-route-local-files-by-scope",
+            "target": "css/naming-separate-local-and-route-style-scopes"
+          },
+          {
+            "evidence": "스타일 소유권 변경이 없어 CSS skill이 비활성이다.",
+            "outcome": "INACTIVE",
+            "source": "react/ownership-place-route-local-files-by-scope",
+            "target": "css/organization-keep-style-files-owned-by-one-component-or-route"
+          },
+          {
+            "evidence": "네 positional 인자를 단일 named object parameter로 전환한다.",
+            "outcome": "Selected",
+            "source": "react/composition-prefer-arrow-functions-and-object-params",
+            "target": "typescript/functions-use-named-object-params-for-complex-signatures"
+          },
+          {
+            "evidence": "component나 runtime boundary를 추출하지 않고 pure function만 이동한다.",
+            "outcome": "N/A",
+            "source": "react/screen-avoid-premature-abstraction",
+            "target": "react/screen-extract-local-section-components-for-runtime-boundaries"
+          },
+          {
+            "evidence": "payload builder 자체가 명확한 입력/출력 support 경계다.",
+            "outcome": "Selected",
+            "source": "react/screen-avoid-premature-abstraction",
+            "target": "react/screen-extract-utilities-selectively"
+          },
+          {
+            "evidence": "추가 sub-helper 없이 실제 payload boundary 하나만 추출한다.",
+            "outcome": "Selected",
+            "source": "react/screen-avoid-premature-abstraction",
+            "target": "typescript/functions-extract-helpers-only-when-the-boundary-is-real"
+          },
+          {
+            "evidence": "route entry 밖으로 옮길 pure support의 목적지는 sibling page.ts다.",
+            "outcome": "Selected",
+            "source": "react/screen-extract-utilities-selectively",
+            "target": "react/screen-move-pure-support-code-out-of-entry-files"
+          },
+          {
+            "evidence": "generic helper soup 없이 domain-sized exported function 하나를 유지한다.",
+            "outcome": "Selected",
+            "source": "react/screen-extract-utilities-selectively",
+            "target": "typescript/functions-extract-helpers-only-when-the-boundary-is-real"
+          },
+          {
+            "evidence": "page.ts로 이동한 pure support function이 exported declaration이 된다.",
+            "outcome": "Selected",
+            "source": "react/screen-move-pure-support-code-out-of-entry-files",
+            "target": "react/docs-require-jsdoc-on-key-declarations"
+          },
+          {
+            "evidence": "owner-named module의 exported pure helper에 header JSDoc이 필요하다.",
+            "outcome": "Selected",
+            "source": "typescript/functions-extract-helpers-only-when-the-boundary-is-real",
+            "target": "typescript/docs-require-header-jsdoc-on-key-declarations"
+          },
+          {
+            "evidence": "owner-named support module의 domain-sized exported pure function이다.",
+            "outcome": "Selected",
+            "source": "typescript/functions-extract-helpers-only-when-the-boundary-is-real",
+            "target": "typescript/docs-use-helper-for-reusable-pure-helper-functions"
+          }
+        ],
+        "scopeEvidence": [
+          "src/routes/entries/page.tsx의 React 소유 payload 조립을 sibling page.ts로 이동한다.",
+          "createEntryPayload는 네 개의 관련 positional 인자를 받는 여러 줄 pure function이며 모듈 경계에서 named export로 바뀐다.",
+          "React hook, state, event, render flow와 styling contract는 변경하지 않는다.",
+          "새 generic utils/helper 파일이나 추가 helper 분해를 만들지 않는다.",
+          "page.tsx와 page.ts의 TypeScript import/export 및 호출 시그니처가 변경된다.",
+          "CreateEntryPayload 선언은 이름·필드·optionality를 보존해 owner와 함께 이동하며 객체 매개변수 계약으로 재사용하므로 새 custom shape를 선언하지 않는다."
+        ],
+        "selected": {
+          "react": [
+            "ownership-prefer-plain-ts-for-local-react-helpers",
+            "ownership-place-route-local-files-by-scope",
+            "ownership-use-consistent-file-and-symbol-naming",
+            "composition-prefer-arrow-functions-and-object-params",
+            "screen-avoid-premature-abstraction",
+            "screen-extract-utilities-selectively",
+            "screen-move-pure-support-code-out-of-entry-files",
+            "docs-require-jsdoc-on-key-declarations"
+          ],
+          "typescript": [
+            "naming-use-consistent-file-and-symbol-naming",
+            "naming-use-direct-imports-and-public-entry-points",
+            "functions-extract-helpers-only-when-the-boundary-is-real",
+            "functions-use-named-object-params-for-complex-signatures",
+            "docs-require-header-jsdoc-on-key-declarations",
+            "docs-standardize-annotation-tags-by-declaration-role",
+            "docs-use-helper-for-reusable-pure-helper-functions",
+            "docs-write-concise-korean-comments-about-purpose-and-constraints",
+            "guardrails-review-banned-typescript-shortcuts-before-finishing"
+          ]
+        },
+        "unknown": {
+          "react": [],
+          "typescript": []
+        }
+      },
+      {
+        "activatedSkills": [
+          "react",
+          "typescript"
+        ],
+        "completionGateAdded": [],
+        "completionGatesEvaluated": [
+          {
+            "outcome": "selected",
+            "rule": "typescript/guardrails-review-banned-typescript-shortcuts-before-finishing"
+          }
+        ],
+        "generatedIndexDigests": {
+          "react": "sha256:624e51ea96f2dea6b775450def20d36142d70ffcf7960cf5169eacdf0ebb57c6",
+          "typescript": "sha256:e0bd359aa2321150229960df8fb663e528e93b3d5d25173d3a20ebf3a1b9b259"
+        },
+        "notApplicable": {
+          "react": [
+            "ownership-avoid-barrel-and-react-namespace-imports",
+            "ownership-layer-component-boundaries",
+            "ownership-shared-config-entry-points",
+            "typing-function-type-first",
+            "typing-reuse-existing-contracts",
+            "strategy-avoid-boolean-prop-proliferation",
+            "strategy-choose-single-composition-compound-and-variants",
+            "strategy-prefer-children-over-render-props",
+            "composition-destructure-props-inside",
+            "composition-do-not-define-components-inside-components",
+            "composition-named-handlers-over-inline",
+            "composition-use-activity-for-render-branches",
+            "composition-use-ref-prop-instead-of-forwardref-in-react-19",
+            "screen-extract-local-section-components-for-runtime-boundaries",
+            "screen-keep-derived-values-close",
+            "screen-keep-route-flow-visible",
+            "events-keep-handler-flow-inline",
+            "events-name-and-curry-handlers",
+            "events-run-user-actions-in-handlers-not-effects",
+            "state-avoid-fallback-defaults-and-loading-flags",
+            "state-calculate-derived-values-during-render",
+            "state-choose-state-tools-by-source-of-truth",
+            "state-name-query-and-mutation-bindings-consistently",
+            "state-compiler-first-memoization",
+            "state-preserve-origin-chaining",
+            "state-shape-query-data-with-select",
+            "state-store-derived-authority",
+            "state-use-functional-setstate-updates",
+            "state-use-lazy-state-initializers-for-expensive-defaults",
+            "state-use-starttransition-for-non-urgent-updates",
+            "state-use-usedeferredvalue-for-heavy-derived-renders",
+            "state-use-effectevent-for-non-reactive-effect-callbacks",
+            "docs-document-compound-parts-with-part-and-description",
+            "docs-limit-inline-comments-to-non-obvious-logic"
+          ],
+          "typescript": [
+            "naming-centralize-shared-config-namespaces",
+            "naming-preserve-config-origin-with-chained-access",
+            "types-document-custom-types-and-shapes",
+            "types-mark-unused-parameters-with-underscore",
+            "types-prefer-function-variable-types-over-parameter-annotations",
+            "types-reuse-callback-signatures-from-existing-contracts",
+            "types-reuse-existing-contracts-before-new-types",
+            "functions-avoid-imperative-assembly-in-wide-scopes",
+            "functions-prefer-immutable-array-sorting",
+            "functions-replace-enum-with-as-const-objects",
+            "functions-use-set-and-map-for-repeated-lookups",
+            "absence-expose-optional-values-instead-of-silent-fallbacks",
+            "docs-keep-inline-comments-for-constraints-and-caveats"
+          ]
+        },
+        "pass": 3,
+        "requiresSelectedAdded": [],
+        "requiresSelectedEvaluated": [
+          {
+            "outcome": "selected",
+            "source": "react/ownership-use-consistent-file-and-symbol-naming",
+            "sourceStatus": "Selected",
+            "target": "typescript/naming-use-consistent-file-and-symbol-naming"
+          },
+          {
+            "outcome": "selected",
+            "source": "react/docs-require-jsdoc-on-key-declarations",
+            "sourceStatus": "Selected",
+            "target": "typescript/docs-require-header-jsdoc-on-key-declarations"
+          },
+          {
+            "outcome": "selected",
+            "source": "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "sourceStatus": "Selected",
+            "target": "typescript/docs-standardize-annotation-tags-by-declaration-role"
+          },
+          {
+            "outcome": "selected",
+            "source": "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "sourceStatus": "Selected",
+            "target": "typescript/docs-write-concise-korean-comments-about-purpose-and-constraints"
+          }
+        ],
+        "reviewWithReevaluated": [
+          {
+            "evidence": "pure payload 조립을 route sibling support module로 추출한다.",
+            "outcome": "Selected",
+            "source": "react/ownership-prefer-plain-ts-for-local-react-helpers",
+            "target": "react/screen-extract-utilities-selectively"
+          },
+          {
+            "evidence": "여러 줄 route-owned pure helper와 type의 목적지가 page.ts다.",
+            "outcome": "Selected",
+            "source": "react/ownership-prefer-plain-ts-for-local-react-helpers",
+            "target": "react/screen-move-pure-support-code-out-of-entry-files"
+          },
+          {
+            "evidence": "명확한 네 입력과 payload 출력 계약을 가진 domain-sized boundary다.",
+            "outcome": "Selected",
+            "source": "react/ownership-prefer-plain-ts-for-local-react-helpers",
+            "target": "typescript/functions-extract-helpers-only-when-the-boundary-is-real"
+          },
+          {
+            "evidence": "스타일 파일, selector, className 또는 styling contract를 변경하지 않는다.",
+            "outcome": "INACTIVE",
+            "source": "react/ownership-place-route-local-files-by-scope",
+            "target": "css/naming-separate-local-and-route-style-scopes"
+          },
+          {
+            "evidence": "스타일 소유권 변경이 없어 CSS skill이 비활성이다.",
+            "outcome": "INACTIVE",
+            "source": "react/ownership-place-route-local-files-by-scope",
+            "target": "css/organization-keep-style-files-owned-by-one-component-or-route"
+          },
+          {
+            "evidence": "네 positional 인자를 단일 named object parameter로 전환한다.",
+            "outcome": "Selected",
+            "source": "react/composition-prefer-arrow-functions-and-object-params",
+            "target": "typescript/functions-use-named-object-params-for-complex-signatures"
+          },
+          {
+            "evidence": "component나 runtime boundary를 추출하지 않고 pure function만 이동한다.",
+            "outcome": "N/A",
+            "source": "react/screen-avoid-premature-abstraction",
+            "target": "react/screen-extract-local-section-components-for-runtime-boundaries"
+          },
+          {
+            "evidence": "payload builder 자체가 명확한 입력/출력 support 경계다.",
+            "outcome": "Selected",
+            "source": "react/screen-avoid-premature-abstraction",
+            "target": "react/screen-extract-utilities-selectively"
+          },
+          {
+            "evidence": "추가 sub-helper 없이 실제 payload boundary 하나만 추출한다.",
+            "outcome": "Selected",
+            "source": "react/screen-avoid-premature-abstraction",
+            "target": "typescript/functions-extract-helpers-only-when-the-boundary-is-real"
+          },
+          {
+            "evidence": "route entry 밖으로 옮길 pure support의 목적지는 sibling page.ts다.",
+            "outcome": "Selected",
+            "source": "react/screen-extract-utilities-selectively",
+            "target": "react/screen-move-pure-support-code-out-of-entry-files"
+          },
+          {
+            "evidence": "generic helper soup 없이 domain-sized exported function 하나를 유지한다.",
+            "outcome": "Selected",
+            "source": "react/screen-extract-utilities-selectively",
+            "target": "typescript/functions-extract-helpers-only-when-the-boundary-is-real"
+          },
+          {
+            "evidence": "page.ts로 이동한 pure support function이 exported declaration이 된다.",
+            "outcome": "Selected",
+            "source": "react/screen-move-pure-support-code-out-of-entry-files",
+            "target": "react/docs-require-jsdoc-on-key-declarations"
+          },
+          {
+            "evidence": "owner-named module의 exported pure helper에 header JSDoc이 필요하다.",
+            "outcome": "Selected",
+            "source": "typescript/functions-extract-helpers-only-when-the-boundary-is-real",
+            "target": "typescript/docs-require-header-jsdoc-on-key-declarations"
+          },
+          {
+            "evidence": "owner-named support module의 domain-sized exported pure function이다.",
+            "outcome": "Selected",
+            "source": "typescript/functions-extract-helpers-only-when-the-boundary-is-real",
+            "target": "typescript/docs-use-helper-for-reusable-pure-helper-functions"
+          }
+        ],
+        "scopeEvidence": [
+          "src/routes/entries/page.tsx의 React 소유 payload 조립을 sibling page.ts로 이동한다.",
+          "createEntryPayload는 네 개의 관련 positional 인자를 받는 여러 줄 pure function이며 모듈 경계에서 named export로 바뀐다.",
+          "React hook, state, event, render flow와 styling contract는 변경하지 않는다.",
+          "새 generic utils/helper 파일이나 추가 helper 분해를 만들지 않는다.",
+          "page.tsx와 page.ts의 TypeScript import/export 및 호출 시그니처가 변경된다.",
+          "CreateEntryPayload 선언은 이름·필드·optionality를 보존해 owner와 함께 이동하며 객체 매개변수 계약으로 재사용하므로 새 custom shape를 선언하지 않는다."
+        ],
+        "selected": {
+          "react": [
+            "ownership-prefer-plain-ts-for-local-react-helpers",
+            "ownership-place-route-local-files-by-scope",
+            "ownership-use-consistent-file-and-symbol-naming",
+            "composition-prefer-arrow-functions-and-object-params",
+            "screen-avoid-premature-abstraction",
+            "screen-extract-utilities-selectively",
+            "screen-move-pure-support-code-out-of-entry-files",
+            "docs-require-jsdoc-on-key-declarations"
+          ],
+          "typescript": [
+            "naming-use-consistent-file-and-symbol-naming",
+            "naming-use-direct-imports-and-public-entry-points",
+            "functions-extract-helpers-only-when-the-boundary-is-real",
+            "functions-use-named-object-params-for-complex-signatures",
+            "docs-require-header-jsdoc-on-key-declarations",
+            "docs-standardize-annotation-tags-by-declaration-role",
+            "docs-use-helper-for-reusable-pure-helper-functions",
+            "docs-write-concise-korean-comments-about-purpose-and-constraints",
+            "guardrails-review-banned-typescript-shortcuts-before-finishing"
+          ]
+        },
+        "unknown": {
+          "react": [],
+          "typescript": []
+        }
+      }
+    ],
+    "stable": true,
+    "stablePair": [
+      2,
+      3
+    ]
+  },
+  "runId": "progressive--RTE03-route-support-extraction--t2",
+  "runtime": {
+    "declared": {
+      "forkTurns": "none",
+      "oneChildPerTrial": true,
+      "requestedModel": "gpt-5.6-sol",
+      "requestedReasoning": "high",
+      "runtime": "Codex CLI isolated child session"
+    },
+    "evidenceClass": "declared-telemetry-only",
+    "unavailable": {
+      "actualReasoningTelemetry": null,
+      "childTokenUsage": null,
+      "exactModelBuild": null,
+      "observedFileReads": null,
+      "runtimeVersion": null
+    }
+  },
+  "scenarioId": "RTE03-route-support-extraction",
+  "scenarioPrompt": "move one real four-argument multi-line payload boundary from src/routes/entries/page.tsx to sibling page.ts; do not create a hook, generic utils file, or helper soup.",
+  "scenarioSha256": "sha256:ea5eba051740effb4ec42cc1e9b0228ecb05faeb63dfa6da4458ee7cf167afdf",
+  "schemaVersion": 3,
+  "scoring": {
+    "driftFinalExactMatch": null,
+    "eligible": true,
+    "exactMatch": false,
+    "initialExactMatch": false,
+    "kind": "candidate",
+    "metrics": {
+      "applicableRuleRecall": 0.9444444444444444,
+      "domainActivationRecall": 1,
+      "exactSelectionPrecision": 1
+    }
+  },
+  "semanticVerdicts": [],
+  "stagedProvenanceSha256": null,
+  "trial": 2,
+  "virtualPatch": {
+    "files": [
+      {
+        "after": "import { createEntryPayload } from \"./page\";\n\nexport const EntriesPage = () => {\n  const payload = createEntryPayload({\n    entryId: \"entry-1\",\n    name: \"Draft\",\n    tags: [\"new\"],\n    enabled: true,\n  });\n\n  return <pre>{JSON.stringify(payload)}</pre>;\n};\n",
+        "afterSha256": "sha256:7de11bab0ecb58ef9dbf9aac82ea05af7fa785e758a167ae2013255ecea3662e",
+        "afterState": "present",
+        "beforeSha256": "sha256:4d2d48e8f917a4e7c5d84cac9c5a651f002837d6b3e91b72f8e200d6cdedeb38",
+        "beforeState": "present",
+        "path": "src/routes/entries/page.tsx"
+      },
+      {
+        "after": "interface CreateEntryPayload {\n  entryId: string;\n  name: string;\n  tags: string[];\n  enabled: boolean;\n}\n\n/**\n * @helper 엔트리 생성 payload 정규화\n */\nexport const createEntryPayload = (\n  params: CreateEntryPayload,\n): CreateEntryPayload => {\n  const { entryId, name, tags, enabled } = params;\n\n  return {\n    entryId,\n    name: name.trim(),\n    tags,\n    enabled,\n  };\n};\n",
+        "afterSha256": "sha256:8d1b6a70196666264b837c9e9073adc72518baefb4144bfe3b271c7aac89dee1",
+        "afterState": "present",
+        "beforeSha256": null,
+        "beforeState": "absent",
+        "path": "src/routes/entries/page.ts"
+      }
+    ],
+    "summary": "route entry의 render flow는 유지하고 payload 조립 boundary 하나만 sibling page.ts의 named export로 이동했다."
+  }
+}

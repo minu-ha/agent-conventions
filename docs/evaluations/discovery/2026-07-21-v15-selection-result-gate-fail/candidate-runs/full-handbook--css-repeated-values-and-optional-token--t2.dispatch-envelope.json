@@ -1,0 +1,43 @@
+{
+  "assignedChildPayloadPath": "/Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v15-candidate-runs/full-handbook--css-repeated-values-and-optional-token--t2.child-payload.json",
+  "childRequest": {
+    "path": "/Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v15-candidate-runs/full-handbook--css-repeated-values-and-optional-token--t2.child-request.json",
+    "sha256": "sha256:8b03613e8ce527bb96a5e19c9695ad72e903b2b22f8f8cb8416bc9fa7228ced4",
+    "utf8ByteLength": 25107
+  },
+  "dispatchEnvelope": {
+    "arm": "full-handbook",
+    "exactPrompt": "Read and execute /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v15-candidate-runs/full-handbook--css-repeated-values-and-optional-token--t2.child-request.json (sha256:8b03613e8ce527bb96a5e19c9695ad72e903b2b22f8f8cb8416bc9fa7228ced4).\nAssigned payload path: /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v15-candidate-runs/full-handbook--css-repeated-values-and-optional-token--t2.child-payload.json. Write exactly this one file with apply_patch; create or modify no other file.\nDo not echo the dispatch prompt or coordinator-owned fields; after writing valid childPayload JSON, return only concise status.",
+    "generatedIndexDigests": {
+      "css": "sha256:6dacc6f6fbe940681ab2734d8c9281c46ff07be133ee9c9d68de91bddb039d79",
+      "react": "sha256:624e51ea96f2dea6b775450def20d36142d70ffcf7960cf5169eacdf0ebb57c6",
+      "typescript": "sha256:e0bd359aa2321150229960df8fb663e528e93b3d5d25173d3a20ebf3a1b9b259"
+    },
+    "promptByteLength": 741,
+    "promptRendererVersion": "behavioral-prompt-renderer-v3",
+    "promptSha256": "sha256:02fdf212ebb2847864a9f8f83f1cd79e6b88f64c41ecf9657dfa76566e043b11",
+    "protocolId": "progressive-loading-behavioral-v3",
+    "repositoryHead": "8eb5b60ab5686e45f80b8cbcc49c731f6851915c",
+    "runId": "full-handbook--css-repeated-values-and-optional-token--t2",
+    "scenarioId": "css-repeated-values-and-optional-token",
+    "scenarioPrompt": "scope a global .ant-tree selector under the existing .ui_themePreview owner root with one descendant level, and replace repeated color/spacing/radius with optional CSS variables and fallbacks; keep the file and owner name unchanged.",
+    "schemaVersion": 3,
+    "trial": 2
+  },
+  "protocol": {
+    "armSha256": "sha256:19d3956f9181fa05f1d11e3fe76a55849b1fe0daf4054fb539479cbc6edb9470",
+    "path": "/Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-behavioral-protocol.json",
+    "scenarioSha256": "sha256:533fd9c65f792e79a5169099491fd68693e91c8191f8f0fde11767a41d8ad4a7",
+    "sha256": "sha256:13face170d72a68d57df6e4eb051b3720b12baa2eeb63af0f429bbcb87543d0c"
+  },
+  "repositoryDir": "/Users/l-20220017/workspace/agent-conventions-progressive-loading",
+  "requestContentDigest": "sha256:d1cea79e83cbf05d6e561e594bab98b353e494dc1d91b3be5d21aba4e4bc3334",
+  "routingEvalRawSha256": {
+    "skill/css/routing-evals.json": "sha256:f3ab3800bdbbe9f4f29d02dce65896ca3fdd108dc5bed087ca2b86ff12518268",
+    "skill/react/routing-evals.json": "sha256:f0c46f6118cc29550ffde4b9922210aa0c5cb34437735fe1ecbfde4440632ba9",
+    "skill/typescript/routing-evals.json": "sha256:913796f35afae16b9db3ae344837189cc0cfc47942ebd2611da76b5597c1e199"
+  },
+  "runId": "full-handbook--css-repeated-values-and-optional-token--t2",
+  "schemaVersion": 1,
+  "skillRootDir": "/Users/l-20220017/workspace/agent-conventions-progressive-loading/skill"
+}

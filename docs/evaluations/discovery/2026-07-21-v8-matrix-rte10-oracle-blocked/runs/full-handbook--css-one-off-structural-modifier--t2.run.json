@@ -1,0 +1,649 @@
+{
+  "activatedSkills": [
+    "css",
+    "typescript"
+  ],
+  "arm": "full-handbook",
+  "armSha256": "sha256:6316fd6282f7968127ddc7af46327cc3f4eafcc669d2d7170b699f0f93961238",
+  "childPayloadSha256": "sha256:21131fca7c91b4ab7717fd9e078a36c9cc144112ad79a8998e6f7a4bfc17bf5e",
+  "childRequestSha256": "sha256:faf7c53286074446d3c25c142c735cca0e6c5432d0d48cd8404fc19c2749af95",
+  "completion": {
+    "blocked": false,
+    "coverageFailCount": 0,
+    "reason": "두 활성 skill의 전체 rule partition, conditional companion, reviewWith, completion gate와 3-pass stable routing을 충족했고 가상 패치가 요청한 역할 기반 element 교체와 간격 보존을 완료한다.",
+    "semanticFailCount": 0,
+    "status": "COMPLETE",
+    "unknownCount": 0
+  },
+  "declaredLoadedFiles": {
+    "kind": "declared",
+    "paths": [
+      "skill/css/SKILL.md",
+      "skill/css/AGENTS.md",
+      "skill/typescript/SKILL.md",
+      "skill/typescript/AGENTS.md"
+    ]
+  },
+  "driftReceipt": null,
+  "exactPrompt": "Read and execute /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v3-runs/full-handbook--css-one-off-structural-modifier--t2.child-request.json (sha256:faf7c53286074446d3c25c142c735cca0e6c5432d0d48cd8404fc19c2749af95).\nAssigned payload path: /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v3-runs/full-handbook--css-one-off-structural-modifier--t2.child-payload.json. Write exactly this one file with apply_patch; create or modify no other file.\nDo not echo the dispatch prompt or coordinator-owned fields; after writing valid childPayload JSON, return only concise status.",
+  "generatedIndexDigests": {
+    "css": "sha256:b9c8fe78ce9066c8baedec798e707f18bfe3845e6fdf4137a6f724d8e94bb1ff",
+    "react": "sha256:c2036ebd5ca4d70b5e6734a53f9a3b8227cb93fa068bda03e318eb0a88ddc4bc",
+    "typescript": "sha256:9891aafd9a34683772d5d7653b4fa82d10e0bee8b8b4412acdd9d2889f832a7e"
+  },
+  "limitations": [],
+  "promptByteLength": 705,
+  "promptRendererVersion": "behavioral-prompt-renderer-v3",
+  "promptSha256": "sha256:32158984ddb405058f7f170651068ae2c2f3b855e94fd5cf1f333656edcc10c2",
+  "protocolId": "progressive-loading-behavioral-v3",
+  "protocolSha256": "sha256:59112f681d1593bb976868637a3b935f6d942f0ecef13301d8c7cecf958e9c61",
+  "receipts": [
+    {
+      "excludedGroups": [
+        {
+          "ordinals": [
+            "C01",
+            "C02",
+            "C04",
+            "C05",
+            "C09",
+            "C10",
+            "C11",
+            "C12",
+            "C13",
+            "C14",
+            "C15",
+            "C16",
+            "C17",
+            "C18",
+            "C19",
+            "C20"
+          ],
+          "reason": "기존 plain CSS의 동일 route owner 안에서 역할 element 이름과 className만 바꾸며 새 namespace, owner 이동, Ui wrapper, selector chain, pseudo-state, CSS variable, 반복 토큰, stylesheet 구조 변경은 없다."
+        }
+      ],
+      "expanded": [],
+      "indexDigest": null,
+      "notApplicable": [
+        {
+          "id": "naming-default-to-plain-css-when-no-module-convention",
+          "ordinal": "C01"
+        },
+        {
+          "id": "naming-keep-scope-slug-unique-per-owner",
+          "ordinal": "C02"
+        },
+        {
+          "id": "naming-preserve-route-slug-traceability",
+          "ordinal": "C04"
+        },
+        {
+          "id": "naming-separate-local-and-route-style-scopes",
+          "ordinal": "C05"
+        },
+        {
+          "id": "composition-keep-classes-single-purpose",
+          "ordinal": "C09"
+        },
+        {
+          "id": "composition-style-ui-components-through-owned-wrappers",
+          "ordinal": "C10"
+        },
+        {
+          "id": "composition-prefer-ui-wrapper-prop-types",
+          "ordinal": "C11"
+        },
+        {
+          "id": "selector-avoid-deep-descendant-dependencies",
+          "ordinal": "C12"
+        },
+        {
+          "id": "selector-keep-project-selectors-flat",
+          "ordinal": "C13"
+        },
+        {
+          "id": "selector-target-third-party-dom-from-owned-roots",
+          "ordinal": "C14"
+        },
+        {
+          "id": "selector-use-pseudo-classes-for-dom-owned-states",
+          "ordinal": "C15"
+        },
+        {
+          "id": "values-keep-layout-intent-explicit",
+          "ordinal": "C16"
+        },
+        {
+          "id": "values-always-provide-css-variable-fallbacks",
+          "ordinal": "C17"
+        },
+        {
+          "id": "values-separate-domain-state-modifiers-from-dom-interaction-states",
+          "ordinal": "C18"
+        },
+        {
+          "id": "values-tokenize-repeated-visual-values",
+          "ordinal": "C19"
+        },
+        {
+          "id": "organization-keep-style-files-owned-by-one-component-or-route",
+          "ordinal": "C20"
+        }
+      ],
+      "selected": [
+        {
+          "id": "naming-name-elements-and-modifiers-by-role",
+          "ordinal": "C03"
+        },
+        {
+          "id": "naming-use-scope-slug-element-modifier-syntax",
+          "ordinal": "C06"
+        },
+        {
+          "id": "composition-compose-classes-with-clsx",
+          "ordinal": "C07"
+        },
+        {
+          "id": "composition-do-not-build-structural-variants-with-modifiers",
+          "ordinal": "C08"
+        },
+        {
+          "id": "organization-review-banned-css-patterns-before-finishing",
+          "ordinal": "C21"
+        }
+      ],
+      "skill": "css",
+      "unknown": []
+    },
+    {
+      "excludedGroups": [
+        {
+          "ordinals": [
+            "T01",
+            "T02",
+            "T03",
+            "T04",
+            "T05",
+            "T06",
+            "T07",
+            "T08",
+            "T09",
+            "T10",
+            "T11",
+            "T12",
+            "T13",
+            "T14",
+            "T15",
+            "T16",
+            "T17",
+            "T18",
+            "T19",
+            "T20",
+            "T21"
+          ],
+          "reason": "TSX class contract 변경 때문에 TypeScript companion은 활성화하지만 import, symbol, type, callback, helper, config, fallback, comment 또는 JSDoc 계약은 변경하지 않는다."
+        }
+      ],
+      "expanded": [],
+      "indexDigest": null,
+      "notApplicable": [
+        {
+          "id": "naming-centralize-shared-config-namespaces",
+          "ordinal": "T01"
+        },
+        {
+          "id": "naming-preserve-config-origin-with-chained-access",
+          "ordinal": "T02"
+        },
+        {
+          "id": "naming-use-consistent-file-and-symbol-naming",
+          "ordinal": "T03"
+        },
+        {
+          "id": "naming-use-direct-imports-and-public-entry-points",
+          "ordinal": "T04"
+        },
+        {
+          "id": "types-document-custom-types-and-shapes",
+          "ordinal": "T05"
+        },
+        {
+          "id": "types-mark-unused-parameters-with-underscore",
+          "ordinal": "T06"
+        },
+        {
+          "id": "types-prefer-function-variable-types-over-parameter-annotations",
+          "ordinal": "T07"
+        },
+        {
+          "id": "types-reuse-callback-signatures-from-existing-contracts",
+          "ordinal": "T08"
+        },
+        {
+          "id": "types-reuse-existing-contracts-before-new-types",
+          "ordinal": "T09"
+        },
+        {
+          "id": "functions-avoid-imperative-assembly-in-wide-scopes",
+          "ordinal": "T10"
+        },
+        {
+          "id": "functions-extract-helpers-only-when-the-boundary-is-real",
+          "ordinal": "T11"
+        },
+        {
+          "id": "functions-prefer-immutable-array-sorting",
+          "ordinal": "T12"
+        },
+        {
+          "id": "functions-replace-enum-with-as-const-objects",
+          "ordinal": "T13"
+        },
+        {
+          "id": "functions-use-named-object-params-for-complex-signatures",
+          "ordinal": "T14"
+        },
+        {
+          "id": "functions-use-set-and-map-for-repeated-lookups",
+          "ordinal": "T15"
+        },
+        {
+          "id": "absence-expose-optional-values-instead-of-silent-fallbacks",
+          "ordinal": "T16"
+        },
+        {
+          "id": "docs-keep-inline-comments-for-constraints-and-caveats",
+          "ordinal": "T17"
+        },
+        {
+          "id": "docs-require-header-jsdoc-on-key-declarations",
+          "ordinal": "T18"
+        },
+        {
+          "id": "docs-standardize-annotation-tags-by-declaration-role",
+          "ordinal": "T19"
+        },
+        {
+          "id": "docs-use-helper-for-reusable-pure-helper-functions",
+          "ordinal": "T20"
+        },
+        {
+          "id": "docs-write-concise-korean-comments-about-purpose-and-constraints",
+          "ordinal": "T21"
+        }
+      ],
+      "selected": [
+        {
+          "id": "guardrails-review-banned-typescript-shortcuts-before-finishing",
+          "ordinal": "T22"
+        }
+      ],
+      "skill": "typescript",
+      "unknown": []
+    }
+  ],
+  "repositoryHead": "be060c52db94b6d344439c5fe2a7bf96349b49be",
+  "requestContentDigest": "sha256:32c460f4bd9601be055b0e65a7f688b7251c3af5a64ca816c3dca1dde689dcfa",
+  "response": "route_catalogDetail__section--compactTop one-off modifier를 역할 기반 route_catalogDetail__detailSection element로 교체했다. 기존 clsx import와 clsx() 사용은 유지했으며, padding shorthand로 기존 8px top 및 24px 나머지 간격을 보존했다.",
+  "routingTrace": {
+    "passes": [
+      {
+        "activatedSkills": [
+          "css",
+          "typescript"
+        ],
+        "completionGateAdded": [
+          "css/organization-review-banned-css-patterns-before-finishing",
+          "typescript/guardrails-review-banned-typescript-shortcuts-before-finishing"
+        ],
+        "completionGatesEvaluated": [
+          {
+            "outcome": "selected",
+            "rule": "css/organization-review-banned-css-patterns-before-finishing"
+          },
+          {
+            "outcome": "selected",
+            "rule": "typescript/guardrails-review-banned-typescript-shortcuts-before-finishing"
+          }
+        ],
+        "generatedIndexDigests": {
+          "css": "sha256:b9c8fe78ce9066c8baedec798e707f18bfe3845e6fdf4137a6f724d8e94bb1ff",
+          "typescript": "sha256:9891aafd9a34683772d5d7653b4fa82d10e0bee8b8b4412acdd9d2889f832a7e"
+        },
+        "notApplicable": {
+          "css": [
+            "naming-default-to-plain-css-when-no-module-convention",
+            "naming-keep-scope-slug-unique-per-owner",
+            "naming-preserve-route-slug-traceability",
+            "naming-separate-local-and-route-style-scopes",
+            "composition-keep-classes-single-purpose",
+            "composition-style-ui-components-through-owned-wrappers",
+            "composition-prefer-ui-wrapper-prop-types",
+            "selector-avoid-deep-descendant-dependencies",
+            "selector-keep-project-selectors-flat",
+            "selector-target-third-party-dom-from-owned-roots",
+            "selector-use-pseudo-classes-for-dom-owned-states",
+            "values-keep-layout-intent-explicit",
+            "values-always-provide-css-variable-fallbacks",
+            "values-separate-domain-state-modifiers-from-dom-interaction-states",
+            "values-tokenize-repeated-visual-values",
+            "organization-keep-style-files-owned-by-one-component-or-route"
+          ],
+          "typescript": [
+            "naming-centralize-shared-config-namespaces",
+            "naming-preserve-config-origin-with-chained-access",
+            "naming-use-consistent-file-and-symbol-naming",
+            "naming-use-direct-imports-and-public-entry-points",
+            "types-document-custom-types-and-shapes",
+            "types-mark-unused-parameters-with-underscore",
+            "types-prefer-function-variable-types-over-parameter-annotations",
+            "types-reuse-callback-signatures-from-existing-contracts",
+            "types-reuse-existing-contracts-before-new-types",
+            "functions-avoid-imperative-assembly-in-wide-scopes",
+            "functions-extract-helpers-only-when-the-boundary-is-real",
+            "functions-prefer-immutable-array-sorting",
+            "functions-replace-enum-with-as-const-objects",
+            "functions-use-named-object-params-for-complex-signatures",
+            "functions-use-set-and-map-for-repeated-lookups",
+            "absence-expose-optional-values-instead-of-silent-fallbacks",
+            "docs-keep-inline-comments-for-constraints-and-caveats",
+            "docs-require-header-jsdoc-on-key-declarations",
+            "docs-standardize-annotation-tags-by-declaration-role",
+            "docs-use-helper-for-reusable-pure-helper-functions",
+            "docs-write-concise-korean-comments-about-purpose-and-constraints"
+          ]
+        },
+        "pass": 1,
+        "requiresSelectedAdded": [],
+        "requiresSelectedEvaluated": [],
+        "reviewWithReevaluated": [
+          {
+            "evidence": "one-off spacing modifier를 역할 기반 detailSection element로 바꾸므로 target naming 규칙도 직접 적용된다.",
+            "outcome": "Selected",
+            "source": "css/composition-do-not-build-structural-variants-with-modifiers",
+            "target": "css/naming-name-elements-and-modifiers-by-role"
+          }
+        ],
+        "scopeEvidence": [
+          "src/routes/catalog/detail.tsx의 className contract와 src/routes/catalog/detail.css의 route-owned class를 함께 변경한다.",
+          "재사용 계약이 없는 section--compactTop spacing modifier를 역할 기반 detailSection element로 교체한다.",
+          "기존 clsx import와 clsx() class composition을 유지한다.",
+          "완료 전에 CSS structural modifier 금지 패턴과 TypeScript/TSX 금지 shortcut을 점검한다."
+        ],
+        "selected": {
+          "css": [
+            "naming-name-elements-and-modifiers-by-role",
+            "naming-use-scope-slug-element-modifier-syntax",
+            "composition-compose-classes-with-clsx",
+            "composition-do-not-build-structural-variants-with-modifiers",
+            "organization-review-banned-css-patterns-before-finishing"
+          ],
+          "typescript": [
+            "guardrails-review-banned-typescript-shortcuts-before-finishing"
+          ]
+        },
+        "unknown": {
+          "css": [],
+          "typescript": []
+        }
+      },
+      {
+        "activatedSkills": [
+          "css",
+          "typescript"
+        ],
+        "completionGateAdded": [],
+        "completionGatesEvaluated": [
+          {
+            "outcome": "selected",
+            "rule": "css/organization-review-banned-css-patterns-before-finishing"
+          },
+          {
+            "outcome": "selected",
+            "rule": "typescript/guardrails-review-banned-typescript-shortcuts-before-finishing"
+          }
+        ],
+        "generatedIndexDigests": {
+          "css": "sha256:b9c8fe78ce9066c8baedec798e707f18bfe3845e6fdf4137a6f724d8e94bb1ff",
+          "typescript": "sha256:9891aafd9a34683772d5d7653b4fa82d10e0bee8b8b4412acdd9d2889f832a7e"
+        },
+        "notApplicable": {
+          "css": [
+            "naming-default-to-plain-css-when-no-module-convention",
+            "naming-keep-scope-slug-unique-per-owner",
+            "naming-preserve-route-slug-traceability",
+            "naming-separate-local-and-route-style-scopes",
+            "composition-keep-classes-single-purpose",
+            "composition-style-ui-components-through-owned-wrappers",
+            "composition-prefer-ui-wrapper-prop-types",
+            "selector-avoid-deep-descendant-dependencies",
+            "selector-keep-project-selectors-flat",
+            "selector-target-third-party-dom-from-owned-roots",
+            "selector-use-pseudo-classes-for-dom-owned-states",
+            "values-keep-layout-intent-explicit",
+            "values-always-provide-css-variable-fallbacks",
+            "values-separate-domain-state-modifiers-from-dom-interaction-states",
+            "values-tokenize-repeated-visual-values",
+            "organization-keep-style-files-owned-by-one-component-or-route"
+          ],
+          "typescript": [
+            "naming-centralize-shared-config-namespaces",
+            "naming-preserve-config-origin-with-chained-access",
+            "naming-use-consistent-file-and-symbol-naming",
+            "naming-use-direct-imports-and-public-entry-points",
+            "types-document-custom-types-and-shapes",
+            "types-mark-unused-parameters-with-underscore",
+            "types-prefer-function-variable-types-over-parameter-annotations",
+            "types-reuse-callback-signatures-from-existing-contracts",
+            "types-reuse-existing-contracts-before-new-types",
+            "functions-avoid-imperative-assembly-in-wide-scopes",
+            "functions-extract-helpers-only-when-the-boundary-is-real",
+            "functions-prefer-immutable-array-sorting",
+            "functions-replace-enum-with-as-const-objects",
+            "functions-use-named-object-params-for-complex-signatures",
+            "functions-use-set-and-map-for-repeated-lookups",
+            "absence-expose-optional-values-instead-of-silent-fallbacks",
+            "docs-keep-inline-comments-for-constraints-and-caveats",
+            "docs-require-header-jsdoc-on-key-declarations",
+            "docs-standardize-annotation-tags-by-declaration-role",
+            "docs-use-helper-for-reusable-pure-helper-functions",
+            "docs-write-concise-korean-comments-about-purpose-and-constraints"
+          ]
+        },
+        "pass": 2,
+        "requiresSelectedAdded": [],
+        "requiresSelectedEvaluated": [],
+        "reviewWithReevaluated": [
+          {
+            "evidence": "one-off spacing modifier를 역할 기반 detailSection element로 바꾸므로 target naming 규칙도 직접 적용된다.",
+            "outcome": "Selected",
+            "source": "css/composition-do-not-build-structural-variants-with-modifiers",
+            "target": "css/naming-name-elements-and-modifiers-by-role"
+          }
+        ],
+        "scopeEvidence": [
+          "src/routes/catalog/detail.tsx의 className contract와 src/routes/catalog/detail.css의 route-owned class를 함께 변경한다.",
+          "재사용 계약이 없는 section--compactTop spacing modifier를 역할 기반 detailSection element로 교체한다.",
+          "기존 clsx import와 clsx() class composition을 유지한다.",
+          "완료 전에 CSS structural modifier 금지 패턴과 TypeScript/TSX 금지 shortcut을 점검한다."
+        ],
+        "selected": {
+          "css": [
+            "naming-name-elements-and-modifiers-by-role",
+            "naming-use-scope-slug-element-modifier-syntax",
+            "composition-compose-classes-with-clsx",
+            "composition-do-not-build-structural-variants-with-modifiers",
+            "organization-review-banned-css-patterns-before-finishing"
+          ],
+          "typescript": [
+            "guardrails-review-banned-typescript-shortcuts-before-finishing"
+          ]
+        },
+        "unknown": {
+          "css": [],
+          "typescript": []
+        }
+      },
+      {
+        "activatedSkills": [
+          "css",
+          "typescript"
+        ],
+        "completionGateAdded": [],
+        "completionGatesEvaluated": [
+          {
+            "outcome": "selected",
+            "rule": "css/organization-review-banned-css-patterns-before-finishing"
+          },
+          {
+            "outcome": "selected",
+            "rule": "typescript/guardrails-review-banned-typescript-shortcuts-before-finishing"
+          }
+        ],
+        "generatedIndexDigests": {
+          "css": "sha256:b9c8fe78ce9066c8baedec798e707f18bfe3845e6fdf4137a6f724d8e94bb1ff",
+          "typescript": "sha256:9891aafd9a34683772d5d7653b4fa82d10e0bee8b8b4412acdd9d2889f832a7e"
+        },
+        "notApplicable": {
+          "css": [
+            "naming-default-to-plain-css-when-no-module-convention",
+            "naming-keep-scope-slug-unique-per-owner",
+            "naming-preserve-route-slug-traceability",
+            "naming-separate-local-and-route-style-scopes",
+            "composition-keep-classes-single-purpose",
+            "composition-style-ui-components-through-owned-wrappers",
+            "composition-prefer-ui-wrapper-prop-types",
+            "selector-avoid-deep-descendant-dependencies",
+            "selector-keep-project-selectors-flat",
+            "selector-target-third-party-dom-from-owned-roots",
+            "selector-use-pseudo-classes-for-dom-owned-states",
+            "values-keep-layout-intent-explicit",
+            "values-always-provide-css-variable-fallbacks",
+            "values-separate-domain-state-modifiers-from-dom-interaction-states",
+            "values-tokenize-repeated-visual-values",
+            "organization-keep-style-files-owned-by-one-component-or-route"
+          ],
+          "typescript": [
+            "naming-centralize-shared-config-namespaces",
+            "naming-preserve-config-origin-with-chained-access",
+            "naming-use-consistent-file-and-symbol-naming",
+            "naming-use-direct-imports-and-public-entry-points",
+            "types-document-custom-types-and-shapes",
+            "types-mark-unused-parameters-with-underscore",
+            "types-prefer-function-variable-types-over-parameter-annotations",
+            "types-reuse-callback-signatures-from-existing-contracts",
+            "types-reuse-existing-contracts-before-new-types",
+            "functions-avoid-imperative-assembly-in-wide-scopes",
+            "functions-extract-helpers-only-when-the-boundary-is-real",
+            "functions-prefer-immutable-array-sorting",
+            "functions-replace-enum-with-as-const-objects",
+            "functions-use-named-object-params-for-complex-signatures",
+            "functions-use-set-and-map-for-repeated-lookups",
+            "absence-expose-optional-values-instead-of-silent-fallbacks",
+            "docs-keep-inline-comments-for-constraints-and-caveats",
+            "docs-require-header-jsdoc-on-key-declarations",
+            "docs-standardize-annotation-tags-by-declaration-role",
+            "docs-use-helper-for-reusable-pure-helper-functions",
+            "docs-write-concise-korean-comments-about-purpose-and-constraints"
+          ]
+        },
+        "pass": 3,
+        "requiresSelectedAdded": [],
+        "requiresSelectedEvaluated": [],
+        "reviewWithReevaluated": [
+          {
+            "evidence": "one-off spacing modifier를 역할 기반 detailSection element로 바꾸므로 target naming 규칙도 직접 적용된다.",
+            "outcome": "Selected",
+            "source": "css/composition-do-not-build-structural-variants-with-modifiers",
+            "target": "css/naming-name-elements-and-modifiers-by-role"
+          }
+        ],
+        "scopeEvidence": [
+          "src/routes/catalog/detail.tsx의 className contract와 src/routes/catalog/detail.css의 route-owned class를 함께 변경한다.",
+          "재사용 계약이 없는 section--compactTop spacing modifier를 역할 기반 detailSection element로 교체한다.",
+          "기존 clsx import와 clsx() class composition을 유지한다.",
+          "완료 전에 CSS structural modifier 금지 패턴과 TypeScript/TSX 금지 shortcut을 점검한다."
+        ],
+        "selected": {
+          "css": [
+            "naming-name-elements-and-modifiers-by-role",
+            "naming-use-scope-slug-element-modifier-syntax",
+            "composition-compose-classes-with-clsx",
+            "composition-do-not-build-structural-variants-with-modifiers",
+            "organization-review-banned-css-patterns-before-finishing"
+          ],
+          "typescript": [
+            "guardrails-review-banned-typescript-shortcuts-before-finishing"
+          ]
+        },
+        "unknown": {
+          "css": [],
+          "typescript": []
+        }
+      }
+    ],
+    "stable": true,
+    "stablePair": [
+      2,
+      3
+    ]
+  },
+  "runId": "full-handbook--css-one-off-structural-modifier--t2",
+  "runtime": {
+    "declared": {
+      "forkTurns": "none",
+      "oneChildPerTrial": true,
+      "requestedModel": "gpt-5.6-sol",
+      "requestedReasoning": "high",
+      "runtime": "Codex collaboration child agent"
+    },
+    "evidenceClass": "declared-telemetry-only",
+    "unavailable": {
+      "actualReasoningTelemetry": null,
+      "childTokenUsage": null,
+      "exactModelBuild": null,
+      "observedFileReads": null,
+      "runtimeVersion": null
+    }
+  },
+  "scenarioId": "css-one-off-structural-modifier",
+  "scenarioPrompt": "replace non-repeatable section--compactTop spacing patch with a role-named element in catalog/detail.tsx and detail.css; keep the existing clsx import.",
+  "scenarioSha256": "sha256:9043393aaf1dc65e3a6b994057002320c052def638d9d2f39b56063e578a3769",
+  "schemaVersion": 3,
+  "scoring": {
+    "driftFinalExactMatch": null,
+    "eligible": true,
+    "exactMatch": false,
+    "initialExactMatch": false,
+    "kind": "candidate",
+    "metrics": {
+      "applicableRuleRecall": 1,
+      "domainActivationRecall": 0.6666666666666666,
+      "exactSelectionPrecision": 1
+    }
+  },
+  "semanticVerdicts": [],
+  "stagedProvenanceSha256": null,
+  "trial": 2,
+  "virtualPatch": {
+    "files": [
+      {
+        "after": "import clsx from \"clsx\";\n\nimport \"./detail.css\";\n\nexport const CatalogDetail = () => (\n  <main className=\"route_catalogDetail\">\n    <section className={clsx(\"route_catalogDetail__detailSection\")}>\n      <h2>Summary</h2>\n    </section>\n  </main>\n);\n",
+        "afterSha256": "sha256:56617f67da06af8eb552d7d2621e28e766a5b973f6fd0a369ac2640edb16aa96",
+        "afterState": "present",
+        "beforeSha256": "sha256:14ed551407a617956505f2236cb90b7b764ce2b7e33d02cc12e5261c5684b899",
+        "beforeState": "present",
+        "path": "src/routes/catalog/detail.tsx"
+      },
+      {
+        "after": ".route_catalogDetail__detailSection {\n  padding: 8px 24px 24px;\n}\n",
+        "afterSha256": "sha256:448efd7ac77643dd332f39fe26ee1028277db77a44d983533dedebfb51e20dda",
+        "afterState": "present",
+        "beforeSha256": "sha256:cf0154ddf5c49b5e373fce4900f2bad7d17221e5f19e4e5cae110c7933024e88",
+        "beforeState": "present",
+        "path": "src/routes/catalog/detail.css"
+      }
+    ],
+    "summary": "one-off compactTop structural modifier를 역할 기반 detailSection element로 치환하고 기존 spacing 및 clsx composition을 보존했다."
+  }
+}

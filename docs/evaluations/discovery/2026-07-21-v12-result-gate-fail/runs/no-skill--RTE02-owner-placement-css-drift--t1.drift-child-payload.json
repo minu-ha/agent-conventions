@@ -1,0 +1,66 @@
+{
+  "runtime": {
+    "declared": {
+      "forkTurns": "none",
+      "oneChildPerTrial": true,
+      "requestedModel": "gpt-5.6-sol",
+      "requestedReasoning": "high",
+      "runtime": "Codex CLI isolated child session"
+    },
+    "evidenceClass": "declared-telemetry-only",
+    "unavailable": {
+      "actualReasoningTelemetry": null,
+      "childTokenUsage": null,
+      "exactModelBuild": null,
+      "observedFileReads": null,
+      "runtimeVersion": null
+    }
+  },
+  "declaredLoadedFiles": {
+    "kind": "declared",
+    "paths": []
+  },
+  "virtualPatch": {
+    "files": [
+      {
+        "path": "src/components/ui/entry-tree.tsx",
+        "beforeState": "absent",
+        "beforeSha256": null,
+        "afterState": "absent",
+        "after": null,
+        "afterSha256": null
+      },
+      {
+        "path": "src/routes/entries/-local/entry-tree.tsx",
+        "beforeState": "present",
+        "beforeSha256": "sha256:018aa8b4f1f47e4a555ce5c67d57f8e5ab28c7058b2d5092bd2632894a26cdec",
+        "afterState": "present",
+        "after": "import clsx from \"clsx\";\nimport \"./entry-tree.css\";\n\ninterface RouteEntryTreeProps {\n  entries: Array<{id: string; label: string}>;\n  selectedId?: string;\n}\n\nexport const RouteEntryTree = ({entries, selectedId}: RouteEntryTreeProps) => (\n  <ul className={clsx(\"rt_entryTree_root\", selectedId && \"rt_entryTree_rootSelected\")}>\n    {entries.map((entry) => (\n      <li key={entry.id}>{entry.label}</li>\n    ))}\n  </ul>\n);\n",
+        "afterSha256": "sha256:df82cf7c5d7be24ec317cfddbc1546e36b6908cc517cd89d72365557dc27c9e9"
+      },
+      {
+        "path": "src/routes/entries/-local/entry-tree.css",
+        "beforeState": "absent",
+        "beforeSha256": null,
+        "afterState": "present",
+        "after": ".rt_entryTree_root {\n  /* Route-local root hook. */\n}\n\n.rt_entryTree_rootSelected {\n  /* Route-local selected-state hook. */\n}\n",
+        "afterSha256": "sha256:6473233fee35be363cacc25ec116bc0737ab33251f3479b09be7ce68e3fd0878"
+      }
+    ],
+    "summary": "Keep the shared UI source absent, directly import a new route-local stylesheet, and replace the entry tree className contract with owner-unique rt_entryTree root and selected-state hooks composed through the existing clsx import."
+  },
+  "activatedSkills": [],
+  "receipts": [],
+  "routingTrace": null,
+  "semanticVerdicts": [],
+  "completion": {
+    "status": "COMPLETE",
+    "blocked": false,
+    "coverageFailCount": 0,
+    "semanticFailCount": 0,
+    "unknownCount": 0,
+    "reason": "The replacement-final virtual snapshot adds the directly imported route-local CSS and updates the existing clsx composition to owner-unique rt_* class hooks."
+  },
+  "limitations": [],
+  "response": "Added the directly imported route-local stylesheet and updated the entry tree to compose owner-unique rt_entryTree classes with the existing clsx import."
+}

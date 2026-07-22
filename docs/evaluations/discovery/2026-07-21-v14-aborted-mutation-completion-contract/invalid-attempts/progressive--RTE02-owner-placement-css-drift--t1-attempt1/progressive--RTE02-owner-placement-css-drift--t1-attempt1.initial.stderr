@@ -1,0 +1,2 @@
+2026-07-22T13:11:48.778464Z  WARN codex_otel::events::session_telemetry: metrics counter [codex.skill.injected] failed: tag value contains invalid characters: superpowers:using-superpowers
+2026-07-22T13:17:13.872911Z  WARN codex_otel::events::session_telemetry: metrics counter [codex.skill.injected] failed: tag value contains invalid characters: superpowers:verification-before-completion
