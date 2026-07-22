@@ -268,7 +268,7 @@ const typescriptRuleRouting = {
 	},
 	"types-reuse-existing-contracts-before-new-types": {
 		appliesWhen:
-			"기존 type, interface 또는 schema와 같거나 일부만 다른 shape를 새로 선언·변경·복제·파생한다. 유일한 기존 선언의 내용·이름 불변 pure relocation은 제외한다.",
+			"기존 type/interface/schema shape를 before/after 기준으로 새로 선언·변경·복제·파생한다. 유일한 선언을 owner와 함께 옮기며 선언 수·field type·optionality·의미를 보존하고 symbol 이름·JSDoc만 바꾸면 제외한다.",
 		reviewWith: ["types-document-custom-types-and-shapes"],
 	},
 } as const;
@@ -288,7 +288,7 @@ const cssRuleRouting = {
 	},
 	"composition-keep-classes-single-purpose": {
 		appliesWhen:
-			"base class 이름에 상태·variant 의미를 합치거나 한 class에 독립 시각 책임을 추가·재사용·분리한다. 책임 보존 owner prefix/single-purpose rename은 제외한다.",
+			"기존 class가 base와 state·variant 책임을 함께 갖거나 독립 시각 책임을 추가·재사용·분리한다. 기존 결합 책임을 분리하지 않고 처음부터 새 single-purpose pair를 만들거나 책임 보존 rename만 하면 제외한다.",
 		reviewWith: [],
 	},
 	"composition-prefer-ui-wrapper-prop-types": {
@@ -356,11 +356,12 @@ const cssRuleRouting = {
 	},
 	"values-always-provide-css-variable-fallbacks": {
 		appliesWhen:
-			"`var(--*)`를 추가·수정하거나 theme provider·third-party wrapper·optional token·overlay처럼 변수 주입이 보장되지 않는 경계를 스타일링한다.",
+			"실제 semantic delta에 `var(--*)` 사용이 있거나 token이 주입 보장 없는 경계를 지난다. 아직 diff에 없는 변수를 규칙 적용 목적으로 가정·도입하거나 새 stylesheet만 만드는 것은 제외한다.",
 		reviewWith: [],
 	},
 	"values-keep-layout-intent-explicit": {
-		appliesWhen: "`sticky`·`fixed`, `z-index`, 강제 width·height 또는 부모·자식의 layout responsibility를 추가·변경한다.",
+		appliesWhen:
+			"`sticky`·`fixed`, `z-index`, 강제 width·height 또는 부모·자식 layout 책임을 추가·변경한다. 같은 element의 기존 `display`·spacing을 동작 변화 없이 base와 modifier 사이에서 옮기기만 하면 제외한다.",
 		reviewWith: [],
 	},
 	"values-separate-domain-state-modifiers-from-dom-interaction-states": {
@@ -455,7 +456,7 @@ const reactRuleRouting = {
 	},
 	"ownership-use-consistent-file-and-symbol-naming": {
 		appliesWhen:
-			"React/TSX 파일 자체·컴포넌트·exported symbol·공용 설정의 이름을 새로 정하거나 바꾸며 casing, ui/wg prefix 또는 config key naming을 판단한다. local query·mutation binding만 바꾸면 제외한다.",
+			"React/TSX 파일·컴포넌트·exported symbol·공용 설정 이름을 정하거나 바꾸거나, React 작업에서 sibling `.ts` support 파일이나 exported support symbol을 만들거나 옮긴다. local query·mutation만이면 제외한다.",
 		reviewWith: [],
 	},
 	"screen-avoid-premature-abstraction": {
@@ -482,7 +483,8 @@ const reactRuleRouting = {
 		reviewWith: [],
 	},
 	"screen-keep-route-flow-visible": {
-		appliesWhen: "route entry의 search·navigate·query·mutation·effect·section 조립을 이동·분리하거나 화면 흐름을 재구성한다.",
+		appliesWhen:
+			"route entry의 search·navigate·query·mutation·effect·section 조립을 이동·분리하거나 재구성한다. 순수 type·payload builder만 sibling `.ts`로 옮기고 이 orchestration을 그대로 두면 제외한다.",
 		reviewWith: ["screen-extract-local-section-components-for-runtime-boundaries", "screen-move-pure-support-code-out-of-entry-files"],
 	},
 	"screen-move-pure-support-code-out-of-entry-files": {
@@ -1853,6 +1855,7 @@ test("React progressive metadata and all 42 rule routes match Appendix B exactly
 		}
 	}
 	const ownershipNamingRule = await readFile(path.join(skillPaths.rulesDir, "ownership-use-consistent-file-and-symbol-naming.md"), "utf8");
+	assert.match(ownershipNamingRule, /^appliesWhen:[^\n]+바꾸거나,[^\n]+sibling `\.ts` support 파일/m);
 	assert.match(
 		ownershipNamingRule,
 		/local query·mutation binding[^\n]+state-name-query-and-mutation-bindings-consistently|state-name-query-and-mutation-bindings-consistently[^\n]+local query·mutation binding/i,
@@ -2193,6 +2196,13 @@ test("CSS progressive metadata and rule routing match Appendix C exactly", async
 		"utf8",
 	);
 	assert.match(wrapperStylingRule, /실제 `Ui\*` React wrapper[^\n]+CSS-only[^\n]+selector-target-third-party-dom-from-owned-roots/i);
+	const singlePurposeRule = await readFile(path.join(skillPaths.rulesDir, "composition-keep-classes-single-purpose.md"), "utf8");
+	assert.match(singlePurposeRule, /^appliesWhen:[^\n]+기존 결합 책임[^\n]+처음부터 새 single-purpose pair/m);
+	const layoutIntentRule = await readFile(path.join(skillPaths.rulesDir, "values-keep-layout-intent-explicit.md"), "utf8");
+	assert.match(layoutIntentRule, /^appliesWhen:[^\n]+`display`·spacing[^\n]+동작 변화 없이/m);
+	const fallbackRule = await readFile(path.join(skillPaths.rulesDir, "values-always-provide-css-variable-fallbacks.md"), "utf8");
+	assert.match(fallbackRule, /^appliesWhen:[^\n]+실제 semantic delta[^\n]+`var\(--\*\)`[^\n]+아직 diff에 없는 변수/m);
+	assert.match(fallbackRule, /실제 diff에 새 CSS variable 사용[^\n]+요청 여부와 무관하게[^\n]+다시 선택/i);
 
 	const template = await readFile(path.join(skillPaths.rulesDir, "_template.md"), "utf8");
 	assert.match(template, /^appliesWhen: /m);
@@ -2342,6 +2352,10 @@ test("routing activation and generated indexes use only the changed semantic del
 		assert.match(source, /변경 (?:semantic )?delta/i);
 		assert.match(source, /추가·삭제·이동|추가·삭제·이동·이름 변경/);
 		assert.match(source, /read-only|byte-equivalent/);
+		assert.match(source, /삭제\+추가|삭제·추가/);
+		assert.match(source, /다시 세지|별도.*(?:추가|변경|재선언)/);
+		assert.match(source, /N\/A rule|N\/A 규칙/);
+		assert.match(source, /최소 semantic patch|최소.*semantic.*patch/i);
 	}
 
 	const typescriptDocument = await readSkillDocument(getSkillPaths("typescript", realSkillRootDir));
@@ -2430,8 +2444,11 @@ test("CSS SKILL.md is a compact full-index router with exact receipts and compan
 	assert.match(body, /고정점[^\n]+Selected contract[^\n]+Expanded 원문[^\n]+구현·리뷰 기준/i);
 	assert.ok(body.indexOf("contracts/<stable-id>.md") < body.indexOf("고정점"));
 	assert.match(body, /scope drift/i);
-	assert.match(body, /TS\/TSX class contract, wrapper Props 또는 style import/);
-	assert.match(body, /TSX.*component|component.*TSX/i);
+	assert.match(body, /TypeScript type·import·helper·wrapper Props.*convention-typescript/);
+	assert.match(body, /TSX.*className.*convention-react.*convention-typescript.*반드시 활성화/i);
+	assert.doesNotMatch(body, /className.*selector와 함께/i);
+	assert.match(body, /Selected.*0.*activation.*유지/i);
+	assert.match(body, /TSX.*(?:component|JSX)|(?:component|JSX).*TSX/i);
 	assert.match(body, /state.*convention-react|convention-react.*state/i);
 	assert.match(body, /convention-typescript/);
 	assert.match(body, /convention-audit/);

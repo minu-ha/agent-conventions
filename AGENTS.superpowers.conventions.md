@@ -122,7 +122,7 @@ framework/project 고유 규칙은 해당 skill이나 consuming project의 proje
 
 ## Progressive Activation Matrix
 
-확장자만으로 결정하지 않고 실제 ownership과 changed surface를 기준으로 아래 closure를 적용합니다.
+확장자만으로 결정하지 않고 실제 ownership과 changed surface를 기준으로 아래 closure를 적용합니다. 파일 이동 안의 의미가 같은 선언·본문·class·value는 diff에 삭제+추가로 보여도 별도 내용 변경으로 다시 세지 않고, N/A rule의 optional pattern을 새로 도입해 스스로 활성화하지 않습니다. 요청을 충족하는 최소 semantic patch를 유지합니다.
 
 | Changed surface | Activate |
 | --- | --- |

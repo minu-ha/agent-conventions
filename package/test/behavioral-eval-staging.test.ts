@@ -362,6 +362,11 @@ test("initial artifacts preserve the existing run coordinate and completely seal
 			fullHandbook.envelope.dispatchEnvelope.generatedIndexDigests,
 		);
 		assert.match(String(fullHandbook.request.armPolicy.generatedIndexDigestContract), /all three.*activatedSkills.*every routing pass/i);
+		assert.match(
+			fullHandbook.request.activationPolicy,
+			/changed TSX.*activates react and typescript.*styling contract.*activates css.*byte-equivalent.*does not activate css.*pure CSS.*pure TypeScript/is,
+		);
+		assert.match(fullHandbook.request.activationPolicy, /requested semantic delta.*do not introduce optional patterns/i);
 		assert.doesNotMatch(String(fullHandbook.request.armPolicy.promptSuffix), /also return driftReceipt/i);
 		assert.match(String(fullHandbook.request.armPolicy.promptSuffix), /initial-stage.*top-level.*driftReceipt.*null/i);
 

@@ -14,7 +14,7 @@ metadata:
 
 수정 전 요청·계획·diff를 한 줄로 고정한다. React/TSX render, screen·route-local 경계, handler, state·query, React support code 변경 시 활성화한다.
 
-변경 semantic delta만 판정한다. 추가·삭제·이동·이름 변경·재선언 surface는 포함하고, read-only 문맥과 owner 이동에 byte-equivalent로 따라온 import·`className`·style import는 제외한다.
+변경 semantic delta만 판정한다. 추가·삭제·이동·이름 변경·재선언 surface는 포함하고, read-only 문맥과 owner 이동에 byte-equivalent로 따라온 import·`className`·style import는 제외한다. 파일 이동에서 이름·shape·동작이 같은 내부 선언·본문·class·value는 diff에 삭제+추가로 보여도 별도 추가·변경·재선언으로 다시 세지 않는다. N/A rule의 optional pattern을 새로 도입해 스스로 활성화하지 말고 요청을 충족하는 최소 semantic patch만 구현한다.
 
 React면 `convention-typescript`는 필수다. class contract·stylesheet·styling surface 변경 때만 `convention-css`를 활성화하고, 조건이 없으면 CSS는 비활성화한다. route·search·navigation·browser test는 전용 skill을 판정한다.
 

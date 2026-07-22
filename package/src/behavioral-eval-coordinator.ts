@@ -6,6 +6,7 @@ import {promisify} from "node:util";
 
 import {
 	assertBehavioralFullHandbookIdentityDictionary,
+	createBehavioralActivationPolicy,
 	createBehavioralChildPayloadContract,
 	createBehavioralEvalDispatchEnvelope,
 	type BehavioralEvalDispatchEnvelope,
@@ -792,10 +793,7 @@ const createChildRequest = (args: CreateChildRequestArgs): BehavioralChildReques
 		task,
 		files: asStringArray(files, `protocol.scenarios.${scenarioId}.files`),
 		virtualFiles,
-		activationPolicy:
-			arm === "no-skill"
-				? "This observational arm activates no convention skill and reads no repository convention document."
-				: `Infer React, TypeScript, and CSS activation only from the task and changed-file surfaces. Resolve every repository-relative read under ${repositoryRoot}. Inspect candidate SKILL.md entrypoints only as the arm read policy allows; do not assume a domain list or expected partition.`,
+		activationPolicy: createBehavioralActivationPolicy(arm, repositoryRoot),
 		candidateSkillEntrypoints: arm === "no-skill" ? [] : progressiveSkillNames.map((skillName) => `skill/${skillName}/SKILL.md`),
 		armPolicy,
 		identityDictionary,

@@ -93,7 +93,7 @@ child와 reviewer의 `declaredLoadedFiles`는 선언 telemetry입니다. exact s
 | --- | --- | --- |
 | `astro` | non-progressive | extends `typescript`, `css` |
 | `react` | progressive | required `typescript`; conditional `css` |
-| `css` | progressive | conditional `typescript` |
+| `css` | progressive | conditional `typescript`; project router closes TSX to `react` |
 | `convention-audit` | non-progressive local | conditional `react`, `typescript`, `css` |
 | `figma-visual-parity` | non-progressive | extends `react`, `css`, `playwright-test` |
 | `nestjs` | non-progressive | extends `typescript` |

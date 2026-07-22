@@ -304,6 +304,11 @@ test("coordinator persists a deterministic short dispatch and sealed child reque
 			"skill/typescript/SKILL.md",
 			"skill/css/SKILL.md",
 		]);
+		assert.match(
+			fullHandbook.request.activationPolicy,
+			/changed TSX.*activates react and typescript.*styling contract.*activates css.*byte-equivalent.*does not activate css.*pure CSS.*pure TypeScript/is,
+		);
+		assert.match(fullHandbook.request.activationPolicy, /requested semantic delta.*do not introduce optional patterns/i);
 		assert.deepEqual(
 			(fullHandbook.request.armPolicy as Record<string, unknown>).currentGeneratedIndexDigests,
 			fullHandbook.envelope.dispatchEnvelope.generatedIndexDigests,

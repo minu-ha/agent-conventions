@@ -4,6 +4,7 @@
 현재 CSS 가이드는 5개 섹션의 21개 rule 파일로 구성되어 있습니다.
 기본 진입점은 compact [SKILL.md](./SKILL.md) router, generated [RULES_INDEX.md](./RULES_INDEX.md), selected `contracts/*.md`이며, 전체 [AGENTS.md](./AGENTS.md)는 opt-in handbook입니다.
 기본 스타일 선택은 plain `*.css`와 전역 고유 클래스명입니다.
+TSX `className`·style import·styling contract까지 바꾸는 작업은 project activation closure로 `react`와 `typescript`를 함께 활성화하고, 순수 CSS 작업은 CSS만 활성화합니다. CSS metadata의 direct conditional companion은 TypeScript이며 React closure는 compact project router와 `SKILL.md`가 소유합니다.
 [pressure-tests.md](./pressure-tests.md)는 CSS skill 품질 회귀를 점검하는 synthetic/real-world pressure scenario 모음입니다.
 
 ## 구조

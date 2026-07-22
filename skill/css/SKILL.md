@@ -14,9 +14,9 @@ metadata:
 
 수정 전 요청·계획 파일·diff를 한 줄로 고정한다. stylesheet, selector, token·CSS variable, `className` contract, visual styling 변경 시 활성화한다.
 
-판정은 변경 semantic delta만 본다. 추가·삭제·이동·이름 변경·재선언 surface는 포함한다. TSX owner 이동에 byte-equivalent로 따라온 `className`, style import, 기존 stylesheet는 CSS 근거가 아니다.
+판정은 변경 semantic delta만 본다. 추가·삭제·이동·이름 변경·재선언 surface는 포함한다. TSX owner 이동에 byte-equivalent로 따라온 `className`, style import, 기존 stylesheet는 CSS 근거가 아니다. 파일 이동에서 이름·shape·동작이 같은 내부 선언·본문·class·value는 diff에 삭제+추가로 보여도 별도 추가·변경·재선언으로 다시 세지 않는다. N/A rule의 optional pattern을 새로 도입해 스스로 활성화하지 말고 요청을 충족하는 최소 semantic patch만 구현한다.
 
-TSX의 component 구조·render·state·handler 자체는 `convention-react`로 보내고, TypeScript type·import·helper 계약은 `convention-typescript`로 보낸다. 특히 `TS/TSX class contract, wrapper Props 또는 style import를 함께 변경한다.`면 conditional TypeScript companion을 활성화한다. 순수 CSS 작업에는 TypeScript를 자동 활성화하지 않는다.
+TSX `className`·style import·styling contract를 추가·삭제·이름 변경하면 JSX 구조·state·handler가 그대로이고 기존 `clsx` import를 재사용해도 `convention-react`와 `convention-typescript`를 반드시 활성화한다. React Selected가 0이어도 activation은 유지한다. 순수 CSS 작업만 두 companion을 비활성화할 수 있다. TypeScript type·import·helper·wrapper Props 변경은 `convention-typescript`가 담당한다.
 
 ## 2. Index scan
 

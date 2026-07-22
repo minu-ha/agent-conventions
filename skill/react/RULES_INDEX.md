@@ -1,10 +1,10 @@
 # React 컨벤션 Rule Index
 
-> 모든 entry를 변경 semantic delta로 스캔합니다. 추가·삭제·이동·재선언은 포함하고 read-only 문맥은 제외합니다. Selected/Unknown guidance path는 `contracts/<stable-id>.md`입니다.
+> 모든 entry를 변경 semantic delta로 스캔합니다. 추가·삭제·이동·재선언은 포함하고 read-only 문맥은 제외합니다. 파일 이동의 동일 내부 선언은 diff에 삭제+추가로 보여도 별도 추가·변경·재선언으로 다시 세지 않습니다. N/A rule을 스스로 활성화하지 말고 최소 semantic patch만 구현합니다. Selected/Unknown guidance path는 `contracts/<stable-id>.md`입니다.
 
 - Skill: `react`
 - Version: `1.0.0`
-- Routing digest: `sha256:f229054372cd355e6ca0a1828ecc98cb0341ab33f72a3a087591125e6d6f685b`
+- Routing digest: `sha256:624e51ea96f2dea6b775450def20d36142d70ffcf7960cf5169eacdf0ebb57c6`
 - Local rules: 42
 
 ## Direct Companions
@@ -21,7 +21,7 @@
 - `R03` · `ownership-layer-component-boundaries` · 컴포넌트를 ui·widget·route-local 중 어느 소유 레이어에 둘지 결정하거나 레이어 사이에서 이동·공용화한다. · reviewWith: `css/naming-separate-local-and-route-style-scopes`, `ownership-place-route-local-files-by-scope`
 - `R04` · `ownership-place-route-local-files-by-scope` · route 전용 컴포넌트·스타일·순수 로직을 새로 만들거나 \`-local\`과 route sibling \`.ts\` 사이에서 위치를 바꾼다. · reviewWith: `css/naming-separate-local-and-route-style-scopes`, `css/organization-keep-style-files-owned-by-one-component-or-route`
 - `R05` · `ownership-shared-config-entry-points` · 둘 이상의 화면이 쓰는 상수·설정·순수 함수를 추가·이동하거나 leaf 파일에 중복 선언된 공용 값을 정리한다. · reviewWith: `typescript/naming-centralize-shared-config-namespaces`, `typescript/naming-preserve-config-origin-with-chained-access`
-- `R06` · `ownership-use-consistent-file-and-symbol-naming` · React/TSX 파일 자체·컴포넌트·exported symbol·공용 설정의 이름을 새로 정하거나 바꾸며 casing, ui/wg prefix 또는 config key naming을 판단한다. local query·mutation binding만 바꾸면 제외한다.
+- `R06` · `ownership-use-consistent-file-and-symbol-naming` · React/TSX 파일·컴포넌트·exported symbol·공용 설정 이름을 정하거나 바꾸거나, React 작업에서 sibling \`.ts\` support 파일이나 exported support symbol을 만들거나 옮긴다. local query·mutation만이면 제외한다.
 
 ### 2. Typing and Contracts (2)
 
@@ -49,7 +49,7 @@
 - `R19` · `screen-extract-local-section-components-for-runtime-boundaries` · route-local section component를 새로 추출하거나 기존 section이 async·state·provider·interaction·library·performance 경계를 소유하는지 바꾼다.
 - `R20` · `screen-extract-utilities-selectively` · 화면 계산·변환·preset·option·column meta를 별도 함수/support module로 추출·이동하거나 support 경계를 바꾼다. query \`select\` 내부 shaping만이면 제외한다. · reviewWith: `screen-move-pure-support-code-out-of-entry-files`, `typescript/functions-extract-helpers-only-when-the-boundary-is-real`
 - `R21` · `screen-keep-derived-values-close` · response·state·search·props의 오리진을 끊는 alias·flag·표시값을 넓은 screen scope에 추가·이동·제거하거나 \`let\`/\`push\` 조립을 바꾼다.
-- `R22` · `screen-keep-route-flow-visible` · route entry의 search·navigate·query·mutation·effect·section 조립을 이동·분리하거나 화면 흐름을 재구성한다. · reviewWith: `screen-extract-local-section-components-for-runtime-boundaries`, `screen-move-pure-support-code-out-of-entry-files`
+- `R22` · `screen-keep-route-flow-visible` · route entry의 search·navigate·query·mutation·effect·section 조립을 이동·분리하거나 재구성한다. 순수 type·payload builder만 sibling \`.ts\`로 옮기고 이 orchestration을 그대로 두면 제외한다. · reviewWith: `screen-extract-local-section-components-for-runtime-boundaries`, `screen-move-pure-support-code-out-of-entry-files`
 - `R23` · `screen-move-pure-support-code-out-of-entry-files` · route entry에 여러 줄 pure helper·preset·option·화면 전용 type이 쌓이거나 추출한 support code의 목적지 파일을 정한다. · reviewWith: `docs-require-jsdoc-on-key-declarations`
 
 ### 6. Events and Interaction Flow (3)

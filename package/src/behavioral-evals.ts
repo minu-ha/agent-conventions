@@ -606,6 +606,14 @@ const declaredBehavioralRuntime = {
 } as const;
 
 /**
+ * @api compact consumer router와 같은 oracle-free activation·minimal-delta policy를 child에게 공개
+ */
+export const createBehavioralActivationPolicy = (arm: string, repositoryRoot: string): string =>
+	arm === "no-skill"
+		? "This observational arm activates no convention skill and reads no repository convention document."
+		: `Apply this generic activation matrix before rule selection: any changed TSX or React ownership, hook, state, or event surface activates react and typescript; a changed stylesheet, selector, token, className, style import, or styling contract also activates css; byte-equivalent styling merely carried by an owner move does not activate css; pure CSS does not activate react or typescript unless its TSX class or wrapper contract also changes; pure TypeScript does not activate react or css. Infer partitions only from the task and virtual changed-file surfaces. Resolve every repository-relative read under ${repositoryRoot}. Inspect candidate SKILL.md entrypoints only as the arm read policy allows; do not assume an expected domain list or rule partition. Implement only the requested semantic delta and do not introduce optional patterns solely to make another rule applicable.`;
+
+/**
  * @api strict validator와 같은 child-owned payload shape를 request에 공개
  */
 export const createBehavioralChildPayloadContract = (): Record<string, unknown> => ({

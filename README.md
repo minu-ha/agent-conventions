@@ -48,7 +48,7 @@
 
 - `metadata.json.companions`의 `required`는 owner와 항상 함께 활성화하고, `conditional`은 `appliesWhen`이 실제 변경 surface와 맞을 때만 활성화합니다.
 - `react`는 `typescript`를 required, `css`를 styling surface 조건부 companion으로 둡니다.
-- `css`는 TypeScript class contract를 함께 바꾸는 경우 `typescript`를 조건부 companion으로 둡니다.
+- `css` metadata는 TypeScript를 direct conditional companion으로 둡니다. TSX class/style contract의 React 활성화는 compact project router와 CSS `SKILL.md`의 activation closure가 담당하며, 순수 CSS면 둘 다 활성화하지 않습니다.
 - non-progressive `convention-audit`는 실제 변경 surface에 따라 `react`, `typescript`, `css`를 조건부 progressive companion으로 활성화합니다.
 - 아직 progressive migration을 하지 않은 `astro`, `nestjs`, `tanstack-route`, `playwright-test`, `figma-visual-parity`는 `metadata.json.extends` 호환 계약을 유지합니다.
 
@@ -66,7 +66,7 @@ framework 공통 규칙은 companion skill이 소유하고, framework 또는 con
 | --- | --- | --- |
 | `astro` | non-progressive | extends `typescript`, `css` |
 | `react` | progressive | required `typescript`; conditional `css` |
-| `css` | progressive | conditional `typescript` |
+| `css` | progressive | conditional `typescript`; project router closes TSX to `react` |
 | `convention-audit` | non-progressive local | conditional `react`, `typescript`, `css` |
 | `figma-visual-parity` | non-progressive | extends `react`, `css`, `playwright-test` |
 | `nestjs` | non-progressive | extends `typescript` |
@@ -99,7 +99,7 @@ non-progressive owner는 자신의 `SKILL.md`가 안내하는 local `AGENTS.md`/
 
 ## Progressive Activation Matrix
 
-파일 확장자는 최소 신호일 뿐이며 실제 ownership과 changed surface를 함께 판정합니다.
+파일 확장자는 최소 신호일 뿐이며 실제 ownership과 changed surface를 함께 판정합니다. 파일 이동 안의 의미가 같은 선언·본문·class·value는 diff에 삭제+추가로 보여도 별도 내용 변경으로 다시 세지 않고, N/A rule의 optional pattern을 새로 도입해 스스로 활성화하지 않습니다. 요청을 충족하는 최소 semantic patch를 유지합니다.
 
 | Changed surface | Activate |
 | --- | --- |

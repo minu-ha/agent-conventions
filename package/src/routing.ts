@@ -419,7 +419,7 @@ export const generateRulesIndexMarkdown = (document: LoadedSkillDocument, direct
 	const lines = [
 		`# ${escapeMarkdownText(document.metadata.title)} Rule Index`,
 		"",
-		"> 모든 entry를 변경 semantic delta로 스캔합니다. 추가·삭제·이동·재선언은 포함하고 read-only 문맥은 제외합니다. Selected/Unknown guidance path는 `contracts/<stable-id>.md`입니다.",
+		"> 모든 entry를 변경 semantic delta로 스캔합니다. 추가·삭제·이동·재선언은 포함하고 read-only 문맥은 제외합니다. 파일 이동의 동일 내부 선언은 diff에 삭제+추가로 보여도 별도 추가·변경·재선언으로 다시 세지 않습니다. N/A rule을 스스로 활성화하지 말고 최소 semantic patch만 구현합니다. Selected/Unknown guidance path는 `contracts/<stable-id>.md`입니다.",
 		"",
 		`- Skill: ${formatInlineCode(document.skillName)}`,
 		`- Version: ${formatInlineCode(document.metadata.version)}`,

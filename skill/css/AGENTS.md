@@ -12,7 +12,7 @@
 
 ## 개요
 
-에이전트 협업 팀을 위한 CSS 코딩 컨벤션입니다. 이 가이드는 plain CSS를 기본으로 한 전역 고유 네이밍, `rt_/wg_/ui_/loc_` owner scope, 예측 가능한 TSX class 조합, 평평한 selector, wrapper 기준 서드파티 스타일링, 토큰화된 값, 절제된 stylesheet 구성을 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, 기본 경로는 SKILL.md router에서 RULES_INDEX.md 전체를 scan하고 selected contracts/*.md를 읽되 CRITICAL 또는 근거가 더 필요한 rule만 full source로 확장하는 방식입니다. AGENTS.md는 명시적으로 요청할 때만 읽는 opt-in full handbook입니다.
+에이전트 협업 팀을 위한 CSS 코딩 컨벤션입니다. 이 가이드는 plain CSS를 기본으로 한 전역 고유 네이밍, `rt_/wg_/ui_/loc_` owner scope, 예측 가능한 TSX class 조합, 평평한 selector, wrapper 기준 서드파티 스타일링, 토큰화된 값, 절제된 stylesheet 구성을 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, 기본 경로는 SKILL.md router에서 RULES_INDEX.md 전체를 scan하고 selected contracts/*.md를 읽되 CRITICAL 또는 근거가 더 필요한 rule만 full source로 확장하는 방식입니다. AGENTS.md는 명시적으로 요청할 때만 읽는 opt-in full handbook입니다. TSX styling contract는 project activation closure에서 React와 TypeScript를 함께 활성화합니다.
 
 이 가이드는 local CSS 컨벤션 규칙만 담고 있습니다. companion skill은 아래 mode와 appliesWhen에 따라 활성화합니다.
 
@@ -380,11 +380,11 @@ modifier는 상태나 반복 variant를 표현할 때만 사용합니다.
 
 **Rule:** `C09` · `composition-keep-classes-single-purpose`
 
-**Applies when:** base class 이름에 상태·variant 의미를 합치거나 한 class에 독립 시각 책임을 추가·재사용·분리한다. 책임 보존 owner prefix/single-purpose rename은 제외한다.
+**Applies when:** 기존 class가 base와 state·variant 책임을 함께 갖거나 독립 시각 책임을 추가·재사용·분리한다. 기존 결합 책임을 분리하지 않고 처음부터 새 single-purpose pair를 만들거나 책임 보존 rename만 하면 제외한다.
 
 **Impact: HIGH (stops one class from carrying both base styling and multiple state or structural meanings at once)**
 
-하나의 클래스는 하나의 시각적 책임만 가져야 합니다. 상태나 변형이 필요하면 modifier를 별도로 두고, 기본 클래스에 모든 의미를 몰아넣지 않습니다. 스타일 선언과 책임을 그대로 보존한 responsibility-preserving owner prefix 수정이나 single-purpose class rename만으로는 이 규칙을 선택하지 않습니다.
+하나의 클래스는 하나의 시각적 책임만 가져야 합니다. 기존 클래스가 base와 state·variant 책임을 함께 가질 때 분리하고, 한 클래스를 독립된 여러 시각 책임에 재사용하지 않습니다. 처음부터 single-purpose base와 modifier를 별도로 만드는 작업은 결합 책임을 해소하는 변경이 없으므로 이 규칙을 선택하지 않습니다. 스타일 책임을 보존한 owner prefix 수정, single-purpose rename, one-off modifier를 역할명 class로 바꾸기만 하는 경우도 대상이 아닙니다.
 
 **Incorrect (상태 의미를 별도 클래스 역할처럼 합쳐 버림):**
 
@@ -710,11 +710,11 @@ rich text 예외는 raw element styling에만 적용됩니다. `.owner__prose .o
 
 **Rule:** `C16` · `values-keep-layout-intent-explicit`
 
-**Applies when:** \`sticky\`·\`fixed\`, \`z-index\`, 강제 width·height 또는 부모·자식의 layout responsibility를 추가·변경한다.
+**Applies when:** \`sticky\`·\`fixed\`, \`z-index\`, 강제 width·height 또는 부모·자식 layout 책임을 추가·변경한다. 같은 element의 기존 \`display\`·spacing을 동작 변화 없이 base와 modifier 사이에서 옮기기만 하면 제외한다.
 
 **Impact: MEDIUM-HIGH (makes sticky, fixed, and box responsibilities understandable without reverse-engineering the DOM)**
 
-레이아웃 의도는 클래스명과 선언에서 즉시 확인 가능해야 합니다. `position`, `width`, `height` 강제는 최소화하고 부모와 자식의 레이아웃 책임을 분리하며, `sticky`나 `fixed`를 쓸 때는 기준 컨테이너와 `z-index` 의도를 주석으로 남깁니다.
+레이아웃 의도는 클래스명과 선언에서 즉시 확인 가능해야 합니다. `position`, `width`, `height` 강제는 최소화하고 부모와 자식의 레이아웃 책임을 분리하며, `sticky`나 `fixed`를 쓸 때는 기준 컨테이너와 `z-index` 의도를 주석으로 남깁니다. 같은 DOM element의 base와 modifier 사이에서 기존 `display`나 spacing 선언을 재배치하되 position, z-index, 강제 geometry, 부모·자식 책임과 실제 layout 동작이 그대로라면 이 규칙은 N/A입니다.
 
 **Incorrect (레이아웃 강제가 많고 기준 설명이 없음):**
 
@@ -748,11 +748,12 @@ rich text 예외는 raw element styling에만 적용됩니다. `.owner__prose .o
 
 **Rule:** `C17` · `values-always-provide-css-variable-fallbacks`
 
-**Applies when:** \`var\(--\*\)\`를 추가·수정하거나 theme provider·third-party wrapper·optional token·overlay처럼 변수 주입이 보장되지 않는 경계를 스타일링한다.
+**Applies when:** 실제 semantic delta에 \`var\(--\*\)\` 사용이 있거나 token이 주입 보장 없는 경계를 지난다. 아직 diff에 없는 변수를 규칙 적용 목적으로 가정·도입하거나 새 stylesheet만 만드는 것은 제외한다.
 
 **Impact: HIGH (prevents missing tokens from degrading styles unpredictably when variables are absent)**
 
-CSS 변수 `var(--*)`를 사용할 때는 토큰 존재가 보장되지 않는 경계에서 fallback 값을 함께 지정합니다. theme provider, 서드파티 wrapper, 선택적 토큰, 임시 overlay처럼 변수가 빠질 수 있는 surface에서는 안전한 기본값을 둬야 합니다.   
+CSS 변수 `var(--*)`를 사용할 때는 토큰 존재가 보장되지 않는 경계에서 fallback 값을 함께 지정합니다. theme provider, 서드파티 wrapper, 선택적 토큰, 임시 overlay처럼 변수가 빠질 수 있는 surface에서는 안전한 기본값을 둬야 합니다. 요청이나 기존 token contract에 없는 CSS variable을 이 규칙 때문에 새로 발명하지 않으며, 새 stylesheet나 class를 만든다는 사실만으로 이 규칙을 선택하지 않습니다.
+다만 실제 diff에 새 CSS variable 사용이 들어오면, 요청 여부와 무관하게 이 규칙을 다시 선택하고 주입 보장·fallback을 검사합니다.
 반대로 프로젝트 전역에서 반드시 주입되는 core design token이라면, 누락을 빨리 드러내기 위해 fallback을 생략할 수도 있습니다.
 
 **Incorrect (존재 보장이 없는 토큰을 fallback 없이 사용):**

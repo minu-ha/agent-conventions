@@ -7,6 +7,7 @@ import {promisify} from "node:util";
 import {scoreBehavioralEvalRun} from "./behavioral-eval-coordinator.js";
 import {
 	assertBehavioralFullHandbookIdentityDictionary,
+	createBehavioralActivationPolicy,
 	createBehavioralChildPayloadContract,
 	createBehavioralEvalDispatchEnvelope,
 	type BehavioralEvalDispatchEnvelope,
@@ -827,11 +828,6 @@ const getIdentityDictionary = (protocol: JsonObject, arm: string): Record<string
 	);
 };
 
-const getActivationPolicy = (arm: string, repositoryRoot: string): string =>
-	arm === "no-skill"
-		? "This observational arm activates no convention skill and reads no repository convention document."
-		: `Infer React, TypeScript, and CSS activation only from this stage task and virtual changed-file surfaces. Resolve every repository-relative read under ${repositoryRoot}; do not assume an expected domain or rule partition.`;
-
 const getCandidateEntrypoints = (arm: string): string[] =>
 	arm === "no-skill" ? [] : progressiveSkillNames.map((skillName) => `skill/${skillName}/SKILL.md`);
 
@@ -989,7 +985,7 @@ export const createStagedInitialArtifacts = async (args: CreateStagedInitialArti
 		task: initialTask,
 		files: initialFiles,
 		virtualFiles,
-		activationPolicy: getActivationPolicy(args.arm, repositoryDir),
+		activationPolicy: createBehavioralActivationPolicy(args.arm, repositoryDir),
 		candidateSkillEntrypoints: getCandidateEntrypoints(args.arm),
 		armPolicy: getApprovedArmPolicy(protocol, args.arm, "initial"),
 		identityDictionary: getIdentityDictionary(protocol, args.arm),
@@ -1428,7 +1424,7 @@ export const createStagedFollowupArtifacts = async (args: CreateStagedFollowupAr
 		files: finalFiles,
 		filesAdded,
 		virtualFiles,
-		activationPolicy: getActivationPolicy(seal.arm, verifiedInitial.envelope.repositoryDir),
+		activationPolicy: createBehavioralActivationPolicy(seal.arm, verifiedInitial.envelope.repositoryDir),
 		candidateSkillEntrypoints: getCandidateEntrypoints(seal.arm),
 		armPolicy: getApprovedArmPolicy(verifiedInitial.protocol, seal.arm, "drift"),
 		identityDictionary: getIdentityDictionary(verifiedInitial.protocol, seal.arm),

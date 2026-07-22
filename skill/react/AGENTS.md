@@ -305,13 +305,13 @@ config.navigation.project_menu_key.dashboard;
 
 **Rule:** `R06` · `ownership-use-consistent-file-and-symbol-naming`
 
-**Applies when:** React/TSX 파일 자체·컴포넌트·exported symbol·공용 설정의 이름을 새로 정하거나 바꾸며 casing, ui/wg prefix 또는 config key naming을 판단한다. local query·mutation binding만 바꾸면 제외한다.
+**Applies when:** React/TSX 파일·컴포넌트·exported symbol·공용 설정 이름을 정하거나 바꾸거나, React 작업에서 sibling \`.ts\` support 파일이나 exported support symbol을 만들거나 옮긴다. local query·mutation만이면 제외한다.
 
 **Requires selected:** `typescript/naming-use-consistent-file-and-symbol-naming` · N/A 불가
 
 **Impact: HIGH (에이전트가 파일을 만들거나 옮길 때 소유 경계와 의도를 분명하게 유지함)**
 
-이 규칙은 React ownership을 드러내는 파일·컴포넌트·exported symbol·공용 설정 이름에 적용합니다. non-exported local symbol은 TypeScript `naming-use-consistent-file-and-symbol-naming`, local query·mutation binding은 React `state-name-query-and-mutation-bindings-consistently`가 담당하므로 그것만 바꾸는 작업에서는 이 규칙을 선택하지 않습니다.
+이 규칙은 React ownership을 드러내는 파일·컴포넌트·exported symbol·공용 설정 이름에 적용합니다. React 작업에서 sibling `.ts` support 파일을 만들거나 local 선언을 named export로 옮기면 target spelling이 유지돼도 선택합니다. non-exported local symbol은 TypeScript `naming-use-consistent-file-and-symbol-naming`, local query·mutation binding은 React `state-name-query-and-mutation-bindings-consistently`가 담당하므로 그것만 바꾸면 N/A입니다.
 
 파일명은 `kebab-case`, 일반 변수와 함수는 `camelCase`, 타입과 컴포넌트는 `PascalCase`를 사용합니다.   
 `const`인지 여부로 별도 casing을 두지 않고, 화면과 모듈 안의 로컬 값은 모두 `camelCase`로 맞춥니다.   
@@ -1488,13 +1488,13 @@ return <UiInput value={selectedNodeContext?.node?.name} />;
 
 **Rule:** `R22` · `screen-keep-route-flow-visible`
 
-**Applies when:** route entry의 search·navigate·query·mutation·effect·section 조립을 이동·분리하거나 화면 흐름을 재구성한다.
+**Applies when:** route entry의 search·navigate·query·mutation·effect·section 조립을 이동·분리하거나 재구성한다. 순수 type·payload builder만 sibling \`.ts\`로 옮기고 이 orchestration을 그대로 두면 제외한다.
 
 **Review with:** `screen-extract-local-section-components-for-runtime-boundaries`, `screen-move-pure-support-code-out-of-entry-files`
 
 **Impact: HIGH (route 파일을 화면의 주 orchestration 지점으로 읽기 쉽게 만듦)**
 
-라우트 엔트리 파일은 화면 흐름이 드러나게 유지합니다. state, API response/mutation, event handler, `useEffect`, 렌더링 조립이 보이도록 두고, 단순 레이아웃 분리만을 위한 조기 컴포넌트화는 기본값으로 삼지 않습니다. runtime boundary를 소유하는 route-local section component는 추출할 수 있지만, route entry는 여전히 search param, navigate, page-level query/mutation, cross-section effect 같은 orchestration을 보여줘야 합니다.
+라우트 엔트리 파일은 화면 흐름이 드러나게 유지합니다. state, API response/mutation, event handler, `useEffect`, 렌더링 조립이 보이도록 두고, 단순 레이아웃 분리만을 위한 조기 컴포넌트화는 기본값으로 삼지 않습니다. runtime boundary를 소유하는 route-local section component는 추출할 수 있지만, route entry는 여전히 search param, navigate, page-level query/mutation, cross-section effect 같은 orchestration을 보여줘야 합니다. 이 orchestration은 건드리지 않고 순수 type, payload builder, preset만 sibling support `.ts`로 옮기는 작업은 `screen-extract-utilities-selectively`와 `screen-move-pure-support-code-out-of-entry-files`가 소유하며 이 규칙은 N/A입니다.
 
 **Incorrect (흐름보다 분해 자체가 목적이 됨):**
 

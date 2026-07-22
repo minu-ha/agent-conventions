@@ -2,7 +2,7 @@
 title: Provide CSS Variable Fallbacks When Token Presence Is Not Guaranteed
 impact: HIGH
 impactDescription: prevents missing tokens from degrading styles unpredictably when variables are absent
-appliesWhen: `var(--*)`를 추가·수정하거나 theme provider·third-party wrapper·optional token·overlay처럼 변수 주입이 보장되지 않는 경계를 스타일링한다.
+appliesWhen: 실제 semantic delta에 `var(--*)` 사용이 있거나 token이 주입 보장 없는 경계를 지난다. 아직 diff에 없는 변수를 규칙 적용 목적으로 가정·도입하거나 새 stylesheet만 만드는 것은 제외한다.
 tags: variables, fallbacks, tokens
 ---
 
@@ -10,7 +10,8 @@ tags: variables, fallbacks, tokens
 
 **Impact: HIGH (prevents missing tokens from degrading styles unpredictably when variables are absent)**
 
-CSS 변수 `var(--*)`를 사용할 때는 토큰 존재가 보장되지 않는 경계에서 fallback 값을 함께 지정합니다. theme provider, 서드파티 wrapper, 선택적 토큰, 임시 overlay처럼 변수가 빠질 수 있는 surface에서는 안전한 기본값을 둬야 합니다.   
+CSS 변수 `var(--*)`를 사용할 때는 토큰 존재가 보장되지 않는 경계에서 fallback 값을 함께 지정합니다. theme provider, 서드파티 wrapper, 선택적 토큰, 임시 overlay처럼 변수가 빠질 수 있는 surface에서는 안전한 기본값을 둬야 합니다. 요청이나 기존 token contract에 없는 CSS variable을 이 규칙 때문에 새로 발명하지 않으며, 새 stylesheet나 class를 만든다는 사실만으로 이 규칙을 선택하지 않습니다.
+다만 실제 diff에 새 CSS variable 사용이 들어오면, 요청 여부와 무관하게 이 규칙을 다시 선택하고 주입 보장·fallback을 검사합니다.
 반대로 프로젝트 전역에서 반드시 주입되는 core design token이라면, 누락을 빨리 드러내기 위해 fallback을 생략할 수도 있습니다.
 
 **Incorrect (존재 보장이 없는 토큰을 fallback 없이 사용):**

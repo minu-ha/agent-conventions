@@ -4,7 +4,8 @@
 
 ## Activation
 
-- 활성화와 rule selection은 현재 작업의 변경 semantic delta만 기준으로 삼는다. 추가·삭제·이동·이름 변경·재선언된 owner/API/selector는 변경 surface다. 반면 diff의 read-only 문맥이나 owner 이동에 byte-equivalent로 따라온 내부 type, import, `className`, style import는 그 자체로 별도 domain 활성화 근거가 아니다.
+- 활성화와 rule selection은 현재 작업의 변경 semantic delta만 기준으로 삼는다. 추가·삭제·이동·이름 변경·재선언된 owner/API/selector는 변경 surface다. 반면 diff의 read-only 문맥이나 owner 이동에 byte-equivalent로 따라온 내부 type, import, `className`, style import는 그 자체로 별도 domain 활성화 근거가 아니다. 파일 이동에서 이름·shape·동작이 같은 내부 선언·본문·class·value는 diff에 삭제+추가로 보여도 별도 추가·변경·재선언으로 다시 세지 않는다.
+- N/A rule의 optional pattern을 새로 도입해 스스로 활성화하지 말고 요청을 충족하는 최소 semantic patch만 구현한다.
 - React, TSX, React hook·state·event·ownership 변경은 `convention-react` + `convention-typescript`를 활성화한다.
 - pure TypeScript의 type·schema·API·helper·config 변경은 `convention-typescript`만 활성화한다.
 - CSS, stylesheet, selector, token, `className`, style import 또는 styling surface를 변경하면 `convention-css`도 활성화한다.

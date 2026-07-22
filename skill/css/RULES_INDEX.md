@@ -1,10 +1,10 @@
 # CSS 컨벤션 Rule Index
 
-> 모든 entry를 변경 semantic delta로 스캔합니다. 추가·삭제·이동·재선언은 포함하고 read-only 문맥은 제외합니다. Selected/Unknown guidance path는 `contracts/<stable-id>.md`입니다.
+> 모든 entry를 변경 semantic delta로 스캔합니다. 추가·삭제·이동·재선언은 포함하고 read-only 문맥은 제외합니다. 파일 이동의 동일 내부 선언은 diff에 삭제+추가로 보여도 별도 추가·변경·재선언으로 다시 세지 않습니다. N/A rule을 스스로 활성화하지 말고 최소 semantic patch만 구현합니다. Selected/Unknown guidance path는 `contracts/<stable-id>.md`입니다.
 
 - Skill: `css`
 - Version: `1.0.0`
-- Routing digest: `sha256:6ac4c965197283a2eeea007a5837f0760f8df25b666658465f177e2026a2a4f1`
+- Routing digest: `sha256:6dacc6f6fbe940681ab2734d8c9281c46ff07be133ee9c9d68de91bddb039d79`
 - Local rules: 21
 
 ## Direct Companions
@@ -26,7 +26,7 @@
 
 - `C07` · `composition-compose-classes-with-clsx` · TSX의 \`className\`을 추가·수정하거나 base class, modifier, optional class를 조합한다.
 - `C08` · `composition-do-not-build-structural-variants-with-modifiers` · spacing·방향·특정 화면의 구조 차이를 \`--modifier\`로 추가하려 하거나 modifier가 반복 가능한 상태 또는 API variant인지 판단한다. · reviewWith: `naming-name-elements-and-modifiers-by-role`
-- `C09` · `composition-keep-classes-single-purpose` · base class 이름에 상태·variant 의미를 합치거나 한 class에 독립 시각 책임을 추가·재사용·분리한다. 책임 보존 owner prefix/single-purpose rename은 제외한다.
+- `C09` · `composition-keep-classes-single-purpose` · 기존 class가 base와 state·variant 책임을 함께 갖거나 독립 시각 책임을 추가·재사용·분리한다. 기존 결합 책임을 분리하지 않고 처음부터 새 single-purpose pair를 만들거나 책임 보존 rename만 하면 제외한다.
 - `C10` · `composition-style-ui-components-through-owned-wrappers` · 실제 \`Ui\*\` React wrapper 사용처·API에서 내부 DOM styling 경계를 정하거나 root \`className\`·slot prop hook을 주입·노출·사용한다. 기존 CSS owner root 아래 third-party selector만 수정하면 제외한다. · reviewWith: `selector-target-third-party-dom-from-owned-roots`
 - `C11` · `composition-prefer-ui-wrapper-prop-types` · \`Ui\*\` wrapper 사용처나 wrapper API에서 Props 타입을 선언·추론·재사용하고 라이브러리 원본 Props 참조를 검토한다.
 
@@ -39,8 +39,8 @@
 
 ### 4. Values, Layout, and Interaction States (4)
 
-- `C16` · `values-keep-layout-intent-explicit` · \`sticky\`·\`fixed\`, \`z-index\`, 강제 width·height 또는 부모·자식의 layout responsibility를 추가·변경한다.
-- `C17` · `values-always-provide-css-variable-fallbacks` · \`var\(--\*\)\`를 추가·수정하거나 theme provider·third-party wrapper·optional token·overlay처럼 변수 주입이 보장되지 않는 경계를 스타일링한다.
+- `C16` · `values-keep-layout-intent-explicit` · \`sticky\`·\`fixed\`, \`z-index\`, 강제 width·height 또는 부모·자식 layout 책임을 추가·변경한다. 같은 element의 기존 \`display\`·spacing을 동작 변화 없이 base와 modifier 사이에서 옮기기만 하면 제외한다.
+- `C17` · `values-always-provide-css-variable-fallbacks` · 실제 semantic delta에 \`var\(--\*\)\` 사용이 있거나 token이 주입 보장 없는 경계를 지난다. 아직 diff에 없는 변수를 규칙 적용 목적으로 가정·도입하거나 새 stylesheet만 만드는 것은 제외한다.
 - `C18` · `values-separate-domain-state-modifiers-from-dom-interaction-states` · app/domain state modifier와 hover·focus·disabled 같은 DOM interaction state를 추가·변경하거나 focus ring에 손댄다. · reviewWith: `composition-do-not-build-structural-variants-with-modifiers`
 - `C19` · `values-tokenize-repeated-visual-values` · 색상·간격·radius·타이포·그림자 등 같은 시각 값이 2회 이상 반복되거나 새 shared visual value를 하드코딩한다. · reviewWith: `values-always-provide-css-variable-fallbacks`
 
