@@ -1,0 +1,43 @@
+{
+  "combinedChildPayloadPath": "/Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v16-candidate-runs/full-handbook--RTE02-owner-placement-css-drift--t1.combined-child-payload.json",
+  "integration": {
+    "coordinatorInput": "/Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v16-candidate-runs/full-handbook--RTE02-owner-placement-css-drift--t1.combined-child-payload.json",
+    "requiredScorerStage": "invoke existing post-hoc score only after combined run validation",
+    "stagedProvenanceBinding": "final run stagedProvenanceSha256 must equal these exact sidecar raw bytes",
+    "validatorShape": "driftReceipt is null for no-skill or exactly {routingTrace,activatedSkills,receipts} for candidate arms"
+  },
+  "provenance": {
+    "agentTarget": "/root/cli-v16-full_handbook-rte02-t1-a1",
+    "combined": {
+      "payloadByteLength": 93149,
+      "payloadSha256": "sha256:e5482010573d9898b1a36ae25f92cd629359e517dc31cfe5000e289f14ebed21",
+      "virtualPatchSha256": "sha256:60bba6a885ff77756b2a00135fde995612d41b4ead08e4d7c7648a786ffebb14"
+    },
+    "followup": {
+      "envelopeSha256": "sha256:ab5b786666c5d6de321c938807866a72973831d45da0c5cfdc35e92a4f8b0a51",
+      "payloadByteLength": 48731,
+      "payloadSha256": "sha256:a4525b20d815946fe4c41178c820b02b82ef7e77e70fe849c30a959d6e6cc259",
+      "promptByteLength": 942,
+      "promptRendererVersion": "behavioral-prompt-renderer-v3-drift",
+      "promptSha256": "sha256:4e5a32ea068d0749e34296c76251c0bd94c663c783e1c16e7ecd98d5d2f4df0b",
+      "requestContentDigest": "sha256:71340974df909f702499ecf7f951dd562d610d16ab7e3d8aa3793063827db7bd",
+      "requestSha256": "sha256:b170868f4d4841cc6b183f1fb26f34c889960111fcc58fdba463af82a625d27f",
+      "virtualPatchSha256": "sha256:19e21c30e4c665d33da018ba08436f641b4a47af91d11dfed67c475799a174de"
+    },
+    "initial": {
+      "envelopeSha256": "sha256:b999d042211b28748cc9bbaed7c90d7dc23d4450b5531cd73661b8e5ac1719b3",
+      "payloadByteLength": 45083,
+      "payloadSha256": "sha256:a8521909d181f0aee5ecbc19456058e132cd60eaa43e2cd0a8551181f851e686",
+      "promptByteLength": 945,
+      "promptRendererVersion": "behavioral-prompt-renderer-v3-initial",
+      "promptSha256": "sha256:7521f40474dca4d6f0d50ccb037fb5a66214dd0eb88c2050752f571ad6d75671",
+      "requestContentDigest": "sha256:2c3eb3388cf37e251d22a248d7c60623dc0cbb54893992ab8f64e9d6938728d2",
+      "requestSha256": "sha256:e4a21e0a8da8f722ade34382c2bbb788fa1371aa4f7c3f367d934d9a552557b4",
+      "virtualPatchSha256": "sha256:77a8c9f3444fae664aec7ce099984ca3181fd56af4c35574ca9611a6c4dbe29a"
+    },
+    "initialSealSha256": "sha256:e7b095660b3e450ca7bf812f3fe9c208da73dd626742553dab64993ae279266d",
+    "mode": "same-agent-followup-v1"
+  },
+  "runId": "full-handbook--RTE02-owner-placement-css-drift--t1",
+  "schemaVersion": 1
+}

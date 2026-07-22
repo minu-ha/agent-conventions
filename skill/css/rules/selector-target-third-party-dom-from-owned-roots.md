@@ -19,6 +19,8 @@ tags: third-party, wrappers, nesting
 - root 없는 `.ant-*` 단독 selector는 금지합니다.
 - `.rt_* .ant-*` 같은 one-line chaining보다 root block 안의 `& .ant-*`를 사용합니다.
 - third-party DOM 경로는 shortest viable chain만 허용합니다.
+- owned root가 이미 instance scope를 제공하고 target class가 직접 식별 가능하면 `.ant-tree` 같은 중간 library root를 반복하지 않습니다.
+- 추가 third-party ancestor는 target ambiguity나 direct-child contract처럼 실제로 필요한 evidence가 있을 때만 허용하고 그 근거를 기록합니다.
 - nested block 안에서 다시 nested block을 열지 않습니다.
 
 이 예외는 third-party DOM path에만 적용됩니다. project-owned class끼리의 깊은 descendant coupling은 여전히 금지입니다.
@@ -35,6 +37,10 @@ tags: third-party, wrappers, nesting
 }
 
 .rt_treePanel__root {
+	& .ant-tree .ant-tree-node-content-wrapper {
+		display: inline-flex;
+	}
+
 	& .ant-tree-node-content-wrapper {
 		& .ant-tree-iconEle {
 			display: inline-flex;

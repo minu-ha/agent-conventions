@@ -104,12 +104,12 @@ build가 `_sections.md` 순서와 rule 정렬 순서를 이용해 생성한다. 
 - optional `reviewWith`
 - stable rule id와 같은 이름의 generated `contracts/<stable-id>.md` 결정 규칙
 
-문서 header에는 전체 local rule 수와 canonical routing/source SHA-256 digest를 함께 생성한다. 각 entry에는 현재 index 안에서만 쓰는 compact ordinal도 붙인다. `requiresSelected` 목록은 초기 token 비용을 늘리지 않도록 index에서 제외하고 selected/unknown contract에서만 읽는다. digest에는 `requiresSelected`, `requiredOnCompletion`, `reviewWith`, full source body hash, contract renderer version이 모두 들어가므로 규범·예시·renderer가 바뀌면 기존 receipt도 stale이다.
+문서 header에는 skill identity와 canonical routing/source SHA-256 digest만 생성한다. local rule 수와 section heading은 전체 entry scan에서 얻는 정보라 중복 렌더하지 않는다. 각 entry에는 현재 index 안에서만 쓰는 compact ordinal을 붙인다. `requiresSelected` 목록은 초기 token 비용을 늘리지 않도록 index에서 제외하고 selected/unknown contract에서만 읽는다. digest에는 `requiresSelected`, `requiredOnCompletion`, `reviewWith`, full source body hash, rule-index renderer version, contract renderer version이 모두 들어가므로 규범·예시·renderer가 바뀌면 기존 receipt도 stale이다.
 
 예시:
 
 ```md
-- `R15` · `composition-named-handlers-over-inline` · TSX event prop에 분기, 비동기 작업, 상태 변경 또는 두 단계 이상의 동작이 들어간다. · reviewWith: `events-keep-handler-flow-inline`, `events-run-user-actions-in-handlers-not-effects`
+- R15 | composition-named-handlers-over-inline | TSX event prop에 분기, 비동기 작업, 상태 변경 또는 두 단계 이상의 동작이 들어간다. | reviewWith: events-keep-handler-flow-inline, events-run-user-actions-in-handlers-not-effects
 ```
 
 stable identity는 filename 기반 rule id이고 ordinal은 exact set을 짧게 기록하기 위한 index-local 표현이다. rule 순서나 source body가 달라지면 digest도 달라지므로 서로 다른 index version의 ordinal을 섞을 수 없다. index에는 title/impact/tag, rule 설명, Incorrect/Correct 예시, full body를 넣지 않는다.
@@ -364,9 +364,9 @@ package test는 schema, build determinism, manifest integrity만 자동 검증�
 
 ## Token 및 품질 합격선
 
-최초 HEAD pilot 기준선은 React + TypeScript + CSS entrypoint와 full compiled guide를 한 번 로드한 38,102 `o200k_base` token이었다. mandatory routing과 completion gate를 반영한 현재 fixed context의 one-load 기준선은 42,710 token이다. 선택 rule의 중복 로딩과 독립 audit/reviewer 재로딩은 이 수치에 포함하지 않는다.
+최초 HEAD pilot 기준선은 React + TypeScript + CSS entrypoint와 full compiled guide를 한 번 로드한 38,102 `o200k_base` token이었다. mandatory routing과 completion gate를 반영한 현재 fixed context의 one-load 기준선은 46,732 token이다. 선택 rule의 중복 로딩과 독립 audit/reviewer 재로딩은 이 수치에 포함하지 않는다.
 
-최초 index + selected full-rule 구현을 실제 8개 context에 대입한 pilot은 implementation median 13,380, max 19,723, one-load 절감 64.8837%, cumulative 절감 48.698%로 네 token gate를 모두 실패했다. 따라서 routing 조건을 약화하지 않고 index의 중복 title/impact/tag를 제거하고 generated contract + CRITICAL full-rule expansion을 추가했다. mandatory closure까지 포함한 현재 fixed context 재측정은 implementation median 8,731.5, max 11,864, one-load 절감 median 79.5564%, cumulative 절감 median 66.1857%로 네 gate를 통과했다. 이 측정은 `tiktoken==0.11.0`, `o200k_base`, contexts SHA-256 `8ce48aa0cdc09af0776d274e7777d33c4288e5eff2f40abbcdde349c9973a1ca`에 묶이며, 최종 evidence에는 committed HEAD와 measured-file hash manifest도 함께 기록한다.
+최초 index + selected full-rule 구현을 실제 8개 context에 대입한 pilot은 implementation median 13,380, max 19,723, one-load 절감 64.8837%, cumulative 절감 48.698%로 네 token gate를 모두 실패했다. 따라서 routing 조건을 약화하지 않고 index의 중복 title/impact/tag를 제거하고 generated contract + CRITICAL full-rule expansion을 추가했다. mandatory closure까지 포함한 현재 fixed context 재측정은 implementation median 9,377, max 11,832, one-load 절감 median 79.9345%, cumulative 절감 median 65.4441%로 네 gate를 통과했다. 이 측정은 `tiktoken==0.11.0`, `o200k_base`, contexts SHA-256 `1a052d41f0f96d05b31b95923570fd7f9a56daacfa8e4ba25dcde5aa3aaaeed3`에 묶이며, 최종 evidence에는 committed HEAD와 measured-file hash manifest도 함께 기록한다.
 
 후보 구조의 목표는 다음과 같다.
 

@@ -193,7 +193,7 @@ import {buildUserSaveRequest} from "./user-profile-support";
 
 **Rule:** `T05` · `types-document-custom-types-and-shapes`
 
-**Applies when:** custom type·interface, schema root, 객체형 상수, 계약 field·파생 alias를 추가·변경하거나 기존 named shape를 새 callable 입출력 계약 역할에 연결한다. 익명 inferred 반환 literal은 제외한다.
+**Applies when:** type·interface·schema root·객체 상수·계약 field·파생 alias를 추가·변경하거나 named shape에 callable 역할을 추가한다. 외부·generated·read-only·shared unchanged shape·익명 inferred 반환은 제외한다.
 
 **Impact: CRITICAL (keeps domain-specific contracts understandable without digging through implementation details)**
 
@@ -204,7 +204,11 @@ import {buildUserSaveRequest} from "./user-profile-support";
 - `Pick`/`Omit`/Indexed Access alias: 필드가 없으므로 헤더 `@summary`만 사용
 - compound component public part props: React rule에 따라 `@part` + `@description` 허용
 
-기존 named shape의 field가 byte-equivalent여도, positional 인자를 대체하는 새 callable input이나 함수 결과를 고정하는 output 계약 역할에 처음 연결되면 이 규칙은 Selected입니다. 선언의 새 계약 역할을 `@summary`와 각 `@field`로 설명합니다.
+`@summary`와 `@field`는 태그 존재만으로 완료되지 않으며, 각 body가 `docs-write-concise-korean-comments-about-purpose-and-constraints`의 한국어 content gate를 만족해야 합니다.
+
+기존 named shape의 field가 byte-equivalent여도, positional 인자를 대체하는 새 callable input이나 함수 결과를 고정하는 output 계약 역할에 처음 연결되면 이 규칙은 Selected입니다. 선언의 새 계약 역할을 `@summary`와 각 `@field`로 설명합니다. 새 callable input 또는 output 역할은 새 type·interface 선언을 요구하지 않습니다. 호환되는 로컬 소유 named shape가 있으면 그대로 연결하고, 그 선언의 `@summary`와 `@field`를 새 역할에 맞게 보강합니다.
+
+외부·generated·read-only·shared owner의 unchanged shape 사용만으로는 N/A입니다. owner 선언은 수정하지 않고 문서화만을 위한 local alias도 만들지 않습니다. callable 문서화 여부는 `docs-require-header-jsdoc-on-key-declarations` 등 docs rule의 applicability로만 판정합니다.
 
 반대로 별도 named type·interface·schema root·객체형 상수 없이 구현 안에서만 추론되는 익명 객체 literal은 이 규칙의 선언형 shape가 아닙니다. 특히 query `select`의 익명 inferred 반환 literal은 N/A이며, 이 규칙을 스스로 활성화하려고 field JSDoc이나 새 type alias를 추가하지 않습니다.
 
@@ -385,15 +389,19 @@ const formatMessage: ToastFormatters["formatMessage"] = (message) => {
 
 **Rule:** `T09` · `types-reuse-existing-contracts-before-new-types`
 
-**Applies when:** 기존 type·interface·schema shape를 새로 선언·변경·복제·파생한다. 동일 선언 owner 이동·이름/JSDoc 변경이나 unchanged contract의 새 사용처만 추가하면 제외한다.
+**Applies when:** 의미상 같은 기존 type·interface·schema 대신 shape를 새로 선언·변경·복제·파생하거나 중복 shape를 도입·제거한다. 호환 후보 없는 새 shape, 순수 owner 이동, unchanged contract의 새 사용처는 제외한다.
 
 **Review with:** `types-document-custom-types-and-shapes`
 
 **Impact: HIGH (reduces duplicate shape declarations by deriving from existing types and schemas when semantics have not changed)**
 
-기존 타입이나 스키마가 이미 존재하면 동일 구조의 별도 타입 선언을 만들지 않습니다. 의미 차이가 실제로 있을 때만 신규 타입을 만들고, 그 외에는 직접 참조하거나 `Pick`/`Omit`/Indexed Access로 파생합니다. before/after의 선언 수, field type, optionality와 의미를 먼저 정규화합니다. 유일한 선언을 owner 파일로 옮기면서 symbol 이름이나 JSDoc만 owner에 맞게 바꾼 relocation은 diff에 삭제+추가로 보여도 새 shape나 중복 계약이 아니므로 이 규칙의 대상이 아닙니다.
+기존 type/schema와 field type·optionality·의미가 같으면 직접 참조하거나 `Pick`/`Omit`/Indexed Access로 파생합니다. 신규 선언은 의미가 다를 때만 허용하며 owner 이동·이름·JSDoc만 바뀌면 N/A입니다.
 
-unchanged contract를 새 함수 인자나 새 call site에서 처음 사용하더라도 shape를 선언·변경·복제·파생하지 않았다면 이 규칙은 N/A입니다. 그 사용이 새 callable 계약 역할을 만든다면 `types-document-custom-types-and-shapes`를 별도로 판정하되, 단순 사용 자체를 중복 타입 재사용 근거로 세지 않습니다.
+shape delta 없는 unchanged contract의 새 use/call site에서 `types-reuse-existing-contracts-before-new-types`는 N/A입니다. callable 역할은 `types-document-custom-types-and-shapes`를 별도 판정합니다.
+
+positional→object input에서 수정 가능한 로컬 소유 호환 shape를 재사용하면 `types-document-custom-types-and-shapes`는 Selected, `types-reuse-existing-contracts-before-new-types`는 N/A입니다. 외부·generated·read-only·shared unchanged shape면 두 type 규칙 모두 N/A이고 callable 문서화 여부는 docs rule이 독립 판정합니다. 요청 밖 `*Params`/`*Input`으로 자가 활성화하지 않습니다. 호환 shape 없는 새 domain contract는 문서화 규칙만 Selected입니다.
+
+raw input과 normalized payload는 field가 같아도 의미가 달라 별도 input shape를 허용합니다. `types-document-custom-types-and-shapes`는 Selected, `types-reuse-existing-contracts-before-new-types`는 N/A입니다.
 
 **Incorrect (기존 계약과 동일한 구조를 다시 선언):**
 
@@ -658,11 +666,13 @@ type AuditStatus = (typeof audit_status)[keyof typeof audit_status];
 
 **Rule:** `T14` · `functions-use-named-object-params-for-complex-signatures`
 
-**Applies when:** 매개변수 3개 이상 또는 같은 계열 인자를 받는 함수를 추가·변경하거나 객체 매개변수를 시그니처에서 구조분해한다.
+**Applies when:** 매개변수 3개 이상 또는 같은 계열 인자를 받는 일반 함수를 추가·변경하거나 객체 매개변수의 구조분해 위치를 바꾼다. React 함수 컴포넌트의 props 수신·구조분해만 바꾸면 제외한다.
 
 **Impact: HIGH (keeps long function signatures readable and makes grouped inputs easier to extend without positional confusion)**
 
-매개변수가 3개 이상이거나 같은 계열 값이 묶여 전달되면 단일 객체 매개변수로 묶고, 함수 시그니처에서 바로 구조분해하지 않습니다. 객체 매개변수 타입은 파일 최상단에 선언하고, 함수 본문 첫 줄에서 구조분해해 사용합니다. 구조분해 줄이 길어 formatter 예외가 꼭 필요할 때도 함수 본문 안에서 처리합니다.
+매개변수가 3개 이상이거나 같은 계열 값이 묶여 전달되면 단일 객체 매개변수로 묶고, 함수 시그니처에서 바로 구조분해하지 않습니다. 객체 매개변수 타입은 파일 최상단의 named contract를 사용하고, 함수 본문 첫 줄에서 구조분해해 사용합니다. 구조분해 줄이 길어 formatter 예외가 꼭 필요할 때도 함수 본문 안에서 처리합니다.
+
+React 함수 컴포넌트의 props 전체 수신과 본문 구조분해만 바뀌는 경우는 `react/composition-destructure-props-inside`가 담당하므로 이 규칙을 중복 선택하지 않습니다. 객체 인자와 field type·optionality·의미가 같은 기존 named contract가 있으면 그대로 재사용하고, 이 규칙을 지키기 위해 별도 `*Params`나 `*Args`를 새로 만들지 않습니다.
 
 **Incorrect (시그니처에서 바로 구조분해):**
 
@@ -742,7 +752,7 @@ const approver = userById.get(approverId);
 
 **Rule:** `T16` · `absence-expose-optional-values-instead-of-silent-fallbacks`
 
-**Applies when:** optional 값의 읽기·정규화·전달을 바꾸거나 \`??\`, \`||\`, 기본값 또는 빈 값 대체 분기를 추가·변경한다.
+**Applies when:** optional 값의 읽기·정규화·전달을 바꾸거나 \`??\`, \`\|\|\`, 기본값 또는 빈 값 대체 분기를 추가·변경한다.
 
 **Review with:** `docs-keep-inline-comments-for-constraints-and-caveats`
 
@@ -817,7 +827,7 @@ if (!normalizedToken) {
 **Impact: MEDIUM-HIGH (makes important boundaries searchable and explainable before readers inspect the implementation body)**
 
 named query·mutation binding과 원격 함수에는 `@api` 헤더 JSDoc을 작성하고, 비자명한 handler/effect, reusable/exported helper·custom hook, 커스텀 `type`/`interface`, store, formatter와 예외 memo 선언에도 헤더 JSDoc을 작성합니다.
-중요한 경계가 파일 검색에서 바로 보이도록 하는 것이 목적입니다. annotation 종류는 선언 역할에 따라 `@api`, `@event`, `@watch`, `@helper`, `@summary` 중 하나를 고릅니다.
+중요한 경계가 파일 검색에서 바로 보이도록 하는 것이 목적입니다. annotation 종류는 선언 역할에 따라 `@api`, `@event`, `@watch`, `@helper`, `@summary` 중 하나를 고릅니다. header tag가 있어도 body가 비어 있거나 영문 label뿐이면 header 요구를 충족하지 않습니다. `requiresSelected`의 `docs-write-concise-korean-comments-about-purpose-and-constraints`는 선택 bookkeeping이 아니라 실제 한국어 content gate입니다.
 
 **Incorrect (주요 선언에 헤더 설명이 없음):**
 
@@ -997,11 +1007,17 @@ export const normalizeUserIds = (userIds: string[]): string[] => {
 
 주석은 한글로 작성하고, 목적, 제약, 부작용 중심으로 간결하게 적습니다. `@api`, `@event`, `@watch`, `@helper`, `@summary`, `@field` 문장은 명사형 종결이나 개조식 표현을 기본으로 하며, 코드 동작 설명보다 도입 이유와 제약 설명을 우선합니다.
 
+기술 용어와 identifier는 영문으로 섞을 수 있지만 annotation 본문 전체가 ASCII 또는 영문 label이면 한글 주석으로 인정하지 않습니다. 새로 추가하거나 바꾼 각 annotation body에는 그 선언의 목적이나 제약을 설명하는 한글 구절이 있어야 합니다. 다른 `@field`가 한글이어도 영문-only `@summary`를 대신 통과시키지 않습니다.
+
 **Incorrect (영문 또는 How 중심의 장황한 설명):**
 
 ```ts
 /**
  * @summary This function sorts rule refs and returns the result.
+ */
+
+/**
+ * @summary route-local entry tree props
  */
 ```
 
@@ -1010,6 +1026,10 @@ export const normalizeUserIds = (userIds: string[]): string[] => {
 ```ts
 /**
  * @summary 중복 제거 후 규칙 경로 정렬
+ */
+
+/**
+ * @summary route-local 엔트리 트리 입력 계약
  */
 ```
 

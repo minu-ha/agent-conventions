@@ -32,17 +32,6 @@ tags: screen, utils, extraction
 - `helper.ts`, `helpers.ts`, `utils.ts`, `common.ts` 같은 generic 파일명은 만들지 않습니다.
 - support module 안에서도 작은 private helper를 쌓지 말고, 기본은 한 exported 함수 안에서 단계별로 정리합니다.
 
-**Incorrect (작은 화면 전용 계산을 generic util 파일로 뺌):**
-
-```ts
-// utils.ts
-export const util = {
-  getNextPage(page: number) {
-    return page + 1;
-  },
-};
-```
-
 **Incorrect (`page.ts`를 export helper 창고처럼 사용):**
 
 ```ts
@@ -66,26 +55,6 @@ export const buildEntryPayload = (formValues: EntryFormValues, files: UploadFile
 		normalizeEntryValues(formValues),
 		buildEntryUploadRequests(files),
 	);
-};
-```
-
-**Incorrect (`_local` component 하나만 쓰는 private helper를 누적):**
-
-```tsx
-const readOptionalFilter = (value: string) => {
-	const trimmedValue = value.trim();
-	return trimmedValue ? trimmedValue : undefined;
-};
-
-const buildEditHref = ({ editHrefBase, row }: { editHrefBase: string; row: EntryRow }) =>
-	`${editHrefBase}${row.id}/`;
-
-export const EntryTable = (props: EntryTableProps) => {
-	const responseEntriesQuery = useListEntries({
-		q: readOptionalFilter(filters.q),
-	});
-
-	return <a href={buildEditHref({editHrefBase: props.editHrefBase, row})}>{row.title}</a>;
 };
 ```
 
@@ -149,21 +118,5 @@ export const EntryTable = (props: EntryTableProps) => {
 			{row.title}
 		</a>
 	));
-};
-```
-
-**Correct (여러 owner가 실제로 공유할 때만 `shared/util.ts`로 승격):**
-
-```ts
-// shared/util.ts
-export const util = {
-	date: {
-		/**
-		 * @helper date 입력값을 ISO 문자열로 정규화
-		 */
-		normalize(value: Date | string) {
-			return new Date(value).toISOString();
-		},
-	},
 };
 ```

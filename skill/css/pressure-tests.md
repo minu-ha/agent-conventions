@@ -90,10 +90,13 @@ Scope drift 뒤에는 file, activated skill, 기존 Selected rule을 제거하�
 - Expected pass signals
   - selector가 항상 owned root block 안에서 nested로 시작함
   - owned root를 `.rt_* .ant-*`처럼 one-line selector로 다시 체이닝하지 않음
+  - 직접 식별 가능한 target은 `& .ant-tree-node-content-wrapper`로 쓰고 중간 library root를 생략함
   - third-party path가 필요할 때도 shortest viable chain만 사용함
+  - target ambiguity나 direct-child contract 때문에 ancestor가 더 필요하면 그 evidence를 기록함
 - Likely fail signals
   - `.ant-tree-node-content-wrapper { ... }`
   - `.rt_treePanel__root .ant-tree-title { ... }`
+  - `& .ant-tree .ant-tree-node-content-wrapper`를 nested block 하나라는 이유로 one-level selector라고 판단함
   - nested 안에서 다시 nested block을 여는 깊은 chain
   - project-owned 클래스끼리 깊은 descendant chain을 만듦
 

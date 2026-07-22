@@ -1,0 +1,1588 @@
+{
+  "runtime": {
+    "declared": {
+      "forkTurns": "none",
+      "oneChildPerTrial": true,
+      "requestedModel": "gpt-5.6-sol",
+      "requestedReasoning": "high",
+      "runtime": "Codex CLI isolated child session"
+    },
+    "evidenceClass": "declared-telemetry-only",
+    "unavailable": {
+      "actualReasoningTelemetry": null,
+      "childTokenUsage": null,
+      "exactModelBuild": null,
+      "observedFileReads": null,
+      "runtimeVersion": null
+    }
+  },
+  "declaredLoadedFiles": {
+    "kind": "declared",
+    "paths": [
+      "skill/react/SKILL.md",
+      "skill/react/AGENTS.md",
+      "skill/typescript/SKILL.md",
+      "skill/typescript/AGENTS.md",
+      "skill/css/SKILL.md",
+      "skill/css/AGENTS.md"
+    ]
+  },
+  "activatedSkills": [
+    "react",
+    "typescript",
+    "css"
+  ],
+  "receipts": [
+    {
+      "skill": "react",
+      "indexDigest": null,
+      "selected": [
+        {
+          "ordinal": "R01",
+          "id": "ownership-avoid-barrel-and-react-namespace-imports"
+        },
+        {
+          "ordinal": "R07",
+          "id": "typing-function-type-first"
+        },
+        {
+          "ordinal": "R15",
+          "id": "composition-named-handlers-over-inline"
+        },
+        {
+          "ordinal": "R21",
+          "id": "screen-keep-derived-values-close"
+        },
+        {
+          "ordinal": "R25",
+          "id": "events-name-and-curry-handlers"
+        },
+        {
+          "ordinal": "R28",
+          "id": "state-calculate-derived-values-during-render"
+        },
+        {
+          "ordinal": "R42",
+          "id": "docs-require-jsdoc-on-key-declarations"
+        }
+      ],
+      "notApplicable": [
+        {
+          "ordinal": "R02",
+          "id": "ownership-prefer-plain-ts-for-local-react-helpers"
+        },
+        {
+          "ordinal": "R03",
+          "id": "ownership-layer-component-boundaries"
+        },
+        {
+          "ordinal": "R04",
+          "id": "ownership-place-route-local-files-by-scope"
+        },
+        {
+          "ordinal": "R05",
+          "id": "ownership-shared-config-entry-points"
+        },
+        {
+          "ordinal": "R06",
+          "id": "ownership-use-consistent-file-and-symbol-naming"
+        },
+        {
+          "ordinal": "R08",
+          "id": "typing-reuse-existing-contracts"
+        },
+        {
+          "ordinal": "R09",
+          "id": "strategy-avoid-boolean-prop-proliferation"
+        },
+        {
+          "ordinal": "R10",
+          "id": "strategy-choose-single-composition-compound-and-variants"
+        },
+        {
+          "ordinal": "R11",
+          "id": "strategy-prefer-children-over-render-props"
+        },
+        {
+          "ordinal": "R12",
+          "id": "composition-destructure-props-inside"
+        },
+        {
+          "ordinal": "R13",
+          "id": "composition-do-not-define-components-inside-components"
+        },
+        {
+          "ordinal": "R14",
+          "id": "composition-prefer-arrow-functions-and-object-params"
+        },
+        {
+          "ordinal": "R16",
+          "id": "composition-use-activity-for-render-branches"
+        },
+        {
+          "ordinal": "R17",
+          "id": "composition-use-ref-prop-instead-of-forwardref-in-react-19"
+        },
+        {
+          "ordinal": "R18",
+          "id": "screen-avoid-premature-abstraction"
+        },
+        {
+          "ordinal": "R19",
+          "id": "screen-extract-local-section-components-for-runtime-boundaries"
+        },
+        {
+          "ordinal": "R20",
+          "id": "screen-extract-utilities-selectively"
+        },
+        {
+          "ordinal": "R22",
+          "id": "screen-keep-route-flow-visible"
+        },
+        {
+          "ordinal": "R23",
+          "id": "screen-move-pure-support-code-out-of-entry-files"
+        },
+        {
+          "ordinal": "R24",
+          "id": "events-keep-handler-flow-inline"
+        },
+        {
+          "ordinal": "R26",
+          "id": "events-run-user-actions-in-handlers-not-effects"
+        },
+        {
+          "ordinal": "R27",
+          "id": "state-avoid-fallback-defaults-and-loading-flags"
+        },
+        {
+          "ordinal": "R29",
+          "id": "state-choose-state-tools-by-source-of-truth"
+        },
+        {
+          "ordinal": "R30",
+          "id": "state-name-query-and-mutation-bindings-consistently"
+        },
+        {
+          "ordinal": "R31",
+          "id": "state-compiler-first-memoization"
+        },
+        {
+          "ordinal": "R32",
+          "id": "state-preserve-origin-chaining"
+        },
+        {
+          "ordinal": "R33",
+          "id": "state-shape-query-data-with-select"
+        },
+        {
+          "ordinal": "R34",
+          "id": "state-store-derived-authority"
+        },
+        {
+          "ordinal": "R35",
+          "id": "state-use-functional-setstate-updates"
+        },
+        {
+          "ordinal": "R36",
+          "id": "state-use-lazy-state-initializers-for-expensive-defaults"
+        },
+        {
+          "ordinal": "R37",
+          "id": "state-use-starttransition-for-non-urgent-updates"
+        },
+        {
+          "ordinal": "R38",
+          "id": "state-use-usedeferredvalue-for-heavy-derived-renders"
+        },
+        {
+          "ordinal": "R39",
+          "id": "state-use-effectevent-for-non-reactive-effect-callbacks"
+        },
+        {
+          "ordinal": "R40",
+          "id": "docs-document-compound-parts-with-part-and-description"
+        },
+        {
+          "ordinal": "R41",
+          "id": "docs-limit-inline-comments-to-non-obvious-logic"
+        }
+      ],
+      "unknown": [],
+      "excludedGroups": [
+        {
+          "ordinals": [
+            "R02",
+            "R03",
+            "R04",
+            "R05",
+            "R06"
+          ],
+          "reason": "helper 추출, ownership layer·파일 이동, shared config, exported React symbol 변경이 없다."
+        },
+        {
+          "ordinals": [
+            "R08",
+            "R09",
+            "R10",
+            "R11",
+            "R12",
+            "R13",
+            "R14"
+          ],
+          "reason": "prop/API shape, shared composition API, props/component 구조, 복합 함수 signature 변경이 없다."
+        },
+        {
+          "ordinals": [
+            "R16",
+            "R17",
+            "R18",
+            "R19",
+            "R20"
+          ],
+          "reason": "visibility/ref/runtime section 또는 support abstraction 경계를 변경하지 않는다."
+        },
+        {
+          "ordinals": [
+            "R22",
+            "R23",
+            "R24"
+          ],
+          "reason": "route orchestration과 support 파일 경계는 유지하고 인라인 callback을 같은 component의 named handler로만 옮긴다."
+        },
+        {
+          "ordinals": [
+            "R26",
+            "R27"
+          ],
+          "reason": "사용자 액션은 기존처럼 handler에서 직접 실행하며 optional fallback이나 loading branch를 바꾸지 않는다."
+        },
+        {
+          "ordinals": [
+            "R29",
+            "R30",
+            "R31",
+            "R32",
+            "R33",
+            "R34",
+            "R35",
+            "R36",
+            "R37",
+            "R38",
+            "R39",
+            "R40",
+            "R41"
+          ],
+          "reason": "state tool·mutation binding·memo·origin·query shaping·shared authority·state update 방식·transition/effect/compound/comment surface는 변경하지 않는다."
+        }
+      ],
+      "expanded": []
+    },
+    {
+      "skill": "typescript",
+      "indexDigest": null,
+      "selected": [
+        {
+          "ordinal": "T03",
+          "id": "naming-use-consistent-file-and-symbol-naming"
+        },
+        {
+          "ordinal": "T04",
+          "id": "naming-use-direct-imports-and-public-entry-points"
+        },
+        {
+          "ordinal": "T06",
+          "id": "types-mark-unused-parameters-with-underscore"
+        },
+        {
+          "ordinal": "T07",
+          "id": "types-prefer-function-variable-types-over-parameter-annotations"
+        },
+        {
+          "ordinal": "T08",
+          "id": "types-reuse-callback-signatures-from-existing-contracts"
+        },
+        {
+          "ordinal": "T18",
+          "id": "docs-require-header-jsdoc-on-key-declarations"
+        },
+        {
+          "ordinal": "T19",
+          "id": "docs-standardize-annotation-tags-by-declaration-role"
+        },
+        {
+          "ordinal": "T21",
+          "id": "docs-write-concise-korean-comments-about-purpose-and-constraints"
+        },
+        {
+          "ordinal": "T22",
+          "id": "guardrails-review-banned-typescript-shortcuts-before-finishing"
+        }
+      ],
+      "notApplicable": [
+        {
+          "ordinal": "T01",
+          "id": "naming-centralize-shared-config-namespaces"
+        },
+        {
+          "ordinal": "T02",
+          "id": "naming-preserve-config-origin-with-chained-access"
+        },
+        {
+          "ordinal": "T05",
+          "id": "types-document-custom-types-and-shapes"
+        },
+        {
+          "ordinal": "T09",
+          "id": "types-reuse-existing-contracts-before-new-types"
+        },
+        {
+          "ordinal": "T10",
+          "id": "functions-avoid-imperative-assembly-in-wide-scopes"
+        },
+        {
+          "ordinal": "T11",
+          "id": "functions-extract-helpers-only-when-the-boundary-is-real"
+        },
+        {
+          "ordinal": "T12",
+          "id": "functions-prefer-immutable-array-sorting"
+        },
+        {
+          "ordinal": "T13",
+          "id": "functions-replace-enum-with-as-const-objects"
+        },
+        {
+          "ordinal": "T14",
+          "id": "functions-use-named-object-params-for-complex-signatures"
+        },
+        {
+          "ordinal": "T15",
+          "id": "functions-use-set-and-map-for-repeated-lookups"
+        },
+        {
+          "ordinal": "T16",
+          "id": "absence-expose-optional-values-instead-of-silent-fallbacks"
+        },
+        {
+          "ordinal": "T17",
+          "id": "docs-keep-inline-comments-for-constraints-and-caveats"
+        },
+        {
+          "ordinal": "T20",
+          "id": "docs-use-helper-for-reusable-pure-helper-functions"
+        }
+      ],
+      "unknown": [],
+      "excludedGroups": [
+        {
+          "ordinals": [
+            "T01",
+            "T02"
+          ],
+          "reason": "shared config/util namespace나 그 origin access를 변경하지 않는다."
+        },
+        {
+          "ordinals": [
+            "T05"
+          ],
+          "reason": "custom type, interface, schema shape를 추가하거나 변경하지 않는다."
+        },
+        {
+          "ordinals": [
+            "T09",
+            "T10",
+            "T11",
+            "T12",
+            "T13",
+            "T14",
+            "T15",
+            "T16",
+            "T17"
+          ],
+          "reason": "새 type 복제, wide assembly, helper 추출, sort, enum, 복합 params, 반복 lookup, fallback, inline comment 변경이 없다."
+        },
+        {
+          "ordinals": [
+            "T20"
+          ],
+          "reason": "재사용 가능한 pure support helper를 추가하지 않는다."
+        }
+      ],
+      "expanded": []
+    },
+    {
+      "skill": "css",
+      "indexDigest": null,
+      "selected": [
+        {
+          "ordinal": "C03",
+          "id": "naming-name-elements-and-modifiers-by-role"
+        },
+        {
+          "ordinal": "C06",
+          "id": "naming-use-scope-slug-element-modifier-syntax"
+        },
+        {
+          "ordinal": "C07",
+          "id": "composition-compose-classes-with-clsx"
+        },
+        {
+          "ordinal": "C08",
+          "id": "composition-do-not-build-structural-variants-with-modifiers"
+        },
+        {
+          "ordinal": "C18",
+          "id": "values-separate-domain-state-modifiers-from-dom-interaction-states"
+        },
+        {
+          "ordinal": "C21",
+          "id": "organization-review-banned-css-patterns-before-finishing"
+        }
+      ],
+      "notApplicable": [
+        {
+          "ordinal": "C01",
+          "id": "naming-default-to-plain-css-when-no-module-convention"
+        },
+        {
+          "ordinal": "C02",
+          "id": "naming-keep-scope-slug-unique-per-owner"
+        },
+        {
+          "ordinal": "C04",
+          "id": "naming-preserve-route-slug-traceability"
+        },
+        {
+          "ordinal": "C05",
+          "id": "naming-separate-local-and-route-style-scopes"
+        },
+        {
+          "ordinal": "C09",
+          "id": "composition-keep-classes-single-purpose"
+        },
+        {
+          "ordinal": "C10",
+          "id": "composition-style-ui-components-through-owned-wrappers"
+        },
+        {
+          "ordinal": "C11",
+          "id": "composition-prefer-ui-wrapper-prop-types"
+        },
+        {
+          "ordinal": "C12",
+          "id": "selector-avoid-deep-descendant-dependencies"
+        },
+        {
+          "ordinal": "C13",
+          "id": "selector-keep-project-selectors-flat"
+        },
+        {
+          "ordinal": "C14",
+          "id": "selector-target-third-party-dom-from-owned-roots"
+        },
+        {
+          "ordinal": "C15",
+          "id": "selector-use-pseudo-classes-for-dom-owned-states"
+        },
+        {
+          "ordinal": "C16",
+          "id": "values-keep-layout-intent-explicit"
+        },
+        {
+          "ordinal": "C17",
+          "id": "values-always-provide-css-variable-fallbacks"
+        },
+        {
+          "ordinal": "C19",
+          "id": "values-tokenize-repeated-visual-values"
+        },
+        {
+          "ordinal": "C20",
+          "id": "organization-keep-style-files-owned-by-one-component-or-route"
+        }
+      ],
+      "unknown": [],
+      "excludedGroups": [
+        {
+          "ordinals": [
+            "C01",
+            "C02",
+            "C04",
+            "C05"
+          ],
+          "reason": "stylesheet 방식, scope namespace, route slug 또는 style owner를 새로 정하거나 이동하지 않는다."
+        },
+        {
+          "ordinals": [
+            "C09",
+            "C10",
+            "C11",
+            "C12",
+            "C13",
+            "C14",
+            "C15",
+            "C16",
+            "C17"
+          ],
+          "reason": "class 책임 분리, Ui wrapper API, selector, pseudo-state, layout, CSS variable contract 변경이 없다."
+        },
+        {
+          "ordinals": [
+            "C19",
+            "C20"
+          ],
+          "reason": "반복 visual value나 stylesheet 소유 파일 구조를 변경하지 않는다."
+        }
+      ],
+      "expanded": []
+    }
+  ],
+  "routingTrace": {
+    "passes": [
+      {
+        "pass": 1,
+        "activatedSkills": [
+          "react",
+          "typescript",
+          "css"
+        ],
+        "scopeEvidence": [
+          "TSX delete button의 onClick 인라인 async callback에 확인 분기, mutation, navigation이 함께 있다.",
+          "selectedIds에서 계산 가능한 값을 별도 state로 동기화한 surface와 그 값을 사용하는 새 className modifier가 변경 대상이다.",
+          "React/TSX 이벤트·state surface와 styling contract가 함께 바뀌므로 react, typescript, css를 활성화하며 완료 판정도 요청 범위다."
+        ],
+        "generatedIndexDigests": {
+          "react": "sha256:30f0c6d798cd558f19a99ecc118ffe185b5e9534d8073aebc30e92a08831bd6d",
+          "typescript": "sha256:4db36590e46880fd881297fb80c97eb453ef14cd077f6cb298bb340d15f4f6c9",
+          "css": "sha256:9c8e7235088b00b2e662f9e859b1eb8360f57c53ce1ef7fbebfe087069995ac3"
+        },
+        "selected": {
+          "react": [
+            "composition-named-handlers-over-inline",
+            "screen-keep-derived-values-close",
+            "events-name-and-curry-handlers",
+            "state-calculate-derived-values-during-render",
+            "docs-require-jsdoc-on-key-declarations"
+          ],
+          "typescript": [
+            "naming-use-consistent-file-and-symbol-naming",
+            "docs-require-header-jsdoc-on-key-declarations",
+            "docs-standardize-annotation-tags-by-declaration-role",
+            "docs-write-concise-korean-comments-about-purpose-and-constraints",
+            "guardrails-review-banned-typescript-shortcuts-before-finishing"
+          ],
+          "css": [
+            "naming-name-elements-and-modifiers-by-role",
+            "naming-use-scope-slug-element-modifier-syntax",
+            "composition-compose-classes-with-clsx",
+            "composition-do-not-build-structural-variants-with-modifiers",
+            "values-separate-domain-state-modifiers-from-dom-interaction-states",
+            "organization-review-banned-css-patterns-before-finishing"
+          ]
+        },
+        "notApplicable": {
+          "react": [
+            "ownership-prefer-plain-ts-for-local-react-helpers",
+            "ownership-layer-component-boundaries",
+            "ownership-place-route-local-files-by-scope",
+            "ownership-shared-config-entry-points",
+            "ownership-use-consistent-file-and-symbol-naming",
+            "typing-reuse-existing-contracts",
+            "strategy-avoid-boolean-prop-proliferation",
+            "strategy-choose-single-composition-compound-and-variants",
+            "strategy-prefer-children-over-render-props",
+            "composition-destructure-props-inside",
+            "composition-do-not-define-components-inside-components",
+            "composition-prefer-arrow-functions-and-object-params",
+            "composition-use-activity-for-render-branches",
+            "composition-use-ref-prop-instead-of-forwardref-in-react-19",
+            "screen-avoid-premature-abstraction",
+            "screen-extract-local-section-components-for-runtime-boundaries",
+            "screen-extract-utilities-selectively",
+            "screen-keep-route-flow-visible",
+            "screen-move-pure-support-code-out-of-entry-files",
+            "state-avoid-fallback-defaults-and-loading-flags",
+            "state-choose-state-tools-by-source-of-truth",
+            "state-name-query-and-mutation-bindings-consistently",
+            "state-compiler-first-memoization",
+            "state-preserve-origin-chaining",
+            "state-shape-query-data-with-select",
+            "state-store-derived-authority",
+            "state-use-functional-setstate-updates",
+            "state-use-lazy-state-initializers-for-expensive-defaults",
+            "state-use-starttransition-for-non-urgent-updates",
+            "state-use-usedeferredvalue-for-heavy-derived-renders",
+            "state-use-effectevent-for-non-reactive-effect-callbacks",
+            "docs-document-compound-parts-with-part-and-description",
+            "docs-limit-inline-comments-to-non-obvious-logic"
+          ],
+          "typescript": [
+            "naming-centralize-shared-config-namespaces",
+            "naming-preserve-config-origin-with-chained-access",
+            "types-document-custom-types-and-shapes",
+            "types-reuse-existing-contracts-before-new-types",
+            "functions-avoid-imperative-assembly-in-wide-scopes",
+            "functions-extract-helpers-only-when-the-boundary-is-real",
+            "functions-prefer-immutable-array-sorting",
+            "functions-replace-enum-with-as-const-objects",
+            "functions-use-named-object-params-for-complex-signatures",
+            "functions-use-set-and-map-for-repeated-lookups",
+            "absence-expose-optional-values-instead-of-silent-fallbacks",
+            "docs-keep-inline-comments-for-constraints-and-caveats",
+            "docs-use-helper-for-reusable-pure-helper-functions"
+          ],
+          "css": [
+            "naming-default-to-plain-css-when-no-module-convention",
+            "naming-keep-scope-slug-unique-per-owner",
+            "naming-preserve-route-slug-traceability",
+            "naming-separate-local-and-route-style-scopes",
+            "composition-keep-classes-single-purpose",
+            "composition-style-ui-components-through-owned-wrappers",
+            "composition-prefer-ui-wrapper-prop-types",
+            "selector-avoid-deep-descendant-dependencies",
+            "selector-keep-project-selectors-flat",
+            "selector-target-third-party-dom-from-owned-roots",
+            "selector-use-pseudo-classes-for-dom-owned-states",
+            "values-keep-layout-intent-explicit",
+            "values-always-provide-css-variable-fallbacks",
+            "values-tokenize-repeated-visual-values",
+            "organization-keep-style-files-owned-by-one-component-or-route"
+          ]
+        },
+        "unknown": {
+          "react": [
+            "ownership-avoid-barrel-and-react-namespace-imports",
+            "typing-function-type-first",
+            "events-keep-handler-flow-inline",
+            "events-run-user-actions-in-handlers-not-effects"
+          ],
+          "typescript": [
+            "naming-use-direct-imports-and-public-entry-points",
+            "types-mark-unused-parameters-with-underscore",
+            "types-prefer-function-variable-types-over-parameter-annotations",
+            "types-reuse-callback-signatures-from-existing-contracts"
+          ],
+          "css": []
+        },
+        "requiresSelectedEvaluated": [
+          {
+            "source": "react/ownership-avoid-barrel-and-react-namespace-imports",
+            "target": "typescript/naming-use-direct-imports-and-public-entry-points",
+            "sourceStatus": "Unknown",
+            "outcome": "not-propagated-unknown"
+          },
+          {
+            "source": "react/typing-function-type-first",
+            "target": "typescript/types-reuse-callback-signatures-from-existing-contracts",
+            "sourceStatus": "Unknown",
+            "outcome": "not-propagated-unknown"
+          },
+          {
+            "source": "react/composition-named-handlers-over-inline",
+            "target": "react/docs-require-jsdoc-on-key-declarations",
+            "sourceStatus": "Selected",
+            "outcome": "selected"
+          },
+          {
+            "source": "react/composition-named-handlers-over-inline",
+            "target": "react/events-name-and-curry-handlers",
+            "sourceStatus": "Selected",
+            "outcome": "selected"
+          },
+          {
+            "source": "react/state-calculate-derived-values-during-render",
+            "target": "react/screen-keep-derived-values-close",
+            "sourceStatus": "Selected",
+            "outcome": "selected"
+          },
+          {
+            "source": "react/docs-require-jsdoc-on-key-declarations",
+            "target": "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "sourceStatus": "Selected",
+            "outcome": "selected"
+          },
+          {
+            "source": "typescript/types-reuse-callback-signatures-from-existing-contracts",
+            "target": "typescript/types-prefer-function-variable-types-over-parameter-annotations",
+            "sourceStatus": "Unknown",
+            "outcome": "not-propagated-unknown"
+          },
+          {
+            "source": "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "target": "typescript/docs-standardize-annotation-tags-by-declaration-role",
+            "sourceStatus": "Selected",
+            "outcome": "selected"
+          },
+          {
+            "source": "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "target": "typescript/docs-write-concise-korean-comments-about-purpose-and-constraints",
+            "sourceStatus": "Selected",
+            "outcome": "selected"
+          }
+        ],
+        "requiresSelectedAdded": [
+          {
+            "source": "react/composition-named-handlers-over-inline",
+            "target": "react/docs-require-jsdoc-on-key-declarations"
+          },
+          {
+            "source": "react/composition-named-handlers-over-inline",
+            "target": "react/events-name-and-curry-handlers"
+          },
+          {
+            "source": "react/state-calculate-derived-values-during-render",
+            "target": "react/screen-keep-derived-values-close"
+          },
+          {
+            "source": "react/docs-require-jsdoc-on-key-declarations",
+            "target": "typescript/docs-require-header-jsdoc-on-key-declarations"
+          },
+          {
+            "source": "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "target": "typescript/docs-standardize-annotation-tags-by-declaration-role"
+          },
+          {
+            "source": "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "target": "typescript/docs-write-concise-korean-comments-about-purpose-and-constraints"
+          }
+        ],
+        "reviewWithReevaluated": [
+          {
+            "source": "react/composition-named-handlers-over-inline",
+            "target": "react/events-keep-handler-flow-inline",
+            "outcome": "Unknown",
+            "evidence": "named handler 내부 유지와 helper 분리 여부를 다음 pass에서 확정한다."
+          },
+          {
+            "source": "react/composition-named-handlers-over-inline",
+            "target": "react/events-run-user-actions-in-handlers-not-effects",
+            "outcome": "Unknown",
+            "evidence": "삭제 동작이 handler 직접 실행인지 effect 위임인지 다음 pass에서 확정한다."
+          },
+          {
+            "source": "react/events-name-and-curry-handlers",
+            "target": "typescript/naming-use-consistent-file-and-symbol-naming",
+            "outcome": "Selected",
+            "evidence": "새 handleDeleteButtonClick 이름을 추가하므로 local symbol naming을 점검한다."
+          },
+          {
+            "source": "react/events-name-and-curry-handlers",
+            "target": "react/typing-function-type-first",
+            "outcome": "Unknown",
+            "evidence": "최종 DOM handler signature와 React alias 사용 여부를 다음 pass에서 확정한다."
+          },
+          {
+            "source": "css/composition-do-not-build-structural-variants-with-modifiers",
+            "target": "css/naming-name-elements-and-modifiers-by-role",
+            "outcome": "Selected",
+            "evidence": "새 modifier는 구조 patch가 아니라 selectedIds 기반 domain 상태 역할로 명명한다."
+          },
+          {
+            "source": "css/values-separate-domain-state-modifiers-from-dom-interaction-states",
+            "target": "css/composition-do-not-build-structural-variants-with-modifiers",
+            "outcome": "Selected",
+            "evidence": "새 domain modifier가 one-off structural variant가 아닌지 함께 분류한다."
+          }
+        ],
+        "completionGatesEvaluated": [
+          {
+            "rule": "typescript/guardrails-review-banned-typescript-shortcuts-before-finishing",
+            "outcome": "selected"
+          },
+          {
+            "rule": "css/organization-review-banned-css-patterns-before-finishing",
+            "outcome": "selected"
+          }
+        ],
+        "completionGateAdded": [
+          "typescript/guardrails-review-banned-typescript-shortcuts-before-finishing",
+          "css/organization-review-banned-css-patterns-before-finishing"
+        ]
+      },
+      {
+        "pass": 2,
+        "activatedSkills": [
+          "react",
+          "typescript",
+          "css"
+        ],
+        "scopeEvidence": [
+          "TSX delete button의 onClick 인라인 async callback에 확인 분기, mutation, navigation이 함께 있다.",
+          "selectedIds에서 계산 가능한 값을 별도 state로 동기화한 surface와 그 값을 사용하는 새 className modifier가 변경 대상이다.",
+          "React/TSX 이벤트·state surface와 styling contract가 함께 바뀌므로 react, typescript, css를 활성화하며 완료 판정도 요청 범위다.",
+          "복합 onClick을 같은 component의 named MouseEventHandler로 추출하므로 direct React type import와 기존 callback 계약 재사용이 필요하고, 미사용 event parameter는 _event로 유지한다.",
+          "Selected 전이에 따라 handler naming·JSDoc, 파생값 근접 계산, TypeScript annotation/comment 규칙과 TypeScript/CSS completion gate를 필수로 닫는다."
+        ],
+        "generatedIndexDigests": {
+          "react": "sha256:30f0c6d798cd558f19a99ecc118ffe185b5e9534d8073aebc30e92a08831bd6d",
+          "typescript": "sha256:4db36590e46880fd881297fb80c97eb453ef14cd077f6cb298bb340d15f4f6c9",
+          "css": "sha256:9c8e7235088b00b2e662f9e859b1eb8360f57c53ce1ef7fbebfe087069995ac3"
+        },
+        "selected": {
+          "react": [
+            "ownership-avoid-barrel-and-react-namespace-imports",
+            "typing-function-type-first",
+            "composition-named-handlers-over-inline",
+            "screen-keep-derived-values-close",
+            "events-name-and-curry-handlers",
+            "state-calculate-derived-values-during-render",
+            "docs-require-jsdoc-on-key-declarations"
+          ],
+          "typescript": [
+            "naming-use-consistent-file-and-symbol-naming",
+            "naming-use-direct-imports-and-public-entry-points",
+            "types-mark-unused-parameters-with-underscore",
+            "types-prefer-function-variable-types-over-parameter-annotations",
+            "types-reuse-callback-signatures-from-existing-contracts",
+            "docs-require-header-jsdoc-on-key-declarations",
+            "docs-standardize-annotation-tags-by-declaration-role",
+            "docs-write-concise-korean-comments-about-purpose-and-constraints",
+            "guardrails-review-banned-typescript-shortcuts-before-finishing"
+          ],
+          "css": [
+            "naming-name-elements-and-modifiers-by-role",
+            "naming-use-scope-slug-element-modifier-syntax",
+            "composition-compose-classes-with-clsx",
+            "composition-do-not-build-structural-variants-with-modifiers",
+            "values-separate-domain-state-modifiers-from-dom-interaction-states",
+            "organization-review-banned-css-patterns-before-finishing"
+          ]
+        },
+        "notApplicable": {
+          "react": [
+            "ownership-prefer-plain-ts-for-local-react-helpers",
+            "ownership-layer-component-boundaries",
+            "ownership-place-route-local-files-by-scope",
+            "ownership-shared-config-entry-points",
+            "ownership-use-consistent-file-and-symbol-naming",
+            "typing-reuse-existing-contracts",
+            "strategy-avoid-boolean-prop-proliferation",
+            "strategy-choose-single-composition-compound-and-variants",
+            "strategy-prefer-children-over-render-props",
+            "composition-destructure-props-inside",
+            "composition-do-not-define-components-inside-components",
+            "composition-prefer-arrow-functions-and-object-params",
+            "composition-use-activity-for-render-branches",
+            "composition-use-ref-prop-instead-of-forwardref-in-react-19",
+            "screen-avoid-premature-abstraction",
+            "screen-extract-local-section-components-for-runtime-boundaries",
+            "screen-extract-utilities-selectively",
+            "screen-keep-route-flow-visible",
+            "screen-move-pure-support-code-out-of-entry-files",
+            "events-keep-handler-flow-inline",
+            "events-run-user-actions-in-handlers-not-effects",
+            "state-avoid-fallback-defaults-and-loading-flags",
+            "state-choose-state-tools-by-source-of-truth",
+            "state-name-query-and-mutation-bindings-consistently",
+            "state-compiler-first-memoization",
+            "state-preserve-origin-chaining",
+            "state-shape-query-data-with-select",
+            "state-store-derived-authority",
+            "state-use-functional-setstate-updates",
+            "state-use-lazy-state-initializers-for-expensive-defaults",
+            "state-use-starttransition-for-non-urgent-updates",
+            "state-use-usedeferredvalue-for-heavy-derived-renders",
+            "state-use-effectevent-for-non-reactive-effect-callbacks",
+            "docs-document-compound-parts-with-part-and-description",
+            "docs-limit-inline-comments-to-non-obvious-logic"
+          ],
+          "typescript": [
+            "naming-centralize-shared-config-namespaces",
+            "naming-preserve-config-origin-with-chained-access",
+            "types-document-custom-types-and-shapes",
+            "types-reuse-existing-contracts-before-new-types",
+            "functions-avoid-imperative-assembly-in-wide-scopes",
+            "functions-extract-helpers-only-when-the-boundary-is-real",
+            "functions-prefer-immutable-array-sorting",
+            "functions-replace-enum-with-as-const-objects",
+            "functions-use-named-object-params-for-complex-signatures",
+            "functions-use-set-and-map-for-repeated-lookups",
+            "absence-expose-optional-values-instead-of-silent-fallbacks",
+            "docs-keep-inline-comments-for-constraints-and-caveats",
+            "docs-use-helper-for-reusable-pure-helper-functions"
+          ],
+          "css": [
+            "naming-default-to-plain-css-when-no-module-convention",
+            "naming-keep-scope-slug-unique-per-owner",
+            "naming-preserve-route-slug-traceability",
+            "naming-separate-local-and-route-style-scopes",
+            "composition-keep-classes-single-purpose",
+            "composition-style-ui-components-through-owned-wrappers",
+            "composition-prefer-ui-wrapper-prop-types",
+            "selector-avoid-deep-descendant-dependencies",
+            "selector-keep-project-selectors-flat",
+            "selector-target-third-party-dom-from-owned-roots",
+            "selector-use-pseudo-classes-for-dom-owned-states",
+            "values-keep-layout-intent-explicit",
+            "values-always-provide-css-variable-fallbacks",
+            "values-tokenize-repeated-visual-values",
+            "organization-keep-style-files-owned-by-one-component-or-route"
+          ]
+        },
+        "unknown": {
+          "react": [],
+          "typescript": [],
+          "css": []
+        },
+        "requiresSelectedEvaluated": [
+          {
+            "source": "react/ownership-avoid-barrel-and-react-namespace-imports",
+            "target": "typescript/naming-use-direct-imports-and-public-entry-points",
+            "sourceStatus": "Selected",
+            "outcome": "selected"
+          },
+          {
+            "source": "react/typing-function-type-first",
+            "target": "typescript/types-reuse-callback-signatures-from-existing-contracts",
+            "sourceStatus": "Selected",
+            "outcome": "selected"
+          },
+          {
+            "source": "react/composition-named-handlers-over-inline",
+            "target": "react/docs-require-jsdoc-on-key-declarations",
+            "sourceStatus": "Selected",
+            "outcome": "selected"
+          },
+          {
+            "source": "react/composition-named-handlers-over-inline",
+            "target": "react/events-name-and-curry-handlers",
+            "sourceStatus": "Selected",
+            "outcome": "selected"
+          },
+          {
+            "source": "react/state-calculate-derived-values-during-render",
+            "target": "react/screen-keep-derived-values-close",
+            "sourceStatus": "Selected",
+            "outcome": "selected"
+          },
+          {
+            "source": "react/docs-require-jsdoc-on-key-declarations",
+            "target": "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "sourceStatus": "Selected",
+            "outcome": "selected"
+          },
+          {
+            "source": "typescript/types-reuse-callback-signatures-from-existing-contracts",
+            "target": "typescript/types-prefer-function-variable-types-over-parameter-annotations",
+            "sourceStatus": "Selected",
+            "outcome": "selected"
+          },
+          {
+            "source": "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "target": "typescript/docs-standardize-annotation-tags-by-declaration-role",
+            "sourceStatus": "Selected",
+            "outcome": "selected"
+          },
+          {
+            "source": "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "target": "typescript/docs-write-concise-korean-comments-about-purpose-and-constraints",
+            "sourceStatus": "Selected",
+            "outcome": "selected"
+          }
+        ],
+        "requiresSelectedAdded": [
+          {
+            "source": "react/ownership-avoid-barrel-and-react-namespace-imports",
+            "target": "typescript/naming-use-direct-imports-and-public-entry-points"
+          },
+          {
+            "source": "react/typing-function-type-first",
+            "target": "typescript/types-reuse-callback-signatures-from-existing-contracts"
+          },
+          {
+            "source": "typescript/types-reuse-callback-signatures-from-existing-contracts",
+            "target": "typescript/types-prefer-function-variable-types-over-parameter-annotations"
+          }
+        ],
+        "reviewWithReevaluated": [
+          {
+            "source": "react/typing-function-type-first",
+            "target": "react/ownership-avoid-barrel-and-react-namespace-imports",
+            "outcome": "Selected",
+            "evidence": "MouseEventHandler를 react에서 direct type import하므로 namespace/barrel import를 사용하지 않는다."
+          },
+          {
+            "source": "react/typing-function-type-first",
+            "target": "react/typing-reuse-existing-contracts",
+            "outcome": "N/A",
+            "evidence": "prop callback이나 API view shape를 새로 만들지 않고 React framework handler alias만 재사용한다."
+          },
+          {
+            "source": "react/composition-named-handlers-over-inline",
+            "target": "react/events-keep-handler-flow-inline",
+            "outcome": "N/A",
+            "evidence": "인라인 callback을 같은 component의 named handler로만 옮기며 helper나 hook으로 분할하지 않는다."
+          },
+          {
+            "source": "react/composition-named-handlers-over-inline",
+            "target": "react/events-run-user-actions-in-handlers-not-effects",
+            "outcome": "N/A",
+            "evidence": "확인, mutation, navigation 실행 순서를 그대로 handler 안에 두며 state+effect 경계로 이동하지 않는다."
+          },
+          {
+            "source": "react/events-name-and-curry-handlers",
+            "target": "typescript/naming-use-consistent-file-and-symbol-naming",
+            "outcome": "Selected",
+            "evidence": "새 handleDeleteButtonClick 이름이 handle+target+event naming을 따른다."
+          },
+          {
+            "source": "react/events-name-and-curry-handlers",
+            "target": "react/typing-function-type-first",
+            "outcome": "Selected",
+            "evidence": "새 button click handler의 최종 signature를 MouseEventHandler<HTMLButtonElement>로 고정한다."
+          },
+          {
+            "source": "typescript/types-reuse-callback-signatures-from-existing-contracts",
+            "target": "typescript/types-mark-unused-parameters-with-underscore",
+            "outcome": "Selected",
+            "evidence": "MouseEventHandler 계약의 event를 쓰지 않으므로 생략하지 않고 _event로 표시한다."
+          },
+          {
+            "source": "css/composition-do-not-build-structural-variants-with-modifiers",
+            "target": "css/naming-name-elements-and-modifiers-by-role",
+            "outcome": "Selected",
+            "evidence": "새 modifier는 구조 patch가 아니라 selectedIds 기반 domain 상태 역할로 명명한다."
+          },
+          {
+            "source": "css/values-separate-domain-state-modifiers-from-dom-interaction-states",
+            "target": "css/composition-do-not-build-structural-variants-with-modifiers",
+            "outcome": "Selected",
+            "evidence": "새 domain modifier가 one-off structural variant가 아닌지 함께 분류한다."
+          }
+        ],
+        "completionGatesEvaluated": [
+          {
+            "rule": "typescript/guardrails-review-banned-typescript-shortcuts-before-finishing",
+            "outcome": "selected"
+          },
+          {
+            "rule": "css/organization-review-banned-css-patterns-before-finishing",
+            "outcome": "selected"
+          }
+        ],
+        "completionGateAdded": []
+      },
+      {
+        "pass": 3,
+        "activatedSkills": [
+          "react",
+          "typescript",
+          "css"
+        ],
+        "scopeEvidence": [
+          "TSX delete button의 onClick 인라인 async callback에 확인 분기, mutation, navigation이 함께 있다.",
+          "selectedIds에서 계산 가능한 값을 별도 state로 동기화한 surface와 그 값을 사용하는 새 className modifier가 변경 대상이다.",
+          "React/TSX 이벤트·state surface와 styling contract가 함께 바뀌므로 react, typescript, css를 활성화하며 완료 판정도 요청 범위다.",
+          "복합 onClick을 같은 component의 named MouseEventHandler로 추출하므로 direct React type import와 기존 callback 계약 재사용이 필요하고, 미사용 event parameter는 _event로 유지한다.",
+          "Selected 전이에 따라 handler naming·JSDoc, 파생값 근접 계산, TypeScript annotation/comment 규칙과 TypeScript/CSS completion gate를 필수로 닫는다."
+        ],
+        "generatedIndexDigests": {
+          "react": "sha256:30f0c6d798cd558f19a99ecc118ffe185b5e9534d8073aebc30e92a08831bd6d",
+          "typescript": "sha256:4db36590e46880fd881297fb80c97eb453ef14cd077f6cb298bb340d15f4f6c9",
+          "css": "sha256:9c8e7235088b00b2e662f9e859b1eb8360f57c53ce1ef7fbebfe087069995ac3"
+        },
+        "selected": {
+          "react": [
+            "ownership-avoid-barrel-and-react-namespace-imports",
+            "typing-function-type-first",
+            "composition-named-handlers-over-inline",
+            "screen-keep-derived-values-close",
+            "events-name-and-curry-handlers",
+            "state-calculate-derived-values-during-render",
+            "docs-require-jsdoc-on-key-declarations"
+          ],
+          "typescript": [
+            "naming-use-consistent-file-and-symbol-naming",
+            "naming-use-direct-imports-and-public-entry-points",
+            "types-mark-unused-parameters-with-underscore",
+            "types-prefer-function-variable-types-over-parameter-annotations",
+            "types-reuse-callback-signatures-from-existing-contracts",
+            "docs-require-header-jsdoc-on-key-declarations",
+            "docs-standardize-annotation-tags-by-declaration-role",
+            "docs-write-concise-korean-comments-about-purpose-and-constraints",
+            "guardrails-review-banned-typescript-shortcuts-before-finishing"
+          ],
+          "css": [
+            "naming-name-elements-and-modifiers-by-role",
+            "naming-use-scope-slug-element-modifier-syntax",
+            "composition-compose-classes-with-clsx",
+            "composition-do-not-build-structural-variants-with-modifiers",
+            "values-separate-domain-state-modifiers-from-dom-interaction-states",
+            "organization-review-banned-css-patterns-before-finishing"
+          ]
+        },
+        "notApplicable": {
+          "react": [
+            "ownership-prefer-plain-ts-for-local-react-helpers",
+            "ownership-layer-component-boundaries",
+            "ownership-place-route-local-files-by-scope",
+            "ownership-shared-config-entry-points",
+            "ownership-use-consistent-file-and-symbol-naming",
+            "typing-reuse-existing-contracts",
+            "strategy-avoid-boolean-prop-proliferation",
+            "strategy-choose-single-composition-compound-and-variants",
+            "strategy-prefer-children-over-render-props",
+            "composition-destructure-props-inside",
+            "composition-do-not-define-components-inside-components",
+            "composition-prefer-arrow-functions-and-object-params",
+            "composition-use-activity-for-render-branches",
+            "composition-use-ref-prop-instead-of-forwardref-in-react-19",
+            "screen-avoid-premature-abstraction",
+            "screen-extract-local-section-components-for-runtime-boundaries",
+            "screen-extract-utilities-selectively",
+            "screen-keep-route-flow-visible",
+            "screen-move-pure-support-code-out-of-entry-files",
+            "events-keep-handler-flow-inline",
+            "events-run-user-actions-in-handlers-not-effects",
+            "state-avoid-fallback-defaults-and-loading-flags",
+            "state-choose-state-tools-by-source-of-truth",
+            "state-name-query-and-mutation-bindings-consistently",
+            "state-compiler-first-memoization",
+            "state-preserve-origin-chaining",
+            "state-shape-query-data-with-select",
+            "state-store-derived-authority",
+            "state-use-functional-setstate-updates",
+            "state-use-lazy-state-initializers-for-expensive-defaults",
+            "state-use-starttransition-for-non-urgent-updates",
+            "state-use-usedeferredvalue-for-heavy-derived-renders",
+            "state-use-effectevent-for-non-reactive-effect-callbacks",
+            "docs-document-compound-parts-with-part-and-description",
+            "docs-limit-inline-comments-to-non-obvious-logic"
+          ],
+          "typescript": [
+            "naming-centralize-shared-config-namespaces",
+            "naming-preserve-config-origin-with-chained-access",
+            "types-document-custom-types-and-shapes",
+            "types-reuse-existing-contracts-before-new-types",
+            "functions-avoid-imperative-assembly-in-wide-scopes",
+            "functions-extract-helpers-only-when-the-boundary-is-real",
+            "functions-prefer-immutable-array-sorting",
+            "functions-replace-enum-with-as-const-objects",
+            "functions-use-named-object-params-for-complex-signatures",
+            "functions-use-set-and-map-for-repeated-lookups",
+            "absence-expose-optional-values-instead-of-silent-fallbacks",
+            "docs-keep-inline-comments-for-constraints-and-caveats",
+            "docs-use-helper-for-reusable-pure-helper-functions"
+          ],
+          "css": [
+            "naming-default-to-plain-css-when-no-module-convention",
+            "naming-keep-scope-slug-unique-per-owner",
+            "naming-preserve-route-slug-traceability",
+            "naming-separate-local-and-route-style-scopes",
+            "composition-keep-classes-single-purpose",
+            "composition-style-ui-components-through-owned-wrappers",
+            "composition-prefer-ui-wrapper-prop-types",
+            "selector-avoid-deep-descendant-dependencies",
+            "selector-keep-project-selectors-flat",
+            "selector-target-third-party-dom-from-owned-roots",
+            "selector-use-pseudo-classes-for-dom-owned-states",
+            "values-keep-layout-intent-explicit",
+            "values-always-provide-css-variable-fallbacks",
+            "values-tokenize-repeated-visual-values",
+            "organization-keep-style-files-owned-by-one-component-or-route"
+          ]
+        },
+        "unknown": {
+          "react": [],
+          "typescript": [],
+          "css": []
+        },
+        "requiresSelectedEvaluated": [
+          {
+            "source": "react/ownership-avoid-barrel-and-react-namespace-imports",
+            "target": "typescript/naming-use-direct-imports-and-public-entry-points",
+            "sourceStatus": "Selected",
+            "outcome": "selected"
+          },
+          {
+            "source": "react/typing-function-type-first",
+            "target": "typescript/types-reuse-callback-signatures-from-existing-contracts",
+            "sourceStatus": "Selected",
+            "outcome": "selected"
+          },
+          {
+            "source": "react/composition-named-handlers-over-inline",
+            "target": "react/docs-require-jsdoc-on-key-declarations",
+            "sourceStatus": "Selected",
+            "outcome": "selected"
+          },
+          {
+            "source": "react/composition-named-handlers-over-inline",
+            "target": "react/events-name-and-curry-handlers",
+            "sourceStatus": "Selected",
+            "outcome": "selected"
+          },
+          {
+            "source": "react/state-calculate-derived-values-during-render",
+            "target": "react/screen-keep-derived-values-close",
+            "sourceStatus": "Selected",
+            "outcome": "selected"
+          },
+          {
+            "source": "react/docs-require-jsdoc-on-key-declarations",
+            "target": "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "sourceStatus": "Selected",
+            "outcome": "selected"
+          },
+          {
+            "source": "typescript/types-reuse-callback-signatures-from-existing-contracts",
+            "target": "typescript/types-prefer-function-variable-types-over-parameter-annotations",
+            "sourceStatus": "Selected",
+            "outcome": "selected"
+          },
+          {
+            "source": "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "target": "typescript/docs-standardize-annotation-tags-by-declaration-role",
+            "sourceStatus": "Selected",
+            "outcome": "selected"
+          },
+          {
+            "source": "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "target": "typescript/docs-write-concise-korean-comments-about-purpose-and-constraints",
+            "sourceStatus": "Selected",
+            "outcome": "selected"
+          }
+        ],
+        "requiresSelectedAdded": [],
+        "reviewWithReevaluated": [
+          {
+            "source": "react/typing-function-type-first",
+            "target": "react/ownership-avoid-barrel-and-react-namespace-imports",
+            "outcome": "Selected",
+            "evidence": "MouseEventHandler를 react에서 direct type import하므로 namespace/barrel import를 사용하지 않는다."
+          },
+          {
+            "source": "react/typing-function-type-first",
+            "target": "react/typing-reuse-existing-contracts",
+            "outcome": "N/A",
+            "evidence": "prop callback이나 API view shape를 새로 만들지 않고 React framework handler alias만 재사용한다."
+          },
+          {
+            "source": "react/composition-named-handlers-over-inline",
+            "target": "react/events-keep-handler-flow-inline",
+            "outcome": "N/A",
+            "evidence": "인라인 callback을 같은 component의 named handler로만 옮기며 helper나 hook으로 분할하지 않는다."
+          },
+          {
+            "source": "react/composition-named-handlers-over-inline",
+            "target": "react/events-run-user-actions-in-handlers-not-effects",
+            "outcome": "N/A",
+            "evidence": "확인, mutation, navigation 실행 순서를 그대로 handler 안에 두며 state+effect 경계로 이동하지 않는다."
+          },
+          {
+            "source": "react/events-name-and-curry-handlers",
+            "target": "typescript/naming-use-consistent-file-and-symbol-naming",
+            "outcome": "Selected",
+            "evidence": "새 handleDeleteButtonClick 이름이 handle+target+event naming을 따른다."
+          },
+          {
+            "source": "react/events-name-and-curry-handlers",
+            "target": "react/typing-function-type-first",
+            "outcome": "Selected",
+            "evidence": "새 button click handler의 최종 signature를 MouseEventHandler<HTMLButtonElement>로 고정한다."
+          },
+          {
+            "source": "typescript/types-reuse-callback-signatures-from-existing-contracts",
+            "target": "typescript/types-mark-unused-parameters-with-underscore",
+            "outcome": "Selected",
+            "evidence": "MouseEventHandler 계약의 event를 쓰지 않으므로 생략하지 않고 _event로 표시한다."
+          },
+          {
+            "source": "css/composition-do-not-build-structural-variants-with-modifiers",
+            "target": "css/naming-name-elements-and-modifiers-by-role",
+            "outcome": "Selected",
+            "evidence": "새 modifier는 구조 patch가 아니라 selectedIds 기반 domain 상태 역할로 명명한다."
+          },
+          {
+            "source": "css/values-separate-domain-state-modifiers-from-dom-interaction-states",
+            "target": "css/composition-do-not-build-structural-variants-with-modifiers",
+            "outcome": "Selected",
+            "evidence": "새 domain modifier가 one-off structural variant가 아닌지 함께 분류한다."
+          }
+        ],
+        "completionGatesEvaluated": [
+          {
+            "rule": "typescript/guardrails-review-banned-typescript-shortcuts-before-finishing",
+            "outcome": "selected"
+          },
+          {
+            "rule": "css/organization-review-banned-css-patterns-before-finishing",
+            "outcome": "selected"
+          }
+        ],
+        "completionGateAdded": []
+      },
+      {
+        "pass": 4,
+        "activatedSkills": [
+          "react",
+          "typescript",
+          "css"
+        ],
+        "scopeEvidence": [
+          "TSX delete button의 onClick 인라인 async callback에 확인 분기, mutation, navigation이 함께 있다.",
+          "selectedIds에서 계산 가능한 값을 별도 state로 동기화한 surface와 그 값을 사용하는 새 className modifier가 변경 대상이다.",
+          "React/TSX 이벤트·state surface와 styling contract가 함께 바뀌므로 react, typescript, css를 활성화하며 완료 판정도 요청 범위다.",
+          "복합 onClick을 같은 component의 named MouseEventHandler로 추출하므로 direct React type import와 기존 callback 계약 재사용이 필요하고, 미사용 event parameter는 _event로 유지한다.",
+          "Selected 전이에 따라 handler naming·JSDoc, 파생값 근접 계산, TypeScript annotation/comment 규칙과 TypeScript/CSS completion gate를 필수로 닫는다."
+        ],
+        "generatedIndexDigests": {
+          "react": "sha256:30f0c6d798cd558f19a99ecc118ffe185b5e9534d8073aebc30e92a08831bd6d",
+          "typescript": "sha256:4db36590e46880fd881297fb80c97eb453ef14cd077f6cb298bb340d15f4f6c9",
+          "css": "sha256:9c8e7235088b00b2e662f9e859b1eb8360f57c53ce1ef7fbebfe087069995ac3"
+        },
+        "selected": {
+          "react": [
+            "ownership-avoid-barrel-and-react-namespace-imports",
+            "typing-function-type-first",
+            "composition-named-handlers-over-inline",
+            "screen-keep-derived-values-close",
+            "events-name-and-curry-handlers",
+            "state-calculate-derived-values-during-render",
+            "docs-require-jsdoc-on-key-declarations"
+          ],
+          "typescript": [
+            "naming-use-consistent-file-and-symbol-naming",
+            "naming-use-direct-imports-and-public-entry-points",
+            "types-mark-unused-parameters-with-underscore",
+            "types-prefer-function-variable-types-over-parameter-annotations",
+            "types-reuse-callback-signatures-from-existing-contracts",
+            "docs-require-header-jsdoc-on-key-declarations",
+            "docs-standardize-annotation-tags-by-declaration-role",
+            "docs-write-concise-korean-comments-about-purpose-and-constraints",
+            "guardrails-review-banned-typescript-shortcuts-before-finishing"
+          ],
+          "css": [
+            "naming-name-elements-and-modifiers-by-role",
+            "naming-use-scope-slug-element-modifier-syntax",
+            "composition-compose-classes-with-clsx",
+            "composition-do-not-build-structural-variants-with-modifiers",
+            "values-separate-domain-state-modifiers-from-dom-interaction-states",
+            "organization-review-banned-css-patterns-before-finishing"
+          ]
+        },
+        "notApplicable": {
+          "react": [
+            "ownership-prefer-plain-ts-for-local-react-helpers",
+            "ownership-layer-component-boundaries",
+            "ownership-place-route-local-files-by-scope",
+            "ownership-shared-config-entry-points",
+            "ownership-use-consistent-file-and-symbol-naming",
+            "typing-reuse-existing-contracts",
+            "strategy-avoid-boolean-prop-proliferation",
+            "strategy-choose-single-composition-compound-and-variants",
+            "strategy-prefer-children-over-render-props",
+            "composition-destructure-props-inside",
+            "composition-do-not-define-components-inside-components",
+            "composition-prefer-arrow-functions-and-object-params",
+            "composition-use-activity-for-render-branches",
+            "composition-use-ref-prop-instead-of-forwardref-in-react-19",
+            "screen-avoid-premature-abstraction",
+            "screen-extract-local-section-components-for-runtime-boundaries",
+            "screen-extract-utilities-selectively",
+            "screen-keep-route-flow-visible",
+            "screen-move-pure-support-code-out-of-entry-files",
+            "events-keep-handler-flow-inline",
+            "events-run-user-actions-in-handlers-not-effects",
+            "state-avoid-fallback-defaults-and-loading-flags",
+            "state-choose-state-tools-by-source-of-truth",
+            "state-name-query-and-mutation-bindings-consistently",
+            "state-compiler-first-memoization",
+            "state-preserve-origin-chaining",
+            "state-shape-query-data-with-select",
+            "state-store-derived-authority",
+            "state-use-functional-setstate-updates",
+            "state-use-lazy-state-initializers-for-expensive-defaults",
+            "state-use-starttransition-for-non-urgent-updates",
+            "state-use-usedeferredvalue-for-heavy-derived-renders",
+            "state-use-effectevent-for-non-reactive-effect-callbacks",
+            "docs-document-compound-parts-with-part-and-description",
+            "docs-limit-inline-comments-to-non-obvious-logic"
+          ],
+          "typescript": [
+            "naming-centralize-shared-config-namespaces",
+            "naming-preserve-config-origin-with-chained-access",
+            "types-document-custom-types-and-shapes",
+            "types-reuse-existing-contracts-before-new-types",
+            "functions-avoid-imperative-assembly-in-wide-scopes",
+            "functions-extract-helpers-only-when-the-boundary-is-real",
+            "functions-prefer-immutable-array-sorting",
+            "functions-replace-enum-with-as-const-objects",
+            "functions-use-named-object-params-for-complex-signatures",
+            "functions-use-set-and-map-for-repeated-lookups",
+            "absence-expose-optional-values-instead-of-silent-fallbacks",
+            "docs-keep-inline-comments-for-constraints-and-caveats",
+            "docs-use-helper-for-reusable-pure-helper-functions"
+          ],
+          "css": [
+            "naming-default-to-plain-css-when-no-module-convention",
+            "naming-keep-scope-slug-unique-per-owner",
+            "naming-preserve-route-slug-traceability",
+            "naming-separate-local-and-route-style-scopes",
+            "composition-keep-classes-single-purpose",
+            "composition-style-ui-components-through-owned-wrappers",
+            "composition-prefer-ui-wrapper-prop-types",
+            "selector-avoid-deep-descendant-dependencies",
+            "selector-keep-project-selectors-flat",
+            "selector-target-third-party-dom-from-owned-roots",
+            "selector-use-pseudo-classes-for-dom-owned-states",
+            "values-keep-layout-intent-explicit",
+            "values-always-provide-css-variable-fallbacks",
+            "values-tokenize-repeated-visual-values",
+            "organization-keep-style-files-owned-by-one-component-or-route"
+          ]
+        },
+        "unknown": {
+          "react": [],
+          "typescript": [],
+          "css": []
+        },
+        "requiresSelectedEvaluated": [
+          {
+            "source": "react/ownership-avoid-barrel-and-react-namespace-imports",
+            "target": "typescript/naming-use-direct-imports-and-public-entry-points",
+            "sourceStatus": "Selected",
+            "outcome": "selected"
+          },
+          {
+            "source": "react/typing-function-type-first",
+            "target": "typescript/types-reuse-callback-signatures-from-existing-contracts",
+            "sourceStatus": "Selected",
+            "outcome": "selected"
+          },
+          {
+            "source": "react/composition-named-handlers-over-inline",
+            "target": "react/docs-require-jsdoc-on-key-declarations",
+            "sourceStatus": "Selected",
+            "outcome": "selected"
+          },
+          {
+            "source": "react/composition-named-handlers-over-inline",
+            "target": "react/events-name-and-curry-handlers",
+            "sourceStatus": "Selected",
+            "outcome": "selected"
+          },
+          {
+            "source": "react/state-calculate-derived-values-during-render",
+            "target": "react/screen-keep-derived-values-close",
+            "sourceStatus": "Selected",
+            "outcome": "selected"
+          },
+          {
+            "source": "react/docs-require-jsdoc-on-key-declarations",
+            "target": "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "sourceStatus": "Selected",
+            "outcome": "selected"
+          },
+          {
+            "source": "typescript/types-reuse-callback-signatures-from-existing-contracts",
+            "target": "typescript/types-prefer-function-variable-types-over-parameter-annotations",
+            "sourceStatus": "Selected",
+            "outcome": "selected"
+          },
+          {
+            "source": "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "target": "typescript/docs-standardize-annotation-tags-by-declaration-role",
+            "sourceStatus": "Selected",
+            "outcome": "selected"
+          },
+          {
+            "source": "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "target": "typescript/docs-write-concise-korean-comments-about-purpose-and-constraints",
+            "sourceStatus": "Selected",
+            "outcome": "selected"
+          }
+        ],
+        "requiresSelectedAdded": [],
+        "reviewWithReevaluated": [
+          {
+            "source": "react/typing-function-type-first",
+            "target": "react/ownership-avoid-barrel-and-react-namespace-imports",
+            "outcome": "Selected",
+            "evidence": "MouseEventHandler를 react에서 direct type import하므로 namespace/barrel import를 사용하지 않는다."
+          },
+          {
+            "source": "react/typing-function-type-first",
+            "target": "react/typing-reuse-existing-contracts",
+            "outcome": "N/A",
+            "evidence": "prop callback이나 API view shape를 새로 만들지 않고 React framework handler alias만 재사용한다."
+          },
+          {
+            "source": "react/composition-named-handlers-over-inline",
+            "target": "react/events-keep-handler-flow-inline",
+            "outcome": "N/A",
+            "evidence": "인라인 callback을 같은 component의 named handler로만 옮기며 helper나 hook으로 분할하지 않는다."
+          },
+          {
+            "source": "react/composition-named-handlers-over-inline",
+            "target": "react/events-run-user-actions-in-handlers-not-effects",
+            "outcome": "N/A",
+            "evidence": "확인, mutation, navigation 실행 순서를 그대로 handler 안에 두며 state+effect 경계로 이동하지 않는다."
+          },
+          {
+            "source": "react/events-name-and-curry-handlers",
+            "target": "typescript/naming-use-consistent-file-and-symbol-naming",
+            "outcome": "Selected",
+            "evidence": "새 handleDeleteButtonClick 이름이 handle+target+event naming을 따른다."
+          },
+          {
+            "source": "react/events-name-and-curry-handlers",
+            "target": "react/typing-function-type-first",
+            "outcome": "Selected",
+            "evidence": "새 button click handler의 최종 signature를 MouseEventHandler<HTMLButtonElement>로 고정한다."
+          },
+          {
+            "source": "typescript/types-reuse-callback-signatures-from-existing-contracts",
+            "target": "typescript/types-mark-unused-parameters-with-underscore",
+            "outcome": "Selected",
+            "evidence": "MouseEventHandler 계약의 event를 쓰지 않으므로 생략하지 않고 _event로 표시한다."
+          },
+          {
+            "source": "css/composition-do-not-build-structural-variants-with-modifiers",
+            "target": "css/naming-name-elements-and-modifiers-by-role",
+            "outcome": "Selected",
+            "evidence": "새 modifier는 구조 patch가 아니라 selectedIds 기반 domain 상태 역할로 명명한다."
+          },
+          {
+            "source": "css/values-separate-domain-state-modifiers-from-dom-interaction-states",
+            "target": "css/composition-do-not-build-structural-variants-with-modifiers",
+            "outcome": "Selected",
+            "evidence": "새 domain modifier가 one-off structural variant가 아닌지 함께 분류한다."
+          }
+        ],
+        "completionGatesEvaluated": [
+          {
+            "rule": "typescript/guardrails-review-banned-typescript-shortcuts-before-finishing",
+            "outcome": "selected"
+          },
+          {
+            "rule": "css/organization-review-banned-css-patterns-before-finishing",
+            "outcome": "selected"
+          }
+        ],
+        "completionGateAdded": []
+      }
+    ],
+    "stablePair": [
+      3,
+      4
+    ],
+    "stable": true
+  },
+  "driftReceipt": null,
+  "semanticVerdicts": [],
+  "completion": {
+    "status": "COMPLETE",
+    "blocked": false,
+    "coverageFailCount": 0,
+    "semanticFailCount": 0,
+    "unknownCount": 0,
+    "reason": "모든 활성 skill의 ordinal/stable-ID partition이 완전하고 final Unknown, coverage failure, semantic failure가 없으며 completion gate까지 Selected로 닫혔다."
+  },
+  "limitations": [
+    "virtualFiles가 비어 있어 실제 파일별 before/after patch를 만들 수 없으므로 virtualPatch는 null이며, response에는 적용할 semantic delta만 기술했다."
+  ],
+  "response": "적용할 변경은 다음과 같다. (1) 복합 inline onClick async callback을 같은 component의 `handleDeleteButtonClick` named handler로 옮기고, 확인 취소 early return → delete mutation await → navigation 순서를 그대로 유지한다. helper/hook이나 state+effect로 분리하지 않는다. (2) `import type { MouseEventHandler } from \"react\"`를 direct import하고 handler를 `MouseEventHandler<HTMLButtonElement>`로 선언하며, 사용하지 않는 event parameter는 생략하지 않고 `_event`로 둔다. handler 위에는 `@event 선택 항목 삭제 확인, 요청, 이동 처리`처럼 목적 중심의 간결한 한글 JSDoc을 둔다. (3) `selectedIds`에서 계산 가능한 별도 state와 이를 맞추는 effect를 제거하고, disabled/표시/class 조합의 사용 지점에서 `selectedIds.length`를 직접 계산한다. (4) className은 `clsx(baseClass, selectedIds.length > 0 && modifierClass)` 형태로 조합한다. modifier는 기존 owner의 `<scope>_<slug>__<element>--<domainState>` 문법과 역할명을 사용하고, spacing 같은 one-off 구조 patch나 hover/focus/disabled DOM 상태를 modifier로 표현하지 않는다. (5) lint 뒤에도 생략하지 않고 TypeScript 금지 shortcut과 CSS selector/modifier 금지 패턴을 별도로 최종 점검한다. 확인할 Selected 규칙은 React R01, R07, R15, R21, R25, R28, R42; TypeScript T03, T04, T06, T07, T08, T18, T19, T21, T22; CSS C03, C06, C07, C08, C18, C21이다.",
+  "virtualPatch": null
+}

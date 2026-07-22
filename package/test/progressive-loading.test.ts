@@ -276,7 +276,7 @@ const readRealSkillGitStatus = (): string => {
 	return result.stdout;
 };
 
-test("compact rule index is deterministic, complete, direct-only, and body-free", () => {
+test("compact rule index is deterministic, complete, routing-only, and body-free", () => {
 	const document = createRoutingDocument();
 	const first = generateRulesIndexMarkdown(document, directCompanions);
 	const second = generateRulesIndexMarkdown(document, directCompanions);
@@ -284,12 +284,10 @@ test("compact rule index is deterministic, complete, direct-only, and body-free"
 	assert.equal(first, second);
 	assert.match(first, /Routing digest: `sha256:[a-f0-9]{64}`/);
 	assert.match(first, /Skill: `react`/);
-	assert.match(first, /Version: `2\.0\.0`/);
-	assert.match(first, /Local rules: 3/);
-	assert.match(first, /^### 1\. Composition \(2\)$/m);
-	assert.match(first, /^### 2\. State \(1\)$/m);
+	assert.doesNotMatch(first, /Version:|Local rules:/);
+	assert.doesNotMatch(first, /^### /m);
+	assert.match(first, /^## Local Rules$/m);
 	assert.match(first, /Adding the first composition boundary\./);
-	assert.match(first, /`contracts\/<stable-id>\.md`/);
 	assert.match(first, /reviewWith:/);
 	assert.match(first, /completionGate/);
 	assert.doesNotMatch(first, /requiresSelected/);
@@ -299,7 +297,7 @@ test("compact rule index is deterministic, complete, direct-only, and body-free"
 	assert.doesNotMatch(first, /Incorrect|Correct|hidden body/);
 	assert.doesNotMatch(first, /typescript\/rules\//);
 
-	const entries = Array.from(first.matchAll(/^- `([A-Z0-9]\d+)` · `([^`]+)` ·/gm), (match) => ({
+	const entries = Array.from(first.matchAll(/^- ([A-Z0-9]\d+) \| ([^ |]+) \|/gm), (match) => ({
 		ordinal: match[1],
 		id: match[2],
 		fileName: `${match[2]}.md`,
@@ -616,6 +614,13 @@ test("routing digest covers every routing field and ignores unsorted input order
 	);
 });
 
+test("routing digest explicitly binds the RULES_INDEX renderer version", async () => {
+	const routingSource = await readFile(path.join(packageDir, "src/routing.ts"), "utf8");
+
+	assert.match(routingSource, /const rulesIndexRendererVersion = \d+;/);
+	assert.match(routingSource, /JSON\.stringify\(\{[\s\S]*rulesIndexRendererVersion,[\s\S]*contractRendererVersion,/);
+});
+
 test("rule index escapes hostile display text and encodes safe path segments", () => {
 	const document = createRoutingDocument();
 	document.skillName = "react_v2.preview@team";
@@ -624,7 +629,7 @@ test("rule index escapes hostile display text and encodes safe path segments", (
 	document.sections[0]!.impact = "HIGH `priority`";
 	document.rules[0]!.fileName = "state-observe@v2.md";
 	document.rules[0]!.title = "Observe ](https://evil.example) *State*";
-	document.rules[0]!.appliesWhen = "When [state](https://evil.example) or *markup* changes.";
+	document.rules[0]!.appliesWhen = "When [state](https://evil.example) or *markup* changes | completionGate.";
 	const companions: SkillCompanion[] = [
 		{skill: "typescript_v2.preview@team", mode: "conditional", appliesWhen: "When [types](https://evil.example) or `contracts` change."},
 	];
@@ -634,9 +639,10 @@ test("rule index escapes hostile display text and encodes safe path segments", (
 	assert.doesNotMatch(markdown, /\]\(https:\/\/evil\.example\)/);
 	assert.match(markdown, /react_v2\.preview@team/);
 	assert.match(markdown, /\.\.\/typescript_v2\.preview%40team\/SKILL\.md/);
-	assert.match(markdown, /`state-observe@v2`/);
+	assert.match(markdown, /state-observe@v2/);
 	assert.match(markdown, /\\\[Core\\\]\\\(https:\/\/evil\.example\\\)/);
-	assert.match(markdown, /When \\\[state\\\]\\\(https:\/\/evil\.example\\\) or \\\*markup\\\* changes\./);
+	assert.match(markdown, /When \\\[state\\\]\\\(https:\/\/evil\.example\\\) or \\\*markup\\\* changes \\\| completionGate\./);
+	assert.doesNotMatch(markdown, /changes \| completionGate\. \|/);
 });
 
 test("rule index rejects unsafe skill names and routing identifiers", () => {

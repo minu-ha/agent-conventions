@@ -5,6 +5,7 @@ import type {LoadedSkillDocument, SkillCompanion, SkillRule, SkillSection} from 
 
 const compareRoutingText = (left: string, right: string): number => (left < right ? -1 : left > right ? 1 : 0);
 const compareHandbookText = (left: string, right: string): number => left.localeCompare(right, "en-US");
+const rulesIndexRendererVersion = 2;
 const contractRendererVersion = 4;
 const supportedImpactLevels = new Set(["CRITICAL", "HIGH", "MEDIUM-HIGH", "MEDIUM", "LOW"]);
 
@@ -12,7 +13,7 @@ const supportedImpactLevels = new Set(["CRITICAL", "HIGH", "MEDIUM-HIGH", "MEDIU
  * @helper generated Markdown display text를 단일 행 literal text로 escape
  */
 export const escapeMarkdownText = (value: string): string => {
-	return value.replace(/[\r\n]+/g, " ").replace(/([\\`*_[\]()<>!])/g, "\\$1");
+	return value.replace(/[\r\n]+/g, " ").replace(/([\\`*_[\]()<>!|])/g, "\\$1");
 };
 
 /**
@@ -369,6 +370,7 @@ const createCanonicalRoutingSource = (args: CanonicalRoutingSourceArgs): string 
 		skill: document.skillName,
 		title: document.metadata.title,
 		version: document.metadata.version,
+		rulesIndexRendererVersion,
 		contractRendererVersion,
 		companions: companions.map((companion) => ({skill: companion.skill, mode: companion.mode, appliesWhen: companion.appliesWhen ?? null})),
 		sections: sections.map((section) => ({
@@ -419,12 +421,8 @@ export const generateRulesIndexMarkdown = (document: LoadedSkillDocument, direct
 	const lines = [
 		`# ${escapeMarkdownText(document.metadata.title)} Rule Index`,
 		"",
-		"> 모든 entry를 변경 semantic delta로 스캔합니다. 추가·삭제·이동·재선언은 포함하고 read-only 문맥은 제외합니다. 파일 이동의 동일 내부 선언은 diff에 삭제+추가로 보여도 별도 추가·변경·재선언으로 다시 세지 않습니다. N/A rule을 스스로 활성화하지 말고 최소 semantic patch만 구현합니다. Selected/Unknown guidance path는 `contracts/<stable-id>.md`입니다.",
-		"",
 		`- Skill: ${formatInlineCode(document.skillName)}`,
-		`- Version: ${formatInlineCode(document.metadata.version)}`,
 		`- Routing digest: \`sha256:${digest}\``,
-		`- Local rules: ${document.rules.length}`,
 	];
 
 	if (orderedCompanions.length > 0) {
@@ -444,20 +442,14 @@ export const generateRulesIndexMarkdown = (document: LoadedSkillDocument, direct
 
 	for (const section of orderedSections) {
 		const rules = getRoutingRulesForSection(section, document.rules);
-		lines.push(`### ${section.order}. ${escapeMarkdownText(section.title)} (${rules.length})`, "");
 
 		for (const rule of rules) {
 			localOrdinal += 1;
 			const ordinal = `${ordinalPrefix}${String(localOrdinal).padStart(2, "0")}`;
-			const reviewWith =
-				rule.reviewWith.length > 0 ? ` · reviewWith: ${getCanonicalRoutingTargets(rule.reviewWith).map(formatInlineCode).join(", ")}` : "";
-			const completionGate = rule.requiredOnCompletion ? " · completionGate" : "";
-			lines.push(
-				`- ${formatInlineCode(ordinal)} · ${formatInlineCode(getRuleId(rule))} · ${escapeMarkdownText(rule.appliesWhen ?? "")}${completionGate}${reviewWith}`,
-			);
+			const reviewWith = rule.reviewWith.length > 0 ? ` | reviewWith: ${getCanonicalRoutingTargets(rule.reviewWith).join(", ")}` : "";
+			const completionGate = rule.requiredOnCompletion ? " | completionGate" : "";
+			lines.push(`- ${ordinal} | ${getRuleId(rule)} | ${escapeMarkdownText(rule.appliesWhen ?? "")}${completionGate}${reviewWith}`);
 		}
-
-		lines.push("");
 	}
 
 	const markdown = lines.join("\n");

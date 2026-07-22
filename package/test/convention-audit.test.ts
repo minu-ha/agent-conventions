@@ -545,7 +545,7 @@ test("RTE08 missing-action mutation is a documented blocking coverage failure", 
 	const rulesIndexSource = await readFile(path.join(repoDir, "skill/react/RULES_INDEX.md"), "utf8");
 	const currentDigest = rulesIndexSource.match(/Routing digest: `(sha256:[a-f0-9]{64})`/)?.[1];
 	assert.ok(currentDigest);
-	const canonicalRules = Array.from(rulesIndexSource.matchAll(/^- `(R\d{2})` · `([^`]+)` ·/gm), (match) => {
+	const canonicalRules = Array.from(rulesIndexSource.matchAll(/^- (R\d{2}) \| ([^ |]+) \|/gm), (match) => {
 		const ordinal = match[1];
 		const ruleId = match[2];
 

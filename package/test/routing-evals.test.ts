@@ -219,7 +219,8 @@ const typescriptRuleRouting = {
 		reviewWith: [],
 	},
 	"functions-use-named-object-params-for-complex-signatures": {
-		appliesWhen: "매개변수 3개 이상 또는 같은 계열 인자를 받는 함수를 추가·변경하거나 객체 매개변수를 시그니처에서 구조분해한다.",
+		appliesWhen:
+			"매개변수 3개 이상 또는 같은 계열 인자를 받는 일반 함수를 추가·변경하거나 객체 매개변수의 구조분해 위치를 바꾼다. React 함수 컴포넌트의 props 수신·구조분해만 바꾸면 제외한다.",
 		reviewWith: [],
 	},
 	"functions-use-set-and-map-for-repeated-lookups": {
@@ -253,7 +254,7 @@ const typescriptRuleRouting = {
 	},
 	"types-document-custom-types-and-shapes": {
 		appliesWhen:
-			"custom type·interface, schema root, 객체형 상수, 계약 field·파생 alias를 추가·변경하거나 기존 named shape를 새 callable 입출력 계약 역할에 연결한다. 익명 inferred 반환 literal은 제외한다.",
+			"type·interface·schema root·객체 상수·계약 field·파생 alias를 추가·변경하거나 named shape에 callable 역할을 추가한다. 외부·generated·read-only·shared unchanged shape·익명 inferred 반환은 제외한다.",
 		reviewWith: [],
 	},
 	"types-mark-unused-parameters-with-underscore": {
@@ -273,7 +274,7 @@ const typescriptRuleRouting = {
 	},
 	"types-reuse-existing-contracts-before-new-types": {
 		appliesWhen:
-			"기존 type·interface·schema shape를 새로 선언·변경·복제·파생한다. 동일 선언 owner 이동·이름/JSDoc 변경이나 unchanged contract의 새 사용처만 추가하면 제외한다.",
+			"의미상 같은 기존 type·interface·schema 대신 shape를 새로 선언·변경·복제·파생하거나 중복 shape를 도입·제거한다. 호환 후보 없는 새 shape, 순수 owner 이동, unchanged contract의 새 사용처는 제외한다.",
 		reviewWith: ["types-document-custom-types-and-shapes"],
 	},
 } as const;
@@ -1653,7 +1654,7 @@ test("TypeScript routing manifest is an exact nine-scenario partition with full 
 test("TypeScript generated index is complete and within the deterministic byte budget", async () => {
 	const skillPaths = getSkillPaths("typescript", realSkillRootDir);
 	const source = await readFile(skillPaths.rulesIndexPath, "utf8");
-	const entries = Array.from(source.matchAll(/^- `T\d+` · `([^`]+)` ·/gm), (match) => ({id: match[1], fileName: `${match[1]}.md`}));
+	const entries = Array.from(source.matchAll(/^- T\d+ \| ([^ |]+) \|/gm), (match) => ({id: match[1], fileName: `${match[1]}.md`}));
 	const ids = entries.map((entry) => entry.id).sort();
 	const document = await readSkillDocument(skillPaths);
 	const expectedIds = document.rules.map((rule) => rule.fileName.replace(/\.md$/, "")).sort();
@@ -1799,6 +1800,7 @@ test("TypeScript SKILL.md is a compact trigger-only router with every receipt an
 	assert.equal(wordCount < 500, true, `router has ${wordCount} words`);
 	assert.equal(Buffer.byteLength(source, "utf8") < 6_000, true);
 	assert.match(body, /scope snapshot/i);
+	assert.match(body, /수정 전[^\n]+scope snapshot[^\n]+고정/i);
 	assert.match(body, /RULES_INDEX\.md/);
 	assert.match(body, /처음부터 끝까지|전체.*scan|전부.*scan/i);
 	assert.match(body, /첫 match.*절대 멈추지 않는다/i);
@@ -1820,6 +1822,10 @@ test("TypeScript SKILL.md is a compact trigger-only router with every receipt an
 	assert.match(body, /고정점[^\n]+Selected contract[^\n]+Expanded 원문[^\n]+구현·리뷰 기준/i);
 	assert.ok(body.indexOf("contracts/<stable-id>.md") < body.indexOf("고정점"));
 	assert.match(body, /scope drift/i);
+	assert.match(body, /Selected\/Unknown[^\n]+ordinal[^\n]+stable ID[^\n]+N\/A[^\n]+ordinal/i);
+	assert.match(body, /Selected\/N\/A\/Unknown[^\n]+(?:disjoint|겹치지)[^\n]+전체 ordinal[^\n]+exact partition/i);
+	assert.match(body, /scope drift[^\n]+snapshot[^\n]+(?:activation|활성화)[^\n]+재판정/i);
+	assert.match(body, /digest-bound implementer receipt[^\n]+Expanded[^\n]+evidence[^\n]+검증[^\n]+sealed comparison[^\n]+audit/i);
 	assert.match(body, /convention-audit/);
 	assert.match(body, /FAIL.*0/);
 	assert.match(body, /UNKNOWN.*0/);
@@ -1868,6 +1874,9 @@ test("React progressive metadata and all 42 rule routes match Appendix B exactly
 	);
 	const screenExtractionRule = await readFile(path.join(skillPaths.rulesDir, "screen-extract-utilities-selectively.md"), "utf8");
 	assert.match(screenExtractionRule, /query `select`[^\n]+state-shape-query-data-with-select[^\n]+별도 함수\/support module[^\n]+N\/A/i);
+	assert.match(screenExtractionRule, /Incorrect[\s\S]*normalizeEntryValues[\s\S]*mergeEntryPayload/i);
+	assert.match(screenExtractionRule, /Correct[\s\S]*normalizeTreeNodes[\s\S]*handleSave/i);
+	assert.match(screenExtractionRule, /Correct[\s\S]*한 exported 함수[\s\S]*buildEntryPayload/i);
 
 	const template = await readFile(path.join(skillPaths.rulesDir, "_template.md"), "utf8");
 	assert.match(template, /^appliesWhen: /m);
@@ -2005,7 +2014,7 @@ test("React routing manifest is the exact fifteen-scenario Appendix B/D oracle w
 test("React generated index and handbook preserve canonical local rules and compact companion links", async () => {
 	const skillPaths = getSkillPaths("react", realSkillRootDir);
 	const source = await readFile(skillPaths.rulesIndexPath, "utf8");
-	const entries = Array.from(source.matchAll(/^- `R\d+` · `([^`]+)` ·/gm), (match) => ({id: match[1], fileName: `${match[1]}.md`}));
+	const entries = Array.from(source.matchAll(/^- R\d+ \| ([^ |]+) \|/gm), (match) => ({id: match[1], fileName: `${match[1]}.md`}));
 	const document = await readSkillDocument(skillPaths);
 
 	assert.deepEqual(
@@ -2067,6 +2076,13 @@ test("React SKILL.md is a compact full-index router with required TypeScript and
 	assert.equal(wordCount < 500, true, `router has ${wordCount} words`);
 	assert.equal(Buffer.byteLength(source, "utf8") < 6_000, true);
 	assert.match(body, /scope snapshot/i);
+	assert.match(body, /수정 전[^\n]+scope snapshot[^\n]+고정/i);
+	assert.match(body, /render[^\n]+screen[^\n]+(?:owner|route-local)[^\n]+React support code/i);
+	assert.match(body, /owner\/route-local 이동[^\n]+포함/i);
+	assert.match(
+		body,
+		/owner 이동[^\n]+byte-equivalent[^\n]+내부 선언[^\n]+본문[^\n]+import[^\n]+class\/style[^\n]+별도 surface[^\n]+다시 세지/i,
+	);
 	assert.match(body, /RULES_INDEX\.md/);
 	assert.match(body, /처음부터 끝까지|전체.*scan|전부.*scan/i);
 	assert.match(body, /첫 match.*절대 멈추지 않는다/i);
@@ -2118,7 +2134,13 @@ test("React SKILL.md is a compact full-index router with required TypeScript and
 	assert.match(body, /고정점[^\n]+Selected contract[^\n]+Expanded 원문[^\n]+구현·리뷰 기준/i);
 	assert.ok(body.indexOf("contracts/<stable-id>.md") < body.indexOf("고정점"));
 	assert.match(body, /scope drift/i);
+	assert.match(body, /Selected\/Unknown[^\n]+ordinal[^\n]+stable ID[^\n]+N\/A[^\n]+ordinal/i);
+	assert.match(body, /Selected\/N\/A\/Unknown[^\n]+(?:disjoint|겹치지)[^\n]+전체 ordinal[^\n]+exact partition/i);
+	assert.match(body, /scope drift[^\n]+snapshot[^\n]+(?:activation|활성화)[^\n]+재판정/i);
+	assert.match(body, /digest-bound implementer receipt[^\n]+Expanded[^\n]+evidence[^\n]+검증[^\n]+sealed comparison[^\n]+audit/i);
 	assert.match(body, /convention-typescript.*필수|필수.*convention-typescript/i);
+	assert.match(body, /route·search·navigation·browser test[^\n]+전용 skill[^\n]+판정/i);
+	assert.match(body, /class contract·stylesheet·styling surface[^\n]+때만[^\n]+convention-css/i);
 	assert.match(
 		body,
 		/(?:(?:조건부|때만|일치(?:하면|할 때| 시)?)[^\n]{0,160}`?convention-css`?[^\n]{0,80}(?:활성화|activation)|`?convention-css`?[^\n]{0,160}(?:조건부|때만|일치(?:하면|할 때| 시)?)[^\n]{0,80}(?:활성화|activation))/i,
@@ -2366,9 +2388,9 @@ test("routing activation and generated indexes use only the changed semantic del
 
 	const typescriptDocument = await readSkillDocument(getSkillPaths("typescript", realSkillRootDir));
 	const generatedIndex = generateRulesIndexMarkdown(typescriptDocument, []);
-	assert.match(generatedIndex, /변경 (?:semantic )?delta/i);
-	assert.match(generatedIndex, /추가·삭제·이동·재선언/);
-	assert.match(generatedIndex, /read-only/);
+	assert.doesNotMatch(generatedIndex, /변경 (?:semantic )?delta/i);
+	assert.match(generatedIndex, /Routing digest: `sha256:[a-f0-9]{64}`/);
+	assert.match(generatedIndex, /^- T\d+ \| [^ |]+ \|/m);
 
 	const routeOwnerRule = await readFile(path.join(realSkillRootDir, "css", "rules", "naming-preserve-route-slug-traceability.md"), "utf8");
 	assert.match(routeOwnerRule, /route\/framework 규칙이 `rt_\*` owner를 선택한 화면/);
@@ -2452,7 +2474,7 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 	assert.match(typescriptContracts[2]!, /curried handler[\s\S]*최종 callback/i);
 	assert.match(typescriptContracts[3]!, /CRITICAL rule[\s\S]*full rule/i);
 	assert.match(typescriptContracts[4]!, /one-off contextually typed inline callback/i);
-	assert.match(typescriptContracts[5]!, /unchanged contract[\s\S]*(?:새 함수 인자|새 call site)/i);
+	assert.match(typescriptContracts[5]!, /unchanged contract[\s\S]*(?:새 함수 인자|새 사용처|call site)/i);
 
 	const stylesheetFormat = await readRule("css", "naming-default-to-plain-css-when-no-module-convention");
 	assert.match(stylesheetFormat, /stylesheet 접근 형식[\s\S]*plain CSS[\s\S]*CSS Modules/i);
@@ -2566,10 +2588,159 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 	assert.equal(notApplicable("RTE14-subscription-effectevent", "ownership-avoid-barrel-and-react-namespace-imports"), true);
 });
 
+test("v17 TypeScript boundaries exclude React props and prevent self-created duplicate contracts", async () => {
+	const readRule = async (skillName: "typescript", ruleId: string): Promise<string> => {
+		return await readFile(path.join(realSkillRootDir, skillName, "rules", `${ruleId}.md`), "utf8");
+	};
+
+	const namedObjectParams = await readRule("typescript", "functions-use-named-object-params-for-complex-signatures");
+	assert.match(namedObjectParams, /^appliesWhen:[^\n]+React (?:함수 )?컴포넌트[^\n]+props[^\n]+(?:N\/A|제외)/m);
+	assert.match(
+		namedObjectParams,
+		/기존 named contract[\s\S]*그대로 재사용[\s\S]*`\*Params`[\s\S]*`\*Args`[\s\S]*(?:새로 만들지 않|추가하지 않)/i,
+	);
+
+	const documentedShape = await readRule("typescript", "types-document-custom-types-and-shapes");
+	assert.match(
+		documentedShape,
+		/^appliesWhen:[^\n]+(?:external|generated|read-only|shared)[^\n]+(?:unchanged|변경하지 않)[^\n]+(?:N\/A|제외)/m,
+	);
+	assert.match(
+		documentedShape,
+		/^appliesWhen:[^\n]+schema root[^\n]+계약 field[^\n]+파생 alias[^\n]+추가·변경[^\n]+named shape[^\n]+callable 역할[^\n]+추가/m,
+	);
+	assert.doesNotMatch(documentedShape, /^appliesWhen:[^\n]+객체형 상수·field·alias/m);
+	assert.match(
+		documentedShape,
+		/새 callable (?:input|입력)[^\n]+(?:output|출력)[^\n]*역할[\s\S]*새 (?:type|interface|선언)[\s\S]*요구하지 않[\s\S]*(?:기존|로컬 소유)[^\n]*named shape[\s\S]*(?:문서|JSDoc|`@summary`)[\s\S]*(?:보강|갱신)/i,
+	);
+	assert.match(
+		documentedShape,
+		/(?:외부|external|generated|read-only|shared)[\s\S]*(?:owner|선언)[^\n]+(?:수정하지 않|보강하지 않)[\s\S]*(?:local alias|별도 alias)[^\n]+(?:만들지 않|추가하지 않)[\s\S]*callable 문서화 여부[^\n]+docs-require-header-jsdoc-on-key-declarations[^\n]+(?:독립|applicability|판정)/i,
+	);
+	assert.doesNotMatch(documentedShape, /callable 선언에서[^\n]+(?:역할|계약)[^\n]+설명/);
+
+	const existingContract = await readRule("typescript", "types-reuse-existing-contracts-before-new-types");
+	assert.match(
+		existingContract,
+		/positional[\s\S]*object[\s\S]*(?:수정 가능한 로컬 소유|기존) (?:호환|compatible) (?:named )?(?:shape|contract)[\s\S]*types-document-custom-types-and-shapes[^\n]+Selected[\s\S]*types-reuse-existing-contracts-before-new-types[^\n]+N\/A/i,
+	);
+	assert.match(
+		existingContract,
+		/요청[^\n]+(?:semantic delta[^\n]+없는|밖)[\s\S]*`\*Params`[\s\S]*`\*Input`[\s\S]*(?:스스로|자기|자가)[\s\S]*(?:활성화|Selected)[\s\S]*(?:하지 않|금지)/i,
+	);
+	assert.match(
+		existingContract,
+		/types-document-custom-types-and-shapes[^\n]+Selected[\s\S]*types-reuse-existing-contracts-before-new-types[^\n]+N\/A[\s\S]*(?:외부|external|generated|read-only|shared)[^\n]+(?:두 type 규칙|두 규칙|모두)[^\n]+N\/A[\s\S]*callable 문서화 여부[^\n]+docs rule[^\n]+독립 판정/i,
+	);
+	assert.doesNotMatch(existingContract, /callable header[^\n]+문서화/);
+	assert.doesNotMatch(existingContract, /^appliesWhen:[^\n]+재사용 결정을 바꾼다/m);
+	assert.match(
+		existingContract,
+		/(?:정규화 전|raw input)[\s\S]*(?:정규화 후|normalized (?:output|payload)|payload)[\s\S]*(?:같은 field|field[^\n]+같)[\s\S]*의미[^\n]+(?:다르|달라)[\s\S]*(?:별도|새) (?:input )?(?:shape|contract)[\s\S]*types-reuse-existing-contracts-before-new-types[^\n]+N\/A/i,
+	);
+	assert.doesNotMatch(documentedShape, /\bT\d{2}\b/);
+	assert.doesNotMatch(existingContract, /\bT\d{2}\b/);
+
+	const typescriptPressure = await readFile(path.join(realSkillRootDir, "typescript", "pressure-tests.md"), "utf8");
+	assert.match(
+		typescriptPressure,
+		/CreateEntryPayloadParams[\s\S]*(?:정규화 전|raw input)[\s\S]*CreateEntryPayload[\s\S]*(?:정규화 후|payload)/i,
+	);
+	assert.match(
+		typescriptPressure,
+		/External Contract and Documentation Independence[\s\S]*types-document-custom-types-and-shapes[\s\S]*types-reuse-existing-contracts-before-new-types[\s\S]*(?:둘 다|모두) N\/A[\s\S]*docs-require-header-jsdoc-on-key-declarations[\s\S]*독립[^\n]+Selected/i,
+	);
+
+	const mixedManifest = await readRoutingEvalManifest(getSkillPaths("react", realSkillRootDir));
+	const ownerMove = mixedManifest.scenarios.find(({id}) => id === "RTE02-owner-placement-css-drift");
+	assert.equal(ownerMove?.expectedSelected.typescript?.includes("functions-use-named-object-params-for-complex-signatures"), false);
+	assert.equal(ownerMove?.expectedNotApplicable.typescript?.includes("functions-use-named-object-params-for-complex-signatures"), true);
+	assert.equal(
+		ownerMove?.scopeDrift?.expectedSelected.typescript?.includes("functions-use-named-object-params-for-complex-signatures"),
+		false,
+	);
+	assert.equal(
+		ownerMove?.scopeDrift?.expectedNotApplicable.typescript?.includes("functions-use-named-object-params-for-complex-signatures"),
+		true,
+	);
+
+	const typescriptManifest = await readRoutingEvalManifest(getSkillPaths("typescript", realSkillRootDir));
+	const namedObjectParam = typescriptManifest.scenarios.find(({id}) => id === "named-object-param");
+	assert.equal(namedObjectParam?.expectedSelected.typescript?.includes("functions-use-named-object-params-for-complex-signatures"), true);
+
+	const generatedContracts = await Promise.all(
+		[
+			"functions-use-named-object-params-for-complex-signatures",
+			"types-document-custom-types-and-shapes",
+			"types-reuse-existing-contracts-before-new-types",
+		].map((ruleId) => readFile(path.join(realSkillRootDir, "typescript", "contracts", `${ruleId}.md`), "utf8")),
+	);
+	assert.match(generatedContracts[0]!, /React 함수 컴포넌트[\s\S]*기존 named contract/i);
+	assert.match(generatedContracts[1]!, /CRITICAL rule[\s\S]*full rule/i);
+	assert.match(generatedContracts[2]!, /positional[\s\S]*object[\s\S]*`\*Params`[\s\S]*(?:스스로|자기|자가)/i);
+});
+
+test("v17 semantic contracts reject English-only annotations and effective deep third-party chains", async () => {
+	const readRule = async (skillName: "typescript" | "css", ruleId: string): Promise<string> => {
+		return await readFile(path.join(realSkillRootDir, skillName, "rules", `${ruleId}.md`), "utf8");
+	};
+
+	const koreanComments = await readRule("typescript", "docs-write-concise-korean-comments-about-purpose-and-constraints");
+	assert.match(koreanComments, /annotation 본문 전체[\s\S]*(?:ASCII|영문)[\s\S]*(?:한글 주석으로 인정하지 않|실패)/i);
+	assert.match(koreanComments, /@summary route-local entry tree props/);
+	assert.match(koreanComments, /@summary route-local 엔트리 트리 입력 계약/);
+
+	const documentedShape = await readRule("typescript", "types-document-custom-types-and-shapes");
+	assert.match(
+		documentedShape,
+		/`@summary`[\s\S]*`@field`[\s\S]*태그 존재만으로[\s\S]*docs-write-concise-korean-comments-about-purpose-and-constraints[\s\S]*(?:content|한국어)[^\n]+gate/i,
+	);
+	const headerDocs = await readRule("typescript", "docs-require-header-jsdoc-on-key-declarations");
+	assert.match(
+		headerDocs,
+		/header tag[\s\S]*(?:영문 label|영문 라벨)[\s\S]*(?:충족하지 않|미충족|완료되지 않)[\s\S]*docs-write-concise-korean-comments-about-purpose-and-constraints[\s\S]*content gate/i,
+	);
+	assert.doesNotMatch(headerDocs, /\bT\d{2}\b/);
+
+	const descendantDepth = await readRule("css", "selector-avoid-deep-descendant-dependencies");
+	assert.match(descendantDepth, /nested (?:source )?block 수[\s\S]*effective selector[\s\S]*(?:combinator|ancestor) chain/i);
+	assert.match(descendantDepth, /& \.ant-tree \.ant-tree-node-content-wrapper[\s\S]*(?:2단계|one-level이 아)/i);
+
+	const thirdPartyRoot = await readRule("css", "selector-target-third-party-dom-from-owned-roots");
+	assert.match(thirdPartyRoot, /owned root[\s\S]*instance scope[\s\S]*중간 (?:library root|라이브러리 root)[\s\S]*(?:생략|반복하지 않)/i);
+	assert.match(thirdPartyRoot, /추가 third-party ancestor[\s\S]*(?:ambiguity|모호성|direct-child)[\s\S]*(?:근거|evidence)/i);
+	assert.match(thirdPartyRoot, /& \.ant-tree \.ant-tree-node-content-wrapper/);
+	assert.match(thirdPartyRoot, /& \.ant-tree-node-content-wrapper/);
+
+	const typescriptPressure = await readFile(path.join(realSkillRootDir, "typescript", "pressure-tests.md"), "utf8");
+	assert.match(typescriptPressure, /@summary route-local entry tree props/);
+	assert.match(typescriptPressure, /@summary route-local 엔트리 트리 입력 계약/);
+	const cssPressure = await readFile(path.join(realSkillRootDir, "css", "pressure-tests.md"), "utf8");
+	assert.match(cssPressure, /& \.ant-tree \.ant-tree-node-content-wrapper/);
+	assert.match(cssPressure, /& \.ant-tree-node-content-wrapper/);
+
+	const generatedContracts = await Promise.all(
+		[
+			["typescript", "docs-require-header-jsdoc-on-key-declarations"],
+			["typescript", "docs-write-concise-korean-comments-about-purpose-and-constraints"],
+			["css", "selector-avoid-deep-descendant-dependencies"],
+			["css", "selector-target-third-party-dom-from-owned-roots"],
+		].map(([skillName, ruleId]) => readFile(path.join(realSkillRootDir, skillName!, "contracts", `${ruleId}.md`), "utf8")),
+	);
+	assert.match(
+		generatedContracts[0]!,
+		/영문 label[\s\S]*docs-write-concise-korean-comments-about-purpose-and-constraints[\s\S]*content gate/i,
+	);
+	assert.match(generatedContracts[1]!, /annotation 본문 전체[\s\S]*(?:ASCII|영문)/i);
+	assert.match(generatedContracts[2]!, /effective selector[\s\S]*(?:combinator|ancestor) chain/i);
+	assert.match(generatedContracts[3]!, /CRITICAL rule[\s\S]*full rule/i);
+});
+
 test("CSS generated index is canonical, complete, body-preserving, and within its byte budget", async () => {
 	const skillPaths = getSkillPaths("css", realSkillRootDir);
 	const source = await readFile(skillPaths.rulesIndexPath, "utf8");
-	const entries = Array.from(source.matchAll(/^- `C\d+` · `([^`]+)` ·/gm), (match) => ({id: match[1], fileName: `${match[1]}.md`}));
+	const entries = Array.from(source.matchAll(/^- C\d+ \| ([^ |]+) \|/gm), (match) => ({id: match[1], fileName: `${match[1]}.md`}));
 	const document = await readSkillDocument(skillPaths);
 
 	assert.deepEqual(
@@ -2621,6 +2792,7 @@ test("CSS SKILL.md is a compact full-index router with exact receipts and compan
 	assert.equal(wordCount < 500, true, `router has ${wordCount} words`);
 	assert.equal(Buffer.byteLength(source, "utf8") < 6_000, true);
 	assert.match(body, /scope snapshot/i);
+	assert.match(body, /수정 전[^\n]+scope snapshot[^\n]+고정/i);
 	assert.match(body, /RULES_INDEX\.md/);
 	assert.match(body, /처음부터 끝까지|전체.*scan|전부.*scan/i);
 	assert.match(body, /첫 match.*절대 멈추지 않는다/i);
@@ -2642,6 +2814,10 @@ test("CSS SKILL.md is a compact full-index router with exact receipts and compan
 	assert.match(body, /고정점[^\n]+Selected contract[^\n]+Expanded 원문[^\n]+구현·리뷰 기준/i);
 	assert.ok(body.indexOf("contracts/<stable-id>.md") < body.indexOf("고정점"));
 	assert.match(body, /scope drift/i);
+	assert.match(body, /Selected\/Unknown[^\n]+ordinal[^\n]+stable ID[^\n]+N\/A[^\n]+ordinal/i);
+	assert.match(body, /Selected\/N\/A\/Unknown[^\n]+(?:disjoint|겹치지)[^\n]+전체 ordinal[^\n]+exact partition/i);
+	assert.match(body, /scope drift[^\n]+snapshot[^\n]+(?:activation|활성화)[^\n]+재판정/i);
+	assert.match(body, /digest-bound implementer receipt[^\n]+Expanded[^\n]+evidence[^\n]+검증[^\n]+sealed comparison[^\n]+audit/i);
 	assert.match(body, /TypeScript type·import·helper·wrapper Props.*convention-typescript/);
 	assert.match(body, /TSX.*className.*convention-react.*convention-typescript.*반드시 활성화/i);
 	assert.doesNotMatch(body, /className.*selector와 함께/i);

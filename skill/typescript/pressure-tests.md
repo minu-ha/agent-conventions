@@ -98,10 +98,12 @@ protocol v3 결과에는 coordinator가 dispatch 전에 고정한 repository HEA
   - "주석과 JSDoc을 TypeScript skill 기준으로 정리해줘. 설명성 주석은 줄이고 역할 태그는 맞춰줘."
 - Expected pass signals
   - `@api`, `@helper`, `@summary`, `@field` 역할이 일관됨
+  - 기술 identifier를 영문으로 섞더라도 `@summary route-local 엔트리 트리 입력 계약`처럼 각 annotation body에 목적을 나타내는 한글 구절이 있음
   - inline comment는 제약과 caveat만 설명함
   - 자명한 `no-op`, `increment` 설명은 제거함
 - Likely fail signals
   - `@schema`, `@contract`, `@data` 같은 비표준 태그 사용
+  - 다른 `@field`만 한글이고 header는 `@summary route-local entry tree props`처럼 영문 label로 끝남
   - `// no-op sink`, `// count를 1 증가` 같은 설명 주석 유지
 
 ### T5. Namespace and Origin Preservation
@@ -230,6 +232,44 @@ protocol v3 결과에는 coordinator가 dispatch 전에 고정한 repository HEA
 - Likely fail signals
   - module path가 같다는 이유로 import specifier 변경을 N/A 처리함
   - handler가 event를 쓰지 않는다는 이유로 parameter를 통째로 생략함
+
+### T13. React Props and Existing Object Contract Boundaries
+
+- Focus
+  - `functions-use-named-object-params-for-complex-signatures`
+  - `types-document-custom-types-and-shapes`
+  - `types-reuse-existing-contracts-before-new-types`
+- Positive control
+  - 일반 함수의 네 positional 인자를 object input으로 바꾸되 같은 raw input 역할의 기존 `CreateEntryPayloadInput`을 그대로 연결하고 callable input 역할에 맞게 기존 JSDoc을 보강함
+  - 같은 field라도 정규화 전 raw input인 `CreateEntryPayloadParams`와 정규화 후 payload인 `CreateEntryPayload`는 의미가 다르므로 별도 input contract를 허용함
+- Negative controls
+  - React 함수 컴포넌트에서 `props` 전체를 받고 본문에서 구조분해하는 변경만으로 named object params 규칙을 선택하지 않음
+  - 같은 field·type·optionality·의미와 같은 raw input 역할을 가진 기존 계약이 있는데 `CreateEntryPayloadParams`나 `CreateEntryPayloadInput`을 새로 만들지 않음
+- Expected pass signals
+  - React props-only 변경은 React props 규칙이 소유하고 TypeScript named object params 규칙은 N/A
+  - positional→object 전환의 문서화 규칙은 Selected, 기존 계약 재사용 규칙은 N/A
+  - 기존 compatible shape가 없거나 정규화 전후처럼 field 의미가 달라 실제 새 domain shape가 필요한 경우도 문서화 규칙만 선택함
+- Likely fail signals
+  - React props 객체를 일반 함수의 복잡한 인자 묶음으로 과선택함
+  - named object params 규칙을 지키기 위해 요청에 없던 `*Params`·`*Args`·`*Input` 중복 타입을 만듦
+  - 구현이 만든 중복 타입을 근거로 contract reuse 규칙을 사후 Selected 처리함
+  - 정규화 전 input과 정규화 후 payload를 field 목록만 보고 같은 의미의 계약으로 합침
+
+### T14. External Contract and Documentation Independence
+
+- Focus
+  - `types-document-custom-types-and-shapes`
+  - `types-reuse-existing-contracts-before-new-types`
+  - `docs-require-header-jsdoc-on-key-declarations`
+- Prompt
+  - "generated SDK의 read-only shared input type을 private one-off 함수의 object input으로 그대로 연결해줘. SDK 선언과 주석은 바꾸지 마."
+- Expected pass signals
+  - unchanged external/generated/read-only/shared shape 사용만으로 두 type 규칙은 모두 N/A
+  - type owner JSDoc 수정이나 문서화 전용 local alias를 만들지 않음
+  - callable이 key declaration에 해당할 때만 `docs-require-header-jsdoc-on-key-declarations`를 독립적으로 Selected하고 그 mandatory docs closure를 따름
+- Likely fail signals
+  - N/A type rule의 숨은 요구로 callable header나 SDK owner JSDoc을 추가함
+  - 문서화를 위해 중복 local `*Params` alias를 만듦
 
 ## 유지보수 원칙
 

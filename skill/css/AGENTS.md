@@ -488,6 +488,8 @@ const items: NonNullable<UiCollapseProps["items"]> = [];
 
 깊은 후손 선택자 체인에 스타일을 걸지 않습니다. 이 규칙은 nested 문법 사용 여부와 무관하게, selector가 DOM 구조에 과도하게 묶이는 것을 금지합니다. project-owned 스타일은 클래스 자체가 계약이 되어야 하며, `.a .b .c .d` 같은 의존성은 DOM 구조가 조금만 바뀌어도 쉽게 깨집니다. owned root 아래의 third-party DOM path는 `selector-target-third-party-dom-from-owned-roots`가 다루는 예외이며, 그 경우에도 shortest viable chain만 허용합니다.
 
+깊이는 nested source block 수가 아니라 nesting을 펼친 effective selector의 combinator·ancestor chain으로 계산합니다. `& .ant-tree .ant-tree-node-content-wrapper`는 한 nested block 안에 있어도 owned root 뒤에 third-party ancestor가 2단계이므로 one-level selector가 아닙니다.
+
 **Incorrect (깊은 후손 선택자 체인에 의존):**
 
 ```css
@@ -585,6 +587,8 @@ rich text 예외는 raw element styling에만 적용됩니다. `.owner__prose .o
 - root 없는 `.ant-*` 단독 selector는 금지합니다.
 - `.rt_* .ant-*` 같은 one-line chaining보다 root block 안의 `& .ant-*`를 사용합니다.
 - third-party DOM 경로는 shortest viable chain만 허용합니다.
+- owned root가 이미 instance scope를 제공하고 target class가 직접 식별 가능하면 `.ant-tree` 같은 중간 library root를 반복하지 않습니다.
+- 추가 third-party ancestor는 target ambiguity나 direct-child contract처럼 실제로 필요한 evidence가 있을 때만 허용하고 그 근거를 기록합니다.
 - nested block 안에서 다시 nested block을 열지 않습니다.
 
 이 예외는 third-party DOM path에만 적용됩니다. project-owned class끼리의 깊은 descendant coupling은 여전히 금지입니다.
@@ -601,6 +605,10 @@ rich text 예외는 raw element styling에만 적용됩니다. `.owner__prose .o
 }
 
 .rt_treePanel__root {
+	& .ant-tree .ant-tree-node-content-wrapper {
+		display: inline-flex;
+	}
+
 	& .ant-tree-node-content-wrapper {
 		& .ant-tree-iconEle {
 			display: inline-flex;
