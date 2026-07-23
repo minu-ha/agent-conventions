@@ -2,6 +2,8 @@
 title: Extract Screen Support Code Only When the Boundary Is Real
 impact: HIGH
 impactDescription: route 파일이 자기 계약이 없는 helper 조각으로 분해되는 것을 막음
+appliesWhen: 화면 계산·변환·preset·option·column meta를 별도 함수/support module로 추출·이동하거나 support 경계를 바꾼다. query `select` 내부 shaping만이면 제외한다.
+reviewWith: screen-move-pure-support-code-out-of-entry-files, typescript/functions-extract-helpers-only-when-the-boundary-is-real
 tags: screen, utils, extraction
 ---
 
@@ -22,24 +24,13 @@ tags: screen, utils, extraction
 
 - 작은 1회성 guard, URL 조립, 빈 검색어 생략 같은 호출 지점 계산
 - handler/effect 안에 있어야 문맥이 보이는 query invalidation, navigation, fallback 처리
-- 한 component나 한 query `select`만 쓰는 작은 mapper
+- query `select` 내부 mapper는 `state-shape-query-data-with-select` 소유이며 별도 함수/support module 경계가 없으면 이 규칙은 N/A
 
 배치:
 
 - route sibling `page.ts`에 named export로 둡니다.
 - `helper.ts`, `helpers.ts`, `utils.ts`, `common.ts` 같은 generic 파일명은 만들지 않습니다.
 - support module 안에서도 작은 private helper를 쌓지 말고, 기본은 한 exported 함수 안에서 단계별로 정리합니다.
-
-**Incorrect (작은 화면 전용 계산을 generic util 파일로 뺌):**
-
-```ts
-// utils.ts
-export const util = {
-  getNextPage(page: number) {
-    return page + 1;
-  },
-};
-```
 
 **Incorrect (`page.ts`를 export helper 창고처럼 사용):**
 
@@ -66,28 +57,6 @@ export const buildEntryPayload = (formValues: EntryFormValues, files: UploadFile
 	);
 };
 ```
-
-**Incorrect (`_local` component 하나만 쓰는 private helper를 누적):**
-
-```tsx
-const readOptionalFilter = (value: string) => {
-	const trimmedValue = value.trim();
-	return trimmedValue ? trimmedValue : undefined;
-};
-
-const buildEditHref = ({ editHrefBase, row }: { editHrefBase: string; row: EntryRow }) =>
-	`${editHrefBase}${row.id}/`;
-
-export const EntryTable = (props: EntryTableProps) => {
-	const responseEntriesQuery = useListEntries({
-		q: readOptionalFilter(filters.q),
-	});
-
-	return <a href={buildEditHref({editHrefBase: props.editHrefBase, row})}>{row.title}</a>;
-};
-```
-
-이 정도는 helper 이름을 따라가는 것보다 component 안에서 직접 읽는 편이 빠릅니다.
 
 **Correct (screen-owned support code는 먼저 `page.ts`의 named export로 모으고, 흐름에 묶인 로직은 handler에 남김):**
 
@@ -149,21 +118,5 @@ export const EntryTable = (props: EntryTableProps) => {
 			{row.title}
 		</a>
 	));
-};
-```
-
-**Correct (여러 owner가 실제로 공유할 때만 `shared/util.ts`로 승격):**
-
-```ts
-// shared/util.ts
-export const util = {
-	date: {
-		/**
-		 * @helper date 입력값을 ISO 문자열로 정규화
-		 */
-		normalize(value: Date | string) {
-			return new Date(value).toISOString();
-		},
-	},
 };
 ```

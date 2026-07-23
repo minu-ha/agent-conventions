@@ -1,0 +1,26 @@
+{
+  "agentTarget": "/root/cli-v14-full_handbook-rte02-t2-a1",
+  "arm": "full-handbook",
+  "initialEnvelope": {
+    "path": "/Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v14-candidate-runs/full-handbook--RTE02-owner-placement-css-drift--t2.initial-dispatch-envelope.json",
+    "sha256": "sha256:8ac2c10fdd474bdbd8f547af53e9e31c72ba3cc1a34d04f630ec328e374c8129"
+  },
+  "initialPayload": {
+    "canonicalSha256": "sha256:8c4ecba154b28e49d4f3c7f1f82738388c311b5368a1a37ba50545163ef15ecf",
+    "path": "/Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v14-candidate-runs/full-handbook--RTE02-owner-placement-css-drift--t2.initial-child-payload.json",
+    "sha256": "sha256:818f38377b8b14097919e124912de418a5fe7dd65d8a142d4a54fe1586b49c57",
+    "utf8ByteLength": 36761,
+    "virtualPatchSha256": "sha256:ff6d66334738286f6684a07f486afb6f00fa1f0ae3056bd7607bcb00ab8ff623"
+  },
+  "initialRequest": {
+    "path": "/Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v14-candidate-runs/full-handbook--RTE02-owner-placement-css-drift--t2.initial-child-request.json",
+    "sha256": "sha256:8245933cd2a2ef9acbc669710733151c01a8fee22629bdeb9965c58e735546f7",
+    "utf8ByteLength": 23958
+  },
+  "mode": "same-agent-followup-v1",
+  "repositoryHead": "30b7c36e560ba70af5e478e831473dd89d431faf",
+  "runId": "full-handbook--RTE02-owner-placement-css-drift--t2",
+  "scenarioId": "RTE02-owner-placement-css-drift",
+  "schemaVersion": 1,
+  "trial": 2
+}

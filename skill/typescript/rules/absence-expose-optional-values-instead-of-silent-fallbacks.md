@@ -2,6 +2,8 @@
 title: Expose Optional Values Instead of Silent Fallbacks
 impact: HIGH
 impactDescription: makes missing data visible instead of quietly masking absence with generic defaults
+appliesWhen: optional 값의 읽기·정규화·전달을 바꾸거나 `??`, `||`, 기본값 또는 빈 값 대체 분기를 추가·변경한다.
+reviewWith: docs-keep-inline-comments-for-constraints-and-caveats
 tags: optional, fallback, absence
 ---
 

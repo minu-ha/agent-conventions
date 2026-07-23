@@ -1,0 +1,812 @@
+{
+  "schemaVersion": 1,
+  "criteriaSetId": "progressive-loading-semantic-criteria-v16",
+  "repositoryHead": "ee5f58a93eabd42a1b35341a716cf18bf7ab64b1",
+  "generatedIndexDigests": {
+    "react": "sha256:30f0c6d798cd558f19a99ecc118ffe185b5e9534d8073aebc30e92a08831bd6d",
+    "typescript": "sha256:4db36590e46880fd881297fb80c97eb453ef14cd077f6cb298bb340d15f4f6c9",
+    "css": "sha256:9c8e7235088b00b2e662f9e859b1eb8360f57c53ce1ef7fbebfe087069995ac3"
+  },
+  "publicFixtureSetSha256": "sha256:8474034b61290c8a62806e2337628efa2bc7db70fa2dc0e36d7a67541a955830",
+  "rubric": {
+    "verdicts": [
+      "PASS",
+      "FAIL",
+      "UNKNOWN"
+    ],
+    "evidencePolicy": "Judge only the resulting virtualPatch bytes and exact present or absent file states. Cite exact paths and artifact text; missing evidence is UNKNOWN.",
+    "processOnlyPolicy": "Rules listed in processOnlyRuleRefs are selection or completion-process obligations that cannot be proven from artifact bytes and are excluded from artifact-semantic PASS claims.",
+    "negativeControlPolicy": "Each scenario has one sealed realistic negative control that must FAIL its target criterion; accepting it invalidates that reviewer batch."
+  },
+  "scenarios": [
+    {
+      "scenarioId": "derive-existing-contract-with-docs",
+      "publicFixtureScenarioSha256": "sha256:55bd45a57cd823e7fa7f9a4209ae2b3af6435b2e82ee19464197b6a719424773",
+      "criteria": [
+        {
+          "id": "derive-pick-alias",
+          "stage": "single",
+          "ruleRefs": [
+            "typescript/types-reuse-existing-contracts-before-new-types"
+          ],
+          "requirement": "UserPreview remains the exported same-name type but is derived with Pick<UserRecord, ...> for exactly id and displayName; the duplicate interface is removed.",
+          "evidencePaths": [
+            "src/users/user-preview.ts"
+          ],
+          "requiredObservations": [
+            "A UserPreview type alias uses Pick<UserRecord, \"id\" | \"displayName\"> or the equivalent key union.",
+            "The existing UserRecord type-only import and UserPreview export name remain."
+          ],
+          "forbiddenObservations": [
+            "An interface named UserPreview remains.",
+            "UserPreview aliases the entire UserRecord contract or redeclares its fields."
+          ],
+          "evidencePolicy": "Quote the alias and the absence-relevant declaration context from the resulting file."
+        },
+        {
+          "id": "derive-korean-summary-doc",
+          "stage": "single",
+          "ruleRefs": [
+            "typescript/types-document-custom-types-and-shapes",
+            "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "typescript/docs-standardize-annotation-tags-by-declaration-role",
+            "typescript/docs-write-concise-korean-comments-about-purpose-and-constraints"
+          ],
+          "requirement": "The derived UserPreview declaration has concise Korean header JSDoc using @summary and explains its projected user-preview purpose.",
+          "evidencePaths": [
+            "src/users/user-preview.ts"
+          ],
+          "requiredObservations": [
+            "A Korean JSDoc block immediately precedes UserPreview.",
+            "The JSDoc uses @summary and describes why the projected type exists."
+          ],
+          "forbiddenObservations": [
+            "Only an English, tautological, or detached comment documents UserPreview."
+          ],
+          "evidencePolicy": "Quote the complete JSDoc and the immediately following declaration."
+        }
+      ],
+      "processOnlyRuleRefs": [
+        {
+          "ruleRef": "typescript/guardrails-review-banned-typescript-shortcuts-before-finishing",
+          "reason": "The completion review is a process gate and cannot be established from the resulting virtual file bytes alone."
+        }
+      ],
+      "negativeControl": {
+        "targetCriterionId": "derive-pick-alias",
+        "virtualPatch": {
+          "files": [
+            {
+              "path": "src/users/user-preview.ts",
+              "beforeState": "present",
+              "beforeSha256": "sha256:1c42aa41c860847e6bc7900dca0be4c31a81e53bb5a38ced554be6f5046fb523",
+              "afterState": "present",
+              "after": "import type {UserRecord} from \"./user-record\";\n\n/** @summary 사용자 미리보기 계약을 재사용한다. */\ntype UserPreview = UserRecord;\n\nexport type {UserPreview};\n",
+              "afterSha256": "sha256:df9cf6b66abaca74fc0532e105375da120ca50a5f388b9878cb39d67581e9fae"
+            }
+          ],
+          "summary": "Documents UserPreview but incorrectly aliases the entire source contract instead of projecting the requested fields."
+        }
+      }
+    },
+    {
+      "scenarioId": "css-repeated-values-and-optional-token",
+      "publicFixtureScenarioSha256": "sha256:61b25bc7c1e6629b7b63626ade407b567a389bc585dd105c5e313f88fef5740b",
+      "criteria": [
+        {
+          "id": "theme-owner-scoped-third-party-selector",
+          "stage": "single",
+          "ruleRefs": [
+            "css/selector-avoid-deep-descendant-dependencies",
+            "css/selector-target-third-party-dom-from-owned-roots",
+            "css/selector-use-pseudo-classes-for-dom-owned-states",
+            "css/values-separate-domain-state-modifiers-from-dom-interaction-states"
+          ],
+          "requirement": "Every changed Ant Tree selector is scoped beneath the existing .ui_themePreview owner, uses only the minimum descendant dependency needed for the third-party node, and keeps hover as an owner-scoped DOM pseudo-state.",
+          "evidencePaths": [
+            "src/components/ui/theme-preview/theme-preview.css"
+          ],
+          "requiredObservations": [
+            "The Ant Tree content-wrapper selector begins at .ui_themePreview.",
+            "The changed hover selector preserves the same owner boundary and uses :hover."
+          ],
+          "forbiddenObservations": [
+            "A top-level global .ant-tree selector remains.",
+            "The selector chains through multiple third-party ancestor levels.",
+            "Hover is represented as a domain modifier or detached from the owner root."
+          ],
+          "evidencePolicy": "Quote every resulting selector that targets Ant Tree DOM."
+        },
+        {
+          "id": "theme-optional-token-fallbacks",
+          "stage": "single",
+          "ruleRefs": [
+            "css/values-always-provide-css-variable-fallbacks",
+            "css/values-tokenize-repeated-visual-values"
+          ],
+          "requirement": "Repeated color, spacing, and radius values are represented by CSS variables and every optional variable use provides an explicit fallback equal to the original value.",
+          "evidencePaths": [
+            "src/components/ui/theme-preview/theme-preview.css"
+          ],
+          "requiredObservations": [
+            "Color, padding, and border-radius use var(...) references.",
+            "Each var(...) has a non-empty fallback preserving #334155, 8px 12px, or 6px as applicable."
+          ],
+          "forbiddenObservations": [
+            "A changed optional CSS variable is used without a fallback.",
+            "The repeated visual constants remain duplicated as raw property values."
+          ],
+          "evidencePolicy": "Quote the complete affected declaration blocks including every var(...) call."
+        }
+      ],
+      "processOnlyRuleRefs": [
+        {
+          "ruleRef": "css/organization-review-banned-css-patterns-before-finishing",
+          "reason": "The banned-pattern completion review is a process gate and cannot be proven solely by one virtual artifact snapshot."
+        }
+      ],
+      "negativeControl": {
+        "targetCriterionId": "theme-optional-token-fallbacks",
+        "virtualPatch": {
+          "files": [
+            {
+              "path": "src/components/ui/theme-preview/theme-preview.css",
+              "beforeState": "present",
+              "beforeSha256": "sha256:7912322f693959a55c484b7fca64222ab87daf66f22eb32927e1d5419cb81184",
+              "afterState": "present",
+              "after": ".ui_themePreview {\n  display: block;\n}\n\n.ui_themePreview .ant-tree-node-content-wrapper {\n  color: var(--theme-preview-color);\n  padding: var(--theme-preview-spacing);\n  border-radius: var(--theme-preview-radius);\n}\n\n.ui_themePreview .ant-tree-node-content-wrapper:hover {\n  background: var(--theme-preview-color);\n  padding: var(--theme-preview-spacing);\n  border-radius: var(--theme-preview-radius);\n}\n",
+              "afterSha256": "sha256:c56c41a28aa5d79acb36ca3e85c3a4bd61a0e3785b39ab5ff60adc8dcc0423fd"
+            }
+          ],
+          "summary": "Scopes and tokenizes the rules but omits every required optional-token fallback."
+        }
+      }
+    },
+    {
+      "scenarioId": "css-domain-state-class-contract",
+      "publicFixtureScenarioSha256": "sha256:f66eea258f8b53da034ac35bb3884fff271def6807318181d17688d9a9d4cf6d",
+      "criteria": [
+        {
+          "id": "catalog-domain-state-base-modifier",
+          "stage": "single",
+          "ruleRefs": [
+            "css/naming-name-elements-and-modifiers-by-role",
+            "css/naming-use-scope-slug-element-modifier-syntax",
+            "css/composition-do-not-build-structural-variants-with-modifiers",
+            "css/composition-keep-classes-single-purpose",
+            "css/selector-use-pseudo-classes-for-dom-owned-states",
+            "css/values-separate-domain-state-modifiers-from-dom-interaction-states"
+          ],
+          "requirement": "The class contract is split into the role-named base .route_catalog__listButton and domain-state modifier .route_catalog__listButton--active; base structure and :hover remain on the base interaction surface while active-only presentation stays in the modifier.",
+          "evidencePaths": [
+            "src/routes/catalog/index.tsx",
+            "src/routes/catalog/_index.css"
+          ],
+          "requiredObservations": [
+            "Both the base element and --active modifier appear in the resulting TSX/CSS contract.",
+            "Shared structure and the :hover selector remain on the base class; active-only presentation remains on the modifier."
+          ],
+          "forbiddenObservations": [
+            "listButtonActive remains as a fused class name.",
+            "The active modifier is used as a one-off structural patch.",
+            ":hover is nested under --active, restricted to the active modifier, or converted into a domain modifier."
+          ],
+          "evidencePolicy": "Quote the className expression and every affected CSS selector/declaration block."
+        },
+        {
+          "id": "catalog-direct-clsx-composition",
+          "stage": "single",
+          "ruleRefs": [
+            "typescript/naming-use-direct-imports-and-public-entry-points",
+            "css/composition-compose-classes-with-clsx"
+          ],
+          "requirement": "catalog/index.tsx directly imports clsx and composes the unconditional base class with the conditional --active modifier through clsx().",
+          "evidencePaths": [
+            "src/routes/catalog/index.tsx"
+          ],
+          "requiredObservations": [
+            "There is a direct import from clsx.",
+            "className uses clsx() with the base class always present and the active modifier conditional on entry.active."
+          ],
+          "forbiddenObservations": [
+            "String concatenation, a ternary-only className, or a barrel import replaces direct clsx composition."
+          ],
+          "evidencePolicy": "Quote the import and the complete className expression."
+        }
+      ],
+      "processOnlyRuleRefs": [
+        {
+          "ruleRef": "typescript/guardrails-review-banned-typescript-shortcuts-before-finishing",
+          "reason": "The TypeScript final-review gate is process-only for this artifact audit."
+        },
+        {
+          "ruleRef": "css/organization-review-banned-css-patterns-before-finishing",
+          "reason": "The CSS final-review gate is process-only for this artifact audit."
+        }
+      ],
+      "negativeControl": {
+        "targetCriterionId": "catalog-domain-state-base-modifier",
+        "virtualPatch": {
+          "files": [
+            {
+              "path": "src/routes/catalog/index.tsx",
+              "beforeState": "present",
+              "beforeSha256": "sha256:abb019ed5a3c45ab86dfa1ffee120ac20468d10e0d9489ba5b237b9a8ef31d94",
+              "afterState": "present",
+              "after": "import clsx from \"clsx\";\n\nimport \"./_index.css\";\n\ninterface CatalogEntry {\n  id: string;\n  label: string;\n  active: boolean;\n}\n\nexport const CatalogPage = ({entries}: {entries: CatalogEntry[]}) => (\n  <nav className=\"route_catalog\">\n    {entries.map((entry) => (\n      <button key={entry.id} className={clsx({route_catalog__listButtonActive: entry.active})}>\n        {entry.label}\n      </button>\n    ))}\n  </nav>\n);\n",
+              "afterSha256": "sha256:6237cd9695f56cb658c1f96d6fb663a8b3cf319d5f1cf41e6676ed61aef10fc7"
+            },
+            {
+              "path": "src/routes/catalog/_index.css",
+              "beforeState": "present",
+              "beforeSha256": "sha256:380447b980dedb2ae1260f1fb22e0ab14ddaf07d1a4a9a3a013e784501262bf7",
+              "afterState": "present",
+              "after": ".route_catalog__listButtonActive {\n  display: flex;\n  color: var(--color-accent);\n  font-weight: 700;\n}\n\n.route_catalog__listButtonActive:hover {\n  text-decoration: underline;\n}\n",
+              "afterSha256": "sha256:380447b980dedb2ae1260f1fb22e0ab14ddaf07d1a4a9a3a013e784501262bf7"
+            }
+          ],
+          "summary": "Adds clsx but deliberately keeps the fused listButtonActive contract instead of the required base/modifier split."
+        }
+      }
+    },
+    {
+      "scenarioId": "RTE12-query-shaping",
+      "publicFixtureScenarioSha256": "sha256:676446dfe8c7eb3c13a90ba704c77bde9803dcf277b39b79dcc46cd0d0d09f9c",
+      "criteria": [
+        {
+          "id": "query-select-preserves-response-origin",
+          "stage": "single",
+          "ruleRefs": [
+            "react/screen-keep-derived-values-close",
+            "react/state-preserve-origin-chaining",
+            "react/state-shape-query-data-with-select"
+          ],
+          "requirement": "The query select option produces render-ready items and meta from the raw response, and rendering uses those values through the response binding without wide entries/items/meta aliases.",
+          "evidencePaths": [
+            "src/routes/entries/page.tsx"
+          ],
+          "requiredObservations": [
+            "useSuspenseQuery contains a select function that creates items and meta.",
+            "The rendered list reads shaped data through the response binding close to use."
+          ],
+          "forbiddenObservations": [
+            "Raw list, items, or meta are re-aliased in the component's wide scope.",
+            "Render shaping remains outside query select."
+          ],
+          "evidencePolicy": "Quote the complete query declaration and the render call site."
+        },
+        {
+          "id": "query-mutation-binding-names",
+          "stage": "single",
+          "ruleRefs": [
+            "react/state-name-query-and-mutation-bindings-consistently",
+            "typescript/naming-use-consistent-file-and-symbol-naming"
+          ],
+          "requirement": "The query and mutation bindings follow response... and mutation... naming consistently and their uses preserve those names.",
+          "evidencePaths": [
+            "src/routes/entries/page.tsx"
+          ],
+          "requiredObservations": [
+            "The query result binding includes Response.",
+            "The mutation result binding includes Mutation."
+          ],
+          "forbiddenObservations": [
+            "entriesQuery or createEntry remains as the query/mutation result binding."
+          ],
+          "evidencePolicy": "Quote both declarations and at least one use of each binding."
+        },
+        {
+          "id": "query-key-declaration-docs",
+          "stage": "single",
+          "ruleRefs": [
+            "react/docs-require-jsdoc-on-key-declarations",
+            "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "typescript/docs-standardize-annotation-tags-by-declaration-role",
+            "typescript/docs-write-concise-korean-comments-about-purpose-and-constraints"
+          ],
+          "requirement": "The changed named query and mutation result bindings have concise Korean header JSDoc with the declaration-role-appropriate @api tag.",
+          "evidencePaths": [
+            "src/routes/entries/page.tsx"
+          ],
+          "requiredObservations": [
+            "Concise Korean @api JSDoc immediately precedes the Response-named query binding.",
+            "Concise Korean @api JSDoc immediately precedes the Mutation-named mutation binding."
+          ],
+          "forbiddenObservations": [
+            "Either changed query or mutation binding is undocumented or only has a detached inline comment."
+          ],
+          "evidencePolicy": "Quote both JSDoc blocks and their immediately following hook declarations."
+        }
+      ],
+      "processOnlyRuleRefs": [
+        {
+          "ruleRef": "typescript/guardrails-review-banned-typescript-shortcuts-before-finishing",
+          "reason": "The TypeScript banned-shortcut review is a completion process, not an artifact-only fact."
+        }
+      ],
+      "negativeControl": {
+        "targetCriterionId": "query-select-preserves-response-origin",
+        "virtualPatch": {
+          "files": [
+            {
+              "path": "src/routes/entries/page.tsx",
+              "beforeState": "present",
+              "beforeSha256": "sha256:d4fb4cd10a6cf8d4185cb19a49a86a500e2bc9e48ef0faeb6f0cd04250d3d800",
+              "afterState": "present",
+              "after": "import {useMutation, useSuspenseQuery} from \"@tanstack/react-query\";\n\nimport {EntryList} from \"./-local/entry-list\";\nimport {fetchEntries, postEntry} from \"./entry-api\";\n\n/** @summary 엔트리 목록 화면을 렌더링한다. */\nexport const EntriesPage = () => {\n  const entryResponse = useSuspenseQuery({queryKey: [\"entries\"], queryFn: fetchEntries});\n  const entryMutation = useMutation({mutationFn: postEntry});\n  const entries = entryResponse.data.entries;\n  const items = entries.map((entry) => ({id: entry.id, label: entry.title.trim()}));\n  const meta = {total: entryResponse.data.total};\n\n  return <EntryList items={items} total={meta.total} onCreate={entryMutation.mutate} />;\n};\n",
+              "afterSha256": "sha256:dce65b229d2240dde2ee2998306c21fd5149cff229008e4b01a6afc5269846ab"
+            }
+          ],
+          "summary": "Renames bindings and documents the component but deliberately leaves shaping and wide aliases outside query select."
+        }
+      }
+    },
+    {
+      "scenarioId": "RTE02-owner-placement-css-drift",
+      "publicFixtureScenarioSha256": "sha256:47d0eb5586c03bbeba7c72608b1d738ae038cfae7352bbb4c29b1e3aad0f0c7c",
+      "criteria": [
+        {
+          "id": "entry-tree-route-local-ownership",
+          "stage": "initial",
+          "ruleRefs": [
+            "react/ownership-layer-component-boundaries",
+            "react/ownership-place-route-local-files-by-scope",
+            "react/ownership-use-consistent-file-and-symbol-naming",
+            "typescript/naming-use-consistent-file-and-symbol-naming"
+          ],
+          "requirement": "The route-only tree is removed from shared UI ownership and exists only as the consistently named route-local EntryTree in src/routes/entries/-local/entry-tree.tsx.",
+          "evidencePaths": [
+            "src/components/ui/entry-tree.tsx",
+            "src/routes/entries/-local/entry-tree.tsx"
+          ],
+          "requiredObservations": [
+            "The shared UI file is absent after the change.",
+            "The route-local file is present and exports a route-local EntryTree symbol."
+          ],
+          "forbiddenObservations": [
+            "The shared UiEntryTree implementation remains present.",
+            "The route-only renderer is duplicated across shared and route-local ownership."
+          ],
+          "evidencePolicy": "Cite both exact after states and quote the route-local exported declaration."
+        },
+        {
+          "id": "entry-tree-props-contract-and-docs",
+          "stage": "initial",
+          "ruleRefs": [
+            "react/composition-destructure-props-inside",
+            "typescript/types-document-custom-types-and-shapes",
+            "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "typescript/docs-standardize-annotation-tags-by-declaration-role",
+            "typescript/docs-write-concise-korean-comments-about-purpose-and-constraints"
+          ],
+          "requirement": "The moved EntryTree accepts a whole EntryTreeProps object and destructures it inside the component body; its file-local custom props contract has concise Korean @summary and per-field @field JSDoc.",
+          "evidencePaths": [
+            "src/routes/entries/-local/entry-tree.tsx"
+          ],
+          "requiredObservations": [
+            "EntryTree receives one props parameter typed as EntryTreeProps and destructures entries and selectedId inside its body.",
+            "EntryTreeProps has Korean @summary JSDoc and each contract field has adjacent Korean @field JSDoc."
+          ],
+          "forbiddenObservations": [
+            "EntryTree destructures props in its function signature.",
+            "EntryTreeProps or one of its fields is undocumented, uses a non-standard tag, or only narrates syntax."
+          ],
+          "evidencePolicy": "Quote the complete EntryTreeProps declaration with JSDoc and the component signature plus first body statements."
+        },
+        {
+          "id": "entry-tree-direct-imports",
+          "stage": "initial",
+          "ruleRefs": [
+            "typescript/naming-use-direct-imports-and-public-entry-points"
+          ],
+          "requirement": "The moved route-local component retains direct dependency imports and the drift stage adds the stylesheet with a direct side-effect import; no barrel import is introduced.",
+          "evidencePaths": [
+            "src/routes/entries/-local/entry-tree.tsx"
+          ],
+          "requiredObservations": [
+            "clsx is imported directly from clsx.",
+            "entry-tree.css is imported directly by the owner in the drift result."
+          ],
+          "forbiddenObservations": [
+            "A new index barrel supplies clsx, styles, or EntryTree."
+          ],
+          "evidencePolicy": "Quote the complete import block from the final route-local file."
+        },
+        {
+          "id": "entry-tree-route-css-ownership",
+          "stage": "drift",
+          "ruleRefs": [
+            "css/naming-default-to-plain-css-when-no-module-convention",
+            "css/naming-keep-scope-slug-unique-per-owner",
+            "css/naming-name-elements-and-modifiers-by-role",
+            "css/naming-preserve-route-slug-traceability",
+            "css/naming-separate-local-and-route-style-scopes",
+            "css/naming-use-scope-slug-element-modifier-syntax",
+            "css/composition-do-not-build-structural-variants-with-modifiers",
+            "css/values-separate-domain-state-modifiers-from-dom-interaction-states",
+            "css/organization-keep-style-files-owned-by-one-component-or-route"
+          ],
+          "requirement": "The drift creates plain route-local entry-tree.css owned only by EntryTree, with an rt_entriesEntryTree route-support owner slug, role-named element classes, and a repeatable selected-state modifier using scope_slug__element--modifier syntax; structural styling stays on the base/element class.",
+          "evidencePaths": [
+            "src/routes/entries/-local/entry-tree.tsx",
+            "src/routes/entries/-local/entry-tree.css"
+          ],
+          "requiredObservations": [
+            "entry-tree.css is present beside its owner component.",
+            "Every new selector uses the rt_entriesEntryTree route-support owner and role-named elements.",
+            "The --selected modifier contains selected-state presentation only while structural declarations remain on the base/element class."
+          ],
+          "forbiddenObservations": [
+            "A CSS Module is introduced despite the stated project context.",
+            "loc_*, ui_*, route_*, shared UI, or another route owns the new selectors.",
+            "Generic or owner-colliding class names are introduced.",
+            "The --selected modifier is used as a one-off structural patch or encodes a DOM interaction state."
+          ],
+          "evidencePolicy": "Quote the stylesheet import, every new selector, and the matching className contract."
+        },
+        {
+          "id": "entry-tree-clsx-contract",
+          "stage": "drift",
+          "ruleRefs": [
+            "css/composition-compose-classes-with-clsx"
+          ],
+          "requirement": "The changed EntryTree className contract is composed with the retained direct clsx import, including a stable base/element class and conditional selected-state modifier.",
+          "evidencePaths": [
+            "src/routes/entries/-local/entry-tree.tsx"
+          ],
+          "requiredObservations": [
+            "The className expression invokes clsx().",
+            "The selected-state class is conditional rather than concatenated manually."
+          ],
+          "forbiddenObservations": [
+            "The changed class contract uses string concatenation or a hand-built ternary list."
+          ],
+          "evidencePolicy": "Quote the clsx import and complete className expression."
+        }
+      ],
+      "processOnlyRuleRefs": [
+        {
+          "ruleRef": "typescript/guardrails-review-banned-typescript-shortcuts-before-finishing",
+          "reason": "The TypeScript completion review is process-only and applies at the initial and drift fixed points."
+        },
+        {
+          "ruleRef": "css/organization-review-banned-css-patterns-before-finishing",
+          "reason": "The CSS banned-pattern review is a drift-stage completion gate and cannot be proven from artifact bytes alone."
+        }
+      ],
+      "negativeControl": {
+        "targetCriterionId": "entry-tree-route-local-ownership",
+        "virtualPatch": {
+          "files": [
+            {
+              "path": "src/components/ui/entry-tree.tsx",
+              "beforeState": "present",
+              "beforeSha256": "sha256:f445d8933df7ebd3f909bbeb3c7c1838c935b2c2b9510d30610b786bd590f1c6",
+              "afterState": "present",
+              "after": "import clsx from \"clsx\";\n\ninterface UiEntryTreeProps {\n  entries: Array<{id: string; label: string}>;\n  selectedId?: string;\n}\n\nexport const UiEntryTree = ({entries, selectedId}: UiEntryTreeProps) => (\n  <ul className={clsx(\"ui_entryTree\", selectedId && \"ui_entryTree--selected\")}>\n    {entries.map((entry) => (\n      <li key={entry.id}>{entry.label}</li>\n    ))}\n  </ul>\n);\n",
+              "afterSha256": "sha256:f445d8933df7ebd3f909bbeb3c7c1838c935b2c2b9510d30610b786bd590f1c6"
+            },
+            {
+              "path": "src/routes/entries/-local/entry-tree.tsx",
+              "beforeState": "absent",
+              "beforeSha256": null,
+              "afterState": "present",
+              "after": "import clsx from \"clsx\";\n\nimport \"./entry-tree.css\";\n\ninterface EntryTreeProps {\n  entries: Array<{id: string; label: string}>;\n  selectedId?: string;\n}\n\nexport const EntryTree = ({entries, selectedId}: EntryTreeProps) => (\n  <section className=\"route_entries_entryTree\">\n    <ul\n      className={clsx(\"route_entries_entryTree__list\", {\n        \"route_entries_entryTree__list--selected\": Boolean(selectedId),\n      })}\n    >\n      {entries.map((entry) => (\n        <li key={entry.id}>{entry.label}</li>\n      ))}\n    </ul>\n  </section>\n);\n",
+              "afterSha256": "sha256:7edae2f9617fefc53b3d6d569d5a4e7c2ac93e61a0f3d949dc2bd5ac0c89456d"
+            },
+            {
+              "path": "src/routes/entries/-local/entry-tree.css",
+              "beforeState": "absent",
+              "beforeSha256": null,
+              "afterState": "present",
+              "after": ".route_entries_entryTree {\n  display: block;\n}\n\n.route_entries_entryTree__list {\n  padding: 0;\n}\n\n.route_entries_entryTree__list--selected {\n  outline: 1px solid currentColor;\n}\n",
+              "afterSha256": "sha256:02adc80bedffdc7440e1e4b5d29478febd1cc66696ee2e11869b084cc4ed97f2"
+            }
+          ],
+          "summary": "Creates a correct route-local styled copy but deliberately leaves the shared route-only implementation present, violating exclusive ownership."
+        }
+      }
+    },
+    {
+      "scenarioId": "RTE03-route-support-extraction",
+      "publicFixtureScenarioSha256": "sha256:7633252bbe7e66b2d6e871bdafc317ef02c77ac5ba964f2f2df4c34b8a0d3d9c",
+      "criteria": [
+        {
+          "id": "payload-route-local-pure-helper-boundary",
+          "stage": "single",
+          "ruleRefs": [
+            "react/ownership-prefer-plain-ts-for-local-react-helpers",
+            "react/ownership-place-route-local-files-by-scope",
+            "react/screen-avoid-premature-abstraction",
+            "react/screen-extract-utilities-selectively",
+            "react/screen-move-pure-support-code-out-of-entry-files",
+            "typescript/naming-use-direct-imports-and-public-entry-points",
+            "typescript/functions-extract-helpers-only-when-the-boundary-is-real"
+          ],
+          "requirement": "The one real pure payload boundary moves from page.tsx into the sibling route-local page.ts and is directly imported back; no hook, generic utils module, or extra helper soup is created.",
+          "evidencePaths": [
+            "src/routes/entries/page.tsx",
+            "src/routes/entries/page.ts"
+          ],
+          "requiredObservations": [
+            "page.ts contains the single payload helper and its local contract.",
+            "page.tsx directly imports and invokes that helper."
+          ],
+          "forbiddenObservations": [
+            "The helper remains defined in page.tsx.",
+            "A custom hook, generic utils file, or multiple tiny forwarding helpers are introduced."
+          ],
+          "evidencePolicy": "Quote both files' import/export boundary and enumerate resulting virtual paths."
+        },
+        {
+          "id": "payload-object-parameter-and-naming",
+          "stage": "single",
+          "ruleRefs": [
+            "react/ownership-use-consistent-file-and-symbol-naming",
+            "react/composition-prefer-arrow-functions-and-object-params",
+            "typescript/naming-use-consistent-file-and-symbol-naming",
+            "typescript/types-document-custom-types-and-shapes",
+            "typescript/functions-use-named-object-params-for-complex-signatures"
+          ],
+          "requirement": "The extracted createEntryPayload arrow helper uses one named object parameter for entryId, name, tags, and enabled, with consistently named documented custom contracts.",
+          "evidencePaths": [
+            "src/routes/entries/page.ts",
+            "src/routes/entries/page.tsx"
+          ],
+          "requiredObservations": [
+            "createEntryPayload is an arrow function with one object parameter.",
+            "Its call site passes one named object containing all four fields.",
+            "Custom parameter and payload shapes have consistent descriptive names."
+          ],
+          "forbiddenObservations": [
+            "The helper still accepts four positional arguments.",
+            "Names are abbreviated or inconsistent across type, helper, and call site."
+          ],
+          "evidencePolicy": "Quote the type declarations, complete helper signature, and call site."
+        },
+        {
+          "id": "payload-helper-and-contract-docs",
+          "stage": "single",
+          "ruleRefs": [
+            "react/docs-require-jsdoc-on-key-declarations",
+            "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "typescript/docs-standardize-annotation-tags-by-declaration-role",
+            "typescript/docs-use-helper-for-reusable-pure-helper-functions",
+            "typescript/docs-write-concise-korean-comments-about-purpose-and-constraints"
+          ],
+          "requirement": "The extracted helper and its custom contracts have concise Korean header JSDoc using role-appropriate @helper, @summary, and @field tags.",
+          "evidencePaths": [
+            "src/routes/entries/page.ts"
+          ],
+          "requiredObservations": [
+            "createEntryPayload has Korean @helper JSDoc.",
+            "Each custom shape has Korean @summary JSDoc and every contract field has adjacent Korean @field JSDoc."
+          ],
+          "forbiddenObservations": [
+            "Only inline implementation narration is added.",
+            "The helper, a custom shape, or one of its fields is undocumented."
+          ],
+          "evidencePolicy": "Quote every relevant JSDoc together with its immediately following declaration."
+        }
+      ],
+      "processOnlyRuleRefs": [
+        {
+          "ruleRef": "typescript/guardrails-review-banned-typescript-shortcuts-before-finishing",
+          "reason": "The final banned-shortcut review is process-only and not inferable from resulting helper bytes."
+        }
+      ],
+      "negativeControl": {
+        "targetCriterionId": "payload-object-parameter-and-naming",
+        "virtualPatch": {
+          "files": [
+            {
+              "path": "src/routes/entries/page.tsx",
+              "beforeState": "present",
+              "beforeSha256": "sha256:4d2d48e8f917a4e7c5d84cac9c5a651f002837d6b3e91b72f8e200d6cdedeb38",
+              "afterState": "present",
+              "after": "import {createEntryPayload} from \"./page\";\n\n/** @summary 엔트리 화면을 렌더링한다. */\nexport const EntriesPage = () => {\n  const payload = createEntryPayload(\"entry-1\", \"Draft\", [\"new\"], true);\n\n  return <pre>{JSON.stringify(payload)}</pre>;\n};\n",
+              "afterSha256": "sha256:82d004da4c17adbb66d2615351c6c489c815cd96a7c41612551570fba507509b"
+            },
+            {
+              "path": "src/routes/entries/page.ts",
+              "beforeState": "absent",
+              "beforeSha256": null,
+              "afterState": "present",
+              "after": "/** @summary 엔트리 생성 payload 계약이다. */\ninterface CreateEntryPayload {\n  /** @field 엔트리 식별자 */\n  entryId: string;\n  /** @field 표시 이름 */\n  name: string;\n  /** @field 분류 태그 */\n  tags: string[];\n  /** @field 활성 여부 */\n  enabled: boolean;\n}\n\n/** @helper 입력값을 엔트리 생성 payload로 정규화한다. */\nexport const createEntryPayload = (\n  entryId: string,\n  name: string,\n  tags: string[],\n  enabled: boolean,\n): CreateEntryPayload => ({entryId, name: name.trim(), tags, enabled});\n",
+              "afterSha256": "sha256:a17d5be925c7e5fa95dc8d63699b974f75196e33947c3d0533a7d400600275d4"
+            }
+          ],
+          "summary": "Extracts and documents one route-local helper but deliberately retains the four positional-argument signature."
+        }
+      }
+    },
+    {
+      "scenarioId": "css-one-off-structural-modifier",
+      "publicFixtureScenarioSha256": "sha256:110a7d3c4821c852a9ffcb7da5c2704e524db7de34d926fcf4bc51274b9ec233",
+      "criteria": [
+        {
+          "id": "catalog-detail-role-element-not-structural-modifier",
+          "stage": "single",
+          "ruleRefs": [
+            "css/naming-name-elements-and-modifiers-by-role",
+            "css/naming-use-scope-slug-element-modifier-syntax",
+            "css/composition-compose-classes-with-clsx",
+            "css/composition-do-not-build-structural-variants-with-modifiers"
+          ],
+          "requirement": "The non-repeatable --compactTop structural modifier is removed from TSX and CSS and replaced by a role-named route_catalogDetail element class, composed through the existing clsx import.",
+          "evidencePaths": [
+            "src/routes/catalog/detail.tsx",
+            "src/routes/catalog/detail.css"
+          ],
+          "requiredObservations": [
+            "A role-named element such as __summarySection carries the one-off spacing intent.",
+            "The TSX className continues to use clsx with the base section and role element."
+          ],
+          "forbiddenObservations": [
+            "section--compactTop remains.",
+            "A new structural modifier replaces it under another generic name."
+          ],
+          "evidencePolicy": "Quote the complete className expression and affected selector blocks."
+        }
+      ],
+      "processOnlyRuleRefs": [
+        {
+          "ruleRef": "typescript/guardrails-review-banned-typescript-shortcuts-before-finishing",
+          "reason": "The TypeScript completion review is process-only for the unchanged logic surface."
+        },
+        {
+          "ruleRef": "css/organization-review-banned-css-patterns-before-finishing",
+          "reason": "The CSS completion review is process-only and cannot be proven from this isolated patch alone."
+        }
+      ],
+      "negativeControl": {
+        "targetCriterionId": "catalog-detail-role-element-not-structural-modifier",
+        "virtualPatch": {
+          "files": [
+            {
+              "path": "src/routes/catalog/detail.tsx",
+              "beforeState": "present",
+              "beforeSha256": "sha256:14ed551407a617956505f2236cb90b7b764ce2b7e33d02cc12e5261c5684b899",
+              "afterState": "present",
+              "after": "import clsx from \"clsx\";\n\nimport \"./detail.css\";\n\nexport const CatalogDetail = () => (\n  <main className=\"route_catalogDetail\">\n    <section className={clsx(\"route_catalogDetail__section\", \"route_catalogDetail__section--compactTop\")}>\n      <h2>Summary</h2>\n    </section>\n  </main>\n);\n",
+              "afterSha256": "sha256:14ed551407a617956505f2236cb90b7b764ce2b7e33d02cc12e5261c5684b899"
+            },
+            {
+              "path": "src/routes/catalog/detail.css",
+              "beforeState": "present",
+              "beforeSha256": "sha256:cf0154ddf5c49b5e373fce4900f2bad7d17221e5f19e4e5cae110c7933024e88",
+              "afterState": "present",
+              "after": ".route_catalogDetail__section {\n  padding: 24px;\n}\n\n.route_catalogDetail__section--compactTop {\n  padding-top: 8px;\n}\n",
+              "afterSha256": "sha256:cf0154ddf5c49b5e373fce4900f2bad7d17221e5f19e4e5cae110c7933024e88"
+            }
+          ],
+          "summary": "Leaves the lint-valid one-off structural modifier untouched instead of introducing a role-named element."
+        }
+      }
+    },
+    {
+      "scenarioId": "RTE10-derived-selection-state",
+      "publicFixtureScenarioSha256": "sha256:bb30c2d22815efca8ed0ab9dcbffdb6ec79c11fd6901f8c91af9698208e119e6",
+      "criteria": [
+        {
+          "id": "selection-named-curried-handler",
+          "stage": "single",
+          "ruleRefs": [
+            "react/ownership-avoid-barrel-and-react-namespace-imports",
+            "react/typing-function-type-first",
+            "react/composition-named-handlers-over-inline",
+            "react/events-name-and-curry-handlers",
+            "typescript/naming-use-consistent-file-and-symbol-naming",
+            "typescript/naming-use-direct-imports-and-public-entry-points",
+            "typescript/types-mark-unused-parameters-with-underscore",
+            "typescript/types-prefer-function-variable-types-over-parameter-annotations",
+            "typescript/types-reuse-callback-signatures-from-existing-contracts"
+          ],
+          "requirement": "Selection toggle logic lives in a consistently named handleSelectionToggle factory that curries the entry id, returns the existing MouseEventHandler<HTMLButtonElement> contract, preserves the unused event as _event, and is assigned directly to onClick without an inline wrapper.",
+          "evidencePaths": [
+            "src/routes/entries/page.tsx"
+          ],
+          "requiredObservations": [
+            "MouseEventHandler is brought in through a direct type-only React import.",
+            "handleSelectionToggle is declared outside JSX, curries entryId, explicitly returns MouseEventHandler<HTMLButtonElement>, and names the unused callback parameter _event.",
+            "onClick is assigned handleSelectionToggle(entry.id) directly."
+          ],
+          "forbiddenObservations": [
+            "The selection update or handler call remains inside an inline JSX callback.",
+            "The final callback omits an explicit existing React handler contract or silently omits its event parameter.",
+            "A React namespace type, mixed type/value import, or inconsistent handler name is used."
+          ],
+          "evidencePolicy": "Quote the React imports, complete handler factory declaration, and complete onClick assignment."
+        },
+        {
+          "id": "selection-functional-updater",
+          "stage": "single",
+          "ruleRefs": [
+            "react/state-use-functional-setstate-updates"
+          ],
+          "requirement": "setSelectedIds uses a functional updater and derives the next array only from its previousSelectedIds parameter.",
+          "evidencePaths": [
+            "src/routes/entries/page.tsx"
+          ],
+          "requiredObservations": [
+            "setSelectedIds receives an updater function with an explicitly meaningful previous-state parameter."
+          ],
+          "forbiddenObservations": [
+            "The update closes over selectedIds to compute the next selectedIds value."
+          ],
+          "evidencePolicy": "Quote the complete setSelectedIds call."
+        },
+        {
+          "id": "selection-derived-during-render",
+          "stage": "single",
+          "ruleRefs": [
+            "react/screen-keep-derived-values-close",
+            "react/state-calculate-derived-values-during-render"
+          ],
+          "requirement": "selectedCount and hasSelection are calculated directly from selectedIds during render near the status output; their synchronizing state and effect are removed.",
+          "evidencePaths": [
+            "src/routes/entries/page.tsx"
+          ],
+          "requiredObservations": [
+            "selectedCount is derived from selectedIds.length during render.",
+            "hasSelection is derived during render and used near the status output."
+          ],
+          "forbiddenObservations": [
+            "useState stores selectedCount or hasSelection.",
+            "useEffect synchronizes either value from selectedIds."
+          ],
+          "evidencePolicy": "Quote the derived declarations, status usage, and import block showing obsolete effect usage is gone."
+        },
+        {
+          "id": "selection-handler-docs",
+          "stage": "single",
+          "ruleRefs": [
+            "react/docs-require-jsdoc-on-key-declarations",
+            "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "typescript/docs-standardize-annotation-tags-by-declaration-role",
+            "typescript/docs-write-concise-korean-comments-about-purpose-and-constraints"
+          ],
+          "requirement": "The changed named selection handler has concise Korean header JSDoc using the handler-appropriate @event tag.",
+          "evidencePaths": [
+            "src/routes/entries/page.tsx"
+          ],
+          "requiredObservations": [
+            "handleSelectionToggle has concise Korean @event JSDoc immediately above the declaration."
+          ],
+          "forbiddenObservations": [
+            "The handler is undocumented or documented only with an inline implementation narration."
+          ],
+          "evidencePolicy": "Quote the handler JSDoc block with its immediately following declaration."
+        }
+      ],
+      "processOnlyRuleRefs": [
+        {
+          "ruleRef": "typescript/guardrails-review-banned-typescript-shortcuts-before-finishing",
+          "reason": "The final TypeScript guardrail review is a process gate, not a virtual artifact fact."
+        }
+      ],
+      "negativeControl": {
+        "targetCriterionId": "selection-derived-during-render",
+        "virtualPatch": {
+          "files": [
+            {
+              "path": "src/routes/entries/page.tsx",
+              "beforeState": "present",
+              "beforeSha256": "sha256:1db519f16f8b3708846dc5187357527cf27a91923ac9d72752d31ac1641c030a",
+              "afterState": "present",
+              "after": "import type {MouseEventHandler} from \"react\";\nimport {useEffect, useState} from \"react\";\n\ninterface Entry {\n  id: string;\n  label: string;\n}\n\n/** @summary 엔트리 선택 화면을 렌더링한다. */\nexport const EntriesPage = ({entries}: {entries: Entry[]}) => {\n  const [selectedIds, setSelectedIds] = useState<string[]>([]);\n  const [selectedCount, setSelectedCount] = useState(0);\n  const [hasSelection, setHasSelection] = useState(false);\n\n  useEffect(() => {\n    setSelectedCount(selectedIds.length);\n    setHasSelection(selectedIds.length > 0);\n  }, [selectedIds]);\n\n  /** @event 선택한 엔트리 식별자를 토글한다. */\n  const handleSelectionToggle =\n    (entryId: string): MouseEventHandler<HTMLButtonElement> =>\n    (_event) => {\n      setSelectedIds((previousSelectedIds) =>\n        previousSelectedIds.includes(entryId)\n          ? previousSelectedIds.filter((selectedId) => selectedId !== entryId)\n          : [...previousSelectedIds, entryId],\n      );\n    };\n\n  return (\n    <section>\n      <p>{hasSelection ? `${selectedCount} selected` : \"No selection\"}</p>\n      {entries.map((entry) => (\n        <button key={entry.id} onClick={handleSelectionToggle(entry.id)}>\n          {entry.label}\n        </button>\n      ))}\n    </section>\n  );\n};\n",
+              "afterSha256": "sha256:e3ae789863dd43ca68619b1910cf579d3320b0dbb17c1d301e1bb51da1fd2b80"
+            }
+          ],
+          "summary": "Uses a documented named curried handler and functional updater but deliberately retains derived-state synchronization in useEffect."
+        }
+      }
+    }
+  ],
+  "authoringProvenance": {
+    "authoredAtUtc": "2026-07-22T16:17:05Z",
+    "publicProtocolPath": "docs/evaluations/2026-07-21-progressive-loading-behavioral-protocol.json",
+    "sealPolicy": "The exact raw criteria bytes are committed before candidate semantic review and revealed only to independent semantic-audit reviewers."
+  }
+}
+

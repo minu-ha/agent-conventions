@@ -2,6 +2,7 @@
 title: Prefer Immutable Array Sorting
 impact: MEDIUM
 impactDescription: avoids mutation bugs when sorted arrays come from props, state, or shared inputs
+appliesWhen: props, state, 매개변수 또는 공유 입력에서 온 배열을 정렬하거나 기존 `.sort()` 호출을 추가·변경한다.
 tags: functions, arrays, sorting, immutability
 ---
 

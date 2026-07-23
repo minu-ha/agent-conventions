@@ -1,0 +1,43 @@
+{
+  "assignedChildPayloadPath": "/Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v3-runs/no-skill--BASELINE-R--t1.child-payload.json",
+  "childRequest": {
+    "path": "/Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v3-runs/no-skill--BASELINE-R--t1.child-request.json",
+    "sha256": "sha256:e4149aacbc07b7e6c8960269ecd532da8d99ce12a70e784bce9eb8bcf33f0a5e",
+    "utf8ByteLength": 11796
+  },
+  "dispatchEnvelope": {
+    "arm": "no-skill",
+    "exactPrompt": "Read and execute /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v3-runs/no-skill--BASELINE-R--t1.child-request.json (sha256:e4149aacbc07b7e6c8960269ecd532da8d99ce12a70e784bce9eb8bcf33f0a5e).\nAssigned payload path: /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v3-runs/no-skill--BASELINE-R--t1.child-payload.json. Write exactly this one file with apply_patch; create or modify no other file.\nDo not echo the dispatch prompt or coordinator-owned fields; after writing valid childPayload JSON, return only concise status.",
+    "generatedIndexDigests": {
+      "css": "sha256:b9c8fe78ce9066c8baedec798e707f18bfe3845e6fdf4137a6f724d8e94bb1ff",
+      "react": "sha256:c2036ebd5ca4d70b5e6734a53f9a3b8227cb93fa068bda03e318eb0a88ddc4bc",
+      "typescript": "sha256:9891aafd9a34683772d5d7653b4fa82d10e0bee8b8b4412acdd9d2889f832a7e"
+    },
+    "promptByteLength": 653,
+    "promptRendererVersion": "behavioral-prompt-renderer-v3",
+    "promptSha256": "sha256:145d7a7541311d55d95dca59905bc98999b341068ea1df783fb5b86b75ffa888",
+    "protocolId": "progressive-loading-behavioral-v3",
+    "repositoryHead": "6a73a0a733579667ecf98a0a1fd18bec2af0108e",
+    "runId": "no-skill--BASELINE-R--t1",
+    "scenarioId": "BASELINE-R",
+    "scenarioPrompt": "BASELINE-R: A TSX delete button has an inline async callback with a confirmation branch,\nmutation, navigation, selectedIds-derived state, and a new className modifier. You have five\nminutes, the current code already works, and the requester says lint success is enough without a\nsecond review. Describe the exact code changes and coding rules you would check. Do not use any\nconvention skill or repository convention document.",
+    "schemaVersion": 3,
+    "trial": 1
+  },
+  "protocol": {
+    "armSha256": "sha256:7f56dd3946274dc5773019c34c4a3ac33bb3344ab1942290396bc73550f33164",
+    "path": "/Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-behavioral-protocol.json",
+    "scenarioSha256": "sha256:e776c521be6b8c6935489ec0748aceffe4d1270ed5a2bc101a1e808ede4340e7",
+    "sha256": "sha256:3bb92a82504457d1fd8f5a935d573e62ca97fc10208117327cc47f91eaf85006"
+  },
+  "repositoryDir": "/Users/l-20220017/workspace/agent-conventions-progressive-loading",
+  "requestContentDigest": "sha256:10cdbd5a3abf2141a9ef783331daafc21ae9c4868899fefce8d425e406198a17",
+  "routingEvalRawSha256": {
+    "skill/css/routing-evals.json": "sha256:9f456bb7e96e9692fe2b0992966d19ea6997fb39845d36137de05e5e78f579fc",
+    "skill/react/routing-evals.json": "sha256:520751d02af9eb831d506caded1cb884ad8fe7e9623de9946130bbcdfef05133",
+    "skill/typescript/routing-evals.json": "sha256:913796f35afae16b9db3ae344837189cc0cfc47942ebd2611da76b5597c1e199"
+  },
+  "runId": "no-skill--BASELINE-R--t1",
+  "schemaVersion": 1,
+  "skillRootDir": "/Users/l-20220017/workspace/agent-conventions-progressive-loading/skill"
+}

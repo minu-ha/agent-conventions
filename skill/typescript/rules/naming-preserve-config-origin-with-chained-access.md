@@ -2,6 +2,7 @@
 title: Preserve Shared Namespace Origin With Chained Access
 impact: HIGH
 impactDescription: keeps readers aware of where values come from instead of hiding origin behind wide-scope aliases
+appliesWhen: `config` 또는 `util` 값을 leaf 모듈에서 접근하며 넓은 스코프 구조분해, 별칭 또는 feature-local namespace를 추가·변경한다.
 tags: config, chaining, traceability
 ---
 

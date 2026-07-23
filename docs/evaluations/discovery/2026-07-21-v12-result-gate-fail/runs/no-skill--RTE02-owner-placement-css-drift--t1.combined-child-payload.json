@@ -1,0 +1,67 @@
+{
+  "activatedSkills": [],
+  "completion": {
+    "blocked": false,
+    "coverageFailCount": 0,
+    "reason": "The replacement-final virtual snapshot adds the directly imported route-local CSS and updates the existing clsx composition to owner-unique rt_* class hooks.",
+    "semanticFailCount": 0,
+    "status": "COMPLETE",
+    "unknownCount": 0
+  },
+  "declaredLoadedFiles": {
+    "kind": "declared",
+    "paths": []
+  },
+  "driftReceipt": null,
+  "limitations": [],
+  "receipts": [],
+  "response": "Added the directly imported route-local stylesheet and updated the entry tree to compose owner-unique rt_entryTree classes with the existing clsx import.",
+  "routingTrace": null,
+  "runtime": {
+    "declared": {
+      "forkTurns": "none",
+      "oneChildPerTrial": true,
+      "requestedModel": "gpt-5.6-sol",
+      "requestedReasoning": "high",
+      "runtime": "Codex CLI isolated child session"
+    },
+    "evidenceClass": "declared-telemetry-only",
+    "unavailable": {
+      "actualReasoningTelemetry": null,
+      "childTokenUsage": null,
+      "exactModelBuild": null,
+      "observedFileReads": null,
+      "runtimeVersion": null
+    }
+  },
+  "semanticVerdicts": [],
+  "virtualPatch": {
+    "files": [
+      {
+        "after": null,
+        "afterSha256": null,
+        "afterState": "absent",
+        "beforeSha256": "sha256:f445d8933df7ebd3f909bbeb3c7c1838c935b2c2b9510d30610b786bd590f1c6",
+        "beforeState": "present",
+        "path": "src/components/ui/entry-tree.tsx"
+      },
+      {
+        "after": "import clsx from \"clsx\";\nimport \"./entry-tree.css\";\n\ninterface RouteEntryTreeProps {\n  entries: Array<{id: string; label: string}>;\n  selectedId?: string;\n}\n\nexport const RouteEntryTree = ({entries, selectedId}: RouteEntryTreeProps) => (\n  <ul className={clsx(\"rt_entryTree_root\", selectedId && \"rt_entryTree_rootSelected\")}>\n    {entries.map((entry) => (\n      <li key={entry.id}>{entry.label}</li>\n    ))}\n  </ul>\n);\n",
+        "afterSha256": "sha256:df82cf7c5d7be24ec317cfddbc1546e36b6908cc517cd89d72365557dc27c9e9",
+        "afterState": "present",
+        "beforeSha256": null,
+        "beforeState": "absent",
+        "path": "src/routes/entries/-local/entry-tree.tsx"
+      },
+      {
+        "after": ".rt_entryTree_root {\n  /* Route-local root hook. */\n}\n\n.rt_entryTree_rootSelected {\n  /* Route-local selected-state hook. */\n}\n",
+        "afterSha256": "sha256:6473233fee35be363cacc25ec116bc0737ab33251f3479b09be7ce68e3fd0878",
+        "afterState": "present",
+        "beforeSha256": null,
+        "beforeState": "absent",
+        "path": "src/routes/entries/-local/entry-tree.css"
+      }
+    ],
+    "summary": "Composed initial and replacement-final virtual patches."
+  }
+}

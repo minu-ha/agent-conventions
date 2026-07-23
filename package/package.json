@@ -16,6 +16,20 @@
 		"build:playwright-test": "tsx src/build.ts --skill=playwright-test",
 		"build:tanstack-route": "tsx src/build.ts --skill=tanstack-route",
 		"build:typescript": "tsx src/build.ts --skill=typescript",
+		"check:generated": "tsx src/check-generated.ts",
+		"check:generated:all": "tsx src/check-generated.ts --all",
+		"check:generated:react": "tsx src/check-generated.ts --skill=react",
+		"check:generated:css": "tsx src/check-generated.ts --skill=css",
+		"check:generated:typescript": "tsx src/check-generated.ts --skill=typescript",
+		"check:handbooks": "tsx src/check-handbooks.ts",
+		"check:handbooks:all": "tsx src/check-handbooks.ts --all",
+		"check:measurement-artifacts": "npm run check:generated:all && npm run check:handbooks:all",
+		"measurement:self-test": "python3 scripts/measure-progressive-loading.py --self-test",
+		"measurement:tokens": "uv run --with tiktoken==0.11.0 python scripts/measure-progressive-loading.py",
+		"behavioral:evals": "tsx src/behavioral-evals-cli.ts",
+		"behavioral:coordinator": "tsx src/behavioral-eval-coordinator.ts",
+		"behavioral:staging": "tsx src/behavioral-eval-staging.ts",
+		"behavioral:semantic-audit": "tsx src/behavioral-semantic-audit-cli.ts",
 		"validate": "tsx src/validate.ts",
 		"validate:all": "tsx src/validate.ts --all",
 		"validate:astro": "tsx src/validate.ts --skill=astro",
@@ -43,7 +57,7 @@
 		"biome:check:write": "biome check --write --no-errors-on-unmatched",
 		"biome:check:all": "biome check --no-errors-on-unmatched --files-ignore-unknown=true",
 		"typecheck": "tsc --noEmit",
-		"test": "tsx --test test/*.test.ts"
+		"test": "tsx --test --test-concurrency=1 test/*.test.ts"
 	},
 	"devDependencies": {"@types/node": "^24.6.0", "@biomejs/biome": "2.2.4", "typescript": "^5.9.3", "tsx": "^4.20.5"}
 }

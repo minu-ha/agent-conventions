@@ -1,0 +1,51 @@
+{
+  "runtime": {
+    "declared": {
+      "forkTurns": "none",
+      "oneChildPerTrial": true,
+      "requestedModel": "gpt-5.6-sol",
+      "requestedReasoning": "high",
+      "runtime": "Codex CLI isolated child session"
+    },
+    "evidenceClass": "declared-telemetry-only",
+    "unavailable": {
+      "actualReasoningTelemetry": null,
+      "childTokenUsage": null,
+      "exactModelBuild": null,
+      "observedFileReads": null,
+      "runtimeVersion": null
+    }
+  },
+  "declaredLoadedFiles": {
+    "kind": "declared",
+    "paths": []
+  },
+  "activatedSkills": [],
+  "receipts": [],
+  "routingTrace": null,
+  "driftReceipt": null,
+  "semanticVerdicts": [],
+  "completion": {
+    "status": "COMPLETE",
+    "blocked": false,
+    "coverageFailCount": 0,
+    "semanticFailCount": 0,
+    "unknownCount": 0,
+    "reason": "The requested virtual refactor is fully represented in the patch."
+  },
+  "limitations": [],
+  "response": "Moved entry-list shaping into the query select, renamed the query and mutation bindings, and removed the intermediate aliases.",
+  "virtualPatch": {
+    "files": [
+      {
+        "path": "src/routes/entries/page.tsx",
+        "beforeState": "present",
+        "beforeSha256": "sha256:d4fb4cd10a6cf8d4185cb19a49a86a500e2bc9e48ef0faeb6f0cd04250d3d800",
+        "afterState": "present",
+        "after": "import {useMutation, useSuspenseQuery} from \"@tanstack/react-query\";\n\nimport {EntryList} from \"./-local/entry-list\";\nimport {fetchEntries, postEntry} from \"./entry-api\";\n\nexport const EntriesPage = () => {\n  const response = useSuspenseQuery({\n    queryKey: [\"entries\"],\n    queryFn: fetchEntries,\n    select: (data) => ({\n      items: data.entries.map((entry) => ({id: entry.id, label: entry.title.trim()})),\n      meta: {total: data.total},\n    }),\n  });\n  const mutation = useMutation({mutationFn: postEntry});\n\n  return <EntryList items={response.data.items} total={response.data.meta.total} onCreate={mutation.mutate} />;\n};\n",
+        "afterSha256": "sha256:aea68054b941a5afda768008fc94d4decec58e12eb9d99125daa22d2299a160d"
+      }
+    ],
+    "summary": "Shape query data in select and consume it directly through response while using mutation for creation."
+  }
+}

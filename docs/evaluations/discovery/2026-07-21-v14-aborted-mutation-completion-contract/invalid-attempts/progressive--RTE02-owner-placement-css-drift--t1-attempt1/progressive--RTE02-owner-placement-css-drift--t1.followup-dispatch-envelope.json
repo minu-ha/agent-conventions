@@ -1,0 +1,55 @@
+{
+  "agentTarget": "/root/cli-v14-progressive-rte02-t1-a1",
+  "assignedChildPayloadPath": "/Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v14-candidate-runs/progressive--RTE02-owner-placement-css-drift--t1.drift-child-payload.json",
+  "childRequest": {
+    "path": "/Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v14-candidate-runs/progressive--RTE02-owner-placement-css-drift--t1.followup-child-request.json",
+    "sha256": "sha256:e49437bde570bcff749996bf77685bd5d8c533cbe0fc1e968ae3f79562b1ef92",
+    "utf8ByteLength": 15894
+  },
+  "dispatchEnvelope": {
+    "arm": "progressive",
+    "exactPrompt": "Read and execute /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v14-candidate-runs/progressive--RTE02-owner-placement-css-drift--t1.followup-child-request.json (sha256:e49437bde570bcff749996bf77685bd5d8c533cbe0fc1e968ae3f79562b1ef92).\nThis exact dispatch is already running in the bound isolated Codex CLI child session: /root/cli-v14-progressive-rte02-t1-a1. Treat that identifier as this current session; do not spawn, hand off, or redispatch to another agent.\nAssigned drift payload path: /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v14-candidate-runs/progressive--RTE02-owner-placement-css-drift--t1.drift-child-payload.json. Write exactly this one file with apply_patch; create or modify no other file.\nDo not echo coordinator-owned fields; after writing valid JSON, return only concise status.",
+    "generatedIndexDigests": {
+      "css": "sha256:6dacc6f6fbe940681ab2734d8c9281c46ff07be133ee9c9d68de91bddb039d79",
+      "react": "sha256:624e51ea96f2dea6b775450def20d36142d70ffcf7960cf5169eacdf0ebb57c6",
+      "typescript": "sha256:e0bd359aa2321150229960df8fb663e528e93b3d5d25173d3a20ebf3a1b9b259"
+    },
+    "promptByteLength": 936,
+    "promptRendererVersion": "behavioral-prompt-renderer-v3-drift",
+    "promptSha256": "sha256:22c7067117ef38675ca74524edc7e72b47d32735878edcd3196be2a366349897",
+    "protocolId": "progressive-loading-behavioral-v3",
+    "repositoryHead": "30b7c36e560ba70af5e478e831473dd89d431faf",
+    "runId": "progressive--RTE02-owner-placement-css-drift--t1",
+    "scenarioId": "RTE02-owner-placement-css-drift",
+    "scenarioPrompt": "in a project without a CSS Modules standard, add directly imported src/routes/entries/-local/entry-tree.css, create route-support rt_* owner-unique role-named classes, and compose the changed className contract with the existing direct clsx import; final skills add CSS with no additional React rule.",
+    "schemaVersion": 3,
+    "trial": 1
+  },
+  "initialEnvelope": {
+    "path": "/Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v14-candidate-runs/progressive--RTE02-owner-placement-css-drift--t1.initial-dispatch-envelope.json",
+    "sha256": "sha256:2f15b4e624fca381d2b0bbae52b2231f503c56835cd15bd451fa41be2b004327"
+  },
+  "initialPayload": {
+    "path": "/Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v14-candidate-runs/progressive--RTE02-owner-placement-css-drift--t1.initial-child-payload.json",
+    "sha256": "sha256:4862250a14ff584206faefc883dd7157688d51cc161f2997aa28945430819291",
+    "utf8ByteLength": 37827,
+    "virtualPatchSha256": "sha256:529ec44bbba7594224e57c99f587ab3160dc8a07f6471d869f2db81178f3e09b"
+  },
+  "initialSeal": {
+    "path": "/Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v14-candidate-runs/progressive--RTE02-owner-placement-css-drift--t1.initial-seal.json",
+    "sha256": "sha256:efb29857178d012104bda1eba58d6af36f19d5fa5b874469808118ee18a1b580"
+  },
+  "kind": "behavioral-staged-followup",
+  "protocol": {
+    "armSha256": "sha256:ce85daeb6c52e884592a3c7e6f17f94a9b58e8202c012ac9e40d5c8fd1b350c2",
+    "fullScenarioSha256": "sha256:1ee19f74a908033acc4065b4384307b7cef14c7f84d28ceb909e198863125e29",
+    "path": "/Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-behavioral-protocol.json",
+    "sha256": "sha256:b345e28b0c9318a34ca60306867e058bf0c37879ae0ae7ddabaa709ee98ef730",
+    "stageScenarioSha256": "sha256:8597b79c07eb818403b944c477ebff2d857a8e104cd08105e1af600431227396"
+  },
+  "repositoryDir": "/Users/l-20220017/workspace/agent-conventions-progressive-loading",
+  "requestContentDigest": "sha256:7726d873ddd1bc8f9352e42c625223f8db35abdc54d8df514bf7c399a89408e1",
+  "runId": "progressive--RTE02-owner-placement-css-drift--t1",
+  "schemaVersion": 1,
+  "skillRootDir": "/Users/l-20220017/workspace/agent-conventions-progressive-loading/skill"
+}

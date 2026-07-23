@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 2,
+  "runId": "no-skill--css-domain-state-class-contract--t1",
+  "protocolId": "progressive-loading-behavioral-v2",
+  "repositoryHead": "567377da933d65b030af88ab16b4693e109e5563",
+  "arm": "no-skill",
+  "scenarioId": "css-domain-state-class-contract",
+  "trial": 1,
+  "exactPrompt": "split listButtonActive into base plus --active, add a direct clsx import, and compose with clsx() in catalog/index.tsx and _index.css; do not change pseudo-states.",
+  "runtime": {
+    "requestedModel": "gpt-5.6-sol",
+    "exactModelBuild": null,
+    "requestedReasoning": "high",
+    "actualReasoningTelemetry": null,
+    "forkTurns": "none"
+  },
+  "declaredLoadedFiles": {
+    "kind": "declared",
+    "paths": []
+  },
+  "activatedSkills": [],
+  "receipts": [],
+  "driftReceipt": null,
+  "semanticVerdicts": [
+    {
+      "criterion": "Split listButtonActive into a base class and a --active state modifier.",
+      "verdict": "UNKNOWN",
+      "reason": "Repository files were intentionally not inspected or edited, so the class split cannot be verified."
+    },
+    {
+      "criterion": "Add a direct clsx import in catalog/index.tsx.",
+      "verdict": "UNKNOWN",
+      "reason": "Repository files were intentionally not inspected or edited, so the import cannot be verified."
+    },
+    {
+      "criterion": "Compose the base and active-state classes with clsx() in catalog/index.tsx.",
+      "verdict": "UNKNOWN",
+      "reason": "Repository files were intentionally not inspected or edited, so class composition cannot be verified."
+    },
+    {
+      "criterion": "Preserve existing pseudo-state behavior in _index.css.",
+      "verdict": "UNKNOWN",
+      "reason": "Repository files were intentionally not inspected or edited, so pseudo-state preservation cannot be verified."
+    }
+  ],
+  "completion": {
+    "status": "BLOCKED",
+    "blocked": true,
+    "coverageFailCount": 0,
+    "semanticFailCount": 0,
+    "unknownCount": 4,
+    "reason": "The trial constraints prohibited reading or changing the requested source files."
+  },
+  "limitations": [
+    "No repository source, guidance, protocol, routing, test, plan, documentation, or prior-run files were read.",
+    "No requested source changes or behavior checks were performed."
+  ],
+  "response": "I couldn't apply or verify the requested class-state refactor because this trial prohibited reading or changing the source files.",
+  "scoring": null
+}

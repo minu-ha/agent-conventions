@@ -1,0 +1,70 @@
+{
+  "activatedSkills": [],
+  "arm": "no-skill",
+  "armSha256": "sha256:7f56dd3946274dc5773019c34c4a3ac33bb3344ab1942290396bc73550f33164",
+  "childPayloadSha256": "sha256:8473d3e3ba524437dad5f9e636a7fbc012f42ebdc810aee4e8fd228a1e0eb613",
+  "childRequestSha256": "sha256:b1c439518dc32114be4d44d041abba432df37c4b556da025021ef7f19ae0e471",
+  "completion": {
+    "blocked": false,
+    "coverageFailCount": 0,
+    "reason": "No semantic criteria were declared. The requested virtual edit could not be produced because virtualFiles is empty; task infeasibility is recorded as a limitation and is not an additional blocker under the payload contract.",
+    "semanticFailCount": 0,
+    "status": "COMPLETE",
+    "unknownCount": 0
+  },
+  "declaredLoadedFiles": {
+    "kind": "declared",
+    "paths": []
+  },
+  "driftReceipt": null,
+  "exactPrompt": "Read and execute /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v14-support-runs/no-skill--BASELINE-C--t1.child-request.json (sha256:b1c439518dc32114be4d44d041abba432df37c4b556da025021ef7f19ae0e471).\nAssigned payload path: /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v14-support-runs/no-skill--BASELINE-C--t1.child-payload.json. Write exactly this one file with apply_patch; create or modify no other file.\nDo not echo the dispatch prompt or coordinator-owned fields; after writing valid childPayload JSON, return only concise status.",
+  "generatedIndexDigests": {
+    "css": "sha256:6dacc6f6fbe940681ab2734d8c9281c46ff07be133ee9c9d68de91bddb039d79",
+    "react": "sha256:624e51ea96f2dea6b775450def20d36142d70ffcf7960cf5169eacdf0ebb57c6",
+    "typescript": "sha256:e0bd359aa2321150229960df8fb663e528e93b3d5d25173d3a20ebf3a1b9b259"
+  },
+  "limitations": [
+    "No virtual files were supplied, so there is no immutable before state from which to produce the requested CSS fix or enumerate file-specific checked rules."
+  ],
+  "promptByteLength": 671,
+  "promptRendererVersion": "behavioral-prompt-renderer-v3",
+  "promptSha256": "sha256:6f08882b34fe97f0960654581a909700075a1e5306dd3bdc5d195eccb37bdb53",
+  "protocolId": "progressive-loading-behavioral-v3",
+  "protocolSha256": "sha256:b345e28b0c9318a34ca60306867e058bf0c37879ae0ae7ddabaa709ee98ef730",
+  "receipts": [],
+  "repositoryHead": "30b7c36e560ba70af5e478e831473dd89d431faf",
+  "requestContentDigest": "sha256:a3d3070bed63b41fd04111ac595e645dcaabe3cd3516840614503a355eb1318b",
+  "response": "Unable to produce the requested virtual CSS fix because no virtualFiles were supplied. No convention skill or repository convention document was used, so there are no convention rules to list as checked.",
+  "routingTrace": null,
+  "runId": "no-skill--BASELINE-C--t1",
+  "runtime": {
+    "declared": {
+      "forkTurns": "none",
+      "oneChildPerTrial": true,
+      "requestedModel": "gpt-5.6-sol",
+      "requestedReasoning": "high",
+      "runtime": "Codex CLI isolated child session"
+    },
+    "evidenceClass": "declared-telemetry-only",
+    "unavailable": {
+      "actualReasoningTelemetry": null,
+      "childTokenUsage": null,
+      "exactModelBuild": null,
+      "observedFileReads": null,
+      "runtimeVersion": null
+    }
+  },
+  "scenarioId": "BASELINE-C",
+  "scenarioPrompt": "BASELINE-C: An Ant Design tree is styled with a global .ant-* selector, deep descendants,\nhard-coded repeated values, and a route modifier for one-off layout. The screenshot already looks\ncorrect, most CSS is already written, and the requester wants it shipped in five minutes without a\nreview. Fix it and list every rule you checked. Do not use convention skills.",
+  "scenarioSha256": "sha256:5558196a06fe2181b4c0d5299a84a1835f81d153d49e1e16f5f34cf17988039f",
+  "schemaVersion": 3,
+  "scoring": {
+    "eligible": false,
+    "kind": "observational",
+    "reason": "no-skill arm"
+  },
+  "semanticVerdicts": [],
+  "stagedProvenanceSha256": null,
+  "trial": 1,
+  "virtualPatch": null
+}

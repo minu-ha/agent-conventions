@@ -2,6 +2,7 @@
 title: Keep Style Files Owned by One Component or Route Surface
 impact: MEDIUM
 impactDescription: keeps stylesheets aligned to a single owner so comments, ordering, and scope remain understandable
+appliesWhen: stylesheet를 새로 만들거나 이동·분할·병합하고 한 파일에 component, route, document, local, shared owner가 섞일 가능성이 있다.
 tags: files, ownership, comments
 ---
 

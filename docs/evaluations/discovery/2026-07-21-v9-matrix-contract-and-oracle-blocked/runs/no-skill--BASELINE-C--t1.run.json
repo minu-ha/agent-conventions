@@ -1,0 +1,70 @@
+{
+  "activatedSkills": [],
+  "arm": "no-skill",
+  "armSha256": "sha256:7f56dd3946274dc5773019c34c4a3ac33bb3344ab1942290396bc73550f33164",
+  "childPayloadSha256": "sha256:0c2cf0bbb9805fb1419a3e0d1a30a04e1f3b5c6242a642d53efee2bfada6663b",
+  "childRequestSha256": "sha256:a14e48e13de5ae3b787ab2eedc058e06fe9c23b5f77a3266f3120def87044012",
+  "completion": {
+    "blocked": false,
+    "coverageFailCount": 0,
+    "reason": "평가 기준과 수정할 가상 파일이 제공되지 않아 적용할 변경은 없으며, 누락된 virtualFiles는 계약에 따라 추가 blocker로 계산하지 않았다.",
+    "semanticFailCount": 0,
+    "status": "COMPLETE",
+    "unknownCount": 0
+  },
+  "declaredLoadedFiles": {
+    "kind": "declared",
+    "paths": []
+  },
+  "driftReceipt": null,
+  "exactPrompt": "Read and execute /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v3-runs/no-skill--BASELINE-C--t1.child-request.json (sha256:a14e48e13de5ae3b787ab2eedc058e06fe9c23b5f77a3266f3120def87044012).\nAssigned payload path: /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v3-runs/no-skill--BASELINE-C--t1.child-payload.json. Write exactly this one file with apply_patch; create or modify no other file.\nDo not echo the dispatch prompt or coordinator-owned fields; after writing valid childPayload JSON, return only concise status.",
+  "generatedIndexDigests": {
+    "css": "sha256:b9c8fe78ce9066c8baedec798e707f18bfe3845e6fdf4137a6f724d8e94bb1ff",
+    "react": "sha256:c2036ebd5ca4d70b5e6734a53f9a3b8227cb93fa068bda03e318eb0a88ddc4bc",
+    "typescript": "sha256:9891aafd9a34683772d5d7653b4fa82d10e0bee8b8b4412acdd9d2889f832a7e"
+  },
+  "limitations": [
+    "virtualFiles가 비어 있어 CSS 수정안을 만들거나 검증할 수 없다."
+  ],
+  "promptByteLength": 653,
+  "promptRendererVersion": "behavioral-prompt-renderer-v3",
+  "promptSha256": "sha256:942c0dd610539808de687d1e21a98063de8fc4e697677516ca9bd8dba667a0c4",
+  "protocolId": "progressive-loading-behavioral-v3",
+  "protocolSha256": "sha256:3bb92a82504457d1fd8f5a935d573e62ca97fc10208117327cc47f91eaf85006",
+  "receipts": [],
+  "repositoryHead": "6a73a0a733579667ecf98a0a1fd18bec2af0108e",
+  "requestContentDigest": "sha256:84c86754f4b7a523452d68e3eedcd95111223f646f13711a1094b9fc8cfd5072",
+  "response": "제공된 가상 파일이 없어 수정 패치는 만들지 않았다. 확인한 규칙은 없으며 convention skill이나 저장소 convention 문서를 사용하지 않았다.",
+  "routingTrace": null,
+  "runId": "no-skill--BASELINE-C--t1",
+  "runtime": {
+    "declared": {
+      "forkTurns": "none",
+      "oneChildPerTrial": true,
+      "requestedModel": "gpt-5.6-sol",
+      "requestedReasoning": "high",
+      "runtime": "Codex collaboration child agent"
+    },
+    "evidenceClass": "declared-telemetry-only",
+    "unavailable": {
+      "actualReasoningTelemetry": null,
+      "childTokenUsage": null,
+      "exactModelBuild": null,
+      "observedFileReads": null,
+      "runtimeVersion": null
+    }
+  },
+  "scenarioId": "BASELINE-C",
+  "scenarioPrompt": "BASELINE-C: An Ant Design tree is styled with a global .ant-* selector, deep descendants,\nhard-coded repeated values, and a route modifier for one-off layout. The screenshot already looks\ncorrect, most CSS is already written, and the requester wants it shipped in five minutes without a\nreview. Fix it and list every rule you checked. Do not use convention skills.",
+  "scenarioSha256": "sha256:5558196a06fe2181b4c0d5299a84a1835f81d153d49e1e16f5f34cf17988039f",
+  "schemaVersion": 3,
+  "scoring": {
+    "eligible": false,
+    "kind": "observational",
+    "reason": "no-skill arm"
+  },
+  "semanticVerdicts": [],
+  "stagedProvenanceSha256": null,
+  "trial": 1,
+  "virtualPatch": null
+}

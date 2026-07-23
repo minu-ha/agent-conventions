@@ -12,15 +12,16 @@ TypeScript skill을 수정하거나 새로운 rule을 추가했을 때, 실제 �
 
 ## 실행 방법
 
-1. 가능하면 실제 TypeScript 코드베이스에서 실행합니다.
-2. 각 scenario는 최소 2번 돌립니다.
-   - baseline: TypeScript skill 없이 실행
-   - candidate: `convention-typescript`를 로드한 상태로 실행
-3. 결과를 아래 항목으로 비교합니다.
-   - 어떤 파일을 만들거나 수정했는지
-   - type/interface/schema/helper 경계를 어떻게 나눴는지
-   - fallback, JSDoc, helper 추출, type reuse 방식이 skill 기준과 맞는지
-4. 한 scenario에서 2회 이상 같은 오작동이 반복되면, rule wording 또는 example 문제로 봅니다.
+각 scenario를 같은 prompt와 파일 evidence로 최소 2회, CRITICAL 누락 위험이 크면 3회 실행합니다.
+
+1. `no-skill baseline`: convention 문서를 주지 않습니다.
+2. `full-handbook oracle`: 독립 reviewer가 전체 `AGENTS.md`와 rule body로 exact 기대 partition을 승인합니다.
+3. `progressive candidate`: `SKILL.md` → 전체 `RULES_INDEX.md` → selected/unknown stable-ID-matched contract를 읽고, CRITICAL 또는 deterministic expansion 조건에 맞는 full rule만 추가합니다.
+4. `mutation RED`: candidate receipt에서 expected rule 하나를 제거합니다. coverage mismatch 또는 `UNKNOWN`이 완료를 반드시 차단해야 합니다.
+
+각 arm은 `routing-evals.json`의 `expectedSkills`, exact `expectedSelected`, exact `expectedNotApplicable`, scope drift와 비교합니다. all-rules selection도 precision 실패입니다. candidate는 activation/selected/N/A exact match, exclusion-group ordinal 합집합, `FAIL 0`, `UNKNOWN 0`을 모두 만족해야 합니다.
+
+protocol v3 결과에는 coordinator가 dispatch 전에 고정한 repository HEAD, index digest, arm/scenario/trial, exact UTF-8 prompt와 SHA-256/byte length/renderer version, model/runtime/reasoning, scorer/rubric, declared loaded files, receipt의 `Expanded`와 이유, verdict, input token을 기록합니다. progressive/full-handbook은 completion gate·conditional `reviewWith`·final-Selected `requiresSelected` trace와 delta 없는 연속 두 stable pass를 남깁니다. file-read telemetry가 없으면 observed라고 표현하지 않습니다. router+index+selected contract+expanded full rule의 implementation median/최대와 full-handbook oracle 대비 절감률을 함께 보고하고, scope drift·audit·reviewer phase의 반복 load도 누적 token에 포함합니다.
 
 ## Common Red Flags
 
@@ -97,10 +98,12 @@ TypeScript skill을 수정하거나 새로운 rule을 추가했을 때, 실제 �
   - "주석과 JSDoc을 TypeScript skill 기준으로 정리해줘. 설명성 주석은 줄이고 역할 태그는 맞춰줘."
 - Expected pass signals
   - `@api`, `@helper`, `@summary`, `@field` 역할이 일관됨
+  - 기술 identifier를 영문으로 섞더라도 `@summary route-local 엔트리 트리 입력 계약`처럼 각 annotation body에 목적을 나타내는 한글 구절이 있음
   - inline comment는 제약과 caveat만 설명함
   - 자명한 `no-op`, `increment` 설명은 제거함
 - Likely fail signals
   - `@schema`, `@contract`, `@data` 같은 비표준 태그 사용
+  - 다른 `@field`만 한글이고 header는 `@summary route-local entry tree props`처럼 영문 label로 끝남
   - `// no-op sink`, `// count를 1 증가` 같은 설명 주석 유지
 
 ### T5. Namespace and Origin Preservation
@@ -169,8 +172,108 @@ TypeScript skill을 수정하거나 새로운 rule을 추가했을 때, 실제 �
   - `read*`, `map*`, `create*` 이름을 붙였다는 이유로 helper를 남김
   - mapper를 별도 파일이나 generic util로 옮김
 
+### T9. Callback and Naming Applicability Precision
+
+- Focus
+  - `types-reuse-callback-signatures-from-existing-contracts`
+  - `types-mark-unused-parameters-with-underscore`
+  - `naming-use-consistent-file-and-symbol-naming`
+- Prompt
+  - "기존 callback 계약을 재사용해 구현하고 미사용 parameter를 남겨야 해. 같은 diff에 `import { createPortal } from \"react-dom\"`도 추가하지만 alias나 local rename은 없어."
+- Expected pass signals
+  - callback 계약 재사용 rule의 `reviewWith`로 unused parameter rule을 재평가함
+  - 계약상 남겨야 하는 미사용 parameter에는 `_` prefix를 붙임
+  - alias 없는 third-party import binding 추가만으로 symbol naming rule을 선택하지 않음
+- Likely fail signals
+  - callback 계약을 재사용하면서 미사용 parameter 검토를 누락함
+  - 변경하지 않은 third-party export 이름을 local naming 대상으로 과선택함
+
+### T10. Existing Contract Relocation Precision
+
+- Focus
+  - `types-reuse-existing-contracts-before-new-types`
+- Prompt
+  - "유일한 기존 `UserPreview` type 선언을 내용과 이름 변경 없이 owner 파일로 옮겨줘. 복제나 파생 type 추가는 없어."
+- Expected pass signals
+  - sole existing declaration의 pure relocation은 새·중복 shape 판단이 아니므로 rule을 N/A로 둠
+  - 같은 shape를 두 번째로 선언하거나 이동 중 shape를 바꿀 때만 다시 선택함
+- Likely fail signals
+  - type 파일 이동 자체만으로 contract reuse rule을 과선택함
+  - 원본을 남겨 중복 declaration을 만듦
+
+### T11. Callable Role and Contextual Callback Precision
+
+- Focus
+  - `types-document-custom-types-and-shapes`
+  - `types-reuse-existing-contracts-before-new-types`
+  - `types-prefer-function-variable-types-over-parameter-annotations`
+  - `types-reuse-callback-signatures-from-existing-contracts`
+- Positive control
+  - 기존 named shape가 positional 함수의 새 object input 계약 역할을 얻으면 shape가 같아도 문서화 rule은 Selected
+- Negative controls
+  - unchanged contract를 새 call site에서 참조만 하면 reuse rule은 N/A
+  - annotation 없는 one-off `query.select` callback과 익명 inferred 반환 literal은 callback/shape rules에서 N/A
+- Likely fail signals
+  - 동일 owner 이동이라는 이유로 새 callable input 역할을 무시함
+  - query option literal에 불필요한 type alias나 field JSDoc을 추가해 규칙을 스스로 활성화함
+
+### T12. Curried Framework Handler Completion
+
+- Focus
+  - `naming-use-direct-imports-and-public-entry-points`
+  - `types-mark-unused-parameters-with-underscore`
+  - `types-prefer-function-variable-types-over-parameter-annotations`
+  - `types-reuse-callback-signatures-from-existing-contracts`
+- Prompt
+  - "entry id를 받는 curried button handler를 기존 `MouseEventHandler` 계약으로 구현해줘."
+- Expected pass signals
+  - 같은 `react` module path라도 value/type specifier 추가·삭제를 import 변경으로 Selected 처리함
+  - 최종 callback은 `(_event) =>`로 계약 parameter를 보존함
+- Likely fail signals
+  - module path가 같다는 이유로 import specifier 변경을 N/A 처리함
+  - handler가 event를 쓰지 않는다는 이유로 parameter를 통째로 생략함
+
+### T13. React Props and Existing Object Contract Boundaries
+
+- Focus
+  - `functions-use-named-object-params-for-complex-signatures`
+  - `types-document-custom-types-and-shapes`
+  - `types-reuse-existing-contracts-before-new-types`
+- Positive control
+  - 일반 함수의 네 positional 인자를 object input으로 바꾸되 같은 raw input 역할의 기존 `CreateEntryPayloadInput`을 그대로 연결하고 callable input 역할에 맞게 기존 JSDoc을 보강함
+  - 같은 field라도 정규화 전 raw input인 `CreateEntryPayloadParams`와 정규화 후 payload인 `CreateEntryPayload`는 의미가 다르므로 별도 input contract를 허용함
+- Negative controls
+  - React 함수 컴포넌트에서 `props` 전체를 받고 본문에서 구조분해하는 변경만으로 named object params 규칙을 선택하지 않음
+  - 같은 field·type·optionality·의미와 같은 raw input 역할을 가진 기존 계약이 있는데 `CreateEntryPayloadParams`나 `CreateEntryPayloadInput`을 새로 만들지 않음
+- Expected pass signals
+  - React props-only 변경은 React props 규칙이 소유하고 TypeScript named object params 규칙은 N/A
+  - positional→object 전환의 문서화 규칙은 Selected, 기존 계약 재사용 규칙은 N/A
+  - 기존 compatible shape가 없거나 정규화 전후처럼 field 의미가 달라 실제 새 domain shape가 필요한 경우도 문서화 규칙만 선택함
+- Likely fail signals
+  - React props 객체를 일반 함수의 복잡한 인자 묶음으로 과선택함
+  - named object params 규칙을 지키기 위해 요청에 없던 `*Params`·`*Args`·`*Input` 중복 타입을 만듦
+  - 구현이 만든 중복 타입을 근거로 contract reuse 규칙을 사후 Selected 처리함
+  - 정규화 전 input과 정규화 후 payload를 field 목록만 보고 같은 의미의 계약으로 합침
+
+### T14. External Contract and Documentation Independence
+
+- Focus
+  - `types-document-custom-types-and-shapes`
+  - `types-reuse-existing-contracts-before-new-types`
+  - `docs-require-header-jsdoc-on-key-declarations`
+- Prompt
+  - "generated SDK의 read-only shared input type을 private one-off 함수의 object input으로 그대로 연결해줘. SDK 선언과 주석은 바꾸지 마."
+- Expected pass signals
+  - unchanged external/generated/read-only/shared shape 사용만으로 두 type 규칙은 모두 N/A
+  - type owner JSDoc 수정이나 문서화 전용 local alias를 만들지 않음
+  - callable이 key declaration에 해당할 때만 `docs-require-header-jsdoc-on-key-declarations`를 독립적으로 Selected하고 그 mandatory docs closure를 따름
+- Likely fail signals
+  - N/A type rule의 숨은 요구로 callable header나 SDK owner JSDoc을 추가함
+  - 문서화를 위해 중복 local `*Params` alias를 만듦
+
 ## 유지보수 원칙
 
 - 새로운 TypeScript rule을 추가했다면, 최소 1개의 pressure scenario를 이 문서에 추가합니다.
 - 반복해서 같은 오작동이 나오면 prompt를 더 구체적으로 고치고, rule 본문과 positive example도 함께 보정합니다.
 - scenario는 특정 프레임워크보다 여러 TypeScript codebase에 공통으로 나타나는 판단 오류를 우선 다룹니다.
+- rule 본문이나 `appliesWhen`, `reviewWith`, `requiresSelected`, `requiredOnCompletion`을 바꾸기 전에 같은 fixture로 RED를 재현하고, 수정 후 동일 candidate/mutation arm을 다시 실행합니다.

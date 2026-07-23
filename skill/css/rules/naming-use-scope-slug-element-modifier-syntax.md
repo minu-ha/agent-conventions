@@ -2,6 +2,7 @@
 title: Use Scope, Slug, Element, and Modifier Syntax
 impact: CRITICAL
 impactDescription: makes class ownership and UI role traceable from the classname alone
+appliesWhen: plain CSS의 project-owned class를 새로 만들거나 이름, scope, slug, element, modifier 구분자 또는 casing을 변경한다.
 tags: naming, class-grammar, ownership
 ---
 

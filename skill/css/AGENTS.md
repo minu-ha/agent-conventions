@@ -6,13 +6,21 @@
 
 > **생성된 문서입니다. 직접 수정하지 마세요.**
 >
-> 현재 skill의 `rules/*.md`, `metadata.json`, `metadata.json.extends`를 수정한 뒤 `npm --prefix ../../package run build -- --skill=css`로 다시 생성하세요.
+> 현재 skill의 `rules/*.md`, `metadata.json`, `metadata.json.companions`를 수정한 뒤 `npm --prefix ../../package run build -- --skill=css`로 다시 생성하세요.
 
 ---
 
 ## 개요
 
-에이전트 협업 팀을 위한 CSS 코딩 컨벤션입니다. 이 가이드는 plain CSS를 기본으로 한 전역 고유 네이밍, `rt_/wg_/ui_/loc_` owner scope, 예측 가능한 TSX class 조합, 평평한 selector, wrapper 기준 서드파티 스타일링, 토큰화된 값, 절제된 stylesheet 구성을 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, 최종적으로 에이전트가 읽는 `AGENTS.md`로 compile됩니다.
+에이전트 협업 팀을 위한 CSS 코딩 컨벤션입니다. 이 가이드는 plain CSS를 기본으로 한 전역 고유 네이밍, `rt_/wg_/ui_/loc_` owner scope, 예측 가능한 TSX class 조합, 평평한 selector, wrapper 기준 서드파티 스타일링, 토큰화된 값, 절제된 stylesheet 구성을 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, 기본 경로는 SKILL.md router에서 RULES_INDEX.md 전체를 scan하고 selected contracts/*.md를 읽되 CRITICAL 또는 근거가 더 필요한 rule만 full source로 확장하는 방식입니다. AGENTS.md는 명시적으로 요청할 때만 읽는 opt-in full handbook입니다. TSX styling contract는 project activation closure에서 React와 TypeScript를 함께 활성화합니다.
+
+이 가이드는 local CSS 컨벤션 규칙만 담고 있습니다. companion skill은 아래 mode와 appliesWhen에 따라 활성화합니다.
+
+---
+
+## Companion Skill 활성화
+
+- `convention-typescript` - TypeScript Convention · mode: `conditional` · appliesWhen: TS/TSX class contract, wrapper Props 또는 style import를 함께 변경한다. · [SKILL.md](../typescript/SKILL.md) · [RULES_INDEX.md](../typescript/RULES_INDEX.md)
 
 ---
 
@@ -55,9 +63,15 @@
 
 ### 1.1 Default to Plain CSS Unless the Project Explicitly Standardizes on CSS Modules
 
+**Rule:** `C01` · `naming-default-to-plain-css-when-no-module-convention`
+
+**Applies when:** 프로젝트 표준 미확정 상태에서 새 stylesheet 접근 형식\(plain CSS·CSS Modules\)을 선택하거나 \`.module.css\`·\`styles.\*\`로 전환한다. 기존 plain CSS class rename은 제외한다.
+
 **Impact: HIGH (keeps the global `scope_slug` naming system meaningful instead of hiding ownership behind local module indirection)**
 
 이 CSS skill은 기본적으로 plain `*.css`와 전역 고유 클래스명을 전제로 합니다. `rt_*`, `ui_*`, `wg_*`, `loc_*` 네임스페이스는 global class space에서 owner를 추적하려고 존재하므로, 프로젝트에 별도 합의가 없다면 `.module.css`와 `styles.foo`를 기본 선택으로 삼지 않습니다. 프로젝트가 이미 CSS Modules를 공식 표준으로 채택했고 그에 맞는 naming/runtime 규칙이 따로 있다면, 그 프로젝트 로컬 규칙이 이 기본값보다 우선합니다.
+
+이 규칙은 stylesheet 접근 형식을 새로 결정하거나 전환할 때 선택합니다. 이미 plain CSS를 직접 import하는 owner 안에서 기존 plain CSS class·selector 이름이나 base/modifier 구조만 바꾸는 작업은 접근 형식을 결정하지 않으므로 N/A입니다.
 
 **Incorrect (프로젝트 표준이 없는데도 CSS Modules를 기본처럼 사용):**
 
@@ -104,6 +118,10 @@ import "./_index.css";
 
 ### 1.2 Keep Each `scope_slug` Unique Per Owner
 
+**Rule:** `C02` · `naming-keep-scope-slug-unique-per-owner`
+
+**Applies when:** 새 \`scope\_slug\` namespace를 추가·복사·이름 변경하거나 서로 다른 owner의 class가 같은 namespace를 사용할 가능성이 있다.
+
 **Impact: CRITICAL (prevents unrelated routes or components from sharing the same namespace and colliding in the global class space)**
 
 클래스명은 프로젝트 전역에서 고유해야 하며, 동일한 `scope_slug` 조합은 단일 소유자만 사용할 수 있습니다. 새 스타일을 추가할 때는 먼저 기존 `scope_slug` 충돌 여부를 확인하고, 의미가 겹치더라도 파일이 다르면 별도 slug를 부여합니다.
@@ -130,6 +148,10 @@ rt_dashboardIndex__header
 
 ### 1.3 Name Elements and Modifiers by Role
 
+**Rule:** `C03` · `naming-name-elements-and-modifiers-by-role`
+
+**Applies when:** element 또는 modifier class를 새로 짓거나 \`container\`, \`wrapper\`, \`box\`, 치수·간격 중심 이름을 변경한다.
+
 **Impact: HIGH (avoids vague or layout-only names that stop classes from describing what the UI part actually is)**
 
 `element`와 `modifier` 이름은 구조나 치수가 아니라 UI 역할을 표현해야 합니다. `container`, `wrapper`, `box` 같은 포괄 단어 단독 사용이나 `gap12` 같은 숫자 기반 의미는 피하고, 실제 역할과 상태를 드러내는 이름을 씁니다.
@@ -153,6 +175,10 @@ rt_catalogDetail__detailSection
 ```
 
 ### 1.4 Preserve Route Slug Traceability
+
+**Rule:** `C04` · `naming-preserve-route-slug-traceability`
+
+**Applies when:** route/framework 규칙이 \`rt\_\*\` owner를 선택한 화면에서 route class slug를 새로 만들거나 이름을 변경한다.
 
 **Impact: HIGH (keeps route-scoped class namespaces readable back to the route hierarchy they belong to)**
 
@@ -188,14 +214,20 @@ rt_document__body
 
 ### 1.5 Separate Route, Local, and Shared Style Scopes
 
+**Rule:** `C05` · `naming-separate-local-and-route-style-scopes`
+
+**Applies when:** 스타일 owner를 route screen/support, document, 독립 leaf helper, reusable widget, UI primitive 중에서 결정하거나 서로 다른 owner를 이동·분리한다.
+
+**Review with:** `organization-keep-style-files-owned-by-one-component-or-route`
+
 **Impact: HIGH (keeps route-owned page styles, shared component styles, and truly local helper styles from mixing into the same namespace or file)**
 
-route/framework skill이 route-owned surface로 판단한 스타일은 `rt_*` scope를 유지합니다. 파일이 route-local helper folder로 내려갔다는 이유만으로 main screen surface를 `loc_*`로 바꾸지 않습니다.
+route/framework skill이 route-owned surface로 판단한 스타일은 `rt_*` scope를 유지합니다. route screen의 흐름을 구성하거나 지원하는 route support surface는 파일이 `_local/` 같은 helper folder로 내려가도 `rt_*`입니다. route 맥락을 몰라도 되는 독립 leaf helper만 `loc_*`를 사용합니다. 파일 위치만으로 main screen 또는 route support surface를 `loc_*`로 바꾸지 않습니다.
 
 scope 기준:
 
 - `rt_*`: route-owned screen, route support surface, route/document owner
-- `loc_*`: route surface와 독립된 leaf helper
+- `loc_*`: route 맥락과 독립된 leaf helper
 - `wg_*`: 여러 route에서 재사용되는 block
 - `ui_*`: primitive component
 
@@ -228,6 +260,10 @@ entries/_local/filter-dialog.css
 ```
 
 ### 1.6 Use Scope, Slug, Element, and Modifier Syntax
+
+**Rule:** `C06` · `naming-use-scope-slug-element-modifier-syntax`
+
+**Applies when:** plain CSS의 project-owned class를 새로 만들거나 이름, scope, slug, element, modifier 구분자 또는 casing을 변경한다.
 
 **Impact: CRITICAL (makes class ownership and UI role traceable from the classname alone)**
 
@@ -272,6 +308,10 @@ TSX class 조합과 wrapper 소유권 규칙은 스타일링 경계를 분명하
 
 ### 2.1 Compose Classes With `clsx()`
 
+**Rule:** `C07` · `composition-compose-classes-with-clsx`
+
+**Applies when:** TSX의 \`className\`을 추가·수정하거나 base class, modifier, optional class를 조합한다.
+
 **Impact: HIGH (keeps TSX class composition readable when base classes and state modifiers need to be combined)**
 
 TSX에서 `className`은 `clsx()` 사용을 기본으로 합니다. 기본 element 클래스 하나만 넣는 경우도 같은 기준을 유지하고, 상태 modifier나 optional class가 붙어도 읽기 쉽게 확장합니다. 문자열 연결이나 중복 ternary로 `className`을 조립하지 않습니다.
@@ -299,6 +339,12 @@ TSX에서 `className`은 `clsx()` 사용을 기본으로 합니다. 기본 eleme
 
 ### 2.2 Do Not Use Modifiers for One-off Structural Patches
 
+**Rule:** `C08` · `composition-do-not-build-structural-variants-with-modifiers`
+
+**Applies when:** modifier를 추가·변경하거나 반복 가능한 state·API variant와 one-off structural patch 사이를 판정한다. 허용된 state로 결론 나도 변경된 modifier 분류는 Selected다.
+
+**Review with:** `naming-name-elements-and-modifiers-by-role`
+
 **Impact: HIGH (keeps modifiers reserved for state instead of turning them into a second layout naming system)**
 
 modifier는 상태나 반복 variant를 표현할 때만 사용합니다.
@@ -315,6 +361,8 @@ modifier는 상태나 반복 variant를 표현할 때만 사용합니다.
 - `dense`, `horizontal`, `compact`처럼 component API로 반복 노출되는 variant
 
 금지 대상은 "상태 의미가 아닌 모든 modifier"가 아니라, 재사용 contract 없이 생긴 one-off structural modifier입니다.
+
+이 규칙의 Selected는 modifier가 금지됐다는 뜻이 아니라 변경된 modifier의 계약을 분류했다는 뜻입니다. `active`·`selected` 같은 허용된 domain state로 결론 나면 `Selected + pass`이며, 위반이 없다는 이유로 N/A로 돌리지 않습니다.
 
 **Incorrect (특정 화면용 구조 patch를 modifier로 덧붙임):**
 
@@ -334,9 +382,13 @@ modifier는 상태나 반복 variant를 표현할 때만 사용합니다.
 
 ### 2.3 Keep Classes Single-purpose
 
+**Rule:** `C09` · `composition-keep-classes-single-purpose`
+
+**Applies when:** 기존 class가 base와 state·variant 책임을 함께 갖거나 독립 시각 책임을 추가·재사용·분리한다. 기존 결합 책임을 분리하지 않고 처음부터 새 single-purpose pair를 만들거나 책임 보존 rename만 하면 제외한다.
+
 **Impact: HIGH (stops one class from carrying both base styling and multiple state or structural meanings at once)**
 
-하나의 클래스는 하나의 시각적 책임만 가져야 합니다. 상태나 변형이 필요하면 modifier를 별도로 두고, 기본 클래스에 모든 의미를 몰아넣지 않습니다.
+하나의 클래스는 하나의 시각적 책임만 가져야 합니다. 기존 클래스가 base와 state·variant 책임을 함께 가질 때 분리하고, 한 클래스를 독립된 여러 시각 책임에 재사용하지 않습니다. 처음부터 single-purpose base와 modifier를 별도로 만드는 작업은 결합 책임을 해소하는 변경이 없으므로 이 규칙을 선택하지 않습니다. 스타일 책임을 보존한 owner prefix 수정, single-purpose rename, one-off modifier를 역할명 class로 바꾸기만 하는 경우도 대상이 아닙니다.
 
 **Incorrect (상태 의미를 별도 클래스 역할처럼 합쳐 버림):**
 
@@ -351,6 +403,12 @@ modifier는 상태나 반복 variant를 표현할 때만 사용합니다.
 ```
 
 ### 2.4 Prefer `Ui*` Wrapper Prop Types
+
+**Rule:** `C11` · `composition-prefer-ui-wrapper-prop-types`
+
+**Applies when:** \`Ui\*\` wrapper 사용처나 wrapper API에서 Props 타입을 선언·추론·재사용하고 라이브러리 원본 Props 참조를 검토한다.
+
+**Requires selected:** `typescript/types-reuse-existing-contracts-before-new-types` · N/A 불가
 
 **Impact: MEDIUM-HIGH (preserves wrapper-level styling and API contracts instead of leaking raw library prop types into usage sites)**
 
@@ -374,7 +432,15 @@ const items: NonNullable<UiCollapseProps["items"]> = [];
 
 ### 2.5 Prefer Owned Wrappers for `Ui*` Component Styling
 
+**Rule:** `C10` · `composition-style-ui-components-through-owned-wrappers`
+
+**Applies when:** 실제 \`Ui\*\` React wrapper 사용처·API에서 내부 DOM styling 경계를 정하거나 root \`className\`·slot prop hook을 주입·노출·사용한다. 기존 CSS owner root 아래 third-party selector만 수정하면 제외한다.
+
+**Review with:** `selector-target-third-party-dom-from-owned-roots`
+
 **Impact: HIGH (prevents shared UI wrappers from exposing uncontrolled styling hooks through ad-hoc className injection)**
+
+이 규칙은 실제 `Ui*` React wrapper 컴포넌트/API 경계에만 적용합니다. `.ui_*` 같은 기존 CSS owner root 아래에서 third-party selector만 스코프하는 CSS-only 변경은 `selector-target-third-party-dom-from-owned-roots`가 담당합니다.
 
 `Ui*` 컴포넌트(`UiCollapse`, `UiAvatar`, `UiButton` 등)의 내부 DOM을 꾸미기 위한 ad-hoc `className` 주입은 기본적으로 피합니다. 스타일링이 필요하면 화면이나 local 래퍼 클래스를 두고, 그 래퍼 아래에서만 서드파티 라이브러리 내부 DOM을 제한적으로 타겟팅합니다.   
 다만 wrapper가 root `className`이나 slot prop을 공식 styling contract로 노출했다면, 레이아웃 참여나 spacing 같은 root-level 스타일에는 그 contract를 그대로 사용할 수 있습니다.
@@ -414,9 +480,15 @@ const items: NonNullable<UiCollapseProps["items"]> = [];
 
 ### 3.1 Avoid Deep Descendant Selector Dependencies
 
+**Rule:** `C12` · `selector-avoid-deep-descendant-dependencies`
+
+**Applies when:** descendant 또는 child selector chain을 추가·수정하거나 DOM 계층에 의존하는 project-owned·third-party selector를 검토한다.
+
 **Impact: HIGH (keeps layout changes from breaking styling through long descendant chains)**
 
 깊은 후손 선택자 체인에 스타일을 걸지 않습니다. 이 규칙은 nested 문법 사용 여부와 무관하게, selector가 DOM 구조에 과도하게 묶이는 것을 금지합니다. project-owned 스타일은 클래스 자체가 계약이 되어야 하며, `.a .b .c .d` 같은 의존성은 DOM 구조가 조금만 바뀌어도 쉽게 깨집니다. owned root 아래의 third-party DOM path는 `selector-target-third-party-dom-from-owned-roots`가 다루는 예외이며, 그 경우에도 shortest viable chain만 허용합니다.
+
+깊이는 nested source block 수가 아니라 nesting을 펼친 effective selector의 combinator·ancestor chain으로 계산합니다. `& .ant-tree .ant-tree-node-content-wrapper`는 한 nested block 안에 있어도 owned root 뒤에 third-party ancestor가 2단계이므로 one-level selector가 아닙니다.
 
 **Incorrect (깊은 후손 선택자 체인에 의존):**
 
@@ -439,6 +511,10 @@ const items: NonNullable<UiCollapseProps["items"]> = [];
 ```
 
 ### 3.2 Keep Project-owned Selectors Flat
+
+**Rule:** `C13` · `selector-keep-project-selectors-flat`
+
+**Applies when:** project-owned class를 중첩·descendant selector로 연결하거나 raw HTML prose·copy·content wrapper 안 element selector를 추가·수정한다.
 
 **Impact: CRITICAL (reduces cascade coupling by keeping project-owned selectors independent instead of descendant-driven)**
 
@@ -495,6 +571,12 @@ rich text 예외는 raw element styling에만 적용됩니다. `.owner__prose .o
 
 ### 3.3 Target Third-party DOM Only From Owned Roots
 
+**Rule:** `C14` · `selector-target-third-party-dom-from-owned-roots`
+
+**Applies when:** \`.ant-\*\`, \`.rc-\*\`, \`.tippy-\*\` 등 third-party 내부 DOM selector를 추가·수정하거나 owned wrapper 아래로 범위를 제한한다.
+
+**Requires selected:** `selector-avoid-deep-descendant-dependencies` · N/A 불가
+
 **Impact: CRITICAL (limits third-party styling to explicit wrapper ownership instead of leaking across the app)**
 
 서드파티 라이브러리 내부 DOM 클래스(`.ant-*`, `.rc-*`, `.tippy-*`)는 프로젝트가 소유한 root block 아래에서만 타겟팅합니다.
@@ -505,6 +587,8 @@ rich text 예외는 raw element styling에만 적용됩니다. `.owner__prose .o
 - root 없는 `.ant-*` 단독 selector는 금지합니다.
 - `.rt_* .ant-*` 같은 one-line chaining보다 root block 안의 `& .ant-*`를 사용합니다.
 - third-party DOM 경로는 shortest viable chain만 허용합니다.
+- owned root가 이미 instance scope를 제공하고 target class가 직접 식별 가능하면 `.ant-tree` 같은 중간 library root를 반복하지 않습니다.
+- 추가 third-party ancestor는 target ambiguity나 direct-child contract처럼 실제로 필요한 evidence가 있을 때만 허용하고 그 근거를 기록합니다.
 - nested block 안에서 다시 nested block을 열지 않습니다.
 
 이 예외는 third-party DOM path에만 적용됩니다. project-owned class끼리의 깊은 descendant coupling은 여전히 금지입니다.
@@ -521,6 +605,10 @@ rich text 예외는 raw element styling에만 적용됩니다. `.owner__prose .o
 }
 
 .rt_treePanel__root {
+	& .ant-tree .ant-tree-node-content-wrapper {
+		display: inline-flex;
+	}
+
 	& .ant-tree-node-content-wrapper {
 		& .ant-tree-iconEle {
 			display: inline-flex;
@@ -555,9 +643,17 @@ rich text 예외는 raw element styling에만 적용됩니다. `.owner__prose .o
 
 ### 3.4 Use Pseudo-classes for DOM-owned States
 
+**Rule:** `C15` · `selector-use-pseudo-classes-for-dom-owned-states`
+
+**Applies when:** \`:hover\`, \`:visited\`, \`:focus\*\`, \`:disabled\`, \`:checked\`를 추가·수정하거나 parent DOM state가 child styling에 영향을 준다.
+
+**Requires selected:** `values-separate-domain-state-modifiers-from-dom-interaction-states` · N/A 불가
+
 **Impact: HIGH (keeps browser-owned interaction states separate from app-owned state modifiers)**
 
 브라우저와 DOM이 직접 부여하는 상태는 같은 클래스 block 안의 nested `&:`로 표현합니다. 화면이나 도메인이 결정하는 상태는 modifier class로 분리합니다.
+
+base/modifier 분리에서는 domain state와 무관한 hover, focus, disabled interaction을 unconditional base element block에 둡니다. interaction selector를 modifier 아래로 옮겨 적용 대상을 좁히지 않습니다. modifier가 켜진 경우에만 interaction이 달라져야 한다는 별도 제품 요구가 있을 때만 그 예외를 명시합니다.
 
 구분 기준:
 
@@ -626,9 +722,13 @@ rich text 예외는 raw element styling에만 적용됩니다. `.owner__prose .o
 
 ### 4.1 Keep Layout Intent Explicit
 
+**Rule:** `C16` · `values-keep-layout-intent-explicit`
+
+**Applies when:** \`sticky\`·\`fixed\`, \`z-index\`, 강제 width·height 또는 부모·자식 layout 책임을 추가·변경한다. 같은 element의 base/modifier 분리에서 기존 \`display\`·spacing 선언을 값 그대로 재배치하면 제외한다.
+
 **Impact: MEDIUM-HIGH (makes sticky, fixed, and box responsibilities understandable without reverse-engineering the DOM)**
 
-레이아웃 의도는 클래스명과 선언에서 즉시 확인 가능해야 합니다. `position`, `width`, `height` 강제는 최소화하고 부모와 자식의 레이아웃 책임을 분리하며, `sticky`나 `fixed`를 쓸 때는 기준 컨테이너와 `z-index` 의도를 주석으로 남깁니다.
+레이아웃 의도는 클래스명과 선언에서 즉시 확인 가능해야 합니다. `position`, `width`, `height` 강제는 최소화하고 부모와 자식의 레이아웃 책임을 분리하며, `sticky`나 `fixed`를 쓸 때는 기준 컨테이너와 `z-index` 의도를 주석으로 남깁니다. 같은 DOM element의 base/modifier 책임을 분리하면서 기존 `display`나 spacing property-value를 값 그대로 재배치하는 작업은 class responsibility 규칙이 소유하며 이 규칙은 N/A입니다. position, z-index, 강제 geometry 또는 부모·자식 layout 책임이 바뀌면 다시 Selected입니다.
 
 **Incorrect (레이아웃 강제가 많고 기준 설명이 없음):**
 
@@ -660,10 +760,17 @@ rich text 예외는 raw element styling에만 적용됩니다. `.owner__prose .o
 
 ### 4.2 Provide CSS Variable Fallbacks When Token Presence Is Not Guaranteed
 
+**Rule:** `C17` · `values-always-provide-css-variable-fallbacks`
+
+**Applies when:** 새·변경된 \`var\(--\*\)\` 사용이나 token 주입 보장 경계를 바꾼다. 같은 stylesheet·주입 경계에서 기존 \`var\(\)\` 선언을 selector 사이 byte-equivalent 이동만 하면 제외한다.
+
 **Impact: HIGH (prevents missing tokens from degrading styles unpredictably when variables are absent)**
 
-CSS 변수 `var(--*)`를 사용할 때는 토큰 존재가 보장되지 않는 경계에서 fallback 값을 함께 지정합니다. theme provider, 서드파티 wrapper, 선택적 토큰, 임시 overlay처럼 변수가 빠질 수 있는 surface에서는 안전한 기본값을 둬야 합니다.   
+CSS 변수 `var(--*)`를 사용할 때는 토큰 존재가 보장되지 않는 경계에서 fallback 값을 함께 지정합니다. theme provider, 서드파티 wrapper, 선택적 토큰, 임시 overlay처럼 변수가 빠질 수 있는 surface에서는 안전한 기본값을 둬야 합니다. 요청이나 기존 token contract에 없는 CSS variable을 이 규칙 때문에 새로 발명하지 않으며, 새 stylesheet나 class를 만든다는 사실만으로 이 규칙을 선택하지 않습니다.
+다만 실제 diff에 새 CSS variable 사용이 들어오면, 요청 여부와 무관하게 이 규칙을 다시 선택하고 주입 보장·fallback을 검사합니다.
 반대로 프로젝트 전역에서 반드시 주입되는 core design token이라면, 누락을 빨리 드러내기 위해 fallback을 생략할 수도 있습니다.
+
+같은 stylesheet와 같은 token 주입 경계 안에서 기존 `var()` 선언을 base와 modifier 또는 rename 전후 selector 사이로 byte-equivalent 이동만 하는 경우는 N/A입니다. 변수 이름·fallback·주입 owner·사용 횟수·의미 중 하나라도 바뀌면 다시 Selected로 판정합니다.
 
 **Incorrect (존재 보장이 없는 토큰을 fallback 없이 사용):**
 
@@ -697,9 +804,17 @@ CSS 변수 `var(--*)`를 사용할 때는 토큰 존재가 보장되지 않는 �
 
 ### 4.3 Separate Domain State Modifiers From DOM Interaction States
 
+**Rule:** `C18` · `values-separate-domain-state-modifiers-from-dom-interaction-states`
+
+**Applies when:** app/domain state modifier와 hover·focus·disabled 같은 DOM interaction state를 추가·변경하거나 focus ring에 손댄다.
+
+**Review with:** `composition-do-not-build-structural-variants-with-modifiers`
+
 **Impact: HIGH (keeps app state, focus visibility, and hover behavior readable and accessible without mixing their responsibilities)**
 
-화면 상태나 도메인 상태는 `--active`, `--selected`, `--error` 같은 modifier로 표현하고, 브라우저 상호작용 상태는 같은 클래스 블록 내부 nested `&:hover`, `&:focus-visible`, `&:disabled` 같은 pseudo-class로 표현합니다. 포커스 링 제거는 금지하며, 대체 포커스 스타일을 반드시 제공합니다.
+화면 상태나 도메인 상태는 `--active`, `--selected`, `--error` 같은 modifier로 표현하고, 브라우저 상호작용 상태는 같은 클래스 블록 내부 nested `&:hover`, `&:focus-visible`, `&:disabled` 같은 pseudo-class로 표현합니다. 새 modifier를 다루면 실제 domain state인지 one-off structural patch인지 확인하기 위해 `composition-do-not-build-structural-variants-with-modifiers`를 다시 판정합니다. 포커스 링 제거는 금지하며, 대체 포커스 스타일을 반드시 제공합니다.
+
+base/modifier 분리에서는 domain state와 무관한 hover, focus, disabled interaction을 unconditional base element block에 둡니다. interaction selector를 modifier 아래로 옮겨 적용 대상을 좁히지 않습니다. modifier block에는 active·selected·error처럼 app state가 소유하는 presentation만 남깁니다.
 
 **Incorrect (포커스 스타일을 제거하거나 상태 경계를 섞음):**
 
@@ -735,6 +850,12 @@ CSS 변수 `var(--*)`를 사용할 때는 토큰 존재가 보장되지 않는 �
 ```
 
 ### 4.4 Tokenize Repeated Visual Values
+
+**Rule:** `C19` · `values-tokenize-repeated-visual-values`
+
+**Applies when:** 색상·간격·radius·타이포·그림자 등 같은 시각 값이 2회 이상 반복되거나 새 shared visual value를 하드코딩한다.
+
+**Review with:** `values-always-provide-css-variable-fallbacks`
 
 **Impact: HIGH (keeps repeated colors, spacing, and radius values aligned with shared design tokens instead of drifting into magic numbers)**
 
@@ -773,6 +894,10 @@ CSS 변수 `var(--*)`를 사용할 때는 토큰 존재가 보장되지 않는 �
 stylesheet는 하나의 owner에 맞춰 유지하고, 가벼운 구조 주석만 사용하며, 마무리 전에 금지 패턴을 점검해야 합니다.
 
 ### 5.1 Keep Style Files Owned by One Component or Route Surface
+
+**Rule:** `C20` · `organization-keep-style-files-owned-by-one-component-or-route`
+
+**Applies when:** stylesheet를 새로 만들거나 이동·분할·병합하고 한 파일에 component, route, document, local, shared owner가 섞일 가능성이 있다.
 
 **Impact: MEDIUM (keeps stylesheets aligned to a single owner so comments, ordering, and scope remain understandable)**
 
@@ -817,6 +942,12 @@ stylesheet는 하나의 owner에 맞춰 유지하고, 가벼운 구조 주석만
 ```
 
 ### 5.2 Review Banned CSS Patterns Before Finishing
+
+**Rule:** `C21` · `organization-review-banned-css-patterns-before-finishing`
+
+**Applies when:** CSS 또는 TSX class contract 변경이 완료 단계에 들어간다.
+
+**Required on completion:** 활성 skill의 완료 receipt에서 Selected이며 N/A 불가
 
 **Impact: MEDIUM (catches unsafe selector, modifier, and library-targeting shortcuts before they become part of the shared style system)**
 

@@ -20,6 +20,7 @@
 
 대상:
 
+- [skill/astro](./skill/astro/README.md)
 - [skill/react](./skill/react/README.md)
 - [skill/css](./skill/css/README.md)
 - [skill/tanstack-route](./skill/tanstack-route/README.md)
@@ -32,11 +33,14 @@
 이 구조에서는 아래 원칙을 지킵니다.
 
 - 각 structured skill의 [rules/_sections.md](./skill/react/rules/_sections.md), [rules/_template.md](./skill/react/rules/_template.md), `rules/*.md`가 source of truth입니다.
-- [skill/react/AGENTS.md](./skill/react/AGENTS.md) 같은 compiled guide는 build 결과물입니다.
-- [skill/react/SKILL.md](./skill/react/SKILL.md) 같은 entrypoint는 스킬 activation guide이며, agent가 어떤 companion skill과 상세 문서를 추가로 읽어야 하는지 명시해야 합니다.
-- 일부 skill은 `metadata.json`의 `extends`로 companion skill 관계를 선언합니다.
+- `SKILL.md`는 사람이 수정하는 activation/load router이며, progressive skill에서는 compact하게 유지합니다.
+- `progressiveDisclosure: true`인 skill은 [RULES_INDEX.md](./skill/react/RULES_INDEX.md)를 generated compact index로 사용합니다. index의 `completionGate`는 완료 시 Selected이며 N/A 불가입니다.
+- progressive skill의 `contracts/*.md`는 source `rules/*.md`에서 build한 selected-rule contract입니다. contract의 `requiresSelected`는 source가 final Selected일 때만 필수 target을 Selected로 닫고, CRITICAL contract는 full rule을 반드시 가리킵니다.
+- progressive React/TypeScript/CSS의 `AGENTS.md`는 각 rule의 escaped `Applies when`을 포함하는 generated opt-in full handbook이며 기본 진입점으로 로드하지 않습니다.
+- `metadata.json.companions`는 `required` companion과 `conditional` companion의 활성화 관계를 선언합니다. `extends`는 아직 progressive migration을 하지 않은 non-progressive skill의 호환 계약입니다.
+- `routing-evals.json`은 runtime에 로드하지 않는 test oracle이며 exact Selected/N/A partition과 scope-drift 시나리오를 검증합니다.
 - `metadata.json`, [rules/_sections.md](./skill/react/rules/_sections.md), [README.md](./skill/react/README.md), [SKILL.md](./skill/react/SKILL.md)는 서로 설명이 어긋나지 않게 유지합니다.
-- 이전 단일 문서를 보존하지 않습니다. 오래된 단일 문서가 필요하면 Git history에서 확인하고, 현재 skill 판단은 `rules/*.md`와 compiled `AGENTS.md`만 기준으로 삼습니다.
+- progressive skill의 현재 판단은 `SKILL.md`, generated `RULES_INDEX.md`, 선택된 `contracts/*.md`, 필요 시 확장한 `rules/*.md`를 기준으로 합니다. non-progressive skill은 `SKILL.md`가 안내하는 `AGENTS.md`와 rule 원문을 따릅니다.
 
 ### 2. Legacy Skill
 
@@ -46,16 +50,31 @@
 
 이 구조에서는 단일 문서가 정본입니다. structured skill 규칙을 억지로 섞지 말고, 실제 파일 구조를 먼저 확인한 뒤 수정합니다.
 
+## Structured Skill Artifact Contract
+
+| Artifact | Role |
+| --- | --- |
+| `rules/_sections.md`, `rules/_template.md`, `rules/*.md` | Editable rule source of truth. |
+| `metadata.json` | Editable build and companion activation contract. |
+| `SKILL.md` | Editable activation/load router; compact for progressive skills. |
+| `RULES_INDEX.md` | Progressive-only generated compact index. |
+| `contracts/*.md` | Progressive-only generated selected-rule contract; never edit directly. |
+| `AGENTS.md` | Generated full handbook; progressive rules include `Applies when`; opt-in for React/TypeScript/CSS. |
+| `routing-evals.json` | Progressive-only editable test oracle; never runtime context. |
+
+non-progressive structured skill은 각 `SKILL.md`가 지정한 local `AGENTS.md`와 rule body 계약을 그대로 따릅니다. 위 opt-in 제한은 progressive React/TypeScript/CSS full handbook에만 적용합니다.
+
 ## Editing Rules
 
 structured skill을 수정할 때는 아래 순서를 기본으로 사용합니다.
 
 1. 먼저 [SKILL.md](./skill/react/SKILL.md), [README.md](./skill/react/README.md), `metadata.json`, [rules/_sections.md](./skill/react/rules/_sections.md)를 훑어 현재 구성과 activation 흐름을 확인합니다.
-2. 실제 규칙 변경은 [rules/_sections.md](./skill/react/rules/_sections.md), [rules/_template.md](./skill/react/rules/_template.md), `rules/*.md`에서 수행합니다.
-3. `metadata.json`에 `extends`가 있으면 공통 companion skill과 local overlay skill 중 어디가 정본인지 먼저 판단합니다.
-4. [skill/react/AGENTS.md](./skill/react/AGENTS.md) 같은 generated guide를 수동 source of truth처럼 편집하지 않습니다.
-5. 변경 후에는 validate와 build를 다시 실행해 generated output을 갱신합니다.
-6. skill 인벤토리나 작업 방식, activation 흐름이 바뀌면 루트 [README.md](./README.md)도 함께 갱신합니다.
+2. 실제 규칙 변경은 `rules/_sections.md`, `rules/_template.md`, `rules/*.md`를 수정합니다. activation/load 흐름이 바뀌면 `SKILL.md`를 수정하고, progressive routing 조건이 바뀌면 rule frontmatter의 `appliesWhen`/`reviewWith`/`requiresSelected`/`requiredOnCompletion`과 `routing-evals.json`도 함께 수정합니다. `reviewWith`는 조건부 재평가, `requiresSelected`는 필수 Selected 전이, `requiredOnCompletion: true`는 skill 완료 gate입니다.
+3. 공통 규칙은 companion skill에 두고 framework/project 특화 예외만 local overlay에 남깁니다. 기존 프로젝트 경계를 공통 pack으로 끌어올리지 않습니다.
+4. `metadata.json.companions`의 `required`/`conditional` mode 또는 non-progressive `extends`가 현재 activation 계약과 맞는지 확인합니다.
+5. [skill/react/AGENTS.md](./skill/react/AGENTS.md), [skill/react/RULES_INDEX.md](./skill/react/RULES_INDEX.md), `skill/react/contracts/*.md` 같은 generated 파일을 직접 편집하지 않습니다.
+6. 변경 후 `validate` → `build` → `check:generated` 순서로 source와 generated output을 검증합니다.
+7. skill 인벤토리, artifact 역할, activation 흐름이 바뀌면 루트 [README.md](./README.md)와 [package/README.md](./package/README.md)도 함께 갱신합니다.
 
 새 skill을 추가하거나 legacy skill을 structured skill로 마이그레이션할 때는 가능하면 이미 정리된 `react`, `css`, `typescript` 폴더를 기준 템플릿으로 삼는 편이 안전합니다.
 
@@ -84,10 +103,14 @@ npm --prefix package run build -- --skill=<skill-name>
 ```bash
 npm --prefix package run validate -- --all
 npm --prefix package run build -- --all
+npm --prefix package run check:generated:all
+npm --prefix package run typecheck
+npm --prefix package run test
 ```
 
 현재 buildable skill alias는 아래와 같습니다.
 
+- `astro`
 - `react`
 - `css`
 - `convention-audit`
@@ -101,9 +124,10 @@ npm --prefix package run build -- --all
 
 ## Guardrails
 
-- structured skill에서는 [rules/_sections.md](./skill/react/rules/_sections.md), [rules/_template.md](./skill/react/rules/_template.md), `rules/*.md`를 우선 수정하고 generated [AGENTS.md](./skill/react/AGENTS.md)를 직접 고친 뒤 끝내지 않습니다.
+- structured skill에서는 [rules/_sections.md](./skill/react/rules/_sections.md), [rules/_template.md](./skill/react/rules/_template.md), `rules/*.md`를 우선 수정하고 generated [AGENTS.md](./skill/react/AGENTS.md)나 [RULES_INDEX.md](./skill/react/RULES_INDEX.md)를 직접 고친 뒤 끝내지 않습니다.
 - generic TypeScript 규칙이면 `typescript` companion skill로 올리고, framework skill에는 예외나 overlay만 남기는 쪽을 우선 검토합니다.
-- 기본 [AGENTS.md](./skill/react/AGENTS.md)는 slim local guide이고, 공통 규칙은 companion skill을 함께 로드하는 방식으로 사용합니다.
+- progressive consumer 경로는 compact router와 index입니다. full handbook은 명시적으로 전체 문맥이 필요할 때만 opt-in합니다.
+- Unknown을 먼저 해소하고 final Selected contract의 `requiresSelected`만 전이합니다. N/A contract는 target을 활성화하지 않습니다.
 - 레포 안의 skill마다 구조가 다를 수 있으므로, 수정 전에 실제 디렉터리 상태를 다시 확인합니다.
 - `reference/agent-skills-main`의 문장을 그대로 가져오기보다, 이 레포의 목적과 현재 구조에 맞게 재서술합니다.
 - skill 이름, 설명, 섹션 구성, generated output이 서로 어긋나면 이후 유지보수가 어려워지므로 한 번에 같이 맞춥니다.

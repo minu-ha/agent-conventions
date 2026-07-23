@@ -12,14 +12,38 @@ CSS skill을 수정하거나 새로운 rule을 추가했을 때, 실제 에이�
 
 ## 실행 방법
 
-1. 가능하면 실제 TSX + CSS 코드베이스에서 실행합니다.
-2. 각 scenario는 최소 2번 돌립니다.
-   - baseline: CSS skill 없이 실행
-   - candidate: `convention-css`와 필요한 companion skill을 함께 로드한 상태로 실행
-3. 결과를 아래 항목으로 비교합니다.
-   - 어떤 CSS 파일과 TSX를 만들거나 수정했는지
-   - class naming, wrapper ownership, selector depth, token usage가 skill 기준과 맞는지
-   - route scope, shared component scope, local scope가 섞이지 않았는지
+각 scenario를 같은 prompt와 파일 evidence로 최소 2회, CRITICAL 누락 위험이 크면 3회 실행합니다.
+
+1. `no-skill baseline`: convention 문서를 주지 않습니다.
+2. `full-handbook oracle`: 독립 reviewer가 전체 `AGENTS.md`와 rule body로 exact 기대 partition을 승인합니다.
+3. `progressive candidate`: `SKILL.md` → 전체 `RULES_INDEX.md` → selected/unknown stable-ID-matched contract를 읽고, CRITICAL 또는 deterministic expansion 조건에 맞는 full rule만 추가합니다.
+4. `mutation RED`: candidate receipt에서 expected rule 하나를 제거합니다. coverage mismatch 또는 `UNKNOWN`이 완료를 반드시 차단해야 합니다.
+
+`completionGate` N/A/누락, final Selected의 `requiresSelected` target N/A/누락, Unknown→N/A source target의 과잉 선택도 mutation RED입니다.
+
+각 arm은 [routing-evals.json](./routing-evals.json)의 `expectedSkills`, exact `expectedSelected`, exact `expectedNotApplicable`, scope drift와 비교합니다. all-rules selection도 precision 실패입니다. candidate는 activation/selected/N/A exact match, exclusion-group ordinal 합집합, `FAIL 0`, `UNKNOWN 0`을 모두 만족해야 합니다.
+
+protocol v3 결과에는 coordinator가 dispatch 전에 고정한 repository HEAD, index digest, arm/scenario/trial, exact UTF-8 prompt와 SHA-256/byte length/renderer version, model/runtime/reasoning, scorer/rubric, declared loaded files, receipt의 `Expanded`와 이유, verdict, input token을 기록합니다. progressive/full-handbook은 completion gate·conditional `reviewWith`·final-Selected `requiresSelected` trace와 delta 없는 연속 두 stable pass를 남깁니다. file-read telemetry가 없으면 observed라고 표현하지 않습니다. router+index+selected contract+expanded full rule의 implementation median/최대와 full-handbook oracle 대비 절감률을 함께 보고하고, scope drift·audit·reviewer phase의 반복 load도 누적 token에 포함합니다.
+
+## Progressive Routing Regression Set
+
+[routing-evals.json](./routing-evals.json)이 exact prompt, files, expected skills, Selected/N/A 배열의 machine-readable oracle입니다. 아래 11개 scenario, 13개 stage를 같은 evidence로 재실행합니다.
+
+- `css-route-style-scope-drift`: initial은 React activation evidence와 TypeScript partition만 유지하고, scope drift에서 CSS owner partition을 추가합니다.
+- `css-owner-boundary-split`: pure CSS owner/file 분리를 판정합니다.
+- `css-domain-state-class-contract`: React evidence, TypeScript direct import, CSS domain-state contract를 함께 판정합니다.
+- `css-one-off-structural-modifier`: non-repeatable modifier 제거와 role naming을 판정합니다.
+- `css-ui-wrapper-third-party-dom`: initial에는 C17을 N/A로 두고 optional variable scope drift에서만 C17을 Selected로 추가합니다.
+- `css-ui-wrapper-root-prop-contract`: C10 wrapper styling, C11 wrapper Props와 conditional TypeScript contract를 함께 판정합니다.
+- `css-rich-text-owner-block`: raw element nesting의 owner block 예외만 선택합니다.
+- `css-dom-interaction-states`: same-block pseudo-state와 domain/DOM state 분리를 선택합니다.
+- `css-repeated-values-and-optional-token`: existing owner-root selector, repeated value token과 fallback을 함께 선택합니다.
+- `css-sticky-layout-intent`: sticky, z-index, size responsibility만 선택합니다.
+- `css-deep-project-descendant-chain`: deep dependency와 flat selector를 함께 선택합니다.
+
+Pure CSS fixture는 CSS만 partition합니다. Mixed fixture 5개는 progressive TypeScript와 React의 exact partition을 모두 저장합니다. React selected가 비어 있어도 42개 전체를 `expectedNotApplicable.react`에 materialize하며, CSS metadata에는 React companion을 추가하지 않습니다.
+
+Scope drift 뒤에는 file, activated skill, 기존 Selected rule을 제거하지 않고 전체 index를 다시 scan합니다. 모든 CSS rule은 전체 scenario set에서 한 번 이상 positive coverage를 가져야 하며, 마지막 `convention-audit`에서 `FAIL 0`, `UNKNOWN 0`을 확인합니다.
 
 ## Common Red Flags
 
@@ -66,10 +90,13 @@ CSS skill을 수정하거나 새로운 rule을 추가했을 때, 실제 에이�
 - Expected pass signals
   - selector가 항상 owned root block 안에서 nested로 시작함
   - owned root를 `.rt_* .ant-*`처럼 one-line selector로 다시 체이닝하지 않음
+  - 직접 식별 가능한 target은 `& .ant-tree-node-content-wrapper`로 쓰고 중간 library root를 생략함
   - third-party path가 필요할 때도 shortest viable chain만 사용함
+  - target ambiguity나 direct-child contract 때문에 ancestor가 더 필요하면 그 evidence를 기록함
 - Likely fail signals
   - `.ant-tree-node-content-wrapper { ... }`
   - `.rt_treePanel__root .ant-tree-title { ... }`
+  - `& .ant-tree .ant-tree-node-content-wrapper`를 nested block 하나라는 이유로 one-level selector라고 판단함
   - nested 안에서 다시 nested block을 여는 깊은 chain
   - project-owned 클래스끼리 깊은 descendant chain을 만듦
 
@@ -153,6 +180,71 @@ CSS skill을 수정하거나 새로운 rule을 추가했을 때, 실제 에이�
   - `.foo:hover .foo__icon { ... }`
   - `.owner__prose h2 { ... }`
   - `.owner__copy > :first-child { ... }`
+
+### C8. Route Support and Leaf-local Ownership
+
+- Focus
+  - `naming-separate-local-and-route-style-scopes`
+- Prompt
+  - "route entry를 지원하는 toolbar section과 `_local/`의 독립 filter dialog 스타일 owner를 정리해줘."
+- Expected pass signals
+  - route screen 흐름을 구성·지원하는 surface는 파일 위치와 무관하게 `rt_*`를 유지함
+  - route 맥락을 몰라도 되는 독립 leaf helper만 `loc_*`를 사용함
+- Likely fail signals
+  - `_local/` 폴더에 있다는 이유만으로 route support surface를 `loc_*`로 바꿈
+  - 독립 leaf dialog를 main route owner namespace에 섞음
+
+### C9. Responsibility-preserving Rename Precision
+
+- Focus
+  - `composition-keep-classes-single-purpose`
+- Prompt
+  - "스타일 선언과 책임은 그대로 두고 잘못된 owner prefix만 `loc_`에서 `rt_`로 고쳐. class를 합치거나 책임을 추가하지는 않아."
+- Expected pass signals
+  - 책임을 보존하는 owner prefix 수정이나 single-purpose class rename만으로는 rule을 선택하지 않음
+  - base class에 상태·variant 의미를 합치거나 독립 책임을 추가할 때만 다시 선택함
+- Likely fail signals
+  - 모든 class rename을 single-purpose composition 변경으로 과선택함
+
+### C10. Domain State Review Edge
+
+- Focus
+  - `values-separate-domain-state-modifiers-from-dom-interaction-states`
+  - `composition-do-not-build-structural-variants-with-modifiers`
+- Prompt
+  - "선택 상태 modifier와 hover/focus 스타일을 정리해줘. 새 modifier가 상태인지 one-off 구조 patch인지도 확인해줘."
+- Expected pass signals
+  - domain/DOM state rule의 `reviewWith`로 structural modifier rule을 재평가함
+  - `--selected` 같은 허용 domain state여도 변경된 modifier 분류 rule은 `Selected + pass`로 기록함
+  - hover/focus/disabled는 unconditional base element block의 pseudo-class로 유지함
+  - spacing 보정 modifier는 반복 가능한 상태로 오인하지 않음
+- Likely fail signals
+  - domain state rule만 보고 one-off modifier 여부를 검토하지 않음
+  - 허용 state라서 위반이 없다는 이유로 modifier 분류 rule을 N/A 처리함
+  - hover/focus를 modifier로 바꾸거나 structural patch를 상태처럼 남김
+
+### C11. Base/Modifier Split Precision
+
+- Focus
+  - `naming-default-to-plain-css-when-no-module-convention`
+  - `values-keep-layout-intent-explicit`
+  - `values-always-provide-css-variable-fallbacks`
+  - `values-tokenize-repeated-visual-values`
+- Prompt
+  - "기존 plain `_index.css`의 fused active class를 base와 `--active`로 분리하되 기존 display, token, raw value를 그대로 재배치해줘."
+- Expected pass signals
+  - 기존 plain stylesheet 접근 형식을 유지하므로 plain-vs-module rule은 N/A
+  - 같은 element의 기존 `display`·spacing property-value 재배치이므로 layout rule은 N/A
+  - 같은 owner·주입 경계의 동일 `var()` 이동이므로 fallback rule은 N/A
+  - 새 반복 visual value가 없으므로 tokenization rule은 N/A
+  - domain state와 무관한 hover/focus/disabled는 modifier 아래가 아니라 unconditional base block에 남음
+- Counter-controls
+  - 새 stylesheet 접근 형식 결정이나 module 전환은 plain-vs-module rule Selected
+  - sticky/z-index/geometry/부모·자식 책임 변화는 layout rule Selected
+  - token/fallback/property/injection boundary 변화는 fallback rule Selected
+- Likely fail signals
+  - 삭제+추가 line만 보고 동일 property-value 이동을 새 layout/token 사용으로 과선택함
+  - base/modifier 이름은 맞지만 hover를 `--active` 아래에 넣어 interaction 대상을 좁힘
 
 ## 유지보수 원칙
 

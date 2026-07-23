@@ -1,0 +1,80 @@
+{
+  "activatedSkills": [],
+  "arm": "no-skill",
+  "armSha256": "sha256:7f56dd3946274dc5773019c34c4a3ac33bb3344ab1942290396bc73550f33164",
+  "childPayloadSha256": "sha256:995e16f53834a36aaadc8ca6d5ff600d52a2a43fff1435dd31936305b1fb0207",
+  "childRequestSha256": "sha256:794d12458d42cc1f191a3987102da8339fcfa99670429f5607e3f9aeb198ff05",
+  "completion": {
+    "blocked": false,
+    "coverageFailCount": 0,
+    "reason": "요청된 타입 별칭과 한국어 @summary를 가상 패치에 반영했습니다.",
+    "semanticFailCount": 0,
+    "status": "COMPLETE",
+    "unknownCount": 0
+  },
+  "declaredLoadedFiles": {
+    "kind": "declared",
+    "paths": []
+  },
+  "driftReceipt": null,
+  "exactPrompt": "Read and execute /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v14-support-runs/no-skill--derive-existing-contract-with-docs--t2.child-request.json (sha256:794d12458d42cc1f191a3987102da8339fcfa99670429f5607e3f9aeb198ff05).\nAssigned payload path: /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v14-support-runs/no-skill--derive-existing-contract-with-docs--t2.child-payload.json. Write exactly this one file with apply_patch; create or modify no other file.\nDo not echo the dispatch prompt or coordinator-owned fields; after writing valid childPayload JSON, return only concise status.",
+  "generatedIndexDigests": {
+    "css": "sha256:6dacc6f6fbe940681ab2734d8c9281c46ff07be133ee9c9d68de91bddb039d79",
+    "react": "sha256:624e51ea96f2dea6b775450def20d36142d70ffcf7960cf5169eacdf0ebb57c6",
+    "typescript": "sha256:e0bd359aa2321150229960df8fb663e528e93b3d5d25173d3a20ebf3a1b9b259"
+  },
+  "limitations": [],
+  "promptByteLength": 719,
+  "promptRendererVersion": "behavioral-prompt-renderer-v3",
+  "promptSha256": "sha256:ef9e2a3954b9e2cb1cb9b883a5c65a779ac5b8912ce9ab17c021ba7c03097d8a",
+  "protocolId": "progressive-loading-behavioral-v3",
+  "protocolSha256": "sha256:b345e28b0c9318a34ca60306867e058bf0c37879ae0ae7ddabaa709ee98ef730",
+  "receipts": [],
+  "repositoryHead": "30b7c36e560ba70af5e478e831473dd89d431faf",
+  "requestContentDigest": "sha256:583410e60035d17937471bf196bf6c2cf86ecf5eaea3f74e03c7dff5be0cbb39",
+  "response": "UserPreview를 같은 이름의 Pick 기반 타입 별칭으로 바꾸고 간결한 한국어 @summary를 추가했습니다.",
+  "routingTrace": null,
+  "runId": "no-skill--derive-existing-contract-with-docs--t2",
+  "runtime": {
+    "declared": {
+      "forkTurns": "none",
+      "oneChildPerTrial": true,
+      "requestedModel": "gpt-5.6-sol",
+      "requestedReasoning": "high",
+      "runtime": "Codex CLI isolated child session"
+    },
+    "evidenceClass": "declared-telemetry-only",
+    "unavailable": {
+      "actualReasoningTelemetry": null,
+      "childTokenUsage": null,
+      "exactModelBuild": null,
+      "observedFileReads": null,
+      "runtimeVersion": null
+    }
+  },
+  "scenarioId": "derive-existing-contract-with-docs",
+  "scenarioPrompt": "replace a duplicate `UserPreview` interface with a same-name `Pick<UserRecord, ...>` alias and add concise Korean `@summary`; imports and names otherwise stay unchanged.",
+  "scenarioSha256": "sha256:2c2f1e677732141c2499d40f5b9aaaa3599802c9a49991090c7cc298fd8cde4c",
+  "schemaVersion": 3,
+  "scoring": {
+    "eligible": false,
+    "kind": "observational",
+    "reason": "no-skill arm"
+  },
+  "semanticVerdicts": [],
+  "stagedProvenanceSha256": null,
+  "trial": 2,
+  "virtualPatch": {
+    "files": [
+      {
+        "after": "import type {UserRecord} from \"./user-record\";\n\n/**\n * @summary 사용자 미리보기 타입\n */\ntype UserPreview = Pick<UserRecord, \"id\" | \"displayName\">;\n\nexport type {UserPreview};\n",
+        "afterSha256": "sha256:5fb64aae76fdd81b5f434c23dcf197ecd3cb7cc596f77b7b64d641146248cac9",
+        "afterState": "present",
+        "beforeSha256": "sha256:1c42aa41c860847e6bc7900dca0be4c31a81e53bb5a38ced554be6f5046fb523",
+        "beforeState": "present",
+        "path": "src/users/user-preview.ts"
+      }
+    ],
+    "summary": "중복 인터페이스를 UserRecord의 id와 displayName을 선택하는 타입 별칭으로 교체하고 한국어 @summary를 추가했습니다."
+  }
+}

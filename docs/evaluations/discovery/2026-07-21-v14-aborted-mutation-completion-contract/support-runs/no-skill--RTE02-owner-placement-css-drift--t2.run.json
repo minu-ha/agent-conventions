@@ -1,0 +1,96 @@
+{
+  "activatedSkills": [],
+  "arm": "no-skill",
+  "armSha256": "sha256:7f56dd3946274dc5773019c34c4a3ac33bb3344ab1942290396bc73550f33164",
+  "childPayloadSha256": "sha256:1a45da3b2e841107b604d77a471a29f3d2469e30de2d03ec5ec86ad382df2151",
+  "childRequestSha256": "sha256:940fe6d5f6ef6c0e6d7acdeb4d8af8587923ac6c018794caad40a79280bd13a3",
+  "completion": {
+    "blocked": false,
+    "coverageFailCount": 0,
+    "reason": "The replacement-final virtual snapshot adds the direct route-local stylesheet, defines owner-unique rt_entryTree role classes, and composes them with the preserved clsx import without activating convention skills.",
+    "semanticFailCount": 0,
+    "status": "COMPLETE",
+    "unknownCount": 0
+  },
+  "declaredLoadedFiles": {
+    "kind": "declared",
+    "paths": []
+  },
+  "driftReceipt": null,
+  "exactPrompt": "Read and execute /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v14-support-runs/no-skill--RTE02-owner-placement-css-drift--t2.initial-child-request.json (sha256:5c7f8f5d6b02f8b9c9d1c5c953f49c9f02dff2f664a32b357007bb4fc6d5025c).\nThis exact dispatch is already running in the bound isolated Codex CLI child session: /root/cli-v14-no_skill-rte02-t2-a1. Treat that identifier as this current session; do not spawn, hand off, or redispatch to another agent.\nAssigned initial payload path: /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v14-support-runs/no-skill--RTE02-owner-placement-css-drift--t2.initial-child-payload.json. Write exactly this one file with apply_patch; create or modify no other file.\nDo not echo coordinator-owned fields; after writing valid JSON, return only concise status.",
+  "generatedIndexDigests": {
+    "css": "sha256:6dacc6f6fbe940681ab2734d8c9281c46ff07be133ee9c9d68de91bddb039d79",
+    "react": "sha256:624e51ea96f2dea6b775450def20d36142d70ffcf7960cf5169eacdf0ebb57c6",
+    "typescript": "sha256:e0bd359aa2321150229960df8fb663e528e93b3d5d25173d3a20ebf3a1b9b259"
+  },
+  "limitations": [],
+  "promptByteLength": 926,
+  "promptRendererVersion": "behavioral-prompt-renderer-v3-initial",
+  "promptSha256": "sha256:fc79ab50d6682464f195ed6bf95b5561f47f3158ad3d58c9d561da483a6c88f9",
+  "protocolId": "progressive-loading-behavioral-v3",
+  "protocolSha256": "sha256:b345e28b0c9318a34ca60306867e058bf0c37879ae0ae7ddabaa709ee98ef730",
+  "receipts": [],
+  "repositoryHead": "30b7c36e560ba70af5e478e831473dd89d431faf",
+  "requestContentDigest": "sha256:699fc78f04e9d619bab092fc140a99a31c9d45fc5e58211fc19ee1c05379f99a",
+  "response": "Prepared the complete route-local CSS drift snapshot with direct import and rt_entryTree role classes.",
+  "routingTrace": null,
+  "runId": "no-skill--RTE02-owner-placement-css-drift--t2",
+  "runtime": {
+    "declared": {
+      "forkTurns": "none",
+      "oneChildPerTrial": true,
+      "requestedModel": "gpt-5.6-sol",
+      "requestedReasoning": "high",
+      "runtime": "Codex CLI isolated child session"
+    },
+    "evidenceClass": "declared-telemetry-only",
+    "unavailable": {
+      "actualReasoningTelemetry": null,
+      "childTokenUsage": null,
+      "exactModelBuild": null,
+      "observedFileReads": null,
+      "runtimeVersion": null
+    }
+  },
+  "scenarioId": "RTE02-owner-placement-css-drift",
+  "scenarioPrompt": "move a route-only tree renderer from shared UI to src/routes/entries/-local/entry-tree.tsx and rename it as route-local; carry its existing className and style import through unchanged and make no styling change.",
+  "scenarioSha256": "sha256:1ee19f74a908033acc4065b4384307b7cef14c7f84d28ceb909e198863125e29",
+  "schemaVersion": 3,
+  "scoring": {
+    "eligible": false,
+    "kind": "observational",
+    "reason": "no-skill arm"
+  },
+  "semanticVerdicts": [],
+  "stagedProvenanceSha256": "sha256:e6b3888c6ff6633e71c87b3b7481c173f67dbcc27ec946c78239ecf27ede7392",
+  "trial": 2,
+  "virtualPatch": {
+    "files": [
+      {
+        "after": null,
+        "afterSha256": null,
+        "afterState": "absent",
+        "beforeSha256": "sha256:f445d8933df7ebd3f909bbeb3c7c1838c935b2c2b9510d30610b786bd590f1c6",
+        "beforeState": "present",
+        "path": "src/components/ui/entry-tree.tsx"
+      },
+      {
+        "after": "import clsx from \"clsx\";\nimport \"./entry-tree.css\";\n\ninterface RouteLocalEntryTreeProps {\n  entries: Array<{id: string; label: string}>;\n  selectedId?: string;\n}\n\nexport const RouteLocalEntryTree = ({entries, selectedId}: RouteLocalEntryTreeProps) => (\n  <ul className={clsx(\"rt_entryTree_list\", selectedId && \"rt_entryTree_selected\")}>\n    {entries.map((entry) => (\n      <li key={entry.id}>{entry.label}</li>\n    ))}\n  </ul>\n);\n",
+        "afterSha256": "sha256:7745b108fc7a0988e297e51f7bd11cd728299fd1b0c6cd32e3f219916d82877b",
+        "afterState": "present",
+        "beforeSha256": null,
+        "beforeState": "absent",
+        "path": "src/routes/entries/-local/entry-tree.tsx"
+      },
+      {
+        "after": ".rt_entryTree_list {\n  margin: 0;\n  padding: 0;\n  list-style: none;\n}\n\n.rt_entryTree_selected {\n  outline: 2px solid currentColor;\n}\n",
+        "afterSha256": "sha256:2ebbc3972e5a858ad56b33ca512879c2b6dfe7650cc24c1160721af1f5b64e70",
+        "afterState": "present",
+        "beforeSha256": null,
+        "beforeState": "absent",
+        "path": "src/routes/entries/-local/entry-tree.css"
+      }
+    ],
+    "summary": "Composed initial and replacement-final virtual patches."
+  }
+}

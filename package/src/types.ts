@@ -32,6 +32,10 @@ export interface CliArgs {
 	 * @field 단일 skill만 대상으로 실행할 때의 skill 이름
 	 */
 	skill?: string;
+	/**
+	 * @field fixture나 별도 checkout을 대상으로 할 absolute skill root
+	 */
+	skillRootDir?: string;
 }
 
 /**
@@ -55,6 +59,10 @@ export interface SkillPaths {
 	 */
 	metadataPath: string;
 	/**
+	 * @field activation entrypoint인 SKILL.md 파일 경로
+	 */
+	skillEntrypointPath: string;
+	/**
 	 * @field 대상 skill rules/_sections.md 파일 경로
 	 */
 	sectionsPath: string;
@@ -62,6 +70,41 @@ export interface SkillPaths {
 	 * @field compiled AGENTS.md 출력 파일 경로
 	 */
 	outputPath: string;
+	/**
+	 * @field compact RULES_INDEX.md 출력 파일 경로
+	 */
+	rulesIndexPath: string;
+	/**
+	 * @field selected rule별 generated compact contract 디렉터리 경로
+	 */
+	ruleContractsDir: string;
+	/**
+	 * @field routing evaluation manifest 파일 경로
+	 */
+	routingEvalsPath: string;
+}
+
+/**
+ * @summary companion skill 활성화 방식
+ */
+export type CompanionMode = "required" | "conditional";
+
+/**
+ * @summary progressive skill이 선언한 companion skill 관계
+ */
+export interface SkillCompanion {
+	/**
+	 * @field companion skill 디렉터리 이름
+	 */
+	skill: string;
+	/**
+	 * @field companion skill을 항상 또는 조건부로 활성화할지 여부
+	 */
+	mode: CompanionMode;
+	/**
+	 * @field conditional companion 활성화 조건
+	 */
+	appliesWhen?: string;
 }
 
 /**
@@ -96,6 +139,14 @@ export interface SkillMetadata {
 	 * @field compiled guide 마지막에 노출할 참고 링크 목록
 	 */
 	references?: string[];
+	/**
+	 * @field compact routing index를 사용하는 progressive skill 여부
+	 */
+	progressiveDisclosure?: boolean;
+	/**
+	 * @field 현재 skill이 직접 선언한 companion skill 관계 목록
+	 */
+	companions?: SkillCompanion[];
 }
 
 /**
@@ -205,7 +256,95 @@ export interface SkillRule {
 	 */
 	tags: string[];
 	/**
+	 * @field 작업 범위에 rule을 선택해야 하는 한 줄 조건
+	 */
+	appliesWhen?: string;
+	/**
+	 * @field 이 rule이 Selected이면 함께 Selected여야 하는 local 또는 companion rule stable ID 목록
+	 */
+	requiresSelected: string[];
+	/**
+	 * @field 활성 skill의 완료 receipt에서 항상 선택해야 하는 rule인지 여부
+	 */
+	requiredOnCompletion: boolean;
+	/**
+	 * @field 함께 검토할 local 또는 companion rule stable ID 목록
+	 */
+	reviewWith: string[];
+	/**
 	 * @field frontmatter를 제외한 markdown 본문
 	 */
 	body: string;
+}
+
+/**
+ * @summary routing fixture가 기대하는 activated skill별 exact rule partition
+ */
+export interface RoutingExpectedPartition {
+	/**
+	 * @field fixture evidence로 활성화해야 하는 skill 이름 목록
+	 */
+	expectedSkills: string[];
+	/**
+	 * @field activated progressive skill별 선택 rule stable ID 목록
+	 */
+	expectedSelected: Record<string, string[]>;
+	/**
+	 * @field activated progressive skill별 비적용 rule stable ID 목록
+	 */
+	expectedNotApplicable: Record<string, string[]>;
+}
+
+/**
+ * @summary 최초 selection 뒤 작업 범위가 확장될 때의 monotonic routing oracle
+ */
+export interface RoutingScopeDrift extends RoutingExpectedPartition {
+	/**
+	 * @field 범위 확장을 입증하는 구체적인 변경 근거
+	 */
+	evidence: string;
+	/**
+	 * @field 범위 확장 뒤 최종 변경 파일 목록
+	 */
+	files: string[];
+}
+
+/**
+ * @summary 한 작업 surface의 exact progressive routing oracle
+ */
+export interface RoutingEvalScenario extends RoutingExpectedPartition {
+	/**
+	 * @field 전체 manifest에서 고유한 scenario 식별자
+	 */
+	id: string;
+	/**
+	 * @field agent에게 전달할 작업 요청과 scope evidence
+	 */
+	prompt: string;
+	/**
+	 * @field 최초 selection 시점의 변경 파일 목록
+	 */
+	files: string[];
+	/**
+	 * @field 작업 중 범위 확장이 있는 경우의 최종 routing oracle
+	 */
+	scopeDrift?: RoutingScopeDrift;
+}
+
+/**
+ * @summary progressive skill 하나가 소유하는 routing evaluation manifest
+ */
+export interface RoutingEvalManifest {
+	/**
+	 * @field manifest schema version
+	 */
+	version: 1;
+	/**
+	 * @field manifest를 소유하는 skill 디렉터리 이름
+	 */
+	skill: string;
+	/**
+	 * @field exact selection과 N/A partition을 검증할 scenario 목록
+	 */
+	scenarios: RoutingEvalScenario[];
 }

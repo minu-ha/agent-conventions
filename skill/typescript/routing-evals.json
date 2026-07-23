@@ -1,0 +1,408 @@
+{
+  "version": 1,
+  "skill": "typescript",
+  "scenarios": [
+    {
+      "id": "shared-config-existing-source",
+      "prompt": "`billing-request.ts` and `audit-request.ts` duplicate URL/page-size constants are replaced with the existing `shared/config.ts` values; use direct `config.*` access and do not change the declaration.",
+      "files": [
+        "src/features/billing/billing-request.ts",
+        "src/features/audit/audit-request.ts"
+      ],
+      "expectedSkills": [
+        "typescript"
+      ],
+      "expectedSelected": {
+        "typescript": [
+          "naming-centralize-shared-config-namespaces",
+          "naming-preserve-config-origin-with-chained-access",
+          "naming-use-direct-imports-and-public-entry-points",
+          "guardrails-review-banned-typescript-shortcuts-before-finishing"
+        ]
+      },
+      "expectedNotApplicable": {
+        "typescript": [
+          "naming-use-consistent-file-and-symbol-naming",
+          "types-document-custom-types-and-shapes",
+          "types-mark-unused-parameters-with-underscore",
+          "types-prefer-function-variable-types-over-parameter-annotations",
+          "types-reuse-callback-signatures-from-existing-contracts",
+          "types-reuse-existing-contracts-before-new-types",
+          "functions-avoid-imperative-assembly-in-wide-scopes",
+          "functions-extract-helpers-only-when-the-boundary-is-real",
+          "functions-prefer-immutable-array-sorting",
+          "functions-replace-enum-with-as-const-objects",
+          "functions-use-named-object-params-for-complex-signatures",
+          "functions-use-set-and-map-for-repeated-lookups",
+          "absence-expose-optional-values-instead-of-silent-fallbacks",
+          "docs-keep-inline-comments-for-constraints-and-caveats",
+          "docs-require-header-jsdoc-on-key-declarations",
+          "docs-standardize-annotation-tags-by-declaration-role",
+          "docs-use-helper-for-reusable-pure-helper-functions",
+          "docs-write-concise-korean-comments-about-purpose-and-constraints"
+        ]
+      }
+    },
+    {
+      "id": "callback-contract-implementation",
+      "prompt": "implement an existing documented interface callback through its Indexed Access function type and rename the unused contract parameter to `_level`; do not add types, imports, or docs.",
+      "files": [
+        "src/logging/log-sink.ts"
+      ],
+      "expectedSkills": [
+        "typescript"
+      ],
+      "expectedSelected": {
+        "typescript": [
+          "naming-use-consistent-file-and-symbol-naming",
+          "types-mark-unused-parameters-with-underscore",
+          "types-prefer-function-variable-types-over-parameter-annotations",
+          "types-reuse-callback-signatures-from-existing-contracts",
+          "guardrails-review-banned-typescript-shortcuts-before-finishing"
+        ]
+      },
+      "expectedNotApplicable": {
+        "typescript": [
+          "naming-centralize-shared-config-namespaces",
+          "naming-preserve-config-origin-with-chained-access",
+          "naming-use-direct-imports-and-public-entry-points",
+          "types-document-custom-types-and-shapes",
+          "types-reuse-existing-contracts-before-new-types",
+          "functions-avoid-imperative-assembly-in-wide-scopes",
+          "functions-extract-helpers-only-when-the-boundary-is-real",
+          "functions-prefer-immutable-array-sorting",
+          "functions-replace-enum-with-as-const-objects",
+          "functions-use-named-object-params-for-complex-signatures",
+          "functions-use-set-and-map-for-repeated-lookups",
+          "absence-expose-optional-values-instead-of-silent-fallbacks",
+          "docs-keep-inline-comments-for-constraints-and-caveats",
+          "docs-require-header-jsdoc-on-key-declarations",
+          "docs-standardize-annotation-tags-by-declaration-role",
+          "docs-use-helper-for-reusable-pure-helper-functions",
+          "docs-write-concise-korean-comments-about-purpose-and-constraints"
+        ]
+      }
+    },
+    {
+      "id": "derive-existing-contract-with-docs",
+      "prompt": "replace a duplicate `UserPreview` interface with a same-name `Pick<UserRecord, ...>` alias and add concise Korean `@summary`; imports and names otherwise stay unchanged.",
+      "files": [
+        "src/users/user-preview.ts"
+      ],
+      "expectedSkills": [
+        "typescript"
+      ],
+      "expectedSelected": {
+        "typescript": [
+          "types-document-custom-types-and-shapes",
+          "types-reuse-existing-contracts-before-new-types",
+          "docs-require-header-jsdoc-on-key-declarations",
+          "docs-standardize-annotation-tags-by-declaration-role",
+          "docs-write-concise-korean-comments-about-purpose-and-constraints",
+          "guardrails-review-banned-typescript-shortcuts-before-finishing"
+        ]
+      },
+      "expectedNotApplicable": {
+        "typescript": [
+          "naming-centralize-shared-config-namespaces",
+          "naming-preserve-config-origin-with-chained-access",
+          "naming-use-consistent-file-and-symbol-naming",
+          "naming-use-direct-imports-and-public-entry-points",
+          "types-mark-unused-parameters-with-underscore",
+          "types-prefer-function-variable-types-over-parameter-annotations",
+          "types-reuse-callback-signatures-from-existing-contracts",
+          "functions-avoid-imperative-assembly-in-wide-scopes",
+          "functions-extract-helpers-only-when-the-boundary-is-real",
+          "functions-prefer-immutable-array-sorting",
+          "functions-replace-enum-with-as-const-objects",
+          "functions-use-named-object-params-for-complex-signatures",
+          "functions-use-set-and-map-for-repeated-lookups",
+          "absence-expose-optional-values-instead-of-silent-fallbacks",
+          "docs-keep-inline-comments-for-constraints-and-caveats",
+          "docs-use-helper-for-reusable-pure-helper-functions"
+        ]
+      }
+    },
+    {
+      "id": "helper-boundary-scope-drift",
+      "prompt": "inline a single-owner mapper/sub-step into `profile-api.ts`.",
+      "files": [
+        "src/profile/profile-api.ts"
+      ],
+      "expectedSkills": [
+        "typescript"
+      ],
+      "expectedSelected": {
+        "typescript": [
+          "functions-extract-helpers-only-when-the-boundary-is-real",
+          "guardrails-review-banned-typescript-shortcuts-before-finishing"
+        ]
+      },
+      "expectedNotApplicable": {
+        "typescript": [
+          "naming-centralize-shared-config-namespaces",
+          "naming-preserve-config-origin-with-chained-access",
+          "naming-use-consistent-file-and-symbol-naming",
+          "naming-use-direct-imports-and-public-entry-points",
+          "types-document-custom-types-and-shapes",
+          "types-mark-unused-parameters-with-underscore",
+          "types-prefer-function-variable-types-over-parameter-annotations",
+          "types-reuse-callback-signatures-from-existing-contracts",
+          "types-reuse-existing-contracts-before-new-types",
+          "functions-avoid-imperative-assembly-in-wide-scopes",
+          "functions-prefer-immutable-array-sorting",
+          "functions-replace-enum-with-as-const-objects",
+          "functions-use-named-object-params-for-complex-signatures",
+          "functions-use-set-and-map-for-repeated-lookups",
+          "absence-expose-optional-values-instead-of-silent-fallbacks",
+          "docs-keep-inline-comments-for-constraints-and-caveats",
+          "docs-require-header-jsdoc-on-key-declarations",
+          "docs-standardize-annotation-tags-by-declaration-role",
+          "docs-use-helper-for-reusable-pure-helper-functions",
+          "docs-write-concise-korean-comments-about-purpose-and-constraints"
+        ]
+      },
+      "scopeDrift": {
+        "evidence": "the same normalization becomes necessary for a second owner, so move the existing named function to `profile-support.ts`, export it, directly import it from `bulk-profile.ts`, and add concise Korean `@helper` docs.",
+        "files": [
+          "src/profile/profile-api.ts",
+          "src/profile/profile-support.ts",
+          "src/bulk/bulk-profile.ts"
+        ],
+        "expectedSkills": [
+          "typescript"
+        ],
+        "expectedSelected": {
+          "typescript": [
+            "naming-use-direct-imports-and-public-entry-points",
+            "functions-extract-helpers-only-when-the-boundary-is-real",
+            "docs-require-header-jsdoc-on-key-declarations",
+            "docs-standardize-annotation-tags-by-declaration-role",
+            "docs-use-helper-for-reusable-pure-helper-functions",
+            "docs-write-concise-korean-comments-about-purpose-and-constraints",
+            "guardrails-review-banned-typescript-shortcuts-before-finishing"
+          ]
+        },
+        "expectedNotApplicable": {
+          "typescript": [
+            "naming-centralize-shared-config-namespaces",
+            "naming-preserve-config-origin-with-chained-access",
+            "naming-use-consistent-file-and-symbol-naming",
+            "types-document-custom-types-and-shapes",
+            "types-mark-unused-parameters-with-underscore",
+            "types-prefer-function-variable-types-over-parameter-annotations",
+            "types-reuse-callback-signatures-from-existing-contracts",
+            "types-reuse-existing-contracts-before-new-types",
+            "functions-avoid-imperative-assembly-in-wide-scopes",
+            "functions-prefer-immutable-array-sorting",
+            "functions-replace-enum-with-as-const-objects",
+            "functions-use-named-object-params-for-complex-signatures",
+            "functions-use-set-and-map-for-repeated-lookups",
+            "absence-expose-optional-values-instead-of-silent-fallbacks",
+            "docs-keep-inline-comments-for-constraints-and-caveats"
+          ]
+        }
+      }
+    },
+    {
+      "id": "shared-collection-lookups-and-sort",
+      "prompt": "replace repeated `includes` with an existing Set's `has` and replace shared-input `.sort()` with `.toSorted()`; declarations, imports, and docs stay unchanged.",
+      "files": [
+        "src/search/filter-entries.ts"
+      ],
+      "expectedSkills": [
+        "typescript"
+      ],
+      "expectedSelected": {
+        "typescript": [
+          "functions-prefer-immutable-array-sorting",
+          "functions-use-set-and-map-for-repeated-lookups",
+          "guardrails-review-banned-typescript-shortcuts-before-finishing"
+        ]
+      },
+      "expectedNotApplicable": {
+        "typescript": [
+          "naming-centralize-shared-config-namespaces",
+          "naming-preserve-config-origin-with-chained-access",
+          "naming-use-consistent-file-and-symbol-naming",
+          "naming-use-direct-imports-and-public-entry-points",
+          "types-document-custom-types-and-shapes",
+          "types-mark-unused-parameters-with-underscore",
+          "types-prefer-function-variable-types-over-parameter-annotations",
+          "types-reuse-callback-signatures-from-existing-contracts",
+          "types-reuse-existing-contracts-before-new-types",
+          "functions-avoid-imperative-assembly-in-wide-scopes",
+          "functions-extract-helpers-only-when-the-boundary-is-real",
+          "functions-replace-enum-with-as-const-objects",
+          "functions-use-named-object-params-for-complex-signatures",
+          "absence-expose-optional-values-instead-of-silent-fallbacks",
+          "docs-keep-inline-comments-for-constraints-and-caveats",
+          "docs-require-header-jsdoc-on-key-declarations",
+          "docs-standardize-annotation-tags-by-declaration-role",
+          "docs-use-helper-for-reusable-pure-helper-functions",
+          "docs-write-concise-korean-comments-about-purpose-and-constraints"
+        ]
+      }
+    },
+    {
+      "id": "enum-like-runtime-contract",
+      "prompt": "replace `enum AuditStatus` with snake_case `audit_status as const`, derive `AuditStatus`, and document the object, every key, and derived type in Korean.",
+      "files": [
+        "src/audit/audit-status.ts"
+      ],
+      "expectedSkills": [
+        "typescript"
+      ],
+      "expectedSelected": {
+        "typescript": [
+          "naming-use-consistent-file-and-symbol-naming",
+          "types-document-custom-types-and-shapes",
+          "functions-replace-enum-with-as-const-objects",
+          "docs-require-header-jsdoc-on-key-declarations",
+          "docs-standardize-annotation-tags-by-declaration-role",
+          "docs-write-concise-korean-comments-about-purpose-and-constraints",
+          "guardrails-review-banned-typescript-shortcuts-before-finishing"
+        ]
+      },
+      "expectedNotApplicable": {
+        "typescript": [
+          "naming-centralize-shared-config-namespaces",
+          "naming-preserve-config-origin-with-chained-access",
+          "naming-use-direct-imports-and-public-entry-points",
+          "types-mark-unused-parameters-with-underscore",
+          "types-prefer-function-variable-types-over-parameter-annotations",
+          "types-reuse-callback-signatures-from-existing-contracts",
+          "types-reuse-existing-contracts-before-new-types",
+          "functions-avoid-imperative-assembly-in-wide-scopes",
+          "functions-extract-helpers-only-when-the-boundary-is-real",
+          "functions-prefer-immutable-array-sorting",
+          "functions-use-named-object-params-for-complex-signatures",
+          "functions-use-set-and-map-for-repeated-lookups",
+          "absence-expose-optional-values-instead-of-silent-fallbacks",
+          "docs-keep-inline-comments-for-constraints-and-caveats",
+          "docs-use-helper-for-reusable-pure-helper-functions"
+        ]
+      }
+    },
+    {
+      "id": "wide-scope-assembly",
+      "prompt": "replace an existing top-level `let` plus conditional `push` flow with a declarative calculation assigned to the same `visibleTabs` name; imports and docs stay unchanged.",
+      "files": [
+        "src/navigation/visible-tabs.ts"
+      ],
+      "expectedSkills": [
+        "typescript"
+      ],
+      "expectedSelected": {
+        "typescript": [
+          "functions-avoid-imperative-assembly-in-wide-scopes",
+          "guardrails-review-banned-typescript-shortcuts-before-finishing"
+        ]
+      },
+      "expectedNotApplicable": {
+        "typescript": [
+          "naming-centralize-shared-config-namespaces",
+          "naming-preserve-config-origin-with-chained-access",
+          "naming-use-consistent-file-and-symbol-naming",
+          "naming-use-direct-imports-and-public-entry-points",
+          "types-document-custom-types-and-shapes",
+          "types-mark-unused-parameters-with-underscore",
+          "types-prefer-function-variable-types-over-parameter-annotations",
+          "types-reuse-callback-signatures-from-existing-contracts",
+          "types-reuse-existing-contracts-before-new-types",
+          "functions-extract-helpers-only-when-the-boundary-is-real",
+          "functions-prefer-immutable-array-sorting",
+          "functions-replace-enum-with-as-const-objects",
+          "functions-use-named-object-params-for-complex-signatures",
+          "functions-use-set-and-map-for-repeated-lookups",
+          "absence-expose-optional-values-instead-of-silent-fallbacks",
+          "docs-keep-inline-comments-for-constraints-and-caveats",
+          "docs-require-header-jsdoc-on-key-declarations",
+          "docs-standardize-annotation-tags-by-declaration-role",
+          "docs-use-helper-for-reusable-pure-helper-functions",
+          "docs-write-concise-korean-comments-about-purpose-and-constraints"
+        ]
+      }
+    },
+    {
+      "id": "named-object-param",
+      "prompt": "change a function that destructures `BuildRequestUrlArgs` in the signature to accept `args` and destructure on the first body line; no other contract/docs/import changes.",
+      "files": [
+        "src/http/build-request-url.ts"
+      ],
+      "expectedSkills": [
+        "typescript"
+      ],
+      "expectedSelected": {
+        "typescript": [
+          "naming-use-consistent-file-and-symbol-naming",
+          "functions-use-named-object-params-for-complex-signatures",
+          "guardrails-review-banned-typescript-shortcuts-before-finishing"
+        ]
+      },
+      "expectedNotApplicable": {
+        "typescript": [
+          "naming-centralize-shared-config-namespaces",
+          "naming-preserve-config-origin-with-chained-access",
+          "naming-use-direct-imports-and-public-entry-points",
+          "types-document-custom-types-and-shapes",
+          "types-mark-unused-parameters-with-underscore",
+          "types-prefer-function-variable-types-over-parameter-annotations",
+          "types-reuse-callback-signatures-from-existing-contracts",
+          "types-reuse-existing-contracts-before-new-types",
+          "functions-avoid-imperative-assembly-in-wide-scopes",
+          "functions-extract-helpers-only-when-the-boundary-is-real",
+          "functions-prefer-immutable-array-sorting",
+          "functions-replace-enum-with-as-const-objects",
+          "functions-use-set-and-map-for-repeated-lookups",
+          "absence-expose-optional-values-instead-of-silent-fallbacks",
+          "docs-keep-inline-comments-for-constraints-and-caveats",
+          "docs-require-header-jsdoc-on-key-declarations",
+          "docs-standardize-annotation-tags-by-declaration-role",
+          "docs-use-helper-for-reusable-pure-helper-functions",
+          "docs-write-concise-korean-comments-about-purpose-and-constraints"
+        ]
+      }
+    },
+    {
+      "id": "explicit-product-fallback",
+      "prompt": "replace an ungrounded optional page-size `??` with an explicit branch for the specified product default 20 and a short Korean constraint comment; helper/header boundaries stay unchanged.",
+      "files": [
+        "src/search/resolve-page-size.ts"
+      ],
+      "expectedSkills": [
+        "typescript"
+      ],
+      "expectedSelected": {
+        "typescript": [
+          "absence-expose-optional-values-instead-of-silent-fallbacks",
+          "docs-keep-inline-comments-for-constraints-and-caveats",
+          "docs-write-concise-korean-comments-about-purpose-and-constraints",
+          "guardrails-review-banned-typescript-shortcuts-before-finishing"
+        ]
+      },
+      "expectedNotApplicable": {
+        "typescript": [
+          "naming-centralize-shared-config-namespaces",
+          "naming-preserve-config-origin-with-chained-access",
+          "naming-use-consistent-file-and-symbol-naming",
+          "naming-use-direct-imports-and-public-entry-points",
+          "types-document-custom-types-and-shapes",
+          "types-mark-unused-parameters-with-underscore",
+          "types-prefer-function-variable-types-over-parameter-annotations",
+          "types-reuse-callback-signatures-from-existing-contracts",
+          "types-reuse-existing-contracts-before-new-types",
+          "functions-avoid-imperative-assembly-in-wide-scopes",
+          "functions-extract-helpers-only-when-the-boundary-is-real",
+          "functions-prefer-immutable-array-sorting",
+          "functions-replace-enum-with-as-const-objects",
+          "functions-use-named-object-params-for-complex-signatures",
+          "functions-use-set-and-map-for-repeated-lookups",
+          "docs-require-header-jsdoc-on-key-declarations",
+          "docs-standardize-annotation-tags-by-declaration-role",
+          "docs-use-helper-for-reusable-pure-helper-functions"
+        ]
+      }
+    }
+  ]
+}

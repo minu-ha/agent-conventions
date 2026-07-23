@@ -2,6 +2,8 @@
 title: Calculate Derived Values During Rendering
 impact: HIGH
 impactDescription: avoids redundant state sync and effect-driven drift when values can be computed from current inputs
+appliesWhen: 현재 props·state·search·response에서 계산 가능한 값을 별도 state와 effect로 동기화하거나 그 동기화를 제거한다.
+requiresSelected: screen-keep-derived-values-close
 tags: state, derived-state, render, effects
 ---
 

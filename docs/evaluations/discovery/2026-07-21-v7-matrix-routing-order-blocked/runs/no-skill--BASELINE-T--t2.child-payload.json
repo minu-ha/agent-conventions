@@ -1,0 +1,42 @@
+{
+  "runtime": {
+    "declared": {
+      "forkTurns": "none",
+      "oneChildPerTrial": true,
+      "requestedModel": "gpt-5.6-sol",
+      "requestedReasoning": "high",
+      "runtime": "Codex collaboration child agent"
+    },
+    "evidenceClass": "declared-telemetry-only",
+    "unavailable": {
+      "actualReasoningTelemetry": null,
+      "childTokenUsage": null,
+      "exactModelBuild": null,
+      "observedFileReads": null,
+      "runtimeVersion": null
+    }
+  },
+  "declaredLoadedFiles": {
+    "kind": "declared",
+    "paths": []
+  },
+  "activatedSkills": [],
+  "receipts": [],
+  "routingTrace": null,
+  "driftReceipt": null,
+  "semanticVerdicts": [],
+  "completion": {
+    "status": "COMPLETE",
+    "blocked": false,
+    "coverageFailCount": 0,
+    "semanticFailCount": 0,
+    "unknownCount": 0,
+    "reason": "No virtual files were provided, so there was no code to modify or rule evidence to evaluate. Per the payload contract, missing virtualFiles is recorded as a limitation and is not an additional blocker."
+  },
+  "limitations": [
+    "The virtualFiles array is empty, so the requested TypeScript cleanup cannot be represented as a virtual patch.",
+    "No convention skill or repository convention document was used; therefore no convention rules were checked."
+  ],
+  "response": "No virtual source files were supplied, so no cleanup was possible and no convention rules were checked. Typecheck could not be run against absent virtual code.",
+  "virtualPatch": null
+}

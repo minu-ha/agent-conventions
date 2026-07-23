@@ -1,0 +1,42 @@
+{
+  "runtime": {
+    "declared": {
+      "forkTurns": "none",
+      "oneChildPerTrial": true,
+      "requestedModel": "gpt-5.6-sol",
+      "requestedReasoning": "high",
+      "runtime": "Codex CLI isolated child session"
+    },
+    "evidenceClass": "declared-telemetry-only",
+    "unavailable": {
+      "actualReasoningTelemetry": null,
+      "childTokenUsage": null,
+      "exactModelBuild": null,
+      "observedFileReads": null,
+      "runtimeVersion": null
+    }
+  },
+  "declaredLoadedFiles": {
+    "kind": "declared",
+    "paths": []
+  },
+  "activatedSkills": [],
+  "receipts": [],
+  "routingTrace": null,
+  "driftReceipt": null,
+  "semanticVerdicts": [],
+  "completion": {
+    "status": "COMPLETE",
+    "blocked": false,
+    "coverageFailCount": 0,
+    "semanticFailCount": 0,
+    "unknownCount": 0,
+    "reason": "No semantic criteria were declared. The requested cleanup could not be performed because virtualFiles is empty, which the payload contract treats as a limitation rather than an additional blocker."
+  },
+  "limitations": [
+    "No virtual source files were supplied, so there was no immutable before state from which to produce a cleanup patch or run typechecking.",
+    "No convention skills or repository convention documents were used, and no implementation rules could be checked against source code."
+  ],
+  "response": "No cleanup patch can be produced because no virtual files were provided. Rules checked against code: none. With helpers.ts and the submit-flow source, I would check that optional settings are handled intentionally rather than silently defaulted, payload construction is not fragmented across unnecessary tiny helpers, repeated callback signatures use a named type, custom fields are documented, and validation is proportionate to the change rather than assuming typecheck alone proves behavior.",
+  "virtualPatch": null
+}

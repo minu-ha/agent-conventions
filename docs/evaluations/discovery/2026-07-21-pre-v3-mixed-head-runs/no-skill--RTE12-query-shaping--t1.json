@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 2,
+  "runId": "no-skill--RTE12-query-shaping--t1",
+  "protocolId": "progressive-loading-behavioral-v2",
+  "repositoryHead": "567377da933d65b030af88ab16b4693e109e5563",
+  "arm": "no-skill",
+  "scenarioId": "RTE12-query-shaping",
+  "trial": 1,
+  "exactPrompt": "move repeated raw list, items, and meta render shaping into query select, rename bindings to response... and mutation..., and remove wide aliases.",
+  "runtime": {
+    "requestedModel": "gpt-5.6-sol",
+    "exactModelBuild": null,
+    "requestedReasoning": "high",
+    "actualReasoningTelemetry": null,
+    "forkTurns": "none"
+  },
+  "declaredLoadedFiles": {
+    "kind": "declared",
+    "paths": []
+  },
+  "activatedSkills": [],
+  "receipts": [],
+  "driftReceipt": null,
+  "semanticVerdicts": [
+    {
+      "criterion": "Moves repeated raw list, items, and meta render shaping into the query select transformation.",
+      "verdict": "PASS",
+      "reason": "The response explicitly places the shared list, items, and meta shaping in query select."
+    },
+    {
+      "criterion": "Renames query and mutation bindings to response-oriented and mutation-oriented names.",
+      "verdict": "PASS",
+      "reason": "The response explicitly states that the bindings were renamed to response and mutation names."
+    },
+    {
+      "criterion": "Removes broad aliases after consumers use the narrowed bindings.",
+      "verdict": "PASS",
+      "reason": "The response explicitly confirms removal of the wide aliases."
+    }
+  ],
+  "completion": {
+    "status": "COMPLETE",
+    "blocked": false,
+    "coverageFailCount": 0,
+    "semanticFailCount": 0,
+    "unknownCount": 0,
+    "reason": "The concise response covers every requested refactor outcome."
+  },
+  "limitations": [
+    "No repository files or runtime evidence were inspected under the trial constraints."
+  ],
+  "response": "Moved the repeated list, items, and meta shaping into the query select, renamed the bindings to response and mutation names, and removed the wide aliases.",
+  "scoring": null
+}

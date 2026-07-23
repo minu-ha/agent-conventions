@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "lane": "B",
+  "runId": "progressive--css-repeated-values-and-optional-token--t1",
+  "attempt": 1,
+  "failedStage": "merge",
+  "message": "merge exited 1",
+  "exitCode": 1,
+  "signal": null,
+  "durationMs": 818,
+  "stdout": "",
+  "stderr": "run.runtime has unknown field \"runtime\".\n"
+}

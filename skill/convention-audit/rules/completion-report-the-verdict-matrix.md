@@ -1,39 +1,44 @@
 ---
 title: Report the Final Verdict Matrix
 impact: CRITICAL
-impactDescription: 사용자가 어떤 rule을 어떤 근거로 통과시켰는지 추적할 수 있게 함
+impactDescription: selection completeness, semantic 결과, reviewer와 관찰 한계를 다시 확인할 수 있게 함
 tags: completion, report, matrix
 ---
 
 ## Report the Final Verdict Matrix
 
-**Impact: CRITICAL (사용자가 어떤 rule을 어떤 근거로 통과시켰는지 추적할 수 있게 함)**
+**Impact: CRITICAL (selection completeness, semantic 결과, reviewer와 관찰 한계를 다시 확인할 수 있게 함)**
 
-완료 보고에는 convention audit 결과를 짧은 matrix로 포함합니다. 자동 검사와 semantic review를 구분하고, reviewer 사용 여부와 미실행 항목을 숨기지 않습니다.
+최종 보고에는 다음을 분리해 기록합니다.
 
-필수 보고 항목:
+- activated indexes: skill별 current routing digest와 total rule count
+- coverage: selected, N/A, unknown count와 exact partition 검증 결과
+- excluded groups: ordinal/ID 범위와 non-empty evidence reason
+- selection comparison: 구현자/auditor `Selected/N/A/Unknown` all-set exact match 여부
+- expanded guidance: full rule로 확장한 ordinal/ID와 CRITICAL 또는 예외 판단 이유
+- reviewWith closure와 inactive cross-skill decision
+- semantic verdicts: PASS/FAIL/UNKNOWN count와 예외
+- reviewer mode, receipt exposure timing, independent reviewer 미사용 사유
+- 파일 읽기 telemetry limitation과 `declared` document list
+- lint/typecheck/build/test/browser 등 실행한 verification
 
-- 적용한 companion skill
-- audit packet 생성 방식
-- reviewer 방식
-- rule별 PASS/FAIL/UNKNOWN 개수
-- FAIL/UNKNOWN이 0인지
-- 예외 승인 여부
-- 실행한 검증 명령
+자동 검사와 browser 결과는 semantic 결과와 같은 줄에 합쳐 PASS처럼 보이게 하지 않습니다. 미실행 검증이나 telemetry 부재도 숨기지 않습니다.
 
-**Incorrect (검증 내용을 뭉뚱그림):**
+**Incorrect (판정과 한계를 생략):**
 
 ```md
-컨벤션 리뷰까지 마쳤습니다.
+컨벤션 검토와 빌드를 모두 마쳤습니다.
 ```
 
-**Correct (최종 판정 추적 가능):**
+**Correct (추적 가능한 최종 보고):**
 
 ```md
-Convention audit:
-- skills: convention-react, convention-css, convention-typescript
-- packet: tools/conventions/check.ts --changed origin/dev
-- reviewer: independent semantic reviewer
-- verdict: PASS 14, FAIL 0, UNKNOWN 0, NOT_APPLICABLE 3
-- exceptions: none
+Activated indexes: react 42 sha256:..., typescript 22 sha256:...
+Coverage: selected 8, N/A 56, unknown 0; exact=true
+Excluded groups: recorded with file/diff reasons
+Selection comparison: exact match
+Verdicts: PASS 8, FAIL 0, UNKNOWN 0
+Reviewer mode: independent; receipt opened after auditor scan
+Telemetry: unavailable; document list is declared
+Verification: lint/build PASS; browser not run
 ```

@@ -1,36 +1,48 @@
 ---
 title: Map Changed Files to Specific Rule IDs
 impact: CRITICAL
-impactDescription: 큰 skill 문서를 대충 훑고 관련 rule 누락이 발생하는 것을 막음
-tags: coverage, rule-map, companion
+impactDescription: current index의 모든 ordinal이 선택 또는 근거 있는 제외로 정확히 설명되게 함
+tags: coverage, rule-map, partition
 ---
 
 ## Map Changed Files to Specific Rule IDs
 
-**Impact: CRITICAL (큰 skill 문서를 대충 훑고 관련 rule 누락이 발생하는 것을 막음)**
+**Impact: CRITICAL (current index의 모든 ordinal이 선택 또는 근거 있는 제외로 정확히 설명되게 함)**
 
-변경 파일마다 적용할 rule id를 명시합니다. "React 규칙 확인"처럼 뭉뚱그리지 않습니다. 최소한 관련 섹션과 rule 파일명을 적고, 왜 적용 또는 제외되는지 한 줄 근거를 둡니다.
+각 activated `RULES_INDEX.md` 전체를 scan하고 current routing digest에 묶인 exact ordinal partition을 만듭니다. 구현자와 auditor receipt 각각의 `Selected`, `N/A`, `Unknown`은 서로 겹치지 않아야 하며 합집합이 `1..N` 전체 ordinal과 정확히 같아야 합니다. count만 같거나 rule ID 없이 섹션 단위로 제외하면 실패입니다.
 
-coverage matrix 항목:
+양쪽 receipt의 `N/A exclusion group`은 서로 독립적으로 다음 계약을 모두 지킵니다.
 
-- file
-- changed concern
-- applicable rule ids
-- evidence needed
-- verdict owner
+- 모든 `N/A` ordinal을 정확히 한 번 덮음
+- `Selected`/`Unknown` ordinal을 포함하지 않음
+- 각 group에 non-empty reason이 있음
+- reason이 changed files, diff, packet evidence로 `appliesWhen` 불일치를 설명함
 
-**Incorrect (coverage가 없음):**
+빠진 applicable rule은 구현이 우연히 그 rule을 준수하더라도 selection coverage `FAIL`입니다. 근거가 빈약하거나 generic verification 성공만 말하는 N/A도 selection coverage `FAIL`입니다.
+
+**Incorrect (count만 맞고 빠진 rule을 N/A로 숨김):**
 
 ```md
-React, CSS, TypeScript 규칙 전반을 확인했습니다.
+Selected 5, N/A 36, Unknown 0 — lint 통과로 나머지는 제외.
 ```
 
-**Correct (rule별 검토 대상 고정):**
+**Correct (digest와 exact partition을 검증):**
 
 ```md
-| file | concern | rules |
-| --- | --- | --- |
-| fundamental-mi-panel.tsx | route entry | react/screen-keep-route-flow-visible, react/state-preserve-origin-chaining |
-| fundamental-mi-panel-model.ts | query shaping | react/state-shape-query-data-with-select, typescript/functions-extract-helpers-only-when-the-boundary-is-real |
-| fundamental-mi-panel.css | owner selector | css/naming-separate-local-and-route-style-scopes, css/selector-target-third-party-dom-from-owned-roots |
+React Index: sha256:<current>, R01..R42
+React Selected: R15,R23,R24,R25,R26,R42
+React N/A 36:
+- R01-R14 — owner/import/type/composition strategy 변경 없음
+- R16-R22 — visibility/ref/screen extraction/route-flow 변경 없음
+- R27-R41 — state/data/performance/compound/inline-comment 변경 없음
+TypeScript Index: sha256:<current>, T01..T22
+TypeScript Selected: T03,T18,T19,T21,T22
+TypeScript N/A 17:
+- T01-T02 — shared config namespace 또는 origin 변경 없음
+- T04-T17 — import/type/function/absence/inline-comment 변경 없음
+- T20 — reusable pure helper 문서화 대상 없음
+Mandatory: R15->R25,R42; R25->T03; R42->T18; T18->T19,T21
+Completion: T22
+Unknown: none
+Check: both partitions disjoint=true, full-union=true, exclusion-union=N/A
 ```

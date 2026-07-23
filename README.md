@@ -22,7 +22,7 @@
 - [css](./skill/css/README.md) - `convention-css`
   plain CSS 기본값, `rt_/wg_/ui_/loc_` owner namespace, 전역 고유 클래스 네이밍, selector 깊이, wrapper 기준 스타일링, 디자인 토큰 규칙
 - [convention-audit](./skill/convention-audit/README.md) - `convention-audit`
-  React/CSS/TypeScript convention 준수를 audit packet, rule coverage matrix, semantic reviewer, FAIL/UNKNOWN repair loop로 검증하는 완료 gate
+  React/CSS/TypeScript의 exact Selected/N/A/Unknown receipt, exclusion evidence, 독립 semantic reviewer, coverage/semantic zero gate를 검증하는 완료 gate
 - [figma-visual-parity](./skill/figma-visual-parity/README.md) - `figma-visual-parity`
   Figma 링크, node, screenshot을 기준으로 실제 브라우저 구현 화면과의 visual parity를 맞추는 workflow 규칙
 - [tanstack-route](./skill/tanstack-route/README.md) - `convention-tanstack-route`
@@ -36,23 +36,81 @@
 - [java](./skill/java/SKILL.md) - `convention-springboot`
   Spring Boot 기반 백엔드 컨벤션
 
-## Structured Skill과 Legacy Skill
+## Skill 구조와 Progressive Loading
 
-이 레포에는 두 가지 형태의 skill이 공존합니다.
+이 레포에는 structured skill과 legacy single-document skill이 공존하며, structured skill 안에서도 consumer loading 방식이 나뉩니다.
 
-- Structured skill
-  `astro`, `react`, `css`, `convention-audit`, `figma-visual-parity`, `tanstack-route`, `playwright-test`, `typescript`, `nestjs`
-- Legacy single-document skill
-  `java`
+- Progressive structured skill: `react`, `typescript`, `css`
+- Non-progressive structured skill: `astro`, `convention-audit`, `figma-visual-parity`, `tanstack-route`, `playwright-test`, `nestjs`
+- Legacy single-document skill: `java`
 
-structured skill은 작은 rule 문서를 조합해 slim `AGENTS.md`를 생성합니다.
-legacy skill은 단일 문서를 직접 정본으로 사용합니다.
+모든 structured skill은 작은 source rule을 조합해 generated full handbook인 `AGENTS.md`를 만듭니다. progressive skill은 compact `RULES_INDEX.md`와 rule별 `contracts/*.md`를 함께 생성해 일반 작업을 router → index → selected contract 경로로 처리합니다. CRITICAL rule과 contract만으로 exact 판단할 수 없는 경우에만 source `rules/*.md` full rule을 확장 로드합니다. progressive full handbook에는 각 규칙의 generated `Applies when`도 함께 표시해 opt-in fallback에서도 규칙 내용과 적용 범위를 혼동하지 않게 합니다. non-progressive skill과 legacy skill은 각 `SKILL.md`의 load 계약을 따르며, 필요하면 local `AGENTS.md` 전체를 읽습니다. 예를 들어 `convention-audit`는 local 8-rule `AGENTS.md` 전체를 요구합니다.
 
-현재 `react`, `nestjs`, `tanstack-route`, `playwright-test`는 `metadata.json.extends`로 `typescript` companion skill 관계를 선언합니다.  
-`astro`는 `metadata.json.extends`로 `typescript`, `css` companion skill 관계를 선언합니다.  
-`convention-audit`는 `metadata.json.extends`로 `react`, `css`, `typescript` companion skill 관계를 선언합니다.  
-`figma-visual-parity`는 `metadata.json.extends`로 `react`, `css`, `playwright-test` companion skill 관계를 선언합니다.  
-즉, framework skill은 local 규칙에 집중하고 공통 TypeScript/CSS 규칙은 companion skill을 함께 로드하는 방식으로 사용합니다.
+- `metadata.json.companions`의 `required`는 owner와 항상 함께 활성화하고, `conditional`은 `appliesWhen`이 실제 변경 surface와 맞을 때만 활성화합니다.
+- `react`는 `typescript`를 required, `css`를 styling surface 조건부 companion으로 둡니다.
+- `css` metadata는 TypeScript를 direct conditional companion으로 둡니다. TSX class/style contract의 React 활성화는 compact project router와 CSS `SKILL.md`의 activation closure가 담당하며, 순수 CSS면 둘 다 활성화하지 않습니다.
+- non-progressive `convention-audit`는 실제 변경 surface에 따라 `react`, `typescript`, `css`를 조건부 progressive companion으로 활성화합니다.
+- 아직 progressive migration을 하지 않은 `astro`, `nestjs`, `tanstack-route`, `playwright-test`, `figma-visual-parity`는 `metadata.json.extends` 호환 계약을 유지합니다.
+
+framework 공통 규칙은 companion skill이 소유하고, framework 또는 consuming project에만 필요한 제약은 project-local overlay로 유지합니다.
+
+### 운영 기본값: compact AGENTS + progressive skill
+
+프로젝트마다 React/TypeScript/CSS 전체 규칙을 하나의 큰 Markdown으로 복사하지 않습니다. 프로젝트 `AGENTS.md`에는 [AGENTS.frontend-conventions.md](./AGENTS.frontend-conventions.md)의 compact activation·loading·audit policy와 프로젝트 고유 overlay만 둡니다. 공통 규칙의 정본은 이 저장소의 skill에 한 번만 유지합니다.
+
+일반 작업은 `SKILL.md` router, activated `RULES_INDEX.md` 전체, Selected/Unknown contract 순서로 읽습니다. CSS는 실제 styling semantic delta가 있을 때만 추가하고, full `AGENTS.md` handbook은 명시적인 전체 검토나 fallback에서만 읽습니다. 완료 전에는 `convention-audit`이 최종 diff에서 독립 partition과 semantic verdict를 다시 만듭니다. 이 구조는 규칙 누락을 줄이면서 매 작업마다 세 handbook 전체를 반복 로드하는 비용을 피하기 위한 기본 계약입니다.
+
+## Buildable Loading Topology
+
+| Skill | Loading | Companion contract |
+| --- | --- | --- |
+| `astro` | non-progressive | extends `typescript`, `css` |
+| `react` | progressive | required `typescript`; conditional `css` |
+| `css` | progressive | conditional `typescript`; project router closes TSX to `react` |
+| `convention-audit` | non-progressive local | conditional `react`, `typescript`, `css` |
+| `figma-visual-parity` | non-progressive | extends `react`, `css`, `playwright-test` |
+| `nestjs` | non-progressive | extends `typescript` |
+| `playwright-test` | non-progressive | extends `typescript` |
+| `tanstack-route` | non-progressive | extends `typescript` |
+| `typescript` | progressive | none |
+
+## Progressive Convention Consumer Contract
+
+각 activated skill은 먼저 자신의 `SKILL.md`를 따릅니다. 아래 계약은 progressive React/TypeScript/CSS skill에 적용합니다.
+
+| Surface or stage | Required contract |
+| --- | --- |
+| Activated skill | Follow its own `SKILL.md` load contract. |
+| Non-progressive owner | Use the local `AGENTS.md` / rule bodies required by that `SKILL.md`. |
+| TSX | Activate `convention-react` + `convention-typescript`. |
+| `className` / CSS / styling surface | Add `convention-css`. |
+| Activated progressive skill | Scan every activated `RULES_INDEX.md` completely; never stop at the first match. |
+| Selected guidance | Read every `Selected` + `Unknown` stable-ID-matched `contracts/*.md`; CRITICAL contracts require their full `rules/*.md`. |
+| `completionGate` | Select every marked entry in each activated progressive skill; it can never be N/A. |
+| `requiresSelected` closure | Resolve Unknown first, then apply only final Selected contracts: immediately select every target, activate its companion, and never classify the target N/A. |
+| `reviewWith` closure | Re-evaluate every target against current evidence; do not auto-select it, and allow evidence-backed N/A. |
+| Fixed point | Add only requirements from final Selected contracts to scope evidence; exclude examples and optional alternatives, then repeat contracts and scans until activation, partition, and evidence stop changing. |
+| Full rule expansion | Expand non-CRITICAL full rules only for exact syntax, exceptions, unresolved Unknown, or missing audit evidence; record `Expanded: ID: reason`. |
+| Progressive full handbook | React/TypeScript/CSS `AGENTS.md` is opt-in, never default-loaded. |
+| Scope drift | Restart activation and rescan every activated progressive index. |
+| Completion | Finish with `convention-audit`: coverage `FAIL = 0`, semantic `FAIL = 0`, `UNKNOWN = 0`. |
+
+non-progressive owner는 자신의 `SKILL.md`가 안내하는 local `AGENTS.md`/rule 원문을 그대로 사용합니다. 이 호환 경로를 progressive handbook 최적화와 혼동하지 않습니다.
+
+## Progressive Activation Matrix
+
+파일 확장자는 최소 신호일 뿐이며 실제 ownership과 changed surface를 함께 판정합니다. 파일 이동 안의 의미가 같은 선언·본문·class·value는 diff에 삭제+추가로 보여도 별도 내용 변경으로 다시 세지 않고, N/A rule의 optional pattern을 새로 도입해 스스로 활성화하지 않습니다. 요청을 충족하는 최소 semantic patch를 유지합니다.
+
+| Changed surface | Activate |
+| --- | --- |
+| Pure TypeScript / type / schema / helper / API / config | `convention-typescript` |
+| Pure CSS / selector / token / stylesheet | `convention-css` |
+| React `.ts` hook / ownership | `convention-react` + `convention-typescript` |
+| TSX | `convention-react` + `convention-typescript` |
+| TSX `className` / style import / styling surface | `convention-react` + `convention-typescript` + `convention-css` |
+| TSX owner 이동에 기존 `className` / style import가 byte-equivalent로 따라오기만 함 | `convention-react` + `convention-typescript`; CSS 비활성 |
+
+Pure CSS는 TypeScript를 자동 활성화하지 않고, pure TypeScript는 React/CSS를 자동 활성화하지 않습니다.
 
 ## 저장소 구조
 
@@ -70,7 +128,11 @@ agent-conventions/
         *.md
     react/
       AGENTS.md
+      RULES_INDEX.md
+      contracts/
+        *.md
       README.md
+      routing-evals.json
       SKILL.md
       metadata.json
       rules/
@@ -123,16 +185,30 @@ agent-conventions/
       ...
 ```
 
-## Structured Skill Anatomy
+## Structured Skill Artifact Contract
 
 structured skill 하나는 보통 아래 형태를 가집니다.
+
+| Artifact | Role |
+| --- | --- |
+| `rules/_sections.md`, `rules/_template.md`, `rules/*.md` | Editable rule source of truth. |
+| `metadata.json` | Editable build and companion activation contract. |
+| `SKILL.md` | Editable activation/load router; compact for progressive skills. |
+| `RULES_INDEX.md` | Progressive-only generated compact index. |
+| `contracts/*.md` | Progressive-only generated selected-rule contract; never edit directly. |
+| `AGENTS.md` | Generated full handbook; progressive rules include `Applies when`; opt-in for React/TypeScript/CSS. |
+| `routing-evals.json` | Progressive-only editable test oracle; never runtime context. |
 
 ```text
 skill/react/
   SKILL.md
   README.md
   metadata.json
+  RULES_INDEX.md
+  routing-evals.json
   AGENTS.md
+  contracts/
+    *.md
   rules/
     _sections.md
     _template.md
@@ -140,25 +216,31 @@ skill/react/
 ```
 
 - `SKILL.md`
-  skill 이름, description, activation checklist, companion skill/load guidance를 담는 엔트리포인트입니다.
+  사람이 직접 수정하는 activation/load router입니다. progressive skill에서는 scope, companion activation, index scan, receipt 형식을 compact하게 담습니다.
 - `README.md`
   사람이 읽는 개요 문서입니다.
 - `metadata.json`
-  build 입력 메타데이터입니다.
+  build 입력 메타데이터입니다. `progressiveDisclosure: true`이면 generated `RULES_INDEX.md`를 만들고 검증합니다.
+- `metadata.json.companions`
+  progressive companion을 `required` 또는 `conditional` mode로 선언합니다.
 - `metadata.json.extends`
-  함께 로드할 companion skill 관계를 선언합니다.
+  non-progressive skill의 recursive companion 호환 관계를 선언합니다.
 - `rules/_sections.md`
   섹션 순서와 설명을 관리합니다.
 - `rules/_template.md`
   새 rule 작성 템플릿입니다.
 - `rules/*.md`
   실제 source of truth rule 문서입니다.
+- `RULES_INDEX.md`
+  stable ID, ordinal, `appliesWhen`, `completionGate`, `reviewWith`, routing digest를 담는 generated compact index입니다. `requiresSelected`는 선택된 contract에서만 로드합니다.
+- `routing-evals.json`
+  runtime에는 로드하지 않는 test oracle이며 scenario별 exact Selected/N/A partition과 scope drift를 검증합니다.
 - `AGENTS.md`
-  build 결과로 생성되는 slim local guide입니다.
+  build 결과로 생성되는 full handbook입니다. progressive React/TypeScript/CSS의 `AGENTS.md`는 generated opt-in handbook이고 일반 작업의 기본 진입점이 아닙니다.
 
 정리하면, structured skill에서 사람이 직접 수정하는 정본은
-`rules/_sections.md`, `rules/_template.md`, `rules/*.md`, `metadata.json`이고,
-`AGENTS.md`는 생성물입니다.
+`rules/_sections.md`, `rules/_template.md`, `rules/*.md`, `metadata.json`, `SKILL.md`, progressive `routing-evals.json`이고,
+`AGENTS.md`, progressive `RULES_INDEX.md`, progressive `contracts/*.md`는 생성물입니다.
 
 ## 설치
 
@@ -202,13 +284,13 @@ skill을 수정할 때는 아래 순서를 권장합니다.
 2. structured skill이면 `rules/_sections.md`, `rules/_template.md`, `rules/*.md`,
    그리고 필요한 `metadata.json`을 수정합니다.
    skill 사용 흐름이나 companion load 기준이 바뀌면 `SKILL.md`도 함께 갱신합니다.
-3. `extends`가 있다면 공통 규칙을 companion skill에 둘지, local overlay로 둘지
-   먼저 판단합니다.
+3. `metadata.json.companions` 또는 non-progressive `extends`가 있다면 공통 규칙을 companion skill에 둘지, local overlay로 둘지 먼저 판단합니다.
 4. generic TypeScript 규칙이면 가능하면
    [skill/typescript](./skill/typescript/README.md) 쪽을 먼저 수정합니다.
 5. framework-specific 규칙이면 해당 skill의 local rule만 수정합니다.
-6. structured skill 변경 후에는 validate와 build를 다시 실행합니다.
-7. skill 인벤토리나 구조 설명이 바뀌면 루트 README도 함께 갱신합니다.
+6. progressive routing 조건이 바뀌면 `routing-evals.json`의 exact partition과 positive coverage를 함께 갱신합니다.
+7. structured skill 변경 후에는 validate, build, `check:generated`를 실행합니다.
+8. skill 인벤토리나 구조 설명이 바뀌면 루트 README도 함께 갱신합니다.
 
 legacy skill이면 해당 단일 문서를 직접 수정합니다.
 
@@ -243,6 +325,10 @@ npm --prefix package run dev:react
 ```bash
 npm --prefix package run validate -- --all
 npm --prefix package run build -- --all
+npm --prefix package run check:generated:all
+npm --prefix package run check:handbooks:all
+npm --prefix package run test
+npm --prefix package run measurement:self-test
 ```
 
 더 자세한 script 설명은 [package/README.md](./package/README.md)에서 확인할 수 있습니다.
@@ -256,6 +342,8 @@ skill-relative 명령을 사용하는 편이 안전합니다.
 
 복사해서 시작할 수 있는 공통 예시는 루트에 함께 둡니다.
 
+- [AGENTS.frontend-conventions.md](./AGENTS.frontend-conventions.md)
+  React + TypeScript + CSS 프로젝트에 바로 복사하는 compact activation·loading·audit policy
 - [AGENTS.superpowers.md](./AGENTS.superpowers.md)
   `superpowers` workflow만 고정하고, 코드 규칙은 프로젝트 자체 문서로 관리하는 예시
 - [AGENTS.superpowers.conventions.md](./AGENTS.superpowers.conventions.md)
@@ -265,6 +353,7 @@ skill-relative 명령을 사용하는 편이 안전합니다.
 
 - 공통 스타일, 경계, 문서화 규칙: 이 저장소의 skill
 - 생성 파일 보호, 검증 명령, 배포 규칙: 프로젝트 로컬 `AGENTS.md`
+- 프로젝트 고유 디렉터리, owner, API, 예외: consuming project의 project-local overlay
 
 서브에이전트 workflow도 같은 원칙으로 나누는 편이 유지보수에 유리합니다.
 
@@ -276,7 +365,7 @@ skill-relative 명령을 사용하는 편이 안전합니다.
 강제 정책을 두는 구성을 기본값으로 권장합니다.
 
 TypeScript 기반 framework 프로젝트에서는 framework skill 하나만 적기보다
-`convention-astro` + `convention-typescript` 또는 `convention-react` + `convention-typescript`처럼 companion skill을 함께 적는 구성을 권장합니다.
+`convention-astro` + `convention-typescript` + `convention-css` 또는 `convention-react` + `convention-typescript`처럼 companion skill을 함께 적는 구성을 권장합니다.
 
 ## 버전 관리 가이드
 

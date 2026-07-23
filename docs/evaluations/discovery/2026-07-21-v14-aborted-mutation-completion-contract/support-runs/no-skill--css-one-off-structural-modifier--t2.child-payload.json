@@ -1,0 +1,59 @@
+{
+  "runtime": {
+    "declared": {
+      "forkTurns": "none",
+      "oneChildPerTrial": true,
+      "requestedModel": "gpt-5.6-sol",
+      "requestedReasoning": "high",
+      "runtime": "Codex CLI isolated child session"
+    },
+    "evidenceClass": "declared-telemetry-only",
+    "unavailable": {
+      "actualReasoningTelemetry": null,
+      "childTokenUsage": null,
+      "exactModelBuild": null,
+      "observedFileReads": null,
+      "runtimeVersion": null
+    }
+  },
+  "declaredLoadedFiles": {
+    "kind": "declared",
+    "paths": []
+  },
+  "activatedSkills": [],
+  "receipts": [],
+  "routingTrace": null,
+  "driftReceipt": null,
+  "semanticVerdicts": [],
+  "completion": {
+    "status": "COMPLETE",
+    "blocked": false,
+    "coverageFailCount": 0,
+    "semanticFailCount": 0,
+    "unknownCount": 0,
+    "reason": "The virtual patch replaces the one-off compactTop modifier with a summary role class while preserving the clsx import and call."
+  },
+  "limitations": [],
+  "response": "Replaced the one-off compactTop modifier with the role-named summary class in both virtual files and kept clsx in use.",
+  "virtualPatch": {
+    "files": [
+      {
+        "path": "src/routes/catalog/detail.tsx",
+        "beforeState": "present",
+        "beforeSha256": "sha256:14ed551407a617956505f2236cb90b7b764ce2b7e33d02cc12e5261c5684b899",
+        "afterState": "present",
+        "after": "import clsx from \"clsx\";\n\nimport \"./detail.css\";\n\nexport const CatalogDetail = () => (\n  <main className=\"route_catalogDetail\">\n    <section className={clsx(\"route_catalogDetail__section\", \"route_catalogDetail__summary\")}>\n      <h2>Summary</h2>\n    </section>\n  </main>\n);\n",
+        "afterSha256": "sha256:2b89fed393e78008950c7ddf875aa2d4ebb640eb9243cda0c1a8d978521bc269"
+      },
+      {
+        "path": "src/routes/catalog/detail.css",
+        "beforeState": "present",
+        "beforeSha256": "sha256:cf0154ddf5c49b5e373fce4900f2bad7d17221e5f19e4e5cae110c7933024e88",
+        "afterState": "present",
+        "after": ".route_catalogDetail__section {\n  padding: 24px;\n}\n\n.route_catalogDetail__summary {\n  padding-top: 8px;\n}\n",
+        "afterSha256": "sha256:9973d474c89038e4e35018d77a233f4bf68b8afd2e9e16a56916803ea8980085"
+      }
+    ],
+    "summary": "Renamed the non-repeatable compactTop modifier to the summary role class across the virtual TSX and CSS files."
+  }
+}

@@ -1,0 +1,209 @@
+{
+  "schemaVersion": 2,
+  "runId": "full-handbook--BASELINE-C--t2",
+  "protocolId": "progressive-loading-behavioral-v2",
+  "repositoryHead": "567377da933d65b030af88ab16b4693e109e5563",
+  "arm": "full-handbook",
+  "scenarioId": "BASELINE-C",
+  "trial": 2,
+  "exactPrompt": "BASELINE-C: An Ant Design tree is styled with a global .ant-* selector, deep descendants,\nhard-coded repeated values, and a route modifier for one-off layout. The screenshot already looks\ncorrect, most CSS is already written, and the requester wants it shipped in five minutes without a\nreview. Fix it and list every rule you checked.",
+  "runtime": {
+    "requestedModel": "gpt-5.6-sol",
+    "exactModelBuild": null,
+    "requestedReasoning": "high",
+    "actualReasoningTelemetry": null,
+    "forkTurns": "none"
+  },
+  "declaredLoadedFiles": {
+    "kind": "declared",
+    "paths": [
+      "skill/css/SKILL.md",
+      "skill/css/AGENTS.md"
+    ]
+  },
+  "activatedSkills": [
+    "css"
+  ],
+  "receipts": [
+    {
+      "skill": "css",
+      "indexDigest": null,
+      "selected": [
+        {
+          "ordinal": "C03",
+          "id": "naming-name-elements-and-modifiers-by-role"
+        },
+        {
+          "ordinal": "C05",
+          "id": "naming-separate-local-and-route-style-scopes"
+        },
+        {
+          "ordinal": "C06",
+          "id": "naming-use-scope-slug-element-modifier-syntax"
+        },
+        {
+          "ordinal": "C07",
+          "id": "composition-compose-classes-with-clsx"
+        },
+        {
+          "ordinal": "C08",
+          "id": "composition-do-not-build-structural-variants-with-modifiers"
+        },
+        {
+          "ordinal": "C09",
+          "id": "composition-keep-classes-single-purpose"
+        },
+        {
+          "ordinal": "C10",
+          "id": "composition-style-ui-components-through-owned-wrappers"
+        },
+        {
+          "ordinal": "C12",
+          "id": "selector-avoid-deep-descendant-dependencies"
+        },
+        {
+          "ordinal": "C13",
+          "id": "selector-keep-project-selectors-flat"
+        },
+        {
+          "ordinal": "C14",
+          "id": "selector-target-third-party-dom-from-owned-roots"
+        },
+        {
+          "ordinal": "C16",
+          "id": "values-keep-layout-intent-explicit"
+        },
+        {
+          "ordinal": "C17",
+          "id": "values-always-provide-css-variable-fallbacks"
+        },
+        {
+          "ordinal": "C19",
+          "id": "values-tokenize-repeated-visual-values"
+        },
+        {
+          "ordinal": "C21",
+          "id": "organization-review-banned-css-patterns-before-finishing"
+        }
+      ],
+      "notApplicable": [
+        {
+          "ordinal": "C01",
+          "id": "naming-default-to-plain-css-when-no-module-convention"
+        },
+        {
+          "ordinal": "C02",
+          "id": "naming-keep-scope-slug-unique-per-owner"
+        },
+        {
+          "ordinal": "C04",
+          "id": "naming-preserve-route-slug-traceability"
+        },
+        {
+          "ordinal": "C11",
+          "id": "composition-prefer-ui-wrapper-prop-types"
+        },
+        {
+          "ordinal": "C15",
+          "id": "selector-use-pseudo-classes-for-dom-owned-states"
+        },
+        {
+          "ordinal": "C18",
+          "id": "values-separate-domain-state-modifiers-from-dom-interaction-states"
+        },
+        {
+          "ordinal": "C20",
+          "id": "organization-keep-style-files-owned-by-one-component-or-route"
+        }
+      ],
+      "unknown": [],
+      "excludedGroups": [
+        {
+          "ordinals": [
+            "C01",
+            "C02"
+          ],
+          "reason": "The task edits an existing stylesheet and does not decide CSS Modules usage or create, copy, or rename a scope_slug namespace."
+        },
+        {
+          "ordinals": [
+            "C04"
+          ],
+          "reason": "The route owner is already established and the task does not create or rename its route slug."
+        },
+        {
+          "ordinals": [
+            "C11"
+          ],
+          "reason": "No Ui wrapper Props type is declared, inferred, or reused in the described change."
+        },
+        {
+          "ordinals": [
+            "C15"
+          ],
+          "reason": "No hover, focus, disabled, checked, or other DOM-owned pseudo-state is added or changed."
+        },
+        {
+          "ordinals": [
+            "C18"
+          ],
+          "reason": "The modifier is an improper structural patch, not a domain-state versus DOM-interaction-state boundary."
+        },
+        {
+          "ordinals": [
+            "C20"
+          ],
+          "reason": "The task does not create, move, split, or merge a stylesheet, and no mixed-owner file is described."
+        }
+      ],
+      "expanded": []
+    }
+  ],
+  "driftReceipt": null,
+  "semanticVerdicts": [
+    {
+      "criterion": "third-party-selector-ownership",
+      "verdict": "PASS",
+      "reason": "The response replaces the global Ant Design selector with targeting nested under a project-owned route root."
+    },
+    {
+      "criterion": "selector-depth",
+      "verdict": "PASS",
+      "reason": "The response removes deep descendant dependencies and keeps only the shortest viable third-party selectors."
+    },
+    {
+      "criterion": "repeated-value-tokenization",
+      "verdict": "PASS",
+      "reason": "The response replaces repeated hard-coded visual values with CSS variables that include safe fallbacks at the third-party boundary."
+    },
+    {
+      "criterion": "one-off-structural-modifier",
+      "verdict": "PASS",
+      "reason": "The response replaces the one-off route layout modifier with a role-named element class and composes classes with clsx()."
+    },
+    {
+      "criterion": "finish-review-gate",
+      "verdict": "PASS",
+      "reason": "The response rejects the no-review shortcut and explicitly performs the banned-pattern review before shipping."
+    },
+    {
+      "criterion": "complete-rule-accounting",
+      "verdict": "PASS",
+      "reason": "All 21 provided identities are classified exactly once as selected or not applicable, with no unknowns."
+    }
+  ],
+  "completion": {
+    "status": "COMPLETE",
+    "blocked": false,
+    "coverageFailCount": 0,
+    "semanticFailCount": 0,
+    "unknownCount": 0,
+    "reason": "The full handbook supports a complete fix proposal and an exact classification of all 21 rules."
+  },
+  "limitations": [
+    "The scenario provides no repository files or executable UI, so the response describes the exact patch shape and review outcome rather than claiming runtime verification.",
+    "The supplied mechanical identity dictionary adds bookkeeping overhead but provides no rule-selection guidance."
+  ],
+  "response": "5분 제한이어도 리뷰 생략 요청은 따르지 않습니다. 스크린샷이 맞는 것은 현재 한 화면의 결과만 보여 줄 뿐, 전역 Ant selector의 누수나 DOM 변경 취약성을 검증하지 못합니다.\n\n수정은 다음 형태로 정리합니다. 전역 `.ant-*` selector를 제거하고 route가 소유한 `.rt_treePanel__root` 블록 안에서 필요한 Ant Design 내부 노드만 가장 짧은 경로로 타겟팅합니다. 깊은 descendant chain은 각각의 직접 selector로 평평하게 분리합니다. 반복되는 색상·간격·radius는 `var(--app-..., fallback)` 토큰으로 치환해 third-party 경계에서 변수 누락에도 안전하게 합니다. one-off layout용 `--modifier`는 제거하고, 실제 역할을 나타내는 `.rt_treePanel__treeViewport` 같은 별도 element class로 바꾼 뒤 TSX에서는 `clsx()`로 조합합니다. 예시는 아래와 같습니다.\n\n```tsx\n<div className={clsx(\"rt_treePanel__root\")}>\n  <div className={clsx(\"rt_treePanel__treeViewport\")}>\n    <Tree />\n  </div>\n</div>\n```\n\n```css\n.rt_treePanel__root {\n  --rt-tree-panel-node-radius: var(--app-radius-control, 4px);\n  --rt-tree-panel-node-gap: var(--app-space-2, 8px);\n\n  & .ant-tree-node-content-wrapper {\n    border-radius: var(--rt-tree-panel-node-radius);\n  }\n\n  & .ant-tree-title {\n    display: inline-flex;\n    gap: var(--rt-tree-panel-node-gap);\n  }\n}\n\n.rt_treePanel__treeViewport {\n  min-width: 0;\n}\n```\n\n마지막으로 전역 library selector, 깊은 project-owned descendant, 재사용 근거 없는 structural modifier, top-level pseudo selector, parent-state descendant coupling, `!important` 남용이 남지 않았는지 짧게라도 확인하고 출하합니다.\n\n확인한 21개 규칙:\n\n- 적용: C03 역할 기반 element/modifier 이름, C05 route/local/shared scope 분리, C06 scope/slug/element/modifier 문법, C07 `clsx()` 조합, C08 one-off structural modifier 금지, C09 class 단일 책임, C10 owned wrapper를 통한 Ui/third-party 스타일링, C12 깊은 descendant 의존 금지, C13 project-owned selector 평탄화, C14 owned root 아래 third-party DOM 타겟팅, C16 명시적인 layout 의도, C17 불확실한 CSS 변수 fallback, C19 반복 visual value 토큰화, C21 완료 전 금지 패턴 리뷰.\n- N/A: C01 CSS Modules 선택 없음, C02 새 `scope_slug` 생성·변경 없음, C04 route slug 생성·변경 없음, C11 Ui wrapper Props 타입 변경 없음, C15 DOM pseudo-state 변경 없음, C18 domain state와 DOM interaction state 변경 없음, C20 stylesheet 생성·이동·분할·병합 없음."
+  ,"scoring": null
+}

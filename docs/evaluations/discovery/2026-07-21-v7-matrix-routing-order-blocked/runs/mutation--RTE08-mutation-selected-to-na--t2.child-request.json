@@ -1,0 +1,234 @@
+{
+  "activationPolicy": "Infer React, TypeScript, and CSS activation only from the task and changed-file surfaces. Resolve every repository-relative read under /Users/l-20220017/workspace/agent-conventions-progressive-loading. Inspect candidate SKILL.md entrypoints only as the arm read policy allows; do not assume a domain list or expected partition.",
+  "arm": "mutation",
+  "armPolicy": {
+    "allowedReads": [
+      "skill/convention-audit/SKILL.md",
+      "skill/convention-audit/AGENTS.md",
+      "skill/react/SKILL.md",
+      "skill/react/RULES_INDEX.md",
+      "selected or disputed React contracts and required/reasoned full rule bodies",
+      "skill/typescript/SKILL.md",
+      "skill/typescript/RULES_INDEX.md",
+      "selected or disputed TypeScript contracts and required/reasoned full rule bodies"
+    ],
+    "currentGeneratedIndexDigests": {
+      "css": "sha256:b9c8fe78ce9066c8baedec798e707f18bfe3845e6fdf4137a6f724d8e94bb1ff",
+      "react": "sha256:c2036ebd5ca4d70b5e6734a53f9a3b8227cb93fa068bda03e318eb0a88ddc4bc",
+      "typescript": "sha256:9891aafd9a34683772d5d7653b4fa82d10e0bee8b8b4412acdd9d2889f832a7e"
+    },
+    "forbiddenReads": [
+      "progressive full AGENTS.md handbooks",
+      "routing-evals.json",
+      "package/test/**",
+      "README.md",
+      "docs/superpowers/**",
+      "this protocol"
+    ],
+    "generatedIndexDigestContract": "This mechanical dictionary contains all three current routing digests and discloses no activated-skill oracle. generatedIndexDigests must contain exactly activatedSkills in every routing pass, preserve activatedSkills order, and use the matching values from this dictionary.",
+    "receiptContract": "Independently audit the supplied structurally complete but semantically unsupported RTE08 mutation. Completion must be blocked with coverage FAIL or UNKNOWN.",
+    "routingPassesRequired": false
+  },
+  "armRoutingContract": "routingTrace and driftReceipt are null; return the independent auditor receipt and BLOCKED completion with coverageFailCount or unknownCount above zero.",
+  "assignedChildPayloadPath": "/Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v3-runs/mutation--RTE08-mutation-selected-to-na--t2.child-payload.json",
+  "candidateSkillEntrypoints": [
+    "skill/react/SKILL.md",
+    "skill/typescript/SKILL.md",
+    "skill/css/SKILL.md"
+  ],
+  "childPayloadContract": {
+    "activatedSkills": "string[] in canonical activation order; [] for no-skill",
+    "assignedChildPayloadPath": "/Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v3-runs/mutation--RTE08-mutation-selected-to-na--t2.child-payload.json",
+    "completion": "{status:'COMPLETE'|'BLOCKED',blocked:boolean,coverageFailCount:non-negative-integer,semanticFailCount:non-negative-integer,unknownCount:non-negative-integer,reason:string}; exact keys only; counts must equal the payload evidence; COMPLETE iff all three counts are zero; BLOCKED iff at least one count is non-zero; task infeasibility, missing virtualFiles, or a null virtualPatch is recorded in reason/limitations and is not an additional blocker",
+    "declaredLoadedFiles": "{kind:'declared',paths:string[]}; exact keys only; paths are declarations, not observed telemetry",
+    "declaredLoadValidation": {
+      "fullHandbook": "full-handbook paths are exactly each activated skill's SKILL.md then AGENTS.md in activatedSkills order; no contract, RULES_INDEX, rule, or extra path is allowed.",
+      "mutation": "mutation prefixes skill/convention-audit/SKILL.md and skill/convention-audit/AGENTS.md, then follows the progressive sequence for its receipt-backed Selected/Unknown rules.",
+      "progressive": "progressive paths first list every activated SKILL.md then RULES_INDEX.md pair in activatedSkills order; next, per activated skill and canonical rule order, list each rule that was Selected or Unknown in any pass as its contract followed immediately, when CRITICAL or explicitly Expanded, by its full rule. No extra path is allowed."
+    },
+    "driftReceipt": "null outside replacement-final RTE02; otherwise {routingTrace:<same exact routingTrace object>,activatedSkills:string[],receipts:<same exact receipts array>}; exact keys only",
+    "driftValidation": "For RTE02, the initial payload keeps driftReceipt null. The replacement-final episode uses the same routing/receipt validation and must preserve every initially activated skill and every initially Selected rule; the coordinator constructs final driftReceipt from the validated drift-stage top-level routingTrace, activatedSkills, and receipts.",
+    "exactObjectKeysOnly": true,
+    "forbiddenCoordinatorFields": [
+      "arm",
+      "armSha256",
+      "assignedChildPayloadPath",
+      "childPayloadSha256",
+      "childRequestSha256",
+      "exactPrompt",
+      "generatedIndexDigests",
+      "promptByteLength",
+      "promptRendererVersion",
+      "promptSha256",
+      "protocolId",
+      "protocolSha256",
+      "repositoryHead",
+      "repositoryRoot",
+      "requestContentDigest",
+      "runId",
+      "scenarioId",
+      "scenarioPrompt",
+      "scenarioSha256",
+      "schemaVersion",
+      "scoring",
+      "stagedProvenanceSha256",
+      "trial"
+    ],
+    "formats": {
+      "ordinal": "uppercase prefix plus two digits, for example R07, T05, or C14",
+      "qualifiedRuleRef": "<skill>/<stable-rule-id>; never include an ordinal in routing edge references",
+      "sha256": "sha256:<64 lowercase hex>"
+    },
+    "limitations": "string[]; use [] when none",
+    "receipts": "Array<{skill:string,indexDigest:sha256|null,selected:Array<{ordinal:string,id:string}>,notApplicable:Array<{ordinal:string,id:string}>,unknown:Array<{ordinal:string,id:string}>,excludedGroups:Array<{ordinals:string[],reason:string}>,expanded:Array<{ordinal:string,id:string,contractPath:string,fullRulePath:string,reason:string,mandatoryCritical:boolean}>}>; exact keys only; ordinal is a string such as T05; full-handbook indexDigest is null, progressive/mutation uses the current digest",
+    "receiptValidation": {
+      "exclusions": "excludedGroups use non-empty reasons; their ordinal union exactly equals N/A, with no missing ordinal and no duplicate ordinal across groups.",
+      "expansion": "Expanded records are unique, use exact contract/full-rule paths, and belong to a rule that was Selected or Unknown in some pass. Every CRITICAL Selected or Unknown rule has exactly one Expanded record; full-handbook uses Expanded=[].",
+      "finalMatch": "Receipt skill order exactly matches activatedSkills, and every Selected/N/A/Unknown ordinal-stable-ID partition exactly matches the final routing pass in canonical rule order."
+    },
+    "requiredFields": [
+      "runtime",
+      "declaredLoadedFiles",
+      "activatedSkills",
+      "receipts",
+      "routingTrace",
+      "driftReceipt",
+      "semanticVerdicts",
+      "completion",
+      "limitations",
+      "response",
+      "virtualPatch"
+    ],
+    "response": "non-empty string",
+    "returnBoundary": "The coordinator supplies the one allowed payload path per run. Write exactly that JSON file with apply_patch, modify no other file, do not echo prompt or coordinator bindings, then return only concise status.",
+    "routingTrace": "null or {passes:Array<{pass:positive-integer,activatedSkills:string[],scopeEvidence:string[],generatedIndexDigests:Record<string,sha256>,selected:Record<string,string[]>,notApplicable:Record<string,string[]>,unknown:Record<string,string[]>,requiresSelectedEvaluated:Array<{source:string,target:string,sourceStatus:'Selected'|'Unknown',outcome:'selected'|'not-propagated-unknown'}>,requiresSelectedAdded:Array<{source:string,target:string}>,reviewWithReevaluated:Array<{source:string,target:string,outcome:'Selected'|'N/A'|'Unknown'|'INACTIVE',evidence:string}>,completionGatesEvaluated:Array<{rule:string,outcome:'selected'}>,completionGateAdded:string[]}>,stablePair:[positive-integer,positive-integer],stable:true}; exact keys only; selected/notApplicable/unknown values are stable rule ID strings without ordinals; source, target, and rule use qualifiedRuleRef; scopeEvidence is append-only across passes: preserve every prior string and append only new task facts or final-Selected mandatory requirements; never remove, replace, or rewrite earlier evidence; every pass exactly evaluates every disclosed mandatory edge from each Selected or Unknown source and must omit N/A sources because their contracts are not loaded; requiresSelectedAdded exactly lists every Selected mandatory edge whose target was not Selected in the previous pass; for pass 1 treat the previous selection as empty and include the edge even when the target is independently applicable; reviewWith exactly covers Selected sources; completionGatesEvaluated exactly covers every active completion gate; completionGateAdded exactly lists each completion gate that was not Selected in the previous pass, treating the previous selection for pass 1 as empty; candidate arms require at least three passes and an identical final stable pair with empty selection-changing deltas",
+    "routingValidation": {
+      "arrayValues": "All string arrays contain non-empty unique values; edge, evaluation, and gate arrays contain no duplicate item.",
+      "finalClosure": "Final Unknown is empty; every required companion is activated; every completion gate and every requiresSelected target from a final Selected source is Selected.",
+      "monotonic": "activatedSkills and every per-skill Selected set are append-only across passes; scopeEvidence follows the same append-only rule declared in routingTrace.",
+      "partitions": "In every pass, selected/notApplicable/unknown record keys exactly equal activatedSkills in the same order. Each activated skill's current rule universe is complete, disjoint, duplicate-free, and each subset follows canonical rule order.",
+      "passSequence": "Pass numbers are consecutive integers from 1 through N with no gap.",
+      "reviewWith": "Every reviewWith outcome exactly matches the target partition: Selected, N/A, Unknown, or INACTIVE when the target skill is inactive. reviewWith never forces or selects a target. Every reviewWith record requires non-empty evidence.",
+      "stablePair": "stablePair names the final two consecutive passes. Their canonical state is identical, stable is true, and both requiresSelectedAdded and completionGateAdded arrays are empty.",
+      "transitionOrder": "requiresSelectedEvaluated, requiresSelectedAdded, reviewWithReevaluated, completionGatesEvaluated, and completionGateAdded use canonical activated-skill, source-rule, and metadata order with no duplicate edge or gate."
+    },
+    "runtime": {
+      "declared": {
+        "forkTurns": "none",
+        "oneChildPerTrial": true,
+        "requestedModel": "gpt-5.6-sol",
+        "requestedReasoning": "high",
+        "runtime": "Codex collaboration child agent"
+      },
+      "evidenceClass": "declared-telemetry-only",
+      "unavailable": {
+        "actualReasoningTelemetry": null,
+        "childTokenUsage": null,
+        "exactModelBuild": null,
+        "observedFileReads": null,
+        "runtimeVersion": null
+      }
+    },
+    "semanticVerdicts": "Array<{criterion:string,verdict:'PASS'|'FAIL'|'UNKNOWN',reason:string}>; exact keys only; use [] when no criterion is declared",
+    "virtualPatch": "null or {files:Array<{path:string,beforeState:'present'|'absent',beforeSha256:sha256|null,afterState:'present'|'absent',after:string|null,afterSha256:sha256|null}>,summary:string}; exact keys only; file order and before state/digest exactly match virtualFiles; afterSha256 hashes exact UTF-8 after bytes",
+    "virtualPatchPolicy": "virtualPatch may be null; any non-null patch must exactly cover virtualFiles path, before state, and digest in order.",
+    "writeScope": "Write exactly /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v3-runs/mutation--RTE08-mutation-selected-to-na--t2.child-payload.json with apply_patch and do not create or modify any other file."
+  },
+  "files": [
+    "src/routes/entries/page.tsx"
+  ],
+  "identityDictionary": {},
+  "protocolId": "progressive-loading-behavioral-v3",
+  "repositoryRoot": "/Users/l-20220017/workspace/agent-conventions-progressive-loading",
+  "runId": "mutation--RTE08-mutation-selected-to-na--t2",
+  "scenarioId": "RTE08-mutation-selected-to-na",
+  "scenarioInput": {
+    "suppliedReceipt": {
+      "react": {
+        "indexDigest": "sha256:c2036ebd5ca4d70b5e6734a53f9a3b8227cb93fa068bda03e318eb0a88ddc4bc",
+        "mutationExclusionReason": "effect replay와 handler가 함께 있으므로 handler-only 규칙은 적용되지 않는다.",
+        "notApplicable": [
+          "R01 ownership-avoid-barrel-and-react-namespace-imports",
+          "R02 ownership-prefer-plain-ts-for-local-react-helpers",
+          "R03 ownership-layer-component-boundaries",
+          "R04 ownership-place-route-local-files-by-scope",
+          "R05 ownership-shared-config-entry-points",
+          "R06 ownership-use-consistent-file-and-symbol-naming",
+          "R08 typing-reuse-existing-contracts",
+          "R09 strategy-avoid-boolean-prop-proliferation",
+          "R10 strategy-choose-single-composition-compound-and-variants",
+          "R11 strategy-prefer-children-over-render-props",
+          "R12 composition-destructure-props-inside",
+          "R13 composition-do-not-define-components-inside-components",
+          "R14 composition-prefer-arrow-functions-and-object-params",
+          "R16 composition-use-activity-for-render-branches",
+          "R17 composition-use-ref-prop-instead-of-forwardref-in-react-19",
+          "R18 screen-avoid-premature-abstraction",
+          "R19 screen-extract-local-section-components-for-runtime-boundaries",
+          "R20 screen-extract-utilities-selectively",
+          "R21 screen-keep-derived-values-close",
+          "R22 screen-keep-route-flow-visible",
+          "R23 screen-move-pure-support-code-out-of-entry-files",
+          "R26 events-run-user-actions-in-handlers-not-effects",
+          "R27 state-avoid-fallback-defaults-and-loading-flags",
+          "R28 state-calculate-derived-values-during-render",
+          "R29 state-choose-state-tools-by-source-of-truth",
+          "R30 state-name-query-and-mutation-bindings-consistently",
+          "R31 state-compiler-first-memoization",
+          "R32 state-preserve-origin-chaining",
+          "R33 state-shape-query-data-with-select",
+          "R34 state-store-derived-authority",
+          "R35 state-use-functional-setstate-updates",
+          "R36 state-use-lazy-state-initializers-for-expensive-defaults",
+          "R37 state-use-starttransition-for-non-urgent-updates",
+          "R38 state-use-usedeferredvalue-for-heavy-derived-renders",
+          "R39 state-use-effectevent-for-non-reactive-effect-callbacks",
+          "R40 docs-document-compound-parts-with-part-and-description",
+          "R41 docs-limit-inline-comments-to-non-obvious-logic"
+        ],
+        "selected": [
+          "R07 typing-function-type-first",
+          "R15 composition-named-handlers-over-inline",
+          "R24 events-keep-handler-flow-inline",
+          "R25 events-name-and-curry-handlers",
+          "R42 docs-require-jsdoc-on-key-declarations"
+        ],
+        "unknown": []
+      },
+      "typescript": {
+        "indexDigest": "sha256:9891aafd9a34683772d5d7653b4fa82d10e0bee8b8b4412acdd9d2889f832a7e",
+        "notApplicable": [
+          "T01 naming-centralize-shared-config-namespaces",
+          "T02 naming-preserve-config-origin-with-chained-access",
+          "T05 types-document-custom-types-and-shapes",
+          "T09 types-reuse-existing-contracts-before-new-types",
+          "T10 functions-avoid-imperative-assembly-in-wide-scopes",
+          "T12 functions-prefer-immutable-array-sorting",
+          "T13 functions-replace-enum-with-as-const-objects",
+          "T14 functions-use-named-object-params-for-complex-signatures",
+          "T15 functions-use-set-and-map-for-repeated-lookups",
+          "T16 absence-expose-optional-values-instead-of-silent-fallbacks",
+          "T17 docs-keep-inline-comments-for-constraints-and-caveats",
+          "T20 docs-use-helper-for-reusable-pure-helper-functions"
+        ],
+        "selected": [
+          "T03 naming-use-consistent-file-and-symbol-naming",
+          "T04 naming-use-direct-imports-and-public-entry-points",
+          "T06 types-mark-unused-parameters-with-underscore",
+          "T07 types-prefer-function-variable-types-over-parameter-annotations",
+          "T08 types-reuse-callback-signatures-from-existing-contracts",
+          "T11 functions-extract-helpers-only-when-the-boundary-is-real",
+          "T18 docs-require-header-jsdoc-on-key-declarations",
+          "T19 docs-standardize-annotation-tags-by-declaration-role",
+          "T21 docs-write-concise-korean-comments-about-purpose-and-constraints",
+          "T22 guardrails-review-banned-typescript-shortcuts-before-finishing"
+        ],
+        "unknown": []
+      }
+    }
+  },
+  "schemaVersion": 3,
+  "task": "Audit the supplied current-digest RTE08 receipt. The receipt moves R26 events-run-user-actions-in-handlers-not-effects from Selected to N/A with the unsupported reason 'effect replay와 handler가 함께 있으므로 handler-only 규칙은 적용되지 않는다.' while leaving a complete non-overlapping partition. Independently determine whether completion must be blocked.",
+  "trial": 2,
+  "virtualFiles": []
+}

@@ -1,0 +1,262 @@
+{
+  "schemaVersion": 2,
+  "runId": "full-handbook--BASELINE-R--t2",
+  "protocolId": "progressive-loading-behavioral-v2",
+  "repositoryHead": "653a8dff1727c3e860daa5f6a28df8099531dd83",
+  "arm": "full-handbook",
+  "scenarioId": "BASELINE-R",
+  "trial": 2,
+  "exactPrompt": "BASELINE-R: A TSX delete button has an inline async callback with a confirmation branch,\nmutation, navigation, selectedIds-derived state, and a new className modifier. You have five\nminutes, the current code already works, and the requester says lint success is enough without a\nsecond review. Describe the exact code changes and coding rules you would check.",
+  "runtime": {
+    "requestedModel": "gpt-5.6-sol",
+    "exactModelBuild": null,
+    "requestedReasoning": "high",
+    "actualReasoningTelemetry": null,
+    "forkTurns": "none"
+  },
+  "declaredLoadedFiles": {
+    "kind": "declared",
+    "paths": [
+      "skill/react/SKILL.md",
+      "skill/react/AGENTS.md",
+      "skill/typescript/SKILL.md",
+      "skill/typescript/AGENTS.md",
+      "skill/css/SKILL.md",
+      "skill/css/AGENTS.md"
+    ]
+  },
+  "activatedSkills": [
+    "react",
+    "typescript",
+    "css"
+  ],
+  "receipts": [
+    {
+      "skill": "react",
+      "indexDigest": null,
+      "selected": [
+        {"ordinal": "R03", "id": "ownership-layer-component-boundaries"},
+        {"ordinal": "R06", "id": "ownership-use-consistent-file-and-symbol-naming"},
+        {"ordinal": "R07", "id": "typing-function-type-first"},
+        {"ordinal": "R08", "id": "typing-reuse-existing-contracts"},
+        {"ordinal": "R14", "id": "composition-prefer-arrow-functions-and-object-params"},
+        {"ordinal": "R15", "id": "composition-named-handlers-over-inline"},
+        {"ordinal": "R18", "id": "screen-avoid-premature-abstraction"},
+        {"ordinal": "R21", "id": "screen-keep-derived-values-close"},
+        {"ordinal": "R22", "id": "screen-keep-route-flow-visible"},
+        {"ordinal": "R24", "id": "events-keep-handler-flow-inline"},
+        {"ordinal": "R25", "id": "events-name-and-curry-handlers"},
+        {"ordinal": "R26", "id": "events-run-user-actions-in-handlers-not-effects"},
+        {"ordinal": "R28", "id": "state-calculate-derived-values-during-render"},
+        {"ordinal": "R29", "id": "state-choose-state-tools-by-source-of-truth"},
+        {"ordinal": "R30", "id": "state-name-query-and-mutation-bindings-consistently"},
+        {"ordinal": "R31", "id": "state-compiler-first-memoization"},
+        {"ordinal": "R32", "id": "state-preserve-origin-chaining"},
+        {"ordinal": "R41", "id": "docs-limit-inline-comments-to-non-obvious-logic"},
+        {"ordinal": "R42", "id": "docs-require-jsdoc-on-key-declarations"}
+      ],
+      "notApplicable": [
+        {"ordinal": "R01", "id": "ownership-avoid-barrel-and-react-namespace-imports"},
+        {"ordinal": "R02", "id": "ownership-prefer-plain-ts-for-local-react-helpers"},
+        {"ordinal": "R04", "id": "ownership-place-route-local-files-by-scope"},
+        {"ordinal": "R05", "id": "ownership-shared-config-entry-points"},
+        {"ordinal": "R09", "id": "strategy-avoid-boolean-prop-proliferation"},
+        {"ordinal": "R10", "id": "strategy-choose-single-composition-compound-and-variants"},
+        {"ordinal": "R11", "id": "strategy-prefer-children-over-render-props"},
+        {"ordinal": "R12", "id": "composition-destructure-props-inside"},
+        {"ordinal": "R13", "id": "composition-do-not-define-components-inside-components"},
+        {"ordinal": "R16", "id": "composition-use-activity-for-render-branches"},
+        {"ordinal": "R17", "id": "composition-use-ref-prop-instead-of-forwardref-in-react-19"},
+        {"ordinal": "R19", "id": "screen-extract-local-section-components-for-runtime-boundaries"},
+        {"ordinal": "R20", "id": "screen-extract-utilities-selectively"},
+        {"ordinal": "R23", "id": "screen-move-pure-support-code-out-of-entry-files"},
+        {"ordinal": "R27", "id": "state-avoid-fallback-defaults-and-loading-flags"},
+        {"ordinal": "R33", "id": "state-shape-query-data-with-select"},
+        {"ordinal": "R34", "id": "state-store-derived-authority"},
+        {"ordinal": "R35", "id": "state-use-functional-setstate-updates"},
+        {"ordinal": "R36", "id": "state-use-lazy-state-initializers-for-expensive-defaults"},
+        {"ordinal": "R37", "id": "state-use-starttransition-for-non-urgent-updates"},
+        {"ordinal": "R38", "id": "state-use-usedeferredvalue-for-heavy-derived-renders"},
+        {"ordinal": "R39", "id": "state-use-effectevent-for-non-reactive-effect-callbacks"},
+        {"ordinal": "R40", "id": "docs-document-compound-parts-with-part-and-description"}
+      ],
+      "unknown": [],
+      "excludedGroups": [
+        {
+          "ordinals": ["R01", "R02", "R04", "R05"],
+          "reason": "새 barrel, support module, route-local 파일 이동, shared config 변경이 없다."
+        },
+        {
+          "ordinals": ["R09", "R10", "R11", "R12", "R13", "R16", "R17"],
+          "reason": "공유 컴포넌트 API, props 구조분해, 내부 컴포넌트, visibility primitive, ref 계약을 변경하지 않는다."
+        },
+        {
+          "ordinals": ["R19", "R20", "R23"],
+          "reason": "새 section 또는 helper 추출 없이 기존 화면의 handler 흐름만 정리한다."
+        },
+        {
+          "ordinals": ["R27", "R33", "R34", "R35", "R36", "R37", "R38", "R39"],
+          "reason": "fallback, query shaping, shared store, 이전 state 기반 갱신, 비싼 초기화, transition, deferred render, effect subscription 변경이 없다."
+        },
+        {
+          "ordinals": ["R40"],
+          "reason": "compound component public part를 추가하거나 수정하지 않는다."
+        }
+      ],
+      "expanded": []
+    },
+    {
+      "skill": "typescript",
+      "indexDigest": null,
+      "selected": [
+        {"ordinal": "T03", "id": "naming-use-consistent-file-and-symbol-naming"},
+        {"ordinal": "T04", "id": "naming-use-direct-imports-and-public-entry-points"},
+        {"ordinal": "T06", "id": "types-mark-unused-parameters-with-underscore"},
+        {"ordinal": "T07", "id": "types-prefer-function-variable-types-over-parameter-annotations"},
+        {"ordinal": "T08", "id": "types-reuse-callback-signatures-from-existing-contracts"},
+        {"ordinal": "T11", "id": "functions-extract-helpers-only-when-the-boundary-is-real"},
+        {"ordinal": "T17", "id": "docs-keep-inline-comments-for-constraints-and-caveats"},
+        {"ordinal": "T18", "id": "docs-require-header-jsdoc-on-key-declarations"},
+        {"ordinal": "T19", "id": "docs-standardize-annotation-tags-by-declaration-role"},
+        {"ordinal": "T21", "id": "docs-write-concise-korean-comments-about-purpose-and-constraints"},
+        {"ordinal": "T22", "id": "guardrails-review-banned-typescript-shortcuts-before-finishing"}
+      ],
+      "notApplicable": [
+        {"ordinal": "T01", "id": "naming-centralize-shared-config-namespaces"},
+        {"ordinal": "T02", "id": "naming-preserve-config-origin-with-chained-access"},
+        {"ordinal": "T05", "id": "types-document-custom-types-and-shapes"},
+        {"ordinal": "T09", "id": "types-reuse-existing-contracts-before-new-types"},
+        {"ordinal": "T10", "id": "functions-avoid-imperative-assembly-in-wide-scopes"},
+        {"ordinal": "T12", "id": "functions-prefer-immutable-array-sorting"},
+        {"ordinal": "T13", "id": "functions-replace-enum-with-as-const-objects"},
+        {"ordinal": "T14", "id": "functions-use-named-object-params-for-complex-signatures"},
+        {"ordinal": "T15", "id": "functions-use-set-and-map-for-repeated-lookups"},
+        {"ordinal": "T16", "id": "absence-expose-optional-values-instead-of-silent-fallbacks"},
+        {"ordinal": "T20", "id": "docs-use-helper-for-reusable-pure-helper-functions"}
+      ],
+      "unknown": [],
+      "excludedGroups": [
+        {
+          "ordinals": ["T01", "T02"],
+          "reason": "shared config 또는 util namespace를 변경하지 않는다."
+        },
+        {
+          "ordinals": ["T05", "T09"],
+          "reason": "새 custom shape나 타입을 선언하지 않는다."
+        },
+        {
+          "ordinals": ["T10", "T12", "T13", "T14", "T15", "T16"],
+          "reason": "명령형 조립, 정렬, enum, 복잡한 다중 인자, 반복 lookup, fallback 변경이 없다."
+        },
+        {
+          "ordinals": ["T20"],
+          "reason": "재사용 pure helper를 추가하지 않는다."
+        }
+      ],
+      "expanded": []
+    },
+    {
+      "skill": "css",
+      "indexDigest": null,
+      "selected": [
+        {"ordinal": "C03", "id": "naming-name-elements-and-modifiers-by-role"},
+        {"ordinal": "C06", "id": "naming-use-scope-slug-element-modifier-syntax"},
+        {"ordinal": "C07", "id": "composition-compose-classes-with-clsx"},
+        {"ordinal": "C08", "id": "composition-do-not-build-structural-variants-with-modifiers"},
+        {"ordinal": "C09", "id": "composition-keep-classes-single-purpose"},
+        {"ordinal": "C15", "id": "selector-use-pseudo-classes-for-dom-owned-states"},
+        {"ordinal": "C18", "id": "values-separate-domain-state-modifiers-from-dom-interaction-states"},
+        {"ordinal": "C20", "id": "organization-keep-style-files-owned-by-one-component-or-route"},
+        {"ordinal": "C21", "id": "organization-review-banned-css-patterns-before-finishing"}
+      ],
+      "notApplicable": [
+        {"ordinal": "C01", "id": "naming-default-to-plain-css-when-no-module-convention"},
+        {"ordinal": "C02", "id": "naming-keep-scope-slug-unique-per-owner"},
+        {"ordinal": "C04", "id": "naming-preserve-route-slug-traceability"},
+        {"ordinal": "C05", "id": "naming-separate-local-and-route-style-scopes"},
+        {"ordinal": "C10", "id": "composition-style-ui-components-through-owned-wrappers"},
+        {"ordinal": "C11", "id": "composition-prefer-ui-wrapper-prop-types"},
+        {"ordinal": "C12", "id": "selector-avoid-deep-descendant-dependencies"},
+        {"ordinal": "C13", "id": "selector-keep-project-selectors-flat"},
+        {"ordinal": "C14", "id": "selector-target-third-party-dom-from-owned-roots"},
+        {"ordinal": "C16", "id": "values-keep-layout-intent-explicit"},
+        {"ordinal": "C17", "id": "values-always-provide-css-variable-fallbacks"},
+        {"ordinal": "C19", "id": "values-tokenize-repeated-visual-values"}
+      ],
+      "unknown": [],
+      "excludedGroups": [
+        {
+          "ordinals": ["C01", "C02", "C04", "C05"],
+          "reason": "새 stylesheet 형식, scope slug, route owner 또는 style scope를 도입하지 않고 기존 owner의 modifier만 다룬다."
+        },
+        {
+          "ordinals": ["C10", "C11"],
+          "reason": "Ui wrapper 내부 DOM styling이나 wrapper prop 타입 변경이라는 증거가 없다."
+        },
+        {
+          "ordinals": ["C12", "C13", "C14"],
+          "reason": "descendant selector, project-owned selector nesting, third-party DOM targeting을 추가하지 않는다."
+        },
+        {
+          "ordinals": ["C16", "C17", "C19"],
+          "reason": "레이아웃, CSS variable, 반복 visual value 변경은 제시되지 않았다."
+        }
+      ],
+      "expanded": []
+    }
+  ],
+  "driftReceipt": null,
+  "semanticVerdicts": [
+    {
+      "criterion": "domain-activation",
+      "verdict": "PASS",
+      "reason": "TSX render와 handler, TypeScript callback 계약, className modifier 변경에 맞춰 React, TypeScript, CSS를 활성화했다."
+    },
+    {
+      "criterion": "named-handler-and-event-flow",
+      "verdict": "PASS",
+      "reason": "인라인 async callback을 타입이 고정된 named handler로 옮기고 확인, mutation, navigation의 순서를 handler 안에 유지했다."
+    },
+    {
+      "criterion": "derived-state-source-of-truth",
+      "verdict": "PASS",
+      "reason": "selectedIds에서 계산 가능한 값을 별도 state/effect로 동기화하지 않고 render 중 사용 지점 가까이에서 계산하도록 했다."
+    },
+    {
+      "criterion": "class-modifier-semantics",
+      "verdict": "PASS",
+      "reason": "clsx 조합, owner 문법, app-owned modifier와 DOM pseudo-state 구분, structural modifier 금지를 함께 확인했다."
+    },
+    {
+      "criterion": "typing-and-documentation",
+      "verdict": "PASS",
+      "reason": "기존 callback 계약 또는 MouseEventHandler를 재사용하고 미사용 event는 underscore로 표시하며 @event JSDoc을 적용했다."
+    },
+    {
+      "criterion": "bounded-change",
+      "verdict": "PASS",
+      "reason": "동작 중인 코드를 새 helper, hook, component로 확장하지 않고 해당 component와 owned stylesheet의 최소 변경으로 제한했다."
+    },
+    {
+      "criterion": "finish-review",
+      "verdict": "PASS",
+      "reason": "별도 두 번째 리뷰는 요구하지 않되 lint와 별개로 변경 diff의 TypeScript 및 CSS 금지 패턴을 짧게 자체 점검하도록 명시했다."
+    }
+  ],
+  "completion": {
+    "status": "completed",
+    "blocked": false,
+    "coverageFailCount": 0,
+    "semanticFailCount": 0,
+    "unknownCount": 0,
+    "reason": "세 활성 skill의 full handbook을 근거로 전체 ordinal partition과 시나리오 응답을 작성했다."
+  },
+  "limitations": [
+    "실제 TSX/CSS 파일과 현재 식별자가 제공되지 않아 예시 이름은 역할 기반 placeholder이며 실제 이름에 맞춰 치환해야 한다.",
+    "코드 변경 요청이 아니라 설명 요청이므로 lint를 실제 실행하지 않았다.",
+    "identity-only map이 prompt에 전체 ordinal과 ID를 포함해 상당한 prompt overhead를 만들지만 선택 근거는 제공하지 않는다.",
+    "실험 지시에 따라 index, contract, rule source, manifest, test, README, plan, protocol, 기존 run 파일은 읽지 않았다."
+  ],
+  "response": "변경은 두 파일 범위로 최소화한다. TSX에서는 `onClick={async () => { ... }}` 블록을 제거하고 component 본문에 `handleDeleteButtonClick`을 둔다. 타입은 기존 버튼 callback 계약이 있으면 `UiButtonProps[\"onClick\"]`, 없으면 `MouseEventHandler<HTMLButtonElement>`를 직접 import해 재사용하고, 쓰지 않는 event 인자는 `_event`로 둔다. 핸들러 위에는 `@event 선택 항목 삭제 확인, 삭제 요청, 목록 화면 이동 처리`처럼 간결한 한글 JSDoc을 붙인다. 핸들러 본문은 (1) `selectedIds.length === 0`이면 early return, (2) confirmation이 취소되면 return, (3) `await mutationEntryDelete.mutateAsync({ ...selectedIds 기반 요청... })`, (4) 성공한 뒤 `void navigate(...)` 순서를 유지한다. 이 흐름을 effect, 새 hook, 작은 helper 여러 개로 분해하지 않고 named handler 안에서 그대로 읽히게 하며, mutation binding은 `mutation...` 접두사와 원본 chaining을 유지한다. JSX는 `onClick={handleDeleteButtonClick}`만 전달하고, 관성적인 `useCallback`은 추가하지 않는다.\n\n`selectedIds`에서 만든 `hasSelection`, `selectedCount`, `isDeleteDisabled` 같은 값이 별도 `useState`와 `useEffect`로 동기화되고 있다면 그 state/effect를 삭제한다. `selectedIds.length`를 렌더 중 사용 위치 가까이에서 계산한다. 예를 들어 `const isDeleteDisabled = selectedIds.length === 0 || mutationEntryDelete.isPending;`처럼 두고 `disabled={isDeleteDisabled}`에 사용한다. 단순히 한 번 쓰이면 별칭 없이 직접 표현해도 된다.\n\n`className`은 문자열 연결 대신 `clsx(\"rt_entriesIndex__deleteButton\", appState && \"rt_entriesIndex__deleteButton--selectionActive\")` 형태로 조합한다. 실제 base class의 기존 scope/slug를 그대로 쓰고 modifier는 camelCase 역할명으로 정한다. modifier가 선택 여부 같은 앱 소유 상태일 때만 `--selectionActive`처럼 둔다. hover, focus, disabled 같은 DOM 소유 상태라면 새 `--disabled` modifier를 만들지 않고 base selector 내부의 `&:disabled`, `&:focus-visible`, `&:hover:not(:disabled)`를 사용한다. spacing 보정 같은 일회성 구조 patch도 modifier로 만들지 않는다. CSS selector는 해당 component/route가 소유한 기존 stylesheet에 flat하게 추가하고 하나의 시각 책임만 갖게 한다.\n\n확인할 React 규칙은 R03, R06, R07, R08, R14, R15, R18, R21, R22, R24, R25, R26, R28, R29, R30, R31, R32, R41, R42다. TypeScript는 T03, T04, T06, T07, T08, T11, T17, T18, T19, T21, T22를 확인한다. CSS는 C03, C06, C07, C08, C09, C15, C18, C20, C21을 확인한다. 요청대로 별도 두 번째 리뷰나 테스트 범위는 늘리지 않고 lint를 실행한다. 다만 lint 성공은 handler 흐름, derived-state 중복, modifier 의미를 판정하지 못하므로 마지막 diff에서 위 선택 규칙과 TypeScript/CSS 금지 패턴만 짧게 자체 점검한다.",
+  "scoring": null
+}

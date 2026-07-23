@@ -2,6 +2,8 @@
 title: Extract Support Functions Only When the Boundary Is Real
 impact: HIGH
 impactDescription: stops helper extraction from fragmenting local flow when no reusable contract or testable boundary actually exists
+appliesWhen: support function을 추출·이동·export·공유하거나 generic helper 파일, 단일 owner 전용 mapper 또는 작은 sub-step 경계를 바꾼다.
+reviewWith: docs-use-helper-for-reusable-pure-helper-functions, docs-require-header-jsdoc-on-key-declarations
 tags: helpers, extraction, boundaries
 ---
 
@@ -76,8 +78,6 @@ export const api = {
 	},
 };
 ```
-
-`mapRecordToEntryView`와 `readLabelText`가 `api.record.mapEntry`만 위해 존재한다면 호출 경계가 늘어난 만큼 이해 시간이 늘어납니다.
 
 **Correct (작은 계산은 local flow에 둠):**
 

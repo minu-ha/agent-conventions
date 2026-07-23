@@ -1,0 +1,3 @@
+Read and execute /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v3-runs/no-skill--css-domain-state-and-shared-token--t1.child-request.json (sha256:be0ad13f6ed58bf13c485136e7ed22f406553d977443109bfac9c0cad41c342a).
+Assigned payload path: /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v3-runs/no-skill--css-domain-state-and-shared-token--t1.child-payload.json. Write exactly this one file with apply_patch; create or modify no other file.
+Do not echo the dispatch prompt or coordinator-owned fields; after writing valid childPayload JSON, return only concise status.

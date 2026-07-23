@@ -1,0 +1,41 @@
+{
+  "agentTarget": "/root/cli-v16-full_handbook-rte02-t2-a2",
+  "assignedChildPayloadPath": "/Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v16-candidate-runs/full-handbook--RTE02-owner-placement-css-drift--t2.initial-child-payload.json",
+  "childRequest": {
+    "path": "/Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v16-candidate-runs/full-handbook--RTE02-owner-placement-css-drift--t2.initial-child-request.json",
+    "sha256": "sha256:9db7c34d22eee41846aac1240853b01db411094e8501560e83b8b428f0d2d66d",
+    "utf8ByteLength": 23958
+  },
+  "dispatchEnvelope": {
+    "arm": "full-handbook",
+    "exactPrompt": "Read and execute /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v16-candidate-runs/full-handbook--RTE02-owner-placement-css-drift--t2.initial-child-request.json (sha256:9db7c34d22eee41846aac1240853b01db411094e8501560e83b8b428f0d2d66d).\nThis exact dispatch is already running in the bound isolated Codex CLI child session: /root/cli-v16-full_handbook-rte02-t2-a2. Treat that identifier as this current session; do not spawn, hand off, or redispatch to another agent.\nAssigned initial payload path: /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v16-candidate-runs/full-handbook--RTE02-owner-placement-css-drift--t2.initial-child-payload.json. Write exactly this one file with apply_patch; create or modify no other file.\nDo not echo coordinator-owned fields; after writing valid JSON, return only concise status.",
+    "generatedIndexDigests": {
+      "css": "sha256:9c8e7235088b00b2e662f9e859b1eb8360f57c53ce1ef7fbebfe087069995ac3",
+      "react": "sha256:30f0c6d798cd558f19a99ecc118ffe185b5e9534d8073aebc30e92a08831bd6d",
+      "typescript": "sha256:4db36590e46880fd881297fb80c97eb453ef14cd077f6cb298bb340d15f4f6c9"
+    },
+    "promptByteLength": 945,
+    "promptRendererVersion": "behavioral-prompt-renderer-v3-initial",
+    "promptSha256": "sha256:92018b50780379b8ca20c079c54b06d4cc9d74aac26d8b3a11eadee4def4ce8b",
+    "protocolId": "progressive-loading-behavioral-v3",
+    "repositoryHead": "ee5f58a93eabd42a1b35341a716cf18bf7ab64b1",
+    "runId": "full-handbook--RTE02-owner-placement-css-drift--t2",
+    "scenarioId": "RTE02-owner-placement-css-drift",
+    "scenarioPrompt": "move a route-only tree renderer from shared UI to src/routes/entries/-local/entry-tree.tsx and rename it as route-local; carry its existing className and style import through unchanged and make no styling change.",
+    "schemaVersion": 3,
+    "trial": 2
+  },
+  "kind": "behavioral-staged-initial",
+  "protocol": {
+    "armSha256": "sha256:19d3956f9181fa05f1d11e3fe76a55849b1fe0daf4054fb539479cbc6edb9470",
+    "fullScenarioSha256": "sha256:1ee19f74a908033acc4065b4384307b7cef14c7f84d28ceb909e198863125e29",
+    "path": "/Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-behavioral-protocol.json",
+    "sha256": "sha256:3bb16859f1bd70a899c0c0f3583caebff8097296d2e2c0b4c66e47e9d8281d95",
+    "stageScenarioSha256": "sha256:dc407be4e3ce1d29a20a8a8138c3f47fee54d1c7681c971b0dc0ca9e58307ec6"
+  },
+  "repositoryDir": "/Users/l-20220017/workspace/agent-conventions-progressive-loading",
+  "requestContentDigest": "sha256:d0b8f2cd82a0e747578abd5df7b643048345b6dea2c0759a957007c694b9a9f4",
+  "runId": "full-handbook--RTE02-owner-placement-css-drift--t2",
+  "schemaVersion": 1,
+  "skillRootDir": "/Users/l-20220017/workspace/agent-conventions-progressive-loading/skill"
+}

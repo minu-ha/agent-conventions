@@ -2,6 +2,8 @@
 title: Avoid Premature Abstraction in Screen Code
 impact: HIGH
 impactDescription: 추측성 추출 대신 실제 재사용 경계에 맞춰 route 코드를 유지함
+appliesWhen: screen 코드를 helper·hook·component·module로 추출하거나 한 곳에서만 쓰는 기존 추상화를 접어 넣는다.
+reviewWith: screen-extract-local-section-components-for-runtime-boundaries, screen-extract-utilities-selectively, typescript/functions-extract-helpers-only-when-the-boundary-is-real
 tags: screen, abstraction, reuse
 ---
 
@@ -62,8 +64,6 @@ export const EntryTable = (props: EntryTableProps) => {
 	));
 };
 ```
-
-이 helper들이 다른 화면의 계약으로 쓰이지 않는다면 component를 읽는 사람이 helper 정의로 이동해야 하는 비용만 생깁니다.
 
 **Correct (계약이 생긴 뒤에 공용화):**
 

@@ -1,0 +1,80 @@
+{
+  "activatedSkills": [],
+  "arm": "no-skill",
+  "armSha256": "sha256:7f56dd3946274dc5773019c34c4a3ac33bb3344ab1942290396bc73550f33164",
+  "childPayloadSha256": "sha256:5a55220ad0faa6afeca36db8ebd4472ccdcee6517674daf2d0dd78495d8fad58",
+  "childRequestSha256": "sha256:ee326d3b64788e51f1f956e8c15823037887901e1fca6207d1705e37b3be52d4",
+  "completion": {
+    "blocked": false,
+    "coverageFailCount": 0,
+    "reason": "요청된 가상 변경을 모두 반영했습니다.",
+    "semanticFailCount": 0,
+    "status": "COMPLETE",
+    "unknownCount": 0
+  },
+  "declaredLoadedFiles": {
+    "kind": "declared",
+    "paths": []
+  },
+  "driftReceipt": null,
+  "exactPrompt": "Read and execute /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v3-runs/no-skill--derive-existing-contract-with-docs--t1.child-request.json (sha256:ee326d3b64788e51f1f956e8c15823037887901e1fca6207d1705e37b3be52d4).\nAssigned payload path: /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v3-runs/no-skill--derive-existing-contract-with-docs--t1.child-payload.json. Write exactly this one file with apply_patch; create or modify no other file.\nDo not echo the dispatch prompt or coordinator-owned fields; after writing valid childPayload JSON, return only concise status.",
+  "generatedIndexDigests": {
+    "css": "sha256:b9c8fe78ce9066c8baedec798e707f18bfe3845e6fdf4137a6f724d8e94bb1ff",
+    "react": "sha256:c2036ebd5ca4d70b5e6734a53f9a3b8227cb93fa068bda03e318eb0a88ddc4bc",
+    "typescript": "sha256:9891aafd9a34683772d5d7653b4fa82d10e0bee8b8b4412acdd9d2889f832a7e"
+  },
+  "limitations": [],
+  "promptByteLength": 701,
+  "promptRendererVersion": "behavioral-prompt-renderer-v3",
+  "promptSha256": "sha256:ac14473c4a5fd20d03891d32f2a5eac81a1aa30fa560a31e49f5a3527472fed1",
+  "protocolId": "progressive-loading-behavioral-v3",
+  "protocolSha256": "sha256:d9f8baf9b7a64876ad56bb4ac58b3b044ce15fb3257b9f91e9b028d0bdf8dcf9",
+  "receipts": [],
+  "repositoryHead": "01c2fbb0c91c168f52475e7a645c940afc79f6f0",
+  "requestContentDigest": "sha256:a1651781e1e6d6a4ddaabd25b09791dc3701e33b1743d3a32e4feb228fe974e7",
+  "response": "UserPreview를 기존 UserRecord 필드에서 파생되는 Pick 별칭으로 바꾸고 간결한 한국어 @summary를 추가했습니다.",
+  "routingTrace": null,
+  "runId": "no-skill--derive-existing-contract-with-docs--t1",
+  "runtime": {
+    "declared": {
+      "forkTurns": "none",
+      "oneChildPerTrial": true,
+      "requestedModel": "gpt-5.6-sol",
+      "requestedReasoning": "high",
+      "runtime": "Codex collaboration child agent"
+    },
+    "evidenceClass": "declared-telemetry-only",
+    "unavailable": {
+      "actualReasoningTelemetry": null,
+      "childTokenUsage": null,
+      "exactModelBuild": null,
+      "observedFileReads": null,
+      "runtimeVersion": null
+    }
+  },
+  "scenarioId": "derive-existing-contract-with-docs",
+  "scenarioPrompt": "replace a duplicate `UserPreview` interface with a same-name `Pick<UserRecord, ...>` alias and add concise Korean `@summary`; imports and names otherwise stay unchanged.",
+  "scenarioSha256": "sha256:2c2f1e677732141c2499d40f5b9aaaa3599802c9a49991090c7cc298fd8cde4c",
+  "schemaVersion": 3,
+  "scoring": {
+    "eligible": false,
+    "kind": "observational",
+    "reason": "no-skill arm"
+  },
+  "semanticVerdicts": [],
+  "stagedProvenanceSha256": null,
+  "trial": 1,
+  "virtualPatch": {
+    "files": [
+      {
+        "after": "import type {UserRecord} from \"./user-record\";\n\n/**\n * @summary 사용자 미리보기 정보\n */\ntype UserPreview = Pick<UserRecord, \"id\" | \"displayName\">;\n\nexport type {UserPreview};\n",
+        "afterSha256": "sha256:71daeac94a323435fda8a541a322ac1fee520098a96ebb7145ef80b2ecece201",
+        "afterState": "present",
+        "beforeSha256": "sha256:1c42aa41c860847e6bc7900dca0be4c31a81e53bb5a38ced554be6f5046fb523",
+        "beforeState": "present",
+        "path": "src/users/user-preview.ts"
+      }
+    ],
+    "summary": "중복 인터페이스를 UserRecord 기반 Pick 별칭으로 대체하고 한국어 @summary를 추가합니다."
+  }
+}

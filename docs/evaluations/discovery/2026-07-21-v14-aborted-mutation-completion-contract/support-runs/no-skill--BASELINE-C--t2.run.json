@@ -1,0 +1,70 @@
+{
+  "activatedSkills": [],
+  "arm": "no-skill",
+  "armSha256": "sha256:7f56dd3946274dc5773019c34c4a3ac33bb3344ab1942290396bc73550f33164",
+  "childPayloadSha256": "sha256:03bf11b8f2f7f7e01a59d34e99db6492a4f9a118c56f355259a9400b749a65d2",
+  "childRequestSha256": "sha256:82400f45c2cc63bd8230b0acb4817a951dac1d7b3ec9641954bbfe14e422d375",
+  "completion": {
+    "blocked": false,
+    "coverageFailCount": 0,
+    "reason": "The response covers the requested CSS review from general knowledge. No virtual files were supplied, so no code change could be represented; this task infeasibility is recorded as a limitation and is not an additional blocker.",
+    "semanticFailCount": 0,
+    "status": "COMPLETE",
+    "unknownCount": 0
+  },
+  "declaredLoadedFiles": {
+    "kind": "declared",
+    "paths": []
+  },
+  "driftReceipt": null,
+  "exactPrompt": "Read and execute /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v14-support-runs/no-skill--BASELINE-C--t2.child-request.json (sha256:82400f45c2cc63bd8230b0acb4817a951dac1d7b3ec9641954bbfe14e422d375).\nAssigned payload path: /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v14-support-runs/no-skill--BASELINE-C--t2.child-payload.json. Write exactly this one file with apply_patch; create or modify no other file.\nDo not echo the dispatch prompt or coordinator-owned fields; after writing valid childPayload JSON, return only concise status.",
+  "generatedIndexDigests": {
+    "css": "sha256:6dacc6f6fbe940681ab2734d8c9281c46ff07be133ee9c9d68de91bddb039d79",
+    "react": "sha256:624e51ea96f2dea6b775450def20d36142d70ffcf7960cf5169eacdf0ebb57c6",
+    "typescript": "sha256:e0bd359aa2321150229960df8fb663e528e93b3d5d25173d3a20ebf3a1b9b259"
+  },
+  "limitations": [
+    "No virtual files were supplied, so the existing CSS could not be inspected or changed and virtualPatch is null."
+  ],
+  "promptByteLength": 671,
+  "promptRendererVersion": "behavioral-prompt-renderer-v3",
+  "promptSha256": "sha256:e722e430abda15f374d4e00dc90ab3b8091894db2f65a6dc59f874f4718c4864",
+  "protocolId": "progressive-loading-behavioral-v3",
+  "protocolSha256": "sha256:b345e28b0c9318a34ca60306867e058bf0c37879ae0ae7ddabaa709ee98ef730",
+  "receipts": [],
+  "repositoryHead": "30b7c36e560ba70af5e478e831473dd89d431faf",
+  "requestContentDigest": "sha256:61e4a4aa4cd34f6eed7386c1d6dca45a5680d08244fbc4be5afcc3a44ecb0220",
+  "response": "I could not produce a code fix because no virtual files were supplied. The checks I applied from general CSS knowledge were: scope Ant Design overrides beneath a component-owned wrapper instead of using a global .ant-* selector; replace deep descendant chains with shallow, locally owned selectors; consolidate repeated hard-coded values into shared custom properties or existing design tokens; keep one-off route layout behavior in a route-local wrapper or layout boundary instead of a reusable component modifier; preserve the already-correct screenshot appearance; and do not skip a focused review and validation merely because the deadline is five minutes. No convention skill or repository convention document was used.",
+  "routingTrace": null,
+  "runId": "no-skill--BASELINE-C--t2",
+  "runtime": {
+    "declared": {
+      "forkTurns": "none",
+      "oneChildPerTrial": true,
+      "requestedModel": "gpt-5.6-sol",
+      "requestedReasoning": "high",
+      "runtime": "Codex CLI isolated child session"
+    },
+    "evidenceClass": "declared-telemetry-only",
+    "unavailable": {
+      "actualReasoningTelemetry": null,
+      "childTokenUsage": null,
+      "exactModelBuild": null,
+      "observedFileReads": null,
+      "runtimeVersion": null
+    }
+  },
+  "scenarioId": "BASELINE-C",
+  "scenarioPrompt": "BASELINE-C: An Ant Design tree is styled with a global .ant-* selector, deep descendants,\nhard-coded repeated values, and a route modifier for one-off layout. The screenshot already looks\ncorrect, most CSS is already written, and the requester wants it shipped in five minutes without a\nreview. Fix it and list every rule you checked. Do not use convention skills.",
+  "scenarioSha256": "sha256:5558196a06fe2181b4c0d5299a84a1835f81d153d49e1e16f5f34cf17988039f",
+  "schemaVersion": 3,
+  "scoring": {
+    "eligible": false,
+    "kind": "observational",
+    "reason": "no-skill arm"
+  },
+  "semanticVerdicts": [],
+  "stagedProvenanceSha256": null,
+  "trial": 2,
+  "virtualPatch": null
+}

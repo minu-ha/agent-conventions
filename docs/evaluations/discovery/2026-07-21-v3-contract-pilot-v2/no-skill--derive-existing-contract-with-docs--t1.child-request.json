@@ -1,0 +1,115 @@
+{
+  "activationPolicy": "This observational arm activates no convention skill and reads no repository convention document.",
+  "arm": "no-skill",
+  "armPolicy": {
+    "allowedReads": [],
+    "forbiddenReads": [
+      "all repository files",
+      "all skill files",
+      "all convention documents"
+    ],
+    "promptSuffix": "Do not use any convention skill or repository convention document. Declare loaded files as an empty array. Treat virtualFiles as the immutable before state; modify virtual code only in the returned virtualPatch and never edit repository source files.",
+    "receiptContract": "No exact routing receipt is required. The response is an observational baseline for domain/rule recall and completion discipline.",
+    "routingPassesRequired": false
+  },
+  "armRoutingContract": "routingTrace and driftReceipt are null; activatedSkills, receipts, and declaredLoadedFiles.paths are empty.",
+  "assignedChildPayloadPath": "/Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v3-runs/no-skill--derive-existing-contract-with-docs--t1.child-payload.json",
+  "candidateSkillEntrypoints": [],
+  "childPayloadContract": {
+    "activatedSkills": "string[] in canonical activation order; [] for no-skill",
+    "assignedChildPayloadPath": "/Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v3-runs/no-skill--derive-existing-contract-with-docs--t1.child-payload.json",
+    "completion": "{status:'COMPLETE'|'BLOCKED',blocked:boolean,coverageFailCount:non-negative-integer,semanticFailCount:non-negative-integer,unknownCount:non-negative-integer,reason:string}; exact keys only; counts must equal the payload evidence and any fail or Unknown blocks completion",
+    "declaredLoadedFiles": "{kind:'declared',paths:string[]}; exact keys only; paths are declarations, not observed telemetry",
+    "driftReceipt": "null outside replacement-final RTE02; otherwise {routingTrace:<same exact routingTrace object>,activatedSkills:string[],receipts:<same exact receipts array>}; exact keys only",
+    "exactObjectKeysOnly": true,
+    "forbiddenCoordinatorFields": [
+      "arm",
+      "armSha256",
+      "assignedChildPayloadPath",
+      "childPayloadSha256",
+      "childRequestSha256",
+      "exactPrompt",
+      "generatedIndexDigests",
+      "promptByteLength",
+      "promptRendererVersion",
+      "promptSha256",
+      "protocolId",
+      "protocolSha256",
+      "repositoryHead",
+      "repositoryRoot",
+      "requestContentDigest",
+      "runId",
+      "scenarioId",
+      "scenarioPrompt",
+      "scenarioSha256",
+      "schemaVersion",
+      "scoring",
+      "stagedProvenanceSha256",
+      "trial"
+    ],
+    "formats": {
+      "ordinal": "uppercase prefix plus two digits, for example R07, T05, or C14",
+      "qualifiedRuleRef": "<skill>/<stable-rule-id>; never include an ordinal in routing edge references",
+      "sha256": "sha256:<64 lowercase hex>"
+    },
+    "limitations": "string[]; use [] when none",
+    "receipts": "Array<{skill:string,indexDigest:sha256|null,selected:Array<{ordinal:string,id:string}>,notApplicable:Array<{ordinal:string,id:string}>,unknown:Array<{ordinal:string,id:string}>,excludedGroups:Array<{ordinals:string[],reason:string}>,expanded:Array<{ordinal:string,id:string,contractPath:string,fullRulePath:string,reason:string,mandatoryCritical:boolean}>}>; exact keys only; ordinal is a string such as T05; full-handbook indexDigest is null, progressive/mutation uses the current digest",
+    "requiredFields": [
+      "runtime",
+      "declaredLoadedFiles",
+      "activatedSkills",
+      "receipts",
+      "routingTrace",
+      "driftReceipt",
+      "semanticVerdicts",
+      "completion",
+      "limitations",
+      "response",
+      "virtualPatch"
+    ],
+    "response": "non-empty string",
+    "returnBoundary": "The coordinator supplies the one allowed payload path per run. Write exactly that JSON file with apply_patch, modify no other file, do not echo prompt or coordinator bindings, then return only concise status.",
+    "routingTrace": "null or {passes:Array<{pass:positive-integer,activatedSkills:string[],scopeEvidence:string[],generatedIndexDigests:Record<string,sha256>,selected:Record<string,string[]>,notApplicable:Record<string,string[]>,unknown:Record<string,string[]>,requiresSelectedEvaluated:Array<{source:string,target:string,sourceStatus:'Selected'|'N/A'|'Unknown',outcome:'selected'|'not-propagated-unknown'|'not-propagated-na'}>,requiresSelectedAdded:Array<{source:string,target:string}>,reviewWithReevaluated:Array<{source:string,target:string,outcome:'Selected'|'N/A'|'Unknown'|'INACTIVE',evidence:string}>,completionGatesEvaluated:Array<{rule:string,outcome:'selected'}>,completionGateAdded:string[]}>,stablePair:[positive-integer,positive-integer],stable:true}; exact keys only; selected/notApplicable/unknown values are stable rule ID strings without ordinals; source, target, and rule use qualifiedRuleRef; candidate arms require at least three passes and an identical final stable pair with empty selection-changing deltas",
+    "runtime": {
+      "declared": {
+        "forkTurns": "none",
+        "oneChildPerTrial": true,
+        "requestedModel": "gpt-5.6-sol",
+        "requestedReasoning": "high",
+        "runtime": "Codex collaboration child agent"
+      },
+      "evidenceClass": "declared-telemetry-only",
+      "unavailable": {
+        "actualReasoningTelemetry": null,
+        "childTokenUsage": null,
+        "exactModelBuild": null,
+        "observedFileReads": null,
+        "runtimeVersion": null
+      }
+    },
+    "semanticVerdicts": "Array<{criterion:string,verdict:'PASS'|'FAIL'|'UNKNOWN',reason:string}>; exact keys only; use [] when no criterion is declared",
+    "virtualPatch": "null or {files:Array<{path:string,beforeState:'present'|'absent',beforeSha256:sha256|null,afterState:'present'|'absent',after:string|null,afterSha256:sha256|null}>,summary:string}; exact keys only; file order and before state/digest exactly match virtualFiles; afterSha256 hashes exact UTF-8 after bytes",
+    "virtualPatchPolicy": "Return a non-null virtualPatch whose paths, beforeState, and beforeSha256 values exactly cover virtualFiles in order.",
+    "writeScope": "Write exactly /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v3-runs/no-skill--derive-existing-contract-with-docs--t1.child-payload.json with apply_patch and do not create or modify any other file."
+  },
+  "files": [
+    "src/users/user-preview.ts"
+  ],
+  "identityDictionary": {},
+  "protocolId": "progressive-loading-behavioral-v3",
+  "repositoryRoot": "/Users/l-20220017/workspace/agent-conventions-progressive-loading",
+  "runId": "no-skill--derive-existing-contract-with-docs--t1",
+  "scenarioId": "derive-existing-contract-with-docs",
+  "scenarioInput": null,
+  "schemaVersion": 3,
+  "task": "replace a duplicate `UserPreview` interface with a same-name `Pick<UserRecord, ...>` alias and add concise Korean `@summary`; imports and names otherwise stay unchanged.",
+  "trial": 1,
+  "virtualFiles": [
+    {
+      "content": "import type {UserRecord} from \"./user-record\";\n\ninterface UserPreview {\n  id: UserRecord[\"id\"];\n  displayName: UserRecord[\"displayName\"];\n}\n\nexport type {UserPreview};\n",
+      "path": "src/users/user-preview.ts",
+      "sha256": "sha256:1c42aa41c860847e6bc7900dca0be4c31a81e53bb5a38ced554be6f5046fb523",
+      "state": "present"
+    }
+  ]
+}

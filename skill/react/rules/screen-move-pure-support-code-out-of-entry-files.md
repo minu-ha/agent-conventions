@@ -2,6 +2,8 @@
 title: Move Screen-owned Pure Support Code Into `page.ts` Before Splitting Further
 impact: HIGH
 impactDescription: route entry 파일이 preset과 순수 helper를 쌓기보다 orchestration에 집중하게 함
+appliesWhen: route entry에 여러 줄 pure helper·preset·option·화면 전용 type이 쌓이거나 추출한 support code의 목적지 파일을 정한다.
+reviewWith: docs-require-jsdoc-on-key-declarations
 tags: screen, routes, helpers, constants
 ---
 

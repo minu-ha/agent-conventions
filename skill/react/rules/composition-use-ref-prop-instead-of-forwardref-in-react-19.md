@@ -2,6 +2,7 @@
 title: Use ref Props Instead of New forwardRef Wrappers in React 19
 impact: MEDIUM-HIGH
 impactDescription: keeps component definitions simpler in React 19 codebases and avoids adding legacy wrappers by default
+appliesWhen: React 19 컴포넌트에 focus·scroll·measure용 ref 공개 API를 추가·변경하거나 새 `forwardRef` wrapper를 도입한다.
 tags: composition, react19, ref, forwardref
 ---
 
