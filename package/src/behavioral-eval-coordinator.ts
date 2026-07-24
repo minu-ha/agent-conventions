@@ -6,10 +6,13 @@ import {promisify} from "node:util";
 
 import {
 	assertBehavioralFullHandbookIdentityDictionary,
+	behavioralReviewWithEdgeContract,
+	createBehavioralAllowedReviewWithEdges,
 	createBehavioralActivationPolicy,
 	createBehavioralChildPayloadContract,
 	createBehavioralEvalDispatchEnvelope,
 	type BehavioralEvalDispatchEnvelope,
+	type RoutingEdge,
 	validateBehavioralEvalRun,
 } from "./behavioral-evals.js";
 import {packagePaths} from "./config.js";
@@ -69,6 +72,10 @@ export interface BehavioralChildRequest {
 	activationPolicy: string;
 	/** @field 후보 skill entrypoint 목록 */
 	candidateSkillEntrypoints: string[];
+	/** @field current generated index에서 계산한 reviewWith directed pair */
+	allowedReviewWithEdges: RoutingEdge[];
+	/** @field directed pair의 exact pass-local 사용 계약 */
+	reviewWithEdgeContract: string;
 	/** @field oracle을 제외한 arm execution policy */
 	armPolicy: Record<string, unknown>;
 	/** @field full-handbook arm에서만 제공하는 identity dictionary */
@@ -716,11 +723,13 @@ interface CreateChildRequestArgs {
 	assignedChildPayloadPath: string;
 	/** @field canonical Git repository root */
 	repositoryRoot: string;
+	/** @field current generated index에서 계산한 reviewWith directed pair */
+	allowedReviewWithEdges: RoutingEdge[];
 }
 
 /** @helper protocol scenario에서 coordinator-approved child request 구성 */
 const createChildRequest = (args: CreateChildRequestArgs): BehavioralChildRequest => {
-	const {protocol, runId, arm, scenarioId, trial, assignedChildPayloadPath, repositoryRoot} = args;
+	const {protocol, runId, arm, scenarioId, trial, assignedChildPayloadPath, repositoryRoot, allowedReviewWithEdges} = args;
 	const scenario = asObject(asObject(protocol.scenarios, "protocol.scenarios")[scenarioId], `protocol.scenarios.${scenarioId}`);
 	const armConfig = asObject(asObject(protocol.arms, "protocol.arms")[arm], `protocol.arms.${arm}`);
 	const task =
@@ -795,6 +804,8 @@ const createChildRequest = (args: CreateChildRequestArgs): BehavioralChildReques
 		virtualFiles,
 		activationPolicy: createBehavioralActivationPolicy(arm, repositoryRoot),
 		candidateSkillEntrypoints: arm === "no-skill" ? [] : progressiveSkillNames.map((skillName) => `skill/${skillName}/SKILL.md`),
+		allowedReviewWithEdges,
+		reviewWithEdgeContract: behavioralReviewWithEdgeContract,
 		armPolicy,
 		identityDictionary,
 		scenarioInput: arm === "mutation" ? {suppliedReceipt: scenario.suppliedReceipt} : null,
@@ -823,12 +834,14 @@ const behavioralChildRequestKeys = [
 	"armPolicy",
 	"armRoutingContract",
 	"assignedChildPayloadPath",
+	"allowedReviewWithEdges",
 	"candidateSkillEntrypoints",
 	"childPayloadContract",
 	"files",
 	"identityDictionary",
 	"protocolId",
 	"repositoryRoot",
+	"reviewWithEdgeContract",
 	"runId",
 	"scenarioId",
 	"scenarioInput",
@@ -882,6 +895,23 @@ const parseBehavioralChildRequest = (value: unknown): BehavioralChildRequest => 
 		]),
 	);
 	const scenarioInput = request.scenarioInput === null ? null : asObject(request.scenarioInput, "saved child request.scenarioInput");
+	const allowedReviewWithEdges = Array.isArray(request.allowedReviewWithEdges)
+		? request.allowedReviewWithEdges.map((item, index) => {
+				const edge = asObject(item, `saved child request.allowedReviewWithEdges[${index}]`);
+				assertExactObjectKeys({
+					value: edge,
+					expectedKeys: ["source", "target"],
+					label: `saved child request.allowedReviewWithEdges[${index}]`,
+				});
+
+				return {
+					source: asString(edge.source, `saved child request.allowedReviewWithEdges[${index}].source`),
+					target: asString(edge.target, `saved child request.allowedReviewWithEdges[${index}].target`),
+				};
+			})
+		: (() => {
+				throw new Error("saved child request.allowedReviewWithEdges must be an array.");
+			})();
 
 	return {
 		schemaVersion: 3,
@@ -897,6 +927,8 @@ const parseBehavioralChildRequest = (value: unknown): BehavioralChildRequest => 
 		virtualFiles: parseBehavioralVirtualFiles(request.virtualFiles, "saved child request.virtualFiles"),
 		activationPolicy: asString(request.activationPolicy, "saved child request.activationPolicy"),
 		candidateSkillEntrypoints: asStringArray(request.candidateSkillEntrypoints, "saved child request.candidateSkillEntrypoints"),
+		allowedReviewWithEdges,
+		reviewWithEdgeContract: asString(request.reviewWithEdgeContract, "saved child request.reviewWithEdgeContract"),
 		armPolicy: asObject(request.armPolicy, "saved child request.armPolicy"),
 		identityDictionary,
 		scenarioInput,
@@ -1194,6 +1226,8 @@ export const createBehavioralCoordinatorArtifacts = async (
 	}
 
 	const paths = resolveOutputPaths(args.outputDir, args.runId);
+	const allowedReviewWithEdges =
+		args.arm === "no-skill" ? [] : await createBehavioralAllowedReviewWithEdges(skillRootDir, progressiveSkillNames);
 	const request = createChildRequest({
 		protocol,
 		runId: args.runId,
@@ -1202,6 +1236,7 @@ export const createBehavioralCoordinatorArtifacts = async (
 		trial: args.trial,
 		assignedChildPayloadPath: paths.childPayloadPath,
 		repositoryRoot: repositoryDir,
+		allowedReviewWithEdges,
 	});
 	const requestRaw = serializeJson(request);
 	const requestSha256 = createSha256(requestRaw);
@@ -1590,6 +1625,8 @@ export const mergeBehavioralEvalChildPayload = async (args: MergeBehavioralEvalC
 		throw new Error("exact dispatch must exactly match the saved child request path, digest, and assigned payload path.");
 	}
 
+	const allowedReviewWithEdges =
+		dispatch.arm === "no-skill" ? [] : await createBehavioralAllowedReviewWithEdges(sourceSnapshot.skillRootDir, progressiveSkillNames);
 	const expectedRequest = createChildRequest({
 		protocol: protocolResult.value,
 		runId: dispatch.runId,
@@ -1598,6 +1635,7 @@ export const mergeBehavioralEvalChildPayload = async (args: MergeBehavioralEvalC
 		trial: dispatch.trial,
 		assignedChildPayloadPath,
 		repositoryRoot: sourceSnapshot.repositoryDir,
+		allowedReviewWithEdges,
 	});
 
 	if (serializeJson(request) !== serializeJson(expectedRequest)) {

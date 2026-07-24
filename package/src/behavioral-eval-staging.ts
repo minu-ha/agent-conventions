@@ -7,10 +7,13 @@ import {promisify} from "node:util";
 import {scoreBehavioralEvalRun} from "./behavioral-eval-coordinator.js";
 import {
 	assertBehavioralFullHandbookIdentityDictionary,
+	behavioralReviewWithEdgeContract,
+	createBehavioralAllowedReviewWithEdges,
 	createBehavioralActivationPolicy,
 	createBehavioralChildPayloadContract,
 	createBehavioralEvalDispatchEnvelope,
 	type BehavioralEvalDispatchEnvelope,
+	type RoutingEdge,
 	validateBehavioralEvalRun,
 	validateBehavioralEvalStageEvidence,
 } from "./behavioral-evals.js";
@@ -82,6 +85,10 @@ export interface StagedInitialChildRequest {
 	virtualFiles: StagedBehavioralVirtualFile[];
 	activationPolicy: string;
 	candidateSkillEntrypoints: string[];
+	/** @field current generated index에서 계산한 reviewWith directed pair */
+	allowedReviewWithEdges: RoutingEdge[];
+	/** @field directed pair의 exact pass-local 사용 계약 */
+	reviewWithEdgeContract: string;
 	armPolicy: Record<string, unknown>;
 	identityDictionary: Record<string, string[]>;
 	childPayloadContract: Record<string, unknown>;
@@ -107,6 +114,10 @@ export interface StagedFollowupChildRequest {
 	virtualFiles: StagedBehavioralVirtualFile[];
 	activationPolicy: string;
 	candidateSkillEntrypoints: string[];
+	/** @field current generated index에서 계산한 reviewWith directed pair */
+	allowedReviewWithEdges: RoutingEdge[];
+	/** @field directed pair의 exact pass-local 사용 계약 */
+	reviewWithEdgeContract: string;
 	armPolicy: Record<string, unknown>;
 	identityDictionary: Record<string, string[]>;
 	childPayloadContract: Record<string, unknown>;
@@ -971,6 +982,8 @@ export const createStagedInitialArtifacts = async (args: CreateStagedInitialArti
 	const initialFiles = asStringArray(scenario.filesInitial, `protocol.scenarios.${stagedScenarioId}.filesInitial`);
 	const virtualFiles = selectVirtualFiles(parseScenarioVirtualFiles(scenario), initialFiles, "initial files");
 	const paths = getStagePaths(outputDir, args.runId);
+	const allowedReviewWithEdges =
+		args.arm === "no-skill" ? [] : await createBehavioralAllowedReviewWithEdges(skillRootDir, progressiveSkillNames);
 	const request: StagedInitialChildRequest = {
 		schemaVersion: 3,
 		protocolId: stagedProtocolId,
@@ -987,6 +1000,8 @@ export const createStagedInitialArtifacts = async (args: CreateStagedInitialArti
 		virtualFiles,
 		activationPolicy: createBehavioralActivationPolicy(args.arm, repositoryDir),
 		candidateSkillEntrypoints: getCandidateEntrypoints(args.arm),
+		allowedReviewWithEdges,
+		reviewWithEdgeContract: behavioralReviewWithEdgeContract,
 		armPolicy: getApprovedArmPolicy(protocol, args.arm, "initial"),
 		identityDictionary: getIdentityDictionary(protocol, args.arm),
 		childPayloadContract: getInitialPayloadContract(paths.initialChildPayloadPath),
@@ -1120,7 +1135,8 @@ const verifyInitialEnvelope = async (
 	protocol: JsonObject;
 	protocolRaw: string;
 }> => {
-	const envelopeResult = await readJsonObject(assertAbsolutePath(envelopePath, "initialEnvelopePath"), "initial envelope");
+	const resolvedEnvelopePath = assertAbsolutePath(envelopePath, "initialEnvelopePath");
+	const envelopeResult = await readJsonObject(resolvedEnvelopePath, "initial envelope");
 	const envelope = parseInitialEnvelope(envelopeResult.value);
 	const protocolResult = await readJsonObject(envelope.protocol.path, "bound protocol");
 
@@ -1150,6 +1166,26 @@ const verifyInitialEnvelope = async (
 		request.task !== envelope.dispatchEnvelope.scenarioPrompt
 	) {
 		throw new Error("initial child request identity does not match its envelope.");
+	}
+
+	const canonicalArtifacts = await createStagedInitialArtifacts({
+		protocolPath: envelope.protocol.path,
+		repositoryHead: envelope.dispatchEnvelope.repositoryHead,
+		runId: envelope.runId,
+		arm: envelope.dispatchEnvelope.arm,
+		trial: envelope.dispatchEnvelope.trial,
+		agentTarget: envelope.agentTarget,
+		outputDir: path.dirname(resolvedEnvelopePath),
+		repositoryDir: envelope.repositoryDir,
+		skillRootDir: envelope.skillRootDir,
+	});
+
+	if (
+		canonicalArtifacts.requestPath !== path.resolve(envelope.childRequest.path) ||
+		canonicalArtifacts.childPayloadPath !== path.resolve(envelope.assignedChildPayloadPath) ||
+		canonicalArtifacts.requestRaw !== requestResult.raw
+	) {
+		throw new Error("initial child request must exactly match the canonical request reconstructed from current bound inputs.");
 	}
 
 	const exactDispatch = createExactDispatch(
@@ -1402,6 +1438,10 @@ export const createStagedFollowupArtifacts = async (args: CreateStagedFollowupAr
 	const virtualFiles = createFollowupVirtualFiles(finalFiles, verified.virtualPatch, parseScenarioVirtualFiles(scenario));
 	const paths = getStagePaths(args.outputDir, seal.runId);
 	const sealSha256 = createSha256(verified.sealRaw);
+	const allowedReviewWithEdges =
+		seal.arm === "no-skill"
+			? []
+			: await createBehavioralAllowedReviewWithEdges(verifiedInitial.envelope.skillRootDir, progressiveSkillNames);
 	const request: StagedFollowupChildRequest = {
 		schemaVersion: 3,
 		protocolId: stagedProtocolId,
@@ -1426,6 +1466,8 @@ export const createStagedFollowupArtifacts = async (args: CreateStagedFollowupAr
 		virtualFiles,
 		activationPolicy: createBehavioralActivationPolicy(seal.arm, verifiedInitial.envelope.repositoryDir),
 		candidateSkillEntrypoints: getCandidateEntrypoints(seal.arm),
+		allowedReviewWithEdges,
+		reviewWithEdgeContract: behavioralReviewWithEdgeContract,
 		armPolicy: getApprovedArmPolicy(verifiedInitial.protocol, seal.arm, "drift"),
 		identityDictionary: getIdentityDictionary(verifiedInitial.protocol, seal.arm),
 		childPayloadContract: getDriftPayloadContract(paths.driftChildPayloadPath),
@@ -1548,7 +1590,8 @@ const parseFollowupEnvelope = (value: unknown): StagedFollowupEnvelope => {
 
 const verifyFollowupEnvelope = async (args: {followupEnvelopePath: string; initialEnvelopePath: string; initialSealPath: string}) => {
 	const initial = await verifyInitialSeal({initialEnvelopePath: args.initialEnvelopePath, initialSealPath: args.initialSealPath});
-	const envelopeResult = await readJsonObject(assertAbsolutePath(args.followupEnvelopePath, "followupEnvelopePath"), "follow-up envelope");
+	const resolvedFollowupEnvelopePath = assertAbsolutePath(args.followupEnvelopePath, "followupEnvelopePath");
+	const envelopeResult = await readJsonObject(resolvedFollowupEnvelopePath, "follow-up envelope");
 	const envelope = parseFollowupEnvelope(envelopeResult.value);
 
 	if (
@@ -1587,6 +1630,20 @@ const verifyFollowupEnvelope = async (args: {followupEnvelopePath: string; initi
 		request.assignedChildPayloadPath !== envelope.assignedChildPayloadPath
 	) {
 		throw new Error("follow-up child request identity does not match its envelope.");
+	}
+
+	const canonicalArtifacts = await createStagedFollowupArtifacts({
+		initialEnvelopePath: args.initialEnvelopePath,
+		initialSealPath: args.initialSealPath,
+		outputDir: path.dirname(resolvedFollowupEnvelopePath),
+	});
+
+	if (
+		canonicalArtifacts.requestPath !== path.resolve(envelope.childRequest.path) ||
+		canonicalArtifacts.childPayloadPath !== path.resolve(envelope.assignedChildPayloadPath) ||
+		canonicalArtifacts.requestRaw !== requestResult.raw
+	) {
+		throw new Error("follow-up child request must exactly match the canonical request reconstructed from current bound inputs.");
 	}
 
 	const exactDispatch = createExactDispatch(
