@@ -1,0 +1,41 @@
+{
+  "runtime": {
+    "declared": {
+      "forkTurns": "none",
+      "oneChildPerTrial": true,
+      "requestedModel": "gpt-5.6-sol",
+      "requestedReasoning": "high",
+      "runtime": "Codex CLI isolated child session"
+    },
+    "evidenceClass": "declared-telemetry-only",
+    "unavailable": {
+      "actualReasoningTelemetry": null,
+      "childTokenUsage": null,
+      "exactModelBuild": null,
+      "observedFileReads": null,
+      "runtimeVersion": null
+    }
+  },
+  "declaredLoadedFiles": {
+    "kind": "declared",
+    "paths": []
+  },
+  "activatedSkills": [],
+  "receipts": [],
+  "routingTrace": null,
+  "driftReceipt": null,
+  "semanticVerdicts": [],
+  "completion": {
+    "status": "COMPLETE",
+    "blocked": false,
+    "coverageFailCount": 0,
+    "semanticFailCount": 0,
+    "unknownCount": 0,
+    "reason": "No semantic criteria were declared, and the absent virtualFiles input is recorded as a limitation rather than an additional blocker."
+  },
+  "limitations": [
+    "No virtualFiles were provided, so no virtual TypeScript cleanup or rule-by-rule code review could be performed."
+  ],
+  "response": "No convention skills or repository convention documents were used. The requested cleanup could not be produced because the scenario supplied no virtual files; consequently there was no code surface against which to check or list rules.",
+  "virtualPatch": null
+}

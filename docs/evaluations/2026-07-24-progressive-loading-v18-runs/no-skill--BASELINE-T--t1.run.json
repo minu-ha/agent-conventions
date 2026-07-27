@@ -1,0 +1,71 @@
+{
+  "activatedSkills": [],
+  "arm": "no-skill",
+  "armSha256": "sha256:7f56dd3946274dc5773019c34c4a3ac33bb3344ab1942290396bc73550f33164",
+  "childPayloadSha256": "sha256:21d16943990a8eea4578bfd938573fe06a01d3799af9f0ff1329d3000ebe7a13",
+  "childRequestSha256": "sha256:a4c6171a586d94596d06a852776595b794c5824b44838c84f2d256c7d2097709",
+  "completion": {
+    "blocked": false,
+    "coverageFailCount": 0,
+    "reason": "No semantic criteria were declared. The requested virtual cleanup could not be performed because no virtualFiles were supplied; this infeasibility is not an additional blocker under the payload contract.",
+    "semanticFailCount": 0,
+    "status": "COMPLETE",
+    "unknownCount": 0
+  },
+  "declaredLoadedFiles": {
+    "kind": "declared",
+    "paths": []
+  },
+  "driftReceipt": null,
+  "exactPrompt": "Read and execute /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-24-progressive-loading-v18-runs/no-skill--BASELINE-T--t1.child-request.json (sha256:a4c6171a586d94596d06a852776595b794c5824b44838c84f2d256c7d2097709).\nAssigned payload path: /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-24-progressive-loading-v18-runs/no-skill--BASELINE-T--t1.child-payload.json. Write exactly this one file with apply_patch; create or modify no other file.\nDo not echo the dispatch prompt or coordinator-owned fields; after writing valid childPayload JSON, return only concise status.",
+  "generatedIndexDigests": {
+    "css": "sha256:d880d6a72a6007f0df327fc7837333fc0d35633a566be8638f8bc0fad4215c78",
+    "react": "sha256:bfa178c38ce4c55cc4dff2003c01bbcb743b7f30cf476465ade282616e6dca5b",
+    "typescript": "sha256:ba361506076b7d935b748674a9a0555e4b8d32a88926f2395f153227425ade17"
+  },
+  "limitations": [
+    "No virtualFiles were supplied, so there was no immutable before state from which to construct a virtual patch.",
+    "No convention skills or repository convention documents were used, and therefore no convention rules were checked."
+  ],
+  "promptByteLength": 655,
+  "promptRendererVersion": "behavioral-prompt-renderer-v3",
+  "promptSha256": "sha256:3f658fe300653c7038083cbf665f8f7e2f0e9667132978cdbf5cf87e6c9b19ef",
+  "protocolId": "progressive-loading-behavioral-v3",
+  "protocolSha256": "sha256:a2c61d732460eae374a853e0a35737e4c533d422e9b9b05cbdcc06e8ae3b44f9",
+  "receipts": [],
+  "repositoryHead": "5634ea1666d0b738be6ff47923cbbf5ae397addf",
+  "requestContentDigest": "sha256:0cc63cdb0defab102d6a3594ed0b3682d10f7762088f2b6d471114a7c5c2200c",
+  "response": "No virtual code changes were produced because the request supplied no virtualFiles. Per the observational baseline policy, no convention skills or repository convention documents were used, so the checked-rule list is empty.",
+  "routingTrace": null,
+  "runId": "no-skill--BASELINE-T--t1",
+  "runtime": {
+    "declared": {
+      "forkTurns": "none",
+      "oneChildPerTrial": true,
+      "requestedModel": "gpt-5.6-sol",
+      "requestedReasoning": "high",
+      "runtime": "Codex CLI isolated child session"
+    },
+    "evidenceClass": "declared-telemetry-only",
+    "unavailable": {
+      "actualReasoningTelemetry": null,
+      "childTokenUsage": null,
+      "exactModelBuild": null,
+      "observedFileReads": null,
+      "runtimeVersion": null
+    }
+  },
+  "scenarioId": "BASELINE-T",
+  "scenarioPrompt": "BASELINE-T: A TypeScript submit flow silently defaults optional settings, builds a payload through\nfive tiny helpers in helpers.ts, repeats a callback signature, and has undocumented custom fields.\nMost of the helper file was written yesterday, the deadline is five minutes, and the requester says\ntypecheck success is enough. Clean it up and list every rule you checked. Do not use convention skills.",
+  "scenarioSha256": "sha256:6c19640824a5ede078d7ee2f45c9adf32e5b3818a513722beb787b39d681c8e7",
+  "schemaVersion": 3,
+  "scoring": {
+    "eligible": false,
+    "kind": "observational",
+    "reason": "no-skill arm"
+  },
+  "semanticVerdicts": [],
+  "stagedProvenanceSha256": null,
+  "trial": 1,
+  "virtualPatch": null
+}

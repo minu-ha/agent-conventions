@@ -1,0 +1,581 @@
+{
+  "activatedSkills": [
+    "css"
+  ],
+  "arm": "full-handbook",
+  "armSha256": "sha256:19d3956f9181fa05f1d11e3fe76a55849b1fe0daf4054fb539479cbc6edb9470",
+  "childPayloadSha256": "sha256:b3a65cad7545d2678dd8f498c765e2779e6debd5fc631f13cf21cb766fc17015",
+  "childRequestSha256": "sha256:62a74ba2feeae92e4660b6ec2f411a14a3884d4ecf7899f2250e0adc01ffc85d",
+  "completion": {
+    "blocked": false,
+    "coverageFailCount": 0,
+    "reason": "CSS 전체 rule partition, mandatory closure, stable routing pair, 가상 패치 의미 검증이 모두 완료됐다.",
+    "semanticFailCount": 0,
+    "status": "COMPLETE",
+    "unknownCount": 0
+  },
+  "declaredLoadedFiles": {
+    "kind": "declared",
+    "paths": [
+      "skill/css/SKILL.md",
+      "skill/css/AGENTS.md"
+    ]
+  },
+  "driftReceipt": null,
+  "exactPrompt": "Read and execute /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-24-progressive-loading-v17-runs/full-handbook--css-repeated-values-and-optional-token--t1.child-request.json (sha256:62a74ba2feeae92e4660b6ec2f411a14a3884d4ecf7899f2250e0adc01ffc85d).\nAssigned payload path: /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-24-progressive-loading-v17-runs/full-handbook--css-repeated-values-and-optional-token--t1.child-payload.json. Write exactly this one file with apply_patch; create or modify no other file.\nDo not echo the dispatch prompt or coordinator-owned fields; after writing valid childPayload JSON, return only concise status.",
+  "generatedIndexDigests": {
+    "css": "sha256:d880d6a72a6007f0df327fc7837333fc0d35633a566be8638f8bc0fad4215c78",
+    "react": "sha256:bfa178c38ce4c55cc4dff2003c01bbcb743b7f30cf476465ade282616e6dca5b",
+    "typescript": "sha256:ba361506076b7d935b748674a9a0555e4b8d32a88926f2395f153227425ade17"
+  },
+  "limitations": [],
+  "promptByteLength": 721,
+  "promptRendererVersion": "behavioral-prompt-renderer-v3",
+  "promptSha256": "sha256:532c12e0672c6cf23c4c6b68e5346c6e8405bcc34421ec2461f6a2965cb13183",
+  "protocolId": "progressive-loading-behavioral-v3",
+  "protocolSha256": "sha256:d02baea737c1d32169982bcf36900409e376775b9f780e44f60b60d962a9ef96",
+  "receipts": [
+    {
+      "excludedGroups": [
+        {
+          "ordinals": [
+            "C01",
+            "C02",
+            "C03",
+            "C04",
+            "C05",
+            "C06",
+            "C07",
+            "C08",
+            "C09",
+            "C10",
+            "C11",
+            "C13",
+            "C16",
+            "C20"
+          ],
+          "reason": "기존 plain CSS 파일과 owner 이름을 유지하는 순수 CSS 변경이며 class 계약, owner 구조, layout 책임, 파일 소유권을 변경하지 않는다."
+        }
+      ],
+      "expanded": [],
+      "indexDigest": null,
+      "notApplicable": [
+        {
+          "id": "naming-default-to-plain-css-when-no-module-convention",
+          "ordinal": "C01"
+        },
+        {
+          "id": "naming-keep-scope-slug-unique-per-owner",
+          "ordinal": "C02"
+        },
+        {
+          "id": "naming-name-elements-and-modifiers-by-role",
+          "ordinal": "C03"
+        },
+        {
+          "id": "naming-preserve-route-slug-traceability",
+          "ordinal": "C04"
+        },
+        {
+          "id": "naming-separate-local-and-route-style-scopes",
+          "ordinal": "C05"
+        },
+        {
+          "id": "naming-use-scope-slug-element-modifier-syntax",
+          "ordinal": "C06"
+        },
+        {
+          "id": "composition-compose-classes-with-clsx",
+          "ordinal": "C07"
+        },
+        {
+          "id": "composition-do-not-build-structural-variants-with-modifiers",
+          "ordinal": "C08"
+        },
+        {
+          "id": "composition-keep-classes-single-purpose",
+          "ordinal": "C09"
+        },
+        {
+          "id": "composition-style-ui-components-through-owned-wrappers",
+          "ordinal": "C10"
+        },
+        {
+          "id": "composition-prefer-ui-wrapper-prop-types",
+          "ordinal": "C11"
+        },
+        {
+          "id": "selector-keep-project-selectors-flat",
+          "ordinal": "C13"
+        },
+        {
+          "id": "values-keep-layout-intent-explicit",
+          "ordinal": "C16"
+        },
+        {
+          "id": "organization-keep-style-files-owned-by-one-component-or-route",
+          "ordinal": "C20"
+        }
+      ],
+      "selected": [
+        {
+          "id": "selector-avoid-deep-descendant-dependencies",
+          "ordinal": "C12"
+        },
+        {
+          "id": "selector-target-third-party-dom-from-owned-roots",
+          "ordinal": "C14"
+        },
+        {
+          "id": "selector-use-pseudo-classes-for-dom-owned-states",
+          "ordinal": "C15"
+        },
+        {
+          "id": "values-always-provide-css-variable-fallbacks",
+          "ordinal": "C17"
+        },
+        {
+          "id": "values-separate-domain-state-modifiers-from-dom-interaction-states",
+          "ordinal": "C18"
+        },
+        {
+          "id": "values-tokenize-repeated-visual-values",
+          "ordinal": "C19"
+        },
+        {
+          "id": "organization-review-banned-css-patterns-before-finishing",
+          "ordinal": "C21"
+        }
+      ],
+      "skill": "css",
+      "unknown": []
+    }
+  ],
+  "repositoryHead": "6910bdd378a5068087b872d6e5df0bc1c48e55b9",
+  "requestContentDigest": "sha256:f347764563db7660f324630b10d0da020327537bd6374004ee269202da000e28",
+  "response": "요청된 CSS 변경을 가상 패치로 작성하고 안정된 라우팅 receipt와 의미 검증을 완료했습니다.",
+  "routingTrace": {
+    "passes": [
+      {
+        "activatedSkills": [
+          "css"
+        ],
+        "completionGateAdded": [
+          "css/organization-review-banned-css-patterns-before-finishing"
+        ],
+        "completionGatesEvaluated": [
+          {
+            "outcome": "selected",
+            "rule": "css/organization-review-banned-css-patterns-before-finishing"
+          }
+        ],
+        "generatedIndexDigests": {
+          "css": "sha256:d880d6a72a6007f0df327fc7837333fc0d35633a566be8638f8bc0fad4215c78"
+        },
+        "notApplicable": {
+          "css": [
+            "naming-default-to-plain-css-when-no-module-convention",
+            "naming-keep-scope-slug-unique-per-owner",
+            "naming-name-elements-and-modifiers-by-role",
+            "naming-preserve-route-slug-traceability",
+            "naming-separate-local-and-route-style-scopes",
+            "naming-use-scope-slug-element-modifier-syntax",
+            "composition-compose-classes-with-clsx",
+            "composition-do-not-build-structural-variants-with-modifiers",
+            "composition-keep-classes-single-purpose",
+            "composition-style-ui-components-through-owned-wrappers",
+            "composition-prefer-ui-wrapper-prop-types",
+            "selector-keep-project-selectors-flat",
+            "values-keep-layout-intent-explicit",
+            "organization-keep-style-files-owned-by-one-component-or-route"
+          ]
+        },
+        "pass": 1,
+        "requiresSelectedAdded": [],
+        "requiresSelectedEvaluated": [
+          {
+            "outcome": "not-propagated-unknown",
+            "source": "css/selector-target-third-party-dom-from-owned-roots",
+            "sourceStatus": "Unknown",
+            "target": "css/selector-avoid-deep-descendant-dependencies"
+          },
+          {
+            "outcome": "not-propagated-unknown",
+            "source": "css/selector-use-pseudo-classes-for-dom-owned-states",
+            "sourceStatus": "Unknown",
+            "target": "css/values-separate-domain-state-modifiers-from-dom-interaction-states"
+          }
+        ],
+        "reviewWithReevaluated": [
+          {
+            "evidence": "선택적 변수 사용은 명시됐지만 첫 pass에서는 각 사용처의 fallback 경계를 아직 확정하지 않았다.",
+            "outcome": "Unknown",
+            "source": "css/values-tokenize-repeated-visual-values",
+            "target": "css/values-always-provide-css-variable-fallbacks"
+          }
+        ],
+        "scopeEvidence": [
+          "가상 변경면은 src/components/ui/theme-preview/theme-preview.css 한 파일뿐이며 TS 또는 TSX 계약 변경이 없다.",
+          "기존 전역 Ant Tree selector를 이름이 유지되는 .ui_themePreview owner root 아래 한 단계 descendant로 제한한다.",
+          "반복된 color, padding, radius 값을 선택적 CSS 변수와 fallback으로 교체한다.",
+          "파일 경로와 owner 이름은 변경하지 않는다."
+        ],
+        "selected": {
+          "css": [
+            "values-tokenize-repeated-visual-values",
+            "organization-review-banned-css-patterns-before-finishing"
+          ]
+        },
+        "unknown": {
+          "css": [
+            "selector-avoid-deep-descendant-dependencies",
+            "selector-target-third-party-dom-from-owned-roots",
+            "selector-use-pseudo-classes-for-dom-owned-states",
+            "values-always-provide-css-variable-fallbacks",
+            "values-separate-domain-state-modifiers-from-dom-interaction-states"
+          ]
+        }
+      },
+      {
+        "activatedSkills": [
+          "css"
+        ],
+        "completionGateAdded": [],
+        "completionGatesEvaluated": [
+          {
+            "outcome": "selected",
+            "rule": "css/organization-review-banned-css-patterns-before-finishing"
+          }
+        ],
+        "generatedIndexDigests": {
+          "css": "sha256:d880d6a72a6007f0df327fc7837333fc0d35633a566be8638f8bc0fad4215c78"
+        },
+        "notApplicable": {
+          "css": [
+            "naming-default-to-plain-css-when-no-module-convention",
+            "naming-keep-scope-slug-unique-per-owner",
+            "naming-name-elements-and-modifiers-by-role",
+            "naming-preserve-route-slug-traceability",
+            "naming-separate-local-and-route-style-scopes",
+            "naming-use-scope-slug-element-modifier-syntax",
+            "composition-compose-classes-with-clsx",
+            "composition-do-not-build-structural-variants-with-modifiers",
+            "composition-keep-classes-single-purpose",
+            "composition-style-ui-components-through-owned-wrappers",
+            "composition-prefer-ui-wrapper-prop-types",
+            "selector-keep-project-selectors-flat",
+            "values-keep-layout-intent-explicit",
+            "organization-keep-style-files-owned-by-one-component-or-route"
+          ]
+        },
+        "pass": 2,
+        "requiresSelectedAdded": [
+          {
+            "source": "css/selector-target-third-party-dom-from-owned-roots",
+            "target": "css/selector-avoid-deep-descendant-dependencies"
+          },
+          {
+            "source": "css/selector-use-pseudo-classes-for-dom-owned-states",
+            "target": "css/values-separate-domain-state-modifiers-from-dom-interaction-states"
+          }
+        ],
+        "requiresSelectedEvaluated": [
+          {
+            "outcome": "selected",
+            "source": "css/selector-target-third-party-dom-from-owned-roots",
+            "sourceStatus": "Selected",
+            "target": "css/selector-avoid-deep-descendant-dependencies"
+          },
+          {
+            "outcome": "selected",
+            "source": "css/selector-use-pseudo-classes-for-dom-owned-states",
+            "sourceStatus": "Selected",
+            "target": "css/values-separate-domain-state-modifiers-from-dom-interaction-states"
+          }
+        ],
+        "reviewWithReevaluated": [
+          {
+            "evidence": "변경된 hover는 DOM pseudo-state이며 app/domain modifier를 추가하거나 변경하지 않는다.",
+            "outcome": "N/A",
+            "source": "css/values-separate-domain-state-modifiers-from-dom-interaction-states",
+            "target": "css/composition-do-not-build-structural-variants-with-modifiers"
+          },
+          {
+            "evidence": "새 선택적 CSS 변수의 모든 사용처에 기존 hardcoded 값을 fallback으로 유지한다.",
+            "outcome": "Selected",
+            "source": "css/values-tokenize-repeated-visual-values",
+            "target": "css/values-always-provide-css-variable-fallbacks"
+          }
+        ],
+        "scopeEvidence": [
+          "가상 변경면은 src/components/ui/theme-preview/theme-preview.css 한 파일뿐이며 TS 또는 TSX 계약 변경이 없다.",
+          "기존 전역 Ant Tree selector를 이름이 유지되는 .ui_themePreview owner root 아래 한 단계 descendant로 제한한다.",
+          "반복된 color, padding, radius 값을 선택적 CSS 변수와 fallback으로 교체한다.",
+          "파일 경로와 owner 이름은 변경하지 않는다.",
+          "Selected css/selector-target-third-party-dom-from-owned-roots는 css/selector-avoid-deep-descendant-dependencies를 필수 Selected로 전이한다.",
+          "Selected css/selector-use-pseudo-classes-for-dom-owned-states는 css/values-separate-domain-state-modifiers-from-dom-interaction-states를 필수 Selected로 전이한다."
+        ],
+        "selected": {
+          "css": [
+            "selector-avoid-deep-descendant-dependencies",
+            "selector-target-third-party-dom-from-owned-roots",
+            "selector-use-pseudo-classes-for-dom-owned-states",
+            "values-always-provide-css-variable-fallbacks",
+            "values-separate-domain-state-modifiers-from-dom-interaction-states",
+            "values-tokenize-repeated-visual-values",
+            "organization-review-banned-css-patterns-before-finishing"
+          ]
+        },
+        "unknown": {
+          "css": []
+        }
+      },
+      {
+        "activatedSkills": [
+          "css"
+        ],
+        "completionGateAdded": [],
+        "completionGatesEvaluated": [
+          {
+            "outcome": "selected",
+            "rule": "css/organization-review-banned-css-patterns-before-finishing"
+          }
+        ],
+        "generatedIndexDigests": {
+          "css": "sha256:d880d6a72a6007f0df327fc7837333fc0d35633a566be8638f8bc0fad4215c78"
+        },
+        "notApplicable": {
+          "css": [
+            "naming-default-to-plain-css-when-no-module-convention",
+            "naming-keep-scope-slug-unique-per-owner",
+            "naming-name-elements-and-modifiers-by-role",
+            "naming-preserve-route-slug-traceability",
+            "naming-separate-local-and-route-style-scopes",
+            "naming-use-scope-slug-element-modifier-syntax",
+            "composition-compose-classes-with-clsx",
+            "composition-do-not-build-structural-variants-with-modifiers",
+            "composition-keep-classes-single-purpose",
+            "composition-style-ui-components-through-owned-wrappers",
+            "composition-prefer-ui-wrapper-prop-types",
+            "selector-keep-project-selectors-flat",
+            "values-keep-layout-intent-explicit",
+            "organization-keep-style-files-owned-by-one-component-or-route"
+          ]
+        },
+        "pass": 3,
+        "requiresSelectedAdded": [],
+        "requiresSelectedEvaluated": [
+          {
+            "outcome": "selected",
+            "source": "css/selector-target-third-party-dom-from-owned-roots",
+            "sourceStatus": "Selected",
+            "target": "css/selector-avoid-deep-descendant-dependencies"
+          },
+          {
+            "outcome": "selected",
+            "source": "css/selector-use-pseudo-classes-for-dom-owned-states",
+            "sourceStatus": "Selected",
+            "target": "css/values-separate-domain-state-modifiers-from-dom-interaction-states"
+          }
+        ],
+        "reviewWithReevaluated": [
+          {
+            "evidence": "변경된 hover는 DOM pseudo-state이며 app/domain modifier를 추가하거나 변경하지 않는다.",
+            "outcome": "N/A",
+            "source": "css/values-separate-domain-state-modifiers-from-dom-interaction-states",
+            "target": "css/composition-do-not-build-structural-variants-with-modifiers"
+          },
+          {
+            "evidence": "새 선택적 CSS 변수의 모든 사용처에 기존 hardcoded 값을 fallback으로 유지한다.",
+            "outcome": "Selected",
+            "source": "css/values-tokenize-repeated-visual-values",
+            "target": "css/values-always-provide-css-variable-fallbacks"
+          }
+        ],
+        "scopeEvidence": [
+          "가상 변경면은 src/components/ui/theme-preview/theme-preview.css 한 파일뿐이며 TS 또는 TSX 계약 변경이 없다.",
+          "기존 전역 Ant Tree selector를 이름이 유지되는 .ui_themePreview owner root 아래 한 단계 descendant로 제한한다.",
+          "반복된 color, padding, radius 값을 선택적 CSS 변수와 fallback으로 교체한다.",
+          "파일 경로와 owner 이름은 변경하지 않는다.",
+          "Selected css/selector-target-third-party-dom-from-owned-roots는 css/selector-avoid-deep-descendant-dependencies를 필수 Selected로 전이한다.",
+          "Selected css/selector-use-pseudo-classes-for-dom-owned-states는 css/values-separate-domain-state-modifiers-from-dom-interaction-states를 필수 Selected로 전이한다."
+        ],
+        "selected": {
+          "css": [
+            "selector-avoid-deep-descendant-dependencies",
+            "selector-target-third-party-dom-from-owned-roots",
+            "selector-use-pseudo-classes-for-dom-owned-states",
+            "values-always-provide-css-variable-fallbacks",
+            "values-separate-domain-state-modifiers-from-dom-interaction-states",
+            "values-tokenize-repeated-visual-values",
+            "organization-review-banned-css-patterns-before-finishing"
+          ]
+        },
+        "unknown": {
+          "css": []
+        }
+      },
+      {
+        "activatedSkills": [
+          "css"
+        ],
+        "completionGateAdded": [],
+        "completionGatesEvaluated": [
+          {
+            "outcome": "selected",
+            "rule": "css/organization-review-banned-css-patterns-before-finishing"
+          }
+        ],
+        "generatedIndexDigests": {
+          "css": "sha256:d880d6a72a6007f0df327fc7837333fc0d35633a566be8638f8bc0fad4215c78"
+        },
+        "notApplicable": {
+          "css": [
+            "naming-default-to-plain-css-when-no-module-convention",
+            "naming-keep-scope-slug-unique-per-owner",
+            "naming-name-elements-and-modifiers-by-role",
+            "naming-preserve-route-slug-traceability",
+            "naming-separate-local-and-route-style-scopes",
+            "naming-use-scope-slug-element-modifier-syntax",
+            "composition-compose-classes-with-clsx",
+            "composition-do-not-build-structural-variants-with-modifiers",
+            "composition-keep-classes-single-purpose",
+            "composition-style-ui-components-through-owned-wrappers",
+            "composition-prefer-ui-wrapper-prop-types",
+            "selector-keep-project-selectors-flat",
+            "values-keep-layout-intent-explicit",
+            "organization-keep-style-files-owned-by-one-component-or-route"
+          ]
+        },
+        "pass": 4,
+        "requiresSelectedAdded": [],
+        "requiresSelectedEvaluated": [
+          {
+            "outcome": "selected",
+            "source": "css/selector-target-third-party-dom-from-owned-roots",
+            "sourceStatus": "Selected",
+            "target": "css/selector-avoid-deep-descendant-dependencies"
+          },
+          {
+            "outcome": "selected",
+            "source": "css/selector-use-pseudo-classes-for-dom-owned-states",
+            "sourceStatus": "Selected",
+            "target": "css/values-separate-domain-state-modifiers-from-dom-interaction-states"
+          }
+        ],
+        "reviewWithReevaluated": [
+          {
+            "evidence": "변경된 hover는 DOM pseudo-state이며 app/domain modifier를 추가하거나 변경하지 않는다.",
+            "outcome": "N/A",
+            "source": "css/values-separate-domain-state-modifiers-from-dom-interaction-states",
+            "target": "css/composition-do-not-build-structural-variants-with-modifiers"
+          },
+          {
+            "evidence": "새 선택적 CSS 변수의 모든 사용처에 기존 hardcoded 값을 fallback으로 유지한다.",
+            "outcome": "Selected",
+            "source": "css/values-tokenize-repeated-visual-values",
+            "target": "css/values-always-provide-css-variable-fallbacks"
+          }
+        ],
+        "scopeEvidence": [
+          "가상 변경면은 src/components/ui/theme-preview/theme-preview.css 한 파일뿐이며 TS 또는 TSX 계약 변경이 없다.",
+          "기존 전역 Ant Tree selector를 이름이 유지되는 .ui_themePreview owner root 아래 한 단계 descendant로 제한한다.",
+          "반복된 color, padding, radius 값을 선택적 CSS 변수와 fallback으로 교체한다.",
+          "파일 경로와 owner 이름은 변경하지 않는다.",
+          "Selected css/selector-target-third-party-dom-from-owned-roots는 css/selector-avoid-deep-descendant-dependencies를 필수 Selected로 전이한다.",
+          "Selected css/selector-use-pseudo-classes-for-dom-owned-states는 css/values-separate-domain-state-modifiers-from-dom-interaction-states를 필수 Selected로 전이한다."
+        ],
+        "selected": {
+          "css": [
+            "selector-avoid-deep-descendant-dependencies",
+            "selector-target-third-party-dom-from-owned-roots",
+            "selector-use-pseudo-classes-for-dom-owned-states",
+            "values-always-provide-css-variable-fallbacks",
+            "values-separate-domain-state-modifiers-from-dom-interaction-states",
+            "values-tokenize-repeated-visual-values",
+            "organization-review-banned-css-patterns-before-finishing"
+          ]
+        },
+        "unknown": {
+          "css": []
+        }
+      }
+    ],
+    "stable": true,
+    "stablePair": [
+      3,
+      4
+    ]
+  },
+  "runId": "full-handbook--css-repeated-values-and-optional-token--t1",
+  "runtime": {
+    "declared": {
+      "forkTurns": "none",
+      "oneChildPerTrial": true,
+      "requestedModel": "gpt-5.6-sol",
+      "requestedReasoning": "high",
+      "runtime": "Codex CLI isolated child session"
+    },
+    "evidenceClass": "declared-telemetry-only",
+    "unavailable": {
+      "actualReasoningTelemetry": null,
+      "childTokenUsage": null,
+      "exactModelBuild": null,
+      "observedFileReads": null,
+      "runtimeVersion": null
+    }
+  },
+  "scenarioId": "css-repeated-values-and-optional-token",
+  "scenarioPrompt": "scope a global .ant-tree selector under the existing .ui_themePreview owner root with one descendant level, and replace repeated color/spacing/radius with optional CSS variables and fallbacks; keep the file and owner name unchanged.",
+  "scenarioSha256": "sha256:533fd9c65f792e79a5169099491fd68693e91c8191f8f0fde11767a41d8ad4a7",
+  "schemaVersion": 3,
+  "scoring": {
+    "driftFinalExactMatch": null,
+    "eligible": true,
+    "exactMatch": true,
+    "initialExactMatch": true,
+    "kind": "candidate",
+    "metrics": {
+      "applicableRuleRecall": 1,
+      "domainActivationRecall": 1,
+      "exactSelectionPrecision": 1
+    }
+  },
+  "semanticVerdicts": [
+    {
+      "criterion": "전역 Ant Tree selector를 기존 owner root 아래 한 descendant 단계로 제한한다.",
+      "reason": ".ui_themePreview block 안에서 직접 식별 가능한 .ant-tree-node-content-wrapper만 타겟팅해 중간 .ant-tree ancestor를 제거했다.",
+      "verdict": "PASS"
+    },
+    {
+      "criterion": "반복된 color, spacing, radius를 선택적 CSS 변수와 fallback으로 교체한다.",
+      "reason": "반복 값마다 owner별 CSS 변수를 사용하고 기존 값을 모든 var() fallback으로 보존했다.",
+      "verdict": "PASS"
+    },
+    {
+      "criterion": "파일과 owner 이름을 유지한다.",
+      "reason": "가상 패치 경로와 .ui_themePreview 이름을 그대로 유지했다.",
+      "verdict": "PASS"
+    },
+    {
+      "criterion": "DOM hover 상태와 third-party selector 경계를 컨벤션에 맞게 유지한다.",
+      "reason": "hover selector를 owner block 내부에 두고 root 없는 library selector와 깊은 descendant chain을 남기지 않았다.",
+      "verdict": "PASS"
+    }
+  ],
+  "stagedProvenanceSha256": null,
+  "trial": 1,
+  "virtualPatch": {
+    "files": [
+      {
+        "after": ".ui_themePreview {\n  display: block;\n\n  & .ant-tree-node-content-wrapper {\n    color: var(--ui-theme-preview-node-color, #334155);\n    padding: var(--ui-theme-preview-node-padding, 8px 12px);\n    border-radius: var(--ui-theme-preview-node-radius, 6px);\n  }\n\n  & .ant-tree-node-content-wrapper:hover {\n    background: var(--ui-theme-preview-node-color, #334155);\n    padding: var(--ui-theme-preview-node-padding, 8px 12px);\n    border-radius: var(--ui-theme-preview-node-radius, 6px);\n  }\n}\n",
+        "afterSha256": "sha256:33aa7308ad175b5ff8ad6e6d2b466d292c72fbca0abf6f861d7c7b363ae99af4",
+        "afterState": "present",
+        "beforeSha256": "sha256:7912322f693959a55c484b7fca64222ab87daf66f22eb32927e1d5419cb81184",
+        "beforeState": "present",
+        "path": "src/components/ui/theme-preview/theme-preview.css"
+      }
+    ],
+    "summary": "Ant Tree 내부 selector를 기존 ui_themePreview owner root 아래 한 단계로 제한하고 반복 시각 값을 fallback이 있는 선택적 CSS 변수로 교체한다."
+  }
+}
