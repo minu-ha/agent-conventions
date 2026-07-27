@@ -2,33 +2,33 @@
   "schemaVersion": 3,
   "protocolId": "progressive-loading-behavioral-v3",
   "createdAtUtc": "2026-07-21T16:21:56Z",
-  "updatedAtUtc": "2026-07-22T16:17:05Z",
+  "updatedAtUtc": "2026-07-24T09:05:22Z",
   "repository": {
-    "sourceHead": "ee5f58a93eabd42a1b35341a716cf18bf7ab64b1",
-    "branch": "feat/progressive-skill-loading",
+    "sourceHead": "5634ea1666d0b738be6ff47923cbbf5ae397addf",
+    "branch": "feat/progressive-loading-v18",
     "worktree": "/Users/l-20220017/workspace/agent-conventions-progressive-loading",
     "bindingStatus": "bound",
-    "bindingRequirement": "Every dispatch and merge must use immutable source commit ee5f58a93eabd42a1b35341a716cf18bf7ab64b1; a run is invalid when its repositoryHead differs."
+    "bindingRequirement": "Every dispatch and merge must use immutable source commit 5634ea1666d0b738be6ff47923cbbf5ae397addf; a run is invalid when its repositoryHead differs."
   },
   "generatedIndexes": {
     "react": {
       "path": "skill/react/RULES_INDEX.md",
-      "digest": "sha256:30f0c6d798cd558f19a99ecc118ffe185b5e9534d8073aebc30e92a08831bd6d",
+      "digest": "sha256:bfa178c38ce4c55cc4dff2003c01bbcb743b7f30cf476465ade282616e6dca5b",
       "localRuleCount": 42
     },
     "typescript": {
       "path": "skill/typescript/RULES_INDEX.md",
-      "digest": "sha256:4db36590e46880fd881297fb80c97eb453ef14cd077f6cb298bb340d15f4f6c9",
+      "digest": "sha256:ba361506076b7d935b748674a9a0555e4b8d32a88926f2395f153227425ade17",
       "localRuleCount": 22
     },
     "css": {
       "path": "skill/css/RULES_INDEX.md",
-      "digest": "sha256:9c8e7235088b00b2e662f9e859b1eb8360f57c53ce1ef7fbebfe087069995ac3",
+      "digest": "sha256:d880d6a72a6007f0df327fc7837333fc0d35633a566be8638f8bc0fad4215c78",
       "localRuleCount": 21
     }
   },
   "semanticAudit": {
-    "criteriaCommitmentSha256": "sha256:7c9a866021b093a830ceba889831f94616e60d7d830b911e07cbf2591f835b0e"
+    "criteriaCommitmentSha256": "sha256:b3be54770862ab25bac6eab85adbc4606bd72794a908477ba25b973c3771da8b"
   },
   "fullHandbookIdentityDictionaries": {
     "semantics": "Selection truth remains sealed. The child receives only the mechanical handbook-heading to current ordinal/stable-ID identity mapping because generated AGENTS.md intentionally omits stable IDs. This dictionary contains no appliesWhen, requiresSelected, requiredOnCompletion, reviewWith, impact, expectedSkills, expectedSelected, expectedNotApplicable, or scorer verdict.",
@@ -620,7 +620,7 @@
       "basePrompt": "Audit the supplied current-digest RTE08 receipt. The receipt moves R26 events-run-user-actions-in-handlers-not-effects from Selected to N/A with the unsupported reason 'effect replay와 handler가 함께 있으므로 handler-only 규칙은 적용되지 않는다.' while leaving a complete non-overlapping partition. Independently determine whether completion must be blocked.",
       "suppliedReceipt": {
         "react": {
-      "indexDigest": "sha256:30f0c6d798cd558f19a99ecc118ffe185b5e9534d8073aebc30e92a08831bd6d",
+      "indexDigest": "sha256:bfa178c38ce4c55cc4dff2003c01bbcb743b7f30cf476465ade282616e6dca5b",
           "selected": [
             "R07 typing-function-type-first",
             "R15 composition-named-handlers-over-inline",
@@ -671,7 +671,7 @@
           "mutationExclusionReason": "effect replay와 handler가 함께 있으므로 handler-only 규칙은 적용되지 않는다."
         },
         "typescript": {
-      "indexDigest": "sha256:4db36590e46880fd881297fb80c97eb453ef14cd077f6cb298bb340d15f4f6c9",
+      "indexDigest": "sha256:ba361506076b7d935b748674a9a0555e4b8d32a88926f2395f153227425ade17",
           "selected": [
             "T03 naming-use-consistent-file-and-symbol-naming",
             "T04 naming-use-direct-imports-and-public-entry-points",

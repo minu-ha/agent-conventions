@@ -1,0 +1,612 @@
+{
+  "activatedSkills": [
+    "css"
+  ],
+  "arm": "progressive",
+  "armSha256": "sha256:ce85daeb6c52e884592a3c7e6f17f94a9b58e8202c012ac9e40d5c8fd1b350c2",
+  "childPayloadSha256": "sha256:6050fa5dfd4f571b38be2bf6f8efd879384531c3a091cbc49b35fe0e82c4af08",
+  "childRequestSha256": "sha256:c76f7f5487fc050a117a7ef505f3afc0ddd7d83fef167b062c6ce78e307650df",
+  "completion": {
+    "blocked": false,
+    "coverageFailCount": 0,
+    "reason": "The CSS-only routing partition reached a stable fixed point, and the virtual patch implements the requested owner scoping and optional token fallbacks.",
+    "semanticFailCount": 0,
+    "status": "COMPLETE",
+    "unknownCount": 0
+  },
+  "declaredLoadedFiles": {
+    "kind": "declared",
+    "paths": [
+      "skill/css/SKILL.md",
+      "skill/css/RULES_INDEX.md",
+      "skill/css/contracts/selector-avoid-deep-descendant-dependencies.md",
+      "skill/css/contracts/selector-target-third-party-dom-from-owned-roots.md",
+      "skill/css/rules/selector-target-third-party-dom-from-owned-roots.md",
+      "skill/css/contracts/selector-use-pseudo-classes-for-dom-owned-states.md",
+      "skill/css/rules/selector-use-pseudo-classes-for-dom-owned-states.md",
+      "skill/css/contracts/values-always-provide-css-variable-fallbacks.md",
+      "skill/css/contracts/values-separate-domain-state-modifiers-from-dom-interaction-states.md",
+      "skill/css/contracts/values-tokenize-repeated-visual-values.md",
+      "skill/css/contracts/organization-review-banned-css-patterns-before-finishing.md"
+    ]
+  },
+  "driftReceipt": null,
+  "exactPrompt": "Read and execute /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-24-progressive-loading-v18-runs/progressive--css-repeated-values-and-optional-token--t2.child-request.json (sha256:c76f7f5487fc050a117a7ef505f3afc0ddd7d83fef167b062c6ce78e307650df).\nAssigned payload path: /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-24-progressive-loading-v18-runs/progressive--css-repeated-values-and-optional-token--t2.child-payload.json. Write exactly this one file with apply_patch; create or modify no other file.\nDo not echo the dispatch prompt or coordinator-owned fields; after writing valid childPayload JSON, return only concise status.",
+  "generatedIndexDigests": {
+    "css": "sha256:d880d6a72a6007f0df327fc7837333fc0d35633a566be8638f8bc0fad4215c78",
+    "react": "sha256:bfa178c38ce4c55cc4dff2003c01bbcb743b7f30cf476465ade282616e6dca5b",
+    "typescript": "sha256:ba361506076b7d935b748674a9a0555e4b8d32a88926f2395f153227425ade17"
+  },
+  "limitations": [],
+  "promptByteLength": 717,
+  "promptRendererVersion": "behavioral-prompt-renderer-v3",
+  "promptSha256": "sha256:69123c6b3e596482883660a2582a59afbc687945da2755cfec85d4dd8267e4f8",
+  "protocolId": "progressive-loading-behavioral-v3",
+  "protocolSha256": "sha256:a2c61d732460eae374a853e0a35737e4c533d422e9b9b05cbdcc06e8ae3b44f9",
+  "receipts": [
+    {
+      "excludedGroups": [
+        {
+          "ordinals": [
+            "C01",
+            "C02",
+            "C03",
+            "C04",
+            "C05",
+            "C06"
+          ],
+          "reason": "The existing plain stylesheet, owner name, scope slug, and class names remain unchanged; no owner placement or naming decision is introduced."
+        },
+        {
+          "ordinals": [
+            "C07",
+            "C08",
+            "C09",
+            "C10",
+            "C11"
+          ],
+          "reason": "No TSX class composition, modifier, class responsibility split, Ui wrapper API, or wrapper Props surface changes; this is an existing CSS owner root scoping its third-party selector."
+        },
+        {
+          "ordinals": [
+            "C13"
+          ],
+          "reason": "The only descendant relationship is the permitted shortest third-party selector beneath an owned root, not coupling between project-owned selectors."
+        },
+        {
+          "ordinals": [
+            "C16"
+          ],
+          "reason": "No layout intent, positioning, stacking, width, height, or parent-child layout responsibility changes."
+        },
+        {
+          "ordinals": [
+            "C20"
+          ],
+          "reason": "The stylesheet path and its single existing owner remain unchanged, with no file creation, move, split, merge, or mixed ownership."
+        }
+      ],
+      "expanded": [
+        {
+          "contractPath": "skill/css/contracts/selector-target-third-party-dom-from-owned-roots.md",
+          "fullRulePath": "skill/css/rules/selector-target-third-party-dom-from-owned-roots.md",
+          "id": "selector-target-third-party-dom-from-owned-roots",
+          "mandatoryCritical": true,
+          "ordinal": "C14",
+          "reason": "CRITICAL third-party selector ownership rule requires full-rule expansion and confirms removal of the redundant intermediate library ancestor."
+        },
+        {
+          "contractPath": "skill/css/contracts/selector-use-pseudo-classes-for-dom-owned-states.md",
+          "fullRulePath": "skill/css/rules/selector-use-pseudo-classes-for-dom-owned-states.md",
+          "id": "selector-use-pseudo-classes-for-dom-owned-states",
+          "mandatoryCritical": false,
+          "ordinal": "C15",
+          "reason": "Expanded to verify exact pseudo-class placement and DOM-owned interaction-state handling while preserving the CRITICAL owned-root nesting boundary."
+        }
+      ],
+      "indexDigest": "sha256:d880d6a72a6007f0df327fc7837333fc0d35633a566be8638f8bc0fad4215c78",
+      "notApplicable": [
+        {
+          "id": "naming-default-to-plain-css-when-no-module-convention",
+          "ordinal": "C01"
+        },
+        {
+          "id": "naming-keep-scope-slug-unique-per-owner",
+          "ordinal": "C02"
+        },
+        {
+          "id": "naming-name-elements-and-modifiers-by-role",
+          "ordinal": "C03"
+        },
+        {
+          "id": "naming-preserve-route-slug-traceability",
+          "ordinal": "C04"
+        },
+        {
+          "id": "naming-separate-local-and-route-style-scopes",
+          "ordinal": "C05"
+        },
+        {
+          "id": "naming-use-scope-slug-element-modifier-syntax",
+          "ordinal": "C06"
+        },
+        {
+          "id": "composition-compose-classes-with-clsx",
+          "ordinal": "C07"
+        },
+        {
+          "id": "composition-do-not-build-structural-variants-with-modifiers",
+          "ordinal": "C08"
+        },
+        {
+          "id": "composition-keep-classes-single-purpose",
+          "ordinal": "C09"
+        },
+        {
+          "id": "composition-style-ui-components-through-owned-wrappers",
+          "ordinal": "C10"
+        },
+        {
+          "id": "composition-prefer-ui-wrapper-prop-types",
+          "ordinal": "C11"
+        },
+        {
+          "id": "selector-keep-project-selectors-flat",
+          "ordinal": "C13"
+        },
+        {
+          "id": "values-keep-layout-intent-explicit",
+          "ordinal": "C16"
+        },
+        {
+          "id": "organization-keep-style-files-owned-by-one-component-or-route",
+          "ordinal": "C20"
+        }
+      ],
+      "selected": [
+        {
+          "id": "selector-avoid-deep-descendant-dependencies",
+          "ordinal": "C12"
+        },
+        {
+          "id": "selector-target-third-party-dom-from-owned-roots",
+          "ordinal": "C14"
+        },
+        {
+          "id": "selector-use-pseudo-classes-for-dom-owned-states",
+          "ordinal": "C15"
+        },
+        {
+          "id": "values-always-provide-css-variable-fallbacks",
+          "ordinal": "C17"
+        },
+        {
+          "id": "values-separate-domain-state-modifiers-from-dom-interaction-states",
+          "ordinal": "C18"
+        },
+        {
+          "id": "values-tokenize-repeated-visual-values",
+          "ordinal": "C19"
+        },
+        {
+          "id": "organization-review-banned-css-patterns-before-finishing",
+          "ordinal": "C21"
+        }
+      ],
+      "skill": "css",
+      "unknown": []
+    }
+  ],
+  "repositoryHead": "5634ea1666d0b738be6ff47923cbbf5ae397addf",
+  "requestContentDigest": "sha256:5655bb3768fdb283e22f76afe56ced4e473604e868d0eeb50f08c22a3f534dff",
+  "response": "기존 .ui_themePreview owner 안에서 Ant Tree target을 one-level descendant로 제한하고, 반복된 색상·간격·radius를 fallback이 있는 선택적 CSS 변수로 교체했습니다. 파일 경로와 owner 이름은 유지했습니다.",
+  "routingTrace": {
+    "passes": [
+      {
+        "activatedSkills": [
+          "css"
+        ],
+        "completionGateAdded": [
+          "css/organization-review-banned-css-patterns-before-finishing"
+        ],
+        "completionGatesEvaluated": [
+          {
+            "outcome": "selected",
+            "rule": "css/organization-review-banned-css-patterns-before-finishing"
+          }
+        ],
+        "generatedIndexDigests": {
+          "css": "sha256:d880d6a72a6007f0df327fc7837333fc0d35633a566be8638f8bc0fad4215c78"
+        },
+        "notApplicable": {
+          "css": [
+            "naming-default-to-plain-css-when-no-module-convention",
+            "naming-keep-scope-slug-unique-per-owner",
+            "naming-name-elements-and-modifiers-by-role",
+            "naming-preserve-route-slug-traceability",
+            "naming-separate-local-and-route-style-scopes",
+            "naming-use-scope-slug-element-modifier-syntax",
+            "composition-compose-classes-with-clsx",
+            "composition-do-not-build-structural-variants-with-modifiers",
+            "composition-keep-classes-single-purpose",
+            "composition-style-ui-components-through-owned-wrappers",
+            "composition-prefer-ui-wrapper-prop-types",
+            "selector-keep-project-selectors-flat",
+            "values-keep-layout-intent-explicit",
+            "organization-keep-style-files-owned-by-one-component-or-route"
+          ]
+        },
+        "pass": 1,
+        "requiresSelectedAdded": [
+          {
+            "source": "css/selector-target-third-party-dom-from-owned-roots",
+            "target": "css/selector-avoid-deep-descendant-dependencies"
+          }
+        ],
+        "requiresSelectedEvaluated": [
+          {
+            "outcome": "selected",
+            "source": "css/selector-target-third-party-dom-from-owned-roots",
+            "sourceStatus": "Selected",
+            "target": "css/selector-avoid-deep-descendant-dependencies"
+          },
+          {
+            "outcome": "not-propagated-unknown",
+            "source": "css/selector-use-pseudo-classes-for-dom-owned-states",
+            "sourceStatus": "Unknown",
+            "target": "css/values-separate-domain-state-modifiers-from-dom-interaction-states"
+          }
+        ],
+        "reviewWithReevaluated": [
+          {
+            "evidence": "The requested optional variables are not guaranteed to be injected, and every new var() usage includes its original literal value as fallback.",
+            "outcome": "Selected",
+            "source": "css/values-tokenize-repeated-visual-values",
+            "target": "css/values-always-provide-css-variable-fallbacks"
+          }
+        ],
+        "scopeEvidence": [
+          "The only virtual changed-file surface is an existing CSS stylesheet, so css is activated without react or typescript.",
+          "A global Ant Tree selector must be scoped beneath the unchanged .ui_themePreview owner and shortened by removing the redundant .ant-tree ancestor.",
+          "Repeated color, spacing, and radius values must become optional CSS variable reads with literal fallbacks.",
+          "The existing :hover selector is modified, so DOM-owned pseudo-state handling is in scope.",
+          "CSS completion requires the banned-pattern review gate.",
+          "Selected third-party selector ownership requires selector-avoid-deep-descendant-dependencies."
+        ],
+        "selected": {
+          "css": [
+            "selector-avoid-deep-descendant-dependencies",
+            "selector-target-third-party-dom-from-owned-roots",
+            "values-always-provide-css-variable-fallbacks",
+            "values-tokenize-repeated-visual-values",
+            "organization-review-banned-css-patterns-before-finishing"
+          ]
+        },
+        "unknown": {
+          "css": [
+            "selector-use-pseudo-classes-for-dom-owned-states",
+            "values-separate-domain-state-modifiers-from-dom-interaction-states"
+          ]
+        }
+      },
+      {
+        "activatedSkills": [
+          "css"
+        ],
+        "completionGateAdded": [],
+        "completionGatesEvaluated": [
+          {
+            "outcome": "selected",
+            "rule": "css/organization-review-banned-css-patterns-before-finishing"
+          }
+        ],
+        "generatedIndexDigests": {
+          "css": "sha256:d880d6a72a6007f0df327fc7837333fc0d35633a566be8638f8bc0fad4215c78"
+        },
+        "notApplicable": {
+          "css": [
+            "naming-default-to-plain-css-when-no-module-convention",
+            "naming-keep-scope-slug-unique-per-owner",
+            "naming-name-elements-and-modifiers-by-role",
+            "naming-preserve-route-slug-traceability",
+            "naming-separate-local-and-route-style-scopes",
+            "naming-use-scope-slug-element-modifier-syntax",
+            "composition-compose-classes-with-clsx",
+            "composition-do-not-build-structural-variants-with-modifiers",
+            "composition-keep-classes-single-purpose",
+            "composition-style-ui-components-through-owned-wrappers",
+            "composition-prefer-ui-wrapper-prop-types",
+            "selector-keep-project-selectors-flat",
+            "values-keep-layout-intent-explicit",
+            "organization-keep-style-files-owned-by-one-component-or-route"
+          ]
+        },
+        "pass": 2,
+        "requiresSelectedAdded": [
+          {
+            "source": "css/selector-use-pseudo-classes-for-dom-owned-states",
+            "target": "css/values-separate-domain-state-modifiers-from-dom-interaction-states"
+          }
+        ],
+        "requiresSelectedEvaluated": [
+          {
+            "outcome": "selected",
+            "source": "css/selector-target-third-party-dom-from-owned-roots",
+            "sourceStatus": "Selected",
+            "target": "css/selector-avoid-deep-descendant-dependencies"
+          },
+          {
+            "outcome": "selected",
+            "source": "css/selector-use-pseudo-classes-for-dom-owned-states",
+            "sourceStatus": "Selected",
+            "target": "css/values-separate-domain-state-modifiers-from-dom-interaction-states"
+          }
+        ],
+        "reviewWithReevaluated": [
+          {
+            "evidence": "The changed state is browser-owned :hover and no app or domain modifier is introduced or changed.",
+            "outcome": "N/A",
+            "source": "css/values-separate-domain-state-modifiers-from-dom-interaction-states",
+            "target": "css/composition-do-not-build-structural-variants-with-modifiers"
+          },
+          {
+            "evidence": "The requested optional variables are not guaranteed to be injected, and every new var() usage includes its original literal value as fallback.",
+            "outcome": "Selected",
+            "source": "css/values-tokenize-repeated-visual-values",
+            "target": "css/values-always-provide-css-variable-fallbacks"
+          }
+        ],
+        "scopeEvidence": [
+          "The only virtual changed-file surface is an existing CSS stylesheet, so css is activated without react or typescript.",
+          "A global Ant Tree selector must be scoped beneath the unchanged .ui_themePreview owner and shortened by removing the redundant .ant-tree ancestor.",
+          "Repeated color, spacing, and radius values must become optional CSS variable reads with literal fallbacks.",
+          "The existing :hover selector is modified, so DOM-owned pseudo-state handling is in scope.",
+          "CSS completion requires the banned-pattern review gate.",
+          "Selected third-party selector ownership requires selector-avoid-deep-descendant-dependencies.",
+          "The pseudo-class contract resolves the hover change as Selected and requires values-separate-domain-state-modifiers-from-dom-interaction-states."
+        ],
+        "selected": {
+          "css": [
+            "selector-avoid-deep-descendant-dependencies",
+            "selector-target-third-party-dom-from-owned-roots",
+            "selector-use-pseudo-classes-for-dom-owned-states",
+            "values-always-provide-css-variable-fallbacks",
+            "values-separate-domain-state-modifiers-from-dom-interaction-states",
+            "values-tokenize-repeated-visual-values",
+            "organization-review-banned-css-patterns-before-finishing"
+          ]
+        },
+        "unknown": {
+          "css": []
+        }
+      },
+      {
+        "activatedSkills": [
+          "css"
+        ],
+        "completionGateAdded": [],
+        "completionGatesEvaluated": [
+          {
+            "outcome": "selected",
+            "rule": "css/organization-review-banned-css-patterns-before-finishing"
+          }
+        ],
+        "generatedIndexDigests": {
+          "css": "sha256:d880d6a72a6007f0df327fc7837333fc0d35633a566be8638f8bc0fad4215c78"
+        },
+        "notApplicable": {
+          "css": [
+            "naming-default-to-plain-css-when-no-module-convention",
+            "naming-keep-scope-slug-unique-per-owner",
+            "naming-name-elements-and-modifiers-by-role",
+            "naming-preserve-route-slug-traceability",
+            "naming-separate-local-and-route-style-scopes",
+            "naming-use-scope-slug-element-modifier-syntax",
+            "composition-compose-classes-with-clsx",
+            "composition-do-not-build-structural-variants-with-modifiers",
+            "composition-keep-classes-single-purpose",
+            "composition-style-ui-components-through-owned-wrappers",
+            "composition-prefer-ui-wrapper-prop-types",
+            "selector-keep-project-selectors-flat",
+            "values-keep-layout-intent-explicit",
+            "organization-keep-style-files-owned-by-one-component-or-route"
+          ]
+        },
+        "pass": 3,
+        "requiresSelectedAdded": [],
+        "requiresSelectedEvaluated": [
+          {
+            "outcome": "selected",
+            "source": "css/selector-target-third-party-dom-from-owned-roots",
+            "sourceStatus": "Selected",
+            "target": "css/selector-avoid-deep-descendant-dependencies"
+          },
+          {
+            "outcome": "selected",
+            "source": "css/selector-use-pseudo-classes-for-dom-owned-states",
+            "sourceStatus": "Selected",
+            "target": "css/values-separate-domain-state-modifiers-from-dom-interaction-states"
+          }
+        ],
+        "reviewWithReevaluated": [
+          {
+            "evidence": "The changed state is browser-owned :hover and no app or domain modifier is introduced or changed.",
+            "outcome": "N/A",
+            "source": "css/values-separate-domain-state-modifiers-from-dom-interaction-states",
+            "target": "css/composition-do-not-build-structural-variants-with-modifiers"
+          },
+          {
+            "evidence": "The requested optional variables are not guaranteed to be injected, and every new var() usage includes its original literal value as fallback.",
+            "outcome": "Selected",
+            "source": "css/values-tokenize-repeated-visual-values",
+            "target": "css/values-always-provide-css-variable-fallbacks"
+          }
+        ],
+        "scopeEvidence": [
+          "The only virtual changed-file surface is an existing CSS stylesheet, so css is activated without react or typescript.",
+          "A global Ant Tree selector must be scoped beneath the unchanged .ui_themePreview owner and shortened by removing the redundant .ant-tree ancestor.",
+          "Repeated color, spacing, and radius values must become optional CSS variable reads with literal fallbacks.",
+          "The existing :hover selector is modified, so DOM-owned pseudo-state handling is in scope.",
+          "CSS completion requires the banned-pattern review gate.",
+          "Selected third-party selector ownership requires selector-avoid-deep-descendant-dependencies.",
+          "The pseudo-class contract resolves the hover change as Selected and requires values-separate-domain-state-modifiers-from-dom-interaction-states."
+        ],
+        "selected": {
+          "css": [
+            "selector-avoid-deep-descendant-dependencies",
+            "selector-target-third-party-dom-from-owned-roots",
+            "selector-use-pseudo-classes-for-dom-owned-states",
+            "values-always-provide-css-variable-fallbacks",
+            "values-separate-domain-state-modifiers-from-dom-interaction-states",
+            "values-tokenize-repeated-visual-values",
+            "organization-review-banned-css-patterns-before-finishing"
+          ]
+        },
+        "unknown": {
+          "css": []
+        }
+      },
+      {
+        "activatedSkills": [
+          "css"
+        ],
+        "completionGateAdded": [],
+        "completionGatesEvaluated": [
+          {
+            "outcome": "selected",
+            "rule": "css/organization-review-banned-css-patterns-before-finishing"
+          }
+        ],
+        "generatedIndexDigests": {
+          "css": "sha256:d880d6a72a6007f0df327fc7837333fc0d35633a566be8638f8bc0fad4215c78"
+        },
+        "notApplicable": {
+          "css": [
+            "naming-default-to-plain-css-when-no-module-convention",
+            "naming-keep-scope-slug-unique-per-owner",
+            "naming-name-elements-and-modifiers-by-role",
+            "naming-preserve-route-slug-traceability",
+            "naming-separate-local-and-route-style-scopes",
+            "naming-use-scope-slug-element-modifier-syntax",
+            "composition-compose-classes-with-clsx",
+            "composition-do-not-build-structural-variants-with-modifiers",
+            "composition-keep-classes-single-purpose",
+            "composition-style-ui-components-through-owned-wrappers",
+            "composition-prefer-ui-wrapper-prop-types",
+            "selector-keep-project-selectors-flat",
+            "values-keep-layout-intent-explicit",
+            "organization-keep-style-files-owned-by-one-component-or-route"
+          ]
+        },
+        "pass": 4,
+        "requiresSelectedAdded": [],
+        "requiresSelectedEvaluated": [
+          {
+            "outcome": "selected",
+            "source": "css/selector-target-third-party-dom-from-owned-roots",
+            "sourceStatus": "Selected",
+            "target": "css/selector-avoid-deep-descendant-dependencies"
+          },
+          {
+            "outcome": "selected",
+            "source": "css/selector-use-pseudo-classes-for-dom-owned-states",
+            "sourceStatus": "Selected",
+            "target": "css/values-separate-domain-state-modifiers-from-dom-interaction-states"
+          }
+        ],
+        "reviewWithReevaluated": [
+          {
+            "evidence": "The changed state is browser-owned :hover and no app or domain modifier is introduced or changed.",
+            "outcome": "N/A",
+            "source": "css/values-separate-domain-state-modifiers-from-dom-interaction-states",
+            "target": "css/composition-do-not-build-structural-variants-with-modifiers"
+          },
+          {
+            "evidence": "The requested optional variables are not guaranteed to be injected, and every new var() usage includes its original literal value as fallback.",
+            "outcome": "Selected",
+            "source": "css/values-tokenize-repeated-visual-values",
+            "target": "css/values-always-provide-css-variable-fallbacks"
+          }
+        ],
+        "scopeEvidence": [
+          "The only virtual changed-file surface is an existing CSS stylesheet, so css is activated without react or typescript.",
+          "A global Ant Tree selector must be scoped beneath the unchanged .ui_themePreview owner and shortened by removing the redundant .ant-tree ancestor.",
+          "Repeated color, spacing, and radius values must become optional CSS variable reads with literal fallbacks.",
+          "The existing :hover selector is modified, so DOM-owned pseudo-state handling is in scope.",
+          "CSS completion requires the banned-pattern review gate.",
+          "Selected third-party selector ownership requires selector-avoid-deep-descendant-dependencies.",
+          "The pseudo-class contract resolves the hover change as Selected and requires values-separate-domain-state-modifiers-from-dom-interaction-states."
+        ],
+        "selected": {
+          "css": [
+            "selector-avoid-deep-descendant-dependencies",
+            "selector-target-third-party-dom-from-owned-roots",
+            "selector-use-pseudo-classes-for-dom-owned-states",
+            "values-always-provide-css-variable-fallbacks",
+            "values-separate-domain-state-modifiers-from-dom-interaction-states",
+            "values-tokenize-repeated-visual-values",
+            "organization-review-banned-css-patterns-before-finishing"
+          ]
+        },
+        "unknown": {
+          "css": []
+        }
+      }
+    ],
+    "stable": true,
+    "stablePair": [
+      3,
+      4
+    ]
+  },
+  "runId": "progressive--css-repeated-values-and-optional-token--t2",
+  "runtime": {
+    "declared": {
+      "forkTurns": "none",
+      "oneChildPerTrial": true,
+      "requestedModel": "gpt-5.6-sol",
+      "requestedReasoning": "high",
+      "runtime": "Codex CLI isolated child session"
+    },
+    "evidenceClass": "declared-telemetry-only",
+    "unavailable": {
+      "actualReasoningTelemetry": null,
+      "childTokenUsage": null,
+      "exactModelBuild": null,
+      "observedFileReads": null,
+      "runtimeVersion": null
+    }
+  },
+  "scenarioId": "css-repeated-values-and-optional-token",
+  "scenarioPrompt": "scope a global .ant-tree selector under the existing .ui_themePreview owner root with one descendant level, and replace repeated color/spacing/radius with optional CSS variables and fallbacks; keep the file and owner name unchanged.",
+  "scenarioSha256": "sha256:533fd9c65f792e79a5169099491fd68693e91c8191f8f0fde11767a41d8ad4a7",
+  "schemaVersion": 3,
+  "scoring": {
+    "driftFinalExactMatch": null,
+    "eligible": true,
+    "exactMatch": true,
+    "initialExactMatch": true,
+    "kind": "candidate",
+    "metrics": {
+      "applicableRuleRecall": 1,
+      "domainActivationRecall": 1,
+      "exactSelectionPrecision": 1
+    }
+  },
+  "semanticVerdicts": [],
+  "stagedProvenanceSha256": null,
+  "trial": 2,
+  "virtualPatch": {
+    "files": [
+      {
+        "after": ".ui_themePreview {\n  display: block;\n\n  & .ant-tree-node-content-wrapper {\n    color: var(--ui-theme-preview-tree-color, #334155);\n    padding: var(--ui-theme-preview-tree-node-padding, 8px 12px);\n    border-radius: var(--ui-theme-preview-tree-node-radius, 6px);\n  }\n\n  & .ant-tree-node-content-wrapper:hover {\n    background: var(--ui-theme-preview-tree-color, #334155);\n    padding: var(--ui-theme-preview-tree-node-padding, 8px 12px);\n    border-radius: var(--ui-theme-preview-tree-node-radius, 6px);\n  }\n}\n",
+        "afterSha256": "sha256:5c9bdf48d251aca33a1a63b45f6ee5369a48f46981d9c3f67efdba0572532c87",
+        "afterState": "present",
+        "beforeSha256": "sha256:7912322f693959a55c484b7fca64222ab87daf66f22eb32927e1d5419cb81184",
+        "beforeState": "present",
+        "path": "src/components/ui/theme-preview/theme-preview.css"
+      }
+    ],
+    "summary": "Scope the Ant Tree node selector under the existing owner root with its shortest viable third-party path and replace repeated visual literals with optional CSS variables that retain the original fallback values."
+  }
+}

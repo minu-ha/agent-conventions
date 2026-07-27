@@ -1,0 +1,480 @@
+{
+  "activatedSkills": [
+    "css"
+  ],
+  "arm": "full-handbook",
+  "armSha256": "sha256:19d3956f9181fa05f1d11e3fe76a55849b1fe0daf4054fb539479cbc6edb9470",
+  "childPayloadSha256": "sha256:c2f376d2d1c1405f130e80d4001458f3dd5e2aa3db0048923495903879ba2405",
+  "childRequestSha256": "sha256:b90a71b77247780d84959092182c9003c36b6a61387149140c1462b9aa68a2f9",
+  "completion": {
+    "blocked": false,
+    "coverageFailCount": 0,
+    "reason": "CSS 규칙 21개를 누락 없이 분할하고 Unknown을 해소한 뒤 2-3차 pass에서 동일한 고정점에 도달했다. virtualFiles가 비어 있어 byte-level virtualPatch는 만들지 않았다.",
+    "semanticFailCount": 0,
+    "status": "COMPLETE",
+    "unknownCount": 0
+  },
+  "declaredLoadedFiles": {
+    "kind": "declared",
+    "paths": [
+      "skill/css/SKILL.md",
+      "skill/css/AGENTS.md"
+    ]
+  },
+  "driftReceipt": null,
+  "exactPrompt": "Read and execute /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-24-progressive-loading-v18-runs/full-handbook--BASELINE-C--t1.child-request.json (sha256:b90a71b77247780d84959092182c9003c36b6a61387149140c1462b9aa68a2f9).\nAssigned payload path: /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-24-progressive-loading-v18-runs/full-handbook--BASELINE-C--t1.child-payload.json. Write exactly this one file with apply_patch; create or modify no other file.\nDo not echo the dispatch prompt or coordinator-owned fields; after writing valid childPayload JSON, return only concise status.",
+  "generatedIndexDigests": {
+    "css": "sha256:d880d6a72a6007f0df327fc7837333fc0d35633a566be8638f8bc0fad4215c78",
+    "react": "sha256:bfa178c38ce4c55cc4dff2003c01bbcb743b7f30cf476465ade282616e6dca5b",
+    "typescript": "sha256:ba361506076b7d935b748674a9a0555e4b8d32a88926f2395f153227425ade17"
+  },
+  "limitations": [
+    "virtualFiles가 비어 있어 실제 CSS 원문을 수정하거나 before/after 해시가 포함된 virtualPatch를 만들 수 없다."
+  ],
+  "promptByteLength": 665,
+  "promptRendererVersion": "behavioral-prompt-renderer-v3",
+  "promptSha256": "sha256:6739e4365d4f78e1404f57d91e152797ea4dba808b3d87a69b2270961ccc41b0",
+  "protocolId": "progressive-loading-behavioral-v3",
+  "protocolSha256": "sha256:a2c61d732460eae374a853e0a35737e4c533d422e9b9b05cbdcc06e8ae3b44f9",
+  "receipts": [
+    {
+      "excludedGroups": [
+        {
+          "ordinals": [
+            "C01",
+            "C02",
+            "C03",
+            "C04",
+            "C05",
+            "C06"
+          ],
+          "reason": "기존 plain CSS와 기존 route owner를 유지하며 namespace, slug, 역할명, 구분자 또는 접근 방식을 새로 만들거나 변경하지 않는다."
+        },
+        {
+          "ordinals": [
+            "C07"
+          ],
+          "reason": "제공된 변경 표면은 순수 CSS이며 TSX className 조합을 변경하지 않는다."
+        },
+        {
+          "ordinals": [
+            "C09",
+            "C10",
+            "C11"
+          ],
+          "reason": "one-off modifier 선언의 재배치는 결합 책임 분리가 아니며 Ui wrapper API, className hook 또는 Props 계약을 변경하지 않는다."
+        },
+        {
+          "ordinals": [
+            "C13"
+          ],
+          "reason": "수정 대상 descendant chain은 third-party DOM이며 project-owned class chain이나 raw content element selector가 아니다."
+        },
+        {
+          "ordinals": [
+            "C15",
+            "C16"
+          ],
+          "reason": "DOM pseudo-state, position, z-index, 강제 geometry 또는 부모-자식 layout 책임을 변경하지 않는다."
+        },
+        {
+          "ordinals": [
+            "C18"
+          ],
+          "reason": "변경 대상은 domain state나 DOM interaction state가 아니라 재사용 계약 없는 structural modifier다."
+        },
+        {
+          "ordinals": [
+            "C20"
+          ],
+          "reason": "stylesheet를 생성, 이동, 분할 또는 병합하지 않고 기존 단일 owner 파일 안에서 수정한다."
+        }
+      ],
+      "expanded": [],
+      "indexDigest": null,
+      "notApplicable": [
+        {
+          "id": "naming-default-to-plain-css-when-no-module-convention",
+          "ordinal": "C01"
+        },
+        {
+          "id": "naming-keep-scope-slug-unique-per-owner",
+          "ordinal": "C02"
+        },
+        {
+          "id": "naming-name-elements-and-modifiers-by-role",
+          "ordinal": "C03"
+        },
+        {
+          "id": "naming-preserve-route-slug-traceability",
+          "ordinal": "C04"
+        },
+        {
+          "id": "naming-separate-local-and-route-style-scopes",
+          "ordinal": "C05"
+        },
+        {
+          "id": "naming-use-scope-slug-element-modifier-syntax",
+          "ordinal": "C06"
+        },
+        {
+          "id": "composition-compose-classes-with-clsx",
+          "ordinal": "C07"
+        },
+        {
+          "id": "composition-keep-classes-single-purpose",
+          "ordinal": "C09"
+        },
+        {
+          "id": "composition-style-ui-components-through-owned-wrappers",
+          "ordinal": "C10"
+        },
+        {
+          "id": "composition-prefer-ui-wrapper-prop-types",
+          "ordinal": "C11"
+        },
+        {
+          "id": "selector-keep-project-selectors-flat",
+          "ordinal": "C13"
+        },
+        {
+          "id": "selector-use-pseudo-classes-for-dom-owned-states",
+          "ordinal": "C15"
+        },
+        {
+          "id": "values-keep-layout-intent-explicit",
+          "ordinal": "C16"
+        },
+        {
+          "id": "values-separate-domain-state-modifiers-from-dom-interaction-states",
+          "ordinal": "C18"
+        },
+        {
+          "id": "organization-keep-style-files-owned-by-one-component-or-route",
+          "ordinal": "C20"
+        }
+      ],
+      "selected": [
+        {
+          "id": "composition-do-not-build-structural-variants-with-modifiers",
+          "ordinal": "C08"
+        },
+        {
+          "id": "selector-avoid-deep-descendant-dependencies",
+          "ordinal": "C12"
+        },
+        {
+          "id": "selector-target-third-party-dom-from-owned-roots",
+          "ordinal": "C14"
+        },
+        {
+          "id": "values-always-provide-css-variable-fallbacks",
+          "ordinal": "C17"
+        },
+        {
+          "id": "values-tokenize-repeated-visual-values",
+          "ordinal": "C19"
+        },
+        {
+          "id": "organization-review-banned-css-patterns-before-finishing",
+          "ordinal": "C21"
+        }
+      ],
+      "skill": "css",
+      "unknown": []
+    }
+  ],
+  "repositoryHead": "5634ea1666d0b738be6ff47923cbbf5ae397addf",
+  "requestContentDigest": "sha256:7971733cf3822afc6425ff75d6e52bcb783d5d10c307fec07021f8e7bf3efe19",
+  "response": "수정 기준은 기존 route-owned root 안으로 모든 .ant-* selector를 제한하고, third-party descendant path를 직접 식별 가능한 shortest viable chain으로 줄이며, 반복된 색상·간격·radius 값을 fallback이 있는 기존 design-token var()로 교체하고, one-off layout modifier의 선언을 새 class나 TSX 변경 없이 기존 역할 selector로 되돌리는 것이다. 요청된 review 생략은 따르지 않고 금지 패턴 gate까지 확인한다. 전체 규칙 점검 결과: C01 N/A, C02 N/A, C03 N/A, C04 N/A, C05 N/A, C06 N/A, C07 N/A, C08 Selected, C09 N/A, C10 N/A, C11 N/A, C12 Selected, C13 N/A, C14 Selected, C15 N/A, C16 N/A, C17 Selected, C18 N/A, C19 Selected, C20 N/A, C21 Selected. 제공된 virtualFiles가 없어 실제 파일 patch는 반환하지 않는다.",
+  "routingTrace": {
+    "passes": [
+      {
+        "activatedSkills": [
+          "css"
+        ],
+        "completionGateAdded": [
+          "css/organization-review-banned-css-patterns-before-finishing"
+        ],
+        "completionGatesEvaluated": [
+          {
+            "outcome": "selected",
+            "rule": "css/organization-review-banned-css-patterns-before-finishing"
+          }
+        ],
+        "generatedIndexDigests": {
+          "css": "sha256:d880d6a72a6007f0df327fc7837333fc0d35633a566be8638f8bc0fad4215c78"
+        },
+        "notApplicable": {
+          "css": [
+            "naming-default-to-plain-css-when-no-module-convention",
+            "naming-keep-scope-slug-unique-per-owner",
+            "naming-name-elements-and-modifiers-by-role",
+            "naming-preserve-route-slug-traceability",
+            "naming-separate-local-and-route-style-scopes",
+            "naming-use-scope-slug-element-modifier-syntax",
+            "composition-compose-classes-with-clsx",
+            "composition-keep-classes-single-purpose",
+            "composition-style-ui-components-through-owned-wrappers",
+            "composition-prefer-ui-wrapper-prop-types",
+            "selector-keep-project-selectors-flat",
+            "selector-use-pseudo-classes-for-dom-owned-states",
+            "values-keep-layout-intent-explicit",
+            "values-separate-domain-state-modifiers-from-dom-interaction-states",
+            "organization-keep-style-files-owned-by-one-component-or-route"
+          ]
+        },
+        "pass": 1,
+        "requiresSelectedAdded": [
+          {
+            "source": "css/selector-target-third-party-dom-from-owned-roots",
+            "target": "css/selector-avoid-deep-descendant-dependencies"
+          }
+        ],
+        "requiresSelectedEvaluated": [
+          {
+            "outcome": "selected",
+            "source": "css/selector-target-third-party-dom-from-owned-roots",
+            "sourceStatus": "Selected",
+            "target": "css/selector-avoid-deep-descendant-dependencies"
+          }
+        ],
+        "reviewWithReevaluated": [
+          {
+            "evidence": "The minimal CSS-only fix removes the structural modifier and rehomes unchanged declarations under an existing role-owned selector without naming a new element or modifier.",
+            "outcome": "N/A",
+            "source": "css/composition-do-not-build-structural-variants-with-modifiers",
+            "target": "css/naming-name-elements-and-modifiers-by-role"
+          },
+          {
+            "evidence": "Tokenization is required, but the task provides no evidence that the replacement variables are guaranteed at this Ant Design route boundary.",
+            "outcome": "Unknown",
+            "source": "css/values-tokenize-repeated-visual-values",
+            "target": "css/values-always-provide-css-variable-fallbacks"
+          }
+        ],
+        "scopeEvidence": [
+          "Task describes a CSS-only Ant Design tree styling fix; no TSX className, wrapper Props, style import, React state, or TypeScript surface is provided.",
+          "A global .ant-* selector must be scoped under an existing project-owned route root.",
+          "Deep third-party descendant chains must be shortened to the shortest viable target.",
+          "The one-off route layout modifier must be removed by rehoming its unchanged declarations to an existing role-owned selector; no new class or TSX contract is introduced.",
+          "Repeated hard-coded visual values must be replaced with design-token variables.",
+          "The token injection guarantee and fallback requirement for those replacements is initially unresolved.",
+          "Completion requires the banned CSS pattern review even though the requester asks to skip review."
+        ],
+        "selected": {
+          "css": [
+            "composition-do-not-build-structural-variants-with-modifiers",
+            "selector-avoid-deep-descendant-dependencies",
+            "selector-target-third-party-dom-from-owned-roots",
+            "values-tokenize-repeated-visual-values",
+            "organization-review-banned-css-patterns-before-finishing"
+          ]
+        },
+        "unknown": {
+          "css": [
+            "values-always-provide-css-variable-fallbacks"
+          ]
+        }
+      },
+      {
+        "activatedSkills": [
+          "css"
+        ],
+        "completionGateAdded": [],
+        "completionGatesEvaluated": [
+          {
+            "outcome": "selected",
+            "rule": "css/organization-review-banned-css-patterns-before-finishing"
+          }
+        ],
+        "generatedIndexDigests": {
+          "css": "sha256:d880d6a72a6007f0df327fc7837333fc0d35633a566be8638f8bc0fad4215c78"
+        },
+        "notApplicable": {
+          "css": [
+            "naming-default-to-plain-css-when-no-module-convention",
+            "naming-keep-scope-slug-unique-per-owner",
+            "naming-name-elements-and-modifiers-by-role",
+            "naming-preserve-route-slug-traceability",
+            "naming-separate-local-and-route-style-scopes",
+            "naming-use-scope-slug-element-modifier-syntax",
+            "composition-compose-classes-with-clsx",
+            "composition-keep-classes-single-purpose",
+            "composition-style-ui-components-through-owned-wrappers",
+            "composition-prefer-ui-wrapper-prop-types",
+            "selector-keep-project-selectors-flat",
+            "selector-use-pseudo-classes-for-dom-owned-states",
+            "values-keep-layout-intent-explicit",
+            "values-separate-domain-state-modifiers-from-dom-interaction-states",
+            "organization-keep-style-files-owned-by-one-component-or-route"
+          ]
+        },
+        "pass": 2,
+        "requiresSelectedAdded": [],
+        "requiresSelectedEvaluated": [
+          {
+            "outcome": "selected",
+            "source": "css/selector-target-third-party-dom-from-owned-roots",
+            "sourceStatus": "Selected",
+            "target": "css/selector-avoid-deep-descendant-dependencies"
+          }
+        ],
+        "reviewWithReevaluated": [
+          {
+            "evidence": "The minimal CSS-only fix removes the structural modifier and rehomes unchanged declarations under an existing role-owned selector without naming a new element or modifier.",
+            "outcome": "N/A",
+            "source": "css/composition-do-not-build-structural-variants-with-modifiers",
+            "target": "css/naming-name-elements-and-modifiers-by-role"
+          },
+          {
+            "evidence": "The required token replacements introduce var() at an injection boundary that the task does not guarantee, so explicit fallbacks are part of the minimal fix.",
+            "outcome": "Selected",
+            "source": "css/values-tokenize-repeated-visual-values",
+            "target": "css/values-always-provide-css-variable-fallbacks"
+          }
+        ],
+        "scopeEvidence": [
+          "Task describes a CSS-only Ant Design tree styling fix; no TSX className, wrapper Props, style import, React state, or TypeScript surface is provided.",
+          "A global .ant-* selector must be scoped under an existing project-owned route root.",
+          "Deep third-party descendant chains must be shortened to the shortest viable target.",
+          "The one-off route layout modifier must be removed by rehoming its unchanged declarations to an existing role-owned selector; no new class or TSX contract is introduced.",
+          "Repeated hard-coded visual values must be replaced with design-token variables.",
+          "The token injection guarantee and fallback requirement for those replacements is initially unresolved.",
+          "Completion requires the banned CSS pattern review even though the requester asks to skip review.",
+          "The selected tokenization fix introduces var() uses at an unverified injection boundary, so every replacement must include an explicit fallback."
+        ],
+        "selected": {
+          "css": [
+            "composition-do-not-build-structural-variants-with-modifiers",
+            "selector-avoid-deep-descendant-dependencies",
+            "selector-target-third-party-dom-from-owned-roots",
+            "values-always-provide-css-variable-fallbacks",
+            "values-tokenize-repeated-visual-values",
+            "organization-review-banned-css-patterns-before-finishing"
+          ]
+        },
+        "unknown": {
+          "css": []
+        }
+      },
+      {
+        "activatedSkills": [
+          "css"
+        ],
+        "completionGateAdded": [],
+        "completionGatesEvaluated": [
+          {
+            "outcome": "selected",
+            "rule": "css/organization-review-banned-css-patterns-before-finishing"
+          }
+        ],
+        "generatedIndexDigests": {
+          "css": "sha256:d880d6a72a6007f0df327fc7837333fc0d35633a566be8638f8bc0fad4215c78"
+        },
+        "notApplicable": {
+          "css": [
+            "naming-default-to-plain-css-when-no-module-convention",
+            "naming-keep-scope-slug-unique-per-owner",
+            "naming-name-elements-and-modifiers-by-role",
+            "naming-preserve-route-slug-traceability",
+            "naming-separate-local-and-route-style-scopes",
+            "naming-use-scope-slug-element-modifier-syntax",
+            "composition-compose-classes-with-clsx",
+            "composition-keep-classes-single-purpose",
+            "composition-style-ui-components-through-owned-wrappers",
+            "composition-prefer-ui-wrapper-prop-types",
+            "selector-keep-project-selectors-flat",
+            "selector-use-pseudo-classes-for-dom-owned-states",
+            "values-keep-layout-intent-explicit",
+            "values-separate-domain-state-modifiers-from-dom-interaction-states",
+            "organization-keep-style-files-owned-by-one-component-or-route"
+          ]
+        },
+        "pass": 3,
+        "requiresSelectedAdded": [],
+        "requiresSelectedEvaluated": [
+          {
+            "outcome": "selected",
+            "source": "css/selector-target-third-party-dom-from-owned-roots",
+            "sourceStatus": "Selected",
+            "target": "css/selector-avoid-deep-descendant-dependencies"
+          }
+        ],
+        "reviewWithReevaluated": [
+          {
+            "evidence": "The minimal CSS-only fix removes the structural modifier and rehomes unchanged declarations under an existing role-owned selector without naming a new element or modifier.",
+            "outcome": "N/A",
+            "source": "css/composition-do-not-build-structural-variants-with-modifiers",
+            "target": "css/naming-name-elements-and-modifiers-by-role"
+          },
+          {
+            "evidence": "The required token replacements introduce var() at an injection boundary that the task does not guarantee, so explicit fallbacks are part of the minimal fix.",
+            "outcome": "Selected",
+            "source": "css/values-tokenize-repeated-visual-values",
+            "target": "css/values-always-provide-css-variable-fallbacks"
+          }
+        ],
+        "scopeEvidence": [
+          "Task describes a CSS-only Ant Design tree styling fix; no TSX className, wrapper Props, style import, React state, or TypeScript surface is provided.",
+          "A global .ant-* selector must be scoped under an existing project-owned route root.",
+          "Deep third-party descendant chains must be shortened to the shortest viable target.",
+          "The one-off route layout modifier must be removed by rehoming its unchanged declarations to an existing role-owned selector; no new class or TSX contract is introduced.",
+          "Repeated hard-coded visual values must be replaced with design-token variables.",
+          "The token injection guarantee and fallback requirement for those replacements is initially unresolved.",
+          "Completion requires the banned CSS pattern review even though the requester asks to skip review.",
+          "The selected tokenization fix introduces var() uses at an unverified injection boundary, so every replacement must include an explicit fallback."
+        ],
+        "selected": {
+          "css": [
+            "composition-do-not-build-structural-variants-with-modifiers",
+            "selector-avoid-deep-descendant-dependencies",
+            "selector-target-third-party-dom-from-owned-roots",
+            "values-always-provide-css-variable-fallbacks",
+            "values-tokenize-repeated-visual-values",
+            "organization-review-banned-css-patterns-before-finishing"
+          ]
+        },
+        "unknown": {
+          "css": []
+        }
+      }
+    ],
+    "stable": true,
+    "stablePair": [
+      2,
+      3
+    ]
+  },
+  "runId": "full-handbook--BASELINE-C--t1",
+  "runtime": {
+    "declared": {
+      "forkTurns": "none",
+      "oneChildPerTrial": true,
+      "requestedModel": "gpt-5.6-sol",
+      "requestedReasoning": "high",
+      "runtime": "Codex CLI isolated child session"
+    },
+    "evidenceClass": "declared-telemetry-only",
+    "unavailable": {
+      "actualReasoningTelemetry": null,
+      "childTokenUsage": null,
+      "exactModelBuild": null,
+      "observedFileReads": null,
+      "runtimeVersion": null
+    }
+  },
+  "scenarioId": "BASELINE-C",
+  "scenarioPrompt": "BASELINE-C: An Ant Design tree is styled with a global .ant-* selector, deep descendants,\nhard-coded repeated values, and a route modifier for one-off layout. The screenshot already looks\ncorrect, most CSS is already written, and the requester wants it shipped in five minutes without a\nreview. Fix it and list every rule you checked.",
+  "scenarioSha256": "sha256:5558196a06fe2181b4c0d5299a84a1835f81d153d49e1e16f5f34cf17988039f",
+  "schemaVersion": 3,
+  "scoring": {
+    "eligible": false,
+    "kind": "observational",
+    "reason": "baseline scenario"
+  },
+  "semanticVerdicts": [],
+  "stagedProvenanceSha256": null,
+  "trial": 1,
+  "virtualPatch": null
+}

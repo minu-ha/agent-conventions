@@ -1,0 +1,75 @@
+{
+  "runtime": {
+    "declared": {
+      "forkTurns": "none",
+      "oneChildPerTrial": true,
+      "requestedModel": "gpt-5.6-sol",
+      "requestedReasoning": "high",
+      "runtime": "Codex CLI isolated child session"
+    },
+    "evidenceClass": "declared-telemetry-only",
+    "unavailable": {
+      "actualReasoningTelemetry": null,
+      "childTokenUsage": null,
+      "exactModelBuild": null,
+      "observedFileReads": null,
+      "runtimeVersion": null
+    }
+  },
+  "declaredLoadedFiles": {
+    "kind": "declared",
+    "paths": []
+  },
+  "activatedSkills": [],
+  "receipts": [],
+  "routingTrace": null,
+  "driftReceipt": null,
+  "semanticVerdicts": [
+    {
+      "criterion": "Replace the non-repeatable section--compactTop modifier with a role-named element in both virtual files.",
+      "verdict": "PASS",
+      "reason": "The TSX and CSS now use route_catalogDetail__summarySection instead of route_catalogDetail__section--compactTop."
+    },
+    {
+      "criterion": "Keep the existing clsx import.",
+      "verdict": "PASS",
+      "reason": "The virtual TSX retains import clsx from \"clsx\" and continues to use clsx for class composition."
+    },
+    {
+      "criterion": "Return a complete virtual patch without editing repository source files.",
+      "verdict": "PASS",
+      "reason": "The patch covers both supplied virtual files in order and records their exact before and after digests."
+    }
+  ],
+  "completion": {
+    "status": "COMPLETE",
+    "blocked": false,
+    "coverageFailCount": 0,
+    "semanticFailCount": 0,
+    "unknownCount": 0,
+    "reason": "All requested virtual changes are represented and all declared semantic criteria pass."
+  },
+  "limitations": [],
+  "response": "Replaced the one-off compact-top modifier with the role-named summarySection element class in the virtual TSX and CSS while preserving the existing clsx import.",
+  "virtualPatch": {
+    "files": [
+      {
+        "path": "src/routes/catalog/detail.tsx",
+        "beforeState": "present",
+        "beforeSha256": "sha256:14ed551407a617956505f2236cb90b7b764ce2b7e33d02cc12e5261c5684b899",
+        "afterState": "present",
+        "after": "import clsx from \"clsx\";\n\nimport \"./detail.css\";\n\nexport const CatalogDetail = () => (\n  <main className=\"route_catalogDetail\">\n    <section className={clsx(\"route_catalogDetail__section\", \"route_catalogDetail__summarySection\")}>\n      <h2>Summary</h2>\n    </section>\n  </main>\n);\n",
+        "afterSha256": "sha256:65314ed9fc7a1b7bdea76938de68f2bd9e48c3f20e06160222fdfa6680dcedbf"
+      },
+      {
+        "path": "src/routes/catalog/detail.css",
+        "beforeState": "present",
+        "beforeSha256": "sha256:cf0154ddf5c49b5e373fce4900f2bad7d17221e5f19e4e5cae110c7933024e88",
+        "afterState": "present",
+        "after": ".route_catalogDetail__section {\n  padding: 24px;\n}\n\n.route_catalogDetail__summarySection {\n  padding-top: 8px;\n}\n",
+        "afterSha256": "sha256:9e659fc0c376f5536f6a90b84bbd04acaac6fbcc27d8922d14f94ab1d54e5ea2"
+      }
+    ],
+    "summary": "Renamed the one-off compact-top modifier to the role-named summarySection element class across the virtual component and stylesheet."
+  }
+}

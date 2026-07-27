@@ -8,6 +8,7 @@ import {promisify} from "node:util";
 import test from "node:test";
 
 import {
+	type BehavioralChildRequest,
 	createBehavioralCoordinatorArtifacts,
 	enumerateBehavioralEvalRunMatrix,
 	mergeBehavioralEvalChildPayload,
@@ -216,6 +217,11 @@ test("coordinator persists a deterministic short dispatch and sealed child reque
 		const second = await createBehavioralCoordinatorArtifacts(args);
 
 		assert.deepEqual(first, second);
+		assert.deepEqual(first.request.allowedReviewWithEdges, []);
+		assert.match(
+			first.request.reviewWithEdgeContract,
+			/directed.*not symmetric.*not transitive.*must not infer.*reverse.*each pass.*source.*Selected.*exactly/i,
+		);
 		assert.ok(Buffer.byteLength(first.exactDispatch, "utf8") < 700);
 		assert.match(first.exactDispatch, /Assigned payload path:/);
 		assert.match(first.exactDispatch, /Write exactly this one file with apply_patch/);
@@ -293,6 +299,7 @@ test("coordinator persists a deterministic short dispatch and sealed child reque
 			runId: "full-handbook--BASELINE-T--t1",
 			arm: "full-handbook",
 		});
+		assert.ok(fullHandbook.request.allowedReviewWithEdges.length > 0);
 		assert.deepEqual(Object.keys(fullHandbook.request.identityDictionary).sort(), ["css", "react", "typescript"]);
 		assert.equal(Object.values(fullHandbook.request.identityDictionary).flat().length, 85);
 		assert.match(
@@ -325,6 +332,7 @@ test("coordinator persists a deterministic short dispatch and sealed child reque
 			arm: "mutation",
 			scenarioId: "RTE08-mutation-selected-to-na",
 		});
+		assert.deepEqual(mutation.request.allowedReviewWithEdges, fullHandbook.request.allowedReviewWithEdges);
 		assert.match(
 			mutation.request.armRoutingContract,
 			/semanticVerdicts.*empty.*coverageFailCount.*1.*semanticFailCount.*0.*unknownCount.*0.*BLOCKED.*blocked.*true/i,
@@ -350,6 +358,45 @@ test("coordinator persists a deterministic short dispatch and sealed child reque
 		assert.equal(await readFile(prepared.requestPath, "utf8"), first.requestRaw);
 		assert.deepEqual(JSON.parse(await readFile(prepared.envelopePath, "utf8")), first.envelope);
 		await assert.rejects(prepareBehavioralEvalDispatch(args), /already exists|overwrite/i);
+	} finally {
+		await rm(fixtureDir, {recursive: true, force: true});
+	}
+});
+
+test("RTE12 request exposes the canonical forward reviewWith edge without an invented reverse edge", async () => {
+	const fixtureDir = await mkdtemp(path.join(tmpdir(), "behavioral-rte12-review-with-edges-"));
+
+	try {
+		const fixture = await createCleanRepositoryFixture(fixtureDir);
+		const prepared = await prepareBehavioralEvalDispatch({
+			protocolPath: fixture.protocolPath,
+			repositoryHead: fixture.head,
+			runId: "progressive--RTE12-query-shaping--t1",
+			arm: "progressive",
+			scenarioId: "RTE12-query-shaping",
+			trial: 1,
+			outputDir: path.join(fixtureDir, "runs"),
+			repositoryDir: fixture.repositoryDir,
+			skillRootDir: fixture.skillRootDir,
+		});
+		const request = JSON.parse(await readFile(prepared.requestPath, "utf8")) as Pick<
+			BehavioralChildRequest,
+			"allowedReviewWithEdges" | "reviewWithEdgeContract"
+		>;
+		const edgeKeys = request.allowedReviewWithEdges.map(({source, target}) => `${source}->${target}`);
+
+		assert.ok(
+			edgeKeys.includes("react/state-preserve-origin-chaining->react/screen-keep-derived-values-close"),
+			"RTE12 must receive the generated forward reviewWith edge",
+		);
+		assert.ok(
+			!edgeKeys.includes("react/screen-keep-derived-values-close->react/state-preserve-origin-chaining"),
+			"RTE12 must not receive an invented reverse reviewWith edge",
+		);
+		assert.match(
+			request.reviewWithEdgeContract,
+			/directed.*not symmetric.*not transitive.*must not infer.*reverse.*each pass.*source.*Selected.*exactly/i,
+		);
 	} finally {
 		await rm(fixtureDir, {recursive: true, force: true});
 	}

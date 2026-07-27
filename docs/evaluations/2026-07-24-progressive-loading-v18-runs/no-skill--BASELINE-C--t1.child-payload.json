@@ -1,0 +1,41 @@
+{
+  "runtime": {
+    "declared": {
+      "forkTurns": "none",
+      "oneChildPerTrial": true,
+      "requestedModel": "gpt-5.6-sol",
+      "requestedReasoning": "high",
+      "runtime": "Codex CLI isolated child session"
+    },
+    "evidenceClass": "declared-telemetry-only",
+    "unavailable": {
+      "actualReasoningTelemetry": null,
+      "childTokenUsage": null,
+      "exactModelBuild": null,
+      "observedFileReads": null,
+      "runtimeVersion": null
+    }
+  },
+  "declaredLoadedFiles": {
+    "kind": "declared",
+    "paths": []
+  },
+  "activatedSkills": [],
+  "receipts": [],
+  "routingTrace": null,
+  "driftReceipt": null,
+  "semanticVerdicts": [],
+  "completion": {
+    "status": "COMPLETE",
+    "blocked": false,
+    "coverageFailCount": 0,
+    "semanticFailCount": 0,
+    "unknownCount": 0,
+    "reason": "The response is complete, but no virtual files were supplied, so no code change can be represented."
+  },
+  "limitations": [
+    "No virtualFiles were provided; therefore virtualPatch is null and the requested CSS fix cannot be applied or verified."
+  ],
+  "response": "수정 대상 virtualFiles가 없어 CSS 패치를 만들거나 현재 화면을 검증할 수 없습니다. 확인할 항목은 전역 .ant-* 선택자 제거와 컴포넌트 래퍼 범위 지정, 깊은 후손 선택자 축소, 반복 하드코딩 값의 공통 토큰화, 일회성 라우트 modifier의 소유 범위 정리, 변경 후 시각 회귀 및 영향 범위 검토입니다. 실제 파일 없이 수정 완료나 5분 내 무검토 배포를 주장하지 않습니다.",
+  "virtualPatch": null
+}

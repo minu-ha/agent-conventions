@@ -34,7 +34,135 @@ interface StagingFixture {
 	driftPayload: Record<string, unknown>;
 }
 
+/** @summary staged exact dispatch fixture 생성 입력 */
+interface CreateExactDispatchArgs {
+	/** @field child가 읽을 request 절대 경로 */
+	requestPath: string;
+	/** @field request raw bytes SHA-256 */
+	requestSha256: string;
+	/** @field child에게 할당한 payload 절대 경로 */
+	childPayloadPath: string;
+	/** @field initial 또는 drift 실행 단계 */
+	stage: "initial" | "drift";
+	/** @field 실행 중인 bound child session target */
+	agentTarget: string;
+}
+
 const createSha256 = (value: string): string => `sha256:${createHash("sha256").update(value).digest("hex")}`;
+
+/** @helper test fixture JSON을 production artifact와 같은 key 순서로 정규화 */
+const sortJsonValue = (value: unknown): unknown => {
+	if (Array.isArray(value)) {
+		return value.map(sortJsonValue);
+	}
+
+	if (typeof value === "object" && value !== null) {
+		return Object.fromEntries(
+			Object.entries(value as Record<string, unknown>)
+				.sort(([left], [right]) => left.localeCompare(right, "en"))
+				.map(([key, child]) => [key, sortJsonValue(child)]),
+		);
+	}
+
+	return value;
+};
+
+/** @helper production staged artifact와 같은 canonical JSON bytes 생성 */
+const serializeJson = (value: unknown): string => `${JSON.stringify(sortJsonValue(value), null, 2)}\n`;
+
+/** @helper production staged content binding과 같은 canonical SHA-256 생성 */
+const createCanonicalSha256 = (value: unknown): string => createSha256(JSON.stringify(sortJsonValue(value)));
+
+/** @helper coordinated tamper가 다시 계산하는 staged exact dispatch 생성 */
+const createExactDispatch = (args: CreateExactDispatchArgs): string => {
+	const {requestPath, requestSha256, childPayloadPath, stage, agentTarget} = args;
+
+	return [
+		`Read and execute ${requestPath} (${requestSha256}).`,
+		`This exact dispatch is already running in the bound isolated Codex CLI child session: ${agentTarget}. Treat that identifier as this current session; do not spawn, hand off, or redispatch to another agent.`,
+		`Assigned ${stage} payload path: ${childPayloadPath}. Write exactly this one file with apply_patch; create or modify no other file.`,
+		"Do not echo coordinator-owned fields; after writing valid JSON, return only concise status.",
+	].join("\n");
+};
+
+const bindTamperedInitialEnvelope = (envelope: Record<string, unknown>, requestRaw: string): void => {
+	const childRequest = envelope.childRequest as Record<string, unknown>;
+	const dispatch = envelope.dispatchEnvelope as Record<string, unknown>;
+	const protocol = envelope.protocol as Record<string, unknown>;
+	const requestSha256 = createSha256(requestRaw);
+	const exactPrompt = createExactDispatch({
+		requestPath: String(childRequest.path),
+		requestSha256,
+		childPayloadPath: String(envelope.assignedChildPayloadPath),
+		stage: "initial",
+		agentTarget: String(envelope.agentTarget),
+	});
+	childRequest.sha256 = requestSha256;
+	childRequest.utf8ByteLength = Buffer.byteLength(requestRaw, "utf8");
+	dispatch.exactPrompt = exactPrompt;
+	dispatch.promptSha256 = createSha256(exactPrompt);
+	dispatch.promptByteLength = Buffer.byteLength(exactPrompt, "utf8");
+	envelope.requestContentDigest = createCanonicalSha256({
+		schemaVersion: 1,
+		stage: "initial",
+		protocolId: "progressive-loading-behavioral-v3",
+		protocolSha256: protocol.sha256,
+		armSha256: protocol.armSha256,
+		fullScenarioSha256: protocol.fullScenarioSha256,
+		stageScenarioSha256: protocol.stageScenarioSha256,
+		repositoryHead: dispatch.repositoryHead,
+		runId: dispatch.runId,
+		arm: dispatch.arm,
+		trial: dispatch.trial,
+		generatedIndexDigests: dispatch.generatedIndexDigests,
+		promptSha256: dispatch.promptSha256,
+		promptByteLength: dispatch.promptByteLength,
+		promptRendererVersion: dispatch.promptRendererVersion,
+		childRequestSha256: requestSha256,
+		agentTarget: envelope.agentTarget,
+	});
+};
+
+const bindTamperedFollowupEnvelope = (envelope: Record<string, unknown>, requestRaw: string): void => {
+	const childRequest = envelope.childRequest as Record<string, unknown>;
+	const dispatch = envelope.dispatchEnvelope as Record<string, unknown>;
+	const initialEnvelope = envelope.initialEnvelope as Record<string, unknown>;
+	const initialSeal = envelope.initialSeal as Record<string, unknown>;
+	const initialPayload = envelope.initialPayload as Record<string, unknown>;
+	const requestSha256 = createSha256(requestRaw);
+	const exactPrompt = createExactDispatch({
+		requestPath: String(childRequest.path),
+		requestSha256,
+		childPayloadPath: String(envelope.assignedChildPayloadPath),
+		stage: "drift",
+		agentTarget: String(envelope.agentTarget),
+	});
+	childRequest.sha256 = requestSha256;
+	childRequest.utf8ByteLength = Buffer.byteLength(requestRaw, "utf8");
+	dispatch.exactPrompt = exactPrompt;
+	dispatch.promptSha256 = createSha256(exactPrompt);
+	dispatch.promptByteLength = Buffer.byteLength(exactPrompt, "utf8");
+	envelope.requestContentDigest = createCanonicalSha256({
+		schemaVersion: 1,
+		stage: "drift",
+		protocolId: "progressive-loading-behavioral-v3",
+		protocol: envelope.protocol,
+		repositoryHead: dispatch.repositoryHead,
+		runId: dispatch.runId,
+		arm: dispatch.arm,
+		trial: dispatch.trial,
+		generatedIndexDigests: dispatch.generatedIndexDigests,
+		agentTarget: envelope.agentTarget,
+		initialEnvelopeSha256: initialEnvelope.sha256,
+		initialSealSha256: initialSeal.sha256,
+		initialPayloadSha256: initialPayload.sha256,
+		initialVirtualPatchSha256: initialPayload.virtualPatchSha256,
+		promptSha256: dispatch.promptSha256,
+		promptByteLength: dispatch.promptByteLength,
+		promptRendererVersion: dispatch.promptRendererVersion,
+		childRequestSha256: requestSha256,
+	});
+};
 
 const createRuntime = (): Record<string, unknown> => ({
 	evidenceClass: "declared-telemetry-only",
@@ -324,6 +452,11 @@ test("initial artifacts preserve the existing run coordinate and completely seal
 		const second = await createStagedInitialArtifacts(args);
 
 		assert.deepEqual(first, second);
+		assert.deepEqual(first.request.allowedReviewWithEdges, []);
+		assert.match(
+			first.request.reviewWithEdgeContract,
+			/directed.*not symmetric.*not transitive.*must not infer.*reverse.*each pass.*source.*Selected.*exactly/i,
+		);
 		assert.equal(first.request.runId, runId);
 		assert.equal(first.request.agentTarget, "/root/rte02-no-skill-t1");
 		assert.equal(first.envelope.agentTarget, first.request.agentTarget);
@@ -357,6 +490,7 @@ test("initial artifacts preserve the existing run coordinate and completely seal
 			arm: "full-handbook",
 			agentTarget: "/root/rte02-full-handbook-t1",
 		});
+		assert.ok(fullHandbook.request.allowedReviewWithEdges.length > 0);
 		assert.deepEqual(
 			fullHandbook.request.armPolicy.currentGeneratedIndexDigests,
 			fullHandbook.envelope.dispatchEnvelope.generatedIndexDigests,
@@ -471,6 +605,45 @@ test("initial payload seal binds the immutable bytes, virtual before states, and
 	}
 });
 
+test("initial verification rejects a coordinated request and envelope contract tamper", async () => {
+	const fixtureDir = await mkdtemp(path.join(tmpdir(), "behavioral-staging-initial-coordinated-tamper-"));
+
+	try {
+		const fixture = await createFixture(fixtureDir);
+		const prepared = await prepareStagedInitialDispatch({
+			protocolPath: fixture.protocolPath,
+			repositoryHead: fixture.head,
+			runId,
+			arm: "no-skill",
+			trial: 1,
+			agentTarget: "/root/rte02-no-skill-t1",
+			outputDir: fixture.outputDir,
+			repositoryDir: fixture.repositoryDir,
+			skillRootDir: fixture.skillRootDir,
+		});
+		await writeFile(prepared.childPayloadPath, `${JSON.stringify(fixture.initialPayload, null, 2)}\n`, "utf8");
+		const request = JSON.parse(await readFile(prepared.requestPath, "utf8")) as Record<string, unknown>;
+		request.reviewWithEdgeContract = "tampered but internally rebound contract";
+		const requestRaw = serializeJson(request);
+		const envelope = JSON.parse(await readFile(prepared.envelopePath, "utf8")) as Record<string, unknown>;
+		bindTamperedInitialEnvelope(envelope, requestRaw);
+		await writeFile(prepared.requestPath, requestRaw, "utf8");
+		await writeFile(prepared.envelopePath, serializeJson(envelope), "utf8");
+
+		await assert.rejects(
+			sealStagedInitialPayload({
+				envelopePath: prepared.envelopePath,
+				childPayloadPath: prepared.childPayloadPath,
+				agentTarget: "/root/rte02-no-skill-t1",
+				outputDir: fixture.outputDir,
+			}),
+			/initial child request must exactly match.*canonical|canonical.*initial child request/i,
+		);
+	} finally {
+		await rm(fixtureDir, {recursive: true, force: true});
+	}
+});
+
 test("follow-up preparation reveals drift only after the sealed initial payload and rejects later mutation", async () => {
 	const fixtureDir = await mkdtemp(path.join(tmpdir(), "behavioral-staging-followup-"));
 
@@ -501,6 +674,11 @@ test("follow-up preparation reveals drift only after the sealed initial payload 
 		});
 
 		assert.equal(followup.request.stage, "drift");
+		assert.deepEqual(followup.request.allowedReviewWithEdges, []);
+		assert.match(
+			followup.request.reviewWithEdgeContract,
+			/directed.*not symmetric.*not transitive.*must not infer.*reverse.*each pass.*source.*Selected.*exactly/i,
+		);
 		assert.equal(followup.request.agentTarget, "/root/rte02-no-skill-t1");
 		assert.match(followup.request.task, /CSS Modules/);
 		assert.deepEqual(followup.request.files, [
@@ -633,6 +811,60 @@ test("staged merge enforces the same target and writes a deterministic immutable
 				outputDir: fixture.outputDir,
 			}),
 			/already exists|overwrite/i,
+		);
+	} finally {
+		await rm(fixtureDir, {recursive: true, force: true});
+	}
+});
+
+test("follow-up verification rejects coordinated directed-edge request and envelope tampering", async () => {
+	const fixtureDir = await mkdtemp(path.join(tmpdir(), "behavioral-staging-followup-coordinated-tamper-"));
+
+	try {
+		const fixture = await createFixture(fixtureDir);
+		const initial = await prepareStagedInitialDispatch({
+			protocolPath: fixture.protocolPath,
+			repositoryHead: fixture.head,
+			runId,
+			arm: "no-skill",
+			trial: 1,
+			agentTarget: "/root/rte02-no-skill-t1",
+			outputDir: fixture.outputDir,
+			repositoryDir: fixture.repositoryDir,
+			skillRootDir: fixture.skillRootDir,
+		});
+		await writeFile(initial.childPayloadPath, `${JSON.stringify(fixture.initialPayload, null, 2)}\n`, "utf8");
+		const sealed = await sealStagedInitialPayload({
+			envelopePath: initial.envelopePath,
+			childPayloadPath: initial.childPayloadPath,
+			agentTarget: "/root/rte02-no-skill-t1",
+			outputDir: fixture.outputDir,
+		});
+		const followup = await prepareStagedFollowupDispatch({
+			initialEnvelopePath: initial.envelopePath,
+			initialSealPath: sealed.sealPath,
+			outputDir: fixture.outputDir,
+		});
+		await writeFile(followup.childPayloadPath, `${JSON.stringify(fixture.driftPayload, null, 2)}\n`, "utf8");
+		const request = JSON.parse(await readFile(followup.requestPath, "utf8")) as Record<string, unknown>;
+		request.allowedReviewWithEdges = [{source: "react/screen-keep-derived-values-close", target: "react/state-preserve-origin-chaining"}];
+		const requestRaw = serializeJson(request);
+		const envelope = JSON.parse(await readFile(followup.envelopePath, "utf8")) as Record<string, unknown>;
+		bindTamperedFollowupEnvelope(envelope, requestRaw);
+		await writeFile(followup.requestPath, requestRaw, "utf8");
+		await writeFile(followup.envelopePath, serializeJson(envelope), "utf8");
+
+		await assert.rejects(
+			mergeStagedBehavioralPayloads({
+				initialEnvelopePath: initial.envelopePath,
+				initialSealPath: sealed.sealPath,
+				followupEnvelopePath: followup.envelopePath,
+				initialChildPayloadPath: initial.childPayloadPath,
+				driftChildPayloadPath: followup.childPayloadPath,
+				agentTarget: "/root/rte02-no-skill-t1",
+				outputDir: fixture.outputDir,
+			}),
+			/follow-up child request must exactly match.*canonical|canonical.*follow-up child request/i,
 		);
 	} finally {
 		await rm(fixtureDir, {recursive: true, force: true});

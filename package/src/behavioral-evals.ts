@@ -162,9 +162,9 @@ type PromptProvenance = Pick<
 >;
 
 /**
- * @summary fixed-point pass의 requiresSelected 전이 기록
+ * @summary requiresSelected와 reviewWith가 공유하는 directed routing edge 계약
  */
-interface RoutingEdge {
+export interface RoutingEdge {
 	/**
 	 * @field mandatory 또는 review 관계의 source qualified rule ID
 	 */
@@ -174,6 +174,9 @@ interface RoutingEdge {
 	 */
 	target: string;
 }
+
+export const behavioralReviewWithEdgeContract =
+	"allowedReviewWithEdges is the complete coordinator-generated directed pair list from current generated indexes. The relation is directed, not symmetric, and not transitive: you must not infer reverse or chained edges. In each pass, for every source that is Selected, reviewWithReevaluated must contain exactly its allowed edges and no other edges; omit edges whose source is not Selected.";
 
 /**
  * @summary reviewWith target의 pass-local 적용성 재평가 결과
@@ -1420,6 +1423,27 @@ const readSkillRoutingSnapshot = async (skillName: string, skillRootDir: string)
 		ordinalByRuleId: new Map(ruleIds.map((ruleId, index) => [ruleId, `${ordinalPrefix}${String(index + 1).padStart(2, "0")}`])),
 		ruleById: new Map(document.rules.map((rule) => [getRuleId(rule), rule])),
 	};
+};
+
+/**
+ * @api current generated routing source에서 reviewWith directed pair 집합 생성
+ */
+export const createBehavioralAllowedReviewWithEdges = async (
+	skillRootDir: string,
+	skillNames: readonly string[],
+): Promise<RoutingEdge[]> => {
+	const snapshots = await Promise.all(skillNames.map((skillName) => readSkillRoutingSnapshot(skillName, skillRootDir)));
+
+	return snapshots.flatMap((snapshot) =>
+		snapshot.ruleIds.flatMap((ruleId) => {
+			const rule = snapshot.ruleById.get(ruleId)!;
+
+			return getCanonicalRoutingTargets(rule.reviewWith).map((target) => ({
+				source: `${snapshot.document.skillName}/${ruleId}`,
+				target: getQualifiedTarget(snapshot.document.skillName, target),
+			}));
+		}),
+	);
 };
 
 /**

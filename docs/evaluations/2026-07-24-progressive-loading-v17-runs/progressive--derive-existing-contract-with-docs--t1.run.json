@@ -1,0 +1,516 @@
+{
+  "activatedSkills": [
+    "typescript"
+  ],
+  "arm": "progressive",
+  "armSha256": "sha256:ce85daeb6c52e884592a3c7e6f17f94a9b58e8202c012ac9e40d5c8fd1b350c2",
+  "childPayloadSha256": "sha256:9bb687ea24c3ee6b743d747226fa89ccac8f0895aa66fbfa84b59939a0565132",
+  "childRequestSha256": "sha256:9a9c8917239eec2b4711984066b2c329d4bea5c4d5aea302b40cbfe1fb7a9454",
+  "completion": {
+    "blocked": false,
+    "coverageFailCount": 0,
+    "reason": "TypeScript 규칙 파티션과 필수 전이가 고정점에 도달했고 가상 패치가 요청 범위에 맞는다.",
+    "semanticFailCount": 0,
+    "status": "COMPLETE",
+    "unknownCount": 0
+  },
+  "declaredLoadedFiles": {
+    "kind": "declared",
+    "paths": [
+      "skill/typescript/SKILL.md",
+      "skill/typescript/RULES_INDEX.md",
+      "skill/typescript/contracts/types-document-custom-types-and-shapes.md",
+      "skill/typescript/rules/types-document-custom-types-and-shapes.md",
+      "skill/typescript/contracts/types-reuse-existing-contracts-before-new-types.md",
+      "skill/typescript/contracts/docs-require-header-jsdoc-on-key-declarations.md",
+      "skill/typescript/contracts/docs-standardize-annotation-tags-by-declaration-role.md",
+      "skill/typescript/contracts/docs-write-concise-korean-comments-about-purpose-and-constraints.md",
+      "skill/typescript/contracts/guardrails-review-banned-typescript-shortcuts-before-finishing.md"
+    ]
+  },
+  "driftReceipt": null,
+  "exactPrompt": "Read and execute /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-24-progressive-loading-v17-runs/progressive--derive-existing-contract-with-docs--t1.child-request.json (sha256:9a9c8917239eec2b4711984066b2c329d4bea5c4d5aea302b40cbfe1fb7a9454).\nAssigned payload path: /Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-24-progressive-loading-v17-runs/progressive--derive-existing-contract-with-docs--t1.child-payload.json. Write exactly this one file with apply_patch; create or modify no other file.\nDo not echo the dispatch prompt or coordinator-owned fields; after writing valid childPayload JSON, return only concise status.",
+  "generatedIndexDigests": {
+    "css": "sha256:d880d6a72a6007f0df327fc7837333fc0d35633a566be8638f8bc0fad4215c78",
+    "react": "sha256:bfa178c38ce4c55cc4dff2003c01bbcb743b7f30cf476465ade282616e6dca5b",
+    "typescript": "sha256:ba361506076b7d935b748674a9a0555e4b8d32a88926f2395f153227425ade17"
+  },
+  "limitations": [],
+  "promptByteLength": 709,
+  "promptRendererVersion": "behavioral-prompt-renderer-v3",
+  "promptSha256": "sha256:c3d8de11efec80c6c08a8bee2ed69e19a7ee839cbc6ce32bbda1f7d543bed030",
+  "protocolId": "progressive-loading-behavioral-v3",
+  "protocolSha256": "sha256:d02baea737c1d32169982bcf36900409e376775b9f780e44f60b60d962a9ef96",
+  "receipts": [
+    {
+      "excludedGroups": [
+        {
+          "ordinals": [
+            "T01",
+            "T02"
+          ],
+          "reason": "shared config namespace나 config/util 접근 방식은 바뀌지 않는다."
+        },
+        {
+          "ordinals": [
+            "T03"
+          ],
+          "reason": "파일과 UserPreview 심볼 이름을 그대로 유지한다."
+        },
+        {
+          "ordinals": [
+            "T04"
+          ],
+          "reason": "import/export 경로와 specifier는 변경하지 않는다."
+        },
+        {
+          "ordinals": [
+            "T06",
+            "T07",
+            "T08"
+          ],
+          "reason": "callback 또는 callable 구현 계약 변경이 없다."
+        },
+        {
+          "ordinals": [
+            "T10",
+            "T11",
+            "T12",
+            "T13",
+            "T14",
+            "T15",
+            "T16"
+          ],
+          "reason": "함수 조립, helper 경계, 정렬, enum, 매개변수, 반복 조회, fallback 변경이 없다."
+        },
+        {
+          "ordinals": [
+            "T17"
+          ],
+          "reason": "함수 본문의 inline comment를 추가하거나 변경하지 않는다."
+        },
+        {
+          "ordinals": [
+            "T20"
+          ],
+          "reason": "재사용 pure helper를 추가하거나 변경하지 않는다."
+        }
+      ],
+      "expanded": [
+        {
+          "contractPath": "skill/typescript/contracts/types-document-custom-types-and-shapes.md",
+          "fullRulePath": "skill/typescript/rules/types-document-custom-types-and-shapes.md",
+          "id": "types-document-custom-types-and-shapes",
+          "mandatoryCritical": true,
+          "ordinal": "T05",
+          "reason": "CRITICAL 규칙은 구현 전에 원문 확인이 필수다."
+        }
+      ],
+      "indexDigest": "sha256:ba361506076b7d935b748674a9a0555e4b8d32a88926f2395f153227425ade17",
+      "notApplicable": [
+        {
+          "id": "naming-centralize-shared-config-namespaces",
+          "ordinal": "T01"
+        },
+        {
+          "id": "naming-preserve-config-origin-with-chained-access",
+          "ordinal": "T02"
+        },
+        {
+          "id": "naming-use-consistent-file-and-symbol-naming",
+          "ordinal": "T03"
+        },
+        {
+          "id": "naming-use-direct-imports-and-public-entry-points",
+          "ordinal": "T04"
+        },
+        {
+          "id": "types-mark-unused-parameters-with-underscore",
+          "ordinal": "T06"
+        },
+        {
+          "id": "types-prefer-function-variable-types-over-parameter-annotations",
+          "ordinal": "T07"
+        },
+        {
+          "id": "types-reuse-callback-signatures-from-existing-contracts",
+          "ordinal": "T08"
+        },
+        {
+          "id": "functions-avoid-imperative-assembly-in-wide-scopes",
+          "ordinal": "T10"
+        },
+        {
+          "id": "functions-extract-helpers-only-when-the-boundary-is-real",
+          "ordinal": "T11"
+        },
+        {
+          "id": "functions-prefer-immutable-array-sorting",
+          "ordinal": "T12"
+        },
+        {
+          "id": "functions-replace-enum-with-as-const-objects",
+          "ordinal": "T13"
+        },
+        {
+          "id": "functions-use-named-object-params-for-complex-signatures",
+          "ordinal": "T14"
+        },
+        {
+          "id": "functions-use-set-and-map-for-repeated-lookups",
+          "ordinal": "T15"
+        },
+        {
+          "id": "absence-expose-optional-values-instead-of-silent-fallbacks",
+          "ordinal": "T16"
+        },
+        {
+          "id": "docs-keep-inline-comments-for-constraints-and-caveats",
+          "ordinal": "T17"
+        },
+        {
+          "id": "docs-use-helper-for-reusable-pure-helper-functions",
+          "ordinal": "T20"
+        }
+      ],
+      "selected": [
+        {
+          "id": "types-document-custom-types-and-shapes",
+          "ordinal": "T05"
+        },
+        {
+          "id": "types-reuse-existing-contracts-before-new-types",
+          "ordinal": "T09"
+        },
+        {
+          "id": "docs-require-header-jsdoc-on-key-declarations",
+          "ordinal": "T18"
+        },
+        {
+          "id": "docs-standardize-annotation-tags-by-declaration-role",
+          "ordinal": "T19"
+        },
+        {
+          "id": "docs-write-concise-korean-comments-about-purpose-and-constraints",
+          "ordinal": "T21"
+        },
+        {
+          "id": "guardrails-review-banned-typescript-shortcuts-before-finishing",
+          "ordinal": "T22"
+        }
+      ],
+      "skill": "typescript",
+      "unknown": []
+    }
+  ],
+  "repositoryHead": "6910bdd378a5068087b872d6e5df0bc1c48e55b9",
+  "requestContentDigest": "sha256:cafa2b406a99c8fddf0c5a9cd9e183b71010ebb12839b2fb75ee798e07584d7f",
+  "response": "UserPreview를 UserRecord에서 파생하는 Pick 별칭으로 바꾸고 간결한 한국어 @summary를 추가했다.",
+  "routingTrace": {
+    "passes": [
+      {
+        "activatedSkills": [
+          "typescript"
+        ],
+        "completionGateAdded": [
+          "typescript/guardrails-review-banned-typescript-shortcuts-before-finishing"
+        ],
+        "completionGatesEvaluated": [
+          {
+            "outcome": "selected",
+            "rule": "typescript/guardrails-review-banned-typescript-shortcuts-before-finishing"
+          }
+        ],
+        "generatedIndexDigests": {
+          "typescript": "sha256:ba361506076b7d935b748674a9a0555e4b8d32a88926f2395f153227425ade17"
+        },
+        "notApplicable": {
+          "typescript": [
+            "naming-centralize-shared-config-namespaces",
+            "naming-preserve-config-origin-with-chained-access",
+            "naming-use-consistent-file-and-symbol-naming",
+            "naming-use-direct-imports-and-public-entry-points",
+            "types-mark-unused-parameters-with-underscore",
+            "types-prefer-function-variable-types-over-parameter-annotations",
+            "types-reuse-callback-signatures-from-existing-contracts",
+            "functions-avoid-imperative-assembly-in-wide-scopes",
+            "functions-extract-helpers-only-when-the-boundary-is-real",
+            "functions-prefer-immutable-array-sorting",
+            "functions-replace-enum-with-as-const-objects",
+            "functions-use-named-object-params-for-complex-signatures",
+            "functions-use-set-and-map-for-repeated-lookups",
+            "absence-expose-optional-values-instead-of-silent-fallbacks",
+            "docs-keep-inline-comments-for-constraints-and-caveats",
+            "docs-use-helper-for-reusable-pure-helper-functions"
+          ]
+        },
+        "pass": 1,
+        "requiresSelectedAdded": [
+          {
+            "source": "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "target": "typescript/docs-standardize-annotation-tags-by-declaration-role"
+          },
+          {
+            "source": "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "target": "typescript/docs-write-concise-korean-comments-about-purpose-and-constraints"
+          }
+        ],
+        "requiresSelectedEvaluated": [
+          {
+            "outcome": "selected",
+            "source": "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "sourceStatus": "Selected",
+            "target": "typescript/docs-standardize-annotation-tags-by-declaration-role"
+          },
+          {
+            "outcome": "selected",
+            "source": "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "sourceStatus": "Selected",
+            "target": "typescript/docs-write-concise-korean-comments-about-purpose-and-constraints"
+          }
+        ],
+        "reviewWithReevaluated": [
+          {
+            "evidence": "중복 interface를 Pick 파생 alias로 바꾸므로 custom type 선언과 문서화도 함께 변경된다.",
+            "outcome": "Selected",
+            "source": "typescript/types-reuse-existing-contracts-before-new-types",
+            "target": "typescript/types-document-custom-types-and-shapes"
+          }
+        ],
+        "scopeEvidence": [
+          "src/users/user-preview.ts의 TypeScript custom type 선언을 interface에서 같은 이름의 Pick 파생 alias로 변경한다.",
+          "UserPreview 중복 shape를 기존 UserRecord 계약에서 파생해 제거한다.",
+          "UserPreview 선언에 간결한 한국어 @summary JSDoc을 추가한다.",
+          "import, export, 파일명과 심볼 이름은 그대로 유지한다.",
+          "TypeScript 완료 전 금지 shortcut 검토가 필요하다."
+        ],
+        "selected": {
+          "typescript": [
+            "types-document-custom-types-and-shapes",
+            "types-reuse-existing-contracts-before-new-types",
+            "docs-require-header-jsdoc-on-key-declarations",
+            "docs-standardize-annotation-tags-by-declaration-role",
+            "docs-write-concise-korean-comments-about-purpose-and-constraints",
+            "guardrails-review-banned-typescript-shortcuts-before-finishing"
+          ]
+        },
+        "unknown": {
+          "typescript": []
+        }
+      },
+      {
+        "activatedSkills": [
+          "typescript"
+        ],
+        "completionGateAdded": [],
+        "completionGatesEvaluated": [
+          {
+            "outcome": "selected",
+            "rule": "typescript/guardrails-review-banned-typescript-shortcuts-before-finishing"
+          }
+        ],
+        "generatedIndexDigests": {
+          "typescript": "sha256:ba361506076b7d935b748674a9a0555e4b8d32a88926f2395f153227425ade17"
+        },
+        "notApplicable": {
+          "typescript": [
+            "naming-centralize-shared-config-namespaces",
+            "naming-preserve-config-origin-with-chained-access",
+            "naming-use-consistent-file-and-symbol-naming",
+            "naming-use-direct-imports-and-public-entry-points",
+            "types-mark-unused-parameters-with-underscore",
+            "types-prefer-function-variable-types-over-parameter-annotations",
+            "types-reuse-callback-signatures-from-existing-contracts",
+            "functions-avoid-imperative-assembly-in-wide-scopes",
+            "functions-extract-helpers-only-when-the-boundary-is-real",
+            "functions-prefer-immutable-array-sorting",
+            "functions-replace-enum-with-as-const-objects",
+            "functions-use-named-object-params-for-complex-signatures",
+            "functions-use-set-and-map-for-repeated-lookups",
+            "absence-expose-optional-values-instead-of-silent-fallbacks",
+            "docs-keep-inline-comments-for-constraints-and-caveats",
+            "docs-use-helper-for-reusable-pure-helper-functions"
+          ]
+        },
+        "pass": 2,
+        "requiresSelectedAdded": [],
+        "requiresSelectedEvaluated": [
+          {
+            "outcome": "selected",
+            "source": "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "sourceStatus": "Selected",
+            "target": "typescript/docs-standardize-annotation-tags-by-declaration-role"
+          },
+          {
+            "outcome": "selected",
+            "source": "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "sourceStatus": "Selected",
+            "target": "typescript/docs-write-concise-korean-comments-about-purpose-and-constraints"
+          }
+        ],
+        "reviewWithReevaluated": [
+          {
+            "evidence": "중복 interface를 Pick 파생 alias로 바꾸므로 custom type 선언과 문서화도 함께 변경된다.",
+            "outcome": "Selected",
+            "source": "typescript/types-reuse-existing-contracts-before-new-types",
+            "target": "typescript/types-document-custom-types-and-shapes"
+          }
+        ],
+        "scopeEvidence": [
+          "src/users/user-preview.ts의 TypeScript custom type 선언을 interface에서 같은 이름의 Pick 파생 alias로 변경한다.",
+          "UserPreview 중복 shape를 기존 UserRecord 계약에서 파생해 제거한다.",
+          "UserPreview 선언에 간결한 한국어 @summary JSDoc을 추가한다.",
+          "import, export, 파일명과 심볼 이름은 그대로 유지한다.",
+          "TypeScript 완료 전 금지 shortcut 검토가 필요하다."
+        ],
+        "selected": {
+          "typescript": [
+            "types-document-custom-types-and-shapes",
+            "types-reuse-existing-contracts-before-new-types",
+            "docs-require-header-jsdoc-on-key-declarations",
+            "docs-standardize-annotation-tags-by-declaration-role",
+            "docs-write-concise-korean-comments-about-purpose-and-constraints",
+            "guardrails-review-banned-typescript-shortcuts-before-finishing"
+          ]
+        },
+        "unknown": {
+          "typescript": []
+        }
+      },
+      {
+        "activatedSkills": [
+          "typescript"
+        ],
+        "completionGateAdded": [],
+        "completionGatesEvaluated": [
+          {
+            "outcome": "selected",
+            "rule": "typescript/guardrails-review-banned-typescript-shortcuts-before-finishing"
+          }
+        ],
+        "generatedIndexDigests": {
+          "typescript": "sha256:ba361506076b7d935b748674a9a0555e4b8d32a88926f2395f153227425ade17"
+        },
+        "notApplicable": {
+          "typescript": [
+            "naming-centralize-shared-config-namespaces",
+            "naming-preserve-config-origin-with-chained-access",
+            "naming-use-consistent-file-and-symbol-naming",
+            "naming-use-direct-imports-and-public-entry-points",
+            "types-mark-unused-parameters-with-underscore",
+            "types-prefer-function-variable-types-over-parameter-annotations",
+            "types-reuse-callback-signatures-from-existing-contracts",
+            "functions-avoid-imperative-assembly-in-wide-scopes",
+            "functions-extract-helpers-only-when-the-boundary-is-real",
+            "functions-prefer-immutable-array-sorting",
+            "functions-replace-enum-with-as-const-objects",
+            "functions-use-named-object-params-for-complex-signatures",
+            "functions-use-set-and-map-for-repeated-lookups",
+            "absence-expose-optional-values-instead-of-silent-fallbacks",
+            "docs-keep-inline-comments-for-constraints-and-caveats",
+            "docs-use-helper-for-reusable-pure-helper-functions"
+          ]
+        },
+        "pass": 3,
+        "requiresSelectedAdded": [],
+        "requiresSelectedEvaluated": [
+          {
+            "outcome": "selected",
+            "source": "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "sourceStatus": "Selected",
+            "target": "typescript/docs-standardize-annotation-tags-by-declaration-role"
+          },
+          {
+            "outcome": "selected",
+            "source": "typescript/docs-require-header-jsdoc-on-key-declarations",
+            "sourceStatus": "Selected",
+            "target": "typescript/docs-write-concise-korean-comments-about-purpose-and-constraints"
+          }
+        ],
+        "reviewWithReevaluated": [
+          {
+            "evidence": "중복 interface를 Pick 파생 alias로 바꾸므로 custom type 선언과 문서화도 함께 변경된다.",
+            "outcome": "Selected",
+            "source": "typescript/types-reuse-existing-contracts-before-new-types",
+            "target": "typescript/types-document-custom-types-and-shapes"
+          }
+        ],
+        "scopeEvidence": [
+          "src/users/user-preview.ts의 TypeScript custom type 선언을 interface에서 같은 이름의 Pick 파생 alias로 변경한다.",
+          "UserPreview 중복 shape를 기존 UserRecord 계약에서 파생해 제거한다.",
+          "UserPreview 선언에 간결한 한국어 @summary JSDoc을 추가한다.",
+          "import, export, 파일명과 심볼 이름은 그대로 유지한다.",
+          "TypeScript 완료 전 금지 shortcut 검토가 필요하다."
+        ],
+        "selected": {
+          "typescript": [
+            "types-document-custom-types-and-shapes",
+            "types-reuse-existing-contracts-before-new-types",
+            "docs-require-header-jsdoc-on-key-declarations",
+            "docs-standardize-annotation-tags-by-declaration-role",
+            "docs-write-concise-korean-comments-about-purpose-and-constraints",
+            "guardrails-review-banned-typescript-shortcuts-before-finishing"
+          ]
+        },
+        "unknown": {
+          "typescript": []
+        }
+      }
+    ],
+    "stable": true,
+    "stablePair": [
+      2,
+      3
+    ]
+  },
+  "runId": "progressive--derive-existing-contract-with-docs--t1",
+  "runtime": {
+    "declared": {
+      "forkTurns": "none",
+      "oneChildPerTrial": true,
+      "requestedModel": "gpt-5.6-sol",
+      "requestedReasoning": "high",
+      "runtime": "Codex CLI isolated child session"
+    },
+    "evidenceClass": "declared-telemetry-only",
+    "unavailable": {
+      "actualReasoningTelemetry": null,
+      "childTokenUsage": null,
+      "exactModelBuild": null,
+      "observedFileReads": null,
+      "runtimeVersion": null
+    }
+  },
+  "scenarioId": "derive-existing-contract-with-docs",
+  "scenarioPrompt": "replace a duplicate `UserPreview` interface with a same-name `Pick<UserRecord, ...>` alias and add concise Korean `@summary`; imports and names otherwise stay unchanged.",
+  "scenarioSha256": "sha256:2c2f1e677732141c2499d40f5b9aaaa3599802c9a49991090c7cc298fd8cde4c",
+  "schemaVersion": 3,
+  "scoring": {
+    "driftFinalExactMatch": null,
+    "eligible": true,
+    "exactMatch": true,
+    "initialExactMatch": true,
+    "kind": "candidate",
+    "metrics": {
+      "applicableRuleRecall": 1,
+      "domainActivationRecall": 1,
+      "exactSelectionPrecision": 1
+    }
+  },
+  "semanticVerdicts": [],
+  "stagedProvenanceSha256": null,
+  "trial": 1,
+  "virtualPatch": {
+    "files": [
+      {
+        "after": "import type {UserRecord} from \"./user-record\";\n\n/**\n * @summary 사용자 미리보기에 필요한 필드\n */\ntype UserPreview = Pick<UserRecord, \"id\" | \"displayName\">;\n\nexport type {UserPreview};\n",
+        "afterSha256": "sha256:6542fff4d2060869209d1b88aa906a75524d86d0f89a8561950ab6ebb62f7cad",
+        "afterState": "present",
+        "beforeSha256": "sha256:1c42aa41c860847e6bc7900dca0be4c31a81e53bb5a38ced554be6f5046fb523",
+        "beforeState": "present",
+        "path": "src/users/user-preview.ts"
+      }
+    ],
+    "summary": "중복 UserPreview interface를 UserRecord 기반 Pick alias로 바꾸고 한국어 @summary를 추가한다."
+  }
+}
