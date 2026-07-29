@@ -392,48 +392,42 @@ test("measurement revalidates contexts after routing-oracle snapshot", async () 
 	assert.ok(revalidationIndex < metadataIndex);
 });
 
-test("copy-ready template carries the activation, loading, and finish contract", async () => {
+test("project template stays a standalone KISS starter, not a convention router", async () => {
 	const template = await readFile(templatePath, "utf8");
 
-	// 복사해 쓰는 문서라 컴팩트해야 한다.
-	assert.equal(template.length < 6_000, true, "copy-ready template must stay compact");
+	// 다른 프로젝트가 그대로 복사한다. 짧아야 지켜진다.
+	assert.equal(template.length < 6_000, true, "starter template must stay compact");
 
-	// 활성화 규칙
+	// 번호 매긴 섹션 골격
+	for (const heading of [
+		"## 1. 프로젝트",
+		"## 2. 먼저 생각한다",
+		"## 3. 최소로 만든다",
+		"## 4. 최소로 고친다",
+		"## 5. 검증하고 보고한다",
+		"## 6. 하지 않는 것",
+	]) {
+		assert.ok(template.includes(heading), heading);
+	}
+
+	// KISS · YAGNI 원칙
 	for (const requiredText of [
-		"`convention-react` + `convention-typescript`",
-		"`convention-css`",
-		"순수 CSS 는 TypeScript 를 자동 활성화하지 않음",
+		"추측하지 않는다",
+		"문제를 푸는 최소한의 코드",
+		"단일 사용처",
+		"꼭 필요한 것만 건드린다",
+		"바뀐 모든 줄이 요청과 직접 연결",
+		"실행한 명령과 그 출력으로 말한다",
 	]) {
 		assert.ok(template.includes(requiredText), requiredText);
 	}
 
-	// 로딩 계약
-	for (const requiredText of [
-		"`RULES_INDEX.md` 를 **끝까지** 훑음",
-		"첫 match 에서 멈추지 않음",
-		"`contracts/*.md` 를 읽음",
-		"`CRITICAL` 이면 `rules/*.md` 원문 필수",
-		"full `HANDBOOK.md` 는 기본 로드하지 않음",
-	]) {
-		assert.ok(template.includes(requiredText), requiredText);
-	}
+	// 프로젝트가 채울 자리
+	assert.ok(template.includes("이 절만 채우면 된다"));
 
-	// routing 키 계약
-	for (const requiredText of ["`requiresSelected`", "`reviewWith`", "`completionGate`", "역방향 추론 금지"]) {
-		assert.ok(template.includes(requiredText), requiredText);
-	}
-
-	// 마무리와 프로젝트 overlay 자리
-	assert.ok(template.includes("file/line 과 수정안으로 보고"));
-	assert.ok(template.includes("컨벤션 준수의 증명이 아님"));
-	assert.ok(template.includes("프로젝트 로컬 규칙"));
-
-	// 규칙 본문을 템플릿에 복제하지 않는다.
-	assert.ok(template.includes("규칙 본문은 복사하지 않음"));
-
-	// 삭제한 강제 장치가 되살아나지 않아야 한다.
-	for (const removed of ["convention-audit", "exact partition", "routing digest", "receipt"]) {
-		assert.doesNotMatch(template, new RegExp(removed, "i"), removed);
+	// 이 레포에 종속되지 않는다. 복사해 간 프로젝트에서 해석 불가능한 참조가 없어야 한다.
+	for (const coupling of ["RULES_INDEX", "contracts/", "appliesWhen", "requiresSelected", "agent-conventions/"]) {
+		assert.ok(!template.includes(coupling), `template must not depend on this repo: ${coupling}`);
 	}
 });
 
@@ -451,27 +445,24 @@ test("repository documentation distinguishes source, router, and generated artif
 		["`routing-evals.json`", "Progressive-only editable test oracle; never runtime context."],
 	];
 
-	// artifact 계약 표는 agent 작업 문서와 build tooling 문서에만 둔다.
 	for (const [documentName, source, heading] of [
-		["AGENTS.md", repositoryAgents, "Structured Skill Artifact Contract"],
+		["AGENTS.md", repositoryAgents, "3. Structured Skill Artifact Contract"],
 		["package/README.md", packageReadme, "Artifact Model"],
 	] as const) {
 		const section = extractMarkdownSection({source, heading, level: 2});
 		assert.deepEqual(parseMarkdownTableRows({section, expectedHeader: ["Artifact", "Role"]}), expectedArtifactRows, documentName);
 	}
 
-	const artifactSection = extractMarkdownSection({source: repositoryAgents, heading: "Structured Skill Artifact Contract", level: 2});
+	const artifactSection = extractMarkdownSection({source: repositoryAgents, heading: "3. Structured Skill Artifact Contract", level: 2});
 	assert.match(artifactSection, /사람이 직접 수정[^\n]*[\s\S]*`SKILL\.md`/);
 
-	// skill 목록은 생성된 핸드북을 가리킨다.
-	const skillTypes = extractMarkdownSection({source: repositoryAgents, heading: "Skill Types", level: 2});
+	const skillTypes = extractMarkdownSection({source: repositoryAgents, heading: "2. Skill Types", level: 2});
 	assert.match(skillTypes, /\[skill\/astro\]\(\.\/skill\/astro\/HANDBOOK\.md\)/);
 	assert.doesNotMatch(skillTypes, /\/AGENTS\.md\)/);
 
-	const editingRules = extractMarkdownSection({source: repositoryAgents, heading: "Editing Rules", level: 2});
+	const editingRules = extractMarkdownSection({source: repositoryAgents, heading: "4. Editing Rules", level: 2});
 	assert.match(editingRules, /`rules\/_sections\.md`, `rules\/_template\.md`, `rules\/\*\.md`를 수정/);
 
-	// 로딩 토폴로지 표는 build tooling 문서에만 둔다.
 	const progressiveSkillNames = new Set<string>(expectedProgressiveSkillNames);
 	const expectedTopologyRows = await Promise.all(
 		expectedSkillScriptNames.map(async (skillName) => {
@@ -510,9 +501,9 @@ test("repository documentation distinguishes source, router, and generated artif
 	assert.match(repositoryReadme, /AGENTS\.template\.md/);
 	assert.match(repositoryReadme, /ONBOARDING\.md/);
 	assert.match(repositoryReadme, /CONTRIBUTING\.md/);
-	assert.doesNotMatch(repositoryReadme, /^## Structured Skill Artifact Contract$/m);
+	assert.doesNotMatch(repositoryReadme, /^## .*Structured Skill Artifact Contract$/m);
 
-	// 사람용 문서는 같은 골격을 쓴다: H1 다음 인용 요약, 그리고 목차.
+	// 사람용 문서는 같은 골격을 쓴다: H1, 한 문단 요약, 그리고 번호 매긴 섹션.
 	for (const [documentName, source] of [
 		["README.md", repositoryReadme],
 		["ONBOARDING.md", await readFile(path.join(repoDir, "ONBOARDING.md"), "utf8")],
@@ -520,8 +511,9 @@ test("repository documentation distinguishes source, router, and generated artif
 		["AGENTS.md", repositoryAgents],
 		["AGENTS.template.md", await readFile(templatePath, "utf8")],
 	] as const) {
-		assert.match(source, /^# .+\n\n> /, `${documentName} must open with a one-line summary quote`);
-		assert.match(source, /^## 목차$/m, `${documentName} must have a table of contents`);
+		assert.match(source, /^# .+\n\n[^#>\n]/, `${documentName} must open with a one-paragraph summary`);
+		assert.match(source, /^## 1\. /m, `${documentName} must use numbered sections`);
+		assert.doesNotMatch(source, /^## 목차$/m, `${documentName} must not use a bullet table of contents`);
 	}
 });
 

@@ -2276,7 +2276,6 @@ test("routing activation and generated indexes use only the changed semantic del
 		path.join(realSkillRootDir, "react", "rules", "_template.md"),
 		path.join(realSkillRootDir, "typescript", "rules", "_template.md"),
 		path.join(realSkillRootDir, "css", "rules", "_template.md"),
-		path.join(repoDir, "AGENTS.template.md"),
 	];
 
 	for (const source of await Promise.all([...routerPaths, ...templatePaths].map((filePath) => readFile(filePath, "utf8")))) {
