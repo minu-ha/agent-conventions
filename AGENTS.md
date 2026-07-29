@@ -7,14 +7,11 @@
 이 저장소의 핵심 제약은 하나입니다. 사람이 고치는 곳은 `rules/*.md` 뿐이고,
 나머지 세 가지는 build 가 매번 다시 만듭니다.
 
-```text
-rules/*.md                                             정본
-  ↓  build
-HANDBOOK.md · RULES_INDEX.md · contracts/*.md          생성물
-  ↓  SKILL.md 가 경로를 결정
-progressive   RULES_INDEX → 걸린 contracts → 필요 시 rules
-전체 로드      HANDBOOK.md 통째로
-```
+| 단계 | 대상 | 성격 |
+| --- | --- | --- |
+| 입력 | `rules/*.md` | 정본. 사람이 고치는 유일한 곳 |
+| build | `HANDBOOK.md` · `RULES_INDEX.md` · `contracts/*.md` | 생성물. 직접 편집 시 소실 |
+| 로드 | `SKILL.md` 가 경로 결정 | progressive 는 index 부터, 전체 로드는 handbook 통째로 |
 
 ---
 

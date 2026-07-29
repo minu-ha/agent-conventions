@@ -79,17 +79,13 @@ companion 까지 함께 명시하는 편이 안전합니다.
 
 TSX 파일 하나를 고쳐 달라고 요청해 보십시오. 에이전트는 아래 순서로 움직입니다.
 
-```text
-변경 판정
-  ↓
-convention-react + convention-typescript 활성화
-  ↓
-RULES_INDEX 를 끝까지 훑어 걸리는 규칙 선별
-  ↓
-해당 contracts 를 읽고 구현
-  ↓
-마무리로 diff 를 다시 훑어 위반 보고
-```
+| 순서 | 동작 |
+| --- | --- |
+| 1 | 변경 판정 |
+| 2 | `convention-react` + `convention-typescript` 활성화 |
+| 3 | `RULES_INDEX` 를 끝까지 훑어 걸리는 규칙 선별 |
+| 4 | 해당 `contracts` 를 읽고 구현 |
+| 5 | 마무리로 diff 를 다시 훑어 위반 보고 |
 
 `className` 이나 stylesheet 를 함께 건드리면 `convention-css` 가 추가로 켜지고,
 순수 CSS 만 고치면 TypeScript 는 켜지지 않습니다.
@@ -143,15 +139,12 @@ companion 은 `metadata.json` 선언에 따라 자동으로 활성화되므로
 
 `progressive` 로 표시된 세 skill 은 규칙 전체를 로드하지 않고 단계적으로 좁혀 갑니다.
 
-```text
-SKILL.md            라우터. 무엇이 바뀌었는지 판정
-  ↓
-RULES_INDEX.md      규칙당 한 줄. 끝까지 훑어 후보 선별
-  ↓
-contracts/<id>.md   걸린 규칙의 규범만. 예시는 제외
-  ↓
-rules/<id>.md       원문. CRITICAL 이거나 판단이 모호할 때만
-```
+| 순서 | 파일 | 읽는 범위 | 빈도 |
+| --- | --- | --- | --- |
+| 1 | `SKILL.md` | 라우터. 무엇이 바뀌었는지 판정 | 항상 |
+| 2 | `RULES_INDEX.md` | 규칙당 한 줄. 끝까지 훑어 후보 선별 | 항상 |
+| 3 | `contracts/<id>.md` | 걸린 규칙의 규범만. 예시는 제외 | 걸린 규칙만 |
+| 4 | `rules/<id>.md` | 원문 | `CRITICAL` 이거나 판단이 모호할 때 |
 
 `HANDBOOK.md` 는 이 경로 밖에 있는 전체 핸드북입니다.
 사람이 통독할 때 쓰고, 에이전트는 명시적 요청이 있을 때만 읽습니다.
