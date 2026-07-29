@@ -1,24 +1,24 @@
 {
-  "title": "React 컨벤션",
-  "version": "1.0.0",
-  "organization": "Agent Conventions",
-  "date": "2026년 4월",
-  "abstract": "에이전트 협업 팀을 위한 React 코딩 컨벤션입니다. shared와 route-local 소유 경계, composition 전략, React handler/prop 계약, 화면 흐름, state 오리진, React 19 component/effect/transition 패턴과 문서화를 다룹니다. 기본 진입점은 SKILL.md, generated RULES_INDEX.md, selected contracts/*.md이며 CRITICAL 또는 근거가 더 필요한 rule만 full source로 확장합니다. AGENTS.md는 opt-in full handbook입니다. TypeScript는 required companion이고 class contract, stylesheet 또는 styling surface가 바뀔 때만 CSS를 conditional companion으로 활성화합니다. `rules/` 아래 rule 파일이 source of truth입니다.",
-  "progressiveDisclosure": true,
-  "companions": [
-    {
-      "skill": "typescript",
-      "mode": "required"
-    },
-    {
-      "skill": "css",
-      "mode": "conditional",
-      "appliesWhen": "class contract, stylesheet 또는 styling surface를 변경한다."
-    }
-  ],
-  "references": [
-    "https://react.dev",
-    "https://tanstack.com/query/latest",
-    "https://zustand.docs.pmnd.rs"
-  ]
+	"title": "React 컨벤션",
+	"version": "1.0.0",
+	"organization": "Agent Conventions",
+	"date": "2026년 4월",
+	"abstract": "에이전트 협업 팀을 위한 React 코딩 컨벤션입니다. shared와 route-local 소유 경계, composition 전략, React handler/prop 계약, 화면 흐름, state 오리진, React 19 component/effect/transition 패턴과 문서화를 다룹니다. TypeScript 규칙을 항상 함께 따르고, class contract나 stylesheet를 바꿀 때는 CSS 규칙도 함께 봅니다. `rules/` 아래 rule 파일이 source of truth입니다.",
+	"progressiveDisclosure": true,
+	"companions": [
+		{
+			"skill": "typescript",
+			"mode": "required"
+		},
+		{
+			"skill": "css",
+			"mode": "conditional",
+			"appliesWhen": "class contract, stylesheet 또는 styling surface를 변경한다."
+		}
+	],
+	"references": [
+		"https://react.dev",
+		"https://tanstack.com/query/latest",
+		"https://zustand.docs.pmnd.rs"
+	]
 }

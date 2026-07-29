@@ -14,13 +14,13 @@
 
 에이전트 협업 팀을 위한 TanStack Router 컨벤션입니다. 이 가이드는 layout-shell-first route grouping, 검색 가능한 파일명, 명시적인 router boundary 선언, route-local 소유권, generated artifact 보호를 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, 기본 compiled guide는 local router 규칙만 담고 route support module과 search schema에는 `typescript` companion skill을 함께 사용합니다.
 
-이 가이드는 local TanStack Route 컨벤션 규칙만 담고 있습니다. 공통 규칙은 companion skill을 함께 로드해 보완합니다.
+이 문서에는 TanStack Route 컨벤션 규칙만 담겨 있습니다. 아래 규칙도 함께 따릅니다.
 
 ---
 
-## 함께 로드할 Companion Skill
+## 함께 따르는 규칙
 
-- `convention-typescript` - TypeScript Convention 공통 규칙 guide: [TypeScript Convention](../typescript/AGENTS.md)
+- [TypeScript Convention](../typescript/AGENTS.md) — 공통 규칙
 
 ---
 

@@ -8,30 +8,32 @@ metadata:
 
 # React Convention Router
 
-## 1. Scope snapshot과 companion
+## 1. 변경 범위 판정
 
-React/TSX 요청·계획·diff의 render·screen·owner/route-local·handler·state·query·React support code 변경 semantic delta만 판정한다. 추가·삭제·이동·이름 변경·재선언, 특히 owner/route-local 이동 자체는 포함하고 read-only 문맥은 제외한다. owner 이동에 byte-equivalent로 따라온 내부 선언·본문·import·class/style은 diff의 삭제+추가로 보여도 별도 surface로 다시 세지 않는다. N/A rule의 optional pattern으로 자가 활성화하지 말고 최소 semantic patch만 구현한다. 판정 직후 수정 전 범위를 scope snapshot으로 고정한다.
+요청·계획·diff에서 render·screen·owner/route-local 배치·handler·state·query·React support code의 실제 변경만 범위로 잡는다. 추가·삭제·이동·이름 변경·재선언은 포함하고, 특히 owner/route-local 이동 자체는 변경이다. read-only 문맥은 제외한다. owner 이동에 그대로 딸려온 내부 선언·본문·import·class/style은 diff에 삭제+추가로 보여도 변경으로 다시 세지 않는다. 적용되지 않는 규칙의 optional pattern을 새로 들여와 스스로 범위를 넓히지 않는다.
 
-`convention-typescript`는 필수다. class contract·stylesheet·styling surface 변경 때만 `convention-css`를 조건부 활성화하고, 조건이 없으면 CSS는 비활성화한다. route·search·navigation·browser test는 전용 skill도 판정한다.
+`convention-typescript`는 항상 함께 활성화한다. class contract·stylesheet·styling surface가 바뀔 때만 `convention-css`를 추가하고, 아니면 켜지 않는다. route·search·navigation·브라우저 테스트가 걸리면 해당 전용 skill도 판정한다.
 
-## 2. Progressive index scan
+## 2. 인덱스 훑기
 
-모든 활성 skill의 `SKILL.md` load 계약을 따른다. `progressiveDisclosure: true`면 `RULES_INDEX.md` 전체 scan·digest receipt, non-progressive skill이면 `SKILL.md`·`AGENTS.md` 자체 load 계약을 쓴다. 모든 활성 progressive index의 `appliesWhen`을 scope evidence와 대조한다. 첫 match에서 절대 멈추지 않는다. 애매하면 `Unknown`이다.
+활성화한 skill마다 그 `SKILL.md`의 load 계약을 따른다. progressive skill이면 `RULES_INDEX.md`를 끝까지 훑고, non-progressive skill이면 그 `SKILL.md`가 지시하는 대로 `AGENTS.md`를 읽는다. 각 규칙의 `appliesWhen`을 변경 범위와 대조하고 첫 match에서 멈추지 않는다. 애매하면 적용되는 쪽으로 본다.
 
-## 3. Digest-bound receipt
+## 3. 규칙 읽고 구현
 
-활성 progressive index `sha256` receipt에 `Activated/Index/Selected/Not applicable/Excluded groups/Unknown/Expanded`를 기록한다. Selected/Unknown은 ordinal+stable ID, N/A는 ordinal exact set이다. Selected/N/A/Unknown은 disjoint하며 전체 ordinal을 exact partition한다. exclusion group의 ordinal 합집합은 exact N/A이며 이유는 비어 있으면 안 된다. `reviewWith`는 재평가 신호, `completionGate`는 완료 시 Selected이며 N/A 불가다.
+걸리는 규칙의 `contracts/<id>.md`를 읽는다. `CRITICAL`이면 `rules/<id>.md` 원문도 반드시 읽는다. 그 외에도 정확한 문법이나 예외 판단이 필요하면 원문으로 확장한다.
 
-## 4. Read and implement
+- `requiresSelected` target은 함께 적용한다. 다른 skill의 규칙이면 그 companion도 활성화한다.
+- `reviewWith` target은 변경 범위에 비춰 다시 판단한다. 자동으로 적용하지는 않는다.
+- `completionGate` 규칙은 마무리 시 항상 적용한다.
 
-Selected와 Unknown의 stable ID에 맞는 `contracts/<stable-id>.md`를 전부 읽는다. `CRITICAL`이면 matching full rule도 반드시 읽는다. 그 외는 exact·Unknown·audit 때 이유와 함께 확장한다. Unknown은 Selected/N/A로 먼저 해소하고 N/A의 `requiresSelected`는 적용하지 않는다. Selected로 확정한 contract의 `requiresSelected` target은 companion 활성화 후 즉시 Selected이며 N/A 불가다. Selected contract의 필수 변경만 scope evidence다. 예시·선택적 대안·해소되지 않은 Unknown의 가상 변경은 제외한다. 새 surface·companion·Selected·`reviewWith`면 고정점까지 반복한다. 고정점의 Selected contract와 Expanded 원문만 구현·리뷰 기준이다.
+규칙이나 companion이 새로 걸리면 인덱스를 다시 훑는다. 더 걸리는 게 없으면 멈춘다.
 
-## 5. Scope drift
+## 4. 범위 변경
 
-scope drift면 snapshot부터 activation을 재판정하고 모든 활성 progressive index를 재scan하며 stale receipt를 폐기한다. conditional·non-progressive도 재판정한다.
+작업 중 범위가 늘거나 바뀌면 1번부터 다시 판정하고 활성 index를 다시 훑는다. conditional companion과 non-progressive skill도 다시 판정한다.
 
-## 6. Finish gate
+## 5. 마무리
 
-digest-bound implementer receipt·Expanded·evidence·검증을 sealed comparison용으로 audit에 넘긴 뒤, 모든 활성 progressive index를 `convention-audit`이 독립 재선택한다. `FAIL 0`, `UNKNOWN 0`만 완료한다.
+변경 diff를 적용한 규칙에 비춰 다시 훑고, 위반이 있으면 file/line과 수정안으로 보고한다. lint·typecheck·build·테스트 통과는 컨벤션을 지켰다는 근거가 아니다.
 
-[AGENTS.md](./AGENTS.md) full handbook은 명시적으로 요청하거나 index/contract/필요 rule 손상·누락 fallback 때만 읽는다.
+[AGENTS.md](./AGENTS.md)는 전체 handbook이다. 전체 검토를 명시적으로 요청받거나 index·contract가 손상됐을 때만 읽는다.

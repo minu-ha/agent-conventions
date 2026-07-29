@@ -289,10 +289,6 @@ export interface RoutingExpectedPartition {
 	 * @field activated progressive skill별 선택 rule stable ID 목록
 	 */
 	expectedSelected: Record<string, string[]>;
-	/**
-	 * @field activated progressive skill별 비적용 rule stable ID 목록
-	 */
-	expectedNotApplicable: Record<string, string[]>;
 }
 
 /**

@@ -14,7 +14,7 @@
 | `AGENTS.md` | Generated full handbook; progressive rules include `Applies when`; opt-in for React/TypeScript/CSS. |
 | `routing-evals.json` | Progressive-only editable test oracle; never runtime context. |
 
-`progressiveDisclosure: true`인 skill은 `RULES_INDEX.md`와 `contracts/*.md`를 생성합니다. non-progressive skill은 `SKILL.md`가 안내하는 `AGENTS.md`와 rule 원문을 사용합니다. `convention-audit`는 local 8-rule `AGENTS.md` 전체를 읽고 progressive companion만 index/contract로 라우팅합니다.
+`progressiveDisclosure: true`인 skill은 `RULES_INDEX.md`와 `contracts/*.md`를 생성합니다. non-progressive skill은 `SKILL.md`가 안내하는 `AGENTS.md`와 rule 원문을 사용합니다.
 
 progressive rule frontmatter의 `reviewWith`는 조건부 재평가, `requiresSelected`는 source가 final Selected일 때 target도 반드시 Selected인 전이, `requiredOnCompletion: true`는 활성 skill의 완료 gate입니다. compact index에는 `completionGate` marker와 `reviewWith`만 렌더하고, 필수 target 목록은 selected/unknown contract에서만 로드해 초기 token 비용을 제한합니다. Unknown을 먼저 해소하며 N/A contract의 필수 target은 전이하지 않습니다.
 
@@ -94,7 +94,6 @@ child와 reviewer의 `declaredLoadedFiles`는 선언 telemetry입니다. exact s
 | `astro` | non-progressive | extends `typescript`, `css` |
 | `react` | progressive | required `typescript`; conditional `css` |
 | `css` | progressive | conditional `typescript`; project router closes TSX to `react` |
-| `convention-audit` | non-progressive local | conditional `react`, `typescript`, `css` |
 | `figma-visual-parity` | non-progressive | extends `react`, `css`, `playwright-test` |
 | `nestjs` | non-progressive | extends `typescript` |
 | `playwright-test` | non-progressive | extends `typescript` |
@@ -110,7 +109,6 @@ progressive owner는 `extends` 대신 `companions`를 사용하고 companion tar
 - `astro`
 - `react`
 - `css`
-- `convention-audit`
 - `figma-visual-parity`
 - `nestjs`
 - `playwright-test`

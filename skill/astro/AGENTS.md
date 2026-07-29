@@ -14,14 +14,14 @@
 
 에이전트 협업 팀을 위한 Astro 코딩 컨벤션입니다. 이 가이드는 `src/pages`를 Astro의 required route tree이자 route-local owner layer로 보고, `src/pages/_document.astro`/`_head.astro`/`_document.css` 기반 pages-local document helper, routed page entry 중심의 screen implementation, route role에 맞춘 page-adjacent asset naming과 `rt_*` surface ownership, `_local/` route-local UI/runtime boundary, owner-named support file, 의미 있는 dynamic segment와 paginated route family, 공개 URL contract 정리 기준, `ui`/`widget` taxonomy, `.astro` 컴포넌트와 page/island/local support의 명확한 책임 경계, selective extraction 기준, static과 on-demand rendering의 의도적인 선택, build-time/live collections, Actions/endpoints/server islands 같은 Astro 고유 기능의 신중한 사용을 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, Astro local rule은 기본 companion인 `typescript`와 `css` skill과 함께 사용합니다.
 
-이 가이드는 local Astro 컨벤션 규칙만 담고 있습니다. 공통 규칙은 companion skill을 함께 로드해 보완합니다.
+이 문서에는 Astro 컨벤션 규칙만 담겨 있습니다. 아래 규칙도 함께 따릅니다.
 
 ---
 
-## 함께 로드할 Companion Skill
+## 함께 따르는 규칙
 
-- `convention-typescript` - TypeScript Convention 공통 규칙 guide: [TypeScript Convention](../typescript/AGENTS.md)
-- `convention-css` - CSS Convention 공통 규칙 guide: [CSS Convention](../css/AGENTS.md)
+- [TypeScript Convention](../typescript/AGENTS.md) — 공통 규칙
+- [CSS Convention](../css/AGENTS.md) — 공통 규칙
 
 ---
 

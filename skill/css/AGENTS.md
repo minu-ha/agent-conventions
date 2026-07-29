@@ -12,15 +12,15 @@
 
 ## 개요
 
-에이전트 협업 팀을 위한 CSS 코딩 컨벤션입니다. 이 가이드는 plain CSS를 기본으로 한 전역 고유 네이밍, `rt_/wg_/ui_/loc_` owner scope, 예측 가능한 TSX class 조합, 평평한 selector, wrapper 기준 서드파티 스타일링, 토큰화된 값, 절제된 stylesheet 구성을 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, 기본 경로는 SKILL.md router에서 RULES_INDEX.md 전체를 scan하고 selected contracts/*.md를 읽되 CRITICAL 또는 근거가 더 필요한 rule만 full source로 확장하는 방식입니다. AGENTS.md는 명시적으로 요청할 때만 읽는 opt-in full handbook입니다. TSX styling contract는 project activation closure에서 React와 TypeScript를 함께 활성화합니다.
+에이전트 협업 팀을 위한 CSS 코딩 컨벤션입니다. plain CSS를 기본으로 한 전역 고유 네이밍, `rt_/wg_/ui_/loc_` owner scope, 예측 가능한 TSX class 조합, 평평한 selector, wrapper 기준 서드파티 스타일링, 토큰화된 값, 절제된 stylesheet 구성을 강조합니다. TSX의 class contract를 함께 바꿀 때는 React와 TypeScript 규칙도 함께 봅니다. `rules/` 아래 rule 파일이 source of truth입니다.
 
-이 가이드는 local CSS 컨벤션 규칙만 담고 있습니다. companion skill은 아래 mode와 appliesWhen에 따라 활성화합니다.
+이 문서에는 CSS 컨벤션 규칙만 담겨 있습니다. 아래 규칙도 함께 따릅니다.
 
 ---
 
-## Companion Skill 활성화
+## 함께 따르는 규칙
 
-- `convention-typescript` - TypeScript Convention · mode: `conditional` · appliesWhen: TS/TSX class contract, wrapper Props 또는 style import를 함께 변경한다. · [SKILL.md](../typescript/SKILL.md) · [RULES_INDEX.md](../typescript/RULES_INDEX.md)
+- [TypeScript Convention](../typescript/AGENTS.md) — 다음 조건에서 함께 적용합니다. TS/TSX class contract, wrapper Props 또는 style import를 함께 변경한다.
 
 ---
 

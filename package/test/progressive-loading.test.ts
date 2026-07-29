@@ -819,11 +819,8 @@ test("temporary progressive build and stale check are deterministic without repo
 		assert.match(firstHandbook, /^### 2\.1 Watch State\n\n\*\*Rule:\*\* `O02` · `state-watch`$/m);
 		assert.match(firstHandbook, /metadata\.json\.companions/);
 		assert.doesNotMatch(firstHandbook, /metadata\.json\.extends/);
-		assert.match(firstHandbook, /`convention-dependency`[\s\S]*?mode: `conditional`/);
-		assert.match(firstHandbook, /appliesWhen: Editing dependency-facing code\./);
-		assert.match(firstHandbook, /\.\.\/dependency\/SKILL\.md/);
-		assert.match(firstHandbook, /\.\.\/dependency\/RULES_INDEX\.md/);
-		assert.doesNotMatch(firstHandbook, /\.\.\/(?:dependency|leaf)\/AGENTS\.md/);
+		assert.match(firstHandbook, /다음 조건에서 함께 적용합니다\. Editing dependency-facing code\./);
+		assert.match(firstHandbook, /\.\.\/dependency\/AGENTS\.md/);
 		assert.doesNotMatch(firstHandbook, /\.\.\/leaf\/(?:SKILL|RULES_INDEX)\.md/);
 		assert.doesNotMatch(firstHandbook, /^### \d+\.\d+ Fixture Rule$/m);
 
@@ -958,14 +955,11 @@ test("non-progressive owners preserve companion modes and link each target to it
 
 		assert.match(handbook, /metadata\.json\.companions/);
 		assert.doesNotMatch(handbook, /metadata\.json\.extends/);
-		assert.match(handbook, /^## Companion Skill 활성화$/m);
-		assert.match(handbook, /`convention-progressive-target`[\s\S]*?mode: `conditional`/);
-		assert.match(handbook, /appliesWhen: Editing progressive target contracts\./);
-		assert.match(handbook, /\.\.\/progressive-target\/SKILL\.md/);
-		assert.match(handbook, /\.\.\/progressive-target\/RULES_INDEX\.md/);
-		assert.doesNotMatch(handbook, /\.\.\/progressive-target\/AGENTS\.md/);
-		assert.match(handbook, /`convention-legacy-target`[\s\S]*?mode: `required`/);
-		assert.match(handbook, /\.\.\/legacy-target\/SKILL\.md/);
+		assert.match(handbook, /^## 함께 따르는 규칙$/m);
+		assert.match(handbook, /다음 조건에서 함께 적용합니다\./);
+		assert.match(handbook, /다음 조건에서 함께 적용합니다\. Editing progressive target contracts\./);
+		assert.match(handbook, /\.\.\/progressive-target\/AGENTS\.md/);
+		assert.match(handbook, /항상 함께 적용합니다\./);
 		assert.match(handbook, /\.\.\/legacy-target\/AGENTS\.md/);
 		assert.doesNotMatch(handbook, /\.\.\/legacy-target\/RULES_INDEX\.md/);
 	});
@@ -992,7 +986,7 @@ test("companion appliesWhen stays literal Markdown for progressive and non-progr
 			await captureConsoleLogs(async () => buildSkill(ownerPaths));
 			const handbook = await readFile(ownerPaths.outputPath, "utf8");
 
-			assert.match(handbook, /appliesWhen: \\\[x\\\]\\\(https:\/\/example\.invalid\\\) \\\*strong\\\* \\`code\\`/);
+			assert.match(handbook, /다음 조건에서 함께 적용합니다\. \\\[x\\\]\\\(https:\/\/example\.invalid\\\) \\\*strong\\\* \\`code\\`/);
 			assert.doesNotMatch(handbook, /\[x\]\(https:\/\/example\.invalid\)/);
 			assert.doesNotMatch(handbook, /\*strong\*/);
 			assert.doesNotMatch(handbook, /`code`/);
@@ -1626,7 +1620,6 @@ test("reviewWith and requiresSelected resolve local and reachable companion rule
 							files: ["src/owner.ts"],
 							expectedSkills: ["owner", "dependency"],
 							expectedSelected: {owner: ["fixture-local", "fixture-owner"], dependency: ["fixture-cross"]},
-							expectedNotApplicable: {owner: [], dependency: []},
 						},
 					],
 				},

@@ -7,7 +7,11 @@
 	},
 	"oneLoadBaseline": {
 		"id": "react-typescript-css-full-handbook-one-load",
-		"activatedDomains": ["react", "typescript", "css"],
+		"activatedDomains": [
+			"react",
+			"typescript",
+			"css"
+		],
 		"files": [
 			"skill/react/SKILL.md",
 			"skill/react/AGENTS.md",
@@ -29,7 +33,10 @@
 			},
 			"arms": {
 				"oracle": {
-					"activatedDomains": ["react", "typescript"],
+					"activatedDomains": [
+						"react",
+						"typescript"
+					],
 					"phases": {
 						"implementation": [
 							"skill/react/SKILL.md",
@@ -38,16 +45,12 @@
 							"skill/typescript/AGENTS.md"
 						],
 						"audit": [
-							"skill/convention-audit/SKILL.md",
-							"skill/convention-audit/AGENTS.md",
 							"skill/react/SKILL.md",
 							"skill/react/AGENTS.md",
 							"skill/typescript/SKILL.md",
 							"skill/typescript/AGENTS.md"
 						],
 						"reviewer": [
-							"skill/convention-audit/SKILL.md",
-							"skill/convention-audit/AGENTS.md",
 							"skill/react/SKILL.md",
 							"skill/react/AGENTS.md",
 							"skill/typescript/SKILL.md",
@@ -56,7 +59,10 @@
 					}
 				},
 				"progressive": {
-					"activatedDomains": ["react", "typescript"],
+					"activatedDomains": [
+						"react",
+						"typescript"
+					],
 					"phases": {
 						"implementation": [
 							"skill/react/SKILL.md",
@@ -83,8 +89,6 @@
 							"skill/typescript/contracts/guardrails-review-banned-typescript-shortcuts-before-finishing.md"
 						],
 						"audit": [
-							"skill/convention-audit/SKILL.md",
-							"skill/convention-audit/AGENTS.md",
 							"skill/react/SKILL.md",
 							"skill/react/RULES_INDEX.md",
 							"skill/react/contracts/ownership-avoid-barrel-and-react-namespace-imports.md",
@@ -109,8 +113,6 @@
 							"skill/typescript/contracts/guardrails-review-banned-typescript-shortcuts-before-finishing.md"
 						],
 						"reviewer": [
-							"skill/convention-audit/SKILL.md",
-							"skill/convention-audit/AGENTS.md",
 							"skill/react/SKILL.md",
 							"skill/react/RULES_INDEX.md",
 							"skill/react/contracts/ownership-avoid-barrel-and-react-namespace-imports.md",
@@ -149,28 +151,28 @@
 			},
 			"arms": {
 				"oracle": {
-					"activatedDomains": ["typescript"],
+					"activatedDomains": [
+						"typescript"
+					],
 					"phases": {
 						"implementation": [
 							"skill/typescript/SKILL.md",
 							"skill/typescript/AGENTS.md"
 						],
 						"audit": [
-							"skill/convention-audit/SKILL.md",
-							"skill/convention-audit/AGENTS.md",
 							"skill/typescript/SKILL.md",
 							"skill/typescript/AGENTS.md"
 						],
 						"reviewer": [
-							"skill/convention-audit/SKILL.md",
-							"skill/convention-audit/AGENTS.md",
 							"skill/typescript/SKILL.md",
 							"skill/typescript/AGENTS.md"
 						]
 					}
 				},
 				"progressive": {
-					"activatedDomains": ["typescript"],
+					"activatedDomains": [
+						"typescript"
+					],
 					"phases": {
 						"implementation": [
 							"skill/typescript/SKILL.md",
@@ -184,8 +186,6 @@
 							"skill/typescript/contracts/guardrails-review-banned-typescript-shortcuts-before-finishing.md"
 						],
 						"audit": [
-							"skill/convention-audit/SKILL.md",
-							"skill/convention-audit/AGENTS.md",
 							"skill/typescript/SKILL.md",
 							"skill/typescript/RULES_INDEX.md",
 							"skill/typescript/contracts/types-document-custom-types-and-shapes.md",
@@ -197,8 +197,6 @@
 							"skill/typescript/contracts/guardrails-review-banned-typescript-shortcuts-before-finishing.md"
 						],
 						"reviewer": [
-							"skill/convention-audit/SKILL.md",
-							"skill/convention-audit/AGENTS.md",
 							"skill/typescript/SKILL.md",
 							"skill/typescript/RULES_INDEX.md",
 							"skill/typescript/contracts/types-document-custom-types-and-shapes.md",
@@ -224,25 +222,28 @@
 			},
 			"arms": {
 				"oracle": {
-					"activatedDomains": ["css"],
+					"activatedDomains": [
+						"css"
+					],
 					"phases": {
-						"implementation": ["skill/css/SKILL.md", "skill/css/AGENTS.md"],
+						"implementation": [
+							"skill/css/SKILL.md",
+							"skill/css/AGENTS.md"
+						],
 						"audit": [
-							"skill/convention-audit/SKILL.md",
-							"skill/convention-audit/AGENTS.md",
 							"skill/css/SKILL.md",
 							"skill/css/AGENTS.md"
 						],
 						"reviewer": [
-							"skill/convention-audit/SKILL.md",
-							"skill/convention-audit/AGENTS.md",
 							"skill/css/SKILL.md",
 							"skill/css/AGENTS.md"
 						]
 					}
 				},
 				"progressive": {
-					"activatedDomains": ["css"],
+					"activatedDomains": [
+						"css"
+					],
 					"phases": {
 						"implementation": [
 							"skill/css/SKILL.md",
@@ -257,8 +258,6 @@
 							"skill/css/contracts/organization-review-banned-css-patterns-before-finishing.md"
 						],
 						"audit": [
-							"skill/convention-audit/SKILL.md",
-							"skill/convention-audit/AGENTS.md",
 							"skill/css/SKILL.md",
 							"skill/css/RULES_INDEX.md",
 							"skill/css/contracts/selector-avoid-deep-descendant-dependencies.md",
@@ -271,8 +270,6 @@
 							"skill/css/contracts/organization-review-banned-css-patterns-before-finishing.md"
 						],
 						"reviewer": [
-							"skill/convention-audit/SKILL.md",
-							"skill/convention-audit/AGENTS.md",
 							"skill/css/SKILL.md",
 							"skill/css/RULES_INDEX.md",
 							"skill/css/contracts/selector-avoid-deep-descendant-dependencies.md",
@@ -299,7 +296,11 @@
 			},
 			"arms": {
 				"oracle": {
-					"activatedDomains": ["react", "typescript", "css"],
+					"activatedDomains": [
+						"react",
+						"typescript",
+						"css"
+					],
 					"phases": {
 						"implementation": [
 							"skill/react/SKILL.md",
@@ -310,8 +311,6 @@
 							"skill/css/AGENTS.md"
 						],
 						"audit": [
-							"skill/convention-audit/SKILL.md",
-							"skill/convention-audit/AGENTS.md",
 							"skill/react/SKILL.md",
 							"skill/react/AGENTS.md",
 							"skill/typescript/SKILL.md",
@@ -320,8 +319,6 @@
 							"skill/css/AGENTS.md"
 						],
 						"reviewer": [
-							"skill/convention-audit/SKILL.md",
-							"skill/convention-audit/AGENTS.md",
 							"skill/react/SKILL.md",
 							"skill/react/AGENTS.md",
 							"skill/typescript/SKILL.md",
@@ -332,7 +329,11 @@
 					}
 				},
 				"progressive": {
-					"activatedDomains": ["react", "typescript", "css"],
+					"activatedDomains": [
+						"react",
+						"typescript",
+						"css"
+					],
 					"phases": {
 						"implementation": [
 							"skill/react/SKILL.md",
@@ -354,8 +355,6 @@
 							"skill/css/contracts/organization-review-banned-css-patterns-before-finishing.md"
 						],
 						"audit": [
-							"skill/convention-audit/SKILL.md",
-							"skill/convention-audit/AGENTS.md",
 							"skill/react/SKILL.md",
 							"skill/react/RULES_INDEX.md",
 							"skill/typescript/SKILL.md",
@@ -375,8 +374,6 @@
 							"skill/css/contracts/organization-review-banned-css-patterns-before-finishing.md"
 						],
 						"reviewer": [
-							"skill/convention-audit/SKILL.md",
-							"skill/convention-audit/AGENTS.md",
 							"skill/react/SKILL.md",
 							"skill/react/RULES_INDEX.md",
 							"skill/typescript/SKILL.md",
@@ -410,7 +407,10 @@
 			},
 			"arms": {
 				"oracle": {
-					"activatedDomains": ["react", "typescript"],
+					"activatedDomains": [
+						"react",
+						"typescript"
+					],
 					"phases": {
 						"implementation": [
 							"skill/react/SKILL.md",
@@ -419,16 +419,12 @@
 							"skill/typescript/AGENTS.md"
 						],
 						"audit": [
-							"skill/convention-audit/SKILL.md",
-							"skill/convention-audit/AGENTS.md",
 							"skill/react/SKILL.md",
 							"skill/react/AGENTS.md",
 							"skill/typescript/SKILL.md",
 							"skill/typescript/AGENTS.md"
 						],
 						"reviewer": [
-							"skill/convention-audit/SKILL.md",
-							"skill/convention-audit/AGENTS.md",
 							"skill/react/SKILL.md",
 							"skill/react/AGENTS.md",
 							"skill/typescript/SKILL.md",
@@ -437,7 +433,10 @@
 					}
 				},
 				"progressive": {
-					"activatedDomains": ["react", "typescript"],
+					"activatedDomains": [
+						"react",
+						"typescript"
+					],
 					"phases": {
 						"implementation": [
 							"skill/react/SKILL.md",
@@ -458,8 +457,6 @@
 							"skill/typescript/contracts/guardrails-review-banned-typescript-shortcuts-before-finishing.md"
 						],
 						"audit": [
-							"skill/convention-audit/SKILL.md",
-							"skill/convention-audit/AGENTS.md",
 							"skill/react/SKILL.md",
 							"skill/react/RULES_INDEX.md",
 							"skill/react/contracts/screen-keep-derived-values-close.md",
@@ -478,8 +475,6 @@
 							"skill/typescript/contracts/guardrails-review-banned-typescript-shortcuts-before-finishing.md"
 						],
 						"reviewer": [
-							"skill/convention-audit/SKILL.md",
-							"skill/convention-audit/AGENTS.md",
 							"skill/react/SKILL.md",
 							"skill/react/RULES_INDEX.md",
 							"skill/react/contracts/screen-keep-derived-values-close.md",
@@ -513,7 +508,11 @@
 			},
 			"arms": {
 				"oracle": {
-					"activatedDomains": ["react", "typescript", "css"],
+					"activatedDomains": [
+						"react",
+						"typescript",
+						"css"
+					],
 					"phases": {
 						"implementation": [
 							"skill/react/SKILL.md",
@@ -530,8 +529,6 @@
 							"skill/css/AGENTS.md"
 						],
 						"audit": [
-							"skill/convention-audit/SKILL.md",
-							"skill/convention-audit/AGENTS.md",
 							"skill/react/SKILL.md",
 							"skill/react/AGENTS.md",
 							"skill/typescript/SKILL.md",
@@ -540,8 +537,6 @@
 							"skill/css/AGENTS.md"
 						],
 						"reviewer": [
-							"skill/convention-audit/SKILL.md",
-							"skill/convention-audit/AGENTS.md",
 							"skill/react/SKILL.md",
 							"skill/react/AGENTS.md",
 							"skill/typescript/SKILL.md",
@@ -552,7 +547,11 @@
 					}
 				},
 				"progressive": {
-					"activatedDomains": ["react", "typescript", "css"],
+					"activatedDomains": [
+						"react",
+						"typescript",
+						"css"
+					],
 					"phases": {
 						"implementation": [
 							"skill/react/SKILL.md",
@@ -608,8 +607,6 @@
 							"skill/css/contracts/organization-review-banned-css-patterns-before-finishing.md"
 						],
 						"audit": [
-							"skill/convention-audit/SKILL.md",
-							"skill/convention-audit/AGENTS.md",
 							"skill/react/SKILL.md",
 							"skill/react/RULES_INDEX.md",
 							"skill/react/contracts/ownership-layer-component-boundaries.md",
@@ -644,8 +641,6 @@
 							"skill/css/contracts/organization-review-banned-css-patterns-before-finishing.md"
 						],
 						"reviewer": [
-							"skill/convention-audit/SKILL.md",
-							"skill/convention-audit/AGENTS.md",
 							"skill/react/SKILL.md",
 							"skill/react/RULES_INDEX.md",
 							"skill/react/contracts/ownership-layer-component-boundaries.md",
@@ -712,7 +707,10 @@
 			},
 			"arms": {
 				"oracle": {
-					"activatedDomains": ["react", "typescript"],
+					"activatedDomains": [
+						"react",
+						"typescript"
+					],
 					"phases": {
 						"implementation": [
 							"skill/react/SKILL.md",
@@ -721,16 +719,12 @@
 							"skill/typescript/AGENTS.md"
 						],
 						"audit": [
-							"skill/convention-audit/SKILL.md",
-							"skill/convention-audit/AGENTS.md",
 							"skill/react/SKILL.md",
 							"skill/react/AGENTS.md",
 							"skill/typescript/SKILL.md",
 							"skill/typescript/AGENTS.md"
 						],
 						"reviewer": [
-							"skill/convention-audit/SKILL.md",
-							"skill/convention-audit/AGENTS.md",
 							"skill/react/SKILL.md",
 							"skill/react/AGENTS.md",
 							"skill/typescript/SKILL.md",
@@ -739,7 +733,10 @@
 					}
 				},
 				"progressive": {
-					"activatedDomains": ["react", "typescript"],
+					"activatedDomains": [
+						"react",
+						"typescript"
+					],
 					"phases": {
 						"implementation": [
 							"skill/react/SKILL.md",
@@ -768,8 +765,6 @@
 							"skill/typescript/contracts/guardrails-review-banned-typescript-shortcuts-before-finishing.md"
 						],
 						"audit": [
-							"skill/convention-audit/SKILL.md",
-							"skill/convention-audit/AGENTS.md",
 							"skill/react/SKILL.md",
 							"skill/react/RULES_INDEX.md",
 							"skill/react/contracts/ownership-prefer-plain-ts-for-local-react-helpers.md",
@@ -796,8 +791,6 @@
 							"skill/typescript/contracts/guardrails-review-banned-typescript-shortcuts-before-finishing.md"
 						],
 						"reviewer": [
-							"skill/convention-audit/SKILL.md",
-							"skill/convention-audit/AGENTS.md",
 							"skill/react/SKILL.md",
 							"skill/react/RULES_INDEX.md",
 							"skill/react/contracts/ownership-prefer-plain-ts-for-local-react-helpers.md",
@@ -838,7 +831,11 @@
 			},
 			"arms": {
 				"oracle": {
-					"activatedDomains": ["react", "typescript", "css"],
+					"activatedDomains": [
+						"react",
+						"typescript",
+						"css"
+					],
 					"phases": {
 						"implementation": [
 							"skill/react/SKILL.md",
@@ -849,8 +846,6 @@
 							"skill/css/AGENTS.md"
 						],
 						"audit": [
-							"skill/convention-audit/SKILL.md",
-							"skill/convention-audit/AGENTS.md",
 							"skill/react/SKILL.md",
 							"skill/react/AGENTS.md",
 							"skill/typescript/SKILL.md",
@@ -859,8 +854,6 @@
 							"skill/css/AGENTS.md"
 						],
 						"reviewer": [
-							"skill/convention-audit/SKILL.md",
-							"skill/convention-audit/AGENTS.md",
 							"skill/react/SKILL.md",
 							"skill/react/AGENTS.md",
 							"skill/typescript/SKILL.md",
@@ -871,7 +864,11 @@
 					}
 				},
 				"progressive": {
-					"activatedDomains": ["react", "typescript", "css"],
+					"activatedDomains": [
+						"react",
+						"typescript",
+						"css"
+					],
 					"phases": {
 						"implementation": [
 							"skill/react/SKILL.md",
@@ -889,8 +886,6 @@
 							"skill/css/contracts/organization-review-banned-css-patterns-before-finishing.md"
 						],
 						"audit": [
-							"skill/convention-audit/SKILL.md",
-							"skill/convention-audit/AGENTS.md",
 							"skill/react/SKILL.md",
 							"skill/react/RULES_INDEX.md",
 							"skill/typescript/SKILL.md",
@@ -906,8 +901,6 @@
 							"skill/css/contracts/organization-review-banned-css-patterns-before-finishing.md"
 						],
 						"reviewer": [
-							"skill/convention-audit/SKILL.md",
-							"skill/convention-audit/AGENTS.md",
 							"skill/react/SKILL.md",
 							"skill/react/RULES_INDEX.md",
 							"skill/typescript/SKILL.md",

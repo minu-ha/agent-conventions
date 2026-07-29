@@ -14,16 +14,16 @@
 
 Figma 링크, node URL, design screenshot을 기준 소스로 받아 실제 브라우저 구현 화면과의 visual parity를 맞추는 작업 규칙입니다. 이 가이드는 Figma MCP evidence 확보, Code Connect와 Figma REST API 활용, node JSON/reference image/variables/components/styles metadata 수집, 현재 구현 화면 확인, 구현 전 visual diff 표 작성, 정적 UI copy와 동적 API 데이터 구분, 기존 컴포넌트와 디자인 토큰 우선 사용, 브라우저 screenshot 기반 반복 검증, 남은 mismatch를 숨기지 않는 완료 보고를 강제합니다. 기능 구현 완료나 build/test 성공만으로 visual parity 작업을 완료 처리하지 않으며, Figma 기준 UI 구현에는 `react`, `css`, `playwright-test` companion skill을 함께 사용합니다.
 
-이 가이드는 local Figma Visual Parity 규칙만 담고 있습니다. 공통 규칙은 companion skill을 함께 로드해 보완합니다.
+이 문서에는 Figma Visual Parity 규칙만 담겨 있습니다. 아래 규칙도 함께 따릅니다.
 
 ---
 
-## 함께 로드할 Companion Skill
+## 함께 따르는 규칙
 
-- `convention-typescript` - TypeScript Convention 공통 규칙 guide: [TypeScript Convention](../typescript/AGENTS.md)
-- `convention-css` - CSS Convention 공통 규칙 guide: [CSS Convention](../css/AGENTS.md)
-- `convention-react` - React Convention 공통 규칙 guide: [React Convention](../react/AGENTS.md)
-- `convention-playwright-test` - Playwright Test Convention 공통 규칙 guide: [Playwright Test Convention](../playwright-test/AGENTS.md)
+- [TypeScript Convention](../typescript/AGENTS.md) — 공통 규칙
+- [CSS Convention](../css/AGENTS.md) — 공통 규칙
+- [React Convention](../react/AGENTS.md) — 공통 규칙
+- [Playwright Test Convention](../playwright-test/AGENTS.md) — 공통 규칙
 
 ---
 

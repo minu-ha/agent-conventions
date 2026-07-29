@@ -36,10 +36,7 @@ CRITICAL_IMPACT_MARKER = "**Impact: CRITICAL**"
 ROUTING_EVAL_PATHS = tuple(
     f"skill/{domain}/routing-evals.json" for domain in DOMAIN_ORDER
 )
-AUDIT_PHASE_FILES = (
-    "skill/convention-audit/SKILL.md",
-    "skill/convention-audit/AGENTS.md",
-)
+AUDIT_PHASE_FILES: tuple[str, ...] = ()
 EXPECTED_BASELINE_FILES = tuple(
     path
     for domain in DOMAIN_ORDER
@@ -1545,9 +1542,7 @@ def run_self_test(contexts: dict[str, Any], repo_root: Path) -> None:
     )
 
     def add_baseline_file(data: dict[str, Any]) -> None:
-        data["oneLoadBaseline"]["files"].append(
-            "skill/convention-audit/SKILL.md"
-        )
+        data["oneLoadBaseline"]["files"].append("skill/astro/SKILL.md")
 
     add_case(
         "baseline-file-addition",

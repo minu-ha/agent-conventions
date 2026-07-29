@@ -110,15 +110,15 @@ framework/project 고유 규칙은 해당 skill이나 consuming project의 proje
 | TSX | Activate `convention-react` + `convention-typescript`. |
 | `className` / CSS / styling surface | Add `convention-css`. |
 | Activated progressive skill | Scan every activated `RULES_INDEX.md` completely; never stop at the first match. |
-| Selected guidance | Read every `Selected` + `Unknown` stable-ID-matched `contracts/*.md`; CRITICAL contracts require their full `rules/*.md`. |
-| `completionGate` | Select every marked entry in each activated progressive skill; it can never be N/A. |
-| `requiresSelected` closure | Resolve Unknown first, then apply only final Selected contracts: immediately select every target, activate its companion, and never classify the target N/A. |
-| `reviewWith` closure | Re-evaluate every target against current evidence; do not auto-select it, and allow evidence-backed N/A. |
-| Fixed point | Add only requirements from final Selected contracts to scope evidence; exclude examples and optional alternatives, then repeat contracts and scans until activation, partition, and evidence stop changing. |
-| Full rule expansion | Expand non-CRITICAL full rules only for exact syntax, exceptions, unresolved Unknown, or missing audit evidence; record `Expanded: ID: reason`. |
+| Selected guidance | Read the `contracts/*.md` of every applicable rule; CRITICAL contracts require their full `rules/*.md`. |
+| `completionGate` | Apply every marked entry in each activated progressive skill at finish. |
+| `requiresSelected` closure | Apply every target too, and activate its companion when the target lives in another skill. |
+| `reviewWith` closure | Re-judge every target against the changed surface; do not apply it automatically. |
+| Repeat | Rescan the activated indexes whenever a new rule, companion, or surface comes into play; stop when nothing new applies. |
+| Full rule expansion | Expand non-CRITICAL full rules when exact syntax or an exception call needs the examples. |
 | Progressive full handbook | React/TypeScript/CSS `AGENTS.md` is opt-in, never default-loaded. |
 | Scope drift | Restart activation and rescan every activated progressive index. |
-| Completion | Finish with `convention-audit`: coverage `FAIL = 0`, semantic `FAIL = 0`, `UNKNOWN = 0`. |
+| Completion | Re-read the diff against the applied rules and report violations with file/line and a fix. |
 
 ## Progressive Activation Matrix
 
@@ -179,13 +179,12 @@ Pure CSS는 TypeScript를 자동 활성화하지 않고, pure TypeScript는 Reac
 - 관련 코드, 테스트, 기존 구현 패턴, 인접 경계를 확인합니다.
 - 변경 근거가 되는 파일과 검증 포인트를 먼저 확보합니다.
 - 각 activated skill의 `SKILL.md`를 먼저 읽습니다.
-- activated progressive skill마다 `RULES_INDEX.md` 전체를 scan하고 digest-bound `Selected`/`N/A`/`Unknown` exact partition을 작성합니다.
-- 각 activated index의 `completionGate` entry를 `Selected`로 두며 N/A로 분류하지 않습니다.
-- `Selected`와 `Unknown` stable ID에 대응하는 generated contract를 읽고, CRITICAL 또는 근거가 더 필요한 경우만 full rule로 확장해 이유를 기록합니다.
-- Unknown을 Selected/N/A로 먼저 해소하며, N/A로 해소한 contract의 `requiresSelected`는 적용하지 않습니다.
-- final Selected contract의 `requiresSelected` target은 companion까지 활성화해 즉시 `Selected`로 두며 N/A로 분류하지 않습니다.
-- final Selected contract의 필수 변경만 scope evidence에 합치며, 예시·선택적 대안·아직 해소되지 않은 Unknown의 가상 변경은 제외합니다.
-- 새 surface·companion·Selected가 생기면 모든 activated index와 `reviewWith`를 재판정하고 새 contract를 읽어 activation·partition·scope evidence의 고정점까지 반복합니다.
+- activated progressive skill마다 `RULES_INDEX.md`를 끝까지 훑고 첫 match에서 멈추지 않습니다.
+- 각 activated index의 `completionGate` 규칙은 마무리 시 항상 적용합니다.
+- 걸리는 규칙의 generated contract를 읽고, CRITICAL이거나 정확한 판단이 더 필요하면 full rule로 확장합니다.
+- `requiresSelected` target은 함께 적용하고, 다른 skill의 규칙이면 그 companion도 활성화합니다.
+- `reviewWith` target은 변경 범위에 비춰 다시 판단하되 자동으로 적용하지는 않습니다.
+- 규칙·companion·새 surface가 걸리면 activated index를 다시 훑고, 더 걸리는 게 없으면 멈춥니다.
 - progressive React/TypeScript/CSS full `AGENTS.md`는 전체 handbook이 명시적으로 필요한 경우에만 opt-in합니다.
 - non-progressive owner가 `SKILL.md`에서 local `AGENTS.md` 전체를 요구하면 그 계약을 따릅니다.
 
@@ -229,13 +228,12 @@ Pure CSS는 TypeScript를 자동 활성화하지 않고, pure TypeScript는 Reac
 - agent 보고만으로 완료 처리하지 않습니다.
 - 실행한 검증과 미실행 검증을 구분합니다.
 
-### Stage 9. Convention Audit
+### Stage 9. Convention Review
 
-- 마지막 gate로 `convention-audit`을 실행하고 local 8-rule `AGENTS.md` 전체를 따릅니다.
-- auditor는 변경 surface와 activated progressive index를 독립적으로 다시 선택하고 implementer receipt와 exact partition을 비교합니다.
-- auditor는 selected/unknown contract를 읽고 CRITICAL 또는 근거가 필요한 full rule expansion과 이유를 독립 검증합니다.
-- 자동 검사 결과는 evidence일 뿐 semantic convention PASS를 대신하지 않습니다.
-- coverage `FAIL = 0`, semantic `FAIL = 0`, `UNKNOWN = 0`이 아니면 Stage 3 또는 Stage 6으로 돌아가 재선택·수정·재검증합니다.
+- 완료 전에 변경 diff를 적용한 규칙에 비춰 다시 훑습니다.
+- 위반은 file/line과 수정안으로 보고하고, 고친 뒤 다시 확인합니다.
+- 자동 검사 결과는 evidence일 뿐 컨벤션을 지켰다는 증명이 아닙니다.
+- 판단이 서지 않는 항목은 넘기지 말고 무엇이 불확실한지 함께 보고합니다.
 - convention 예외는 기본 금지이며, 예외가 필요하면 근거와 제거 조건을 함께 남깁니다.
 
 ### Stage 10. Completion
@@ -251,8 +249,8 @@ Pure CSS는 TypeScript를 자동 활성화하지 않고, pure TypeScript는 Reac
 - plan이 필요한 작업은 execution strategy를 정하기 전에는 구현하지 않습니다.
 - review 미통과 상태로 다음 task나 완료 단계로 넘어가지 않습니다.
 - fresh verification 없이 완료 처리하지 않습니다.
-- scope drift 뒤 기존 receipt를 재사용하지 않습니다.
-- convention-audit의 coverage/semantic `FAIL` 또는 `UNKNOWN`을 문서화만 하고 종료하지 않습니다.
+- scope drift 뒤 이전 판정을 그대로 재사용하지 않습니다.
+- 컨벤션 위반을 문서화만 하고 종료하지 않습니다.
 - spec review 또는 code quality review를 생략하고 완료 처리하지 않습니다.
 
 ## Final Report

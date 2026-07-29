@@ -28,7 +28,6 @@
 - [skill/typescript](./skill/typescript/README.md)
 - [skill/nestjs](./skill/nestjs/README.md)
 - [skill/figma-visual-parity](./skill/figma-visual-parity/README.md)
-- [skill/convention-audit](./skill/convention-audit/README.md)
 
 이 구조에서는 아래 원칙을 지킵니다.
 
@@ -61,6 +60,10 @@
 | `contracts/*.md` | Progressive-only generated selected-rule contract; never edit directly. |
 | `AGENTS.md` | Generated full handbook; progressive rules include `Applies when`; opt-in for React/TypeScript/CSS. |
 | `routing-evals.json` | Progressive-only editable test oracle; never runtime context. |
+
+정리하면, structured skill에서 사람이 직접 수정하는 정본은
+`rules/_sections.md`, `rules/_template.md`, `rules/*.md`, `metadata.json`, `SKILL.md`, progressive `routing-evals.json`이고,
+`AGENTS.md`, progressive `RULES_INDEX.md`, progressive `contracts/*.md`는 생성물입니다.
 
 non-progressive structured skill은 각 `SKILL.md`가 지정한 local `AGENTS.md`와 rule body 계약을 그대로 따릅니다. 위 opt-in 제한은 progressive React/TypeScript/CSS full handbook에만 적용합니다.
 
@@ -113,7 +116,6 @@ npm --prefix package run test
 - `astro`
 - `react`
 - `css`
-- `convention-audit`
 - `figma-visual-parity`
 - `nestjs`
 - `playwright-test`

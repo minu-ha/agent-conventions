@@ -12,16 +12,16 @@
 
 ## 개요
 
-에이전트 협업 팀을 위한 React 코딩 컨벤션입니다. shared와 route-local 소유 경계, composition 전략, React handler/prop 계약, 화면 흐름, state 오리진, React 19 component/effect/transition 패턴과 문서화를 다룹니다. 기본 진입점은 SKILL.md, generated RULES_INDEX.md, selected contracts/*.md이며 CRITICAL 또는 근거가 더 필요한 rule만 full source로 확장합니다. AGENTS.md는 opt-in full handbook입니다. TypeScript는 required companion이고 class contract, stylesheet 또는 styling surface가 바뀔 때만 CSS를 conditional companion으로 활성화합니다. `rules/` 아래 rule 파일이 source of truth입니다.
+에이전트 협업 팀을 위한 React 코딩 컨벤션입니다. shared와 route-local 소유 경계, composition 전략, React handler/prop 계약, 화면 흐름, state 오리진, React 19 component/effect/transition 패턴과 문서화를 다룹니다. TypeScript 규칙을 항상 함께 따르고, class contract나 stylesheet를 바꿀 때는 CSS 규칙도 함께 봅니다. `rules/` 아래 rule 파일이 source of truth입니다.
 
-이 가이드는 local React 컨벤션 규칙만 담고 있습니다. companion skill은 아래 mode와 appliesWhen에 따라 활성화합니다.
+이 문서에는 React 컨벤션 규칙만 담겨 있습니다. 아래 규칙도 함께 따릅니다.
 
 ---
 
-## Companion Skill 활성화
+## 함께 따르는 규칙
 
-- `convention-typescript` - TypeScript Convention · mode: `required` · [SKILL.md](../typescript/SKILL.md) · [RULES_INDEX.md](../typescript/RULES_INDEX.md)
-- `convention-css` - CSS Convention · mode: `conditional` · appliesWhen: class contract, stylesheet 또는 styling surface를 변경한다. · [SKILL.md](../css/SKILL.md) · [RULES_INDEX.md](../css/RULES_INDEX.md)
+- [TypeScript Convention](../typescript/AGENTS.md) — 항상 함께 적용합니다.
+- [CSS Convention](../css/AGENTS.md) — 다음 조건에서 함께 적용합니다. class contract, stylesheet 또는 styling surface를 변경한다.
 
 ---
 
