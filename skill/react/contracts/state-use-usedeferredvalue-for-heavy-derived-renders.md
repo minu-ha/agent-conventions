@@ -10,4 +10,4 @@
 deferred value를 기준으로 expensive 계산을 다시 돌리는 비용이 실제로 크고,
 render마다 같은 작업을 반복하지 않으려는 목적이 분명할 때만 함께 사용합니다.
 
-> 예시·예외가 필요할 때만 [full rule](../rules/state-use-usedeferredvalue-for-heavy-derived-renders.md)을 추가로 읽고 fallback 사유를 기록합니다.
+> 예시·예외가 필요하면 [full rule](../rules/state-use-usedeferredvalue-for-heavy-derived-renders.md)을 읽습니다.

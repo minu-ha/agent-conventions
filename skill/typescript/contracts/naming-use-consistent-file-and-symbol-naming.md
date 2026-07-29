@@ -12,4 +12,4 @@ schema 키,
 변경이 아니므로 이 규칙의 대상이 아닙니다.
 local alias를 추가하거나 import binding 이름을 바꿀 때만 다시 판정합니다.
 
-> 예시·예외가 필요할 때만 [full rule](../rules/naming-use-consistent-file-and-symbol-naming.md)을 추가로 읽고 fallback 사유를 기록합니다.
+> 예시·예외가 필요하면 [full rule](../rules/naming-use-consistent-file-and-symbol-naming.md)을 읽습니다.

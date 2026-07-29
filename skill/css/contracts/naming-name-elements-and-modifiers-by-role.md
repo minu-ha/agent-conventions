@@ -7,4 +7,4 @@
 `box` 같은 포괄 단어 단독 사용이나 `gap12` 같은 숫자 기반 의미는 피하고,
 실제 역할과 상태를 드러내는 이름을 씁니다.
 
-> 예시·예외가 필요할 때만 [full rule](../rules/naming-name-elements-and-modifiers-by-role.md)을 추가로 읽고 fallback 사유를 기록합니다.
+> 예시·예외가 필요하면 [full rule](../rules/naming-name-elements-and-modifiers-by-role.md)을 읽습니다.

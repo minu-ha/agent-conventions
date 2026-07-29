@@ -25,6 +25,6 @@ export되지 않은 file-local `type`/`interface`는 public이라는 이유만�
 `@description`,
 `@field`를 사용합니다.
 
-**Requires selected:** `typescript/docs-require-header-jsdoc-on-key-declarations` · N/A 불가
+**Requires selected:** `typescript/docs-require-header-jsdoc-on-key-declarations` · 함께 적용
 
-> 예시·예외가 필요할 때만 [full rule](../rules/docs-require-jsdoc-on-key-declarations.md)을 추가로 읽고 fallback 사유를 기록합니다.
+> 예시·예외가 필요하면 [full rule](../rules/docs-require-jsdoc-on-key-declarations.md)을 읽습니다.

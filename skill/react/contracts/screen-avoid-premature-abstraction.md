@@ -22,4 +22,4 @@
 - export helper가 다른 export helper 하나만 위해 존재하는 구조
 - 이름이 그럴듯하다는 이유로 흐름을 파일 왕복으로 숨기기
 
-> 예시·예외가 필요할 때만 [full rule](../rules/screen-avoid-premature-abstraction.md)을 추가로 읽고 fallback 사유를 기록합니다.
+> 예시·예외가 필요하면 [full rule](../rules/screen-avoid-premature-abstraction.md)을 읽습니다.

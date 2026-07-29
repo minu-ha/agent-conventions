@@ -342,7 +342,7 @@ test("generated rule contract preserves the normative prefix and defers examples
 	assert.match(contract, /Keep the observable owner contract\./);
 	assert.match(contract, /Keep the observable owner contract\.\\\nContinue on the next rendered line\./);
 	assert.match(contract, /Preserve the source of truth\./);
-	assert.match(contract, /Required on completion:[^\n]+Selected[^\n]+N\/A/i);
+	assert.match(contract, /Required on completion:[^\n]+마무리 시 항상 적용/);
 	assert.match(contract, /\[full rule\]\(\.\.\/rules\/state-observe\.md\)/);
 	assert.doesNotMatch(contract, /Incorrect|Correct|hiddenBad|hiddenGood|```/);
 	assert.doesNotMatch(contract, /[ \t]+$/m);
@@ -394,7 +394,7 @@ test("critical contracts require the full source while non-critical contracts re
 		"## First Composition\n\n**Impact: CRITICAL (First impact.)**\n\nKeep the critical boundary.\n\n**Incorrect**\n\n```ts\nconst bad = true;\n```\n\n**Correct**\n\n```ts\nconst good = true;\n```";
 	const criticalContract = generateRuleContractMarkdown(criticalRule);
 	assert.match(criticalContract, /CRITICAL/);
-	assert.match(criticalContract, /Requires selected:[^\n]+state-observe[^\n]+typescript\/types-reuse-contracts[^\n]+N\/A/i);
+	assert.match(criticalContract, /Requires selected:[^\n]+state-observe[^\n]+typescript\/types-reuse-contracts[^\n]+함께 적용/);
 	assert.match(criticalContract, /must read.*\[full rule\]\(\.\.\/rules\/composition-first\.md\)/i);
 	assert.doesNotMatch(criticalContract, /hidden body/);
 
@@ -986,13 +986,20 @@ test("companion appliesWhen stays literal Markdown for progressive and non-progr
 			await captureConsoleLogs(async () => buildSkill(ownerPaths));
 			const handbook = await readFile(ownerPaths.outputPath, "utf8");
 
-			assert.match(handbook, /다음 조건에서 함께 적용합니다\. \\\[x\\\]\\\(https:\/\/example\.invalid\\\) \\\*strong\\\* \\`code\\`/);
-			assert.doesNotMatch(handbook, /\[x\]\(https:\/\/example\.invalid\)/);
-			assert.doesNotMatch(handbook, /\*strong\*/);
-			assert.doesNotMatch(handbook, /`code`/);
+			// companion 줄은 전부 이스케이프한다. 목록 항목이라 코드 스팬까지 살릴 필요가 없다.
+			const companionLine = handbook.split("\n").find((line) => line.includes("다음 조건에서 함께 적용합니다.")) ?? "";
+			assert.match(companionLine, /다음 조건에서 함께 적용합니다\. \\\[x\\\]\\\(https:\/\/example\.invalid\\\) \\\*strong\\\* \\`code\\`/);
+			for (const live of [/\[x\]\(https:\/\/example\.invalid\)/, /\*strong\*/, /`code`/]) {
+				assert.doesNotMatch(companionLine, live);
+			}
+
+			// 링크와 강조는 어느 줄에서도 살아나면 안 된다.
+			assert.doesNotMatch(handbook, /[^\\]\[x\]\(https:\/\/example\.invalid\)/);
+			assert.doesNotMatch(handbook, /[^\\]\*strong\*/);
 
 			if (progressiveDisclosure) {
-				assert.match(handbook, /\*\*Applies when:\*\* \\\[x\\\]\\\(https:\/\/example\.invalid\\\) \\\*strong\\\* \\`code\\`/);
+				// 링크와 강조는 무력화하고, 코드 스팬은 그대로 살린다.
+				assert.match(handbook, /\*\*Applies when:\*\* \\\[x\\\]\\\(https:\/\/example\.invalid\\\) \\\*strong\\\* `code`/);
 			}
 		}
 	});

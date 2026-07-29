@@ -9,4 +9,4 @@ React 19 컴파일러가 처리하는 범위에서는 `useMemo`, `useCallback`�
 `useDeferredValue`를 기준으로 무거운 파생 계산을 늦추는 경우처럼 render 비용 절감 목적이 분명한 예외는 허용할 수 있지만,
 그때도 "정말 무거운 계산인지"가 먼저 확인되어야 합니다.
 
-> 예시·예외가 필요할 때만 [full rule](../rules/state-compiler-first-memoization.md)을 추가로 읽고 fallback 사유를 기록합니다.
+> 예시·예외가 필요하면 [full rule](../rules/state-compiler-first-memoization.md)을 읽습니다.

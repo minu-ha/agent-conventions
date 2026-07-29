@@ -2,6 +2,6 @@
 
 **Impact: CRITICAL**
 
-**Requires selected:** `docs-require-jsdoc-on-key-declarations` · N/A 불가
+**Requires selected:** `docs-require-jsdoc-on-key-declarations` · 함께 적용
 
 > CRITICAL rule: must read the [full rule](../rules/state-shape-query-data-with-select.md) before implementation or review.

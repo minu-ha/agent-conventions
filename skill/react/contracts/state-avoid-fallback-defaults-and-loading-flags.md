@@ -12,4 +12,4 @@ background refetch indicator,
 저장 중 배지처럼 기존 UI를 보조하는 좁은 용도로만 사용합니다.
 화면 전체를 가리는 로컬 loading 분기가 꼭 필요하면 가까운 한글 주석으로 이유를 남깁니다.
 
-> 예시·예외가 필요할 때만 [full rule](../rules/state-avoid-fallback-defaults-and-loading-flags.md)을 추가로 읽고 fallback 사유를 기록합니다.
+> 예시·예외가 필요하면 [full rule](../rules/state-avoid-fallback-defaults-and-loading-flags.md)을 읽습니다.

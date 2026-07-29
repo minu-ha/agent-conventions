@@ -11,6 +11,6 @@
 헤더 JSDoc과 annotation 태그 선택은 `docs-require-jsdoc-on-key-declarations`와 companion skill인
 `convention-typescript`의 표준을 따릅니다.
 
-**Requires selected:** `typescript/docs-keep-inline-comments-for-constraints-and-caveats` · N/A 불가
+**Requires selected:** `typescript/docs-keep-inline-comments-for-constraints-and-caveats` · 함께 적용
 
-> 예시·예외가 필요할 때만 [full rule](../rules/docs-limit-inline-comments-to-non-obvious-logic.md)을 추가로 읽고 fallback 사유를 기록합니다.
+> 예시·예외가 필요하면 [full rule](../rules/docs-limit-inline-comments-to-non-obvious-logic.md)을 읽습니다.

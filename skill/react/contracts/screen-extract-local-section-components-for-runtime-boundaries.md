@@ -20,4 +20,4 @@ invalidate,
 redirect,
 여러 section에 걸친 파생값은 route entry에 둡니다.
 
-> 예시·예외가 필요할 때만 [full rule](../rules/screen-extract-local-section-components-for-runtime-boundaries.md)을 추가로 읽고 fallback 사유를 기록합니다.
+> 예시·예외가 필요하면 [full rule](../rules/screen-extract-local-section-components-for-runtime-boundaries.md)을 읽습니다.

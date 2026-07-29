@@ -8,4 +8,4 @@
 그렇지 않으면 복사 후 정렬합니다.
 companion skill이므로 지원 여부가 불분명한 환경에 무조건 `toSorted()`를 강제하지는 않습니다.
 
-> 예시·예외가 필요할 때만 [full rule](../rules/functions-prefer-immutable-array-sorting.md)을 추가로 읽고 fallback 사유를 기록합니다.
+> 예시·예외가 필요하면 [full rule](../rules/functions-prefer-immutable-array-sorting.md)을 읽습니다.

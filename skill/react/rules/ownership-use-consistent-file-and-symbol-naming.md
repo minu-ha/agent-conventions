@@ -15,8 +15,8 @@ tags: ownership, naming, files
 React 작업에서 sibling `.ts` support 파일을 만들거나 local 선언을 named export로 옮기면 target spelling이 유지돼도
 선택합니다.
 non-exported local symbol은 TypeScript `naming-use-consistent-file-and-symbol-naming`,
-local query·mutation binding은 React `state-name-query-and-mutation-bindings-consistently`가 담당하므로 그것만 바꾸면
-N/A입니다.
+local query·mutation binding은 React `state-name-query-and-mutation-bindings-consistently`가 담당합니다.
+그것만 바꾸면 이 규칙은 적용하지 않습니다.
 
 파일명은 `kebab-case`, 일반 변수와 함수는 `camelCase`, 타입과 컴포넌트는 `PascalCase`를 사용합니다.
 `const`인지 여부로 별도 casing을 두지 않고, 화면과 모듈 안의 로컬 값은 모두 `camelCase`로 맞춥니다.

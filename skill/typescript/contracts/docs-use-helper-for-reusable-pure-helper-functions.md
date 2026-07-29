@@ -16,4 +16,4 @@
 - 한 함수나 한 support module 안에서만 쓰는 작은 sub-step
 - 반복이 보이지만 아직 caller surface가 넓지 않은 local 계산
 
-> 예시·예외가 필요할 때만 [full rule](../rules/docs-use-helper-for-reusable-pure-helper-functions.md)을 추가로 읽고 fallback 사유를 기록합니다.
+> 예시·예외가 필요하면 [full rule](../rules/docs-use-helper-for-reusable-pure-helper-functions.md)을 읽습니다.

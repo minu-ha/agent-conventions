@@ -19,4 +19,4 @@ public part는 소비자가 이름으로 조립해야 하거나 shared context/a
 단순 class wrapper, spacing 보정 DOM, 내부 layout helper는 숨깁니다.
 stateless compound에 state가 필요해지면 public 이름은 유지하고 context만 추가합니다.
 
-> 예시·예외가 필요할 때만 [full rule](../rules/strategy-choose-single-composition-compound-and-variants.md)을 추가로 읽고 fallback 사유를 기록합니다.
+> 예시·예외가 필요하면 [full rule](../rules/strategy-choose-single-composition-compound-and-variants.md)을 읽습니다.

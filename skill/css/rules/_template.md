@@ -2,7 +2,7 @@
 title: Rule Title Here
 impact: MEDIUM
 impactDescription: 선택적 영향도 설명
-appliesWhen: 이 rule을 선택해야 하는 변경 surface와 evidence를 한 문장으로 설명
+appliesWhen: 이 규칙이 걸리는 변경을 한 문장으로. 결론이 아니라 관찰 가능한 조건
 tags: tag1, tag2
 ---
 
@@ -10,30 +10,30 @@ tags: tag1, tag2
 
 **Impact: MEDIUM (선택적 영향도 설명)**
 
-규칙의 핵심과 이유를 짧고 분명하게 설명합니다.
+규칙의 핵심과 이유를 짧고 분명하게 쓴다.
 
-규범과 예외는 이 지점까지 완결합니다.
-아래에는 `Incorrect`/`Correct` label, fenced code, 빈 줄만 두며 예시가 여러 개면 Incorrect를 먼저 모두 배치합니다.
+규범과 예외는 여기까지 끝낸다.
+아래에는 `Incorrect` / `Correct` 라벨, 코드 펜스, 빈 줄만 둔다.
+예시가 여러 개면 Incorrect 를 먼저 모두 배치한다.
 
-`appliesWhen`은 현재 작업의 변경 semantic delta만 판정하도록 작성합니다.
-추가·삭제·이동·이름 변경·재선언 surface를 빠뜨리지 말고,
-read-only 문맥이나 owner 이동에 byte-equivalent로 따라온 내부 구문은 선택 근거로 삼지 않습니다.
-파일 이동에서 이름·shape·동작이 같은 내부 선언·본문·class·value는 diff에 삭제+추가로 보여도 별도 추가·변경·재선언으로
-다시 세지 않습니다.
-N/A rule의 optional pattern을 새로 도입해 스스로 활성화하지 말고 요청을 충족하는 최소 semantic patch만 구현합니다.
+<!--
+frontmatter 키와 appliesWhen 작성 기준은 CONTRIBUTING.md 3절 참고.
+  appliesWhen           걸리는 조건. 규칙의 결론이 아니라 diff 에서 관찰 가능한 것
+  requiresSelected      이 규칙이 걸리면 반드시 함께 적용할 규칙
+  reviewWith            함께 다시 판단해 볼 규칙. 자동 적용 아님
+  requiredOnCompletion  마무리 시 항상 적용하는 규칙에만
+대상이 없는 키는 생략한다. 같은 target 을 두 키에 넣지 않는다.
+이 주석은 새 규칙을 만든 뒤 지운다.
+-->
 
-source rule이 Selected이면 target도 반드시 Selected여야 할 때만 `requiresSelected`를 추가합니다.
-N/A 가능성이 있는 관련 rule은 `reviewWith`로 두고, 같은 target을 두 field에 중복하지 않습니다.
-활성 skill 전체의 실제 finish gate에만 `requiredOnCompletion: true`를 사용하며 선택 사항이 없으면 key를 생략합니다.
+**Incorrect (무엇이 문제인지):**
 
-**Incorrect (무엇이 문제인지 설명):**
-
-```tsx
-// 나쁜 예시
+```css
+/* 나쁜 예시 */
 ```
 
-**Correct (무엇이 좋아졌는지 설명):**
+**Correct (무엇이 좋아졌는지):**
 
-```tsx
-// 좋은 예시
+```css
+/* 좋은 예시 */
 ```

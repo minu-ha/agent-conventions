@@ -7,6 +7,6 @@ render 중에 계산하면 추가 렌더와 drift를 줄일 수 있고, effect d
 이 규칙은 `screen-keep-derived-values-close`와 함께 사용합니다.
 파생값은 render 중에 만들고, 사용 지점 가까이에 둡니다.
 
-**Requires selected:** `screen-keep-derived-values-close` · N/A 불가
+**Requires selected:** `screen-keep-derived-values-close` · 함께 적용
 
-> 예시·예외가 필요할 때만 [full rule](../rules/state-calculate-derived-values-during-render.md)을 추가로 읽고 fallback 사유를 기록합니다.
+> 예시·예외가 필요하면 [full rule](../rules/state-calculate-derived-values-during-render.md)을 읽습니다.

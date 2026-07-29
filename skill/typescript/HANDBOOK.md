@@ -97,7 +97,7 @@ config.pagination.default_page_size;
 
 **Rule:** `T02` · `naming-preserve-config-origin-with-chained-access`
 
-**Applies when:** \`config\` 또는 \`util\` 값을 leaf 모듈에서 접근하며 넓은 스코프 구조분해, 별칭 또는 feature-local namespace를 추가·변경한다.
+**Applies when:** `config` 또는 `util` 값을 leaf 모듈에서 접근하며 넓은 스코프 구조분해, 별칭 또는 feature-local namespace를 추가·변경한다.
 
 **Impact: HIGH (keeps readers aware of where values come from instead of hiding origin behind wide-scope aliases)**
 
@@ -390,7 +390,7 @@ const normalizeSearchRequest: NormalizeRequest = (request) => {
 
 **Applies when:** interface·객체·framework의 named·shared callback 구현에서 기존 시그니처를 재사용·변경한다. annotation 없는 one-off contextually typed inline callback은 제외한다.
 
-**Requires selected:** `types-prefer-function-variable-types-over-parameter-annotations` · N/A 불가
+**Requires selected:** `types-prefer-function-variable-types-over-parameter-annotations` · 함께 적용
 
 **Review with:** `types-mark-unused-parameters-with-underscore`
 
@@ -493,7 +493,7 @@ type UserPreview = Pick<UserRecord, "id" | "name">;
 
 **Rule:** `T10` · `functions-avoid-imperative-assembly-in-wide-scopes`
 
-**Applies when:** 파일 상단이나 넓은 스코프에서 \`let\` 재대입, 배열 \`push\` 또는 조건부 누적으로 값을 조립하거나 이를 리팩터링한다.
+**Applies when:** 파일 상단이나 넓은 스코프에서 `let` 재대입, 배열 `push` 또는 조건부 누적으로 값을 조립하거나 이를 리팩터링한다.
 
 **Impact: HIGH (keeps file-wide logic declarative instead of mutating shared locals through branching assembly)**
 
@@ -667,7 +667,7 @@ export const util = {
 
 **Rule:** `T12` · `functions-prefer-immutable-array-sorting`
 
-**Applies when:** props, state, 매개변수 또는 공유 입력에서 온 배열을 정렬하거나 기존 \`.sort\(\)\` 호출을 추가·변경한다.
+**Applies when:** props, state, 매개변수 또는 공유 입력에서 온 배열을 정렬하거나 기존 `.sort()` 호출을 추가·변경한다.
 
 **Impact: MEDIUM (avoids mutation bugs when sorted arrays come from props, state, or shared inputs)**
 
@@ -697,9 +697,9 @@ const sortedUsers = [...users].sort((left, right) => left.name.localeCompare(rig
 
 **Rule:** `T13` · `functions-replace-enum-with-as-const-objects`
 
-**Applies when:** \`enum\` 또는 타입과 런타임에서 함께 쓰는 enum-like 값 집합을 추가·변경한다.
+**Applies when:** `enum` 또는 타입과 런타임에서 함께 쓰는 enum-like 값 집합을 추가·변경한다.
 
-**Requires selected:** `naming-use-consistent-file-and-symbol-naming`, `types-document-custom-types-and-shapes` · N/A 불가
+**Requires selected:** `naming-use-consistent-file-and-symbol-naming`, `types-document-custom-types-and-shapes` · 함께 적용
 
 **Impact: MEDIUM-HIGH (keeps runtime values explicit and type extraction lightweight without introducing enum-specific behavior)**
 
@@ -786,7 +786,7 @@ const buildRequestUrl = (args: BuildRequestUrlArgs): URL => {
 
 **Rule:** `T15` · `functions-use-set-and-map-for-repeated-lookups`
 
-**Applies when:** 같은 컬렉션에 \`includes\`, \`find\` 또는 keyed lookup을 여러 번 수행하는 코드를 추가·변경한다.
+**Applies when:** 같은 컬렉션에 `includes`, `find` 또는 keyed lookup을 여러 번 수행하는 코드를 추가·변경한다.
 
 **Impact: MEDIUM (keeps repeated membership and keyed access code explicit once lookup count grows)**
 
@@ -830,7 +830,7 @@ const approver = userById.get(approverId);
 
 **Rule:** `T16` · `absence-expose-optional-values-instead-of-silent-fallbacks`
 
-**Applies when:** optional 값의 읽기·정규화·전달을 바꾸거나 \`??\`, \`\|\|\`, 기본값 또는 빈 값 대체 분기를 추가·변경한다.
+**Applies when:** optional 값의 읽기·정규화·전달을 바꾸거나 `??`, `||`, 기본값 또는 빈 값 대체 분기를 추가·변경한다.
 
 **Review with:** `docs-keep-inline-comments-for-constraints-and-caveats`
 
@@ -875,7 +875,7 @@ const resolvePageSize = (query: SearchQuery): string => {
 
 **Rule:** `T17` · `docs-keep-inline-comments-for-constraints-and-caveats`
 
-**Applies when:** 함수 본문의 \`//\` 주석을 추가·수정·유지하거나 도메인 규칙, 예외 방어, 외부 제약 또는 부수효과 순서를 주석으로 설명한다.
+**Applies when:** 함수 본문의 `//` 주석을 추가·수정·유지하거나 도메인 규칙, 예외 방어, 외부 제약 또는 부수효과 순서를 주석으로 설명한다.
 
 **Impact: MEDIUM (prevents inline comments from narrating obvious code while preserving notes that avoid real misunderstandings)**
 
@@ -908,7 +908,7 @@ if (!normalizedToken) {
 
 **Applies when:** named query·mutation, 원격 함수, 비자명한 handler/effect, reusable/exported helper·custom hook, custom type·interface, store, formatter 또는 예외 memo 선언을 추가·변경한다.
 
-**Requires selected:** `docs-standardize-annotation-tags-by-declaration-role`, `docs-write-concise-korean-comments-about-purpose-and-constraints` · N/A 불가
+**Requires selected:** `docs-standardize-annotation-tags-by-declaration-role`, `docs-write-concise-korean-comments-about-purpose-and-constraints` · 함께 적용
 
 **Impact: MEDIUM-HIGH (makes important boundaries searchable and explainable before readers inspect the implementation body)**
 
@@ -1039,7 +1039,7 @@ interface DialogRootProps {
 
 **Rule:** `T20` · `docs-use-helper-for-reusable-pure-helper-functions`
 
-**Applies when:** 여러 caller가 쓰는 pure support function, owner-named exported helper 또는 \`shared/util.ts\` 함수를 추가·변경하거나 \`@helper\`를 붙이려 한다.
+**Applies when:** 여러 caller가 쓰는 pure support function, owner-named exported helper 또는 `shared/util.ts` 함수를 추가·변경하거나 `@helper`를 붙이려 한다.
 
 **Impact: MEDIUM-HIGH (distinguishes reusable pure support logic from local implementation details or integration boundaries)**
 
@@ -1157,7 +1157,7 @@ annotation 본문 전체가 ASCII 또는 영문 label이면 한글 주석으로 
 
 **Applies when:** TypeScript/TSX 변경을 완료 판정하거나 diff에서 barrel, 중복 타입, 조기 helper, 넓은 조립, 무근거 fallback 또는 자명한 주석을 점검한다.
 
-**Required on completion:** 활성 skill의 완료 receipt에서 Selected이며 N/A 불가
+**Required on completion:** 마무리 시 항상 적용
 
 **Impact: MEDIUM (catches the recurring shortcuts that most often erode import, type, helper, fallback, and comment discipline)**
 

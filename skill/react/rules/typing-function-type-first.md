@@ -15,11 +15,11 @@ tags: typing, handlers, props
 React가 제공하는 이벤트 핸들러 타입이나 prop callback 계약이 이미 있다면,
 매개변수 타입보다 함수 변수 타입 선언을 우선합니다.
 curried handler factory가 반환하는 함수도 JSX event prop에 전달되는 React handler 선언입니다.
-JSX가 나중에 contextual typing을 제공한다는 이유는 반환 함수 타입을 N/A로 둘 근거가 아니며,
+JSX가 나중에 contextual typing을 제공한다는 이유로 반환 함수 타입을 생략하지 않습니다.
 factory 반환 타입을 `MouseEventHandler<...>` 같은 기존 alias로 고정합니다.
 
-`query.select` 같은 hook option의 one-off contextual callback과 UI-agnostic domain function은 React event handler나 prop
-callback 구현이 아니므로 이 규칙은 N/A입니다.
+`query.select` 같은 hook option의 one-off contextual callback과 UI-agnostic domain function은
+React event handler나 prop callback 구현이 아닙니다. 이 경우 이 규칙은 적용하지 않습니다.
 
 React alias를 쓰기 위해 type import를 추가·변경하면
 `ownership-avoid-barrel-and-react-namespace-imports`를 다시 판정합니다.

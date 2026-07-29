@@ -17,6 +17,18 @@ export const escapeMarkdownText = (value: string): string => {
 };
 
 /**
+ * @helper 표가 아닌 단독 줄에 넣을 scalar 정리.
+ * 코드 스팬 안은 그대로 두어 `React.*` 같은 표기를 살리고, 스팬 밖의 링크·강조 구문만 무력화한다.
+ */
+export const escapeMarkdownProse = (value: string): string => {
+	return value
+		.replace(/[\r\n]+/g, " ")
+		.split(/(`[^`]*`)/)
+		.map((part, index) => (index % 2 === 1 ? part : part.replace(/([\\*_[\]()<>!|])/g, "\\$1")))
+		.join("");
+};
+
+/**
  * @helper arbitrary scalar를 안전한 CommonMark inline code span으로 렌더링
  */
 const formatInlineCode = (value: string): string => {
@@ -244,8 +256,8 @@ export const generateRuleContractMarkdown = (rule: SkillRule): string => {
 	const routingMetadata = [
 		rule.requiresSelected.length === 0
 			? undefined
-			: `**Requires selected:** ${getCanonicalRoutingTargets(rule.requiresSelected).map(formatInlineCode).join(", ")} · N/A 불가`,
-		rule.requiredOnCompletion ? "**Required on completion:** 활성 skill의 완료 receipt에서 Selected이며 N/A 불가" : undefined,
+			: `**Requires selected:** ${getCanonicalRoutingTargets(rule.requiresSelected).map(formatInlineCode).join(", ")} · 함께 적용`,
+		rule.requiredOnCompletion ? "**Required on completion:** 마무리 시 항상 적용" : undefined,
 	]
 		.filter((line): line is string => line !== undefined)
 		.join("\n\n");
@@ -253,7 +265,7 @@ export const generateRuleContractMarkdown = (rule: SkillRule): string => {
 	const markdown =
 		rule.impact === "CRITICAL"
 			? `# ${escapeMarkdownText(rule.title)}\n\n**Impact: CRITICAL**${routingMetadataBlock}\n\n> CRITICAL rule: must read the [full rule](${fullRuleLink}) before implementation or review.\n`
-			: `${normativeBody}${routingMetadataBlock}\n\n> 예시·예외가 필요할 때만 [full rule](${fullRuleLink})을 추가로 읽고 fallback 사유를 기록합니다.\n`;
+			: `${normativeBody}${routingMetadataBlock}\n\n> 예시·예외가 필요하면 [full rule](${fullRuleLink})을 읽습니다.\n`;
 	const byteLength = Buffer.byteLength(markdown, "utf8");
 	const byteBudget = getRuleContractByteBudget();
 

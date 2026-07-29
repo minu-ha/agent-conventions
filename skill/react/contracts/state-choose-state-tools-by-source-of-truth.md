@@ -9,4 +9,4 @@
 프로젝트가 이미 다른 전역 store나 server-state 도구를 표준으로 채택했다면,
 이 규칙을 문자 그대로 적용해 `Zustand`나 `react-query`를 새로 들여오지 말고 같은 source-of-truth 원칙만 유지합니다.
 
-> 예시·예외가 필요할 때만 [full rule](../rules/state-choose-state-tools-by-source-of-truth.md)을 추가로 읽고 fallback 사유를 기록합니다.
+> 예시·예외가 필요하면 [full rule](../rules/state-choose-state-tools-by-source-of-truth.md)을 읽습니다.

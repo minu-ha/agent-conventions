@@ -13,4 +13,4 @@ owned root 아래의 third-party DOM path는 `selector-target-third-party-dom-fr
 `& .ant-tree .ant-tree-node-content-wrapper`는 한 nested block 안에 있어도 owned root 뒤에 third-party ancestor가
 2단계이므로 one-level selector가 아닙니다.
 
-> 예시·예외가 필요할 때만 [full rule](../rules/selector-avoid-deep-descendant-dependencies.md)을 추가로 읽고 fallback 사유를 기록합니다.
+> 예시·예외가 필요하면 [full rule](../rules/selector-avoid-deep-descendant-dependencies.md)을 읽습니다.

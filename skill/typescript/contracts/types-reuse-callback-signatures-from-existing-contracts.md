@@ -12,6 +12,6 @@ annotation 없는 one-off contextually typed inline callback은 시그니처를 
 반대로 named callback과 curried factory의 최종 반환 handler를 interface·객체·framework alias로 고정하는 작업은 기존
 callback 계약 재사용이므로 Selected입니다.
 
-**Requires selected:** `types-prefer-function-variable-types-over-parameter-annotations` · N/A 불가
+**Requires selected:** `types-prefer-function-variable-types-over-parameter-annotations` · 함께 적용
 
-> 예시·예외가 필요할 때만 [full rule](../rules/types-reuse-callback-signatures-from-existing-contracts.md)을 추가로 읽고 fallback 사유를 기록합니다.
+> 예시·예외가 필요하면 [full rule](../rules/types-reuse-callback-signatures-from-existing-contracts.md)을 읽습니다.

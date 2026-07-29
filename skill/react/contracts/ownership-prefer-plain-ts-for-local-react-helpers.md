@@ -10,4 +10,4 @@ context,
 다른 hook 호출 순서 같은 React orchestration을 실제로 캡슐화할 때만 허용합니다.
 단순 계산을 hook처럼 보이게 만드는 추상화는 피합니다.
 
-> 예시·예외가 필요할 때만 [full rule](../rules/ownership-prefer-plain-ts-for-local-react-helpers.md)을 추가로 읽고 fallback 사유를 기록합니다.
+> 예시·예외가 필요하면 [full rule](../rules/ownership-prefer-plain-ts-for-local-react-helpers.md)을 읽습니다.

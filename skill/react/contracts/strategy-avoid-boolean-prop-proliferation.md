@@ -12,4 +12,4 @@ shared `ui`나 `widget`는 explicit variant component나 compound component로 �
 문법은 권장 예시일 뿐이고,
 이 규칙의 본질은 boolean을 없애고 구조를 명시적으로 드러내는 데 있습니다.
 
-> 예시·예외가 필요할 때만 [full rule](../rules/strategy-avoid-boolean-prop-proliferation.md)을 추가로 읽고 fallback 사유를 기록합니다.
+> 예시·예외가 필요하면 [full rule](../rules/strategy-avoid-boolean-prop-proliferation.md)을 읽습니다.

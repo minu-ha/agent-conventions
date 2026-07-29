@@ -8,4 +8,4 @@
 `build*`,
 `normalize*` 형태 유틸로 분리합니다.
 
-> 예시·예외가 필요할 때만 [full rule](../rules/functions-avoid-imperative-assembly-in-wide-scopes.md)을 추가로 읽고 fallback 사유를 기록합니다.
+> 예시·예외가 필요하면 [full rule](../rules/functions-avoid-imperative-assembly-in-wide-scopes.md)을 읽습니다.

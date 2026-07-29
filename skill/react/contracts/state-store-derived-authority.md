@@ -11,4 +11,4 @@ Suspense query처럼 `onSuccess`가 없어서 동기화가 필요하다면 owner
 `useLayoutEffect`를 사용하고,
 selector 최적화는 정말 필요한 경우에만 근거 주석과 함께 예외적으로 사용합니다.
 
-> 예시·예외가 필요할 때만 [full rule](../rules/state-store-derived-authority.md)을 추가로 읽고 fallback 사유를 기록합니다.
+> 예시·예외가 필요하면 [full rule](../rules/state-store-derived-authority.md)을 읽습니다.

@@ -11,4 +11,4 @@
 single-purpose rename,
 one-off modifier를 역할명 class로 바꾸기만 하는 경우도 대상이 아닙니다.
 
-> 예시·예외가 필요할 때만 [full rule](../rules/composition-keep-classes-single-purpose.md)을 추가로 읽고 fallback 사유를 기록합니다.
+> 예시·예외가 필요하면 [full rule](../rules/composition-keep-classes-single-purpose.md)을 읽습니다.

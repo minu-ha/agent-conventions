@@ -10,4 +10,4 @@ support function은 "이름"이 아니라 "호출 경계"가 있을 때만 분�
 - 배치: generic `helper.ts`/`utils.ts` 금지, owner-named support module 우선
 - 승격: 여러 owner가 실제 공유하는 범용 pure function만 `shared/util.ts`의 `util.*`
 
-> 예시·예외가 필요할 때만 [full rule](../rules/functions-extract-helpers-only-when-the-boundary-is-real.md)을 추가로 읽고 fallback 사유를 기록합니다.
+> 예시·예외가 필요하면 [full rule](../rules/functions-extract-helpers-only-when-the-boundary-is-real.md)을 읽습니다.

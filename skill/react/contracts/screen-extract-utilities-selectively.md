@@ -15,8 +15,8 @@
 
 - 작은 1회성 guard, URL 조립, 빈 검색어 생략 같은 호출 지점 계산
 - handler/effect 안에 있어야 문맥이 보이는 query invalidation, navigation, fallback 처리
-- query `select` 내부 mapper는 `state-shape-query-data-with-select` 소유이며 별도 함수/support module 경계가 없으면 이
-  규칙은 N/A
+- query `select` 내부 mapper. `state-shape-query-data-with-select` 가 담당하므로
+  별도 함수나 support module 경계가 없으면 이 규칙은 적용하지 않는다
 
 배치:
 
@@ -24,4 +24,4 @@
 - `helper.ts`, `helpers.ts`, `utils.ts`, `common.ts` 같은 generic 파일명은 만들지 않습니다.
 - support module 안에서도 작은 private helper를 쌓지 말고, 기본은 한 exported 함수 안에서 단계별로 정리합니다.
 
-> 예시·예외가 필요할 때만 [full rule](../rules/screen-extract-utilities-selectively.md)을 추가로 읽고 fallback 사유를 기록합니다.
+> 예시·예외가 필요하면 [full rule](../rules/screen-extract-utilities-selectively.md)을 읽습니다.

@@ -14,6 +14,6 @@ header tag가 있어도 body가 비어 있거나 영문 label뿐이면 header �
 `docs-write-concise-korean-comments-about-purpose-and-constraints`는 선택 bookkeeping이 아니라 실제 한국어 content
 gate입니다.
 
-**Requires selected:** `docs-standardize-annotation-tags-by-declaration-role`, `docs-write-concise-korean-comments-about-purpose-and-constraints` · N/A 불가
+**Requires selected:** `docs-standardize-annotation-tags-by-declaration-role`, `docs-write-concise-korean-comments-about-purpose-and-constraints` · 함께 적용
 
-> 예시·예외가 필요할 때만 [full rule](../rules/docs-require-header-jsdoc-on-key-declarations.md)을 추가로 읽고 fallback 사유를 기록합니다.
+> 예시·예외가 필요하면 [full rule](../rules/docs-require-header-jsdoc-on-key-declarations.md)을 읽습니다.

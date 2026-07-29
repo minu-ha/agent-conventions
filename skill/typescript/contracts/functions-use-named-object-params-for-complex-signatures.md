@@ -13,4 +13,4 @@ React 함수 컴포넌트의 props 전체 수신과 본문 구조분해만 바�
 객체 인자와 field type·optionality·의미가 같은 기존 named contract가 있으면 그대로 재사용하고,
 이 규칙을 지키기 위해 별도 `*Params`나 `*Args`를 새로 만들지 않습니다.
 
-> 예시·예외가 필요할 때만 [full rule](../rules/functions-use-named-object-params-for-complex-signatures.md)을 추가로 읽고 fallback 사유를 기록합니다.
+> 예시·예외가 필요하면 [full rule](../rules/functions-use-named-object-params-for-complex-signatures.md)을 읽습니다.

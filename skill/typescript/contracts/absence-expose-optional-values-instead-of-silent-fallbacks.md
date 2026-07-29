@@ -7,4 +7,4 @@
 꼭 필요할 때만 도메인상 기본값이 명확하며
 코드 바로 위 이유 주석이 있을 때 제한적으로 허용합니다.
 
-> 예시·예외가 필요할 때만 [full rule](../rules/absence-expose-optional-values-instead-of-silent-fallbacks.md)을 추가로 읽고 fallback 사유를 기록합니다.
+> 예시·예외가 필요하면 [full rule](../rules/absence-expose-optional-values-instead-of-silent-fallbacks.md)을 읽습니다.

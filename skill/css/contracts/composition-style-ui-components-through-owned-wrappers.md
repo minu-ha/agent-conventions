@@ -14,4 +14,4 @@ third-party selector만 스코프하는 CSS-only 변경은 `selector-target-thir
 다만 wrapper가 root `className`이나 slot prop을 공식 styling contract로 노출했다면,
 레이아웃 참여나 spacing 같은 root-level 스타일에는 그 contract를 그대로 사용할 수 있습니다.
 
-> 예시·예외가 필요할 때만 [full rule](../rules/composition-style-ui-components-through-owned-wrappers.md)을 추가로 읽고 fallback 사유를 기록합니다.
+> 예시·예외가 필요하면 [full rule](../rules/composition-style-ui-components-through-owned-wrappers.md)을 읽습니다.

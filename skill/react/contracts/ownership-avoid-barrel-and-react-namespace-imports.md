@@ -8,6 +8,6 @@ React 타입을 namespace로 둘지 direct `import type`으로 가져올지 결�
 일반 third-party value를 alias 없이 직접 import하는 변경만으로는 이 규칙을 선택하지 않습니다.
 이렇게 해야 import 경로와 타입 출처가 더 명시적으로 유지됩니다.
 
-**Requires selected:** `typescript/naming-use-direct-imports-and-public-entry-points` · N/A 불가
+**Requires selected:** `typescript/naming-use-direct-imports-and-public-entry-points` · 함께 적용
 
-> 예시·예외가 필요할 때만 [full rule](../rules/ownership-avoid-barrel-and-react-namespace-imports.md)을 추가로 읽고 fallback 사유를 기록합니다.
+> 예시·예외가 필요하면 [full rule](../rules/ownership-avoid-barrel-and-react-namespace-imports.md)을 읽습니다.

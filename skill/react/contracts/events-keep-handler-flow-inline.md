@@ -13,4 +13,4 @@
 `screen-extract-utilities-selectively` 규칙을 만족할 때만 분리합니다.
 화면 하나에서만 쓰는 custom hook으로 우회해 흐름을 숨기는 것도 기본적으로 피합니다.
 
-> 예시·예외가 필요할 때만 [full rule](../rules/events-keep-handler-flow-inline.md)을 추가로 읽고 fallback 사유를 기록합니다.
+> 예시·예외가 필요하면 [full rule](../rules/events-keep-handler-flow-inline.md)을 읽습니다.

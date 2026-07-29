@@ -9,4 +9,4 @@
 부수효과 순서처럼 없으면 오해될 수 있는 경우에만 씁니다.
 변수명 그대로 반복하는 설명은 남기지 않습니다.
 
-> 예시·예외가 필요할 때만 [full rule](../rules/docs-keep-inline-comments-for-constraints-and-caveats.md)을 추가로 읽고 fallback 사유를 기록합니다.
+> 예시·예외가 필요하면 [full rule](../rules/docs-keep-inline-comments-for-constraints-and-caveats.md)을 읽습니다.

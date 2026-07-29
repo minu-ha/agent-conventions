@@ -65,7 +65,7 @@
 
 **Rule:** `C01` · `naming-default-to-plain-css-when-no-module-convention`
 
-**Applies when:** 프로젝트 표준 미확정 상태에서 새 stylesheet 접근 형식\(plain CSS·CSS Modules\)을 선택하거나 \`.module.css\`·\`styles.\*\`로 전환한다. 기존 plain CSS class rename은 제외한다.
+**Applies when:** 프로젝트 표준 미확정 상태에서 새 stylesheet 접근 형식\(plain CSS·CSS Modules\)을 선택하거나 `.module.css`·`styles.*`로 전환한다. 기존 plain CSS class rename은 제외한다.
 
 **Impact: HIGH (keeps the global `scope_slug` naming system meaningful instead of hiding ownership behind local module indirection)**
 
@@ -128,7 +128,7 @@ import "./_index.css";
 
 **Rule:** `C02` · `naming-keep-scope-slug-unique-per-owner`
 
-**Applies when:** 새 \`scope\_slug\` namespace를 추가·복사·이름 변경하거나 서로 다른 owner의 class가 같은 namespace를 사용할 가능성이 있다.
+**Applies when:** 새 `scope_slug` namespace를 추가·복사·이름 변경하거나 서로 다른 owner의 class가 같은 namespace를 사용할 가능성이 있다.
 
 **Impact: CRITICAL (prevents unrelated routes or components from sharing the same namespace and colliding in the global class space)**
 
@@ -160,7 +160,7 @@ rt_dashboardIndex__header
 
 **Rule:** `C03` · `naming-name-elements-and-modifiers-by-role`
 
-**Applies when:** element 또는 modifier class를 새로 짓거나 \`container\`, \`wrapper\`, \`box\`, 치수·간격 중심 이름을 변경한다.
+**Applies when:** element 또는 modifier class를 새로 짓거나 `container`, `wrapper`, `box`, 치수·간격 중심 이름을 변경한다.
 
 **Impact: HIGH (avoids vague or layout-only names that stop classes from describing what the UI part actually is)**
 
@@ -191,7 +191,7 @@ rt_catalogDetail__detailSection
 
 **Rule:** `C04` · `naming-preserve-route-slug-traceability`
 
-**Applies when:** route/framework 규칙이 \`rt\_\*\` owner를 선택한 화면에서 route class slug를 새로 만들거나 이름을 변경한다.
+**Applies when:** route/framework 규칙이 `rt_*` owner를 선택한 화면에서 route class slug를 새로 만들거나 이름을 변경한다.
 
 **Impact: HIGH (keeps route-scoped class namespaces readable back to the route hierarchy they belong to)**
 
@@ -333,7 +333,7 @@ TSX class 조합과 wrapper 소유권 규칙은 스타일링 경계를 분명하
 
 **Rule:** `C07` · `composition-compose-classes-with-clsx`
 
-**Applies when:** TSX의 \`className\`을 추가·수정하거나 base class, modifier, optional class를 조합한다.
+**Applies when:** TSX의 `className`을 추가·수정하거나 base class, modifier, optional class를 조합한다.
 
 **Impact: HIGH (keeps TSX class composition readable when base classes and state modifiers need to be combined)**
 
@@ -441,9 +441,9 @@ one-off modifier를 역할명 class로 바꾸기만 하는 경우도 대상이 �
 
 **Rule:** `C11` · `composition-prefer-ui-wrapper-prop-types`
 
-**Applies when:** \`Ui\*\` wrapper 사용처나 wrapper API에서 Props 타입을 선언·추론·재사용하고 라이브러리 원본 Props 참조를 검토한다.
+**Applies when:** `Ui*` wrapper 사용처나 wrapper API에서 Props 타입을 선언·추론·재사용하고 라이브러리 원본 Props 참조를 검토한다.
 
-**Requires selected:** `typescript/types-reuse-existing-contracts-before-new-types` · N/A 불가
+**Requires selected:** `typescript/types-reuse-existing-contracts-before-new-types` · 함께 적용
 
 **Impact: MEDIUM-HIGH (preserves wrapper-level styling and API contracts instead of leaking raw library prop types into usage sites)**
 
@@ -470,7 +470,7 @@ const items: NonNullable<UiCollapseProps["items"]> = [];
 
 **Rule:** `C10` · `composition-style-ui-components-through-owned-wrappers`
 
-**Applies when:** 실제 \`Ui\*\` React wrapper 사용처·API에서 내부 DOM styling 경계를 정하거나 root \`className\`·slot prop hook을 주입·노출·사용한다. 기존 CSS owner root 아래 third-party selector만 수정하면 제외한다.
+**Applies when:** 실제 `Ui*` React wrapper 사용처·API에서 내부 DOM styling 경계를 정하거나 root `className`·slot prop hook을 주입·노출·사용한다. 기존 CSS owner root 아래 third-party selector만 수정하면 제외한다.
 
 **Review with:** `selector-target-third-party-dom-from-owned-roots`
 
@@ -628,9 +628,9 @@ rich text 예외는 raw element styling에만 적용됩니다. `.owner__prose .o
 
 **Rule:** `C14` · `selector-target-third-party-dom-from-owned-roots`
 
-**Applies when:** \`.ant-\*\`, \`.rc-\*\`, \`.tippy-\*\` 등 third-party 내부 DOM selector를 추가·수정하거나 owned wrapper 아래로 범위를 제한한다.
+**Applies when:** `.ant-*`, `.rc-*`, `.tippy-*` 등 third-party 내부 DOM selector를 추가·수정하거나 owned wrapper 아래로 범위를 제한한다.
 
-**Requires selected:** `selector-avoid-deep-descendant-dependencies` · N/A 불가
+**Requires selected:** `selector-avoid-deep-descendant-dependencies` · 함께 적용
 
 **Impact: CRITICAL (limits third-party styling to explicit wrapper ownership instead of leaking across the app)**
 
@@ -706,9 +706,9 @@ project-owned class끼리의 깊은 descendant coupling은 여전히 금지입�
 
 **Rule:** `C15` · `selector-use-pseudo-classes-for-dom-owned-states`
 
-**Applies when:** \`:hover\`, \`:visited\`, \`:focus\*\`, \`:disabled\`, \`:checked\`를 추가·수정하거나 parent DOM state가 child styling에 영향을 준다.
+**Applies when:** `:hover`, `:visited`, `:focus*`, `:disabled`, `:checked`를 추가·수정하거나 parent DOM state가 child styling에 영향을 준다.
 
-**Requires selected:** `values-separate-domain-state-modifiers-from-dom-interaction-states` · N/A 불가
+**Requires selected:** `values-separate-domain-state-modifiers-from-dom-interaction-states` · 함께 적용
 
 **Impact: HIGH (keeps browser-owned interaction states separate from app-owned state modifiers)**
 
@@ -790,7 +790,7 @@ modifier가 켜진 경우에만 interaction이 달라져야 한다는 별도 제
 
 **Rule:** `C16` · `values-keep-layout-intent-explicit`
 
-**Applies when:** \`sticky\`·\`fixed\`, \`z-index\`, 강제 width·height 또는 부모·자식 layout 책임을 추가·변경한다. 같은 element의 base/modifier 분리에서 기존 \`display\`·spacing 선언을 값 그대로 재배치하면 제외한다.
+**Applies when:** `sticky`·`fixed`, `z-index`, 강제 width·height 또는 부모·자식 layout 책임을 추가·변경한다. 같은 element의 base/modifier 분리에서 기존 `display`·spacing 선언을 값 그대로 재배치하면 제외한다.
 
 **Impact: MEDIUM-HIGH (makes sticky, fixed, and box responsibilities understandable without reverse-engineering the DOM)**
 
@@ -836,7 +836,7 @@ position, z-index, 강제 geometry 또는 부모·자식 layout 책임이 바뀌
 
 **Rule:** `C17` · `values-always-provide-css-variable-fallbacks`
 
-**Applies when:** 새·변경된 \`var\(--\*\)\` 사용이나 token 주입 보장 경계를 바꾼다. 같은 stylesheet·주입 경계에서 기존 \`var\(\)\` 선언을 selector 사이 byte-equivalent 이동만 하면 제외한다.
+**Applies when:** 새·변경된 `var(--*)` 사용이나 token 주입 보장 경계를 바꾼다. 같은 stylesheet·주입 경계에서 기존 `var()` 선언을 selector 사이 byte-equivalent 이동만 하면 제외한다.
 
 **Impact: HIGH (prevents missing tokens from degrading styles unpredictably when variables are absent)**
 
@@ -1047,7 +1047,7 @@ stylesheet는 하나의 owner에 맞춰 유지하고, 가벼운 구조 주석만
 
 **Applies when:** CSS 또는 TSX class contract 변경이 완료 단계에 들어간다.
 
-**Required on completion:** 활성 skill의 완료 receipt에서 Selected이며 N/A 불가
+**Required on completion:** 마무리 시 항상 적용
 
 **Impact: MEDIUM (catches unsafe selector, modifier, and library-targeting shortcuts before they become part of the shared style system)**
 

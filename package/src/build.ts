@@ -7,6 +7,7 @@ import {isDirectExecution} from "./entrypoint.js";
 import {readGeneratedDirectoryFileNames, replaceGeneratedFiles} from "./generated-files.js";
 import {buildRuleAnchor, buildSectionAnchor, normalizeHeadingTitle, readResolvedSkillDocuments, replaceRuleHeading} from "./parser.js";
 import {
+	escapeMarkdownProse,
 	escapeMarkdownText,
 	getCanonicalRoutingRuleIds,
 	generateRuleContractMarkdown,
@@ -327,19 +328,19 @@ export const generateMarkdown = (args: GenerateMarkdownArgs): string => {
 
 				const routingMetadata = [
 					`**Rule:** \`${escapeMarkdownText(ordinal)}\` · \`${escapeMarkdownText(ruleId)}\``,
-					`**Applies when:** ${escapeMarkdownText(rule.appliesWhen)}`,
+					`**Applies when:** ${escapeMarkdownProse(rule.appliesWhen)}`,
 				];
 
 				if (rule.requiresSelected.length > 0) {
 					routingMetadata.push(
 						`**Requires selected:** ${getCanonicalRoutingTargets(rule.requiresSelected)
 							.map((target) => `\`${escapeMarkdownText(target)}\``)
-							.join(", ")} · N/A 불가`,
+							.join(", ")} · 함께 적용`,
 					);
 				}
 
 				if (rule.requiredOnCompletion) {
-					routingMetadata.push("**Required on completion:** 활성 skill의 완료 receipt에서 Selected이며 N/A 불가");
+					routingMetadata.push("**Required on completion:** 마무리 시 항상 적용");
 				}
 
 				if (rule.reviewWith.length > 0) {

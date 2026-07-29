@@ -6,6 +6,6 @@
 codegen 여부와 무관하게 query는 `response...`,
 mutation은 `mutation...`으로 맞춰야 화면 파일에서 역할과 오리진이 한눈에 보입니다.
 
-**Requires selected:** `docs-require-jsdoc-on-key-declarations`, `typescript/naming-use-consistent-file-and-symbol-naming` · N/A 불가
+**Requires selected:** `docs-require-jsdoc-on-key-declarations`, `typescript/naming-use-consistent-file-and-symbol-naming` · 함께 적용
 
-> 예시·예외가 필요할 때만 [full rule](../rules/state-name-query-and-mutation-bindings-consistently.md)을 추가로 읽고 fallback 사유를 기록합니다.
+> 예시·예외가 필요하면 [full rule](../rules/state-name-query-and-mutation-bindings-consistently.md)을 읽습니다.

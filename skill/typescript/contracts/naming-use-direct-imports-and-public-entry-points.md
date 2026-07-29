@@ -13,4 +13,4 @@ import 계약 변경이므로 Selected입니다.
 예를 들어 React value import에서 `useEffect`를 제거하거나 같은 `react` 경로에 handler type import를 추가하는 작업을
 "module path가 같다"는 이유로 N/A 처리하지 않습니다.
 
-> 예시·예외가 필요할 때만 [full rule](../rules/naming-use-direct-imports-and-public-entry-points.md)을 추가로 읽고 fallback 사유를 기록합니다.
+> 예시·예외가 필요하면 [full rule](../rules/naming-use-direct-imports-and-public-entry-points.md)을 읽습니다.

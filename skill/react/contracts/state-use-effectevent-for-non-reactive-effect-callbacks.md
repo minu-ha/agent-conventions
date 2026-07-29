@@ -7,6 +7,6 @@ effect 안에서 최신 prop이나 state를 읽어야 하지만,
 이 규칙은 event handler를 effect로 옮기라는 뜻이 아닙니다.
 진짜 구독/연결 effect 안에서만 쓰고, 클릭/제출 같은 사용자 액션은 여전히 named handler에 둡니다.
 
-**Requires selected:** `docs-require-jsdoc-on-key-declarations` · N/A 불가
+**Requires selected:** `docs-require-jsdoc-on-key-declarations` · 함께 적용
 
-> 예시·예외가 필요할 때만 [full rule](../rules/state-use-effectevent-for-non-reactive-effect-callbacks.md)을 추가로 읽고 fallback 사유를 기록합니다.
+> 예시·예외가 필요하면 [full rule](../rules/state-use-effectevent-for-non-reactive-effect-callbacks.md)을 읽습니다.

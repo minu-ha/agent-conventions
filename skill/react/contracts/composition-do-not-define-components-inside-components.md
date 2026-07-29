@@ -9,4 +9,4 @@ animation restart,
 effect 재실행이 생길 수 있습니다.
 로컬에서 JSX 조각을 재사용하고 싶다면 그냥 helper 함수 호출로 남기거나, 독립 component로 빼고 props를 전달합니다.
 
-> 예시·예외가 필요할 때만 [full rule](../rules/composition-do-not-define-components-inside-components.md)을 추가로 읽고 fallback 사유를 기록합니다.
+> 예시·예외가 필요하면 [full rule](../rules/composition-do-not-define-components-inside-components.md)을 읽습니다.

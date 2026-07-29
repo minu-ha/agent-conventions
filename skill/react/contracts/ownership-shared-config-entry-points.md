@@ -9,4 +9,4 @@
 공용 순수 함수는 `config`에 섞지 말고 `shared/util.ts`의 `util.*` 아래로 분리합니다.
 route나 feature 전용 support code는 `shared/util.ts`로 올리지 말고 sibling `page.ts`나 owner-named module에 둡니다.
 
-> 예시·예외가 필요할 때만 [full rule](../rules/ownership-shared-config-entry-points.md)을 추가로 읽고 fallback 사유를 기록합니다.
+> 예시·예외가 필요하면 [full rule](../rules/ownership-shared-config-entry-points.md)을 읽습니다.

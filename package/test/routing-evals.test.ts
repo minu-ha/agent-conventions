@@ -1876,7 +1876,10 @@ test("React progressive metadata and all 42 rule routes match Appendix B exactly
 		/local query·mutation binding[^\n]+state-name-query-and-mutation-bindings-consistently|state-name-query-and-mutation-bindings-consistently[^\n]+local query·mutation binding/i,
 	);
 	const screenExtractionRule = await readFile(path.join(skillPaths.rulesDir, "screen-extract-utilities-selectively.md"), "utf8");
-	assert.match(screenExtractionRule, /query `select`[\s\S]+state-shape-query-data-with-select[\s\S]+별도 함수\/support module[\s\S]+N\/A/i);
+	assert.match(
+		screenExtractionRule,
+		/query `select`[\s\S]+state-shape-query-data-with-select[\s\S]+별도 함수나 support module 경계[\s\S]+적용하지 않/i,
+	);
 	assert.match(screenExtractionRule, /Incorrect[\s\S]*normalizeEntryValues[\s\S]*mergeEntryPayload/i);
 	assert.match(screenExtractionRule, /Correct[\s\S]*normalizeTreeNodes[\s\S]*handleSave/i);
 	assert.match(screenExtractionRule, /Correct[\s\S]*한 exported 함수[\s\S]*buildEntryPayload/i);
@@ -2272,13 +2275,9 @@ test("routing activation and generated indexes use only the changed semantic del
 		path.join(realSkillRootDir, "typescript", "SKILL.md"),
 		path.join(realSkillRootDir, "css", "SKILL.md"),
 	];
-	const templatePaths = [
-		path.join(realSkillRootDir, "react", "rules", "_template.md"),
-		path.join(realSkillRootDir, "typescript", "rules", "_template.md"),
-		path.join(realSkillRootDir, "css", "rules", "_template.md"),
-	];
-
-	for (const source of await Promise.all([...routerPaths, ...templatePaths].map((filePath) => readFile(filePath, "utf8")))) {
+	// 변경 범위 계약은 라우터가 진다. rules/_template.md 는 규칙 작성 스캐폴드라
+	// 같은 문장을 복제하지 않고 CONTRIBUTING.md 를 가리킨다.
+	for (const source of await Promise.all(routerPaths.map((filePath) => readFile(filePath, "utf8")))) {
 		assert.match(source, /변경 (?:semantic )?delta|실제 변경|실제로 바꾼 것|변경 범위/i);
 		assert.match(source, /추가·삭제·이동|추가·삭제·이동·이름 변경/);
 		assert.match(source, /read-only|byte-equivalent/);
@@ -2286,6 +2285,18 @@ test("routing activation and generated indexes use only the changed semantic del
 		assert.match(source, /다시 세지|별도.*(?:추가|변경|재선언)/);
 		assert.match(source, /N\/A rule|N\/A 규칙|적용되지 않는 규칙/);
 		assert.match(source, /최소 semantic patch|최소 변경|범위를 넓히지 않/i);
+	}
+
+	for (const skillName of ["react", "typescript", "css"] as const) {
+		const template = await readFile(path.join(realSkillRootDir, skillName, "rules", "_template.md"), "utf8");
+		assert.match(template, /^appliesWhen: /m, `${skillName} template needs an appliesWhen slot`);
+		assert.match(template, /관찰 가능한 (?:것|조건)/, `${skillName} template must ask for observable conditions`);
+		assert.match(template, /CONTRIBUTING\.md/, `${skillName} template must point at the authoring guide`);
+		assert.doesNotMatch(
+			template,
+			/(?<![A-Za-z])(?:Selected|N\/A)(?![A-Za-z])/,
+			`${skillName} template must not teach the removed protocol`,
+		);
 	}
 
 	const typescriptDocument = await readSkillDocument(getSkillPaths("typescript", realSkillRootDir));
@@ -2304,15 +2315,15 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 	};
 
 	const routeFlow = await readRule("react", "screen-keep-route-flow-visible");
-	assert.match(routeFlow, /orchestration[\s\S]*(?:owner|소유)[\s\S]*(?:page-section|section)[\s\S]*topology/i);
+	assert.match(routeFlow, /route 흐름의 소유자[\s\S]*섹션 구성[\s\S]*적용/);
 	assert.match(
 		routeFlow,
-		/같은 (?:route )?owner[\s\S]*(?:`query\.select`|query `select`)[\s\S]*binding·alias[\s\S]*derived-state effect[\s\S]*render 계산[\s\S]*N\/A/i,
+		/소유자가 그대로인 변경은 대상이 아[\s\S]*`query\.select`[\s\S]*binding·alias[\s\S]*derived-state effect[\s\S]*render 계산/i,
 	);
 
 	const curriedHandler = await readRule("react", "events-name-and-curry-handlers");
 	assert.match(curriedHandler, /DOM React event prop[\s\S]*인라인 callback[\s\S]*추가 인자[\s\S]*wrapper[\s\S]*(?:완료가 아|우회)/i);
-	assert.match(curriedHandler, /최종 반환[\s\S]*React handler[\s\S]*typing-function-type-first[\s\S]*Selected/i);
+	assert.match(curriedHandler, /최종 반환[\s\S]*React handler[\s\S]*typing-function-type-first[\s\S]*함께 적용/i);
 	assert.match(
 		curriedHandler,
 		/UI-agnostic domain[\s\S]*custom component prop callback[\s\S]*`useEffectEvent`[\s\S]*(?:DOM event|curry)[\s\S]*(?:만들지 않|N\/A)/i,
@@ -2320,15 +2331,15 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 
 	const reactHandlerType = await readRule("react", "typing-function-type-first");
 	assert.match(reactHandlerType, /curried|고차 함수/i);
-	assert.match(reactHandlerType, /반환(?:된|하는)? (?:함수|handler)[\s\S]*contextual typing[\s\S]*N\/A.*아니/i);
-	assert.match(reactHandlerType, /`query\.select`[\s\S]*one-off contextual callback[\s\S]*UI-agnostic domain function[\s\S]*N\/A/i);
+	assert.match(reactHandlerType, /contextual typing[\s\S]*반환 함수 타입[\s\S]*생략하지 않/i);
+	assert.match(reactHandlerType, /`query\.select`[\s\S]*one-off contextual callback[\s\S]*UI-agnostic domain function[\s\S]*적용하지 않/i);
 
 	const reactContracts = await Promise.all(
 		["screen-keep-route-flow-visible", "events-name-and-curry-handlers", "typing-function-type-first"].map((ruleId) =>
 			readFile(path.join(realSkillRootDir, "react", "contracts", `${ruleId}.md`), "utf8"),
 		),
 	);
-	assert.match(reactContracts[0]!, /(?:`query\.select`|query `select`)[\s\S]*derived-state effect[\s\S]*N\/A/i);
+	assert.match(reactContracts[0]!, /(?:`query\.select`|query `select`)[\s\S]*derived-state effect[\s\S]*render 계산/i);
 	assert.match(reactContracts[1]!, /DOM React event prop[\s\S]*custom component prop callback/i);
 	assert.match(reactContracts[2]!, /curried[\s\S]*one-off contextual callback/i);
 

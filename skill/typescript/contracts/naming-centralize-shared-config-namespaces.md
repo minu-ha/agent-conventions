@@ -12,4 +12,4 @@ feature flag,
 수가 많지 않을 때는 `config/` 폴더로 미리 쪼개지 말고 단일 `config.ts`를 유지하고,
 여러 독립 섹션으로 커졌을 때만 분리를 검토합니다.
 
-> 예시·예외가 필요할 때만 [full rule](../rules/naming-centralize-shared-config-namespaces.md)을 추가로 읽고 fallback 사유를 기록합니다.
+> 예시·예외가 필요하면 [full rule](../rules/naming-centralize-shared-config-namespaces.md)을 읽습니다.

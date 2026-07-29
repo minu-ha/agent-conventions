@@ -11,4 +11,4 @@ measure 같은 contract가 있을 때만 `ref` prop을 열고,
 기존 `forwardRef`를 모두 지우라는 뜻은 아니며,
 third-party 타입 제약이나 점진적 마이그레이션 때문에 유지해야 하는 경우는 예외로 둘 수 있습니다.
 
-> 예시·예외가 필요할 때만 [full rule](../rules/composition-use-ref-prop-instead-of-forwardref-in-react-19.md)을 추가로 읽고 fallback 사유를 기록합니다.
+> 예시·예외가 필요하면 [full rule](../rules/composition-use-ref-prop-instead-of-forwardref-in-react-19.md)을 읽습니다.

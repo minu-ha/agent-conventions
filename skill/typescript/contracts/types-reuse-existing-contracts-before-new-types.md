@@ -21,4 +21,4 @@ raw input과 normalized payload는 field가 같아도 의미가 달라 별도 in
 `types-document-custom-types-and-shapes`는 Selected,
 `types-reuse-existing-contracts-before-new-types`는 N/A입니다.
 
-> 예시·예외가 필요할 때만 [full rule](../rules/types-reuse-existing-contracts-before-new-types.md)을 추가로 읽고 fallback 사유를 기록합니다.
+> 예시·예외가 필요하면 [full rule](../rules/types-reuse-existing-contracts-before-new-types.md)을 읽습니다.
