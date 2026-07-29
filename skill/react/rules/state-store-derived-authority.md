@@ -2,7 +2,9 @@
 title: Store Shared Derived Decisions Only When They Are Truly Shared
 impact: HIGH
 impactDescription: 중복된 도메인 판별 휴리스틱이 여러 화면에 퍼지는 것을 막음
-appliesWhen: 여러 화면·메뉴·route guard가 쓰는 권한·capability 같은 derived decision을 store에 저장·동기화하거나 단일 화면 값까지 store로 올린다.
+appliesWhen: >-
+  여러 화면·메뉴·route guard가 쓰는 권한·capability 같은 derived decision을 store에 저장·동기화하거나 단일 화면 값까지
+  store로 올린다.
 reviewWith: docs-require-jsdoc-on-key-declarations
 tags: state, zustand, derived-decisions
 ---

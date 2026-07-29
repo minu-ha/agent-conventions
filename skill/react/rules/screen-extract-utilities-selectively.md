@@ -2,7 +2,9 @@
 title: Extract Screen Support Code Only When the Boundary Is Real
 impact: HIGH
 impactDescription: route 파일이 자기 계약이 없는 helper 조각으로 분해되는 것을 막음
-appliesWhen: 화면 계산·변환·preset·option·column meta를 별도 함수/support module로 추출·이동하거나 support 경계를 바꾼다. query `select` 내부 shaping만이면 제외한다.
+appliesWhen: >-
+  화면 계산·변환·preset·option·column meta를 별도 함수/support module로 추출·이동하거나 support 경계를 바꾼다. query
+  `select` 내부 shaping만이면 제외한다.
 reviewWith: screen-move-pure-support-code-out-of-entry-files, typescript/functions-extract-helpers-only-when-the-boundary-is-real
 tags: screen, utils, extraction
 ---

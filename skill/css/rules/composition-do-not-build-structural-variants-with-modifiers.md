@@ -2,7 +2,9 @@
 title: Do Not Use Modifiers for One-off Structural Patches
 impact: HIGH
 impactDescription: keeps modifiers reserved for state instead of turning them into a second layout naming system
-appliesWhen: modifier를 추가·변경하거나 반복 가능한 state·API variant와 one-off structural patch 사이를 판정한다. 허용된 state로 결론 나도 변경된 modifier 분류는 Selected다.
+appliesWhen: >-
+  modifier를 추가·변경하거나 반복 가능한 state·API variant와 one-off structural patch 사이를 판정한다. 허용된 state로
+  결론 나도 변경된 modifier 분류는 Selected다.
 reviewWith: naming-name-elements-and-modifiers-by-role
 tags: modifiers, structure, naming
 ---

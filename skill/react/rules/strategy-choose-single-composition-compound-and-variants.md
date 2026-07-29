@@ -2,7 +2,9 @@
 title: Choose Single Components, Compound Components, and Variants Deliberately
 impact: HIGH
 impactDescription: helps shared components choose the simplest structure that still exposes the right extension points
-appliesWhen: exported shared component에 slot·public part·shared context/action·반복 preset·mode API를 추가하거나 조립 구조를 재설계한다.
+appliesWhen: >-
+  exported shared component에 slot·public part·shared context/action·반복 preset·mode API를 추가하거나 조립 구조를
+  재설계한다.
 reviewWith: strategy-avoid-boolean-prop-proliferation, strategy-prefer-children-over-render-props, screen-avoid-premature-abstraction
 tags: composition, compound-components, variants, component-design
 ---

@@ -18,6 +18,27 @@ const repoDir = path.resolve(currentDir, "../..");
  * @helper 줄바꿈으로 접힌 본문을 한 줄로 펴서 문구 단위로 비교
  */
 const flattenWhitespace = (text: string): string => text.replace(/\s+/g, " ");
+
+/**
+ * @helper inline scalar 와 YAML folded scalar 를 모두 받아 appliesWhen 값만 돌려준다
+ */
+const readAppliesWhen = (source: string): string => {
+	const inline = /^appliesWhen: (?!>)(.+)$/m.exec(source);
+
+	if (inline?.[1] !== undefined) {
+		return inline[1];
+	}
+
+	const folded = /^appliesWhen: >-?\n((?:[ \t]+\S.*\n?)+)/m.exec(source);
+
+	return folded?.[1] === undefined
+		? ""
+		: folded[1]
+				.split("\n")
+				.map((line) => line.trim())
+				.filter(Boolean)
+				.join(" ");
+};
 const realSkillRootDir = path.join(repoDir, "skill");
 const behavioralProtocolPath = path.join(repoDir, "docs/evaluations/2026-07-21-progressive-loading-behavioral-protocol.json");
 
@@ -1767,7 +1788,7 @@ test("induced naming closure and activated finish gates stay mandatory across ev
 		"utf8",
 	);
 
-	assert.match(derivedRule, /^appliesWhen:[^\n]+alias[^\n]+추가·이동·제거/m);
+	assert.match(readAppliesWhen(derivedRule), /[\s\S]+alias[\s\S]+추가·이동·제거/);
 	assert.match(originRule, /^reviewWith:[^\n]+screen-keep-derived-values-close/m);
 	assert.match(bindingRule, /^requiresSelected:[^\n]+typescript\/naming-use-consistent-file-and-symbol-naming/m);
 	assert.match(typescriptFinishRule, /^requiredOnCompletion: true$/m);
@@ -1870,7 +1891,7 @@ test("React progressive metadata and all 42 rule routes match Appendix B exactly
 		}
 	}
 	const ownershipNamingRule = await readFile(path.join(skillPaths.rulesDir, "ownership-use-consistent-file-and-symbol-naming.md"), "utf8");
-	assert.match(ownershipNamingRule, /^appliesWhen:[^\n]+바꾸거나,[^\n]+sibling `\.ts` support 파일/m);
+	assert.match(readAppliesWhen(ownershipNamingRule), /[\s\S]+바꾸거나,[\s\S]+sibling `\.ts` support 파일/);
 	assert.match(
 		ownershipNamingRule,
 		/local query·mutation binding[^\n]+state-name-query-and-mutation-bindings-consistently|state-name-query-and-mutation-bindings-consistently[^\n]+local query·mutation binding/i,
@@ -1885,7 +1906,7 @@ test("React progressive metadata and all 42 rule routes match Appendix B exactly
 	assert.match(screenExtractionRule, /Correct[\s\S]*한 exported 함수[\s\S]*buildEntryPayload/i);
 
 	const template = await readFile(path.join(skillPaths.rulesDir, "_template.md"), "utf8");
-	assert.match(template, /^appliesWhen: /m);
+	assert.match(readAppliesWhen(template), / /);
 	assert.doesNotMatch(template, /^reviewWith: /m);
 
 	// frontmatter 작성 규칙은 스킬마다 복제하지 않고 공통 기여 문서 한 곳에 둔다.
@@ -2140,15 +2161,15 @@ test("CSS progressive metadata and rule routing match Appendix C exactly", async
 	);
 	assert.match(wrapperStylingRule, /실제 `Ui\*` React wrapper[\s\S]+CSS-only[\s\S]+selector-target-third-party-dom-from-owned-roots/i);
 	const singlePurposeRule = await readFile(path.join(skillPaths.rulesDir, "composition-keep-classes-single-purpose.md"), "utf8");
-	assert.match(singlePurposeRule, /^appliesWhen:[^\n]+기존 결합 책임[^\n]+처음부터 새 single-purpose pair/m);
+	assert.match(readAppliesWhen(singlePurposeRule), /[\s\S]+기존 결합 책임[\s\S]+처음부터 새 single-purpose pair/);
 	const layoutIntentRule = await readFile(path.join(skillPaths.rulesDir, "values-keep-layout-intent-explicit.md"), "utf8");
-	assert.match(layoutIntentRule, /^appliesWhen:[^\n]+base\/modifier[^\n]+`display`·spacing[^\n]+값 그대로/m);
+	assert.match(readAppliesWhen(layoutIntentRule), /base\/modifier[\s\S]+`display`·spacing[\s\S]+값 그대로/);
 	const fallbackRule = await readFile(path.join(skillPaths.rulesDir, "values-always-provide-css-variable-fallbacks.md"), "utf8");
-	assert.match(fallbackRule, /^appliesWhen:[^\n]+`var\(--\*\)`[^\n]+같은 stylesheet[^\n]+byte-equivalent/m);
+	assert.match(readAppliesWhen(fallbackRule), /[\s\S]+`var\(--\*\)`[\s\S]+같은 stylesheet[\s\S]+byte-equivalent/);
 	assert.match(flattenWhitespace(fallbackRule), /실제 diff에 새 CSS variable 사용[^\n]+요청 여부와 무관하게[^\n]+다시 선택/i);
 
 	const template = await readFile(path.join(skillPaths.rulesDir, "_template.md"), "utf8");
-	assert.match(template, /^appliesWhen: /m);
+	assert.match(readAppliesWhen(template), / /);
 	assert.doesNotMatch(template, /^reviewWith: /m);
 
 	// frontmatter 작성 규칙은 스킬마다 복제하지 않고 공통 기여 문서 한 곳에 둔다.
@@ -2289,7 +2310,7 @@ test("routing activation and generated indexes use only the changed semantic del
 
 	for (const skillName of ["react", "typescript", "css"] as const) {
 		const template = await readFile(path.join(realSkillRootDir, skillName, "rules", "_template.md"), "utf8");
-		assert.match(template, /^appliesWhen: /m, `${skillName} template needs an appliesWhen slot`);
+		assert.match(readAppliesWhen(template), / /, `${skillName} template needs an appliesWhen slot`);
 		assert.match(template, /관찰 가능한 (?:것|조건)/, `${skillName} template must ask for observable conditions`);
 		assert.match(template, /CONTRIBUTING\.md/, `${skillName} template must point at the authoring guide`);
 		assert.doesNotMatch(
@@ -2352,10 +2373,10 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 	assert.match(documentedShape, /JSDoc[\s\S]*(?:스스로|자기)[\s\S]*(?:활성화|Selected)[\s\S]*(?:하지 않|금지)/i);
 
 	const directImports = await readRule("typescript", "naming-use-direct-imports-and-public-entry-points");
-	assert.match(directImports, /^appliesWhen:[^\n]+같은 module path[^\n]+(?:value|type) specifier[^\n]+추가·삭제·전환/m);
+	assert.match(readAppliesWhen(directImports), /[\s\S]+같은 module path[\s\S]+(?:value|type) specifier[\s\S]+추가·삭제·전환/);
 
 	const unusedParameters = await readRule("typescript", "types-mark-unused-parameters-with-underscore");
-	assert.match(unusedParameters, /^appliesWhen:[^\n]+curried handler[^\n]+최종 callback[^\n]+(?:생략|사용하지 않)/m);
+	assert.match(readAppliesWhen(unusedParameters), /[\s\S]+curried handler[\s\S]+최종 callback[\s\S]+(?:생략|사용하지 않)/);
 	assert.match(unusedParameters, /framework alias[\s\S]*매개변수 생략[\s\S]*N\/A.*아니[\s\S]*`_event`/i);
 
 	for (const ruleId of [
@@ -2363,7 +2384,10 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 		"types-reuse-callback-signatures-from-existing-contracts",
 	]) {
 		const contextualCallback = await readRule("typescript", ruleId);
-		assert.match(contextualCallback, /annotation 없는[\s\S]*one-off[\s\S]*contextual(?:ly)? typed[\s\S]*(?:N\/A|제외)/i);
+		assert.match(
+			readAppliesWhen(contextualCallback),
+			/annotation[\s\S]*없는[\s\S]*one-off[\s\S]*contextual(?:ly)? typed[\s\S]*(?:N\/A|제외)/i,
+		);
 	}
 
 	const existingContract = await readRule("typescript", "types-reuse-existing-contracts-before-new-types");
@@ -2504,7 +2528,7 @@ test("v17 TypeScript boundaries exclude React props and prevent self-created dup
 	};
 
 	const namedObjectParams = await readRule("typescript", "functions-use-named-object-params-for-complex-signatures");
-	assert.match(namedObjectParams, /^appliesWhen:[^\n]+React (?:함수 )?컴포넌트[^\n]+props[^\n]+(?:N\/A|제외)/m);
+	assert.match(readAppliesWhen(namedObjectParams), /React (?:함수 )?컴포넌트[\s\S]+props[\s\S]+(?:N\/A|제외)/);
 	assert.match(
 		namedObjectParams,
 		/기존 named contract[\s\S]*그대로 재사용[\s\S]*`\*Params`[\s\S]*`\*Args`[\s\S]*(?:새로 만들지 않|추가하지 않)/i,
@@ -2512,14 +2536,14 @@ test("v17 TypeScript boundaries exclude React props and prevent self-created dup
 
 	const documentedShape = await readRule("typescript", "types-document-custom-types-and-shapes");
 	assert.match(
-		documentedShape,
-		/^appliesWhen:[^\n]+(?:external|generated|read-only|shared)[^\n]+(?:unchanged|변경하지 않)[^\n]+(?:N\/A|제외)/m,
+		readAppliesWhen(documentedShape),
+		/(?:external|generated|read-only|shared)[\s\S]+(?:unchanged|변경하지 않)[\s\S]+(?:N\/A|제외)/,
 	);
 	assert.match(
-		documentedShape,
-		/^appliesWhen:[^\n]+schema root[^\n]+계약 field[^\n]+파생 alias[^\n]+추가·변경[^\n]+named shape[^\n]+callable 역할[^\n]+추가/m,
+		readAppliesWhen(documentedShape),
+		/schema root[\s\S]+계약 field[\s\S]+파생 alias[\s\S]+추가·변경[\s\S]+named shape[\s\S]+callable 역할[\s\S]+추가/,
 	);
-	assert.doesNotMatch(documentedShape, /^appliesWhen:[^\n]+객체형 상수·field·alias/m);
+	assert.doesNotMatch(readAppliesWhen(documentedShape), /객체형 상수·field·alias/);
 	assert.match(
 		documentedShape,
 		/새 callable (?:input|입력)[^\n]+(?:output|출력)[^\n]*역할[\s\S]*새 (?:type|interface|선언)[\s\S]*요구하지 않[\s\S]*(?:기존|로컬 소유)[^\n]*named shape[\s\S]*(?:문서|JSDoc|`@summary`)[\s\S]*(?:보강|갱신)/i,
@@ -2544,7 +2568,7 @@ test("v17 TypeScript boundaries exclude React props and prevent self-created dup
 		/types-document-custom-types-and-shapes[\s\S]+Selected[\s\S]*types-reuse-existing-contracts-before-new-types[\s\S]+N\/A[\s\S]*(?:외부|external|generated|read-only|shared)[\s\S]+(?:두 type 규칙|두 규칙|모두)[\s\S]+N\/A[\s\S]*callable 문서화 여부[\s\S]+docs rule[\s\S]+독립 판정/i,
 	);
 	assert.doesNotMatch(existingContract, /callable header[^\n]+문서화/);
-	assert.doesNotMatch(existingContract, /^appliesWhen:[^\n]+재사용 결정을 바꾼다/m);
+	assert.doesNotMatch(readAppliesWhen(existingContract), /재사용 결정을 바꾼다/);
 	assert.match(
 		existingContract,
 		/(?:정규화 전|raw input)[\s\S]*(?:정규화 후|normalized (?:output|payload)|payload)[\s\S]*(?:같은 field|field[^\n]+같)[\s\S]*의미[^\n]+(?:다르|달라)[\s\S]*(?:별도|새) (?:input )?(?:shape|contract)[\s\S]*types-reuse-existing-contracts-before-new-types[^\n]+N\/A/i,

@@ -2,7 +2,9 @@
 title: Use Pseudo-classes for DOM-owned States
 impact: HIGH
 impactDescription: keeps browser-owned interaction states separate from app-owned state modifiers
-appliesWhen: `:hover`, `:visited`, `:focus*`, `:disabled`, `:checked`를 추가·수정하거나 parent DOM state가 child styling에 영향을 준다.
+appliesWhen: >-
+  `:hover`, `:visited`, `:focus*`, `:disabled`, `:checked`를 추가·수정하거나 parent DOM state가 child styling에 영향을
+  준다.
 requiresSelected: values-separate-domain-state-modifiers-from-dom-interaction-states
 tags: pseudo-classes, state, interaction
 ---

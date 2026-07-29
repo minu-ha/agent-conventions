@@ -2,7 +2,8 @@
 title: Avoid Boolean Prop Proliferation in Shared Components
 impact: HIGH
 impactDescription: exported shared components stay explicit instead of accumulating hidden variant combinations
-appliesWhen: 여러 곳에서 쓰는 shared component에 boolean mode·visibility prop을 추가하거나 기존 boolean 조합과 JSX 분기가 늘어난다.
+appliesWhen: >-
+  여러 곳에서 쓰는 shared component에 boolean mode·visibility prop을 추가하거나 기존 boolean 조합과 JSX 분기가 늘어난다.
 tags: composition, props, variants, component-design
 ---
 

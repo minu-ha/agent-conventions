@@ -2,7 +2,9 @@
 title: Use useEffectEvent for Non-reactive Effect Callbacks
 impact: MEDIUM-HIGH
 impactDescription: keeps effects reactive only to true subscriptions while still reading the latest handler logic
-appliesWhen: subscription effect가 최신 prop·state callback을 읽도록 ref 동기화 hack, dependency 재설치 또는 `useEffectEvent`를 추가·변경한다.
+appliesWhen: >-
+  subscription effect가 최신 prop·state callback을 읽도록 ref 동기화 hack, dependency 재설치 또는 `useEffectEvent`를
+  추가·변경한다.
 requiresSelected: docs-require-jsdoc-on-key-declarations
 reviewWith: events-run-user-actions-in-handlers-not-effects
 tags: state, react19, useeffectevent, effects

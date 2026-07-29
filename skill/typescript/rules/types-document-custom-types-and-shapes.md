@@ -2,7 +2,9 @@
 title: Document Custom Types and Declarative Shapes
 impact: CRITICAL
 impactDescription: keeps domain-specific contracts understandable without digging through implementation details
-appliesWhen: type·interface·schema root·객체 상수·계약 field·파생 alias를 추가·변경하거나 named shape에 callable 역할을 추가한다. 외부·generated·read-only·shared unchanged shape·익명 inferred 반환은 제외한다.
+appliesWhen: >-
+  type·interface·schema root·객체 상수·계약 field·파생 alias를 추가·변경하거나 named shape에 callable 역할을 추가한다.
+  외부·generated·read-only·shared unchanged shape·익명 inferred 반환은 제외한다.
 tags: types, jsdoc, shapes
 ---
 

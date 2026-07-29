@@ -2,7 +2,8 @@
 title: Target Third-party DOM Only From Owned Roots
 impact: CRITICAL
 impactDescription: limits third-party styling to explicit wrapper ownership instead of leaking across the app
-appliesWhen: `.ant-*`, `.rc-*`, `.tippy-*` 등 third-party 내부 DOM selector를 추가·수정하거나 owned wrapper 아래로 범위를 제한한다.
+appliesWhen: >-
+  `.ant-*`, `.rc-*`, `.tippy-*` 등 third-party 내부 DOM selector를 추가·수정하거나 owned wrapper 아래로 범위를 제한한다.
 requiresSelected: selector-avoid-deep-descendant-dependencies
 tags: third-party, wrappers, nesting
 ---

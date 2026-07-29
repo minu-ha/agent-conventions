@@ -1,8 +1,11 @@
 ---
 title: Use Named Object Params for Complex Signatures
 impact: HIGH
-impactDescription: keeps long function signatures readable and makes grouped inputs easier to extend without positional confusion
-appliesWhen: 매개변수 3개 이상 또는 같은 계열 인자를 받는 일반 함수를 추가·변경하거나 객체 매개변수의 구조분해 위치를 바꾼다. React 함수 컴포넌트의 props 수신·구조분해만 바꾸면 제외한다.
+impactDescription: >-
+  keeps long function signatures readable and makes grouped inputs easier to extend without positional confusion
+appliesWhen: >-
+  매개변수 3개 이상 또는 같은 계열 인자를 받는 일반 함수를 추가·변경하거나 객체 매개변수의 구조분해 위치를 바꾼다. React
+  함수 컴포넌트의 props 수신·구조분해만 바꾸면 제외한다.
 tags: functions, params, signatures
 ---
 

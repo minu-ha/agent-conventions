@@ -2,7 +2,8 @@
 title: Prefer Arrow Functions and Object Parameters for Complex Signatures
 impact: MEDIUM-HIGH
 impactDescription: 함수 선언과 다중 인자 계약을 더 쉽게 확장하고 수정할 수 있게 함
-appliesWhen: React 인접 코드에 function 선언이 생기거나 함수가 3개 이상 매개변수 또는 함께 이동하는 같은 계열 값을 받는다.
+appliesWhen: >-
+  React 인접 코드에 function 선언이 생기거나 함수가 3개 이상 매개변수 또는 함께 이동하는 같은 계열 값을 받는다.
 reviewWith: typescript/functions-use-named-object-params-for-complex-signatures
 tags: composition, functions, params
 ---

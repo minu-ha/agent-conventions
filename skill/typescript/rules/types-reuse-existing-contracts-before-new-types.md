@@ -1,8 +1,11 @@
 ---
 title: Reuse Existing Contracts Before Declaring New Types
 impact: HIGH
-impactDescription: reduces duplicate shape declarations by deriving from existing types and schemas when semantics have not changed
-appliesWhen: 의미상 같은 기존 type·interface·schema 대신 shape를 새로 선언·변경·복제·파생하거나 중복 shape를 도입·제거한다. 호환 후보 없는 새 shape, 순수 owner 이동, unchanged contract의 새 사용처는 제외한다.
+impactDescription: >-
+  reduces duplicate shape declarations by deriving from existing types and schemas when semantics have not changed
+appliesWhen: >-
+  의미상 같은 기존 type·interface·schema 대신 shape를 새로 선언·변경·복제·파생하거나 중복 shape를 도입·제거한다. 호환
+  후보 없는 새 shape, 순수 owner 이동, unchanged contract의 새 사용처는 제외한다.
 reviewWith: types-document-custom-types-and-shapes
 tags: type-reuse, pick, omit
 ---

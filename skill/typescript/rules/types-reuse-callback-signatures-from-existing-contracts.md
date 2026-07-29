@@ -1,8 +1,11 @@
 ---
 title: Reuse Callback Signatures From Existing Contracts
 impact: HIGH
-impactDescription: prevents callback signatures from drifting when an existing interface or object contract already defines them
-appliesWhen: interface·객체·framework의 named·shared callback 구현에서 기존 시그니처를 재사용·변경한다. annotation 없는 one-off contextually typed inline callback은 제외한다.
+impactDescription: >-
+  prevents callback signatures from drifting when an existing interface or object contract already defines them
+appliesWhen: >-
+  interface·객체·framework의 named·shared callback 구현에서 기존 시그니처를 재사용·변경한다. annotation 없는 one-off
+  contextually typed inline callback은 제외한다.
 requiresSelected: types-prefer-function-variable-types-over-parameter-annotations
 reviewWith: types-mark-unused-parameters-with-underscore
 tags: callbacks, indexed-access, reuse

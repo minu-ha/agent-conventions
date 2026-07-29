@@ -2,7 +2,8 @@
 title: Name Handlers Predictably and Curry Extra Arguments
 impact: MEDIUM-HIGH
 impactDescription: 이벤트 흐름을 검색 가능하게 유지하고 즉흥적인 handler 시그니처를 피함
-appliesWhen: 이벤트 핸들러를 새로 만들거나 이름, target/event 표현, 추가 인자 전달 방식 또는 최종 React handler 시그니처를 바꾼다.
+appliesWhen: >-
+  이벤트 핸들러를 새로 만들거나 이름, target/event 표현, 추가 인자 전달 방식 또는 최종 React handler 시그니처를 바꾼다.
 reviewWith: typing-function-type-first, typescript/naming-use-consistent-file-and-symbol-naming
 tags: events, handlers, naming
 ---

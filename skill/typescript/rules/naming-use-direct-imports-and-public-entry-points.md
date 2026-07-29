@@ -2,7 +2,9 @@
 title: Use Direct Imports and Dedicated Public Entry Points
 impact: HIGH
 impactDescription: makes import ownership explicit without relying on barrels or ambiguous re-export layers
-appliesWhen: TypeScript import/export, barrel, shared 공개 진입점·feature support module 경계를 추가·변경하거나 같은 module path의 value/type specifier를 추가·삭제·전환한다.
+appliesWhen: >-
+  TypeScript import/export, barrel, shared 공개 진입점·feature support module 경계를 추가·변경하거나 같은 module path의
+  value/type specifier를 추가·삭제·전환한다.
 tags: imports, exports, public-entry
 ---
 

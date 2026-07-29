@@ -1,8 +1,11 @@
 ---
 title: Default to Plain CSS Unless the Project Explicitly Standardizes on CSS Modules
 impact: HIGH
-impactDescription: keeps the global `scope_slug` naming system meaningful instead of hiding ownership behind local module indirection
-appliesWhen: 프로젝트 표준 미확정 상태에서 새 stylesheet 접근 형식(plain CSS·CSS Modules)을 선택하거나 `.module.css`·`styles.*`로 전환한다. 기존 plain CSS class rename은 제외한다.
+impactDescription: >-
+  keeps the global `scope_slug` naming system meaningful instead of hiding ownership behind local module indirection
+appliesWhen: >-
+  프로젝트 표준 미확정 상태에서 새 stylesheet 접근 형식(plain CSS·CSS Modules)을 선택하거나 `.module.css`·`styles.*`로
+  전환한다. 기존 plain CSS class rename은 제외한다.
 tags: naming, css-modules, ownership
 ---
 

@@ -1,8 +1,11 @@
 ---
 title: Document Compound Parts with @part and @description
 impact: MEDIUM
-impactDescription: keeps compound public parts scannable as one named boundary instead of disconnected props and component declarations
-appliesWhen: compound component의 exported public part·props interface·part 내부 handler를 추가·변경하거나 public part 문서를 수정한다.
+impactDescription: >-
+  keeps compound public parts scannable as one named boundary instead of disconnected props and component declarations
+appliesWhen: >-
+  compound component의 exported public part·props interface·part 내부 handler를 추가·변경하거나 public part 문서를
+  수정한다.
 requiresSelected: docs-require-jsdoc-on-key-declarations
 tags: docs, jsdoc, composition, compound-components
 ---

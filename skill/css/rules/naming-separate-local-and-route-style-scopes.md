@@ -1,8 +1,12 @@
 ---
 title: Separate Route, Local, and Shared Style Scopes
 impact: HIGH
-impactDescription: keeps route-owned page styles, shared component styles, and truly local helper styles from mixing into the same namespace or file
-appliesWhen: 스타일 owner를 route screen/support, document, 독립 leaf helper, reusable widget, UI primitive 중에서 결정하거나 서로 다른 owner를 이동·분리한다.
+impactDescription: >-
+  keeps route-owned page styles, shared component styles, and truly local helper styles from mixing into the same
+  namespace or file
+appliesWhen: >-
+  스타일 owner를 route screen/support, document, 독립 leaf helper, reusable widget, UI primitive 중에서 결정하거나 서로
+  다른 owner를 이동·분리한다.
 reviewWith: organization-keep-style-files-owned-by-one-component-or-route
 tags: route-scope, local-scope, shared-scope, css-files
 ---

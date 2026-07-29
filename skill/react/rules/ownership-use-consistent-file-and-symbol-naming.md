@@ -2,7 +2,9 @@
 title: Use Consistent File and Symbol Naming
 impact: HIGH
 impactDescription: 에이전트가 파일을 만들거나 옮길 때 소유 경계와 의도를 분명하게 유지함
-appliesWhen: React/TSX 파일·컴포넌트·exported symbol·공용 설정 이름을 정하거나 바꾸거나, React 작업에서 sibling `.ts` support 파일이나 exported support symbol을 만들거나 옮긴다. local query·mutation만이면 제외한다.
+appliesWhen: >-
+  React/TSX 파일·컴포넌트·exported symbol·공용 설정 이름을 정하거나 바꾸거나, React 작업에서 sibling `.ts` support
+  파일이나 exported support symbol을 만들거나 옮긴다. local query·mutation만이면 제외한다.
 requiresSelected: typescript/naming-use-consistent-file-and-symbol-naming
 tags: ownership, naming, files
 ---

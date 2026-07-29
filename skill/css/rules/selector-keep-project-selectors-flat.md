@@ -2,7 +2,9 @@
 title: Keep Project-owned Selectors Flat
 impact: CRITICAL
 impactDescription: reduces cascade coupling by keeping project-owned selectors independent instead of descendant-driven
-appliesWhen: project-owned class를 중첩·descendant selector로 연결하거나 raw HTML prose·copy·content wrapper 안 element selector를 추가·수정한다.
+appliesWhen: >-
+  project-owned class를 중첩·descendant selector로 연결하거나 raw HTML prose·copy·content wrapper 안 element selector를
+  추가·수정한다.
 tags: selectors, nesting, flat-structure
 ---
 

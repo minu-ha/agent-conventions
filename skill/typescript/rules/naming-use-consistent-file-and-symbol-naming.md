@@ -2,7 +2,9 @@
 title: Use Consistent File, Symbol, and Field Naming
 impact: HIGH
 impactDescription: keeps file names, symbols, and shape fields predictable across modules and runtime structures
-appliesWhen: TypeScript 파일, local 변수·함수·타입, 객체·schema field 또는 enum-like 상수의 이름을 새로 만들거나 바꾼다. alias 없는 third-party import binding 추가는 제외한다.
+appliesWhen: >-
+  TypeScript 파일, local 변수·함수·타입, 객체·schema field 또는 enum-like 상수의 이름을 새로 만들거나 바꾼다. alias 없는
+  third-party import binding 추가는 제외한다.
 tags: naming, files, symbols
 ---
 

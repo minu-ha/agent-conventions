@@ -2,7 +2,9 @@
 title: Keep Layout Intent Explicit
 impact: MEDIUM-HIGH
 impactDescription: makes sticky, fixed, and box responsibilities understandable without reverse-engineering the DOM
-appliesWhen: `sticky`·`fixed`, `z-index`, 강제 width·height 또는 부모·자식 layout 책임을 추가·변경한다. 같은 element의 base/modifier 분리에서 기존 `display`·spacing 선언을 값 그대로 재배치하면 제외한다.
+appliesWhen: >-
+  `sticky`·`fixed`, `z-index`, 강제 width·height 또는 부모·자식 layout 책임을 추가·변경한다. 같은 element의
+  base/modifier 분리에서 기존 `display`·spacing 선언을 값 그대로 재배치하면 제외한다.
 tags: layout, comments, sticky
 ---
 

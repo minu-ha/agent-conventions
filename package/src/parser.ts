@@ -51,6 +51,11 @@ const parseScalarValue = (rawValueSource: string, key: string): string => {
 };
 
 /**
+ * @field YAML folded scalar 표기. 값을 여러 줄로 쓰고 공백 한 칸으로 접는다
+ */
+const foldedScalarMarker = /^\s*>-?\s*$/;
+
+/**
  * @helper markdown frontmatter와 본문 분리
  */
 export const parseFrontmatter = (source: string): {frontmatter: Record<string, string>; body: string} => {
@@ -63,8 +68,11 @@ export const parseFrontmatter = (source: string): {frontmatter: Record<string, s
 
 	const [, frontmatterSource, body] = match;
 	const frontmatter: Record<string, string> = {};
+	const sourceLines = frontmatterSource.split("\n");
 
-	for (const line of frontmatterSource.split("\n")) {
+	for (let index = 0; index < sourceLines.length; index += 1) {
+		const line = sourceLines[index] ?? "";
+
 		if (line.trim().length === 0) {
 			continue;
 		}
@@ -83,6 +91,23 @@ export const parseFrontmatter = (source: string): {frontmatter: Record<string, s
 
 		if (Object.hasOwn(frontmatter, key)) {
 			throw new Error(`Duplicate frontmatter key "${key}".`);
+		}
+
+		// YAML folded scalar. 긴 조건문을 소스에서 여러 줄로 쓰되 값은 한 줄로 접는다.
+		if (rawValueSource !== undefined && foldedScalarMarker.test(rawValueSource)) {
+			const foldedLines: string[] = [];
+
+			while (index + 1 < sourceLines.length && /^\s+\S/.test(sourceLines[index + 1] ?? "")) {
+				index += 1;
+				foldedLines.push((sourceLines[index] ?? "").trim());
+			}
+
+			if (foldedLines.length === 0) {
+				throw new Error(`Folded frontmatter key "${key}" has no indented continuation lines.`);
+			}
+
+			frontmatter[key] = foldedLines.join(" ");
+			continue;
 		}
 
 		frontmatter[key] = parseScalarValue(rawValueSource, key);
