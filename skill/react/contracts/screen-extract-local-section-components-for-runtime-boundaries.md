@@ -12,6 +12,12 @@ route entry의 local component는 `runtime boundary`가 있을 때만 추출합�
 - interaction: popover, modal, selection, inline edit, drag, expandable tree
 - library/performance: dense widget adapter, virtualization, transition, deferred value
 
-search param, navigation, page-level query/mutation, cross-section effect, invalidate, redirect, 여러 section에 걸친 파생값은 route entry에 둡니다.
+search param,
+navigation,
+page-level query/mutation,
+cross-section effect,
+invalidate,
+redirect,
+여러 section에 걸친 파생값은 route entry에 둡니다.
 
 > 예시·예외가 필요할 때만 [full rule](../rules/screen-extract-local-section-components-for-runtime-boundaries.md)을 추가로 읽고 fallback 사유를 기록합니다.

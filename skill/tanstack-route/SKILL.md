@@ -8,8 +8,8 @@ metadata:
 
 # TanStack Route 컨벤션
 
-에이전트 협업 팀을 위한 TanStack Router 컨벤션 모음입니다. 현재 이 가이드는 6개 카테고리의 24개 local 규칙으로 구성되어 있습니다.  
-route 구조, 네이밍, router boundary 선언, route-local 책임, generated artifact, 반복 가능한 route 추가 워크플로우를 [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`와 compiled [AGENTS.md](./AGENTS.md)로 관리합니다.  
+에이전트 협업 팀을 위한 TanStack Router 컨벤션 모음입니다. 현재 이 가이드는 6개 카테고리의 24개 local 규칙으로 구성되어 있습니다.
+route 구조, 네이밍, router boundary 선언, route-local 책임, generated artifact, 반복 가능한 route 추가 워크플로우를 [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`와 compiled [HANDBOOK.md](./HANDBOOK.md)로 관리합니다.
 기본 compiled guide는 local router rule만 담고 route support module과 search schema에는 `convention-typescript`를 companion skill로 함께 사용합니다.
 이 skill은 TanStack Router의 mixed route tree와 프로젝트의 custom route naming 전제를 함께 따릅니다. 특히 `routeToken: "layout"`과 feature-named `*.layout.tsx` / `*.index.tsx` 파일 세트를 전제로 설명합니다.
 
@@ -20,7 +20,7 @@ route 구조, 네이밍, router boundary 선언, route-local 책임, generated a
 
 ## 활성화 체크리스트
 - 변경 범위가 route 파일, route 폴더 구조, redirect/guard/search schema, route-local support module인지 먼저 확인합니다.
-- 이 skill이 활성화되면 먼저 compiled [AGENTS.md](./AGENTS.md)를 열어 Structure, Naming, Declaration, Responsibility, Styling, Workflow 중 어떤 카테고리가 직접 걸리는지 빠르게 훑습니다.
+- 이 skill이 활성화되면 먼저 compiled [HANDBOOK.md](./HANDBOOK.md)를 열어 Structure, Naming, Declaration, Responsibility, Styling, Workflow 중 어떤 카테고리가 직접 걸리는지 빠르게 훑습니다.
 - 실제로 바꾸는 관심사에 맞는 `rules/*.md`를 추가로 읽습니다. route 구조와 그룹핑을 바꾸면 structure rule, `createFileRoute`/`beforeLoad`/`validateSearch`를 바꾸면 declaration rule, CSS와 generated artifact를 만지면 styling/workflow rule을 확인합니다.
 - route support module과 search schema를 바꾸면 `convention-typescript`, route entry 화면이나 `-local` UI를 바꾸면 `convention-react`, route CSS를 바꾸면 `convention-css`, navigation 검증을 브라우저 테스트로 확인하면 `convention-playwright-test`도 함께 로드합니다.
 
@@ -91,7 +91,7 @@ route 구조, 네이밍, router boundary 선언, route-local 책임, generated a
 
 ## 함께 쓰기
 - 이 skill은 route support module, search schema, route-local `*.ts` 변경 시 `convention-typescript`와 함께 로드하는 것을 기본으로 합니다.
-- slim [AGENTS.md](./AGENTS.md)는 local router rule만 담고, route support module과 search schema의 공통 TypeScript 규칙은 `convention-typescript`를 함께 로드해 보완합니다.
+- slim [HANDBOOK.md](./HANDBOOK.md)는 local router rule만 담고, route support module과 search schema의 공통 TypeScript 규칙은 `convention-typescript`를 함께 로드해 보완합니다.
 - route entry 화면이나 `-local` 컴포넌트가 바뀌면 `convention-react`를 함께 사용합니다.
 - route 레벨 CSS나 `-local/*.css`가 바뀌면 `convention-css`를 함께 사용합니다.
 - redirect, auth guard, navigation 흐름을 Playwright로 검증하면 `convention-playwright-test`를 함께 사용합니다.
@@ -116,4 +116,4 @@ route 구조, 네이밍, router boundary 선언, route-local 책임, generated a
 
 ## 전체 compiled 문서
 
-모든 규칙이 펼쳐진 전체 가이드는 [AGENTS.md](./AGENTS.md)에서 확인할 수 있습니다.
+모든 규칙이 펼쳐진 전체 가이드는 [HANDBOOK.md](./HANDBOOK.md)에서 확인할 수 있습니다.

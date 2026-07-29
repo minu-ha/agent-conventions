@@ -15,7 +15,7 @@ CSS skill을 수정하거나 새로운 rule을 추가했을 때, 실제 에이�
 각 scenario를 같은 prompt와 파일 evidence로 최소 2회, CRITICAL 누락 위험이 크면 3회 실행합니다.
 
 1. `no-skill baseline`: convention 문서를 주지 않습니다.
-2. `full-handbook oracle`: 독립 reviewer가 전체 `AGENTS.md`와 rule body로 exact 기대 partition을 승인합니다.
+2. `full-handbook oracle`: 독립 reviewer가 전체 `HANDBOOK.md`와 rule body로 exact 기대 partition을 승인합니다.
 3. `progressive candidate`: `SKILL.md` → 전체 `RULES_INDEX.md` → selected/unknown stable-ID-matched contract를 읽고, CRITICAL 또는 deterministic expansion 조건에 맞는 full rule만 추가합니다.
 4. `mutation RED`: candidate receipt에서 expected rule 하나를 제거합니다. coverage mismatch 또는 `UNKNOWN`이 완료를 반드시 차단해야 합니다.
 

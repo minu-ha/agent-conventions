@@ -784,16 +784,16 @@ test("temporary progressive build and stale check are deterministic without repo
 		});
 
 		assert.deepEqual(buildLogs, [
-			"Wrote AGENTS.md",
+			"Wrote HANDBOOK.md",
 			"Wrote RULES_INDEX.md",
 			"Wrote contracts (1)",
-			"Wrote AGENTS.md",
+			"Wrote HANDBOOK.md",
 			"Wrote RULES_INDEX.md",
 			"Wrote contracts (1)",
-			"Wrote AGENTS.md",
+			"Wrote HANDBOOK.md",
 			"Wrote RULES_INDEX.md",
 			"Wrote contracts (2)",
-			"Wrote AGENTS.md",
+			"Wrote HANDBOOK.md",
 		]);
 		await access(ownerPaths.outputPath);
 		await access(ownerPaths.rulesIndexPath);
@@ -820,7 +820,7 @@ test("temporary progressive build and stale check are deterministic without repo
 		assert.match(firstHandbook, /metadata\.json\.companions/);
 		assert.doesNotMatch(firstHandbook, /metadata\.json\.extends/);
 		assert.match(firstHandbook, /다음 조건에서 함께 적용합니다\. Editing dependency-facing code\./);
-		assert.match(firstHandbook, /\.\.\/dependency\/AGENTS\.md/);
+		assert.match(firstHandbook, /\.\.\/dependency\/HANDBOOK\.md/);
 		assert.doesNotMatch(firstHandbook, /\.\.\/leaf\/(?:SKILL|RULES_INDEX)\.md/);
 		assert.doesNotMatch(firstHandbook, /^### \d+\.\d+ Fixture Rule$/m);
 
@@ -851,14 +851,14 @@ test("temporary progressive build and stale check are deterministic without repo
 		const firstRebuildLogs = await captureConsoleLogs(async () => {
 			await buildSkill(ownerPaths);
 		});
-		assert.deepEqual(firstRebuildLogs, ["Wrote AGENTS.md", "Wrote RULES_INDEX.md", "Wrote contracts (2)"]);
+		assert.deepEqual(firstRebuildLogs, ["Wrote HANDBOOK.md", "Wrote RULES_INDEX.md", "Wrote contracts (2)"]);
 		await checkGeneratedSkill(ownerPaths);
 		const rebuiltIndex = await readFile(ownerPaths.rulesIndexPath, "utf8");
 		assert.notEqual(rebuiltIndex, firstIndex);
 		const secondRebuildLogs = await captureConsoleLogs(async () => {
 			await buildSkill(ownerPaths);
 		});
-		assert.deepEqual(secondRebuildLogs, ["Wrote AGENTS.md", "Wrote RULES_INDEX.md", "Wrote contracts (2)"]);
+		assert.deepEqual(secondRebuildLogs, ["Wrote HANDBOOK.md", "Wrote RULES_INDEX.md", "Wrote contracts (2)"]);
 		assert.equal(await readFile(ownerPaths.rulesIndexPath, "utf8"), rebuiltIndex);
 		assert.notDeepEqual(
 			await readFileTreeSnapshot(skillRootDir),
@@ -881,7 +881,7 @@ test("generated checks reject missing, stale, and unexpected compact contracts",
 		const contractPath = path.join(ownerPaths.ruleContractsDir, "fixture-rule-1.md");
 		const handbook = await readFile(ownerPaths.outputPath, "utf8");
 		await writeFile(ownerPaths.outputPath, `${handbook}\nINFLATED DENOMINATOR\n`, "utf8");
-		await assert.rejects(() => checkGeneratedHandbook(ownerPaths), /owner.*stale generated AGENTS\.md/i);
+		await assert.rejects(() => checkGeneratedHandbook(ownerPaths), /owner.*stale generated HANDBOOK\.md/i);
 		await captureConsoleLogs(async () => buildSkill(ownerPaths));
 
 		await rm(contractPath);
@@ -958,9 +958,9 @@ test("non-progressive owners preserve companion modes and link each target to it
 		assert.match(handbook, /^## 함께 따르는 규칙$/m);
 		assert.match(handbook, /다음 조건에서 함께 적용합니다\./);
 		assert.match(handbook, /다음 조건에서 함께 적용합니다\. Editing progressive target contracts\./);
-		assert.match(handbook, /\.\.\/progressive-target\/AGENTS\.md/);
+		assert.match(handbook, /\.\.\/progressive-target\/HANDBOOK\.md/);
 		assert.match(handbook, /항상 함께 적용합니다\./);
-		assert.match(handbook, /\.\.\/legacy-target\/AGENTS\.md/);
+		assert.match(handbook, /\.\.\/legacy-target\/HANDBOOK\.md/);
 		assert.doesNotMatch(handbook, /\.\.\/legacy-target\/RULES_INDEX\.md/);
 	});
 });
@@ -1107,7 +1107,7 @@ test("non-progressive checks reject stale indexes and build removes them deliber
 		await assert.rejects(() => checkGeneratedSkill(legacyPaths), /legacy.*unexpected.*RULES_INDEX\.md/i);
 		await writeSkillFixture(skillRootDir, "missing-dependency");
 		const logs = await captureConsoleLogs(async () => buildSkill(legacyPaths));
-		assert.deepEqual(logs, ["Wrote AGENTS.md", "Removed RULES_INDEX.md"]);
+		assert.deepEqual(logs, ["Wrote HANDBOOK.md", "Removed RULES_INDEX.md"]);
 		await assert.rejects(() => access(legacyPaths.rulesIndexPath), /ENOENT/);
 		assert.equal(await checkGeneratedSkill(legacyPaths), false);
 	});
@@ -1136,7 +1136,7 @@ test("non-progressive checks reject stale contracts and build removes their gene
 
 		await assert.rejects(() => checkGeneratedSkill(legacyPaths), /legacy.*unexpected.*contract/i);
 		const logs = await captureConsoleLogs(async () => buildSkill(legacyPaths));
-		assert.deepEqual(logs, ["Wrote AGENTS.md", "Removed contracts (1)"]);
+		assert.deepEqual(logs, ["Wrote HANDBOOK.md", "Removed contracts (1)"]);
 		assert.deepEqual(await readdir(legacyPaths.ruleContractsDir), []);
 		assert.equal(await checkGeneratedSkill(legacyPaths), false);
 	});
@@ -1278,7 +1278,7 @@ test("skill directory symlinks cannot escape the configured root or receive gene
 			await assert.rejects(() => buildSkill(escapedPaths), /skill.*real directory.*symlink/i);
 			await assert.rejects(() => checkGeneratedSkill(escapedPaths), /skill.*real directory.*symlink/i);
 			await assert.rejects(() => validateSkill(escapedPaths), /skill.*real directory.*symlink/i);
-			await assert.rejects(() => access(path.join(outsideSkillDir, "AGENTS.md")), /ENOENT/);
+			await assert.rejects(() => access(path.join(outsideSkillDir, "HANDBOOK.md")), /ENOENT/);
 			await assert.rejects(() => access(path.join(outsideSkillDir, "RULES_INDEX.md")), /ENOENT/);
 			await assert.rejects(() => access(path.join(outsideSkillDir, "contracts")), /ENOENT/);
 		} finally {

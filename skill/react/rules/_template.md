@@ -16,8 +16,10 @@ tags: tag1, tag2
 아래에는 `Incorrect`/`Correct` label, fenced code, 빈 줄만 두며 예시가 여러 개면 Incorrect를 먼저 모두 배치합니다.
 
 `appliesWhen`은 현재 작업의 변경 semantic delta만 판정하도록 작성합니다.
-추가·삭제·이동·이름 변경·재선언 surface를 빠뜨리지 말고, read-only 문맥이나 owner 이동에 byte-equivalent로 따라온 내부 구문은 선택 근거로 삼지 않습니다.
-파일 이동에서 이름·shape·동작이 같은 내부 선언·본문·class·value는 diff에 삭제+추가로 보여도 별도 추가·변경·재선언으로 다시 세지 않습니다.
+추가·삭제·이동·이름 변경·재선언 surface를 빠뜨리지 말고,
+read-only 문맥이나 owner 이동에 byte-equivalent로 따라온 내부 구문은 선택 근거로 삼지 않습니다.
+파일 이동에서 이름·shape·동작이 같은 내부 선언·본문·class·value는 diff에 삭제+추가로 보여도 별도 추가·변경·재선언으로
+다시 세지 않습니다.
 N/A rule의 optional pattern을 새로 도입해 스스로 활성화하지 말고 요청을 충족하는 최소 semantic patch만 구현합니다.
 
 source rule이 Selected이면 target도 반드시 Selected여야 할 때만 `requiresSelected`를 추가합니다.

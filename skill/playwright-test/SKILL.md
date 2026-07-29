@@ -8,8 +8,8 @@ metadata:
 
 # Playwright Test 컨벤션
 
-에이전트 협업 팀을 위한 Playwright 브라우저 테스트 컨벤션 모음입니다. 현재 이 가이드는 7개 카테고리의 25개 local 규칙으로 구성되어 있습니다.  
-테스트 레벨 경계, spec 배치, setup 가시성, 데이터 고립, locator 전략, waiting 규칙을 [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`와 compiled [AGENTS.md](./AGENTS.md)로 관리합니다.  
+에이전트 협업 팀을 위한 Playwright 브라우저 테스트 컨벤션 모음입니다. 현재 이 가이드는 7개 카테고리의 25개 local 규칙으로 구성되어 있습니다.
+테스트 레벨 경계, spec 배치, setup 가시성, 데이터 고립, locator 전략, waiting 규칙을 [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`와 compiled [HANDBOOK.md](./HANDBOOK.md)로 관리합니다.
 기본 compiled guide는 local Playwright rule만 담고 fixture, seed helper, support type에는 `convention-typescript`를 companion skill로 함께 사용합니다.
 
 ## 사용할 때
@@ -19,7 +19,7 @@ metadata:
 
 ## 활성화 체크리스트
 - 변경 범위가 Playwright spec, fixture, seed helper, support type, integration/e2e 분류, locator, mocking, waiting 규칙에 걸리는지 먼저 확인합니다.
-- 이 skill이 활성화되면 먼저 compiled [AGENTS.md](./AGENTS.md)를 열어 Strategy, Naming, Authoring, Integration, E2E, Locator, Guardrails 중 어떤 카테고리가 직접 관련되는지 빠르게 훑습니다.
+- 이 skill이 활성화되면 먼저 compiled [HANDBOOK.md](./HANDBOOK.md)를 열어 Strategy, Naming, Authoring, Integration, E2E, Locator, Guardrails 중 어떤 카테고리가 직접 관련되는지 빠르게 훑습니다.
 - 실제로 바꾸는 관심사에 맞는 `rules/*.md`를 추가로 읽습니다. integration/e2e 분류를 바꾸면 strategy/integration/e2e rule, locator나 assertion을 바꾸면 locator rule, test data와 cleanup을 바꾸면 authoring rule을 확인합니다.
 - fixture, seed helper, payload builder, support type을 건드리면 `convention-typescript`를 함께 로드하고, 화면 구조나 route 흐름이 직접 관련되면 `convention-react`나 `convention-tanstack-route`도 같이 참고합니다.
 
@@ -97,7 +97,7 @@ metadata:
 
 ## 함께 쓰기
 - 이 skill은 fixture, seed helper, payload builder, support type 변경 시 `convention-typescript`와 함께 로드하는 것을 기본으로 합니다.
-- slim [AGENTS.md](./AGENTS.md)는 local Playwright rule만 담고, fixture나 support type의 공통 TypeScript 규칙은 `convention-typescript`를 함께 로드해 보완합니다.
+- slim [HANDBOOK.md](./HANDBOOK.md)는 local Playwright rule만 담고, fixture나 support type의 공통 TypeScript 규칙은 `convention-typescript`를 함께 로드해 보완합니다.
 - 테스트가 화면 구조나 라우팅 규칙과 강하게 묶이면 `convention-react`나 `convention-tanstack-route`를 함께 사용합니다.
 
 ## 마무리 전 셀프 리뷰
@@ -120,4 +120,4 @@ metadata:
 
 ## 전체 compiled 문서
 
-모든 규칙이 펼쳐진 전체 가이드는 [AGENTS.md](./AGENTS.md)에서 확인할 수 있습니다.
+모든 규칙이 펼쳐진 전체 가이드는 [HANDBOOK.md](./HANDBOOK.md)에서 확인할 수 있습니다.

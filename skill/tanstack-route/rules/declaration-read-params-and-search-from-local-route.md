@@ -10,7 +10,8 @@ tags: route-hooks, params, search
 **Impact: MEDIUM-HIGH (keeps param and search access aligned with the route file that owns the contract)**
 
 param과 search 접근은 해당 파일의 `Route`에서 꺼내 쓰는 것을 기본으로 합니다.
-훅 사용 패턴을 route definition 근처에서 일관되게 유지하면, 이 파일이 어떤 params/search 계약을 갖는지 한 곳에서 읽을 수 있습니다.
+훅 사용 패턴을 route definition 근처에서 일관되게 유지하면,
+이 파일이 어떤 params/search 계약을 갖는지 한 곳에서 읽을 수 있습니다.
 
 **Incorrect (전역 hook 호출로 계약 출처를 흐림):**
 

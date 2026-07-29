@@ -10,8 +10,10 @@ tags: slug, route-scope, traceability
 
 **Impact: HIGH (keeps route-scoped class namespaces readable back to the route hierarchy they belong to)**
 
-활성화된 route/framework skill이 `rt_*` owner를 선택했다면, CSS는 그 owner slug를 route까지 다시 추적할 수 있게 유지합니다.
-CSS skill은 어떤 파일이 route-owned인지 결정하지 않고, 이미 선택된 route owner가 클래스명에서 흐려지지 않게 지키는 역할을 합니다.
+활성화된 route/framework skill이 `rt_*` owner를 선택했다면,
+CSS는 그 owner slug를 route까지 다시 추적할 수 있게 유지합니다.
+CSS skill은 어떤 파일이 route-owned인지 결정하지 않고,
+이미 선택된 route owner가 클래스명에서 흐려지지 않게 지키는 역할을 합니다.
 
 기본 판단:
 

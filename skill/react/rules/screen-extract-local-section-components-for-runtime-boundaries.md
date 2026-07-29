@@ -20,7 +20,13 @@ route entry의 local component는 `runtime boundary`가 있을 때만 추출합�
 - interaction: popover, modal, selection, inline edit, drag, expandable tree
 - library/performance: dense widget adapter, virtualization, transition, deferred value
 
-search param, navigation, page-level query/mutation, cross-section effect, invalidate, redirect, 여러 section에 걸친 파생값은 route entry에 둡니다.
+search param,
+navigation,
+page-level query/mutation,
+cross-section effect,
+invalidate,
+redirect,
+여러 section에 걸친 파생값은 route entry에 둡니다.
 
 **Incorrect (layout wrapper만 분리해 route flow를 숨김):**
 

@@ -11,7 +11,8 @@ tags: layout, grouping, shells
 
 여러 화면이 같은 레이아웃 셸을 쓰면 같은 부모 `layout` 아래에 두고 하위 그룹만 늘립니다.
 기능이 다르다는 이유만으로 최상위 레이아웃을 새로 만들지 말고, 동일 셸이라면 기존 부모 아래에서 확장합니다.
-각 feature가 자기 `feature.layout.tsx` tunnel route를 따로 가질 수는 있지만, 공통 shell을 대신하는 상위 layout를 feature별로 중복 만들지는 않습니다.
+각 feature가 자기 `feature.layout.tsx` tunnel route를 따로 가질 수는 있지만,
+공통 shell을 대신하는 상위 layout를 feature별로 중복 만들지는 않습니다.
 
 **Incorrect (같은 셸인데 기능별로 상위 layout을 새로 만듦):**
 

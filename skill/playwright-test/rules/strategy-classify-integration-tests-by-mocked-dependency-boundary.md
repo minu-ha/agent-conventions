@@ -10,7 +10,13 @@ tags: integration, mocking, boundaries
 **Impact: CRITICAL (makes it clear that integration tests exercise UI and route behavior with mocked backend or auth boundaries)**
 
 주요 API를 mock해도 테스트 목적이 유지되면 Integration입니다.
-Integration은 `page.route()` 기반 API mocking, 인증 상태 mocking, 초기 데이터 강제 주입을 허용하고, 폼 검증, 로딩/에러/빈 상태, 권한 redirect, search/pagination 동기화 같은 화면 조합 책임을 검증합니다.
+Integration은 `page.route()` 기반 API mocking,
+인증 상태 mocking,
+초기 데이터 강제 주입을 허용하고,
+폼 검증,
+로딩/에러/빈 상태,
+권한 redirect,
+search/pagination 동기화 같은 화면 조합 책임을 검증합니다.
 
 **Incorrect (mock을 적극적으로 쓰면서도 E2E라고 부름):**
 

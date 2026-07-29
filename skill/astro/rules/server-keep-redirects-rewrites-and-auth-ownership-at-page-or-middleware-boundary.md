@@ -9,7 +9,9 @@ tags: server, redirects, middleware, auth, ownership
 
 **Impact: HIGH (keeps request-time guards and navigation side effects out of layout shells that should stay visual)**
 
-Route-local shell과 pages-local document helper는 shell 조립 역할만 하므로 redirect, rewrite, auth guard의 owner가 되지 않습니다.
+Route-local shell과 pages-local document helper는 shell 조립 역할만 하므로 redirect,
+rewrite,
+auth guard의 owner가 되지 않습니다.
 
 Owner 기준:
 
@@ -19,7 +21,8 @@ Owner 기준:
 
 Route param, query, page-level data selection과 결합된 guard는 page에서 처리합니다.
 여러 route에 공통인 auth, locale, tenant, request locals 주입은 middleware에서 처리합니다.
-Astro 공식 문서상 `Astro.redirect()`는 page가 `return`해야 하고, middleware interception은 `src/middleware.ts`에서 수행합니다.
+Astro 공식 문서상 `Astro.redirect()`는 page가 `return`해야 하고,
+middleware interception은 `src/middleware.ts`에서 수행합니다.
 
 **Incorrect (layout이 request-time guard와 redirect를 직접 소유):**
 

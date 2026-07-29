@@ -1,41 +1,92 @@
 #!/usr/bin/env python3
-"""문단을 문장 단위로 줄바꿈한다 (semantic line breaks).
+"""규칙 문서의 줄 폭을 120칸 이하로 맞춘다.
 
-Markdown 은 연속한 줄을 한 문단으로 합치므로 렌더링 결과는 바뀌지 않는다.
-코드 펜스, 표, frontmatter, 목록 항목, 인용은 건드리지 않는다.
+세 단계로 끊는다.
+  1. 문장 경계 (semantic line breaks)
+  2. 그래도 길면 절 경계 (쉼표, 연결어미)
+  3. 그래도 길면 공백 기준 하드랩
+
+Markdown 은 문단 안의 줄바꿈을 다시 합치므로 렌더링 결과는 바뀌지 않는다.
+frontmatter, 코드 펜스, 표, 헤딩은 건드리지 않는다. 표는 줄을 끊으면 깨지고
+frontmatter 는 YAML 스칼라라 한 줄이어야 한다.
+
+사용:
+    python3 docs/semantic-wrap.py                       # skill/*/rules/*.md 전체
+    python3 docs/semantic-wrap.py "skill/css/rules/*.md"
 """
+
 import pathlib
 import re
 import sys
 import unicodedata
 
-# 문장 끝에서만 끊는다.
-#  - 한국어 종결 어미 + 마침표
-#  - 또는 마침표. 단 "e.g." 처럼 한 글자 뒤 마침표(약어)는 제외한다.
-# 다음 문장은 한글·영문·백틱·대괄호·괄호 어느 것으로 시작해도 된다.
-SPLIT = re.compile(r"(?<=[가-힣)\]`\w]{2}\.)\s+(?=[가-힣A-Za-z`\[(])")
-MAX = 100  # 이 표시 폭(칸)을 넘는 줄만 손댄다. 한글은 두 칸으로 센다.
+MAX = 120
+
+# 문장 끝. "e.g." 같은 한 글자 약어를 피하려고 앞 두 글자를 요구한다.
+SENTENCE = re.compile(r"(?<=[가-힣)\]`\w]{2}\.)\s+(?=[가-힣A-Za-z`\[(])")
+# 절 경계. 쉼표와 대표적인 연결어미.
+CLAUSE = re.compile(r"(?<=[,、])\s+|(?<=하고)\s+|(?<=하며)\s+|(?<=지만)\s+|(?<=하면)\s+|(?<=되면)\s+")
 
 
-def width(s: str) -> int:
-    return sum(2 if unicodedata.east_asian_width(c) in "WF" else 1 for c in s)
+def width(text: str) -> int:
+    return sum(2 if unicodedata.east_asian_width(c) in "WF" else 1 for c in text)
 
 
-def split_sentences(line: str) -> list[str]:
-    """인라인 코드와 링크를 보호한 채 문장 경계에서 자른다."""
+def mask_inline(text: str) -> tuple[str, list[str]]:
+    """인라인 코드와 링크를 자리표시자로 바꿔 그 안에서 끊기지 않게 한다."""
     holes: list[str] = []
 
-    def stash(m: re.Match[str]) -> str:
-        holes.append(m.group(0))
+    def stash(match: re.Match[str]) -> str:
+        holes.append(match.group(0))
         return f"\x00{len(holes) - 1}\x00"
 
-    masked = re.sub(r"`[^`]*`|\[[^\]]*\]\([^)]*\)", stash, line)
-    parts = [p for p in SPLIT.split(masked) if p.strip()]
+    return re.sub(r"`[^`]*`|\[[^\]]*\]\([^)]*\)", stash, text), holes
 
-    def restore(t: str) -> str:
-        return re.sub(r"\x00(\d+)\x00", lambda m: holes[int(m.group(1))], t)
 
-    return [restore(p) for p in parts]
+def unmask(text: str, holes: list[str]) -> str:
+    return re.sub(r"\x00(\d+)\x00", lambda m: holes[int(m.group(1))], text)
+
+
+def hard_wrap(text: str, indent: str) -> list[str]:
+    """공백 기준으로 MAX 칸에 맞춰 접는다."""
+    masked, holes = mask_inline(text)
+    out: list[str] = []
+    line = ""
+    for word in masked.split(" "):
+        candidate = word if not line else f"{line} {word}"
+        if line and width(unmask(candidate, holes)) + (width(indent) if out else 0) > MAX:
+            out.append(unmask(line, holes))
+            line = word
+        else:
+            line = candidate
+    if line:
+        out.append(unmask(line, holes))
+    return out
+
+
+def split_by(pattern: re.Pattern[str], text: str) -> list[str]:
+    masked, holes = mask_inline(text)
+    parts = [p for p in pattern.split(masked) if p and p.strip()]
+    return [unmask(p, holes) for p in parts] if len(parts) > 1 else [text]
+
+
+def wrap_line(line: str) -> list[str]:
+    """한 줄을 120칸 이하 여러 줄로 만든다."""
+    bullet = re.match(r"^(\s*(?:[-*+]|\d+\.)\s+)", line)
+    indent = " " * width(bullet.group(1)) if bullet else ""
+
+    pieces: list[str] = []
+    for sentence in split_by(SENTENCE, line):
+        if width(sentence) <= MAX:
+            pieces.append(sentence)
+            continue
+        for clause in split_by(CLAUSE, sentence):
+            pieces.extend([clause] if width(clause) <= MAX else hard_wrap(clause, indent))
+
+    if not bullet or len(pieces) < 2:
+        return pieces
+    # 불릿의 이어지는 줄은 항목 안에 남도록 들여쓴다.
+    return [pieces[0], *[f"{indent}{p}" for p in pieces[1:]]]
 
 
 def process(text: str) -> str:
@@ -44,10 +95,10 @@ def process(text: str) -> str:
     in_fence = False
     in_front = False
 
-    for i, line in enumerate(lines):
+    for index, line in enumerate(lines):
         stripped = line.strip()
 
-        if i == 0 and stripped == "---":
+        if index == 0 and stripped == "---":
             in_front = True
             out.append(line)
             continue
@@ -65,31 +116,34 @@ def process(text: str) -> str:
             out.append(line)
             continue
 
-        # 표, 목록, 인용, 헤딩, 짧은 줄, 들여쓴 줄은 그대로
-        skip = (
-            width(line) <= MAX
-            or line[:1] in {" ", "\t", "|", ">", "#"}
-            or re.match(r"^\s*(?:[-*+]|\d+\.)\s", line)
-        )
-        if skip:
-            out.append(line)
+        # 표, 헤딩, 들여쓴 블록, 구조 마커, 짧은 줄은 그대로.
+        # **Impact:** / **Incorrect ...** / **Correct ...** 는 build 가 한 줄로 파싱하는
+        # 구조 마커다. 접으면 "첫 Incorrect 뒤의 prose" 로 오인돼 계약 검사에 걸린다.
+        if (
+            line[:1] in {"|", "#", "\t"}
+            or line.startswith("    ")
+            or stripped.startswith("**")
+            or width(line.rstrip()) <= MAX
+        ):
+            out.append(line.rstrip())
             continue
 
-        out.extend(split_sentences(line))
+        out.extend(wrap_line(line.rstrip()))
 
     return "\n".join(out)
 
 
 def main() -> int:
-    paths = sorted(pathlib.Path(".").glob(sys.argv[1] if len(sys.argv) > 1 else "skill/*/rules/*.md"))
+    pattern = sys.argv[1] if len(sys.argv) > 1 else "skill/*/rules/*.md"
+    paths = sorted(pathlib.Path(".").glob(pattern))
     touched = 0
-    for p in paths:
-        before = p.read_text(encoding="utf-8")
+    for path in paths:
+        before = path.read_text(encoding="utf-8")
         after = process(before)
         if after != before:
-            p.write_text(after, encoding="utf-8")
+            path.write_text(after, encoding="utf-8")
             touched += 1
-    print(f"  {touched}/{len(paths)} 파일 변경")
+    print(f"{touched}/{len(paths)} 파일 변경")
     return 0
 
 

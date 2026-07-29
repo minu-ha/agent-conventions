@@ -9,7 +9,8 @@ tags: dto, response, security
 
 **Impact: HIGH (prevents backend responses from leaking full Prisma models or sensitive fields by default)**
 
-응답 DTO는 클라이언트에 노출할 필드를 명시적으로 선언하고, Prisma 모델 전체를 그대로 반환하지 않습니다. `@Exclude()`와 `@Expose()`를 사용해 민감 필드를 응답에서 제거합니다.
+응답 DTO는 클라이언트에 노출할 필드를 명시적으로 선언하고,
+Prisma 모델 전체를 그대로 반환하지 않습니다. `@Exclude()`와 `@Expose()`를 사용해 민감 필드를 응답에서 제거합니다.
 
 **Incorrect (응답에 모델 전체를 그대로 노출):**
 

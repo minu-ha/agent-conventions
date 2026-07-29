@@ -10,7 +10,12 @@ tags: evidence, screenshot, browser
 **Impact: CRITICAL (기준 화면과 현재 화면 없이 CSS를 추측 수정하는 일을 막음)**
 
 구현 전에 Figma node/design context/screenshot과 현재 브라우저 구현 화면을 모두 확인합니다.
-Figma node가 너무 크거나 tool fetch가 실패하면 더 작은 node, parent section, screenshot, metadata fallback을 사용하고, 확보한 evidence와 한계를 기록합니다.
+Figma node가 너무 크거나 tool fetch가 실패하면
+더 작은 node,
+parent section,
+screenshot,
+metadata fallback을 사용하고,
+확보한 evidence와 한계를 기록합니다.
 
 **Incorrect (Figma node 실패를 이유로 분석 포기):**
 

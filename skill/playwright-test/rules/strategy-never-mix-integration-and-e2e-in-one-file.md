@@ -10,7 +10,8 @@ tags: levels, files, boundaries
 **Impact: HIGH (keeps test intent and failure diagnosis clear by assigning one runtime boundary per spec file)**
 
 한 spec 파일 안에는 하나의 테스트 레벨만 둡니다.
-Integration과 E2E는 도구가 아니라 의존 경계로 구분되므로, 한 파일 안에서 mock 기반 테스트와 실제 시스템 기반 테스트를 섞지 않습니다.
+Integration과 E2E는 도구가 아니라 의존 경계로 구분되므로,
+한 파일 안에서 mock 기반 테스트와 실제 시스템 기반 테스트를 섞지 않습니다.
 
 **Incorrect (한 파일 안에서 Integration과 E2E를 섞음):**
 

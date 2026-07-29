@@ -19,7 +19,10 @@ Put them under the owning route's `_local/` folder.
 - Shared visual pieces: `ui` and `widget`
 - Site-wide document shell: top-level `_document.astro`, `_head.astro`, `_document.css`
 
-Do not create `src/layouts`, `src/components/layouts`, `ui-page-shell`, or `widget-page-shell` just because several children in one route subtree share a shell.
+Do not create `src/layouts`,
+`src/components/layouts`,
+`ui-page-shell`,
+or `widget-page-shell` just because several children in one route subtree share a shell.
 
 **Incorrect (route shell floats as a shared component layer):**
 
@@ -37,7 +40,8 @@ src/
         index.astro
 ```
 
-이 구조는 admin route shell과 site-wide document shell의 자리를 동시에 흐리게 만들고, shell ownership도 route 밖으로 밀어냅니다.
+이 구조는 admin route shell과 site-wide document shell의 자리를 동시에 흐리게 만들고,
+shell ownership도 route 밖으로 밀어냅니다.
 
 **Correct (route shell은 owning route `_local/` 아래에 두고 shared 조각만 ui/widget으로 재사용):**
 
@@ -61,4 +65,6 @@ src/
         index.astro
 ```
 
-이 구조에서는 `admin-shell.astro`가 admin route family shell을 소유하고, site-wide document shell은 `src/pages/_*`가 소유하며, shared visual block만 `ui`와 `widget`에서 가져와 조립합니다.
+이 구조에서는 `admin-shell.astro`가 admin route family shell을 소유하고,
+site-wide document shell은 `src/pages/_*`가 소유하며,
+shared visual block만 `ui`와 `widget`에서 가져와 조립합니다.

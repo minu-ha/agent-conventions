@@ -9,7 +9,8 @@ tags: server-islands, serializable-props, fallback
 
 **Impact: HIGH (keeps deferred rendering portable and avoids broken props or blank loading states)**
 
-`server:defer`를 쓰는 Astro component에는 serializable props만 넘기고, 느린 personalized content에는 fallback slot을 함께 준비합니다.
+`server:defer`를 쓰는 Astro component에는 serializable props만 넘기고,
+느린 personalized content에는 fallback slot을 함께 준비합니다.
 함수나 거대한 객체를 넘겨 deferred boundary를 깨뜨리거나, placeholder 없이 blank 영역을 남기지 않습니다.
 
 **Incorrect (함수 prop과 fallback 없는 deferred island):**

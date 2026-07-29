@@ -9,7 +9,10 @@ tags: naming, pages, css, route-role
 
 **Impact: HIGH (keeps Astro route files, route-local assets, CSS owners, and URL semantics aligned without duplicating folder depth in names)**
 
-Routed entry file names follow Astro routing (`index.astro`, `[slug].astro`, `new.astro`). Route-local support files and CSS use the route role as owner, not the whole folder path.
+Routed entry file names follow Astro routing (`index.astro`,
+`[slug].astro`,
+`new.astro`). Route-local support files and CSS use the route role as owner,
+not the whole folder path.
 
 Naming 기준:
 
@@ -46,4 +49,5 @@ _document.astro -> rt_document__body
 ```
 
 When two route families would collide, choose the smallest owner name that disambiguates the local route.
-Do not switch to `loc_*` for the main page surface just because markup moved into `_local/`; the screen owner remains the route.
+Do not switch to `loc_*` for the main page surface just because markup moved into `_local/`; the screen owner remains
+the route.

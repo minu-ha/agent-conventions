@@ -9,7 +9,7 @@ metadata:
 # Astro 컨벤션
 
 에이전트 협업 팀을 위한 Astro 코딩 컨벤션 모음입니다. 현재 이 가이드는 11개 카테고리의 42개 local 규칙으로 구성되어 있습니다.
-Astro entry 구조, route-local owner layer인 `src/pages`, pages-local `_document.astro`/`_head.astro`/`_document.css`, page-owned implementation, route-role aligned page asset naming과 `rt_*` surface ownership, `_local/` route-local UI/runtime boundary, owner-named support file, `.astro` 컴포넌트 경계, framework island 사용법, file-based routing, SSG/SSR/CSR rendering 선택, build-time/live collections, Actions와 endpoints, page/local/island 책임, `ui` primitive/`widget` reusable block taxonomy, selective extraction 기준, Astro 전용 문서화 규칙, Astro 전용 검토 흐름을 [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`와 compiled [AGENTS.md](./AGENTS.md)로 관리합니다.
+Astro entry 구조, route-local owner layer인 `src/pages`, pages-local `_document.astro`/`_head.astro`/`_document.css`, page-owned implementation, route-role aligned page asset naming과 `rt_*` surface ownership, `_local/` route-local UI/runtime boundary, owner-named support file, `.astro` 컴포넌트 경계, framework island 사용법, file-based routing, SSG/SSR/CSR rendering 선택, build-time/live collections, Actions와 endpoints, page/local/island 책임, `ui` primitive/`widget` reusable block taxonomy, selective extraction 기준, Astro 전용 문서화 규칙, Astro 전용 검토 흐름을 [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`와 compiled [HANDBOOK.md](./HANDBOOK.md)로 관리합니다.
 Astro local rule은 기본 companion인 `convention-typescript`와 `convention-css`를 함께 사용하고, React island나 브라우저 테스트는 필요할 때 추가로 로드합니다.
 
 ## 사용할 때
@@ -23,8 +23,8 @@ Astro local rule은 기본 companion인 `convention-typescript`와 `convention-c
 ## 활성화 체크리스트
 
 - 변경 범위가 `.astro` 페이지/레이아웃/컴포넌트, `src/pages` route-local 구조, rendering mode, file-based route, content collection, Actions/endpoints, server islands, framework island인지 먼저 확인합니다.
-- convention을 적용만 할 때는 compiled [AGENTS.md](./AGENTS.md)를 열어 Structure, Naming, Component, Island, Routing, Rendering, Content, Server, Responsibility, Workflow 중 어떤 카테고리가 직접 걸리는지 빠르게 훑습니다.
-- 이 skill 자체를 편집하거나 리뷰할 때는 `rules/_sections.md`, `SKILL.md`, `README.md`, `metadata.json`, 관련 `rules/*.md`를 source of truth로 먼저 읽습니다. `AGENTS.md`는 build 결과 확인용으로만 사용합니다.
+- convention을 적용만 할 때는 compiled [HANDBOOK.md](./HANDBOOK.md)를 열어 Structure, Naming, Component, Island, Routing, Rendering, Content, Server, Responsibility, Workflow 중 어떤 카테고리가 직접 걸리는지 빠르게 훑습니다.
+- 이 skill 자체를 편집하거나 리뷰할 때는 `rules/_sections.md`, `SKILL.md`, `README.md`, `metadata.json`, 관련 `rules/*.md`를 source of truth로 먼저 읽습니다. `HANDBOOK.md`는 build 결과 확인용으로만 사용합니다.
 - 실제로 바꾸는 관심사에 맞는 `rules/*.md`를 추가로 읽습니다. `src/pages` route-local 배치와 `_local/` 구조를 조정하면 structure rule, owner-named route asset과 dynamic segment 이름을 바꾸면 naming rule, static/on-demand/server mode 판단이면 rendering rule, page/local/island/support 경계를 조정하면 responsibility rule을 확인합니다.
 - Astro 변경은 기본적으로 `convention-typescript`와 `convention-css`를 함께 로드하고, React island나 TSX를 만지면 `convention-react`, hydration/form/server 흐름을 브라우저 테스트로 검증하면 `convention-playwright-test`도 함께 로드합니다.
 - `client:*`, `client:only`, `server:defer`, Actions, endpoints, content collections처럼 버전 민감한 Astro API를 건드리면 가능하면 `astro-docs` MCP 같은 공식 문서 경로를 먼저 확인합니다.
@@ -173,4 +173,4 @@ Astro local rule은 기본 companion인 `convention-typescript`와 `convention-c
 
 ## 전체 compiled 문서
 
-모든 규칙이 펼쳐진 전체 가이드는 [AGENTS.md](./AGENTS.md)에서 확인할 수 있습니다.
+모든 규칙이 펼쳐진 전체 가이드는 [HANDBOOK.md](./HANDBOOK.md)에서 확인할 수 있습니다.

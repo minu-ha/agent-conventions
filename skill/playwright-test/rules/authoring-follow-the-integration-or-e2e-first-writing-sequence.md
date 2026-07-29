@@ -9,7 +9,10 @@ tags: workflow, writing-order, setup
 
 **Impact: MEDIUM (reduces confused setup by forcing the author to classify the test level and dependency boundary before writing actions)**
 
-신규 테스트를 쓸 때는 먼저 Integration인지 E2E인지 결정하고, 그 레벨에 맞는 setup만 선언한 뒤, 사용자 locator로 action을 작성하고, web-first assertion으로 결과를 검증합니다.
+신규 테스트를 쓸 때는 먼저 Integration인지 E2E인지 결정하고,
+그 레벨에 맞는 setup만 선언한 뒤,
+사용자 locator로 action을 작성하고,
+web-first assertion으로 결과를 검증합니다.
 마지막으로 정말 필요한 비동기 경계만 명시적으로 기다립니다.
 
 **Incorrect (레벨 구분 없이 test body부터 쓰기 시작):**

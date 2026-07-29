@@ -8,8 +8,8 @@ metadata:
 
 # NestJS 컨벤션
 
-에이전트 협업 팀을 위한 NestJS 코딩 컨벤션 모음입니다. 현재 이 가이드는 7개 카테고리의 21개 local 규칙으로 구성되어 있습니다.  
-모듈 경계, controller-service 레이어링, DTO 계약, backend 메서드 규칙, NestJS/Prisma 문서화 규칙, 테스트 전략을 [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`와 compiled [AGENTS.md](./AGENTS.md)로 관리합니다.  
+에이전트 협업 팀을 위한 NestJS 코딩 컨벤션 모음입니다. 현재 이 가이드는 7개 카테고리의 21개 local 규칙으로 구성되어 있습니다.
+모듈 경계, controller-service 레이어링, DTO 계약, backend 메서드 규칙, NestJS/Prisma 문서화 규칙, 테스트 전략을 [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`와 compiled [HANDBOOK.md](./HANDBOOK.md)로 관리합니다.
 기본 compiled guide는 local NestJS rule만 담고 `convention-typescript`를 companion skill로 함께 사용합니다.
 
 ## 사용할 때
@@ -19,7 +19,7 @@ metadata:
 
 ## 활성화 체크리스트
 - 변경 범위가 NestJS module, controller, service, DTO, Prisma access, exception 처리, backend test인지 먼저 확인합니다.
-- 이 skill이 활성화되면 먼저 compiled [AGENTS.md](./AGENTS.md)를 열어 Naming, Layers, DTO, Methods, Docs, Testing, Guardrails 중 어떤 카테고리가 이번 변경과 직접 맞물리는지 확인합니다.
+- 이 skill이 활성화되면 먼저 compiled [HANDBOOK.md](./HANDBOOK.md)를 열어 Naming, Layers, DTO, Methods, Docs, Testing, Guardrails 중 어떤 카테고리가 이번 변경과 직접 맞물리는지 확인합니다.
 - 실제로 건드리는 관심사에 해당하는 `rules/*.md`를 추가로 읽습니다. controller/service 경계를 바꾸면 layer rule, DTO shape나 swagger 문서를 바꾸면 dto rule, 예외/async 흐름을 바꾸면 methods rule, 테스트 범위를 바꾸면 testing rule을 봅니다.
 - NestJS 변경은 기본적으로 `convention-typescript`를 함께 로드하고, 프론트엔드와 공유하는 API 계약이 바뀌면 대응되는 frontend skill, 브라우저 E2E 흐름까지 바뀌면 `convention-playwright-test`도 같이 참고합니다.
 
@@ -93,7 +93,7 @@ metadata:
 
 ## 함께 쓰기
 - 이 skill은 `convention-typescript`와 함께 로드하는 것을 기본으로 합니다.
-- slim [AGENTS.md](./AGENTS.md)는 local NestJS rule만 담고, 공통 TypeScript 규칙은 `convention-typescript`를 함께 로드해 보완합니다.
+- slim [HANDBOOK.md](./HANDBOOK.md)는 local NestJS rule만 담고, 공통 TypeScript 규칙은 `convention-typescript`를 함께 로드해 보완합니다.
 - DTO나 controller가 React/TanStack Route와 계약을 공유하면 해당 프론트엔드 skill과 함께 사용합니다.
 - 백엔드 E2E와 브라우저 E2E가 함께 바뀌면 `convention-playwright-test`를 함께 사용합니다.
 
@@ -117,4 +117,4 @@ metadata:
 
 ## 전체 compiled 문서
 
-모든 규칙이 펼쳐진 전체 가이드는 [AGENTS.md](./AGENTS.md)에서 확인할 수 있습니다.
+모든 규칙이 펼쳐진 전체 가이드는 [HANDBOOK.md](./HANDBOOK.md)에서 확인할 수 있습니다.

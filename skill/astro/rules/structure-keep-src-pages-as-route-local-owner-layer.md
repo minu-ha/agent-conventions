@@ -67,4 +67,5 @@ src/
           entry-editor.css
 ```
 
-이 구조에서는 route contract와 route-only 구현이 함께 움직입니다. `src/components/ui`와 `src/components/widget`은 여러 route에서 재사용되는 public surface만 받습니다.
+이 구조에서는 route contract와 route-only 구현이 함께 움직입니다. `src/components/ui`와 `src/components/widget`은 여러
+route에서 재사용되는 public surface만 받습니다.

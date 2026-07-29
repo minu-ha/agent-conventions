@@ -9,7 +9,11 @@ tags: locators, accessibility, selectors
 
 **Impact: HIGH (keeps selectors resilient and user-oriented by favoring accessible names over DOM structure)**
 
-locator 우선순위는 `getByRole`, `getByLabel`/`getByPlaceholder`, `getByText`, `getByTestId`, 최후수단 CSS/XPath 순서입니다.
+locator 우선순위는 `getByRole`,
+`getByLabel`/`getByPlaceholder`,
+`getByText`,
+`getByTestId`,
+최후수단 CSS/XPath 순서입니다.
 접근 가능한 이름과 실제 사용자 표현을 우선 사용하고, CSS class, DOM 구조, `nth-child` 의존 locator는 피합니다.
 
 **Incorrect (DOM 구조와 class에 과도하게 의존):**

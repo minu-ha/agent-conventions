@@ -9,7 +9,11 @@ tags: comments, inline, domain-rules
 
 **Impact: MEDIUM (keeps inline comments reserved for backend constraints that would otherwise be easy to misread or accidentally remove)**
 
-함수 본문 내부에서는 JSDoc 블록 주석을 사용하지 않고, `//` 주석은 도메인 규칙, 정합성 제약, Prisma 동작 제약, 트랜잭션 순서처럼 없으면 오해될 수 있는 내용에만 사용합니다.
+함수 본문 내부에서는 JSDoc 블록 주석을 사용하지 않고,
+`//` 주석은 도메인 규칙,
+정합성 제약,
+Prisma 동작 제약,
+트랜잭션 순서처럼 없으면 오해될 수 있는 내용에만 사용합니다.
 변수명 그대로 반복하는 설명은 남기지 않습니다.
 
 **Incorrect (변수명 반복이나 자명한 설명):**

@@ -13,6 +13,11 @@ import type {RoutingEvalManifest, RoutingExpectedPartition, SkillCompanion} from
 
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
 const repoDir = path.resolve(currentDir, "../..");
+
+/**
+ * @helper 줄바꿈으로 접힌 본문을 한 줄로 펴서 문구 단위로 비교
+ */
+const flattenWhitespace = (text: string): string => text.replace(/\s+/g, " ");
 const realSkillRootDir = path.join(repoDir, "skill");
 const behavioralProtocolPath = path.join(repoDir, "docs/evaluations/2026-07-21-progressive-loading-behavioral-protocol.json");
 
@@ -1818,7 +1823,7 @@ test("TypeScript SKILL.md is a compact router without receipt or audit machinery
 	assert.match(body, /통과는 컨벤션을 지켰다는 근거가 아니다/);
 
 	// opt-in full handbook
-	assert.match(body, /\[AGENTS\.md\]\(\.\/AGENTS\.md\)는 전체 handbook이다/);
+	assert.match(body, /\[HANDBOOK\.md\]\(\.\/HANDBOOK\.md\)는 전체 handbook이다/);
 
 	// 제거한 강제 장치가 되살아나지 않아야 한다
 	assert.doesNotMatch(body, /digest|sha256/i);
@@ -1871,7 +1876,7 @@ test("React progressive metadata and all 42 rule routes match Appendix B exactly
 		/local query·mutation binding[^\n]+state-name-query-and-mutation-bindings-consistently|state-name-query-and-mutation-bindings-consistently[^\n]+local query·mutation binding/i,
 	);
 	const screenExtractionRule = await readFile(path.join(skillPaths.rulesDir, "screen-extract-utilities-selectively.md"), "utf8");
-	assert.match(screenExtractionRule, /query `select`[^\n]+state-shape-query-data-with-select[^\n]+별도 함수\/support module[^\n]+N\/A/i);
+	assert.match(screenExtractionRule, /query `select`[\s\S]+state-shape-query-data-with-select[\s\S]+별도 함수\/support module[\s\S]+N\/A/i);
 	assert.match(screenExtractionRule, /Incorrect[\s\S]*normalizeEntryValues[\s\S]*mergeEntryPayload/i);
 	assert.match(screenExtractionRule, /Correct[\s\S]*normalizeTreeNodes[\s\S]*handleSave/i);
 	assert.match(screenExtractionRule, /Correct[\s\S]*한 exported 함수[\s\S]*buildEntryPayload/i);
@@ -1884,7 +1889,7 @@ test("React progressive metadata and all 42 rule routes match Appendix B exactly
 	const contributing = await readFile(path.join(repoDir, "CONTRIBUTING.md"), "utf8");
 	assert.match(contributing, /appliesWhen.*한 줄.*160/);
 	assert.match(contributing, /reviewWith.*자동 선택이.*아니라.*재평가/i);
-	assert.match(contributing, /대상이 없으면.*key를 아예 생략/i);
+	assert.match(contributing, /대상이 없으면.*key\s*를 아예 생략/i);
 });
 
 test("React routing manifest is the exact fifteen-scenario Appendix B/D oracle with full positive coverage", async () => {
@@ -2024,12 +2029,12 @@ test("React generated index and handbook preserve canonical local rules and comp
 	assert.match(handbook, /metadata\.json\.companions/);
 	assert.doesNotMatch(handbook, /metadata\.json\.extends/);
 	assert.match(handbook, /^## 함께 따르는 규칙$/m);
-	assert.match(handbook, /^- \[TypeScript Convention\]\(\.\.\/typescript\/AGENTS\.md\) — 항상 함께 적용합니다\.$/m);
+	assert.match(handbook, /^- \[TypeScript Convention\]\(\.\.\/typescript\/HANDBOOK\.md\) — 항상 함께 적용합니다\.$/m);
 	assert.match(
 		handbook,
-		/^- \[CSS Convention\]\(\.\.\/css\/AGENTS\.md\) — 다음 조건에서 함께 적용합니다\. class contract, stylesheet 또는 styling surface를 변경한다\.$/m,
+		/^- \[CSS Convention\]\(\.\.\/css\/HANDBOOK\.md\) — 다음 조건에서 함께 적용합니다\. class contract, stylesheet 또는 styling surface를 변경한다\.$/m,
 	);
-	assert.match(handbook, /\.\.\/typescript\/AGENTS\.md/);
+	assert.match(handbook, /\.\.\/typescript\/HANDBOOK\.md/);
 
 	for (const rule of document.rules) {
 		const bodyWithoutHeading = rule.body.replace(/^## .+\n+/, "");
@@ -2086,7 +2091,7 @@ test("React SKILL.md is a compact router with required TypeScript and conditiona
 	assert.match(body, /통과는 컨벤션을 지켰다는 근거가 아니다/);
 
 	// opt-in full handbook
-	assert.match(body, /\[AGENTS\.md\]\(\.\/AGENTS\.md\)는 전체 handbook이다/);
+	assert.match(body, /\[HANDBOOK\.md\]\(\.\/HANDBOOK\.md\)는 전체 handbook이다/);
 
 	// 제거한 강제 장치가 되살아나지 않아야 한다
 	assert.doesNotMatch(body, /digest|sha256/i);
@@ -2098,7 +2103,7 @@ test("React SKILL.md is a compact router with required TypeScript and conditiona
 	// companion 경계
 	assert.match(body, /`convention-typescript`는 항상 함께 활성화한다/);
 	assert.match(body, /class contract·stylesheet·styling surface가 바뀔 때만 `convention-css`를 추가하고, 아니면 켜지 않는다/);
-	assert.match(body, /non-progressive skill이면[^\n]+`AGENTS\.md`를 읽는다/);
+	assert.match(body, /non-progressive skill이면[^\n]+`HANDBOOK\.md`를 읽는다/);
 });
 
 test("CSS progressive metadata and rule routing match Appendix C exactly", async () => {
@@ -2130,14 +2135,14 @@ test("CSS progressive metadata and rule routing match Appendix C exactly", async
 		path.join(skillPaths.rulesDir, "composition-style-ui-components-through-owned-wrappers.md"),
 		"utf8",
 	);
-	assert.match(wrapperStylingRule, /실제 `Ui\*` React wrapper[^\n]+CSS-only[^\n]+selector-target-third-party-dom-from-owned-roots/i);
+	assert.match(wrapperStylingRule, /실제 `Ui\*` React wrapper[\s\S]+CSS-only[\s\S]+selector-target-third-party-dom-from-owned-roots/i);
 	const singlePurposeRule = await readFile(path.join(skillPaths.rulesDir, "composition-keep-classes-single-purpose.md"), "utf8");
 	assert.match(singlePurposeRule, /^appliesWhen:[^\n]+기존 결합 책임[^\n]+처음부터 새 single-purpose pair/m);
 	const layoutIntentRule = await readFile(path.join(skillPaths.rulesDir, "values-keep-layout-intent-explicit.md"), "utf8");
 	assert.match(layoutIntentRule, /^appliesWhen:[^\n]+base\/modifier[^\n]+`display`·spacing[^\n]+값 그대로/m);
 	const fallbackRule = await readFile(path.join(skillPaths.rulesDir, "values-always-provide-css-variable-fallbacks.md"), "utf8");
 	assert.match(fallbackRule, /^appliesWhen:[^\n]+`var\(--\*\)`[^\n]+같은 stylesheet[^\n]+byte-equivalent/m);
-	assert.match(fallbackRule, /실제 diff에 새 CSS variable 사용[^\n]+요청 여부와 무관하게[^\n]+다시 선택/i);
+	assert.match(flattenWhitespace(fallbackRule), /실제 diff에 새 CSS variable 사용[^\n]+요청 여부와 무관하게[^\n]+다시 선택/i);
 
 	const template = await readFile(path.join(skillPaths.rulesDir, "_template.md"), "utf8");
 	assert.match(template, /^appliesWhen: /m);
@@ -2147,7 +2152,7 @@ test("CSS progressive metadata and rule routing match Appendix C exactly", async
 	const contributing = await readFile(path.join(repoDir, "CONTRIBUTING.md"), "utf8");
 	assert.match(contributing, /appliesWhen.*한 줄.*160/);
 	assert.match(contributing, /reviewWith.*자동 선택이.*아니라.*재평가/i);
-	assert.match(contributing, /대상이 없으면.*key를 아예 생략/i);
+	assert.match(contributing, /대상이 없으면.*key\s*를 아예 생략/i);
 });
 
 test("CSS routing manifest is the exact eleven-scenario and thirteen-stage Appendix C/D oracle", async () => {
@@ -2271,7 +2276,7 @@ test("routing activation and generated indexes use only the changed semantic del
 		path.join(realSkillRootDir, "react", "rules", "_template.md"),
 		path.join(realSkillRootDir, "typescript", "rules", "_template.md"),
 		path.join(realSkillRootDir, "css", "rules", "_template.md"),
-		path.join(repoDir, "AGENTS.frontend-conventions.md"),
+		path.join(repoDir, "AGENTS.template.md"),
 	];
 
 	for (const source of await Promise.all([...routerPaths, ...templatePaths].map((filePath) => readFile(filePath, "utf8")))) {
@@ -2281,7 +2286,7 @@ test("routing activation and generated indexes use only the changed semantic del
 		assert.match(source, /삭제\+추가|삭제·추가/);
 		assert.match(source, /다시 세지|별도.*(?:추가|변경|재선언)/);
 		assert.match(source, /N\/A rule|N\/A 규칙|적용되지 않는 규칙/);
-		assert.match(source, /최소 semantic patch|최소 변경|범위를 넓히지 않는다/i);
+		assert.match(source, /최소 semantic patch|최소 변경|범위를 넓히지 않/i);
 	}
 
 	const typescriptDocument = await readSkillDocument(getSkillPaths("typescript", realSkillRootDir));
@@ -2517,7 +2522,7 @@ test("v17 TypeScript boundaries exclude React props and prevent self-created dup
 
 	const existingContract = await readRule("typescript", "types-reuse-existing-contracts-before-new-types");
 	assert.match(
-		existingContract,
+		flattenWhitespace(existingContract),
 		/positional[\s\S]*object[\s\S]*(?:수정 가능한 로컬 소유|기존) (?:호환|compatible) (?:named )?(?:shape|contract)[\s\S]*types-document-custom-types-and-shapes[^\n]+Selected[\s\S]*types-reuse-existing-contracts-before-new-types[^\n]+N\/A/i,
 	);
 	assert.match(
@@ -2525,8 +2530,8 @@ test("v17 TypeScript boundaries exclude React props and prevent self-created dup
 		/요청[^\n]+(?:semantic delta[^\n]+없는|밖)[\s\S]*`\*Params`[\s\S]*`\*Input`[\s\S]*(?:스스로|자기|자가)[\s\S]*(?:활성화|Selected)[\s\S]*(?:하지 않|금지)/i,
 	);
 	assert.match(
-		existingContract,
-		/types-document-custom-types-and-shapes[^\n]+Selected[\s\S]*types-reuse-existing-contracts-before-new-types[^\n]+N\/A[\s\S]*(?:외부|external|generated|read-only|shared)[^\n]+(?:두 type 규칙|두 규칙|모두)[^\n]+N\/A[\s\S]*callable 문서화 여부[^\n]+docs rule[^\n]+독립 판정/i,
+		flattenWhitespace(existingContract),
+		/types-document-custom-types-and-shapes[\s\S]+Selected[\s\S]*types-reuse-existing-contracts-before-new-types[\s\S]+N\/A[\s\S]*(?:외부|external|generated|read-only|shared)[\s\S]+(?:두 type 규칙|두 규칙|모두)[\s\S]+N\/A[\s\S]*callable 문서화 여부[\s\S]+docs rule[\s\S]+독립 판정/i,
 	);
 	assert.doesNotMatch(existingContract, /callable header[^\n]+문서화/);
 	assert.doesNotMatch(existingContract, /^appliesWhen:[^\n]+재사용 결정을 바꾼다/m);
@@ -2592,7 +2597,7 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	);
 	const headerDocs = await readRule("typescript", "docs-require-header-jsdoc-on-key-declarations");
 	assert.match(
-		headerDocs,
+		flattenWhitespace(headerDocs),
 		/header tag[\s\S]*(?:영문 label|영문 라벨)[\s\S]*(?:충족하지 않|미충족|완료되지 않)[\s\S]*docs-write-concise-korean-comments-about-purpose-and-constraints[\s\S]*content gate/i,
 	);
 	assert.doesNotMatch(headerDocs, /\bT\d{2}\b/);
@@ -2623,7 +2628,7 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 		].map(([skillName, ruleId]) => readFile(path.join(realSkillRootDir, skillName!, "contracts", `${ruleId}.md`), "utf8")),
 	);
 	assert.match(
-		generatedContracts[0]!,
+		flattenWhitespace(generatedContracts[0]!),
 		/영문 label[\s\S]*docs-write-concise-korean-comments-about-purpose-and-constraints[\s\S]*content gate/i,
 	);
 	assert.match(generatedContracts[1]!, /annotation 본문 전체[\s\S]*(?:ASCII|영문)/i);
@@ -2654,9 +2659,9 @@ test("CSS generated index is canonical, complete, body-preserving, and within it
 	assert.match(handbook, /metadata\.json\.companions/);
 	assert.doesNotMatch(handbook, /metadata\.json\.extends/);
 	assert.match(handbook, /^## 함께 따르는 규칙$/m);
-	assert.match(handbook, /- \[TypeScript Convention\]\(\.\.\/typescript\/AGENTS\.md\) — 다음 조건에서 함께 적용합니다\./);
+	assert.match(handbook, /- \[TypeScript Convention\]\(\.\.\/typescript\/HANDBOOK\.md\) — 다음 조건에서 함께 적용합니다\./);
 	assert.match(handbook, /다음 조건에서 함께 적용합니다\. TS\/TSX class contract, wrapper Props 또는 style import를 함께 변경한다\./);
-	assert.match(handbook, /\.\.\/typescript\/AGENTS\.md/);
+	assert.match(handbook, /\.\.\/typescript\/HANDBOOK\.md/);
 	for (const rule of document.rules) {
 		const bodyWithoutHeading = rule.body.replace(/^## .+\n+/, "");
 		assert.equal(handbook.includes(bodyWithoutHeading), true, `${rule.fileName} body must remain verbatim in AGENTS.md`);
@@ -2707,7 +2712,7 @@ test("CSS SKILL.md is a compact router with companion boundaries", async () => {
 	assert.match(body, /통과는 컨벤션을 지켰다는 근거가 아니다/);
 
 	// opt-in full handbook
-	assert.match(body, /\[AGENTS\.md\]\(\.\/AGENTS\.md\)는 전체 handbook이다/);
+	assert.match(body, /\[HANDBOOK\.md\]\(\.\/HANDBOOK\.md\)는 전체 handbook이다/);
 
 	// 제거한 강제 장치가 되살아나지 않아야 한다
 	assert.doesNotMatch(body, /digest|sha256/i);

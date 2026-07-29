@@ -10,7 +10,10 @@ tags: rendering, output, static
 **Impact: CRITICAL (keeps Astro's fast default intact and avoids adding server dependence too early)**
 
 Astro 프로젝트는 기본 `static` output을 먼저 유지합니다.
-쿠키, 세션, 요청별 개인화가 필요한 경로가 몇 개 있다고 해서 전체 프로젝트를 곧바로 `output: "server"`로 바꾸지 말고, 대부분의 page가 여전히 build-time에 안전하다면 static 기본값을 유지한 채 필요한 route만 on-demand로 opt out 합니다.
+쿠키,
+세션,
+요청별 개인화가 필요한 경로가 몇 개 있다고 해서 전체 프로젝트를 곧바로 `output: "server"`로 바꾸지 말고,
+대부분의 page가 여전히 build-time에 안전하다면 static 기본값을 유지한 채 필요한 route만 on-demand로 opt out 합니다.
 
 **Incorrect (대부분이 정적인 사이트인데 동적 page 몇 개 때문에 전체를 server mode로 바꿈):**
 

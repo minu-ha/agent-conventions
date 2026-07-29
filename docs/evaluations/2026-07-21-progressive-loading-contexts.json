@@ -14,11 +14,11 @@
 		],
 		"files": [
 			"skill/react/SKILL.md",
-			"skill/react/AGENTS.md",
+			"skill/react/HANDBOOK.md",
 			"skill/typescript/SKILL.md",
-			"skill/typescript/AGENTS.md",
+			"skill/typescript/HANDBOOK.md",
 			"skill/css/SKILL.md",
-			"skill/css/AGENTS.md"
+			"skill/css/HANDBOOK.md"
 		]
 	},
 	"scenarios": [
@@ -40,21 +40,21 @@
 					"phases": {
 						"implementation": [
 							"skill/react/SKILL.md",
-							"skill/react/AGENTS.md",
+							"skill/react/HANDBOOK.md",
 							"skill/typescript/SKILL.md",
-							"skill/typescript/AGENTS.md"
+							"skill/typescript/HANDBOOK.md"
 						],
 						"audit": [
 							"skill/react/SKILL.md",
-							"skill/react/AGENTS.md",
+							"skill/react/HANDBOOK.md",
 							"skill/typescript/SKILL.md",
-							"skill/typescript/AGENTS.md"
+							"skill/typescript/HANDBOOK.md"
 						],
 						"reviewer": [
 							"skill/react/SKILL.md",
-							"skill/react/AGENTS.md",
+							"skill/react/HANDBOOK.md",
 							"skill/typescript/SKILL.md",
-							"skill/typescript/AGENTS.md"
+							"skill/typescript/HANDBOOK.md"
 						]
 					}
 				},
@@ -157,15 +157,15 @@
 					"phases": {
 						"implementation": [
 							"skill/typescript/SKILL.md",
-							"skill/typescript/AGENTS.md"
+							"skill/typescript/HANDBOOK.md"
 						],
 						"audit": [
 							"skill/typescript/SKILL.md",
-							"skill/typescript/AGENTS.md"
+							"skill/typescript/HANDBOOK.md"
 						],
 						"reviewer": [
 							"skill/typescript/SKILL.md",
-							"skill/typescript/AGENTS.md"
+							"skill/typescript/HANDBOOK.md"
 						]
 					}
 				},
@@ -228,15 +228,15 @@
 					"phases": {
 						"implementation": [
 							"skill/css/SKILL.md",
-							"skill/css/AGENTS.md"
+							"skill/css/HANDBOOK.md"
 						],
 						"audit": [
 							"skill/css/SKILL.md",
-							"skill/css/AGENTS.md"
+							"skill/css/HANDBOOK.md"
 						],
 						"reviewer": [
 							"skill/css/SKILL.md",
-							"skill/css/AGENTS.md"
+							"skill/css/HANDBOOK.md"
 						]
 					}
 				},
@@ -304,27 +304,27 @@
 					"phases": {
 						"implementation": [
 							"skill/react/SKILL.md",
-							"skill/react/AGENTS.md",
+							"skill/react/HANDBOOK.md",
 							"skill/typescript/SKILL.md",
-							"skill/typescript/AGENTS.md",
+							"skill/typescript/HANDBOOK.md",
 							"skill/css/SKILL.md",
-							"skill/css/AGENTS.md"
+							"skill/css/HANDBOOK.md"
 						],
 						"audit": [
 							"skill/react/SKILL.md",
-							"skill/react/AGENTS.md",
+							"skill/react/HANDBOOK.md",
 							"skill/typescript/SKILL.md",
-							"skill/typescript/AGENTS.md",
+							"skill/typescript/HANDBOOK.md",
 							"skill/css/SKILL.md",
-							"skill/css/AGENTS.md"
+							"skill/css/HANDBOOK.md"
 						],
 						"reviewer": [
 							"skill/react/SKILL.md",
-							"skill/react/AGENTS.md",
+							"skill/react/HANDBOOK.md",
 							"skill/typescript/SKILL.md",
-							"skill/typescript/AGENTS.md",
+							"skill/typescript/HANDBOOK.md",
 							"skill/css/SKILL.md",
-							"skill/css/AGENTS.md"
+							"skill/css/HANDBOOK.md"
 						]
 					}
 				},
@@ -414,21 +414,21 @@
 					"phases": {
 						"implementation": [
 							"skill/react/SKILL.md",
-							"skill/react/AGENTS.md",
+							"skill/react/HANDBOOK.md",
 							"skill/typescript/SKILL.md",
-							"skill/typescript/AGENTS.md"
+							"skill/typescript/HANDBOOK.md"
 						],
 						"audit": [
 							"skill/react/SKILL.md",
-							"skill/react/AGENTS.md",
+							"skill/react/HANDBOOK.md",
 							"skill/typescript/SKILL.md",
-							"skill/typescript/AGENTS.md"
+							"skill/typescript/HANDBOOK.md"
 						],
 						"reviewer": [
 							"skill/react/SKILL.md",
-							"skill/react/AGENTS.md",
+							"skill/react/HANDBOOK.md",
 							"skill/typescript/SKILL.md",
-							"skill/typescript/AGENTS.md"
+							"skill/typescript/HANDBOOK.md"
 						]
 					}
 				},
@@ -516,33 +516,33 @@
 					"phases": {
 						"implementation": [
 							"skill/react/SKILL.md",
-							"skill/react/AGENTS.md",
+							"skill/react/HANDBOOK.md",
 							"skill/typescript/SKILL.md",
-							"skill/typescript/AGENTS.md"
+							"skill/typescript/HANDBOOK.md"
 						],
 						"drift": [
 							"skill/react/SKILL.md",
-							"skill/react/AGENTS.md",
+							"skill/react/HANDBOOK.md",
 							"skill/typescript/SKILL.md",
-							"skill/typescript/AGENTS.md",
+							"skill/typescript/HANDBOOK.md",
 							"skill/css/SKILL.md",
-							"skill/css/AGENTS.md"
+							"skill/css/HANDBOOK.md"
 						],
 						"audit": [
 							"skill/react/SKILL.md",
-							"skill/react/AGENTS.md",
+							"skill/react/HANDBOOK.md",
 							"skill/typescript/SKILL.md",
-							"skill/typescript/AGENTS.md",
+							"skill/typescript/HANDBOOK.md",
 							"skill/css/SKILL.md",
-							"skill/css/AGENTS.md"
+							"skill/css/HANDBOOK.md"
 						],
 						"reviewer": [
 							"skill/react/SKILL.md",
-							"skill/react/AGENTS.md",
+							"skill/react/HANDBOOK.md",
 							"skill/typescript/SKILL.md",
-							"skill/typescript/AGENTS.md",
+							"skill/typescript/HANDBOOK.md",
 							"skill/css/SKILL.md",
-							"skill/css/AGENTS.md"
+							"skill/css/HANDBOOK.md"
 						]
 					}
 				},
@@ -714,21 +714,21 @@
 					"phases": {
 						"implementation": [
 							"skill/react/SKILL.md",
-							"skill/react/AGENTS.md",
+							"skill/react/HANDBOOK.md",
 							"skill/typescript/SKILL.md",
-							"skill/typescript/AGENTS.md"
+							"skill/typescript/HANDBOOK.md"
 						],
 						"audit": [
 							"skill/react/SKILL.md",
-							"skill/react/AGENTS.md",
+							"skill/react/HANDBOOK.md",
 							"skill/typescript/SKILL.md",
-							"skill/typescript/AGENTS.md"
+							"skill/typescript/HANDBOOK.md"
 						],
 						"reviewer": [
 							"skill/react/SKILL.md",
-							"skill/react/AGENTS.md",
+							"skill/react/HANDBOOK.md",
 							"skill/typescript/SKILL.md",
-							"skill/typescript/AGENTS.md"
+							"skill/typescript/HANDBOOK.md"
 						]
 					}
 				},
@@ -839,27 +839,27 @@
 					"phases": {
 						"implementation": [
 							"skill/react/SKILL.md",
-							"skill/react/AGENTS.md",
+							"skill/react/HANDBOOK.md",
 							"skill/typescript/SKILL.md",
-							"skill/typescript/AGENTS.md",
+							"skill/typescript/HANDBOOK.md",
 							"skill/css/SKILL.md",
-							"skill/css/AGENTS.md"
+							"skill/css/HANDBOOK.md"
 						],
 						"audit": [
 							"skill/react/SKILL.md",
-							"skill/react/AGENTS.md",
+							"skill/react/HANDBOOK.md",
 							"skill/typescript/SKILL.md",
-							"skill/typescript/AGENTS.md",
+							"skill/typescript/HANDBOOK.md",
 							"skill/css/SKILL.md",
-							"skill/css/AGENTS.md"
+							"skill/css/HANDBOOK.md"
 						],
 						"reviewer": [
 							"skill/react/SKILL.md",
-							"skill/react/AGENTS.md",
+							"skill/react/HANDBOOK.md",
 							"skill/typescript/SKILL.md",
-							"skill/typescript/AGENTS.md",
+							"skill/typescript/HANDBOOK.md",
 							"skill/css/SKILL.md",
-							"skill/css/AGENTS.md"
+							"skill/css/HANDBOOK.md"
 						]
 					}
 				},

@@ -10,7 +10,16 @@ tags: integration, states, results
 **Impact: HIGH (keeps integration tests responsible for the wide UI state matrix and the visible result of each state)**
 
 Integration은 상태 매트릭스를 책임집니다.
-loading, empty, error, success, validation error, permission redirect, search/pagination 동기화를 우선 검토하고, submit 계열 테스트는 request body 검증만으로 끝내지 말고 저장 후 URL, 토스트, 화면 전환 같은 사용자 결과도 함께 확인합니다.
+loading,
+empty,
+error,
+success,
+validation error,
+permission redirect,
+search/pagination 동기화를 우선 검토하고,
+submit 계열 테스트는 request body 검증만으로 끝내지 말고 저장 후 URL,
+토스트,
+화면 전환 같은 사용자 결과도 함께 확인합니다.
 
 **Incorrect (request body만 보고 사용자 결과는 보지 않음):**
 

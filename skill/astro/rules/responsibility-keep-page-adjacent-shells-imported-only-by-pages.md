@@ -9,7 +9,9 @@ tags: responsibility, pages, imports, dependency-direction, document-helpers
 
 **Impact: HIGH (preserves one-way dependency flow from routed pages to pages-local document helpers instead of letting shared code depend on routing helpers)**
 
-`src/pages/_document.astro`, `_head.astro`, `_document.css` 같은 pages-local document helper는 routed page만 import합니다.
+`src/pages/_document.astro`,
+`_head.astro`,
+`_document.css` 같은 pages-local document helper는 routed page만 import합니다.
 
 의존 방향:
 
@@ -18,7 +20,8 @@ tags: responsibility, pages, imports, dependency-direction, document-helpers
 - `_document.astro`와 `_head.astro`는 각자 자기 로컬 `Props`를 직접 소유
 - `src/components/**`, shared utility, route-local `_local/` leaf는 document helper를 직접 import하지 않음
 
-이 흐름을 지켜야 top-level document composition은 route boundary에 남고 shared component tier가 routing helper에 묶이지 않습니다.
+이 흐름을 지켜야 top-level document composition은 route boundary에 남고 shared component tier가 routing helper에 묶이지
+않습니다.
 
 **Incorrect (route-local leaf가 pages-local document helper를 직접 import함):**
 
@@ -34,7 +37,8 @@ import DocumentShell from "@/pages/_document.astro";
 </DocumentShell>
 ```
 
-이 구조는 leaf component가 pages-local document helper와 메타 계약을 직접 알아야 하므로 route/document/component 경계를 깨뜨립니다.
+이 구조는 leaf component가 pages-local document helper와 메타 계약을 직접 알아야 하므로 route/document/component 경계를
+깨뜨립니다.
 
 **Correct (page만 document helper를 알고, `_local/` leaf는 body만 렌더링):**
 

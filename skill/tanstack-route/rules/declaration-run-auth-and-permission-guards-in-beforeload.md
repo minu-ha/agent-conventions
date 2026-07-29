@@ -10,7 +10,8 @@ tags: auth, guards, beforeload
 **Impact: CRITICAL (keeps access control in router boundaries instead of after-the-fact screen navigation)**
 
 인증과 권한 보장은 라우트 컴포넌트 본문이 아니라 `beforeLoad`에서 처리합니다.
-공통 가드 로직은 route 전용 support module이나 안정된 shared module로 분리해 재사용하고, 화면 컴포넌트가 렌더링된 뒤 조건부 네비게이션을 하는 패턴은 피합니다.
+공통 가드 로직은 route 전용 support module이나 안정된 shared module로 분리해 재사용하고,
+화면 컴포넌트가 렌더링된 뒤 조건부 네비게이션을 하는 패턴은 피합니다.
 
 **Incorrect (컴포넌트 렌더링 이후 조건부 네비게이션):**
 

@@ -10,7 +10,10 @@ tags: playwright, tool-choice, consistency
 **Impact: CRITICAL (keeps browser UI testing consistent by using one toolchain and one interaction model across test levels)**
 
 브라우저 UI 테스트의 기본 도구는 `Playwright` 하나로 통일합니다.
-같은 도구를 쓰더라도 Integration과 E2E 경계는 별도로 나누고, locator, assertion, waiting 방식도 Playwright의 web-first 문법으로 통일합니다.
+같은 도구를 쓰더라도 Integration과 E2E 경계는 별도로 나누고,
+locator,
+assertion,
+waiting 방식도 Playwright의 web-first 문법으로 통일합니다.
 
 **Incorrect (브라우저 UI 테스트 도구가 섞임):**
 

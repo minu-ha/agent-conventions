@@ -12,12 +12,11 @@ const currentDir = path.dirname(fileURLToPath(import.meta.url));
 const repoDir = path.resolve(currentDir, "../..");
 const packageDir = path.join(repoDir, "package");
 const repositoryAgentsPath = path.join(repoDir, "AGENTS.md");
-const consumerTemplatePath = path.join(repoDir, "AGENTS.superpowers.conventions.md");
-const frontendConventionTemplatePath = path.join(repoDir, "AGENTS.frontend-conventions.md");
+const templatePath = path.join(repoDir, "AGENTS.template.md");
 const repositoryReadmePath = path.join(repoDir, "README.md");
 const packageReadmePath = path.join(packageDir, "README.md");
-const astroAgentsPath = path.join(repoDir, "skill/astro/AGENTS.md");
-const reactAgentsPath = path.join(repoDir, "skill/react/AGENTS.md");
+const astroAgentsPath = path.join(repoDir, "skill/astro/HANDBOOK.md");
+const reactAgentsPath = path.join(repoDir, "skill/react/HANDBOOK.md");
 const npmCommand = process.platform === "win32" ? "npm.cmd" : "npm";
 const packageBinDir = path.join(packageDir, "node_modules/.bin");
 const nodeBinDir = path.dirname(process.execPath);
@@ -393,278 +392,53 @@ test("measurement revalidates contexts after routing-oracle snapshot", async () 
 	assert.ok(revalidationIndex < metadataIndex);
 });
 
-test("consumer documentation enforces the exact progressive convention policy", async () => {
-	const expectedPolicyRows = [
-		["Activated skill", "Follow its own `SKILL.md` load contract."],
-		["Non-progressive owner", "Use the local `AGENTS.md` / rule bodies required by that `SKILL.md`."],
-		["TSX", "Activate `convention-react` + `convention-typescript`."],
-		["`className` / CSS / styling surface", "Add `convention-css`."],
-		["Activated progressive skill", "Scan every activated `RULES_INDEX.md` completely; never stop at the first match."],
-		["Selected guidance", "Read the `contracts/*.md` of every applicable rule; CRITICAL contracts require their full `rules/*.md`."],
-		["`completionGate`", "Apply every marked entry in each activated progressive skill at finish."],
-		["`requiresSelected` closure", "Apply every target too, and activate its companion when the target lives in another skill."],
-		["`reviewWith` closure", "Re-judge every target against the changed surface; do not apply it automatically."],
-		["Repeat", "Rescan the activated indexes whenever a new rule, companion, or surface comes into play; stop when nothing new applies."],
-		["Full rule expansion", "Expand non-CRITICAL full rules when exact syntax or an exception call needs the examples."],
-		["Progressive full handbook", "React/TypeScript/CSS `AGENTS.md` is opt-in, never default-loaded."],
-		["Scope drift", "Restart activation and rescan every activated progressive index."],
-		["Completion", "Re-read the diff against the applied rules and report violations with file/line and a fix."],
-	];
-	const consumerTemplate = await readFile(consumerTemplatePath, "utf8");
-	const expectedActivationRows = [
-		["Pure TypeScript / type / schema / helper / API / config", "`convention-typescript`"],
-		["Pure CSS / selector / token / stylesheet", "`convention-css`"],
-		["React `.ts` hook / ownership", "`convention-react` + `convention-typescript`"],
-		["TSX", "`convention-react` + `convention-typescript`"],
-		["TSX `className` / style import / styling surface", "`convention-react` + `convention-typescript` + `convention-css`"],
-		[
-			"TSX owner 이동에 기존 `className` / style import가 byte-equivalent로 따라오기만 함",
-			"`convention-react` + `convention-typescript`; CSS 비활성",
-		],
-	];
-	// README.md 는 라우팅 문서라 규범 계약 표를 싣지 않는다. 정본은 아래 두 곳뿐이다.
-	const policyDocuments = [["AGENTS.superpowers.conventions.md", consumerTemplate]] as const;
-	const expectedPolicyNarrativeByDocument = new Map<string, readonly string[]>([
-		[
-			"AGENTS.superpowers.conventions.md",
-			[
-				"아래 표는 progressive React/TypeScript/CSS skill에만 적용합니다. non-progressive owner는 자신의 `SKILL.md`가 지정한 local `AGENTS.md`/rule body 계약을 유지합니다.",
-			],
-		],
-	]);
-	const expectedActivationNarrativeByDocument = new Map<string, readonly string[]>([
-		[
-			"AGENTS.superpowers.conventions.md",
-			[
-				"확장자만으로 결정하지 않고 실제 ownership과 changed surface를 기준으로 아래 closure를 적용합니다. 파일 이동 안의 의미가 같은 선언·본문·class·value는 diff에 삭제+추가로 보여도 별도 내용 변경으로 다시 세지 않고, N/A rule의 optional pattern을 새로 도입해 스스로 활성화하지 않습니다. 요청을 충족하는 최소 semantic patch를 유지합니다.",
-				"Pure CSS는 TypeScript를 자동 활성화하지 않고, pure TypeScript는 React/CSS를 자동 활성화하지 않습니다.",
-			],
-		],
-	]);
-	/**
-	 * @helper source mutation마다 consumer policy와 activation 계약을 재검증
-	 */
-	const assertConsumerPolicySource = (source: string, documentName: string): void => {
-		const section = extractMarkdownSection({source, heading: "Progressive Convention Consumer Contract", level: 2});
-		assert.deepEqual(
-			parseMarkdownTableRows({section, expectedHeader: ["Surface or stage", "Required contract"]}),
-			expectedPolicyRows,
-			documentName,
-		);
-		const activationSection = extractMarkdownSection({source, heading: "Progressive Activation Matrix", level: 2});
-		assert.deepEqual(
-			parseMarkdownTableRows({section: activationSection, expectedHeader: ["Changed surface", "Activate"]}),
-			expectedActivationRows,
-			documentName,
-		);
+test("copy-ready template carries the activation, loading, and finish contract", async () => {
+	const template = await readFile(templatePath, "utf8");
 
-		for (const contradiction of [
-			/Read only `Selected` `rules\/\*\.md` bodies\./,
-			/Keep the initial receipt\./,
-			/Never load any `AGENTS\.md`\./,
-			/High severity checks are enough to complete\./,
-		]) {
-			assert.doesNotMatch(source, contradiction, documentName);
-		}
+	// 복사해 쓰는 문서라 컴팩트해야 한다.
+	assert.equal(template.length < 6_000, true, "copy-ready template must stay compact");
 
-		const expectedPolicyNarrative = expectedPolicyNarrativeByDocument.get(documentName);
-		const expectedActivationNarrative = expectedActivationNarrativeByDocument.get(documentName);
-		if (expectedPolicyNarrative === undefined || expectedActivationNarrative === undefined) {
-			throw new Error(`Missing exact narrative fixture for ${documentName}.`);
-		}
-		const policyNarrative = section
-			.split("\n")
-			.map((line) => line.trim())
-			.filter((line) => line.length > 0 && !line.startsWith("|"));
-		const activationNarrative = activationSection
-			.split("\n")
-			.map((line) => line.trim())
-			.filter((line) => line.length > 0 && !line.startsWith("|"));
-		assert.deepEqual(policyNarrative, expectedPolicyNarrative, documentName);
-		assert.deepEqual(activationNarrative, expectedActivationNarrative, documentName);
-	};
-
-	for (const [documentName, source] of policyDocuments) {
-		assertConsumerPolicySource(source, documentName);
-	}
-
-	const expectedReviewBullets = [
-		"- 완료 전에 변경 diff를 적용한 규칙에 비춰 다시 훑습니다.",
-		"- 위반은 file/line과 수정안으로 보고하고, 고친 뒤 다시 확인합니다.",
-		"- 자동 검사 결과는 evidence일 뿐 컨벤션을 지켰다는 증명이 아닙니다.",
-		"- 판단이 서지 않는 항목은 넘기지 말고 무엇이 불확실한지 함께 보고합니다.",
-		"- convention 예외는 기본 금지이며, 예외가 필요하면 근거와 제거 조건을 함께 남깁니다.",
-	];
-	const expectedOverlayBullets = [
-		"- 공통 rule body를 복제하지 않습니다.",
-		"- 프로젝트 디렉터리/owner/허용 파일/금지 영역만 추가합니다.",
-		"- 실제 build/lint/test/browser 명령과 generated-file 보호를 추가합니다.",
-		"- scoped exception은 근거와 제거 조건을 함께 적습니다.",
-		"- 공통 convention과 충돌하면 약화하지 않고 명시적으로 보고합니다.",
-	];
-	const expectedContextBullets = [
-		"- 관련 코드, 테스트, 기존 구현 패턴, 인접 경계를 확인합니다.",
-		"- 변경 근거가 되는 파일과 검증 포인트를 먼저 확보합니다.",
-		"- 각 activated skill의 `SKILL.md`를 먼저 읽습니다.",
-		"- activated progressive skill마다 `RULES_INDEX.md`를 끝까지 훑고 첫 match에서 멈추지 않습니다.",
-		"- 각 activated index의 `completionGate` 규칙은 마무리 시 항상 적용합니다.",
-		"- 걸리는 규칙의 generated contract를 읽고, CRITICAL이거나 정확한 판단이 더 필요하면 full rule로 확장합니다.",
-		"- `requiresSelected` target은 함께 적용하고, 다른 skill의 규칙이면 그 companion도 활성화합니다.",
-		"- `reviewWith` target은 변경 범위에 비춰 다시 판단하되 자동으로 적용하지는 않습니다.",
-		"- 규칙·companion·새 surface가 걸리면 activated index를 다시 훑고, 더 걸리는 게 없으면 멈춥니다.",
-		"- progressive React/TypeScript/CSS full `AGENTS.md`는 전체 handbook이 명시적으로 필요한 경우에만 opt-in합니다.",
-		"- non-progressive owner가 `SKILL.md`에서 local `AGENTS.md` 전체를 요구하면 그 계약을 따릅니다.",
-	];
-	/**
-	 * @helper source mutation마다 consumer template의 audit와 overlay 계약을 재검증
-	 */
-	const assertConsumerTemplateSource = (source: string): void => {
-		assertConsumerPolicySource(source, "AGENTS.superpowers.conventions.md");
-		const contextSection = extractMarkdownSection({source, heading: "Stage 4. Context Collection", level: 3});
-		assert.deepEqual(
-			contextSection.split("\n").filter((line) => line.trim().length > 0),
-			expectedContextBullets,
-		);
-		const reviewSection = extractMarkdownSection({source, heading: "Stage 9. Convention Review", level: 3});
-		assert.deepEqual(
-			reviewSection.split("\n").filter((line) => line.trim().length > 0),
-			expectedReviewBullets,
-		);
-		const overlaySection = extractMarkdownSection({source, heading: "Project-local Overlay Contract", level: 2});
-		assert.deepEqual(
-			overlaySection.split("\n").filter((line) => line.trim().length > 0),
-			expectedOverlayBullets,
-		);
-	};
-
-	assert.doesNotThrow(() => assertConsumerTemplateSource(consumerTemplate));
-
-	const policyNextHeading = "\n## Progressive Activation Matrix";
-	for (const contradiction of [
-		"Read only `Selected` `contracts/*.md` bodies.",
-		"Keep the initial receipt.",
-		"Never load any `AGENTS.md`.",
-		"High severity checks are enough to complete.",
-		"초기 receipt를 그대로 재사용합니다.",
-	]) {
-		const mutatedSource = consumerTemplate.replace(policyNextHeading, `\n${contradiction}\n${policyNextHeading}`);
-		assert.notEqual(mutatedSource, consumerTemplate);
-		assert.throws(() => assertConsumerTemplateSource(mutatedSource));
-	}
-
-	for (const [currentText, mutatedText] of [
-		["Activate `convention-react` + `convention-typescript`.", "Activate `convention-react`."],
-		[
-			"Read the `contracts/*.md` of every applicable rule; CRITICAL contracts require their full `rules/*.md`.",
-			"Read only `Selected` `contracts/*.md` bodies.",
-		],
-		["Restart activation and rescan every activated progressive index.", "Keep the initial receipt."],
-		["React/TypeScript/CSS `AGENTS.md` is opt-in, never default-loaded.", "Never load any `AGENTS.md`."],
-		[
-			"| TSX `className` / style import / styling surface | `convention-react` + `convention-typescript` + `convention-css` |",
-			"| TSX `className` / style import / styling surface | `convention-react` + `convention-css` |",
-		],
-	] as const) {
-		const mutatedSource = consumerTemplate.replace(currentText, mutatedText);
-		assert.notEqual(mutatedSource, consumerTemplate);
-		assert.throws(() => assertConsumerTemplateSource(mutatedSource));
-	}
-
-	const reviewGateBullet = expectedReviewBullets[0];
-	if (!reviewGateBullet) {
-		throw new Error("Review policy fixture must include the diff re-read bullet.");
-	}
-	const mutatedReviewSource = consumerTemplate.replace(reviewGateBullet, "- High severity checks are enough to complete.");
-	assert.notEqual(mutatedReviewSource, consumerTemplate);
-	assert.throws(() => assertConsumerTemplateSource(mutatedReviewSource));
-
-	for (const [currentText, mutatedText] of [
-		["| Surface or stage | Required contract |", "| Keyword dump | Required contract |"],
-		["| --- | --- |", "| invalid | --- |"],
-	] as const) {
-		const mutatedSource = consumerTemplate.replace(currentText, mutatedText);
-		assert.notEqual(mutatedSource, consumerTemplate);
-		assert.throws(() => assertConsumerTemplateSource(mutatedSource));
-	}
-
-	const policySection = extractMarkdownSection({source: consumerTemplate, heading: "Progressive Convention Consumer Contract", level: 2});
-	const policyBlock = `## Progressive Convention Consumer Contract\n\n${policySection}\n\n`;
-	const sourceWithoutPolicy = consumerTemplate.replace(policyBlock, "");
-	assert.notEqual(sourceWithoutPolicy, consumerTemplate);
-	const fencedPolicySource = `${sourceWithoutPolicy}\n\n\`\`\`md\n${policyBlock}\`\`\`\n`;
-	assert.throws(() => assertConsumerTemplateSource(fencedPolicySource));
-	const nestedFencePolicySource = `${sourceWithoutPolicy}\n\n\`\`\`\`md\n\`\`\`\n${policyBlock}\`\`\`\`\n`;
-	assert.throws(() => assertConsumerTemplateSource(nestedFencePolicySource));
-
-	const policyTable = [
-		"| Surface or stage | Required contract |",
-		"| --- | --- |",
-		...expectedPolicyRows.map((row) => `| ${row.join(" | ")} |`),
-	].join("\n");
-	const indentedPolicyTableSource = consumerTemplate.replace(
-		policyTable,
-		policyTable
-			.split("\n")
-			.map((line) => `    ${line}`)
-			.join("\n"),
-	);
-	assert.notEqual(indentedPolicyTableSource, consumerTemplate);
-	assert.throws(() => assertConsumerTemplateSource(indentedPolicyTableSource));
-
-	const commentedPolicySource = `${sourceWithoutPolicy}\n\n<!--\n${policyBlock}## Hidden policy boundary\n-->\n`;
-	assert.throws(() => assertConsumerTemplateSource(commentedPolicySource));
-
-	const scatteredTableSource = consumerTemplate.replace(
-		policyNextHeading,
-		"\npolicy prose\n| stray | table row |\n\n## Progressive Activation Matrix",
-	);
-	assert.notEqual(scatteredTableSource, consumerTemplate);
-	assert.throws(() => assertConsumerTemplateSource(scatteredTableSource));
-	const multipleTableSource = consumerTemplate.replace(
-		policyNextHeading,
-		"\n| Extra | Table |\n| --- | --- |\n| duplicate | context |\n\n## Progressive Activation Matrix",
-	);
-	assert.notEqual(multipleTableSource, consumerTemplate);
-	assert.throws(() => assertConsumerTemplateSource(multipleTableSource));
-
-	assert.throws(() => extractMarkdownSection({source: "## Convention Selection extra\nbody", heading: "Convention Selection", level: 2}));
-	assert.throws(() =>
-		extractMarkdownSection({
-			source: "## Convention Selection\nfirst\n## Convention Selection\nsecond",
-			heading: "Convention Selection",
-			level: 2,
-		}),
-	);
-});
-
-test("frontend projects have a compact copy-ready convention router", async () => {
-	const [template, repositoryReadme] = await Promise.all([
-		readFile(frontendConventionTemplatePath, "utf8"),
-		readFile(repositoryReadmePath, "utf8"),
-	]);
-
+	// 활성화 규칙
 	for (const requiredText of [
 		"`convention-react` + `convention-typescript`",
 		"`convention-css`",
-		"`RULES_INDEX.md`를 끝까지 훑는다",
-		"`contracts/*.md`",
-		"`completionGate`",
-		"`requiresSelected`",
-		"`reviewWith`",
-		"full `AGENTS.md`를 기본 로드하지 않는다",
-		"file/line과 수정안으로 보고한다",
-		"프로젝트 로컬 overlay",
+		"순수 CSS 는 TypeScript 를 자동 활성화하지 않음",
 	]) {
 		assert.ok(template.includes(requiredText), requiredText);
 	}
 
-	assert.ok(template.length < 6_000, "copy-ready frontend router must stay compact");
-	assert.match(repositoryReadme, /AGENTS\.frontend-conventions\.md/);
+	// 로딩 계약
+	for (const requiredText of [
+		"`RULES_INDEX.md` 를 **끝까지** 훑음",
+		"첫 match 에서 멈추지 않음",
+		"`contracts/*.md` 를 읽음",
+		"`CRITICAL` 이면 `rules/*.md` 원문 필수",
+		"full `HANDBOOK.md` 는 기본 로드하지 않음",
+	]) {
+		assert.ok(template.includes(requiredText), requiredText);
+	}
+
+	// routing 키 계약
+	for (const requiredText of ["`requiresSelected`", "`reviewWith`", "`completionGate`", "역방향 추론 금지"]) {
+		assert.ok(template.includes(requiredText), requiredText);
+	}
+
+	// 마무리와 프로젝트 overlay 자리
+	assert.ok(template.includes("file/line 과 수정안으로 보고"));
+	assert.ok(template.includes("컨벤션 준수의 증명이 아님"));
+	assert.ok(template.includes("프로젝트 로컬 규칙"));
+
+	// 규칙 본문을 템플릿에 복제하지 않는다.
+	assert.ok(template.includes("규칙 본문은 복사하지 않음"));
+
+	// 삭제한 강제 장치가 되살아나지 않아야 한다.
+	for (const removed of ["convention-audit", "exact partition", "routing digest", "receipt"]) {
+		assert.doesNotMatch(template, new RegExp(removed, "i"), removed);
+	}
 });
 
-test("repository documentation distinguishes source, router, generated artifacts, and compatibility modes", async () => {
+test("repository documentation distinguishes source, router, and generated artifacts", async () => {
 	const repositoryAgents = await readFile(repositoryAgentsPath, "utf8");
-	const consumerTemplate = await readFile(consumerTemplatePath, "utf8");
 	const repositoryReadme = await readFile(repositoryReadmePath, "utf8");
 	const packageReadme = await readFile(packageReadmePath, "utf8");
 	const expectedArtifactRows = [
@@ -673,33 +447,40 @@ test("repository documentation distinguishes source, router, generated artifacts
 		["`SKILL.md`", "Editable activation/load router; compact for progressive skills."],
 		["`RULES_INDEX.md`", "Progressive-only generated compact index."],
 		["`contracts/*.md`", "Progressive-only generated selected-rule contract; never edit directly."],
-		["`AGENTS.md`", "Generated full handbook; progressive rules include `Applies when`; opt-in for React/TypeScript/CSS."],
+		["`HANDBOOK.md`", "Generated full handbook; progressive rules include `Applies when`."],
 		["`routing-evals.json`", "Progressive-only editable test oracle; never runtime context."],
 	];
-	// README.md 는 라우팅 문서라 artifact 계약 표를 싣지 않는다.
-	const artifactDocuments = [
+
+	// artifact 계약 표는 agent 작업 문서와 build tooling 문서에만 둔다.
+	for (const [documentName, source, heading] of [
 		["AGENTS.md", repositoryAgents, "Structured Skill Artifact Contract"],
 		["package/README.md", packageReadme, "Artifact Model"],
-	] as const;
-
-	for (const [documentName, source, heading] of artifactDocuments) {
+	] as const) {
 		const section = extractMarkdownSection({source, heading, level: 2});
 		assert.deepEqual(parseMarkdownTableRows({section, expectedHeader: ["Artifact", "Role"]}), expectedArtifactRows, documentName);
 	}
 
+	const artifactSection = extractMarkdownSection({source: repositoryAgents, heading: "Structured Skill Artifact Contract", level: 2});
+	assert.match(artifactSection, /사람이 직접 수정[^\n]*[\s\S]*`SKILL\.md`/);
+
+	// skill 목록은 생성된 핸드북을 가리킨다.
+	const skillTypes = extractMarkdownSection({source: repositoryAgents, heading: "Skill Types", level: 2});
+	assert.match(skillTypes, /\[skill\/astro\]\(\.\/skill\/astro\/HANDBOOK\.md\)/);
+	assert.doesNotMatch(skillTypes, /\/AGENTS\.md\)/);
+
+	const editingRules = extractMarkdownSection({source: repositoryAgents, heading: "Editing Rules", level: 2});
+	assert.match(editingRules, /`rules\/_sections\.md`, `rules\/_template\.md`, `rules\/\*\.md`를 수정/);
+
+	// 로딩 토폴로지 표는 build tooling 문서에만 둔다.
 	const progressiveSkillNames = new Set<string>(expectedProgressiveSkillNames);
 	const expectedTopologyRows = await Promise.all(
 		expectedSkillScriptNames.map(async (skillName) => {
-			const metadataSource = await readFile(path.join(repoDir, "skill", skillName, "metadata.json"), "utf8");
-			const metadata = JSON.parse(metadataSource) as SkillMetadata;
+			const metadata = JSON.parse(await readFile(path.join(repoDir, "skill", skillName, "metadata.json"), "utf8")) as SkillMetadata;
 			const shouldBeProgressive = progressiveSkillNames.has(skillName);
 			assert.equal(metadata.progressiveDisclosure === true, shouldBeProgressive, `${skillName} progressive mode`);
 
-			const loadingMode = shouldBeProgressive ? "progressive" : "non-progressive";
-
-			let companionContract = "none";
+			const companionGroups: string[] = [];
 			if (metadata.companions !== undefined) {
-				const companionGroups: string[] = [];
 				const companions: SkillCompanion[] = metadata.companions;
 				for (const mode of ["required", "conditional"] as const) {
 					const names = companions.filter((companion) => companion.mode === mode).map((companion) => `\`${companion.skill}\``);
@@ -707,45 +488,41 @@ test("repository documentation distinguishes source, router, generated artifacts
 						companionGroups.push(`${mode} ${names.join(", ")}`);
 					}
 				}
-				if (companionGroups.length > 0) {
-					companionContract = companionGroups.join("; ");
-				}
 			} else if (metadata.extends !== undefined) {
-				companionContract = `extends ${metadata.extends.map((skill) => `\`${skill}\``).join(", ")}`;
-			}
-			if (skillName === "css") {
-				companionContract += "; project router closes TSX to `react`";
+				companionGroups.push(`extends ${metadata.extends.map((name) => `\`${name}\``).join(", ")}`);
 			}
 
-			return [`\`${skillName}\``, loadingMode, companionContract];
+			return [
+				`\`${skillName}\``,
+				shouldBeProgressive ? "progressive" : "non-progressive",
+				companionGroups.length > 0 ? companionGroups.join("; ") : "none",
+			];
 		}),
 	);
-	// 로딩 토폴로지 표는 build tooling 문서에만 둔다. README.md 는 라우팅 문서다.
-	for (const [documentName, source] of [["package/README.md", packageReadme]] as const) {
-		const topologySection = extractMarkdownSection({source, heading: "Buildable Loading Topology", level: 2});
-		assert.deepEqual(
-			parseMarkdownTableRows({section: topologySection, expectedHeader: ["Skill", "Loading", "Companion contract"]}),
-			expectedTopologyRows,
-			documentName,
-		);
+	const topologySection = extractMarkdownSection({source: packageReadme, heading: "Buildable Loading Topology", level: 2});
+	assert.deepEqual(
+		parseMarkdownTableRows({section: topologySection, expectedHeader: ["Skill", "Loading", "Companion contract"]}),
+		expectedTopologyRows,
+		"package/README.md",
+	);
+
+	// README 는 라우팅 문서다. 규범 계약 표를 싣지 않는다.
+	assert.match(repositoryReadme, /AGENTS\.template\.md/);
+	assert.match(repositoryReadme, /ONBOARDING\.md/);
+	assert.match(repositoryReadme, /CONTRIBUTING\.md/);
+	assert.doesNotMatch(repositoryReadme, /^## Structured Skill Artifact Contract$/m);
+
+	// 사람용 문서는 같은 골격을 쓴다: H1 다음 인용 요약, 그리고 목차.
+	for (const [documentName, source] of [
+		["README.md", repositoryReadme],
+		["ONBOARDING.md", await readFile(path.join(repoDir, "ONBOARDING.md"), "utf8")],
+		["CONTRIBUTING.md", await readFile(path.join(repoDir, "CONTRIBUTING.md"), "utf8")],
+		["AGENTS.md", repositoryAgents],
+		["AGENTS.template.md", await readFile(templatePath, "utf8")],
+	] as const) {
+		assert.match(source, /^# .+\n\n> /, `${documentName} must open with a one-line summary quote`);
+		assert.match(source, /^## 목차$/m, `${documentName} must have a table of contents`);
 	}
-
-	const skillTypes = extractMarkdownSection({source: repositoryAgents, heading: "Skill Types", level: 2});
-	assert.match(skillTypes, /\[skill\/astro\]\(\.\/skill\/astro\/AGENTS\.md\)/);
-	const editingRules = extractMarkdownSection({source: repositoryAgents, heading: "Editing Rules", level: 2});
-	assert.match(editingRules, /`rules\/_sections\.md`, `rules\/_template\.md`, `rules\/\*\.md`를 수정/);
-	assert.match(editingRules, /activation[^\n]*load[^\n]*`SKILL\.md`[^\n]*수정/i);
-	assert.match(editingRules, /project[^\n]*local overlay/i);
-	const commands = extractMarkdownSection({source: repositoryAgents, heading: "Commands", level: 2});
-	assert.match(commands, /validate -- --all[\s\S]*build -- --all[\s\S]*check:generated:all/);
-
-	const conventionSelection = extractMarkdownSection({source: consumerTemplate, heading: "Convention Selection", level: 2});
-	assert.doesNotMatch(conventionSelection, /\bft_[A-Za-z0-9_*]*\b/);
-	// artifact 정본/생성물 구분은 agent 작업 규칙 문서가 정본이다.
-	const artifactSection = extractMarkdownSection({source: repositoryAgents, heading: "Structured Skill Artifact Contract", level: 2});
-	assert.match(artifactSection, /사람이 직접 수정[^\n]*[\s\S]*`SKILL\.md`/);
-	const consumerUsage = extractMarkdownSection({source: repositoryReadme, heading: "포함된 Skill", level: 2});
-	assert.match(consumerUsage, /`convention-astro` \+ `convention-typescript` \+ `convention-css`/);
 });
 
 test("build and generated-check modules import without running their CLI main", () => {
@@ -770,7 +547,7 @@ test("build CLI executes once for direct and symlinked entry paths", async (cont
 	});
 
 	assert.equal(directResult.status, 0, directResult.stderr);
-	assert.equal((directResult.stdout.match(/Wrote AGENTS\.md/g) ?? []).length, 1, directResult.stdout);
+	assert.equal((directResult.stdout.match(/Wrote HANDBOOK\.md/g) ?? []).length, 1, directResult.stdout);
 
 	const linkedBuildPath = path.join(temporaryDir, "build-link.ts");
 
@@ -794,7 +571,7 @@ test("build CLI executes once for direct and symlinked entry paths", async (cont
 		});
 
 		assert.equal(linkedResult.status, 0, linkedResult.stderr);
-		assert.equal((linkedResult.stdout.match(/Wrote AGENTS\.md/g) ?? []).length, 1, linkedResult.stdout);
+		assert.equal((linkedResult.stdout.match(/Wrote HANDBOOK\.md/g) ?? []).length, 1, linkedResult.stdout);
 	} finally {
 		await rm(temporaryDir, {recursive: true, force: true});
 	}
@@ -874,7 +651,7 @@ test("validate:astro alias succeeds for the astro skill", () => {
 	assert.match(result.stdout, /Validated astro:/);
 });
 
-test("build script regenerates AGENTS.md for the react skill", async () => {
+test("build script regenerates HANDBOOK.md for the react skill", async () => {
 	const result = runPackageCommand(["--prefix", packageDir, "run", "build", "--", "--skill=react"]);
 
 	assert.equal(result.status, 0, result.stderr);
@@ -886,14 +663,14 @@ test("build script regenerates AGENTS.md for the react skill", async () => {
 	assert.match(agentsSource, /^## 함께 따르는 규칙$/m);
 	assert.match(agentsSource, /metadata\.json\.companions/);
 	assert.doesNotMatch(agentsSource, /metadata\.json\.extends/);
-	assert.match(agentsSource, /^- \[TypeScript Convention\]\(\.\.\/typescript\/AGENTS\.md\) — 항상 함께 적용합니다\.$/m);
+	assert.match(agentsSource, /^- \[TypeScript Convention\]\(\.\.\/typescript\/HANDBOOK\.md\) — 항상 함께 적용합니다\.$/m);
 	assert.match(
 		agentsSource,
-		/^- \[CSS Convention\]\(\.\.\/css\/AGENTS\.md\) — 다음 조건에서 함께 적용합니다\. class contract, stylesheet 또는 styling surface를 변경한다\.$/m,
+		/^- \[CSS Convention\]\(\.\.\/css\/HANDBOOK\.md\) — 다음 조건에서 함께 적용합니다\. class contract, stylesheet 또는 styling surface를 변경한다\.$/m,
 	);
 	// 핸드북의 companion 목록은 사람이 읽는 경로라 상대 skill 의 handbook 을 가리킨다.
-	assert.match(agentsSource, /\.\.\/typescript\/AGENTS\.md/);
-	assert.match(agentsSource, /\.\.\/css\/AGENTS\.md/);
+	assert.match(agentsSource, /\.\.\/typescript\/HANDBOOK\.md/);
+	assert.match(agentsSource, /\.\.\/css\/HANDBOOK\.md/);
 	assert.match(agentsSource, /^## 1\. Ownership and Boundaries$/m);
 	assert.doesNotMatch(agentsSource, /^## 1\. TypeScript Convention Base - Naming and Module Boundaries$/m);
 	assert.doesNotMatch(agentsSource, /TypeScript Convention Base - Naming and Module Boundaries/);
@@ -901,7 +678,7 @@ test("build script regenerates AGENTS.md for the react skill", async () => {
 	assert.doesNotMatch(agentsSource, /^ {3}- \d+\.\d+ \[Avoid Premature Abstraction in Screen Code\]/m);
 });
 
-test("build:react alias regenerates AGENTS.md for the react skill", async () => {
+test("build:react alias regenerates HANDBOOK.md for the react skill", async () => {
 	const result = runPackageCommand(["--prefix", packageDir, "run", "build:react"]);
 
 	assert.equal(result.status, 0, result.stderr);
@@ -911,7 +688,7 @@ test("build:react alias regenerates AGENTS.md for the react skill", async () => 
 	assert.match(agentsSource, /^# React 컨벤션$/m);
 });
 
-test("build:astro alias regenerates AGENTS.md for the astro skill", async () => {
+test("build:astro alias regenerates HANDBOOK.md for the astro skill", async () => {
 	const result = runPackageCommand(["--prefix", packageDir, "run", "build:astro"]);
 
 	assert.equal(result.status, 0, result.stderr);
@@ -922,7 +699,7 @@ test("build:astro alias regenerates AGENTS.md for the astro skill", async () => 
 	assert.match(agentsSource, /^## 함께 따르는 규칙$/m);
 	assert.match(agentsSource, /`convention-typescript`/);
 	assert.match(agentsSource, /metadata\.json\.extends/);
-	assert.match(agentsSource, /\.\.\/typescript\/AGENTS\.md/);
+	assert.match(agentsSource, /\.\.\/typescript\/HANDBOOK\.md/);
 	assert.doesNotMatch(agentsSource, /\.\.\/typescript\/(?:SKILL|RULES_INDEX)\.md/);
 	assert.match(agentsSource, /^ {4}- \d+\.\d+ \[Align Route Page Assets and `rt_\*` Surface Classes with Route Role\]/m);
 	assert.match(agentsSource, /^### \d+\.\d+ Compose Page-level Documents Through `_document\.astro` and `_head\.astro`$/m);
@@ -953,7 +730,7 @@ test("build:all alias succeeds for every buildable skill", () => {
 	const result = runPackageCommand(["--prefix", packageDir, "run", "build:all"]);
 
 	assert.equal(result.status, 0, result.stderr);
-	assert.match(result.stdout, /Wrote AGENTS\.md/);
+	assert.match(result.stdout, /Wrote HANDBOOK\.md/);
 });
 
 test("dev:react alias validates and builds the react skill in sequence", () => {
@@ -961,7 +738,7 @@ test("dev:react alias validates and builds the react skill in sequence", () => {
 
 	assert.equal(result.status, 0, result.stderr);
 	assert.match(result.stdout, /Validated react:/);
-	assert.match(result.stdout, /Wrote AGENTS\.md/);
+	assert.match(result.stdout, /Wrote HANDBOOK\.md/);
 });
 
 test("package exposes a typecheck entry point for the TypeScript build", () => {

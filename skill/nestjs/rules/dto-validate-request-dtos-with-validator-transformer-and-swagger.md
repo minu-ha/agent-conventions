@@ -9,7 +9,8 @@ tags: dto, validation, swagger
 
 **Impact: HIGH (keeps request contracts explicit by colocating validation, transformation, and API documentation on the DTO)**
 
-요청 DTO는 `class-validator` 데코레이터로 유효성 검증을 선언하고, 필요할 때 `class-transformer`로 타입 변환을 명시합니다.
+요청 DTO는 `class-validator` 데코레이터로 유효성 검증을 선언하고,
+필요할 때 `class-transformer`로 타입 변환을 명시합니다.
 각 필드는 `@ApiProperty()`로 Swagger 문서를 유지하고, DTO 파일명은 `<action>-<domain>.dto.ts` 규칙을 따릅니다.
 
 **Incorrect (요청 구조가 검증과 문서화 없이 흩어짐):**

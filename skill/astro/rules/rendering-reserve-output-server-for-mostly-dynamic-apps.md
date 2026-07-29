@@ -10,7 +10,9 @@ tags: rendering, output, server
 **Impact: HIGH (makes full-project SSR a deliberate app-level choice instead of a convenience toggle)**
 
 `output: "server"`는 새로운 기능을 추가하는 옵션이 아니라 전체 page의 기본 rendering behavior를 뒤집는 선택입니다.
-대시보드, 로그인 후 앱처럼 대부분의 page가 request-time 데이터와 auth에 묶인 경우에만 기본값으로 채택하고, 그 안의 정적 page만 `prerender = true`로 opt in 합니다.
+대시보드,
+로그인 후 앱처럼 대부분의 page가 request-time 데이터와 auth에 묶인 경우에만 기본값으로 채택하고,
+그 안의 정적 page만 `prerender = true`로 opt in 합니다.
 
 **Incorrect (몇 개의 auth page만 동적인데 전체 project를 server mode로 돌림):**
 

@@ -67,7 +67,7 @@ export interface SkillPaths {
 	 */
 	sectionsPath: string;
 	/**
-	 * @field compiled AGENTS.md 출력 파일 경로
+	 * @field compiled HANDBOOK.md 출력 파일 경로
 	 */
 	outputPath: string;
 	/**

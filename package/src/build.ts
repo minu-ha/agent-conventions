@@ -95,7 +95,7 @@ interface PreparedSkillBuild {
 	 */
 	rootDocument: LoadedSkillDocument;
 	/**
-	 * @field 현재 source에서 렌더링한 expected AGENTS.md
+	 * @field 현재 source에서 렌더링한 expected HANDBOOK.md
 	 */
 	localMarkdown: string;
 }
@@ -193,7 +193,7 @@ const collectCompanionSkills = (rootDocument: LoadedSkillDocument, documents: Lo
 			skillName,
 			conventionName: getConventionSkillName(skillName),
 			title: getConventionTitle(skillName, document.metadata.title),
-			agentsGuidePath: `../${skillName}/AGENTS.md`,
+			agentsGuidePath: `../${skillName}/HANDBOOK.md`,
 			skillEntrypointPath: `../${skillName}/SKILL.md`,
 			rulesIndexPath: `../${skillName}/RULES_INDEX.md`,
 			...(declaration === undefined ? {} : {declaration}),
@@ -405,14 +405,14 @@ const prepareSkillBuild = async (skillPaths: SkillPaths): Promise<PreparedSkillB
 };
 
 /**
- * @description 단일 skill의 현재 source 기준 expected `AGENTS.md`를 write 없이 렌더링
+ * @description 단일 skill의 현재 source 기준 expected `HANDBOOK.md`를 write 없이 렌더링
  */
 export const generateCompiledSkillMarkdown = async (skillPaths: SkillPaths): Promise<string> => {
 	return (await prepareSkillBuild(skillPaths)).localMarkdown;
 };
 
 /**
- * @description 단일 skill의 compiled `AGENTS.md` 생성
+ * @description 단일 skill의 compiled `HANDBOOK.md` 생성
  */
 export const buildSkill = async (skillPaths: SkillPaths): Promise<void> => {
 	const {rootDocument, localMarkdown} = await prepareSkillBuild(skillPaths);

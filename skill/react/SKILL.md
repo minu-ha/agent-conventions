@@ -16,7 +16,7 @@ metadata:
 
 ## 2. 인덱스 훑기
 
-활성화한 skill마다 그 `SKILL.md`의 load 계약을 따른다. progressive skill이면 `RULES_INDEX.md`를 끝까지 훑고, non-progressive skill이면 그 `SKILL.md`가 지시하는 대로 `AGENTS.md`를 읽는다. 각 규칙의 `appliesWhen`을 변경 범위와 대조하고 첫 match에서 멈추지 않는다. 애매하면 적용되는 쪽으로 본다.
+활성화한 skill마다 그 `SKILL.md`의 load 계약을 따른다. progressive skill이면 `RULES_INDEX.md`를 끝까지 훑고, non-progressive skill이면 그 `SKILL.md`가 지시하는 대로 `HANDBOOK.md`를 읽는다. 각 규칙의 `appliesWhen`을 변경 범위와 대조하고 첫 match에서 멈추지 않는다. 애매하면 적용되는 쪽으로 본다.
 
 ## 3. 규칙 읽고 구현
 
@@ -36,4 +36,4 @@ metadata:
 
 변경 diff를 적용한 규칙에 비춰 다시 훑고, 위반이 있으면 file/line과 수정안으로 보고한다. lint·typecheck·build·테스트 통과는 컨벤션을 지켰다는 근거가 아니다.
 
-[AGENTS.md](./AGENTS.md)는 전체 handbook이다. 전체 검토를 명시적으로 요청받거나 index·contract가 손상됐을 때만 읽는다.
+[HANDBOOK.md](./HANDBOOK.md)는 전체 handbook이다. 전체 검토를 명시적으로 요청받거나 index·contract가 손상됐을 때만 읽는다.

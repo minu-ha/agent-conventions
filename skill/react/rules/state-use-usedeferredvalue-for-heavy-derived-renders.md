@@ -16,7 +16,8 @@ tags: state, usedeferredvalue, performance, derived
 이 규칙은 실제로 렌더 지연이 느껴질 때 적용합니다.
 작은 배열이나 단순 문자열 가공까지 습관적으로 defer하지는 않습니다.
 또한 이 경우의 `useMemo`는 `state-compiler-first-memoization` 규칙의 예외적인 허용 사례입니다.
-deferred value를 기준으로 expensive 계산을 다시 돌리는 비용이 실제로 크고, render마다 같은 작업을 반복하지 않으려는 목적이 분명할 때만 함께 사용합니다.
+deferred value를 기준으로 expensive 계산을 다시 돌리는 비용이 실제로 크고,
+render마다 같은 작업을 반복하지 않으려는 목적이 분명할 때만 함께 사용합니다.
 
 **Incorrect (입력과 무거운 파생 렌더를 같은 값에 묶음):**
 

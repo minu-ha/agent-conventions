@@ -9,7 +9,12 @@ tags: waiting, integration, stability
 
 **Impact: CRITICAL (keeps integration tests deterministic by waiting for observable state instead of arbitrary sleeps)**
 
-Integration에서는 Suspense, bootstrap query, lazy data 주입이 있는 화면일수록 관련 응답이나 안정적인 화면 marker가 생긴 뒤 assertion을 시작합니다. `waitForTimeout()` 대신 URL, response, locator 상태 같은 관찰 가능한 상태를 기다립니다.
+Integration에서는 Suspense,
+bootstrap query,
+lazy data 주입이 있는 화면일수록 관련 응답이나 안정적인 화면 marker가 생긴 뒤 assertion을 시작합니다. `waitForTimeout()`
+대신 URL,
+response,
+locator 상태 같은 관찰 가능한 상태를 기다립니다.
 
 **Incorrect (시간 기반 안정화):**
 
