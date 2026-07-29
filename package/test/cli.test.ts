@@ -6,6 +6,8 @@ import {tmpdir} from "node:os";
 import path from "node:path";
 import test from "node:test";
 import {fileURLToPath, pathToFileURL} from "node:url";
+
+import {assertMentions} from "./helpers/router-contract.js";
 import type {SkillCompanion, SkillMetadata} from "../src/types.js";
 
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
@@ -454,7 +456,7 @@ test("repository documentation distinguishes source, router, and generated artif
 	}
 
 	const artifactSection = extractMarkdownSection({source: repositoryAgents, heading: "3. Structured Skill Artifact Contract", level: 2});
-	assert.match(artifactSection, /사람이 직접 수정[^\n]*[\s\S]*`SKILL\.md`/);
+	assertMentions(artifactSection, ["사람이 직접 수정", "`SKILL.md`"], "artifactSection");
 
 	const skillTypes = extractMarkdownSection({source: repositoryAgents, heading: "2. Skill Types", level: 2});
 	assert.match(skillTypes, /\[skill\/astro\]\(\.\/skill\/astro\/HANDBOOK\.md\)/);

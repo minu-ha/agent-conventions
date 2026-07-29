@@ -6,6 +6,8 @@ import path from "node:path";
 import test from "node:test";
 import {fileURLToPath, pathToFileURL} from "node:url";
 
+import {assertMentions} from "./helpers/router-contract.js";
+
 import {buildSkill} from "../src/build.js";
 import {checkGeneratedHandbook} from "../src/check-handbooks.js";
 import {checkGeneratedSkill} from "../src/check-generated.js";
@@ -342,7 +344,7 @@ test("generated rule contract preserves the normative prefix and defers examples
 	assert.match(contract, /Keep the observable owner contract\./);
 	assert.match(contract, /Keep the observable owner contract\.\\\nContinue on the next rendered line\./);
 	assert.match(contract, /Preserve the source of truth\./);
-	assert.match(contract, /Required on completion:[^\n]+마무리 시 항상 적용/);
+	assertMentions(contract, ["Required on completion:", "마무리 시 항상 적용"], "contract");
 	assert.match(contract, /\[full rule\]\(\.\.\/rules\/state-observe\.md\)/);
 	assert.doesNotMatch(contract, /Incorrect|Correct|hiddenBad|hiddenGood|```/);
 	assert.doesNotMatch(contract, /[ \t]+$/m);
@@ -394,7 +396,11 @@ test("critical contracts require the full source while non-critical contracts re
 		"## First Composition\n\n**Impact: CRITICAL (First impact.)**\n\nKeep the critical boundary.\n\n**Incorrect**\n\n```ts\nconst bad = true;\n```\n\n**Correct**\n\n```ts\nconst good = true;\n```";
 	const criticalContract = generateRuleContractMarkdown(criticalRule);
 	assert.match(criticalContract, /CRITICAL/);
-	assert.match(criticalContract, /Requires selected:[^\n]+state-observe[^\n]+typescript\/types-reuse-contracts[^\n]+함께 적용/);
+	assertMentions(
+		criticalContract,
+		["Requires selected:", "state-observe", "typescript/types-reuse-contracts", "함께 적용"],
+		"criticalContract",
+	);
 	assert.match(criticalContract, /must read.*\[full rule\]\(\.\.\/rules\/composition-first\.md\)/i);
 	assert.doesNotMatch(criticalContract, /hidden body/);
 

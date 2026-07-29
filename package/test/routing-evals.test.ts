@@ -5,6 +5,17 @@ import path from "node:path";
 import test from "node:test";
 import {fileURLToPath} from "node:url";
 
+import {
+	assertMentions,
+	assertRemovedApparatusStaysGone,
+	assertRouterProtocol,
+	assertRouterShape,
+	blockContaining,
+	extractSection,
+	isNegated,
+	splitFrontmatter,
+} from "./helpers/router-contract.js";
+
 import {getSkillPaths} from "../src/config.js";
 import {readSkillDocument} from "../src/parser.js";
 import {readRoutingEvalManifest, validateRoutingEvalManifest, validateRoutingEvalManifests} from "../src/routing-evals.js";
@@ -1793,18 +1804,21 @@ test("induced naming closure and activated finish gates stay mandatory across ev
 		"utf8",
 	);
 
-	assert.match(readAppliesWhen(derivedRule), /[\s\S]+alias[\s\S]+추가·이동·제거/);
+	assertMentions(readAppliesWhen(derivedRule), ["alias", "추가·이동·제거"], "derivedRule");
 	assert.match(originRule, /^reviewWith:[^\n]+screen-keep-derived-values-close/m);
 	assert.match(bindingRule, /^requiresSelected:[^\n]+typescript\/naming-use-consistent-file-and-symbol-naming/m);
 	assert.match(typescriptFinishRule, /^requiredOnCompletion: true$/m);
 	assert.match(cssFinishRule, /^requiredOnCompletion: true$/m);
 
-	const typescriptSkill = await readFile(path.join(realSkillRootDir, "typescript", "SKILL.md"), "utf8");
-	const cssSkill = await readFile(path.join(realSkillRootDir, "css", "SKILL.md"), "utf8");
-	assert.match(typescriptSkill, /`completionGate` 규칙은 마무리 시 항상 적용한다/);
-	assert.match(cssSkill, /`completionGate` 규칙은 마무리 시 항상 적용한다/);
-	assert.match(typescriptSkill, /`requiresSelected` target은 함께 적용한다[^\n]+companion도 활성화한다/);
-	assert.match(cssSkill, /`requiresSelected` target은 함께 적용한다[^\n]+companion도 활성화한다/);
+	// companion router 도 두 gate 를 가르쳐야 한다. 문구가 아니라 언급과 극성으로 본다
+	for (const skillName of ["typescript", "css"] as const) {
+		const {body} = splitFrontmatter(await readFile(path.join(realSkillRootDir, skillName, "SKILL.md"), "utf8"));
+		const apply = extractSection(body, 3);
+
+		assertMentions(apply, ["requiresSelected", "completionGate", "companion"], `${skillName} 3절`);
+		assert.equal(isNegated(blockContaining(apply, "requiresSelected")), false, `${skillName}: requiresSelected 가 부정문이다`);
+		assert.equal(isNegated(blockContaining(apply, "completionGate")), false, `${skillName}: completionGate 가 부정문이다`);
+	}
 
 	const reactManifest = await readRoutingEvalManifest(getSkillPaths("react", realSkillRootDir));
 	const sharedAuthority = reactManifest.scenarios.find(({id}) => id === "RTE11-shared-authority");
@@ -1815,51 +1829,14 @@ test("induced naming closure and activated finish gates stay mandatory across ev
 
 test("TypeScript SKILL.md is a compact router without receipt or audit machinery", async () => {
 	const source = await readFile(path.join(realSkillRootDir, "typescript", "SKILL.md"), "utf8");
-	const frontmatterSource = source.match(/^---\n([\s\S]*?)\n---/)?.[1] ?? "";
-	const body = source.replace(/^---\n[\s\S]*?\n---\n?/, "");
-	const wordCount = body.trim().split(/\s+/).filter(Boolean).length;
+	const {body} = splitFrontmatter(source);
 
-	assert.match(frontmatterSource, /^name: convention-typescript$/m);
-	assert.match(frontmatterSource, /^description: Use when /m);
-	assert.doesNotMatch(frontmatterSource, /scan|read|load/i);
-	assert.equal(wordCount < 400, true, `router has ${wordCount} words`);
-	assert.equal(Buffer.byteLength(source, "utf8") < 5_000, true);
+	assertRouterShape(source, "convention-typescript");
+	assertRouterProtocol(body);
+	assertRemovedApparatusStaysGone(body);
 
-	// 1. 변경 범위 판정
-	assert.match(body, /## 1\. 변경 범위 판정/);
-	assert.match(body, /최소 변경|범위를 넓히지 않는다/);
-
-	// 2. 인덱스 전체 훑기
-	assert.match(body, /RULES_INDEX\.md/);
-	assert.match(body, /끝까지 훑/);
-	assert.match(body, /첫 match에서 멈추지 않는다/);
-
-	// 3. 규칙 읽고 구현
-	assert.match(body, /contracts\/<id>\.md/);
-	assert.match(body, /`CRITICAL`이면 `rules\/<id>\.md` 원문도 반드시 읽는다/);
-	assert.match(body, /`requiresSelected` target은 함께 적용한다/);
-	assert.match(body, /`reviewWith` target은[^\n]+자동으로 적용하지는 않는다/);
-	assert.match(body, /`completionGate` 규칙은 마무리 시 항상 적용한다/);
-	assert.match(body, /다시 훑는다[^\n]*\n?[^\n]*더 걸리는 게 없으면 멈춘다|더 걸리는 게 없으면 멈춘다/);
-
-	// 4~5. 범위 변경과 마무리
-	assert.match(body, /## 4\. 범위 변경/);
-	assert.match(body, /## 5\. 마무리/);
-	assert.match(body, /file\/line과 수정안으로 보고한다/);
-	assert.match(body, /통과는 컨벤션을 지켰다는 근거가 아니다/);
-
-	// opt-in full handbook
-	assert.match(body, /\[HANDBOOK\.md\]\(\.\/HANDBOOK\.md\)는 전체 handbook이다/);
-
-	// 제거한 강제 장치가 되살아나지 않아야 한다
-	assert.doesNotMatch(body, /digest|sha256/i);
-	assert.doesNotMatch(body, /exact partition|ordinal/i);
-	assert.doesNotMatch(body, /receipt/i);
-	assert.doesNotMatch(body, /convention-audit/);
-	assert.doesNotMatch(body, /Excluded groups|exclusion group/i);
-
-	// companion 경계
-	assert.match(body, /React\/CSS 경계가 걸리면 해당 companion도 활성화한다/);
+	// companion 경계. typescript 는 companion 으로 들어오므로 React/CSS 경계만 되짚는다
+	assertMentions(extractSection(body, 1), ["React/CSS", "companion"], "typescript 1절");
 });
 
 test("React progressive metadata and all 42 rule routes match Appendix B exactly", async () => {
@@ -1896,7 +1873,7 @@ test("React progressive metadata and all 42 rule routes match Appendix B exactly
 		}
 	}
 	const ownershipNamingRule = await readFile(path.join(skillPaths.rulesDir, "ownership-use-consistent-file-and-symbol-naming.md"), "utf8");
-	assert.match(readAppliesWhen(ownershipNamingRule), /[\s\S]+바꾸거나,[\s\S]+sibling `\.ts` support 파일/);
+	assertMentions(readAppliesWhen(ownershipNamingRule), ["바꾸거나,", "sibling `.ts` support 파일"], "ownershipNamingRule");
 	assert.match(
 		ownershipNamingRule,
 		/local query·mutation binding[^\n]+state-name-query-and-mutation-bindings-consistently|state-name-query-and-mutation-bindings-consistently[^\n]+local query·mutation binding/i,
@@ -1908,7 +1885,7 @@ test("React progressive metadata and all 42 rule routes match Appendix B exactly
 	);
 	assert.match(screenExtractionRule, /Incorrect[\s\S]*normalizeEntryValues[\s\S]*mergeEntryPayload/i);
 	assert.match(screenExtractionRule, /Correct[\s\S]*normalizeTreeNodes[\s\S]*handleSave/i);
-	assert.match(screenExtractionRule, /Correct[\s\S]*한 exported 함수[\s\S]*buildEntryPayload/i);
+	assertMentions(screenExtractionRule, [/Correct/i, /한 exported 함수/i, /buildEntryPayload/i], "screenExtractionRule");
 
 	const template = await readFile(path.join(skillPaths.rulesDir, "_template.md"), "utf8");
 	assert.match(readAppliesWhen(template), / /);
@@ -2086,53 +2063,21 @@ test("React generated index and handbook preserve canonical local rules and comp
 
 test("React SKILL.md is a compact router with required TypeScript and conditional CSS", async () => {
 	const source = await readFile(path.join(realSkillRootDir, "react", "SKILL.md"), "utf8");
-	const frontmatterSource = source.match(/^---\n([\s\S]*?)\n---/)?.[1] ?? "";
-	const body = source.replace(/^---\n[\s\S]*?\n---\n?/, "");
-	const wordCount = body.trim().split(/\s+/).filter(Boolean).length;
+	const {body} = splitFrontmatter(source);
 
-	assert.match(frontmatterSource, /^name: convention-react$/m);
-	assert.match(frontmatterSource, /^description: Use when /m);
-	assert.doesNotMatch(frontmatterSource, /scan|read|load/i);
-	assert.equal(wordCount < 400, true, `router has ${wordCount} words`);
-	assert.equal(Buffer.byteLength(source, "utf8") < 5_000, true);
+	assertRouterShape(source, "convention-react");
+	assertRouterProtocol(body);
+	assertRemovedApparatusStaysGone(body);
 
-	// 1. 변경 범위 판정
-	assert.match(body, /## 1\. 변경 범위 판정/);
-	assert.match(body, /최소 변경|범위를 넓히지 않는다/);
+	// companion 경계. typescript 는 무조건, css 는 styling surface 가 바뀔 때만 켠다
+	const reactScope = extractSection(body, 1);
 
-	// 2. 인덱스 전체 훑기
-	assert.match(body, /RULES_INDEX\.md/);
-	assert.match(body, /끝까지 훑/);
-	assert.match(body, /첫 match에서 멈추지 않는다/);
+	assertMentions(reactScope, ["`convention-typescript`", "`convention-css`", "class contract"], "react 1절");
+	assert.match(reactScope, /(때|경우)만/, "react 1절: `convention-css` 조건부 경계가 없다");
+	assert.equal(isNegated(blockContaining(reactScope, "`convention-css`")), true, "react 1절: css 미적용 조건이 없다");
 
-	// 3. 규칙 읽고 구현
-	assert.match(body, /contracts\/<id>\.md/);
-	assert.match(body, /`CRITICAL`이면 `rules\/<id>\.md` 원문도 반드시 읽는다/);
-	assert.match(body, /`requiresSelected` target은 함께 적용한다/);
-	assert.match(body, /`reviewWith` target은[^\n]+자동으로 적용하지는 않는다/);
-	assert.match(body, /`completionGate` 규칙은 마무리 시 항상 적용한다/);
-	assert.match(body, /다시 훑는다[^\n]*\n?[^\n]*더 걸리는 게 없으면 멈춘다|더 걸리는 게 없으면 멈춘다/);
-
-	// 4~5. 범위 변경과 마무리
-	assert.match(body, /## 4\. 범위 변경/);
-	assert.match(body, /## 5\. 마무리/);
-	assert.match(body, /file\/line과 수정안으로 보고한다/);
-	assert.match(body, /통과는 컨벤션을 지켰다는 근거가 아니다/);
-
-	// opt-in full handbook
-	assert.match(body, /\[HANDBOOK\.md\]\(\.\/HANDBOOK\.md\)는 전체 handbook이다/);
-
-	// 제거한 강제 장치가 되살아나지 않아야 한다
-	assert.doesNotMatch(body, /digest|sha256/i);
-	assert.doesNotMatch(body, /exact partition|ordinal/i);
-	assert.doesNotMatch(body, /receipt/i);
-	assert.doesNotMatch(body, /convention-audit/);
-	assert.doesNotMatch(body, /Excluded groups|exclusion group/i);
-
-	// companion 경계
-	assert.match(body, /`convention-typescript`는 항상 함께 활성화한다/);
-	assert.match(body, /class contract·stylesheet·styling surface가 바뀔 때만 `convention-css`를 추가하고, 아니면 켜지 않는다/);
-	assert.match(body, /non-progressive skill이면[^\n]+`HANDBOOK\.md`를 읽는다/);
+	// 진입 skill 이므로 non-progressive companion 의 로딩 경로도 안내한다
+	assertMentions(extractSection(body, 2), ["non-progressive", "HANDBOOK.md"], "react 2절");
 });
 
 test("CSS progressive metadata and rule routing match Appendix C exactly", async () => {
@@ -2164,14 +2109,22 @@ test("CSS progressive metadata and rule routing match Appendix C exactly", async
 		path.join(skillPaths.rulesDir, "composition-style-ui-components-through-owned-wrappers.md"),
 		"utf8",
 	);
-	assert.match(wrapperStylingRule, /실제 `Ui\*` React wrapper[\s\S]+CSS-only[\s\S]+selector-target-third-party-dom-from-owned-roots/i);
+	assertMentions(
+		wrapperStylingRule,
+		[/실제 `Ui\*` React wrapper/i, /CSS-only/i, /selector-target-third-party-dom-from-owned-roots/i],
+		"wrapperStylingRule",
+	);
 	const singlePurposeRule = await readFile(path.join(skillPaths.rulesDir, "composition-keep-classes-single-purpose.md"), "utf8");
-	assert.match(readAppliesWhen(singlePurposeRule), /[\s\S]+기존 결합 책임[\s\S]+처음부터 새 single-purpose pair/);
+	assertMentions(readAppliesWhen(singlePurposeRule), ["기존 결합 책임", "처음부터 새 single-purpose pair"], "singlePurposeRule");
 	const layoutIntentRule = await readFile(path.join(skillPaths.rulesDir, "values-keep-layout-intent-explicit.md"), "utf8");
-	assert.match(readAppliesWhen(layoutIntentRule), /base\/modifier[\s\S]+`display`·spacing[\s\S]+값 그대로/);
+	assertMentions(readAppliesWhen(layoutIntentRule), ["base/modifier", "`display`·spacing", "값 그대로"], "layoutIntentRule");
 	const fallbackRule = await readFile(path.join(skillPaths.rulesDir, "values-always-provide-css-variable-fallbacks.md"), "utf8");
-	assert.match(readAppliesWhen(fallbackRule), /[\s\S]+`var\(--\*\)`[\s\S]+같은 stylesheet[\s\S]+byte-equivalent/);
-	assert.match(flattenWhitespace(fallbackRule), /실제 diff에 새 CSS variable 사용[^\n]+요청 여부와 무관하게[^\n]+다시 선택/i);
+	assertMentions(readAppliesWhen(fallbackRule), ["`var(--*)`", "같은 stylesheet", "byte-equivalent"], "fallbackRule");
+	assertMentions(
+		flattenWhitespace(fallbackRule),
+		[/실제 diff에 새 CSS variable 사용/i, /요청 여부와 무관하게/i, /다시 선택/i],
+		"fallbackRule",
+	);
 
 	const template = await readFile(path.join(skillPaths.rulesDir, "_template.md"), "utf8");
 	assert.match(readAppliesWhen(template), / /);
@@ -2341,15 +2294,19 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 	};
 
 	const routeFlow = await readRule("react", "screen-keep-route-flow-visible");
-	assert.match(routeFlow, /소유자가 그대로인 변경은 대상이 아[\s\S]*binding·alias[\s\S]*support-code 규칙/);
+	assertMentions(routeFlow, ["소유자가 그대로인 변경은 대상이 아", "binding·alias", "support-code 규칙"], "routeFlow");
 	assert.match(
 		routeFlow,
 		/소유자가 그대로인 변경은 대상이 아[\s\S]*`query\.select`[\s\S]*binding·alias[\s\S]*derived-state effect[\s\S]*render 계산/i,
 	);
 
 	const curriedHandler = await readRule("react", "events-name-and-curry-handlers");
-	assert.match(curriedHandler, /인라인 callback[\s\S]*추가 인자[\s\S]*event boundary[\s\S]*wrapper[\s\S]*(?:완료가 아|우회)/i);
-	assert.match(curriedHandler, /최종 반환[\s\S]*React handler[\s\S]*typing-function-type-first[\s\S]*함께 적용/i);
+	assertMentions(
+		curriedHandler,
+		[/인라인 callback/i, /추가 인자/i, /event boundary/i, /wrapper/i, /(?:완료가 아|우회)/i],
+		"curriedHandler",
+	);
+	assertMentions(curriedHandler, [/최종 반환/i, /React handler/i, /typing-function-type-first/i, /함께 적용/i], "curriedHandler");
 	assert.match(
 		curriedHandler,
 		/UI-agnostic domain[\s\S]*custom component prop callback[\s\S]*`useEffectEvent`[\s\S]*(?:DOM event|curry)[\s\S]*(?:만들지 않|N\/A)/i,
@@ -2357,32 +2314,40 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 
 	const reactHandlerType = await readRule("react", "typing-function-type-first");
 	assert.match(reactHandlerType, /curried|고차 함수/i);
-	assert.match(reactHandlerType, /contextual typing[\s\S]*반환 함수 타입[\s\S]*생략하지 않/i);
-	assert.match(reactHandlerType, /`query\.select`[\s\S]*one-off contextual callback[\s\S]*UI-agnostic domain function[\s\S]*적용하지 않/i);
+	assertMentions(reactHandlerType, [/contextual typing/i, /반환 함수 타입/i, /생략하지 않/i], "reactHandlerType");
+	assertMentions(
+		reactHandlerType,
+		[/`query\.select`/i, /one-off contextual callback/i, /UI-agnostic domain function/i, /적용하지 않/i],
+		"reactHandlerType",
+	);
 
 	const reactContracts = await Promise.all(
 		["screen-keep-route-flow-visible", "events-name-and-curry-handlers", "typing-function-type-first"].map((ruleId) =>
 			readFile(path.join(realSkillRootDir, "react", "contracts", `${ruleId}.md`), "utf8"),
 		),
 	);
-	assert.match(reactContracts[0]!, /(?:`query\.select`|query `select`)[\s\S]*derived-state effect[\s\S]*render 계산/i);
-	assert.match(reactContracts[1]!, /인라인 callback[\s\S]*custom component prop callback/i);
+	assertMentions(reactContracts[0]!, [/(?:`query\.select`|query `select`)/i, /derived-state effect/i, /render 계산/i], "reactContracts");
+	assertMentions(reactContracts[1]!, [/인라인 callback/i, /custom component prop callback/i], "reactContracts");
 	assert.match(reactContracts[2]!, /curried[\s\S]*one-off contextual callback/i);
 
 	const typescriptRouter = await readFile(path.join(realSkillRootDir, "typescript", "SKILL.md"), "utf8");
-	assert.match(typescriptRouter, /byte-equivalent[\s\S]*named shape[\s\S]*callable[\s\S]*input\/output[\s\S]*변경으로 본다/i);
+	assertMentions(
+		typescriptRouter,
+		[/byte-equivalent/i, /named shape/i, /callable/i, /input\/output/i, /변경으로 본다/i],
+		"typescriptRouter",
+	);
 
 	const documentedShape = await readRule("typescript", "types-document-custom-types-and-shapes");
-	assert.match(documentedShape, /기존 named shape[\s\S]*새 callable (?:input|입력)[\s\S]*(?:output|출력)[\s\S]*Selected/i);
-	assert.match(documentedShape, /익명[\s\S]*(?:inferred|추론)[\s\S]*(?:query )?`select`[\s\S]*N\/A/i);
-	assert.match(documentedShape, /JSDoc[\s\S]*(?:스스로|자기)[\s\S]*(?:활성화|Selected)[\s\S]*(?:하지 않|금지)/i);
+	assertMentions(documentedShape, [/기존 named shape/i, /새 callable (?:input|입력)/i, /(?:output|출력)/i, /Selected/i], "documentedShape");
+	assertMentions(documentedShape, [/익명/i, /(?:inferred|추론)/i, /(?:query )?`select`/i, /N\/A/i], "documentedShape");
+	assertMentions(documentedShape, [/JSDoc/i, /(?:스스로|자기)/i, /(?:활성화|Selected)/i, /(?:하지 않|금지)/i], "documentedShape");
 
 	const directImports = await readRule("typescript", "naming-use-direct-imports-and-public-entry-points");
-	assert.match(readAppliesWhen(directImports), /[\s\S]+같은 module path[\s\S]+(?:value|type) specifier[\s\S]+추가·삭제·전환/);
+	assertMentions(readAppliesWhen(directImports), ["같은 module path", /(?:value|type) specifier/, "추가·삭제·전환"], "directImports");
 
 	const unusedParameters = await readRule("typescript", "types-mark-unused-parameters-with-underscore");
-	assert.match(readAppliesWhen(unusedParameters), /[\s\S]+curried handler[\s\S]+최종 callback[\s\S]+(?:생략|사용하지 않)/);
-	assert.match(unusedParameters, /framework alias[\s\S]*매개변수 생략[\s\S]*N\/A.*아니[\s\S]*`_event`/i);
+	assertMentions(readAppliesWhen(unusedParameters), ["curried handler", "최종 callback", /(?:생략|사용하지 않)/], "unusedParameters");
+	assertMentions(unusedParameters, [/framework alias/i, /매개변수 생략/i, /N\/A.*아니/i, /`_event`/i], "unusedParameters");
 
 	for (const ruleId of [
 		"types-prefer-function-variable-types-over-parameter-annotations",
@@ -2396,7 +2361,7 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 	}
 
 	const existingContract = await readRule("typescript", "types-reuse-existing-contracts-before-new-types");
-	assert.match(existingContract, /unchanged contract[\s\S]*새 사용처[\s\S]*(?:N\/A|제외)/i);
+	assertMentions(existingContract, [/unchanged contract/i, /새 사용처/i, /(?:N\/A|제외)/i], "existingContract");
 
 	const typescriptContracts = await Promise.all(
 		[
@@ -2410,17 +2375,25 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 	);
 	assert.match(typescriptContracts[0]!, /same module path|같은 module path/i);
 	assert.match(typescriptContracts[1]!, /CRITICAL rule[\s\S]*full rule/i);
-	assert.match(typescriptContracts[2]!, /curried handler[\s\S]*최종 callback/i);
+	assertMentions(typescriptContracts[2]!, [/curried handler/i, /최종 callback/i], "typescriptContracts");
 	assert.match(typescriptContracts[3]!, /CRITICAL rule[\s\S]*full rule/i);
 	assert.match(typescriptContracts[4]!, /one-off contextually typed inline callback/i);
-	assert.match(typescriptContracts[5]!, /unchanged contract[\s\S]*(?:새 함수 인자|새 사용처|call site)/i);
+	assertMentions(typescriptContracts[5]!, [/unchanged contract/i, /(?:새 함수 인자|새 사용처|call site)/i], "typescriptContracts");
 
 	const stylesheetFormat = await readRule("css", "naming-default-to-plain-css-when-no-module-convention");
-	assert.match(stylesheetFormat, /stylesheet 접근 형식[\s\S]*plain CSS[\s\S]*CSS Modules/i);
-	assert.match(stylesheetFormat, /기존 plain CSS[\s\S]*(?:class|selector)[\s\S]*(?:rename|이름 변경)[\s\S]*(?:N\/A|제외)/i);
+	assertMentions(stylesheetFormat, [/stylesheet 접근 형식/i, /plain CSS/i, /CSS Modules/i], "stylesheetFormat");
+	assertMentions(
+		stylesheetFormat,
+		[/기존 plain CSS/i, /(?:class|selector)/i, /(?:rename|이름 변경)/i, /(?:N\/A|제외)/i],
+		"stylesheetFormat",
+	);
 
 	const modifierClassification = await readRule("css", "composition-do-not-build-structural-variants-with-modifiers");
-	assert.match(modifierClassification, /허용(?:된| 가능한)? (?:domain )?state[\s\S]*Selected[\s\S]*(?:N\/A.*아니|pass)/i);
+	assertMentions(
+		modifierClassification,
+		[/허용(?:된| 가능한)? (?:domain )?state/i, /Selected/i, /(?:N\/A.*아니|pass)/i],
+		"modifierClassification",
+	);
 
 	const layoutIntent = await readRule("css", "values-keep-layout-intent-explicit");
 	assert.match(
@@ -2451,7 +2424,7 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 		),
 	);
 	for (const contract of cssInteractionContracts) {
-		assert.match(contract, /base(?: element)? block[\s\S]*modifier 아래/i);
+		assertMentions(contract, [/base(?: element)? block/i, /modifier 아래/i], "contract");
 	}
 
 	const mixedManifest = await readRoutingEvalManifest(getSkillPaths("react", realSkillRootDir));
@@ -2533,7 +2506,7 @@ test("v17 TypeScript boundaries exclude React props and prevent self-created dup
 	};
 
 	const namedObjectParams = await readRule("typescript", "functions-use-named-object-params-for-complex-signatures");
-	assert.match(readAppliesWhen(namedObjectParams), /React (?:함수 )?컴포넌트[\s\S]+props[\s\S]+(?:N\/A|제외)/);
+	assertMentions(readAppliesWhen(namedObjectParams), [/React (?:함수 )?컴포넌트/, "props", /(?:N\/A|제외)/], "namedObjectParams");
 	assert.match(
 		namedObjectParams,
 		/기존 named contract[\s\S]*그대로 재사용[\s\S]*`\*Params`[\s\S]*`\*Args`[\s\S]*(?:새로 만들지 않|추가하지 않)/i,
@@ -2614,9 +2587,9 @@ test("v17 TypeScript boundaries exclude React props and prevent self-created dup
 			"types-reuse-existing-contracts-before-new-types",
 		].map((ruleId) => readFile(path.join(realSkillRootDir, "typescript", "contracts", `${ruleId}.md`), "utf8")),
 	);
-	assert.match(generatedContracts[0]!, /React 함수 컴포넌트[\s\S]*기존 named contract/i);
+	assertMentions(generatedContracts[0]!, [/React 함수 컴포넌트/i, /기존 named contract/i], "generatedContracts");
 	assert.match(generatedContracts[1]!, /CRITICAL rule[\s\S]*full rule/i);
-	assert.match(generatedContracts[2]!, /positional[\s\S]*object[\s\S]*`\*Params`[\s\S]*(?:스스로|자기|자가)/i);
+	assertMentions(generatedContracts[2]!, [/positional/i, /object/i, /`\*Params`/i, /(?:스스로|자기|자가)/i], "generatedContracts");
 });
 
 test("v17 semantic contracts reject English-only annotations and effective deep third-party chains", async () => {
@@ -2625,7 +2598,7 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	};
 
 	const koreanComments = await readRule("typescript", "docs-write-concise-korean-comments-about-purpose-and-constraints");
-	assert.match(koreanComments, /annotation 본문 전체[\s\S]*(?:ASCII|영문)[\s\S]*(?:한글 주석으로 인정하지 않|실패)/i);
+	assertMentions(koreanComments, [/annotation 본문 전체/i, /(?:ASCII|영문)/i, /(?:한글 주석으로 인정하지 않|실패)/i], "koreanComments");
 	assert.match(koreanComments, /@summary route-local entry tree props/);
 	assert.match(koreanComments, /@summary route-local 엔트리 트리 입력 계약/);
 
@@ -2642,12 +2615,24 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	assert.doesNotMatch(headerDocs, /\bT\d{2}\b/);
 
 	const descendantDepth = await readRule("css", "selector-avoid-deep-descendant-dependencies");
-	assert.match(descendantDepth, /nested (?:source )?block 수[\s\S]*effective selector[\s\S]*(?:combinator|ancestor) chain/i);
-	assert.match(descendantDepth, /& \.ant-tree \.ant-tree-node-content-wrapper[\s\S]*(?:2단계|one-level이 아)/i);
+	assertMentions(
+		descendantDepth,
+		[/nested (?:source )?block 수/i, /effective selector/i, /(?:combinator|ancestor) chain/i],
+		"descendantDepth",
+	);
+	assertMentions(descendantDepth, [/& \.ant-tree \.ant-tree-node-content-wrapper/i, /(?:2단계|one-level이 아)/i], "descendantDepth");
 
 	const thirdPartyRoot = await readRule("css", "selector-target-third-party-dom-from-owned-roots");
-	assert.match(thirdPartyRoot, /owned root[\s\S]*instance scope[\s\S]*중간 (?:library root|라이브러리 root)[\s\S]*(?:생략|반복하지 않)/i);
-	assert.match(thirdPartyRoot, /추가 third-party ancestor[\s\S]*(?:ambiguity|모호성|direct-child)[\s\S]*(?:근거|evidence)/i);
+	assertMentions(
+		thirdPartyRoot,
+		[/owned root/i, /instance scope/i, /중간 (?:library root|라이브러리 root)/i, /(?:생략|반복하지 않)/i],
+		"thirdPartyRoot",
+	);
+	assertMentions(
+		thirdPartyRoot,
+		[/추가 third-party ancestor/i, /(?:ambiguity|모호성|direct-child)/i, /(?:근거|evidence)/i],
+		"thirdPartyRoot",
+	);
 	assert.match(thirdPartyRoot, /& \.ant-tree \.ant-tree-node-content-wrapper/);
 	assert.match(thirdPartyRoot, /& \.ant-tree-node-content-wrapper/);
 
@@ -2670,7 +2655,7 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 		flattenWhitespace(generatedContracts[0]!),
 		/영문 label[\s\S]*docs-write-concise-korean-comments-about-purpose-and-constraints[\s\S]*content gate/i,
 	);
-	assert.match(generatedContracts[1]!, /annotation 본문 전체[\s\S]*(?:ASCII|영문)/i);
+	assertMentions(generatedContracts[1]!, [/annotation 본문 전체/i, /(?:ASCII|영문)/i], "generatedContracts");
 	assert.match(generatedContracts[2]!, /effective selector[\s\S]*(?:combinator|ancestor) chain/i);
 	assert.match(generatedContracts[3]!, /CRITICAL rule[\s\S]*full rule/i);
 });
@@ -2717,52 +2702,17 @@ test("CSS generated index is canonical, complete, body-preserving, and within it
 
 test("CSS SKILL.md is a compact router with companion boundaries", async () => {
 	const source = await readFile(path.join(realSkillRootDir, "css", "SKILL.md"), "utf8");
-	const frontmatterSource = source.match(/^---\n([\s\S]*?)\n---/)?.[1] ?? "";
-	const body = source.replace(/^---\n[\s\S]*?\n---\n?/, "");
-	const wordCount = body.trim().split(/\s+/).filter(Boolean).length;
+	const {body} = splitFrontmatter(source);
 
-	assert.match(frontmatterSource, /^name: convention-css$/m);
-	assert.match(frontmatterSource, /^description: Use when /m);
-	assert.doesNotMatch(frontmatterSource, /scan|read|load/i);
-	assert.equal(wordCount < 400, true, `router has ${wordCount} words`);
-	assert.equal(Buffer.byteLength(source, "utf8") < 5_000, true);
+	assertRouterShape(source, "convention-css");
+	assertRouterProtocol(body);
+	assertRemovedApparatusStaysGone(body);
 
-	// 1. 변경 범위 판정
-	assert.match(body, /## 1\. 변경 범위 판정/);
-	assert.match(body, /최소 변경|범위를 넓히지 않는다/);
+	// companion 경계. 순수 CSS 변경이면 둘 다 켜지 않는다
+	const cssScope = extractSection(body, 1);
 
-	// 2. 인덱스 전체 훑기
-	assert.match(body, /RULES_INDEX\.md/);
-	assert.match(body, /끝까지 훑/);
-	assert.match(body, /첫 match에서 멈추지 않는다/);
-
-	// 3. 규칙 읽고 구현
-	assert.match(body, /contracts\/<id>\.md/);
-	assert.match(body, /`CRITICAL`이면 `rules\/<id>\.md` 원문도 반드시 읽는다/);
-	assert.match(body, /`requiresSelected` target은 함께 적용한다/);
-	assert.match(body, /`reviewWith` target은[^\n]+자동으로 적용하지는 않는다/);
-	assert.match(body, /`completionGate` 규칙은 마무리 시 항상 적용한다/);
-	assert.match(body, /다시 훑는다[^\n]*\n?[^\n]*더 걸리는 게 없으면 멈춘다|더 걸리는 게 없으면 멈춘다/);
-
-	// 4~5. 범위 변경과 마무리
-	assert.match(body, /## 4\. 범위 변경/);
-	assert.match(body, /## 5\. 마무리/);
-	assert.match(body, /file\/line과 수정안으로 보고한다/);
-	assert.match(body, /통과는 컨벤션을 지켰다는 근거가 아니다/);
-
-	// opt-in full handbook
-	assert.match(body, /\[HANDBOOK\.md\]\(\.\/HANDBOOK\.md\)는 전체 handbook이다/);
-
-	// 제거한 강제 장치가 되살아나지 않아야 한다
-	assert.doesNotMatch(body, /digest|sha256/i);
-	assert.doesNotMatch(body, /exact partition|ordinal/i);
-	assert.doesNotMatch(body, /receipt/i);
-	assert.doesNotMatch(body, /convention-audit/);
-	assert.doesNotMatch(body, /Excluded groups|exclusion group/i);
-
-	// companion 경계
-	assert.match(body, /`convention-react`와 `convention-typescript`를 함께 활성화한다/);
-	assert.match(body, /순수 CSS 변경이면 둘 다 켜지 않는다/);
+	assertMentions(cssScope, ["`convention-react`", "`convention-typescript`", "순수 CSS"], "css 1절");
+	assert.equal(isNegated(blockContaining(cssScope, "순수 CSS")), true, "css 1절: 순수 CSS 예외가 없다");
 });
 
 test("fixture manifests accept exact progressive partitions and non-progressive activation evidence", async () => {
