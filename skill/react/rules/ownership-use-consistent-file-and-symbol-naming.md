@@ -28,7 +28,7 @@ tags: ownership, naming, files
 - sibling `.ts` support 파일을 만들거나 local 선언을 named export로 옮기면
   이름 자체가 그대로여도 이 규칙을 확인합니다.
 - non-exported local symbol은 TypeScript `naming-use-consistent-file-and-symbol-naming`이,
-  local query·mutation binding은 `state-name-query-and-mutation-bindings-consistently`가 담당합니다.
+  local query·mutation binding은 `data-name-query-and-mutation-bindings-consistently`가 담당합니다.
   그것만 바꾸면 이 규칙은 적용하지 않습니다.
 
 **Incorrect (파일명과 심볼 규칙이 제각각이고 공용 상수를 화면 파일에 직접 둠):**

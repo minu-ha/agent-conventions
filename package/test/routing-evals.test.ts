@@ -137,19 +137,19 @@ const reactRuleUniverse = [
 	"events-keep-handler-flow-inline",
 	"events-name-and-curry-handlers",
 	"events-run-user-actions-in-handlers-not-effects",
-	"state-avoid-fallback-defaults-and-loading-flags",
+	"data-avoid-fallback-defaults-and-loading-flags",
+	"data-name-query-and-mutation-bindings-consistently",
+	"data-preserve-origin-chaining",
+	"data-shape-query-data-with-select",
 	"state-calculate-derived-values-during-render",
 	"state-choose-state-tools-by-source-of-truth",
-	"state-name-query-and-mutation-bindings-consistently",
-	"state-compiler-first-memoization",
-	"state-preserve-origin-chaining",
-	"state-shape-query-data-with-select",
 	"state-store-derived-authority",
 	"state-use-functional-setstate-updates",
-	"state-use-lazy-state-initializers-for-expensive-defaults",
-	"state-use-starttransition-for-non-urgent-updates",
-	"state-use-usedeferredvalue-for-heavy-derived-renders",
 	"state-use-effectevent-for-non-reactive-effect-callbacks",
+	"perf-compiler-first-memoization",
+	"perf-use-lazy-state-initializers-for-expensive-defaults",
+	"perf-use-starttransition-for-non-urgent-updates",
+	"perf-use-usedeferredvalue-for-heavy-derived-renders",
 	"docs-document-compound-parts-with-part-and-description",
 	"docs-limit-inline-comments-to-non-obvious-logic",
 	"docs-require-jsdoc-on-key-declarations",
@@ -539,11 +539,11 @@ const reactRuleRouting = {
 		appliesWhen: "route entry에 여러 줄 pure helper·preset·option·화면 전용 type이 쌓이거나 추출한 support code의 목적지 파일을 정한다.",
 		reviewWith: ["docs-require-jsdoc-on-key-declarations"],
 	},
-	"state-avoid-fallback-defaults-and-loading-flags": {
+	"data-avoid-fallback-defaults-and-loading-flags": {
 		appliesWhen:
 			"optional 응답에 `??`·`||` 기본값을 넣거나 Suspense 화면 본문에 초기 loading return을 추가·변경하고 결측·로딩 UX를 다룬다.",
 		reviewWith: [
-			"state-preserve-origin-chaining",
+			"data-preserve-origin-chaining",
 			"screen-keep-derived-values-close",
 			"typescript/absence-expose-optional-values-instead-of-silent-fallbacks",
 		],
@@ -556,22 +556,22 @@ const reactRuleRouting = {
 		appliesWhen: "로컬 UI·전역 client·server 데이터를 새 state 도구로 옮기거나 서로 다른 source of truth 사이에 복제·동기화한다.",
 		reviewWith: ["state-store-derived-authority"],
 	},
-	"state-compiler-first-memoization": {
+	"perf-compiler-first-memoization": {
 		appliesWhen:
 			"`useMemo`·`useCallback`을 추가·제거하거나 참조 동일성·실측 병목·무거운 deferred 계산을 이유로 수동 memoization을 검토한다.",
 		reviewWith: [],
 	},
-	"state-name-query-and-mutation-bindings-consistently": {
+	"data-name-query-and-mutation-bindings-consistently": {
 		appliesWhen: "React Query query·mutation hook의 로컬 binding을 추가·이름 변경하거나 역할이 드러나지 않는 별칭이 diff에 보인다.",
-		reviewWith: ["state-preserve-origin-chaining"],
+		reviewWith: ["data-preserve-origin-chaining"],
 	},
-	"state-preserve-origin-chaining": {
+	"data-preserve-origin-chaining": {
 		appliesWhen: "page·layout·screen 넓은 스코프에서 response·mutation·store를 구조분해하거나 별칭으로 끊고 원본 값 접근을 바꾼다.",
 		reviewWith: ["screen-keep-derived-values-close"],
 	},
-	"state-shape-query-data-with-select": {
+	"data-shape-query-data-with-select": {
 		appliesWhen: "서버 응답의 list·items·meta 등을 렌더에서 가공·반복 소비하거나 React Query `select`의 결과 shape를 추가·변경한다.",
-		reviewWith: ["state-name-query-and-mutation-bindings-consistently", "state-preserve-origin-chaining"],
+		reviewWith: ["data-name-query-and-mutation-bindings-consistently", "data-preserve-origin-chaining"],
 	},
 	"state-store-derived-authority": {
 		appliesWhen:
@@ -587,17 +587,17 @@ const reactRuleRouting = {
 		appliesWhen: "다음 state가 현재 state에 의존하는 handler·async callback·반복 갱신에서 `setState` 호출 방식을 추가·변경한다.",
 		reviewWith: [],
 	},
-	"state-use-lazy-state-initializers-for-expensive-defaults": {
+	"perf-use-lazy-state-initializers-for-expensive-defaults": {
 		appliesWhen: "`useState` 초기값에 localStorage 파싱, 인덱스 생성, 큰 배열 정규화 같은 비용 있는 계산을 추가·변경한다.",
 		reviewWith: [],
 	},
-	"state-use-starttransition-for-non-urgent-updates": {
+	"perf-use-starttransition-for-non-urgent-updates": {
 		appliesWhen: "클릭·선택·필터 변경 뒤 큰 list·table·tree를 다시 그리는 state update의 우선순위나 transition 처리를 바꾼다.",
 		reviewWith: [],
 	},
-	"state-use-usedeferredvalue-for-heavy-derived-renders": {
+	"perf-use-usedeferredvalue-for-heavy-derived-renders": {
 		appliesWhen: "검색어·필터·정렬 입력이 무거운 파생 view를 갱신해 typing 지연이 생기거나 `useDeferredValue` 기반 계산을 추가·변경한다.",
-		reviewWith: ["state-compiler-first-memoization", "state-use-starttransition-for-non-urgent-updates"],
+		reviewWith: ["perf-compiler-first-memoization", "perf-use-starttransition-for-non-urgent-updates"],
 	},
 	"strategy-avoid-boolean-prop-proliferation": {
 		appliesWhen: "여러 곳에서 쓰는 shared component에 boolean mode·visibility prop을 추가하거나 기존 boolean 조합과 JSX 분기가 늘어난다.",
@@ -643,11 +643,11 @@ const mandatoryRuleRouting = {
 		"ownership-avoid-barrel-and-react-namespace-imports": ["typescript/naming-use-direct-imports-and-public-entry-points"],
 		"ownership-use-consistent-file-and-symbol-naming": ["typescript/naming-use-consistent-file-and-symbol-naming"],
 		"state-calculate-derived-values-during-render": ["screen-keep-derived-values-close"],
-		"state-name-query-and-mutation-bindings-consistently": [
+		"data-name-query-and-mutation-bindings-consistently": [
 			"typescript/naming-use-consistent-file-and-symbol-naming",
 			"docs-require-jsdoc-on-key-declarations",
 		],
-		"state-shape-query-data-with-select": ["docs-require-jsdoc-on-key-declarations"],
+		"data-shape-query-data-with-select": ["docs-require-jsdoc-on-key-declarations"],
 		"state-use-effectevent-for-non-reactive-effect-callbacks": ["docs-require-jsdoc-on-key-declarations"],
 		"typing-function-type-first": ["typescript/types-reuse-callback-signatures-from-existing-contracts"],
 	},
@@ -1101,8 +1101,8 @@ const reactScenarioStages = {
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
 				react: [
+					"data-preserve-origin-chaining",
 					"state-choose-state-tools-by-source-of-truth",
-					"state-preserve-origin-chaining",
 					"state-store-derived-authority",
 					"docs-require-jsdoc-on-key-declarations",
 				],
@@ -1127,9 +1127,9 @@ const reactScenarioStages = {
 			expectedSelected: {
 				react: [
 					"screen-keep-derived-values-close",
-					"state-name-query-and-mutation-bindings-consistently",
-					"state-preserve-origin-chaining",
-					"state-shape-query-data-with-select",
+					"data-name-query-and-mutation-bindings-consistently",
+					"data-preserve-origin-chaining",
+					"data-shape-query-data-with-select",
 					"docs-require-jsdoc-on-key-declarations",
 				],
 				typescript: [
@@ -1150,10 +1150,10 @@ const reactScenarioStages = {
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
 				react: [
-					"state-compiler-first-memoization",
-					"state-use-lazy-state-initializers-for-expensive-defaults",
-					"state-use-starttransition-for-non-urgent-updates",
-					"state-use-usedeferredvalue-for-heavy-derived-renders",
+					"perf-compiler-first-memoization",
+					"perf-use-lazy-state-initializers-for-expensive-defaults",
+					"perf-use-starttransition-for-non-urgent-updates",
+					"perf-use-usedeferredvalue-for-heavy-derived-renders",
 					"docs-limit-inline-comments-to-non-obvious-logic",
 					"docs-require-jsdoc-on-key-declarations",
 				],
@@ -1201,8 +1201,8 @@ const reactScenarioStages = {
 			expectedSelected: {
 				react: [
 					"screen-keep-derived-values-close",
-					"state-avoid-fallback-defaults-and-loading-flags",
-					"state-preserve-origin-chaining",
+					"data-avoid-fallback-defaults-and-loading-flags",
+					"data-preserve-origin-chaining",
 					"docs-limit-inline-comments-to-non-obvious-logic",
 				],
 				typescript: [
@@ -1740,7 +1740,7 @@ test("JSDoc routing closure and query-select ownership stay exact across every m
 	const reactManifest = await readRoutingEvalManifest(getSkillPaths("react", realSkillRootDir));
 	const queryShaping = reactManifest.scenarios.find(({id}) => id === "RTE12-query-shaping");
 	assert.ok(queryShaping);
-	assert.ok(queryShaping.expectedSelected.react?.includes("state-shape-query-data-with-select"));
+	assert.ok(queryShaping.expectedSelected.react?.includes("data-shape-query-data-with-select"));
 	assert.ok(!(queryShaping.expectedSelected.react?.includes("screen-extract-utilities-selectively") ?? false));
 	assert.equal(queryShaping.expectedSelected.react?.includes("screen-extract-utilities-selectively"), false);
 });
@@ -1781,7 +1781,7 @@ test("induced naming closure and activated finish gates stay mandatory across ev
 					);
 				}
 
-				if (stage.expectedSelected.react?.includes("state-name-query-and-mutation-bindings-consistently")) {
+				if (stage.expectedSelected.react?.includes("data-name-query-and-mutation-bindings-consistently")) {
 					assert.ok(
 						stage.expectedSelected.typescript?.includes("naming-use-consistent-file-and-symbol-naming"),
 						`${skillName}/${scenario.id} must close React binding naming to TypeScript symbol naming`,
@@ -1793,8 +1793,8 @@ test("induced naming closure and activated finish gates stay mandatory across ev
 
 	const reactRulesDir = getSkillPaths("react", realSkillRootDir).rulesDir;
 	const derivedRule = await readFile(path.join(reactRulesDir, "screen-keep-derived-values-close.md"), "utf8");
-	const bindingRule = await readFile(path.join(reactRulesDir, "state-name-query-and-mutation-bindings-consistently.md"), "utf8");
-	const originRule = await readFile(path.join(reactRulesDir, "state-preserve-origin-chaining.md"), "utf8");
+	const bindingRule = await readFile(path.join(reactRulesDir, "data-name-query-and-mutation-bindings-consistently.md"), "utf8");
+	const originRule = await readFile(path.join(reactRulesDir, "data-preserve-origin-chaining.md"), "utf8");
 	const typescriptFinishRule = await readFile(
 		path.join(getSkillPaths("typescript", realSkillRootDir).rulesDir, "guardrails-review-banned-typescript-shortcuts-before-finishing.md"),
 		"utf8",
@@ -1823,7 +1823,7 @@ test("induced naming closure and activated finish gates stay mandatory across ev
 	const reactManifest = await readRoutingEvalManifest(getSkillPaths("react", realSkillRootDir));
 	const sharedAuthority = reactManifest.scenarios.find(({id}) => id === "RTE11-shared-authority");
 	assert.ok(sharedAuthority);
-	assert.ok(sharedAuthority.expectedSelected.react?.includes("state-preserve-origin-chaining"));
+	assert.ok(sharedAuthority.expectedSelected.react?.includes("data-preserve-origin-chaining"));
 	assert.ok(!(sharedAuthority.expectedSelected.react?.includes("screen-keep-derived-values-close") ?? false));
 });
 
@@ -1876,12 +1876,12 @@ test("React progressive metadata and all 42 rule routes match Appendix B exactly
 	assertMentions(readAppliesWhen(ownershipNamingRule), ["바꾸거나,", "sibling `.ts` support 파일"], "ownershipNamingRule");
 	assert.match(
 		ownershipNamingRule,
-		/local query·mutation binding[^\n]+state-name-query-and-mutation-bindings-consistently|state-name-query-and-mutation-bindings-consistently[^\n]+local query·mutation binding/i,
+		/local query·mutation binding[^\n]+data-name-query-and-mutation-bindings-consistently|data-name-query-and-mutation-bindings-consistently[^\n]+local query·mutation binding/i,
 	);
 	const screenExtractionRule = await readFile(path.join(skillPaths.rulesDir, "screen-extract-utilities-selectively.md"), "utf8");
 	assert.match(
 		screenExtractionRule,
-		/query `select`[\s\S]+state-shape-query-data-with-select[\s\S]+별도 함수나 support module 경계[\s\S]+적용하지 않/i,
+		/query `select`[\s\S]+data-shape-query-data-with-select[\s\S]+별도 함수나 support module 경계[\s\S]+적용하지 않/i,
 	);
 	assert.match(screenExtractionRule, /Incorrect[\s\S]*normalizeEntryValues[\s\S]*mergeEntryPayload/i);
 	assert.match(screenExtractionRule, /Correct[\s\S]*normalizeTreeNodes[\s\S]*handleSave/i);

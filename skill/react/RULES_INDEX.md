@@ -1,7 +1,7 @@
 # React 컨벤션 Rule Index
 
 - Skill: `react`
-- Routing digest: `sha256:52592aa872e7cb18d2cd24825c5554eea748fa4fe8567f4c272795f910d8ef71`
+- Routing digest: `sha256:6ac0a09d42b044929e379b59acffe30684aebb308271c6d01da52d1e30a66a6b`
 
 ## Direct Companions
 
@@ -36,19 +36,19 @@
 - R24 | events-keep-handler-flow-inline | 화면 전용 named handler의 분기·mutation·navigation·후처리를 여러 helper나 hook으로 나누거나 다시 합친다. | reviewWith: screen-extract-utilities-selectively
 - R25 | events-name-and-curry-handlers | 이벤트 핸들러를 새로 만들거나 이름, target/event 표현, 추가 인자 전달 방식 또는 최종 React handler 시그니처를 바꾼다. | reviewWith: typescript/naming-use-consistent-file-and-symbol-naming, typing-function-type-first
 - R26 | events-run-user-actions-in-handlers-not-effects | 제출·저장·삭제·닫기 같은 one-shot 사용자 액션을 handler와 state+effect 사이에서 이동하거나 실행 흐름을 바꾼다.
-- R27 | state-avoid-fallback-defaults-and-loading-flags | optional 응답에 \`??\`·\`\|\|\` 기본값을 넣거나 Suspense 화면 본문에 초기 loading return을 추가·변경하고 결측·로딩 UX를 다룬다. | reviewWith: screen-keep-derived-values-close, state-preserve-origin-chaining, typescript/absence-expose-optional-values-instead-of-silent-fallbacks
-- R28 | state-calculate-derived-values-during-render | 현재 props·state·search·response에서 계산 가능한 값을 별도 state와 effect로 동기화하거나 그 동기화를 제거한다.
-- R29 | state-choose-state-tools-by-source-of-truth | 로컬 UI·전역 client·server 데이터를 새 state 도구로 옮기거나 서로 다른 source of truth 사이에 복제·동기화한다. | reviewWith: state-store-derived-authority
-- R30 | state-name-query-and-mutation-bindings-consistently | React Query query·mutation hook의 로컬 binding을 추가·이름 변경하거나 역할이 드러나지 않는 별칭이 diff에 보인다. | reviewWith: state-preserve-origin-chaining
-- R31 | state-compiler-first-memoization | \`useMemo\`·\`useCallback\`을 추가·제거하거나 참조 동일성·실측 병목·무거운 deferred 계산을 이유로 수동 memoization을 검토한다.
-- R32 | state-preserve-origin-chaining | page·layout·screen 넓은 스코프에서 response·mutation·store를 구조분해하거나 별칭으로 끊고 원본 값 접근을 바꾼다. | reviewWith: screen-keep-derived-values-close
-- R33 | state-shape-query-data-with-select | 서버 응답의 list·items·meta 등을 렌더에서 가공·반복 소비하거나 React Query \`select\`의 결과 shape를 추가·변경한다. | reviewWith: state-name-query-and-mutation-bindings-consistently, state-preserve-origin-chaining
-- R34 | state-store-derived-authority | 여러 화면·메뉴·route guard가 쓰는 권한·capability 같은 derived decision을 store에 저장·동기화하거나 단일 화면 값까지 store로 올린다. | reviewWith: docs-require-jsdoc-on-key-declarations
-- R35 | state-use-functional-setstate-updates | 다음 state가 현재 state에 의존하는 handler·async callback·반복 갱신에서 \`setState\` 호출 방식을 추가·변경한다.
-- R36 | state-use-lazy-state-initializers-for-expensive-defaults | \`useState\` 초기값에 localStorage 파싱, 인덱스 생성, 큰 배열 정규화 같은 비용 있는 계산을 추가·변경한다.
-- R37 | state-use-starttransition-for-non-urgent-updates | 클릭·선택·필터 변경 뒤 큰 list·table·tree를 다시 그리는 state update의 우선순위나 transition 처리를 바꾼다.
-- R38 | state-use-usedeferredvalue-for-heavy-derived-renders | 검색어·필터·정렬 입력이 무거운 파생 view를 갱신해 typing 지연이 생기거나 \`useDeferredValue\` 기반 계산을 추가·변경한다. | reviewWith: state-compiler-first-memoization, state-use-starttransition-for-non-urgent-updates
-- R39 | state-use-effectevent-for-non-reactive-effect-callbacks | subscription effect가 최신 prop·state callback을 읽도록 ref 동기화 hack, dependency 재설치 또는 \`useEffectEvent\`를 추가·변경한다. | reviewWith: events-run-user-actions-in-handlers-not-effects
+- R27 | data-avoid-fallback-defaults-and-loading-flags | optional 응답에 \`??\`·\`\|\|\` 기본값을 넣거나 Suspense 화면 본문에 초기 loading return을 추가·변경하고 결측·로딩 UX를 다룬다. | reviewWith: data-preserve-origin-chaining, screen-keep-derived-values-close, typescript/absence-expose-optional-values-instead-of-silent-fallbacks
+- R28 | data-name-query-and-mutation-bindings-consistently | React Query query·mutation hook의 로컬 binding을 추가·이름 변경하거나 역할이 드러나지 않는 별칭이 diff에 보인다. | reviewWith: data-preserve-origin-chaining
+- R29 | data-preserve-origin-chaining | page·layout·screen 넓은 스코프에서 response·mutation·store를 구조분해하거나 별칭으로 끊고 원본 값 접근을 바꾼다. | reviewWith: screen-keep-derived-values-close
+- R30 | data-shape-query-data-with-select | 서버 응답의 list·items·meta 등을 렌더에서 가공·반복 소비하거나 React Query \`select\`의 결과 shape를 추가·변경한다. | reviewWith: data-name-query-and-mutation-bindings-consistently, data-preserve-origin-chaining
+- R31 | state-calculate-derived-values-during-render | 현재 props·state·search·response에서 계산 가능한 값을 별도 state와 effect로 동기화하거나 그 동기화를 제거한다.
+- R32 | state-choose-state-tools-by-source-of-truth | 로컬 UI·전역 client·server 데이터를 새 state 도구로 옮기거나 서로 다른 source of truth 사이에 복제·동기화한다. | reviewWith: state-store-derived-authority
+- R33 | state-store-derived-authority | 여러 화면·메뉴·route guard가 쓰는 권한·capability 같은 derived decision을 store에 저장·동기화하거나 단일 화면 값까지 store로 올린다. | reviewWith: docs-require-jsdoc-on-key-declarations
+- R34 | state-use-functional-setstate-updates | 다음 state가 현재 state에 의존하는 handler·async callback·반복 갱신에서 \`setState\` 호출 방식을 추가·변경한다.
+- R35 | state-use-effectevent-for-non-reactive-effect-callbacks | subscription effect가 최신 prop·state callback을 읽도록 ref 동기화 hack, dependency 재설치 또는 \`useEffectEvent\`를 추가·변경한다. | reviewWith: events-run-user-actions-in-handlers-not-effects
+- R36 | perf-compiler-first-memoization | \`useMemo\`·\`useCallback\`을 추가·제거하거나 참조 동일성·실측 병목·무거운 deferred 계산을 이유로 수동 memoization을 검토한다.
+- R37 | perf-use-lazy-state-initializers-for-expensive-defaults | \`useState\` 초기값에 localStorage 파싱, 인덱스 생성, 큰 배열 정규화 같은 비용 있는 계산을 추가·변경한다.
+- R38 | perf-use-starttransition-for-non-urgent-updates | 클릭·선택·필터 변경 뒤 큰 list·table·tree를 다시 그리는 state update의 우선순위나 transition 처리를 바꾼다.
+- R39 | perf-use-usedeferredvalue-for-heavy-derived-renders | 검색어·필터·정렬 입력이 무거운 파생 view를 갱신해 typing 지연이 생기거나 \`useDeferredValue\` 기반 계산을 추가·변경한다. | reviewWith: perf-compiler-first-memoization, perf-use-starttransition-for-non-urgent-updates
 - R40 | docs-document-compound-parts-with-part-and-description | compound component의 exported public part·props interface·part 내부 handler를 추가·변경하거나 public part 문서를 수정한다.
 - R41 | docs-limit-inline-comments-to-non-obvious-logic | React 함수·handler·JSX 인접 로직 안의 \`//\` 주석을 추가·수정하거나 자명한 설명과 실제 제약을 구분해 정리한다.
 - R42 | docs-require-jsdoc-on-key-declarations | query·mutation, 비자명한 handler/effect, exported helper/custom hook/store, exported 또는 re-exported public type/interface, 예외 memo 선언을 추가·변경한다.

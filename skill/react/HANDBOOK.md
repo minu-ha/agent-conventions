@@ -59,24 +59,26 @@
     - 6.1 [Keep Screen-specific Handler Flow Local Until a Real Utility Emerges](#61-keep-screen-specific-handler-flow-local-until-a-real-utility-emerges)
     - 6.2 [Name Handlers Predictably and Curry Extra Arguments](#62-name-handlers-predictably-and-curry-extra-arguments)
     - 6.3 [Run User Actions in Handlers, Not Effects](#63-run-user-actions-in-handlers-not-effects)
-7. [State and Data Flow](#7-state-and-data-flow) — **CRITICAL**
+7. [Server Data Flow](#7-server-data-flow) — **CRITICAL**
     - 7.1 [Avoid Silent Fallback Defaults and Ad-hoc Loading Branches](#71-avoid-silent-fallback-defaults-and-ad-hoc-loading-branches)
-    - 7.2 [Calculate Derived Values During Rendering](#72-calculate-derived-values-during-rendering)
-    - 7.3 [Choose State Tools by Source of Truth](#73-choose-state-tools-by-source-of-truth)
-    - 7.4 [Name Query and Mutation Bindings Consistently](#74-name-query-and-mutation-bindings-consistently)
-    - 7.5 [Prefer React Compiler Defaults Over Manual Memoization](#75-prefer-react-compiler-defaults-over-manual-memoization)
-    - 7.6 [Preserve Response and Store Origin in Wide Scopes](#76-preserve-response-and-store-origin-in-wide-scopes)
-    - 7.7 [Shape React Query Data in query.select](#77-shape-react-query-data-in-query-select)
-    - 7.8 [Store Shared Derived Decisions Only When They Are Truly Shared](#78-store-shared-derived-decisions-only-when-they-are-truly-shared)
-    - 7.9 [Use Functional setState Updates When Based on Previous State](#79-use-functional-setstate-updates-when-based-on-previous-state)
-    - 7.10 [Use Lazy State Initializers for Expensive Defaults](#710-use-lazy-state-initializers-for-expensive-defaults)
-    - 7.11 [Use startTransition for Non-urgent Visual Updates](#711-use-starttransition-for-non-urgent-visual-updates)
-    - 7.12 [Use useDeferredValue for Heavy Derived Renders](#712-use-usedeferredvalue-for-heavy-derived-renders)
-    - 7.13 [Use useEffectEvent for Non-reactive Effect Callbacks](#713-use-useeffectevent-for-non-reactive-effect-callbacks)
-8. [Documentation and Comments](#8-documentation-and-comments) — **MEDIUM**
-    - 8.1 [Document Compound Parts with @part and @description](#81-document-compound-parts-with-part-and-description)
-    - 8.2 [Limit Inline Comments to Non-obvious Logic](#82-limit-inline-comments-to-non-obvious-logic)
-    - 8.3 [Require JSDoc on React Hooks, Handlers, and Key Declarations](#83-require-jsdoc-on-react-hooks-handlers-and-key-declarations)
+    - 7.2 [Name Query and Mutation Bindings Consistently](#72-name-query-and-mutation-bindings-consistently)
+    - 7.3 [Preserve Response and Store Origin in Wide Scopes](#73-preserve-response-and-store-origin-in-wide-scopes)
+    - 7.4 [Shape React Query Data in query.select](#74-shape-react-query-data-in-query-select)
+8. [Local State](#8-local-state) — **HIGH**
+    - 8.1 [Calculate Derived Values During Rendering](#81-calculate-derived-values-during-rendering)
+    - 8.2 [Choose State Tools by Source of Truth](#82-choose-state-tools-by-source-of-truth)
+    - 8.3 [Store Shared Derived Decisions Only When They Are Truly Shared](#83-store-shared-derived-decisions-only-when-they-are-truly-shared)
+    - 8.4 [Use Functional setState Updates When Based on Previous State](#84-use-functional-setstate-updates-when-based-on-previous-state)
+    - 8.5 [Use useEffectEvent for Non-reactive Effect Callbacks](#85-use-useeffectevent-for-non-reactive-effect-callbacks)
+9. [Render Performance](#9-render-performance) — **MEDIUM-HIGH**
+    - 9.1 [Prefer React Compiler Defaults Over Manual Memoization](#91-prefer-react-compiler-defaults-over-manual-memoization)
+    - 9.2 [Use Lazy State Initializers for Expensive Defaults](#92-use-lazy-state-initializers-for-expensive-defaults)
+    - 9.3 [Use startTransition for Non-urgent Visual Updates](#93-use-starttransition-for-non-urgent-visual-updates)
+    - 9.4 [Use useDeferredValue for Heavy Derived Renders](#94-use-usedeferredvalue-for-heavy-derived-renders)
+10. [Documentation and Comments](#10-documentation-and-comments) — **MEDIUM**
+    - 10.1 [Document Compound Parts with @part and @description](#101-document-compound-parts-with-part-and-description)
+    - 10.2 [Limit Inline Comments to Non-obvious Logic](#102-limit-inline-comments-to-non-obvious-logic)
+    - 10.3 [Require JSDoc on React Hooks, Handlers, and Key Declarations](#103-require-jsdoc-on-react-hooks-handlers-and-key-declarations)
 
 ---
 
@@ -352,7 +354,7 @@ config.navigation.project_menu_key.dashboard;
 - sibling `.ts` support 파일을 만들거나 local 선언을 named export로 옮기면
   이름 자체가 그대로여도 이 규칙을 확인합니다.
 - non-exported local symbol은 TypeScript `naming-use-consistent-file-and-symbol-naming`이,
-  local query·mutation binding은 `state-name-query-and-mutation-bindings-consistently`가 담당합니다.
+  local query·mutation binding은 `data-name-query-and-mutation-bindings-consistently`가 담당합니다.
   그것만 바꾸면 이 규칙은 적용하지 않습니다.
 
 **Incorrect (파일명과 심볼 규칙이 제각각이고 공용 상수를 화면 파일에 직접 둠):**
@@ -1387,7 +1389,7 @@ export const RouteComponent = () => {
 - 작은 1회성 guard, URL 조립, 빈 검색어 생략 같은 호출 지점 계산
 - handler/effect 안에 있어야 문맥이 보이는 query invalidation, navigation, fallback 처리
 - query `select` 내부 mapper.
-  `state-shape-query-data-with-select` 가 담당하므로 별도 함수나 support module 경계가 없으면 이 규칙은 적용하지 않는다
+  `data-shape-query-data-with-select` 가 담당하므로 별도 함수나 support module 경계가 없으면 이 규칙은 적용하지 않는다
 
 배치:
 
@@ -1864,19 +1866,19 @@ const handleSubmit = async () => {
 };
 ```
 
-## 7. State and Data Flow
+## 7. Server Data Flow
 
 **Impact: CRITICAL**
 
-Server state, store 접근, 파생값, effect callback, transition은 오리진을 보존해야 하며 데이터 변형도 가능한 한 소스 가까이에 있어야 합니다.
+Query와 mutation은 오리진을 보존해야 하며, 응답 변형은 `query.select`처럼 소스에 가장 가까운 지점에서 끝내야 합니다. binding 이름도 어떤 API에서 왔는지 드러내야 합니다.
 
 ### 7.1 Avoid Silent Fallback Defaults and Ad-hoc Loading Branches
 
-**Rule:** `R27` · `state-avoid-fallback-defaults-and-loading-flags`
+**Rule:** `R27` · `data-avoid-fallback-defaults-and-loading-flags`
 
 **Applies when:** optional 응답에 `??`·`||` 기본값을 넣거나 Suspense 화면 본문에 초기 loading return을 추가·변경하고 결측·로딩 UX를 다룬다.
 
-**Review with:** `screen-keep-derived-values-close`, `state-preserve-origin-chaining`, `typescript/absence-expose-optional-values-instead-of-silent-fallbacks`
+**Review with:** `data-preserve-origin-chaining`, `screen-keep-derived-values-close`, `typescript/absence-expose-optional-values-instead-of-silent-fallbacks`
 
 **Impact: HIGH (결측 데이터를 숨기지 않고 로딩 UX를 Suspense 또는 명시적 예외 처리 쪽으로 유도함)**
 
@@ -1920,90 +1922,15 @@ return (
 );
 ```
 
-### 7.2 Calculate Derived Values During Rendering
+### 7.2 Name Query and Mutation Bindings Consistently
 
-**Rule:** `R28` · `state-calculate-derived-values-during-render`
-
-**Applies when:** 현재 props·state·search·response에서 계산 가능한 값을 별도 state와 effect로 동기화하거나 그 동기화를 제거한다.
-
-**Requires selected:** `screen-keep-derived-values-close` · 함께 적용
-
-**Impact: HIGH (avoids redundant state sync and effect-driven drift when values can be computed from current inputs)**
-
-현재 props, state, search, response에서 바로 계산할 수 있는 값은
-`useEffect`와 `useState`로 다시 동기화하지 않습니다.
-render 중에 계산하면 추가 렌더와 drift가 줄고, effect dependency도 억지로 늘어나지 않습니다.
-
-파생값은 render 중에 만들고 사용 지점 가까이에 둡니다.
-배치 기준은 `screen-keep-derived-values-close`가 함께 정합니다.
-
-**Incorrect (파생값을 effect로 다시 state에 동기화):**
-
-```tsx
-const [selectedCount, setSelectedCount] = useState(0);
-
-useEffect(() => {
-	setSelectedCount(selectedIds.length);
-}, [selectedIds]);
-```
-
-**Correct (render 중에 바로 계산):**
-
-```tsx
-return <SelectedCountBadge count={selectedIds.length} />;
-```
-
-### 7.3 Choose State Tools by Source of Truth
-
-**Rule:** `R29` · `state-choose-state-tools-by-source-of-truth`
-
-**Applies when:** 로컬 UI·전역 client·server 데이터를 새 state 도구로 옮기거나 서로 다른 source of truth 사이에 복제·동기화한다.
-
-**Review with:** `state-store-derived-authority`
-
-**Impact: MEDIUM-HIGH (로컬 UI state, 전역 client state, server state가 서로 흐려지는 것을 막음)**
-
-상태 도구는 값의 수명과 소유자를 기준으로 고릅니다.
-
-| 상태의 소유자 | 기본 도구 |
-| --- | --- |
-| 로컬 UI | `useState` 또는 `useReducer` |
-| 전역 클라이언트 | `Zustand` |
-| 서버 | `@tanstack/react-query` |
-
-이 기준으로 고르면 화면 파일이 더 읽기 쉬워지고 중복 동기화가 줄어듭니다.
-
-프로젝트가 이미 다른 전역 store나 server-state 도구를 표준으로 쓴다면 그것을 유지합니다.
-`Zustand`나 `react-query`를 새로 들여오지 말고 source-of-truth 원칙만 지킵니다.
-
-**Incorrect (서버 상태를 로컬 상태로 복제):**
-
-```ts
-const responseUserGetItemSuspense = useUserGetItemSuspense();
-const [userName, setUserName] = useState(responseUserGetItemSuspense.data.name);
-```
-
-**Correct (도구를 source of truth에 맞춤):**
-
-```ts
-const [isOpen, setIsOpen] = useState(false);
-const themeStore = useThemeStore();
-
-/**
- * @api 사용자 상세 조회 API
- */
-const responseUserGetItemSuspense = useUserGetItemSuspense();
-```
-
-### 7.4 Name Query and Mutation Bindings Consistently
-
-**Rule:** `R30` · `state-name-query-and-mutation-bindings-consistently`
+**Rule:** `R28` · `data-name-query-and-mutation-bindings-consistently`
 
 **Applies when:** React Query query·mutation hook의 로컬 binding을 추가·이름 변경하거나 역할이 드러나지 않는 별칭이 diff에 보인다.
 
 **Requires selected:** `docs-require-jsdoc-on-key-declarations`, `typescript/naming-use-consistent-file-and-symbol-naming` · 함께 적용
 
-**Review with:** `state-preserve-origin-chaining`
+**Review with:** `data-preserve-origin-chaining`
 
 **Impact: HIGH (생성된 API hook과 로컬 바인딩을 쉽게 훑고 추적할 수 있게 함)**
 
@@ -2032,40 +1959,9 @@ const responseEntryListSuspense = useEntryListSuspense();
 const mutationEntryRemove = useEntryRemove();
 ```
 
-### 7.5 Prefer React Compiler Defaults Over Manual Memoization
+### 7.3 Preserve Response and Store Origin in Wide Scopes
 
-**Rule:** `R31` · `state-compiler-first-memoization`
-
-**Applies when:** `useMemo`·`useCallback`을 추가·제거하거나 참조 동일성·실측 병목·무거운 deferred 계산을 이유로 수동 memoization을 검토한다.
-
-**Impact: MEDIUM-HIGH (검증되지 않은 값어치 없이 노이즈만 늘리는 방어적 useMemo/useCallback을 피함)**
-
-React 19 컴파일러가 처리하는 범위에서는 `useMemo`, `useCallback`을 기본적으로 쓰지 않습니다.
-
-허용하는 경우는 셋뿐이고, 어느 쪽이든 바로 위에 한글 주석으로 이유를 남깁니다.
-
-- 외부 라이브러리가 참조 동일성에 민감할 때
-- 병목이 실제로 확인됐을 때
-- `useDeferredValue` 기준으로 무거운 파생 계산을 늦출 때
-
-마지막 경우에도 정말 무거운 계산인지를 먼저 확인합니다.
-
-**Incorrect (단순 가공을 관성적으로 memoization):**
-
-```ts
-const columns = useMemo(() => buildColumns(response.data.columns), [response.data.columns]);
-```
-
-**Correct (필요할 때만 이유를 적고 사용):**
-
-```ts
-// list library가 columns 참조 동일성을 요구하여 리렌더 폭증을 방지한다.
-const columns = useMemo(() => buildColumns(response.data.columns), [response.data.columns]);
-```
-
-### 7.6 Preserve Response and Store Origin in Wide Scopes
-
-**Rule:** `R32` · `state-preserve-origin-chaining`
+**Rule:** `R29` · `data-preserve-origin-chaining`
 
 **Applies when:** page·layout·screen 넓은 스코프에서 response·mutation·store를 구조분해하거나 별칭으로 끊고 원본 값 접근을 바꾼다.
 
@@ -2105,15 +2001,15 @@ useEffect(() => {
 }, [responseEntrySearchSuspense]);
 ```
 
-### 7.7 Shape React Query Data in query.select
+### 7.4 Shape React Query Data in query.select
 
-**Rule:** `R33` · `state-shape-query-data-with-select`
+**Rule:** `R30` · `data-shape-query-data-with-select`
 
 **Applies when:** 서버 응답의 list·items·meta 등을 렌더에서 가공·반복 소비하거나 React Query `select`의 결과 shape를 추가·변경한다.
 
 **Requires selected:** `docs-require-jsdoc-on-key-declarations` · 함께 적용
 
-**Review with:** `state-name-query-and-mutation-bindings-consistently`, `state-preserve-origin-chaining`
+**Review with:** `data-name-query-and-mutation-bindings-consistently`, `data-preserve-origin-chaining`
 
 **Impact: CRITICAL (응답 변환을 fetch 경계 가까이에 두고 렌더 타임의 반복 매핑을 피함)**
 
@@ -2144,9 +2040,90 @@ const responseEntryListSuspense = useEntryListSuspense({
 });
 ```
 
-### 7.8 Store Shared Derived Decisions Only When They Are Truly Shared
+## 8. Local State
 
-**Rule:** `R34` · `state-store-derived-authority`
+**Impact: HIGH**
+
+로컬 상태는 값의 수명과 소유자에 맞는 도구로 고르고, 파생값은 저장하지 않고 render에서 계산해야 합니다. effect callback은 반응성이 필요한 값만 의존성으로 받아야 합니다.
+
+### 8.1 Calculate Derived Values During Rendering
+
+**Rule:** `R31` · `state-calculate-derived-values-during-render`
+
+**Applies when:** 현재 props·state·search·response에서 계산 가능한 값을 별도 state와 effect로 동기화하거나 그 동기화를 제거한다.
+
+**Requires selected:** `screen-keep-derived-values-close` · 함께 적용
+
+**Impact: HIGH (avoids redundant state sync and effect-driven drift when values can be computed from current inputs)**
+
+현재 props, state, search, response에서 바로 계산할 수 있는 값은
+`useEffect`와 `useState`로 다시 동기화하지 않습니다.
+render 중에 계산하면 추가 렌더와 drift가 줄고, effect dependency도 억지로 늘어나지 않습니다.
+
+파생값은 render 중에 만들고 사용 지점 가까이에 둡니다.
+배치 기준은 `screen-keep-derived-values-close`가 함께 정합니다.
+
+**Incorrect (파생값을 effect로 다시 state에 동기화):**
+
+```tsx
+const [selectedCount, setSelectedCount] = useState(0);
+
+useEffect(() => {
+	setSelectedCount(selectedIds.length);
+}, [selectedIds]);
+```
+
+**Correct (render 중에 바로 계산):**
+
+```tsx
+return <SelectedCountBadge count={selectedIds.length} />;
+```
+
+### 8.2 Choose State Tools by Source of Truth
+
+**Rule:** `R32` · `state-choose-state-tools-by-source-of-truth`
+
+**Applies when:** 로컬 UI·전역 client·server 데이터를 새 state 도구로 옮기거나 서로 다른 source of truth 사이에 복제·동기화한다.
+
+**Review with:** `state-store-derived-authority`
+
+**Impact: MEDIUM-HIGH (로컬 UI state, 전역 client state, server state가 서로 흐려지는 것을 막음)**
+
+상태 도구는 값의 수명과 소유자를 기준으로 고릅니다.
+
+| 상태의 소유자 | 기본 도구 |
+| --- | --- |
+| 로컬 UI | `useState` 또는 `useReducer` |
+| 전역 클라이언트 | `Zustand` |
+| 서버 | `@tanstack/react-query` |
+
+이 기준으로 고르면 화면 파일이 더 읽기 쉬워지고 중복 동기화가 줄어듭니다.
+
+프로젝트가 이미 다른 전역 store나 server-state 도구를 표준으로 쓴다면 그것을 유지합니다.
+`Zustand`나 `react-query`를 새로 들여오지 말고 source-of-truth 원칙만 지킵니다.
+
+**Incorrect (서버 상태를 로컬 상태로 복제):**
+
+```ts
+const responseUserGetItemSuspense = useUserGetItemSuspense();
+const [userName, setUserName] = useState(responseUserGetItemSuspense.data.name);
+```
+
+**Correct (도구를 source of truth에 맞춤):**
+
+```ts
+const [isOpen, setIsOpen] = useState(false);
+const themeStore = useThemeStore();
+
+/**
+ * @api 사용자 상세 조회 API
+ */
+const responseUserGetItemSuspense = useUserGetItemSuspense();
+```
+
+### 8.3 Store Shared Derived Decisions Only When They Are Truly Shared
+
+**Rule:** `R33` · `state-store-derived-authority`
 
 **Applies when:** 여러 화면·메뉴·route guard가 쓰는 권한·capability 같은 derived decision을 store에 저장·동기화하거나 단일 화면 값까지 store로 올린다.
 
@@ -2196,9 +2173,9 @@ useEffect(() => {
 }, [accessStore, responseAccessBootstrapSuspense.data]);
 ```
 
-### 7.9 Use Functional setState Updates When Based on Previous State
+### 8.4 Use Functional setState Updates When Based on Previous State
 
-**Rule:** `R35` · `state-use-functional-setstate-updates`
+**Rule:** `R34` · `state-use-functional-setstate-updates`
 
 **Applies when:** 다음 state가 현재 state에 의존하는 handler·async callback·반복 갱신에서 `setState` 호출 방식을 추가·변경한다.
 
@@ -2237,106 +2214,9 @@ const handleToggleUser = (userId: string) => {
 };
 ```
 
-### 7.10 Use Lazy State Initializers for Expensive Defaults
+### 8.5 Use useEffectEvent for Non-reactive Effect Callbacks
 
-**Rule:** `R36` · `state-use-lazy-state-initializers-for-expensive-defaults`
-
-**Applies when:** `useState` 초기값에 localStorage 파싱, 인덱스 생성, 큰 배열 정규화 같은 비용 있는 계산을 추가·변경한다.
-
-**Impact: MEDIUM (prevents repeated setup work when the initial state is expensive to compute)**
-
-`useState` 초기값이 localStorage 파싱, 인덱스 생성,
-큰 배열 정규화처럼 무거운 계산이라면 값을 바로 넣지 말고 initializer 함수로 감쌉니다.
-싼 literal이나 단순 prop passthrough까지 전부 함수형으로 감쌀 필요는 없습니다.
-
-**Incorrect (비싼 초기화가 렌더마다 다시 평가됨):**
-
-```tsx
-const [searchIndex] = useState(buildSearchIndex(entryList));
-const [draftFilter] = useState(JSON.parse(localStorage.getItem("entry-filter") ?? "{}"));
-```
-
-**Correct (비싼 초기화는 최초 렌더에서만 수행):**
-
-```tsx
-const [searchIndex] = useState(() => buildSearchIndex(entryList));
-const [draftFilter] = useState(() => {
-	const storedValue = localStorage.getItem("entry-filter");
-	return storedValue ? JSON.parse(storedValue) : {};
-});
-```
-
-### 7.11 Use startTransition for Non-urgent Visual Updates
-
-**Rule:** `R37` · `state-use-starttransition-for-non-urgent-updates`
-
-**Applies when:** 클릭·선택·필터 변경 뒤 큰 list·table·tree를 다시 그리는 state update의 우선순위나 transition 처리를 바꾼다.
-
-**Impact: MEDIUM (keeps interactions responsive when a state change triggers a heavy list, table, or tree update)**
-
-클릭이나 선택 이후 무거운 list, table, tree 렌더가 따라오는 비긴급 시각 업데이트는 `startTransition`으로 감쌉니다.
-입력값 자체, 폼 에러, 즉시 비활성화 같은 urgent feedback까지 transition에 넣지는 않습니다.
-
-**Incorrect (무거운 비긴급 업데이트를 urgent state로 처리):**
-
-```tsx
-const handleStatusFilterChange = (nextStatus: EntryStatusFilter) => {
-	setStatusFilter(nextStatus);
-};
-```
-
-**Correct (비긴급 시각 업데이트는 transition으로 내림):**
-
-```tsx
-/**
- * @event 상태 필터 변경으로 인한 무거운 목록 갱신을 transition으로 예약
- */
-const handleStatusFilterChange = (nextStatus: EntryStatusFilter) => {
-	startTransition(() => {
-		setStatusFilter(nextStatus);
-	});
-};
-```
-
-### 7.12 Use useDeferredValue for Heavy Derived Renders
-
-**Rule:** `R38` · `state-use-usedeferredvalue-for-heavy-derived-renders`
-
-**Applies when:** 검색어·필터·정렬 입력이 무거운 파생 view를 갱신해 typing 지연이 생기거나 `useDeferredValue` 기반 계산을 추가·변경한다.
-
-**Review with:** `state-compiler-first-memoization`, `state-use-starttransition-for-non-urgent-updates`
-
-**Impact: MEDIUM (keeps typing and small interactions responsive while expensive derived views catch up)**
-
-검색어, 필터, 정렬 입력이 무거운 파생 렌더를 유발하면 원본 입력값을 그대로 expensive view에 연결하지 않습니다.
-`useDeferredValue`로 한 박자 늦춘 값을 만들고, 필요하면 그 값을 기준으로 필터링이나 정렬을 계산합니다.
-
-- 작은 배열이나 단순 문자열 가공까지 습관적으로 defer하지 않습니다.
-- 이 경우의 `useMemo`는 `state-compiler-first-memoization`의 예외적 허용 사례입니다.
-  deferred value 기준 재계산 비용이 실제로 크고,
-  render마다 같은 작업을 반복하지 않으려는 목적이 분명할 때만 함께 씁니다.
-
-**Incorrect (입력과 무거운 파생 렌더를 같은 값에 묶음):**
-
-```tsx
-const [keyword, setKeyword] = useState("");
-const filteredRows = rows.filter((row) => fuzzyMatchRow(row, keyword));
-```
-
-**Correct (입력은 urgent, 무거운 파생 렌더는 deferred 값과 제한적인 memoization으로 계산):**
-
-```tsx
-const [keyword, setKeyword] = useState("");
-const deferredKeyword = useDeferredValue(keyword);
-
-const filteredRows = useMemo(() => {
-	return rows.filter((row) => fuzzyMatchRow(row, deferredKeyword));
-}, [deferredKeyword, rows]);
-```
-
-### 7.13 Use useEffectEvent for Non-reactive Effect Callbacks
-
-**Rule:** `R39` · `state-use-effectevent-for-non-reactive-effect-callbacks`
+**Rule:** `R35` · `state-use-effectevent-for-non-reactive-effect-callbacks`
 
 **Applies when:** subscription effect가 최신 prop·state callback을 읽도록 ref 동기화 hack, dependency 재설치 또는 `useEffectEvent`를 추가·변경한다.
 
@@ -2392,13 +2272,147 @@ useEffect(() => {
 }, [socket]);
 ```
 
-## 8. Documentation and Comments
+## 9. Render Performance
+
+**Impact: MEDIUM-HIGH**
+
+메모이제이션은 React Compiler를 기본으로 두고 직접 손대지 않습니다. 실제로 무거운 초기화와 갱신만 lazy initializer, transition, deferred value로 미룹니다.
+
+### 9.1 Prefer React Compiler Defaults Over Manual Memoization
+
+**Rule:** `R36` · `perf-compiler-first-memoization`
+
+**Applies when:** `useMemo`·`useCallback`을 추가·제거하거나 참조 동일성·실측 병목·무거운 deferred 계산을 이유로 수동 memoization을 검토한다.
+
+**Impact: MEDIUM-HIGH (검증되지 않은 값어치 없이 노이즈만 늘리는 방어적 useMemo/useCallback을 피함)**
+
+React 19 컴파일러가 처리하는 범위에서는 `useMemo`, `useCallback`을 기본적으로 쓰지 않습니다.
+
+허용하는 경우는 셋뿐이고, 어느 쪽이든 바로 위에 한글 주석으로 이유를 남깁니다.
+
+- 외부 라이브러리가 참조 동일성에 민감할 때
+- 병목이 실제로 확인됐을 때
+- `useDeferredValue` 기준으로 무거운 파생 계산을 늦출 때
+
+마지막 경우에도 정말 무거운 계산인지를 먼저 확인합니다.
+
+**Incorrect (단순 가공을 관성적으로 memoization):**
+
+```ts
+const columns = useMemo(() => buildColumns(response.data.columns), [response.data.columns]);
+```
+
+**Correct (필요할 때만 이유를 적고 사용):**
+
+```ts
+// list library가 columns 참조 동일성을 요구하여 리렌더 폭증을 방지한다.
+const columns = useMemo(() => buildColumns(response.data.columns), [response.data.columns]);
+```
+
+### 9.2 Use Lazy State Initializers for Expensive Defaults
+
+**Rule:** `R37` · `perf-use-lazy-state-initializers-for-expensive-defaults`
+
+**Applies when:** `useState` 초기값에 localStorage 파싱, 인덱스 생성, 큰 배열 정규화 같은 비용 있는 계산을 추가·변경한다.
+
+**Impact: MEDIUM (prevents repeated setup work when the initial state is expensive to compute)**
+
+`useState` 초기값이 localStorage 파싱, 인덱스 생성,
+큰 배열 정규화처럼 무거운 계산이라면 값을 바로 넣지 말고 initializer 함수로 감쌉니다.
+싼 literal이나 단순 prop passthrough까지 전부 함수형으로 감쌀 필요는 없습니다.
+
+**Incorrect (비싼 초기화가 렌더마다 다시 평가됨):**
+
+```tsx
+const [searchIndex] = useState(buildSearchIndex(entryList));
+const [draftFilter] = useState(JSON.parse(localStorage.getItem("entry-filter") ?? "{}"));
+```
+
+**Correct (비싼 초기화는 최초 렌더에서만 수행):**
+
+```tsx
+const [searchIndex] = useState(() => buildSearchIndex(entryList));
+const [draftFilter] = useState(() => {
+	const storedValue = localStorage.getItem("entry-filter");
+	return storedValue ? JSON.parse(storedValue) : {};
+});
+```
+
+### 9.3 Use startTransition for Non-urgent Visual Updates
+
+**Rule:** `R38` · `perf-use-starttransition-for-non-urgent-updates`
+
+**Applies when:** 클릭·선택·필터 변경 뒤 큰 list·table·tree를 다시 그리는 state update의 우선순위나 transition 처리를 바꾼다.
+
+**Impact: MEDIUM (keeps interactions responsive when a state change triggers a heavy list, table, or tree update)**
+
+클릭이나 선택 이후 무거운 list, table, tree 렌더가 따라오는 비긴급 시각 업데이트는 `startTransition`으로 감쌉니다.
+입력값 자체, 폼 에러, 즉시 비활성화 같은 urgent feedback까지 transition에 넣지는 않습니다.
+
+**Incorrect (무거운 비긴급 업데이트를 urgent state로 처리):**
+
+```tsx
+const handleStatusFilterChange = (nextStatus: EntryStatusFilter) => {
+	setStatusFilter(nextStatus);
+};
+```
+
+**Correct (비긴급 시각 업데이트는 transition으로 내림):**
+
+```tsx
+/**
+ * @event 상태 필터 변경으로 인한 무거운 목록 갱신을 transition으로 예약
+ */
+const handleStatusFilterChange = (nextStatus: EntryStatusFilter) => {
+	startTransition(() => {
+		setStatusFilter(nextStatus);
+	});
+};
+```
+
+### 9.4 Use useDeferredValue for Heavy Derived Renders
+
+**Rule:** `R39` · `perf-use-usedeferredvalue-for-heavy-derived-renders`
+
+**Applies when:** 검색어·필터·정렬 입력이 무거운 파생 view를 갱신해 typing 지연이 생기거나 `useDeferredValue` 기반 계산을 추가·변경한다.
+
+**Review with:** `perf-compiler-first-memoization`, `perf-use-starttransition-for-non-urgent-updates`
+
+**Impact: MEDIUM (keeps typing and small interactions responsive while expensive derived views catch up)**
+
+검색어, 필터, 정렬 입력이 무거운 파생 렌더를 유발하면 원본 입력값을 그대로 expensive view에 연결하지 않습니다.
+`useDeferredValue`로 한 박자 늦춘 값을 만들고, 필요하면 그 값을 기준으로 필터링이나 정렬을 계산합니다.
+
+- 작은 배열이나 단순 문자열 가공까지 습관적으로 defer하지 않습니다.
+- 이 경우의 `useMemo`는 `perf-compiler-first-memoization`의 예외적 허용 사례입니다.
+  deferred value 기준 재계산 비용이 실제로 크고,
+  render마다 같은 작업을 반복하지 않으려는 목적이 분명할 때만 함께 씁니다.
+
+**Incorrect (입력과 무거운 파생 렌더를 같은 값에 묶음):**
+
+```tsx
+const [keyword, setKeyword] = useState("");
+const filteredRows = rows.filter((row) => fuzzyMatchRow(row, keyword));
+```
+
+**Correct (입력은 urgent, 무거운 파생 렌더는 deferred 값과 제한적인 memoization으로 계산):**
+
+```tsx
+const [keyword, setKeyword] = useState("");
+const deferredKeyword = useDeferredValue(keyword);
+
+const filteredRows = useMemo(() => {
+	return rows.filter((row) => fuzzyMatchRow(row, deferredKeyword));
+}, [deferredKeyword, rows]);
+```
+
+## 10. Documentation and Comments
 
 **Impact: MEDIUM**
 
 React 경계 선언에는 companion skill인 `convention-typescript`의 annotation 표준을 적용하고, compound component의 public part는 `@part`와 `@description`으로 읽히게 문서화하며, inline comment는 JSX나 handler 흐름에서 비자명한 제약만 설명해야 합니다.
 
-### 8.1 Document Compound Parts with @part and @description
+### 10.1 Document Compound Parts with @part and @description
 
 **Rule:** `R40` · `docs-document-compound-parts-with-part-and-description`
 
@@ -2497,7 +2511,7 @@ const DialogClose = (props: DialogCloseProps) => {
 };
 ```
 
-### 8.2 Limit Inline Comments to Non-obvious Logic
+### 10.2 Limit Inline Comments to Non-obvious Logic
 
 **Rule:** `R41` · `docs-limit-inline-comments-to-non-obvious-logic`
 
@@ -2537,7 +2551,7 @@ if (mutationFileUpload.isPending) {
 }
 ```
 
-### 8.3 Require JSDoc on React Hooks, Handlers, and Key Declarations
+### 10.3 Require JSDoc on React Hooks, Handlers, and Key Declarations
 
 **Rule:** `R42` · `docs-require-jsdoc-on-key-declarations`
 

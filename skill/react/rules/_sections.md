@@ -34,12 +34,22 @@ interaction 같은 runtime boundary를 소유한 route-local section은 추출�
 **Description:** Event handler는 이름이 예측 가능하고 effect 재실행을 유발하지 않는 직접적인 사용자 액션 흐름으로
   유지해야 합니다.
 
-## 7. State and Data Flow (state)
+## 7. Server Data Flow (data)
 **Impact:** CRITICAL
-**Description:** Server state, store 접근, 파생값, effect callback, transition은 오리진을 보존해야 하며 데이터 변형도
-  가능한 한 소스 가까이에 있어야 합니다.
+**Description:** Query와 mutation은 오리진을 보존해야 하며, 응답 변형은 `query.select`처럼 소스에 가장 가까운 지점에서
+  끝내야 합니다. binding 이름도 어떤 API에서 왔는지 드러내야 합니다.
 
-## 8. Documentation and Comments (docs)
+## 8. Local State (state)
+**Impact:** HIGH
+**Description:** 로컬 상태는 값의 수명과 소유자에 맞는 도구로 고르고, 파생값은 저장하지 않고 render에서 계산해야
+  합니다. effect callback은 반응성이 필요한 값만 의존성으로 받아야 합니다.
+
+## 9. Render Performance (perf)
+**Impact:** MEDIUM-HIGH
+**Description:** 메모이제이션은 React Compiler를 기본으로 두고 직접 손대지 않습니다. 실제로 무거운 초기화와 갱신만
+  lazy initializer, transition, deferred value로 미룹니다.
+
+## 10. Documentation and Comments (docs)
 **Impact:** MEDIUM
 **Description:** React 경계 선언에는 companion skill인 `convention-typescript`의 annotation 표준을 적용하고, compound
   component의 public part는 `@part`와 `@description`으로 읽히게 문서화하며, inline comment는 JSX나 handler 흐름에서

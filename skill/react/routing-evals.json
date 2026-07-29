@@ -371,8 +371,8 @@
 			],
 			"expectedSelected": {
 				"react": [
+					"data-preserve-origin-chaining",
 					"state-choose-state-tools-by-source-of-truth",
-					"state-preserve-origin-chaining",
 					"state-store-derived-authority",
 					"docs-require-jsdoc-on-key-declarations"
 				],
@@ -400,9 +400,9 @@
 			"expectedSelected": {
 				"react": [
 					"screen-keep-derived-values-close",
-					"state-name-query-and-mutation-bindings-consistently",
-					"state-preserve-origin-chaining",
-					"state-shape-query-data-with-select",
+					"data-name-query-and-mutation-bindings-consistently",
+					"data-preserve-origin-chaining",
+					"data-shape-query-data-with-select",
 					"docs-require-jsdoc-on-key-declarations"
 				],
 				"typescript": [
@@ -426,10 +426,10 @@
 			],
 			"expectedSelected": {
 				"react": [
-					"state-compiler-first-memoization",
-					"state-use-lazy-state-initializers-for-expensive-defaults",
-					"state-use-starttransition-for-non-urgent-updates",
-					"state-use-usedeferredvalue-for-heavy-derived-renders",
+					"perf-compiler-first-memoization",
+					"perf-use-lazy-state-initializers-for-expensive-defaults",
+					"perf-use-starttransition-for-non-urgent-updates",
+					"perf-use-usedeferredvalue-for-heavy-derived-renders",
 					"docs-limit-inline-comments-to-non-obvious-logic",
 					"docs-require-jsdoc-on-key-declarations"
 				],
@@ -483,8 +483,8 @@
 			"expectedSelected": {
 				"react": [
 					"screen-keep-derived-values-close",
-					"state-avoid-fallback-defaults-and-loading-flags",
-					"state-preserve-origin-chaining",
+					"data-avoid-fallback-defaults-and-loading-flags",
+					"data-preserve-origin-chaining",
 					"docs-limit-inline-comments-to-non-obvious-logic"
 				],
 				"typescript": [

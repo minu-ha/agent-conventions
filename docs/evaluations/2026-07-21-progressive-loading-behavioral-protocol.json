@@ -247,26 +247,24 @@
         "css": ["C21 organization-review-banned-css-patterns-before-finishing"]
       },
       "requiresSelected": {
-        "react:R01 ownership-avoid-barrel-and-react-namespace-imports": ["typescript:T04 naming-use-direct-imports-and-public-entry-points"],
-        "react:R06 ownership-use-consistent-file-and-symbol-naming": ["typescript:T03 naming-use-consistent-file-and-symbol-naming"],
-        "react:R07 typing-function-type-first": ["typescript:T08 types-reuse-callback-signatures-from-existing-contracts"],
-        "react:R15 composition-named-handlers-over-inline": ["react:R25 events-name-and-curry-handlers", "react:R42 docs-require-jsdoc-on-key-declarations"],
-        "react:R28 state-calculate-derived-values-during-render": ["react:R21 screen-keep-derived-values-close"],
-        "react:R30 state-name-query-and-mutation-bindings-consistently": ["typescript:T03 naming-use-consistent-file-and-symbol-naming", "react:R42 docs-require-jsdoc-on-key-declarations"],
-        "react:R33 state-shape-query-data-with-select": ["react:R42 docs-require-jsdoc-on-key-declarations"],
-        "react:R39 state-use-effectevent-for-non-reactive-effect-callbacks": ["react:R42 docs-require-jsdoc-on-key-declarations"],
+        "react:R15 composition-named-handlers-over-inline": ["react:R42 docs-require-jsdoc-on-key-declarations", "react:R25 events-name-and-curry-handlers"],
+        "react:R28 data-name-query-and-mutation-bindings-consistently": ["typescript:T03 naming-use-consistent-file-and-symbol-naming", "react:R42 docs-require-jsdoc-on-key-declarations"],
+        "react:R30 data-shape-query-data-with-select": ["react:R42 docs-require-jsdoc-on-key-declarations"],
         "react:R40 docs-document-compound-parts-with-part-and-description": ["react:R42 docs-require-jsdoc-on-key-declarations"],
         "react:R41 docs-limit-inline-comments-to-non-obvious-logic": ["typescript:T17 docs-keep-inline-comments-for-constraints-and-caveats"],
         "react:R42 docs-require-jsdoc-on-key-declarations": ["typescript:T18 docs-require-header-jsdoc-on-key-declarations"],
-        "typescript:T08 types-reuse-callback-signatures-from-existing-contracts": ["typescript:T07 types-prefer-function-variable-types-over-parameter-annotations"],
-        "typescript:T13 functions-replace-enum-with-as-const-objects": ["typescript:T03 naming-use-consistent-file-and-symbol-naming", "typescript:T05 types-document-custom-types-and-shapes"],
+        "react:R01 ownership-avoid-barrel-and-react-namespace-imports": ["typescript:T04 naming-use-direct-imports-and-public-entry-points"],
+        "react:R06 ownership-use-consistent-file-and-symbol-naming": ["typescript:T03 naming-use-consistent-file-and-symbol-naming"],
+        "react:R31 state-calculate-derived-values-during-render": ["react:R21 screen-keep-derived-values-close"],
+        "react:R35 state-use-effectevent-for-non-reactive-effect-callbacks": ["react:R42 docs-require-jsdoc-on-key-declarations"],
+        "react:R07 typing-function-type-first": ["typescript:T08 types-reuse-callback-signatures-from-existing-contracts"],
         "typescript:T18 docs-require-header-jsdoc-on-key-declarations": ["typescript:T19 docs-standardize-annotation-tags-by-declaration-role", "typescript:T21 docs-write-concise-korean-comments-about-purpose-and-constraints"],
+        "typescript:T13 functions-replace-enum-with-as-const-objects": ["typescript:T03 naming-use-consistent-file-and-symbol-naming", "typescript:T05 types-document-custom-types-and-shapes"],
+        "typescript:T08 types-reuse-callback-signatures-from-existing-contracts": ["typescript:T07 types-prefer-function-variable-types-over-parameter-annotations"],
         "css:C11 composition-prefer-ui-wrapper-prop-types": ["typescript:T09 types-reuse-existing-contracts-before-new-types"],
         "css:C14 selector-target-third-party-dom-from-owned-roots": ["css:C12 selector-avoid-deep-descendant-dependencies"],
         "css:C15 selector-use-pseudo-classes-for-dom-owned-states": ["css:C18 values-separate-domain-state-modifiers-from-dom-interaction-states"]
-      },
-      "closure": "Every completion gate for every activated domain is Selected. Every final Selected source activates any cross-skill target domain and forces every listed target to Selected. A forced target can never be N/A. Repeat until no new skill or Selected target is added.",
-      "negativePropagation": "An Unknown source is resolved first and records not-propagated-unknown until resolved. A final N/A source never propagates requiresSelected or activates a target skill and is omitted from requiresSelectedEvaluated because progressive routing does not load its contract. Extra target selection remains an exact-partition failure."
+      }
     },
     "reviewWithOutcomeContract": {
       "sourceOfTruth": "Every reviewWith edge in the current digest-bound contract set; this protocol does not duplicate or weaken that set.",

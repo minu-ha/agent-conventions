@@ -12,4 +12,4 @@ React 19 컴파일러가 처리하는 범위에서는 `useMemo`, `useCallback`�
 
 마지막 경우에도 정말 무거운 계산인지를 먼저 확인합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/state-compiler-first-memoization.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/perf-compiler-first-memoization.md)을 읽습니다.
