@@ -401,29 +401,29 @@ test("project template stays a standalone KISS starter, not a convention router"
 	// 번호 매긴 섹션 골격
 	for (const heading of [
 		"## 1. 프로젝트",
-		"## 2. 먼저 생각합니다",
-		"## 3. 최소로 만듭니다",
-		"## 4. 최소로 고칩니다",
-		"## 5. 검증하고 보고합니다",
-		"## 6. 하지 않는 것",
+		"## 2. 먼저 생각한다",
+		"## 3. 최소로 만든다",
+		"## 4. 최소로 고친다",
+		"## 5. 검증하고 보고한다",
+		"## 6. 확인받고 하는 것",
 	]) {
 		assert.ok(template.includes(heading), heading);
 	}
 
 	// KISS · YAGNI 원칙
 	for (const requiredText of [
-		"추측하지 않고",
+		"추측하지 않는다",
 		"문제를 해결하는 최소한의 코드",
 		"단일 사용처",
-		"꼭 필요한 곳만 건드리고",
+		"꼭 필요한 곳만 건드린다",
 		"바뀐 모든 줄이 요청과 직접 연결",
-		"실행한 명령과 그 출력으로 보고합니다",
+		"실행한 명령과 그 출력으로 보고한다",
 	]) {
 		assert.ok(template.includes(requiredText), requiredText);
 	}
 
 	// 프로젝트가 채울 자리
-	assert.ok(template.includes("이 절만 채우고 나머지는 그대로 둡니다"));
+	assert.ok(template.includes("이 절만 채운다"));
 
 	// 이 레포에 종속되지 않는다. 복사해 간 프로젝트에서 해석 불가능한 참조가 없어야 한다.
 	for (const coupling of ["RULES_INDEX", "contracts/", "appliesWhen", "requiresSelected", "agent-conventions/"]) {
