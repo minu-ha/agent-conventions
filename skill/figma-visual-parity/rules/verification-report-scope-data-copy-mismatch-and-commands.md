@@ -9,14 +9,8 @@ tags: verification, report, completion
 
 **Impact: CRITICAL (완료 보고에서 근거, 제외 항목, 남은 차이를 숨기지 않게 함)**
 
-완료 보고에는 사용한 Figma 링크/node,
-수정 scope,
-구현한 visual parity 항목,
-동적 데이터라서 하드코딩하지 않은 항목,
-정적 UI copy로 맞춘 항목,
-브라우저 screenshot 검증 여부,
-남은 mismatch,
-실행한 검증 명령을 포함합니다.
+완료 보고에는 사용한 Figma 링크/node, 수정 scope, 구현한 visual parity 항목, 동적 데이터라서 하드코딩하지 않은 항목,
+정적 UI copy로 맞춘 항목, 브라우저 screenshot 검증 여부, 남은 mismatch, 실행한 검증 명령을 포함합니다.
 
 **Incorrect (검증 근거와 남은 차이를 생략):**
 

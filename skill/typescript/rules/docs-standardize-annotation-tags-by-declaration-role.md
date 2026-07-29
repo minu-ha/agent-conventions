@@ -23,12 +23,8 @@ annotation 태그는 아래 여덟 개만 사용합니다.
 | `@part` | compound component public part |
 | `@description` | `@part`와 함께 쓰는 part 설명 |
 
-`@description`은 `@part`와 함께만 사용합니다. `@schema`,
-`@shape`,
-`@contract`,
-`@data`,
-`@type`,
-`@property`는 쓰지 않습니다.
+`@description`은 `@part`와 함께만 사용합니다.
+`@schema`, `@shape`, `@contract`, `@data`, `@type`, `@property`는 쓰지 않습니다.
 
 **Incorrect (역할이 드러나지 않는 예전 태그나 part 전용 태그를 잘못 사용):**
 

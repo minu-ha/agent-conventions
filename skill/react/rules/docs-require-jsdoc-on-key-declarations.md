@@ -27,13 +27,7 @@ export되지 않은 file-local `type`/`interface`는 public이라는 이유만�
 - exported/re-exported public `type`/`interface`, compound component public part
 - 예외적으로 남긴 `useMemo`/`useCallback`
 
-태그는 `convention-typescript`의 `@api`,
-`@event`,
-`@watch`,
-`@helper`,
-`@summary`,
-`@part`,
-`@description`,
+태그는 `convention-typescript`의 `@api`, `@event`, `@watch`, `@helper`, `@summary`, `@part`, `@description`,
 `@field`를 사용합니다.
 
 **Incorrect (비자명한 경계 선언에 문맥 설명이 없음):**

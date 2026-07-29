@@ -9,8 +9,7 @@ tags: server, redirects, middleware, auth, ownership
 
 **Impact: HIGH (keeps request-time guards and navigation side effects out of layout shells that should stay visual)**
 
-Route-local shell과 pages-local document helper는 shell 조립 역할만 하므로 redirect,
-rewrite,
+Route-local shell과 pages-local document helper는 shell 조립 역할만 하므로 redirect, rewrite,
 auth guard의 owner가 되지 않습니다.
 
 Owner 기준:

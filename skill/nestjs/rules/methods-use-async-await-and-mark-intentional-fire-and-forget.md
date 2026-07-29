@@ -9,9 +9,8 @@ tags: async, await, side-effects
 
 **Impact: HIGH (keeps asynchronous backend flow readable and makes intentionally unawaited side effects explicit)**
 
-비동기 처리는 `async/await`를 기본으로 사용하고
-`.then()` 체이닝은 피합니다. `void` 반환 비동기 호출은 반드시 `await`하거나 `void` 키워드로 fire-and-forget 의도를
-명시합니다.
+비동기 처리는 `async/await`를 기본으로 사용하고 `.then()` 체이닝은 피합니다.
+`void` 반환 비동기 호출은 반드시 `await`하거나 `void` 키워드로 fire-and-forget 의도를 명시합니다.
 
 **Incorrect (`.then()` 체이닝과 숨은 비동기 호출):**
 

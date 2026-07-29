@@ -6,8 +6,7 @@
 **Impact:** CRITICAL
 **Description:** `src/pages`는 Astro의 required route tree이자 route-local owner layer입니다.
 routed entry는 URL/rendering/server data/document handoff와 화면 흐름을 직접 소유하고,
-`_document.astro`/`_head.astro`/`_document.css`,
-`_local/`,
+`_document.astro`/`_head.astro`/`_document.css`, `_local/`,
 owner-named support file처럼 `_` prefix로 제외되는 route-local 파일만 함께 둡니다.
 
 ## 2. File Naming and Page Assets (naming)

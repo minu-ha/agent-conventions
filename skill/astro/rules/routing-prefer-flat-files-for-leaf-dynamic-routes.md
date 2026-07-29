@@ -9,15 +9,14 @@ tags: routing, dynamic-routes, folders, pages
 
 **Impact: HIGH (keeps dynamic route trees shallow until a route actually owns child routes)**
 
-하위 route가 없는 dynamic page는 folder로 감싸지 말고 flat file로 둡니다. `index.astro` folder는 같은 resource 아래에
-child route가 실제로 생겼을 때 사용합니다.
+하위 route가 없는 dynamic page는 folder로 감싸지 말고 flat file로 둡니다.
+`index.astro` folder는 같은 resource 아래에 child route가 실제로 생겼을 때 사용합니다.
 
 판단 기준:
 
 - Leaf public detail은 `src/pages/posts/[slug].astro`처럼 둡니다.
 - Leaf filtered list도 child route가 없으면 `src/pages/tags/[slug].astro`처럼 둡니다.
-- 같은 dynamic resource 아래에 `feed.xml`,
-  `[page].astro`,
+- 같은 dynamic resource 아래에 `feed.xml`, `[page].astro`,
   settings 같은 child route가 생기면 그때 `src/pages/tags/[slug]/index.astro`로 승격합니다.
 - 공개 URL contract가 이미 배포됐다면 파일 구조 선호보다 URL 보존과 redirect 계획을 먼저 봅니다.
 

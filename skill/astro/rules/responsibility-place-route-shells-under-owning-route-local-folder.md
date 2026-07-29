@@ -10,8 +10,7 @@ tags: responsibility, layouts, local, ownership
 
 **Impact: HIGH (prevents route shell files from becoming a blurry shared component tier between pages and reusable building blocks)**
 
-Route-specific shell files are not shared layouts.
-Put them under the owning route's `_local/` folder.
+Route-specific shell files are not shared layouts. Put them under the owning route's `_local/` folder.
 
 기준:
 
@@ -20,9 +19,7 @@ Put them under the owning route's `_local/` folder.
 - Shared visual pieces: `ui` and `widget`
 - Site-wide document shell: top-level `_document.astro`, `_head.astro`, `_document.css`
 
-Do not create `src/layouts`,
-`src/components/layouts`,
-`ui-page-shell`,
+Do not create `src/layouts`, `src/components/layouts`, `ui-page-shell`,
 or `widget-page-shell` just because several children in one route subtree share a shell.
 
 **Incorrect (route shell floats as a shared component layer):**
@@ -67,5 +64,4 @@ src/
 ```
 
 이 구조에서는 `admin-shell.astro`가 admin route family shell을 소유하고,
-site-wide document shell은 `src/pages/_*`가 소유하며,
-shared visual block만 `ui`와 `widget`에서 가져와 조립합니다.
+site-wide document shell은 `src/pages/_*`가 소유하며, shared visual block만 `ui`와 `widget`에서 가져와 조립합니다.

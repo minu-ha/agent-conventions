@@ -27,8 +27,8 @@ tags: screen, utils, extraction
 
 - 작은 1회성 guard, URL 조립, 빈 검색어 생략 같은 호출 지점 계산
 - handler/effect 안에 있어야 문맥이 보이는 query invalidation, navigation, fallback 처리
-- query `select` 내부 mapper. `state-shape-query-data-with-select` 가 담당하므로
-  별도 함수나 support module 경계가 없으면 이 규칙은 적용하지 않는다
+- query `select` 내부 mapper.
+  `state-shape-query-data-with-select` 가 담당하므로 별도 함수나 support module 경계가 없으면 이 규칙은 적용하지 않는다
 
 배치:
 

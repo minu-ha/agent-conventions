@@ -89,8 +89,7 @@
 
 `src/pages`는 Astro의 required route tree이자 route-local owner layer입니다.
 routed entry는 URL/rendering/server data/document handoff와 화면 흐름을 직접 소유하고,
-`_document.astro`/`_head.astro`/`_document.css`,
-`_local/`,
+`_document.astro`/`_head.astro`/`_document.css`, `_local/`,
 owner-named support file처럼 `_` prefix로 제외되는 route-local 파일만 함께 둡니다.
 
 ### 1.1 Keep `src/pages` as the Route-local Owner Layer
@@ -155,8 +154,8 @@ src/
           entry-editor.css
 ```
 
-이 구조에서는 route contract와 route-only 구현이 함께 움직입니다. `src/components/ui`와 `src/components/widget`은 여러
-route에서 재사용되는 public surface만 받습니다.
+이 구조에서는 route contract와 route-only 구현이 함께 움직입니다.
+`src/components/ui`와 `src/components/widget`은 여러 route에서 재사용되는 public surface만 받습니다.
 
 ### 1.2 Place Pages-local Document Helpers Under `src/pages` with an Underscore Prefix
 
@@ -172,8 +171,7 @@ Astro는 `src/pages` 안에서 `_`로 시작하는 파일과 폴더를 router에
 - Route support module: `_index.ts`, `_slug.ts`, `_entry-admin.ts`
 - Route-local implementation: `_local/entry-editor.tsx`, `_local/entry-editor.css`
 
-`_document.astro`는 `<html>`,
-`<head>`,
+`_document.astro`는 `<html>`, `<head>`,
 `<body>`와 route-shared body shell을 소유하면서 document shell `Props`를 자기 파일 안에 직접 가집니다.
 
 **Incorrect (document helper와 route-local 구현이 route tree 밖으로 밀려남):**
@@ -193,8 +191,8 @@ src/
         index.astro
 ```
 
-이 구조는 Astro route와 route-only 구현의 ownership을 흐립니다. `components`는 public shared surface처럼 보이므로 route
-전용 파일을 두기에 부적절합니다.
+이 구조는 Astro route와 route-only 구현의 ownership을 흐립니다.
+`components`는 public shared surface처럼 보이므로 route 전용 파일을 두기에 부적절합니다.
 
 **Correct (pages-local document helper와 route-local 구현을 `_` prefix로 route tree 안에 둠):**
 
@@ -224,9 +222,7 @@ src/
           entry-editor.css
 ```
 
-이 구조에서는 `_document`,
-`_head`,
-`_document.css`가 pages-local document helper라는 점과,
+이 구조에서는 `_document`, `_head`, `_document.css`가 pages-local document helper라는 점과,
 `_local/` 및 owner-named support file이 route-local 구현이라는 점이 파일 위치만으로 드러납니다.
 
 ### 1.3 Place Route Implementations Under `src/pages`
@@ -295,8 +291,7 @@ src/
 
 `src/pages` 안에서 `_`로 시작하는 파일과 폴더는 route가 아니므로 route-local implementation을 안전하게 둘 수 있습니다.
 단, `_local/`은 dump folder가 아닙니다.
-파일명은 `entry-editor.tsx`,
-`admin-query-provider.tsx`,
+파일명은 `entry-editor.tsx`, `admin-query-provider.tsx`,
 `entry-admin-table.css`처럼 실제 owner와 역할이 드러나야 합니다.
 
 ## 2. File Naming and Page Assets
@@ -309,10 +304,8 @@ src/
 
 **Impact: HIGH (keeps Astro route files, route-local assets, CSS owners, and URL semantics aligned without duplicating folder depth in names)**
 
-Routed entry file names follow Astro routing (`index.astro`,
-`[slug].astro`,
-`new.astro`). Route-local support files and CSS use the route role as owner,
-not the whole folder path.
+Routed entry file names follow Astro routing (`index.astro`, `[slug].astro`,
+`new.astro`). Route-local support files and CSS use the route role as owner, not the whole folder path.
 
 Naming 기준:
 
@@ -357,9 +350,7 @@ the route.
 **Impact: MEDIUM-HIGH (keeps route params self-explanatory in file trees and inside Astro.params)**
 
 `[param].astro`와 `[...param].astro`의 이름은 도메인 의미가 드러나는 명사를 사용합니다.
-실제 slug를 표현하는 경우가 아니라면 generic `id`,
-`path`,
-`value` 이름은 피하고,
+실제 slug를 표현하는 경우가 아니라면 generic `id`, `path`, `value` 이름은 피하고,
 파일 경로만 봐도 해당 param이 무엇을 가리키는지 알 수 있게 둡니다.
 
 **Incorrect (generic param 이름으로 의미를 숨김):**
@@ -444,8 +435,7 @@ src/
           entry-editor.css
 ```
 
-If a helper is used by exactly one component,
-place it beside that component with the same owner name,
+If a helper is used by exactly one component, place it beside that component with the same owner name,
 such as `entry-editor.ts` next to `entry-editor.tsx`. If it is shared across the route family,
 use the route support owner,
 such as `_entry-admin.ts`. Promote it to `shared` or `components` only after the dependency crosses route ownership.
@@ -607,14 +597,10 @@ const description = pageDescription ?? "Default site description";
 **Impact: HIGH (prevents browser behavior from leaking into Astro's server-side component preparation phase)**
 
 Astro frontmatter는 server-only component script입니다.
-import,
-`Astro.props` 해석,
-fetch,
-server-side 파생값 계산처럼 HTML을 준비하는 코드에 집중하고,
+import, `Astro.props` 해석, fetch, server-side 파생값 계산처럼 HTML을 준비하는 코드에 집중하고,
 이 값이 브라우저에서 그대로 살아 있을 것처럼 가정하지 않습니다.
 브라우저 이벤트 핸들러나 DOM 접근은 template의 `<script>`나 framework island로 넘기고,
-frontmatter 값이 browser script에 필요하면
-`data-*` attribute 같은 명시적인 handoff를 사용합니다.
+frontmatter 값이 browser script에 필요하면 `data-*` attribute 같은 명시적인 handoff를 사용합니다.
 
 **Incorrect (frontmatter 안에서 browser handler를 정의하고 template에 직접 연결하려 함):**
 
@@ -769,10 +755,7 @@ import PromoCard from "./PromoCard.astro";
 **Impact: CRITICAL (keeps Astro pages mostly static and reserves JavaScript for real interaction boundaries)**
 
 Hydration은 검색 입력, 필터, 플레이어, 차트, 폼 상태처럼 실제 상호작용이 필요한 widget에만 사용합니다.
-정적 hero,
-marketing copy,
-read-only card,
-simple CTA wrapper는 `.astro`로 렌더링하고
+정적 hero, marketing copy, read-only card, simple CTA wrapper는 `.astro`로 렌더링하고
 불필요한 `client:*`를 붙이지 않습니다.
 
 **Incorrect (정적 정보 블록 전체를 습관적으로 hydrate함):**
@@ -802,11 +785,9 @@ import FeatureSearch from "../components/FeatureSearch.tsx";
 **Impact: HIGH (preserves server-rendered HTML for interactive widgets that can hydrate normally)**
 
 `client:only`는 server HTML을 건너뛰고 page load 시점에 바로 client 렌더링합니다.
-browser API 전용 라이브러리처럼 SSR이 실제로 불가능한 경우에만 사용하고,
-그렇지 않다면 `client:load`,
-`client:idle`,
-`client:visible`로 server HTML을 먼저 남깁니다. `client:only`를 쓸 때는 framework hint를 명시하고,
-로딩 공백이 보이면 fallback도 함께 둡니다.
+browser API 전용 라이브러리처럼 SSR이 실제로 불가능한 경우에만 사용하고, 그렇지 않다면 `client:load`, `client:idle`,
+`client:visible`로 server HTML을 먼저 남깁니다.
+`client:only`를 쓸 때는 framework hint를 명시하고, 로딩 공백이 보이면 fallback도 함께 둡니다.
 
 **Incorrect (SSR 가능한 widget까지 습관적으로 `client:only`에 올림):**
 
@@ -877,15 +858,14 @@ const { post } = Astro.props;
 
 **Impact: HIGH (keeps dynamic route trees shallow until a route actually owns child routes)**
 
-하위 route가 없는 dynamic page는 folder로 감싸지 말고 flat file로 둡니다. `index.astro` folder는 같은 resource 아래에
-child route가 실제로 생겼을 때 사용합니다.
+하위 route가 없는 dynamic page는 folder로 감싸지 말고 flat file로 둡니다.
+`index.astro` folder는 같은 resource 아래에 child route가 실제로 생겼을 때 사용합니다.
 
 판단 기준:
 
 - Leaf public detail은 `src/pages/posts/[slug].astro`처럼 둡니다.
 - Leaf filtered list도 child route가 없으면 `src/pages/tags/[slug].astro`처럼 둡니다.
-- 같은 dynamic resource 아래에 `feed.xml`,
-  `[page].astro`,
+- 같은 dynamic resource 아래에 `feed.xml`, `[page].astro`,
   settings 같은 child route가 생기면 그때 `src/pages/tags/[slug]/index.astro`로 승격합니다.
 - 공개 URL contract가 이미 배포됐다면 파일 구조 선호보다 URL 보존과 redirect 계획을 먼저 봅니다.
 
@@ -974,11 +954,8 @@ src/pages/topics/[topic]/[page].astro
 **Impact: HIGH (prevents file tree cleanup from silently changing published URLs that users and crawlers already rely on)**
 
 route folder를 더 예쁘게 정리할 수 있더라도, 이미 공개된 URL contract가 있다면 그 계약을 먼저 존중합니다.
-현재 사이트가 이미 `/recent/:page?`,
-`/posts/:page?`,
-`/posts/:slug`,
-`/tags/:slug` 같은 경로를 쓰고 있다면 폴더 대칭성만을 이유로 root pagination,
-singular folder,
+현재 사이트가 이미 `/recent/:page?`, `/posts/:page?`, `/posts/:slug`,
+`/tags/:slug` 같은 경로를 쓰고 있다면 폴더 대칭성만을 이유로 root pagination, singular folder,
 다른 slug family로 URL을 바꾸지 않습니다.
 이 skill에서는 "새로 설계할 때의 선호 구조"와 "이미 배포된 공개 URL"을 분리해서 판단합니다.
 
@@ -1010,12 +987,8 @@ src/pages/note/[slug].astro
 src/pages/tag/[slug].astro
 ```
 
-이 변경은 file tree는 더 대칭적으로 보일 수 있지만,
-이미 배포된 `/recent/*`,
-`/posts/*`,
-`/notes/*`,
-`/tags/*` 링크와 canonical을 깨뜨리는 공개 URL 변경이므로 별도 migration이나 redirect 계획 없이 수행하면
-안 됩니다.
+이 변경은 file tree는 더 대칭적으로 보일 수 있지만, 이미 배포된 `/recent/*`, `/posts/*`, `/notes/*`,
+`/tags/*` 링크와 canonical을 깨뜨리는 공개 URL 변경이므로 별도 migration이나 redirect 계획 없이 수행하면 안 됩니다.
 
 **Correct (현재 공개 URL을 유지하거나, 바꾼다면 명시적 migration으로 다룸):**
 
@@ -1034,10 +1007,7 @@ src/pages/tags/index.astro
 src/pages/tags/[slug].astro
 ```
 
-이 경우에는 convention이 현재 공개 URL을 존중하도록 맞추고,
-정말 URL을 바꾸고 싶다면 redirect,
-canonical,
-internal link,
+이 경우에는 convention이 현재 공개 URL을 존중하도록 맞추고, 정말 URL을 바꾸고 싶다면 redirect, canonical, internal link,
 sitemap까지 포함한 migration 작업으로 분리합니다.
 
 ### 5.5 Use HTML Anchors Before Framework Link Abstractions
@@ -1079,9 +1049,7 @@ static, on-demand SSR, `output: \"server\"`, client-only islands는 전제가 �
 **Impact: CRITICAL (keeps Astro's fast default intact and avoids adding server dependence too early)**
 
 Astro 프로젝트는 기본 `static` output을 먼저 유지합니다.
-쿠키,
-세션,
-요청별 개인화가 필요한 경로가 몇 개 있다고 해서 전체 프로젝트를 곧바로 `output: "server"`로 바꾸지 말고,
+쿠키, 세션, 요청별 개인화가 필요한 경로가 몇 개 있다고 해서 전체 프로젝트를 곧바로 `output: "server"`로 바꾸지 말고,
 대부분의 page가 여전히 build-time에 안전하다면 static 기본값을 유지한 채 필요한 route만 on-demand로 opt out 합니다.
 
 **Incorrect (대부분이 정적인 사이트인데 동적 page 몇 개 때문에 전체를 server mode로 바꿈):**
@@ -1114,8 +1082,7 @@ export default defineConfig({
 **Impact: HIGH (makes full-project SSR a deliberate app-level choice instead of a convenience toggle)**
 
 `output: "server"`는 새로운 기능을 추가하는 옵션이 아니라 전체 page의 기본 rendering behavior를 뒤집는 선택입니다.
-대시보드,
-로그인 후 앱처럼 대부분의 page가 request-time 데이터와 auth에 묶인 경우에만 기본값으로 채택하고,
+대시보드, 로그인 후 앱처럼 대부분의 page가 request-time 데이터와 auth에 묶인 경우에만 기본값으로 채택하고,
 그 안의 정적 page만 `prerender = true`로 opt in 합니다.
 
 **Incorrect (몇 개의 auth page만 동적인데 전체 project를 server mode로 돌림):**
@@ -1144,13 +1111,11 @@ export default defineConfig({
 
 **Impact: CRITICAL (keeps request-time logic on routes that actually execute per request)**
 
-쿠키,
-인증 세션,
-요청 헤더,
+쿠키, 인증 세션, 요청 헤더,
 요청마다 바뀌는 개인화 데이터에 의존하는 page나 endpoint는 static mode에서 `export const prerender = false`로 on-demand
 rendering을 명시합니다.
-build 시점에 고정된 HTML로 만들 수 없는 동작을 정적 page 안에 억지로 숨기지 않습니다. `output: "server"`를 이미 쓰는
-프로젝트라면 같은 intent를 page-level로 다시 선언할 필요는 없습니다.
+build 시점에 고정된 HTML로 만들 수 없는 동작을 정적 page 안에 억지로 숨기지 않습니다.
+`output: "server"`를 이미 쓰는 프로젝트라면 같은 intent를 page-level로 다시 선언할 필요는 없습니다.
 
 **Incorrect (request-time 데이터에 의존하지만 정적 page처럼 둠):**
 
@@ -1185,8 +1150,7 @@ structured content는 build-time/live collection 경계를 분명히 하고 conf
 **Impact: HIGH (centralizes content ownership and keeps collection shape from being redefined across pages)**
 
 build-time content collection 정의는 `src/content.config.ts`에서 한 번에 관리합니다.
-page 파일 안에서 glob,
-frontmatter parsing,
+page 파일 안에서 glob, frontmatter parsing,
 ad-hoc shape normalization을 반복하지 말고 collection loader와 registration을 중앙화합니다.
 요청마다 fresh한 데이터를 가져오는 live collection은 이 파일이 아니라 `src/live.config.ts`와 `defineLiveCollection()`
 쪽으로 분리합니다.
@@ -1221,8 +1185,7 @@ export const collections = { blog };
 
 build-time content collection과 live collection은 같은 개념으로 취급하지 않습니다.
 build-time collection은 `src/content.config.ts`와 `defineCollection()`에 두고 `getCollection()`/`getEntry()`로 읽습니다.
-요청마다 fresh한 CMS나 API 데이터를 다뤄야 하면
-`src/live.config.ts`와 `defineLiveCollection()`을 사용하고
+요청마다 fresh한 CMS나 API 데이터를 다뤄야 하면 `src/live.config.ts`와 `defineLiveCollection()`을 사용하고
 `getLiveCollection()`/`getLiveEntry()`로 접근합니다.
 live collection은 on-demand rendering 전제도 함께 갖습니다.
 
@@ -1291,13 +1254,9 @@ Actions, endpoints, server islands는 각각 caller와 response shape, adapter �
 **Impact: HIGH (keeps mutation boundaries aligned with who is calling them and what kind of response they must control)**
 
 브라우저 UI가 직접 호출하는 form submit이나 mutation은 기본적으로 Actions를 먼저 검토합니다.
-Actions는 input validation,
-error shape,
+Actions는 input validation, error shape,
 client/server 호출 계약을 한 경계에서 다루기 쉬워 UI와 가까운 write flow에 잘 맞습니다.
-반대로 public API,
-webhook,
-binary 응답,
-세밀한 header/status 제어,
+반대로 public API, webhook, binary 응답, 세밀한 header/status 제어,
 non-UI consumer가 필요한 경우에는 endpoint가 더 자연스럽습니다.
 static mode에서 HTML form 기반 action을 쓰면 on-demand rendering 전제도 함께 확인합니다.
 
@@ -1321,8 +1280,7 @@ static mode에서 HTML form 기반 action을 쓰면 on-demand rendering 전제�
 
 **Impact: HIGH (keeps request-time guards and navigation side effects out of layout shells that should stay visual)**
 
-Route-local shell과 pages-local document helper는 shell 조립 역할만 하므로 redirect,
-rewrite,
+Route-local shell과 pages-local document helper는 shell 조립 역할만 하므로 redirect, rewrite,
 auth guard의 owner가 되지 않습니다.
 
 Owner 기준:
@@ -1514,10 +1472,7 @@ Page file에 남길 것:
 - `class:list` conditions
 - empty-state branch choices
 
-Do not create `_form.ts`,
-`_api.ts`,
-`utils.ts`,
-`helpers.ts`,
+Do not create `_form.ts`, `_api.ts`, `utils.ts`, `helpers.ts`,
 or `common.ts` unless the owner name makes the boundary explicit.
 
 **Incorrect (small route-local calculations are scattered into generic helpers):**
@@ -1714,8 +1669,7 @@ const initialState = await getEntryAdminInitialState();
 
 **Impact: HIGH (preserves one-way dependency flow from routed pages to pages-local document helpers instead of letting shared code depend on routing helpers)**
 
-`src/pages/_document.astro`,
-`_head.astro`,
+`src/pages/_document.astro`, `_head.astro`,
 `_document.css` 같은 pages-local document helper는 routed page만 import합니다.
 
 의존 방향:
@@ -1812,8 +1766,7 @@ import Document from "@/pages/_document.astro";
 </Document>
 ```
 
-이 구조만 보면 route에서 어떤 server data가 준비되는지,
-어떤 empty state가 있는지,
+이 구조만 보면 route에서 어떤 server data가 준비되는지, 어떤 empty state가 있는지,
 어떤 screen surface가 route owner인지 보이지 않습니다.
 
 **Correct (route page가 screen flow와 runtime handoff를 계속 소유):**
@@ -1844,9 +1797,7 @@ const hasEntries = initialState.entries.length > 0;
 </Document>
 ```
 
-이 예시는 React runtime이 필요해도 route entry가 document handoff,
-server data,
-high-level branch,
+이 예시는 React runtime이 필요해도 route entry가 document handoff, server data, high-level branch,
 `rt_*` surface owner를 계속 보여 줍니다.
 
 ### 9.7 Limit Layouts to Shell and Composition
@@ -1905,8 +1856,7 @@ const { currentPathname } = Astro.props;
 
 **Impact: HIGH (prevents route shell files from becoming a blurry shared component tier between pages and reusable building blocks)**
 
-Route-specific shell files are not shared layouts.
-Put them under the owning route's `_local/` folder.
+Route-specific shell files are not shared layouts. Put them under the owning route's `_local/` folder.
 
 기준:
 
@@ -1915,9 +1865,7 @@ Put them under the owning route's `_local/` folder.
 - Shared visual pieces: `ui` and `widget`
 - Site-wide document shell: top-level `_document.astro`, `_head.astro`, `_document.css`
 
-Do not create `src/layouts`,
-`src/components/layouts`,
-`ui-page-shell`,
+Do not create `src/layouts`, `src/components/layouts`, `ui-page-shell`,
 or `widget-page-shell` just because several children in one route subtree share a shell.
 
 **Incorrect (route shell floats as a shared component layer):**
@@ -1962,8 +1910,7 @@ src/
 ```
 
 이 구조에서는 `admin-shell.astro`가 admin route family shell을 소유하고,
-site-wide document shell은 `src/pages/_*`가 소유하며,
-shared visual block만 `ui`와 `widget`에서 가져와 조립합니다.
+site-wide document shell은 `src/pages/_*`가 소유하며, shared visual block만 `ui`와 `widget`에서 가져와 조립합니다.
 
 ### 9.9 Place Route-local UI Under `_local/`
 
@@ -2031,13 +1978,9 @@ Astro frontmatter, `src/pages/_document.astro`/`_head.astro`, route-local suppor
 
 **Impact: MEDIUM (keeps Astro comments focused on the constraints readers are most likely to miss)**
 
-Astro의 inline comment는 rendering mode,
-serialization,
-route ownership handoff,
-adapter requirement,
+Astro의 inline comment는 rendering mode, serialization, route ownership handoff, adapter requirement,
 integration caveat처럼 없으면 오해되기 쉬운 제약에만 남깁니다.
-frontmatter 안에서는 `//` 주석을 사용하고,
-template 내부 설명이 필요하면
+frontmatter 안에서는 `//` 주석을 사용하고, template 내부 설명이 필요하면
 HTML comment로 남기기보다 frontmatter나 support module로 경계를 옮겨 문서화합니다.
 변수명이나 template 구조를 그대로 읽어주는 주석은 남기지 않습니다.
 
@@ -2068,9 +2011,7 @@ const pageProps = getPostListPageProps({ entries: postEntries, currentPage: 1 })
 
 **Impact: MEDIUM-HIGH (makes Astro route boundaries and route-local support helpers searchable before readers inspect implementation details)**
 
-Astro frontmatter와 `src/pages/_document.astro`,
-`src/pages/_head.astro`,
-`src/pages/**/_entry-admin.ts`,
+Astro frontmatter와 `src/pages/_document.astro`, `src/pages/_head.astro`, `src/pages/**/_entry-admin.ts`,
 `src/pages/**/_local/entry-editor.ts` 같은 route-local support module에서 중요한 경계를 선언할 때는 헤더 JSDoc을
 작성합니다.
 
@@ -2166,14 +2107,9 @@ Astro 기능은 버전과 adapter 조건에 민감하므로 문서 확인과 lay
 
 **Impact: MEDIUM (reduces cleanup work by deciding shell, rendering mode, and island boundaries before files sprawl)**
 
-새 page를 추가할 때는 화면 마크업부터 급하게 만들지 말고,
-먼저 기본 `src/pages/_document.astro` 패턴으로 충분한지,
-`_document.astro`와 `_head.astro`의 로컬 `Props`에 어떤 문서 계약이 필요한지,
-`_document.css`를 건드려야 하는지,
-owning route의 `_local/` shell이 필요한지,
-guard owner,
-static/on-demand 여부,
-dynamic route 여부,
+새 page를 추가할 때는 화면 마크업부터 급하게 만들지 말고, 먼저 기본 `src/pages/_document.astro` 패턴으로 충분한지,
+`_document.astro`와 `_head.astro`의 로컬 `Props`에 어떤 문서 계약이 필요한지, `_document.css`를 건드려야 하는지,
+owning route의 `_local/` shell이 필요한지, guard owner, static/on-demand 여부, dynamic route 여부,
 island 필요 여부를 정합니다.
 이 순서를 따르면 `client:load` 남용이나 route-local ownership 붕괴를 뒤늦게 뜯어내는 일을 줄일 수 있습니다.
 
@@ -2203,12 +2139,9 @@ island 필요 여부를 정합니다.
 
 **Impact: MEDIUM (reduces stale assumptions around fast-moving Astro features and directives)**
 
-`client:*`,
-`server:defer`,
-Actions,
-content collections,
-adapters처럼 버전과 host 조건에 민감한 Astro 기능은 공식 문서를 먼저 확인합니다. `astro-docs` MCP가 연결돼 있다면 그
-경로를 우선 사용하고,
+`client:*`, `server:defer`, Actions, content collections,
+adapters처럼 버전과 host 조건에 민감한 Astro 기능은 공식 문서를 먼저 확인합니다.
+`astro-docs` MCP가 연결돼 있다면 그 경로를 우선 사용하고,
 없더라도 최소한 공식 문서 기준으로 최신 동작을 확인한 뒤 규칙을 적용합니다.
 
 **Incorrect (다른 framework 기억이나 오래된 Astro 예시를 그대로 적용):**
@@ -2229,11 +2162,8 @@ adapters처럼 버전과 host 조건에 민감한 Astro 기능은 공식 문서�
 
 **Impact: MEDIUM (catches Astro-specific deployment and rendering mismatches before they ship)**
 
-Astro 변경을 마무리할 때는 코드 diff만 보지 말고 adapter,
-`output`,
-prerender/on-demand 전제,
-build-time/live collection 선택,
-hydration 경계를 함께 점검합니다.
+Astro 변경을 마무리할 때는 코드 diff만 보지 말고 adapter, `output`, prerender/on-demand 전제,
+build-time/live collection 선택, hydration 경계를 함께 점검합니다.
 Actions나 server islands를 추가했는데 adapter가 없거나, 정적 shell이 과하게 hydrate되는 상태로 끝내지 않습니다.
 
 **Incorrect (Astro 전용 전제를 확인하지 않고 기능만 붙이고 마무리):**

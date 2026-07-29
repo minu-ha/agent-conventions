@@ -9,12 +9,9 @@ tags: workflow, docs, astro-docs
 
 **Impact: MEDIUM (reduces stale assumptions around fast-moving Astro features and directives)**
 
-`client:*`,
-`server:defer`,
-Actions,
-content collections,
-adapters처럼 버전과 host 조건에 민감한 Astro 기능은 공식 문서를 먼저 확인합니다. `astro-docs` MCP가 연결돼 있다면 그
-경로를 우선 사용하고,
+`client:*`, `server:defer`, Actions, content collections,
+adapters처럼 버전과 host 조건에 민감한 Astro 기능은 공식 문서를 먼저 확인합니다.
+`astro-docs` MCP가 연결돼 있다면 그 경로를 우선 사용하고,
 없더라도 최소한 공식 문서 기준으로 최신 동작을 확인한 뒤 규칙을 적용합니다.
 
 **Incorrect (다른 framework 기억이나 오래된 Astro 예시를 그대로 적용):**

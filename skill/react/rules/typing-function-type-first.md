@@ -20,8 +20,9 @@ curried handler factory가 반환하는 함수도 JSX event prop에 전달되는
 JSX가 나중에 contextual typing을 제공한다는 이유로 반환 함수 타입을 생략하지 않습니다.
 factory 반환 타입을 `MouseEventHandler<...>` 같은 기존 alias로 고정합니다.
 
-`query.select` 같은 hook option의 one-off contextual callback과 UI-agnostic domain function은
-React event handler나 prop callback 구현이 아닙니다. 이 경우 이 규칙은 적용하지 않습니다.
+`query.select` 같은 hook option의 one-off contextual callback과 UI-agnostic domain function은 React event handler나 prop
+callback 구현이 아닙니다.
+이 경우 이 규칙은 적용하지 않습니다.
 
 React alias를 쓰기 위해 type import를 추가·변경하면
 `ownership-avoid-barrel-and-react-namespace-imports`를 다시 판정합니다.

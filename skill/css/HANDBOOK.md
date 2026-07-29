@@ -69,10 +69,8 @@
 
 **Impact: HIGH (keeps the global `scope_slug` naming system meaningful instead of hiding ownership behind local module indirection)**
 
-이 CSS skill은 기본적으로 plain `*.css`와 전역 고유 클래스명을 전제로 합니다. `rt_*`,
-`ui_*`,
-`wg_*`,
-`loc_*` 네임스페이스는 global class space에서 owner를 추적하려고 존재하므로,
+이 CSS skill은 기본적으로 plain `*.css`와 전역 고유 클래스명을 전제로 합니다.
+`rt_*`, `ui_*`, `wg_*`, `loc_*` 네임스페이스는 global class space에서 owner를 추적하려고 존재하므로,
 프로젝트에 별도 합의가 없다면 `.module.css`와 `styles.foo`를 기본 선택으로 삼지 않습니다.
 프로젝트가 이미 CSS Modules를 공식 표준으로 채택했고 그에 맞는 naming/runtime 규칙이 따로 있다면,
 그 프로젝트 로컬 규칙이 이 기본값보다 우선합니다.
@@ -164,9 +162,8 @@ rt_dashboardIndex__header
 
 **Impact: HIGH (avoids vague or layout-only names that stop classes from describing what the UI part actually is)**
 
-`element`와 `modifier` 이름은 구조나 치수가 아니라 UI 역할을 표현해야 합니다. `container`,
-`wrapper`,
-`box` 같은 포괄 단어 단독 사용이나 `gap12` 같은 숫자 기반 의미는 피하고,
+`element`와 `modifier` 이름은 구조나 치수가 아니라 UI 역할을 표현해야 합니다.
+`container`, `wrapper`, `box` 같은 포괄 단어 단독 사용이나 `gap12` 같은 숫자 기반 의미는 피하고,
 실제 역할과 상태를 드러내는 이름을 씁니다.
 
 **Incorrect (역할 대신 구조나 치수에 기대는 이름):**
@@ -388,8 +385,8 @@ modifier는 상태나 반복 variant를 표현할 때만 사용합니다.
 
 금지 대상은 "상태 의미가 아닌 모든 modifier"가 아니라, 재사용 contract 없이 생긴 one-off structural modifier입니다.
 
-이 규칙의 Selected는 modifier가 금지됐다는 뜻이 아니라 변경된 modifier의 계약을 분류했다는 뜻입니다. `active`·`selected`
-같은 허용된 domain state로 결론 나면 `Selected + pass`이며,
+이 규칙의 Selected는 modifier가 금지됐다는 뜻이 아니라 변경된 modifier의 계약을 분류했다는 뜻입니다.
+`active`·`selected` 같은 허용된 domain state로 결론 나면 `Selected + pass`이며,
 위반이 없다는 이유로 N/A로 돌리지 않습니다.
 
 **Incorrect (특정 화면용 구조 patch를 modifier로 덧붙임):**
@@ -421,8 +418,7 @@ modifier는 상태나 반복 variant를 표현할 때만 사용합니다.
 한 클래스를 독립된 여러 시각 책임에 재사용하지 않습니다.
 처음부터 single-purpose base와 modifier를 별도로 만드는 작업은 결합 책임을 해소하는 변경이 없으므로 이 규칙을 선택하지
 않습니다.
-스타일 책임을 보존한 owner prefix 수정,
-single-purpose rename,
+스타일 책임을 보존한 owner prefix 수정, single-purpose rename,
 one-off modifier를 역할명 class로 바꾸기만 하는 경우도 대상이 아닙니다.
 
 **Incorrect (상태 의미를 별도 클래스 역할처럼 합쳐 버림):**
@@ -476,14 +472,13 @@ const items: NonNullable<UiCollapseProps["items"]> = [];
 
 **Impact: HIGH (prevents shared UI wrappers from exposing uncontrolled styling hooks through ad-hoc className injection)**
 
-이 규칙은 실제 `Ui*` React wrapper 컴포넌트/API 경계에만 적용합니다. `.ui_*` 같은 기존 CSS owner root 아래에서
-third-party selector만 스코프하는 CSS-only 변경은 `selector-target-third-party-dom-from-owned-roots`가 담당합니다.
+이 규칙은 실제 `Ui*` React wrapper 컴포넌트/API 경계에만 적용합니다.
+`.ui_*` 같은 기존 CSS owner root 아래에서 third-party selector만 스코프하는 CSS-only 변경은
+`selector-target-third-party-dom-from-owned-roots`가 담당합니다.
 
-`Ui*` 컴포넌트(`UiCollapse`,
-`UiAvatar`,
+`Ui*` 컴포넌트(`UiCollapse`, `UiAvatar`,
 `UiButton` 등)의 내부 DOM을 꾸미기 위한 ad-hoc `className` 주입은 기본적으로 피합니다.
-스타일링이 필요하면
-화면이나 local 래퍼 클래스를 두고,
+스타일링이 필요하면 화면이나 local 래퍼 클래스를 두고,
 그 래퍼 아래에서만 서드파티 라이브러리 내부 DOM을 제한적으로 타겟팅합니다.
 다만 wrapper가 root `className`이나 slot prop을 공식 styling contract로 노출했다면,
 레이아웃 참여나 spacing 같은 root-level 스타일에는 그 contract를 그대로 사용할 수 있습니다.
@@ -574,15 +569,12 @@ owned root 아래의 third-party DOM path는 `selector-target-third-party-dom-fr
 
 - 기본값: project-owned class는 각각 top-level block으로 선언합니다.
 - 금지: project-owned class끼리 부모-자식 관계를 descendant selector로 표현하지 않습니다.
-- 예외: `__prose`,
-  `__copy`,
-  `__content`처럼 raw HTML wrapper가 owner boundary라면 같은 block 안에서 `& h2`,
-  `& p`,
+- 예외: `__prose`, `__copy`, `__content`처럼 raw HTML wrapper가 owner boundary라면 같은 block 안에서 `& h2`, `& p`,
   `& > :first-child`를 허용합니다.
 - 별도 규칙: third-party DOM anchor는 `selector-target-third-party-dom-from-owned-roots`를 따릅니다.
 
-rich text 예외는 raw element styling에만 적용됩니다. `.owner__prose .owner__child`처럼 다른 project-owned class를 다시
-체이닝하는 근거로 쓰지 않습니다.
+rich text 예외는 raw element styling에만 적용됩니다.
+`.owner__prose .owner__child`처럼 다른 project-owned class를 다시 체이닝하는 근거로 쓰지 않습니다.
 
 **Incorrect (project-owned 클래스 관계를 descendant selector로 표현하거나, owner wrapper element styling을 block 밖으로 흩뿌림):**
 
@@ -634,8 +626,7 @@ rich text 예외는 raw element styling에만 적용됩니다. `.owner__prose .o
 
 **Impact: CRITICAL (limits third-party styling to explicit wrapper ownership instead of leaking across the app)**
 
-서드파티 라이브러리 내부 DOM 클래스(`.ant-*`,
-`.rc-*`,
+서드파티 라이브러리 내부 DOM 클래스(`.ant-*`, `.rc-*`,
 `.tippy-*`)는 프로젝트가 소유한 root block 아래에서만 타겟팅합니다.
 
 판단 기준:
@@ -644,15 +635,13 @@ rich text 예외는 raw element styling에만 적용됩니다. `.owner__prose .o
 - root 없는 `.ant-*` 단독 selector는 금지합니다.
 - `.rt_* .ant-*` 같은 one-line chaining보다 root block 안의 `& .ant-*`를 사용합니다.
 - third-party DOM 경로는 shortest viable chain만 허용합니다.
-- owned root가 이미 instance scope를 제공하고
-  target class가 직접 식별 가능하면
+- owned root가 이미 instance scope를 제공하고 target class가 직접 식별 가능하면
   `.ant-tree` 같은 중간 library root를 반복하지 않습니다.
 - 추가 third-party ancestor는 target ambiguity나 direct-child contract처럼 실제로 필요한 evidence가 있을 때만 허용하고
   그 근거를 기록합니다.
 - nested block 안에서 다시 nested block을 열지 않습니다.
 
-이 예외는 third-party DOM path에만 적용됩니다.
-project-owned class끼리의 깊은 descendant coupling은 여전히 금지입니다.
+이 예외는 third-party DOM path에만 적용됩니다. project-owned class끼리의 깊은 descendant coupling은 여전히 금지입니다.
 
 **Incorrect (루트 없이 타겟팅하거나 nested 안에서 다시 nested를 열어 의미를 흐림):**
 
@@ -715,8 +704,7 @@ project-owned class끼리의 깊은 descendant coupling은 여전히 금지입�
 브라우저와 DOM이 직접 부여하는 상태는 같은 클래스 block 안의 nested `&:`로 표현합니다.
 화면이나 도메인이 결정하는 상태는 modifier class로 분리합니다.
 
-base/modifier 분리에서는 domain state와 무관한 hover,
-focus,
+base/modifier 분리에서는 domain state와 무관한 hover, focus,
 disabled interaction을 unconditional base element block에 둡니다.
 interaction selector를 modifier 아래로 옮겨 적용 대상을 좁히지 않습니다.
 modifier가 켜진 경우에만 interaction이 달라져야 한다는 별도 제품 요구가 있을 때만 그 예외를 명시합니다.
@@ -794,14 +782,11 @@ modifier가 켜진 경우에만 interaction이 달라져야 한다는 별도 제
 
 **Impact: MEDIUM-HIGH (makes sticky, fixed, and box responsibilities understandable without reverse-engineering the DOM)**
 
-레이아웃 의도는 클래스명과 선언에서 즉시 확인 가능해야 합니다. `position`,
-`width`,
-`height` 강제는 최소화하고
-부모와 자식의 레이아웃 책임을 분리하며,
+레이아웃 의도는 클래스명과 선언에서 즉시 확인 가능해야 합니다.
+`position`, `width`, `height` 강제는 최소화하고 부모와 자식의 레이아웃 책임을 분리하며,
 `sticky`나 `fixed`를 쓸 때는 기준 컨테이너와 `z-index` 의도를 주석으로 남깁니다.
 같은 DOM element의 base/modifier 책임을 분리하면서 기존 `display`나 spacing property-value를 값 그대로 재배치하는 작업은
-class responsibility 규칙이 소유하며
-이 규칙은 N/A입니다.
+class responsibility 규칙이 소유하며 이 규칙은 N/A입니다.
 position, z-index, 강제 geometry 또는 부모·자식 layout 책임이 바뀌면 다시 Selected입니다.
 
 **Incorrect (레이아웃 강제가 많고 기준 설명이 없음):**
@@ -841,14 +826,11 @@ position, z-index, 강제 geometry 또는 부모·자식 layout 책임이 바뀌
 **Impact: HIGH (prevents missing tokens from degrading styles unpredictably when variables are absent)**
 
 CSS 변수 `var(--*)`를 사용할 때는 토큰 존재가 보장되지 않는 경계에서 fallback 값을 함께 지정합니다.
-theme provider,
-서드파티 wrapper,
-선택적 토큰,
+theme provider, 서드파티 wrapper, 선택적 토큰,
 임시 overlay처럼 변수가 빠질 수 있는 surface에서는 안전한 기본값을 둬야 합니다.
 요청이나 기존 token contract에 없는 CSS variable을 이 규칙 때문에 새로 발명하지 않으며,
 새 stylesheet나 class를 만든다는 사실만으로 이 규칙을 선택하지 않습니다.
-다만 실제 diff에 새 CSS variable 사용이 들어오면,
-요청 여부와 무관하게 이 규칙을 다시 선택하고
+다만 실제 diff에 새 CSS variable 사용이 들어오면, 요청 여부와 무관하게 이 규칙을 다시 선택하고
 주입 보장·fallback을 검사합니다.
 반대로 프로젝트 전역에서 반드시 주입되는 core design token이라면,
 누락을 빨리 드러내기 위해 fallback을 생략할 수도 있습니다.
@@ -897,18 +879,14 @@ byte-equivalent 이동만 하는 경우는 N/A입니다.
 
 **Impact: HIGH (keeps app state, focus visibility, and hover behavior readable and accessible without mixing their responsibilities)**
 
-화면 상태나 도메인 상태는 `--active`,
-`--selected`,
-`--error` 같은 modifier로 표현하고,
-브라우저 상호작용 상태는 같은 클래스 블록 내부 nested `&:hover`,
-`&:focus-visible`,
+화면 상태나 도메인 상태는 `--active`, `--selected`, `--error` 같은 modifier로 표현하고,
+브라우저 상호작용 상태는 같은 클래스 블록 내부 nested `&:hover`, `&:focus-visible`,
 `&:disabled` 같은 pseudo-class로 표현합니다.
 새 modifier를 다루면 실제 domain state인지 one-off structural patch인지 확인하기 위해
 `composition-do-not-build-structural-variants-with-modifiers`를 다시 판정합니다.
 포커스 링 제거는 금지하며, 대체 포커스 스타일을 반드시 제공합니다.
 
-base/modifier 분리에서는 domain state와 무관한 hover,
-focus,
+base/modifier 분리에서는 domain state와 무관한 hover, focus,
 disabled interaction을 unconditional base element block에 둡니다.
 interaction selector를 modifier 아래로 옮겨 적용 대상을 좁히지 않습니다.
 modifier block에는 active·selected·error처럼 app state가 소유하는 presentation만 남깁니다.

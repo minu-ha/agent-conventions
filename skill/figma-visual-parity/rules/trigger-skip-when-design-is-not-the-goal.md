@@ -9,11 +9,7 @@ tags: trigger, scope, exclusions
 
 **Impact: HIGH (Figma와 무관한 기능/API 작업에 visual parity 절차를 과잉 적용하지 않게 함)**
 
-Figma 댓글 CSV 추출,
-API/데이터 로직 수정,
-디자인 기준 없는 기능 구현,
-사용자가 명시한 "대략만",
-"구조만",
+Figma 댓글 CSV 추출, API/데이터 로직 수정, 디자인 기준 없는 기능 구현, 사용자가 명시한 "대략만", "구조만",
 "디자인 말고 동작만" 요청은 이 skill을 적용하지 않습니다.
 Figma link가 있어도 사용 목적이 comment extraction이나 metadata export라면 visual parity workflow로 바꾸지 않습니다.
 

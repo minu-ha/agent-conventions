@@ -17,8 +17,7 @@ tags: composition, modifiers, responsibility
 한 클래스를 독립된 여러 시각 책임에 재사용하지 않습니다.
 처음부터 single-purpose base와 modifier를 별도로 만드는 작업은 결합 책임을 해소하는 변경이 없으므로 이 규칙을 선택하지
 않습니다.
-스타일 책임을 보존한 owner prefix 수정,
-single-purpose rename,
+스타일 책임을 보존한 owner prefix 수정, single-purpose rename,
 one-off modifier를 역할명 class로 바꾸기만 하는 경우도 대상이 아닙니다.
 
 **Incorrect (상태 의미를 별도 클래스 역할처럼 합쳐 버림):**

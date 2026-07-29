@@ -11,8 +11,7 @@ tags: responsibility, pages, imports, dependency-direction, document-helpers
 
 **Impact: HIGH (preserves one-way dependency flow from routed pages to pages-local document helpers instead of letting shared code depend on routing helpers)**
 
-`src/pages/_document.astro`,
-`_head.astro`,
+`src/pages/_document.astro`, `_head.astro`,
 `_document.css` 같은 pages-local document helper는 routed page만 import합니다.
 
 의존 방향:

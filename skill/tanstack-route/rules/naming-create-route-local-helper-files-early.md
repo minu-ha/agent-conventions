@@ -13,10 +13,8 @@ tags: helpers, route-local, typescript
 예를 들어 `settings.index.tsx`라면 `settings.ts`로 옮기고 named export를 직접 import합니다.
 
 exported support helper는 `convention-typescript` 규칙에 맞춰 `@helper` JSDoc을 붙이고,
-silent fallback으로 결측을 숨기지 않습니다. `helper.ts`,
-`helpers.ts`,
-`utils.ts`,
-`common.ts` 같은 generic 파일명은 만들지 않고,
+silent fallback으로 결측을 숨기지 않습니다.
+`helper.ts`, `helpers.ts`, `utils.ts`, `common.ts` 같은 generic 파일명은 만들지 않고,
 화면 하나에서만 쓰는 custom hook으로 우회해 숨기지도 않습니다.
 
 **Incorrect (generic helper 파일명으로 support code를 분산):**

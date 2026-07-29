@@ -40,8 +40,7 @@ import Document from "@/pages/_document.astro";
 </Document>
 ```
 
-이 구조만 보면 route에서 어떤 server data가 준비되는지,
-어떤 empty state가 있는지,
+이 구조만 보면 route에서 어떤 server data가 준비되는지, 어떤 empty state가 있는지,
 어떤 screen surface가 route owner인지 보이지 않습니다.
 
 **Correct (route page가 screen flow와 runtime handoff를 계속 소유):**
@@ -72,7 +71,5 @@ const hasEntries = initialState.entries.length > 0;
 </Document>
 ```
 
-이 예시는 React runtime이 필요해도 route entry가 document handoff,
-server data,
-high-level branch,
+이 예시는 React runtime이 필요해도 route entry가 document handoff, server data, high-level branch,
 `rt_*` surface owner를 계속 보여 줍니다.

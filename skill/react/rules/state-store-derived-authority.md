@@ -19,8 +19,7 @@ tags: state, zustand, derived-decisions
 store에 올리기로 했다면 문자열 비교나 도메인 판별은 bootstrap/layout 같은 한 경계에만 모으고,
 화면은 `accessStore.canEditRecord` 같은 결과만 참조합니다.
 Suspense query처럼 `onSuccess`가 없어서 동기화가 필요하다면 owner가 분명한 경계에서만 `useEffect` 또는
-`useLayoutEffect`를 사용하고,
-selector 최적화는 정말 필요한 경우에만 근거 주석과 함께 예외적으로 사용합니다.
+`useLayoutEffect`를 사용하고, selector 최적화는 정말 필요한 경우에만 근거 주석과 함께 예외적으로 사용합니다.
 
 **Incorrect (화면마다 판별을 반복하면서 단일 화면용 값을 store에도 복제):**
 

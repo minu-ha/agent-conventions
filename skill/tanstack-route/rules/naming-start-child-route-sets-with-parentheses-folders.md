@@ -9,11 +9,8 @@ tags: child-routes, grouping, folders
 
 **Impact: HIGH (makes child route groups explicit before filenames grow long or sibling routes become hard to scan)**
 
-하위 라우트가 생기면 기본적으로 먼저 `(<feature>)` 그룹 폴더를 만들고,
-그 안에 해당 feature의 4-file set(`feature.css`,
-`feature.ts`,
-`feature.layout.tsx`,
-`feature.index.tsx`)과 `-local/`을 정리합니다.
+하위 라우트가 생기면 기본적으로 먼저 `(<feature>)` 그룹 폴더를 만들고, 그 안에 해당 feature의 4-file set(`feature.css`,
+`feature.ts`, `feature.layout.tsx`, `feature.index.tsx`)과 `-local/`을 정리합니다.
 이 규칙의 목적은 URL semantics를 바꾸는 것이 아니라 route asset 묶음을 한 feature 단위로 보이게 유지하는 것입니다.
 이렇게 하면 sibling route가 늘어나도 같은 계층의 route asset이 서로 섞이지 않고, 파일명이 불필요하게 길어지지 않습니다.
 

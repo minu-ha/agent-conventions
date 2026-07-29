@@ -10,9 +10,8 @@ tags: naming, semantics, modifiers
 
 **Impact: HIGH (avoids vague or layout-only names that stop classes from describing what the UI part actually is)**
 
-`element`와 `modifier` 이름은 구조나 치수가 아니라 UI 역할을 표현해야 합니다. `container`,
-`wrapper`,
-`box` 같은 포괄 단어 단독 사용이나 `gap12` 같은 숫자 기반 의미는 피하고,
+`element`와 `modifier` 이름은 구조나 치수가 아니라 UI 역할을 표현해야 합니다.
+`container`, `wrapper`, `box` 같은 포괄 단어 단독 사용이나 `gap12` 같은 숫자 기반 의미는 피하고,
 실제 역할과 상태를 드러내는 이름을 씁니다.
 
 **Incorrect (역할 대신 구조나 치수에 기대는 이름):**

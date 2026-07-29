@@ -104,9 +104,7 @@ Bad: 플랫 파일명만으로 표현
 **Impact: HIGH (prevents app-wide route concerns from mixing with feature-specific shells)**
 
 전역 라우트 컨텍스트와 앱 전체 공통 책임은 `<route-root>/__root.tsx`에서만 관리합니다.
-루트는 `head`,
-전역 `Outlet`,
-전역 로딩/모달 정리처럼 모든 화면이 공유하는 책임만 가져야 하고,
+루트는 `head`, 전역 `Outlet`, 전역 로딩/모달 정리처럼 모든 화면이 공유하는 책임만 가져야 하고,
 특정 feature 전용 셸이나 화면 로직을 끌어오지 않습니다.
 
 **Incorrect (루트 파일에 feature 전용 셸 책임을 섞음):**
@@ -184,12 +182,7 @@ function Root() {
 **Impact: CRITICAL (keeps top-level route boundaries aligned with real shell differences instead of feature names)**
 
 최상위 라우트 그룹은 기능명 기준이 아니라 레이아웃 셸 기준으로 나눕니다.
-헤더,
-사이드바,
-접근 가드,
-브레드크럼,
-전역 래퍼가 다르면 별도 최상위 그룹으로 분리하고,
-모든 화면이 같은 셸을 공유하면
+헤더, 사이드바, 접근 가드, 브레드크럼, 전역 래퍼가 다르면 별도 최상위 그룹으로 분리하고, 모든 화면이 같은 셸을 공유하면
 기능별 최상위 그룹으로 쪼개지 않습니다.
 
 **Incorrect (같은 레이아웃인데 기능명으로 최상위 그룹을 분리):**
@@ -246,10 +239,8 @@ URL에 보여야 하는 상위 계층만 일반 폴더로 두고, 하위 라우�
 
 **Impact: HIGH (makes top-level route groups communicate the shell they belong to instead of the feature they happen to contain)**
 
-최상위 그룹 이름은 기능명이 아니라 레이아웃 셸 의미가 드러나야 합니다. `public/app`,
-`auth/workspace`,
-`marketing/admin`처럼 셸 단위를 표현하고,
-같은 셸이면 새 그룹 이름을 만들지 않습니다.
+최상위 그룹 이름은 기능명이 아니라 레이아웃 셸 의미가 드러나야 합니다.
+`public/app`, `auth/workspace`, `marketing/admin`처럼 셸 단위를 표현하고, 같은 셸이면 새 그룹 이름을 만들지 않습니다.
 
 **Incorrect (기능명으로 최상위 그룹 의미를 대신함):**
 
@@ -271,11 +262,9 @@ URL에 보여야 하는 상위 계층만 일반 폴더로 두고, 하위 라우�
 
 **Impact: MEDIUM-HIGH (gives nested routes a predictable place for styles, shell code, and pure helpers from the start)**
 
-이 프로젝트의 route file set은 `feature.css`,
-`feature.ts`,
-`feature.layout.tsx`,
-`feature.index.tsx` 4개를 기본 세트로 봅니다. `*.layout.tsx`는 눈에 띄는 shell UI가 아직 없더라도 route tunnel과 향후
-layout 책임을 받을 경계로 미리 두고,
+이 프로젝트의 route file set은 `feature.css`, `feature.ts`, `feature.layout.tsx`,
+`feature.index.tsx` 4개를 기본 세트로 봅니다.
+`*.layout.tsx`는 눈에 띄는 shell UI가 아직 없더라도 route tunnel과 향후 layout 책임을 받을 경계로 미리 두고,
 `*.ts`는 route support code가 자라날 기본 자리로 둡니다.
 이렇게 해야 라우트가 커져도 스타일, 셸, 화면, 순수 로직의 자리가 예측 가능하게 유지됩니다.
 
@@ -300,11 +289,8 @@ layout 책임을 받을 경계로 미리 두고,
 
 **Impact: HIGH (makes child route groups explicit before filenames grow long or sibling routes become hard to scan)**
 
-하위 라우트가 생기면 기본적으로 먼저 `(<feature>)` 그룹 폴더를 만들고,
-그 안에 해당 feature의 4-file set(`feature.css`,
-`feature.ts`,
-`feature.layout.tsx`,
-`feature.index.tsx`)과 `-local/`을 정리합니다.
+하위 라우트가 생기면 기본적으로 먼저 `(<feature>)` 그룹 폴더를 만들고, 그 안에 해당 feature의 4-file set(`feature.css`,
+`feature.ts`, `feature.layout.tsx`, `feature.index.tsx`)과 `-local/`을 정리합니다.
 이 규칙의 목적은 URL semantics를 바꾸는 것이 아니라 route asset 묶음을 한 feature 단위로 보이게 유지하는 것입니다.
 이렇게 하면 sibling route가 늘어나도 같은 계층의 route asset이 서로 섞이지 않고, 파일명이 불필요하게 길어지지 않습니다.
 
@@ -331,8 +317,7 @@ layout 책임을 받을 경계로 미리 두고,
 
 **Impact: MEDIUM-HIGH (keeps route params self-explanatory at the file level and inside router APIs)**
 
-필수 path param은 `{$param}`,
-선택 path param은 `{-$param}` 문법을 사용하고,
+필수 path param은 `{$param}`, 선택 path param은 `{-$param}` 문법을 사용하고,
 param 이름은 도메인 의미가 드러나는 명사를 씁니다.
 generic `id`, `x` 같은 이름은 파일 구조만 봐서는 의미를 알 수 없으므로 피합니다.
 
@@ -359,10 +344,8 @@ filters.{-$tab}.tsx
 예를 들어 `settings.index.tsx`라면 `settings.ts`로 옮기고 named export를 직접 import합니다.
 
 exported support helper는 `convention-typescript` 규칙에 맞춰 `@helper` JSDoc을 붙이고,
-silent fallback으로 결측을 숨기지 않습니다. `helper.ts`,
-`helpers.ts`,
-`utils.ts`,
-`common.ts` 같은 generic 파일명은 만들지 않고,
+silent fallback으로 결측을 숨기지 않습니다.
+`helper.ts`, `helpers.ts`, `utils.ts`, `common.ts` 같은 generic 파일명은 만들지 않고,
 화면 하나에서만 쓰는 custom hook으로 우회해 숨기지도 않습니다.
 
 **Incorrect (generic helper 파일명으로 support code를 분산):**
@@ -410,8 +393,7 @@ export const buildSettingsRedirect = (tab: string) => {
 **Impact: HIGH (keeps route entries easy to find in file search even when group folders are already present)**
 
 이 프로젝트는 mixed route tree와 `routeToken: "layout"` 전제를 사용하므로,
-그룹 폴더를 쓰더라도 엔트리 파일명은 `feature.index.tsx`,
-`feature.layout.tsx`처럼 feature 이름을 유지합니다.
+그룹 폴더를 쓰더라도 엔트리 파일명은 `feature.index.tsx`, `feature.layout.tsx`처럼 feature 이름을 유지합니다.
 그룹 폴더 아래 파일명을 모두 `index.tsx`, `layout.tsx`로 두면 검색성과 탐색성이 크게 떨어집니다.
 
 **Incorrect (그룹 폴더 안에서 익명 파일명을 사용):**
@@ -475,9 +457,7 @@ function UsersIndex() {
 **Impact: HIGH (prevents route strings from drifting away from the file tree that owns them)**
 
 `createFileRoute()` 문자열은 실제 파일 구조와 대응되게 작성합니다.
-일반 폴더,
-pathless group,
-동적 세그먼트,
+일반 폴더, pathless group, 동적 세그먼트,
 trailing slash 규칙을 문자열에 그대로 반영해야 route tree와 파일 위치를 함께 추적할 수 있습니다.
 
 **Incorrect (경로 문자열이 파일 구조와 어긋남):**
@@ -591,10 +571,8 @@ export const Route = createFileRoute("/app")({
 **Impact: CRITICAL (normalizes query strings once at the route boundary instead of reparsing them throughout the screen)**
 
 쿼리스트링을 읽는 화면은 `Route.useSearch()` 사용 전에 `validateSearch`를 선언합니다.
-search schema는 `z.object(...)`로 작성하고,
-숫자형 페이지네이션이나 선택값은 `z.coerce.number()`로 보정하며,
-초기값이나 방어값이 필요하면
-`.default()`와 `.catch()`를 함께 사용합니다.
+search schema는 `z.object(...)`로 작성하고, 숫자형 페이지네이션이나 선택값은 `z.coerce.number()`로 보정하며,
+초기값이나 방어값이 필요하면 `.default()`와 `.catch()`를 함께 사용합니다.
 
 **Incorrect (사용처마다 문자열 파싱을 반복):**
 
@@ -627,9 +605,7 @@ export const Route = createFileRoute("/app/(users)/users/")({
 **Impact: HIGH (preserves a readable route entry where screen assembly, hooks, and handlers stay visible)**
 
 `*.index.tsx`는 실제 화면 렌더링, API hook, 이벤트 핸들러, search 기반 상태 동기화, 화면 조립을 담당합니다.
-entry file이 순수 helper,
-대형 상수,
-route 외부 재사용 로직까지 떠안기 시작하면
+entry file이 순수 helper, 대형 상수, route 외부 재사용 로직까지 떠안기 시작하면
 화면 흐름이 흐려지므로 route-local support module과 `-local/`로 책임을 분리합니다.
 작은 1회성 guard나 사용 지점 바로 옆이 더 읽기 쉬운 계산은 entry file에 남길 수 있습니다.
 
@@ -708,8 +684,7 @@ function SettingsLayout() {
 해당 라우트에서만 쓰는 모달, 폼, 보조 컴포넌트, route-private module은 라우트 하위 `-local/`에 둡니다.
 다른 라우트와 계약이 아직 안정되지 않았다면 shared UI나 공용 helper로 올리지 말고, 먼저 route-local 소유를 유지합니다.
 다만 route entry가 직접 가져오는 순수 support function은 먼저 같은 계층 owner-named module(`settings.ts`,
-`members.ts`)에 두고,
-`-local/`은 route-private UI와 module 묶음이 실제로 생길 때 사용합니다.
+`members.ts`)에 두고, `-local/`은 route-private UI와 module 묶음이 실제로 생길 때 사용합니다.
 
 **Incorrect (route 전용 모듈을 성급하게 공용 레이어로 올림):**
 
@@ -799,11 +774,8 @@ router generator를 다시 실행한다
 **Impact: MEDIUM (reduces cleanup work by establishing shell, grouping, and search boundaries before route files sprawl)**
 
 신규 라우트를 추가할 때는 화면 파일부터 급하게 만들지 말고, 레이아웃 셸과 그룹 구조를 먼저 고정하는 순서를 따릅니다.
-이 프로젝트에서는 `feature.css`,
-`feature.ts`,
-`feature.layout.tsx`,
-`feature.index.tsx` 4-file set을 route 기본 단위로 보고,
-layout file은 최소 tunnel이어도 먼저 자리를 확보합니다.
+이 프로젝트에서는 `feature.css`, `feature.ts`, `feature.layout.tsx`,
+`feature.index.tsx` 4-file set을 route 기본 단위로 보고, layout file은 최소 tunnel이어도 먼저 자리를 확보합니다.
 이렇게 해야 route tree, support code 위치, search 검증 경계가 뒤늦게 흔들리지 않습니다.
 
 **Incorrect (leaf 화면부터 만들고 나중에 구조를 끼워 맞춤):**
@@ -834,10 +806,7 @@ layout file은 최소 tunnel이어도 먼저 자리를 확보합니다.
 **Impact: MEDIUM (catches grouping, guard, and ownership drift before a route change is declared complete)**
 
 라우트 작업을 끝냈다고 보기 전에 구조 체크리스트를 다시 확인합니다.
-화면이 보인다는 이유만으로 마무리하지 말고,
-그룹 구조,
-support code 배치,
-guard 위치,
+화면이 보인다는 이유만으로 마무리하지 말고, 그룹 구조, support code 배치, guard 위치,
 generated artifact 처리까지 함께 점검해야 합니다.
 
 **Incorrect (렌더링만 확인하고 구조 검토를 생략):**

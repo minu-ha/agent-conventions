@@ -18,8 +18,7 @@
 - query invalidation, navigation처럼 hook context가 필요한 흐름
 
 `page.ts`는 helper 창고가 아니라 화면 전용 support module입니다.
-처음부터 `*-request.ts`,
-`*-columns.ts`로 쪼개지 말고,
+처음부터 `*-request.ts`, `*-columns.ts`로 쪼개지 말고,
 `page.ts`가 여러 독립 관심사로 커졌을 때만 추가 분리를 검토합니다.
 
 > 예시·예외가 필요하면 [full rule](../rules/screen-move-pure-support-code-out-of-entry-files.md)을 읽습니다.

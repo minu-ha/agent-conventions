@@ -71,8 +71,7 @@ src/
           entry-editor.css
 ```
 
-If a helper is used by exactly one component,
-place it beside that component with the same owner name,
+If a helper is used by exactly one component, place it beside that component with the same owner name,
 such as `entry-editor.ts` next to `entry-editor.tsx`. If it is shared across the route family,
 use the route support owner,
 such as `_entry-admin.ts`. Promote it to `shared` or `components` only after the dependency crosses route ownership.

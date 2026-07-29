@@ -25,10 +25,7 @@ Page file에 남길 것:
 - `class:list` conditions
 - empty-state branch choices
 
-Do not create `_form.ts`,
-`_api.ts`,
-`utils.ts`,
-`helpers.ts`,
+Do not create `_form.ts`, `_api.ts`, `utils.ts`, `helpers.ts`,
 or `common.ts` unless the owner name makes the boundary explicit.
 
 **Incorrect (small route-local calculations are scattered into generic helpers):**

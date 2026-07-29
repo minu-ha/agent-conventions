@@ -10,10 +10,7 @@ tags: review, workflow, checklist
 **Impact: MEDIUM (catches grouping, guard, and ownership drift before a route change is declared complete)**
 
 라우트 작업을 끝냈다고 보기 전에 구조 체크리스트를 다시 확인합니다.
-화면이 보인다는 이유만으로 마무리하지 말고,
-그룹 구조,
-support code 배치,
-guard 위치,
+화면이 보인다는 이유만으로 마무리하지 말고, 그룹 구조, support code 배치, guard 위치,
 generated artifact 처리까지 함께 점검해야 합니다.
 
 **Incorrect (렌더링만 확인하고 구조 검토를 생략):**

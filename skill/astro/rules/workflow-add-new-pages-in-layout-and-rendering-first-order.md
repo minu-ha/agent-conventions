@@ -9,14 +9,9 @@ tags: workflow, pages, checklist
 
 **Impact: MEDIUM (reduces cleanup work by deciding shell, rendering mode, and island boundaries before files sprawl)**
 
-새 page를 추가할 때는 화면 마크업부터 급하게 만들지 말고,
-먼저 기본 `src/pages/_document.astro` 패턴으로 충분한지,
-`_document.astro`와 `_head.astro`의 로컬 `Props`에 어떤 문서 계약이 필요한지,
-`_document.css`를 건드려야 하는지,
-owning route의 `_local/` shell이 필요한지,
-guard owner,
-static/on-demand 여부,
-dynamic route 여부,
+새 page를 추가할 때는 화면 마크업부터 급하게 만들지 말고, 먼저 기본 `src/pages/_document.astro` 패턴으로 충분한지,
+`_document.astro`와 `_head.astro`의 로컬 `Props`에 어떤 문서 계약이 필요한지, `_document.css`를 건드려야 하는지,
+owning route의 `_local/` shell이 필요한지, guard owner, static/on-demand 여부, dynamic route 여부,
 island 필요 여부를 정합니다.
 이 순서를 따르면 `client:load` 남용이나 route-local ownership 붕괴를 뒤늦게 뜯어내는 일을 줄일 수 있습니다.
 

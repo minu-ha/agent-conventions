@@ -10,9 +10,7 @@ tags: docs, jsdoc, frontmatter, route-support
 
 **Impact: MEDIUM-HIGH (makes Astro route boundaries and route-local support helpers searchable before readers inspect implementation details)**
 
-Astro frontmatter와 `src/pages/_document.astro`,
-`src/pages/_head.astro`,
-`src/pages/**/_entry-admin.ts`,
+Astro frontmatter와 `src/pages/_document.astro`, `src/pages/_head.astro`, `src/pages/**/_entry-admin.ts`,
 `src/pages/**/_local/entry-editor.ts` 같은 route-local support module에서 중요한 경계를 선언할 때는 헤더 JSDoc을
 작성합니다.
 

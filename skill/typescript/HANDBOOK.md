@@ -67,10 +67,7 @@
 
 여러 파일에서 공유되는 설정과 상수는 기본적으로 `shared/config.ts` 한 파일을 공개 진입점으로 삼아 `config` namespace
 아래에 모읍니다.
-leaf 파일마다 공용 URL,
-feature flag,
-페이지 크기,
-상수 문자열을 흩뿌리지 말고,
+leaf 파일마다 공용 URL, feature flag, 페이지 크기, 상수 문자열을 흩뿌리지 말고,
 `config.*` 체이닝으로 읽을 수 있게 정리합니다.
 수가 많지 않을 때는 `config/` 폴더로 미리 쪼개지 말고 단일 `config.ts`를 유지하고,
 여러 독립 섹션으로 커졌을 때만 분리를 검토합니다.
@@ -138,9 +135,7 @@ util.number.clamp(score, 0, 100);
 
 파일명은 `kebab-case`, 일반 변수와 함수는 `camelCase`, 타입은 `PascalCase`를 사용합니다.
 `const`인지 여부로 별도 casing을 두지 않고, 모듈 안의 로컬 값은 모두 `camelCase`로 맞춥니다.
-공용 설정 객체 키와 enum-like 상수 객체 이름 및 그 키는 `snake_case`,
-일반 객체 키,
-schema 키,
+공용 설정 객체 키와 enum-like 상수 객체 이름 및 그 키는 `snake_case`, 일반 객체 키, schema 키,
 커스텀 타입 필드는 `camelCase`를 유지합니다.
 외부 package가 export한 이름을 alias 없이 그대로 가져오는 third-party import binding은 local symbol을 새로 작명하는
 변경이 아니므로 이 규칙의 대상이 아닙니다.
@@ -179,8 +174,7 @@ const userProfileSchema = z.object({
 **Impact: HIGH (makes import ownership explicit without relying on barrels or ambiguous re-export layers)**
 
 `index.ts` 기반 barrel export를 만들지 않고 직접 export/import 구조를 유지합니다.
-공용 설정과 공용 순수 함수는 각각 `shared/config.ts`,
-`shared/util.ts` 같은 공개 진입점으로 모으고,
+공용 설정과 공용 순수 함수는 각각 `shared/config.ts`, `shared/util.ts` 같은 공개 진입점으로 모으고,
 타입 전용 import는 `import type`을 사용해 계약과 런타임 의존을 분리합니다.
 feature 전용 support code는 owner-named module처럼 소유자가 보이는 파일에서 named export를 직접 import합니다.
 
@@ -332,9 +326,7 @@ const noopLog: LogSink = (_message, _level) => {};
 **Impact: CRITICAL (keeps callable contracts reusable and prevents local parameter annotations from fragmenting shared function types)**
 
 재사용 가능한 콜백이나 함수 타입이 있다면 매개변수 타입 선언보다 함수 변수 타입 선언을 우선합니다.
-이미 존재하는 interface,
-object contract,
-framework alias를 먼저 재사용하고,
+이미 존재하는 interface, object contract, framework alias를 먼저 재사용하고,
 동일 callable contract를 여러 구현이 공유할 때만 별도 함수 타입 alias를 선언합니다.
 한 번만 쓰는 로컬 함수 때문에 함수 타입 alias를 늘리는 것은 지양합니다.
 
@@ -454,16 +446,14 @@ N/A입니다.
 callable 역할은 `types-document-custom-types-and-shapes`를 별도 판정합니다.
 
 positional→object input에서 수정 가능한 로컬 소유 호환 shape를 재사용하면
-`types-document-custom-types-and-shapes`는 Selected,
-`types-reuse-existing-contracts-before-new-types`는 N/A입니다.
+`types-document-custom-types-and-shapes`는 Selected, `types-reuse-existing-contracts-before-new-types`는 N/A입니다.
 외부·generated·read-only·shared unchanged shape면 두 type 규칙 모두 N/A이고 callable 문서화 여부는 docs rule이 독립
 판정합니다.
 요청 밖 `*Params`/`*Input`으로 자가 활성화하지 않습니다.
 호환 shape 없는 새 domain contract는 문서화 규칙만 Selected입니다.
 
 raw input과 normalized payload는 field가 같아도 의미가 달라 별도 input shape를 허용합니다.
-`types-document-custom-types-and-shapes`는 Selected,
-`types-reuse-existing-contracts-before-new-types`는 N/A입니다.
+`types-document-custom-types-and-shapes`는 Selected, `types-reuse-existing-contracts-before-new-types`는 N/A입니다.
 
 **Incorrect (기존 계약과 동일한 구조를 다시 선언):**
 
@@ -498,9 +488,7 @@ type UserPreview = Pick<UserRecord, "id" | "name">;
 **Impact: HIGH (keeps file-wide logic declarative instead of mutating shared locals through branching assembly)**
 
 파일 상단이나 넓은 스코프에서 `let` 재대입, 배열 `push`, 조건부 누적 조립을 하지 않습니다.
-단회성 사용이면 실제 사용하는 좁은 스코프에서 직접 계산하고,
-분기와 보정이 결합된 계산은 `resolve*`,
-`build*`,
+단회성 사용이면 실제 사용하는 좁은 스코프에서 직접 계산하고, 분기와 보정이 결합된 계산은 `resolve*`, `build*`,
 `normalize*` 형태 유틸로 분리합니다.
 
 **Incorrect (넓은 스코프에서 명령형으로 누적 조립):**
@@ -672,8 +660,7 @@ export const util = {
 **Impact: MEDIUM (avoids mutation bugs when sorted arrays come from props, state, or shared inputs)**
 
 정렬이 필요한데 원본 배열을 계속 써야 한다면 `.sort()`로 제자리 mutation을 하지 않습니다.
-프로젝트 런타임이 ES2023 이상이거나 `toSorted()` 지원이 보장되면
-`.toSorted()`를 우선하고,
+프로젝트 런타임이 ES2023 이상이거나 `toSorted()` 지원이 보장되면 `.toSorted()`를 우선하고,
 그렇지 않으면 복사 후 정렬합니다.
 companion skill이므로 지원 여부가 불분명한 환경에 무조건 `toSorted()`를 강제하지는 않습니다.
 
@@ -739,8 +726,7 @@ type AuditStatus = (typeof audit_status)[keyof typeof audit_status];
 
 **Impact: HIGH (keeps long function signatures readable and makes grouped inputs easier to extend without positional confusion)**
 
-매개변수가 3개 이상이거나 같은 계열 값이 묶여 전달되면
-단일 객체 매개변수로 묶고,
+매개변수가 3개 이상이거나 같은 계열 값이 묶여 전달되면 단일 객체 매개변수로 묶고,
 함수 시그니처에서 바로 구조분해하지 않습니다.
 객체 매개변수 타입은 파일 최상단의 named contract를 사용하고, 함수 본문 첫 줄에서 구조분해해 사용합니다.
 구조분해 줄이 길어 formatter 예외가 꼭 필요할 때도 함수 본문 안에서 처리합니다.
@@ -837,8 +823,7 @@ const approver = userById.get(approverId);
 **Impact: HIGH (makes missing data visible instead of quietly masking absence with generic defaults)**
 
 옵셔널 값에 대해 `??`, `||`로 기본값을 넣는 폴백 처리를 기본 금지합니다.
-값이 없을 수 있음을 명확히 드러내고,
-꼭 필요할 때만 도메인상 기본값이 명확하며
+값이 없을 수 있음을 명확히 드러내고, 꼭 필요할 때만 도메인상 기본값이 명확하며
 코드 바로 위 이유 주석이 있을 때 제한적으로 허용합니다.
 
 **Incorrect (결측을 호출부에서 조용히 숨김):**
@@ -879,10 +864,7 @@ const resolvePageSize = (query: SearchQuery): string => {
 
 **Impact: MEDIUM (prevents inline comments from narrating obvious code while preserving notes that avoid real misunderstandings)**
 
-함수 본문 내부에서는 JSDoc 블록 주석을 사용하지 않고,
-`//` 주석은 도메인 규칙,
-예외 방어 의도,
-외부 라이브러리 제약,
+함수 본문 내부에서는 JSDoc 블록 주석을 사용하지 않고, `//` 주석은 도메인 규칙, 예외 방어 의도, 외부 라이브러리 제약,
 부수효과 순서처럼 없으면 오해될 수 있는 경우에만 씁니다.
 변수명 그대로 반복하는 설명은 남기지 않습니다.
 
@@ -912,17 +894,14 @@ if (!normalizedToken) {
 
 **Impact: MEDIUM-HIGH (makes important boundaries searchable and explainable before readers inspect the implementation body)**
 
-named query·mutation binding과 원격 함수에는 `@api` 헤더 JSDoc을 작성하고,
-비자명한 handler/effect,
-reusable/exported helper·custom hook,
-커스텀 `type`/`interface`,
-store,
+named query·mutation binding과 원격 함수에는 `@api` 헤더 JSDoc을 작성하고, 비자명한 handler/effect,
+reusable/exported helper·custom hook, 커스텀 `type`/`interface`, store,
 formatter와 예외 memo 선언에도 헤더 JSDoc을 작성합니다.
 중요한 경계가 파일 검색에서 바로 보이도록 하는 것이 목적입니다.
 annotation 종류는 선언 역할에 따라 `@api`, `@event`, `@watch`, `@helper`, `@summary` 중 하나를 고릅니다.
-header tag가 있어도 body가 비어 있거나 영문 label뿐이면 header 요구를 충족하지 않습니다. `requiresSelected`의
-`docs-write-concise-korean-comments-about-purpose-and-constraints`는 선택 bookkeeping이 아니라 실제 한국어 content
-gate입니다.
+header tag가 있어도 body가 비어 있거나 영문 label뿐이면 header 요구를 충족하지 않습니다.
+`requiresSelected`의 `docs-write-concise-korean-comments-about-purpose-and-constraints`는 선택 bookkeeping이 아니라 실제
+한국어 content gate입니다.
 
 **Incorrect (주요 선언에 헤더 설명이 없음):**
 
@@ -964,12 +943,8 @@ annotation 태그는 아래 여덟 개만 사용합니다.
 | `@part` | compound component public part |
 | `@description` | `@part`와 함께 쓰는 part 설명 |
 
-`@description`은 `@part`와 함께만 사용합니다. `@schema`,
-`@shape`,
-`@contract`,
-`@data`,
-`@type`,
-`@property`는 쓰지 않습니다.
+`@description`은 `@part`와 함께만 사용합니다.
+`@schema`, `@shape`, `@contract`, `@data`, `@type`, `@property`는 쓰지 않습니다.
 
 **Incorrect (역할이 드러나지 않는 예전 태그나 part 전용 태그를 잘못 사용):**
 
@@ -1105,15 +1080,8 @@ export const normalizeUserIds = (userIds: string[]): string[] => {
 
 **Impact: MEDIUM (keeps comments focused on intent and constraints instead of narrating code mechanics)**
 
-주석은 한글로 작성하고,
-목적,
-제약,
-부작용 중심으로 간결하게 적습니다. `@api`,
-`@event`,
-`@watch`,
-`@helper`,
-`@summary`,
-`@field` 문장은 명사형 종결이나 개조식 표현을 기본으로 하며,
+주석은 한글로 작성하고, 목적, 제약, 부작용 중심으로 간결하게 적습니다.
+`@api`, `@event`, `@watch`, `@helper`, `@summary`, `@field` 문장은 명사형 종결이나 개조식 표현을 기본으로 하며,
 코드 동작 설명보다 도입 이유와 제약 설명을 우선합니다.
 
 기술 용어와 identifier는 영문으로 섞을 수 있지만
@@ -1162,11 +1130,7 @@ annotation 본문 전체가 ASCII 또는 영문 label이면 한글 주석으로 
 **Impact: MEDIUM (catches the recurring shortcuts that most often erode import, type, helper, fallback, and comment discipline)**
 
 작업을 끝냈다고 보기 전에 반복적으로 금지되는 TypeScript 지름길을 다시 확인합니다.
-barrel export,
-기존 타입 재선언,
-재사용 근거 없는 조기 추상화,
-넓은 스코프 명령형 조립,
-사유 없는 폴백,
+barrel export, 기존 타입 재선언, 재사용 근거 없는 조기 추상화, 넓은 스코프 명령형 조립, 사유 없는 폴백,
 자명한 코드 설명 주석은 마무리 전에 제거합니다.
 
 **Incorrect (금지 패턴을 그대로 남김):**

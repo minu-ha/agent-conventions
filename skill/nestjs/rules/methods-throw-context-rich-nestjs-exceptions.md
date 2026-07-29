@@ -9,9 +9,7 @@ tags: exceptions, errors, diagnostics
 
 **Impact: HIGH (makes backend failures diagnosable by using the right NestJS exception type with real domain context)**
 
-NestJS 내장 예외 클래스(`NotFoundException`,
-`BadRequestException`,
-`ForbiddenException` 등)를 사용하고,
+NestJS 내장 예외 클래스(`NotFoundException`, `BadRequestException`, `ForbiddenException` 등)를 사용하고,
 메시지에는 도메인 이름이나 식별자 같은 맥락 정보를 포함합니다.
 예외를 무음 처리하거나 `'Not found'` 같은 빈약한 메시지를 남기지 않습니다.
 

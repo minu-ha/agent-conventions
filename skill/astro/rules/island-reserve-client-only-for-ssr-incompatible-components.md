@@ -10,11 +10,9 @@ tags: client-only, islands, hydration
 **Impact: HIGH (preserves server-rendered HTML for interactive widgets that can hydrate normally)**
 
 `client:only`는 server HTML을 건너뛰고 page load 시점에 바로 client 렌더링합니다.
-browser API 전용 라이브러리처럼 SSR이 실제로 불가능한 경우에만 사용하고,
-그렇지 않다면 `client:load`,
-`client:idle`,
-`client:visible`로 server HTML을 먼저 남깁니다. `client:only`를 쓸 때는 framework hint를 명시하고,
-로딩 공백이 보이면 fallback도 함께 둡니다.
+browser API 전용 라이브러리처럼 SSR이 실제로 불가능한 경우에만 사용하고, 그렇지 않다면 `client:load`, `client:idle`,
+`client:visible`로 server HTML을 먼저 남깁니다.
+`client:only`를 쓸 때는 framework hint를 명시하고, 로딩 공백이 보이면 fallback도 함께 둡니다.
 
 **Incorrect (SSR 가능한 widget까지 습관적으로 `client:only`에 올림):**
 

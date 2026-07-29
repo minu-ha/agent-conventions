@@ -23,7 +23,7 @@ import unicodedata
 MAX = 120
 
 # 문장 끝. "e.g." 같은 한 글자 약어를 피하려고 앞 두 글자를 요구한다.
-SENTENCE = re.compile(r"(?<=[가-힣)\]`\w]{2}\.)\s+(?=[가-힣A-Za-z`\[(])")
+SENTENCE = re.compile("(?<=[가-힣)\\]`\\w]{2}\\.)\\s+(?=[가-힣A-Za-z`\\[(\x00])")
 # 절 경계. 쉼표와 대표적인 연결어미.
 CLAUSE = re.compile(r"(?<=[,、])\s+|(?<=하고)\s+|(?<=하며)\s+|(?<=지만)\s+|(?<=하면)\s+|(?<=되면)\s+")
 
@@ -80,8 +80,19 @@ def wrap_line(line: str) -> list[str]:
         if width(sentence) <= MAX:
             pieces.append(sentence)
             continue
+
+        # 절 경계마다 끊지 않고, MAX 를 넘기 직전까지 모아 담는다.
+        packed = ""
         for clause in split_by(CLAUSE, sentence):
-            pieces.extend([clause] if width(clause) <= MAX else hard_wrap(clause, indent))
+            for chunk in [clause] if width(clause) <= MAX else hard_wrap(clause, indent):
+                candidate = chunk if not packed else f"{packed} {chunk}"
+                if packed and width(candidate) + (width(indent) if pieces else 0) > MAX:
+                    pieces.append(packed)
+                    packed = chunk
+                else:
+                    packed = candidate
+        if packed:
+            pieces.append(packed)
 
     if not bullet or len(pieces) < 2:
         return pieces
@@ -92,8 +103,21 @@ def wrap_line(line: str) -> list[str]:
 def process(text: str) -> str:
     lines = text.split("\n")
     out: list[str] = []
+    paragraph: list[str] = []
     in_fence = False
     in_front = False
+    in_comment = False
+
+    def flush() -> None:
+        """모아 둔 문단이나 목록 항목을 한 줄로 이어 붙인 뒤 다시 접는다."""
+        if not paragraph:
+            return
+        joined = " ".join(part.strip() for part in paragraph)
+        bullet = re.match(r"^(\s*(?:[-*+]|\d+\.)\s+)", paragraph[0])
+        if bullet:
+            joined = bullet.group(1) + joined[len(bullet.group(1)) :].strip()
+        out.extend(wrap_line(joined) if width(joined) > MAX else [joined])
+        paragraph.clear()
 
     for index, line in enumerate(lines):
         stripped = line.strip()
@@ -108,7 +132,13 @@ def process(text: str) -> str:
                 in_front = False
             continue
 
+        if not stripped:
+            flush()
+            out.append("")
+            continue
+
         if stripped.startswith("```"):
+            flush()
             in_fence = not in_fence
             out.append(line)
             continue
@@ -116,20 +146,33 @@ def process(text: str) -> str:
             out.append(line)
             continue
 
-        # 표, 헤딩, 들여쓴 블록, 구조 마커, 짧은 줄은 그대로.
+        # HTML 주석은 정렬된 표를 담는 경우가 있어 원문 그대로 둔다.
+        if stripped.startswith("<!--"):
+            flush()
+            in_comment = True
+        if in_comment:
+            out.append(line.rstrip())
+            if "-->" in stripped:
+                in_comment = False
+            continue
+
+        # 표, 헤딩, 들여쓴 블록, 구조 마커는 그대로 둔다.
         # **Impact:** / **Incorrect ...** / **Correct ...** 는 build 가 한 줄로 파싱하는
         # 구조 마커다. 접으면 "첫 Incorrect 뒤의 prose" 로 오인돼 계약 검사에 걸린다.
-        if (
-            line[:1] in {"|", "#", "\t"}
-            or line.startswith("    ")
-            or stripped.startswith("**")
-            or width(line.rstrip()) <= MAX
-        ):
+        if line[:1] in {"|", "#", "\t"} or line.startswith("    ") or stripped.startswith("**"):
+            flush()
             out.append(line.rstrip())
             continue
 
-        out.extend(wrap_line(line.rstrip()))
+        # 목록 항목은 항목 단위로 모은다. 새 항목을 만나면 앞 항목을 마무리한다.
+        if re.match(r"^\s*(?:[-*+]|\d+\.)\s", line):
+            flush()
+            paragraph.append(line.rstrip())
+            continue
 
+        paragraph.append(line.strip())
+
+    flush()
     return "\n".join(out)
 
 

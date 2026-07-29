@@ -11,12 +11,8 @@ tags: unit-tests, e2e, levels
 **Impact: CRITICAL (keeps backend failures diagnosable by assigning business logic and full-stack wiring to different test levels)**
 
 테스트는 `unit test`와 `e2e test`를 기본 축으로 구분합니다.
-unit test는 Service 단위의 비즈니스 로직 검증을 담당하고,
-e2e test는 HTTP 요청부터 ValidationPipe,
-Filter,
-Service,
-Prisma,
-DB까지의 연결을 검증합니다.
+unit test는 Service 단위의 비즈니스 로직 검증을 담당하고, e2e test는 HTTP 요청부터 ValidationPipe, Filter, Service,
+Prisma, DB까지의 연결을 검증합니다.
 특별한 이유가 없으면 controller 전용 spec보다 service unit test와 HTTP e2e test를 우선합니다.
 
 **Incorrect (controller spec과 service logic test가 뒤섞임):**

@@ -10,17 +10,8 @@ tags: evidence, visual-diff, planning
 **Impact: CRITICAL (구현 범위와 완료 기준을 layout, spacing, typography 같은 항목으로 명확히 고정함)**
 
 코드를 수정하기 전에 Figma와 현재 구현의 차이를 표로 작성합니다.
-최소 항목은 layout,
-spacing,
-typography,
-color,
-border/radius,
-surface/background,
-shadow,
-icon/assets,
-static copy,
-states,
-responsive behavior입니다.
+최소 항목은 layout, spacing, typography, color, border/radius, surface/background, shadow, icon/assets, static copy,
+states, responsive behavior입니다.
 
 **Incorrect (차이 분류 없이 바로 수정):**
 

@@ -10,15 +10,8 @@ tags: comments, korean, purpose
 
 **Impact: MEDIUM (keeps comments focused on intent and constraints instead of narrating code mechanics)**
 
-주석은 한글로 작성하고,
-목적,
-제약,
-부작용 중심으로 간결하게 적습니다. `@api`,
-`@event`,
-`@watch`,
-`@helper`,
-`@summary`,
-`@field` 문장은 명사형 종결이나 개조식 표현을 기본으로 하며,
+주석은 한글로 작성하고, 목적, 제약, 부작용 중심으로 간결하게 적습니다.
+`@api`, `@event`, `@watch`, `@helper`, `@summary`, `@field` 문장은 명사형 종결이나 개조식 표현을 기본으로 하며,
 코드 동작 설명보다 도입 이유와 제약 설명을 우선합니다.
 
 기술 용어와 identifier는 영문으로 섞을 수 있지만
