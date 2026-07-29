@@ -45,4 +45,5 @@ admin/entries/_local/entry-editor.css
 _document.astro -> rt_document__body
 ```
 
-When two route families would collide, choose the smallest owner name that disambiguates the local route. Do not switch to `loc_*` for the main page surface just because markup moved into `_local/`; the screen owner remains the route.
+When two route families would collide, choose the smallest owner name that disambiguates the local route.
+Do not switch to `loc_*` for the main page surface just because markup moved into `_local/`; the screen owner remains the route.

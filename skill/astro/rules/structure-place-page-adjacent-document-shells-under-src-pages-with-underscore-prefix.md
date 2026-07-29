@@ -9,7 +9,8 @@ tags: structure, pages, underscore, document-helpers
 
 **Impact: HIGH (keeps route-shared document helpers and route-local support files close to route owners without turning them into routed pages)**
 
-Astro는 `src/pages` 안에서 `_`로 시작하는 파일과 폴더를 router에서 제외합니다. 이 성질을 이용해 pages-local document helper와 route-local support file을 `src/pages/_*` 또는 `src/pages/**/_*`에 둡니다.
+Astro는 `src/pages` 안에서 `_`로 시작하는 파일과 폴더를 router에서 제외합니다.
+이 성질을 이용해 pages-local document helper와 route-local support file을 `src/pages/_*` 또는 `src/pages/**/_*`에 둡니다.
 
 기본 배치:
 

@@ -42,4 +42,5 @@ src/pages/topics/[topic]/[page].astro
 src/pages/topics/[topic]/feed.xml.ts
 ```
 
-`topics/[topic]/index.astro`는 child route를 실제로 가지므로 folder가 route owner입니다. 반대로 `posts/[slug].astro`와 `tags/[slug].astro`는 leaf route라 flat file이 더 읽기 쉽습니다.
+`topics/[topic]/index.astro`는 child route를 실제로 가지므로 folder가 route owner입니다.
+반대로 `posts/[slug].astro`와 `tags/[slug].astro`는 leaf route라 flat file이 더 읽기 쉽습니다.

@@ -9,7 +9,8 @@ tags: e2e, seed, cleanup
 
 **Impact: HIGH (keeps e2e setup fast and explicit without turning browser steps into slow seed scripts)**
 
-e2e의 사전 상태가 필요하면 API helper로 준비하고 `finally`에서 cleanup합니다. seed는 브라우저 UI로 장황하게 만들지 않되, 검증 대상 자체를 API로 우회하지는 않습니다.
+e2e의 사전 상태가 필요하면 API helper로 준비하고 `finally`에서 cleanup합니다.
+seed는 브라우저 UI로 장황하게 만들지 않되, 검증 대상 자체를 API로 우회하지는 않습니다.
 
 **Incorrect (준비 단계까지 브라우저로 장황하게 생성하거나 cleanup을 빼먹음):**
 

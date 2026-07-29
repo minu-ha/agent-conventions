@@ -10,7 +10,8 @@ tags: naming, class-grammar, ownership
 
 **Impact: CRITICAL (makes class ownership and UI role traceable from the classname alone)**
 
-클래스명은 `<scope>_<slug>__<element>[--<modifier>]` 문법을 사용합니다. 구분자는 `_`, `__`, `--`를 고정하고, 각 부분의 책임을 섞지 않습니다.
+클래스명은 `<scope>_<slug>__<element>[--<modifier>]` 문법을 사용합니다.
+구분자는 `_`, `__`, `--`를 고정하고, 각 부분의 책임을 섞지 않습니다.
 
 구성 요소:
 

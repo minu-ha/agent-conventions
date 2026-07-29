@@ -9,7 +9,9 @@ tags: verification, screenshot, browser
 
 **Impact: CRITICAL (build/test 성공만으로 visual parity 완료를 선언하는 일을 막음)**
 
-Build/test 통과는 필요하지만 visual parity의 완료 조건은 아닙니다. 실제 브라우저에서 구현 화면 screenshot을 확인하고, Figma screenshot과 비교해 mismatch가 남으면 가능한 범위에서 수정 반복합니다. 브라우저 검증을 못 하면 완료가 아니라 미검증 상태로 보고합니다.
+Build/test 통과는 필요하지만 visual parity의 완료 조건은 아닙니다.
+실제 브라우저에서 구현 화면 screenshot을 확인하고, Figma screenshot과 비교해 mismatch가 남으면 가능한 범위에서 수정 반복합니다.
+브라우저 검증을 못 하면 완료가 아니라 미검증 상태로 보고합니다.
 
 **Incorrect (빌드 성공만으로 완료):**
 

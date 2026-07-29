@@ -10,7 +10,7 @@ tags: state, setstate, closures, handlers
 
 **Impact: MEDIUM-HIGH (prevents stale closure bugs when the next value depends on the current state)**
 
-다음 state가 현재 state 값에 의존하면 직접 바깥 변수를 참조하지 말고 functional updater를 사용합니다.   
+다음 state가 현재 state 값에 의존하면 직접 바깥 변수를 참조하지 말고 functional updater를 사용합니다.
 특히 handler, async callback, 여러 번 연속 호출될 수 있는 갱신에서는 stale closure를 막는 데 중요합니다.
 
 **Incorrect (현재 state를 바깥 closure에서 직접 읽음):**

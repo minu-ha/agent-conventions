@@ -62,7 +62,6 @@
 - `convention-tanstack-route`: route, navigation, search param, route-local 구조
 - `convention-playwright-test`: Playwright integration/e2e 테스트
 - `convention-nestjs`: NestJS module, controller, service, DTO, backend layering
-- `convention-springboot`: Spring Boot 기반 backend convention
 
 이 문서는 위 skill 중 요청과 직접 관련된 skill만 선택해 적용하는 것을 전제로 합니다.
 
@@ -95,7 +94,6 @@
   - route/search/navigation 변경: `convention-tanstack-route` + 필요 시 `convention-typescript`
   - Playwright 테스트 변경: `convention-playwright-test` + 필요 시 관련 companion skill
   - NestJS backend 변경: `convention-nestjs` + `convention-typescript`
-  - Spring Boot backend 변경: `convention-springboot`
 
 framework/project 고유 규칙은 해당 skill이나 consuming project의 project-local overlay가 소유합니다. 이 공통 template에 Astro route/class naming 같은 rule body를 복제하지 않습니다.
 

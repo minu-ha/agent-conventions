@@ -19,7 +19,8 @@ Page file에서 보여야 하는 것:
 - empty/error branch
 - high-level screen order
 
-Do not reduce every route file to a one-line import of a page component just to keep `src/pages` thin. Extract only pieces with real rendering, browser runtime, provider, third-party library, or data-shaping boundaries.
+Do not reduce every route file to a one-line import of a page component just to keep `src/pages` thin.
+Extract only pieces with real rendering, browser runtime, provider, third-party library, or data-shaping boundaries.
 
 **Incorrect (route page hides all screen flow behind route-local components):**
 

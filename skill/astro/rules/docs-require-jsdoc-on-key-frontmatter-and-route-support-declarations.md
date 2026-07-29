@@ -19,7 +19,8 @@ Astro frontmatter와 `src/pages/_document.astro`, `src/pages/_head.astro`, `src/
 - 외부 연동 helper
 - rendering mode 판단이 섞인 helper
 
-`@summary`, `@helper`, `@api`, `@field` 같은 태그는 companion skill인 `convention-typescript` 표준에 맞춥니다. 단순 local destructuring이나 자명한 alias까지 전부 문서화할 필요는 없습니다.
+`@summary`, `@helper`, `@api`, `@field` 같은 태그는 companion skill인 `convention-typescript` 표준에 맞춥니다.
+단순 local destructuring이나 자명한 alias까지 전부 문서화할 필요는 없습니다.
 
 **Incorrect (document props/route/support 경계 선언에 문맥 설명이 없음):**
 

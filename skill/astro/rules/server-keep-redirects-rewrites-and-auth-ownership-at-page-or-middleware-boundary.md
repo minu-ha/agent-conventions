@@ -17,7 +17,9 @@ Owner 기준:
 - Cross-cutting concern: `src/middleware.ts`의 `onRequest()`
 - Visual shell: page나 middleware가 결정한 결과를 props 또는 `Astro.locals`로 받아 표현
 
-Route param, query, page-level data selection과 결합된 guard는 page에서 처리합니다. 여러 route에 공통인 auth, locale, tenant, request locals 주입은 middleware에서 처리합니다. Astro 공식 문서상 `Astro.redirect()`는 page가 `return`해야 하고, middleware interception은 `src/middleware.ts`에서 수행합니다.
+Route param, query, page-level data selection과 결합된 guard는 page에서 처리합니다.
+여러 route에 공통인 auth, locale, tenant, request locals 주입은 middleware에서 처리합니다.
+Astro 공식 문서상 `Astro.redirect()`는 page가 `return`해야 하고, middleware interception은 `src/middleware.ts`에서 수행합니다.
 
 **Incorrect (layout이 request-time guard와 redirect를 직접 소유):**
 

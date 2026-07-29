@@ -21,7 +21,8 @@ Move a section into `src/pages/**/_local/` only when it owns a real rendering or
 - third-party widget adapter
 - repeated slot contract
 
-Do not extract a component just because a heading/body/footer group looks like a section. If the subtree still describes the same route surface, keep the route `rt_*` owner instead of inventing a `loc_*` namespace.
+Do not extract a component just because a heading/body/footer group looks like a section.
+If the subtree still describes the same route surface, keep the route `rt_*` owner instead of inventing a `loc_*` namespace.
 
 **Incorrect (simple page markup is split into `_local/` wrappers):**
 

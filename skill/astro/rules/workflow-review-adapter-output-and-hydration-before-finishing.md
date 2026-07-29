@@ -9,7 +9,8 @@ tags: workflow, adapters, hydration
 
 **Impact: MEDIUM (catches Astro-specific deployment and rendering mismatches before they ship)**
 
-Astro 변경을 마무리할 때는 코드 diff만 보지 말고 adapter, `output`, prerender/on-demand 전제, build-time/live collection 선택, hydration 경계를 함께 점검합니다. Actions나 server islands를 추가했는데 adapter가 없거나, 정적 shell이 과하게 hydrate되는 상태로 끝내지 않습니다.
+Astro 변경을 마무리할 때는 코드 diff만 보지 말고 adapter, `output`, prerender/on-demand 전제, build-time/live collection 선택, hydration 경계를 함께 점검합니다.
+Actions나 server islands를 추가했는데 adapter가 없거나, 정적 shell이 과하게 hydrate되는 상태로 끝내지 않습니다.
 
 **Incorrect (Astro 전용 전제를 확인하지 않고 기능만 붙이고 마무리):**
 

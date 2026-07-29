@@ -1,0 +1,27 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# 규칙 문서는 문장 단위로 줄을 끊습니다 (semantic line breaks).
+# 문단 안의 줄바꿈은 Markdown 이 다시 합치므로 렌더링 결과는 바뀌지 않고,
+# diff 가 문장 단위로 남아 리뷰하기 쉽습니다.
+# 고정 컬럼으로 하드랩하지 마세요. 한 문장을 고칠 때 문단 전체가 재배치됩니다.
+[*.md]
+max_line_length = 100
+
+[*.{ts,json}]
+indent_style = tab
+indent_size = 2
+max_line_length = 140
+
+[*.py]
+indent_style = space
+indent_size = 4
+
+[*.{yml,yaml}]
+indent_style = space
+indent_size = 2

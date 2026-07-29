@@ -18,7 +18,8 @@ tags: responsibility, layouts, ui, widget, composition
 - Document shell: `_document.astro` and `_document.css`
 - Route shell: owning route의 `_local/`
 
-Shell 자체를 `ui-*`나 `widget-*`로 이름 붙여 shared component처럼 승격하지 않습니다. Shell class는 `rt_document__*`처럼 owner가 드러나게 유지합니다.
+Shell 자체를 `ui-*`나 `widget-*`로 이름 붙여 shared component처럼 승격하지 않습니다.
+Shell class는 `rt_document__*`처럼 owner가 드러나게 유지합니다.
 
 **Incorrect (layout 역할을 ui/widget로 위장함):**
 

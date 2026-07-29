@@ -25,7 +25,8 @@ tags: component, document, head, pages, seo
 - `Props extends DocumentMetaProps`처럼 얇은 타입 확장으로 contract 숨기기
 - 실제 재사용 경계 없는 `_page-chrome.astro` helper 추가
 
-SEO library는 `_head.astro` 내부 구현 선택지일 뿐 필수 contract가 아닙니다. 중요한 기준은 page, document, head의 책임이 한눈에 보이고, routed page가 body content를 slot으로 전달한다는 점입니다.
+SEO library는 `_head.astro` 내부 구현 선택지일 뿐 필수 contract가 아닙니다.
+중요한 기준은 page, document, head의 책임이 한눈에 보이고, routed page가 body content를 slot으로 전달한다는 점입니다.
 
 **Incorrect (각 page가 문서 조립을 반복함):**
 

@@ -9,7 +9,9 @@ tags: implementation, labels, headings
 
 **Impact: HIGH (UI polish 중 사용자에게 보이는 구조 신호를 임의 삭제하지 않게 함)**
 
-Visible label, section title, heading, column header는 화면 구조와 접근성의 일부입니다. Figma 또는 사용자가 명확히 제거하라고 하지 않는 한, visual polish를 이유로 임의 삭제하지 않습니다. Figma에 label이 있고 현재 구현에 없으면 static UI copy로 맞출 후보입니다.
+Visible label, section title, heading, column header는 화면 구조와 접근성의 일부입니다.
+Figma 또는 사용자가 명확히 제거하라고 하지 않는 한, visual polish를 이유로 임의 삭제하지 않습니다.
+Figma에 label이 있고 현재 구현에 없으면 static UI copy로 맞출 후보입니다.
 
 **Incorrect (깔끔해 보이게 하려고 heading 삭제):**
 

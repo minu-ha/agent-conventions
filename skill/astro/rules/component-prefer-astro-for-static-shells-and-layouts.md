@@ -18,7 +18,8 @@ state, effect, client runtime가 필요 없는 shell은 기본적으로 `.astro`
 - `src/pages/_document.astro`: top-level document와 shared body shell
 - `src/pages/**/_local/*.astro`: 특정 route subtree만 쓰는 route shell
 
-React component를 이미 쓴다는 이유만으로 정적 shell까지 TSX로 밀어 넣지 않습니다. page content가 주입되는 자리는 `<slot />`로 드러내고, full document shell이라면 `<html>`이 최상위 parent가 되게 유지합니다.
+React component를 이미 쓴다는 이유만으로 정적 shell까지 TSX로 밀어 넣지 않습니다.
+page content가 주입되는 자리는 `<slot />`로 드러내고, full document shell이라면 `<html>`이 최상위 parent가 되게 유지합니다.
 
 **Incorrect (정적 shell을 React component로 올려 불필요한 framework surface를 늘림):**
 

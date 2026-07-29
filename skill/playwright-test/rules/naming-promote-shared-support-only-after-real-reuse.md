@@ -9,7 +9,8 @@ tags: support, reuse, helpers
 
 **Impact: MEDIUM-HIGH (keeps support layers proportional by delaying global helpers until multiple features genuinely need them)**
 
-전역 공용 helper는 `<test-support-path>`에 두되, 여러 feature가 함께 쓰는 인증, API seed, 공용 route setup만 올립니다. 특정 기능 하나에서만 쓰는 mock builder, request body helper, bootstrap wait는 spec 근처에 두고, 공용화는 두 개 이상 feature에서 반복될 때만 합니다.
+전역 공용 helper는 `<test-support-path>`에 두되, 여러 feature가 함께 쓰는 인증, API seed, 공용 route setup만 올립니다.
+특정 기능 하나에서만 쓰는 mock builder, request body helper, bootstrap wait는 spec 근처에 두고, 공용화는 두 개 이상 feature에서 반복될 때만 합니다.
 
 **Incorrect (한 기능 전용 helper를 너무 빨리 전역 support로 올림):**
 

@@ -731,7 +731,7 @@ test("repository documentation distinguishes source, router, generated artifacts
 	}
 
 	const skillTypes = extractMarkdownSection({source: repositoryAgents, heading: "Skill Types", level: 2});
-	assert.match(skillTypes, /\[skill\/astro\]\(\.\/skill\/astro\/README\.md\)/);
+	assert.match(skillTypes, /\[skill\/astro\]\(\.\/skill\/astro\/AGENTS\.md\)/);
 	const editingRules = extractMarkdownSection({source: repositoryAgents, heading: "Editing Rules", level: 2});
 	assert.match(editingRules, /`rules\/_sections\.md`, `rules\/_template\.md`, `rules\/\*\.md`를 수정/);
 	assert.match(editingRules, /activation[^\n]*load[^\n]*`SKILL\.md`[^\n]*수정/i);

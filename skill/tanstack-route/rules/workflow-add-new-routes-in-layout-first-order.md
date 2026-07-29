@@ -9,7 +9,9 @@ tags: workflow, route-creation, checklist
 
 **Impact: MEDIUM (reduces cleanup work by establishing shell, grouping, and search boundaries before route files sprawl)**
 
-신규 라우트를 추가할 때는 화면 파일부터 급하게 만들지 말고, 레이아웃 셸과 그룹 구조를 먼저 고정하는 순서를 따릅니다. 이 프로젝트에서는 `feature.css`, `feature.ts`, `feature.layout.tsx`, `feature.index.tsx` 4-file set을 route 기본 단위로 보고, layout file은 최소 tunnel이어도 먼저 자리를 확보합니다. 이렇게 해야 route tree, support code 위치, search 검증 경계가 뒤늦게 흔들리지 않습니다.
+신규 라우트를 추가할 때는 화면 파일부터 급하게 만들지 말고, 레이아웃 셸과 그룹 구조를 먼저 고정하는 순서를 따릅니다.
+이 프로젝트에서는 `feature.css`, `feature.ts`, `feature.layout.tsx`, `feature.index.tsx` 4-file set을 route 기본 단위로 보고, layout file은 최소 tunnel이어도 먼저 자리를 확보합니다.
+이렇게 해야 route tree, support code 위치, search 검증 경계가 뒤늦게 흔들리지 않습니다.
 
 **Incorrect (leaf 화면부터 만들고 나중에 구조를 끼워 맞춤):**
 

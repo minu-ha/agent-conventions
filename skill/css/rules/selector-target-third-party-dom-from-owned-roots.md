@@ -23,7 +23,8 @@ tags: third-party, wrappers, nesting
 - 추가 third-party ancestor는 target ambiguity나 direct-child contract처럼 실제로 필요한 evidence가 있을 때만 허용하고 그 근거를 기록합니다.
 - nested block 안에서 다시 nested block을 열지 않습니다.
 
-이 예외는 third-party DOM path에만 적용됩니다. project-owned class끼리의 깊은 descendant coupling은 여전히 금지입니다.
+이 예외는 third-party DOM path에만 적용됩니다.
+project-owned class끼리의 깊은 descendant coupling은 여전히 금지입니다.
 
 **Incorrect (루트 없이 타겟팅하거나 nested 안에서 다시 nested를 열어 의미를 흐림):**
 

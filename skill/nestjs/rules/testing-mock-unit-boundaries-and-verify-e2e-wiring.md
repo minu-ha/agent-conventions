@@ -9,7 +9,8 @@ tags: unit-tests, e2e, mocks
 
 **Impact: CRITICAL (keeps service unit tests fast and focused while making e2e tests prove real Nest wiring end to end)**
 
-unit test에서는 DB, 외부 API, JWT, cache 같은 외부 의존성을 mock 처리하고 Service public 메서드의 핵심 분기와 예외를 검증합니다. e2e test에서는 `AppModule` 또는 필요한 실제 모듈 조합을 띄우고, `supertest`로 HTTP 진입점부터 ValidationPipe, Filter, Service, Prisma, DB 반영까지 실제 wiring을 검증합니다.
+unit test에서는 DB, 외부 API, JWT, cache 같은 외부 의존성을 mock 처리하고 Service public 메서드의 핵심 분기와 예외를 검증합니다.
+e2e test에서는 `AppModule` 또는 필요한 실제 모듈 조합을 띄우고, `supertest`로 HTTP 진입점부터 ValidationPipe, Filter, Service, Prisma, DB 반영까지 실제 wiring을 검증합니다.
 
 **Incorrect (unit에서 실제 DB를 띄우거나 e2e에서 핵심 wiring을 검증하지 않음):**
 

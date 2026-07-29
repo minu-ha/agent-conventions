@@ -9,7 +9,8 @@ tags: responsibility, layouts, local, ownership
 
 **Impact: HIGH (prevents route shell files from becoming a blurry shared component tier between pages and reusable building blocks)**
 
-Route-specific shell files are not shared layouts. Put them under the owning route's `_local/` folder.
+Route-specific shell files are not shared layouts.
+Put them under the owning route's `_local/` folder.
 
 기준:
 

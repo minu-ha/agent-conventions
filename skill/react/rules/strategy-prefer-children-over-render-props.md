@@ -10,7 +10,7 @@ tags: composition, children, render-props, component-design
 
 **Impact: MEDIUM (keeps shared component composition readable when the parent does not need to push runtime data through callbacks)**
 
-shared component가 `stateless compound component`로 충분할 때는 `renderHeader`, `renderFooter` 같은 render prop보다 `children`과 namespaced slot part를 우선합니다.  
+shared component가 `stateless compound component`로 충분할 때는 `renderHeader`, `renderFooter` 같은 render prop보다 `children`과 namespaced slot part를 우선합니다.
 render prop은 parent가 child에 item, index, state 같은 runtime 데이터를 전달해야 할 때만 사용합니다.
 
 **Incorrect (정적인 구조를 render prop으로 조립):**
