@@ -96,11 +96,12 @@ Shared UI, widget, route-local 코드는 소유 경계가 분명해야 에이전
 
 **Impact: HIGH (import 경로를 명시적으로 유지하고 타입 import 스타일 혼용을 막음)**
 
-`index.ts` 기반 barrel export를 만들지 않고,
+`index.ts` 기반 barrel export를 만들지 않습니다.
 React 타입은 `React.MouseEvent` 같은 전역 네임스페이스 대신 `import type`으로 직접 가져옵니다.
-React 타입을 namespace로 둘지 direct `import type`으로 가져올지 결정하는 변경도 이 규칙의 판단 대상입니다.
-일반 third-party value를 alias 없이 직접 import하는 변경만으로는 이 규칙을 선택하지 않습니다.
-이렇게 해야 import 경로와 타입 출처가 더 명시적으로 유지됩니다.
+import 경로와 타입 출처를 명시적으로 유지하기 위해서입니다.
+
+- React 타입을 namespace로 둘지 direct `import type`으로 가져올지 정하는 변경도 이 규칙이 판단합니다.
+- 일반 third-party value를 alias 없이 직접 import하는 변경만으로는 걸리지 않습니다.
 
 **Incorrect (barrel export와 namespace 타입 혼용):**
 
@@ -136,12 +137,14 @@ const handleClick: MouseEventHandler<HTMLButtonElement> = (_event) => {
 
 **Impact: HIGH (React 전용 추상화를 실제 lifecycle/context 결합이 있는 경우에만 사용하게 함)**
 
-화면 하나에 종속된 계산, 정규화, payload 조립은 custom hook으로 포장하지 말고 먼저 일반 `.ts` support module에 둡니다.
-route entry 화면이라면 기본 추출 위치는 같은 계층의 `page.ts`이고,
-screen-owned pure function은 named export를 직접 import해 사용합니다.
-screen-local custom hook은 lifecycle, context,
-다른 hook 호출 순서 같은 React orchestration을 실제로 캡슐화할 때만 허용합니다.
-단순 계산을 hook처럼 보이게 만드는 추상화는 피합니다.
+화면 하나에 종속된 계산, 정규화, payload 조립은 custom hook으로 포장하지 않습니다.
+먼저 일반 `.ts` support module에 둡니다.
+
+- route entry 화면이면 기본 추출 위치는 같은 계층의 `page.ts`입니다.
+  screen-owned pure function은 named export를 직접 import해 씁니다.
+- screen-local custom hook은 lifecycle, context, 다른 hook 호출 순서 같은
+  React orchestration을 실제로 캡슐화할 때만 허용합니다.
+- 단순 계산을 hook처럼 보이게 만드는 추상화는 피합니다.
 
 **Incorrect (로컬 계산을 습관적으로 hook으로 포장):**
 
@@ -190,10 +193,15 @@ const request = buildMediaUploadPayload(files);
 
 **Impact: CRITICAL (공용 책임과 route-local 책임이 같은 레이어로 섞이는 것을 막음)**
 
-`ui`는 순수 view, `widget`은 여러 화면에서 재사용되는 공용 조합,
-`-local`은 특정 route 맥락을 아는 화면 전용 코드로 유지합니다.
-`widget` 레이어 폴더명은 유지하되, widget-owned 파일과 심볼은 `wg-*`, `Wg*` 규칙으로 소유자를 바로 드러내야 합니다.
-`ui`는 계속 `ui-*`, `Ui*` 규칙을 사용합니다.
+컴포넌트는 소유 레이어를 이름으로 드러냅니다.
+
+| 레이어 | 책임 | 파일·심볼 |
+| --- | --- | --- |
+| `ui` | 순수 view | `ui-*` · `Ui*` |
+| `widget` | 여러 화면이 재사용하는 공용 조합 | `wg-*` · `Wg*` |
+| `-local` | 특정 route 맥락을 아는 화면 전용 코드 | route 소유자 이름 |
+
+`widget` 레이어 폴더명은 그대로 두되, widget-owned 파일과 심볼은 `wg-*`, `Wg*`로 소유자를 드러냅니다.
 
 **Incorrect (view 레이어와 화면 전용 로직이 섞임):**
 
@@ -290,12 +298,17 @@ export const mapFolderNodeToTreeData = (node: FolderNode, renderers: FolderTreeR
 
 **Impact: HIGH (공용 상수가 route와 local component 곳곳에 흩어지는 것을 막음)**
 
-여러 화면에서 쓰는 상수와 설정은 라우트 파일이나 `-local` 컴포넌트에 흩뿌리지 말고 기본적으로 `shared/config.ts` 한
-파일에서 가져옵니다.
-수가 많지 않을 때는 폴더로 쪼개기보다 `export const config = {}` 한 namespace를 유지하고,
+여러 화면에서 쓰는 상수와 설정은 라우트 파일이나 `-local` 컴포넌트에 흩뿌리지 않습니다.
+기본 출처는 `shared/config.ts` 한 파일입니다.
+
+| 대상 | 위치 |
+| --- | --- |
+| 공용 상수·설정 | `shared/config.ts` 의 `config.*` |
+| 공용 순수 함수 | `shared/util.ts` 의 `util.*` |
+| route·feature 전용 support code | sibling `page.ts` 또는 owner-named module |
+
+수가 많지 않으면 폴더로 쪼개지 말고 `export const config = {}` 한 namespace를 유지합니다.
 사용처는 `config.*` 체이닝으로 접근해 출처를 보존합니다.
-공용 순수 함수는 `config`에 섞지 말고 `shared/util.ts`의 `util.*` 아래로 분리합니다.
-route나 feature 전용 support code는 `shared/util.ts`로 올리지 말고 sibling `page.ts`나 owner-named module에 둡니다.
 
 **Incorrect (공용 상수를 화면 파일에 직접 선언):**
 
@@ -324,18 +337,23 @@ config.navigation.project_menu_key.dashboard;
 
 **Impact: HIGH (에이전트가 파일을 만들거나 옮길 때 소유 경계와 의도를 분명하게 유지함)**
 
-이 규칙은 React ownership을 드러내는 파일·컴포넌트·exported symbol·공용 설정 이름에 적용합니다.
-React 작업에서 sibling `.ts` support 파일을 만들거나 local 선언을 named export로 옮기면 target spelling이 유지돼도
-선택합니다.
-non-exported local symbol은 TypeScript `naming-use-consistent-file-and-symbol-naming`,
-local query·mutation binding은 React `state-name-query-and-mutation-bindings-consistently`가 담당합니다.
-그것만 바꾸면 이 규칙은 적용하지 않습니다.
-
-파일명은 `kebab-case`, 일반 변수와 함수는 `camelCase`, 타입과 컴포넌트는 `PascalCase`를 사용합니다.
-`const`인지 여부로 별도 casing을 두지 않고, 화면과 모듈 안의 로컬 값은 모두 `camelCase`로 맞춥니다.
-여러 화면이 함께 쓰는 설정과 enum-like 상수는 `shared/config.ts`의 `config.*` 아래에 두고,
-그 객체 이름과 키는 `snake_case`를 사용합니다.
 파일명과 심볼명이 소유자와 역할을 바로 드러내야 route-local 이동과 공용화 판단이 쉬워집니다.
+
+| 대상 | 표기 |
+| --- | --- |
+| 파일명 | `kebab-case` |
+| 일반 변수·함수 | `camelCase` |
+| 타입·컴포넌트 | `PascalCase` |
+| `shared/config.ts` 의 설정 객체와 키 | `snake_case` |
+
+`const` 여부로 casing을 나누지 않고, 화면과 모듈 안의 로컬 값은 모두 `camelCase`로 맞춥니다.
+여러 화면이 함께 쓰는 설정과 enum-like 상수는 `shared/config.ts`의 `config.*` 아래에 둡니다.
+
+- sibling `.ts` support 파일을 만들거나 local 선언을 named export로 옮기면
+  이름 자체가 그대로여도 이 규칙을 확인합니다.
+- non-exported local symbol은 TypeScript `naming-use-consistent-file-and-symbol-naming`이,
+  local query·mutation binding은 `state-name-query-and-mutation-bindings-consistently`가 담당합니다.
+  그것만 바꾸면 이 규칙은 적용하지 않습니다.
 
 **Incorrect (파일명과 심볼 규칙이 제각각이고 공용 상수를 화면 파일에 직접 둠):**
 
@@ -384,20 +402,19 @@ React가 제공하는 handler와 prop 계약은 선언 위치에서 바로 드�
 
 **Impact: HIGH (React handler 시그니처와 callback 의도를 선언 위치에서 바로 보이게 함)**
 
-React가 제공하는 이벤트 핸들러 타입이나 prop callback 계약이 이미 있다면,
+React가 제공하는 이벤트 핸들러 타입이나 prop callback 계약이 이미 있다면
 매개변수 타입보다 함수 변수 타입 선언을 우선합니다.
+
 curried handler factory가 반환하는 함수도 JSX event prop에 전달되는 React handler 선언입니다.
-JSX가 나중에 contextual typing을 제공한다는 이유로 반환 함수 타입을 생략하지 않습니다.
+JSX가 나중에 contextual typing을 제공한다는 이유로 반환 함수 타입을 생략하지 않고,
 factory 반환 타입을 `MouseEventHandler<...>` 같은 기존 alias로 고정합니다.
 
-`query.select` 같은 hook option의 one-off contextual callback과 UI-agnostic domain function은 React event handler나 prop
-callback 구현이 아닙니다.
-이 경우 이 규칙은 적용하지 않습니다.
-
-React alias를 쓰기 위해 type import를 추가·변경하면
-`ownership-avoid-barrel-and-react-namespace-imports`를 다시 판정합니다.
-일반 TypeScript 함수 타입 규칙은 companion skill인 `convention-typescript`에서 다루고,
-여기서는 React handler alias를 바로 쓰는 경우를 강조합니다.
+- `query.select` 같은 hook option의 one-off contextual callback과 UI-agnostic domain function은
+  React event handler나 prop callback 구현이 아닙니다. 이 경우 이 규칙은 적용하지 않습니다.
+- React alias를 쓰려고 type import를 추가·변경하면
+  `ownership-avoid-barrel-and-react-namespace-imports`를 다시 판단합니다.
+- 일반 TypeScript 함수 타입 규칙은 companion skill인 `convention-typescript`가 다룹니다.
+  여기서는 React handler alias를 바로 쓰는 경우만 봅니다.
 
 **Incorrect (핸들러 타입이 있는데 매개변수만 타입 지정):**
 
@@ -470,14 +487,14 @@ Shared component는 single component, compound component, explicit variant 중 �
 
 **Impact: HIGH (exported shared components stay explicit instead of accumulating hidden variant combinations)**
 
-여러 파일과 레이어에서 재사용되는 shared component에 `isCompact`, `isEditing`,
-`showSearch` 같은 boolean prop을 계속 추가하지 않습니다.
-boolean이 늘어날수록 가능한 조합이 급증하고, JSX 분기와 스타일 조건도 함께 불어나기 때문입니다.
-이 규칙은 exported shared component에 적용합니다.
-route entry 안의 일회성 분기는 로컬에서 유지할 수 있지만,
-shared `ui`나 `widget`는 explicit variant component나 compound component로 드러냅니다.
-`.Root` 같은 namespaced part 문법은 권장 예시일 뿐이고,
-이 규칙의 본질은 boolean을 없애고 구조를 명시적으로 드러내는 데 있습니다.
+여러 파일과 레이어에서 재사용되는 shared component에 `isCompact`, `isEditing`, `showSearch` 같은
+boolean prop을 계속 추가하지 않습니다.
+boolean이 늘어날수록 가능한 조합이 급증하고, JSX 분기와 스타일 조건도 함께 불어납니다.
+
+- route entry 안의 일회성 분기는 로컬에서 유지해도 됩니다.
+- shared `ui`나 `widget`는 explicit variant component나 compound component로 드러냅니다.
+- `.Root` 같은 namespaced part 문법은 권장 예시일 뿐입니다.
+  본질은 boolean을 없애고 구조를 명시적으로 드러내는 데 있습니다.
 
 **Incorrect (boolean prop 조합으로 shared component가 비대해짐):**
 
@@ -781,10 +798,11 @@ export const EntryScreen = () => {
 **Impact: MEDIUM (컴포넌트 계약을 시그니처에 남기고 실제 사용을 본문 가까이에 유지함)**
 
 컴포넌트 시그니처는 `props` 전체를 받고, 함수 본문 첫 줄에서 구조분해합니다.
-props를 받는 컴포넌트를 다른 파일로 이동하거나 이름을 바꾸는 작업도 시그니처를 복사·재작성하는 surface이므로,
-props field가 그대로여도 이 형태를 다시 확인합니다.
-props가 없는 컴포넌트 이동만으로는 이 규칙을 선택하지 않습니다.
-이렇게 하면 시그니처에서 계약을 한눈에 읽고, 본문에서 실제 사용하는 값을 좁은 스코프에 둘 수 있습니다.
+시그니처에서 계약을 한눈에 읽고, 본문에서 실제 쓰는 값을 좁은 스코프에 둘 수 있습니다.
+
+- 컴포넌트를 다른 파일로 옮기거나 이름을 바꾸는 것도 시그니처를 다시 쓰는 작업입니다.
+  props field가 그대로여도 이 형태를 다시 확인합니다.
+- props가 없는 컴포넌트 이동만으로는 이 규칙이 걸리지 않습니다.
 
 **Incorrect (시그니처에서 바로 구조분해):**
 
@@ -812,9 +830,11 @@ const UserCard = (props: UserCardProps) => {
 **Impact: HIGH (prevents remount bugs and hidden state resets caused by recreating component types every render)**
 
 컴포넌트 본문 안에서 다른 컴포넌트를 새로 정의하지 않습니다.
-parent가 다시 렌더될 때마다 child component type도 새로 만들어져 remount, focus reset, animation restart,
-effect 재실행이 생길 수 있습니다.
-로컬에서 JSX 조각을 재사용하고 싶다면 그냥 helper 함수 호출로 남기거나, 독립 component로 빼고 props를 전달합니다.
+parent가 다시 렌더될 때마다 child component type도 새로 만들어져
+remount, focus reset, animation restart, effect 재실행이 생깁니다.
+
+로컬에서 JSX 조각을 재사용하려면 helper 함수 호출로 남기거나,
+독립 component로 빼고 props를 전달합니다.
 
 **Incorrect (렌더마다 새 component type을 생성):**
 
@@ -955,12 +975,14 @@ const handleRemoveEntryButtonClick: MouseEventHandler<HTMLButtonElement> = async
 
 **Impact: MEDIUM-HIGH (keeps component definitions simpler in React 19 codebases and avoids adding legacy wrappers by default)**
 
-React 19 codebase에서는 `ref`를 "외부에서 실제로 제어해야 하는 public imperative contract"로 다룹니다.
-따라서 focus, scroll, measure 같은 contract가 있을 때만 `ref` prop을 열고,
-그 경우에도 새로운 `forwardRef` wrapper보다 `ref`를 일반 prop처럼 직접 받는 방식을 기본값으로 삼습니다.
-반대로 외부 제어가 필요 없는 단순 view component에는 `ref` prop 자체를 추가하지 않습니다.
-기존 `forwardRef`를 모두 지우라는 뜻은 아니며,
-third-party 타입 제약이나 점진적 마이그레이션 때문에 유지해야 하는 경우는 예외로 둘 수 있습니다.
+React 19 codebase에서 `ref`는 외부에서 실제로 제어해야 하는 public imperative contract입니다.
+
+- focus, scroll, measure 같은 contract가 있을 때만 `ref` prop을 엽니다.
+- 그 경우에도 새 `forwardRef` wrapper 대신 `ref`를 일반 prop처럼 직접 받습니다.
+- 외부 제어가 필요 없는 단순 view component에는 `ref` prop을 추가하지 않습니다.
+
+기존 `forwardRef`를 모두 지우라는 뜻은 아닙니다.
+third-party 타입 제약이나 점진적 마이그레이션 때문에 유지해야 하면 예외로 둡니다.
 
 **Incorrect (React 19에서도 새 `forwardRef`를 추가):**
 
@@ -1026,12 +1048,14 @@ export const UiStatusBadge = (props: UiStatusBadgeProps) => {
 
 **Impact: MEDIUM (표시 여부 결정을 route 화면 전반에서 명시적이고 일관되게 유지함)**
 
-React 19의 `<Activity />` 또는 프로젝트가 이미 채택한 동등한 visibility primitive가 있다면,
-이미 마운트된 subtree를 보여주거나 숨기는 의도일 때만 사용합니다.
+React 19의 `<Activity />` 또는 프로젝트가 이미 채택한 동등한 visibility primitive는
+이미 마운트된 subtree를 보여주거나 숨기는 의도일 때만 씁니다.
+
 삼항 렌더링과 visibility primitive는 같은 의미가 아닙니다.
-전자는 branch를 아예 unmount할 수 있지만, 후자는 숨겨진 subtree의 state와 effect를 유지할 수 있습니다.
-mount/unmount 의미가 중요하면 기존 조건부 렌더링을 유지하고,
-코드베이스에 `Activity`가 아직 없다면 이 규칙 때문에 새 추상화를 도입하지 말고 기존 패턴을 따릅니다.
+삼항은 branch를 아예 unmount하지만, visibility primitive는 숨겨진 subtree의 state와 effect를 유지합니다.
+
+- mount/unmount 의미가 중요하면 기존 조건부 렌더링을 유지합니다.
+- 코드베이스에 `Activity`가 아직 없으면 이 규칙 때문에 새 추상화를 들이지 말고 기존 패턴을 따릅니다.
 
 **Incorrect (lifecycle 의미가 다른 분기를 무비판적으로 visibility primitive로 치환):**
 
@@ -1467,10 +1491,13 @@ export const EntryTable = (props: EntryTableProps) => {
 
 **Impact: HIGH (오리진을 보존하고 route 파일이 alias와 명령형 setup 코드로 채워지는 것을 막음)**
 
-화면 상단에서 오리진을 잃는 별칭 상수, `let` 재할당,
-배열 `push` 기반 명령형 조립을 추가·유지하지 않고 기존 항목은 제거합니다.
-Hook 파라미터, JSX 표시값, effect 내부 계산은 실제 사용하는 좁은 스코프에서 직접 계산합니다.
-JSX 전용 표시값은 화면 상단 `const`로 빼지 말고 원본 체이닝으로 직접 참조합니다.
+파생값은 실제 쓰는 자리에서 계산합니다.
+화면 상단으로 끌어올리면 값의 출처를 잃습니다.
+
+- 오리진을 잃는 별칭 상수, `let` 재할당, 배열 `push` 기반 명령형 조립을 새로 만들지 않고
+  기존 항목은 제거합니다.
+- Hook 파라미터, JSX 표시값, effect 내부 계산은 쓰는 자리의 좁은 스코프에서 직접 계산합니다.
+- JSX 전용 표시값은 화면 상단 `const`로 빼지 말고 원본 체이닝으로 직접 참조합니다.
 
 **Incorrect (화면 상단에서 파생값과 별칭을 누적):**
 
@@ -1512,12 +1539,10 @@ return <UiInput value={selectedNodeContext?.node?.name} />;
 Route entry는 search, navigate, page query·mutation, cross-section effect와 render 조립을 보여줍니다.
 runtime boundary section은 추출해도 주 orchestration은 route entry에 둡니다.
 
-route 흐름의 소유자나 섹션 구성이 바뀔 때 적용합니다.
-흐름을 hook·support module·section component로 옮기거나, 섹션의 순서와 소유자를 바꾸는 경우입니다.
-
 소유자가 그대로인 변경은 대상이 아닙니다.
-`query.select` shape, binding·alias 정리, derived-state effect 를 render 계산으로 옮기는 것이 여기에 해당합니다.
-순수 type·payload builder·preset 의 sibling `.ts` 이동은 support-code 규칙이 담당합니다.
+
+- `query.select` shape, binding·alias 정리, derived-state effect를 render 계산으로 옮기는 것
+- 순수 type·payload builder·preset의 sibling `.ts` 이동. support-code 규칙이 담당합니다.
 
 **Incorrect (흐름보다 분해 자체가 목적이 됨):**
 
@@ -1750,20 +1775,23 @@ const handleSubmitButtonClick: MouseEventHandler<HTMLButtonElement> = async (_ev
 
 **Impact: MEDIUM-HIGH (이벤트 흐름을 검색 가능하게 유지하고 즉흥적인 handler 시그니처를 피함)**
 
-이벤트 핸들러는 `handle` 접두사와 역할명을 사용합니다.
-DOM event면 `handle + Target + Event`, action 문맥이 분명하면 `handle + DomainAction`을 사용합니다.
-DOM React event prop의 인라인 callback을 새 `handle*`로 추출하며 event 외 추가 인자가 필요하면
-factory가 event boundary를 소유합니다.
-`onClick={() => handleSelectionToggle(id)}` wrapper는 완료가 아닙니다.
+이벤트 핸들러는 `handle` 접두사와 역할명을 씁니다.
+
+| 상황 | 이름 |
+| --- | --- |
+| DOM event | `handle + Target + Event` |
+| action 문맥이 분명할 때 | `handle + DomainAction` |
+
+인라인 callback을 `handle*`로 추출할 때 event 외 추가 인자가 필요하면 factory가 event boundary를 소유합니다.
 `(id): MouseEventHandler<Element> => (_event) => ...` 반환값을 JSX에 직접 전달합니다.
+`onClick={() => handleSelectionToggle(id)}` 같은 wrapper는 완료가 아닙니다.
 
-최종 반환 React handler는 `typing-function-type-first`를 재판정합니다.
-alias나 prop callback 계약을 쓸 수 있으면 그 규칙도 함께 적용하고 contextual typing으로 숨기지 않습니다.
-
-기존 UI-agnostic domain command나 custom component prop callback이 `(id) => void`이면 direct callback이나 최소 adapter를
-유지합니다.
-`useEffectEvent`에도 계약에 없는 DOM event 또는 curry를 만들지 않습니다.
-이 경우 React DOM handler typing 규칙은 적용하지 않습니다.
+- 최종 반환 React handler는 `typing-function-type-first`를 다시 판단합니다.
+  alias나 prop callback 계약을 쓸 수 있으면 그 규칙도 함께 적용하고 contextual typing으로 숨기지 않습니다.
+- 기존 UI-agnostic domain command나 custom component prop callback이 `(id) => void`이면
+  direct callback이나 최소 adapter를 유지합니다.
+- `useEffectEvent`에도 계약에 없는 DOM event나 curry를 만들지 않습니다.
+  이 경우 React DOM handler typing 규칙은 적용하지 않습니다.
 
 **Incorrect (이름과 시그니처가 제각각임):**
 
@@ -1851,12 +1879,13 @@ Server state, store 접근, 파생값, effect callback, transition은 오리진�
 
 **Impact: HIGH (결측 데이터를 숨기지 않고 로딩 UX를 Suspense 또는 명시적 예외 처리 쪽으로 유도함)**
 
-옵셔널 값에 `??`, `||`로 습관적인 기본값을 넣지 않고,
-Suspense query의 초기 blocking 로딩을 화면 본문에서 즉석 분기하지 않습니다.
-결측값은 드러내고, 초기 로딩은 기본적으로 Suspense 경계나 상위 레이아웃에서 처리합니다.
-대신 `isPending`, `isFetching` 같은 상태는 버튼 비활성화, background refetch indicator,
-저장 중 배지처럼 기존 UI를 보조하는 좁은 용도로만 사용합니다.
-화면 전체를 가리는 로컬 loading 분기가 꼭 필요하면 가까운 한글 주석으로 이유를 남깁니다.
+옵셔널 값에 `??`, `||`로 습관적인 기본값을 넣지 않습니다.
+Suspense query의 초기 blocking 로딩도 화면 본문에서 즉석 분기하지 않습니다.
+결측값은 드러내고, 초기 로딩은 Suspense 경계나 상위 레이아웃에서 처리합니다.
+
+- `isPending`, `isFetching` 같은 상태는 기존 UI를 보조하는 좁은 용도로만 씁니다.
+  버튼 비활성화, background refetch indicator, 저장 중 배지가 그런 경우입니다.
+- 화면 전체를 가리는 로컬 loading 분기가 꼭 필요하면 가까운 한글 주석으로 이유를 남깁니다.
 
 **Incorrect (결측과 로딩을 즉석에서 숨김):**
 
@@ -1900,10 +1929,12 @@ return (
 
 **Impact: HIGH (avoids redundant state sync and effect-driven drift when values can be computed from current inputs)**
 
-현재 props, state, search, response에서 바로 계산할 수 있는 값은 `useEffect`와 `useState`로 다시 동기화하지 않습니다.
-render 중에 계산하면 추가 렌더와 drift를 줄일 수 있고, effect dependency도 억지로 늘어나지 않습니다.
-이 규칙은 `screen-keep-derived-values-close`와 함께 사용합니다.
-파생값은 render 중에 만들고, 사용 지점 가까이에 둡니다.
+현재 props, state, search, response에서 바로 계산할 수 있는 값은
+`useEffect`와 `useState`로 다시 동기화하지 않습니다.
+render 중에 계산하면 추가 렌더와 drift가 줄고, effect dependency도 억지로 늘어나지 않습니다.
+
+파생값은 render 중에 만들고 사용 지점 가까이에 둡니다.
+배치 기준은 `screen-keep-derived-values-close`가 함께 정합니다.
 
 **Incorrect (파생값을 effect로 다시 state에 동기화):**
 
@@ -1931,11 +1962,18 @@ return <SelectedCountBadge count={selectedIds.length} />;
 
 **Impact: MEDIUM-HIGH (로컬 UI state, 전역 client state, server state가 서로 흐려지는 것을 막음)**
 
-이 convention 세트는 로컬 UI 상태에 `useState` 또는 `useReducer`, 전역 클라이언트 상태에 `Zustand`,
-서버 상태에 `@tanstack/react-query`를 기본 전제로 둡니다.
-상태 도구를 수명과 소유자 기준으로 고르면 화면 파일이 더 읽기 쉬워지고 중복 동기화가 줄어듭니다.
-프로젝트가 이미 다른 전역 store나 server-state 도구를 표준으로 채택했다면,
-이 규칙을 문자 그대로 적용해 `Zustand`나 `react-query`를 새로 들여오지 말고 같은 source-of-truth 원칙만 유지합니다.
+상태 도구는 값의 수명과 소유자를 기준으로 고릅니다.
+
+| 상태의 소유자 | 기본 도구 |
+| --- | --- |
+| 로컬 UI | `useState` 또는 `useReducer` |
+| 전역 클라이언트 | `Zustand` |
+| 서버 | `@tanstack/react-query` |
+
+이 기준으로 고르면 화면 파일이 더 읽기 쉬워지고 중복 동기화가 줄어듭니다.
+
+프로젝트가 이미 다른 전역 store나 server-state 도구를 표준으로 쓴다면 그것을 유지합니다.
+`Zustand`나 `react-query`를 새로 들여오지 말고 source-of-truth 원칙만 지킵니다.
 
 **Incorrect (서버 상태를 로컬 상태로 복제):**
 
@@ -2001,11 +2039,15 @@ const mutationEntryRemove = useEntryRemove();
 
 **Impact: MEDIUM-HIGH (검증되지 않은 값어치 없이 노이즈만 늘리는 방어적 useMemo/useCallback을 피함)**
 
-React 19 컴파일러가 처리하는 범위에서는 `useMemo`, `useCallback`을 기본적으로 사용하지 않습니다.
-외부 라이브러리가 참조 동일성에 민감하거나, 병목이 실제로 확인된 경우에만 허용하고
-바로 위에 한글 주석으로 이유를 남깁니다.
-`useDeferredValue`를 기준으로 무거운 파생 계산을 늦추는 경우처럼 render 비용 절감 목적이 분명한 예외는 허용할 수 있지만,
-그때도 "정말 무거운 계산인지"가 먼저 확인되어야 합니다.
+React 19 컴파일러가 처리하는 범위에서는 `useMemo`, `useCallback`을 기본적으로 쓰지 않습니다.
+
+허용하는 경우는 셋뿐이고, 어느 쪽이든 바로 위에 한글 주석으로 이유를 남깁니다.
+
+- 외부 라이브러리가 참조 동일성에 민감할 때
+- 병목이 실제로 확인됐을 때
+- `useDeferredValue` 기준으로 무거운 파생 계산을 늦출 때
+
+마지막 경우에도 정말 무거운 계산인지를 먼저 확인합니다.
 
 **Incorrect (단순 가공을 관성적으로 memoization):**
 
@@ -2031,9 +2073,10 @@ const columns = useMemo(() => buildColumns(response.data.columns), [response.dat
 **Impact: CRITICAL (파일 전체에서 alias를 따라가지 않아도 값의 출처를 바로 알 수 있게 함)**
 
 페이지, 레이아웃, 화면 스코프에서는 `response...`, `mutation...`, `*Store` 원본을 유지합니다.
-넓은 스코프 구조분해와 별칭 상수는 피하고,
-정말 필요할 때만 handler나 effect 내부의 좁은 스코프에서 제한적으로 구조분해합니다.
-`props`를 본문 첫 줄에서 구조분해하는 패턴만 예외로 봅니다.
+넓은 스코프의 구조분해와 별칭 상수는 값의 출처를 흐립니다.
+
+- 정말 필요하면 handler나 effect 내부의 좁은 스코프에서만 제한적으로 구조분해합니다.
+- `props`를 본문 첫 줄에서 구조분해하는 패턴만 예외입니다.
 
 **Incorrect (넓은 스코프 구조분해로 출처가 흐려짐):**
 
@@ -2074,9 +2117,10 @@ useEffect(() => {
 **Impact: CRITICAL (응답 변환을 fetch 경계 가까이에 두고 렌더 타임의 반복 매핑을 피함)**
 
 서버 응답 가공은 렌더링 본문이 아니라 `query.select`에서 처리합니다.
-`data.list` 같은 원시 응답 구조를 화면 여러 군데에서 직접 해석하지 말고,
-도메인 의미가 드러나는 필드 이름으로 한 번 변환합니다.
-여러 쿼리 데이터를 함께 가공해야 해도 먼저 `select`나 전용 hook 경계에서 풀 수 있는지 검토합니다.
+
+- `data.list` 같은 원시 응답 구조를 화면 여러 군데에서 직접 해석하지 않습니다.
+  도메인 의미가 드러나는 필드 이름으로 한 번 변환합니다.
+- 여러 쿼리 데이터를 함께 가공해야 해도 먼저 `select`나 전용 hook 경계에서 풀 수 있는지 봅니다.
 
 **Incorrect (응답 원형을 화면에서 직접 소비):**
 
@@ -2301,10 +2345,11 @@ const filteredRows = useMemo(() => {
 
 **Impact: MEDIUM-HIGH (keeps effects reactive only to true subscriptions while still reading the latest handler logic)**
 
-effect 안에서 최신 prop이나 state를 읽어야 하지만,
-그 값 변화 자체가 subscription 재설치를 일으키면 안 되는 경우에는 ref hack 대신 `useEffectEvent`를 우선합니다.
-이 규칙은 event handler를 effect로 옮기라는 뜻이 아닙니다.
-진짜 구독/연결 effect 안에서만 쓰고, 클릭/제출 같은 사용자 액션은 여전히 named handler에 둡니다.
+effect 안에서 최신 prop이나 state를 읽어야 하지만 그 값 변화가 subscription 재설치를
+일으키면 안 되는 경우, ref hack 대신 `useEffectEvent`를 씁니다.
+
+event handler를 effect로 옮기라는 뜻이 아닙니다.
+진짜 구독·연결 effect 안에서만 쓰고, 클릭·제출 같은 사용자 액션은 named handler에 둡니다.
 
 **Incorrect (최신 callback을 위해 ref를 수동 동기화):**
 
@@ -2460,11 +2505,14 @@ const DialogClose = (props: DialogCloseProps) => {
 
 **Impact: MEDIUM (코드를 해설하기보다 주석을 caveat, 제약, 부수효과 설명에 집중시킴)**
 
-함수 본문 안에서는 `//` 라인 주석을 사용하고, 도메인 규칙, 예외 방어, 라이브러리 제약,
-부수효과 순서처럼 코드만 읽어서는 놓치기 쉬운 경우에만 남깁니다.
-변수명 반복이나 단순 매핑 설명은 주석으로 적지 않습니다.
-헤더 JSDoc과 annotation 태그 선택은 `docs-require-jsdoc-on-key-declarations`와 companion skill인
-`convention-typescript`의 표준을 따릅니다.
+함수 본문 안에서는 `//` 라인 주석을 씁니다.
+코드만 읽어서는 놓치기 쉬운 경우에만 남깁니다.
+
+- 남기는 경우: 도메인 규칙, 예외 방어, 라이브러리 제약, 부수효과 순서
+- 남기지 않는 경우: 변수명 반복, 단순 매핑 설명
+
+헤더 JSDoc과 annotation 태그 선택은 `docs-require-jsdoc-on-key-declarations`와
+companion skill인 `convention-typescript`의 표준을 따릅니다.
 
 **Incorrect (코드 그대로를 반복하는 주석):**
 

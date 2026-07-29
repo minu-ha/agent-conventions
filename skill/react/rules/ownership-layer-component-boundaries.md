@@ -11,10 +11,15 @@ tags: ownership, ui, widget, local, naming
 
 **Impact: CRITICAL (공용 책임과 route-local 책임이 같은 레이어로 섞이는 것을 막음)**
 
-`ui`는 순수 view, `widget`은 여러 화면에서 재사용되는 공용 조합,
-`-local`은 특정 route 맥락을 아는 화면 전용 코드로 유지합니다.
-`widget` 레이어 폴더명은 유지하되, widget-owned 파일과 심볼은 `wg-*`, `Wg*` 규칙으로 소유자를 바로 드러내야 합니다.
-`ui`는 계속 `ui-*`, `Ui*` 규칙을 사용합니다.
+컴포넌트는 소유 레이어를 이름으로 드러냅니다.
+
+| 레이어 | 책임 | 파일·심볼 |
+| --- | --- | --- |
+| `ui` | 순수 view | `ui-*` · `Ui*` |
+| `widget` | 여러 화면이 재사용하는 공용 조합 | `wg-*` · `Wg*` |
+| `-local` | 특정 route 맥락을 아는 화면 전용 코드 | route 소유자 이름 |
+
+`widget` 레이어 폴더명은 그대로 두되, widget-owned 파일과 심볼은 `wg-*`, `Wg*`로 소유자를 드러냅니다.
 
 **Incorrect (view 레이어와 화면 전용 로직이 섞임):**
 

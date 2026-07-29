@@ -2341,14 +2341,14 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 	};
 
 	const routeFlow = await readRule("react", "screen-keep-route-flow-visible");
-	assert.match(routeFlow, /route 흐름의 소유자[\s\S]*섹션 구성[\s\S]*적용/);
+	assert.match(routeFlow, /소유자가 그대로인 변경은 대상이 아[\s\S]*binding·alias[\s\S]*support-code 규칙/);
 	assert.match(
 		routeFlow,
 		/소유자가 그대로인 변경은 대상이 아[\s\S]*`query\.select`[\s\S]*binding·alias[\s\S]*derived-state effect[\s\S]*render 계산/i,
 	);
 
 	const curriedHandler = await readRule("react", "events-name-and-curry-handlers");
-	assert.match(curriedHandler, /DOM React event prop[\s\S]*인라인 callback[\s\S]*추가 인자[\s\S]*wrapper[\s\S]*(?:완료가 아|우회)/i);
+	assert.match(curriedHandler, /인라인 callback[\s\S]*추가 인자[\s\S]*event boundary[\s\S]*wrapper[\s\S]*(?:완료가 아|우회)/i);
 	assert.match(curriedHandler, /최종 반환[\s\S]*React handler[\s\S]*typing-function-type-first[\s\S]*함께 적용/i);
 	assert.match(
 		curriedHandler,
@@ -2366,7 +2366,7 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 		),
 	);
 	assert.match(reactContracts[0]!, /(?:`query\.select`|query `select`)[\s\S]*derived-state effect[\s\S]*render 계산/i);
-	assert.match(reactContracts[1]!, /DOM React event prop[\s\S]*custom component prop callback/i);
+	assert.match(reactContracts[1]!, /인라인 callback[\s\S]*custom component prop callback/i);
 	assert.match(reactContracts[2]!, /curried[\s\S]*one-off contextual callback/i);
 
 	const typescriptRouter = await readFile(path.join(realSkillRootDir, "typescript", "SKILL.md"), "utf8");
