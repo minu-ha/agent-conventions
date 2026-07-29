@@ -26,8 +26,8 @@
 ## 5. Screen File Discipline (screen)
 **Impact:** HIGH
 **Description:** Route entry는 화면 흐름을 분명하게 보여줘야 하며, helper 추출도 경계가 정당할 때만 해야 합니다.
-layout-only 분리는 지양하지만 async, state,
-interaction 같은 runtime boundary를 소유한 route-local section은 추출할 수 있습니다.
+  layout-only 분리는 지양하지만 async, state, interaction 같은 runtime boundary를 소유한 route-local section은 추출할 수
+  있습니다.
 
 ## 6. Events and Interaction Flow (events)
 **Impact:** MEDIUM-HIGH
@@ -41,13 +41,13 @@ interaction 같은 runtime boundary를 소유한 route-local section은 추출�
 
 ## 8. Local State (state)
 **Impact:** HIGH
-**Description:** 로컬 상태는 값의 수명과 소유자에 맞는 도구로 고르고, 파생값은 저장하지 않고 render에서 계산해야
-  합니다. effect callback은 반응성이 필요한 값만 의존성으로 받아야 합니다.
+**Description:** 로컬 상태는 값의 수명과 소유자에 맞는 도구로 고르고, 파생값은 저장하지 않고 render에서 계산해야 합니다.
+  effect callback은 반응성이 필요한 값만 의존성으로 받아야 합니다.
 
 ## 9. Render Performance (perf)
 **Impact:** MEDIUM-HIGH
-**Description:** 메모이제이션은 React Compiler를 기본으로 두고 직접 손대지 않습니다. 실제로 무거운 초기화와 갱신만
-  lazy initializer, transition, deferred value로 미룹니다.
+**Description:** 메모이제이션은 React Compiler를 기본으로 두고 직접 손대지 않습니다. 실제로 무거운 초기화와 갱신만 lazy
+  initializer, transition, deferred value로 미룹니다.
 
 ## 10. Documentation and Comments (docs)
 **Impact:** MEDIUM
