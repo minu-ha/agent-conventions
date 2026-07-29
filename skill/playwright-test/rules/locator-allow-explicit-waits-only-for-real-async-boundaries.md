@@ -1,7 +1,9 @@
 ---
 title: Allow Explicit Waits Only for Real Async Boundaries
 impact: HIGH
-impactDescription: keeps explicit waits intentional by limiting them to navigation, known responses, bootstrap, or real background polling
+impactDescription: >-
+  keeps explicit waits intentional by limiting them to navigation, known responses, bootstrap, or real background
+  polling
 tags: waits, async-boundaries, polling
 ---
 

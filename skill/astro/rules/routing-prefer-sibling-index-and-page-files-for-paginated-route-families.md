@@ -1,7 +1,8 @@
 ---
 title: Prefer Sibling `index.astro` and `[page].astro` Files for Paginated Route Families
 impact: HIGH
-impactDescription: keeps paginated route families shallow and makes list plus pagination contracts readable from one folder
+impactDescription: >-
+  keeps paginated route families shallow and makes list plus pagination contracts readable from one folder
 tags: routing, pagination, pages, route-families
 ---
 

@@ -1,7 +1,8 @@
 ---
 title: Write Comments Only for Non-obvious Setup Boundaries
 impact: MEDIUM
-impactDescription: keeps test comments focused on why a setup exists instead of narrating obvious Arrange/Act/Assert steps
+impactDescription: >-
+  keeps test comments focused on why a setup exists instead of narrating obvious Arrange/Act/Assert steps
 tags: comments, setup, helpers
 ---
 

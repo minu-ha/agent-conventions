@@ -1,7 +1,9 @@
 ---
 title: Align Route Page Assets and `rt_*` Surface Classes with Route Role
 impact: HIGH
-impactDescription: keeps Astro route files, route-local assets, CSS owners, and URL semantics aligned without duplicating folder depth in names
+impactDescription: >-
+  keeps Astro route files, route-local assets, CSS owners, and URL semantics aligned without duplicating folder depth in
+  names
 tags: naming, pages, css, route-role
 ---
 

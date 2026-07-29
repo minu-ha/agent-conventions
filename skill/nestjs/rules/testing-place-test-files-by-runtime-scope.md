@@ -1,7 +1,8 @@
 ---
 title: Place Test Files by Runtime Scope
 impact: HIGH
-impactDescription: makes backend test ownership obvious by separating service-adjacent unit tests from top-level HTTP e2e tests
+impactDescription: >-
+  makes backend test ownership obvious by separating service-adjacent unit tests from top-level HTTP e2e tests
 tags: test-files, placement, runtime-scope
 ---
 

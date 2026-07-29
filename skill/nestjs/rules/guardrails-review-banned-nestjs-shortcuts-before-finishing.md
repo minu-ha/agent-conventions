@@ -1,7 +1,9 @@
 ---
 title: Review Banned NestJS Shortcuts Before Finishing
 impact: MEDIUM
-impactDescription: catches the recurring shortcuts that most often blur NestJS layers, contracts, and test meaning before the work is closed out
+impactDescription: >-
+  catches the recurring shortcuts that most often blur NestJS layers, contracts, and test meaning before the work is
+  closed out
 tags: review, guardrails, banned-patterns
 ---
 

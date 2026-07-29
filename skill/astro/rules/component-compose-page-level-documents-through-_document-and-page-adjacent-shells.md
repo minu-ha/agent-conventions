@@ -1,7 +1,9 @@
 ---
 title: Compose Page-level Documents Through `_document.astro` and `_head.astro`
 impact: HIGH
-impactDescription: keeps repeated document, head, and body shell composition out of route files while preserving a single page-level entry point
+impactDescription: >-
+  keeps repeated document, head, and body shell composition out of route files while preserving a single page-level
+  entry point
 tags: component, document, head, pages, seo
 ---
 

@@ -20,16 +20,16 @@ const repoDir = path.resolve(currentDir, "../..");
 const flattenWhitespace = (text: string): string => text.replace(/\s+/g, " ");
 
 /**
- * @helper inline scalar 와 YAML folded scalar 를 모두 받아 appliesWhen 값만 돌려준다
+ * @helper inline scalar 와 YAML folded scalar 를 모두 받아 frontmatter 값만 돌려준다
  */
-const readAppliesWhen = (source: string): string => {
-	const inline = /^appliesWhen: (?!>)(.+)$/m.exec(source);
+const readFrontmatterValue = (source: string, key: string): string => {
+	const inline = new RegExp(`^${key}: (?!>)(.+)$`, "m").exec(source);
 
 	if (inline?.[1] !== undefined) {
 		return inline[1];
 	}
 
-	const folded = /^appliesWhen: >-?\n((?:[ \t]+\S.*\n?)+)/m.exec(source);
+	const folded = new RegExp(`^${key}: >-?\\n((?:[ \\t]+\\S.*\\n?)+)`, "m").exec(source);
 
 	return folded?.[1] === undefined
 		? ""
@@ -39,6 +39,11 @@ const readAppliesWhen = (source: string): string => {
 				.filter(Boolean)
 				.join(" ");
 };
+
+/**
+ * @helper appliesWhen 전용 단축
+ */
+const readAppliesWhen = (source: string): string => readFrontmatterValue(source, "appliesWhen");
 const realSkillRootDir = path.join(repoDir, "skill");
 const behavioralProtocolPath = path.join(repoDir, "docs/evaluations/2026-07-21-progressive-loading-behavioral-protocol.json");
 
@@ -1603,9 +1608,9 @@ test("TypeScript progressive metadata matches Appendix A exactly", async () => {
 	);
 	const headerJsdocRule = await readFile(path.join(skillPaths.rulesDir, "docs-require-header-jsdoc-on-key-declarations.md"), "utf8");
 	assert.match(headerJsdocRule, /named query·mutation binding[^\n]+@api/i);
-	assert.match(
-		headerJsdocRule,
-		/^requiresSelected: docs-standardize-annotation-tags-by-declaration-role, docs-write-concise-korean-comments-about-purpose-and-constraints$/m,
+	assert.equal(
+		readFrontmatterValue(headerJsdocRule, "requiresSelected"),
+		"docs-standardize-annotation-tags-by-declaration-role, docs-write-concise-korean-comments-about-purpose-and-constraints",
 	);
 	assert.doesNotMatch(headerJsdocRule, /^reviewWith:/m);
 });
@@ -1907,7 +1912,7 @@ test("React progressive metadata and all 42 rule routes match Appendix B exactly
 
 	const template = await readFile(path.join(skillPaths.rulesDir, "_template.md"), "utf8");
 	assert.match(readAppliesWhen(template), / /);
-	assert.doesNotMatch(template, /^reviewWith: /m);
+	assert.doesNotMatch(template, /^reviewWith:/m);
 
 	// frontmatter 작성 규칙은 스킬마다 복제하지 않고 공통 기여 문서 한 곳에 둔다.
 	const contributing = await readFile(path.join(repoDir, "CONTRIBUTING.md"), "utf8");
@@ -2170,7 +2175,7 @@ test("CSS progressive metadata and rule routing match Appendix C exactly", async
 
 	const template = await readFile(path.join(skillPaths.rulesDir, "_template.md"), "utf8");
 	assert.match(readAppliesWhen(template), / /);
-	assert.doesNotMatch(template, /^reviewWith: /m);
+	assert.doesNotMatch(template, /^reviewWith:/m);
 
 	// frontmatter 작성 규칙은 스킬마다 복제하지 않고 공통 기여 문서 한 곳에 둔다.
 	const contributing = await readFile(path.join(repoDir, "CONTRIBUTING.md"), "utf8");

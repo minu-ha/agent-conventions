@@ -1,7 +1,8 @@
 ---
 title: Isolate and Clean Up Test Data
 impact: HIGH
-impactDescription: prevents remote or shared-state browser tests from colliding through reused accounts, ids, or seed records
+impactDescription: >-
+  prevents remote or shared-state browser tests from colliding through reused accounts, ids, or seed records
 tags: data-isolation, cleanup, seeds
 ---
 

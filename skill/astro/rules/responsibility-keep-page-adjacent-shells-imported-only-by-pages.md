@@ -1,7 +1,9 @@
 ---
 title: Keep Pages-local Document Helpers Imported Only by Pages
 impact: HIGH
-impactDescription: preserves one-way dependency flow from routed pages to pages-local document helpers instead of letting shared code depend on routing helpers
+impactDescription: >-
+  preserves one-way dependency flow from routed pages to pages-local document helpers instead of letting shared code
+  depend on routing helpers
 tags: responsibility, pages, imports, dependency-direction, document-helpers
 ---
 

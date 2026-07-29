@@ -1,7 +1,8 @@
 ---
 title: Promote Shared Support Only After Real Reuse
 impact: MEDIUM-HIGH
-impactDescription: keeps support layers proportional by delaying global helpers until multiple features genuinely need them
+impactDescription: >-
+  keeps support layers proportional by delaying global helpers until multiple features genuinely need them
 tags: support, reuse, helpers
 ---
 

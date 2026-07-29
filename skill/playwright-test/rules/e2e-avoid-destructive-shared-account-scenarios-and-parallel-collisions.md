@@ -1,7 +1,8 @@
 ---
 title: Avoid Destructive Shared-account Scenarios and Parallel Collisions
 impact: CRITICAL
-impactDescription: keeps real-system browser tests from corrupting shared accounts or racing on the same remote resources
+impactDescription: >-
+  keeps real-system browser tests from corrupting shared accounts or racing on the same remote resources
 tags: e2e, shared-accounts, parallelism
 ---
 

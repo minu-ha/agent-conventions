@@ -5,7 +5,8 @@ impactDescription: makes important boundaries searchable and explainable before 
 appliesWhen: >-
   named query·mutation, 원격 함수, 비자명한 handler/effect, reusable/exported helper·custom hook, custom type·interface,
   store, formatter 또는 예외 memo 선언을 추가·변경한다.
-requiresSelected: docs-standardize-annotation-tags-by-declaration-role, docs-write-concise-korean-comments-about-purpose-and-constraints
+requiresSelected: >-
+  docs-standardize-annotation-tags-by-declaration-role, docs-write-concise-korean-comments-about-purpose-and-constraints
 tags: jsdoc, declarations, boundaries
 ---
 

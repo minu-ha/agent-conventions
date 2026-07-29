@@ -1,7 +1,8 @@
 ---
 title: Use Underscore-prefixed Pages-local Helper Names for Document Files
 impact: MEDIUM-HIGH
-impactDescription: keeps page-adjacent non-routes recognizable in file trees and prevents generic shell names from blurring ownership
+impactDescription: >-
+  keeps page-adjacent non-routes recognizable in file trees and prevents generic shell names from blurring ownership
 tags: naming, pages, underscore, document-helpers
 ---
 

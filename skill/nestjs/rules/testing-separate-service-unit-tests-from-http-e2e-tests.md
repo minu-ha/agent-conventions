@@ -1,7 +1,8 @@
 ---
 title: Separate Service Unit Tests From HTTP E2E Tests
 impact: CRITICAL
-impactDescription: keeps backend failures diagnosable by assigning business logic and full-stack wiring to different test levels
+impactDescription: >-
+  keeps backend failures diagnosable by assigning business logic and full-stack wiring to different test levels
 tags: unit-tests, e2e, levels
 ---
 

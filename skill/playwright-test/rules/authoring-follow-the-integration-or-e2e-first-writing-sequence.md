@@ -1,7 +1,8 @@
 ---
 title: Follow the Declared Integration or E2E Writing Sequence
 impact: MEDIUM
-impactDescription: reduces confused setup by forcing the author to classify the test level and dependency boundary before writing actions
+impactDescription: >-
+  reduces confused setup by forcing the author to classify the test level and dependency boundary before writing actions
 tags: workflow, writing-order, setup
 ---
 

@@ -1,7 +1,8 @@
 ---
 title: Name Top-level Groups by Shell Meaning
 impact: HIGH
-impactDescription: makes top-level route groups communicate the shell they belong to instead of the feature they happen to contain
+impactDescription: >-
+  makes top-level route groups communicate the shell they belong to instead of the feature they happen to contain
 tags: naming, layout-shell, route-groups
 ---
 

@@ -1,7 +1,8 @@
 ---
 title: Keep Services Responsible for Domain Rules and Prisma
 impact: CRITICAL
-impactDescription: keeps business rules, transaction orchestration, and persistence access in the backend layer designed to own them
+impactDescription: >-
+  keeps business rules, transaction orchestration, and persistence access in the backend layer designed to own them
 tags: services, prisma, domain-logic
 ---
 

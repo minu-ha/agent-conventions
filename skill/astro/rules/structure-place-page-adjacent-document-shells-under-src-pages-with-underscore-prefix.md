@@ -1,7 +1,9 @@
 ---
 title: Place Pages-local Document Helpers Under `src/pages` with an Underscore Prefix
 impact: HIGH
-impactDescription: keeps route-shared document helpers and route-local support files close to route owners without turning them into routed pages
+impactDescription: >-
+  keeps route-shared document helpers and route-local support files close to route owners without turning them into
+  routed pages
 tags: structure, pages, underscore, document-helpers
 ---
 

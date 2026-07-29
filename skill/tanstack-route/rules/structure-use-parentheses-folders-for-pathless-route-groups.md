@@ -1,7 +1,8 @@
 ---
 title: Use Parentheses Folders for Pathless Route Groups
 impact: HIGH
-impactDescription: separates URL hierarchy from grouping hierarchy so nested routes stay organized without changing paths
+impactDescription: >-
+  separates URL hierarchy from grouping hierarchy so nested routes stay organized without changing paths
 tags: pathless-routes, grouping, folders
 ---
 

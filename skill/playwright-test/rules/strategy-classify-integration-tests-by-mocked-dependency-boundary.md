@@ -1,7 +1,8 @@
 ---
 title: Classify Integration Tests by Mocked Dependency Boundary
 impact: CRITICAL
-impactDescription: makes it clear that integration tests exercise UI and route behavior with mocked backend or auth boundaries
+impactDescription: >-
+  makes it clear that integration tests exercise UI and route behavior with mocked backend or auth boundaries
 tags: integration, mocking, boundaries
 ---
 

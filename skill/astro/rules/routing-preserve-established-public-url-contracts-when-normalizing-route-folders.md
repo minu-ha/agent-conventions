@@ -1,7 +1,8 @@
 ---
 title: Preserve Established Public URL Contracts When Normalizing Route Folders
 impact: HIGH
-impactDescription: prevents file tree cleanup from silently changing published URLs that users and crawlers already rely on
+impactDescription: >-
+  prevents file tree cleanup from silently changing published URLs that users and crawlers already rely on
 tags: routing, urls, migrations, route-families
 ---
 

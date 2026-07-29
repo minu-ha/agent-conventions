@@ -1,7 +1,8 @@
 ---
 title: Place Route Shells Under the Owning Route `_local/` Folder
 impact: HIGH
-impactDescription: prevents route shell files from becoming a blurry shared component tier between pages and reusable building blocks
+impactDescription: >-
+  prevents route shell files from becoming a blurry shared component tier between pages and reusable building blocks
 tags: responsibility, layouts, local, ownership
 ---
 

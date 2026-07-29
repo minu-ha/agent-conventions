@@ -1,7 +1,8 @@
 ---
 title: Place Route Implementations Under `src/pages`
 impact: HIGH
-impactDescription: keeps page implementation near the file-based route while using underscore-prefixed files to avoid accidental routes
+impactDescription: >-
+  keeps page implementation near the file-based route while using underscore-prefixed files to avoid accidental routes
 tags: structure, pages, route-implementations, local
 ---
 

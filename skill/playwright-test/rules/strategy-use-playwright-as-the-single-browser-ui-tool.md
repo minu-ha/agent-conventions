@@ -1,7 +1,8 @@
 ---
 title: Use Playwright as the Single Browser UI Tool
 impact: CRITICAL
-impactDescription: keeps browser UI testing consistent by using one toolchain and one interaction model across test levels
+impactDescription: >-
+  keeps browser UI testing consistent by using one toolchain and one interaction model across test levels
 tags: playwright, tool-choice, consistency
 ---
 

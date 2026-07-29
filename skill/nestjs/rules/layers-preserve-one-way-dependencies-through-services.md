@@ -1,7 +1,8 @@
 ---
 title: Preserve One-way Dependencies Through Services
 impact: HIGH
-impactDescription: prevents cross-layer shortcuts that bypass the service boundary and make backend change impact harder to reason about
+impactDescription: >-
+  prevents cross-layer shortcuts that bypass the service boundary and make backend change impact harder to reason about
 tags: dependencies, layering, services
 ---
 

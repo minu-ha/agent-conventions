@@ -1,7 +1,9 @@
 ---
 title: Keep `src/pages` as the Route-local Owner Layer
 impact: CRITICAL
-impactDescription: keeps Astro route ownership close to the file-based route without leaking screen implementation into shared or generic helper layers
+impactDescription: >-
+  keeps Astro route ownership close to the file-based route without leaking screen implementation into shared or generic
+  helper layers
 tags: structure, pages, route-local, routing
 ---
 

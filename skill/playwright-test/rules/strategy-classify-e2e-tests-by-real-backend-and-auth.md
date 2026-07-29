@@ -1,7 +1,8 @@
 ---
 title: Classify E2E Tests by Real Backend and Auth Dependence
 impact: CRITICAL
-impactDescription: keeps e2e meaning strict by requiring the real backend, real auth, and real routing to remain part of the test
+impactDescription: >-
+  keeps e2e meaning strict by requiring the real backend, real auth, and real routing to remain part of the test
 tags: e2e, real-backend, auth
 ---
 

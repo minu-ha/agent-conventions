@@ -1,7 +1,9 @@
 ---
 title: Use Web-first Assertions for UI Results
 impact: HIGH
-impactDescription: aligns assertions with the browser's async rendering model instead of relying on immediate checks of transient UI state
+impactDescription: >-
+  aligns assertions with the browser's async rendering model instead of relying on immediate checks of transient UI
+  state
 tags: assertions, web-first, ui
 ---
 

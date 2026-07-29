@@ -1,7 +1,8 @@
 ---
 title: Replace Local `enum` With `as const` Except Prisma Enums
 impact: MEDIUM-HIGH
-impactDescription: keeps local runtime values lightweight while still allowing generated Prisma enums to remain the source of truth
+impactDescription: >-
+  keeps local runtime values lightweight while still allowing generated Prisma enums to remain the source of truth
 tags: enum, as-const, prisma
 ---
 

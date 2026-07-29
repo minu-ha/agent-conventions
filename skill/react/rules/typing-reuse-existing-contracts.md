@@ -3,7 +3,9 @@ title: Reuse Prop and API Contracts Before Creating New Types
 impact: HIGH
 impactDescription: 중복 타입 구조가 시간이 지나며 어긋나는 것을 막음
 appliesWhen: Props callback 구현이나 API 응답 기반 view type을 추가·변경하며 기존 prop·API 계약과 같은 shape가 보인다.
-reviewWith: typescript/types-reuse-callback-signatures-from-existing-contracts, typescript/types-reuse-existing-contracts-before-new-types
+reviewWith: >-
+  typescript/types-reuse-callback-signatures-from-existing-contracts,
+  typescript/types-reuse-existing-contracts-before-new-types
 tags: typing, api, props
 ---
 

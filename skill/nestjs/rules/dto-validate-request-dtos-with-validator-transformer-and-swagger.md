@@ -1,7 +1,8 @@
 ---
 title: Validate Request DTOs With Validator, Transformer, and Swagger
 impact: HIGH
-impactDescription: keeps request contracts explicit by colocating validation, transformation, and API documentation on the DTO
+impactDescription: >-
+  keeps request contracts explicit by colocating validation, transformation, and API documentation on the DTO
 tags: dto, validation, swagger
 ---
 

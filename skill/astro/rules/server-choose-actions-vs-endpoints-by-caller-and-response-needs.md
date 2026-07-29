@@ -1,7 +1,8 @@
 ---
 title: Choose Actions vs. Endpoints by Caller and Response Needs
 impact: HIGH
-impactDescription: keeps mutation boundaries aligned with who is calling them and what kind of response they must control
+impactDescription: >-
+  keeps mutation boundaries aligned with who is calling them and what kind of response they must control
 tags: actions, endpoints, forms
 ---
 

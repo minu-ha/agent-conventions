@@ -1,7 +1,8 @@
 ---
 title: Keep One Behavior Per Test
 impact: HIGH
-impactDescription: keeps setup, action, and assertions focused so browser failures point to one behavior instead of many unrelated checks
+impactDescription: >-
+  keeps setup, action, and assertions focused so browser failures point to one behavior instead of many unrelated checks
 tags: test-design, scope, assertions
 ---
 

@@ -1,7 +1,8 @@
 ---
 title: Use NestJS Class Methods and Explicit Async Return Types
 impact: MEDIUM-HIGH
-impactDescription: keeps backend class APIs conventional while making async method contracts readable without opening implementations
+impactDescription: >-
+  keeps backend class APIs conventional while making async method contracts readable without opening implementations
 tags: methods, async, return-types
 ---
 

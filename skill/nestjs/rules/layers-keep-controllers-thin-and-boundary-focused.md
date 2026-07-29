@@ -1,7 +1,8 @@
 ---
 title: Keep Controllers Thin and Boundary-focused
 impact: CRITICAL
-impactDescription: prevents controllers from absorbing domain logic, persistence calls, and response shaping that belongs in services
+impactDescription: >-
+  prevents controllers from absorbing domain logic, persistence calls, and response shaping that belongs in services
 tags: controllers, layering, boundaries
 ---
 

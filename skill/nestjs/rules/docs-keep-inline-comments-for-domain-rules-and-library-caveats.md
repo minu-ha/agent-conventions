@@ -1,7 +1,8 @@
 ---
 title: Keep Inline Comments for Domain Rules and Library Caveats
 impact: MEDIUM
-impactDescription: keeps inline comments reserved for backend constraints that would otherwise be easy to misread or accidentally remove
+impactDescription: >-
+  keeps inline comments reserved for backend constraints that would otherwise be easy to misread or accidentally remove
 tags: comments, inline, domain-rules
 ---
 

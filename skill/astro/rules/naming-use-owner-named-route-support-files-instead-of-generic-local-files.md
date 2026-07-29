@@ -1,7 +1,8 @@
 ---
 title: Use Owner-named Route Support Files Instead of Generic Local Files
 impact: MEDIUM-HIGH
-impactDescription: keeps route-local files searchable even when a route owns several helpers, runtime components, and stylesheets
+impactDescription: >-
+  keeps route-local files searchable even when a route owns several helpers, runtime components, and stylesheets
 tags: naming, pages, local, support-modules
 ---
 

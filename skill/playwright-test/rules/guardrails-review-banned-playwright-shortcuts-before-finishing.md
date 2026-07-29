@@ -1,7 +1,9 @@
 ---
 title: Review Banned Playwright Shortcuts Before Finishing
 impact: MEDIUM
-impactDescription: catches the shortcuts that most often blur test level meaning or introduce flaky browser behavior before the work is closed
+impactDescription: >-
+  catches the shortcuts that most often blur test level meaning or introduce flaky browser behavior before the work is
+  closed
 tags: review, guardrails, flakiness
 ---
 
