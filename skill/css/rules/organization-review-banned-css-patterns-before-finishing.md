@@ -10,7 +10,8 @@ tags: review, banned-patterns, guardrails
 
 ## Review Banned CSS Patterns Before Finishing
 
-**Impact: MEDIUM (catches unsafe selector, modifier, and library-targeting shortcuts before they become part of the shared style system)**
+**Impact: MEDIUM (catches unsafe selector, modifier, and library-targeting shortcuts before they become part of the
+shared style system)**
 
 작업을 마치기 전에 금지 패턴을 다시 확인합니다.
 

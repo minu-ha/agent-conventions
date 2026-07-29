@@ -8,7 +8,8 @@ tags: actions, endpoints, forms
 
 ## Choose Actions vs. Endpoints by Caller and Response Needs
 
-**Impact: HIGH (keeps mutation boundaries aligned with who is calling them and what kind of response they must control)**
+**Impact: HIGH (keeps mutation boundaries aligned with who is calling them and what kind of response they must
+control)**
 
 브라우저 UI가 직접 호출하는 form submit이나 mutation은 기본적으로 Actions를 먼저 검토합니다.
 Actions는 input validation, error shape,

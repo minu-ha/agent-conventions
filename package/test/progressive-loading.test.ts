@@ -14,7 +14,7 @@ import {checkGeneratedSkill} from "../src/check-generated.js";
 import {getSkillPaths, isBuildableSkill, listSkillNames} from "../src/config.js";
 import {replaceGeneratedFiles} from "../src/generated-files.js";
 import type {GeneratedFileOperations} from "../src/generated-files.js";
-import {parseFrontmatter, readResolvedSkillDocuments, readSkillRules} from "../src/parser.js";
+import {parseFrontmatter, parseSections, readResolvedSkillDocuments, readSkillRules} from "../src/parser.js";
 import {
 	generateRuleContractMarkdown,
 	generateRulesIndexMarkdown,
@@ -349,6 +349,53 @@ test("generated rule contract preserves the normative prefix and defers examples
 	assert.doesNotMatch(contract, /Incorrect|Correct|hiddenBad|hiddenGood|```/);
 	assert.doesNotMatch(contract, /[ \t]+$/m);
 	assert.equal(Buffer.byteLength(contract, "utf8") <= getRuleContractByteBudget(), true);
+});
+
+test("long Impact and Description declarations may fold across source lines", () => {
+	// 규칙 본문. 접어 써도 계약에는 한 줄로 들어간다
+	const foldedRule = createRoutingDocument().rules[0]!;
+	foldedRule.body = [
+		"## Observe State",
+		"",
+		"**Impact: HIGH (State",
+		"impact.)**",
+		"",
+		"Keep the observable owner contract.",
+		"",
+		"**Incorrect (hidden example):**",
+		"",
+		"```ts",
+		"const hiddenBad = true;",
+		"```",
+		"",
+		"**Correct (hidden example):**",
+		"",
+		"```ts",
+		"const hiddenGood = true;",
+		"```",
+	].join("\n");
+
+	assert.match(generateRuleContractMarkdown(foldedRule), /^\*\*Impact: HIGH \(State impact\.\)\*\*$/m);
+
+	// 접었다고 frontmatter 와 어긋나도 되는 건 아니다
+	const driftedRule = createRoutingDocument().rules[0]!;
+	driftedRule.body = foldedRule.body.replace("impact.)**", "impact drift.)**");
+
+	assert.throws(() => generateRuleContractMarkdown(driftedRule), /state-observe.*Impact declaration matching frontmatter/i);
+
+	// _sections.md 의 Description 도 마찬가지다
+	const sections = parseSections(
+		[
+			"# 섹션",
+			"",
+			"## 1. Ownership and Boundaries (ownership)",
+			"**Impact:** CRITICAL",
+			"**Description:** 첫 줄에서 끊고",
+			"다음 줄로 이어 쓴다.",
+		].join("\n"),
+	);
+
+	assert.equal(sections[0]?.description, "첫 줄에서 끊고 다음 줄로 이어 쓴다.");
 });
 
 test("generated rule contract rejects missing boundaries and oversized normative prefixes", () => {

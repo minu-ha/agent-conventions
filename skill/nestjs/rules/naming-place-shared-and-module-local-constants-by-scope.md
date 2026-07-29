@@ -7,7 +7,8 @@ tags: constants, scope, modules
 
 ## Place Shared and Module-local Constants by Scope
 
-**Impact: MEDIUM-HIGH (prevents controller and service files from becoming ad-hoc homes for constants with unclear ownership)**
+**Impact: MEDIUM-HIGH (prevents controller and service files from becoming ad-hoc homes for constants with unclear
+ownership)**
 
 2개 이상의 모듈에서 공유되는 상수는 `<src-root>/<shared-dir>/constants.ts`에 모으고,
 특정 도메인 모듈에서만 쓰이는 상수는 해당 모듈의 `*.constants.ts` 파일에 둡니다.

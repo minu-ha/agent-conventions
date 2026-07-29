@@ -7,7 +7,8 @@ tags: vitest, ui-tests, tooling
 
 ## Keep Vitest Out of Browser UI Tests by Default
 
-**Impact: MEDIUM-HIGH (avoids splitting browser UI coverage across tools when Playwright already owns the runtime boundary)**
+**Impact: MEDIUM-HIGH (avoids splitting browser UI coverage across tools when Playwright already owns the runtime
+boundary)**
 
 `vi`와 `Vitest`는 이 프로젝트의 기본 UI 테스트 도구가 아닙니다.
 화면이나 라우트 기능 검증을 위해 Vitest를 기본 도입하지 않고,

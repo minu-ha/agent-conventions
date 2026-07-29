@@ -67,7 +67,8 @@
 
 **Applies when:** 프로젝트 표준 미확정 상태에서 새 stylesheet 접근 형식\(plain CSS·CSS Modules\)을 선택하거나 `.module.css`·`styles.*`로 전환한다. 기존 plain CSS class rename은 제외한다.
 
-**Impact: HIGH (keeps the global `scope_slug` naming system meaningful instead of hiding ownership behind local module indirection)**
+**Impact: HIGH (keeps the global `scope_slug` naming system meaningful instead of hiding ownership behind local module
+indirection)**
 
 이 CSS skill은 기본적으로 plain `*.css`와 전역 고유 클래스명을 전제로 합니다.
 `rt_*`, `ui_*`, `wg_*`, `loc_*` 네임스페이스는 global class space에서 owner를 추적하려고 존재하므로,
@@ -128,7 +129,8 @@ import "./_index.css";
 
 **Applies when:** 새 `scope_slug` namespace를 추가·복사·이름 변경하거나 서로 다른 owner의 class가 같은 namespace를 사용할 가능성이 있다.
 
-**Impact: CRITICAL (prevents unrelated routes or components from sharing the same namespace and colliding in the global class space)**
+**Impact: CRITICAL (prevents unrelated routes or components from sharing the same namespace and colliding in the global
+class space)**
 
 클래스명은 프로젝트 전역에서 고유해야 하며, 동일한 `scope_slug` 조합은 단일 소유자만 사용할 수 있습니다.
 새 스타일을 추가할 때는 먼저 기존 `scope_slug` 충돌 여부를 확인하고,
@@ -233,7 +235,8 @@ rt_document__body
 
 **Review with:** `organization-keep-style-files-owned-by-one-component-or-route`
 
-**Impact: HIGH (keeps route-owned page styles, shared component styles, and truly local helper styles from mixing into the same namespace or file)**
+**Impact: HIGH (keeps route-owned page styles, shared component styles, and truly local helper styles from mixing into
+the same namespace or file)**
 
 route/framework skill이 route-owned surface로 판단한 스타일은 `rt_*` scope를 유지합니다.
 route screen의 흐름을 구성하거나 지원하는 route support surface는 파일이 `_local/` 같은 helper folder로 내려가도
@@ -309,7 +312,7 @@ rt_document__main-content
 rt_document__main--route_active
 ```
 
-**Correct (scope는 lowercase namespace를 유지하고, slug는 scope별 house style을 따르며, element/modifier는 camelCase로 표기):**
+**Correct (scope는 lowercase, slug는 scope별 house style, element/modifier는 camelCase):**
 
 ```txt
 ui_tagList__root
@@ -441,7 +444,8 @@ one-off modifier를 역할명 class로 바꾸기만 하는 경우도 대상이 �
 
 **Requires selected:** `typescript/types-reuse-existing-contracts-before-new-types` · 함께 적용
 
-**Impact: MEDIUM-HIGH (preserves wrapper-level styling and API contracts instead of leaking raw library prop types into usage sites)**
+**Impact: MEDIUM-HIGH (preserves wrapper-level styling and API contracts instead of leaking raw library prop types into
+usage sites)**
 
 `Ui*` 래퍼 컴포넌트를 사용할 때는 라이브러리 원본 Props 타입이 아니라 래퍼가 노출한 `Ui*Props` 타입을 우선 사용합니다.
 그래야 wrapper가 의도적으로 제한하거나 보강한 스타일링 계약과 API 경계를 유지할 수 있습니다.
@@ -470,7 +474,8 @@ const items: NonNullable<UiCollapseProps["items"]> = [];
 
 **Review with:** `selector-target-third-party-dom-from-owned-roots`
 
-**Impact: HIGH (prevents shared UI wrappers from exposing uncontrolled styling hooks through ad-hoc className injection)**
+**Impact: HIGH (prevents shared UI wrappers from exposing uncontrolled styling hooks through ad-hoc className
+injection)**
 
 이 규칙은 실제 `Ui*` React wrapper 컴포넌트/API 경계에만 적용합니다.
 `.ui_*` 같은 기존 CSS owner root 아래에서 third-party selector만 스코프하는 CSS-only 변경은
@@ -561,7 +566,8 @@ owned root 아래의 third-party DOM path는 `selector-target-third-party-dom-fr
 
 **Applies when:** project-owned class를 중첩·descendant selector로 연결하거나 raw HTML prose·copy·content wrapper 안 element selector를 추가·수정한다.
 
-**Impact: CRITICAL (reduces cascade coupling by keeping project-owned selectors independent instead of descendant-driven)**
+**Impact: CRITICAL (reduces cascade coupling by keeping project-owned selectors independent instead of
+descendant-driven)**
 
 프로젝트가 직접 소유한 선택자는 플랫 구조를 기본으로 작성합니다.
 
@@ -576,7 +582,7 @@ owned root 아래의 third-party DOM path는 `selector-target-third-party-dom-fr
 rich text 예외는 raw element styling에만 적용됩니다.
 `.owner__prose .owner__child`처럼 다른 project-owned class를 다시 체이닝하는 근거로 쓰지 않습니다.
 
-**Incorrect (project-owned 클래스 관계를 descendant selector로 표현하거나, owner wrapper element styling을 block 밖으로 흩뿌림):**
+**Incorrect (project-owned 클래스 관계를 descendant selector로 쓰고, wrapper styling을 block 밖으로 흩뿌림):**
 
 ```css
 .rt_catalogIndex__layout {
@@ -780,7 +786,8 @@ modifier가 켜진 경우에만 interaction이 달라져야 한다는 별도 제
 
 **Applies when:** `sticky`·`fixed`, `z-index`, 강제 width·height 또는 부모·자식 layout 책임을 추가·변경한다. 같은 element의 base/modifier 분리에서 기존 `display`·spacing 선언을 값 그대로 재배치하면 제외한다.
 
-**Impact: MEDIUM-HIGH (makes sticky, fixed, and box responsibilities understandable without reverse-engineering the DOM)**
+**Impact: MEDIUM-HIGH (makes sticky, fixed, and box responsibilities understandable without reverse-engineering the
+DOM)**
 
 레이아웃 의도는 클래스명과 선언에서 즉시 확인 가능해야 합니다.
 `position`, `width`, `height` 강제는 최소화하고 부모와 자식의 레이아웃 책임을 분리하며,
@@ -877,7 +884,8 @@ byte-equivalent 이동만 하는 경우는 N/A입니다.
 
 **Review with:** `composition-do-not-build-structural-variants-with-modifiers`
 
-**Impact: HIGH (keeps app state, focus visibility, and hover behavior readable and accessible without mixing their responsibilities)**
+**Impact: HIGH (keeps app state, focus visibility, and hover behavior readable and accessible without mixing their
+responsibilities)**
 
 화면 상태나 도메인 상태는 `--active`, `--selected`, `--error` 같은 modifier로 표현하고,
 브라우저 상호작용 상태는 같은 클래스 블록 내부 nested `&:hover`, `&:focus-visible`,
@@ -932,7 +940,8 @@ modifier block에는 active·selected·error처럼 app state가 소유하는 pre
 
 **Review with:** `values-always-provide-css-variable-fallbacks`
 
-**Impact: HIGH (keeps repeated colors, spacing, and radius values aligned with shared design tokens instead of drifting into magic numbers)**
+**Impact: HIGH (keeps repeated colors, spacing, and radius values aligned with shared design tokens instead of drifting
+into magic numbers)**
 
 색상, 간격, 타이포, 그림자 같은 반복 가능한 시각 값은 CSS 변수와 디자인 토큰을 우선 사용합니다.
 같은 값이 2회 이상 반복되면 하드코딩을 늘리기 전에 토큰화 여부를 먼저 검토합니다.
@@ -1027,7 +1036,8 @@ stylesheet는 하나의 owner에 맞춰 유지하고, 가벼운 구조 주석만
 
 **Required on completion:** 마무리 시 항상 적용
 
-**Impact: MEDIUM (catches unsafe selector, modifier, and library-targeting shortcuts before they become part of the shared style system)**
+**Impact: MEDIUM (catches unsafe selector, modifier, and library-targeting shortcuts before they become part of the
+shared style system)**
 
 작업을 마치기 전에 금지 패턴을 다시 확인합니다.
 

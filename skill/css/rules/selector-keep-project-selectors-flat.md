@@ -10,7 +10,8 @@ tags: selectors, nesting, flat-structure
 
 ## Keep Project-owned Selectors Flat
 
-**Impact: CRITICAL (reduces cascade coupling by keeping project-owned selectors independent instead of descendant-driven)**
+**Impact: CRITICAL (reduces cascade coupling by keeping project-owned selectors independent instead of
+descendant-driven)**
 
 프로젝트가 직접 소유한 선택자는 플랫 구조를 기본으로 작성합니다.
 
@@ -25,7 +26,7 @@ tags: selectors, nesting, flat-structure
 rich text 예외는 raw element styling에만 적용됩니다.
 `.owner__prose .owner__child`처럼 다른 project-owned class를 다시 체이닝하는 근거로 쓰지 않습니다.
 
-**Incorrect (project-owned 클래스 관계를 descendant selector로 표현하거나, owner wrapper element styling을 block 밖으로 흩뿌림):**
+**Incorrect (project-owned 클래스 관계를 descendant selector로 쓰고, wrapper styling을 block 밖으로 흩뿌림):**
 
 ```css
 .rt_catalogIndex__layout {

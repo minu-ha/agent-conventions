@@ -8,7 +8,8 @@ tags: naming, pages, local, support-modules
 
 ## Use Owner-named Route Support Files Instead of Generic Local Files
 
-**Impact: MEDIUM-HIGH (keeps route-local files searchable even when a route owns several helpers, runtime components, and stylesheets)**
+**Impact: MEDIUM-HIGH (keeps route-local files searchable even when a route owns several helpers, runtime components,
+and stylesheets)**
 
 Route-local files should name the owner and responsibility directly.
 

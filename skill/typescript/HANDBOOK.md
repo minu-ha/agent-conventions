@@ -286,7 +286,8 @@ const publishResultSchema = z.object({
 
 **Applies when:** 기존 callback·framework 계약 구현을 추가·변경하며 parameter를 생략하거나 사용하지 않는다. curried handler가 반환하는 최종 callback의 생략도 포함한다.
 
-**Impact: MEDIUM-HIGH (makes intentionally ignored callback parameters explicit instead of silently dropping parts of a contract)**
+**Impact: MEDIUM-HIGH (makes intentionally ignored callback parameters explicit instead of silently dropping parts of a
+contract)**
 
 미사용 매개변수도 생략하지 않고 `_` 접두사로 명시합니다.
 이렇게 해야 callback 시그니처 계약을 유지하면서도, 현재 구현에서 의도적으로 쓰지 않는 값이라는 점이 드러납니다.
@@ -323,7 +324,8 @@ const noopLog: LogSink = (_message, _level) => {};
 
 **Applies when:** 기존 callable 계약을 named·shared 함수 구현에 재사용하거나 같은 시그니처를 여러 구현이 공유하도록 바꾼다. annotation 없는 one-off contextually typed inline callback은 제외한다.
 
-**Impact: CRITICAL (keeps callable contracts reusable and prevents local parameter annotations from fragmenting shared function types)**
+**Impact: CRITICAL (keeps callable contracts reusable and prevents local parameter annotations from fragmenting shared
+function types)**
 
 재사용 가능한 콜백이나 함수 타입이 있다면 매개변수 타입 선언보다 함수 변수 타입 선언을 우선합니다.
 이미 존재하는 interface, object contract, framework alias를 먼저 재사용하고,
@@ -386,7 +388,8 @@ const normalizeSearchRequest: NormalizeRequest = (request) => {
 
 **Review with:** `types-mark-unused-parameters-with-underscore`
 
-**Impact: HIGH (prevents callback signatures from drifting when an existing interface or object contract already defines them)**
+**Impact: HIGH (prevents callback signatures from drifting when an existing interface or object contract already defines
+them)**
 
 콜백 구현 시 매개변수를 다시 타이핑하기보다, 이미 존재하는 인터페이스나 계약의 시그니처를 Indexed Access로 재사용합니다.
 재사용한 계약에 현재 구현이 쓰지 않는 parameter가 있으면 `types-mark-unused-parameters-with-underscore`를 다시
@@ -436,7 +439,8 @@ const formatMessage: ToastFormatters["formatMessage"] = (message) => {
 
 **Review with:** `types-document-custom-types-and-shapes`
 
-**Impact: HIGH (reduces duplicate shape declarations by deriving from existing types and schemas when semantics have not changed)**
+**Impact: HIGH (reduces duplicate shape declarations by deriving from existing types and schemas when semantics have not
+changed)**
 
 기존 type/schema와 field type·optionality·의미가 같으면 직접 참조하거나 `Pick`/`Omit`/Indexed Access로 파생합니다.
 신규 선언은 의미가 다를 때만 허용하며 owner 이동·이름·JSDoc만 바뀌면 N/A입니다.
@@ -517,7 +521,8 @@ const visibleTabs = canManageItems
 
 **Review with:** `docs-require-header-jsdoc-on-key-declarations`, `docs-use-helper-for-reusable-pure-helper-functions`
 
-**Impact: HIGH (stops helper extraction from fragmenting local flow when no reusable contract or testable boundary actually exists)**
+**Impact: HIGH (stops helper extraction from fragmenting local flow when no reusable contract or testable boundary
+actually exists)**
 
 support function은 "이름"이 아니라 "호출 경계"가 있을 때만 분리합니다.
 
@@ -688,7 +693,8 @@ const sortedUsers = [...users].sort((left, right) => left.name.localeCompare(rig
 
 **Requires selected:** `naming-use-consistent-file-and-symbol-naming`, `types-document-custom-types-and-shapes` · 함께 적용
 
-**Impact: MEDIUM-HIGH (keeps runtime values explicit and type extraction lightweight without introducing enum-specific behavior)**
+**Impact: MEDIUM-HIGH (keeps runtime values explicit and type extraction lightweight without introducing enum-specific
+behavior)**
 
 `enum` 대신 객체 리터럴과 `as const`를 사용합니다.
 이렇게 하면 런타임 값과 타입 추론을 함께 유지하면서도 enum 고유 문법과 번들 영향을 피할 수 있습니다.
@@ -724,7 +730,8 @@ type AuditStatus = (typeof audit_status)[keyof typeof audit_status];
 
 **Applies when:** 매개변수 3개 이상 또는 같은 계열 인자를 받는 일반 함수를 추가·변경하거나 객체 매개변수의 구조분해 위치를 바꾼다. React 함수 컴포넌트의 props 수신·구조분해만 바꾸면 제외한다.
 
-**Impact: HIGH (keeps long function signatures readable and makes grouped inputs easier to extend without positional confusion)**
+**Impact: HIGH (keeps long function signatures readable and makes grouped inputs easier to extend without positional
+confusion)**
 
 매개변수가 3개 이상이거나 같은 계열 값이 묶여 전달되면 단일 객체 매개변수로 묶고,
 함수 시그니처에서 바로 구조분해하지 않습니다.
@@ -862,7 +869,8 @@ const resolvePageSize = (query: SearchQuery): string => {
 
 **Applies when:** 함수 본문의 `//` 주석을 추가·수정·유지하거나 도메인 규칙, 예외 방어, 외부 제약 또는 부수효과 순서를 주석으로 설명한다.
 
-**Impact: MEDIUM (prevents inline comments from narrating obvious code while preserving notes that avoid real misunderstandings)**
+**Impact: MEDIUM (prevents inline comments from narrating obvious code while preserving notes that avoid real
+misunderstandings)**
 
 함수 본문 내부에서는 JSDoc 블록 주석을 사용하지 않고, `//` 주석은 도메인 규칙, 예외 방어 의도, 외부 라이브러리 제약,
 부수효과 순서처럼 없으면 오해될 수 있는 경우에만 씁니다.
@@ -892,7 +900,8 @@ if (!normalizedToken) {
 
 **Requires selected:** `docs-standardize-annotation-tags-by-declaration-role`, `docs-write-concise-korean-comments-about-purpose-and-constraints` · 함께 적용
 
-**Impact: MEDIUM-HIGH (makes important boundaries searchable and explainable before readers inspect the implementation body)**
+**Impact: MEDIUM-HIGH (makes important boundaries searchable and explainable before readers inspect the implementation
+body)**
 
 named query·mutation binding과 원격 함수에는 `@api` 헤더 JSDoc을 작성하고, 비자명한 handler/effect,
 reusable/exported helper·custom hook, 커스텀 `type`/`interface`, store,
@@ -1016,7 +1025,8 @@ interface DialogRootProps {
 
 **Applies when:** 여러 caller가 쓰는 pure support function, owner-named exported helper 또는 `shared/util.ts` 함수를 추가·변경하거나 `@helper`를 붙이려 한다.
 
-**Impact: MEDIUM-HIGH (distinguishes reusable pure support logic from local implementation details or integration boundaries)**
+**Impact: MEDIUM-HIGH (distinguishes reusable pure support logic from local implementation details or integration
+boundaries)**
 
 `@helper`는 재사용 가능한 pure support function에만 붙입니다.
 
@@ -1127,7 +1137,8 @@ annotation 본문 전체가 ASCII 또는 영문 label이면 한글 주석으로 
 
 **Required on completion:** 마무리 시 항상 적용
 
-**Impact: MEDIUM (catches the recurring shortcuts that most often erode import, type, helper, fallback, and comment discipline)**
+**Impact: MEDIUM (catches the recurring shortcuts that most often erode import, type, helper, fallback, and comment
+discipline)**
 
 작업을 끝냈다고 보기 전에 반복적으로 금지되는 TypeScript 지름길을 다시 확인합니다.
 barrel export, 기존 타입 재선언, 재사용 근거 없는 조기 추상화, 넓은 스코프 명령형 조립, 사유 없는 폴백,

@@ -8,7 +8,8 @@ tags: support, reuse, helpers
 
 ## Promote Shared Support Only After Real Reuse
 
-**Impact: MEDIUM-HIGH (keeps support layers proportional by delaying global helpers until multiple features genuinely need them)**
+**Impact: MEDIUM-HIGH (keeps support layers proportional by delaying global helpers until multiple features genuinely
+need them)**
 
 전역 공용 helper는 `<test-support-path>`에 두되, 여러 feature가 함께 쓰는 인증, API seed, 공용 route setup만 올립니다.
 특정 기능 하나에서만 쓰는 mock builder, request body helper, bootstrap wait는 spec 근처에 두고,

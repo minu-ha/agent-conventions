@@ -9,7 +9,8 @@ tags: naming, pages, css, route-role
 
 ## Align Route Page Assets and `rt_*` Surface Classes with Route Role
 
-**Impact: HIGH (keeps Astro route files, route-local assets, CSS owners, and URL semantics aligned without duplicating folder depth in names)**
+**Impact: HIGH (keeps Astro route files, route-local assets, CSS owners, and URL semantics aligned without duplicating
+folder depth in names)**
 
 Routed entry file names follow Astro routing (`index.astro`, `[slug].astro`,
 `new.astro`). Route-local support files and CSS use the route role as owner, not the whole folder path.

@@ -7,7 +7,8 @@ tags: file-set, route-assets, naming
 
 ## Prepare the Basic Route File Set
 
-**Impact: MEDIUM-HIGH (gives nested routes a predictable place for styles, shell code, and pure helpers from the start)**
+**Impact: MEDIUM-HIGH (gives nested routes a predictable place for styles, shell code, and pure helpers from the
+start)**
 
 이 프로젝트의 route file set은 `feature.css`, `feature.ts`, `feature.layout.tsx`,
 `feature.index.tsx` 4개를 기본 세트로 봅니다.

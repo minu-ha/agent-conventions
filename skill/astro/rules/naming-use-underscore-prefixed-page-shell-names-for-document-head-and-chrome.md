@@ -8,7 +8,8 @@ tags: naming, pages, underscore, document-helpers
 
 ## Use Underscore-prefixed Pages-local Helper Names for Document Files
 
-**Impact: MEDIUM-HIGH (keeps page-adjacent non-routes recognizable in file trees and prevents generic shell names from blurring ownership)**
+**Impact: MEDIUM-HIGH (keeps page-adjacent non-routes recognizable in file trees and prevents generic shell names from
+blurring ownership)**
 
 `src/pages` 아래의 pages-local document helper와 support file은 `_` prefix와 역할 이름을 함께 사용합니다.
 

@@ -32,7 +32,7 @@ public part는 소비자가 이름으로 조립해야 하거나 shared context/a
 단순 class wrapper, spacing 보정 DOM, 내부 layout helper는 숨깁니다.
 stateless compound에 state가 필요해지면 public 이름은 유지하고 context만 추가합니다.
 
-**Incorrect (single component, compound component, explicit variant의 경계를 구분하지 않고 하나의 component에 몰아넣음):**
+**Incorrect (single·compound·explicit variant의 경계를 구분하지 않고 한 component에 몰아넣음):**
 
 ```tsx
 export interface ProfileDialogProps {

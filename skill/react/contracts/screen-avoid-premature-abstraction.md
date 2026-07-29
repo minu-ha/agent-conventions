@@ -13,7 +13,7 @@
 추출할 수 있는 때:
 
 - 여러 화면/모듈이 같은 이름의 계약으로 직접 호출함
-- state/effect/context/form/store orchestration을 한 custom hook이 실제로 소유함
+- state·effect·context·form·store 연결을 한 custom hook이 실제로 소유함
 - route-local component가 async/state/provider/interaction 같은 runtime boundary를 소유함
 
 금지:

@@ -1,7 +1,7 @@
 ---
 title: Move Screen-owned Pure Support Code Into `page.ts` Before Splitting Further
 impact: HIGH
-impactDescription: route entry 파일이 preset과 순수 helper를 쌓기보다 orchestration에 집중하게 함
+impactDescription: route entry가 preset과 순수 helper를 쌓기보다 화면 흐름에 집중하게 함
 appliesWhen: >-
   route entry에 여러 줄 pure helper·preset·option·화면 전용 type이 쌓이거나 추출한 support code의 목적지 파일을 정한다.
 reviewWith: docs-require-jsdoc-on-key-declarations
@@ -10,7 +10,7 @@ tags: screen, routes, helpers, constants
 
 ## Move Screen-owned Pure Support Code Into `page.ts` Before Splitting Further
 
-**Impact: HIGH (route entry 파일이 preset과 순수 helper를 쌓기보다 orchestration에 집중하게 함)**
+**Impact: HIGH (route entry가 preset과 순수 helper를 쌓기보다 화면 흐름에 집중하게 함)**
 
 이 규칙은 추출하기로 결정한 화면 전용 pure support code의 목적지를 정합니다.
 
@@ -59,7 +59,7 @@ export const validateUploadFile = (file: UploadFileCandidate) => {
 };
 ```
 
-**Correct (route entry 흐름은 `page.tsx`에 두고, screen-owned pure support code는 `page.ts`의 named export로 모음):**
+**Correct (route entry 흐름은 `page.tsx`에 두고, 화면 전용 pure support code는 `page.ts`의 named export로 모음):**
 
 ```tsx
 import { buildFileRequests } from "./page";

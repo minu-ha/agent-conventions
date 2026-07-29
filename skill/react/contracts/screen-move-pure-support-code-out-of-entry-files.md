@@ -1,6 +1,6 @@
 # Move Screen-owned Pure Support Code Into `page.ts` Before Splitting Further
 
-**Impact: HIGH (route entry 파일이 preset과 순수 helper를 쌓기보다 orchestration에 집중하게 함)**
+**Impact: HIGH (route entry가 preset과 순수 helper를 쌓기보다 화면 흐름에 집중하게 함)**
 
 이 규칙은 추출하기로 결정한 화면 전용 pure support code의 목적지를 정합니다.
 

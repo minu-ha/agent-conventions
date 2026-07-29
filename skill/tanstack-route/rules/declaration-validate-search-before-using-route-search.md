@@ -7,7 +7,8 @@ tags: validateSearch, zod, search-params
 
 ## Validate Search Before Using Route Search
 
-**Impact: CRITICAL (normalizes query strings once at the route boundary instead of reparsing them throughout the screen)**
+**Impact: CRITICAL (normalizes query strings once at the route boundary instead of reparsing them throughout the
+screen)**
 
 쿼리스트링을 읽는 화면은 `Route.useSearch()` 사용 전에 `validateSearch`를 선언합니다.
 search schema는 `z.object(...)`로 작성하고, 숫자형 페이지네이션이나 선택값은 `z.coerce.number()`로 보정하며,

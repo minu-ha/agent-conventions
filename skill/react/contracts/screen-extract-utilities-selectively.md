@@ -1,6 +1,6 @@
 # Extract Screen Support Code Only When the Boundary Is Real
 
-**Impact: HIGH (route 파일이 자기 계약이 없는 helper 조각으로 분해되는 것을 막음)**
+**Impact: HIGH (route entry가 자기 계약이 없는 helper 조각으로 분해되는 것을 막음)**
 
 화면 support code는 "이름 붙일 수 있다"가 아니라 "경계가 있다"일 때만 추출합니다.
 

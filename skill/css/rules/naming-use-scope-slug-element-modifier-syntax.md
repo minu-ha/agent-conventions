@@ -35,7 +35,7 @@ rt_document__main-content
 rt_document__main--route_active
 ```
 
-**Correct (scope는 lowercase namespace를 유지하고, slug는 scope별 house style을 따르며, element/modifier는 camelCase로 표기):**
+**Correct (scope는 lowercase, slug는 scope별 house style, element/modifier는 camelCase):**
 
 ```txt
 ui_tagList__root

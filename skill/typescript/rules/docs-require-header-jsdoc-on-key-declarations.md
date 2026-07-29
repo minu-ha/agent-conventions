@@ -12,7 +12,8 @@ tags: jsdoc, declarations, boundaries
 
 ## Require Header JSDoc on Key Declarations
 
-**Impact: MEDIUM-HIGH (makes important boundaries searchable and explainable before readers inspect the implementation body)**
+**Impact: MEDIUM-HIGH (makes important boundaries searchable and explainable before readers inspect the implementation
+body)**
 
 named query·mutation binding과 원격 함수에는 `@api` 헤더 JSDoc을 작성하고, 비자명한 handler/effect,
 reusable/exported helper·custom hook, 커스텀 `type`/`interface`, store,

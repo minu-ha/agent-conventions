@@ -9,7 +9,8 @@ tags: responsibility, pages, imports, dependency-direction, document-helpers
 
 ## Keep Pages-local Document Helpers Imported Only by Pages
 
-**Impact: HIGH (preserves one-way dependency flow from routed pages to pages-local document helpers instead of letting shared code depend on routing helpers)**
+**Impact: HIGH (preserves one-way dependency flow from routed pages to pages-local document helpers instead of letting
+shared code depend on routing helpers)**
 
 `src/pages/_document.astro`, `_head.astro`,
 `_document.css` 같은 pages-local document helper는 routed page만 import합니다.

@@ -12,7 +12,8 @@ tags: ui-components, wrappers, third-party
 
 ## Prefer Owned Wrappers for `Ui*` Component Styling
 
-**Impact: HIGH (prevents shared UI wrappers from exposing uncontrolled styling hooks through ad-hoc className injection)**
+**Impact: HIGH (prevents shared UI wrappers from exposing uncontrolled styling hooks through ad-hoc className
+injection)**
 
 이 규칙은 실제 `Ui*` React wrapper 컴포넌트/API 경계에만 적용합니다.
 `.ui_*` 같은 기존 CSS owner root 아래에서 third-party selector만 스코프하는 CSS-only 변경은

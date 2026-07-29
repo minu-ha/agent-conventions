@@ -10,7 +10,8 @@ tags: composition, react19, ref, forwardref
 
 ## Use ref Props Instead of New forwardRef Wrappers in React 19
 
-**Impact: MEDIUM-HIGH (keeps component definitions simpler in React 19 codebases and avoids adding legacy wrappers by default)**
+**Impact: MEDIUM-HIGH (keeps component definitions simpler in React 19 codebases and avoids adding legacy wrappers by
+default)**
 
 React 19 codebase에서 `ref`는 외부에서 실제로 제어해야 하는 public imperative contract입니다.
 

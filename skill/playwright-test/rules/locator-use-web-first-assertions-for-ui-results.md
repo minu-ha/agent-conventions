@@ -9,7 +9,8 @@ tags: assertions, web-first, ui
 
 ## Use Web-first Assertions for UI Results
 
-**Impact: HIGH (aligns assertions with the browser's async rendering model instead of relying on immediate checks of transient UI state)**
+**Impact: HIGH (aligns assertions with the browser's async rendering model instead of relying on immediate checks of
+transient UI state)**
 
 UI 결과는 `toBeVisible`, `toHaveText`, `toHaveValue`, `toHaveURL` 같은 web-first assertion을 기본으로 씁니다.
 즉시 평가되는 generic assertion은 non-UI 값에만 쓰고, 내부 state나 cache,

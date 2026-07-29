@@ -7,7 +7,8 @@ tags: unit-tests, e2e, mocks
 
 ## Mock Unit Boundaries and Verify E2E Wiring
 
-**Impact: CRITICAL (keeps service unit tests fast and focused while making e2e tests prove real Nest wiring end to end)**
+**Impact: CRITICAL (keeps service unit tests fast and focused while making e2e tests prove real Nest wiring end to
+end)**
 
 unit test에서는 DB, 외부 API, JWT, cache 같은 외부 의존성을 mock 처리하고
 Service public 메서드의 핵심 분기와 예외를 검증합니다.

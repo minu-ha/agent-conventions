@@ -12,7 +12,8 @@ tags: helpers, extraction, boundaries
 
 ## Extract Support Functions Only When the Boundary Is Real
 
-**Impact: HIGH (stops helper extraction from fragmenting local flow when no reusable contract or testable boundary actually exists)**
+**Impact: HIGH (stops helper extraction from fragmenting local flow when no reusable contract or testable boundary
+actually exists)**
 
 support function은 "이름"이 아니라 "호출 경계"가 있을 때만 분리합니다.
 

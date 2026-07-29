@@ -103,7 +103,8 @@
 
 ### 1.2 Place Shared and Module-local Constants by Scope
 
-**Impact: MEDIUM-HIGH (prevents controller and service files from becoming ad-hoc homes for constants with unclear ownership)**
+**Impact: MEDIUM-HIGH (prevents controller and service files from becoming ad-hoc homes for constants with unclear
+ownership)**
 
 2개 이상의 모듈에서 공유되는 상수는 `<src-root>/<shared-dir>/constants.ts`에 모으고,
 특정 도메인 모듈에서만 쓰이는 상수는 해당 모듈의 `*.constants.ts` 파일에 둡니다.
@@ -155,7 +156,8 @@ controller, service, Prisma 접근은 단방향 책임을 유지해야 비즈니
 
 ### 2.1 Keep Controllers Thin and Boundary-focused
 
-**Impact: CRITICAL (prevents controllers from absorbing domain logic, persistence calls, and response shaping that belongs in services)**
+**Impact: CRITICAL (prevents controllers from absorbing domain logic, persistence calls, and response shaping that
+belongs in services)**
 
 Controller는 요청 수신, 입력 검증 위임, 응답 반환만 담당합니다.
 비즈니스 로직, Prisma 호출, 조건 분기, 응답 shape 조립은 Controller에 두지 않고 Service로 위임하며, `@Body()`,
@@ -197,7 +199,8 @@ export class UsersController {
 
 ### 2.2 Keep Services Responsible for Domain Rules and Prisma
 
-**Impact: CRITICAL (keeps business rules, transaction orchestration, and persistence access in the backend layer designed to own them)**
+**Impact: CRITICAL (keeps business rules, transaction orchestration, and persistence access in the backend layer
+designed to own them)**
 
 Service는 비즈니스 로직, 도메인 규칙, 트랜잭션 조율을 담당하고 `PrismaService`를 직접 주입받아 데이터에 접근합니다.
 다른 도메인 데이터가 필요하면 해당 도메인의 Service를 주입해 사용하고,
@@ -245,7 +248,8 @@ export class UsersService {
 
 ### 2.3 Preserve One-way Dependencies Through Services
 
-**Impact: HIGH (prevents cross-layer shortcuts that bypass the service boundary and make backend change impact harder to reason about)**
+**Impact: HIGH (prevents cross-layer shortcuts that bypass the service boundary and make backend change impact harder to
+reason about)**
 
 의존 방향은 `Controller -> Service -> Prisma` 단방향만 허용합니다.
 Service가 Controller를 참조하는 것을 금지하고, 다른 도메인의 데이터가 필요하면
@@ -287,7 +291,8 @@ request DTO, response DTO, Prisma type, parameter object는 backend 계약을 �
 
 ### 3.1 Document Custom Backend Types and Parameter Objects
 
-**Impact: MEDIUM-HIGH (keeps backend-only contracts and parameter objects understandable without scanning method bodies)**
+**Impact: MEDIUM-HIGH (keeps backend-only contracts and parameter objects understandable without scanning method
+bodies)**
 
 Prisma 생성 타입이 아닌 커스텀 `type`, `interface`, 파라미터 객체에는 JSDoc을 작성합니다.
 객체형 계약은 헤더에 `@summary`, 각 필드 바로 위 `@field`를 사용하고, 관련 파일 최상단에 모아 배치합니다.
@@ -359,7 +364,8 @@ export class UserResponseDto {
 
 ### 3.3 Replace Local `enum` With `as const` Except Prisma Enums
 
-**Impact: MEDIUM-HIGH (keeps local runtime values lightweight while still allowing generated Prisma enums to remain the source of truth)**
+**Impact: MEDIUM-HIGH (keeps local runtime values lightweight while still allowing generated Prisma enums to remain the
+source of truth)**
 
 로컬 TypeScript `enum` 대신 객체 리터럴과 `as const`를 사용합니다.
 다만 Prisma 스키마에서 생성된 enum은 `@prisma/client`에서 그대로 import해 source of truth를 유지합니다.
@@ -418,7 +424,8 @@ type SafeUser = Omit<User, "password">;
 
 ### 3.5 Validate Request DTOs With Validator, Transformer, and Swagger
 
-**Impact: HIGH (keeps request contracts explicit by colocating validation, transformation, and API documentation on the DTO)**
+**Impact: HIGH (keeps request contracts explicit by colocating validation, transformation, and API documentation on the
+DTO)**
 
 요청 DTO는 `class-validator` 데코레이터로 유효성 검증을 선언하고,
 필요할 때 `class-transformer`로 타입 변환을 명시합니다.
@@ -514,7 +521,8 @@ void this.eventsService.emit("user.created", user);
 
 ### 4.3 Use NestJS Class Methods and Explicit Async Return Types
 
-**Impact: MEDIUM-HIGH (keeps backend class APIs conventional while making async method contracts readable without opening implementations)**
+**Impact: MEDIUM-HIGH (keeps backend class APIs conventional while making async method contracts readable without
+opening implementations)**
 
 클래스 메서드는 NestJS 관례에 따라 일반 메서드 선언을 사용하고, 클래스 외부 유틸 함수는 화살표 함수를 기본으로 합니다.
 복잡한 함수나 `async` 함수는 `Promise<T>` 반환 타입을 명시해 서비스 계약이 시그니처에서 드러나게 합니다.
@@ -560,7 +568,8 @@ export const buildPaginationMeta = (total: number, params: PaginationParams) => 
 
 ### 5.1 Keep Inline Comments for Domain Rules and Library Caveats
 
-**Impact: MEDIUM (keeps inline comments reserved for backend constraints that would otherwise be easy to misread or accidentally remove)**
+**Impact: MEDIUM (keeps inline comments reserved for backend constraints that would otherwise be easy to misread or
+accidentally remove)**
 
 함수 본문 내부에서는 JSDoc 블록 주석을 사용하지 않고, `//` 주석은 도메인 규칙, 정합성 제약, Prisma 동작 제약,
 트랜잭션 순서처럼 없으면 오해될 수 있는 내용에만 사용합니다.
@@ -581,7 +590,8 @@ const where = includeDeleted ? {id} : {id, deletedAt: null};
 
 ### 5.2 Require JSDoc on Service Hooks and Boundary Methods
 
-**Impact: MEDIUM-HIGH (makes important backend execution boundaries searchable before readers inspect implementation details)**
+**Impact: MEDIUM-HIGH (makes important backend execution boundaries searchable before readers inspect implementation
+details)**
 
 Service public 메서드, Prisma 접근이나 외부 API 호출 블록, NestJS 생명주기 훅, 커스텀 `type`/`interface`,
 Guard/Interceptor/Pipe 핵심 메서드에는 예외 없이 JSDoc을 작성합니다.
@@ -647,7 +657,8 @@ Prisma schema 변경이 API 동작에 영향을 주면 최소 한 개 이상의 
 
 ### 6.2 Mock Unit Boundaries and Verify E2E Wiring
 
-**Impact: CRITICAL (keeps service unit tests fast and focused while making e2e tests prove real Nest wiring end to end)**
+**Impact: CRITICAL (keeps service unit tests fast and focused while making e2e tests prove real Nest wiring end to
+end)**
 
 unit test에서는 DB, 외부 API, JWT, cache 같은 외부 의존성을 mock 처리하고
 Service public 메서드의 핵심 분기와 예외를 검증합니다.
@@ -678,7 +689,8 @@ await request(app.getHttpServer()).post("/users").send(payload).expect(201);
 
 ### 6.3 Place Test Files by Runtime Scope
 
-**Impact: HIGH (makes backend test ownership obvious by separating service-adjacent unit tests from top-level HTTP e2e tests)**
+**Impact: HIGH (makes backend test ownership obvious by separating service-adjacent unit tests from top-level HTTP e2e
+tests)**
 
 Service unit test는 대상 파일 옆의 `*.service.spec.ts`로 두고,
 HTTP e2e test는 `test/` 아래 `<domain>.e2e-spec.ts`로 둡니다.
@@ -708,7 +720,8 @@ test/
 
 ### 6.4 Separate Service Unit Tests From HTTP E2E Tests
 
-**Impact: CRITICAL (keeps backend failures diagnosable by assigning business logic and full-stack wiring to different test levels)**
+**Impact: CRITICAL (keeps backend failures diagnosable by assigning business logic and full-stack wiring to different
+test levels)**
 
 테스트는 `unit test`와 `e2e test`를 기본 축으로 구분합니다.
 unit test는 Service 단위의 비즈니스 로직 검증을 담당하고, e2e test는 HTTP 요청부터 ValidationPipe, Filter, Service,
@@ -739,7 +752,8 @@ backend 변경은 NestJS 레이어링, 타입 규율, 테스트 규율을 가장
 
 ### 7.1 Review Banned NestJS Shortcuts Before Finishing
 
-**Impact: MEDIUM (catches the recurring shortcuts that most often blur NestJS layers, contracts, and test meaning before the work is closed out)**
+**Impact: MEDIUM (catches the recurring shortcuts that most often blur NestJS layers, contracts, and test meaning before
+the work is closed out)**
 
 마무리 전에 반복적으로 금지되는 NestJS 지름길을 다시 확인합니다.
 Controller에서 Prisma 직접 호출, `.then()` 체이닝, void 반환 비동기 호출 방치, 모델 전체 응답 노출, 중복 타입 선언,

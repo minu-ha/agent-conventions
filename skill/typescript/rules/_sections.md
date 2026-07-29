@@ -8,11 +8,13 @@
 
 ## 2. Types and Contracts (types)
 **Impact:** CRITICAL
-**Description:** 함수 시그니처, callback 재사용, 타입 중복 제거, custom shape 문서화는 계약을 명시적이고 재사용 가능하게 유지해야 합니다.
+**Description:** 함수 시그니처, callback 재사용, 타입 중복 제거, custom shape 문서화는 계약을 명시적이고 재사용 가능하게
+  유지해야 합니다.
 
 ## 3. Functions and Helper Boundaries (functions)
 **Impact:** HIGH
-**Description:** 함수 시그니처와 helper 추출 규칙은 읽기 쉬운 local flow를 유지하면서 진짜 재사용 로직만 분리해야 합니다.
+**Description:** 함수 시그니처와 helper 추출 규칙은 읽기 쉬운 local flow를 유지하면서 진짜 재사용 로직만 분리해야
+  합니다.
 
 ## 4. Absence and Fallback Handling (absence)
 **Impact:** HIGH
@@ -20,7 +22,8 @@
 
 ## 5. JSDoc and Comment Conventions (docs)
 **Impact:** MEDIUM-HIGH
-**Description:** 주석과 annotation 규칙은 `@api`, `@event`, `@watch`, `@helper`, `@summary`, `@field`처럼 작은 고정 태그 세트로 선언 역할을 빠르게 드러내야 합니다.
+**Description:** 주석과 annotation 규칙은 `@api`, `@event`, `@watch`, `@helper`, `@summary`, `@field`처럼 작은 고정 태그
+  세트로 선언 역할을 빠르게 드러내야 합니다.
 
 ## 6. Guardrails and Review Checks (guardrails)
 **Impact:** MEDIUM

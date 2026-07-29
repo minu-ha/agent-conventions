@@ -1,7 +1,7 @@
 ---
 title: Extract Screen Support Code Only When the Boundary Is Real
 impact: HIGH
-impactDescription: route 파일이 자기 계약이 없는 helper 조각으로 분해되는 것을 막음
+impactDescription: route entry가 자기 계약이 없는 helper 조각으로 분해되는 것을 막음
 appliesWhen: >-
   화면 계산·변환·preset·option·column meta를 별도 함수/support module로 추출·이동하거나 support 경계를 바꾼다. query
   `select` 내부 shaping만이면 제외한다.
@@ -12,7 +12,7 @@ tags: screen, utils, extraction
 
 ## Extract Screen Support Code Only When the Boundary Is Real
 
-**Impact: HIGH (route 파일이 자기 계약이 없는 helper 조각으로 분해되는 것을 막음)**
+**Impact: HIGH (route entry가 자기 계약이 없는 helper 조각으로 분해되는 것을 막음)**
 
 화면 support code는 "이름 붙일 수 있다"가 아니라 "경계가 있다"일 때만 추출합니다.
 
@@ -62,7 +62,7 @@ export const buildEntryPayload = (formValues: EntryFormValues, files: UploadFile
 };
 ```
 
-**Correct (screen-owned support code는 먼저 `page.ts`의 named export로 모으고, 흐름에 묶인 로직은 handler에 남김):**
+**Correct (화면 전용 support code는 먼저 `page.ts`의 named export로 모으고, 흐름에 묶인 로직은 handler에 남김):**
 
 ```ts
 // page.ts

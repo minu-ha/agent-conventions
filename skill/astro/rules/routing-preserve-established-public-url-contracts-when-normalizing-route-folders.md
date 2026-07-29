@@ -8,7 +8,8 @@ tags: routing, urls, migrations, route-families
 
 ## Preserve Established Public URL Contracts When Normalizing Route Folders
 
-**Impact: HIGH (prevents file tree cleanup from silently changing published URLs that users and crawlers already rely on)**
+**Impact: HIGH (prevents file tree cleanup from silently changing published URLs that users and crawlers already rely
+on)**
 
 route folder를 더 예쁘게 정리할 수 있더라도, 이미 공개된 URL contract가 있다면 그 계약을 먼저 존중합니다.
 현재 사이트가 이미 `/recent/:page?`, `/posts/:page?`, `/posts/:slug`,

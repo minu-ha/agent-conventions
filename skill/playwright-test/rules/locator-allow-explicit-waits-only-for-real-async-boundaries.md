@@ -9,7 +9,8 @@ tags: waits, async-boundaries, polling
 
 ## Allow Explicit Waits Only for Real Async Boundaries
 
-**Impact: HIGH (keeps explicit waits intentional by limiting them to navigation, known responses, bootstrap, or real background polling)**
+**Impact: HIGH (keeps explicit waits intentional by limiting them to navigation, known responses, bootstrap, or real
+background polling)**
 
 명시적 wait는 navigation 완료, 특정 API 응답, suspense bootstrap,
 비동기 background job polling 같은 실제 비동기 경계에만 허용합니다.

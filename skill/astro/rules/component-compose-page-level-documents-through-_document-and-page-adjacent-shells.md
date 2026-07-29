@@ -9,7 +9,8 @@ tags: component, document, head, pages, seo
 
 ## Compose Page-level Documents Through `_document.astro` and `_head.astro`
 
-**Impact: HIGH (keeps repeated document, head, and body shell composition out of route files while preserving a single page-level entry point)**
+**Impact: HIGH (keeps repeated document, head, and body shell composition out of route files while preserving a single
+page-level entry point)**
 
 반복되는 top-level document composition이 필요하면 routed page는 `src/pages/_document.astro` 하나만 import합니다.
 

@@ -8,7 +8,8 @@ tags: data-isolation, cleanup, seeds
 
 ## Isolate and Clean Up Test Data
 
-**Impact: HIGH (prevents remote or shared-state browser tests from colliding through reused accounts, ids, or seed records)**
+**Impact: HIGH (prevents remote or shared-state browser tests from colliding through reused accounts, ids, or seed
+records)**
 
 원격 백엔드를 건드리는 테스트는 고유 데이터로 실행하고 `try/finally`로 cleanup합니다.
 `Date.now()`, worker suffix, 고유 login ID 같은 전략으로 충돌을 피하고,

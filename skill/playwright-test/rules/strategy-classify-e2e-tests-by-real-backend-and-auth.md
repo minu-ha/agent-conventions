@@ -8,7 +8,8 @@ tags: e2e, real-backend, auth
 
 ## Classify E2E Tests by Real Backend and Auth Dependence
 
-**Impact: CRITICAL (keeps e2e meaning strict by requiring the real backend, real auth, and real routing to remain part of the test)**
+**Impact: CRITICAL (keeps e2e meaning strict by requiring the real backend, real auth, and real routing to remain part
+of the test)**
 
 실제 로그인, 실제 저장, 실제 권한 연결이 끊기면 테스트 의미가 사라지면 E2E입니다.
 E2E는 실제 백엔드, 실제 인증 플로우, 실제 라우팅과 번들 결과를 사용하고,

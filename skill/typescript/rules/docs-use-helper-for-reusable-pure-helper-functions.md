@@ -10,7 +10,8 @@ tags: helper, pure-functions, reuse
 
 ## Use `@helper` on Reusable Support Functions
 
-**Impact: MEDIUM-HIGH (distinguishes reusable pure support logic from local implementation details or integration boundaries)**
+**Impact: MEDIUM-HIGH (distinguishes reusable pure support logic from local implementation details or integration
+boundaries)**
 
 `@helper`는 재사용 가능한 pure support function에만 붙입니다.
 

@@ -8,7 +8,8 @@ tags: unit-tests, e2e, levels
 
 ## Separate Service Unit Tests From HTTP E2E Tests
 
-**Impact: CRITICAL (keeps backend failures diagnosable by assigning business logic and full-stack wiring to different test levels)**
+**Impact: CRITICAL (keeps backend failures diagnosable by assigning business logic and full-stack wiring to different
+test levels)**
 
 테스트는 `unit test`와 `e2e test`를 기본 축으로 구분합니다.
 unit test는 Service 단위의 비즈니스 로직 검증을 담당하고, e2e test는 HTTP 요청부터 ValidationPipe, Filter, Service,

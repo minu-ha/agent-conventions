@@ -8,7 +8,8 @@ tags: dto, validation, swagger
 
 ## Validate Request DTOs With Validator, Transformer, and Swagger
 
-**Impact: HIGH (keeps request contracts explicit by colocating validation, transformation, and API documentation on the DTO)**
+**Impact: HIGH (keeps request contracts explicit by colocating validation, transformation, and API documentation on the
+DTO)**
 
 요청 DTO는 `class-validator` 데코레이터로 유효성 검증을 선언하고,
 필요할 때 `class-transformer`로 타입 변환을 명시합니다.

@@ -9,7 +9,8 @@ tags: responsibility, pages, screen-flow
 
 ## Keep Route Page Files Focused on Screen Flow
 
-**Impact: HIGH (keeps routed `.astro` files readable as the main route orchestration layer instead of turning them into import-only adapters)**
+**Impact: HIGH (keeps routed `.astro` files readable as the main route orchestration layer instead of turning them into
+import-only adapters)**
 
 `src/pages/**/index.astro`, `[slug].astro`, and similar route files own more than the URL.
 

@@ -6,9 +6,9 @@
 먼저 일반 `.ts` support module에 둡니다.
 
 - route entry 화면이면 기본 추출 위치는 같은 계층의 `page.ts`입니다.
-  screen-owned pure function은 named export를 직접 import해 씁니다.
-- screen-local custom hook은 lifecycle, context, 다른 hook 호출 순서 같은
-  React orchestration을 실제로 캡슐화할 때만 허용합니다.
+  화면 전용 pure function은 named export를 직접 import해 씁니다.
+- screen-local custom hook은 lifecycle, context, 다른 hook 호출 순서를
+  실제로 캡슐화할 때만 허용합니다.
 - 단순 계산을 hook처럼 보이게 만드는 추상화는 피합니다.
 
 > 예시·예외가 필요하면 [full rule](../rules/ownership-prefer-plain-ts-for-local-react-helpers.md)을 읽습니다.

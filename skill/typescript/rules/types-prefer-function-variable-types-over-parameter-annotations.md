@@ -11,7 +11,8 @@ tags: function-types, annotations, contracts
 
 ## Prefer Function Variable Types Over Parameter Annotations
 
-**Impact: CRITICAL (keeps callable contracts reusable and prevents local parameter annotations from fragmenting shared function types)**
+**Impact: CRITICAL (keeps callable contracts reusable and prevents local parameter annotations from fragmenting shared
+function types)**
 
 재사용 가능한 콜백이나 함수 타입이 있다면 매개변수 타입 선언보다 함수 변수 타입 선언을 우선합니다.
 이미 존재하는 interface, object contract, framework alias를 먼저 재사용하고,

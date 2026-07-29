@@ -8,7 +8,8 @@ tags: controllers, layering, boundaries
 
 ## Keep Controllers Thin and Boundary-focused
 
-**Impact: CRITICAL (prevents controllers from absorbing domain logic, persistence calls, and response shaping that belongs in services)**
+**Impact: CRITICAL (prevents controllers from absorbing domain logic, persistence calls, and response shaping that
+belongs in services)**
 
 Controller는 요청 수신, 입력 검증 위임, 응답 반환만 담당합니다.
 비즈니스 로직, Prisma 호출, 조건 분기, 응답 shape 조립은 Controller에 두지 않고 Service로 위임하며, `@Body()`,

@@ -149,7 +149,10 @@ export const parseSections = (source: string): SkillSection[] => {
 
 		const [, order, title, prefix] = headerMatch;
 
-		return {order: Number(order), title, prefix, impact: impactMatch[1].trim(), description: descriptionMatch[1].trim()};
+		// description 은 여러 줄로 써도 된다. 소스에서만 접고 값은 한 줄로 편다
+		const description = descriptionMatch[1].trim().replace(/\s+/g, " ");
+
+		return {order: Number(order), title, prefix, impact: impactMatch[1].trim(), description};
 	});
 
 	return sections.sort((left, right) => left.order - right.order);

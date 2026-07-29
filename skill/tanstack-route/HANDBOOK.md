@@ -204,7 +204,8 @@ function Root() {
 
 ### 1.5 Use Parentheses Folders for Pathless Route Groups
 
-**Impact: HIGH (separates URL hierarchy from grouping hierarchy so nested routes stay organized without changing paths)**
+**Impact: HIGH (separates URL hierarchy from grouping hierarchy so nested routes stay organized without changing
+paths)**
 
 일반 폴더는 실제 URL 세그먼트를 반영하는 상위 계층이고,
 괄호 폴더 `()`는 하위 라우트를 그룹화하기 위한 pathless 계층입니다.
@@ -237,7 +238,8 @@ URL에 보여야 하는 상위 계층만 일반 폴더로 두고, 하위 라우�
 
 ### 2.1 Name Top-level Groups by Shell Meaning
 
-**Impact: HIGH (makes top-level route groups communicate the shell they belong to instead of the feature they happen to contain)**
+**Impact: HIGH (makes top-level route groups communicate the shell they belong to instead of the feature they happen to
+contain)**
 
 최상위 그룹 이름은 기능명이 아니라 레이아웃 셸 의미가 드러나야 합니다.
 `public/app`, `auth/workspace`, `marketing/admin`처럼 셸 단위를 표현하고, 같은 셸이면 새 그룹 이름을 만들지 않습니다.
@@ -260,7 +262,8 @@ URL에 보여야 하는 상위 계층만 일반 폴더로 두고, 하위 라우�
 
 ### 2.2 Prepare the Basic Route File Set
 
-**Impact: MEDIUM-HIGH (gives nested routes a predictable place for styles, shell code, and pure helpers from the start)**
+**Impact: MEDIUM-HIGH (gives nested routes a predictable place for styles, shell code, and pure helpers from the
+start)**
 
 이 프로젝트의 route file set은 `feature.css`, `feature.ts`, `feature.layout.tsx`,
 `feature.index.tsx` 4개를 기본 세트로 봅니다.
@@ -568,7 +571,8 @@ export const Route = createFileRoute("/app")({
 
 ### 3.6 Validate Search Before Using Route Search
 
-**Impact: CRITICAL (normalizes query strings once at the route boundary instead of reparsing them throughout the screen)**
+**Impact: CRITICAL (normalizes query strings once at the route boundary instead of reparsing them throughout the
+screen)**
 
 쿼리스트링을 읽는 화면은 `Route.useSearch()` 사용 전에 `validateSearch`를 선언합니다.
 search schema는 `z.object(...)`로 작성하고, 숫자형 페이지네이션이나 선택값은 `z.coerce.number()`로 보정하며,
@@ -711,7 +715,8 @@ route 스타일은 해당 route와 함께 있어야 하고, generated router out
 
 ### 5.1 Keep Route CSS at Route Scope
 
-**Impact: MEDIUM-HIGH (prevents route-level styles and local component styles from collapsing into one oversized stylesheet)**
+**Impact: MEDIUM-HIGH (prevents route-level styles and local component styles from collapsing into one oversized
+stylesheet)**
 
 route 공용 스타일은 해당 route 폴더의 `*.css`에 두고, `-local` 컴포넌트 스타일은 `-local/*.css`에 둡니다.
 같은 route의 `layout`과 `index`가 같은 시각 컨텍스트를 공유하더라도,
@@ -771,7 +776,8 @@ router generator를 다시 실행한다
 
 ### 6.1 Add New Routes in Layout-first Order
 
-**Impact: MEDIUM (reduces cleanup work by establishing shell, grouping, and search boundaries before route files sprawl)**
+**Impact: MEDIUM (reduces cleanup work by establishing shell, grouping, and search boundaries before route files
+sprawl)**
 
 신규 라우트를 추가할 때는 화면 파일부터 급하게 만들지 말고, 레이아웃 셸과 그룹 구조를 먼저 고정하는 순서를 따릅니다.
 이 프로젝트에서는 `feature.css`, `feature.ts`, `feature.layout.tsx`,

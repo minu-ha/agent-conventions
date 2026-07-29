@@ -8,7 +8,8 @@ tags: test-design, scope, assertions
 
 ## Keep One Behavior Per Test
 
-**Impact: HIGH (keeps setup, action, and assertions focused so browser failures point to one behavior instead of many unrelated checks)**
+**Impact: HIGH (keeps setup, action, and assertions focused so browser failures point to one behavior instead of many
+unrelated checks)**
 
 한 테스트는 한 행동과 한 결과에 집중합니다.
 기본 구조는 `Arrange -> Act -> Assert` 순서를 따르고, unrelated assertion을 한 테스트 안에 과도하게 나열하지 않습니다.

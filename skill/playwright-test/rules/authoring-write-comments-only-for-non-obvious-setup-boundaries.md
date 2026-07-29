@@ -8,7 +8,8 @@ tags: comments, setup, helpers
 
 ## Write Comments Only for Non-obvious Setup Boundaries
 
-**Impact: MEDIUM (keeps test comments focused on why a setup exists instead of narrating obvious Arrange/Act/Assert steps)**
+**Impact: MEDIUM (keeps test comments focused on why a setup exists instead of narrating obvious Arrange/Act/Assert
+steps)**
 
 테스트 주석은 한글로 작성하고, helper, seed/cleanup,
 bootstrap wait처럼 목적이 바로 드러나지 않는 setup에만 왜 필요한지 짧게 남깁니다.

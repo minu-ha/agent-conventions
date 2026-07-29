@@ -12,7 +12,8 @@ tags: docs, jsdoc, composition, compound-components
 
 ## Document Compound Parts with @part and @description
 
-**Impact: MEDIUM (keeps compound public parts scannable as one named boundary instead of disconnected props and component declarations)**
+**Impact: MEDIUM (keeps compound public parts scannable as one named boundary instead of disconnected props and
+component declarations)**
 
 compound component가 public part를 노출하면 part 단위로 문서화합니다.
 

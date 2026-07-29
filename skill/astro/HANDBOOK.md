@@ -87,14 +87,12 @@
 
 **Impact: CRITICAL**
 
-`src/pages`는 Astro의 required route tree이자 route-local owner layer입니다.
-routed entry는 URL/rendering/server data/document handoff와 화면 흐름을 직접 소유하고,
-`_document.astro`/`_head.astro`/`_document.css`, `_local/`,
-owner-named support file처럼 `_` prefix로 제외되는 route-local 파일만 함께 둡니다.
+`src/pages`는 Astro의 required route tree이자 route-local owner layer입니다. routed entry는 URL/rendering/server data/document handoff와 화면 흐름을 직접 소유하고, `_document.astro`/`_head.astro`/`_document.css`, `_local/`, owner-named support file처럼 `_` prefix로 제외되는 route-local 파일만 함께 둡니다.
 
 ### 1.1 Keep `src/pages` as the Route-local Owner Layer
 
-**Impact: CRITICAL (keeps Astro route ownership close to the file-based route without leaking screen implementation into shared or generic helper layers)**
+**Impact: CRITICAL (keeps Astro route ownership close to the file-based route without leaking screen implementation into
+shared or generic helper layers)**
 
 Astro에서 `src/pages`는 required route tree입니다.
 Route file은 얇은 import adapter가 아니라 URL contract와 route-local screen flow를 함께 소유합니다.
@@ -159,7 +157,8 @@ src/
 
 ### 1.2 Place Pages-local Document Helpers Under `src/pages` with an Underscore Prefix
 
-**Impact: HIGH (keeps route-shared document helpers and route-local support files close to route owners without turning them into routed pages)**
+**Impact: HIGH (keeps route-shared document helpers and route-local support files close to route owners without turning
+them into routed pages)**
 
 Astro는 `src/pages` 안에서 `_`로 시작하는 파일과 폴더를 router에서 제외합니다.
 이 성질을 이용해 pages-local document helper와 route-local support file을 `src/pages/_*` 또는 `src/pages/**/_*`에
@@ -227,7 +226,8 @@ src/
 
 ### 1.3 Place Route Implementations Under `src/pages`
 
-**Impact: HIGH (keeps page implementation near the file-based route while using underscore-prefixed files to avoid accidental routes)**
+**Impact: HIGH (keeps page implementation near the file-based route while using underscore-prefixed files to avoid
+accidental routes)**
 
 Astro가 file-based routing을 `src/pages`에서 결정하므로, route 구현도 가능한 한 같은 route subtree에 둡니다.
 
@@ -302,7 +302,8 @@ src/
 
 ### 2.1 Align Route Page Assets and `rt_*` Surface Classes with Route Role
 
-**Impact: HIGH (keeps Astro route files, route-local assets, CSS owners, and URL semantics aligned without duplicating folder depth in names)**
+**Impact: HIGH (keeps Astro route files, route-local assets, CSS owners, and URL semantics aligned without duplicating
+folder depth in names)**
 
 Routed entry file names follow Astro routing (`index.astro`, `[slug].astro`,
 `new.astro`). Route-local support files and CSS use the route role as owner, not the whole folder path.
@@ -372,7 +373,8 @@ src/pages/blog/[slug].astro
 
 ### 2.3 Use Owner-named Route Support Files Instead of Generic Local Files
 
-**Impact: MEDIUM-HIGH (keeps route-local files searchable even when a route owns several helpers, runtime components, and stylesheets)**
+**Impact: MEDIUM-HIGH (keeps route-local files searchable even when a route owns several helpers, runtime components,
+and stylesheets)**
 
 Route-local files should name the owner and responsibility directly.
 
@@ -442,7 +444,8 @@ such as `_entry-admin.ts`. Promote it to `shared` or `components` only after the
 
 ### 2.4 Use Underscore-prefixed Pages-local Helper Names for Document Files
 
-**Impact: MEDIUM-HIGH (keeps page-adjacent non-routes recognizable in file trees and prevents generic shell names from blurring ownership)**
+**Impact: MEDIUM-HIGH (keeps page-adjacent non-routes recognizable in file trees and prevents generic shell names from
+blurring ownership)**
 
 `src/pages` 아래의 pages-local document helper와 support file은 `_` prefix와 역할 이름을 함께 사용합니다.
 
@@ -486,7 +489,8 @@ src/pages/_head.astro
 
 ### 3.1 Compose Page-level Documents Through `_document.astro` and `_head.astro`
 
-**Impact: HIGH (keeps repeated document, head, and body shell composition out of route files while preserving a single page-level entry point)**
+**Impact: HIGH (keeps repeated document, head, and body shell composition out of route files while preserving a single
+page-level entry point)**
 
 반복되는 top-level document composition이 필요하면 routed page는 `src/pages/_document.astro` 하나만 import합니다.
 
@@ -899,7 +903,8 @@ src/pages/topics/[topic]/feed.xml.ts
 
 ### 5.3 Prefer Sibling `index.astro` and `[page].astro` Files for Paginated Route Families
 
-**Impact: HIGH (keeps paginated route families shallow and makes list plus pagination contracts readable from one folder)**
+**Impact: HIGH (keeps paginated route families shallow and makes list plus pagination contracts readable from one
+folder)**
 
 페이지네이션이 있는 list route family는 가능하면 같은 폴더 안에서 `index.astro`와 `[page].astro`를 sibling으로 둡니다.
 
@@ -951,7 +956,8 @@ src/pages/topics/[topic]/[page].astro
 
 ### 5.4 Preserve Established Public URL Contracts When Normalizing Route Folders
 
-**Impact: HIGH (prevents file tree cleanup from silently changing published URLs that users and crawlers already rely on)**
+**Impact: HIGH (prevents file tree cleanup from silently changing published URLs that users and crawlers already rely
+on)**
 
 route folder를 더 예쁘게 정리할 수 있더라도, 이미 공개된 URL contract가 있다면 그 계약을 먼저 존중합니다.
 현재 사이트가 이미 `/recent/:page?`, `/posts/:page?`, `/posts/:slug`,
@@ -1251,7 +1257,8 @@ Actions, endpoints, server islands는 각각 caller와 response shape, adapter �
 
 ### 8.1 Choose Actions vs. Endpoints by Caller and Response Needs
 
-**Impact: HIGH (keeps mutation boundaries aligned with who is calling them and what kind of response they must control)**
+**Impact: HIGH (keeps mutation boundaries aligned with who is calling them and what kind of response they must
+control)**
 
 브라우저 UI가 직접 호출하는 form submit이나 mutation은 기본적으로 Actions를 먼저 검토합니다.
 Actions는 input validation, error shape,
@@ -1383,9 +1390,7 @@ import GenericAvatar from "../components/GenericAvatar.astro";
 
 **Impact: HIGH**
 
-pages-local document helper는 top-level document composition, routed page는 route contract와 `rt_*` screen flow, `_local/`은 route-local UI/runtime boundary, owner-named support module은 진짜 data/rendering boundary를 소유합니다.
-shared `ui`/`widget`으로 올릴 수 없는 route-only 조각은 같은 route folder 안에 남겨 Astro의 server-first 구조와
-ownership이 함께 읽히게 합니다.
+pages-local document helper는 top-level document composition, routed page는 route contract와 `rt_*` screen flow, `_local/`은 route-local UI/runtime boundary, owner-named support module은 진짜 data/rendering boundary를 소유합니다. shared `ui`/`widget`으로 올릴 수 없는 route-only 조각은 같은 route folder 안에 남겨 Astro의 server-first 구조와 ownership이 함께 읽히게 합니다.
 
 ### 9.1 Compose Layouts from Widget and UI Only
 
@@ -1667,7 +1672,8 @@ const initialState = await getEntryAdminInitialState();
 
 ### 9.5 Keep Pages-local Document Helpers Imported Only by Pages
 
-**Impact: HIGH (preserves one-way dependency flow from routed pages to pages-local document helpers instead of letting shared code depend on routing helpers)**
+**Impact: HIGH (preserves one-way dependency flow from routed pages to pages-local document helpers instead of letting
+shared code depend on routing helpers)**
 
 `src/pages/_document.astro`, `_head.astro`,
 `_document.css` 같은 pages-local document helper는 routed page만 import합니다.
@@ -1735,7 +1741,8 @@ const { entries } = Astro.props as { entries: EntryListItem[] };
 
 ### 9.6 Keep Route Page Files Focused on Screen Flow
 
-**Impact: HIGH (keeps routed `.astro` files readable as the main route orchestration layer instead of turning them into import-only adapters)**
+**Impact: HIGH (keeps routed `.astro` files readable as the main route orchestration layer instead of turning them into
+import-only adapters)**
 
 `src/pages/**/index.astro`, `[slug].astro`, and similar route files own more than the URL.
 
@@ -1854,7 +1861,8 @@ const { currentPathname } = Astro.props;
 
 ### 9.8 Place Route Shells Under the Owning Route `_local/` Folder
 
-**Impact: HIGH (prevents route shell files from becoming a blurry shared component tier between pages and reusable building blocks)**
+**Impact: HIGH (prevents route shell files from becoming a blurry shared component tier between pages and reusable
+building blocks)**
 
 Route-specific shell files are not shared layouts. Put them under the owning route's `_local/` folder.
 
@@ -2009,7 +2017,8 @@ const pageProps = getPostListPageProps({ entries: postEntries, currentPage: 1 })
 
 ### 10.2 Require JSDoc on Key Frontmatter, Document Props, and Route Support Declarations
 
-**Impact: MEDIUM-HIGH (makes Astro route boundaries and route-local support helpers searchable before readers inspect implementation details)**
+**Impact: MEDIUM-HIGH (makes Astro route boundaries and route-local support helpers searchable before readers inspect
+implementation details)**
 
 Astro frontmatter와 `src/pages/_document.astro`, `src/pages/_head.astro`, `src/pages/**/_entry-admin.ts`,
 `src/pages/**/_local/entry-editor.ts` 같은 route-local support module에서 중요한 경계를 선언할 때는 헤더 JSDoc을

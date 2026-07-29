@@ -8,7 +8,8 @@ tags: comments, inline, domain-rules
 
 ## Keep Inline Comments for Domain Rules and Library Caveats
 
-**Impact: MEDIUM (keeps inline comments reserved for backend constraints that would otherwise be easy to misread or accidentally remove)**
+**Impact: MEDIUM (keeps inline comments reserved for backend constraints that would otherwise be easy to misread or
+accidentally remove)**
 
 함수 본문 내부에서는 JSDoc 블록 주석을 사용하지 않고, `//` 주석은 도메인 규칙, 정합성 제약, Prisma 동작 제약,
 트랜잭션 순서처럼 없으면 오해될 수 있는 내용에만 사용합니다.

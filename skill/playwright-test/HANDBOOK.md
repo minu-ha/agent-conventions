@@ -69,7 +69,8 @@
 
 ### 1.1 Classify E2E Tests by Real Backend and Auth Dependence
 
-**Impact: CRITICAL (keeps e2e meaning strict by requiring the real backend, real auth, and real routing to remain part of the test)**
+**Impact: CRITICAL (keeps e2e meaning strict by requiring the real backend, real auth, and real routing to remain part
+of the test)**
 
 실제 로그인, 실제 저장, 실제 권한 연결이 끊기면 테스트 의미가 사라지면 E2E입니다.
 E2E는 실제 백엔드, 실제 인증 플로우, 실제 라우팅과 번들 결과를 사용하고,
@@ -94,7 +95,8 @@ E2E는 실제 백엔드, 실제 인증 플로우, 실제 라우팅과 번들 결
 
 ### 1.2 Classify Integration Tests by Mocked Dependency Boundary
 
-**Impact: CRITICAL (makes it clear that integration tests exercise UI and route behavior with mocked backend or auth boundaries)**
+**Impact: CRITICAL (makes it clear that integration tests exercise UI and route behavior with mocked backend or auth
+boundaries)**
 
 주요 API를 mock해도 테스트 목적이 유지되면 Integration입니다.
 Integration은 `page.route()` 기반 API mocking, 인증 상태 mocking, 초기 데이터 강제 주입을 허용하고, 폼 검증,
@@ -139,7 +141,8 @@ Integration은 `page.route()` 기반 API mocking, 인증 상태 mocking, 초기 
 
 ### 1.4 Keep Vitest Out of Browser UI Tests by Default
 
-**Impact: MEDIUM-HIGH (avoids splitting browser UI coverage across tools when Playwright already owns the runtime boundary)**
+**Impact: MEDIUM-HIGH (avoids splitting browser UI coverage across tools when Playwright already owns the runtime
+boundary)**
 
 `vi`와 `Vitest`는 이 프로젝트의 기본 UI 테스트 도구가 아닙니다.
 화면이나 라우트 기능 검증을 위해 Vitest를 기본 도입하지 않고,
@@ -188,7 +191,8 @@ login.e2e.spec.ts
 
 ### 1.6 Use Playwright as the Single Browser UI Tool
 
-**Impact: CRITICAL (keeps browser UI testing consistent by using one toolchain and one interaction model across test levels)**
+**Impact: CRITICAL (keeps browser UI testing consistent by using one toolchain and one interaction model across test
+levels)**
 
 브라우저 UI 테스트의 기본 도구는 `Playwright` 하나로 통일합니다.
 같은 도구를 쓰더라도 Integration과 E2E 경계는 별도로 나누고, locator, assertion,
@@ -244,7 +248,8 @@ spec 배치, 파일명, shared support 승격 규칙은 테스트 소유권을 �
 
 ### 2.2 Promote Shared Support Only After Real Reuse
 
-**Impact: MEDIUM-HIGH (keeps support layers proportional by delaying global helpers until multiple features genuinely need them)**
+**Impact: MEDIUM-HIGH (keeps support layers proportional by delaying global helpers until multiple features genuinely
+need them)**
 
 전역 공용 helper는 `<test-support-path>`에 두되, 여러 feature가 함께 쓰는 인증, API seed, 공용 route setup만 올립니다.
 특정 기능 하나에서만 쓰는 mock builder, request body helper, bootstrap wait는 spec 근처에 두고,
@@ -296,7 +301,8 @@ members.e2e.spec.ts
 
 ### 3.1 Follow the Declared Integration or E2E Writing Sequence
 
-**Impact: MEDIUM (reduces confused setup by forcing the author to classify the test level and dependency boundary before writing actions)**
+**Impact: MEDIUM (reduces confused setup by forcing the author to classify the test level and dependency boundary before
+writing actions)**
 
 신규 테스트를 쓸 때는 먼저 Integration인지 E2E인지 결정하고, 그 레벨에 맞는 setup만 선언한 뒤,
 사용자 locator로 action을 작성하고, web-first assertion으로 결과를 검증합니다.
@@ -322,7 +328,8 @@ members.e2e.spec.ts
 
 ### 3.2 Isolate and Clean Up Test Data
 
-**Impact: HIGH (prevents remote or shared-state browser tests from colliding through reused accounts, ids, or seed records)**
+**Impact: HIGH (prevents remote or shared-state browser tests from colliding through reused accounts, ids, or seed
+records)**
 
 원격 백엔드를 건드리는 테스트는 고유 데이터로 실행하고 `try/finally`로 cleanup합니다.
 `Date.now()`, worker suffix, 고유 login ID 같은 전략으로 충돌을 피하고,
@@ -383,7 +390,8 @@ test("검색 결과가 비어 있으면 empty 상태를 보여준다", async ({p
 
 ### 3.4 Keep One Behavior Per Test
 
-**Impact: HIGH (keeps setup, action, and assertions focused so browser failures point to one behavior instead of many unrelated checks)**
+**Impact: HIGH (keeps setup, action, and assertions focused so browser failures point to one behavior instead of many
+unrelated checks)**
 
 한 테스트는 한 행동과 한 결과에 집중합니다.
 기본 구조는 `Arrange -> Act -> Assert` 순서를 따르고, unrelated assertion을 한 테스트 안에 과도하게 나열하지 않습니다.
@@ -427,7 +435,8 @@ test("권한이 없으면 멤버 화면 진입 시 로그인으로 이동한다"
 
 ### 3.6 Write Comments Only for Non-obvious Setup Boundaries
 
-**Impact: MEDIUM (keeps test comments focused on why a setup exists instead of narrating obvious Arrange/Act/Assert steps)**
+**Impact: MEDIUM (keeps test comments focused on why a setup exists instead of narrating obvious Arrange/Act/Assert
+steps)**
 
 테스트 주석은 한글로 작성하고, helper, seed/cleanup,
 bootstrap wait처럼 목적이 바로 드러나지 않는 setup에만 왜 필요한지 짧게 남깁니다.
@@ -538,7 +547,8 @@ e2e 테스트는 실제 backend와 auth 경로를 사용하되 seed, cleanup, sh
 
 ### 5.1 Avoid Destructive Shared-account Scenarios and Parallel Collisions
 
-**Impact: CRITICAL (keeps real-system browser tests from corrupting shared accounts or racing on the same remote resources)**
+**Impact: CRITICAL (keeps real-system browser tests from corrupting shared accounts or racing on the same remote
+resources)**
 
 공유 관리자 계정으로 실패 로그인, 잠금, 비밀번호 변경 같은 destructive 시나리오를 검증하지 않습니다.
 같은 원격 자원이나 계정을 동시에 건드릴 수 있으면 serial 실행이나 고립된 데이터 전략을 우선하고,
@@ -624,7 +634,8 @@ test("실제 로그인 성공 smoke", async ({page}) => {
 
 ### 6.1 Allow Explicit Waits Only for Real Async Boundaries
 
-**Impact: HIGH (keeps explicit waits intentional by limiting them to navigation, known responses, bootstrap, or real background polling)**
+**Impact: HIGH (keeps explicit waits intentional by limiting them to navigation, known responses, bootstrap, or real
+background polling)**
 
 명시적 wait는 navigation 완료, 특정 API 응답, suspense bootstrap,
 비동기 background job polling 같은 실제 비동기 경계에만 허용합니다.
@@ -668,7 +679,8 @@ await page.getByLabel("이메일").fill("user@example.com");
 
 ### 6.3 Use Web-first Assertions for UI Results
 
-**Impact: HIGH (aligns assertions with the browser's async rendering model instead of relying on immediate checks of transient UI state)**
+**Impact: HIGH (aligns assertions with the browser's async rendering model instead of relying on immediate checks of
+transient UI state)**
 
 UI 결과는 `toBeVisible`, `toHaveText`, `toHaveValue`, `toHaveURL` 같은 web-first assertion을 기본으로 씁니다.
 즉시 평가되는 generic assertion은 non-UI 값에만 쓰고, 내부 state나 cache,
@@ -696,7 +708,8 @@ await expect(page).toHaveURL(/members/);
 
 ### 7.1 Review Banned Playwright Shortcuts Before Finishing
 
-**Impact: MEDIUM (catches the shortcuts that most often blur test level meaning or introduce flaky browser behavior before the work is closed)**
+**Impact: MEDIUM (catches the shortcuts that most often blur test level meaning or introduce flaky browser behavior
+before the work is closed)**
 
 마무리 전에 반복적으로 금지되는 Playwright 지름길을 다시 확인합니다.
 한 파일 안의 Integration/E2E 혼합, E2E에서 핵심 API route mocking, CSS class와 DOM 구조에 과도하게 의존한 locator,

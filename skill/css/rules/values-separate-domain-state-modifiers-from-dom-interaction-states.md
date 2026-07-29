@@ -11,7 +11,8 @@ tags: state, focus, accessibility
 
 ## Separate Domain State Modifiers From DOM Interaction States
 
-**Impact: HIGH (keeps app state, focus visibility, and hover behavior readable and accessible without mixing their responsibilities)**
+**Impact: HIGH (keeps app state, focus visibility, and hover behavior readable and accessible without mixing their
+responsibilities)**
 
 화면 상태나 도메인 상태는 `--active`, `--selected`, `--error` 같은 modifier로 표현하고,
 브라우저 상호작용 상태는 같은 클래스 블록 내부 nested `&:hover`, `&:focus-visible`,

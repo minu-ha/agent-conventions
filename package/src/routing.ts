@@ -120,6 +120,29 @@ const normalizeContractLine = (line: string): string => {
 };
 
 /**
+ * @helper 여러 줄로 접어 쓴 `**Impact: ...**` 선언을 한 줄로 되돌린다.
+ *
+ * 선언이 길면 소스에서 가로로 넘친다. 접어 쓰고 여기서 다시 이어 붙여 계약 비교는 한 줄 기준을 지킨다.
+ */
+const joinFoldedImpactDeclaration = (lines: readonly string[]): string[] => {
+	const joined: string[] = [];
+
+	for (const line of lines) {
+		const previous = joined[joined.length - 1];
+		const isOpenImpact = previous !== undefined && /^\s*\*\*Impact:/.test(previous) && !previous.endsWith("**");
+
+		if (isOpenImpact && line.trim().length > 0) {
+			joined[joined.length - 1] = `${previous} ${line.trim()}`;
+			continue;
+		}
+
+		joined.push(line);
+	}
+
+	return joined;
+};
+
+/**
  * @helper full rule body에서 fenced example 밖의 첫 Incorrect 경계와 normative prefix 검증
  */
 const readNormativeRuleContract = (rule: SkillRule): string => {
@@ -218,7 +241,9 @@ const readNormativeRuleContract = (rule: SkillRule): string => {
 		throw new Error(`${getRuleId(rule)}: full rule body requires fenced Incorrect and Correct examples after anchored markers.`);
 	}
 
-	const normativeLines = normalizedBody.slice(0, incorrectBoundaryOffset).trim().split("\n").map(normalizeContractLine);
+	const normativeLines = joinFoldedImpactDeclaration(
+		normalizedBody.slice(0, incorrectBoundaryOffset).trim().split("\n").map(normalizeContractLine),
+	);
 	const normativeBody = normativeLines.join("\n");
 	const expectedHeading = `## ${rule.title}`;
 	const expectedImpact = `**Impact: ${rule.impact} (${rule.impactDescription})**`;

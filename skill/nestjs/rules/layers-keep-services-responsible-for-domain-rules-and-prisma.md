@@ -8,7 +8,8 @@ tags: services, prisma, domain-logic
 
 ## Keep Services Responsible for Domain Rules and Prisma
 
-**Impact: CRITICAL (keeps business rules, transaction orchestration, and persistence access in the backend layer designed to own them)**
+**Impact: CRITICAL (keeps business rules, transaction orchestration, and persistence access in the backend layer
+designed to own them)**
 
 Service는 비즈니스 로직, 도메인 규칙, 트랜잭션 조율을 담당하고 `PrismaService`를 직접 주입받아 데이터에 접근합니다.
 다른 도메인 데이터가 필요하면 해당 도메인의 Service를 주입해 사용하고,

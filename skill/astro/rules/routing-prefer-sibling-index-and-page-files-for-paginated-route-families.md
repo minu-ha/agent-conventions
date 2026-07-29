@@ -8,7 +8,8 @@ tags: routing, pagination, pages, route-families
 
 ## Prefer Sibling `index.astro` and `[page].astro` Files for Paginated Route Families
 
-**Impact: HIGH (keeps paginated route families shallow and makes list plus pagination contracts readable from one folder)**
+**Impact: HIGH (keeps paginated route families shallow and makes list plus pagination contracts readable from one
+folder)**
 
 페이지네이션이 있는 list route family는 가능하면 같은 폴더 안에서 `index.astro`와 `[page].astro`를 sibling으로 둡니다.
 

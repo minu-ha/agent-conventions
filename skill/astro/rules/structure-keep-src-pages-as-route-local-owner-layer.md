@@ -9,7 +9,8 @@ tags: structure, pages, route-local, routing
 
 ## Keep `src/pages` as the Route-local Owner Layer
 
-**Impact: CRITICAL (keeps Astro route ownership close to the file-based route without leaking screen implementation into shared or generic helper layers)**
+**Impact: CRITICAL (keeps Astro route ownership close to the file-based route without leaking screen implementation into
+shared or generic helper layers)**
 
 Astro에서 `src/pages`는 required route tree입니다.
 Route file은 얇은 import adapter가 아니라 URL contract와 route-local screen flow를 함께 소유합니다.

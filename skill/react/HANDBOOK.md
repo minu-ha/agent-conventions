@@ -141,9 +141,9 @@ const handleClick: MouseEventHandler<HTMLButtonElement> = (_event) => {
 먼저 일반 `.ts` support module에 둡니다.
 
 - route entry 화면이면 기본 추출 위치는 같은 계층의 `page.ts`입니다.
-  screen-owned pure function은 named export를 직접 import해 씁니다.
-- screen-local custom hook은 lifecycle, context, 다른 hook 호출 순서 같은
-  React orchestration을 실제로 캡슐화할 때만 허용합니다.
+  화면 전용 pure function은 named export를 직접 import해 씁니다.
+- screen-local custom hook은 lifecycle, context, 다른 hook 호출 순서를
+  실제로 캡슐화할 때만 허용합니다.
 - 단순 계산을 hook처럼 보이게 만드는 추상화는 피합니다.
 
 **Incorrect (로컬 계산을 습관적으로 hook으로 포장):**
@@ -577,7 +577,7 @@ public part는 소비자가 이름으로 조립해야 하거나 shared context/a
 단순 class wrapper, spacing 보정 DOM, 내부 layout helper는 숨깁니다.
 stateless compound에 state가 필요해지면 public 이름은 유지하고 context만 추가합니다.
 
-**Incorrect (single component, compound component, explicit variant의 경계를 구분하지 않고 하나의 component에 몰아넣음):**
+**Incorrect (single·compound·explicit variant의 경계를 구분하지 않고 한 component에 몰아넣음):**
 
 ```tsx
 export interface ProfileDialogProps {
@@ -703,7 +703,8 @@ export const ReadOnlyProfileDialog = () => {
 
 **Applies when:** shared component에 header·footer·action 같은 정적 slot 또는 render prop을 추가·변경하며 runtime data 주입 필요가 불분명하다.
 
-**Impact: MEDIUM (keeps shared component composition readable when the parent does not need to push runtime data through callbacks)**
+**Impact: MEDIUM (keeps shared component composition readable when the parent does not need to push runtime data through
+callbacks)**
 
 shared component가 `stateless compound component`로 충분할 때는 `renderHeader`,
 `renderFooter` 같은 render prop보다 `children`과 namespaced slot part를 우선합니다.
@@ -973,7 +974,8 @@ const handleRemoveEntryButtonClick: MouseEventHandler<HTMLButtonElement> = async
 
 **Applies when:** React 19 컴포넌트에 focus·scroll·measure용 ref 공개 API를 추가·변경하거나 새 `forwardRef` wrapper를 도입한다.
 
-**Impact: MEDIUM-HIGH (keeps component definitions simpler in React 19 codebases and avoids adding legacy wrappers by default)**
+**Impact: MEDIUM-HIGH (keeps component definitions simpler in React 19 codebases and avoids adding legacy wrappers by
+default)**
 
 React 19 codebase에서 `ref`는 외부에서 실제로 제어해야 하는 public imperative contract입니다.
 
@@ -1086,9 +1088,7 @@ return hasItems ? <ItemList /> : <EmptyState />;
 
 **Impact: HIGH**
 
-Route entry 파일은 화면 흐름을 분명하게 보여줘야 하며, helper 추출도 경계가 정당할 때만 해야 합니다.
-layout-only 분리는 지양하지만 async, state,
-interaction 같은 runtime boundary를 소유한 route-local section은 추출할 수 있습니다.
+Route entry는 화면 흐름을 분명하게 보여줘야 하며, helper 추출도 경계가 정당할 때만 해야 합니다. layout-only 분리는 지양하지만 async, state, interaction 같은 runtime boundary를 소유한 route-local section은 추출할 수 있습니다.
 
 ### 5.1 Avoid Premature Abstraction in Screen Code
 
@@ -1111,7 +1111,7 @@ interaction 같은 runtime boundary를 소유한 route-local section은 추출�
 추출할 수 있는 때:
 
 - 여러 화면/모듈이 같은 이름의 계약으로 직접 호출함
-- state/effect/context/form/store orchestration을 한 custom hook이 실제로 소유함
+- state·effect·context·form·store 연결을 한 custom hook이 실제로 소유함
 - route-local component가 async/state/provider/interaction 같은 runtime boundary를 소유함
 
 금지:
@@ -1214,7 +1214,8 @@ export const EntryTable = (props: EntryTableProps) => {
 
 **Applies when:** route-local section component를 새로 추출하거나 기존 section이 async·state·provider·interaction·library·performance 경계를 소유하는지 바꾼다.
 
-**Impact: HIGH (route entry의 orchestration은 보이게 유지하면서도 async, state, interaction처럼 실제 경계가 있는 subtree는 안전하게 분리할 수 있게 함)**
+**Impact: HIGH (route entry의 흐름은 보이게 두면서 async, state, interaction처럼 실제 경계가 있는 subtree만 안전하게
+분리할 수 있게 함)**
 
 route entry의 local component는 `runtime boundary`가 있을 때만 추출합니다.
 단순 layout wrapper, className grouping, 들여쓰기 감소만으로는 추출하지 않습니다.
@@ -1320,7 +1321,7 @@ const EntryTreeSection = (props: EntryTreeSectionProps) => {
 };
 ```
 
-**Correct (route entry는 orchestration을 계속 소유):**
+**Correct (route entry가 흐름 제어를 계속 소유):**
 
 ```tsx
 export const RouteComponent = () => {
@@ -1370,7 +1371,7 @@ export const RouteComponent = () => {
 
 **Review with:** `screen-move-pure-support-code-out-of-entry-files`, `typescript/functions-extract-helpers-only-when-the-boundary-is-real`
 
-**Impact: HIGH (route 파일이 자기 계약이 없는 helper 조각으로 분해되는 것을 막음)**
+**Impact: HIGH (route entry가 자기 계약이 없는 helper 조각으로 분해되는 것을 막음)**
 
 화면 support code는 "이름 붙일 수 있다"가 아니라 "경계가 있다"일 때만 추출합니다.
 
@@ -1420,7 +1421,7 @@ export const buildEntryPayload = (formValues: EntryFormValues, files: UploadFile
 };
 ```
 
-**Correct (screen-owned support code는 먼저 `page.ts`의 named export로 모으고, 흐름에 묶인 로직은 handler에 남김):**
+**Correct (화면 전용 support code는 먼저 `page.ts`의 named export로 모으고, 흐름에 묶인 로직은 handler에 남김):**
 
 ```ts
 // page.ts
@@ -1489,7 +1490,7 @@ export const EntryTable = (props: EntryTableProps) => {
 
 **Applies when:** response·state·search·props의 오리진을 끊는 alias·flag·표시값을 넓은 screen scope에 추가·이동·제거하거나 `let`/`push` 조립을 바꾼다.
 
-**Impact: HIGH (오리진을 보존하고 route 파일이 alias와 명령형 setup 코드로 채워지는 것을 막음)**
+**Impact: HIGH (오리진을 보존하고 route entry가 alias와 명령형 setup 코드로 채워지는 것을 막음)**
 
 파생값은 실제 쓰는 자리에서 계산합니다.
 화면 상단으로 끌어올리면 값의 출처를 잃습니다.
@@ -1534,10 +1535,10 @@ return <UiInput value={selectedNodeContext?.node?.name} />;
 
 **Review with:** `screen-extract-local-section-components-for-runtime-boundaries`, `screen-move-pure-support-code-out-of-entry-files`
 
-**Impact: HIGH (route 파일을 화면의 주 orchestration 지점으로 읽기 쉽게 만듦)**
+**Impact: HIGH (route entry만 봐도 화면 흐름을 따라갈 수 있게 만듦)**
 
 Route entry는 search, navigate, page query·mutation, cross-section effect와 render 조립을 보여줍니다.
-runtime boundary section은 추출해도 주 orchestration은 route entry에 둡니다.
+async·state·interaction 경계를 가진 section을 분리해도 이 흐름 제어 자체는 route entry에 남깁니다.
 
 소유자가 그대로인 변경은 대상이 아닙니다.
 
@@ -1556,7 +1557,7 @@ return (
 );
 ```
 
-**Correct (화면 엔트리에서 흐름과 orchestration이 보이고, 필요한 section만 runtime boundary 기준으로 분리):**
+**Correct (route entry에서 흐름이 보이고, 실제 경계가 있는 section만 분리):**
 
 ```tsx
 const navigate = useNavigate();
@@ -1601,7 +1602,7 @@ return (
 
 **Review with:** `docs-require-jsdoc-on-key-declarations`
 
-**Impact: HIGH (route entry 파일이 preset과 순수 helper를 쌓기보다 orchestration에 집중하게 함)**
+**Impact: HIGH (route entry가 preset과 순수 helper를 쌓기보다 화면 흐름에 집중하게 함)**
 
 이 규칙은 추출하기로 결정한 화면 전용 pure support code의 목적지를 정합니다.
 
@@ -1650,7 +1651,7 @@ export const validateUploadFile = (file: UploadFileCandidate) => {
 };
 ```
 
-**Correct (route entry 흐름은 `page.tsx`에 두고, screen-owned pure support code는 `page.ts`의 named export로 모음):**
+**Correct (route entry 흐름은 `page.tsx`에 두고, 화면 전용 pure support code는 `page.ts`의 named export로 모음):**
 
 ```tsx
 import { buildFileRequests } from "./page";
@@ -2405,7 +2406,8 @@ React 경계 선언에는 companion skill인 `convention-typescript`의 annotati
 
 **Requires selected:** `docs-require-jsdoc-on-key-declarations` · 함께 적용
 
-**Impact: MEDIUM (keeps compound public parts scannable as one named boundary instead of disconnected props and component declarations)**
+**Impact: MEDIUM (keeps compound public parts scannable as one named boundary instead of disconnected props and
+component declarations)**
 
 compound component가 public part를 노출하면 part 단위로 문서화합니다.
 

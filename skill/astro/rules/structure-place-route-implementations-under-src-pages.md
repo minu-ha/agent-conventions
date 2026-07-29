@@ -8,7 +8,8 @@ tags: structure, pages, route-implementations, local
 
 ## Place Route Implementations Under `src/pages`
 
-**Impact: HIGH (keeps page implementation near the file-based route while using underscore-prefixed files to avoid accidental routes)**
+**Impact: HIGH (keeps page implementation near the file-based route while using underscore-prefixed files to avoid
+accidental routes)**
 
 Astro가 file-based routing을 `src/pages`에서 결정하므로, route 구현도 가능한 한 같은 route subtree에 둡니다.
 

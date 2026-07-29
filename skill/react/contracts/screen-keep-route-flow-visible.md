@@ -1,9 +1,9 @@
 # Keep Route Entry Files Focused on Screen Flow
 
-**Impact: HIGH (route 파일을 화면의 주 orchestration 지점으로 읽기 쉽게 만듦)**
+**Impact: HIGH (route entry만 봐도 화면 흐름을 따라갈 수 있게 만듦)**
 
 Route entry는 search, navigate, page query·mutation, cross-section effect와 render 조립을 보여줍니다.
-runtime boundary section은 추출해도 주 orchestration은 route entry에 둡니다.
+async·state·interaction 경계를 가진 section을 분리해도 이 흐름 제어 자체는 route entry에 남깁니다.
 
 소유자가 그대로인 변경은 대상이 아닙니다.
 
