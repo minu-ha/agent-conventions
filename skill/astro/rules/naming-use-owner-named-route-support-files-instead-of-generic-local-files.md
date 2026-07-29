@@ -25,7 +25,8 @@ Route-local files should name the owner and responsibility directly.
 - `_local/admin-state-notice.tsx`
 - `_local/entry-editor.tsx`, `_local/entry-editor.css`
 
-The routed `index.astro` or `[slug].astro` is the only place where generic route file names are expected, because Astro owns that naming contract.
+The routed `index.astro` or `[slug].astro` is the only place where generic route file names are expected,
+because Astro owns that naming contract.
 
 **Incorrect (support files hide ownership behind generic names):**
 
@@ -69,4 +70,8 @@ src/
           entry-editor.css
 ```
 
-If a helper is used by exactly one component, place it beside that component with the same owner name, such as `entry-editor.ts` next to `entry-editor.tsx`. If it is shared across the route family, use the route support owner, such as `_entry-admin.ts`. Promote it to `shared` or `components` only after the dependency crosses route ownership.
+If a helper is used by exactly one component,
+place it beside that component with the same owner name,
+such as `entry-editor.ts` next to `entry-editor.tsx`. If it is shared across the route family,
+use the route support owner,
+such as `_entry-admin.ts`. Promote it to `shared` or `components` only after the dependency crosses route ownership.

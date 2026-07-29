@@ -9,7 +9,11 @@ tags: e2e, real-backend, auth
 
 **Impact: CRITICAL (keeps e2e meaning strict by requiring the real backend, real auth, and real routing to remain part of the test)**
 
-실제 로그인, 실제 저장, 실제 권한 연결이 끊기면 테스트 의미가 사라지면 E2E입니다. E2E는 실제 백엔드, 실제 인증 플로우, 실제 라우팅과 번들 결과를 사용하고, 핵심 엔드포인트를 `page.route()`로 가로채면서 E2E라고 부르지 않습니다.
+실제 로그인, 실제 저장, 실제 권한 연결이 끊기면 테스트 의미가 사라지면 E2E입니다.
+E2E는 실제 백엔드,
+실제 인증 플로우,
+실제 라우팅과 번들 결과를 사용하고,
+핵심 엔드포인트를 `page.route()`로 가로채면서 E2E라고 부르지 않습니다.
 
 **Incorrect (실제 시스템 경계를 우회하면서 E2E라고 분류):**
 

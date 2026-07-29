@@ -9,7 +9,17 @@ tags: trigger, figma, visual-parity
 
 **Impact: CRITICAL (Figma가 기준 소스인 UI 작업에서 visual parity workflow가 빠지지 않게 함)**
 
-사용자가 Figma 링크, Figma node, Figma screenshot, design screenshot을 제공하고 구현, 싱크, 스타일 보정, 비교, polish를 요청하면 이 작업은 visual parity 작업입니다. 새 UI든 기존 UI 수정이든 Figma가 기준 소스라면 먼저 Figma evidence와 현재 구현 화면을 확보해야 합니다.
+사용자가 Figma 링크,
+Figma node,
+Figma screenshot,
+design screenshot을 제공하고
+구현,
+싱크,
+스타일 보정,
+비교,
+polish를 요청하면
+이 작업은 visual parity 작업입니다.
+새 UI든 기존 UI 수정이든 Figma가 기준 소스라면 먼저 Figma evidence와 현재 구현 화면을 확보해야 합니다.
 
 **Incorrect (Figma 기준 요청을 일반 기능 구현처럼 처리):**
 

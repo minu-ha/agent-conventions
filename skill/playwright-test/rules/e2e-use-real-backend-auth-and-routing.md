@@ -9,7 +9,9 @@ tags: e2e, backend, auth
 
 **Impact: CRITICAL (preserves the meaning of e2e by keeping the core backend, auth, and routing path real)**
 
-E2E는 실제 로그인 또는 검증된 인증 helper, 실제 백엔드, 실제 라우팅과 번들 결과를 사용합니다. 인증 자체가 검증 대상이 아니더라도 핵심 엔드포인트를 mock하지 않고, 실제 사용자가 끝까지 완료할 수 있는 흐름을 검증합니다.
+E2E는 실제 로그인 또는 검증된 인증 helper, 실제 백엔드, 실제 라우팅과 번들 결과를 사용합니다.
+인증 자체가 검증 대상이 아니더라도 핵심 엔드포인트를 mock하지 않고,
+실제 사용자가 끝까지 완료할 수 있는 흐름을 검증합니다.
 
 **Incorrect (핵심 엔드포인트를 mock하고 E2E라고 부름):**
 

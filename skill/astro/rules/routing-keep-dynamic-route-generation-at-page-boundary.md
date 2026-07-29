@@ -9,7 +9,9 @@ tags: routing, getstaticpaths, pages
 
 **Impact: HIGH (keeps route params and build-time page generation visible where the URL contract is defined)**
 
-동적 route의 `getStaticPaths()`와 param-to-page generation 책임은 page file 경계에 둡니다. shared component나 utility가 URL contract를 대신 소유하게 만들지 말고, page가 경로와 데이터를 연결한 뒤 렌더링용 component에 props를 전달합니다.
+동적 route의 `getStaticPaths()`와 param-to-page generation 책임은 page file 경계에 둡니다.
+shared component나 utility가 URL contract를 대신 소유하게 만들지 말고,
+page가 경로와 데이터를 연결한 뒤 렌더링용 component에 props를 전달합니다.
 
 **Incorrect (`getStaticPaths()` 책임을 shared component 쪽으로 밀어 page contract를 숨김):**
 

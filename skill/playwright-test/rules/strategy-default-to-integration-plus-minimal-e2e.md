@@ -9,7 +9,8 @@ tags: integration, e2e, strategy
 
 **Impact: HIGH (keeps state coverage broad without duplicating every branch in slower real-system tests)**
 
-새 기능은 기본적으로 Integration에서 상태 분기와 화면 반응을 먼저 잡고, 필요한 최소 핵심 사용자 흐름만 E2E로 남깁니다. 모든 상태 조합을 E2E로 복제하지 않고, 실제 끝까지 되는지 보장해야 하는 핵심 여정만 E2E에 둡니다.
+새 기능은 기본적으로 Integration에서 상태 분기와 화면 반응을 먼저 잡고, 필요한 최소 핵심 사용자 흐름만 E2E로 남깁니다.
+모든 상태 조합을 E2E로 복제하지 않고, 실제 끝까지 되는지 보장해야 하는 핵심 여정만 E2E에 둡니다.
 
 **Incorrect (모든 상태 조합을 E2E로 복제):**
 

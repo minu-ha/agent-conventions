@@ -10,7 +10,8 @@ tags: naming, class-grammar, ownership
 
 **Impact: CRITICAL (makes class ownership and UI role traceable from the classname alone)**
 
-클래스명은 `<scope>_<slug>__<element>[--<modifier>]` 문법을 사용합니다. 구분자는 `_`, `__`, `--`를 고정하고, 각 부분의 책임을 섞지 않습니다.
+클래스명은 `<scope>_<slug>__<element>[--<modifier>]` 문법을 사용합니다.
+구분자는 `_`, `__`, `--`를 고정하고, 각 부분의 책임을 섞지 않습니다.
 
 구성 요소:
 
@@ -19,7 +20,8 @@ tags: naming, class-grammar, ownership
 - `element`: owner 안의 UI 역할. `listButton`, `emptyState`처럼 camelCase
 - `modifier`: 상태나 반복 variant. `routeActive`, `selected`처럼 camelCase
 
-중요한 것은 모든 scope에 같은 slug casing을 강제하는 것이 아니라, 같은 owner 안에서 표기가 흔들리지 않게 유지하는 것입니다.
+중요한 것은 모든 scope에 같은 slug casing을 강제하는 것이 아니라,
+같은 owner 안에서 표기가 흔들리지 않게 유지하는 것입니다.
 
 **Incorrect (scope별 slug 규칙을 섞거나 element/modifier casing이 흔들림):**
 

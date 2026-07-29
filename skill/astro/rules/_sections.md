@@ -4,7 +4,11 @@
 
 ## 1. Project Structure and File Ownership (structure)
 **Impact:** CRITICAL
-**Description:** `src/pages`는 Astro의 required route tree이자 route-local owner layer입니다. routed entry는 URL/rendering/server data/document handoff와 화면 흐름을 직접 소유하고, `_document.astro`/`_head.astro`/`_document.css`, `_local/`, owner-named support file처럼 `_` prefix로 제외되는 route-local 파일만 함께 둡니다.
+**Description:** `src/pages`는 Astro의 required route tree이자 route-local owner layer입니다.
+routed entry는 URL/rendering/server data/document handoff와 화면 흐름을 직접 소유하고,
+`_document.astro`/`_head.astro`/`_document.css`,
+`_local/`,
+owner-named support file처럼 `_` prefix로 제외되는 route-local 파일만 함께 둡니다.
 
 ## 2. File Naming and Page Assets (naming)
 **Impact:** HIGH
@@ -36,7 +40,9 @@
 
 ## 9. Page, Layout, and Island Responsibilities (responsibility)
 **Impact:** HIGH
-**Description:** pages-local document helper는 top-level document composition, routed page는 route contract와 `rt_*` screen flow, `_local/`은 route-local UI/runtime boundary, owner-named support module은 진짜 data/rendering boundary를 소유합니다. shared `ui`/`widget`으로 올릴 수 없는 route-only 조각은 같은 route folder 안에 남겨 Astro의 server-first 구조와 ownership이 함께 읽히게 합니다.
+**Description:** pages-local document helper는 top-level document composition, routed page는 route contract와 `rt_*` screen flow, `_local/`은 route-local UI/runtime boundary, owner-named support module은 진짜 data/rendering boundary를 소유합니다.
+shared `ui`/`widget`으로 올릴 수 없는 route-only 조각은 같은 route folder 안에 남겨 Astro의 server-first 구조와
+ownership이 함께 읽히게 합니다.
 
 ## 10. Documentation and Comments (docs)
 **Impact:** MEDIUM

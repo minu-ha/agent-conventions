@@ -79,7 +79,7 @@ export const getSkillPaths = (skillName: string, targetSkillRootDir: string = sk
 		metadataPath: path.join(skillDir, "metadata.json"),
 		skillEntrypointPath: path.join(skillDir, "SKILL.md"),
 		sectionsPath: path.join(skillDir, "rules", "_sections.md"),
-		outputPath: path.join(skillDir, "AGENTS.md"),
+		outputPath: path.join(skillDir, "HANDBOOK.md"),
 		rulesIndexPath: path.join(skillDir, "RULES_INDEX.md"),
 		ruleContractsDir: path.join(skillDir, "contracts"),
 		routingEvalsPath: path.join(skillDir, "routing-evals.json"),

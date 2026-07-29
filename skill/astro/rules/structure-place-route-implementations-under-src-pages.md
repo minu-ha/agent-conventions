@@ -69,4 +69,8 @@ src/
           entry-admin-table.css
 ```
 
-`src/pages` 안에서 `_`로 시작하는 파일과 폴더는 route가 아니므로 route-local implementation을 안전하게 둘 수 있습니다. 단, `_local/`은 dump folder가 아닙니다. 파일명은 `entry-editor.tsx`, `admin-query-provider.tsx`, `entry-admin-table.css`처럼 실제 owner와 역할이 드러나야 합니다.
+`src/pages` 안에서 `_`로 시작하는 파일과 폴더는 route가 아니므로 route-local implementation을 안전하게 둘 수 있습니다.
+단, `_local/`은 dump folder가 아닙니다.
+파일명은 `entry-editor.tsx`,
+`admin-query-provider.tsx`,
+`entry-admin-table.css`처럼 실제 owner와 역할이 드러나야 합니다.

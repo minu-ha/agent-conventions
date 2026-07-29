@@ -36,14 +36,11 @@ CRITICAL_IMPACT_MARKER = "**Impact: CRITICAL**"
 ROUTING_EVAL_PATHS = tuple(
     f"skill/{domain}/routing-evals.json" for domain in DOMAIN_ORDER
 )
-AUDIT_PHASE_FILES = (
-    "skill/convention-audit/SKILL.md",
-    "skill/convention-audit/AGENTS.md",
-)
+AUDIT_PHASE_FILES: tuple[str, ...] = ()
 EXPECTED_BASELINE_FILES = tuple(
     path
     for domain in DOMAIN_ORDER
-    for path in (f"skill/{domain}/SKILL.md", f"skill/{domain}/AGENTS.md")
+    for path in (f"skill/{domain}/SKILL.md", f"skill/{domain}/HANDBOOK.md")
 )
 EXPECTED_SCENARIOS = (
     ("RTE10-derived-selection-state", True, False, ()),
@@ -326,10 +323,10 @@ def validate_oracle_phase_files(
         if (
             len(parts) != 3
             or parts[0] != "skill"
-            or parts[2] not in {"SKILL.md", "AGENTS.md"}
+            or parts[2] not in {"SKILL.md", "HANDBOOK.md"}
         ):
             raise ContextValidationError(
-                f"{location} oracle phase may load only SKILL.md and AGENTS.md: "
+                f"{location} oracle phase may load only SKILL.md and HANDBOOK.md: "
                 f"{relative_path}."
             )
 
@@ -356,7 +353,7 @@ def validate_progressive_phase_files(
             len(parts) == 3
             and parts[0] == "skill"
             and parts[1] == "convention-audit"
-            and parts[2] in {"SKILL.md", "AGENTS.md"}
+            and parts[2] in {"SKILL.md", "HANDBOOK.md"}
         )
         contract_detail = parse_progressive_detail_path(relative_path, "contracts")
         full_rule_detail = parse_progressive_detail_path(relative_path, "rules")
@@ -732,7 +729,7 @@ def expected_oracle_phase_files(
         files.extend(
             (
                 f"skill/{domain}/SKILL.md",
-                f"skill/{domain}/AGENTS.md",
+                f"skill/{domain}/HANDBOOK.md",
             )
         )
     return tuple(files)
@@ -1545,9 +1542,7 @@ def run_self_test(contexts: dict[str, Any], repo_root: Path) -> None:
     )
 
     def add_baseline_file(data: dict[str, Any]) -> None:
-        data["oneLoadBaseline"]["files"].append(
-            "skill/convention-audit/SKILL.md"
-        )
+        data["oneLoadBaseline"]["files"].append("skill/astro/SKILL.md")
 
     add_case(
         "baseline-file-addition",
@@ -1746,7 +1741,7 @@ def run_self_test(contexts: dict[str, Any], repo_root: Path) -> None:
     def replace_progressive_contract_with_handbook(data: dict[str, Any]) -> None:
         files, contract_index = first_contract_location(data)
         contract_parts = Path(files[contract_index]).parts
-        files[contract_index] = f"skill/{contract_parts[1]}/AGENTS.md"
+        files[contract_index] = f"skill/{contract_parts[1]}/HANDBOOK.md"
 
     add_case(
         "progressive-full-handbook",
@@ -1763,7 +1758,7 @@ def run_self_test(contexts: dict[str, Any], repo_root: Path) -> None:
     add_case(
         "oracle-progressive-artifact",
         add_progressive_artifact_to_oracle,
-        "oracle phase may load only SKILL.md and AGENTS.md",
+        "oracle phase may load only SKILL.md and HANDBOOK.md",
     )
 
     def delete_canonical_expansion(data: dict[str, Any]) -> None:

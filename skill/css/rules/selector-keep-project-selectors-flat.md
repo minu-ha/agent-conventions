@@ -16,10 +16,15 @@ tags: selectors, nesting, flat-structure
 
 - 기본값: project-owned class는 각각 top-level block으로 선언합니다.
 - 금지: project-owned class끼리 부모-자식 관계를 descendant selector로 표현하지 않습니다.
-- 예외: `__prose`, `__copy`, `__content`처럼 raw HTML wrapper가 owner boundary라면 같은 block 안에서 `& h2`, `& p`, `& > :first-child`를 허용합니다.
+- 예외: `__prose`,
+  `__copy`,
+  `__content`처럼 raw HTML wrapper가 owner boundary라면 같은 block 안에서 `& h2`,
+  `& p`,
+  `& > :first-child`를 허용합니다.
 - 별도 규칙: third-party DOM anchor는 `selector-target-third-party-dom-from-owned-roots`를 따릅니다.
 
-rich text 예외는 raw element styling에만 적용됩니다. `.owner__prose .owner__child`처럼 다른 project-owned class를 다시 체이닝하는 근거로 쓰지 않습니다.
+rich text 예외는 raw element styling에만 적용됩니다. `.owner__prose .owner__child`처럼 다른 project-owned class를 다시
+체이닝하는 근거로 쓰지 않습니다.
 
 **Incorrect (project-owned 클래스 관계를 descendant selector로 표현하거나, owner wrapper element styling을 block 밖으로 흩뿌림):**
 

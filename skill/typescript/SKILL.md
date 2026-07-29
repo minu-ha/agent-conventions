@@ -8,28 +8,30 @@ metadata:
 
 # TypeScript Convention Router
 
-## 1. Scope snapshot
+## 1. 변경 범위 판정
 
-요청·계획·diff의 `.ts`/`.tsx`·type·schema·config·API·helper·import/export·fallback·JSDoc 변경 semantic delta만 판정한다. 추가·삭제·이동·이름 변경·재선언은 포함하고 read-only·byte-equivalent 이동은 제외한다. 이름·shape·동작이 같은 이동은 diff의 삭제+추가를 별도 변경으로 다시 세지 않는다. 단, byte-equivalent named shape의 새 callable input/output 역할은 semantic delta다. N/A rule의 optional pattern으로 자가 활성화하지 말고 최소 semantic patch만 구현한다. React/CSS 경계면 companion도 활성화한다. 판정 직후 수정 전 범위를 scope snapshot으로 고정한다.
+요청·계획·diff에서 `.ts`/`.tsx`·type·schema·config·API·helper·import/export·fallback·JSDoc의 실제 변경만 범위로 잡는다. 추가·삭제·이동·이름 변경·재선언은 포함하고 read-only 문맥은 제외한다. 이름·shape·동작이 그대로인 이동은 diff에 삭제+추가로 보여도 변경으로 다시 세지 않는다. 단 byte-equivalent named shape이 새 callable의 input/output 역할을 맡으면 변경으로 본다. 적용되지 않는 규칙의 optional pattern을 새로 들여와 스스로 범위를 넓히지 않는다. React/CSS 경계가 걸리면 해당 companion도 활성화한다.
 
-## 2. Index scan
+## 2. 인덱스 훑기
 
-[RULES_INDEX.md](./RULES_INDEX.md) 전체 scan: 모든 `appliesWhen`을 scope evidence와 대조하고 첫 match에서 절대 멈추지 않는다. 애매하면 `Unknown`이다.
+[RULES_INDEX.md](./RULES_INDEX.md)를 끝까지 훑어 각 규칙의 `appliesWhen`을 변경 범위와 대조한다. 첫 match에서 멈추지 않는다. 애매하면 적용되는 쪽으로 본다.
 
-## 3. Digest-bound receipt
+## 3. 규칙 읽고 구현
 
-index `sha256` receipt에 `Activated/Index/Selected/Not applicable/Excluded groups/Unknown/Expanded`를 기록한다. Selected/Unknown은 ordinal+stable ID, N/A는 ordinal exact set이다. Selected/N/A/Unknown은 disjoint하며 전체 ordinal을 exact partition한다. exclusion group의 ordinal 합집합은 exact N/A이며 이유는 비어 있으면 안 된다. `reviewWith`는 재평가 신호, `completionGate`는 완료 시 Selected이며 N/A 불가다.
+걸리는 규칙의 `contracts/<id>.md`를 읽는다. `CRITICAL`이면 `rules/<id>.md` 원문도 반드시 읽는다. 그 외에도 정확한 문법이나 예외 판단이 필요하면 원문으로 확장한다.
 
-## 4. Read and implement
+- `requiresSelected` target은 함께 적용한다. 다른 skill의 규칙이면 그 companion도 활성화한다.
+- `reviewWith` target은 변경 범위에 비춰 다시 판단한다. 자동으로 적용하지는 않는다.
+- `completionGate` 규칙은 마무리 시 항상 적용한다.
 
-Selected와 Unknown의 stable ID에 맞는 `contracts/<stable-id>.md`를 전부 읽는다. `CRITICAL`이면 matching full rule도 반드시 읽는다. 그 외는 exact·Unknown·audit 때 이유와 함께 확장한다. Unknown은 Selected/N/A로 먼저 해소하고 N/A의 `requiresSelected`는 적용하지 않는다. Selected로 확정한 contract의 `requiresSelected` target은 companion 활성화 후 즉시 Selected이며 N/A 불가다. Selected contract의 필수 변경만 scope evidence다. 예시·선택적 대안·해소되지 않은 Unknown의 가상 변경은 제외한다. 새 surface·companion·Selected·`reviewWith`면 고정점까지 반복한다. 고정점의 Selected contract와 Expanded 원문만 구현·리뷰 기준이다.
+규칙이나 companion이 새로 걸리면 인덱스를 다시 훑는다. 더 걸리는 게 없으면 멈춘다.
 
-## 5. Scope drift
+## 4. 범위 변경
 
-scope drift면 snapshot부터 activation을 재판정하고 활성 progressive index를 재scan하며 stale receipt를 폐기한다.
+작업 중 범위가 늘거나 바뀌면 1번부터 다시 판정하고 인덱스를 다시 훑는다.
 
-## 6. Finish gate
+## 5. 마무리
 
-digest-bound implementer receipt·Expanded·evidence·검증을 sealed comparison용으로 audit에 넘긴 뒤, 활성 progressive index를 `convention-audit`이 독립 재선택한다. `FAIL 0`, `UNKNOWN 0`만 완료한다.
+변경 diff를 적용한 규칙에 비춰 다시 훑고, 위반이 있으면 file/line과 수정안으로 보고한다. lint·typecheck·build 통과는 컨벤션을 지켰다는 근거가 아니다.
 
-[AGENTS.md](./AGENTS.md) full handbook은 명시적으로 요청하거나 index/contract/필요 rule 손상·누락 fallback 때만 읽는다.
+[HANDBOOK.md](./HANDBOOK.md)는 전체 handbook이다. 전체 검토를 명시적으로 요청받거나 index·contract가 손상됐을 때만 읽는다.

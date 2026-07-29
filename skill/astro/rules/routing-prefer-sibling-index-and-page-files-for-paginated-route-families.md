@@ -17,7 +17,8 @@ tags: routing, pagination, pages, route-families
 - 하위 route가 없는 dynamic leaf는 `src/pages/articles/[slug].astro`처럼 flat file로 둡니다.
 - Paginated archive는 `src/pages/archive/index.astro`와 `src/pages/archive/[page].astro`처럼 전용 family 아래에 둡니다.
 - Section list는 `src/pages/articles/index.astro`와 `src/pages/articles/[page].astro`처럼 둡니다.
-- Dynamic resource 아래 pagination은 `src/pages/topics/[topic]/index.astro`와 `src/pages/topics/[topic]/[page].astro`처럼 resource folder 안에 둡니다.
+- Dynamic resource 아래 pagination은 `src/pages/topics/[topic]/index.astro`와
+  `src/pages/topics/[topic]/[page].astro`처럼 resource folder 안에 둡니다.
 
 **Incorrect (pagination route를 `page/` 하위 폴더로 한 단계 더 감쌈):**
 
@@ -28,7 +29,9 @@ src/pages/docs/page/[page].astro
 src/pages/topics/[topic]/page/[page].astro
 ```
 
-이 구조는 홈과 archive의 역할을 섞거나, 같은 route family를 불필요한 `page/` 서브폴더로 나눠 tree를 훑을 때 list와 pagination contract를 한눈에 보기 어렵게 만듭니다.
+이 구조는 홈과 archive의 역할을 섞거나,
+같은 route family를 불필요한 `page/` 서브폴더로 나눠 tree를 훑을 때 list와 pagination contract를 한눈에 보기 어렵게
+만듭니다.
 
 **Correct (list와 pagination을 sibling file로 둠):**
 
@@ -50,4 +53,6 @@ src/pages/topics/[topic]/index.astro
 src/pages/topics/[topic]/[page].astro
 ```
 
-이 구조에서는 홈은 별도 route로 남고, 각 paginated route family의 entry page와 pagination page가 같은 폴더에 모여 있어 URL contract를 file tree만 보고도 바로 이해할 수 있습니다.
+이 구조에서는 홈은 별도 route로 남고,
+각 paginated route family의 entry page와 pagination page가 같은 폴더에 모여 있어 URL contract를 file tree만 보고도 바로
+이해할 수 있습니다.

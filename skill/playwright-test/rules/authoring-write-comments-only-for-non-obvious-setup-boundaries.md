@@ -9,7 +9,11 @@ tags: comments, setup, helpers
 
 **Impact: MEDIUM (keeps test comments focused on why a setup exists instead of narrating obvious Arrange/Act/Assert steps)**
 
-테스트 주석은 한글로 작성하고, helper, seed/cleanup, bootstrap wait처럼 목적이 바로 드러나지 않는 setup에만 왜 필요한지 짧게 남깁니다. 코드 그대로를 반복 설명하거나 Arrange/Act/Assert를 줄마다 해설하는 과한 단계 주석은 기본값으로 쓰지 않습니다.
+테스트 주석은 한글로 작성하고,
+helper,
+seed/cleanup,
+bootstrap wait처럼 목적이 바로 드러나지 않는 setup에만 왜 필요한지 짧게 남깁니다.
+코드 그대로를 반복 설명하거나 Arrange/Act/Assert를 줄마다 해설하는 과한 단계 주석은 기본값으로 쓰지 않습니다.
 
 **Incorrect (코드 그대로를 반복 설명):**
 

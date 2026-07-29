@@ -15,7 +15,7 @@ CSS skill을 수정하거나 새로운 rule을 추가했을 때, 실제 에이�
 각 scenario를 같은 prompt와 파일 evidence로 최소 2회, CRITICAL 누락 위험이 크면 3회 실행합니다.
 
 1. `no-skill baseline`: convention 문서를 주지 않습니다.
-2. `full-handbook oracle`: 독립 reviewer가 전체 `AGENTS.md`와 rule body로 exact 기대 partition을 승인합니다.
+2. `full-handbook oracle`: 독립 reviewer가 전체 `HANDBOOK.md`와 rule body로 exact 기대 partition을 승인합니다.
 3. `progressive candidate`: `SKILL.md` → 전체 `RULES_INDEX.md` → selected/unknown stable-ID-matched contract를 읽고, CRITICAL 또는 deterministic expansion 조건에 맞는 full rule만 추가합니다.
 4. `mutation RED`: candidate receipt에서 expected rule 하나를 제거합니다. coverage mismatch 또는 `UNKNOWN`이 완료를 반드시 차단해야 합니다.
 
@@ -43,7 +43,7 @@ protocol v3 결과에는 coordinator가 dispatch 전에 고정한 repository HEA
 
 Pure CSS fixture는 CSS만 partition합니다. Mixed fixture 5개는 progressive TypeScript와 React의 exact partition을 모두 저장합니다. React selected가 비어 있어도 42개 전체를 `expectedNotApplicable.react`에 materialize하며, CSS metadata에는 React companion을 추가하지 않습니다.
 
-Scope drift 뒤에는 file, activated skill, 기존 Selected rule을 제거하지 않고 전체 index를 다시 scan합니다. 모든 CSS rule은 전체 scenario set에서 한 번 이상 positive coverage를 가져야 하며, 마지막 `convention-audit`에서 `FAIL 0`, `UNKNOWN 0`을 확인합니다.
+범위가 바뀌면 기존에 걸린 규칙을 지우지 않고 전체 index를 다시 훑습니다. 모든 CSS rule은 전체 scenario set에서 한 번 이상 걸려야 합니다.
 
 ## Common Red Flags
 

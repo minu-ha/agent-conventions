@@ -9,7 +9,9 @@ tags: routing, navigation, anchors
 
 **Impact: HIGH (aligns navigation with Astro's default routing model and avoids importing foreign router habits)**
 
-Astro page navigation은 기본적으로 plain `<a>`를 사용합니다. 다른 SPA framework의 `<Link>` 습관을 그대로 들여오지 말고, client router가 정말 필요한 island 안이 아니라면 HTML anchor를 기본값으로 유지합니다.
+Astro page navigation은 기본적으로 plain `<a>`를 사용합니다.
+다른 SPA framework의 `<Link>` 습관을 그대로 들여오지 말고,
+client router가 정말 필요한 island 안이 아니라면 HTML anchor를 기본값으로 유지합니다.
 
 **Incorrect (Astro page에서 외부 router abstraction을 습관적으로 사용):**
 

@@ -95,14 +95,13 @@ interface PreparedSkillBuild {
 	 */
 	rootDocument: LoadedSkillDocument;
 	/**
-	 * @field 현재 source에서 렌더링한 expected AGENTS.md
+	 * @field 현재 source에서 렌더링한 expected HANDBOOK.md
 	 */
 	localMarkdown: string;
 }
 
 const conventionTitleBySkillName: Record<string, string> = {
 	astro: "Astro Convention",
-	"convention-audit": "Convention Audit",
 	css: "CSS Convention",
 	"figma-visual-parity": "Figma Visual Parity",
 	nestjs: "NestJS Convention",
@@ -111,10 +110,7 @@ const conventionTitleBySkillName: Record<string, string> = {
 	"tanstack-route": "TanStack Route Convention",
 	typescript: "TypeScript Convention",
 };
-const conventionSkillNameBySkillName: Record<string, string> = {
-	"convention-audit": "convention-audit",
-	"figma-visual-parity": "figma-visual-parity",
-};
+const conventionSkillNameBySkillName: Record<string, string> = {"figma-visual-parity": "figma-visual-parity"};
 const nestedTocIndent = " ".repeat(4);
 
 /**
@@ -197,7 +193,7 @@ const collectCompanionSkills = (rootDocument: LoadedSkillDocument, documents: Lo
 			skillName,
 			conventionName: getConventionSkillName(skillName),
 			title: getConventionTitle(skillName, document.metadata.title),
-			agentsGuidePath: `../${skillName}/AGENTS.md`,
+			agentsGuidePath: `../${skillName}/HANDBOOK.md`,
 			skillEntrypointPath: `../${skillName}/SKILL.md`,
 			rulesIndexPath: `../${skillName}/RULES_INDEX.md`,
 			...(declaration === undefined ? {} : {declaration}),
@@ -243,18 +239,14 @@ export const generateMarkdown = (args: GenerateMarkdownArgs): string => {
 
 	if (companionSkills.length > 0) {
 		lines.push("");
-		lines.push(
-			usesCompanionDeclarations
-				? `이 가이드는 local ${metadata.title} 규칙만 담고 있습니다. companion skill은 아래 mode와 appliesWhen에 따라 활성화합니다.`
-				: `이 가이드는 local ${metadata.title} 규칙만 담고 있습니다. 공통 규칙은 companion skill을 함께 로드해 보완합니다.`,
-		);
+		lines.push(`이 문서에는 ${metadata.title} 규칙만 담겨 있습니다. 아래 규칙도 함께 따릅니다.`);
 	}
 	lines.push("");
 
 	if (companionSkills.length > 0) {
 		lines.push("---");
 		lines.push("");
-		lines.push(usesCompanionDeclarations ? "## Companion Skill 활성화" : "## 함께 로드할 Companion Skill");
+		lines.push("## 함께 따르는 규칙");
 		lines.push("");
 
 		for (const companionSkill of companionSkills) {
@@ -265,19 +257,17 @@ export const generateMarkdown = (args: GenerateMarkdownArgs): string => {
 					throw new Error(`Skill "${skillName}" is missing companion declaration for "${companionSkill.skillName}".`);
 				}
 
-				const condition = declaration.appliesWhen === undefined ? "" : ` · appliesWhen: ${escapeMarkdownText(declaration.appliesWhen)}`;
-				const companionGuide = companionSkill.progressiveDisclosure
-					? `[RULES_INDEX.md](${companionSkill.rulesIndexPath})`
-					: `[AGENTS.md](${companionSkill.agentsGuidePath})`;
-				lines.push(
-					`- \`${companionSkill.conventionName}\` - ${companionSkill.title} · mode: \`${declaration.mode}\`${condition} · [SKILL.md](${companionSkill.skillEntrypointPath}) · ${companionGuide}`,
-				);
+				const condition =
+					declaration.mode === "required"
+						? "항상 함께 적용합니다."
+						: declaration.appliesWhen === undefined
+							? "관련 변경이 있을 때 함께 적용합니다."
+							: `다음 조건에서 함께 적용합니다. ${escapeMarkdownText(declaration.appliesWhen)}`;
+				lines.push(`- [${companionSkill.title}](${companionSkill.agentsGuidePath}) — ${condition}`);
 				continue;
 			}
 
-			lines.push(
-				`- \`${companionSkill.conventionName}\` - ${companionSkill.title} 공통 규칙 guide: [${companionSkill.title}](${companionSkill.agentsGuidePath})`,
-			);
+			lines.push(`- [${companionSkill.title}](${companionSkill.agentsGuidePath}) — 공통 규칙`);
 		}
 
 		lines.push("");
@@ -415,14 +405,14 @@ const prepareSkillBuild = async (skillPaths: SkillPaths): Promise<PreparedSkillB
 };
 
 /**
- * @description 단일 skill의 현재 source 기준 expected `AGENTS.md`를 write 없이 렌더링
+ * @description 단일 skill의 현재 source 기준 expected `HANDBOOK.md`를 write 없이 렌더링
  */
 export const generateCompiledSkillMarkdown = async (skillPaths: SkillPaths): Promise<string> => {
 	return (await prepareSkillBuild(skillPaths)).localMarkdown;
 };
 
 /**
- * @description 단일 skill의 compiled `AGENTS.md` 생성
+ * @description 단일 skill의 compiled `HANDBOOK.md` 생성
  */
 export const buildSkill = async (skillPaths: SkillPaths): Promise<void> => {
 	const {rootDocument, localMarkdown} = await prepareSkillBuild(skillPaths);

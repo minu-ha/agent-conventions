@@ -9,7 +9,8 @@ tags: structure, pages, route-local, routing
 
 **Impact: CRITICAL (keeps Astro route ownership close to the file-based route without leaking screen implementation into shared or generic helper layers)**
 
-Astro에서 `src/pages`는 required route tree입니다. Route file은 얇은 import adapter가 아니라 URL contract와 route-local screen flow를 함께 소유합니다.
+Astro에서 `src/pages`는 required route tree입니다.
+Route file은 얇은 import adapter가 아니라 URL contract와 route-local screen flow를 함께 소유합니다.
 
 `src/pages`가 소유하는 것:
 
@@ -18,7 +19,8 @@ Astro에서 `src/pages`는 required route tree입니다. Route file은 얇은 im
 - document helper로 넘기는 page meta handoff
 - 현재 route에만 속한 screen implementation
 
-분리가 필요하면 `src/pages/**/_local/`과 owner-named support file로 내립니다. Shared `ui`/`widget`이나 generic helper layer로 먼저 올리지 않습니다.
+분리가 필요하면 `src/pages/**/_local/`과 owner-named support file로 내립니다.
+Shared `ui`/`widget`이나 generic helper layer로 먼저 올리지 않습니다.
 
 **Incorrect (`src/pages`를 얇게 만들기 위해 route-only 구현을 shared layer로 밀어냄):**
 
@@ -65,4 +67,5 @@ src/
           entry-editor.css
 ```
 
-이 구조에서는 route contract와 route-only 구현이 함께 움직입니다. `src/components/ui`와 `src/components/widget`은 여러 route에서 재사용되는 public surface만 받습니다.
+이 구조에서는 route contract와 route-only 구현이 함께 움직입니다. `src/components/ui`와 `src/components/widget`은 여러
+route에서 재사용되는 public surface만 받습니다.

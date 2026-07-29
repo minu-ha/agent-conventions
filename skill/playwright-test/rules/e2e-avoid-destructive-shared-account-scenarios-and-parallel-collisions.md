@@ -9,7 +9,9 @@ tags: e2e, shared-accounts, parallelism
 
 **Impact: CRITICAL (keeps real-system browser tests from corrupting shared accounts or racing on the same remote resources)**
 
-공유 관리자 계정으로 실패 로그인, 잠금, 비밀번호 변경 같은 destructive 시나리오를 검증하지 않습니다. 같은 원격 자원이나 계정을 동시에 건드릴 수 있으면 serial 실행이나 고립된 데이터 전략을 우선하고, 안정성이 중요한 로컬 e2e 스위트는 직렬 실행을 기본으로 봅니다.
+공유 관리자 계정으로 실패 로그인, 잠금, 비밀번호 변경 같은 destructive 시나리오를 검증하지 않습니다.
+같은 원격 자원이나 계정을 동시에 건드릴 수 있으면 serial 실행이나 고립된 데이터 전략을 우선하고,
+안정성이 중요한 로컬 e2e 스위트는 직렬 실행을 기본으로 봅니다.
 
 **Incorrect (공유 계정과 병렬 충돌을 무시):**
 

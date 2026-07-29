@@ -14,13 +14,13 @@
 
 에이전트 협업 팀을 위한 NestJS 코딩 컨벤션입니다. 이 가이드는 명시적인 모듈 소유권, 얇은 controller, service 중심 도메인 로직, 의도적인 DTO 계약, NestJS/Prisma 경계에 맞는 예외 처리, 신뢰할 수 있는 backend 테스트 경계를 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, 기본 compiled guide는 local NestJS 규칙만 담고 `typescript` companion skill과 함께 사용합니다.
 
-이 가이드는 local NestJS 컨벤션 규칙만 담고 있습니다. 공통 규칙은 companion skill을 함께 로드해 보완합니다.
+이 문서에는 NestJS 컨벤션 규칙만 담겨 있습니다. 아래 규칙도 함께 따릅니다.
 
 ---
 
-## 함께 로드할 Companion Skill
+## 함께 따르는 규칙
 
-- `convention-typescript` - TypeScript Convention 공통 규칙 guide: [TypeScript Convention](../typescript/AGENTS.md)
+- [TypeScript Convention](../typescript/HANDBOOK.md) — 공통 규칙
 
 ---
 
@@ -67,7 +67,9 @@
 
 **Impact: HIGH (keeps domain ownership and truly shared backend code separate so modules stay local by default)**
 
-하나의 도메인은 하나의 모듈 폴더로 구성하고, `_shared/` 같은 공유 디렉터리에는 2개 이상의 모듈에서 함께 쓰는 코드만 둡니다. 한 모듈에서만 쓰이는 Guard, Pipe, Decorator, 상수는 해당 모듈 폴더 안에 유지합니다.
+하나의 도메인은 하나의 모듈 폴더로 구성하고,
+`_shared/` 같은 공유 디렉터리에는 2개 이상의 모듈에서 함께 쓰는 코드만 둡니다.
+한 모듈에서만 쓰이는 Guard, Pipe, Decorator, 상수는 해당 모듈 폴더 안에 유지합니다.
 
 **Incorrect (공유 여부가 불분명한 코드가 전역으로 올라감):**
 
@@ -103,7 +105,9 @@
 
 **Impact: MEDIUM-HIGH (prevents controller and service files from becoming ad-hoc homes for constants with unclear ownership)**
 
-2개 이상의 모듈에서 공유되는 상수는 `<src-root>/<shared-dir>/constants.ts`에 모으고, 특정 도메인 모듈에서만 쓰이는 상수는 해당 모듈의 `*.constants.ts` 파일에 둡니다. Controller나 Service 파일에 공용 상수를 직접 선언하지 않습니다.
+2개 이상의 모듈에서 공유되는 상수는 `<src-root>/<shared-dir>/constants.ts`에 모으고,
+특정 도메인 모듈에서만 쓰이는 상수는 해당 모듈의 `*.constants.ts` 파일에 둡니다.
+Controller나 Service 파일에 공용 상수를 직접 선언하지 않습니다.
 
 **Incorrect (Service 파일에 상수를 직접 선언):**
 
@@ -121,7 +125,13 @@ import {DEFAULT_PAGE_SIZE} from "./users.constants";
 
 **Impact: HIGH (keeps NestJS file purpose obvious from the filename before the file is opened)**
 
-NestJS 파일명은 `kebab-case`를 사용하고 역할 suffix를 반드시 포함합니다. 변수, 함수, 메서드는 `camelCase`, 클래스와 타입, 인터페이스는 `PascalCase`, 상수는 `SCREAMING_SNAKE_CASE`를 유지해 파일명과 심볼 역할이 함께 읽히도록 합니다.
+NestJS 파일명은 `kebab-case`를 사용하고 역할 suffix를 반드시 포함합니다.
+변수,
+함수,
+메서드는 `camelCase`,
+클래스와 타입,
+인터페이스는 `PascalCase`,
+상수는 `SCREAMING_SNAKE_CASE`를 유지해 파일명과 심볼 역할이 함께 읽히도록 합니다.
 
 **Incorrect (파일 목적이나 심볼 규칙이 불분명함):**
 
@@ -151,7 +161,14 @@ controller, service, Prisma 접근은 단방향 책임을 유지해야 비즈니
 
 **Impact: CRITICAL (prevents controllers from absorbing domain logic, persistence calls, and response shaping that belongs in services)**
 
-Controller는 요청 수신, 입력 검증 위임, 응답 반환만 담당합니다. 비즈니스 로직, Prisma 호출, 조건 분기, 응답 shape 조립은 Controller에 두지 않고 Service로 위임하며, `@Body()`, `@Param()`, `@Query()`는 DTO나 변환된 타입으로 받습니다.
+Controller는 요청 수신, 입력 검증 위임, 응답 반환만 담당합니다.
+비즈니스 로직,
+Prisma 호출,
+조건 분기,
+응답 shape 조립은 Controller에 두지 않고 Service로 위임하며,
+`@Body()`,
+`@Param()`,
+`@Query()`는 DTO나 변환된 타입으로 받습니다.
 
 **Incorrect (Controller에 Prisma 호출과 비즈니스 로직이 들어감):**
 
@@ -191,7 +208,10 @@ export class UsersController {
 
 **Impact: CRITICAL (keeps business rules, transaction orchestration, and persistence access in the backend layer designed to own them)**
 
-Service는 비즈니스 로직, 도메인 규칙, 트랜잭션 조율을 담당하고 `PrismaService`를 직접 주입받아 데이터에 접근합니다. 다른 도메인 데이터가 필요하면 해당 도메인의 Service를 주입해 사용하고, 리소스 부재나 도메인 위반 예외도 Service에서 결정합니다.
+Service는 비즈니스 로직, 도메인 규칙, 트랜잭션 조율을 담당하고 `PrismaService`를 직접 주입받아 데이터에 접근합니다.
+다른 도메인 데이터가 필요하면
+해당 도메인의 Service를 주입해 사용하고,
+리소스 부재나 도메인 위반 예외도 Service에서 결정합니다.
 
 **Incorrect (도메인 규칙이 Controller나 외부 레이어에 흩어짐):**
 
@@ -237,7 +257,10 @@ export class UsersService {
 
 **Impact: HIGH (prevents cross-layer shortcuts that bypass the service boundary and make backend change impact harder to reason about)**
 
-의존 방향은 `Controller -> Service -> Prisma` 단방향만 허용합니다. Service가 Controller를 참조하는 것을 금지하고, 다른 도메인의 데이터가 필요하면 Prisma를 우회해 직접 접근하지 말고 해당 도메인 Service를 통해 연결합니다.
+의존 방향은 `Controller -> Service -> Prisma` 단방향만 허용합니다.
+Service가 Controller를 참조하는 것을 금지하고,
+다른 도메인의 데이터가 필요하면
+Prisma를 우회해 직접 접근하지 말고 해당 도메인 Service를 통해 연결합니다.
 
 **Incorrect (Controller가 Prisma에 직접 접근해 서비스 경계를 우회):**
 
@@ -277,7 +300,8 @@ request DTO, response DTO, Prisma type, parameter object는 backend 계약을 �
 
 **Impact: MEDIUM-HIGH (keeps backend-only contracts and parameter objects understandable without scanning method bodies)**
 
-Prisma 생성 타입이 아닌 커스텀 `type`, `interface`, 파라미터 객체에는 JSDoc을 작성합니다. 객체형 계약은 헤더에 `@summary`, 각 필드 바로 위 `@field`를 사용하고, 관련 파일 최상단에 모아 배치합니다.
+Prisma 생성 타입이 아닌 커스텀 `type`, `interface`, 파라미터 객체에는 JSDoc을 작성합니다.
+객체형 계약은 헤더에 `@summary`, 각 필드 바로 위 `@field`를 사용하고, 관련 파일 최상단에 모아 배치합니다.
 
 **Incorrect (커스텀 계약 설명이 없거나 헤더에 `@property`를 몰아씀):**
 
@@ -314,7 +338,8 @@ interface PaginationParams {
 
 **Impact: HIGH (prevents backend responses from leaking full Prisma models or sensitive fields by default)**
 
-응답 DTO는 클라이언트에 노출할 필드를 명시적으로 선언하고, Prisma 모델 전체를 그대로 반환하지 않습니다. `@Exclude()`와 `@Expose()`를 사용해 민감 필드를 응답에서 제거합니다.
+응답 DTO는 클라이언트에 노출할 필드를 명시적으로 선언하고,
+Prisma 모델 전체를 그대로 반환하지 않습니다. `@Exclude()`와 `@Expose()`를 사용해 민감 필드를 응답에서 제거합니다.
 
 **Incorrect (응답에 모델 전체를 그대로 노출):**
 
@@ -347,7 +372,8 @@ export class UserResponseDto {
 
 **Impact: MEDIUM-HIGH (keeps local runtime values lightweight while still allowing generated Prisma enums to remain the source of truth)**
 
-로컬 TypeScript `enum` 대신 객체 리터럴과 `as const`를 사용합니다. 다만 Prisma 스키마에서 생성된 enum은 `@prisma/client`에서 그대로 import해 source of truth를 유지합니다.
+로컬 TypeScript `enum` 대신 객체 리터럴과 `as const`를 사용합니다.
+다만 Prisma 스키마에서 생성된 enum은 `@prisma/client`에서 그대로 import해 source of truth를 유지합니다.
 
 **Incorrect (로컬 enum을 직접 선언):**
 
@@ -377,7 +403,9 @@ import {Role} from "@prisma/client";
 
 **Impact: HIGH (prevents duplicate backend type declarations when Prisma already owns the same structural contract)**
 
-Prisma가 생성한 타입이 이미 존재하면 동일하거나 유사한 구조의 별도 타입 선언을 만들지 않습니다. 필요한 경우 Prisma 타입을 직접 참조하거나 `Pick`/`Omit`으로 파생하고, 구조 중복이 아니라 의미 차이가 실제로 있을 때만 신규 타입을 선언합니다.
+Prisma가 생성한 타입이 이미 존재하면 동일하거나 유사한 구조의 별도 타입 선언을 만들지 않습니다.
+필요한 경우 Prisma 타입을 직접 참조하거나 `Pick`/`Omit`으로 파생하고,
+구조 중복이 아니라 의미 차이가 실제로 있을 때만 신규 타입을 선언합니다.
 
 **Incorrect (Prisma 타입과 같은 구조를 다시 선언):**
 
@@ -403,7 +431,9 @@ type SafeUser = Omit<User, "password">;
 
 **Impact: HIGH (keeps request contracts explicit by colocating validation, transformation, and API documentation on the DTO)**
 
-요청 DTO는 `class-validator` 데코레이터로 유효성 검증을 선언하고, 필요할 때 `class-transformer`로 타입 변환을 명시합니다. 각 필드는 `@ApiProperty()`로 Swagger 문서를 유지하고, DTO 파일명은 `<action>-<domain>.dto.ts` 규칙을 따릅니다.
+요청 DTO는 `class-validator` 데코레이터로 유효성 검증을 선언하고,
+필요할 때 `class-transformer`로 타입 변환을 명시합니다.
+각 필드는 `@ApiProperty()`로 Swagger 문서를 유지하고, DTO 파일명은 `<action>-<domain>.dto.ts` 규칙을 따릅니다.
 
 **Incorrect (요청 구조가 검증과 문서화 없이 흩어짐):**
 
@@ -444,7 +474,11 @@ backend 메서드는 shortcut에 기대지 말고 async 의도와 exception 맥�
 
 **Impact: HIGH (makes backend failures diagnosable by using the right NestJS exception type with real domain context)**
 
-NestJS 내장 예외 클래스(`NotFoundException`, `BadRequestException`, `ForbiddenException` 등)를 사용하고, 메시지에는 도메인 이름이나 식별자 같은 맥락 정보를 포함합니다. 예외를 무음 처리하거나 `'Not found'` 같은 빈약한 메시지를 남기지 않습니다.
+NestJS 내장 예외 클래스(`NotFoundException`,
+`BadRequestException`,
+`ForbiddenException` 등)를 사용하고,
+메시지에는 도메인 이름이나 식별자 같은 맥락 정보를 포함합니다.
+예외를 무음 처리하거나 `'Not found'` 같은 빈약한 메시지를 남기지 않습니다.
 
 **Incorrect (맥락 없는 메시지와 무음 처리):**
 
@@ -470,7 +504,9 @@ if (user.role !== USER_ROLE.ADMIN) {
 
 **Impact: HIGH (keeps asynchronous backend flow readable and makes intentionally unawaited side effects explicit)**
 
-비동기 처리는 `async/await`를 기본으로 사용하고 `.then()` 체이닝은 피합니다. `void` 반환 비동기 호출은 반드시 `await`하거나 `void` 키워드로 fire-and-forget 의도를 명시합니다.
+비동기 처리는 `async/await`를 기본으로 사용하고
+`.then()` 체이닝은 피합니다. `void` 반환 비동기 호출은 반드시 `await`하거나 `void` 키워드로 fire-and-forget 의도를
+명시합니다.
 
 **Incorrect (`.then()` 체이닝과 숨은 비동기 호출):**
 
@@ -494,7 +530,8 @@ void this.eventsService.emit("user.created", user);
 
 **Impact: MEDIUM-HIGH (keeps backend class APIs conventional while making async method contracts readable without opening implementations)**
 
-클래스 메서드는 NestJS 관례에 따라 일반 메서드 선언을 사용하고, 클래스 외부 유틸 함수는 화살표 함수를 기본으로 합니다. 복잡한 함수나 `async` 함수는 `Promise<T>` 반환 타입을 명시해 서비스 계약이 시그니처에서 드러나게 합니다.
+클래스 메서드는 NestJS 관례에 따라 일반 메서드 선언을 사용하고, 클래스 외부 유틸 함수는 화살표 함수를 기본으로 합니다.
+복잡한 함수나 `async` 함수는 `Promise<T>` 반환 타입을 명시해 서비스 계약이 시그니처에서 드러나게 합니다.
 
 **Incorrect (반환 계약이 불분명하거나 관례가 섞임):**
 
@@ -539,7 +576,12 @@ export const buildPaginationMeta = (total: number, params: PaginationParams) => 
 
 **Impact: MEDIUM (keeps inline comments reserved for backend constraints that would otherwise be easy to misread or accidentally remove)**
 
-함수 본문 내부에서는 JSDoc 블록 주석을 사용하지 않고, `//` 주석은 도메인 규칙, 정합성 제약, Prisma 동작 제약, 트랜잭션 순서처럼 없으면 오해될 수 있는 내용에만 사용합니다. 변수명 그대로 반복하는 설명은 남기지 않습니다.
+함수 본문 내부에서는 JSDoc 블록 주석을 사용하지 않고,
+`//` 주석은 도메인 규칙,
+정합성 제약,
+Prisma 동작 제약,
+트랜잭션 순서처럼 없으면 오해될 수 있는 내용에만 사용합니다.
+변수명 그대로 반복하는 설명은 남기지 않습니다.
 
 **Incorrect (변수명 반복이나 자명한 설명):**
 
@@ -558,7 +600,22 @@ const where = includeDeleted ? {id} : {id, deletedAt: null};
 
 **Impact: MEDIUM-HIGH (makes important backend execution boundaries searchable before readers inspect implementation details)**
 
-Service public 메서드, Prisma 접근이나 외부 API 호출 블록, NestJS 생명주기 훅, 커스텀 `type`/`interface`, Guard/Interceptor/Pipe 핵심 메서드에는 예외 없이 JSDoc을 작성합니다. Controller는 Swagger 데코레이터가 충분하면 JSDoc을 생략할 수 있습니다. annotation 태그 선택은 companion skill인 `convention-typescript`의 표준인 `@api`, `@event`, `@watch`, `@helper`, `@summary`, `@field`를 따르되, 일반적인 NestJS 코드에서는 주로 `@api`, `@helper`, `@summary`, `@field`를 사용합니다.
+Service public 메서드,
+Prisma 접근이나 외부 API 호출 블록,
+NestJS 생명주기 훅,
+커스텀 `type`/`interface`,
+Guard/Interceptor/Pipe 핵심 메서드에는 예외 없이 JSDoc을 작성합니다.
+Controller는 Swagger 데코레이터가 충분하면 JSDoc을 생략할 수 있습니다.
+annotation 태그 선택은 companion skill인 `convention-typescript`의 표준인 `@api`,
+`@event`,
+`@watch`,
+`@helper`,
+`@summary`,
+`@field`를 따르되,
+일반적인 NestJS 코드에서는 주로 `@api`,
+`@helper`,
+`@summary`,
+`@field`를 사용합니다.
 
 **Incorrect (핵심 서비스 메서드에 헤더 설명이 없음):**
 
@@ -595,7 +652,11 @@ unit과 e2e 테스트는 runtime 경계, 파일 배치, 의존 전략 기준으�
 
 **Impact: HIGH (keeps backend regressions from slipping through when logic branches or API/database behavior changes)**
 
-Service에 의미 있는 비즈니스 분기나 예외 처리가 추가되면 unit test를, 공개 API 엔드포인트가 추가되거나 변경되면 e2e test를 추가합니다. Prisma schema 변경이 API 동작에 영향을 주면 최소 한 개 이상의 e2e test로 회귀를 막습니다.
+Service에 의미 있는 비즈니스 분기나 예외 처리가 추가되면
+unit test를,
+공개 API 엔드포인트가 추가되거나 변경되면
+e2e test를 추가합니다.
+Prisma schema 변경이 API 동작에 영향을 주면 최소 한 개 이상의 e2e test로 회귀를 막습니다.
 
 **Incorrect (분기나 엔드포인트가 늘어도 기존 테스트만 믿고 넘어감):**
 
@@ -618,7 +679,17 @@ Service에 의미 있는 비즈니스 분기나 예외 처리가 추가되면 un
 
 **Impact: CRITICAL (keeps service unit tests fast and focused while making e2e tests prove real Nest wiring end to end)**
 
-unit test에서는 DB, 외부 API, JWT, cache 같은 외부 의존성을 mock 처리하고 Service public 메서드의 핵심 분기와 예외를 검증합니다. e2e test에서는 `AppModule` 또는 필요한 실제 모듈 조합을 띄우고, `supertest`로 HTTP 진입점부터 ValidationPipe, Filter, Service, Prisma, DB 반영까지 실제 wiring을 검증합니다.
+unit test에서는 DB,
+외부 API,
+JWT,
+cache 같은 외부 의존성을 mock 처리하고
+Service public 메서드의 핵심 분기와 예외를 검증합니다.
+e2e test에서는 `AppModule` 또는 필요한 실제 모듈 조합을 띄우고,
+`supertest`로 HTTP 진입점부터 ValidationPipe,
+Filter,
+Service,
+Prisma,
+DB 반영까지 실제 wiring을 검증합니다.
 
 **Incorrect (unit에서 실제 DB를 띄우거나 e2e에서 핵심 wiring을 검증하지 않음):**
 
@@ -646,7 +717,9 @@ await request(app.getHttpServer()).post("/users").send(payload).expect(201);
 
 **Impact: HIGH (makes backend test ownership obvious by separating service-adjacent unit tests from top-level HTTP e2e tests)**
 
-Service unit test는 대상 파일 옆의 `*.service.spec.ts`로 두고, HTTP e2e test는 `test/` 아래 `<domain>.e2e-spec.ts`로 둡니다. 테스트 파일명은 대상과 범위가 즉시 드러나야 하며, unit과 e2e를 같은 위치나 같은 이름 패턴으로 섞지 않습니다.
+Service unit test는 대상 파일 옆의 `*.service.spec.ts`로 두고,
+HTTP e2e test는 `test/` 아래 `<domain>.e2e-spec.ts`로 둡니다.
+테스트 파일명은 대상과 범위가 즉시 드러나야 하며, unit과 e2e를 같은 위치나 같은 이름 패턴으로 섞지 않습니다.
 
 **Incorrect (범위와 대상이 드러나지 않는 배치):**
 
@@ -674,7 +747,14 @@ test/
 
 **Impact: CRITICAL (keeps backend failures diagnosable by assigning business logic and full-stack wiring to different test levels)**
 
-테스트는 `unit test`와 `e2e test`를 기본 축으로 구분합니다. unit test는 Service 단위의 비즈니스 로직 검증을 담당하고, e2e test는 HTTP 요청부터 ValidationPipe, Filter, Service, Prisma, DB까지의 연결을 검증합니다. 특별한 이유가 없으면 controller 전용 spec보다 service unit test와 HTTP e2e test를 우선합니다.
+테스트는 `unit test`와 `e2e test`를 기본 축으로 구분합니다.
+unit test는 Service 단위의 비즈니스 로직 검증을 담당하고,
+e2e test는 HTTP 요청부터 ValidationPipe,
+Filter,
+Service,
+Prisma,
+DB까지의 연결을 검증합니다.
+특별한 이유가 없으면 controller 전용 spec보다 service unit test와 HTTP e2e test를 우선합니다.
 
 **Incorrect (controller spec과 service logic test가 뒤섞임):**
 
@@ -702,7 +782,16 @@ backend 변경은 NestJS 레이어링, 타입 규율, 테스트 규율을 가장
 
 **Impact: MEDIUM (catches the recurring shortcuts that most often blur NestJS layers, contracts, and test meaning before the work is closed out)**
 
-마무리 전에 반복적으로 금지되는 NestJS 지름길을 다시 확인합니다. Controller에서 Prisma 직접 호출, `.then()` 체이닝, void 반환 비동기 호출 방치, 모델 전체 응답 노출, 중복 타입 선언, 맥락 없는 예외 메시지, 무음 처리, 이유 없는 폴백 같은 패턴은 정리하고 끝냅니다.
+마무리 전에 반복적으로 금지되는 NestJS 지름길을 다시 확인합니다.
+Controller에서 Prisma 직접 호출,
+`.then()` 체이닝,
+void 반환 비동기 호출 방치,
+모델 전체 응답 노출,
+중복 타입 선언,
+맥락 없는 예외 메시지,
+무음 처리,
+이유 없는 폴백 같은 패턴은 정리하고
+끝냅니다.
 
 **Incorrect (금지 패턴을 남긴 채 마무리):**
 

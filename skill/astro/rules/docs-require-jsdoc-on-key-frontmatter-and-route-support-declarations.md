@@ -9,7 +9,11 @@ tags: docs, jsdoc, frontmatter, route-support
 
 **Impact: MEDIUM-HIGH (makes Astro route boundaries and route-local support helpers searchable before readers inspect implementation details)**
 
-Astro frontmatter와 `src/pages/_document.astro`, `src/pages/_head.astro`, `src/pages/**/_entry-admin.ts`, `src/pages/**/_local/entry-editor.ts` 같은 route-local support module에서 중요한 경계를 선언할 때는 헤더 JSDoc을 작성합니다.
+Astro frontmatter와 `src/pages/_document.astro`,
+`src/pages/_head.astro`,
+`src/pages/**/_entry-admin.ts`,
+`src/pages/**/_local/entry-editor.ts` 같은 route-local support module에서 중요한 경계를 선언할 때는 헤더 JSDoc을
+작성합니다.
 
 문서화 대상:
 
@@ -19,7 +23,8 @@ Astro frontmatter와 `src/pages/_document.astro`, `src/pages/_head.astro`, `src/
 - 외부 연동 helper
 - rendering mode 판단이 섞인 helper
 
-`@summary`, `@helper`, `@api`, `@field` 같은 태그는 companion skill인 `convention-typescript` 표준에 맞춥니다. 단순 local destructuring이나 자명한 alias까지 전부 문서화할 필요는 없습니다.
+`@summary`, `@helper`, `@api`, `@field` 같은 태그는 companion skill인 `convention-typescript` 표준에 맞춥니다.
+단순 local destructuring이나 자명한 alias까지 전부 문서화할 필요는 없습니다.
 
 **Incorrect (document props/route/support 경계 선언에 문맥 설명이 없음):**
 

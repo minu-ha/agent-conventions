@@ -25,7 +25,11 @@ Page file에 남길 것:
 - `class:list` conditions
 - empty-state branch choices
 
-Do not create `_form.ts`, `_api.ts`, `utils.ts`, `helpers.ts`, or `common.ts` unless the owner name makes the boundary explicit.
+Do not create `_form.ts`,
+`_api.ts`,
+`utils.ts`,
+`helpers.ts`,
+or `common.ts` unless the owner name makes the boundary explicit.
 
 **Incorrect (small route-local calculations are scattered into generic helpers):**
 
@@ -68,4 +72,5 @@ const emptyMessage = hasEntries ? undefined : "No entries yet.";
 ---
 ```
 
-이 구조에서는 API normalization과 initial state 조립만 support module로 내리고, 현재 route의 branch와 문구 선택은 page frontmatter에 남깁니다.
+이 구조에서는 API normalization과 initial state 조립만 support module로 내리고,
+현재 route의 branch와 문구 선택은 page frontmatter에 남깁니다.

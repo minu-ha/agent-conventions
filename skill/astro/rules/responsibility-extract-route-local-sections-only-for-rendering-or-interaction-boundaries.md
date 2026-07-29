@@ -21,7 +21,9 @@ Move a section into `src/pages/**/_local/` only when it owns a real rendering or
 - third-party widget adapter
 - repeated slot contract
 
-Do not extract a component just because a heading/body/footer group looks like a section. If the subtree still describes the same route surface, keep the route `rt_*` owner instead of inventing a `loc_*` namespace.
+Do not extract a component just because a heading/body/footer group looks like a section.
+If the subtree still describes the same route surface,
+keep the route `rt_*` owner instead of inventing a `loc_*` namespace.
 
 **Incorrect (simple page markup is split into `_local/` wrappers):**
 
@@ -74,4 +76,5 @@ const { entry, relatedEntries } = Astro.props;
 </article>
 ```
 
-이 예시에서는 deferred panel과 hydrated island처럼 runtime 경계가 있는 부분만 `_local/`로 내리고, route의 본문 흐름은 routed page에서 읽히게 유지합니다.
+이 예시에서는 deferred panel과 hydrated island처럼 runtime 경계가 있는 부분만 `_local/`로 내리고,
+route의 본문 흐름은 routed page에서 읽히게 유지합니다.

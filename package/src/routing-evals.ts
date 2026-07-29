@@ -107,10 +107,6 @@ interface ValidateRulePartitionArgs {
 	 * @field 선택된 local rule stable ID 목록
 	 */
 	selected: string[];
-	/**
-	 * @field 비적용 local rule stable ID 목록
-	 */
-	notApplicable: string[];
 }
 
 /**
@@ -216,17 +212,11 @@ const parsePartitionRecord = (value: unknown, label: string): Record<string, str
 const parseExpectedPartition = (source: JsonObject, label: string): RoutingExpectedPartition => ({
 	expectedSkills: parseStringArray({value: source.expectedSkills, label: `${label}.expectedSkills`, allowEmpty: false}),
 	expectedSelected: parsePartitionRecord(source.expectedSelected, `${label}.expectedSelected`),
-	expectedNotApplicable: parsePartitionRecord(source.expectedNotApplicable, `${label}.expectedNotApplicable`),
 });
 
 const parseScopeDrift = (value: unknown, label: string): RoutingScopeDrift => {
 	const source = assertJsonObject(value, label);
-	assertExactKeys({
-		value: source,
-		requiredKeys: ["evidence", "files", "expectedSkills", "expectedSelected", "expectedNotApplicable"],
-		optionalKeys: [],
-		label,
-	});
+	assertExactKeys({value: source, requiredKeys: ["evidence", "files", "expectedSkills", "expectedSelected"], optionalKeys: [], label});
 
 	return {
 		evidence: parseNonEmptyString(source.evidence, `${label}.evidence`),
@@ -240,7 +230,7 @@ const parseScenario = (value: unknown, index: number): RoutingEvalScenario => {
 	const source = assertJsonObject(value, label);
 	assertExactKeys({
 		value: source,
-		requiredKeys: ["id", "prompt", "files", "expectedSkills", "expectedSelected", "expectedNotApplicable"],
+		requiredKeys: ["id", "prompt", "files", "expectedSkills", "expectedSelected"],
 		optionalKeys: ["scopeDrift"],
 		label,
 	});
@@ -338,40 +328,25 @@ const readExpectedSkillDocument = async (args: ReadExpectedSkillDocumentArgs): P
 };
 
 const validateRulePartition = (args: ValidateRulePartitionArgs): void => {
-	const {label, document, selected, notApplicable} = args;
+	const {label, document, selected} = args;
 	const universe = getCanonicalRoutingRuleIds(document);
 	const universeSet = new Set(universe);
 
-	for (const ruleId of [...selected, ...notApplicable]) {
+	for (const ruleId of selected) {
 		if (!universeSet.has(ruleId)) {
 			throw new Error(`${label} has unknown rule "${ruleId}" for skill "${document.skillName}".`);
 		}
 	}
 
-	const notApplicableSet = new Set(notApplicable);
-	const overlap = selected.find((ruleId) => notApplicableSet.has(ruleId));
-
-	if (overlap) {
-		throw new Error(`${label} selected/N/A partition overlap includes "${overlap}" for skill "${document.skillName}".`);
+	if (new Set(selected).size !== selected.length) {
+		throw new Error(`${label}.expectedSelected.${document.skillName} must not repeat a rule.`);
 	}
 
-	const covered = new Set([...selected, ...notApplicable]);
-	const missing = universe.filter((ruleId) => !covered.has(ruleId));
+	const selectedSet = new Set(selected);
+	const canonicalSubset = universe.filter((ruleId) => selectedSet.has(ruleId));
 
-	if (missing.length > 0) {
-		throw new Error(`${label} has incomplete partition for skill "${document.skillName}"; missing ${missing.join(", ")}.`);
-	}
-
-	for (const [partitionName, ruleIds] of [
-		["expectedSelected", selected],
-		["expectedNotApplicable", notApplicable],
-	] as const) {
-		const ruleIdSet = new Set(ruleIds);
-		const canonicalSubset = universe.filter((ruleId) => ruleIdSet.has(ruleId));
-
-		if (canonicalSubset.some((ruleId, index) => ruleId !== ruleIds[index])) {
-			throw new Error(`${label}.${partitionName}.${document.skillName} must follow canonical RULES_INDEX order.`);
-		}
+	if (canonicalSubset.some((ruleId, index) => ruleId !== selected[index])) {
+		throw new Error(`${label}.expectedSelected.${document.skillName} must follow canonical RULES_INDEX order.`);
 	}
 };
 
@@ -390,10 +365,7 @@ const validateExpectedPartition = async (args: ValidateExpectedPartitionArgs): P
 
 	const progressiveSkillSet = new Set(progressiveSkillNames);
 
-	for (const [recordName, record] of [
-		["expectedSelected", partition.expectedSelected],
-		["expectedNotApplicable", partition.expectedNotApplicable],
-	] as const) {
+	for (const [recordName, record] of [["expectedSelected", partition.expectedSelected]] as const) {
 		for (const skillName of Object.keys(record)) {
 			if (!progressiveSkillSet.has(skillName)) {
 				throw new Error(`${label}.${recordName} has unexpected partition skill "${skillName}".`);
@@ -414,12 +386,7 @@ const validateExpectedPartition = async (args: ValidateExpectedPartitionArgs): P
 			throw new Error(`${label}: failed to cache activated skill "${skillName}".`);
 		}
 
-		validateRulePartition({
-			label,
-			document,
-			selected: partition.expectedSelected[skillName] ?? [],
-			notApplicable: partition.expectedNotApplicable[skillName] ?? [],
-		});
+		validateRulePartition({label, document, selected: partition.expectedSelected[skillName] ?? []});
 
 		const selectedRuleIds = new Set(partition.expectedSelected[skillName] ?? []);
 		const missingCompletionRule = document.rules.find(

@@ -9,7 +9,12 @@ tags: integration, rest-api, screenshot
 
 **Impact: CRITICAL (Figma URL에서 구조화된 node 데이터와 비교용 reference image를 확보하게 함)**
 
-Figma REST API token이 있으면 Figma URL에서 `fileKey`와 `nodeId`를 파싱합니다. URL의 `node-id=1-2`는 API 요청용 `1:2`로 변환합니다. `GET /v1/files/:key/nodes?ids=<nodeId>`로 node JSON과 subtree를 확인하고, 큰 node는 `depth`를 낮춰 구조를 먼저 봅니다. `GET /v1/images/:key?ids=<nodeId>&format=png&scale=2`로 reference image를 확보해 browser screenshot diff 기준으로 사용합니다. token, signed image URL, 원본 응답 전체는 로그나 커밋에 노출하지 않습니다.
+Figma REST API token이 있으면 Figma URL에서 `fileKey`와 `nodeId`를 파싱합니다.
+URL의 `node-id=1-2`는 API 요청용 `1:2`로 변환합니다. `GET /v1/files/:key/nodes?ids=<nodeId>`로 node JSON과 subtree를
+확인하고,
+큰 node는 `depth`를 낮춰 구조를 먼저 봅니다. `GET /v1/images/:key?ids=<nodeId>&format=png&scale=2`로 reference image를
+확보해 browser screenshot diff 기준으로 사용합니다.
+token, signed image URL, 원본 응답 전체는 로그나 커밋에 노출하지 않습니다.
 
 **Incorrect (REST API 사용 가능 상태를 무시):**
 

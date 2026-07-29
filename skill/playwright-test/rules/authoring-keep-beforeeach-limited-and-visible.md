@@ -9,7 +9,8 @@ tags: beforeEach, setup, visibility
 
 **Impact: HIGH (prevents shared setup from hiding the test's real dependency boundary or main assertions)**
 
-`beforeEach`에는 반복되는 인증 stub, 공용 이동 경로, 공용 seed 설치처럼 진짜 반복되는 준비만 둡니다. 핵심 assertion이나 테스트마다 다른 mock/seed를 `beforeEach`에 숨기지 않고, 각 테스트 본문에서 선언합니다.
+`beforeEach`에는 반복되는 인증 stub, 공용 이동 경로, 공용 seed 설치처럼 진짜 반복되는 준비만 둡니다.
+핵심 assertion이나 테스트마다 다른 mock/seed를 `beforeEach`에 숨기지 않고, 각 테스트 본문에서 선언합니다.
 
 **Incorrect (`beforeEach`에 테스트 의미를 숨김):**
 

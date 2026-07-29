@@ -7,7 +7,7 @@ import {readGeneratedRegularFile} from "./generated-files.js";
 import type {SkillPaths} from "./types.js";
 
 /**
- * @description 단일 skill의 compiled `AGENTS.md`가 현재 source renderer와 일치하는지 write 없이 확인
+ * @description 단일 skill의 compiled `HANDBOOK.md`가 현재 source renderer와 일치하는지 write 없이 확인
  */
 export const checkGeneratedHandbook = async (skillPaths: SkillPaths): Promise<void> => {
 	const expectedHandbook = await generateCompiledSkillMarkdown(skillPaths);
@@ -17,14 +17,14 @@ export const checkGeneratedHandbook = async (skillPaths: SkillPaths): Promise<vo
 		actualHandbook = await readGeneratedRegularFile(skillPaths.outputPath);
 	} catch (error) {
 		if ((error as NodeJS.ErrnoException).code === "ENOENT") {
-			throw new Error(`${skillPaths.skillName}: missing generated AGENTS.md at ${skillPaths.outputPath}. Run the skill build.`);
+			throw new Error(`${skillPaths.skillName}: missing generated HANDBOOK.md at ${skillPaths.outputPath}. Run the skill build.`);
 		}
 
 		throw error;
 	}
 
 	if (actualHandbook !== expectedHandbook) {
-		throw new Error(`${skillPaths.skillName}: stale generated AGENTS.md at ${skillPaths.outputPath}. Run the skill build.`);
+		throw new Error(`${skillPaths.skillName}: stale generated HANDBOOK.md at ${skillPaths.outputPath}. Run the skill build.`);
 	}
 };
 
@@ -52,7 +52,7 @@ export const main = async (): Promise<void> => {
 
 		const skillPaths = getSkillPaths(skillName, skillRootDir);
 		await checkGeneratedHandbook(skillPaths);
-		console.log(`Checked ${path.join(skillName, "AGENTS.md")}`);
+		console.log(`Checked ${path.join(skillName, "HANDBOOK.md")}`);
 	}
 };
 

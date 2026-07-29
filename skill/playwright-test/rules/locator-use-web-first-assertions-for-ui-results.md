@@ -9,7 +9,10 @@ tags: assertions, web-first, ui
 
 **Impact: HIGH (aligns assertions with the browser's async rendering model instead of relying on immediate checks of transient UI state)**
 
-UI 결과는 `toBeVisible`, `toHaveText`, `toHaveValue`, `toHaveURL` 같은 web-first assertion을 기본으로 씁니다. 즉시 평가되는 generic assertion은 non-UI 값에만 쓰고, 내부 state나 cache, hook return 값 같은 구현 디테일 assertion은 하지 않습니다.
+UI 결과는 `toBeVisible`, `toHaveText`, `toHaveValue`, `toHaveURL` 같은 web-first assertion을 기본으로 씁니다.
+즉시 평가되는 generic assertion은 non-UI 값에만 쓰고,
+내부 state나 cache,
+hook return 값 같은 구현 디테일 assertion은 하지 않습니다.
 
 **Incorrect (즉시 평가와 구현 디테일에 의존):**
 

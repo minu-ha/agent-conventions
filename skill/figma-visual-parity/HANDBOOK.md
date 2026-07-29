@@ -14,16 +14,16 @@
 
 Figma 링크, node URL, design screenshot을 기준 소스로 받아 실제 브라우저 구현 화면과의 visual parity를 맞추는 작업 규칙입니다. 이 가이드는 Figma MCP evidence 확보, Code Connect와 Figma REST API 활용, node JSON/reference image/variables/components/styles metadata 수집, 현재 구현 화면 확인, 구현 전 visual diff 표 작성, 정적 UI copy와 동적 API 데이터 구분, 기존 컴포넌트와 디자인 토큰 우선 사용, 브라우저 screenshot 기반 반복 검증, 남은 mismatch를 숨기지 않는 완료 보고를 강제합니다. 기능 구현 완료나 build/test 성공만으로 visual parity 작업을 완료 처리하지 않으며, Figma 기준 UI 구현에는 `react`, `css`, `playwright-test` companion skill을 함께 사용합니다.
 
-이 가이드는 local Figma Visual Parity 규칙만 담고 있습니다. 공통 규칙은 companion skill을 함께 로드해 보완합니다.
+이 문서에는 Figma Visual Parity 규칙만 담겨 있습니다. 아래 규칙도 함께 따릅니다.
 
 ---
 
-## 함께 로드할 Companion Skill
+## 함께 따르는 규칙
 
-- `convention-typescript` - TypeScript Convention 공통 규칙 guide: [TypeScript Convention](../typescript/AGENTS.md)
-- `convention-css` - CSS Convention 공통 규칙 guide: [CSS Convention](../css/AGENTS.md)
-- `convention-react` - React Convention 공통 규칙 guide: [React Convention](../react/AGENTS.md)
-- `convention-playwright-test` - Playwright Test Convention 공통 규칙 guide: [Playwright Test Convention](../playwright-test/AGENTS.md)
+- [TypeScript Convention](../typescript/HANDBOOK.md) — 공통 규칙
+- [CSS Convention](../css/HANDBOOK.md) — 공통 규칙
+- [React Convention](../react/HANDBOOK.md) — 공통 규칙
+- [Playwright Test Convention](../playwright-test/HANDBOOK.md) — 공통 규칙
 
 ---
 
@@ -63,7 +63,13 @@ Figma 링크, node, screenshot이 UI 구현 기준으로 제공된 경우에는 
 
 **Impact: HIGH (Figma와 무관한 기능/API 작업에 visual parity 절차를 과잉 적용하지 않게 함)**
 
-Figma 댓글 CSV 추출, API/데이터 로직 수정, 디자인 기준 없는 기능 구현, 사용자가 명시한 "대략만", "구조만", "디자인 말고 동작만" 요청은 이 skill을 적용하지 않습니다. Figma link가 있어도 사용 목적이 comment extraction이나 metadata export라면 visual parity workflow로 바꾸지 않습니다.
+Figma 댓글 CSV 추출,
+API/데이터 로직 수정,
+디자인 기준 없는 기능 구현,
+사용자가 명시한 "대략만",
+"구조만",
+"디자인 말고 동작만" 요청은 이 skill을 적용하지 않습니다.
+Figma link가 있어도 사용 목적이 comment extraction이나 metadata export라면 visual parity workflow로 바꾸지 않습니다.
 
 **Incorrect (디자인 기준이 아닌 작업에 parity 절차를 강제):**
 
@@ -83,7 +89,17 @@ Figma 댓글 CSV 추출, API/데이터 로직 수정, 디자인 기준 없는 �
 
 **Impact: CRITICAL (Figma가 기준 소스인 UI 작업에서 visual parity workflow가 빠지지 않게 함)**
 
-사용자가 Figma 링크, Figma node, Figma screenshot, design screenshot을 제공하고 구현, 싱크, 스타일 보정, 비교, polish를 요청하면 이 작업은 visual parity 작업입니다. 새 UI든 기존 UI 수정이든 Figma가 기준 소스라면 먼저 Figma evidence와 현재 구현 화면을 확보해야 합니다.
+사용자가 Figma 링크,
+Figma node,
+Figma screenshot,
+design screenshot을 제공하고
+구현,
+싱크,
+스타일 보정,
+비교,
+polish를 요청하면
+이 작업은 visual parity 작업입니다.
+새 UI든 기존 UI 수정이든 Figma가 기준 소스라면 먼저 Figma evidence와 현재 구현 화면을 확보해야 합니다.
 
 **Incorrect (Figma 기준 요청을 일반 기능 구현처럼 처리):**
 
@@ -109,7 +125,13 @@ Figma 댓글 CSV 추출, API/데이터 로직 수정, 디자인 기준 없는 �
 
 **Impact: CRITICAL (기준 화면과 현재 화면 없이 CSS를 추측 수정하는 일을 막음)**
 
-구현 전에 Figma node/design context/screenshot과 현재 브라우저 구현 화면을 모두 확인합니다. Figma node가 너무 크거나 tool fetch가 실패하면 더 작은 node, parent section, screenshot, metadata fallback을 사용하고, 확보한 evidence와 한계를 기록합니다.
+구현 전에 Figma node/design context/screenshot과 현재 브라우저 구현 화면을 모두 확인합니다.
+Figma node가 너무 크거나 tool fetch가 실패하면
+더 작은 node,
+parent section,
+screenshot,
+metadata fallback을 사용하고,
+확보한 evidence와 한계를 기록합니다.
 
 **Incorrect (Figma node 실패를 이유로 분석 포기):**
 
@@ -131,7 +153,18 @@ Figma node fetch 실패.
 
 **Impact: CRITICAL (구현 범위와 완료 기준을 layout, spacing, typography 같은 항목으로 명확히 고정함)**
 
-코드를 수정하기 전에 Figma와 현재 구현의 차이를 표로 작성합니다. 최소 항목은 layout, spacing, typography, color, border/radius, surface/background, shadow, icon/assets, static copy, states, responsive behavior입니다.
+코드를 수정하기 전에 Figma와 현재 구현의 차이를 표로 작성합니다.
+최소 항목은 layout,
+spacing,
+typography,
+color,
+border/radius,
+surface/background,
+shadow,
+icon/assets,
+static copy,
+states,
+responsive behavior입니다.
 
 **Incorrect (차이 분류 없이 바로 수정):**
 
@@ -159,7 +192,18 @@ Figma MCP, Code Connect, REST API, variables/components/styles metadata, browser
 
 **Impact: CRITICAL (MCP만 쓰고 끝내지 않고 사용 가능한 integration을 모두 조합하게 함)**
 
-Figma visual parity 작업을 시작하면 먼저 사용 가능한 integration을 audit합니다. Figma MCP, Code Connect, Figma REST API token, variables/components/styles metadata, repo design system inventory, browser screenshot diff 중 접근 가능한 것은 모두 사용합니다. 접근할 수 없는 계층은 조용히 생략하지 말고 "없음", "권한 없음", "scope 부족", "rate limit", "tool unavailable"처럼 이유를 기록합니다.
+Figma visual parity 작업을 시작하면 먼저 사용 가능한 integration을 audit합니다.
+Figma MCP,
+Code Connect,
+Figma REST API token,
+variables/components/styles metadata,
+repo design system inventory,
+browser screenshot diff 중 접근 가능한 것은 모두 사용합니다.
+접근할 수 없는 계층은 조용히 생략하지 말고 "없음",
+"권한 없음",
+"scope 부족",
+"rate limit",
+"tool unavailable"처럼 이유를 기록합니다.
 
 **Incorrect (MCP 한 계층만 보고 바로 구현):**
 
@@ -183,7 +227,12 @@ Integration audit:
 
 **Impact: HIGH (Figma token metadata를 확인할 수 있는데 raw visual value를 코드에 박는 일을 줄임)**
 
-권한이 있으면 Figma variables, components, styles metadata를 확인해 project token과 component mapping에 반영합니다. `file_variables:read` scope가 있으면 `GET /v1/files/:file_key/variables/local` 또는 published variables endpoint로 mode별 token 값을 확인합니다. published component/style metadata가 필요하면 file/team component endpoints를 사용합니다. scope, plan, rate limit 때문에 실패하면 repo의 CSS variable, design token, component usage inventory로 fallback합니다.
+권한이 있으면 Figma variables,
+components,
+styles metadata를 확인해 project token과 component mapping에 반영합니다. `file_variables:read` scope가 있으면
+`GET /v1/files/:file_key/variables/local` 또는 published variables endpoint로 mode별 token 값을 확인합니다.
+published component/style metadata가 필요하면 file/team component endpoints를 사용합니다.
+scope, plan, rate limit 때문에 실패하면 repo의 CSS variable, design token, component usage inventory로 fallback합니다.
 
 **Incorrect (metadata 확인 없이 raw value를 늘림):**
 
@@ -207,7 +256,16 @@ Token mapping:
 
 **Impact: CRITICAL (실제 디자인 시스템 컴포넌트를 무시하고 raw JSX/CSS를 새로 만드는 일을 막음)**
 
-Code Connect context가 있으면 import statement, component snippet, prop mapping, variant value, custom instruction을 우선 구현 기준으로 사용합니다. Code Connect가 없으면 repo의 `src/components`, `src/shared`, design system docs, existing route usage를 검색해 Figma component와 code component mapping table을 먼저 작성합니다. 새 컴포넌트나 raw CSS는 기존 컴포넌트로 표현할 수 없을 때만 만듭니다.
+Code Connect context가 있으면 import statement,
+component snippet,
+prop mapping,
+variant value,
+custom instruction을 우선 구현 기준으로 사용합니다.
+Code Connect가 없으면 repo의 `src/components`,
+`src/shared`,
+design system docs,
+existing route usage를 검색해 Figma component와 code component mapping table을 먼저 작성합니다.
+새 컴포넌트나 raw CSS는 기존 컴포넌트로 표현할 수 없을 때만 만듭니다.
 
 **Incorrect (연결된 component snippet을 무시):**
 
@@ -230,7 +288,12 @@ import {Button} from "@/components/ui/button";
 
 **Impact: CRITICAL (Figma URL에서 구조화된 node 데이터와 비교용 reference image를 확보하게 함)**
 
-Figma REST API token이 있으면 Figma URL에서 `fileKey`와 `nodeId`를 파싱합니다. URL의 `node-id=1-2`는 API 요청용 `1:2`로 변환합니다. `GET /v1/files/:key/nodes?ids=<nodeId>`로 node JSON과 subtree를 확인하고, 큰 node는 `depth`를 낮춰 구조를 먼저 봅니다. `GET /v1/images/:key?ids=<nodeId>&format=png&scale=2`로 reference image를 확보해 browser screenshot diff 기준으로 사용합니다. token, signed image URL, 원본 응답 전체는 로그나 커밋에 노출하지 않습니다.
+Figma REST API token이 있으면 Figma URL에서 `fileKey`와 `nodeId`를 파싱합니다.
+URL의 `node-id=1-2`는 API 요청용 `1:2`로 변환합니다. `GET /v1/files/:key/nodes?ids=<nodeId>`로 node JSON과 subtree를
+확인하고,
+큰 node는 `depth`를 낮춰 구조를 먼저 봅니다. `GET /v1/images/:key?ids=<nodeId>&format=png&scale=2`로 reference image를
+확보해 browser screenshot diff 기준으로 사용합니다.
+token, signed image URL, 원본 응답 전체는 로그나 커밋에 노출하지 않습니다.
 
 **Incorrect (REST API 사용 가능 상태를 무시):**
 
@@ -261,7 +324,9 @@ Figma에 보이는 값이 static UI copy인지 dynamic API data인지 먼저 분
 
 **Impact: CRITICAL (Figma copy는 맞추되 서버/API 값을 하드코딩하는 오류를 막음)**
 
-Figma에 보이는 모든 텍스트와 숫자를 static UI copy와 dynamic data로 먼저 분류합니다. 버튼명, 탭명, 컬럼명, 라벨, placeholder, empty state, default option, 고정 안내문구는 Figma 기준으로 맞춥니다. row data, metric value, user-specific data, API mock 값은 UI 고정값처럼 박지 않습니다.
+Figma에 보이는 모든 텍스트와 숫자를 static UI copy와 dynamic data로 먼저 분류합니다.
+버튼명, 탭명, 컬럼명, 라벨, placeholder, empty state, default option, 고정 안내문구는 Figma 기준으로 맞춥니다.
+row data, metric value, user-specific data, API mock 값은 UI 고정값처럼 박지 않습니다.
 
 **Incorrect (Figma 숫자를 API 값 대신 하드코딩):**
 
@@ -279,7 +344,13 @@ Figma에 보이는 모든 텍스트와 숫자를 static UI copy와 dynamic data�
 
 **Impact: HIGH (Figma의 고정 라벨과 섹션 제목을 데이터라는 이유로 방치하지 않게 함)**
 
-Figma static label을 서버 데이터라고 착각해서 맞추지 않는 것도 오류입니다. 버튼 텍스트, column header, tab label, empty state, section heading은 제품 copy이므로 Figma 또는 사용자 지시를 기준으로 맞춥니다. 애매하면 먼저 "static copy 후보"와 "dynamic data 후보"로 분류해 보고합니다.
+Figma static label을 서버 데이터라고 착각해서 맞추지 않는 것도 오류입니다.
+버튼 텍스트,
+column header,
+tab label,
+empty state,
+section heading은 제품 copy이므로 Figma 또는 사용자 지시를 기준으로 맞춥니다.
+애매하면 먼저 "static copy 후보"와 "dynamic data 후보"로 분류해 보고합니다.
 
 **Incorrect (고정 라벨을 데이터라고 보고 방치):**
 
@@ -307,7 +378,9 @@ Visual parity 구현은 기존 컴포넌트와 디자인 토큰을 우선 사용
 
 **Impact: HIGH (visual polish 중 불필요한 구조 리팩터링과 shared surface 변경을 막음)**
 
-Visual parity 작업은 Figma와 현재 화면의 차이를 줄이는 데 집중합니다. 불필요한 구조 리팩터링, API/data shaping 변경, shared component/style 변경을 기본값으로 삼지 않습니다. scope 밖 shared surface 변경이 필요하면 왜 필요한지 먼저 보고하고 승인을 받습니다.
+Visual parity 작업은 Figma와 현재 화면의 차이를 줄이는 데 집중합니다.
+불필요한 구조 리팩터링, API/data shaping 변경, shared component/style 변경을 기본값으로 삼지 않습니다.
+scope 밖 shared surface 변경이 필요하면 왜 필요한지 먼저 보고하고 승인을 받습니다.
 
 **Incorrect (스타일 보정 중 구조를 크게 바꿈):**
 
@@ -328,7 +401,9 @@ scope: src/pages/detail
 
 **Impact: HIGH (UI polish 중 사용자에게 보이는 구조 신호를 임의 삭제하지 않게 함)**
 
-Visible label, section title, heading, column header는 화면 구조와 접근성의 일부입니다. Figma 또는 사용자가 명확히 제거하라고 하지 않는 한, visual polish를 이유로 임의 삭제하지 않습니다. Figma에 label이 있고 현재 구현에 없으면 static UI copy로 맞출 후보입니다.
+Visible label, section title, heading, column header는 화면 구조와 접근성의 일부입니다.
+Figma 또는 사용자가 명확히 제거하라고 하지 않는 한, visual polish를 이유로 임의 삭제하지 않습니다.
+Figma에 label이 있고 현재 구현에 없으면 static UI copy로 맞출 후보입니다.
 
 **Incorrect (깔끔해 보이게 하려고 heading 삭제):**
 
@@ -351,7 +426,11 @@ return (
 
 **Impact: HIGH (visual parity 작업이 raw CSS 누적이나 디자인 시스템 우회로 흐르지 않게 함)**
 
-Figma와 맞지 않는 부분을 고칠 때도 기존 컴포넌트, CSS 변수, spacing/color/type token, local wrapper 규칙을 먼저 확인합니다. 필요한 경우 owner scope 안에서 CSS/layout을 조정하되, 디자인 시스템에 이미 있는 표현을 raw value로 새로 늘리지 않습니다.
+Figma와 맞지 않는 부분을 고칠 때도 기존 컴포넌트,
+CSS 변수,
+spacing/color/type token,
+local wrapper 규칙을 먼저 확인합니다.
+필요한 경우 owner scope 안에서 CSS/layout을 조정하되, 디자인 시스템에 이미 있는 표현을 raw value로 새로 늘리지 않습니다.
 
 **Incorrect (토큰 확인 없이 raw CSS만 추가):**
 
@@ -383,7 +462,10 @@ Figma와 맞지 않는 부분을 고칠 때도 기존 컴포넌트, CSS 변수, 
 
 **Impact: CRITICAL (build/test 성공만으로 visual parity 완료를 선언하는 일을 막음)**
 
-Build/test 통과는 필요하지만 visual parity의 완료 조건은 아닙니다. 실제 브라우저에서 구현 화면 screenshot을 확인하고, Figma screenshot과 비교해 mismatch가 남으면 가능한 범위에서 수정 반복합니다. 브라우저 검증을 못 하면 완료가 아니라 미검증 상태로 보고합니다.
+Build/test 통과는 필요하지만 visual parity의 완료 조건은 아닙니다.
+실제 브라우저에서 구현 화면 screenshot을 확인하고,
+Figma screenshot과 비교해 mismatch가 남으면 가능한 범위에서 수정 반복합니다.
+브라우저 검증을 못 하면 완료가 아니라 미검증 상태로 보고합니다.
 
 **Incorrect (빌드 성공만으로 완료):**
 
@@ -404,7 +486,14 @@ Figma 대비 spacing과 button label mismatch 수정 완료.
 
 **Impact: CRITICAL (완료 보고에서 근거, 제외 항목, 남은 차이를 숨기지 않게 함)**
 
-완료 보고에는 사용한 Figma 링크/node, 수정 scope, 구현한 visual parity 항목, 동적 데이터라서 하드코딩하지 않은 항목, 정적 UI copy로 맞춘 항목, 브라우저 screenshot 검증 여부, 남은 mismatch, 실행한 검증 명령을 포함합니다.
+완료 보고에는 사용한 Figma 링크/node,
+수정 scope,
+구현한 visual parity 항목,
+동적 데이터라서 하드코딩하지 않은 항목,
+정적 UI copy로 맞춘 항목,
+브라우저 screenshot 검증 여부,
+남은 mismatch,
+실행한 검증 명령을 포함합니다.
 
 **Incorrect (검증 근거와 남은 차이를 생략):**
 

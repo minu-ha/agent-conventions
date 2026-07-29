@@ -9,7 +9,11 @@ tags: params, dynamic-routes, naming
 
 **Impact: MEDIUM-HIGH (keeps route params self-explanatory in file trees and inside Astro.params)**
 
-`[param].astro`와 `[...param].astro`의 이름은 도메인 의미가 드러나는 명사를 사용합니다. 실제 slug를 표현하는 경우가 아니라면 generic `id`, `path`, `value` 이름은 피하고, 파일 경로만 봐도 해당 param이 무엇을 가리키는지 알 수 있게 둡니다.
+`[param].astro`와 `[...param].astro`의 이름은 도메인 의미가 드러나는 명사를 사용합니다.
+실제 slug를 표현하는 경우가 아니라면 generic `id`,
+`path`,
+`value` 이름은 피하고,
+파일 경로만 봐도 해당 param이 무엇을 가리키는지 알 수 있게 둡니다.
 
 **Incorrect (generic param 이름으로 의미를 숨김):**
 

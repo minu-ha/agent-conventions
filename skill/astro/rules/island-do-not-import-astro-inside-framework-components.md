@@ -9,7 +9,8 @@ tags: islands, react, slots
 
 **Impact: CRITICAL (preserves Astro's component boundary and avoids unsupported cross-runtime composition)**
 
-React 같은 framework component 안에서는 `.astro` component를 직접 import하지 않습니다. Astro에서 framework island를 감싸고, 필요한 정적 조립은 slot이나 children으로 전달합니다.
+React 같은 framework component 안에서는 `.astro` component를 직접 import하지 않습니다.
+Astro에서 framework island를 감싸고, 필요한 정적 조립은 slot이나 children으로 전달합니다.
 
 **Incorrect (framework component에서 `.astro`를 직접 import해 runtime 경계를 깨뜨림):**
 

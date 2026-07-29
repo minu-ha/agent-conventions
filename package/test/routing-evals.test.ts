@@ -13,6 +13,11 @@ import type {RoutingEvalManifest, RoutingExpectedPartition, SkillCompanion} from
 
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
 const repoDir = path.resolve(currentDir, "../..");
+
+/**
+ * @helper 줄바꿈으로 접힌 본문을 한 줄로 펴서 문구 단위로 비교
+ */
+const flattenWhitespace = (text: string): string => text.replace(/\s+/g, " ");
 const realSkillRootDir = path.join(repoDir, "skill");
 const behavioralProtocolPath = path.join(repoDir, "docs/evaluations/2026-07-21-progressive-loading-behavioral-protocol.json");
 
@@ -1475,7 +1480,6 @@ const createValidManifest = (skill: string = "owner"): RoutingEvalManifest => ({
 			files: ["src/fixture.ts"],
 			expectedSkills: [skill],
 			expectedSelected: {[skill]: [...fixtureRuleIds]},
-			expectedNotApplicable: {[skill]: []},
 		},
 	],
 });
@@ -1607,13 +1611,8 @@ test("TypeScript routing manifest is an exact nine-scenario partition with full 
 	const covered = new Set<string>();
 	for (const scenario of manifest.scenarios) {
 		assert.deepEqual(scenario.expectedSkills, ["typescript"], `${scenario.id} initial expectedSkills must be exact`);
-		assert.ok(Object.hasOwn(scenario, "expectedNotApplicable"), `${scenario.id} must materialize expectedNotApplicable`);
-		const selected = new Set(scenario.expectedSelected.typescript ?? []);
-		assert.deepEqual(
-			scenario.expectedNotApplicable.typescript,
-			universe.filter((ruleId) => !selected.has(ruleId)),
-		);
 		for (const ruleId of scenario.expectedSelected.typescript ?? []) {
+			assert.ok((universe as readonly string[]).includes(ruleId), `${scenario.id} selected ${ruleId} must exist in the index`);
 			covered.add(ruleId);
 		}
 		for (const ruleId of scenario.scopeDrift?.expectedSelected.typescript ?? []) {
@@ -1705,7 +1704,7 @@ test("JSDoc routing closure and query-select ownership stay exact across every m
 	const queryShaping = reactManifest.scenarios.find(({id}) => id === "RTE12-query-shaping");
 	assert.ok(queryShaping);
 	assert.ok(queryShaping.expectedSelected.react?.includes("state-shape-query-data-with-select"));
-	assert.ok(queryShaping.expectedNotApplicable.react?.includes("screen-extract-utilities-selectively"));
+	assert.ok(!(queryShaping.expectedSelected.react?.includes("screen-extract-utilities-selectively") ?? false));
 	assert.equal(queryShaping.expectedSelected.react?.includes("screen-extract-utilities-selectively"), false);
 });
 
@@ -1776,19 +1775,19 @@ test("induced naming closure and activated finish gates stay mandatory across ev
 
 	const typescriptSkill = await readFile(path.join(realSkillRootDir, "typescript", "SKILL.md"), "utf8");
 	const cssSkill = await readFile(path.join(realSkillRootDir, "css", "SKILL.md"), "utf8");
-	assert.match(typescriptSkill, /completionGate[^\n]+완료[^\n]+Selected[^\n]+N\/A/i);
-	assert.match(cssSkill, /completionGate[^\n]+완료[^\n]+Selected[^\n]+N\/A/i);
-	assert.match(typescriptSkill, /requiresSelected[^\n]+즉시 Selected[^\n]+N\/A/i);
-	assert.match(cssSkill, /requiresSelected[^\n]+즉시 Selected[^\n]+N\/A/i);
+	assert.match(typescriptSkill, /`completionGate` 규칙은 마무리 시 항상 적용한다/);
+	assert.match(cssSkill, /`completionGate` 규칙은 마무리 시 항상 적용한다/);
+	assert.match(typescriptSkill, /`requiresSelected` target은 함께 적용한다[^\n]+companion도 활성화한다/);
+	assert.match(cssSkill, /`requiresSelected` target은 함께 적용한다[^\n]+companion도 활성화한다/);
 
 	const reactManifest = await readRoutingEvalManifest(getSkillPaths("react", realSkillRootDir));
 	const sharedAuthority = reactManifest.scenarios.find(({id}) => id === "RTE11-shared-authority");
 	assert.ok(sharedAuthority);
 	assert.ok(sharedAuthority.expectedSelected.react?.includes("state-preserve-origin-chaining"));
-	assert.ok(sharedAuthority.expectedNotApplicable.react?.includes("screen-keep-derived-values-close"));
+	assert.ok(!(sharedAuthority.expectedSelected.react?.includes("screen-keep-derived-values-close") ?? false));
 });
 
-test("TypeScript SKILL.md is a compact trigger-only router with every receipt and audit gate", async () => {
+test("TypeScript SKILL.md is a compact router without receipt or audit machinery", async () => {
 	const source = await readFile(path.join(realSkillRootDir, "typescript", "SKILL.md"), "utf8");
 	const frontmatterSource = source.match(/^---\n([\s\S]*?)\n---/)?.[1] ?? "";
 	const body = source.replace(/^---\n[\s\S]*?\n---\n?/, "");
@@ -1796,41 +1795,45 @@ test("TypeScript SKILL.md is a compact trigger-only router with every receipt an
 
 	assert.match(frontmatterSource, /^name: convention-typescript$/m);
 	assert.match(frontmatterSource, /^description: Use when /m);
-	assert.doesNotMatch(frontmatterSource, /scan|read|load|receipt|audit/i);
-	assert.equal(wordCount < 500, true, `router has ${wordCount} words`);
-	assert.equal(Buffer.byteLength(source, "utf8") < 6_000, true);
-	assert.match(body, /scope snapshot/i);
-	assert.match(body, /수정 전[^\n]+scope snapshot[^\n]+고정/i);
+	assert.doesNotMatch(frontmatterSource, /scan|read|load/i);
+	assert.equal(wordCount < 400, true, `router has ${wordCount} words`);
+	assert.equal(Buffer.byteLength(source, "utf8") < 5_000, true);
+
+	// 1. 변경 범위 판정
+	assert.match(body, /## 1\. 변경 범위 판정/);
+	assert.match(body, /최소 변경|범위를 넓히지 않는다/);
+
+	// 2. 인덱스 전체 훑기
 	assert.match(body, /RULES_INDEX\.md/);
-	assert.match(body, /처음부터 끝까지|전체.*scan|전부.*scan/i);
-	assert.match(body, /첫 match.*절대 멈추지 않는다/i);
-	assert.match(body, /sha256|digest/i);
-	assert.match(body, /Selected/);
-	assert.match(body, /Not applicable|N\/A/i);
-	assert.match(body, /Unknown/);
-	assert.match(body, /Selected와 Unknown.*stable ID.*contracts\/<stable-id>\.md.*전부 읽는다/i);
-	assert.match(body, /`CRITICAL`이면[^\n]+full rule도 반드시 읽는다/i);
-	assert.match(body, /exclusion|배제.*그룹/i);
-	assert.match(body, /ordinal.*union|합집합.*ordinal|ordinal.*합집합/i);
-	assert.match(body, /이유는 비어 있으면 안 된다/i);
-	assert.match(body, /reviewWith/);
-	assert.match(body, /Unknown[^\n]+Selected\/N\/A[^\n]+먼저 해소[^\n]+N\/A[^\n]+requiresSelected[^\n]+적용하지/i);
-	assert.match(body, /Selected로 확정한 contract[^\n]+requiresSelected[^\n]+즉시 Selected[^\n]+N\/A/i);
-	assert.match(body, /Selected contract[^\n]+필수 변경[^\n]+scope evidence/i);
-	assert.match(body, /예시[^\n]+선택적 대안[^\n]+해소되지 않은 Unknown[^\n]+가상 변경[^\n]+(?:evidence가 아니다|제외)/i);
-	assert.match(body, /reviewWith[^\n]+고정점[^\n]+반복/i);
-	assert.match(body, /고정점[^\n]+Selected contract[^\n]+Expanded 원문[^\n]+구현·리뷰 기준/i);
-	assert.ok(body.indexOf("contracts/<stable-id>.md") < body.indexOf("고정점"));
-	assert.match(body, /scope drift/i);
-	assert.match(body, /Selected\/Unknown[^\n]+ordinal[^\n]+stable ID[^\n]+N\/A[^\n]+ordinal/i);
-	assert.match(body, /Selected\/N\/A\/Unknown[^\n]+(?:disjoint|겹치지)[^\n]+전체 ordinal[^\n]+exact partition/i);
-	assert.match(body, /scope drift[^\n]+snapshot[^\n]+(?:activation|활성화)[^\n]+재판정/i);
-	assert.match(body, /digest-bound implementer receipt[^\n]+Expanded[^\n]+evidence[^\n]+검증[^\n]+sealed comparison[^\n]+audit/i);
-	assert.match(body, /convention-audit/);
-	assert.match(body, /FAIL.*0/);
-	assert.match(body, /UNKNOWN.*0/);
-	assert.match(body, /AGENTS\.md.*handbook|handbook.*AGENTS\.md|fallback.*AGENTS\.md/i);
-	assert.match(body, /index\/contract\/필요 rule 손상·누락/i);
+	assert.match(body, /끝까지 훑/);
+	assert.match(body, /첫 match에서 멈추지 않는다/);
+
+	// 3. 규칙 읽고 구현
+	assert.match(body, /contracts\/<id>\.md/);
+	assert.match(body, /`CRITICAL`이면 `rules\/<id>\.md` 원문도 반드시 읽는다/);
+	assert.match(body, /`requiresSelected` target은 함께 적용한다/);
+	assert.match(body, /`reviewWith` target은[^\n]+자동으로 적용하지는 않는다/);
+	assert.match(body, /`completionGate` 규칙은 마무리 시 항상 적용한다/);
+	assert.match(body, /다시 훑는다[^\n]*\n?[^\n]*더 걸리는 게 없으면 멈춘다|더 걸리는 게 없으면 멈춘다/);
+
+	// 4~5. 범위 변경과 마무리
+	assert.match(body, /## 4\. 범위 변경/);
+	assert.match(body, /## 5\. 마무리/);
+	assert.match(body, /file\/line과 수정안으로 보고한다/);
+	assert.match(body, /통과는 컨벤션을 지켰다는 근거가 아니다/);
+
+	// opt-in full handbook
+	assert.match(body, /\[HANDBOOK\.md\]\(\.\/HANDBOOK\.md\)는 전체 handbook이다/);
+
+	// 제거한 강제 장치가 되살아나지 않아야 한다
+	assert.doesNotMatch(body, /digest|sha256/i);
+	assert.doesNotMatch(body, /exact partition|ordinal/i);
+	assert.doesNotMatch(body, /receipt/i);
+	assert.doesNotMatch(body, /convention-audit/);
+	assert.doesNotMatch(body, /Excluded groups|exclusion group/i);
+
+	// companion 경계
+	assert.match(body, /React\/CSS 경계가 걸리면 해당 companion도 활성화한다/);
 });
 
 test("React progressive metadata and all 42 rule routes match Appendix B exactly", async () => {
@@ -1838,8 +1841,8 @@ test("React progressive metadata and all 42 rule routes match Appendix B exactly
 	const document = await readSkillDocument(skillPaths);
 
 	assert.equal(document.metadata.progressiveDisclosure, true);
-	assert.match(document.metadata.abstract, /SKILL\.md.*RULES_INDEX\.md/);
-	assert.match(document.metadata.abstract, /AGENTS\.md.*opt-in.*full handbook/i);
+	// abstract 는 사람이 읽는 개요다. 로딩 경로 설명을 넣지 않는다.
+	assert.doesNotMatch(document.metadata.abstract, /SKILL\.md|RULES_INDEX\.md|contracts\/|opt-in/);
 	assert.deepEqual(document.metadata.companions, [
 		{skill: "typescript", mode: "required"},
 		{skill: "css", mode: "conditional", appliesWhen: "class contract, stylesheet 또는 styling surface를 변경한다."},
@@ -1873,7 +1876,7 @@ test("React progressive metadata and all 42 rule routes match Appendix B exactly
 		/local query·mutation binding[^\n]+state-name-query-and-mutation-bindings-consistently|state-name-query-and-mutation-bindings-consistently[^\n]+local query·mutation binding/i,
 	);
 	const screenExtractionRule = await readFile(path.join(skillPaths.rulesDir, "screen-extract-utilities-selectively.md"), "utf8");
-	assert.match(screenExtractionRule, /query `select`[^\n]+state-shape-query-data-with-select[^\n]+별도 함수\/support module[^\n]+N\/A/i);
+	assert.match(screenExtractionRule, /query `select`[\s\S]+state-shape-query-data-with-select[\s\S]+별도 함수\/support module[\s\S]+N\/A/i);
 	assert.match(screenExtractionRule, /Incorrect[\s\S]*normalizeEntryValues[\s\S]*mergeEntryPayload/i);
 	assert.match(screenExtractionRule, /Correct[\s\S]*normalizeTreeNodes[\s\S]*handleSave/i);
 	assert.match(screenExtractionRule, /Correct[\s\S]*한 exported 함수[\s\S]*buildEntryPayload/i);
@@ -1882,10 +1885,11 @@ test("React progressive metadata and all 42 rule routes match Appendix B exactly
 	assert.match(template, /^appliesWhen: /m);
 	assert.doesNotMatch(template, /^reviewWith: /m);
 
-	const readme = await readFile(path.join(skillPaths.skillDir, "README.md"), "utf8");
-	assert.match(readme, /appliesWhen.*한 줄.*160/);
-	assert.match(readme, /reviewWith.*자동 선택.*아니.*재평가/i);
-	assert.match(readme, /대상.*없으면.*key.*생략/i);
+	// frontmatter 작성 규칙은 스킬마다 복제하지 않고 공통 기여 문서 한 곳에 둔다.
+	const contributing = await readFile(path.join(repoDir, "CONTRIBUTING.md"), "utf8");
+	assert.match(contributing, /appliesWhen.*한 줄.*160/);
+	assert.match(contributing, /reviewWith.*자동 선택이 아니라.*재평가/i);
+	assert.match(contributing, /대상이 없으면.*key\s*를 생략/i);
 });
 
 test("React routing manifest is the exact fifteen-scenario Appendix B/D oracle with full positive coverage", async () => {
@@ -1958,21 +1962,12 @@ test("React routing manifest is the exact fifteen-scenario Appendix B/D oracle w
 			assert.deepEqual(actual.files, expectedFiles, `${scenarioId} ${label} files must be exact`);
 			assert.deepEqual(actual.expectedSkills, expectedSkills, `${scenarioId} ${label} expectedSkills must be exact`);
 			assert.deepEqual(actual.expectedSelected, expectedSelected, `${scenarioId} ${label} selected maps must be exact`);
-			assert.deepEqual(
-				Object.keys(actual.expectedNotApplicable),
-				Object.keys(expectedSelected),
-				`${scenarioId} ${label} N/A map keys must match activated progressive skills`,
-			);
-
 			for (const [skillName, selectedRuleIds] of Object.entries(expectedSelected)) {
 				const universe = universeBySkillName[skillName];
 				assert.ok(universe, `${scenarioId} ${label} ${skillName} must have a known progressive universe`);
-				const selected = new Set(selectedRuleIds);
-				assert.deepEqual(
-					actual.expectedNotApplicable[skillName],
-					universe.filter((ruleId) => !selected.has(ruleId)),
-					`${scenarioId} ${label} ${skillName} N/A partition must be exact`,
-				);
+				for (const ruleId of selectedRuleIds) {
+					assert.ok(universe.includes(ruleId), `${scenarioId} ${label} ${skillName} selected ${ruleId} must exist`);
+				}
 			}
 
 			for (const ruleId of actual.expectedSelected.react ?? []) {
@@ -2001,14 +1996,14 @@ test("React routing manifest is the exact fifteen-scenario Appendix B/D oracle w
 	assert.equal(cssDrift.expectedSelected.css?.includes("composition-do-not-build-structural-variants-with-modifiers"), true);
 	assert.equal(cssDrift.expectedSelected.css?.includes("values-separate-domain-state-modifiers-from-dom-interaction-states"), true);
 	assert.equal(cssDrift.expectedSelected.css?.includes("naming-preserve-route-slug-traceability"), true);
-	assert.equal(cssDrift.expectedNotApplicable.css?.includes("naming-preserve-route-slug-traceability"), false);
+	assert.equal(cssDrift.expectedSelected.css?.includes("naming-preserve-route-slug-traceability") ?? false, true);
 
 	const routeSupport = scenarioById.get("RTE03-route-support-extraction");
 	assert.equal(routeSupport?.expectedSelected.typescript?.includes("types-reuse-existing-contracts-before-new-types"), false);
-	assert.equal(routeSupport?.expectedNotApplicable.typescript?.includes("types-reuse-existing-contracts-before-new-types"), true);
+	assert.equal(routeSupport?.expectedSelected.typescript?.includes("types-reuse-existing-contracts-before-new-types") ?? false, false);
 	const derivedSelection = scenarioById.get("RTE10-derived-selection-state");
 	assert.equal(derivedSelection?.expectedSelected.react?.includes("events-keep-handler-flow-inline"), false);
-	assert.equal(derivedSelection?.expectedNotApplicable.react?.includes("events-keep-handler-flow-inline"), true);
+	assert.equal(derivedSelection?.expectedSelected.react?.includes("events-keep-handler-flow-inline") ?? false, false);
 });
 
 test("React generated index and handbook preserve canonical local rules and compact companion links", async () => {
@@ -2033,16 +2028,13 @@ test("React generated index and handbook preserve canonical local rules and comp
 	const handbook = await readFile(skillPaths.outputPath, "utf8");
 	assert.match(handbook, /metadata\.json\.companions/);
 	assert.doesNotMatch(handbook, /metadata\.json\.extends/);
-	assert.match(handbook, /^## Companion Skill 활성화$/m);
+	assert.match(handbook, /^## 함께 따르는 규칙$/m);
+	assert.match(handbook, /^- \[TypeScript Convention\]\(\.\.\/typescript\/HANDBOOK\.md\) — 항상 함께 적용합니다\.$/m);
 	assert.match(
 		handbook,
-		/^- `convention-typescript`[^\n]*mode: `required`[^\n]*\.\.\/typescript\/SKILL\.md[^\n]*\.\.\/typescript\/RULES_INDEX\.md[^\n]*$/m,
+		/^- \[CSS Convention\]\(\.\.\/css\/HANDBOOK\.md\) — 다음 조건에서 함께 적용합니다\. class contract, stylesheet 또는 styling surface를 변경한다\.$/m,
 	);
-	assert.match(
-		handbook,
-		/^- `convention-css`[^\n]*mode: `conditional`[^\n]*appliesWhen: class contract, stylesheet 또는 styling surface를 변경한다\.[^\n]*\.\.\/css\/SKILL\.md[^\n]*\.\.\/css\/RULES_INDEX\.md[^\n]*$/m,
-	);
-	assert.doesNotMatch(handbook, /\.\.\/(?:typescript|css)\/AGENTS\.md/);
+	assert.match(handbook, /\.\.\/typescript\/HANDBOOK\.md/);
 
 	for (const rule of document.rules) {
 		const bodyWithoutHeading = rule.body.replace(/^## .+\n+/, "");
@@ -2058,140 +2050,60 @@ test("React generated index and handbook preserve canonical local rules and comp
 		}
 	}
 
-	const companionSection = handbook.match(/^## Companion Skill 활성화$[\s\S]*?(?=\n---\n)/m)?.[0] ?? "";
-	assert.equal((companionSection.match(/`convention-typescript`/g) ?? []).length, 1);
-	assert.equal((companionSection.match(/`convention-css`/g) ?? []).length, 1);
+	const companionSection = handbook.match(/^## 함께 따르는 규칙$[\s\S]*?(?=\n---\n)/m)?.[0] ?? "";
+	assert.equal((companionSection.match(/TypeScript Convention/g) ?? []).length, 1);
+	assert.equal((companionSection.match(/CSS Convention/g) ?? []).length, 1);
 });
 
-test("React SKILL.md is a compact full-index router with required TypeScript and conditional CSS", async () => {
-	const skillDir = path.join(realSkillRootDir, "react");
-	const source = await readFile(path.join(skillDir, "SKILL.md"), "utf8");
+test("React SKILL.md is a compact router with required TypeScript and conditional CSS", async () => {
+	const source = await readFile(path.join(realSkillRootDir, "react", "SKILL.md"), "utf8");
 	const frontmatterSource = source.match(/^---\n([\s\S]*?)\n---/)?.[1] ?? "";
 	const body = source.replace(/^---\n[\s\S]*?\n---\n?/, "");
 	const wordCount = body.trim().split(/\s+/).filter(Boolean).length;
 
 	assert.match(frontmatterSource, /^name: convention-react$/m);
 	assert.match(frontmatterSource, /^description: Use when /m);
-	assert.doesNotMatch(frontmatterSource, /scan|read|load|receipt|audit/i);
-	assert.equal(wordCount < 500, true, `router has ${wordCount} words`);
-	assert.equal(Buffer.byteLength(source, "utf8") < 6_000, true);
-	assert.match(body, /scope snapshot/i);
-	assert.match(body, /수정 전[^\n]+scope snapshot[^\n]+고정/i);
-	assert.match(body, /render[^\n]+screen[^\n]+(?:owner|route-local)[^\n]+React support code/i);
-	assert.match(body, /owner\/route-local 이동[^\n]+포함/i);
-	assert.match(
-		body,
-		/owner 이동[^\n]+byte-equivalent[^\n]+내부 선언[^\n]+본문[^\n]+import[^\n]+class\/style[^\n]+별도 surface[^\n]+다시 세지/i,
-	);
+	assert.doesNotMatch(frontmatterSource, /scan|read|load/i);
+	assert.equal(wordCount < 400, true, `router has ${wordCount} words`);
+	assert.equal(Buffer.byteLength(source, "utf8") < 5_000, true);
+
+	// 1. 변경 범위 판정
+	assert.match(body, /## 1\. 변경 범위 판정/);
+	assert.match(body, /최소 변경|범위를 넓히지 않는다/);
+
+	// 2. 인덱스 전체 훑기
 	assert.match(body, /RULES_INDEX\.md/);
-	assert.match(body, /처음부터 끝까지|전체.*scan|전부.*scan/i);
-	assert.match(body, /첫 match.*절대 멈추지 않는다/i);
-	assert.match(body, /모든 활성(?:화된)? skill[^\n]{0,160}SKILL\.md[^\n]{0,120}(?:계약|따른|읽)/i);
-	assert.match(
-		body,
-		/progressiveDisclosure[^\n]{0,40}true[^\n]{0,160}RULES_INDEX\.md[^\n]{0,160}(?:전체|처음부터 끝까지|full)[^\n]{0,80}(?:scan|판정|읽)[^\n]{0,160}(?:digest|receipt)/i,
-	);
-	assert.match(body, /non-progressive skill[^\n]{0,160}SKILL\.md[^\n]{0,160}AGENTS\.md[^\n]{0,100}(?:계약|따른|읽|로드)/i);
+	assert.match(body, /끝까지 훑/);
+	assert.match(body, /첫 match에서 멈추지 않는다/);
 
-	const sectionSources = new Map<string, string>();
-	for (const sectionSource of body.split(/^## /m)) {
-		const sectionMatch = sectionSource.match(/^([2-6])\.[^\n]*\n([\s\S]*)$/);
+	// 3. 규칙 읽고 구현
+	assert.match(body, /contracts\/<id>\.md/);
+	assert.match(body, /`CRITICAL`이면 `rules\/<id>\.md` 원문도 반드시 읽는다/);
+	assert.match(body, /`requiresSelected` target은 함께 적용한다/);
+	assert.match(body, /`reviewWith` target은[^\n]+자동으로 적용하지는 않는다/);
+	assert.match(body, /`completionGate` 규칙은 마무리 시 항상 적용한다/);
+	assert.match(body, /다시 훑는다[^\n]*\n?[^\n]*더 걸리는 게 없으면 멈춘다|더 걸리는 게 없으면 멈춘다/);
 
-		if (sectionMatch) {
-			sectionSources.set(sectionMatch[1] ?? "", sectionMatch[2] ?? "");
-		}
-	}
-	for (const sectionNumber of ["2", "3", "5", "6"]) {
-		assert.match(
-			sectionSources.get(sectionNumber) ?? "",
-			/(?:활성(?:화된)?[^\n]{0,80}progressive[^\n]{0,80}index|progressive[^\n]{0,80}활성(?:화된)?[^\n]{0,80}index)/i,
-			`section ${sectionNumber} must qualify the contract as activated progressive indexes`,
-		);
-	}
+	// 4~5. 범위 변경과 마무리
+	assert.match(body, /## 4\. 범위 변경/);
+	assert.match(body, /## 5\. 마무리/);
+	assert.match(body, /file\/line과 수정안으로 보고한다/);
+	assert.match(body, /통과는 컨벤션을 지켰다는 근거가 아니다/);
 
-	for (const legacySkillName of ["tanstack-route", "playwright-test"] as const) {
-		const legacySkillPaths = getSkillPaths(legacySkillName, realSkillRootDir);
-		const legacyMetadata = JSON.parse(await readFile(legacySkillPaths.metadataPath, "utf8")) as {progressiveDisclosure?: boolean};
+	// opt-in full handbook
+	assert.match(body, /\[HANDBOOK\.md\]\(\.\/HANDBOOK\.md\)는 전체 handbook이다/);
 
-		assert.notEqual(legacyMetadata.progressiveDisclosure, true, `${legacySkillName} must remain non-progressive`);
-		await assert.rejects(access(legacySkillPaths.rulesIndexPath), {code: "ENOENT"});
-	}
-	assert.match(body, /sha256|digest/i);
-	assert.match(body, /Selected/);
-	assert.match(body, /Not applicable|N\/A/i);
-	assert.match(body, /Unknown/);
-	assert.match(body, /Selected와 Unknown.*stable ID.*contracts\/<stable-id>\.md.*전부 읽는다/i);
-	assert.match(body, /`CRITICAL`이면[^\n]+full rule도 반드시 읽는다/i);
-	assert.match(body, /exclusion|배제.*그룹/i);
-	assert.match(body, /비어 있지 않은|비어 있으면 안 된다/i);
-	assert.match(body, /ordinal.*union|합집합.*ordinal|ordinal.*합집합/i);
-	assert.match(body, /reviewWith/);
-	assert.match(body, /Unknown[^\n]+Selected\/N\/A[^\n]+먼저 해소[^\n]+N\/A[^\n]+requiresSelected[^\n]+적용하지/i);
-	assert.match(body, /Selected로 확정한 contract[^\n]+requiresSelected[^\n]+즉시 Selected[^\n]+N\/A/i);
-	assert.match(body, /Selected contract[^\n]+필수 변경[^\n]+scope evidence/i);
-	assert.match(body, /예시[^\n]+선택적 대안[^\n]+해소되지 않은 Unknown[^\n]+가상 변경[^\n]+(?:evidence가 아니다|제외)/i);
-	assert.match(body, /reviewWith[^\n]+고정점[^\n]+반복/i);
-	assert.match(body, /고정점[^\n]+Selected contract[^\n]+Expanded 원문[^\n]+구현·리뷰 기준/i);
-	assert.ok(body.indexOf("contracts/<stable-id>.md") < body.indexOf("고정점"));
-	assert.match(body, /scope drift/i);
-	assert.match(body, /Selected\/Unknown[^\n]+ordinal[^\n]+stable ID[^\n]+N\/A[^\n]+ordinal/i);
-	assert.match(body, /Selected\/N\/A\/Unknown[^\n]+(?:disjoint|겹치지)[^\n]+전체 ordinal[^\n]+exact partition/i);
-	assert.match(body, /scope drift[^\n]+snapshot[^\n]+(?:activation|활성화)[^\n]+재판정/i);
-	assert.match(body, /digest-bound implementer receipt[^\n]+Expanded[^\n]+evidence[^\n]+검증[^\n]+sealed comparison[^\n]+audit/i);
-	assert.match(body, /convention-typescript.*필수|필수.*convention-typescript/i);
-	assert.match(body, /route·search·navigation·browser test[^\n]+전용 skill[^\n]+판정/i);
-	assert.match(body, /class contract·stylesheet·styling surface[^\n]+때만[^\n]+convention-css/i);
-	assert.match(
-		body,
-		/(?:(?:조건부|때만|일치(?:하면|할 때| 시)?)[^\n]{0,160}`?convention-css`?[^\n]{0,80}(?:활성화|activation)|`?convention-css`?[^\n]{0,160}(?:조건부|때만|일치(?:하면|할 때| 시)?)[^\n]{0,80}(?:활성화|activation))/i,
-	);
-	assert.match(
-		body,
-		/(?:(?:조건(?:이)? 없으면|그 외(?:에는)?|otherwise)[^\n]{0,160}(?:CSS|convention-css)[^\n]{0,80}(?:제외|비활성|활성화하지 않)|(?:CSS|convention-css)[^\n]{0,160}(?:조건(?:이)? 없으면|그 외(?:에는)?|otherwise)[^\n]{0,80}(?:제외|비활성|활성화하지 않))/i,
-	);
-	assert.match(body, /convention-audit/);
-	assert.match(body, /FAIL.*0/);
-	assert.match(body, /UNKNOWN.*0/);
-	assert.match(body, /AGENTS\.md.*handbook|handbook.*AGENTS\.md|opt-in.*AGENTS\.md/i);
-	assert.match(body, /AGENTS\.md[\s\S]*?(?:명시적으로 요청|fallback)[\s\S]*?때만 읽/i);
-	assert.match(body, /index\/contract\/필요 rule 손상·누락/i);
-	assert.doesNotMatch(body, /(?:먼저|우선)[^\n]{0,80}AGENTS\.md[^\n]{0,80}(?:열|읽|로드|훑)/i);
+	// 제거한 강제 장치가 되살아나지 않아야 한다
+	assert.doesNotMatch(body, /digest|sha256/i);
+	assert.doesNotMatch(body, /exact partition|ordinal/i);
+	assert.doesNotMatch(body, /receipt/i);
+	assert.doesNotMatch(body, /convention-audit/);
+	assert.doesNotMatch(body, /Excluded groups|exclusion group/i);
 
-	const readme = await readFile(path.join(skillDir, "README.md"), "utf8");
-	assert.match(readme, /RULES_INDEX\.md/);
-	assert.match(readme, /routing-evals\.json/);
-	assert.match(readme, /Selected/);
-	assert.match(readme, /N\/A|Not applicable/);
-	assert.match(readme, /Unknown/);
-	assert.match(readme, /check:generated:react/);
-	assert.match(readme, /AGENTS\.md.*opt-in.*full handbook/i);
-	assert.doesNotMatch(readme, /(?:먼저|우선)[^\n]{0,80}AGENTS\.md[^\n]{0,80}(?:열|읽|로드|훑)/i);
-
-	const pressureTests = await readFile(path.join(skillDir, "pressure-tests.md"), "utf8");
-	assert.match(pressureTests, /RTE02-owner-placement-css-drift/);
-	assert.match(pressureTests, /RTE15-suspense-absence/);
-	assert.match(pressureTests, /15개 scenario, 16개 stage/);
-	for (const scenarioId of Object.keys(reactScenarioStages)) {
-		assert.equal((pressureTests.match(new RegExp(scenarioId, "g")) ?? []).length >= 1, true, `${scenarioId} must be documented`);
-	}
-	assert.match(pressureTests, /scope drift/i);
-	assert.match(pressureTests, /no-skill baseline/);
-	assert.match(pressureTests, /full-handbook oracle/);
-	assert.match(pressureTests, /progressive candidate/);
-	assert.match(pressureTests, /mutation RED/);
-	assert.match(pressureTests, /최소 2회.*3회|2회.*CRITICAL.*3회/i);
-	assert.match(pressureTests, /exact.*precision|precision.*exact/i);
-	assert.match(pressureTests, /input token/i);
-	assert.match(pressureTests, /telemetry/i);
-	assert.match(pressureTests, /median|중앙값/i);
-	assert.match(pressureTests, /절감률/);
-	assert.doesNotMatch(pressureTests, /^\s*-\s*(?:baseline|candidate):/im);
-
-	const cssPressureTests = await readFile(path.join(realSkillRootDir, "css", "pressure-tests.md"), "utf8");
-	assert.doesNotMatch(cssPressureTests, /React는 아직 non-progressive|react partition을 만들지 않는다/i);
-	assert.match(cssPressureTests, /mixed fixture 5개.*React.*exact partition/i);
-	const cssReadme = await readFile(path.join(realSkillRootDir, "css", "README.md"), "utf8");
-	assert.match(cssReadme, /mixed fixture 5개.*React.*exact partition/i);
+	// companion 경계
+	assert.match(body, /`convention-typescript`는 항상 함께 활성화한다/);
+	assert.match(body, /class contract·stylesheet·styling surface가 바뀔 때만 `convention-css`를 추가하고, 아니면 켜지 않는다/);
+	assert.match(body, /non-progressive skill이면[^\n]+`HANDBOOK\.md`를 읽는다/);
 });
 
 test("CSS progressive metadata and rule routing match Appendix C exactly", async () => {
@@ -2199,8 +2111,8 @@ test("CSS progressive metadata and rule routing match Appendix C exactly", async
 	const document = await readSkillDocument(skillPaths);
 
 	assert.equal(document.metadata.progressiveDisclosure, true);
-	assert.match(document.metadata.abstract, /SKILL\.md.*RULES_INDEX\.md/);
-	assert.match(document.metadata.abstract, /AGENTS\.md.*opt-in.*full handbook/i);
+	// abstract 는 사람이 읽는 개요다. 로딩 경로 설명을 넣지 않는다.
+	assert.doesNotMatch(document.metadata.abstract, /SKILL\.md|RULES_INDEX\.md|contracts\/|opt-in/);
 	assert.deepEqual(document.metadata.companions, [
 		{skill: "typescript", mode: "conditional", appliesWhen: "TS/TSX class contract, wrapper Props 또는 style import를 함께 변경한다."},
 	]);
@@ -2223,23 +2135,24 @@ test("CSS progressive metadata and rule routing match Appendix C exactly", async
 		path.join(skillPaths.rulesDir, "composition-style-ui-components-through-owned-wrappers.md"),
 		"utf8",
 	);
-	assert.match(wrapperStylingRule, /실제 `Ui\*` React wrapper[^\n]+CSS-only[^\n]+selector-target-third-party-dom-from-owned-roots/i);
+	assert.match(wrapperStylingRule, /실제 `Ui\*` React wrapper[\s\S]+CSS-only[\s\S]+selector-target-third-party-dom-from-owned-roots/i);
 	const singlePurposeRule = await readFile(path.join(skillPaths.rulesDir, "composition-keep-classes-single-purpose.md"), "utf8");
 	assert.match(singlePurposeRule, /^appliesWhen:[^\n]+기존 결합 책임[^\n]+처음부터 새 single-purpose pair/m);
 	const layoutIntentRule = await readFile(path.join(skillPaths.rulesDir, "values-keep-layout-intent-explicit.md"), "utf8");
 	assert.match(layoutIntentRule, /^appliesWhen:[^\n]+base\/modifier[^\n]+`display`·spacing[^\n]+값 그대로/m);
 	const fallbackRule = await readFile(path.join(skillPaths.rulesDir, "values-always-provide-css-variable-fallbacks.md"), "utf8");
 	assert.match(fallbackRule, /^appliesWhen:[^\n]+`var\(--\*\)`[^\n]+같은 stylesheet[^\n]+byte-equivalent/m);
-	assert.match(fallbackRule, /실제 diff에 새 CSS variable 사용[^\n]+요청 여부와 무관하게[^\n]+다시 선택/i);
+	assert.match(flattenWhitespace(fallbackRule), /실제 diff에 새 CSS variable 사용[^\n]+요청 여부와 무관하게[^\n]+다시 선택/i);
 
 	const template = await readFile(path.join(skillPaths.rulesDir, "_template.md"), "utf8");
 	assert.match(template, /^appliesWhen: /m);
 	assert.doesNotMatch(template, /^reviewWith: /m);
 
-	const readme = await readFile(path.join(skillPaths.skillDir, "README.md"), "utf8");
-	assert.match(readme, /appliesWhen.*한 줄.*160/);
-	assert.match(readme, /reviewWith.*자동 선택.*아니.*재평가/i);
-	assert.match(readme, /대상.*없으면.*key.*생략/i);
+	// frontmatter 작성 규칙은 스킬마다 복제하지 않고 공통 기여 문서 한 곳에 둔다.
+	const contributing = await readFile(path.join(repoDir, "CONTRIBUTING.md"), "utf8");
+	assert.match(contributing, /appliesWhen.*한 줄.*160/);
+	assert.match(contributing, /reviewWith.*자동 선택이 아니라.*재평가/i);
+	assert.match(contributing, /대상이 없으면.*key\s*를 생략/i);
 });
 
 test("CSS routing manifest is the exact eleven-scenario and thirteen-stage Appendix C/D oracle", async () => {
@@ -2306,12 +2219,6 @@ test("CSS routing manifest is the exact eleven-scenario and thirteen-stage Appen
 			assert.deepEqual(actual.files, expectedFiles, `${scenarioId} ${label} files must be exact`);
 			assert.deepEqual(actual.expectedSkills, expectedSkills, `${scenarioId} ${label} expectedSkills must be exact`);
 			assert.deepEqual(actual.expectedSelected, expectedSelected, `${scenarioId} ${label} selected maps must be exact`);
-			assert.deepEqual(
-				Object.keys(actual.expectedNotApplicable),
-				Object.keys(expectedSelected),
-				`${scenarioId} ${label} N/A map keys must match activated progressive skills`,
-			);
-
 			for (const [skillName, selectedRuleIds] of Object.entries(expectedSelected)) {
 				const universeBySkillName: Record<string, readonly string[]> = {
 					css: cssRuleUniverse,
@@ -2320,12 +2227,9 @@ test("CSS routing manifest is the exact eleven-scenario and thirteen-stage Appen
 				};
 				const universe = universeBySkillName[skillName];
 				assert.ok(universe, `${scenarioId} ${label} ${skillName} must have a known progressive universe`);
-				const selected = new Set(selectedRuleIds);
-				assert.deepEqual(
-					actual.expectedNotApplicable[skillName],
-					universe.filter((ruleId) => !selected.has(ruleId)),
-					`${scenarioId} ${label} ${skillName} N/A partition must be exact`,
-				);
+				for (const ruleId of selectedRuleIds) {
+					assert.ok(universe.includes(ruleId), `${scenarioId} ${label} ${skillName} selected ${ruleId} must exist`);
+				}
 			}
 
 			for (const ruleId of actual.expectedSelected.css ?? []) {
@@ -2350,7 +2254,7 @@ test("CSS routing manifest is the exact eleven-scenario and thirteen-stage Appen
 
 	const oneOffStructuralModifier = scenarioById.get("css-one-off-structural-modifier");
 	assert.equal(oneOffStructuralModifier?.expectedSelected.css?.includes("composition-keep-classes-single-purpose"), false);
-	assert.equal(oneOffStructuralModifier?.expectedNotApplicable.css?.includes("composition-keep-classes-single-purpose"), true);
+	assert.equal(oneOffStructuralModifier?.expectedSelected.css?.includes("composition-keep-classes-single-purpose") ?? false, false);
 
 	const repeatedValues = scenarioById.get("css-repeated-values-and-optional-token");
 	assert.equal(repeatedValues?.expectedSelected.css?.includes("selector-use-pseudo-classes-for-dom-owned-states"), true);
@@ -2358,7 +2262,7 @@ test("CSS routing manifest is the exact eleven-scenario and thirteen-stage Appen
 
 	const wrapperDrift = scenarioById.get("css-ui-wrapper-third-party-dom");
 	assert.equal(wrapperDrift?.expectedSelected.css?.includes("values-always-provide-css-variable-fallbacks"), false);
-	assert.equal(wrapperDrift?.expectedNotApplicable.css?.includes("values-always-provide-css-variable-fallbacks"), true);
+	assert.equal(wrapperDrift?.expectedSelected.css?.includes("values-always-provide-css-variable-fallbacks") ?? false, false);
 	assert.equal(wrapperDrift?.scopeDrift?.expectedSelected.css?.includes("values-always-provide-css-variable-fallbacks"), true);
 });
 
@@ -2367,23 +2271,21 @@ test("routing activation and generated indexes use only the changed semantic del
 		path.join(realSkillRootDir, "react", "SKILL.md"),
 		path.join(realSkillRootDir, "typescript", "SKILL.md"),
 		path.join(realSkillRootDir, "css", "SKILL.md"),
-		path.join(realSkillRootDir, "convention-audit", "SKILL.md"),
 	];
 	const templatePaths = [
 		path.join(realSkillRootDir, "react", "rules", "_template.md"),
 		path.join(realSkillRootDir, "typescript", "rules", "_template.md"),
 		path.join(realSkillRootDir, "css", "rules", "_template.md"),
-		path.join(repoDir, "AGENTS.frontend-conventions.md"),
 	];
 
 	for (const source of await Promise.all([...routerPaths, ...templatePaths].map((filePath) => readFile(filePath, "utf8")))) {
-		assert.match(source, /변경 (?:semantic )?delta/i);
+		assert.match(source, /변경 (?:semantic )?delta|실제 변경|실제로 바꾼 것|변경 범위/i);
 		assert.match(source, /추가·삭제·이동|추가·삭제·이동·이름 변경/);
 		assert.match(source, /read-only|byte-equivalent/);
 		assert.match(source, /삭제\+추가|삭제·추가/);
 		assert.match(source, /다시 세지|별도.*(?:추가|변경|재선언)/);
-		assert.match(source, /N\/A rule|N\/A 규칙/);
-		assert.match(source, /최소 semantic patch|최소.*semantic.*patch/i);
+		assert.match(source, /N\/A rule|N\/A 규칙|적용되지 않는 규칙/);
+		assert.match(source, /최소 semantic patch|최소 변경|범위를 넓히지 않/i);
 	}
 
 	const typescriptDocument = await readSkillDocument(getSkillPaths("typescript", realSkillRootDir));
@@ -2431,10 +2333,7 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 	assert.match(reactContracts[2]!, /curried[\s\S]*one-off contextual callback/i);
 
 	const typescriptRouter = await readFile(path.join(realSkillRootDir, "typescript", "SKILL.md"), "utf8");
-	assert.match(
-		typescriptRouter,
-		/byte-equivalent[\s\S]*named shape[\s\S]*callable (?:input|입력)[\s\S]*(?:output|출력)[\s\S]*semantic delta/i,
-	);
+	assert.match(typescriptRouter, /byte-equivalent[\s\S]*named shape[\s\S]*callable[\s\S]*input\/output[\s\S]*변경으로 본다/i);
 
 	const documentedShape = await readRule("typescript", "types-document-custom-types-and-shapes");
 	assert.match(documentedShape, /기존 named shape[\s\S]*새 callable (?:input|입력)[\s\S]*(?:output|출력)[\s\S]*Selected/i);
@@ -2520,7 +2419,7 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 	const tsSelected = (scenarioId: string, ruleId: string): boolean =>
 		mixedScenarioById.get(scenarioId)?.expectedSelected.typescript?.includes(ruleId) ?? false;
 	const tsNotApplicable = (scenarioId: string, ruleId: string): boolean =>
-		mixedScenarioById.get(scenarioId)?.expectedNotApplicable.typescript?.includes(ruleId) ?? false;
+		!(mixedScenarioById.get(scenarioId)?.expectedSelected.typescript?.includes(ruleId) ?? false);
 	assert.equal(tsSelected("RTE03-route-support-extraction", "types-document-custom-types-and-shapes"), true);
 	assert.equal(tsNotApplicable("RTE03-route-support-extraction", "types-reuse-existing-contracts-before-new-types"), true);
 	for (const ruleId of [
@@ -2550,7 +2449,7 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 		"values-always-provide-css-variable-fallbacks",
 		"values-tokenize-repeated-visual-values",
 	]) {
-		assert.equal(domainState?.expectedNotApplicable.css?.includes(ruleId), true);
+		assert.equal(domainState?.expectedSelected.css?.includes(ruleId) ?? false, false);
 	}
 	const ownerDrift = mixedScenarioById.get("RTE02-owner-placement-css-drift")?.scopeDrift;
 	for (const ruleId of [
@@ -2560,13 +2459,13 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 		assert.equal(ownerDrift?.expectedSelected.css?.includes(ruleId), true);
 	}
 	for (const ruleId of ["values-keep-layout-intent-explicit", "values-always-provide-css-variable-fallbacks"]) {
-		assert.equal(ownerDrift?.expectedNotApplicable.css?.includes(ruleId), true);
+		assert.equal(ownerDrift?.expectedSelected.css?.includes(ruleId) ?? false, false);
 	}
 
 	const selected = (scenarioId: string, ruleId: string): boolean =>
 		mixedScenarioById.get(scenarioId)?.expectedSelected.react?.includes(ruleId) ?? false;
 	const notApplicable = (scenarioId: string, ruleId: string): boolean =>
-		mixedScenarioById.get(scenarioId)?.expectedNotApplicable.react?.includes(ruleId) ?? false;
+		!(mixedScenarioById.get(scenarioId)?.expectedSelected.react?.includes(ruleId) ?? false);
 
 	assert.equal(selected("RTE09-route-runtime-section", "screen-keep-route-flow-visible"), true);
 	assert.equal(notApplicable("RTE10-derived-selection-state", "screen-keep-route-flow-visible"), true);
@@ -2622,7 +2521,7 @@ test("v17 TypeScript boundaries exclude React props and prevent self-created dup
 
 	const existingContract = await readRule("typescript", "types-reuse-existing-contracts-before-new-types");
 	assert.match(
-		existingContract,
+		flattenWhitespace(existingContract),
 		/positional[\s\S]*object[\s\S]*(?:수정 가능한 로컬 소유|기존) (?:호환|compatible) (?:named )?(?:shape|contract)[\s\S]*types-document-custom-types-and-shapes[^\n]+Selected[\s\S]*types-reuse-existing-contracts-before-new-types[^\n]+N\/A/i,
 	);
 	assert.match(
@@ -2630,8 +2529,8 @@ test("v17 TypeScript boundaries exclude React props and prevent self-created dup
 		/요청[^\n]+(?:semantic delta[^\n]+없는|밖)[\s\S]*`\*Params`[\s\S]*`\*Input`[\s\S]*(?:스스로|자기|자가)[\s\S]*(?:활성화|Selected)[\s\S]*(?:하지 않|금지)/i,
 	);
 	assert.match(
-		existingContract,
-		/types-document-custom-types-and-shapes[^\n]+Selected[\s\S]*types-reuse-existing-contracts-before-new-types[^\n]+N\/A[\s\S]*(?:외부|external|generated|read-only|shared)[^\n]+(?:두 type 규칙|두 규칙|모두)[^\n]+N\/A[\s\S]*callable 문서화 여부[^\n]+docs rule[^\n]+독립 판정/i,
+		flattenWhitespace(existingContract),
+		/types-document-custom-types-and-shapes[\s\S]+Selected[\s\S]*types-reuse-existing-contracts-before-new-types[\s\S]+N\/A[\s\S]*(?:외부|external|generated|read-only|shared)[\s\S]+(?:두 type 규칙|두 규칙|모두)[\s\S]+N\/A[\s\S]*callable 문서화 여부[\s\S]+docs rule[\s\S]+독립 판정/i,
 	);
 	assert.doesNotMatch(existingContract, /callable header[^\n]+문서화/);
 	assert.doesNotMatch(existingContract, /^appliesWhen:[^\n]+재사용 결정을 바꾼다/m);
@@ -2655,14 +2554,13 @@ test("v17 TypeScript boundaries exclude React props and prevent self-created dup
 	const mixedManifest = await readRoutingEvalManifest(getSkillPaths("react", realSkillRootDir));
 	const ownerMove = mixedManifest.scenarios.find(({id}) => id === "RTE02-owner-placement-css-drift");
 	assert.equal(ownerMove?.expectedSelected.typescript?.includes("functions-use-named-object-params-for-complex-signatures"), false);
-	assert.equal(ownerMove?.expectedNotApplicable.typescript?.includes("functions-use-named-object-params-for-complex-signatures"), true);
 	assert.equal(
-		ownerMove?.scopeDrift?.expectedSelected.typescript?.includes("functions-use-named-object-params-for-complex-signatures"),
+		ownerMove?.expectedSelected.typescript?.includes("functions-use-named-object-params-for-complex-signatures") ?? false,
 		false,
 	);
 	assert.equal(
-		ownerMove?.scopeDrift?.expectedNotApplicable.typescript?.includes("functions-use-named-object-params-for-complex-signatures"),
-		true,
+		ownerMove?.scopeDrift?.expectedSelected.typescript?.includes("functions-use-named-object-params-for-complex-signatures"),
+		false,
 	);
 
 	const typescriptManifest = await readRoutingEvalManifest(getSkillPaths("typescript", realSkillRootDir));
@@ -2698,7 +2596,7 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	);
 	const headerDocs = await readRule("typescript", "docs-require-header-jsdoc-on-key-declarations");
 	assert.match(
-		headerDocs,
+		flattenWhitespace(headerDocs),
 		/header tag[\s\S]*(?:영문 label|영문 라벨)[\s\S]*(?:충족하지 않|미충족|완료되지 않)[\s\S]*docs-write-concise-korean-comments-about-purpose-and-constraints[\s\S]*content gate/i,
 	);
 	assert.doesNotMatch(headerDocs, /\bT\d{2}\b/);
@@ -2729,7 +2627,7 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 		].map(([skillName, ruleId]) => readFile(path.join(realSkillRootDir, skillName!, "contracts", `${ruleId}.md`), "utf8")),
 	);
 	assert.match(
-		generatedContracts[0]!,
+		flattenWhitespace(generatedContracts[0]!),
 		/영문 label[\s\S]*docs-write-concise-korean-comments-about-purpose-and-constraints[\s\S]*content gate/i,
 	);
 	assert.match(generatedContracts[1]!, /annotation 본문 전체[\s\S]*(?:ASCII|영문)/i);
@@ -2759,12 +2657,10 @@ test("CSS generated index is canonical, complete, body-preserving, and within it
 	const handbook = await readFile(skillPaths.outputPath, "utf8");
 	assert.match(handbook, /metadata\.json\.companions/);
 	assert.doesNotMatch(handbook, /metadata\.json\.extends/);
-	assert.match(handbook, /^## Companion Skill 활성화$/m);
-	assert.match(handbook, /`convention-typescript`[\s\S]*?mode: `conditional`/);
-	assert.match(handbook, /appliesWhen: TS\/TSX class contract, wrapper Props 또는 style import를 함께 변경한다\./);
-	assert.match(handbook, /\.\.\/typescript\/SKILL\.md/);
-	assert.match(handbook, /\.\.\/typescript\/RULES_INDEX\.md/);
-	assert.doesNotMatch(handbook, /\.\.\/typescript\/AGENTS\.md/);
+	assert.match(handbook, /^## 함께 따르는 규칙$/m);
+	assert.match(handbook, /- \[TypeScript Convention\]\(\.\.\/typescript\/HANDBOOK\.md\) — 다음 조건에서 함께 적용합니다\./);
+	assert.match(handbook, /다음 조건에서 함께 적용합니다\. TS\/TSX class contract, wrapper Props 또는 style import를 함께 변경한다\./);
+	assert.match(handbook, /\.\.\/typescript\/HANDBOOK\.md/);
 	for (const rule of document.rules) {
 		const bodyWithoutHeading = rule.body.replace(/^## .+\n+/, "");
 		assert.equal(handbook.includes(bodyWithoutHeading), true, `${rule.fileName} body must remain verbatim in AGENTS.md`);
@@ -2775,84 +2671,58 @@ test("CSS generated index is canonical, complete, body-preserving, and within it
 		const bodyWithoutHeading = rule.body.replace(/^## .+\n+/, "");
 		assert.equal(handbook.includes(bodyWithoutHeading), false, `${rule.fileName} companion body must not be embedded in CSS AGENTS.md`);
 	}
-	assert.equal((handbook.match(/`convention-typescript`/g) ?? []).length, 1);
+	assert.equal((handbook.match(/TypeScript Convention/g) ?? []).length, 1);
 	assert.doesNotMatch(handbook, /`convention-react`/);
 });
 
-test("CSS SKILL.md is a compact full-index router with exact receipts and companion boundaries", async () => {
-	const skillDir = path.join(realSkillRootDir, "css");
-	const source = await readFile(path.join(skillDir, "SKILL.md"), "utf8");
+test("CSS SKILL.md is a compact router with companion boundaries", async () => {
+	const source = await readFile(path.join(realSkillRootDir, "css", "SKILL.md"), "utf8");
 	const frontmatterSource = source.match(/^---\n([\s\S]*?)\n---/)?.[1] ?? "";
 	const body = source.replace(/^---\n[\s\S]*?\n---\n?/, "");
 	const wordCount = body.trim().split(/\s+/).filter(Boolean).length;
 
 	assert.match(frontmatterSource, /^name: convention-css$/m);
 	assert.match(frontmatterSource, /^description: Use when /m);
-	assert.doesNotMatch(frontmatterSource, /scan|read|load|receipt|audit/i);
-	assert.equal(wordCount < 500, true, `router has ${wordCount} words`);
-	assert.equal(Buffer.byteLength(source, "utf8") < 6_000, true);
-	assert.match(body, /scope snapshot/i);
-	assert.match(body, /수정 전[^\n]+scope snapshot[^\n]+고정/i);
+	assert.doesNotMatch(frontmatterSource, /scan|read|load/i);
+	assert.equal(wordCount < 400, true, `router has ${wordCount} words`);
+	assert.equal(Buffer.byteLength(source, "utf8") < 5_000, true);
+
+	// 1. 변경 범위 판정
+	assert.match(body, /## 1\. 변경 범위 판정/);
+	assert.match(body, /최소 변경|범위를 넓히지 않는다/);
+
+	// 2. 인덱스 전체 훑기
 	assert.match(body, /RULES_INDEX\.md/);
-	assert.match(body, /처음부터 끝까지|전체.*scan|전부.*scan/i);
-	assert.match(body, /첫 match.*절대 멈추지 않는다/i);
-	assert.match(body, /sha256|digest/i);
-	assert.match(body, /Selected/);
-	assert.match(body, /Not applicable|N\/A/i);
-	assert.match(body, /Unknown/);
-	assert.match(body, /Selected와 Unknown.*stable ID.*contracts\/<stable-id>\.md.*전부 읽는다/i);
-	assert.match(body, /`CRITICAL`이면[^\n]+full rule도 반드시 읽는다/i);
-	assert.match(body, /exclusion|배제.*그룹/i);
-	assert.match(body, /비어 있지 않은|비어 있으면 안 된다/i);
-	assert.match(body, /ordinal.*union|합집합.*ordinal|ordinal.*합집합/i);
-	assert.match(body, /reviewWith/);
-	assert.match(body, /Unknown[^\n]+Selected\/N\/A[^\n]+먼저 해소[^\n]+N\/A[^\n]+requiresSelected[^\n]+적용하지/i);
-	assert.match(body, /Selected로 확정한 contract[^\n]+requiresSelected[^\n]+즉시 Selected[^\n]+N\/A/i);
-	assert.match(body, /Selected contract[^\n]+필수 변경[^\n]+scope evidence/i);
-	assert.match(body, /예시[^\n]+선택적 대안[^\n]+해소되지 않은 Unknown[^\n]+가상 변경[^\n]+(?:evidence가 아니다|제외)/i);
-	assert.match(body, /reviewWith[^\n]+고정점[^\n]+반복/i);
-	assert.match(body, /고정점[^\n]+Selected contract[^\n]+Expanded 원문[^\n]+구현·리뷰 기준/i);
-	assert.ok(body.indexOf("contracts/<stable-id>.md") < body.indexOf("고정점"));
-	assert.match(body, /scope drift/i);
-	assert.match(body, /Selected\/Unknown[^\n]+ordinal[^\n]+stable ID[^\n]+N\/A[^\n]+ordinal/i);
-	assert.match(body, /Selected\/N\/A\/Unknown[^\n]+(?:disjoint|겹치지)[^\n]+전체 ordinal[^\n]+exact partition/i);
-	assert.match(body, /scope drift[^\n]+snapshot[^\n]+(?:activation|활성화)[^\n]+재판정/i);
-	assert.match(body, /digest-bound implementer receipt[^\n]+Expanded[^\n]+evidence[^\n]+검증[^\n]+sealed comparison[^\n]+audit/i);
-	assert.match(body, /TypeScript type·import·helper·wrapper Props.*convention-typescript/);
-	assert.match(body, /TSX.*className.*convention-react.*convention-typescript.*반드시 활성화/i);
-	assert.doesNotMatch(body, /className.*selector와 함께/i);
-	assert.match(body, /Selected.*0.*activation.*유지/i);
-	assert.match(body, /TSX.*(?:component|JSX)|(?:component|JSX).*TSX/i);
-	assert.match(body, /state.*convention-react|convention-react.*state/i);
-	assert.match(body, /convention-typescript/);
-	assert.match(body, /convention-audit/);
-	assert.match(body, /FAIL.*0/);
-	assert.match(body, /UNKNOWN.*0/);
-	assert.match(body, /AGENTS\.md.*handbook|handbook.*AGENTS\.md|opt-in.*AGENTS\.md/i);
-	assert.match(body, /index\/contract\/필요 rule 손상·누락/i);
+	assert.match(body, /끝까지 훑/);
+	assert.match(body, /첫 match에서 멈추지 않는다/);
 
-	const readme = await readFile(path.join(skillDir, "README.md"), "utf8");
-	assert.match(readme, /RULES_INDEX\.md/);
-	assert.match(readme, /routing-evals\.json/);
-	assert.match(readme, /Selected/);
-	assert.match(readme, /N\/A|Not applicable/);
-	assert.match(readme, /Unknown/);
-	assert.match(readme, /check:generated:css/);
+	// 3. 규칙 읽고 구현
+	assert.match(body, /contracts\/<id>\.md/);
+	assert.match(body, /`CRITICAL`이면 `rules\/<id>\.md` 원문도 반드시 읽는다/);
+	assert.match(body, /`requiresSelected` target은 함께 적용한다/);
+	assert.match(body, /`reviewWith` target은[^\n]+자동으로 적용하지는 않는다/);
+	assert.match(body, /`completionGate` 규칙은 마무리 시 항상 적용한다/);
+	assert.match(body, /다시 훑는다[^\n]*\n?[^\n]*더 걸리는 게 없으면 멈춘다|더 걸리는 게 없으면 멈춘다/);
 
-	const pressureTests = await readFile(path.join(skillDir, "pressure-tests.md"), "utf8");
-	assert.match(pressureTests, /css-route-style-scope-drift/);
-	assert.match(pressureTests, /css-ui-wrapper-third-party-dom/);
-	assert.match(pressureTests, /scope drift/i);
-	assert.match(pressureTests, /no-skill baseline/);
-	assert.match(pressureTests, /full-handbook oracle/);
-	assert.match(pressureTests, /progressive candidate/);
-	assert.match(pressureTests, /mutation RED/);
-	assert.match(pressureTests, /최소 2회.*3회|2회.*CRITICAL.*3회/i);
-	assert.match(pressureTests, /exact.*precision|precision.*exact/i);
-	assert.match(pressureTests, /input token/i);
-	assert.match(pressureTests, /telemetry/i);
-	assert.match(pressureTests, /median|중앙값/i);
-	assert.match(pressureTests, /절감률/);
+	// 4~5. 범위 변경과 마무리
+	assert.match(body, /## 4\. 범위 변경/);
+	assert.match(body, /## 5\. 마무리/);
+	assert.match(body, /file\/line과 수정안으로 보고한다/);
+	assert.match(body, /통과는 컨벤션을 지켰다는 근거가 아니다/);
+
+	// opt-in full handbook
+	assert.match(body, /\[HANDBOOK\.md\]\(\.\/HANDBOOK\.md\)는 전체 handbook이다/);
+
+	// 제거한 강제 장치가 되살아나지 않아야 한다
+	assert.doesNotMatch(body, /digest|sha256/i);
+	assert.doesNotMatch(body, /exact partition|ordinal/i);
+	assert.doesNotMatch(body, /receipt/i);
+	assert.doesNotMatch(body, /convention-audit/);
+	assert.doesNotMatch(body, /Excluded groups|exclusion group/i);
+
+	// companion 경계
+	assert.match(body, /`convention-react`와 `convention-typescript`를 함께 활성화한다/);
+	assert.match(body, /순수 CSS 변경이면 둘 다 켜지 않는다/);
 });
 
 test("fixture manifests accept exact progressive partitions and non-progressive activation evidence", async () => {
@@ -2902,20 +2772,6 @@ test("manifest reader rejects invalid JSON and strict shape/version/owner violat
 				/files.*duplicate/i,
 			],
 			[
-				"duplicate N/A IDs",
-				{
-					...createValidManifest(),
-					scenarios: [
-						{
-							...createValidManifest().scenarios[0],
-							expectedSelected: {owner: []},
-							expectedNotApplicable: {owner: ["fixture-first", "fixture-first"]},
-						},
-					],
-				},
-				/expectedNotApplicable.*duplicate/i,
-			],
-			[
 				"scope drift unknown key",
 				{
 					...createValidManifest(),
@@ -2927,7 +2783,6 @@ test("manifest reader rejects invalid JSON and strict shape/version/owner violat
 								files: ["src/fixture.ts"],
 								expectedSkills: ["owner"],
 								expectedSelected: {owner: [...fixtureRuleIds]},
-								expectedNotApplicable: {owner: []},
 								extra: true,
 							},
 						},
@@ -2947,7 +2802,6 @@ test("manifest reader rejects invalid JSON and strict shape/version/owner violat
 								files: ["src/fixture.ts"],
 								expectedSkills: ["owner"],
 								expectedSelected: {owner: [...fixtureRuleIds]},
-								expectedNotApplicable: {owner: []},
 							},
 						},
 					],
@@ -2990,7 +2844,6 @@ test("manifest validator rejects duplicate arrays, unknown skills/rules, overlap
 				(manifest) => {
 					manifest.scenarios[0]!.expectedSkills = ["legacy"];
 					manifest.scenarios[0]!.expectedSelected = {};
-					manifest.scenarios[0]!.expectedNotApplicable = {};
 				},
 				/must activate its owner skill.*owner/i,
 			],
@@ -2998,18 +2851,11 @@ test("manifest validator rejects duplicate arrays, unknown skills/rules, overlap
 			["unknown skill", (manifest) => manifest.scenarios[0]!.expectedSkills.push("missing"), /unknown skill.*missing/i],
 			["unknown rule", (manifest) => manifest.scenarios[0]!.expectedSelected.owner.push("missing-rule"), /unknown rule.*missing-rule/i],
 			["duplicate rule", (manifest) => manifest.scenarios[0]!.expectedSelected.owner.push("fixture-first"), /expectedSelected.*duplicate/i],
-			["overlap", (manifest) => manifest.scenarios[0]!.expectedNotApplicable.owner.push("fixture-first"), /overlap.*fixture-first/i],
-			["incomplete", (manifest) => manifest.scenarios[0]!.expectedSelected.owner.pop(), /incomplete partition.*fixture-second/i],
-			[
-				"missing progressive map key",
-				(manifest) => delete manifest.scenarios[0]!.expectedNotApplicable.owner,
-				/expectedNotApplicable.*owner/i,
-			],
+			["missing progressive map key", (manifest) => delete manifest.scenarios[0]!.expectedSelected.owner, /expectedSelected.*owner/i],
 			[
 				"unexpected partition key",
 				(manifest) => {
 					manifest.scenarios[0]!.expectedSelected.other = [];
-					manifest.scenarios[0]!.expectedNotApplicable.other = [];
 				},
 				/unexpected partition.*other/i,
 			],
@@ -3018,7 +2864,6 @@ test("manifest validator rejects duplicate arrays, unknown skills/rules, overlap
 				(manifest) => {
 					manifest.scenarios[0]!.expectedSkills.push("legacy");
 					manifest.scenarios[0]!.expectedSelected.legacy = [];
-					manifest.scenarios[0]!.expectedNotApplicable.legacy = [];
 				},
 				/unexpected partition skill.*legacy/i,
 			],
@@ -3054,13 +2899,11 @@ test("manifest validator enforces required closure and partitions an explicitly 
 
 		manifest.scenarios[0]!.expectedSkills.push("required");
 		manifest.scenarios[0]!.expectedSelected.required = [...fixtureRuleIds];
-		manifest.scenarios[0]!.expectedNotApplicable.required = [];
 		await writeManifest({skillRootDir, skillName: "owner", manifest});
 		await assert.rejects(() => validateRoutingEvalManifest(getSkillPaths("owner", skillRootDir)), /required companion.*leaf/i);
 
 		manifest.scenarios[0]!.expectedSkills.push("leaf");
 		manifest.scenarios[0]!.expectedSelected.leaf = [...fixtureRuleIds];
-		manifest.scenarios[0]!.expectedNotApplicable.leaf = [];
 		manifest.scenarios[0]!.expectedSkills.push("conditional");
 		await writeManifest({skillRootDir, skillName: "owner", manifest});
 		await assert.rejects(
@@ -3069,7 +2912,6 @@ test("manifest validator enforces required closure and partitions an explicitly 
 		);
 
 		manifest.scenarios[0]!.expectedSelected.conditional = [...fixtureRuleIds];
-		manifest.scenarios[0]!.expectedNotApplicable.conditional = [];
 		await writeManifest({skillRootDir, skillName: "owner", manifest});
 		await validateRoutingEvalManifest(getSkillPaths("owner", skillRootDir));
 	});
@@ -3084,7 +2926,6 @@ test("manifest validator enforces requiresSelected and requiredOnCompletion rule
 		});
 		const manifest = createValidManifest();
 		manifest.scenarios[0]!.expectedSelected.owner = ["fixture-first"];
-		manifest.scenarios[0]!.expectedNotApplicable.owner = ["fixture-second"];
 		await writeManifest({skillRootDir, skillName: "owner", manifest});
 
 		await assert.rejects(
@@ -3097,7 +2938,6 @@ test("manifest validator enforces requiresSelected and requiredOnCompletion rule
 		await writeFixtureSkill({skillRootDir, skillName: "owner", options: {ruleRouting: {"fixture-second": {requiredOnCompletion: true}}}});
 		const manifest = createValidManifest();
 		manifest.scenarios[0]!.expectedSelected.owner = ["fixture-first"];
-		manifest.scenarios[0]!.expectedNotApplicable.owner = ["fixture-second"];
 		await writeManifest({skillRootDir, skillName: "owner", manifest});
 
 		await assert.rejects(
@@ -3123,7 +2963,6 @@ test("manifest validator enforces recursive required closure for non-progressive
 
 		manifest.scenarios[0]!.expectedSkills.push("typescript");
 		manifest.scenarios[0]!.expectedSelected.typescript = [...fixtureRuleIds];
-		manifest.scenarios[0]!.expectedNotApplicable.typescript = [];
 		await writeManifest({skillRootDir, skillName: "owner", manifest});
 		await validateRoutingEvalManifest(getSkillPaths("owner", skillRootDir));
 	});
@@ -3179,13 +3018,11 @@ test("manifest owner may activate first in drift but must stay active and fully 
 					files: ["src/view.tsx"],
 					expectedSkills: ["react", "typescript"],
 					expectedSelected: {typescript: [...fixtureRuleIds]},
-					expectedNotApplicable: {typescript: []},
 					scopeDrift: {
 						evidence: "Add the owner surface after scope drift.",
 						files: ["src/view.tsx", "src/view.css"],
 						expectedSkills: ["react", "typescript", "owner"],
 						expectedSelected: {typescript: [...fixtureRuleIds], owner: [...fixtureRuleIds]},
-						expectedNotApplicable: {typescript: [], owner: []},
 					},
 				},
 			],
@@ -3198,7 +3035,6 @@ test("manifest owner may activate first in drift but must stay active and fully 
 		const ownerNeverActive = structuredClone(manifest);
 		ownerNeverActive.scenarios[0]!.scopeDrift!.expectedSkills.pop();
 		delete ownerNeverActive.scenarios[0]!.scopeDrift!.expectedSelected.owner;
-		delete ownerNeverActive.scenarios[0]!.scopeDrift!.expectedNotApplicable.owner;
 		await writeManifest({skillRootDir, skillName: "owner", manifest: ownerNeverActive});
 		await assert.rejects(
 			() => validateRoutingEvalManifest(getSkillPaths("owner", skillRootDir)),
@@ -3211,7 +3047,6 @@ test("manifest owner may activate first in drift but must stay active and fully 
 			files: ["src/fixture.ts", "src/view.tsx"],
 			expectedSkills: ["react"],
 			expectedSelected: {},
-			expectedNotApplicable: {},
 		};
 		await writeManifest({skillRootDir, skillName: "owner", manifest: ownerRemovedByDrift});
 		await assert.rejects(
@@ -3220,12 +3055,9 @@ test("manifest owner may activate first in drift but must stay active and fully 
 		);
 
 		const missingDriftOwnerMap = structuredClone(manifest);
-		delete missingDriftOwnerMap.scenarios[0]!.scopeDrift!.expectedNotApplicable.owner;
+		delete missingDriftOwnerMap.scenarios[0]!.scopeDrift!.expectedSelected.owner;
 		await writeManifest({skillRootDir, skillName: "owner", manifest: missingDriftOwnerMap});
-		await assert.rejects(
-			() => validateRoutingEvalManifest(getSkillPaths("owner", skillRootDir)),
-			/scopeDrift.*expectedNotApplicable.*owner/i,
-		);
+		await assert.rejects(() => validateRoutingEvalManifest(getSkillPaths("owner", skillRootDir)), /scopeDrift.*expectedSelected.*owner/i);
 	});
 });
 
@@ -3240,7 +3072,6 @@ test("scope drift is monotonic for files, activated skills, and selected rules",
 			files: ["src/fixture.ts", "src/second.ts"],
 			expectedSkills: ["owner", "legacy"],
 			expectedSelected: {owner: [...fixtureRuleIds]},
-			expectedNotApplicable: {owner: []},
 		};
 		await writeManifest({skillRootDir, skillName: "owner", manifest});
 		await validateRoutingEvalManifest(getSkillPaths("owner", skillRootDir));
@@ -3252,7 +3083,6 @@ test("scope drift is monotonic for files, activated skills, and selected rules",
 				"selection removal",
 				(candidate) => {
 					candidate.scenarios[0]!.scopeDrift!.expectedSelected.owner.pop();
-					candidate.scenarios[0]!.scopeDrift!.expectedNotApplicable.owner.push("fixture-second");
 				},
 				/scopeDrift.*selected.*monotonic/i,
 			],
@@ -3280,7 +3110,6 @@ test("all-manifest validation rejects cross-owner scenario duplicates and missin
 
 		betaManifest.scenarios[0]!.id = "beta-all-rules";
 		betaManifest.scenarios[0]!.expectedSelected.beta = ["fixture-first"];
-		betaManifest.scenarios[0]!.expectedNotApplicable.beta = ["fixture-second"];
 		await writeManifest({skillRootDir, skillName: "beta", manifest: betaManifest});
 		await assert.rejects(() => validateRoutingEvalManifests(skillRootDir), /positive coverage.*beta.*fixture-second/i);
 	});
@@ -3296,7 +3125,6 @@ test("single and all manifest APIs reject required companion cycles", async () =
 			const companionName = skillName === "alpha" ? "beta" : "alpha";
 			manifest.scenarios[0]!.expectedSkills.push(companionName);
 			manifest.scenarios[0]!.expectedSelected[companionName] = [...fixtureRuleIds];
-			manifest.scenarios[0]!.expectedNotApplicable[companionName] = [];
 			await writeManifest({skillRootDir, skillName, manifest});
 		}
 

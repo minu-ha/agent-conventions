@@ -9,7 +9,8 @@ tags: responsibility, layouts, ui, widget, composition
 
 **Impact: HIGH (keeps layout files as route shells instead of letting them become domain-specific shared blocks)**
 
-`_document.astro`나 route-local shell이 shell composition을 맡는다면, 그 안에서 조립하는 shared piece는 `src/components/widget/**`와 `src/components/ui/**`로 제한합니다.
+`_document.astro`나 route-local shell이 shell composition을 맡는다면,
+그 안에서 조립하는 shared piece는 `src/components/widget/**`와 `src/components/ui/**`로 제한합니다.
 
 구분 기준:
 
@@ -18,7 +19,8 @@ tags: responsibility, layouts, ui, widget, composition
 - Document shell: `_document.astro` and `_document.css`
 - Route shell: owning route의 `_local/`
 
-Shell 자체를 `ui-*`나 `widget-*`로 이름 붙여 shared component처럼 승격하지 않습니다. Shell class는 `rt_document__*`처럼 owner가 드러나게 유지합니다.
+Shell 자체를 `ui-*`나 `widget-*`로 이름 붙여 shared component처럼 승격하지 않습니다.
+Shell class는 `rt_document__*`처럼 owner가 드러나게 유지합니다.
 
 **Incorrect (layout 역할을 ui/widget로 위장함):**
 
@@ -65,4 +67,5 @@ const { currentPathname } = Astro.props;
 </UiSurface>
 ```
 
-이 예시에서 `_document.astro`는 route-shared body shell을 소유하고, 재사용 가능한 block은 전부 `widget`과 `ui`로 분리되어 있습니다.
+이 예시에서 `_document.astro`는 route-shared body shell을 소유하고,
+재사용 가능한 block은 전부 `widget`과 `ui`로 분리되어 있습니다.

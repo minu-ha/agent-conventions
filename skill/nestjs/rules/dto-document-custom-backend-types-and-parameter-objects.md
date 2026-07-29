@@ -9,7 +9,8 @@ tags: types, jsdoc, params
 
 **Impact: MEDIUM-HIGH (keeps backend-only contracts and parameter objects understandable without scanning method bodies)**
 
-Prisma 생성 타입이 아닌 커스텀 `type`, `interface`, 파라미터 객체에는 JSDoc을 작성합니다. 객체형 계약은 헤더에 `@summary`, 각 필드 바로 위 `@field`를 사용하고, 관련 파일 최상단에 모아 배치합니다.
+Prisma 생성 타입이 아닌 커스텀 `type`, `interface`, 파라미터 객체에는 JSDoc을 작성합니다.
+객체형 계약은 헤더에 `@summary`, 각 필드 바로 위 `@field`를 사용하고, 관련 파일 최상단에 모아 배치합니다.
 
 **Incorrect (커스텀 계약 설명이 없거나 헤더에 `@property`를 몰아씀):**
 

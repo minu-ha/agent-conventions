@@ -9,7 +9,9 @@ tags: implementation, scope, shared
 
 **Impact: HIGH (visual polish 중 불필요한 구조 리팩터링과 shared surface 변경을 막음)**
 
-Visual parity 작업은 Figma와 현재 화면의 차이를 줄이는 데 집중합니다. 불필요한 구조 리팩터링, API/data shaping 변경, shared component/style 변경을 기본값으로 삼지 않습니다. scope 밖 shared surface 변경이 필요하면 왜 필요한지 먼저 보고하고 승인을 받습니다.
+Visual parity 작업은 Figma와 현재 화면의 차이를 줄이는 데 집중합니다.
+불필요한 구조 리팩터링, API/data shaping 변경, shared component/style 변경을 기본값으로 삼지 않습니다.
+scope 밖 shared surface 변경이 필요하면 왜 필요한지 먼저 보고하고 승인을 받습니다.
 
 **Incorrect (스타일 보정 중 구조를 크게 바꿈):**
 

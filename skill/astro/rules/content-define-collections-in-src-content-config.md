@@ -9,7 +9,12 @@ tags: content-collections, config, loaders
 
 **Impact: HIGH (centralizes content ownership and keeps collection shape from being redefined across pages)**
 
-build-time content collection 정의는 `src/content.config.ts`에서 한 번에 관리합니다. page 파일 안에서 glob, frontmatter parsing, ad-hoc shape normalization을 반복하지 말고 collection loader와 registration을 중앙화합니다. 요청마다 fresh한 데이터를 가져오는 live collection은 이 파일이 아니라 `src/live.config.ts`와 `defineLiveCollection()` 쪽으로 분리합니다.
+build-time content collection 정의는 `src/content.config.ts`에서 한 번에 관리합니다.
+page 파일 안에서 glob,
+frontmatter parsing,
+ad-hoc shape normalization을 반복하지 말고 collection loader와 registration을 중앙화합니다.
+요청마다 fresh한 데이터를 가져오는 live collection은 이 파일이 아니라 `src/live.config.ts`와 `defineLiveCollection()`
+쪽으로 분리합니다.
 
 **Incorrect (page 파일 안에서 raw glob과 frontmatter parsing을 직접 반복):**
 

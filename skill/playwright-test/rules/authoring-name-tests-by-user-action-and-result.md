@@ -9,7 +9,8 @@ tags: test-titles, naming, behavior
 
 **Impact: MEDIUM-HIGH (makes browser tests readable as user behavior instead of implementation detail or setup jargon)**
 
-`test.describe()`는 기능 단위 이름을 쓰고, `test()` 제목은 “사용자 행동 + 기대 결과” 형태로 작성합니다. 구현 세부사항이나 내부 state가 아니라 사용자가 보는 결과가 읽혀야 합니다.
+`test.describe()`는 기능 단위 이름을 쓰고, `test()` 제목은 “사용자 행동 + 기대 결과” 형태로 작성합니다.
+구현 세부사항이나 내부 state가 아니라 사용자가 보는 결과가 읽혀야 합니다.
 
 **Incorrect (구현 세부사항이나 setup 중심 제목):**
 

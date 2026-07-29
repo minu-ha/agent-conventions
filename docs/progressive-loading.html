@@ -1,0 +1,1072 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Progressive Convention Loading — 설계와 측정</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  body, h1, h2, h3, p, ul, ol, li, figure, table, pre { margin: 0; padding: 0; }
+  ul, ol { list-style: none; }
+  img { max-width: 100%; }
+</style>
+<style>
+  :root {
+    --paper:      #f6f7f4;
+    --paper-2:    #eef0ea;
+    --ink:        #14181a;
+    --ink-2:      #3d4744;
+    --muted:      #667370;
+    --rule:       #dcdfd8;
+    --rule-2:     #c6cbc2;
+    --prog:       #125f57;
+    --prog-soft:  #125f5718;
+    --heavy:      #8f3f1e;
+    --heavy-soft: #8f3f1e18;
+    --warn:       #7a6212;
+
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, "Cascadia Mono", Consolas, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic",
+            "Segoe UI", Roboto, sans-serif;
+    --serif: "Iowan Old Style", Charter, Georgia, "Apple SD Gothic Neo", serif;
+
+    --measure: 66ch;
+    --wide: 940px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper:      #101413;
+      --paper-2:    #171c1a;
+      --ink:        #e7eae5;
+      --ink-2:      #b3bcb7;
+      --muted:      #7f8a86;
+      --rule:       #262d2a;
+      --rule-2:     #38413d;
+      --prog:       #4fb3a0;
+      --prog-soft:  #4fb3a020;
+      --heavy:      #dc8b5e;
+      --heavy-soft: #dc8b5e20;
+      --warn:       #c8ad4a;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper:      #101413;
+    --paper-2:    #171c1a;
+    --ink:        #e7eae5;
+    --ink-2:      #b3bcb7;
+    --muted:      #7f8a86;
+    --rule:       #262d2a;
+    --rule-2:     #38413d;
+    --prog:       #4fb3a0;
+    --prog-soft:  #4fb3a020;
+    --heavy:      #dc8b5e;
+    --heavy-soft: #dc8b5e20;
+    --warn:       #c8ad4a;
+  }
+  :root[data-theme="light"] {
+    --paper:      #f6f7f4;
+    --paper-2:    #eef0ea;
+    --ink:        #14181a;
+    --ink-2:      #3d4744;
+    --muted:      #667370;
+    --rule:       #dcdfd8;
+    --rule-2:     #c6cbc2;
+    --prog:       #125f57;
+    --prog-soft:  #125f5718;
+    --heavy:      #8f3f1e;
+    --heavy-soft: #8f3f1e18;
+    --warn:       #7a6212;
+  }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.72;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    max-width: var(--wide);
+    margin: 0 auto;
+    padding: clamp(2.5rem, 6vw, 5.5rem) clamp(1.15rem, 4vw, 2.5rem) 6rem;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(3rem, 6vw, 4.75rem);
+  }
+
+  .col { max-width: var(--measure); }
+
+  p { margin: 0; }
+  .col > p + p { margin-top: 1.05em; }
+
+  a {
+    color: inherit;
+    text-decoration-color: var(--rule-2);
+    text-underline-offset: 3px;
+  }
+  a:hover { text-decoration-color: var(--prog); }
+  a:focus-visible {
+    outline: 2px solid var(--prog);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  /* ── masthead ─────────────────────────────────────────── */
+
+  .mast { display: flex; flex-direction: column; gap: 1.5rem; }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: .7rem;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  h1 {
+    font-family: var(--mono);
+    font-size: clamp(1.85rem, 5.2vw, 3rem);
+    line-height: 1.08;
+    letter-spacing: -.035em;
+    font-weight: 600;
+    text-wrap: balance;
+    margin: 0;
+  }
+  h1 .dim { color: var(--muted); font-weight: 400; }
+
+  .lede {
+    font-size: clamp(1.02rem, 2.2vw, 1.16rem);
+    color: var(--ink-2);
+    max-width: 60ch;
+    line-height: 1.66;
+  }
+
+  .headline-figs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 3.25rem;
+    row-gap: 1.5rem;
+    padding-top: 1.75rem;
+    border-top: 1px solid var(--rule);
+  }
+  .fig { display: flex; flex-direction: column; gap: .3rem; }
+  .fig-n {
+    font-family: var(--mono);
+    font-size: clamp(1.5rem, 3.6vw, 2.1rem);
+    font-weight: 600;
+    letter-spacing: -.03em;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+  }
+  .fig-n.prog { color: var(--prog); }
+  .fig-l {
+    font-family: var(--mono);
+    font-size: .705rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ── sections ─────────────────────────────────────────── */
+
+  section { display: flex; flex-direction: column; gap: 1.6rem; }
+
+  h2 {
+    font-family: var(--mono);
+    font-size: 1.16rem;
+    font-weight: 600;
+    letter-spacing: -.015em;
+    margin: 0;
+    padding-bottom: .7rem;
+    border-bottom: 2px solid var(--ink);
+    display: flex;
+    align-items: baseline;
+    gap: .85rem;
+  }
+  h2 .tag {
+    font-size: .68rem;
+    font-weight: 400;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-left: auto;
+  }
+
+  h3 {
+    font-family: var(--mono);
+    font-size: .78rem;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0;
+  }
+
+  /* ── tier funnel ──────────────────────────────────────── */
+
+  .tiers { display: flex; flex-direction: column; gap: .1rem; }
+
+  .tier {
+    display: grid;
+    grid-template-columns: 10.5rem minmax(0, 1fr) 5.5rem;
+    align-items: center;
+    gap: 1rem;
+    padding: .62rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .tier:first-child { border-top: 1px solid var(--rule); }
+
+  .tier-name {
+    font-family: var(--mono);
+    font-size: .82rem;
+    font-weight: 600;
+    letter-spacing: -.01em;
+  }
+  .tier-bar-track { min-width: 0; }
+  .tier-bar {
+    height: 15px;
+    background: var(--prog);
+    border-radius: 1px;
+    transform-origin: left center;
+  }
+  .tier-bar.opt { background: var(--heavy); }
+  .tier-meta {
+    font-family: var(--mono);
+    font-size: .74rem;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+  }
+  .tier-note {
+    grid-column: 2 / -1;
+    font-size: .8rem;
+    color: var(--muted);
+    margin-top: -.15rem;
+  }
+
+  /* ── comparison ───────────────────────────────────────── */
+
+  .compare { display: flex; flex-direction: column; gap: 1.15rem; }
+  .cmp-row { display: flex; flex-direction: column; gap: .4rem; }
+  .cmp-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    font-family: var(--mono);
+    font-size: .8rem;
+  }
+  .cmp-head .n {
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    font-size: .95rem;
+  }
+  .cmp-bar {
+    height: 30px;
+    border-radius: 1px;
+    transform-origin: left center;
+  }
+  .cmp-bar.heavy { background: var(--heavy); }
+  .cmp-bar.prog  { background: var(--prog); }
+  .cmp-foot {
+    font-size: .84rem;
+    color: var(--muted);
+    padding-top: .3rem;
+  }
+
+  /* ── tables ───────────────────────────────────────────── */
+
+  .scroll { overflow-x: auto; }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: .845rem;
+    min-width: 560px;
+  }
+  caption {
+    text-align: left;
+    font-size: .82rem;
+    color: var(--muted);
+    padding-bottom: .7rem;
+  }
+  th, td {
+    text-align: left;
+    padding: .52rem .8rem .52rem 0;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: middle;
+  }
+  thead th {
+    font-family: var(--mono);
+    font-size: .68rem;
+    font-weight: 600;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-bottom: 1px solid var(--rule-2);
+    white-space: nowrap;
+  }
+  td.num, th.num {
+    text-align: right;
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  td.id {
+    font-family: var(--mono);
+    font-size: .78rem;
+    letter-spacing: -.01em;
+  }
+  tbody tr:last-child td { border-bottom: 1px solid var(--rule-2); }
+
+  .minibar-cell { width: 132px; padding-right: 0; }
+  .minibar {
+    height: 9px;
+    background: var(--prog);
+    border-radius: 1px;
+    min-width: 2px;
+  }
+  .minibar-track {
+    background: var(--heavy-soft);
+    border-radius: 1px;
+    width: 100%;
+  }
+
+  /* ── gates ────────────────────────────────────────────── */
+
+  .gates {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(196px, 1fr));
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+  }
+  .gate {
+    background: var(--paper);
+    padding: .95rem 1.05rem;
+    display: flex;
+    flex-direction: column;
+    gap: .28rem;
+  }
+  .gate-l {
+    font-family: var(--mono);
+    font-size: .68rem;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .gate-v {
+    font-family: var(--mono);
+    font-size: 1.02rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+  .gate-t { font-size: .77rem; color: var(--muted); font-family: var(--mono); }
+  .pass {
+    font-family: var(--mono);
+    font-size: .66rem;
+    letter-spacing: .1em;
+    color: var(--prog);
+    border: 1px solid var(--prog);
+    padding: .04rem .34rem;
+    align-self: flex-start;
+    margin-top: .15rem;
+  }
+
+  /* ── timeline ─────────────────────────────────────────── */
+
+  .timeline { display: flex; flex-direction: column; }
+
+  .phase {
+    display: grid;
+    grid-template-columns: 2.1rem minmax(0, 1fr);
+    gap: 1.35rem;
+    padding: 1.35rem 0;
+    border-top: 1px solid var(--rule);
+  }
+  .phase:last-child { border-bottom: 1px solid var(--rule); }
+
+  .phase-n {
+    font-family: var(--mono);
+    font-size: .92rem;
+    font-weight: 600;
+    color: var(--prog);
+    font-variant-numeric: tabular-nums;
+    padding-top: .05rem;
+  }
+  .phase-body { display: flex; flex-direction: column; gap: .5rem; min-width: 0; }
+  .phase-top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: .45rem .9rem;
+  }
+  .phase-title {
+    font-family: var(--mono);
+    font-size: .95rem;
+    font-weight: 600;
+    letter-spacing: -.015em;
+  }
+  .phase-when {
+    font-family: var(--mono);
+    font-size: .72rem;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .phase-body p { font-size: .93rem; color: var(--ink-2); max-width: 62ch; }
+  .phase-out {
+    font-family: var(--mono);
+    font-size: .765rem;
+    color: var(--muted);
+    line-height: 1.75;
+    padding-left: .85rem;
+    border-left: 2px solid var(--rule-2);
+  }
+
+  /* ── incident ─────────────────────────────────────────── */
+
+  .incident {
+    border: 1px solid var(--rule-2);
+    background: var(--paper-2);
+    padding: clamp(1.15rem, 3vw, 1.7rem);
+    display: flex;
+    flex-direction: column;
+    gap: .85rem;
+  }
+  .incident p { font-size: .93rem; color: var(--ink-2); max-width: 62ch; }
+  pre {
+    font-family: var(--mono);
+    font-size: .775rem;
+    line-height: 1.72;
+    overflow-x: auto;
+    margin: 0;
+    padding: .8rem .95rem;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+  }
+  pre .bad  { color: var(--heavy); }
+  pre .good { color: var(--prog); }
+  code {
+    font-family: var(--mono);
+    font-size: .88em;
+    background: var(--prog-soft);
+    padding: .08em .34em;
+    border-radius: 2px;
+  }
+
+  /* ── limits ───────────────────────────────────────────── */
+
+  .limits-quote {
+    font-family: var(--serif);
+    font-size: clamp(1.08rem, 2.5vw, 1.28rem);
+    line-height: 1.6;
+    color: var(--ink);
+    max-width: 40ch;
+    border-left: 3px solid var(--heavy);
+    padding-left: 1.15rem;
+  }
+
+  .limit-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: .1rem;
+  }
+  .limit {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: .6rem 1.25rem;
+    align-items: baseline;
+    padding: .78rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .limit:first-child { border-top: 1px solid var(--rule); }
+  .limit-what { font-size: .93rem; }
+  .limit-what b { font-weight: 600; }
+  .limit-why { font-size: .84rem; color: var(--muted); grid-column: 1 / -1; margin-top: -.35rem; }
+  .stamp {
+    font-family: var(--mono);
+    font-size: .64rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--heavy);
+    border: 1px solid var(--heavy);
+    padding: .08rem .4rem;
+    white-space: nowrap;
+  }
+  .stamp.soft { color: var(--muted); border-color: var(--rule-2); }
+
+  /* ── docs ─────────────────────────────────────────────── */
+
+  .docs { display: flex; flex-direction: column; gap: .1rem; }
+  .doc {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: .2rem;
+    padding: .8rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .doc:first-child { border-top: 1px solid var(--rule); }
+  .doc-p {
+    font-family: var(--mono);
+    font-size: .775rem;
+    letter-spacing: -.01em;
+    overflow-wrap: anywhere;
+  }
+  .doc-d { font-size: .855rem; color: var(--muted); }
+
+  footer {
+    border-top: 1px solid var(--rule);
+    padding-top: 1.5rem;
+    font-family: var(--mono);
+    font-size: .74rem;
+    color: var(--muted);
+    line-height: 1.85;
+  }
+
+  /* ── motion ───────────────────────────────────────────── */
+
+  @keyframes grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  .tier-bar, .cmp-bar { animation: grow .78s cubic-bezier(.22,.68,.32,1) both; }
+  .cmp-bar.prog { animation-delay: .16s; }
+  .tier:nth-child(1) .tier-bar { animation-delay: .02s; }
+  .tier:nth-child(2) .tier-bar { animation-delay: .08s; }
+  .tier:nth-child(3) .tier-bar { animation-delay: .14s; }
+  .tier:nth-child(4) .tier-bar { animation-delay: .20s; }
+  .tier:nth-child(5) .tier-bar { animation-delay: .26s; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tier-bar, .cmp-bar { animation: none; }
+  }
+
+  @media (max-width: 560px) {
+    .tier { grid-template-columns: 8.5rem minmax(0, 1fr); }
+    .tier-meta { grid-column: 2; text-align: left; }
+  }
+</style>
+<style>
+  .tbtn {
+    position: fixed; top: 1rem; right: 1rem; z-index: 50;
+    font-family: var(--mono); font-size: .7rem; color: var(--muted);
+    background: var(--paper); border: 1px solid var(--rule-2);
+    border-radius: 2px; padding: .22rem .55rem; cursor: pointer;
+  }
+  .tbtn:hover { color: var(--ink); border-color: var(--ink); }
+</style>
+</head>
+<body>
+<button class="tbtn" id="tt" type="button">테마</button>
+<script>
+  (function () {
+    var b = document.getElementById("tt");
+    var r = document.documentElement;
+    b.addEventListener("click", function () {
+      var dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      var cur = r.getAttribute("data-theme") || (dark ? "dark" : "light");
+      r.setAttribute("data-theme", cur === "dark" ? "light" : "dark");
+    });
+  })();
+</script>
+<div class="page">
+
+  <header class="mast">
+    <div class="eyebrow">agent-conventions · 2026-07-21 → 07-27 · 43 commits</div>
+    <h1>Progressive<br>Convention Loading<br><span class="dim">설계와 측정</span></h1>
+    <p class="lede">
+      React · TypeScript · CSS 컨벤션을 매 작업마다 전체 핸드북으로 주입하던 구조를,
+      router → index → 선택된 계약 경로로 바꾼 기록입니다.
+      규칙 정확도를 유지하면서 컨텍스트 비용만 줄이는 것이 목표였습니다.
+    </p>
+
+    <div class="headline-figs">
+      <div class="fig">
+        <div class="fig-n">46,732</div>
+        <div class="fig-l">핸드북 1회 로드 · 토큰</div>
+      </div>
+      <div class="fig">
+        <div class="fig-n prog">9,377</div>
+        <div class="fig-l">progressive 중앙값 · 토큰</div>
+      </div>
+      <div class="fig">
+        <div class="fig-n prog">−79.9%</div>
+        <div class="fig-l">컨텍스트 감소 중앙값</div>
+      </div>
+      <div class="fig">
+        <div class="fig-n">14 : 14</div>
+        <div class="fig-l">정확도 · 핸드북 대 progressive</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ─────────────────────────────────────────────────── -->
+  <section>
+    <h2>문제<span class="tag">before</span></h2>
+    <div class="col">
+      <p>
+        기존 계약은 활성화된 skill마다 생성된 full handbook <code>AGENTS.md</code>를 통째로 읽는 것이었습니다.
+        React 핸드북 하나가 93,997 bytes고, TSX 한 줄을 고쳐도 세 도메인이 함께 켜지면
+        46,732 토큰이 선택 이전에 이미 들어갑니다.
+      </p>
+      <p>
+        문제는 skill을 셋으로 나눈 구조가 아니라 <b>loading contract</b>였습니다.
+        프로젝트마다 규칙을 하나의 큰 Markdown으로 합치면 활성화는 단순해지지만
+        모든 작업에 모든 규칙이 주입되고 규칙 정본도 프로젝트별로 복제됩니다.
+        그래서 세 domain skill은 유지하되 읽는 방식만 바꿨습니다.
+      </p>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────────────────────── -->
+  <section>
+    <h2>구조<span class="tag">react 기준 · 실측 bytes</span></h2>
+    <div class="col">
+      <p>
+        하나였던 문서를 네 층으로 쪼갰습니다. 막대 폭은 실제 파일 크기 비율입니다 —
+        아래로 갈수록 비싸고, 그만큼 드물게 읽습니다.
+      </p>
+    </div>
+
+    <div class="tiers">
+      <div class="tier">
+        <div class="tier-name">SKILL.md</div>
+        <div class="tier-bar-track"><div class="tier-bar" style="width:3.7%"></div></div>
+        <div class="tier-meta">3,479 B</div>
+        <div class="tier-note">router — scope 판정과 companion 활성화. 항상 읽음</div>
+      </div>
+      <div class="tier">
+        <div class="tier-name">RULES_INDEX.md</div>
+        <div class="tier-bar-track"><div class="tier-bar" style="width:12.5%"></div></div>
+        <div class="tier-meta">11,780 B</div>
+        <div class="tier-note">규칙당 한 줄 — id · appliesWhen · routing edge. 전체 scan, 항상 읽음</div>
+      </div>
+      <div class="tier">
+        <div class="tier-name">contracts/*.md</div>
+        <div class="tier-bar-track"><div class="tier-bar" style="width:0.94%"></div></div>
+        <div class="tier-meta">887 B</div>
+        <div class="tier-note">규범 문장만. 예시 코드는 뺌 — 선택된 규칙만 읽음 (42개 중 평균 8~17개)</div>
+      </div>
+      <div class="tier">
+        <div class="tier-name">rules/*.md</div>
+        <div class="tier-bar-track"><div class="tier-bar" style="width:2.4%"></div></div>
+        <div class="tier-meta">2,254 B</div>
+        <div class="tier-note">예시 포함 원문 — CRITICAL이거나 판단이 모호할 때만 확장</div>
+      </div>
+      <div class="tier">
+        <div class="tier-name">AGENTS.md</div>
+        <div class="tier-bar-track"><div class="tier-bar opt" style="width:100%"></div></div>
+        <div class="tier-meta">93,997 B</div>
+        <div class="tier-note">full handbook — opt-in. 기본 경로에서 제외됨</div>
+      </div>
+    </div>
+
+    <div class="col">
+      <h3>절감이 나오는 두 지점</h3>
+      <p>
+        첫째, <b>예시 코드를 계약에서 분리</b>했습니다. contract는 heading · Impact · 규범 한 문단 ·
+        routing edge만 남기고 Incorrect / Correct 코드블록을 원문으로 미룹니다.
+        react 기준 <code>rules/</code> 94,668 B → <code>contracts/</code> 37,269 B, 약 61% 삭감.
+        선택 여부와 무관하게 적용되는 절감입니다.
+      </p>
+      <p>
+        둘째, <b>선택된 것만 읽습니다.</b> 85개 규칙(42 + 22 + 21) 중 실제 관련된 계약만 로드합니다.
+        인덱스가 얇은 것도 의도된 설계라, title · impact · tags · 설명 · 예시를 전부 제외했습니다.
+      </p>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────────────────────── -->
+  <section>
+    <h2>측정<span class="tag">tiktoken 0.11.0 · o200k_base</span></h2>
+
+    <div class="compare">
+      <div class="cmp-row">
+        <div class="cmp-head">
+          <span>full handbook — react + typescript + css, 6 파일</span>
+          <span class="n">46,732</span>
+        </div>
+        <div class="cmp-bar heavy" style="width:100%"></div>
+      </div>
+      <div class="cmp-row">
+        <div class="cmp-head">
+          <span>progressive — 같은 도메인, 중앙값</span>
+          <span class="n">9,377</span>
+        </div>
+        <div class="cmp-bar prog" style="width:20.1%"></div>
+      </div>
+      <p class="cmp-foot">
+        두 arm의 활성 도메인이 동일합니다. 도메인을 덜 켜서 줄어든 것이 아니라
+        같은 도메인을 켠 상태에서 읽는 방식만 다릅니다.
+      </p>
+    </div>
+
+    <div class="scroll">
+      <table>
+        <caption>시나리오별 implementation phase. 감소율 막대는 progressive가 차지하는 비율.</caption>
+        <thead>
+          <tr>
+            <th>시나리오</th>
+            <th class="num">도메인</th>
+            <th class="num">핸드북</th>
+            <th class="num">progressive</th>
+            <th class="num">감소</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="id">css-one-off-structural-modifier</td>
+            <td class="num">3</td><td class="num">46,732</td><td class="num">9,349</td><td class="num">80.0%</td>
+            <td class="minibar-cell"><div class="minibar-track"><div class="minibar" style="width:20.0%"></div></div></td>
+          </tr>
+          <tr>
+            <td class="id">css-domain-state-class-contract</td>
+            <td class="num">3</td><td class="num">46,732</td><td class="num">10,375</td><td class="num">77.8%</td>
+            <td class="minibar-cell"><div class="minibar-track"><div class="minibar" style="width:22.2%"></div></div></td>
+          </tr>
+          <tr>
+            <td class="id">RTE12-query-shaping</td>
+            <td class="num">2</td><td class="num">35,643</td><td class="num">8,632</td><td class="num">75.8%</td>
+            <td class="minibar-cell"><div class="minibar-track"><div class="minibar" style="width:24.2%"></div></div></td>
+          </tr>
+          <tr>
+            <td class="id">RTE02-owner-placement-css-drift</td>
+            <td class="num">2</td><td class="num">35,643</td><td class="num">9,405</td><td class="num">73.6%</td>
+            <td class="minibar-cell"><div class="minibar-track"><div class="minibar" style="width:26.4%"></div></div></td>
+          </tr>
+          <tr>
+            <td class="id">RTE10-derived-selection-state</td>
+            <td class="num">2</td><td class="num">35,643</td><td class="num">10,168</td><td class="num">71.5%</td>
+            <td class="minibar-cell"><div class="minibar-track"><div class="minibar" style="width:28.5%"></div></div></td>
+          </tr>
+          <tr>
+            <td class="id">RTE03-route-support-extraction</td>
+            <td class="num">2</td><td class="num">35,643</td><td class="num">11,832</td><td class="num">66.8%</td>
+            <td class="minibar-cell"><div class="minibar-track"><div class="minibar" style="width:33.2%"></div></div></td>
+          </tr>
+          <tr>
+            <td class="id">derive-existing-contract-with-docs</td>
+            <td class="num">1</td><td class="num">11,609</td><td class="num">4,236</td><td class="num">63.5%</td>
+            <td class="minibar-cell"><div class="minibar-track"><div class="minibar" style="width:36.5%"></div></div></td>
+          </tr>
+          <tr>
+            <td class="id">css-repeated-values-and-optional-token</td>
+            <td class="num">1</td><td class="num">11,089</td><td class="num">4,298</td><td class="num">61.2%</td>
+            <td class="minibar-cell"><div class="minibar-track"><div class="minibar" style="width:38.8%"></div></div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="col">
+      <p>
+        단일 도메인 시나리오가 61~64%로 가장 낮습니다.
+        인덱스는 선택 이전에 항상 내는 고정비라, 작업이 작을수록 상대 이득이 줄어듭니다.
+      </p>
+    </div>
+
+    <h3>측정 게이트</h3>
+    <div class="gates">
+      <div class="gate">
+        <div class="gate-l">progressive 중앙값</div>
+        <div class="gate-v">9,377</div>
+        <div class="gate-t">≤ 10,000</div>
+        <div class="pass">PASS</div>
+      </div>
+      <div class="gate">
+        <div class="gate-l">progressive 최댓값</div>
+        <div class="gate-v">11,832</div>
+        <div class="gate-t">≤ 12,000</div>
+        <div class="pass">PASS</div>
+      </div>
+      <div class="gate">
+        <div class="gate-l">1회 로드 감소</div>
+        <div class="gate-v">79.93%</div>
+        <div class="gate-t">≥ 70%</div>
+        <div class="pass">PASS</div>
+      </div>
+      <div class="gate">
+        <div class="gate-l">누적 감소</div>
+        <div class="gate-v">65.44%</div>
+        <div class="gate-t">≥ 60%</div>
+        <div class="pass">PASS</div>
+      </div>
+    </div>
+
+    <div class="col">
+      <p>
+        누적 감소가 1회 로드보다 낮은 이유는 측정에 드러납니다. audit phase에서 두 arm 모두
+        정확히 +5,502 토큰이 붙는데, 이것이 아직 progressive가 아닌
+        <code>convention-audit</code>의 SKILL + AGENTS입니다.
+        progressive arm의 audit phase 비용 15,670 중 35%가 여기서 나옵니다 — 다음 최적화 대상.
+      </p>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────────────────────── -->
+  <section>
+    <h2>정확도<span class="tag">v18 · 60 / 66 runs</span></h2>
+    <div class="col">
+      <p>
+        컨텍스트만 줄고 규칙을 놓치면 의미가 없으므로, 같은 시나리오를
+        no-skill · full-handbook · progressive 세 arm으로 돌려 선택 결과를 비교했습니다.
+      </p>
+    </div>
+
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Arm</th>
+            <th class="num">runs</th>
+            <th class="num">candidate</th>
+            <th class="num">exact match</th>
+            <th>completion</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="id">no-skill</td><td class="num">21</td><td class="num">0</td><td class="num">—</td><td>21 COMPLETE</td></tr>
+          <tr><td class="id">full-handbook</td><td class="num">21</td><td class="num">15</td><td class="num">14</td><td>21 COMPLETE</td></tr>
+          <tr><td class="id">progressive</td><td class="num">15</td><td class="num">15</td><td class="num">14</td><td>15 COMPLETE</td></tr>
+          <tr><td class="id">mutation control</td><td class="num">3</td><td class="num">0</td><td class="num">—</td><td>3 correctly BLOCKED</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="col">
+      <p>
+        <b>full handbook은 정확도 우위를 보이지 못했습니다.</b> 같은 14/15인데 컨텍스트만 5배입니다.
+        비-mutation run 전체에서 semantic failure 0, unknown 0, applicable-rule recall 1,
+        domain-activation recall 1이었습니다.
+      </p>
+      <p>
+        mutation control은 적용되어야 할 규칙 하나를 의도적으로 N/A로 옮긴 run입니다.
+        셋 모두 coverage failure로 차단됐습니다 — 완료 게이트가 실제로 동작한다는 증거입니다.
+      </p>
+      <p>
+        빗나간 2건은 모두 <b>over-selection</b>이었습니다. 불필요한 규칙을 더 고른 것이지
+        필요한 규칙을 놓친 것이 아닙니다. 유리한 재시도로 교체하지 않고 그대로 기록에 남겼습니다.
+      </p>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────────────────────── -->
+  <section>
+    <h2>검증 과정<span class="tag">4 phases · 43 commits</span></h2>
+
+    <div class="timeline">
+      <div class="phase">
+        <div class="phase-n">01</div>
+        <div class="phase-body">
+          <div class="phase-top">
+            <span class="phase-title">설계 · 계획 · 베이스라인</span>
+            <span class="phase-when">07-21 14:13 → 15:10 · 3 commits</span>
+          </div>
+          <p>
+            구현 전에 설계 문서(415줄)와 계획(1,149줄)을 먼저 썼습니다.
+            "rules는 유일한 정본", "SKILL.md는 규칙집이 아니라 router",
+            "선택하지 않은 규칙도 판정 증거를 남긴다" 같은 원칙과 범위 밖 항목을 먼저 고정했습니다.
+          </p>
+          <div class="phase-out">design · plan · baseline + red test</div>
+        </div>
+      </div>
+
+      <div class="phase">
+        <div class="phase-n">02</div>
+        <div class="phase-body">
+          <div class="phase-top">
+            <span class="phase-title">빌드 파이프라인</span>
+            <span class="phase-when">07-21 15:33 → 21:40 · 9 commits</span>
+          </div>
+          <p>
+            frontmatter 스키마부터 쌓았습니다. 라우팅 메타데이터는 의존 순서대로
+            TypeScript → CSS → React로 붙였습니다.
+          </p>
+          <div class="phase-out">
+            appliesWhen · requiresSelected · reviewWith · requiredOnCompletion 스키마<br>
+            routing.ts → RULES_INDEX.md 생성 · check-generated<br>
+            contracts/*.md 생성 (148 files) · convention-audit 재작성
+          </div>
+        </div>
+      </div>
+
+      <div class="phase">
+        <div class="phase-n">03</div>
+        <div class="phase-body">
+          <div class="phase-top">
+            <span class="phase-title">평가 주도 하드닝</span>
+            <span class="phase-when">07-21 23:18 → 07-23 02:57 · 20 commits</span>
+          </div>
+          <p>
+            실제 작업량의 대부분입니다. behavioral eval harness를 붙인 뒤
+            <b>평가를 돌리고 → 깨지고 → 계약을 조이는</b> 루프를 반복했습니다.
+            20개의 fix 커밋이 전부 실제 평가 실패에 대응합니다.
+            실패는 지우지 않고 v3~v16까지 34개 디렉터리, 2,097개 파일로 전부 보존했습니다.
+          </p>
+          <div class="phase-out">
+            v6 contract blocked · v7 routing order · v8 RTE10 oracle<br>
+            v11 handbook identity · v12 result gate · v13 preflight gate<br>
+            v14 mutation completion · v15 selection gate · v16 boundary
+          </div>
+        </div>
+      </div>
+
+      <div class="phase">
+        <div class="phase-n">04</div>
+        <div class="phase-body">
+          <div class="phase-top">
+            <span class="phase-title">v17 · v18 인증</span>
+            <span class="phase-when">07-24 → 07-27</span>
+          </div>
+          <p>
+            v17은 66-run 매트릭스 중 12개에서 막혔습니다. 그 원인과 대응이 이 작업에서
+            가장 특징적인 판단이었습니다 (아래).
+            v18에서 60개 run을 마치고 채택을 결정했습니다.
+          </p>
+          <div class="phase-out">v18 · 28/30 exact · mutation 3/3 blocked · 채택</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="incident">
+      <h3>v17이 막힌 지점</h3>
+      <p>
+        평가자 에이전트가 존재하지 않는 역방향 라우팅 엣지를 계속 만들어냈습니다.
+        세 번 연속 같은 실패였습니다.
+      </p>
+<pre><span class="bad">✗ react/screen-keep-derived-values-close
+    → react/state-preserve-origin-chaining     없는 엣지 (추론된 역방향)</span>
+
+<span class="good">✓ react/state-preserve-origin-chaining
+    → react/screen-keep-derived-values-close   인덱스가 선언한 유일한 방향</span></pre>
+      <p>
+        선택지는 둘이었습니다 — 코디네이터의 엄격한 exact-edge 검증을 완화하거나,
+        평가자 쪽 모호성을 없애거나. <b>검증을 약화시키지 않는 쪽</b>을 택했습니다.
+        코디네이터가 directed edge 사전을 명시적으로 넘기고
+        <code>reviewWith</code>가 대칭도 전이도 아님을 못박게 고쳤습니다.
+        v18에서 해당 시나리오 두 trial 모두 exact match로 통과했습니다.
+      </p>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────────────────────── -->
+  <section>
+    <h2>증명되지 않은 것<span class="tag">partial certification</span></h2>
+
+    <p class="limits-quote">
+      전체 인증은 의도적으로 주장하지 않았습니다.
+    </p>
+
+    <div class="col">
+      <p>
+        채택 결정에 필요한 증거는 충분했지만 매트릭스는 완결되지 않았습니다.
+        아래는 이 구조를 쓸 때 알고 있어야 할 한계입니다.
+      </p>
+    </div>
+
+    <ul class="limit-list">
+      <li class="limit">
+        <span class="limit-what"><b>총 실행 토큰은 측정하지 않았습니다.</b></span>
+        <span class="stamp">미측정</span>
+        <span class="limit-why">
+          측정된 것은 skill 파일이 컨텍스트에 차지하는 크기입니다.
+          도구 호출, 추론 토큰, 파일 재독은 포함되지 않습니다. 비용 절감률이 아닙니다.
+        </span>
+      </li>
+      <li class="limit">
+        <span class="limit-what"><b>fallback 경로는 시나리오 0건입니다.</b></span>
+        <span class="stamp">미측정</span>
+        <span class="limit-why">
+          opt-in full handbook fallback이 발동하면 index + contracts + 핸드북을 모두 내므로
+          핸드북 단독보다 비쌉니다. 그 경로 비용은 한 번도 측정된 적이 없습니다.
+        </span>
+      </li>
+      <li class="limit">
+        <span class="limit-what"><b>측정은 이상적 선택을 가정합니다.</b></span>
+        <span class="stamp soft">보정 필요</span>
+        <span class="limit-why">
+          측정 컨텍스트의 파일 목록은 오라클의 정답 선택입니다.
+          실제 run에서는 over-selection이 관측됐으므로(precision 0.667 · 0.944)
+          실제 로드는 모델보다 약간 큽니다. 계약 하나가 ~880 B라 영향은 제한적입니다.
+        </span>
+      </li>
+      <li class="limit">
+        <span class="limit-what"><b>prompt caching은 고려하지 않았습니다.</b></span>
+        <span class="stamp soft">범위 밖</span>
+        <span class="limit-why">
+          설계에서 명시적으로 제외했는데, 방향은 불리한 쪽입니다.
+          고정된 핸드북은 캐시가 잘 붙고 매번 달라지는 계약 집합은 캐시 효율이 나쁩니다.
+        </span>
+      </li>
+      <li class="limit">
+        <span class="limit-what"><b>staged 시나리오 6 run이 미실행입니다.</b></span>
+        <span class="stamp">미실행</span>
+        <span class="limit-why">
+          <code>RTE02-owner-placement-css-drift</code>의 arm별 2 trial씩.
+          66개 좌표 중 60개만 실행하고 중단했습니다.
+        </span>
+      </li>
+      <li class="limit">
+        <span class="limit-what"><b>독립 semantic reviewer 8개 배치가 미실행입니다.</b></span>
+        <span class="stamp">미실행</span>
+        <span class="limit-why">
+          behavioral run은 완료됐지만 artifact 수준의 독립 semantic 검토는 시작하지 않았습니다.
+        </span>
+      </li>
+    </ul>
+
+    <div class="col">
+      <p>
+        관측된 약점은 <b>over-selection이지 필요 규칙 누락이 아닙니다.</b>
+        따라서 다음 개선 방향은 always-loaded 컨텍스트를 늘리는 것이 아니라
+        activation 근거를 좁히는 쪽입니다.
+      </p>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────────────────────── -->
+  <section>
+    <h2>원본 기록<span class="tag">repo</span></h2>
+    <div class="docs">
+      <div class="doc">
+        <div class="doc-p">docs/superpowers/specs/2026-07-21-progressive-convention-loading-design.md</div>
+        <div class="doc-d">설계 원칙, 산출물 구조, 범위와 범위 밖 — 415줄</div>
+      </div>
+      <div class="doc">
+        <div class="doc-p">docs/superpowers/plans/2026-07-21-progressive-convention-loading.md</div>
+        <div class="doc-d">구현 계획과 skill별 라우팅 오라클 (Appendix A~D) — 1,149줄</div>
+      </div>
+      <div class="doc">
+        <div class="doc-p">docs/evaluations/2026-07-27-progressive-loading-v18-partial-certification.md</div>
+        <div class="doc-d">최종 측정·검증 결과, 채택 결정, 미완료 항목</div>
+      </div>
+      <div class="doc">
+        <div class="doc-p">docs/evaluations/2026-07-24-progressive-loading-v17-progress.md</div>
+        <div class="doc-d">v17이 막힌 지점과 수정 근거</div>
+      </div>
+      <div class="doc">
+        <div class="doc-p">docs/evaluations/discovery/</div>
+        <div class="doc-d">채택되지 않은 v3~v16 시도의 실패 기록 — 34 디렉터리 · 2,097 파일</div>
+      </div>
+    </div>
+
+    <div class="col">
+      <h3>측정 재현</h3>
+      <pre>npm --prefix package run measurement:tokens</pre>
+      <p style="font-size:.855rem;color:var(--muted);margin-top:.8rem">
+        contexts SHA-256 <code>1a052d41…aaeed3</code> · 71개 파일 해시 고정 ·
+        게이트 4/4 PASS. 같은 커밋에서 항상 같은 수치가 나옵니다.
+      </p>
+    </div>
+  </section>
+
+  <footer>
+    측정 기준 tiktoken 0.11.0 · o200k_base · Python 3.13.7<br>
+    v18 bound source HEAD 5634ea1 · criteria SHA-256 b3be5477…71da8b
+  </footer>
+
+</div>
+</body>
+</html>

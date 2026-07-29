@@ -122,6 +122,6 @@ Figma를 대략 참고하는 skill이 아니라, Figma evidence와 실제 브라
 
 ## 상세 규칙
 
-- [AGENTS.md](./AGENTS.md) - compiled local guide
+- [HANDBOOK.md](./HANDBOOK.md) - compiled local guide
 - [pressure-tests.md](./pressure-tests.md) - baseline failure와 pressure scenario 검증 세트
 - [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md` - source of truth
