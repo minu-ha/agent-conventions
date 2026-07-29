@@ -1888,8 +1888,8 @@ test("React progressive metadata and all 42 rule routes match Appendix B exactly
 	// frontmatter 작성 규칙은 스킬마다 복제하지 않고 공통 기여 문서 한 곳에 둔다.
 	const contributing = await readFile(path.join(repoDir, "CONTRIBUTING.md"), "utf8");
 	assert.match(contributing, /appliesWhen.*한 줄.*160/);
-	assert.match(contributing, /reviewWith.*자동 선택이.*아니라.*재평가/i);
-	assert.match(contributing, /대상이 없으면.*key\s*를 아예 생략/i);
+	assert.match(contributing, /reviewWith.*자동 선택이 아니라.*재평가/i);
+	assert.match(contributing, /대상이 없으면.*key\s*를 생략/i);
 });
 
 test("React routing manifest is the exact fifteen-scenario Appendix B/D oracle with full positive coverage", async () => {
@@ -2151,8 +2151,8 @@ test("CSS progressive metadata and rule routing match Appendix C exactly", async
 	// frontmatter 작성 규칙은 스킬마다 복제하지 않고 공통 기여 문서 한 곳에 둔다.
 	const contributing = await readFile(path.join(repoDir, "CONTRIBUTING.md"), "utf8");
 	assert.match(contributing, /appliesWhen.*한 줄.*160/);
-	assert.match(contributing, /reviewWith.*자동 선택이.*아니라.*재평가/i);
-	assert.match(contributing, /대상이 없으면.*key\s*를 아예 생략/i);
+	assert.match(contributing, /reviewWith.*자동 선택이 아니라.*재평가/i);
+	assert.match(contributing, /대상이 없으면.*key\s*를 생략/i);
 });
 
 test("CSS routing manifest is the exact eleven-scenario and thirteen-stage Appendix C/D oracle", async () => {

@@ -401,10 +401,10 @@ test("project template stays a standalone KISS starter, not a convention router"
 	// 번호 매긴 섹션 골격
 	for (const heading of [
 		"## 1. 프로젝트",
-		"## 2. 먼저 생각한다",
-		"## 3. 최소로 만든다",
-		"## 4. 최소로 고친다",
-		"## 5. 검증하고 보고한다",
+		"## 2. 먼저 생각합니다",
+		"## 3. 최소로 만듭니다",
+		"## 4. 최소로 고칩니다",
+		"## 5. 검증하고 보고합니다",
 		"## 6. 하지 않는 것",
 	]) {
 		assert.ok(template.includes(heading), heading);
@@ -412,18 +412,18 @@ test("project template stays a standalone KISS starter, not a convention router"
 
 	// KISS · YAGNI 원칙
 	for (const requiredText of [
-		"추측하지 않는다",
-		"문제를 푸는 최소한의 코드",
+		"추측하지 않고",
+		"문제를 해결하는 최소한의 코드",
 		"단일 사용처",
-		"꼭 필요한 것만 건드린다",
+		"꼭 필요한 곳만 건드리고",
 		"바뀐 모든 줄이 요청과 직접 연결",
-		"실행한 명령과 그 출력으로 말한다",
+		"실행한 명령과 그 출력으로 보고합니다",
 	]) {
 		assert.ok(template.includes(requiredText), requiredText);
 	}
 
 	// 프로젝트가 채울 자리
-	assert.ok(template.includes("이 절만 채우면 된다"));
+	assert.ok(template.includes("이 절만 채우고 나머지는 그대로 둡니다"));
 
 	// 이 레포에 종속되지 않는다. 복사해 간 프로젝트에서 해석 불가능한 참조가 없어야 한다.
 	for (const coupling of ["RULES_INDEX", "contracts/", "appliesWhen", "requiresSelected", "agent-conventions/"]) {
@@ -499,21 +499,23 @@ test("repository documentation distinguishes source, router, and generated artif
 
 	// README 는 라우팅 문서다. 규범 계약 표를 싣지 않는다.
 	assert.match(repositoryReadme, /AGENTS\.template\.md/);
-	assert.match(repositoryReadme, /ONBOARDING\.md/);
 	assert.match(repositoryReadme, /CONTRIBUTING\.md/);
 	assert.doesNotMatch(repositoryReadme, /^## .*Structured Skill Artifact Contract$/m);
 
 	// 사람용 문서는 같은 골격을 쓴다: H1, 한 문단 요약, 그리고 번호 매긴 섹션.
 	for (const [documentName, source] of [
 		["README.md", repositoryReadme],
-		["ONBOARDING.md", await readFile(path.join(repoDir, "ONBOARDING.md"), "utf8")],
 		["CONTRIBUTING.md", await readFile(path.join(repoDir, "CONTRIBUTING.md"), "utf8")],
 		["AGENTS.md", repositoryAgents],
 		["AGENTS.template.md", await readFile(templatePath, "utf8")],
 	] as const) {
 		assert.match(source, /^# .+\n\n[^#>\n]/, `${documentName} must open with a one-paragraph summary`);
+		assert.match(source, /^## 목차$/m, `${documentName} must have a table of contents`);
 		assert.match(source, /^## 1\. /m, `${documentName} must use numbered sections`);
-		assert.doesNotMatch(source, /^## 목차$/m, `${documentName} must not use a bullet table of contents`);
+		// 목차는 HANDBOOK.md 와 같은 번호 목록으로 쓴다. 불릿 목차는 쓰지 않는다.
+		const tableOfContents = extractMarkdownSection({source, heading: "목차", level: 2});
+		assert.match(tableOfContents, /^1\. \[/m, `${documentName} table of contents must be numbered`);
+		assert.doesNotMatch(tableOfContents, /^- \[/m, `${documentName} table of contents must not use bullets`);
 	}
 });
 
