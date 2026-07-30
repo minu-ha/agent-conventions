@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** `skill/*/rules/*.md` 212개를 정본 그대로 두고, 사람이 검색·필터로 조회하는 단일 HTML 한 장을 생성 파이프라인으로 만든다.
+**Goal:** `skill/*/rules/*.md` 212개를 정본 그대로 두고, 사람이 skill 드롭다운·검색·필터로 조회하는 단일 HTML 한 장을 생성 파이프라인으로 만든다.
 
 **Architecture:** `parser.ts`의 기존 로더를 재사용해 8개 skill을 읽고, rule 본문을 prose와 Incorrect/Correct 예시로 분해한 뒤, 데이터를 JSON으로 인라인한 자기완결 HTML 한 장(`docs/conventions.html`)을 낸다. 출력은 결정적이며 `check-handbooks.ts`와 같은 방식으로 신선도를 강제한다. 사람이 읽는 한국어 제목은 `titleKo` frontmatter 필드를 추가해 채우고, 기존 영어 `title`은 앵커·헤딩 식별자로 그대로 둔다.
 
@@ -10,9 +10,17 @@
 
 ---
 
+## 읽는 순서
+
+Task 1-5가 코드다. **Task 5까지 하면 212개 규칙이 전부 검색·필터되는 화면이 뜬다.** 한 번 앉아서 끝나는 분량이고, 한국어 제목을 하나도 안 채워도 동작한다 (`titleKo`가 비면 영어 제목으로 대체 표시).
+
+Task 6-7은 한국어 제목 212개를 채우는 **콘텐츠 작업**이다. 코드가 아니고 블로커도 아니다. skill별로 쪼개서 아무 때나 해도 된다.
+
+Task 8-9는 마감이다. Task 8은 Task 6-7이 **전부** 끝난 뒤에만 한다.
+
 ## 배경: 왜 생성 파이프라인이어야 하는가
 
-`docs/react-rules-preview.html`(커밋 `ab9518e`)은 스크래치패드 Python 스크립트로 한 번 떠낸 스냅샷이다. 만든 당일에 이미 낡았다.
+`docs/react-rules-preview.html`(커밋 `ab9518e`)은 스크래치패드 스크립트로 한 번 떠낸 스냅샷이다. 만든 당일에 이미 낡았다.
 
 커밋 `397407d`("react State 섹션을 세 갈래로 나눈다")가 병행 세션에서 `state` 섹션을 `data`/`state`/`perf`로 쪼갰다. 그 결과:
 
@@ -22,53 +30,63 @@
 | prefix 분포 | `state: 13` | **`data: 4`, `state: 5`, `perf: 4`** |
 | 규칙 ID | 8개가 구 이름 | 8개가 `data-*`/`perf-*`로 개명 |
 
-**즉 손으로 뜬 HTML은 몇 시간 만에 정본과 어긋났다.** 이 계획의 핵심은 예쁜 화면이 아니라 **어긋날 수 없게 만드는 것**이고, 그래서 Task 7(신선도 검사)이 선택 사항이 아니다.
+**손으로 뜬 HTML은 몇 시간 만에 정본과 어긋났다.** 이 계획의 핵심은 예쁜 화면이 아니라 **어긋날 수 없게 만드는 것**이고, 그래서 Task 5의 신선도 검사가 선택 사항이 아니다.
 
 ## 설계 결정
 
-아래 6개는 확정 사항이다. 구현 중 뒤집지 말 것.
+아래 7개는 확정 사항이다. 구현 중 뒤집지 말 것.
 
 **1. 출력은 8개 skill을 합친 한 장 (`docs/conventions.html`)**
 
-skill별로 쪼개지 않는다. 이유:
+skill별 파일로 쪼개지 않는다. 이유:
 - 교차참조가 skill 경계를 넘는다(`typescript/types-reuse-existing-contracts-before-new-types`, `css/naming-separate-local-and-route-style-scopes` 등). 한 파일 안에서는 전부 `#anchor`라 경로 해석이 없고 링크가 깨질 수 없다.
-- `convention-react`는 `convention-typescript`를 **항상** 동반한다. 사람도 두 skill을 함께 봐야 하므로 검색이 하나여야 한다.
 - 전체 콘텐츠가 358KB(gzip 107KB)라 한 장에 들어간다.
-- "react만" 보려면 rail의 skill 필터 한 번이면 된다.
+- 파일이 하나면 열기·북마크·공유가 하나다.
 
-**2. 출력은 결정적이어야 한다 — 타임스탬프·난수·해시 금지**
+**2. skill 이동은 단일선택 드롭다운**
 
-Task 7의 신선도 검사가 재렌더 결과를 바이트 비교한다(`check-handbooks.ts`와 동일 전략). 생성 시각을 넣으면 검사가 항상 실패한다. 페이로드에 `generatedAt` 같은 필드를 넣지 말 것.
+상단에 `<select>` 하나. 항목은 `전체(212)` + skill 8개. 한 번에 한 scope만 본다.
 
-**3. 완전한 HTML 문서로 낼 것 — `<!doctype>` + `<meta charset="utf-8">` 필수**
+동반 관계(react → typescript `required`, css `conditional`)와는 상충하지만, 아래 두 가지로 왕복 비용을 없앤다. **컨트롤을 추가하지 않는다.**
 
-이게 실제로 터진 버그다. 선언이 없으면 `file://`로 열 때 브라우저가 Latin-1로 추측해 한글이 전부 깨진다(`한국어` → `í\x95\x9cêµ\xadì\x96´`). Task 5에 회귀 테스트를 둔다.
+- **교차참조 칩이 드롭다운을 자동 전환한다.** `typescript/…` 칩을 누르면 드롭다운이 `typescript`로 바뀌고 대상 규칙으로 스크롤·펼침된다. 실제로 다른 skill 규칙이 필요한 순간이 정확히 이 지점이므로, 두 skill을 동시에 띄울 필요가 없어진다.
+- **선택한 skill의 동반 관계를 헤더에 한 줄로 보여준다.** `동반 typescript 필수 · css 조건` 형태이고, 각 항목이 드롭다운을 그 skill로 바꾸는 버튼이다. 정보 표시 + 한 번 클릭 이동일 뿐 필터가 아니다.
 
-**4. 인라인 JSON은 `<`를 `<`로 이스케이프**
+전역 검색이 필요하면 `전체`를 고른다. 선택은 `localStorage`에 기억시킨다(`file://`에서 실패할 수 있으므로 `try/catch`로 조용히 무시).
+
+**3. 출력은 결정적이어야 한다 — 타임스탬프·난수 금지**
+
+Task 5의 신선도 검사가 재렌더 결과를 바이트 비교한다(`check-handbooks.ts`와 동일 전략). 생성 시각을 넣으면 검사가 항상 실패한다. 페이로드에 `generatedAt` 같은 필드를 넣지 말 것.
+
+**4. 완전한 HTML 문서로 낼 것 — `<!doctype>` + `<meta charset="utf-8">` 필수**
+
+이게 실제로 터진 버그다. 선언이 없으면 `file://`로 열 때 브라우저가 Latin-1로 추측해 한글이 전부 깨진다(`한국어` → `í\x95\x9cêµ\xadì\x96´`). Task 4에 회귀 테스트를 둔다.
+
+**5. 인라인 JSON은 `<`를 `<`로 이스케이프**
 
 `<script type="application/json">` 안에 규칙 본문이 들어간다. 코드 예시에 `</script`가 있으면 문서가 깨진다. `JSON.stringify` 결과에서 `<`를 전부 `<`로 바꾼다. `JSON.parse`가 원복한다.
 
-**5. `titleKo`는 추가만 한다 — 기존 `title`을 뒤집지 않는다**
+**6. `titleKo`는 추가만 한다 — 기존 `title`을 뒤집지 않는다**
 
 영어 `title` 220개는 놀고 있는 게 아니다. `HANDBOOK.md` 헤딩이고 `buildRuleAnchor()` 슬러그 기반이며 grep 대상이다. 뒤집으면 앵커와 링크가 전부 흔들린다. `titleKo`를 새로 추가하고 화면에만 쓴다. 영어는 규칙 ID·태그·섹션 키로 남아 검색에도 계속 걸린다.
 
-**6. CSS grid는 `minmax(0, 1fr)`이어야 한다**
+**7. CSS grid는 `minmax(0, 1fr)`이어야 한다**
 
-`1fr`만 쓰면 grid item이 콘텐츠 intrinsic min-width 아래로 줄지 못한다. 긴 코드 한 줄이 컬럼을 밀어내 박스가 행 밖으로 나가고, `pre`는 넓어지기만 하고 스크롤이 안 걸린다. 헤드리스 측정으로 확인된 수치: 수정 전 112개 코드 박스 중 **29개가 최대 351px 이탈**, 스크롤되는 `pre` **0개** → 수정 후 이탈 **0개**, 스크롤 정상. `.diff`(좌우 2단)와 `.pane`(rail/본문 2단) 둘 다 해당한다. Task 6에 문자열 가드 테스트를 둔다.
+`1fr`만 쓰면 grid item이 콘텐츠 intrinsic min-width 아래로 줄지 못한다. 긴 코드 한 줄이 컬럼을 밀어내 박스가 행 밖으로 나가고, `pre`는 넓어지기만 하고 스크롤이 안 걸린다. 헤드리스 측정 수치: 수정 전 112개 코드 박스 중 **29개가 최대 351px 이탈**, 스크롤되는 `pre` **0개** → 수정 후 이탈 **0개**. `.diff`(좌우 2단)와 `.pane`(rail/본문 2단) 둘 다 해당한다. Task 4에 문자열 가드 테스트를 둔다.
 
 ## 대상 규모
 
-| skill | 규칙 | 섹션 | 모드 |
-| --- | --- | --- | --- |
-| astro | 42 | 11 | plain |
-| css | 21 | 5 | progressive |
-| figma-visual-parity | 15 | 6 | plain |
-| nestjs | 21 | 7 | plain |
-| playwright-test | 25 | 7 | plain |
-| react | 42 | 10 | progressive |
-| tanstack-route | 24 | 6 | plain |
-| typescript | 22 | 6 | progressive |
-| **합계** | **212** | **58** | |
+| skill | 규칙 | 섹션 | 모드 | 동반 |
+| --- | --- | --- | --- | --- |
+| astro | 42 | 11 | plain | — |
+| css | 21 | 5 | progressive | typescript(조건) |
+| figma-visual-parity | 15 | 6 | plain | — |
+| nestjs | 21 | 7 | plain | — |
+| playwright-test | 25 | 7 | plain | — |
+| react | 42 | 10 | progressive | typescript(필수), css(조건) |
+| tanstack-route | 24 | 6 | plain | — |
+| typescript | 22 | 6 | progressive | — |
+| **합계** | **212** | **58** | | |
 
 `plain` skill은 `contracts/`도 `RULES_INDEX.md`도 없다. viewer는 두 모드를 구분하지 않고 `rules/*.md`만 읽으므로 8개 전부 동일하게 처리된다.
 
@@ -82,7 +100,7 @@ Task 7의 신선도 검사가 재렌더 결과를 바이트 비교한다(`check-
 | --- | --- |
 | `rule-body.ts` | `SkillRule.body` 원문 → `{prose, examples}` 구조화. 순수 함수, I/O 없음 |
 | `viewer-payload.ts` | 8개 skill 로드 → 화면용 `ViewerPayload` 조립. 정렬·결정성 담당 |
-| `viewer-template.ts` | CSS·클라이언트 스크립트 문자열 상수 + 완전한 문서 조립 |
+| `viewer-template.ts` | CSS·마크업·클라이언트 스크립트 문자열 + 완전한 문서 조립 |
 | `viewer.ts` | CLI 진입점. payload → HTML → 파일 쓰기 |
 | `check-viewer.ts` | 재렌더 후 바이트 비교로 신선도 강제 |
 
@@ -99,7 +117,7 @@ Task 7의 신선도 검사가 재렌더 결과를 바이트 비교한다(`check-
 | `package/src/types.ts` | `SkillRule.titleKo`, `SkillSection.titleKo` 추가 |
 | `package/src/parser.ts` | `titleKo` 파싱 (rule frontmatter, `_sections.md`) |
 | `package/src/config.ts` | `viewerOutputPath` 추가 |
-| `package/src/validate.ts` | `titleKo` 필수 검증 (Task 16에서 활성화) |
+| `package/src/validate.ts` | `titleKo` 필수 검증 (Task 8에서 활성화) |
 | `package/package.json` | `viewer`, `check:viewer` 스크립트 + 검사 체인 편입 |
 | `skill/*/rules/*.md` | `titleKo` frontmatter 212개 |
 | `skill/*/rules/_sections.md` | `**TitleKo:**` 58개 |
@@ -109,7 +127,7 @@ Task 7의 신선도 검사가 재렌더 결과를 바이트 비교한다(`check-
 
 | 파일 | 이유 |
 | --- | --- |
-| `docs/react-rules-preview.html` | 스냅샷 초안. Task 17에서 생성물로 대체 |
+| `docs/react-rules-preview.html` | 스냅샷 초안. Task 9에서 생성물로 대체 |
 
 ---
 
@@ -119,9 +137,9 @@ Task 7의 신선도 검사가 재렌더 결과를 바이트 비교한다(`check-
 - Create: `package/src/rule-body.ts`
 - Create: `package/test/viewer.test.ts`
 
-**전제로 삼아도 되는 것:** `validate.ts:143` 이 이미 모든 규칙에 `**Incorrect` 와 `**Correct` 가 있어야 한다고 강제한다. 즉 212개 전부 예시 쌍을 갖는 것은 우연이 아니라 검증된 불변이다. 파서가 예시를 못 찾으면 파서 버그다.
+**전제로 삼아도 되는 것:** `validate.ts:143`이 이미 모든 규칙에 `**Incorrect`와 `**Correct`가 있어야 한다고 강제한다. 즉 212개 전부 예시 쌍을 갖는 것은 우연이 아니라 검증된 불변이다. 파서가 예시를 못 찾으면 파서 버그다.
 
-**새 소스 파일이 지켜야 하는 것:** `test/documentation.test.ts` 가 `package/src/**` 의 JSDoc 규약을 검사한다. interface는 `@summary` 와 필드별 `@field`, 함수는 역할에 따라 `@api`/`@helper`/`@description` 태그, 그리고 named function 선언 대신 arrow function을 써야 한다. 아래 코드는 이 규약을 따른 상태다.
+**새 소스 파일이 지켜야 하는 것:** `test/documentation.test.ts`가 `package/src/**`의 JSDoc 규약을 검사한다. interface는 `@summary`와 필드별 `@field`, 함수는 역할에 따라 `@api`/`@helper`/`@description` 태그, named function 선언 대신 arrow function. 아래 코드는 이 규약을 따른 상태다.
 
 - [ ] **Step 1: 실패하는 테스트를 쓴다**
 
@@ -168,17 +186,7 @@ test("parseRuleBody splits prose from Incorrect and Correct examples", () => {
 });
 
 test("parseRuleBody keeps multiple blocks under one Correct label", () => {
-	const body = [
-		"**Correct:**",
-		"",
-		"```ts",
-		"export const a = 1;",
-		"```",
-		"",
-		"```tsx",
-		"export const B = () => null;",
-		"```",
-	].join("\n");
+	const body = ["**Correct:**", "", "```ts", "export const a = 1;", "```", "", "```tsx", "export const B = () => null;", "```"].join("\n");
 
 	const parsed = parseRuleBody(body);
 
@@ -205,7 +213,7 @@ Expected: FAIL — `Cannot find module '../src/rule-body.js'`
 
 - [ ] **Step 3: 최소 구현을 쓴다**
 
-`package/src/rule-body.ts` (탭 들여쓰기, `bracketSpacing: false`):
+`package/src/rule-body.ts` (탭 들여쓰기, `bracketSpacing: false`, lineWidth 140):
 
 ```ts
 /**
@@ -359,7 +367,7 @@ export const parseRuleBody = (body: string): ParsedRuleBody => {
 Run: `cd package && npx tsx --test test/viewer.test.ts`
 Expected: PASS — 3 tests
 
-- [ ] **Step 5: 실데이터 212개를 통과시키는 회귀 테스트를 추가한다**
+- [ ] **Step 5: 실데이터 212개 회귀 테스트를 추가한다**
 
 `package/test/viewer.test.ts` 끝에 추가:
 
@@ -410,19 +418,21 @@ git commit -m "feat: rule 본문을 산문과 Incorrect/Correct 예시로 분해
 
 ---
 
-### Task 2: rule에 `titleKo`를 선택 필드로 추가한다
+### Task 2: `titleKo`를 rule과 section 스키마에 선택 필드로 추가한다
 
 **Files:**
 - Modify: `package/src/types.ts`
-- Modify: `package/src/parser.ts:248-275`
+- Modify: `package/src/parser.ts` (`readSkillRules`, `parseSections`)
 - Modify: `package/test/viewer.test.ts`
+
+**주의:** `parseSections`의 description 정규식은 `^\*\*Description:\*\*\s+([\s\S]+)$`로 **탐욕적**이다. `**TitleKo:**`를 `**Description:**` 뒤에 놓으면 description 값으로 삼켜진다. 반드시 헤더와 `**Impact:**` 사이에 놓는다.
 
 - [ ] **Step 1: 실패하는 테스트를 쓴다**
 
 `package/test/viewer.test.ts` 끝에 추가:
 
 ```ts
-import {parseFrontmatter} from "../src/parser.js";
+import {parseFrontmatter, parseSections} from "../src/parser.js";
 
 test("readSkillRules exposes titleKo and tolerates its absence", async () => {
 	const rules = await readSkillRules(getSkillPaths("react"));
@@ -437,63 +447,6 @@ test("parseFrontmatter reads titleKo as a plain scalar", () => {
 
 	assert.equal(frontmatter.titleKo, "명명된 핸들러를 쓴다");
 });
-```
-
-- [ ] **Step 2: 실패를 확인한다**
-
-Run: `cd package && npx tsx --test test/viewer.test.ts`
-Expected: FAIL — `titleKo` 가 `SkillRule`에 없어 타입 오류 또는 `undefined`
-
-- [ ] **Step 3: 타입에 필드를 추가한다**
-
-`package/src/types.ts`의 `SkillRule` 안, `title` 필드 바로 아래:
-
-```ts
-	/**
-	 * @field 사람이 읽는 화면에 노출할 한국어 rule 제목
-	 */
-	titleKo: string;
-```
-
-- [ ] **Step 4: 파서가 필드를 채우게 한다**
-
-`package/src/parser.ts`의 `readSkillRules` 안 `rules.push({...})`에서 `title` 다음 줄에 추가:
-
-```ts
-			title: frontmatter.title ?? "",
-			titleKo: frontmatter.titleKo ?? "",
-```
-
-- [ ] **Step 5: 통과와 타입을 확인한다**
-
-Run: `cd package && npx tsx --test test/viewer.test.ts && npm run typecheck`
-Expected: PASS — 6 tests, 타입 오류 없음
-
-- [ ] **Step 6: 커밋**
-
-```bash
-cd /Users/l-20220017/workspace/agent-conventions
-git add package/src/types.ts package/src/parser.ts package/test/viewer.test.ts
-git commit -m "feat: rule frontmatter에 titleKo를 선택 필드로 받는다"
-```
-
----
-
-### Task 3: 섹션에 한국어 제목을 추가한다
-
-**Files:**
-- Modify: `package/src/types.ts`
-- Modify: `package/src/parser.ts:122-158`
-- Modify: `package/test/viewer.test.ts`
-
-**주의:** `parseSections`의 description 정규식은 `^\*\*Description:\*\*\s+([\s\S]+)$`로 **탐욕적**이다. `**TitleKo:**`를 `**Description:**` 뒤에 놓으면 description 값으로 삼켜진다. 반드시 헤더와 `**Impact:**` 사이에 놓는다.
-
-- [ ] **Step 1: 실패하는 테스트를 쓴다**
-
-`package/test/viewer.test.ts` 끝에 추가:
-
-```ts
-import {parseSections} from "../src/parser.js";
 
 test("parseSections reads TitleKo placed before Description", () => {
 	const source = [
@@ -525,11 +478,20 @@ test("parseSections leaves titleKo empty when the line is absent", () => {
 - [ ] **Step 2: 실패를 확인한다**
 
 Run: `cd package && npx tsx --test test/viewer.test.ts`
-Expected: FAIL — `titleKo` 가 `SkillSection`에 없음
+Expected: FAIL — `titleKo`가 `SkillRule`·`SkillSection`에 없어 타입 오류
 
 - [ ] **Step 3: 타입에 필드를 추가한다**
 
-`package/src/types.ts`의 `SkillSection` 안, `title` 다음:
+`package/src/types.ts`의 `SkillRule` 안, `title` 필드 바로 아래:
+
+```ts
+	/**
+	 * @field 사람이 읽는 화면에 노출할 한국어 rule 제목
+	 */
+	titleKo: string;
+```
+
+같은 파일 `SkillSection` 안, `title` 필드 바로 아래:
 
 ```ts
 	/**
@@ -538,7 +500,16 @@ Expected: FAIL — `titleKo` 가 `SkillSection`에 없음
 	titleKo: string;
 ```
 
-- [ ] **Step 4: 파서가 필드를 읽게 한다**
+- [ ] **Step 4: rule 파서가 필드를 채우게 한다**
+
+`package/src/parser.ts`의 `readSkillRules` 안 `rules.push({...})`에서 `title` 다음 줄에 추가:
+
+```ts
+			title: frontmatter.title ?? "",
+			titleKo: frontmatter.titleKo ?? "",
+```
+
+- [ ] **Step 5: section 파서가 필드를 읽게 한다**
 
 `package/src/parser.ts`의 `parseSections` 안 `impactMatch` 선언 다음 줄에 추가:
 
@@ -546,7 +517,7 @@ Expected: FAIL — `titleKo` 가 `SkillSection`에 없음
 		const titleKoMatch = block.match(/^\*\*TitleKo:\*\*\s+(.+)$/m);
 ```
 
-그리고 반환 객체를 다음으로 바꾼다:
+같은 함수의 반환 객체를 다음으로 바꾼다:
 
 ```ts
 		return {
@@ -559,22 +530,22 @@ Expected: FAIL — `titleKo` 가 `SkillSection`에 없음
 		};
 ```
 
-- [ ] **Step 5: 통과와 기존 빌드 무손상을 확인한다**
+- [ ] **Step 6: 통과와 기존 생성물 무손상을 확인한다**
 
-Run: `cd package && npx tsx --test test/viewer.test.ts && npm run check:handbooks:all`
-Expected: PASS — 8 tests. `check:handbooks:all`은 8개 skill 전부 "Checked …/HANDBOOK.md" 출력. `titleKo`는 `HANDBOOK.md` 렌더링에 쓰이지 않으므로 기존 생성물이 바뀌지 않아야 한다.
+Run: `cd package && npx tsx --test test/viewer.test.ts && npm run typecheck && npm run check:handbooks:all`
+Expected: PASS — 8 tests, 타입 오류 없음. `check:handbooks:all`은 8개 skill 전부 "Checked …/HANDBOOK.md" 출력. `titleKo`는 `HANDBOOK.md` 렌더링에 쓰이지 않으므로 기존 생성물이 바뀌지 않아야 한다.
 
-- [ ] **Step 6: 커밋**
+- [ ] **Step 7: 커밋**
 
 ```bash
 cd /Users/l-20220017/workspace/agent-conventions
 git add package/src/types.ts package/src/parser.ts package/test/viewer.test.ts
-git commit -m "feat: _sections.md에서 한국어 section 제목을 읽는다"
+git commit -m "feat: rule과 section frontmatter에서 한국어 제목을 읽는다"
 ```
 
 ---
 
-### Task 4: viewer 페이로드를 조립한다
+### Task 3: viewer 페이로드를 조립한다
 
 **Files:**
 - Create: `package/src/viewer-payload.ts`
@@ -597,9 +568,24 @@ test("buildViewerPayload collects every skill, section, and rule", async () => {
 	const react = payload.skills.find((skill) => skill.name === "react");
 	assert.equal(react?.title, "React 컨벤션");
 	assert.equal(react?.progressive, true);
+	assert.equal(react?.ruleCount, 42);
 
 	const astro = payload.skills.find((skill) => skill.name === "astro");
 	assert.equal(astro?.progressive, false);
+	assert.deepEqual(astro?.companions, []);
+});
+
+test("buildViewerPayload carries companion declarations for the header hint", async () => {
+	const payload = await buildViewerPayload();
+	const react = payload.skills.find((skill) => skill.name === "react");
+
+	assert.deepEqual(react?.companions, [
+		{skill: "typescript", mode: "required"},
+		{skill: "css", mode: "conditional"},
+	]);
+
+	const css = payload.skills.find((skill) => skill.name === "css");
+	assert.deepEqual(css?.companions, [{skill: "typescript", mode: "conditional"}]);
 });
 
 test("buildViewerPayload gives every rule a resolvable section and parsed examples", async () => {
@@ -620,15 +606,15 @@ test("buildViewerPayload is deterministic and carries no timestamp", async () =>
 	assert.ok(!JSON.stringify(first).includes("generatedAt"), "payload must not embed a timestamp");
 });
 
-test("buildViewerPayload marks cross-skill references so the viewer can style them", async () => {
+test("buildViewerPayload keeps cross-skill references resolvable", async () => {
 	const payload = await buildViewerPayload();
-	const ids = new Set(payload.rules.map((rule) => `${rule.skill}/${rule.id}`));
-	const crossSkill = payload.rules.flatMap((rule) => rule.reviewWith.filter((target) => target.includes("/")));
+	const keys = new Set(payload.rules.map((rule) => `${rule.skill}/${rule.id}`));
+	const crossSkill = payload.rules.flatMap((rule) => [...rule.reviewWith, ...rule.requiresSelected].filter((target) => target.includes("/")));
 
-	assert.ok(crossSkill.length > 0, "expected cross-skill reviewWith targets");
+	assert.ok(crossSkill.length > 0, "expected cross-skill targets");
 
 	for (const target of crossSkill) {
-		assert.ok(ids.has(target), `reviewWith target ${target} does not resolve to a known rule`);
+		assert.ok(keys.has(target), `target ${target} does not resolve to a known rule`);
 	}
 });
 ```
@@ -647,6 +633,47 @@ import {getSkillPaths, isBuildableSkill, listSkillNames} from "./config.js";
 import {readSkillDocument} from "./parser.js";
 import {parseRuleBody} from "./rule-body.js";
 import type {RuleExample, RuleProseNode} from "./rule-body.js";
+import type {CompanionMode} from "./types.js";
+
+/**
+ * @summary 헤더 동반 안내에 쓰는 companion 요약
+ */
+export interface ViewerCompanion {
+	/**
+	 * @field companion skill 디렉터리 이름
+	 */
+	skill: string;
+	/**
+	 * @field 항상 동반인지 조건부인지
+	 */
+	mode: CompanionMode;
+}
+
+/**
+ * @summary 드롭다운 항목이 되는 skill
+ */
+export interface ViewerSkill {
+	/**
+	 * @field skill 디렉터리 이름
+	 */
+	name: string;
+	/**
+	 * @field metadata.json의 표시 제목
+	 */
+	title: string;
+	/**
+	 * @field progressive disclosure 사용 여부
+	 */
+	progressive: boolean;
+	/**
+	 * @field 드롭다운에 표시할 규칙 개수
+	 */
+	ruleCount: number;
+	/**
+	 * @field 이 skill이 선언한 동반 skill 목록
+	 */
+	companions: ViewerCompanion[];
+}
 
 /**
  * @summary 화면에 나열할 단일 rule
@@ -707,7 +734,7 @@ export interface ViewerRule {
 }
 
 /**
- * @summary 화면 필터에 쓰는 section 메타데이터
+ * @summary 화면 section 메타데이터
  */
 export interface ViewerSection {
 	/**
@@ -737,37 +764,19 @@ export interface ViewerSection {
 }
 
 /**
- * @summary 화면 skill 필터 항목
- */
-export interface ViewerSkill {
-	/**
-	 * @field skill 디렉터리 이름
-	 */
-	name: string;
-	/**
-	 * @field metadata.json의 표시 제목
-	 */
-	title: string;
-	/**
-	 * @field progressive disclosure 사용 여부
-	 */
-	progressive: boolean;
-}
-
-/**
  * @summary HTML에 인라인할 전체 데이터
  */
 export interface ViewerPayload {
 	/**
-	 * @field skill 필터 목록. 이름 오름차순
+	 * @field 드롭다운 항목. skill 이름 오름차순
 	 */
 	skills: ViewerSkill[];
 	/**
-	 * @field 전체 section 목록. skill 이름, section 순번 순
+	 * @field 전체 section 목록
 	 */
 	sections: ViewerSection[];
 	/**
-	 * @field 전체 rule 목록. skill 이름, section 순번, 파일명 순
+	 * @field 전체 rule 목록. skill 이름, rule ID 순
 	 */
 	rules: ViewerRule[];
 }
@@ -786,16 +795,16 @@ export const buildViewerPayload = async (): Promise<ViewerPayload> => {
 		}
 
 		const document = await readSkillDocument(getSkillPaths(skillName));
+
 		skills.push({
 			name: document.skillName,
 			title: document.metadata.title,
 			progressive: document.metadata.progressiveDisclosure === true,
+			ruleCount: document.rules.length,
+			companions: (document.metadata.companions ?? []).map((companion) => ({skill: companion.skill, mode: companion.mode})),
 		});
 
-		const sectionOrderByPrefix = new Map<string, number>();
-
 		for (const section of document.sections) {
-			sectionOrderByPrefix.set(section.prefix, section.order);
 			sections.push({
 				skill: document.skillName,
 				order: section.order,
@@ -808,6 +817,7 @@ export const buildViewerPayload = async (): Promise<ViewerPayload> => {
 
 		for (const rule of document.rules) {
 			const parsed = parseRuleBody(rule.body);
+
 			rules.push({
 				skill: document.skillName,
 				id: rule.fileName.replace(/\.md$/, ""),
@@ -838,29 +848,38 @@ export const buildViewerPayload = async (): Promise<ViewerPayload> => {
 };
 ```
 
+`metadata.companions`가 `SkillMetadata`에 선언되어 있지 않아 타입 오류가 나면, `package/src/types.ts`의 `SkillMetadata`에 다음을 추가한다.
+
+```ts
+	/**
+	 * @field 이 skill이 함께 활성화하는 companion 선언 목록
+	 */
+	companions?: SkillCompanion[];
+```
+
 - [ ] **Step 4: 통과를 확인한다**
 
-Run: `cd package && npx tsx --test test/viewer.test.ts`
-Expected: PASS — 12 tests
-
-교차참조 테스트가 실패하면 `reviewWith` 대상이 실제 rule ID로 안 풀리는 것이다. `progressive` skill만 교차참조를 갖는다는 점(css·react·typescript)을 감안해 대상 문자열의 `skill/rule-id` 형식을 확인할 것.
+Run: `cd package && npx tsx --test test/viewer.test.ts && npm run typecheck`
+Expected: PASS — 13 tests, 타입 오류 없음
 
 - [ ] **Step 5: 커밋**
 
 ```bash
 cd /Users/l-20220017/workspace/agent-conventions
-git add package/src/viewer-payload.ts package/test/viewer.test.ts
+git add package/src/viewer-payload.ts package/src/types.ts package/test/viewer.test.ts
 git commit -m "feat: 8개 skill을 읽어 viewer 페이로드로 조립한다"
 ```
 
 ---
 
-### Task 5: 완전한 HTML 문서 셸을 낸다
+### Task 4: 화면과 클라이언트 동작을 담은 완전한 문서를 낸다
 
 **Files:**
 - Create: `package/src/viewer-template.ts`
 - Modify: `package/src/config.ts`
 - Modify: `package/test/viewer.test.ts`
+
+화면 요구는 "문서처럼 보이지 않는 것"이다. 상단에 skill 드롭다운과 검색, 코드가 중앙, 산문은 접힘.
 
 - [ ] **Step 1: 실패하는 테스트를 쓴다**
 
@@ -868,6 +887,8 @@ git commit -m "feat: 8개 skill을 읽어 viewer 페이로드로 조립한다"
 
 ```ts
 import {encodeViewerPayload, renderViewerHtml} from "../src/viewer-template.js";
+
+const emptyPayload = {skills: [], sections: [], rules: []};
 
 test("encodeViewerPayload escapes angle brackets so inline JSON cannot break out", () => {
 	const encoded = encodeViewerPayload({
@@ -896,20 +917,53 @@ test("encodeViewerPayload escapes angle brackets so inline JSON cannot break out
 });
 
 test("renderViewerHtml emits a complete document with a utf-8 charset", () => {
-	const html = renderViewerHtml(encodeViewerPayload({skills: [], sections: [], rules: []}));
+	const html = renderViewerHtml(encodeViewerPayload(emptyPayload));
 
 	assert.ok(html.startsWith("<!doctype html>"), "document must start with a doctype");
 	assert.match(html.slice(0, 400), /<meta charset="utf-8">/);
 	assert.match(html, /<html lang="ko">/);
 	assert.ok(html.trimEnd().endsWith("</html>"), "document must close html");
+	assert.equal(Buffer.from(html, "utf8").toString("utf8"), html);
 });
 
-test("renderViewerHtml round-trips Korean text without mojibake", () => {
-	const html = renderViewerHtml(encodeViewerPayload({skills: [], sections: [], rules: []}));
-	const bytes = Buffer.from(html, "utf8");
+test("viewer markup exposes a single-select skill dropdown and a companion slot", () => {
+	const html = renderViewerHtml(encodeViewerPayload(emptyPayload));
 
-	assert.equal(bytes.toString("utf8"), html);
-	assert.match(html, /[가-힣]/);
+	assert.match(html, /<select id="skill"/);
+	assert.equal(/<select id="skill"[^>]*multiple/.test(html), false, "skill selector must stay single-select");
+	assert.match(html, /id="companion"/);
+	assert.equal(/id="f-skill"/.test(html), false, "skill chip group must be gone; the dropdown replaces it");
+});
+
+test("viewer styles use minmax(0, 1fr) on both two-column grids", () => {
+	const html = renderViewerHtml(encodeViewerPayload(emptyPayload));
+
+	// 1fr 만 쓰면 grid item이 콘텐츠 intrinsic min-width 아래로 줄지 못해
+	// 긴 코드 한 줄이 컬럼을 밀어내고 박스가 행 밖으로 삐져나간다.
+	assert.equal(/grid-template-columns:\s*1fr\s+1fr/.test(html), false, "two-column grid must not use bare 1fr");
+	assert.match(html, /\.diff\s*\{[^}]*minmax\(0,\s*1fr\)/);
+	assert.match(html, /\.pane\s*\{[^}]*minmax\(0,\s*1fr\)/);
+	assert.match(html, /min-width:\s*0/);
+});
+
+test("viewer styles define both themes and respect reduced motion", () => {
+	const html = renderViewerHtml(encodeViewerPayload(emptyPayload));
+
+	assert.match(html, /@media \(prefers-color-scheme: dark\)/);
+	assert.match(html, /:root\[data-theme="dark"\]/);
+	assert.match(html, /:root:not\(\[data-theme="light"\]\)/);
+	assert.match(html, /prefers-reduced-motion/);
+	assert.match(html, /:focus-visible/);
+});
+
+test("viewer client script indexes both languages plus code, and switches skill on cross-skill jumps", () => {
+	const html = renderViewerHtml(encodeViewerPayload(emptyPayload));
+
+	assert.match(html, /titleKo/);
+	assert.match(html, /appliesWhen/);
+	assert.match(html, /data-goto/);
+	assert.match(html, /state\.skill\s*=/);
+	assert.match(html, /localStorage/);
 });
 ```
 
@@ -929,9 +983,9 @@ Expected: FAIL — `Cannot find module '../src/viewer-template.js'`
 export const viewerOutputPath = path.join(repoDir, "docs", "conventions.html");
 ```
 
-- [ ] **Step 4: 템플릿 모듈의 셸을 쓴다**
+- [ ] **Step 4: 템플릿 모듈의 공개 함수를 쓴다**
 
-`package/src/viewer-template.ts`:
+`package/src/viewer-template.ts` 선두:
 
 ```ts
 import type {ViewerPayload} from "./viewer-payload.js";
@@ -971,90 +1025,13 @@ ${viewerClientScript}
 };
 ```
 
-같은 파일에 임시 상수 3개를 둔다. Task 6에서 채운다.
+- [ ] **Step 5: 스타일을 같은 파일에 추가한다**
 
-```ts
-const viewerStyles = `:root { color-scheme: light dark; }
-body { font-family: -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }`;
-
-const viewerBodyMarkup = `<header class="topbar"><div class="brand">팀 컨벤션 조회</div></header>
-<main id="viewer-root"></main>`;
-
-const viewerClientScript = `"use strict";
-const payload = JSON.parse(document.getElementById("viewer-data").textContent);
-document.getElementById("viewer-root").textContent = "규칙 " + payload.rules.length + "개";`;
-```
-
-- [ ] **Step 5: 통과를 확인한다**
-
-Run: `cd package && npx tsx --test test/viewer.test.ts`
-Expected: PASS — 15 tests
-
-- [ ] **Step 6: 커밋**
-
-```bash
-cd /Users/l-20220017/workspace/agent-conventions
-git add package/src/viewer-template.ts package/src/config.ts package/test/viewer.test.ts
-git commit -m "feat: charset을 선언한 완전한 viewer 문서 셸을 낸다"
-```
-
----
-
-### Task 6: 화면과 클라이언트 동작을 채운다
-
-**Files:**
-- Modify: `package/src/viewer-template.ts`
-- Modify: `package/test/viewer.test.ts`
-
-화면 요구는 "문서처럼 보이지 않는 것"이다. 검색이 첫 화면, 코드가 중앙, 산문은 접힘.
-
-- [ ] **Step 1: 회귀 가드 테스트를 쓴다**
-
-`package/test/viewer.test.ts` 끝에 추가:
-
-```ts
-test("viewer styles use minmax(0, 1fr) on both two-column grids", () => {
-	const html = renderViewerHtml(encodeViewerPayload({skills: [], sections: [], rules: []}));
-
-	// 1fr 만 쓰면 grid item이 콘텐츠 intrinsic min-width 아래로 줄지 못해
-	// 긴 코드 한 줄이 컬럼을 밀어내고 박스가 행 밖으로 삐져나간다.
-	assert.equal(/grid-template-columns:\s*1fr\s+1fr/.test(html), false, "two-column grid must not use bare 1fr");
-	assert.match(html, /\.diff\s*\{[^}]*minmax\(0,\s*1fr\)/);
-	assert.match(html, /\.pane\s*\{[^}]*minmax\(0,\s*1fr\)/);
-	assert.match(html, /min-width:\s*0/);
-});
-
-test("viewer styles define both themes and respect reduced motion", () => {
-	const html = renderViewerHtml(encodeViewerPayload({skills: [], sections: [], rules: []}));
-
-	assert.match(html, /@media \(prefers-color-scheme: dark\)/);
-	assert.match(html, /:root\[data-theme="dark"\]/);
-	assert.match(html, /:root:not\(\[data-theme="light"\]\)/);
-	assert.match(html, /prefers-reduced-motion/);
-	assert.match(html, /:focus-visible/);
-});
-
-test("viewer client script indexes both languages and code for search", () => {
-	const html = renderViewerHtml(encodeViewerPayload({skills: [], sections: [], rules: []}));
-
-	assert.match(html, /titleKo/);
-	assert.match(html, /appliesWhen/);
-	assert.match(html, /examples/);
-});
-```
-
-- [ ] **Step 2: 실패를 확인한다**
-
-Run: `cd package && npx tsx --test test/viewer.test.ts`
-Expected: FAIL — `.diff`/`.pane` 규칙이 아직 없음
-
-- [ ] **Step 3: 스타일을 채운다**
-
-`package/src/viewer-template.ts`의 `viewerStyles`를 교체한다. 토큰은 `:root`에 두고, 다크는 미디어쿼리와 `[data-theme]` 양쪽에서 재정의한다. 액센트(petrol)와 diff 의미색(brick/pine)을 분리하고, impact는 순서 있는 등급이라 단일 색상 램프를 형태로 인코딩한다.
+토큰은 `:root`에 두고 다크는 미디어쿼리와 `[data-theme]` 양쪽에서 재정의한다. 액센트(petrol)와 diff 의미색(brick/pine)을 분리하고, impact는 순서 있는 등급이라 단일 색상 램프를 형태로 인코딩한다.
 
 ```ts
 const viewerStyles = `*, *::before, *::after { box-sizing: border-box; }
-h1, h2, p, ul, li, pre, button, input { margin: 0; padding: 0; }
+h1, h2, p, ul, li, pre, button, input, select { margin: 0; padding: 0; }
 button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
 
 :root {
@@ -1095,13 +1072,18 @@ body { background: var(--paper); color: var(--ink); font-family: var(--sans); fo
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 .topbar { position: sticky; top: 0; z-index: 40; background: var(--paper); border-bottom: 1px solid var(--rule); }
-.topbar-in { max-width: 1440px; margin: 0 auto; padding: .7rem clamp(.75rem, 2vw, 1.5rem); display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+.topbar-in { max-width: 1440px; margin: 0 auto; padding: .7rem clamp(.75rem, 2vw, 1.5rem); display: flex; align-items: center; gap: .8rem; flex-wrap: wrap; }
 .brand { font-family: var(--mono); font-size: .72rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); }
-.search-wrap { position: relative; flex: 1 1 320px; min-width: 200px; }
+.skill-select { font-family: var(--mono); font-size: .78rem; font-weight: 600; color: var(--ink); background: var(--card); border: 1px solid var(--rule-2); border-radius: 2px; padding: .42rem .5rem; }
+.skill-select:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 0 3px var(--accent-bg); }
+.companion { flex-basis: 100%; display: flex; align-items: baseline; gap: .35rem; flex-wrap: wrap; font-family: var(--mono); font-size: .64rem; color: var(--muted); }
+.companion:empty { display: none; }
+.search-wrap { position: relative; flex: 1 1 280px; min-width: 180px; }
 .search { width: 100%; font-family: var(--mono); font-size: .84rem; color: var(--ink); background: var(--card); border: 1px solid var(--rule-2); border-radius: 2px; padding: .5rem; }
 .search:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 0 3px var(--accent-bg); }
-.count { font-family: var(--mono); font-size: .72rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.count { font-family: var(--mono); font-size: .72rem; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .tbtn { font-family: var(--mono); font-size: .68rem; color: var(--ink-2); border: 1px solid var(--rule-2); border-radius: 2px; padding: .25rem .5rem; }
+.tbtn:hover { color: var(--ink); border-color: var(--ink-2); }
 
 .shell { max-width: 1440px; margin: 0 auto; padding: 0 clamp(.75rem, 2vw, 1.5rem); }
 .pane { display: grid; grid-template-columns: 232px minmax(0, 1fr); gap: clamp(1rem, 2.5vw, 2rem); padding: 1.25rem 0 4rem; }
@@ -1109,11 +1091,12 @@ body { background: var(--paper); color: var(--ink); font-family: var(--sans); fo
 @media (max-width: 900px) { .pane { grid-template-columns: minmax(0, 1fr); } }
 .pane > main { min-width: 0; }
 
-.rail { align-self: start; position: sticky; top: 4rem; display: flex; flex-direction: column; gap: 1.35rem; }
+.rail { align-self: start; position: sticky; top: 5rem; display: flex; flex-direction: column; gap: 1.35rem; }
 @media (max-width: 900px) { .rail { position: static; } }
-.rail-hd { font-family: var(--mono); font-size: .64rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); display: flex; justify-content: space-between; }
-.chips { display: flex; flex-wrap: wrap; gap: .3rem; }
+.rail-hd { font-family: var(--mono); font-size: .64rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); display: flex; justify-content: space-between; gap: .5rem; }
+.chips { display: flex; flex-wrap: wrap; gap: .3rem; margin-top: .45rem; }
 .chip { font-family: var(--mono); font-size: .68rem; color: var(--ink-2); background: var(--card); border: 1px solid var(--rule); border-radius: 2px; padding: .18rem .42rem; }
+.chip:hover { border-color: var(--rule-2); color: var(--ink); }
 .chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
 .n { font-variant-numeric: tabular-nums; opacity: .6; font-size: .92em; }
 
@@ -1130,13 +1113,15 @@ body { background: var(--paper); color: var(--ink); font-family: var(--sans); fo
 .row[data-imp="MEDIUM-HIGH"] { border-left-color: color-mix(in srgb, var(--ember) 28%, var(--rule)); }
 .row-hd { width: 100%; text-align: left; display: grid; grid-template-columns: 2.4rem minmax(0, 1fr) auto; align-items: baseline; gap: .1rem .7rem; padding: .6rem .75rem; }
 .row-hd:hover { background: var(--sunk); }
+@media (max-width: 640px) { .row-hd { grid-template-columns: 2rem minmax(0, 1fr); } .row-meta { grid-column: 2; margin-top: .3rem; } }
 .row-main { display: flex; flex-direction: column; gap: .18rem; min-width: 0; }
+.row-t1 { display: flex; gap: .5rem; flex-wrap: wrap; align-items: baseline; }
 .row-title { font-size: .92rem; font-weight: 600; }
 .row-id { font-family: var(--mono); font-size: .64rem; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .row-when { font-size: .8rem; color: var(--ink-2); display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
 .row[data-open="1"] .row-when { display: block; }
 .row-meta { display: flex; align-items: center; gap: .4rem; }
-.row-ex { font-family: var(--mono); font-size: .64rem; color: var(--muted); }
+.row-ex { font-family: var(--mono); font-size: .64rem; color: var(--muted); font-variant-numeric: tabular-nums; }
 .row-body { display: none; border-top: 1px solid var(--rule); padding: .85rem .75rem 1rem; }
 .row[data-open="1"] .row-body { display: block; }
 
@@ -1165,7 +1150,7 @@ pre.code::-webkit-scrollbar-thumb { background: var(--rule-2); border-radius: 4p
 .t-g { color: var(--ember); }
 
 .why { margin-top: .9rem; border-top: 1px dashed var(--rule); padding-top: .6rem; }
-.why-btn { font-family: var(--mono); font-size: .66rem; color: var(--accent); display: flex; gap: .4rem; }
+.why-btn { font-family: var(--mono); font-size: .66rem; color: var(--accent); display: flex; gap: .4rem; text-align: left; }
 .why-body { display: none; max-width: 68ch; margin-top: .5rem; color: var(--ink-2); font-size: .84rem; }
 .why[data-open="1"] .why-body { display: block; }
 .why-body p { margin: 0 0 .5rem; }
@@ -1174,27 +1159,31 @@ pre.code::-webkit-scrollbar-thumb { background: var(--rule-2); border-radius: 4p
 .why-body table { border-collapse: collapse; font-size: .8rem; min-width: 100%; }
 .why-body th, .why-body td { border: 1px solid var(--rule); padding: .25rem .5rem; text-align: left; vertical-align: top; }
 .why-body th { background: var(--sunk); font-family: var(--mono); font-size: .68rem; }
+.why-body pre.code { border: 1px solid var(--rule); border-radius: 2px; margin: 0 0 .6rem; }
 
 .xr { display: flex; flex-wrap: wrap; gap: .35rem; align-items: baseline; margin-top: .75rem; }
 .xr-lb { font-family: var(--mono); font-size: .62rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
 .xr-a { font-family: var(--mono); font-size: .66rem; color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent); border-radius: 2px; padding: .1rem .35rem; background: var(--accent-bg); }
-.xr-a[data-ext="1"] { color: var(--ink-2); border-style: dashed; background: none; }
+.xr-a:hover { border-color: var(--accent); }
+.xr-a[data-ext="1"] { border-style: dashed; }
 .tagrow { display: flex; flex-wrap: wrap; gap: .25rem; margin-top: .6rem; }
 .tag { font-family: var(--mono); font-size: .62rem; color: var(--muted); border: 1px solid var(--rule); border-radius: 2px; padding: .05rem .3rem; }
+.tag:hover { color: var(--accent); border-color: var(--accent); }
 .empty { font-family: var(--mono); font-size: .78rem; color: var(--muted); text-align: center; padding: 3rem 1rem; border: 1px dashed var(--rule); }
 mark { background: color-mix(in srgb, var(--ember) 35%, transparent); color: inherit; }
 
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }`;
 ```
 
-- [ ] **Step 4: 본문 마크업을 채운다**
+- [ ] **Step 6: 본문 마크업을 추가한다**
 
-`viewerBodyMarkup`을 교체한다.
+skill 칩 그룹은 없다. 드롭다운이 그 역할을 한다.
 
 ```ts
 const viewerBodyMarkup = `<header class="topbar">
 	<div class="topbar-in">
-		<div class="brand">팀 컨벤션 조회</div>
+		<div class="brand">팀 컨벤션</div>
+		<select id="skill" class="skill-select" aria-label="조회할 skill"></select>
 		<div class="search-wrap">
 			<input id="q" class="search" type="search" autocomplete="off" spellcheck="false"
 				placeholder="규칙·상황·코드 검색  (handler, barrel, useEffect …)" aria-label="규칙 검색">
@@ -1202,18 +1191,19 @@ const viewerBodyMarkup = `<header class="topbar">
 		<div class="count" id="count"></div>
 		<button class="tbtn" id="expand">전체 펼침</button>
 		<button class="tbtn" id="theme">테마</button>
+		<div class="companion" id="companion"></div>
 	</div>
 </header>
 <div class="shell">
 	<div class="pane">
 		<aside class="rail">
 			<div>
-				<div class="rail-hd"><span>Skill</span><button class="tbtn" data-clear="skill">해제</button></div>
-				<div class="chips" id="f-skill"></div>
-			</div>
-			<div>
 				<div class="rail-hd"><span>Impact</span><button class="tbtn" data-clear="impact">해제</button></div>
 				<div class="chips" id="f-impact"></div>
+			</div>
+			<div>
+				<div class="rail-hd"><span>섹션</span><button class="tbtn" data-clear="section">해제</button></div>
+				<div class="chips" id="f-section"></div>
 			</div>
 			<div>
 				<div class="rail-hd"><span>태그</span><button class="tbtn" data-clear="tags">해제</button></div>
@@ -1225,9 +1215,9 @@ const viewerBodyMarkup = `<header class="topbar">
 </div>`;
 ```
 
-- [ ] **Step 5: 클라이언트 스크립트를 채운다**
+- [ ] **Step 7: 클라이언트 스크립트를 추가한다**
 
-`viewerClientScript`를 교체한다. 하이라이터의 자리표시자는 **NUL 문자**여야 한다. 공백+숫자를 쓰면 `arr.length > 0 ?` 의 `" 0 "` 과 충돌해 코드가 깨진다.
+하이라이터 자리표시자는 **NUL 문자**여야 한다. 공백+숫자를 쓰면 `arr.length > 0 ?`의 `" 0 "`과 충돌해 코드가 깨진다.
 
 ```ts
 const viewerClientScript = `(() => {
@@ -1236,13 +1226,20 @@ const viewerClientScript = `(() => {
 	const DATA = JSON.parse(document.getElementById("viewer-data").textContent);
 	const RULES = DATA.rules;
 	const IMPACTS = ["CRITICAL", "HIGH", "MEDIUM-HIGH", "MEDIUM"];
-	const byKey = new Map(RULES.map((r) => [r.skill + "/" + r.id, r]));
-	const sectionOf = (r) => DATA.sections.find((s) => s.skill === r.skill && s.prefix === r.sectionPrefix);
+	const keyOf = (r) => r.skill + "/" + r.id;
+	const byKey = new Map(RULES.map((r) => [keyOf(r), r]));
 	const titleOf = (r) => r.titleKo || r.title;
+	const secOf = (r) => DATA.sections.find((s) => s.skill === r.skill && s.prefix === r.sectionPrefix);
+	const secLabel = (s) => s.titleKo || s.title;
 
-	const state = {q: "", skills: new Set(), impact: new Set(), tags: new Set(), open: new Set()};
+	const state = {q: "", skill: "", impact: new Set(), section: "", tags: new Set(), open: new Set()};
+
+	// 선택 기억. file:// 에서 막힐 수 있으므로 조용히 무시한다.
+	const remember = (v) => { try { localStorage.setItem("viewer-skill", v); } catch (e) {} };
+	try { state.skill = localStorage.getItem("viewer-skill") || ""; } catch (e) {}
+	if (state.skill && !DATA.skills.some((s) => s.name === state.skill)) state.skill = "";
+
 	const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-
 	const KW = /\\b(const|let|var|function|return|if|else|for|while|export|import|from|type|interface|as|await|async|new|void|null|undefined|true|false|extends|default|typeof|in|of)\\b/g;
 
 	function hl(code, lang) {
@@ -1267,7 +1264,7 @@ const viewerClientScript = `(() => {
 		const flushP = () => { if (para.length) { out += "<p>" + inline(para.join(" ")) + "</p>"; para = []; } };
 		const flushT = () => {
 			if (!tbl) return;
-			const [head, ...body] = tbl;
+			const head = tbl[0], body = tbl.slice(1);
 			out += '<div class="tw"><table><thead><tr>' + head.map((c) => "<th>" + inline(c) + "</th>").join("") + "</tr></thead><tbody>";
 			out += body.map((r) => "<tr>" + r.map((c) => "<td>" + inline(c) + "</td>").join("") + "</tr>").join("");
 			out += "</tbody></table></div>";
@@ -1280,7 +1277,7 @@ const viewerClientScript = `(() => {
 				flushP();
 				const cells = t.trim().replace(/^\\||\\|$/g, "").split("|").map((c) => c.trim());
 				if (cells.every((c) => /^:?-{2,}:?$/.test(c))) continue;
-				(tbl = tbl || []).push(cells);
+				tbl = tbl || []; tbl.push(cells);
 				continue;
 			}
 			flushT();
@@ -1299,7 +1296,8 @@ const viewerClientScript = `(() => {
 	}
 
 	function matches(r) {
-		if (state.skills.size && !state.skills.has(r.skill)) return false;
+		if (state.skill && r.skill !== state.skill) return false;
+		if (state.section && r.sectionPrefix !== state.section) return false;
 		if (state.impact.size && !state.impact.has(r.impact)) return false;
 		if (state.tags.size && !r.tags.some((t) => state.tags.has(t))) return false;
 		if (state.q) {
@@ -1318,14 +1316,14 @@ const viewerClientScript = `(() => {
 
 	const xrHtml = (target) => {
 		const ext = target.includes("/");
-		const key = ext ? target : null;
-		const local = ext ? byKey.has(target) : false;
-		return '<button class="xr-a" data-ext="' + (ext ? 1 : 0) + '"' + (local ? ' data-goto="' + esc(key) + '"' : " disabled") + ">" + esc(target) + "</button>";
+		const resolvable = ext && byKey.has(target);
+		return '<button class="xr-a" data-ext="' + (ext ? 1 : 0) + '"' +
+			(resolvable ? ' data-goto="' + esc(target) + '"' : " disabled") + ">" + esc(target) + "</button>";
 	};
 
 	function ruleHtml(r, n) {
-		const open = state.open.has(r.skill + "/" + r.id);
-		const sec = sectionOf(r);
+		const open = state.open.has(keyOf(r));
+		const sec = secOf(r);
 		const exCount = r.examples.reduce((t, e) => t + e.blocks.length, 0);
 		const pairs = [];
 		for (let i = 0; i < r.examples.length; i++) {
@@ -1341,34 +1339,56 @@ const viewerClientScript = `(() => {
 
 		const body = !open ? "" : '<div class="row-body">' +
 			pairs.map((p) => p.length === 2 ? '<div class="diff">' + exBlock(p[0]) + exBlock(p[1]) + "</div>" : exBlock(p[0])).join("") +
-			(r.prose.length ? '<div class="why" data-open="0"><button class="why-btn" data-why="1"><span aria-hidden="true">\\u25b8</span> 왜 이 규칙인가' +
-				(r.impactDescription ? " \\u2014 " + esc(r.impactDescription) : "") + '</button><div class="why-body">' + renderProse(r.prose) + "</div></div>" : "") +
+			(r.prose.length ? '<div class="why" data-open="0"><button class="why-btn" data-why="1"><span aria-hidden="true">\\u25b8</span><span>왜 이 규칙인가' +
+				(r.impactDescription ? " \\u2014 " + esc(r.impactDescription) : "") + '</span></button><div class="why-body">' + renderProse(r.prose) + "</div></div>" : "") +
 			(r.requiresSelected.length ? '<div class="xr"><span class="xr-lb">함께 적용</span>' + r.requiresSelected.map(xrHtml).join("") + "</div>" : "") +
 			(r.reviewWith.length ? '<div class="xr"><span class="xr-lb">함께 검토</span>' + r.reviewWith.map(xrHtml).join("") + "</div>" : "") +
 			'<div class="tagrow">' + r.tags.map((t) => '<button class="tag" data-tag="' + esc(t) + '">#' + esc(t) + "</button>").join("") + "</div></div>";
 
-		return '<article class="row" data-imp="' + r.impact + '" data-open="' + (open ? 1 : 0) + '" id="r-' + r.skill + "-" + r.id + '">' +
-			'<button class="row-hd" data-rule="' + r.skill + "/" + r.id + '" aria-expanded="' + open + '">' +
+		return '<article class="row" data-imp="' + r.impact + '" data-open="' + (open ? 1 : 0) + '" id="r-' + r.skill + "--" + r.id + '">' +
+			'<button class="row-hd" data-rule="' + keyOf(r) + '" aria-expanded="' + open + '">' +
 			'<span class="row-ex">' + String(n).padStart(3, "0") + "</span>" +
-			'<span class="row-main"><span style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:baseline">' +
-			'<span class="row-title">' + hi(titleOf(r)) + '</span><span class="row-id">' + hi(r.skill + "/" + r.id) + "</span></span>" +
+			'<span class="row-main"><span class="row-t1"><span class="row-title">' + hi(titleOf(r)) + "</span>" +
+			'<span class="row-id">' + hi(state.skill ? r.id : keyOf(r)) + "</span></span>" +
 			'<span class="row-when">' + hi(r.appliesWhen || r.impactDescription) + "</span></span>" +
 			'<span class="row-meta">' + (sec ? '<span class="row-ex">\\u00a7' + sec.order + "</span>" : "") +
 			'<span class="row-ex">예시 ' + exCount + '</span><span class="imp imp-' + r.impact + '">' + r.impact + "</span></span></button>" + body + "</article>";
 	}
 
+	function renderSkillSelect() {
+		const sel = document.getElementById("skill");
+		sel.innerHTML = '<option value="">전체 (' + RULES.length + ")</option>" +
+			DATA.skills.map((s) => '<option value="' + s.name + '">' + s.name + " (" + s.ruleCount + ")</option>").join("");
+		sel.value = state.skill;
+	}
+
+	function renderCompanion() {
+		const el = document.getElementById("companion");
+		const skill = DATA.skills.find((s) => s.name === state.skill);
+		if (!skill || skill.companions.length === 0) { el.innerHTML = ""; return; }
+		el.innerHTML = "<span>동반</span>" + skill.companions.map((c) =>
+			'<button class="xr-a" data-switch="' + c.skill + '">' + c.skill + (c.mode === "required" ? " 필수" : " 조건") + "</button>").join("");
+	}
+
 	function renderRail() {
-		const count = (fn) => RULES.filter(fn).length;
-		document.getElementById("f-skill").innerHTML = DATA.skills.map((s) =>
-			'<button class="chip" data-skill="' + s.name + '" aria-pressed="' + state.skills.has(s.name) + '">' + s.name +
-			' <span class="n">' + count((r) => r.skill === s.name) + "</span></button>").join("");
+		const scoped = RULES.filter((r) => !state.skill || r.skill === state.skill);
+		const count = (fn) => scoped.filter(fn).length;
+
 		document.getElementById("f-impact").innerHTML = IMPACTS.map((k) =>
 			'<button class="chip imp imp-' + k + '" data-impact="' + k + '" aria-pressed="' + state.impact.has(k) + '">' + k +
 			' <span class="n">' + count((r) => r.impact === k) + "</span></button>").join("");
+
+		const secs = DATA.sections.filter((s) => !state.skill || s.skill === state.skill)
+			.sort((a, b) => a.skill.localeCompare(b.skill, "en-US") || a.order - b.order);
+		document.getElementById("f-section").innerHTML = secs.map((s) =>
+			'<button class="chip" data-section="' + s.prefix + '" aria-pressed="' + (state.section === s.prefix) + '">' +
+			(state.skill ? s.order + ". " : s.skill + " ") + secLabel(s) + ' <span class="n">' + count((r) => r.sectionPrefix === s.prefix) + "</span></button>").join("");
+
 		const tally = new Map();
-		for (const r of RULES) for (const t of r.tags) tally.set(t, (tally.get(t) || 0) + 1);
-		document.getElementById("f-tags").innerHTML = [...tally.entries()].filter(([, n]) => n > 2).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
-			.map(([t, n]) => '<button class="chip" data-tag="' + t + '" aria-pressed="' + state.tags.has(t) + '">' + t + ' <span class="n">' + n + "</span></button>").join("");
+		for (const r of scoped) for (const t of r.tags) tally.set(t, (tally.get(t) || 0) + 1);
+		document.getElementById("f-tags").innerHTML = [...tally.entries()].filter((e) => e[1] > 1)
+			.sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+			.map((e) => '<button class="chip" data-tag="' + e[0] + '" aria-pressed="' + state.tags.has(e[0]) + '">' + e[0] + ' <span class="n">' + e[1] + "</span></button>").join("");
 	}
 
 	function render() {
@@ -1376,20 +1396,33 @@ const viewerClientScript = `(() => {
 		document.getElementById("list").innerHTML = hits.length
 			? hits.map((r, i) => ruleHtml(r, i + 1)).join("")
 			: '<div class="empty">일치하는 규칙이 없습니다 \\u2014 검색어나 필터를 줄여보세요</div>';
-		document.getElementById("count").innerHTML = "<b>" + hits.length + "</b> / " + RULES.length +
+		const scopeTotal = RULES.filter((r) => !state.skill || r.skill === state.skill).length;
+		document.getElementById("count").innerHTML = "<b>" + hits.length + "</b> / " + scopeTotal +
 			(hits.length ? " \\u00b7 코드 <b>" + hits.reduce((n, r) => n + r.examples.reduce((m, e) => m + e.blocks.length, 0), 0) + "</b>" : "");
-		const allOpen = hits.length > 0 && hits.every((r) => state.open.has(r.skill + "/" + r.id));
+		const allOpen = hits.length > 0 && hits.every((r) => state.open.has(keyOf(r)));
 		document.getElementById("expand").textContent = allOpen ? "전체 접기" : "전체 펼침";
+		renderCompanion();
 		renderRail();
 	}
 
+	function selectSkill(name) {
+		state.skill = name;
+		state.section = "";
+		remember(name);
+		document.getElementById("skill").value = name;
+		render();
+	}
+
+	document.getElementById("skill").addEventListener("change", (e) => selectSkill(e.target.value));
 	document.getElementById("q").addEventListener("input", (e) => { state.q = e.target.value.trim(); render(); });
+
 	document.getElementById("expand").addEventListener("click", () => {
 		const hits = RULES.filter(matches);
-		const allOpen = hits.length && hits.every((r) => state.open.has(r.skill + "/" + r.id));
-		for (const r of hits) { const k = r.skill + "/" + r.id; allOpen ? state.open.delete(k) : state.open.add(k); }
+		const allOpen = hits.length && hits.every((r) => state.open.has(keyOf(r)));
+		for (const r of hits) { const k = keyOf(r); allOpen ? state.open.delete(k) : state.open.add(k); }
 		render();
 	});
+
 	document.getElementById("theme").addEventListener("click", () => {
 		const cur = document.documentElement.dataset.theme;
 		const dark = cur ? cur === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
@@ -1397,34 +1430,42 @@ const viewerClientScript = `(() => {
 	});
 
 	document.addEventListener("click", (ev) => {
-		const t = ev.target.closest("[data-rule],[data-skill],[data-impact],[data-tag],[data-why],[data-goto],[data-clear]");
+		const t = ev.target.closest("[data-rule],[data-impact],[data-section],[data-tag],[data-why],[data-goto],[data-switch],[data-clear]");
 		if (!t) return;
 		const toggle = (set, key) => { set.has(key) ? set.delete(key) : set.add(key); render(); };
+
 		if (t.dataset.rule) return toggle(state.open, t.dataset.rule);
-		if (t.dataset.skill) return toggle(state.skills, t.dataset.skill);
 		if (t.dataset.impact) return toggle(state.impact, t.dataset.impact);
 		if (t.dataset.tag) return toggle(state.tags, t.dataset.tag);
+		if (t.dataset.section) { state.section = state.section === t.dataset.section ? "" : t.dataset.section; return render(); }
+		if (t.dataset.switch) return selectSkill(t.dataset.switch);
+
 		if (t.dataset.why) {
 			const w = t.closest(".why");
 			const on = w.dataset.open === "1";
 			w.dataset.open = on ? "0" : "1";
-			t.querySelector("span").textContent = on ? "\\u25b8" : "\\u25be";
+			t.firstElementChild.textContent = on ? "\\u25b8" : "\\u25be";
 			return;
 		}
+
 		if (t.dataset.goto) {
+			// 단일선택이라 다른 skill 규칙으로 가려면 드롭다운을 그 skill 로 전환한다.
 			const key = t.dataset.goto;
-			state.q = ""; state.skills.clear(); state.impact.clear(); state.tags.clear();
+			const target = byKey.get(key);
+			if (!target) return;
+			state.q = ""; state.impact.clear(); state.tags.clear();
 			document.getElementById("q").value = "";
 			state.open.add(key);
-			render();
-			const el = document.getElementById("r-" + key.replace("/", "-"));
+			selectSkill(target.skill);
+			const el = document.getElementById("r-" + target.skill + "--" + target.id);
 			if (el) el.scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "center"});
 			return;
 		}
+
 		if (t.dataset.clear) {
-			if (t.dataset.clear === "skill") state.skills.clear();
 			if (t.dataset.clear === "impact") state.impact.clear();
 			if (t.dataset.clear === "tags") state.tags.clear();
+			if (t.dataset.clear === "section") state.section = "";
 			render();
 		}
 	});
@@ -1434,32 +1475,35 @@ const viewerClientScript = `(() => {
 		if (e.key === "Escape" && e.target.id === "q") { e.target.value = ""; state.q = ""; render(); e.target.blur(); }
 	});
 
+	renderSkillSelect();
 	render();
 })();`;
 ```
 
-- [ ] **Step 6: 통과와 형식을 확인한다**
+- [ ] **Step 8: 통과와 형식을 확인한다**
 
 Run: `cd package && npx tsx --test test/viewer.test.ts && npm run typecheck && npm run biome:check:all`
-Expected: PASS — 18 tests, 타입 오류 없음, Biome 위반 없음
+Expected: PASS — 19 tests, 타입 오류 없음, Biome 위반 없음
 
-- [ ] **Step 7: 커밋**
+- [ ] **Step 9: 커밋**
 
 ```bash
 cd /Users/l-20220017/workspace/agent-conventions
-git add package/src/viewer-template.ts package/test/viewer.test.ts
-git commit -m "feat: viewer 화면과 검색·필터 동작을 채운다"
+git add package/src/viewer-template.ts package/src/config.ts package/test/viewer.test.ts
+git commit -m "feat: skill 드롭다운과 검색·필터를 갖춘 viewer 화면을 낸다"
 ```
 
 ---
 
-### Task 7: 생성과 신선도 검사를 CLI로 묶는다
+### Task 5: 생성과 신선도 검사를 CLI로 묶는다
 
 **Files:**
 - Create: `package/src/viewer.ts`
 - Create: `package/src/check-viewer.ts`
 - Modify: `package/package.json`
 - Modify: `package/test/viewer.test.ts`
+
+**이 태스크가 끝나면 화면이 뜬다.** 한국어 제목이 하나도 없어도 영어 제목으로 대체되어 212개 규칙이 전부 조회된다.
 
 - [ ] **Step 1: 실패하는 테스트를 쓴다**
 
@@ -1468,9 +1512,9 @@ git commit -m "feat: viewer 화면과 검색·필터 동작을 채운다"
 ```ts
 import {readFile} from "node:fs/promises";
 
-import {viewerOutputPath} from "../src/config.js";
 import {checkGeneratedViewer} from "../src/check-viewer.js";
-import {generateViewerHtml} from "../src/viewer.ts";
+import {viewerOutputPath} from "../src/config.js";
+import {generateViewerHtml} from "../src/viewer.js";
 
 test("generateViewerHtml embeds every rule and stays byte-stable", async () => {
 	const [first, second] = await Promise.all([generateViewerHtml(), generateViewerHtml()]);
@@ -1479,9 +1523,13 @@ test("generateViewerHtml embeds every rule and stays byte-stable", async () => {
 	assert.ok(first.startsWith("<!doctype html>"));
 	assert.match(first.slice(0, 400), /<meta charset="utf-8">/);
 
-	const payload = JSON.parse(/<script id="viewer-data" type="application\/json">(.*?)<\/script>/s.exec(first)?.[1] ?? "null");
+	const encoded = /<script id="viewer-data" type="application\/json">(.*?)<\/script>/s.exec(first)?.[1];
+	assert.ok(encoded, "expected an inline payload");
+
+	const payload = JSON.parse(encoded);
 	assert.equal(payload.rules.length, 212);
 	assert.equal(payload.skills.length, 8);
+	assert.equal(payload.sections.length, 58);
 });
 
 test("checkGeneratedViewer rejects a stale committed document", async () => {
@@ -1496,7 +1544,7 @@ test("checkGeneratedViewer rejects a stale committed document", async () => {
 - [ ] **Step 2: 실패를 확인한다**
 
 Run: `cd package && npx tsx --test test/viewer.test.ts`
-Expected: FAIL — `Cannot find module '../src/viewer.ts'`
+Expected: FAIL — `Cannot find module '../src/viewer.js'`
 
 - [ ] **Step 3: 생성 CLI를 쓴다**
 
@@ -1508,8 +1556,8 @@ import path from "node:path";
 import {packagePaths, viewerOutputPath} from "./config.js";
 import {isDirectExecution} from "./entrypoint.js";
 import {replaceGeneratedFiles} from "./generated-files.js";
-import {encodeViewerPayload, renderViewerHtml} from "./viewer-template.js";
 import {buildViewerPayload} from "./viewer-payload.js";
+import {encodeViewerPayload, renderViewerHtml} from "./viewer-template.js";
 
 /**
  * @description 현재 source 기준 viewer 문서를 write 없이 렌더링
@@ -1522,8 +1570,7 @@ export const generateViewerHtml = async (): Promise<string> => {
  * @description viewer 문서를 생성해 `docs/conventions.html`에 기록
  */
 export const buildViewer = async (): Promise<void> => {
-	const html = await generateViewerHtml();
-	await replaceGeneratedFiles([{targetPath: viewerOutputPath, content: html}]);
+	await replaceGeneratedFiles([{targetPath: viewerOutputPath, content: await generateViewerHtml()}]);
 	console.log(`Wrote ${path.relative(packagePaths.repoDir, viewerOutputPath)}`);
 };
 
@@ -1586,11 +1633,7 @@ if (await isDirectExecution(import.meta.url)) {
 }
 ```
 
-- [ ] **Step 5: 테스트 import 경로를 정리한다**
-
-Step 1의 `from "../src/viewer.ts"`를 `from "../src/viewer.js"`로 바꾼다. 이 저장소는 ESM `.js` 확장자 import 규약을 쓴다.
-
-- [ ] **Step 6: npm 스크립트를 추가한다**
+- [ ] **Step 5: npm 스크립트를 추가한다**
 
 `package/package.json`의 `scripts`에 추가한다.
 
@@ -1605,17 +1648,17 @@ Step 1의 `from "../src/viewer.ts"`를 `from "../src/viewer.js"`로 바꾼다. �
 		"check:measurement-artifacts": "npm run check:generated:all && npm run check:handbooks:all && npm run check:viewer",
 ```
 
-- [ ] **Step 7: 문서를 처음 생성한다**
+- [ ] **Step 6: 문서를 처음 생성한다**
 
 Run: `cd package && npm run viewer`
 Expected: `Wrote docs/conventions.html`
 
-- [ ] **Step 8: 검사와 테스트를 돌린다**
+- [ ] **Step 7: 검사와 테스트를 돌린다**
 
 Run: `cd package && npm run check:viewer && npx tsx --test test/viewer.test.ts`
-Expected: `Checked docs/conventions.html` 후 PASS — 20 tests
+Expected: `Checked docs/conventions.html` 후 PASS — 21 tests
 
-- [ ] **Step 9: 신선도 검사가 실제로 낡음을 잡는지 확인한다**
+- [ ] **Step 8: 신선도 검사가 실제로 낡음을 잡는지 확인한다**
 
 ```bash
 cd /Users/l-20220017/workspace/agent-conventions
@@ -1633,6 +1676,22 @@ cd package && npm run viewer && npm run check:viewer
 
 Expected: `Wrote docs/conventions.html` 후 `Checked docs/conventions.html`
 
+- [ ] **Step 9: 브라우저에서 실제로 확인한다**
+
+```bash
+cd /Users/l-20220017/workspace/agent-conventions && open docs/conventions.html
+```
+
+눈으로 확인할 것:
+- 한글이 깨지지 않는다
+- 드롭다운에 `전체 (212)` + skill 8개가 보이고, 고르면 목록과 카운트가 그 skill로 좁혀진다
+- `react`를 고르면 헤더에 `동반 typescript 필수 · css 조건`이 뜬다. 누르면 드롭다운이 그 skill로 바뀐다
+- 규칙을 펼치면 Incorrect / Correct가 좌우로 나란히 나오고, 코드 박스가 행 밖으로 삐져나가지 않는다
+- 다른 skill 교차참조 칩(점선)을 누르면 드롭다운이 자동 전환되고 대상 규칙이 펼쳐진다
+- 창을 좁혀도 페이지가 가로로 스크롤되지 않는다
+- 새로고침하면 마지막에 고른 skill이 유지된다
+- 이 시점에는 제목이 영어다. 정상이다 — Task 6부터 한국어로 바뀐다
+
 - [ ] **Step 10: 커밋**
 
 ```bash
@@ -1643,7 +1702,7 @@ git commit -m "feat: viewer 생성과 신선도 검사를 CLI로 묶는다"
 
 ---
 
-### Task 8: react 규칙 42개에 `titleKo`를 채운다
+### Task 6: react 규칙 42개에 `titleKo`를 채운다
 
 **Files:**
 - Modify: `skill/react/rules/*.md` (42개)
@@ -1653,7 +1712,7 @@ git commit -m "feat: viewer 생성과 신선도 검사를 CLI로 묶는다"
 
 - [ ] **Step 1: 섹션 10개에 한국어 제목을 넣는다**
 
-`skill/react/rules/_sections.md`의 각 `## N. …` 헤더 **바로 아래, `**Impact:**` 위**에 한 줄씩 넣는다. (description 정규식이 탐욕적이라 Description 뒤에 놓으면 삼켜진다.)
+`skill/react/rules/_sections.md`의 각 `## N. …` 헤더 **바로 아래, `**Impact:**` 위**에 한 줄씩 넣는다. description 정규식이 탐욕적이라 Description 뒤에 놓으면 삼켜진다.
 
 | prefix | 넣을 줄 |
 | --- | --- |
@@ -1668,7 +1727,7 @@ git commit -m "feat: viewer 생성과 신선도 검사를 CLI로 묶는다"
 | perf | `**TitleKo:** 렌더 성능` |
 | docs | `**TitleKo:** 문서화와 주석` |
 
-예시 (`ownership` 섹션):
+예시:
 
 ```md
 ## 1. Ownership and Boundaries (ownership)
@@ -1680,7 +1739,7 @@ git commit -m "feat: viewer 생성과 신선도 검사를 CLI로 묶는다"
 
 - [ ] **Step 2: 규칙 42개에 `titleKo`를 넣는다**
 
-각 파일 frontmatter의 `title:` 바로 아래에 `titleKo:` 를 넣는다.
+각 파일 frontmatter의 `title:` 바로 아래에 넣는다.
 
 | 파일 (`skill/react/rules/`) | `titleKo` |
 | --- | --- |
@@ -1745,20 +1804,15 @@ for f in skill/react/rules/*.md; do
   case "$(basename "$f")" in _*) continue;; esac
   /usr/bin/grep -q '^titleKo:' "$f" || echo "누락: $f"
 done
-/usr/bin/grep -c '^\*\*TitleKo:\*\*' skill/react/rules/_sections.md
+echo "섹션 TitleKo: $(/usr/bin/grep -c '^\*\*TitleKo:\*\*' skill/react/rules/_sections.md)"
 ```
 
-Expected: "누락:" 줄이 하나도 없고, 마지막 숫자는 `10`
+Expected: "누락:" 줄이 없고 `섹션 TitleKo: 10`
 
-- [ ] **Step 4: 기존 생성물이 변하지 않았는지 확인한다**
-
-Run: `cd package && npm run validate:react && npm run check:handbooks:all`
-Expected: 통과. `titleKo`는 `HANDBOOK.md`에 렌더링되지 않으므로 기존 생성물이 그대로여야 한다.
-
-- [ ] **Step 5: viewer를 재생성하고 한국어 제목이 나오는지 확인한다**
+- [ ] **Step 4: 기존 생성물 무손상과 화면을 확인한다**
 
 ```bash
-cd package && npm run viewer
+cd package && npm run validate:react && npm run check:handbooks:all && npm run viewer
 cd /Users/l-20220017/workspace/agent-conventions
 python3 -c "
 import json, re, pathlib
@@ -1772,9 +1826,9 @@ print('샘플:', filled[0]['titleKo'])
 "
 ```
 
-Expected: `react 42개 중 titleKo 채움 42개`
+Expected: `check:handbooks:all` 통과 후 `react 42개 중 titleKo 채움 42개`
 
-- [ ] **Step 6: 커밋**
+- [ ] **Step 5: 커밋**
 
 ```bash
 cd /Users/l-20220017/workspace/agent-conventions
@@ -1784,27 +1838,45 @@ git commit -m "docs: react 규칙과 섹션에 한국어 제목을 넣는다"
 
 ---
 
-### Tasks 9-15: 남은 7개 skill에 `titleKo`를 채운다
+### Task 7: 남은 7개 skill에 `titleKo`를 채운다
 
-**이 7개 태스크는 코드가 아니라 콘텐츠 작업이다.** 한국어 제목 170개를 계획서가 대신 지어낼 수 없다 — 규칙 본문을 읽은 사람이 쓰고 리뷰해야 하는 값이고, 잘못된 제목은 정본에 남는다. 그래서 각 태스크는 **채울 목록·형식·검증 명령·완료 기준**을 확정해 두고 값만 작성자가 넣는다.
+**Files:**
+- Modify: `skill/<skill>/rules/*.md`, `skill/<skill>/rules/_sections.md` (skill별로 하나씩)
 
-**모든 태스크의 공통 절차** (skill 이름과 개수만 다르다):
+**이 태스크는 코드가 아니라 콘텐츠 작업이다.** 한국어 제목 170개를 계획서가 대신 지어낼 수 없다 — 규칙 본문을 읽은 사람이 쓰고 리뷰해야 하는 값이고, 잘못된 제목은 정본에 남는다. 그래서 채울 목록·형식·검증 명령·완료 기준만 확정해 둔다.
 
-- [ ] **Step 1: 채울 파일 목록을 뽑는다**
+**skill 하나를 한 커밋으로 한다.** 7개를 한 번에 하지 말 것. 순서는 아래 표대로 — `typescript`와 `css`가 react의 동반이라 가장 먼저다.
+
+| 순서 | skill | 규칙 | 섹션 | 첫 파일의 영어 `title` (Step 1 결과 대조용) |
+| --- | --- | --- | --- | --- |
+| 1 | `typescript` | 22 | 6 | Expose Optional Values Instead of Silent Fallbacks |
+| 2 | `css` | 21 | 5 | Compose Classes With `clsx()` |
+| 3 | `astro` | 42 | 11 | Compose Page-level Documents Through `_document.astro` and `_head.astro` |
+| 4 | `tanstack-route` | 24 | 6 | Export `Route` at the Top of the File |
+| 5 | `nestjs` | 21 | 7 | Keep Inline Comments for Domain Rules and Library Caveats |
+| 6 | `playwright-test` | 25 | 7 | Follow the Declared Integration or E2E Writing Sequence |
+| 7 | `figma-visual-parity` | 15 | 6 | Classify Static UI Copy and Dynamic Values |
+
+**각 skill마다 아래 6단계를 반복한다.** `SKILL` 변수만 바꾼다.
+
+- [ ] **Step 1: 채울 목록을 뽑는다**
 
 ```bash
 cd /Users/l-20220017/workspace/agent-conventions
-SKILL=<skill-name>
+SKILL=typescript   # 표의 순서대로 바꿔가며 실행
 for f in skill/$SKILL/rules/*.md; do
   case "$(basename "$f")" in _*) continue;; esac
-  printf '%-70s %s\n' "$(basename "$f")" "$(/usr/bin/grep -m1 '^title:' "$f" | /usr/bin/sed 's/^title: //')"
+  printf '%-72s %s\n' "$(basename "$f")" "$(/usr/bin/grep -m1 '^title:' "$f" | /usr/bin/sed 's/^title: //')"
 done
+echo "--- 섹션 ---"
+/usr/bin/grep '^## ' skill/$SKILL/rules/_sections.md
 ```
 
-- [ ] **Step 2: 각 규칙에 `titleKo:` 를 넣는다**
+- [ ] **Step 2: 규칙마다 `titleKo:` 를 넣는다**
 
 `title:` 바로 아래 한 줄. 작성 기준:
-- 코드 식별자는 영어로 남긴다 (`forwardRef`, `query.select`, `clsx()`, `Route`). 한국 개발자가 실제로 말하는 방식이다.
+
+- 코드 식별자는 영어로 남긴다 (`forwardRef`, `query.select`, `clsx()`, `Route`, `_document.astro`). 한국 개발자가 실제로 말하는 방식이다.
 - 명사구보다 **동작 지시**로 쓴다. "핸들러 명명" 대신 "명명된 핸들러로".
 - 40자 이내. 행 목록에서 한 줄로 읽혀야 한다.
 - 영어 `title`의 직역이 아니라 같은 뜻의 자연스러운 한국어.
@@ -1817,7 +1889,7 @@ done
 
 ```bash
 cd /Users/l-20220017/workspace/agent-conventions
-SKILL=<skill-name>
+SKILL=typescript
 missing=0
 for f in skill/$SKILL/rules/*.md; do
   case "$(basename "$f")" in _*) continue;; esac
@@ -1827,45 +1899,25 @@ echo "섹션 TitleKo: $(/usr/bin/grep -c '^\*\*TitleKo:\*\*' skill/$SKILL/rules/
 test $missing -eq 0 && echo "규칙 전부 채움"
 ```
 
+Expected: `규칙 전부 채움`, 섹션 수가 표와 일치
+
 - [ ] **Step 5: 검증과 재생성**
 
 ```bash
-cd package && npm run validate:<skill-name> && npm run check:handbooks:all && npm run viewer
+cd package && npm run validate:typescript && npm run check:handbooks:all && npm run viewer
 ```
+
+Expected: 전부 통과. `check:handbooks:all`이 깨지면 `titleKo`가 `HANDBOOK.md`에 새는 것이므로 렌더러를 확인할 것.
 
 - [ ] **Step 6: 커밋**
 
 ```bash
 cd /Users/l-20220017/workspace/agent-conventions
-git add skill/<skill-name>/rules docs/conventions.html
-git commit -m "docs: <skill-name> 규칙과 섹션에 한국어 제목을 넣는다"
+git add skill/typescript/rules docs/conventions.html
+git commit -m "docs: typescript 규칙과 섹션에 한국어 제목을 넣는다"
 ```
 
-**태스크별 규모와 첫 파일 (Step 1 결과 대조용):**
-
-| Task | skill | 규칙 | 섹션 | 첫 파일의 영어 `title` |
-| --- | --- | --- | --- | --- |
-| 9 | `typescript` | 22 | 6 | Expose Optional Values Instead of Silent Fallbacks |
-| 10 | `css` | 21 | 5 | Compose Classes With `clsx()` |
-| 11 | `astro` | 42 | 11 | Compose Page-level Documents Through `_document.astro` and `_head.astro` |
-| 12 | `nestjs` | 21 | 7 | Keep Inline Comments for Domain Rules and Library Caveats |
-| 13 | `playwright-test` | 25 | 7 | Follow the Declared Integration or E2E Writing Sequence |
-| 14 | `tanstack-route` | 24 | 6 | Export `Route` at the Top of the File |
-| 15 | `figma-visual-parity` | 15 | 6 | Classify Static UI Copy and Dynamic Values |
-
-Task 9·10을 먼저 한다. `typescript`와 `css`는 react의 동반 skill이라 한 화면에서 함께 읽히고, progressive라 교차참조도 가장 많다.
-
----
-
-### Task 16: `titleKo`를 필수로 전환한다
-
-**Files:**
-- Modify: `package/src/validate.ts:83-96`
-- Modify: `package/test/viewer.test.ts`
-
-Task 8-15가 **모두** 끝난 뒤에만 진행한다. 하나라도 비어 있으면 8개 skill 전체 validate가 깨진다.
-
-- [ ] **Step 1: 212개가 모두 채워졌는지 먼저 확인한다**
+- [ ] **Step 7: 7개 skill 전부 반복했는지 확인한다**
 
 ```bash
 cd /Users/l-20220017/workspace/agent-conventions
@@ -1873,7 +1925,7 @@ total=0; missing=0
 for f in skill/*/rules/*.md; do
   case "$(basename "$f")" in _*) continue;; esac
   total=$((total+1))
-  /usr/bin/grep -q '^titleKo:' "$f" || { echo "누락: $f"; missing=$((missing+1)); }
+  /usr/bin/grep -q '^titleKo:' "$f" || missing=$((missing+1))
 done
 echo "규칙 $total개 중 누락 $missing개"
 echo "섹션 TitleKo 합계: $(/usr/bin/grep -hc '^\*\*TitleKo:\*\*' skill/*/rules/_sections.md | paste -sd+ - | bc)"
@@ -1881,7 +1933,20 @@ echo "섹션 TitleKo 합계: $(/usr/bin/grep -hc '^\*\*TitleKo:\*\*' skill/*/rul
 
 Expected: `규칙 212개 중 누락 0개`, `섹션 TitleKo 합계: 58`
 
-누락이 있으면 여기서 멈추고 해당 Task로 돌아간다.
+---
+
+### Task 8: `titleKo`를 필수로 전환한다
+
+**Files:**
+- Modify: `package/src/validate.ts`
+- Modify: `package/test/viewer.test.ts`
+
+Task 6·7이 **모두** 끝난 뒤에만 진행한다. 하나라도 비어 있으면 8개 skill 전체 validate가 깨진다.
+
+- [ ] **Step 1: 212개가 모두 채워졌는지 먼저 확인한다**
+
+Task 7 Step 7의 명령을 다시 돌린다.
+Expected: `규칙 212개 중 누락 0개`, `섹션 TitleKo 합계: 58`. 누락이 있으면 여기서 멈추고 Task 7로 돌아간다.
 
 - [ ] **Step 2: 실패하는 테스트를 쓴다**
 
@@ -1904,9 +1969,9 @@ test("every rule and section in the repository carries a Korean title", async ()
 - [ ] **Step 3: 테스트가 통과하는지 확인한다**
 
 Run: `cd package && npx tsx --test test/viewer.test.ts`
-Expected: PASS. 실패하면 Step 1로 돌아간다.
+Expected: PASS — 22 tests. 실패하면 Step 1로 돌아간다.
 
-- [ ] **Step 4: validate에 검증을 추가한다**
+- [ ] **Step 4: rule 검증을 추가한다**
 
 `package/src/validate.ts`의 `title` 검증 블록 바로 아래에 넣는다.
 
@@ -1916,7 +1981,9 @@ Expected: PASS. 실패하면 Step 1로 돌아간다.
 		}
 ```
 
-section 검증도 추가한다. **기존 `for (const section of sections)` 루프(약 69행)를 쓰지 말 것** — 그 루프는 `if (metadata.progressiveDisclosure === true)` 안에 있어서 8개 중 3개 skill에만 돈다. `titleKo` 는 전부 필요하므로 별도 루프를 둔다.
+- [ ] **Step 5: section 검증을 추가한다**
+
+**기존 `for (const section of sections)` 루프(약 69행)를 쓰지 말 것** — 그 루프는 `if (metadata.progressiveDisclosure === true)` 안에 있어서 8개 중 3개 skill에만 돈다. `titleKo`는 전부 필요하므로 별도 루프를 둔다.
 
 `sections.length === 0` 검사 블록(약 64-66행) 바로 **다음**, `if (metadata.progressiveDisclosure === true)` 블록 **앞**에 넣는다.
 
@@ -1928,12 +1995,12 @@ section 검증도 추가한다. **기존 `for (const section of sections)` 루�
 	}
 ```
 
-- [ ] **Step 5: 8개 skill 전부 validate를 돌린다**
+- [ ] **Step 6: 8개 skill 전부 validate를 돌린다**
 
 Run: `cd package && npm run validate:all`
 Expected: 8개 skill 전부 통과
 
-- [ ] **Step 6: 검증이 실제로 누락을 잡는지 확인한다**
+- [ ] **Step 7: 검증이 실제로 누락을 잡는지 확인한다**
 
 ```bash
 cd /Users/l-20220017/workspace/agent-conventions
@@ -1954,7 +2021,7 @@ cd package && npm run validate:react
 
 Expected: 통과
 
-- [ ] **Step 7: 커밋**
+- [ ] **Step 8: 커밋**
 
 ```bash
 cd /Users/l-20220017/workspace/agent-conventions
@@ -1964,7 +2031,7 @@ git commit -m "feat: titleKo와 섹션 TitleKo를 필수로 검증한다"
 
 ---
 
-### Task 17: 문서를 갱신하고 스냅샷 초안을 제거한다
+### Task 9: 문서를 갱신하고 전체를 검증한다
 
 **Files:**
 - Modify: `README.md`
@@ -1982,17 +2049,18 @@ git rm docs/react-rules-preview.html
 
 - [ ] **Step 2: README의 핸드북 안내를 바꾼다**
 
-`README.md`의 "1.3 담당 영역 핸드북" 절 도입부를 다음으로 교체한다. 기존 skill별 `HANDBOOK.md` 표는 그대로 두고 앞에 문단만 추가한다.
+`README.md`의 "1.3 담당 영역 핸드북" 절 도입부를 다음으로 교체한다. 기존 skill별 `HANDBOOK.md` 표는 그대로 두고 앞에 문단만 넣는다.
 
 ```md
 ### 1.3 담당 영역 핸드북
 
 사람이 규칙을 찾을 때는 [docs/conventions.html](./docs/conventions.html) 을 먼저 연다.
-8개 skill 212개 규칙이 한 장에 들어 있고, 검색·Impact 필터·태그 필터로 좁힌다.
+8개 skill 212개 규칙이 한 장에 들어 있고, 상단 드롭다운으로 담당 skill만 남긴다.
 브라우저로 파일을 그냥 열면 된다. 서버가 필요 없다.
 
 규칙마다 Incorrect / Correct 코드가 나란히 나오고 근거 산문은 접혀 있다.
 `CRITICAL` 부터 훑으려면 왼쪽 Impact 필터에서 `CRITICAL` 만 켠다.
+다른 skill 규칙을 가리키는 점선 칩을 누르면 드롭다운이 그 skill로 자동 전환된다.
 
 `HANDBOOK.md` 는 에이전트가 전체 검토를 요청받았을 때 읽는 생성물이다.
 사람이 통독할 문서로 만들어진 것이 아니다.
@@ -2002,7 +2070,7 @@ git rm docs/react-rules-preview.html
 
 `CONTRIBUTING.md`에 절을 추가한다. 삽입 위치는 규칙 추가 절차를 설명하는 절 다음이다.
 
-```md
+````md
 ## 한국어 제목
 
 규칙마다 `title`(영어)과 `titleKo`(한국어) 둘 다 필수다.
@@ -2029,7 +2097,7 @@ impact: HIGH
 
 ## 생성물 재생성
 
-규칙을 고쳤으면 생성물 세 종류를 다시 만든다.
+규칙을 고쳤으면 생성물을 다시 만든다.
 
 ```bash
 cd package
@@ -2041,22 +2109,11 @@ npm run check:measurement-artifacts
 
 `docs/conventions.html` 은 생성물이다. 직접 편집하지 않는다.
 낡은 채로 커밋하면 `npm run check:viewer` 가 막는다.
-```
+````
 
-- [ ] **Step 4: 문서 링크가 살아 있는지 확인한다**
+- [ ] **Step 4: 죽은 링크가 없는지 확인한다**
 
-```bash
-cd /Users/l-20220017/workspace/agent-conventions
-test -f docs/conventions.html && echo "viewer 존재"
-/usr/bin/grep -c 'docs/conventions.html' README.md CONTRIBUTING.md
-test -f docs/react-rules-preview.html && echo "초안이 아직 있다 (실패)" || echo "초안 제거됨"
-```
-
-Expected: `viewer 존재`, README·CONTRIBUTING 각각 1 이상, `초안 제거됨`
-
-- [ ] **Step 5: 문서에 죽은 링크가 없는지 확인한다**
-
-`documentation.test.ts` 는 `package/src/**` 의 JSDoc 규약을 검사하는 테스트이고 markdown 링크는 보지 않는다. 링크는 직접 확인한다.
+`documentation.test.ts`는 `package/src/**`의 JSDoc 규약을 검사하는 테스트이고 markdown 링크는 보지 않는다. 링크는 직접 확인한다.
 
 ```bash
 cd /Users/l-20220017/workspace/agent-conventions
@@ -2065,36 +2122,17 @@ for f in README.md CONTRIBUTING.md AGENTS.md; do
     test -e "$p" || echo "죽은 링크: $f -> $p"
   done
 done
-echo "확인 완료"
+test -f docs/react-rules-preview.html && echo "초안이 아직 있다 (실패)" || echo "초안 제거됨"
 ```
 
-Expected: "죽은 링크:" 줄이 없고 `확인 완료`
+Expected: "죽은 링크:" 줄이 없고 `초안 제거됨`
 
-- [ ] **Step 6: 커밋**
+- [ ] **Step 5: 전체 테스트·타입·형식**
 
-```bash
-cd /Users/l-20220017/workspace/agent-conventions
-git add README.md CONTRIBUTING.md
-git commit -m "docs: 사람 동선을 생성 viewer로 바꾸고 스냅샷 초안을 걷는다"
-```
+Run: `cd package && npm test && npm run typecheck && npm run biome:check:all`
+Expected: 전부 PASS, 오류 0, 위반 0
 
----
-
-### Task 18: 전체 검증
-
-**Files:** 없음 (검증만)
-
-- [ ] **Step 1: 전체 테스트**
-
-Run: `cd package && npm test`
-Expected: 전부 PASS. 실패 0
-
-- [ ] **Step 2: 타입과 형식**
-
-Run: `cd package && npm run typecheck && npm run biome:check:all`
-Expected: 오류 0, 위반 0
-
-- [ ] **Step 3: 생성물 전체 재생성과 신선도**
+- [ ] **Step 6: 생성물 전체 재생성과 신선도**
 
 ```bash
 cd package
@@ -2106,33 +2144,16 @@ npm run check:measurement-artifacts
 
 Expected: 마지막 명령이 `check:generated:all`, `check:handbooks:all`, `check:viewer` 세 단계를 모두 통과
 
-- [ ] **Step 4: 재생성이 파일을 바꾸지 않는지 확인한다 (결정성)**
+- [ ] **Step 7: 재생성이 파일을 바꾸지 않는지 확인한다 (결정성)**
 
 ```bash
 cd /Users/l-20220017/workspace/agent-conventions
 git status --short
 ```
 
-Expected: 출력 없음. 무엇이든 나오면 생성기가 결정적이지 않다는 뜻이다. 타임스탬프나 정렬 불안정을 찾을 것.
+Expected: 문서 변경 외에는 출력 없음. 생성물이 계속 바뀌면 결정적이지 않다는 뜻이다. 타임스탬프나 정렬 불안정을 찾을 것.
 
-- [ ] **Step 5: 브라우저에서 실제로 확인한다**
-
-```bash
-cd /Users/l-20220017/workspace/agent-conventions
-open docs/conventions.html
-```
-
-눈으로 확인할 것:
-- 한글이 깨지지 않는다 (깨지면 charset 선언 확인)
-- 검색창에 `handler` → 영어로 걸린다. `핸들러` → 한국어로도 걸린다
-- 왼쪽 Skill 필터에 8개가 보이고 합계 212개다
-- `CRITICAL` 필터를 켜면 목록이 줄어든다
-- 규칙을 펼치면 Incorrect / Correct 가 **좌우로 나란히** 나오고, 코드 박스가 행 밖으로 삐져나가지 않는다
-- 창을 좁혀도 페이지가 가로로 스크롤되지 않는다. 코드는 자기 박스 안에서 스크롤된다
-- 교차참조 칩을 누르면 대상 규칙으로 이동해 펼쳐진다. 다른 skill 규칙은 점선이다
-- 테마 버튼으로 밝음/어둠이 둘 다 읽힌다
-
-- [ ] **Step 6: 이탈을 기계로 재확인한다 (선택)**
+- [ ] **Step 8: 이탈을 기계로 재확인한다**
 
 Chrome이 있으면 수치로 확인한다.
 
@@ -2171,14 +2192,21 @@ rm -f /tmp/viewer-probe.html
 
 Expected: 모든 폭에서 `"overflowing":0`, `"bodySideways":false`
 
-- [ ] **Step 7: 최종 커밋 (필요하면)**
+- [ ] **Step 9: 브라우저 최종 확인**
+
+```bash
+cd /Users/l-20220017/workspace/agent-conventions && open docs/conventions.html
+```
+
+Task 5 Step 9의 항목을 다시 확인한다. 이번에는 제목이 전부 한국어여야 한다.
+
+- [ ] **Step 10: 커밋**
 
 ```bash
 cd /Users/l-20220017/workspace/agent-conventions
-git status --short
+git add README.md CONTRIBUTING.md
+git commit -m "docs: 사람 동선을 생성 viewer로 바꾸고 스냅샷 초안을 걷는다"
 ```
-
-깨끗하면 커밋할 것이 없다. 남은 것이 있으면 무엇이 왜 바뀌었는지 확인한 뒤 커밋한다.
 
 ---
 
@@ -2188,52 +2216,50 @@ git status --short
 
 | 요구 | 태스크 |
 | --- | --- |
-| 8개 skill 212개 규칙 전부 화면에 | Task 4 (payload), Task 6 (렌더), Task 18 Step 5 |
-| 사람은 `.md` 를 안 본다 | Task 17 (README 동선 변경) |
-| 한국어 제목 우선 | Task 2·3 (스키마), 8-15 (값), 16 (강제) |
-| 영어는 식별자로 유지 | Task 6 (`row-id`, 검색 색인), 설계 결정 5 |
-| 검색이 코드까지 훑는다 | Task 6 (`haystack`) |
-| Incorrect/Correct 나란히 | Task 6 (`.diff`), Task 18 Step 5 |
-| 산문은 접힘 | Task 6 (`.why`) |
-| 정본과 어긋날 수 없다 | Task 7 (신선도 검사 + 검사 체인 편입) |
-| 서버 불필요 | Task 5 (완전 문서 + charset) |
-| 인코딩 깨짐 재발 방지 | Task 5 Step 1 (charset 회귀 테스트) |
-| diff 레이아웃 깨짐 재발 방지 | Task 6 Step 1 (minmax 가드 테스트) |
+| 8개 skill 212개 규칙 전부 한 장에 | Task 3 (payload), Task 4 (렌더), Task 5 Step 9 |
+| skill 이동은 단일선택 드롭다운 | Task 4 Step 6·7, 설계 결정 2 |
+| 동반 왕복 비용 완화 | Task 4 Step 7 (`data-goto` 자동 전환, `data-switch` 동반 칩) |
+| 사람은 `.md` 를 안 본다 | Task 9 (README 동선 변경) |
+| 한국어 제목 우선 | Task 2 (스키마), 6·7 (값), 8 (강제) |
+| 영어는 식별자로 유지 | Task 4 (`row-id`, 검색 색인), 설계 결정 6 |
+| 검색이 코드까지 훑는다 | Task 4 (`haystack`) |
+| Incorrect/Correct 나란히 | Task 4 (`.diff`), Task 9 Step 8 |
+| 산문은 접힘 | Task 4 (`.why`) |
+| 정본과 어긋날 수 없다 | Task 5 (신선도 검사 + 검사 체인 편입) |
+| 서버 불필요 | Task 4 (완전 문서 + charset) |
+| 인코딩 깨짐 재발 방지 | Task 4 Step 1 (charset 회귀 테스트) |
+| diff 레이아웃 깨짐 재발 방지 | Task 4 Step 1 (minmax 가드 테스트) |
 
 **의도적으로 넣지 않은 것**
 
-- **한국어 제목 170개의 실제 값** (Task 9-15). 규칙 본문을 읽은 사람이 써야 하는 콘텐츠이고, 계획서가 지어내면 잘못된 값이 정본에 박힌다. 대신 목록·형식·검증 명령·완료 기준을 확정했다. react 42개는 초안이 있어 전량 수록했다.
+- **한국어 제목 170개의 실제 값** (Task 7). 규칙 본문을 읽은 사람이 써야 하는 콘텐츠이고, 계획서가 지어내면 잘못된 값이 정본에 박힌다. 대신 목록·형식·검증 명령·완료 기준을 확정했다. react 42개는 초안이 있어 전량 수록했다.
+- **skill 다중선택.** 단일선택 드롭다운으로 결정됐다. react가 typescript를 `required`로 동반하는 것과 상충하지만, 교차참조 자동 전환과 동반 칩으로 왕복을 한 번 클릭으로 줄였다. 실제로 두 skill을 나란히 봐야 하면 드롭다운에서 `전체`를 고른다.
 - **영어 번역본 세트.** 실측 결과 에이전트 1회 호출 비용이 약 6,056 tok이고 영어 전환 절감은 1,000 tok 미만(컨텍스트의 0.5% 미만)이다. 그 이득으로 정본 이원화와 "에이전트는 낡은 규칙을 집행하고 사람은 새 규칙을 읽는" 실패 모드를 살 수 없다.
-- **프레임워크 도입** (Astro/Starlight 등). 전체 콘텐츠 358KB가 한 장에 들어가고, Pagefind 같은 검색 인덱스는 `fetch` 를 쓰기 때문에 `file://` 에서 CORS로 죽는다. 서버를 띄워야 하는 문서는 "안 띄우는 사람은 안 본다".
-- **mermaid/PlantUML 다이어그램.** 212개 규칙 전부가 이미 Incorrect/Correct 코드 쌍을 갖고 있다. 이 콘텐츠의 시각 형태는 코드 diff다. 다이어그램이 값을 내는 두 곳(skill 동반 그래프, 라우팅 흐름)은 `overview.html` 에 이미 SVG로 있다.
+- **프레임워크 도입** (Astro/Starlight 등). 전체 콘텐츠 358KB가 한 장에 들어가고, Pagefind 같은 검색 인덱스는 `fetch`를 쓰기 때문에 `file://`에서 CORS로 죽는다. 서버를 띄워야 하는 문서는 "안 띄우는 사람은 안 본다".
+- **mermaid/PlantUML 다이어그램.** 212개 규칙 전부가 이미 Incorrect/Correct 코드 쌍을 갖고 있다. 이 콘텐츠의 시각 형태는 코드 diff다. 다이어그램이 값을 내는 두 곳(skill 동반 그래프, 라우팅 흐름)은 `overview.html`에 이미 SVG로 있다.
 
 **타입 일관성 확인**
 
-`RuleCodeBlock` / `RuleExample` / `RuleProseNode` / `ParsedRuleBody` (Task 1) → `ViewerRule.prose`·`examples` (Task 4)에서 그대로 재사용. `ViewerPayload` (Task 4) → `encodeViewerPayload` 인자, `renderViewerHtml` 은 인코딩된 **문자열**을 받는다 (Task 5). `generateViewerHtml` (Task 7)이 셋을 잇는다. `viewerOutputPath` 는 `config.ts` 한 곳에만 정의하고 `viewer.ts`·`check-viewer.ts`·테스트가 공유한다. `titleKo` 는 rule과 section 양쪽에서 같은 이름을 쓰고, `_sections.md` 안에서만 `**TitleKo:**` 표기다.
+`RuleCodeBlock` / `RuleExample` / `RuleProseNode` / `ParsedRuleBody` (Task 1) → `ViewerRule.prose`·`examples` (Task 3)에서 그대로 재사용. `ViewerCompanion` / `ViewerSkill` / `ViewerSection` / `ViewerRule` / `ViewerPayload` (Task 3) → `encodeViewerPayload(payload)` 인자, `renderViewerHtml(encodedPayload)` 은 인코딩된 **문자열**을 받는다 (Task 4). `generateViewerHtml` (Task 5)이 셋을 잇는다. `viewerOutputPath` 는 `config.ts` 한 곳에만 정의하고 `viewer.ts`·`check-viewer.ts`·테스트가 공유한다. `titleKo` 는 rule과 section 양쪽에서 같은 필드명이고, `_sections.md` 안에서만 `**TitleKo:**` 표기다. 클라이언트에서 규칙 키는 항상 `keyOf(r) = skill + "/" + id` 이고, DOM id만 `r-<skill>--<id>` 로 구분자를 바꿔 쓴다(`/`는 id에 부적합).
 
 ## 실행 순서 요약
 
 ```
-1  rule-body.ts          본문 분해            ← 다른 전부의 전제
-2  titleKo 스키마 (rule)
-3  TitleKo 스키마 (section)
-4  viewer-payload.ts     데이터 조립
-5  viewer-template.ts    문서 셸 + charset
-6  viewer-template.ts    화면 + 동작
-7  viewer.ts / check-viewer.ts / npm scripts   ← 여기서 처음 화면이 뜬다
-────────────────────────── 이후는 콘텐츠 작업
-8  react 42
-9  typescript 22         react 동반 skill
-10 css 21                react 동반 skill
-11 astro 42
-12 nestjs 21
-13 playwright-test 25
-14 tanstack-route 24
-15 figma-visual-parity 15
-────────────────────────── 전부 채운 뒤에만
-16 titleKo 필수 전환
-17 문서 갱신 + 초안 제거
-18 전체 검증
-```
+── 코드. 한 번 앉아서 끝난다 ────────────────────────
+1  rule-body.ts              본문 분해
+2  titleKo 스키마             rule + section
+3  viewer-payload.ts          데이터 조립
+4  viewer-template.ts         문서 + 화면 + 동작
+5  viewer.ts / check-viewer.ts / npm scripts
+   └─ 여기서 화면이 뜬다. 한국어 제목 0개여도 동작 (영어로 대체)
 
-Task 7까지가 코드 작업이고, 여기서 이미 212개 규칙이 화면에 뜬다 (`titleKo` 가 빈 규칙은 영어 제목으로 대체 표시). Task 8부터는 순서를 바꿔도 되고 나눠서 해도 된다. Task 16만 반드시 8-15 전체 뒤에 온다.
+── 콘텐츠. 나눠서 아무 때나 ──────────────────────────
+6  react 42
+7  typescript 22 → css 21 → astro 42 → tanstack-route 24
+   → nestjs 21 → playwright-test 25 → figma-visual-parity 15
+   └─ skill 하나가 커밋 하나
+
+── 마감. 6·7 전부 끝난 뒤에만 ────────────────────────
+8  titleKo 필수 전환
+9  문서 갱신 + 초안 제거 + 전체 검증
+```
