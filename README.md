@@ -57,6 +57,18 @@ TypeScript 프레임워크 프로젝트는 framework skill 하나만 적지 말 
 
 ### 1.3 담당 영역 핸드북
 
+사람이 규칙을 찾을 때는 [conventions.html](./conventions.html) 을 먼저 연다.
+8개 skill 212개 규칙이 한 장에 들어 있고, 왼쪽 Skill 목록에서 담당 skill 하나를 고른다.
+브라우저로 파일을 그냥 열면 된다. 서버가 필요 없다.
+
+규칙을 펼치면 Incorrect / Correct 코드가 먼저 나오고, 적용 조건과 근거가 그 아래 온다.
+`CRITICAL` 부터 훑으려면 왼쪽 Impact 필터에서 `CRITICAL` 만 켠다.
+다른 skill 규칙을 가리키는 점선 칩을 누르면 그 skill 로 옮겨가 해당 규칙을 펼친다.
+규칙 번호(`1.1`, `7.2`)는 `HANDBOOK.md` 헤딩 번호와 같아서 두 문서를 번호로 맞춰 볼 수 있다.
+
+`HANDBOOK.md` 는 에이전트가 전체 검토를 요청받았을 때 읽는 생성물이다.
+사람이 통독할 문서로 만들어진 것이 아니다.
+
 전체를 외울 필요 없다. 담당 영역만 한 번 훑으면 리뷰에서 덜 돌아온다.
 
 | 작업 영역 | 핸드북 |
@@ -97,7 +109,8 @@ TSX 파일 하나를 고쳐 달라고 시켜본다. 에이전트는 이 순서�
 | --- | --- |
 | README.md | 이 문서. 설치와 적용 |
 | [CONTRIBUTING.md](./CONTRIBUTING.md) | 규칙 추가·수정 절차 |
-| `skill/<name>/HANDBOOK.md` | 규칙 전문. 목차와 예시 포함 |
+| [conventions.html](./conventions.html) | **규칙 조회.** 8개 skill 212개를 검색·필터로 찾는다 |
+| `skill/<name>/HANDBOOK.md` | 규칙 전문. 에이전트 전체 검토용 생성물 |
 | [overview.html](./overview.html) | 실행 흐름 · 스킬 관계 · 규칙 관계 |
 | [docs/progressive-loading.html](./docs/progressive-loading.html) | 설계 배경 · 측정 · 검증 · 한계 |
 | [package/README.md](./package/README.md) | build · validate · test tooling |

@@ -1,7 +1,9 @@
 ---
 title: Require JSDoc on Service Hooks and Boundary Methods
+titleKo: service hook과 경계 메서드에는 JSDoc 필수
 impact: MEDIUM-HIGH
 impactDescription: makes important backend execution boundaries searchable before readers inspect implementation details
+impactDescriptionKo: 구현 세부를 뜯어보기 전에 중요한 백엔드 실행 경계를 검색할 수 있게 함
 tags: jsdoc, services, lifecycle
 ---
 

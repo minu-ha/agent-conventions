@@ -1,7 +1,9 @@
 ---
 title: Mock Only the Endpoints Required by the Spec
+titleKo: spec이 요구하는 엔드포인트만 모킹
 impact: HIGH
 impactDescription: keeps integration test setup readable by mocking only the dependencies that matter to the scenario
+impactDescriptionKo: 시나리오에 중요한 의존만 모킹해 integration setup 을 읽을 수 있게 유지함
 tags: integration, mocks, routes
 ---
 

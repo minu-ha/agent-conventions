@@ -1,8 +1,10 @@
 ---
 title: Prefer Sibling `index.astro` and `[page].astro` Files for Paginated Route Families
+titleKo: 페이지네이션 route는 index.astro와 [page].astro 형제로
 impact: HIGH
 impactDescription: >-
   keeps paginated route families shallow and makes list plus pagination contracts readable from one folder
+impactDescriptionKo: 페이지네이션 route를 얕게 유지하고 목록과 페이지네이션 계약을 한 폴더에서 읽히게 함
 tags: routing, pagination, pages, route-families
 ---
 

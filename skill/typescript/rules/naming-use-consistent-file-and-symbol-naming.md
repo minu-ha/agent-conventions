@@ -1,7 +1,9 @@
 ---
 title: Use Consistent File, Symbol, and Field Naming
+titleKo: 파일·심볼·필드 이름을 일관되게
 impact: HIGH
 impactDescription: keeps file names, symbols, and shape fields predictable across modules and runtime structures
+impactDescriptionKo: 모듈과 런타임 구조를 넘나들며 파일명·심볼·shape 필드를 예측 가능하게 유지함
 appliesWhen: >-
   TypeScript 파일, local 변수·함수·타입, 객체·schema field 또는 enum-like 상수의 이름을 새로 만들거나 바꾼다. alias 없는
   third-party import binding 추가는 제외한다.

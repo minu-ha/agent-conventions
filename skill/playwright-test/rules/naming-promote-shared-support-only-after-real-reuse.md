@@ -1,8 +1,10 @@
 ---
 title: Promote Shared Support Only After Real Reuse
+titleKo: 공용 support는 실제 재사용이 생긴 뒤에 승격
 impact: MEDIUM-HIGH
 impactDescription: >-
   keeps support layers proportional by delaying global helpers until multiple features genuinely need them
+impactDescriptionKo: 여러 기능이 진짜로 필요해질 때까지 전역 헬퍼를 미뤄 support 계층을 규모에 맞게 유지함
 tags: support, reuse, helpers
 ---
 

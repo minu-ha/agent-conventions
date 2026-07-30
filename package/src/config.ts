@@ -17,6 +17,11 @@ const skillRootDir = path.join(repoDir, "skill");
 export const packagePaths: PackagePaths = {currentDir, packageDir, repoDir, skillRootDir};
 
 /**
+ * @summary 사람이 읽는 생성 viewer 문서 경로
+ */
+export const viewerOutputPath = path.join(repoDir, "conventions.html");
+
+/**
  * @helper configured skill root가 symlink가 아닌 실제 directory인지 검증
  */
 const assertRealSkillRootDirectory = async (targetSkillRootDir: string): Promise<void> => {

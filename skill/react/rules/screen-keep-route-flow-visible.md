@@ -1,7 +1,9 @@
 ---
 title: Keep Route Entry Files Focused on Screen Flow
+titleKo: route entry 파일은 화면 흐름에만 집중
 impact: HIGH
 impactDescription: route entry만 봐도 화면 흐름을 따라갈 수 있게 만듦
+impactDescriptionKo: route entry만 봐도 화면 흐름을 따라갈 수 있게 만듦
 appliesWhen: >-
   route entry의 search·navigate·query·mutation·cross-section effect를 component/module 사이에서 이동·분리하거나 page
   section 조립의 순서·owner를 바꾼다. 같은 owner 안 표현 변경은 제외한다.

@@ -368,7 +368,12 @@ test("package.json exposes all-skill and per-skill script aliases", async () => 
 	assert.ok(packageJson.scripts["check:generated"]);
 	assert.ok(packageJson.scripts["check:generated:all"]);
 	assert.equal(packageJson.scripts["check:handbooks:all"], "tsx src/check-handbooks.ts --all");
-	assert.equal(packageJson.scripts["check:measurement-artifacts"], "npm run check:generated:all && npm run check:handbooks:all");
+	assert.equal(packageJson.scripts.viewer, "tsx src/viewer.ts");
+	assert.equal(packageJson.scripts["check:viewer"], "tsx src/check-viewer.ts");
+	assert.equal(
+		packageJson.scripts["check:measurement-artifacts"],
+		"npm run check:generated:all && npm run check:handbooks:all && npm run check:viewer",
+	);
 	assert.equal(packageJson.scripts["measurement:self-test"], "python3 scripts/measure-progressive-loading.py --self-test");
 	assert.equal(packageJson.scripts["measurement:tokens"], "uv run --with tiktoken==0.11.0 python scripts/measure-progressive-loading.py");
 

@@ -1,7 +1,9 @@
 ---
 title: Add New Routes in Layout-first Order
+titleKo: 새 route는 레이아웃 먼저 순서로 추가
 impact: MEDIUM
 impactDescription: reduces cleanup work by establishing shell, grouping, and search boundaries before route files sprawl
+impactDescriptionKo: route 파일이 번지기 전에 셸·그룹·search 경계를 먼저 정해 정리 작업을 줄임
 tags: workflow, route-creation, checklist
 ---
 

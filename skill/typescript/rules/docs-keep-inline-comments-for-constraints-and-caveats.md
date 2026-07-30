@@ -1,8 +1,10 @@
 ---
 title: Keep Inline Comments for Constraints and Caveats Only
+titleKo: 인라인 주석은 제약과 예외에만
 impact: MEDIUM
 impactDescription: >-
   prevents inline comments from narrating obvious code while preserving notes that avoid real misunderstandings
+impactDescriptionKo: 자명한 코드를 설명하는 주석은 막고 실제 오해를 방지하는 메모는 남김
 appliesWhen: >-
   함수 본문의 `//` 주석을 추가·수정·유지하거나 도메인 규칙, 예외 방어, 외부 제약 또는 부수효과 순서를 주석으로 설명한다.
 tags: comments, inline, caveats

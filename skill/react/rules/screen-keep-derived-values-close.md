@@ -1,7 +1,9 @@
 ---
 title: Keep Derived Values Close to Where They Are Used
+titleKo: 파생 값은 쓰는 곳 가까이
 impact: HIGH
 impactDescription: 오리진을 보존하고 route entry가 alias와 명령형 setup 코드로 채워지는 것을 막음
+impactDescriptionKo: 오리진을 보존하고 route entry가 alias와 명령형 setup 코드로 채워지는 것을 막음
 appliesWhen: >-
   response·state·search·props의 오리진을 끊는 alias·flag·표시값을 넓은 screen scope에 추가·이동·제거하거나 `let`/`push`
   조립을 바꾼다.

@@ -1,8 +1,10 @@
 ---
 title: Follow the Declared Integration or E2E Writing Sequence
+titleKo: 정해진 integration·e2e 작성 순서를 따르기
 impact: MEDIUM
 impactDescription: >-
   reduces confused setup by forcing the author to classify the test level and dependency boundary before writing actions
+impactDescriptionKo: 동작을 쓰기 전에 테스트 층위와 의존 경계를 먼저 분류하게 해 혼란스러운 setup 을 줄임
 tags: workflow, writing-order, setup
 ---
 

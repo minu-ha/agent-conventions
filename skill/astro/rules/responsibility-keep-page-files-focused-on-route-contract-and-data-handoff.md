@@ -1,7 +1,9 @@
 ---
 title: Keep Page Files Focused on Route Contract and Data Handoff
+titleKo: page 파일은 route 계약과 데이터 전달에 집중
 impact: HIGH
 impactDescription: keeps `src/pages` readable as route owners without reducing page files to import-only adapters
+impactDescriptionKo: page 파일을 import 전용 어댑터로 만들지 않으면서 src/pages를 route 소유자로 읽히게 함
 tags: pages, routing, responsibility
 ---
 

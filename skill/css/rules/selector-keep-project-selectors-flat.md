@@ -1,7 +1,9 @@
 ---
 title: Keep Project-owned Selectors Flat
+titleKo: 프로젝트 소유 셀렉터는 평평하게
 impact: CRITICAL
 impactDescription: reduces cascade coupling by keeping project-owned selectors independent instead of descendant-driven
+impactDescriptionKo: 프로젝트 소유 셀렉터를 descendant 의존 대신 독립적으로 두어 cascade 결합을 줄임
 appliesWhen: >-
   project-owned class를 중첩·descendant selector로 연결하거나 raw HTML prose·copy·content wrapper 안 element selector를
   추가·수정한다.

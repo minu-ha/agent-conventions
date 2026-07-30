@@ -1,8 +1,10 @@
 ---
 title: Choose Actions vs. Endpoints by Caller and Response Needs
+titleKo: Actions와 Endpoints는 호출자와 응답 요건으로 선택
 impact: HIGH
 impactDescription: >-
   keeps mutation boundaries aligned with who is calling them and what kind of response they must control
+impactDescriptionKo: mutation 경계를 누가 호출하는지와 어떤 응답을 제어해야 하는지에 맞춤
 tags: actions, endpoints, forms
 ---
 

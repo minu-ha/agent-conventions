@@ -1,7 +1,9 @@
 ---
 title: Document Custom Types and Declarative Shapes
+titleKo: 커스텀 타입과 선언적 shape 문서화
 impact: CRITICAL
 impactDescription: keeps domain-specific contracts understandable without digging through implementation details
+impactDescriptionKo: 구현 세부를 파헤치지 않고도 도메인 전용 계약을 이해할 수 있게 함
 appliesWhen: >-
   type·interface·schema root·객체 상수·계약 field·파생 alias를 추가·변경하거나 named shape에 callable 역할을 추가한다.
   외부·generated·read-only·shared unchanged shape·익명 inferred 반환은 제외한다.

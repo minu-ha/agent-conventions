@@ -1,7 +1,9 @@
 ---
 title: Keep Style Files Owned by One Component or Route Surface
+titleKo: 스타일 파일은 컴포넌트 또는 route 하나가 소유
 impact: MEDIUM
 impactDescription: keeps stylesheets aligned to a single owner so comments, ordering, and scope remain understandable
+impactDescriptionKo: 주석·순서·범위를 이해할 수 있도록 stylesheet를 소유자 하나에 맞춤
 appliesWhen: >-
   stylesheet를 새로 만들거나 이동·분할·병합하고 한 파일에 component, route, document, local, shared owner가 섞일
   가능성이 있다.

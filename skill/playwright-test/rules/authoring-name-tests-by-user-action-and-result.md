@@ -1,7 +1,9 @@
 ---
 title: Name Tests by User Action and Result
+titleKo: 테스트 이름은 사용자 동작과 결과로
 impact: MEDIUM-HIGH
 impactDescription: makes browser tests readable as user behavior instead of implementation detail or setup jargon
+impactDescriptionKo: 구현 세부나 setup 용어가 아니라 사용자 행위로 브라우저 테스트를 읽히게 함
 tags: test-titles, naming, behavior
 ---
 

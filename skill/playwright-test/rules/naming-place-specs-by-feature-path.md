@@ -1,7 +1,9 @@
 ---
 title: Place Specs by Feature Path
+titleKo: spec은 기능 경로에 맞춰 배치
 impact: HIGH
 impactDescription: keeps test ownership discoverable by mirroring the real route or feature path in the test tree
+impactDescriptionKo: 테스트 트리가 실제 route·기능 경로를 반영하게 해 테스트 소유를 찾을 수 있게 함
 tags: spec-placement, features, paths
 ---
 

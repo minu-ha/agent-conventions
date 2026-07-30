@@ -1,7 +1,9 @@
 ---
 title: Read Params and Search From the Local `Route`
+titleKo: params와 search는 로컬 Route에서 읽기
 impact: MEDIUM-HIGH
 impactDescription: keeps param and search access aligned with the route file that owns the contract
+impactDescriptionKo: param·search 접근을 계약을 소유한 route 파일에 맞춤
 tags: route-hooks, params, search
 ---
 

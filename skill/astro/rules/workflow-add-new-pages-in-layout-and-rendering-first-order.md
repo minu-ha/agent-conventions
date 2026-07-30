@@ -1,7 +1,9 @@
 ---
 title: Add New Pages in Layout-and-rendering-first Order
+titleKo: 새 페이지는 레이아웃·렌더링 먼저 순서로 추가
 impact: MEDIUM
 impactDescription: reduces cleanup work by deciding shell, rendering mode, and island boundaries before files sprawl
+impactDescriptionKo: 파일이 번지기 전에 셸·렌더링 모드·아일랜드 경계를 먼저 정해 정리 작업을 줄임
 tags: workflow, pages, checklist
 ---
 

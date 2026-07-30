@@ -1,7 +1,9 @@
 ---
 title: Prefer React Handler Type Aliases Over Inline Event Parameter Annotations
+titleKo: 이벤트 매개변수 인라인 타입보다 React handler alias
 impact: HIGH
 impactDescription: React handler 시그니처와 callback 의도를 선언 위치에서 바로 보이게 함
+impactDescriptionKo: React handler 시그니처와 callback 의도를 선언 위치에서 바로 보이게 함
 appliesWhen: >-
   React 이벤트 핸들러나 prop callback의 선언·시그니처를 추가·변경하며 기존 React alias·callback 계약을 쓸 수 있다.
   curried factory의 최종 반환 handler도 포함한다.

@@ -1,8 +1,10 @@
 ---
 title: Validate Request DTOs With Validator, Transformer, and Swagger
+titleKo: 요청 DTO는 validator·transformer·Swagger로 검증
 impact: HIGH
 impactDescription: >-
   keeps request contracts explicit by colocating validation, transformation, and API documentation on the DTO
+impactDescriptionKo: 검증·변환·API 문서를 DTO 한곳에 모아 요청 계약을 명시적으로 유지함
 tags: dto, validation, swagger
 ---
 

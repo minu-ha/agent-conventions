@@ -1,7 +1,9 @@
 ---
 title: Reserve `output: "server"` for Mostly Dynamic Apps
+titleKo: output: server는 대부분 동적인 앱에만
 impact: HIGH
 impactDescription: makes full-project SSR a deliberate app-level choice instead of a convenience toggle
+impactDescriptionKo: 전체 SSR을 편의 토글이 아니라 앱 수준의 의도적 선택으로 만듦
 tags: rendering, output, server
 ---
 

@@ -1,7 +1,9 @@
 ---
 title: Use Discoverable Spec File Names
+titleKo: spec 파일 이름은 찾기 쉽게
 impact: HIGH
 impactDescription: keeps spec purpose searchable by encoding feature and level directly into the filename
+impactDescriptionKo: 기능과 층위를 파일명에 직접 담아 spec 의 목적을 검색 가능하게 유지함
 tags: filenames, discovery, levels
 ---
 

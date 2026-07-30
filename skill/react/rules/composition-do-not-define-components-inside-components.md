@@ -1,7 +1,9 @@
 ---
 title: Do Not Define Components Inside Components
+titleKo: 컴포넌트 안에 컴포넌트를 정의하지 않기
 impact: HIGH
 impactDescription: prevents remount bugs and hidden state resets caused by recreating component types every render
+impactDescriptionKo: 렌더마다 컴포넌트 타입을 다시 만들어 생기는 remount 버그와 숨은 state 초기화를 막음
 appliesWhen: >-
   컴포넌트 본문 안에 JSX를 반환하는 로컬 함수·컴포넌트를 추가·이동하거나 재렌더 시 remount·focus reset 징후를 다룬다.
 tags: composition, components, remount, performance

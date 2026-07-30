@@ -1,9 +1,11 @@
 ---
 title: Keep Route Page Files Focused on Screen Flow
+titleKo: route page 파일은 화면 흐름에 집중
 impact: HIGH
 impactDescription: >-
   keeps routed `.astro` files readable as the main route orchestration layer instead of turning them into import-only
   adapters
+impactDescriptionKo: route .astro 파일을 import 전용 어댑터가 아니라 route 조율 계층으로 읽히게 함
 tags: responsibility, pages, screen-flow
 ---
 

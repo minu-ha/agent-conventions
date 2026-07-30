@@ -1,7 +1,9 @@
 ---
 title: Reuse Existing Components and Design Tokens First
+titleKo: 기존 컴포넌트와 디자인 토큰을 먼저 재사용
 impact: HIGH
 impactDescription: visual parity 작업이 raw CSS 누적이나 디자인 시스템 우회로 흐르지 않게 함
+impactDescriptionKo: visual parity 작업이 raw CSS 누적이나 디자인 시스템 우회로 흐르지 않게 함
 tags: implementation, components, tokens
 ---
 

@@ -214,6 +214,10 @@ export interface SkillSection {
 	 */
 	title: string;
 	/**
+	 * @field 사람이 읽는 화면에 노출할 한국어 section 제목
+	 */
+	titleKo: string;
+	/**
 	 * @field rule 파일명과 연결되는 section prefix
 	 */
 	prefix: string;
@@ -244,6 +248,10 @@ export interface SkillRule {
 	 */
 	title: string;
 	/**
+	 * @field 사람이 읽는 화면에 노출할 한국어 rule 제목
+	 */
+	titleKo: string;
+	/**
 	 * @field rule 중요도 레벨
 	 */
 	impact: string;
@@ -251,6 +259,10 @@ export interface SkillRule {
 	 * @field rule 중요도 부연 설명
 	 */
 	impactDescription?: string;
+	/**
+	 * @field 사람이 읽는 화면에 노출할 한국어 중요도 설명
+	 */
+	impactDescriptionKo: string;
 	/**
 	 * @field rule 탐색과 분류용 태그 목록
 	 */

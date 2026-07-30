@@ -1,7 +1,9 @@
 ---
 title: Mock Unit Boundaries and Verify E2E Wiring
+titleKo: 단위는 경계를 모킹하고 e2e는 배선을 검증
 impact: CRITICAL
 impactDescription: keeps service unit tests fast and focused while making e2e tests prove real Nest wiring end to end
+impactDescriptionKo: service 단위 테스트는 빠르고 좁게, e2e 는 실제 Nest 배선을 끝까지 증명하게 유지함
 tags: unit-tests, e2e, mocks
 ---
 

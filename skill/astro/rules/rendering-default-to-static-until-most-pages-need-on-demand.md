@@ -1,7 +1,9 @@
 ---
 title: Default to Static Until Most Pages Need On-demand Rendering
+titleKo: 대부분이 on-demand가 될 때까지 static을 기본으로
 impact: CRITICAL
 impactDescription: keeps Astro's fast default intact and avoids adding server dependence too early
+impactDescriptionKo: Astro의 빠른 기본값을 지키고 서버 의존을 너무 일찍 들이지 않음
 tags: rendering, output, static
 ---
 

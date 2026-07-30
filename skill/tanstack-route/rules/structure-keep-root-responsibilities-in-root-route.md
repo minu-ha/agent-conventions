@@ -1,7 +1,9 @@
 ---
 title: Keep Root Responsibilities in `__root.tsx`
+titleKo: 루트 책임은 __root.tsx에 두기
 impact: HIGH
 impactDescription: prevents app-wide route concerns from mixing with feature-specific shells
+impactDescriptionKo: 앱 전역 route 관심사가 기능별 셸과 섞이는 것을 막음
 tags: root-route, layout, ownership
 ---
 

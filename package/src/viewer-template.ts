@@ -1,0 +1,656 @@
+import type {ViewerPayload} from "./viewer-payload.js";
+
+const viewerStyles = `*, *::before, *::after { box-sizing: border-box; }
+h1, p, pre, button, input, table { margin: 0; padding: 0; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+
+:root {
+	--page: #eef1f3; --card: #fff;
+	--ink: #14191c; --ink2: #47535a; --muted: #77848a; --faint: #98a3a8;
+	--hair: #d8dee2; --soft: #e4e9ec; --edge: #c3ccd1; --hover: #e7ecef;
+	/* 구조 구분선. 카드·박스는 선 대신 배경과 그림자로 나눈다 */
+	--line: #e9eef1;
+	--shadow: 0 1px 2px #14191c0d, 0 0 0 1px #14191c08;
+	--coral: #cc785c; --coral-dk: #a9583e;
+	--bad: #a8392b; --good: #3f6f52; --tag-fg: #7d6a55;
+	--code-bg: #fff; --code-fg: #14191c;
+	--sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+	--mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+/* 디자인은 라이트를 기준으로 만들어졌다. 다크는 같은 토큰만 다시 정의해 얹는다. */
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme="light"]) {
+		--page: #101416; --card: #171c1f;
+		--ink: #e6ebed; --ink2: #b3bec3; --muted: #8b979d; --faint: #6f7b81;
+		--hair: #262d31; --soft: #222a2e; --edge: #3a444a; --hover: #1e2528;
+		--line: #232b2f;
+		--shadow: 0 1px 2px #0006, 0 0 0 1px #ffffff0a;
+		--coral: #d98a6c; --coral-dk: #e0a184;
+		--bad: #dd8a7d; --good: #6bb890; --tag-fg: #b39a7c;
+		--code-bg: #12171a; --code-fg: #e4eaec;
+	}
+}
+
+:root[data-theme="dark"] {
+	--page: #101416; --card: #171c1f;
+	--ink: #e6ebed; --ink2: #b3bec3; --muted: #8b979d; --faint: #6f7b81;
+	--hair: #262d31; --soft: #222a2e; --edge: #3a444a; --hover: #1e2528;
+	--line: #232b2f;
+	--shadow: 0 1px 2px #0006, 0 0 0 1px #ffffff0a;
+	--coral: #d98a6c; --coral-dk: #e0a184;
+	--bad: #dd8a7d; --good: #6bb890; --tag-fg: #b39a7c;
+	--code-bg: #12171a; --code-fg: #e4eaec;
+}
+
+body {
+	min-height: 100vh; background: var(--page); color: var(--ink);
+	font-family: var(--sans); font-size: 14px; line-height: 1.6;
+	-webkit-font-smoothing: antialiased;
+}
+:focus-visible { outline: 2px solid var(--coral); outline-offset: 2px; border-radius: 4px; }
+
+/* ---------- header ---------- */
+.hd { position: sticky; top: 0; z-index: 40; background: color-mix(in srgb, var(--page) 94%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+.hd-in { max-width: 1320px; margin: 0 auto; padding: 0 28px; min-height: 64px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 9px; flex: 0 0 auto; }
+.brand-nm { font-size: 15px; font-weight: 600; letter-spacing: -.01em; }
+.brand-sub { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: .04em; padding-left: 4px; }
+
+.sr { flex: 1 1 320px; display: flex; justify-content: center; min-width: 0; }
+.sr-box { position: relative; width: 100%; max-width: 460px; }
+.sr-ico { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 12px; pointer-events: none; }
+.sr-in {
+	width: 100%; height: 34px; padding: 0 12px 0 30px;
+	font-family: var(--mono); font-size: 12.5px; color: var(--ink);
+	background: var(--card); border: 0; border-radius: 8px; box-shadow: var(--shadow);
+}
+.sr-in::placeholder { color: var(--faint); }
+.sr-in:focus { outline: none; box-shadow: 0 0 0 2px var(--coral); }
+
+.hd-r { flex: 0 0 auto; display: flex; align-items: center; gap: 14px; }
+.cnt { font-family: var(--mono); font-size: 11.5px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.btn { height: 32px; padding: 0 12px; font-size: 12.5px; color: var(--ink2); background: var(--card); border: 0; border-radius: 8px; white-space: nowrap; box-shadow: var(--shadow); }
+.btn:hover { color: var(--ink); background: var(--hover); }
+
+/* ---------- shell ---------- */
+.wrap { max-width: 1320px; margin: 0 auto; padding: 0 28px; }
+.pane { display: grid; grid-template-columns: 244px minmax(0, 1fr); gap: 40px; padding: 28px 0 96px; align-items: start; }
+/* minmax(0,…): 1fr 이면 main 이 콘텐츠 min-width 아래로 줄지 못해 페이지가 가로로 늘어난다. */
+@media (max-width: 940px) { .pane { grid-template-columns: minmax(0, 1fr); gap: 24px; } }
+.pane > main { min-width: 0; }
+
+.rail { position: sticky; top: 88px; display: flex; flex-direction: column; gap: 26px; max-height: calc(100vh - 116px); overflow-y: auto; padding-right: 4px; }
+@media (max-width: 940px) { .rail { position: static; max-height: none; overflow: visible; } }
+.rail::-webkit-scrollbar { width: 6px; }
+.rail::-webkit-scrollbar-thumb { background: var(--hair); border-radius: 3px; }
+
+.grp-hd { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 20px; padding-bottom: 8px; border-bottom: 1px solid var(--line); margin-bottom: 10px; }
+.grp-lb { font-family: var(--mono); font-size: 10.5px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--ink2); }
+.grp-note { font-family: var(--mono); font-size: 10px; color: var(--faint); white-space: nowrap; }
+.grp-clear { font-family: var(--mono); font-size: 10.5px; color: var(--faint); }
+.grp-clear:hover { color: var(--coral-dk); }
+
+.col { display: flex; flex-direction: column; gap: 1px; }
+
+.ch {
+	display: grid; align-items: center; gap: 8px; width: 100%; text-align: left;
+	min-height: 28px; padding: 0 8px; border-radius: 6px;
+	font-size: 12.5px; color: var(--ink2);
+}
+.ch:hover { background: var(--hover); }
+.ch[aria-pressed="true"] { background: var(--coral); color: #fff; }
+.ch[aria-pressed="true"]:hover { background: var(--coral-dk); }
+.ch-skill { grid-template-columns: minmax(0, 1fr) auto; font-family: var(--mono); font-size: 12px; }
+.ch-imp { grid-template-columns: 10px minmax(0, 1fr) auto; font-family: var(--mono); font-size: 11px; letter-spacing: .02em; }
+.ch-sec { grid-template-columns: 2.6em minmax(0, 1fr) auto; align-items: baseline; gap: 6px; padding: 5px 8px; }
+.ch-lb { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ch-sec .ch-lb { white-space: normal; line-height: 1.4; }
+.ch-n { font-family: var(--mono); font-size: 10.5px; font-variant-numeric: tabular-nums; opacity: .65; min-width: 2.2em; text-align: right; }
+.ch-no { font-family: var(--mono); font-size: 10.5px; font-variant-numeric: tabular-nums; opacity: .6; }
+.ch-dot { width: 8px; height: 8px; border-radius: 2px; }
+
+.comp { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line); }
+.comp:empty { display: none; }
+.comp-lb { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--faint); width: 100%; }
+.comp-ch { font-family: var(--mono); font-size: 10.5px; min-height: 22px; padding: 0 7px; color: var(--coral-dk); background: color-mix(in srgb, var(--coral) 7%, transparent); border: 1px solid color-mix(in srgb, var(--coral) 28%, transparent); border-radius: 6px; }
+.comp-ch:hover { background: color-mix(in srgb, var(--coral) 14%, transparent); }
+
+.tagwrap { display: flex; flex-wrap: wrap; gap: 4px; }
+.tg { display: inline-flex; align-items: center; gap: 5px; min-height: 24px; padding: 0 8px; border-radius: 999px; font-family: var(--mono); font-size: 10.5px; color: var(--muted); border: 1px solid var(--hair); }
+.tg:hover { color: var(--coral-dk); border-color: color-mix(in srgb, var(--coral) 45%, transparent); }
+.tg[aria-pressed="true"] { background: var(--coral); border-color: var(--coral); color: #fff; }
+.tg-n { font-variant-numeric: tabular-nums; opacity: .6; }
+
+/* ---------- rule cards ---------- */
+.list { display: flex; flex-direction: column; gap: 8px; }
+/* 카드는 선 대신 배경 대비와 얕은 그림자로 나눈다. 선이 많으면 화면이 딱딱해진다. */
+.row { position: relative; background: var(--card); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); }
+.row[data-open="1"] { box-shadow: 0 2px 8px #14191c14, 0 0 0 1px #14191c12; }
+.row-stripe { position: absolute; left: 0; top: 0; bottom: 0; width: 3px; }
+.row[data-imp="CRITICAL"] .row-stripe { background: var(--coral); }
+.row[data-imp="HIGH"] .row-stripe { background: color-mix(in srgb, var(--coral) 55%, transparent); }
+.row[data-imp="MEDIUM-HIGH"] .row-stripe { background: color-mix(in srgb, var(--coral) 25%, transparent); }
+
+.row-hd { display: grid; grid-template-columns: 58px minmax(0, 1fr) auto; align-items: center; gap: 16px; width: 100%; text-align: left; padding: 14px 18px 14px 20px; }
+.row-hd:hover { background: var(--hover); }
+@media (max-width: 560px) { .row-hd { grid-template-columns: 44px minmax(0, 1fr); row-gap: 8px; } .row-meta { grid-column: 2; } }
+.row-no { font-family: var(--mono); font-size: 12px; font-weight: 500; color: var(--coral-dk); font-variant-numeric: tabular-nums; }
+.row-ti { min-width: 0; font-size: 14.5px; font-weight: 600; letter-spacing: -.01em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.row[data-open="1"] .row-ti { white-space: normal; }
+.row-meta { display: flex; align-items: center; gap: 10px; flex: 0 0 auto; }
+.car { color: #a8b2b8; font-size: 11px; width: 12px; text-align: center; }
+
+.imp { display: inline-flex; align-items: center; gap: 5px; min-height: 22px; padding: 0 8px; border-radius: 999px; font-family: var(--mono); font-size: 10px; font-weight: 500; letter-spacing: .06em; white-space: nowrap; border: 1px solid transparent; }
+.imp-CRITICAL { background: var(--coral); color: #fff; border-color: var(--coral); }
+.imp-HIGH { background: color-mix(in srgb, var(--coral) 14%, transparent); color: var(--coral-dk); }
+.imp-MEDIUM-HIGH { color: var(--coral-dk); border-color: color-mix(in srgb, var(--coral) 50%, transparent); }
+.imp-MEDIUM { color: var(--muted); border-color: var(--hair); }
+
+.body { border-top: 1px solid var(--line); padding: 18px 20px 22px; }
+.meta { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; font-family: var(--mono); font-size: 10.5px; color: var(--faint); }
+.meta-s { color: var(--edge); }
+
+/* 아코디언 두 개는 같은 형태다. 판단에 쓰는 글은 읽기 편한 폭으로 제한한다. */
+.accs { display: flex; flex-direction: column; margin-top: 16px; border-top: 1px solid var(--line); }
+.accs:empty { display: none; }
+.acc { border-bottom: 1px solid var(--line); }
+.acc-btn { display: flex; align-items: center; gap: 8px; width: 100%; text-align: left; padding: 11px 2px; font-size: 13px; font-weight: 500; color: var(--coral-dk); }
+.acc-btn:hover { color: var(--coral); }
+.acc-car { font-size: 9px; width: 8px; flex: 0 0 auto; }
+.acc-body { display: none; padding: 0 2px 14px 16px; border-left: 1px solid var(--line); color: var(--ink2); font-size: 13.5px; line-height: 1.75; }
+.acc[data-open="1"] .acc-body { display: block; }
+.acc-body p { margin: 0 0 .75em; }
+.acc-body p:last-child { margin-bottom: 0; }
+.acc-body .lead { color: var(--ink); font-weight: 500; }
+.acc-body ul { margin: 0 0 .75em; padding-left: 1.1em; list-style: none; }
+.acc-body ul:last-child { margin-bottom: 0; }
+.acc-body li { position: relative; margin: 0 0 .35em; }
+.acc-body li::before { content: "·"; position: absolute; left: -.9em; color: var(--coral); font-weight: 700; }
+.acc-body code { font-family: var(--mono); font-size: .88em; background: var(--hover); border-radius: 3px; padding: 0 .25em; }
+.acc-body strong { color: var(--ink); font-weight: 600; }
+.acc-body .tw { overflow-x: auto; margin: 0 0 .8em; }
+.acc-body table { border-collapse: collapse; font-size: 12.5px; min-width: 100%; }
+.acc-body th, .acc-body td { border: 1px solid var(--line); padding: 6px 10px; text-align: left; vertical-align: top; }
+.acc-body th { background: var(--hover); font-family: var(--mono); font-size: 10.5px; font-weight: 500; }
+.acc-body pre.code { border-radius: 8px; margin: 0 0 .8em; }
+
+.pairs { display: flex; flex-direction: column; gap: 18px; margin-top: 16px; }
+.pair { display: flex; flex-direction: column; gap: 12px; }
+.box { display: flex; flex-direction: column; min-width: 0; border-radius: 10px; overflow: hidden; }
+/* 채도를 올려 두 박스가 한눈에 갈린다. 헤더 띠를 본문보다 진하게 둔다. */
+.box-bad { background: color-mix(in srgb, var(--bad) 5%, transparent); }
+.box-good { background: color-mix(in srgb, var(--good) 5%, transparent); }
+.box-hd { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 32px; padding: 4px 12px; }
+.box-bad .box-hd { background: color-mix(in srgb, var(--bad) 15%, transparent); }
+.box-good .box-hd { background: color-mix(in srgb, var(--good) 15%, transparent); }
+.box-l { display: flex; align-items: center; gap: 6px; min-width: 0; font-family: var(--mono); font-size: 10.5px; font-weight: 700; letter-spacing: .06em; }
+.box-bad .box-l { color: var(--bad); }
+.box-good .box-l { color: var(--good); }
+.box-note { font-weight: 400; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; letter-spacing: 0; }
+.box-langs { font-family: var(--mono); font-size: 10px; color: var(--faint); flex: 0 0 auto; }
+
+/* 코드는 가로 스크롤 대신 줄바꿈한다. 좁은 폭에서도 잘리지 않는다. */
+pre.code {
+	margin: 0; padding: 12px 14px; font-family: var(--mono); font-size: 12px; line-height: 1.7;
+	background: var(--code-bg); color: var(--code-fg);
+	white-space: pre-wrap; overflow-wrap: anywhere; word-break: break-word; tab-size: 2;
+}
+/* 카드와 같은 흰색이면 코드 영역이 글과 구분되지 않는다. 의미색을 옅게 섞어 대비를 준다. */
+.box-bad pre.code, .box-bad .code-lb { background: color-mix(in srgb, var(--bad) 9%, var(--code-bg)); }
+.box-good pre.code, .box-good .code-lb { background: color-mix(in srgb, var(--good) 9%, var(--code-bg)); }
+.acc-body pre.code { background: color-mix(in srgb, var(--ink) 4%, var(--code-bg)); }
+pre.code + pre.code, .code-lb + pre.code { border-top: 1px solid var(--line); }
+.code-lb { font-family: var(--mono); font-size: 9.5px; letter-spacing: .06em; color: var(--faint); padding: 6px 14px 0; background: var(--code-bg); }
+pre.code + .code-lb { border-top: 1px solid var(--line); }
+.c { color: var(--faint); font-style: italic; }
+.s { color: var(--good); }
+.k { color: var(--coral-dk); font-weight: 500; }
+.g { color: var(--tag-fg); }
+
+
+.refs { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
+.ref-g { display: grid; grid-template-columns: 5.6em minmax(0, 1fr); align-items: start; gap: 10px; }
+@media (max-width: 560px) { .ref-g { grid-template-columns: minmax(0, 1fr); gap: 4px; } }
+.ref-lb { font-family: var(--mono); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--faint); padding-top: 5px; }
+.ref-items { display: flex; flex-wrap: wrap; gap: 5px; }
+.ref { min-height: 24px; padding: 0 8px; border-radius: 6px; font-family: var(--mono); font-size: 10.5px; color: var(--coral-dk); background: color-mix(in srgb, var(--coral) 7%, transparent); border: 1px solid color-mix(in srgb, var(--coral) 28%, transparent); }
+.ref:hover { background: color-mix(in srgb, var(--coral) 14%, transparent); }
+.ref[data-ext="1"] { border-style: dashed; }
+.ref[disabled] { color: var(--faint); background: none; border-color: var(--soft); cursor: default; }
+
+.rtags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); }
+.rtag { min-height: 22px; padding: 0 8px; border-radius: 999px; font-family: var(--mono); font-size: 10px; color: var(--muted); border: 1px solid var(--hair); }
+.rtag:hover { color: var(--coral-dk); border-color: color-mix(in srgb, var(--coral) 45%, transparent); }
+
+.empty { padding: 72px 24px; text-align: center; border: 1px dashed var(--line); border-radius: 12px; color: var(--muted); font-size: 13.5px; }
+mark { background: color-mix(in srgb, var(--coral) 30%, transparent); color: inherit; border-radius: 2px; }
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; scroll-behavior: auto !important; } }`;
+
+const viewerBodyMarkup = `<header class="hd">
+	<div class="hd-in">
+		<div class="brand">
+			<span class="brand-nm">팀 컨벤션</span>
+			<span class="brand-sub">HANDBOOK</span>
+		</div>
+		<div class="sr">
+			<div class="sr-box">
+				<span class="sr-ico" aria-hidden="true">◇</span>
+				<input id="q" class="sr-in" type="search" autocomplete="off" spellcheck="false"
+					placeholder="규칙·상황·코드 검색   /" aria-label="규칙 검색">
+			</div>
+		</div>
+		<div class="hd-r">
+			<span class="cnt" id="count"></span>
+			<button class="btn" id="expand">전체 펼침</button>
+			<button class="btn" id="theme" aria-label="라이트·다크 전환">테마</button>
+		</div>
+	</div>
+</header>
+<div class="wrap">
+	<div class="pane">
+		<aside class="rail">
+			<div>
+				<div class="grp-hd"><span class="grp-lb">Skill</span><span class="grp-note">단일 선택</span></div>
+				<div class="col" id="f-skill"></div>
+				<div class="comp" id="companion"></div>
+			</div>
+			<div>
+				<div class="grp-hd"><span class="grp-lb">Impact</span><button class="grp-clear" data-clear="impact">해제</button></div>
+				<div class="col" id="f-impact"></div>
+			</div>
+			<div>
+				<div class="grp-hd"><span class="grp-lb">섹션</span><button class="grp-clear" data-clear="section">해제</button></div>
+				<div class="col" id="f-section"></div>
+			</div>
+			<div>
+				<div class="grp-hd"><span class="grp-lb">태그</span><button class="grp-clear" data-clear="tags">해제</button></div>
+				<div class="tagwrap" id="f-tags"></div>
+			</div>
+		</aside>
+		<main><div class="list" id="list"></div></main>
+	</div>
+</div>`;
+
+const viewerClientScript = `(() => {
+	"use strict";
+
+	const DATA = JSON.parse(document.getElementById("viewer-data").textContent);
+	window.CONVENTION_DATA = DATA;
+
+	const RULES = DATA.rules;
+	const IMPACTS = ["CRITICAL", "HIGH", "MEDIUM-HIGH", "MEDIUM"];
+	const DOT = {
+		CRITICAL: "var(--coral)",
+		HIGH: "color-mix(in srgb, var(--coral) 75%, transparent)",
+		"MEDIUM-HIGH": "color-mix(in srgb, var(--coral) 40%, transparent)",
+		MEDIUM: "var(--edge)",
+	};
+
+	const keyOf = (r) => r.skill + "/" + r.id;
+	const domIdOf = (r) => "r-" + r.skill + "--" + r.id;
+	const byKey = new Map(RULES.map((r) => [keyOf(r), r]));
+	const titleOf = (r) => r.titleKo || r.title;
+	const secOf = (r) => DATA.sections.find((s) => s.skill === r.skill && s.prefix === r.sectionPrefix);
+	const secLabel = (s) => s.titleKo || s.title;
+
+	// skill 은 단일 선택. section 은 skill 마다 같은 prefix 를 쓸 수 있어 "skill/prefix" 로 잡는다.
+	const state = {q: "", skill: "", impact: new Set(), section: "", tags: new Set(), open: new Set(), when: new Set(), why: new Set()};
+
+	const remember = () => { try { localStorage.setItem("viewer-skill", state.skill); } catch (e) {} };
+	try { state.skill = localStorage.getItem("viewer-skill") || ""; } catch (e) {}
+	if (!DATA.skills.some((s) => s.name === state.skill)) {
+		state.skill = DATA.skills.some((s) => s.name === "react") ? "react" : (DATA.skills[0] ? DATA.skills[0].name : "");
+	}
+
+	const esc = (s) => String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+	const KW = /\\b(const|let|var|function|return|if|else|for|while|export|import|from|type|interface|as|await|async|new|void|null|undefined|true|false|extends|default|typeof|in|of)\\b/g;
+
+	function hl(code, lang) {
+		let s = esc(code);
+		const hold = [];
+		// 자리표시자는 코드에 절대 없는 NUL 이어야 한다.
+		// 공백+숫자를 쓰면 \`arr.length > 0 ?\` 의 " 0 " 과 충돌해 코드가 깨진다.
+		const park = (t) => "\\u0000" + (hold.push(t) - 1) + "\\u0000";
+		const wrap = (cls, m) => park('<span class="' + cls + '">' + m + "</span>");
+		s = s.replace(/\\/\\/[^\\n]*/g, (m) => wrap("c", m));
+		s = s.replace(/\\/\\*[\\s\\S]*?\\*\\//g, (m) => wrap("c", m));
+		s = s.replace(/(&#39;|'|"|\`)(?:\\\\.|(?!\\1)[\\s\\S])*?\\1/g, (m) => wrap("s", m));
+		if (lang === "tsx" || lang === "astro") {
+			s = s.replace(/&lt;\\/?([A-Za-z][\\w.-]*)/g, (m, n) => m.replace(n, '<span class="g">' + n + "</span>"));
+		}
+		s = s.replace(KW, '<span class="k">$&</span>');
+		return s.replace(/\\u0000(\\d+)\\u0000/g, (_, i) => hold[+i]);
+	}
+
+	const inline = (t) => esc(t).replace(/\`([^\`]+)\`/g, "<code>$1</code>").replace(/\\*\\*([^*]+)\\*\\*/g, "<strong>$1</strong>");
+
+	function renderProse(prose) {
+		let out = "", para = [], tbl = null, list = null;
+		const flushP = () => { if (para.length) { out += "<p>" + inline(para.join(" ")) + "</p>"; para = []; } };
+		const flushL = () => {
+			if (!list) return;
+			out += "<ul>" + list.map((item) => "<li>" + inline(item) + "</li>").join("") + "</ul>";
+			list = null;
+		};
+		const flushT = () => {
+			if (!tbl) return;
+			const head = tbl[0], body = tbl.slice(1);
+			out += '<div class="tw"><table><thead><tr>' + head.map((c) => "<th>" + inline(c) + "</th>").join("") + "</tr></thead><tbody>";
+			out += body.map((r) => "<tr>" + r.map((c) => "<td>" + inline(c) + "</td>").join("") + "</tr>").join("");
+			out += "</tbody></table></div>";
+			tbl = null;
+		};
+		const flushAll = () => { flushP(); flushL(); flushT(); };
+
+		for (const p of prose) {
+			// 문자열은 일반 줄, 객체는 코드 블록이다.
+			if (typeof p !== "string") { flushAll(); out += '<pre class="code">' + hl(p.code, p.lang) + "</pre>"; continue; }
+			const t = p.trim();
+
+			// 표
+			if (t.startsWith("|")) {
+				flushP(); flushL();
+				const cells = t.replace(/^\\||\\|$/g, "").split("|").map((c) => c.trim());
+				if (cells.every((c) => /^:?-{2,}:?$/.test(c))) continue;
+				tbl = tbl || []; tbl.push(cells);
+				continue;
+			}
+			flushT();
+
+			// 목록. 이걸 문단으로 뭉치면 "- 항목 - 항목" 으로 이어져 읽을 수 없다.
+			const bullet = /^[-*+]\\s+(.*)$/.exec(t);
+			if (bullet) {
+				flushP();
+				list = list || []; list.push(bullet[1]);
+				continue;
+			}
+			// 목록 항목의 이어지는 줄은 마지막 항목에 붙인다.
+			if (list && t) { list[list.length - 1] += " " + t; continue; }
+
+			if (!t) { flushAll(); continue; }
+			para.push(t);
+		}
+		flushAll();
+		return out;
+	}
+
+	function haystack(r) {
+		if (r._h) return r._h;
+		const code = r.examples.flatMap((e) => e.blocks.map((b) => b.code)).join("\\n");
+		// 한국어·영어 제목을 모두 색인해 어느 언어로 검색해도 걸린다.
+		return (r._h = [r.titleKo, r.title, r.id, r.skill, r.appliesWhen, r.impactDescription, r.tags.join(" "), code].join("\\n").toLowerCase());
+	}
+
+	function matches(r) {
+		if (state.skill && r.skill !== state.skill) return false;
+		if (state.section && r.skill + "/" + r.sectionPrefix !== state.section) return false;
+		if (state.impact.size && !state.impact.has(r.impact)) return false;
+		if (state.tags.size && !r.tags.some((t) => state.tags.has(t))) return false;
+		if (state.q) {
+			const h = haystack(r);
+			return state.q.toLowerCase().split(/\\s+/).filter(Boolean).every((t) => h.includes(t));
+		}
+		return true;
+	}
+
+	function hi(text) {
+		const t = esc(text);
+		if (!state.q) return t;
+		const terms = state.q.split(/\\s+/).filter(Boolean).map((x) => x.replace(/[.*+?^\${}()|[\\]\\\\]/g, "\\\\$&"));
+		return terms.length ? t.replace(new RegExp("(" + terms.join("|") + ")", "gi"), "<mark>$1</mark>") : t;
+	}
+
+	// 참조 칩은 규칙 ID 대신 한국어 제목을 보여준다. ID 는 title 속성에 남겨 grep 이 되게 한다.
+	// 같은 skill 안의 참조는 ID 만 오므로 소유 skill 을 붙여 해석한다.
+	const refHtml = (target, ownerSkill) => {
+		const ext = target.includes("/");
+		const key = ext ? target : ownerSkill + "/" + target;
+		const rule = byKey.get(key);
+		const label = rule ? (ext ? rule.skill + " · " : "") + titleOf(rule) : target;
+		return '<button class="ref" data-ext="' + (ext ? 1 : 0) + '" title="' + esc(key) + '"' +
+			(rule ? ' data-goto="' + esc(key) + '"' : " disabled") + ">" + esc(label) + "</button>";
+	};
+
+	// 블록이 여러 개면 박스 하나 안에서 "1 / 2 · lang" 구분선으로 잇는다.
+	const codeHtml = (blocks) => blocks.map((b, i) =>
+		(blocks.length > 1 ? '<div class="code-lb">' + (i + 1) + " / " + blocks.length + "  ·  " + esc(b.lang) + "</div>" : "") +
+		'<pre class="code">' + hl(b.code, b.lang) + "</pre>").join("");
+
+	const boxHtml = (e) => {
+		if (!e) return "";
+		const bad = e.kind === "incorrect";
+		const langs = [...new Set(e.blocks.map((b) => b.lang))].join(" · ");
+		return '<div class="box ' + (bad ? "box-bad" : "box-good") + '"><div class="box-hd">' +
+			'<span class="box-l"><span aria-hidden="true">' + (bad ? "\\u2715" : "\\u2713") + "</span>" +
+			"<span>" + (bad ? "INCORRECT" : "CORRECT") + "</span>" +
+			(e.label ? '<span class="box-note">' + esc(e.label) + "</span>" : "") + "</span>" +
+			'<span class="box-langs">' + esc(langs) + "</span></div>" + codeHtml(e.blocks) + "</div>";
+	};
+
+	function ruleHtml(r) {
+		const key = keyOf(r);
+		const open = state.open.has(key);
+		const whenOpen = state.when.has(key);
+		const whyOpen = state.why.has(key);
+		const sec = secOf(r);
+		const exCount = r.examples.reduce((t, e) => t + e.blocks.length, 0);
+
+		let body = "";
+		if (open) {
+			const pairs = [];
+			for (let i = 0; i < r.examples.length; i++) {
+				const e = r.examples[i];
+				const nx = r.examples[i + 1];
+				if (e.kind === "incorrect" && nx && nx.kind === "correct") { pairs.push([e, nx]); i++; }
+				else pairs.push([e]);
+			}
+			const refs = [];
+			if (r.requiresSelected.length) refs.push(["함께 적용", r.requiresSelected]);
+			if (r.reviewWith.length) refs.push(["함께 검토", r.reviewWith]);
+
+			// 아코디언 두 개는 같은 형태로 둔다. 둘 다 접힌 상태로 시작해 코드가 먼저 읽힌다.
+			const acc = (attr, label, open, inner) =>
+				'<div class="acc" data-open="' + (open ? 1 : 0) + '">' +
+				'<button class="acc-btn" data-' + attr + '="' + esc(key) + '">' +
+				'<span class="acc-car" aria-hidden="true">' + (open ? "\\u25be" : "\\u25b8") + "</span>" +
+				"<span>" + label + "</span></button>" +
+				'<div class="acc-body">' + (open ? inner() : "") + "</div></div>";
+
+			// 순서: 코드 → 언제 → 왜 → 함께 → 태그.
+			// 규칙을 펼치는 이유는 "어떻게 고치나" 이므로 코드가 먼저 온다.
+			body = '<div class="body">' +
+				'<div class="meta"><span>' + esc(r.id) + "</span>" +
+				(sec ? '<span class="meta-s">·</span><span>' + esc(secLabel(sec)) + "</span>" : "") +
+				'<span class="meta-s">·</span><span>예시 ' + exCount + "</span></div>" +
+				'<div class="pairs">' + pairs.map((p) => '<div class="pair">' +
+					boxHtml(p.find((e) => e.kind === "incorrect")) +
+					boxHtml(p.find((e) => e.kind !== "incorrect")) + "</div>").join("") + "</div>" +
+				'<div class="accs">' +
+				(r.appliesWhen
+					? acc("when", "언제 적용할까요?", whenOpen, () => "<p>" + hi(r.appliesWhen) + "</p>")
+					: "") +
+				(r.prose.length || r.impactDescription
+					? acc("why", "이 규칙이 왜 필요할까요?", whyOpen, () =>
+						(r.impactDescription ? '<p class="lead">' + esc(r.impactDescription) + "</p>" : "") + renderProse(r.prose))
+					: "") +
+				"</div>" +
+				(refs.length ? '<div class="refs">' + refs.map((g) => '<div class="ref-g"><span class="ref-lb">' + g[0] + "</span>" +
+					'<span class="ref-items">' + g[1].map((t) => refHtml(t, r.skill)).join("") + "</span></div>").join("") + "</div>" : "") +
+				'<div class="rtags">' + r.tags.map((t) => '<button class="rtag" data-tag="' + esc(t) + '">#' + esc(t) + "</button>").join("") + "</div>" +
+				"</div>";
+		}
+
+		return '<article class="row" data-imp="' + r.impact + '" data-open="' + (open ? 1 : 0) + '" id="' + domIdOf(r) + '">' +
+			'<span class="row-stripe" aria-hidden="true"></span>' +
+			'<button class="row-hd" data-rule="' + esc(key) + '" aria-expanded="' + open + '">' +
+			'<span class="row-no" title="' + esc(r.skill) + " HANDBOOK " + r.number + '">' + r.number + "</span>" +
+			'<span class="row-ti">' + hi(titleOf(r)) + "</span>" +
+			'<span class="row-meta"><span class="imp imp-' + r.impact + '">' + r.impact + "</span>" +
+			'<span class="car" aria-hidden="true">' + (open ? "\\u25be" : "\\u25b8") + "</span></span></button>" +
+			body + "</article>";
+	}
+
+	function renderRail() {
+		const scoped = RULES.filter((r) => !state.skill || r.skill === state.skill);
+		const count = (fn) => scoped.filter(fn).length;
+
+		document.getElementById("f-skill").innerHTML = DATA.skills.map((s) =>
+			'<button class="ch ch-skill" data-skill="' + s.name + '" aria-pressed="' + (state.skill === s.name) + '">' +
+			'<span class="ch-lb">' + s.name + '</span><span class="ch-n">' + s.ruleCount + "</span></button>").join("");
+
+		document.getElementById("f-impact").innerHTML = IMPACTS.map((k) => {
+			const active = state.impact.has(k);
+			return '<button class="ch ch-imp" data-impact="' + k + '" aria-pressed="' + active + '">' +
+				'<span class="ch-dot" style="background:' + (active ? "#fff" : DOT[k]) + '"></span>' +
+				'<span class="ch-lb">' + k + '</span><span class="ch-n">' + count((r) => r.impact === k) + "</span></button>";
+		}).join("");
+
+		const secs = DATA.sections.filter((s) => !state.skill || s.skill === state.skill)
+			.slice()
+			.sort((a, b) => a.skill.localeCompare(b.skill, "en-US") || a.order - b.order);
+		document.getElementById("f-section").innerHTML = secs.map((s) => {
+			const key = s.skill + "/" + s.prefix;
+			return '<button class="ch ch-sec" data-section="' + esc(key) + '" aria-pressed="' + (state.section === key) + '">' +
+				'<span class="ch-no">' + (state.skill ? s.order + "." : s.skill.slice(0, 3) + " " + s.order) + "</span>" +
+				'<span class="ch-lb">' + esc(secLabel(s)) + '</span><span class="ch-n">' +
+				count((r) => r.skill === s.skill && r.sectionPrefix === s.prefix) + "</span></button>";
+		}).join("");
+
+		const tally = new Map();
+		for (const r of scoped) for (const t of r.tags) tally.set(t, (tally.get(t) || 0) + 1);
+		document.getElementById("f-tags").innerHTML = [...tally.entries()].filter((e) => e[1] > 1)
+			.sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+			.slice(0, 36)
+			.map((e) => '<button class="tg" data-tag="' + esc(e[0]) + '" aria-pressed="' + state.tags.has(e[0]) + '">' +
+				"<span>" + esc(e[0]) + '</span><span class="tg-n">' + e[1] + "</span></button>").join("");
+
+		const seen = new Set();
+		const hints = [];
+		const skill = DATA.skills.find((s) => s.name === state.skill);
+		for (const c of skill ? skill.companions : []) {
+			if (c.skill === state.skill || seen.has(c.skill)) continue;
+			seen.add(c.skill);
+			hints.push('<button class="comp-ch" data-skill="' + c.skill + '">\\u2192 ' + c.skill + (c.mode === "required" ? " 필수" : " 조건") + "</button>");
+		}
+		document.getElementById("companion").innerHTML = hints.length ? '<span class="comp-lb">동반</span>' + hints.join("") : "";
+	}
+
+	function render() {
+		const hits = RULES.filter(matches);
+		const scopeTotal = RULES.filter((r) => !state.skill || r.skill === state.skill).length;
+		document.getElementById("list").innerHTML = hits.length
+			? hits.map(ruleHtml).join("")
+			: '<div class="empty">일치하는 규칙이 없습니다. 검색어나 필터를 줄여보세요.</div>';
+		const codeTotal = hits.reduce((n, r) => n + r.examples.reduce((m, e) => m + e.blocks.length, 0), 0);
+		document.getElementById("count").textContent = hits.length + " / " + scopeTotal + " 규칙" + (hits.length ? "  ·  코드 " + codeTotal : "");
+		const allOpen = hits.length > 0 && hits.every((r) => state.open.has(keyOf(r)));
+		document.getElementById("expand").textContent = allOpen ? "전체 접기" : "전체 펼침";
+		renderRail();
+	}
+
+	function selectSkill(name) {
+		if (state.skill === name) return;
+		state.skill = name;
+		state.section = "";
+		state.impact.clear();
+		state.tags.clear();
+		remember();
+		render();
+	}
+
+	document.getElementById("q").addEventListener("input", (e) => { state.q = e.target.value.trim(); render(); });
+
+	document.getElementById("expand").addEventListener("click", () => {
+		const hits = RULES.filter(matches);
+		const allOpen = hits.length && hits.every((r) => state.open.has(keyOf(r)));
+		for (const r of hits) { const k = keyOf(r); allOpen ? state.open.delete(k) : state.open.add(k); }
+		render();
+	});
+
+	document.getElementById("theme").addEventListener("click", () => {
+		const cur = document.documentElement.dataset.theme;
+		const dark = cur ? cur === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+		document.documentElement.dataset.theme = dark ? "light" : "dark";
+	});
+
+	document.addEventListener("click", (ev) => {
+		const t = ev.target.closest("[data-rule],[data-skill],[data-impact],[data-section],[data-tag],[data-when],[data-why],[data-goto],[data-clear]");
+		if (!t) return;
+		const toggle = (set, key) => { set.has(key) ? set.delete(key) : set.add(key); render(); };
+
+		if (t.dataset.rule) return toggle(state.open, t.dataset.rule);
+		if (t.dataset.skill) return selectSkill(t.dataset.skill);
+		if (t.dataset.impact) return toggle(state.impact, t.dataset.impact);
+		if (t.dataset.tag) return toggle(state.tags, t.dataset.tag);
+		if (t.dataset.section) { state.section = state.section === t.dataset.section ? "" : t.dataset.section; return render(); }
+		if (t.dataset.when) return toggle(state.when, t.dataset.when);
+		if (t.dataset.why) return toggle(state.why, t.dataset.why);
+
+		if (t.dataset.goto) {
+			// 단일 선택이라 다른 skill 규칙으로 가려면 선택을 그 skill 로 옮긴다.
+			const target = byKey.get(t.dataset.goto);
+			if (!target) return;
+			state.q = ""; state.impact.clear(); state.tags.clear(); state.section = "";
+			document.getElementById("q").value = "";
+			if (state.skill !== target.skill) { state.skill = target.skill; remember(); }
+			state.open.add(t.dataset.goto);
+			render();
+			const el = document.getElementById(domIdOf(target));
+			if (el) {
+				const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+				window.scrollTo({top: el.getBoundingClientRect().top + window.scrollY - 88, behavior: reduce ? "auto" : "smooth"});
+			}
+			return;
+		}
+
+		if (t.dataset.clear) {
+			if (t.dataset.clear === "impact") state.impact.clear();
+			if (t.dataset.clear === "tags") state.tags.clear();
+			if (t.dataset.clear === "section") state.section = "";
+			render();
+		}
+	});
+
+	document.addEventListener("keydown", (e) => {
+		if (e.key === "/" && e.target.tagName !== "INPUT") { e.preventDefault(); document.getElementById("q").focus(); }
+		if (e.key === "Escape" && e.target.id === "q") { e.target.value = ""; state.q = ""; render(); e.target.blur(); }
+	});
+
+	render();
+})();`;
+
+/**
+ * @api 인라인 JSON으로 안전하게 삽입할 수 있게 페이로드를 인코딩
+ * @description `<`를 `<`로 바꿔 본문 코드의 `</script`가 문서를 끊지 못하게 한다. `JSON.parse`가 원복한다.
+ */
+export const encodeViewerPayload = (payload: ViewerPayload): string => {
+	return JSON.stringify(payload).replace(/</g, "\\u003c");
+};
+
+/**
+ * @api 인코딩된 페이로드를 담은 완전한 자기완결 HTML 문서 생성
+ * @description `file://`로 열리므로 charset 선언이 없으면 브라우저가 Latin-1로 추측해 한글이 전부 깨진다.
+ */
+export const renderViewerHtml = (encodedPayload: string): string => {
+	return `<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>팀 컨벤션 — 규칙 조회</title>
+<style>
+${viewerStyles}
+</style>
+</head>
+<body>
+${viewerBodyMarkup}
+<script id="viewer-data" type="application/json">${encodedPayload}</script>
+<script>
+${viewerClientScript}
+</script>
+</body>
+</html>
+`;
+};

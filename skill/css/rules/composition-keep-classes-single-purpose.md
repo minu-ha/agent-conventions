@@ -1,7 +1,9 @@
 ---
 title: Keep Classes Single-purpose
+titleKo: class는 한 가지 책임만
 impact: HIGH
 impactDescription: stops one class from carrying both base styling and multiple state or structural meanings at once
+impactDescriptionKo: class 하나가 base 스타일과 여러 상태·구조 의미를 동시에 지는 것을 막음
 appliesWhen: >-
   기존 class가 base와 state·variant 책임을 함께 갖거나 독립 시각 책임을 추가·재사용·분리한다. 기존 결합 책임을 분리하지
   않고 처음부터 새 single-purpose pair를 만들거나 책임 보존 rename만 하면 제외한다.

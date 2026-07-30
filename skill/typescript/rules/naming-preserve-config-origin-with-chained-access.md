@@ -1,7 +1,9 @@
 ---
 title: Preserve Shared Namespace Origin With Chained Access
+titleKo: config·util은 체인 접근으로 출처 보존
 impact: HIGH
 impactDescription: keeps readers aware of where values come from instead of hiding origin behind wide-scope aliases
+impactDescriptionKo: 넓은 스코프 별칭으로 출처를 숨기지 않고 값이 어디서 오는지 읽는 사람이 알게 함
 appliesWhen: >-
   `config` 또는 `util` 값을 leaf 모듈에서 접근하며 넓은 스코프 구조분해, 별칭 또는 feature-local namespace를
   추가·변경한다.

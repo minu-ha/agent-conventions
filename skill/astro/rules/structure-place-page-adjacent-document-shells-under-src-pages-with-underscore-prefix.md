@@ -1,9 +1,11 @@
 ---
 title: Place Pages-local Document Helpers Under `src/pages` with an Underscore Prefix
+titleKo: pages-local 문서 헬퍼는 src/pages 아래 밑줄 접두사로
 impact: HIGH
 impactDescription: >-
   keeps route-shared document helpers and route-local support files close to route owners without turning them into
   routed pages
+impactDescriptionKo: route 공용 문서 헬퍼와 route-local support 파일을 route 소유자 가까이 두면서 route 페이지가 되지 않게 함
 tags: structure, pages, underscore, document-helpers
 ---
 

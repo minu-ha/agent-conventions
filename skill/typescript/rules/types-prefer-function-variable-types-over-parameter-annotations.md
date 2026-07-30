@@ -1,8 +1,10 @@
 ---
 title: Prefer Function Variable Types Over Parameter Annotations
+titleKo: 매개변수 annotation보다 함수 변수 타입
 impact: CRITICAL
 impactDescription: >-
   keeps callable contracts reusable and prevents local parameter annotations from fragmenting shared function types
+impactDescriptionKo: callable 계약을 재사용 가능하게 유지하고 지역 매개변수 annotation이 공용 함수 타입을 조각내는 것을 막음
 appliesWhen: >-
   기존 callable 계약을 named·shared 함수 구현에 재사용하거나 같은 시그니처를 여러 구현이 공유하도록 바꾼다. annotation
   없는 one-off contextually typed inline callback은 제외한다.

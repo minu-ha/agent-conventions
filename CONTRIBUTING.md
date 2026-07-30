@@ -73,8 +73,10 @@ skill/react/
 ```markdown
 ---
 title: Rule Title Here
+titleKo: 사람이 화면에서 읽을 한국어 제목
 impact: MEDIUM
-impactDescription: 선택적 영향도 설명
+impactDescription: 영향도 설명. contracts 로 나가는 에이전트용 원문
+impactDescriptionKo: 사람이 화면에서 읽을 한국어 영향도 설명
 appliesWhen: 이 규칙이 걸리는 변경을 한 문장으로
 requiresSelected: 함께 반드시 걸리는 rule-id, companion-skill/cross-rule-id
 requiredOnCompletion: true
@@ -85,13 +87,34 @@ tags: tag1, tag2
 
 | 키 | 필수 | 의미 |
 | --- | --- | --- |
-| `title` | 필수 | 핸드북과 목차에 나오는 제목 |
+| `title` | 필수 | 영어. 핸드북 헤딩과 앵커 슬러그의 기반. 바꾸면 링크가 깨진다 |
+| `titleKo` | 필수 | 한국어. `conventions.html` 에 노출된다. 40자 이내 |
 | `impact` | 필수 | `CRITICAL` · `HIGH` · `MEDIUM` · `LOW` |
+| `impactDescription` | 필수 | 영향도 설명. 본문 `**Impact:**` 줄과 일치해야 하고 `contracts/*.md` 로 나간다 |
+| `impactDescriptionKo` | 필수 | 한국어. `conventions.html` 에 노출된다 |
 | `appliesWhen` | 필수 | 비어 있지 않은 한 줄. 160자 이내 |
 | `requiresSelected` | 선택 | 걸리면 target 도 반드시 함께 적용 |
 | `reviewWith` | 선택 | 자동 선택이 아니라 다시 판정하라는 재평가 힌트 |
 | `requiredOnCompletion` | 선택 | 마무리 시 항상 적용 |
 | `tags` | 선택 | 검색용 |
+
+`titleKo` 는 영어 제목의 직역이 아니라 같은 뜻의 자연스러운 한국어로 쓴다.
+코드 식별자는 영어로 남긴다. 명사구보다 동작 지시형이 목록에서 잘 읽힌다.
+
+```markdown
+title: Use Named Handlers Instead of Hiding Logic in JSX
+titleKo: 로직을 JSX에 숨기지 말고 명명된 핸들러로
+```
+
+섹션도 한국어 제목이 필수다. `rules/_sections.md` 의 각 헤더 아래,
+**`**Impact:**` 위**에 넣는다. `**Description:**` 뒤에 놓으면 description 값으로 삼켜진다.
+
+```markdown
+## 1. Ownership and Boundaries (ownership)
+**TitleKo:** 소유와 경계
+**Impact:** CRITICAL
+**Description:** …
+```
 
 ### 3.1 appliesWhen 작성 기준
 
@@ -142,10 +165,16 @@ npm --prefix package install                  # 최초 1회
 npm --prefix package run dev:react            # 단일 skill validate + build
 npm --prefix package run validate -- --all
 npm --prefix package run build -- --all
+npm --prefix package run viewer                # conventions.html 재생성
 npm --prefix package run check:generated:all  # 생성물과 source 일치 확인
 npm --prefix package run check:handbooks:all
+npm --prefix package run check:viewer
 npm --prefix package run test
 ```
+
+`conventions.html` 은 생성물이다. 직접 편집하지 않는다.
+규칙을 고쳤으면 `npm --prefix package run viewer` 로 다시 만든다.
+낡은 채로 커밋하면 `check:viewer` 가 막는다.
 
 `skill/<name>` 안에서 작업하면 `--prefix ../../package` 로 바꾼다.
 자세한 script 설명은 [package/README.md](./package/README.md).

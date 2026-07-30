@@ -1,8 +1,10 @@
 ---
 title: Replace Local `enum` With `as const` Except Prisma Enums
+titleKo: Prisma enum 외에는 enum 대신 as const
 impact: MEDIUM-HIGH
 impactDescription: >-
   keeps local runtime values lightweight while still allowing generated Prisma enums to remain the source of truth
+impactDescriptionKo: 생성된 Prisma enum 은 정본으로 남기면서 지역 런타임 값은 가볍게 유지함
 tags: enum, as-const, prisma
 ---
 

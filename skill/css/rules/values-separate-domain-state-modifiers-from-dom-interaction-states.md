@@ -1,8 +1,10 @@
 ---
 title: Separate Domain State Modifiers From DOM Interaction States
+titleKo: 도메인 state modifier와 DOM 상호작용 state 분리
 impact: HIGH
 impactDescription: >-
   keeps app state, focus visibility, and hover behavior readable and accessible without mixing their responsibilities
+impactDescriptionKo: 앱 상태·포커스 가시성·hover 동작의 책임을 섞지 않고 읽기 쉽고 접근성 있게 유지함
 appliesWhen: >-
   app/domain state modifier와 hover·focus·disabled 같은 DOM interaction state를 추가·변경하거나 focus ring에 손댄다.
 reviewWith: composition-do-not-build-structural-variants-with-modifiers

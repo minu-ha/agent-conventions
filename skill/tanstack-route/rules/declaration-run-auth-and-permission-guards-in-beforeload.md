@@ -1,7 +1,9 @@
 ---
 title: Run Auth and Permission Guards in `beforeLoad`
+titleKo: 인증·권한 가드는 beforeLoad에서
 impact: CRITICAL
 impactDescription: keeps access control in router boundaries instead of after-the-fact screen navigation
+impactDescriptionKo: 화면에서 뒤늦게 이동시키지 않고 접근 제어를 router 경계에 둠
 tags: auth, guards, beforeload
 ---
 

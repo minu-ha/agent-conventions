@@ -1,8 +1,10 @@
 ---
 title: Review Banned TypeScript Shortcuts Before Finishing
+titleKo: 마무리 전에 금지된 TypeScript 지름길 점검
 impact: MEDIUM
 impactDescription: >-
   catches the recurring shortcuts that most often erode import, type, helper, fallback, and comment discipline
+impactDescriptionKo: import·타입·헬퍼·fallback·주석 규율을 가장 자주 무너뜨리는 지름길을 잡음
 appliesWhen: >-
   TypeScript/TSX 변경을 완료 판정하거나 diff에서 barrel, 중복 타입, 조기 helper, 넓은 조립, 무근거 fallback 또는 자명한
   주석을 점검한다.

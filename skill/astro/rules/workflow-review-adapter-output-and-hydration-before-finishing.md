@@ -1,7 +1,9 @@
 ---
 title: Review Adapter, Output Mode, and Hydration Before Finishing
+titleKo: 마무리 전에 adapter·output 모드·hydration 점검
 impact: MEDIUM
 impactDescription: catches Astro-specific deployment and rendering mismatches before they ship
+impactDescriptionKo: Astro 특유의 배포·렌더링 불일치를 배포 전에 잡음
 tags: workflow, adapters, hydration
 ---
 

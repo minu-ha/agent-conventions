@@ -1,8 +1,10 @@
 ---
 title: Use Playwright as the Single Browser UI Tool
+titleKo: 브라우저 UI 도구는 Playwright 하나로
 impact: CRITICAL
 impactDescription: >-
   keeps browser UI testing consistent by using one toolchain and one interaction model across test levels
+impactDescriptionKo: 테스트 층위 전체에서 도구 하나와 상호작용 모델 하나를 써서 브라우저 UI 테스트를 일관되게 유지함
 tags: playwright, tool-choice, consistency
 ---
 

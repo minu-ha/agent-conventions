@@ -1,8 +1,10 @@
 ---
 title: Keep One Behavior Per Test
+titleKo: 테스트 하나에 행위 하나
 impact: HIGH
 impactDescription: >-
   keeps setup, action, and assertions focused so browser failures point to one behavior instead of many unrelated checks
+impactDescriptionKo: setup·동작·단정을 좁게 유지해 브라우저 실패가 여러 검사가 아니라 한 행위를 가리키게 함
 tags: test-design, scope, assertions
 ---
 

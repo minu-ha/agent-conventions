@@ -1,7 +1,9 @@
 ---
 title: Map Variables, Components, and Styles to Project Tokens
+titleKo: Figma 변수·컴포넌트·스타일을 프로젝트 토큰에 매핑
 impact: HIGH
 impactDescription: Figma token metadata를 확인할 수 있는데 raw visual value를 코드에 박는 일을 줄임
+impactDescriptionKo: Figma token metadata를 확인할 수 있는데 raw visual value를 코드에 박는 일을 줄임
 tags: integration, variables, tokens
 ---
 
