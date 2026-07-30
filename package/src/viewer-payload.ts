@@ -2,8 +2,14 @@ import {getSkillPaths, isBuildableSkill, listSkillNames} from "./config.js";
 import {readSkillDocument} from "./parser.js";
 import {getRulesForSection} from "./routing.js";
 import {parseRuleBody} from "./rule-body.js";
-import type {RuleExample, RuleProseNode} from "./rule-body.js";
+import type {RuleCodeBlock, RuleExample} from "./rule-body.js";
 import type {CompanionMode} from "./types.js";
+
+/**
+ * @summary 화면용 산문 노드. 일반 줄은 문자열, 코드 블록은 객체다
+ * @description `{"type":"line","text":…}` 래퍼를 벗겨 인라인 JSON 크기를 줄인다. 산문 줄이 1,500개라 래퍼 비용이 크다.
+ */
+export type ViewerProseNode = string | RuleCodeBlock;
 
 /**
  * @summary 헤더 동반 안내에 쓰는 companion 요약
@@ -98,9 +104,9 @@ export interface ViewerRule {
 	 */
 	sectionPrefix: string;
 	/**
-	 * @field 첫 예시 이전 산문
+	 * @field 첫 예시 이전 산문. 일반 줄은 문자열, 코드 블록은 객체다
 	 */
-	prose: RuleProseNode[];
+	prose: ViewerProseNode[];
 	/**
 	 * @field Incorrect/Correct 예시 목록
 	 */
@@ -219,7 +225,7 @@ export const buildViewerPayload = async (): Promise<ViewerPayload> => {
 				requiresSelected: rule.requiresSelected,
 				reviewWith: rule.reviewWith,
 				sectionPrefix: rule.prefix,
-				prose: parsed.prose,
+				prose: parsed.prose.map((node) => (node.type === "line" ? node.text : {lang: node.lang, code: node.code})),
 				examples: parsed.examples,
 			});
 		}

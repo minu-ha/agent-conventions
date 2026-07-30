@@ -87,7 +87,7 @@ tags: tag1, tag2
 | 키 | 필수 | 의미 |
 | --- | --- | --- |
 | `title` | 필수 | 영어. 핸드북 헤딩과 앵커 슬러그의 기반. 바꾸면 링크가 깨진다 |
-| `titleKo` | 필수 | 한국어. `docs/conventions.html` 에 노출된다. 40자 이내 |
+| `titleKo` | 필수 | 한국어. `conventions.html` 에 노출된다. 40자 이내 |
 | `impact` | 필수 | `CRITICAL` · `HIGH` · `MEDIUM` · `LOW` |
 | `appliesWhen` | 필수 | 비어 있지 않은 한 줄. 160자 이내 |
 | `requiresSelected` | 선택 | 걸리면 target 도 반드시 함께 적용 |
@@ -162,14 +162,14 @@ npm --prefix package install                  # 최초 1회
 npm --prefix package run dev:react            # 단일 skill validate + build
 npm --prefix package run validate -- --all
 npm --prefix package run build -- --all
-npm --prefix package run viewer                # docs/conventions.html 재생성
+npm --prefix package run viewer                # conventions.html 재생성
 npm --prefix package run check:generated:all  # 생성물과 source 일치 확인
 npm --prefix package run check:handbooks:all
 npm --prefix package run check:viewer
 npm --prefix package run test
 ```
 
-`docs/conventions.html` 은 생성물이다. 직접 편집하지 않는다.
+`conventions.html` 은 생성물이다. 직접 편집하지 않는다.
 규칙을 고쳤으면 `npm --prefix package run viewer` 로 다시 만든다.
 낡은 채로 커밋하면 `check:viewer` 가 막는다.
 

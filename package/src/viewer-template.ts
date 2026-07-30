@@ -47,7 +47,6 @@ body {
 .hd { position: sticky; top: 0; z-index: 40; background: color-mix(in srgb, var(--page) 94%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--hair); }
 .hd-in { max-width: 1320px; margin: 0 auto; padding: 0 28px; min-height: 64px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
 .brand { display: flex; align-items: center; gap: 9px; flex: 0 0 auto; }
-.brand-mark { color: var(--coral); font-size: 15px; line-height: 1; }
 .brand-nm { font-size: 15px; font-weight: 600; letter-spacing: -.01em; }
 .brand-sub { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: .04em; padding-left: 4px; }
 
@@ -134,24 +133,34 @@ body {
 .row-meta { display: flex; align-items: center; gap: 10px; flex: 0 0 auto; }
 .car { color: #a8b2b8; font-size: 11px; width: 12px; text-align: center; }
 
-.imp { display: inline-flex; align-items: center; min-height: 22px; padding: 0 8px; border-radius: 999px; font-family: var(--mono); font-size: 10px; font-weight: 500; letter-spacing: .06em; white-space: nowrap; border: 1px solid transparent; }
+.imp { display: inline-flex; align-items: center; gap: 5px; min-height: 22px; padding: 0 8px; border-radius: 999px; font-family: var(--mono); font-size: 10px; font-weight: 500; letter-spacing: .06em; white-space: nowrap; border: 1px solid transparent; }
 .imp-CRITICAL { background: var(--coral); color: #fff; border-color: var(--coral); }
 .imp-HIGH { background: color-mix(in srgb, var(--coral) 14%, transparent); color: var(--coral-dk); }
 .imp-MEDIUM-HIGH { color: var(--coral-dk); border-color: color-mix(in srgb, var(--coral) 50%, transparent); }
 .imp-MEDIUM { color: var(--muted); border-color: var(--hair); }
+.imp-ko { font-family: var(--sans); font-size: 10.5px; font-weight: 500; letter-spacing: 0; opacity: .8; }
+.ch-ko { font-family: var(--sans); font-size: 11px; opacity: .7; padding-left: 5px; }
 
 .body { border-top: 1px solid var(--soft); padding: 18px 20px 22px; }
 .meta { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; font-family: var(--mono); font-size: 10.5px; color: var(--faint); }
 .meta-s { color: var(--edge); }
-.desc { margin-top: 5px; font-size: 13.5px; line-height: 1.65; color: var(--ink2); max-width: 90ch; }
 
-.pairs { display: flex; flex-direction: column; gap: 18px; margin-top: 18px; }
+/* 판단에 쓰는 글은 읽기 편한 폭과 패널로 감싼다. 카드 폭 전체로 흘리면 줄이 길어 눈이 돌아온다. */
+.note { display: grid; grid-template-columns: 5.6em minmax(0, 1fr); gap: 10px; margin-top: 18px; padding: 12px 14px; background: var(--hover); border-radius: 10px; }
+@media (max-width: 560px) { .note { grid-template-columns: minmax(0, 1fr); gap: 4px; } }
+.note-lb { font-family: var(--mono); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--faint); padding-top: 3px; }
+.note-tx { font-size: 13.5px; line-height: 1.75; color: var(--ink2); max-width: 74ch; }
+
+.pairs { display: flex; flex-direction: column; gap: 18px; margin-top: 16px; }
 .pair { display: flex; flex-direction: column; gap: 12px; }
 .box { display: flex; flex-direction: column; min-width: 0; border-radius: 10px; overflow: hidden; }
-.box-bad { background: color-mix(in srgb, var(--bad) 4%, transparent); border: 1px solid color-mix(in srgb, var(--bad) 22%, transparent); }
-.box-good { background: color-mix(in srgb, var(--good) 4%, transparent); border: 1px solid color-mix(in srgb, var(--good) 22%, transparent); }
-.box-hd { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 32px; padding: 4px 12px; border-bottom: 1px solid var(--soft); }
-.box-l { display: flex; align-items: center; gap: 6px; min-width: 0; font-family: var(--mono); font-size: 10.5px; font-weight: 600; letter-spacing: .06em; }
+/* 채도를 올려 두 박스가 한눈에 갈린다. 헤더 띠를 본문보다 진하게 둔다. */
+.box-bad { border: 1px solid color-mix(in srgb, var(--bad) 42%, transparent); }
+.box-good { border: 1px solid color-mix(in srgb, var(--good) 42%, transparent); }
+.box-hd { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 32px; padding: 4px 12px; }
+.box-bad .box-hd { background: color-mix(in srgb, var(--bad) 13%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--bad) 30%, transparent); }
+.box-good .box-hd { background: color-mix(in srgb, var(--good) 13%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--good) 30%, transparent); }
+.box-l { display: flex; align-items: center; gap: 6px; min-width: 0; font-family: var(--mono); font-size: 10.5px; font-weight: 700; letter-spacing: .06em; }
 .box-bad .box-l { color: var(--bad); }
 .box-good .box-l { color: var(--good); }
 .box-note { font-weight: 400; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; letter-spacing: 0; }
@@ -171,15 +180,23 @@ pre.code + .code-lb { border-top: 1px solid var(--soft); }
 .k { color: var(--coral-dk); font-weight: 500; }
 .g { color: var(--tag-fg); }
 
-.why { margin-top: 18px; padding-top: 14px; border-top: 1px dashed var(--hair); }
-.why-btn { display: flex; align-items: baseline; gap: 8px; width: 100%; text-align: left; font-size: 12.5px; color: var(--coral-dk); }
-.why-btn:hover { text-decoration: underline; }
-.why-car { font-size: 9px; }
-.why-body { display: none; margin-top: 12px; color: var(--ink2); font-size: 13.5px; max-width: 92ch; }
+.why { margin-top: 14px; padding-top: 14px; border-top: 1px dashed var(--hair); }
+.why-btn { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; width: 100%; text-align: left; font-size: 12.5px; font-weight: 500; color: var(--coral-dk); }
+.why-btn:hover:not([disabled]) { text-decoration: underline; }
+.why-btn[disabled] { cursor: default; }
+.why-car { font-size: 9px; width: 8px; flex: 0 0 auto; }
+.why-imp { min-height: 20px; font-size: 9.5px; }
+.why-desc { font-weight: 400; color: var(--muted); font-size: 12.5px; }
+.why-body { display: none; margin-top: 12px; padding-left: 16px; border-left: 2px solid var(--soft); color: var(--ink2); font-size: 13.5px; line-height: 1.75; max-width: 78ch; }
 .why[data-open="1"] .why-body { display: block; }
-.why-body p { margin: 0 0 .7em; }
-.why-body code { font-family: var(--mono); font-size: .88em; background: var(--hover); border-radius: 3px; padding: 0 .25em; }
-.why-body strong { color: var(--ink); }
+.why-body p { margin: 0 0 .75em; }
+.why-body p:last-child { margin-bottom: 0; }
+.why-body ul { margin: 0 0 .75em; padding-left: 1.1em; list-style: none; }
+.why-body ul:last-child { margin-bottom: 0; }
+.why-body li { position: relative; margin: 0 0 .35em; }
+.why-body li::before { content: "·"; position: absolute; left: -.9em; color: var(--coral); font-weight: 700; }
+.why-body code { font-family: var(--mono); font-size: .88em; background: var(--hover); border: 1px solid var(--soft); border-radius: 3px; padding: 0 .25em; }
+.why-body strong { color: var(--ink); font-weight: 600; }
 .why-body .tw { overflow-x: auto; margin: 0 0 .8em; }
 .why-body table { border-collapse: collapse; font-size: 12.5px; min-width: 100%; }
 .why-body th, .why-body td { border: 1px solid var(--hair); padding: 6px 10px; text-align: left; vertical-align: top; }
@@ -208,7 +225,6 @@ mark { background: color-mix(in srgb, var(--coral) 30%, transparent); color: inh
 const viewerBodyMarkup = `<header class="hd">
 	<div class="hd-in">
 		<div class="brand">
-			<span class="brand-mark" aria-hidden="true">✳</span>
 			<span class="brand-nm">팀 컨벤션</span>
 			<span class="brand-sub">HANDBOOK</span>
 		</div>
@@ -259,6 +275,8 @@ const viewerClientScript = `(() => {
 
 	const RULES = DATA.rules;
 	const IMPACTS = ["CRITICAL", "HIGH", "MEDIUM-HIGH", "MEDIUM"];
+	const IMPACT_KO = {CRITICAL: "최우선", HIGH: "높음", "MEDIUM-HIGH": "중상", MEDIUM: "보통"};
+	const impKo = (k) => IMPACT_KO[k] || k;
 	const DOT = {
 		CRITICAL: "var(--coral)",
 		HIGH: "color-mix(in srgb, var(--coral) 75%, transparent)",
@@ -305,8 +323,13 @@ const viewerClientScript = `(() => {
 	const inline = (t) => esc(t).replace(/\`([^\`]+)\`/g, "<code>$1</code>").replace(/\\*\\*([^*]+)\\*\\*/g, "<strong>$1</strong>");
 
 	function renderProse(prose) {
-		let out = "", para = [], tbl = null;
+		let out = "", para = [], tbl = null, list = null;
 		const flushP = () => { if (para.length) { out += "<p>" + inline(para.join(" ")) + "</p>"; para = []; } };
+		const flushL = () => {
+			if (!list) return;
+			out += "<ul>" + list.map((item) => "<li>" + inline(item) + "</li>").join("") + "</ul>";
+			list = null;
+		};
 		const flushT = () => {
 			if (!tbl) return;
 			const head = tbl[0], body = tbl.slice(1);
@@ -315,21 +338,37 @@ const viewerClientScript = `(() => {
 			out += "</tbody></table></div>";
 			tbl = null;
 		};
+		const flushAll = () => { flushP(); flushL(); flushT(); };
+
 		for (const p of prose) {
-			if (p.type === "code") { flushP(); flushT(); out += '<pre class="code">' + hl(p.code, p.lang) + "</pre>"; continue; }
-			const t = p.text;
-			if (/^\\s*\\|/.test(t)) {
-				flushP();
-				const cells = t.trim().replace(/^\\||\\|$/g, "").split("|").map((c) => c.trim());
+			// 문자열은 일반 줄, 객체는 코드 블록이다.
+			if (typeof p !== "string") { flushAll(); out += '<pre class="code">' + hl(p.code, p.lang) + "</pre>"; continue; }
+			const t = p.trim();
+
+			// 표
+			if (t.startsWith("|")) {
+				flushP(); flushL();
+				const cells = t.replace(/^\\||\\|$/g, "").split("|").map((c) => c.trim());
 				if (cells.every((c) => /^:?-{2,}:?$/.test(c))) continue;
 				tbl = tbl || []; tbl.push(cells);
 				continue;
 			}
 			flushT();
-			if (!t.trim()) { flushP(); continue; }
-			para.push(t.trim());
+
+			// 목록. 이걸 문단으로 뭉치면 "- 항목 - 항목" 으로 이어져 읽을 수 없다.
+			const bullet = /^[-*+]\\s+(.*)$/.exec(t);
+			if (bullet) {
+				flushP();
+				list = list || []; list.push(bullet[1]);
+				continue;
+			}
+			// 목록 항목의 이어지는 줄은 마지막 항목에 붙인다.
+			if (list && t) { list[list.length - 1] += " " + t; continue; }
+
+			if (!t) { flushAll(); continue; }
+			para.push(t);
 		}
-		flushP(); flushT();
+		flushAll();
 		return out;
 	}
 
@@ -398,22 +437,29 @@ const viewerClientScript = `(() => {
 				if (e.kind === "incorrect" && nx && nx.kind === "correct") { pairs.push([e, nx]); i++; }
 				else pairs.push([e]);
 			}
-			const desc = r.appliesWhen || r.impactDescription;
 			const refs = [];
-			if (r.requiresSelected.length) refs.push(['함께 적용', r.requiresSelected]);
-			if (r.reviewWith.length) refs.push(['함께 검토', r.reviewWith]);
+			if (r.requiresSelected.length) refs.push(["함께 적용", r.requiresSelected]);
+			if (r.reviewWith.length) refs.push(["함께 검토", r.reviewWith]);
 
+			// 순서: 코드 → 적용 조건 → 왜 → 함께 → 태그.
+			// 규칙을 펼치는 이유는 "어떻게 고치나" 이므로 코드가 먼저 온다.
+			// 판단에 쓰는 글(적용 조건·근거)은 코드 다음에 읽기 편한 폭으로 놓는다.
 			body = '<div class="body">' +
 				'<div class="meta"><span>' + esc(r.id) + "</span>" +
 				(sec ? '<span class="meta-s">·</span><span>' + esc(secLabel(sec)) + "</span>" : "") +
 				'<span class="meta-s">·</span><span>예시 ' + exCount + "</span></div>" +
-				(desc ? '<p class="desc">' + hi(desc) + "</p>" : "") +
 				'<div class="pairs">' + pairs.map((p) => '<div class="pair">' +
 					boxHtml(p.find((e) => e.kind === "incorrect")) +
 					boxHtml(p.find((e) => e.kind !== "incorrect")) + "</div>").join("") + "</div>" +
-				(r.prose.length ? '<div class="why" data-open="' + (whyOpen ? 1 : 0) + '">' +
-					'<button class="why-btn" data-why="' + esc(key) + '"><span class="why-car" aria-hidden="true">' + (whyOpen ? "\\u25be" : "\\u25b8") + "</span>" +
-					"<span>왜 이 규칙인가" + (r.impactDescription ? " \\u2014 " + esc(r.impactDescription) : "") + "</span></button>" +
+				(r.appliesWhen ? '<div class="note"><span class="note-lb">적용 조건</span>' +
+					'<p class="note-tx">' + hi(r.appliesWhen) + "</p></div>" : "") +
+				(r.prose.length || r.impactDescription ? '<div class="why" data-open="' + (whyOpen ? 1 : 0) + '">' +
+					'<button class="why-btn" data-why="' + esc(key) + '"' + (r.prose.length ? "" : " disabled") + ">" +
+					'<span class="why-car" aria-hidden="true">' + (r.prose.length ? (whyOpen ? "\\u25be" : "\\u25b8") : "\\u00b7") + "</span>" +
+					"<span>왜 이 규칙인가</span>" +
+					'<span class="why-imp imp imp-' + r.impact + '">' + impKo(r.impact) + "</span>" +
+					(r.impactDescription ? '<span class="why-desc">' + esc(r.impactDescription) + "</span>" : "") +
+					"</button>" +
 					'<div class="why-body">' + (whyOpen ? renderProse(r.prose) : "") + "</div></div>" : "") +
 				(refs.length ? '<div class="refs">' + refs.map((g) => '<div class="ref-g"><span class="ref-lb">' + g[0] + "</span>" +
 					'<span class="ref-items">' + g[1].map(refHtml).join("") + "</span></div>").join("") + "</div>" : "") +
@@ -426,7 +472,8 @@ const viewerClientScript = `(() => {
 			'<button class="row-hd" data-rule="' + esc(key) + '" aria-expanded="' + open + '">' +
 			'<span class="row-no" title="' + esc(r.skill) + " HANDBOOK " + r.number + '">' + r.number + "</span>" +
 			'<span class="row-ti">' + hi(titleOf(r)) + "</span>" +
-			'<span class="row-meta"><span class="imp imp-' + r.impact + '">' + r.impact + "</span>" +
+			'<span class="row-meta"><span class="imp imp-' + r.impact + '">' + r.impact +
+			'<span class="imp-ko">' + impKo(r.impact) + "</span></span>" +
 			'<span class="car" aria-hidden="true">' + (open ? "\\u25be" : "\\u25b8") + "</span></span></button>" +
 			body + "</article>";
 	}
@@ -443,7 +490,8 @@ const viewerClientScript = `(() => {
 			const active = state.impact.has(k);
 			return '<button class="ch ch-imp" data-impact="' + k + '" aria-pressed="' + active + '">' +
 				'<span class="ch-dot" style="background:' + (active ? "#fff" : DOT[k]) + '"></span>' +
-				'<span class="ch-lb">' + k + '</span><span class="ch-n">' + count((r) => r.impact === k) + "</span></button>";
+				'<span class="ch-lb">' + k + '<span class="ch-ko">' + impKo(k) + "</span></span>" +
+				'<span class="ch-n">' + count((r) => r.impact === k) + "</span></button>";
 		}).join("");
 
 		const secs = DATA.sections.filter((s) => !state.skill || s.skill === state.skill)
