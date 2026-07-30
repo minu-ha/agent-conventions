@@ -207,14 +207,15 @@ const createRoutingDocument = (): LoadedSkillDocument => ({
 		progressiveDisclosure: true,
 	},
 	sections: [
-		{order: 2, title: "State", prefix: "state", impact: "HIGH", description: "State rules."},
-		{order: 1, title: "Composition", prefix: "composition", impact: "CRITICAL", description: "Composition rules."},
+		{order: 2, title: "State", titleKo: "상태", prefix: "state", impact: "HIGH", description: "State rules."},
+		{order: 1, title: "Composition", titleKo: "조립", prefix: "composition", impact: "CRITICAL", description: "Composition rules."},
 	],
 	rules: [
 		{
 			fileName: "state-observe.md",
 			prefix: "state",
 			title: "Observe State",
+			titleKo: "상태 관찰",
 			impact: "HIGH",
 			impactDescription: "State impact.",
 			tags: ["state", "watch"],
@@ -228,6 +229,7 @@ const createRoutingDocument = (): LoadedSkillDocument => ({
 			fileName: "composition-second.md",
 			prefix: "composition",
 			title: "Second Composition",
+			titleKo: "두 번째 조립",
 			impact: "HIGH",
 			impactDescription: "Second impact.",
 			tags: ["composition", "owner"],
@@ -241,6 +243,7 @@ const createRoutingDocument = (): LoadedSkillDocument => ({
 			fileName: "composition-first.md",
 			prefix: "composition",
 			title: "First Composition",
+			titleKo: "첫 번째 조립",
 			impact: "CRITICAL",
 			impactDescription: "First impact.",
 			tags: ["owner", "composition"],
@@ -772,6 +775,7 @@ test("rule index rejects duplicate IDs, missing or duplicate section assignments
 	duplicateAssignmentDocument.sections.push({
 		order: 3,
 		title: "Duplicate State",
+		titleKo: "중복 상태",
 		prefix: "state",
 		impact: "HIGH",
 		description: "Duplicate assignment.",

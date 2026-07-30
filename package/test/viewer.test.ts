@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {getSkillPaths, isBuildableSkill, listSkillNames} from "../src/config.js";
-import {readSkillRules} from "../src/parser.js";
+import {parseFrontmatter, parseSections, readSkillRules} from "../src/parser.js";
 import {parseRuleBody} from "../src/rule-body.js";
 
 test("parseRuleBody splits prose from Incorrect and Correct examples", () => {
@@ -87,4 +87,46 @@ test("parseRuleBody handles every rule in the repository", async () => {
 
 	assert.equal(ruleCount, 212);
 	assert.ok(blockCount > 400, `expected 400+ code blocks, found ${blockCount}`);
+});
+
+test("readSkillRules exposes titleKo and tolerates its absence", async () => {
+	const rules = await readSkillRules(getSkillPaths("react"));
+	const sample = rules.find((rule) => rule.fileName === "composition-named-handlers-over-inline.md");
+
+	assert.ok(sample, "expected react composition-named-handlers-over-inline.md");
+	assert.equal(typeof sample.titleKo, "string");
+});
+
+test("parseFrontmatter reads titleKo as a plain scalar", () => {
+	const {frontmatter} = parseFrontmatter(
+		["---", "title: Use Named Handlers", "titleKo: 명명된 핸들러를 쓴다", "---", "", "본문"].join("\n"),
+	);
+
+	assert.equal(frontmatter.titleKo, "명명된 핸들러를 쓴다");
+});
+
+test("parseSections reads TitleKo placed before Description", () => {
+	const source = [
+		"# 섹션",
+		"",
+		"## 1. Ownership and Boundaries (ownership)",
+		"**TitleKo:** 소유와 경계",
+		"**Impact:** CRITICAL",
+		"**Description:** 소유 경계가 분명해야 배치를 예측할 수",
+		"  있습니다.",
+	].join("\n");
+
+	const [section] = parseSections(source);
+
+	assert.equal(section?.titleKo, "소유와 경계");
+	assert.equal(section?.title, "Ownership and Boundaries");
+	assert.equal(section?.prefix, "ownership");
+	assert.equal(section?.impact, "CRITICAL");
+	assert.equal(section?.description, "소유 경계가 분명해야 배치를 예측할 수 있습니다.");
+});
+
+test("parseSections leaves titleKo empty when the line is absent", () => {
+	const source = ["## 1. Naming (naming)", "**Impact:** HIGH", "**Description:** 설명."].join("\n");
+
+	assert.equal(parseSections(source)[0]?.titleKo, "");
 });

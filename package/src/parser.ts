@@ -8,6 +8,7 @@ import type {LoadedSkillDocument, SkillMetadata, SkillPaths, SkillRule, SkillSec
 
 const allowedRuleFrontmatterKeys = new Set([
 	"title",
+	"titleKo",
 	"impact",
 	"impactDescription",
 	"appliesWhen",
@@ -133,6 +134,8 @@ export const parseSections = (source: string): SkillSection[] => {
 	const sections = blocks.map((block) => {
 		const headerMatch = block.match(/^## (\d+)\.\s+(.+?)\s+\(([^)]+)\)$/m);
 		const impactMatch = block.match(/^\*\*Impact:\*\*\s+(.+)$/m);
+		// Description 정규식이 탐욕적이라 TitleKo 는 반드시 Description 앞에 와야 한다.
+		const titleKoMatch = block.match(/^\*\*TitleKo:\*\*\s+(.+)$/m);
 		const descriptionMatch = block.match(/^\*\*Description:\*\*\s+([\s\S]+)$/m);
 
 		if (!headerMatch) {
@@ -152,7 +155,14 @@ export const parseSections = (source: string): SkillSection[] => {
 		// description 은 여러 줄로 써도 된다. 소스에서만 접고 값은 한 줄로 편다
 		const description = descriptionMatch[1].trim().replace(/\s+/g, " ");
 
-		return {order: Number(order), title, prefix, impact: impactMatch[1].trim(), description};
+		return {
+			order: Number(order),
+			title,
+			titleKo: titleKoMatch === null ? "" : titleKoMatch[1].trim(),
+			prefix,
+			impact: impactMatch[1].trim(),
+			description,
+		};
 	});
 
 	return sections.sort((left, right) => left.order - right.order);
@@ -261,6 +271,7 @@ export const readSkillRules = async (skillPaths: SkillPaths): Promise<SkillRule[
 			fileName: ruleFileName,
 			prefix,
 			title: frontmatter.title ?? "",
+			titleKo: frontmatter.titleKo ?? "",
 			impact: frontmatter.impact ?? "",
 			impactDescription: frontmatter.impactDescription ?? "",
 			tags: splitScalarList(frontmatter.tags),
