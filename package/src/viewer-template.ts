@@ -41,7 +41,7 @@ body {
 	font-family: var(--sans); font-size: 14px; line-height: 1.6;
 	-webkit-font-smoothing: antialiased;
 }
-:focus-visible { outline: 2px solid var(--coral); outline-offset: 2px; border-radius: 4px; }
+:focus-visible { outline: 2px solid var(--coral); outline-offset: 2px; border-radius: 2px; }
 
 /* ---------- header ---------- */
 .hd { position: sticky; top: 0; z-index: 40; background: color-mix(in srgb, var(--page) 94%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--hair); }
@@ -56,14 +56,14 @@ body {
 .sr-in {
 	width: 100%; height: 34px; padding: 0 12px 0 30px;
 	font-family: var(--mono); font-size: 12.5px; color: var(--ink);
-	background: var(--card); border: 1px solid var(--hair); border-radius: 8px;
+	background: var(--card); border: 1px solid var(--hair); border-radius: 2px;
 }
 .sr-in::placeholder { color: var(--faint); }
 .sr-in:focus { border-color: var(--coral); outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--coral) 18%, transparent); }
 
 .hd-r { flex: 0 0 auto; display: flex; align-items: center; gap: 14px; }
 .cnt { font-family: var(--mono); font-size: 11.5px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
-.btn { height: 32px; padding: 0 12px; font-size: 12.5px; color: var(--ink2); background: var(--card); border: 1px solid var(--hair); border-radius: 8px; white-space: nowrap; }
+.btn { height: 32px; padding: 0 12px; font-size: 12.5px; color: var(--ink2); background: var(--card); border: 1px solid var(--hair); border-radius: 2px; white-space: nowrap; }
 .btn:hover { border-color: var(--edge); color: var(--ink); }
 
 /* ---------- shell ---------- */
@@ -88,7 +88,7 @@ body {
 
 .ch {
 	display: grid; align-items: center; gap: 8px; width: 100%; text-align: left;
-	min-height: 28px; padding: 0 8px; border-radius: 6px;
+	min-height: 28px; padding: 0 8px; border-radius: 2px;
 	font-size: 12.5px; color: var(--ink2);
 }
 .ch:hover { background: var(--hover); }
@@ -106,7 +106,7 @@ body {
 .comp { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--hair); }
 .comp:empty { display: none; }
 .comp-lb { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--faint); width: 100%; }
-.comp-ch { font-family: var(--mono); font-size: 10.5px; min-height: 22px; padding: 0 7px; color: var(--coral-dk); background: color-mix(in srgb, var(--coral) 7%, transparent); border: 1px solid color-mix(in srgb, var(--coral) 28%, transparent); border-radius: 6px; }
+.comp-ch { font-family: var(--mono); font-size: 10.5px; min-height: 22px; padding: 0 7px; color: var(--coral-dk); background: color-mix(in srgb, var(--coral) 7%, transparent); border: 1px solid color-mix(in srgb, var(--coral) 28%, transparent); border-radius: 2px; }
 .comp-ch:hover { background: color-mix(in srgb, var(--coral) 14%, transparent); }
 
 .tagwrap { display: flex; flex-wrap: wrap; gap: 4px; }
@@ -117,7 +117,9 @@ body {
 
 /* ---------- rule cards ---------- */
 .list { display: flex; flex-direction: column; gap: 8px; }
-.row { position: relative; background: var(--card); border: 1px solid var(--hair); border-radius: 12px; overflow: hidden; }
+/* 반경은 레포 기존 html(overview.html, progressive-loading.html) 의 1~3px 취향에 맞춘다.
+   칩 계열만 알약(999px)으로 남긴다. */
+.row { position: relative; background: var(--card); border: 1px solid var(--hair); border-radius: 3px; overflow: hidden; }
 .row[data-open="1"] { border-color: var(--edge); }
 .row-stripe { position: absolute; left: 0; top: 0; bottom: 0; width: 3px; }
 .row[data-imp="CRITICAL"] .row-stripe { background: var(--coral); }
@@ -165,11 +167,11 @@ body {
 .acc-body table { border-collapse: collapse; font-size: 12.5px; min-width: 100%; }
 .acc-body th, .acc-body td { border: 1px solid var(--hair); padding: 6px 10px; text-align: left; vertical-align: top; }
 .acc-body th { background: var(--hover); font-family: var(--mono); font-size: 10.5px; font-weight: 500; }
-.acc-body pre.code { border: 1px solid var(--soft); border-radius: 8px; margin: 0 0 .8em; }
+.acc-body pre.code { border: 1px solid var(--soft); border-radius: 2px; margin: 0 0 .8em; }
 
 .pairs { display: flex; flex-direction: column; gap: 18px; margin-top: 16px; }
 .pair { display: flex; flex-direction: column; gap: 12px; }
-.box { display: flex; flex-direction: column; min-width: 0; border-radius: 10px; overflow: hidden; }
+.box { display: flex; flex-direction: column; min-width: 0; border-radius: 2px; overflow: hidden; }
 /* 채도를 올려 두 박스가 한눈에 갈린다. 헤더 띠를 본문보다 진하게 둔다. */
 .box-bad { border: 1px solid color-mix(in srgb, var(--bad) 42%, transparent); }
 .box-good { border: 1px solid color-mix(in srgb, var(--good) 42%, transparent); }
@@ -206,7 +208,7 @@ pre.code + .code-lb { border-top: 1px solid var(--soft); }
 @media (max-width: 560px) { .ref-g { grid-template-columns: minmax(0, 1fr); gap: 4px; } }
 .ref-lb { font-family: var(--mono); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--faint); padding-top: 5px; }
 .ref-items { display: flex; flex-wrap: wrap; gap: 5px; }
-.ref { min-height: 24px; padding: 0 8px; border-radius: 6px; font-family: var(--mono); font-size: 10.5px; color: var(--coral-dk); background: color-mix(in srgb, var(--coral) 7%, transparent); border: 1px solid color-mix(in srgb, var(--coral) 28%, transparent); }
+.ref { min-height: 24px; padding: 0 8px; border-radius: 2px; font-family: var(--mono); font-size: 10.5px; color: var(--coral-dk); background: color-mix(in srgb, var(--coral) 7%, transparent); border: 1px solid color-mix(in srgb, var(--coral) 28%, transparent); }
 .ref:hover { background: color-mix(in srgb, var(--coral) 14%, transparent); }
 .ref[data-ext="1"] { border-style: dashed; }
 .ref[disabled] { color: var(--faint); background: none; border-color: var(--soft); cursor: default; }
@@ -215,7 +217,7 @@ pre.code + .code-lb { border-top: 1px solid var(--soft); }
 .rtag { min-height: 22px; padding: 0 8px; border-radius: 999px; font-family: var(--mono); font-size: 10px; color: var(--muted); border: 1px solid var(--hair); }
 .rtag:hover { color: var(--coral-dk); border-color: color-mix(in srgb, var(--coral) 45%, transparent); }
 
-.empty { padding: 72px 24px; text-align: center; border: 1px dashed var(--hair); border-radius: 12px; color: var(--muted); font-size: 13.5px; }
+.empty { padding: 72px 24px; text-align: center; border: 1px dashed var(--hair); border-radius: 3px; color: var(--muted); font-size: 13.5px; }
 mark { background: color-mix(in srgb, var(--coral) 30%, transparent); color: inherit; border-radius: 2px; }
 
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; scroll-behavior: auto !important; } }`;
