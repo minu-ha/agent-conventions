@@ -1,11 +1,14 @@
 import assert from "node:assert/strict";
+import {readFile} from "node:fs/promises";
 import test from "node:test";
 
-import {getSkillPaths, isBuildableSkill, listSkillNames} from "../src/config.js";
+import {checkGeneratedViewer} from "../src/check-viewer.js";
+import {getSkillPaths, isBuildableSkill, listSkillNames, viewerOutputPath} from "../src/config.js";
 import {parseFrontmatter, parseSections, readSkillRules} from "../src/parser.js";
 import {parseRuleBody} from "../src/rule-body.js";
 import {buildViewerPayload} from "../src/viewer-payload.js";
 import {encodeViewerPayload, renderViewerHtml} from "../src/viewer-template.js";
+import {generateViewerHtml} from "../src/viewer.js";
 
 const emptyPayload = {skills: [], sections: [], rules: []};
 
@@ -276,4 +279,28 @@ test("viewer client script indexes both languages plus code, and switches skill 
 	assert.match(html, /data-goto/);
 	assert.match(html, /state\.skill\s*=/);
 	assert.match(html, /localStorage/);
+});
+
+test("generateViewerHtml embeds every rule and stays byte-stable", async () => {
+	const [first, second] = await Promise.all([generateViewerHtml(), generateViewerHtml()]);
+
+	assert.equal(first, second, "viewer output must be deterministic");
+	assert.ok(first.startsWith("<!doctype html>"));
+	assert.match(first.slice(0, 400), /<meta charset="utf-8">/);
+
+	const encoded = /<script id="viewer-data" type="application\/json">(.*?)<\/script>/s.exec(first)?.[1];
+	assert.ok(encoded, "expected an inline payload");
+
+	const payload = JSON.parse(encoded);
+	assert.equal(payload.rules.length, 212);
+	assert.equal(payload.skills.length, 8);
+	assert.equal(payload.sections.length, 58);
+});
+
+test("checkGeneratedViewer rejects a stale committed document", async () => {
+	const committed = await readFile(viewerOutputPath, "utf8");
+	const expected = await generateViewerHtml();
+
+	assert.equal(committed, expected, "docs/conventions.html is stale. Run: npm run viewer");
+	await checkGeneratedViewer();
 });
