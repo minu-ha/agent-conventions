@@ -1,5 +1,6 @@
 ---
 title: Seed With API Helpers and Clean Up in `finally`
+titleKo: seed는 API 헬퍼로, 정리는 finally에서
 impact: HIGH
 impactDescription: keeps e2e setup fast and explicit without turning browser steps into slow seed scripts
 tags: e2e, seed, cleanup

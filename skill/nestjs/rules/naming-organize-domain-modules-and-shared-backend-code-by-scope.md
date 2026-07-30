@@ -1,5 +1,6 @@
 ---
 title: Organize Domain Modules and Shared Backend Code by Scope
+titleKo: 도메인 모듈과 공용 백엔드 코드를 스코프로 구성
 impact: HIGH
 impactDescription: keeps domain ownership and truly shared backend code separate so modules stay local by default
 tags: modules, folders, shared-code

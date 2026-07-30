@@ -1,5 +1,6 @@
 ---
 title: Keep Route CSS at Route Scope
+titleKo: route CSS는 route 스코프에 두기
 impact: MEDIUM-HIGH
 impactDescription: prevents route-level styles and local component styles from collapsing into one oversized stylesheet
 tags: css, route-scope, styling

@@ -1,5 +1,6 @@
 ---
 title: Keep Frontmatter Server-only and Template-focused
+titleKo: frontmatter는 서버 전용으로 두고 템플릿에 집중
 impact: HIGH
 impactDescription: prevents browser behavior from leaking into Astro's server-side component preparation phase
 tags: frontmatter, scripts, templates

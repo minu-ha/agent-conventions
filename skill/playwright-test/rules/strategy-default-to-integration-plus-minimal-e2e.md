@@ -1,5 +1,6 @@
 ---
 title: Default to Integration Plus Minimal Critical E2E
+titleKo: integration을 기본으로, 핵심 e2e만 최소로
 impact: HIGH
 impactDescription: keeps state coverage broad without duplicating every branch in slower real-system tests
 tags: integration, e2e, strategy

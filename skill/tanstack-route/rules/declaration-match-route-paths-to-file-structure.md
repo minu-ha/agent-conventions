@@ -1,5 +1,6 @@
 ---
 title: Match Route Paths to File Structure
+titleKo: route 경로를 파일 구조와 일치시키기
 impact: HIGH
 impactDescription: prevents route strings from drifting away from the file tree that owns them
 tags: createfileroute, paths, file-structure

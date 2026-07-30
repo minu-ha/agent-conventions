@@ -1,5 +1,6 @@
 ---
 title: Keep Vitest Out of Browser UI Tests by Default
+titleKo: 브라우저 UI 테스트에는 기본적으로 Vitest를 쓰지 않기
 impact: MEDIUM-HIGH
 impactDescription: avoids splitting browser UI coverage across tools when Playwright already owns the runtime boundary
 tags: vitest, ui-tests, tooling

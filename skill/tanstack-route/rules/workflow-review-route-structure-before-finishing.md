@@ -1,5 +1,6 @@
 ---
 title: Review Route Structure Before Finishing
+titleKo: 마무리 전에 route 구조 점검
 impact: MEDIUM
 impactDescription: catches grouping, guard, and ownership drift before a route change is declared complete
 tags: review, workflow, checklist

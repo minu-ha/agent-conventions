@@ -1,5 +1,6 @@
 ---
 title: Place Route Shells Under the Owning Route `_local/` Folder
+titleKo: route 셸은 소유 route의 _local/ 아래에
 impact: HIGH
 impactDescription: >-
   prevents route shell files from becoming a blurry shared component tier between pages and reusable building blocks

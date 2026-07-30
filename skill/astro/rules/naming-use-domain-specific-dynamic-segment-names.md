@@ -1,5 +1,6 @@
 ---
 title: Use Domain-specific Dynamic Segment Names
+titleKo: 동적 세그먼트는 도메인 이름으로
 impact: MEDIUM-HIGH
 impactDescription: keeps route params self-explanatory in file trees and inside Astro.params
 tags: params, dynamic-routes, naming

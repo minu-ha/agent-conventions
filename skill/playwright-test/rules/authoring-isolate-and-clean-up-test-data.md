@@ -1,5 +1,6 @@
 ---
 title: Isolate and Clean Up Test Data
+titleKo: 테스트 데이터는 격리하고 정리하기
 impact: HIGH
 impactDescription: >-
   prevents remote or shared-state browser tests from colliding through reused accounts, ids, or seed records

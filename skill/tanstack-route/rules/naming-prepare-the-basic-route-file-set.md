@@ -1,5 +1,6 @@
 ---
 title: Prepare the Basic Route File Set
+titleKo: 기본 route 파일 세트를 갖추기
 impact: MEDIUM-HIGH
 impactDescription: gives nested routes a predictable place for styles, shell code, and pure helpers from the start
 tags: file-set, route-assets, naming

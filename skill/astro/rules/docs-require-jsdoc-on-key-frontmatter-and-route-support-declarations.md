@@ -1,5 +1,6 @@
 ---
 title: Require JSDoc on Key Frontmatter, Document Props, and Route Support Declarations
+titleKo: 핵심 frontmatter·Props·route support 선언에 JSDoc
 impact: MEDIUM-HIGH
 impactDescription: >-
   makes Astro route boundaries and route-local support helpers searchable before readers inspect implementation details

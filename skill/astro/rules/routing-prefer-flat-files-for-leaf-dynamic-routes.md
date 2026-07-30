@@ -1,5 +1,6 @@
 ---
 title: Prefer Flat Files for Leaf Dynamic Routes
+titleKo: 말단 동적 route는 평평한 파일로
 impact: HIGH
 impactDescription: keeps dynamic route trees shallow until a route actually owns child routes
 tags: routing, dynamic-routes, folders, pages

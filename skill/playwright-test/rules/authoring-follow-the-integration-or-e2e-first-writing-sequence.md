@@ -1,5 +1,6 @@
 ---
 title: Follow the Declared Integration or E2E Writing Sequence
+titleKo: 정해진 integration·e2e 작성 순서를 따르기
 impact: MEDIUM
 impactDescription: >-
   reduces confused setup by forcing the author to classify the test level and dependency boundary before writing actions

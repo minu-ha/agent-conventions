@@ -1,5 +1,6 @@
 ---
 title: Validate Search Before Using Route Search
+titleKo: search는 쓰기 전에 검증
 impact: CRITICAL
 impactDescription: normalizes query strings once at the route boundary instead of reparsing them throughout the screen
 tags: validateSearch, zod, search-params

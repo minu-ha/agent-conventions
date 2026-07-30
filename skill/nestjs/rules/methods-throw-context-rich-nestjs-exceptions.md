@@ -1,5 +1,6 @@
 ---
 title: Throw Context-rich NestJS Exceptions
+titleKo: 맥락이 담긴 NestJS 예외를 던지기
 impact: HIGH
 impactDescription: makes backend failures diagnosable by using the right NestJS exception type with real domain context
 tags: exceptions, errors, diagnostics

@@ -1,5 +1,6 @@
 ---
 title: Keep Dynamic Route Generation at the Page Boundary
+titleKo: 동적 route 생성은 page 경계에서
 impact: HIGH
 impactDescription: keeps route params and build-time page generation visible where the URL contract is defined
 tags: routing, getstaticpaths, pages

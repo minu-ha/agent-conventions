@@ -1,5 +1,6 @@
 ---
 title: Name Top-level Groups by Shell Meaning
+titleKo: 최상위 그룹은 셸 의미로 이름 짓기
 impact: HIGH
 impactDescription: >-
   makes top-level route groups communicate the shell they belong to instead of the feature they happen to contain

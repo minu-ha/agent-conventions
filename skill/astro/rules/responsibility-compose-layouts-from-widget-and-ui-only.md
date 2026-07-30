@@ -1,5 +1,6 @@
 ---
 title: Compose Layouts from Widget and UI Only
+titleKo: 레이아웃은 widget과 ui만으로 조립
 impact: HIGH
 impactDescription: keeps layout files as route shells instead of letting them become domain-specific shared blocks
 tags: responsibility, layouts, ui, widget, composition

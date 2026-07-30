@@ -1,5 +1,6 @@
 ---
 title: Redirect Empty Entry Routes in `beforeLoad`
+titleKo: 빈 진입 route는 beforeLoad에서 리다이렉트
 impact: HIGH
 impactDescription: moves entry redirects to the router boundary before screens mount and side effects begin
 tags: redirect, beforeload, navigation

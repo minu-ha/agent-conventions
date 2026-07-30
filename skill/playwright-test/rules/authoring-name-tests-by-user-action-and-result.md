@@ -1,5 +1,6 @@
 ---
 title: Name Tests by User Action and Result
+titleKo: 테스트 이름은 사용자 동작과 결과로
 impact: MEDIUM-HIGH
 impactDescription: makes browser tests readable as user behavior instead of implementation detail or setup jargon
 tags: test-titles, naming, behavior

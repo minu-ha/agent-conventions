@@ -1,5 +1,6 @@
 ---
 title: Document Custom Backend Types and Parameter Objects
+titleKo: 커스텀 백엔드 타입과 매개변수 객체 문서화
 impact: MEDIUM-HIGH
 impactDescription: keeps backend-only contracts and parameter objects understandable without scanning method bodies
 tags: types, jsdoc, params

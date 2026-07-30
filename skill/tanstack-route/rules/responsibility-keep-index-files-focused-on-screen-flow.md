@@ -1,5 +1,6 @@
 ---
 title: Keep `*.index.tsx` Files Focused on Screen Flow
+titleKo: *.index.tsx는 화면 흐름에 집중
 impact: HIGH
 impactDescription: preserves a readable route entry where screen assembly, hooks, and handlers stay visible
 tags: index-files, screen-flow, ownership

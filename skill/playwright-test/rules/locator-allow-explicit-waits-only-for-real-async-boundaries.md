@@ -1,5 +1,6 @@
 ---
 title: Allow Explicit Waits Only for Real Async Boundaries
+titleKo: 명시적 대기는 진짜 비동기 경계에만
 impact: HIGH
 impactDescription: >-
   keeps explicit waits intentional by limiting them to navigation, known responses, bootstrap, or real background

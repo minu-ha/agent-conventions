@@ -1,5 +1,6 @@
 ---
 title: Use Owner-named Route Support Files Instead of Generic Local Files
+titleKo: route support 파일은 generic 대신 owner 이름으로
 impact: MEDIUM-HIGH
 impactDescription: >-
   keeps route-local files searchable even when a route owns several helpers, runtime components, and stylesheets

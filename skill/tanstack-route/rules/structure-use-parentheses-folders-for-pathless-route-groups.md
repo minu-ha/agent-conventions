@@ -1,5 +1,6 @@
 ---
 title: Use Parentheses Folders for Pathless Route Groups
+titleKo: 경로 없는 route 그룹은 괄호 폴더로
 impact: HIGH
 impactDescription: >-
   separates URL hierarchy from grouping hierarchy so nested routes stay organized without changing paths

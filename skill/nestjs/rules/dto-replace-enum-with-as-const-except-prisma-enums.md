@@ -1,5 +1,6 @@
 ---
 title: Replace Local `enum` With `as const` Except Prisma Enums
+titleKo: Prisma enum 외에는 enum 대신 as const
 impact: MEDIUM-HIGH
 impactDescription: >-
   keeps local runtime values lightweight while still allowing generated Prisma enums to remain the source of truth

@@ -1,5 +1,6 @@
 ---
 title: Keep Controllers Thin and Boundary-focused
+titleKo: controller는 얇게, 경계에만 집중
 impact: CRITICAL
 impactDescription: >-
   prevents controllers from absorbing domain logic, persistence calls, and response shaping that belongs in services

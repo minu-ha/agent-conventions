@@ -1,5 +1,6 @@
 ---
 title: Classify E2E Tests by Real Backend and Auth Dependence
+titleKo: e2e는 실제 백엔드·인증 의존으로 분류
 impact: CRITICAL
 impactDescription: >-
   keeps e2e meaning strict by requiring the real backend, real auth, and real routing to remain part of the test

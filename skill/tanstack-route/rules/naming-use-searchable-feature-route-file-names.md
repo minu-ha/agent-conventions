@@ -1,5 +1,6 @@
 ---
 title: Use Searchable Feature Route File Names
+titleKo: route 파일 이름은 검색 가능하게
 impact: HIGH
 impactDescription: keeps route entries easy to find in file search even when group folders are already present
 tags: filenames, searchability, route-files

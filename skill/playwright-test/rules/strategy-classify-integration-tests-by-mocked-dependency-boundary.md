@@ -1,5 +1,6 @@
 ---
 title: Classify Integration Tests by Mocked Dependency Boundary
+titleKo: integration은 모킹한 의존 경계로 분류
 impact: CRITICAL
 impactDescription: >-
   makes it clear that integration tests exercise UI and route behavior with mocked backend or auth boundaries

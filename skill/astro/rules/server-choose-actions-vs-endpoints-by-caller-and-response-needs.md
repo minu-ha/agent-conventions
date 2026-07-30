@@ -1,5 +1,6 @@
 ---
 title: Choose Actions vs. Endpoints by Caller and Response Needs
+titleKo: Actions와 Endpoints는 호출자와 응답 요건으로 선택
 impact: HIGH
 impactDescription: >-
   keeps mutation boundaries aligned with who is calling them and what kind of response they must control

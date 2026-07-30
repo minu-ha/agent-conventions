@@ -1,5 +1,6 @@
 ---
 title: Expose Response DTO Fields Explicitly
+titleKo: 응답 DTO 필드는 명시적으로 노출
 impact: HIGH
 impactDescription: prevents backend responses from leaking full Prisma models or sensitive fields by default
 tags: dto, response, security

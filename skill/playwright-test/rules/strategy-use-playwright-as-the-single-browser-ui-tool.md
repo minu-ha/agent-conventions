@@ -1,5 +1,6 @@
 ---
 title: Use Playwright as the Single Browser UI Tool
+titleKo: 브라우저 UI 도구는 Playwright 하나로
 impact: CRITICAL
 impactDescription: >-
   keeps browser UI testing consistent by using one toolchain and one interaction model across test levels

@@ -1,5 +1,6 @@
 ---
 title: Separate Service Unit Tests From HTTP E2E Tests
+titleKo: service 단위 테스트와 HTTP e2e 테스트 분리
 impact: CRITICAL
 impactDescription: >-
   keeps backend failures diagnosable by assigning business logic and full-stack wiring to different test levels

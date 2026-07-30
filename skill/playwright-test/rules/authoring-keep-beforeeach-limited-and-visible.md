@@ -1,5 +1,6 @@
 ---
 title: Keep `beforeEach` Limited and Visible
+titleKo: beforeEach는 최소로, 보이게
 impact: HIGH
 impactDescription: prevents shared setup from hiding the test's real dependency boundary or main assertions
 tags: beforeEach, setup, visibility

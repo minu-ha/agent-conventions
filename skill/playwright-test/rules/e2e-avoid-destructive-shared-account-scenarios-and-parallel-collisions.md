@@ -1,5 +1,6 @@
 ---
 title: Avoid Destructive Shared-account Scenarios and Parallel Collisions
+titleKo: 공용 계정 파괴 시나리오와 병렬 충돌 피하기
 impact: CRITICAL
 impactDescription: >-
   keeps real-system browser tests from corrupting shared accounts or racing on the same remote resources

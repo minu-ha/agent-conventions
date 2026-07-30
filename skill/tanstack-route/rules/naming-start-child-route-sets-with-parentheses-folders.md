@@ -1,5 +1,6 @@
 ---
 title: Start Child Route Sets With Parentheses Folders
+titleKo: 자식 route 세트는 괄호 폴더로 시작
 impact: HIGH
 impactDescription: makes child route groups explicit before filenames grow long or sibling routes become hard to scan
 tags: child-routes, grouping, folders

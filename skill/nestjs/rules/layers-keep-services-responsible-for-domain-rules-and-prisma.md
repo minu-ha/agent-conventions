@@ -1,5 +1,6 @@
 ---
 title: Keep Services Responsible for Domain Rules and Prisma
+titleKo: 도메인 규칙과 Prisma는 service가 책임
 impact: CRITICAL
 impactDescription: >-
   keeps business rules, transaction orchestration, and persistence access in the backend layer designed to own them

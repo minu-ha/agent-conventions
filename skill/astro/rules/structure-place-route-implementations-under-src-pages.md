@@ -1,5 +1,6 @@
 ---
 title: Place Route Implementations Under `src/pages`
+titleKo: route 구현은 src/pages 아래에
 impact: HIGH
 impactDescription: >-
   keeps page implementation near the file-based route while using underscore-prefixed files to avoid accidental routes

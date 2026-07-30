@@ -1,5 +1,6 @@
 ---
 title: Wait for State, Not Time, in Integration Tests
+titleKo: 시간이 아니라 상태를 기다리기
 impact: CRITICAL
 impactDescription: keeps integration tests deterministic by waiting for observable state instead of arbitrary sleeps
 tags: waiting, integration, stability

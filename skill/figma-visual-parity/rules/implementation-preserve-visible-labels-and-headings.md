@@ -1,5 +1,6 @@
 ---
 title: Preserve Visible Labels and Headings Unless Explicitly Removed
+titleKo: 명시적 삭제 요청 없이 라벨·제목을 없애지 않기
 impact: HIGH
 impactDescription: UI polish 중 사용자에게 보이는 구조 신호를 임의 삭제하지 않게 함
 tags: implementation, labels, headings

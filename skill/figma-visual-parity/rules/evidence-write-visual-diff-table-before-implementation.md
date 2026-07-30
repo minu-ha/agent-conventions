@@ -1,5 +1,6 @@
 ---
 title: Write the Visual Diff Table Before Implementation
+titleKo: 구현 전에 시각 diff 표를 먼저 쓰기
 impact: CRITICAL
 impactDescription: 구현 범위와 완료 기준을 layout, spacing, typography 같은 항목으로 명확히 고정함
 tags: evidence, visual-diff, planning

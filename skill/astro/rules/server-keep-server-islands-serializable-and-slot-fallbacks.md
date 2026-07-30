@@ -1,5 +1,6 @@
 ---
 title: Keep Server Islands Serializable and Slot Fallbacks Ready
+titleKo: server island는 직렬화 가능하게, slot fallback 준비
 impact: HIGH
 impactDescription: keeps deferred rendering portable and avoids broken props or blank loading states
 tags: server-islands, serializable-props, fallback

@@ -1,5 +1,6 @@
 ---
 title: Keep One Behavior Per Test
+titleKo: 테스트 하나에 행위 하나
 impact: HIGH
 impactDescription: >-
   keeps setup, action, and assertions focused so browser failures point to one behavior instead of many unrelated checks

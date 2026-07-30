@@ -1,5 +1,6 @@
 ---
 title: Place Test Files by Runtime Scope
+titleKo: 테스트 파일은 런타임 스코프에 맞게 배치
 impact: HIGH
 impactDescription: >-
   makes backend test ownership obvious by separating service-adjacent unit tests from top-level HTTP e2e tests

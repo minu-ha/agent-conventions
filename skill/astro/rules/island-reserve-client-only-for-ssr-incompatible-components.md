@@ -1,5 +1,6 @@
 ---
 title: Reserve `client:only` for SSR-incompatible Components
+titleKo: client:only는 SSR 불가 컴포넌트에만
 impact: HIGH
 impactDescription: preserves server-rendered HTML for interactive widgets that can hydrate normally
 tags: client-only, islands, hydration

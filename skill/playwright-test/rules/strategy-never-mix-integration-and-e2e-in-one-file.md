@@ -1,5 +1,6 @@
 ---
 title: Never Mix Integration and E2E in One File
+titleKo: integration과 e2e를 한 파일에 섞지 않기
 impact: HIGH
 impactDescription: keeps test intent and failure diagnosis clear by assigning one runtime boundary per spec file
 tags: levels, files, boundaries

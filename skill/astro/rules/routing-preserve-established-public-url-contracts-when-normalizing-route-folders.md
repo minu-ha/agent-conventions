@@ -1,5 +1,6 @@
 ---
 title: Preserve Established Public URL Contracts When Normalizing Route Folders
+titleKo: route 폴더를 정리해도 공개 URL 계약은 보존
 impact: HIGH
 impactDescription: >-
   prevents file tree cleanup from silently changing published URLs that users and crawlers already rely on

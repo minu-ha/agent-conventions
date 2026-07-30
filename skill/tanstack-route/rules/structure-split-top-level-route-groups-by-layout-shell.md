@@ -1,5 +1,6 @@
 ---
 title: Split Top-level Route Groups by Layout Shell
+titleKo: 최상위 route 그룹은 레이아웃 셸로 나누기
 impact: CRITICAL
 impactDescription: keeps top-level route boundaries aligned with real shell differences instead of feature names
 tags: layout-shell, grouping, route-tree

@@ -1,5 +1,6 @@
 ---
 title: Use Web-first Assertions for UI Results
+titleKo: UI 결과는 web-first 단정으로
 impact: HIGH
 impactDescription: >-
   aligns assertions with the browser's async rendering model instead of relying on immediate checks of transient UI

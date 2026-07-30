@@ -1,5 +1,6 @@
 ---
 title: Place Route-only Modules in `-local/`
+titleKo: route 전용 모듈은 -local/ 에
 impact: HIGH
 impactDescription: keeps route-scoped UI and private modules close to the route until their contracts are stable
 tags: route-local, local-folder, ownership

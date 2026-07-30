@@ -1,5 +1,6 @@
 ---
 title: Review Banned Playwright Shortcuts Before Finishing
+titleKo: 마무리 전에 금지된 Playwright 지름길 점검
 impact: MEDIUM
 impactDescription: >-
   catches the shortcuts that most often blur test level meaning or introduce flaky browser behavior before the work is

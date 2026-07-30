@@ -1,5 +1,6 @@
 ---
 title: Compose Page-level Documents Through `_document.astro` and `_head.astro`
+titleKo: 페이지 문서는 _document.astro와 _head.astro로 조립
 impact: HIGH
 impactDescription: >-
   keeps repeated document, head, and body shell composition out of route files while preserving a single page-level

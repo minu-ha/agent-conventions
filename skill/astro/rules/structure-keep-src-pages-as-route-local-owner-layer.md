@@ -1,5 +1,6 @@
 ---
 title: Keep `src/pages` as the Route-local Owner Layer
+titleKo: src/pages를 route-local 소유 레이어로 유지
 impact: CRITICAL
 impactDescription: >-
   keeps Astro route ownership close to the file-based route without leaking screen implementation into shared or generic

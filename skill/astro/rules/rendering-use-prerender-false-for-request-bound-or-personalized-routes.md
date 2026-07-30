@@ -1,5 +1,6 @@
 ---
 title: Use `prerender = false` for Request-bound or Personalized Routes
+titleKo: 요청 의존·개인화 route에는 prerender = false
 impact: CRITICAL
 impactDescription: keeps request-time logic on routes that actually execute per request
 tags: prerender, ssr, rendering

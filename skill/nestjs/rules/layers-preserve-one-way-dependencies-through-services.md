@@ -1,5 +1,6 @@
 ---
 title: Preserve One-way Dependencies Through Services
+titleKo: 의존은 service를 거쳐 한 방향으로
 impact: HIGH
 impactDescription: >-
   prevents cross-layer shortcuts that bypass the service boundary and make backend change impact harder to reason about

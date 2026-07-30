@@ -1,5 +1,6 @@
 ---
 title: Choose `client:*` Directives by Visibility and Urgency
+titleKo: client:* 지시자는 가시성과 시급성으로 선택
 impact: HIGH
 impactDescription: makes hydration cost intentional instead of defaulting everything to eager loading
 tags: client-directives, islands, hydration

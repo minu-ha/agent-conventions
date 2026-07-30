@@ -1,5 +1,6 @@
 ---
 title: Export `Route` at the Top of the File
+titleKo: Route는 파일 맨 위에서 export
 impact: HIGH
 impactDescription: keeps the router contract obvious before the screen implementation details begin
 tags: createfileroute, exports, route-definition

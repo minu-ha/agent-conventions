@@ -1,5 +1,6 @@
 ---
 title: Keep Pages-local Document Helpers Imported Only by Pages
+titleKo: pages-local 문서 헬퍼는 page만 import하게
 impact: HIGH
 impactDescription: >-
   preserves one-way dependency flow from routed pages to pages-local document helpers instead of letting shared code

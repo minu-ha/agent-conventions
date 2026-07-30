@@ -1,5 +1,6 @@
 ---
 title: Limit Layouts to Shell and Composition
+titleKo: 레이아웃은 셸과 조립까지만
 impact: HIGH
 impactDescription: prevents shared layout files from absorbing leaf-page data and interaction logic
 tags: layouts, slots, responsibility

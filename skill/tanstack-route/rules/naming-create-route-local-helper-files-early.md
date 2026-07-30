@@ -1,5 +1,6 @@
 ---
 title: Use Owner-named Route Support Modules Instead of Generic Helper Files
+titleKo: route support 모듈은 generic 대신 owner 이름으로
 impact: MEDIUM-HIGH
 impactDescription: keeps route files from accumulating normalization and mapping logic before boundaries blur
 tags: helpers, route-local, typescript

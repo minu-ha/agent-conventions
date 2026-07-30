@@ -1,5 +1,6 @@
 ---
 title: Keep Redirects, Rewrites, and Auth Ownership at the Page or Middleware Boundary
+titleKo: 리다이렉트·rewrite·인증 소유는 page 또는 middleware 경계에
 impact: HIGH
 impactDescription: keeps request-time guards and navigation side effects out of layout shells that should stay visual
 tags: server, redirects, middleware, auth, ownership

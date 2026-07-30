@@ -1,5 +1,6 @@
 ---
 title: Review Banned NestJS Shortcuts Before Finishing
+titleKo: 마무리 전에 금지된 NestJS 지름길 점검
 impact: MEDIUM
 impactDescription: >-
   catches the recurring shortcuts that most often blur NestJS layers, contracts, and test meaning before the work is

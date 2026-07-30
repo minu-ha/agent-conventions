@@ -1,5 +1,6 @@
 ---
 title: Write Comments Only for Non-obvious Setup Boundaries
+titleKo: 주석은 자명하지 않은 setup 경계에만
 impact: MEDIUM
 impactDescription: >-
   keeps test comments focused on why a setup exists instead of narrating obvious Arrange/Act/Assert steps

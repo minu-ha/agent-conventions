@@ -1,5 +1,6 @@
 ---
 title: Use NestJS Class Methods and Explicit Async Return Types
+titleKo: NestJS 클래스 메서드와 명시적 async 반환 타입
 impact: MEDIUM-HIGH
 impactDescription: >-
   keeps backend class APIs conventional while making async method contracts readable without opening implementations

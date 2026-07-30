@@ -1,5 +1,6 @@
 ---
 title: Do Not Import `.astro` Components Inside Framework Components
+titleKo: 프레임워크 컴포넌트 안에서 .astro를 import하지 않기
 impact: CRITICAL
 impactDescription: preserves Astro's component boundary and avoids unsupported cross-runtime composition
 tags: islands, react, slots

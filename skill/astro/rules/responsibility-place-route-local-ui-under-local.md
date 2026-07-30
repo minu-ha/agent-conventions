@@ -1,5 +1,6 @@
 ---
 title: Place Route-local UI Under `_local/`
+titleKo: route-local UI는 _local/ 아래에
 impact: HIGH
 impactDescription: makes the boundary between route-only implementation and shared public surface obvious
 tags: responsibility, local, pages, ownership

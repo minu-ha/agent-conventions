@@ -1,5 +1,6 @@
 ---
 title: Use This Skill for Figma-sourced UI Work
+titleKo: Figma에서 출발한 UI 작업에 이 skill을 쓰기
 impact: CRITICAL
 impactDescription: Figma가 기준 소스인 UI 작업에서 visual parity workflow가 빠지지 않게 함
 tags: trigger, figma, visual-parity

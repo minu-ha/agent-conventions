@@ -1,5 +1,6 @@
 ---
 title: Use Domain-specific Dynamic Segment Names
+titleKo: 동적 세그먼트는 도메인 이름으로
 impact: MEDIUM-HIGH
 impactDescription: keeps route params self-explanatory at the file level and inside router APIs
 tags: params, dynamic-segments, naming

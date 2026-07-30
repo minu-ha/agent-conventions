@@ -1,5 +1,6 @@
 ---
 title: Cover State Matrices and User-visible Results in Integration
+titleKo: integration은 상태 조합과 사용자에게 보이는 결과를 덮기
 impact: HIGH
 impactDescription: keeps integration tests responsible for the wide UI state matrix and the visible result of each state
 tags: integration, states, results

@@ -1,5 +1,6 @@
 ---
 title: Use Underscore-prefixed Pages-local Helper Names for Document Files
+titleKo: pages-local 문서 헬퍼는 밑줄 접두사로
 impact: MEDIUM-HIGH
 impactDescription: >-
   keeps page-adjacent non-routes recognizable in file trees and prevents generic shell names from blurring ownership
