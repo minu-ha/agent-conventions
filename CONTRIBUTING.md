@@ -78,6 +78,9 @@ impact: MEDIUM
 impactDescription: 영향도 설명. contracts 로 나가는 에이전트용 원문
 impactDescriptionKo: 사람이 화면에서 읽을 한국어 영향도 설명
 appliesWhen: 이 규칙이 걸리는 변경을 한 문장으로
+appliesWhenKo:
+  - 사람이 화면에서 읽을 적용 조건 불렛
+  - 제외: 걸리지 않는 조건
 requiresSelected: 함께 반드시 걸리는 rule-id, companion-skill/cross-rule-id
 requiredOnCompletion: true
 reviewWith: 함께 다시 판단할 rule-id, companion-skill/cross-rule-id
@@ -93,6 +96,7 @@ tags: tag1, tag2
 | `impactDescription` | 필수 | 영향도 설명. 본문 `**Impact:**` 줄과 일치해야 하고 `contracts/*.md` 로 나간다 |
 | `impactDescriptionKo` | 필수 | 한국어. `conventions.html` 에 노출된다 |
 | `appliesWhen` | 필수 | 비어 있지 않은 한 줄. 160자 이내 |
+| `appliesWhenKo` | 선택 | `- ` 항목 블록 리스트. `conventions.html` 의 "언제 적용할까요?" 불렛. 없으면 `appliesWhen` 원문 노출 |
 | `requiresSelected` | 선택 | 걸리면 target 도 반드시 함께 적용 |
 | `reviewWith` | 선택 | 자동 선택이 아니라 다시 판정하라는 재평가 힌트 |
 | `requiredOnCompletion` | 선택 | 마무리 시 항상 적용 |
@@ -109,6 +113,10 @@ titleKo: JSX 인라인 로직의 명명된 핸들러 분리
 
 `impactDescription` 계열은 `~합니다` 로 끝나는 한 문장으로 쓰고, 본문 산문도 `~합니다` 문체로 통일한다.
 `appliesWhen` 은 라우팅용 텍스트라 예외로 `~한다` 서술을 유지한다.
+
+`appliesWhenKo` 는 `appliesWhen` 을 개발자가 훑기 쉽게 불렛으로 다시 쓴 표시용 목록이다.
+각 항목은 `~할 때` 로 끝맺고, 걸리지 않는 조건은 `제외:` 로 시작한다.
+라우팅에는 쓰지 않으므로 조건의 뜻이 `appliesWhen` 과 어긋나지 않게 유지한다.
 
 섹션도 한국어 제목이 필수다. `rules/_sections.md` 의 각 헤더 아래,
 **`**Impact:**` 위**에 넣는다. `**Description:**` 뒤에 놓으면 description 값으로 삼켜진다.

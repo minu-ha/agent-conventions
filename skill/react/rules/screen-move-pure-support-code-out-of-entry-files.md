@@ -6,6 +6,9 @@ impactDescription: route entry가 preset과 순수 helper를 쌓기보다 화면
 impactDescriptionKo: route entry가 preset과 순수 helper를 쌓기보다 화면 흐름에 집중하게 합니다
 appliesWhen: >-
   route entry에 여러 줄 pure helper·preset·option·화면 전용 type이 쌓이거나 추출한 support code의 목적지 파일을 정한다.
+appliesWhenKo:
+  - route entry에 여러 줄 pure helper·preset·option·화면 전용 type이 쌓일 때
+  - 추출하기로 한 support code의 목적지 파일을 정할 때
 reviewWith: docs-require-jsdoc-on-key-declarations
 tags: screen, routes, helpers, constants
 ---

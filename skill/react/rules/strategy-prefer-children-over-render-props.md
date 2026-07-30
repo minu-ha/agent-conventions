@@ -7,6 +7,9 @@ impactDescriptionKo: 부모가 callback으로 런타임 데이터를 내려보�
 appliesWhen: >-
   shared component에 header·footer·action 같은 정적 slot 또는 render prop을 추가·변경하며 runtime data 주입 필요가
   불분명하다.
+appliesWhenKo:
+  - shared component에 header·footer·action 같은 정적 slot을 추가·변경할 때
+  - render prop을 추가·변경하는데 runtime data 주입이 꼭 필요한지 불분명할 때
 tags: composition, children, render-props, component-design
 ---
 

@@ -5,6 +5,9 @@ impact: HIGH
 impactDescription: 중복 타입 구조가 시간이 지나며 어긋나는 것을 막습니다
 impactDescriptionKo: 중복 타입 구조가 시간이 지나며 어긋나는 것을 막습니다
 appliesWhen: Props callback 구현이나 API 응답 기반 view type을 추가·변경하며 기존 prop·API 계약과 같은 shape가 보인다.
+appliesWhenKo:
+  - Props callback 구현을 추가·변경할 때
+  - API 응답 기반 view type을 추가·변경하는데 기존 prop·API 계약과 같은 shape가 보일 때
 reviewWith: >-
   typescript/types-reuse-callback-signatures-from-existing-contracts,
   typescript/types-reuse-existing-contracts-before-new-types

@@ -7,6 +7,9 @@ impactDescriptionKo: 중복된 도메인 판별 휴리스틱이 여러 화면에
 appliesWhen: >-
   여러 화면·메뉴·route guard가 쓰는 권한·capability 같은 derived decision을 store에 저장·동기화하거나 단일 화면 값까지
   store로 올린다.
+appliesWhenKo:
+  - 여러 화면·메뉴·route guard가 쓰는 권한·capability 같은 derived decision을 store에 저장·동기화할 때
+  - 단일 화면에서만 쓰는 값까지 store로 올리려 할 때
 reviewWith: docs-require-jsdoc-on-key-declarations
 tags: state, zustand, derived-decisions
 ---

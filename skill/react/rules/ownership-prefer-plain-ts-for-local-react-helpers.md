@@ -5,6 +5,9 @@ impact: HIGH
 impactDescription: React 전용 추상화를 실제 lifecycle/context 결합이 있는 경우로 한정합니다
 impactDescriptionKo: React 전용 추상화를 실제 lifecycle/context 결합이 있는 경우로 한정합니다
 appliesWhen: 화면 전용 계산·정규화·payload 조립을 custom hook 또는 별도 support module로 추출·이동하려 한다.
+appliesWhenKo:
+  - 화면 전용 계산·정규화·payload 조립을 custom hook으로 추출하려 할 때
+  - 화면 전용 순수 로직을 별도 support module로 옮기려 할 때
 reviewWith: >-
   screen-extract-utilities-selectively, screen-move-pure-support-code-out-of-entry-files,
   typescript/functions-extract-helpers-only-when-the-boundary-is-real

@@ -7,6 +7,10 @@ impactDescriptionKo: 공용 컴포넌트가 필요한 확장점은 열면서 가
 appliesWhen: >-
   exported shared component에 slot·public part·shared context/action·반복 preset·mode API를 추가하거나 조립 구조를
   재설계한다.
+appliesWhenKo:
+  - exported shared component에 slot·public part·shared context/action을 추가할 때
+  - 반복되는 preset이나 mode API를 추가할 때
+  - shared component의 조립 구조를 재설계할 때
 reviewWith: >-
   strategy-avoid-boolean-prop-proliferation, strategy-prefer-children-over-render-props,
   screen-avoid-premature-abstraction

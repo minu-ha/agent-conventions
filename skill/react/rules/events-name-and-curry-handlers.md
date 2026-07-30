@@ -6,6 +6,10 @@ impactDescription: 이벤트 흐름을 검색 가능하게 유지하고 즉흥�
 impactDescriptionKo: 이벤트 흐름을 검색 가능하게 유지하고 즉흥적인 handler 시그니처를 막습니다
 appliesWhen: >-
   이벤트 핸들러를 새로 만들거나 이름, target/event 표현, 추가 인자 전달 방식 또는 최종 React handler 시그니처를 바꾼다.
+appliesWhenKo:
+  - 이벤트 핸들러를 새로 만들 때
+  - 핸들러 이름이나 target/event 표현을 바꿀 때
+  - 추가 인자 전달 방식이나 최종 React handler 시그니처를 바꿀 때
 reviewWith: typing-function-type-first, typescript/naming-use-consistent-file-and-symbol-naming
 tags: events, handlers, naming
 ---

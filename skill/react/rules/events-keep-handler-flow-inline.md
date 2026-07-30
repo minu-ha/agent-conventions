@@ -5,6 +5,9 @@ impact: MEDIUM
 impactDescription: 모든 분기를 작은 helper로 쪼개지 않고도 가독성을 유지합니다
 impactDescriptionKo: 모든 분기를 작은 helper로 쪼개지 않고도 가독성을 유지합니다
 appliesWhen: 화면 전용 named handler의 분기·mutation·navigation·후처리를 여러 helper나 hook으로 나누거나 다시 합친다.
+appliesWhenKo:
+  - 화면 전용 named handler의 분기·mutation·navigation·후처리를 여러 helper나 hook으로 나눌 때
+  - 쪼개져 있던 handler 흐름을 다시 합칠 때
 reviewWith: screen-extract-utilities-selectively
 tags: events, handlers, flow
 ---

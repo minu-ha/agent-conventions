@@ -272,6 +272,10 @@ export interface SkillRule {
 	 */
 	appliesWhen?: string;
 	/**
+	 * @field 사람이 읽는 화면에 노출할 적용 조건 불렛 목록. 라우팅에는 쓰지 않는다
+	 */
+	appliesWhenKo?: string[];
+	/**
 	 * @field 이 rule이 Selected이면 함께 Selected여야 하는 local 또는 companion rule stable ID 목록
 	 */
 	requiresSelected: string[];

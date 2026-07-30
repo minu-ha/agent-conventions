@@ -6,6 +6,9 @@ impactDescription: React 19 코드베이스에서 컴포넌트 정의를 단순�
 impactDescriptionKo: React 19 코드베이스에서 컴포넌트 정의를 단순하게 유지하고 관성적인 legacy wrapper 추가를 막습니다
 appliesWhen: >-
   React 19 컴포넌트에 focus·scroll·measure용 ref 공개 API를 추가·변경하거나 새 `forwardRef` wrapper를 도입한다.
+appliesWhenKo:
+  - React 19 컴포넌트에 focus·scroll·measure용 ref 공개 API를 추가·변경할 때
+  - 새 `forwardRef` wrapper를 도입하려 할 때
 tags: composition, react19, ref, forwardref
 ---
 

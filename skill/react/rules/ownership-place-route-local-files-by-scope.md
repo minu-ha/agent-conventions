@@ -5,6 +5,9 @@ impact: HIGH
 impactDescription: route 전용 component·style·logic을 예측 가능한 위치에 유지합니다
 impactDescriptionKo: route 전용 component·style·logic을 예측 가능한 위치에 유지합니다
 appliesWhen: route 전용 컴포넌트·스타일·순수 로직을 새로 만들거나 `-local`과 route sibling `.ts` 사이에서 위치를 바꾼다.
+appliesWhenKo:
+  - route 전용 컴포넌트·스타일·순수 로직을 새로 만들 때
+  - `-local/`과 route sibling `.ts` 사이에서 파일 위치를 바꿀 때
 reviewWith: >-
   css/naming-separate-local-and-route-style-scopes, css/organization-keep-style-files-owned-by-one-component-or-route
 tags: ownership, local, routes, files

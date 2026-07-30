@@ -7,6 +7,10 @@ impactDescriptionKo: route entry만 봐도 화면 흐름을 따라갈 수 있게
 appliesWhen: >-
   route entry의 search·navigate·query·mutation·cross-section effect를 component/module 사이에서 이동·분리하거나 page
   section 조립의 순서·owner를 바꾼다. 같은 owner 안 표현 변경은 제외한다.
+appliesWhenKo:
+  - route entry의 search·navigate·query·mutation·cross-section effect를 다른 component/module로 옮기거나 분리할 때
+  - page section 조립의 순서나 owner를 바꿀 때
+  - 제외: 같은 owner 안에서 표현만 바꾸는 경우
 reviewWith: >-
   screen-extract-local-section-components-for-runtime-boundaries, screen-move-pure-support-code-out-of-entry-files
 tags: screen, routes, flow

@@ -7,6 +7,9 @@ impactDescriptionKo: 최신 handler 로직은 읽으면서 effect는 실제 구�
 appliesWhen: >-
   subscription effect가 최신 prop·state callback을 읽도록 ref 동기화 hack, dependency 재설치 또는 `useEffectEvent`를
   추가·변경한다.
+appliesWhenKo:
+  - subscription effect가 최신 prop·state callback을 읽어야 할 때
+  - ref 동기화 hack, dependency 재설치, `useEffectEvent`를 추가·변경할 때
 requiresSelected: docs-require-jsdoc-on-key-declarations
 reviewWith: events-run-user-actions-in-handlers-not-effects
 tags: state, react19, useeffectevent, effects

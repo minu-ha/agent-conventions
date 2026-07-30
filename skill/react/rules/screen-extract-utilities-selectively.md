@@ -7,6 +7,10 @@ impactDescriptionKo: route entry가 자기 계약이 없는 helper 조각으로 
 appliesWhen: >-
   화면 계산·변환·preset·option·column meta를 별도 함수/support module로 추출·이동하거나 support 경계를 바꾼다. query
   `select` 내부 shaping만이면 제외한다.
+appliesWhenKo:
+  - 화면 계산·변환·preset·option·column meta를 별도 함수나 support module로 옮길 때
+  - 화면 support 경계를 바꿀 때
+  - 제외: query `select` 내부 shaping만 바꾸는 경우
 reviewWith: >-
   screen-move-pure-support-code-out-of-entry-files, typescript/functions-extract-helpers-only-when-the-boundary-is-real
 tags: screen, utils, extraction

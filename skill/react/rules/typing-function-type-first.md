@@ -7,6 +7,10 @@ impactDescriptionKo: React handler 시그니처와 callback 의도를 선언 위
 appliesWhen: >-
   React 이벤트 핸들러나 prop callback의 선언·시그니처를 추가·변경하며 기존 React alias·callback 계약을 쓸 수 있다.
   curried factory의 최종 반환 handler도 포함한다.
+appliesWhenKo:
+  - React 이벤트 핸들러나 prop callback의 선언·시그니처를 추가·변경할 때
+  - 기존 React alias나 callback 계약을 그대로 쓸 수 있는 상황일 때
+  - curried factory가 최종 반환하는 handler를 다룰 때
 reviewWith: typing-reuse-existing-contracts, ownership-avoid-barrel-and-react-namespace-imports
 requiresSelected: typescript/types-reuse-callback-signatures-from-existing-contracts
 tags: typing, handlers, props

@@ -7,6 +7,9 @@ impactDescriptionKo: compound 공개 part를 흩어진 선언이 아니라 이�
 appliesWhen: >-
   compound component의 exported public part·props interface·part 내부 handler를 추가·변경하거나 public part 문서를
   수정한다.
+appliesWhenKo:
+  - compound component의 exported public part·props interface·part 내부 handler를 추가·변경할 때
+  - public part 문서를 수정할 때
 requiresSelected: docs-require-jsdoc-on-key-declarations
 tags: docs, jsdoc, composition, compound-components
 ---

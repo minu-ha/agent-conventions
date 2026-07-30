@@ -5,6 +5,9 @@ impact: HIGH
 impactDescription: 추측성 추출 대신 실제 재사용 경계에 맞춰 route 코드를 유지합니다
 impactDescriptionKo: 추측성 추출 대신 실제 재사용 경계에 맞춰 route 코드를 유지합니다
 appliesWhen: screen 코드를 helper·hook·component·module로 추출하거나 한 곳에서만 쓰는 기존 추상화를 접어 넣는다.
+appliesWhenKo:
+  - screen 코드를 helper·hook·component·module로 추출할 때
+  - 한 곳에서만 쓰는 기존 추상화를 다시 접어 넣을 때
 reviewWith: >-
   screen-extract-local-section-components-for-runtime-boundaries, screen-extract-utilities-selectively,
   typescript/functions-extract-helpers-only-when-the-boundary-is-real

@@ -88,6 +88,10 @@ export interface ViewerRule {
 	 */
 	appliesWhen: string;
 	/**
+	 * @field 사람이 읽는 화면에 노출할 적용 조건 불렛 목록. 비어 있으면 appliesWhen 원문을 보여준다
+	 */
+	appliesWhenBullets: string[];
+	/**
 	 * @field 탐색용 태그 목록
 	 */
 	tags: string[];
@@ -221,6 +225,7 @@ export const buildViewerPayload = async (): Promise<ViewerPayload> => {
 				impact: rule.impact,
 				impactDescription: rule.impactDescriptionKo || rule.impactDescription || "",
 				appliesWhen: rule.appliesWhen ?? "",
+				appliesWhenBullets: rule.appliesWhenKo ?? [],
 				tags: rule.tags,
 				requiresSelected: rule.requiresSelected,
 				reviewWith: rule.reviewWith,

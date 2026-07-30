@@ -6,6 +6,9 @@ impactDescription: 응답 변환을 fetch 경계 가까이에 두고 렌더 타�
 impactDescriptionKo: 응답 변환을 fetch 경계 가까이에 두고 렌더 타임의 반복 매핑을 막습니다
 appliesWhen: >-
   서버 응답의 list·items·meta 등을 렌더에서 가공·반복 소비하거나 React Query `select`의 결과 shape를 추가·변경한다.
+appliesWhenKo:
+  - 서버 응답의 list·items·meta 등을 렌더에서 가공하거나 반복 소비할 때
+  - React Query `select`의 결과 shape를 추가·변경할 때
 requiresSelected: docs-require-jsdoc-on-key-declarations
 reviewWith: data-name-query-and-mutation-bindings-consistently, data-preserve-origin-chaining
 tags: state, react-query, select

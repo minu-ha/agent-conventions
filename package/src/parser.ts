@@ -13,11 +13,17 @@ const allowedRuleFrontmatterKeys = new Set([
 	"impactDescription",
 	"impactDescriptionKo",
 	"appliesWhen",
+	"appliesWhenKo",
 	"requiresSelected",
 	"requiredOnCompletion",
 	"reviewWith",
 	"tags",
 ]);
+
+/**
+ * @field `- ` 항목 block list로만 쓰는 frontmatter 키. 값은 줄바꿈으로 이어 붙인다
+ */
+const blockListFrontmatterKeys = new Set(["appliesWhenKo"]);
 
 /**
  * @helper optional boolean frontmatter scalar 해석
@@ -93,6 +99,27 @@ export const parseFrontmatter = (source: string): {frontmatter: Record<string, s
 
 		if (Object.hasOwn(frontmatter, key)) {
 			throw new Error(`Duplicate frontmatter key "${key}".`);
+		}
+
+		// YAML block list. 사람이 읽는 조건 불렛처럼 항목이 여러 개인 키만 허용한다.
+		if (blockListFrontmatterKeys.has(key)) {
+			if ((rawValueSource ?? "").trim().length > 0) {
+				throw new Error(`Frontmatter key "${key}" must be a block list of "- " items.`);
+			}
+
+			const items: string[] = [];
+
+			while (index + 1 < sourceLines.length && /^\s+-\s+\S/.test(sourceLines[index + 1] ?? "")) {
+				index += 1;
+				items.push(parseScalarValue((sourceLines[index] ?? "").trim().replace(/^-\s+/, ""), key));
+			}
+
+			if (items.length === 0) {
+				throw new Error(`Block list frontmatter key "${key}" has no "- " items.`);
+			}
+
+			frontmatter[key] = items.join("\n");
+			continue;
 		}
 
 		// YAML folded scalar. 긴 조건문을 소스에서 여러 줄로 쓰되 값은 한 줄로 접는다.
@@ -278,6 +305,7 @@ export const readSkillRules = async (skillPaths: SkillPaths): Promise<SkillRule[
 			impactDescriptionKo: frontmatter.impactDescriptionKo ?? "",
 			tags: splitScalarList(frontmatter.tags),
 			appliesWhen: frontmatter.appliesWhen,
+			appliesWhenKo: frontmatter.appliesWhenKo === undefined ? [] : frontmatter.appliesWhenKo.split("\n"),
 			requiresSelected: splitScalarList(frontmatter.requiresSelected),
 			requiredOnCompletion: parseBooleanScalar(frontmatter.requiredOnCompletion, "requiredOnCompletion"),
 			reviewWith: splitScalarList(frontmatter.reviewWith),

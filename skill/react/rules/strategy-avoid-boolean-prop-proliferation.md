@@ -6,6 +6,9 @@ impactDescription: 공용 컴포넌트가 숨은 variant 조합을 쌓지 않고
 impactDescriptionKo: 공용 컴포넌트가 숨은 variant 조합을 쌓지 않고 명시적인 구조를 유지하게 합니다
 appliesWhen: >-
   여러 곳에서 쓰는 shared component에 boolean mode·visibility prop을 추가하거나 기존 boolean 조합과 JSX 분기가 늘어난다.
+appliesWhenKo:
+  - 여러 곳에서 쓰는 shared component에 boolean mode·visibility prop을 추가할 때
+  - 기존 boolean prop 조합과 JSX 분기가 늘어날 때
 tags: composition, props, variants, component-design
 ---
 

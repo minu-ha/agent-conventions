@@ -7,6 +7,9 @@ impactDescriptionKo: route entry 흐름은 보이게 두면서 실제 런타임 
 appliesWhen: >-
   route-local section component를 새로 추출하거나 기존 section이 async·state·provider·interaction·library·performance
   경계를 소유하는지 바꾼다.
+appliesWhenKo:
+  - route-local section component를 새로 추출할 때
+  - 기존 section이 async·state·provider·interaction·library·performance 경계를 소유하는지 바꿀 때
 tags: screen, routes, local-components, boundaries
 ---
 

@@ -6,6 +6,9 @@ impactDescription: 현재 입력에서 계산할 수 있는 값의 불필요한 
 impactDescriptionKo: 현재 입력에서 계산할 수 있는 값의 불필요한 state 동기화와 effect 기반 어긋남을 막습니다
 appliesWhen: >-
   현재 props·state·search·response에서 계산 가능한 값을 별도 state와 effect로 동기화하거나 그 동기화를 제거한다.
+appliesWhenKo:
+  - 현재 props·state·search·response에서 계산 가능한 값을 별도 state와 effect로 동기화할 때
+  - 그런 동기화를 제거할 때
 requiresSelected: screen-keep-derived-values-close
 tags: state, derived-state, render, effects
 ---

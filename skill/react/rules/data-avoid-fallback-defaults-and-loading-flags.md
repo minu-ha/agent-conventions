@@ -7,6 +7,10 @@ impactDescriptionKo: 결측 데이터를 숨기지 않고 로딩 UX를 Suspense 
 appliesWhen: >-
   optional 응답에 `??`·`||` 기본값을 넣거나 Suspense 화면 본문에 초기 loading return을 추가·변경하고 결측·로딩 UX를
   다룬다.
+appliesWhenKo:
+  - optional 응답에 `??`·`||` 기본값을 넣을 때
+  - Suspense 화면 본문에 초기 loading return을 추가·변경할 때
+  - 결측·로딩 UX를 다룰 때
 reviewWith: >-
   data-preserve-origin-chaining, screen-keep-derived-values-close,
   typescript/absence-expose-optional-values-instead-of-silent-fallbacks

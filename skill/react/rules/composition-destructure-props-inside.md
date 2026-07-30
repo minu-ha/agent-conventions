@@ -7,6 +7,9 @@ impactDescriptionKo: 컴포넌트 계약을 시그니처에 남기고 실제 사
 appliesWhen: >-
   props를 받는 함수 컴포넌트의 시그니처·본문 구조분해 방식을 추가·변경하거나 그 컴포넌트를 다른 파일로 이동·이름
   변경한다.
+appliesWhenKo:
+  - props를 받는 함수 컴포넌트의 시그니처나 구조분해 방식을 추가·변경할 때
+  - props를 받는 컴포넌트를 다른 파일로 옮기거나 이름을 바꿀 때
 tags: composition, props
 ---
 

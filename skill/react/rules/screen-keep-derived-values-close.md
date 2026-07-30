@@ -7,6 +7,9 @@ impactDescriptionKo: 오리진을 보존하고 route entry가 alias와 명령형
 appliesWhen: >-
   response·state·search·props의 오리진을 끊는 alias·flag·표시값을 넓은 screen scope에 추가·이동·제거하거나 `let`/`push`
   조립을 바꾼다.
+appliesWhenKo:
+  - 오리진을 끊는 alias·flag·표시값을 넓은 screen scope에 추가·이동·제거할 때
+  - `let` 재할당이나 배열 `push` 기반 조립을 바꿀 때
 tags: screen, derived-values, origin
 ---
 

@@ -220,6 +220,22 @@ pre.code + .code-lb { border-top: 1px solid var(--soft); }
 .empty { padding: 72px 24px; text-align: center; border: 1px dashed var(--hair); border-radius: 3px; color: var(--muted); font-size: 13.5px; }
 mark { background: color-mix(in srgb, var(--coral) 30%, transparent); color: inherit; border-radius: 2px; }
 
+/* 적용 조건 불렛. 제외 조건은 라벨 칩과 낮은 대비로 본 조건과 갈라 읽힌다. */
+.acc-body li.li-x { color: var(--muted); }
+.acc-body li.li-x::before { color: var(--faint); }
+.x-lb { display: inline-block; font-family: var(--mono); font-size: 10px; font-weight: 500; letter-spacing: .06em; color: var(--faint); border: 1px solid var(--hair); border-radius: 999px; padding: 0 7px; margin-right: 7px; vertical-align: 1px; }
+
+/* ---------- rule dialog ---------- */
+/* 참조 칩은 목록을 이동하는 대신 이 다이얼로그로 미리 보여준다. 보던 섹션을 잃지 않는다. */
+.dlg { width: min(880px, calc(100vw - 32px)); max-height: min(86vh, 920px); margin: auto; padding: 0; overflow: auto; border: 1px solid var(--edge); border-radius: 3px; background: var(--card); color: var(--ink); box-shadow: 0 24px 64px color-mix(in srgb, #0b0f11 35%, transparent); }
+.dlg::backdrop { background: color-mix(in srgb, #0b0f11 52%, transparent); }
+.dlg-bar { position: sticky; top: 0; z-index: 2; display: flex; align-items: center; justify-content: flex-end; gap: 6px; padding: 8px 10px; background: var(--card); border-bottom: 1px solid var(--soft); }
+.dlg-act { min-height: 26px; padding: 0 9px; border-radius: 2px; font-family: var(--mono); font-size: 10.5px; color: var(--ink2); border: 1px solid var(--hair); background: var(--card); }
+.dlg-act:hover { border-color: var(--edge); color: var(--ink); }
+.dlg .row { border: 0; border-radius: 0; }
+.dlg .row-hd-dlg:hover { background: none; }
+.dlg .row-hd-dlg { cursor: default; }
+
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; scroll-behavior: auto !important; } }`;
 
 const viewerBodyMarkup = `<header class="hd">
@@ -265,7 +281,8 @@ const viewerBodyMarkup = `<header class="hd">
 		</aside>
 		<main><div class="list" id="list"></div></main>
 	</div>
-</div>`;
+</div>
+<dialog class="dlg" id="dlg" aria-label="규칙 미리 보기"></dialog>`;
 
 const viewerClientScript = `(() => {
 	"use strict";
@@ -374,7 +391,7 @@ const viewerClientScript = `(() => {
 		if (r._h) return r._h;
 		const code = r.examples.flatMap((e) => e.blocks.map((b) => b.code)).join("\\n");
 		// 한국어·영어 제목을 모두 색인해 어느 언어로 검색해도 걸린다.
-		return (r._h = [r.titleKo, r.title, r.id, r.skill, r.appliesWhen, r.impactDescription, r.tags.join(" "), code].join("\\n").toLowerCase());
+		return (r._h = [r.titleKo, r.title, r.id, r.skill, r.appliesWhen, r.appliesWhenBullets.join(" "), r.impactDescription, r.tags.join(" "), code].join("\\n").toLowerCase());
 	}
 
 	function matches(r) {
@@ -395,6 +412,21 @@ const viewerClientScript = `(() => {
 		const terms = state.q.split(/\\s+/).filter(Boolean).map((x) => x.replace(/[.*+?^\${}()|[\\]\\\\]/g, "\\\\$&"));
 		return terms.length ? t.replace(new RegExp("(" + terms.join("|") + ")", "gi"), "<mark>$1</mark>") : t;
 	}
+
+	// 검색 하이라이트를 유지한 채 backtick 구간만 <code> 로 감싼다.
+	const inlineHi = (t) => String(t == null ? "" : t).split("\`").map((seg, i) => (i % 2 ? "<code>" + esc(seg) + "</code>" : hi(seg))).join("");
+
+	// 적용 조건은 불렛이 있으면 불렛으로, 없으면 appliesWhen 원문 문단으로 보여준다.
+	// "제외:" 로 시작하는 항목은 걸리지 않는 조건이라 라벨 칩으로 갈라 보여준다.
+	const whenHtml = (r) => {
+		if (!r.appliesWhenBullets.length) return "<p>" + inlineHi(r.appliesWhen) + "</p>";
+		return "<ul>" + r.appliesWhenBullets.map((b) => {
+			const m = /^제외\\s*[:—-]\\s*/.exec(b);
+			return m
+				? '<li class="li-x"><span class="x-lb">제외</span>' + inlineHi(b.slice(m[0].length)) + "</li>"
+				: "<li>" + inlineHi(b) + "</li>";
+		}).join("") + "</ul>";
+	};
 
 	// 참조 칩은 규칙 ID 대신 한국어 제목을 보여준다. ID 는 title 속성에 남겨 grep 이 되게 한다.
 	// 같은 skill 안의 참조는 ID 만 오므로 소유 skill 을 붙여 해석한다.
@@ -423,9 +455,10 @@ const viewerClientScript = `(() => {
 			'<span class="box-langs">' + esc(langs) + "</span></div>" + codeHtml(e.blocks) + "</div>";
 	};
 
-	function ruleHtml(r) {
+	// dlg 모드는 참조 미리 보기 다이얼로그 전용이다. 항상 펼치고, 목록과 id 가 겹치지 않게 둔다.
+	function ruleHtml(r, dlg) {
 		const key = keyOf(r);
-		const open = state.open.has(key);
+		const open = dlg ? true : state.open.has(key);
 		const whenOpen = state.when.has(key);
 		const whyOpen = state.why.has(key);
 		const sec = secOf(r);
@@ -462,8 +495,8 @@ const viewerClientScript = `(() => {
 					boxHtml(p.find((e) => e.kind === "incorrect")) +
 					boxHtml(p.find((e) => e.kind !== "incorrect")) + "</div>").join("") + "</div>" +
 				'<div class="accs">' +
-				(r.appliesWhen
-					? acc("when", "언제 적용할까요?", whenOpen, () => "<p>" + hi(r.appliesWhen) + "</p>")
+				(r.appliesWhen || r.appliesWhenBullets.length
+					? acc("when", "언제 적용할까요?", whenOpen, () => whenHtml(r))
 					: "") +
 				(r.prose.length || r.impactDescription
 					? acc("why", "이 규칙이 왜 필요할까요?", whyOpen, () =>
@@ -476,14 +509,21 @@ const viewerClientScript = `(() => {
 				"</div>";
 		}
 
-		return '<article class="row" data-imp="' + r.impact + '" data-open="' + (open ? 1 : 0) + '" id="' + domIdOf(r) + '">' +
+		const head = dlg
+			? '<div class="row-hd row-hd-dlg">' +
+				'<span class="row-no" title="' + esc(r.skill) + " HANDBOOK " + r.number + '">' + r.number + "</span>" +
+				'<span class="row-ti">' + hi(titleOf(r)) + "</span>" +
+				'<span class="row-meta"><span class="imp imp-' + r.impact + '">' + r.impact + "</span></span></div>"
+			: '<button class="row-hd" data-rule="' + esc(key) + '" aria-expanded="' + open + '">' +
+				'<span class="row-no" title="' + esc(r.skill) + " HANDBOOK " + r.number + '">' + r.number + "</span>" +
+				'<span class="row-ti">' + hi(titleOf(r)) + "</span>" +
+				'<span class="row-meta"><span class="imp imp-' + r.impact + '">' + r.impact + "</span>" +
+				'<span class="car" aria-hidden="true">' + (open ? "\\u25be" : "\\u25b8") + "</span></span></button>";
+
+		return '<article class="row" data-imp="' + r.impact + '" data-open="' + (open ? 1 : 0) + '"' +
+			(dlg ? "" : ' id="' + domIdOf(r) + '"') + ">" +
 			'<span class="row-stripe" aria-hidden="true"></span>' +
-			'<button class="row-hd" data-rule="' + esc(key) + '" aria-expanded="' + open + '">' +
-			'<span class="row-no" title="' + esc(r.skill) + " HANDBOOK " + r.number + '">' + r.number + "</span>" +
-			'<span class="row-ti">' + hi(titleOf(r)) + "</span>" +
-			'<span class="row-meta"><span class="imp imp-' + r.impact + '">' + r.impact + "</span>" +
-			'<span class="car" aria-hidden="true">' + (open ? "\\u25be" : "\\u25b8") + "</span></span></button>" +
-			body + "</article>";
+			head + body + "</article>";
 	}
 
 	function renderRail() {
@@ -535,7 +575,7 @@ const viewerClientScript = `(() => {
 		const hits = RULES.filter(matches);
 		const scopeTotal = RULES.filter((r) => !state.skill || r.skill === state.skill).length;
 		document.getElementById("list").innerHTML = hits.length
-			? hits.map(ruleHtml).join("")
+			? hits.map((r) => ruleHtml(r)).join("")
 			: '<div class="empty">일치하는 규칙이 없습니다. 검색어나 필터를 줄여보세요.</div>';
 		const codeTotal = hits.reduce((n, r) => n + r.examples.reduce((m, e) => m + e.blocks.length, 0), 0);
 		document.getElementById("count").textContent = hits.length + " / " + scopeTotal + " 규칙" + (hits.length ? "  ·  코드 " + codeTotal : "");
@@ -543,6 +583,33 @@ const viewerClientScript = `(() => {
 		document.getElementById("expand").textContent = allOpen ? "전체 접기" : "전체 펼침";
 		renderRail();
 	}
+
+	// 참조 미리 보기 다이얼로그. 목록 스크롤을 유지한 채 다른 규칙을 읽는다.
+	const dlg = document.getElementById("dlg");
+	let dlgKey = "";
+
+	function renderDialog() {
+		if (!dlgKey) return;
+		const r = byKey.get(dlgKey);
+		if (!r) return;
+		dlg.setAttribute("aria-label", titleOf(r));
+		dlg.innerHTML = '<div class="dlg-bar">' +
+			'<button class="dlg-act" data-jump="' + esc(dlgKey) + '">목록에서 열기</button>' +
+			'<button class="dlg-act" data-close="1">닫기 esc</button></div>' +
+			ruleHtml(r, true);
+	}
+
+	function openDialog(key) {
+		if (!byKey.has(key)) return;
+		dlgKey = key;
+		renderDialog();
+		if (!dlg.open) dlg.showModal();
+		dlg.scrollTop = 0;
+	}
+
+	// 내용이 다이얼로그를 가득 채우므로 dialog 자체가 target 이면 backdrop 클릭이다.
+	dlg.addEventListener("click", (ev) => { if (ev.target === dlg) dlg.close(); });
+	dlg.addEventListener("close", () => { dlgKey = ""; dlg.innerHTML = ""; });
 
 	function selectSkill(name) {
 		if (state.skill === name) return;
@@ -570,9 +637,10 @@ const viewerClientScript = `(() => {
 	});
 
 	document.addEventListener("click", (ev) => {
-		const t = ev.target.closest("[data-rule],[data-skill],[data-impact],[data-section],[data-tag],[data-when],[data-why],[data-goto],[data-clear]");
+		const t = ev.target.closest("[data-rule],[data-skill],[data-impact],[data-section],[data-tag],[data-when],[data-why],[data-goto],[data-jump],[data-close],[data-clear]");
 		if (!t) return;
-		const toggle = (set, key) => { set.has(key) ? set.delete(key) : set.add(key); render(); };
+		// 다이얼로그가 열려 있으면 그 안의 아코디언도 같은 상태를 쓰므로 함께 다시 그린다.
+		const toggle = (set, key) => { set.has(key) ? set.delete(key) : set.add(key); render(); renderDialog(); };
 
 		if (t.dataset.rule) return toggle(state.open, t.dataset.rule);
 		if (t.dataset.skill) return selectSkill(t.dataset.skill);
@@ -581,15 +649,20 @@ const viewerClientScript = `(() => {
 		if (t.dataset.section) { state.section = state.section === t.dataset.section ? "" : t.dataset.section; return render(); }
 		if (t.dataset.when) return toggle(state.when, t.dataset.when);
 		if (t.dataset.why) return toggle(state.why, t.dataset.why);
+		if (t.dataset.close) return dlg.close();
 
-		if (t.dataset.goto) {
+		// 참조 칩은 보던 위치를 잃지 않게 목록 이동 대신 다이얼로그로 미리 보여준다.
+		if (t.dataset.goto) return openDialog(t.dataset.goto);
+
+		if (t.dataset.jump) {
 			// 단일 선택이라 다른 skill 규칙으로 가려면 선택을 그 skill 로 옮긴다.
-			const target = byKey.get(t.dataset.goto);
+			const target = byKey.get(t.dataset.jump);
 			if (!target) return;
+			dlg.close();
 			state.q = ""; state.impact.clear(); state.tags.clear(); state.section = "";
 			document.getElementById("q").value = "";
 			if (state.skill !== target.skill) { state.skill = target.skill; remember(); }
-			state.open.add(t.dataset.goto);
+			state.open.add(t.dataset.jump);
 			render();
 			const el = document.getElementById(domIdOf(target));
 			if (el) {

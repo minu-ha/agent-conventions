@@ -7,6 +7,10 @@ impactDescriptionKo: 중요한 API, handler, effect, 타입 선언을 더 쉽게
 appliesWhen: >-
   query·mutation, 비자명한 handler/effect, exported helper/custom hook/store, exported 또는 re-exported public
   type/interface, 예외 memo 선언을 추가·변경한다.
+appliesWhenKo:
+  - query·mutation binding이나 비자명한 handler/effect를 추가·변경할 때
+  - exported helper·custom hook·store 선언을 추가·변경할 때
+  - exported/re-exported public type·interface나 예외 memo 선언을 추가·변경할 때
 requiresSelected: typescript/docs-require-header-jsdoc-on-key-declarations
 tags: docs, jsdoc, handlers, effects
 ---

@@ -7,6 +7,10 @@ impactDescriptionKo: 에이전트가 파일을 만들거나 옮길 때 소유 �
 appliesWhen: >-
   React/TSX 파일·컴포넌트·exported symbol·공용 설정 이름을 정하거나 바꾸거나, React 작업에서 sibling `.ts` support
   파일이나 exported support symbol을 만들거나 옮긴다. local query·mutation만이면 제외한다.
+appliesWhenKo:
+  - React/TSX 파일·컴포넌트·exported symbol·공용 설정의 이름을 정하거나 바꿀 때
+  - React 작업에서 sibling `.ts` support 파일이나 exported support symbol을 만들거나 옮길 때
+  - 제외: local query·mutation binding 이름만 바꾸는 경우
 requiresSelected: typescript/naming-use-consistent-file-and-symbol-naming
 tags: ownership, naming, files
 ---

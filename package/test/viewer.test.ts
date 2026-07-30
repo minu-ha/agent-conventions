@@ -113,6 +113,19 @@ test("parseFrontmatter reads titleKo as a plain scalar", () => {
 	assert.equal(frontmatter.titleKo, "명명된 핸들러를 쓴다");
 });
 
+test("parseFrontmatter reads appliesWhenKo as a block list of items", () => {
+	const {frontmatter} = parseFrontmatter(
+		["---", "title: Sample", "appliesWhenKo:", "  - 조건 하나를 바꿀 때", "  - 제외: 표현만 바꾸는 경우", "---", "", "본문"].join("\n"),
+	);
+
+	assert.equal(frontmatter.appliesWhenKo, "조건 하나를 바꿀 때\n제외: 표현만 바꾸는 경우");
+});
+
+test("parseFrontmatter rejects appliesWhenKo without block list items", () => {
+	assert.throws(() => parseFrontmatter(["---", "appliesWhenKo: 한 줄 값", "---", "본문"].join("\n")), /block list/);
+	assert.throws(() => parseFrontmatter(["---", "appliesWhenKo:", "tags: a", "---", "본문"].join("\n")), /no "- " items/);
+});
+
 test("parseSections reads TitleKo placed before Description", () => {
 	const source = [
 		"# 섹션",
@@ -183,6 +196,17 @@ test("buildViewerPayload gives every rule a resolvable section and parsed exampl
 	}
 });
 
+test("buildViewerPayload carries human-readable condition bullets for react rules", async () => {
+	const payload = await buildViewerPayload();
+	const reactRules = payload.rules.filter((rule) => rule.skill === "react");
+
+	assert.ok(reactRules.length > 0, "expected react rules");
+
+	for (const rule of reactRules) {
+		assert.ok(rule.appliesWhenBullets.length > 0, `react/${rule.id} has no appliesWhenKo bullets`);
+	}
+});
+
 test("buildViewerPayload is deterministic and carries no timestamp", async () => {
 	const [first, second] = await Promise.all([buildViewerPayload(), buildViewerPayload()]);
 
@@ -218,6 +242,7 @@ test("encodeViewerPayload escapes angle brackets so inline JSON cannot break out
 				impact: "HIGH",
 				impactDescription: "설명",
 				appliesWhen: "조건",
+				appliesWhenBullets: ["조건 불렛"],
 				tags: ["a"],
 				requiresSelected: [],
 				reviewWith: [],
@@ -294,6 +319,20 @@ test("viewer client script indexes both languages plus code, and keeps cross-ski
 	// 규칙 번호는 필터와 무관한 고정값이어야 한다. 목록 위치로 번호를 매기면 안 된다.
 	assert.match(html, /r\.number/);
 	assert.equal(/padStart\(3, "0"\)/.test(html), false, "rule numbers must come from the payload, not the list index");
+});
+
+test("viewer previews referenced rules in a dialog instead of leaving the current section", () => {
+	const html = renderViewerHtml(encodeViewerPayload(emptyPayload));
+
+	// 참조 칩은 목록 스크롤을 잃지 않게 다이얼로그로 미리 보여준다.
+	assert.match(html, /<dialog class="dlg" id="dlg"/);
+	assert.match(html, /openDialog\(t\.dataset\.goto\)/);
+	assert.match(html, /showModal/);
+	// 목록으로 이동하는 기존 경로는 다이얼로그 안 버튼으로 남는다.
+	assert.match(html, /data-jump/);
+	// 적용 조건은 불렛 목록으로 렌더한다.
+	assert.match(html, /appliesWhenBullets/);
+	assert.match(html, /class="li-x"/);
 });
 
 test("generateViewerHtml embeds every rule and stays byte-stable", async () => {
