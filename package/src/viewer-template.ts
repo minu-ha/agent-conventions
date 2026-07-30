@@ -227,7 +227,10 @@ mark { background: color-mix(in srgb, var(--coral) 30%, transparent); color: inh
 
 /* ---------- rule dialog ---------- */
 /* 참조 칩은 목록을 이동하는 대신 이 다이얼로그로 미리 보여준다. 보던 섹션을 잃지 않는다. */
-.dlg { width: min(880px, calc(100vw - 32px)); max-height: min(86vh, 920px); margin: auto; padding: 0; overflow: hidden; display: flex; flex-direction: column; border: 1px solid var(--edge); border-radius: 3px; background: var(--card); color: var(--ink); box-shadow: 0 24px 64px color-mix(in srgb, #0b0f11 35%, transparent); }
+.dlg { width: min(880px, calc(100vw - 32px)); max-height: min(86vh, 920px); margin: auto; padding: 0; overflow: hidden; border: 1px solid var(--edge); border-radius: 3px; background: var(--card); color: var(--ink); box-shadow: 0 24px 64px color-mix(in srgb, #0b0f11 35%, transparent); }
+/* display 를 기본 선택자에 주면 UA 의 dialog:not([open]) { display: none } 을 덮어써
+   닫힌 빈 다이얼로그의 테두리가 화면 중앙에 선으로 남는다. 열렸을 때만 준다. */
+.dlg[open] { display: flex; flex-direction: column; }
 .dlg::backdrop { background: color-mix(in srgb, #0b0f11 52%, transparent); }
 /* 다이얼로그가 열리면 뒤 목록은 스크롤되지 않아야 한다. */
 body:has(.dlg[open]) { overflow: hidden; }
