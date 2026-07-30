@@ -138,18 +138,34 @@ body {
 .imp-HIGH { background: color-mix(in srgb, var(--coral) 14%, transparent); color: var(--coral-dk); }
 .imp-MEDIUM-HIGH { color: var(--coral-dk); border-color: color-mix(in srgb, var(--coral) 50%, transparent); }
 .imp-MEDIUM { color: var(--muted); border-color: var(--hair); }
-.imp-ko { font-family: var(--sans); font-size: 10.5px; font-weight: 500; letter-spacing: 0; opacity: .8; }
-.ch-ko { font-family: var(--sans); font-size: 11px; opacity: .7; padding-left: 5px; }
 
 .body { border-top: 1px solid var(--soft); padding: 18px 20px 22px; }
 .meta { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; font-family: var(--mono); font-size: 10.5px; color: var(--faint); }
 .meta-s { color: var(--edge); }
 
-/* 판단에 쓰는 글은 읽기 편한 폭과 패널로 감싼다. 카드 폭 전체로 흘리면 줄이 길어 눈이 돌아온다. */
-.note { display: grid; grid-template-columns: 5.6em minmax(0, 1fr); gap: 10px; margin-top: 18px; padding: 12px 14px; background: var(--hover); border-radius: 10px; }
-@media (max-width: 560px) { .note { grid-template-columns: minmax(0, 1fr); gap: 4px; } }
-.note-lb { font-family: var(--mono); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--faint); padding-top: 3px; }
-.note-tx { font-size: 13.5px; line-height: 1.75; color: var(--ink2); max-width: 74ch; }
+/* 아코디언 두 개는 같은 형태다. 판단에 쓰는 글은 읽기 편한 폭으로 제한한다. */
+.accs { display: flex; flex-direction: column; margin-top: 16px; border-top: 1px dashed var(--hair); }
+.accs:empty { display: none; }
+.acc { border-bottom: 1px dashed var(--hair); }
+.acc-btn { display: flex; align-items: center; gap: 8px; width: 100%; text-align: left; padding: 11px 2px; font-size: 13px; font-weight: 500; color: var(--coral-dk); }
+.acc-btn:hover { color: var(--coral); }
+.acc-car { font-size: 9px; width: 8px; flex: 0 0 auto; }
+.acc-body { display: none; padding: 0 2px 14px 18px; color: var(--ink2); font-size: 13.5px; line-height: 1.75; max-width: 78ch; }
+.acc[data-open="1"] .acc-body { display: block; }
+.acc-body p { margin: 0 0 .75em; }
+.acc-body p:last-child { margin-bottom: 0; }
+.acc-body .lead { color: var(--ink); font-weight: 500; }
+.acc-body ul { margin: 0 0 .75em; padding-left: 1.1em; list-style: none; }
+.acc-body ul:last-child { margin-bottom: 0; }
+.acc-body li { position: relative; margin: 0 0 .35em; }
+.acc-body li::before { content: "·"; position: absolute; left: -.9em; color: var(--coral); font-weight: 700; }
+.acc-body code { font-family: var(--mono); font-size: .88em; background: var(--hover); border: 1px solid var(--soft); border-radius: 3px; padding: 0 .25em; }
+.acc-body strong { color: var(--ink); font-weight: 600; }
+.acc-body .tw { overflow-x: auto; margin: 0 0 .8em; }
+.acc-body table { border-collapse: collapse; font-size: 12.5px; min-width: 100%; }
+.acc-body th, .acc-body td { border: 1px solid var(--hair); padding: 6px 10px; text-align: left; vertical-align: top; }
+.acc-body th { background: var(--hover); font-family: var(--mono); font-size: 10.5px; font-weight: 500; }
+.acc-body pre.code { border: 1px solid var(--soft); border-radius: 8px; margin: 0 0 .8em; }
 
 .pairs { display: flex; flex-direction: column; gap: 18px; margin-top: 16px; }
 .pair { display: flex; flex-direction: column; gap: 12px; }
@@ -180,28 +196,6 @@ pre.code + .code-lb { border-top: 1px solid var(--soft); }
 .k { color: var(--coral-dk); font-weight: 500; }
 .g { color: var(--tag-fg); }
 
-.why { margin-top: 14px; padding-top: 14px; border-top: 1px dashed var(--hair); }
-.why-btn { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; width: 100%; text-align: left; font-size: 12.5px; font-weight: 500; color: var(--coral-dk); }
-.why-btn:hover:not([disabled]) { text-decoration: underline; }
-.why-btn[disabled] { cursor: default; }
-.why-car { font-size: 9px; width: 8px; flex: 0 0 auto; }
-.why-imp { min-height: 20px; font-size: 9.5px; }
-.why-desc { font-weight: 400; color: var(--muted); font-size: 12.5px; }
-.why-body { display: none; margin-top: 12px; padding-left: 16px; border-left: 2px solid var(--soft); color: var(--ink2); font-size: 13.5px; line-height: 1.75; max-width: 78ch; }
-.why[data-open="1"] .why-body { display: block; }
-.why-body p { margin: 0 0 .75em; }
-.why-body p:last-child { margin-bottom: 0; }
-.why-body ul { margin: 0 0 .75em; padding-left: 1.1em; list-style: none; }
-.why-body ul:last-child { margin-bottom: 0; }
-.why-body li { position: relative; margin: 0 0 .35em; }
-.why-body li::before { content: "·"; position: absolute; left: -.9em; color: var(--coral); font-weight: 700; }
-.why-body code { font-family: var(--mono); font-size: .88em; background: var(--hover); border: 1px solid var(--soft); border-radius: 3px; padding: 0 .25em; }
-.why-body strong { color: var(--ink); font-weight: 600; }
-.why-body .tw { overflow-x: auto; margin: 0 0 .8em; }
-.why-body table { border-collapse: collapse; font-size: 12.5px; min-width: 100%; }
-.why-body th, .why-body td { border: 1px solid var(--hair); padding: 6px 10px; text-align: left; vertical-align: top; }
-.why-body th { background: var(--hover); font-family: var(--mono); font-size: 10.5px; font-weight: 500; }
-.why-body pre.code { border: 1px solid var(--soft); border-radius: 8px; margin: 0 0 .8em; }
 
 .refs { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
 .ref-g { display: grid; grid-template-columns: 5.6em minmax(0, 1fr); align-items: start; gap: 10px; }
@@ -275,8 +269,6 @@ const viewerClientScript = `(() => {
 
 	const RULES = DATA.rules;
 	const IMPACTS = ["CRITICAL", "HIGH", "MEDIUM-HIGH", "MEDIUM"];
-	const IMPACT_KO = {CRITICAL: "최우선", HIGH: "높음", "MEDIUM-HIGH": "중상", MEDIUM: "보통"};
-	const impKo = (k) => IMPACT_KO[k] || k;
 	const DOT = {
 		CRITICAL: "var(--coral)",
 		HIGH: "color-mix(in srgb, var(--coral) 75%, transparent)",
@@ -292,7 +284,7 @@ const viewerClientScript = `(() => {
 	const secLabel = (s) => s.titleKo || s.title;
 
 	// skill 은 단일 선택. section 은 skill 마다 같은 prefix 를 쓸 수 있어 "skill/prefix" 로 잡는다.
-	const state = {q: "", skill: "", impact: new Set(), section: "", tags: new Set(), open: new Set(), why: new Set()};
+	const state = {q: "", skill: "", impact: new Set(), section: "", tags: new Set(), open: new Set(), when: new Set(), why: new Set()};
 
 	const remember = () => { try { localStorage.setItem("viewer-skill", state.skill); } catch (e) {} };
 	try { state.skill = localStorage.getItem("viewer-skill") || ""; } catch (e) {}
@@ -398,11 +390,15 @@ const viewerClientScript = `(() => {
 		return terms.length ? t.replace(new RegExp("(" + terms.join("|") + ")", "gi"), "<mark>$1</mark>") : t;
 	}
 
-	const refHtml = (target) => {
+	// 참조 칩은 규칙 ID 대신 한국어 제목을 보여준다. ID 는 title 속성에 남겨 grep 이 되게 한다.
+	// 같은 skill 안의 참조는 ID 만 오므로 소유 skill 을 붙여 해석한다.
+	const refHtml = (target, ownerSkill) => {
 		const ext = target.includes("/");
-		const resolvable = ext && byKey.has(target);
-		return '<button class="ref" data-ext="' + (ext ? 1 : 0) + '"' +
-			(resolvable ? ' data-goto="' + esc(target) + '"' : " disabled") + ">" + esc(target) + "</button>";
+		const key = ext ? target : ownerSkill + "/" + target;
+		const rule = byKey.get(key);
+		const label = rule ? (ext ? rule.skill + " · " : "") + titleOf(rule) : target;
+		return '<button class="ref" data-ext="' + (ext ? 1 : 0) + '" title="' + esc(key) + '"' +
+			(rule ? ' data-goto="' + esc(key) + '"' : " disabled") + ">" + esc(label) + "</button>";
 	};
 
 	// 블록이 여러 개면 박스 하나 안에서 "1 / 2 · lang" 구분선으로 잇는다.
@@ -424,6 +420,7 @@ const viewerClientScript = `(() => {
 	function ruleHtml(r) {
 		const key = keyOf(r);
 		const open = state.open.has(key);
+		const whenOpen = state.when.has(key);
 		const whyOpen = state.why.has(key);
 		const sec = secOf(r);
 		const exCount = r.examples.reduce((t, e) => t + e.blocks.length, 0);
@@ -441,9 +438,16 @@ const viewerClientScript = `(() => {
 			if (r.requiresSelected.length) refs.push(["함께 적용", r.requiresSelected]);
 			if (r.reviewWith.length) refs.push(["함께 검토", r.reviewWith]);
 
-			// 순서: 코드 → 적용 조건 → 왜 → 함께 → 태그.
+			// 아코디언 두 개는 같은 형태로 둔다. 둘 다 접힌 상태로 시작해 코드가 먼저 읽힌다.
+			const acc = (attr, label, open, inner) =>
+				'<div class="acc" data-open="' + (open ? 1 : 0) + '">' +
+				'<button class="acc-btn" data-' + attr + '="' + esc(key) + '">' +
+				'<span class="acc-car" aria-hidden="true">' + (open ? "\\u25be" : "\\u25b8") + "</span>" +
+				"<span>" + label + "</span></button>" +
+				'<div class="acc-body">' + (open ? inner() : "") + "</div></div>";
+
+			// 순서: 코드 → 언제 → 왜 → 함께 → 태그.
 			// 규칙을 펼치는 이유는 "어떻게 고치나" 이므로 코드가 먼저 온다.
-			// 판단에 쓰는 글(적용 조건·근거)은 코드 다음에 읽기 편한 폭으로 놓는다.
 			body = '<div class="body">' +
 				'<div class="meta"><span>' + esc(r.id) + "</span>" +
 				(sec ? '<span class="meta-s">·</span><span>' + esc(secLabel(sec)) + "</span>" : "") +
@@ -451,18 +455,17 @@ const viewerClientScript = `(() => {
 				'<div class="pairs">' + pairs.map((p) => '<div class="pair">' +
 					boxHtml(p.find((e) => e.kind === "incorrect")) +
 					boxHtml(p.find((e) => e.kind !== "incorrect")) + "</div>").join("") + "</div>" +
-				(r.appliesWhen ? '<div class="note"><span class="note-lb">적용 조건</span>' +
-					'<p class="note-tx">' + hi(r.appliesWhen) + "</p></div>" : "") +
-				(r.prose.length || r.impactDescription ? '<div class="why" data-open="' + (whyOpen ? 1 : 0) + '">' +
-					'<button class="why-btn" data-why="' + esc(key) + '"' + (r.prose.length ? "" : " disabled") + ">" +
-					'<span class="why-car" aria-hidden="true">' + (r.prose.length ? (whyOpen ? "\\u25be" : "\\u25b8") : "\\u00b7") + "</span>" +
-					"<span>왜 이 규칙인가</span>" +
-					'<span class="why-imp imp imp-' + r.impact + '">' + impKo(r.impact) + "</span>" +
-					(r.impactDescription ? '<span class="why-desc">' + esc(r.impactDescription) + "</span>" : "") +
-					"</button>" +
-					'<div class="why-body">' + (whyOpen ? renderProse(r.prose) : "") + "</div></div>" : "") +
+				'<div class="accs">' +
+				(r.appliesWhen
+					? acc("when", "언제 적용할까요?", whenOpen, () => "<p>" + hi(r.appliesWhen) + "</p>")
+					: "") +
+				(r.prose.length || r.impactDescription
+					? acc("why", "이 규칙이 왜 필요할까요?", whyOpen, () =>
+						(r.impactDescription ? '<p class="lead">' + esc(r.impactDescription) + "</p>" : "") + renderProse(r.prose))
+					: "") +
+				"</div>" +
 				(refs.length ? '<div class="refs">' + refs.map((g) => '<div class="ref-g"><span class="ref-lb">' + g[0] + "</span>" +
-					'<span class="ref-items">' + g[1].map(refHtml).join("") + "</span></div>").join("") + "</div>" : "") +
+					'<span class="ref-items">' + g[1].map((t) => refHtml(t, r.skill)).join("") + "</span></div>").join("") + "</div>" : "") +
 				'<div class="rtags">' + r.tags.map((t) => '<button class="rtag" data-tag="' + esc(t) + '">#' + esc(t) + "</button>").join("") + "</div>" +
 				"</div>";
 		}
@@ -472,8 +475,7 @@ const viewerClientScript = `(() => {
 			'<button class="row-hd" data-rule="' + esc(key) + '" aria-expanded="' + open + '">' +
 			'<span class="row-no" title="' + esc(r.skill) + " HANDBOOK " + r.number + '">' + r.number + "</span>" +
 			'<span class="row-ti">' + hi(titleOf(r)) + "</span>" +
-			'<span class="row-meta"><span class="imp imp-' + r.impact + '">' + r.impact +
-			'<span class="imp-ko">' + impKo(r.impact) + "</span></span>" +
+			'<span class="row-meta"><span class="imp imp-' + r.impact + '">' + r.impact + "</span>" +
 			'<span class="car" aria-hidden="true">' + (open ? "\\u25be" : "\\u25b8") + "</span></span></button>" +
 			body + "</article>";
 	}
@@ -490,8 +492,7 @@ const viewerClientScript = `(() => {
 			const active = state.impact.has(k);
 			return '<button class="ch ch-imp" data-impact="' + k + '" aria-pressed="' + active + '">' +
 				'<span class="ch-dot" style="background:' + (active ? "#fff" : DOT[k]) + '"></span>' +
-				'<span class="ch-lb">' + k + '<span class="ch-ko">' + impKo(k) + "</span></span>" +
-				'<span class="ch-n">' + count((r) => r.impact === k) + "</span></button>";
+				'<span class="ch-lb">' + k + '</span><span class="ch-n">' + count((r) => r.impact === k) + "</span></button>";
 		}).join("");
 
 		const secs = DATA.sections.filter((s) => !state.skill || s.skill === state.skill)
@@ -563,7 +564,7 @@ const viewerClientScript = `(() => {
 	});
 
 	document.addEventListener("click", (ev) => {
-		const t = ev.target.closest("[data-rule],[data-skill],[data-impact],[data-section],[data-tag],[data-why],[data-goto],[data-clear]");
+		const t = ev.target.closest("[data-rule],[data-skill],[data-impact],[data-section],[data-tag],[data-when],[data-why],[data-goto],[data-clear]");
 		if (!t) return;
 		const toggle = (set, key) => { set.has(key) ? set.delete(key) : set.add(key); render(); };
 
@@ -572,6 +573,7 @@ const viewerClientScript = `(() => {
 		if (t.dataset.impact) return toggle(state.impact, t.dataset.impact);
 		if (t.dataset.tag) return toggle(state.tags, t.dataset.tag);
 		if (t.dataset.section) { state.section = state.section === t.dataset.section ? "" : t.dataset.section; return render(); }
+		if (t.dataset.when) return toggle(state.when, t.dataset.when);
 		if (t.dataset.why) return toggle(state.why, t.dataset.why);
 
 		if (t.dataset.goto) {
