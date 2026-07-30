@@ -1,9 +1,9 @@
 ---
 title: Require JSDoc on React Hooks, Handlers, and Key Declarations
-titleKo: hook·handler·핵심 선언에는 JSDoc 필수
+titleKo: hook·handler·핵심 선언의 JSDoc 의무화
 impact: MEDIUM-HIGH
-impactDescription: 중요한 API, handler, effect, 타입 선언을 더 쉽게 리뷰하고 재사용할 수 있게 함
-impactDescriptionKo: 중요한 API, handler, effect, 타입 선언을 더 쉽게 리뷰하고 재사용할 수 있게 함
+impactDescription: 중요한 API, handler, effect, 타입 선언을 더 쉽게 리뷰하고 재사용할 수 있게 합니다
+impactDescriptionKo: 중요한 API, handler, effect, 타입 선언을 더 쉽게 리뷰하고 재사용할 수 있게 합니다
 appliesWhen: >-
   query·mutation, 비자명한 handler/effect, exported helper/custom hook/store, exported 또는 re-exported public
   type/interface, 예외 memo 선언을 추가·변경한다.
@@ -13,7 +13,7 @@ tags: docs, jsdoc, handlers, effects
 
 ## Require JSDoc on React Hooks, Handlers, and Key Declarations
 
-**Impact: MEDIUM-HIGH (중요한 API, handler, effect, 타입 선언을 더 쉽게 리뷰하고 재사용할 수 있게 함)**
+**Impact: MEDIUM-HIGH (중요한 API, handler, effect, 타입 선언을 더 쉽게 리뷰하고 재사용할 수 있게 합니다)**
 
 JSDoc은 경계를 설명할 때만 붙입니다. 자명한 local 변수에는 강제하지 않습니다.
 

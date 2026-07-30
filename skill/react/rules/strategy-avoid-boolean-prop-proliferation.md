@@ -1,9 +1,9 @@
 ---
 title: Avoid Boolean Prop Proliferation in Shared Components
-titleKo: 공용 컴포넌트에 boolean prop 남발하지 않기
+titleKo: 공용 컴포넌트의 boolean prop 증식 방지
 impact: HIGH
-impactDescription: exported shared components stay explicit instead of accumulating hidden variant combinations
-impactDescriptionKo: exported 공용 컴포넌트가 숨은 variant 조합을 쌓지 않고 명시적으로 남게 함
+impactDescription: 공용 컴포넌트가 숨은 variant 조합을 쌓지 않고 명시적인 구조를 유지하게 합니다
+impactDescriptionKo: 공용 컴포넌트가 숨은 variant 조합을 쌓지 않고 명시적인 구조를 유지하게 합니다
 appliesWhen: >-
   여러 곳에서 쓰는 shared component에 boolean mode·visibility prop을 추가하거나 기존 boolean 조합과 JSX 분기가 늘어난다.
 tags: composition, props, variants, component-design
@@ -11,7 +11,7 @@ tags: composition, props, variants, component-design
 
 ## Avoid Boolean Prop Proliferation in Shared Components
 
-**Impact: HIGH (exported shared components stay explicit instead of accumulating hidden variant combinations)**
+**Impact: HIGH (공용 컴포넌트가 숨은 variant 조합을 쌓지 않고 명시적인 구조를 유지하게 합니다)**
 
 여러 파일과 레이어에서 재사용되는 shared component에 `isCompact`, `isEditing`, `showSearch` 같은
 boolean prop을 계속 추가하지 않습니다.

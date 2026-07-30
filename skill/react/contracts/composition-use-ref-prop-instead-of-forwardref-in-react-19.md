@@ -1,6 +1,6 @@
 # Use ref Props Instead of New forwardRef Wrappers in React 19
 
-**Impact: MEDIUM-HIGH (keeps component definitions simpler in React 19 codebases and avoids adding legacy wrappers by default)**
+**Impact: MEDIUM-HIGH (React 19 코드베이스에서 컴포넌트 정의를 단순하게 유지하고 관성적인 legacy wrapper 추가를 막습니다)**
 
 React 19 codebase에서 `ref`는 외부에서 실제로 제어해야 하는 public imperative contract입니다.
 

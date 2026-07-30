@@ -1,9 +1,9 @@
 ---
 title: Use Named Handlers Instead of Hiding Logic in JSX
-titleKo: 로직을 JSX에 숨기지 말고 명명된 핸들러로
+titleKo: JSX 인라인 로직의 명명된 핸들러 분리
 impact: HIGH
-impactDescription: 부수효과, 분기, 비동기 흐름을 일반 코드 흐름에서 읽을 수 있게 함
-impactDescriptionKo: 부수효과, 분기, 비동기 흐름을 일반 코드 흐름에서 읽을 수 있게 함
+impactDescription: 부수효과, 분기, 비동기 흐름을 일반 코드 흐름에서 읽을 수 있게 합니다
+impactDescriptionKo: 부수효과, 분기, 비동기 흐름을 일반 코드 흐름에서 읽을 수 있게 합니다
 appliesWhen: >-
   TSX event prop의 인라인 callback에 분기, 비동기 호출, 여러 동작·부수효과 또는 비자명한 state transition을
   추가·수정한다. 단순 setter·인자 전달 한 줄 위임은 제외한다.
@@ -14,7 +14,7 @@ tags: composition, jsx, handlers
 
 ## Use Named Handlers Instead of Hiding Logic in JSX
 
-**Impact: HIGH (부수효과, 분기, 비동기 흐름을 일반 코드 흐름에서 읽을 수 있게 함)**
+**Impact: HIGH (부수효과, 분기, 비동기 흐름을 일반 코드 흐름에서 읽을 수 있게 합니다)**
 
 JSX에서는 명명된 핸들러 참조를 기본으로 하고, 아주 짧은 단순 위임만 인라인 함수로 허용합니다.
 분기, 비동기 호출, 여러 부수효과가 들어가면 반드시 핸들러로 분리합니다.

@@ -1,9 +1,9 @@
 ---
 title: Store Shared Derived Decisions Only When They Are Truly Shared
-titleKo: 공유 파생 결정은 진짜 공유될 때만 store에
+titleKo: 공유 파생 결정의 선별적 store 승격
 impact: HIGH
-impactDescription: 중복된 도메인 판별 휴리스틱이 여러 화면에 퍼지는 것을 막음
-impactDescriptionKo: 중복된 도메인 판별 휴리스틱이 여러 화면에 퍼지는 것을 막음
+impactDescription: 중복된 도메인 판별 휴리스틱이 여러 화면에 퍼지는 것을 막습니다
+impactDescriptionKo: 중복된 도메인 판별 휴리스틱이 여러 화면에 퍼지는 것을 막습니다
 appliesWhen: >-
   여러 화면·메뉴·route guard가 쓰는 권한·capability 같은 derived decision을 store에 저장·동기화하거나 단일 화면 값까지
   store로 올린다.
@@ -13,7 +13,7 @@ tags: state, zustand, derived-decisions
 
 ## Store Shared Derived Decisions Only When They Are Truly Shared
 
-**Impact: HIGH (중복된 도메인 판별 휴리스틱이 여러 화면에 퍼지는 것을 막음)**
+**Impact: HIGH (중복된 도메인 판별 휴리스틱이 여러 화면에 퍼지는 것을 막습니다)**
 
 여러 화면, 메뉴, route guard에서 반복해서 필요한 derived decision만 store에 승격합니다.
 단일 화면에서 한두 번 읽는 query 필드까지 store로 복제하지 않습니다.
@@ -21,7 +21,7 @@ tags: state, zustand, derived-decisions
 store에 올리기로 했다면 문자열 비교나 도메인 판별은 bootstrap/layout 같은 한 경계에만 모으고,
 화면은 `accessStore.canEditRecord` 같은 결과만 참조합니다.
 Suspense query처럼 `onSuccess`가 없어서 동기화가 필요하다면 owner가 분명한 경계에서만 `useEffect` 또는
-`useLayoutEffect`를 사용하고, selector 최적화는 정말 필요한 경우에만 근거 주석과 함께 예외적으로 사용합니다.
+`useLayoutEffect`를 사용하고, selector 최적화는 실제로 필요한 경우에만 근거 주석과 함께 예외적으로 사용합니다.
 
 **Incorrect (화면마다 판별을 반복하면서 단일 화면용 값을 store에도 복제):**
 

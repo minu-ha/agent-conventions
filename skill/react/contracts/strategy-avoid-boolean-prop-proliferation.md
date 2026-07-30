@@ -1,6 +1,6 @@
 # Avoid Boolean Prop Proliferation in Shared Components
 
-**Impact: HIGH (exported shared components stay explicit instead of accumulating hidden variant combinations)**
+**Impact: HIGH (공용 컴포넌트가 숨은 variant 조합을 쌓지 않고 명시적인 구조를 유지하게 합니다)**
 
 여러 파일과 레이어에서 재사용되는 shared component에 `isCompact`, `isEditing`, `showSearch` 같은
 boolean prop을 계속 추가하지 않습니다.

@@ -1,6 +1,6 @@
 # Keep Route Entry Files Focused on Screen Flow
 
-**Impact: HIGH (route entry만 봐도 화면 흐름을 따라갈 수 있게 만듦)**
+**Impact: HIGH (route entry만 봐도 화면 흐름을 따라갈 수 있게 합니다)**
 
 Route entry는 search, navigate, page query·mutation, cross-section effect와 render 조립을 보여줍니다.
 async·state·interaction 경계를 가진 section을 분리해도 이 흐름 제어 자체는 route entry에 남깁니다.

@@ -1,6 +1,6 @@
 # Name Handlers Predictably and Curry Extra Arguments
 
-**Impact: MEDIUM-HIGH (이벤트 흐름을 검색 가능하게 유지하고 즉흥적인 handler 시그니처를 피함)**
+**Impact: MEDIUM-HIGH (이벤트 흐름을 검색 가능하게 유지하고 즉흥적인 handler 시그니처를 막습니다)**
 
 이벤트 핸들러는 `handle` 접두사와 역할명을 씁니다.
 
@@ -11,7 +11,7 @@
 
 인라인 callback을 `handle*`로 추출할 때 event 외 추가 인자가 필요하면 factory가 event boundary를 소유합니다.
 `(id): MouseEventHandler<Element> => (_event) => ...` 반환값을 JSX에 직접 전달합니다.
-`onClick={() => handleSelectionToggle(id)}` 같은 wrapper는 완료가 아닙니다.
+`onClick={() => handleSelectionToggle(id)}` 같은 wrapper로 우회한 상태는 이 규칙을 만족하지 않습니다.
 
 - 최종 반환 React handler는 `typing-function-type-first`를 다시 판단합니다.
   alias나 prop callback 계약을 쓸 수 있으면 그 규칙도 함께 적용하고 contextual typing으로 숨기지 않습니다.

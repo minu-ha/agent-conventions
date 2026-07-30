@@ -1,9 +1,9 @@
 ---
 title: Do Not Create Screen-local Custom Hooks for Pure Logic
-titleKo: 순수 로직에 화면 전용 custom hook 만들지 않기
+titleKo: 순수 로직을 감싸는 화면 전용 custom hook 금지
 impact: HIGH
-impactDescription: React 전용 추상화를 실제 lifecycle/context 결합이 있는 경우에만 사용하게 함
-impactDescriptionKo: React 전용 추상화를 실제 lifecycle/context 결합이 있는 경우에만 사용하게 함
+impactDescription: React 전용 추상화를 실제 lifecycle/context 결합이 있는 경우로 한정합니다
+impactDescriptionKo: React 전용 추상화를 실제 lifecycle/context 결합이 있는 경우로 한정합니다
 appliesWhen: 화면 전용 계산·정규화·payload 조립을 custom hook 또는 별도 support module로 추출·이동하려 한다.
 reviewWith: >-
   screen-extract-utilities-selectively, screen-move-pure-support-code-out-of-entry-files,
@@ -13,7 +13,7 @@ tags: ownership, hooks, helpers, widget
 
 ## Do Not Create Screen-local Custom Hooks for Pure Logic
 
-**Impact: HIGH (React 전용 추상화를 실제 lifecycle/context 결합이 있는 경우에만 사용하게 함)**
+**Impact: HIGH (React 전용 추상화를 실제 lifecycle/context 결합이 있는 경우로 한정합니다)**
 
 화면 하나에 종속된 계산, 정규화, payload 조립은 custom hook으로 포장하지 않습니다.
 먼저 일반 `.ts` support module에 둡니다.

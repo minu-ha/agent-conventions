@@ -1,6 +1,6 @@
 # Document Compound Parts with @part and @description
 
-**Impact: MEDIUM (keeps compound public parts scannable as one named boundary instead of disconnected props and component declarations)**
+**Impact: MEDIUM (compound 공개 part를 흩어진 선언이 아니라 이름 붙은 경계 하나로 훑을 수 있게 합니다)**
 
 compound component가 public part를 노출하면 part 단위로 문서화합니다.
 

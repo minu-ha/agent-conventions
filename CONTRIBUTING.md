@@ -99,12 +99,16 @@ tags: tag1, tag2
 | `tags` | 선택 | 검색용 |
 
 `titleKo` 는 영어 제목의 직역이 아니라 같은 뜻의 자연스러운 한국어로 쓴다.
-코드 식별자는 영어로 남긴다. 명사구보다 동작 지시형이 목록에서 잘 읽힌다.
+코드 식별자는 영어로 남긴다. 보고서 목차처럼 명사형으로 끝맺고
+`~하기` · `~않기` 같은 동작 지시형 어미는 쓰지 않는다.
 
 ```markdown
 title: Use Named Handlers Instead of Hiding Logic in JSX
-titleKo: 로직을 JSX에 숨기지 말고 명명된 핸들러로
+titleKo: JSX 인라인 로직의 명명된 핸들러 분리
 ```
+
+`impactDescription` 계열은 `~합니다` 로 끝나는 한 문장으로 쓰고, 본문 산문도 `~합니다` 문체로 통일한다.
+`appliesWhen` 은 라우팅용 텍스트라 예외로 `~한다` 서술을 유지한다.
 
 섹션도 한국어 제목이 필수다. `rules/_sections.md` 의 각 헤더 아래,
 **`**Impact:**` 위**에 넣는다. `**Description:**` 뒤에 놓으면 description 값으로 삼켜진다.

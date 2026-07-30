@@ -1,10 +1,9 @@
 ---
 title: Document Compound Parts with @part and @description
-titleKo: compound part는 @part와 @description으로 문서화
+titleKo: compound part의 @part·@description 문서화
 impact: MEDIUM
-impactDescription: >-
-  keeps compound public parts scannable as one named boundary instead of disconnected props and component declarations
-impactDescriptionKo: compound 공개 part 를 흩어진 props·컴포넌트 선언이 아니라 이름 붙은 경계 하나로 훑히게 함
+impactDescription: compound 공개 part를 흩어진 선언이 아니라 이름 붙은 경계 하나로 훑을 수 있게 합니다
+impactDescriptionKo: compound 공개 part를 흩어진 선언이 아니라 이름 붙은 경계 하나로 훑을 수 있게 합니다
 appliesWhen: >-
   compound component의 exported public part·props interface·part 내부 handler를 추가·변경하거나 public part 문서를
   수정한다.
@@ -14,8 +13,7 @@ tags: docs, jsdoc, composition, compound-components
 
 ## Document Compound Parts with @part and @description
 
-**Impact: MEDIUM (keeps compound public parts scannable as one named boundary instead of disconnected props and
-component declarations)**
+**Impact: MEDIUM (compound 공개 part를 흩어진 선언이 아니라 이름 붙은 경계 하나로 훑을 수 있게 합니다)**
 
 compound component가 public part를 노출하면 part 단위로 문서화합니다.
 

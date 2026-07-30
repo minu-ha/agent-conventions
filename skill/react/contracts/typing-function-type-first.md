@@ -1,6 +1,6 @@
 # Prefer React Handler Type Aliases Over Inline Event Parameter Annotations
 
-**Impact: HIGH (React handler 시그니처와 callback 의도를 선언 위치에서 바로 보이게 함)**
+**Impact: HIGH (React handler 시그니처와 callback 의도를 선언 위치에서 바로 드러냅니다)**
 
 React가 제공하는 이벤트 핸들러 타입이나 prop callback 계약이 이미 있다면
 매개변수 타입보다 함수 변수 타입 선언을 우선합니다.

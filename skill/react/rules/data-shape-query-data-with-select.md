@@ -1,9 +1,9 @@
 ---
 title: Shape React Query Data in query.select
-titleKo: React Query 데이터는 query.select에서 가공
+titleKo: query.select를 통한 응답 데이터 가공
 impact: CRITICAL
-impactDescription: 응답 변환을 fetch 경계 가까이에 두고 렌더 타임의 반복 매핑을 피함
-impactDescriptionKo: 응답 변환을 fetch 경계 가까이에 두고 렌더 타임의 반복 매핑을 피함
+impactDescription: 응답 변환을 fetch 경계 가까이에 두고 렌더 타임의 반복 매핑을 막습니다
+impactDescriptionKo: 응답 변환을 fetch 경계 가까이에 두고 렌더 타임의 반복 매핑을 막습니다
 appliesWhen: >-
   서버 응답의 list·items·meta 등을 렌더에서 가공·반복 소비하거나 React Query `select`의 결과 shape를 추가·변경한다.
 requiresSelected: docs-require-jsdoc-on-key-declarations
@@ -13,7 +13,7 @@ tags: state, react-query, select
 
 ## Shape React Query Data in query.select
 
-**Impact: CRITICAL (응답 변환을 fetch 경계 가까이에 두고 렌더 타임의 반복 매핑을 피함)**
+**Impact: CRITICAL (응답 변환을 fetch 경계 가까이에 두고 렌더 타임의 반복 매핑을 막습니다)**
 
 서버 응답 가공은 렌더링 본문이 아니라 `query.select`에서 처리합니다.
 
@@ -27,7 +27,7 @@ tags: state, react-query, select
 const items = responseEntryListSuspense.data.list;
 ```
 
-**Correct (패칭 시점에 필요한 모양으로 변환):**
+**Correct (fetch 시점에 필요한 모양으로 변환):**
 
 ```ts
 /**

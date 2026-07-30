@@ -1,6 +1,6 @@
 # Use Visibility Primitives Deliberately for Show and Hide Branches
 
-**Impact: MEDIUM (표시 여부 결정을 route 화면 전반에서 명시적이고 일관되게 유지함)**
+**Impact: MEDIUM (표시 여부 결정을 route 화면 전반에서 명시적이고 일관되게 유지합니다)**
 
 React 19의 `<Activity />` 또는 프로젝트가 이미 채택한 동등한 visibility primitive는
 이미 마운트된 subtree를 보여주거나 숨기는 의도일 때만 씁니다.

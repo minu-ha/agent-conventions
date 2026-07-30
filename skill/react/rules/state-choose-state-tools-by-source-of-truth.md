@@ -1,9 +1,9 @@
 ---
 title: Choose State Tools by Source of Truth
-titleKo: state 도구는 source of truth 기준으로 선택
+titleKo: source of truth 기준의 state 도구 선택
 impact: MEDIUM-HIGH
-impactDescription: 로컬 UI state, 전역 client state, server state가 서로 흐려지는 것을 막음
-impactDescriptionKo: 로컬 UI state, 전역 client state, server state가 서로 흐려지는 것을 막음
+impactDescription: 로컬 UI state, 전역 client state, server state가 서로 섞이는 것을 막습니다
+impactDescriptionKo: 로컬 UI state, 전역 client state, server state가 서로 섞이는 것을 막습니다
 appliesWhen: >-
   로컬 UI·전역 client·server 데이터를 새 state 도구로 옮기거나 서로 다른 source of truth 사이에 복제·동기화한다.
 reviewWith: state-store-derived-authority
@@ -12,7 +12,7 @@ tags: state, react-query, zustand, local-state
 
 ## Choose State Tools by Source of Truth
 
-**Impact: MEDIUM-HIGH (로컬 UI state, 전역 client state, server state가 서로 흐려지는 것을 막음)**
+**Impact: MEDIUM-HIGH (로컬 UI state, 전역 client state, server state가 서로 섞이는 것을 막습니다)**
 
 상태 도구는 값의 수명과 소유자를 기준으로 고릅니다.
 

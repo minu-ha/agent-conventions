@@ -1,6 +1,6 @@
 # Prefer Children Over Render Props for Static Composition
 
-**Impact: MEDIUM (keeps shared component composition readable when the parent does not need to push runtime data through callbacks)**
+**Impact: MEDIUM (부모가 callback으로 런타임 데이터를 내려보낼 필요가 없을 때 공용 컴포넌트 조립을 읽기 쉽게 유지합니다)**
 
 shared component가 `stateless compound component`로 충분할 때는 `renderHeader`,
 `renderFooter` 같은 render prop보다 `children`과 namespaced slot part를 우선합니다.

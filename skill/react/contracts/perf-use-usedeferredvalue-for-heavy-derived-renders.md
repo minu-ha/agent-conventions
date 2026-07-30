@@ -1,6 +1,6 @@
 # Use useDeferredValue for Heavy Derived Renders
 
-**Impact: MEDIUM (keeps typing and small interactions responsive while expensive derived views catch up)**
+**Impact: MEDIUM (무거운 파생 화면이 따라오는 동안에도 입력과 작은 상호작용의 반응성을 유지합니다)**
 
 검색어, 필터, 정렬 입력이 무거운 파생 렌더를 유발하면 원본 입력값을 그대로 expensive view에 연결하지 않습니다.
 `useDeferredValue`로 한 박자 늦춘 값을 만들고, 필요하면 그 값을 기준으로 필터링이나 정렬을 계산합니다.

@@ -1,9 +1,9 @@
 ---
 title: Extract Screen Support Code Only When the Boundary Is Real
-titleKo: 화면 support 코드는 경계가 실재할 때만 추출
+titleKo: 화면 support 코드의 선별적 추출
 impact: HIGH
-impactDescription: route entry가 자기 계약이 없는 helper 조각으로 분해되는 것을 막음
-impactDescriptionKo: route entry가 자기 계약이 없는 helper 조각으로 분해되는 것을 막음
+impactDescription: route entry가 자기 계약이 없는 helper 조각으로 분해되는 것을 막습니다
+impactDescriptionKo: route entry가 자기 계약이 없는 helper 조각으로 분해되는 것을 막습니다
 appliesWhen: >-
   화면 계산·변환·preset·option·column meta를 별도 함수/support module로 추출·이동하거나 support 경계를 바꾼다. query
   `select` 내부 shaping만이면 제외한다.
@@ -14,9 +14,9 @@ tags: screen, utils, extraction
 
 ## Extract Screen Support Code Only When the Boundary Is Real
 
-**Impact: HIGH (route entry가 자기 계약이 없는 helper 조각으로 분해되는 것을 막음)**
+**Impact: HIGH (route entry가 자기 계약이 없는 helper 조각으로 분해되는 것을 막습니다)**
 
-화면 support code는 "이름 붙일 수 있다"가 아니라 "경계가 있다"일 때만 추출합니다.
+화면 support code는 이름을 붙일 수 있다는 이유가 아니라 경계가 실재할 때만 추출합니다.
 
 추출 후보:
 
@@ -25,14 +25,14 @@ tags: screen, utils, extraction
 - 밖으로 빼면 route entry의 response, state, handler, render flow가 더 잘 보이는 코드
 - 여러 exported 함수에서 같은 단계가 반복되는 이름 있는 도메인 규칙
 
-남길 것:
+호출 지점에 남길 대상:
 
 - 작은 1회성 guard, URL 조립, 빈 검색어 생략 같은 호출 지점 계산
 - handler/effect 안에 있어야 문맥이 보이는 query invalidation, navigation, fallback 처리
 - query `select` 내부 mapper.
-  `data-shape-query-data-with-select` 가 담당하므로 별도 함수나 support module 경계가 없으면 이 규칙은 적용하지 않는다
+  `data-shape-query-data-with-select`가 담당하므로 별도 함수나 support module 경계가 없으면 이 규칙은 적용하지 않습니다.
 
-배치:
+배치 기준:
 
 - route sibling `page.ts`에 named export로 둡니다.
 - `helper.ts`, `helpers.ts`, `utils.ts`, `common.ts` 같은 generic 파일명은 만들지 않습니다.

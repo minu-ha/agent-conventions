@@ -1,6 +1,6 @@
 # Choose Single Components, Compound Components, and Variants Deliberately
 
-**Impact: HIGH (helps shared components choose the simplest structure that still exposes the right extension points)**
+**Impact: HIGH (공용 컴포넌트가 필요한 확장점은 열면서 가장 단순한 구조를 고르도록 돕습니다)**
 
 shared component는 props보다 구조를 먼저 고릅니다.
 고정 UI, public part 조립, shared state/action/context, 반복 preset 중 무엇이 필요한지 순서대로 봅니다.
@@ -13,7 +13,7 @@ shared component는 props보다 구조를 먼저 고릅니다.
 | part 조립만 필요함 | `stateless compound component` |
 | 여러 part가 같은 state/action/context를 읽음 | `stateful compound component` |
 | 같은 compound 조합이 반복됨 | `explicit variant component` |
-| parent가 runtime 데이터를 child 콜백에 밀어줘야 함 | `render prop` |
+| parent가 runtime 데이터를 child 콜백에 전달해야 함 | `render prop` |
 
 public part는 소비자가 이름으로 조립해야 하거나 shared context/action을 직접 쓰는 영역만 공개합니다.
 단순 class wrapper, spacing 보정 DOM, 내부 layout helper는 숨깁니다.

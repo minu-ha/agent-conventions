@@ -1,6 +1,6 @@
 # Do Not Create Screen-local Custom Hooks for Pure Logic
 
-**Impact: HIGH (React 전용 추상화를 실제 lifecycle/context 결합이 있는 경우에만 사용하게 함)**
+**Impact: HIGH (React 전용 추상화를 실제 lifecycle/context 결합이 있는 경우로 한정합니다)**
 
 화면 하나에 종속된 계산, 정규화, payload 조립은 custom hook으로 포장하지 않습니다.
 먼저 일반 `.ts` support module에 둡니다.

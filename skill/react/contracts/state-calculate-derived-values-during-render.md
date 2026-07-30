@@ -1,6 +1,6 @@
 # Calculate Derived Values During Rendering
 
-**Impact: HIGH (avoids redundant state sync and effect-driven drift when values can be computed from current inputs)**
+**Impact: HIGH (현재 입력에서 계산할 수 있는 값의 불필요한 state 동기화와 effect 기반 어긋남을 막습니다)**
 
 현재 props, state, search, response에서 바로 계산할 수 있는 값은
 `useEffect`와 `useState`로 다시 동기화하지 않습니다.

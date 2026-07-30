@@ -1,6 +1,6 @@
 # Use Lazy State Initializers for Expensive Defaults
 
-**Impact: MEDIUM (prevents repeated setup work when the initial state is expensive to compute)**
+**Impact: MEDIUM (초기 state 계산 비용이 클 때 준비 작업이 렌더마다 반복되는 것을 막습니다)**
 
 `useState` 초기값이 localStorage 파싱, 인덱스 생성,
 큰 배열 정규화처럼 무거운 계산이라면 값을 바로 넣지 말고 initializer 함수로 감쌉니다.

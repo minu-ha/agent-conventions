@@ -1,17 +1,17 @@
 # Move Screen-owned Pure Support Code Into `page.ts` Before Splitting Further
 
-**Impact: HIGH (route entry가 preset과 순수 helper를 쌓기보다 화면 흐름에 집중하게 함)**
+**Impact: HIGH (route entry가 preset과 순수 helper를 쌓기보다 화면 흐름에 집중하게 합니다)**
 
 이 규칙은 추출하기로 결정한 화면 전용 pure support code의 목적지를 정합니다.
 
-`page.ts`로 옮길 것:
+`page.ts`로 옮길 대상:
 
 - 화면 전용 불변 설정, 옵션 목록, preset, column meta
 - React hook 없이 동작하는 pure support function
 - 화면 전용 type/interface
 - 여러 줄로 커진 request/response shaping
 
-`page.tsx`에 남길 것:
+`page.tsx`에 남길 대상:
 
 - response/mutation, state, handler, effect, render flow
 - 작은 1회성 guard와 사용 지점 옆이 더 빠른 계산

@@ -1,9 +1,9 @@
 ---
 title: Accept props as a Whole and Destructure Inside the Component
-titleKo: props는 통째로 받고 컴포넌트 안에서 구조분해
+titleKo: props 전체 수신과 본문 내 구조분해
 impact: MEDIUM
-impactDescription: 컴포넌트 계약을 시그니처에 남기고 실제 사용을 본문 가까이에 유지함
-impactDescriptionKo: 컴포넌트 계약을 시그니처에 남기고 실제 사용을 본문 가까이에 유지함
+impactDescription: 컴포넌트 계약을 시그니처에 남기고 실제 사용을 본문 가까이에 유지합니다
+impactDescriptionKo: 컴포넌트 계약을 시그니처에 남기고 실제 사용을 본문 가까이에 유지합니다
 appliesWhen: >-
   props를 받는 함수 컴포넌트의 시그니처·본문 구조분해 방식을 추가·변경하거나 그 컴포넌트를 다른 파일로 이동·이름
   변경한다.
@@ -12,7 +12,7 @@ tags: composition, props
 
 ## Accept props as a Whole and Destructure Inside the Component
 
-**Impact: MEDIUM (컴포넌트 계약을 시그니처에 남기고 실제 사용을 본문 가까이에 유지함)**
+**Impact: MEDIUM (컴포넌트 계약을 시그니처에 남기고 실제 사용을 본문 가까이에 유지합니다)**
 
 컴포넌트 시그니처는 `props` 전체를 받고, 함수 본문 첫 줄에서 구조분해합니다.
 시그니처에서 계약을 한눈에 읽고, 본문에서 실제 쓰는 값을 좁은 스코프에 둘 수 있습니다.

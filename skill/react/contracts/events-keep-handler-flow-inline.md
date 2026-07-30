@@ -1,6 +1,6 @@
 # Keep Screen-specific Handler Flow Local Until a Real Utility Emerges
 
-**Impact: MEDIUM (모든 분기를 작은 helper로 쪼개지 않고도 가독성을 유지함)**
+**Impact: MEDIUM (모든 분기를 작은 helper로 쪼개지 않고도 가독성을 유지합니다)**
 
 여기서 `local`은 JSX 인라인 핸들러가 아니라,
 이미 이름 붙은 handler 본문 안에서 흐름을 계속 읽을 수 있게 유지한다는 뜻입니다.

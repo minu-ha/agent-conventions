@@ -1,9 +1,9 @@
 ---
 title: Use Consistent File and Symbol Naming
-titleKo: 파일·심볼 이름을 일관되게
+titleKo: 파일·심볼 명명 규칙 통일
 impact: HIGH
-impactDescription: 에이전트가 파일을 만들거나 옮길 때 소유 경계와 의도를 분명하게 유지함
-impactDescriptionKo: 에이전트가 파일을 만들거나 옮길 때 소유 경계와 의도를 분명하게 유지함
+impactDescription: 에이전트가 파일을 만들거나 옮길 때 소유 경계와 의도를 분명하게 유지합니다
+impactDescriptionKo: 에이전트가 파일을 만들거나 옮길 때 소유 경계와 의도를 분명하게 유지합니다
 appliesWhen: >-
   React/TSX 파일·컴포넌트·exported symbol·공용 설정 이름을 정하거나 바꾸거나, React 작업에서 sibling `.ts` support
   파일이나 exported support symbol을 만들거나 옮긴다. local query·mutation만이면 제외한다.
@@ -13,7 +13,7 @@ tags: ownership, naming, files
 
 ## Use Consistent File and Symbol Naming
 
-**Impact: HIGH (에이전트가 파일을 만들거나 옮길 때 소유 경계와 의도를 분명하게 유지함)**
+**Impact: HIGH (에이전트가 파일을 만들거나 옮길 때 소유 경계와 의도를 분명하게 유지합니다)**
 
 파일명과 심볼명이 소유자와 역할을 바로 드러내야 route-local 이동과 공용화 판단이 쉬워집니다.
 
