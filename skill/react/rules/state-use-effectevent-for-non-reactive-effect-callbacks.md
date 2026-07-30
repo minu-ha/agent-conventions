@@ -1,5 +1,6 @@
 ---
 title: Use useEffectEvent for Non-reactive Effect Callbacks
+titleKo: 비반응성 effect 콜백에는 useEffectEvent
 impact: MEDIUM-HIGH
 impactDescription: keeps effects reactive only to true subscriptions while still reading the latest handler logic
 appliesWhen: >-

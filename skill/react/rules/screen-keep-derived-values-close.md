@@ -1,5 +1,6 @@
 ---
 title: Keep Derived Values Close to Where They Are Used
+titleKo: 파생 값은 쓰는 곳 가까이
 impact: HIGH
 impactDescription: 오리진을 보존하고 route entry가 alias와 명령형 setup 코드로 채워지는 것을 막음
 appliesWhen: >-

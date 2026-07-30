@@ -1,5 +1,6 @@
 ---
 title: Prefer Children Over Render Props for Static Composition
+titleKo: 정적 조립에는 render prop보다 children
 impact: MEDIUM
 impactDescription: >-
   keeps shared component composition readable when the parent does not need to push runtime data through callbacks

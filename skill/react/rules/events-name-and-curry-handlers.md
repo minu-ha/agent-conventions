@@ -1,5 +1,6 @@
 ---
 title: Name Handlers Predictably and Curry Extra Arguments
+titleKo: 핸들러 이름은 예측 가능하게, 추가 인자는 커링으로
 impact: MEDIUM-HIGH
 impactDescription: 이벤트 흐름을 검색 가능하게 유지하고 즉흥적인 handler 시그니처를 피함
 appliesWhen: >-

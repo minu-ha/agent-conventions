@@ -1,5 +1,6 @@
 ---
 title: Prefer React Handler Type Aliases Over Inline Event Parameter Annotations
+titleKo: 이벤트 매개변수 인라인 타입보다 React handler alias
 impact: HIGH
 impactDescription: React handler 시그니처와 callback 의도를 선언 위치에서 바로 보이게 함
 appliesWhen: >-

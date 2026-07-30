@@ -1,5 +1,6 @@
 ---
 title: Document Compound Parts with @part and @description
+titleKo: compound part는 @part와 @description으로 문서화
 impact: MEDIUM
 impactDescription: >-
   keeps compound public parts scannable as one named boundary instead of disconnected props and component declarations

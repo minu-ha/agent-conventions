@@ -1,5 +1,6 @@
 ---
 title: Prefer Arrow Functions and Object Parameters for Complex Signatures
+titleKo: 복잡한 시그니처는 화살표 함수와 객체 매개변수로
 impact: MEDIUM-HIGH
 impactDescription: 함수 선언과 다중 인자 계약을 더 쉽게 확장하고 수정할 수 있게 함
 appliesWhen: >-

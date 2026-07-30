@@ -1,5 +1,6 @@
 ---
 title: Do Not Define Components Inside Components
+titleKo: 컴포넌트 안에 컴포넌트를 정의하지 않기
 impact: HIGH
 impactDescription: prevents remount bugs and hidden state resets caused by recreating component types every render
 appliesWhen: >-

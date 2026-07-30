@@ -1,5 +1,6 @@
 ---
 title: Use useDeferredValue for Heavy Derived Renders
+titleKo: 무거운 파생 렌더에는 useDeferredValue
 impact: MEDIUM
 impactDescription: keeps typing and small interactions responsive while expensive derived views catch up
 appliesWhen: >-

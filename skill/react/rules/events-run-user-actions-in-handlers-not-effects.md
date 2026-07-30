@@ -1,5 +1,6 @@
 ---
 title: Run User Actions in Handlers, Not Effects
+titleKo: 사용자 동작은 effect가 아니라 handler에서
 impact: HIGH
 impactDescription: avoids modeling one-shot user actions as state plus effect replays
 appliesWhen: >-

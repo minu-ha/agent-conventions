@@ -1,5 +1,6 @@
 ---
 title: Extract Screen Support Code Only When the Boundary Is Real
+titleKo: 화면 support 코드는 경계가 실재할 때만 추출
 impact: HIGH
 impactDescription: route entry가 자기 계약이 없는 helper 조각으로 분해되는 것을 막음
 appliesWhen: >-

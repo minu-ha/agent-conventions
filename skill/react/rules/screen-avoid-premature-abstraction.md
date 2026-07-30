@@ -1,5 +1,6 @@
 ---
 title: Avoid Premature Abstraction in Screen Code
+titleKo: 화면 코드의 조급한 추상화 피하기
 impact: HIGH
 impactDescription: 추측성 추출 대신 실제 재사용 경계에 맞춰 route 코드를 유지함
 appliesWhen: screen 코드를 helper·hook·component·module로 추출하거나 한 곳에서만 쓰는 기존 추상화를 접어 넣는다.

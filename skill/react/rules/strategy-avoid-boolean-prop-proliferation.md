@@ -1,5 +1,6 @@
 ---
 title: Avoid Boolean Prop Proliferation in Shared Components
+titleKo: 공용 컴포넌트에 boolean prop 남발하지 않기
 impact: HIGH
 impactDescription: exported shared components stay explicit instead of accumulating hidden variant combinations
 appliesWhen: >-

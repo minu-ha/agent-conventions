@@ -1,5 +1,6 @@
 ---
 title: Preserve Response and Store Origin in Wide Scopes
+titleKo: 넓은 스코프에서는 응답·store 출처를 보존
 impact: CRITICAL
 impactDescription: 파일 전체에서 alias를 따라가지 않아도 값의 출처를 바로 알 수 있게 함
 appliesWhen: >-

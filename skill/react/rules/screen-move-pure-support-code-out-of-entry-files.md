@@ -1,5 +1,6 @@
 ---
 title: Move Screen-owned Pure Support Code Into `page.ts` Before Splitting Further
+titleKo: 화면 소유 순수 코드는 더 쪼개기 전에 page.ts로
 impact: HIGH
 impactDescription: route entry가 preset과 순수 helper를 쌓기보다 화면 흐름에 집중하게 함
 appliesWhen: >-

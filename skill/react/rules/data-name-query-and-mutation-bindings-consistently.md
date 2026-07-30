@@ -1,5 +1,6 @@
 ---
 title: Name Query and Mutation Bindings Consistently
+titleKo: query·mutation 바인딩 이름을 일관되게
 impact: HIGH
 impactDescription: 생성된 API hook과 로컬 바인딩을 쉽게 훑고 추적할 수 있게 함
 appliesWhen: >-

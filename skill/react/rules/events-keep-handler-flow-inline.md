@@ -1,5 +1,6 @@
 ---
 title: Keep Screen-specific Handler Flow Local Until a Real Utility Emerges
+titleKo: 화면 전용 핸들러 흐름은 진짜 유틸이 될 때까지 로컬에
 impact: MEDIUM
 impactDescription: 모든 분기를 작은 helper로 쪼개지 않고도 가독성을 유지함
 appliesWhen: 화면 전용 named handler의 분기·mutation·navigation·후처리를 여러 helper나 hook으로 나누거나 다시 합친다.

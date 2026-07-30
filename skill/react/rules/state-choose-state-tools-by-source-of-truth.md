@@ -1,5 +1,6 @@
 ---
 title: Choose State Tools by Source of Truth
+titleKo: state 도구는 source of truth 기준으로 선택
 impact: MEDIUM-HIGH
 impactDescription: 로컬 UI state, 전역 client state, server state가 서로 흐려지는 것을 막음
 appliesWhen: >-

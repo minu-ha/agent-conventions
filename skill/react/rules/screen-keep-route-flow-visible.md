@@ -1,5 +1,6 @@
 ---
 title: Keep Route Entry Files Focused on Screen Flow
+titleKo: route entry 파일은 화면 흐름에만 집중
 impact: HIGH
 impactDescription: route entry만 봐도 화면 흐름을 따라갈 수 있게 만듦
 appliesWhen: >-

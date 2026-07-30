@@ -1,5 +1,6 @@
 ---
 title: Prefer React Compiler Defaults Over Manual Memoization
+titleKo: 수동 memoization보다 React Compiler 기본값
 impact: MEDIUM-HIGH
 impactDescription: 검증되지 않은 값어치 없이 노이즈만 늘리는 방어적 useMemo/useCallback을 피함
 appliesWhen: >-

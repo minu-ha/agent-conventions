@@ -1,5 +1,6 @@
 ---
 title: Store Shared Derived Decisions Only When They Are Truly Shared
+titleKo: 공유 파생 결정은 진짜 공유될 때만 store에
 impact: HIGH
 impactDescription: 중복된 도메인 판별 휴리스틱이 여러 화면에 퍼지는 것을 막음
 appliesWhen: >-

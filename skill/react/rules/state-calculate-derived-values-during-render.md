@@ -1,5 +1,6 @@
 ---
 title: Calculate Derived Values During Rendering
+titleKo: 파생 값은 렌더 중에 계산
 impact: HIGH
 impactDescription: avoids redundant state sync and effect-driven drift when values can be computed from current inputs
 appliesWhen: >-

@@ -1,5 +1,6 @@
 ---
 title: Shape React Query Data in query.select
+titleKo: React Query 데이터는 query.select에서 가공
 impact: CRITICAL
 impactDescription: 응답 변환을 fetch 경계 가까이에 두고 렌더 타임의 반복 매핑을 피함
 appliesWhen: >-

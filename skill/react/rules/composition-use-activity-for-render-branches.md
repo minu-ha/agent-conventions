@@ -1,5 +1,6 @@
 ---
 title: Use Visibility Primitives Deliberately for Show and Hide Branches
+titleKo: 표시·숨김 분기는 visibility primitive를 의도적으로 선택
 impact: MEDIUM
 impactDescription: 표시 여부 결정을 route 화면 전반에서 명시적이고 일관되게 유지함
 appliesWhen: >-

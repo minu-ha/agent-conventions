@@ -1,5 +1,6 @@
 ---
 title: Use startTransition for Non-urgent Visual Updates
+titleKo: 급하지 않은 시각 갱신은 startTransition으로
 impact: MEDIUM
 impactDescription: keeps interactions responsive when a state change triggers a heavy list, table, or tree update
 appliesWhen: 클릭·선택·필터 변경 뒤 큰 list·table·tree를 다시 그리는 state update의 우선순위나 transition 처리를 바꾼다.

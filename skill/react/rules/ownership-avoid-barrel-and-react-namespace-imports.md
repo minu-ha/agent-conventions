@@ -1,5 +1,6 @@
 ---
 title: Avoid Barrel Exports and React Namespace Types
+titleKo: barrel export와 React namespace 타입 피하기
 impact: HIGH
 impactDescription: import 경로를 명시적으로 유지하고 타입 import 스타일 혼용을 막음
 appliesWhen: >-

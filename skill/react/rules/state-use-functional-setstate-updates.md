@@ -1,5 +1,6 @@
 ---
 title: Use Functional setState Updates When Based on Previous State
+titleKo: 이전 state 기반 갱신은 함수형 setState로
 impact: MEDIUM-HIGH
 impactDescription: prevents stale closure bugs when the next value depends on the current state
 appliesWhen: >-

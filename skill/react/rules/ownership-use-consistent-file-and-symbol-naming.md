@@ -1,5 +1,6 @@
 ---
 title: Use Consistent File and Symbol Naming
+titleKo: 파일·심볼 이름을 일관되게
 impact: HIGH
 impactDescription: 에이전트가 파일을 만들거나 옮길 때 소유 경계와 의도를 분명하게 유지함
 appliesWhen: >-

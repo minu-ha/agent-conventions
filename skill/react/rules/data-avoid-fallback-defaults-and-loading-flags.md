@@ -1,5 +1,6 @@
 ---
 title: Avoid Silent Fallback Defaults and Ad-hoc Loading Branches
+titleKo: 조용한 fallback 기본값과 임시 loading 분기 피하기
 impact: HIGH
 impactDescription: 결측 데이터를 숨기지 않고 로딩 UX를 Suspense 또는 명시적 예외 처리 쪽으로 유도함
 appliesWhen: >-

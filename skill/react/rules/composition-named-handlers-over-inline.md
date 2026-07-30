@@ -1,5 +1,6 @@
 ---
 title: Use Named Handlers Instead of Hiding Logic in JSX
+titleKo: 로직을 JSX에 숨기지 말고 명명된 핸들러로
 impact: HIGH
 impactDescription: 부수효과, 분기, 비동기 흐름을 일반 코드 흐름에서 읽을 수 있게 함
 appliesWhen: >-

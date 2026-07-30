@@ -1,5 +1,6 @@
 ---
 title: Choose Single Components, Compound Components, and Variants Deliberately
+titleKo: 단일·compound·variant 조립 구조를 의도적으로 선택
 impact: HIGH
 impactDescription: helps shared components choose the simplest structure that still exposes the right extension points
 appliesWhen: >-
