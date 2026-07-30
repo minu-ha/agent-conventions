@@ -1,5 +1,6 @@
 ---
 title: Preserve Shared Namespace Origin With Chained Access
+titleKo: config·util은 체인 접근으로 출처 보존
 impact: HIGH
 impactDescription: keeps readers aware of where values come from instead of hiding origin behind wide-scope aliases
 appliesWhen: >-

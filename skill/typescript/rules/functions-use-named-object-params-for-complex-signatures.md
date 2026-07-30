@@ -1,5 +1,6 @@
 ---
 title: Use Named Object Params for Complex Signatures
+titleKo: 복잡한 시그니처는 named 객체 매개변수로
 impact: HIGH
 impactDescription: >-
   keeps long function signatures readable and makes grouped inputs easier to extend without positional confusion

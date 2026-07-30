@@ -1,5 +1,6 @@
 ---
 title: Use Direct Imports and Dedicated Public Entry Points
+titleKo: 직접 import와 전용 공개 진입점 쓰기
 impact: HIGH
 impactDescription: makes import ownership explicit without relying on barrels or ambiguous re-export layers
 appliesWhen: >-

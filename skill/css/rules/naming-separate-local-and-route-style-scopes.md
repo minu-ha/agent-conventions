@@ -1,5 +1,6 @@
 ---
 title: Separate Route, Local, and Shared Style Scopes
+titleKo: route·local·shared 스타일 스코프 분리
 impact: HIGH
 impactDescription: >-
   keeps route-owned page styles, shared component styles, and truly local helper styles from mixing into the same

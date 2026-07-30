@@ -1,5 +1,6 @@
 ---
 title: Replace `enum` With `as const` Objects
+titleKo: enum 대신 as const 객체
 impact: MEDIUM-HIGH
 impactDescription: >-
   keeps runtime values explicit and type extraction lightweight without introducing enum-specific behavior

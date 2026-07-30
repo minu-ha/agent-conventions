@@ -1,5 +1,6 @@
 ---
 title: Default to Plain CSS Unless the Project Explicitly Standardizes on CSS Modules
+titleKo: 프로젝트 표준이 없으면 plain CSS를 기본으로
 impact: HIGH
 impactDescription: >-
   keeps the global `scope_slug` naming system meaningful instead of hiding ownership behind local module indirection

@@ -1,5 +1,6 @@
 ---
 title: Prefer Function Variable Types Over Parameter Annotations
+titleKo: 매개변수 annotation보다 함수 변수 타입
 impact: CRITICAL
 impactDescription: >-
   keeps callable contracts reusable and prevents local parameter annotations from fragmenting shared function types

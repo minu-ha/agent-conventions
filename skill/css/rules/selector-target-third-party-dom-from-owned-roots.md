@@ -1,5 +1,6 @@
 ---
 title: Target Third-party DOM Only From Owned Roots
+titleKo: third-party DOM은 소유한 root 아래에서만
 impact: CRITICAL
 impactDescription: limits third-party styling to explicit wrapper ownership instead of leaking across the app
 appliesWhen: >-

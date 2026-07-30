@@ -1,5 +1,6 @@
 ---
 title: Reuse Existing Contracts Before Declaring New Types
+titleKo: 새 타입 선언 전에 기존 계약 재사용
 impact: HIGH
 impactDescription: >-
   reduces duplicate shape declarations by deriving from existing types and schemas when semantics have not changed

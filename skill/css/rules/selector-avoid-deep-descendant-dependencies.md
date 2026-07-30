@@ -1,5 +1,6 @@
 ---
 title: Avoid Deep Descendant Selector Dependencies
+titleKo: 깊은 descendant 셀렉터 의존 피하기
 impact: HIGH
 impactDescription: keeps layout changes from breaking styling through long descendant chains
 appliesWhen: >-

@@ -1,5 +1,6 @@
 ---
 title: Centralize Shared Config Under `shared/config.ts`
+titleKo: 공용 설정은 shared/config.ts로 모으기
 impact: HIGH
 impactDescription: prevents shared config values from scattering across leaf files and losing a single public source
 appliesWhen: >-

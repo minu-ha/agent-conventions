@@ -1,5 +1,6 @@
 ---
 title: Keep Each `scope_slug` Unique Per Owner
+titleKo: scope_slug는 owner마다 고유하게
 impact: CRITICAL
 impactDescription: >-
   prevents unrelated routes or components from sharing the same namespace and colliding in the global class space

@@ -1,5 +1,6 @@
 ---
 title: Do Not Use Modifiers for One-off Structural Patches
+titleKo: one-off 구조 수정에 modifier 쓰지 않기
 impact: HIGH
 impactDescription: keeps modifiers reserved for state instead of turning them into a second layout naming system
 appliesWhen: >-

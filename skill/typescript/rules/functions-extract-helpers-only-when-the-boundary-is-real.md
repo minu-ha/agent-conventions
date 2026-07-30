@@ -1,5 +1,6 @@
 ---
 title: Extract Support Functions Only When the Boundary Is Real
+titleKo: support 함수는 경계가 실재할 때만 추출
 impact: HIGH
 impactDescription: >-
   stops helper extraction from fragmenting local flow when no reusable contract or testable boundary actually exists

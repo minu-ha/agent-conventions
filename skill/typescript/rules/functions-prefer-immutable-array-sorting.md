@@ -1,5 +1,6 @@
 ---
 title: Prefer Immutable Array Sorting
+titleKo: 배열 정렬은 원본을 건드리지 않기
 impact: MEDIUM
 impactDescription: avoids mutation bugs when sorted arrays come from props, state, or shared inputs
 appliesWhen: props, state, 매개변수 또는 공유 입력에서 온 배열을 정렬하거나 기존 `.sort()` 호출을 추가·변경한다.

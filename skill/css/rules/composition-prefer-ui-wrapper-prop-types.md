@@ -1,5 +1,6 @@
 ---
 title: Prefer `Ui*` Wrapper Prop Types
+titleKo: 라이브러리 원본 대신 Ui* wrapper Props 타입
 impact: MEDIUM-HIGH
 impactDescription: >-
   preserves wrapper-level styling and API contracts instead of leaking raw library prop types into usage sites

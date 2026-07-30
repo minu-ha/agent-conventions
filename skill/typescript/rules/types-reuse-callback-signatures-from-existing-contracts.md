@@ -1,5 +1,6 @@
 ---
 title: Reuse Callback Signatures From Existing Contracts
+titleKo: callback 시그니처는 기존 계약에서 재사용
 impact: HIGH
 impactDescription: >-
   prevents callback signatures from drifting when an existing interface or object contract already defines them

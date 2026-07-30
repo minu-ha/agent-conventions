@@ -1,5 +1,6 @@
 ---
 title: Use `@helper` on Reusable Support Functions
+titleKo: 재사용 support 함수에는 @helper
 impact: MEDIUM-HIGH
 impactDescription: distinguishes reusable pure support logic from local implementation details or integration boundaries
 appliesWhen: >-

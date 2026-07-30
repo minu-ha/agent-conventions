@@ -1,5 +1,6 @@
 ---
 title: Keep Classes Single-purpose
+titleKo: class는 한 가지 책임만
 impact: HIGH
 impactDescription: stops one class from carrying both base styling and multiple state or structural meanings at once
 appliesWhen: >-

@@ -1,5 +1,6 @@
 ---
 title: Avoid Imperative Assembly in Wide Scopes
+titleKo: 넓은 스코프에서 명령형 조립 피하기
 impact: HIGH
 impactDescription: keeps file-wide logic declarative instead of mutating shared locals through branching assembly
 appliesWhen: >-

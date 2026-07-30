@@ -1,5 +1,6 @@
 ---
 title: Use Scope, Slug, Element, and Modifier Syntax
+titleKo: scope·slug·element·modifier 문법 지키기
 impact: CRITICAL
 impactDescription: makes class ownership and UI role traceable from the classname alone
 appliesWhen: >-

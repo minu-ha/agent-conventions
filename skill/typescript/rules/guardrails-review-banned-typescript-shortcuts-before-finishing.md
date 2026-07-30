@@ -1,5 +1,6 @@
 ---
 title: Review Banned TypeScript Shortcuts Before Finishing
+titleKo: 마무리 전에 금지된 TypeScript 지름길 점검
 impact: MEDIUM
 impactDescription: >-
   catches the recurring shortcuts that most often erode import, type, helper, fallback, and comment discipline

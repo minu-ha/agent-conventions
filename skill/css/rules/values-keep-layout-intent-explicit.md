@@ -1,5 +1,6 @@
 ---
 title: Keep Layout Intent Explicit
+titleKo: 레이아웃 의도를 명시적으로 드러내기
 impact: MEDIUM-HIGH
 impactDescription: makes sticky, fixed, and box responsibilities understandable without reverse-engineering the DOM
 appliesWhen: >-

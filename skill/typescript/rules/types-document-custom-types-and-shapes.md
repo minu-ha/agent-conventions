@@ -1,5 +1,6 @@
 ---
 title: Document Custom Types and Declarative Shapes
+titleKo: 커스텀 타입과 선언적 shape 문서화
 impact: CRITICAL
 impactDescription: keeps domain-specific contracts understandable without digging through implementation details
 appliesWhen: >-

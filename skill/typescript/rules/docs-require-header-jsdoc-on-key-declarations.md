@@ -1,5 +1,6 @@
 ---
 title: Require Header JSDoc on Key Declarations
+titleKo: 핵심 선언에는 헤더 JSDoc 필수
 impact: MEDIUM-HIGH
 impactDescription: makes important boundaries searchable and explainable before readers inspect the implementation body
 appliesWhen: >-

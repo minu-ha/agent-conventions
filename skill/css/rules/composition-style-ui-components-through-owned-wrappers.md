@@ -1,5 +1,6 @@
 ---
 title: Prefer Owned Wrappers for `Ui*` Component Styling
+titleKo: Ui* 스타일링은 소유한 wrapper를 통해
 impact: HIGH
 impactDescription: >-
   prevents shared UI wrappers from exposing uncontrolled styling hooks through ad-hoc className injection

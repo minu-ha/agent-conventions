@@ -1,5 +1,6 @@
 ---
 title: Use Pseudo-classes for DOM-owned States
+titleKo: DOM이 소유한 상태에는 pseudo-class
 impact: HIGH
 impactDescription: keeps browser-owned interaction states separate from app-owned state modifiers
 appliesWhen: >-

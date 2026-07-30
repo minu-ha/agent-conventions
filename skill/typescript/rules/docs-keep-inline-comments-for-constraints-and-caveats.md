@@ -1,5 +1,6 @@
 ---
 title: Keep Inline Comments for Constraints and Caveats Only
+titleKo: 인라인 주석은 제약과 예외에만
 impact: MEDIUM
 impactDescription: >-
   prevents inline comments from narrating obvious code while preserving notes that avoid real misunderstandings

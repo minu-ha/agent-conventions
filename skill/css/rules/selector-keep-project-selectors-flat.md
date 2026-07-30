@@ -1,5 +1,6 @@
 ---
 title: Keep Project-owned Selectors Flat
+titleKo: 프로젝트 소유 셀렉터는 평평하게
 impact: CRITICAL
 impactDescription: reduces cascade coupling by keeping project-owned selectors independent instead of descendant-driven
 appliesWhen: >-

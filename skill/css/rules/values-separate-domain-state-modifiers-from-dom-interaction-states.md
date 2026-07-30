@@ -1,5 +1,6 @@
 ---
 title: Separate Domain State Modifiers From DOM Interaction States
+titleKo: 도메인 state modifier와 DOM 상호작용 state 분리
 impact: HIGH
 impactDescription: >-
   keeps app state, focus visibility, and hover behavior readable and accessible without mixing their responsibilities

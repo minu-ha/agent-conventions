@@ -1,5 +1,6 @@
 ---
 title: Standardize Annotation Tags by Declaration Role
+titleKo: JSDoc 태그는 선언 역할에 맞춰 통일
 impact: MEDIUM-HIGH
 impactDescription: keeps mixed TypeScript and TSX files scannable by using a small fixed annotation set
 appliesWhen: TypeScript/TSX 선언의 JSDoc 태그를 추가·변경하거나 선언 역할에 맞는 annotation을 검토한다.

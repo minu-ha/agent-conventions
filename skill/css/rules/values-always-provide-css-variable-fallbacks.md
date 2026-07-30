@@ -1,5 +1,6 @@
 ---
 title: Provide CSS Variable Fallbacks When Token Presence Is Not Guaranteed
+titleKo: token 주입이 보장 안 되면 var() fallback 넣기
 impact: HIGH
 impactDescription: prevents missing tokens from degrading styles unpredictably when variables are absent
 appliesWhen: >-

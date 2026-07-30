@@ -1,5 +1,6 @@
 ---
 title: Review Banned CSS Patterns Before Finishing
+titleKo: 마무리 전에 금지된 CSS 패턴 점검
 impact: MEDIUM
 impactDescription: >-
   catches unsafe selector, modifier, and library-targeting shortcuts before they become part of the shared style system

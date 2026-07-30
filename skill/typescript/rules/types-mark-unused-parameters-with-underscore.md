@@ -1,5 +1,6 @@
 ---
 title: Mark Unused Parameters With an Underscore Prefix
+titleKo: 쓰지 않는 매개변수는 밑줄 접두사로
 impact: MEDIUM-HIGH
 impactDescription: >-
   makes intentionally ignored callback parameters explicit instead of silently dropping parts of a contract

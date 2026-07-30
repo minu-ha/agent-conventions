@@ -1,5 +1,6 @@
 ---
 title: Use Consistent File, Symbol, and Field Naming
+titleKo: 파일·심볼·필드 이름을 일관되게
 impact: HIGH
 impactDescription: keeps file names, symbols, and shape fields predictable across modules and runtime structures
 appliesWhen: >-

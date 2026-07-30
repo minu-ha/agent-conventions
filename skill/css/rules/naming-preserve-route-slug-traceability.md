@@ -1,5 +1,6 @@
 ---
 title: Preserve Route Slug Traceability
+titleKo: route slug 추적성 유지
 impact: HIGH
 impactDescription: keeps route-scoped class namespaces readable back to the route hierarchy they belong to
 appliesWhen: route/framework 규칙이 `rt_*` owner를 선택한 화면에서 route class slug를 새로 만들거나 이름을 변경한다.

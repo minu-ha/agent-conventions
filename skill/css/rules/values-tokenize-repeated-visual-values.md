@@ -1,5 +1,6 @@
 ---
 title: Tokenize Repeated Visual Values
+titleKo: 반복되는 시각 값은 토큰화
 impact: HIGH
 impactDescription: >-
   keeps repeated colors, spacing, and radius values aligned with shared design tokens instead of drifting into magic
