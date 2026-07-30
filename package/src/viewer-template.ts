@@ -44,9 +44,7 @@ body { background: var(--paper); color: var(--ink); font-family: var(--sans); fo
 .topbar { position: sticky; top: 0; z-index: 40; background: var(--paper); border-bottom: 1px solid var(--rule); }
 .topbar-in { max-width: 1440px; margin: 0 auto; padding: .7rem clamp(.75rem, 2vw, 1.5rem); display: flex; align-items: center; gap: .8rem; flex-wrap: wrap; }
 .brand { font-family: var(--mono); font-size: .72rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); }
-.skill-select { font-family: var(--mono); font-size: .78rem; font-weight: 600; color: var(--ink); background: var(--card); border: 1px solid var(--rule-2); border-radius: 2px; padding: .42rem .5rem; }
-.skill-select:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 0 3px var(--accent-bg); }
-.companion { flex-basis: 100%; display: flex; align-items: baseline; gap: .35rem; flex-wrap: wrap; font-family: var(--mono); font-size: .64rem; color: var(--muted); }
+.companion { display: flex; align-items: baseline; gap: .3rem; flex-wrap: wrap; margin-top: .4rem; font-family: var(--mono); font-size: .62rem; color: var(--muted); }
 .companion:empty { display: none; }
 .search-wrap { position: relative; flex: 1 1 280px; min-width: 180px; }
 .search { width: 100%; font-family: var(--mono); font-size: .84rem; color: var(--ink); background: var(--card); border: 1px solid var(--rule-2); border-radius: 2px; padding: .5rem; }
@@ -81,9 +79,13 @@ body { background: var(--paper); color: var(--ink); font-family: var(--sans); fo
 .row[data-imp="CRITICAL"] { border-left-color: var(--ember); }
 .row[data-imp="HIGH"] { border-left-color: color-mix(in srgb, var(--ember) 55%, var(--rule)); }
 .row[data-imp="MEDIUM-HIGH"] { border-left-color: color-mix(in srgb, var(--ember) 28%, var(--rule)); }
-.row-hd { width: 100%; text-align: left; display: grid; grid-template-columns: 2.4rem minmax(0, 1fr) auto; align-items: baseline; gap: .1rem .7rem; padding: .6rem .75rem; }
+.row-hd { width: 100%; text-align: left; display: grid; grid-template-columns: 2.7rem minmax(0, 1fr) auto; align-items: baseline; gap: .1rem .7rem; padding: .6rem .75rem; }
 .row-hd:hover { background: var(--sunk); }
-@media (max-width: 640px) { .row-hd { grid-template-columns: 2rem minmax(0, 1fr); } .row-meta { grid-column: 2; margin-top: .3rem; } }
+@media (max-width: 640px) { .row-hd { grid-template-columns: 2.7rem minmax(0, 1fr); } .row-meta { grid-column: 2; margin-top: .3rem; } }
+.row-no {
+	font-family: var(--mono); font-size: .72rem; font-weight: 600; color: var(--accent);
+	font-variant-numeric: tabular-nums; letter-spacing: -.02em;
+}
 .row-main { display: flex; flex-direction: column; gap: .18rem; min-width: 0; }
 .row-t1 { display: flex; gap: .5rem; flex-wrap: wrap; align-items: baseline; }
 .row-title { font-size: .92rem; font-weight: 600; }
@@ -148,7 +150,6 @@ mark { background: color-mix(in srgb, var(--ember) 35%, transparent); color: inh
 const viewerBodyMarkup = `<header class="topbar">
 	<div class="topbar-in">
 		<div class="brand">팀 컨벤션</div>
-		<select id="skill" class="skill-select" aria-label="조회할 skill"></select>
 		<div class="search-wrap">
 			<input id="q" class="search" type="search" autocomplete="off" spellcheck="false"
 				placeholder="규칙·상황·코드 검색  (handler, barrel, useEffect …)" aria-label="규칙 검색">
@@ -156,12 +157,16 @@ const viewerBodyMarkup = `<header class="topbar">
 		<div class="count" id="count"></div>
 		<button class="tbtn" id="expand">전체 펼침</button>
 		<button class="tbtn" id="theme">테마</button>
-		<div class="companion" id="companion"></div>
 	</div>
 </header>
 <div class="shell">
 	<div class="pane">
 		<aside class="rail">
+			<div>
+				<div class="rail-hd"><span>Skill</span><button class="tbtn" data-clear="skills">해제</button></div>
+				<div class="chips" id="f-skill"></div>
+				<div class="companion" id="companion"></div>
+			</div>
 			<div>
 				<div class="rail-hd"><span>Impact</span><button class="tbtn" data-clear="impact">해제</button></div>
 				<div class="chips" id="f-impact"></div>
@@ -192,12 +197,19 @@ const viewerClientScript = `(() => {
 	const secOf = (r) => DATA.sections.find((s) => s.skill === r.skill && s.prefix === r.sectionPrefix);
 	const secLabel = (s) => s.titleKo || s.title;
 
-	const state = {q: "", skill: "", impact: new Set(), section: "", tags: new Set(), open: new Set()};
+	// section 은 skill 마다 같은 prefix 를 쓸 수 있어(docs, naming …) "skill/prefix" 로 잡는다.
+	const state = {q: "", skills: new Set(), impact: new Set(), section: "", tags: new Set(), open: new Set()};
 
 	// 선택 기억. file:// 에서 막힐 수 있으므로 조용히 무시한다.
-	const remember = (v) => { try { localStorage.setItem("viewer-skill", v); } catch (e) {} };
-	try { state.skill = localStorage.getItem("viewer-skill") || ""; } catch (e) {}
-	if (state.skill && !DATA.skills.some((s) => s.name === state.skill)) state.skill = "";
+	const remember = () => {
+		try { localStorage.setItem("viewer-skills", [...state.skills].join(",")); } catch (e) {}
+	};
+	try {
+		const saved = (localStorage.getItem("viewer-skills") || "").split(",").filter(Boolean);
+		for (const name of saved) {
+			if (DATA.skills.some((s) => s.name === name)) state.skills.add(name);
+		}
+	} catch (e) {}
 
 	const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 	const KW = /\\b(const|let|var|function|return|if|else|for|while|export|import|from|type|interface|as|await|async|new|void|null|undefined|true|false|extends|default|typeof|in|of)\\b/g;
@@ -257,8 +269,8 @@ const viewerClientScript = `(() => {
 	}
 
 	function matches(r) {
-		if (state.skill && r.skill !== state.skill) return false;
-		if (state.section && r.sectionPrefix !== state.section) return false;
+		if (state.skills.size && !state.skills.has(r.skill)) return false;
+		if (state.section && r.skill + "/" + r.sectionPrefix !== state.section) return false;
 		if (state.impact.size && !state.impact.has(r.impact)) return false;
 		if (state.tags.size && !r.tags.some((t) => state.tags.has(t))) return false;
 		if (state.q) {
@@ -282,7 +294,7 @@ const viewerClientScript = `(() => {
 			(resolvable ? ' data-goto="' + esc(target) + '"' : " disabled") + ">" + esc(target) + "</button>";
 	};
 
-	function ruleHtml(r, n) {
+	function ruleHtml(r) {
 		const open = state.open.has(keyOf(r));
 		const sec = secOf(r);
 		const exCount = r.examples.reduce((t, e) => t + e.blocks.length, 0);
@@ -308,43 +320,54 @@ const viewerClientScript = `(() => {
 
 		return '<article class="row" data-imp="' + r.impact + '" data-open="' + (open ? 1 : 0) + '" id="' + domIdOf(r) + '">' +
 			'<button class="row-hd" data-rule="' + keyOf(r) + '" aria-expanded="' + open + '">' +
-			'<span class="row-ex">' + String(n).padStart(3, "0") + "</span>" +
+			'<span class="row-no" title="' + r.skill + " HANDBOOK " + r.number + '">' + r.number + "</span>" +
 			'<span class="row-main"><span class="row-t1"><span class="row-title">' + hi(titleOf(r)) + "</span>" +
-			'<span class="row-id">' + hi(state.skill ? r.id : keyOf(r)) + "</span></span>" +
+			'<span class="row-id">' + hi(state.skills.size === 1 ? r.id : keyOf(r)) + "</span></span>" +
 			'<span class="row-when">' + hi(r.appliesWhen || r.impactDescription) + "</span></span>" +
-			'<span class="row-meta">' + (sec ? '<span class="row-ex">\\u00a7' + sec.order + "</span>" : "") +
+			'<span class="row-meta">' + (sec ? '<span class="row-ex">' + esc(secLabel(sec)) + "</span>" : "") +
 			'<span class="row-ex">예시 ' + exCount + '</span><span class="imp imp-' + r.impact + '">' + r.impact + "</span></span></button>" + body + "</article>";
-	}
-
-	function renderSkillSelect() {
-		const sel = document.getElementById("skill");
-		sel.innerHTML = '<option value="">전체 (' + RULES.length + ")</option>" +
-			DATA.skills.map((s) => '<option value="' + s.name + '">' + s.name + " (" + s.ruleCount + ")</option>").join("");
-		sel.value = state.skill;
 	}
 
 	function renderCompanion() {
 		const el = document.getElementById("companion");
-		const skill = DATA.skills.find((s) => s.name === state.skill);
-		if (!skill || skill.companions.length === 0) { el.innerHTML = ""; return; }
-		el.innerHTML = "<span>동반</span>" + skill.companions.map((c) =>
-			'<button class="xr-a" data-switch="' + c.skill + '">' + c.skill + (c.mode === "required" ? " 필수" : " 조건") + "</button>").join("");
+		const seen = new Set();
+		const hints = [];
+
+		for (const name of state.skills) {
+			const skill = DATA.skills.find((s) => s.name === name);
+			if (!skill) continue;
+			for (const c of skill.companions) {
+				if (state.skills.has(c.skill) || seen.has(c.skill)) continue;
+				seen.add(c.skill);
+				hints.push('<button class="xr-a" data-add-skill="' + c.skill + '">+ ' + c.skill + (c.mode === "required" ? " 필수" : " 조건") + "</button>");
+			}
+		}
+
+		el.innerHTML = hints.length ? "<span>동반</span>" + hints.join("") : "";
 	}
 
 	function renderRail() {
-		const scoped = RULES.filter((r) => !state.skill || r.skill === state.skill);
+		const scoped = RULES.filter((r) => !state.skills.size || state.skills.has(r.skill));
 		const count = (fn) => scoped.filter(fn).length;
+
+		document.getElementById("f-skill").innerHTML = DATA.skills.map((s) =>
+			'<button class="chip" data-skill="' + s.name + '" aria-pressed="' + state.skills.has(s.name) + '">' + s.name +
+			' <span class="n">' + s.ruleCount + "</span></button>").join("");
 
 		document.getElementById("f-impact").innerHTML = IMPACTS.map((k) =>
 			'<button class="chip imp imp-' + k + '" data-impact="' + k + '" aria-pressed="' + state.impact.has(k) + '">' + k +
 			' <span class="n">' + count((r) => r.impact === k) + "</span></button>").join("");
 
-		const secs = DATA.sections.filter((s) => !state.skill || s.skill === state.skill)
+		const secs = DATA.sections.filter((s) => !state.skills.size || state.skills.has(s.skill))
 			.slice()
 			.sort((a, b) => a.skill.localeCompare(b.skill, "en-US") || a.order - b.order);
-		document.getElementById("f-section").innerHTML = secs.map((s) =>
-			'<button class="chip" data-section="' + s.prefix + '" aria-pressed="' + (state.section === s.prefix) + '">' +
-			(state.skill ? s.order + ". " : s.skill + " ") + secLabel(s) + ' <span class="n">' + count((r) => r.sectionPrefix === s.prefix) + "</span></button>").join("");
+		const oneSkill = state.skills.size === 1;
+		document.getElementById("f-section").innerHTML = secs.map((s) => {
+			const key = s.skill + "/" + s.prefix;
+			return '<button class="chip" data-section="' + esc(key) + '" aria-pressed="' + (state.section === key) + '">' +
+				(oneSkill ? s.order + ". " : s.skill + " " + s.order + ". ") + esc(secLabel(s)) +
+				' <span class="n">' + count((r) => r.skill === s.skill && r.sectionPrefix === s.prefix) + "</span></button>";
+		}).join("");
 
 		const tally = new Map();
 		for (const r of scoped) for (const t of r.tags) tally.set(t, (tally.get(t) || 0) + 1);
@@ -356,9 +379,9 @@ const viewerClientScript = `(() => {
 	function render() {
 		const hits = RULES.filter(matches);
 		document.getElementById("list").innerHTML = hits.length
-			? hits.map((r, i) => ruleHtml(r, i + 1)).join("")
+			? hits.map((r) => ruleHtml(r)).join("")
 			: '<div class="empty">일치하는 규칙이 없습니다 \\u2014 검색어나 필터를 줄여보세요</div>';
-		const scopeTotal = RULES.filter((r) => !state.skill || r.skill === state.skill).length;
+		const scopeTotal = RULES.filter((r) => !state.skills.size || state.skills.has(r.skill)).length;
 		document.getElementById("count").innerHTML = "<b>" + hits.length + "</b> / " + scopeTotal +
 			(hits.length ? " \\u00b7 코드 <b>" + hits.reduce((n, r) => n + r.examples.reduce((m, e) => m + e.blocks.length, 0), 0) + "</b>" : "");
 		const allOpen = hits.length > 0 && hits.every((r) => state.open.has(keyOf(r)));
@@ -367,15 +390,13 @@ const viewerClientScript = `(() => {
 		renderRail();
 	}
 
-	function selectSkill(name) {
-		state.skill = name;
+	function toggleSkill(name) {
+		state.skills.has(name) ? state.skills.delete(name) : state.skills.add(name);
 		state.section = "";
-		remember(name);
-		document.getElementById("skill").value = name;
+		remember();
 		render();
 	}
 
-	document.getElementById("skill").addEventListener("change", (e) => selectSkill(e.target.value));
 	document.getElementById("q").addEventListener("input", (e) => { state.q = e.target.value.trim(); render(); });
 
 	document.getElementById("expand").addEventListener("click", () => {
@@ -392,15 +413,21 @@ const viewerClientScript = `(() => {
 	});
 
 	document.addEventListener("click", (ev) => {
-		const t = ev.target.closest("[data-rule],[data-impact],[data-section],[data-tag],[data-why],[data-goto],[data-switch],[data-clear]");
+		const t = ev.target.closest("[data-rule],[data-skill],[data-add-skill],[data-impact],[data-section],[data-tag],[data-why],[data-goto],[data-clear]");
 		if (!t) return;
 		const toggle = (set, key) => { set.has(key) ? set.delete(key) : set.add(key); render(); };
 
 		if (t.dataset.rule) return toggle(state.open, t.dataset.rule);
+		if (t.dataset.skill) return toggleSkill(t.dataset.skill);
+		if (t.dataset.addSkill) {
+			state.skills.add(t.dataset.addSkill);
+			state.section = "";
+			remember();
+			return render();
+		}
 		if (t.dataset.impact) return toggle(state.impact, t.dataset.impact);
 		if (t.dataset.tag) return toggle(state.tags, t.dataset.tag);
 		if (t.dataset.section) { state.section = state.section === t.dataset.section ? "" : t.dataset.section; return render(); }
-		if (t.dataset.switch) return selectSkill(t.dataset.switch);
 
 		if (t.dataset.why) {
 			const w = t.closest(".why");
@@ -411,19 +438,21 @@ const viewerClientScript = `(() => {
 		}
 
 		if (t.dataset.goto) {
-			// 단일선택이라 다른 skill 규칙으로 가려면 드롭다운을 그 skill 로 전환한다.
+			// skill 필터가 켜져 있으면 대상 skill 을 더해 준다. 현재 맥락은 유지된다.
 			const target = byKey.get(t.dataset.goto);
 			if (!target) return;
-			state.q = ""; state.impact.clear(); state.tags.clear();
+			state.q = ""; state.impact.clear(); state.tags.clear(); state.section = "";
 			document.getElementById("q").value = "";
+			if (state.skills.size) { state.skills.add(target.skill); remember(); }
 			state.open.add(t.dataset.goto);
-			selectSkill(target.skill);
+			render();
 			const el = document.getElementById(domIdOf(target));
 			if (el) el.scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "center"});
 			return;
 		}
 
 		if (t.dataset.clear) {
+			if (t.dataset.clear === "skills") { state.skills.clear(); state.section = ""; remember(); }
 			if (t.dataset.clear === "impact") state.impact.clear();
 			if (t.dataset.clear === "tags") state.tags.clear();
 			if (t.dataset.clear === "section") state.section = "";
@@ -436,7 +465,6 @@ const viewerClientScript = `(() => {
 		if (e.key === "Escape" && e.target.id === "q") { e.target.value = ""; state.q = ""; render(); e.target.blur(); }
 	});
 
-	renderSkillSelect();
 	render();
 })();`;
 

@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import {readFile} from "node:fs/promises";
+import path from "node:path";
 import test from "node:test";
 
 import {checkGeneratedViewer} from "../src/check-viewer.js";
@@ -211,6 +212,7 @@ test("encodeViewerPayload escapes angle brackets so inline JSON cannot break out
 			{
 				skill: "react",
 				id: "sample",
+				number: "1.1",
 				title: "Sample",
 				titleKo: "샘플",
 				impact: "HIGH",
@@ -241,13 +243,17 @@ test("renderViewerHtml emits a complete document with a utf-8 charset", () => {
 	assert.equal(Buffer.from(html, "utf8").toString("utf8"), html);
 });
 
-test("viewer markup exposes a single-select skill dropdown and a companion slot", () => {
+test("viewer markup lists skills as rail chips, not a dropdown", () => {
 	const html = renderViewerHtml(encodeViewerPayload(emptyPayload));
 
-	assert.match(html, /<select id="skill"/);
-	assert.equal(/<select id="skill"[^>]*multiple/.test(html), false, "skill selector must stay single-select");
+	assert.match(html, /id="f-skill"/);
+	assert.equal(/<select/.test(html), false, "skill selection must be rail chips, not a dropdown");
+	assert.match(html, /data-clear="skills"/);
 	assert.match(html, /id="companion"/);
-	assert.equal(/id="f-skill"/.test(html), false, "skill chip group must be gone; the dropdown replaces it");
+	// rail 4개 그룹: skill, impact, section, tag
+	assert.match(html, /id="f-impact"/);
+	assert.match(html, /id="f-section"/);
+	assert.match(html, /id="f-tags"/);
 });
 
 test("viewer styles use minmax(0, 1fr) on both two-column grids", () => {
@@ -271,14 +277,17 @@ test("viewer styles define both themes and respect reduced motion", () => {
 	assert.match(html, /:focus-visible/);
 });
 
-test("viewer client script indexes both languages plus code, and switches skill on cross-skill jumps", () => {
+test("viewer client script indexes both languages plus code, and keeps cross-skill jumps reachable", () => {
 	const html = renderViewerHtml(encodeViewerPayload(emptyPayload));
 
 	assert.match(html, /titleKo/);
 	assert.match(html, /appliesWhen/);
 	assert.match(html, /data-goto/);
-	assert.match(html, /state\.skill\s*=/);
+	assert.match(html, /state\.skills\.add\(target\.skill\)/);
 	assert.match(html, /localStorage/);
+	// 규칙 번호는 필터와 무관한 고정값이어야 한다. 목록 위치로 번호를 매기면 안 된다.
+	assert.match(html, /r\.number/);
+	assert.equal(/padStart\(3, "0"\)/.test(html), false, "rule numbers must come from the payload, not the list index");
 });
 
 test("generateViewerHtml embeds every rule and stays byte-stable", async () => {
@@ -315,4 +324,27 @@ test("every rule and section in the repository carries a Korean title", async ()
 	for (const section of payload.sections) {
 		assert.ok(section.titleKo.length > 0, `${section.skill}/${section.prefix} section is missing TitleKo`);
 	}
+});
+
+test("every rule carries a stable number that matches its HANDBOOK.md heading", async () => {
+	const payload = await buildViewerPayload();
+	const handbook = await readFile(path.join(getSkillPaths("react").skillDir, "HANDBOOK.md"), "utf8");
+
+	// HANDBOOK 헤딩: `### 1.1 Avoid Barrel Exports and React Namespace Types`
+	const headingNumberByTitle = new Map([...handbook.matchAll(/^### (\d+\.\d+) (.+)$/gm)].map((match) => [match[2].trim(), match[1]]));
+
+	assert.ok(headingNumberByTitle.size > 0, "expected numbered headings in react HANDBOOK.md");
+
+	for (const rule of payload.rules.filter((candidate) => candidate.skill === "react")) {
+		const expected = headingNumberByTitle.get(rule.title);
+		assert.ok(expected, `react HANDBOOK.md has no heading for "${rule.title}"`);
+		assert.equal(rule.number, expected, `${rule.id} number should match its HANDBOOK heading`);
+	}
+
+	for (const rule of payload.rules) {
+		assert.match(rule.number, /^\d+\.\d+$/, `${rule.skill}/${rule.id} has no rule number`);
+	}
+
+	const keys = payload.rules.map((rule) => `${rule.skill} ${rule.number}`);
+	assert.equal(new Set(keys).size, keys.length, "rule numbers must be unique within a skill");
 });

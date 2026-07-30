@@ -1,5 +1,6 @@
 import {getSkillPaths, isBuildableSkill, listSkillNames} from "./config.js";
 import {readSkillDocument} from "./parser.js";
+import {getRulesForSection} from "./routing.js";
 import {parseRuleBody} from "./rule-body.js";
 import type {RuleExample, RuleProseNode} from "./rule-body.js";
 import type {CompanionMode} from "./types.js";
@@ -56,6 +57,10 @@ export interface ViewerRule {
 	 * @field 확장자를 뗀 rule 파일명. 규칙 stable ID이다
 	 */
 	id: string;
+	/**
+	 * @field `<section order>.<section 내 순번>` 형식의 고정 규칙 번호. `HANDBOOK.md` 헤딩 번호와 같다
+	 */
+	number: string;
 	/**
 	 * @field 영어 rule 제목. 화면 제목이 아니라 식별자와 검색에 쓴다
 	 */
@@ -158,6 +163,8 @@ export const buildViewerPayload = async (): Promise<ViewerPayload> => {
 	const skills: ViewerSkill[] = [];
 	const sections: ViewerSection[] = [];
 	const rules: ViewerRule[] = [];
+	// `skill/id` -> section order와 section 내 순번을 합친 정렬 키
+	const orderKey = new Map<string, number>();
 
 	for (const skillName of await listSkillNames()) {
 		if (!(await isBuildableSkill(skillName))) {
@@ -185,12 +192,24 @@ export const buildViewerPayload = async (): Promise<ViewerPayload> => {
 			});
 		}
 
+		// `HANDBOOK.md`와 같은 번호를 붙인다. build.ts 가 쓰는 것과 같은 정렬을 재사용해야
+		// 두 문서의 `1.1`, `3.2`가 같은 규칙을 가리킨다.
+		const numberByFileName = new Map<string, string>();
+
+		for (const section of document.sections) {
+			getRulesForSection(section, document.rules).forEach((rule, index) => {
+				numberByFileName.set(rule.fileName, `${section.order}.${index + 1}`);
+				orderKey.set(`${document.skillName}/${rule.fileName.replace(/\.md$/, "")}`, section.order * 1000 + index);
+			});
+		}
+
 		for (const rule of document.rules) {
 			const parsed = parseRuleBody(rule.body);
 
 			rules.push({
 				skill: document.skillName,
 				id: rule.fileName.replace(/\.md$/, ""),
+				number: numberByFileName.get(rule.fileName) ?? "",
 				title: rule.title,
 				titleKo: rule.titleKo,
 				impact: rule.impact,
@@ -206,12 +225,16 @@ export const buildViewerPayload = async (): Promise<ViewerPayload> => {
 		}
 	}
 
+	// skill 순 → 규칙 번호 순. `HANDBOOK.md`의 나열 순서와 같아진다.
 	rules.sort((left, right) => {
 		if (left.skill !== right.skill) {
 			return left.skill.localeCompare(right.skill, "en-US");
 		}
 
-		return left.id.localeCompare(right.id, "en-US");
+		const leftKey = orderKey.get(`${left.skill}/${left.id}`) ?? Number.MAX_SAFE_INTEGER;
+		const rightKey = orderKey.get(`${right.skill}/${right.id}`) ?? Number.MAX_SAFE_INTEGER;
+
+		return leftKey - rightKey || left.id.localeCompare(right.id, "en-US");
 	});
 
 	return {skills, sections, rules};
