@@ -232,14 +232,16 @@ mark { background: color-mix(in srgb, var(--coral) 30%, transparent); color: inh
 
 /* ---------- rule dialog ---------- */
 /* 참조 칩은 목록을 이동하는 대신 이 다이얼로그로 미리 보여준다. 보던 섹션을 잃지 않는다. */
-.dlg { width: min(880px, calc(100vw - 32px)); max-height: min(86vh, 920px); margin: auto; padding: 0; overflow: auto; border: 1px solid var(--edge); border-radius: 3px; background: var(--card); color: var(--ink); box-shadow: 0 24px 64px color-mix(in srgb, #0b0f11 35%, transparent); }
+.dlg { width: min(880px, calc(100vw - 32px)); max-height: min(86vh, 920px); margin: auto; padding: 0; overflow: hidden; display: flex; flex-direction: column; border: 1px solid var(--edge); border-radius: 3px; background: var(--card); color: var(--ink); box-shadow: 0 24px 64px color-mix(in srgb, #0b0f11 35%, transparent); }
 .dlg::backdrop { background: color-mix(in srgb, #0b0f11 52%, transparent); }
-.dlg-bar { position: sticky; top: 0; z-index: 2; display: flex; align-items: center; justify-content: flex-end; gap: 6px; padding: 8px 10px; background: var(--card); border-bottom: 1px solid var(--soft); }
-.dlg-act { min-height: 26px; padding: 0 9px; border-radius: 2px; font-family: var(--mono); font-size: 10.5px; color: var(--ink2); border: 1px solid var(--hair); background: var(--card); }
-.dlg-act:hover { border-color: var(--edge); color: var(--ink); }
+/* 다이얼로그가 열리면 뒤 목록은 스크롤되지 않아야 한다. */
+body:has(.dlg[open]) { overflow: hidden; }
+.dlg-x { position: absolute; top: 12px; right: 12px; z-index: 3; width: 28px; height: 28px; display: grid; place-items: center; border-radius: 2px; font-size: 12px; color: var(--muted); background: var(--card); border: 1px solid var(--hair); }
+.dlg-x:hover { color: var(--ink); border-color: var(--edge); }
+.dlg-scroll { overflow: auto; min-height: 0; }
 .dlg .row { border: 0; border-radius: 0; }
 .dlg .row-hd-dlg:hover { background: none; }
-.dlg .row-hd-dlg { cursor: default; }
+.dlg .row-hd-dlg { cursor: default; padding-right: 52px; }
 
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; scroll-behavior: auto !important; } }
 </style>
@@ -601,10 +603,8 @@ mark { background: color-mix(in srgb, var(--coral) 30%, transparent); color: inh
 		const r = byKey.get(dlgKey);
 		if (!r) return;
 		dlg.setAttribute("aria-label", titleOf(r));
-		dlg.innerHTML = '<div class="dlg-bar">' +
-			'<button class="dlg-act" data-jump="' + esc(dlgKey) + '">목록에서 열기</button>' +
-			'<button class="dlg-act" data-close="1">닫기 esc</button></div>' +
-			ruleHtml(r, true);
+		dlg.innerHTML = '<button class="dlg-x" data-close="1" aria-label="닫기">\u2715</button>' +
+			'<div class="dlg-scroll">' + ruleHtml(r, true) + "</div>";
 	}
 
 	function openDialog(key) {
@@ -612,7 +612,8 @@ mark { background: color-mix(in srgb, var(--coral) 30%, transparent); color: inh
 		dlgKey = key;
 		renderDialog();
 		if (!dlg.open) dlg.showModal();
-		dlg.scrollTop = 0;
+		const scroller = dlg.querySelector(".dlg-scroll");
+		if (scroller) scroller.scrollTop = 0;
 	}
 
 	// 내용이 다이얼로그를 가득 채우므로 dialog 자체가 target 이면 backdrop 클릭이다.
@@ -645,7 +646,7 @@ mark { background: color-mix(in srgb, var(--coral) 30%, transparent); color: inh
 	});
 
 	document.addEventListener("click", (ev) => {
-		const t = ev.target.closest("[data-rule],[data-skill],[data-impact],[data-section],[data-tag],[data-when],[data-why],[data-goto],[data-jump],[data-close],[data-clear]");
+		const t = ev.target.closest("[data-rule],[data-skill],[data-impact],[data-section],[data-tag],[data-when],[data-why],[data-goto],[data-close],[data-clear]");
 		if (!t) return;
 		// 다이얼로그가 열려 있으면 그 안의 아코디언도 같은 상태를 쓰므로 함께 다시 그린다.
 		const toggle = (set, key) => { set.has(key) ? set.delete(key) : set.add(key); render(); renderDialog(); };
@@ -660,25 +661,8 @@ mark { background: color-mix(in srgb, var(--coral) 30%, transparent); color: inh
 		if (t.dataset.close) return dlg.close();
 
 		// 참조 칩은 보던 위치를 잃지 않게 목록 이동 대신 다이얼로그로 미리 보여준다.
+		// 다른 skill 규칙도 목록 필터를 건드리지 않고 그대로 열린다.
 		if (t.dataset.goto) return openDialog(t.dataset.goto);
-
-		if (t.dataset.jump) {
-			// 단일 선택이라 다른 skill 규칙으로 가려면 선택을 그 skill 로 옮긴다.
-			const target = byKey.get(t.dataset.jump);
-			if (!target) return;
-			dlg.close();
-			state.q = ""; state.impact.clear(); state.tags.clear(); state.section = "";
-			document.getElementById("q").value = "";
-			if (state.skill !== target.skill) { state.skill = target.skill; remember(); }
-			state.open.add(t.dataset.jump);
-			render();
-			const el = document.getElementById(domIdOf(target));
-			if (el) {
-				const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-				window.scrollTo({top: el.getBoundingClientRect().top + window.scrollY - 88, behavior: reduce ? "auto" : "smooth"});
-			}
-			return;
-		}
 
 		if (t.dataset.clear) {
 			if (t.dataset.clear === "impact") state.impact.clear();

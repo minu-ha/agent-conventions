@@ -307,13 +307,14 @@ test("viewer styles define both themes and respect reduced motion", () => {
 	assert.match(html, /:focus-visible/);
 });
 
-test("viewer client script indexes both languages plus code, and keeps cross-skill jumps reachable", () => {
+test("viewer client script indexes both languages plus code, and keeps cross-skill references reachable", () => {
 	const html = renderViewerHtml(encodeViewerPayload(emptyPayload));
 
 	assert.match(html, /titleKo/);
 	assert.match(html, /appliesWhen/);
+	// 참조 칩은 skill 과 무관하게 byKey 전체 색인으로 열린다.
 	assert.match(html, /data-goto/);
-	assert.match(html, /state\.skill = target\.skill/);
+	assert.match(html, /openDialog\(t\.dataset\.goto\)/);
 	assert.match(html, /localStorage/);
 	assert.match(html, /window\.CONVENTION_DATA = DATA/);
 	// 규칙 번호는 필터와 무관한 고정값이어야 한다. 목록 위치로 번호를 매기면 안 된다.
@@ -328,8 +329,10 @@ test("viewer previews referenced rules in a dialog instead of leaving the curren
 	assert.match(html, /<dialog class="dlg" id="dlg"/);
 	assert.match(html, /openDialog\(t\.dataset\.goto\)/);
 	assert.match(html, /showModal/);
-	// 목록으로 이동하는 기존 경로는 다이얼로그 안 버튼으로 남는다.
-	assert.match(html, /data-jump/);
+	// 다이얼로그 조작은 닫기 X 하나뿐이고, 열려 있는 동안 뒤 목록은 스크롤되지 않는다.
+	assert.match(html, /class="dlg-x" data-close/);
+	assert.equal(/data-jump/.test(html), false, "dialog must expose only a close button");
+	assert.match(html, /body:has\(\.dlg\[open\]\)\s*\{\s*overflow:\s*hidden/);
 	// 적용 조건은 불렛 목록으로 렌더한다.
 	assert.match(html, /appliesWhenBullets/);
 	assert.match(html, /class="li-x"/);
