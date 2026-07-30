@@ -2,9 +2,7 @@
 title: Keep Each `scope_slug` Unique Per Owner
 titleKo: scope_slug는 owner마다 고유하게
 impact: CRITICAL
-impactDescription: >-
-  prevents unrelated routes or components from sharing the same namespace and colliding in the global class space
-impactDescriptionKo: 관련 없는 route나 컴포넌트가 같은 namespace를 공유해 전역 class 공간에서 충돌하는 것을 막음
+impactDescription: 관련 없는 route나 컴포넌트가 같은 namespace를 공유해 전역 class 공간에서 충돌하는 것을 막음
 appliesWhen: >-
   새 `scope_slug` namespace를 추가·복사·이름 변경하거나 서로 다른 owner의 class가 같은 namespace를 사용할 가능성이 있다.
 tags: namespace, ownership, uniqueness
@@ -12,8 +10,7 @@ tags: namespace, ownership, uniqueness
 
 ## Keep Each `scope_slug` Unique Per Owner
 
-**Impact: CRITICAL (prevents unrelated routes or components from sharing the same namespace and colliding in the global
-class space)**
+**Impact: CRITICAL (관련 없는 route나 컴포넌트가 같은 namespace를 공유해 전역 class 공간에서 충돌하는 것을 막음)**
 
 클래스명은 프로젝트 전역에서 고유해야 하며, 동일한 `scope_slug` 조합은 단일 소유자만 사용할 수 있습니다.
 새 스타일을 추가할 때는 먼저 기존 `scope_slug` 충돌 여부를 확인하고,

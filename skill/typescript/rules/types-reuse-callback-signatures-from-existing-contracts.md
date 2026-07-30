@@ -2,9 +2,7 @@
 title: Reuse Callback Signatures From Existing Contracts
 titleKo: callback 시그니처는 기존 계약에서 재사용
 impact: HIGH
-impactDescription: >-
-  prevents callback signatures from drifting when an existing interface or object contract already defines them
-impactDescriptionKo: 기존 interface나 객체 계약이 이미 정의한 callback 시그니처가 어긋나는 것을 막음
+impactDescription: 기존 interface나 객체 계약이 이미 정의한 callback 시그니처가 어긋나는 것을 막음
 appliesWhen: >-
   interface·객체·framework의 named·shared callback 구현에서 기존 시그니처를 재사용·변경한다. annotation 없는 one-off
   contextually typed inline callback은 제외한다.
@@ -15,8 +13,7 @@ tags: callbacks, indexed-access, reuse
 
 ## Reuse Callback Signatures From Existing Contracts
 
-**Impact: HIGH (prevents callback signatures from drifting when an existing interface or object contract already defines
-them)**
+**Impact: HIGH (기존 interface나 객체 계약이 이미 정의한 callback 시그니처가 어긋나는 것을 막음)**
 
 콜백 구현 시 매개변수를 다시 타이핑하기보다, 이미 존재하는 인터페이스나 계약의 시그니처를 Indexed Access로 재사용합니다.
 재사용한 계약에 현재 구현이 쓰지 않는 parameter가 있으면 `types-mark-unused-parameters-with-underscore`를 다시

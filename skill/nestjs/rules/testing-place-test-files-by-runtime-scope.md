@@ -2,16 +2,13 @@
 title: Place Test Files by Runtime Scope
 titleKo: 테스트 파일은 런타임 스코프에 맞게 배치
 impact: HIGH
-impactDescription: >-
-  makes backend test ownership obvious by separating service-adjacent unit tests from top-level HTTP e2e tests
-impactDescriptionKo: service 인접 단위 테스트와 최상위 HTTP e2e 테스트를 분리해 테스트 소유를 분명히 함
+impactDescription: service 인접 단위 테스트와 최상위 HTTP e2e 테스트를 분리해 테스트 소유를 분명히 함
 tags: test-files, placement, runtime-scope
 ---
 
 ## Place Test Files by Runtime Scope
 
-**Impact: HIGH (makes backend test ownership obvious by separating service-adjacent unit tests from top-level HTTP e2e
-tests)**
+**Impact: HIGH (service 인접 단위 테스트와 최상위 HTTP e2e 테스트를 분리해 테스트 소유를 분명히 함)**
 
 Service unit test는 대상 파일 옆의 `*.service.spec.ts`로 두고,
 HTTP e2e test는 `test/` 아래 `<domain>.e2e-spec.ts`로 둡니다.

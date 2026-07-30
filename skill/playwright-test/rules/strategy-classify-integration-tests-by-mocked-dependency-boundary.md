@@ -2,16 +2,13 @@
 title: Classify Integration Tests by Mocked Dependency Boundary
 titleKo: integration은 모킹한 의존 경계로 분류
 impact: CRITICAL
-impactDescription: >-
-  makes it clear that integration tests exercise UI and route behavior with mocked backend or auth boundaries
-impactDescriptionKo: integration 테스트가 백엔드·인증을 모킹한 상태로 UI 와 route 동작을 검증한다는 점을 분명히 함
+impactDescription: integration 테스트가 백엔드·인증을 모킹한 상태로 UI 와 route 동작을 검증한다는 점을 분명히 함
 tags: integration, mocking, boundaries
 ---
 
 ## Classify Integration Tests by Mocked Dependency Boundary
 
-**Impact: CRITICAL (makes it clear that integration tests exercise UI and route behavior with mocked backend or auth
-boundaries)**
+**Impact: CRITICAL (integration 테스트가 백엔드·인증을 모킹한 상태로 UI 와 route 동작을 검증한다는 점을 분명히 함)**
 
 주요 API를 mock해도 테스트 목적이 유지되면 Integration입니다.
 Integration은 `page.route()` 기반 API mocking, 인증 상태 mocking, 초기 데이터 강제 주입을 허용하고, 폼 검증,

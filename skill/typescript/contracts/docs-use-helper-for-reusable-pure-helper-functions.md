@@ -1,6 +1,6 @@
 # Use `@helper` on Reusable Support Functions
 
-**Impact: MEDIUM-HIGH (distinguishes reusable pure support logic from local implementation details or integration boundaries)**
+**Impact: MEDIUM-HIGH (재사용 가능한 순수 support 로직을 지역 구현 세부나 통합 경계와 구분함)**
 
 `@helper`는 재사용 가능한 pure support function에만 붙입니다.
 

@@ -2,8 +2,7 @@
 title: Use Pseudo-classes for DOM-owned States
 titleKo: DOM이 소유한 상태에는 pseudo-class
 impact: HIGH
-impactDescription: keeps browser-owned interaction states separate from app-owned state modifiers
-impactDescriptionKo: 브라우저가 소유한 상호작용 상태를 앱이 소유한 상태 modifier와 분리함
+impactDescription: 브라우저가 소유한 상호작용 상태를 앱이 소유한 상태 modifier와 분리함
 appliesWhen: >-
   `:hover`, `:visited`, `:focus*`, `:disabled`, `:checked`를 추가·수정하거나 parent DOM state가 child styling에 영향을
   준다.
@@ -13,7 +12,7 @@ tags: pseudo-classes, state, interaction
 
 ## Use Pseudo-classes for DOM-owned States
 
-**Impact: HIGH (keeps browser-owned interaction states separate from app-owned state modifiers)**
+**Impact: HIGH (브라우저가 소유한 상호작용 상태를 앱이 소유한 상태 modifier와 분리함)**
 
 브라우저와 DOM이 직접 부여하는 상태는 같은 클래스 block 안의 nested `&:`로 표현합니다.
 화면이나 도메인이 결정하는 상태는 modifier class로 분리합니다.

@@ -2,14 +2,13 @@
 title: Avoid Folder-only and Flat-only Route Trees
 titleKo: 폴더만·평면만 route 트리 둘 다 피하기
 impact: HIGH
-impactDescription: keeps route trees readable without forcing deep nesting or excessively long filenames
-impactDescriptionKo: 깊은 중첩이나 지나치게 긴 파일명을 강요하지 않고 route 트리를 읽을 수 있게 유지함
+impactDescription: 깊은 중첩이나 지나치게 긴 파일명을 강요하지 않고 route 트리를 읽을 수 있게 유지함
 tags: route-structure, folders, naming
 ---
 
 ## Avoid Folder-only and Flat-only Route Trees
 
-**Impact: HIGH (keeps route trees readable without forcing deep nesting or excessively long filenames)**
+**Impact: HIGH (깊은 중첩이나 지나치게 긴 파일명을 강요하지 않고 route 트리를 읽을 수 있게 유지함)**
 
 폴더만으로 라우트를 표현하면 중첩이 깊어지고 `index.tsx` 반복이 심해집니다.
 반대로 플랫 파일명만으로 구조를 표현하면 파일명이 지나치게 길어지고 rename 비용이 커집니다.

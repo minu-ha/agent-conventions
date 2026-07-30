@@ -1,6 +1,6 @@
 # Default to Plain CSS Unless the Project Explicitly Standardizes on CSS Modules
 
-**Impact: HIGH (keeps the global `scope_slug` naming system meaningful instead of hiding ownership behind local module indirection)**
+**Impact: HIGH (소유를 local module 간접층에 숨기지 않고 전역 scope_slug 이름 체계가 의미를 유지하게 함)**
 
 이 CSS skill은 기본적으로 plain `*.css`와 전역 고유 클래스명을 전제로 합니다.
 `rt_*`, `ui_*`, `wg_*`, `loc_*` 네임스페이스는 global class space에서 owner를 추적하려고 존재하므로,

@@ -11,9 +11,7 @@ const allowedRuleFrontmatterKeys = new Set([
 	"titleKo",
 	"impact",
 	"impactDescription",
-	"impactDescriptionKo",
 	"appliesWhen",
-	"appliesWhenKo",
 	"requiresSelected",
 	"requiredOnCompletion",
 	"reviewWith",
@@ -21,9 +19,9 @@ const allowedRuleFrontmatterKeys = new Set([
 ]);
 
 /**
- * @field `- ` 항목 block list로만 쓰는 frontmatter 키. 값은 줄바꿈으로 이어 붙인다
+ * @field 한 줄 scalar 외에 `- ` 항목 block list도 허용하는 frontmatter 키. 항목은 줄바꿈으로 이어 붙인다
  */
-const blockListFrontmatterKeys = new Set(["appliesWhenKo"]);
+const blockListCapableFrontmatterKeys = new Set(["appliesWhen"]);
 
 /**
  * @helper optional boolean frontmatter scalar 해석
@@ -101,12 +99,8 @@ export const parseFrontmatter = (source: string): {frontmatter: Record<string, s
 			throw new Error(`Duplicate frontmatter key "${key}".`);
 		}
 
-		// YAML block list. 사람이 읽는 조건 불렛처럼 항목이 여러 개인 키만 허용한다.
-		if (blockListFrontmatterKeys.has(key)) {
-			if ((rawValueSource ?? "").trim().length > 0) {
-				throw new Error(`Frontmatter key "${key}" must be a block list of "- " items.`);
-			}
-
+		// YAML block list. 값 없이 키만 쓰면 이어지는 `- ` 항목을 조건 불렛으로 읽는다.
+		if (blockListCapableFrontmatterKeys.has(key) && (rawValueSource ?? "").trim().length === 0) {
 			const items: string[] = [];
 
 			while (index + 1 < sourceLines.length && /^\s+-\s+\S/.test(sourceLines[index + 1] ?? "")) {
@@ -118,7 +112,8 @@ export const parseFrontmatter = (source: string): {frontmatter: Record<string, s
 				throw new Error(`Block list frontmatter key "${key}" has no "- " items.`);
 			}
 
-			frontmatter[key] = items.join("\n");
+			// 항목이 하나여도 scalar와 구분되도록 `- ` 접두사를 남긴다.
+			frontmatter[key] = items.map((item) => `- ${item}`).join("\n");
 			continue;
 		}
 
@@ -302,10 +297,8 @@ export const readSkillRules = async (skillPaths: SkillPaths): Promise<SkillRule[
 			titleKo: frontmatter.titleKo ?? "",
 			impact: frontmatter.impact ?? "",
 			impactDescription: frontmatter.impactDescription ?? "",
-			impactDescriptionKo: frontmatter.impactDescriptionKo ?? "",
 			tags: splitScalarList(frontmatter.tags),
-			appliesWhen: frontmatter.appliesWhen,
-			appliesWhenKo: frontmatter.appliesWhenKo === undefined ? [] : frontmatter.appliesWhenKo.split("\n"),
+			...resolveAppliesWhen(frontmatter.appliesWhen),
 			requiresSelected: splitScalarList(frontmatter.requiresSelected),
 			requiredOnCompletion: parseBooleanScalar(frontmatter.requiredOnCompletion, "requiredOnCompletion"),
 			reviewWith: splitScalarList(frontmatter.reviewWith),
@@ -314,6 +307,24 @@ export const readSkillRules = async (skillPaths: SkillPaths): Promise<SkillRule[
 	}
 
 	return rules;
+};
+
+/**
+ * @helper appliesWhen 값을 라우팅용 한 줄 문장과 표시용 불렛 목록으로 해석.
+ * block list면 불렛을 마침표로 이어 라우팅 문장을 만들고, scalar면 원문을 그대로 라우팅 문장으로 쓴다.
+ */
+const resolveAppliesWhen = (value: string | undefined): {appliesWhen?: string; appliesWhenBullets: string[]} => {
+	if (value === undefined) {
+		return {appliesWhenBullets: []};
+	}
+
+	if (!value.startsWith("- ")) {
+		return {appliesWhen: value, appliesWhenBullets: []};
+	}
+
+	const bullets = value.split("\n").map((line) => line.replace(/^- /, ""));
+
+	return {appliesWhen: `${bullets.map((bullet) => bullet.replace(/\.$/, "")).join(". ")}.`, appliesWhenBullets: bullets};
 };
 
 /**

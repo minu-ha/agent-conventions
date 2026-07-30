@@ -3,9 +3,7 @@ title: Use startTransition for Non-urgent Visual Updates
 titleKo: 비긴급 시각 갱신의 startTransition 처리
 impact: MEDIUM
 impactDescription: state 변경이 무거운 목록·표·트리 갱신을 유발할 때 상호작용 반응성을 유지합니다
-impactDescriptionKo: state 변경이 무거운 목록·표·트리 갱신을 유발할 때 상호작용 반응성을 유지합니다
-appliesWhen: 클릭·선택·필터 변경 뒤 큰 list·table·tree를 다시 그리는 state update의 우선순위나 transition 처리를 바꾼다.
-appliesWhenKo:
+appliesWhen:
   - 클릭·선택·필터 변경 뒤 큰 list·table·tree를 다시 그리는 state update를 다룰 때
   - state update의 우선순위나 transition 처리를 바꿀 때
 tags: state, transitions, starttransition, performance

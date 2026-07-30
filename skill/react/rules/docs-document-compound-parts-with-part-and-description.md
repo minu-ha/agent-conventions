@@ -3,11 +3,7 @@ title: Document Compound Parts with @part and @description
 titleKo: compound part의 @part·@description 문서화
 impact: MEDIUM
 impactDescription: compound 공개 part를 흩어진 선언이 아니라 이름 붙은 경계 하나로 훑을 수 있게 합니다
-impactDescriptionKo: compound 공개 part를 흩어진 선언이 아니라 이름 붙은 경계 하나로 훑을 수 있게 합니다
-appliesWhen: >-
-  compound component의 exported public part·props interface·part 내부 handler를 추가·변경하거나 public part 문서를
-  수정한다.
-appliesWhenKo:
+appliesWhen:
   - compound component의 exported public part·props interface·part 내부 handler를 추가·변경할 때
   - public part 문서를 수정할 때
 requiresSelected: docs-require-jsdoc-on-key-declarations

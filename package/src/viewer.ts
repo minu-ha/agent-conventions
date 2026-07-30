@@ -24,10 +24,7 @@ export interface ViewerArtifacts {
  * @description 현재 source 기준 viewer 생성물 쌍을 write 없이 렌더링
  */
 export const generateViewerArtifacts = async (): Promise<ViewerArtifacts> => {
-	return {
-		html: renderViewerHtml(),
-		dataScript: renderViewerDataScript(encodeViewerPayload(await buildViewerPayload())),
-	};
+	return {html: renderViewerHtml(), dataScript: renderViewerDataScript(encodeViewerPayload(await buildViewerPayload()))};
 };
 
 /**

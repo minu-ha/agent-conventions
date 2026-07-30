@@ -2,14 +2,13 @@
 title: Place Route-local UI Under `_local/`
 titleKo: route-local UI는 _local/ 아래에
 impact: HIGH
-impactDescription: makes the boundary between route-only implementation and shared public surface obvious
-impactDescriptionKo: route 전용 구현과 공용 공개 표면의 경계를 분명하게 드러냄
+impactDescription: route 전용 구현과 공용 공개 표면의 경계를 분명하게 드러냄
 tags: responsibility, local, pages, ownership
 ---
 
 ## Place Route-local UI Under `_local/`
 
-**Impact: HIGH (makes the boundary between route-only implementation and shared public surface obvious)**
+**Impact: HIGH (route 전용 구현과 공용 공개 표면의 경계를 분명하게 드러냄)**
 
 Shared로 승격되지 않은 route-only UI는 owning route folder의 `_local/` 아래에 둡니다.
 

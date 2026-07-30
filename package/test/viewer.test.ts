@@ -113,17 +113,28 @@ test("parseFrontmatter reads titleKo as a plain scalar", () => {
 	assert.equal(frontmatter.titleKo, "명명된 핸들러를 쓴다");
 });
 
-test("parseFrontmatter reads appliesWhenKo as a block list of items", () => {
-	const {frontmatter} = parseFrontmatter(
-		["---", "title: Sample", "appliesWhenKo:", "  - 조건 하나를 바꿀 때", "  - 제외: 표현만 바꾸는 경우", "---", "", "본문"].join("\n"),
-	);
+test("parseFrontmatter reads appliesWhen as a scalar or a block list of items", () => {
+	const scalar = parseFrontmatter(["---", "appliesWhen: 조건 한 줄을 바꾼다.", "---", "본문"].join("\n"));
+	assert.equal(scalar.frontmatter.appliesWhen, "조건 한 줄을 바꾼다.");
 
-	assert.equal(frontmatter.appliesWhenKo, "조건 하나를 바꿀 때\n제외: 표현만 바꾸는 경우");
+	const list = parseFrontmatter(
+		["---", "title: Sample", "appliesWhen:", "  - 조건 하나를 바꿀 때", "  - 제외: 표현만 바꾸는 경우", "---", "", "본문"].join("\n"),
+	);
+	assert.equal(list.frontmatter.appliesWhen, "- 조건 하나를 바꿀 때\n- 제외: 표현만 바꾸는 경우");
 });
 
-test("parseFrontmatter rejects appliesWhenKo without block list items", () => {
-	assert.throws(() => parseFrontmatter(["---", "appliesWhenKo: 한 줄 값", "---", "본문"].join("\n")), /block list/);
-	assert.throws(() => parseFrontmatter(["---", "appliesWhenKo:", "tags: a", "---", "본문"].join("\n")), /no "- " items/);
+test("parseFrontmatter rejects an appliesWhen block list without items", () => {
+	assert.throws(() => parseFrontmatter(["---", "appliesWhen:", "tags: a", "---", "본문"].join("\n")), /no "- " items/);
+});
+
+test("readSkillRules joins appliesWhen bullets into one routing sentence", async () => {
+	const rules = await readSkillRules(getSkillPaths("react"));
+	const sample = rules.find((rule) => rule.fileName.endsWith("composition-do-not-define-components-inside-components.md"));
+
+	assert.ok(sample, "expected react composition-do-not-define-components-inside-components rule");
+	assert.ok((sample.appliesWhenBullets ?? []).length > 0, "expected condition bullets");
+	assert.equal(sample.appliesWhen, `${(sample.appliesWhenBullets ?? []).map((b) => b.replace(/\.$/, "")).join(". ")}.`);
+	assert.equal(/[\r\n]/.test(sample.appliesWhen ?? ""), false, "routing sentence must stay one line");
 });
 
 test("parseSections reads TitleKo placed before Description", () => {

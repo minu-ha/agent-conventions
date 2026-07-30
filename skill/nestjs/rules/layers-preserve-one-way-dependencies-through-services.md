@@ -2,16 +2,13 @@
 title: Preserve One-way Dependencies Through Services
 titleKo: 의존은 service를 거쳐 한 방향으로
 impact: HIGH
-impactDescription: >-
-  prevents cross-layer shortcuts that bypass the service boundary and make backend change impact harder to reason about
-impactDescriptionKo: service 경계를 우회해 백엔드 변경 영향을 추론하기 어렵게 만드는 계층 간 지름길을 막음
+impactDescription: service 경계를 우회해 백엔드 변경 영향을 추론하기 어렵게 만드는 계층 간 지름길을 막음
 tags: dependencies, layering, services
 ---
 
 ## Preserve One-way Dependencies Through Services
 
-**Impact: HIGH (prevents cross-layer shortcuts that bypass the service boundary and make backend change impact harder to
-reason about)**
+**Impact: HIGH (service 경계를 우회해 백엔드 변경 영향을 추론하기 어렵게 만드는 계층 간 지름길을 막음)**
 
 의존 방향은 `Controller -> Service -> Prisma` 단방향만 허용합니다.
 Service가 Controller를 참조하는 것을 금지하고, 다른 도메인의 데이터가 필요하면

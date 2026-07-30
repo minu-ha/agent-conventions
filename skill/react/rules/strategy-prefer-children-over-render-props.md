@@ -3,11 +3,7 @@ title: Prefer Children Over Render Props for Static Composition
 titleKo: 정적 조립에서 render prop 대신 children 사용
 impact: MEDIUM
 impactDescription: 부모가 callback으로 런타임 데이터를 내려보낼 필요가 없을 때 공용 컴포넌트 조립을 읽기 쉽게 유지합니다
-impactDescriptionKo: 부모가 callback으로 런타임 데이터를 내려보낼 필요가 없을 때 공용 컴포넌트 조립을 읽기 쉽게 유지합니다
-appliesWhen: >-
-  shared component에 header·footer·action 같은 정적 slot 또는 render prop을 추가·변경하며 runtime data 주입 필요가
-  불분명하다.
-appliesWhenKo:
+appliesWhen:
   - shared component에 header·footer·action 같은 정적 slot을 추가·변경할 때
   - render prop을 추가·변경하는데 runtime data 주입이 꼭 필요한지 불분명할 때
 tags: composition, children, render-props, component-design

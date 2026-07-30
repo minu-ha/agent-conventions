@@ -3,11 +3,7 @@ title: Store Shared Derived Decisions Only When They Are Truly Shared
 titleKo: 공유 파생 결정의 선별적 store 승격
 impact: HIGH
 impactDescription: 중복된 도메인 판별 휴리스틱이 여러 화면에 퍼지는 것을 막습니다
-impactDescriptionKo: 중복된 도메인 판별 휴리스틱이 여러 화면에 퍼지는 것을 막습니다
-appliesWhen: >-
-  여러 화면·메뉴·route guard가 쓰는 권한·capability 같은 derived decision을 store에 저장·동기화하거나 단일 화면 값까지
-  store로 올린다.
-appliesWhenKo:
+appliesWhen:
   - 여러 화면·메뉴·route guard가 쓰는 권한·capability 같은 derived decision을 store에 저장·동기화할 때
   - 단일 화면에서만 쓰는 값까지 store로 올리려 할 때
 reviewWith: docs-require-jsdoc-on-key-declarations

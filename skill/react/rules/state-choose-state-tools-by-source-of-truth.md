@@ -3,10 +3,7 @@ title: Choose State Tools by Source of Truth
 titleKo: source of truth 기준의 state 도구 선택
 impact: MEDIUM-HIGH
 impactDescription: 로컬 UI state, 전역 client state, server state가 서로 섞이는 것을 막습니다
-impactDescriptionKo: 로컬 UI state, 전역 client state, server state가 서로 섞이는 것을 막습니다
-appliesWhen: >-
-  로컬 UI·전역 client·server 데이터를 새 state 도구로 옮기거나 서로 다른 source of truth 사이에 복제·동기화한다.
-appliesWhenKo:
+appliesWhen:
   - 로컬 UI·전역 client·server 데이터를 새 state 도구로 옮길 때
   - 서로 다른 source of truth 사이에 값을 복제하거나 동기화할 때
 reviewWith: state-store-derived-authority

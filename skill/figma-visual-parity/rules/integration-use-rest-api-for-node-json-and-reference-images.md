@@ -3,7 +3,6 @@ title: Use REST API for Node JSON and Reference Images When Available
 titleKo: 가능하면 REST API로 node JSON과 기준 이미지 받기
 impact: CRITICAL
 impactDescription: Figma URL에서 구조화된 node 데이터와 비교용 reference image를 확보하게 함
-impactDescriptionKo: Figma URL에서 구조화된 node 데이터와 비교용 reference image를 확보하게 함
 tags: integration, rest-api, screenshot
 ---
 

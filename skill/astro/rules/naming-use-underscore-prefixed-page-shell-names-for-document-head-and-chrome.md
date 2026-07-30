@@ -2,16 +2,13 @@
 title: Use Underscore-prefixed Pages-local Helper Names for Document Files
 titleKo: pages-local 문서 헬퍼는 밑줄 접두사로
 impact: MEDIUM-HIGH
-impactDescription: >-
-  keeps page-adjacent non-routes recognizable in file trees and prevents generic shell names from blurring ownership
-impactDescriptionKo: page 옆 비-route 파일을 파일 트리에서 구분하고 generic 셸 이름이 소유를 흐리는 것을 막음
+impactDescription: page 옆 비-route 파일을 파일 트리에서 구분하고 generic 셸 이름이 소유를 흐리는 것을 막음
 tags: naming, pages, underscore, document-helpers
 ---
 
 ## Use Underscore-prefixed Pages-local Helper Names for Document Files
 
-**Impact: MEDIUM-HIGH (keeps page-adjacent non-routes recognizable in file trees and prevents generic shell names from
-blurring ownership)**
+**Impact: MEDIUM-HIGH (page 옆 비-route 파일을 파일 트리에서 구분하고 generic 셸 이름이 소유를 흐리는 것을 막음)**
 
 `src/pages` 아래의 pages-local document helper와 support file은 `_` prefix와 역할 이름을 함께 사용합니다.
 

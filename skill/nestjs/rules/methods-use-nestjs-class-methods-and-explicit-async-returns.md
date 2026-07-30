@@ -2,16 +2,13 @@
 title: Use NestJS Class Methods and Explicit Async Return Types
 titleKo: NestJS 클래스 메서드와 명시적 async 반환 타입
 impact: MEDIUM-HIGH
-impactDescription: >-
-  keeps backend class APIs conventional while making async method contracts readable without opening implementations
-impactDescriptionKo: 백엔드 클래스 API 를 관례대로 두면서 구현을 열지 않고도 async 계약을 읽게 함
+impactDescription: 백엔드 클래스 API 를 관례대로 두면서 구현을 열지 않고도 async 계약을 읽게 함
 tags: methods, async, return-types
 ---
 
 ## Use NestJS Class Methods and Explicit Async Return Types
 
-**Impact: MEDIUM-HIGH (keeps backend class APIs conventional while making async method contracts readable without
-opening implementations)**
+**Impact: MEDIUM-HIGH (백엔드 클래스 API 를 관례대로 두면서 구현을 열지 않고도 async 계약을 읽게 함)**
 
 클래스 메서드는 NestJS 관례에 따라 일반 메서드 선언을 사용하고, 클래스 외부 유틸 함수는 화살표 함수를 기본으로 합니다.
 복잡한 함수나 `async` 함수는 `Promise<T>` 반환 타입을 명시해 서비스 계약이 시그니처에서 드러나게 합니다.

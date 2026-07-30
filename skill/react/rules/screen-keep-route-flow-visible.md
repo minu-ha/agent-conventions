@@ -3,12 +3,8 @@ title: Keep Route Entry Files Focused on Screen Flow
 titleKo: route entry 파일의 화면 흐름 중심 유지
 impact: HIGH
 impactDescription: route entry만 봐도 화면 흐름을 따라갈 수 있게 합니다
-impactDescriptionKo: route entry만 봐도 화면 흐름을 따라갈 수 있게 합니다
-appliesWhen: >-
-  route entry의 search·navigate·query·mutation·cross-section effect를 component/module 사이에서 이동·분리하거나 page
-  section 조립의 순서·owner를 바꾼다. 같은 owner 안 표현 변경은 제외한다.
-appliesWhenKo:
-  - route entry의 search·navigate·query·mutation·cross-section effect를 다른 component/module로 옮기거나 분리할 때
+appliesWhen:
+  - route entry의 search·navigate·query·mutation·cross-section effect를 옮기거나 나눌 때
   - page section 조립의 순서나 owner를 바꿀 때
   - 제외: 같은 owner 안에서 표현만 바꾸는 경우
 reviewWith: >-

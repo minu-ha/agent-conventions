@@ -2,14 +2,13 @@
 title: Keep Frontmatter Server-only and Template-focused
 titleKo: frontmatter는 서버 전용으로 두고 템플릿에 집중
 impact: HIGH
-impactDescription: prevents browser behavior from leaking into Astro's server-side component preparation phase
-impactDescriptionKo: 브라우저 동작이 Astro의 서버 측 컴포넌트 준비 단계로 새는 것을 막음
+impactDescription: 브라우저 동작이 Astro의 서버 측 컴포넌트 준비 단계로 새는 것을 막음
 tags: frontmatter, scripts, templates
 ---
 
 ## Keep Frontmatter Server-only and Template-focused
 
-**Impact: HIGH (prevents browser behavior from leaking into Astro's server-side component preparation phase)**
+**Impact: HIGH (브라우저 동작이 Astro의 서버 측 컴포넌트 준비 단계로 새는 것을 막음)**
 
 Astro frontmatter는 server-only component script입니다.
 import, `Astro.props` 해석, fetch, server-side 파생값 계산처럼 HTML을 준비하는 코드에 집중하고,

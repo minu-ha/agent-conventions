@@ -2,17 +2,13 @@
 title: Review Banned NestJS Shortcuts Before Finishing
 titleKo: 마무리 전에 금지된 NestJS 지름길 점검
 impact: MEDIUM
-impactDescription: >-
-  catches the recurring shortcuts that most often blur NestJS layers, contracts, and test meaning before the work is
-  closed out
-impactDescriptionKo: NestJS 레이어·계약·테스트 의미를 가장 자주 흐리는 지름길을 마무리 전에 잡음
+impactDescription: NestJS 레이어·계약·테스트 의미를 가장 자주 흐리는 지름길을 마무리 전에 잡음
 tags: review, guardrails, banned-patterns
 ---
 
 ## Review Banned NestJS Shortcuts Before Finishing
 
-**Impact: MEDIUM (catches the recurring shortcuts that most often blur NestJS layers, contracts, and test meaning before
-the work is closed out)**
+**Impact: MEDIUM (NestJS 레이어·계약·테스트 의미를 가장 자주 흐리는 지름길을 마무리 전에 잡음)**
 
 마무리 전에 반복적으로 금지되는 NestJS 지름길을 다시 확인합니다.
 Controller에서 Prisma 직접 호출, `.then()` 체이닝, void 반환 비동기 호출 방치, 모델 전체 응답 노출, 중복 타입 선언,

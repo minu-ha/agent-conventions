@@ -3,11 +3,7 @@ title: Avoid Silent Fallback Defaults and Ad-hoc Loading Branches
 titleKo: 암묵적 fallback 기본값과 즉석 loading 분기 금지
 impact: HIGH
 impactDescription: 결측 데이터를 숨기지 않고 로딩 UX를 Suspense 또는 명시적 예외 처리 쪽으로 유도합니다
-impactDescriptionKo: 결측 데이터를 숨기지 않고 로딩 UX를 Suspense 또는 명시적 예외 처리 쪽으로 유도합니다
-appliesWhen: >-
-  optional 응답에 `??`·`||` 기본값을 넣거나 Suspense 화면 본문에 초기 loading return을 추가·변경하고 결측·로딩 UX를
-  다룬다.
-appliesWhenKo:
+appliesWhen:
   - optional 응답에 `??`·`||` 기본값을 넣을 때
   - Suspense 화면 본문에 초기 loading return을 추가·변경할 때
   - 결측·로딩 UX를 다룰 때

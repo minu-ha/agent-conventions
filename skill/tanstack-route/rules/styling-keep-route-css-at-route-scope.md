@@ -2,15 +2,13 @@
 title: Keep Route CSS at Route Scope
 titleKo: route CSS는 route 스코프에 두기
 impact: MEDIUM-HIGH
-impactDescription: prevents route-level styles and local component styles from collapsing into one oversized stylesheet
-impactDescriptionKo: route 수준 스타일과 지역 컴포넌트 스타일이 거대한 stylesheet 하나로 뭉치는 것을 막음
+impactDescription: route 수준 스타일과 지역 컴포넌트 스타일이 거대한 stylesheet 하나로 뭉치는 것을 막음
 tags: css, route-scope, styling
 ---
 
 ## Keep Route CSS at Route Scope
 
-**Impact: MEDIUM-HIGH (prevents route-level styles and local component styles from collapsing into one oversized
-stylesheet)**
+**Impact: MEDIUM-HIGH (route 수준 스타일과 지역 컴포넌트 스타일이 거대한 stylesheet 하나로 뭉치는 것을 막음)**
 
 route 공용 스타일은 해당 route 폴더의 `*.css`에 두고, `-local` 컴포넌트 스타일은 `-local/*.css`에 둡니다.
 같은 route의 `layout`과 `index`가 같은 시각 컨텍스트를 공유하더라도,

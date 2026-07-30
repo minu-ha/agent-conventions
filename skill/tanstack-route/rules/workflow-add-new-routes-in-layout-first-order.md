@@ -2,15 +2,13 @@
 title: Add New Routes in Layout-first Order
 titleKo: 새 route는 레이아웃 먼저 순서로 추가
 impact: MEDIUM
-impactDescription: reduces cleanup work by establishing shell, grouping, and search boundaries before route files sprawl
-impactDescriptionKo: route 파일이 번지기 전에 셸·그룹·search 경계를 먼저 정해 정리 작업을 줄임
+impactDescription: route 파일이 번지기 전에 셸·그룹·search 경계를 먼저 정해 정리 작업을 줄임
 tags: workflow, route-creation, checklist
 ---
 
 ## Add New Routes in Layout-first Order
 
-**Impact: MEDIUM (reduces cleanup work by establishing shell, grouping, and search boundaries before route files
-sprawl)**
+**Impact: MEDIUM (route 파일이 번지기 전에 셸·그룹·search 경계를 먼저 정해 정리 작업을 줄임)**
 
 신규 라우트를 추가할 때는 화면 파일부터 급하게 만들지 말고, 레이아웃 셸과 그룹 구조를 먼저 고정하는 순서를 따릅니다.
 이 프로젝트에서는 `feature.css`, `feature.ts`, `feature.layout.tsx`,

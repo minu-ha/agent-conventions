@@ -2,16 +2,13 @@
 title: Keep Controllers Thin and Boundary-focused
 titleKo: controller는 얇게, 경계에만 집중
 impact: CRITICAL
-impactDescription: >-
-  prevents controllers from absorbing domain logic, persistence calls, and response shaping that belongs in services
-impactDescriptionKo: service 에 속한 도메인 로직·영속 호출·응답 가공을 controller 가 흡수하는 것을 막음
+impactDescription: service 에 속한 도메인 로직·영속 호출·응답 가공을 controller 가 흡수하는 것을 막음
 tags: controllers, layering, boundaries
 ---
 
 ## Keep Controllers Thin and Boundary-focused
 
-**Impact: CRITICAL (prevents controllers from absorbing domain logic, persistence calls, and response shaping that
-belongs in services)**
+**Impact: CRITICAL (service 에 속한 도메인 로직·영속 호출·응답 가공을 controller 가 흡수하는 것을 막음)**
 
 Controller는 요청 수신, 입력 검증 위임, 응답 반환만 담당합니다.
 비즈니스 로직, Prisma 호출, 조건 분기, 응답 shape 조립은 Controller에 두지 않고 Service로 위임하며, `@Body()`,

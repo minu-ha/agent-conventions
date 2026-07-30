@@ -3,9 +3,7 @@ title: Use Lazy State Initializers for Expensive Defaults
 titleKo: 고비용 초기값의 lazy state initializer 사용
 impact: MEDIUM
 impactDescription: 초기 state 계산 비용이 클 때 준비 작업이 렌더마다 반복되는 것을 막습니다
-impactDescriptionKo: 초기 state 계산 비용이 클 때 준비 작업이 렌더마다 반복되는 것을 막습니다
-appliesWhen: `useState` 초기값에 localStorage 파싱, 인덱스 생성, 큰 배열 정규화 같은 비용 있는 계산을 추가·변경한다.
-appliesWhenKo:
+appliesWhen:
   - `useState` 초기값에 localStorage 파싱, 인덱스 생성, 큰 배열 정규화 같은 비용 있는 계산을 넣을 때
 tags: state, usestate, initialization, performance
 ---

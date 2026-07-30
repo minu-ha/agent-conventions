@@ -2,14 +2,13 @@
 title: Export `Route` at the Top of the File
 titleKo: Route는 파일 맨 위에서 export
 impact: HIGH
-impactDescription: keeps the router contract obvious before the screen implementation details begin
-impactDescriptionKo: 화면 구현 세부가 시작되기 전에 router 계약이 먼저 드러나게 함
+impactDescription: 화면 구현 세부가 시작되기 전에 router 계약이 먼저 드러나게 함
 tags: createfileroute, exports, route-definition
 ---
 
 ## Export `Route` at the Top of the File
 
-**Impact: HIGH (keeps the router contract obvious before the screen implementation details begin)**
+**Impact: HIGH (화면 구현 세부가 시작되기 전에 router 계약이 먼저 드러나게 함)**
 
 각 라우트 파일은 `export const Route = createFileRoute("...")({...})` 형태를 기본으로 하고,
 export 이름은 항상 `Route`로 고정합니다.

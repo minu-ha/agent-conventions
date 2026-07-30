@@ -1,6 +1,6 @@
 # Provide CSS Variable Fallbacks When Token Presence Is Not Guaranteed
 
-**Impact: HIGH (prevents missing tokens from degrading styles unpredictably when variables are absent)**
+**Impact: HIGH (변수가 없을 때 토큰 누락이 스타일을 예측 못 하게 망가뜨리는 것을 막음)**
 
 CSS 변수 `var(--*)`를 사용할 때는 토큰 존재가 보장되지 않는 경계에서 fallback 값을 함께 지정합니다.
 theme provider, 서드파티 wrapper, 선택적 토큰,

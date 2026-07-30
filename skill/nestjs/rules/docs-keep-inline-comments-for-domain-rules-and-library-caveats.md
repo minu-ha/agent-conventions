@@ -2,16 +2,13 @@
 title: Keep Inline Comments for Domain Rules and Library Caveats
 titleKo: 인라인 주석은 도메인 규칙과 라이브러리 예외에만
 impact: MEDIUM
-impactDescription: >-
-  keeps inline comments reserved for backend constraints that would otherwise be easy to misread or accidentally remove
-impactDescriptionKo: 잘못 읽거나 실수로 지우기 쉬운 백엔드 제약에만 인라인 주석을 남겨둠
+impactDescription: 잘못 읽거나 실수로 지우기 쉬운 백엔드 제약에만 인라인 주석을 남겨둠
 tags: comments, inline, domain-rules
 ---
 
 ## Keep Inline Comments for Domain Rules and Library Caveats
 
-**Impact: MEDIUM (keeps inline comments reserved for backend constraints that would otherwise be easy to misread or
-accidentally remove)**
+**Impact: MEDIUM (잘못 읽거나 실수로 지우기 쉬운 백엔드 제약에만 인라인 주석을 남겨둠)**
 
 함수 본문 내부에서는 JSDoc 블록 주석을 사용하지 않고, `//` 주석은 도메인 규칙, 정합성 제약, Prisma 동작 제약,
 트랜잭션 순서처럼 없으면 오해될 수 있는 내용에만 사용합니다.

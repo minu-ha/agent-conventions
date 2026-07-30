@@ -2,14 +2,13 @@
 title: Hydrate Only Truly Interactive Widgets
 titleKo: 진짜 상호작용하는 위젯만 hydrate
 impact: CRITICAL
-impactDescription: keeps Astro pages mostly static and reserves JavaScript for real interaction boundaries
-impactDescriptionKo: Astro 페이지를 대체로 정적으로 유지하고 JavaScript를 진짜 상호작용 경계에만 씀
+impactDescription: Astro 페이지를 대체로 정적으로 유지하고 JavaScript를 진짜 상호작용 경계에만 씀
 tags: islands, hydration, performance
 ---
 
 ## Hydrate Only Truly Interactive Widgets
 
-**Impact: CRITICAL (keeps Astro pages mostly static and reserves JavaScript for real interaction boundaries)**
+**Impact: CRITICAL (Astro 페이지를 대체로 정적으로 유지하고 JavaScript를 진짜 상호작용 경계에만 씀)**
 
 Hydration은 검색 입력, 필터, 플레이어, 차트, 폼 상태처럼 실제 상호작용이 필요한 widget에만 사용합니다.
 정적 hero, marketing copy, read-only card, simple CTA wrapper는 `.astro`로 렌더링하고

@@ -1,6 +1,6 @@
 # Separate Route, Local, and Shared Style Scopes
 
-**Impact: HIGH (keeps route-owned page styles, shared component styles, and truly local helper styles from mixing into the same namespace or file)**
+**Impact: HIGH (route 소유 페이지 스타일·공용 컴포넌트 스타일·순수 local 헬퍼 스타일이 같은 namespace나 파일에 섞이는 것을 막음)**
 
 route/framework skill이 route-owned surface로 판단한 스타일은 `rt_*` scope를 유지합니다.
 route screen의 흐름을 구성하거나 지원하는 route support surface는 파일이 `_local/` 같은 helper folder로 내려가도

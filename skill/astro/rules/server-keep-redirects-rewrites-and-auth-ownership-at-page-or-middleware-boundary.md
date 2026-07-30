@@ -2,14 +2,13 @@
 title: Keep Redirects, Rewrites, and Auth Ownership at the Page or Middleware Boundary
 titleKo: 리다이렉트·rewrite·인증 소유는 page 또는 middleware 경계에
 impact: HIGH
-impactDescription: keeps request-time guards and navigation side effects out of layout shells that should stay visual
-impactDescriptionKo: 요청 시점 가드와 내비게이션 부수효과를 시각적으로 남아야 하는 layout 셸 밖에 둠
+impactDescription: 요청 시점 가드와 내비게이션 부수효과를 시각적으로 남아야 하는 layout 셸 밖에 둠
 tags: server, redirects, middleware, auth, ownership
 ---
 
 ## Keep Redirects, Rewrites, and Auth Ownership at the Page or Middleware Boundary
 
-**Impact: HIGH (keeps request-time guards and navigation side effects out of layout shells that should stay visual)**
+**Impact: HIGH (요청 시점 가드와 내비게이션 부수효과를 시각적으로 남아야 하는 layout 셸 밖에 둠)**
 
 Route-local shell과 pages-local document helper는 shell 조립 역할만 하므로 redirect, rewrite,
 auth guard의 owner가 되지 않습니다.

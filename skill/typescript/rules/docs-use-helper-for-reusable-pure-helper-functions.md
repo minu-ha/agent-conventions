@@ -2,8 +2,7 @@
 title: Use `@helper` on Reusable Support Functions
 titleKo: 재사용 support 함수에는 @helper
 impact: MEDIUM-HIGH
-impactDescription: distinguishes reusable pure support logic from local implementation details or integration boundaries
-impactDescriptionKo: 재사용 가능한 순수 support 로직을 지역 구현 세부나 통합 경계와 구분함
+impactDescription: 재사용 가능한 순수 support 로직을 지역 구현 세부나 통합 경계와 구분함
 appliesWhen: >-
   여러 caller가 쓰는 pure support function, owner-named exported helper 또는 `shared/util.ts` 함수를 추가·변경하거나
   `@helper`를 붙이려 한다.
@@ -12,8 +11,7 @@ tags: helper, pure-functions, reuse
 
 ## Use `@helper` on Reusable Support Functions
 
-**Impact: MEDIUM-HIGH (distinguishes reusable pure support logic from local implementation details or integration
-boundaries)**
+**Impact: MEDIUM-HIGH (재사용 가능한 순수 support 로직을 지역 구현 세부나 통합 경계와 구분함)**
 
 `@helper`는 재사용 가능한 pure support function에만 붙입니다.
 

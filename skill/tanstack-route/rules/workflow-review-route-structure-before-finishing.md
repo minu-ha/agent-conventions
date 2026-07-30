@@ -2,14 +2,13 @@
 title: Review Route Structure Before Finishing
 titleKo: 마무리 전에 route 구조 점검
 impact: MEDIUM
-impactDescription: catches grouping, guard, and ownership drift before a route change is declared complete
-impactDescriptionKo: route 변경을 완료로 선언하기 전에 그룹·가드·소유 어긋남을 잡음
+impactDescription: route 변경을 완료로 선언하기 전에 그룹·가드·소유 어긋남을 잡음
 tags: review, workflow, checklist
 ---
 
 ## Review Route Structure Before Finishing
 
-**Impact: MEDIUM (catches grouping, guard, and ownership drift before a route change is declared complete)**
+**Impact: MEDIUM (route 변경을 완료로 선언하기 전에 그룹·가드·소유 어긋남을 잡음)**
 
 라우트 작업을 끝냈다고 보기 전에 구조 체크리스트를 다시 확인합니다.
 화면이 보인다는 이유만으로 마무리하지 말고, 그룹 구조, support code 배치, guard 위치,

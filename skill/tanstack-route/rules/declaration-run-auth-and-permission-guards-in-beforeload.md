@@ -2,14 +2,13 @@
 title: Run Auth and Permission Guards in `beforeLoad`
 titleKo: 인증·권한 가드는 beforeLoad에서
 impact: CRITICAL
-impactDescription: keeps access control in router boundaries instead of after-the-fact screen navigation
-impactDescriptionKo: 화면에서 뒤늦게 이동시키지 않고 접근 제어를 router 경계에 둠
+impactDescription: 화면에서 뒤늦게 이동시키지 않고 접근 제어를 router 경계에 둠
 tags: auth, guards, beforeload
 ---
 
 ## Run Auth and Permission Guards in `beforeLoad`
 
-**Impact: CRITICAL (keeps access control in router boundaries instead of after-the-fact screen navigation)**
+**Impact: CRITICAL (화면에서 뒤늦게 이동시키지 않고 접근 제어를 router 경계에 둠)**
 
 인증과 권한 보장은 라우트 컴포넌트 본문이 아니라 `beforeLoad`에서 처리합니다.
 공통 가드 로직은 route 전용 support module이나 안정된 shared module로 분리해 재사용하고,

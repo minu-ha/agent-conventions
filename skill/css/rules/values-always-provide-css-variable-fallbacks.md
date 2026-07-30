@@ -2,8 +2,7 @@
 title: Provide CSS Variable Fallbacks When Token Presence Is Not Guaranteed
 titleKo: token 주입이 보장 안 되면 var() fallback 넣기
 impact: HIGH
-impactDescription: prevents missing tokens from degrading styles unpredictably when variables are absent
-impactDescriptionKo: 변수가 없을 때 토큰 누락이 스타일을 예측 못 하게 망가뜨리는 것을 막음
+impactDescription: 변수가 없을 때 토큰 누락이 스타일을 예측 못 하게 망가뜨리는 것을 막음
 appliesWhen: >-
   새·변경된 `var(--*)` 사용이나 token 주입 보장 경계를 바꾼다. 같은 stylesheet·주입 경계에서 기존 `var()` 선언을
   selector 사이 byte-equivalent 이동만 하면 제외한다.
@@ -12,7 +11,7 @@ tags: variables, fallbacks, tokens
 
 ## Provide CSS Variable Fallbacks When Token Presence Is Not Guaranteed
 
-**Impact: HIGH (prevents missing tokens from degrading styles unpredictably when variables are absent)**
+**Impact: HIGH (변수가 없을 때 토큰 누락이 스타일을 예측 못 하게 망가뜨리는 것을 막음)**
 
 CSS 변수 `var(--*)`를 사용할 때는 토큰 존재가 보장되지 않는 경계에서 fallback 값을 함께 지정합니다.
 theme provider, 서드파티 wrapper, 선택적 토큰,

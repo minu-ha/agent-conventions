@@ -3,10 +3,7 @@ title: Use useDeferredValue for Heavy Derived Renders
 titleKo: 무거운 파생 렌더의 useDeferredValue 적용
 impact: MEDIUM
 impactDescription: 무거운 파생 화면이 따라오는 동안에도 입력과 작은 상호작용의 반응성을 유지합니다
-impactDescriptionKo: 무거운 파생 화면이 따라오는 동안에도 입력과 작은 상호작용의 반응성을 유지합니다
-appliesWhen: >-
-  검색어·필터·정렬 입력이 무거운 파생 view를 갱신해 typing 지연이 생기거나 `useDeferredValue` 기반 계산을 추가·변경한다.
-appliesWhenKo:
+appliesWhen:
   - 검색어·필터·정렬 입력이 무거운 파생 view를 갱신해 typing 지연이 생길 때
   - `useDeferredValue` 기반 계산을 추가·변경할 때
 reviewWith: perf-compiler-first-memoization, perf-use-starttransition-for-non-urgent-updates

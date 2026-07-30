@@ -3,10 +3,7 @@ title: Limit Inline Comments to Non-obvious Logic
 titleKo: 인라인 주석의 비자명한 로직 한정
 impact: MEDIUM
 impactDescription: 코드를 해설하기보다 주석을 caveat, 제약, 부수효과 설명에 집중시킵니다
-impactDescriptionKo: 코드를 해설하기보다 주석을 caveat, 제약, 부수효과 설명에 집중시킵니다
-appliesWhen: >-
-  React 함수·handler·JSX 인접 로직 안의 `//` 주석을 추가·수정하거나 자명한 설명과 실제 제약을 구분해 정리한다.
-appliesWhenKo:
+appliesWhen:
   - React 함수·handler·JSX 인접 로직 안의 `//` 주석을 추가·수정할 때
   - 자명한 설명과 실제 제약을 구분해 주석을 정리할 때
 requiresSelected: typescript/docs-keep-inline-comments-for-constraints-and-caveats

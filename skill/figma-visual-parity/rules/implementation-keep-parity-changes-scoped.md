@@ -3,7 +3,6 @@ title: Keep Parity Changes Scoped
 titleKo: parity 변경은 범위 안에 두기
 impact: HIGH
 impactDescription: visual polish 중 불필요한 구조 리팩터링과 shared surface 변경을 막음
-impactDescriptionKo: visual polish 중 불필요한 구조 리팩터링과 shared surface 변경을 막음
 tags: implementation, scope, shared
 ---
 

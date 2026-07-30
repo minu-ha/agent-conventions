@@ -2,14 +2,13 @@
 title: Start Child Route Sets With Parentheses Folders
 titleKo: 자식 route 세트는 괄호 폴더로 시작
 impact: HIGH
-impactDescription: makes child route groups explicit before filenames grow long or sibling routes become hard to scan
-impactDescriptionKo: 파일명이 길어지거나 형제 route 가 훑기 어려워지기 전에 자식 route 그룹을 드러냄
+impactDescription: 파일명이 길어지거나 형제 route 가 훑기 어려워지기 전에 자식 route 그룹을 드러냄
 tags: child-routes, grouping, folders
 ---
 
 ## Start Child Route Sets With Parentheses Folders
 
-**Impact: HIGH (makes child route groups explicit before filenames grow long or sibling routes become hard to scan)**
+**Impact: HIGH (파일명이 길어지거나 형제 route 가 훑기 어려워지기 전에 자식 route 그룹을 드러냄)**
 
 하위 라우트가 생기면 기본적으로 먼저 `(<feature>)` 그룹 폴더를 만들고, 그 안에 해당 feature의 4-file set(`feature.css`,
 `feature.ts`, `feature.layout.tsx`, `feature.index.tsx`)과 `-local/`을 정리합니다.

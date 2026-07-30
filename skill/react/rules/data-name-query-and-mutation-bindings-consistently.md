@@ -3,10 +3,7 @@ title: Name Query and Mutation Bindings Consistently
 titleKo: query·mutation 바인딩 명명 규칙 통일
 impact: HIGH
 impactDescription: 생성된 API hook과 로컬 바인딩을 쉽게 훑고 추적할 수 있게 합니다
-impactDescriptionKo: 생성된 API hook과 로컬 바인딩을 쉽게 훑고 추적할 수 있게 합니다
-appliesWhen: >-
-  React Query query·mutation hook의 로컬 binding을 추가·이름 변경하거나 역할이 드러나지 않는 별칭이 diff에 보인다.
-appliesWhenKo:
+appliesWhen:
   - React Query query·mutation hook의 로컬 binding을 추가하거나 이름을 바꿀 때
   - 역할이 드러나지 않는 별칭이 diff에 보일 때
 requiresSelected: typescript/naming-use-consistent-file-and-symbol-naming, docs-require-jsdoc-on-key-declarations

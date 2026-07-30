@@ -1,6 +1,6 @@
 # Use Direct Imports and Dedicated Public Entry Points
 
-**Impact: HIGH (makes import ownership explicit without relying on barrels or ambiguous re-export layers)**
+**Impact: HIGH (barrel 이나 모호한 재노출 계층에 기대지 않고 import 소유를 명시적으로 드러냄)**
 
 `index.ts` 기반 barrel export를 만들지 않고 직접 export/import 구조를 유지합니다.
 공용 설정과 공용 순수 함수는 각각 `shared/config.ts`, `shared/util.ts` 같은 공개 진입점으로 모으고,

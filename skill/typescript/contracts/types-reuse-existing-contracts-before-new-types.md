@@ -1,6 +1,6 @@
 # Reuse Existing Contracts Before Declaring New Types
 
-**Impact: HIGH (reduces duplicate shape declarations by deriving from existing types and schemas when semantics have not changed)**
+**Impact: HIGH (의미가 그대로일 때 기존 타입·스키마에서 파생해 중복 shape 선언을 줄임)**
 
 기존 type/schema와 field type·optionality·의미가 같으면 직접 참조하거나 `Pick`/`Omit`/Indexed Access로 파생합니다.
 신규 선언은 의미가 다를 때만 허용하며 owner 이동·이름·JSDoc만 바뀌면 N/A입니다.

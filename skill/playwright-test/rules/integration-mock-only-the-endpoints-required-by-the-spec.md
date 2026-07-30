@@ -2,14 +2,13 @@
 title: Mock Only the Endpoints Required by the Spec
 titleKo: spec이 요구하는 엔드포인트만 모킹
 impact: HIGH
-impactDescription: keeps integration test setup readable by mocking only the dependencies that matter to the scenario
-impactDescriptionKo: 시나리오에 중요한 의존만 모킹해 integration setup 을 읽을 수 있게 유지함
+impactDescription: 시나리오에 중요한 의존만 모킹해 integration setup 을 읽을 수 있게 유지함
 tags: integration, mocks, routes
 ---
 
 ## Mock Only the Endpoints Required by the Spec
 
-**Impact: HIGH (keeps integration test setup readable by mocking only the dependencies that matter to the scenario)**
+**Impact: HIGH (시나리오에 중요한 의존만 모킹해 integration setup 을 읽을 수 있게 유지함)**
 
 Integration에서 `page.route()`는 반드시 `page.goto()` 전에 등록하고, 해당 테스트 목적에 필요한 엔드포인트만 선언합니다.
 인증이 필요하면 공용 authenticated session helper를 우선 사용하고,

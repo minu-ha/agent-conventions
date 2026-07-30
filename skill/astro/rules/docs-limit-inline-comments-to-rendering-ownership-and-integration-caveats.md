@@ -2,14 +2,13 @@
 title: Limit Inline Comments to Rendering, Ownership, and Integration Caveats
 titleKo: 인라인 주석은 렌더링·소유·통합 예외에만
 impact: MEDIUM
-impactDescription: keeps Astro comments focused on the constraints readers are most likely to miss
-impactDescriptionKo: Astro 주석을 읽는 사람이 놓치기 쉬운 제약에만 집중시킴
+impactDescription: Astro 주석을 읽는 사람이 놓치기 쉬운 제약에만 집중시킴
 tags: docs, comments, rendering, caveats
 ---
 
 ## Limit Inline Comments to Rendering, Ownership, and Integration Caveats
 
-**Impact: MEDIUM (keeps Astro comments focused on the constraints readers are most likely to miss)**
+**Impact: MEDIUM (Astro 주석을 읽는 사람이 놓치기 쉬운 제약에만 집중시킴)**
 
 Astro의 inline comment는 rendering mode, serialization, route ownership handoff, adapter requirement,
 integration caveat처럼 없으면 오해되기 쉬운 제약에만 남깁니다.

@@ -2,17 +2,13 @@
 title: Keep `src/pages` as the Route-local Owner Layer
 titleKo: src/pages를 route-local 소유 레이어로 유지
 impact: CRITICAL
-impactDescription: >-
-  keeps Astro route ownership close to the file-based route without leaking screen implementation into shared or generic
-  helper layers
-impactDescriptionKo: 화면 구현이 공용·generic 헬퍼 계층으로 새지 않게 Astro route 소유를 파일 기반 route 가까이 둠
+impactDescription: 화면 구현이 공용·generic 헬퍼 계층으로 새지 않게 Astro route 소유를 파일 기반 route 가까이 둠
 tags: structure, pages, route-local, routing
 ---
 
 ## Keep `src/pages` as the Route-local Owner Layer
 
-**Impact: CRITICAL (keeps Astro route ownership close to the file-based route without leaking screen implementation into
-shared or generic helper layers)**
+**Impact: CRITICAL (화면 구현이 공용·generic 헬퍼 계층으로 새지 않게 Astro route 소유를 파일 기반 route 가까이 둠)**
 
 Astro에서 `src/pages`는 required route tree입니다.
 Route file은 얇은 import adapter가 아니라 URL contract와 route-local screen flow를 함께 소유합니다.

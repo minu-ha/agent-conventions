@@ -256,25 +256,21 @@ export interface SkillRule {
 	 */
 	impact: string;
 	/**
-	 * @field rule 중요도 부연 설명
+	 * @field rule 중요도 부연 설명. 본문 Impact 줄과 일치해야 한다
 	 */
 	impactDescription?: string;
-	/**
-	 * @field 사람이 읽는 화면에 노출할 한국어 중요도 설명
-	 */
-	impactDescriptionKo: string;
 	/**
 	 * @field rule 탐색과 분류용 태그 목록
 	 */
 	tags: string[];
 	/**
-	 * @field 작업 범위에 rule을 선택해야 하는 한 줄 조건
+	 * @field 작업 범위에 rule을 선택해야 하는 한 줄 조건. block list면 불렛을 이어 붙인 문장이다
 	 */
 	appliesWhen?: string;
 	/**
-	 * @field 사람이 읽는 화면에 노출할 적용 조건 불렛 목록. 라우팅에는 쓰지 않는다
+	 * @field appliesWhen을 block list로 썼을 때의 불렛 원문 목록. 사람이 읽는 화면에 노출한다
 	 */
-	appliesWhenKo?: string[];
+	appliesWhenBullets?: string[];
 	/**
 	 * @field 이 rule이 Selected이면 함께 Selected여야 하는 local 또는 companion rule stable ID 목록
 	 */

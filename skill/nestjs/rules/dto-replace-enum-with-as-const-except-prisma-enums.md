@@ -2,16 +2,13 @@
 title: Replace Local `enum` With `as const` Except Prisma Enums
 titleKo: Prisma enum 외에는 enum 대신 as const
 impact: MEDIUM-HIGH
-impactDescription: >-
-  keeps local runtime values lightweight while still allowing generated Prisma enums to remain the source of truth
-impactDescriptionKo: 생성된 Prisma enum 은 정본으로 남기면서 지역 런타임 값은 가볍게 유지함
+impactDescription: 생성된 Prisma enum 은 정본으로 남기면서 지역 런타임 값은 가볍게 유지함
 tags: enum, as-const, prisma
 ---
 
 ## Replace Local `enum` With `as const` Except Prisma Enums
 
-**Impact: MEDIUM-HIGH (keeps local runtime values lightweight while still allowing generated Prisma enums to remain the
-source of truth)**
+**Impact: MEDIUM-HIGH (생성된 Prisma enum 은 정본으로 남기면서 지역 런타임 값은 가볍게 유지함)**
 
 로컬 TypeScript `enum` 대신 객체 리터럴과 `as const`를 사용합니다.
 다만 Prisma 스키마에서 생성된 enum은 `@prisma/client`에서 그대로 import해 source of truth를 유지합니다.

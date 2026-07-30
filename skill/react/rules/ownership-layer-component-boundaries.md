@@ -3,9 +3,7 @@ title: Keep UI, Widget, and -local Ownership Separate
 titleKo: ui·widget·-local 소유 레이어 분리
 impact: CRITICAL
 impactDescription: 공용 책임과 route-local 책임이 같은 레이어로 섞이는 것을 막습니다
-impactDescriptionKo: 공용 책임과 route-local 책임이 같은 레이어로 섞이는 것을 막습니다
-appliesWhen: 컴포넌트를 ui·widget·route-local 중 어느 소유 레이어에 둘지 결정하거나 레이어 사이에서 이동·공용화한다.
-appliesWhenKo:
+appliesWhen:
   - 컴포넌트를 ui·widget·route-local 중 어느 소유 레이어에 둘지 정할 때
   - 컴포넌트를 레이어 사이에서 옮기거나 공용화할 때
 reviewWith: ownership-place-route-local-files-by-scope, css/naming-separate-local-and-route-style-scopes

@@ -2,9 +2,7 @@
 title: Mark Unused Parameters With an Underscore Prefix
 titleKo: 쓰지 않는 매개변수는 밑줄 접두사로
 impact: MEDIUM-HIGH
-impactDescription: >-
-  makes intentionally ignored callback parameters explicit instead of silently dropping parts of a contract
-impactDescriptionKo: 계약의 일부를 조용히 버리지 않고 의도적으로 무시한 callback 매개변수를 드러냄
+impactDescription: 계약의 일부를 조용히 버리지 않고 의도적으로 무시한 callback 매개변수를 드러냄
 appliesWhen: >-
   기존 callback·framework 계약 구현을 추가·변경하며 parameter를 생략하거나 사용하지 않는다. curried handler가 반환하는
   최종 callback의 생략도 포함한다.
@@ -13,8 +11,7 @@ tags: parameters, callbacks, naming
 
 ## Mark Unused Parameters With an Underscore Prefix
 
-**Impact: MEDIUM-HIGH (makes intentionally ignored callback parameters explicit instead of silently dropping parts of a
-contract)**
+**Impact: MEDIUM-HIGH (계약의 일부를 조용히 버리지 않고 의도적으로 무시한 callback 매개변수를 드러냄)**
 
 미사용 매개변수도 생략하지 않고 `_` 접두사로 명시합니다.
 이렇게 해야 callback 시그니처 계약을 유지하면서도, 현재 구현에서 의도적으로 쓰지 않는 값이라는 점이 드러납니다.

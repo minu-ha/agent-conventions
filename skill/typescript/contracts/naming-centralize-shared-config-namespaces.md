@@ -1,6 +1,6 @@
 # Centralize Shared Config Under `shared/config.ts`
 
-**Impact: HIGH (prevents shared config values from scattering across leaf files and losing a single public source)**
+**Impact: HIGH (공용 설정 값이 leaf 파일로 흩어져 공개 출처 하나를 잃는 것을 막음)**
 
 여러 파일에서 공유되는 설정과 상수는 기본적으로 `shared/config.ts` 한 파일을 공개 진입점으로 삼아 `config` namespace
 아래에 모읍니다.

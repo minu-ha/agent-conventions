@@ -2,14 +2,13 @@
 title: Consult Official Docs for Version-sensitive Astro Features
 titleKo: 버전 민감한 Astro 기능은 공식 문서 확인
 impact: MEDIUM
-impactDescription: reduces stale assumptions around fast-moving Astro features and directives
-impactDescriptionKo: 빠르게 바뀌는 Astro 기능과 지시자에 대한 낡은 가정을 줄임
+impactDescription: 빠르게 바뀌는 Astro 기능과 지시자에 대한 낡은 가정을 줄임
 tags: workflow, docs, astro-docs
 ---
 
 ## Consult Official Docs for Version-sensitive Astro Features
 
-**Impact: MEDIUM (reduces stale assumptions around fast-moving Astro features and directives)**
+**Impact: MEDIUM (빠르게 바뀌는 Astro 기능과 지시자에 대한 낡은 가정을 줄임)**
 
 `client:*`, `server:defer`, Actions, content collections,
 adapters처럼 버전과 host 조건에 민감한 Astro 기능은 공식 문서를 먼저 확인합니다.

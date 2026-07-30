@@ -3,7 +3,6 @@ title: Report Scope, Data Boundaries, Mismatches, and Commands
 titleKo: 범위·데이터 경계·불일치·실행 명령을 보고
 impact: CRITICAL
 impactDescription: 완료 보고에서 근거, 제외 항목, 남은 차이를 숨기지 않게 함
-impactDescriptionKo: 완료 보고에서 근거, 제외 항목, 남은 차이를 숨기지 않게 함
 tags: verification, report, completion
 ---
 

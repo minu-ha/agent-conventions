@@ -1,6 +1,6 @@
 # Expose Optional Values Instead of Silent Fallbacks
 
-**Impact: HIGH (makes missing data visible instead of quietly masking absence with generic defaults)**
+**Impact: HIGH (일반 기본값으로 부재를 조용히 덮지 않고 결측 데이터가 드러나게 함)**
 
 옵셔널 값에 대해 `??`, `||`로 기본값을 넣는 폴백 처리를 기본 금지합니다.
 값이 없을 수 있음을 명확히 드러내고, 꼭 필요할 때만 도메인상 기본값이 명확하며

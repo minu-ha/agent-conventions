@@ -3,7 +3,6 @@ title: Prefer Code Connect and Repo Components Over Rebuilding UI
 titleKo: UI를 새로 만들기보다 Code Connect와 레포 컴포넌트를
 impact: CRITICAL
 impactDescription: 실제 디자인 시스템 컴포넌트를 무시하고 raw JSX/CSS를 새로 만드는 일을 막음
-impactDescriptionKo: 실제 디자인 시스템 컴포넌트를 무시하고 raw JSX/CSS를 새로 만드는 일을 막음
 tags: integration, code-connect, components
 ---
 

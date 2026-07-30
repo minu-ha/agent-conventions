@@ -2,8 +2,7 @@
 title: Avoid Deep Descendant Selector Dependencies
 titleKo: 깊은 descendant 셀렉터 의존 피하기
 impact: HIGH
-impactDescription: keeps layout changes from breaking styling through long descendant chains
-impactDescriptionKo: 레이아웃 변경이 긴 descendant 체인을 통해 스타일을 깨뜨리는 것을 막음
+impactDescription: 레이아웃 변경이 긴 descendant 체인을 통해 스타일을 깨뜨리는 것을 막음
 appliesWhen: >-
   descendant 또는 child selector chain을 추가·수정하거나 DOM 계층에 의존하는 project-owned·third-party selector를
   검토한다.
@@ -12,7 +11,7 @@ tags: descendants, selector-depth, guardrails
 
 ## Avoid Deep Descendant Selector Dependencies
 
-**Impact: HIGH (keeps layout changes from breaking styling through long descendant chains)**
+**Impact: HIGH (레이아웃 변경이 긴 descendant 체인을 통해 스타일을 깨뜨리는 것을 막음)**
 
 깊은 후손 선택자 체인에 스타일을 걸지 않습니다.
 이 규칙은 nested 문법 사용 여부와 무관하게, selector가 DOM 구조에 과도하게 묶이는 것을 금지합니다.

@@ -2,17 +2,13 @@
 title: Keep Pages-local Document Helpers Imported Only by Pages
 titleKo: pages-local 문서 헬퍼는 page만 import하게
 impact: HIGH
-impactDescription: >-
-  preserves one-way dependency flow from routed pages to pages-local document helpers instead of letting shared code
-  depend on routing helpers
-impactDescriptionKo: 공용 코드가 라우팅 헬퍼에 의존하지 않도록 route에서 pages-local 문서 헬퍼로 향하는 한 방향 의존을 지킴
+impactDescription: 공용 코드가 라우팅 헬퍼에 의존하지 않도록 route에서 pages-local 문서 헬퍼로 향하는 한 방향 의존을 지킴
 tags: responsibility, pages, imports, dependency-direction, document-helpers
 ---
 
 ## Keep Pages-local Document Helpers Imported Only by Pages
 
-**Impact: HIGH (preserves one-way dependency flow from routed pages to pages-local document helpers instead of letting
-shared code depend on routing helpers)**
+**Impact: HIGH (공용 코드가 라우팅 헬퍼에 의존하지 않도록 route에서 pages-local 문서 헬퍼로 향하는 한 방향 의존을 지킴)**
 
 `src/pages/_document.astro`, `_head.astro`,
 `_document.css` 같은 pages-local document helper는 routed page만 import합니다.

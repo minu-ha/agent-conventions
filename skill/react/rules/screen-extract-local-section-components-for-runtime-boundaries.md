@@ -3,11 +3,7 @@ title: Extract Route-local Section Components Only for Runtime Boundaries
 titleKo: 런타임 경계 기준의 route-local 섹션 추출
 impact: HIGH
 impactDescription: route entry 흐름은 보이게 두면서 실제 런타임 경계가 있는 subtree만 분리하게 합니다
-impactDescriptionKo: route entry 흐름은 보이게 두면서 실제 런타임 경계가 있는 subtree만 분리하게 합니다
-appliesWhen: >-
-  route-local section component를 새로 추출하거나 기존 section이 async·state·provider·interaction·library·performance
-  경계를 소유하는지 바꾼다.
-appliesWhenKo:
+appliesWhen:
   - route-local section component를 새로 추출할 때
   - 기존 section이 async·state·provider·interaction·library·performance 경계를 소유하는지 바꿀 때
 tags: screen, routes, local-components, boundaries

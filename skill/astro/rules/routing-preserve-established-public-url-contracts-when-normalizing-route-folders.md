@@ -2,16 +2,13 @@
 title: Preserve Established Public URL Contracts When Normalizing Route Folders
 titleKo: route 폴더를 정리해도 공개 URL 계약은 보존
 impact: HIGH
-impactDescription: >-
-  prevents file tree cleanup from silently changing published URLs that users and crawlers already rely on
-impactDescriptionKo: 파일 트리 정리가 이미 쓰이는 공개 URL을 조용히 바꾸는 것을 막음
+impactDescription: 파일 트리 정리가 이미 쓰이는 공개 URL을 조용히 바꾸는 것을 막음
 tags: routing, urls, migrations, route-families
 ---
 
 ## Preserve Established Public URL Contracts When Normalizing Route Folders
 
-**Impact: HIGH (prevents file tree cleanup from silently changing published URLs that users and crawlers already rely
-on)**
+**Impact: HIGH (파일 트리 정리가 이미 쓰이는 공개 URL을 조용히 바꾸는 것을 막음)**
 
 route folder를 더 예쁘게 정리할 수 있더라도, 이미 공개된 URL contract가 있다면 그 계약을 먼저 존중합니다.
 현재 사이트가 이미 `/recent/:page?`, `/posts/:page?`, `/posts/:slug`,

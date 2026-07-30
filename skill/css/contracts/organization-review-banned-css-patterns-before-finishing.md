@@ -1,6 +1,6 @@
 # Review Banned CSS Patterns Before Finishing
 
-**Impact: MEDIUM (catches unsafe selector, modifier, and library-targeting shortcuts before they become part of the shared style system)**
+**Impact: MEDIUM (위험한 셀렉터·modifier·라이브러리 타겟팅 지름길이 공용 스타일 체계에 들어가기 전에 잡음)**
 
 작업을 마치기 전에 금지 패턴을 다시 확인합니다.
 

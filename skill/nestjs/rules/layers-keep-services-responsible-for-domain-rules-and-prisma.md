@@ -2,16 +2,13 @@
 title: Keep Services Responsible for Domain Rules and Prisma
 titleKo: 도메인 규칙과 Prisma는 service가 책임
 impact: CRITICAL
-impactDescription: >-
-  keeps business rules, transaction orchestration, and persistence access in the backend layer designed to own them
-impactDescriptionKo: 비즈니스 규칙·트랜잭션 조율·영속 접근을 그것을 소유하도록 설계된 계층에 둠
+impactDescription: 비즈니스 규칙·트랜잭션 조율·영속 접근을 그것을 소유하도록 설계된 계층에 둠
 tags: services, prisma, domain-logic
 ---
 
 ## Keep Services Responsible for Domain Rules and Prisma
 
-**Impact: CRITICAL (keeps business rules, transaction orchestration, and persistence access in the backend layer
-designed to own them)**
+**Impact: CRITICAL (비즈니스 규칙·트랜잭션 조율·영속 접근을 그것을 소유하도록 설계된 계층에 둠)**
 
 Service는 비즈니스 로직, 도메인 규칙, 트랜잭션 조율을 담당하고 `PrismaService`를 직접 주입받아 데이터에 접근합니다.
 다른 도메인 데이터가 필요하면 해당 도메인의 Service를 주입해 사용하고,

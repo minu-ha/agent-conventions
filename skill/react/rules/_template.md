@@ -3,10 +3,8 @@ title: Rule Title Here
 titleKo: 사람이 화면에서 읽을 한국어 제목. 보고서 목차처럼 명사형으로 끝맺는다
 impact: MEDIUM
 impactDescription: 영향도 설명. ~합니다 로 끝나는 한 문장
-impactDescriptionKo: 사람이 화면에서 읽을 한국어 영향도 설명. ~합니다 로 끝나는 한 문장
-appliesWhen: 이 규칙이 걸리는 변경을 한 문장으로. 결론이 아니라 관찰 가능한 조건
-appliesWhenKo:
-  - 사람이 화면에서 읽을 적용 조건 불렛. ~할 때 로 끝맺는다
+appliesWhen:
+  - 이 규칙이 걸리는 변경 불렛. 결론이 아니라 관찰 가능한 조건을 ~할 때 로 끝맺는다
   - 제외: 로 시작하면 걸리지 않는 조건을 뜻한다
 tags: tag1, tag2
 ---
@@ -23,8 +21,8 @@ tags: tag1, tag2
 
 <!--
 frontmatter 키와 appliesWhen 작성 기준은 CONTRIBUTING.md 3절 참고.
-  appliesWhen           걸리는 조건. 규칙의 결론이 아니라 diff 에서 관찰 가능한 것
-  appliesWhenKo         사람이 읽을 적용 조건 불렛 목록. conventions.html 에만 노출
+  appliesWhen           걸리는 조건 불렛 목록. 규칙의 결론이 아니라 diff 에서 관찰 가능한 것.
+                        라우팅용 문장은 불렛을 이어 붙여 자동 생성되고 합쳐서 160자 이내
   requiresSelected      이 규칙이 걸리면 반드시 함께 적용할 규칙
   reviewWith            함께 다시 판단해 볼 규칙. 자동 적용 아님
   requiredOnCompletion  마무리 시 항상 적용하는 규칙에만

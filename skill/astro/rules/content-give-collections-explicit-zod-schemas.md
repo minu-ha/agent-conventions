@@ -2,14 +2,13 @@
 title: Give Collections Explicit Zod Schemas
 titleKo: 컬렉션에는 명시적 Zod 스키마
 impact: HIGH
-impactDescription: makes structured content type-safe and prevents frontmatter drift from leaking into pages
-impactDescriptionKo: 구조화 콘텐츠를 타입 안전하게 만들고 frontmatter 변형이 페이지로 새는 것을 막음
+impactDescription: 구조화 콘텐츠를 타입 안전하게 만들고 frontmatter 변형이 페이지로 새는 것을 막음
 tags: content-collections, zod, schema
 ---
 
 ## Give Collections Explicit Zod Schemas
 
-**Impact: HIGH (makes structured content type-safe and prevents frontmatter drift from leaking into pages)**
+**Impact: HIGH (구조화 콘텐츠를 타입 안전하게 만들고 frontmatter 변형이 페이지로 새는 것을 막음)**
 
 구조화된 collection은 loader만 두고 끝내지 말고 schema를 명시적으로 둡니다.
 collection entry shape를 page마다 추측하거나 optional chaining으로 봉합하지 말고 `astro:zod` 기반 schema에서 타입과

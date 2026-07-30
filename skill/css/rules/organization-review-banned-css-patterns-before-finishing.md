@@ -2,9 +2,7 @@
 title: Review Banned CSS Patterns Before Finishing
 titleKo: 마무리 전에 금지된 CSS 패턴 점검
 impact: MEDIUM
-impactDescription: >-
-  catches unsafe selector, modifier, and library-targeting shortcuts before they become part of the shared style system
-impactDescriptionKo: 위험한 셀렉터·modifier·라이브러리 타겟팅 지름길이 공용 스타일 체계에 들어가기 전에 잡음
+impactDescription: 위험한 셀렉터·modifier·라이브러리 타겟팅 지름길이 공용 스타일 체계에 들어가기 전에 잡음
 appliesWhen: CSS 또는 TSX class contract 변경이 완료 단계에 들어간다.
 requiredOnCompletion: true
 tags: review, banned-patterns, guardrails
@@ -12,8 +10,7 @@ tags: review, banned-patterns, guardrails
 
 ## Review Banned CSS Patterns Before Finishing
 
-**Impact: MEDIUM (catches unsafe selector, modifier, and library-targeting shortcuts before they become part of the
-shared style system)**
+**Impact: MEDIUM (위험한 셀렉터·modifier·라이브러리 타겟팅 지름길이 공용 스타일 체계에 들어가기 전에 잡음)**
 
 작업을 마치기 전에 금지 패턴을 다시 확인합니다.
 

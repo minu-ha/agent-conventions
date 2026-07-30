@@ -2,14 +2,13 @@
 title: Compose Layouts from Widget and UI Only
 titleKo: 레이아웃은 widget과 ui만으로 조립
 impact: HIGH
-impactDescription: keeps layout files as route shells instead of letting them become domain-specific shared blocks
-impactDescriptionKo: layout 파일이 도메인 전용 공용 블록이 되지 않고 route 셸로 남게 함
+impactDescription: layout 파일이 도메인 전용 공용 블록이 되지 않고 route 셸로 남게 함
 tags: responsibility, layouts, ui, widget, composition
 ---
 
 ## Compose Layouts from Widget and UI Only
 
-**Impact: HIGH (keeps layout files as route shells instead of letting them become domain-specific shared blocks)**
+**Impact: HIGH (layout 파일이 도메인 전용 공용 블록이 되지 않고 route 셸로 남게 함)**
 
 `_document.astro`나 route-local shell이 shell composition을 맡는다면,
 그 안에서 조립하는 shared piece는 `src/components/widget/**`와 `src/components/ui/**`로 제한합니다.

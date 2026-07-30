@@ -1,6 +1,6 @@
 # Extract Support Functions Only When the Boundary Is Real
 
-**Impact: HIGH (stops helper extraction from fragmenting local flow when no reusable contract or testable boundary actually exists)**
+**Impact: HIGH (재사용 계약이나 테스트 경계가 실제로 없을 때 헬퍼 추출이 지역 흐름을 조각내는 것을 막음)**
 
 support function은 "이름"이 아니라 "호출 경계"가 있을 때만 분리합니다.
 

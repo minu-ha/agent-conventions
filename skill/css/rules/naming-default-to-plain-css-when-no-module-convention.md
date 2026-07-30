@@ -2,9 +2,7 @@
 title: Default to Plain CSS Unless the Project Explicitly Standardizes on CSS Modules
 titleKo: 프로젝트 표준이 없으면 plain CSS를 기본으로
 impact: HIGH
-impactDescription: >-
-  keeps the global `scope_slug` naming system meaningful instead of hiding ownership behind local module indirection
-impactDescriptionKo: 소유를 local module 간접층에 숨기지 않고 전역 scope_slug 이름 체계가 의미를 유지하게 함
+impactDescription: 소유를 local module 간접층에 숨기지 않고 전역 scope_slug 이름 체계가 의미를 유지하게 함
 appliesWhen: >-
   프로젝트 표준 미확정 상태에서 새 stylesheet 접근 형식(plain CSS·CSS Modules)을 선택하거나 `.module.css`·`styles.*`로
   전환한다. 기존 plain CSS class rename은 제외한다.
@@ -13,8 +11,7 @@ tags: naming, css-modules, ownership
 
 ## Default to Plain CSS Unless the Project Explicitly Standardizes on CSS Modules
 
-**Impact: HIGH (keeps the global `scope_slug` naming system meaningful instead of hiding ownership behind local module
-indirection)**
+**Impact: HIGH (소유를 local module 간접층에 숨기지 않고 전역 scope_slug 이름 체계가 의미를 유지하게 함)**
 
 이 CSS skill은 기본적으로 plain `*.css`와 전역 고유 클래스명을 전제로 합니다.
 `rt_*`, `ui_*`, `wg_*`, `loc_*` 네임스페이스는 global class space에서 owner를 추적하려고 존재하므로,

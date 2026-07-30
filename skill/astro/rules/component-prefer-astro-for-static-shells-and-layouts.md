@@ -2,14 +2,13 @@
 title: Prefer `.astro` for Static Shells and Layouts
 titleKo: 정적 셸과 레이아웃은 .astro로
 impact: CRITICAL
-impactDescription: reduces unnecessary client framework surface and keeps Astro's zero-JS default intact
-impactDescriptionKo: 불필요한 클라이언트 프레임워크 표면을 줄이고 Astro의 zero-JS 기본값을 지킴
+impactDescription: 불필요한 클라이언트 프레임워크 표면을 줄이고 Astro의 zero-JS 기본값을 지킴
 tags: astro-components, layouts, islands
 ---
 
 ## Prefer `.astro` for Static Shells and Layouts
 
-**Impact: CRITICAL (reduces unnecessary client framework surface and keeps Astro's zero-JS default intact)**
+**Impact: CRITICAL (불필요한 클라이언트 프레임워크 표면을 줄이고 Astro의 zero-JS 기본값을 지킴)**
 
 state, effect, client runtime가 필요 없는 shell은 기본적으로 `.astro`로 작성합니다.
 

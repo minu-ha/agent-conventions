@@ -2,14 +2,13 @@
 title: Match Route Paths to File Structure
 titleKo: route 경로를 파일 구조와 일치시키기
 impact: HIGH
-impactDescription: prevents route strings from drifting away from the file tree that owns them
-impactDescriptionKo: route 문자열이 그것을 소유한 파일 트리에서 벗어나는 것을 막음
+impactDescription: route 문자열이 그것을 소유한 파일 트리에서 벗어나는 것을 막음
 tags: createfileroute, paths, file-structure
 ---
 
 ## Match Route Paths to File Structure
 
-**Impact: HIGH (prevents route strings from drifting away from the file tree that owns them)**
+**Impact: HIGH (route 문자열이 그것을 소유한 파일 트리에서 벗어나는 것을 막음)**
 
 `createFileRoute()` 문자열은 실제 파일 구조와 대응되게 작성합니다.
 일반 폴더, pathless group, 동적 세그먼트,

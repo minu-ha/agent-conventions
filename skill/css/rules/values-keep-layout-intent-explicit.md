@@ -2,8 +2,7 @@
 title: Keep Layout Intent Explicit
 titleKo: 레이아웃 의도를 명시적으로 드러내기
 impact: MEDIUM-HIGH
-impactDescription: makes sticky, fixed, and box responsibilities understandable without reverse-engineering the DOM
-impactDescriptionKo: DOM을 역추적하지 않고도 sticky·fixed·박스 책임을 이해할 수 있게 함
+impactDescription: DOM을 역추적하지 않고도 sticky·fixed·박스 책임을 이해할 수 있게 함
 appliesWhen: >-
   `sticky`·`fixed`, `z-index`, 강제 width·height 또는 부모·자식 layout 책임을 추가·변경한다. 같은 element의
   base/modifier 분리에서 기존 `display`·spacing 선언을 값 그대로 재배치하면 제외한다.
@@ -12,8 +11,7 @@ tags: layout, comments, sticky
 
 ## Keep Layout Intent Explicit
 
-**Impact: MEDIUM-HIGH (makes sticky, fixed, and box responsibilities understandable without reverse-engineering the
-DOM)**
+**Impact: MEDIUM-HIGH (DOM을 역추적하지 않고도 sticky·fixed·박스 책임을 이해할 수 있게 함)**
 
 레이아웃 의도는 클래스명과 선언에서 즉시 확인 가능해야 합니다.
 `position`, `width`, `height` 강제는 최소화하고 부모와 자식의 레이아웃 책임을 분리하며,

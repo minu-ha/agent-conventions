@@ -2,14 +2,13 @@
 title: Split Top-level Route Groups by Layout Shell
 titleKo: 최상위 route 그룹은 레이아웃 셸로 나누기
 impact: CRITICAL
-impactDescription: keeps top-level route boundaries aligned with real shell differences instead of feature names
-impactDescriptionKo: 최상위 route 경계를 기능 이름이 아니라 실제 셸 차이에 맞춤
+impactDescription: 최상위 route 경계를 기능 이름이 아니라 실제 셸 차이에 맞춤
 tags: layout-shell, grouping, route-tree
 ---
 
 ## Split Top-level Route Groups by Layout Shell
 
-**Impact: CRITICAL (keeps top-level route boundaries aligned with real shell differences instead of feature names)**
+**Impact: CRITICAL (최상위 route 경계를 기능 이름이 아니라 실제 셸 차이에 맞춤)**
 
 최상위 라우트 그룹은 기능명 기준이 아니라 레이아웃 셸 기준으로 나눕니다.
 헤더, 사이드바, 접근 가드, 브레드크럼, 전역 래퍼가 다르면 별도 최상위 그룹으로 분리하고, 모든 화면이 같은 셸을 공유하면

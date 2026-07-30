@@ -2,14 +2,13 @@
 title: Add Tests When Branches, Endpoints, or Schema Behavior Change
 titleKo: 분기·엔드포인트·스키마가 바뀌면 테스트 추가
 impact: HIGH
-impactDescription: keeps backend regressions from slipping through when logic branches or API/database behavior changes
-impactDescriptionKo: 로직 분기나 API·DB 동작이 바뀔 때 백엔드 회귀가 빠져나가는 것을 막음
+impactDescription: 로직 분기나 API·DB 동작이 바뀔 때 백엔드 회귀가 빠져나가는 것을 막음
 tags: tests, coverage, regression
 ---
 
 ## Add Tests When Branches, Endpoints, or Schema Behavior Change
 
-**Impact: HIGH (keeps backend regressions from slipping through when logic branches or API/database behavior changes)**
+**Impact: HIGH (로직 분기나 API·DB 동작이 바뀔 때 백엔드 회귀가 빠져나가는 것을 막음)**
 
 Service에 의미 있는 비즈니스 분기나 예외 처리가 추가되면 unit test를, 공개 API 엔드포인트가 추가되거나 변경되면
 e2e test를 추가합니다.

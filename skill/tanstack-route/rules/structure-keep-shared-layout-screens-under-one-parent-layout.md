@@ -2,14 +2,13 @@
 title: Keep Shared-layout Screens Under One Parent Layout
 titleKo: 레이아웃을 공유하는 화면은 부모 레이아웃 하나 밑에
 impact: HIGH
-impactDescription: avoids duplicating top-level route shells when screens share the same layout
-impactDescriptionKo: 같은 레이아웃을 쓰는 화면들이 최상위 route 셸을 중복하지 않게 함
+impactDescription: 같은 레이아웃을 쓰는 화면들이 최상위 route 셸을 중복하지 않게 함
 tags: layout, grouping, shells
 ---
 
 ## Keep Shared-layout Screens Under One Parent Layout
 
-**Impact: HIGH (avoids duplicating top-level route shells when screens share the same layout)**
+**Impact: HIGH (같은 레이아웃을 쓰는 화면들이 최상위 route 셸을 중복하지 않게 함)**
 
 여러 화면이 같은 레이아웃 셸을 쓰면 같은 부모 `layout` 아래에 두고 하위 그룹만 늘립니다.
 기능이 다르다는 이유만으로 최상위 레이아웃을 새로 만들지 말고, 동일 셸이라면 기존 부모 아래에서 확장합니다.

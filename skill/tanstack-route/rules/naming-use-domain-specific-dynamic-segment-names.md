@@ -2,14 +2,13 @@
 title: Use Domain-specific Dynamic Segment Names
 titleKo: 동적 세그먼트는 도메인 이름으로
 impact: MEDIUM-HIGH
-impactDescription: keeps route params self-explanatory at the file level and inside router APIs
-impactDescriptionKo: 파일 수준과 router API 안에서 route 파라미터가 스스로 설명되게 함
+impactDescription: 파일 수준과 router API 안에서 route 파라미터가 스스로 설명되게 함
 tags: params, dynamic-segments, naming
 ---
 
 ## Use Domain-specific Dynamic Segment Names
 
-**Impact: MEDIUM-HIGH (keeps route params self-explanatory at the file level and inside router APIs)**
+**Impact: MEDIUM-HIGH (파일 수준과 router API 안에서 route 파라미터가 스스로 설명되게 함)**
 
 필수 path param은 `{$param}`, 선택 path param은 `{-$param}` 문법을 사용하고,
 param 이름은 도메인 의미가 드러나는 명사를 씁니다.

@@ -2,14 +2,13 @@
 title: Reserve `output: "server"` for Mostly Dynamic Apps
 titleKo: output: server는 대부분 동적인 앱에만
 impact: HIGH
-impactDescription: makes full-project SSR a deliberate app-level choice instead of a convenience toggle
-impactDescriptionKo: 전체 SSR을 편의 토글이 아니라 앱 수준의 의도적 선택으로 만듦
+impactDescription: 전체 SSR을 편의 토글이 아니라 앱 수준의 의도적 선택으로 만듦
 tags: rendering, output, server
 ---
 
 ## Reserve `output: "server"` for Mostly Dynamic Apps
 
-**Impact: HIGH (makes full-project SSR a deliberate app-level choice instead of a convenience toggle)**
+**Impact: HIGH (전체 SSR을 편의 토글이 아니라 앱 수준의 의도적 선택으로 만듦)**
 
 `output: "server"`는 새로운 기능을 추가하는 옵션이 아니라 전체 page의 기본 rendering behavior를 뒤집는 선택입니다.
 대시보드, 로그인 후 앱처럼 대부분의 page가 request-time 데이터와 auth에 묶인 경우에만 기본값으로 채택하고,

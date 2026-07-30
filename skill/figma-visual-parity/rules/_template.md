@@ -3,7 +3,6 @@ title: Rule Title Here
 titleKo: 사람이 화면에서 읽을 한국어 제목
 impact: MEDIUM
 impactDescription: 선택적 영향도 설명
-impactDescriptionKo: 사람이 화면에서 읽을 한국어 영향도 설명
 tags: tag1, tag2
 ---
 

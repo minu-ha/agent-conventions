@@ -3,11 +3,7 @@ title: Choose Single Components, Compound Components, and Variants Deliberately
 titleKo: 단일·compound·variant 조립 구조의 의도적 선택
 impact: HIGH
 impactDescription: 공용 컴포넌트가 필요한 확장점은 열면서 가장 단순한 구조를 고르도록 돕습니다
-impactDescriptionKo: 공용 컴포넌트가 필요한 확장점은 열면서 가장 단순한 구조를 고르도록 돕습니다
-appliesWhen: >-
-  exported shared component에 slot·public part·shared context/action·반복 preset·mode API를 추가하거나 조립 구조를
-  재설계한다.
-appliesWhenKo:
+appliesWhen:
   - exported shared component에 slot·public part·shared context/action을 추가할 때
   - 반복되는 preset이나 mode API를 추가할 때
   - shared component의 조립 구조를 재설계할 때

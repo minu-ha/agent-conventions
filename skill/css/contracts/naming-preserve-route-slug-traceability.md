@@ -1,6 +1,6 @@
 # Preserve Route Slug Traceability
 
-**Impact: HIGH (keeps route-scoped class namespaces readable back to the route hierarchy they belong to)**
+**Impact: HIGH (route 범위 class namespace를 소속 route 계층으로 거슬러 읽을 수 있게 유지함)**
 
 활성화된 route/framework skill이 `rt_*` owner를 선택했다면,
 CSS는 그 owner slug를 route까지 다시 추적할 수 있게 유지합니다.

@@ -3,7 +3,6 @@ title: Compare Screenshots Before Completion
 titleKo: 완료 전에 스크린샷을 비교
 impact: CRITICAL
 impactDescription: build/test 성공만으로 visual parity 완료를 선언하는 일을 막음
-impactDescriptionKo: build/test 성공만으로 visual parity 완료를 선언하는 일을 막음
 tags: verification, screenshot, browser
 ---
 

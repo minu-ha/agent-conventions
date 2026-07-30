@@ -2,14 +2,13 @@
 title: Never Edit Generated Route Tree Files
 titleKo: 생성된 route tree 파일은 절대 손대지 않기
 impact: MEDIUM-HIGH
-impactDescription: preserves generated router output as a build artifact derived from route sources
-impactDescriptionKo: 생성된 router 출력을 route 소스에서 파생된 빌드 산출물로 지킴
+impactDescription: 생성된 router 출력을 route 소스에서 파생된 빌드 산출물로 지킴
 tags: generated-files, route-tree, safety
 ---
 
 ## Never Edit Generated Route Tree Files
 
-**Impact: MEDIUM-HIGH (preserves generated router output as a build artifact derived from route sources)**
+**Impact: MEDIUM-HIGH (생성된 router 출력을 route 소스에서 파생된 빌드 산출물로 지킴)**
 
 라우트 추가나 변경 결과로 생성되는 `<generated-route-tree-path>`는 수동 수정하지 않습니다.
 라우트 소스만 수정하고, 생성 파일은 결과물로만 다루어야 source of truth가 명확하게 유지됩니다.

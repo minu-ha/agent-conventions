@@ -1,6 +1,6 @@
 # Do Not Use Modifiers for One-off Structural Patches
 
-**Impact: HIGH (keeps modifiers reserved for state instead of turning them into a second layout naming system)**
+**Impact: HIGH (modifier를 두 번째 레이아웃 이름 체계로 만들지 않고 상태 표현에만 남겨둠)**
 
 modifier는 상태나 반복 variant를 표현할 때만 사용합니다.
 

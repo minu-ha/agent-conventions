@@ -1,6 +1,6 @@
 # Use Named Object Params for Complex Signatures
 
-**Impact: HIGH (keeps long function signatures readable and makes grouped inputs easier to extend without positional confusion)**
+**Impact: HIGH (긴 함수 시그니처를 읽을 수 있게 유지하고 위치 혼동 없이 묶인 입력을 확장하게 함)**
 
 매개변수가 3개 이상이거나 같은 계열 값이 묶여 전달되면 단일 객체 매개변수로 묶고,
 함수 시그니처에서 바로 구조분해하지 않습니다.

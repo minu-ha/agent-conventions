@@ -2,16 +2,13 @@
 title: Write Comments Only for Non-obvious Setup Boundaries
 titleKo: 주석은 자명하지 않은 setup 경계에만
 impact: MEDIUM
-impactDescription: >-
-  keeps test comments focused on why a setup exists instead of narrating obvious Arrange/Act/Assert steps
-impactDescriptionKo: 자명한 Arrange/Act/Assert 서술 대신 그 setup 이 왜 있는지에 주석을 집중시킴
+impactDescription: 자명한 Arrange/Act/Assert 서술 대신 그 setup 이 왜 있는지에 주석을 집중시킴
 tags: comments, setup, helpers
 ---
 
 ## Write Comments Only for Non-obvious Setup Boundaries
 
-**Impact: MEDIUM (keeps test comments focused on why a setup exists instead of narrating obvious Arrange/Act/Assert
-steps)**
+**Impact: MEDIUM (자명한 Arrange/Act/Assert 서술 대신 그 setup 이 왜 있는지에 주석을 집중시킴)**
 
 테스트 주석은 한글로 작성하고, helper, seed/cleanup,
 bootstrap wait처럼 목적이 바로 드러나지 않는 setup에만 왜 필요한지 짧게 남깁니다.

@@ -2,10 +2,7 @@
 title: Tokenize Repeated Visual Values
 titleKo: 반복되는 시각 값은 토큰화
 impact: HIGH
-impactDescription: >-
-  keeps repeated colors, spacing, and radius values aligned with shared design tokens instead of drifting into magic
-  numbers
-impactDescriptionKo: 반복되는 색·간격·radius 값이 매직 넘버로 흐르지 않고 공용 디자인 토큰에 맞게 유지함
+impactDescription: 반복되는 색·간격·radius 값이 매직 넘버로 흐르지 않고 공용 디자인 토큰에 맞게 유지함
 appliesWhen: 색상·간격·radius·타이포·그림자 등 같은 시각 값이 2회 이상 반복되거나 새 shared visual value를 하드코딩한다.
 reviewWith: values-always-provide-css-variable-fallbacks
 tags: tokens, variables, reuse
@@ -13,8 +10,7 @@ tags: tokens, variables, reuse
 
 ## Tokenize Repeated Visual Values
 
-**Impact: HIGH (keeps repeated colors, spacing, and radius values aligned with shared design tokens instead of drifting
-into magic numbers)**
+**Impact: HIGH (반복되는 색·간격·radius 값이 매직 넘버로 흐르지 않고 공용 디자인 토큰에 맞게 유지함)**
 
 색상, 간격, 타이포, 그림자 같은 반복 가능한 시각 값은 CSS 변수와 디자인 토큰을 우선 사용합니다.
 같은 값이 2회 이상 반복되면 하드코딩을 늘리기 전에 토큰화 여부를 먼저 검토합니다.

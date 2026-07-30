@@ -2,17 +2,13 @@
 title: Align Route Page Assets and `rt_*` Surface Classes with Route Role
 titleKo: route 자산과 rt_* class를 route 역할에 맞추기
 impact: HIGH
-impactDescription: >-
-  keeps Astro route files, route-local assets, CSS owners, and URL semantics aligned without duplicating folder depth in
-  names
-impactDescriptionKo: 이름에 폴더 깊이를 중복하지 않고 route 파일·자산·CSS 소유자·URL 의미를 일치시킴
+impactDescription: 이름에 폴더 깊이를 중복하지 않고 route 파일·자산·CSS 소유자·URL 의미를 일치시킴
 tags: naming, pages, css, route-role
 ---
 
 ## Align Route Page Assets and `rt_*` Surface Classes with Route Role
 
-**Impact: HIGH (keeps Astro route files, route-local assets, CSS owners, and URL semantics aligned without duplicating
-folder depth in names)**
+**Impact: HIGH (이름에 폴더 깊이를 중복하지 않고 route 파일·자산·CSS 소유자·URL 의미를 일치시킴)**
 
 Routed entry file names follow Astro routing (`index.astro`, `[slug].astro`,
 `new.astro`). Route-local support files and CSS use the route role as owner, not the whole folder path.

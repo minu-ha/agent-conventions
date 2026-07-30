@@ -3,11 +3,7 @@ title: Use Visibility Primitives Deliberately for Show and Hide Branches
 titleKo: 표시·숨김 분기의 visibility primitive 의도적 선택
 impact: MEDIUM
 impactDescription: 표시 여부 결정을 route 화면 전반에서 명시적이고 일관되게 유지합니다
-impactDescriptionKo: 표시 여부 결정을 route 화면 전반에서 명시적이고 일관되게 유지합니다
-appliesWhen: >-
-  이미 마운트된 subtree의 표시 상태를 보존하려고 조건부 렌더링과 Activity 또는 동등한 visibility primitive 사이를
-  바꾼다.
-appliesWhenKo:
+appliesWhen:
   - 마운트된 subtree의 표시 상태를 보존하려고 조건부 렌더링을 Activity로 바꿀 때
   - Activity 등 visibility primitive와 조건부 렌더링 사이를 오갈 때
 tags: composition, jsx, activity

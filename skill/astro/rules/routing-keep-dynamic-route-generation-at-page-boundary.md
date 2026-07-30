@@ -2,14 +2,13 @@
 title: Keep Dynamic Route Generation at the Page Boundary
 titleKo: 동적 route 생성은 page 경계에서
 impact: HIGH
-impactDescription: keeps route params and build-time page generation visible where the URL contract is defined
-impactDescriptionKo: URL 계약이 정의된 곳에서 route 파라미터와 빌드 시점 페이지 생성이 보이게 함
+impactDescription: URL 계약이 정의된 곳에서 route 파라미터와 빌드 시점 페이지 생성이 보이게 함
 tags: routing, getstaticpaths, pages
 ---
 
 ## Keep Dynamic Route Generation at the Page Boundary
 
-**Impact: HIGH (keeps route params and build-time page generation visible where the URL contract is defined)**
+**Impact: HIGH (URL 계약이 정의된 곳에서 route 파라미터와 빌드 시점 페이지 생성이 보이게 함)**
 
 동적 route의 `getStaticPaths()`와 param-to-page generation 책임은 page file 경계에 둡니다.
 shared component나 utility가 URL contract를 대신 소유하게 만들지 말고,

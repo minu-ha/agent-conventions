@@ -3,11 +3,7 @@ title: Keep Derived Values Close to Where They Are Used
 titleKo: 파생 값의 사용 지점 인접 배치
 impact: HIGH
 impactDescription: 오리진을 보존하고 route entry가 alias와 명령형 setup 코드로 채워지는 것을 막습니다
-impactDescriptionKo: 오리진을 보존하고 route entry가 alias와 명령형 setup 코드로 채워지는 것을 막습니다
-appliesWhen: >-
-  response·state·search·props의 오리진을 끊는 alias·flag·표시값을 넓은 screen scope에 추가·이동·제거하거나 `let`/`push`
-  조립을 바꾼다.
-appliesWhenKo:
+appliesWhen:
   - 오리진을 끊는 alias·flag·표시값을 넓은 screen scope에 추가·이동·제거할 때
   - `let` 재할당이나 배열 `push` 기반 조립을 바꿀 때
 tags: screen, derived-values, origin
