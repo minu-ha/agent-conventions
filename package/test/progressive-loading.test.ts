@@ -34,6 +34,7 @@ interface RuleFixture {
 	fileName?: string;
 	frontmatter?: string;
 	title?: string;
+	titleKo?: string;
 	impact?: string;
 	impactDescription?: string;
 	appliesWhen?: string;
@@ -55,6 +56,7 @@ interface SectionFixture {
 	order: number;
 	prefix: string;
 	title: string;
+	titleKo?: string;
 }
 
 const defaultMetadata = {
@@ -75,6 +77,7 @@ const toFrontmatter = (rule: RuleFixture): string => {
 
 	return [
 		`title: ${rule.title ?? "Fixture Rule"}`,
+		`titleKo: ${rule.titleKo ?? "픽스처 규칙"}`,
 		`impact: ${rule.impact ?? "HIGH"}`,
 		`impactDescription: ${rule.impactDescription ?? "Fixture impact description."}`,
 		rule.appliesWhen === undefined ? undefined : `appliesWhen: ${rule.appliesWhen}`,
@@ -102,7 +105,7 @@ const writeSkillFixture = async (skillRootDir: string, skillName: string, fixtur
 		sections
 			.map(
 				(section) =>
-					`## ${section.order}. ${section.title} (${section.prefix})\n\n**Impact:** ${section.impact ?? "HIGH"}\n\n**Description:** ${section.title} rules.`,
+					`## ${section.order}. ${section.title} (${section.prefix})\n\n**TitleKo:** ${section.titleKo ?? "픽스처 섹션"}\n\n**Impact:** ${section.impact ?? "HIGH"}\n\n**Description:** ${section.title} rules.`,
 			)
 			.join("\n\n"),
 		"utf8",
@@ -1638,11 +1641,11 @@ test("progressive validation rejects normative prose placed after the first Inco
 test("legacy non-progressive rules and extends remain valid without appliesWhen", async () => {
 	await withFixtureRoot(async (skillRootDir) => {
 		await writeSkillFixture(skillRootDir, "base", {
-			rules: [{frontmatter: "title: Base Rule\nimpact: HIGH\nimpactDescription: Base impact.\ntags: base"}],
+			rules: [{frontmatter: "title: Base Rule\ntitleKo: 기반 규칙\nimpact: HIGH\nimpactDescription: Base impact.\ntags: base"}],
 		});
 		await writeSkillFixture(skillRootDir, "owner", {
 			metadata: {extends: ["base"]},
-			rules: [{frontmatter: "title: Owner Rule\nimpact: HIGH\nimpactDescription: Owner impact.\ntags: owner"}],
+			rules: [{frontmatter: "title: Owner Rule\ntitleKo: 소유 규칙\nimpact: HIGH\nimpactDescription: Owner impact.\ntags: owner"}],
 		});
 
 		await validateSkill(getSkillPaths("owner", skillRootDir));

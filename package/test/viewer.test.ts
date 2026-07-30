@@ -304,3 +304,15 @@ test("checkGeneratedViewer rejects a stale committed document", async () => {
 	assert.equal(committed, expected, "docs/conventions.html is stale. Run: npm run viewer");
 	await checkGeneratedViewer();
 });
+
+test("every rule and section in the repository carries a Korean title", async () => {
+	const payload = await buildViewerPayload();
+
+	for (const rule of payload.rules) {
+		assert.ok(rule.titleKo.length > 0, `${rule.skill}/${rule.id} is missing titleKo`);
+	}
+
+	for (const section of payload.sections) {
+		assert.ok(section.titleKo.length > 0, `${section.skill}/${section.prefix} section is missing TitleKo`);
+	}
+});

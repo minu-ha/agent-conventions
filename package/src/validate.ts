@@ -65,6 +65,13 @@ const validateLocalSkill = async (skillPaths: SkillPaths): Promise<LocalValidati
 		throw new Error(`${skillPaths.skillName}: rules/_sections.md must define at least one section.`);
 	}
 
+	// 아래 progressive 전용 루프와 별개로 둔다. 한국어 제목은 8개 skill 전부 필요하다.
+	for (const section of sections) {
+		if (!section.titleKo) {
+			throw new Error(`${skillPaths.skillName}: section "${section.title}" is missing "**TitleKo:**" in rules/_sections.md.`);
+		}
+	}
+
 	if (metadata.progressiveDisclosure === true) {
 		for (const section of sections) {
 			assertValidRoutingIdentifier(section.prefix, `${skillPaths.skillName}: section prefix`);
@@ -82,6 +89,10 @@ const validateLocalSkill = async (skillPaths: SkillPaths): Promise<LocalValidati
 
 		if (!rule.title) {
 			throw new Error(`${skillPaths.skillName}: ${rule.fileName} is missing frontmatter key "title".`);
+		}
+
+		if (!rule.titleKo) {
+			throw new Error(`${skillPaths.skillName}: ${rule.fileName} is missing frontmatter key "titleKo".`);
 		}
 
 		if (!rule.impact) {
