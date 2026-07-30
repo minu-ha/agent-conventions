@@ -1,7 +1,7 @@
 # CSS 컨벤션 Rule Index
 
 - Skill: `css`
-- Routing digest: `sha256:18b21a1d367ef26f415b6a317baf406dc35feb5a5c3c3f625366e41f28c1767e`
+- Routing digest: `sha256:cac5e60de04dbe5e112418491ba3ac528d9dc1d8d9780d795c19e4a66f215508`
 
 ## Direct Companions
 
@@ -18,8 +18,8 @@
 - C07 | composition-compose-classes-with-clsx | TSX의 \`className\`을 추가·수정하거나 base class, modifier, optional class를 조합한다.
 - C08 | composition-do-not-build-structural-variants-with-modifiers | modifier를 추가·변경하거나 반복 가능한 state·API variant와 one-off structural patch 사이를 판정한다. 허용된 state로 결론 나도 변경된 modifier 분류는 Selected다. | reviewWith: naming-name-elements-and-modifiers-by-role
 - C09 | composition-keep-classes-single-purpose | 기존 class가 base와 state·variant 책임을 함께 갖거나 독립 시각 책임을 추가·재사용·분리한다. 기존 결합 책임을 분리하지 않고 처음부터 새 single-purpose pair를 만들거나 책임 보존 rename만 하면 제외한다.
-- C10 | composition-style-ui-components-through-owned-wrappers | 실제 \`Ui\*\` React wrapper 사용처·API에서 내부 DOM styling 경계를 정하거나 root \`className\`·slot prop hook을 주입·노출·사용한다. 기존 CSS owner root 아래 third-party selector만 수정하면 제외한다. | reviewWith: selector-target-third-party-dom-from-owned-roots
-- C11 | composition-prefer-ui-wrapper-prop-types | \`Ui\*\` wrapper 사용처나 wrapper API에서 Props 타입을 선언·추론·재사용하고 라이브러리 원본 Props 참조를 검토한다.
+- C10 | composition-prefer-ui-wrapper-prop-types | \`Ui\*\` wrapper 사용처나 wrapper API에서 Props 타입을 선언·추론·재사용하고 라이브러리 원본 Props 참조를 검토한다.
+- C11 | composition-style-ui-components-through-owned-wrappers | 실제 \`Ui\*\` React wrapper 사용처·API에서 내부 DOM styling 경계를 정하거나 root \`className\`·slot prop hook을 주입·노출·사용한다. 기존 CSS owner root 아래 third-party selector만 수정하면 제외한다. | reviewWith: selector-target-third-party-dom-from-owned-roots
 - C12 | selector-avoid-deep-descendant-dependencies | descendant 또는 child selector chain을 추가·수정하거나 DOM 계층에 의존하는 project-owned·third-party selector를 검토한다.
 - C13 | selector-keep-project-selectors-flat | project-owned class를 중첩·descendant selector로 연결하거나 raw HTML prose·copy·content wrapper 안 element selector를 추가·수정한다.
 - C14 | selector-target-third-party-dom-from-owned-roots | \`.ant-\*\`, \`.rc-\*\`, \`.tippy-\*\` 등 third-party 내부 DOM selector를 추가·수정하거나 owned wrapper 아래로 범위를 제한한다.

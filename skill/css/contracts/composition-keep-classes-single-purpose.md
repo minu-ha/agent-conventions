@@ -10,4 +10,4 @@
 스타일 책임을 보존한 owner prefix 수정, single-purpose rename,
 one-off modifier를 역할명 class로 바꾸기만 하는 경우도 대상이 아닙니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/composition-keep-classes-single-purpose.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/02-03-composition-keep-classes-single-purpose.md)을 읽습니다.

@@ -10,4 +10,4 @@
 변경이 아니므로 이 규칙의 대상이 아닙니다.
 local alias를 추가하거나 import binding 이름을 바꿀 때만 다시 판정합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/naming-use-consistent-file-and-symbol-naming.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/01-03-naming-use-consistent-file-and-symbol-naming.md)을 읽습니다.

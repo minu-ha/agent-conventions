@@ -435,7 +435,7 @@ one-off modifier를 역할명 class로 바꾸기만 하는 경우도 대상이 �
 
 ### 2.4 Prefer `Ui*` Wrapper Prop Types
 
-**Rule:** `C11` · `composition-prefer-ui-wrapper-prop-types`
+**Rule:** `C10` · `composition-prefer-ui-wrapper-prop-types`
 
 **Applies when:** `Ui*` wrapper 사용처나 wrapper API에서 Props 타입을 선언·추론·재사용하고 라이브러리 원본 Props 참조를 검토한다.
 
@@ -464,7 +464,7 @@ const items: NonNullable<UiCollapseProps["items"]> = [];
 
 ### 2.5 Prefer Owned Wrappers for `Ui*` Component Styling
 
-**Rule:** `C10` · `composition-style-ui-components-through-owned-wrappers`
+**Rule:** `C11` · `composition-style-ui-components-through-owned-wrappers`
 
 **Applies when:** 실제 `Ui*` React wrapper 사용처·API에서 내부 DOM styling 경계를 정하거나 root `className`·slot prop hook을 주입·노출·사용한다. 기존 CSS owner root 아래 third-party selector만 수정하면 제외한다.
 

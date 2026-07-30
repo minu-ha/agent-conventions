@@ -14,4 +14,4 @@ callback 계약 재사용이므로 Selected입니다.
 
 **Requires selected:** `types-prefer-function-variable-types-over-parameter-annotations` · 함께 적용
 
-> 예시·예외가 필요하면 [full rule](../rules/types-reuse-callback-signatures-from-existing-contracts.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/02-04-types-reuse-callback-signatures-from-existing-contracts.md)을 읽습니다.

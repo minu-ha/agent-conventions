@@ -6,4 +6,4 @@
 값이 없을 수 있음을 명확히 드러내고, 꼭 필요할 때만 도메인상 기본값이 명확하며
 코드 바로 위 이유 주석이 있을 때 제한적으로 허용합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/absence-expose-optional-values-instead-of-silent-fallbacks.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/04-01-absence-expose-optional-values-instead-of-silent-fallbacks.md)을 읽습니다.

@@ -18,4 +18,4 @@ scope 기준:
 서로 다른 owner 범위는 한 파일에 섞지 않습니다.
 어떤 markup이 route-owned인지 판단하는 책임은 활성화된 framework convention이 가집니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/naming-separate-local-and-route-style-scopes.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/01-05-naming-separate-local-and-route-style-scopes.md)을 읽습니다.

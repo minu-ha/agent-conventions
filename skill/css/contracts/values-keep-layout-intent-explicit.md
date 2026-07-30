@@ -9,4 +9,4 @@
 class responsibility 규칙이 소유하며 이 규칙은 N/A입니다.
 position, z-index, 강제 geometry 또는 부모·자식 layout 책임이 바뀌면 다시 Selected입니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/values-keep-layout-intent-explicit.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/04-01-values-keep-layout-intent-explicit.md)을 읽습니다.

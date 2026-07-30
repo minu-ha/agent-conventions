@@ -19,4 +19,4 @@ positional→object input에서 수정 가능한 로컬 소유 호환 shape를 �
 raw input과 normalized payload는 field가 같아도 의미가 달라 별도 input shape를 허용합니다.
 `types-document-custom-types-and-shapes`는 Selected, `types-reuse-existing-contracts-before-new-types`는 N/A입니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/types-reuse-existing-contracts-before-new-types.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/02-05-types-reuse-existing-contracts-before-new-types.md)을 읽습니다.

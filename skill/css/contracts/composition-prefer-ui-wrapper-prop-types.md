@@ -7,4 +7,4 @@
 
 **Requires selected:** `typescript/types-reuse-existing-contracts-before-new-types` · 함께 적용
 
-> 예시·예외가 필요하면 [full rule](../rules/composition-prefer-ui-wrapper-prop-types.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/02-04-composition-prefer-ui-wrapper-prop-types.md)을 읽습니다.

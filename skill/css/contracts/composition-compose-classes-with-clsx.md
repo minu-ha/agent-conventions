@@ -7,4 +7,4 @@ TSX에서 `className`은 `clsx()` 사용을 기본으로 합니다.
 상태 modifier나 optional class가 붙어도 읽기 쉽게 확장합니다.
 문자열 연결이나 중복 ternary로 `className`을 조립하지 않습니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/composition-compose-classes-with-clsx.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/02-01-composition-compose-classes-with-clsx.md)을 읽습니다.

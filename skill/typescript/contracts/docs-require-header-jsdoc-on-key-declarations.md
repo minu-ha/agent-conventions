@@ -13,4 +13,4 @@ header tag가 있어도 body가 비어 있거나 영문 label뿐이면 header �
 
 **Requires selected:** `docs-standardize-annotation-tags-by-declaration-role`, `docs-write-concise-korean-comments-about-purpose-and-constraints` · 함께 적용
 
-> 예시·예외가 필요하면 [full rule](../rules/docs-require-header-jsdoc-on-key-declarations.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/05-02-docs-require-header-jsdoc-on-key-declarations.md)을 읽습니다.

@@ -8,4 +8,4 @@ barrel export, 기존 타입 재선언, 재사용 근거 없는 조기 추상화
 
 **Required on completion:** 마무리 시 항상 적용
 
-> 예시·예외가 필요하면 [full rule](../rules/guardrails-review-banned-typescript-shortcuts-before-finishing.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/06-01-guardrails-review-banned-typescript-shortcuts-before-finishing.md)을 읽습니다.

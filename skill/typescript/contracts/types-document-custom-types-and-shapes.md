@@ -2,4 +2,4 @@
 
 **Impact: CRITICAL**
 
-> CRITICAL rule: must read the [full rule](../rules/types-document-custom-types-and-shapes.md) before implementation or review.
+> CRITICAL rule: must read the [full rule](../rules/02-01-types-document-custom-types-and-shapes.md) before implementation or review.

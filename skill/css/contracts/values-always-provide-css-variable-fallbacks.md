@@ -16,4 +16,4 @@ theme provider, 서드파티 wrapper, 선택적 토큰,
 byte-equivalent 이동만 하는 경우는 N/A입니다.
 변수 이름·fallback·주입 owner·사용 횟수·의미 중 하나라도 바뀌면 다시 Selected로 판정합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/values-always-provide-css-variable-fallbacks.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/04-02-values-always-provide-css-variable-fallbacks.md)을 읽습니다.

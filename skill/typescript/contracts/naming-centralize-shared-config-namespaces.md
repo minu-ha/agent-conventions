@@ -9,4 +9,4 @@ leaf 파일마다 공용 URL, feature flag, 페이지 크기, 상수 문자열�
 수가 많지 않을 때는 `config/` 폴더로 미리 쪼개지 말고 단일 `config.ts`를 유지하고,
 여러 독립 섹션으로 커졌을 때만 분리를 검토합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/naming-centralize-shared-config-namespaces.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/01-01-naming-centralize-shared-config-namespaces.md)을 읽습니다.

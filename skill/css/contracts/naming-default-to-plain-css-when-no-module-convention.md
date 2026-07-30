@@ -12,4 +12,4 @@
 이미 plain CSS를 직접 import하는 owner 안에서 기존 plain CSS class·selector 이름이나 base/modifier 구조만 바꾸는 작업은
 접근 형식을 결정하지 않으므로 N/A입니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/naming-default-to-plain-css-when-no-module-convention.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/01-01-naming-default-to-plain-css-when-no-module-convention.md)을 읽습니다.

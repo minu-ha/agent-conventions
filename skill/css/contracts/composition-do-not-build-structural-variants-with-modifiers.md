@@ -21,4 +21,4 @@ modifier는 상태나 반복 variant를 표현할 때만 사용합니다.
 `active`·`selected` 같은 허용된 domain state로 결론 나면 `Selected + pass`이며,
 위반이 없다는 이유로 N/A로 돌리지 않습니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/composition-do-not-build-structural-variants-with-modifiers.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/02-02-composition-do-not-build-structural-variants-with-modifiers.md)을 읽습니다.

@@ -11,4 +11,4 @@ annotation 본문 전체가 ASCII 또는 영문 label이면 한글 주석으로 
 새로 추가하거나 바꾼 각 annotation body에는 그 선언의 목적이나 제약을 설명하는 한글 구절이 있어야 합니다.
 다른 `@field`가 한글이어도 영문-only `@summary`를 대신 통과시키지 않습니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/docs-write-concise-korean-comments-about-purpose-and-constraints.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/05-05-docs-write-concise-korean-comments-about-purpose-and-constraints.md)을 읽습니다.

@@ -18,4 +18,4 @@ annotation 태그는 아래 여덟 개만 사용합니다.
 `@description`은 `@part`와 함께만 사용합니다.
 `@schema`, `@shape`, `@contract`, `@data`, `@type`, `@property`는 쓰지 않습니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/docs-standardize-annotation-tags-by-declaration-role.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/05-03-docs-standardize-annotation-tags-by-declaration-role.md)을 읽습니다.

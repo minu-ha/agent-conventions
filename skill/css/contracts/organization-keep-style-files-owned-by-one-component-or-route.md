@@ -7,4 +7,4 @@
 파일이 길어질 경우 가벼운 섹션 주석이나 선언 순서 규약을 보조적으로 둘 수 있지만,
 이 규칙의 핵심은 주석 스타일이 아니라 ownership을 섞지 않는 것입니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/organization-keep-style-files-owned-by-one-component-or-route.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/05-01-organization-keep-style-files-owned-by-one-component-or-route.md)을 읽습니다.

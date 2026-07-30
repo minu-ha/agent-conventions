@@ -14,4 +14,4 @@ disabled interaction을 unconditional base element block에 둡니다.
 interaction selector를 modifier 아래로 옮겨 적용 대상을 좁히지 않습니다.
 modifier block에는 active·selected·error처럼 app state가 소유하는 presentation만 남깁니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/values-separate-domain-state-modifiers-from-dom-interaction-states.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/04-03-values-separate-domain-state-modifiers-from-dom-interaction-states.md)을 읽습니다.

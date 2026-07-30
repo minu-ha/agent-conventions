@@ -19,4 +19,4 @@ modifier가 켜진 경우에만 interaction이 달라져야 한다는 별도 제
 
 **Requires selected:** `values-separate-domain-state-modifiers-from-dom-interaction-states` · 함께 적용
 
-> 예시·예외가 필요하면 [full rule](../rules/selector-use-pseudo-classes-for-dom-owned-states.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/03-04-selector-use-pseudo-classes-for-dom-owned-states.md)을 읽습니다.

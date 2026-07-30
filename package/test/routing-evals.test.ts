@@ -117,8 +117,8 @@ const cssRuleUniverse = [
 	"composition-compose-classes-with-clsx",
 	"composition-do-not-build-structural-variants-with-modifiers",
 	"composition-keep-classes-single-purpose",
-	"composition-style-ui-components-through-owned-wrappers",
 	"composition-prefer-ui-wrapper-prop-types",
+	"composition-style-ui-components-through-owned-wrappers",
 	"selector-avoid-deep-descendant-dependencies",
 	"selector-keep-project-selectors-flat",
 	"selector-target-third-party-dom-from-owned-roots",
@@ -1401,8 +1401,8 @@ const cssScenarioStages = {
 				],
 				css: [
 					"composition-compose-classes-with-clsx",
-					"composition-style-ui-components-through-owned-wrappers",
 					"composition-prefer-ui-wrapper-prop-types",
+					"composition-style-ui-components-through-owned-wrappers",
 					"organization-review-banned-css-patterns-before-finishing",
 				],
 			},
@@ -1652,7 +1652,7 @@ test("TypeScript progressive metadata matches Appendix A exactly", async () => {
 		document.rules.every((rule) => (rule.appliesWhen?.length ?? 0) <= 160),
 		true,
 	);
-	const headerJsdocRule = await readFile(path.join(skillPaths.rulesDir, "docs-require-header-jsdoc-on-key-declarations.md"), "utf8");
+	const headerJsdocRule = await readRuleSource("typescript", "docs-require-header-jsdoc-on-key-declarations");
 	assert.match(headerJsdocRule, /named query·mutation binding[^\n]+@api/i);
 	assert.equal(
 		readFrontmatterValue(headerJsdocRule, "requiresSelected"),
@@ -1827,14 +1827,8 @@ test("induced naming closure and activated finish gates stay mandatory across ev
 	const derivedRule = await readRuleSource("react", "screen-keep-derived-values-close");
 	const bindingRule = await readRuleSource("react", "data-name-query-and-mutation-bindings-consistently");
 	const originRule = await readRuleSource("react", "data-preserve-origin-chaining");
-	const typescriptFinishRule = await readFile(
-		path.join(getSkillPaths("typescript", realSkillRootDir).rulesDir, "guardrails-review-banned-typescript-shortcuts-before-finishing.md"),
-		"utf8",
-	);
-	const cssFinishRule = await readFile(
-		path.join(getSkillPaths("css", realSkillRootDir).rulesDir, "organization-review-banned-css-patterns-before-finishing.md"),
-		"utf8",
-	);
+	const typescriptFinishRule = await readRuleSource("typescript", "guardrails-review-banned-typescript-shortcuts-before-finishing");
+	const cssFinishRule = await readRuleSource("css", "organization-review-banned-css-patterns-before-finishing");
 
 	assertMentions(readAppliesWhen(derivedRule), ["alias", "추가·이동·제거"], "derivedRule");
 	assert.match(originRule, /^reviewWith:[^\n]+screen-keep-derived-values-close/m);
@@ -2133,20 +2127,17 @@ test("CSS progressive metadata and rule routing match Appendix C exactly", async
 		document.rules.every((rule) => (rule.appliesWhen?.length ?? 0) <= 160),
 		true,
 	);
-	const wrapperStylingRule = await readFile(
-		path.join(skillPaths.rulesDir, "composition-style-ui-components-through-owned-wrappers.md"),
-		"utf8",
-	);
+	const wrapperStylingRule = await readRuleSource("css", "composition-style-ui-components-through-owned-wrappers");
 	assertMentions(
 		wrapperStylingRule,
 		[/실제 `Ui\*` React wrapper/i, /CSS-only/i, /selector-target-third-party-dom-from-owned-roots/i],
 		"wrapperStylingRule",
 	);
-	const singlePurposeRule = await readFile(path.join(skillPaths.rulesDir, "composition-keep-classes-single-purpose.md"), "utf8");
+	const singlePurposeRule = await readRuleSource("css", "composition-keep-classes-single-purpose");
 	assertMentions(readAppliesWhen(singlePurposeRule), ["기존 결합 책임", "처음부터 새 single-purpose pair"], "singlePurposeRule");
-	const layoutIntentRule = await readFile(path.join(skillPaths.rulesDir, "values-keep-layout-intent-explicit.md"), "utf8");
+	const layoutIntentRule = await readRuleSource("css", "values-keep-layout-intent-explicit");
 	assertMentions(readAppliesWhen(layoutIntentRule), ["base/modifier", "`display`·spacing", "값 그대로"], "layoutIntentRule");
-	const fallbackRule = await readFile(path.join(skillPaths.rulesDir, "values-always-provide-css-variable-fallbacks.md"), "utf8");
+	const fallbackRule = await readRuleSource("css", "values-always-provide-css-variable-fallbacks");
 	assertMentions(readAppliesWhen(fallbackRule), ["`var(--*)`", "같은 stylesheet", "byte-equivalent"], "fallbackRule");
 	assertMentions(
 		flattenWhitespace(fallbackRule),
@@ -2312,7 +2303,7 @@ test("routing activation and generated indexes use only the changed semantic del
 	assert.match(generatedIndex, /Routing digest: `sha256:[a-f0-9]{64}`/);
 	assert.match(generatedIndex, /^- T\d+ \| [^ |]+ \|/m);
 
-	const routeOwnerRule = await readFile(path.join(realSkillRootDir, "css", "rules", "naming-preserve-route-slug-traceability.md"), "utf8");
+	const routeOwnerRule = await readRuleSource("css", "naming-preserve-route-slug-traceability");
 	assert.match(routeOwnerRule, /route\/framework 규칙이 `rt_\*` owner를 선택한 화면/);
 });
 

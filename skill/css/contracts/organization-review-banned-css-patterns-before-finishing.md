@@ -24,4 +24,4 @@
 
 **Required on completion:** 마무리 시 항상 적용
 
-> 예시·예외가 필요하면 [full rule](../rules/organization-review-banned-css-patterns-before-finishing.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/05-02-organization-review-banned-css-patterns-before-finishing.md)을 읽습니다.
