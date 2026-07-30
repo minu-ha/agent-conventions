@@ -6,185 +6,252 @@
 <title>팀 컨벤션 — 규칙 조회</title>
 <style>
 *, *::before, *::after { box-sizing: border-box; }
-h1, h2, p, ul, li, pre, button, input, select { margin: 0; padding: 0; }
+h1, p, pre, button, input, table { margin: 0; padding: 0; }
 button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
 
 :root {
-	--paper: #eef1f3; --card: #fff; --sunk: #e3e8eb;
-	--ink: #141a1d; --ink-2: #47545a; --muted: #77868c;
-	--rule: #d5dcdf; --rule-2: #b4bfc4;
-	--accent: #0d5c7a; --accent-bg: #0d5c7a14; --on-accent: #fff;
-	--bad: #b3312a; --bad-bg: #b3312a0f;
-	--good: #1f6d4d; --good-bg: #1f6d4d0f;
-	--ember: #a8501c; --ember-2: #a8501c1f; --on-ember: #fff;
-	--mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-	--sans: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", "Segoe UI", sans-serif;
+	--page: #eef1f3; --card: #fff;
+	--ink: #14191c; --ink2: #47535a; --muted: #77848a; --faint: #98a3a8;
+	--hair: #d8dee2; --soft: #e4e9ec; --edge: #c3ccd1; --hover: #e7ecef;
+	--coral: #cc785c; --coral-dk: #a9583e;
+	--bad: #a8392b; --good: #3f6f52; --tag-fg: #7d6a55;
+	--code-bg: #fff; --code-fg: #14191c;
+	--sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+	--mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
+/* 디자인은 라이트를 기준으로 만들어졌다. 다크는 같은 토큰만 다시 정의해 얹는다. */
 @media (prefers-color-scheme: dark) {
 	:root:not([data-theme="light"]) {
-		--paper: #12171a; --card: #1a2024; --sunk: #0d1114;
-		--ink: #e4eaec; --ink-2: #a9b6bb; --muted: #7b898f;
-		--rule: #293237; --rule-2: #3d4950;
-		--accent: #5eb3d6; --accent-bg: #5eb3d61f; --on-accent: #0d1114;
-		--bad: #e0897f; --bad-bg: #e0897f14;
-		--good: #5cb98d; --good-bg: #5cb98d14;
-		--ember: #d18a4e; --ember-2: #d18a4e26; --on-ember: #14181a;
+		--page: #101416; --card: #171c1f;
+		--ink: #e6ebed; --ink2: #b3bec3; --muted: #8b979d; --faint: #6f7b81;
+		--hair: #262d31; --soft: #222a2e; --edge: #3a444a; --hover: #1e2528;
+		--coral: #d98a6c; --coral-dk: #e0a184;
+		--bad: #dd8a7d; --good: #6bb890; --tag-fg: #b39a7c;
+		--code-bg: #12171a; --code-fg: #e4eaec;
 	}
 }
 
 :root[data-theme="dark"] {
-	--paper: #12171a; --card: #1a2024; --sunk: #0d1114;
-	--ink: #e4eaec; --ink-2: #a9b6bb; --muted: #7b898f;
-	--rule: #293237; --rule-2: #3d4950;
-	--accent: #5eb3d6; --accent-bg: #5eb3d61f; --on-accent: #0d1114;
-	--bad: #e0897f; --bad-bg: #e0897f14;
-	--good: #5cb98d; --good-bg: #5cb98d14;
-	--ember: #d18a4e; --ember-2: #d18a4e26; --on-ember: #14181a;
+	--page: #101416; --card: #171c1f;
+	--ink: #e6ebed; --ink2: #b3bec3; --muted: #8b979d; --faint: #6f7b81;
+	--hair: #262d31; --soft: #222a2e; --edge: #3a444a; --hover: #1e2528;
+	--coral: #d98a6c; --coral-dk: #e0a184;
+	--bad: #dd8a7d; --good: #6bb890; --tag-fg: #b39a7c;
+	--code-bg: #12171a; --code-fg: #e4eaec;
 }
 
-body { background: var(--paper); color: var(--ink); font-family: var(--sans); font-size: 14px; line-height: 1.65; -webkit-font-smoothing: antialiased; }
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+body {
+	min-height: 100vh; background: var(--page); color: var(--ink);
+	font-family: var(--sans); font-size: 14px; line-height: 1.6;
+	-webkit-font-smoothing: antialiased;
+}
+:focus-visible { outline: 2px solid var(--coral); outline-offset: 2px; border-radius: 4px; }
 
-.topbar { position: sticky; top: 0; z-index: 40; background: var(--paper); border-bottom: 1px solid var(--rule); }
-.topbar-in { max-width: 1440px; margin: 0 auto; padding: .7rem clamp(.75rem, 2vw, 1.5rem); display: flex; align-items: center; gap: .8rem; flex-wrap: wrap; }
-.brand { font-family: var(--mono); font-size: .72rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); }
-.companion { display: flex; align-items: baseline; gap: .3rem; flex-wrap: wrap; margin-top: .4rem; font-family: var(--mono); font-size: .62rem; color: var(--muted); }
-.companion:empty { display: none; }
-.search-wrap { position: relative; flex: 1 1 280px; min-width: 180px; }
-.search { width: 100%; font-family: var(--mono); font-size: .84rem; color: var(--ink); background: var(--card); border: 1px solid var(--rule-2); border-radius: 2px; padding: .5rem; }
-.search:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 0 3px var(--accent-bg); }
-.count { font-family: var(--mono); font-size: .72rem; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
-.tbtn { font-family: var(--mono); font-size: .68rem; color: var(--ink-2); border: 1px solid var(--rule-2); border-radius: 2px; padding: .25rem .5rem; }
-.tbtn:hover { color: var(--ink); border-color: var(--ink-2); }
+/* ---------- header ---------- */
+.hd { position: sticky; top: 0; z-index: 40; background: color-mix(in srgb, var(--page) 94%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--hair); }
+.hd-in { max-width: 1320px; margin: 0 auto; padding: 0 28px; min-height: 64px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 9px; flex: 0 0 auto; }
+.brand-mark { color: var(--coral); font-size: 15px; line-height: 1; }
+.brand-nm { font-size: 15px; font-weight: 600; letter-spacing: -.01em; }
+.brand-sub { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: .04em; padding-left: 4px; }
 
-.shell { max-width: 1440px; margin: 0 auto; padding: 0 clamp(.75rem, 2vw, 1.5rem); }
-.pane { display: grid; grid-template-columns: 232px minmax(0, 1fr); gap: clamp(1rem, 2.5vw, 2rem); padding: 1.25rem 0 4rem; }
-/* 여기도 minmax(0,…) 이어야 한다. 1fr 이면 main 이 못 줄어 페이지가 가로로 늘어난다. */
-@media (max-width: 900px) { .pane { grid-template-columns: minmax(0, 1fr); } }
+.sr { flex: 1 1 320px; display: flex; justify-content: center; min-width: 0; }
+.sr-box { position: relative; width: 100%; max-width: 460px; }
+.sr-ico { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 12px; pointer-events: none; }
+.sr-in {
+	width: 100%; height: 34px; padding: 0 12px 0 30px;
+	font-family: var(--mono); font-size: 12.5px; color: var(--ink);
+	background: var(--card); border: 1px solid var(--hair); border-radius: 8px;
+}
+.sr-in::placeholder { color: var(--faint); }
+.sr-in:focus { border-color: var(--coral); outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--coral) 18%, transparent); }
+
+.hd-r { flex: 0 0 auto; display: flex; align-items: center; gap: 14px; }
+.cnt { font-family: var(--mono); font-size: 11.5px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.btn { height: 32px; padding: 0 12px; font-size: 12.5px; color: var(--ink2); background: var(--card); border: 1px solid var(--hair); border-radius: 8px; white-space: nowrap; }
+.btn:hover { border-color: var(--edge); color: var(--ink); }
+
+/* ---------- shell ---------- */
+.wrap { max-width: 1320px; margin: 0 auto; padding: 0 28px; }
+.pane { display: grid; grid-template-columns: 244px minmax(0, 1fr); gap: 40px; padding: 28px 0 96px; align-items: start; }
+/* minmax(0,…): 1fr 이면 main 이 콘텐츠 min-width 아래로 줄지 못해 페이지가 가로로 늘어난다. */
+@media (max-width: 940px) { .pane { grid-template-columns: minmax(0, 1fr); gap: 24px; } }
 .pane > main { min-width: 0; }
 
-.rail { align-self: start; position: sticky; top: 5rem; display: flex; flex-direction: column; gap: 1.35rem; }
-@media (max-width: 900px) { .rail { position: static; } }
-.rail-hd { font-family: var(--mono); font-size: .64rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); display: flex; justify-content: space-between; gap: .5rem; }
-.chips { display: flex; flex-wrap: wrap; gap: .3rem; margin-top: .45rem; }
-.chip { font-family: var(--mono); font-size: .68rem; color: var(--ink-2); background: var(--card); border: 1px solid var(--rule); border-radius: 2px; padding: .18rem .42rem; text-align: left; }
-.chip:hover { border-color: var(--rule-2); color: var(--ink); }
-.chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
-.n { font-variant-numeric: tabular-nums; opacity: .6; font-size: .92em; }
+.rail { position: sticky; top: 88px; display: flex; flex-direction: column; gap: 26px; max-height: calc(100vh - 116px); overflow-y: auto; padding-right: 4px; }
+@media (max-width: 940px) { .rail { position: static; max-height: none; overflow: visible; } }
+.rail::-webkit-scrollbar { width: 6px; }
+.rail::-webkit-scrollbar-thumb { background: var(--hair); border-radius: 3px; }
 
-.imp { font-family: var(--mono); font-size: .62rem; font-weight: 600; letter-spacing: .06em; padding: .1rem .34rem; border-radius: 2px; border: 1px solid transparent; display: inline-flex; gap: .3rem; white-space: nowrap; }
-.imp-CRITICAL { background: var(--ember); color: var(--on-ember); }
-.imp-HIGH { background: var(--ember-2); color: var(--ember); }
-.imp-MEDIUM-HIGH { border-color: var(--ember); color: var(--ember); }
-.imp-MEDIUM { border-color: var(--rule-2); color: var(--muted); }
+.grp-hd { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 20px; padding-bottom: 8px; border-bottom: 1px solid var(--hair); margin-bottom: 10px; }
+.grp-lb { font-family: var(--mono); font-size: 10.5px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--ink2); }
+.grp-note { font-family: var(--mono); font-size: 10px; color: var(--faint); white-space: nowrap; }
+.grp-clear { font-family: var(--mono); font-size: 10.5px; color: var(--faint); }
+.grp-clear:hover { color: var(--coral-dk); }
 
-.list { display: flex; flex-direction: column; gap: .3rem; }
-.row { background: var(--card); border: 1px solid var(--rule); border-left-width: 3px; border-left-color: var(--rule); border-radius: 2px; overflow: hidden; }
-.row[data-imp="CRITICAL"] { border-left-color: var(--ember); }
-.row[data-imp="HIGH"] { border-left-color: color-mix(in srgb, var(--ember) 55%, var(--rule)); }
-.row[data-imp="MEDIUM-HIGH"] { border-left-color: color-mix(in srgb, var(--ember) 28%, var(--rule)); }
-.row-hd { width: 100%; text-align: left; display: grid; grid-template-columns: 2.7rem minmax(0, 1fr) auto; align-items: baseline; gap: .1rem .7rem; padding: .6rem .75rem; }
-.row-hd:hover { background: var(--sunk); }
-@media (max-width: 640px) { .row-hd { grid-template-columns: 2.7rem minmax(0, 1fr); } .row-meta { grid-column: 2; margin-top: .3rem; } }
-.row-no {
-	font-family: var(--mono); font-size: .72rem; font-weight: 600; color: var(--accent);
-	font-variant-numeric: tabular-nums; letter-spacing: -.02em;
+.col { display: flex; flex-direction: column; gap: 1px; }
+
+.ch {
+	display: grid; align-items: center; gap: 8px; width: 100%; text-align: left;
+	min-height: 28px; padding: 0 8px; border-radius: 6px;
+	font-size: 12.5px; color: var(--ink2);
 }
-.row-main { display: flex; flex-direction: column; gap: .18rem; min-width: 0; }
-.row-t1 { display: flex; gap: .5rem; flex-wrap: wrap; align-items: baseline; }
-.row-title { font-size: .92rem; font-weight: 600; }
-.row-id { font-family: var(--mono); font-size: .64rem; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.row-when { font-size: .8rem; color: var(--ink-2); display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
-.row[data-open="1"] .row-when { display: block; }
-.row-meta { display: flex; align-items: center; gap: .4rem; }
-.row-ex { font-family: var(--mono); font-size: .64rem; color: var(--muted); font-variant-numeric: tabular-nums; }
-.row-body { display: none; border-top: 1px solid var(--rule); padding: .85rem .75rem 1rem; }
-.row[data-open="1"] .row-body { display: block; }
+.ch:hover { background: var(--hover); }
+.ch[aria-pressed="true"] { background: var(--coral); color: #fff; }
+.ch[aria-pressed="true"]:hover { background: var(--coral-dk); }
+.ch-skill { grid-template-columns: minmax(0, 1fr) auto; font-family: var(--mono); font-size: 12px; }
+.ch-imp { grid-template-columns: 10px minmax(0, 1fr) auto; font-family: var(--mono); font-size: 11px; letter-spacing: .02em; }
+.ch-sec { grid-template-columns: 2.6em minmax(0, 1fr) auto; align-items: baseline; gap: 6px; padding: 5px 8px; }
+.ch-lb { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ch-sec .ch-lb { white-space: normal; line-height: 1.4; }
+.ch-n { font-family: var(--mono); font-size: 10.5px; font-variant-numeric: tabular-nums; opacity: .65; min-width: 2.2em; text-align: right; }
+.ch-no { font-family: var(--mono); font-size: 10.5px; font-variant-numeric: tabular-nums; opacity: .6; }
+.ch-dot { width: 8px; height: 8px; border-radius: 2px; }
 
-.ex { display: flex; flex-direction: column; gap: .55rem; min-width: 0; }
-.ex + .ex { margin-top: .9rem; }
-.ex-hd { font-family: var(--mono); font-size: .66rem; font-weight: 600; display: flex; align-items: baseline; gap: .45rem; }
-.ex-bad .ex-hd { color: var(--bad); }
-.ex-good .ex-hd { color: var(--good); }
-.ex-hd em { font-style: normal; font-weight: 400; color: var(--ink-2); font-family: var(--sans); font-size: .76rem; }
+.comp { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--hair); }
+.comp:empty { display: none; }
+.comp-lb { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--faint); width: 100%; }
+.comp-ch { font-family: var(--mono); font-size: 10.5px; min-height: 22px; padding: 0 7px; color: var(--coral-dk); background: color-mix(in srgb, var(--coral) 7%, transparent); border: 1px solid color-mix(in srgb, var(--coral) 28%, transparent); border-radius: 6px; }
+.comp-ch:hover { background: color-mix(in srgb, var(--coral) 14%, transparent); }
 
-/* minmax(0,1fr): 1fr 이면 긴 코드 줄이 컬럼을 밀어내 박스가 행 밖으로 나간다. */
-.diff { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: .7rem; align-items: start; }
-@media (max-width: 860px) { .diff { grid-template-columns: minmax(0, 1fr); } }
+.tagwrap { display: flex; flex-wrap: wrap; gap: 4px; }
+.tg { display: inline-flex; align-items: center; gap: 5px; min-height: 24px; padding: 0 8px; border-radius: 999px; font-family: var(--mono); font-size: 10.5px; color: var(--muted); border: 1px solid var(--hair); }
+.tg:hover { color: var(--coral-dk); border-color: color-mix(in srgb, var(--coral) 45%, transparent); }
+.tg[aria-pressed="true"] { background: var(--coral); border-color: var(--coral); color: #fff; }
+.tg-n { font-variant-numeric: tabular-nums; opacity: .6; }
 
-.cbox { min-width: 0; border: 1px solid var(--rule); border-radius: 2px; overflow: hidden; }
-.ex-bad .cbox { border-color: color-mix(in srgb, var(--bad) 30%, var(--rule)); background: var(--bad-bg); }
-.ex-good .cbox { border-color: color-mix(in srgb, var(--good) 30%, var(--rule)); background: var(--good-bg); }
-.cbox-hd { font-family: var(--mono); font-size: .62rem; color: var(--muted); padding: .28rem .5rem; border-bottom: 1px solid var(--rule); display: flex; justify-content: space-between; }
-pre.code { font-family: var(--mono); font-size: .715rem; line-height: 1.6; padding: .55rem .65rem; color: var(--ink); background: var(--card); tab-size: 2; overflow-x: auto; scrollbar-width: thin; }
-pre.code::-webkit-scrollbar { height: 8px; }
-pre.code::-webkit-scrollbar-track { background: var(--sunk); }
-pre.code::-webkit-scrollbar-thumb { background: var(--rule-2); border-radius: 4px; }
-.t-c { color: var(--muted); font-style: italic; }
-.t-s { color: var(--good); }
-.t-k { color: var(--accent); font-weight: 600; }
-.t-g { color: var(--ember); }
+/* ---------- rule cards ---------- */
+.list { display: flex; flex-direction: column; gap: 8px; }
+.row { position: relative; background: var(--card); border: 1px solid var(--hair); border-radius: 12px; overflow: hidden; }
+.row[data-open="1"] { border-color: var(--edge); }
+.row-stripe { position: absolute; left: 0; top: 0; bottom: 0; width: 3px; }
+.row[data-imp="CRITICAL"] .row-stripe { background: var(--coral); }
+.row[data-imp="HIGH"] .row-stripe { background: color-mix(in srgb, var(--coral) 55%, transparent); }
+.row[data-imp="MEDIUM-HIGH"] .row-stripe { background: color-mix(in srgb, var(--coral) 25%, transparent); }
 
-.why { margin-top: .9rem; border-top: 1px dashed var(--rule); padding-top: .6rem; }
-.why-btn { font-family: var(--mono); font-size: .66rem; color: var(--accent); display: flex; gap: .4rem; text-align: left; }
-.why-body { display: none; max-width: 68ch; margin-top: .5rem; color: var(--ink-2); font-size: .84rem; }
+.row-hd { display: grid; grid-template-columns: 58px minmax(0, 1fr) auto; align-items: center; gap: 16px; width: 100%; text-align: left; padding: 14px 18px 14px 20px; }
+.row-hd:hover { background: var(--hover); }
+@media (max-width: 560px) { .row-hd { grid-template-columns: 44px minmax(0, 1fr); row-gap: 8px; } .row-meta { grid-column: 2; } }
+.row-no { font-family: var(--mono); font-size: 12px; font-weight: 500; color: var(--coral-dk); font-variant-numeric: tabular-nums; }
+.row-ti { min-width: 0; font-size: 14.5px; font-weight: 600; letter-spacing: -.01em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.row[data-open="1"] .row-ti { white-space: normal; }
+.row-meta { display: flex; align-items: center; gap: 10px; flex: 0 0 auto; }
+.car { color: #a8b2b8; font-size: 11px; width: 12px; text-align: center; }
+
+.imp { display: inline-flex; align-items: center; min-height: 22px; padding: 0 8px; border-radius: 999px; font-family: var(--mono); font-size: 10px; font-weight: 500; letter-spacing: .06em; white-space: nowrap; border: 1px solid transparent; }
+.imp-CRITICAL { background: var(--coral); color: #fff; border-color: var(--coral); }
+.imp-HIGH { background: color-mix(in srgb, var(--coral) 14%, transparent); color: var(--coral-dk); }
+.imp-MEDIUM-HIGH { color: var(--coral-dk); border-color: color-mix(in srgb, var(--coral) 50%, transparent); }
+.imp-MEDIUM { color: var(--muted); border-color: var(--hair); }
+
+.body { border-top: 1px solid var(--soft); padding: 18px 20px 22px; }
+.meta { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; font-family: var(--mono); font-size: 10.5px; color: var(--faint); }
+.meta-s { color: var(--edge); }
+.desc { margin-top: 5px; font-size: 13.5px; line-height: 1.65; color: var(--ink2); max-width: 90ch; }
+
+.pairs { display: flex; flex-direction: column; gap: 18px; margin-top: 18px; }
+.pair { display: flex; flex-direction: column; gap: 12px; }
+.box { display: flex; flex-direction: column; min-width: 0; border-radius: 10px; overflow: hidden; }
+.box-bad { background: color-mix(in srgb, var(--bad) 4%, transparent); border: 1px solid color-mix(in srgb, var(--bad) 22%, transparent); }
+.box-good { background: color-mix(in srgb, var(--good) 4%, transparent); border: 1px solid color-mix(in srgb, var(--good) 22%, transparent); }
+.box-hd { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 32px; padding: 4px 12px; border-bottom: 1px solid var(--soft); }
+.box-l { display: flex; align-items: center; gap: 6px; min-width: 0; font-family: var(--mono); font-size: 10.5px; font-weight: 600; letter-spacing: .06em; }
+.box-bad .box-l { color: var(--bad); }
+.box-good .box-l { color: var(--good); }
+.box-note { font-weight: 400; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; letter-spacing: 0; }
+.box-langs { font-family: var(--mono); font-size: 10px; color: var(--faint); flex: 0 0 auto; }
+
+/* 코드는 가로 스크롤 대신 줄바꿈한다. 좁은 폭에서도 잘리지 않는다. */
+pre.code {
+	margin: 0; padding: 12px 14px; font-family: var(--mono); font-size: 12px; line-height: 1.7;
+	background: var(--code-bg); color: var(--code-fg);
+	white-space: pre-wrap; overflow-wrap: anywhere; word-break: break-word; tab-size: 2;
+}
+pre.code + pre.code, .code-lb + pre.code { border-top: 1px solid var(--soft); }
+.code-lb { font-family: var(--mono); font-size: 9.5px; letter-spacing: .06em; color: var(--faint); padding: 6px 14px 0; background: var(--code-bg); }
+pre.code + .code-lb { border-top: 1px solid var(--soft); }
+.c { color: var(--faint); font-style: italic; }
+.s { color: var(--good); }
+.k { color: var(--coral-dk); font-weight: 500; }
+.g { color: var(--tag-fg); }
+
+.why { margin-top: 18px; padding-top: 14px; border-top: 1px dashed var(--hair); }
+.why-btn { display: flex; align-items: baseline; gap: 8px; width: 100%; text-align: left; font-size: 12.5px; color: var(--coral-dk); }
+.why-btn:hover { text-decoration: underline; }
+.why-car { font-size: 9px; }
+.why-body { display: none; margin-top: 12px; color: var(--ink2); font-size: 13.5px; max-width: 92ch; }
 .why[data-open="1"] .why-body { display: block; }
-.why-body p { margin: 0 0 .5rem; }
-.why-body code { font-family: var(--mono); font-size: .9em; background: var(--sunk); border: 1px solid var(--rule); border-radius: 2px; padding: 0 .22em; }
-.why-body .tw { overflow-x: auto; margin: 0 0 .6rem; }
-.why-body table { border-collapse: collapse; font-size: .8rem; min-width: 100%; }
-.why-body th, .why-body td { border: 1px solid var(--rule); padding: .25rem .5rem; text-align: left; vertical-align: top; }
-.why-body th { background: var(--sunk); font-family: var(--mono); font-size: .68rem; }
-.why-body pre.code { border: 1px solid var(--rule); border-radius: 2px; margin: 0 0 .6rem; }
+.why-body p { margin: 0 0 .7em; }
+.why-body code { font-family: var(--mono); font-size: .88em; background: var(--hover); border-radius: 3px; padding: 0 .25em; }
+.why-body strong { color: var(--ink); }
+.why-body .tw { overflow-x: auto; margin: 0 0 .8em; }
+.why-body table { border-collapse: collapse; font-size: 12.5px; min-width: 100%; }
+.why-body th, .why-body td { border: 1px solid var(--hair); padding: 6px 10px; text-align: left; vertical-align: top; }
+.why-body th { background: var(--hover); font-family: var(--mono); font-size: 10.5px; font-weight: 500; }
+.why-body pre.code { border: 1px solid var(--soft); border-radius: 8px; margin: 0 0 .8em; }
 
-.xr { display: flex; flex-wrap: wrap; gap: .35rem; align-items: baseline; margin-top: .75rem; }
-.xr-lb { font-family: var(--mono); font-size: .62rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
-.xr-a { font-family: var(--mono); font-size: .66rem; color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent); border-radius: 2px; padding: .1rem .35rem; background: var(--accent-bg); }
-.xr-a:hover { border-color: var(--accent); }
-.xr-a[data-ext="1"] { border-style: dashed; }
-.xr-a[disabled] { color: var(--muted); cursor: default; }
-.tagrow { display: flex; flex-wrap: wrap; gap: .25rem; margin-top: .6rem; }
-.tag { font-family: var(--mono); font-size: .62rem; color: var(--muted); border: 1px solid var(--rule); border-radius: 2px; padding: .05rem .3rem; }
-.tag:hover { color: var(--accent); border-color: var(--accent); }
-.empty { font-family: var(--mono); font-size: .78rem; color: var(--muted); text-align: center; padding: 3rem 1rem; border: 1px dashed var(--rule); }
-mark { background: color-mix(in srgb, var(--ember) 35%, transparent); color: inherit; }
+.refs { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
+.ref-g { display: grid; grid-template-columns: 5.6em minmax(0, 1fr); align-items: start; gap: 10px; }
+@media (max-width: 560px) { .ref-g { grid-template-columns: minmax(0, 1fr); gap: 4px; } }
+.ref-lb { font-family: var(--mono); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--faint); padding-top: 5px; }
+.ref-items { display: flex; flex-wrap: wrap; gap: 5px; }
+.ref { min-height: 24px; padding: 0 8px; border-radius: 6px; font-family: var(--mono); font-size: 10.5px; color: var(--coral-dk); background: color-mix(in srgb, var(--coral) 7%, transparent); border: 1px solid color-mix(in srgb, var(--coral) 28%, transparent); }
+.ref:hover { background: color-mix(in srgb, var(--coral) 14%, transparent); }
+.ref[data-ext="1"] { border-style: dashed; }
+.ref[disabled] { color: var(--faint); background: none; border-color: var(--soft); cursor: default; }
 
-@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+.rtags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--hover); }
+.rtag { min-height: 22px; padding: 0 8px; border-radius: 999px; font-family: var(--mono); font-size: 10px; color: var(--muted); border: 1px solid var(--hair); }
+.rtag:hover { color: var(--coral-dk); border-color: color-mix(in srgb, var(--coral) 45%, transparent); }
+
+.empty { padding: 72px 24px; text-align: center; border: 1px dashed var(--hair); border-radius: 12px; color: var(--muted); font-size: 13.5px; }
+mark { background: color-mix(in srgb, var(--coral) 30%, transparent); color: inherit; border-radius: 2px; }
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; scroll-behavior: auto !important; } }
 </style>
 </head>
 <body>
-<header class="topbar">
-	<div class="topbar-in">
-		<div class="brand">팀 컨벤션</div>
-		<div class="search-wrap">
-			<input id="q" class="search" type="search" autocomplete="off" spellcheck="false"
-				placeholder="규칙·상황·코드 검색  (handler, barrel, useEffect …)" aria-label="규칙 검색">
+<header class="hd">
+	<div class="hd-in">
+		<div class="brand">
+			<span class="brand-mark" aria-hidden="true">✳</span>
+			<span class="brand-nm">팀 컨벤션</span>
+			<span class="brand-sub">HANDBOOK</span>
 		</div>
-		<div class="count" id="count"></div>
-		<button class="tbtn" id="expand">전체 펼침</button>
-		<button class="tbtn" id="theme">테마</button>
+		<div class="sr">
+			<div class="sr-box">
+				<span class="sr-ico" aria-hidden="true">◇</span>
+				<input id="q" class="sr-in" type="search" autocomplete="off" spellcheck="false"
+					placeholder="규칙·상황·코드 검색   /" aria-label="규칙 검색">
+			</div>
+		</div>
+		<div class="hd-r">
+			<span class="cnt" id="count"></span>
+			<button class="btn" id="expand">전체 펼침</button>
+			<button class="btn" id="theme" aria-label="라이트·다크 전환">테마</button>
+		</div>
 	</div>
 </header>
-<div class="shell">
+<div class="wrap">
 	<div class="pane">
 		<aside class="rail">
 			<div>
-				<div class="rail-hd"><span>Skill</span><button class="tbtn" data-clear="skills">해제</button></div>
-				<div class="chips" id="f-skill"></div>
-				<div class="companion" id="companion"></div>
+				<div class="grp-hd"><span class="grp-lb">Skill</span><span class="grp-note">단일 선택</span></div>
+				<div class="col" id="f-skill"></div>
+				<div class="comp" id="companion"></div>
 			</div>
 			<div>
-				<div class="rail-hd"><span>Impact</span><button class="tbtn" data-clear="impact">해제</button></div>
-				<div class="chips" id="f-impact"></div>
+				<div class="grp-hd"><span class="grp-lb">Impact</span><button class="grp-clear" data-clear="impact">해제</button></div>
+				<div class="col" id="f-impact"></div>
 			</div>
 			<div>
-				<div class="rail-hd"><span>섹션</span><button class="tbtn" data-clear="section">해제</button></div>
-				<div class="chips" id="f-section"></div>
+				<div class="grp-hd"><span class="grp-lb">섹션</span><button class="grp-clear" data-clear="section">해제</button></div>
+				<div class="col" id="f-section"></div>
 			</div>
 			<div>
-				<div class="rail-hd"><span>태그</span><button class="tbtn" data-clear="tags">해제</button></div>
-				<div class="chips" id="f-tags"></div>
+				<div class="grp-hd"><span class="grp-lb">태그</span><button class="grp-clear" data-clear="tags">해제</button></div>
+				<div class="tagwrap" id="f-tags"></div>
 			</div>
 		</aside>
 		<main><div class="list" id="list"></div></main>
@@ -196,8 +263,17 @@ mark { background: color-mix(in srgb, var(--ember) 35%, transparent); color: inh
 	"use strict";
 
 	const DATA = JSON.parse(document.getElementById("viewer-data").textContent);
+	window.CONVENTION_DATA = DATA;
+
 	const RULES = DATA.rules;
 	const IMPACTS = ["CRITICAL", "HIGH", "MEDIUM-HIGH", "MEDIUM"];
+	const DOT = {
+		CRITICAL: "var(--coral)",
+		HIGH: "color-mix(in srgb, var(--coral) 75%, transparent)",
+		"MEDIUM-HIGH": "color-mix(in srgb, var(--coral) 40%, transparent)",
+		MEDIUM: "var(--edge)",
+	};
+
 	const keyOf = (r) => r.skill + "/" + r.id;
 	const domIdOf = (r) => "r-" + r.skill + "--" + r.id;
 	const byKey = new Map(RULES.map((r) => [keyOf(r), r]));
@@ -205,21 +281,16 @@ mark { background: color-mix(in srgb, var(--ember) 35%, transparent); color: inh
 	const secOf = (r) => DATA.sections.find((s) => s.skill === r.skill && s.prefix === r.sectionPrefix);
 	const secLabel = (s) => s.titleKo || s.title;
 
-	// section 은 skill 마다 같은 prefix 를 쓸 수 있어(docs, naming …) "skill/prefix" 로 잡는다.
-	const state = {q: "", skills: new Set(), impact: new Set(), section: "", tags: new Set(), open: new Set()};
+	// skill 은 단일 선택. section 은 skill 마다 같은 prefix 를 쓸 수 있어 "skill/prefix" 로 잡는다.
+	const state = {q: "", skill: "", impact: new Set(), section: "", tags: new Set(), open: new Set(), why: new Set()};
 
-	// 선택 기억. file:// 에서 막힐 수 있으므로 조용히 무시한다.
-	const remember = () => {
-		try { localStorage.setItem("viewer-skills", [...state.skills].join(",")); } catch (e) {}
-	};
-	try {
-		const saved = (localStorage.getItem("viewer-skills") || "").split(",").filter(Boolean);
-		for (const name of saved) {
-			if (DATA.skills.some((s) => s.name === name)) state.skills.add(name);
-		}
-	} catch (e) {}
+	const remember = () => { try { localStorage.setItem("viewer-skill", state.skill); } catch (e) {} };
+	try { state.skill = localStorage.getItem("viewer-skill") || ""; } catch (e) {}
+	if (!DATA.skills.some((s) => s.name === state.skill)) {
+		state.skill = DATA.skills.some((s) => s.name === "react") ? "react" : (DATA.skills[0] ? DATA.skills[0].name : "");
+	}
 
-	const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+	const esc = (s) => String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 	const KW = /\b(const|let|var|function|return|if|else|for|while|export|import|from|type|interface|as|await|async|new|void|null|undefined|true|false|extends|default|typeof|in|of)\b/g;
 
 	function hl(code, lang) {
@@ -228,13 +299,14 @@ mark { background: color-mix(in srgb, var(--ember) 35%, transparent); color: inh
 		// 자리표시자는 코드에 절대 없는 NUL 이어야 한다.
 		// 공백+숫자를 쓰면 `arr.length > 0 ?` 의 " 0 " 과 충돌해 코드가 깨진다.
 		const park = (t) => "\u0000" + (hold.push(t) - 1) + "\u0000";
-		s = s.replace(/\/\/[^\n]*/g, (m) => park('<span class="t-c">' + m + "</span>"));
-		s = s.replace(/\/\*[\s\S]*?\*\//g, (m) => park('<span class="t-c">' + m + "</span>"));
-		s = s.replace(/(&#39;|'|"|`)(?:\\.|(?!\1)[\s\S])*?\1/g, (m) => park('<span class="t-s">' + m + "</span>"));
+		const wrap = (cls, m) => park('<span class="' + cls + '">' + m + "</span>");
+		s = s.replace(/\/\/[^\n]*/g, (m) => wrap("c", m));
+		s = s.replace(/\/\*[\s\S]*?\*\//g, (m) => wrap("c", m));
+		s = s.replace(/(&#39;|'|"|`)(?:\\.|(?!\1)[\s\S])*?\1/g, (m) => wrap("s", m));
 		if (lang === "tsx" || lang === "astro") {
-			s = s.replace(/&lt;\/?([A-Za-z][\w.-]*)/g, (m, n) => m.replace(n, '<span class="t-g">' + n + "</span>"));
+			s = s.replace(/&lt;\/?([A-Za-z][\w.-]*)/g, (m, n) => m.replace(n, '<span class="g">' + n + "</span>"));
 		}
-		s = s.replace(KW, '<span class="t-k">$&</span>');
+		s = s.replace(KW, '<span class="k">$&</span>');
 		return s.replace(/\u0000(\d+)\u0000/g, (_, i) => hold[+i]);
 	}
 
@@ -277,7 +349,7 @@ mark { background: color-mix(in srgb, var(--ember) 35%, transparent); color: inh
 	}
 
 	function matches(r) {
-		if (state.skills.size && !state.skills.has(r.skill)) return false;
+		if (state.skill && r.skill !== state.skill) return false;
 		if (state.section && r.skill + "/" + r.sectionPrefix !== state.section) return false;
 		if (state.impact.size && !state.impact.has(r.impact)) return false;
 		if (state.tags.size && !r.tags.some((t) => state.tags.has(t))) return false;
@@ -295,112 +367,142 @@ mark { background: color-mix(in srgb, var(--ember) 35%, transparent); color: inh
 		return terms.length ? t.replace(new RegExp("(" + terms.join("|") + ")", "gi"), "<mark>$1</mark>") : t;
 	}
 
-	const xrHtml = (target) => {
+	const refHtml = (target) => {
 		const ext = target.includes("/");
 		const resolvable = ext && byKey.has(target);
-		return '<button class="xr-a" data-ext="' + (ext ? 1 : 0) + '"' +
+		return '<button class="ref" data-ext="' + (ext ? 1 : 0) + '"' +
 			(resolvable ? ' data-goto="' + esc(target) + '"' : " disabled") + ">" + esc(target) + "</button>";
 	};
 
+	// 블록이 여러 개면 박스 하나 안에서 "1 / 2 · lang" 구분선으로 잇는다.
+	const codeHtml = (blocks) => blocks.map((b, i) =>
+		(blocks.length > 1 ? '<div class="code-lb">' + (i + 1) + " / " + blocks.length + "  ·  " + esc(b.lang) + "</div>" : "") +
+		'<pre class="code">' + hl(b.code, b.lang) + "</pre>").join("");
+
+	const boxHtml = (e) => {
+		if (!e) return "";
+		const bad = e.kind === "incorrect";
+		const langs = [...new Set(e.blocks.map((b) => b.lang))].join(" · ");
+		return '<div class="box ' + (bad ? "box-bad" : "box-good") + '"><div class="box-hd">' +
+			'<span class="box-l"><span aria-hidden="true">' + (bad ? "\u2715" : "\u2713") + "</span>" +
+			"<span>" + (bad ? "INCORRECT" : "CORRECT") + "</span>" +
+			(e.label ? '<span class="box-note">' + esc(e.label) + "</span>" : "") + "</span>" +
+			'<span class="box-langs">' + esc(langs) + "</span></div>" + codeHtml(e.blocks) + "</div>";
+	};
+
 	function ruleHtml(r) {
-		const open = state.open.has(keyOf(r));
+		const key = keyOf(r);
+		const open = state.open.has(key);
+		const whyOpen = state.why.has(key);
 		const sec = secOf(r);
 		const exCount = r.examples.reduce((t, e) => t + e.blocks.length, 0);
-		const pairs = [];
-		for (let i = 0; i < r.examples.length; i++) {
-			const e = r.examples[i];
-			if (e.kind === "incorrect" && r.examples[i + 1] && r.examples[i + 1].kind === "correct") { pairs.push([e, r.examples[i + 1]]); i++; }
-			else pairs.push([e]);
-		}
-		const cbox = (b, i, total) => '<div class="cbox"><div class="cbox-hd"><span>' + esc(b.lang) + "</span>" +
-			(total > 1 ? "<span>" + (i + 1) + "/" + total + "</span>" : "") + '</div><pre class="code">' + hl(b.code, b.lang) + "</pre></div>";
-		const exBlock = (e) => '<div class="ex ' + (e.kind === "incorrect" ? "ex-bad" : "ex-good") + '"><div class="ex-hd"><span aria-hidden="true">' +
-			(e.kind === "incorrect" ? "\u2715" : "\u2713") + "</span><span>" + (e.kind === "incorrect" ? "Incorrect" : "Correct") + "</span>" +
-			(e.label ? "<em>" + esc(e.label) + "</em>" : "") + "</div>" + e.blocks.map((b, i) => cbox(b, i, e.blocks.length)).join("") + "</div>";
 
-		const body = !open ? "" : '<div class="row-body">' +
-			pairs.map((p) => p.length === 2 ? '<div class="diff">' + exBlock(p[0]) + exBlock(p[1]) + "</div>" : exBlock(p[0])).join("") +
-			(r.prose.length ? '<div class="why" data-open="0"><button class="why-btn" data-why="1"><span aria-hidden="true">\u25b8</span><span>왜 이 규칙인가' +
-				(r.impactDescription ? " \u2014 " + esc(r.impactDescription) : "") + '</span></button><div class="why-body">' + renderProse(r.prose) + "</div></div>" : "") +
-			(r.requiresSelected.length ? '<div class="xr"><span class="xr-lb">함께 적용</span>' + r.requiresSelected.map(xrHtml).join("") + "</div>" : "") +
-			(r.reviewWith.length ? '<div class="xr"><span class="xr-lb">함께 검토</span>' + r.reviewWith.map(xrHtml).join("") + "</div>" : "") +
-			'<div class="tagrow">' + r.tags.map((t) => '<button class="tag" data-tag="' + esc(t) + '">#' + esc(t) + "</button>").join("") + "</div></div>";
+		let body = "";
+		if (open) {
+			const pairs = [];
+			for (let i = 0; i < r.examples.length; i++) {
+				const e = r.examples[i];
+				const nx = r.examples[i + 1];
+				if (e.kind === "incorrect" && nx && nx.kind === "correct") { pairs.push([e, nx]); i++; }
+				else pairs.push([e]);
+			}
+			const desc = r.appliesWhen || r.impactDescription;
+			const refs = [];
+			if (r.requiresSelected.length) refs.push(['함께 적용', r.requiresSelected]);
+			if (r.reviewWith.length) refs.push(['함께 검토', r.reviewWith]);
+
+			body = '<div class="body">' +
+				'<div class="meta"><span>' + esc(r.id) + "</span>" +
+				(sec ? '<span class="meta-s">·</span><span>' + esc(secLabel(sec)) + "</span>" : "") +
+				'<span class="meta-s">·</span><span>예시 ' + exCount + "</span></div>" +
+				(desc ? '<p class="desc">' + hi(desc) + "</p>" : "") +
+				'<div class="pairs">' + pairs.map((p) => '<div class="pair">' +
+					boxHtml(p.find((e) => e.kind === "incorrect")) +
+					boxHtml(p.find((e) => e.kind !== "incorrect")) + "</div>").join("") + "</div>" +
+				(r.prose.length ? '<div class="why" data-open="' + (whyOpen ? 1 : 0) + '">' +
+					'<button class="why-btn" data-why="' + esc(key) + '"><span class="why-car" aria-hidden="true">' + (whyOpen ? "\u25be" : "\u25b8") + "</span>" +
+					"<span>왜 이 규칙인가" + (r.impactDescription ? " \u2014 " + esc(r.impactDescription) : "") + "</span></button>" +
+					'<div class="why-body">' + (whyOpen ? renderProse(r.prose) : "") + "</div></div>" : "") +
+				(refs.length ? '<div class="refs">' + refs.map((g) => '<div class="ref-g"><span class="ref-lb">' + g[0] + "</span>" +
+					'<span class="ref-items">' + g[1].map(refHtml).join("") + "</span></div>").join("") + "</div>" : "") +
+				'<div class="rtags">' + r.tags.map((t) => '<button class="rtag" data-tag="' + esc(t) + '">#' + esc(t) + "</button>").join("") + "</div>" +
+				"</div>";
+		}
 
 		return '<article class="row" data-imp="' + r.impact + '" data-open="' + (open ? 1 : 0) + '" id="' + domIdOf(r) + '">' +
-			'<button class="row-hd" data-rule="' + keyOf(r) + '" aria-expanded="' + open + '">' +
-			'<span class="row-no" title="' + r.skill + " HANDBOOK " + r.number + '">' + r.number + "</span>" +
-			'<span class="row-main"><span class="row-t1"><span class="row-title">' + hi(titleOf(r)) + "</span>" +
-			'<span class="row-id">' + hi(state.skills.size === 1 ? r.id : keyOf(r)) + "</span></span>" +
-			'<span class="row-when">' + hi(r.appliesWhen || r.impactDescription) + "</span></span>" +
-			'<span class="row-meta">' + (sec ? '<span class="row-ex">' + esc(secLabel(sec)) + "</span>" : "") +
-			'<span class="row-ex">예시 ' + exCount + '</span><span class="imp imp-' + r.impact + '">' + r.impact + "</span></span></button>" + body + "</article>";
-	}
-
-	function renderCompanion() {
-		const el = document.getElementById("companion");
-		const seen = new Set();
-		const hints = [];
-
-		for (const name of state.skills) {
-			const skill = DATA.skills.find((s) => s.name === name);
-			if (!skill) continue;
-			for (const c of skill.companions) {
-				if (state.skills.has(c.skill) || seen.has(c.skill)) continue;
-				seen.add(c.skill);
-				hints.push('<button class="xr-a" data-add-skill="' + c.skill + '">+ ' + c.skill + (c.mode === "required" ? " 필수" : " 조건") + "</button>");
-			}
-		}
-
-		el.innerHTML = hints.length ? "<span>동반</span>" + hints.join("") : "";
+			'<span class="row-stripe" aria-hidden="true"></span>' +
+			'<button class="row-hd" data-rule="' + esc(key) + '" aria-expanded="' + open + '">' +
+			'<span class="row-no" title="' + esc(r.skill) + " HANDBOOK " + r.number + '">' + r.number + "</span>" +
+			'<span class="row-ti">' + hi(titleOf(r)) + "</span>" +
+			'<span class="row-meta"><span class="imp imp-' + r.impact + '">' + r.impact + "</span>" +
+			'<span class="car" aria-hidden="true">' + (open ? "\u25be" : "\u25b8") + "</span></span></button>" +
+			body + "</article>";
 	}
 
 	function renderRail() {
-		const scoped = RULES.filter((r) => !state.skills.size || state.skills.has(r.skill));
+		const scoped = RULES.filter((r) => !state.skill || r.skill === state.skill);
 		const count = (fn) => scoped.filter(fn).length;
 
 		document.getElementById("f-skill").innerHTML = DATA.skills.map((s) =>
-			'<button class="chip" data-skill="' + s.name + '" aria-pressed="' + state.skills.has(s.name) + '">' + s.name +
-			' <span class="n">' + s.ruleCount + "</span></button>").join("");
+			'<button class="ch ch-skill" data-skill="' + s.name + '" aria-pressed="' + (state.skill === s.name) + '">' +
+			'<span class="ch-lb">' + s.name + '</span><span class="ch-n">' + s.ruleCount + "</span></button>").join("");
 
-		document.getElementById("f-impact").innerHTML = IMPACTS.map((k) =>
-			'<button class="chip imp imp-' + k + '" data-impact="' + k + '" aria-pressed="' + state.impact.has(k) + '">' + k +
-			' <span class="n">' + count((r) => r.impact === k) + "</span></button>").join("");
+		document.getElementById("f-impact").innerHTML = IMPACTS.map((k) => {
+			const active = state.impact.has(k);
+			return '<button class="ch ch-imp" data-impact="' + k + '" aria-pressed="' + active + '">' +
+				'<span class="ch-dot" style="background:' + (active ? "#fff" : DOT[k]) + '"></span>' +
+				'<span class="ch-lb">' + k + '</span><span class="ch-n">' + count((r) => r.impact === k) + "</span></button>";
+		}).join("");
 
-		const secs = DATA.sections.filter((s) => !state.skills.size || state.skills.has(s.skill))
+		const secs = DATA.sections.filter((s) => !state.skill || s.skill === state.skill)
 			.slice()
 			.sort((a, b) => a.skill.localeCompare(b.skill, "en-US") || a.order - b.order);
-		const oneSkill = state.skills.size === 1;
 		document.getElementById("f-section").innerHTML = secs.map((s) => {
 			const key = s.skill + "/" + s.prefix;
-			return '<button class="chip" data-section="' + esc(key) + '" aria-pressed="' + (state.section === key) + '">' +
-				(oneSkill ? s.order + ". " : s.skill + " " + s.order + ". ") + esc(secLabel(s)) +
-				' <span class="n">' + count((r) => r.skill === s.skill && r.sectionPrefix === s.prefix) + "</span></button>";
+			return '<button class="ch ch-sec" data-section="' + esc(key) + '" aria-pressed="' + (state.section === key) + '">' +
+				'<span class="ch-no">' + (state.skill ? s.order + "." : s.skill.slice(0, 3) + " " + s.order) + "</span>" +
+				'<span class="ch-lb">' + esc(secLabel(s)) + '</span><span class="ch-n">' +
+				count((r) => r.skill === s.skill && r.sectionPrefix === s.prefix) + "</span></button>";
 		}).join("");
 
 		const tally = new Map();
 		for (const r of scoped) for (const t of r.tags) tally.set(t, (tally.get(t) || 0) + 1);
 		document.getElementById("f-tags").innerHTML = [...tally.entries()].filter((e) => e[1] > 1)
 			.sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
-			.map((e) => '<button class="chip" data-tag="' + e[0] + '" aria-pressed="' + state.tags.has(e[0]) + '">' + e[0] + ' <span class="n">' + e[1] + "</span></button>").join("");
+			.slice(0, 36)
+			.map((e) => '<button class="tg" data-tag="' + esc(e[0]) + '" aria-pressed="' + state.tags.has(e[0]) + '">' +
+				"<span>" + esc(e[0]) + '</span><span class="tg-n">' + e[1] + "</span></button>").join("");
+
+		const seen = new Set();
+		const hints = [];
+		const skill = DATA.skills.find((s) => s.name === state.skill);
+		for (const c of skill ? skill.companions : []) {
+			if (c.skill === state.skill || seen.has(c.skill)) continue;
+			seen.add(c.skill);
+			hints.push('<button class="comp-ch" data-skill="' + c.skill + '">\u2192 ' + c.skill + (c.mode === "required" ? " 필수" : " 조건") + "</button>");
+		}
+		document.getElementById("companion").innerHTML = hints.length ? '<span class="comp-lb">동반</span>' + hints.join("") : "";
 	}
 
 	function render() {
 		const hits = RULES.filter(matches);
+		const scopeTotal = RULES.filter((r) => !state.skill || r.skill === state.skill).length;
 		document.getElementById("list").innerHTML = hits.length
-			? hits.map((r) => ruleHtml(r)).join("")
-			: '<div class="empty">일치하는 규칙이 없습니다 \u2014 검색어나 필터를 줄여보세요</div>';
-		const scopeTotal = RULES.filter((r) => !state.skills.size || state.skills.has(r.skill)).length;
-		document.getElementById("count").innerHTML = "<b>" + hits.length + "</b> / " + scopeTotal +
-			(hits.length ? " \u00b7 코드 <b>" + hits.reduce((n, r) => n + r.examples.reduce((m, e) => m + e.blocks.length, 0), 0) + "</b>" : "");
+			? hits.map(ruleHtml).join("")
+			: '<div class="empty">일치하는 규칙이 없습니다. 검색어나 필터를 줄여보세요.</div>';
+		const codeTotal = hits.reduce((n, r) => n + r.examples.reduce((m, e) => m + e.blocks.length, 0), 0);
+		document.getElementById("count").textContent = hits.length + " / " + scopeTotal + " 규칙" + (hits.length ? "  ·  코드 " + codeTotal : "");
 		const allOpen = hits.length > 0 && hits.every((r) => state.open.has(keyOf(r)));
 		document.getElementById("expand").textContent = allOpen ? "전체 접기" : "전체 펼침";
-		renderCompanion();
 		renderRail();
 	}
 
-	function toggleSkill(name) {
-		state.skills.has(name) ? state.skills.delete(name) : state.skills.add(name);
+	function selectSkill(name) {
+		if (state.skill === name) return;
+		state.skill = name;
 		state.section = "";
+		state.impact.clear();
+		state.tags.clear();
 		remember();
 		render();
 	}
@@ -421,46 +523,35 @@ mark { background: color-mix(in srgb, var(--ember) 35%, transparent); color: inh
 	});
 
 	document.addEventListener("click", (ev) => {
-		const t = ev.target.closest("[data-rule],[data-skill],[data-add-skill],[data-impact],[data-section],[data-tag],[data-why],[data-goto],[data-clear]");
+		const t = ev.target.closest("[data-rule],[data-skill],[data-impact],[data-section],[data-tag],[data-why],[data-goto],[data-clear]");
 		if (!t) return;
 		const toggle = (set, key) => { set.has(key) ? set.delete(key) : set.add(key); render(); };
 
 		if (t.dataset.rule) return toggle(state.open, t.dataset.rule);
-		if (t.dataset.skill) return toggleSkill(t.dataset.skill);
-		if (t.dataset.addSkill) {
-			state.skills.add(t.dataset.addSkill);
-			state.section = "";
-			remember();
-			return render();
-		}
+		if (t.dataset.skill) return selectSkill(t.dataset.skill);
 		if (t.dataset.impact) return toggle(state.impact, t.dataset.impact);
 		if (t.dataset.tag) return toggle(state.tags, t.dataset.tag);
 		if (t.dataset.section) { state.section = state.section === t.dataset.section ? "" : t.dataset.section; return render(); }
-
-		if (t.dataset.why) {
-			const w = t.closest(".why");
-			const on = w.dataset.open === "1";
-			w.dataset.open = on ? "0" : "1";
-			t.firstElementChild.textContent = on ? "\u25b8" : "\u25be";
-			return;
-		}
+		if (t.dataset.why) return toggle(state.why, t.dataset.why);
 
 		if (t.dataset.goto) {
-			// skill 필터가 켜져 있으면 대상 skill 을 더해 준다. 현재 맥락은 유지된다.
+			// 단일 선택이라 다른 skill 규칙으로 가려면 선택을 그 skill 로 옮긴다.
 			const target = byKey.get(t.dataset.goto);
 			if (!target) return;
 			state.q = ""; state.impact.clear(); state.tags.clear(); state.section = "";
 			document.getElementById("q").value = "";
-			if (state.skills.size) { state.skills.add(target.skill); remember(); }
+			if (state.skill !== target.skill) { state.skill = target.skill; remember(); }
 			state.open.add(t.dataset.goto);
 			render();
 			const el = document.getElementById(domIdOf(target));
-			if (el) el.scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "center"});
+			if (el) {
+				const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+				window.scrollTo({top: el.getBoundingClientRect().top + window.scrollY - 88, behavior: reduce ? "auto" : "smooth"});
+			}
 			return;
 		}
 
 		if (t.dataset.clear) {
-			if (t.dataset.clear === "skills") { state.skills.clear(); state.section = ""; remember(); }
 			if (t.dataset.clear === "impact") state.impact.clear();
 			if (t.dataset.clear === "tags") state.tags.clear();
 			if (t.dataset.clear === "section") state.section = "";

@@ -248,23 +248,28 @@ test("viewer markup lists skills as rail chips, not a dropdown", () => {
 
 	assert.match(html, /id="f-skill"/);
 	assert.equal(/<select/.test(html), false, "skill selection must be rail chips, not a dropdown");
-	assert.match(html, /data-clear="skills"/);
 	assert.match(html, /id="companion"/);
 	// rail 4개 그룹: skill, impact, section, tag
 	assert.match(html, /id="f-impact"/);
 	assert.match(html, /id="f-section"/);
 	assert.match(html, /id="f-tags"/);
+	// skill 은 단일 선택이라 그룹 해제 버튼이 없고 안내만 둔다
+	assert.equal(/data-clear="skills?"/.test(html), false, "single-select skill group has no clear button");
+	assert.match(html, /단일 선택/);
 });
 
-test("viewer styles use minmax(0, 1fr) on both two-column grids", () => {
+test("viewer layout cannot overflow: grids shrink and code wraps", () => {
 	const html = renderViewerHtml(encodeViewerPayload(emptyPayload));
 
 	// 1fr 만 쓰면 grid item이 콘텐츠 intrinsic min-width 아래로 줄지 못해
 	// 긴 코드 한 줄이 컬럼을 밀어내고 박스가 행 밖으로 삐져나간다.
-	assert.equal(/grid-template-columns:\s*1fr\s+1fr/.test(html), false, "two-column grid must not use bare 1fr");
-	assert.match(html, /\.diff\s*\{[^}]*minmax\(0,\s*1fr\)/);
 	assert.match(html, /\.pane\s*\{[^}]*minmax\(0,\s*1fr\)/);
-	assert.match(html, /min-width:\s*0/);
+	assert.match(html, /\.pane\s*>\s*main\s*\{[^}]*min-width:\s*0/);
+	assert.match(html, /\.row-hd\s*\{[^}]*minmax\(0,\s*1fr\)/);
+	// Incorrect/Correct 는 세로로 쌓이고 코드는 가로 스크롤 대신 줄바꿈한다
+	assert.match(html, /\.pair\s*\{[^}]*flex-direction:\s*column/);
+	assert.match(html, /pre\.code\s*\{[^}]*white-space:\s*pre-wrap/);
+	assert.match(html, /pre\.code\s*\{[^}]*overflow-wrap:\s*anywhere/);
 });
 
 test("viewer styles define both themes and respect reduced motion", () => {
@@ -283,8 +288,9 @@ test("viewer client script indexes both languages plus code, and keeps cross-ski
 	assert.match(html, /titleKo/);
 	assert.match(html, /appliesWhen/);
 	assert.match(html, /data-goto/);
-	assert.match(html, /state\.skills\.add\(target\.skill\)/);
+	assert.match(html, /state\.skill = target\.skill/);
 	assert.match(html, /localStorage/);
+	assert.match(html, /window\.CONVENTION_DATA = DATA/);
 	// 규칙 번호는 필터와 무관한 고정값이어야 한다. 목록 위치로 번호를 매기면 안 된다.
 	assert.match(html, /r\.number/);
 	assert.equal(/padStart\(3, "0"\)/.test(html), false, "rule numbers must come from the payload, not the list index");
