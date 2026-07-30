@@ -184,7 +184,8 @@ npm --prefix package run check:viewer
 npm --prefix package run test
 ```
 
-`conventions.html` 은 생성물이다. 직접 편집하지 않는다.
+`conventions.html` 과 `conventions-data.js` 는 한 쌍의 생성물이다. 직접 편집하지 않는다.
+데이터는 `conventions-data.js` 에 있고 문서가 script src 로 로드하므로 두 파일을 같은 폴더에 둔다.
 규칙을 고쳤으면 `npm --prefix package run viewer` 로 다시 만든다.
 낡은 채로 커밋하면 `check:viewer` 가 막는다.
 

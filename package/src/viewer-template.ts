@@ -289,8 +289,14 @@ const viewerBodyMarkup = `<header class="hd">
 const viewerClientScript = `(() => {
 	"use strict";
 
-	const DATA = JSON.parse(document.getElementById("viewer-data").textContent);
-	window.CONVENTION_DATA = DATA;
+	// 데이터는 같은 폴더의 conventions-data.js 가 전역으로 싣는다. file:// 에서는 fetch 가 막혀 script src 를 쓴다.
+	const DATA = window.CONVENTION_DATA;
+
+	if (!DATA) {
+		document.body.innerHTML =
+			'<p style="padding:64px 24px;text-align:center;color:#77848a">conventions-data.js 를 찾을 수 없습니다. conventions.html 과 같은 폴더에 함께 두세요.</p>';
+		return;
+	}
 
 	const RULES = DATA.rules;
 	const IMPACTS = ["CRITICAL", "HIGH", "MEDIUM-HIGH", "MEDIUM"];
@@ -673,18 +679,26 @@ const viewerClientScript = `(() => {
 })();`;
 
 /**
- * @api 인라인 JSON으로 안전하게 삽입할 수 있게 페이로드를 인코딩
- * @description `<`를 `<`로 바꿔 본문 코드의 `</script`가 문서를 끊지 못하게 한다. `JSON.parse`가 원복한다.
+ * @api 데이터 파일에 안전하게 넣을 수 있게 페이로드를 인코딩
+ * @description `<`를 `<`로 바꿔 코드 예시의 `</script`가 어떤 삽입 문맥에서도 문서를 끊지 못하게 한다. `JSON.parse`가 원복한다.
  */
 export const encodeViewerPayload = (payload: ViewerPayload): string => {
 	return JSON.stringify(payload).replace(/</g, "\\u003c");
 };
 
 /**
- * @api 인코딩된 페이로드를 담은 완전한 자기완결 HTML 문서 생성
+ * @api viewer 문서가 script src로 로드하는 데이터 파일 본문 생성
+ * @description `file://`에서는 fetch가 CORS로 막혀 순수 JSON 파일을 읽을 수 없다. 전역 할당 JS 파일로 우회한다.
+ */
+export const renderViewerDataScript = (encodedPayload: string): string => {
+	return `window.CONVENTION_DATA = ${encodedPayload};\n`;
+};
+
+/**
+ * @api 마크업과 스크립트만 담은 HTML 문서 생성. 데이터는 conventions-data.js 가 싣는다
  * @description `file://`로 열리므로 charset 선언이 없으면 브라우저가 Latin-1로 추측해 한글이 전부 깨진다.
  */
-export const renderViewerHtml = (encodedPayload: string): string => {
+export const renderViewerHtml = (): string => {
 	return `<!doctype html>
 <html lang="ko">
 <head>
@@ -697,7 +711,7 @@ ${viewerStyles}
 </head>
 <body>
 ${viewerBodyMarkup}
-<script id="viewer-data" type="application/json">${encodedPayload}</script>
+<script src="conventions-data.js"></script>
 <script>
 ${viewerClientScript}
 </script>

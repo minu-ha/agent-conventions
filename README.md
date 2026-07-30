@@ -109,7 +109,7 @@ TSX 파일 하나를 고쳐 달라고 시켜본다. 에이전트는 이 순서�
 | --- | --- |
 | README.md | 이 문서. 설치와 적용 |
 | [CONTRIBUTING.md](./CONTRIBUTING.md) | 규칙 추가·수정 절차 |
-| [conventions.html](./conventions.html) | **규칙 조회.** 8개 skill 212개를 검색·필터로 찾는다 |
+| [conventions.html](./conventions.html) | **규칙 조회.** 8개 skill 212개를 검색·필터로 찾는다. 데이터인 `conventions-data.js` 와 같은 폴더에 두고 연다 |
 | `skill/<name>/HANDBOOK.md` | 규칙 전문. 에이전트 전체 검토용 생성물 |
 | [overview.html](./overview.html) | 실행 흐름 · 스킬 관계 · 규칙 관계 |
 | [docs/progressive-loading.html](./docs/progressive-loading.html) | 설계 배경 · 측정 · 검증 · 한계 |

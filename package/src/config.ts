@@ -22,6 +22,12 @@ export const packagePaths: PackagePaths = {currentDir, packageDir, repoDir, skil
 export const viewerOutputPath = path.join(repoDir, "conventions.html");
 
 /**
+ * @summary viewer 문서가 script src로 로드하는 생성 데이터 파일 경로.
+ * `file://`에서는 fetch가 막혀 JSON 대신 전역 할당 JS 파일을 쓴다.
+ */
+export const viewerDataOutputPath = path.join(repoDir, "conventions-data.js");
+
+/**
  * @helper configured skill root가 symlink가 아닌 실제 directory인지 검증
  */
 const assertRealSkillRootDirectory = async (targetSkillRootDir: string): Promise<void> => {

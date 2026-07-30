@@ -4,12 +4,12 @@ import path from "node:path";
 import test from "node:test";
 
 import {checkGeneratedViewer} from "../src/check-viewer.js";
-import {getSkillPaths, isBuildableSkill, listSkillNames, viewerOutputPath} from "../src/config.js";
+import {getSkillPaths, isBuildableSkill, listSkillNames, viewerDataOutputPath, viewerOutputPath} from "../src/config.js";
 import {parseFrontmatter, parseSections, readSkillRules} from "../src/parser.js";
 import {parseRuleBody} from "../src/rule-body.js";
 import {buildViewerPayload} from "../src/viewer-payload.js";
-import {encodeViewerPayload, renderViewerHtml} from "../src/viewer-template.js";
-import {generateViewerHtml} from "../src/viewer.js";
+import {encodeViewerPayload, renderViewerDataScript, renderViewerHtml} from "../src/viewer-template.js";
+import {generateViewerArtifacts} from "../src/viewer.js";
 
 const emptyPayload = {skills: [], sections: [], rules: []};
 
@@ -259,7 +259,7 @@ test("encodeViewerPayload escapes angle brackets so inline JSON cannot break out
 });
 
 test("renderViewerHtml emits a complete document with a utf-8 charset", () => {
-	const html = renderViewerHtml(encodeViewerPayload(emptyPayload));
+	const html = renderViewerHtml();
 
 	assert.ok(html.startsWith("<!doctype html>"), "document must start with a doctype");
 	assert.match(html.slice(0, 400), /<meta charset="utf-8">/);
@@ -269,7 +269,7 @@ test("renderViewerHtml emits a complete document with a utf-8 charset", () => {
 });
 
 test("viewer markup lists skills as rail chips, not a dropdown", () => {
-	const html = renderViewerHtml(encodeViewerPayload(emptyPayload));
+	const html = renderViewerHtml();
 
 	assert.match(html, /id="f-skill"/);
 	assert.equal(/<select/.test(html), false, "skill selection must be rail chips, not a dropdown");
@@ -284,7 +284,7 @@ test("viewer markup lists skills as rail chips, not a dropdown", () => {
 });
 
 test("viewer layout cannot overflow: grids shrink and code wraps", () => {
-	const html = renderViewerHtml(encodeViewerPayload(emptyPayload));
+	const html = renderViewerHtml();
 
 	// 1fr 만 쓰면 grid item이 콘텐츠 intrinsic min-width 아래로 줄지 못해
 	// 긴 코드 한 줄이 컬럼을 밀어내고 박스가 행 밖으로 삐져나간다.
@@ -298,7 +298,7 @@ test("viewer layout cannot overflow: grids shrink and code wraps", () => {
 });
 
 test("viewer styles define both themes and respect reduced motion", () => {
-	const html = renderViewerHtml(encodeViewerPayload(emptyPayload));
+	const html = renderViewerHtml();
 
 	assert.match(html, /@media \(prefers-color-scheme: dark\)/);
 	assert.match(html, /:root\[data-theme="dark"\]/);
@@ -308,7 +308,7 @@ test("viewer styles define both themes and respect reduced motion", () => {
 });
 
 test("viewer client script indexes both languages plus code, and keeps cross-skill references reachable", () => {
-	const html = renderViewerHtml(encodeViewerPayload(emptyPayload));
+	const html = renderViewerHtml();
 
 	assert.match(html, /titleKo/);
 	assert.match(html, /appliesWhen/);
@@ -316,14 +316,14 @@ test("viewer client script indexes both languages plus code, and keeps cross-ski
 	assert.match(html, /data-goto/);
 	assert.match(html, /openDialog\(t\.dataset\.goto\)/);
 	assert.match(html, /localStorage/);
-	assert.match(html, /window\.CONVENTION_DATA = DATA/);
+	assert.match(html, /const DATA = window\.CONVENTION_DATA/);
 	// 규칙 번호는 필터와 무관한 고정값이어야 한다. 목록 위치로 번호를 매기면 안 된다.
 	assert.match(html, /r\.number/);
 	assert.equal(/padStart\(3, "0"\)/.test(html), false, "rule numbers must come from the payload, not the list index");
 });
 
 test("viewer previews referenced rules in a dialog instead of leaving the current section", () => {
-	const html = renderViewerHtml(encodeViewerPayload(emptyPayload));
+	const html = renderViewerHtml();
 
 	// 참조 칩은 목록 스크롤을 잃지 않게 다이얼로그로 미리 보여준다.
 	assert.match(html, /<dialog class="dlg" id="dlg"/);
@@ -338,15 +338,18 @@ test("viewer previews referenced rules in a dialog instead of leaving the curren
 	assert.match(html, /class="li-x"/);
 });
 
-test("generateViewerHtml embeds every rule and stays byte-stable", async () => {
-	const [first, second] = await Promise.all([generateViewerHtml(), generateViewerHtml()]);
+test("generateViewerArtifacts keeps the payload in the data script and stays byte-stable", async () => {
+	const [first, second] = await Promise.all([generateViewerArtifacts(), generateViewerArtifacts()]);
 
-	assert.equal(first, second, "viewer output must be deterministic");
-	assert.ok(first.startsWith("<!doctype html>"));
-	assert.match(first.slice(0, 400), /<meta charset="utf-8">/);
+	assert.deepEqual(first, second, "viewer output must be deterministic");
+	assert.ok(first.html.startsWith("<!doctype html>"));
+	assert.match(first.html.slice(0, 400), /<meta charset="utf-8">/);
+	// 데이터는 html에 인라인하지 않고 같은 폴더의 데이터 파일이 싣는다.
+	assert.match(first.html, /<script src="conventions-data\.js"><\/script>/);
+	assert.equal(first.html.includes('id="viewer-data"'), false, "payload must live in the data script, not inline");
 
-	const encoded = /<script id="viewer-data" type="application\/json">(.*?)<\/script>/s.exec(first)?.[1];
-	assert.ok(encoded, "expected an inline payload");
+	const encoded = /^window\.CONVENTION_DATA = ([\s\S]+);\n$/.exec(first.dataScript)?.[1];
+	assert.ok(encoded, "expected a global assignment in the data script");
 
 	const payload = JSON.parse(encoded);
 	assert.equal(payload.rules.length, 212);
@@ -354,11 +357,20 @@ test("generateViewerHtml embeds every rule and stays byte-stable", async () => {
 	assert.equal(payload.sections.length, 58);
 });
 
-test("checkGeneratedViewer rejects a stale committed document", async () => {
-	const committed = await readFile(viewerOutputPath, "utf8");
-	const expected = await generateViewerHtml();
+test("renderViewerDataScript escapes closing script sequences", () => {
+	const dataScript = renderViewerDataScript(encodeViewerPayload(emptyPayload));
 
-	assert.equal(committed, expected, "docs/conventions.html is stale. Run: npm run viewer");
+	assert.equal(dataScript.includes("</script"), false, "data script must not contain a literal closing script tag");
+	assert.match(dataScript, /^window\.CONVENTION_DATA = /);
+});
+
+test("checkGeneratedViewer rejects stale committed documents", async () => {
+	const committedHtml = await readFile(viewerOutputPath, "utf8");
+	const committedData = await readFile(viewerDataOutputPath, "utf8");
+	const expected = await generateViewerArtifacts();
+
+	assert.equal(committedHtml, expected.html, "conventions.html is stale. Run: npm run viewer");
+	assert.equal(committedData, expected.dataScript, "conventions-data.js is stale. Run: npm run viewer");
 	await checkGeneratedViewer();
 });
 
