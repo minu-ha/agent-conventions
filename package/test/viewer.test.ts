@@ -5,6 +5,9 @@ import {getSkillPaths, isBuildableSkill, listSkillNames} from "../src/config.js"
 import {parseFrontmatter, parseSections, readSkillRules} from "../src/parser.js";
 import {parseRuleBody} from "../src/rule-body.js";
 import {buildViewerPayload} from "../src/viewer-payload.js";
+import {encodeViewerPayload, renderViewerHtml} from "../src/viewer-template.js";
+
+const emptyPayload = {skills: [], sections: [], rules: []};
 
 test("parseRuleBody splits prose from Incorrect and Correct examples", () => {
 	const body = [
@@ -195,4 +198,82 @@ test("buildViewerPayload keeps cross-skill references resolvable", async () => {
 	for (const target of crossSkill) {
 		assert.ok(keys.has(target), `target ${target} does not resolve to a known rule`);
 	}
+});
+
+test("encodeViewerPayload escapes angle brackets so inline JSON cannot break out", () => {
+	const encoded = encodeViewerPayload({
+		skills: [],
+		sections: [],
+		rules: [
+			{
+				skill: "react",
+				id: "sample",
+				title: "Sample",
+				titleKo: "샘플",
+				impact: "HIGH",
+				impactDescription: "설명",
+				appliesWhen: "조건",
+				tags: ["a"],
+				requiresSelected: [],
+				reviewWith: [],
+				sectionPrefix: "sample",
+				prose: [],
+				examples: [{kind: "correct", label: "", blocks: [{lang: "html", code: "</script><script>alert(1)</script>"}]}],
+			},
+		],
+	});
+
+	assert.ok(!encoded.includes("</script"), "encoded payload must not contain a literal closing script tag");
+	assert.ok(encoded.includes("\\u003c"), "encoded payload must escape '<'");
+	assert.equal(JSON.parse(encoded).rules[0].examples[0].blocks[0].code, "</script><script>alert(1)</script>");
+});
+
+test("renderViewerHtml emits a complete document with a utf-8 charset", () => {
+	const html = renderViewerHtml(encodeViewerPayload(emptyPayload));
+
+	assert.ok(html.startsWith("<!doctype html>"), "document must start with a doctype");
+	assert.match(html.slice(0, 400), /<meta charset="utf-8">/);
+	assert.match(html, /<html lang="ko">/);
+	assert.ok(html.trimEnd().endsWith("</html>"), "document must close html");
+	assert.equal(Buffer.from(html, "utf8").toString("utf8"), html);
+});
+
+test("viewer markup exposes a single-select skill dropdown and a companion slot", () => {
+	const html = renderViewerHtml(encodeViewerPayload(emptyPayload));
+
+	assert.match(html, /<select id="skill"/);
+	assert.equal(/<select id="skill"[^>]*multiple/.test(html), false, "skill selector must stay single-select");
+	assert.match(html, /id="companion"/);
+	assert.equal(/id="f-skill"/.test(html), false, "skill chip group must be gone; the dropdown replaces it");
+});
+
+test("viewer styles use minmax(0, 1fr) on both two-column grids", () => {
+	const html = renderViewerHtml(encodeViewerPayload(emptyPayload));
+
+	// 1fr 만 쓰면 grid item이 콘텐츠 intrinsic min-width 아래로 줄지 못해
+	// 긴 코드 한 줄이 컬럼을 밀어내고 박스가 행 밖으로 삐져나간다.
+	assert.equal(/grid-template-columns:\s*1fr\s+1fr/.test(html), false, "two-column grid must not use bare 1fr");
+	assert.match(html, /\.diff\s*\{[^}]*minmax\(0,\s*1fr\)/);
+	assert.match(html, /\.pane\s*\{[^}]*minmax\(0,\s*1fr\)/);
+	assert.match(html, /min-width:\s*0/);
+});
+
+test("viewer styles define both themes and respect reduced motion", () => {
+	const html = renderViewerHtml(encodeViewerPayload(emptyPayload));
+
+	assert.match(html, /@media \(prefers-color-scheme: dark\)/);
+	assert.match(html, /:root\[data-theme="dark"\]/);
+	assert.match(html, /:root:not\(\[data-theme="light"\]\)/);
+	assert.match(html, /prefers-reduced-motion/);
+	assert.match(html, /:focus-visible/);
+});
+
+test("viewer client script indexes both languages plus code, and switches skill on cross-skill jumps", () => {
+	const html = renderViewerHtml(encodeViewerPayload(emptyPayload));
+
+	assert.match(html, /titleKo/);
+	assert.match(html, /appliesWhen/);
+	assert.match(html, /data-goto/);
+	assert.match(html, /state\.skill\s*=/);
+	assert.match(html, /localStorage/);
 });
