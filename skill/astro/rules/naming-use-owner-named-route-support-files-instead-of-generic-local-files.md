@@ -4,6 +4,7 @@ titleKo: route support 파일은 generic 대신 owner 이름으로
 impact: MEDIUM-HIGH
 impactDescription: >-
   keeps route-local files searchable even when a route owns several helpers, runtime components, and stylesheets
+impactDescriptionKo: route 하나가 헬퍼·런타임 컴포넌트·스타일시트를 여럿 가져도 파일을 찾을 수 있게 함
 tags: naming, pages, local, support-modules
 ---
 

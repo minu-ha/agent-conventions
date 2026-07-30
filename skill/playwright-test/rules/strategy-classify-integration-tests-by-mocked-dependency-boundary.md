@@ -4,6 +4,7 @@ titleKo: integration은 모킹한 의존 경계로 분류
 impact: CRITICAL
 impactDescription: >-
   makes it clear that integration tests exercise UI and route behavior with mocked backend or auth boundaries
+impactDescriptionKo: integration 테스트가 백엔드·인증을 모킹한 상태로 UI 와 route 동작을 검증한다는 점을 분명히 함
 tags: integration, mocking, boundaries
 ---
 

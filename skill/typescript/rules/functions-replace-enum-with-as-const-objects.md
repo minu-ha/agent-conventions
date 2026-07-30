@@ -4,6 +4,7 @@ titleKo: enum 대신 as const 객체
 impact: MEDIUM-HIGH
 impactDescription: >-
   keeps runtime values explicit and type extraction lightweight without introducing enum-specific behavior
+impactDescriptionKo: enum 특유의 동작을 들이지 않고 런타임 값을 명시적으로, 타입 추출을 가볍게 유지함
 appliesWhen: `enum` 또는 타입과 런타임에서 함께 쓰는 enum-like 값 집합을 추가·변경한다.
 requiresSelected: naming-use-consistent-file-and-symbol-naming, types-document-custom-types-and-shapes
 tags: enum, as-const, values

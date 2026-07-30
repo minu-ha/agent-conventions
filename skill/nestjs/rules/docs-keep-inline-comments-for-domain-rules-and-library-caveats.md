@@ -4,6 +4,7 @@ titleKo: 인라인 주석은 도메인 규칙과 라이브러리 예외에만
 impact: MEDIUM
 impactDescription: >-
   keeps inline comments reserved for backend constraints that would otherwise be easy to misread or accidentally remove
+impactDescriptionKo: 잘못 읽거나 실수로 지우기 쉬운 백엔드 제약에만 인라인 주석을 남겨둠
 tags: comments, inline, domain-rules
 ---
 

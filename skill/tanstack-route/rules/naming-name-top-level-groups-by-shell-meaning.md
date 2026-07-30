@@ -4,6 +4,7 @@ titleKo: 최상위 그룹은 셸 의미로 이름 짓기
 impact: HIGH
 impactDescription: >-
   makes top-level route groups communicate the shell they belong to instead of the feature they happen to contain
+impactDescriptionKo: 최상위 route 그룹이 우연히 담고 있는 기능이 아니라 소속 셸을 말하게 함
 tags: naming, layout-shell, route-groups
 ---
 

@@ -4,6 +4,7 @@ titleKo: React 19에서는 새 forwardRef 대신 ref prop
 impact: MEDIUM-HIGH
 impactDescription: >-
   keeps component definitions simpler in React 19 codebases and avoids adding legacy wrappers by default
+impactDescriptionKo: React 19 코드베이스에서 컴포넌트 정의를 단순하게 유지하고 관성적으로 legacy wrapper 를 덧붙이지 않음
 appliesWhen: >-
   React 19 컴포넌트에 focus·scroll·measure용 ref 공개 API를 추가·변경하거나 새 `forwardRef` wrapper를 도입한다.
 tags: composition, react19, ref, forwardref

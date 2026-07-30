@@ -4,6 +4,7 @@ titleKo: scope_slug는 owner마다 고유하게
 impact: CRITICAL
 impactDescription: >-
   prevents unrelated routes or components from sharing the same namespace and colliding in the global class space
+impactDescriptionKo: 관련 없는 route나 컴포넌트가 같은 namespace를 공유해 전역 class 공간에서 충돌하는 것을 막음
 appliesWhen: >-
   새 `scope_slug` namespace를 추가·복사·이름 변경하거나 서로 다른 owner의 class가 같은 namespace를 사용할 가능성이 있다.
 tags: namespace, ownership, uniqueness

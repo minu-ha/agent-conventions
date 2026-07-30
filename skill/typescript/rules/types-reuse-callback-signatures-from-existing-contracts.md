@@ -4,6 +4,7 @@ titleKo: callback 시그니처는 기존 계약에서 재사용
 impact: HIGH
 impactDescription: >-
   prevents callback signatures from drifting when an existing interface or object contract already defines them
+impactDescriptionKo: 기존 interface나 객체 계약이 이미 정의한 callback 시그니처가 어긋나는 것을 막음
 appliesWhen: >-
   interface·객체·framework의 named·shared callback 구현에서 기존 시그니처를 재사용·변경한다. annotation 없는 one-off
   contextually typed inline callback은 제외한다.

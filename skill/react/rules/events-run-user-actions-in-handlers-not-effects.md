@@ -3,6 +3,7 @@ title: Run User Actions in Handlers, Not Effects
 titleKo: 사용자 동작은 effect가 아니라 handler에서
 impact: HIGH
 impactDescription: avoids modeling one-shot user actions as state plus effect replays
+impactDescriptionKo: 한 번뿐인 사용자 동작을 state 와 effect 재실행으로 모델링하는 것을 피함
 appliesWhen: >-
   제출·저장·삭제·닫기 같은 one-shot 사용자 액션을 handler와 state+effect 사이에서 이동하거나 실행 흐름을 바꾼다.
 tags: events, handlers, effects, actions

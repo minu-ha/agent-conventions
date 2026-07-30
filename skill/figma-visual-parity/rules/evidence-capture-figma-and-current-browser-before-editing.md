@@ -3,6 +3,7 @@ title: Capture Figma Evidence and Current Browser State Before Editing
 titleKo: 고치기 전에 Figma와 현재 화면을 먼저 캡처
 impact: CRITICAL
 impactDescription: 기준 화면과 현재 화면 없이 CSS를 추측 수정하는 일을 막음
+impactDescriptionKo: 기준 화면과 현재 화면 없이 CSS를 추측 수정하는 일을 막음
 tags: evidence, screenshot, browser
 ---
 

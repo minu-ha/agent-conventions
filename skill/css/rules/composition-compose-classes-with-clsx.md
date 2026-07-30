@@ -3,6 +3,7 @@ title: Compose Classes With `clsx()`
 titleKo: class 조합은 clsx()로
 impact: HIGH
 impactDescription: keeps TSX class composition readable when base classes and state modifiers need to be combined
+impactDescriptionKo: base class와 상태 modifier를 조합할 때 TSX class 조립을 읽을 수 있게 유지함
 appliesWhen: TSX의 `className`을 추가·수정하거나 base class, modifier, optional class를 조합한다.
 tags: clsx, tsx, className
 ---

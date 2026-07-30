@@ -4,6 +4,7 @@ titleKo: 도메인 규칙과 Prisma는 service가 책임
 impact: CRITICAL
 impactDescription: >-
   keeps business rules, transaction orchestration, and persistence access in the backend layer designed to own them
+impactDescriptionKo: 비즈니스 규칙·트랜잭션 조율·영속 접근을 그것을 소유하도록 설계된 계층에 둠
 tags: services, prisma, domain-logic
 ---
 

@@ -3,6 +3,7 @@ title: Classify Static UI Copy and Dynamic Values
 titleKo: 정적 UI 문구와 동적 값을 구분
 impact: CRITICAL
 impactDescription: Figma copy는 맞추되 서버/API 값을 하드코딩하는 오류를 막음
+impactDescriptionKo: Figma copy는 맞추되 서버/API 값을 하드코딩하는 오류를 막음
 tags: data, copy, api
 ---
 

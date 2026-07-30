@@ -3,6 +3,7 @@ title: Use Visibility Primitives Deliberately for Show and Hide Branches
 titleKo: 표시·숨김 분기는 visibility primitive를 의도적으로 선택
 impact: MEDIUM
 impactDescription: 표시 여부 결정을 route 화면 전반에서 명시적이고 일관되게 유지함
+impactDescriptionKo: 표시 여부 결정을 route 화면 전반에서 명시적이고 일관되게 유지함
 appliesWhen: >-
   이미 마운트된 subtree의 표시 상태를 보존하려고 조건부 렌더링과 Activity 또는 동등한 visibility primitive 사이를
   바꾼다.

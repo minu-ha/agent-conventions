@@ -3,6 +3,7 @@ title: Use Set and Map for Repeated Lookups
 titleKo: 반복 조회에는 Set과 Map
 impact: MEDIUM
 impactDescription: keeps repeated membership and keyed access code explicit once lookup count grows
+impactDescriptionKo: 조회 횟수가 늘어나면 반복되는 포함 검사와 키 접근을 명시적으로 드러냄
 appliesWhen: 같은 컬렉션에 `includes`, `find` 또는 keyed lookup을 여러 번 수행하는 코드를 추가·변경한다.
 tags: functions, set, map, lookups, performance
 ---

@@ -37,6 +37,7 @@ interface RuleFixture {
 	titleKo?: string;
 	impact?: string;
 	impactDescription?: string;
+	impactDescriptionKo?: string;
 	appliesWhen?: string;
 	requiredOnCompletion?: boolean;
 	requiresSelected?: string[];
@@ -80,6 +81,7 @@ const toFrontmatter = (rule: RuleFixture): string => {
 		`titleKo: ${rule.titleKo ?? "픽스처 규칙"}`,
 		`impact: ${rule.impact ?? "HIGH"}`,
 		`impactDescription: ${rule.impactDescription ?? "Fixture impact description."}`,
+		`impactDescriptionKo: ${rule.impactDescriptionKo ?? "픽스처 영향도 설명."}`,
 		rule.appliesWhen === undefined ? undefined : `appliesWhen: ${rule.appliesWhen}`,
 		rule.requiresSelected === undefined ? undefined : `requiresSelected: ${rule.requiresSelected.join(", ")}`,
 		rule.requiredOnCompletion === undefined ? undefined : `requiredOnCompletion: ${String(rule.requiredOnCompletion)}`,
@@ -221,6 +223,7 @@ const createRoutingDocument = (): LoadedSkillDocument => ({
 			titleKo: "상태 관찰",
 			impact: "HIGH",
 			impactDescription: "State impact.",
+			impactDescriptionKo: "상태 영향도.",
 			tags: ["state", "watch"],
 			appliesWhen: "Reading state from an external owner.",
 			requiredOnCompletion: true,
@@ -235,6 +238,7 @@ const createRoutingDocument = (): LoadedSkillDocument => ({
 			titleKo: "두 번째 조립",
 			impact: "HIGH",
 			impactDescription: "Second impact.",
+			impactDescriptionKo: "두 번째 영향도.",
 			tags: ["composition", "owner"],
 			appliesWhen: "Adding the second composition boundary.",
 			requiredOnCompletion: false,
@@ -249,6 +253,7 @@ const createRoutingDocument = (): LoadedSkillDocument => ({
 			titleKo: "첫 번째 조립",
 			impact: "CRITICAL",
 			impactDescription: "First impact.",
+			impactDescriptionKo: "첫 번째 영향도.",
 			tags: ["owner", "composition"],
 			appliesWhen: "Adding the first composition boundary.",
 			requiredOnCompletion: false,
@@ -1641,11 +1646,21 @@ test("progressive validation rejects normative prose placed after the first Inco
 test("legacy non-progressive rules and extends remain valid without appliesWhen", async () => {
 	await withFixtureRoot(async (skillRootDir) => {
 		await writeSkillFixture(skillRootDir, "base", {
-			rules: [{frontmatter: "title: Base Rule\ntitleKo: 기반 규칙\nimpact: HIGH\nimpactDescription: Base impact.\ntags: base"}],
+			rules: [
+				{
+					frontmatter:
+						"title: Base Rule\ntitleKo: 기반 규칙\nimpact: HIGH\nimpactDescription: Base impact.\nimpactDescriptionKo: 기반 영향도.\ntags: base",
+				},
+			],
 		});
 		await writeSkillFixture(skillRootDir, "owner", {
 			metadata: {extends: ["base"]},
-			rules: [{frontmatter: "title: Owner Rule\ntitleKo: 소유 규칙\nimpact: HIGH\nimpactDescription: Owner impact.\ntags: owner"}],
+			rules: [
+				{
+					frontmatter:
+						"title: Owner Rule\ntitleKo: 소유 규칙\nimpact: HIGH\nimpactDescription: Owner impact.\nimpactDescriptionKo: 소유 영향도.\ntags: owner",
+				},
+			],
 		});
 
 		await validateSkill(getSkillPaths("owner", skillRootDir));

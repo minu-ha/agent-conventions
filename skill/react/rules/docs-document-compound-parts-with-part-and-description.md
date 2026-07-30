@@ -4,6 +4,7 @@ titleKo: compound part는 @part와 @description으로 문서화
 impact: MEDIUM
 impactDescription: >-
   keeps compound public parts scannable as one named boundary instead of disconnected props and component declarations
+impactDescriptionKo: compound 공개 part 를 흩어진 props·컴포넌트 선언이 아니라 이름 붙은 경계 하나로 훑히게 함
 appliesWhen: >-
   compound component의 exported public part·props interface·part 내부 handler를 추가·변경하거나 public part 문서를
   수정한다.

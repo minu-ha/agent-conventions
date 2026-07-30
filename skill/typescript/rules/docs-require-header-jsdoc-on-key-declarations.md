@@ -3,6 +3,7 @@ title: Require Header JSDoc on Key Declarations
 titleKo: 핵심 선언에는 헤더 JSDoc 필수
 impact: MEDIUM-HIGH
 impactDescription: makes important boundaries searchable and explainable before readers inspect the implementation body
+impactDescriptionKo: 구현 본문을 뜯어보기 전에 중요한 경계를 검색하고 설명할 수 있게 함
 appliesWhen: >-
   named query·mutation, 원격 함수, 비자명한 handler/effect, reusable/exported helper·custom hook, custom type·interface,
   store, formatter 또는 예외 memo 선언을 추가·변경한다.

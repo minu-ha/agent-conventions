@@ -3,6 +3,7 @@ title: Use Kebab-case Filenames With Nest Role Suffixes
 titleKo: 파일 이름은 kebab-case에 Nest 역할 접미사
 impact: HIGH
 impactDescription: keeps NestJS file purpose obvious from the filename before the file is opened
+impactDescriptionKo: 파일을 열기 전에 파일명만으로 NestJS 파일의 목적이 드러나게 함
 tags: naming, files, suffixes
 ---
 

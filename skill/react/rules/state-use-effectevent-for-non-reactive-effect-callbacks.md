@@ -3,6 +3,7 @@ title: Use useEffectEvent for Non-reactive Effect Callbacks
 titleKo: 비반응성 effect 콜백에는 useEffectEvent
 impact: MEDIUM-HIGH
 impactDescription: keeps effects reactive only to true subscriptions while still reading the latest handler logic
+impactDescriptionKo: 최신 handler 로직은 읽으면서 effect 는 진짜 구독에만 반응하게 유지함
 appliesWhen: >-
   subscription effect가 최신 prop·state callback을 읽도록 ref 동기화 hack, dependency 재설치 또는 `useEffectEvent`를
   추가·변경한다.

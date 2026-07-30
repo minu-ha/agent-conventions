@@ -3,6 +3,7 @@ title: Distinguish Build-time and Live Collections
 titleKo: 빌드 시점 컬렉션과 live 컬렉션을 구분
 impact: HIGH
 impactDescription: prevents freshness assumptions from drifting between static content and request-time content
+impactDescriptionKo: 정적 콘텐츠와 요청 시점 콘텐츠 사이에서 신선도 가정이 어긋나는 것을 막음
 tags: content-collections, live-collections, loaders
 ---
 

@@ -150,7 +150,7 @@ body {
 .acc-btn { display: flex; align-items: center; gap: 8px; width: 100%; text-align: left; padding: 11px 2px; font-size: 13px; font-weight: 500; color: var(--coral-dk); }
 .acc-btn:hover { color: var(--coral); }
 .acc-car { font-size: 9px; width: 8px; flex: 0 0 auto; }
-.acc-body { display: none; padding: 0 2px 14px 18px; color: var(--ink2); font-size: 13.5px; line-height: 1.75; max-width: 78ch; }
+.acc-body { display: none; padding: 0 2px 14px 18px; color: var(--ink2); font-size: 13.5px; line-height: 1.75; }
 .acc[data-open="1"] .acc-body { display: block; }
 .acc-body p { margin: 0 0 .75em; }
 .acc-body p:last-child { margin-bottom: 0; }
@@ -188,6 +188,10 @@ pre.code {
 	background: var(--code-bg); color: var(--code-fg);
 	white-space: pre-wrap; overflow-wrap: anywhere; word-break: break-word; tab-size: 2;
 }
+/* 카드와 같은 흰색이면 코드 영역이 글과 구분되지 않는다. 의미색을 옅게 섞어 대비를 준다. */
+.box-bad pre.code, .box-bad .code-lb { background: color-mix(in srgb, var(--bad) 7%, var(--code-bg)); }
+.box-good pre.code, .box-good .code-lb { background: color-mix(in srgb, var(--good) 7%, var(--code-bg)); }
+.acc-body pre.code { background: color-mix(in srgb, var(--ink) 4%, var(--code-bg)); }
 pre.code + pre.code, .code-lb + pre.code { border-top: 1px solid var(--soft); }
 .code-lb { font-family: var(--mono); font-size: 9.5px; letter-spacing: .06em; color: var(--faint); padding: 6px 14px 0; background: var(--code-bg); }
 pre.code + .code-lb { border-top: 1px solid var(--soft); }

@@ -5,6 +5,7 @@ impact: MEDIUM
 impactDescription: >-
   catches the shortcuts that most often blur test level meaning or introduce flaky browser behavior before the work is
   closed
+impactDescriptionKo: 테스트 층위 의미를 흐리거나 불안정한 브라우저 동작을 들이는 지름길을 마무리 전에 잡음
 tags: review, guardrails, flakiness
 ---
 

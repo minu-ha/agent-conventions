@@ -5,6 +5,7 @@ impact: HIGH
 impactDescription: >-
   keeps repeated document, head, and body shell composition out of route files while preserving a single page-level
   entry point
+impactDescriptionKo: 반복되는 document·head·body 셸 조립을 route 파일 밖으로 빼면서 페이지 진입점은 하나로 유지함
 tags: component, document, head, pages, seo
 ---
 

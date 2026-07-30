@@ -3,6 +3,7 @@ title: Use Async/Await and Mark Intentional Fire-and-forget Calls
 titleKo: async/await 쓰고 의도적 fire-and-forget은 표시
 impact: HIGH
 impactDescription: keeps asynchronous backend flow readable and makes intentionally unawaited side effects explicit
+impactDescriptionKo: 비동기 백엔드 흐름을 읽을 수 있게 유지하고 의도적으로 await 하지 않은 부수효과를 드러냄
 tags: async, await, side-effects
 ---
 

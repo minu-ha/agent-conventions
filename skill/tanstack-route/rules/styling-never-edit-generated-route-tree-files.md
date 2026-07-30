@@ -3,6 +3,7 @@ title: Never Edit Generated Route Tree Files
 titleKo: 생성된 route tree 파일은 절대 손대지 않기
 impact: MEDIUM-HIGH
 impactDescription: preserves generated router output as a build artifact derived from route sources
+impactDescriptionKo: 생성된 router 출력을 route 소스에서 파생된 빌드 산출물로 지킴
 tags: generated-files, route-tree, safety
 ---
 

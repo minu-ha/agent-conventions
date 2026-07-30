@@ -3,6 +3,7 @@ title: Place Shared and Module-local Constants by Scope
 titleKo: 공용·모듈 전용 상수를 스코프에 맞게 배치
 impact: MEDIUM-HIGH
 impactDescription: prevents controller and service files from becoming ad-hoc homes for constants with unclear ownership
+impactDescriptionKo: controller·service 파일이 소유가 불분명한 상수의 임시 보관소가 되는 것을 막음
 tags: constants, scope, modules
 ---
 

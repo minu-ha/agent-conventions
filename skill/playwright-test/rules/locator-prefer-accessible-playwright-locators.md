@@ -3,6 +3,7 @@ title: Prefer Accessible Playwright Locators
 titleKo: 접근성 기반 Playwright 로케이터 우선
 impact: HIGH
 impactDescription: keeps selectors resilient and user-oriented by favoring accessible names over DOM structure
+impactDescriptionKo: DOM 구조보다 접근성 이름을 앞세워 셀렉터를 견고하고 사용자 관점으로 유지함
 tags: locators, accessibility, selectors
 ---
 

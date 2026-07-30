@@ -3,6 +3,7 @@ title: Give Collections Explicit Zod Schemas
 titleKo: 컬렉션에는 명시적 Zod 스키마
 impact: HIGH
 impactDescription: makes structured content type-safe and prevents frontmatter drift from leaking into pages
+impactDescriptionKo: 구조화 콘텐츠를 타입 안전하게 만들고 frontmatter 변형이 페이지로 새는 것을 막음
 tags: content-collections, zod, schema
 ---
 

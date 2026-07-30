@@ -3,6 +3,7 @@ title: Use Direct Imports and Dedicated Public Entry Points
 titleKo: 직접 import와 전용 공개 진입점 쓰기
 impact: HIGH
 impactDescription: makes import ownership explicit without relying on barrels or ambiguous re-export layers
+impactDescriptionKo: barrel 이나 모호한 재노출 계층에 기대지 않고 import 소유를 명시적으로 드러냄
 appliesWhen: >-
   TypeScript import/export, barrel, shared 공개 진입점·feature support module 경계를 추가·변경하거나 같은 module path의
   value/type specifier를 추가·삭제·전환한다.

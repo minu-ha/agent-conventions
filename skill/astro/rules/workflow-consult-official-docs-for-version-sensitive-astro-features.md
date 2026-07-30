@@ -3,6 +3,7 @@ title: Consult Official Docs for Version-sensitive Astro Features
 titleKo: 버전 민감한 Astro 기능은 공식 문서 확인
 impact: MEDIUM
 impactDescription: reduces stale assumptions around fast-moving Astro features and directives
+impactDescriptionKo: 빠르게 바뀌는 Astro 기능과 지시자에 대한 낡은 가정을 줄임
 tags: workflow, docs, astro-docs
 ---
 

@@ -3,6 +3,7 @@ title: Extract Route-local Sections Only for Rendering or Interaction Boundaries
 titleKo: route-local 섹션은 렌더링·상호작용 경계일 때만 추출
 impact: HIGH
 impactDescription: keeps routed pages readable while avoiding premature `_local/` section extraction
+impactDescriptionKo: 조급한 _local/ 섹션 추출 없이 route 페이지를 읽을 수 있게 유지함
 tags: responsibility, local, islands, boundaries
 ---
 

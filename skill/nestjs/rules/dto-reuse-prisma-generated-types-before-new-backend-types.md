@@ -3,6 +3,7 @@ title: Reuse Prisma Generated Types Before New Backend Types
 titleKo: 새 백엔드 타입 전에 Prisma 생성 타입 재사용
 impact: HIGH
 impactDescription: prevents duplicate backend type declarations when Prisma already owns the same structural contract
+impactDescriptionKo: Prisma 가 이미 같은 구조 계약을 소유할 때 백엔드 타입이 중복 선언되는 것을 막음
 tags: prisma, types, reuse
 ---
 

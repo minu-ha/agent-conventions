@@ -3,6 +3,7 @@ title: Extract Screen Support Code Only When the Boundary Is Real
 titleKo: 화면 support 코드는 경계가 실재할 때만 추출
 impact: HIGH
 impactDescription: route entry가 자기 계약이 없는 helper 조각으로 분해되는 것을 막음
+impactDescriptionKo: route entry가 자기 계약이 없는 helper 조각으로 분해되는 것을 막음
 appliesWhen: >-
   화면 계산·변환·preset·option·column meta를 별도 함수/support module로 추출·이동하거나 support 경계를 바꾼다. query
   `select` 내부 shaping만이면 제외한다.

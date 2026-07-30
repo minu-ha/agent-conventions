@@ -3,6 +3,7 @@ title: Target Third-party DOM Only From Owned Roots
 titleKo: third-party DOM은 소유한 root 아래에서만
 impact: CRITICAL
 impactDescription: limits third-party styling to explicit wrapper ownership instead of leaking across the app
+impactDescriptionKo: third-party 스타일링을 앱 전체로 새게 하지 않고 명시적 wrapper 소유로 제한함
 appliesWhen: >-
   `.ant-*`, `.rc-*`, `.tippy-*` 등 third-party 내부 DOM selector를 추가·수정하거나 owned wrapper 아래로 범위를 제한한다.
 requiresSelected: selector-avoid-deep-descendant-dependencies

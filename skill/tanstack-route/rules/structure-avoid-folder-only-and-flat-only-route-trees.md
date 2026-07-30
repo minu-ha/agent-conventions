@@ -3,6 +3,7 @@ title: Avoid Folder-only and Flat-only Route Trees
 titleKo: 폴더만·평면만 route 트리 둘 다 피하기
 impact: HIGH
 impactDescription: keeps route trees readable without forcing deep nesting or excessively long filenames
+impactDescriptionKo: 깊은 중첩이나 지나치게 긴 파일명을 강요하지 않고 route 트리를 읽을 수 있게 유지함
 tags: route-structure, folders, naming
 ---
 

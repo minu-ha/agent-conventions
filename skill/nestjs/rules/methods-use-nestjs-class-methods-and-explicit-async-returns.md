@@ -4,6 +4,7 @@ titleKo: NestJS 클래스 메서드와 명시적 async 반환 타입
 impact: MEDIUM-HIGH
 impactDescription: >-
   keeps backend class APIs conventional while making async method contracts readable without opening implementations
+impactDescriptionKo: 백엔드 클래스 API 를 관례대로 두면서 구현을 열지 않고도 async 계약을 읽게 함
 tags: methods, async, return-types
 ---
 

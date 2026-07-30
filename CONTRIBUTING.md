@@ -75,7 +75,8 @@ skill/react/
 title: Rule Title Here
 titleKo: 사람이 화면에서 읽을 한국어 제목
 impact: MEDIUM
-impactDescription: 선택적 영향도 설명
+impactDescription: 영향도 설명. contracts 로 나가는 에이전트용 원문
+impactDescriptionKo: 사람이 화면에서 읽을 한국어 영향도 설명
 appliesWhen: 이 규칙이 걸리는 변경을 한 문장으로
 requiresSelected: 함께 반드시 걸리는 rule-id, companion-skill/cross-rule-id
 requiredOnCompletion: true
@@ -89,6 +90,8 @@ tags: tag1, tag2
 | `title` | 필수 | 영어. 핸드북 헤딩과 앵커 슬러그의 기반. 바꾸면 링크가 깨진다 |
 | `titleKo` | 필수 | 한국어. `conventions.html` 에 노출된다. 40자 이내 |
 | `impact` | 필수 | `CRITICAL` · `HIGH` · `MEDIUM` · `LOW` |
+| `impactDescription` | 필수 | 영향도 설명. 본문 `**Impact:**` 줄과 일치해야 하고 `contracts/*.md` 로 나간다 |
+| `impactDescriptionKo` | 필수 | 한국어. `conventions.html` 에 노출된다 |
 | `appliesWhen` | 필수 | 비어 있지 않은 한 줄. 160자 이내 |
 | `requiresSelected` | 선택 | 걸리면 target 도 반드시 함께 적용 |
 | `reviewWith` | 선택 | 자동 선택이 아니라 다시 판정하라는 재평가 힌트 |

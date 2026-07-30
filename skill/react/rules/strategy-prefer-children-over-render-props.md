@@ -4,6 +4,7 @@ titleKo: 정적 조립에는 render prop보다 children
 impact: MEDIUM
 impactDescription: >-
   keeps shared component composition readable when the parent does not need to push runtime data through callbacks
+impactDescriptionKo: 부모가 callback 으로 런타임 데이터를 내려보낼 필요가 없을 때 공용 컴포넌트 조립을 읽을 수 있게 유지함
 appliesWhen: >-
   shared component에 header·footer·action 같은 정적 slot 또는 render prop을 추가·변경하며 runtime data 주입 필요가
   불분명하다.

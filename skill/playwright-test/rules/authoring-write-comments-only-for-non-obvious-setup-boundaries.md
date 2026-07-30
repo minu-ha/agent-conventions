@@ -4,6 +4,7 @@ titleKo: 주석은 자명하지 않은 setup 경계에만
 impact: MEDIUM
 impactDescription: >-
   keeps test comments focused on why a setup exists instead of narrating obvious Arrange/Act/Assert steps
+impactDescriptionKo: 자명한 Arrange/Act/Assert 서술 대신 그 setup 이 왜 있는지에 주석을 집중시킴
 tags: comments, setup, helpers
 ---
 

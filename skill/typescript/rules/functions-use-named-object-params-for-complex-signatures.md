@@ -4,6 +4,7 @@ titleKo: 복잡한 시그니처는 named 객체 매개변수로
 impact: HIGH
 impactDescription: >-
   keeps long function signatures readable and makes grouped inputs easier to extend without positional confusion
+impactDescriptionKo: 긴 함수 시그니처를 읽을 수 있게 유지하고 위치 혼동 없이 묶인 입력을 확장하게 함
 appliesWhen: >-
   매개변수 3개 이상 또는 같은 계열 인자를 받는 일반 함수를 추가·변경하거나 객체 매개변수의 구조분해 위치를 바꾼다. React
   함수 컴포넌트의 props 수신·구조분해만 바꾸면 제외한다.

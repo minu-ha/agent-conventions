@@ -3,6 +3,7 @@ title: Extract Route Support Code Only When the Boundary Is Real
 titleKo: route support 코드는 경계가 실재할 때만 추출
 impact: HIGH
 impactDescription: prevents routed pages from scattering one-off frontmatter logic into generic helper files
+impactDescriptionKo: route 페이지의 일회성 frontmatter 로직이 generic 헬퍼 파일로 흩어지는 것을 막음
 tags: responsibility, support-code, frontmatter, naming
 ---
 

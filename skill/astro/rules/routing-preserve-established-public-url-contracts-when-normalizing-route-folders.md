@@ -4,6 +4,7 @@ titleKo: route 폴더를 정리해도 공개 URL 계약은 보존
 impact: HIGH
 impactDescription: >-
   prevents file tree cleanup from silently changing published URLs that users and crawlers already rely on
+impactDescriptionKo: 파일 트리 정리가 이미 쓰이는 공개 URL을 조용히 바꾸는 것을 막음
 tags: routing, urls, migrations, route-families
 ---
 

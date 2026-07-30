@@ -3,6 +3,7 @@ title: Use HTML Anchors Before Framework Link Abstractions
 titleKo: 프레임워크 Link 추상보다 HTML anchor 먼저
 impact: HIGH
 impactDescription: aligns navigation with Astro's default routing model and avoids importing foreign router habits
+impactDescriptionKo: 내비게이션을 Astro 기본 라우팅 모델에 맞추고 외부 router 습관을 들이지 않음
 tags: routing, navigation, anchors
 ---
 

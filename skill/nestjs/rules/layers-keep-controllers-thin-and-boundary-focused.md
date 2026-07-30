@@ -4,6 +4,7 @@ titleKo: controller는 얇게, 경계에만 집중
 impact: CRITICAL
 impactDescription: >-
   prevents controllers from absorbing domain logic, persistence calls, and response shaping that belongs in services
+impactDescriptionKo: service 에 속한 도메인 로직·영속 호출·응답 가공을 controller 가 흡수하는 것을 막음
 tags: controllers, layering, boundaries
 ---
 

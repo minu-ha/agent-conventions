@@ -5,6 +5,7 @@ impact: HIGH
 impactDescription: >-
   keeps repeated colors, spacing, and radius values aligned with shared design tokens instead of drifting into magic
   numbers
+impactDescriptionKo: 반복되는 색·간격·radius 값이 매직 넘버로 흐르지 않고 공용 디자인 토큰에 맞게 유지함
 appliesWhen: 색상·간격·radius·타이포·그림자 등 같은 시각 값이 2회 이상 반복되거나 새 shared visual value를 하드코딩한다.
 reviewWith: values-always-provide-css-variable-fallbacks
 tags: tokens, variables, reuse

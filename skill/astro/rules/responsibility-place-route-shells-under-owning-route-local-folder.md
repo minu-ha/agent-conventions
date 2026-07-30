@@ -4,6 +4,7 @@ titleKo: route 셸은 소유 route의 _local/ 아래에
 impact: HIGH
 impactDescription: >-
   prevents route shell files from becoming a blurry shared component tier between pages and reusable building blocks
+impactDescriptionKo: route 셸 파일이 page와 재사용 블록 사이의 애매한 공용 계층이 되는 것을 막음
 tags: responsibility, layouts, local, ownership
 ---
 

@@ -4,6 +4,7 @@ titleKo: 공용 계정 파괴 시나리오와 병렬 충돌 피하기
 impact: CRITICAL
 impactDescription: >-
   keeps real-system browser tests from corrupting shared accounts or racing on the same remote resources
+impactDescriptionKo: 실제 시스템 브라우저 테스트가 공용 계정을 망치거나 같은 원격 자원에서 경합하는 것을 막음
 tags: e2e, shared-accounts, parallelism
 ---
 

@@ -3,6 +3,7 @@ title: Avoid Boolean Prop Proliferation in Shared Components
 titleKo: 공용 컴포넌트에 boolean prop 남발하지 않기
 impact: HIGH
 impactDescription: exported shared components stay explicit instead of accumulating hidden variant combinations
+impactDescriptionKo: exported 공용 컴포넌트가 숨은 variant 조합을 쌓지 않고 명시적으로 남게 함
 appliesWhen: >-
   여러 곳에서 쓰는 shared component에 boolean mode·visibility prop을 추가하거나 기존 boolean 조합과 JSX 분기가 늘어난다.
 tags: composition, props, variants, component-design

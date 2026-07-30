@@ -3,6 +3,7 @@ title: Calculate Derived Values During Rendering
 titleKo: 파생 값은 렌더 중에 계산
 impact: HIGH
 impactDescription: avoids redundant state sync and effect-driven drift when values can be computed from current inputs
+impactDescriptionKo: 현재 입력에서 계산할 수 있는 값에 대해 불필요한 state 동기화와 effect 기반 어긋남을 피함
 appliesWhen: >-
   현재 props·state·search·response에서 계산 가능한 값을 별도 state와 effect로 동기화하거나 그 동기화를 제거한다.
 requiresSelected: screen-keep-derived-values-close

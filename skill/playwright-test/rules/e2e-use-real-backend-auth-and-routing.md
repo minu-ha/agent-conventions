@@ -3,6 +3,7 @@ title: Use Real Backend, Auth, and Routing in E2E
 titleKo: e2e는 실제 백엔드·인증·라우팅을 쓰기
 impact: CRITICAL
 impactDescription: preserves the meaning of e2e by keeping the core backend, auth, and routing path real
+impactDescriptionKo: 핵심 백엔드·인증·라우팅 경로를 실제로 유지해 e2e 의 의미를 지킴
 tags: e2e, backend, auth
 ---
 

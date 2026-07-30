@@ -3,6 +3,7 @@ title: Do Not Confuse Static Labels with Server Data
 titleKo: 정적 라벨을 서버 데이터로 착각하지 않기
 impact: HIGH
 impactDescription: Figma의 고정 라벨과 섹션 제목을 데이터라는 이유로 방치하지 않게 함
+impactDescriptionKo: Figma의 고정 라벨과 섹션 제목을 데이터라는 이유로 방치하지 않게 함
 tags: data, labels, copy
 ---
 

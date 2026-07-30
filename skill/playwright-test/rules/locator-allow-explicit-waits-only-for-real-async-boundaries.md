@@ -5,6 +5,7 @@ impact: HIGH
 impactDescription: >-
   keeps explicit waits intentional by limiting them to navigation, known responses, bootstrap, or real background
   polling
+impactDescriptionKo: 내비게이션·알려진 응답·부트스트랩·실제 백그라운드 폴링으로 제한해 명시적 대기를 의도적으로 유지함
 tags: waits, async-boundaries, polling
 ---
 

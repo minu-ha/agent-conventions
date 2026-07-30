@@ -103,6 +103,10 @@ const validateLocalSkill = async (skillPaths: SkillPaths): Promise<LocalValidati
 			throw new Error(`${skillPaths.skillName}: ${rule.fileName} is missing frontmatter key "impactDescription".`);
 		}
 
+		if (!rule.impactDescriptionKo) {
+			throw new Error(`${skillPaths.skillName}: ${rule.fileName} is missing frontmatter key "impactDescriptionKo".`);
+		}
+
 		if (rule.tags.length === 0) {
 			throw new Error(`${skillPaths.skillName}: ${rule.fileName} is missing frontmatter key "tags".`);
 		}

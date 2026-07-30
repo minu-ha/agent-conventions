@@ -3,6 +3,7 @@ title: Accept props as a Whole and Destructure Inside the Component
 titleKo: props는 통째로 받고 컴포넌트 안에서 구조분해
 impact: MEDIUM
 impactDescription: 컴포넌트 계약을 시그니처에 남기고 실제 사용을 본문 가까이에 유지함
+impactDescriptionKo: 컴포넌트 계약을 시그니처에 남기고 실제 사용을 본문 가까이에 유지함
 appliesWhen: >-
   props를 받는 함수 컴포넌트의 시그니처·본문 구조분해 방식을 추가·변경하거나 그 컴포넌트를 다른 파일로 이동·이름
   변경한다.

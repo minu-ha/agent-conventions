@@ -3,6 +3,7 @@ title: Use Lazy State Initializers for Expensive Defaults
 titleKo: 비싼 기본값은 lazy state initializer로
 impact: MEDIUM
 impactDescription: prevents repeated setup work when the initial state is expensive to compute
+impactDescriptionKo: 초기 state 계산이 비쌀 때 준비 작업이 매번 반복되는 것을 막음
 appliesWhen: `useState` 초기값에 localStorage 파싱, 인덱스 생성, 큰 배열 정규화 같은 비용 있는 계산을 추가·변경한다.
 tags: state, usestate, initialization, performance
 ---

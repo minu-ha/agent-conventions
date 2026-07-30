@@ -3,6 +3,7 @@ title: Add Tests When Branches, Endpoints, or Schema Behavior Change
 titleKo: 분기·엔드포인트·스키마가 바뀌면 테스트 추가
 impact: HIGH
 impactDescription: keeps backend regressions from slipping through when logic branches or API/database behavior changes
+impactDescriptionKo: 로직 분기나 API·DB 동작이 바뀔 때 백엔드 회귀가 빠져나가는 것을 막음
 tags: tests, coverage, regression
 ---
 

@@ -5,6 +5,7 @@ impact: HIGH
 impactDescription: >-
   keeps Astro route files, route-local assets, CSS owners, and URL semantics aligned without duplicating folder depth in
   names
+impactDescriptionKo: 이름에 폴더 깊이를 중복하지 않고 route 파일·자산·CSS 소유자·URL 의미를 일치시킴
 tags: naming, pages, css, route-role
 ---
 

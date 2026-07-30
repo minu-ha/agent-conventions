@@ -3,6 +3,7 @@ title: Rule Title Here
 titleKo: 사람이 화면에서 읽을 한국어 제목
 impact: MEDIUM
 impactDescription: 선택적 영향도 설명
+impactDescriptionKo: 사람이 화면에서 읽을 한국어 영향도 설명
 appliesWhen: 이 규칙이 걸리는 변경을 한 문장으로. 결론이 아니라 관찰 가능한 조건
 tags: tag1, tag2
 ---

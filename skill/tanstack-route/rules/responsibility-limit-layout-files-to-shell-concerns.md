@@ -3,6 +3,7 @@ title: Limit `*.layout.tsx` Files to Shell Concerns
 titleKo: *.layout.tsx는 셸 관심사까지만
 impact: HIGH
 impactDescription: prevents parent route shells from absorbing leaf-screen data and form logic
+impactDescriptionKo: 부모 route 셸이 말단 화면의 데이터·폼 로직을 흡수하는 것을 막음
 tags: layout-files, shell, outlet
 ---
 

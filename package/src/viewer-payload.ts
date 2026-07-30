@@ -80,7 +80,7 @@ export interface ViewerRule {
 	 */
 	impact: string;
 	/**
-	 * @field 중요도 부연 설명
+	 * @field 화면에 노출할 한국어 중요도 설명. 비어 있으면 영어 설명으로 대체된다
 	 */
 	impactDescription: string;
 	/**
@@ -219,7 +219,7 @@ export const buildViewerPayload = async (): Promise<ViewerPayload> => {
 				title: rule.title,
 				titleKo: rule.titleKo,
 				impact: rule.impact,
-				impactDescription: rule.impactDescription ?? "",
+				impactDescription: rule.impactDescriptionKo || rule.impactDescription || "",
 				appliesWhen: rule.appliesWhen ?? "",
 				tags: rule.tags,
 				requiresSelected: rule.requiresSelected,

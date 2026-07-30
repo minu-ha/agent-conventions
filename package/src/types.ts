@@ -260,6 +260,10 @@ export interface SkillRule {
 	 */
 	impactDescription?: string;
 	/**
+	 * @field 사람이 읽는 화면에 노출할 한국어 중요도 설명
+	 */
+	impactDescriptionKo: string;
+	/**
 	 * @field rule 탐색과 분류용 태그 목록
 	 */
 	tags: string[];

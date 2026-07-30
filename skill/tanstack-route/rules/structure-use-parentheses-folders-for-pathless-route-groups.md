@@ -4,6 +4,7 @@ titleKo: 경로 없는 route 그룹은 괄호 폴더로
 impact: HIGH
 impactDescription: >-
   separates URL hierarchy from grouping hierarchy so nested routes stay organized without changing paths
+impactDescriptionKo: URL 계층과 그룹 계층을 분리해 경로를 바꾸지 않고도 중첩 route 를 정돈함
 tags: pathless-routes, grouping, folders
 ---
 

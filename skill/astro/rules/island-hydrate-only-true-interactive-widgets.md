@@ -3,6 +3,7 @@ title: Hydrate Only Truly Interactive Widgets
 titleKo: 진짜 상호작용하는 위젯만 hydrate
 impact: CRITICAL
 impactDescription: keeps Astro pages mostly static and reserves JavaScript for real interaction boundaries
+impactDescriptionKo: Astro 페이지를 대체로 정적으로 유지하고 JavaScript를 진짜 상호작용 경계에만 씀
 tags: islands, hydration, performance
 ---
 

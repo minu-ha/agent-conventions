@@ -5,6 +5,7 @@ impact: MEDIUM
 impactDescription: >-
   catches the recurring shortcuts that most often blur NestJS layers, contracts, and test meaning before the work is
   closed out
+impactDescriptionKo: NestJS 레이어·계약·테스트 의미를 가장 자주 흐리는 지름길을 마무리 전에 잡음
 tags: review, guardrails, banned-patterns
 ---
 
