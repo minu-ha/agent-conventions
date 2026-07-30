@@ -4,6 +4,7 @@ import test from "node:test";
 import {getSkillPaths, isBuildableSkill, listSkillNames} from "../src/config.js";
 import {parseFrontmatter, parseSections, readSkillRules} from "../src/parser.js";
 import {parseRuleBody} from "../src/rule-body.js";
+import {buildViewerPayload} from "../src/viewer-payload.js";
 
 test("parseRuleBody splits prose from Incorrect and Correct examples", () => {
 	const body = [
@@ -129,4 +130,69 @@ test("parseSections leaves titleKo empty when the line is absent", () => {
 	const source = ["## 1. Naming (naming)", "**Impact:** HIGH", "**Description:** 설명."].join("\n");
 
 	assert.equal(parseSections(source)[0]?.titleKo, "");
+});
+
+test("buildViewerPayload collects every skill, section, and rule", async () => {
+	const payload = await buildViewerPayload();
+
+	assert.equal(payload.skills.length, 8);
+	assert.equal(payload.rules.length, 212);
+	assert.equal(payload.sections.length, 58);
+
+	const react = payload.skills.find((skill) => skill.name === "react");
+	assert.equal(react?.title, "React 컨벤션");
+	assert.equal(react?.progressive, true);
+	assert.equal(react?.ruleCount, 42);
+
+	const astro = payload.skills.find((skill) => skill.name === "astro");
+	assert.equal(astro?.progressive, false);
+	assert.deepEqual(astro?.companions, []);
+});
+
+test("buildViewerPayload carries companion declarations for the header hint", async () => {
+	const payload = await buildViewerPayload();
+	const react = payload.skills.find((skill) => skill.name === "react");
+
+	assert.deepEqual(react?.companions, [
+		{skill: "typescript", mode: "required"},
+		{skill: "css", mode: "conditional"},
+	]);
+
+	const css = payload.skills.find((skill) => skill.name === "css");
+	assert.deepEqual(css?.companions, [{skill: "typescript", mode: "conditional"}]);
+});
+
+test("buildViewerPayload gives every rule a resolvable section and parsed examples", async () => {
+	const payload = await buildViewerPayload();
+	const sectionKeys = new Set(payload.sections.map((section) => `${section.skill}/${section.prefix}`));
+
+	for (const rule of payload.rules) {
+		assert.ok(
+			sectionKeys.has(`${rule.skill}/${rule.sectionPrefix}`),
+			`${rule.skill}/${rule.id} has unmapped section ${rule.sectionPrefix}`,
+		);
+		assert.ok(rule.examples.length > 0, `${rule.skill}/${rule.id} has no example`);
+		assert.ok(rule.impact.length > 0, `${rule.skill}/${rule.id} has no impact`);
+	}
+});
+
+test("buildViewerPayload is deterministic and carries no timestamp", async () => {
+	const [first, second] = await Promise.all([buildViewerPayload(), buildViewerPayload()]);
+
+	assert.equal(JSON.stringify(first), JSON.stringify(second));
+	assert.ok(!JSON.stringify(first).includes("generatedAt"), "payload must not embed a timestamp");
+});
+
+test("buildViewerPayload keeps cross-skill references resolvable", async () => {
+	const payload = await buildViewerPayload();
+	const keys = new Set(payload.rules.map((rule) => `${rule.skill}/${rule.id}`));
+	const crossSkill = payload.rules.flatMap((rule) =>
+		[...rule.reviewWith, ...rule.requiresSelected].filter((target) => target.includes("/")),
+	);
+
+	assert.ok(crossSkill.length > 0, "expected cross-skill targets");
+
+	for (const target of crossSkill) {
+		assert.ok(keys.has(target), `target ${target} does not resolve to a known rule`);
+	}
 });
