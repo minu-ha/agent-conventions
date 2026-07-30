@@ -57,6 +57,17 @@ TypeScript 프레임워크 프로젝트는 framework skill 하나만 적지 말 
 
 ### 1.3 담당 영역 핸드북
 
+사람이 규칙을 찾을 때는 [docs/conventions.html](./docs/conventions.html) 을 먼저 연다.
+8개 skill 212개 규칙이 한 장에 들어 있고, 상단 드롭다운으로 담당 skill만 남긴다.
+브라우저로 파일을 그냥 열면 된다. 서버가 필요 없다.
+
+규칙마다 Incorrect / Correct 코드가 나란히 나오고 근거 산문은 접혀 있다.
+`CRITICAL` 부터 훑으려면 왼쪽 Impact 필터에서 `CRITICAL` 만 켠다.
+다른 skill 규칙을 가리키는 점선 칩을 누르면 드롭다운이 그 skill로 자동 전환된다.
+
+`HANDBOOK.md` 는 에이전트가 전체 검토를 요청받았을 때 읽는 생성물이다.
+사람이 통독할 문서로 만들어진 것이 아니다.
+
 전체를 외울 필요 없다. 담당 영역만 한 번 훑으면 리뷰에서 덜 돌아온다.
 
 | 작업 영역 | 핸드북 |
