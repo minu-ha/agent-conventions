@@ -8,4 +8,4 @@ mutation은 `mutation...`으로 맞춰야 화면 파일에서 역할과 오리�
 
 **Requires selected:** `docs-require-jsdoc-on-key-declarations`, `typescript/naming-use-consistent-file-and-symbol-naming` · 함께 적용
 
-> 예시·예외가 필요하면 [full rule](../rules/data-name-query-and-mutation-bindings-consistently.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/07-02-data-name-query-and-mutation-bindings-consistently.md)을 읽습니다.

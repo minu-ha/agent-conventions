@@ -15,4 +15,4 @@ route entry의 local component는 `runtime boundary`가 있을 때만 추출합�
 search param, navigation, page-level query/mutation, cross-section effect, invalidate, redirect,
 여러 section에 걸친 파생값은 route entry에 둡니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/screen-extract-local-section-components-for-runtime-boundaries.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/05-02-screen-extract-local-section-components-for-runtime-boundaries.md)을 읽습니다.

@@ -20,4 +20,4 @@
 - `useEffectEvent`에도 계약에 없는 DOM event나 curry를 만들지 않습니다.
   이 경우 React DOM handler typing 규칙은 적용하지 않습니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/events-name-and-curry-handlers.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/06-02-events-name-and-curry-handlers.md)을 읽습니다.

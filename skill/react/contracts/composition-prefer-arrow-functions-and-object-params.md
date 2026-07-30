@@ -6,4 +6,4 @@
 단일 객체 매개변수로 묶습니다.
 객체 매개변수 타입은 파일 상단에 선언해 계약을 먼저 드러냅니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/composition-prefer-arrow-functions-and-object-params.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/04-03-composition-prefer-arrow-functions-and-object-params.md)을 읽습니다.

@@ -13,4 +13,4 @@ compound component가 public part를 노출하면 part 단위로 문서화합니
 
 **Requires selected:** `docs-require-jsdoc-on-key-declarations` · 함께 적용
 
-> 예시·예외가 필요하면 [full rule](../rules/docs-document-compound-parts-with-part-and-description.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/10-01-docs-document-compound-parts-with-part-and-description.md)을 읽습니다.

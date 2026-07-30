@@ -30,7 +30,7 @@ skill/react/
   rules/
     _sections.md      섹션 순서 · Impact · 설명. 괄호 안이 파일명 prefix
     _template.md      새 규칙 템플릿
-    *.md              규칙 정본
+    NN-MM-*.md        규칙 정본. 번호는 사람용 탐색 표지고 규칙 ID 에는 안 들어간다
   routing-evals.json  시나리오별로 걸려야 할 규칙의 테스트 오라클
   RULES_INDEX.md      생성물
   contracts/*.md      생성물
@@ -51,7 +51,10 @@ skill/react/
 ## 2. 규칙 추가 절차
 
 1. `rules/_sections.md` 에서 섹션을 정한다. 제목 괄호 안이 파일명 prefix.
-2. `rules/_template.md` 를 `rules/<prefix>-<설명>.md` 로 복사한다.
+2. `rules/_template.md` 를 `rules/<NN>-<MM>-<prefix>-<설명>.md` 로 복사한다.
+   `NN` 은 섹션 번호, `MM` 은 섹션 안 규칙 번호로 둘 다 0을 채운 두 자리다.
+   규칙 ID 는 번호를 뺀 `<prefix>-<설명>` 이라 중간 삽입으로 번호가 밀려도 참조는 깨지지 않는다.
+   react 처럼 번호를 쓰는 skill 은 섹션 안에서 1부터 연속해야 하고 `validate` 가 검사한다.
 3. frontmatter 를 채운다. `appliesWhen` 은 관찰 가능한 변경으로 쓴다.
 4. 본문을 쓴다. 규범과 예외를 첫 `Incorrect` 앞에서 끝낸다.
 5. progressive skill 이면 `routing-evals.json` 에 걸리는 시나리오를 넣는다.

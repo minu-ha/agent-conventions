@@ -22,4 +22,4 @@
 
 **Requires selected:** `typescript/naming-use-consistent-file-and-symbol-naming` · 함께 적용
 
-> 예시·예외가 필요하면 [full rule](../rules/ownership-use-consistent-file-and-symbol-naming.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/01-06-ownership-use-consistent-file-and-symbol-naming.md)을 읽습니다.

@@ -9,4 +9,4 @@
   props field가 그대로여도 이 형태를 다시 확인합니다.
 - props가 없는 컴포넌트 이동만으로는 이 규칙이 걸리지 않습니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/composition-destructure-props-inside.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/04-01-composition-destructure-props-inside.md)을 읽습니다.

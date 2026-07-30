@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import {access, mkdtemp, mkdir, readFile, rm, writeFile} from "node:fs/promises";
+import {access, mkdtemp, mkdir, readFile, readdir, rm, writeFile} from "node:fs/promises";
 import {tmpdir} from "node:os";
 import path from "node:path";
 import test from "node:test";
@@ -66,6 +66,20 @@ const readFrontmatterValue = (source: string, key: string): string => {
  */
 const readAppliesWhen = (source: string): string => readFrontmatterValue(source, "appliesWhen");
 const realSkillRootDir = path.join(repoDir, "skill");
+
+/**
+ * @helper stable ID로 rule 원문을 읽는다. 파일명에 사람용 번호 prefix(`NN-MM-`)가 붙어 있어도 찾는다
+ */
+const readRuleSource = async (skillName: string, ruleId: string): Promise<string> => {
+	const rulesDir = path.join(realSkillRootDir, skillName, "rules");
+	const fileName = (await readdir(rulesDir)).find(
+		(candidate) => candidate === `${ruleId}.md` || candidate.replace(/^\d+-\d+-/, "") === `${ruleId}.md`,
+	);
+
+	assert.ok(fileName, `${skillName}/${ruleId} rule file not found`);
+
+	return await readFile(path.join(rulesDir, fileName), "utf8");
+};
 const behavioralProtocolPath = path.join(repoDir, "docs/evaluations/2026-07-21-progressive-loading-behavioral-protocol.json");
 
 const typescriptRuleUniverse = [
@@ -136,8 +150,8 @@ const reactRuleUniverse = [
 	"composition-do-not-define-components-inside-components",
 	"composition-prefer-arrow-functions-and-object-params",
 	"composition-named-handlers-over-inline",
-	"composition-use-activity-for-render-branches",
 	"composition-use-ref-prop-instead-of-forwardref-in-react-19",
+	"composition-use-activity-for-render-branches",
 	"screen-avoid-premature-abstraction",
 	"screen-extract-local-section-components-for-runtime-boundaries",
 	"screen-extract-utilities-selectively",
@@ -1627,9 +1641,7 @@ test("TypeScript progressive metadata matches Appendix A exactly", async () => {
 	assert.deepEqual(document.metadata.companions ?? [], []);
 	assert.equal(document.rules.length, 22);
 	assert.deepEqual(
-		Object.fromEntries(
-			document.rules.map((rule) => [rule.fileName.replace(/\.md$/, ""), {appliesWhen: rule.appliesWhen, reviewWith: rule.reviewWith}]),
-		),
+		Object.fromEntries(document.rules.map((rule) => [getRuleId(rule), {appliesWhen: rule.appliesWhen, reviewWith: rule.reviewWith}])),
 		typescriptRuleRouting,
 	);
 	assert.equal(
@@ -1716,7 +1728,7 @@ test("TypeScript generated index is complete and within the deterministic byte b
 	const entries = Array.from(source.matchAll(/^- T\d+ \| ([^ |]+) \|/gm), (match) => ({id: match[1], fileName: `${match[1]}.md`}));
 	const ids = entries.map((entry) => entry.id).sort();
 	const document = await readSkillDocument(skillPaths);
-	const expectedIds = document.rules.map((rule) => rule.fileName.replace(/\.md$/, "")).sort();
+	const expectedIds = document.rules.map((rule) => getRuleId(rule)).sort();
 
 	assert.deepEqual(ids, expectedIds);
 	assert.equal(ids.length, 22);
@@ -1775,15 +1787,13 @@ test("induced naming closure and activated finish gates stay mandatory across ev
 
 		assert.deepEqual(
 			Object.fromEntries(
-				document.rules
-					.filter((rule) => rule.requiresSelected.length > 0)
-					.map((rule) => [rule.fileName.replace(/\.md$/, ""), rule.requiresSelected]),
+				document.rules.filter((rule) => rule.requiresSelected.length > 0).map((rule) => [getRuleId(rule), rule.requiresSelected]),
 			),
 			mandatoryRuleRouting[skillName],
 			`${skillName} requiresSelected metadata must match the exact mandatory-routing oracle`,
 		);
 		assert.deepEqual(
-			document.rules.filter((rule) => rule.requiredOnCompletion).map((rule) => rule.fileName.replace(/\.md$/, "")),
+			document.rules.filter((rule) => rule.requiredOnCompletion).map((rule) => getRuleId(rule)),
 			completionGateRouting[skillName],
 			`${skillName} completion gates must match the exact oracle`,
 		);
@@ -1814,10 +1824,9 @@ test("induced naming closure and activated finish gates stay mandatory across ev
 		}
 	}
 
-	const reactRulesDir = getSkillPaths("react", realSkillRootDir).rulesDir;
-	const derivedRule = await readFile(path.join(reactRulesDir, "screen-keep-derived-values-close.md"), "utf8");
-	const bindingRule = await readFile(path.join(reactRulesDir, "data-name-query-and-mutation-bindings-consistently.md"), "utf8");
-	const originRule = await readFile(path.join(reactRulesDir, "data-preserve-origin-chaining.md"), "utf8");
+	const derivedRule = await readRuleSource("react", "screen-keep-derived-values-close");
+	const bindingRule = await readRuleSource("react", "data-name-query-and-mutation-bindings-consistently");
+	const originRule = await readRuleSource("react", "data-preserve-origin-chaining");
 	const typescriptFinishRule = await readFile(
 		path.join(getSkillPaths("typescript", realSkillRootDir).rulesDir, "guardrails-review-banned-typescript-shortcuts-before-finishing.md"),
 		"utf8",
@@ -1875,9 +1884,7 @@ test("React progressive metadata and all 42 rule routes match Appendix B exactly
 	]);
 	assert.equal(document.rules.length, 42);
 	assert.deepEqual(
-		Object.fromEntries(
-			document.rules.map((rule) => [rule.fileName.replace(/\.md$/, ""), {appliesWhen: rule.appliesWhen, reviewWith: rule.reviewWith}]),
-		),
+		Object.fromEntries(document.rules.map((rule) => [getRuleId(rule), {appliesWhen: rule.appliesWhen, reviewWith: rule.reviewWith}])),
 		reactRuleRouting,
 	);
 	assert.equal(
@@ -1889,19 +1896,19 @@ test("React progressive metadata and all 42 rule routes match Appendix B exactly
 		true,
 	);
 	for (const [ruleId, routing] of Object.entries(reactRuleRouting)) {
-		const ruleSource = await readFile(path.join(skillPaths.rulesDir, `${ruleId}.md`), "utf8");
+		const ruleSource = await readRuleSource("react", ruleId);
 
 		if (routing.reviewWith.length === 0) {
 			assert.doesNotMatch(ruleSource, /^reviewWith:/m, `${ruleId} must omit an empty reviewWith key`);
 		}
 	}
-	const ownershipNamingRule = await readFile(path.join(skillPaths.rulesDir, "ownership-use-consistent-file-and-symbol-naming.md"), "utf8");
+	const ownershipNamingRule = await readRuleSource("react", "ownership-use-consistent-file-and-symbol-naming");
 	assertMentions(readAppliesWhen(ownershipNamingRule), ["바꿀 때", "sibling `.ts` support 파일"], "ownershipNamingRule");
 	assert.match(
 		ownershipNamingRule,
 		/local query·mutation binding[^\n]+data-name-query-and-mutation-bindings-consistently|data-name-query-and-mutation-bindings-consistently[^\n]+local query·mutation binding/i,
 	);
-	const screenExtractionRule = await readFile(path.join(skillPaths.rulesDir, "screen-extract-utilities-selectively.md"), "utf8");
+	const screenExtractionRule = await readRuleSource("react", "screen-extract-utilities-selectively");
 	assert.match(
 		screenExtractionRule,
 		/query `select`[\s\S]+data-shape-query-data-with-select[\s\S]+별도 함수나 support module 경계[\s\S]+적용하지 않/i,
@@ -2115,9 +2122,7 @@ test("CSS progressive metadata and rule routing match Appendix C exactly", async
 	]);
 	assert.equal(document.rules.length, 21);
 	assert.deepEqual(
-		Object.fromEntries(
-			document.rules.map((rule) => [rule.fileName.replace(/\.md$/, ""), {appliesWhen: rule.appliesWhen, reviewWith: rule.reviewWith}]),
-		),
+		Object.fromEntries(document.rules.map((rule) => [getRuleId(rule), {appliesWhen: rule.appliesWhen, reviewWith: rule.reviewWith}])),
 		cssRuleRouting,
 	);
 	assert.equal(
@@ -2313,7 +2318,7 @@ test("routing activation and generated indexes use only the changed semantic del
 
 test("v16 boundary contracts distinguish semantic role changes from contextual and byte-equivalent noise", async () => {
 	const readRule = async (skillName: "react" | "typescript" | "css", ruleId: string): Promise<string> => {
-		return await readFile(path.join(realSkillRootDir, skillName, "rules", `${ruleId}.md`), "utf8");
+		return await readRuleSource(skillName, ruleId);
 	};
 
 	const routeFlow = await readRule("react", "screen-keep-route-flow-visible");
@@ -2525,7 +2530,7 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 
 test("v17 TypeScript boundaries exclude React props and prevent self-created duplicate contracts", async () => {
 	const readRule = async (skillName: "typescript", ruleId: string): Promise<string> => {
-		return await readFile(path.join(realSkillRootDir, skillName, "rules", `${ruleId}.md`), "utf8");
+		return await readRuleSource(skillName, ruleId);
 	};
 
 	const namedObjectParams = await readRule("typescript", "functions-use-named-object-params-for-complex-signatures");
@@ -2617,7 +2622,7 @@ test("v17 TypeScript boundaries exclude React props and prevent self-created dup
 
 test("v17 semantic contracts reject English-only annotations and effective deep third-party chains", async () => {
 	const readRule = async (skillName: "typescript" | "css", ruleId: string): Promise<string> => {
-		return await readFile(path.join(realSkillRootDir, skillName, "rules", `${ruleId}.md`), "utf8");
+		return await readRuleSource(skillName, ruleId);
 	};
 
 	const koreanComments = await readRule("typescript", "docs-write-concise-korean-comments-about-purpose-and-constraints");

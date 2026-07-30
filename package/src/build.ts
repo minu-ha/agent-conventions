@@ -420,9 +420,10 @@ export const buildSkill = async (skillPaths: SkillPaths): Promise<void> => {
 	const dependencies = parseDependencyDeclaration(rootDocument.skillName, rootDocument.metadata);
 	const rulesIndexMarkdown =
 		rootDocument.metadata.progressiveDisclosure === true ? generateRulesIndexMarkdown(rootDocument, dependencies.companions) : undefined;
-	const contractMarkdownByFileName = new Map(
+	// contract 파일명은 번호 prefix 없는 stable ID 기준이라 rule 파일명이 번호로 바뀌어도 참조가 유지된다.
+	const contractMarkdownByFileName = new Map<string, string>(
 		rootDocument.metadata.progressiveDisclosure === true
-			? rootDocument.rules.map((rule) => [rule.fileName, generateRuleContractMarkdown(rule)] as const)
+			? rootDocument.rules.map((rule) => [`${getRuleId(rule)}.md`, generateRuleContractMarkdown(rule)])
 			: [],
 	);
 	const existingContractFileNames = await readGeneratedDirectoryFileNames(skillPaths.ruleContractsDir);

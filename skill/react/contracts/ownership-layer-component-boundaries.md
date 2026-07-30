@@ -2,4 +2,4 @@
 
 **Impact: CRITICAL**
 
-> CRITICAL rule: must read the [full rule](../rules/ownership-layer-component-boundaries.md) before implementation or review.
+> CRITICAL rule: must read the [full rule](../rules/01-03-ownership-layer-component-boundaries.md) before implementation or review.

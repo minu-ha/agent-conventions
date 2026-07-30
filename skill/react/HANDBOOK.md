@@ -971,7 +971,7 @@ const handleRemoveEntryButtonClick: MouseEventHandler<HTMLButtonElement> = async
 
 ### 4.5 Use ref Props Instead of New forwardRef Wrappers in React 19
 
-**Rule:** `R17` · `composition-use-ref-prop-instead-of-forwardref-in-react-19`
+**Rule:** `R16` · `composition-use-ref-prop-instead-of-forwardref-in-react-19`
 
 **Applies when:** React 19 컴포넌트에 focus·scroll·measure용 ref 공개 API를 추가·변경할 때. 새 `forwardRef` wrapper를 도입하려 할 때.
 
@@ -1044,7 +1044,7 @@ export const UiStatusBadge = (props: UiStatusBadgeProps) => {
 
 ### 4.6 Use Visibility Primitives Deliberately for Show and Hide Branches
 
-**Rule:** `R16` · `composition-use-activity-for-render-branches`
+**Rule:** `R17` · `composition-use-activity-for-render-branches`
 
 **Applies when:** 마운트된 subtree의 표시 상태를 보존하려고 조건부 렌더링을 Activity로 바꿀 때. Activity 등 visibility primitive와 조건부 렌더링 사이를 오갈 때.
 

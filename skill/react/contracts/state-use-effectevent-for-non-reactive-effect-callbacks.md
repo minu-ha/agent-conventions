@@ -10,4 +10,4 @@ event handler를 effect로 옮기라는 뜻이 아닙니다.
 
 **Requires selected:** `docs-require-jsdoc-on-key-declarations` · 함께 적용
 
-> 예시·예외가 필요하면 [full rule](../rules/state-use-effectevent-for-non-reactive-effect-callbacks.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/08-05-state-use-effectevent-for-non-reactive-effect-callbacks.md)을 읽습니다.

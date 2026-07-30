@@ -11,4 +11,4 @@
 - 화면 하나에서만 쓰는 custom hook으로 우회해 흐름을 숨기는 것도 피합니다.
 - 인라인 callback을 같은 component 안의 named handler로 옮기기만 하는 변경은 대상이 아닙니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/events-keep-handler-flow-inline.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/06-01-events-keep-handler-flow-inline.md)을 읽습니다.

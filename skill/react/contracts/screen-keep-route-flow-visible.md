@@ -10,4 +10,4 @@ async·state·interaction 경계를 가진 section을 분리해도 이 흐름 �
 - `query.select` shape, binding·alias 정리, derived-state effect를 render 계산으로 옮기는 것
 - 순수 type·payload builder·preset의 sibling `.ts` 이동. support-code 규칙이 담당합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/screen-keep-route-flow-visible.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/05-05-screen-keep-route-flow-visible.md)을 읽습니다.

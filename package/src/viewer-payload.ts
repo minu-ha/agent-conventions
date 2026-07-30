@@ -1,6 +1,6 @@
 import {getSkillPaths, isBuildableSkill, listSkillNames} from "./config.js";
 import {readSkillDocument} from "./parser.js";
-import {getRulesForSection} from "./routing.js";
+import {getRuleId, getRulesForSection} from "./routing.js";
 import {parseRuleBody} from "./rule-body.js";
 import type {RuleCodeBlock, RuleExample} from "./rule-body.js";
 import type {CompanionMode} from "./types.js";
@@ -209,7 +209,7 @@ export const buildViewerPayload = async (): Promise<ViewerPayload> => {
 		for (const section of document.sections) {
 			getRulesForSection(section, document.rules).forEach((rule, index) => {
 				numberByFileName.set(rule.fileName, `${section.order}.${index + 1}`);
-				orderKey.set(`${document.skillName}/${rule.fileName.replace(/\.md$/, "")}`, section.order * 1000 + index);
+				orderKey.set(`${document.skillName}/${getRuleId(rule)}`, section.order * 1000 + index);
 			});
 		}
 
@@ -218,7 +218,7 @@ export const buildViewerPayload = async (): Promise<ViewerPayload> => {
 
 			rules.push({
 				skill: document.skillName,
-				id: rule.fileName.replace(/\.md$/, ""),
+				id: getRuleId(rule),
 				number: numberByFileName.get(rule.fileName) ?? "",
 				title: rule.title,
 				titleKo: rule.titleKo,

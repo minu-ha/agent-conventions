@@ -11,4 +11,4 @@ React 19의 `<Activity />` 또는 프로젝트가 이미 채택한 동등한 vis
 - mount/unmount 의미가 중요하면 기존 조건부 렌더링을 유지합니다.
 - 코드베이스에 `Activity`가 아직 없으면 이 규칙 때문에 새 추상화를 들이지 말고 기존 패턴을 따릅니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/composition-use-activity-for-render-branches.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/04-06-composition-use-activity-for-render-branches.md)을 읽습니다.

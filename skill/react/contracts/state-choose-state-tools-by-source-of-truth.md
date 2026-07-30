@@ -15,4 +15,4 @@
 프로젝트가 이미 다른 전역 store나 server-state 도구를 표준으로 쓴다면 그것을 유지합니다.
 `Zustand`나 `react-query`를 새로 들여오지 말고 source-of-truth 원칙만 지킵니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/state-choose-state-tools-by-source-of-truth.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/08-02-state-choose-state-tools-by-source-of-truth.md)을 읽습니다.

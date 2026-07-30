@@ -11,4 +11,4 @@ boolean이 늘어날수록 가능한 조합이 급증하고, JSX 분기와 스�
 - `.Root` 같은 namespaced part 문법은 권장 예시일 뿐입니다.
   본질은 boolean을 없애고 구조를 명시적으로 드러내는 데 있습니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/strategy-avoid-boolean-prop-proliferation.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/03-01-strategy-avoid-boolean-prop-proliferation.md)을 읽습니다.

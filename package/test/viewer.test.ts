@@ -99,7 +99,7 @@ test("parseRuleBody handles every rule in the repository", async () => {
 
 test("readSkillRules exposes titleKo and tolerates its absence", async () => {
 	const rules = await readSkillRules(getSkillPaths("react"));
-	const sample = rules.find((rule) => rule.fileName === "composition-named-handlers-over-inline.md");
+	const sample = rules.find((rule) => rule.fileName.endsWith("composition-named-handlers-over-inline.md"));
 
 	assert.ok(sample, "expected react composition-named-handlers-over-inline.md");
 	assert.equal(typeof sample.titleKo, "string");

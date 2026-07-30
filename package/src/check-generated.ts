@@ -6,7 +6,7 @@ import {isDirectExecution} from "./entrypoint.js";
 import {readGeneratedDirectoryFileNames, readGeneratedRegularFile} from "./generated-files.js";
 import {readSkillDocument} from "./parser.js";
 import {assertProgressiveCompanionSource, assertProgressiveSkillEntrypoint} from "./progressive.js";
-import {generateRuleContractMarkdown, generateRulesIndexMarkdown} from "./routing.js";
+import {generateRuleContractMarkdown, generateRulesIndexMarkdown, getRuleId} from "./routing.js";
 import type {SkillPaths} from "./types.js";
 
 /**
@@ -85,7 +85,10 @@ const checkGeneratedSkillTree = async (skillPaths: SkillPaths, visiting: Set<str
 		throw new Error(`${skillPaths.skillName}: stale generated RULES_INDEX.md at ${skillPaths.rulesIndexPath}. Run the skill build.`);
 	}
 
-	const expectedContracts = new Map(localDocument.rules.map((rule) => [rule.fileName, generateRuleContractMarkdown(rule)] as const));
+	// contract 파일명은 번호 prefix 없는 stable ID 기준이다.
+	const expectedContracts = new Map<string, string>(
+		localDocument.rules.map((rule) => [`${getRuleId(rule)}.md`, generateRuleContractMarkdown(rule)]),
+	);
 
 	for (const [fileName, expectedContract] of expectedContracts) {
 		const contractPath = path.join(skillPaths.ruleContractsDir, fileName);

@@ -13,4 +13,4 @@ companion skill인 `convention-typescript`의 표준을 따릅니다.
 
 **Requires selected:** `typescript/docs-keep-inline-comments-for-constraints-and-caveats` · 함께 적용
 
-> 예시·예외가 필요하면 [full rule](../rules/docs-limit-inline-comments-to-non-obvious-logic.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/10-02-docs-limit-inline-comments-to-non-obvious-logic.md)을 읽습니다.

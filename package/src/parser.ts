@@ -2,7 +2,7 @@ import {readFile, readdir} from "node:fs/promises";
 import path from "node:path";
 
 import {assertRealSkillDirectory, getSkillPaths, isBuildableSkill} from "./config.js";
-import {assertMetadataObject, parseDependencyDeclaration} from "./dependencies.js";
+import {assertMetadataObject, getRuleStableId, parseDependencyDeclaration} from "./dependencies.js";
 import {assertProgressiveCompanionSource, assertProgressiveSkillEntrypoint} from "./progressive.js";
 import type {LoadedSkillDocument, SkillMetadata, SkillPaths, SkillRule, SkillSection} from "./types.js";
 
@@ -288,7 +288,8 @@ export const readSkillRules = async (skillPaths: SkillPaths): Promise<SkillRule[
 	for (const ruleFileName of ruleFileNames) {
 		const source = await readFile(path.join(skillPaths.rulesDir, ruleFileName), "utf8");
 		const {frontmatter, body} = parseFrontmatter(source);
-		const prefix = ruleFileName.split("-")[0];
+		// 번호 prefix(`NN-MM-`)를 뗀 stable ID의 첫 토큰이 section prefix다.
+		const prefix = getRuleStableId(ruleFileName).split("-")[0];
 
 		rules.push({
 			fileName: ruleFileName,

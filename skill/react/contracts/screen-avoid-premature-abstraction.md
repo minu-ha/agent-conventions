@@ -22,4 +22,4 @@
 - export helper가 다른 export helper 하나만 위해 존재하는 구조
 - 이름이 그럴듯하다는 이유로 흐름을 파일 왕복 뒤에 숨기는 구조
 
-> 예시·예외가 필요하면 [full rule](../rules/screen-avoid-premature-abstraction.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/05-01-screen-avoid-premature-abstraction.md)을 읽습니다.

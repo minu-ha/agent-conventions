@@ -10,4 +10,4 @@
   deferred value 기준 재계산 비용이 실제로 크고,
   render마다 같은 작업을 반복하지 않으려는 목적이 분명할 때만 함께 씁니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/perf-use-usedeferredvalue-for-heavy-derived-renders.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/09-04-perf-use-usedeferredvalue-for-heavy-derived-renders.md)을 읽습니다.

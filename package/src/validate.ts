@@ -1,7 +1,13 @@
 import path from "node:path";
 
 import {getSkillPaths, isBuildableSkill, listSkillNames, packagePaths, parseCliArgs} from "./config.js";
-import {assertRoutingCondition, assertValidRoutingIdentifier, assertValidRuleTarget, parseDependencyDeclaration} from "./dependencies.js";
+import {
+	assertRoutingCondition,
+	assertValidRoutingIdentifier,
+	assertValidRuleTarget,
+	getRuleStableId,
+	parseDependencyDeclaration,
+} from "./dependencies.js";
 import type {DependencyDeclaration} from "./dependencies.js";
 import {isDirectExecution} from "./entrypoint.js";
 import {readSkillDocument, readSkillRuleFileNames} from "./parser.js";
@@ -81,7 +87,7 @@ const validateLocalSkill = async (skillPaths: SkillPaths): Promise<LocalValidati
 	const validPrefixes = new Set(sections.map((section) => section.prefix));
 
 	for (const rule of rules) {
-		const ruleId = rule.fileName.replace(/\.md$/, "");
+		const ruleId = getRuleStableId(rule.fileName);
 
 		if (!validPrefixes.has(rule.prefix)) {
 			throw new Error(`${skillPaths.skillName}: unknown prefix "${rule.prefix}" in ${rule.fileName}.`);
@@ -154,6 +160,43 @@ const validateLocalSkill = async (skillPaths: SkillPaths): Promise<LocalValidati
 		if (!rule.body.includes("**Incorrect") || !rule.body.includes("**Correct")) {
 			throw new Error(`${skillPaths.skillName}: ${rule.fileName} must contain Incorrect and Correct sections.`);
 		}
+	}
+
+	// 파일명 번호 prefix(`NN-MM-`)는 사람용 탐색 표지다. 섹션 번호와 어긋나거나 건너뛰면 표지가 거짓말이 된다.
+	for (const section of sections) {
+		const sectionRules = rules.filter((rule) => rule.prefix === section.prefix);
+		const numberedOrders: number[] = [];
+
+		for (const rule of sectionRules) {
+			const numbered = /^(\d+)-(\d+)-/.exec(rule.fileName);
+
+			if (!numbered) {
+				continue;
+			}
+
+			if (Number(numbered[1]) !== section.order) {
+				throw new Error(`${skillPaths.skillName}: ${rule.fileName} filename section number must match section order ${section.order}.`);
+			}
+
+			numberedOrders.push(Number(numbered[2]));
+		}
+
+		if (numberedOrders.length === 0) {
+			continue;
+		}
+
+		if (numberedOrders.length !== sectionRules.length) {
+			throw new Error(`${skillPaths.skillName}: section "${section.prefix}" mixes numbered and unnumbered rule filenames.`);
+		}
+
+		numberedOrders.sort((left, right) => left - right);
+		numberedOrders.forEach((order, index) => {
+			if (order !== index + 1) {
+				throw new Error(
+					`${skillPaths.skillName}: section "${section.prefix}" filename rule numbers must run 1..${numberedOrders.length}; found ${numberedOrders.join(", ")}.`,
+				);
+			}
+		});
 	}
 
 	return {document, dependencies, ruleCount: ruleFileNames.length, sectionCount: sections.length};
@@ -239,7 +282,7 @@ const validateRoutingTargets = (
 	dependenciesBySkill: Map<string, DependencyDeclaration>,
 ): void => {
 	for (const [skillName, document] of documents) {
-		const localRuleIds = new Set(document.rules.map((rule) => rule.fileName.replace(/\.md$/, "")));
+		const localRuleIds = new Set(document.rules.map((rule) => getRuleStableId(rule.fileName)));
 		const reachableSkillNames = collectReachableSkillNames(skillName, dependenciesBySkill);
 
 		for (const rule of document.rules) {
@@ -266,7 +309,7 @@ const validateRoutingTargets = (
 					}
 
 					const targetDocument = documents.get(targetSkillName);
-					const targetExists = targetDocument?.rules.some((targetRule) => targetRule.fileName.replace(/\.md$/, "") === targetRuleId);
+					const targetExists = targetDocument?.rules.some((targetRule) => getRuleStableId(targetRule.fileName) === targetRuleId);
 
 					if (!targetExists) {
 						throw new Error(`${skillName}: ${rule.fileName} has unknown ${fieldName} target "${target}".`);

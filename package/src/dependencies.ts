@@ -24,6 +24,14 @@ const maximumConditionLength = 160;
 const safeStableNamePattern = /^[A-Za-z0-9][A-Za-z0-9._@-]*$/;
 
 /**
+ * @helper rule 파일명에서 stable ID 계산.
+ * 사람이 번호로 찾도록 파일명 앞에 붙이는 `NN-MM-` prefix는 ID에서 제외해 참조가 번호 변경에 흔들리지 않게 한다.
+ */
+export const getRuleStableId = (fileName: string): string => {
+	return fileName.replace(/\.md$/, "").replace(/^\d+-\d+-/, "");
+};
+
+/**
  * @helper unknown 값의 metadata object 여부 검증
  */
 export const assertMetadataObject = (value: unknown, skillName: string): Record<string, unknown> => {

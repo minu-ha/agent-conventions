@@ -9,4 +9,4 @@ remount, focus reset, animation restart, effect 재실행이 생깁니다.
 로컬에서 JSX 조각을 재사용하려면 helper 함수 호출로 남기거나,
 독립 component로 빼고 props를 전달합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/composition-do-not-define-components-inside-components.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/04-02-composition-do-not-define-components-inside-components.md)을 읽습니다.

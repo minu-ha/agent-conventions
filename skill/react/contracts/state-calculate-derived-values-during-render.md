@@ -11,4 +11,4 @@ render 중에 계산하면 추가 렌더와 drift가 줄고, effect dependency�
 
 **Requires selected:** `screen-keep-derived-values-close` · 함께 적용
 
-> 예시·예외가 필요하면 [full rule](../rules/state-calculate-derived-values-during-render.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/08-01-state-calculate-derived-values-during-render.md)을 읽습니다.

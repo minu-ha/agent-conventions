@@ -24,4 +24,4 @@
 - `helper.ts`, `helpers.ts`, `utils.ts`, `common.ts` 같은 generic 파일명은 만들지 않습니다.
 - support module 안에서도 작은 private helper를 쌓지 말고, 기본은 한 exported 함수 안에서 단계별로 정리합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/screen-extract-utilities-selectively.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/05-03-screen-extract-utilities-selectively.md)을 읽습니다.

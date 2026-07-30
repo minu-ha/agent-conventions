@@ -4,7 +4,7 @@ import path from "node:path";
 import {getSkillPaths, isBuildableSkill, listSkillNames, packagePaths} from "./config.js";
 import {parseDependencyDeclaration} from "./dependencies.js";
 import {readResolvedSkillDocuments, readSkillDocument} from "./parser.js";
-import {getCanonicalRoutingRuleIds} from "./routing.js";
+import {getCanonicalRoutingRuleIds, getRuleId} from "./routing.js";
 import type {
 	LoadedSkillDocument,
 	RoutingEvalManifest,
@@ -389,18 +389,14 @@ const validateExpectedPartition = async (args: ValidateExpectedPartitionArgs): P
 		validateRulePartition({label, document, selected: partition.expectedSelected[skillName] ?? []});
 
 		const selectedRuleIds = new Set(partition.expectedSelected[skillName] ?? []);
-		const missingCompletionRule = document.rules.find(
-			(rule) => rule.requiredOnCompletion && !selectedRuleIds.has(rule.fileName.replace(/\.md$/, "")),
-		);
+		const missingCompletionRule = document.rules.find((rule) => rule.requiredOnCompletion && !selectedRuleIds.has(getRuleId(rule)));
 
 		if (missingCompletionRule) {
-			throw new Error(
-				`${label} must select requiredOnCompletion rule "${skillName}/${missingCompletionRule.fileName.replace(/\.md$/, "")}".`,
-			);
+			throw new Error(`${label} must select requiredOnCompletion rule "${skillName}/${getRuleId(missingCompletionRule)}".`);
 		}
 
 		for (const selectedRuleId of selectedRuleIds) {
-			const selectedRule = document.rules.find((rule) => rule.fileName.replace(/\.md$/, "") === selectedRuleId);
+			const selectedRule = document.rules.find((rule) => getRuleId(rule) === selectedRuleId);
 
 			if (!selectedRule) {
 				continue;
@@ -569,7 +565,7 @@ export const validateRoutingEvalManifests = async (skillRootDir: string = packag
 
 	for (const [skillName, document] of progressiveDocuments) {
 		const selected = selectedBySkill.get(skillName) ?? new Set<string>();
-		const missingRuleIds = document.rules.map((rule) => rule.fileName.replace(/\.md$/, "")).filter((ruleId) => !selected.has(ruleId));
+		const missingRuleIds = document.rules.map((rule) => getRuleId(rule)).filter((ruleId) => !selected.has(ruleId));
 
 		if (missingRuleIds.length > 0) {
 			throw new Error(`Routing positive coverage for "${skillName}" is missing: ${missingRuleIds.join(", ")}.`);

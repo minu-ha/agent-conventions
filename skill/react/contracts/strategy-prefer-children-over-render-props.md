@@ -6,4 +6,4 @@ shared component가 `stateless compound component`로 충분할 때는 `renderHe
 `renderFooter` 같은 render prop보다 `children`과 namespaced slot part를 우선합니다.
 render prop은 parent가 child에 item, index, state 같은 runtime 데이터를 전달해야 할 때만 사용합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/strategy-prefer-children-over-render-props.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/03-03-strategy-prefer-children-over-render-props.md)을 읽습니다.

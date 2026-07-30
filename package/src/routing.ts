@@ -1,6 +1,6 @@
 import {createHash} from "node:crypto";
 
-import {assertRoutingCondition, assertValidRoutingIdentifier, assertValidRuleTarget} from "./dependencies.js";
+import {assertRoutingCondition, assertValidRoutingIdentifier, assertValidRuleTarget, getRuleStableId} from "./dependencies.js";
 import type {LoadedSkillDocument, SkillCompanion, SkillRule, SkillSection} from "./types.js";
 
 const compareRoutingText = (left: string, right: string): number => (left < right ? -1 : left > right ? 1 : 0);
@@ -67,7 +67,16 @@ interface CanonicalRoutingSourceArgs {
 /**
  * @helper rule 파일명에서 stable ID 계산
  */
-export const getRuleId = (rule: SkillRule): string => rule.fileName.replace(/\.md$/, "");
+export const getRuleId = (rule: SkillRule): string => getRuleStableId(rule.fileName);
+
+/**
+ * @helper 파일명 번호 prefix에서 section 내 정렬 키 계산. 번호가 없으면 제목 정렬로 넘어간다
+ */
+const getRuleFileOrder = (rule: SkillRule): number => {
+	const numbered = /^(\d+)-(\d+)-/.exec(rule.fileName);
+
+	return numbered ? Number(numbered[1]) * 1_000 + Number(numbered[2]) : Number.MAX_SAFE_INTEGER;
+};
 
 /**
  * @helper routing edge target를 generated surface와 validator가 공유하는 code-point 순서로 정렬
@@ -80,7 +89,12 @@ export const getCanonicalRoutingTargets = (targets: string[]): string[] => [...t
 export const getRulesForSection = (section: SkillSection, rules: SkillRule[]): SkillRule[] => {
 	return rules
 		.filter((rule) => rule.prefix === section.prefix)
-		.sort((left, right) => compareHandbookText(left.title, right.title) || compareHandbookText(getRuleId(left), getRuleId(right)));
+		.sort(
+			(left, right) =>
+				getRuleFileOrder(left) - getRuleFileOrder(right) ||
+				compareHandbookText(left.title, right.title) ||
+				compareHandbookText(getRuleId(left), getRuleId(right)),
+		);
 };
 
 /**
@@ -89,7 +103,12 @@ export const getRulesForSection = (section: SkillSection, rules: SkillRule[]): S
 const getRoutingRulesForSection = (section: SkillSection, rules: SkillRule[]): SkillRule[] => {
 	return rules
 		.filter((rule) => rule.prefix === section.prefix)
-		.sort((left, right) => compareRoutingText(left.title, right.title) || compareRoutingText(getRuleId(left), getRuleId(right)));
+		.sort(
+			(left, right) =>
+				getRuleFileOrder(left) - getRuleFileOrder(right) ||
+				compareRoutingText(left.title, right.title) ||
+				compareRoutingText(getRuleId(left), getRuleId(right)),
+		);
 };
 
 /**

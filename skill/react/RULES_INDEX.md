@@ -1,7 +1,7 @@
 # React 컨벤션 Rule Index
 
 - Skill: `react`
-- Routing digest: `sha256:160002c3a57b0c30530b5079df879c5b11084fc18c7da1995f3a5b21d861ee01`
+- Routing digest: `sha256:41bd8bf81502e601d87edc57f37a1030ca53623534811d7f08d153fb17f33b9a`
 
 ## Direct Companions
 
@@ -25,8 +25,8 @@
 - R13 | composition-do-not-define-components-inside-components | 컴포넌트 본문 안에 JSX를 반환하는 로컬 함수·컴포넌트를 추가하거나 옮길 때. 재렌더 시 remount·focus reset 징후를 다룰 때.
 - R14 | composition-prefer-arrow-functions-and-object-params | React 인접 코드에 \`function\` 선언이 생길 때. 함수가 매개변수를 3개 이상 받을 때. 함수가 함께 이동하는 같은 계열 값을 받을 때. | reviewWith: typescript/functions-use-named-object-params-for-complex-signatures
 - R15 | composition-named-handlers-over-inline | TSX event prop의 인라인 callback에 분기나 비동기 호출을 추가·수정할 때. 인라인 callback에 여러 동작·부수효과나 비자명한 state transition이 들어갈 때. 제외: 단순 setter나 인자 전달 한 줄 위임만 있는 경우. | reviewWith: events-keep-handler-flow-inline, events-run-user-actions-in-handlers-not-effects
-- R16 | composition-use-activity-for-render-branches | 마운트된 subtree의 표시 상태를 보존하려고 조건부 렌더링을 Activity로 바꿀 때. Activity 등 visibility primitive와 조건부 렌더링 사이를 오갈 때.
-- R17 | composition-use-ref-prop-instead-of-forwardref-in-react-19 | React 19 컴포넌트에 focus·scroll·measure용 ref 공개 API를 추가·변경할 때. 새 \`forwardRef\` wrapper를 도입하려 할 때.
+- R16 | composition-use-ref-prop-instead-of-forwardref-in-react-19 | React 19 컴포넌트에 focus·scroll·measure용 ref 공개 API를 추가·변경할 때. 새 \`forwardRef\` wrapper를 도입하려 할 때.
+- R17 | composition-use-activity-for-render-branches | 마운트된 subtree의 표시 상태를 보존하려고 조건부 렌더링을 Activity로 바꿀 때. Activity 등 visibility primitive와 조건부 렌더링 사이를 오갈 때.
 - R18 | screen-avoid-premature-abstraction | screen 코드를 helper·hook·component·module로 추출할 때. 한 곳에서만 쓰는 기존 추상화를 다시 접어 넣을 때. | reviewWith: screen-extract-local-section-components-for-runtime-boundaries, screen-extract-utilities-selectively, typescript/functions-extract-helpers-only-when-the-boundary-is-real
 - R19 | screen-extract-local-section-components-for-runtime-boundaries | route-local section component를 새로 추출할 때. 기존 section이 async·state·provider·interaction·library·performance 경계를 소유하는지 바꿀 때.
 - R20 | screen-extract-utilities-selectively | 화면 계산·변환·preset·option·column meta를 별도 함수나 support module로 옮길 때. 화면 support 경계를 바꿀 때. 제외: query \`select\` 내부 shaping만 바꾸는 경우. | reviewWith: screen-move-pure-support-code-out-of-entry-files, typescript/functions-extract-helpers-only-when-the-boundary-is-real

@@ -18,4 +18,4 @@ factory 반환 타입을 `MouseEventHandler<...>` 같은 기존 alias로 고정�
 
 **Requires selected:** `typescript/types-reuse-callback-signatures-from-existing-contracts` · 함께 적용
 
-> 예시·예외가 필요하면 [full rule](../rules/typing-function-type-first.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/02-01-typing-function-type-first.md)을 읽습니다.

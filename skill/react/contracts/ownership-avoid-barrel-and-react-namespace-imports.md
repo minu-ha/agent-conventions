@@ -11,4 +11,4 @@ import 경로와 타입 출처를 명시적으로 유지하기 위해서입니�
 
 **Requires selected:** `typescript/naming-use-direct-imports-and-public-entry-points` · 함께 적용
 
-> 예시·예외가 필요하면 [full rule](../rules/ownership-avoid-barrel-and-react-namespace-imports.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/01-01-ownership-avoid-barrel-and-react-namespace-imports.md)을 읽습니다.

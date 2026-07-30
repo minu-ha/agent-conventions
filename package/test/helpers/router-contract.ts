@@ -98,7 +98,8 @@ export const assertRouterProtocol = (body: string): void => {
 	// 3. 규칙 본문 확장 기준과 라우팅 key 3종의 의미
 	const apply = extractSection(body, 3);
 
-	assertMentions(apply, ["contracts/<id>.md", "rules/<id>.md", "CRITICAL"], "3절");
+	// full rule 파일명은 사람용 번호 prefix(`NN-MM-`)가 붙은 skill 과 아닌 skill 이 공존한다
+	assertMentions(apply, ["contracts/<id>.md", /rules\/(?:NN-MM-)?<id>\.md/, "CRITICAL"], "3절");
 
 	for (const {key, negated} of routingKeyPolarity) {
 		assert.equal(isNegated(blockContaining(apply, key)), negated, `3절 \`${key}\` 극성이 뒤집혔다`);

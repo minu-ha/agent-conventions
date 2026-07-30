@@ -14,4 +14,4 @@
 수가 많지 않으면 폴더 단위로 나누지 말고 `export const config = {}` 한 namespace를 유지합니다.
 사용처는 `config.*` 체이닝으로 접근해 출처를 보존합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/ownership-shared-config-entry-points.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/01-05-ownership-shared-config-entry-points.md)을 읽습니다.
