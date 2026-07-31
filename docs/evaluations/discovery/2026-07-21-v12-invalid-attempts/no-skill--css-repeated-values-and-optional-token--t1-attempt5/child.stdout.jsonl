@@ -1,3 +1,0 @@
-{"type":"thread.started","thread_id":"019f8988-07d7-7071-9eaa-11394b870ae2"}
-{"type":"turn.started"}
-{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"요청 파일과 체크섬을 확인한 뒤, 지정된 payload 파일만 수정하겠습니다. 대화 시작 규칙에 따라 `superpowers:using-superpowers` 지침도 먼저 확인합니다."}}

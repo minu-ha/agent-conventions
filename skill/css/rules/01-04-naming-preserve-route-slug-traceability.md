@@ -22,7 +22,7 @@ CSS skill은 어떤 파일이 route-owned인지 결정하지 않고,
 - `rt_*` slug는 짧음보다 추적 가능성을 우선합니다.
 - 전체 folder path를 모두 쓰지는 않아도, route family와 screen role은 읽혀야 합니다.
 - 팀이 공유하는 route map이 없는 opaque acronym은 피합니다.
-- `wg_*`, `ui_*`, `loc_*`는 각 owner scope의 naming style을 따릅니다.
+- `wg_*`, `ui_*`, `pv_*`는 각 owner scope의 naming style을 따릅니다.
 - document, local helper, reusable widget의 owner 판단은 companion framework skill의 소유권 규칙을 우선합니다.
 
 **Incorrect (의미가 약하거나 계층 순서가 흐려진 slug):**

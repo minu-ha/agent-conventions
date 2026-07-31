@@ -5,8 +5,8 @@
 ## 1. Naming and Ownership (naming)
 **TitleKo:** 이름과 소유
 **Impact:** CRITICAL
-**Description:** 클래스 문법, `rt_/wg_/ui_/loc_` scope별 slug 규칙, 네임스페이스 소유권, route/local/shared owner 범위가
-  명확해야 스타일을 검색하고 안전하게 수정할 수 있습니다.
+**Description:** 클래스 문법, `rt_/wg_/ui_/pv_` scope별 slug 규칙, 네임스페이스 소유권, route/private/shared owner
+  범위가 명확해야 스타일을 검색하고 안전하게 수정할 수 있습니다.
 
 ## 2. Class Composition and Wrapper Boundaries (composition)
 **TitleKo:** class 조합과 wrapper 경계

@@ -5,8 +5,8 @@
 ## 1. Ownership and Boundaries (ownership)
 **TitleKo:** 소유와 경계
 **Impact:** CRITICAL
-**Description:** Shared UI, widget, route-local 코드는 소유 경계가 분명해야 에이전트가 코드를 예측 가능하게 배치할 수
-  있습니다.
+**Description:** ui, widget, owner-private 코드는 소유 경계가 분명해야 에이전트가 코드를 예측 가능하게 배치할 수
+  있습니다. owner 아래 role 폴더 구조, 하향 단방향 import, lifecycle 소유가 이 경계를 지탱합니다.
 
 ## 2. Typing and Contracts (typing)
 **TitleKo:** 타입과 계약

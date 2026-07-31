@@ -17,6 +17,10 @@ tags: namespace, ownership, uniqueness
 새 스타일을 추가할 때는 먼저 기존 `scope_slug` 충돌 여부를 확인하고,
 의미가 겹치더라도 파일이 다르면 별도 slug를 부여합니다.
 
+CSS 파일 하나가 slug 하나를 소유합니다.
+여러 하위 component가 부모 slug를 나눠 쓰는 것도 같은 위반입니다.
+자기 CSS 파일이 있으면 자기 slug를 만들고, 부모 slug를 계속 쓰려면 스타일도 부모 파일에 두어야 합니다.
+
 **Incorrect (이미 다른 소유자가 쓰는 `scope_slug`를 재사용):**
 
 ```txt

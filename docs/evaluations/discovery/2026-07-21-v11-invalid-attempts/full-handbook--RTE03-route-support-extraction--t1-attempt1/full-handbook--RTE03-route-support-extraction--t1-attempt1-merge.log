@@ -1,5 +1,0 @@
-
-> skills-build@1.0.0 behavioral:coordinator
-> tsx src/behavioral-eval-coordinator.ts merge --envelope=/Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v11-runs/full-handbook--RTE03-route-support-extraction--t1.dispatch-envelope.json --payload=/Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v11-runs/full-handbook--RTE03-route-support-extraction--t1.child-payload.json --output-dir=/Users/l-20220017/workspace/agent-conventions-progressive-loading/docs/evaluations/2026-07-21-progressive-loading-v11-runs --skill-root=/Users/l-20220017/workspace/agent-conventions-progressive-loading/skill
-
-run.routingTrace pass 1 must partition the complete current rule universe for "react".

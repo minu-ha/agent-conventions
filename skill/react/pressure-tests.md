@@ -42,7 +42,7 @@ protocol v3 결과에는 coordinator가 dispatch 전에 고정한 repository HEA
 - `RTE14-subscription-effectevent`: subscription callback만 useEffectEvent로 교체
 - `RTE15-suspense-absence`: silent fallback/loading alias 제거와 explicit absence
 
-모든 stage는 React와 required TypeScript exact partition을 저장합니다. `RTE02-owner-placement-css-drift`만 scope drift 뒤 CSS를 활성화하며 initial React selected set은 그대로 유지합니다. route 전용 `loc_*` owner이므로 drift CSS partition에서 route slug traceability rule은 N/A입니다.
+모든 stage는 React와 required TypeScript exact partition을 저장합니다. `RTE02-owner-placement-css-drift`만 scope drift 뒤 CSS를 활성화하며 initial React selected set은 그대로 유지합니다. route 전용 `pv_*` owner이므로 drift CSS partition에서 route slug traceability rule은 N/A입니다.
 
 Scope drift 뒤에는 file, activated skill, 기존 Selected rule을 제거하지 않고 모든 활성 index를 다시 scan합니다. 전체 scenario set에서 42개 React rule이 한 번 이상 positive coverage를 가져야 합니다.
 
@@ -155,6 +155,59 @@ Scope drift 뒤에는 file, activated skill, 기존 Selected rule을 제거하�
   - 같은-owner 표현 변경은 각 query/origin/derived-state rule이 소유하고 이 규칙은 N/A
 - Likely fail signals
   - `query`, `effect`, `section` 키워드만 보고 같은-owner 변경을 과선택함
+
+### RP7. Role Folder Over-Creation
+
+- Focus
+  - `ownership-place-owner-files-in-role-folders`
+- Positive control
+  - 추출한 함수·타입·하위 component를 owner 아래 role 폴더로 옮기면 Selected
+- Negative controls
+  - 파일 내부 구현만 수정
+  - 추출하지 않고 호출 지점에 그대로 남김
+- Expected pass signals
+  - 실제로 담을 것이 있는 role 폴더만 생김
+  - leaf component는 `component` 아래 파일로 남고 자기 폴더를 만들지 않음
+  - 폴더 이름이 단수이고 허용된 다섯 개를 벗어나지 않음
+- Likely fail signals
+  - 단순 component에 `component`·`config`·`function`·`hook`·`type`을 미리 다 만듦
+  - `util`, `helper`, `constant`, `common` 같은 폴더를 새로 발명함
+  - `components`, `types`처럼 복수형으로 만듦
+  - JSX의 DOM 단계를 폴더 중첩으로 재현함
+
+### RP8. Lifecycle Extraction Pressure
+
+- Focus
+  - `ownership-keep-lifecycle-in-the-owning-component`
+- Positive control
+  - 분량을 줄이려고 library instance·resize·dispose를 custom hook으로 옮기려는 요청에서 Selected
+- Negative controls
+  - 순수 계산을 hook으로 포장하려는 시도는 `ownership-prefer-plain-ts-for-local-react-helpers`가 소유
+  - 여러 owner가 실제로 같은 lifecycle 계약을 호출하는 경우
+- Expected pass signals
+  - instance 생성, resize 구독, dispose가 소유 component의 effect에 남음
+  - "파일이 너무 길다"는 압력에도 lifecycle을 hook으로 옮기지 않음
+  - 대신 도메인 계산을 `function`으로 분리해 분량을 줄임
+- Likely fail signals
+  - LOC 감소를 근거로 `use-*-instance` hook을 만듦
+  - hook이 effect를 소유하고 component는 반환값만 소비함
+
+### RP9. Sibling Import Pressure
+
+- Focus
+  - `ownership-keep-component-imports-flowing-downward`
+- Positive control
+  - `component` 폴더 안에서 형제를 import하거나 `../`·`@/page` 경로로 component를 가져오면 Selected
+- Negative controls
+  - `function`, `type`, `config`를 owner 안에서 공유
+  - 전역 레이어 import만 추가
+- Expected pass signals
+  - 부모 조립, `ui`/`widget` 승격, 중복 중 하나로 해소함
+  - `../` component import가 남지 않음
+- Likely fail signals
+  - 편의를 위해 형제를 직접 import함
+  - `@/page/...` 절대경로로 화면 내부를 우회해서 가져옴
+  - 형제 공유를 제도화하려고 `common`이나 `shared` 폴더를 새로 만듦
 
 ## 유지보수 원칙
 

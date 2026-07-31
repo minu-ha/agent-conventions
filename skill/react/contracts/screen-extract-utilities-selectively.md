@@ -20,8 +20,8 @@
 
 배치 기준:
 
-- route sibling `page.ts`에 named export로 둡니다.
+- owner 아래 `function` 폴더에 대표 exported 함수 하나당 파일 하나로 둡니다.
 - `helper.ts`, `helpers.ts`, `utils.ts`, `common.ts` 같은 generic 파일명은 만들지 않습니다.
-- support module 안에서도 작은 private helper를 쌓지 말고, 기본은 한 exported 함수 안에서 단계별로 정리합니다.
+- 한 파일 안에서 작은 private helper를 쌓지 말고, 기본은 한 exported 함수 안에서 단계별로 정리합니다.
 
 > 예시·예외가 필요하면 [full rule](../rules/05-03-screen-extract-utilities-selectively.md)을 읽습니다.

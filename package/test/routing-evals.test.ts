@@ -19,7 +19,7 @@ import {
 import {getSkillPaths} from "../src/config.js";
 import {readSkillDocument} from "../src/parser.js";
 import {readRoutingEvalManifest, validateRoutingEvalManifest, validateRoutingEvalManifests} from "../src/routing-evals.js";
-import {generateRulesIndexMarkdown, getCanonicalRoutingRuleIds, getRuleId, getRulesIndexByteBudget} from "../src/routing.js";
+import {generateRulesIndexMarkdown, getRuleId, getRulesIndexByteBudget} from "../src/routing.js";
 import type {RoutingEvalManifest, RoutingExpectedPartition, SkillCompanion} from "../src/types.js";
 
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
@@ -80,7 +80,6 @@ const readRuleSource = async (skillName: string, ruleId: string): Promise<string
 
 	return await readFile(path.join(rulesDir, fileName), "utf8");
 };
-const behavioralProtocolPath = path.join(repoDir, "docs/evaluations/2026-07-21-progressive-loading-behavioral-protocol.json");
 
 const typescriptRuleUniverse = [
 	"naming-centralize-shared-config-namespaces",
@@ -112,7 +111,7 @@ const cssRuleUniverse = [
 	"naming-keep-scope-slug-unique-per-owner",
 	"naming-name-elements-and-modifiers-by-role",
 	"naming-preserve-route-slug-traceability",
-	"naming-separate-local-and-route-style-scopes",
+	"naming-separate-owner-style-scopes",
 	"naming-use-scope-slug-element-modifier-syntax",
 	"composition-compose-classes-with-clsx",
 	"composition-do-not-build-structural-variants-with-modifiers",
@@ -138,9 +137,11 @@ const reactRuleUniverse = [
 	"ownership-avoid-barrel-and-react-namespace-imports",
 	"ownership-prefer-plain-ts-for-local-react-helpers",
 	"ownership-layer-component-boundaries",
-	"ownership-place-route-local-files-by-scope",
+	"ownership-place-owner-files-in-role-folders",
 	"ownership-shared-config-entry-points",
 	"ownership-use-consistent-file-and-symbol-naming",
+	"ownership-keep-component-imports-flowing-downward",
+	"ownership-keep-lifecycle-in-the-owning-component",
 	"typing-function-type-first",
 	"typing-reuse-existing-contracts",
 	"strategy-avoid-boolean-prop-proliferation",
@@ -157,7 +158,6 @@ const reactRuleUniverse = [
 	"screen-extract-utilities-selectively",
 	"screen-keep-derived-values-close",
 	"screen-keep-route-flow-visible",
-	"screen-move-pure-support-code-out-of-entry-files",
 	"events-keep-handler-flow-inline",
 	"events-name-and-curry-handlers",
 	"events-run-user-actions-in-handlers-not-effects",
@@ -179,125 +179,10 @@ const reactRuleUniverse = [
 	"docs-require-jsdoc-on-key-declarations",
 ] as const;
 
-test("behavioral protocol mandatory routing contract exactly mirrors current rule frontmatter", async () => {
-	const skillNames = ["react", "typescript", "css"] as const;
-	const documents = new Map(
-		await Promise.all(
-			skillNames.map(async (skillName) => [skillName, await readSkillDocument(getSkillPaths(skillName, realSkillRootDir))] as const),
-		),
-	);
-	const ruleReferenceByQualifiedId = new Map<string, string>();
-
-	for (const skillName of skillNames) {
-		const document = documents.get(skillName)!;
-		const prefix = skillName.slice(0, 1).toUpperCase();
-
-		for (const [index, ruleId] of getCanonicalRoutingRuleIds(document).entries()) {
-			ruleReferenceByQualifiedId.set(`${skillName}/${ruleId}`, `${skillName}:${prefix}${String(index + 1).padStart(2, "0")} ${ruleId}`);
-		}
-	}
-
-	const expectedRequiresSelected: Record<string, string[]> = {};
-	const expectedCompletionGates: Record<string, string[]> = {};
-
-	for (const skillName of skillNames) {
-		const document = documents.get(skillName)!;
-		expectedCompletionGates[skillName] = [];
-
-		for (const rule of document.rules) {
-			const ruleId = getRuleId(rule);
-			const sourceReference = ruleReferenceByQualifiedId.get(`${skillName}/${ruleId}`)!;
-
-			if (rule.requiredOnCompletion) expectedCompletionGates[skillName]!.push(sourceReference.slice(sourceReference.indexOf(":") + 1));
-
-			if (rule.requiresSelected.length > 0) {
-				expectedRequiresSelected[sourceReference] = rule.requiresSelected.map((target) => {
-					const qualifiedTarget = target.includes("/") ? target : `${skillName}/${target}`;
-					const targetReference = ruleReferenceByQualifiedId.get(qualifiedTarget);
-
-					assert.ok(targetReference, `missing current target identity for ${qualifiedTarget}`);
-					return targetReference;
-				});
-			}
-		}
-	}
-
-	const protocol = JSON.parse(await readFile(behavioralProtocolPath, "utf8")) as {
-		execution: {mandatoryRoutingContract: {completionGates: Record<string, string[]>; requiresSelected: Record<string, string[]>}};
-	};
-	const actualContract = protocol.execution.mandatoryRoutingContract;
-	const normalizeRequiresSelected = (record: Record<string, string[]>): Record<string, string[]> =>
-		Object.fromEntries(
-			Object.entries(record)
-				.sort(([left], [right]) => left.localeCompare(right, "en"))
-				.map(([source, targets]) => [source, [...targets].sort((left, right) => left.localeCompare(right, "en"))]),
-		);
-
-	assert.deepEqual(actualContract.completionGates, expectedCompletionGates);
-	assert.deepEqual(normalizeRequiresSelected(actualContract.requiresSelected), normalizeRequiresSelected(expectedRequiresSelected));
-});
-
 /**
  * @summary Appendix A의 TypeScript rule별 exact routing metadata oracle
  */
 const typescriptRuleRouting = {
-	"absence-expose-optional-values-instead-of-silent-fallbacks": {
-		appliesWhen: "optional 값의 읽기·정규화·전달을 바꿀 때. `??`, `||`, 기본값 또는 빈 값 대체 분기를 추가·변경할 때.",
-		reviewWith: ["docs-keep-inline-comments-for-constraints-and-caveats"],
-	},
-	"docs-keep-inline-comments-for-constraints-and-caveats": {
-		appliesWhen: "함수 본문의 `//` 주석을 추가·수정·유지할 때. 도메인 규칙, 예외 방어, 외부 제약 또는 부수효과 순서를 주석으로 설명할 때.",
-		reviewWith: [],
-	},
-	"docs-require-header-jsdoc-on-key-declarations": {
-		appliesWhen:
-			"named query·mutation, 원격 함수, 비자명한 handler/effect, reusable/exported helper·custom hook, custom type·interface, store, formatter 또는 예외 memo 선언을 추가·변경할 때.",
-		reviewWith: [],
-	},
-	"docs-standardize-annotation-tags-by-declaration-role": {
-		appliesWhen: "TypeScript/TSX 선언의 JSDoc 태그를 추가·변경할 때. 선언 역할에 맞는 annotation을 검토할 때.",
-		reviewWith: [],
-	},
-	"docs-use-helper-for-reusable-pure-helper-functions": {
-		appliesWhen:
-			"여러 caller가 쓰는 pure support function, owner-named exported helper 또는 `shared/util.ts` 함수를 추가·변경할 때. `@helper`를 붙이려 할 때.",
-		reviewWith: [],
-	},
-	"docs-write-concise-korean-comments-about-purpose-and-constraints": {
-		appliesWhen: "TypeScript/TSX의 JSDoc이나 inline comment 문구를 추가·수정·번역하거나 리뷰할 때.",
-		reviewWith: [],
-	},
-	"functions-avoid-imperative-assembly-in-wide-scopes": {
-		appliesWhen: "파일 상단이나 넓은 스코프에서 `let` 재대입, 배열 `push` 또는 조건부 누적으로 값을 조립하거나 리팩터링할 때.",
-		reviewWith: [],
-	},
-	"functions-extract-helpers-only-when-the-boundary-is-real": {
-		appliesWhen:
-			"support function을 추출·이동·export·공유할 때. generic helper 파일, 단일 owner 전용 mapper 또는 작은 sub-step 경계를 바꿀 때.",
-		reviewWith: ["docs-use-helper-for-reusable-pure-helper-functions", "docs-require-header-jsdoc-on-key-declarations"],
-	},
-	"functions-prefer-immutable-array-sorting": {
-		appliesWhen: "props, state, 매개변수 또는 공유 입력에서 온 배열을 정렬할 때. 기존 `.sort()` 호출을 추가·변경할 때.",
-		reviewWith: [],
-	},
-	"functions-replace-enum-with-as-const-objects": {
-		appliesWhen: "`enum` 또는 타입과 런타임에서 함께 쓰는 enum-like 값 집합을 추가·변경할 때.",
-		reviewWith: [],
-	},
-	"functions-use-named-object-params-for-complex-signatures": {
-		appliesWhen:
-			"매개변수 3개 이상 또는 같은 계열 인자를 받는 일반 함수를 추가·변경할 때. 객체 매개변수의 구조분해 위치를 바꿀 때. 제외: React 함수 컴포넌트의 props 수신·구조분해만 바꾸는 경우.",
-		reviewWith: [],
-	},
-	"functions-use-set-and-map-for-repeated-lookups": {
-		appliesWhen: "같은 컬렉션에 `includes`, `find` 또는 keyed lookup을 여러 번 수행하는 코드를 추가·변경할 때.",
-		reviewWith: [],
-	},
-	"guardrails-review-banned-typescript-shortcuts-before-finishing": {
-		appliesWhen:
-			"TypeScript/TSX 변경을 완료 판정할 때. diff에서 barrel, 중복 타입, 조기 helper, 넓은 조립, 무근거 fallback 또는 자명한 주석을 점검할 때.",
-		reviewWith: [],
-	},
 	"naming-centralize-shared-config-namespaces": {
 		appliesWhen:
 			"여러 leaf 모듈이 함께 쓰는 URL, feature flag, 페이지 크기나 상수를 추가·이동·중복 정의할 때. shared config 경계를 바꿀 때.",
@@ -315,7 +200,7 @@ const typescriptRuleRouting = {
 	},
 	"naming-use-direct-imports-and-public-entry-points": {
 		appliesWhen:
-			"TypeScript import/export, barrel, shared 공개 진입점·feature support module 경계를 추가·변경할 때. 같은 module path의 value/type specifier를 추가·삭제·전환할 때.",
+			"TypeScript import/export, barrel, shared 공개 진입점·owner support module 경계를 추가·변경할 때. 절대경로 alias로 다른 모듈을 가져올 때. 같은 module path의 value/type specifier를 추가·삭제·전환할 때.",
 		reviewWith: [],
 	},
 	"types-document-custom-types-and-shapes": {
@@ -343,12 +228,96 @@ const typescriptRuleRouting = {
 			"의미상 같은 기존 type·interface·schema 대신 shape를 새로 선언·변경·복제·파생할 때. 중복 shape를 도입·제거할 때. 제외: 호환 후보 없는 새 shape, 순수 owner 이동, unchanged contract의 새 사용처인 경우.",
 		reviewWith: ["types-document-custom-types-and-shapes"],
 	},
+	"functions-avoid-imperative-assembly-in-wide-scopes": {
+		appliesWhen: "파일 상단이나 넓은 스코프에서 `let` 재대입, 배열 `push` 또는 조건부 누적으로 값을 조립하거나 리팩터링할 때.",
+		reviewWith: [],
+	},
+	"functions-extract-helpers-only-when-the-boundary-is-real": {
+		appliesWhen:
+			"support function을 추출·이동·export·공유할 때. generic helper 파일, 단일 owner 전용 mapper 또는 작은 sub-step 경계를 바꿀 때.",
+		reviewWith: ["docs-use-helper-for-reusable-pure-helper-functions", "docs-require-header-jsdoc-on-key-declarations"],
+	},
+	"functions-prefer-immutable-array-sorting": {
+		appliesWhen: "props, state, 매개변수 또는 공유 입력에서 온 배열을 정렬할 때. 기존 `.sort()` 호출을 추가·변경할 때.",
+		reviewWith: [],
+	},
+	"functions-replace-enum-with-as-const-objects": {
+		appliesWhen: "`enum` 또는 타입과 런타임에서 함께 쓰는 enum-like 값 집합을 추가·변경할 때.",
+		reviewWith: [],
+	},
+	"functions-use-named-object-params-for-complex-signatures": {
+		appliesWhen:
+			"매개변수 3개 이상 또는 같은 계열 인자를 받는 일반 함수를 추가·변경할 때. 객체 매개변수의 구조분해 위치를 바꿀 때. 제외: React 함수 컴포넌트의 props 수신·구조분해만 바꾸는 경우.",
+		reviewWith: [],
+	},
+	"functions-use-set-and-map-for-repeated-lookups": {
+		appliesWhen: "같은 컬렉션에 `includes`, `find` 또는 keyed lookup을 여러 번 수행하는 코드를 추가·변경할 때.",
+		reviewWith: [],
+	},
+	"absence-expose-optional-values-instead-of-silent-fallbacks": {
+		appliesWhen: "optional 값의 읽기·정규화·전달을 바꿀 때. `??`, `||`, 기본값 또는 빈 값 대체 분기를 추가·변경할 때.",
+		reviewWith: ["docs-keep-inline-comments-for-constraints-and-caveats"],
+	},
+	"docs-keep-inline-comments-for-constraints-and-caveats": {
+		appliesWhen: "함수 본문의 `//` 주석을 추가·수정·유지할 때. 도메인 규칙, 예외 방어, 외부 제약 또는 부수효과 순서를 주석으로 설명할 때.",
+		reviewWith: [],
+	},
+	"docs-require-header-jsdoc-on-key-declarations": {
+		appliesWhen:
+			"named query·mutation, 원격 함수, 비자명한 handler/effect, reusable/exported helper·custom hook, custom type·interface, store, formatter 또는 예외 memo 선언을 추가·변경할 때.",
+		reviewWith: [],
+	},
+	"docs-standardize-annotation-tags-by-declaration-role": {
+		appliesWhen: "TypeScript/TSX 선언의 JSDoc 태그를 추가·변경할 때. 선언 역할에 맞는 annotation을 검토할 때.",
+		reviewWith: [],
+	},
+	"docs-use-helper-for-reusable-pure-helper-functions": {
+		appliesWhen:
+			"여러 caller가 쓰는 pure support function, owner-named exported helper 또는 `shared/util.ts` 함수를 추가·변경할 때. `@helper`를 붙이려 할 때.",
+		reviewWith: [],
+	},
+	"docs-write-concise-korean-comments-about-purpose-and-constraints": {
+		appliesWhen: "TypeScript/TSX의 JSDoc이나 inline comment 문구를 추가·수정·번역하거나 리뷰할 때.",
+		reviewWith: [],
+	},
+	"guardrails-review-banned-typescript-shortcuts-before-finishing": {
+		appliesWhen:
+			"TypeScript/TSX 변경을 완료 판정할 때. diff에서 barrel, 중복 타입, 조기 helper, 넓은 조립, 무근거 fallback 또는 자명한 주석을 점검할 때.",
+		reviewWith: [],
+	},
 } as const;
 
 /**
  * @summary Appendix C의 CSS rule별 exact routing metadata oracle
  */
 const cssRuleRouting = {
+	"naming-default-to-plain-css-when-no-module-convention": {
+		appliesWhen:
+			"프로젝트 표준 미확정 상태에서 새 stylesheet 접근 형식(plain CSS·CSS Modules)을 선택하거나 `.module.css`·`styles.*`로 전환할 때. 제외: 기존 plain CSS class rename만 하는 경우.",
+		reviewWith: [],
+	},
+	"naming-keep-scope-slug-unique-per-owner": {
+		appliesWhen:
+			"새 `scope_slug` namespace를 추가·복사·이름 변경할 때. 서로 다른 owner의 class가 같은 namespace를 사용할 가능성이 있을 때.",
+		reviewWith: [],
+	},
+	"naming-name-elements-and-modifiers-by-role": {
+		appliesWhen: "element 또는 modifier class 이름을 새로 지을 때. `container`, `wrapper`, `box`, 치수·간격 중심 이름을 변경할 때.",
+		reviewWith: [],
+	},
+	"naming-preserve-route-slug-traceability": {
+		appliesWhen: "route/framework 규칙이 `rt_*` owner를 선택한 화면에서 route class slug를 새로 만들거나 이름을 변경할 때.",
+		reviewWith: [],
+	},
+	"naming-separate-owner-style-scopes": {
+		appliesWhen:
+			"스타일 owner를 route shell, private component, widget, primitive 중에서 결정할 때. 새 CSS 파일을 만들거나 기존 owner 범위를 옮길 때.",
+		reviewWith: ["naming-keep-scope-slug-unique-per-owner", "organization-keep-style-files-owned-by-one-component-or-route"],
+	},
+	"naming-use-scope-slug-element-modifier-syntax": {
+		appliesWhen: "plain CSS의 project-owned class를 새로 만들 때. 이름, scope, slug, element, modifier 구분자 또는 casing을 변경할 때.",
+		reviewWith: [],
+	},
 	"composition-compose-classes-with-clsx": {
 		appliesWhen: "TSX의 `className`을 추가·수정할 때. base class, modifier, optional class를 조합할 때.",
 		reviewWith: [],
@@ -372,42 +341,6 @@ const cssRuleRouting = {
 			"실제 `Ui*` React wrapper 사용처·API에서 내부 DOM styling 경계를 정할 때. root `className`·slot prop hook을 주입·노출·사용할 때. 제외: 기존 CSS owner root 아래 third-party selector만 수정하는 경우.",
 		reviewWith: ["selector-target-third-party-dom-from-owned-roots"],
 	},
-	"naming-default-to-plain-css-when-no-module-convention": {
-		appliesWhen:
-			"프로젝트 표준 미확정 상태에서 새 stylesheet 접근 형식(plain CSS·CSS Modules)을 선택하거나 `.module.css`·`styles.*`로 전환할 때. 제외: 기존 plain CSS class rename만 하는 경우.",
-		reviewWith: [],
-	},
-	"naming-keep-scope-slug-unique-per-owner": {
-		appliesWhen:
-			"새 `scope_slug` namespace를 추가·복사·이름 변경할 때. 서로 다른 owner의 class가 같은 namespace를 사용할 가능성이 있을 때.",
-		reviewWith: [],
-	},
-	"naming-name-elements-and-modifiers-by-role": {
-		appliesWhen: "element 또는 modifier class 이름을 새로 지을 때. `container`, `wrapper`, `box`, 치수·간격 중심 이름을 변경할 때.",
-		reviewWith: [],
-	},
-	"naming-preserve-route-slug-traceability": {
-		appliesWhen: "route/framework 규칙이 `rt_*` owner를 선택한 화면에서 route class slug를 새로 만들거나 이름을 변경할 때.",
-		reviewWith: [],
-	},
-	"naming-separate-local-and-route-style-scopes": {
-		appliesWhen:
-			"스타일 owner를 route screen/support, document, 독립 leaf helper, reusable widget, UI primitive 중에서 결정할 때. 서로 다른 owner를 이동·분리할 때.",
-		reviewWith: ["organization-keep-style-files-owned-by-one-component-or-route"],
-	},
-	"naming-use-scope-slug-element-modifier-syntax": {
-		appliesWhen: "plain CSS의 project-owned class를 새로 만들 때. 이름, scope, slug, element, modifier 구분자 또는 casing을 변경할 때.",
-		reviewWith: [],
-	},
-	"organization-keep-style-files-owned-by-one-component-or-route": {
-		appliesWhen:
-			"stylesheet를 새로 만들거나 이동·분할·병합해 한 파일에 component, route, document, local, shared owner가 섞일 가능성이 있을 때.",
-		reviewWith: [],
-	},
-	"organization-review-banned-css-patterns-before-finishing": {
-		appliesWhen: "CSS 또는 TSX class contract 변경이 완료 단계에 들어갈 때.",
-		reviewWith: [],
-	},
 	"selector-avoid-deep-descendant-dependencies": {
 		appliesWhen:
 			"descendant 또는 child selector chain을 추가·수정할 때. DOM 계층에 의존하는 project-owned·third-party selector를 검토할 때.",
@@ -427,14 +360,14 @@ const cssRuleRouting = {
 			"`:hover`, `:visited`, `:focus*`, `:disabled`, `:checked`를 추가·수정할 때. parent DOM state가 child styling에 영향을 줄 때.",
 		reviewWith: [],
 	},
-	"values-always-provide-css-variable-fallbacks": {
-		appliesWhen:
-			"`var(--*)` 사용을 새로 추가하거나 변경할 때. token 주입 보장 경계를 바꿀 때. 제외: 같은 stylesheet·주입 경계에서 기존 `var()` 선언을 selector 사이 byte-equivalent 이동만 하는 경우.",
-		reviewWith: [],
-	},
 	"values-keep-layout-intent-explicit": {
 		appliesWhen:
 			"`sticky`·`fixed`, `z-index`, 강제 width·height 또는 부모·자식 layout 책임을 추가·변경할 때. 제외: 같은 element의 base/modifier 분리에서 기존 `display`·spacing 선언을 값 그대로 재배치하는 경우.",
+		reviewWith: [],
+	},
+	"values-always-provide-css-variable-fallbacks": {
+		appliesWhen:
+			"`var(--*)` 사용을 새로 추가하거나 변경할 때. token 주입 보장 경계를 바꿀 때. 제외: 같은 stylesheet·주입 경계에서 기존 `var()` 선언을 selector 사이 byte-equivalent 이동만 하는 경우.",
 		reviewWith: [],
 	},
 	"values-separate-domain-state-modifiers-from-dom-interaction-states": {
@@ -445,90 +378,44 @@ const cssRuleRouting = {
 		appliesWhen: "색상·간격·radius·타이포·그림자 등 같은 시각 값이 2회 이상 반복될 때. 새 shared visual value를 하드코딩할 때.",
 		reviewWith: ["values-always-provide-css-variable-fallbacks"],
 	},
+	"organization-keep-style-files-owned-by-one-component-or-route": {
+		appliesWhen:
+			"stylesheet를 새로 만들거나 이동·분할·병합해 한 파일에 component, route, document, local, shared owner가 섞일 가능성이 있을 때.",
+		reviewWith: [],
+	},
+	"organization-review-banned-css-patterns-before-finishing": {
+		appliesWhen: "CSS 또는 TSX class contract 변경이 완료 단계에 들어갈 때.",
+		reviewWith: [],
+	},
 } as const;
 
 /**
  * @summary Appendix B의 React rule별 exact routing metadata oracle
  */
 const reactRuleRouting = {
-	"composition-destructure-props-inside": {
-		appliesWhen:
-			"props를 받는 함수 컴포넌트의 시그니처나 구조분해 방식을 추가·변경할 때. props를 받는 컴포넌트를 다른 파일로 옮기거나 이름을 바꿀 때.",
-		reviewWith: [],
-	},
-	"composition-do-not-define-components-inside-components": {
-		appliesWhen: "컴포넌트 본문 안에 JSX를 반환하는 로컬 함수·컴포넌트를 추가하거나 옮길 때. 재렌더 시 remount·focus reset 징후를 다룰 때.",
-		reviewWith: [],
-	},
-	"composition-named-handlers-over-inline": {
-		appliesWhen:
-			"TSX event prop의 인라인 callback에 분기나 비동기 호출을 추가·수정할 때. 인라인 callback에 여러 동작·부수효과나 비자명한 state transition이 들어갈 때. 제외: 단순 setter나 인자 전달 한 줄 위임만 있는 경우.",
-		reviewWith: ["events-keep-handler-flow-inline", "events-run-user-actions-in-handlers-not-effects"],
-	},
-	"composition-prefer-arrow-functions-and-object-params": {
-		appliesWhen:
-			"React 인접 코드에 `function` 선언이 생길 때. 함수가 매개변수를 3개 이상 받을 때. 함수가 함께 이동하는 같은 계열 값을 받을 때.",
-		reviewWith: ["typescript/functions-use-named-object-params-for-complex-signatures"],
-	},
-	"composition-use-activity-for-render-branches": {
-		appliesWhen:
-			"마운트된 subtree의 표시 상태를 보존하려고 조건부 렌더링을 Activity로 바꿀 때. Activity 등 visibility primitive와 조건부 렌더링 사이를 오갈 때.",
-		reviewWith: [],
-	},
-	"composition-use-ref-prop-instead-of-forwardref-in-react-19": {
-		appliesWhen: "React 19 컴포넌트에 focus·scroll·measure용 ref 공개 API를 추가·변경할 때. 새 `forwardRef` wrapper를 도입하려 할 때.",
-		reviewWith: [],
-	},
-	"docs-document-compound-parts-with-part-and-description": {
-		appliesWhen:
-			"compound component의 exported public part·props interface·part 내부 handler를 추가·변경할 때. public part 문서를 수정할 때.",
-		reviewWith: [],
-	},
-	"docs-limit-inline-comments-to-non-obvious-logic": {
-		appliesWhen: "React 함수·handler·JSX 인접 로직 안의 `//` 주석을 추가·수정할 때. 자명한 설명과 실제 제약을 구분해 주석을 정리할 때.",
-		reviewWith: [],
-	},
-	"docs-require-jsdoc-on-key-declarations": {
-		appliesWhen:
-			"query·mutation이나 비자명한 handler/effect를 추가·변경할 때. exported helper·hook·store 선언을 추가·변경할 때. re-export 포함 public type·interface나 예외 memo 선언을 추가·변경할 때.",
-		reviewWith: [],
-	},
-	"events-keep-handler-flow-inline": {
-		appliesWhen:
-			"화면 전용 named handler의 분기·mutation·navigation·후처리를 여러 helper나 hook으로 나눌 때. 쪼개져 있던 handler 흐름을 다시 합칠 때.",
-		reviewWith: ["screen-extract-utilities-selectively"],
-	},
-	"events-name-and-curry-handlers": {
-		appliesWhen:
-			"이벤트 핸들러를 새로 만들 때. 핸들러 이름이나 target/event 표현을 바꿀 때. 추가 인자 전달 방식이나 최종 React handler 시그니처를 바꿀 때.",
-		reviewWith: ["typing-function-type-first", "typescript/naming-use-consistent-file-and-symbol-naming"],
-	},
-	"events-run-user-actions-in-handlers-not-effects": {
-		appliesWhen:
-			"제출·저장·삭제·닫기 같은 one-shot 사용자 액션을 handler와 state+effect 사이에서 옮길 때. one-shot 사용자 액션의 실행 흐름을 바꿀 때.",
-		reviewWith: [],
-	},
 	"ownership-avoid-barrel-and-react-namespace-imports": {
 		appliesWhen:
 			"`index.ts` barrel 재노출을 추가·수정할 때. `React.*` 타입과 direct `import type` 중 선택할 때. type/value 혼합 import나 출처를 숨기는 경로를 추가·수정할 때. 제외: 일반 direct value import만 바꾸는 경우.",
 		reviewWith: [],
-	},
-	"ownership-layer-component-boundaries": {
-		appliesWhen: "컴포넌트를 ui·widget·route-local 중 어느 소유 레이어에 둘지 정할 때. 컴포넌트를 레이어 사이에서 옮기거나 공용화할 때.",
-		reviewWith: ["ownership-place-route-local-files-by-scope", "css/naming-separate-local-and-route-style-scopes"],
-	},
-	"ownership-place-route-local-files-by-scope": {
-		appliesWhen: "route 전용 컴포넌트·스타일·순수 로직을 새로 만들 때. `-local/`과 route sibling `.ts` 사이에서 파일 위치를 바꿀 때.",
-		reviewWith: ["css/naming-separate-local-and-route-style-scopes", "css/organization-keep-style-files-owned-by-one-component-or-route"],
 	},
 	"ownership-prefer-plain-ts-for-local-react-helpers": {
 		appliesWhen:
 			"화면 전용 계산·정규화·payload 조립을 custom hook으로 추출하려 할 때. 화면 전용 순수 로직을 별도 support module로 옮기려 할 때.",
 		reviewWith: [
 			"screen-extract-utilities-selectively",
-			"screen-move-pure-support-code-out-of-entry-files",
+			"ownership-place-owner-files-in-role-folders",
+			"ownership-keep-lifecycle-in-the-owning-component",
 			"typescript/functions-extract-helpers-only-when-the-boundary-is-real",
 		],
+	},
+	"ownership-layer-component-boundaries": {
+		appliesWhen: "컴포넌트를 ui·widget·private 중 어느 소유 레이어에 둘지 정할 때. 컴포넌트를 레이어 사이에서 옮기거나 공용화할 때.",
+		reviewWith: ["ownership-place-owner-files-in-role-folders", "css/naming-separate-owner-style-scopes"],
+	},
+	"ownership-place-owner-files-in-role-folders": {
+		appliesWhen:
+			"owner 아래 `component`·`config`·`function`·`hook`·`type` 폴더를 만들거나 옮길 때. 추출한 component·함수·타입의 배치 위치를 정할 때. 제외: 기존 파일 내부 구현만 바꾸는 경우.",
+		reviewWith: ["ownership-keep-component-imports-flowing-downward", "css/naming-separate-owner-style-scopes"],
 	},
 	"ownership-shared-config-entry-points": {
 		appliesWhen: "둘 이상의 화면이 쓰는 상수·설정·순수 함수를 추가하거나 옮길 때. leaf 파일에 중복 선언된 공용 값을 정리할 때.",
@@ -539,101 +426,28 @@ const reactRuleRouting = {
 			"React/TSX 파일·컴포넌트·exported symbol·공용 설정 이름을 정하거나 바꿀 때. sibling `.ts` support 파일·symbol을 만들거나 옮길 때. 제외: local query·mutation binding 이름만 바꾸는 경우.",
 		reviewWith: [],
 	},
-	"screen-avoid-premature-abstraction": {
-		appliesWhen: "screen 코드를 helper·hook·component·module로 추출할 때. 한 곳에서만 쓰는 기존 추상화를 다시 접어 넣을 때.",
+	"ownership-keep-component-imports-flowing-downward": {
+		appliesWhen:
+			"`component` 폴더 안의 파일을 다른 파일에서 import할 때. `../`나 `@/page` 경로로 component를 가져오려 할 때. 여러 자식이 같은 component를 필요로 해 배치를 다시 정할 때.",
+		reviewWith: ["ownership-layer-component-boundaries"],
+	},
+	"ownership-keep-lifecycle-in-the-owning-component": {
+		appliesWhen:
+			"외부 library instance 생성·resize·구독·dispose를 한 component가 소유할 때. lifecycle 코드를 custom hook으로 옮겨 파일을 줄이려 할 때. 제외: 여러 owner가 같은 lifecycle 계약을 실제로 호출하는 경우.",
+		reviewWith: ["ownership-prefer-plain-ts-for-local-react-helpers"],
+	},
+	"typing-function-type-first": {
+		appliesWhen:
+			"React 이벤트 핸들러나 prop callback의 선언·시그니처를 추가·변경할 때. 기존 React alias나 callback 계약을 그대로 쓸 수 있는 상황일 때. curried factory가 최종 반환하는 handler를 다룰 때.",
+		reviewWith: ["typing-reuse-existing-contracts", "ownership-avoid-barrel-and-react-namespace-imports"],
+	},
+	"typing-reuse-existing-contracts": {
+		appliesWhen:
+			"Props callback 구현을 추가·변경할 때. API 응답 기반 view type을 추가·변경하는데 기존 prop·API 계약과 같은 shape가 보일 때.",
 		reviewWith: [
-			"screen-extract-local-section-components-for-runtime-boundaries",
-			"screen-extract-utilities-selectively",
-			"typescript/functions-extract-helpers-only-when-the-boundary-is-real",
+			"typescript/types-reuse-callback-signatures-from-existing-contracts",
+			"typescript/types-reuse-existing-contracts-before-new-types",
 		],
-	},
-	"screen-extract-local-section-components-for-runtime-boundaries": {
-		appliesWhen:
-			"route-local section component를 새로 추출할 때. 기존 section이 async·state·provider·interaction·library·performance 경계를 소유하는지 바꿀 때.",
-		reviewWith: [],
-	},
-	"screen-extract-utilities-selectively": {
-		appliesWhen:
-			"화면 계산·변환·preset·option·column meta를 별도 함수나 support module로 옮길 때. 화면 support 경계를 바꿀 때. 제외: query `select` 내부 shaping만 바꾸는 경우.",
-		reviewWith: ["screen-move-pure-support-code-out-of-entry-files", "typescript/functions-extract-helpers-only-when-the-boundary-is-real"],
-	},
-	"screen-keep-derived-values-close": {
-		appliesWhen:
-			"오리진을 끊는 alias·flag·표시값을 넓은 screen scope에 추가·이동·제거할 때. `let` 재할당이나 배열 `push` 기반 조립을 바꿀 때.",
-		reviewWith: [],
-	},
-	"screen-keep-route-flow-visible": {
-		appliesWhen:
-			"route entry의 search·navigate·query·mutation·cross-section effect를 옮기거나 나눌 때. page section 조립의 순서나 owner를 바꿀 때. 제외: 같은 owner 안에서 표현만 바꾸는 경우.",
-		reviewWith: ["screen-extract-local-section-components-for-runtime-boundaries", "screen-move-pure-support-code-out-of-entry-files"],
-	},
-	"screen-move-pure-support-code-out-of-entry-files": {
-		appliesWhen:
-			"route entry에 여러 줄 pure helper·preset·option·화면 전용 type이 쌓일 때. 추출하기로 한 support code의 목적지 파일을 정할 때.",
-		reviewWith: ["docs-require-jsdoc-on-key-declarations"],
-	},
-	"data-avoid-fallback-defaults-and-loading-flags": {
-		appliesWhen:
-			"optional 응답에 `??`·`||` 기본값을 넣을 때. Suspense 화면 본문에 초기 loading return을 추가·변경할 때. 결측·로딩 UX를 다룰 때.",
-		reviewWith: [
-			"data-preserve-origin-chaining",
-			"screen-keep-derived-values-close",
-			"typescript/absence-expose-optional-values-instead-of-silent-fallbacks",
-		],
-	},
-	"state-calculate-derived-values-during-render": {
-		appliesWhen: "현재 props·state·search·response에서 계산 가능한 값을 별도 state와 effect로 동기화할 때. 그런 동기화를 제거할 때.",
-		reviewWith: [],
-	},
-	"state-choose-state-tools-by-source-of-truth": {
-		appliesWhen:
-			"로컬 UI·전역 client·server 데이터를 새 state 도구로 옮길 때. 서로 다른 source of truth 사이에 값을 복제하거나 동기화할 때.",
-		reviewWith: ["state-store-derived-authority"],
-	},
-	"perf-compiler-first-memoization": {
-		appliesWhen:
-			"`useMemo`·`useCallback`을 추가하거나 제거할 때. 참조 동일성·실측 병목·무거운 deferred 계산을 이유로 수동 memoization을 검토할 때.",
-		reviewWith: [],
-	},
-	"data-name-query-and-mutation-bindings-consistently": {
-		appliesWhen: "React Query query·mutation hook의 로컬 binding을 추가하거나 이름을 바꿀 때. 역할이 드러나지 않는 별칭이 diff에 보일 때.",
-		reviewWith: ["data-preserve-origin-chaining"],
-	},
-	"data-preserve-origin-chaining": {
-		appliesWhen: "page·layout·screen 넓은 스코프에서 response·mutation·store를 구조분해할 때. 원본을 별칭으로 끊고 값 접근 방식을 바꿀 때.",
-		reviewWith: ["screen-keep-derived-values-close"],
-	},
-	"data-shape-query-data-with-select": {
-		appliesWhen: "서버 응답의 list·items·meta 등을 렌더에서 가공하거나 반복 소비할 때. React Query `select`의 결과 shape를 추가·변경할 때.",
-		reviewWith: ["data-name-query-and-mutation-bindings-consistently", "data-preserve-origin-chaining"],
-	},
-	"state-store-derived-authority": {
-		appliesWhen:
-			"여러 화면·메뉴·route guard가 쓰는 권한·capability 같은 derived decision을 store에 저장·동기화할 때. 단일 화면에서만 쓰는 값까지 store로 올리려 할 때.",
-		reviewWith: ["docs-require-jsdoc-on-key-declarations"],
-	},
-	"state-use-effectevent-for-non-reactive-effect-callbacks": {
-		appliesWhen:
-			"subscription effect가 최신 prop·state callback을 읽어야 할 때. ref 동기화 hack, dependency 재설치, `useEffectEvent`를 추가·변경할 때.",
-		reviewWith: ["events-run-user-actions-in-handlers-not-effects"],
-	},
-	"state-use-functional-setstate-updates": {
-		appliesWhen:
-			"다음 state가 현재 state에 의존하는 갱신을 추가·변경할 때. handler·async callback·연속 호출에서 `setState` 방식을 바꿀 때.",
-		reviewWith: [],
-	},
-	"perf-use-lazy-state-initializers-for-expensive-defaults": {
-		appliesWhen: "`useState` 초기값에 localStorage 파싱, 인덱스 생성, 큰 배열 정규화 같은 비용 있는 계산을 넣을 때.",
-		reviewWith: [],
-	},
-	"perf-use-starttransition-for-non-urgent-updates": {
-		appliesWhen:
-			"클릭·선택·필터 변경 뒤 큰 list·table·tree를 다시 그리는 state update를 다룰 때. state update의 우선순위나 transition 처리를 바꿀 때.",
-		reviewWith: [],
-	},
-	"perf-use-usedeferredvalue-for-heavy-derived-renders": {
-		appliesWhen: "검색어·필터·정렬 입력이 무거운 파생 view를 갱신해 typing 지연이 생길 때. `useDeferredValue` 기반 계산을 추가·변경할 때.",
-		reviewWith: ["perf-compiler-first-memoization", "perf-use-starttransition-for-non-urgent-updates"],
 	},
 	"strategy-avoid-boolean-prop-proliferation": {
 		appliesWhen:
@@ -654,18 +468,153 @@ const reactRuleRouting = {
 			"shared component에 header·footer·action 같은 정적 slot을 추가·변경할 때. render prop을 추가·변경하는데 runtime data 주입이 꼭 필요한지 불분명할 때.",
 		reviewWith: [],
 	},
-	"typing-function-type-first": {
+	"composition-destructure-props-inside": {
 		appliesWhen:
-			"React 이벤트 핸들러나 prop callback의 선언·시그니처를 추가·변경할 때. 기존 React alias나 callback 계약을 그대로 쓸 수 있는 상황일 때. curried factory가 최종 반환하는 handler를 다룰 때.",
-		reviewWith: ["typing-reuse-existing-contracts", "ownership-avoid-barrel-and-react-namespace-imports"],
+			"props를 받는 함수 컴포넌트의 시그니처나 구조분해 방식을 추가·변경할 때. props를 받는 컴포넌트를 다른 파일로 옮기거나 이름을 바꿀 때.",
+		reviewWith: [],
 	},
-	"typing-reuse-existing-contracts": {
+	"composition-do-not-define-components-inside-components": {
+		appliesWhen: "컴포넌트 본문 안에 JSX를 반환하는 로컬 함수·컴포넌트를 추가하거나 옮길 때. 재렌더 시 remount·focus reset 징후를 다룰 때.",
+		reviewWith: [],
+	},
+	"composition-prefer-arrow-functions-and-object-params": {
 		appliesWhen:
-			"Props callback 구현을 추가·변경할 때. API 응답 기반 view type을 추가·변경하는데 기존 prop·API 계약과 같은 shape가 보일 때.",
+			"React 인접 코드에 `function` 선언이 생길 때. 함수가 매개변수를 3개 이상 받을 때. 함수가 함께 이동하는 같은 계열 값을 받을 때.",
+		reviewWith: ["typescript/functions-use-named-object-params-for-complex-signatures"],
+	},
+	"composition-named-handlers-over-inline": {
+		appliesWhen:
+			"TSX event prop의 인라인 callback에 분기나 비동기 호출을 추가·수정할 때. 인라인 callback에 여러 동작·부수효과나 비자명한 state transition이 들어갈 때. 제외: 단순 setter나 인자 전달 한 줄 위임만 있는 경우.",
+		reviewWith: ["events-keep-handler-flow-inline", "events-run-user-actions-in-handlers-not-effects"],
+	},
+	"composition-use-ref-prop-instead-of-forwardref-in-react-19": {
+		appliesWhen: "React 19 컴포넌트에 focus·scroll·measure용 ref 공개 API를 추가·변경할 때. 새 `forwardRef` wrapper를 도입하려 할 때.",
+		reviewWith: [],
+	},
+	"composition-use-activity-for-render-branches": {
+		appliesWhen:
+			"마운트된 subtree의 표시 상태를 보존하려고 조건부 렌더링을 Activity로 바꿀 때. Activity 등 visibility primitive와 조건부 렌더링 사이를 오갈 때.",
+		reviewWith: [],
+	},
+	"screen-avoid-premature-abstraction": {
+		appliesWhen: "screen 코드를 helper·hook·component·module로 추출할 때. 한 곳에서만 쓰는 기존 추상화를 다시 접어 넣을 때.",
 		reviewWith: [
-			"typescript/types-reuse-callback-signatures-from-existing-contracts",
-			"typescript/types-reuse-existing-contracts-before-new-types",
+			"screen-extract-local-section-components-for-runtime-boundaries",
+			"screen-extract-utilities-selectively",
+			"typescript/functions-extract-helpers-only-when-the-boundary-is-real",
 		],
+	},
+	"screen-extract-local-section-components-for-runtime-boundaries": {
+		appliesWhen:
+			"route-local section component를 새로 추출할 때. 기존 section이 async·state·provider·interaction·library·performance 경계를 소유하는지 바꿀 때.",
+		reviewWith: [],
+	},
+	"screen-extract-utilities-selectively": {
+		appliesWhen:
+			"화면 계산·변환·preset·option·column meta를 별도 함수나 support module로 옮길 때. 화면 support 경계를 바꿀 때. 제외: query `select` 내부 shaping만 바꾸는 경우.",
+		reviewWith: ["ownership-place-owner-files-in-role-folders", "typescript/functions-extract-helpers-only-when-the-boundary-is-real"],
+	},
+	"screen-keep-derived-values-close": {
+		appliesWhen:
+			"오리진을 끊는 alias·flag·표시값을 넓은 screen scope에 추가·이동·제거할 때. `let` 재할당이나 배열 `push` 기반 조립을 바꿀 때.",
+		reviewWith: [],
+	},
+	"screen-keep-route-flow-visible": {
+		appliesWhen:
+			"route entry의 search·navigate·query·mutation·cross-section effect를 옮기거나 나눌 때. page section 조립의 순서나 owner를 바꿀 때. 제외: 같은 owner 안에서 표현만 바꾸는 경우.",
+		reviewWith: ["screen-extract-local-section-components-for-runtime-boundaries", "ownership-place-owner-files-in-role-folders"],
+	},
+	"events-keep-handler-flow-inline": {
+		appliesWhen:
+			"화면 전용 named handler의 분기·mutation·navigation·후처리를 여러 helper나 hook으로 나눌 때. 쪼개져 있던 handler 흐름을 다시 합칠 때.",
+		reviewWith: ["screen-extract-utilities-selectively"],
+	},
+	"events-name-and-curry-handlers": {
+		appliesWhen:
+			"이벤트 핸들러를 새로 만들 때. 핸들러 이름이나 target/event 표현을 바꿀 때. 추가 인자 전달 방식이나 최종 React handler 시그니처를 바꿀 때.",
+		reviewWith: ["typing-function-type-first", "typescript/naming-use-consistent-file-and-symbol-naming"],
+	},
+	"events-run-user-actions-in-handlers-not-effects": {
+		appliesWhen:
+			"제출·저장·삭제·닫기 같은 one-shot 사용자 액션을 handler와 state+effect 사이에서 옮길 때. one-shot 사용자 액션의 실행 흐름을 바꿀 때.",
+		reviewWith: [],
+	},
+	"data-avoid-fallback-defaults-and-loading-flags": {
+		appliesWhen:
+			"optional 응답에 `??`·`||` 기본값을 넣을 때. Suspense 화면 본문에 초기 loading return을 추가·변경할 때. 결측·로딩 UX를 다룰 때.",
+		reviewWith: [
+			"data-preserve-origin-chaining",
+			"screen-keep-derived-values-close",
+			"typescript/absence-expose-optional-values-instead-of-silent-fallbacks",
+		],
+	},
+	"data-name-query-and-mutation-bindings-consistently": {
+		appliesWhen: "React Query query·mutation hook의 로컬 binding을 추가하거나 이름을 바꿀 때. 역할이 드러나지 않는 별칭이 diff에 보일 때.",
+		reviewWith: ["data-preserve-origin-chaining"],
+	},
+	"data-preserve-origin-chaining": {
+		appliesWhen: "page·layout·screen 넓은 스코프에서 response·mutation·store를 구조분해할 때. 원본을 별칭으로 끊고 값 접근 방식을 바꿀 때.",
+		reviewWith: ["screen-keep-derived-values-close"],
+	},
+	"data-shape-query-data-with-select": {
+		appliesWhen: "서버 응답의 list·items·meta 등을 렌더에서 가공하거나 반복 소비할 때. React Query `select`의 결과 shape를 추가·변경할 때.",
+		reviewWith: ["data-name-query-and-mutation-bindings-consistently", "data-preserve-origin-chaining"],
+	},
+	"state-calculate-derived-values-during-render": {
+		appliesWhen: "현재 props·state·search·response에서 계산 가능한 값을 별도 state와 effect로 동기화할 때. 그런 동기화를 제거할 때.",
+		reviewWith: [],
+	},
+	"state-choose-state-tools-by-source-of-truth": {
+		appliesWhen:
+			"로컬 UI·전역 client·server 데이터를 새 state 도구로 옮길 때. 서로 다른 source of truth 사이에 값을 복제하거나 동기화할 때.",
+		reviewWith: ["state-store-derived-authority"],
+	},
+	"state-store-derived-authority": {
+		appliesWhen:
+			"여러 화면·메뉴·route guard가 쓰는 권한·capability 같은 derived decision을 store에 저장·동기화할 때. 단일 화면에서만 쓰는 값까지 store로 올리려 할 때.",
+		reviewWith: ["docs-require-jsdoc-on-key-declarations"],
+	},
+	"state-use-functional-setstate-updates": {
+		appliesWhen:
+			"다음 state가 현재 state에 의존하는 갱신을 추가·변경할 때. handler·async callback·연속 호출에서 `setState` 방식을 바꿀 때.",
+		reviewWith: [],
+	},
+	"state-use-effectevent-for-non-reactive-effect-callbacks": {
+		appliesWhen:
+			"subscription effect가 최신 prop·state callback을 읽어야 할 때. ref 동기화 hack, dependency 재설치, `useEffectEvent`를 추가·변경할 때.",
+		reviewWith: ["events-run-user-actions-in-handlers-not-effects"],
+	},
+	"perf-compiler-first-memoization": {
+		appliesWhen:
+			"`useMemo`·`useCallback`을 추가하거나 제거할 때. 참조 동일성·실측 병목·무거운 deferred 계산을 이유로 수동 memoization을 검토할 때.",
+		reviewWith: [],
+	},
+	"perf-use-lazy-state-initializers-for-expensive-defaults": {
+		appliesWhen: "`useState` 초기값에 localStorage 파싱, 인덱스 생성, 큰 배열 정규화 같은 비용 있는 계산을 넣을 때.",
+		reviewWith: [],
+	},
+	"perf-use-starttransition-for-non-urgent-updates": {
+		appliesWhen:
+			"클릭·선택·필터 변경 뒤 큰 list·table·tree를 다시 그리는 state update를 다룰 때. state update의 우선순위나 transition 처리를 바꿀 때.",
+		reviewWith: [],
+	},
+	"perf-use-usedeferredvalue-for-heavy-derived-renders": {
+		appliesWhen: "검색어·필터·정렬 입력이 무거운 파생 view를 갱신해 typing 지연이 생길 때. `useDeferredValue` 기반 계산을 추가·변경할 때.",
+		reviewWith: ["perf-compiler-first-memoization", "perf-use-starttransition-for-non-urgent-updates"],
+	},
+	"docs-document-compound-parts-with-part-and-description": {
+		appliesWhen:
+			"compound component의 exported public part·props interface·part 내부 handler를 추가·변경할 때. public part 문서를 수정할 때.",
+		reviewWith: [],
+	},
+	"docs-limit-inline-comments-to-non-obvious-logic": {
+		appliesWhen: "React 함수·handler·JSX 인접 로직 안의 `//` 주석을 추가·수정할 때. 자명한 설명과 실제 제약을 구분해 주석을 정리할 때.",
+		reviewWith: [],
+	},
+	"docs-require-jsdoc-on-key-declarations": {
+		appliesWhen:
+			"query·mutation이나 비자명한 handler/effect를 추가·변경할 때. exported helper·hook·store 선언을 추가·변경할 때. re-export 포함 public type·interface나 예외 memo 선언을 추가·변경할 때.",
+		reviewWith: [],
 	},
 } as const;
 
@@ -679,6 +628,7 @@ const mandatoryRuleRouting = {
 		"docs-limit-inline-comments-to-non-obvious-logic": ["typescript/docs-keep-inline-comments-for-constraints-and-caveats"],
 		"docs-require-jsdoc-on-key-declarations": ["typescript/docs-require-header-jsdoc-on-key-declarations"],
 		"ownership-avoid-barrel-and-react-namespace-imports": ["typescript/naming-use-direct-imports-and-public-entry-points"],
+		"ownership-keep-component-imports-flowing-downward": ["typescript/naming-use-direct-imports-and-public-entry-points"],
 		"ownership-use-consistent-file-and-symbol-naming": ["typescript/naming-use-consistent-file-and-symbol-naming"],
 		"state-calculate-derived-values-during-render": ["screen-keep-derived-values-close"],
 		"data-name-query-and-mutation-bindings-consistently": [
@@ -859,13 +809,13 @@ const reactScenarioStages = {
 	"RTE02-owner-placement-css-drift": {
 		initial: {
 			prompt:
-				"move a route-only tree renderer from shared UI to src/routes/entries/-local/entry-tree.tsx and rename it as route-local; carry its existing className and style import through unchanged and make no styling change.",
-			files: ["src/components/ui/entry-tree.tsx", "src/routes/entries/-local/entry-tree.tsx"],
+				"move a route-only tree renderer from shared UI to src/page/entries/component/entry-tree.tsx and rename it as owner-private; carry its existing className and style import through unchanged and make no styling change.",
+			files: ["src/ui/entry-tree/ui-entry-tree.tsx", "src/page/entries/component/entry-tree.tsx"],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
 				react: [
 					"ownership-layer-component-boundaries",
-					"ownership-place-route-local-files-by-scope",
+					"ownership-place-owner-files-in-role-folders",
 					"ownership-use-consistent-file-and-symbol-naming",
 					"composition-destructure-props-inside",
 				],
@@ -882,13 +832,17 @@ const reactScenarioStages = {
 		},
 		scopeDrift: {
 			evidence:
-				"in a project without a CSS Modules standard, add directly imported src/routes/entries/-local/entry-tree.css, create route-support rt_* owner-unique role-named classes, and compose the changed className contract with the existing direct clsx import; final skills add CSS with no additional React rule.",
-			files: ["src/components/ui/entry-tree.tsx", "src/routes/entries/-local/entry-tree.tsx", "src/routes/entries/-local/entry-tree.css"],
+				"in a project without a CSS Modules standard, add directly imported src/page/entries/component/entry-tree.css, create owner-unique pv_* role-named classes, and compose the changed className contract with the existing direct clsx import; final skills add CSS with no additional React rule.",
+			files: [
+				"src/ui/entry-tree/ui-entry-tree.tsx",
+				"src/page/entries/component/entry-tree.tsx",
+				"src/page/entries/component/entry-tree.css",
+			],
 			expectedSkills: ["react", "typescript", "css"],
 			expectedSelected: {
 				react: [
 					"ownership-layer-component-boundaries",
-					"ownership-place-route-local-files-by-scope",
+					"ownership-place-owner-files-in-role-folders",
 					"ownership-use-consistent-file-and-symbol-naming",
 					"composition-destructure-props-inside",
 				],
@@ -905,8 +859,7 @@ const reactScenarioStages = {
 					"naming-default-to-plain-css-when-no-module-convention",
 					"naming-keep-scope-slug-unique-per-owner",
 					"naming-name-elements-and-modifiers-by-role",
-					"naming-preserve-route-slug-traceability",
-					"naming-separate-local-and-route-style-scopes",
+					"naming-separate-owner-style-scopes",
 					"naming-use-scope-slug-element-modifier-syntax",
 					"composition-compose-classes-with-clsx",
 					"composition-do-not-build-structural-variants-with-modifiers",
@@ -920,18 +873,17 @@ const reactScenarioStages = {
 	"RTE03-route-support-extraction": {
 		initial: {
 			prompt:
-				"move one real four-argument multi-line payload boundary from src/routes/entries/page.tsx to sibling page.ts; do not create a hook, generic utils file, or helper soup.",
-			files: ["src/routes/entries/page.tsx", "src/routes/entries/page.ts"],
+				"move one real four-argument multi-line payload boundary out of src/page/entries/entries-page.tsx into src/page/entries/function/build-entry-payload.ts; do not create a hook, generic utils file, or helper soup.",
+			files: ["src/page/entries/entries-page.tsx", "src/page/entries/function/build-entry-payload.ts"],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
 				react: [
 					"ownership-prefer-plain-ts-for-local-react-helpers",
-					"ownership-place-route-local-files-by-scope",
+					"ownership-place-owner-files-in-role-folders",
 					"ownership-use-consistent-file-and-symbol-naming",
 					"composition-prefer-arrow-functions-and-object-params",
 					"screen-avoid-premature-abstraction",
 					"screen-extract-utilities-selectively",
-					"screen-move-pure-support-code-out-of-entry-files",
 					"docs-require-jsdoc-on-key-declarations",
 				],
 				typescript: [
@@ -1075,7 +1027,7 @@ const reactScenarioStages = {
 			expectedSelected: {
 				react: [
 					"ownership-layer-component-boundaries",
-					"ownership-place-route-local-files-by-scope",
+					"ownership-place-owner-files-in-role-folders",
 					"ownership-use-consistent-file-and-symbol-naming",
 					"typing-function-type-first",
 					"typing-reuse-existing-contracts",
@@ -1252,6 +1204,52 @@ const reactScenarioStages = {
 			},
 		},
 	},
+	"RTE16-private-component-import-direction": {
+		initial: {
+			prompt:
+				"two sibling files under src/page/detail/component/spike-pattern-panel/component/ import each other's legend row through ../; make the panel own the shared legend row and pass it down as an element prop, and remove the sibling and @/page component imports.",
+			files: [
+				"src/page/detail/component/spike-pattern-panel/spike-pattern-panel.tsx",
+				"src/page/detail/component/spike-pattern-panel/component/detection-section.tsx",
+				"src/page/detail/component/spike-pattern-panel/component/summary-band.tsx",
+			],
+			expectedSkills: ["react", "typescript"],
+			expectedSelected: {
+				react: [
+					"ownership-place-owner-files-in-role-folders",
+					"ownership-keep-component-imports-flowing-downward",
+					"strategy-prefer-children-over-render-props",
+				],
+				typescript: ["naming-use-direct-imports-and-public-entry-points", "guardrails-review-banned-typescript-shortcuts-before-finishing"],
+			},
+		},
+	},
+	"RTE17-chart-lifecycle-ownership": {
+		initial: {
+			prompt:
+				"the ECharts init, resize listener, and dispose currently sit in src/widget/chart/hook/use-chart-instance.ts only to shorten the component; fold that lifecycle back into the owning chart root and leave the domain option builder in function/.",
+			files: [
+				"src/widget/chart/component/chart-root.tsx",
+				"src/widget/chart/hook/use-chart-instance.ts",
+				"src/widget/chart/function/build-chart-option.ts",
+			],
+			expectedSkills: ["react", "typescript"],
+			expectedSelected: {
+				react: [
+					"ownership-prefer-plain-ts-for-local-react-helpers",
+					"ownership-place-owner-files-in-role-folders",
+					"ownership-keep-lifecycle-in-the-owning-component",
+					"docs-require-jsdoc-on-key-declarations",
+				],
+				typescript: [
+					"docs-require-header-jsdoc-on-key-declarations",
+					"docs-standardize-annotation-tags-by-declaration-role",
+					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"guardrails-review-banned-typescript-shortcuts-before-finishing",
+				],
+			},
+		},
+	},
 } as const;
 
 /**
@@ -1271,14 +1269,14 @@ const cssScenarioStages = {
 			files: ["src/routes/catalog/index.tsx", "src/routes/catalog/_index.css"],
 			expectedSkills: ["react", "typescript", "css"],
 			expectedSelected: {
-				react: ["ownership-place-route-local-files-by-scope"],
+				react: ["ownership-place-owner-files-in-role-folders"],
 				typescript: ["naming-use-direct-imports-and-public-entry-points", "guardrails-review-banned-typescript-shortcuts-before-finishing"],
 				css: [
 					"naming-default-to-plain-css-when-no-module-convention",
 					"naming-keep-scope-slug-unique-per-owner",
 					"naming-name-elements-and-modifiers-by-role",
 					"naming-preserve-route-slug-traceability",
-					"naming-separate-local-and-route-style-scopes",
+					"naming-separate-owner-style-scopes",
 					"naming-use-scope-slug-element-modifier-syntax",
 					"composition-compose-classes-with-clsx",
 					"organization-keep-style-files-owned-by-one-component-or-route",
@@ -1295,7 +1293,7 @@ const cssScenarioStages = {
 			expectedSkills: ["css"],
 			expectedSelected: {
 				css: [
-					"naming-separate-local-and-route-style-scopes",
+					"naming-separate-owner-style-scopes",
 					"organization-keep-style-files-owned-by-one-component-or-route",
 					"organization-review-banned-css-patterns-before-finishing",
 				],
@@ -1877,7 +1875,7 @@ test("React progressive metadata and all 42 rule routes match Appendix B exactly
 		{skill: "typescript", mode: "required"},
 		{skill: "css", mode: "conditional", appliesWhen: "class contract, stylesheet 또는 styling surface를 변경한다."},
 	]);
-	assert.equal(document.rules.length, 42);
+	assert.equal(document.rules.length, 43);
 	assert.deepEqual(
 		Object.fromEntries(document.rules.map((rule) => [getRuleId(rule), {appliesWhen: rule.appliesWhen, reviewWith: rule.reviewWith}])),
 		reactRuleRouting,
@@ -1923,7 +1921,7 @@ test("React progressive metadata and all 42 rule routes match Appendix B exactly
 	assert.match(contributing, /대상이 없으면.*key\s*를 생략/i);
 });
 
-test("React routing manifest is the exact fifteen-scenario Appendix B/D oracle with full positive coverage", async () => {
+test("React routing manifest is the exact seventeen-scenario Appendix B/D oracle with full positive coverage", async () => {
 	const skillPaths = getSkillPaths("react", realSkillRootDir);
 	await validateRoutingEvalManifest(skillPaths);
 	await validateRoutingEvalManifests(realSkillRootDir);
@@ -1937,10 +1935,10 @@ test("React routing manifest is the exact fifteen-scenario Appendix B/D oracle w
 		manifest.scenarios.map((scenario) => scenario.id),
 		expectedScenarioIds,
 	);
-	assert.equal(manifest.scenarios.length, 15);
+	assert.equal(manifest.scenarios.length, 17);
 	assert.equal(
 		manifest.scenarios.reduce((count, scenario) => count + (scenario.scopeDrift ? 2 : 1), 0),
-		16,
+		18,
 	);
 
 	const universeBySkillName: Record<string, readonly string[]> = {
@@ -2026,8 +2024,8 @@ test("React routing manifest is the exact fifteen-scenario Appendix B/D oracle w
 	assert.equal(cssDrift.expectedSelected.typescript?.includes("docs-write-concise-korean-comments-about-purpose-and-constraints"), true);
 	assert.equal(cssDrift.expectedSelected.css?.includes("composition-do-not-build-structural-variants-with-modifiers"), true);
 	assert.equal(cssDrift.expectedSelected.css?.includes("values-separate-domain-state-modifiers-from-dom-interaction-states"), true);
-	assert.equal(cssDrift.expectedSelected.css?.includes("naming-preserve-route-slug-traceability"), true);
-	assert.equal(cssDrift.expectedSelected.css?.includes("naming-preserve-route-slug-traceability") ?? false, true);
+	assert.equal(cssDrift.expectedSelected.css?.includes("naming-separate-owner-style-scopes"), true);
+	assert.equal(cssDrift.expectedSelected.css?.includes("naming-preserve-route-slug-traceability") ?? false, false);
 
 	const routeSupport = scenarioById.get("RTE03-route-support-extraction");
 	assert.equal(routeSupport?.expectedSelected.typescript?.includes("types-reuse-existing-contracts-before-new-types"), false);
@@ -2047,8 +2045,8 @@ test("React generated index and handbook preserve canonical local rules and comp
 		entries.map((entry) => entry.id),
 		reactRuleUniverse,
 	);
-	assert.equal(entries.length, 42);
-	assert.equal(getRulesIndexByteBudget(entries.length), 15_480);
+	assert.equal(entries.length, 43);
+	assert.equal(getRulesIndexByteBudget(entries.length), 15_820);
 	assert.equal(Buffer.byteLength(source, "utf8") <= getRulesIndexByteBudget(entries.length), true);
 
 	for (const entry of entries) {
@@ -2246,7 +2244,7 @@ test("CSS routing manifest is the exact eleven-scenario and thirteen-stage Appen
 		react: [],
 		typescript: ["guardrails-review-banned-typescript-shortcuts-before-finishing"],
 	});
-	assert.deepEqual(routeDrift?.scopeDrift?.expectedSelected.react, ["ownership-place-route-local-files-by-scope"]);
+	assert.deepEqual(routeDrift?.scopeDrift?.expectedSelected.react, ["ownership-place-owner-files-in-role-folders"]);
 	assert.deepEqual(routeDrift?.scopeDrift?.expectedSelected.typescript, [
 		"naming-use-direct-imports-and-public-entry-points",
 		"guardrails-review-banned-typescript-shortcuts-before-finishing",

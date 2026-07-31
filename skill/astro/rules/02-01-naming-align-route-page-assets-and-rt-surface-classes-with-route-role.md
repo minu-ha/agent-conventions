@@ -24,12 +24,12 @@ Naming 기준:
 **Incorrect (route depth and generic names leak into file/class names):**
 
 ```txt
-admin/entries/index.astro -> loc_adminEntriesPage__root
+admin/entries/index.astro -> pv_adminEntriesPage__root
 admin/entries/_admin-entries.ts
 admin/entries/_local.ts
 admin/entries/_local.css
 admin/entries/_local/provider.tsx
-entries/[slug].astro -> loc_entryDetailPage__body
+entries/[slug].astro -> pv_entryDetailPage__body
 ```
 
 **Correct (route role and asset owner are short, searchable, and aligned):**
@@ -48,5 +48,5 @@ _document.astro -> rt_document__body
 ```
 
 When two route families would collide, choose the smallest owner name that disambiguates the local route.
-Do not switch to `loc_*` for the main page surface just because markup moved into `_local/`; the screen owner remains
+Do not switch to `pv_*` for the main page surface just because markup moved into `_local/`; the screen owner remains
 the route.

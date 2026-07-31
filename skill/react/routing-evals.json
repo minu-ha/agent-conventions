@@ -37,10 +37,10 @@
 		},
 		{
 			"id": "RTE02-owner-placement-css-drift",
-			"prompt": "move a route-only tree renderer from shared UI to src/routes/entries/-local/entry-tree.tsx and rename it as route-local; carry its existing className and style import through unchanged and make no styling change.",
+			"prompt": "move a route-only tree renderer from shared UI to src/page/entries/component/entry-tree.tsx and rename it as owner-private; carry its existing className and style import through unchanged and make no styling change.",
 			"files": [
-				"src/components/ui/entry-tree.tsx",
-				"src/routes/entries/-local/entry-tree.tsx"
+				"src/ui/entry-tree/ui-entry-tree.tsx",
+				"src/page/entries/component/entry-tree.tsx"
 			],
 			"expectedSkills": [
 				"react",
@@ -49,7 +49,7 @@
 			"expectedSelected": {
 				"react": [
 					"ownership-layer-component-boundaries",
-					"ownership-place-route-local-files-by-scope",
+					"ownership-place-owner-files-in-role-folders",
 					"ownership-use-consistent-file-and-symbol-naming",
 					"composition-destructure-props-inside"
 				],
@@ -64,11 +64,11 @@
 				]
 			},
 			"scopeDrift": {
-				"evidence": "in a project without a CSS Modules standard, add directly imported src/routes/entries/-local/entry-tree.css, create route-support rt_* owner-unique role-named classes, and compose the changed className contract with the existing direct clsx import; final skills add CSS with no additional React rule.",
+				"evidence": "in a project without a CSS Modules standard, add directly imported src/page/entries/component/entry-tree.css, create owner-unique pv_* role-named classes, and compose the changed className contract with the existing direct clsx import; final skills add CSS with no additional React rule.",
 				"files": [
-					"src/components/ui/entry-tree.tsx",
-					"src/routes/entries/-local/entry-tree.tsx",
-					"src/routes/entries/-local/entry-tree.css"
+					"src/ui/entry-tree/ui-entry-tree.tsx",
+					"src/page/entries/component/entry-tree.tsx",
+					"src/page/entries/component/entry-tree.css"
 				],
 				"expectedSkills": [
 					"react",
@@ -78,7 +78,7 @@
 				"expectedSelected": {
 					"react": [
 						"ownership-layer-component-boundaries",
-						"ownership-place-route-local-files-by-scope",
+						"ownership-place-owner-files-in-role-folders",
 						"ownership-use-consistent-file-and-symbol-naming",
 						"composition-destructure-props-inside"
 					],
@@ -95,8 +95,7 @@
 						"naming-default-to-plain-css-when-no-module-convention",
 						"naming-keep-scope-slug-unique-per-owner",
 						"naming-name-elements-and-modifiers-by-role",
-						"naming-preserve-route-slug-traceability",
-						"naming-separate-local-and-route-style-scopes",
+						"naming-separate-owner-style-scopes",
 						"naming-use-scope-slug-element-modifier-syntax",
 						"composition-compose-classes-with-clsx",
 						"composition-do-not-build-structural-variants-with-modifiers",
@@ -109,10 +108,10 @@
 		},
 		{
 			"id": "RTE03-route-support-extraction",
-			"prompt": "move one real four-argument multi-line payload boundary from src/routes/entries/page.tsx to sibling page.ts; do not create a hook, generic utils file, or helper soup.",
+			"prompt": "move one real four-argument multi-line payload boundary out of src/page/entries/entries-page.tsx into src/page/entries/function/build-entry-payload.ts; do not create a hook, generic utils file, or helper soup.",
 			"files": [
-				"src/routes/entries/page.tsx",
-				"src/routes/entries/page.ts"
+				"src/page/entries/entries-page.tsx",
+				"src/page/entries/function/build-entry-payload.ts"
 			],
 			"expectedSkills": [
 				"react",
@@ -121,12 +120,11 @@
 			"expectedSelected": {
 				"react": [
 					"ownership-prefer-plain-ts-for-local-react-helpers",
-					"ownership-place-route-local-files-by-scope",
+					"ownership-place-owner-files-in-role-folders",
 					"ownership-use-consistent-file-and-symbol-naming",
 					"composition-prefer-arrow-functions-and-object-params",
 					"screen-avoid-premature-abstraction",
 					"screen-extract-utilities-selectively",
-					"screen-move-pure-support-code-out-of-entry-files",
 					"docs-require-jsdoc-on-key-declarations"
 				],
 				"typescript": [
@@ -300,7 +298,7 @@
 			"expectedSelected": {
 				"react": [
 					"ownership-layer-component-boundaries",
-					"ownership-place-route-local-files-by-scope",
+					"ownership-place-owner-files-in-role-folders",
 					"ownership-use-consistent-file-and-symbol-naming",
 					"typing-function-type-first",
 					"typing-reuse-existing-contracts",
@@ -490,6 +488,57 @@
 				"typescript": [
 					"absence-expose-optional-values-instead-of-silent-fallbacks",
 					"docs-keep-inline-comments-for-constraints-and-caveats",
+					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"guardrails-review-banned-typescript-shortcuts-before-finishing"
+				]
+			}
+		},
+		{
+			"id": "RTE16-private-component-import-direction",
+			"prompt": "two sibling files under src/page/detail/component/spike-pattern-panel/component/ import each other's legend row through ../; make the panel own the shared legend row and pass it down as an element prop, and remove the sibling and @/page component imports.",
+			"files": [
+				"src/page/detail/component/spike-pattern-panel/spike-pattern-panel.tsx",
+				"src/page/detail/component/spike-pattern-panel/component/detection-section.tsx",
+				"src/page/detail/component/spike-pattern-panel/component/summary-band.tsx"
+			],
+			"expectedSkills": [
+				"react",
+				"typescript"
+			],
+			"expectedSelected": {
+				"react": [
+					"ownership-place-owner-files-in-role-folders",
+					"ownership-keep-component-imports-flowing-downward",
+					"strategy-prefer-children-over-render-props"
+				],
+				"typescript": [
+					"naming-use-direct-imports-and-public-entry-points",
+					"guardrails-review-banned-typescript-shortcuts-before-finishing"
+				]
+			}
+		},
+		{
+			"id": "RTE17-chart-lifecycle-ownership",
+			"prompt": "the ECharts init, resize listener, and dispose currently sit in src/widget/chart/hook/use-chart-instance.ts only to shorten the component; fold that lifecycle back into the owning chart root and leave the domain option builder in function/.",
+			"files": [
+				"src/widget/chart/component/chart-root.tsx",
+				"src/widget/chart/hook/use-chart-instance.ts",
+				"src/widget/chart/function/build-chart-option.ts"
+			],
+			"expectedSkills": [
+				"react",
+				"typescript"
+			],
+			"expectedSelected": {
+				"react": [
+					"ownership-prefer-plain-ts-for-local-react-helpers",
+					"ownership-place-owner-files-in-role-folders",
+					"ownership-keep-lifecycle-in-the-owning-component",
+					"docs-require-jsdoc-on-key-declarations"
+				],
+				"typescript": [
+					"docs-require-header-jsdoc-on-key-declarations",
+					"docs-standardize-annotation-tags-by-declaration-role",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"guardrails-review-banned-typescript-shortcuts-before-finishing"
 				]

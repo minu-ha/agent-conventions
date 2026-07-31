@@ -315,12 +315,12 @@ Naming 기준:
 **Incorrect (route depth and generic names leak into file/class names):**
 
 ```txt
-admin/entries/index.astro -> loc_adminEntriesPage__root
+admin/entries/index.astro -> pv_adminEntriesPage__root
 admin/entries/_admin-entries.ts
 admin/entries/_local.ts
 admin/entries/_local.css
 admin/entries/_local/provider.tsx
-entries/[slug].astro -> loc_entryDetailPage__body
+entries/[slug].astro -> pv_entryDetailPage__body
 ```
 
 **Correct (route role and asset owner are short, searchable, and aligned):**
@@ -339,7 +339,7 @@ _document.astro -> rt_document__body
 ```
 
 When two route families would collide, choose the smallest owner name that disambiguates the local route.
-Do not switch to `loc_*` for the main page surface just because markup moved into `_local/`; the screen owner remains
+Do not switch to `pv_*` for the main page surface just because markup moved into `_local/`; the screen owner remains
 the route.
 
 ### 2.2 Use Domain-specific Dynamic Segment Names
@@ -1532,7 +1532,7 @@ Move a section into `src/pages/**/_local/` only when it owns a real rendering or
 
 Do not extract a component just because a heading/body/footer group looks like a section.
 If the subtree still describes the same route surface,
-keep the route `rt_*` owner instead of inventing a `loc_*` namespace.
+keep the route `rt_*` owner instead of inventing a `pv_*` namespace.
 
 **Incorrect (simple page markup is split into `_local/` wrappers):**
 
@@ -1959,9 +1959,9 @@ src/
           entry-editor.css
 ```
 
-같은 page surface를 설명하는 `_local/` markup과 CSS는 `loc_*`로 새 namespace를 만들지 말고 `rt_*` owner를 유지합니다.
-예외적으로 dialog나 helper wrapper가 route 안에서도 독립 owner contract를 가져야 할 때만 `loc_entryFilterDialog__*` 같은
-`loc_*`를 사용합니다.
+같은 page surface를 설명하는 `_local/` markup과 CSS는 `pv_*`로 새 namespace를 만들지 말고 `rt_*` owner를 유지합니다.
+예외적으로 dialog나 helper wrapper가 route 안에서도 독립 owner contract를 가져야 할 때만 `pv_entryFilterDialog__*` 같은
+`pv_*`를 사용합니다.
 
 ## 10. Documentation and Comments
 

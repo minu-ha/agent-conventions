@@ -31,7 +31,7 @@
 				],
 				"expectedSelected": {
 					"react": [
-						"ownership-place-route-local-files-by-scope"
+						"ownership-place-owner-files-in-role-folders"
 					],
 					"typescript": [
 						"naming-use-direct-imports-and-public-entry-points",
@@ -42,7 +42,7 @@
 						"naming-keep-scope-slug-unique-per-owner",
 						"naming-name-elements-and-modifiers-by-role",
 						"naming-preserve-route-slug-traceability",
-						"naming-separate-local-and-route-style-scopes",
+						"naming-separate-owner-style-scopes",
 						"naming-use-scope-slug-element-modifier-syntax",
 						"composition-compose-classes-with-clsx",
 						"organization-keep-style-files-owned-by-one-component-or-route",
@@ -64,7 +64,7 @@
 			],
 			"expectedSelected": {
 				"css": [
-					"naming-separate-local-and-route-style-scopes",
+					"naming-separate-owner-style-scopes",
 					"organization-keep-style-files-owned-by-one-component-or-route",
 					"organization-review-banned-css-patterns-before-finishing"
 				]

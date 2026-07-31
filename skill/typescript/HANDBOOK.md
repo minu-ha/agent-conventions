@@ -69,8 +69,10 @@
 아래에 모읍니다.
 leaf 파일마다 공용 URL, feature flag, 페이지 크기, 상수 문자열을 흩뿌리지 말고,
 `config.*` 체이닝으로 읽을 수 있게 정리합니다.
-수가 많지 않을 때는 `config/` 폴더로 미리 쪼개지 말고 단일 `config.ts`를 유지하고,
+수가 많지 않을 때는 폴더로 미리 쪼개지 말고 단일 `config.ts`를 유지하고,
 여러 독립 섹션으로 커졌을 때만 분리를 검토합니다.
+owner 하나만 쓰는 선언형 설정은 전역으로 올리지 않고 그 owner 아래 `config` 폴더에 `<owner>_config`로 둡니다.
+`constants` 폴더는 만들지 않습니다.
 
 **Incorrect (공용 설정을 leaf 파일마다 흩뿌림):**
 
@@ -134,6 +136,7 @@ util.number.clamp(score, 0, 100);
 **Impact: HIGH (모듈과 런타임 구조를 넘나들며 파일명·심볼·shape 필드를 예측 가능하게 유지합니다)**
 
 파일명은 `kebab-case`, 일반 변수와 함수는 `camelCase`, 타입은 `PascalCase`를 사용합니다.
+폴더명은 `kebab-case` 단수로 쓰고 프레임워크가 강제하는 이름만 예외로 둡니다.
 `const`인지 여부로 별도 casing을 두지 않고, 모듈 안의 로컬 값은 모두 `camelCase`로 맞춥니다.
 공용 설정 객체 키와 enum-like 상수 객체 이름 및 그 키는 `snake_case`, 일반 객체 키, schema 키,
 커스텀 타입 필드는 `camelCase`를 유지합니다.
@@ -169,24 +172,38 @@ const userProfileSchema = z.object({
 
 **Rule:** `T04` · `naming-use-direct-imports-and-public-entry-points`
 
-**Applies when:** TypeScript import/export, barrel, shared 공개 진입점·feature support module 경계를 추가·변경할 때. 같은 module path의 value/type specifier를 추가·삭제·전환할 때.
+**Applies when:** TypeScript import/export, barrel, shared 공개 진입점·owner support module 경계를 추가·변경할 때. 절대경로 alias로 다른 모듈을 가져올 때. 같은 module path의 value/type specifier를 추가·삭제·전환할 때.
 
 **Impact: HIGH (barrel이나 모호한 재노출 계층에 기대지 않고 import 소유를 명시적으로 드러냅니다)**
 
 `index.ts` 기반 barrel export를 만들지 않고 직접 export/import 구조를 유지합니다.
-공용 설정과 공용 순수 함수는 각각 `shared/config.ts`, `shared/util.ts` 같은 공개 진입점으로 모으고,
+role 폴더를 `index.ts`로 묶는 것도 barrel이므로 만들지 않습니다.
 타입 전용 import는 `import type`을 사용해 계약과 런타임 의존을 분리합니다.
-feature 전용 support code는 owner-named module처럼 소유자가 보이는 파일에서 named export를 직접 import합니다.
+
+절대경로 alias는 전역 레이어 루트만 가리킵니다.
+
+| 경로 | 판정 |
+| --- | --- |
+| `@/ui`, `@/widget` | 허용 |
+| `@/shared`, `@/service`, `@/store`, `@/asset` | 허용 |
+| `@/page/...` 등 화면 내부 | 금지 |
+
+화면이나 owner 내부 모듈은 절대경로로 열지 않고 `./`로만 접근합니다.
+owner 밖에서 필요해지면 경로를 뚫는 대신 전역 레이어로 올립니다.
 
 같은 module path를 계속 사용하더라도 import specifier의 value/type 구성이 추가·삭제·전환되면
 import 계약 변경이므로 Selected입니다.
-예를 들어 React value import에서 `useEffect`를 제거하거나 같은 `react` 경로에 handler type import를 추가하는 작업을
-"module path가 같다"는 이유로 N/A 처리하지 않습니다.
 
 **Incorrect (barrel과 혼합 import로 경계를 흐림):**
 
 ```ts
 import {config, util, UserProfile} from "./index";
+```
+
+**Incorrect (절대경로로 다른 화면 내부를 가져옴):**
+
+```ts
+import {SpikeChartCard} from "@/page/detail/component/spike-pattern-panel/component/spike-chart-card";
 ```
 
 **Correct (직접 import와 공개 진입점을 구분):**
@@ -195,8 +212,8 @@ import {config, util, UserProfile} from "./index";
 import type {UserProfile} from "@/shared/contracts";
 import {config} from "@/shared/config";
 import {util} from "@/shared/util";
-import {userProfileSchema} from "@/shared/schema";
-import {buildUserSaveRequest} from "./user-profile-support";
+import {WgChartCard} from "@/widget/chart-card/wg-chart-card";
+import {buildUserSaveRequest} from "./function/build-user-save-request";
 ```
 
 ## 2. Types and Contracts
@@ -524,8 +541,12 @@ support function은 "이름"이 아니라 "호출 경계"가 있을 때만 분�
 - 필수: 명확한 input/output, 런타임 문맥 없는 독립 검증 가능성
 - 추출 신호: 여러 owner의 직접 호출, 여러 export에서 반복되는 도메인 규칙
 - 유지: 한 번만 쓰는 짧은 계산, optional 보정, label fallback, 단일 namespace method 전용 mapper
-- 배치: generic `helper.ts`/`utils.ts` 금지, owner-named support module 우선
+- 배치: generic `helper.ts`/`utils.ts` 금지, owner 아래 `function` 폴더에 대표 export 하나당 파일 하나
+- 깊이: 호출은 owner → exported function → 파일 내부 private까지 두 단계로 끝냅니다
 - 승격: 여러 owner가 실제 공유하는 범용 pure function만 `shared/util.ts`의 `util.*`
+
+export 함수가 다른 export 함수를 따라가는 사슬은 만들지 않습니다.
+읽는 사람이 흐름을 알려고 파일을 왕복하게 되면 경계가 아니라 분해입니다.
 
 **Incorrect (단회성 계산을 generic util 파일로 분리):**
 

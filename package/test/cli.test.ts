@@ -27,7 +27,6 @@ const tsxCliPath = path.join(packageDir, "node_modules", "tsx", "dist", "cli.mjs
 const buildModulePath = path.join(packageDir, "src", "build.ts");
 const checkGeneratedModulePath = path.join(packageDir, "src", "check-generated.ts");
 const checkHandbooksModulePath = path.join(packageDir, "src", "check-handbooks.ts");
-const measurementScriptPath = path.join(packageDir, "scripts", "measure-progressive-loading.py");
 const expectedSkillScriptNames = [
 	"astro",
 	"react",
@@ -371,32 +370,13 @@ test("package.json exposes all-skill and per-skill script aliases", async () => 
 	assert.equal(packageJson.scripts.viewer, "tsx src/viewer.ts");
 	assert.equal(packageJson.scripts["check:viewer"], "tsx src/check-viewer.ts");
 	assert.equal(
-		packageJson.scripts["check:measurement-artifacts"],
+		packageJson.scripts["check:artifacts"],
 		"npm run check:generated:all && npm run check:handbooks:all && npm run check:viewer",
 	);
-	assert.equal(packageJson.scripts["measurement:self-test"], "python3 scripts/measure-progressive-loading.py --self-test");
-	assert.equal(packageJson.scripts["measurement:tokens"], "uv run --with tiktoken==0.11.0 python scripts/measure-progressive-loading.py");
 
 	for (const skillName of ["react", "css", "typescript"] as const) {
 		assert.ok(packageJson.scripts[`check:generated:${skillName}`]);
 	}
-});
-
-test("measurement revalidates contexts after routing-oracle snapshot", async () => {
-	const source = await readFile(measurementScriptPath, "utf8");
-	const runMeasurementStart = source.indexOf("def run_measurement(");
-	const runMeasurementEnd = source.indexOf("\n\nMutation =", runMeasurementStart);
-	const runMeasurementSource = source.slice(runMeasurementStart, runMeasurementEnd);
-	const snapshotIndex = runMeasurementSource.indexOf("routing_oracle_snapshot = {");
-	const revalidationIndex = runMeasurementSource.indexOf("validate_contexts(contexts, repo_root)", snapshotIndex);
-	const metadataIndex = runMeasurementSource.indexOf('"type": "metadata"');
-
-	assert.notEqual(runMeasurementStart, -1);
-	assert.notEqual(runMeasurementEnd, -1);
-	assert.notEqual(snapshotIndex, -1);
-	assert.notEqual(revalidationIndex, -1);
-	assert.ok(revalidationIndex > snapshotIndex);
-	assert.ok(revalidationIndex < metadataIndex);
 });
 
 test("project template stays a standalone KISS starter, not a convention router", async () => {

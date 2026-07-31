@@ -30,10 +30,12 @@
 1. [Ownership and Boundaries](#1-ownership-and-boundaries) — **CRITICAL**
     - 1.1 [Avoid Barrel Exports and React Namespace Types](#11-avoid-barrel-exports-and-react-namespace-types)
     - 1.2 [Do Not Create Screen-local Custom Hooks for Pure Logic](#12-do-not-create-screen-local-custom-hooks-for-pure-logic)
-    - 1.3 [Keep UI, Widget, and -local Ownership Separate](#13-keep-ui-widget-and--local-ownership-separate)
-    - 1.4 [Place Route-local Files by Visual Scope](#14-place-route-local-files-by-visual-scope)
+    - 1.3 [Keep UI, Widget, and Private Ownership Separate](#13-keep-ui-widget-and-private-ownership-separate)
+    - 1.4 [Place Owner Files in Role Folders](#14-place-owner-files-in-role-folders)
     - 1.5 [Route Shared Constants Through `shared/config.ts`](#15-route-shared-constants-through-shared-config-ts)
     - 1.6 [Use Consistent File and Symbol Naming](#16-use-consistent-file-and-symbol-naming)
+    - 1.7 [Keep Component Imports Flowing Downward](#17-keep-component-imports-flowing-downward)
+    - 1.8 [Keep Library Lifecycle in the Owning Component](#18-keep-library-lifecycle-in-the-owning-component)
 2. [Typing and Contracts](#2-typing-and-contracts) — **HIGH**
     - 2.1 [Prefer React Handler Type Aliases Over Inline Event Parameter Annotations](#21-prefer-react-handler-type-aliases-over-inline-event-parameter-annotations)
     - 2.2 [Reuse Prop and API Contracts Before Creating New Types](#22-reuse-prop-and-api-contracts-before-creating-new-types)
@@ -54,7 +56,6 @@
     - 5.3 [Extract Screen Support Code Only When the Boundary Is Real](#53-extract-screen-support-code-only-when-the-boundary-is-real)
     - 5.4 [Keep Derived Values Close to Where They Are Used](#54-keep-derived-values-close-to-where-they-are-used)
     - 5.5 [Keep Route Entry Files Focused on Screen Flow](#55-keep-route-entry-files-focused-on-screen-flow)
-    - 5.6 [Move Screen-owned Pure Support Code Into `page.ts` Before Splitting Further](#56-move-screen-owned-pure-support-code-into-page-ts-before-splitting-further)
 6. [Events and Interaction Flow](#6-events-and-interaction-flow) — **MEDIUM-HIGH**
     - 6.1 [Keep Screen-specific Handler Flow Local Until a Real Utility Emerges](#61-keep-screen-specific-handler-flow-local-until-a-real-utility-emerges)
     - 6.2 [Name Handlers Predictably and Curry Extra Arguments](#62-name-handlers-predictably-and-curry-extra-arguments)
@@ -86,7 +87,7 @@
 
 **Impact: CRITICAL**
 
-Shared UI, widget, route-local 코드는 소유 경계가 분명해야 에이전트가 코드를 예측 가능하게 배치할 수 있습니다.
+ui, widget, owner-private 코드는 소유 경계가 분명해야 에이전트가 코드를 예측 가능하게 배치할 수 있습니다. owner 아래 role 폴더 구조, 하향 단방향 import, lifecycle 소유가 이 경계를 지탱합니다.
 
 ### 1.1 Avoid Barrel Exports and React Namespace Types
 
@@ -104,6 +105,9 @@ import 경로와 타입 출처를 명시적으로 유지하기 위해서입니�
 
 - React 타입을 namespace로 둘지 direct `import type`으로 가져올지 정하는 변경도 이 규칙의 판단 대상입니다.
 - 일반 third-party value를 alias 없이 직접 import하는 변경만으로는 걸리지 않습니다.
+- `export const Dialog = { Root, Header } as const` 같은 compound facade는 barrel이 아닙니다.
+  재노출 계층이 아니라 같은 파일이 소유한 public part 조립이므로 허용합니다.
+- `component`, `function` 같은 role 폴더에 `index.ts`를 만들어 묶는 것은 barrel이므로 금지합니다.
 
 **Incorrect (barrel export와 namespace 타입 혼용):**
 
@@ -135,28 +139,28 @@ const handleClick: MouseEventHandler<HTMLButtonElement> = (_event) => {
 
 **Applies when:** 화면 전용 계산·정규화·payload 조립을 custom hook으로 추출하려 할 때. 화면 전용 순수 로직을 별도 support module로 옮기려 할 때.
 
-**Review with:** `screen-extract-utilities-selectively`, `screen-move-pure-support-code-out-of-entry-files`, `typescript/functions-extract-helpers-only-when-the-boundary-is-real`
+**Review with:** `ownership-keep-lifecycle-in-the-owning-component`, `ownership-place-owner-files-in-role-folders`, `screen-extract-utilities-selectively`, `typescript/functions-extract-helpers-only-when-the-boundary-is-real`
 
 **Impact: HIGH (React 전용 추상화를 실제 lifecycle/context 결합이 있는 경우로 한정합니다)**
 
 화면 하나에 종속된 계산, 정규화, payload 조립은 custom hook으로 포장하지 않습니다.
 먼저 일반 `.ts` support module에 둡니다.
 
-- route entry 화면이면 기본 추출 위치는 같은 계층의 `page.ts`입니다.
-  화면 전용 pure function은 named export를 직접 import해 씁니다.
-- screen-local custom hook은 lifecycle, context, 다른 hook 호출 순서를
-  실제로 캡슐화할 때만 허용합니다.
+- 추출 위치는 owner 아래 `function` 폴더이고, 대표 exported 함수 하나당 파일 하나를 둡니다.
+- screen-local custom hook은 state, context, 다른 hook 호출 순서를 실제로 캡슐화할 때만 허용합니다.
+- lifecycle이 실제로 있어도 파일 분량을 줄이려는 추출은 허용하지 않습니다.
+  그 판단은 `ownership-keep-lifecycle-in-the-owning-component`가 담당합니다.
 - 단순 계산을 hook처럼 보이게 만드는 추상화는 피합니다.
 
 **Incorrect (로컬 계산을 습관적으로 hook으로 포장):**
 
 ```ts
 export const useMediaUploadPayload = (files: UploadFile[]) => {
-  return files.map((file) => ({ uid: file.uid }));
+	return files.map((file) => ({ uid: file.uid }));
 };
 ```
 
-**Incorrect (로컬 support module도 불필요한 `page.*` namespace로 감쌈):**
+**Incorrect (support module을 불필요한 namespace 객체로 감쌈):**
 
 ```ts
 export const page = {
@@ -166,128 +170,217 @@ export const page = {
 };
 ```
 
-**Correct (순수 계산은 sibling `page.ts`의 named export로 유지):**
+**Correct (순수 계산은 owner의 `function` 폴더에서 named export로 유지):**
 
 ```ts
+// page/entries/function/build-media-upload-payload.ts
 /**
  * @helper 업로드 파일 목록을 저장 payload로 정규화
  */
 export const buildMediaUploadPayload = (files: UploadFile[]) => {
-  return files.map((file) => ({ uid: file.uid }));
+	return files.map((file) => ({ uid: file.uid }));
 };
 ```
 
-**Correct (sibling `page.ts`도 named export를 직접 가져옴):**
+**Correct (named export를 직접 가져옴):**
 
 ```tsx
-import { buildMediaUploadPayload } from "./page";
+import { buildMediaUploadPayload } from "./function/build-media-upload-payload";
 
 const request = buildMediaUploadPayload(files);
 ```
 
-### 1.3 Keep UI, Widget, and -local Ownership Separate
+### 1.3 Keep UI, Widget, and Private Ownership Separate
 
 **Rule:** `R03` · `ownership-layer-component-boundaries`
 
-**Applies when:** 컴포넌트를 ui·widget·route-local 중 어느 소유 레이어에 둘지 정할 때. 컴포넌트를 레이어 사이에서 옮기거나 공용화할 때.
+**Applies when:** 컴포넌트를 ui·widget·private 중 어느 소유 레이어에 둘지 정할 때. 컴포넌트를 레이어 사이에서 옮기거나 공용화할 때.
 
-**Review with:** `css/naming-separate-local-and-route-style-scopes`, `ownership-place-route-local-files-by-scope`
+**Review with:** `css/naming-separate-owner-style-scopes`, `ownership-place-owner-files-in-role-folders`
 
-**Impact: CRITICAL (공용 책임과 route-local 책임이 같은 레이어로 섞이는 것을 막습니다)**
+**Impact: CRITICAL (공용 책임과 owner-private 책임이 같은 레이어로 섞이는 것을 막습니다)**
 
 컴포넌트는 소유 레이어를 이름으로 드러냅니다.
 
 | 레이어 | 책임 | 파일·심볼 |
 | --- | --- | --- |
-| `ui` | 순수 view | `ui-*` · `Ui*` |
-| `widget` | 여러 화면이 재사용하는 공용 조합 | `wg-*` · `Wg*` |
-| `-local` | 특정 route 맥락을 아는 화면 전용 코드 | route 소유자 이름 |
+| `ui` | 도메인을 모르는 순수 view | `ui-*` · `Ui*` |
+| `widget` | 화면 조립을 전제하지 않는 공용 조합 | `wg-*` · `Wg*` |
+| private | 한 owner 안에서만 쓰이는 화면 전용 코드 | owner 이름 |
 
-`widget` 레이어 폴더명은 그대로 두되, widget-owned 파일과 심볼은 `wg-*`, `Wg*`로 소유자를 드러냅니다.
+private 레이어는 전용 폴더를 갖지 않고 owner 아래 `component`에 살기 때문에, 이름이 아니라 위치가 소유를 드러냅니다.
+`ui`와 `widget`은 여러 곳에서 import하므로 최상위에 모으고, private component는 owner 옆에 둡니다.
+
+레이어 판정은 두 축으로 갈립니다.
+
+| 축 | 질문 | 결정하는 것 |
+| --- | --- | --- |
+| 맥락 독립성 | 화면 조립이나 부모 구조를 전제하는가 | 승격 가능 여부 |
+| 도메인 지식 | 도메인을 아는가 | `ui`와 `widget` 중 어디인가 |
+
+- 화면 조립을 전제하면 private으로 남습니다.
+- 맥락 독립이고 도메인을 모르면 `ui`입니다.
+- 맥락 독립이고 도메인을 알면 `widget`입니다. 이름에 도메인 단어가 남아도 됩니다.
+
+**사용 횟수는 판정 기준이 아닙니다.**
+한 화면에서만 쓰여도 맥락 독립이면 `widget`입니다.
+사용 횟수로 판정하면 쓰임이 늘거나 줄 때마다 컴포넌트가 폴더를 옮겨 다니게 됩니다.
 
 **Incorrect (view 레이어와 화면 전용 로직이 섞임):**
 
 ```tsx
-// <component-root>/ui/button/ui-delete-entry-button.tsx
+// ui/button/ui-delete-entry-button.tsx
 const UiDeleteEntryButton = () => {
-  const navigate = useNavigate();
+	const navigate = useNavigate();
 
-  return <button onClick={() => void navigate({ to: "/entries" })}>삭제</button>;
+	return <button onClick={() => void navigate({ to: "/entries" })}>삭제</button>;
+};
+```
+
+**Incorrect (맥락 독립인 부품을 사용 횟수만 보고 private에 남김):**
+
+```tsx
+// page/detail/component/spike-pattern-panel/component/spike-legend-glyph.tsx
+// props만 받아 마커를 그리는데 이 화면에서만 쓴다는 이유로 private에 남아 있다.
+export const SpikeLegendGlyph = (props: SpikeLegendGlyphProps) => {
+	const { item } = props;
+	return <svg className="pv_spikeLegendGlyph__root">{/* ... */}</svg>;
 };
 ```
 
 **Correct (레이어별 책임과 이름이 분리됨):**
 
 ```tsx
-// <component-root>/ui/button/ui-button.tsx
+// ui/button/ui-button.tsx
 export interface UiButtonProps {
-  onClick: MouseEventHandler<HTMLButtonElement>;
+	onClick: MouseEventHandler<HTMLButtonElement>;
 }
 
 export const UiButton = (props: UiButtonProps) => {
-  const { onClick } = props;
-  return <button onClick={onClick} />;
+	const { onClick } = props;
+	return <button onClick={onClick} />;
 };
 ```
 
 ```tsx
-// <component-root>/widget/entry-toolbar/wg-entry-toolbar.tsx
+// widget/entry-toolbar/wg-entry-toolbar.tsx
 export interface WgEntryToolbarProps {
-  onClose: () => void;
+	onClose: () => void;
 }
 
 export const WgEntryToolbar = (props: WgEntryToolbarProps) => {
-  const { onClose } = props;
-  return <UiButton onClick={onClose} />;
+	const { onClose } = props;
+	return <UiButton onClick={onClose} />;
 };
 ```
 
+**Correct (맥락 독립·도메인 인지 부품은 widget으로 올림):**
+
 ```tsx
-// <route-root>/entries/-local/delete-entry-button.tsx
+// widget/spike-legend-glyph/wg-spike-legend-glyph.tsx
+export const WgSpikeLegendGlyph = (props: WgSpikeLegendGlyphProps) => {
+	const { item } = props;
+	return <svg className="wg_spikeLegendGlyph__root">{/* ... */}</svg>;
+};
+```
+
+**Correct (화면 조립을 전제하는 코드는 owner 아래 private으로 남김):**
+
+```tsx
+// page/entries/component/delete-entry-button.tsx
 const DeleteEntryButton = () => {
-  const navigate = useNavigate();
-  return <UiButton onClick={() => void navigate({ to: "/entries" })} />;
+	const navigate = useNavigate();
+	return <UiButton onClick={() => void navigate({ to: "/entries" })} />;
 };
 ```
 
-### 1.4 Place Route-local Files by Visual Scope
+### 1.4 Place Owner Files in Role Folders
 
-**Rule:** `R04` · `ownership-place-route-local-files-by-scope`
+**Rule:** `R04` · `ownership-place-owner-files-in-role-folders`
 
-**Applies when:** route 전용 컴포넌트·스타일·순수 로직을 새로 만들 때. `-local/`과 route sibling `.ts` 사이에서 파일 위치를 바꿀 때.
+**Applies when:** owner 아래 `component`·`config`·`function`·`hook`·`type` 폴더를 만들거나 옮길 때. 추출한 component·함수·타입의 배치 위치를 정할 때. 제외: 기존 파일 내부 구현만 바꾸는 경우.
 
-**Review with:** `css/naming-separate-local-and-route-style-scopes`, `css/organization-keep-style-files-owned-by-one-component-or-route`
+**Review with:** `css/naming-separate-owner-style-scopes`, `ownership-keep-component-imports-flowing-downward`
 
-**Impact: HIGH (route 전용 component·style·logic을 예측 가능한 위치에 유지합니다)**
+**Impact: CRITICAL (추출한 파일이 소유자를 따라 예측 가능한 위치에 놓이게 합니다)**
 
-화면 전용 컴포넌트와 스타일은 `-local/`에 두고, 비컴포넌트 로직은 라우트와 같은 계층의 `.ts` 파일에 둡니다.
-같은 계층 `.ts` 파일에는 JSX를 직접 넣지 않고, 필요하면 렌더링 콜백을 주입합니다.
+route와 복잡한 component가 owner이고, 추출한 파일은 그 owner 아래 role 폴더에 둡니다.
+owner 이름이 폴더 이름이므로 위치만 보고 소유자를 알 수 있습니다.
 
-**Incorrect (화면 전용 컴포넌트와 순수 로직 위치가 뒤섞임):**
+role 폴더는 다음 다섯 개뿐이고 새 role 폴더를 발명하지 않습니다.
 
-```tsx
-// folders.ts
-export const renderFolderTitle = () => <span>Folder</span>;
+| 폴더 | 담는 것 |
+| --- | --- |
+| `component` | 이 owner만 쓰는 하위 component |
+| `config` | 입력을 받지 않는 선언형 설정, preset, threshold |
+| `function` | 대표 exported 도메인 연산 |
+| `hook` | 실제 state·effect·context를 소유한 custom hook |
+| `type` | 여러 파일이 공유하는 계약 |
+
+`util`, `helper`, `constant`, `common`, `shared` 같은 폴더는 만들지 않습니다.
+폴더 이름은 단수로 쓰고 프레임워크가 강제하는 이름만 예외로 둡니다.
+
+배치 기준입니다.
+
+- 필요한 role 폴더만 그때 만듭니다. 빈 폴더를 미리 만들어 두지 않습니다.
+- 파일이 하나뿐인 role 폴더도 그대로 둡니다. sibling `.ts` 하나로 대신하지 않습니다.
+- 자기 role 폴더가 필요한 component만 자기 폴더를 갖고, leaf는 `component` 아래 파일로 둡니다.
+- Props는 해당 TSX에 두고 여러 파일이 공유하는 계약만 `type`으로 옮깁니다.
+- owner 중첩이 3단계에 닿으면 분리가 맞는지, widget으로 나갈 대상인지 다시 봅니다.
+
+무엇을 추출할지는 이 규칙이 정하지 않습니다.
+`screen-extract-utilities-selectively`가 추출 여부를 먼저 판정하고 이 규칙은 그 결과의 위치만 정합니다.
+
+**Incorrect (단순 component에 role 폴더를 미리 다 만듦):**
+
+```txt
+ui/button/
+├── ui-button.tsx
+├── ui-button.css
+├── component/
+├── config/
+├── function/
+├── hook/
+└── type/
 ```
 
-**Correct (시각 코드와 비시각 로직의 위치를 분리):**
+**Incorrect (generic 이름 폴더와 복수형을 섞어 씀):**
 
-```ts
-// folders.ts
-/**
- * @helper folder node를 UiTree data로 변환
- */
-export const mapFolderNodeToTreeData = (node: FolderNode, renderers: FolderTreeRenderers) => {
-  return {
-    key: String(node.id),
-    title: renderers.renderTitle(node),
-  };
-};
+```txt
+page/detail/
+├── detail-page.tsx
+├── components/
+├── constants/
+├── utils/
+└── helpers/
 ```
 
-```tsx
-// -local/folder-tree.tsx
-<UiTree treeData={nodes.map((node) => mapFolderNodeToTreeData(node, { renderTitle }))} />
+**Correct (필요한 role 폴더만 만들고 leaf는 파일로 둠):**
+
+```txt
+page/detail/
+├── detail-page.tsx
+├── detail-page.css
+├── function/
+│   └── map-api-response-to-view-model.ts
+├── type/
+│   └── detail-view-model.ts
+└── component/
+    ├── summary-band.tsx
+    ├── summary-band.css
+    └── spike-pattern-panel/
+        ├── spike-pattern-panel.tsx
+        ├── spike-pattern-panel.css
+        └── function/
+            └── resolve-chart-viewport.ts
+```
+
+**Correct (지원 코드가 없으면 폴더 없이 파일만 둠):**
+
+```txt
+ui/button/
+├── ui-button.tsx
+└── ui-button.css
 ```
 
 ### 1.5 Route Shared Constants Through `shared/config.ts`
@@ -300,17 +393,18 @@ export const mapFolderNodeToTreeData = (node: FolderNode, renderers: FolderTreeR
 
 **Impact: HIGH (공용 상수가 route와 local component 곳곳에 흩어지는 것을 막습니다)**
 
-여러 화면에서 쓰는 상수와 설정은 라우트 파일이나 `-local` 컴포넌트에 흩뿌리지 않습니다.
+여러 화면에서 쓰는 상수와 설정은 라우트 파일이나 private 컴포넌트에 흩뿌리지 않습니다.
 기본 출처는 `shared/config.ts` 한 파일입니다.
 
 | 대상 | 위치 |
 | --- | --- |
 | 공용 상수·설정 | `shared/config.ts` 의 `config.*` |
 | 공용 순수 함수 | `shared/util.ts` 의 `util.*` |
-| route·feature 전용 support code | sibling `page.ts` 또는 owner-named module |
+| owner 전용 선언형 설정 | owner 아래 `config` 폴더의 `<owner>_config` |
 
 수가 많지 않으면 폴더 단위로 나누지 말고 `export const config = {}` 한 namespace를 유지합니다.
 사용처는 `config.*` 체이닝으로 접근해 출처를 보존합니다.
+`constants` 폴더는 만들지 않습니다. 입력을 받지 않는 선언형 값은 `config`가, 그 밖은 사용 지점이 소유합니다.
 
 **Incorrect (공용 상수를 화면 파일에 직접 선언):**
 
@@ -344,10 +438,12 @@ config.navigation.project_menu_key.dashboard;
 | 대상 | 표기 |
 | --- | --- |
 | 파일명 | `kebab-case` |
+| 폴더명 | `kebab-case` 단수 |
 | 일반 변수·함수 | `camelCase` |
 | 타입·컴포넌트 | `PascalCase` |
-| `shared/config.ts` 의 설정 객체와 키 | `snake_case` |
+| 설정 객체와 그 키 | `snake_case` |
 
+폴더명은 단수로 씁니다. 복수형은 쓰지 않고 프레임워크가 강제하는 이름만 예외입니다.
 `const` 여부로 casing을 나누지 않고, 화면과 모듈 안의 로컬 값은 모두 `camelCase`로 맞춥니다.
 여러 화면이 함께 쓰는 설정과 enum-like 상수는 `shared/config.ts`의 `config.*` 아래에 둡니다.
 
@@ -386,6 +482,169 @@ export const UserCard = () => {
 };
 ```
 
+### 1.7 Keep Component Imports Flowing Downward
+
+**Rule:** `R07` · `ownership-keep-component-imports-flowing-downward`
+
+**Applies when:** `component` 폴더 안의 파일을 다른 파일에서 import할 때. `../`나 `@/page` 경로로 component를 가져오려 할 때. 여러 자식이 같은 component를 필요로 해 배치를 다시 정할 때.
+
+**Requires selected:** `typescript/naming-use-direct-imports-and-public-entry-points` · 함께 적용
+
+**Review with:** `ownership-layer-component-boundaries`
+
+**Impact: CRITICAL (private component가 형제나 상위에서 역참조되어 소유 관계가 무너지는 것을 막습니다)**
+
+component import는 소유 관계를 따라 아래로만 흐릅니다.
+
+- `component` 폴더 안의 파일은 그 폴더의 owner만 import합니다.
+- 형제끼리는 import하지 않습니다.
+- `../`로 component를 가져오지 않습니다.
+- 절대경로는 전역 레이어 루트만 가리킵니다. `@/page/...`로 화면 내부를 가져오지 않습니다.
+
+여러 자식이 같은 component를 필요로 하면 셋 중 하나로 해소합니다.
+
+1. 부모가 조립해서 prop이나 `children`으로 내려보냅니다.
+2. 화면 조립을 전제하지 않는 component면 `ui` 또는 `widget`으로 올립니다.
+3. 짧은 조각이면 그대로 중복해서 씁니다.
+
+세 자식 이상이 같은 것을 필요로 하는데 올릴 수도 없으면 자식 분리가 잘못됐다는 신호입니다.
+`function`, `type`, `config`는 렌더 트리를 만들지 않으므로 owner 안에서 공유하고 이 방향 제약을 받지 않습니다.
+
+**Incorrect (형제 component를 직접 가져와 소유 관계가 사라짐):**
+
+```tsx
+// page/detail/component/spike-pattern-panel/component/detection-section.tsx
+import { LegendRow } from "./legend-row";
+import { SectionHeading } from "../../section-heading/section-heading";
+```
+
+**Incorrect (절대경로로 다른 화면 내부를 가져옴):**
+
+```tsx
+import { SpikeChartCard } from "@/page/detail/component/spike-pattern-panel/component/spike-chart-card";
+```
+
+**Correct (부모가 조립해서 내려보냄):**
+
+```tsx
+// page/detail/component/spike-pattern-panel/spike-pattern-panel.tsx
+import { UiSectionHeading } from "@/ui/section-heading/ui-section-heading";
+
+import { DetectionSection } from "./component/detection-section";
+import { SummaryBand } from "./component/summary-band";
+
+export const SpikePatternPanel = (props: SpikePatternPanelProps) => {
+	const { legendItems } = props;
+
+	return (
+		<section className="pv_spikePatternPanel__root">
+			<DetectionSection heading={<UiSectionHeading title="상단 이탈 감지" />} legendItems={legendItems} />
+			<SummaryBand heading={<UiSectionHeading title="요약" />} />
+		</section>
+	);
+};
+```
+
+**Correct (맥락 독립 component는 전역 레이어에서 가져옴):**
+
+```tsx
+// page/detail/component/spike-pattern-panel/component/detection-section.tsx
+import { WgLegendPanel } from "@/widget/legend-panel/wg-legend-panel";
+```
+
+### 1.8 Keep Library Lifecycle in the Owning Component
+
+**Rule:** `R08` · `ownership-keep-lifecycle-in-the-owning-component`
+
+**Applies when:** 외부 library instance 생성·resize·구독·dispose를 한 component가 소유할 때. lifecycle 코드를 custom hook으로 옮겨 파일을 줄이려 할 때. 제외: 여러 owner가 같은 lifecycle 계약을 실제로 호출하는 경우.
+
+**Review with:** `ownership-prefer-plain-ts-for-local-react-helpers`
+
+**Impact: HIGH (파일 길이를 줄이려고 lifecycle을 hook 뒤로 숨겨 실행 흐름이 사라지는 것을 막습니다)**
+
+외부 library의 instance 생성, resize, 이벤트 구독, dispose는 그 subtree를 소유한 component가 직접 가집니다.
+파일이 길어졌다는 이유만으로 custom hook을 만들어 lifecycle을 숨기지 않습니다.
+
+- 한 owner만 쓰는 lifecycle은 그 component 안의 effect로 둡니다.
+- LOC 감소는 추출 근거가 아닙니다. 읽는 사람이 파일을 왕복하게 만들 뿐입니다.
+- 여러 owner가 같은 lifecycle 계약을 실제로 호출할 때만 hook으로 올립니다.
+- 파일이 길면 lifecycle을 옮기기보다 도메인 계산을 `function`으로 분리합니다.
+
+`ownership-prefer-plain-ts-for-local-react-helpers`는 순수 계산을 hook으로 포장하는 것을 막고,
+이 규칙은 반대로 실제 lifecycle이 있어도 분량 때문에 hook으로 옮기는 것을 막습니다.
+
+**Incorrect (LOC를 줄이려고 lifecycle을 hook 뒤로 옮김):**
+
+```tsx
+// component/chart-root/use-chart-instance.ts
+export const useChartInstance = (containerRef: RefObject<HTMLDivElement>) => {
+	const [chart, setChart] = useState<EChartsType | null>(null);
+
+	useEffect(() => {
+		const instance = init(containerRef.current);
+		const handleResize = () => instance.resize();
+
+		window.addEventListener("resize", handleResize);
+		setChart(instance);
+
+		return () => {
+			window.removeEventListener("resize", handleResize);
+			instance.dispose();
+		};
+	}, [containerRef]);
+
+	return chart;
+};
+```
+
+```tsx
+// component/chart-root/chart-root.tsx
+export const ChartRoot = (props: ChartRootProps) => {
+	const containerRef = useRef<HTMLDivElement>(null);
+	const chart = useChartInstance(containerRef);
+
+	return <div ref={containerRef} className="wg_chart__canvas" />;
+};
+```
+
+**Correct (lifecycle을 소유 component가 직접 가짐):**
+
+```tsx
+// component/chart-root/chart-root.tsx
+export const ChartRoot = (props: ChartRootProps) => {
+	const { option } = props;
+	const containerRef = useRef<HTMLDivElement>(null);
+	const [chart, setChart] = useState<EChartsType | null>(null);
+
+	/**
+	 * @watch container mount 시 chart instance를 만들고 resize·dispose까지 소유
+	 */
+	useEffect(() => {
+		if (!containerRef.current) return;
+
+		const instance = init(containerRef.current);
+		const handleResize = () => instance.resize();
+
+		window.addEventListener("resize", handleResize);
+		setChart(instance);
+
+		return () => {
+			window.removeEventListener("resize", handleResize);
+			instance.dispose();
+		};
+	}, []);
+
+	/**
+	 * @watch option이 바뀌면 기존 instance에 다시 반영
+	 */
+	useEffect(() => {
+		chart?.setOption(option);
+	}, [chart, option]);
+
+	return <div ref={containerRef} className="wg_chart__canvas" />;
+};
+```
+
 ## 2. Typing and Contracts
 
 **Impact: HIGH**
@@ -394,7 +653,7 @@ React가 제공하는 handler와 prop 계약은 선언 위치에서 바로 드�
 
 ### 2.1 Prefer React Handler Type Aliases Over Inline Event Parameter Annotations
 
-**Rule:** `R07` · `typing-function-type-first`
+**Rule:** `R09` · `typing-function-type-first`
 
 **Applies when:** React 이벤트 핸들러나 prop callback의 선언·시그니처를 추가·변경할 때. 기존 React alias나 callback 계약을 그대로 쓸 수 있는 상황일 때. curried factory가 최종 반환하는 handler를 다룰 때.
 
@@ -441,7 +700,7 @@ const handleAddButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => {
 
 ### 2.2 Reuse Prop and API Contracts Before Creating New Types
 
-**Rule:** `R08` · `typing-reuse-existing-contracts`
+**Rule:** `R10` · `typing-reuse-existing-contracts`
 
 **Applies when:** Props callback 구현을 추가·변경할 때. API 응답 기반 view type을 추가·변경하는데 기존 prop·API 계약과 같은 shape가 보일 때.
 
@@ -483,7 +742,7 @@ Shared component는 single component, compound component, explicit variant 중 �
 
 ### 3.1 Avoid Boolean Prop Proliferation in Shared Components
 
-**Rule:** `R09` · `strategy-avoid-boolean-prop-proliferation`
+**Rule:** `R11` · `strategy-avoid-boolean-prop-proliferation`
 
 **Applies when:** 여러 곳에서 쓰는 shared component에 boolean mode·visibility prop을 추가할 때. 기존 boolean prop 조합과 JSX 분기가 늘어날 때.
 
@@ -554,7 +813,7 @@ export const WgEntryEditToolbar = () => {
 
 ### 3.2 Choose Single Components, Compound Components, and Variants Deliberately
 
-**Rule:** `R10` · `strategy-choose-single-composition-compound-and-variants`
+**Rule:** `R12` · `strategy-choose-single-composition-compound-and-variants`
 
 **Applies when:** exported shared component에 slot·public part·shared context/action을 추가할 때. 반복되는 preset이나 mode API를 추가할 때. shared component의 조립 구조를 재설계할 때.
 
@@ -701,7 +960,7 @@ export const ReadOnlyProfileDialog = () => {
 
 ### 3.3 Prefer Children Over Render Props for Static Composition
 
-**Rule:** `R11` · `strategy-prefer-children-over-render-props`
+**Rule:** `R13` · `strategy-prefer-children-over-render-props`
 
 **Applies when:** shared component에 header·footer·action 같은 정적 slot을 추가·변경할 때. render prop을 추가·변경하는데 runtime data 주입이 꼭 필요한지 불분명할 때.
 
@@ -793,7 +1052,7 @@ export const EntryScreen = () => {
 
 ### 4.1 Accept props as a Whole and Destructure Inside the Component
 
-**Rule:** `R12` · `composition-destructure-props-inside`
+**Rule:** `R14` · `composition-destructure-props-inside`
 
 **Applies when:** props를 받는 함수 컴포넌트의 시그니처나 구조분해 방식을 추가·변경할 때. props를 받는 컴포넌트를 다른 파일로 옮기거나 이름을 바꿀 때.
 
@@ -825,7 +1084,7 @@ const UserCard = (props: UserCardProps) => {
 
 ### 4.2 Do Not Define Components Inside Components
 
-**Rule:** `R13` · `composition-do-not-define-components-inside-components`
+**Rule:** `R15` · `composition-do-not-define-components-inside-components`
 
 **Applies when:** 컴포넌트 본문 안에 JSX를 반환하는 로컬 함수·컴포넌트를 추가하거나 옮길 때. 재렌더 시 remount·focus reset 징후를 다룰 때.
 
@@ -882,7 +1141,7 @@ export const UserProfileCard = (props: UserProfileCardProps) => {
 
 ### 4.3 Prefer Arrow Functions and Object Parameters for Complex Signatures
 
-**Rule:** `R14` · `composition-prefer-arrow-functions-and-object-params`
+**Rule:** `R16` · `composition-prefer-arrow-functions-and-object-params`
 
 **Applies when:** React 인접 코드에 `function` 선언이 생길 때. 함수가 매개변수를 3개 이상 받을 때. 함수가 함께 이동하는 같은 계열 값을 받을 때.
 
@@ -928,7 +1187,7 @@ export const updateEntryMediaUploadFileByUid = (params: UpdateEntryMediaUploadFi
 
 ### 4.4 Use Named Handlers Instead of Hiding Logic in JSX
 
-**Rule:** `R15` · `composition-named-handlers-over-inline`
+**Rule:** `R17` · `composition-named-handlers-over-inline`
 
 **Applies when:** TSX event prop의 인라인 callback에 분기나 비동기 호출을 추가·수정할 때. 인라인 callback에 여러 동작·부수효과나 비자명한 state transition이 들어갈 때. 제외: 단순 setter나 인자 전달 한 줄 위임만 있는 경우.
 
@@ -971,7 +1230,7 @@ const handleRemoveEntryButtonClick: MouseEventHandler<HTMLButtonElement> = async
 
 ### 4.5 Use ref Props Instead of New forwardRef Wrappers in React 19
 
-**Rule:** `R16` · `composition-use-ref-prop-instead-of-forwardref-in-react-19`
+**Rule:** `R18` · `composition-use-ref-prop-instead-of-forwardref-in-react-19`
 
 **Applies when:** React 19 컴포넌트에 focus·scroll·measure용 ref 공개 API를 추가·변경할 때. 새 `forwardRef` wrapper를 도입하려 할 때.
 
@@ -1044,7 +1303,7 @@ export const UiStatusBadge = (props: UiStatusBadgeProps) => {
 
 ### 4.6 Use Visibility Primitives Deliberately for Show and Hide Branches
 
-**Rule:** `R17` · `composition-use-activity-for-render-branches`
+**Rule:** `R19` · `composition-use-activity-for-render-branches`
 
 **Applies when:** 마운트된 subtree의 표시 상태를 보존하려고 조건부 렌더링을 Activity로 바꿀 때. Activity 등 visibility primitive와 조건부 렌더링 사이를 오갈 때.
 
@@ -1092,7 +1351,7 @@ Route entry는 화면 흐름을 분명하게 보여줘야 하며, helper 추출�
 
 ### 5.1 Avoid Premature Abstraction in Screen Code
 
-**Rule:** `R18` · `screen-avoid-premature-abstraction`
+**Rule:** `R20` · `screen-avoid-premature-abstraction`
 
 **Applies when:** screen 코드를 helper·hook·component·module로 추출할 때. 한 곳에서만 쓰는 기존 추상화를 다시 접어 넣을 때.
 
@@ -1210,7 +1469,7 @@ export const EntryTable = (props: EntryTableProps) => {
 
 ### 5.2 Extract Route-local Section Components Only for Runtime Boundaries
 
-**Rule:** `R19` · `screen-extract-local-section-components-for-runtime-boundaries`
+**Rule:** `R21` · `screen-extract-local-section-components-for-runtime-boundaries`
 
 **Applies when:** route-local section component를 새로 추출할 때. 기존 section이 async·state·provider·interaction·library·performance 경계를 소유하는지 바꿀 때.
 
@@ -1228,6 +1487,10 @@ route entry의 local component는 `runtime boundary`가 있을 때만 추출합�
 
 search param, navigation, page-level query/mutation, cross-section effect, invalidate, redirect,
 여러 section에 걸친 파생값은 route entry에 둡니다.
+
+호출 계층은 폴더 깊이가 아니라 entry 파일의 조립이 드러냅니다.
+"어느 component가 이걸 쓰는지"를 폴더 경로로 표현하려고 중첩을 늘리지 않습니다.
+entry의 JSX와 import 목록을 위에서 아래로 읽으면 답이 나와야 하고, 그러지 않으면 section을 과하게 쪼갠 것입니다.
 
 **Incorrect (layout wrapper만 분리해 route flow를 숨김):**
 
@@ -1364,11 +1627,11 @@ export const RouteComponent = () => {
 
 ### 5.3 Extract Screen Support Code Only When the Boundary Is Real
 
-**Rule:** `R20` · `screen-extract-utilities-selectively`
+**Rule:** `R22` · `screen-extract-utilities-selectively`
 
 **Applies when:** 화면 계산·변환·preset·option·column meta를 별도 함수나 support module로 옮길 때. 화면 support 경계를 바꿀 때. 제외: query `select` 내부 shaping만 바꾸는 경우.
 
-**Review with:** `screen-move-pure-support-code-out-of-entry-files`, `typescript/functions-extract-helpers-only-when-the-boundary-is-real`
+**Review with:** `ownership-place-owner-files-in-role-folders`, `typescript/functions-extract-helpers-only-when-the-boundary-is-real`
 
 **Impact: HIGH (route entry가 자기 계약이 없는 helper 조각으로 분해되는 것을 막습니다)**
 
@@ -1390,11 +1653,11 @@ export const RouteComponent = () => {
 
 배치 기준:
 
-- route sibling `page.ts`에 named export로 둡니다.
+- owner 아래 `function` 폴더에 대표 exported 함수 하나당 파일 하나로 둡니다.
 - `helper.ts`, `helpers.ts`, `utils.ts`, `common.ts` 같은 generic 파일명은 만들지 않습니다.
-- support module 안에서도 작은 private helper를 쌓지 말고, 기본은 한 exported 함수 안에서 단계별로 정리합니다.
+- 한 파일 안에서 작은 private helper를 쌓지 말고, 기본은 한 exported 함수 안에서 단계별로 정리합니다.
 
-**Incorrect (`page.ts`를 export helper 창고처럼 사용):**
+**Incorrect (한 파일에 export helper를 단계별로 쌓아 서로 호출하게 만듦):**
 
 ```ts
 export const normalizeEntryValues = (formValues: EntryFormValues) => {
@@ -1420,10 +1683,10 @@ export const buildEntryPayload = (formValues: EntryFormValues, files: UploadFile
 };
 ```
 
-**Correct (화면 전용 support code는 먼저 `page.ts`의 named export로 모으고, 흐름에 묶인 로직은 handler에 남김):**
+**Correct (화면 전용 support code는 owner의 `function` 폴더에 두고, 흐름에 묶인 로직은 handler에 남김):**
 
 ```ts
-// page.ts
+// page/entries/function/normalize-tree-nodes.ts
 /**
  * @helper tree 응답을 화면용 node shape로 정규화
  */
@@ -1436,7 +1699,7 @@ export const normalizeTreeNodes = (nodes: TreeNodeResponse[]) => {
 ```
 
 ```ts
-// page.tsx
+// page/entries/entries-page.tsx
 /**
  * @event 저장 요청 후 목록 query를 무효화
  */
@@ -1446,7 +1709,7 @@ const handleSave = async () => {
 };
 ```
 
-**Correct (`page.ts` 안의 작은 단계는 한 exported 함수 안에서 정리):**
+**Correct (파일 안의 작은 단계는 한 exported 함수 안에서 정리):**
 
 ```ts
 /**
@@ -1485,7 +1748,7 @@ export const EntryTable = (props: EntryTableProps) => {
 
 ### 5.4 Keep Derived Values Close to Where They Are Used
 
-**Rule:** `R21` · `screen-keep-derived-values-close`
+**Rule:** `R23` · `screen-keep-derived-values-close`
 
 **Applies when:** 오리진을 끊는 alias·flag·표시값을 넓은 screen scope에 추가·이동·제거할 때. `let` 재할당이나 배열 `push` 기반 조립을 바꿀 때.
 
@@ -1528,11 +1791,11 @@ return <UiInput value={selectedNodeContext?.node?.name} />;
 
 ### 5.5 Keep Route Entry Files Focused on Screen Flow
 
-**Rule:** `R22` · `screen-keep-route-flow-visible`
+**Rule:** `R24` · `screen-keep-route-flow-visible`
 
 **Applies when:** route entry의 search·navigate·query·mutation·cross-section effect를 옮기거나 나눌 때. page section 조립의 순서나 owner를 바꿀 때. 제외: 같은 owner 안에서 표현만 바꾸는 경우.
 
-**Review with:** `screen-extract-local-section-components-for-runtime-boundaries`, `screen-move-pure-support-code-out-of-entry-files`
+**Review with:** `ownership-place-owner-files-in-role-folders`, `screen-extract-local-section-components-for-runtime-boundaries`
 
 **Impact: HIGH (route entry만 봐도 화면 흐름을 따라갈 수 있게 합니다)**
 
@@ -1593,124 +1856,6 @@ return (
 );
 ```
 
-### 5.6 Move Screen-owned Pure Support Code Into `page.ts` Before Splitting Further
-
-**Rule:** `R23` · `screen-move-pure-support-code-out-of-entry-files`
-
-**Applies when:** route entry에 여러 줄 pure helper·preset·option·화면 전용 type이 쌓일 때. 추출하기로 한 support code의 목적지 파일을 정할 때.
-
-**Review with:** `docs-require-jsdoc-on-key-declarations`
-
-**Impact: HIGH (route entry가 preset과 순수 helper를 쌓기보다 화면 흐름에 집중하게 합니다)**
-
-이 규칙은 추출하기로 결정한 화면 전용 pure support code의 목적지를 정합니다.
-
-`page.ts`로 옮길 대상:
-
-- 화면 전용 불변 설정, 옵션 목록, preset, column meta
-- React hook 없이 동작하는 pure support function
-- 화면 전용 type/interface
-- 여러 줄로 커진 request/response shaping
-
-`page.tsx`에 남길 대상:
-
-- response/mutation, state, handler, effect, render flow
-- 작은 1회성 guard와 사용 지점 옆이 더 빠른 계산
-- query invalidation, navigation처럼 hook context가 필요한 흐름
-
-`page.ts`는 helper 창고가 아니라 화면 전용 support module입니다.
-처음부터 `*-request.ts`, `*-columns.ts`로 쪼개지 말고,
-`page.ts`가 여러 독립 관심사로 커졌을 때만 추가 분리를 검토합니다.
-
-**Incorrect (route entry 상단에 순수 지원 코드가 누적됨):**
-
-```ts
-const getMediaColumnRules = () => {
-  // ...
-};
-
-const buildFileRequests = () => {
-  // ...
-};
-```
-
-**Incorrect (`page.ts` 안에서도 작은 단계마다 export helper를 늘림):**
-
-```ts
-export const getUploadFileExtension = (fileName: string) => {
-	// ...
-};
-
-export const formatUploadFileSizeMb = (bytes: number) => {
-	// ...
-};
-
-export const validateUploadFile = (file: UploadFileCandidate) => {
-	// ...
-};
-```
-
-**Correct (route entry 흐름은 `page.tsx`에 두고, 화면 전용 pure support code는 `page.ts`의 named export로 모음):**
-
-```tsx
-import { buildFileRequests } from "./page";
-
-const [uploadFilesByField, setUploadFilesByField] = useState({});
-
-/**
- * @api entry form schema 조회 API
- */
-const responseEntryFormSchema = useEntryFormSchema();
-
-/**
- * @event 업로드 파일 목록으로 요청 payload 조립
- */
-const handleFormFinish = () => {
-  const request = buildFileRequests(uploadFilesByField);
-  // ...
-};
-```
-
-```ts
-/**
- * @helper upload field별 검증 규칙 생성
- */
-export const getUploadFieldRules = () => {
-  // ...
-};
-
-/**
- * @helper 업로드 파일 목록을 저장 request 배열로 변환
- */
-export const buildFileRequests = (uploadFilesByField: Record<string, unknown>) => {
-  // ...
-  return [];
-};
-```
-
-**Correct (`page.ts` 내부 단계는 한 exported 함수 안에서 정리):**
-
-```ts
-/**
- * @helper 업로드 파일 유효성 검사를 단계별로 수행
- */
-export const validateUploadFile = (file: UploadFileCandidate) => {
-	// 1. 파일 크기 확인
-	// 2. 확장자 확인
-	// 3. 확장자별 제한 확인
-	// 4. 메시지 조립 후 결과 반환
-};
-```
-
-**Correct (작은 1회성 계산은 render flow 옆에 그대로 둠):**
-
-```tsx
-const isSubmitDisabled =
-	mutationEntrySave.isPending || uploadFileList.length === 0;
-
-return <UiButton disabled={isSubmitDisabled}>저장</UiButton>;
-```
-
 ## 6. Events and Interaction Flow
 
 **Impact: MEDIUM-HIGH**
@@ -1719,7 +1864,7 @@ Event handler는 이름이 예측 가능하고 effect 재실행을 유발하지 
 
 ### 6.1 Keep Screen-specific Handler Flow Local Until a Real Utility Emerges
 
-**Rule:** `R24` · `events-keep-handler-flow-inline`
+**Rule:** `R25` · `events-keep-handler-flow-inline`
 
 **Applies when:** 화면 전용 named handler의 분기·mutation·navigation·후처리를 여러 helper나 hook으로 나눌 때. 쪼개져 있던 handler 흐름을 다시 합칠 때.
 
@@ -1729,7 +1874,7 @@ Event handler는 이름이 예측 가능하고 effect 재실행을 유발하지 
 
 여기서 `local`은 JSX 인라인 핸들러가 아니라,
 이미 이름 붙은 handler 본문 안에서 흐름을 계속 읽을 수 있게 유지한다는 뜻입니다.
-핸들러가 길어져도 바로 `page.ts`나 shared support code로 쪼개지 않습니다.
+핸들러가 길어져도 바로 `function` 폴더나 shared support code로 쪼개지 않습니다.
 
 - 먼저 early return, 단계적 지역 변수, 의미 있는 블록 구분으로 읽기 쉽게 유지합니다.
 - `screen-extract-utilities-selectively`를 만족할 때만 분리합니다.
@@ -1767,7 +1912,7 @@ const handleSubmitButtonClick: MouseEventHandler<HTMLButtonElement> = async (_ev
 
 ### 6.2 Name Handlers Predictably and Curry Extra Arguments
 
-**Rule:** `R25` · `events-name-and-curry-handlers`
+**Rule:** `R26` · `events-name-and-curry-handlers`
 
 **Applies when:** 이벤트 핸들러를 새로 만들 때. 핸들러 이름이나 target/event 표현을 바꿀 때. 추가 인자 전달 방식이나 최종 React handler 시그니처를 바꿀 때.
 
@@ -1824,7 +1969,7 @@ const handleListItemClick =
 
 ### 6.3 Run User Actions in Handlers, Not Effects
 
-**Rule:** `R26` · `events-run-user-actions-in-handlers-not-effects`
+**Rule:** `R27` · `events-run-user-actions-in-handlers-not-effects`
 
 **Applies when:** 제출·저장·삭제·닫기 같은 one-shot 사용자 액션을 handler와 state+effect 사이에서 옮길 때. one-shot 사용자 액션의 실행 흐름을 바꿀 때.
 
@@ -1871,7 +2016,7 @@ Query와 mutation은 오리진을 보존해야 하며, 응답 변형은 `query.s
 
 ### 7.1 Avoid Silent Fallback Defaults and Ad-hoc Loading Branches
 
-**Rule:** `R27` · `data-avoid-fallback-defaults-and-loading-flags`
+**Rule:** `R28` · `data-avoid-fallback-defaults-and-loading-flags`
 
 **Applies when:** optional 응답에 `??`·`||` 기본값을 넣을 때. Suspense 화면 본문에 초기 loading return을 추가·변경할 때. 결측·로딩 UX를 다룰 때.
 
@@ -1921,7 +2066,7 @@ return (
 
 ### 7.2 Name Query and Mutation Bindings Consistently
 
-**Rule:** `R28` · `data-name-query-and-mutation-bindings-consistently`
+**Rule:** `R29` · `data-name-query-and-mutation-bindings-consistently`
 
 **Applies when:** React Query query·mutation hook의 로컬 binding을 추가하거나 이름을 바꿀 때. 역할이 드러나지 않는 별칭이 diff에 보일 때.
 
@@ -1958,7 +2103,7 @@ const mutationEntryRemove = useEntryRemove();
 
 ### 7.3 Preserve Response and Store Origin in Wide Scopes
 
-**Rule:** `R29` · `data-preserve-origin-chaining`
+**Rule:** `R30` · `data-preserve-origin-chaining`
 
 **Applies when:** page·layout·screen 넓은 스코프에서 response·mutation·store를 구조분해할 때. 원본을 별칭으로 끊고 값 접근 방식을 바꿀 때.
 
@@ -2000,7 +2145,7 @@ useEffect(() => {
 
 ### 7.4 Shape React Query Data in query.select
 
-**Rule:** `R30` · `data-shape-query-data-with-select`
+**Rule:** `R31` · `data-shape-query-data-with-select`
 
 **Applies when:** 서버 응답의 list·items·meta 등을 렌더에서 가공하거나 반복 소비할 때. React Query `select`의 결과 shape를 추가·변경할 때.
 
@@ -2045,7 +2190,7 @@ const responseEntryListSuspense = useEntryListSuspense({
 
 ### 8.1 Calculate Derived Values During Rendering
 
-**Rule:** `R31` · `state-calculate-derived-values-during-render`
+**Rule:** `R32` · `state-calculate-derived-values-during-render`
 
 **Applies when:** 현재 props·state·search·response에서 계산 가능한 값을 별도 state와 effect로 동기화할 때. 그런 동기화를 제거할 때.
 
@@ -2078,7 +2223,7 @@ return <SelectedCountBadge count={selectedIds.length} />;
 
 ### 8.2 Choose State Tools by Source of Truth
 
-**Rule:** `R32` · `state-choose-state-tools-by-source-of-truth`
+**Rule:** `R33` · `state-choose-state-tools-by-source-of-truth`
 
 **Applies when:** 로컬 UI·전역 client·server 데이터를 새 state 도구로 옮길 때. 서로 다른 source of truth 사이에 값을 복제하거나 동기화할 때.
 
@@ -2120,7 +2265,7 @@ const responseUserGetItemSuspense = useUserGetItemSuspense();
 
 ### 8.3 Store Shared Derived Decisions Only When They Are Truly Shared
 
-**Rule:** `R33` · `state-store-derived-authority`
+**Rule:** `R34` · `state-store-derived-authority`
 
 **Applies when:** 여러 화면·메뉴·route guard가 쓰는 권한·capability 같은 derived decision을 store에 저장·동기화할 때. 단일 화면에서만 쓰는 값까지 store로 올리려 할 때.
 
@@ -2172,7 +2317,7 @@ useEffect(() => {
 
 ### 8.4 Use Functional setState Updates When Based on Previous State
 
-**Rule:** `R34` · `state-use-functional-setstate-updates`
+**Rule:** `R35` · `state-use-functional-setstate-updates`
 
 **Applies when:** 다음 state가 현재 state에 의존하는 갱신을 추가·변경할 때. handler·async callback·연속 호출에서 `setState` 방식을 바꿀 때.
 
@@ -2213,7 +2358,7 @@ const handleToggleUser = (userId: string) => {
 
 ### 8.5 Use useEffectEvent for Non-reactive Effect Callbacks
 
-**Rule:** `R35` · `state-use-effectevent-for-non-reactive-effect-callbacks`
+**Rule:** `R36` · `state-use-effectevent-for-non-reactive-effect-callbacks`
 
 **Applies when:** subscription effect가 최신 prop·state callback을 읽어야 할 때. ref 동기화 hack, dependency 재설치, `useEffectEvent`를 추가·변경할 때.
 
@@ -2277,7 +2422,7 @@ useEffect(() => {
 
 ### 9.1 Prefer React Compiler Defaults Over Manual Memoization
 
-**Rule:** `R36` · `perf-compiler-first-memoization`
+**Rule:** `R37` · `perf-compiler-first-memoization`
 
 **Applies when:** `useMemo`·`useCallback`을 추가하거나 제거할 때. 참조 동일성·실측 병목·무거운 deferred 계산을 이유로 수동 memoization을 검토할 때.
 
@@ -2308,7 +2453,7 @@ const columns = useMemo(() => buildColumns(response.data.columns), [response.dat
 
 ### 9.2 Use Lazy State Initializers for Expensive Defaults
 
-**Rule:** `R37` · `perf-use-lazy-state-initializers-for-expensive-defaults`
+**Rule:** `R38` · `perf-use-lazy-state-initializers-for-expensive-defaults`
 
 **Applies when:** `useState` 초기값에 localStorage 파싱, 인덱스 생성, 큰 배열 정규화 같은 비용 있는 계산을 넣을 때.
 
@@ -2337,7 +2482,7 @@ const [draftFilter] = useState(() => {
 
 ### 9.3 Use startTransition for Non-urgent Visual Updates
 
-**Rule:** `R38` · `perf-use-starttransition-for-non-urgent-updates`
+**Rule:** `R39` · `perf-use-starttransition-for-non-urgent-updates`
 
 **Applies when:** 클릭·선택·필터 변경 뒤 큰 list·table·tree를 다시 그리는 state update를 다룰 때. state update의 우선순위나 transition 처리를 바꿀 때.
 
@@ -2369,7 +2514,7 @@ const handleStatusFilterChange = (nextStatus: EntryStatusFilter) => {
 
 ### 9.4 Use useDeferredValue for Heavy Derived Renders
 
-**Rule:** `R39` · `perf-use-usedeferredvalue-for-heavy-derived-renders`
+**Rule:** `R40` · `perf-use-usedeferredvalue-for-heavy-derived-renders`
 
 **Applies when:** 검색어·필터·정렬 입력이 무거운 파생 view를 갱신해 typing 지연이 생길 때. `useDeferredValue` 기반 계산을 추가·변경할 때.
 
@@ -2411,7 +2556,7 @@ React 경계 선언에는 companion skill인 `convention-typescript`의 annotati
 
 ### 10.1 Document Compound Parts with @part and @description
 
-**Rule:** `R40` · `docs-document-compound-parts-with-part-and-description`
+**Rule:** `R41` · `docs-document-compound-parts-with-part-and-description`
 
 **Applies when:** compound component의 exported public part·props interface·part 내부 handler를 추가·변경할 때. public part 문서를 수정할 때.
 
@@ -2509,7 +2654,7 @@ const DialogClose = (props: DialogCloseProps) => {
 
 ### 10.2 Limit Inline Comments to Non-obvious Logic
 
-**Rule:** `R41` · `docs-limit-inline-comments-to-non-obvious-logic`
+**Rule:** `R42` · `docs-limit-inline-comments-to-non-obvious-logic`
 
 **Applies when:** React 함수·handler·JSX 인접 로직 안의 `//` 주석을 추가·수정할 때. 자명한 설명과 실제 제약을 구분해 주석을 정리할 때.
 
@@ -2549,7 +2694,7 @@ if (mutationFileUpload.isPending) {
 
 ### 10.3 Require JSDoc on React Hooks, Handlers, and Key Declarations
 
-**Rule:** `R42` · `docs-require-jsdoc-on-key-declarations`
+**Rule:** `R43` · `docs-require-jsdoc-on-key-declarations`
 
 **Applies when:** query·mutation이나 비자명한 handler/effect를 추가·변경할 때. exported helper·hook·store 선언을 추가·변경할 때. re-export 포함 public type·interface나 예외 memo 선언을 추가·변경할 때.
 

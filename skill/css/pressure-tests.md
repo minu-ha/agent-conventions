@@ -49,9 +49,9 @@ Pure CSS fixture는 CSS만 partition합니다. Mixed fixture 5개는 progressive
 
 - `.module.css`와 `styles.*`를 기본처럼 사용함
 - TSX `className`에 문자열 리터럴이나 문자열 연결을 직접 넣음
-- `rt_*`, `loc_*`, `ui_*`, `wg_*` namespace가 owner와 맞지 않음
-- route-owned page surface를 `loc_*`나 shared component namespace로 잡음
-- `rt_*` route slug 규칙을 `wg_*`, `ui_*`, `loc_*` owner slug에 그대로 덮어씀
+- `rt_*`, `pv_*`, `ui_*`, `wg_*` namespace가 owner와 맞지 않음
+- route-owned page surface를 `pv_*`나 shared component namespace로 잡음
+- `rt_*` route slug 규칙을 `wg_*`, `ui_*`, `pv_*` owner slug에 그대로 덮어씀
 - one-off layout patch를 modifier로 추가함
 - `.a .b .c .d` 같은 깊은 project-owned descendant selector를 만듦
 - top-level `.foo:hover`, `.foo:visited`를 다시 열어 둠
@@ -131,20 +131,20 @@ Pure CSS fixture는 CSS만 partition합니다. Mixed fixture 5개는 progressive
   - `#f5f5f5`, `12px`, `4px`가 그대로 반복됨
   - `var(--app-color-border)`를 불안정한 경계에서 fallback 없이 사용함
 
-### C5. Route vs Local vs Document Ownership
+### C5. Route, Private, and Document Ownership
 
 - Focus
-  - `naming-separate-local-and-route-style-scopes`
+  - `naming-separate-owner-style-scopes`
   - `organization-keep-style-files-owned-by-one-component-or-route`
 - Prompt
-  - "route page CSS와 `_local/` dialog CSS, `_document.css`를 같이 정리해줘."
+  - "route page CSS와 filter dialog CSS, `_document.css`를 같이 정리해줘."
 - Expected pass signals
-  - route page surface는 `rt_*`를 사용함
-  - pages-local document shell은 `rt_document__*`, truly local helper는 `loc_*`로 분리함
-  - 파일도 route owner, document owner, local owner 단위로 나뉨
+  - route entry와 page shell surface는 `rt_*`를 사용함
+  - 자기 CSS 파일을 가진 page-private component는 자기 `pv_*` slug를 사용함
+  - 파일도 route owner, document owner, private owner 단위로 나뉨
 - Likely fail signals
-  - 하나의 CSS 파일에 서로 다른 `rt_*`, `loc_*`, `ui_*` owner가 섞임
-  - `_local/` 파일이라는 이유만으로 main route surface까지 `loc_*`로 바꿈
+  - 하나의 CSS 파일에 서로 다른 `rt_*`, `pv_*`, `ui_*` owner가 섞임
+  - 별도 CSS 파일인데 부모 `rt_*` slug를 계속 사용함
   - document shell 스타일을 route CSS 안에 넣음
 
 ### C6. TSX Class Composition Discipline
@@ -181,25 +181,26 @@ Pure CSS fixture는 CSS만 partition합니다. Mixed fixture 5개는 progressive
   - `.owner__prose h2 { ... }`
   - `.owner__copy > :first-child { ... }`
 
-### C8. Route Support and Leaf-local Ownership
+### C8. Owner-based Scope Assignment
 
 - Focus
-  - `naming-separate-local-and-route-style-scopes`
+  - `naming-separate-owner-style-scopes`
+  - `naming-keep-scope-slug-unique-per-owner`
 - Prompt
-  - "route entry를 지원하는 toolbar section과 `_local/`의 독립 filter dialog 스타일 owner를 정리해줘."
+  - "route entry가 조립하는 toolbar section과 filter dialog의 스타일 owner를 정리해줘."
 - Expected pass signals
-  - route screen 흐름을 구성·지원하는 surface는 파일 위치와 무관하게 `rt_*`를 유지함
-  - route 맥락을 몰라도 되는 독립 leaf helper만 `loc_*`를 사용함
+  - 자기 CSS 파일을 가진 component는 파일 하나당 자기 slug 하나를 가짐
+  - 부모 CSS 파일이 스타일을 소유하는 조각은 부모 slug에 남음
 - Likely fail signals
-  - `_local/` 폴더에 있다는 이유만으로 route support surface를 `loc_*`로 바꿈
-  - 독립 leaf dialog를 main route owner namespace에 섞음
+  - 여러 하위 owner가 부모 slug 하나를 공유함
+  - 별도 CSS 파일을 만들면서 부모 slug를 그대로 사용함
 
 ### C9. Responsibility-preserving Rename Precision
 
 - Focus
   - `composition-keep-classes-single-purpose`
 - Prompt
-  - "스타일 선언과 책임은 그대로 두고 잘못된 owner prefix만 `loc_`에서 `rt_`로 고쳐. class를 합치거나 책임을 추가하지는 않아."
+  - "스타일 선언과 책임은 그대로 두고 잘못된 owner prefix만 `pv_`에서 `rt_`로 고쳐. class를 합치거나 책임을 추가하지는 않아."
 - Expected pass signals
   - 책임을 보존하는 owner prefix 수정이나 single-purpose class rename만으로는 rule을 선택하지 않음
   - base class에 상태·variant 의미를 합치거나 독립 책임을 추가할 때만 다시 선택함

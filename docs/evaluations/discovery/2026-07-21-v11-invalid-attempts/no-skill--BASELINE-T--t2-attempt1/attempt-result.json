@@ -1,7 +1,0 @@
-{
-  "schemaVersion": 1,
-  "runId": "no-skill--BASELINE-T--t2",
-  "attempt": 1,
-  "failedStage": "stopped-before-child-dispatch",
-  "message": "Execution stopped at the current child boundary after a deterministic full-handbook stable-ID observability defect was found. Prepare artifacts are preserved; no child session was started for this run."
-}

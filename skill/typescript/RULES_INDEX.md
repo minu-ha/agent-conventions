@@ -1,14 +1,14 @@
 # TypeScript 컨벤션 Rule Index
 
 - Skill: `typescript`
-- Routing digest: `sha256:6657ce14dae11f4b963611c38374a4e0434bc66fde4502402e3045ce4d61ccb8`
+- Routing digest: `sha256:edb34e32b32d287163ed7de5621fe21a8c8b7cbe98aeb59f0a5c5814037cb8f1`
 
 ## Local Rules
 
 - T01 | naming-centralize-shared-config-namespaces | 여러 leaf 모듈이 함께 쓰는 URL, feature flag, 페이지 크기나 상수를 추가·이동·중복 정의할 때. shared config 경계를 바꿀 때. | reviewWith: naming-preserve-config-origin-with-chained-access, naming-use-direct-imports-and-public-entry-points
 - T02 | naming-preserve-config-origin-with-chained-access | \`config\` 또는 \`util\` 값을 leaf 모듈에서 접근하며 넓은 스코프 구조분해, 별칭 또는 feature-local namespace를 추가·변경할 때.
 - T03 | naming-use-consistent-file-and-symbol-naming | TypeScript 파일, local 변수·함수·타입, 객체·schema field 또는 enum-like 상수의 이름을 새로 만들거나 바꿀 때. 제외: alias 없는 third-party import binding 추가인 경우.
-- T04 | naming-use-direct-imports-and-public-entry-points | TypeScript import/export, barrel, shared 공개 진입점·feature support module 경계를 추가·변경할 때. 같은 module path의 value/type specifier를 추가·삭제·전환할 때.
+- T04 | naming-use-direct-imports-and-public-entry-points | TypeScript import/export, barrel, shared 공개 진입점·owner support module 경계를 추가·변경할 때. 절대경로 alias로 다른 모듈을 가져올 때. 같은 module path의 value/type specifier를 추가·삭제·전환할 때.
 - T05 | types-document-custom-types-and-shapes | type·interface·schema root·객체 상수·계약 field·파생 alias를 추가·변경할 때. named shape에 callable 역할을 추가할 때. 제외: 외부·generated·read-only·shared unchanged shape나 익명 추론 반환인 경우.
 - T06 | types-mark-unused-parameters-with-underscore | 기존 callback·framework 계약 구현을 추가·변경하며 parameter를 생략하거나 사용하지 않을 때. curried handler가 반환하는 최종 callback에서 parameter를 생략할 때.
 - T07 | types-prefer-function-variable-types-over-parameter-annotations | 기존 callable 계약을 named·shared 함수 구현에 재사용할 때. 같은 시그니처를 여러 구현이 공유하도록 바꿀 때. 제외: annotation 없는 one-off contextually typed inline callback인 경우.

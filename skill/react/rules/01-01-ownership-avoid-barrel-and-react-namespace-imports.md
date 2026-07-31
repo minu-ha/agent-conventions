@@ -22,6 +22,9 @@ import 경로와 타입 출처를 명시적으로 유지하기 위해서입니�
 
 - React 타입을 namespace로 둘지 direct `import type`으로 가져올지 정하는 변경도 이 규칙의 판단 대상입니다.
 - 일반 third-party value를 alias 없이 직접 import하는 변경만으로는 걸리지 않습니다.
+- `export const Dialog = { Root, Header } as const` 같은 compound facade는 barrel이 아닙니다.
+  재노출 계층이 아니라 같은 파일이 소유한 public part 조립이므로 허용합니다.
+- `component`, `function` 같은 role 폴더에 `index.ts`를 만들어 묶는 것은 barrel이므로 금지합니다.
 
 **Incorrect (barrel export와 namespace 타입 혼용):**
 

@@ -8,7 +8,7 @@ appliesWhen:
   - 화면 support 경계를 바꿀 때
   - 제외: query `select` 내부 shaping만 바꾸는 경우
 reviewWith: >-
-  screen-move-pure-support-code-out-of-entry-files, typescript/functions-extract-helpers-only-when-the-boundary-is-real
+  ownership-place-owner-files-in-role-folders, typescript/functions-extract-helpers-only-when-the-boundary-is-real
 tags: screen, utils, extraction
 ---
 
@@ -34,11 +34,11 @@ tags: screen, utils, extraction
 
 배치 기준:
 
-- route sibling `page.ts`에 named export로 둡니다.
+- owner 아래 `function` 폴더에 대표 exported 함수 하나당 파일 하나로 둡니다.
 - `helper.ts`, `helpers.ts`, `utils.ts`, `common.ts` 같은 generic 파일명은 만들지 않습니다.
-- support module 안에서도 작은 private helper를 쌓지 말고, 기본은 한 exported 함수 안에서 단계별로 정리합니다.
+- 한 파일 안에서 작은 private helper를 쌓지 말고, 기본은 한 exported 함수 안에서 단계별로 정리합니다.
 
-**Incorrect (`page.ts`를 export helper 창고처럼 사용):**
+**Incorrect (한 파일에 export helper를 단계별로 쌓아 서로 호출하게 만듦):**
 
 ```ts
 export const normalizeEntryValues = (formValues: EntryFormValues) => {
@@ -64,10 +64,10 @@ export const buildEntryPayload = (formValues: EntryFormValues, files: UploadFile
 };
 ```
 
-**Correct (화면 전용 support code는 먼저 `page.ts`의 named export로 모으고, 흐름에 묶인 로직은 handler에 남김):**
+**Correct (화면 전용 support code는 owner의 `function` 폴더에 두고, 흐름에 묶인 로직은 handler에 남김):**
 
 ```ts
-// page.ts
+// page/entries/function/normalize-tree-nodes.ts
 /**
  * @helper tree 응답을 화면용 node shape로 정규화
  */
@@ -80,7 +80,7 @@ export const normalizeTreeNodes = (nodes: TreeNodeResponse[]) => {
 ```
 
 ```ts
-// page.tsx
+// page/entries/entries-page.tsx
 /**
  * @event 저장 요청 후 목록 query를 무효화
  */
@@ -90,7 +90,7 @@ const handleSave = async () => {
 };
 ```
 
-**Correct (`page.ts` 안의 작은 단계는 한 exported 함수 안에서 정리):**
+**Correct (파일 안의 작은 단계는 한 exported 함수 안에서 정리):**
 
 ```ts
 /**

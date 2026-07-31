@@ -12,7 +12,7 @@
 
 ## 개요
 
-에이전트 협업 팀을 위한 CSS 코딩 컨벤션입니다. plain CSS를 기본으로 한 전역 고유 네이밍, `rt_/wg_/ui_/loc_` owner scope, 예측 가능한 TSX class 조합, 평평한 selector, wrapper 기준 서드파티 스타일링, 토큰화된 값, 절제된 stylesheet 구성을 강조합니다. TSX의 class contract를 함께 바꿀 때는 React와 TypeScript 규칙도 함께 봅니다. `rules/` 아래 rule 파일이 source of truth입니다.
+에이전트 협업 팀을 위한 CSS 코딩 컨벤션입니다. plain CSS를 기본으로 한 전역 고유 네이밍, `rt_/wg_/ui_/pv_` owner scope, 예측 가능한 TSX class 조합, 평평한 selector, wrapper 기준 서드파티 스타일링, 토큰화된 값, 절제된 stylesheet 구성을 강조합니다. TSX의 class contract를 함께 바꿀 때는 React와 TypeScript 규칙도 함께 봅니다. `rules/` 아래 rule 파일이 source of truth입니다.
 
 이 문서에는 CSS 컨벤션 규칙만 담겨 있습니다. 아래 규칙도 함께 따릅니다.
 
@@ -31,7 +31,7 @@
     - 1.2 [Keep Each `scope_slug` Unique Per Owner](#12-keep-each-scope-slug-unique-per-owner)
     - 1.3 [Name Elements and Modifiers by Role](#13-name-elements-and-modifiers-by-role)
     - 1.4 [Preserve Route Slug Traceability](#14-preserve-route-slug-traceability)
-    - 1.5 [Separate Route, Local, and Shared Style Scopes](#15-separate-route-local-and-shared-style-scopes)
+    - 1.5 [Separate Owner Style Scopes](#15-separate-owner-style-scopes)
     - 1.6 [Use Scope, Slug, Element, and Modifier Syntax](#16-use-scope-slug-element-and-modifier-syntax)
 2. [Class Composition and Wrapper Boundaries](#2-class-composition-and-wrapper-boundaries) — **HIGH**
     - 2.1 [Compose Classes With `clsx()`](#21-compose-classes-with-clsx)
@@ -59,7 +59,7 @@
 
 **Impact: CRITICAL**
 
-클래스 문법, `rt_/wg_/ui_/loc_` scope별 slug 규칙, 네임스페이스 소유권, route/local/shared owner 범위가 명확해야 스타일을 검색하고 안전하게 수정할 수 있습니다.
+클래스 문법, `rt_/wg_/ui_/pv_` scope별 slug 규칙, 네임스페이스 소유권, route/private/shared owner 범위가 명확해야 스타일을 검색하고 안전하게 수정할 수 있습니다.
 
 ### 1.1 Default to Plain CSS Unless the Project Explicitly Standardizes on CSS Modules
 
@@ -70,7 +70,7 @@
 **Impact: HIGH (소유를 local module 간접층에 숨기지 않고 전역 scope_slug 이름 체계가 의미를 유지하게 합니다)**
 
 이 CSS skill은 기본적으로 plain `*.css`와 전역 고유 클래스명을 전제로 합니다.
-`rt_*`, `ui_*`, `wg_*`, `loc_*` 네임스페이스는 global class space에서 owner를 추적하려고 존재하므로,
+`rt_*`, `ui_*`, `wg_*`, `pv_*` 네임스페이스는 global class space에서 owner를 추적하려고 존재하므로,
 프로젝트에 별도 합의가 없다면 `.module.css`와 `styles.foo`를 기본 선택으로 삼지 않습니다.
 프로젝트가 이미 CSS Modules를 공식 표준으로 채택했고 그에 맞는 naming/runtime 규칙이 따로 있다면,
 그 프로젝트 로컬 규칙이 이 기본값보다 우선합니다.
@@ -133,6 +133,10 @@ import "./_index.css";
 클래스명은 프로젝트 전역에서 고유해야 하며, 동일한 `scope_slug` 조합은 단일 소유자만 사용할 수 있습니다.
 새 스타일을 추가할 때는 먼저 기존 `scope_slug` 충돌 여부를 확인하고,
 의미가 겹치더라도 파일이 다르면 별도 slug를 부여합니다.
+
+CSS 파일 하나가 slug 하나를 소유합니다.
+여러 하위 component가 부모 slug를 나눠 쓰는 것도 같은 위반입니다.
+자기 CSS 파일이 있으면 자기 slug를 만들고, 부모 slug를 계속 쓰려면 스타일도 부모 파일에 두어야 합니다.
 
 **Incorrect (이미 다른 소유자가 쓰는 `scope_slug`를 재사용):**
 
@@ -202,7 +206,7 @@ CSS skill은 어떤 파일이 route-owned인지 결정하지 않고,
 - `rt_*` slug는 짧음보다 추적 가능성을 우선합니다.
 - 전체 folder path를 모두 쓰지는 않아도, route family와 screen role은 읽혀야 합니다.
 - 팀이 공유하는 route map이 없는 opaque acronym은 피합니다.
-- `wg_*`, `ui_*`, `loc_*`는 각 owner scope의 naming style을 따릅니다.
+- `wg_*`, `ui_*`, `pv_*`는 각 owner scope의 naming style을 따릅니다.
 - document, local helper, reusable widget의 owner 판단은 companion framework skill의 소유권 규칙을 우선합니다.
 
 **Incorrect (의미가 약하거나 계층 순서가 흐려진 slug):**
@@ -225,56 +229,70 @@ rt_postsDetail__body
 rt_document__body
 ```
 
-### 1.5 Separate Route, Local, and Shared Style Scopes
+### 1.5 Separate Owner Style Scopes
 
-**Rule:** `C05` · `naming-separate-local-and-route-style-scopes`
+**Rule:** `C05` · `naming-separate-owner-style-scopes`
 
-**Applies when:** 스타일 owner를 route screen/support, document, 독립 leaf helper, reusable widget, UI primitive 중에서 결정할 때. 서로 다른 owner를 이동·분리할 때.
+**Applies when:** 스타일 owner를 route shell, private component, widget, primitive 중에서 결정할 때. 새 CSS 파일을 만들거나 기존 owner 범위를 옮길 때.
 
-**Review with:** `organization-keep-style-files-owned-by-one-component-or-route`
+**Review with:** `naming-keep-scope-slug-unique-per-owner`, `organization-keep-style-files-owned-by-one-component-or-route`
 
-**Impact: HIGH (route 소유 페이지 스타일·공용 컴포넌트 스타일·순수 local 헬퍼 스타일이 같은 namespace나 파일에 섞이는 것을 막습니다)**
+**Impact: HIGH (route shell·private component·공용 widget·primitive 스타일이 같은 namespace나 파일에 섞이는 것을 막습니다)**
 
-route/framework skill이 route-owned surface로 판단한 스타일은 `rt_*` scope를 유지합니다.
-route screen의 흐름을 구성하거나 지원하는 route support surface는 파일이 `_local/` 같은 helper folder로 내려가도
-`rt_*`입니다.
-route 맥락을 몰라도 되는 독립 leaf helper만 `loc_*`를 사용합니다.
-파일 위치만으로 main screen 또는 route support surface를 `loc_*`로 바꾸지 않습니다.
+scope prefix는 폴더 경로가 아니라 그 CSS 파일의 소유자를 가리킵니다.
 
-scope 기준:
+| prefix | owner |
+| --- | --- |
+| `rt_` | route entry와 page shell |
+| `pv_` | 한 owner 안에서만 쓰이는 private component |
+| `wg_` | 여러 화면이 재사용하는 widget |
+| `ui_` | primitive component |
 
-- `rt_*`: route-owned screen, route support surface, route/document owner
-- `loc_*`: route 맥락과 독립된 leaf helper
-- `wg_*`: 여러 route에서 재사용되는 block
-- `ui_*`: primitive component
+판정은 CSS 파일 소유로 갈립니다.
+
+- 자기 CSS 파일을 가진 component는 자기 scope slug를 씁니다.
+- 부모가 스타일을 소유하면 부모 CSS 파일과 부모 slug에 남깁니다.
+- 별도 CSS 파일인데 부모 slug를 쓰고 있으면 ownership이 잘못 나뉜 상태입니다.
 
 서로 다른 owner 범위는 한 파일에 섞지 않습니다.
-어떤 markup이 route-owned인지 판단하는 책임은 활성화된 framework convention이 가집니다.
+어떤 component가 route shell이고 어떤 것이 private인지 판단하는 책임은 활성화된 framework convention이 가집니다.
 
-**Incorrect (route surface, local helper, shared component owner를 한 파일/네임스페이스에 섞음):**
+**Incorrect (route shell, private component, primitive owner를 한 파일에 섞음):**
 
 ```txt
-entries/_index.css
-  rt_entriesIndex__root
-  loc_filterDialog__root
-  rt_document__content
+detail/detail-page.css
+  rt_detail__root
+  pv_spikePatternPanel__root
   ui_button__root
 ```
 
-**Correct (route owner, document owner, local helper owner를 분리):**
+**Incorrect (별도 CSS 파일인데 부모 slug를 계속 사용):**
 
 ```txt
-entries/_index.css
-  rt_entriesIndex__root
-  rt_entriesIndex__list
-  rt_entriesIndex__empty
+detail/detail-page.css
+  rt_detail__root
 
-pages/_document.css
-  rt_document__body
-  rt_document__content
+detail/component/spike-pattern-panel/spike-pattern-panel.css
+  rt_detail__panel
+  rt_detail__panelHeader
+```
 
-entries/_local/filter-dialog.css
-  loc_filterDialog__root
+**Correct (CSS 파일마다 자기 owner slug를 사용):**
+
+```txt
+detail/detail-page.css
+  rt_detail__root
+  rt_detail__body
+
+detail/component/spike-pattern-panel/spike-pattern-panel.css
+  pv_spikePatternPanel__root
+  pv_spikePatternPanel__header
+
+widget/chart-card/wg-chart-card.css
+  wg_chartCard__root
+
+ui/button/ui-button.css
+  ui_button__root
 ```
 
 ### 1.6 Use Scope, Slug, Element, and Modifier Syntax
@@ -486,19 +504,19 @@ const items: NonNullable<UiCollapseProps["items"]> = [];
 **Incorrect (내부 DOM을 만지기 위해 `Ui*`에 ad-hoc className을 주입):**
 
 ```tsx
-<UiCollapse className={clsx("loc_postFilterDialog__collapse")} />
+<UiCollapse className={clsx("pv_postFilterDialog__collapse")} />
 ```
 
 **Correct (내부 DOM 스타일링은 소유 래퍼 아래로 제한하고, 공식 root contract는 예외적으로 허용):**
 
 ```tsx
-<div className={clsx("loc_postFilterDialog__collapse")}>
+<div className={clsx("pv_postFilterDialog__collapse")}>
 	<UiCollapse />
 </div>
 ```
 
 ```css
-.loc_postFilterDialog__collapse {
+.pv_postFilterDialog__collapse {
 	& .ant-collapse-item {
 		border-radius: var(--mk-size-radius-card, 10px);
 	}
@@ -507,7 +525,7 @@ const items: NonNullable<UiCollapseProps["items"]> = [];
 
 ```tsx
 // UiButton이 root className contract를 공식적으로 노출하는 경우에만 허용
-<UiButton className={clsx("loc_postFilterDialog__submitButton")} />
+<UiButton className={clsx("pv_postFilterDialog__submitButton")} />
 ```
 
 ## 3. Selectors and Nesting Boundaries
@@ -842,7 +860,7 @@ byte-equivalent 이동만 하는 경우는 N/A입니다.
 **Incorrect (존재 보장이 없는 토큰을 fallback 없이 사용):**
 
 ```css
-.loc_postFilterDialog__panel {
+.pv_postFilterDialog__panel {
 	border: 1px solid var(--mk-color-border-default);
 	background: var(--mk-color-bg-surface);
 }
@@ -851,13 +869,13 @@ byte-equivalent 이동만 하는 경우는 N/A입니다.
 **Correct (불안정한 경계에는 fallback을 두고, 보장된 core token은 의도적으로 fail-loud 할 수 있음):**
 
 ```css
-.loc_postFilterDialog__panel {
+.pv_postFilterDialog__panel {
 	border: 1px solid var(--mk-color-border-default, #d9d9d9);
 	border-radius: var(--mk-size-radius-card, 4px);
 	background-color: var(--mk-color-bg-surface, #fff);
 }
 
-.loc_postFilterDialog__collapse {
+.pv_postFilterDialog__collapse {
 	& .ant-collapse-item {
 		border-radius: var(--mk-size-radius-card, 10px);
 		background: var(--mk-color-bg-surface, #fff);

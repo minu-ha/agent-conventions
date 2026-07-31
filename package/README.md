@@ -34,9 +34,7 @@ progressive rule frontmatter의 `reviewWith`는 조건부 재평가, `requiresSe
 - `npm run check:generated:all`: 모든 progressive `RULES_INDEX.md`와 `contracts/*.md`의 missing/stale/orphan output, companion link를 확인합니다.
 - `npm run check:generated:{react,css,typescript}`: progressive skill과 그 companion closure의 generated index/contract를 확인합니다.
 - `npm run check:handbooks:all`: 모든 buildable skill의 generated `HANDBOOK.md`를 source renderer와 byte-for-byte 비교합니다.
-- `npm run check:measurement-artifacts`: routing 산출물과 full handbook freshness를 함께 확인해 token denominator inflation을 차단합니다.
-- `npm run measurement:self-test`: token context schema, exact scenario suite, path/symlink, expansion, threshold anti-gaming 회귀 테스트를 실행합니다.
-- `npm run measurement:tokens`: `uv`로 `tiktoken==0.11.0`/`o200k_base` 실제 gate를 실행합니다.
+- `npm run check:artifacts`: generated index/contract, full handbook, viewer freshness를 한 번에 확인합니다.
 - `npm run test`: CLI, build, progressive routing, `routing-evals.json`, documentation contract 회귀 테스트를 실행합니다.
 - `npm run typecheck`: package source와 test를 `tsc --noEmit`으로 검사합니다.
 - `npm run biome:check:all`: package source/test 형식을 검사합니다.
@@ -51,41 +49,11 @@ npm --prefix package run check:handbooks:all
 npm --prefix package run typecheck
 npm --prefix package run test
 npm --prefix package run biome:check:all
-npm --prefix package run measurement:self-test
-npm --prefix package run measurement:tokens
 ```
 
 `build` 뒤의 `check:generated:all`은 generated file을 다시 쓰는 단계가 아니라 stale 여부를 검증하는 단계입니다. CI에서는 build로 dirty output을 숨기지 말고 `check:generated:all`을 별도 gate로 유지합니다.
 
-`check:generated`는 progressive router/index/contract의 missing·stale·orphan·symlink와 recursive companion closure, non-progressive skill의 unexpected index/contract 부재를 검사합니다. full `HANDBOOK.md` freshness는 `check:handbooks:all`이 별도로 read-only 검증하며, token 측정은 두 checker를 묶은 `check:measurement-artifacts`를 자동 preflight합니다.
-
-## Behavioral Evidence Workflow
-
-행동 평가는 clean source commit과 digest가 채워진 protocol을 먼저 고정한 뒤 실행합니다. 일반 좌표는 coordinator가 oracle-free request와 전용 payload 경로를 no-overwrite로 만들고, fresh child가 그 payload 하나만 작성한 뒤 merge가 source·request·payload·routing 고정점을 다시 검증합니다. RTE02는 initial payload를 봉인한 다음 같은 사전 바인딩 agent target에 drift를 공개하고, staged finalizer가 두 trace와 composed virtual patch를 검증합니다.
-
-```bash
-npm --prefix package run behavioral:coordinator -- matrix --protocol=<protocol.json>
-npm --prefix package run behavioral:coordinator -- prepare --protocol=<protocol.json> --head=<commit> --run-id=<id> --arm=<arm> --scenario=<id> --trial=<n> --output-dir=<runs-dir>
-npm --prefix package run behavioral:coordinator -- merge --envelope=<dispatch-envelope.json> --payload=<child-payload.json> --output-dir=<runs-dir>
-
-npm --prefix package run behavioral:staging -- prepare-initial --protocol=<protocol.json> --head=<commit> --run-id=<id> --arm=<arm> --trial=<n> --agent-target=/root/behavioral_eval_agent --output-dir=<runs-dir>
-npm --prefix package run behavioral:staging -- seal-initial --envelope=<initial-envelope.json> --payload=<initial-child-payload.json> --agent-target=/root/behavioral_eval_agent --output-dir=<runs-dir>
-npm --prefix package run behavioral:staging -- prepare-followup --initial-envelope=<initial-envelope.json> --initial-seal=<initial-seal.json> --output-dir=<runs-dir>
-npm --prefix package run behavioral:staging -- merge-staged --initial-envelope=<initial-envelope.json> --initial-seal=<initial-seal.json> --followup-envelope=<followup-envelope.json> --initial-payload=<initial-child-payload.json> --drift-payload=<drift-child-payload.json> --agent-target=/root/behavioral_eval_agent --output-dir=<runs-dir>
-npm --prefix package run behavioral:staging -- finalize-staged --initial-envelope=<initial-envelope.json> --initial-seal=<initial-seal.json> --followup-envelope=<followup-envelope.json> --combined-payload=<combined-child-payload.json> --merge-provenance=<staged-merge-provenance.json> --output-dir=<runs-dir>
-```
-
-34개 candidate run이 immutable해진 뒤 semantic audit은 30개 regular merge와 4개 staged finalize를 fresh temp directory에서 재생해 run JSON byte equality를 먼저 확인합니다. 그 다음 committed criteria로 만든 8개 opaque batch를 각각 fresh reviewer에게 보내고, candidate 34/34 PASS·negative control 8/8 탐지·FAIL 0·UNKNOWN 0일 때만 aggregate가 통과합니다.
-
-```bash
-npm --prefix package run behavioral:semantic-audit -- commit-criteria --criteria=<criteria.json> --commitment=<commitment.json> --skill-root=<skill-root> --protocol=<protocol.json>
-npm --prefix package run behavioral:semantic-audit -- matrix --criteria=<criteria.json> --commitment=<commitment.json> --runs-dir=<runs-dir> --skill-root=<skill-root> --protocol=<protocol.json> --output=<matrix.json>
-npm --prefix package run behavioral:semantic-audit -- prepare --matrix=<matrix.json> --batch=<opaque-id> --output-dir=<semantic-dir> --skill-root=<skill-root> --protocol=<protocol.json>
-npm --prefix package run behavioral:semantic-audit -- merge --envelope=<review-envelope.json> --payload=<reviewer-payload.json> --output-dir=<semantic-dir> --skill-root=<skill-root> --protocol=<protocol.json>
-npm --prefix package run behavioral:semantic-audit -- aggregate --matrix=<matrix.json> --results-dir=<semantic-dir> --skill-root=<skill-root> --protocol=<protocol.json> --output=<aggregate.json>
-```
-
-child와 reviewer의 `declaredLoadedFiles`는 선언 telemetry입니다. exact served model build, 실제 reasoning setting, observed file reads, agent token usage, 플랫폼 차원의 fresh/same-agent attestation은 현재 API로 관측할 수 없으므로 결과 보고서에서도 관측 사실처럼 표현하지 않습니다.
+`check:generated`는 progressive router/index/contract의 missing·stale·orphan·symlink와 recursive companion closure, non-progressive skill의 unexpected index/contract 부재를 검사합니다. full `HANDBOOK.md` freshness는 `check:handbooks:all`이 별도로 read-only 검증하며, `check:artifacts`가 두 checker와 `check:viewer`를 함께 묶어 실행합니다.
 
 ## Buildable Loading Topology
 

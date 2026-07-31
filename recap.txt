@@ -1,0 +1,332 @@
+# 인수인계 요약
+
+  ## 전체 목표
+
+  AI가 만든 코드를 사람이 읽고 유지보수할 수 있도록 다음 원칙으로 프로젝트 구조와 agent-conventions 스킬을 개선하려고 한다.
+
+  1. 인간의 가독성이 최우선
+  2. 위에서 아래로 읽히는 실행 흐름
+  3. 모듈화는 실제 경계가 있을 때만
+  4. KISS
+  5. 파일과 폴더를 쉽게 찾을 수 있어야 함
+  6. 한 함수가 다른 함수를 계속 따라가는 깊은 참조 구조 금지
+  7. AI가 임의로 구조를 복잡하게 확장하지 못하게 규칙화
+
+  ## 차트 리팩터링 상태
+
+  작업 위치:
+
+  - worktree: /Users/l-20220017/workspace/sk-ax-gas-pp-chart-readability-v2
+  - branch: feat/chart-readability-v2
+  - 2026-07-30 마지막 확인 HEAD: 785b74d4
+  - 당시 최신 dev인 a558bb8d까지 로컬 병합됨
+  - remote feature branch보다 7커밋 앞선 상태였음
+  - 당시 working tree는 clean
+
+  기존 dev 차트는 다음처럼 거대한 파일 중심이었다.
+
+  - wg-chart-option.ts: 약 2,160줄
+  - wg-chart.tsx: 약 789줄
+  - wg-chart.type.ts: 약 416줄
+
+  feature에서는 다음 구조로 변경했다.
+
+  src/components/widgets/chart/
+  ├── wg-chart.tsx
+  ├── wg-chart.css
+  ├── components/
+  │   ├── root/wg-chart-root.tsx
+  │   ├── header/wg-chart-header.tsx
+  │   ├── actions/
+  │   └── canvas/wg-chart-canvas.tsx
+  ├── configs/chart-config.ts
+  ├── functions/
+  ├── hooks/use-wg-chart-context.ts
+  └── types/
+
+  주요 결정:
+
+  - wg-chart.tsx는 WgChart.Root, Header, Actions, ToolAction, Canvas를 조립하는 public compound entry다.
+  - public part는 각각 TSX 파일로 분리한다.
+  - part 전용 Props는 해당 TSX에 둔다.
+  - WgChartRoot가 ECharts instance, renderer, resize, dataZoom, legend, toolbar, dispose 등 lifecycle을 직접 소유한다.
+  - 파일 길이를 줄이기 위해 use-wg-echarts 같은 hook으로 lifecycle을 다시 숨기지 않는다.
+  - 차트 subtree 내부 공유 상태는 scoped Context로 충분하며 Zustand로 바꾸지 않는다.
+  - build-chart-option, tooltip formatter, series builder 등 실제 도메인 경계는 파일로 유지한다.
+  - 작은 한 번짜리 계산까지 함수 파일로 분리하지 않는다.
+
+  ## 차트에서 확인된 후속 기술 이슈
+
+  아직 처리하지 않은 사항:
+
+  1. resolve-chart-y-axis-viewport.ts가 시간축 날짜에 Date.parse()를 사용한다.
+      - ECharts time.parse()와 timezone 해석이 달라 DST 경계에서 Y축 데이터가 누락될 수 있음.
+
+  2. dataZoom마다 날짜 전체를 파싱·중복 제거·정렬해 대용량 데이터에서 성능 위험이 있음.
+  3. 모든 annotation producer가 annotations: []만 전달하고 있어 계약 제거 여부 검토 필요.
+  4. chart-config.ts에 범용 설정, toolbar icon, Spike marker 설정이 혼재함.
+  5. 다음 가독성 개선 대상은 차트 core보다 route adapter다.
+      - spike-pattern-panel.ts: 약 1,647줄
+      - pattern-panel.ts: 약 934줄
+
+  ## React 스킬 개선 방향
+
+  현재 React 스킬은 route 화면 추출 규칙은 자세하지만, 복잡한 compound widget 내부 폴더 구조를 정의하지 않는다.
+
+  추천하는 새 규칙:
+
+  ownership-structure-complex-compound-widget-modules
+
+  적용 대상:
+
+  - 여러 public part를 가진 shared compound component
+  - scoped Context
+  - 외부 library lifecycle
+  - 여러 독립 domain calculation을 소유한 복잡한 widget
+
+  권장 구조:
+
+  <owner>/
+  ├── <owner>.tsx
+  ├── <owner>.css
+  ├── components/
+  ├── configs/
+  ├── functions/
+  ├── hooks/
+  └── types/
+
+  규칙:
+
+  - public compound part 하나당 TSX 파일 하나
+  - 최상위 entry 파일은 explicit namespace 조립만 담당
+  - index.ts, export * barrel은 만들지 않음
+  - explicit WgChart = { Root, Header, ... }는 barrel이 아니라 public facade로 허용
+  - component만 시각적 계층으로 nesting
+  - functions/types/hooks/configs는 owner 전체 기준으로 평탄하게 관리
+  - 단순 component에는 모든 role folder를 미리 만들지 않음
+  - Root lifecycle은 단순 LOC 감소 목적으로 hook 추출 금지
+  - compound subtree 공유 상태는 scoped Context가 기본
+
+  ## Pages와 _local 구조에 대한 결정
+
+  현재 feature 기준:
+
+  - src/pages/detail/_local: 99개 파일
+  - src/pages/index/_local: 49개 파일
+  - 최대 경로 깊이: 10단계
+  - _local/_local도 존재
+
+  이 프로젝트는 file-based routing이 아니라 명시적인 React Router 설정을 사용하므로 _local에 framework 의미가 없다.
+
+  추천 구조:
+
+  pages/detail/
+  ├── detail-page.tsx
+  ├── detail-page.css
+  ├── spike-detail-page.tsx
+  ├── components/
+  │   ├── pattern-panel/
+  │   ├── spike-pattern-panel/
+  │   │   ├── spike-pattern-panel.tsx
+  │   │   ├── spike-pattern-panel.css
+  │   │   ├── components/
+  │   │   ├── configs/
+  │   │   ├── functions/
+  │   │   ├── hooks/
+  │   │   └── types/
+  │   └── fundamental-mi-panel/
+  ├── configs/
+  ├── functions/
+  ├── hooks/
+  └── types/
+
+  핵심은 owner-first / role-second다.
+
+  - route 또는 복잡한 component가 owner
+  - owner 내부에서 필요한 role folder만 생성
+  - 복잡한 nested component는 다시 자기 owner 구조를 가질 수 있음
+  - leaf component는 tsx + css 정도만 유지
+  - JSX의 모든 DOM 단계를 폴더로 재현하지 않음
+  - _local은 제거하는 방향
+
+  ## Configs 기준
+
+  configs에는 다음만 둔다.
+
+  - immutable한 선언형 정책
+  - 여러 sibling 파일이 공유
+  - 입력값을 받지 않는 mapping, preset, threshold, default
+  - label/icon mapping
+  - option preset
+  - enum-like lookup
+
+  넣지 않을 것:
+  - 타입 → types
+  - Props/state → TSX 또는 hook
+  - 한 파일에서만 쓰는 값 → 해당 파일 local
+  - 전역 공용 설정 → shared/config
+
+  constants/ 폴더는 만들지 않는다.
+
+  Module-local 설정은 다음처럼 허용할 방향이다.
+
+  spike_chart_config.*
+  chart_config.*
+
+  ## Functions·Types 분리 기준
+
+  사용자가 원하는 방향은 “추출된 declaration을 찾기 쉽게 한 파일씩 분리”하는 것이다.
+
+  Functions:
+
+  - 대표 exported domain operation 하나당 파일 하나
+  - 작은 private 단계는 대표 함수 파일 내부에 유지
+  - 한 번만 쓰는 짧은 guard·fallback은 호출부에 유지
+  - 호출 깊이 기본 최대 2단계
+  - owner → exported function → private local function 정도가 기준
+  - export 함수가 export 함수를 계속 따라가는 dependency graph 금지
+
+  Types:
+
+  - 여러 파일이 공유하는 계약만 types/
+  - 대표 exported type/interface 하나당 파일 하나
+  - Component Props는 해당 TSX
+  - 한 field에서만 쓰는 union은 inline
+  - file-local type은 해당 파일에 private 선언
+  - 라이브러리와 동일한 의미는 라이브러리 타입에서 파생
+
+  Hooks:
+
+  - 실제 React state/effect/context/hook 조합만
+  - 순수 계산을 hook으로 만들지 않음
+  - 대표 exported hook 하나당 파일 하나
+
+  ## CSS class naming 결론
+
+  _local 폴더를 제거해도 loc_ prefix는 제거하지 않는 것을 추천했다.
+
+  최종 의미:
+
+   Prefix    소유자
+  ━━━━━━━━  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   rt_*      route entry와 page shell
+  ────────  ──────────────────────────────────────────
+   loc_*     특정 page/feature 내부 private component
+  ────────  ──────────────────────────────────────────
+   wg_*      여러 route에서 재사용되는 widget
+  ────────  ──────────────────────────────────────────
+   ui_*      primitive component
+
+  예:
+
+  DetailPage
+  → rt_detail__root
+
+  SpikeDetailPage
+  → rt_spikeDetail__root
+
+  SpikePatternPanel
+  → loc_spikePatternPanel__root
+
+  SpikeChartCard
+  → loc_spikeChartCard__root
+
+  SpikeLegendPanel
+  → loc_spikeLegendPanel__root
+
+  rt_detailSpikePatternPanel은 권장하지 않는다.
+
+  - route 이동 시 class 전체를 바꿔야 함
+  - 이름이 지나치게 길어짐
+  - route shell과 private component가 모두 rt가 되어 구분이 사라짐
+  - source path를 class에 중복 기록하게 됨
+
+  현재 더 큰 문제는 loc_ prefix가 아니라 하나의 slug를 여러 하위 owner가 공유한다는 것이다.
+
+  현재:
+
+  - loc_fundamentalMiPanel: 1,000회 이상
+  - loc_spikePatternPanel: 300회 이상
+
+  새 기준:
+
+  - 자기 CSS 파일을 가진 component는 자기 slug 사용
+  - 부모가 스타일을 소유한다면 부모 CSS와 부모 slug 사용
+  - 별도 CSS 파일인데 부모 slug를 사용하면 ownership이 잘못 분리된 상태
+
+  따라서:
+
+  loc_spikePatternPanel__root
+  loc_spikeChartCard__root
+  loc_spikeLegendPanel__root
+  loc_spikePatternSummaryBand__root
+
+  처럼 나눈다.
+
+  ## 수정해야 할 agent-conventions 규칙
+
+  React:
+
+  - _local 기본 배치 규칙 제거
+  - route 아래 role folder 구조 허용
+  - complex compound widget module 규칙 추가
+  - public part per-file 규칙 추가
+  - explicit compound facade를 barrel 예외로 허용
+  - scoped Context 추가
+  - Root lifecycle 강제 hook 추출 방지
+
+  TypeScript:
+
+  - page.ts 한 파일에 support code를 몰아넣는 기본 규칙 변경
+  - 추출된 function/type의 대표 export per-file
+  - module-local <owner>_config.* 허용
+  - 함수 참조 깊이 제한
+  - direct import 유지
+  - role folder barrel 금지
+
+  CSS:
+
+  - _local 경로와 loc_* 의미 분리
+  - rt_*는 route entry/page shell
+  - loc_*는 page-private component owner
+  - 자기 CSS 파일을 가진 owner는 자기 scope_slug 사용
+  - 기존 _local 예시를 components 구조로 변경
+
+  ## 스킬 수정 절차
+
+  writing-skills 규칙에 따라 바로 문서부터 수정하면 안 된다.
+
+  1. routing-evals.json에 실패 시나리오 추가
+  2. 현재 skill baseline에서 실패 확인
+  3. 단순 component에 폴더를 남발하지 않는 negative scenario 추가
+  4. rules/*.md 수정
+  5. React·TypeScript·CSS 생성 산출물 재생성
+  6. validate, package test, typecheck, generated check, routing eval 실행
+
+  직접 수정하지 않을 generated 파일:
+
+  - HANDBOOK.md
+  - RULES_INDEX.md
+  - contracts/*.md
+
+  source of truth:
+
+  - rules/*.md
+  - metadata.json
+  - routing-evals.json
+
+  ## 다음 세션에서 먼저 확정할 것
+
+  다음 세션은 아래 설계를 승인하는 것부터 이어가면 된다.
+
+  > _local을 제거하고 route와 complex component를 owner로 삼는다. 각 owner 아래 필요한 components/configs/functions/hooks/types를 선택적으로 반복한다. 추출된 function/type은 대표 export 하나당
+  > 파일 하나를 두되 작은 local 계산은 추출하지 않는다. rt_*는 route shell, loc_*는 page-private component로 정의하며 자기 CSS 파일을 가진 component는 자기 slug를 사용한다.
+
+  승인되면 agent-conventions의 React·TypeScript·CSS 스킬 개정 설계서와 pressure scenario부터 작성한다. 아직 관련 스킬 파일이나 제품 코드는 수정하지 않았다.
+
+  추가 프로젝트 선호:
+
+  - 테스트 코드는 사용자가 명시적으로 요청하지 않으면 제품 프로젝트에 만들지 않는다.
+  - 스킬 자체의 behavioral/routing eval은 스킬 수정 검증이므로 별도다.
+  - 실제 pages 구조 마이그레이션은 한 번에 하지 말고 spike-pattern-panel → fundamental-mi-panel → pattern-panel → index pattern-search처럼 owner 단위로 진행한다.
+  - 구조 이동과 CSS class 변경은 스타일·동작 보존 검증이 필요하다.

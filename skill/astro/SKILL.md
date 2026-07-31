@@ -146,7 +146,7 @@ Astro local rule은 기본 companion인 `convention-typescript`와 `convention-c
 
 - 이 skill은 `convention-typescript`와 `convention-css`를 함께 로드하는 것을 기본으로 합니다.
 - `convention-typescript`는 frontmatter TypeScript, route-local support module, JSDoc 태그 표준을 보완합니다.
-- `convention-css`는 `.astro` template의 `class`/`class:list`, `rt_*` route surface ownership, `rt_document__*`, `wg_*`, `ui_*`, 드문 `loc_*` helper ownership, route-local stylesheet, wrapper 스타일링을 보완합니다.
+- `convention-css`는 `.astro` template의 `class`/`class:list`, `rt_*` route surface ownership, `rt_document__*`, `wg_*`, `ui_*`, 드문 `pv_*` helper ownership, route-local stylesheet, wrapper 스타일링을 보완합니다.
 - React island, TSX component, client framework support code가 바뀌면 `convention-react`를 추가로 함께 사용합니다.
 - hydration, form action, server island fallback, navigation 회귀를 브라우저에서 검증하면 `convention-playwright-test`를 함께 사용합니다.
 
@@ -155,7 +155,7 @@ Astro local rule은 기본 companion인 `convention-typescript`와 `convention-c
 - 이번 변경이 Naming, Rendering, Responsibility, Docs까지 포함한 어느 카테고리에 걸리는지 다시 대조하고 관련 rule을 빠뜨리지 않았는지 확인합니다.
 - React island, CSS, TypeScript config/action schema, JSDoc/comment, Playwright 검증까지 번졌는데 companion skill을 빼먹지 않았는지 점검합니다.
 - static, on-demand, `output: "server"`, `client:only` 중 현재 선택이 과한지 다시 확인합니다.
-- `src/pages` route-local owner layer, `src/pages/_document.astro`/`_head.astro`/`_document.css`, route role에 맞는 page-adjacent asset naming, `rt_*` surface ownership, `rt_document__*`/`wg_*`/`ui_*`/드문 `loc_*` ownership, `_local/` route shell/runtime/component CSS, `ui`/`widget` taxonomy, route page orchestration, owner-named support module extraction 기준, build-time/live collection 구분, page/island ownership, endpoint와 Actions의 역할 분리, 핵심 frontmatter 선언의 JSDoc/comment가 마지막 diff에도 그대로 보이는지 확인합니다.
+- `src/pages` route-local owner layer, `src/pages/_document.astro`/`_head.astro`/`_document.css`, route role에 맞는 page-adjacent asset naming, `rt_*` surface ownership, `rt_document__*`/`wg_*`/`ui_*`/드문 `pv_*` ownership, `_local/` route shell/runtime/component CSS, `ui`/`widget` taxonomy, route page orchestration, owner-named support module extraction 기준, build-time/live collection 구분, page/island ownership, endpoint와 Actions의 역할 분리, 핵심 frontmatter 선언의 JSDoc/comment가 마지막 diff에도 그대로 보이는지 확인합니다.
 
 ## 사용하는 방법
 

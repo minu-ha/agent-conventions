@@ -1,4 +1,4 @@
-# Keep UI, Widget, and -local Ownership Separate
+# Keep UI, Widget, and Private Ownership Separate
 
 **Impact: CRITICAL**
 

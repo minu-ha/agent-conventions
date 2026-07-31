@@ -8,7 +8,7 @@ appliesWhen:
   - page section 조립의 순서나 owner를 바꿀 때
   - 제외: 같은 owner 안에서 표현만 바꾸는 경우
 reviewWith: >-
-  screen-extract-local-section-components-for-runtime-boundaries, screen-move-pure-support-code-out-of-entry-files
+  screen-extract-local-section-components-for-runtime-boundaries, ownership-place-owner-files-in-role-folders
 tags: screen, routes, flow
 ---
 

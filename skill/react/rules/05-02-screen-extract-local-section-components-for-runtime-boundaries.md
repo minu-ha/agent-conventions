@@ -26,6 +26,10 @@ route entry의 local component는 `runtime boundary`가 있을 때만 추출합�
 search param, navigation, page-level query/mutation, cross-section effect, invalidate, redirect,
 여러 section에 걸친 파생값은 route entry에 둡니다.
 
+호출 계층은 폴더 깊이가 아니라 entry 파일의 조립이 드러냅니다.
+"어느 component가 이걸 쓰는지"를 폴더 경로로 표현하려고 중첩을 늘리지 않습니다.
+entry의 JSX와 import 목록을 위에서 아래로 읽으면 답이 나와야 하고, 그러지 않으면 section을 과하게 쪼갠 것입니다.
+
 **Incorrect (layout wrapper만 분리해 route flow를 숨김):**
 
 ```tsx
