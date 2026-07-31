@@ -69,8 +69,8 @@ const initialState = await getEntryAdminInitialState();
 ---
 
 <Document currentPathname={Astro.url.pathname} pageTitle="admin entries" pageNoIndex>
-	<section class="rt_adminEntriesIndex__root">
-		<header class="rt_adminEntriesIndex__header">
+	<section class="pg_adminEntriesIndex__root">
+		<header class="pg_adminEntriesIndex__header">
 			<h1>Entries</h1>
 		</header>
 		<EntryAdminRuntime client:load initialState={initialState} />

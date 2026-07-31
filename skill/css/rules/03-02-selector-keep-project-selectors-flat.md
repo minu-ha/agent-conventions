@@ -29,8 +29,8 @@ rich text 예외는 raw element styling에만 적용됩니다.
 **Incorrect (project-owned 클래스 관계를 descendant selector로 쓰고, wrapper styling을 block 밖으로 흩뿌림):**
 
 ```css
-.rt_catalogIndex__layout {
-	& .rt_catalogIndex__panel {
+.pg_catalogIndex__layout {
+	& .pg_catalogIndex__panel {
 		padding: 8px;
 	}
 }
@@ -47,11 +47,11 @@ rich text 예외는 raw element styling에만 적용됩니다.
 **Correct (project-owned 클래스는 플랫하게 두고, rich text wrapper 예외는 같은 block 안에 국한함):**
 
 ```css
-.rt_catalogIndex__layout {
+.pg_catalogIndex__layout {
 	display: grid;
 }
 
-.rt_catalogIndex__panel {
+.pg_catalogIndex__panel {
 	padding: 8px;
 }
 

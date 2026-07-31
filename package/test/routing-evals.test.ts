@@ -294,12 +294,11 @@ const cssRuleRouting = {
 		reviewWith: [],
 	},
 	"naming-preserve-route-slug-traceability": {
-		appliesWhen: "route/framework 규칙이 `rt_*` owner를 선택한 화면에서 route class slug를 새로 만들거나 이름을 변경할 때.",
+		appliesWhen: "`pg_*` owner의 class slug를 새로 만들거나 이름을 바꿀 때. 같은 이름 component가 여러 화면에 생겨 slug를 구분해야 할 때.",
 		reviewWith: [],
 	},
 	"naming-separate-owner-style-scopes": {
-		appliesWhen:
-			"스타일 owner를 route shell, private component, widget, primitive 중에서 결정할 때. 새 CSS 파일을 만들거나 기존 owner 범위를 옮길 때.",
+		appliesWhen: "스타일 owner를 화면 내부, widget, primitive 중에서 결정할 때. 새 CSS 파일을 만들거나 기존 owner 범위를 옮길 때.",
 		reviewWith: ["naming-keep-scope-slug-unique-per-owner", "organization-keep-style-files-owned-by-one-component-or-route"],
 	},
 	"naming-use-scope-slug-element-modifier-syntax": {
@@ -397,7 +396,7 @@ const reactRuleRouting = {
 		],
 	},
 	"ownership-layer-component-boundaries": {
-		appliesWhen: "컴포넌트를 ui·widget·private 중 어느 소유 레이어에 둘지 정할 때. 컴포넌트를 레이어 사이에서 옮기거나 공용화할 때.",
+		appliesWhen: "컴포넌트를 ui·widget·page 중 어느 소유 레이어에 둘지 정할 때. 컴포넌트를 레이어 사이에서 옮기거나 공용화할 때.",
 		reviewWith: ["ownership-place-owner-files-in-role-folders", "css/naming-separate-owner-style-scopes"],
 	},
 	"ownership-place-owner-files-in-role-folders": {
@@ -785,8 +784,8 @@ const reactScenarioStages = {
 	"RTE02-owner-placement-css-drift": {
 		initial: {
 			prompt:
-				"move a route-only tree renderer from shared UI to src/page/entries/component/entry-tree.tsx and rename it as owner-private; carry its existing className and style import through unchanged and make no styling change.",
-			files: ["src/ui/entry-tree/ui-entry-tree.tsx", "src/page/entries/component/entry-tree.tsx"],
+				"move a route-only tree renderer from shared UI to src/page/entries/component/pg-entry-tree.tsx and rename it as owner-private; carry its existing className and style import through unchanged and make no styling change.",
+			files: ["src/ui/entry-tree/ui-entry-tree.tsx", "src/page/entries/component/pg-entry-tree.tsx"],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
 				react: [
@@ -807,11 +806,11 @@ const reactScenarioStages = {
 		},
 		scopeDrift: {
 			evidence:
-				"in a project without a CSS Modules standard, add directly imported src/page/entries/component/entry-tree.css, create owner-unique pv_* role-named classes, and compose the changed className contract with the existing direct clsx import; final skills add CSS with no additional React rule.",
+				"in a project without a CSS Modules standard, add directly imported src/page/entries/component/pg-entry-tree.css, create owner-unique pg_* role-named classes, and compose the changed className contract with the existing direct clsx import; final skills add CSS with no additional React rule.",
 			files: [
 				"src/ui/entry-tree/ui-entry-tree.tsx",
-				"src/page/entries/component/entry-tree.tsx",
-				"src/page/entries/component/entry-tree.css",
+				"src/page/entries/component/pg-entry-tree.tsx",
+				"src/page/entries/component/pg-entry-tree.css",
 			],
 			expectedSkills: ["react", "typescript", "css"],
 			expectedSelected: {
@@ -833,6 +832,7 @@ const reactScenarioStages = {
 					"naming-default-to-plain-css-when-no-module-convention",
 					"naming-keep-scope-slug-unique-per-owner",
 					"naming-name-elements-and-modifiers-by-role",
+					"naming-preserve-route-slug-traceability",
 					"naming-separate-owner-style-scopes",
 					"naming-use-scope-slug-element-modifier-syntax",
 					"composition-compose-classes-with-clsx",
@@ -847,8 +847,8 @@ const reactScenarioStages = {
 	"RTE03-route-support-extraction": {
 		initial: {
 			prompt:
-				"move one real four-argument multi-line payload boundary out of src/page/entries/entries-page.tsx into src/page/entries/function/build-entry-payload.ts; do not create a hook, generic utils file, or helper soup.",
-			files: ["src/page/entries/entries-page.tsx", "src/page/entries/function/build-entry-payload.ts"],
+				"move one real four-argument multi-line payload boundary out of src/page/entries/pg-entries.tsx into src/page/entries/function/build-entry-payload.ts; do not create a hook, generic utils file, or helper soup.",
+			files: ["src/page/entries/pg-entries.tsx", "src/page/entries/function/build-entry-payload.ts"],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
 				react: [
@@ -1170,9 +1170,9 @@ const reactScenarioStages = {
 			prompt:
 				"two sibling files under src/page/detail/component/spike-pattern-panel/component/ import each other's legend row through ../; make the panel own the shared legend row and pass it down as an element prop, and remove the sibling and @/page component imports.",
 			files: [
-				"src/page/detail/component/spike-pattern-panel/spike-pattern-panel.tsx",
-				"src/page/detail/component/spike-pattern-panel/component/detection-section.tsx",
-				"src/page/detail/component/spike-pattern-panel/component/summary-band.tsx",
+				"src/page/detail/component/spike-pattern-panel/pg-spike-pattern-panel.tsx",
+				"src/page/detail/component/spike-pattern-panel/component/pg-detection-section.tsx",
+				"src/page/detail/component/spike-pattern-panel/component/pg-summary-band.tsx",
 			],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
@@ -1190,7 +1190,7 @@ const reactScenarioStages = {
 			prompt:
 				"the ECharts init, resize listener, and dispose currently sit in src/widget/chart/hook/use-chart-instance.ts only to shorten the component; fold that lifecycle back into the owning chart root and leave the domain option builder in function/.",
 			files: [
-				"src/widget/chart/component/chart-root.tsx",
+				"src/widget/chart/component/wg-chart-root.tsx",
 				"src/widget/chart/hook/use-chart-instance.ts",
 				"src/widget/chart/function/build-chart-option.ts",
 			],
@@ -1976,7 +1976,7 @@ test("React routing manifest is the exact seventeen-scenario Appendix B/D oracle
 	assert.equal(cssDrift.expectedSelected.css?.includes("composition-do-not-build-structural-variants-with-modifiers"), true);
 	assert.equal(cssDrift.expectedSelected.css?.includes("values-separate-domain-state-modifiers-from-dom-interaction-states"), true);
 	assert.equal(cssDrift.expectedSelected.css?.includes("naming-separate-owner-style-scopes"), true);
-	assert.equal(cssDrift.expectedSelected.css?.includes("naming-preserve-route-slug-traceability") ?? false, false);
+	assert.equal(cssDrift.expectedSelected.css?.includes("naming-preserve-route-slug-traceability") ?? false, true);
 
 	const routeSupport = scenarioById.get("RTE03-route-support-extraction");
 	assert.equal(routeSupport?.expectedSelected.typescript?.includes("types-reuse-existing-contracts-before-new-types"), false);
@@ -2254,7 +2254,7 @@ test("routing activation and generated indexes use only the changed semantic del
 	assert.match(generatedIndex, /^- T\d+ \| [^ |]+ \|/m);
 
 	const routeOwnerRule = await readRuleSource("css", "naming-preserve-route-slug-traceability");
-	assert.match(routeOwnerRule, /route\/framework 규칙이 `rt_\*` owner를 선택한 화면/);
+	assert.match(routeOwnerRule, /`pg_\*` owner의 class slug를 새로 만들거나 이름을 바꿀 때/);
 });
 
 test("v16 boundary contracts distinguish semantic role changes from contextual and byte-equivalent noise", async () => {

@@ -56,19 +56,19 @@ const hasEntries = initialState.entries.length > 0;
 ---
 
 <Document currentPathname={Astro.url.pathname} pageTitle="admin entries" pageNoIndex>
-	<section class="rt_adminEntriesIndex__root">
-		<header class="rt_adminEntriesIndex__header">
+	<section class="pg_adminEntriesIndex__root">
+		<header class="pg_adminEntriesIndex__header">
 			<h1>Entries</h1>
 		</header>
 
 		{hasEntries ? (
 			<EntryAdminRuntime client:load initialState={initialState} />
 		) : (
-			<p class="rt_adminEntriesIndex__empty">No entries yet.</p>
+			<p class="pg_adminEntriesIndex__empty">No entries yet.</p>
 		)}
 	</section>
 </Document>
 ```
 
 이 예시는 React runtime이 필요해도 route entry가 document handoff, server data, high-level branch,
-`rt_*` surface owner를 계속 보여 줍니다.
+`pg_*` surface owner를 계속 보여 줍니다.

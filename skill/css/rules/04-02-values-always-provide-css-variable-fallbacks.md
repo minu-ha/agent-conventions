@@ -31,7 +31,7 @@ byte-equivalent 이동만 하는 경우는 N/A입니다.
 **Incorrect (존재 보장이 없는 토큰을 fallback 없이 사용):**
 
 ```css
-.pv_postFilterDialog__panel {
+.pg_postFilterDialog__panel {
 	border: 1px solid var(--mk-color-border-default);
 	background: var(--mk-color-bg-surface);
 }
@@ -40,13 +40,13 @@ byte-equivalent 이동만 하는 경우는 N/A입니다.
 **Correct (불안정한 경계에는 fallback을 두고, 보장된 core token은 의도적으로 fail-loud 할 수 있음):**
 
 ```css
-.pv_postFilterDialog__panel {
+.pg_postFilterDialog__panel {
 	border: 1px solid var(--mk-color-border-default, #d9d9d9);
 	border-radius: var(--mk-size-radius-card, 4px);
 	background-color: var(--mk-color-bg-surface, #fff);
 }
 
-.pv_postFilterDialog__collapse {
+.pg_postFilterDialog__collapse {
 	& .ant-collapse-item {
 		border-radius: var(--mk-size-radius-card, 10px);
 		background: var(--mk-color-bg-surface, #fff);

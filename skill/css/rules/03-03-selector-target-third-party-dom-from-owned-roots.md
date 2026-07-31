@@ -21,7 +21,7 @@ tags: third-party, wrappers, nesting
 
 - 항상 owned root class block을 먼저 엽니다.
 - root 없는 `.ant-*` 단독 selector는 금지합니다.
-- `.rt_* .ant-*` 같은 one-line chaining보다 root block 안의 `& .ant-*`를 사용합니다.
+- `.pg_* .ant-*` 같은 one-line chaining보다 root block 안의 `& .ant-*`를 사용합니다.
 - third-party DOM 경로는 shortest viable chain만 허용합니다.
 - owned root가 이미 instance scope를 제공하고 target class가 직접 식별 가능하면
   `.ant-tree` 같은 중간 library root를 반복하지 않습니다.
@@ -38,11 +38,11 @@ tags: third-party, wrappers, nesting
 	border-radius: 4px;
 }
 
-.rt_treePanel__root .ant-tree-title {
+.pg_treePanel__root .ant-tree-title {
 	color: #999;
 }
 
-.rt_treePanel__root {
+.pg_treePanel__root {
 	& .ant-tree .ant-tree-node-content-wrapper {
 		display: inline-flex;
 	}
@@ -58,7 +58,7 @@ tags: third-party, wrappers, nesting
 **Correct (항상 owned root block을 열고, 그 안에서 third-party DOM path를 nested로 적음):**
 
 ```css
-.rt_treePanel__root {
+.pg_treePanel__root {
 	& .ant-tree-node-content-wrapper {
 		display: inline-flex;
 	}
@@ -72,7 +72,7 @@ tags: third-party, wrappers, nesting
 	}
 }
 
-.rt_treePanel__toolbar {
+.pg_treePanel__toolbar {
 	& > .ant-btn-icon {
 		color: var(--app-color-text-muted, rgba(0, 0, 0, 0.45));
 	}

@@ -40,7 +40,7 @@ modifier가 켜진 경우에만 interaction이 달라져야 한다는 별도 제
 	transform: rotate(-2deg);
 }
 
-.rt_pmli__assetCard {
+.pg_pmli__assetCard {
 	&:selected {
 		border-color: var(--app-color-accent, #1677ff);
 	}
@@ -64,7 +64,7 @@ modifier가 켜진 경우에만 interaction이 달라져야 한다는 별도 제
 	transform: var(--wg-site-header-brand-mark-transform);
 }
 
-.rt_pmli__assetCardButton {
+.pg_pmli__assetCardButton {
 	cursor: default;
 
 	&:disabled {
@@ -76,7 +76,7 @@ modifier가 켜진 경우에만 interaction이 달라져야 한다는 별도 제
 	}
 }
 
-.rt_pmli__assetCard--selected {
+.pg_pmli__assetCard--selected {
 	border-color: var(--app-color-accent, #1677ff);
 }
 ```

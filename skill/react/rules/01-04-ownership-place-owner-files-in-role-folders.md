@@ -38,6 +38,7 @@ role 폴더는 다음 다섯 개뿐이고 새 role 폴더를 발명하지 않습
 - 파일이 하나뿐인 role 폴더도 그대로 둡니다. sibling `.ts` 하나로 대신하지 않습니다.
 - 자기 role 폴더가 필요한 component만 자기 폴더를 갖고, leaf는 `component` 아래 파일로 둡니다.
 - Props는 해당 TSX에 두고 여러 파일이 공유하는 계약만 `type`으로 옮깁니다.
+- 컴포넌트 파일명에는 계층 prefix를 붙이고 폴더명에는 붙이지 않습니다.
 - owner 중첩이 3단계에 닿으면 분리가 맞는지, widget으로 나갈 대상인지 다시 봅니다.
 
 무엇을 추출할지는 이 규칙이 정하지 않습니다.
@@ -60,7 +61,7 @@ ui/button/
 
 ```txt
 page/detail/
-├── detail-page.tsx
+├── pg-detail.tsx
 ├── components/
 ├── constants/
 ├── utils/
@@ -71,18 +72,18 @@ page/detail/
 
 ```txt
 page/detail/
-├── detail-page.tsx
-├── detail-page.css
+├── pg-detail.tsx
+├── pg-detail.css
 ├── function/
 │   └── map-api-response-to-view-model.ts
 ├── type/
 │   └── detail-view-model.ts
 └── component/
-    ├── summary-band.tsx
-    ├── summary-band.css
+    ├── pg-summary-band.tsx
+    ├── pg-summary-band.css
     └── spike-pattern-panel/
-        ├── spike-pattern-panel.tsx
-        ├── spike-pattern-panel.css
+        ├── pg-spike-pattern-panel.tsx
+        ├── pg-spike-pattern-panel.css
         └── function/
             └── resolve-chart-viewport.ts
 ```

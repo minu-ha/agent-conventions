@@ -25,18 +25,18 @@ CSS 파일 하나가 slug 하나를 소유합니다.
 
 ```txt
 // catalog/index route
-rt_catalogIndex__header
+pg_catalogIndex__header
 
 // dashboard/index route
-rt_catalogIndex__toolbar
+pg_catalogIndex__toolbar
 ```
 
 **Correct (소유자가 다르면 별도 slug를 부여):**
 
 ```txt
 // catalog/index route
-rt_catalogIndex__header
+pg_catalogIndex__header
 
 // dashboard/index route
-rt_dashboardIndex__header
+pg_dashboardIndex__header
 ```

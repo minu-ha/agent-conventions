@@ -14,7 +14,7 @@
 **TitleKo:** 파일 이름과 페이지 자산
 **Impact:** HIGH
 **Description:** `_document`/`_head`/`_document.css` 같은 pages-local helper, route entry와 짝을 이루는
-  `_index.ts`/`_slug.ts`/`_entry-admin.ts`, `_local/entry-editor.tsx`처럼 owner가 드러나는 route-local asset, `rt_*`
+  `_index.ts`/`_slug.ts`/`_entry-admin.ts`, `_local/entry-editor.tsx`처럼 owner가 드러나는 route-local asset, `pg_*`
   route surface owner, 의미 있는 dynamic segment 이름은 file-based routing과 support module 탐색을 함께 쉽게 만듭니다.
 
 ## 3. Astro Components and Layout Composition (component)
@@ -58,7 +58,7 @@
 ## 9. Page, Layout, and Island Responsibilities (responsibility)
 **TitleKo:** 페이지·레이아웃·아일랜드 책임
 **Impact:** HIGH
-**Description:** pages-local document helper는 top-level document composition, routed page는 route contract와 `rt_*`
+**Description:** pages-local document helper는 top-level document composition, routed page는 route contract와 `pg_*`
   screen flow, `_local/`은 route-local UI/runtime boundary, owner-named support module은 진짜 data/rendering boundary를
   소유합니다. shared `ui`/`widget`으로 올릴 수 없는 route-only 조각은 같은 route folder 안에 남겨 Astro의 server-first
   구조와 ownership이 함께 읽히게 합니다.

@@ -23,7 +23,7 @@ position, z-index, 강제 geometry 또는 부모·자식 layout 책임이 바뀌
 **Incorrect (레이아웃 강제가 많고 기준 설명이 없음):**
 
 ```css
-.rt_dashboard__toolbar {
+.pg_dashboard__toolbar {
 	position: sticky;
 	top: 0;
 	z-index: 9999;
@@ -35,14 +35,14 @@ position, z-index, 강제 geometry 또는 부모·자식 layout 책임이 바뀌
 **Correct (기준 컨테이너와 의도를 드러냄):**
 
 ```css
-.rt_dashboard__toolbar {
+.pg_dashboard__toolbar {
 	/* sticky toolbar pinned inside the scrollable content pane */
 	position: sticky;
 	top: 0;
 	z-index: var(--app-z-index-toolbar, 10);
 }
 
-.rt_dashboard__content {
+.pg_dashboard__content {
 	display: grid;
 	min-height: 0;
 }

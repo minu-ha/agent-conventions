@@ -58,6 +58,6 @@ src/
           entry-editor.css
 ```
 
-같은 page surface를 설명하는 `_local/` markup과 CSS는 `pv_*`로 새 namespace를 만들지 말고 `rt_*` owner를 유지합니다.
-예외적으로 dialog나 helper wrapper가 route 안에서도 독립 owner contract를 가져야 할 때만 `pv_entryFilterDialog__*` 같은
-`pv_*`를 사용합니다.
+같은 page surface를 설명하는 `_local/` markup과 CSS는 `pg_*`로 새 namespace를 만들지 말고 `pg_*` owner를 유지합니다.
+예외적으로 dialog나 helper wrapper가 route 안에서도 독립 owner contract를 가져야 할 때만 `pg_entryFilterDialog__*` 같은
+`pg_*`를 사용합니다.

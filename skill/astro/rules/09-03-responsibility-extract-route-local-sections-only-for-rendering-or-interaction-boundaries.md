@@ -24,7 +24,7 @@ Move a section into `src/pages/**/_local/` only when it owns a real rendering or
 
 Do not extract a component just because a heading/body/footer group looks like a section.
 If the subtree still describes the same route surface,
-keep the route `rt_*` owner instead of inventing a `pv_*` namespace.
+keep the route `pg_*` owner instead of inventing a `pg_*` namespace.
 
 **Incorrect (simple page markup is split into `_local/` wrappers):**
 
@@ -37,7 +37,7 @@ import EntryMetaSection from "./_local/entry-meta-section.astro";
 const { entry } = Astro.props;
 ---
 
-<article class="rt_entryDetail__root">
+<article class="pg_entryDetail__root">
 	<EntryHeaderSection entry={entry} />
 	<EntryMetaSection entry={entry} />
 	<EntryBodySection html={entry.html} />
@@ -56,18 +56,18 @@ import EntryReactionIsland from "./_local/entry-reaction-island.tsx";
 const { entry, relatedEntries } = Astro.props;
 ---
 
-<article class="rt_entryDetail__root">
-	<header class="rt_entryDetail__header">
+<article class="pg_entryDetail__root">
+	<header class="pg_entryDetail__header">
 		<h1>{entry.title}</h1>
 		<p>{entry.description}</p>
 	</header>
 
-	<div class="rt_entryDetail__meta">
+	<div class="pg_entryDetail__meta">
 		<span>{entry.author}</span>
 		<span>{entry.publishedAtLabel}</span>
 	</div>
 
-	<div class="rt_entryDetail__body" set:html={entry.html} />
+	<div class="pg_entryDetail__body" set:html={entry.html} />
 
 	<RelatedEntriesPanel server:defer entries={relatedEntries}>
 		<p slot="fallback">Loading related entries...</p>

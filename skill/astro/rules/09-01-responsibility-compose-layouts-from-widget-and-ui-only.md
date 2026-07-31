@@ -21,7 +21,7 @@ tags: responsibility, layouts, ui, widget, composition
 - Route shell: owning route의 `_local/`
 
 Shell 자체를 `ui-*`나 `widget-*`로 이름 붙여 shared component처럼 승격하지 않습니다.
-Shell class는 `rt_document__*`처럼 owner가 드러나게 유지합니다.
+Shell class는 `pg_document__*`처럼 owner가 드러나게 유지합니다.
 
 **Incorrect (layout 역할을 ui/widget로 위장함):**
 
@@ -54,13 +54,13 @@ import WgSiteHeader from "@/components/widget/site-header/wg-site-header.astro";
 const { currentPathname } = Astro.props;
 ---
 
-<UiSurface class="rt_document__surface">
-	<UiStack class="rt_document__stack">
-		<UiBox class="rt_document__header">
+<UiSurface class="pg_document__surface">
+	<UiStack class="pg_document__stack">
+		<UiBox class="pg_document__header">
 			<WgSiteHeader currentPathname={currentPathname} />
 		</UiBox>
-		<main class="rt_document__main">
-			<UiBox class="rt_document__content">
+		<main class="pg_document__main">
+			<UiBox class="pg_document__content">
 				<slot />
 			</UiBox>
 		</main>

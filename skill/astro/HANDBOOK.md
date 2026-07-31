@@ -12,7 +12,7 @@
 
 ## 개요
 
-에이전트 협업 팀을 위한 Astro 코딩 컨벤션입니다. 이 가이드는 `src/pages`를 Astro의 required route tree이자 route-local owner layer로 보고, `src/pages/_document.astro`/`_head.astro`/`_document.css` 기반 pages-local document helper, routed page entry 중심의 screen implementation, route role에 맞춘 page-adjacent asset naming과 `rt_*` surface ownership, `_local/` route-local UI/runtime boundary, owner-named support file, 의미 있는 dynamic segment와 paginated route family, 공개 URL contract 정리 기준, `ui`/`widget` taxonomy, `.astro` 컴포넌트와 page/island/local support의 명확한 책임 경계, selective extraction 기준, static과 on-demand rendering의 의도적인 선택, build-time/live collections, Actions/endpoints/server islands 같은 Astro 고유 기능의 신중한 사용을 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, Astro local rule은 기본 companion인 `typescript`와 `css` skill과 함께 사용합니다.
+에이전트 협업 팀을 위한 Astro 코딩 컨벤션입니다. 이 가이드는 `src/pages`를 Astro의 required route tree이자 route-local owner layer로 보고, `src/pages/_document.astro`/`_head.astro`/`_document.css` 기반 pages-local document helper, routed page entry 중심의 screen implementation, route role에 맞춘 page-adjacent asset naming과 `pg_*` surface ownership, `_local/` route-local UI/runtime boundary, owner-named support file, 의미 있는 dynamic segment와 paginated route family, 공개 URL contract 정리 기준, `ui`/`widget` taxonomy, `.astro` 컴포넌트와 page/island/local support의 명확한 책임 경계, selective extraction 기준, static과 on-demand rendering의 의도적인 선택, build-time/live collections, Actions/endpoints/server islands 같은 Astro 고유 기능의 신중한 사용을 강조합니다. `rules/` 아래 rule 파일이 source of truth이며, Astro local rule은 기본 companion인 `typescript`와 `css` skill과 함께 사용합니다.
 
 이 문서에는 Astro 컨벤션 규칙만 담겨 있습니다. 아래 규칙도 함께 따릅니다.
 
@@ -32,7 +32,7 @@
     - 1.2 [Place Pages-local Document Helpers Under `src/pages` with an Underscore Prefix](#12-place-pages-local-document-helpers-under-src-pages-with-an-underscore-prefix)
     - 1.3 [Place Route Implementations Under `src/pages`](#13-place-route-implementations-under-src-pages)
 2. [File Naming and Page Assets](#2-file-naming-and-page-assets) — **HIGH**
-    - 2.1 [Align Route Page Assets and `rt_*` Surface Classes with Route Role](#21-align-route-page-assets-and-rt-surface-classes-with-route-role)
+    - 2.1 [Align Route Page Assets and `pg_*` Surface Classes with Route Role](#21-align-route-page-assets-and-pg-surface-classes-with-route-role)
     - 2.2 [Use Domain-specific Dynamic Segment Names](#22-use-domain-specific-dynamic-segment-names)
     - 2.3 [Use Owner-named Route Support Files Instead of Generic Local Files](#23-use-owner-named-route-support-files-instead-of-generic-local-files)
     - 2.4 [Use Underscore-prefixed Pages-local Helper Names for Document Files](#24-use-underscore-prefixed-pages-local-helper-names-for-document-files)
@@ -295,9 +295,9 @@ src/
 
 **Impact: HIGH**
 
-`_document`/`_head`/`_document.css` 같은 pages-local helper, route entry와 짝을 이루는 `_index.ts`/`_slug.ts`/`_entry-admin.ts`, `_local/entry-editor.tsx`처럼 owner가 드러나는 route-local asset, `rt_*` route surface owner, 의미 있는 dynamic segment 이름은 file-based routing과 support module 탐색을 함께 쉽게 만듭니다.
+`_document`/`_head`/`_document.css` 같은 pages-local helper, route entry와 짝을 이루는 `_index.ts`/`_slug.ts`/`_entry-admin.ts`, `_local/entry-editor.tsx`처럼 owner가 드러나는 route-local asset, `pg_*` route surface owner, 의미 있는 dynamic segment 이름은 file-based routing과 support module 탐색을 함께 쉽게 만듭니다.
 
-### 2.1 Align Route Page Assets and `rt_*` Surface Classes with Route Role
+### 2.1 Align Route Page Assets and `pg_*` Surface Classes with Route Role
 
 **Impact: HIGH (이름에 폴더 깊이를 중복하지 않고 route 파일·자산·CSS 소유자·URL 의미를 일치시킵니다)**
 
@@ -306,40 +306,40 @@ Routed entry file names follow Astro routing (`index.astro`, `[slug].astro`,
 
 Naming 기준:
 
-- Route-owned surface class는 `rt_*__*`를 사용합니다.
-- `rt_*` slug는 route family와 screen role이 읽히는 이름을 기본으로 합니다.
+- Route-owned surface class는 `pg_*__*`를 사용합니다.
+- `pg_*` slug는 route family와 screen role이 읽히는 이름을 기본으로 합니다.
 - 팀이 공유하는 route map이 없는 짧은 acronym은 정답 예시로 쓰지 않습니다.
 - 같은 route family가 충돌하면 더 명시적인 owner name을 선택합니다.
-- Document shell은 `rt_document__*`를 유지합니다.
+- Document shell은 `pg_document__*`를 유지합니다.
 
 **Incorrect (route depth and generic names leak into file/class names):**
 
 ```txt
-admin/entries/index.astro -> pv_adminEntriesPage__root
+admin/entries/index.astro -> pg_adminEntriesPage__root
 admin/entries/_admin-entries.ts
 admin/entries/_local.ts
 admin/entries/_local.css
 admin/entries/_local/provider.tsx
-entries/[slug].astro -> pv_entryDetailPage__body
+entries/[slug].astro -> pg_entryDetailPage__body
 ```
 
 **Correct (route role and asset owner are short, searchable, and aligned):**
 
 ```txt
-index.astro -> rt_home__root
-entries/index.astro -> rt_entriesIndex__root
-entries/[slug].astro -> rt_entryDetail__root
-admin/entries/index.astro -> rt_adminEntriesIndex__root
+index.astro -> pg_home__root
+entries/index.astro -> pg_entriesIndex__root
+entries/[slug].astro -> pg_entryDetail__root
+admin/entries/index.astro -> pg_adminEntriesIndex__root
 admin/entries/_entry-admin.ts
 admin/entries/_entry-admin.css
 admin/entries/_local/entry-admin-runtime.tsx
 admin/entries/_local/entry-editor.tsx
 admin/entries/_local/entry-editor.css
-_document.astro -> rt_document__body
+_document.astro -> pg_document__body
 ```
 
 When two route families would collide, choose the smallest owner name that disambiguates the local route.
-Do not switch to `pv_*` for the main page surface just because markup moved into `_local/`; the screen owner remains
+Do not switch to `pg_*` for the main page surface just because markup moved into `_local/`; the screen owner remains
 the route.
 
 ### 2.2 Use Domain-specific Dynamic Segment Names
@@ -516,7 +516,7 @@ import Head from "./_head.astro";
 	<body>
 		<header>...</header>
 		<main>
-			<section class="rt_entriesIndex__root">...</section>
+			<section class="pg_entriesIndex__root">...</section>
 		</main>
 	</body>
 </html>
@@ -533,7 +533,7 @@ const entries = await listEntries();
 ---
 
 <Document currentPathname={Astro.url.pathname} pageTitle="entries" pageDescription="Archived entries">
-	<section class="rt_entriesIndex__root">
+	<section class="pg_entriesIndex__root">
 		<WgEntryFeed entries={entries} />
 	</section>
 </Document>
@@ -559,9 +559,9 @@ const {currentPathname, pageTitle, pageDescription} = Astro.props as Props;
 <!doctype html>
 <html lang="ko">
 	<Head pageTitle={pageTitle} pageDescription={pageDescription} />
-	<body class="rt_document__body">
+	<body class="pg_document__body">
 		<WgSiteHeader currentPathname={currentPathname} />
-		<main class="rt_document__main">
+		<main class="pg_document__main">
 			<slot />
 		</main>
 		<WgSiteFooter />
@@ -1380,7 +1380,7 @@ import GenericAvatar from "../components/GenericAvatar.astro";
 
 **Impact: HIGH**
 
-pages-local document helper는 top-level document composition, routed page는 route contract와 `rt_*` screen flow, `_local/`은 route-local UI/runtime boundary, owner-named support module은 진짜 data/rendering boundary를 소유합니다. shared `ui`/`widget`으로 올릴 수 없는 route-only 조각은 같은 route folder 안에 남겨 Astro의 server-first 구조와 ownership이 함께 읽히게 합니다.
+pages-local document helper는 top-level document composition, routed page는 route contract와 `pg_*` screen flow, `_local/`은 route-local UI/runtime boundary, owner-named support module은 진짜 data/rendering boundary를 소유합니다. shared `ui`/`widget`으로 올릴 수 없는 route-only 조각은 같은 route folder 안에 남겨 Astro의 server-first 구조와 ownership이 함께 읽히게 합니다.
 
 ### 9.1 Compose Layouts from Widget and UI Only
 
@@ -1397,7 +1397,7 @@ pages-local document helper는 top-level document composition, routed page는 ro
 - Route shell: owning route의 `_local/`
 
 Shell 자체를 `ui-*`나 `widget-*`로 이름 붙여 shared component처럼 승격하지 않습니다.
-Shell class는 `rt_document__*`처럼 owner가 드러나게 유지합니다.
+Shell class는 `pg_document__*`처럼 owner가 드러나게 유지합니다.
 
 **Incorrect (layout 역할을 ui/widget로 위장함):**
 
@@ -1430,13 +1430,13 @@ import WgSiteHeader from "@/components/widget/site-header/wg-site-header.astro";
 const { currentPathname } = Astro.props;
 ---
 
-<UiSurface class="rt_document__surface">
-	<UiStack class="rt_document__stack">
-		<UiBox class="rt_document__header">
+<UiSurface class="pg_document__surface">
+	<UiStack class="pg_document__stack">
+		<UiBox class="pg_document__header">
 			<WgSiteHeader currentPathname={currentPathname} />
 		</UiBox>
-		<main class="rt_document__main">
-			<UiBox class="rt_document__content">
+		<main class="pg_document__main">
+			<UiBox class="pg_document__content">
 				<slot />
 			</UiBox>
 		</main>
@@ -1532,7 +1532,7 @@ Move a section into `src/pages/**/_local/` only when it owns a real rendering or
 
 Do not extract a component just because a heading/body/footer group looks like a section.
 If the subtree still describes the same route surface,
-keep the route `rt_*` owner instead of inventing a `pv_*` namespace.
+keep the route `pg_*` owner instead of inventing a `pg_*` namespace.
 
 **Incorrect (simple page markup is split into `_local/` wrappers):**
 
@@ -1545,7 +1545,7 @@ import EntryMetaSection from "./_local/entry-meta-section.astro";
 const { entry } = Astro.props;
 ---
 
-<article class="rt_entryDetail__root">
+<article class="pg_entryDetail__root">
 	<EntryHeaderSection entry={entry} />
 	<EntryMetaSection entry={entry} />
 	<EntryBodySection html={entry.html} />
@@ -1564,18 +1564,18 @@ import EntryReactionIsland from "./_local/entry-reaction-island.tsx";
 const { entry, relatedEntries } = Astro.props;
 ---
 
-<article class="rt_entryDetail__root">
-	<header class="rt_entryDetail__header">
+<article class="pg_entryDetail__root">
+	<header class="pg_entryDetail__header">
 		<h1>{entry.title}</h1>
 		<p>{entry.description}</p>
 	</header>
 
-	<div class="rt_entryDetail__meta">
+	<div class="pg_entryDetail__meta">
 		<span>{entry.author}</span>
 		<span>{entry.publishedAtLabel}</span>
 	</div>
 
-	<div class="rt_entryDetail__body" set:html={entry.html} />
+	<div class="pg_entryDetail__body" set:html={entry.html} />
 
 	<RelatedEntriesPanel server:defer entries={relatedEntries}>
 		<p slot="fallback">Loading related entries...</p>
@@ -1651,8 +1651,8 @@ const initialState = await getEntryAdminInitialState();
 ---
 
 <Document currentPathname={Astro.url.pathname} pageTitle="admin entries" pageNoIndex>
-	<section class="rt_adminEntriesIndex__root">
-		<header class="rt_adminEntriesIndex__header">
+	<section class="pg_adminEntriesIndex__root">
+		<header class="pg_adminEntriesIndex__header">
 			<h1>Entries</h1>
 		</header>
 		<EntryAdminRuntime client:load initialState={initialState} />
@@ -1778,22 +1778,22 @@ const hasEntries = initialState.entries.length > 0;
 ---
 
 <Document currentPathname={Astro.url.pathname} pageTitle="admin entries" pageNoIndex>
-	<section class="rt_adminEntriesIndex__root">
-		<header class="rt_adminEntriesIndex__header">
+	<section class="pg_adminEntriesIndex__root">
+		<header class="pg_adminEntriesIndex__header">
 			<h1>Entries</h1>
 		</header>
 
 		{hasEntries ? (
 			<EntryAdminRuntime client:load initialState={initialState} />
 		) : (
-			<p class="rt_adminEntriesIndex__empty">No entries yet.</p>
+			<p class="pg_adminEntriesIndex__empty">No entries yet.</p>
 		)}
 	</section>
 </Document>
 ```
 
 이 예시는 React runtime이 필요해도 route entry가 document handoff, server data, high-level branch,
-`rt_*` surface owner를 계속 보여 줍니다.
+`pg_*` surface owner를 계속 보여 줍니다.
 
 ### 9.7 Limit Layouts to Shell and Composition
 
@@ -1959,9 +1959,9 @@ src/
           entry-editor.css
 ```
 
-같은 page surface를 설명하는 `_local/` markup과 CSS는 `pv_*`로 새 namespace를 만들지 말고 `rt_*` owner를 유지합니다.
-예외적으로 dialog나 helper wrapper가 route 안에서도 독립 owner contract를 가져야 할 때만 `pv_entryFilterDialog__*` 같은
-`pv_*`를 사용합니다.
+같은 page surface를 설명하는 `_local/` markup과 CSS는 `pg_*`로 새 namespace를 만들지 말고 `pg_*` owner를 유지합니다.
+예외적으로 dialog나 helper wrapper가 route 안에서도 독립 owner contract를 가져야 할 때만 `pg_entryFilterDialog__*` 같은
+`pg_*`를 사용합니다.
 
 ## 10. Documentation and Comments
 

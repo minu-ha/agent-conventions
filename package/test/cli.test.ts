@@ -682,7 +682,7 @@ test("build:astro alias regenerates HANDBOOK.md for the astro skill", async () =
 	assert.match(agentsSource, /metadata\.json\.extends/);
 	assert.match(agentsSource, /\.\.\/typescript\/HANDBOOK\.md/);
 	assert.doesNotMatch(agentsSource, /\.\.\/typescript\/(?:SKILL|RULES_INDEX)\.md/);
-	assert.match(agentsSource, /^ {4}- \d+\.\d+ \[Align Route Page Assets and `rt_\*` Surface Classes with Route Role\]/m);
+	assert.match(agentsSource, /^ {4}- \d+\.\d+ \[Align Route Page Assets and `pg_\*` Surface Classes with Route Role\]/m);
 	assert.match(agentsSource, /^### \d+\.\d+ Compose Page-level Documents Through `_document\.astro` and `_head\.astro`$/m);
 });
 

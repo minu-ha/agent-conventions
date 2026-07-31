@@ -44,7 +44,7 @@ protocol v3 결과에는 coordinator가 dispatch 전에 고정한 repository HEA
 - `RTE16-private-component-import-direction`: 형제 import 해소와 하향 단방향 유지
 - `RTE17-chart-lifecycle-ownership`: 분량 압력에도 library lifecycle을 소유 component에 유지
 
-모든 stage는 React와 required TypeScript exact partition을 저장합니다. `RTE02-owner-placement-css-drift`만 scope drift 뒤 CSS를 활성화하며 initial React selected set은 그대로 유지합니다. route 전용 `pv_*` owner이므로 drift CSS partition에서 route slug traceability rule은 N/A입니다.
+모든 stage는 React와 required TypeScript exact partition을 저장합니다. `RTE02-owner-placement-css-drift`만 scope drift 뒤 CSS를 활성화하며 initial React selected set은 그대로 유지합니다. drift CSS는 자기 CSS 파일을 가진 화면 component라 `pg_*` owner slug를 새로 만들며, route slug traceability rule도 함께 Selected입니다.
 
 Scope drift 뒤에는 file, activated skill, 기존 Selected rule을 제거하지 않고 모든 활성 index를 다시 scan합니다. 전체 scenario set에서 42개 React rule이 한 번 이상 positive coverage를 가져야 합니다.
 

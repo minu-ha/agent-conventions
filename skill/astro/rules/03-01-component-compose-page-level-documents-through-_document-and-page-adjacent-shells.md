@@ -41,7 +41,7 @@ import Head from "./_head.astro";
 	<body>
 		<header>...</header>
 		<main>
-			<section class="rt_entriesIndex__root">...</section>
+			<section class="pg_entriesIndex__root">...</section>
 		</main>
 	</body>
 </html>
@@ -58,7 +58,7 @@ const entries = await listEntries();
 ---
 
 <Document currentPathname={Astro.url.pathname} pageTitle="entries" pageDescription="Archived entries">
-	<section class="rt_entriesIndex__root">
+	<section class="pg_entriesIndex__root">
 		<WgEntryFeed entries={entries} />
 	</section>
 </Document>
@@ -84,9 +84,9 @@ const {currentPathname, pageTitle, pageDescription} = Astro.props as Props;
 <!doctype html>
 <html lang="ko">
 	<Head pageTitle={pageTitle} pageDescription={pageDescription} />
-	<body class="rt_document__body">
+	<body class="pg_document__body">
 		<WgSiteHeader currentPathname={currentPathname} />
-		<main class="rt_document__main">
+		<main class="pg_document__main">
 			<slot />
 		</main>
 		<WgSiteFooter />

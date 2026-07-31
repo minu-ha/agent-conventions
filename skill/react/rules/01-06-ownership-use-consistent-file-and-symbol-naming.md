@@ -25,9 +25,9 @@ tags: ownership, naming, files
 | 타입·컴포넌트 | `PascalCase` |
 | 설정 객체와 그 키 | `snake_case` |
 
+컴포넌트 파일과 심볼에는 계층 prefix를 붙이고 폴더명에는 붙이지 않습니다.
 폴더명은 단수로 씁니다. 복수형은 쓰지 않고 프레임워크가 강제하는 이름만 예외입니다.
 `const` 여부로 casing을 나누지 않고, 화면과 모듈 안의 로컬 값은 모두 `camelCase`로 맞춥니다.
-여러 화면이 함께 쓰는 설정과 enum-like 상수는 `shared/config.ts`의 `config.*` 아래에 둡니다.
 
 - sibling `.ts` support 파일을 만들거나 local 선언을 named export로 옮기면
   이름 자체가 그대로여도 이 규칙을 확인합니다.

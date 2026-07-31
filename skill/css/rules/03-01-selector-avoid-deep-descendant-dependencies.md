@@ -27,7 +27,7 @@ owned root 아래의 third-party DOM path는 `selector-target-third-party-dom-fr
 **Incorrect (깊은 후손 선택자 체인에 의존):**
 
 ```css
-.rt_catalogIndex__layout .rt_catalogIndex__panel .rt_catalogIndex__detail .rt_catalogIndex__item {
+.pg_catalogIndex__layout .pg_catalogIndex__panel .pg_catalogIndex__detail .pg_catalogIndex__item {
 	padding: 8px;
 }
 ```
@@ -35,11 +35,11 @@ owned root 아래의 third-party DOM path는 `selector-target-third-party-dom-fr
 **Correct (대상 element 클래스나 직접 owner root 계약에 스타일을 둠):**
 
 ```css
-.rt_catalogIndex__item {
+.pg_catalogIndex__item {
 	padding: 8px;
 }
 
-.rt_catalogIndex__detailHeader {
+.pg_catalogIndex__detailHeader {
 	gap: var(--app-space-2, 8px);
 }
 ```

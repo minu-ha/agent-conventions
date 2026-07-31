@@ -9,7 +9,7 @@ metadata:
 # Astro 컨벤션
 
 에이전트 협업 팀을 위한 Astro 코딩 컨벤션 모음입니다. 현재 이 가이드는 11개 카테고리의 42개 local 규칙으로 구성되어 있습니다.
-Astro entry 구조, route-local owner layer인 `src/pages`, pages-local `_document.astro`/`_head.astro`/`_document.css`, page-owned implementation, route-role aligned page asset naming과 `rt_*` surface ownership, `_local/` route-local UI/runtime boundary, owner-named support file, `.astro` 컴포넌트 경계, framework island 사용법, file-based routing, SSG/SSR/CSR rendering 선택, build-time/live collections, Actions와 endpoints, page/local/island 책임, `ui` primitive/`widget` reusable block taxonomy, selective extraction 기준, Astro 전용 문서화 규칙, Astro 전용 검토 흐름을 [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`와 compiled [HANDBOOK.md](./HANDBOOK.md)로 관리합니다.
+Astro entry 구조, route-local owner layer인 `src/pages`, pages-local `_document.astro`/`_head.astro`/`_document.css`, page-owned implementation, route-role aligned page asset naming과 `pg_*` surface ownership, `_local/` route-local UI/runtime boundary, owner-named support file, `.astro` 컴포넌트 경계, framework island 사용법, file-based routing, SSG/SSR/CSR rendering 선택, build-time/live collections, Actions와 endpoints, page/local/island 책임, `ui` primitive/`widget` reusable block taxonomy, selective extraction 기준, Astro 전용 문서화 규칙, Astro 전용 검토 흐름을 [rules/_sections.md](./rules/_sections.md), [rules/_template.md](./rules/_template.md), `rules/*.md`와 compiled [HANDBOOK.md](./HANDBOOK.md)로 관리합니다.
 Astro local rule은 기본 companion인 `convention-typescript`와 `convention-css`를 함께 사용하고, React island나 브라우저 테스트는 필요할 때 추가로 로드합니다.
 
 ## 사용할 때
@@ -76,7 +76,7 @@ Astro local rule은 기본 companion인 `convention-typescript`와 `convention-c
 ### 2. File Naming and Page Assets (HIGH)
 
 - `naming-use-underscore-prefixed-page-shell-names-for-document-head-and-chrome` - pages-local helper는 `_document`, `_head`, `_document.css` 같은 이름 사용
-- `naming-align-route-page-assets-and-rt-surface-classes-with-route-role` - route page asset과 `rt_*` surface class를 route role 기준으로 정렬
+- `naming-align-route-page-assets-and-pg-surface-classes-with-route-role` - route page asset과 `pg_*` surface class를 route role 기준으로 정렬
 - `naming-use-owner-named-route-support-files-instead-of-generic-local-files` - route-local support file은 generic `_local.ts` 대신 owner-named로 유지
 - `naming-use-domain-specific-dynamic-segment-names` - `[param]`과 `[...param]` 이름은 도메인 의미를 드러내기
 
@@ -126,7 +126,7 @@ Astro local rule은 기본 companion인 `convention-typescript`와 `convention-c
 - `responsibility-compose-layouts-from-widget-and-ui-only` - layout 내부 조립은 `widget`과 `ui`로 제한
 - `responsibility-keep-page-files-focused-on-route-contract-and-data-handoff` - page는 route contract, data handoff, 화면 흐름을 소유
 - `responsibility-keep-page-adjacent-shells-imported-only-by-pages` - `_document`, `_head`, `_document.css`는 pages만 소유
-- `responsibility-keep-route-page-files-focused-on-screen-flow` - route page는 `rt_*` surface owner이자 screen flow owner로 남음
+- `responsibility-keep-route-page-files-focused-on-screen-flow` - route page는 `pg_*` surface owner이자 screen flow owner로 남음
 - `responsibility-extract-route-local-sections-only-for-rendering-or-interaction-boundaries` - `_local/` section은 진짜 rendering/interaction boundary가 있을 때만 추출
 - `responsibility-extract-route-support-code-only-when-the-boundary-is-real` - `_entry-admin.ts` 같은 support module은 진짜 data boundary가 있을 때만 사용
 - `responsibility-place-route-local-ui-under-local` - route-local UI와 CSS는 `_local/` 아래에 둠
@@ -146,7 +146,7 @@ Astro local rule은 기본 companion인 `convention-typescript`와 `convention-c
 
 - 이 skill은 `convention-typescript`와 `convention-css`를 함께 로드하는 것을 기본으로 합니다.
 - `convention-typescript`는 frontmatter TypeScript, route-local support module, JSDoc 태그 표준을 보완합니다.
-- `convention-css`는 `.astro` template의 `class`/`class:list`, `rt_*` route surface ownership, `rt_document__*`, `wg_*`, `ui_*`, 드문 `pv_*` helper ownership, route-local stylesheet, wrapper 스타일링을 보완합니다.
+- `convention-css`는 `.astro` template의 `class`/`class:list`, `pg_*` route surface ownership, `pg_document__*`, `wg_*`, `ui_*`, 드문 `pg_*` helper ownership, route-local stylesheet, wrapper 스타일링을 보완합니다.
 - React island, TSX component, client framework support code가 바뀌면 `convention-react`를 추가로 함께 사용합니다.
 - hydration, form action, server island fallback, navigation 회귀를 브라우저에서 검증하면 `convention-playwright-test`를 함께 사용합니다.
 
@@ -155,7 +155,7 @@ Astro local rule은 기본 companion인 `convention-typescript`와 `convention-c
 - 이번 변경이 Naming, Rendering, Responsibility, Docs까지 포함한 어느 카테고리에 걸리는지 다시 대조하고 관련 rule을 빠뜨리지 않았는지 확인합니다.
 - React island, CSS, TypeScript config/action schema, JSDoc/comment, Playwright 검증까지 번졌는데 companion skill을 빼먹지 않았는지 점검합니다.
 - static, on-demand, `output: "server"`, `client:only` 중 현재 선택이 과한지 다시 확인합니다.
-- `src/pages` route-local owner layer, `src/pages/_document.astro`/`_head.astro`/`_document.css`, route role에 맞는 page-adjacent asset naming, `rt_*` surface ownership, `rt_document__*`/`wg_*`/`ui_*`/드문 `pv_*` ownership, `_local/` route shell/runtime/component CSS, `ui`/`widget` taxonomy, route page orchestration, owner-named support module extraction 기준, build-time/live collection 구분, page/island ownership, endpoint와 Actions의 역할 분리, 핵심 frontmatter 선언의 JSDoc/comment가 마지막 diff에도 그대로 보이는지 확인합니다.
+- `src/pages` route-local owner layer, `src/pages/_document.astro`/`_head.astro`/`_document.css`, route role에 맞는 page-adjacent asset naming, `pg_*` surface ownership, `pg_document__*`/`wg_*`/`ui_*`/드문 `pg_*` ownership, `_local/` route shell/runtime/component CSS, `ui`/`widget` taxonomy, route page orchestration, owner-named support module extraction 기준, build-time/live collection 구분, page/island ownership, endpoint와 Actions의 역할 분리, 핵심 frontmatter 선언의 JSDoc/comment가 마지막 diff에도 그대로 보이는지 확인합니다.
 
 ## 사용하는 방법
 

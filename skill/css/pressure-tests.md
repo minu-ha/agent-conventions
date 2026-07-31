@@ -49,16 +49,16 @@ Pure CSS fixture는 CSS만 partition합니다. Mixed fixture 5개는 progressive
 
 - `.module.css`와 `styles.*`를 기본처럼 사용함
 - TSX `className`에 문자열 리터럴이나 문자열 연결을 직접 넣음
-- `rt_*`, `pv_*`, `ui_*`, `wg_*` namespace가 owner와 맞지 않음
-- route-owned page surface를 `pv_*`나 shared component namespace로 잡음
-- `rt_*` route slug 규칙을 `wg_*`, `ui_*`, `pv_*` owner slug에 그대로 덮어씀
+- `pg_*`, `pg_*`, `ui_*`, `wg_*` namespace가 owner와 맞지 않음
+- route-owned page surface를 `pg_*`나 shared component namespace로 잡음
+- `pg_*` route slug 규칙을 `wg_*`, `ui_*`, `pg_*` owner slug에 그대로 덮어씀
 - one-off layout patch를 modifier로 추가함
 - `.a .b .c .d` 같은 깊은 project-owned descendant selector를 만듦
 - top-level `.foo:hover`, `.foo:visited`를 다시 열어 둠
 - `.foo:hover .foo__bar`처럼 parent state와 child class를 직접 결합함
 - `.owner__prose h2`, `.owner__copy > :first-child`를 owner block 밖 top-level selector로 둠
 - owned root 없이 `.ant-*`, `.rc-*`를 바로 타겟팅함
-- owned root를 `.rt_* .ant-*` 같은 one-line selector로 다시 체이닝함
+- owned root를 `.pg_* .ant-*` 같은 one-line selector로 다시 체이닝함
 - 반복되는 색상, 간격, radius를 하드코딩함
 - 존재 보장이 없는 CSS 변수에 fallback이 없음
 - route CSS와 document/local/shared component CSS를 한 파일에 섞음
@@ -89,13 +89,13 @@ Pure CSS fixture는 CSS만 partition합니다. Mixed fixture 5개는 progressive
   - "Ant Design tree 내부 DOM 스타일을 조금 손봐야 해. CSS skill 기준으로 안전하게 작성해줘."
 - Expected pass signals
   - selector가 항상 owned root block 안에서 nested로 시작함
-  - owned root를 `.rt_* .ant-*`처럼 one-line selector로 다시 체이닝하지 않음
+  - owned root를 `.pg_* .ant-*`처럼 one-line selector로 다시 체이닝하지 않음
   - 직접 식별 가능한 target은 `& .ant-tree-node-content-wrapper`로 쓰고 중간 library root를 생략함
   - third-party path가 필요할 때도 shortest viable chain만 사용함
   - target ambiguity나 direct-child contract 때문에 ancestor가 더 필요하면 그 evidence를 기록함
 - Likely fail signals
   - `.ant-tree-node-content-wrapper { ... }`
-  - `.rt_treePanel__root .ant-tree-title { ... }`
+  - `.pg_treePanel__root .ant-tree-title { ... }`
   - `& .ant-tree .ant-tree-node-content-wrapper`를 nested block 하나라는 이유로 one-level selector라고 판단함
   - nested 안에서 다시 nested block을 여는 깊은 chain
   - project-owned 클래스끼리 깊은 descendant chain을 만듦
@@ -139,12 +139,12 @@ Pure CSS fixture는 CSS만 partition합니다. Mixed fixture 5개는 progressive
 - Prompt
   - "route page CSS와 filter dialog CSS, `_document.css`를 같이 정리해줘."
 - Expected pass signals
-  - route entry와 page shell surface는 `rt_*`를 사용함
-  - 자기 CSS 파일을 가진 page-private component는 자기 `pv_*` slug를 사용함
+  - route entry와 page shell surface는 `pg_*`를 사용함
+  - 자기 CSS 파일을 가진 page-private component는 자기 `pg_*` slug를 사용함
   - 파일도 route owner, document owner, private owner 단위로 나뉨
 - Likely fail signals
-  - 하나의 CSS 파일에 서로 다른 `rt_*`, `pv_*`, `ui_*` owner가 섞임
-  - 별도 CSS 파일인데 부모 `rt_*` slug를 계속 사용함
+  - 하나의 CSS 파일에 서로 다른 `pg_*`, `pg_*`, `ui_*` owner가 섞임
+  - 별도 CSS 파일인데 부모 `pg_*` slug를 계속 사용함
   - document shell 스타일을 route CSS 안에 넣음
 
 ### C6. TSX Class Composition Discipline
@@ -159,8 +159,8 @@ Pure CSS fixture는 CSS만 partition합니다. Mixed fixture 5개는 progressive
   - route class와 modifier가 문자열 연결 대신 `clsx()`에서 읽기 쉽게 조합됨
   - `Ui*` 내부 DOM 스타일링은 wrapper class를 통해 접근하고, wrapper class 주입도 `clsx()` 기준을 따름
 - Likely fail signals
-  - `className="rt_catalogIndex__panel"`
-  - `className={"rt_catalogIndex__panel " + (isActive ? "rt_catalogIndex__panel--active" : "")}`
+  - `className="pg_catalogIndex__panel"`
+  - `className={"pg_catalogIndex__panel " + (isActive ? "pg_catalogIndex__panel--active" : "")}`
   - `UiButton` 내부 DOM을 wrapper 없이 직접 selector로 제어함
 
 ### C7. Pseudo and Prose Nesting Discipline
@@ -200,7 +200,7 @@ Pure CSS fixture는 CSS만 partition합니다. Mixed fixture 5개는 progressive
 - Focus
   - `composition-keep-classes-single-purpose`
 - Prompt
-  - "스타일 선언과 책임은 그대로 두고 잘못된 owner prefix만 `pv_`에서 `rt_`로 고쳐. class를 합치거나 책임을 추가하지는 않아."
+  - "스타일 선언과 책임은 그대로 두고 잘못된 owner prefix만 `pg_`에서 `wg_`로 고쳐. class를 합치거나 책임을 추가하지는 않아."
 - Expected pass signals
   - 책임을 보존하는 owner prefix 수정이나 single-purpose class rename만으로는 rule을 선택하지 않음
   - base class에 상태·variant 의미를 합치거나 독립 책임을 추가할 때만 다시 선택함

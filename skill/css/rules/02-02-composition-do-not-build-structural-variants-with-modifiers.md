@@ -36,13 +36,13 @@ modifier는 상태나 반복 variant를 표현할 때만 사용합니다.
 **Incorrect (특정 화면용 구조 patch를 modifier로 덧붙임):**
 
 ```tsx
-<div className={clsx("rt_catalogDetail__section", "rt_catalogDetail__section--compactTop")} />
+<div className={clsx("pg_catalogDetail__section", "pg_catalogDetail__section--compactTop")} />
 ```
 
 **Correct (one-off patch는 별도 element로 풀고, 반복되는 variant만 제한적으로 허용):**
 
 ```tsx
-<div className={clsx("rt_catalogDetail__detailSection")} />
+<div className={clsx("pg_catalogDetail__detailSection")} />
 ```
 
 ```tsx

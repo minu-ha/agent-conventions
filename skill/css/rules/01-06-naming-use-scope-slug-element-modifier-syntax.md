@@ -30,20 +30,20 @@ tags: naming, class-grammar, ownership
 
 ```txt
 ui_tag_list__root
-rt_catalog_page__root
-rt_catalogDetail__main-content
+pg_catalog_page__root
+pg_catalogDetail__main-content
 wg_site_header__brandLink
-rt_document__main-content
-rt_document__main--route_active
+pg_document__main-content
+pg_document__main--route_active
 ```
 
 **Correct (scope는 lowercase, slug는 scope별 house style, element/modifier는 camelCase):**
 
 ```txt
 ui_tagList__root
-rt_catalogIndex__root
-rt_catalogDetail__mainContent
+pg_catalogIndex__root
+pg_catalogDetail__mainContent
 wg_siteHeader__brandLink
-rt_document__main
-rt_document__main--routeActive
+pg_document__main
+pg_document__main--routeActive
 ```

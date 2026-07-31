@@ -12,7 +12,7 @@
 
 ## 개요
 
-에이전트 협업 팀을 위한 CSS 코딩 컨벤션입니다. plain CSS를 기본으로 한 전역 고유 네이밍, `rt_/wg_/ui_/pv_` owner scope, 예측 가능한 TSX class 조합, 평평한 selector, wrapper 기준 서드파티 스타일링, 토큰화된 값, 절제된 stylesheet 구성을 강조합니다. TSX의 class contract를 함께 바꿀 때는 React와 TypeScript 규칙도 함께 봅니다. `rules/` 아래 rule 파일이 source of truth입니다.
+에이전트 협업 팀을 위한 CSS 코딩 컨벤션입니다. plain CSS를 기본으로 한 전역 고유 네이밍, `pg_/wg_/ui_` owner scope, 예측 가능한 TSX class 조합, 평평한 selector, wrapper 기준 서드파티 스타일링, 토큰화된 값, 절제된 stylesheet 구성을 강조합니다. TSX의 class contract를 함께 바꿀 때는 React와 TypeScript 규칙도 함께 봅니다. `rules/` 아래 rule 파일이 source of truth입니다.
 
 이 문서에는 CSS 컨벤션 규칙만 담겨 있습니다. 아래 규칙도 함께 따릅니다.
 
@@ -59,7 +59,7 @@
 
 **Impact: CRITICAL**
 
-클래스 문법, `rt_/wg_/ui_/pv_` scope별 slug 규칙, 네임스페이스 소유권, route/private/shared owner 범위가 명확해야 스타일을 검색하고 안전하게 수정할 수 있습니다.
+클래스 문법, `pg_/wg_/ui_` scope별 slug 규칙, 네임스페이스 소유권, 화면/공용 owner 범위가 명확해야 스타일을 검색하고 안전하게 수정할 수 있습니다.
 
 ### 1.1 Default to Plain CSS Unless the Project Explicitly Standardizes on CSS Modules
 
@@ -70,7 +70,7 @@
 **Impact: HIGH (소유를 local module 간접층에 숨기지 않고 전역 scope_slug 이름 체계가 의미를 유지하게 합니다)**
 
 이 CSS skill은 기본적으로 plain `*.css`와 전역 고유 클래스명을 전제로 합니다.
-`rt_*`, `ui_*`, `wg_*`, `pv_*` 네임스페이스는 global class space에서 owner를 추적하려고 존재하므로,
+`pg_*`, `wg_*`, `ui_*` 네임스페이스는 global class space에서 owner를 추적하려고 존재하므로,
 프로젝트에 별도 합의가 없다면 `.module.css`와 `styles.foo`를 기본 선택으로 삼지 않습니다.
 프로젝트가 이미 CSS Modules를 공식 표준으로 채택했고 그에 맞는 naming/runtime 규칙이 따로 있다면,
 그 프로젝트 로컬 규칙이 이 기본값보다 우선합니다.
@@ -84,19 +84,19 @@
 ```tsx
 import styles from "./mission-control.module.css";
 
-<div className={styles.rt_star_wars_mission_control__hero}>
-	<span className={styles.rt_star_wars_mission_control__eyebrow}>
+<div className={styles.pg_star_wars_mission_control__hero}>
+	<span className={styles.pg_star_wars_mission_control__eyebrow}>
 		GraphQL operations deck
 	</span>
 </div>
 ```
 
 ```css
-.rt_star_wars_mission_control__hero {
+.pg_star_wars_mission_control__hero {
 	display: grid;
 }
 
-.rt_star_wars_mission_control__eyebrow {
+.pg_star_wars_mission_control__eyebrow {
 	letter-spacing: 0.08em;
 }
 ```
@@ -107,17 +107,17 @@ import styles from "./mission-control.module.css";
 import { clsx } from "clsx";
 import "./_index.css";
 
-<section className={clsx("rt_catalogIndex__hero")}>
-	<span className={clsx("rt_catalogIndex__eyebrow")}>Catalog</span>
+<section className={clsx("pg_catalogIndex__hero")}>
+	<span className={clsx("pg_catalogIndex__eyebrow")}>Catalog</span>
 </section>
 ```
 
 ```css
-.rt_catalogIndex__hero {
+.pg_catalogIndex__hero {
 	display: grid;
 }
 
-.rt_catalogIndex__eyebrow {
+.pg_catalogIndex__eyebrow {
 	letter-spacing: 0.08em;
 }
 ```
@@ -142,20 +142,20 @@ CSS 파일 하나가 slug 하나를 소유합니다.
 
 ```txt
 // catalog/index route
-rt_catalogIndex__header
+pg_catalogIndex__header
 
 // dashboard/index route
-rt_catalogIndex__toolbar
+pg_catalogIndex__toolbar
 ```
 
 **Correct (소유자가 다르면 별도 slug를 부여):**
 
 ```txt
 // catalog/index route
-rt_catalogIndex__header
+pg_catalogIndex__header
 
 // dashboard/index route
-rt_dashboardIndex__header
+pg_dashboardIndex__header
 ```
 
 ### 1.3 Name Elements and Modifiers by Role
@@ -176,7 +176,7 @@ rt_dashboardIndex__header
 ui_card__wrapper
 ui_card__box
 ui_card__body--gap12
-rt_catalogDetail__section--compactTop
+pg_catalogDetail__section--compactTop
 ```
 
 **Correct (역할과 상태를 기준으로 이름을 붙임):**
@@ -185,111 +185,136 @@ rt_catalogDetail__section--compactTop
 ui_card__toolbar
 ui_card__body
 ui_card__body--active
-rt_catalogDetail__detailSection
+pg_catalogDetail__detailSection
 ```
 
 ### 1.4 Preserve Route Slug Traceability
 
 **Rule:** `C04` · `naming-preserve-route-slug-traceability`
 
-**Applies when:** route/framework 규칙이 `rt_*` owner를 선택한 화면에서 route class slug를 새로 만들거나 이름을 변경할 때.
+**Applies when:** `pg_*` owner의 class slug를 새로 만들거나 이름을 바꿀 때. 같은 이름 component가 여러 화면에 생겨 slug를 구분해야 할 때.
 
-**Impact: HIGH (route 범위 class namespace를 소속 route 계층으로 거슬러 읽을 수 있게 유지합니다)**
+**Impact: HIGH (화면 범위 class namespace를 소속 화면으로 거슬러 읽을 수 있게 유지합니다)**
 
-활성화된 route/framework skill이 `rt_*` owner를 선택했다면,
-CSS는 그 owner slug를 route까지 다시 추적할 수 있게 유지합니다.
-CSS skill은 어떤 파일이 route-owned인지 결정하지 않고,
-이미 선택된 route owner가 클래스명에서 흐려지지 않게 지키는 역할을 합니다.
+`pg_*` slug는 소속 화면까지 다시 추적할 수 있어야 합니다.
+CSS skill은 어떤 파일이 화면 소유인지 결정하지 않고, 이미 선택된 owner가 클래스명에서 흐려지지 않게 지킵니다.
 
 기본 판단:
 
-- `rt_*` slug는 짧음보다 추적 가능성을 우선합니다.
-- 전체 folder path를 모두 쓰지는 않아도, route family와 screen role은 읽혀야 합니다.
+- 화면 shell slug는 route 이름을 씁니다. route family와 screen role이 읽혀야 합니다.
+- 화면 내부 component slug는 자기 component 이름만 씁니다.
 - 팀이 공유하는 route map이 없는 opaque acronym은 피합니다.
-- `wg_*`, `ui_*`, `pv_*`는 각 owner scope의 naming style을 따릅니다.
-- document, local helper, reusable widget의 owner 판단은 companion framework skill의 소유권 규칙을 우선합니다.
+- `wg_*`, `ui_*`는 각 owner scope의 naming style을 따릅니다.
+
+부모 이름을 미리 붙이지 않습니다.
+충돌이 실제로 생겼을 때만 최소 범위로 덧붙입니다.
+미리 붙이면 깊이에 따라 slug가 계속 자라서 충돌을 걱정하기 전에 읽기가 무너집니다.
 
 **Incorrect (의미가 약하거나 계층 순서가 흐려진 slug):**
 
 ```txt
-rt_shell__body
-rt_pageChrome__main
-rt_doc__content
-rt_x__root
+pg_shell__body
+pg_doc__content
+pg_x__root
 ```
 
-**Correct (도메인 의미와 계층 순서가 보존된 slug):**
+**Incorrect (충돌이 없는데도 부모 이름을 미리 붙임):**
 
 ```txt
-posts index route -> rt_postsIndex
-posts detail route -> rt_postsDetail
-document shell -> rt_document
-rt_postsIndex__root
-rt_postsDetail__body
-rt_document__body
+pg_detailSpikePatternPanelOverviewSection__root
+pg_detailSpikePatternPanelSummaryBand__root
+```
+
+**Correct (shell은 route 이름, component는 자기 이름):**
+
+```txt
+posts index route  -> pg_postsIndex__root
+posts detail route -> pg_postsDetail__body
+document shell     -> pg_document__body
+
+overview section   -> pg_overviewSection__root
+summary band       -> pg_summaryBand__root
+```
+
+**Correct (같은 이름이 실제로 두 화면에 생겼을 때만 구분):**
+
+```txt
+pg_detailOverviewSection__root
+pg_indexOverviewSection__root
 ```
 
 ### 1.5 Separate Owner Style Scopes
 
 **Rule:** `C05` · `naming-separate-owner-style-scopes`
 
-**Applies when:** 스타일 owner를 route shell, private component, widget, primitive 중에서 결정할 때. 새 CSS 파일을 만들거나 기존 owner 범위를 옮길 때.
+**Applies when:** 스타일 owner를 화면 내부, widget, primitive 중에서 결정할 때. 새 CSS 파일을 만들거나 기존 owner 범위를 옮길 때.
 
 **Review with:** `naming-keep-scope-slug-unique-per-owner`, `organization-keep-style-files-owned-by-one-component-or-route`
 
-**Impact: HIGH (route shell·private component·공용 widget·primitive 스타일이 같은 namespace나 파일에 섞이는 것을 막습니다)**
+**Impact: HIGH (화면 소유 스타일·공용 widget 스타일·primitive 스타일이 같은 namespace나 파일에 섞이는 것을 막습니다)**
 
-scope prefix는 폴더 경로가 아니라 그 CSS 파일의 소유자를 가리킵니다.
+scope prefix는 폴더 경로가 아니라 그 CSS 파일 소유자의 재사용 범위를 가리킵니다.
 
 | prefix | owner |
 | --- | --- |
-| `rt_` | route entry와 page shell |
-| `pv_` | 한 owner 안에서만 쓰이는 private component |
-| `wg_` | 여러 화면이 재사용하는 widget |
-| `ui_` | primitive component |
+| `pg_` | 한 화면 안에서만 쓰이는 shell과 component |
+| `wg_` | 여러 화면이 재사용하는 widget과 그 part |
+| `ui_` | primitive component와 그 part |
+
+`pg_`는 화면 shell과 그 아래 component를 함께 덮습니다.
+shell은 slug가 route 이름과 같아서 따로 표시하지 않아도 구분됩니다.
 
 판정은 CSS 파일 소유로 갈립니다.
 
 - 자기 CSS 파일을 가진 component는 자기 scope slug를 씁니다.
 - 부모가 스타일을 소유하면 부모 CSS 파일과 부모 slug에 남깁니다.
 - 별도 CSS 파일인데 부모 slug를 쓰고 있으면 ownership이 잘못 나뉜 상태입니다.
+- 폴더가 아니라 가장 가까운 공개 패키지 경계로 판정합니다.
+  widget 내부 part가 `component` 폴더에 있어도 `wg_`입니다.
 
 서로 다른 owner 범위는 한 파일에 섞지 않습니다.
-어떤 component가 route shell이고 어떤 것이 private인지 판단하는 책임은 활성화된 framework convention이 가집니다.
+어떤 파일이 화면 소유인지 판단하는 책임은 활성화된 framework convention이 가집니다.
 
-**Incorrect (route shell, private component, primitive owner를 한 파일에 섞음):**
+**Incorrect (화면 소유, widget, primitive owner를 한 파일에 섞음):**
 
 ```txt
-detail/detail-page.css
-  rt_detail__root
-  pv_spikePatternPanel__root
+page/detail/pg-detail.css
+  pg_detail__root
+  wg_chart__root
   ui_button__root
 ```
 
 **Incorrect (별도 CSS 파일인데 부모 slug를 계속 사용):**
 
 ```txt
-detail/detail-page.css
-  rt_detail__root
+page/detail/pg-detail.css
+  pg_detail__root
 
-detail/component/spike-pattern-panel/spike-pattern-panel.css
-  rt_detail__panel
-  rt_detail__panelHeader
+page/detail/component/pg-spike-pattern-panel.css
+  pg_detail__panel
+  pg_detail__panelHeader
+```
+
+**Incorrect (widget 내부 part를 폴더 이름만 보고 화면 scope로 내림):**
+
+```txt
+widget/chart/component/wg-chart-header.css
+  pg_chartHeader__root
 ```
 
 **Correct (CSS 파일마다 자기 owner slug를 사용):**
 
 ```txt
-detail/detail-page.css
-  rt_detail__root
-  rt_detail__body
+page/detail/pg-detail.css
+  pg_detail__root
+  pg_detail__body
 
-detail/component/spike-pattern-panel/spike-pattern-panel.css
-  pv_spikePatternPanel__root
-  pv_spikePatternPanel__header
+page/detail/component/pg-spike-pattern-panel.css
+  pg_spikePatternPanel__root
+  pg_spikePatternPanel__header
 
-widget/chart-card/wg-chart-card.css
-  wg_chartCard__root
+widget/chart/component/wg-chart-header.css
+  wg_chartHeader__root
 
 ui/button/ui-button.css
   ui_button__root
@@ -320,22 +345,22 @@ ui/button/ui-button.css
 
 ```txt
 ui_tag_list__root
-rt_catalog_page__root
-rt_catalogDetail__main-content
+pg_catalog_page__root
+pg_catalogDetail__main-content
 wg_site_header__brandLink
-rt_document__main-content
-rt_document__main--route_active
+pg_document__main-content
+pg_document__main--route_active
 ```
 
 **Correct (scope는 lowercase, slug는 scope별 house style, element/modifier는 camelCase):**
 
 ```txt
 ui_tagList__root
-rt_catalogIndex__root
-rt_catalogDetail__mainContent
+pg_catalogIndex__root
+pg_catalogDetail__mainContent
 wg_siteHeader__brandLink
-rt_document__main
-rt_document__main--routeActive
+pg_document__main
+pg_document__main--routeActive
 ```
 
 ## 2. Class Composition and Wrapper Boundaries
@@ -360,7 +385,7 @@ TSX에서 `className`은 `clsx()` 사용을 기본으로 합니다.
 **Incorrect (문자열 연결로 클래스 조합을 숨김):**
 
 ```tsx
-<button className={"rt_catalogIndex__listButton " + (isActive ? "rt_catalogIndex__listButton--active" : "")}>
+<button className={"pg_catalogIndex__listButton " + (isActive ? "pg_catalogIndex__listButton--active" : "")}>
 	저장
 </button>
 ```
@@ -370,8 +395,8 @@ TSX에서 `className`은 `clsx()` 사용을 기본으로 합니다.
 ```tsx
 <button
 	className={clsx(
-		"rt_catalogIndex__listButton",
-		isActive && "rt_catalogIndex__listButton--active",
+		"pg_catalogIndex__listButton",
+		isActive && "pg_catalogIndex__listButton--active",
 	)}
 >
 	저장
@@ -410,13 +435,13 @@ modifier는 상태나 반복 variant를 표현할 때만 사용합니다.
 **Incorrect (특정 화면용 구조 patch를 modifier로 덧붙임):**
 
 ```tsx
-<div className={clsx("rt_catalogDetail__section", "rt_catalogDetail__section--compactTop")} />
+<div className={clsx("pg_catalogDetail__section", "pg_catalogDetail__section--compactTop")} />
 ```
 
 **Correct (one-off patch는 별도 element로 풀고, 반복되는 variant만 제한적으로 허용):**
 
 ```tsx
-<div className={clsx("rt_catalogDetail__detailSection")} />
+<div className={clsx("pg_catalogDetail__detailSection")} />
 ```
 
 ```tsx
@@ -442,13 +467,13 @@ one-off modifier를 역할명 class로 바꾸기만 하는 경우도 대상이 �
 **Incorrect (상태 의미를 별도 클래스 역할처럼 합쳐 버림):**
 
 ```tsx
-<div className={clsx("rt_catalogIndex__listButtonActive")} />
+<div className={clsx("pg_catalogIndex__listButtonActive")} />
 ```
 
 **Correct (기본 클래스와 상태 modifier를 분리):**
 
 ```tsx
-<div className={clsx("rt_catalogIndex__listButton", isActive && "rt_catalogIndex__listButton--active")} />
+<div className={clsx("pg_catalogIndex__listButton", isActive && "pg_catalogIndex__listButton--active")} />
 ```
 
 ### 2.4 Prefer `Ui*` Wrapper Prop Types
@@ -504,19 +529,19 @@ const items: NonNullable<UiCollapseProps["items"]> = [];
 **Incorrect (내부 DOM을 만지기 위해 `Ui*`에 ad-hoc className을 주입):**
 
 ```tsx
-<UiCollapse className={clsx("pv_postFilterDialog__collapse")} />
+<UiCollapse className={clsx("pg_postFilterDialog__collapse")} />
 ```
 
 **Correct (내부 DOM 스타일링은 소유 래퍼 아래로 제한하고, 공식 root contract는 예외적으로 허용):**
 
 ```tsx
-<div className={clsx("pv_postFilterDialog__collapse")}>
+<div className={clsx("pg_postFilterDialog__collapse")}>
 	<UiCollapse />
 </div>
 ```
 
 ```css
-.pv_postFilterDialog__collapse {
+.pg_postFilterDialog__collapse {
 	& .ant-collapse-item {
 		border-radius: var(--mk-size-radius-card, 10px);
 	}
@@ -525,7 +550,7 @@ const items: NonNullable<UiCollapseProps["items"]> = [];
 
 ```tsx
 // UiButton이 root className contract를 공식적으로 노출하는 경우에만 허용
-<UiButton className={clsx("pv_postFilterDialog__submitButton")} />
+<UiButton className={clsx("pg_postFilterDialog__submitButton")} />
 ```
 
 ## 3. Selectors and Nesting Boundaries
@@ -556,7 +581,7 @@ owned root 아래의 third-party DOM path는 `selector-target-third-party-dom-fr
 **Incorrect (깊은 후손 선택자 체인에 의존):**
 
 ```css
-.rt_catalogIndex__layout .rt_catalogIndex__panel .rt_catalogIndex__detail .rt_catalogIndex__item {
+.pg_catalogIndex__layout .pg_catalogIndex__panel .pg_catalogIndex__detail .pg_catalogIndex__item {
 	padding: 8px;
 }
 ```
@@ -564,11 +589,11 @@ owned root 아래의 third-party DOM path는 `selector-target-third-party-dom-fr
 **Correct (대상 element 클래스나 직접 owner root 계약에 스타일을 둠):**
 
 ```css
-.rt_catalogIndex__item {
+.pg_catalogIndex__item {
 	padding: 8px;
 }
 
-.rt_catalogIndex__detailHeader {
+.pg_catalogIndex__detailHeader {
 	gap: var(--app-space-2, 8px);
 }
 ```
@@ -597,8 +622,8 @@ rich text 예외는 raw element styling에만 적용됩니다.
 **Incorrect (project-owned 클래스 관계를 descendant selector로 쓰고, wrapper styling을 block 밖으로 흩뿌림):**
 
 ```css
-.rt_catalogIndex__layout {
-	& .rt_catalogIndex__panel {
+.pg_catalogIndex__layout {
+	& .pg_catalogIndex__panel {
 		padding: 8px;
 	}
 }
@@ -615,11 +640,11 @@ rich text 예외는 raw element styling에만 적용됩니다.
 **Correct (project-owned 클래스는 플랫하게 두고, rich text wrapper 예외는 같은 block 안에 국한함):**
 
 ```css
-.rt_catalogIndex__layout {
+.pg_catalogIndex__layout {
 	display: grid;
 }
 
-.rt_catalogIndex__panel {
+.pg_catalogIndex__panel {
 	padding: 8px;
 }
 
@@ -651,7 +676,7 @@ rich text 예외는 raw element styling에만 적용됩니다.
 
 - 항상 owned root class block을 먼저 엽니다.
 - root 없는 `.ant-*` 단독 selector는 금지합니다.
-- `.rt_* .ant-*` 같은 one-line chaining보다 root block 안의 `& .ant-*`를 사용합니다.
+- `.pg_* .ant-*` 같은 one-line chaining보다 root block 안의 `& .ant-*`를 사용합니다.
 - third-party DOM 경로는 shortest viable chain만 허용합니다.
 - owned root가 이미 instance scope를 제공하고 target class가 직접 식별 가능하면
   `.ant-tree` 같은 중간 library root를 반복하지 않습니다.
@@ -668,11 +693,11 @@ rich text 예외는 raw element styling에만 적용됩니다.
 	border-radius: 4px;
 }
 
-.rt_treePanel__root .ant-tree-title {
+.pg_treePanel__root .ant-tree-title {
 	color: #999;
 }
 
-.rt_treePanel__root {
+.pg_treePanel__root {
 	& .ant-tree .ant-tree-node-content-wrapper {
 		display: inline-flex;
 	}
@@ -688,7 +713,7 @@ rich text 예외는 raw element styling에만 적용됩니다.
 **Correct (항상 owned root block을 열고, 그 안에서 third-party DOM path를 nested로 적음):**
 
 ```css
-.rt_treePanel__root {
+.pg_treePanel__root {
 	& .ant-tree-node-content-wrapper {
 		display: inline-flex;
 	}
@@ -702,7 +727,7 @@ rich text 예외는 raw element styling에만 적용됩니다.
 	}
 }
 
-.rt_treePanel__toolbar {
+.pg_treePanel__toolbar {
 	& > .ant-btn-icon {
 		color: var(--app-color-text-muted, rgba(0, 0, 0, 0.45));
 	}
@@ -745,7 +770,7 @@ modifier가 켜진 경우에만 interaction이 달라져야 한다는 별도 제
 	transform: rotate(-2deg);
 }
 
-.rt_pmli__assetCard {
+.pg_pmli__assetCard {
 	&:selected {
 		border-color: var(--app-color-accent, #1677ff);
 	}
@@ -769,7 +794,7 @@ modifier가 켜진 경우에만 interaction이 달라져야 한다는 별도 제
 	transform: var(--wg-site-header-brand-mark-transform);
 }
 
-.rt_pmli__assetCardButton {
+.pg_pmli__assetCardButton {
 	cursor: default;
 
 	&:disabled {
@@ -781,7 +806,7 @@ modifier가 켜진 경우에만 interaction이 달라져야 한다는 별도 제
 	}
 }
 
-.rt_pmli__assetCard--selected {
+.pg_pmli__assetCard--selected {
 	border-color: var(--app-color-accent, #1677ff);
 }
 ```
@@ -810,7 +835,7 @@ position, z-index, 강제 geometry 또는 부모·자식 layout 책임이 바뀌
 **Incorrect (레이아웃 강제가 많고 기준 설명이 없음):**
 
 ```css
-.rt_dashboard__toolbar {
+.pg_dashboard__toolbar {
 	position: sticky;
 	top: 0;
 	z-index: 9999;
@@ -822,14 +847,14 @@ position, z-index, 강제 geometry 또는 부모·자식 layout 책임이 바뀌
 **Correct (기준 컨테이너와 의도를 드러냄):**
 
 ```css
-.rt_dashboard__toolbar {
+.pg_dashboard__toolbar {
 	/* sticky toolbar pinned inside the scrollable content pane */
 	position: sticky;
 	top: 0;
 	z-index: var(--app-z-index-toolbar, 10);
 }
 
-.rt_dashboard__content {
+.pg_dashboard__content {
 	display: grid;
 	min-height: 0;
 }
@@ -860,7 +885,7 @@ byte-equivalent 이동만 하는 경우는 N/A입니다.
 **Incorrect (존재 보장이 없는 토큰을 fallback 없이 사용):**
 
 ```css
-.pv_postFilterDialog__panel {
+.pg_postFilterDialog__panel {
 	border: 1px solid var(--mk-color-border-default);
 	background: var(--mk-color-bg-surface);
 }
@@ -869,13 +894,13 @@ byte-equivalent 이동만 하는 경우는 N/A입니다.
 **Correct (불안정한 경계에는 fallback을 두고, 보장된 core token은 의도적으로 fail-loud 할 수 있음):**
 
 ```css
-.pv_postFilterDialog__panel {
+.pg_postFilterDialog__panel {
 	border: 1px solid var(--mk-color-border-default, #d9d9d9);
 	border-radius: var(--mk-size-radius-card, 4px);
 	background-color: var(--mk-color-bg-surface, #fff);
 }
 
-.pv_postFilterDialog__collapse {
+.pg_postFilterDialog__collapse {
 	& .ant-collapse-item {
 		border-radius: var(--mk-size-radius-card, 10px);
 		background: var(--mk-color-bg-surface, #fff);
@@ -1004,11 +1029,11 @@ stylesheet는 하나의 owner에 맞춰 유지하고, 가벼운 구조 주석만
 
 ```css
 /* posts.css */
-.rt_catalogIndex__root {
+.pg_catalogIndex__root {
 	display: grid;
 }
 
-.rt_document__content {
+.pg_document__content {
 	display: flex;
 }
 
@@ -1022,17 +1047,17 @@ stylesheet는 하나의 owner에 맞춰 유지하고, 가벼운 구조 주석만
 ```css
 /* posts.css */
 /* layout */
-.rt_catalogIndex__root {
+.pg_catalogIndex__root {
 	display: grid;
 }
 
 /* visual */
-.rt_catalogIndex__panel {
+.pg_catalogIndex__panel {
 	background: var(--app-color-bg-surface, #fff);
 }
 
 /* state */
-.rt_catalogIndex__panel--active {
+.pg_catalogIndex__panel--active {
 	border-color: var(--app-color-accent, #1677ff);
 }
 ```
@@ -1108,7 +1133,7 @@ div {
 	}
 }
 
-.rt_treePanel__root {
+.pg_treePanel__root {
 	& .ant-tree-node-content-wrapper {
 		border-radius: var(--app-radius-control, 4px);
 	}

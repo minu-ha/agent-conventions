@@ -1,7 +1,7 @@
 # CSS 컨벤션 Rule Index
 
 - Skill: `css`
-- Routing digest: `sha256:c2c6172bdc7a7356a171bcf224f6492c57b5e3c71cbbb22ccad201c441445476`
+- Routing digest: `sha256:fb3694e4322488ee54515de112fc09cd16741ec6733f9c7c382e50a5fb21857b`
 
 ## Direct Companions
 
@@ -12,8 +12,8 @@
 - C01 | naming-default-to-plain-css-when-no-module-convention | 프로젝트 표준 미확정 상태에서 새 stylesheet 접근 형식\(plain CSS·CSS Modules\)을 선택하거나 \`.module.css\`·\`styles.\*\`로 전환할 때. 제외: 기존 plain CSS class rename만 하는 경우.
 - C02 | naming-keep-scope-slug-unique-per-owner | 새 \`scope\_slug\` namespace를 추가·복사·이름 변경할 때. 서로 다른 owner의 class가 같은 namespace를 사용할 가능성이 있을 때.
 - C03 | naming-name-elements-and-modifiers-by-role | element 또는 modifier class 이름을 새로 지을 때. \`container\`, \`wrapper\`, \`box\`, 치수·간격 중심 이름을 변경할 때.
-- C04 | naming-preserve-route-slug-traceability | route/framework 규칙이 \`rt\_\*\` owner를 선택한 화면에서 route class slug를 새로 만들거나 이름을 변경할 때.
-- C05 | naming-separate-owner-style-scopes | 스타일 owner를 route shell, private component, widget, primitive 중에서 결정할 때. 새 CSS 파일을 만들거나 기존 owner 범위를 옮길 때. | reviewWith: naming-keep-scope-slug-unique-per-owner, organization-keep-style-files-owned-by-one-component-or-route
+- C04 | naming-preserve-route-slug-traceability | \`pg\_\*\` owner의 class slug를 새로 만들거나 이름을 바꿀 때. 같은 이름 component가 여러 화면에 생겨 slug를 구분해야 할 때.
+- C05 | naming-separate-owner-style-scopes | 스타일 owner를 화면 내부, widget, primitive 중에서 결정할 때. 새 CSS 파일을 만들거나 기존 owner 범위를 옮길 때. | reviewWith: naming-keep-scope-slug-unique-per-owner, organization-keep-style-files-owned-by-one-component-or-route
 - C06 | naming-use-scope-slug-element-modifier-syntax | plain CSS의 project-owned class를 새로 만들 때. 이름, scope, slug, element, modifier 구분자 또는 casing을 변경할 때.
 - C07 | composition-compose-classes-with-clsx | TSX의 \`className\`을 추가·수정할 때. base class, modifier, optional class를 조합할 때.
 - C08 | composition-do-not-build-structural-variants-with-modifiers | modifier를 추가·변경하거나 반복 가능한 state·API variant와 one-off structural patch 사이를 판정할 때. 허용된 state로 결론 나도 변경된 modifier 분류는 Selected. | reviewWith: naming-name-elements-and-modifiers-by-role

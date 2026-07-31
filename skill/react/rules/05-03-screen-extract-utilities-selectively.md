@@ -80,7 +80,7 @@ export const normalizeTreeNodes = (nodes: TreeNodeResponse[]) => {
 ```
 
 ```ts
-// page/entries/entries-page.tsx
+// page/entries/pg-entries.tsx
 /**
  * 저장 요청 후 목록 query를 무효화
  */

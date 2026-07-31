@@ -21,7 +21,7 @@ TSX에서 `className`은 `clsx()` 사용을 기본으로 합니다.
 **Incorrect (문자열 연결로 클래스 조합을 숨김):**
 
 ```tsx
-<button className={"rt_catalogIndex__listButton " + (isActive ? "rt_catalogIndex__listButton--active" : "")}>
+<button className={"pg_catalogIndex__listButton " + (isActive ? "pg_catalogIndex__listButton--active" : "")}>
 	저장
 </button>
 ```
@@ -31,8 +31,8 @@ TSX에서 `className`은 `clsx()` 사용을 기본으로 합니다.
 ```tsx
 <button
 	className={clsx(
-		"rt_catalogIndex__listButton",
-		isActive && "rt_catalogIndex__listButton--active",
+		"pg_catalogIndex__listButton",
+		isActive && "pg_catalogIndex__listButton--active",
 	)}
 >
 	저장

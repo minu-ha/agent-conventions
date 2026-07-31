@@ -1,4 +1,4 @@
-# Keep UI, Widget, and Private Ownership Separate
+# Keep UI, Widget, and Page Ownership Separate
 
 **Impact: CRITICAL**
 

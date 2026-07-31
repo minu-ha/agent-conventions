@@ -30,7 +30,7 @@
 1. [Ownership and Boundaries](#1-ownership-and-boundaries) — **CRITICAL**
     - 1.1 [Import React Types Directly](#11-import-react-types-directly)
     - 1.2 [Do Not Create Screen-local Custom Hooks for Pure Logic](#12-do-not-create-screen-local-custom-hooks-for-pure-logic)
-    - 1.3 [Keep UI, Widget, and Private Ownership Separate](#13-keep-ui-widget-and-private-ownership-separate)
+    - 1.3 [Keep UI, Widget, and Page Ownership Separate](#13-keep-ui-widget-and-page-ownership-separate)
     - 1.4 [Place Owner Files in Role Folders](#14-place-owner-files-in-role-folders)
     - 1.5 [Route Shared Constants Through `shared/config.ts`](#15-route-shared-constants-through-shared-config-ts)
     - 1.6 [Use Consistent File and Symbol Naming](#16-use-consistent-file-and-symbol-naming)
@@ -196,26 +196,27 @@ import { buildMediaUploadPayload } from "./function/build-media-upload-payload";
 const request = buildMediaUploadPayload(files);
 ```
 
-### 1.3 Keep UI, Widget, and Private Ownership Separate
+### 1.3 Keep UI, Widget, and Page Ownership Separate
 
 **Rule:** `R03` · `ownership-layer-component-boundaries`
 
-**Applies when:** 컴포넌트를 ui·widget·private 중 어느 소유 레이어에 둘지 정할 때. 컴포넌트를 레이어 사이에서 옮기거나 공용화할 때.
+**Applies when:** 컴포넌트를 ui·widget·page 중 어느 소유 레이어에 둘지 정할 때. 컴포넌트를 레이어 사이에서 옮기거나 공용화할 때.
 
 **Review with:** `css/naming-separate-owner-style-scopes`, `ownership-place-owner-files-in-role-folders`
 
-**Impact: CRITICAL (공용 책임과 owner-private 책임이 같은 레이어로 섞이는 것을 막습니다)**
+**Impact: CRITICAL (공용 책임과 화면 전용 책임이 같은 레이어로 섞이는 것을 막습니다)**
 
 컴포넌트는 소유 레이어를 이름으로 드러냅니다.
 
-| 레이어 | 책임 | 파일·심볼 |
+| 레이어 | 책임 | 파일 · 심볼 · slug |
 | --- | --- | --- |
-| `ui` | 도메인을 모르는 순수 view | `ui-*` · `Ui*` |
-| `widget` | 화면 조립을 전제하지 않는 공용 조합 | `wg-*` · `Wg*` |
-| private | 한 owner 안에서만 쓰이는 화면 전용 코드 | owner 이름 |
+| `ui` | 도메인을 모르는 순수 view | `ui-button.tsx` · `UiButton` · `ui_button` |
+| `widget` | 화면 조립을 전제하지 않는 공용 조합 | `wg-chart.tsx` · `WgChart` · `wg_chart` |
+| `page` | 한 화면 안에서만 쓰이는 shell과 component | `pg-detail.tsx` · `PgDetail` · `pg_detail` |
 
-private 레이어는 전용 폴더를 갖지 않고 owner 아래 `component`에 살기 때문에, 이름이 아니라 위치가 소유를 드러냅니다.
-`ui`와 `widget`은 여러 곳에서 import하므로 최상위에 모으고, private component는 owner 옆에 둡니다.
+세 레이어 모두 파일명과 심볼에 계층 prefix를 붙이고 예외를 두지 않습니다.
+폴더에는 붙이지 않습니다. 상위 계층 폴더가 이미 계층을 말합니다.
+slug에서는 prefix가 말하는 부분을 반복하지 않습니다.
 
 레이어 판정은 두 축으로 갈립니다.
 
@@ -224,13 +225,12 @@ private 레이어는 전용 폴더를 갖지 않고 owner 아래 `component`에 
 | 맥락 독립성 | 화면 조립이나 부모 구조를 전제하는가 | 승격 가능 여부 |
 | 도메인 지식 | 도메인을 아는가 | `ui`와 `widget` 중 어디인가 |
 
-- 화면 조립을 전제하면 private으로 남습니다.
+- 화면 조립을 전제하면 `page`에 남습니다.
 - 맥락 독립이고 도메인을 모르면 `ui`입니다.
 - 맥락 독립이고 도메인을 알면 `widget`입니다. 이름에 도메인 단어가 남아도 됩니다.
 
-**사용 횟수는 판정 기준이 아닙니다.**
-한 화면에서만 쓰여도 맥락 독립이면 `widget`입니다.
-사용 횟수로 판정하면 쓰임이 늘거나 줄 때마다 컴포넌트가 폴더를 옮겨 다니게 됩니다.
+사용 횟수는 판정 기준이 아닙니다.
+한 화면에서만 쓰여도 맥락 독립이면 `widget`이고, 사용 횟수로 판정하면 쓰임이 변할 때마다 폴더를 옮겨 다닙니다.
 
 **Incorrect (view 레이어와 화면 전용 로직이 섞임):**
 
@@ -243,14 +243,23 @@ const UiDeleteEntryButton = () => {
 };
 ```
 
-**Incorrect (맥락 독립인 부품을 사용 횟수만 보고 private에 남김):**
+**Incorrect (화면 컴포넌트에만 계층 prefix를 빼먹음):**
 
 ```tsx
-// page/detail/component/spike-pattern-panel/component/spike-legend-glyph.tsx
-// props만 받아 마커를 그리는데 이 화면에서만 쓴다는 이유로 private에 남아 있다.
-export const SpikeLegendGlyph = (props: SpikeLegendGlyphProps) => {
+// page/detail/component/spike-pattern-panel.tsx
+export const SpikePatternPanel = (props: SpikePatternPanelProps) => {
+	return <section className="pg_spikePatternPanel__root">{/* ... */}</section>;
+};
+```
+
+**Incorrect (맥락 독립인 부품을 사용 횟수만 보고 화면에 남김):**
+
+```tsx
+// page/detail/component/pg-spike-legend-glyph.tsx
+// props만 받아 마커를 그리는데 이 화면에서만 쓴다는 이유로 남아 있다.
+export const PgSpikeLegendGlyph = (props: PgSpikeLegendGlyphProps) => {
 	const { item } = props;
-	return <svg className="pv_spikeLegendGlyph__root">{/* ... */}</svg>;
+	return <svg className="pg_spikeLegendGlyph__root">{/* ... */}</svg>;
 };
 ```
 
@@ -270,10 +279,6 @@ export const UiButton = (props: UiButtonProps) => {
 
 ```tsx
 // widget/entry-toolbar/wg-entry-toolbar.tsx
-export interface WgEntryToolbarProps {
-	onClose: () => void;
-}
-
 export const WgEntryToolbar = (props: WgEntryToolbarProps) => {
 	const { onClose } = props;
 	return <UiButton onClick={onClose} />;
@@ -290,11 +295,11 @@ export const WgSpikeLegendGlyph = (props: WgSpikeLegendGlyphProps) => {
 };
 ```
 
-**Correct (화면 조립을 전제하는 코드는 owner 아래 private으로 남김):**
+**Correct (화면 조립을 전제하는 코드는 화면 레이어에 prefix를 붙여 남김):**
 
 ```tsx
-// page/entries/component/delete-entry-button.tsx
-const DeleteEntryButton = () => {
+// page/entries/component/pg-delete-entry-button.tsx
+const PgDeleteEntryButton = () => {
 	const navigate = useNavigate();
 	return <UiButton onClick={() => void navigate({ to: "/entries" })} />;
 };
@@ -332,6 +337,7 @@ role 폴더는 다음 다섯 개뿐이고 새 role 폴더를 발명하지 않습
 - 파일이 하나뿐인 role 폴더도 그대로 둡니다. sibling `.ts` 하나로 대신하지 않습니다.
 - 자기 role 폴더가 필요한 component만 자기 폴더를 갖고, leaf는 `component` 아래 파일로 둡니다.
 - Props는 해당 TSX에 두고 여러 파일이 공유하는 계약만 `type`으로 옮깁니다.
+- 컴포넌트 파일명에는 계층 prefix를 붙이고 폴더명에는 붙이지 않습니다.
 - owner 중첩이 3단계에 닿으면 분리가 맞는지, widget으로 나갈 대상인지 다시 봅니다.
 
 무엇을 추출할지는 이 규칙이 정하지 않습니다.
@@ -354,7 +360,7 @@ ui/button/
 
 ```txt
 page/detail/
-├── detail-page.tsx
+├── pg-detail.tsx
 ├── components/
 ├── constants/
 ├── utils/
@@ -365,18 +371,18 @@ page/detail/
 
 ```txt
 page/detail/
-├── detail-page.tsx
-├── detail-page.css
+├── pg-detail.tsx
+├── pg-detail.css
 ├── function/
 │   └── map-api-response-to-view-model.ts
 ├── type/
 │   └── detail-view-model.ts
 └── component/
-    ├── summary-band.tsx
-    ├── summary-band.css
+    ├── pg-summary-band.tsx
+    ├── pg-summary-band.css
     └── spike-pattern-panel/
-        ├── spike-pattern-panel.tsx
-        ├── spike-pattern-panel.css
+        ├── pg-spike-pattern-panel.tsx
+        ├── pg-spike-pattern-panel.css
         └── function/
             └── resolve-chart-viewport.ts
 ```
@@ -449,9 +455,9 @@ config.navigation.project_menu_key.dashboard;
 | 타입·컴포넌트 | `PascalCase` |
 | 설정 객체와 그 키 | `snake_case` |
 
+컴포넌트 파일과 심볼에는 계층 prefix를 붙이고 폴더명에는 붙이지 않습니다.
 폴더명은 단수로 씁니다. 복수형은 쓰지 않고 프레임워크가 강제하는 이름만 예외입니다.
 `const` 여부로 casing을 나누지 않고, 화면과 모듈 안의 로컬 값은 모두 `camelCase`로 맞춥니다.
-여러 화면이 함께 쓰는 설정과 enum-like 상수는 `shared/config.ts`의 `config.*` 아래에 둡니다.
 
 - sibling `.ts` support 파일을 만들거나 local 선언을 named export로 옮기면
   이름 자체가 그대로여도 이 규칙을 확인합니다.
@@ -519,33 +525,33 @@ component import는 소유 관계를 따라 아래로만 흐릅니다.
 **Incorrect (형제 component를 직접 가져와 소유 관계가 사라짐):**
 
 ```tsx
-// page/detail/component/spike-pattern-panel/component/detection-section.tsx
-import { LegendRow } from "./legend-row";
+// page/detail/component/spike-pattern-panel/component/pg-detection-section.tsx
+import { PgLegendRow } from "./pg-legend-row";
 import { SectionHeading } from "../../section-heading/section-heading";
 ```
 
 **Incorrect (절대경로로 다른 화면 내부를 가져옴):**
 
 ```tsx
-import { SpikeChartCard } from "@/page/detail/component/spike-pattern-panel/component/spike-chart-card";
+import { PgSpikeChartCard } from "@/page/detail/component/spike-pattern-panel/component/pg-spike-chart-card";
 ```
 
 **Correct (부모가 조립해서 내려보냄):**
 
 ```tsx
-// page/detail/component/spike-pattern-panel/spike-pattern-panel.tsx
+// page/detail/component/spike-pattern-panel/pg-spike-pattern-panel.tsx
 import { UiSectionHeading } from "@/ui/section-heading/ui-section-heading";
 
-import { DetectionSection } from "./component/detection-section";
-import { SummaryBand } from "./component/summary-band";
+import { PgDetectionSection } from "./component/pg-detection-section";
+import { PgSummaryBand } from "./component/pg-summary-band";
 
-export const SpikePatternPanel = (props: SpikePatternPanelProps) => {
+export const PgSpikePatternPanel = (props:  PgSpikePatternPanel Props) => {
 	const { legendItems } = props;
 
 	return (
-		<section className="pv_spikePatternPanel__root">
-			<DetectionSection heading={<UiSectionHeading title="상단 이탈 감지" />} legendItems={legendItems} />
-			<SummaryBand heading={<UiSectionHeading title="요약" />} />
+		<section className="pg_spikePatternPanel__root">
+			<PgDetectionSection heading={<UiSectionHeading title="상단 이탈 감지" />} legendItems={legendItems} />
+			<PgSummaryBand heading={<UiSectionHeading title="요약" />} />
 		</section>
 	);
 };
@@ -554,7 +560,7 @@ export const SpikePatternPanel = (props: SpikePatternPanelProps) => {
 **Correct (맥락 독립 component는 전역 레이어에서 가져옴):**
 
 ```tsx
-// page/detail/component/spike-pattern-panel/component/detection-section.tsx
+// page/detail/component/spike-pattern-panel/component/pg-detection-section.tsx
 import { WgLegendPanel } from "@/widget/legend-panel/wg-legend-panel";
 ```
 
@@ -1501,7 +1507,7 @@ entry의 JSX와 import 목록을 위에서 아래로 읽으면 답이 나와야 
 **Incorrect (layout wrapper만 분리해 route flow를 숨김):**
 
 ```tsx
-const EntrySidebarPanel = () => {
+const PgEntrySidebarPanel = () => {
 	return (
 		<section className="entry-layout__sidebar">
 			<SidebarStats />
@@ -1511,7 +1517,7 @@ const EntrySidebarPanel = () => {
 	);
 };
 
-const EntryDetailPanel = () => {
+const PgEntryDetailPanel = () => {
 	return (
 		<section className="entry-layout__detail">
 			<DetailHeader />
@@ -1520,14 +1526,14 @@ const EntryDetailPanel = () => {
 	);
 };
 
-export const RouteComponent = () => {
+export const PgEntries = () => {
 	const responseEntryTreeSuspense = useEntryTreeSuspense();
 	const responseEntryListSuspense = useEntryListSuspense();
 
 	return (
 		<div className="entry-layout">
-			<EntrySidebarPanel />
-			<EntryDetailPanel />
+			<PgEntrySidebarPanel />
+			<PgEntryDetailPanel />
 		</div>
 	);
 };
@@ -1536,13 +1542,13 @@ export const RouteComponent = () => {
 **Correct (runtime boundary를 소유하는 section만 route-local component로 추출):**
 
 ```tsx
-interface EntryTreeSectionProps {
+interface  PgEntryTreeSection Props {
 	categoryNodes: EntryCategoryNode[];
 	selectedCategoryId?: string;
 	onCategorySelect: (categoryId: string) => void;
 }
 
-const EntryTreeSection = (props: EntryTreeSectionProps) => {
+const PgEntryTreeSection = (props:  PgEntryTreeSection Props) => {
 	const { categoryNodes, selectedCategoryId, onCategorySelect } = props;
 	const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
 	const [treeSearchKeyword, setTreeSearchKeyword] = useState("");
@@ -1592,7 +1598,7 @@ const EntryTreeSection = (props: EntryTreeSectionProps) => {
 **Correct (route entry가 흐름 제어를 계속 소유):**
 
 ```tsx
-export const RouteComponent = () => {
+export const PgEntries = () => {
 	const navigate = useNavigate();
 	const search = Route.useSearch();
 
@@ -1609,7 +1615,7 @@ export const RouteComponent = () => {
 	/**
 	 * tree에서 선택한 category로 route search를 갱신
 	 */
-	const handleCategorySelect: EntryTreeSectionProps["onCategorySelect"] = (categoryId) => {
+	const handleCategorySelect:  PgEntryTreeSection Props["onCategorySelect"] = (categoryId) => {
 		void navigate({
 			to: "/entries",
 			search: { page: search.page, size: search.size, categoryId },
@@ -1618,12 +1624,12 @@ export const RouteComponent = () => {
 
 	return (
 		<div className="entry-layout">
-			<EntryTreeSection
+			<PgEntryTreeSection
 				categoryNodes={responseEntryTreeSuspense.data.categoryNodes}
 				selectedCategoryId={search.categoryId}
 				onCategorySelect={handleCategorySelect}
 			/>
-			<EntryTableSection
+			<PgEntryTableSection
 				entries={responseEntryListSuspense.data?.entries}
 			/>
 		</div>
@@ -1705,7 +1711,7 @@ export const normalizeTreeNodes = (nodes: TreeNodeResponse[]) => {
 ```
 
 ```ts
-// page/entries/entries-page.tsx
+// page/entries/pg-entries.tsx
 /**
  * 저장 요청 후 목록 query를 무효화
  */

@@ -21,11 +21,11 @@ tags: files, ownership, comments
 
 ```css
 /* posts.css */
-.rt_catalogIndex__root {
+.pg_catalogIndex__root {
 	display: grid;
 }
 
-.rt_document__content {
+.pg_document__content {
 	display: flex;
 }
 
@@ -39,17 +39,17 @@ tags: files, ownership, comments
 ```css
 /* posts.css */
 /* layout */
-.rt_catalogIndex__root {
+.pg_catalogIndex__root {
 	display: grid;
 }
 
 /* visual */
-.rt_catalogIndex__panel {
+.pg_catalogIndex__panel {
 	background: var(--app-color-bg-surface, #fff);
 }
 
 /* state */
-.rt_catalogIndex__panel--active {
+.pg_catalogIndex__panel--active {
 	border-color: var(--app-color-accent, #1677ff);
 }
 ```
