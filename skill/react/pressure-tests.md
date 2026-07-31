@@ -24,23 +24,25 @@ protocol v3 결과에는 coordinator가 dispatch 전에 고정한 repository HEA
 
 ## Progressive Routing Regression Set
 
-[routing-evals.json](./routing-evals.json)의 15개 scenario, 16개 stage를 그대로 재실행합니다.
+[routing-evals.json](./routing-evals.json)의 17개 scenario, 18개 stage를 그대로 재실행합니다.
 
 - `RTE01-import-contract-cleanup`: naming/import와 기존 React·TypeScript 계약 재사용
 - `RTE02-owner-placement-css-drift`: initial React+TypeScript에서 class/style drift 뒤 CSS exact partition 추가
-- `RTE03-route-support-extraction`: plain `page.ts` support boundary와 과추출 방지
+- `RTE03-route-support-extraction`: owner `function` 폴더 support boundary와 과추출 방지
 - `RTE04-shared-config`: shared config entry와 `config.*` origin
 - `RTE05-toolbar-composition`: boolean/render-prop 제거, compound/variant와 public part docs
 - `RTE06-nested-forwardref`: nested component hoist와 React 19 ref prop
 - `RTE07-visibility-lifecycle`: show/hide lifecycle에만 Activity 사용
 - `RTE08-delete-handler-flow`: curried named handler 안에 one-shot flow 유지
-- `RTE09-route-runtime-section`: runtime owner만 `-local` 추출하고 route flow 유지
+- `RTE09-route-runtime-section`: runtime owner만 `component`로 추출하고 route flow 유지
 - `RTE10-derived-selection-state`: inline callback의 named handler 추출, render-derived value와 functional updater
 - `RTE11-shared-authority`: shared capability source-of-truth와 store authority
 - `RTE12-query-shaping`: query select, binding naming, origin chaining
 - `RTE13-heavy-search`: lazy/deferred/transition과 evidence-backed memoization
 - `RTE14-subscription-effectevent`: subscription callback만 useEffectEvent로 교체
 - `RTE15-suspense-absence`: silent fallback/loading alias 제거와 explicit absence
+- `RTE16-private-component-import-direction`: 형제 import 해소와 하향 단방향 유지
+- `RTE17-chart-lifecycle-ownership`: 분량 압력에도 library lifecycle을 소유 component에 유지
 
 모든 stage는 React와 required TypeScript exact partition을 저장합니다. `RTE02-owner-placement-css-drift`만 scope drift 뒤 CSS를 활성화하며 initial React selected set은 그대로 유지합니다. route 전용 `pv_*` owner이므로 drift CSS partition에서 route slug traceability rule은 N/A입니다.
 
@@ -70,7 +72,7 @@ Scope drift 뒤에는 file, activated skill, 기존 Selected rule을 제거하�
 ### RP1. React Type Import Decision
 
 - Focus
-  - `ownership-avoid-barrel-and-react-namespace-imports`
+  - `ownership-import-react-types-directly`
   - `typing-function-type-first`
 - Prompt
   - "기존 `React.MouseEvent` parameter annotation을 `MouseEventHandler<HTMLButtonElement>` 함수 변수 타입과 direct `import type`으로 바꿔줘."

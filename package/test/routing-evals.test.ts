@@ -132,7 +132,7 @@ const cssRuleUniverse = [
  * @summary generated React index의 canonical codepoint rule universe
  */
 const reactRuleUniverse = [
-	"ownership-avoid-barrel-and-react-namespace-imports",
+	"ownership-import-react-types-directly",
 	"ownership-prefer-plain-ts-for-local-react-helpers",
 	"ownership-layer-component-boundaries",
 	"ownership-place-owner-files-in-role-folders",
@@ -381,9 +381,9 @@ const cssRuleRouting = {
  * @summary Appendix B의 React rule별 exact routing metadata oracle
  */
 const reactRuleRouting = {
-	"ownership-avoid-barrel-and-react-namespace-imports": {
+	"ownership-import-react-types-directly": {
 		appliesWhen:
-			"`index.ts` barrel 재노출을 추가·수정할 때. `React.*` 타입과 direct `import type` 중 선택할 때. type/value 혼합 import나 출처를 숨기는 경로를 추가·수정할 때. 제외: 일반 direct value import만 바꾸는 경우.",
+			"`React.*` namespace 타입과 direct `import type` 중 선택할 때. 같은 module path의 type/value import 구성을 추가·삭제·전환할 때. 제외: 일반 direct value import만 바꾸는 경우.",
 		reviewWith: [],
 	},
 	"ownership-prefer-plain-ts-for-local-react-helpers": {
@@ -427,7 +427,7 @@ const reactRuleRouting = {
 	"typing-function-type-first": {
 		appliesWhen:
 			"React 이벤트 핸들러나 prop callback의 선언·시그니처를 추가·변경할 때. 기존 React alias나 callback 계약을 그대로 쓸 수 있는 상황일 때. curried factory가 최종 반환하는 handler를 다룰 때.",
-		reviewWith: ["typing-reuse-existing-contracts", "ownership-avoid-barrel-and-react-namespace-imports"],
+		reviewWith: ["typing-reuse-existing-contracts", "ownership-import-react-types-directly"],
 	},
 	"typing-reuse-existing-contracts": {
 		appliesWhen:
@@ -606,7 +606,7 @@ const reactRuleRouting = {
  */
 const mandatoryRuleRouting = {
 	react: {
-		"ownership-avoid-barrel-and-react-namespace-imports": ["typescript/naming-use-direct-imports-and-public-entry-points"],
+		"ownership-import-react-types-directly": ["typescript/naming-use-direct-imports-and-public-entry-points"],
 		"ownership-use-consistent-file-and-symbol-naming": ["typescript/naming-use-consistent-file-and-symbol-naming"],
 		"ownership-keep-component-imports-flowing-downward": ["typescript/naming-use-direct-imports-and-public-entry-points"],
 		"typing-function-type-first": ["typescript/types-reuse-callback-signatures-from-existing-contracts"],
@@ -762,7 +762,7 @@ const reactScenarioStages = {
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
 				react: [
-					"ownership-avoid-barrel-and-react-namespace-imports",
+					"ownership-import-react-types-directly",
 					"ownership-use-consistent-file-and-symbol-naming",
 					"typing-function-type-first",
 					"typing-reuse-existing-contracts",
@@ -1026,7 +1026,7 @@ const reactScenarioStages = {
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
 				react: [
-					"ownership-avoid-barrel-and-react-namespace-imports",
+					"ownership-import-react-types-directly",
 					"typing-function-type-first",
 					"composition-named-handlers-over-inline",
 					"screen-keep-derived-values-close",
@@ -2455,21 +2455,17 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 	assert.equal(selected("RTE09-route-runtime-section", "screen-keep-route-flow-visible"), true);
 	assert.equal(notApplicable("RTE10-derived-selection-state", "screen-keep-route-flow-visible"), true);
 	assert.equal(notApplicable("RTE12-query-shaping", "screen-keep-route-flow-visible"), true);
-	for (const ruleId of [
-		"ownership-avoid-barrel-and-react-namespace-imports",
-		"typing-function-type-first",
-		"events-name-and-curry-handlers",
-	]) {
+	for (const ruleId of ["ownership-import-react-types-directly", "typing-function-type-first", "events-name-and-curry-handlers"]) {
 		assert.equal(selected("RTE10-derived-selection-state", ruleId), true);
 	}
 	for (const scenarioId of ["RTE08-delete-handler-flow", "RTE09-route-runtime-section"]) {
 		assert.equal(selected(scenarioId, "events-name-and-curry-handlers"), true);
 		assert.equal(selected(scenarioId, "typing-function-type-first"), true);
-		assert.equal(notApplicable(scenarioId, "ownership-avoid-barrel-and-react-namespace-imports"), true);
+		assert.equal(notApplicable(scenarioId, "ownership-import-react-types-directly"), true);
 	}
 	assert.equal(selected("RTE14-subscription-effectevent", "events-name-and-curry-handlers"), true);
 	assert.equal(notApplicable("RTE14-subscription-effectevent", "typing-function-type-first"), true);
-	assert.equal(notApplicable("RTE14-subscription-effectevent", "ownership-avoid-barrel-and-react-namespace-imports"), true);
+	assert.equal(notApplicable("RTE14-subscription-effectevent", "ownership-import-react-types-directly"), true);
 });
 
 test("v17 TypeScript boundaries exclude React props and prevent self-created duplicate contracts", async () => {

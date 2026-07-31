@@ -28,7 +28,7 @@
 ## 목차
 
 1. [Ownership and Boundaries](#1-ownership-and-boundaries) — **CRITICAL**
-    - 1.1 [Avoid Barrel Exports and React Namespace Types](#11-avoid-barrel-exports-and-react-namespace-types)
+    - 1.1 [Import React Types Directly](#11-import-react-types-directly)
     - 1.2 [Do Not Create Screen-local Custom Hooks for Pure Logic](#12-do-not-create-screen-local-custom-hooks-for-pure-logic)
     - 1.3 [Keep UI, Widget, and Private Ownership Separate](#13-keep-ui-widget-and-private-ownership-separate)
     - 1.4 [Place Owner Files in Role Folders](#14-place-owner-files-in-role-folders)
@@ -88,47 +88,54 @@
 
 ui, widget, owner-private 코드는 소유 경계가 분명해야 에이전트가 코드를 예측 가능하게 배치할 수 있습니다. owner 아래 role 폴더 구조, 하향 단방향 import, lifecycle 소유가 이 경계를 지탱합니다.
 
-### 1.1 Avoid Barrel Exports and React Namespace Types
+### 1.1 Import React Types Directly
 
-**Rule:** `R01` · `ownership-avoid-barrel-and-react-namespace-imports`
+**Rule:** `R01` · `ownership-import-react-types-directly`
 
-**Applies when:** `index.ts` barrel 재노출을 추가·수정할 때. `React.*` 타입과 direct `import type` 중 선택할 때. type/value 혼합 import나 출처를 숨기는 경로를 추가·수정할 때. 제외: 일반 direct value import만 바꾸는 경우.
+**Applies when:** `React.*` namespace 타입과 direct `import type` 중 선택할 때. 같은 module path의 type/value import 구성을 추가·삭제·전환할 때. 제외: 일반 direct value import만 바꾸는 경우.
 
 **Requires selected:** `typescript/naming-use-direct-imports-and-public-entry-points` · 함께 적용
 
-**Impact: HIGH (import 경로를 명시적으로 유지하고 타입 import 스타일 혼용을 막습니다)**
+**Impact: HIGH (React 타입 출처를 숨기지 않고 type import와 value import를 분리해 유지합니다)**
 
-`index.ts` 기반 barrel export를 만들지 않습니다.
-React 타입은 `React.MouseEvent` 같은 전역 네임스페이스 대신 `import type`으로 직접 가져옵니다.
-import 경로와 타입 출처를 명시적으로 유지하기 위해서입니다.
+React 타입은 `React.MouseEvent` 같은 전역 namespace 대신 `import type`으로 직접 가져옵니다.
 
-- React 타입을 namespace로 둘지 direct `import type`으로 가져올지 정하는 변경도 이 규칙의 판단 대상입니다.
+값 위치의 `React.useState`는 TypeScript가 UMD global 접근으로 막지만,
+타입 위치의 `React.MouseEvent`는 컴파일러가 통과시킵니다.
+그래서 타입 쪽이 이 규칙의 실질이고, 프로젝트에 린터가 있으면 `no-restricted-syntax`로 함께 막습니다.
+
+- 같은 이름이 이미 지역에 있으면 import에 alias를 붙이지 말고 지역 이름을 바꿉니다.
+- 같은 module path여도 타입은 `import type`으로 따로 가져와 런타임 의존과 분리합니다.
+- import specifier의 type/value 구성이 바뀌면 import 계약 변경이므로 이 규칙을 다시 판정합니다.
 - 일반 third-party value를 alias 없이 직접 import하는 변경만으로는 걸리지 않습니다.
-- `export const Dialog = { Root, Header } as const` 같은 compound facade는 barrel이 아닙니다.
-  재노출 계층이 아니라 같은 파일이 소유한 public part 조립이므로 허용합니다.
-- `component`, `function` 같은 role 폴더에 `index.ts`를 만들어 묶는 것은 barrel이므로 금지합니다.
 
-**Incorrect (barrel export와 namespace 타입 혼용):**
+barrel과 공개 진입점 판단은 `typescript/naming-use-direct-imports-and-public-entry-points`가 소유합니다.
+
+**Incorrect (전역 namespace로 React 타입을 참조):**
 
 ```ts
-// index.ts
-export * from "./user-card";
-
 const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-  event.preventDefault();
+	event.preventDefault();
 };
 ```
 
-**Correct (직접 import와 import type 사용):**
+**Incorrect (타입과 값을 한 import에 섞음):**
 
 ```ts
+import { useState, type MouseEventHandler } from "react";
+```
+
+**Correct (타입은 `import type`으로 분리해 직접 가져옴):**
+
+```ts
+import { useState } from "react";
 import type { MouseEventHandler } from "react";
 
 /**
  * 버튼 클릭 기본 동작 차단
  */
 const handleClick: MouseEventHandler<HTMLButtonElement> = (_event) => {
-  // ...
+	// ...
 };
 ```
 
@@ -658,7 +665,7 @@ React가 제공하는 handler와 prop 계약은 선언 위치에서 바로 드�
 
 **Requires selected:** `typescript/types-reuse-callback-signatures-from-existing-contracts` · 함께 적용
 
-**Review with:** `ownership-avoid-barrel-and-react-namespace-imports`, `typing-reuse-existing-contracts`
+**Review with:** `ownership-import-react-types-directly`, `typing-reuse-existing-contracts`
 
 **Impact: HIGH (React handler 시그니처와 callback 의도를 선언 위치에서 바로 드러냅니다)**
 
@@ -672,7 +679,7 @@ factory 반환 타입을 `MouseEventHandler<...>` 같은 기존 alias로 고정�
 - `query.select` 같은 hook option의 one-off contextual callback과 UI-agnostic domain function은
   React event handler나 prop callback 구현이 아닙니다. 이 경우 이 규칙은 적용하지 않습니다.
 - React alias를 쓰려고 type import를 추가·변경하면
-  `ownership-avoid-barrel-and-react-namespace-imports`를 다시 판단합니다.
+  `ownership-import-react-types-directly`를 다시 판단합니다.
 - 일반 TypeScript 함수 타입 규칙은 companion skill인 `convention-typescript`가 다룹니다.
   여기서는 React handler alias를 바로 쓰는 경우만 봅니다.
 

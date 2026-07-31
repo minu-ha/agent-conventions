@@ -7,7 +7,7 @@ appliesWhen:
   - React 이벤트 핸들러나 prop callback의 선언·시그니처를 추가·변경할 때
   - 기존 React alias나 callback 계약을 그대로 쓸 수 있는 상황일 때
   - curried factory가 최종 반환하는 handler를 다룰 때
-reviewWith: typing-reuse-existing-contracts, ownership-avoid-barrel-and-react-namespace-imports
+reviewWith: typing-reuse-existing-contracts, ownership-import-react-types-directly
 requiresSelected: typescript/types-reuse-callback-signatures-from-existing-contracts
 tags: typing, handlers, props
 ---
@@ -26,7 +26,7 @@ factory 반환 타입을 `MouseEventHandler<...>` 같은 기존 alias로 고정�
 - `query.select` 같은 hook option의 one-off contextual callback과 UI-agnostic domain function은
   React event handler나 prop callback 구현이 아닙니다. 이 경우 이 규칙은 적용하지 않습니다.
 - React alias를 쓰려고 type import를 추가·변경하면
-  `ownership-avoid-barrel-and-react-namespace-imports`를 다시 판단합니다.
+  `ownership-import-react-types-directly`를 다시 판단합니다.
 - 일반 TypeScript 함수 타입 규칙은 companion skill인 `convention-typescript`가 다룹니다.
   여기서는 React handler alias를 바로 쓰는 경우만 봅니다.
 

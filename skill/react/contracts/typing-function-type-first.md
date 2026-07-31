@@ -12,7 +12,7 @@ factory 반환 타입을 `MouseEventHandler<...>` 같은 기존 alias로 고정�
 - `query.select` 같은 hook option의 one-off contextual callback과 UI-agnostic domain function은
   React event handler나 prop callback 구현이 아닙니다. 이 경우 이 규칙은 적용하지 않습니다.
 - React alias를 쓰려고 type import를 추가·변경하면
-  `ownership-avoid-barrel-and-react-namespace-imports`를 다시 판단합니다.
+  `ownership-import-react-types-directly`를 다시 판단합니다.
 - 일반 TypeScript 함수 타입 규칙은 companion skill인 `convention-typescript`가 다룹니다.
   여기서는 React handler alias를 바로 쓰는 경우만 봅니다.
 

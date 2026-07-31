@@ -1,7 +1,7 @@
 # React 컨벤션 Rule Index
 
 - Skill: `react`
-- Routing digest: `sha256:f2925a8ca880732d346c17bc9bde94c66846c5a64a37de55f447bd630230df54`
+- Routing digest: `sha256:17a911d78df4423ade3c544f45127975e16f1d293509dcc199e025832ec22447`
 
 ## Direct Companions
 
@@ -10,7 +10,7 @@
 
 ## Local Rules
 
-- R01 | ownership-avoid-barrel-and-react-namespace-imports | \`index.ts\` barrel 재노출을 추가·수정할 때. \`React.\*\` 타입과 direct \`import type\` 중 선택할 때. type/value 혼합 import나 출처를 숨기는 경로를 추가·수정할 때. 제외: 일반 direct value import만 바꾸는 경우.
+- R01 | ownership-import-react-types-directly | \`React.\*\` namespace 타입과 direct \`import type\` 중 선택할 때. 같은 module path의 type/value import 구성을 추가·삭제·전환할 때. 제외: 일반 direct value import만 바꾸는 경우.
 - R02 | ownership-prefer-plain-ts-for-local-react-helpers | 화면 전용 계산·정규화·payload 조립을 custom hook으로 추출하려 할 때. 화면 전용 순수 로직을 별도 support module로 옮기려 할 때. | reviewWith: ownership-keep-lifecycle-in-the-owning-component, ownership-place-owner-files-in-role-folders, screen-extract-utilities-selectively, typescript/functions-extract-helpers-only-when-the-boundary-is-real
 - R03 | ownership-layer-component-boundaries | 컴포넌트를 ui·widget·private 중 어느 소유 레이어에 둘지 정할 때. 컴포넌트를 레이어 사이에서 옮기거나 공용화할 때. | reviewWith: css/naming-separate-owner-style-scopes, ownership-place-owner-files-in-role-folders
 - R04 | ownership-place-owner-files-in-role-folders | owner 아래 \`component\`·\`config\`·\`function\`·\`hook\`·\`type\` 폴더를 만들거나 옮길 때. 추출한 component·함수·타입의 배치 위치를 정할 때. 제외: 기존 파일 내부 구현만 바꾸는 경우. | reviewWith: css/naming-separate-owner-style-scopes, ownership-keep-component-imports-flowing-downward
@@ -18,7 +18,7 @@
 - R06 | ownership-use-consistent-file-and-symbol-naming | React/TSX 파일·컴포넌트·exported symbol·공용 설정 이름을 정하거나 바꿀 때. sibling \`.ts\` support 파일·symbol을 만들거나 옮길 때. 제외: local query·mutation binding 이름만 바꾸는 경우.
 - R07 | ownership-keep-component-imports-flowing-downward | \`component\` 폴더 안의 파일을 다른 파일에서 import할 때. \`../\`나 \`@/page\` 경로로 component를 가져오려 할 때. 여러 자식이 같은 component를 필요로 해 배치를 다시 정할 때. | reviewWith: ownership-layer-component-boundaries
 - R08 | ownership-keep-lifecycle-in-the-owning-component | 외부 library instance 생성·resize·구독·dispose를 한 component가 소유할 때. lifecycle 코드를 custom hook으로 옮겨 파일을 줄이려 할 때. 제외: 여러 owner가 같은 lifecycle 계약을 실제로 호출하는 경우. | reviewWith: ownership-prefer-plain-ts-for-local-react-helpers
-- R09 | typing-function-type-first | React 이벤트 핸들러나 prop callback의 선언·시그니처를 추가·변경할 때. 기존 React alias나 callback 계약을 그대로 쓸 수 있는 상황일 때. curried factory가 최종 반환하는 handler를 다룰 때. | reviewWith: ownership-avoid-barrel-and-react-namespace-imports, typing-reuse-existing-contracts
+- R09 | typing-function-type-first | React 이벤트 핸들러나 prop callback의 선언·시그니처를 추가·변경할 때. 기존 React alias나 callback 계약을 그대로 쓸 수 있는 상황일 때. curried factory가 최종 반환하는 handler를 다룰 때. | reviewWith: ownership-import-react-types-directly, typing-reuse-existing-contracts
 - R10 | typing-reuse-existing-contracts | Props callback 구현을 추가·변경할 때. API 응답 기반 view type을 추가·변경하는데 기존 prop·API 계약과 같은 shape가 보일 때. | reviewWith: typescript/types-reuse-callback-signatures-from-existing-contracts, typescript/types-reuse-existing-contracts-before-new-types
 - R11 | strategy-avoid-boolean-prop-proliferation | 여러 곳에서 쓰는 shared component에 boolean mode·visibility prop을 추가할 때. 기존 boolean prop 조합과 JSX 분기가 늘어날 때.
 - R12 | strategy-choose-single-composition-compound-and-variants | exported shared component에 slot·public part·shared context/action을 추가할 때. 반복되는 preset이나 mode API를 추가할 때. shared component의 조립 구조를 재설계할 때. | reviewWith: screen-avoid-premature-abstraction, strategy-avoid-boolean-prop-proliferation, strategy-prefer-children-over-render-props

@@ -4,6 +4,8 @@
 
 `index.ts` 기반 barrel export를 만들지 않고 직접 export/import 구조를 유지합니다.
 role 폴더를 `index.ts`로 묶는 것도 barrel이므로 만들지 않습니다.
+같은 파일이 소유한 `export const Dialog = { Root, Header } as const` 같은 조립 객체는
+재노출 계층이 아니므로 barrel이 아닙니다.
 타입 전용 import는 `import type`을 사용해 계약과 런타임 의존을 분리합니다.
 
 절대경로 alias는 전역 레이어 루트만 가리킵니다.

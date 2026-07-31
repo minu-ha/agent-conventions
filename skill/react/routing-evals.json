@@ -15,7 +15,7 @@
 			],
 			"expectedSelected": {
 				"react": [
-					"ownership-avoid-barrel-and-react-namespace-imports",
+					"ownership-import-react-types-directly",
 					"ownership-use-consistent-file-and-symbol-naming",
 					"typing-function-type-first",
 					"typing-reuse-existing-contracts",
@@ -323,7 +323,7 @@
 			],
 			"expectedSelected": {
 				"react": [
-					"ownership-avoid-barrel-and-react-namespace-imports",
+					"ownership-import-react-types-directly",
 					"typing-function-type-first",
 					"composition-named-handlers-over-inline",
 					"screen-keep-derived-values-close",
