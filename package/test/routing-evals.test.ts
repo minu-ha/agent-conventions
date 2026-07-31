@@ -117,7 +117,7 @@ const cssRuleUniverse = [
 	"composition-prefer-ui-wrapper-prop-types",
 	"composition-style-ui-components-through-owned-wrappers",
 	"selector-avoid-deep-descendant-dependencies",
-	"selector-keep-project-selectors-flat",
+	"selector-limit-nesting-block-depth",
 	"selector-target-third-party-dom-from-owned-roots",
 	"selector-use-pseudo-classes-for-dom-owned-states",
 	"values-keep-layout-intent-explicit",
@@ -310,8 +310,7 @@ const cssRuleRouting = {
 		reviewWith: [],
 	},
 	"composition-do-not-build-structural-variants-with-modifiers": {
-		appliesWhen:
-			"modifier를 추가·변경하거나 반복 가능한 state·API variant와 one-off structural patch 사이를 판정할 때. 허용된 state로 결론 나도 변경된 modifier 분류는 Selected.",
+		appliesWhen: "modifier를 추가·변경할 때. 반복 가능한 state·API variant와 one-off structural patch 사이를 판정할 때.",
 		reviewWith: ["naming-name-elements-and-modifiers-by-role"],
 	},
 	"composition-keep-classes-single-purpose": {
@@ -330,13 +329,13 @@ const cssRuleRouting = {
 	},
 	"selector-avoid-deep-descendant-dependencies": {
 		appliesWhen:
-			"descendant 또는 child selector chain을 추가·수정할 때. DOM 계층에 의존하는 project-owned·third-party selector를 검토할 때.",
-		reviewWith: [],
+			"descendant·child·sibling combinator를 추가·수정할 때. DOM 계층에 의존하는 project-owned·third-party selector를 검토할 때.",
+		reviewWith: ["selector-limit-nesting-block-depth"],
 	},
-	"selector-keep-project-selectors-flat": {
+	"selector-limit-nesting-block-depth": {
 		appliesWhen:
-			"project-owned class를 중첩·descendant selector로 연결할 때. raw HTML prose·copy·content wrapper 안 element selector를 추가·수정할 때.",
-		reviewWith: [],
+			"중첩 `{}` block을 추가하거나 기존 block을 펼치거나 합칠 때. raw HTML prose·copy·content wrapper 안 element selector를 추가·수정할 때.",
+		reviewWith: ["selector-avoid-deep-descendant-dependencies"],
 	},
 	"selector-target-third-party-dom-from-owned-roots": {
 		appliesWhen: "`.ant-*`, `.rc-*`, `.tippy-*` 등 third-party 내부 DOM selector를 추가·수정할 때. owned wrapper 아래로 범위를 제한할 때.",
@@ -353,9 +352,8 @@ const cssRuleRouting = {
 		reviewWith: [],
 	},
 	"values-always-provide-css-variable-fallbacks": {
-		appliesWhen:
-			"`var(--*)` 사용을 새로 추가하거나 변경할 때. token 주입 보장 경계를 바꿀 때. 제외: 같은 stylesheet·주입 경계에서 기존 `var()` 선언을 selector 사이 byte-equivalent 이동만 하는 경우.",
-		reviewWith: [],
+		appliesWhen: "`var(--*)` 사용을 추가하거나 변수 이름·fallback을 바꿀 때. core token 목록에 항목을 추가·제거할 때.",
+		reviewWith: ["values-tokenize-repeated-visual-values"],
 	},
 	"values-separate-domain-state-modifiers-from-dom-interaction-states": {
 		appliesWhen: "app/domain state modifier와 hover·focus·disabled 같은 DOM interaction state를 추가·변경할 때. focus ring을 수정할 때.",
@@ -1372,7 +1370,7 @@ const cssScenarioStages = {
 				"move top-level .wg_entryDetail__prose h2 and > :first-child into existing owner-block raw-element nesting; class names and values stay unchanged.",
 			files: ["src/components/widgets/entry-detail/wg-entry-detail.css"],
 			expectedSkills: ["css"],
-			expectedSelected: {css: ["selector-keep-project-selectors-flat", "organization-review-banned-css-patterns-before-finishing"]},
+			expectedSelected: {css: ["selector-limit-nesting-block-depth", "organization-review-banned-css-patterns-before-finishing"]},
 		},
 	},
 	"css-dom-interaction-states": {
@@ -1426,7 +1424,7 @@ const cssScenarioStages = {
 			expectedSelected: {
 				css: [
 					"selector-avoid-deep-descendant-dependencies",
-					"selector-keep-project-selectors-flat",
+					"selector-limit-nesting-block-depth",
 					"organization-review-banned-css-patterns-before-finishing",
 				],
 			},
@@ -2088,10 +2086,10 @@ test("CSS progressive metadata and rule routing match Appendix C exactly", async
 	const layoutIntentRule = await readRuleSource("css", "values-keep-layout-intent-explicit");
 	assertMentions(readAppliesWhen(layoutIntentRule), ["base/modifier", "`display`·spacing", "값 그대로"], "layoutIntentRule");
 	const fallbackRule = await readRuleSource("css", "values-always-provide-css-variable-fallbacks");
-	assertMentions(readAppliesWhen(fallbackRule), ["`var(--*)`", "같은 stylesheet", "byte-equivalent"], "fallbackRule");
+	assertMentions(readAppliesWhen(fallbackRule), ["`var(--*)`", "core token"], "fallbackRule");
 	assertMentions(
 		flattenWhitespace(fallbackRule),
-		[/실제 diff에 새 CSS variable 사용/i, /요청 여부와 무관하게/i, /다시 선택/i],
+		[/core token 목록/i, /fail-loud/i, /values-tokenize-repeated-visual-values/i],
 		"fallbackRule",
 	);
 
@@ -2361,29 +2359,18 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 	);
 
 	const modifierClassification = await readRule("css", "composition-do-not-build-structural-variants-with-modifiers");
-	assertMentions(
-		modifierClassification,
-		[/허용(?:된| 가능한)? (?:domain )?state/i, /Selected/i, /(?:N\/A.*아니|pass)/i],
-		"modifierClassification",
-	);
+	assertMentions(modifierClassification, [/허용:/, /one-off structural modifier/i, /두 번째 화면/], "modifierClassification");
 
 	const layoutIntent = await readRule("css", "values-keep-layout-intent-explicit");
-	assert.match(
-		layoutIntent,
-		/같은 (?:DOM )?element[\s\S]*base(?:와|\/|·)modifier[\s\S]*기존 `display`[\s\S]*(?:값 그대로|property-value)[\s\S]*(?:N\/A|제외)/i,
-	);
+	assert.match(layoutIntent, /`z-index`[\s\S]*layer 토큰[\s\S]*stacking 순서/i);
+	assert.match(layoutIntent, /기준 컨테이너를 주석/i);
 	assert.doesNotMatch(layoutIntent, /동작 변화 없이/);
 
 	const variableFallback = await readRule("css", "values-always-provide-css-variable-fallbacks");
-	assert.match(
-		variableFallback,
-		/같은 stylesheet[\s\S]*(?:주입|injection) 경계[\s\S]*기존 `var\(\)`[\s\S]*byte-equivalent[\s\S]*(?:N\/A|제외)/i,
-	);
+	assert.match(variableFallback, /core token 목록에 있는 변수[\s\S]*쓰지 않습니다/i);
+	assert.match(variableFallback, /그 밖의 모든 `var\(\)`[\s\S]*씁니다/i);
 
-	for (const ruleId of [
-		"selector-use-pseudo-classes-for-dom-owned-states",
-		"values-separate-domain-state-modifiers-from-dom-interaction-states",
-	]) {
+	for (const ruleId of ["values-separate-domain-state-modifiers-from-dom-interaction-states"]) {
 		const interactionState = await readRule("css", ruleId);
 		assert.match(
 			interactionState,
@@ -2391,8 +2378,8 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 		);
 	}
 	const cssInteractionContracts = await Promise.all(
-		["selector-use-pseudo-classes-for-dom-owned-states", "values-separate-domain-state-modifiers-from-dom-interaction-states"].map(
-			(ruleId) => readFile(path.join(realSkillRootDir, "css", "contracts", `${ruleId}.md`), "utf8"),
+		["values-separate-domain-state-modifiers-from-dom-interaction-states"].map((ruleId) =>
+			readFile(path.join(realSkillRootDir, "css", "contracts", `${ruleId}.md`), "utf8"),
 		),
 	);
 	for (const contract of cssInteractionContracts) {
@@ -2585,12 +2572,8 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	assert.doesNotMatch(headerDocs, /\bT\d{2}\b/);
 
 	const descendantDepth = await readRule("css", "selector-avoid-deep-descendant-dependencies");
-	assertMentions(
-		descendantDepth,
-		[/nested (?:source )?block 수/i, /effective selector/i, /(?:combinator|ancestor) chain/i],
-		"descendantDepth",
-	);
-	assertMentions(descendantDepth, [/& \.ant-tree \.ant-tree-node-content-wrapper/i, /(?:2단계|one-level이 아)/i], "descendantDepth");
+	assertMentions(descendantDepth, [/effective selector/i, /combinator 개수/i, /같은 요소에 붙는 조건/], "descendantDepth");
+	assertMentions(descendantDepth, [/combinator 0/, /소유 root 아래 third-party 내부 DOM/], "descendantDepth");
 
 	const thirdPartyRoot = await readRule("css", "selector-target-third-party-dom-from-owned-roots");
 	assertMentions(
@@ -2598,11 +2581,7 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 		[/owned root/i, /instance scope/i, /중간 (?:library root|라이브러리 root)/i, /(?:생략|반복하지 않)/i],
 		"thirdPartyRoot",
 	);
-	assertMentions(
-		thirdPartyRoot,
-		[/추가 third-party ancestor/i, /(?:ambiguity|모호성|direct-child)/i, /(?:근거|evidence)/i],
-		"thirdPartyRoot",
-	);
+	assertMentions(thirdPartyRoot, [/selector-avoid-deep-descendant-dependencies/i, /주석 한 줄/i, /(?:근거|evidence)/i], "thirdPartyRoot");
 	assert.match(thirdPartyRoot, /& \.ant-tree \.ant-tree-node-content-wrapper/);
 	assert.match(thirdPartyRoot, /& \.ant-tree-node-content-wrapper/);
 
@@ -2626,7 +2605,7 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 		/영문 label[\s\S]*docs-write-concise-korean-comments-about-purpose-and-constraints[\s\S]*content gate/i,
 	);
 	assertMentions(generatedContracts[1]!, [/주석 본문 전체/i, /(?:ASCII|영문)/i], "generatedContracts");
-	assert.match(generatedContracts[2]!, /effective selector[\s\S]*(?:combinator|ancestor) chain/i);
+	assert.match(generatedContracts[2]!, /effective selector[\s\S]*combinator 개수/i);
 	assert.match(generatedContracts[3]!, /CRITICAL rule[\s\S]*full rule/i);
 });
 

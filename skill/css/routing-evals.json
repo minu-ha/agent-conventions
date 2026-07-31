@@ -228,7 +228,7 @@
 			],
 			"expectedSelected": {
 				"css": [
-					"selector-keep-project-selectors-flat",
+					"selector-limit-nesting-block-depth",
 					"organization-review-banned-css-patterns-before-finishing"
 				]
 			}
@@ -299,7 +299,7 @@
 			"expectedSelected": {
 				"css": [
 					"selector-avoid-deep-descendant-dependencies",
-					"selector-keep-project-selectors-flat",
+					"selector-limit-nesting-block-depth",
 					"organization-review-banned-css-patterns-before-finishing"
 				]
 			}

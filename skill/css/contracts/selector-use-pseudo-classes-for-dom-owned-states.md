@@ -5,17 +5,18 @@
 브라우저와 DOM이 직접 부여하는 상태는 같은 클래스 block 안의 nested `&:`로 표현합니다.
 화면이나 도메인이 결정하는 상태는 modifier class로 분리합니다.
 
-base/modifier 분리에서는 domain state와 무관한 hover, focus,
-disabled interaction을 unconditional base element block에 둡니다.
-interaction selector를 modifier 아래로 옮겨 적용 대상을 좁히지 않습니다.
-modifier가 켜진 경우에만 interaction이 달라져야 한다는 별도 제품 요구가 있을 때만 그 예외를 명시합니다.
+| 소유 | 상태 | 표현 |
+| --- | --- | --- |
+| DOM | `:hover`, `:visited`, `:focus-visible`, `:disabled`, `:checked` | 같은 block 안 nested `&:` |
+| 앱 | `selected`, `active`, `error`, `expanded`, `current` | `--modifier` class |
 
-구분 기준:
-
-- DOM-owned: `:hover`, `:visited`, `:focus`, `:focus-visible`, `:disabled`, `:checked`
-- App-owned: `selected`, `active`, `error`, `expanded`, `current`
-- DOM state가 child element를 바꿔야 하면 parent block에서 CSS 변수를 바꾸고 child block이 그 값을 읽게 합니다.
+- pseudo-class를 top-level selector로 다시 열지 않습니다.
+- 도메인 상태를 `:not(.--modifier)`로 뒤집지 않습니다.
+  읽는 사람이 부정 조건을 뒤집어야 하고 combinator 예산도 함께 먹습니다. 예외는 자손 modifier로 옮깁니다.
+- DOM state가 자손을 바꿔야 하면 조상 block에서 custom property를 바꾸고 자손이 그 값을 읽습니다.
 - `.foo:hover .foo__icon`처럼 project-owned descendant coupling으로 상태를 전달하지 않습니다.
+
+base/modifier 배치와 focus 접근성은 `values-separate-domain-state-modifiers-from-dom-interaction-states`가 담당합니다.
 
 **Requires selected:** `values-separate-domain-state-modifiers-from-dom-interaction-states` · 함께 적용
 

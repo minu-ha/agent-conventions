@@ -4,8 +4,8 @@ titleKo: one-off 구조 patch에 modifier 사용 금지
 impact: HIGH
 impactDescription: modifier를 두 번째 레이아웃 이름 체계로 만들지 않고 상태 표현에만 남겨둡니다
 appliesWhen:
-  - modifier를 추가·변경하거나 반복 가능한 state·API variant와 one-off structural patch 사이를 판정할 때
-  - 허용된 state로 결론 나도 변경된 modifier 분류는 Selected
+  - modifier를 추가·변경할 때
+  - 반복 가능한 state·API variant와 one-off structural patch 사이를 판정할 때
 reviewWith: naming-name-elements-and-modifiers-by-role
 tags: modifiers, structure, naming
 ---
@@ -28,10 +28,7 @@ modifier는 상태나 반복 variant를 표현할 때만 사용합니다.
 - `dense`, `horizontal`, `compact`처럼 component API로 반복 노출되는 variant
 
 금지 대상은 "상태 의미가 아닌 모든 modifier"가 아니라, 재사용 contract 없이 생긴 one-off structural modifier입니다.
-
-이 규칙의 Selected는 modifier가 금지됐다는 뜻이 아니라 변경된 modifier의 계약을 분류했다는 뜻입니다.
-`active`·`selected` 같은 허용된 domain state로 결론 나면 `Selected + pass`이며,
-위반이 없다는 이유로 N/A로 돌리지 않습니다.
+허용 여부가 갈리는 지점은 그 modifier를 두 번째 화면에서도 같은 이름으로 쓸 수 있느냐입니다.
 
 **Incorrect (특정 화면용 구조 patch를 modifier로 덧붙임):**
 

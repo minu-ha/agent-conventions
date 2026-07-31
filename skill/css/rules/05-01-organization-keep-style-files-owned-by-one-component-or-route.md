@@ -45,11 +45,11 @@ tags: files, ownership, comments
 
 /* visual */
 .pg_catalogIndex__panel {
-	background: var(--app-color-bg-surface, #fff);
+	background: var(--app-color-bg-surface);
 }
 
 /* state */
 .pg_catalogIndex__panel--active {
-	border-color: var(--app-color-accent, #1677ff);
+	border-color: var(--app-color-accent);
 }
 ```

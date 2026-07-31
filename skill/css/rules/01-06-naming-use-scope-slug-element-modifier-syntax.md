@@ -18,15 +18,14 @@ tags: naming, class-grammar, ownership
 
 구성 요소:
 
-- `scope`: `rt`, `wg`, `ui`, `loc` 같은 lowercase owner namespace
-- `slug`: owner 식별자. casing은 해당 scope의 house style을 따름
+- `scope`: `pg`, `wg`, `ui` 중 하나. lowercase owner namespace
+- `slug`: owner 식별자. `camelCase`
 - `element`: owner 안의 UI 역할. `listButton`, `emptyState`처럼 camelCase
 - `modifier`: 상태나 반복 variant. `routeActive`, `selected`처럼 camelCase
 
-중요한 것은 모든 scope에 같은 slug casing을 강제하는 것이 아니라,
-같은 owner 안에서 표기가 흔들리지 않게 유지하는 것입니다.
+slug에는 prefix가 말하는 부분을 반복하지 않습니다. `UiButton`은 `ui_button`이고 `ui_uiButton`이 아닙니다.
 
-**Incorrect (scope별 slug 규칙을 섞거나 element/modifier casing이 흔들림):**
+**Incorrect (slug나 element casing이 흔들림):**
 
 ```txt
 ui_tag_list__root
@@ -37,7 +36,7 @@ pg_document__main-content
 pg_document__main--route_active
 ```
 
-**Correct (scope는 lowercase, slug는 scope별 house style, element/modifier는 camelCase):**
+**Correct (scope는 lowercase, slug·element·modifier는 camelCase):**
 
 ```txt
 ui_tagList__root

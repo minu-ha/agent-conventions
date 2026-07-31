@@ -167,7 +167,7 @@ Pure CSS fixture는 CSS만 partition합니다. Mixed fixture 5개는 progressive
 
 - Focus
   - `selector-use-pseudo-classes-for-dom-owned-states`
-  - `selector-keep-project-selectors-flat`
+  - `selector-limit-nesting-block-depth`
   - `organization-review-banned-css-patterns-before-finishing`
 - Prompt
   - "link hover/visited 상태와 prose wrapper 타이포를 CSS skill 기준으로 정리해줘."

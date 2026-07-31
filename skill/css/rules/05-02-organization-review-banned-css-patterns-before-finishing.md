@@ -76,7 +76,7 @@ div {
 
 .pg_treePanel__root {
 	& .ant-tree-node-content-wrapper {
-		border-radius: var(--app-radius-control, 4px);
+		border-radius: var(--app-radius-control);
 	}
 }
 ```

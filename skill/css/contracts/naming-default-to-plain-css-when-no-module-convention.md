@@ -8,8 +8,4 @@
 프로젝트가 이미 CSS Modules를 공식 표준으로 채택했고 그에 맞는 naming/runtime 규칙이 따로 있다면,
 그 프로젝트 로컬 규칙이 이 기본값보다 우선합니다.
 
-이 규칙은 stylesheet 접근 형식을 새로 결정하거나 전환할 때 선택합니다.
-이미 plain CSS를 직접 import하는 owner 안에서 기존 plain CSS class·selector 이름이나 base/modifier 구조만 바꾸는 작업은
-접근 형식을 결정하지 않으므로 N/A입니다.
-
 > 예시·예외가 필요하면 [full rule](../rules/01-01-naming-default-to-plain-css-when-no-module-convention.md)을 읽습니다.

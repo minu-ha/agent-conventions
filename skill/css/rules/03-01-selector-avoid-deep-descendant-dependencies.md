@@ -2,29 +2,45 @@
 title: Avoid Deep Descendant Selector Dependencies
 titleKo: 깊은 descendant 셀렉터 의존 금지
 impact: HIGH
-impactDescription: 레이아웃 변경이 긴 descendant 체인을 통해 스타일을 깨뜨리는 것을 막습니다
+impactDescription: selector가 훑는 요소 수를 제한해 마크업 변경에 함께 깨지지 않게 합니다
 appliesWhen:
-  - descendant 또는 child selector chain을 추가·수정할 때
+  - descendant·child·sibling combinator를 추가·수정할 때
   - DOM 계층에 의존하는 project-owned·third-party selector를 검토할 때
+reviewWith: selector-limit-nesting-block-depth
 tags: descendants, selector-depth, guardrails
 ---
 
 ## Avoid Deep Descendant Selector Dependencies
 
-**Impact: HIGH (레이아웃 변경이 긴 descendant 체인을 통해 스타일을 깨뜨리는 것을 막습니다)**
+**Impact: HIGH (selector가 훑는 요소 수를 제한해 마크업 변경에 함께 깨지지 않게 합니다)**
 
-깊은 후손 선택자 체인에 스타일을 걸지 않습니다.
-이 규칙은 nested 문법 사용 여부와 무관하게, selector가 DOM 구조에 과도하게 묶이는 것을 금지합니다.
-project-owned 스타일은 클래스 자체가 계약이 되어야 하며,
-`.a .b .c .d` 같은 의존성은 DOM 구조가 조금만 바뀌어도 쉽게 깨집니다.
-owned root 아래의 third-party DOM path는 `selector-target-third-party-dom-from-owned-roots`가 다루는 예외이며,
-그 경우에도 shortest viable chain만 허용합니다.
+중첩을 펼친 effective selector의 combinator 개수를 셉니다.
+같은 요소에 붙는 조건인 `.a.b`, `:hover`, `:not()`, `::before`는 DOM 관계가 아니므로 세지 않습니다.
 
-깊이는 nested source block 수가 아니라 nesting을 펼친 effective selector의 combinator·ancestor chain으로 계산합니다.
-`& .ant-tree .ant-tree-node-content-wrapper`는 한 nested block 안에 있어도 owned root 뒤에 third-party ancestor가
-2단계이므로 one-level selector가 아닙니다.
+기본값은 combinator 0입니다. 규칙 하나가 요소 하나만 겨냥하고, 상태는 그 요소의 modifier class로 받습니다.
 
-**Incorrect (깊은 후손 선택자 체인에 의존):**
+combinator를 쓸 수 있는 경우와 상한은 넷뿐입니다.
+
+| 경우 | 상한 |
+| --- | --- |
+| 조상의 DOM 상호작용 상태가 자손 모양을 바꿈 | 1 |
+| 소유 root 아래 third-party 내부 DOM | 2 |
+| raw HTML wrapper 안 element selector | 1 |
+| 공유 컴포넌트가 slot class prop을 열지 않은 부분 override | 1 |
+
+첫 항목은 CSS에 부모 선택자가 없어 생기는 정상 소비입니다.
+다만 도메인 상태까지 부모 조건으로 얹지 말고 자손 modifier로 옮깁니다.
+
+상한을 넘으면 순서대로 시도합니다.
+
+1. 자손에 modifier를 주고 combinator 0으로 편다
+2. 조상 block에서 custom property를 바꾸고 자손이 그 값을 읽는다
+3. 위 네 경우 중 무엇인지 주석 한 줄로 남긴다
+4. 어디에도 안 걸리면 리팩터 대상이다
+
+중첩을 펼쳐도 effective selector는 같아서 결합도가 줄지 않습니다. 블록 깊이는 별도 규칙이 담당합니다.
+
+**Incorrect (project-owned 클래스를 네 요소까지 체이닝):**
 
 ```css
 .pg_catalogIndex__layout .pg_catalogIndex__panel .pg_catalogIndex__detail .pg_catalogIndex__item {
@@ -32,7 +48,15 @@ owned root 아래의 third-party DOM path는 `selector-target-third-party-dom-fr
 }
 ```
 
-**Correct (대상 element 클래스나 직접 owner root 계약에 스타일을 둠):**
+**Incorrect (도메인 상태를 부모 조건으로 얹어 예산을 낭비):**
+
+```css
+.pg_spikePanel__spreadButton:not(.pg_spikePanel__spreadButton--checked):hover .pg_spikePanel__spreadBox {
+	border-color: #9fadc7;
+}
+```
+
+**Correct (대상 element 클래스에 직접 스타일을 둠):**
 
 ```css
 .pg_catalogIndex__item {
@@ -40,6 +64,36 @@ owned root 아래의 third-party DOM path는 `selector-target-third-party-dom-fr
 }
 
 .pg_catalogIndex__detailHeader {
-	gap: var(--app-space-2, 8px);
+	gap: var(--app-space-2);
+}
+```
+
+**Correct (조상 hover는 combinator 1개로 쓰고, 도메인 상태는 자손 modifier가 처리):**
+
+```css
+.pg_spikePanel__spreadButton {
+	&:hover .pg_spikePanel__spreadBox {
+		border-color: var(--app-color-accent);
+	}
+}
+
+.pg_spikePanel__spreadBox--checked {
+	box-shadow: none;
+}
+```
+
+**Correct (조상 상태를 custom property로 내려 combinator 0으로 유지):**
+
+```css
+.pg_spikePanel__spreadButton {
+	--pg-spike-box-border: var(--app-color-border);
+
+	&:hover {
+		--pg-spike-box-border: var(--app-color-accent);
+	}
+}
+
+.pg_spikePanel__spreadBox {
+	border: 2px solid var(--pg-spike-box-border);
 }
 ```

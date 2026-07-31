@@ -19,28 +19,22 @@ tags: naming, css-modules, ownership
 프로젝트가 이미 CSS Modules를 공식 표준으로 채택했고 그에 맞는 naming/runtime 규칙이 따로 있다면,
 그 프로젝트 로컬 규칙이 이 기본값보다 우선합니다.
 
-이 규칙은 stylesheet 접근 형식을 새로 결정하거나 전환할 때 선택합니다.
-이미 plain CSS를 직접 import하는 owner 안에서 기존 plain CSS class·selector 이름이나 base/modifier 구조만 바꾸는 작업은
-접근 형식을 결정하지 않으므로 N/A입니다.
-
 **Incorrect (프로젝트 표준이 없는데도 CSS Modules를 기본처럼 사용):**
 
 ```tsx
-import styles from "./mission-control.module.css";
+import styles from "./catalog-index.module.css";
 
-<div className={styles.pg_star_wars_mission_control__hero}>
-	<span className={styles.pg_star_wars_mission_control__eyebrow}>
-		GraphQL operations deck
-	</span>
-</div>
+<section className={styles.hero}>
+	<span className={styles.eyebrow}>Catalog</span>
+</section>
 ```
 
 ```css
-.pg_star_wars_mission_control__hero {
+.hero {
 	display: grid;
 }
 
-.pg_star_wars_mission_control__eyebrow {
+.eyebrow {
 	letter-spacing: 0.08em;
 }
 ```
