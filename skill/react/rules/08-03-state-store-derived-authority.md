@@ -45,7 +45,7 @@ if (accessStore.canEditRecord) {
 
 ```ts
 /**
- * @watch bootstrap capability 응답을 access store에 동기화
+ * bootstrap capability 응답을 access store에 동기화
  */
 useEffect(() => {
   if (!responseAccessBootstrapSuspense.data) {

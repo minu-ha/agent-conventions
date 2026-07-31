@@ -164,8 +164,8 @@ def flow_companions():
 
     TS_X, TS_W, TS_Y = 400, 200, 70
     s += [
-        sk(90, TS_Y, 190, "react", "43 rules · progressive", "e"),
-        sk(TS_X, TS_Y, TS_W, "typescript", "22 rules · progressive", "e"),
+        sk(90, TS_Y, 190, "react", "42 rules · progressive", "e"),
+        sk(TS_X, TS_Y, TS_W, "typescript", "20 rules · progressive", "e"),
         sk(720, TS_Y, 190, "css", "21 rules · progressive", "e"),
     ]
 

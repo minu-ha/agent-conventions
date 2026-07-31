@@ -36,7 +36,7 @@ const postProcess = () => {/* ... */};
 
 ```ts
 /**
- * @event 선택된 entry 저장과 화면 이동 처리
+ * 선택된 entry 저장과 화면 이동 처리
  */
 const handleSubmitButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
   if (!responseEntryListSuspense.data.selectedEntry) {

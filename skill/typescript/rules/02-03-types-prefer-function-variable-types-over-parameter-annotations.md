@@ -36,11 +36,11 @@ const formatState = (state: Record<string, unknown>): string => {
 
 ```ts
 /**
- * @summary 사용자 formatter 계약
+ * 사용자 formatter 계약
  */
 interface UserFormatters {
 	/**
-	 * @field 상태 문자열 formatter
+	 * 상태 문자열 formatter
 	 */
 	formatState: (state: Record<string, unknown>) => string;
 }
@@ -52,7 +52,7 @@ const formatState: UserFormatters["formatState"] = (state) => {
 
 ```ts
 /**
- * @summary request 정규화 계약
+ * request 정규화 계약
  */
 type NormalizeRequest = (request: string) => string;
 

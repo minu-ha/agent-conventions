@@ -70,7 +70,7 @@ export const ChartRoot = (props: ChartRootProps) => {
 	const [chart, setChart] = useState<EChartsType | null>(null);
 
 	/**
-	 * @watch container mount 시 chart instance를 만들고 resize·dispose까지 소유
+	 * container mount 시 chart instance를 만들고 resize·dispose까지 소유
 	 */
 	useEffect(() => {
 		if (!containerRef.current) return;
@@ -88,7 +88,7 @@ export const ChartRoot = (props: ChartRootProps) => {
 	}, []);
 
 	/**
-	 * @watch option이 바뀌면 기존 instance에 다시 반영
+	 * option이 바뀌면 기존 instance에 다시 반영
 	 */
 	useEffect(() => {
 		chart?.setOption(option);

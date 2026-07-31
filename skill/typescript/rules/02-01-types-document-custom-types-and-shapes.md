@@ -16,20 +16,19 @@ tags: types, jsdoc, shapes
 
 선언형 shape는 헤더와 필드를 나눠 문서화합니다.
 
-- custom `type`, `interface`, schema root, 객체형 상수: 헤더 `@summary`
-- 객체형 계약과 schema field: 각 필드 바로 위 `@field`
-- `Pick`/`Omit`/Indexed Access alias: 필드가 없으므로 헤더 `@summary`만 사용
-- compound component public part props: React rule에 따라 `@part` + `@description` 허용
+- custom `type`, `interface`, schema root, 객체형 상수: 선언 위 헤더 doc 주석
+- 객체형 계약과 schema field: 각 필드 바로 위 doc 주석
+- `Pick`/`Omit`/Indexed Access alias: 필드가 없으므로 헤더만 작성
 
-`@summary`와 `@field`는 태그 존재만으로 완료되지 않으며,
+헤더와 필드 주석은 존재만으로 완료되지 않으며,
 각 body가 `docs-write-concise-korean-comments-about-purpose-and-constraints`의 한국어 content gate를 만족해야 합니다.
 
 기존 named shape의 field가 byte-equivalent여도,
 positional 인자를 대체하는 새 callable input이나 함수 결과를 고정하는 output 계약 역할에 처음 연결되면
 이 규칙은 Selected입니다.
-선언의 새 계약 역할을 `@summary`와 각 `@field`로 설명합니다.
+선언의 새 계약 역할을 헤더와 각 필드 주석으로 설명합니다.
 새 callable input 또는 output 역할은 새 type·interface 선언을 요구하지 않습니다.
-호환되는 로컬 소유 named shape가 있으면 그대로 연결하고, 그 선언의 `@summary`와 `@field`를 새 역할에 맞게 보강합니다.
+호환되는 로컬 소유 named shape가 있으면 그대로 연결하고, 그 선언의 헤더와 필드 문서를 새 역할에 맞게 보강합니다.
 
 외부·generated·read-only·shared owner의 unchanged shape 사용만으로는 N/A입니다.
 owner 선언은 수정하지 않고 문서화만을 위한 local alias도 만들지 않습니다.
@@ -44,8 +43,8 @@ callable 문서화 여부는 `docs-require-header-jsdoc-on-key-declarations` 등
 
 ```ts
 /**
- * @summary 게시 결과 요약
- * @field 게시 대상 문서 ID
+ * 게시 결과 요약
+ * 게시 대상 문서 ID
  */
 interface PublishResult {
 	documentId: string;
@@ -53,29 +52,29 @@ interface PublishResult {
 }
 ```
 
-**Correct (헤더 `@summary` + 필드별 `@field`를 사용):**
+**Correct (헤더와 필드별 doc 주석을 사용):**
 
 ```ts
 /**
- * @summary 게시 결과 요약
+ * 게시 결과 요약
  */
 export interface PublishResult {
 	/**
-	 * @field 게시 대상 문서 ID
+	 * 게시 대상 문서 ID
 	 */
 	documentId: string;
 	/**
-	 * @field 게시 성공 여부
+	 * 게시 성공 여부
 	 */
 	published: boolean;
 }
 
 /**
- * @summary 게시 결과 스키마
+ * 게시 결과 스키마
  */
 const publishResultSchema = z.object({
 	/**
-	 * @field 게시 대상 문서 ID
+	 * 게시 대상 문서 ID
 	 */
 	documentId: z.string(),
 });

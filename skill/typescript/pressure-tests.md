@@ -27,9 +27,9 @@ protocol v3 결과에는 coordinator가 dispatch 전에 고정한 repository HEA
 
 - `??`, `||`로 결측을 습관적으로 숨김
 - `helper.ts`, `helpers.ts`, `utils.ts`, `common.ts` 같은 generic 파일을 먼저 만듦
-- owner module export나 `shared/util.ts` helper에 `@helper`가 없음
+- owner module export나 `shared/util.ts` helper에 헤더 doc 주석이 없음
 - formatter 예외 함수, custom type/interface, schema root에 header JSDoc이 없음
-- `Pick`/`Omit`/Indexed Access로 만든 alias에 `@summary`가 없음
+- `Pick`/`Omit`/Indexed Access로 만든 alias에 헤더 doc 주석이 없음
 - interface field나 schema field 설명이 없는데도 “Correct”처럼 제시됨
 - callback 시그니처를 기존 계약에서 재사용하지 않고 다시 씀
 - 미사용 callback parameter를 생략하거나 `_` 접두사를 붙이지 않음
@@ -49,7 +49,7 @@ protocol v3 결과에는 coordinator가 dispatch 전에 고정한 repository HEA
 - Expected pass signals
   - `??`, `||`를 습관적으로 쓰지 않음
   - 기본값이 제품 명세상 확정일 때만 explicit branch로 드러냄
-  - 기본값 적용 helper를 뺐다면 `@helper`가 붙어 있음
+  - 기본값 적용 helper를 뺐다면 헤더 doc 주석이 붙어 있음
 - Likely fail signals
   - `settings.supportEmail ?? "help@example.com"`
   - `query.pageSize?.trim() || "20"` 같은 한 줄 fallback
@@ -65,7 +65,7 @@ protocol v3 결과에는 coordinator가 dispatch 전에 고정한 repository HEA
 - Expected pass signals
   - 작은 계산은 local flow에 남김
   - 진짜 exported pure support function만 남김
-  - exported support helper에는 `@helper`가 붙어 있음
+  - exported support helper에는 헤더 doc 주석이 붙어 있음
 - Likely fail signals
   - `helper.ts`, `helpers.ts`, `utils.ts` 생성
   - support module 안에 sub-step export가 늘어남
@@ -80,8 +80,8 @@ protocol v3 결과에는 coordinator가 dispatch 전에 고정한 repository HEA
 - Prompt
   - "기존 타입 재사용과 문서화를 같이 맞춰줘. 새 타입은 최소화하고 계약 문서는 유지해야 해."
 - Expected pass signals
-  - `Pick`/`Omit`/Indexed Access로 파생하되 `@summary`를 유지함
-  - custom interface에는 `@summary`, field에는 `@field`를 붙임
+  - `Pick`/`Omit`/Indexed Access로 파생하되 헤더 doc 주석을 유지함
+  - custom interface에는 헤더 주석, field에는 필드 주석을 붙임
   - callback 시그니처는 기존 계약에서 재사용함
 - Likely fail signals
   - 동일 구조 타입을 다시 선언함
@@ -97,13 +97,13 @@ protocol v3 결과에는 coordinator가 dispatch 전에 고정한 repository HEA
 - Prompt
   - "주석과 JSDoc을 TypeScript skill 기준으로 정리해줘. 설명성 주석은 줄이고 역할 태그는 맞춰줘."
 - Expected pass signals
-  - `@api`, `@helper`, `@summary`, `@field` 역할이 일관됨
-  - 기술 identifier를 영문으로 섞더라도 `@summary route-local 엔트리 트리 입력 계약`처럼 각 annotation body에 목적을 나타내는 한글 구절이 있음
+  - 헤더와 필드 주석이 역할 태그 없이 여러 줄 블록으로 일관됨
+  - 기술 identifier를 영문으로 섞더라도 `route-local 엔트리 트리 입력 계약`처럼 각 주석 본문에 목적을 나타내는 한글 구절이 있음
   - inline comment는 제약과 caveat만 설명함
   - 자명한 `no-op`, `increment` 설명은 제거함
 - Likely fail signals
   - `@schema`, `@contract`, `@data` 같은 비표준 태그 사용
-  - 다른 `@field`만 한글이고 header는 `@summary route-local entry tree props`처럼 영문 label로 끝남
+  - 필드 주석만 한글이고 header는 `route-local entry tree props`처럼 영문 label로 끝남
   - `// no-op sink`, `// count를 1 증가` 같은 설명 주석 유지
 
 ### T5. Namespace and Origin Preservation
@@ -131,7 +131,7 @@ protocol v3 결과에는 coordinator가 dispatch 전에 고정한 repository HEA
   - "상태 값 집합을 타입과 런타임에서 같이 써야 해. TypeScript skill 기준으로 정리해줘."
 - Expected pass signals
   - `enum` 대신 object literal + `as const`를 사용함
-  - 파생 타입에는 `@summary`를 유지함
+  - 파생 타입에는 헤더 doc 주석을 유지함
   - enum-like 값 집합 이름과 키 casing이 naming rule과 맞음
 - Likely fail signals
   - `enum AuditStatus { ... }`

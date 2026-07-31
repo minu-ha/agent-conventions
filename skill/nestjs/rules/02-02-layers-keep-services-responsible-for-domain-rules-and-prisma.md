@@ -40,7 +40,7 @@ export class UsersService {
 	constructor(private readonly prisma: PrismaService) {}
 
 	/**
-	 * @api 사용자 단건 조회 - 미존재 시 NotFoundException 발생
+	 * 사용자 단건 조회 - 미존재 시 NotFoundException 발생
 	 */
 	async findOneOrThrow(id: number): Promise<SafeUser> {
 		const user = await this.prisma.user.findUnique({where: {id}});

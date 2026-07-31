@@ -49,7 +49,7 @@ export const getEmptyMessage = (filter?: string) => {
 import type { EntryAdminInitialState } from "./_local/entry-admin-runtime";
 
 /**
- * @summary admin entries 화면의 초기 server state를 만든다.
+ * admin entries 화면의 초기 server state를 만든다.
  */
 export const getEntryAdminInitialState = async (): Promise<EntryAdminInitialState> => {
 	const entries = await entryAdminApi.listEntries();

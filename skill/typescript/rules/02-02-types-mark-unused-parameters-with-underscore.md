@@ -35,7 +35,7 @@ const noopLog: LogSink = () => {
 
 ```ts
 /**
- * @summary 로그 sink 콜백 계약
+ * 로그 sink 콜백 계약
  */
 type LogSink = (message: string, level: "info" | "error") => void;
 

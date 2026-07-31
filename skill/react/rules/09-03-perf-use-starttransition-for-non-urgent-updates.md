@@ -28,7 +28,7 @@ const handleStatusFilterChange = (nextStatus: EntryStatusFilter) => {
 
 ```tsx
 /**
- * @event 상태 필터 변경으로 인한 무거운 목록 갱신을 transition으로 예약
+ * 상태 필터 변경으로 인한 무거운 목록 갱신을 transition으로 예약
  */
 const handleStatusFilterChange = (nextStatus: EntryStatusFilter) => {
 	startTransition(() => {

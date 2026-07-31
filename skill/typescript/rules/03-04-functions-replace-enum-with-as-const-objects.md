@@ -36,7 +36,7 @@ const audit_status = {
 } as const;
 
 /**
- * @summary 감사 상태 값 집합
+ * 감사 상태 값 집합
  */
 type AuditStatus = (typeof audit_status)[keyof typeof audit_status];
 ```

@@ -69,7 +69,7 @@ export const buildEntryPayload = (formValues: EntryFormValues, files: UploadFile
 ```ts
 // page/entries/function/normalize-tree-nodes.ts
 /**
- * @helper tree 응답을 화면용 node shape로 정규화
+ * tree 응답을 화면용 node shape로 정규화
  */
 export const normalizeTreeNodes = (nodes: TreeNodeResponse[]) => {
   return nodes.map((node) => ({
@@ -82,7 +82,7 @@ export const normalizeTreeNodes = (nodes: TreeNodeResponse[]) => {
 ```ts
 // page/entries/entries-page.tsx
 /**
- * @event 저장 요청 후 목록 query를 무효화
+ * 저장 요청 후 목록 query를 무효화
  */
 const handleSave = async () => {
   await mutationEntrySave.mutateAsync({ data: request });
@@ -94,7 +94,7 @@ const handleSave = async () => {
 
 ```ts
 /**
- * @helper entry form values와 파일 목록을 저장 payload로 조립
+ * entry form values와 파일 목록을 저장 payload로 조립
  */
 export const buildEntryPayload = (
 	formValues: EntryFormValues,

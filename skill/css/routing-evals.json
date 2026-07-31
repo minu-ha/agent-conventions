@@ -206,7 +206,6 @@
 					"types-document-custom-types-and-shapes",
 					"types-reuse-existing-contracts-before-new-types",
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-standardize-annotation-tags-by-declaration-role",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"guardrails-review-banned-typescript-shortcuts-before-finishing"
 				],

@@ -42,7 +42,7 @@
 		},
 		{
 			"id": "derive-existing-contract-with-docs",
-			"prompt": "replace a duplicate `UserPreview` interface with a same-name `Pick<UserRecord, ...>` alias and add concise Korean `@summary`; imports and names otherwise stay unchanged.",
+			"prompt": "replace a duplicate `UserPreview` interface with a same-name `Pick<UserRecord, ...>` alias and add concise Korean header doc comments; imports and names otherwise stay unchanged.",
 			"files": [
 				"src/users/user-preview.ts"
 			],
@@ -54,7 +54,6 @@
 					"types-document-custom-types-and-shapes",
 					"types-reuse-existing-contracts-before-new-types",
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-standardize-annotation-tags-by-declaration-role",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"guardrails-review-banned-typescript-shortcuts-before-finishing"
 				]
@@ -76,7 +75,7 @@
 				]
 			},
 			"scopeDrift": {
-				"evidence": "the same normalization becomes necessary for a second owner, so move the existing named function to `profile-support.ts`, export it, directly import it from `bulk-profile.ts`, and add concise Korean `@helper` docs.",
+				"evidence": "the same normalization becomes necessary for a second owner, so move the existing named function to `profile-support.ts`, export it, directly import it from `bulk-profile.ts`, and add concise Korean header doc comments.",
 				"files": [
 					"src/profile/profile-api.ts",
 					"src/profile/profile-support.ts",
@@ -90,8 +89,6 @@
 						"naming-use-direct-imports-and-public-entry-points",
 						"functions-extract-helpers-only-when-the-boundary-is-real",
 						"docs-require-header-jsdoc-on-key-declarations",
-						"docs-standardize-annotation-tags-by-declaration-role",
-						"docs-use-helper-for-reusable-pure-helper-functions",
 						"docs-write-concise-korean-comments-about-purpose-and-constraints",
 						"guardrails-review-banned-typescript-shortcuts-before-finishing"
 					]
@@ -130,7 +127,6 @@
 					"types-document-custom-types-and-shapes",
 					"functions-replace-enum-with-as-const-objects",
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-standardize-annotation-tags-by-declaration-role",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"guardrails-review-banned-typescript-shortcuts-before-finishing"
 				]

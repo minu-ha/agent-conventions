@@ -31,7 +31,7 @@ const items = responseEntryListSuspense.data.list;
 
 ```ts
 /**
- * @api entry 목록 조회 API
+ * entry 목록 조회 API
  */
 const responseEntryListSuspense = useEntryListSuspense({
   query: {

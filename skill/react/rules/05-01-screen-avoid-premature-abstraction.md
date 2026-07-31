@@ -74,13 +74,13 @@ export const EntryTable = (props: EntryTableProps) => {
 
 ```ts
 /**
- * @summary form state, 저장 mutation, 오류 노출을 함께 오케스트레이션하는 editor contract
+ * form state, 저장 mutation, 오류 노출을 함께 오케스트레이션하는 editor contract
  */
 export const useEntryEditor = () => {
   const form = useForm<EntryEditorFormValues>();
 
   /**
-   * @api entry 저장 API
+   * entry 저장 API
    */
   const mutationEntrySave = useEntrySave();
   const [submitErrorMessage, setSubmitErrorMessage] = useState<string | null>(null);
@@ -93,7 +93,7 @@ export const useEntryEditor = () => {
 
 ```ts
 /**
- * @helper entry form values를 API payload로 조립
+ * entry form values를 API payload로 조립
  */
 export const buildEntryPayload = (formValues: EntryFormValues) => {
 	// 1. 공통 문자열 값 정규화

@@ -38,7 +38,7 @@ JSX에서는 명명된 핸들러 참조를 기본으로 하고, 아주 짧은 �
 
 ```tsx
 /**
- * @event 선택된 entry 삭제와 다음 화면 이동 처리
+ * 선택된 entry 삭제와 다음 화면 이동 처리
  */
 const handleRemoveEntryButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
   // ...

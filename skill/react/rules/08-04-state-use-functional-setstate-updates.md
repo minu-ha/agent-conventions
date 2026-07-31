@@ -33,7 +33,7 @@ const handleToggleUser = (userId: string) => {
 
 ```tsx
 /**
- * @event 사용자 선택 목록 토글 처리
+ * 사용자 선택 목록 토글 처리
  */
 const handleToggleUser = (userId: string) => {
 	setSelectedUserIds((currentUserIds) => {

@@ -42,7 +42,7 @@ const buildRequestUrl = ({baseUrl, resourcePath, searchParams}: BuildRequestUrlA
 
 ```ts
 /**
- * @summary grouped args로 API request URL 생성
+ * grouped args로 API request URL 생성
  */
 const buildRequestUrl = (args: BuildRequestUrlArgs): URL => {
 	const {baseUrl, resourcePath, searchParams} = args;

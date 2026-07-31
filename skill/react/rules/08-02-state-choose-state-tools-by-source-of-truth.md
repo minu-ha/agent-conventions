@@ -41,7 +41,7 @@ const [isOpen, setIsOpen] = useState(false);
 const themeStore = useThemeStore();
 
 /**
- * @api 사용자 상세 조회 API
+ * 사용자 상세 조회 API
  */
 const responseUserGetItemSuspense = useUserGetItemSuspense();
 ```

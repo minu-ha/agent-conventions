@@ -30,12 +30,12 @@ const removeApi = useEntryRemove();
 
 ```ts
 /**
- * @api entry 목록 조회 API
+ * entry 목록 조회 API
  */
 const responseEntryListSuspense = useEntryListSuspense();
 
 /**
- * @api entry 삭제 API
+ * entry 삭제 API
  */
 const mutationEntryRemove = useEntryRemove();
 ```

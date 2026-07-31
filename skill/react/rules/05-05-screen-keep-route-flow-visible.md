@@ -43,19 +43,19 @@ const navigate = useNavigate();
 const search = Route.useSearch();
 
 /**
- * @api entry 목록 조회 API
+ * entry 목록 조회 API
  */
 const responseEntryListSuspense = useEntryListSuspense({
   page: search.page,
 });
 
 /**
- * @api entry 저장 API
+ * entry 저장 API
  */
 const mutationEntrySave = useEntrySave();
 
 /**
- * @event entry 저장 후 현재 화면 흐름을 유지한 채 route search를 갱신
+ * entry 저장 후 현재 화면 흐름을 유지한 채 route search를 갱신
  */
 const handleSubmitButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
   await mutationEntrySave.mutateAsync({ data: request });

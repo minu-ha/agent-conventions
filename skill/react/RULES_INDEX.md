@@ -1,7 +1,7 @@
 # React 컨벤션 Rule Index
 
 - Skill: `react`
-- Routing digest: `sha256:8a9ad06dfb5d3fe9eb904d60c263f88a76f329644f29c94e1c8f6df066e880f9`
+- Routing digest: `sha256:f2925a8ca880732d346c17bc9bde94c66846c5a64a37de55f447bd630230df54`
 
 ## Direct Companions
 
@@ -50,6 +50,5 @@
 - R38 | perf-use-lazy-state-initializers-for-expensive-defaults | \`useState\` 초기값에 localStorage 파싱, 인덱스 생성, 큰 배열 정규화 같은 비용 있는 계산을 넣을 때.
 - R39 | perf-use-starttransition-for-non-urgent-updates | 클릭·선택·필터 변경 뒤 큰 list·table·tree를 다시 그리는 state update를 다룰 때. state update의 우선순위나 transition 처리를 바꿀 때.
 - R40 | perf-use-usedeferredvalue-for-heavy-derived-renders | 검색어·필터·정렬 입력이 무거운 파생 view를 갱신해 typing 지연이 생길 때. \`useDeferredValue\` 기반 계산을 추가·변경할 때. | reviewWith: perf-compiler-first-memoization, perf-use-starttransition-for-non-urgent-updates
-- R41 | docs-document-compound-parts-with-part-and-description | compound component의 exported public part·props interface·part 내부 handler를 추가·변경할 때. public part 문서를 수정할 때.
-- R42 | docs-limit-inline-comments-to-non-obvious-logic | React 함수·handler·JSX 인접 로직 안의 \`//\` 주석을 추가·수정할 때. 자명한 설명과 실제 제약을 구분해 주석을 정리할 때.
-- R43 | docs-require-jsdoc-on-key-declarations | query·mutation이나 비자명한 handler/effect를 추가·변경할 때. exported helper·hook·store 선언을 추가·변경할 때. re-export 포함 public type·interface나 예외 memo 선언을 추가·변경할 때.
+- R41 | docs-limit-inline-comments-to-non-obvious-logic | React 함수·handler·JSX 인접 로직 안의 \`//\` 주석을 추가·수정할 때. 자명한 설명과 실제 제약을 구분해 주석을 정리할 때.
+- R42 | docs-require-jsdoc-on-key-declarations | query·mutation이나 비자명한 handler/effect를 추가·변경할 때. exported helper·hook·store 선언을 추가·변경할 때. re-export 포함 public type·interface나 compound public part를 추가·변경할 때.

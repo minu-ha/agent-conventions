@@ -77,9 +77,8 @@
     - 9.3 [Use startTransition for Non-urgent Visual Updates](#93-use-starttransition-for-non-urgent-visual-updates)
     - 9.4 [Use useDeferredValue for Heavy Derived Renders](#94-use-usedeferredvalue-for-heavy-derived-renders)
 10. [Documentation and Comments](#10-documentation-and-comments) — **MEDIUM**
-    - 10.1 [Document Compound Parts with @part and @description](#101-document-compound-parts-with-part-and-description)
-    - 10.2 [Limit Inline Comments to Non-obvious Logic](#102-limit-inline-comments-to-non-obvious-logic)
-    - 10.3 [Require JSDoc on React Hooks, Handlers, and Key Declarations](#103-require-jsdoc-on-react-hooks-handlers-and-key-declarations)
+    - 10.1 [Limit Inline Comments to Non-obvious Logic](#101-limit-inline-comments-to-non-obvious-logic)
+    - 10.2 [Require Doc Comments on React Hooks, Handlers, and Key Declarations](#102-require-doc-comments-on-react-hooks-handlers-and-key-declarations)
 
 ---
 
@@ -126,7 +125,7 @@ const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 import type { MouseEventHandler } from "react";
 
 /**
- * @event 버튼 클릭 기본 동작 차단
+ * 버튼 클릭 기본 동작 차단
  */
 const handleClick: MouseEventHandler<HTMLButtonElement> = (_event) => {
   // ...
@@ -175,7 +174,7 @@ export const page = {
 ```ts
 // page/entries/function/build-media-upload-payload.ts
 /**
- * @helper 업로드 파일 목록을 저장 payload로 정규화
+ * 업로드 파일 목록을 저장 payload로 정규화
  */
 export const buildMediaUploadPayload = (files: UploadFile[]) => {
 	return files.map((file) => ({ uid: file.uid }));
@@ -617,7 +616,7 @@ export const ChartRoot = (props: ChartRootProps) => {
 	const [chart, setChart] = useState<EChartsType | null>(null);
 
 	/**
-	 * @watch container mount 시 chart instance를 만들고 resize·dispose까지 소유
+	 * container mount 시 chart instance를 만들고 resize·dispose까지 소유
 	 */
 	useEffect(() => {
 		if (!containerRef.current) return;
@@ -635,7 +634,7 @@ export const ChartRoot = (props: ChartRootProps) => {
 	}, []);
 
 	/**
-	 * @watch option이 바뀌면 기존 instance에 다시 반영
+	 * option이 바뀌면 기존 instance에 다시 반영
 	 */
 	useEffect(() => {
 		chart?.setOption(option);
@@ -691,7 +690,7 @@ const handleAddButtonClick = (event: MouseEvent<HTMLButtonElement>): void => {
 import type { MouseEventHandler } from "react";
 
 /**
- * @event 추가 버튼 클릭 기본 동작 차단
+ * 추가 버튼 클릭 기본 동작 차단
  */
 const handleAddButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => {
   // ...
@@ -727,7 +726,7 @@ interface EntrySummaryValues {
 type EntrySummary = Pick<EntrySummaryResponse, "id" | "title">;
 
 /**
- * @event 링크 클릭 기본 이동 차단
+ * 링크 클릭 기본 이동 차단
  */
 const handleLinkClick: LinkProps["onLinkClick"] = (event) => {
   event.preventDefault();
@@ -1177,7 +1176,7 @@ export interface UpdateEntryMediaUploadFileByUidParams {
 }
 
 /**
- * @helper column별 업로드 파일 목록에서 특정 uid 항목 갱신
+ * column별 업로드 파일 목록에서 특정 uid 항목 갱신
  */
 export const updateEntryMediaUploadFileByUid = (params: UpdateEntryMediaUploadFileByUidParams) => {
   const { uploadFileListByColumn, columnName, fileUid, updater } = params;
@@ -1219,7 +1218,7 @@ JSX에서는 명명된 핸들러 참조를 기본으로 하고, 아주 짧은 �
 
 ```tsx
 /**
- * @event 선택된 entry 삭제와 다음 화면 이동 처리
+ * 선택된 entry 삭제와 다음 화면 이동 처리
  */
 const handleRemoveEntryButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
   // ...
@@ -1417,13 +1416,13 @@ export const EntryTable = (props: EntryTableProps) => {
 
 ```ts
 /**
- * @summary form state, 저장 mutation, 오류 노출을 함께 오케스트레이션하는 editor contract
+ * form state, 저장 mutation, 오류 노출을 함께 오케스트레이션하는 editor contract
  */
 export const useEntryEditor = () => {
   const form = useForm<EntryEditorFormValues>();
 
   /**
-   * @api entry 저장 API
+   * entry 저장 API
    */
   const mutationEntrySave = useEntrySave();
   const [submitErrorMessage, setSubmitErrorMessage] = useState<string | null>(null);
@@ -1436,7 +1435,7 @@ export const useEntryEditor = () => {
 
 ```ts
 /**
- * @helper entry form values를 API payload로 조립
+ * entry form values를 API payload로 조립
  */
 export const buildEntryPayload = (formValues: EntryFormValues) => {
 	// 1. 공통 문자열 값 정규화
@@ -1547,7 +1546,7 @@ const EntryTreeSection = (props: EntryTreeSectionProps) => {
 	);
 
 	/**
-	 * @event tree에서 선택한 category key를 route search용 categoryId로 변환
+	 * tree에서 선택한 category key를 route search용 categoryId로 변환
 	 */
 	const handleTreeSelect: UiTreeProps["onSelect"] = (keys, _info) => {
 		const selectedKey = keys[0];
@@ -1591,17 +1590,17 @@ export const RouteComponent = () => {
 	const search = Route.useSearch();
 
 	/**
-	 * @api tree sidebar 조회 API
+	 * tree sidebar 조회 API
 	 */
 	const responseEntryTreeSuspense = useEntryTreeSuspense<EntryTreeSelectData>();
 
 	/**
-	 * @api entry 목록 조회 API
+	 * entry 목록 조회 API
 	 */
 	const responseEntryListSuspense = useEntryListSuspense<EntryListSelectData>();
 
 	/**
-	 * @event tree에서 선택한 category로 route search를 갱신
+	 * tree에서 선택한 category로 route search를 갱신
 	 */
 	const handleCategorySelect: EntryTreeSectionProps["onCategorySelect"] = (categoryId) => {
 		void navigate({
@@ -1688,7 +1687,7 @@ export const buildEntryPayload = (formValues: EntryFormValues, files: UploadFile
 ```ts
 // page/entries/function/normalize-tree-nodes.ts
 /**
- * @helper tree 응답을 화면용 node shape로 정규화
+ * tree 응답을 화면용 node shape로 정규화
  */
 export const normalizeTreeNodes = (nodes: TreeNodeResponse[]) => {
   return nodes.map((node) => ({
@@ -1701,7 +1700,7 @@ export const normalizeTreeNodes = (nodes: TreeNodeResponse[]) => {
 ```ts
 // page/entries/entries-page.tsx
 /**
- * @event 저장 요청 후 목록 query를 무효화
+ * 저장 요청 후 목록 query를 무효화
  */
 const handleSave = async () => {
   await mutationEntrySave.mutateAsync({ data: request });
@@ -1713,7 +1712,7 @@ const handleSave = async () => {
 
 ```ts
 /**
- * @helper entry form values와 파일 목록을 저장 payload로 조립
+ * entry form values와 파일 목록을 저장 payload로 조립
  */
 export const buildEntryPayload = (
 	formValues: EntryFormValues,
@@ -1774,7 +1773,7 @@ const selectedCategoryIdForQuery = selectedCategoryState.selectedCategoryNode?.i
 
 ```ts
 /**
- * @api entry 목록 조회 API
+ * entry 목록 조회 API
  */
 const responseEntryListSuspense = useEntryListSuspense({
   categoryId: selectedCategoryState.selectedCategoryNode?.id,
@@ -1826,19 +1825,19 @@ const navigate = useNavigate();
 const search = Route.useSearch();
 
 /**
- * @api entry 목록 조회 API
+ * entry 목록 조회 API
  */
 const responseEntryListSuspense = useEntryListSuspense({
   page: search.page,
 });
 
 /**
- * @api entry 저장 API
+ * entry 저장 API
  */
 const mutationEntrySave = useEntrySave();
 
 /**
- * @event entry 저장 후 현재 화면 흐름을 유지한 채 route search를 갱신
+ * entry 저장 후 현재 화면 흐름을 유지한 채 route search를 갱신
  */
 const handleSubmitButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
   await mutationEntrySave.mutateAsync({ data: request });
@@ -1894,7 +1893,7 @@ const postProcess = () => {/* ... */};
 
 ```ts
 /**
- * @event 선택된 entry 저장과 화면 이동 처리
+ * 선택된 entry 저장과 화면 이동 처리
  */
 const handleSubmitButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
   if (!responseEntryListSuspense.data.selectedEntry) {
@@ -1958,7 +1957,7 @@ const handleSelectionToggle = (id: string) => {
 import type { MouseEventHandler } from "react";
 
 /**
- * @event 목록 항목 클릭 시 선택된 ID 전달
+ * 목록 항목 클릭 시 선택된 ID 전달
  */
 const handleListItemClick =
   (id: string): MouseEventHandler<HTMLLIElement> =>
@@ -2001,7 +2000,7 @@ const handleSubmit = () => {
 
 ```tsx
 /**
- * @event 제출 버튼 클릭 시 생성 요청 실행
+ * 제출 버튼 클릭 시 생성 요청 실행
  */
 const handleSubmit = async () => {
 	await createEntryMutation.mutateAsync(formValues);
@@ -2091,12 +2090,12 @@ const removeApi = useEntryRemove();
 
 ```ts
 /**
- * @api entry 목록 조회 API
+ * entry 목록 조회 API
  */
 const responseEntryListSuspense = useEntryListSuspense();
 
 /**
- * @api entry 삭제 API
+ * entry 삭제 API
  */
 const mutationEntryRemove = useEntryRemove();
 ```
@@ -2132,7 +2131,7 @@ const { entries, selectedEntry } = responseEntryListSuspense.data;
 
 ```ts
 /**
- * @watch 검색 응답이 비어 있을 때만 후속 동기화를 건너뜀
+ * 검색 응답이 비어 있을 때만 후속 동기화를 건너뜀
  */
 useEffect(() => {
   const { data, isFetching } = responseEntrySearchSuspense;
@@ -2171,7 +2170,7 @@ const items = responseEntryListSuspense.data.list;
 
 ```ts
 /**
- * @api entry 목록 조회 API
+ * entry 목록 조회 API
  */
 const responseEntryListSuspense = useEntryListSuspense({
   query: {
@@ -2258,7 +2257,7 @@ const [isOpen, setIsOpen] = useState(false);
 const themeStore = useThemeStore();
 
 /**
- * @api 사용자 상세 조회 API
+ * 사용자 상세 조회 API
  */
 const responseUserGetItemSuspense = useUserGetItemSuspense();
 ```
@@ -2304,7 +2303,7 @@ if (accessStore.canEditRecord) {
 
 ```ts
 /**
- * @watch bootstrap capability 응답을 access store에 동기화
+ * bootstrap capability 응답을 access store에 동기화
  */
 useEffect(() => {
   if (!responseAccessBootstrapSuspense.data) {
@@ -2343,7 +2342,7 @@ const handleToggleUser = (userId: string) => {
 
 ```tsx
 /**
- * @event 사용자 선택 목록 토글 처리
+ * 사용자 선택 목록 토글 처리
  */
 const handleToggleUser = (userId: string) => {
 	setSelectedUserIds((currentUserIds) => {
@@ -2396,14 +2395,14 @@ useEffect(() => {
 
 ```tsx
 /**
- * @event socket message 수신 시 최신 onMessage 로직 실행
+ * socket message 수신 시 최신 onMessage 로직 실행
  */
 const handleMessage = useEffectEvent((message: SocketMessage) => {
 	onMessage(message);
 });
 
 /**
- * @watch socket subscription lifecycle 유지
+ * socket subscription lifecycle 유지
  */
 useEffect(() => {
 	const unsubscribe = socket.subscribe((message) => {
@@ -2503,7 +2502,7 @@ const handleStatusFilterChange = (nextStatus: EntryStatusFilter) => {
 
 ```tsx
 /**
- * @event 상태 필터 변경으로 인한 무거운 목록 갱신을 transition으로 예약
+ * 상태 필터 변경으로 인한 무거운 목록 갱신을 transition으로 예약
  */
 const handleStatusFilterChange = (nextStatus: EntryStatusFilter) => {
 	startTransition(() => {
@@ -2552,109 +2551,11 @@ const filteredRows = useMemo(() => {
 
 **Impact: MEDIUM**
 
-React 경계 선언에는 companion skill인 `convention-typescript`의 annotation 표준을 적용하고, compound component의 public part는 `@part`와 `@description`으로 읽히게 문서화하며, inline comment는 JSX나 handler 흐름에서 비자명한 제약만 설명해야 합니다.
+React 경계 선언에는 companion skill인 `convention-typescript`의 doc 주석 표준을 적용하고, compound component의 public part는 props `interface` 위 설명으로 문서화하며, inline comment는 JSX나 handler 흐름에서 비자명한 제약만 설명해야 합니다.
 
-### 10.1 Document Compound Parts with @part and @description
+### 10.1 Limit Inline Comments to Non-obvious Logic
 
-**Rule:** `R41` · `docs-document-compound-parts-with-part-and-description`
-
-**Applies when:** compound component의 exported public part·props interface·part 내부 handler를 추가·변경할 때. public part 문서를 수정할 때.
-
-**Requires selected:** `docs-require-jsdoc-on-key-declarations` · 함께 적용
-
-**Impact: MEDIUM (compound 공개 part를 흩어진 선언이 아니라 이름 붙은 경계 하나로 훑을 수 있게 합니다)**
-
-compound component가 public part를 노출하면 part 단위로 문서화합니다.
-
-작성 방식:
-
-- props `interface` 바로 위에 `@part`와 `@description`을 둡니다.
-- component 선언은 그 `interface` 바로 아래에 둡니다.
-- part field는 `@field`, part 내부 handler는 `@event`로 설명합니다.
-- 단순 내부 wrapper에는 public part 문서를 만들지 않습니다.
-
-**Incorrect (props와 component 설명이 분리되어 part 경계가 흐려짐):**
-
-```tsx
-/**
- * @summary dialog header props
- */
-interface DialogHeaderProps {
-	/**
-	 * @field header 영역 안에 렌더할 자식 요소
-	 */
-	children: ReactNode;
-}
-
-/**
- * @summary dialog 헤더 슬롯
- */
-const DialogHeader = (props: DialogHeaderProps) => {
-	const { children } = props;
-
-	return <header className="dialog-header">{children}</header>;
-};
-
-export const Dialog = {
-	Header: DialogHeader,
-} as const;
-```
-
-**Correct (part 단위로 JSDoc을 묶어 읽히게 유지):**
-
-```tsx
-/**
- * @part dialog header
- * @description dialog panel 상단의 제목과 설명 영역을 감싸는 헤더 컴포넌트
- */
-interface DialogHeaderProps {
-	/**
-	 * @field header 영역 안에 렌더할 자식 요소
-	 */
-	children: ReactNode;
-}
-const DialogHeader = (props: DialogHeaderProps) => {
-	const { children } = props;
-
-	return <header className="dialog-header">{children}</header>;
-};
-```
-
-**Correct (stateful part 내부의 handler도 역할에 맞게 문서화):**
-
-```tsx
-/**
- * @part dialog close
- * @description dialog root context를 사용해 닫기 액션을 실행하는 공용 버튼 컴포넌트
- */
-interface DialogCloseProps {
-	/**
-	 * @field 닫기 버튼 안에 표시할 자식 요소
-	 */
-	children: ReactNode;
-}
-const DialogClose = (props: DialogCloseProps) => {
-	const { children } = props;
-	const dialog = useDialogContext();
-
-	/**
-	 * @event dialog 닫기 버튼 클릭 처리
-	 */
-	const handleCloseButtonClick = () => {
-		dialog.closeDialog();
-	};
-
-	return (
-		<button onClick={handleCloseButtonClick} type="button">
-			{children}
-		</button>
-	);
-};
-```
-
-### 10.2 Limit Inline Comments to Non-obvious Logic
-
-**Rule:** `R42` · `docs-limit-inline-comments-to-non-obvious-logic`
+**Rule:** `R41` · `docs-limit-inline-comments-to-non-obvious-logic`
 
 **Applies when:** React 함수·handler·JSX 인접 로직 안의 `//` 주석을 추가·수정할 때. 자명한 설명과 실제 제약을 구분해 주석을 정리할 때.
 
@@ -2692,17 +2593,17 @@ if (mutationFileUpload.isPending) {
 }
 ```
 
-### 10.3 Require JSDoc on React Hooks, Handlers, and Key Declarations
+### 10.2 Require Doc Comments on React Hooks, Handlers, and Key Declarations
 
-**Rule:** `R43` · `docs-require-jsdoc-on-key-declarations`
+**Rule:** `R42` · `docs-require-jsdoc-on-key-declarations`
 
-**Applies when:** query·mutation이나 비자명한 handler/effect를 추가·변경할 때. exported helper·hook·store 선언을 추가·변경할 때. re-export 포함 public type·interface나 예외 memo 선언을 추가·변경할 때.
+**Applies when:** query·mutation이나 비자명한 handler/effect를 추가·변경할 때. exported helper·hook·store 선언을 추가·변경할 때. re-export 포함 public type·interface나 compound public part를 추가·변경할 때.
 
 **Requires selected:** `typescript/docs-require-header-jsdoc-on-key-declarations` · 함께 적용
 
 **Impact: MEDIUM-HIGH (중요한 API, handler, effect, 타입 선언을 더 쉽게 리뷰하고 재사용할 수 있게 합니다)**
 
-JSDoc은 경계를 설명할 때만 붙입니다. 자명한 local 변수에는 강제하지 않습니다.
+doc 주석은 경계를 설명할 때만 붙입니다. 자명한 local 변수에는 강제하지 않습니다.
 
 여기서 public 선언은 다른 module이 소비할 수 있도록 실제 exported 또는 re-exported 된 선언만 뜻합니다.
 export되지 않은 file-local `type`/`interface`는 public이라는 이유만으로 이 규칙을 선택하지 않습니다.
@@ -2716,58 +2617,77 @@ export되지 않은 file-local `type`/`interface`는 public이라는 이유만�
 - exported/re-exported public `type`/`interface`, compound component public part
 - 예외적으로 남긴 `useMemo`/`useCallback`
 
-태그는 `convention-typescript`의 `@api`, `@event`, `@watch`, `@helper`, `@summary`, `@part`, `@description`,
-`@field`를 사용합니다.
+compound public part는 props `interface` 바로 위에 설명을 두고 component 선언을 그 `interface` 바로 아래에 둡니다.
+단순 내부 wrapper에는 part 문서를 만들지 않습니다.
+
+형식과 태그 기준은 `typescript/docs-require-header-jsdoc-on-key-declarations`가 정합니다.
+여러 줄 블록으로 쓰고 역할 태그는 붙이지 않습니다.
 
 **Incorrect (비자명한 경계 선언에 문맥 설명이 없음):**
 
 ```ts
 const handleRemoveEntryButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
-  if (!selectedEntry) {
-    return;
-  }
+	if (!selectedEntry) {
+		return;
+	}
 
-  await mutationEntryRemove.mutateAsync({ params: { entryId } });
+	await mutationEntryRemove.mutateAsync({ params: { entryId } });
 };
 
 useEffect(() => {
-  resetForm(userData);
+	resetForm(userData);
 }, [userData, resetForm]);
 ```
 
-**Correct (비자명한 선언 의도와 역할을 바로 위에 문서화):**
+**Correct (비자명한 선언 의도를 바로 위에 여러 줄 블록으로 문서화):**
 
 ```ts
 /**
- * @api entry 삭제 API
+ * entry 삭제 API
  */
 const mutationEntryRemove = useEntryRemove();
 
 /**
- * @event 선택된 entry 삭제와 다음 화면 이동 처리
+ * 선택된 entry 삭제와 다음 화면 이동 처리
  */
 const handleRemoveEntryButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
-  if (!selectedEntry) {
-    return;
-  }
+	if (!selectedEntry) {
+		return;
+	}
 
-  await mutationEntryRemove.mutateAsync({ params: { entryId } });
+	await mutationEntryRemove.mutateAsync({ params: { entryId } });
 };
 
 /**
- * @watch 사용자 데이터 변경 시 폼 상태 동기화
+ * 사용자 데이터 변경 시 폼 상태 동기화
  */
 useEffect(() => {
-  resetForm(userData);
+	resetForm(userData);
 }, [userData, resetForm]);
 
 /**
- * @helper entry 저장 요청 payload 생성
+ * entry 저장 요청 payload 생성
  */
 export const buildEntryPayload = (formValues: EntryFormValues) => {
-  return {
-    title: formValues.title.trim(),
-  };
+	return {
+		title: formValues.title.trim(),
+	};
+};
+```
+
+**Correct (compound public part는 props `interface` 위에 설명을 두고 component를 바로 아래에 둠):**
+
+```tsx
+/**
+ * dialog 제목과 닫기 버튼을 담는 header part
+ */
+export interface DialogHeaderProps {
+	children: ReactNode;
+}
+
+const DialogHeader = (props: DialogHeaderProps) => {
+	const { children } = props;
+	return <header className="wg_dialog__header">{children}</header>;
 };
 ```
 

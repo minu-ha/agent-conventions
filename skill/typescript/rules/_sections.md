@@ -27,8 +27,7 @@
 ## 5. JSDoc and Comment Conventions (docs)
 **TitleKo:** JSDoc과 주석 규약
 **Impact:** MEDIUM-HIGH
-**Description:** 주석과 annotation 규칙은 `@api`, `@event`, `@watch`, `@helper`, `@summary`, `@field`처럼 작은 고정 태그
-  세트로 선언 역할을 빠르게 드러내야 합니다.
+**Description:** 주석 규칙은 역할 태그 없이 여러 줄 블록과 한국어 본문으로 선언의 목적과 제약을 드러내야 합니다.
 
 ## 6. Guardrails and Review Checks (guardrails)
 **TitleKo:** 가드레일과 마무리 점검

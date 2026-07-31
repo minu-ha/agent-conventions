@@ -6,7 +6,7 @@ impactDescription: 재사용 계약이나 테스트 경계가 실제로 없을 �
 appliesWhen:
   - support function을 추출·이동·export·공유할 때
   - generic helper 파일, 단일 owner 전용 mapper 또는 작은 sub-step 경계를 바꿀 때
-reviewWith: docs-use-helper-for-reusable-pure-helper-functions, docs-require-header-jsdoc-on-key-declarations
+reviewWith: docs-require-header-jsdoc-on-key-declarations
 tags: helpers, extraction, boundaries
 ---
 
@@ -97,7 +97,7 @@ const nextIteration = iteration + 1;
 ```ts
 // profile-support.ts
 /**
- * @helper profile form 값을 저장 payload로 조립
+ * profile form 값을 저장 payload로 조립
  */
 export const buildProfileUpdatePayload = (formValues: ProfileFormValues) => {
 	const normalizedDisplayName = formValues.displayName.trim();
@@ -141,7 +141,7 @@ import { buildProfileUpdatePayload } from "./profile-support";
 export const util = {
 	date: {
 		/**
-		 * @helper date 입력값을 ISO 문자열로 정규화
+		 * date 입력값을 ISO 문자열로 정규화
 		 */
 		normalize(value: Date | string): string {
 			return new Date(value).toISOString();

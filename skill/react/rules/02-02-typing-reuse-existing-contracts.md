@@ -35,7 +35,7 @@ interface EntrySummaryValues {
 type EntrySummary = Pick<EntrySummaryResponse, "id" | "title">;
 
 /**
- * @event 링크 클릭 기본 이동 차단
+ * 링크 클릭 기본 이동 차단
  */
 const handleLinkClick: LinkProps["onLinkClick"] = (event) => {
   event.preventDefault();

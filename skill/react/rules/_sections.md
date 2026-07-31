@@ -61,6 +61,6 @@
 ## 10. Documentation and Comments (docs)
 **TitleKo:** 문서화와 주석
 **Impact:** MEDIUM
-**Description:** React 경계 선언에는 companion skill인 `convention-typescript`의 annotation 표준을 적용하고, compound
-  component의 public part는 `@part`와 `@description`으로 읽히게 문서화하며, inline comment는 JSX나 handler 흐름에서
+**Description:** React 경계 선언에는 companion skill인 `convention-typescript`의 doc 주석 표준을 적용하고, compound
+  component의 public part는 props `interface` 위 설명으로 문서화하며, inline comment는 JSX나 handler 흐름에서
   비자명한 제약만 설명해야 합니다.

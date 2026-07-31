@@ -44,7 +44,7 @@ const handleAddButtonClick = (event: MouseEvent<HTMLButtonElement>): void => {
 import type { MouseEventHandler } from "react";
 
 /**
- * @event 추가 버튼 클릭 기본 동작 차단
+ * 추가 버튼 클릭 기본 동작 차단
  */
 const handleAddButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => {
   // ...

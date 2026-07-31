@@ -229,7 +229,7 @@ export class UsersService {
 	constructor(private readonly prisma: PrismaService) {}
 
 	/**
-	 * @api 사용자 단건 조회 - 미존재 시 NotFoundException 발생
+	 * 사용자 단건 조회 - 미존재 시 NotFoundException 발생
 	 */
 	async findOneOrThrow(id: number): Promise<SafeUser> {
 		const user = await this.prisma.user.findUnique({where: {id}});
@@ -290,13 +290,13 @@ request DTO, response DTO, Prisma type, parameter object는 backend 계약을 �
 **Impact: MEDIUM-HIGH (메서드 본문을 훑지 않고도 백엔드 전용 계약과 매개변수 객체를 이해할 수 있게 합니다)**
 
 Prisma 생성 타입이 아닌 커스텀 `type`, `interface`, 파라미터 객체에는 JSDoc을 작성합니다.
-객체형 계약은 헤더에 `@summary`, 각 필드 바로 위 `@field`를 사용하고, 관련 파일 최상단에 모아 배치합니다.
+객체형 계약은 헤더와 각 필드 바로 위에 doc 주석을 두고, 관련 파일 최상단에 모아 배치합니다.
 
 **Incorrect (커스텀 계약 설명이 없거나 헤더에 `@property`를 몰아씀):**
 
 ```ts
 /**
- * @summary 페이지네이션 조회 공통 파라미터
+ * 페이지네이션 조회 공통 파라미터
  * @property page 페이지 번호
  */
 interface PaginationParams {
@@ -305,19 +305,19 @@ interface PaginationParams {
 }
 ```
 
-**Correct (헤더 `@summary` + 필드별 `@field`를 사용):**
+**Correct (헤더와 필드별 doc 주석을 사용):**
 
 ```ts
 /**
- * @summary 페이지네이션 조회 공통 파라미터
+ * 페이지네이션 조회 공통 파라미터
  */
 interface PaginationParams {
 	/**
-	 * @field 1부터 시작하는 페이지 번호
+	 * 1부터 시작하는 페이지 번호
 	 */
 	page: number;
 	/**
-	 * @field 페이지당 항목 수
+	 * 페이지당 항목 수
 	 */
 	limit: number;
 }
@@ -586,8 +586,8 @@ const where = includeDeleted ? {id} : {id, deletedAt: null};
 Service public 메서드, Prisma 접근이나 외부 API 호출 블록, NestJS 생명주기 훅, 커스텀 `type`/`interface`,
 Guard/Interceptor/Pipe 핵심 메서드에는 예외 없이 JSDoc을 작성합니다.
 Controller는 Swagger 데코레이터가 충분하면 JSDoc을 생략할 수 있습니다.
-annotation 태그 선택은 companion skill인 `convention-typescript`의 표준인 `@api`, `@event`, `@watch`, `@helper`,
-`@summary`, `@field`를 따르되, 일반적인 NestJS 코드에서는 주로 `@api`, `@helper`, `@summary`, `@field`를 사용합니다.
+주석 형식은 companion skill인 `convention-typescript` 표준을 따릅니다.
+여러 줄 블록으로 쓰고 역할 태그는 붙이지 않습니다.
 
 **Incorrect (핵심 서비스 메서드에 헤더 설명이 없음):**
 
@@ -606,7 +606,7 @@ export class UsersService {
 @Injectable()
 export class UsersService {
 	/**
-	 * @api 사용자 단건 조회 - 미존재 시 NotFoundException 발생
+	 * 사용자 단건 조회 - 미존재 시 NotFoundException 발생
 	 */
 	async findOneOrThrow(id: number): Promise<SafeUser> {
 		// ...

@@ -85,7 +85,7 @@ const EntryTreeSection = (props: EntryTreeSectionProps) => {
 	);
 
 	/**
-	 * @event tree에서 선택한 category key를 route search용 categoryId로 변환
+	 * tree에서 선택한 category key를 route search용 categoryId로 변환
 	 */
 	const handleTreeSelect: UiTreeProps["onSelect"] = (keys, _info) => {
 		const selectedKey = keys[0];
@@ -129,17 +129,17 @@ export const RouteComponent = () => {
 	const search = Route.useSearch();
 
 	/**
-	 * @api tree sidebar 조회 API
+	 * tree sidebar 조회 API
 	 */
 	const responseEntryTreeSuspense = useEntryTreeSuspense<EntryTreeSelectData>();
 
 	/**
-	 * @api entry 목록 조회 API
+	 * entry 목록 조회 API
 	 */
 	const responseEntryListSuspense = useEntryListSuspense<EntryListSelectData>();
 
 	/**
-	 * @event tree에서 선택한 category로 route search를 갱신
+	 * tree에서 선택한 category로 route search를 갱신
 	 */
 	const handleCategorySelect: EntryTreeSectionProps["onCategorySelect"] = (categoryId) => {
 		void navigate({

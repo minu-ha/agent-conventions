@@ -28,7 +28,7 @@ const supportEmail = settings.supportEmail ?? "help@example.com";
 
 ```ts
 /**
- * @helper 제품 명세에 따라 페이지 크기 기본값 적용
+ * 제품 명세에 따라 페이지 크기 기본값 적용
  */
 const resolvePageSize = (query: SearchQuery): string => {
 	const normalizedPageSize = query.pageSize?.trim();

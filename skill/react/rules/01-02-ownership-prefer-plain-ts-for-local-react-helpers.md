@@ -49,7 +49,7 @@ export const page = {
 ```ts
 // page/entries/function/build-media-upload-payload.ts
 /**
- * @helper 업로드 파일 목록을 저장 payload로 정규화
+ * 업로드 파일 목록을 저장 payload로 정규화
  */
 export const buildMediaUploadPayload = (files: UploadFile[]) => {
 	return files.map((file) => ({ uid: file.uid }));

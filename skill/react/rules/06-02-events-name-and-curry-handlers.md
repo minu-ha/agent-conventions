@@ -53,7 +53,7 @@ const handleSelectionToggle = (id: string) => {
 import type { MouseEventHandler } from "react";
 
 /**
- * @event 목록 항목 클릭 시 선택된 ID 전달
+ * 목록 항목 클릭 시 선택된 ID 전달
  */
 const handleListItemClick =
   (id: string): MouseEventHandler<HTMLLIElement> =>

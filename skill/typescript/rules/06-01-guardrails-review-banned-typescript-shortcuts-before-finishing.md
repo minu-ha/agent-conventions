@@ -36,7 +36,7 @@ const supportEmail = settings.supportEmail ?? "help@example.com";
 import type {UserRecord} from "<type-public-import>";
 
 /**
- * @summary 사용자 미리보기 계약
+ * 사용자 미리보기 계약
  */
 type UserPreview = Pick<UserRecord, "id" | "name">;
 

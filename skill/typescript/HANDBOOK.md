@@ -40,10 +40,8 @@
     - 4.1 [Expose Optional Values Instead of Silent Fallbacks](#41-expose-optional-values-instead-of-silent-fallbacks)
 5. [JSDoc and Comment Conventions](#5-jsdoc-and-comment-conventions) — **MEDIUM-HIGH**
     - 5.1 [Keep Inline Comments for Constraints and Caveats Only](#51-keep-inline-comments-for-constraints-and-caveats-only)
-    - 5.2 [Require Header JSDoc on Key Declarations](#52-require-header-jsdoc-on-key-declarations)
-    - 5.3 [Standardize Annotation Tags by Declaration Role](#53-standardize-annotation-tags-by-declaration-role)
-    - 5.4 [Use `@helper` on Reusable Support Functions](#54-use-helper-on-reusable-support-functions)
-    - 5.5 [Write Concise Korean Comments About Purpose and Constraints](#55-write-concise-korean-comments-about-purpose-and-constraints)
+    - 5.2 [Require Header Doc Comments on Key Declarations](#52-require-header-doc-comments-on-key-declarations)
+    - 5.3 [Write Concise Korean Comments About Purpose and Constraints](#53-write-concise-korean-comments-about-purpose-and-constraints)
 6. [Guardrails and Review Checks](#6-guardrails-and-review-checks) — **MEDIUM**
     - 6.1 [Review Banned TypeScript Shortcuts Before Finishing](#61-review-banned-typescript-shortcuts-before-finishing)
 
@@ -158,11 +156,11 @@ const User_ProfileSchema = z.object({
 ```ts
 // chat-state.ts
 /**
- * @summary 사용자 프로필 스키마
+ * 사용자 프로필 스키마
  */
 const userProfileSchema = z.object({
 	/**
-	 * @field 저장소 경로
+	 * 저장소 경로
 	 */
 	repoPath: z.string(),
 });
@@ -232,20 +230,19 @@ import {buildUserSaveRequest} from "./function/build-user-save-request";
 
 선언형 shape는 헤더와 필드를 나눠 문서화합니다.
 
-- custom `type`, `interface`, schema root, 객체형 상수: 헤더 `@summary`
-- 객체형 계약과 schema field: 각 필드 바로 위 `@field`
-- `Pick`/`Omit`/Indexed Access alias: 필드가 없으므로 헤더 `@summary`만 사용
-- compound component public part props: React rule에 따라 `@part` + `@description` 허용
+- custom `type`, `interface`, schema root, 객체형 상수: 선언 위 헤더 doc 주석
+- 객체형 계약과 schema field: 각 필드 바로 위 doc 주석
+- `Pick`/`Omit`/Indexed Access alias: 필드가 없으므로 헤더만 작성
 
-`@summary`와 `@field`는 태그 존재만으로 완료되지 않으며,
+헤더와 필드 주석은 존재만으로 완료되지 않으며,
 각 body가 `docs-write-concise-korean-comments-about-purpose-and-constraints`의 한국어 content gate를 만족해야 합니다.
 
 기존 named shape의 field가 byte-equivalent여도,
 positional 인자를 대체하는 새 callable input이나 함수 결과를 고정하는 output 계약 역할에 처음 연결되면
 이 규칙은 Selected입니다.
-선언의 새 계약 역할을 `@summary`와 각 `@field`로 설명합니다.
+선언의 새 계약 역할을 헤더와 각 필드 주석으로 설명합니다.
 새 callable input 또는 output 역할은 새 type·interface 선언을 요구하지 않습니다.
-호환되는 로컬 소유 named shape가 있으면 그대로 연결하고, 그 선언의 `@summary`와 `@field`를 새 역할에 맞게 보강합니다.
+호환되는 로컬 소유 named shape가 있으면 그대로 연결하고, 그 선언의 헤더와 필드 문서를 새 역할에 맞게 보강합니다.
 
 외부·generated·read-only·shared owner의 unchanged shape 사용만으로는 N/A입니다.
 owner 선언은 수정하지 않고 문서화만을 위한 local alias도 만들지 않습니다.
@@ -260,8 +257,8 @@ callable 문서화 여부는 `docs-require-header-jsdoc-on-key-declarations` 등
 
 ```ts
 /**
- * @summary 게시 결과 요약
- * @field 게시 대상 문서 ID
+ * 게시 결과 요약
+ * 게시 대상 문서 ID
  */
 interface PublishResult {
 	documentId: string;
@@ -269,29 +266,29 @@ interface PublishResult {
 }
 ```
 
-**Correct (헤더 `@summary` + 필드별 `@field`를 사용):**
+**Correct (헤더와 필드별 doc 주석을 사용):**
 
 ```ts
 /**
- * @summary 게시 결과 요약
+ * 게시 결과 요약
  */
 export interface PublishResult {
 	/**
-	 * @field 게시 대상 문서 ID
+	 * 게시 대상 문서 ID
 	 */
 	documentId: string;
 	/**
-	 * @field 게시 성공 여부
+	 * 게시 성공 여부
 	 */
 	published: boolean;
 }
 
 /**
- * @summary 게시 결과 스키마
+ * 게시 결과 스키마
  */
 const publishResultSchema = z.object({
 	/**
-	 * @field 게시 대상 문서 ID
+	 * 게시 대상 문서 ID
 	 */
 	documentId: z.string(),
 });
@@ -327,7 +324,7 @@ const noopLog: LogSink = () => {
 
 ```ts
 /**
- * @summary 로그 sink 콜백 계약
+ * 로그 sink 콜백 계약
  */
 type LogSink = (message: string, level: "info" | "error") => void;
 
@@ -364,11 +361,11 @@ const formatState = (state: Record<string, unknown>): string => {
 
 ```ts
 /**
- * @summary 사용자 formatter 계약
+ * 사용자 formatter 계약
  */
 interface UserFormatters {
 	/**
-	 * @field 상태 문자열 formatter
+	 * 상태 문자열 formatter
 	 */
 	formatState: (state: Record<string, unknown>) => string;
 }
@@ -380,7 +377,7 @@ const formatState: UserFormatters["formatState"] = (state) => {
 
 ```ts
 /**
- * @summary request 정규화 계약
+ * request 정규화 계약
  */
 type NormalizeRequest = (request: string) => string;
 
@@ -431,11 +428,11 @@ const formatMessage = (message: string): string => {
 
 ```ts
 /**
- * @summary toast formatter 계약
+ * toast formatter 계약
  */
 interface ToastFormatters {
 	/**
-	 * @field toast 메시지 포맷 함수
+	 * toast 메시지 포맷 함수
 	 */
 	formatMessage: (message: string) => string;
 }
@@ -485,7 +482,7 @@ interface UserPreview {
 
 ```ts
 /**
- * @summary 사용자 미리보기 계약
+ * 사용자 미리보기 계약
  */
 type UserPreview = Pick<UserRecord, "id" | "name">;
 ```
@@ -532,7 +529,7 @@ const visibleTabs = canManageItems
 
 **Applies when:** support function을 추출·이동·export·공유할 때. generic helper 파일, 단일 owner 전용 mapper 또는 작은 sub-step 경계를 바꿀 때.
 
-**Review with:** `docs-require-header-jsdoc-on-key-declarations`, `docs-use-helper-for-reusable-pure-helper-functions`
+**Review with:** `docs-require-header-jsdoc-on-key-declarations`
 
 **Impact: HIGH (재사용 계약이나 테스트 경계가 실제로 없을 때 헬퍼 추출이 지역 흐름을 조각내는 것을 막습니다)**
 
@@ -619,7 +616,7 @@ const nextIteration = iteration + 1;
 ```ts
 // profile-support.ts
 /**
- * @helper profile form 값을 저장 payload로 조립
+ * profile form 값을 저장 payload로 조립
  */
 export const buildProfileUpdatePayload = (formValues: ProfileFormValues) => {
 	const normalizedDisplayName = formValues.displayName.trim();
@@ -663,7 +660,7 @@ import { buildProfileUpdatePayload } from "./profile-support";
 export const util = {
 	date: {
 		/**
-		 * @helper date 입력값을 ISO 문자열로 정규화
+		 * date 입력값을 ISO 문자열로 정규화
 		 */
 		normalize(value: Date | string): string {
 			return new Date(value).toISOString();
@@ -734,7 +731,7 @@ const audit_status = {
 } as const;
 
 /**
- * @summary 감사 상태 값 집합
+ * 감사 상태 값 집합
  */
 type AuditStatus = (typeof audit_status)[keyof typeof audit_status];
 ```
@@ -775,7 +772,7 @@ const buildRequestUrl = ({baseUrl, resourcePath, searchParams}: BuildRequestUrlA
 
 ```ts
 /**
- * @summary grouped args로 API request URL 생성
+ * grouped args로 API request URL 생성
  */
 const buildRequestUrl = (args: BuildRequestUrlArgs): URL => {
 	const {baseUrl, resourcePath, searchParams} = args;
@@ -857,7 +854,7 @@ const supportEmail = settings.supportEmail ?? "help@example.com";
 
 ```ts
 /**
- * @helper 제품 명세에 따라 페이지 크기 기본값 적용
+ * 제품 명세에 따라 페이지 크기 기본값 적용
  */
 const resolvePageSize = (query: SearchQuery): string => {
 	const normalizedPageSize = query.pageSize?.trim();
@@ -875,7 +872,7 @@ const resolvePageSize = (query: SearchQuery): string => {
 
 **Impact: MEDIUM-HIGH**
 
-주석과 annotation 규칙은 `@api`, `@event`, `@watch`, `@helper`, `@summary`, `@field`처럼 작은 고정 태그 세트로 선언 역할을 빠르게 드러내야 합니다.
+주석 규칙은 역할 태그 없이 여러 줄 블록과 한국어 본문으로 선언의 목적과 제약을 드러내야 합니다.
 
 ### 5.1 Keep Inline Comments for Constraints and Caveats Only
 
@@ -905,24 +902,32 @@ if (!normalizedToken) {
 }
 ```
 
-### 5.2 Require Header JSDoc on Key Declarations
+### 5.2 Require Header Doc Comments on Key Declarations
 
 **Rule:** `T18` · `docs-require-header-jsdoc-on-key-declarations`
 
-**Applies when:** named query·mutation, 원격 함수, 비자명한 handler/effect, reusable/exported helper·custom hook, custom type·interface, store, formatter 또는 예외 memo 선언을 추가·변경할 때.
+**Applies when:** query·mutation, 원격 함수, 비자명한 handler/effect, exported helper·hook, custom type·interface, store 선언을 추가·변경할 때. 선언 위 주석의 형식이나 태그를 정할 때.
 
-**Requires selected:** `docs-standardize-annotation-tags-by-declaration-role`, `docs-write-concise-korean-comments-about-purpose-and-constraints` · 함께 적용
+**Requires selected:** `docs-write-concise-korean-comments-about-purpose-and-constraints` · 함께 적용
 
 **Impact: MEDIUM-HIGH (구현 본문을 읽기 전에 중요한 경계를 검색하고 설명할 수 있게 합니다)**
 
-named query·mutation binding과 원격 함수에는 `@api` 헤더 JSDoc을 작성하고, 비자명한 handler/effect,
-reusable/exported helper·custom hook, 커스텀 `type`/`interface`, store,
-formatter와 예외 memo 선언에도 헤더 JSDoc을 작성합니다.
-중요한 경계가 파일 검색에서 바로 보이도록 하는 것이 목적입니다.
-annotation 종류는 선언 역할에 따라 `@api`, `@event`, `@watch`, `@helper`, `@summary` 중 하나를 고릅니다.
-header tag가 있어도 body가 비어 있거나 영문 label뿐이면 header 요구를 충족하지 않습니다.
-`requiresSelected`의 `docs-write-concise-korean-comments-about-purpose-and-constraints`는 선택 bookkeeping이 아니라 실제
-한국어 content gate입니다.
+named query·mutation binding, 원격 함수, 비자명한 handler/effect, reusable/exported helper와 custom hook,
+커스텀 `type`/`interface`, store, formatter, 예외 memo 선언에는 헤더 doc 주석을 작성합니다.
+중요한 경계가 파일 검색에서 바로 보이게 하는 것이 목적입니다.
+
+형식은 여러 줄 블록으로 고정합니다.
+`/**`, `*`, `*/`를 각각 줄로 나누고 `/** 한 줄 */` 형태는 쓰지 않습니다.
+선언 설명에 `//`를 쓰지 않습니다. `//`는 본문 안 제약 설명 몫입니다.
+
+annotation 태그는 쓰지 않습니다.
+`@api`, `@helper`, `@summary` 같은 역할 태그를 붙이지 않고 `@schema`처럼 새로 만들지도 않습니다.
+선언 종류는 이름 규칙과 문법이 이미 드러냅니다.
+`@deprecated`, `@example`처럼 TSDoc 규격에 있는 태그만 필요할 때 씁니다.
+
+헤더 doc 주석은 본문이 비어 있거나 영문 label뿐이면 요구를 충족하지 않습니다.
+`requiresSelected`의 `docs-write-concise-korean-comments-about-purpose-and-constraints`는
+선택 bookkeeping이 아니라 실제 한국어 content gate입니다.
 
 **Incorrect (주요 선언에 헤더 설명이 없음):**
 
@@ -932,7 +937,19 @@ export const normalizeUserIds = (userIds: string[]): string[] => {
 };
 ```
 
-**Correct (핵심 선언의 헤더 JSDoc과 역할 태그를 명시):**
+**Incorrect (한 줄 형태와 `//` 설명을 섞어 씀):**
+
+```ts
+/** 중복 제거 후 사용자 ID 정렬 */
+export const normalizeUserIds = (userIds: string[]): string[] => {
+	return Array.from(new Set(userIds)).sort();
+};
+
+// entry 목록 조회 API
+const responseEntryList = useEntryList();
+```
+
+**Incorrect (역할 태그를 붙임):**
 
 ```ts
 /**
@@ -943,182 +960,48 @@ export const normalizeUserIds = (userIds: string[]): string[] => {
 };
 ```
 
-### 5.3 Standardize Annotation Tags by Declaration Role
-
-**Rule:** `T19` · `docs-standardize-annotation-tags-by-declaration-role`
-
-**Applies when:** TypeScript/TSX 선언의 JSDoc 태그를 추가·변경할 때. 선언 역할에 맞는 annotation을 검토할 때.
-
-**Impact: MEDIUM-HIGH (고정된 소수의 annotation 집합으로 TypeScript와 TSX가 섞인 파일을 훑을 수 있게 유지합니다)**
-
-annotation 태그는 아래 여덟 개만 사용합니다.
-
-| 태그 | 대상 |
-| --- | --- |
-| `@api` | 원격 데이터, 파일, 외부 실행 경계 |
-| `@event` | 이벤트 핸들러, 사용자 액션 처리 |
-| `@watch` | 반응형 동기화 블록, subscription |
-| `@helper` | 재사용 가능한 pure support function |
-| `@summary` | type, interface, store, custom hook, schema root |
-| `@field` | 계약 내부 필드 |
-| `@part` | compound component public part |
-| `@description` | `@part`와 함께 쓰는 part 설명 |
-
-`@description`은 `@part`와 함께만 사용합니다.
-`@schema`, `@shape`, `@contract`, `@data`, `@type`, `@property`는 쓰지 않습니다.
-
-**Incorrect (역할이 드러나지 않는 예전 태그나 part 전용 태그를 잘못 사용):**
+**Correct (여러 줄 블록에 설명만 작성):**
 
 ```ts
 /**
- * @description 프로젝트 설정 파일 로드
- */
-export const loadProjectConfig = async (path: string): Promise<string> => {
-	return await Promise.resolve(path);
-};
-
-/**
- * @summary 선택된 entry 변경 처리
- */
-const handleSelectEntry = (entryId: string) => {
-	return entryId;
-};
-
-/**
- * @schema 게시 결과 스키마
- */
-const publishResultSchema = z.object({
-	documentId: z.string(),
-});
-```
-
-**Correct (선언 역할에 따라 고정 태그를 사용):**
-
-```ts
-/**
- * @api 프로젝트 설정 파일 로드
- */
-export const loadProjectConfig = async (path: string): Promise<string> => {
-	return await Promise.resolve(path);
-};
-
-/**
- * @event 선택된 entry 변경 처리
- */
-const handleSelectEntry = (entryId: string) => {
-	return entryId;
-};
-
-/**
- * @summary 게시 결과 스키마
- */
-const publishResultSchema = z.object({
-	/**
-	 * @field 게시 대상 문서 ID
-	 */
-	documentId: z.string(),
-});
-
-/**
- * @part dialog root
- * @description dialog 열림 상태와 compound part 공유 context를 소유하는 루트 컴포넌트
- */
-interface DialogRootProps {
-	/**
-	 * @field dialog 트리를 감싸는 자식 요소
-	 */
-	children: ReactNode;
-}
-```
-
-### 5.4 Use `@helper` on Reusable Support Functions
-
-**Rule:** `T20` · `docs-use-helper-for-reusable-pure-helper-functions`
-
-**Applies when:** 여러 caller가 쓰는 pure support function, owner-named exported helper 또는 `shared/util.ts` 함수를 추가·변경할 때. `@helper`를 붙이려 할 때.
-
-**Impact: MEDIUM-HIGH (재사용 가능한 순수 support 로직을 지역 구현 세부나 통합 경계와 구분합니다)**
-
-`@helper`는 재사용 가능한 pure support function에만 붙입니다.
-
-사용 대상:
-
-- 여러 caller가 직접 호출하는 문자열 조립, 정규화, 포맷, 계약 변환 함수
-- owner-named support module의 domain-sized exported pure function
-- 여러 owner가 공유하는 `shared/util.ts`의 `util.*` 함수
-
-사용하지 않을 대상:
-
-- 외부 I/O, 원격 데이터, 파일 접근 같은 `@api` 경계
-- 한 함수나 한 support module 안에서만 쓰는 작은 sub-step
-- 반복이 보이지만 아직 caller surface가 넓지 않은 local 계산
-
-**Incorrect (외부 연동 함수나 단회성 계산을 helper로 혼동):**
-
-```ts
-/**
- * @helper 사용자 설정 파일 로드
- */
-const loadUserSettings = async (): Promise<string> => {
-	return await Promise.resolve("settings");
-};
-```
-
-**Incorrect (support module 내부 sub-step을 전부 `@helper`로 export):**
-
-```ts
-/**
- * @helper 프로필 입력 trim
- */
-export const normalizeProfileValues = (formValues: ProfileFormValues) => {
-	return formValues;
-};
-
-/**
- * @helper 프로필 저장 payload 조립
- */
-export const buildProfilePayload = (formValues: ProfileFormValues) => {
-	return normalizeProfileValues(formValues);
-};
-```
-
-**Correct (여러 caller가 공유하는 순수 정규화 경계에 `@helper`를 사용):**
-
-```ts
-/**
- * @helper 목록 화면과 상세 화면이 함께 쓰는 사용자 ID 정규화
+ * 중복 제거 후 사용자 ID 정렬
  */
 export const normalizeUserIds = (userIds: string[]): string[] => {
 	return Array.from(new Set(userIds)).sort();
 };
+
+/**
+ * entry 목록 조회 API
+ */
+const responseEntryList = useEntryList();
 ```
 
-### 5.5 Write Concise Korean Comments About Purpose and Constraints
+### 5.3 Write Concise Korean Comments About Purpose and Constraints
 
-**Rule:** `T21` · `docs-write-concise-korean-comments-about-purpose-and-constraints`
+**Rule:** `T19` · `docs-write-concise-korean-comments-about-purpose-and-constraints`
 
 **Applies when:** TypeScript/TSX의 JSDoc이나 inline comment 문구를 추가·수정·번역하거나 리뷰할 때.
 
 **Impact: MEDIUM (코드 동작을 서술하지 않고 의도와 제약에 주석을 집중시킵니다)**
 
 주석은 한글로 작성하고, 목적, 제약, 부작용 중심으로 간결하게 적습니다.
-`@api`, `@event`, `@watch`, `@helper`, `@summary`, `@field` 문장은 명사형 종결이나 개조식 표현을 기본으로 하며,
+헤더와 필드 doc 주석 문장은 명사형 종결이나 개조식 표현을 기본으로 하며,
 코드 동작 설명보다 도입 이유와 제약 설명을 우선합니다.
 
 기술 용어와 identifier는 영문으로 섞을 수 있지만
-annotation 본문 전체가 ASCII 또는 영문 label이면 한글 주석으로 인정하지 않습니다.
-새로 추가하거나 바꾼 각 annotation body에는 그 선언의 목적이나 제약을 설명하는 한글 구절이 있어야 합니다.
-다른 `@field`가 한글이어도 영문-only `@summary`를 대신 통과시키지 않습니다.
+주석 본문 전체가 ASCII 또는 영문 label이면 한글 주석으로 인정하지 않습니다.
+새로 추가하거나 바꾼 각 doc 주석 본문에는 그 선언의 목적이나 제약을 설명하는 한글 구절이 있어야 합니다.
+다른 필드 주석이 한글이어도 영문-only 헤더 주석을 대신 통과시키지 않습니다.
 
 **Incorrect (영문 또는 How 중심의 장황한 설명):**
 
 ```ts
 /**
- * @summary This function sorts rule refs and returns the result.
+ * This function sorts rule refs and returns the result.
  */
 
 /**
- * @summary route-local entry tree props
+ * route-local entry tree props
  */
 ```
 
@@ -1126,11 +1009,11 @@ annotation 본문 전체가 ASCII 또는 영문 label이면 한글 주석으로 
 
 ```ts
 /**
- * @summary 중복 제거 후 규칙 경로 정렬
+ * 중복 제거 후 규칙 경로 정렬
  */
 
 /**
- * @summary route-local 엔트리 트리 입력 계약
+ * route-local 엔트리 트리 입력 계약
  */
 ```
 
@@ -1142,7 +1025,7 @@ annotation 본문 전체가 ASCII 또는 영문 label이면 한글 주석으로 
 
 ### 6.1 Review Banned TypeScript Shortcuts Before Finishing
 
-**Rule:** `T22` · `guardrails-review-banned-typescript-shortcuts-before-finishing`
+**Rule:** `T20` · `guardrails-review-banned-typescript-shortcuts-before-finishing`
 
 **Applies when:** TypeScript/TSX 변경을 완료 판정할 때. diff에서 barrel, 중복 타입, 조기 helper, 넓은 조립, 무근거 fallback 또는 자명한 주석을 점검할 때.
 
@@ -1172,7 +1055,7 @@ const supportEmail = settings.supportEmail ?? "help@example.com";
 import type {UserRecord} from "<type-public-import>";
 
 /**
- * @summary 사용자 미리보기 계약
+ * 사용자 미리보기 계약
  */
 type UserPreview = Pick<UserRecord, "id" | "name">;
 

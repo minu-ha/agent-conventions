@@ -100,8 +100,6 @@ const typescriptRuleUniverse = [
 	"absence-expose-optional-values-instead-of-silent-fallbacks",
 	"docs-keep-inline-comments-for-constraints-and-caveats",
 	"docs-require-header-jsdoc-on-key-declarations",
-	"docs-standardize-annotation-tags-by-declaration-role",
-	"docs-use-helper-for-reusable-pure-helper-functions",
 	"docs-write-concise-korean-comments-about-purpose-and-constraints",
 	"guardrails-review-banned-typescript-shortcuts-before-finishing",
 ] as const;
@@ -174,7 +172,6 @@ const reactRuleUniverse = [
 	"perf-use-lazy-state-initializers-for-expensive-defaults",
 	"perf-use-starttransition-for-non-urgent-updates",
 	"perf-use-usedeferredvalue-for-heavy-derived-renders",
-	"docs-document-compound-parts-with-part-and-description",
 	"docs-limit-inline-comments-to-non-obvious-logic",
 	"docs-require-jsdoc-on-key-declarations",
 ] as const;
@@ -235,7 +232,7 @@ const typescriptRuleRouting = {
 	"functions-extract-helpers-only-when-the-boundary-is-real": {
 		appliesWhen:
 			"support function을 추출·이동·export·공유할 때. generic helper 파일, 단일 owner 전용 mapper 또는 작은 sub-step 경계를 바꿀 때.",
-		reviewWith: ["docs-use-helper-for-reusable-pure-helper-functions", "docs-require-header-jsdoc-on-key-declarations"],
+		reviewWith: ["docs-require-header-jsdoc-on-key-declarations"],
 	},
 	"functions-prefer-immutable-array-sorting": {
 		appliesWhen: "props, state, 매개변수 또는 공유 입력에서 온 배열을 정렬할 때. 기존 `.sort()` 호출을 추가·변경할 때.",
@@ -264,16 +261,7 @@ const typescriptRuleRouting = {
 	},
 	"docs-require-header-jsdoc-on-key-declarations": {
 		appliesWhen:
-			"named query·mutation, 원격 함수, 비자명한 handler/effect, reusable/exported helper·custom hook, custom type·interface, store, formatter 또는 예외 memo 선언을 추가·변경할 때.",
-		reviewWith: [],
-	},
-	"docs-standardize-annotation-tags-by-declaration-role": {
-		appliesWhen: "TypeScript/TSX 선언의 JSDoc 태그를 추가·변경할 때. 선언 역할에 맞는 annotation을 검토할 때.",
-		reviewWith: [],
-	},
-	"docs-use-helper-for-reusable-pure-helper-functions": {
-		appliesWhen:
-			"여러 caller가 쓰는 pure support function, owner-named exported helper 또는 `shared/util.ts` 함수를 추가·변경할 때. `@helper`를 붙이려 할 때.",
+			"query·mutation, 원격 함수, 비자명한 handler/effect, exported helper·hook, custom type·interface, store 선언을 추가·변경할 때. 선언 위 주석의 형식이나 태그를 정할 때.",
 		reviewWith: [],
 	},
 	"docs-write-concise-korean-comments-about-purpose-and-constraints": {
@@ -602,18 +590,13 @@ const reactRuleRouting = {
 		appliesWhen: "검색어·필터·정렬 입력이 무거운 파생 view를 갱신해 typing 지연이 생길 때. `useDeferredValue` 기반 계산을 추가·변경할 때.",
 		reviewWith: ["perf-compiler-first-memoization", "perf-use-starttransition-for-non-urgent-updates"],
 	},
-	"docs-document-compound-parts-with-part-and-description": {
-		appliesWhen:
-			"compound component의 exported public part·props interface·part 내부 handler를 추가·변경할 때. public part 문서를 수정할 때.",
-		reviewWith: [],
-	},
 	"docs-limit-inline-comments-to-non-obvious-logic": {
 		appliesWhen: "React 함수·handler·JSX 인접 로직 안의 `//` 주석을 추가·수정할 때. 자명한 설명과 실제 제약을 구분해 주석을 정리할 때.",
 		reviewWith: [],
 	},
 	"docs-require-jsdoc-on-key-declarations": {
 		appliesWhen:
-			"query·mutation이나 비자명한 handler/effect를 추가·변경할 때. exported helper·hook·store 선언을 추가·변경할 때. re-export 포함 public type·interface나 예외 memo 선언을 추가·변경할 때.",
+			"query·mutation이나 비자명한 handler/effect를 추가·변경할 때. exported helper·hook·store 선언을 추가·변경할 때. re-export 포함 public type·interface나 compound public part를 추가·변경할 때.",
 		reviewWith: [],
 	},
 } as const;
@@ -623,32 +606,28 @@ const reactRuleRouting = {
  */
 const mandatoryRuleRouting = {
 	react: {
-		"composition-named-handlers-over-inline": ["docs-require-jsdoc-on-key-declarations", "events-name-and-curry-handlers"],
-		"docs-document-compound-parts-with-part-and-description": ["docs-require-jsdoc-on-key-declarations"],
-		"docs-limit-inline-comments-to-non-obvious-logic": ["typescript/docs-keep-inline-comments-for-constraints-and-caveats"],
-		"docs-require-jsdoc-on-key-declarations": ["typescript/docs-require-header-jsdoc-on-key-declarations"],
 		"ownership-avoid-barrel-and-react-namespace-imports": ["typescript/naming-use-direct-imports-and-public-entry-points"],
-		"ownership-keep-component-imports-flowing-downward": ["typescript/naming-use-direct-imports-and-public-entry-points"],
 		"ownership-use-consistent-file-and-symbol-naming": ["typescript/naming-use-consistent-file-and-symbol-naming"],
-		"state-calculate-derived-values-during-render": ["screen-keep-derived-values-close"],
+		"ownership-keep-component-imports-flowing-downward": ["typescript/naming-use-direct-imports-and-public-entry-points"],
+		"typing-function-type-first": ["typescript/types-reuse-callback-signatures-from-existing-contracts"],
+		"composition-named-handlers-over-inline": ["docs-require-jsdoc-on-key-declarations", "events-name-and-curry-handlers"],
 		"data-name-query-and-mutation-bindings-consistently": [
 			"typescript/naming-use-consistent-file-and-symbol-naming",
 			"docs-require-jsdoc-on-key-declarations",
 		],
 		"data-shape-query-data-with-select": ["docs-require-jsdoc-on-key-declarations"],
+		"state-calculate-derived-values-during-render": ["screen-keep-derived-values-close"],
 		"state-use-effectevent-for-non-reactive-effect-callbacks": ["docs-require-jsdoc-on-key-declarations"],
-		"typing-function-type-first": ["typescript/types-reuse-callback-signatures-from-existing-contracts"],
+		"docs-limit-inline-comments-to-non-obvious-logic": ["typescript/docs-keep-inline-comments-for-constraints-and-caveats"],
+		"docs-require-jsdoc-on-key-declarations": ["typescript/docs-require-header-jsdoc-on-key-declarations"],
 	},
 	typescript: {
-		"docs-require-header-jsdoc-on-key-declarations": [
-			"docs-standardize-annotation-tags-by-declaration-role",
-			"docs-write-concise-korean-comments-about-purpose-and-constraints",
-		],
+		"types-reuse-callback-signatures-from-existing-contracts": ["types-prefer-function-variable-types-over-parameter-annotations"],
 		"functions-replace-enum-with-as-const-objects": [
 			"naming-use-consistent-file-and-symbol-naming",
 			"types-document-custom-types-and-shapes",
 		],
-		"types-reuse-callback-signatures-from-existing-contracts": ["types-prefer-function-variable-types-over-parameter-annotations"],
+		"docs-require-header-jsdoc-on-key-declarations": ["docs-write-concise-korean-comments-about-purpose-and-constraints"],
 	},
 	css: {
 		"composition-prefer-ui-wrapper-prop-types": ["typescript/types-reuse-existing-contracts-before-new-types"],
@@ -678,7 +657,6 @@ const typescriptSelections = {
 		"types-document-custom-types-and-shapes",
 		"types-reuse-existing-contracts-before-new-types",
 		"docs-require-header-jsdoc-on-key-declarations",
-		"docs-standardize-annotation-tags-by-declaration-role",
 		"docs-write-concise-korean-comments-about-purpose-and-constraints",
 		"guardrails-review-banned-typescript-shortcuts-before-finishing",
 	],
@@ -687,7 +665,6 @@ const typescriptSelections = {
 		"types-document-custom-types-and-shapes",
 		"functions-replace-enum-with-as-const-objects",
 		"docs-require-header-jsdoc-on-key-declarations",
-		"docs-standardize-annotation-tags-by-declaration-role",
 		"docs-write-concise-korean-comments-about-purpose-and-constraints",
 		"guardrails-review-banned-typescript-shortcuts-before-finishing",
 	],
@@ -734,7 +711,7 @@ const typescriptScenarioEvidence = {
 	},
 	"derive-existing-contract-with-docs": {
 		prompt:
-			"replace a duplicate `UserPreview` interface with a same-name `Pick<UserRecord, ...>` alias and add concise Korean `@summary`; imports and names otherwise stay unchanged.",
+			"replace a duplicate `UserPreview` interface with a same-name `Pick<UserRecord, ...>` alias and add concise Korean header doc comments; imports and names otherwise stay unchanged.",
 		files: ["src/users/user-preview.ts"],
 	},
 	"enum-like-runtime-contract": {
@@ -799,7 +776,6 @@ const reactScenarioStages = {
 					"types-reuse-callback-signatures-from-existing-contracts",
 					"types-reuse-existing-contracts-before-new-types",
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-standardize-annotation-tags-by-declaration-role",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"guardrails-review-banned-typescript-shortcuts-before-finishing",
 				],
@@ -824,7 +800,6 @@ const reactScenarioStages = {
 					"naming-use-direct-imports-and-public-entry-points",
 					"types-document-custom-types-and-shapes",
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-standardize-annotation-tags-by-declaration-role",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"guardrails-review-banned-typescript-shortcuts-before-finishing",
 				],
@@ -851,7 +826,6 @@ const reactScenarioStages = {
 					"naming-use-direct-imports-and-public-entry-points",
 					"types-document-custom-types-and-shapes",
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-standardize-annotation-tags-by-declaration-role",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"guardrails-review-banned-typescript-shortcuts-before-finishing",
 				],
@@ -893,8 +867,6 @@ const reactScenarioStages = {
 					"functions-extract-helpers-only-when-the-boundary-is-real",
 					"functions-use-named-object-params-for-complex-signatures",
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-standardize-annotation-tags-by-declaration-role",
-					"docs-use-helper-for-reusable-pure-helper-functions",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"guardrails-review-banned-typescript-shortcuts-before-finishing",
 				],
@@ -916,7 +888,6 @@ const reactScenarioStages = {
 					"naming-use-direct-imports-and-public-entry-points",
 					"types-document-custom-types-and-shapes",
 					"functions-replace-enum-with-as-const-objects",
-					"docs-standardize-annotation-tags-by-declaration-role",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"guardrails-review-banned-typescript-shortcuts-before-finishing",
 				],
@@ -936,7 +907,6 @@ const reactScenarioStages = {
 					"strategy-choose-single-composition-compound-and-variants",
 					"strategy-prefer-children-over-render-props",
 					"composition-destructure-props-inside",
-					"docs-document-compound-parts-with-part-and-description",
 					"docs-require-jsdoc-on-key-declarations",
 				],
 				typescript: [
@@ -944,7 +914,6 @@ const reactScenarioStages = {
 					"naming-use-direct-imports-and-public-entry-points",
 					"types-document-custom-types-and-shapes",
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-standardize-annotation-tags-by-declaration-role",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"guardrails-review-banned-typescript-shortcuts-before-finishing",
 				],
@@ -969,7 +938,6 @@ const reactScenarioStages = {
 					"naming-use-direct-imports-and-public-entry-points",
 					"types-document-custom-types-and-shapes",
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-standardize-annotation-tags-by-declaration-role",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"guardrails-review-banned-typescript-shortcuts-before-finishing",
 				],
@@ -1011,7 +979,6 @@ const reactScenarioStages = {
 					"types-reuse-callback-signatures-from-existing-contracts",
 					"functions-extract-helpers-only-when-the-boundary-is-real",
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-standardize-annotation-tags-by-declaration-role",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"guardrails-review-banned-typescript-shortcuts-before-finishing",
 				],
@@ -1045,7 +1012,6 @@ const reactScenarioStages = {
 					"types-prefer-function-variable-types-over-parameter-annotations",
 					"types-reuse-callback-signatures-from-existing-contracts",
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-standardize-annotation-tags-by-declaration-role",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"guardrails-review-banned-typescript-shortcuts-before-finishing",
 				],
@@ -1076,7 +1042,6 @@ const reactScenarioStages = {
 					"types-prefer-function-variable-types-over-parameter-annotations",
 					"types-reuse-callback-signatures-from-existing-contracts",
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-standardize-annotation-tags-by-declaration-role",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"guardrails-review-banned-typescript-shortcuts-before-finishing",
 				],
@@ -1101,7 +1066,6 @@ const reactScenarioStages = {
 					"naming-use-direct-imports-and-public-entry-points",
 					"types-document-custom-types-and-shapes",
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-standardize-annotation-tags-by-declaration-role",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"guardrails-review-banned-typescript-shortcuts-before-finishing",
 				],
@@ -1125,7 +1089,6 @@ const reactScenarioStages = {
 				typescript: [
 					"naming-use-consistent-file-and-symbol-naming",
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-standardize-annotation-tags-by-declaration-role",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"guardrails-review-banned-typescript-shortcuts-before-finishing",
 				],
@@ -1152,7 +1115,6 @@ const reactScenarioStages = {
 					"naming-use-direct-imports-and-public-entry-points",
 					"docs-keep-inline-comments-for-constraints-and-caveats",
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-standardize-annotation-tags-by-declaration-role",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"guardrails-review-banned-typescript-shortcuts-before-finishing",
 				],
@@ -1175,7 +1137,6 @@ const reactScenarioStages = {
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-standardize-annotation-tags-by-declaration-role",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"guardrails-review-banned-typescript-shortcuts-before-finishing",
 				],
@@ -1243,7 +1204,6 @@ const reactScenarioStages = {
 				],
 				typescript: [
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-standardize-annotation-tags-by-declaration-role",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"guardrails-review-banned-typescript-shortcuts-before-finishing",
 				],
@@ -1394,7 +1354,6 @@ const cssScenarioStages = {
 					"types-document-custom-types-and-shapes",
 					"types-reuse-existing-contracts-before-new-types",
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-standardize-annotation-tags-by-declaration-role",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"guardrails-review-banned-typescript-shortcuts-before-finishing",
 				],
@@ -1638,7 +1597,7 @@ test("TypeScript progressive metadata matches Appendix A exactly", async () => {
 
 	assert.equal(document.metadata.progressiveDisclosure, true);
 	assert.deepEqual(document.metadata.companions ?? [], []);
-	assert.equal(document.rules.length, 22);
+	assert.equal(document.rules.length, 20);
 	assert.deepEqual(
 		Object.fromEntries(document.rules.map((rule) => [getRuleId(rule), {appliesWhen: rule.appliesWhen, reviewWith: rule.reviewWith}])),
 		typescriptRuleRouting,
@@ -1652,10 +1611,10 @@ test("TypeScript progressive metadata matches Appendix A exactly", async () => {
 		true,
 	);
 	const headerJsdocRule = await readRuleSource("typescript", "docs-require-header-jsdoc-on-key-declarations");
-	assert.match(headerJsdocRule, /named query·mutation binding[^\n]+@api/i);
+	assert.match(headerJsdocRule, /annotation 태그는 쓰지 않습니다/);
 	assert.equal(
 		readFrontmatterValue(headerJsdocRule, "requiresSelected"),
-		"docs-standardize-annotation-tags-by-declaration-role, docs-write-concise-korean-comments-about-purpose-and-constraints",
+		"docs-write-concise-korean-comments-about-purpose-and-constraints",
 	);
 	assert.doesNotMatch(headerJsdocRule, /^reviewWith:/m);
 });
@@ -1703,7 +1662,7 @@ test("TypeScript routing manifest is an exact nine-scenario partition with full 
 	assert.ok(driftScenario?.scopeDrift);
 	assert.equal(
 		driftScenario.scopeDrift.evidence,
-		"the same normalization becomes necessary for a second owner, so move the existing named function to `profile-support.ts`, export it, directly import it from `bulk-profile.ts`, and add concise Korean `@helper` docs.",
+		"the same normalization becomes necessary for a second owner, so move the existing named function to `profile-support.ts`, export it, directly import it from `bulk-profile.ts`, and add concise Korean header doc comments.",
 	);
 	assert.deepEqual(driftScenario.scopeDrift.files, [
 		"src/profile/profile-api.ts",
@@ -1714,8 +1673,6 @@ test("TypeScript routing manifest is an exact nine-scenario partition with full 
 		"naming-use-direct-imports-and-public-entry-points",
 		"functions-extract-helpers-only-when-the-boundary-is-real",
 		"docs-require-header-jsdoc-on-key-declarations",
-		"docs-standardize-annotation-tags-by-declaration-role",
-		"docs-use-helper-for-reusable-pure-helper-functions",
 		"docs-write-concise-korean-comments-about-purpose-and-constraints",
 		"guardrails-review-banned-typescript-shortcuts-before-finishing",
 	]);
@@ -1730,8 +1687,8 @@ test("TypeScript generated index is complete and within the deterministic byte b
 	const expectedIds = document.rules.map((rule) => getRuleId(rule)).sort();
 
 	assert.deepEqual(ids, expectedIds);
-	assert.equal(ids.length, 22);
-	assert.equal(getRulesIndexByteBudget(ids.length), 8_680);
+	assert.equal(ids.length, 20);
+	assert.equal(getRulesIndexByteBudget(ids.length), 8_000);
 	assert.equal(Buffer.byteLength(source, "utf8") <= getRulesIndexByteBudget(ids.length), true);
 
 	for (const entry of entries) {
@@ -1758,10 +1715,6 @@ test("JSDoc routing closure and query-select ownership stay exact across every m
 				const selected = stage.expectedSelected.typescript ?? [];
 
 				if (selected.includes("docs-require-header-jsdoc-on-key-declarations")) {
-					assert.ok(
-						selected.includes("docs-standardize-annotation-tags-by-declaration-role"),
-						`${skillName}/${scenario.id} must close T18 to T19`,
-					);
 					assert.ok(
 						selected.includes("docs-write-concise-korean-comments-about-purpose-and-constraints"),
 						`${skillName}/${scenario.id} must close T18 to T21`,
@@ -1875,7 +1828,7 @@ test("React progressive metadata and all 42 rule routes match Appendix B exactly
 		{skill: "typescript", mode: "required"},
 		{skill: "css", mode: "conditional", appliesWhen: "class contract, stylesheet 또는 styling surface를 변경한다."},
 	]);
-	assert.equal(document.rules.length, 43);
+	assert.equal(document.rules.length, 42);
 	assert.deepEqual(
 		Object.fromEntries(document.rules.map((rule) => [getRuleId(rule), {appliesWhen: rule.appliesWhen, reviewWith: rule.reviewWith}])),
 		reactRuleRouting,
@@ -2013,14 +1966,12 @@ test("React routing manifest is the exact seventeen-scenario Appendix B/D oracle
 	assert.equal(ownerMove.expectedSelected.react?.includes("composition-destructure-props-inside"), true);
 	assert.equal(ownerMove.expectedSelected.typescript?.includes("types-document-custom-types-and-shapes"), true);
 	assert.equal(ownerMove.expectedSelected.typescript?.includes("docs-require-header-jsdoc-on-key-declarations"), true);
-	assert.equal(ownerMove.expectedSelected.typescript?.includes("docs-standardize-annotation-tags-by-declaration-role"), true);
 	assert.equal(ownerMove.expectedSelected.typescript?.includes("docs-write-concise-korean-comments-about-purpose-and-constraints"), true);
 	const cssDrift = ownerMove.scopeDrift;
 	assert.ok(cssDrift);
 	assert.equal(cssDrift.expectedSelected.react?.includes("composition-destructure-props-inside"), true);
 	assert.equal(cssDrift.expectedSelected.typescript?.includes("types-document-custom-types-and-shapes"), true);
 	assert.equal(cssDrift.expectedSelected.typescript?.includes("docs-require-header-jsdoc-on-key-declarations"), true);
-	assert.equal(cssDrift.expectedSelected.typescript?.includes("docs-standardize-annotation-tags-by-declaration-role"), true);
 	assert.equal(cssDrift.expectedSelected.typescript?.includes("docs-write-concise-korean-comments-about-purpose-and-constraints"), true);
 	assert.equal(cssDrift.expectedSelected.css?.includes("composition-do-not-build-structural-variants-with-modifiers"), true);
 	assert.equal(cssDrift.expectedSelected.css?.includes("values-separate-domain-state-modifiers-from-dom-interaction-states"), true);
@@ -2045,8 +1996,8 @@ test("React generated index and handbook preserve canonical local rules and comp
 		entries.map((entry) => entry.id),
 		reactRuleUniverse,
 	);
-	assert.equal(entries.length, 43);
-	assert.equal(getRulesIndexByteBudget(entries.length), 15_820);
+	assert.equal(entries.length, 42);
+	assert.equal(getRulesIndexByteBudget(entries.length), 15_480);
 	assert.equal(Buffer.byteLength(source, "utf8") <= getRulesIndexByteBudget(entries.length), true);
 
 	for (const entry of entries) {
@@ -2621,19 +2572,19 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	};
 
 	const koreanComments = await readRule("typescript", "docs-write-concise-korean-comments-about-purpose-and-constraints");
-	assertMentions(koreanComments, [/annotation 본문 전체/i, /(?:ASCII|영문)/i, /(?:한글 주석으로 인정하지 않|실패)/i], "koreanComments");
-	assert.match(koreanComments, /@summary route-local entry tree props/);
-	assert.match(koreanComments, /@summary route-local 엔트리 트리 입력 계약/);
+	assertMentions(koreanComments, [/주석 본문 전체/i, /(?:ASCII|영문)/i, /(?:한글 주석으로 인정하지 않|실패)/i], "koreanComments");
+	assert.match(koreanComments, /route-local entry tree props/);
+	assert.match(koreanComments, /route-local 엔트리 트리 입력 계약/);
 
 	const documentedShape = await readRule("typescript", "types-document-custom-types-and-shapes");
 	assert.match(
 		documentedShape,
-		/`@summary`[\s\S]*`@field`[\s\S]*태그 존재만으로[\s\S]*docs-write-concise-korean-comments-about-purpose-and-constraints[\s\S]*(?:content|한국어)[^\n]+gate/i,
+		/헤더와 필드 주석[\s\S]*존재만으로[\s\S]*docs-write-concise-korean-comments-about-purpose-and-constraints[\s\S]*(?:content|한국어)[^\n]+gate/i,
 	);
 	const headerDocs = await readRule("typescript", "docs-require-header-jsdoc-on-key-declarations");
 	assert.match(
 		flattenWhitespace(headerDocs),
-		/header tag[\s\S]*(?:영문 label|영문 라벨)[\s\S]*(?:충족하지 않|미충족|완료되지 않)[\s\S]*docs-write-concise-korean-comments-about-purpose-and-constraints[\s\S]*content gate/i,
+		/헤더 doc 주석[\s\S]*(?:영문 label|영문 라벨)[\s\S]*(?:충족하지 않|미충족|완료되지 않)[\s\S]*docs-write-concise-korean-comments-about-purpose-and-constraints[\s\S]*content gate/i,
 	);
 	assert.doesNotMatch(headerDocs, /\bT\d{2}\b/);
 
@@ -2660,8 +2611,8 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	assert.match(thirdPartyRoot, /& \.ant-tree-node-content-wrapper/);
 
 	const typescriptPressure = await readFile(path.join(realSkillRootDir, "typescript", "pressure-tests.md"), "utf8");
-	assert.match(typescriptPressure, /@summary route-local entry tree props/);
-	assert.match(typescriptPressure, /@summary route-local 엔트리 트리 입력 계약/);
+	assert.match(typescriptPressure, /route-local entry tree props/);
+	assert.match(typescriptPressure, /route-local 엔트리 트리 입력 계약/);
 	const cssPressure = await readFile(path.join(realSkillRootDir, "css", "pressure-tests.md"), "utf8");
 	assert.match(cssPressure, /& \.ant-tree \.ant-tree-node-content-wrapper/);
 	assert.match(cssPressure, /& \.ant-tree-node-content-wrapper/);
@@ -2678,7 +2629,7 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 		flattenWhitespace(generatedContracts[0]!),
 		/영문 label[\s\S]*docs-write-concise-korean-comments-about-purpose-and-constraints[\s\S]*content gate/i,
 	);
-	assertMentions(generatedContracts[1]!, [/annotation 본문 전체/i, /(?:ASCII|영문)/i], "generatedContracts");
+	assertMentions(generatedContracts[1]!, [/주석 본문 전체/i, /(?:ASCII|영문)/i], "generatedContracts");
 	assert.match(generatedContracts[2]!, /effective selector[\s\S]*(?:combinator|ancestor) chain/i);
 	assert.match(generatedContracts[3]!, /CRITICAL rule[\s\S]*full rule/i);
 });

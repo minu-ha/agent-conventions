@@ -39,7 +39,7 @@ const handleSubmit = () => {
 
 ```tsx
 /**
- * @event 제출 버튼 클릭 시 생성 요청 실행
+ * 제출 버튼 클릭 시 생성 요청 실행
  */
 const handleSubmit = async () => {
 	await createEntryMutation.mutateAsync(formValues);
