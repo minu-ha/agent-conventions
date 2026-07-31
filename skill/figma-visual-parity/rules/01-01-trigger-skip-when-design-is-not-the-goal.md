@@ -1,14 +1,14 @@
 ---
 title: Skip This Skill When Design Parity Is Not the Goal
-titleKo: 디자인 일치가 목표가 아니면 이 skill을 건너뛰기
+titleKo: 디자인 일치가 목표가 아닌 작업의 skill 적용 제외
 impact: HIGH
-impactDescription: Figma와 무관한 기능/API 작업에 visual parity 절차를 과잉 적용하지 않게 함
+impactDescription: Figma와 무관한 기능/API 작업에 visual parity 절차를 과잉 적용하는 일을 막습니다
 tags: trigger, scope, exclusions
 ---
 
 ## Skip This Skill When Design Parity Is Not the Goal
 
-**Impact: HIGH (Figma와 무관한 기능/API 작업에 visual parity 절차를 과잉 적용하지 않게 함)**
+**Impact: HIGH (Figma와 무관한 기능/API 작업에 visual parity 절차를 과잉 적용하는 일을 막습니다)**
 
 Figma 댓글 CSV 추출, API/데이터 로직 수정, 디자인 기준 없는 기능 구현, 사용자가 명시한 "대략만", "구조만",
 "디자인 말고 동작만" 요청은 이 skill을 적용하지 않습니다.

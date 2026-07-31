@@ -1,17 +1,17 @@
 ---
 title: Keep Project-owned Selectors Flat
-titleKo: 프로젝트 소유 셀렉터는 평평하게
+titleKo: 프로젝트 소유 셀렉터의 플랫 구조 유지
 impact: CRITICAL
-impactDescription: 프로젝트 소유 셀렉터를 descendant 의존 대신 독립적으로 두어 cascade 결합을 줄임
-appliesWhen: >-
-  project-owned class를 중첩·descendant selector로 연결하거나 raw HTML prose·copy·content wrapper 안 element selector를
-  추가·수정한다.
+impactDescription: 프로젝트 소유 셀렉터를 descendant 의존 대신 독립적으로 두어 cascade 결합을 줄입니다
+appliesWhen:
+  - project-owned class를 중첩·descendant selector로 연결할 때
+  - raw HTML prose·copy·content wrapper 안 element selector를 추가·수정할 때
 tags: selectors, nesting, flat-structure
 ---
 
 ## Keep Project-owned Selectors Flat
 
-**Impact: CRITICAL (프로젝트 소유 셀렉터를 descendant 의존 대신 독립적으로 두어 cascade 결합을 줄임)**
+**Impact: CRITICAL (프로젝트 소유 셀렉터를 descendant 의존 대신 독립적으로 두어 cascade 결합을 줄입니다)**
 
 프로젝트가 직접 소유한 선택자는 플랫 구조를 기본으로 작성합니다.
 

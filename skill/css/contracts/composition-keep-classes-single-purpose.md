@@ -1,6 +1,6 @@
 # Keep Classes Single-purpose
 
-**Impact: HIGH (class 하나가 base 스타일과 여러 상태·구조 의미를 동시에 지는 것을 막음)**
+**Impact: HIGH (class 하나가 base 스타일과 여러 상태·구조 의미를 동시에 지는 것을 막습니다)**
 
 하나의 클래스는 하나의 시각적 책임만 가져야 합니다.
 기존 클래스가 base와 state·variant 책임을 함께 가질 때 분리하고,

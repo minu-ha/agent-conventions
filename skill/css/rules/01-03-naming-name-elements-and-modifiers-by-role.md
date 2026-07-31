@@ -1,15 +1,17 @@
 ---
 title: Name Elements and Modifiers by Role
-titleKo: element·modifier는 역할로 이름 짓기
+titleKo: element·modifier의 역할 기반 명명
 impact: HIGH
-impactDescription: class가 UI 부위를 설명하지 못하게 만드는 모호하거나 레이아웃 중심인 이름을 피함
-appliesWhen: element 또는 modifier class를 새로 짓거나 `container`, `wrapper`, `box`, 치수·간격 중심 이름을 변경한다.
+impactDescription: class가 UI 부위를 설명하지 못하게 만드는 모호하거나 레이아웃 중심인 이름을 피합니다
+appliesWhen:
+  - element 또는 modifier class 이름을 새로 지을 때
+  - `container`, `wrapper`, `box`, 치수·간격 중심 이름을 변경할 때
 tags: naming, semantics, modifiers
 ---
 
 ## Name Elements and Modifiers by Role
 
-**Impact: HIGH (class가 UI 부위를 설명하지 못하게 만드는 모호하거나 레이아웃 중심인 이름을 피함)**
+**Impact: HIGH (class가 UI 부위를 설명하지 못하게 만드는 모호하거나 레이아웃 중심인 이름을 피합니다)**
 
 `element`와 `modifier` 이름은 구조나 치수가 아니라 UI 역할을 표현해야 합니다.
 `container`, `wrapper`, `box` 같은 포괄 단어 단독 사용이나 `gap12` 같은 숫자 기반 의미는 피하고,

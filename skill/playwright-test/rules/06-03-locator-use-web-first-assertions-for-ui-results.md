@@ -1,14 +1,14 @@
 ---
 title: Use Web-first Assertions for UI Results
-titleKo: UI 결과는 web-first 단정으로
+titleKo: UI 결과는 web-first 단정으로 검증
 impact: HIGH
-impactDescription: 일시적인 UI 상태를 즉시 검사하지 않고 단정을 브라우저의 비동기 렌더 모델에 맞춤
+impactDescription: 일시적인 UI 상태를 즉시 검사하지 않고 단정을 브라우저의 비동기 렌더 모델에 맞춥니다
 tags: assertions, web-first, ui
 ---
 
 ## Use Web-first Assertions for UI Results
 
-**Impact: HIGH (일시적인 UI 상태를 즉시 검사하지 않고 단정을 브라우저의 비동기 렌더 모델에 맞춤)**
+**Impact: HIGH (일시적인 UI 상태를 즉시 검사하지 않고 단정을 브라우저의 비동기 렌더 모델에 맞춥니다)**
 
 UI 결과는 `toBeVisible`, `toHaveText`, `toHaveValue`, `toHaveURL` 같은 web-first assertion을 기본으로 씁니다.
 즉시 평가되는 generic assertion은 non-UI 값에만 쓰고, 내부 state나 cache,

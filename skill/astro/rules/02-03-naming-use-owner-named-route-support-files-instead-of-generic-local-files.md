@@ -1,14 +1,14 @@
 ---
 title: Use Owner-named Route Support Files Instead of Generic Local Files
-titleKo: route support 파일은 generic 대신 owner 이름으로
+titleKo: route support 파일의 owner 이름 사용
 impact: MEDIUM-HIGH
-impactDescription: route 하나가 헬퍼·런타임 컴포넌트·스타일시트를 여럿 가져도 파일을 찾을 수 있게 함
+impactDescription: route 하나가 헬퍼·런타임 컴포넌트·스타일시트를 여럿 가져도 파일을 찾을 수 있게 합니다
 tags: naming, pages, local, support-modules
 ---
 
 ## Use Owner-named Route Support Files Instead of Generic Local Files
 
-**Impact: MEDIUM-HIGH (route 하나가 헬퍼·런타임 컴포넌트·스타일시트를 여럿 가져도 파일을 찾을 수 있게 함)**
+**Impact: MEDIUM-HIGH (route 하나가 헬퍼·런타임 컴포넌트·스타일시트를 여럿 가져도 파일을 찾을 수 있게 합니다)**
 
 Route-local files should name the owner and responsibility directly.
 

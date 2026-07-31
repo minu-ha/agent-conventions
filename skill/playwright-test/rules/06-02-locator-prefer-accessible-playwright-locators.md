@@ -2,13 +2,13 @@
 title: Prefer Accessible Playwright Locators
 titleKo: 접근성 기반 Playwright 로케이터 우선
 impact: HIGH
-impactDescription: DOM 구조보다 접근성 이름을 앞세워 셀렉터를 견고하고 사용자 관점으로 유지함
+impactDescription: DOM 구조보다 접근성 이름을 앞세워 셀렉터를 견고하게, 사용자 관점으로 유지합니다
 tags: locators, accessibility, selectors
 ---
 
 ## Prefer Accessible Playwright Locators
 
-**Impact: HIGH (DOM 구조보다 접근성 이름을 앞세워 셀렉터를 견고하고 사용자 관점으로 유지함)**
+**Impact: HIGH (DOM 구조보다 접근성 이름을 앞세워 셀렉터를 견고하게, 사용자 관점으로 유지합니다)**
 
 locator 우선순위는 `getByRole`, `getByLabel`/`getByPlaceholder`, `getByText`, `getByTestId`,
 최후수단 CSS/XPath 순서입니다.

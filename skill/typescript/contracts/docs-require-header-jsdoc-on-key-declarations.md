@@ -1,6 +1,6 @@
 # Require Header JSDoc on Key Declarations
 
-**Impact: MEDIUM-HIGH (구현 본문을 뜯어보기 전에 중요한 경계를 검색하고 설명할 수 있게 함)**
+**Impact: MEDIUM-HIGH (구현 본문을 읽기 전에 중요한 경계를 검색하고 설명할 수 있게 합니다)**
 
 named query·mutation binding과 원격 함수에는 `@api` 헤더 JSDoc을 작성하고, 비자명한 handler/effect,
 reusable/exported helper·custom hook, 커스텀 `type`/`interface`, store,

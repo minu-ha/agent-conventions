@@ -2,14 +2,15 @@
 title: Preserve Route Slug Traceability
 titleKo: route slug 추적성 유지
 impact: HIGH
-impactDescription: route 범위 class namespace를 소속 route 계층으로 거슬러 읽을 수 있게 유지함
-appliesWhen: route/framework 규칙이 `rt_*` owner를 선택한 화면에서 route class slug를 새로 만들거나 이름을 변경한다.
+impactDescription: route 범위 class namespace를 소속 route 계층으로 거슬러 읽을 수 있게 유지합니다
+appliesWhen:
+  - route/framework 규칙이 `rt_*` owner를 선택한 화면에서 route class slug를 새로 만들거나 이름을 변경할 때
 tags: slug, route-scope, traceability
 ---
 
 ## Preserve Route Slug Traceability
 
-**Impact: HIGH (route 범위 class namespace를 소속 route 계층으로 거슬러 읽을 수 있게 유지함)**
+**Impact: HIGH (route 범위 class namespace를 소속 route 계층으로 거슬러 읽을 수 있게 유지합니다)**
 
 활성화된 route/framework skill이 `rt_*` owner를 선택했다면,
 CSS는 그 owner slug를 route까지 다시 추적할 수 있게 유지합니다.

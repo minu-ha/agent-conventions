@@ -1,6 +1,6 @@
 # Prefer Owned Wrappers for `Ui*` Component Styling
 
-**Impact: HIGH (공용 UI wrapper가 즉석 className 주입으로 통제 안 되는 스타일 훅을 노출하는 것을 막음)**
+**Impact: HIGH (공용 UI wrapper가 즉석 className 주입으로 통제되지 않는 스타일 훅을 노출하는 것을 막습니다)**
 
 이 규칙은 실제 `Ui*` React wrapper 컴포넌트/API 경계에만 적용합니다.
 `.ui_*` 같은 기존 CSS owner root 아래에서 third-party selector만 스코프하는 CSS-only 변경은

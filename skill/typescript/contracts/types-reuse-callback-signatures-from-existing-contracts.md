@@ -1,6 +1,6 @@
 # Reuse Callback Signatures From Existing Contracts
 
-**Impact: HIGH (기존 interface나 객체 계약이 이미 정의한 callback 시그니처가 어긋나는 것을 막음)**
+**Impact: HIGH (기존 interface나 객체 계약이 이미 정의한 callback 시그니처가 어긋나는 것을 막습니다)**
 
 콜백 구현 시 매개변수를 다시 타이핑하기보다, 이미 존재하는 인터페이스나 계약의 시그니처를 Indexed Access로 재사용합니다.
 재사용한 계약에 현재 구현이 쓰지 않는 parameter가 있으면 `types-mark-unused-parameters-with-underscore`를 다시

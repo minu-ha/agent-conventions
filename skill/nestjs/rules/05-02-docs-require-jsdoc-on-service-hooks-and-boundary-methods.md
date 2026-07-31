@@ -1,14 +1,14 @@
 ---
 title: Require JSDoc on Service Hooks and Boundary Methods
-titleKo: service hook과 경계 메서드에는 JSDoc 필수
+titleKo: service hook·경계 메서드의 JSDoc 의무화
 impact: MEDIUM-HIGH
-impactDescription: 구현 세부를 뜯어보기 전에 중요한 백엔드 실행 경계를 검색할 수 있게 함
+impactDescription: 구현 세부를 살펴보기 전에 중요한 백엔드 실행 경계를 검색할 수 있게 합니다
 tags: jsdoc, services, lifecycle
 ---
 
 ## Require JSDoc on Service Hooks and Boundary Methods
 
-**Impact: MEDIUM-HIGH (구현 세부를 뜯어보기 전에 중요한 백엔드 실행 경계를 검색할 수 있게 함)**
+**Impact: MEDIUM-HIGH (구현 세부를 살펴보기 전에 중요한 백엔드 실행 경계를 검색할 수 있게 합니다)**
 
 Service public 메서드, Prisma 접근이나 외부 API 호출 블록, NestJS 생명주기 훅, 커스텀 `type`/`interface`,
 Guard/Interceptor/Pipe 핵심 메서드에는 예외 없이 JSDoc을 작성합니다.

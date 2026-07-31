@@ -1,14 +1,14 @@
 ---
 title: Validate Request DTOs With Validator, Transformer, and Swagger
-titleKo: 요청 DTO는 validator·transformer·Swagger로 검증
+titleKo: 요청 DTO의 validator·transformer·Swagger 검증
 impact: HIGH
-impactDescription: 검증·변환·API 문서를 DTO 한곳에 모아 요청 계약을 명시적으로 유지함
+impactDescription: 검증·변환·API 문서를 DTO 한곳에 모아 요청 계약을 명시적으로 유지합니다
 tags: dto, validation, swagger
 ---
 
 ## Validate Request DTOs With Validator, Transformer, and Swagger
 
-**Impact: HIGH (검증·변환·API 문서를 DTO 한곳에 모아 요청 계약을 명시적으로 유지함)**
+**Impact: HIGH (검증·변환·API 문서를 DTO 한곳에 모아 요청 계약을 명시적으로 유지합니다)**
 
 요청 DTO는 `class-validator` 데코레이터로 유효성 검증을 선언하고,
 필요할 때 `class-transformer`로 타입 변환을 명시합니다.

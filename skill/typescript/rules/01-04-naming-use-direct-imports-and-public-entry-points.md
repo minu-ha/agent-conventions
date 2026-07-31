@@ -1,17 +1,17 @@
 ---
 title: Use Direct Imports and Dedicated Public Entry Points
-titleKo: 직접 import와 전용 공개 진입점 쓰기
+titleKo: 직접 import와 전용 공개 진입점 사용
 impact: HIGH
-impactDescription: barrel 이나 모호한 재노출 계층에 기대지 않고 import 소유를 명시적으로 드러냄
-appliesWhen: >-
-  TypeScript import/export, barrel, shared 공개 진입점·feature support module 경계를 추가·변경하거나 같은 module path의
-  value/type specifier를 추가·삭제·전환한다.
+impactDescription: barrel이나 모호한 재노출 계층에 기대지 않고 import 소유를 명시적으로 드러냅니다
+appliesWhen:
+  - TypeScript import/export, barrel, shared 공개 진입점·feature support module 경계를 추가·변경할 때
+  - 같은 module path의 value/type specifier를 추가·삭제·전환할 때
 tags: imports, exports, public-entry
 ---
 
 ## Use Direct Imports and Dedicated Public Entry Points
 
-**Impact: HIGH (barrel 이나 모호한 재노출 계층에 기대지 않고 import 소유를 명시적으로 드러냄)**
+**Impact: HIGH (barrel이나 모호한 재노출 계층에 기대지 않고 import 소유를 명시적으로 드러냅니다)**
 
 `index.ts` 기반 barrel export를 만들지 않고 직접 export/import 구조를 유지합니다.
 공용 설정과 공용 순수 함수는 각각 `shared/config.ts`, `shared/util.ts` 같은 공개 진입점으로 모으고,

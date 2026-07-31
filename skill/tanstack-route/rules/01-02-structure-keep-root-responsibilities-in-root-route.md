@@ -1,14 +1,14 @@
 ---
 title: Keep Root Responsibilities in `__root.tsx`
-titleKo: 루트 책임은 __root.tsx에 두기
+titleKo: 루트 책임의 __root.tsx 집중
 impact: HIGH
-impactDescription: 앱 전역 route 관심사가 기능별 셸과 섞이는 것을 막음
+impactDescription: 앱 전역 route 관심사가 기능별 셸과 섞이는 것을 막습니다
 tags: root-route, layout, ownership
 ---
 
 ## Keep Root Responsibilities in `__root.tsx`
 
-**Impact: HIGH (앱 전역 route 관심사가 기능별 셸과 섞이는 것을 막음)**
+**Impact: HIGH (앱 전역 route 관심사가 기능별 셸과 섞이는 것을 막습니다)**
 
 전역 라우트 컨텍스트와 앱 전체 공통 책임은 `<route-root>/__root.tsx`에서만 관리합니다.
 루트는 `head`, 전역 `Outlet`, 전역 로딩/모달 정리처럼 모든 화면이 공유하는 책임만 가져야 하고,

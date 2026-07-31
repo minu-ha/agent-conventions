@@ -1,14 +1,14 @@
 ---
 title: Validate Search Before Using Route Search
-titleKo: search는 쓰기 전에 검증
+titleKo: route search의 사용 전 검증
 impact: CRITICAL
-impactDescription: 화면 곳곳에서 다시 파싱하지 않고 query string 을 route 경계에서 한 번 정규화함
+impactDescription: 화면 곳곳에서 다시 파싱하지 않고 query string을 route 경계에서 한 번 정규화합니다
 tags: validateSearch, zod, search-params
 ---
 
 ## Validate Search Before Using Route Search
 
-**Impact: CRITICAL (화면 곳곳에서 다시 파싱하지 않고 query string 을 route 경계에서 한 번 정규화함)**
+**Impact: CRITICAL (화면 곳곳에서 다시 파싱하지 않고 query string을 route 경계에서 한 번 정규화합니다)**
 
 쿼리스트링을 읽는 화면은 `Route.useSearch()` 사용 전에 `validateSearch`를 선언합니다.
 search schema는 `z.object(...)`로 작성하고, 숫자형 페이지네이션이나 선택값은 `z.coerce.number()`로 보정하며,

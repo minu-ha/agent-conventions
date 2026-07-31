@@ -1,14 +1,14 @@
 ---
 title: Review Route Structure Before Finishing
-titleKo: 마무리 전에 route 구조 점검
+titleKo: 마무리 전 route 구조 점검
 impact: MEDIUM
-impactDescription: route 변경을 완료로 선언하기 전에 그룹·가드·소유 어긋남을 잡음
+impactDescription: route 변경을 완료로 선언하기 전에 그룹·가드·소유 어긋남을 잡습니다
 tags: review, workflow, checklist
 ---
 
 ## Review Route Structure Before Finishing
 
-**Impact: MEDIUM (route 변경을 완료로 선언하기 전에 그룹·가드·소유 어긋남을 잡음)**
+**Impact: MEDIUM (route 변경을 완료로 선언하기 전에 그룹·가드·소유 어긋남을 잡습니다)**
 
 라우트 작업을 끝냈다고 보기 전에 구조 체크리스트를 다시 확인합니다.
 화면이 보인다는 이유만으로 마무리하지 말고, 그룹 구조, support code 배치, guard 위치,

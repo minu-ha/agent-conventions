@@ -1,6 +1,6 @@
 # Separate Domain State Modifiers From DOM Interaction States
 
-**Impact: HIGH (앱 상태·포커스 가시성·hover 동작의 책임을 섞지 않고 읽기 쉽고 접근성 있게 유지함)**
+**Impact: HIGH (앱 상태·포커스 가시성·hover 동작의 책임을 섞지 않고 읽기 쉽고 접근성 있게 유지합니다)**
 
 화면 상태나 도메인 상태는 `--active`, `--selected`, `--error` 같은 modifier로 표현하고,
 브라우저 상호작용 상태는 같은 클래스 블록 내부 nested `&:hover`, `&:focus-visible`,

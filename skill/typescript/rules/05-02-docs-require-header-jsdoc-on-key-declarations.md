@@ -1,11 +1,10 @@
 ---
 title: Require Header JSDoc on Key Declarations
-titleKo: 핵심 선언에는 헤더 JSDoc 필수
+titleKo: 핵심 선언의 헤더 JSDoc 의무화
 impact: MEDIUM-HIGH
-impactDescription: 구현 본문을 뜯어보기 전에 중요한 경계를 검색하고 설명할 수 있게 함
-appliesWhen: >-
-  named query·mutation, 원격 함수, 비자명한 handler/effect, reusable/exported helper·custom hook, custom type·interface,
-  store, formatter 또는 예외 memo 선언을 추가·변경한다.
+impactDescription: 구현 본문을 읽기 전에 중요한 경계를 검색하고 설명할 수 있게 합니다
+appliesWhen:
+  - named query·mutation, 원격 함수, 비자명한 handler/effect, reusable/exported helper·custom hook, custom type·interface, store, formatter 또는 예외 memo 선언을 추가·변경할 때
 requiresSelected: >-
   docs-standardize-annotation-tags-by-declaration-role, docs-write-concise-korean-comments-about-purpose-and-constraints
 tags: jsdoc, declarations, boundaries
@@ -13,7 +12,7 @@ tags: jsdoc, declarations, boundaries
 
 ## Require Header JSDoc on Key Declarations
 
-**Impact: MEDIUM-HIGH (구현 본문을 뜯어보기 전에 중요한 경계를 검색하고 설명할 수 있게 함)**
+**Impact: MEDIUM-HIGH (구현 본문을 읽기 전에 중요한 경계를 검색하고 설명할 수 있게 합니다)**
 
 named query·mutation binding과 원격 함수에는 `@api` 헤더 JSDoc을 작성하고, 비자명한 handler/effect,
 reusable/exported helper·custom hook, 커스텀 `type`/`interface`, store,

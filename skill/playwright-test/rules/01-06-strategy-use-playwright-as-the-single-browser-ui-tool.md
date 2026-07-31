@@ -1,14 +1,14 @@
 ---
 title: Use Playwright as the Single Browser UI Tool
-titleKo: 브라우저 UI 도구는 Playwright 하나로
+titleKo: 브라우저 UI 테스트 도구의 Playwright 단일화
 impact: CRITICAL
-impactDescription: 테스트 층위 전체에서 도구 하나와 상호작용 모델 하나를 써서 브라우저 UI 테스트를 일관되게 유지함
+impactDescription: 테스트 층위 전체에서 도구 하나와 상호작용 모델 하나를 써서 브라우저 UI 테스트를 일관되게 유지합니다
 tags: playwright, tool-choice, consistency
 ---
 
 ## Use Playwright as the Single Browser UI Tool
 
-**Impact: CRITICAL (테스트 층위 전체에서 도구 하나와 상호작용 모델 하나를 써서 브라우저 UI 테스트를 일관되게 유지함)**
+**Impact: CRITICAL (테스트 층위 전체에서 도구 하나와 상호작용 모델 하나를 써서 브라우저 UI 테스트를 일관되게 유지합니다)**
 
 브라우저 UI 테스트의 기본 도구는 `Playwright` 하나로 통일합니다.
 같은 도구를 쓰더라도 Integration과 E2E 경계는 별도로 나누고, locator, assertion,

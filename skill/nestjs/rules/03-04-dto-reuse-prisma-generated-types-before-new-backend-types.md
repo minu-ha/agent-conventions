@@ -2,13 +2,13 @@
 title: Reuse Prisma Generated Types Before New Backend Types
 titleKo: 새 백엔드 타입 전에 Prisma 생성 타입 재사용
 impact: HIGH
-impactDescription: Prisma 가 이미 같은 구조 계약을 소유할 때 백엔드 타입이 중복 선언되는 것을 막음
+impactDescription: Prisma가 이미 같은 구조 계약을 소유할 때 백엔드 타입이 중복 선언되는 것을 막습니다
 tags: prisma, types, reuse
 ---
 
 ## Reuse Prisma Generated Types Before New Backend Types
 
-**Impact: HIGH (Prisma 가 이미 같은 구조 계약을 소유할 때 백엔드 타입이 중복 선언되는 것을 막음)**
+**Impact: HIGH (Prisma가 이미 같은 구조 계약을 소유할 때 백엔드 타입이 중복 선언되는 것을 막습니다)**
 
 Prisma가 생성한 타입이 이미 존재하면 동일하거나 유사한 구조의 별도 타입 선언을 만들지 않습니다.
 필요한 경우 Prisma 타입을 직접 참조하거나 `Pick`/`Omit`으로 파생하고,

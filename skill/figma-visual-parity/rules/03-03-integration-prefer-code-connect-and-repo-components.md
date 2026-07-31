@@ -1,14 +1,14 @@
 ---
 title: Prefer Code Connect and Repo Components Over Rebuilding UI
-titleKo: UI를 새로 만들기보다 Code Connect와 레포 컴포넌트를
+titleKo: UI 신규 제작보다 Code Connect·레포 컴포넌트 우선
 impact: CRITICAL
-impactDescription: 실제 디자인 시스템 컴포넌트를 무시하고 raw JSX/CSS를 새로 만드는 일을 막음
+impactDescription: 실제 디자인 시스템 컴포넌트를 무시하고 raw JSX/CSS를 새로 만드는 일을 막습니다
 tags: integration, code-connect, components
 ---
 
 ## Prefer Code Connect and Repo Components Over Rebuilding UI
 
-**Impact: CRITICAL (실제 디자인 시스템 컴포넌트를 무시하고 raw JSX/CSS를 새로 만드는 일을 막음)**
+**Impact: CRITICAL (실제 디자인 시스템 컴포넌트를 무시하고 raw JSX/CSS를 새로 만드는 일을 막습니다)**
 
 Code Connect context가 있으면 import statement, component snippet, prop mapping, variant value,
 custom instruction을 우선 구현 기준으로 사용합니다.

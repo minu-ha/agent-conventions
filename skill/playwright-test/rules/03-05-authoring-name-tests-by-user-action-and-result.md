@@ -1,14 +1,14 @@
 ---
 title: Name Tests by User Action and Result
-titleKo: 테스트 이름은 사용자 동작과 결과로
+titleKo: 사용자 동작과 결과 중심의 테스트 이름
 impact: MEDIUM-HIGH
-impactDescription: 구현 세부나 setup 용어가 아니라 사용자 행위로 브라우저 테스트를 읽히게 함
+impactDescription: 구현 세부나 setup 용어가 아니라 사용자 행위로 브라우저 테스트를 읽히게 합니다
 tags: test-titles, naming, behavior
 ---
 
 ## Name Tests by User Action and Result
 
-**Impact: MEDIUM-HIGH (구현 세부나 setup 용어가 아니라 사용자 행위로 브라우저 테스트를 읽히게 함)**
+**Impact: MEDIUM-HIGH (구현 세부나 setup 용어가 아니라 사용자 행위로 브라우저 테스트를 읽히게 합니다)**
 
 `test.describe()`는 기능 단위 이름을 쓰고, `test()` 제목은 “사용자 행동 + 기대 결과” 형태로 작성합니다.
 구현 세부사항이나 내부 state가 아니라 사용자가 보는 결과가 읽혀야 합니다.

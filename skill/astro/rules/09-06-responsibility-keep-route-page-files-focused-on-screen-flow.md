@@ -1,14 +1,14 @@
 ---
 title: Keep Route Page Files Focused on Screen Flow
-titleKo: route page 파일은 화면 흐름에 집중
+titleKo: route page 파일의 화면 흐름 집중
 impact: HIGH
-impactDescription: route .astro 파일을 import 전용 어댑터가 아니라 route 조율 계층으로 읽히게 함
+impactDescription: route .astro 파일을 import 전용 어댑터가 아니라 route 조율 계층으로 읽히게 합니다
 tags: responsibility, pages, screen-flow
 ---
 
 ## Keep Route Page Files Focused on Screen Flow
 
-**Impact: HIGH (route .astro 파일을 import 전용 어댑터가 아니라 route 조율 계층으로 읽히게 함)**
+**Impact: HIGH (route .astro 파일을 import 전용 어댑터가 아니라 route 조율 계층으로 읽히게 합니다)**
 
 `src/pages/**/index.astro`, `[slug].astro`, and similar route files own more than the URL.
 

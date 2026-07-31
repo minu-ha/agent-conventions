@@ -2,17 +2,17 @@
 title: Separate Route, Local, and Shared Style Scopes
 titleKo: route·local·shared 스타일 스코프 분리
 impact: HIGH
-impactDescription: route 소유 페이지 스타일·공용 컴포넌트 스타일·순수 local 헬퍼 스타일이 같은 namespace나 파일에 섞이는 것을 막음
-appliesWhen: >-
-  스타일 owner를 route screen/support, document, 독립 leaf helper, reusable widget, UI primitive 중에서 결정하거나 서로
-  다른 owner를 이동·분리한다.
+impactDescription: route 소유 페이지 스타일·공용 컴포넌트 스타일·순수 local 헬퍼 스타일이 같은 namespace나 파일에 섞이는 것을 막습니다
+appliesWhen:
+  - 스타일 owner를 route screen/support, document, 독립 leaf helper, reusable widget, UI primitive 중에서 결정할 때
+  - 서로 다른 owner를 이동·분리할 때
 reviewWith: organization-keep-style-files-owned-by-one-component-or-route
 tags: route-scope, local-scope, shared-scope, css-files
 ---
 
 ## Separate Route, Local, and Shared Style Scopes
 
-**Impact: HIGH (route 소유 페이지 스타일·공용 컴포넌트 스타일·순수 local 헬퍼 스타일이 같은 namespace나 파일에 섞이는 것을 막음)**
+**Impact: HIGH (route 소유 페이지 스타일·공용 컴포넌트 스타일·순수 local 헬퍼 스타일이 같은 namespace나 파일에 섞이는 것을 막습니다)**
 
 route/framework skill이 route-owned surface로 판단한 스타일은 `rt_*` scope를 유지합니다.
 route screen의 흐름을 구성하거나 지원하는 route support surface는 파일이 `_local/` 같은 helper folder로 내려가도

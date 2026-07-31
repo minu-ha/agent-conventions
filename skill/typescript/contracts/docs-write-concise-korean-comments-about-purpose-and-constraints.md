@@ -1,6 +1,6 @@
 # Write Concise Korean Comments About Purpose and Constraints
 
-**Impact: MEDIUM (코드 동작을 서술하지 않고 의도와 제약에 주석을 집중시킴)**
+**Impact: MEDIUM (코드 동작을 서술하지 않고 의도와 제약에 주석을 집중시킵니다)**
 
 주석은 한글로 작성하고, 목적, 제약, 부작용 중심으로 간결하게 적습니다.
 `@api`, `@event`, `@watch`, `@helper`, `@summary`, `@field` 문장은 명사형 종결이나 개조식 표현을 기본으로 하며,

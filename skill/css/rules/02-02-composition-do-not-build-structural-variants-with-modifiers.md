@@ -1,18 +1,18 @@
 ---
 title: Do Not Use Modifiers for One-off Structural Patches
-titleKo: one-off 구조 수정에 modifier 쓰지 않기
+titleKo: one-off 구조 patch에 modifier 사용 금지
 impact: HIGH
-impactDescription: modifier를 두 번째 레이아웃 이름 체계로 만들지 않고 상태 표현에만 남겨둠
-appliesWhen: >-
-  modifier를 추가·변경하거나 반복 가능한 state·API variant와 one-off structural patch 사이를 판정한다. 허용된 state로
-  결론 나도 변경된 modifier 분류는 Selected다.
+impactDescription: modifier를 두 번째 레이아웃 이름 체계로 만들지 않고 상태 표현에만 남겨둡니다
+appliesWhen:
+  - modifier를 추가·변경하거나 반복 가능한 state·API variant와 one-off structural patch 사이를 판정할 때
+  - 허용된 state로 결론 나도 변경된 modifier 분류는 Selected
 reviewWith: naming-name-elements-and-modifiers-by-role
 tags: modifiers, structure, naming
 ---
 
 ## Do Not Use Modifiers for One-off Structural Patches
 
-**Impact: HIGH (modifier를 두 번째 레이아웃 이름 체계로 만들지 않고 상태 표현에만 남겨둠)**
+**Impact: HIGH (modifier를 두 번째 레이아웃 이름 체계로 만들지 않고 상태 표현에만 남겨둡니다)**
 
 modifier는 상태나 반복 variant를 표현할 때만 사용합니다.
 

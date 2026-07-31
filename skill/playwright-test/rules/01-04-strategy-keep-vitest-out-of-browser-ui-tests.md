@@ -1,14 +1,14 @@
 ---
 title: Keep Vitest Out of Browser UI Tests by Default
-titleKo: 브라우저 UI 테스트에는 기본적으로 Vitest를 쓰지 않기
+titleKo: 브라우저 UI 테스트에 Vitest 기본 도입 금지
 impact: MEDIUM-HIGH
-impactDescription: Playwright 가 이미 런타임 경계를 소유할 때 브라우저 UI 커버리지를 여러 도구로 쪼개지 않음
+impactDescription: Playwright가 이미 런타임 경계를 소유할 때 브라우저 UI 커버리지를 여러 도구로 쪼개지 않습니다
 tags: vitest, ui-tests, tooling
 ---
 
 ## Keep Vitest Out of Browser UI Tests by Default
 
-**Impact: MEDIUM-HIGH (Playwright 가 이미 런타임 경계를 소유할 때 브라우저 UI 커버리지를 여러 도구로 쪼개지 않음)**
+**Impact: MEDIUM-HIGH (Playwright가 이미 런타임 경계를 소유할 때 브라우저 UI 커버리지를 여러 도구로 쪼개지 않습니다)**
 
 `vi`와 `Vitest`는 이 프로젝트의 기본 UI 테스트 도구가 아닙니다.
 화면이나 라우트 기능 검증을 위해 Vitest를 기본 도입하지 않고,

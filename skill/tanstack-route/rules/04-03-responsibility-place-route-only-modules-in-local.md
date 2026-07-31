@@ -1,14 +1,14 @@
 ---
 title: Place Route-only Modules in `-local/`
-titleKo: route 전용 모듈은 -local/ 에
+titleKo: route 전용 모듈의 -local/ 배치
 impact: HIGH
-impactDescription: 계약이 안정되기 전까지 route 범위 UI 와 비공개 모듈을 route 가까이 둠
+impactDescription: 계약이 안정되기 전까지 route 범위 UI와 비공개 모듈을 route 가까이 둡니다
 tags: route-local, local-folder, ownership
 ---
 
 ## Place Route-only Modules in `-local/`
 
-**Impact: HIGH (계약이 안정되기 전까지 route 범위 UI 와 비공개 모듈을 route 가까이 둠)**
+**Impact: HIGH (계약이 안정되기 전까지 route 범위 UI와 비공개 모듈을 route 가까이 둡니다)**
 
 해당 라우트에서만 쓰는 모달, 폼, 보조 컴포넌트, route-private module은 라우트 하위 `-local/`에 둡니다.
 다른 라우트와 계약이 아직 안정되지 않았다면 shared UI나 공용 helper로 올리지 말고, 먼저 route-local 소유를 유지합니다.

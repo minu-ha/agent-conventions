@@ -1,14 +1,14 @@
 ---
 title: Keep Parity Changes Scoped
-titleKo: parity 변경은 범위 안에 두기
+titleKo: parity 변경의 범위 한정
 impact: HIGH
-impactDescription: visual polish 중 불필요한 구조 리팩터링과 shared surface 변경을 막음
+impactDescription: visual polish 중 불필요한 구조 리팩터링과 shared surface 변경을 막습니다
 tags: implementation, scope, shared
 ---
 
 ## Keep Parity Changes Scoped
 
-**Impact: HIGH (visual polish 중 불필요한 구조 리팩터링과 shared surface 변경을 막음)**
+**Impact: HIGH (visual polish 중 불필요한 구조 리팩터링과 shared surface 변경을 막습니다)**
 
 Visual parity 작업은 Figma와 현재 화면의 차이를 줄이는 데 집중합니다.
 불필요한 구조 리팩터링, API/data shaping 변경, shared component/style 변경을 기본값으로 삼지 않습니다.

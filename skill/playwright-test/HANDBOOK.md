@@ -69,9 +69,9 @@
 
 ### 1.1 Classify E2E Tests by Real Backend and Auth Dependence
 
-**Impact: CRITICAL (실제 백엔드·실제 인증·실제 라우팅이 테스트에 남아 있어야 한다고 요구해 e2e 의미를 엄격하게 유지함)**
+**Impact: CRITICAL (실제 백엔드·실제 인증·실제 라우팅이 테스트에 남아 있어야 한다고 요구해 e2e 의미를 엄격하게 유지합니다)**
 
-실제 로그인, 실제 저장, 실제 권한 연결이 끊기면 테스트 의미가 사라지면 E2E입니다.
+실제 로그인, 실제 저장, 실제 권한 연결이 끊겼을 때 테스트 의미가 사라지면 E2E입니다.
 E2E는 실제 백엔드, 실제 인증 플로우, 실제 라우팅과 번들 결과를 사용하고,
 핵심 엔드포인트를 `page.route()`로 가로채면서 E2E라고 부르지 않습니다.
 
@@ -94,7 +94,7 @@ E2E는 실제 백엔드, 실제 인증 플로우, 실제 라우팅과 번들 결
 
 ### 1.2 Classify Integration Tests by Mocked Dependency Boundary
 
-**Impact: CRITICAL (integration 테스트가 백엔드·인증을 모킹한 상태로 UI 와 route 동작을 검증한다는 점을 분명히 함)**
+**Impact: CRITICAL (integration 테스트가 백엔드·인증을 모킹한 상태로 UI와 route 동작을 검증한다는 점을 분명히 합니다)**
 
 주요 API를 mock해도 테스트 목적이 유지되면 Integration입니다.
 Integration은 `page.route()` 기반 API mocking, 인증 상태 mocking, 초기 데이터 강제 주입을 허용하고, 폼 검증,
@@ -118,7 +118,7 @@ Integration은 `page.route()` 기반 API mocking, 인증 상태 mocking, 초기 
 
 ### 1.3 Default to Integration Plus Minimal Critical E2E
 
-**Impact: HIGH (느린 실제 시스템 테스트에서 모든 분기를 중복하지 않고 상태 커버리지를 넓게 유지함)**
+**Impact: HIGH (느린 실제 시스템 테스트에서 모든 분기를 중복하지 않고 상태 커버리지를 넓게 유지합니다)**
 
 새 기능은 기본적으로 Integration에서 상태 분기와 화면 반응을 먼저 잡고, 필요한 최소 핵심 사용자 흐름만 E2E로 남깁니다.
 모든 상태 조합을 E2E로 복제하지 않고, 실제 끝까지 되는지 보장해야 하는 핵심 여정만 E2E에 둡니다.
@@ -139,7 +139,7 @@ Integration은 `page.route()` 기반 API mocking, 인증 상태 mocking, 초기 
 
 ### 1.4 Keep Vitest Out of Browser UI Tests by Default
 
-**Impact: MEDIUM-HIGH (Playwright 가 이미 런타임 경계를 소유할 때 브라우저 UI 커버리지를 여러 도구로 쪼개지 않음)**
+**Impact: MEDIUM-HIGH (Playwright가 이미 런타임 경계를 소유할 때 브라우저 UI 커버리지를 여러 도구로 쪼개지 않습니다)**
 
 `vi`와 `Vitest`는 이 프로젝트의 기본 UI 테스트 도구가 아닙니다.
 화면이나 라우트 기능 검증을 위해 Vitest를 기본 도입하지 않고,
@@ -161,7 +161,7 @@ DOM 없이 검증하는 편이 더 싼 순수 계산 로직이 충분히 생겼�
 
 ### 1.5 Never Mix Integration and E2E in One File
 
-**Impact: HIGH (spec 파일마다 런타임 경계를 하나로 배정해 테스트 의도와 실패 진단을 분명하게 유지함)**
+**Impact: HIGH (spec 파일마다 런타임 경계를 하나로 배정해 테스트 의도와 실패 진단을 분명하게 유지합니다)**
 
 한 spec 파일 안에는 하나의 테스트 레벨만 둡니다.
 Integration과 E2E는 도구가 아니라 의존 경계로 구분되므로,
@@ -188,7 +188,7 @@ login.e2e.spec.ts
 
 ### 1.6 Use Playwright as the Single Browser UI Tool
 
-**Impact: CRITICAL (테스트 층위 전체에서 도구 하나와 상호작용 모델 하나를 써서 브라우저 UI 테스트를 일관되게 유지함)**
+**Impact: CRITICAL (테스트 층위 전체에서 도구 하나와 상호작용 모델 하나를 써서 브라우저 UI 테스트를 일관되게 유지합니다)**
 
 브라우저 UI 테스트의 기본 도구는 `Playwright` 하나로 통일합니다.
 같은 도구를 쓰더라도 Integration과 E2E 경계는 별도로 나누고, locator, assertion,
@@ -218,7 +218,7 @@ spec 배치, 파일명, shared support 승격 규칙은 테스트 소유권을 �
 
 ### 2.1 Place Specs by Feature Path
 
-**Impact: HIGH (테스트 트리가 실제 route·기능 경로를 반영하게 해 테스트 소유를 찾을 수 있게 함)**
+**Impact: HIGH (테스트 트리가 실제 route·기능 경로를 반영하게 해 테스트 소유권을 찾을 수 있게 합니다)**
 
 테스트는 `<test-root>/<기능 경로>/...` 아래에 두고, 디렉터리 구조는 실제 화면이나 도메인 구조를 따라갑니다.
 그래야 feature를 찾을 때 구현 파일과 테스트 파일이 비슷한 경로 감각으로 탐색됩니다.
@@ -244,7 +244,7 @@ spec 배치, 파일명, shared support 승격 규칙은 테스트 소유권을 �
 
 ### 2.2 Promote Shared Support Only After Real Reuse
 
-**Impact: MEDIUM-HIGH (여러 기능이 진짜로 필요해질 때까지 전역 헬퍼를 미뤄 support 계층을 규모에 맞게 유지함)**
+**Impact: MEDIUM-HIGH (여러 기능에서 실제 재사용이 생길 때까지 전역 헬퍼 승격을 미뤄 support 계층을 규모에 맞게 유지합니다)**
 
 전역 공용 helper는 `<test-support-path>`에 두되, 여러 feature가 함께 쓰는 인증, API seed, 공용 route setup만 올립니다.
 특정 기능 하나에서만 쓰는 mock builder, request body helper, bootstrap wait는 spec 근처에 두고,
@@ -266,7 +266,7 @@ spec 배치, 파일명, shared support 승격 규칙은 테스트 소유권을 �
 
 ### 2.3 Use Discoverable Spec File Names
 
-**Impact: HIGH (기능과 층위를 파일명에 직접 담아 spec 의 목적을 검색 가능하게 유지함)**
+**Impact: HIGH (기능과 층위를 파일명에 직접 담아 spec의 목적을 검색 가능하게 유지합니다)**
 
 Integration은 `*.spec.ts`, E2E는 `*.e2e.spec.ts`를 사용하고, 파일명에는 라우트나 기능 이름이 바로 보이게 유지합니다.
 `index.spec.ts`, `test.spec.ts`처럼 탐색이 어려운 이름은 금지합니다.
@@ -296,7 +296,7 @@ members.e2e.spec.ts
 
 ### 3.1 Follow the Declared Integration or E2E Writing Sequence
 
-**Impact: MEDIUM (동작을 쓰기 전에 테스트 층위와 의존 경계를 먼저 분류하게 해 혼란스러운 setup 을 줄임)**
+**Impact: MEDIUM (동작을 쓰기 전에 테스트 층위와 의존 경계를 먼저 분류하게 해 혼란스러운 setup을 줄입니다)**
 
 신규 테스트를 쓸 때는 먼저 Integration인지 E2E인지 결정하고, 그 레벨에 맞는 setup만 선언한 뒤,
 사용자 locator로 action을 작성하고, web-first assertion으로 결과를 검증합니다.
@@ -322,7 +322,7 @@ members.e2e.spec.ts
 
 ### 3.2 Isolate and Clean Up Test Data
 
-**Impact: HIGH (계정·id·seed 레코드 재사용으로 원격·공유 상태 브라우저 테스트가 충돌하는 것을 막음)**
+**Impact: HIGH (계정·id·seed 레코드 재사용으로 원격·공유 상태 브라우저 테스트가 충돌하는 것을 막습니다)**
 
 원격 백엔드를 건드리는 테스트는 고유 데이터로 실행하고 `try/finally`로 cleanup합니다.
 `Date.now()`, worker suffix, 고유 login ID 같은 전략으로 충돌을 피하고,
@@ -351,7 +351,7 @@ try {
 
 ### 3.3 Keep `beforeEach` Limited and Visible
 
-**Impact: HIGH (공용 setup 이 테스트의 실제 의존 경계나 핵심 단정을 숨기는 것을 막음)**
+**Impact: HIGH (공용 setup이 테스트의 실제 의존 경계나 핵심 단정을 숨기는 것을 막습니다)**
 
 `beforeEach`에는 반복되는 인증 stub, 공용 이동 경로, 공용 seed 설치처럼 진짜 반복되는 준비만 둡니다.
 핵심 assertion이나 테스트마다 다른 mock/seed를 `beforeEach`에 숨기지 않고, 각 테스트 본문에서 선언합니다.
@@ -383,7 +383,7 @@ test("검색 결과가 비어 있으면 empty 상태를 보여준다", async ({p
 
 ### 3.4 Keep One Behavior Per Test
 
-**Impact: HIGH (setup·동작·단정을 좁게 유지해 브라우저 실패가 여러 검사가 아니라 한 행위를 가리키게 함)**
+**Impact: HIGH (setup·동작·단정을 좁게 유지해 브라우저 실패가 여러 검사가 아니라 한 행위를 가리키게 합니다)**
 
 한 테스트는 한 행동과 한 결과에 집중합니다.
 기본 구조는 `Arrange -> Act -> Assert` 순서를 따르고, unrelated assertion을 한 테스트 안에 과도하게 나열하지 않습니다.
@@ -406,7 +406,7 @@ test("저장 후 성공 토스트를 표시한다", async ({page}) => {
 
 ### 3.5 Name Tests by User Action and Result
 
-**Impact: MEDIUM-HIGH (구현 세부나 setup 용어가 아니라 사용자 행위로 브라우저 테스트를 읽히게 함)**
+**Impact: MEDIUM-HIGH (구현 세부나 setup 용어가 아니라 사용자 행위로 브라우저 테스트를 읽히게 합니다)**
 
 `test.describe()`는 기능 단위 이름을 쓰고, `test()` 제목은 “사용자 행동 + 기대 결과” 형태로 작성합니다.
 구현 세부사항이나 내부 state가 아니라 사용자가 보는 결과가 읽혀야 합니다.
@@ -427,7 +427,7 @@ test("권한이 없으면 멤버 화면 진입 시 로그인으로 이동한다"
 
 ### 3.6 Write Comments Only for Non-obvious Setup Boundaries
 
-**Impact: MEDIUM (자명한 Arrange/Act/Assert 서술 대신 그 setup 이 왜 있는지에 주석을 집중시킴)**
+**Impact: MEDIUM (자명한 Arrange/Act/Assert 서술 대신 그 setup이 왜 있는지에 주석을 집중시킵니다)**
 
 테스트 주석은 한글로 작성하고, helper, seed/cleanup,
 bootstrap wait처럼 목적이 바로 드러나지 않는 setup에만 왜 필요한지 짧게 남깁니다.
@@ -455,7 +455,7 @@ integration 테스트는 mocked dependency를 명시적으로 드러내고, 상�
 
 ### 4.1 Cover State Matrices and User-visible Results in Integration
 
-**Impact: HIGH (넓은 UI 상태 조합과 각 상태의 눈에 보이는 결과를 integration 테스트가 책임지게 함)**
+**Impact: HIGH (넓은 UI 상태 조합과 각 상태의 눈에 보이는 결과를 integration 테스트가 책임지게 합니다)**
 
 Integration은 상태 매트릭스를 책임집니다.
 loading, empty, error, success, validation error, permission redirect, search/pagination 동기화를 우선 검토하고,
@@ -480,7 +480,7 @@ test("저장 후 목록 화면으로 이동하고 성공 토스트를 표시한�
 
 ### 4.2 Mock Only the Endpoints Required by the Spec
 
-**Impact: HIGH (시나리오에 중요한 의존만 모킹해 integration setup 을 읽을 수 있게 유지함)**
+**Impact: HIGH (시나리오에 중요한 의존만 모킹해 integration setup을 읽을 수 있게 유지합니다)**
 
 Integration에서 `page.route()`는 반드시 `page.goto()` 전에 등록하고, 해당 테스트 목적에 필요한 엔드포인트만 선언합니다.
 인증이 필요하면 공용 authenticated session helper를 우선 사용하고,
@@ -509,7 +509,7 @@ test("멤버 검색 결과를 표시한다", async ({page}) => {
 
 ### 4.3 Wait for State, Not Time, in Integration Tests
 
-**Impact: CRITICAL (임의의 sleep 대신 관찰 가능한 상태를 기다려 integration 테스트를 결정적으로 유지함)**
+**Impact: CRITICAL (임의의 sleep 대신 관찰 가능한 상태를 기다려 integration 테스트를 결정적으로 유지합니다)**
 
 Integration에서는 Suspense, bootstrap query,
 lazy data 주입이 있는 화면일수록 관련 응답이나 안정적인 화면 marker가 생긴 뒤 assertion을 시작합니다.
@@ -538,7 +538,7 @@ e2e 테스트는 실제 backend와 auth 경로를 사용하되 seed, cleanup, sh
 
 ### 5.1 Avoid Destructive Shared-account Scenarios and Parallel Collisions
 
-**Impact: CRITICAL (실제 시스템 브라우저 테스트가 공용 계정을 망치거나 같은 원격 자원에서 경합하는 것을 막음)**
+**Impact: CRITICAL (실제 시스템 브라우저 테스트가 공용 계정을 망치거나 같은 원격 자원에서 경합하는 것을 막습니다)**
 
 공유 관리자 계정으로 실패 로그인, 잠금, 비밀번호 변경 같은 destructive 시나리오를 검증하지 않습니다.
 같은 원격 자원이나 계정을 동시에 건드릴 수 있으면 serial 실행이나 고립된 데이터 전략을 우선하고,
@@ -561,7 +561,7 @@ e2e 테스트는 실제 backend와 auth 경로를 사용하되 seed, cleanup, sh
 
 ### 5.2 Seed With API Helpers and Clean Up in `finally`
 
-**Impact: HIGH (브라우저 단계를 느린 seed 스크립트로 만들지 않고 e2e setup 을 빠르고 명시적으로 유지함)**
+**Impact: HIGH (seed를 느린 브라우저 단계로 만들지 않고 e2e setup을 빠르고 명시적으로 유지합니다)**
 
 e2e의 사전 상태가 필요하면 API helper로 준비하고 `finally`에서 cleanup합니다.
 seed는 브라우저 UI로 장황하게 만들지 않되, 검증 대상 자체를 API로 우회하지는 않습니다.
@@ -591,7 +591,7 @@ try {
 
 ### 5.3 Use Real Backend, Auth, and Routing in E2E
 
-**Impact: CRITICAL (핵심 백엔드·인증·라우팅 경로를 실제로 유지해 e2e 의 의미를 지킴)**
+**Impact: CRITICAL (핵심 백엔드·인증·라우팅 경로를 실제로 유지해 e2e의 의미를 지킵니다)**
 
 E2E는 실제 로그인 또는 검증된 인증 helper, 실제 백엔드, 실제 라우팅과 번들 결과를 사용합니다.
 인증 자체가 검증 대상이 아니더라도 핵심 엔드포인트를 mock하지 않고,
@@ -624,7 +624,7 @@ test("실제 로그인 성공 smoke", async ({page}) => {
 
 ### 6.1 Allow Explicit Waits Only for Real Async Boundaries
 
-**Impact: HIGH (내비게이션·알려진 응답·부트스트랩·실제 백그라운드 폴링으로 제한해 명시적 대기를 의도적으로 유지함)**
+**Impact: HIGH (내비게이션·알려진 응답·부트스트랩·실제 백그라운드 폴링으로 제한해 명시적 대기를 의도적으로 유지합니다)**
 
 명시적 wait는 navigation 완료, 특정 API 응답, suspense bootstrap,
 비동기 background job polling 같은 실제 비동기 경계에만 허용합니다.
@@ -647,7 +647,7 @@ await expect.poll(async () => await support.jobs.readStatus(jobId)).toBe("done")
 
 ### 6.2 Prefer Accessible Playwright Locators
 
-**Impact: HIGH (DOM 구조보다 접근성 이름을 앞세워 셀렉터를 견고하고 사용자 관점으로 유지함)**
+**Impact: HIGH (DOM 구조보다 접근성 이름을 앞세워 셀렉터를 견고하게, 사용자 관점으로 유지합니다)**
 
 locator 우선순위는 `getByRole`, `getByLabel`/`getByPlaceholder`, `getByText`, `getByTestId`,
 최후수단 CSS/XPath 순서입니다.
@@ -668,7 +668,7 @@ await page.getByLabel("이메일").fill("user@example.com");
 
 ### 6.3 Use Web-first Assertions for UI Results
 
-**Impact: HIGH (일시적인 UI 상태를 즉시 검사하지 않고 단정을 브라우저의 비동기 렌더 모델에 맞춤)**
+**Impact: HIGH (일시적인 UI 상태를 즉시 검사하지 않고 단정을 브라우저의 비동기 렌더 모델에 맞춥니다)**
 
 UI 결과는 `toBeVisible`, `toHaveText`, `toHaveValue`, `toHaveURL` 같은 web-first assertion을 기본으로 씁니다.
 즉시 평가되는 generic assertion은 non-UI 값에만 쓰고, 내부 state나 cache,
@@ -696,7 +696,7 @@ await expect(page).toHaveURL(/members/);
 
 ### 7.1 Review Banned Playwright Shortcuts Before Finishing
 
-**Impact: MEDIUM (테스트 층위 의미를 흐리거나 불안정한 브라우저 동작을 들이는 지름길을 마무리 전에 잡음)**
+**Impact: MEDIUM (테스트 층위 의미를 흐리거나 불안정한 브라우저 동작을 들이는 지름길을 마무리 전에 잡습니다)**
 
 마무리 전에 반복적으로 금지되는 Playwright 지름길을 다시 확인합니다.
 한 파일 안의 Integration/E2E 혼합, E2E에서 핵심 API route mocking, CSS class와 DOM 구조에 과도하게 의존한 locator,

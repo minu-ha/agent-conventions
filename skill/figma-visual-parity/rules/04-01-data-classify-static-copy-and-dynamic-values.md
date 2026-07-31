@@ -1,18 +1,18 @@
 ---
 title: Classify Static UI Copy and Dynamic Values
-titleKo: 정적 UI 문구와 동적 값을 구분
+titleKo: 정적 UI 문구와 동적 값 구분
 impact: CRITICAL
-impactDescription: Figma copy는 맞추되 서버/API 값을 하드코딩하는 오류를 막음
+impactDescription: Figma copy는 맞추되 서버/API 값을 하드코딩하는 오류를 막습니다
 tags: data, copy, api
 ---
 
 ## Classify Static UI Copy and Dynamic Values
 
-**Impact: CRITICAL (Figma copy는 맞추되 서버/API 값을 하드코딩하는 오류를 막음)**
+**Impact: CRITICAL (Figma copy는 맞추되 서버/API 값을 하드코딩하는 오류를 막습니다)**
 
 Figma에 보이는 모든 텍스트와 숫자를 static UI copy와 dynamic data로 먼저 분류합니다.
 버튼명, 탭명, 컬럼명, 라벨, placeholder, empty state, default option, 고정 안내문구는 Figma 기준으로 맞춥니다.
-row data, metric value, user-specific data, API mock 값은 UI 고정값처럼 박지 않습니다.
+row data, metric value, user-specific data, API mock 값은 UI 고정값처럼 하드코딩하지 않습니다.
 
 **Incorrect (Figma 숫자를 API 값 대신 하드코딩):**
 

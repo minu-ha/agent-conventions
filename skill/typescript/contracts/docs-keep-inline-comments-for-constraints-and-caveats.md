@@ -1,6 +1,6 @@
 # Keep Inline Comments for Constraints and Caveats Only
 
-**Impact: MEDIUM (자명한 코드를 설명하는 주석은 막고 실제 오해를 방지하는 메모는 남김)**
+**Impact: MEDIUM (자명한 코드를 설명하는 주석은 막고 실제 오해를 방지하는 메모는 남깁니다)**
 
 함수 본문 내부에서는 JSDoc 블록 주석을 사용하지 않고, `//` 주석은 도메인 규칙, 예외 방어 의도, 외부 라이브러리 제약,
 부수효과 순서처럼 없으면 오해될 수 있는 경우에만 씁니다.

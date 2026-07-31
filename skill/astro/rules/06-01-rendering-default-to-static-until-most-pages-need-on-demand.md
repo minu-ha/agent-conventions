@@ -1,14 +1,14 @@
 ---
 title: Default to Static Until Most Pages Need On-demand Rendering
-titleKo: 대부분이 on-demand가 될 때까지 static을 기본으로
+titleKo: 대부분 on-demand 전까지 static 기본값 유지
 impact: CRITICAL
-impactDescription: Astro의 빠른 기본값을 지키고 서버 의존을 너무 일찍 들이지 않음
+impactDescription: Astro의 빠른 기본값을 지키고 서버 의존을 너무 일찍 들이지 않습니다
 tags: rendering, output, static
 ---
 
 ## Default to Static Until Most Pages Need On-demand Rendering
 
-**Impact: CRITICAL (Astro의 빠른 기본값을 지키고 서버 의존을 너무 일찍 들이지 않음)**
+**Impact: CRITICAL (Astro의 빠른 기본값을 지키고 서버 의존을 너무 일찍 들이지 않습니다)**
 
 Astro 프로젝트는 기본 `static` output을 먼저 유지합니다.
 쿠키, 세션, 요청별 개인화가 필요한 경로가 몇 개 있다고 해서 전체 프로젝트를 곧바로 `output: "server"`로 바꾸지 말고,

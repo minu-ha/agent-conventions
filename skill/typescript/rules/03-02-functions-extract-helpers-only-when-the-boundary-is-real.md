@@ -1,18 +1,18 @@
 ---
 title: Extract Support Functions Only When the Boundary Is Real
-titleKo: support 함수는 경계가 실재할 때만 추출
+titleKo: 실재하는 경계 기준의 support 함수 추출
 impact: HIGH
-impactDescription: 재사용 계약이나 테스트 경계가 실제로 없을 때 헬퍼 추출이 지역 흐름을 조각내는 것을 막음
-appliesWhen: >-
-  support function을 추출·이동·export·공유하거나 generic helper 파일, 단일 owner 전용 mapper 또는 작은 sub-step 경계를
-  바꾼다.
+impactDescription: 재사용 계약이나 테스트 경계가 실제로 없을 때 헬퍼 추출이 지역 흐름을 조각내는 것을 막습니다
+appliesWhen:
+  - support function을 추출·이동·export·공유할 때
+  - generic helper 파일, 단일 owner 전용 mapper 또는 작은 sub-step 경계를 바꿀 때
 reviewWith: docs-use-helper-for-reusable-pure-helper-functions, docs-require-header-jsdoc-on-key-declarations
 tags: helpers, extraction, boundaries
 ---
 
 ## Extract Support Functions Only When the Boundary Is Real
 
-**Impact: HIGH (재사용 계약이나 테스트 경계가 실제로 없을 때 헬퍼 추출이 지역 흐름을 조각내는 것을 막음)**
+**Impact: HIGH (재사용 계약이나 테스트 경계가 실제로 없을 때 헬퍼 추출이 지역 흐름을 조각내는 것을 막습니다)**
 
 support function은 "이름"이 아니라 "호출 경계"가 있을 때만 분리합니다.
 

@@ -1,14 +1,14 @@
 ---
 title: Place Route Implementations Under `src/pages`
-titleKo: route 구현은 src/pages 아래에
+titleKo: route 구현의 src/pages 배치
 impact: HIGH
-impactDescription: page 구현을 파일 기반 route 가까이 두고 밑줄 접두사로 의도치 않은 route 생성을 피함
+impactDescription: page 구현을 파일 기반 route 가까이 두고 밑줄 접두사로 의도치 않은 route 생성을 피합니다
 tags: structure, pages, route-implementations, local
 ---
 
 ## Place Route Implementations Under `src/pages`
 
-**Impact: HIGH (page 구현을 파일 기반 route 가까이 두고 밑줄 접두사로 의도치 않은 route 생성을 피함)**
+**Impact: HIGH (page 구현을 파일 기반 route 가까이 두고 밑줄 접두사로 의도치 않은 route 생성을 피합니다)**
 
 Astro가 file-based routing을 `src/pages`에서 결정하므로, route 구현도 가능한 한 같은 route subtree에 둡니다.
 

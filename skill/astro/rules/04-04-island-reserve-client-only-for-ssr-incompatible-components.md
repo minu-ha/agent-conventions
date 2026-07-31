@@ -1,14 +1,14 @@
 ---
 title: Reserve `client:only` for SSR-incompatible Components
-titleKo: client:only는 SSR 불가 컴포넌트에만
+titleKo: client:only의 SSR 불가 컴포넌트 한정
 impact: HIGH
-impactDescription: 정상적으로 hydrate 가능한 위젯의 서버 렌더 HTML을 지킴
+impactDescription: 정상적으로 hydrate 가능한 위젯의 서버 렌더 HTML을 지킵니다
 tags: client-only, islands, hydration
 ---
 
 ## Reserve `client:only` for SSR-incompatible Components
 
-**Impact: HIGH (정상적으로 hydrate 가능한 위젯의 서버 렌더 HTML을 지킴)**
+**Impact: HIGH (정상적으로 hydrate 가능한 위젯의 서버 렌더 HTML을 지킵니다)**
 
 `client:only`는 server HTML을 건너뛰고 page load 시점에 바로 client 렌더링합니다.
 browser API 전용 라이브러리처럼 SSR이 실제로 불가능한 경우에만 사용하고, 그렇지 않다면 `client:load`, `client:idle`,

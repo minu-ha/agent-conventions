@@ -1,14 +1,14 @@
 ---
 title: Preserve Visible Labels and Headings Unless Explicitly Removed
-titleKo: 명시적 삭제 요청 없이 라벨·제목을 없애지 않기
+titleKo: 명시적 요청 없는 라벨·제목 삭제 금지
 impact: HIGH
-impactDescription: UI polish 중 사용자에게 보이는 구조 신호를 임의 삭제하지 않게 함
+impactDescription: UI polish 중 사용자에게 보이는 구조 신호를 임의로 삭제하는 일을 막습니다
 tags: implementation, labels, headings
 ---
 
 ## Preserve Visible Labels and Headings Unless Explicitly Removed
 
-**Impact: HIGH (UI polish 중 사용자에게 보이는 구조 신호를 임의 삭제하지 않게 함)**
+**Impact: HIGH (UI polish 중 사용자에게 보이는 구조 신호를 임의로 삭제하는 일을 막습니다)**
 
 Visible label, section title, heading, column header는 화면 구조와 접근성의 일부입니다.
 Figma 또는 사용자가 명확히 제거하라고 하지 않는 한, visual polish를 이유로 임의 삭제하지 않습니다.

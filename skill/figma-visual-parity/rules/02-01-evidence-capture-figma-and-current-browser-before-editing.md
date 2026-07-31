@@ -1,14 +1,14 @@
 ---
 title: Capture Figma Evidence and Current Browser State Before Editing
-titleKo: 고치기 전에 Figma와 현재 화면을 먼저 캡처
+titleKo: 수정 전 Figma·현재 화면 우선 캡처
 impact: CRITICAL
-impactDescription: 기준 화면과 현재 화면 없이 CSS를 추측 수정하는 일을 막음
+impactDescription: 기준 화면과 현재 화면 없이 CSS를 추측 수정하는 일을 막습니다
 tags: evidence, screenshot, browser
 ---
 
 ## Capture Figma Evidence and Current Browser State Before Editing
 
-**Impact: CRITICAL (기준 화면과 현재 화면 없이 CSS를 추측 수정하는 일을 막음)**
+**Impact: CRITICAL (기준 화면과 현재 화면 없이 CSS를 추측 수정하는 일을 막습니다)**
 
 구현 전에 Figma node/design context/screenshot과 현재 브라우저 구현 화면을 모두 확인합니다.
 Figma node가 너무 크거나 tool fetch가 실패하면 더 작은 node, parent section, screenshot, metadata fallback을 사용하고,

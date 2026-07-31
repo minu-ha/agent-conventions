@@ -1,18 +1,19 @@
 ---
 title: Prefer Owned Wrappers for `Ui*` Component Styling
-titleKo: Ui* 스타일링은 소유한 wrapper를 통해
+titleKo: 소유한 wrapper를 통한 Ui* 스타일링
 impact: HIGH
-impactDescription: 공용 UI wrapper가 즉석 className 주입으로 통제 안 되는 스타일 훅을 노출하는 것을 막음
-appliesWhen: >-
-  실제 `Ui*` React wrapper 사용처·API에서 내부 DOM styling 경계를 정하거나 root `className`·slot prop hook을
-  주입·노출·사용한다. 기존 CSS owner root 아래 third-party selector만 수정하면 제외한다.
+impactDescription: 공용 UI wrapper가 즉석 className 주입으로 통제되지 않는 스타일 훅을 노출하는 것을 막습니다
+appliesWhen:
+  - 실제 `Ui*` React wrapper 사용처·API에서 내부 DOM styling 경계를 정할 때
+  - root `className`·slot prop hook을 주입·노출·사용할 때
+  - 제외: 기존 CSS owner root 아래 third-party selector만 수정하는 경우
 reviewWith: selector-target-third-party-dom-from-owned-roots
 tags: ui-components, wrappers, third-party
 ---
 
 ## Prefer Owned Wrappers for `Ui*` Component Styling
 
-**Impact: HIGH (공용 UI wrapper가 즉석 className 주입으로 통제 안 되는 스타일 훅을 노출하는 것을 막음)**
+**Impact: HIGH (공용 UI wrapper가 즉석 className 주입으로 통제되지 않는 스타일 훅을 노출하는 것을 막습니다)**
 
 이 규칙은 실제 `Ui*` React wrapper 컴포넌트/API 경계에만 적용합니다.
 `.ui_*` 같은 기존 CSS owner root 아래에서 third-party selector만 스코프하는 CSS-only 변경은

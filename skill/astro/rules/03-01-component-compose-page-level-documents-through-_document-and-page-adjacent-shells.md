@@ -1,14 +1,14 @@
 ---
 title: Compose Page-level Documents Through `_document.astro` and `_head.astro`
-titleKo: 페이지 문서는 _document.astro와 _head.astro로 조립
+titleKo: 페이지 문서의 _document.astro·_head.astro 조립
 impact: HIGH
-impactDescription: 반복되는 document·head·body 셸 조립을 route 파일 밖으로 빼면서 페이지 진입점은 하나로 유지함
+impactDescription: 반복되는 document·head·body 셸 조립을 route 파일 밖으로 빼면서 페이지 진입점은 하나로 유지합니다
 tags: component, document, head, pages, seo
 ---
 
 ## Compose Page-level Documents Through `_document.astro` and `_head.astro`
 
-**Impact: HIGH (반복되는 document·head·body 셸 조립을 route 파일 밖으로 빼면서 페이지 진입점은 하나로 유지함)**
+**Impact: HIGH (반복되는 document·head·body 셸 조립을 route 파일 밖으로 빼면서 페이지 진입점은 하나로 유지합니다)**
 
 반복되는 top-level document composition이 필요하면 routed page는 `src/pages/_document.astro` 하나만 import합니다.
 

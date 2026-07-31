@@ -1,14 +1,14 @@
 ---
 title: Cover State Matrices and User-visible Results in Integration
-titleKo: integration은 상태 조합과 사용자에게 보이는 결과를 덮기
+titleKo: integration의 상태 조합과 사용자에게 보이는 결과 검증
 impact: HIGH
-impactDescription: 넓은 UI 상태 조합과 각 상태의 눈에 보이는 결과를 integration 테스트가 책임지게 함
+impactDescription: 넓은 UI 상태 조합과 각 상태의 눈에 보이는 결과를 integration 테스트가 책임지게 합니다
 tags: integration, states, results
 ---
 
 ## Cover State Matrices and User-visible Results in Integration
 
-**Impact: HIGH (넓은 UI 상태 조합과 각 상태의 눈에 보이는 결과를 integration 테스트가 책임지게 함)**
+**Impact: HIGH (넓은 UI 상태 조합과 각 상태의 눈에 보이는 결과를 integration 테스트가 책임지게 합니다)**
 
 Integration은 상태 매트릭스를 책임집니다.
 loading, empty, error, success, validation error, permission redirect, search/pagination 동기화를 우선 검토하고,

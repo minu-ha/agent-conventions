@@ -1,14 +1,14 @@
 ---
 title: Avoid Destructive Shared-account Scenarios and Parallel Collisions
-titleKo: 공용 계정 파괴 시나리오와 병렬 충돌 피하기
+titleKo: 공용 계정 파괴 시나리오와 병렬 충돌 금지
 impact: CRITICAL
-impactDescription: 실제 시스템 브라우저 테스트가 공용 계정을 망치거나 같은 원격 자원에서 경합하는 것을 막음
+impactDescription: 실제 시스템 브라우저 테스트가 공용 계정을 망치거나 같은 원격 자원에서 경합하는 것을 막습니다
 tags: e2e, shared-accounts, parallelism
 ---
 
 ## Avoid Destructive Shared-account Scenarios and Parallel Collisions
 
-**Impact: CRITICAL (실제 시스템 브라우저 테스트가 공용 계정을 망치거나 같은 원격 자원에서 경합하는 것을 막음)**
+**Impact: CRITICAL (실제 시스템 브라우저 테스트가 공용 계정을 망치거나 같은 원격 자원에서 경합하는 것을 막습니다)**
 
 공유 관리자 계정으로 실패 로그인, 잠금, 비밀번호 변경 같은 destructive 시나리오를 검증하지 않습니다.
 같은 원격 자원이나 계정을 동시에 건드릴 수 있으면 serial 실행이나 고립된 데이터 전략을 우선하고,

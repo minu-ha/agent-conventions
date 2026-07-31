@@ -1,14 +1,14 @@
 ---
 title: Place Route Shells Under the Owning Route `_local/` Folder
-titleKo: route 셸은 소유 route의 _local/ 아래에
+titleKo: route 셸의 소유 route _local/ 배치
 impact: HIGH
-impactDescription: route 셸 파일이 page와 재사용 블록 사이의 애매한 공용 계층이 되는 것을 막음
+impactDescription: route 셸 파일이 page와 재사용 블록 사이의 애매한 공용 계층이 되는 것을 막습니다
 tags: responsibility, layouts, local, ownership
 ---
 
 ## Place Route Shells Under the Owning Route `_local/` Folder
 
-**Impact: HIGH (route 셸 파일이 page와 재사용 블록 사이의 애매한 공용 계층이 되는 것을 막음)**
+**Impact: HIGH (route 셸 파일이 page와 재사용 블록 사이의 애매한 공용 계층이 되는 것을 막습니다)**
 
 Route-specific shell files are not shared layouts. Put them under the owning route's `_local/` folder.
 

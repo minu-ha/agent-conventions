@@ -1,14 +1,14 @@
 ---
 title: Limit Layouts to Shell and Composition
-titleKo: 레이아웃은 셸과 조립까지만
+titleKo: 레이아웃 책임의 셸·조립 한정
 impact: HIGH
-impactDescription: 공용 layout 파일이 말단 페이지의 데이터·상호작용 로직을 흡수하는 것을 막음
+impactDescription: 공용 layout 파일이 말단 페이지의 데이터·상호작용 로직을 흡수하는 것을 막습니다
 tags: layouts, slots, responsibility
 ---
 
 ## Limit Layouts to Shell and Composition
 
-**Impact: HIGH (공용 layout 파일이 말단 페이지의 데이터·상호작용 로직을 흡수하는 것을 막음)**
+**Impact: HIGH (공용 layout 파일이 말단 페이지의 데이터·상호작용 로직을 흡수하는 것을 막습니다)**
 
 route-local shell과 pages-local document helper는 shell composition만 담당합니다.
 

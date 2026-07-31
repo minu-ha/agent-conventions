@@ -1,14 +1,14 @@
 ---
 title: Review Adapter, Output Mode, and Hydration Before Finishing
-titleKo: 마무리 전에 adapter·output 모드·hydration 점검
+titleKo: 마무리 전 adapter·output 모드·hydration 점검
 impact: MEDIUM
-impactDescription: Astro 특유의 배포·렌더링 불일치를 배포 전에 잡음
+impactDescription: Astro 특유의 배포·렌더링 불일치를 배포 전에 잡습니다
 tags: workflow, adapters, hydration
 ---
 
 ## Review Adapter, Output Mode, and Hydration Before Finishing
 
-**Impact: MEDIUM (Astro 특유의 배포·렌더링 불일치를 배포 전에 잡음)**
+**Impact: MEDIUM (Astro 특유의 배포·렌더링 불일치를 배포 전에 잡습니다)**
 
 Astro 변경을 마무리할 때는 코드 diff만 보지 말고 adapter, `output`, prerender/on-demand 전제,
 build-time/live collection 선택, hydration 경계를 함께 점검합니다.

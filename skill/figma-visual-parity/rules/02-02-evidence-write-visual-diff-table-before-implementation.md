@@ -1,14 +1,14 @@
 ---
 title: Write the Visual Diff Table Before Implementation
-titleKo: 구현 전에 시각 diff 표를 먼저 쓰기
+titleKo: 구현 전 시각 diff 표 우선 작성
 impact: CRITICAL
-impactDescription: 구현 범위와 완료 기준을 layout, spacing, typography 같은 항목으로 명확히 고정함
+impactDescription: 구현 범위와 완료 기준을 layout, spacing, typography 같은 항목으로 명확히 고정합니다
 tags: evidence, visual-diff, planning
 ---
 
 ## Write the Visual Diff Table Before Implementation
 
-**Impact: CRITICAL (구현 범위와 완료 기준을 layout, spacing, typography 같은 항목으로 명확히 고정함)**
+**Impact: CRITICAL (구현 범위와 완료 기준을 layout, spacing, typography 같은 항목으로 명확히 고정합니다)**
 
 코드를 수정하기 전에 Figma와 현재 구현의 차이를 표로 작성합니다.
 최소 항목은 layout, spacing, typography, color, border/radius, surface/background, shadow, icon/assets, static copy,

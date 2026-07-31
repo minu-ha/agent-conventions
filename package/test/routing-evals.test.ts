@@ -242,105 +242,105 @@ test("behavioral protocol mandatory routing contract exactly mirrors current rul
  */
 const typescriptRuleRouting = {
 	"absence-expose-optional-values-instead-of-silent-fallbacks": {
-		appliesWhen: "optional 값의 읽기·정규화·전달을 바꾸거나 `??`, `||`, 기본값 또는 빈 값 대체 분기를 추가·변경한다.",
+		appliesWhen: "optional 값의 읽기·정규화·전달을 바꿀 때. `??`, `||`, 기본값 또는 빈 값 대체 분기를 추가·변경할 때.",
 		reviewWith: ["docs-keep-inline-comments-for-constraints-and-caveats"],
 	},
 	"docs-keep-inline-comments-for-constraints-and-caveats": {
-		appliesWhen: "함수 본문의 `//` 주석을 추가·수정·유지하거나 도메인 규칙, 예외 방어, 외부 제약 또는 부수효과 순서를 주석으로 설명한다.",
+		appliesWhen: "함수 본문의 `//` 주석을 추가·수정·유지할 때. 도메인 규칙, 예외 방어, 외부 제약 또는 부수효과 순서를 주석으로 설명할 때.",
 		reviewWith: [],
 	},
 	"docs-require-header-jsdoc-on-key-declarations": {
 		appliesWhen:
-			"named query·mutation, 원격 함수, 비자명한 handler/effect, reusable/exported helper·custom hook, custom type·interface, store, formatter 또는 예외 memo 선언을 추가·변경한다.",
+			"named query·mutation, 원격 함수, 비자명한 handler/effect, reusable/exported helper·custom hook, custom type·interface, store, formatter 또는 예외 memo 선언을 추가·변경할 때.",
 		reviewWith: [],
 	},
 	"docs-standardize-annotation-tags-by-declaration-role": {
-		appliesWhen: "TypeScript/TSX 선언의 JSDoc 태그를 추가·변경하거나 선언 역할에 맞는 annotation을 검토한다.",
+		appliesWhen: "TypeScript/TSX 선언의 JSDoc 태그를 추가·변경할 때. 선언 역할에 맞는 annotation을 검토할 때.",
 		reviewWith: [],
 	},
 	"docs-use-helper-for-reusable-pure-helper-functions": {
 		appliesWhen:
-			"여러 caller가 쓰는 pure support function, owner-named exported helper 또는 `shared/util.ts` 함수를 추가·변경하거나 `@helper`를 붙이려 한다.",
+			"여러 caller가 쓰는 pure support function, owner-named exported helper 또는 `shared/util.ts` 함수를 추가·변경할 때. `@helper`를 붙이려 할 때.",
 		reviewWith: [],
 	},
 	"docs-write-concise-korean-comments-about-purpose-and-constraints": {
-		appliesWhen: "TypeScript/TSX의 JSDoc이나 inline comment 문구를 추가·수정·번역하거나 리뷰한다.",
+		appliesWhen: "TypeScript/TSX의 JSDoc이나 inline comment 문구를 추가·수정·번역하거나 리뷰할 때.",
 		reviewWith: [],
 	},
 	"functions-avoid-imperative-assembly-in-wide-scopes": {
-		appliesWhen: "파일 상단이나 넓은 스코프에서 `let` 재대입, 배열 `push` 또는 조건부 누적으로 값을 조립하거나 이를 리팩터링한다.",
+		appliesWhen: "파일 상단이나 넓은 스코프에서 `let` 재대입, 배열 `push` 또는 조건부 누적으로 값을 조립하거나 리팩터링할 때.",
 		reviewWith: [],
 	},
 	"functions-extract-helpers-only-when-the-boundary-is-real": {
 		appliesWhen:
-			"support function을 추출·이동·export·공유하거나 generic helper 파일, 단일 owner 전용 mapper 또는 작은 sub-step 경계를 바꾼다.",
+			"support function을 추출·이동·export·공유할 때. generic helper 파일, 단일 owner 전용 mapper 또는 작은 sub-step 경계를 바꿀 때.",
 		reviewWith: ["docs-use-helper-for-reusable-pure-helper-functions", "docs-require-header-jsdoc-on-key-declarations"],
 	},
 	"functions-prefer-immutable-array-sorting": {
-		appliesWhen: "props, state, 매개변수 또는 공유 입력에서 온 배열을 정렬하거나 기존 `.sort()` 호출을 추가·변경한다.",
+		appliesWhen: "props, state, 매개변수 또는 공유 입력에서 온 배열을 정렬할 때. 기존 `.sort()` 호출을 추가·변경할 때.",
 		reviewWith: [],
 	},
 	"functions-replace-enum-with-as-const-objects": {
-		appliesWhen: "`enum` 또는 타입과 런타임에서 함께 쓰는 enum-like 값 집합을 추가·변경한다.",
+		appliesWhen: "`enum` 또는 타입과 런타임에서 함께 쓰는 enum-like 값 집합을 추가·변경할 때.",
 		reviewWith: [],
 	},
 	"functions-use-named-object-params-for-complex-signatures": {
 		appliesWhen:
-			"매개변수 3개 이상 또는 같은 계열 인자를 받는 일반 함수를 추가·변경하거나 객체 매개변수의 구조분해 위치를 바꾼다. React 함수 컴포넌트의 props 수신·구조분해만 바꾸면 제외한다.",
+			"매개변수 3개 이상 또는 같은 계열 인자를 받는 일반 함수를 추가·변경할 때. 객체 매개변수의 구조분해 위치를 바꿀 때. 제외: React 함수 컴포넌트의 props 수신·구조분해만 바꾸는 경우.",
 		reviewWith: [],
 	},
 	"functions-use-set-and-map-for-repeated-lookups": {
-		appliesWhen: "같은 컬렉션에 `includes`, `find` 또는 keyed lookup을 여러 번 수행하는 코드를 추가·변경한다.",
+		appliesWhen: "같은 컬렉션에 `includes`, `find` 또는 keyed lookup을 여러 번 수행하는 코드를 추가·변경할 때.",
 		reviewWith: [],
 	},
 	"guardrails-review-banned-typescript-shortcuts-before-finishing": {
 		appliesWhen:
-			"TypeScript/TSX 변경을 완료 판정하거나 diff에서 barrel, 중복 타입, 조기 helper, 넓은 조립, 무근거 fallback 또는 자명한 주석을 점검한다.",
+			"TypeScript/TSX 변경을 완료 판정할 때. diff에서 barrel, 중복 타입, 조기 helper, 넓은 조립, 무근거 fallback 또는 자명한 주석을 점검할 때.",
 		reviewWith: [],
 	},
 	"naming-centralize-shared-config-namespaces": {
 		appliesWhen:
-			"여러 leaf 모듈이 함께 쓰는 URL, feature flag, 페이지 크기나 상수를 추가·이동·중복 정의하거나 shared config 경계를 바꾼다.",
+			"여러 leaf 모듈이 함께 쓰는 URL, feature flag, 페이지 크기나 상수를 추가·이동·중복 정의할 때. shared config 경계를 바꿀 때.",
 		reviewWith: ["naming-preserve-config-origin-with-chained-access", "naming-use-direct-imports-and-public-entry-points"],
 	},
 	"naming-preserve-config-origin-with-chained-access": {
 		appliesWhen:
-			"`config` 또는 `util` 값을 leaf 모듈에서 접근하며 넓은 스코프 구조분해, 별칭 또는 feature-local namespace를 추가·변경한다.",
+			"`config` 또는 `util` 값을 leaf 모듈에서 접근하며 넓은 스코프 구조분해, 별칭 또는 feature-local namespace를 추가·변경할 때.",
 		reviewWith: [],
 	},
 	"naming-use-consistent-file-and-symbol-naming": {
 		appliesWhen:
-			"TypeScript 파일, local 변수·함수·타입, 객체·schema field 또는 enum-like 상수의 이름을 새로 만들거나 바꾼다. alias 없는 third-party import binding 추가는 제외한다.",
+			"TypeScript 파일, local 변수·함수·타입, 객체·schema field 또는 enum-like 상수의 이름을 새로 만들거나 바꿀 때. 제외: alias 없는 third-party import binding 추가인 경우.",
 		reviewWith: [],
 	},
 	"naming-use-direct-imports-and-public-entry-points": {
 		appliesWhen:
-			"TypeScript import/export, barrel, shared 공개 진입점·feature support module 경계를 추가·변경하거나 같은 module path의 value/type specifier를 추가·삭제·전환한다.",
+			"TypeScript import/export, barrel, shared 공개 진입점·feature support module 경계를 추가·변경할 때. 같은 module path의 value/type specifier를 추가·삭제·전환할 때.",
 		reviewWith: [],
 	},
 	"types-document-custom-types-and-shapes": {
 		appliesWhen:
-			"type·interface·schema root·객체 상수·계약 field·파생 alias를 추가·변경하거나 named shape에 callable 역할을 추가한다. 외부·generated·read-only·shared unchanged shape·익명 inferred 반환은 제외한다.",
+			"type·interface·schema root·객체 상수·계약 field·파생 alias를 추가·변경할 때. named shape에 callable 역할을 추가할 때. 제외: 외부·generated·read-only·shared unchanged shape나 익명 추론 반환인 경우.",
 		reviewWith: [],
 	},
 	"types-mark-unused-parameters-with-underscore": {
 		appliesWhen:
-			"기존 callback·framework 계약 구현을 추가·변경하며 parameter를 생략하거나 사용하지 않는다. curried handler가 반환하는 최종 callback의 생략도 포함한다.",
+			"기존 callback·framework 계약 구현을 추가·변경하며 parameter를 생략하거나 사용하지 않을 때. curried handler가 반환하는 최종 callback에서 parameter를 생략할 때.",
 		reviewWith: [],
 	},
 	"types-prefer-function-variable-types-over-parameter-annotations": {
 		appliesWhen:
-			"기존 callable 계약을 named·shared 함수 구현에 재사용하거나 같은 시그니처를 여러 구현이 공유하도록 바꾼다. annotation 없는 one-off contextually typed inline callback은 제외한다.",
+			"기존 callable 계약을 named·shared 함수 구현에 재사용할 때. 같은 시그니처를 여러 구현이 공유하도록 바꿀 때. 제외: annotation 없는 one-off contextually typed inline callback인 경우.",
 		reviewWith: [],
 	},
 	"types-reuse-callback-signatures-from-existing-contracts": {
 		appliesWhen:
-			"interface·객체·framework의 named·shared callback 구현에서 기존 시그니처를 재사용·변경한다. annotation 없는 one-off contextually typed inline callback은 제외한다.",
+			"interface·객체·framework의 named·shared callback 구현에서 기존 시그니처를 재사용·변경할 때. 제외: annotation 없는 one-off contextually typed inline callback인 경우.",
 		reviewWith: ["types-mark-unused-parameters-with-underscore"],
 	},
 	"types-reuse-existing-contracts-before-new-types": {
 		appliesWhen:
-			"의미상 같은 기존 type·interface·schema 대신 shape를 새로 선언·변경·복제·파생하거나 중복 shape를 도입·제거한다. 호환 후보 없는 새 shape, 순수 owner 이동, unchanged contract의 새 사용처는 제외한다.",
+			"의미상 같은 기존 type·interface·schema 대신 shape를 새로 선언·변경·복제·파생할 때. 중복 shape를 도입·제거할 때. 제외: 호환 후보 없는 새 shape, 순수 owner 이동, unchanged contract의 새 사용처인 경우.",
 		reviewWith: ["types-document-custom-types-and-shapes"],
 	},
 } as const;
@@ -350,98 +350,99 @@ const typescriptRuleRouting = {
  */
 const cssRuleRouting = {
 	"composition-compose-classes-with-clsx": {
-		appliesWhen: "TSX의 `className`을 추가·수정하거나 base class, modifier, optional class를 조합한다.",
+		appliesWhen: "TSX의 `className`을 추가·수정할 때. base class, modifier, optional class를 조합할 때.",
 		reviewWith: [],
 	},
 	"composition-do-not-build-structural-variants-with-modifiers": {
 		appliesWhen:
-			"modifier를 추가·변경하거나 반복 가능한 state·API variant와 one-off structural patch 사이를 판정한다. 허용된 state로 결론 나도 변경된 modifier 분류는 Selected다.",
+			"modifier를 추가·변경하거나 반복 가능한 state·API variant와 one-off structural patch 사이를 판정할 때. 허용된 state로 결론 나도 변경된 modifier 분류는 Selected.",
 		reviewWith: ["naming-name-elements-and-modifiers-by-role"],
 	},
 	"composition-keep-classes-single-purpose": {
 		appliesWhen:
-			"기존 class가 base와 state·variant 책임을 함께 갖거나 독립 시각 책임을 추가·재사용·분리한다. 기존 결합 책임을 분리하지 않고 처음부터 새 single-purpose pair를 만들거나 책임 보존 rename만 하면 제외한다.",
+			"기존 class가 base와 state·variant 책임을 함께 갖거나 독립 시각 책임을 추가·재사용·분리할 때. 제외: 기존 결합 책임을 분리하지 않고 처음부터 새 single-purpose pair를 만들거나 책임 보존 rename만 하는 경우.",
 		reviewWith: [],
 	},
 	"composition-prefer-ui-wrapper-prop-types": {
-		appliesWhen: "`Ui*` wrapper 사용처나 wrapper API에서 Props 타입을 선언·추론·재사용하고 라이브러리 원본 Props 참조를 검토한다.",
+		appliesWhen: "`Ui*` wrapper 사용처나 wrapper API에서 Props 타입을 선언·추론·재사용할 때. 라이브러리 원본 Props 참조를 검토할 때.",
 		reviewWith: [],
 	},
 	"composition-style-ui-components-through-owned-wrappers": {
 		appliesWhen:
-			"실제 `Ui*` React wrapper 사용처·API에서 내부 DOM styling 경계를 정하거나 root `className`·slot prop hook을 주입·노출·사용한다. 기존 CSS owner root 아래 third-party selector만 수정하면 제외한다.",
+			"실제 `Ui*` React wrapper 사용처·API에서 내부 DOM styling 경계를 정할 때. root `className`·slot prop hook을 주입·노출·사용할 때. 제외: 기존 CSS owner root 아래 third-party selector만 수정하는 경우.",
 		reviewWith: ["selector-target-third-party-dom-from-owned-roots"],
 	},
 	"naming-default-to-plain-css-when-no-module-convention": {
 		appliesWhen:
-			"프로젝트 표준 미확정 상태에서 새 stylesheet 접근 형식(plain CSS·CSS Modules)을 선택하거나 `.module.css`·`styles.*`로 전환한다. 기존 plain CSS class rename은 제외한다.",
+			"프로젝트 표준 미확정 상태에서 새 stylesheet 접근 형식(plain CSS·CSS Modules)을 선택하거나 `.module.css`·`styles.*`로 전환할 때. 제외: 기존 plain CSS class rename만 하는 경우.",
 		reviewWith: [],
 	},
 	"naming-keep-scope-slug-unique-per-owner": {
-		appliesWhen: "새 `scope_slug` namespace를 추가·복사·이름 변경하거나 서로 다른 owner의 class가 같은 namespace를 사용할 가능성이 있다.",
+		appliesWhen:
+			"새 `scope_slug` namespace를 추가·복사·이름 변경할 때. 서로 다른 owner의 class가 같은 namespace를 사용할 가능성이 있을 때.",
 		reviewWith: [],
 	},
 	"naming-name-elements-and-modifiers-by-role": {
-		appliesWhen: "element 또는 modifier class를 새로 짓거나 `container`, `wrapper`, `box`, 치수·간격 중심 이름을 변경한다.",
+		appliesWhen: "element 또는 modifier class 이름을 새로 지을 때. `container`, `wrapper`, `box`, 치수·간격 중심 이름을 변경할 때.",
 		reviewWith: [],
 	},
 	"naming-preserve-route-slug-traceability": {
-		appliesWhen: "route/framework 규칙이 `rt_*` owner를 선택한 화면에서 route class slug를 새로 만들거나 이름을 변경한다.",
+		appliesWhen: "route/framework 규칙이 `rt_*` owner를 선택한 화면에서 route class slug를 새로 만들거나 이름을 변경할 때.",
 		reviewWith: [],
 	},
 	"naming-separate-local-and-route-style-scopes": {
 		appliesWhen:
-			"스타일 owner를 route screen/support, document, 독립 leaf helper, reusable widget, UI primitive 중에서 결정하거나 서로 다른 owner를 이동·분리한다.",
+			"스타일 owner를 route screen/support, document, 독립 leaf helper, reusable widget, UI primitive 중에서 결정할 때. 서로 다른 owner를 이동·분리할 때.",
 		reviewWith: ["organization-keep-style-files-owned-by-one-component-or-route"],
 	},
 	"naming-use-scope-slug-element-modifier-syntax": {
-		appliesWhen: "plain CSS의 project-owned class를 새로 만들거나 이름, scope, slug, element, modifier 구분자 또는 casing을 변경한다.",
+		appliesWhen: "plain CSS의 project-owned class를 새로 만들 때. 이름, scope, slug, element, modifier 구분자 또는 casing을 변경할 때.",
 		reviewWith: [],
 	},
 	"organization-keep-style-files-owned-by-one-component-or-route": {
 		appliesWhen:
-			"stylesheet를 새로 만들거나 이동·분할·병합하고 한 파일에 component, route, document, local, shared owner가 섞일 가능성이 있다.",
+			"stylesheet를 새로 만들거나 이동·분할·병합해 한 파일에 component, route, document, local, shared owner가 섞일 가능성이 있을 때.",
 		reviewWith: [],
 	},
 	"organization-review-banned-css-patterns-before-finishing": {
-		appliesWhen: "CSS 또는 TSX class contract 변경이 완료 단계에 들어간다.",
+		appliesWhen: "CSS 또는 TSX class contract 변경이 완료 단계에 들어갈 때.",
 		reviewWith: [],
 	},
 	"selector-avoid-deep-descendant-dependencies": {
 		appliesWhen:
-			"descendant 또는 child selector chain을 추가·수정하거나 DOM 계층에 의존하는 project-owned·third-party selector를 검토한다.",
+			"descendant 또는 child selector chain을 추가·수정할 때. DOM 계층에 의존하는 project-owned·third-party selector를 검토할 때.",
 		reviewWith: [],
 	},
 	"selector-keep-project-selectors-flat": {
 		appliesWhen:
-			"project-owned class를 중첩·descendant selector로 연결하거나 raw HTML prose·copy·content wrapper 안 element selector를 추가·수정한다.",
+			"project-owned class를 중첩·descendant selector로 연결할 때. raw HTML prose·copy·content wrapper 안 element selector를 추가·수정할 때.",
 		reviewWith: [],
 	},
 	"selector-target-third-party-dom-from-owned-roots": {
-		appliesWhen: "`.ant-*`, `.rc-*`, `.tippy-*` 등 third-party 내부 DOM selector를 추가·수정하거나 owned wrapper 아래로 범위를 제한한다.",
+		appliesWhen: "`.ant-*`, `.rc-*`, `.tippy-*` 등 third-party 내부 DOM selector를 추가·수정할 때. owned wrapper 아래로 범위를 제한할 때.",
 		reviewWith: [],
 	},
 	"selector-use-pseudo-classes-for-dom-owned-states": {
 		appliesWhen:
-			"`:hover`, `:visited`, `:focus*`, `:disabled`, `:checked`를 추가·수정하거나 parent DOM state가 child styling에 영향을 준다.",
+			"`:hover`, `:visited`, `:focus*`, `:disabled`, `:checked`를 추가·수정할 때. parent DOM state가 child styling에 영향을 줄 때.",
 		reviewWith: [],
 	},
 	"values-always-provide-css-variable-fallbacks": {
 		appliesWhen:
-			"새·변경된 `var(--*)` 사용이나 token 주입 보장 경계를 바꾼다. 같은 stylesheet·주입 경계에서 기존 `var()` 선언을 selector 사이 byte-equivalent 이동만 하면 제외한다.",
+			"`var(--*)` 사용을 새로 추가하거나 변경할 때. token 주입 보장 경계를 바꿀 때. 제외: 같은 stylesheet·주입 경계에서 기존 `var()` 선언을 selector 사이 byte-equivalent 이동만 하는 경우.",
 		reviewWith: [],
 	},
 	"values-keep-layout-intent-explicit": {
 		appliesWhen:
-			"`sticky`·`fixed`, `z-index`, 강제 width·height 또는 부모·자식 layout 책임을 추가·변경한다. 같은 element의 base/modifier 분리에서 기존 `display`·spacing 선언을 값 그대로 재배치하면 제외한다.",
+			"`sticky`·`fixed`, `z-index`, 강제 width·height 또는 부모·자식 layout 책임을 추가·변경할 때. 제외: 같은 element의 base/modifier 분리에서 기존 `display`·spacing 선언을 값 그대로 재배치하는 경우.",
 		reviewWith: [],
 	},
 	"values-separate-domain-state-modifiers-from-dom-interaction-states": {
-		appliesWhen: "app/domain state modifier와 hover·focus·disabled 같은 DOM interaction state를 추가·변경하거나 focus ring에 손댄다.",
+		appliesWhen: "app/domain state modifier와 hover·focus·disabled 같은 DOM interaction state를 추가·변경할 때. focus ring을 수정할 때.",
 		reviewWith: ["composition-do-not-build-structural-variants-with-modifiers"],
 	},
 	"values-tokenize-repeated-visual-values": {
-		appliesWhen: "색상·간격·radius·타이포·그림자 등 같은 시각 값이 2회 이상 반복되거나 새 shared visual value를 하드코딩한다.",
+		appliesWhen: "색상·간격·radius·타이포·그림자 등 같은 시각 값이 2회 이상 반복될 때. 새 shared visual value를 하드코딩할 때.",
 		reviewWith: ["values-always-provide-css-variable-fallbacks"],
 	},
 } as const;
@@ -2373,9 +2374,12 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 		"types-reuse-callback-signatures-from-existing-contracts",
 	]) {
 		const contextualCallback = await readRule("typescript", ruleId);
-		assert.match(
+
+		// 제외 표지는 불렛 앞(`제외:`)에도 문장 끝(`… 제외한다`)에도 올 수 있다. 순서가 아니라 개념 존재만 본다.
+		assertMentions(
 			readAppliesWhen(contextualCallback),
-			/annotation[\s\S]*없는[\s\S]*one-off[\s\S]*contextual(?:ly)? typed[\s\S]*(?:N\/A|제외)/i,
+			[/annotation/i, "없는", /one-off/i, /contextual(?:ly)? typed/i, /N\/A|제외/],
+			`${ruleId} appliesWhen`,
 		);
 	}
 
@@ -2532,9 +2536,11 @@ test("v17 TypeScript boundaries exclude React props and prevent self-created dup
 	);
 
 	const documentedShape = await readRule("typescript", "types-document-custom-types-and-shapes");
-	assert.match(
+	// 위와 같은 이유로 순서를 박지 않는다.
+	assertMentions(
 		readAppliesWhen(documentedShape),
-		/(?:external|generated|read-only|shared)[\s\S]+(?:unchanged|변경하지 않)[\s\S]+(?:N\/A|제외)/,
+		[/external|generated|read-only|shared/, /unchanged|변경하지 않/, /N\/A|제외/],
+		"documentedShape appliesWhen",
 	);
 	assert.match(
 		readAppliesWhen(documentedShape),

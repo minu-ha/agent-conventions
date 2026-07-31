@@ -1,14 +1,14 @@
 ---
 title: Do Not Import `.astro` Components Inside Framework Components
-titleKo: 프레임워크 컴포넌트 안에서 .astro를 import하지 않기
+titleKo: 프레임워크 컴포넌트 내부 .astro import 금지
 impact: CRITICAL
-impactDescription: Astro 컴포넌트 경계를 지키고 지원되지 않는 런타임 간 조립을 피함
+impactDescription: Astro 컴포넌트 경계를 지키고 지원되지 않는 런타임 간 조립을 피합니다
 tags: islands, react, slots
 ---
 
 ## Do Not Import `.astro` Components Inside Framework Components
 
-**Impact: CRITICAL (Astro 컴포넌트 경계를 지키고 지원되지 않는 런타임 간 조립을 피함)**
+**Impact: CRITICAL (Astro 컴포넌트 경계를 지키고 지원되지 않는 런타임 간 조립을 피합니다)**
 
 React 같은 framework component 안에서는 `.astro` component를 직접 import하지 않습니다.
 Astro에서 framework island를 감싸고, 필요한 정적 조립은 slot이나 children으로 전달합니다.

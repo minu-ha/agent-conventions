@@ -1,6 +1,6 @@
 # Standardize Annotation Tags by Declaration Role
 
-**Impact: MEDIUM-HIGH (고정된 소수의 annotation 집합으로 TypeScript와 TSX가 섞인 파일을 훑을 수 있게 유지함)**
+**Impact: MEDIUM-HIGH (고정된 소수의 annotation 집합으로 TypeScript와 TSX가 섞인 파일을 훑을 수 있게 유지합니다)**
 
 annotation 태그는 아래 여덟 개만 사용합니다.
 

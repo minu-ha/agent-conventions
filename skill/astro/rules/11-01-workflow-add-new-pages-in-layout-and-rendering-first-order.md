@@ -1,14 +1,14 @@
 ---
 title: Add New Pages in Layout-and-rendering-first Order
-titleKo: 새 페이지는 레이아웃·렌더링 먼저 순서로 추가
+titleKo: 새 페이지 추가의 레이아웃·렌더링 우선 순서
 impact: MEDIUM
-impactDescription: 파일이 번지기 전에 셸·렌더링 모드·아일랜드 경계를 먼저 정해 정리 작업을 줄임
+impactDescription: 파일이 번지기 전에 셸·렌더링 모드·아일랜드 경계를 먼저 정해 정리 작업을 줄입니다
 tags: workflow, pages, checklist
 ---
 
 ## Add New Pages in Layout-and-rendering-first Order
 
-**Impact: MEDIUM (파일이 번지기 전에 셸·렌더링 모드·아일랜드 경계를 먼저 정해 정리 작업을 줄임)**
+**Impact: MEDIUM (파일이 번지기 전에 셸·렌더링 모드·아일랜드 경계를 먼저 정해 정리 작업을 줄입니다)**
 
 새 page를 추가할 때는 화면 마크업부터 급하게 만들지 말고, 먼저 기본 `src/pages/_document.astro` 패턴으로 충분한지,
 `_document.astro`와 `_head.astro`의 로컬 `Props`에 어떤 문서 계약이 필요한지, `_document.css`를 건드려야 하는지,

@@ -1,6 +1,6 @@
 # Name Elements and Modifiers by Role
 
-**Impact: HIGH (class가 UI 부위를 설명하지 못하게 만드는 모호하거나 레이아웃 중심인 이름을 피함)**
+**Impact: HIGH (class가 UI 부위를 설명하지 못하게 만드는 모호하거나 레이아웃 중심인 이름을 피합니다)**
 
 `element`와 `modifier` 이름은 구조나 치수가 아니라 UI 역할을 표현해야 합니다.
 `container`, `wrapper`, `box` 같은 포괄 단어 단독 사용이나 `gap12` 같은 숫자 기반 의미는 피하고,

@@ -2,16 +2,17 @@
 title: Document Custom Types and Declarative Shapes
 titleKo: 커스텀 타입과 선언적 shape 문서화
 impact: CRITICAL
-impactDescription: 구현 세부를 파헤치지 않고도 도메인 전용 계약을 이해할 수 있게 함
-appliesWhen: >-
-  type·interface·schema root·객체 상수·계약 field·파생 alias를 추가·변경하거나 named shape에 callable 역할을 추가한다.
-  외부·generated·read-only·shared unchanged shape·익명 inferred 반환은 제외한다.
+impactDescription: 구현 세부를 파헤치지 않고도 도메인 전용 계약을 이해할 수 있게 합니다
+appliesWhen:
+  - type·interface·schema root·객체 상수·계약 field·파생 alias를 추가·변경할 때
+  - named shape에 callable 역할을 추가할 때
+  - 제외: 외부·generated·read-only·shared unchanged shape나 익명 추론 반환인 경우
 tags: types, jsdoc, shapes
 ---
 
 ## Document Custom Types and Declarative Shapes
 
-**Impact: CRITICAL (구현 세부를 파헤치지 않고도 도메인 전용 계약을 이해할 수 있게 함)**
+**Impact: CRITICAL (구현 세부를 파헤치지 않고도 도메인 전용 계약을 이해할 수 있게 합니다)**
 
 선언형 shape는 헤더와 필드를 나눠 문서화합니다.
 

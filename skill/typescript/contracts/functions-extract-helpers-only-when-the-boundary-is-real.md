@@ -1,6 +1,6 @@
 # Extract Support Functions Only When the Boundary Is Real
 
-**Impact: HIGH (재사용 계약이나 테스트 경계가 실제로 없을 때 헬퍼 추출이 지역 흐름을 조각내는 것을 막음)**
+**Impact: HIGH (재사용 계약이나 테스트 경계가 실제로 없을 때 헬퍼 추출이 지역 흐름을 조각내는 것을 막습니다)**
 
 support function은 "이름"이 아니라 "호출 경계"가 있을 때만 분리합니다.
 

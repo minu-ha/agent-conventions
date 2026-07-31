@@ -1,14 +1,14 @@
 ---
 title: Throw Context-rich NestJS Exceptions
-titleKo: 맥락이 담긴 NestJS 예외를 던지기
+titleKo: 맥락이 담긴 NestJS 예외 사용
 impact: HIGH
-impactDescription: 알맞은 NestJS 예외 타입과 실제 도메인 맥락으로 백엔드 실패를 진단 가능하게 함
+impactDescription: 알맞은 NestJS 예외 타입과 실제 도메인 맥락으로 백엔드 실패를 진단할 수 있게 합니다
 tags: exceptions, errors, diagnostics
 ---
 
 ## Throw Context-rich NestJS Exceptions
 
-**Impact: HIGH (알맞은 NestJS 예외 타입과 실제 도메인 맥락으로 백엔드 실패를 진단 가능하게 함)**
+**Impact: HIGH (알맞은 NestJS 예외 타입과 실제 도메인 맥락으로 백엔드 실패를 진단할 수 있게 합니다)**
 
 NestJS 내장 예외 클래스(`NotFoundException`, `BadRequestException`, `ForbiddenException` 등)를 사용하고,
 메시지에는 도메인 이름이나 식별자 같은 맥락 정보를 포함합니다.

@@ -1,14 +1,14 @@
 ---
 title: Isolate and Clean Up Test Data
-titleKo: 테스트 데이터는 격리하고 정리하기
+titleKo: 테스트 데이터의 격리와 정리
 impact: HIGH
-impactDescription: 계정·id·seed 레코드 재사용으로 원격·공유 상태 브라우저 테스트가 충돌하는 것을 막음
+impactDescription: 계정·id·seed 레코드 재사용으로 원격·공유 상태 브라우저 테스트가 충돌하는 것을 막습니다
 tags: data-isolation, cleanup, seeds
 ---
 
 ## Isolate and Clean Up Test Data
 
-**Impact: HIGH (계정·id·seed 레코드 재사용으로 원격·공유 상태 브라우저 테스트가 충돌하는 것을 막음)**
+**Impact: HIGH (계정·id·seed 레코드 재사용으로 원격·공유 상태 브라우저 테스트가 충돌하는 것을 막습니다)**
 
 원격 백엔드를 건드리는 테스트는 고유 데이터로 실행하고 `try/finally`로 cleanup합니다.
 `Date.now()`, worker suffix, 고유 login ID 같은 전략으로 충돌을 피하고,

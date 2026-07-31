@@ -1,14 +1,14 @@
 ---
 title: Place Pages-local Document Helpers Under `src/pages` with an Underscore Prefix
-titleKo: pages-local 문서 헬퍼는 src/pages 아래 밑줄 접두사로
+titleKo: pages-local 문서 헬퍼의 src/pages 밑줄 접두사 배치
 impact: HIGH
-impactDescription: route 공용 문서 헬퍼와 route-local support 파일을 route 소유자 가까이 두면서 route 페이지가 되지 않게 함
+impactDescription: route 공용 문서 헬퍼와 route-local support 파일을 route 소유자 가까이 두면서 route 페이지가 되지 않게 합니다
 tags: structure, pages, underscore, document-helpers
 ---
 
 ## Place Pages-local Document Helpers Under `src/pages` with an Underscore Prefix
 
-**Impact: HIGH (route 공용 문서 헬퍼와 route-local support 파일을 route 소유자 가까이 두면서 route 페이지가 되지 않게 함)**
+**Impact: HIGH (route 공용 문서 헬퍼와 route-local support 파일을 route 소유자 가까이 두면서 route 페이지가 되지 않게 합니다)**
 
 Astro는 `src/pages` 안에서 `_`로 시작하는 파일과 폴더를 router에서 제외합니다.
 이 성질을 이용해 pages-local document helper와 route-local support file을 `src/pages/_*` 또는 `src/pages/**/_*`에

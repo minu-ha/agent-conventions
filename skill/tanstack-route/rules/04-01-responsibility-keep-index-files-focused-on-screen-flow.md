@@ -1,14 +1,14 @@
 ---
 title: Keep `*.index.tsx` Files Focused on Screen Flow
-titleKo: *.index.tsx는 화면 흐름에 집중
+titleKo: '*.index.tsx의 화면 흐름 중심 유지'
 impact: HIGH
-impactDescription: 화면 조립·hook·handler 가 보이는 읽을 수 있는 route 진입점을 지킴
+impactDescription: 화면 조립·hook·handler가 보이는 읽기 쉬운 route 진입점을 지킵니다
 tags: index-files, screen-flow, ownership
 ---
 
 ## Keep `*.index.tsx` Files Focused on Screen Flow
 
-**Impact: HIGH (화면 조립·hook·handler 가 보이는 읽을 수 있는 route 진입점을 지킴)**
+**Impact: HIGH (화면 조립·hook·handler가 보이는 읽기 쉬운 route 진입점을 지킵니다)**
 
 `*.index.tsx`는 실제 화면 렌더링, API hook, 이벤트 핸들러, search 기반 상태 동기화, 화면 조립을 담당합니다.
 entry file이 순수 helper, 대형 상수, route 외부 재사용 로직까지 떠안기 시작하면

@@ -1,14 +1,14 @@
 ---
 title: Keep Page Files Focused on Route Contract and Data Handoff
-titleKo: page 파일은 route 계약과 데이터 전달에 집중
+titleKo: page 파일의 route 계약·데이터 전달 집중
 impact: HIGH
-impactDescription: page 파일을 import 전용 어댑터로 만들지 않으면서 src/pages를 route 소유자로 읽히게 함
+impactDescription: page 파일을 import 전용 어댑터로 만들지 않으면서 src/pages를 route 소유자로 읽히게 합니다
 tags: pages, routing, responsibility
 ---
 
 ## Keep Page Files Focused on Route Contract and Data Handoff
 
-**Impact: HIGH (page 파일을 import 전용 어댑터로 만들지 않으면서 src/pages를 route 소유자로 읽히게 함)**
+**Impact: HIGH (page 파일을 import 전용 어댑터로 만들지 않으면서 src/pages를 route 소유자로 읽히게 합니다)**
 
 Page file은 route owner 책임을 한눈에 보이게 유지합니다.
 

@@ -1,14 +1,14 @@
 ---
 title: Require JSDoc on Key Frontmatter, Document Props, and Route Support Declarations
-titleKo: 핵심 frontmatter·Props·route support 선언에 JSDoc
+titleKo: 핵심 frontmatter·Props·support 선언의 JSDoc
 impact: MEDIUM-HIGH
-impactDescription: 구현을 뜯어보기 전에 Astro route 경계와 route-local support 헬퍼를 찾을 수 있게 함
+impactDescription: 구현을 뜯어보기 전에 Astro route 경계와 route-local support 헬퍼를 찾을 수 있게 합니다
 tags: docs, jsdoc, frontmatter, route-support
 ---
 
 ## Require JSDoc on Key Frontmatter, Document Props, and Route Support Declarations
 
-**Impact: MEDIUM-HIGH (구현을 뜯어보기 전에 Astro route 경계와 route-local support 헬퍼를 찾을 수 있게 함)**
+**Impact: MEDIUM-HIGH (구현을 뜯어보기 전에 Astro route 경계와 route-local support 헬퍼를 찾을 수 있게 합니다)**
 
 Astro frontmatter와 `src/pages/_document.astro`, `src/pages/_head.astro`, `src/pages/**/_entry-admin.ts`,
 `src/pages/**/_local/entry-editor.ts` 같은 route-local support module에서 중요한 경계를 선언할 때는 헤더 JSDoc을

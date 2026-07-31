@@ -1,14 +1,14 @@
 ---
 title: Wait for State, Not Time, in Integration Tests
-titleKo: 시간이 아니라 상태를 기다리기
+titleKo: 시간이 아닌 관찰 가능한 상태 대기
 impact: CRITICAL
-impactDescription: 임의의 sleep 대신 관찰 가능한 상태를 기다려 integration 테스트를 결정적으로 유지함
+impactDescription: 임의의 sleep 대신 관찰 가능한 상태를 기다려 integration 테스트를 결정적으로 유지합니다
 tags: waiting, integration, stability
 ---
 
 ## Wait for State, Not Time, in Integration Tests
 
-**Impact: CRITICAL (임의의 sleep 대신 관찰 가능한 상태를 기다려 integration 테스트를 결정적으로 유지함)**
+**Impact: CRITICAL (임의의 sleep 대신 관찰 가능한 상태를 기다려 integration 테스트를 결정적으로 유지합니다)**
 
 Integration에서는 Suspense, bootstrap query,
 lazy data 주입이 있는 화면일수록 관련 응답이나 안정적인 화면 marker가 생긴 뒤 assertion을 시작합니다.

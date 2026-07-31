@@ -1,14 +1,14 @@
 ---
 title: Choose `client:*` Directives by Visibility and Urgency
-titleKo: client:* 지시자는 가시성과 시급성으로 선택
+titleKo: client:* 지시자의 가시성·시급성 기준 선택
 impact: HIGH
-impactDescription: 모든 것을 eager 로딩으로 두지 않고 hydration 비용을 의도적으로 정하게 함
+impactDescription: 모든 것을 eager 로딩으로 두지 않고 hydration 비용을 의도적으로 정하게 합니다
 tags: client-directives, islands, hydration
 ---
 
 ## Choose `client:*` Directives by Visibility and Urgency
 
-**Impact: HIGH (모든 것을 eager 로딩으로 두지 않고 hydration 비용을 의도적으로 정하게 함)**
+**Impact: HIGH (모든 것을 eager 로딩으로 두지 않고 hydration 비용을 의도적으로 정하게 합니다)**
 
 `client:load`, `client:idle`, `client:visible`, `client:media`, `client:only`는 모두 같은 비용이 아닙니다.
 above-the-fold 즉시 상호작용이 필요한 widget만 eager hydration을 쓰고, 그 외에는 visibility/idle 조건에 맞게 낮춥니다.

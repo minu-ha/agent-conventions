@@ -1,17 +1,16 @@
 ---
 title: Preserve Shared Namespace Origin With Chained Access
-titleKo: config·util은 체인 접근으로 출처 보존
+titleKo: 체인 접근을 통한 config·util 출처 보존
 impact: HIGH
-impactDescription: 넓은 스코프 별칭으로 출처를 숨기지 않고 값이 어디서 오는지 읽는 사람이 알게 함
-appliesWhen: >-
-  `config` 또는 `util` 값을 leaf 모듈에서 접근하며 넓은 스코프 구조분해, 별칭 또는 feature-local namespace를
-  추가·변경한다.
+impactDescription: 넓은 스코프 별칭으로 출처를 숨기지 않고 값이 어디서 오는지 읽는 사람이 알 수 있게 합니다
+appliesWhen:
+  - `config` 또는 `util` 값을 leaf 모듈에서 접근하며 넓은 스코프 구조분해, 별칭 또는 feature-local namespace를 추가·변경할 때
 tags: config, chaining, traceability
 ---
 
 ## Preserve Shared Namespace Origin With Chained Access
 
-**Impact: HIGH (넓은 스코프 별칭으로 출처를 숨기지 않고 값이 어디서 오는지 읽는 사람이 알게 함)**
+**Impact: HIGH (넓은 스코프 별칭으로 출처를 숨기지 않고 값이 어디서 오는지 읽는 사람이 알 수 있게 합니다)**
 
 공용 설정과 공용 순수 함수는 leaf 모듈 직접 import 뒤에 `config.*`, `util.*` 체이닝 접근을 기본으로 합니다.
 넓은 스코프에서 구조분해하거나 별칭 상수로 끊어 원본 오리진을 흐리지 말고,

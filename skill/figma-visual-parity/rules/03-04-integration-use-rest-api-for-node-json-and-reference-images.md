@@ -1,14 +1,14 @@
 ---
 title: Use REST API for Node JSON and Reference Images When Available
-titleKo: 가능하면 REST API로 node JSON과 기준 이미지 받기
+titleKo: 가능하면 REST API로 node JSON·기준 이미지 확보
 impact: CRITICAL
-impactDescription: Figma URL에서 구조화된 node 데이터와 비교용 reference image를 확보하게 함
+impactDescription: Figma URL에서 구조화된 node 데이터와 비교용 reference image를 확보하게 합니다
 tags: integration, rest-api, screenshot
 ---
 
 ## Use REST API for Node JSON and Reference Images When Available
 
-**Impact: CRITICAL (Figma URL에서 구조화된 node 데이터와 비교용 reference image를 확보하게 함)**
+**Impact: CRITICAL (Figma URL에서 구조화된 node 데이터와 비교용 reference image를 확보하게 합니다)**
 
 Figma REST API token이 있으면 Figma URL에서 `fileKey`와 `nodeId`를 파싱합니다.
 URL의 `node-id=1-2`는 API 요청용 `1:2`로 변환합니다.

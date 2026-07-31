@@ -1,16 +1,17 @@
 ---
 title: Use Scope, Slug, Element, and Modifier Syntax
-titleKo: scope·slug·element·modifier 문법 지키기
+titleKo: scope·slug·element·modifier 문법 준수
 impact: CRITICAL
-impactDescription: classname만 보고도 class 소유와 UI 역할을 추적할 수 있게 함
-appliesWhen: >-
-  plain CSS의 project-owned class를 새로 만들거나 이름, scope, slug, element, modifier 구분자 또는 casing을 변경한다.
+impactDescription: classname만 보고도 class 소유와 UI 역할을 추적할 수 있게 합니다
+appliesWhen:
+  - plain CSS의 project-owned class를 새로 만들 때
+  - 이름, scope, slug, element, modifier 구분자 또는 casing을 변경할 때
 tags: naming, class-grammar, ownership
 ---
 
 ## Use Scope, Slug, Element, and Modifier Syntax
 
-**Impact: CRITICAL (classname만 보고도 class 소유와 UI 역할을 추적할 수 있게 함)**
+**Impact: CRITICAL (classname만 보고도 class 소유와 UI 역할을 추적할 수 있게 합니다)**
 
 클래스명은 `<scope>_<slug>__<element>[--<modifier>]` 문법을 사용합니다.
 구분자는 `_`, `__`, `--`를 고정하고, 각 부분의 책임을 섞지 않습니다.

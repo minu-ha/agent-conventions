@@ -1,14 +1,14 @@
 ---
 title: Choose Actions vs. Endpoints by Caller and Response Needs
-titleKo: Actions와 Endpoints는 호출자와 응답 요건으로 선택
+titleKo: Actions·Endpoints의 호출자·응답 요건 기준 선택
 impact: HIGH
-impactDescription: mutation 경계를 누가 호출하는지와 어떤 응답을 제어해야 하는지에 맞춤
+impactDescription: mutation 경계를 누가 호출하는지와 어떤 응답을 제어해야 하는지에 맞춥니다
 tags: actions, endpoints, forms
 ---
 
 ## Choose Actions vs. Endpoints by Caller and Response Needs
 
-**Impact: HIGH (mutation 경계를 누가 호출하는지와 어떤 응답을 제어해야 하는지에 맞춤)**
+**Impact: HIGH (mutation 경계를 누가 호출하는지와 어떤 응답을 제어해야 하는지에 맞춥니다)**
 
 브라우저 UI가 직접 호출하는 form submit이나 mutation은 기본적으로 Actions를 먼저 검토합니다.
 Actions는 input validation, error shape,
@@ -25,7 +25,7 @@ static mode에서 HTML form 기반 action을 쓰면 on-demand rendering 전제�
 - 파일 다운로드 응답도 action 안에서 우겨 넣는다
 ```
 
-**Correct (caller와 response shape에 맞는 경계를 고른다):**
+**Correct (caller와 response shape에 맞는 경계를 고름):**
 
 ```text
 - page form이나 button mutation: Actions 우선

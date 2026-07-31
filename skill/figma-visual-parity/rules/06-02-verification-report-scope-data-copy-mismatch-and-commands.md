@@ -1,14 +1,14 @@
 ---
 title: Report Scope, Data Boundaries, Mismatches, and Commands
-titleKo: 범위·데이터 경계·불일치·실행 명령을 보고
+titleKo: 범위·데이터 경계·불일치·실행 명령 보고
 impact: CRITICAL
-impactDescription: 완료 보고에서 근거, 제외 항목, 남은 차이를 숨기지 않게 함
+impactDescription: 완료 보고에서 근거, 제외 항목, 남은 차이를 숨기는 일을 막습니다
 tags: verification, report, completion
 ---
 
 ## Report Scope, Data Boundaries, Mismatches, and Commands
 
-**Impact: CRITICAL (완료 보고에서 근거, 제외 항목, 남은 차이를 숨기지 않게 함)**
+**Impact: CRITICAL (완료 보고에서 근거, 제외 항목, 남은 차이를 숨기는 일을 막습니다)**
 
 완료 보고에는 사용한 Figma 링크/node, 수정 scope, 구현한 visual parity 항목, 동적 데이터라서 하드코딩하지 않은 항목,
 정적 UI copy로 맞춘 항목, 브라우저 screenshot 검증 여부, 남은 mismatch, 실행한 검증 명령을 포함합니다.

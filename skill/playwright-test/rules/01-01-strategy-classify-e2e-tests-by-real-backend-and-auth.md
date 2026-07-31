@@ -2,15 +2,15 @@
 title: Classify E2E Tests by Real Backend and Auth Dependence
 titleKo: e2e는 실제 백엔드·인증 의존으로 분류
 impact: CRITICAL
-impactDescription: 실제 백엔드·실제 인증·실제 라우팅이 테스트에 남아 있어야 한다고 요구해 e2e 의미를 엄격하게 유지함
+impactDescription: 실제 백엔드·실제 인증·실제 라우팅이 테스트에 남아 있어야 한다고 요구해 e2e 의미를 엄격하게 유지합니다
 tags: e2e, real-backend, auth
 ---
 
 ## Classify E2E Tests by Real Backend and Auth Dependence
 
-**Impact: CRITICAL (실제 백엔드·실제 인증·실제 라우팅이 테스트에 남아 있어야 한다고 요구해 e2e 의미를 엄격하게 유지함)**
+**Impact: CRITICAL (실제 백엔드·실제 인증·실제 라우팅이 테스트에 남아 있어야 한다고 요구해 e2e 의미를 엄격하게 유지합니다)**
 
-실제 로그인, 실제 저장, 실제 권한 연결이 끊기면 테스트 의미가 사라지면 E2E입니다.
+실제 로그인, 실제 저장, 실제 권한 연결이 끊겼을 때 테스트 의미가 사라지면 E2E입니다.
 E2E는 실제 백엔드, 실제 인증 플로우, 실제 라우팅과 번들 결과를 사용하고,
 핵심 엔드포인트를 `page.route()`로 가로채면서 E2E라고 부르지 않습니다.
 

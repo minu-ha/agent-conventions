@@ -1,16 +1,16 @@
 ---
 title: Preserve Established Public URL Contracts When Normalizing Route Folders
-titleKo: route 폴더를 정리해도 공개 URL 계약은 보존
+titleKo: route 폴더 정리 시 공개 URL 계약 보존
 impact: HIGH
-impactDescription: 파일 트리 정리가 이미 쓰이는 공개 URL을 조용히 바꾸는 것을 막음
+impactDescription: 파일 트리 정리가 이미 쓰이는 공개 URL을 조용히 바꾸는 것을 막습니다
 tags: routing, urls, migrations, route-families
 ---
 
 ## Preserve Established Public URL Contracts When Normalizing Route Folders
 
-**Impact: HIGH (파일 트리 정리가 이미 쓰이는 공개 URL을 조용히 바꾸는 것을 막음)**
+**Impact: HIGH (파일 트리 정리가 이미 쓰이는 공개 URL을 조용히 바꾸는 것을 막습니다)**
 
-route folder를 더 예쁘게 정리할 수 있더라도, 이미 공개된 URL contract가 있다면 그 계약을 먼저 존중합니다.
+route folder를 더 깔끔하게 정리할 수 있더라도, 이미 공개된 URL contract가 있다면 그 계약을 먼저 존중합니다.
 현재 사이트가 이미 `/recent/:page?`, `/posts/:page?`, `/posts/:slug`,
 `/tags/:slug` 같은 경로를 쓰고 있다면 폴더 대칭성만을 이유로 root pagination, singular folder,
 다른 slug family로 URL을 바꾸지 않습니다.
@@ -64,5 +64,5 @@ src/pages/tags/index.astro
 src/pages/tags/[slug].astro
 ```
 
-이 경우에는 convention이 현재 공개 URL을 존중하도록 맞추고, 정말 URL을 바꾸고 싶다면 redirect, canonical, internal link,
+이 경우에는 convention이 현재 공개 URL을 존중하도록 맞추고, 실제로 URL을 바꾸려 한다면 redirect, canonical, internal link,
 sitemap까지 포함한 migration 작업으로 분리합니다.

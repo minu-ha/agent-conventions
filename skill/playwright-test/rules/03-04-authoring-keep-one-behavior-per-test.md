@@ -2,13 +2,13 @@
 title: Keep One Behavior Per Test
 titleKo: 테스트 하나에 행위 하나
 impact: HIGH
-impactDescription: setup·동작·단정을 좁게 유지해 브라우저 실패가 여러 검사가 아니라 한 행위를 가리키게 함
+impactDescription: setup·동작·단정을 좁게 유지해 브라우저 실패가 여러 검사가 아니라 한 행위를 가리키게 합니다
 tags: test-design, scope, assertions
 ---
 
 ## Keep One Behavior Per Test
 
-**Impact: HIGH (setup·동작·단정을 좁게 유지해 브라우저 실패가 여러 검사가 아니라 한 행위를 가리키게 함)**
+**Impact: HIGH (setup·동작·단정을 좁게 유지해 브라우저 실패가 여러 검사가 아니라 한 행위를 가리키게 합니다)**
 
 한 테스트는 한 행동과 한 결과에 집중합니다.
 기본 구조는 `Arrange -> Act -> Assert` 순서를 따르고, unrelated assertion을 한 테스트 안에 과도하게 나열하지 않습니다.

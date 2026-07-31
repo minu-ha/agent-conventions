@@ -1,14 +1,14 @@
 ---
 title: Keep `beforeEach` Limited and Visible
-titleKo: beforeEach는 최소로, 보이게
+titleKo: beforeEach의 최소화와 가시성 유지
 impact: HIGH
-impactDescription: 공용 setup 이 테스트의 실제 의존 경계나 핵심 단정을 숨기는 것을 막음
+impactDescription: 공용 setup이 테스트의 실제 의존 경계나 핵심 단정을 숨기는 것을 막습니다
 tags: beforeEach, setup, visibility
 ---
 
 ## Keep `beforeEach` Limited and Visible
 
-**Impact: HIGH (공용 setup 이 테스트의 실제 의존 경계나 핵심 단정을 숨기는 것을 막음)**
+**Impact: HIGH (공용 setup이 테스트의 실제 의존 경계나 핵심 단정을 숨기는 것을 막습니다)**
 
 `beforeEach`에는 반복되는 인증 stub, 공용 이동 경로, 공용 seed 설치처럼 진짜 반복되는 준비만 둡니다.
 핵심 assertion이나 테스트마다 다른 mock/seed를 `beforeEach`에 숨기지 않고, 각 테스트 본문에서 선언합니다.

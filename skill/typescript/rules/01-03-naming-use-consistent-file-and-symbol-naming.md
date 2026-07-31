@@ -1,17 +1,17 @@
 ---
 title: Use Consistent File, Symbol, and Field Naming
-titleKo: 파일·심볼·필드 이름을 일관되게
+titleKo: 파일·심볼·필드 명명 규칙 통일
 impact: HIGH
-impactDescription: 모듈과 런타임 구조를 넘나들며 파일명·심볼·shape 필드를 예측 가능하게 유지함
-appliesWhen: >-
-  TypeScript 파일, local 변수·함수·타입, 객체·schema field 또는 enum-like 상수의 이름을 새로 만들거나 바꾼다. alias 없는
-  third-party import binding 추가는 제외한다.
+impactDescription: 모듈과 런타임 구조를 넘나들며 파일명·심볼·shape 필드를 예측 가능하게 유지합니다
+appliesWhen:
+  - TypeScript 파일, local 변수·함수·타입, 객체·schema field 또는 enum-like 상수의 이름을 새로 만들거나 바꿀 때
+  - 제외: alias 없는 third-party import binding 추가인 경우
 tags: naming, files, symbols
 ---
 
 ## Use Consistent File, Symbol, and Field Naming
 
-**Impact: HIGH (모듈과 런타임 구조를 넘나들며 파일명·심볼·shape 필드를 예측 가능하게 유지함)**
+**Impact: HIGH (모듈과 런타임 구조를 넘나들며 파일명·심볼·shape 필드를 예측 가능하게 유지합니다)**
 
 파일명은 `kebab-case`, 일반 변수와 함수는 `camelCase`, 타입은 `PascalCase`를 사용합니다.
 `const`인지 여부로 별도 casing을 두지 않고, 모듈 안의 로컬 값은 모두 `camelCase`로 맞춥니다.

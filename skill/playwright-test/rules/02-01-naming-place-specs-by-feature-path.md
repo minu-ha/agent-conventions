@@ -2,13 +2,13 @@
 title: Place Specs by Feature Path
 titleKo: spec은 기능 경로에 맞춰 배치
 impact: HIGH
-impactDescription: 테스트 트리가 실제 route·기능 경로를 반영하게 해 테스트 소유를 찾을 수 있게 함
+impactDescription: 테스트 트리가 실제 route·기능 경로를 반영하게 해 테스트 소유권을 찾을 수 있게 합니다
 tags: spec-placement, features, paths
 ---
 
 ## Place Specs by Feature Path
 
-**Impact: HIGH (테스트 트리가 실제 route·기능 경로를 반영하게 해 테스트 소유를 찾을 수 있게 함)**
+**Impact: HIGH (테스트 트리가 실제 route·기능 경로를 반영하게 해 테스트 소유권을 찾을 수 있게 합니다)**
 
 테스트는 `<test-root>/<기능 경로>/...` 아래에 두고, 디렉터리 구조는 실제 화면이나 도메인 구조를 따라갑니다.
 그래야 feature를 찾을 때 구현 파일과 테스트 파일이 비슷한 경로 감각으로 탐색됩니다.

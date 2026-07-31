@@ -1,14 +1,14 @@
 ---
 title: Distinguish Build-time and Live Collections
-titleKo: 빌드 시점 컬렉션과 live 컬렉션을 구분
+titleKo: 빌드 시점 컬렉션과 live 컬렉션의 구분
 impact: HIGH
-impactDescription: 정적 콘텐츠와 요청 시점 콘텐츠 사이에서 신선도 가정이 어긋나는 것을 막음
+impactDescription: 정적 콘텐츠와 요청 시점 콘텐츠 사이에서 신선도 가정이 어긋나는 것을 막습니다
 tags: content-collections, live-collections, loaders
 ---
 
 ## Distinguish Build-time and Live Collections
 
-**Impact: HIGH (정적 콘텐츠와 요청 시점 콘텐츠 사이에서 신선도 가정이 어긋나는 것을 막음)**
+**Impact: HIGH (정적 콘텐츠와 요청 시점 콘텐츠 사이에서 신선도 가정이 어긋나는 것을 막습니다)**
 
 build-time content collection과 live collection은 같은 개념으로 취급하지 않습니다.
 build-time collection은 `src/content.config.ts`와 `defineCollection()`에 두고 `getCollection()`/`getEntry()`로 읽습니다.

@@ -1,14 +1,14 @@
 ---
 title: Audit and Use Every Available Figma Integration Layer
-titleKo: 쓸 수 있는 Figma 연동 레이어를 전부 확인하고 쓰기
+titleKo: 사용 가능한 Figma 연동 레이어의 전수 확인과 활용
 impact: CRITICAL
-impactDescription: MCP만 쓰고 끝내지 않고 사용 가능한 integration을 모두 조합하게 함
+impactDescription: MCP만 쓰고 끝내지 않고 사용 가능한 integration을 모두 조합하게 합니다
 tags: integration, mcp, rest-api, code-connect
 ---
 
 ## Audit and Use Every Available Figma Integration Layer
 
-**Impact: CRITICAL (MCP만 쓰고 끝내지 않고 사용 가능한 integration을 모두 조합하게 함)**
+**Impact: CRITICAL (MCP만 쓰고 끝내지 않고 사용 가능한 integration을 모두 조합하게 합니다)**
 
 Figma visual parity 작업을 시작하면 먼저 사용 가능한 integration을 audit합니다.
 Figma MCP, Code Connect, Figma REST API token, variables/components/styles metadata, repo design system inventory,

@@ -2,13 +2,13 @@
 title: Review Banned Playwright Shortcuts Before Finishing
 titleKo: 마무리 전에 금지된 Playwright 지름길 점검
 impact: MEDIUM
-impactDescription: 테스트 층위 의미를 흐리거나 불안정한 브라우저 동작을 들이는 지름길을 마무리 전에 잡음
+impactDescription: 테스트 층위 의미를 흐리거나 불안정한 브라우저 동작을 들이는 지름길을 마무리 전에 잡습니다
 tags: review, guardrails, flakiness
 ---
 
 ## Review Banned Playwright Shortcuts Before Finishing
 
-**Impact: MEDIUM (테스트 층위 의미를 흐리거나 불안정한 브라우저 동작을 들이는 지름길을 마무리 전에 잡음)**
+**Impact: MEDIUM (테스트 층위 의미를 흐리거나 불안정한 브라우저 동작을 들이는 지름길을 마무리 전에 잡습니다)**
 
 마무리 전에 반복적으로 금지되는 Playwright 지름길을 다시 확인합니다.
 한 파일 안의 Integration/E2E 혼합, E2E에서 핵심 API route mocking, CSS class와 DOM 구조에 과도하게 의존한 locator,

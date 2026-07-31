@@ -1,14 +1,14 @@
 ---
 title: Use Owner-named Route Support Modules Instead of Generic Helper Files
-titleKo: route support 모듈은 generic 대신 owner 이름으로
+titleKo: route support 모듈의 owner 이름 사용
 impact: MEDIUM-HIGH
-impactDescription: 경계가 흐려지기 전에 route 파일에 정규화·매핑 로직이 쌓이는 것을 막음
+impactDescription: 경계가 흐려지기 전에 route 파일에 정규화·매핑 로직이 쌓이는 것을 막습니다
 tags: helpers, route-local, typescript
 ---
 
 ## Use Owner-named Route Support Modules Instead of Generic Helper Files
 
-**Impact: MEDIUM-HIGH (경계가 흐려지기 전에 route 파일에 정규화·매핑 로직이 쌓이는 것을 막음)**
+**Impact: MEDIUM-HIGH (경계가 흐려지기 전에 route 파일에 정규화·매핑 로직이 쌓이는 것을 막습니다)**
 
 라우트 전용 순수 support code가 entry file을 흐리기 시작하면 첫 추출 대상은 같은 계층 owner-named module입니다.
 예를 들어 `settings.index.tsx`라면 `settings.ts`로 옮기고 named export를 직접 import합니다.

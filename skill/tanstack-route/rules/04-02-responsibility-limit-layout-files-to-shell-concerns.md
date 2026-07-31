@@ -1,14 +1,14 @@
 ---
 title: Limit `*.layout.tsx` Files to Shell Concerns
-titleKo: *.layout.tsx는 셸 관심사까지만
+titleKo: '*.layout.tsx의 셸 관심사 한정'
 impact: HIGH
-impactDescription: 부모 route 셸이 말단 화면의 데이터·폼 로직을 흡수하는 것을 막음
+impactDescription: 부모 route 셸이 말단 화면의 데이터·폼 로직을 흡수하는 것을 막습니다
 tags: layout-files, shell, outlet
 ---
 
 ## Limit `*.layout.tsx` Files to Shell Concerns
 
-**Impact: HIGH (부모 route 셸이 말단 화면의 데이터·폼 로직을 흡수하는 것을 막음)**
+**Impact: HIGH (부모 route 셸이 말단 화면의 데이터·폼 로직을 흡수하는 것을 막습니다)**
 
 `*.layout.tsx`는 부모 경로 등록, 접근 제어, 공통 래퍼, 메뉴 상태 동기화, `<Outlet />`까지만 담당합니다.
 이 프로젝트에서는 `*.layout.tsx`를 4-file set의 기본 tunnel route로 항상 두지만,

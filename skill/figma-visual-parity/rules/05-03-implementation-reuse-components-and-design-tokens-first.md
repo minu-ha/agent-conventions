@@ -1,14 +1,14 @@
 ---
 title: Reuse Existing Components and Design Tokens First
-titleKo: 기존 컴포넌트와 디자인 토큰을 먼저 재사용
+titleKo: 기존 컴포넌트와 디자인 토큰 우선 재사용
 impact: HIGH
-impactDescription: visual parity 작업이 raw CSS 누적이나 디자인 시스템 우회로 흐르지 않게 함
+impactDescription: visual parity 작업이 raw CSS 누적이나 디자인 시스템 우회로 흐르는 일을 막습니다
 tags: implementation, components, tokens
 ---
 
 ## Reuse Existing Components and Design Tokens First
 
-**Impact: HIGH (visual parity 작업이 raw CSS 누적이나 디자인 시스템 우회로 흐르지 않게 함)**
+**Impact: HIGH (visual parity 작업이 raw CSS 누적이나 디자인 시스템 우회로 흐르는 일을 막습니다)**
 
 Figma와 맞지 않는 부분을 고칠 때도 기존 컴포넌트, CSS 변수, spacing/color/type token,
 local wrapper 규칙을 먼저 확인합니다.

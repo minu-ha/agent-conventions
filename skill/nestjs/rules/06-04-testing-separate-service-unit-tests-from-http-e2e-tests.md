@@ -2,13 +2,13 @@
 title: Separate Service Unit Tests From HTTP E2E Tests
 titleKo: service 단위 테스트와 HTTP e2e 테스트 분리
 impact: CRITICAL
-impactDescription: 비즈니스 로직과 전체 배선을 다른 테스트 층위에 배정해 백엔드 실패를 진단 가능하게 함
+impactDescription: 비즈니스 로직과 전체 배선을 서로 다른 테스트 층위에 배정해 백엔드 실패를 진단할 수 있게 합니다
 tags: unit-tests, e2e, levels
 ---
 
 ## Separate Service Unit Tests From HTTP E2E Tests
 
-**Impact: CRITICAL (비즈니스 로직과 전체 배선을 다른 테스트 층위에 배정해 백엔드 실패를 진단 가능하게 함)**
+**Impact: CRITICAL (비즈니스 로직과 전체 배선을 서로 다른 테스트 층위에 배정해 백엔드 실패를 진단할 수 있게 합니다)**
 
 테스트는 `unit test`와 `e2e test`를 기본 축으로 구분합니다.
 unit test는 Service 단위의 비즈니스 로직 검증을 담당하고, e2e test는 HTTP 요청부터 ValidationPipe, Filter, Service,

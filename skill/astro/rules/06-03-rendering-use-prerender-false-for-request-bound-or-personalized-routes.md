@@ -1,14 +1,14 @@
 ---
 title: Use `prerender = false` for Request-bound or Personalized Routes
-titleKo: 요청 의존·개인화 route에는 prerender = false
+titleKo: 요청 의존·개인화 route의 prerender = false 지정
 impact: CRITICAL
-impactDescription: 요청마다 실제로 실행되는 route에만 요청 시점 로직을 둠
+impactDescription: 요청마다 실제로 실행되는 route에만 요청 시점 로직을 둡니다
 tags: prerender, ssr, rendering
 ---
 
 ## Use `prerender = false` for Request-bound or Personalized Routes
 
-**Impact: CRITICAL (요청마다 실제로 실행되는 route에만 요청 시점 로직을 둠)**
+**Impact: CRITICAL (요청마다 실제로 실행되는 route에만 요청 시점 로직을 둡니다)**
 
 쿠키, 인증 세션, 요청 헤더,
 요청마다 바뀌는 개인화 데이터에 의존하는 page나 endpoint는 static mode에서 `export const prerender = false`로 on-demand

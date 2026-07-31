@@ -1,14 +1,14 @@
 ---
 title: Allow Explicit Waits Only for Real Async Boundaries
-titleKo: 명시적 대기는 진짜 비동기 경계에만
+titleKo: 실제 비동기 경계로 명시적 대기 한정
 impact: HIGH
-impactDescription: 내비게이션·알려진 응답·부트스트랩·실제 백그라운드 폴링으로 제한해 명시적 대기를 의도적으로 유지함
+impactDescription: 내비게이션·알려진 응답·부트스트랩·실제 백그라운드 폴링으로 제한해 명시적 대기를 의도적으로 유지합니다
 tags: waits, async-boundaries, polling
 ---
 
 ## Allow Explicit Waits Only for Real Async Boundaries
 
-**Impact: HIGH (내비게이션·알려진 응답·부트스트랩·실제 백그라운드 폴링으로 제한해 명시적 대기를 의도적으로 유지함)**
+**Impact: HIGH (내비게이션·알려진 응답·부트스트랩·실제 백그라운드 폴링으로 제한해 명시적 대기를 의도적으로 유지합니다)**
 
 명시적 wait는 navigation 완료, 특정 API 응답, suspense bootstrap,
 비동기 background job polling 같은 실제 비동기 경계에만 허용합니다.

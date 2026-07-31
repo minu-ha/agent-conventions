@@ -1,17 +1,18 @@
 ---
 title: Use Named Object Params for Complex Signatures
-titleKo: 복잡한 시그니처는 named 객체 매개변수로
+titleKo: 복잡한 시그니처의 named 객체 매개변수 적용
 impact: HIGH
-impactDescription: 긴 함수 시그니처를 읽을 수 있게 유지하고 위치 혼동 없이 묶인 입력을 확장하게 함
-appliesWhen: >-
-  매개변수 3개 이상 또는 같은 계열 인자를 받는 일반 함수를 추가·변경하거나 객체 매개변수의 구조분해 위치를 바꾼다. React
-  함수 컴포넌트의 props 수신·구조분해만 바꾸면 제외한다.
+impactDescription: 긴 함수 시그니처를 읽을 수 있게 유지하고 위치 혼동 없이 묶인 입력을 확장하게 합니다
+appliesWhen:
+  - 매개변수 3개 이상 또는 같은 계열 인자를 받는 일반 함수를 추가·변경할 때
+  - 객체 매개변수의 구조분해 위치를 바꿀 때
+  - 제외: React 함수 컴포넌트의 props 수신·구조분해만 바꾸는 경우
 tags: functions, params, signatures
 ---
 
 ## Use Named Object Params for Complex Signatures
 
-**Impact: HIGH (긴 함수 시그니처를 읽을 수 있게 유지하고 위치 혼동 없이 묶인 입력을 확장하게 함)**
+**Impact: HIGH (긴 함수 시그니처를 읽을 수 있게 유지하고 위치 혼동 없이 묶인 입력을 확장하게 합니다)**
 
 매개변수가 3개 이상이거나 같은 계열 값이 묶여 전달되면 단일 객체 매개변수로 묶고,
 함수 시그니처에서 바로 구조분해하지 않습니다.

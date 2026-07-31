@@ -1,14 +1,14 @@
 ---
 title: Keep Server Islands Serializable and Slot Fallbacks Ready
-titleKo: server island는 직렬화 가능하게, slot fallback 준비
+titleKo: server island의 직렬화 props와 fallback 준비
 impact: HIGH
-impactDescription: 지연 렌더링을 이식 가능하게 유지하고 깨진 props나 빈 로딩 화면을 피함
+impactDescription: 지연 렌더링을 이식 가능하게 유지하고 깨진 props나 빈 로딩 화면을 피합니다
 tags: server-islands, serializable-props, fallback
 ---
 
 ## Keep Server Islands Serializable and Slot Fallbacks Ready
 
-**Impact: HIGH (지연 렌더링을 이식 가능하게 유지하고 깨진 props나 빈 로딩 화면을 피함)**
+**Impact: HIGH (지연 렌더링을 이식 가능하게 유지하고 깨진 props나 빈 로딩 화면을 피합니다)**
 
 `server:defer`를 쓰는 Astro component에는 serializable props만 넘기고,
 느린 personalized content에는 fallback slot을 함께 준비합니다.

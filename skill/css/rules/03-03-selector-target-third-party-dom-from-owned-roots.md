@@ -1,17 +1,18 @@
 ---
 title: Target Third-party DOM Only From Owned Roots
-titleKo: third-party DOM은 소유한 root 아래에서만
+titleKo: 소유한 root 아래로 third-party DOM 타겟팅 제한
 impact: CRITICAL
-impactDescription: third-party 스타일링을 앱 전체로 새게 하지 않고 명시적 wrapper 소유로 제한함
-appliesWhen: >-
-  `.ant-*`, `.rc-*`, `.tippy-*` 등 third-party 내부 DOM selector를 추가·수정하거나 owned wrapper 아래로 범위를 제한한다.
+impactDescription: third-party 스타일링을 앱 전체로 새게 하지 않고 명시적 wrapper 소유로 제한합니다
+appliesWhen:
+  - `.ant-*`, `.rc-*`, `.tippy-*` 등 third-party 내부 DOM selector를 추가·수정할 때
+  - owned wrapper 아래로 범위를 제한할 때
 requiresSelected: selector-avoid-deep-descendant-dependencies
 tags: third-party, wrappers, nesting
 ---
 
 ## Target Third-party DOM Only From Owned Roots
 
-**Impact: CRITICAL (third-party 스타일링을 앱 전체로 새게 하지 않고 명시적 wrapper 소유로 제한함)**
+**Impact: CRITICAL (third-party 스타일링을 앱 전체로 새게 하지 않고 명시적 wrapper 소유로 제한합니다)**
 
 서드파티 라이브러리 내부 DOM 클래스(`.ant-*`, `.rc-*`,
 `.tippy-*`)는 프로젝트가 소유한 root block 아래에서만 타겟팅합니다.

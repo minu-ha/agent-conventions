@@ -1,24 +1,24 @@
 ---
 title: Extract Route Support Code Only When the Boundary Is Real
-titleKo: route support 코드는 경계가 실재할 때만 추출
+titleKo: route support 코드의 실재 경계 한정 추출
 impact: HIGH
-impactDescription: route 페이지의 일회성 frontmatter 로직이 generic 헬퍼 파일로 흩어지는 것을 막음
+impactDescription: route 페이지의 일회성 frontmatter 로직이 generic 헬퍼 파일로 흩어지는 것을 막습니다
 tags: responsibility, support-code, frontmatter, naming
 ---
 
 ## Extract Route Support Code Only When the Boundary Is Real
 
-**Impact: HIGH (route 페이지의 일회성 frontmatter 로직이 generic 헬퍼 파일로 흩어지는 것을 막음)**
+**Impact: HIGH (route 페이지의 일회성 frontmatter 로직이 generic 헬퍼 파일로 흩어지는 것을 막습니다)**
 
 Route page frontmatter support code should move into owner-named support modules only when the boundary is real.
 
-추출할 수 있는 것:
+추출 대상:
 
 - clear input/output data boundary
 - validation, auth, serialization, model building
 - shared route-family data loader
 
-Page file에 남길 것:
+Page file에 남기는 대상:
 
 - small one-off booleans
 - `Astro.props` destructuring

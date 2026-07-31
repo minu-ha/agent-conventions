@@ -1,14 +1,14 @@
 ---
 title: Do Not Confuse Static Labels with Server Data
-titleKo: 정적 라벨을 서버 데이터로 착각하지 않기
+titleKo: 정적 라벨과 서버 데이터의 혼동 금지
 impact: HIGH
-impactDescription: Figma의 고정 라벨과 섹션 제목을 데이터라는 이유로 방치하지 않게 함
+impactDescription: Figma의 고정 라벨과 섹션 제목을 데이터라는 이유로 방치하는 일을 막습니다
 tags: data, labels, copy
 ---
 
 ## Do Not Confuse Static Labels with Server Data
 
-**Impact: HIGH (Figma의 고정 라벨과 섹션 제목을 데이터라는 이유로 방치하지 않게 함)**
+**Impact: HIGH (Figma의 고정 라벨과 섹션 제목을 데이터라는 이유로 방치하는 일을 막습니다)**
 
 Figma static label을 서버 데이터라고 착각해서 맞추지 않는 것도 오류입니다.
 버튼 텍스트, column header, tab label, empty state,

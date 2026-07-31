@@ -1,14 +1,14 @@
 ---
 title: Use Discoverable Spec File Names
-titleKo: spec 파일 이름은 찾기 쉽게
+titleKo: 검색 가능한 spec 파일 이름 사용
 impact: HIGH
-impactDescription: 기능과 층위를 파일명에 직접 담아 spec 의 목적을 검색 가능하게 유지함
+impactDescription: 기능과 층위를 파일명에 직접 담아 spec의 목적을 검색 가능하게 유지합니다
 tags: filenames, discovery, levels
 ---
 
 ## Use Discoverable Spec File Names
 
-**Impact: HIGH (기능과 층위를 파일명에 직접 담아 spec 의 목적을 검색 가능하게 유지함)**
+**Impact: HIGH (기능과 층위를 파일명에 직접 담아 spec의 목적을 검색 가능하게 유지합니다)**
 
 Integration은 `*.spec.ts`, E2E는 `*.e2e.spec.ts`를 사용하고, 파일명에는 라우트나 기능 이름이 바로 보이게 유지합니다.
 `index.spec.ts`, `test.spec.ts`처럼 탐색이 어려운 이름은 금지합니다.

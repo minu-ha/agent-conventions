@@ -1,14 +1,14 @@
 ---
 title: Prefer Flat Files for Leaf Dynamic Routes
-titleKo: 말단 동적 route는 평평한 파일로
+titleKo: 말단 동적 route의 flat file 유지
 impact: HIGH
-impactDescription: route가 실제로 자식 route를 가질 때까지 동적 route 트리를 얕게 유지함
+impactDescription: route가 실제로 자식 route를 가질 때까지 동적 route 트리를 얕게 유지합니다
 tags: routing, dynamic-routes, folders, pages
 ---
 
 ## Prefer Flat Files for Leaf Dynamic Routes
 
-**Impact: HIGH (route가 실제로 자식 route를 가질 때까지 동적 route 트리를 얕게 유지함)**
+**Impact: HIGH (route가 실제로 자식 route를 가질 때까지 동적 route 트리를 얕게 유지합니다)**
 
 하위 route가 없는 dynamic page는 folder로 감싸지 말고 flat file로 둡니다.
 `index.astro` folder는 같은 resource 아래에 child route가 실제로 생겼을 때 사용합니다.

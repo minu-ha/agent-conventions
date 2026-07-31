@@ -1,14 +1,14 @@
 ---
 title: Define Build-time Collections in `src/content.config.ts`
-titleKo: 빌드 시점 컬렉션은 src/content.config.ts에 정의
+titleKo: 빌드 시점 컬렉션의 src/content.config.ts 정의
 impact: HIGH
-impactDescription: 콘텐츠 소유를 한곳에 모아 컬렉션 형태가 페이지마다 다시 정의되는 것을 막음
+impactDescription: 콘텐츠 소유를 한곳에 모아 컬렉션 형태가 페이지마다 다시 정의되는 것을 막습니다
 tags: content-collections, config, loaders
 ---
 
 ## Define Build-time Collections in `src/content.config.ts`
 
-**Impact: HIGH (콘텐츠 소유를 한곳에 모아 컬렉션 형태가 페이지마다 다시 정의되는 것을 막음)**
+**Impact: HIGH (콘텐츠 소유를 한곳에 모아 컬렉션 형태가 페이지마다 다시 정의되는 것을 막습니다)**
 
 build-time content collection 정의는 `src/content.config.ts`에서 한 번에 관리합니다.
 page 파일 안에서 glob, frontmatter parsing,

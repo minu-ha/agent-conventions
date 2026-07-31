@@ -1,14 +1,14 @@
 ---
 title: Follow the Declared Integration or E2E Writing Sequence
-titleKo: 정해진 integration·e2e 작성 순서를 따르기
+titleKo: integration·e2e 작성 순서 준수
 impact: MEDIUM
-impactDescription: 동작을 쓰기 전에 테스트 층위와 의존 경계를 먼저 분류하게 해 혼란스러운 setup 을 줄임
+impactDescription: 동작을 쓰기 전에 테스트 층위와 의존 경계를 먼저 분류하게 해 혼란스러운 setup을 줄입니다
 tags: workflow, writing-order, setup
 ---
 
 ## Follow the Declared Integration or E2E Writing Sequence
 
-**Impact: MEDIUM (동작을 쓰기 전에 테스트 층위와 의존 경계를 먼저 분류하게 해 혼란스러운 setup 을 줄임)**
+**Impact: MEDIUM (동작을 쓰기 전에 테스트 층위와 의존 경계를 먼저 분류하게 해 혼란스러운 setup을 줄입니다)**
 
 신규 테스트를 쓸 때는 먼저 Integration인지 E2E인지 결정하고, 그 레벨에 맞는 setup만 선언한 뒤,
 사용자 locator로 action을 작성하고, web-first assertion으로 결과를 검증합니다.
