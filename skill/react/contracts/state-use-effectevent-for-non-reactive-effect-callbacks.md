@@ -1,12 +1,12 @@
 # Use useEffectEvent for Non-reactive Effect Callbacks
 
-**Impact: MEDIUM-HIGH (최신 handler 로직은 읽으면서 effect는 실제 구독에만 반응하게 유지합니다)**
+**Impact: MEDIUM-HIGH (핸들러 로직은 최신으로 읽고 이펙트는 실제 구독에만 반응합니다)**
 
-effect 안에서 최신 prop이나 state를 읽어야 하지만 그 값 변화가 subscription 재설치를
+이펙트 안에서 최신 prop이나 상태를 읽어야 하지만 그 값 변화가 subscription 재설치를
 일으키면 안 되는 경우, ref hack 대신 `useEffectEvent`를 씁니다.
 
-event handler를 effect로 옮기라는 뜻이 아닙니다.
-실제 구독·연결 effect 안에서만 쓰고, 클릭·제출 같은 사용자 액션은 named handler에 둡니다.
+이벤트 핸들러를 이펙트로 옮기라는 뜻이 아닙니다.
+실제 구독·연결 이펙트 안에서만 쓰고, 클릭·제출 같은 사용자 액션은 이름 붙인 핸들러에 둡니다.
 
 **Requires selected:** `docs-require-jsdoc-on-key-declarations` · 함께 적용
 

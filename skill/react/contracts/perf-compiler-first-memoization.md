@@ -1,6 +1,6 @@
 # Prefer React Compiler Defaults Over Manual Memoization
 
-**Impact: MEDIUM-HIGH (검증된 효과 없이 노이즈만 늘리는 방어적 useMemo/useCallback을 막습니다)**
+**Impact: MEDIUM-HIGH (효과를 확인하지 않은 방어적 useMemo 와 useCallback 을 막습니다)**
 
 React Compiler가 처리하는 범위에서는 `useMemo`, `useCallback`을 기본적으로 쓰지 않습니다.
 

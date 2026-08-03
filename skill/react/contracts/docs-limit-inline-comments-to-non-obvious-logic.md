@@ -1,6 +1,6 @@
 # Limit Inline Comments to Non-obvious Logic
 
-**Impact: MEDIUM (코드를 해설하기보다 주석을 caveat, 제약, 부수효과 설명에 집중시킵니다)**
+**Impact: MEDIUM (코드를 해설하지 않고 주의점, 제약, 부수효과에 주석을 모읍니다)**
 
 함수 본문 안에서는 `//` 라인 주석을 씁니다.
 코드만 읽어서는 놓치기 쉬운 경우에만 남깁니다.

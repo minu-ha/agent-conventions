@@ -1,8 +1,8 @@
 ---
 title: Prefer Arrow Functions and Object Parameters for Complex Signatures
-titleKo: 복잡한 시그니처의 화살표 함수·객체 매개변수 적용
+titleKo: 시그니처가 복잡해지면 화살표 함수와 객체 매개변수를 씁니다
 impact: MEDIUM-HIGH
-impactDescription: 함수 선언과 다중 인자 계약을 더 쉽게 확장하고 수정할 수 있게 합니다
+impactDescription: 함수 선언과 여러 인자 계약을 넓히고 고치기 쉬워집니다
 appliesWhen:
   - React 인접 코드에 `function` 선언이 생길 때
   - 함수가 매개변수를 3개 이상 받을 때
@@ -13,7 +13,7 @@ tags: composition, functions, params
 
 ## Prefer Arrow Functions and Object Parameters for Complex Signatures
 
-**Impact: MEDIUM-HIGH (함수 선언과 다중 인자 계약을 더 쉽게 확장하고 수정할 수 있게 합니다)**
+**Impact: MEDIUM-HIGH (함수 선언과 여러 인자 계약을 넓히고 고치기 쉬워집니다)**
 
 함수는 기본적으로 화살표 함수로 선언하고, 매개변수가 3개 이상이거나 같은 계열 값이 함께 이동하면
 단일 객체 매개변수로 묶습니다.

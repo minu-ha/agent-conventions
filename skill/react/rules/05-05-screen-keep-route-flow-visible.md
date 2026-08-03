@@ -1,12 +1,12 @@
 ---
 title: Keep Route Entry Files Focused on Screen Flow
-titleKo: route entry 파일의 화면 흐름 중심 유지
+titleKo: 화면 진입 파일은 흐름 위주로 둡니다
 impact: HIGH
-impactDescription: route entry만 봐도 화면 흐름을 따라갈 수 있게 합니다
+impactDescription: 진입 파일만 봐도 화면 흐름을 따라갈 수 있습니다
 appliesWhen:
-  - route entry의 search·navigate·query·mutation·cross-section effect를 옮기거나 나눌 때
-  - page section 조립의 순서나 owner를 바꿀 때
-  - 제외: 같은 owner 안에서 표현만 바꾸는 경우
+  - 라우트 진입의 검색·navigate·질의·변경 요청·cross-section 이펙트를 옮기거나 나눌 때
+  - page 섹션 조립의 순서나 소유자를 바꿀 때
+  - 제외: 같은 소유자 안에서 표현만 바꾸는 경우
 reviewWith: >-
   screen-extract-local-section-components-for-runtime-boundaries, ownership-place-owner-files-in-role-folders
 tags: screen, routes, flow
@@ -14,15 +14,15 @@ tags: screen, routes, flow
 
 ## Keep Route Entry Files Focused on Screen Flow
 
-**Impact: HIGH (route entry만 봐도 화면 흐름을 따라갈 수 있게 합니다)**
+**Impact: HIGH (진입 파일만 봐도 화면 흐름을 따라갈 수 있습니다)**
 
-Route entry는 search, navigate, page query·mutation, cross-section effect와 render 조립을 보여줍니다.
-async·state·interaction 경계를 가진 section을 분리해도 이 흐름 제어 자체는 route entry에 남깁니다.
+Route 진입은 검색, navigate, page 질의·변경 요청, cross-section 이펙트와 렌더 조립을 보여줍니다.
+비동기·상태·interaction 경계를 가진 섹션을 분리해도 이 흐름 제어 자체는 라우트 진입에 남깁니다.
 
 소유자가 그대로인 변경은 대상이 아닙니다.
 
-- `query.select` shape, binding·alias 정리, derived-state effect를 render 계산으로 옮기는 것
-- 순수 type·payload builder·preset의 sibling `.ts` 이동. support-code 규칙이 담당합니다.
+- `query.select` shape, 바인딩·별칭 정리, derived-state 이펙트를 렌더 계산으로 옮기는 것
+- 순수 type·payload builder·기본 설정의 형제 `.ts` 이동. support-code 규칙이 담당합니다.
 
 **Incorrect (흐름보다 분해 자체가 목적이 됨):**
 
@@ -36,7 +36,7 @@ return (
 );
 ```
 
-**Correct (route entry에서 흐름이 보이고, 실제 경계가 있는 section만 분리):**
+**Correct (라우트 진입에서 흐름이 보이고, 실제 경계가 있는 섹션만 분리):**
 
 ```tsx
 const navigate = useNavigate();

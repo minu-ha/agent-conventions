@@ -1,8 +1,8 @@
 ---
 title: Avoid Silent Fallback Defaults and Ad-hoc Loading Branches
-titleKo: 암묵적 fallback 기본값과 즉석 loading 분기 금지
+titleKo: 기본값으로 덮거나 즉석 로딩 분기를 만들지 않습니다
 impact: HIGH
-impactDescription: 결측 데이터를 숨기지 않고 로딩 UX를 Suspense 또는 명시적 예외 처리 쪽으로 유도합니다
+impactDescription: 빠진 데이터를 숨기지 않고 로딩은 Suspense 나 명시적 처리로 보냅니다
 appliesWhen:
   - optional 응답에 `??`·`||` 기본값을 넣을 때
   - Suspense 화면 본문에 초기 loading return을 추가·변경할 때
@@ -15,10 +15,10 @@ tags: state, fallback, loading, suspense
 
 ## Avoid Silent Fallback Defaults and Ad-hoc Loading Branches
 
-**Impact: HIGH (결측 데이터를 숨기지 않고 로딩 UX를 Suspense 또는 명시적 예외 처리 쪽으로 유도합니다)**
+**Impact: HIGH (빠진 데이터를 숨기지 않고 로딩은 Suspense 나 명시적 처리로 보냅니다)**
 
 옵셔널 값에 `??`, `||`로 습관적인 기본값을 넣지 않습니다.
-Suspense query의 초기 blocking 로딩도 화면 본문에서 즉석 분기하지 않습니다.
+Suspense 질의의 초기 blocking 로딩도 화면 본문에서 즉석 분기하지 않습니다.
 결측값은 드러내고, 초기 로딩은 Suspense 경계나 상위 레이아웃에서 처리합니다.
 
 - `isPending`, `isFetching` 같은 상태는 기존 UI를 보조하는 좁은 용도로만 씁니다.

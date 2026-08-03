@@ -1,12 +1,12 @@
 ---
 title: Reuse Prop and API Contracts Before Creating New Types
-titleKo: 기존 prop·API 계약 우선 재사용
+titleKo: 새 타입을 만들기 전에 기존 prop 과 API 계약을 씁니다
 impact: HIGH
-impactDescription: 중복 타입 구조가 시간이 지나며 어긋나는 것을 막습니다
+impactDescription: 같은 구조를 두 번 선언해 시간이 지나며 어긋나는 것을 막습니다
 appliesWhen:
-  - Props callback 구현을 추가·변경할 때
-  - API 응답 기반 view type을 추가·변경하는데 기존 prop·API 계약과 같은 shape가 보일 때
-  - wrapper 컴포넌트 사용처에서 Props 타입을 참조할 때
+  - Props 콜백 구현을 추가·변경할 때
+  - API 응답 기반 화면 type을 추가·변경하는데 기존 prop·API 계약과 같은 shape가 보일 때
+  - 래퍼 컴포넌트 사용처에서 Props 타입을 참조할 때
 reviewWith: >-
   typescript/types-reuse-callback-signatures-from-existing-contracts,
   typescript/types-reuse-existing-contracts-before-new-types
@@ -15,12 +15,12 @@ tags: typing, api, props
 
 ## Reuse Prop and API Contracts Before Creating New Types
 
-**Impact: HIGH (중복 타입 구조가 시간이 지나며 어긋나는 것을 막습니다)**
+**Impact: HIGH (같은 구조를 두 번 선언해 시간이 지나며 어긋나는 것을 막습니다)**
 
 Props 콜백 구현 시에는 Props 시그니처를 재사용하고, API 응답 타입이 이미 있으면 새 인터페이스를 만들지 않습니다.
 필요하면 `Pick`, `Omit`, indexed access 같은 파생 타입으로 좁힙니다.
-`Ui*` wrapper를 쓸 때는 라이브러리 원본 Props가 아니라 wrapper가 노출한 `Ui*Props`를 참조합니다.
-wrapper가 의도적으로 좁히거나 보강한 계약이 사용처로 새지 않게 하려는 것입니다.
+`Ui*` 래퍼를 쓸 때는 라이브러리 원본 Props가 아니라 래퍼가 노출한 `Ui*Props`를 참조합니다.
+래퍼가 의도적으로 좁히거나 보강한 계약이 사용처로 새지 않게 하려는 것입니다.
 
 **Incorrect (같은 계약을 새 타입으로 다시 정의):**
 

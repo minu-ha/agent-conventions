@@ -1,28 +1,28 @@
 ---
 title: Avoid Boolean Prop Proliferation in Shared Components
-titleKo: 공용 컴포넌트의 boolean prop 증식 방지
+titleKo: 공용 컴포넌트에 boolean prop 을 늘리지 않습니다
 impact: HIGH
-impactDescription: 공용 컴포넌트가 숨은 variant 조합을 쌓지 않고 명시적인 구조를 유지하게 합니다
+impactDescription: 공용 컴포넌트가 숨은 조합을 쌓지 않고 구조를 드러냅니다
 appliesWhen:
-  - 여러 곳에서 쓰는 shared component에 boolean mode·visibility prop을 추가할 때
+  - 여러 곳에서 쓰는 공용 컴포넌트에 boolean mode·표시 prop을 추가할 때
   - 기존 boolean prop 조합과 JSX 분기가 늘어날 때
 tags: composition, props, variants, component-design
 ---
 
 ## Avoid Boolean Prop Proliferation in Shared Components
 
-**Impact: HIGH (공용 컴포넌트가 숨은 variant 조합을 쌓지 않고 명시적인 구조를 유지하게 합니다)**
+**Impact: HIGH (공용 컴포넌트가 숨은 조합을 쌓지 않고 구조를 드러냅니다)**
 
-여러 파일과 레이어에서 재사용되는 shared component에 `isCompact`, `isEditing`, `showSearch` 같은
+여러 파일과 레이어에서 재사용되는 공용 컴포넌트에 `isCompact`, `isEditing`, `showSearch` 같은
 boolean prop을 계속 추가하지 않습니다.
 boolean이 늘어날수록 가능한 조합이 급증하고, JSX 분기와 스타일 조건도 함께 불어납니다.
 
-- route entry 안의 일회성 분기는 로컬에서 유지해도 됩니다.
-- shared `ui`나 `widget`는 explicit variant component나 compound component로 드러냅니다.
-- `.Root` 같은 namespaced part 문법은 권장 예시일 뿐입니다.
+- 라우트 진입 안의 일회성 분기는 로컬에서 유지해도 됩니다.
+- 공용 `ui`나 `widget`는 explicit 변형 컴포넌트나 합성 컴포넌트로 드러냅니다.
+- `.Root` 같은 namespaced 부품 문법은 권장 예시일 뿐입니다.
   본질은 boolean을 없애고 구조를 명시적으로 드러내는 데 있습니다.
 
-**Incorrect (boolean prop 조합으로 shared component가 비대해짐):**
+**Incorrect (boolean prop 조합으로 공용 컴포넌트가 비대해짐):**
 
 ```tsx
 export interface WgEntryToolbarProps {
@@ -43,7 +43,7 @@ export const WgEntryToolbar = (props: WgEntryToolbarProps) => {
 };
 ```
 
-**Correct (variant를 explicit component와 stateless compound component로 분리):**
+**Correct (변형을 explicit 컴포넌트와 stateless 합성 컴포넌트로 분리):**
 
 ```tsx
 const WgEntryToolbarRoot = (props: { children: ReactNode }) => {

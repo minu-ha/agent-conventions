@@ -1,8 +1,8 @@
 ---
 title: Keep UI, Widget, and Page Ownership Separate
-titleKo: ui·widget·page 소유 레이어 분리
+titleKo: 컴포넌트를 ui, widget, page 소유 레이어로 나눕니다
 impact: CRITICAL
-impactDescription: 공용 책임과 화면 전용 책임이 같은 레이어로 섞이는 것을 막습니다
+impactDescription: 공용 책임과 화면 전용 책임이 같은 레이어에 섞이지 않습니다
 appliesWhen:
   - 컴포넌트를 ui·widget·page 중 어느 소유 레이어에 둘지 정할 때
   - 컴포넌트를 레이어 사이에서 옮기거나 공용화할 때
@@ -12,19 +12,19 @@ tags: ownership, ui, widget, page, naming
 
 ## Keep UI, Widget, and Page Ownership Separate
 
-**Impact: CRITICAL (공용 책임과 화면 전용 책임이 같은 레이어로 섞이는 것을 막습니다)**
+**Impact: CRITICAL (공용 책임과 화면 전용 책임이 같은 레이어에 섞이지 않습니다)**
 
 컴포넌트는 소유 레이어를 이름으로 드러냅니다.
 
 | 레이어 | 책임 | 파일 · 심볼 · slug |
 | --- | --- | --- |
-| `ui` | 도메인을 모르는 순수 view | `ui-button.tsx` · `UiButton` · `ui_button` |
+| `ui` | 도메인을 모르는 순수 화면 | `ui-button.tsx` · `UiButton` · `ui_button` |
 | `widget` | 화면 조립을 전제하지 않는 공용 조합 | `wg-chart.tsx` · `WgChart` · `wg_chart` |
-| `page` | 한 화면 안에서만 쓰이는 shell과 component | `pg-detail.tsx` · `PgDetail` · `pg_detail` |
+| `page` | 한 화면 안에서만 쓰이는 shell과 컴포넌트 | `pg-detail.tsx` · `PgDetail` · `pg_detail` |
 
-세 레이어 모두 파일명과 심볼에 계층 prefix를 붙이고 예외를 두지 않습니다.
+세 레이어 모두 파일명과 심볼에 계층 접두사를 붙이고 예외를 두지 않습니다.
 폴더에는 붙이지 않습니다. 상위 계층 폴더가 이미 계층을 말합니다.
-slug에서는 prefix가 말하는 부분을 반복하지 않습니다.
+slug에서는 접두사가 말하는 부분을 반복하지 않습니다.
 
 레이어 판정은 두 축으로 갈립니다.
 
@@ -40,7 +40,7 @@ slug에서는 prefix가 말하는 부분을 반복하지 않습니다.
 사용 횟수는 판정 기준이 아닙니다.
 한 화면에서만 쓰여도 맥락 독립이면 `widget`이고, 사용 횟수로 판정하면 쓰임이 변할 때마다 폴더를 옮겨 다닙니다.
 
-**Incorrect (view 레이어와 화면 전용 로직이 섞임):**
+**Incorrect (화면 레이어와 화면 전용 로직이 섞임):**
 
 ```tsx
 // ui/button/ui-delete-entry-button.tsx
@@ -51,7 +51,7 @@ const UiDeleteEntryButton = () => {
 };
 ```
 
-**Incorrect (화면 컴포넌트에만 계층 prefix를 빼먹음):**
+**Incorrect (화면 컴포넌트에만 계층 접두사를 빼먹음):**
 
 ```tsx
 // page/detail/component/spike-pattern-panel.tsx
@@ -93,7 +93,7 @@ export const WgEntryToolbar = (props: WgEntryToolbarProps) => {
 };
 ```
 
-**Correct (맥락 독립·도메인 인지 부품은 widget으로 올림):**
+**Correct (맥락 독립·도메인 인지 부품은 widget 으로 올림):**
 
 ```tsx
 // widget/spike-legend-glyph/wg-spike-legend-glyph.tsx
@@ -103,7 +103,7 @@ export const WgSpikeLegendGlyph = (props: WgSpikeLegendGlyphProps) => {
 };
 ```
 
-**Correct (화면 조립을 전제하는 코드는 화면 레이어에 prefix를 붙여 남김):**
+**Correct (화면 조립을 전제하는 코드는 화면 레이어에 접두사를 붙여 남김):**
 
 ```tsx
 // page/entries/component/pg-delete-entry-button.tsx

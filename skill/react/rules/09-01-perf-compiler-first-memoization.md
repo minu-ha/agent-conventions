@@ -1,8 +1,8 @@
 ---
 title: Prefer React Compiler Defaults Over Manual Memoization
-titleKo: 수동 memoization 대신 React Compiler 기본값 사용
+titleKo: 직접 메모이제이션하지 않고 React Compiler 에 맡깁니다
 impact: MEDIUM-HIGH
-impactDescription: 검증된 효과 없이 노이즈만 늘리는 방어적 useMemo/useCallback을 막습니다
+impactDescription: 효과를 확인하지 않은 방어적 useMemo 와 useCallback 을 막습니다
 appliesWhen:
   - `useMemo`·`useCallback`을 추가하거나 제거할 때
   - 참조 동일성·실측 병목·무거운 deferred 계산을 이유로 수동 memoization을 검토할 때
@@ -11,7 +11,7 @@ tags: state, react, memoization
 
 ## Prefer React Compiler Defaults Over Manual Memoization
 
-**Impact: MEDIUM-HIGH (검증된 효과 없이 노이즈만 늘리는 방어적 useMemo/useCallback을 막습니다)**
+**Impact: MEDIUM-HIGH (효과를 확인하지 않은 방어적 useMemo 와 useCallback 을 막습니다)**
 
 React Compiler가 처리하는 범위에서는 `useMemo`, `useCallback`을 기본적으로 쓰지 않습니다.
 
