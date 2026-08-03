@@ -22,16 +22,15 @@ tags: third-party, wrappers, nesting
 - 항상 owned root class block을 먼저 엽니다.
 - root 없는 `.ant-*` 단독 selector는 금지합니다.
 - `.pg_* .ant-*` 같은 one-line chaining보다 root block 안의 `& .ant-*`를 사용합니다.
-- owned root가 이미 instance scope를 제공하고 target class가 직접 식별 가능하면
-  `.ant-tree` 같은 중간 library root를 반복하지 않습니다.
+- owned root가 이미 instance를 한정하므로 `.ant-tree` 같은 중간 library root를 반복하지 않습니다.
 
-combinator 상한은 `selector-avoid-deep-descendant-dependencies`가 정합니다.
-third-party DOM은 그 표에서 2까지 허용되고, 2를 넘겨야 하면 라이브러리가 그 구조를 강제한다는 근거를
-해당 선언 바로 위 주석 한 줄로 남깁니다.
+결합자 상한은 `selector-avoid-deep-descendant-dependencies`가 정합니다.
+third-party DOM은 그 표에서 2까지 허용되고, 2를 쓰려면 왜 1로 안 되는지를 해당 선언 바로 위 주석 한 줄로 남깁니다.
+같은 라이브러리 클래스가 여러 계층에 나타나 겨냥이 모호할 때가 대표적인 근거입니다.
 
 이 예외는 third-party DOM path에만 적용됩니다. project-owned class끼리의 깊은 descendant coupling은 여전히 금지입니다.
 
-**Incorrect (루트 없이 타겟팅하거나 nested 안에서 다시 nested를 열어 의미를 흐림):**
+**Incorrect (루트 없이 타겟팅하거나 중간 root를 반복하거나 nested 안에서 다시 nested를 엶):**
 
 ```css
 .ant-tree-node-content-wrapper {
@@ -39,7 +38,7 @@ third-party DOM은 그 표에서 2까지 허용되고, 2를 넘겨야 하면 라
 }
 
 .pg_treePanel__root .ant-tree-title {
-	color: #999;
+	color: #8c8c8c;
 }
 
 .pg_treePanel__root {
@@ -55,26 +54,48 @@ third-party DOM은 그 표에서 2까지 허용되고, 2를 넘겨야 하면 라
 }
 ```
 
-**Correct (항상 owned root block을 열고, 그 안에서 third-party DOM path를 nested로 적음):**
+**Correct (owned root가 instance를 한정하므로 중간 root 없이 target을 직접 겨냥):**
 
 ```css
 .pg_treePanel__root {
 	& .ant-tree-node-content-wrapper {
 		display: inline-flex;
+		border-radius: 4px;
 	}
 
 	& .ant-tree-title {
-		color: #999;
+		color: #8c8c8c;
 	}
 
-	& .ant-tree-switcher {
-		color: var(--app-color-text-muted);
+	& .ant-tree-iconEle {
+		display: inline-flex;
 	}
 }
+```
 
+**Correct (같은 클래스가 header와 body 양쪽에 있어 겨냥이 모호할 때만 상한 2를 쓰고 근거를 남김):**
+
+```css
+.pg_orderTable__root {
+	/* .ant-table-cell은 thead와 tbody 양쪽에 붙어서 header만 겨냥하려면 1단계로 안 된다 */
+	& .ant-table-thead .ant-table-cell {
+		font-weight: 600;
+		background: #fafafa;
+	}
+
+	& .ant-table-cell {
+		padding: 8px 12px;
+	}
+}
+```
+
+**Correct (중첩된 자손까지 걸리면 안 될 때 direct child로 좁힘):**
+
+```css
 .pg_treePanel__toolbar {
-	& > .ant-btn-icon {
-		color: var(--app-color-text-muted));
+	/* 툴바 직계 버튼만 대상이다. 트리 노드 안의 버튼 아이콘은 제외한다 */
+	& > .ant-btn > .ant-btn-icon {
+		color: #8c8c8c;
 	}
 }
 ```

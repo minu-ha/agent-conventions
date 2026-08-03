@@ -1,7 +1,7 @@
 # CSS 컨벤션 Rule Index
 
 - Skill: `css`
-- Routing digest: `sha256:0f967f114f2d4e24642b067a2d2535eb9c89996c76c5da773d54ddcc639d9afa`
+- Routing digest: `sha256:20e61dedfedb0185a77776a11fca000440f6a201d259b9327162d75d9e8db42c`
 
 ## Direct Companions
 
@@ -28,4 +28,3 @@
 - C17 | values-separate-domain-state-modifiers-from-dom-interaction-states | app/domain state modifier와 hover·focus·disabled 같은 DOM interaction state를 추가·변경할 때. focus ring을 수정할 때. | reviewWith: composition-do-not-build-structural-variants-with-modifiers
 - C18 | values-tokenize-repeated-visual-values | 여러 파일이 같은 색·간격·radius·타이포·그림자 값을 쓸 때. 새 CSS custom property를 선언할 때. | reviewWith: values-always-provide-css-variable-fallbacks
 - C19 | organization-keep-style-files-owned-by-one-component-or-route | stylesheet를 새로 만들거나 이동·분할·병합해 한 파일에 component, route, document, local, shared owner가 섞일 가능성이 있을 때.
-- C20 | organization-review-banned-css-patterns-before-finishing | CSS 또는 TSX class contract 변경이 완료 단계에 들어갈 때. | completionGate

@@ -37,7 +37,7 @@
     - 2.1 [Compose Classes With `clsx()`](#21-compose-classes-with-clsx)
     - 2.2 [Do Not Use Modifiers for One-off Structural Patches](#22-do-not-use-modifiers-for-one-off-structural-patches)
     - 2.3 [Keep Classes Single-purpose](#23-keep-classes-single-purpose)
-    - 2.4 [Style `Ui*` Components Through Their Root Class Contract](#24-style-ui-components-through-their-root-class-contract)
+    - 2.4 [Expose Only a Root Class on `Ui*` Components](#24-expose-only-a-root-class-on-ui-components)
 3. [Selectors and Nesting Boundaries](#3-selectors-and-nesting-boundaries) — **CRITICAL**
     - 3.1 [Avoid Deep Descendant Selector Dependencies](#31-avoid-deep-descendant-selector-dependencies)
     - 3.2 [Limit Nesting Block Depth](#32-limit-nesting-block-depth)
@@ -47,10 +47,9 @@
     - 4.1 [Keep Layout Intent Explicit](#41-keep-layout-intent-explicit)
     - 4.2 [Declare Core Tokens Once and Fall Back Everywhere Else](#42-declare-core-tokens-once-and-fall-back-everywhere-else)
     - 4.3 [Separate Domain State Modifiers From DOM Interaction States](#43-separate-domain-state-modifiers-from-dom-interaction-states)
-    - 4.4 [Use Global Tokens and Do Not Invent Local Ones](#44-use-global-tokens-and-do-not-invent-local-ones)
+    - 4.4 [Use Global Tokens and Do Not Create Local Ones](#44-use-global-tokens-and-do-not-create-local-ones)
 5. [File Organization and Guardrails](#5-file-organization-and-guardrails) — **MEDIUM**
     - 5.1 [Keep Style Files Owned by One Component or Route Surface](#51-keep-style-files-owned-by-one-component-or-route-surface)
-    - 5.2 [Review Banned CSS Patterns Before Finishing](#52-review-banned-css-patterns-before-finishing)
 
 ---
 
@@ -466,7 +465,7 @@ modifier가 상태를 표현할 자격이 있는지는 `composition-do-not-build
 <div className={clsx("pg_catalogIndex__listButton", isActive && "pg_catalogIndex__listButton--active")} />
 ```
 
-### 2.4 Style `Ui*` Components Through Their Root Class Contract
+### 2.4 Expose Only a Root Class on `Ui*` Components
 
 **Rule:** `C10` · `composition-style-ui-components-through-owned-wrappers`
 
@@ -474,24 +473,42 @@ modifier가 상태를 표현할 자격이 있는지는 `composition-do-not-build
 
 **Review with:** `selector-target-third-party-dom-from-owned-roots`
 
-**Impact: HIGH (공용 UI wrapper의 내부 DOM이 사용처에서 임의로 스타일링되는 것을 막습니다)**
+**Impact: HIGH (wrapper가 내부 DOM 스타일링 창구를 여러 개 열어 사용처가 내부 구조에 묶이는 것을 막습니다)**
 
-`Ui*` wrapper는 root `className`을 받는 것이 기본 계약입니다.
-레이아웃 참여, spacing, 크기처럼 root에 걸리는 스타일은 `<UiCollapse className={clsx("pg_x__collapse")} />`처럼
-그 계약으로 직접 줍니다.
+`Ui*` wrapper가 여는 스타일 창구는 root `className` 하나입니다.
+사용처는 그 클래스로 배치, 여백, 크기처럼 root에 걸리는 스타일만 줍니다.
 
-래핑 `div`를 습관적으로 만들지 않습니다.
-DOM 노드가 늘어 flex·grid child 수가 바뀌고, 역할 없는 wrapper class가 생겨
-`naming-name-elements-and-modifiers-by-role`과 부딪힙니다.
+`headerClassName`, `itemClassName` 같은 slot class prop을 늘리지 않습니다.
+창구가 늘어나면 사용처가 내부 구조를 알게 되고, 내부가 바뀔 때 사용처가 함께 깨집니다.
 
-wrapper는 받은 `className`을 root 노드에만 붙입니다.
-내부 노드에 forward하면 소비자가 내부 구조를 알게 되고, 그 구조가 바뀔 때 사용처가 함께 깨집니다.
-내부 노드를 스타일링 대상으로 열어야 하면 `headerClassName`처럼 이름 있는 slot prop을 명시적으로 노출합니다.
+내부 모양이 화면마다 달라야 하면 **wrapper가 variant prop을 받아 내부에서 결정**합니다.
+사용처는 `variant="compact"`처럼 의도만 넘기고 어떤 노드가 어떻게 바뀌는지는 모릅니다.
 
-소비자는 slot prop이 없는 내부 노드를 owner root class 아래에서만 좁힙니다.
-방법은 `selector-target-third-party-dom-from-owned-roots`가 정합니다.
-wrapper가 root `className`을 아예 받지 않으면 wrapper에 계약을 추가하는 것이 먼저이고,
-래핑 `div`는 그것이 불가능할 때의 마지막 수단입니다.
+- wrapper는 받은 `className`을 root 노드에만 붙이고 내부 노드로 forward하지 않습니다.
+- 래핑 `div`를 습관적으로 만들지 않습니다. 부모의 flex·grid 자식 수가 바뀌고 역할 없는 클래스가 생깁니다.
+- root `className`을 받지 않는 wrapper면 그 계약을 추가하는 것이 먼저이고, 래핑은 마지막 수단입니다.
+
+내부 노드를 직접 손대야 하는 경우는 `selector-target-third-party-dom-from-owned-roots`가 다룹니다.
+
+**Incorrect (내부 노드마다 slot class prop을 열어 창구를 늘림):**
+
+```tsx
+export interface UiCollapseProps {
+	className?: string;
+	headerClassName?: string;
+	itemClassName?: string;
+	contentClassName?: string;
+}
+```
+
+**Incorrect (wrapper가 받은 className을 내부 노드로 forward):**
+
+```tsx
+export const UiCollapse = (props: UiCollapseProps) => {
+	const { className, items } = props;
+	return <AntCollapse items={items} itemClassName={className} />;
+};
+```
 
 **Incorrect (래핑 div로 root 스타일을 우회):**
 
@@ -501,37 +518,36 @@ wrapper가 root `className`을 아예 받지 않으면 wrapper에 계약을 추�
 </div>
 ```
 
-**Incorrect (wrapper가 받은 className을 내부 노드로 forward):**
-
-```tsx
-export const UiCollapse = (props: UiCollapseProps) => {
-	const { className, items } = props;
-	return <AntCollapse items={items} rootClassName="" expandIconPosition="end" itemClassName={className} />;
-};
-```
-
-**Correct (root 계약으로 root 스타일을 주고, 내부는 owner root 안에서만 좁힘):**
-
-```tsx
-<UiCollapse className={clsx("pg_postFilterDialog__collapse")} />
-```
-
-```css
-.pg_postFilterDialog__collapse {
-	margin-block-start: var(--app-space-3);
-
-	& .ant-collapse-item {
-		border-radius: var(--mk-size-radius-card, 10px);
-	}
-}
-```
-
-**Correct (내부 노드를 열려면 이름 있는 slot prop으로 노출):**
+**Correct (root className 하나만 열고 내부 모양은 variant로 받음):**
 
 ```tsx
 export interface UiCollapseProps {
 	className?: string;
-	headerClassName?: string;
+	variant?: "default" | "compact";
+}
+
+export const UiCollapse = (props: UiCollapseProps) => {
+	const { className, variant = "default" } = props;
+
+	return (
+		<AntCollapse
+			className={clsx("ui_collapse__root", variant === "compact" && "ui_collapse__root--compact")}
+			rootClassName={className}
+		/>
+	);
+};
+```
+
+**Correct (사용처는 root 스타일만 주고 내부 의도는 prop으로 넘김):**
+
+```tsx
+<UiCollapse className={clsx("pg_postFilterDialog__collapse")} variant="compact" />
+```
+
+```css
+.pg_postFilterDialog__collapse {
+	margin-top: 16px;
+	width: 100%;
 }
 ```
 
@@ -575,7 +591,7 @@ export interface UiCollapseProps {
 각 경우의 상세는 `reviewWith` 규칙이 담당합니다.
 첫 항목은 CSS에 부모 선택자가 없어 생기는 정상 소비이고, 도메인 상태까지 얹지 말고 자손 modifier로 옮깁니다.
 
-상한을 넘으면 자손 modifier로 펴기, 조상이 custom property를 바꾸기, 예외 근거 주석, 리팩터 순으로 시도합니다.
+상한을 넘으면 자손 modifier로 펴기, 예외 근거 주석, 리팩터 순으로 시도합니다.
 
 **Incorrect (요소 네 개를 훑음):**
 
@@ -601,7 +617,7 @@ export interface UiCollapseProps {
 }
 
 .pg_catalogIndex__detailHeader {
-	gap: var(--app-space-2);
+	gap: 8px;
 }
 ```
 
@@ -610,7 +626,7 @@ export interface UiCollapseProps {
 ```css
 .pg_spikePanel__spreadButton {
 	&:hover .pg_spikePanel__spreadBox {
-		border-color: var(--app-color-accent);
+		border-color: #9fadc7;
 	}
 }
 
@@ -619,19 +635,15 @@ export interface UiCollapseProps {
 }
 ```
 
-**Correct (조상 상태를 custom property로 내려 결합자 0으로 유지):**
+**Correct (결합자를 쓸 필요가 없으면 각 요소에 직접 둠):**
 
 ```css
-.pg_spikePanel__spreadButton {
-	--pg-spike-box-border: var(--app-color-border);
-
-	&:hover {
-		--pg-spike-box-border: var(--app-color-accent);
-	}
+.pg_spikePanel__spreadBox {
+	border: 2px solid #ced4da;
 }
 
-.pg_spikePanel__spreadBox {
-	border: 2px solid var(--pg-spike-box-border);
+.pg_spikePanel__spreadBox--checked {
+	border-color: #9fadc7;
 }
 ```
 
@@ -693,7 +705,7 @@ raw HTML에는 클래스를 붙일 수 없어서 element selector가 유일한 �
 ```css
 .pg_spikePanel__spreadButton {
 	&:hover .pg_spikePanel__spreadBox {
-		border-color: var(--app-color-accent);
+		border-color: #9fadc7;
 	}
 }
 
@@ -726,16 +738,15 @@ raw HTML에는 클래스를 붙일 수 없어서 element selector가 유일한 �
 - 항상 owned root class block을 먼저 엽니다.
 - root 없는 `.ant-*` 단독 selector는 금지합니다.
 - `.pg_* .ant-*` 같은 one-line chaining보다 root block 안의 `& .ant-*`를 사용합니다.
-- owned root가 이미 instance scope를 제공하고 target class가 직접 식별 가능하면
-  `.ant-tree` 같은 중간 library root를 반복하지 않습니다.
+- owned root가 이미 instance를 한정하므로 `.ant-tree` 같은 중간 library root를 반복하지 않습니다.
 
-combinator 상한은 `selector-avoid-deep-descendant-dependencies`가 정합니다.
-third-party DOM은 그 표에서 2까지 허용되고, 2를 넘겨야 하면 라이브러리가 그 구조를 강제한다는 근거를
-해당 선언 바로 위 주석 한 줄로 남깁니다.
+결합자 상한은 `selector-avoid-deep-descendant-dependencies`가 정합니다.
+third-party DOM은 그 표에서 2까지 허용되고, 2를 쓰려면 왜 1로 안 되는지를 해당 선언 바로 위 주석 한 줄로 남깁니다.
+같은 라이브러리 클래스가 여러 계층에 나타나 겨냥이 모호할 때가 대표적인 근거입니다.
 
 이 예외는 third-party DOM path에만 적용됩니다. project-owned class끼리의 깊은 descendant coupling은 여전히 금지입니다.
 
-**Incorrect (루트 없이 타겟팅하거나 nested 안에서 다시 nested를 열어 의미를 흐림):**
+**Incorrect (루트 없이 타겟팅하거나 중간 root를 반복하거나 nested 안에서 다시 nested를 엶):**
 
 ```css
 .ant-tree-node-content-wrapper {
@@ -743,7 +754,7 @@ third-party DOM은 그 표에서 2까지 허용되고, 2를 넘겨야 하면 라
 }
 
 .pg_treePanel__root .ant-tree-title {
-	color: #999;
+	color: #8c8c8c;
 }
 
 .pg_treePanel__root {
@@ -759,26 +770,48 @@ third-party DOM은 그 표에서 2까지 허용되고, 2를 넘겨야 하면 라
 }
 ```
 
-**Correct (항상 owned root block을 열고, 그 안에서 third-party DOM path를 nested로 적음):**
+**Correct (owned root가 instance를 한정하므로 중간 root 없이 target을 직접 겨냥):**
 
 ```css
 .pg_treePanel__root {
 	& .ant-tree-node-content-wrapper {
 		display: inline-flex;
+		border-radius: 4px;
 	}
 
 	& .ant-tree-title {
-		color: #999;
+		color: #8c8c8c;
 	}
 
-	& .ant-tree-switcher {
-		color: var(--app-color-text-muted);
+	& .ant-tree-iconEle {
+		display: inline-flex;
 	}
 }
+```
 
+**Correct (같은 클래스가 header와 body 양쪽에 있어 겨냥이 모호할 때만 상한 2를 쓰고 근거를 남김):**
+
+```css
+.pg_orderTable__root {
+	/* .ant-table-cell은 thead와 tbody 양쪽에 붙어서 header만 겨냥하려면 1단계로 안 된다 */
+	& .ant-table-thead .ant-table-cell {
+		font-weight: 600;
+		background: #fafafa;
+	}
+
+	& .ant-table-cell {
+		padding: 8px 12px;
+	}
+}
+```
+
+**Correct (중첩된 자손까지 걸리면 안 될 때 direct child로 좁힘):**
+
+```css
 .pg_treePanel__toolbar {
-	& > .ant-btn-icon {
-		color: var(--app-color-text-muted));
+	/* 툴바 직계 버튼만 대상이다. 트리 노드 안의 버튼 아이콘은 제외한다 */
+	& > .ant-btn > .ant-btn-icon {
+		color: #8c8c8c;
 	}
 }
 ```
@@ -804,8 +837,8 @@ third-party DOM은 그 표에서 2까지 허용되고, 2를 넘겨야 하면 라
 - pseudo-class를 top-level selector로 다시 열지 않습니다.
 - 도메인 상태를 `:not(.--modifier)`로 뒤집지 않습니다.
   읽는 사람이 부정 조건을 뒤집어야 하고 combinator 예산도 함께 먹습니다. 예외는 자손 modifier로 옮깁니다.
-- DOM state가 자손을 바꿔야 하면 조상 block에서 custom property를 바꾸고 자손이 그 값을 읽습니다.
-- `.foo:hover .foo__icon`처럼 project-owned descendant coupling으로 상태를 전달하지 않습니다.
+- 조상의 DOM state가 자손 모양을 바꿔야 하면 조상 block 안에서 결합자 1개로 자손을 겨냥합니다.
+  CSS에 부모 선택자가 없어 생기는 정상 소비이고, 상한은 `selector-avoid-deep-descendant-dependencies`가 정합니다.
 
 base/modifier 배치와 focus 접근성은 `values-separate-domain-state-modifiers-from-dom-interaction-states`가 담당합니다.
 
@@ -813,7 +846,7 @@ base/modifier 배치와 focus 접근성은 `values-separate-domain-state-modifie
 
 ```css
 .wg_siteHeader__brandLink:hover {
-	color: var(--mk-color-link-hover, #0958d9);
+	color: #0958d9;
 }
 
 .wg_siteHeader__brandLink:hover .wg_siteHeader__brandMark {
@@ -822,12 +855,12 @@ base/modifier 배치와 focus 접근성은 `values-separate-domain-state-modifie
 
 .pg_assetIndex__card {
 	&[aria-selected="true"] {
-		border-color: var(--app-color-accent);
+		border-color: #1677ff;
 	}
 }
 
 .pg_assetIndex__card:not(.pg_assetIndex__card--checked) .pg_assetIndex__cardBox {
-	border-color: var(--app-color-border);
+	border-color: #d9d9d9;
 }
 ```
 
@@ -835,17 +868,19 @@ base/modifier 배치와 focus 접근성은 `values-separate-domain-state-modifie
 
 ```css
 .wg_siteHeader__brandLink {
-	--wg-site-header-brand-mark-transform: translateY(1px);
-	color: var(--mk-color-link, #1677ff);
+	color: #1677ff;
 
 	&:hover {
-		--wg-site-header-brand-mark-transform: translateY(1px) rotate(-2deg);
-		color: var(--mk-color-link-hover, #0958d9);
+		color: #0958d9;
+	}
+
+	&:hover .wg_siteHeader__brandMark {
+		transform: rotate(-2deg);
 	}
 }
 
 .wg_siteHeader__brandMark {
-	transform: var(--wg-site-header-brand-mark-transform);
+	transform: translateY(1px);
 }
 
 .pg_assetIndex__cardButton {
@@ -861,7 +896,7 @@ base/modifier 배치와 focus 접근성은 `values-separate-domain-state-modifie
 }
 
 .pg_assetIndex__card--selected {
-	border-color: var(--app-color-accent);
+	border-color: #1677ff;
 }
 ```
 
@@ -1034,7 +1069,7 @@ modifier가 켜진 경우에만 interaction이 달라져야 한다는 제품 요
 }
 ```
 
-### 4.4 Use Global Tokens and Do Not Invent Local Ones
+### 4.4 Use Global Tokens and Do Not Create Local Ones
 
 **Rule:** `C18` · `values-tokenize-repeated-visual-values`
 
@@ -1042,22 +1077,21 @@ modifier가 켜진 경우에만 interaction이 달라져야 한다는 제품 요
 
 **Review with:** `values-always-provide-css-variable-fallbacks`
 
-**Impact: MEDIUM-HIGH (공용 시각 값은 전역 토큰으로 모으고 값 재사용 목적의 지역 변수는 늘리지 않습니다)**
+**Impact: MEDIUM-HIGH (공용 시각 값은 전역 토큰으로 모으고 그 밖의 값은 선언 자리에 그대로 두게 합니다)**
 
 판정 기준은 **파일 경계**입니다.
 
 | 반복 범위 | 처리 |
 | --- | --- |
 | 여러 파일 | 전역 core token을 쓰거나, 없으면 core token 목록에 추가를 검토합니다 |
-| 한 파일 안 | 값을 그대로 둡니다. 지역 변수를 만들지 않습니다 |
+| 한 파일 안 | 값을 그대로 둡니다 |
 
-같은 파일 안에서 `8px`이 세 번 나온다고 지역 custom property를 만들지 않습니다.
-core token 목록에 없는 변수는 `values-always-provide-css-variable-fallbacks`에 따라 fallback이 필요해서
-`var(--pg-detail-gap, 8px)`처럼 값이 결국 사용처에 남습니다.
-읽는 사람은 변수 선언을 한 번 더 찾아가야 하고, 값을 바꿀 지점은 여전히 여러 곳입니다.
+**지역 custom property는 만들지 않습니다.**
+core token 목록에 없는 변수는 fallback이 필요해서 값이 결국 사용처에 남습니다.
+읽는 사람은 선언을 한 번 더 찾아가야 하는데 바꿀 지점은 여전히 여러 곳이라 얻는 것이 없습니다.
 
-지역 custom property는 값 재사용이 아니라 **조상에서 자손으로 상태를 전달할 때만** 씁니다.
-그 용도는 `selector-avoid-deep-descendant-dependencies`가 결합자를 줄이는 수단으로 인정합니다.
+조상 상태를 자손에 전달할 때도 변수를 쓰지 않고 결합자 하나로 자손을 겨냥합니다.
+그 상한은 `selector-avoid-deep-descendant-dependencies`가 정합니다.
 
 **Incorrect (한 파일 안 반복을 지역 변수로 감쌈):**
 
@@ -1069,6 +1103,22 @@ core token 목록에 없는 변수는 `values-always-provide-css-variable-fallba
 
 .pg_catalogIndex__footer {
 	gap: var(--pg-catalog-gap, 12px);
+}
+```
+
+**Incorrect (상태 전달을 위해 지역 변수를 만듦):**
+
+```css
+.pg_catalogIndex__row {
+	--pg-catalog-row-accent: transparent;
+
+	&:hover {
+		--pg-catalog-row-accent: #1677ff;
+	}
+}
+
+.pg_catalogIndex__rowBadge {
+	border-color: var(--pg-catalog-row-accent);
 }
 ```
 
@@ -1104,7 +1154,7 @@ core token 목록에 없는 변수는 `values-always-provide-css-variable-fallba
 }
 ```
 
-**Correct (한 파일 안 반복은 값을 그대로 두고, 지역 변수는 상태 전달에만):**
+**Correct (한 파일 안 반복은 값을 그대로 두고, 상태 전달은 결합자 하나로):**
 
 ```css
 .pg_catalogIndex__toolbar {
@@ -1116,15 +1166,13 @@ core token 목록에 없는 변수는 `values-always-provide-css-variable-fallba
 }
 
 .pg_catalogIndex__row {
-	--pg-catalog-row-accent: transparent;
-
-	&:hover {
-		--pg-catalog-row-accent: var(--app-color-accent);
+	&:hover .pg_catalogIndex__rowBadge {
+		border-color: #1677ff;
 	}
 }
 
 .pg_catalogIndex__rowBadge {
-	border-color: var(--pg-catalog-row-accent);
+	border: 1px solid transparent;
 }
 ```
 
@@ -1175,86 +1223,12 @@ stylesheet는 하나의 owner에 맞춰 유지하고, 가벼운 구조 주석만
 
 /* visual */
 .pg_catalogIndex__panel {
-	background: var(--app-color-bg-surface);
+	background: #fff;
 }
 
 /* state */
 .pg_catalogIndex__panel--active {
-	border-color: var(--app-color-accent);
-}
-```
-
-### 5.2 Review Banned CSS Patterns Before Finishing
-
-**Rule:** `C20` · `organization-review-banned-css-patterns-before-finishing`
-
-**Applies when:** CSS 또는 TSX class contract 변경이 완료 단계에 들어갈 때.
-
-**Required on completion:** 마무리 시 항상 적용
-
-**Impact: MEDIUM (선택되지 않은 규칙의 위반이 그대로 병합되는 것을 완료 직전에 잡습니다)**
-
-이 규칙은 새 기준을 만들지 않습니다. 판정을 놓친 규칙도 마무리에서 한 번 걸리게 하는 색인이고,
-각 항목의 정본은 소관 규칙입니다.
-
-| 확인할 것 | 소관 규칙 |
-| --- | --- |
-| 요소 선택자 중심 스타일링 | `selector-limit-nesting-block-depth` |
-| 결합자 상한 초과 | `selector-avoid-deep-descendant-dependencies` |
-| root 없는 library class targeting | `selector-target-third-party-dom-from-owned-roots` |
-| top-level pseudo selector 재오픈 | `selector-use-pseudo-classes-for-dom-owned-states` |
-| 재사용 근거 없는 structural modifier | `composition-do-not-build-structural-variants-with-modifiers` |
-| base와 state를 이름 하나에 융합 | `composition-keep-classes-single-purpose` |
-| core token에 붙은 fallback, 지역 토큰 발명 | `values-always-provide-css-variable-fallbacks` |
-| owner가 섞인 stylesheet | `organization-keep-style-files-owned-by-one-component-or-route` |
-
-`!important`만 여기서 직접 금지합니다. third-party가 inline style로 덮는 경우에만 근거 주석과 함께 남깁니다.
-
-**Incorrect (금지 패턴을 그대로 남김):**
-
-```css
-div {
-	padding: 8px !important;
-}
-
-.wg_siteHeader__brandLink:hover .wg_siteHeader__brandMark {
-	transform: rotate(-2deg);
-}
-
-.wg_entryDetail__prose h2 {
-	margin: 24px 0 12px;
-}
-
-.ant-tree-node-content-wrapper {
-	border-radius: 4px;
-}
-```
-
-**Correct (소유 클래스와 허용된 구조·상태 표현으로 정리):**
-
-```css
-.wg_siteHeader__brandLink {
-	--wg-site-header-brand-mark-transform: none;
-
-	&:hover {
-		--wg-site-header-brand-mark-transform: rotate(-2deg);
-	}
-}
-
-.wg_siteHeader__brandMark {
-	transform: var(--wg-site-header-brand-mark-transform);
-}
-
-.wg_entryDetail__prose {
-	& h2 {
-		margin: 24px 0 12px;
-	}
-}
-
-.pg_treePanel__root {
-	& .ant-tree-node-content-wrapper {
-		border-radius: var(--app-radius-control);
-	}
+	border-color: #1677ff;
 }
 ```
 

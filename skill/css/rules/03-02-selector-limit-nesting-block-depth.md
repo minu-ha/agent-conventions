@@ -62,7 +62,7 @@ raw HTML에는 클래스를 붙일 수 없어서 element selector가 유일한 �
 ```css
 .pg_spikePanel__spreadButton {
 	&:hover .pg_spikePanel__spreadBox {
-		border-color: var(--app-color-accent);
+		border-color: #9fadc7;
 	}
 }
 

@@ -45,8 +45,7 @@
 						"naming-separate-owner-style-scopes",
 						"naming-use-scope-slug-element-modifier-syntax",
 						"composition-compose-classes-with-clsx",
-						"organization-keep-style-files-owned-by-one-component-or-route",
-						"organization-review-banned-css-patterns-before-finishing"
+						"organization-keep-style-files-owned-by-one-component-or-route"
 					]
 				}
 			}
@@ -65,8 +64,7 @@
 			"expectedSelected": {
 				"css": [
 					"naming-separate-owner-style-scopes",
-					"organization-keep-style-files-owned-by-one-component-or-route",
-					"organization-review-banned-css-patterns-before-finishing"
+					"organization-keep-style-files-owned-by-one-component-or-route"
 				]
 			}
 		},
@@ -95,8 +93,7 @@
 					"composition-do-not-build-structural-variants-with-modifiers",
 					"composition-keep-classes-single-purpose",
 					"selector-use-pseudo-classes-for-dom-owned-states",
-					"values-separate-domain-state-modifiers-from-dom-interaction-states",
-					"organization-review-banned-css-patterns-before-finishing"
+					"values-separate-domain-state-modifiers-from-dom-interaction-states"
 				]
 			}
 		},
@@ -121,8 +118,7 @@
 					"naming-name-elements-and-modifiers-by-role",
 					"naming-use-scope-slug-element-modifier-syntax",
 					"composition-compose-classes-with-clsx",
-					"composition-do-not-build-structural-variants-with-modifiers",
-					"organization-review-banned-css-patterns-before-finishing"
+					"composition-do-not-build-structural-variants-with-modifiers"
 				]
 			}
 		},
@@ -150,8 +146,7 @@
 					"composition-compose-classes-with-clsx",
 					"composition-style-ui-components-through-owned-wrappers",
 					"selector-avoid-deep-descendant-dependencies",
-					"selector-target-third-party-dom-from-owned-roots",
-					"organization-review-banned-css-patterns-before-finishing"
+					"selector-target-third-party-dom-from-owned-roots"
 				]
 			},
 			"scopeDrift": {
@@ -178,8 +173,7 @@
 						"composition-style-ui-components-through-owned-wrappers",
 						"selector-avoid-deep-descendant-dependencies",
 						"selector-target-third-party-dom-from-owned-roots",
-						"values-always-provide-css-variable-fallbacks",
-						"organization-review-banned-css-patterns-before-finishing"
+						"values-always-provide-css-variable-fallbacks"
 					]
 				}
 			}
@@ -211,8 +205,7 @@
 				],
 				"css": [
 					"composition-compose-classes-with-clsx",
-					"composition-style-ui-components-through-owned-wrappers",
-					"organization-review-banned-css-patterns-before-finishing"
+					"composition-style-ui-components-through-owned-wrappers"
 				]
 			}
 		},
@@ -227,8 +220,7 @@
 			],
 			"expectedSelected": {
 				"css": [
-					"selector-limit-nesting-block-depth",
-					"organization-review-banned-css-patterns-before-finishing"
+					"selector-limit-nesting-block-depth"
 				]
 			}
 		},
@@ -244,8 +236,7 @@
 			"expectedSelected": {
 				"css": [
 					"selector-use-pseudo-classes-for-dom-owned-states",
-					"values-separate-domain-state-modifiers-from-dom-interaction-states",
-					"organization-review-banned-css-patterns-before-finishing"
+					"values-separate-domain-state-modifiers-from-dom-interaction-states"
 				]
 			}
 		},
@@ -265,8 +256,7 @@
 					"selector-use-pseudo-classes-for-dom-owned-states",
 					"values-always-provide-css-variable-fallbacks",
 					"values-separate-domain-state-modifiers-from-dom-interaction-states",
-					"values-tokenize-repeated-visual-values",
-					"organization-review-banned-css-patterns-before-finishing"
+					"values-tokenize-repeated-visual-values"
 				]
 			}
 		},
@@ -281,8 +271,7 @@
 			],
 			"expectedSelected": {
 				"css": [
-					"values-keep-layout-intent-explicit",
-					"organization-review-banned-css-patterns-before-finishing"
+					"values-keep-layout-intent-explicit"
 				]
 			}
 		},
@@ -298,8 +287,7 @@
 			"expectedSelected": {
 				"css": [
 					"selector-avoid-deep-descendant-dependencies",
-					"selector-limit-nesting-block-depth",
-					"organization-review-banned-css-patterns-before-finishing"
+					"selector-limit-nesting-block-depth"
 				]
 			}
 		}

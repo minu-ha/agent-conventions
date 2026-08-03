@@ -26,6 +26,6 @@
 각 경우의 상세는 `reviewWith` 규칙이 담당합니다.
 첫 항목은 CSS에 부모 선택자가 없어 생기는 정상 소비이고, 도메인 상태까지 얹지 말고 자손 modifier로 옮깁니다.
 
-상한을 넘으면 자손 modifier로 펴기, 조상이 custom property를 바꾸기, 예외 근거 주석, 리팩터 순으로 시도합니다.
+상한을 넘으면 자손 modifier로 펴기, 예외 근거 주석, 리팩터 순으로 시도합니다.
 
 > 예시·예외가 필요하면 [full rule](../rules/03-01-selector-avoid-deep-descendant-dependencies.md)을 읽습니다.

@@ -1,8 +1,8 @@
 ---
-title: Use Global Tokens and Do Not Invent Local Ones
-titleKo: 전역 토큰 사용과 지역 토큰 발명 금지
+title: Use Global Tokens and Do Not Create Local Ones
+titleKo: 전역 토큰 사용과 지역 변수 생성 금지
 impact: MEDIUM-HIGH
-impactDescription: 공용 시각 값은 전역 토큰으로 모으고 값 재사용 목적의 지역 변수는 늘리지 않습니다
+impactDescription: 공용 시각 값은 전역 토큰으로 모으고 그 밖의 값은 선언 자리에 그대로 두게 합니다
 appliesWhen:
   - 여러 파일이 같은 색·간격·radius·타이포·그림자 값을 쓸 때
   - 새 CSS custom property를 선언할 때
@@ -10,24 +10,23 @@ reviewWith: values-always-provide-css-variable-fallbacks
 tags: tokens, variables, reuse
 ---
 
-## Use Global Tokens and Do Not Invent Local Ones
+## Use Global Tokens and Do Not Create Local Ones
 
-**Impact: MEDIUM-HIGH (공용 시각 값은 전역 토큰으로 모으고 값 재사용 목적의 지역 변수는 늘리지 않습니다)**
+**Impact: MEDIUM-HIGH (공용 시각 값은 전역 토큰으로 모으고 그 밖의 값은 선언 자리에 그대로 두게 합니다)**
 
 판정 기준은 **파일 경계**입니다.
 
 | 반복 범위 | 처리 |
 | --- | --- |
 | 여러 파일 | 전역 core token을 쓰거나, 없으면 core token 목록에 추가를 검토합니다 |
-| 한 파일 안 | 값을 그대로 둡니다. 지역 변수를 만들지 않습니다 |
+| 한 파일 안 | 값을 그대로 둡니다 |
 
-같은 파일 안에서 `8px`이 세 번 나온다고 지역 custom property를 만들지 않습니다.
-core token 목록에 없는 변수는 `values-always-provide-css-variable-fallbacks`에 따라 fallback이 필요해서
-`var(--pg-detail-gap, 8px)`처럼 값이 결국 사용처에 남습니다.
-읽는 사람은 변수 선언을 한 번 더 찾아가야 하고, 값을 바꿀 지점은 여전히 여러 곳입니다.
+**지역 custom property는 만들지 않습니다.**
+core token 목록에 없는 변수는 fallback이 필요해서 값이 결국 사용처에 남습니다.
+읽는 사람은 선언을 한 번 더 찾아가야 하는데 바꿀 지점은 여전히 여러 곳이라 얻는 것이 없습니다.
 
-지역 custom property는 값 재사용이 아니라 **조상에서 자손으로 상태를 전달할 때만** 씁니다.
-그 용도는 `selector-avoid-deep-descendant-dependencies`가 결합자를 줄이는 수단으로 인정합니다.
+조상 상태를 자손에 전달할 때도 변수를 쓰지 않고 결합자 하나로 자손을 겨냥합니다.
+그 상한은 `selector-avoid-deep-descendant-dependencies`가 정합니다.
 
 **Incorrect (한 파일 안 반복을 지역 변수로 감쌈):**
 
@@ -39,6 +38,22 @@ core token 목록에 없는 변수는 `values-always-provide-css-variable-fallba
 
 .pg_catalogIndex__footer {
 	gap: var(--pg-catalog-gap, 12px);
+}
+```
+
+**Incorrect (상태 전달을 위해 지역 변수를 만듦):**
+
+```css
+.pg_catalogIndex__row {
+	--pg-catalog-row-accent: transparent;
+
+	&:hover {
+		--pg-catalog-row-accent: #1677ff;
+	}
+}
+
+.pg_catalogIndex__rowBadge {
+	border-color: var(--pg-catalog-row-accent);
 }
 ```
 
@@ -74,7 +89,7 @@ core token 목록에 없는 변수는 `values-always-provide-css-variable-fallba
 }
 ```
 
-**Correct (한 파일 안 반복은 값을 그대로 두고, 지역 변수는 상태 전달에만):**
+**Correct (한 파일 안 반복은 값을 그대로 두고, 상태 전달은 결합자 하나로):**
 
 ```css
 .pg_catalogIndex__toolbar {
@@ -86,14 +101,12 @@ core token 목록에 없는 변수는 `values-always-provide-css-variable-fallba
 }
 
 .pg_catalogIndex__row {
-	--pg-catalog-row-accent: transparent;
-
-	&:hover {
-		--pg-catalog-row-accent: var(--app-color-accent);
+	&:hover .pg_catalogIndex__rowBadge {
+		border-color: #1677ff;
 	}
 }
 
 .pg_catalogIndex__rowBadge {
-	border-color: var(--pg-catalog-row-accent);
+	border: 1px solid transparent;
 }
 ```

@@ -124,7 +124,6 @@ const cssRuleUniverse = [
 	"values-separate-domain-state-modifiers-from-dom-interaction-states",
 	"values-tokenize-repeated-visual-values",
 	"organization-keep-style-files-owned-by-one-component-or-route",
-	"organization-review-banned-css-patterns-before-finishing",
 ] as const;
 
 /**
@@ -365,10 +364,6 @@ const cssRuleRouting = {
 	"organization-keep-style-files-owned-by-one-component-or-route": {
 		appliesWhen:
 			"stylesheet를 새로 만들거나 이동·분할·병합해 한 파일에 component, route, document, local, shared owner가 섞일 가능성이 있을 때.",
-		reviewWith: [],
-	},
-	"organization-review-banned-css-patterns-before-finishing": {
-		appliesWhen: "CSS 또는 TSX class contract 변경이 완료 단계에 들어갈 때.",
 		reviewWith: [],
 	},
 } as const;
@@ -631,11 +626,7 @@ const mandatoryRuleRouting = {
 	},
 } as const;
 
-const completionGateRouting = {
-	react: [],
-	typescript: ["guardrails-review-banned-typescript-shortcuts-before-finishing"],
-	css: ["organization-review-banned-css-patterns-before-finishing"],
-} as const;
+const completionGateRouting = {react: [], typescript: ["guardrails-review-banned-typescript-shortcuts-before-finishing"], css: []} as const;
 
 /**
  * @summary Appendix A scenario별 initial exact selected rule oracle
@@ -835,7 +826,6 @@ const reactScenarioStages = {
 					"composition-do-not-build-structural-variants-with-modifiers",
 					"values-separate-domain-state-modifiers-from-dom-interaction-states",
 					"organization-keep-style-files-owned-by-one-component-or-route",
-					"organization-review-banned-css-patterns-before-finishing",
 				],
 			},
 		},
@@ -1236,7 +1226,6 @@ const cssScenarioStages = {
 					"naming-use-scope-slug-element-modifier-syntax",
 					"composition-compose-classes-with-clsx",
 					"organization-keep-style-files-owned-by-one-component-or-route",
-					"organization-review-banned-css-patterns-before-finishing",
 				],
 			},
 		},
@@ -1247,13 +1236,7 @@ const cssScenarioStages = {
 				"split mixed route/document/local ownership from posts/_index.css into pages/_document.css and posts/_local/filter-dialog.css; class names do not change.",
 			files: ["src/routes/posts/_index.css", "src/pages/_document.css", "src/routes/posts/_local/filter-dialog.css"],
 			expectedSkills: ["css"],
-			expectedSelected: {
-				css: [
-					"naming-separate-owner-style-scopes",
-					"organization-keep-style-files-owned-by-one-component-or-route",
-					"organization-review-banned-css-patterns-before-finishing",
-				],
-			},
+			expectedSelected: {css: ["naming-separate-owner-style-scopes", "organization-keep-style-files-owned-by-one-component-or-route"]},
 		},
 	},
 	"css-domain-state-class-contract": {
@@ -1273,7 +1256,6 @@ const cssScenarioStages = {
 					"composition-keep-classes-single-purpose",
 					"selector-use-pseudo-classes-for-dom-owned-states",
 					"values-separate-domain-state-modifiers-from-dom-interaction-states",
-					"organization-review-banned-css-patterns-before-finishing",
 				],
 			},
 		},
@@ -1292,7 +1274,6 @@ const cssScenarioStages = {
 					"naming-use-scope-slug-element-modifier-syntax",
 					"composition-compose-classes-with-clsx",
 					"composition-do-not-build-structural-variants-with-modifiers",
-					"organization-review-banned-css-patterns-before-finishing",
 				],
 			},
 		},
@@ -1313,7 +1294,6 @@ const cssScenarioStages = {
 					"composition-style-ui-components-through-owned-wrappers",
 					"selector-avoid-deep-descendant-dependencies",
 					"selector-target-third-party-dom-from-owned-roots",
-					"organization-review-banned-css-patterns-before-finishing",
 				],
 			},
 		},
@@ -1332,7 +1312,6 @@ const cssScenarioStages = {
 					"selector-avoid-deep-descendant-dependencies",
 					"selector-target-third-party-dom-from-owned-roots",
 					"values-always-provide-css-variable-fallbacks",
-					"organization-review-banned-css-patterns-before-finishing",
 				],
 			},
 		},
@@ -1353,11 +1332,7 @@ const cssScenarioStages = {
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"guardrails-review-banned-typescript-shortcuts-before-finishing",
 				],
-				css: [
-					"composition-compose-classes-with-clsx",
-					"composition-style-ui-components-through-owned-wrappers",
-					"organization-review-banned-css-patterns-before-finishing",
-				],
+				css: ["composition-compose-classes-with-clsx", "composition-style-ui-components-through-owned-wrappers"],
 			},
 		},
 	},
@@ -1367,7 +1342,7 @@ const cssScenarioStages = {
 				"move top-level .wg_entryDetail__prose h2 and > :first-child into existing owner-block raw-element nesting; class names and values stay unchanged.",
 			files: ["src/components/widgets/entry-detail/wg-entry-detail.css"],
 			expectedSkills: ["css"],
-			expectedSelected: {css: ["selector-limit-nesting-block-depth", "organization-review-banned-css-patterns-before-finishing"]},
+			expectedSelected: {css: ["selector-limit-nesting-block-depth"]},
 		},
 	},
 	"css-dom-interaction-states": {
@@ -1377,11 +1352,7 @@ const cssScenarioStages = {
 			files: ["src/components/ui/button/ui-button.css"],
 			expectedSkills: ["css"],
 			expectedSelected: {
-				css: [
-					"selector-use-pseudo-classes-for-dom-owned-states",
-					"values-separate-domain-state-modifiers-from-dom-interaction-states",
-					"organization-review-banned-css-patterns-before-finishing",
-				],
+				css: ["selector-use-pseudo-classes-for-dom-owned-states", "values-separate-domain-state-modifiers-from-dom-interaction-states"],
 			},
 		},
 	},
@@ -1399,7 +1370,6 @@ const cssScenarioStages = {
 					"values-always-provide-css-variable-fallbacks",
 					"values-separate-domain-state-modifiers-from-dom-interaction-states",
 					"values-tokenize-repeated-visual-values",
-					"organization-review-banned-css-patterns-before-finishing",
 				],
 			},
 		},
@@ -1410,7 +1380,7 @@ const cssScenarioStages = {
 				"clarify sticky basis and z-index ownership and remove excessive width/height forcing in dashboard/_index.css; tokens and selectors stay unchanged.",
 			files: ["src/routes/dashboard/_index.css"],
 			expectedSkills: ["css"],
-			expectedSelected: {css: ["values-keep-layout-intent-explicit", "organization-review-banned-css-patterns-before-finishing"]},
+			expectedSelected: {css: ["values-keep-layout-intent-explicit"]},
 		},
 	},
 	"css-deep-project-descendant-chain": {
@@ -1418,13 +1388,7 @@ const cssScenarioStages = {
 			prompt: "flatten .layout .panel .detail .item to a target element top-level block without changing class names or values.",
 			files: ["src/routes/catalog/_index.css"],
 			expectedSkills: ["css"],
-			expectedSelected: {
-				css: [
-					"selector-avoid-deep-descendant-dependencies",
-					"selector-limit-nesting-block-depth",
-					"organization-review-banned-css-patterns-before-finishing",
-				],
-			},
+			expectedSelected: {css: ["selector-avoid-deep-descendant-dependencies", "selector-limit-nesting-block-depth"]},
 		},
 	},
 } as const;
@@ -1754,13 +1718,6 @@ test("induced naming closure and activated finish gates stay mandatory across ev
 					);
 				}
 
-				if (stage.expectedSkills.includes("css")) {
-					assert.ok(
-						stage.expectedSelected.css?.includes("organization-review-banned-css-patterns-before-finishing"),
-						`${skillName}/${scenario.id} must select the CSS finish gate`,
-					);
-				}
-
 				if (stage.expectedSelected.react?.includes("data-name-query-and-mutation-bindings-consistently")) {
 					assert.ok(
 						stage.expectedSelected.typescript?.includes("naming-use-consistent-file-and-symbol-naming"),
@@ -1775,13 +1732,11 @@ test("induced naming closure and activated finish gates stay mandatory across ev
 	const bindingRule = await readRuleSource("react", "data-name-query-and-mutation-bindings-consistently");
 	const originRule = await readRuleSource("react", "data-preserve-origin-chaining");
 	const typescriptFinishRule = await readRuleSource("typescript", "guardrails-review-banned-typescript-shortcuts-before-finishing");
-	const cssFinishRule = await readRuleSource("css", "organization-review-banned-css-patterns-before-finishing");
 
 	assertMentions(readAppliesWhen(derivedRule), ["alias", "추가·이동·제거"], "derivedRule");
 	assert.match(originRule, /^reviewWith:[^\n]+screen-keep-derived-values-close/m);
 	assert.match(bindingRule, /^requiresSelected:[^\n]+typescript\/naming-use-consistent-file-and-symbol-naming/m);
 	assert.match(typescriptFinishRule, /^requiredOnCompletion: true$/m);
-	assert.match(cssFinishRule, /^requiredOnCompletion: true$/m);
 
 	// companion router 도 두 gate 를 가르쳐야 한다. 문구가 아니라 언급과 극성으로 본다
 	for (const skillName of ["typescript", "css"] as const) {
@@ -2059,7 +2014,7 @@ test("CSS progressive metadata and rule routing match Appendix C exactly", async
 	assert.deepEqual(document.metadata.companions, [
 		{skill: "typescript", mode: "conditional", appliesWhen: "TS/TSX class contract, wrapper Props 또는 style import를 함께 변경한다."},
 	]);
-	assert.equal(document.rules.length, 20);
+	assert.equal(document.rules.length, 19);
 	assert.deepEqual(
 		Object.fromEntries(document.rules.map((rule) => [getRuleId(rule), {appliesWhen: rule.appliesWhen, reviewWith: rule.reviewWith}])),
 		cssRuleRouting,
@@ -2075,7 +2030,7 @@ test("CSS progressive metadata and rule routing match Appendix C exactly", async
 	const wrapperStylingRule = await readRuleSource("css", "composition-style-ui-components-through-owned-wrappers");
 	assertMentions(
 		wrapperStylingRule,
-		[/root `className`을 받는 것이 기본 계약/i, /래핑 `div`/i, /selector-target-third-party-dom-from-owned-roots/i],
+		[/스타일 창구는 root `className` 하나/i, /래핑 `div`/i, /selector-target-third-party-dom-from-owned-roots/i],
 		"wrapperStylingRule",
 	);
 	const singlePurposeRule = await readRuleSource("css", "composition-keep-classes-single-purpose");
@@ -2575,7 +2530,7 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	const thirdPartyRoot = await readRule("css", "selector-target-third-party-dom-from-owned-roots");
 	assertMentions(
 		thirdPartyRoot,
-		[/owned root/i, /instance scope/i, /중간 (?:library root|라이브러리 root)/i, /(?:생략|반복하지 않)/i],
+		[/owned root/i, /instance를 한정/i, /중간 (?:library root|라이브러리 root)/i, /(?:생략|반복하지 않)/i],
 		"thirdPartyRoot",
 	);
 	assertMentions(thirdPartyRoot, [/selector-avoid-deep-descendant-dependencies/i, /주석 한 줄/i, /(?:근거|evidence)/i], "thirdPartyRoot");
@@ -2616,8 +2571,8 @@ test("CSS generated index is canonical, complete, body-preserving, and within it
 		entries.map((entry) => entry.id),
 		cssRuleUniverse,
 	);
-	assert.equal(entries.length, 20);
-	assert.equal(getRulesIndexByteBudget(entries.length), 8_000);
+	assert.equal(entries.length, 19);
+	assert.equal(getRulesIndexByteBudget(entries.length), 7_660);
 	assert.equal(Buffer.byteLength(source, "utf8") <= getRulesIndexByteBudget(entries.length), true);
 
 	for (const entry of entries) {

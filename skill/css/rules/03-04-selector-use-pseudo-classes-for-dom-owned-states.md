@@ -25,8 +25,8 @@ tags: pseudo-classes, state, interaction
 - pseudo-class를 top-level selector로 다시 열지 않습니다.
 - 도메인 상태를 `:not(.--modifier)`로 뒤집지 않습니다.
   읽는 사람이 부정 조건을 뒤집어야 하고 combinator 예산도 함께 먹습니다. 예외는 자손 modifier로 옮깁니다.
-- DOM state가 자손을 바꿔야 하면 조상 block에서 custom property를 바꾸고 자손이 그 값을 읽습니다.
-- `.foo:hover .foo__icon`처럼 project-owned descendant coupling으로 상태를 전달하지 않습니다.
+- 조상의 DOM state가 자손 모양을 바꿔야 하면 조상 block 안에서 결합자 1개로 자손을 겨냥합니다.
+  CSS에 부모 선택자가 없어 생기는 정상 소비이고, 상한은 `selector-avoid-deep-descendant-dependencies`가 정합니다.
 
 base/modifier 배치와 focus 접근성은 `values-separate-domain-state-modifiers-from-dom-interaction-states`가 담당합니다.
 
@@ -34,7 +34,7 @@ base/modifier 배치와 focus 접근성은 `values-separate-domain-state-modifie
 
 ```css
 .wg_siteHeader__brandLink:hover {
-	color: var(--mk-color-link-hover, #0958d9);
+	color: #0958d9;
 }
 
 .wg_siteHeader__brandLink:hover .wg_siteHeader__brandMark {
@@ -43,12 +43,12 @@ base/modifier 배치와 focus 접근성은 `values-separate-domain-state-modifie
 
 .pg_assetIndex__card {
 	&[aria-selected="true"] {
-		border-color: var(--app-color-accent);
+		border-color: #1677ff;
 	}
 }
 
 .pg_assetIndex__card:not(.pg_assetIndex__card--checked) .pg_assetIndex__cardBox {
-	border-color: var(--app-color-border);
+	border-color: #d9d9d9;
 }
 ```
 
@@ -56,17 +56,19 @@ base/modifier 배치와 focus 접근성은 `values-separate-domain-state-modifie
 
 ```css
 .wg_siteHeader__brandLink {
-	--wg-site-header-brand-mark-transform: translateY(1px);
-	color: var(--mk-color-link, #1677ff);
+	color: #1677ff;
 
 	&:hover {
-		--wg-site-header-brand-mark-transform: translateY(1px) rotate(-2deg);
-		color: var(--mk-color-link-hover, #0958d9);
+		color: #0958d9;
+	}
+
+	&:hover .wg_siteHeader__brandMark {
+		transform: rotate(-2deg);
 	}
 }
 
 .wg_siteHeader__brandMark {
-	transform: var(--wg-site-header-brand-mark-transform);
+	transform: translateY(1px);
 }
 
 .pg_assetIndex__cardButton {
@@ -82,6 +84,6 @@ base/modifier 배치와 focus 접근성은 `values-separate-domain-state-modifie
 }
 
 .pg_assetIndex__card--selected {
-	border-color: var(--app-color-accent);
+	border-color: #1677ff;
 }
 ```

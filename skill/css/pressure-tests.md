@@ -70,7 +70,6 @@ Pure CSS fixture는 CSS만 partition합니다. Mixed fixture 5개는 progressive
 - Focus
   - `composition-do-not-build-structural-variants-with-modifiers`
   - `composition-keep-classes-single-purpose`
-  - `organization-review-banned-css-patterns-before-finishing`
 - Prompt
   - "리스트 패널 위쪽 여백만 다른 화면이 하나 생겼어. 기존 클래스 기반으로 스타일을 정리해줘."
 - Expected pass signals
@@ -168,7 +167,6 @@ Pure CSS fixture는 CSS만 partition합니다. Mixed fixture 5개는 progressive
 - Focus
   - `selector-use-pseudo-classes-for-dom-owned-states`
   - `selector-limit-nesting-block-depth`
-  - `organization-review-banned-css-patterns-before-finishing`
 - Prompt
   - "link hover/visited 상태와 prose wrapper 타이포를 CSS skill 기준으로 정리해줘."
 - Expected pass signals

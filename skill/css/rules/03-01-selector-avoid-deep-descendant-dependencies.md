@@ -40,7 +40,7 @@ tags: descendants, selector-depth, guardrails
 각 경우의 상세는 `reviewWith` 규칙이 담당합니다.
 첫 항목은 CSS에 부모 선택자가 없어 생기는 정상 소비이고, 도메인 상태까지 얹지 말고 자손 modifier로 옮깁니다.
 
-상한을 넘으면 자손 modifier로 펴기, 조상이 custom property를 바꾸기, 예외 근거 주석, 리팩터 순으로 시도합니다.
+상한을 넘으면 자손 modifier로 펴기, 예외 근거 주석, 리팩터 순으로 시도합니다.
 
 **Incorrect (요소 네 개를 훑음):**
 
@@ -66,7 +66,7 @@ tags: descendants, selector-depth, guardrails
 }
 
 .pg_catalogIndex__detailHeader {
-	gap: var(--app-space-2);
+	gap: 8px;
 }
 ```
 
@@ -75,7 +75,7 @@ tags: descendants, selector-depth, guardrails
 ```css
 .pg_spikePanel__spreadButton {
 	&:hover .pg_spikePanel__spreadBox {
-		border-color: var(--app-color-accent);
+		border-color: #9fadc7;
 	}
 }
 
@@ -84,18 +84,14 @@ tags: descendants, selector-depth, guardrails
 }
 ```
 
-**Correct (조상 상태를 custom property로 내려 결합자 0으로 유지):**
+**Correct (결합자를 쓸 필요가 없으면 각 요소에 직접 둠):**
 
 ```css
-.pg_spikePanel__spreadButton {
-	--pg-spike-box-border: var(--app-color-border);
-
-	&:hover {
-		--pg-spike-box-border: var(--app-color-accent);
-	}
+.pg_spikePanel__spreadBox {
+	border: 2px solid #ced4da;
 }
 
-.pg_spikePanel__spreadBox {
-	border: 2px solid var(--pg-spike-box-border);
+.pg_spikePanel__spreadBox--checked {
+	border-color: #9fadc7;
 }
 ```
