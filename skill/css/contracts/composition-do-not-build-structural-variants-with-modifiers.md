@@ -1,21 +1,23 @@
-# Do Not Use Modifiers for One-off Structural Patches
+# Use Modifiers Only for States and Repeated Variants
 
-**Impact: HIGH (modifier를 두 번째 레이아웃 이름 체계로 만들지 않고 상태 표현에만 남겨둡니다)**
+**Impact: HIGH (modifier가 두 번째 레이아웃 이름 체계로 자라지 않게 막습니다)**
 
-modifier는 상태나 반복 variant를 표현할 때만 사용합니다.
+modifier가 표현할 수 있는 것은 두 가지입니다.
 
-금지:
+| 쓸 수 있는 것 | 예 |
+| --- | --- |
+| 켜지고 꺼지는 상태 | `--active`, `--selected`, `--disabled`, `--error`, `--hidden` |
+| 여러 곳에서 반복되는 모양 | `--dense`, `--compact`, `--horizontal` |
 
-- spacing patch
-- 방향 보정
-- 특정 화면 하나에서만 필요한 구조 차이
+한 곳에서만 필요한 여백이나 배치 보정에는 쓰지 않습니다.
+`--compactTop`, `--marginLeft0`, `--alignRight`처럼 그 화면 하나를 고치려고 붙이는 이름이 여기 해당합니다.
+그런 보정은 modifier가 아니라 **역할 이름을 가진 별도 element class**로 풉니다.
 
-허용:
+갈리는 기준은 하나입니다.
 
-- `active`, `hidden`, `disabled`, `selected`, `error` 같은 상태
-- `dense`, `horizontal`, `compact`처럼 component API로 반복 노출되는 variant
+> 이 modifier를 다른 화면에서도 같은 이름으로 쓸 수 있는가?
 
-금지 대상은 "상태 의미가 아닌 모든 modifier"가 아니라, 재사용 contract 없이 생긴 one-off structural modifier입니다.
-허용 여부가 갈리는 지점은 그 modifier를 두 번째 화면에서도 같은 이름으로 쓸 수 있느냐입니다.
+쓸 수 있으면 반복되는 모양이라 허용합니다.
+그 화면에서만 뜻이 통하면 이름이 이미 위치 정보를 담고 있다는 뜻이라 element로 바꿉니다.
 
 > 예시·예외가 필요하면 [full rule](../rules/02-02-composition-do-not-build-structural-variants-with-modifiers.md)을 읽습니다.

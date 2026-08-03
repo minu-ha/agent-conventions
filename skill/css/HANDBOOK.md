@@ -35,7 +35,7 @@
     - 1.6 [Use Scope, Slug, Element, and Modifier Syntax](#16-use-scope-slug-element-and-modifier-syntax)
 2. [Class Composition and Wrapper Boundaries](#2-class-composition-and-wrapper-boundaries) — **HIGH**
     - 2.1 [Compose Classes With `clsx()`](#21-compose-classes-with-clsx)
-    - 2.2 [Do Not Use Modifiers for One-off Structural Patches](#22-do-not-use-modifiers-for-one-off-structural-patches)
+    - 2.2 [Use Modifiers Only for States and Repeated Variants](#22-use-modifiers-only-for-states-and-repeated-variants)
     - 2.3 [Keep Classes Single-purpose](#23-keep-classes-single-purpose)
     - 2.4 [Expose Only a Root Class on `Ui*` Components](#24-expose-only-a-root-class-on-ui-components)
 3. [Selectors and Nesting Boundaries](#3-selectors-and-nesting-boundaries) — **CRITICAL**
@@ -395,46 +395,53 @@ modifier가 붙는 순간 문자열 연결로 되돌아가는 diff를 막으려�
 </button>
 ```
 
-### 2.2 Do Not Use Modifiers for One-off Structural Patches
+### 2.2 Use Modifiers Only for States and Repeated Variants
 
 **Rule:** `C08` · `composition-do-not-build-structural-variants-with-modifiers`
 
-**Applies when:** modifier를 추가·변경할 때. 반복 가능한 state·API variant와 one-off structural patch 사이를 판정할 때.
+**Applies when:** modifier를 추가·변경할 때. 여러 곳에서 쓰이는 variant인지 한 곳만의 보정인지 판정할 때.
 
 **Review with:** `naming-name-elements-and-modifiers-by-role`
 
-**Impact: HIGH (modifier를 두 번째 레이아웃 이름 체계로 만들지 않고 상태 표현에만 남겨둡니다)**
+**Impact: HIGH (modifier가 두 번째 레이아웃 이름 체계로 자라지 않게 막습니다)**
 
-modifier는 상태나 반복 variant를 표현할 때만 사용합니다.
+modifier가 표현할 수 있는 것은 두 가지입니다.
 
-금지:
+| 쓸 수 있는 것 | 예 |
+| --- | --- |
+| 켜지고 꺼지는 상태 | `--active`, `--selected`, `--disabled`, `--error`, `--hidden` |
+| 여러 곳에서 반복되는 모양 | `--dense`, `--compact`, `--horizontal` |
 
-- spacing patch
-- 방향 보정
-- 특정 화면 하나에서만 필요한 구조 차이
+한 곳에서만 필요한 여백이나 배치 보정에는 쓰지 않습니다.
+`--compactTop`, `--marginLeft0`, `--alignRight`처럼 그 화면 하나를 고치려고 붙이는 이름이 여기 해당합니다.
+그런 보정은 modifier가 아니라 **역할 이름을 가진 별도 element class**로 풉니다.
 
-허용:
+갈리는 기준은 하나입니다.
 
-- `active`, `hidden`, `disabled`, `selected`, `error` 같은 상태
-- `dense`, `horizontal`, `compact`처럼 component API로 반복 노출되는 variant
+> 이 modifier를 다른 화면에서도 같은 이름으로 쓸 수 있는가?
 
-금지 대상은 "상태 의미가 아닌 모든 modifier"가 아니라, 재사용 contract 없이 생긴 one-off structural modifier입니다.
-허용 여부가 갈리는 지점은 그 modifier를 두 번째 화면에서도 같은 이름으로 쓸 수 있느냐입니다.
+쓸 수 있으면 반복되는 모양이라 허용합니다.
+그 화면에서만 뜻이 통하면 이름이 이미 위치 정보를 담고 있다는 뜻이라 element로 바꿉니다.
 
-**Incorrect (특정 화면용 구조 patch를 modifier로 덧붙임):**
+**Incorrect (그 화면 하나를 고치려고 modifier를 붙임):**
 
 ```tsx
 <div className={clsx("pg_catalogDetail__section", "pg_catalogDetail__section--compactTop")} />
+<div className={clsx("pg_catalogDetail__aside", "pg_catalogDetail__aside--marginLeft0")} />
 ```
 
-**Correct (one-off patch는 별도 element로 풀고, 반복되는 variant만 제한적으로 허용):**
+**Correct (한 곳만의 보정은 역할 이름을 가진 element로 분리):**
 
 ```tsx
 <div className={clsx("pg_catalogDetail__detailSection")} />
+<div className={clsx("pg_catalogDetail__flushAside")} />
 ```
+
+**Correct (상태와 반복되는 모양만 modifier로):**
 
 ```tsx
 <div className={clsx("ui_table__root", isDense && "ui_table__root--dense")} />
+<div className={clsx("pg_catalogIndex__row", isSelected && "pg_catalogIndex__row--selected")} />
 ```
 
 ### 2.3 Keep Classes Single-purpose
@@ -469,26 +476,25 @@ modifier가 상태를 표현할 자격이 있는지는 `composition-do-not-build
 
 **Rule:** `C10` · `composition-style-ui-components-through-owned-wrappers`
 
-**Applies when:** `Ui*` wrapper에 `className`을 주거나 wrapper가 노출할 class 계약을 정할 때. `Ui*` 내부 DOM을 겨냥하는 스타일을 추가할 때. 제외: 기존 CSS owner root 아래 third-party selector만 수정하는 경우.
+**Applies when:** `Ui*` wrapper에 `className`을 주거나 wrapper가 노출할 class 계약을 정할 때. `Ui*` 내부 노드의 모양을 화면마다 다르게 해야 할 때. 제외: 기존 CSS owner root 아래 third-party selector만 수정하는 경우.
 
 **Review with:** `selector-target-third-party-dom-from-owned-roots`
 
 **Impact: HIGH (wrapper가 내부 DOM 스타일링 창구를 여러 개 열어 사용처가 내부 구조에 묶이는 것을 막습니다)**
 
-`Ui*` wrapper가 여는 스타일 창구는 root `className` 하나입니다.
-사용처는 그 클래스로 배치, 여백, 크기처럼 root에 걸리는 스타일만 줍니다.
+`Ui*` wrapper가 여는 스타일 창구는 `className` 하나입니다.
+wrapper는 받은 값을 자기 root class와 `clsx()`로 합치고, 사용처는 그 클래스로 배치·여백·크기만 줍니다.
 
 `headerClassName`, `itemClassName` 같은 slot class prop을 늘리지 않습니다.
 창구가 늘어나면 사용처가 내부 구조를 알게 되고, 내부가 바뀔 때 사용처가 함께 깨집니다.
 
-내부 모양이 화면마다 달라야 하면 **wrapper가 variant prop을 받아 내부에서 결정**합니다.
-사용처는 `variant="compact"`처럼 의도만 넘기고 어떤 노드가 어떻게 바뀌는지는 모릅니다.
+내부 모양이 화면마다 달라야 하면 wrapper가 `variant` prop을 받아 처리합니다.
+variant는 root뿐 아니라 header·content처럼 필요한 노드에 각각 modifier로 붙입니다.
+root modifier 하나만 붙이고 내부를 결합자로 잡지 않습니다.
 
-- wrapper는 받은 `className`을 root 노드에만 붙이고 내부 노드로 forward하지 않습니다.
+- 받은 `className`을 내부 노드로 넘기지 않습니다.
 - 래핑 `div`를 습관적으로 만들지 않습니다. 부모의 flex·grid 자식 수가 바뀌고 역할 없는 클래스가 생깁니다.
-- root `className`을 받지 않는 wrapper면 그 계약을 추가하는 것이 먼저이고, 래핑은 마지막 수단입니다.
-
-내부 노드를 직접 손대야 하는 경우는 `selector-target-third-party-dom-from-owned-roots`가 다룹니다.
+- `className`을 아예 받지 않는 wrapper면 그 계약을 추가하는 것이 먼저이고, 래핑은 마지막 수단입니다.
 
 **Incorrect (내부 노드마다 slot class prop을 열어 창구를 늘림):**
 
@@ -496,18 +502,38 @@ modifier가 상태를 표현할 자격이 있는지는 `composition-do-not-build
 export interface UiCollapseProps {
 	className?: string;
 	headerClassName?: string;
-	itemClassName?: string;
+	titleClassName?: string;
 	contentClassName?: string;
 }
 ```
 
-**Incorrect (wrapper가 받은 className을 내부 노드로 forward):**
+**Incorrect (받은 className을 내부 노드로 넘김):**
 
 ```tsx
 export const UiCollapse = (props: UiCollapseProps) => {
-	const { className, items } = props;
-	return <AntCollapse items={items} itemClassName={className} />;
+	const { className, title, children } = props;
+
+	return (
+		<div className={clsx("ui_collapse__root")}>
+			<button className={clsx("ui_collapse__header", className)} type="button">
+				{title}
+			</button>
+			<div className={clsx("ui_collapse__content")}>{children}</div>
+		</div>
+	);
 };
+```
+
+**Incorrect (variant를 root에만 붙이고 내부를 결합자로 잡음):**
+
+```css
+.ui_collapse__root--compact .ui_collapse__header {
+	padding: 6px 8px;
+}
+
+.ui_collapse__root--compact .ui_collapse__title {
+	font-size: 13px;
+}
 ```
 
 **Incorrect (래핑 div로 root 스타일을 우회):**
@@ -518,30 +544,49 @@ export const UiCollapse = (props: UiCollapseProps) => {
 </div>
 ```
 
-**Correct (root className 하나만 열고 내부 모양은 variant로 받음):**
+**Correct (className은 root class와 합치고, variant는 필요한 노드마다 modifier로 붙임):**
 
 ```tsx
 export interface UiCollapseProps {
 	className?: string;
 	variant?: "default" | "compact";
+	title: ReactNode;
+	children: ReactNode;
 }
 
 export const UiCollapse = (props: UiCollapseProps) => {
-	const { className, variant = "default" } = props;
+	const { className, variant = "default", title, children } = props;
+	const isCompact = variant === "compact";
 
 	return (
-		<AntCollapse
-			className={clsx("ui_collapse__root", variant === "compact" && "ui_collapse__root--compact")}
-			rootClassName={className}
-		/>
+		<div className={clsx("ui_collapse__root", isCompact && "ui_collapse__root--compact", className)}>
+			<button className={clsx("ui_collapse__header", isCompact && "ui_collapse__header--compact")} type="button">
+				<span className={clsx("ui_collapse__title", isCompact && "ui_collapse__title--compact")}>{title}</span>
+			</button>
+			<div className={clsx("ui_collapse__content", isCompact && "ui_collapse__content--compact")}>{children}</div>
+		</div>
 	);
 };
+```
+
+```css
+.ui_collapse__header {
+	padding: 12px 16px;
+}
+
+.ui_collapse__header--compact {
+	padding: 6px 8px;
+}
+
+.ui_collapse__title--compact {
+	font-size: 13px;
+}
 ```
 
 **Correct (사용처는 root 스타일만 주고 내부 의도는 prop으로 넘김):**
 
 ```tsx
-<UiCollapse className={clsx("pg_postFilterDialog__collapse")} variant="compact" />
+<UiCollapse className={clsx("pg_postFilterDialog__collapse")} variant="compact" title="필터" />
 ```
 
 ```css
@@ -567,15 +612,12 @@ export const UiCollapse = (props: UiCollapseProps) => {
 
 **Impact: HIGH (한 규칙이 훑는 요소 수를 줄여 마크업이 조금 바뀌어도 스타일이 깨지지 않게 합니다)**
 
-규칙 하나가 훑는 요소가 많을수록 마크업이 조금 바뀌어도 함께 깨집니다.
-
 세는 방법:
 
 - 요소 사이 관계 기호인 공백, `>`, `+`, `~`의 개수를 셉니다. 이것을 결합자라고 부릅니다.
-- 중첩은 펼친 뒤에 셉니다.
+- 중첩은 펼친 뒤에 셉니다. `.pg_panel__button:hover .pg_panel__box`는 결합자 1개, 요소 2개입니다.
 - 같은 요소에 붙는 `.a.b`, `:hover`, `:not()`, `::before`는 DOM 관계가 아니라 세지 않습니다.
-
-`.pg_panel__button:hover .pg_panel__box`는 결합자 1개, 요소 2개입니다.
+- 상한은 selector 하나당입니다. selector 개수는 제한하지 않습니다.
 
 기본값은 결합자 0입니다. 상태는 그 요소의 modifier class로 받습니다.
 
@@ -583,13 +625,13 @@ export const UiCollapse = (props: UiCollapseProps) => {
 
 | 경우 | 상한 |
 | --- | --- |
-| 조상의 DOM 상호작용 상태가 자손 모양을 바꿈 | 1 |
+| 같은 파일이 소유한 조상의 `:hover`·`:focus-visible`·`:checked`가 자손을 바꿈 | 1 |
 | 소유 root 아래 third-party 내부 DOM | 2 |
 | raw HTML wrapper 안 element selector | 1 |
 | wrapper가 slot class를 열지 않은 부분 override | 1 |
 
-각 경우의 상세는 `reviewWith` 규칙이 담당합니다.
-첫 항목은 CSS에 부모 선택자가 없어 생기는 정상 소비이고, 도메인 상태까지 얹지 말고 자손 modifier로 옮깁니다.
+첫 항목만 결합자가 유일한 수단입니다. 자손의 `:hover`는 포인터가 자손 위에 있을 때만 걸립니다.
+앱이 이미 아는 상태(variant, selected)는 결합자 대신 각 노드에 modifier를 붙입니다.
 
 상한을 넘으면 자손 modifier로 펴기, 예외 근거 주석, 리팩터 순으로 시도합니다.
 
@@ -598,6 +640,14 @@ export const UiCollapse = (props: UiCollapseProps) => {
 ```css
 .pg_catalogIndex__layout .pg_catalogIndex__panel .pg_catalogIndex__detail .pg_catalogIndex__item {
 	padding: 8px;
+}
+```
+
+**Incorrect (다른 owner의 내부를 밖에서 잡음. wrapper·third-party 규칙이 정한 경로로만 접근한다):**
+
+```css
+.pg_catalogIndex__panel .ui_card__title {
+	font-size: 13px;
 }
 ```
 
@@ -740,9 +790,12 @@ raw HTML에는 클래스를 붙일 수 없어서 element selector가 유일한 �
 - `.pg_* .ant-*` 같은 one-line chaining보다 root block 안의 `& .ant-*`를 사용합니다.
 - owned root가 이미 instance를 한정하므로 `.ant-tree` 같은 중간 library root를 반복하지 않습니다.
 
-결합자 상한은 `selector-avoid-deep-descendant-dependencies`가 정합니다.
-third-party DOM은 그 표에서 2까지 허용되고, 2를 쓰려면 왜 1로 안 되는지를 해당 선언 바로 위 주석 한 줄로 남깁니다.
+결합자 상한은 `selector-avoid-deep-descendant-dependencies`가 정하고 third-party DOM은 2까지입니다.
+상한은 selector 하나당이라 겨냥할 노드가 다섯 개면 같은 root block 안에 selector를 다섯 개 씁니다.
+
+2를 쓰려면 왜 1로 안 되는지를 선언 바로 위 주석 한 줄로 남깁니다.
 같은 라이브러리 클래스가 여러 계층에 나타나 겨냥이 모호할 때가 대표적인 근거입니다.
+라이브러리가 클래스 없이 `> tr > th`처럼 element만 노출해 2로 줄일 수 없으면 그 사실을 주석으로 남기고 예외로 씁니다.
 
 이 예외는 third-party DOM path에만 적용됩니다. project-owned class끼리의 깊은 descendant coupling은 여전히 금지입니다.
 
@@ -805,6 +858,43 @@ third-party DOM은 그 표에서 2까지 허용되고, 2를 쓰려면 왜 1로 �
 }
 ```
 
+**Correct (겨냥할 노드가 많으면 selector를 늘린다. 결합자는 각각 1개):**
+
+```css
+.pg_treePanel__root {
+	& .ant-tree-node-content-wrapper {
+		display: inline-flex;
+	}
+
+	& .ant-tree-title {
+		color: #8c8c8c;
+	}
+
+	& .ant-tree-switcher {
+		width: 20px;
+	}
+
+	& .ant-tree-iconEle {
+		display: inline-flex;
+	}
+
+	& .ant-tree-indent-unit {
+		width: 12px;
+	}
+}
+```
+
+**Correct (라이브러리가 element만 노출해 2로 줄일 수 없을 때만 근거를 남기고 초과):**
+
+```css
+.pg_orderTable__root {
+	/* antd가 이 행에 클래스를 주지 않아 tr·th element로만 겨냥할 수 있다 */
+	& .ant-table-thead > tr > th {
+		border-bottom: 2px solid #d9d9d9;
+	}
+}
+```
+
 **Correct (중첩된 자손까지 걸리면 안 될 때 direct child로 좁힘):**
 
 ```css
@@ -837,8 +927,8 @@ third-party DOM은 그 표에서 2까지 허용되고, 2를 쓰려면 왜 1로 �
 - pseudo-class를 top-level selector로 다시 열지 않습니다.
 - 도메인 상태를 `:not(.--modifier)`로 뒤집지 않습니다.
   읽는 사람이 부정 조건을 뒤집어야 하고 combinator 예산도 함께 먹습니다. 예외는 자손 modifier로 옮깁니다.
-- 조상의 DOM state가 자손 모양을 바꿔야 하면 조상 block 안에서 결합자 1개로 자손을 겨냥합니다.
-  CSS에 부모 선택자가 없어 생기는 정상 소비이고, 상한은 `selector-avoid-deep-descendant-dependencies`가 정합니다.
+- 조상의 DOM 상태가 자손을 바꿔야 하면 같은 파일이 둘을 소유할 때만 결합자 하나로 겨냥합니다.
+- 앱이 값을 아는 상태는 결합자 없이 각 노드에 modifier를 직접 붙입니다.
 
 base/modifier 배치와 focus 접근성은 `values-separate-domain-state-modifiers-from-dom-interaction-states`가 담당합니다.
 

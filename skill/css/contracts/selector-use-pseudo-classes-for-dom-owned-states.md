@@ -13,8 +13,8 @@
 - pseudo-class를 top-level selector로 다시 열지 않습니다.
 - 도메인 상태를 `:not(.--modifier)`로 뒤집지 않습니다.
   읽는 사람이 부정 조건을 뒤집어야 하고 combinator 예산도 함께 먹습니다. 예외는 자손 modifier로 옮깁니다.
-- 조상의 DOM state가 자손 모양을 바꿔야 하면 조상 block 안에서 결합자 1개로 자손을 겨냥합니다.
-  CSS에 부모 선택자가 없어 생기는 정상 소비이고, 상한은 `selector-avoid-deep-descendant-dependencies`가 정합니다.
+- 조상의 DOM 상태가 자손을 바꿔야 하면 같은 파일이 둘을 소유할 때만 결합자 하나로 겨냥합니다.
+- 앱이 값을 아는 상태는 결합자 없이 각 노드에 modifier를 직접 붙입니다.
 
 base/modifier 배치와 focus 접근성은 `values-separate-domain-state-modifiers-from-dom-interaction-states`가 담당합니다.
 

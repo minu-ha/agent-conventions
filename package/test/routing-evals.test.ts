@@ -307,7 +307,7 @@ const cssRuleRouting = {
 		reviewWith: [],
 	},
 	"composition-do-not-build-structural-variants-with-modifiers": {
-		appliesWhen: "modifier를 추가·변경할 때. 반복 가능한 state·API variant와 one-off structural patch 사이를 판정할 때.",
+		appliesWhen: "modifier를 추가·변경할 때. 여러 곳에서 쓰이는 variant인지 한 곳만의 보정인지 판정할 때.",
 		reviewWith: ["naming-name-elements-and-modifiers-by-role"],
 	},
 	"composition-keep-classes-single-purpose": {
@@ -317,7 +317,7 @@ const cssRuleRouting = {
 	},
 	"composition-style-ui-components-through-owned-wrappers": {
 		appliesWhen:
-			"`Ui*` wrapper에 `className`을 주거나 wrapper가 노출할 class 계약을 정할 때. `Ui*` 내부 DOM을 겨냥하는 스타일을 추가할 때. 제외: 기존 CSS owner root 아래 third-party selector만 수정하는 경우.",
+			"`Ui*` wrapper에 `className`을 주거나 wrapper가 노출할 class 계약을 정할 때. `Ui*` 내부 노드의 모양을 화면마다 다르게 해야 할 때. 제외: 기존 CSS owner root 아래 third-party selector만 수정하는 경우.",
 		reviewWith: ["selector-target-third-party-dom-from-owned-roots"],
 	},
 	"selector-avoid-deep-descendant-dependencies": {
@@ -2030,7 +2030,7 @@ test("CSS progressive metadata and rule routing match Appendix C exactly", async
 	const wrapperStylingRule = await readRuleSource("css", "composition-style-ui-components-through-owned-wrappers");
 	assertMentions(
 		wrapperStylingRule,
-		[/스타일 창구는 root `className` 하나/i, /래핑 `div`/i, /selector-target-third-party-dom-from-owned-roots/i],
+		[/스타일 창구는 `className` 하나/i, /래핑 `div`/i, /variant.*modifier로 붙입니다/i],
 		"wrapperStylingRule",
 	);
 	const singlePurposeRule = await readRuleSource("css", "composition-keep-classes-single-purpose");
@@ -2311,7 +2311,11 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 	);
 
 	const modifierClassification = await readRule("css", "composition-do-not-build-structural-variants-with-modifiers");
-	assertMentions(modifierClassification, [/허용:/, /one-off structural modifier/i, /두 번째 화면/], "modifierClassification");
+	assertMentions(
+		modifierClassification,
+		[/켜지고 꺼지는 상태/, /여러 곳에서 반복되는 모양/, /다른 화면에서도 같은 이름으로/],
+		"modifierClassification",
+	);
 
 	const layoutIntent = await readRule("css", "values-keep-layout-intent-explicit");
 	assert.match(layoutIntent, /`z-index`[\s\S]*layer 토큰[\s\S]*stacking 순서/i);
