@@ -163,21 +163,30 @@ test("parseSections leaves titleKo empty when the line is absent", () => {
 	assert.equal(parseSections(source)[0]?.titleKo, "");
 });
 
-test("buildViewerPayload collects every skill, section, and rule", async () => {
+test("buildViewerPayload collects only progressive skills", async () => {
 	const payload = await buildViewerPayload();
 
-	assert.equal(payload.skills.length, 8);
-	assert.equal(payload.rules.length, 215);
-	assert.equal(payload.sections.length, 59);
+	assert.equal(payload.skills.length, 3);
+	assert.equal(payload.rules.length, 88);
+	assert.equal(payload.sections.length, 22);
 
 	const react = payload.skills.find((skill) => skill.name === "react");
 	assert.equal(react?.title, "React 컨벤션");
 	assert.equal(react?.progressive, true);
 	assert.equal(react?.ruleCount, 42);
 
-	const astro = payload.skills.find((skill) => skill.name === "astro");
-	assert.equal(astro?.progressive, false);
-	assert.deepEqual(astro?.companions, []);
+	// non-progressive skill 은 아직 작성 중이라 핸드북에 넣지 않는다
+	for (const excluded of ["astro", "nestjs", "playwright-test", "tanstack-route", "figma-visual-parity"]) {
+		assert.equal(
+			payload.skills.some((skill) => skill.name === excluded),
+			false,
+			`${excluded} must stay out of the viewer payload`,
+		);
+	}
+	assert.deepEqual(
+		payload.skills.map((skill) => skill.name),
+		["css", "react", "typescript"],
+	);
 });
 
 test("buildViewerPayload carries companion declarations for the header hint", async () => {
@@ -363,9 +372,9 @@ test("generateViewerArtifacts keeps the payload in the data script and stays byt
 	assert.ok(encoded, "expected a global assignment in the data script");
 
 	const payload = JSON.parse(encoded);
-	assert.equal(payload.rules.length, 215);
-	assert.equal(payload.skills.length, 8);
-	assert.equal(payload.sections.length, 59);
+	assert.equal(payload.rules.length, 88);
+	assert.equal(payload.skills.length, 3);
+	assert.equal(payload.sections.length, 22);
 });
 
 test("renderViewerDataScript escapes closing script sequences", () => {

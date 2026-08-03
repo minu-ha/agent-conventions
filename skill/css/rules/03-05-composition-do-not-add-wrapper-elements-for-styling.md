@@ -1,8 +1,8 @@
 ---
 title: Do Not Add Wrapper Elements for Styling
-titleKo: 스타일 때문에 element를 새로 감싸지 않습니다
+titleKo: 스타일 때문에 요소를 새로 감싸지 않습니다
 impact: MEDIUM-HIGH
-impactDescription: 래핑 element는 부모 레이아웃 계산을 바꾸고 역할 없는 클래스를 늘립니다
+impactDescription: 래핑 요소는 부모 레이아웃 계산을 바꾸고 역할 없는 클래스를 늘립니다
 appliesWhen:
   - 스타일을 주려고 `div`나 `span`을 새로 감쌀 때
   - `className`을 받지 않는 컴포넌트에 여백이나 크기를 줘야 할 때
@@ -13,9 +13,9 @@ tags: components, wrappers, layout
 
 ## Do Not Add Wrapper Elements for Styling
 
-**Impact: MEDIUM-HIGH (래핑 element는 부모 레이아웃 계산을 바꾸고 역할 없는 클래스를 늘립니다)**
+**Impact: MEDIUM-HIGH (래핑 요소는 부모 레이아웃 계산을 바꾸고 역할 없는 클래스를 늘립니다)**
 
-스타일을 주려고 element를 새로 감싸지 않습니다.
+스타일을 주려고 요소를 새로 감싸지 않습니다.
 그 컴포넌트가 `className`을 받도록 먼저 고칩니다.
 
 - 래핑 `div` 하나가 부모의 flex나 grid 자식 수를 바꿉니다.

@@ -1,6 +1,6 @@
 # Default to Plain CSS Unless the Project Explicitly Standardizes on CSS Modules
 
-**Impact: HIGH (클래스명이 전역에서 고유해야 scope_slug로 소유자를 되짚을 수 있습니다)**
+**Impact: HIGH (클래스명이 전역에서 고유해야 범위_식별자로 소유자를 되짚을 수 있습니다)**
 
 이 CSS skill은 plain `*.css`와 전역에서 고유한 클래스명을 전제로 씁니다.
 `pg_*`, `wg_*`, `ui_*` 네임스페이스가 있는 이유는 전역 클래스 공간에서 소유자를 되짚기 위해서입니다.

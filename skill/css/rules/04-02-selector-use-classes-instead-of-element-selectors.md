@@ -1,10 +1,10 @@
 ---
 title: Use Classes Instead of Element Selectors
-titleKo: element 선택자 대신 클래스를 붙입니다
+titleKo: 요소 선택자 대신 클래스를 붙입니다
 impact: MEDIUM
 impactDescription: 태그만 바꿔도 스타일이 사라지므로 우리가 렌더하는 마크업에는 클래스를 붙입니다
 appliesWhen:
-  - `p`, `h2`, `span`, `button` 같은 element 선택자를 쓰려 할 때
+  - `p`, `h2`, `span`, `button` 같은 요소 선택자를 쓰려 할 때
   - `dangerouslySetInnerHTML`이나 Markdown 렌더러 출력을 스타일링할 때
 reviewWith: naming-name-elements-and-modifiers-by-role
 tags: selector, element-selectors, markup
@@ -14,12 +14,12 @@ tags: selector, element-selectors, markup
 
 **Impact: MEDIUM (태그만 바꿔도 스타일이 사라지므로 우리가 렌더하는 마크업에는 클래스를 붙입니다)**
 
-우리가 렌더하는 마크업에는 element 선택자를 쓰지 않습니다. 클래스를 붙입니다.
+우리가 렌더하는 마크업에는 요소 선택자를 쓰지 않습니다. 클래스를 붙입니다.
 
 `div`를 `section`으로, `span`을 `p`로 바꾸는 것만으로 스타일이 사라집니다.
 그 변경은 TSX에서 일어나고 CSS 파일에는 흔적이 남지 않습니다.
 
-element 선택자를 쓸 수 있는 경우는 하나입니다.
+요소 선택자를 쓸 수 있는 경우는 하나입니다.
 
 > **우리가 그 마크업을 쓰지 않아서 클래스를 붙일 수 없을 때**
 
@@ -29,11 +29,11 @@ TSX에서 그 지점이 보이므로 "이게 raw HTML인가"를 판단할 필요
 - 그때도 래퍼 클래스 블록 안에서만 씁니다. 최상위 `h2 { }`는 그 페이지 모든 `h2`에 걸립니다.
 - `:first-child` 같은 구조 선택자도 같습니다. 우리가 렌더하면 클래스를 붙입니다.
 
-`selector-disallowed-list`가 중첩 안 element 선택자를 막습니다.
+`selector-disallowed-list`가 중첩 안 요소 선택자를 막습니다.
 그래서 이 예외를 쓸 때는 `stylelint-disable-next-line` 주석이 필요합니다.
 드문 경우이므로 그 주석이 곧 "여기는 우리가 쓰지 않는 마크업"이라는 표시가 됩니다.
 
-**Incorrect (우리가 렌더하는 마크업을 element 선택자로 겨냥함):**
+**Incorrect (우리가 렌더하는 마크업을 요소 선택자로 겨냥함):**
 
 ```css
 .pg_catalogIndex__toolbar {
@@ -51,7 +51,7 @@ TSX에서 그 지점이 보이므로 "이게 raw HTML인가"를 판단할 필요
 }
 ```
 
-**Incorrect (element 선택자를 최상위에 둠):**
+**Incorrect (요소 선택자를 최상위에 둠):**
 
 ```css
 .wg_entryDetail__prose h2 {
@@ -82,7 +82,7 @@ TSX에서 그 지점이 보이므로 "이게 raw HTML인가"를 판단할 필요
 }
 ```
 
-**Correct (마크업을 우리가 쓰지 않으면 래퍼 블록 안에서 element 선택자를 씀):**
+**Correct (마크업을 우리가 쓰지 않으면 래퍼 블록 안에서 요소 선택자를 씀):**
 
 ```tsx
 <div

@@ -5,7 +5,7 @@ impact: MEDIUM-HIGH
 impactDescription: DOM을 거슬러 올라가지 않고 sticky, fixed, 박스 책임을 파악합니다
 appliesWhen:
   - `sticky`·`fixed`, `z-index`, 강제 width나 height 또는 부모·자식 layout 책임을 추가·변경할 때
-  - 제외: 같은 element의 기본/modifier 분리에서 기존 `display`·spacing 선언을 값 그대로 재배치하는 경우
+  - 제외: 같은 요소의 기본/modifier 분리에서 기존 `display`·spacing 선언을 값 그대로 재배치하는 경우
 tags: layout, comments, sticky
 ---
 

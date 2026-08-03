@@ -183,6 +183,11 @@ export const buildViewerPayload = async (): Promise<ViewerPayload> => {
 
 		const document = await readSkillDocument(getSkillPaths(skillName));
 
+		// 핸드북은 완성된 progressive skill 만 노출한다. 나머지는 아직 작성 중이다.
+		if (document.metadata.progressiveDisclosure !== true) {
+			continue;
+		}
+
 		skills.push({
 			name: document.skillName,
 			title: document.metadata.title,

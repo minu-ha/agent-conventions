@@ -291,19 +291,20 @@ const cssRuleRouting = {
 	},
 	"naming-use-scope-slug-element-modifier-syntax": {
 		appliesWhen:
-			"plain CSS의 project-owned 클래스를 새로 만들 때. 이름, scope, slug, element, modifier 구분자 또는 대소문자 표기을 변경할 때.",
+			"plain CSS의 project-owned 클래스를 새로 만들 때. 이름, 범위, 식별자, 요소, modifier 구분자 또는 대소문자 표기을 변경할 때.",
 		reviewWith: [],
 	},
 	"naming-name-elements-and-modifiers-by-role": {
-		appliesWhen: "element 또는 modifier 클래스 이름을 새로 지을 때. `container`, `wrapper`, `box`, 치수나 간격 중심 이름을 변경할 때.",
+		appliesWhen: "요소 또는 modifier 클래스 이름을 새로 지을 때. `container`, `wrapper`, `box`, 치수나 간격 중심 이름을 변경할 때.",
 		reviewWith: [],
 	},
 	"naming-keep-page-slug-traceable": {
-		appliesWhen: "`pg_*` 소유자의 클래스 slug를 새로 만들거나 이름을 바꿀 때. 같은 이름 컴포넌트가 여러 화면에 생겨 slug를 구분해야 할 때.",
+		appliesWhen:
+			"`pg_*` 소유자의 클래스 식별자를 새로 만들거나 이름을 바꿀 때. 같은 이름 컴포넌트가 여러 화면에 생겨 식별자를 구분해야 할 때.",
 		reviewWith: [],
 	},
 	"ownership-give-each-file-one-scope-slug": {
-		appliesWhen: "새 `scope_slug`를 만들거나 기존 slug를 복사·이름 변경할 때. 서로 다른 컴포넌트가 같은 slug를 쓸 가능성이 있을 때.",
+		appliesWhen: "새 `scope_slug`를 만들거나 기존 식별자를 복사·이름 변경할 때. 서로 다른 컴포넌트가 같은 식별자를 쓸 가능성이 있을 때.",
 		reviewWith: [],
 	},
 	"ownership-choose-scope-prefix-by-reuse-range": {
@@ -350,7 +351,7 @@ const cssRuleRouting = {
 	},
 	"selector-use-classes-instead-of-element-selectors": {
 		appliesWhen:
-			"`p`, `h2`, `span`, `button` 같은 element 선택자를 쓰려 할 때. `dangerouslySetInnerHTML`이나 Markdown 렌더러 출력을 스타일링할 때.",
+			"`p`, `h2`, `span`, `button` 같은 요소 선택자를 쓰려 할 때. `dangerouslySetInnerHTML`이나 Markdown 렌더러 출력을 스타일링할 때.",
 		reviewWith: ["naming-name-elements-and-modifiers-by-role"],
 	},
 	"selector-do-not-group-classes-with-commas": {
@@ -381,7 +382,7 @@ const cssRuleRouting = {
 	},
 	"values-keep-layout-intent-explicit": {
 		appliesWhen:
-			"`sticky`·`fixed`, `z-index`, 강제 width나 height 또는 부모·자식 layout 책임을 추가·변경할 때. 제외: 같은 element의 기본/modifier 분리에서 기존 `display`·spacing 선언을 값 그대로 재배치하는 경우.",
+			"`sticky`·`fixed`, `z-index`, 강제 width나 height 또는 부모·자식 layout 책임을 추가·변경할 때. 제외: 같은 요소의 기본/modifier 분리에서 기존 `display`·spacing 선언을 값 그대로 재배치하는 경우.",
 		reviewWith: [],
 	},
 	"values-always-provide-css-variable-fallbacks": {
@@ -2312,7 +2313,7 @@ test("routing activation and generated indexes use only the changed semantic del
 	assert.match(generatedIndex, /^- T\d+ \| [^ |]+ \|/m);
 
 	const routeOwnerRule = await readRuleSource("css", "naming-keep-page-slug-traceable");
-	assert.match(routeOwnerRule, /`pg_\*` 소유자의 클래스 slug를 새로 만들거나 이름을 바꿀 때/);
+	assert.match(routeOwnerRule, /`pg_\*` 소유자의 클래스 식별자를 새로 만들거나 이름을 바꿀 때/);
 });
 
 test("v16 boundary contracts distinguish semantic role changes from contextual and byte-equivalent noise", async () => {
@@ -2695,7 +2696,7 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	const foreignRoot = await readRule("css", "ownership-use-foreign-classes-only-under-your-own-root");
 	assertMentions(
 		foreignRoot,
-		[/내 root 클래스 블록 안에서만/, /단독 최상위 선택자로 쓰지 않습니다/, /선택자가 내 slug로 시작하는지/],
+		[/내 root 클래스 블록 안에서만/, /단독 최상위 선택자로 쓰지 않습니다/, /선택자가 내 식별자로 시작하는지/],
 		"foreignRoot",
 	);
 	assertMentions(
@@ -2727,7 +2728,7 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	const rawWrapper = await readRule("css", "selector-use-classes-instead-of-element-selectors");
 	assertMentions(
 		rawWrapper,
-		[/우리가 렌더하는 마크업에는 element 선택자를 쓰지 않습니다/, /dangerouslySetInnerHTML/, /stylelint-disable-next-line/],
+		[/우리가 렌더하는 마크업에는 요소 선택자를 쓰지 않습니다/, /dangerouslySetInnerHTML/, /stylelint-disable-next-line/],
 		"rawWrapper",
 	);
 
@@ -2765,7 +2766,7 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	const nestDomState = await readRule("css", "selector-nest-dom-state-in-the-owning-block");
 	assertMentions(
 		nestDomState,
-		[/최상위 선택자로 다시 열지 않습니다/, /slug가 같은 자손을 결합자 하나로 겨냥합니다/, /부모 선택자가 없어서/],
+		[/최상위 선택자로 다시 열지 않습니다/, /식별자가 같은 자손을 결합자 하나로 겨냥합니다/, /부모 선택자가 없어서/],
 		"nestDomState",
 	);
 
@@ -2802,7 +2803,7 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 		/영문 label[\s\S]*docs-write-concise-korean-comments-about-purpose-and-constraints[\s\S]*content gate/i,
 	);
 	assertMentions(generatedContracts[1]!, [/주석 본문 전체/i, /(?:ASCII|영문)/i], "generatedContracts");
-	assert.match(generatedContracts[2]!, /pseudo-class[\s\S]*slug가 같은 자손을 결합자 하나로 겨냥합니다/i);
+	assert.match(generatedContracts[2]!, /pseudo-class[\s\S]*식별자가 같은 자손을 결합자 하나로 겨냥합니다/i);
 	assert.match(generatedContracts[3]!, /CRITICAL rule[\s\S]*full rule/i);
 });
 

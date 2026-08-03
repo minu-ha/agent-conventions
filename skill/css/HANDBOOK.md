@@ -65,7 +65,7 @@
 
 **Impact: CRITICAL**
 
-클래스 문법이 고정되어 있고 element·modifier 이름이 역할을 가리켜야 스타일을 이름으로 검색할 수 있고, 이름만 보고 무엇을 담당하는 클래스인지 알 수 있습니다.
+클래스 문법이 고정되어 있고 요소·modifier 이름이 역할을 가리켜야 스타일을 이름으로 검색할 수 있고, 이름만 보고 무엇을 담당하는 클래스인지 알 수 있습니다.
 
 ### 1.1 Default to Plain CSS Unless the Project Explicitly Standardizes on CSS Modules
 
@@ -73,7 +73,7 @@
 
 **Applies when:** 프로젝트 표준 미확정 상태에서 새 스타일시트 접근 형식\(plain CSS, CSS Modules\)을 선택하거나 `.module.css`·`styles.*`로 전환할 때. 제외: 기존 plain CSS 클래스 이름 변경만 하는 경우.
 
-**Impact: HIGH (클래스명이 전역에서 고유해야 scope_slug로 소유자를 되짚을 수 있습니다)**
+**Impact: HIGH (클래스명이 전역에서 고유해야 범위_식별자로 소유자를 되짚을 수 있습니다)**
 
 이 CSS skill은 plain `*.css`와 전역에서 고유한 클래스명을 전제로 씁니다.
 `pg_*`, `wg_*`, `ui_*` 네임스페이스가 있는 이유는 전역 클래스 공간에서 소유자를 되짚기 위해서입니다.
@@ -126,25 +126,29 @@ import "./_index.css";
 
 **Rule:** `C02` · `naming-use-scope-slug-element-modifier-syntax`
 
-**Applies when:** plain CSS의 project-owned 클래스를 새로 만들 때. 이름, scope, slug, element, modifier 구분자 또는 대소문자 표기을 변경할 때.
+**Applies when:** plain CSS의 project-owned 클래스를 새로 만들 때. 이름, 범위, 식별자, 요소, modifier 구분자 또는 대소문자 표기을 변경할 때.
 
 **Impact: CRITICAL (클래스명만 보고 누가 소유하고 어떤 역할인지 읽힙니다)**
 
-클래스명은 `<scope>_<slug>__<element>[--<modifier>]` 문법을 사용합니다.
-구분자는 `_`, `__`, `--`를 고정하고, 각 부분의 책임을 섞지 않습니다.
+클래스명은 `<scope>_<slug>__<element>[--<modifier>]` 문법을 씁니다.
+구분자 `_`, `__`, `--`를 고정하고 각 자리의 책임을 섞지 않습니다.
 
-구성 요소:
+네 자리를 아래처럼 읽습니다. 앞으로 규칙 본문은 한국어 쪽 이름을 씁니다.
 
-- `scope`: `pg`, `wg`, `ui` 중 하나. lowercase 소유자 네임스페이스
-- `slug`: 소유자 식별자. `camelCase`
-- `element`: 소유자 안의 UI 역할. `listButton`, `emptyState`처럼 camelCase
-- `modifier`: 상태나 반복 variant. `routeActive`, `selected`처럼 camelCase
+| 자리 | 읽는 이름 | 무엇을 담는가 |
+| --- | --- | --- |
+| `scope` | 범위 | `pg`, `wg`, `ui` 중 하나. 소문자로 씁니다 |
+| `slug` | 식별자 | 그 CSS 파일 소유자의 이름. camelCase |
+| `element` | 요소 | 소유자 안의 UI 역할. `listButton`, `emptyState` |
+| `modifier` | modifier | 상태나 반복되는 모양. `routeActive`, `selected` |
 
-slug에는 접두사가 말하는 부분을 반복하지 않습니다. `UiButton`은 `ui_button`이고 `ui_uiButton`이 아닙니다.
+`modifier`만 영어를 그대로 씁니다. `variant` prop과 뜻이 겹쳐서 한국어로 바꾸면 헷갈립니다.
+
+식별자에는 접두사가 말하는 부분을 반복하지 않습니다. `UiButton`은 `ui_button`이고 `ui_uiButton`이 아닙니다.
 
 `selector-class-pattern`에 이 문법을 정규식으로 넣으면 기계가 검사합니다.
 
-**Incorrect (slug와 element에 snake_case와 kebab-case가 섞임):**
+**Incorrect (식별자와 요소에 snake_case와 kebab-case가 섞임):**
 
 ```txt
 ui_tag_list__root
@@ -156,7 +160,7 @@ pg_catalogDetail__main-content
 pg_catalogDetail__main--route_active
 ```
 
-**Correct (scope는 lowercase, slug·element·modifier는 camelCase):**
+**Correct (범위는 lowercase, 식별자·요소·modifier는 camelCase):**
 
 ```txt
 ui_tagList__root
@@ -172,7 +176,7 @@ pg_catalogDetail__main--routeActive
 
 **Rule:** `C03` · `naming-name-elements-and-modifiers-by-role`
 
-**Applies when:** element 또는 modifier 클래스 이름을 새로 지을 때. `container`, `wrapper`, `box`, 치수나 간격 중심 이름을 변경할 때.
+**Applies when:** 요소 또는 modifier 클래스 이름을 새로 지을 때. `container`, `wrapper`, `box`, 치수나 간격 중심 이름을 변경할 때.
 
 **Impact: HIGH (이름이 모호하거나 치수를 가리키면 클래스가 어느 부위인지 알 수 없습니다)**
 
@@ -202,23 +206,23 @@ pg_catalogDetail__detailSection
 
 **Rule:** `C04` · `naming-keep-page-slug-traceable`
 
-**Applies when:** `pg_*` 소유자의 클래스 slug를 새로 만들거나 이름을 바꿀 때. 같은 이름 컴포넌트가 여러 화면에 생겨 slug를 구분해야 할 때.
+**Applies when:** `pg_*` 소유자의 클래스 식별자를 새로 만들거나 이름을 바꿀 때. 같은 이름 컴포넌트가 여러 화면에 생겨 식별자를 구분해야 할 때.
 
 **Impact: HIGH (클래스명만 보고 어느 화면 것인지 거슬러 찾습니다)**
 
-`pg_*` slug만 보고 어느 화면의 것인지 알 수 있어야 합니다.
-어떤 파일이 화면 소유인지는 프레임워크 규약이 정하고, CSS는 그 소유가 slug에서 흐려지지 않게 지킵니다.
+`pg_*` 식별자만 보고 어느 화면의 것인지 알 수 있어야 합니다.
+어떤 파일이 화면 소유인지는 프레임워크 규약이 정하고, CSS는 그 소유가 식별자에서 흐려지지 않게 지킵니다.
 
-- 화면 shell은 page 이름을 slug로 씁니다. `pg_postsDetail`처럼 화면 계열과 역할이 읽혀야 합니다.
-- 화면 안의 컴포넌트는 자기 이름만 slug로 씁니다.
+- 화면 shell은 page 이름을 식별자로 씁니다. `pg_postsDetail`처럼 화면 계열과 역할이 읽혀야 합니다.
+- 화면 안의 컴포넌트는 자기 이름만 식별자로 씁니다.
 - 팀이 공유하는 화면 목록에 없는 줄임말은 쓰지 않습니다.
-- `wg_*`, `ui_*`는 각자의 slug 규칙을 따릅니다.
+- `wg_*`, `ui_*`는 각자의 식별자 규칙을 따릅니다.
 
-부모 slug를 미리 붙이지 않습니다.
+부모 식별자를 미리 붙이지 않습니다.
 충돌이 실제로 생겼을 때만 최소 범위로 덧붙입니다.
-미리 붙이면 깊이에 따라 slug가 계속 자라서 충돌을 걱정하기 전에 읽기가 무너집니다.
+미리 붙이면 깊이에 따라 식별자가 계속 자라서 충돌을 걱정하기 전에 읽기가 무너집니다.
 
-**Incorrect (의미가 약하거나 계층 순서가 흐려진 slug):**
+**Incorrect (의미가 약하거나 계층 순서가 흐려진 식별자):**
 
 ```txt
 pg_shell__body
@@ -226,14 +230,14 @@ pg_doc__content
 pg_x__root
 ```
 
-**Incorrect (충돌이 없는데도 부모 slug를 미리 붙임):**
+**Incorrect (충돌이 없는데도 부모 식별자를 미리 붙임):**
 
 ```txt
 pg_detailSpikePatternPanelOverviewSection__root
 pg_detailSpikePatternPanelSummaryBand__root
 ```
 
-**Correct (shell은 화면 slug, 컴포넌트는 자기 slug):**
+**Correct (shell은 화면 식별자, 컴포넌트는 자기 식별자):**
 
 ```txt
 posts index page   -> pg_postsIndex__root
@@ -244,7 +248,7 @@ overview section   -> pg_overviewSection__root
 summary band       -> pg_summaryBand__root
 ```
 
-**Correct (같은 slug가 실제로 두 화면에 생겼을 때만 구분):**
+**Correct (같은 식별자가 실제로 두 화면에 생겼을 때만 구분):**
 
 ```txt
 pg_detailOverviewSection__root
@@ -261,16 +265,16 @@ pg_indexOverviewSection__root
 
 **Rule:** `C05` · `ownership-give-each-file-one-scope-slug`
 
-**Applies when:** 새 `scope_slug`를 만들거나 기존 slug를 복사·이름 변경할 때. 서로 다른 컴포넌트가 같은 slug를 쓸 가능성이 있을 때.
+**Applies when:** 새 `scope_slug`를 만들거나 기존 식별자를 복사·이름 변경할 때. 서로 다른 컴포넌트가 같은 식별자를 쓸 가능성이 있을 때.
 
 **Impact: CRITICAL (여러 컴포넌트가 같은 네임스페이스를 나눠 쓰면 전역에서 충돌합니다)**
 
-CSS 파일마다 slug가 하나입니다. 같은 slug를 쓰는 파일은 프로젝트 전역에서 그 하나뿐입니다.
+CSS 파일마다 식별자가 하나입니다. 같은 식별자를 쓰는 파일은 프로젝트 전역에서 그 하나뿐입니다.
 
-- 새 스타일을 추가하기 전에 같은 slug를 쓰는 파일이 이미 있는지 확인합니다.
-- 의미가 겹쳐도 파일이 다르면 slug를 따로 만듭니다.
-- 하위 컴포넌트 여럿이 부모 slug를 나눠 쓰는 것도 같은 위반입니다.
-- 자기 CSS 파일이 있으면 자기 slug를 만듭니다. 부모 slug를 계속 쓰려면 스타일도 부모 파일에 둡니다.
+- 새 스타일을 추가하기 전에 같은 식별자를 쓰는 파일이 이미 있는지 확인합니다.
+- 의미가 겹쳐도 파일이 다르면 식별자를 따로 만듭니다.
+- 하위 컴포넌트 여럿이 부모 식별자를 나눠 쓰는 것도 같은 위반입니다.
+- 자기 CSS 파일이 있으면 자기 식별자를 만듭니다. 부모 식별자를 계속 쓰려면 스타일도 부모 파일에 둡니다.
 
 **Incorrect (이미 다른 소유자가 쓰는 `scope_slug`를 재사용):**
 
@@ -282,7 +286,7 @@ pg_catalogIndex__header
 pg_catalogIndex__toolbar
 ```
 
-**Correct (소유자가 다르면 별도 slug를 부여):**
+**Correct (소유자가 다르면 별도 식별자를 부여):**
 
 ```txt
 // catalog/index route
@@ -302,7 +306,7 @@ pg_dashboardIndex__header
 
 **Impact: HIGH (접두사를 재사용 범위로 정하면 이름만 보고 어디서 쓰이는지 압니다)**
 
-scope 접두사는 폴더 경로가 아니라 그 CSS 파일 소유자의 **재사용 범위**를 가리킵니다.
+범위 접두사는 폴더 경로가 아니라 그 CSS 파일 소유자의 **재사용 범위**를 가리킵니다.
 
 | 접두사 | 재사용 범위 |
 | --- | --- |
@@ -311,7 +315,7 @@ scope 접두사는 폴더 경로가 아니라 그 CSS 파일 소유자의 **재�
 | `ui_` | 도메인 지식이 없는 primitive 컴포넌트와 그 구성 요소 |
 
 `pg_`는 화면 shell과 그 아래 컴포넌트를 함께 덮습니다.
-shell은 slug가 route 이름과 같아서 따로 표시하지 않아도 구분됩니다.
+shell은 식별자가 route 이름과 같아서 따로 표시하지 않아도 구분됩니다.
 
 - 폴더가 아니라 가장 가까운 공개 패키지 경계로 판정합니다.
   widget 내부 part가 `component` 폴더에 있어도 `wg_`입니다.
@@ -320,7 +324,7 @@ shell은 slug가 route 이름과 같아서 따로 표시하지 않아도 구분�
 
 어떤 파일이 화면 소유인지는 활성화된 프레임워크 규약이 판단합니다.
 
-**Incorrect (widget 내부 part를 폴더 이름만 보고 화면 scope로 내림):**
+**Incorrect (widget 내부 part를 폴더 이름만 보고 화면 범위로 내림):**
 
 ```txt
 widget/chart/component/wg-chart-header.css
@@ -374,7 +378,7 @@ ui/button/ui-button.css
 | `.pg_x__root { & .wg_chartCard__caption { } }` | 씁니다 |
 | `.pg_x__button:hover .pg_x__box { }` | 내 클래스끼리라 대상이 아닙니다 |
 
-판정은 **선택자가 내 slug로 시작하는지**입니다. 소유 관계를 따로 조사하지 않습니다.
+판정은 **선택자가 내 식별자로 시작하는지**입니다. 소유 관계를 따로 조사하지 않습니다.
 최상위 `.pg_x__root .ant-tree-title`도 쓰지 않습니다. root 블록을 열고 그 안에서 `&`로 씁니다.
 한 소유자의 덮어쓰기가 한 블록에 모이면 라이브러리를 올릴 때 볼 곳이 한 군데뿐입니다.
 
@@ -616,14 +620,14 @@ modifier는 두 가지만 표현합니다.
 
 한 곳에서만 필요한 여백이나 배치 보정에는 쓰지 않습니다.
 `--compactTop`, `--marginLeft0`, `--alignRight`처럼 그 화면 하나를 고치려고 붙이는 이름이 여기 해당합니다.
-그런 보정은 modifier가 아니라 **역할 이름을 가진 별도 element 클래스**로 풉니다.
+그런 보정은 modifier가 아니라 **역할 이름을 가진 별도 요소 클래스**로 풉니다.
 
 갈리는 기준은 하나입니다.
 
 > 이 modifier를 다른 화면에서도 같은 이름으로 쓸 수 있는가?
 
 쓸 수 있으면 반복되는 모양이라 허용합니다.
-그 화면에서만 통하는 이름이면 이미 위치 정보를 담고 있으니 element로 바꿉니다.
+그 화면에서만 통하는 이름이면 이미 위치 정보를 담고 있으니 요소로 바꿉니다.
 
 **Incorrect (그 화면 하나를 고치려고 modifier를 붙임):**
 
@@ -632,7 +636,7 @@ modifier는 두 가지만 표현합니다.
 <div className={clsx("pg_catalogDetail__aside", "pg_catalogDetail__aside--marginLeft0")} />
 ```
 
-**Correct (한 곳만의 보정은 역할 이름을 가진 element로 분리):**
+**Correct (한 곳만의 보정은 역할 이름을 가진 요소로 분리):**
 
 ```tsx
 <div className={clsx("pg_catalogDetail__detailSection")} />
@@ -803,9 +807,9 @@ export const UiCollapse = (props: UiCollapseProps) => {
 
 **Review with:** `composition-inject-classes-only-at-the-entry-point`, `naming-name-elements-and-modifiers-by-role`
 
-**Impact: MEDIUM-HIGH (래핑 element는 부모 레이아웃 계산을 바꾸고 역할 없는 클래스를 늘립니다)**
+**Impact: MEDIUM-HIGH (래핑 요소는 부모 레이아웃 계산을 바꾸고 역할 없는 클래스를 늘립니다)**
 
-스타일을 주려고 element를 새로 감싸지 않습니다.
+스타일을 주려고 요소를 새로 감싸지 않습니다.
 그 컴포넌트가 `className`을 받도록 먼저 고칩니다.
 
 - 래핑 `div` 하나가 부모의 flex나 grid 자식 수를 바꿉니다.
@@ -985,18 +989,18 @@ export const UiCollapse = ({className, items}: UiCollapseProps) => (
 
 **Rule:** `C15` · `selector-use-classes-instead-of-element-selectors`
 
-**Applies when:** `p`, `h2`, `span`, `button` 같은 element 선택자를 쓰려 할 때. `dangerouslySetInnerHTML`이나 Markdown 렌더러 출력을 스타일링할 때.
+**Applies when:** `p`, `h2`, `span`, `button` 같은 요소 선택자를 쓰려 할 때. `dangerouslySetInnerHTML`이나 Markdown 렌더러 출력을 스타일링할 때.
 
 **Review with:** `naming-name-elements-and-modifiers-by-role`
 
 **Impact: MEDIUM (태그만 바꿔도 스타일이 사라지므로 우리가 렌더하는 마크업에는 클래스를 붙입니다)**
 
-우리가 렌더하는 마크업에는 element 선택자를 쓰지 않습니다. 클래스를 붙입니다.
+우리가 렌더하는 마크업에는 요소 선택자를 쓰지 않습니다. 클래스를 붙입니다.
 
 `div`를 `section`으로, `span`을 `p`로 바꾸는 것만으로 스타일이 사라집니다.
 그 변경은 TSX에서 일어나고 CSS 파일에는 흔적이 남지 않습니다.
 
-element 선택자를 쓸 수 있는 경우는 하나입니다.
+요소 선택자를 쓸 수 있는 경우는 하나입니다.
 
 > **우리가 그 마크업을 쓰지 않아서 클래스를 붙일 수 없을 때**
 
@@ -1006,11 +1010,11 @@ TSX에서 그 지점이 보이므로 "이게 raw HTML인가"를 판단할 필요
 - 그때도 래퍼 클래스 블록 안에서만 씁니다. 최상위 `h2 { }`는 그 페이지 모든 `h2`에 걸립니다.
 - `:first-child` 같은 구조 선택자도 같습니다. 우리가 렌더하면 클래스를 붙입니다.
 
-`selector-disallowed-list`가 중첩 안 element 선택자를 막습니다.
+`selector-disallowed-list`가 중첩 안 요소 선택자를 막습니다.
 그래서 이 예외를 쓸 때는 `stylelint-disable-next-line` 주석이 필요합니다.
 드문 경우이므로 그 주석이 곧 "여기는 우리가 쓰지 않는 마크업"이라는 표시가 됩니다.
 
-**Incorrect (우리가 렌더하는 마크업을 element 선택자로 겨냥함):**
+**Incorrect (우리가 렌더하는 마크업을 요소 선택자로 겨냥함):**
 
 ```css
 .pg_catalogIndex__toolbar {
@@ -1028,7 +1032,7 @@ TSX에서 그 지점이 보이므로 "이게 raw HTML인가"를 판단할 필요
 }
 ```
 
-**Incorrect (element 선택자를 최상위에 둠):**
+**Incorrect (요소 선택자를 최상위에 둠):**
 
 ```css
 .wg_entryDetail__prose h2 {
@@ -1059,7 +1063,7 @@ TSX에서 그 지점이 보이므로 "이게 raw HTML인가"를 판단할 필요
 }
 ```
 
-**Correct (마크업을 우리가 쓰지 않으면 래퍼 블록 안에서 element 선택자를 씀):**
+**Correct (마크업을 우리가 쓰지 않으면 래퍼 블록 안에서 요소 선택자를 씀):**
 
 ```tsx
 <div
@@ -1349,7 +1353,7 @@ DOM 상태 pseudo-class는 그 요소의 클래스 블록 안에서 `&:`로 씁�
 - 파일 어디에 상태 스타일이 더 있는지 찾지 않습니다.
 - 여러 상태가 같은 선언을 쓰면 상태마다 블록을 따로 엽니다. `,`도 `:is()`도 쓰지 않습니다.
 
-조상의 DOM 상태가 자손을 바꿔야 하면 slug가 같은 자손을 결합자 하나로 겨냥합니다.
+조상의 DOM 상태가 자손을 바꿔야 하면 식별자가 같은 자손을 결합자 하나로 겨냥합니다.
 자손의 `:hover`는 포인터가 자손 위에 있을 때만 걸려서 조상 상태를 알 방법이 없고,
 CSS에 부모 선택자가 없어서 대체 수단이 없습니다.
 
@@ -1523,7 +1527,7 @@ CSS에 부모 선택자가 없어서 대체 수단이 없습니다.
 
 **Rule:** `C21` · `values-keep-layout-intent-explicit`
 
-**Applies when:** `sticky`·`fixed`, `z-index`, 강제 width나 height 또는 부모·자식 layout 책임을 추가·변경할 때. 제외: 같은 element의 기본/modifier 분리에서 기존 `display`·spacing 선언을 값 그대로 재배치하는 경우.
+**Applies when:** `sticky`·`fixed`, `z-index`, 강제 width나 height 또는 부모·자식 layout 책임을 추가·변경할 때. 제외: 같은 요소의 기본/modifier 분리에서 기존 `display`·spacing 선언을 값 그대로 재배치하는 경우.
 
 **Impact: MEDIUM-HIGH (DOM을 거슬러 올라가지 않고 sticky, fixed, 박스 책임을 파악합니다)**
 

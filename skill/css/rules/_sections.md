@@ -5,7 +5,7 @@
 ## 1. Class Naming and Syntax (naming)
 **TitleKo:** 클래스 이름과 문법
 **Impact:** CRITICAL
-**Description:** 클래스 문법이 고정되어 있고 element·modifier 이름이 역할을 가리켜야 스타일을 이름으로 검색할 수 있고,
+**Description:** 클래스 문법이 고정되어 있고 요소·modifier 이름이 역할을 가리켜야 스타일을 이름으로 검색할 수 있고,
   이름만 보고 무엇을 담당하는 클래스인지 알 수 있습니다.
 
 ## 2. Ownership and Boundaries (ownership)

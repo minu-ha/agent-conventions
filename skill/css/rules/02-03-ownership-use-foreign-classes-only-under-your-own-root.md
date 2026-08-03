@@ -30,7 +30,7 @@ tags: ownership, scope, third-party
 | `.pg_x__root { & .wg_chartCard__caption { } }` | 씁니다 |
 | `.pg_x__button:hover .pg_x__box { }` | 내 클래스끼리라 대상이 아닙니다 |
 
-판정은 **선택자가 내 slug로 시작하는지**입니다. 소유 관계를 따로 조사하지 않습니다.
+판정은 **선택자가 내 식별자로 시작하는지**입니다. 소유 관계를 따로 조사하지 않습니다.
 최상위 `.pg_x__root .ant-tree-title`도 쓰지 않습니다. root 블록을 열고 그 안에서 `&`로 씁니다.
 한 소유자의 덮어쓰기가 한 블록에 모이면 라이브러리를 올릴 때 볼 곳이 한 군데뿐입니다.
 
