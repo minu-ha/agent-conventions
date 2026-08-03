@@ -29,12 +29,12 @@ tags: tooling, stylelint, automation
 | `no-descending-specificity` | 자손 기본 블록을 조상 규칙보다 앞에 두게 합니다 |
 
 접두사가 디렉터리마다 달라서 `selector-class-pattern`과 `selector-disallowed-list`는 `overrides`로 나눕니다.
-중첩이 한 겹이라 블록 안 선택자는 `&`로 시작하고, 그래서 단독 최상위만 걸립니다.
+중첩이 한 겹이라 블록 안 선택자는 `&`로 시작하고, 그래서 블록 바깥에 홀로 둔 것만 걸립니다.
 
 `selector-max-combinators`와 `selector-max-type`은 넣지 않습니다.
 우리 체이닝과 라이브러리 경로를 개수로 구분할 수 없습니다.
 
-역할 이름, 승격 판단, variant 노출, 포커스 대비는 리뷰가 담당합니다.
+역할 이름, 승격 판단, 변형 노출, 포커스 대비는 리뷰가 담당합니다.
 
 **Incorrect (`stylelint-config-standard`의 기본 클래스 패턴을 그대로 씀):**
 
@@ -134,9 +134,9 @@ export default {
 
 ```md
 <!-- docs/css-review.md -->
-- element·modifier 이름이 역할을 가리키는가
-- element 선택자를 쓴 자리가 정말 우리가 마크업을 쓰지 않는 곳인가
-- 이 화면만 쓰는 컴포넌트를 widget 으로 올리지 않았는가
-- 내부 표현을 variant 로 노출했는가, 아니면 root 아래에서 겨냥했는가
+- 요소·수정자 이름이 역할을 가리키는가
+- 요소 선택자를 쓴 자리가 정말 우리가 마크업을 쓰지 않는 곳인가
+- 이 화면만 쓰는 컴포넌트를 위젯으로 올리지 않았는가
+- 내부 모습을 변형으로 노출했는가, 아니면 최상위 블록 아래에서 겨냥했는가
 - 포커스 표시가 색만 바뀌지 않고 형태로 구분되는가
 ```

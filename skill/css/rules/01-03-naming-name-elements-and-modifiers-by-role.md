@@ -1,10 +1,10 @@
 ---
 title: Name Elements and Modifiers by Role
-titleKo: 요소와 modifier는 역할로 이름 짓습니다
+titleKo: 요소와 수정자는 역할로 이름 짓습니다
 impact: HIGH
 impactDescription: 이름이 모호하거나 치수를 가리키면 클래스가 어느 부위인지 알 수 없습니다
 appliesWhen:
-  - 요소 또는 modifier 클래스 이름을 새로 지을 때
+  - 요소나 수정자 클래스 이름을 새로 지을 때
   - `container`, `wrapper`, `box`, 치수나 간격 중심 이름을 변경할 때
 tags: naming, semantics, modifiers
 ---
@@ -13,9 +13,9 @@ tags: naming, semantics, modifiers
 
 **Impact: HIGH (이름이 모호하거나 치수를 가리키면 클래스가 어느 부위인지 알 수 없습니다)**
 
-`element`와 `modifier` 이름은 구조나 치수가 아니라 UI 역할을 표현해야 합니다.
-`container`, `wrapper`, `box` 같은 포괄 단어 단독 사용이나 `gap12` 같은 숫자 기반 의미는 피하고,
-실제 역할과 상태를 드러내는 이름을 씁니다.
+요소와 수정자 이름은 구조나 치수가 아니라 UI 역할을 드러냅니다.
+`container`, `wrapper`, `box`처럼 뭉뚱그린 단어를 홀로 쓰거나 `gap12`처럼 숫자로 뜻을 담지 않습니다.
+그 자리가 무슨 일을 하는지, 어떤 상태인지가 이름에서 읽히게 씁니다.
 
 **Incorrect (역할 대신 구조나 치수에 기대는 이름):**
 

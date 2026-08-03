@@ -1,8 +1,8 @@
 ---
 title: Use Foreign Classes Only Under Your Own Root
-titleKo: 남의 클래스는 내 root 블록 안에서만 씁니다
+titleKo: 남의 클래스는 내 최상위 블록 안에서만 씁니다
 impact: CRITICAL
-impactDescription: 남의 클래스를 단독으로 쓰면 그 라이브러리나 widget을 쓰는 화면이 전부 함께 바뀝니다
+impactDescription: 남의 클래스를 홀로 쓰면 그 라이브러리나 위젯을 쓰는 화면이 전부 함께 바뀝니다
 appliesWhen:
   - `.ant-*`·`.rc-*`·`.Mui-*` 같은 외부 라이브러리 클래스를 쓸 때
   - 다른 `scope_slug`의 클래스를 겨냥할 때
@@ -14,24 +14,24 @@ tags: ownership, scope, third-party
 
 ## Use Foreign Classes Only Under Your Own Root
 
-**Impact: CRITICAL (남의 클래스를 단독으로 쓰면 그 라이브러리나 widget을 쓰는 화면이 전부 함께 바뀝니다)**
+**Impact: CRITICAL (남의 클래스를 홀로 쓰면 그 라이브러리나 위젯을 쓰는 화면이 전부 함께 바뀝니다)**
 
-내 파일이 소유하지 않은 클래스는 **내 root 클래스 블록 안에서만** 씁니다.
-단독 최상위 선택자로 쓰지 않습니다.
+내 파일이 소유하지 않은 클래스는 **내 최상위 클래스 블록 안에서만** 씁니다.
+블록 바깥에 홀로 두지 않습니다.
 
 `scope_slug`가 내 것이면 내 클래스입니다. 그 밖은 전부 남의 것입니다.
-외부 라이브러리든 다른 화면의 `pg_`든 widget의 `wg_`든 똑같이 다룹니다.
+외부 라이브러리든 다른 화면의 `pg_`든 위젯의 `wg_`든 똑같이 다룹니다.
 
 | 선택자 | 판정 |
 | --- | --- |
 | `.ant-tree-title { }` | 안 씁니다. 그 라이브러리를 쓰는 앱 전체에 걸립니다 |
-| `.wg_chartCard__caption { }` | 안 씁니다. 그 widget을 쓰는 화면 전체에 걸립니다 |
+| `.wg_chartCard__caption { }` | 안 씁니다. 그 위젯을 쓰는 화면 전체에 걸립니다 |
 | `.pg_x__root { & .ant-tree-title { } }` | 씁니다. 그 인스턴스에만 걸립니다 |
 | `.pg_x__root { & .wg_chartCard__caption { } }` | 씁니다 |
 | `.pg_x__button:hover .pg_x__box { }` | 내 클래스끼리라 대상이 아닙니다 |
 
 판정은 **선택자가 내 식별자로 시작하는지**입니다. 소유 관계를 따로 조사하지 않습니다.
-최상위 `.pg_x__root .ant-tree-title`도 쓰지 않습니다. root 블록을 열고 그 안에서 `&`로 씁니다.
+`.pg_x__root .ant-tree-title`처럼 바깥에서 이어 쓰지도 않습니다. 최상위 블록을 열고 그 안에서 `&`로 씁니다.
 한 소유자의 덮어쓰기가 한 블록에 모이면 라이브러리를 올릴 때 볼 곳이 한 군데뿐입니다.
 
 결합자 개수는 제한하지 않습니다. 남의 DOM 깊이는 우리가 정할 수 없습니다.
@@ -45,7 +45,7 @@ tags: ownership, scope, third-party
 `page/` 아래는 `/^\.(wg|ui)_/`와 `/^\.(ant|rc|tippy|Mui)-/`를 막습니다.
 중첩이 한 겹이라 블록 안 선택자는 `&`로 시작해서 걸리지 않습니다.
 
-**Incorrect (root 없이 라이브러리 클래스를 직접 씀):**
+**Incorrect (최상위 블록 없이 라이브러리 클래스를 바로 씀):**
 
 ```css
 .ant-tree-node-content-wrapper {
@@ -57,7 +57,7 @@ tags: ownership, scope, third-party
 }
 ```
 
-**Incorrect (root 없이 다른 `scope_slug`의 클래스를 직접 씀):**
+**Incorrect (최상위 블록 없이 다른 `scope_slug`의 클래스를 바로 씀):**
 
 ```css
 /* page/detail/pg-detail.css */
@@ -70,7 +70,7 @@ tags: ownership, scope, third-party
 }
 ```
 
-**Incorrect (root 블록을 열지 않고 최상위에서 체이닝):**
+**Incorrect (최상위 블록을 열지 않고 바깥에서 이어 씀):**
 
 ```css
 .pg_treePanel__root .ant-tree-title {
@@ -78,7 +78,7 @@ tags: ownership, scope, third-party
 }
 ```
 
-**Correct (내 root 블록 안에서 외부 라이브러리 DOM을 겨냥):**
+**Correct (내 최상위 블록 안에서 외부 라이브러리 DOM을 겨냥):**
 
 ```css
 .pg_treePanel__root {
@@ -112,7 +112,7 @@ tags: ownership, scope, third-party
 }
 ```
 
-**Correct (다른 `scope_slug`의 클래스도 같은 방식으로 내 root 아래에서 겨냥):**
+**Correct (다른 `scope_slug`의 클래스도 내 최상위 블록 안에서 겨냥):**
 
 ```css
 /* page/detail/pg-detail.css */

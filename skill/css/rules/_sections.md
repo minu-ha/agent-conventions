@@ -5,7 +5,7 @@
 ## 1. Class Naming and Syntax (naming)
 **TitleKo:** 클래스 이름과 문법
 **Impact:** CRITICAL
-**Description:** 클래스 문법이 고정되어 있고 요소·modifier 이름이 역할을 가리켜야 스타일을 이름으로 검색할 수 있고,
+**Description:** 클래스 문법이 고정되어 있고 요소·수정자 이름이 역할을 가리켜야 스타일을 이름으로 검색할 수 있고,
   이름만 보고 무엇을 담당하는 클래스인지 알 수 있습니다.
 
 ## 2. Ownership and Boundaries (ownership)
@@ -17,11 +17,11 @@
 ## 3. Class Composition in TSX (composition)
 **TitleKo:** TSX 클래스 조합
 **Impact:** HIGH
-**Description:** TSX 클래스 조합과 래퍼 소유권 규칙은 스타일링 경계를 분명하게 유지하고, UI 래퍼가 통제되지 않은
+**Description:** TSX 클래스 조합과 래퍼 소유 규칙은 스타일링 경계를 분명하게 유지하고, UI 래퍼가 통제되지 않은
   스타일 hook을 노출하는 것을 막습니다.
 
 ## 4. Selectors and Declaration Placement (selector)
-**TitleKo:** 셀렉터와 선언 배치
+**TitleKo:** 선택자와 선언 배치
 **Impact:** HIGH
 **Description:** 겨냥 대상이 코드에 그대로 쓰여 있고 한 클래스의 선언이 한 block에 모여 있어야, 스타일을 고칠 때 읽을
   선택자와 볼 block이 각각 하나로 정해집니다.

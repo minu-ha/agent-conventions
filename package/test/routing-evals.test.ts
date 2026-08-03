@@ -286,16 +286,16 @@ const typescriptRuleRouting = {
 const cssRuleRouting = {
 	"naming-default-to-plain-css-when-no-module-convention": {
 		appliesWhen:
-			"프로젝트 표준 미확정 상태에서 새 스타일시트 접근 형식(plain CSS, CSS Modules)을 선택하거나 `.module.css`·`styles.*`로 전환할 때. 제외: 기존 plain CSS 클래스 이름 변경만 하는 경우.",
+			"표준이 정해지지 않은 상태에서 스타일시트 방식(일반 CSS, CSS Modules)을 고르거나 `.module.css`·`styles.*`로 옮길 때. 제외: 기존 일반 CSS 클래스 이름만 바꾸는 경우.",
 		reviewWith: [],
 	},
 	"naming-use-scope-slug-element-modifier-syntax": {
 		appliesWhen:
-			"plain CSS의 project-owned 클래스를 새로 만들 때. 이름, 범위, 식별자, 요소, modifier 구분자 또는 대소문자 표기을 변경할 때.",
+			"일반 CSS에서 프로젝트가 소유한 클래스를 새로 만들 때. 이름, 범위, 식별자, 요소, 수정자의 구분자나 대소문자 표기를 바꿀 때.",
 		reviewWith: [],
 	},
 	"naming-name-elements-and-modifiers-by-role": {
-		appliesWhen: "요소 또는 modifier 클래스 이름을 새로 지을 때. `container`, `wrapper`, `box`, 치수나 간격 중심 이름을 변경할 때.",
+		appliesWhen: "요소나 수정자 클래스 이름을 새로 지을 때. `container`, `wrapper`, `box`, 치수나 간격 중심 이름을 변경할 때.",
 		reviewWith: [],
 	},
 	"naming-keep-page-slug-traceable": {
@@ -324,21 +324,21 @@ const cssRuleRouting = {
 		reviewWith: ["ownership-use-foreign-classes-only-under-your-own-root", "composition-inject-classes-only-at-the-entry-point"],
 	},
 	"composition-compose-classes-with-clsx": {
-		appliesWhen: "TSX의 `className`을 추가·수정할 때. 기본 클래스, modifier, optional 클래스를 조합할 때.",
+		appliesWhen: "TSX의 `className`을 추가·수정할 때. 기본 클래스, 수정자, 선택 클래스를 함께 엮을 때.",
 		reviewWith: [],
 	},
 	"composition-do-not-build-structural-variants-with-modifiers": {
-		appliesWhen: "modifier를 추가·변경할 때. 여러 곳에서 쓰이는 variant인지 한 곳만의 보정인지 판정할 때.",
+		appliesWhen: "수정자를 추가·변경할 때. 여러 곳에서 쓰이는 변형인지 한 곳만의 보정인지 가릴 때.",
 		reviewWith: ["naming-name-elements-and-modifiers-by-role"],
 	},
 	"composition-keep-classes-single-purpose": {
 		appliesWhen:
-			"기존 클래스가 기본과 상태·variant 책임을 함께 갖거나 독립 시각 책임을 추가·재사용·분리할 때. 제외: 기존 결합 책임을 분리하지 않고 처음부터 새 single-purpose pair를 만들거나 책임 보존 이름 변경만 하는 경우.",
+			"기존 클래스가 기본과 상태·변형 책임을 함께 갖거나 독립 시각 책임을 추가·재사용·분리할 때. 제외: 기존 결합 책임을 그대로 두고 처음부터 단일 책임 쌍을 만들거나 책임이 그대로인 이름 변경만 하는 경우.",
 		reviewWith: [],
 	},
 	"composition-inject-classes-only-at-the-entry-point": {
 		appliesWhen:
-			"우리가 만든 컴포넌트에 `className`이나 클래스 관련 prop을 추가할 때. 그 컴포넌트 내부 노드의 모양을 화면마다 다르게 해야 할 때. 제외: 기존 CSS root 아래 외부 라이브러리 선택자만 수정하는 경우.",
+			"우리가 만든 컴포넌트에 `className`이나 클래스 관련 prop을 추가할 때. 그 컴포넌트 내부 노드의 모양을 화면마다 다르게 해야 할 때. 제외: 기존 CSS 최상위 블록 아래 외부 라이브러리 선택자만 고치는 경우.",
 		reviewWith: ["ownership-use-foreign-classes-only-under-your-own-root", "ownership-change-other-owners-through-their-api"],
 	},
 	"composition-do-not-add-wrapper-elements-for-styling": {
@@ -346,7 +346,7 @@ const cssRuleRouting = {
 		reviewWith: ["composition-inject-classes-only-at-the-entry-point", "naming-name-elements-and-modifiers-by-role"],
 	},
 	"selector-limit-nesting-block-depth": {
-		appliesWhen: "중첩 `{}` 블록을 추가하거나 기존 블록을 펼치거나 합칠 때. `&`로 조건이나 pseudo-element를 붙일 때.",
+		appliesWhen: "중첩 `{}` 블록을 추가하거나 기존 블록을 펼치거나 합칠 때. `&`로 조건이나 가상 요소를 붙일 때.",
 		reviewWith: ["selector-use-classes-instead-of-element-selectors", "selector-declare-each-class-in-one-block"],
 	},
 	"selector-use-classes-instead-of-element-selectors": {
@@ -363,8 +363,7 @@ const cssRuleRouting = {
 		reviewWith: ["selector-do-not-group-classes-with-commas"],
 	},
 	"selector-use-pseudo-classes-for-dom-owned-states": {
-		appliesWhen:
-			"`:hover`, `:visited`, `:focus*`, `:disabled`, `:checked`를 추가·수정할 때. parent DOM state가 child styling에 영향을 줄 때.",
+		appliesWhen: "`:hover`, `:visited`, `:focus*`, `:disabled`, `:checked`를 추가·수정할 때. 조상의 DOM 상태가 자손 스타일에 영향을 줄 때.",
 		reviewWith: [],
 	},
 	"selector-nest-dom-state-in-the-owning-block": {
@@ -377,28 +376,28 @@ const cssRuleRouting = {
 		],
 	},
 	"selector-do-not-invert-domain-state-with-not": {
-		appliesWhen: "`:not(.--modifier)`로 앱 상태를 뒤집으려 할 때. 조상의 modifier가 자손의 표현을 결정해야 할 것 같을 때.",
+		appliesWhen: "`:not(.--modifier)`로 앱 상태를 뒤집으려 할 때. 조상의 수정자가 자손의 모습을 정해야 할 것 같을 때.",
 		reviewWith: ["selector-use-pseudo-classes-for-dom-owned-states"],
 	},
 	"values-keep-layout-intent-explicit": {
 		appliesWhen:
-			"`sticky`·`fixed`, `z-index`, 강제 width나 height 또는 부모·자식 layout 책임을 추가·변경할 때. 제외: 같은 요소의 기본/modifier 분리에서 기존 `display`·spacing 선언을 값 그대로 재배치하는 경우.",
+			"`sticky`·`fixed`, `z-index`, 강제 `width`·`height` 또는 부모·자식 레이아웃 책임을 추가·변경할 때. 제외: 같은 요소를 기본과 수정자로 나누면서 기존 `display`·여백 선언을 값 그대로 옮기는 경우.",
 		reviewWith: [],
 	},
 	"values-always-provide-css-variable-fallbacks": {
-		appliesWhen: "`var(--*)` 사용을 추가하거나 변수 이름이나 fallback을 바꿀 때. core token 목록에 항목을 추가·제거할 때.",
+		appliesWhen: "`var(--*)`를 새로 쓰거나 변수 이름이나 대체값을 바꿀 때. 공통 토큰 목록에 항목을 넣거나 뺄 때.",
 		reviewWith: ["values-tokenize-repeated-visual-values"],
 	},
 	"values-tokenize-repeated-visual-values": {
-		appliesWhen: "여러 파일이 같은 색, 간격, radius, 타이포, 그림자 값을 쓸 때. 새 CSS custom property를 선언할 때.",
+		appliesWhen: "여러 파일이 같은 색, 간격, radius, 타이포, 그림자 값을 쓸 때. 새 사용자 정의 속성을 선언할 때.",
 		reviewWith: ["values-always-provide-css-variable-fallbacks"],
 	},
 	"values-separate-domain-state-modifiers-from-dom-interaction-states": {
-		appliesWhen: "앱 상태 modifier와 hover, focus, disabled 같은 DOM 상호작용 상태를 추가·변경할 때. 포커스 링을 수정할 때.",
+		appliesWhen: "앱 상태 수정자와 hover, focus, disabled 같은 DOM 상호작용 상태를 추가·변경할 때. 포커스 링을 수정할 때.",
 		reviewWith: ["composition-do-not-build-structural-variants-with-modifiers"],
 	},
 	"values-always-provide-a-visible-focus-indicator": {
-		appliesWhen: "`outline`, `:focus`, `:focus-visible` 스타일을 추가·수정할 때. interactive 요소의 기본 포커스 링을 덮어쓸 때.",
+		appliesWhen: "`outline`, `:focus`, `:focus-visible` 스타일을 추가·수정할 때. 상호작용 요소의 기본 포커스 링을 덮어쓸 때.",
 		reviewWith: ["values-separate-domain-state-modifiers-from-dom-interaction-states"],
 	},
 	"tooling-configure-stylelint-to-enforce-these-rules": {
@@ -2139,18 +2138,18 @@ test("CSS progressive metadata and rule routing match Appendix C exactly", async
 	const wrapperStylingRule = await readRuleSource("css", "composition-inject-classes-only-at-the-entry-point");
 	assertMentions(
 		wrapperStylingRule,
-		[/스타일 창구는 \*\*진입점 하나\*\*/i, /slot 클래스 prop을 늘리지 않습니다/i, /variant.*modifier로 붙입니다/i],
+		[/스타일 창구는 \*\*진입점 하나\*\*/i, /내부 노드로 가는 클래스 prop을 늘리지 않습니다/i, /변형은.*수정자로 붙입니다/i],
 		"wrapperStylingRule",
 	);
 	const singlePurposeRule = await readRuleSource("css", "composition-keep-classes-single-purpose");
-	assertMentions(readAppliesWhen(singlePurposeRule), ["기존 결합 책임", "처음부터 새 single-purpose pair"], "singlePurposeRule");
+	assertMentions(readAppliesWhen(singlePurposeRule), ["기존 결합 책임", "처음부터 단일 책임 쌍"], "singlePurposeRule");
 	const layoutIntentRule = await readRuleSource("css", "values-keep-layout-intent-explicit");
-	assertMentions(readAppliesWhen(layoutIntentRule), ["기본/modifier", "`display`·spacing", "값 그대로"], "layoutIntentRule");
+	assertMentions(readAppliesWhen(layoutIntentRule), ["기본과 수정자로 나누면서", "`display`·여백", "값 그대로"], "layoutIntentRule");
 	const fallbackRule = await readRuleSource("css", "values-always-provide-css-variable-fallbacks");
-	assertMentions(readAppliesWhen(fallbackRule), ["`var(--*)`", "core token"], "fallbackRule");
+	assertMentions(readAppliesWhen(fallbackRule), ["`var(--*)`", "공통 토큰"], "fallbackRule");
 	assertMentions(
 		flattenWhitespace(fallbackRule),
-		[/core token 목록/i, /fail-loud/i, /values-tokenize-repeated-visual-values/i],
+		[/공통 토큰 목록/i, /빠진 것을 곧바로 드러냅니다/, /values-tokenize-repeated-visual-values/i],
 		"fallbackRule",
 	);
 
@@ -2412,10 +2411,10 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 	assertMentions(typescriptContracts[5]!, [/unchanged contract/i, /(?:새 함수 인자|새 사용처|call site)/i], "typescriptContracts");
 
 	const stylesheetFormat = await readRule("css", "naming-default-to-plain-css-when-no-module-convention");
-	assertMentions(stylesheetFormat, [/스타일시트 접근 형식/i, /plain CSS/i, /CSS Modules/i], "stylesheetFormat");
+	assertMentions(stylesheetFormat, [/스타일시트 방식/i, /plain CSS/i, /CSS Modules/i], "stylesheetFormat");
 	assertMentions(
 		stylesheetFormat,
-		[/기존 plain CSS/i, /(?:class|selector)/i, /(?:rename|이름 변경)/i, /(?:N\/A|제외)/i],
+		[/기존 일반 CSS/i, /(?:class|selector)/i, /(?:rename|이름만 바꾸는)/i, /(?:N\/A|제외)/i],
 		"stylesheetFormat",
 	);
 
@@ -2427,17 +2426,17 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 	);
 
 	const layoutIntent = await readRule("css", "values-keep-layout-intent-explicit");
-	assert.match(layoutIntent, /`z-index`[\s\S]*layer 토큰[\s\S]*쌓임 순서/i);
+	assert.match(layoutIntent, /`z-index`[\s\S]*층 토큰[\s\S]*쌓임 순서/i);
 	assert.match(layoutIntent, /기준 컨테이너를 주석/i);
 	assert.doesNotMatch(layoutIntent, /동작 변화 없이/);
 
 	const variableFallback = await readRule("css", "values-always-provide-css-variable-fallbacks");
-	assert.match(variableFallback, /core token 목록에 있는 변수[\s\S]*쓰지 않습니다/i);
+	assert.match(variableFallback, /공통 토큰 목록에 있는 변수[\s\S]*쓰지 않습니다/i);
 	assert.match(variableFallback, /그 밖의 모든 `var\(\)`[\s\S]*씁니다/i);
 
 	for (const ruleId of ["values-separate-domain-state-modifiers-from-dom-interaction-states"]) {
 		const interactionState = await readRule("css", ruleId);
-		assert.match(interactionState, /(?:hover|focus|disabled)[\s\S]*조건 없는 기본 블록[\s\S]*modifier 아래[\s\S]*(?:좁히지 않|두지 않)/i);
+		assert.match(interactionState, /(?:hover|focus|disabled)[\s\S]*조건 없는 기본 블록[\s\S]*수정자 아래[\s\S]*(?:좁히지 않|두지 않)/i);
 	}
 	const cssInteractionContracts = await Promise.all(
 		["values-separate-domain-state-modifiers-from-dom-interaction-states"].map((ruleId) =>
@@ -2445,7 +2444,7 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 		),
 	);
 	for (const contract of cssInteractionContracts) {
-		assertMentions(contract, [/기본 블록/i, /modifier 아래/i], "contract");
+		assertMentions(contract, [/기본 블록/i, /수정자 아래/i], "contract");
 	}
 
 	const mixedManifest = await readRoutingEvalManifest(getSkillPaths("react", realSkillRootDir));
@@ -2696,14 +2695,14 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	const foreignRoot = await readRule("css", "ownership-use-foreign-classes-only-under-your-own-root");
 	assertMentions(
 		foreignRoot,
-		[/내 root 클래스 블록 안에서만/, /단독 최상위 선택자로 쓰지 않습니다/, /선택자가 내 식별자로 시작하는지/],
+		[/내 최상위 클래스 블록 안에서만/, /블록 바깥에 홀로 두지 않습니다/, /선택자가 내 식별자로 시작하는지/],
 		"foreignRoot",
 	);
 	assertMentions(
 		foreignRoot,
 		[
 			/그 라이브러리를 쓰는 앱 전체에 걸립니다/,
-			/그 widget을 쓰는 화면 전체에 걸립니다/,
+			/그 위젯을 쓰는 화면 전체에 걸립니다/,
 			/결합자 개수는 제한하지 않습니다/,
 			/selector-disallowed-list/,
 		],
@@ -2714,7 +2713,7 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	const otherOwnerApi = await readRule("css", "ownership-change-other-owners-through-their-api");
 	assertMentions(
 		otherOwnerApi,
-		[/세 갈래를 순서대로 봅니다/, /막다른 길이 아니라 마지막 선택지입니다/, /root까지만 닿는 것은 제약이 아니라 경계입니다/],
+		[/세 갈래를 순서대로 봅니다/, /막다른 길이 아니라 마지막 선택지입니다/, /최상위까지만 닿는 것은 제약이 아니라 경계입니다/],
 		"otherOwnerApi",
 	);
 
@@ -2735,7 +2734,7 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	const entryPoint = await readRule("css", "composition-inject-classes-only-at-the-entry-point");
 	assertMentions(
 		entryPoint,
-		[/스타일 창구는 \*\*진입점 하나\*\*입니다/, /`ui_`든 `wg_`든 `pg_`든 같습니다/, /slot 클래스 prop을 늘리지 않습니다/],
+		[/스타일 창구는 \*\*진입점 하나\*\*입니다/, /`ui_`든 `wg_`든 `pg_`든 같습니다/, /내부 노드로 가는 클래스 prop을 늘리지 않습니다/],
 		"entryPoint",
 	);
 
@@ -2766,14 +2765,14 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	const nestDomState = await readRule("css", "selector-nest-dom-state-in-the-owning-block");
 	assertMentions(
 		nestDomState,
-		[/최상위 선택자로 다시 열지 않습니다/, /식별자가 같은 자손을 결합자 하나로 겨냥합니다/, /부모 선택자가 없어서/],
+		[/블록 바깥에서 다시 열지 않습니다/, /식별자가 같은 자손을 결합자 하나로 겨냥합니다/, /부모 선택자가 없어서/],
 		"nestDomState",
 	);
 
 	const notInversion = await readRule("css", "selector-do-not-invert-domain-state-with-not");
 	assertMentions(
 		notInversion,
-		[/조상의 modifier로 자손의 표현을 결정하려 했기 때문입니다/, /부정 조건이 필요 없어집니다/, /:not\(:disabled\)/],
+		[/조상의 수정자로 자손의 모습을 정하려 했기 때문입니다/, /부정 조건이 필요 없어집니다/, /:not\(:disabled\)/],
 		"notInversion",
 	);
 

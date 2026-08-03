@@ -7,6 +7,8 @@
 <style>
 *, *::before, *::after { box-sizing: border-box; }
 h1, p, pre, button, input, table { margin: 0; padding: 0; }
+/* 한국어는 어절 안에서 끊지 않는다. 기본값이면 글자 단위로 잘려 읽기 어렵다. */
+body { word-break: keep-all; overflow-wrap: break-word; }
 button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
 
 :root {
@@ -358,7 +360,10 @@ body:has(.dlg[open]) { overflow: hidden; }
 
 	function renderProse(prose) {
 		let out = "", para = [], tbl = null, list = null;
-		const flushP = () => { if (para.length) { out += "<p>" + inline(para.join(" ")) + "</p>"; para = []; } };
+		// 원문은 한 줄에 한 문장이다. 문장이 끝난 자리만 줄바꿈하고, 이어지는 줄은 공백으로 붙인다.
+		const joinSentences = (lines) =>
+			lines.reduce((acc, line, i) => (i === 0 ? line : acc + (/[.:?!]$/.test(lines[i - 1]) ? "<br>" : " ") + line), "");
+		const flushP = () => { if (para.length) { out += "<p>" + joinSentences(para.map(inline)) + "</p>"; para = []; } };
 		const flushL = () => {
 			if (!list) return;
 			out += "<ul>" + list.map((item) => "<li>" + inline(item) + "</li>").join("") + "</ul>";

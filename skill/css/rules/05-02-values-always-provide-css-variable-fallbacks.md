@@ -1,39 +1,39 @@
 ---
 title: Declare Core Tokens Once and Fall Back Everywhere Else
-titleKo: core token은 한 곳에 선언하고 그 밖 var()에는 fallback을 둡니다
+titleKo: 공통 토큰은 한 곳에 선언하고 그 밖 var()에는 대체값을 둡니다
 impact: HIGH
-impactDescription: 토큰이 빠지면 조용히 깨지지 않고 드러나며, fallback이 매직 넘버로 번지지도 않습니다
+impactDescription: 토큰이 빠지면 조용히 깨지지 않고 드러나며, 대체값이 매직 넘버로 번지지도 않습니다
 appliesWhen:
-  - `var(--*)` 사용을 추가하거나 변수 이름이나 fallback을 바꿀 때
-  - core token 목록에 항목을 추가·제거할 때
+  - `var(--*)`를 새로 쓰거나 변수 이름이나 대체값을 바꿀 때
+  - 공통 토큰 목록에 항목을 넣거나 뺄 때
 reviewWith: values-tokenize-repeated-visual-values
 tags: variables, fallbacks, tokens
 ---
 
 ## Declare Core Tokens Once and Fall Back Everywhere Else
 
-**Impact: HIGH (토큰이 빠지면 조용히 깨지지 않고 드러나며, fallback이 매직 넘버로 번지지도 않습니다)**
+**Impact: HIGH (토큰이 빠지면 조용히 깨지지 않고 드러나며, 대체값이 매직 넘버로 번지지도 않습니다)**
 
-프로젝트는 전역에서 항상 주입되는 **core token 목록**을 한 곳에 선언합니다.
-`:root` 또는 전역 theme 스타일시트가 그 목록의 단일 출처입니다.
+프로젝트는 전역에서 항상 주입되는 **공통 토큰 목록**을 한 곳에 선언합니다.
+`:root`나 전역 테마 스타일시트가 그 목록의 단일 출처입니다.
 
 판정은 목록 대조로 끝냅니다.
 
-| 대상 | fallback |
+| 대상 | 대체값 |
 | --- | --- |
-| core token 목록에 있는 변수 | **쓰지 않습니다.** 누락을 fail-loud로 드러냅니다 |
+| 공통 토큰 목록에 있는 변수 | **쓰지 않습니다.** 빠진 것을 곧바로 드러냅니다 |
 | 그 밖의 모든 `var()` | **씁니다.** 값이 없을 때 안전한 기본값을 둡니다 |
 
-core token에 fallback을 붙이지 않는 이유는 `values-tokenize-repeated-visual-values`와 충돌하기 때문입니다.
+공통 토큰에 대체값을 붙이지 않는 이유는 `values-tokenize-repeated-visual-values`와 충돌하기 때문입니다.
 `var(--app-space-3, 12px)`가 100곳에 있으면 `12px`을 100곳에 하드코딩한 것과 같아서 토큰화의 목적이 사라집니다.
 값을 한 곳에서 바꾸려면 그 한 곳이 유일해야 합니다.
 
-fallback이 필요한 곳은 프로젝트가 직접 주입하지 않는 경계입니다.
-서드파티 래퍼 내부, 켜고 끄는 theme, 임시 overlay, 조건부로만 주입되는 변수가 여기 해당합니다.
+대체값이 필요한 곳은 프로젝트가 직접 주입하지 않는 경계입니다.
+외부 라이브러리 래퍼 내부, 켜고 끄는 테마, 임시 오버레이, 조건부로만 주입되는 변수가 여기 해당합니다.
 
-요청에 없는 CSS variable을 이 규칙 때문에 새로 발명하지 않습니다.
+요청에 없는 CSS 변수를 이 규칙 때문에 새로 만들지 않습니다.
 
-**Incorrect (core token에 fallback을 붙여 값을 두 곳으로 흩음):**
+**Incorrect (공통 토큰에 대체값을 붙여 값을 두 곳으로 흩음):**
 
 ```css
 .pg_postFilterDialog__panel {
@@ -42,7 +42,7 @@ fallback이 필요한 곳은 프로젝트가 직접 주입하지 않는 경계�
 }
 ```
 
-**Incorrect (서드파티 내부에 주입 보장 없는 변수를 fallback 없이 사용):**
+**Incorrect (주입이 보장되지 않는 변수를 대체값 없이 씀):**
 
 ```css
 .pg_postFilterDialog__collapse {
@@ -52,7 +52,7 @@ fallback이 필요한 곳은 프로젝트가 직접 주입하지 않는 경계�
 }
 ```
 
-**Correct (core token은 fallback 없이, 그 밖은 fallback과 함께):**
+**Correct (공통 토큰은 대체값 없이, 그 밖은 대체값과 함께):**
 
 ```css
 /* src/style/token.css — core token 목록의 단일 출처 */

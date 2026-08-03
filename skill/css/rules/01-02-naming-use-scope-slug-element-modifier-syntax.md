@@ -1,11 +1,11 @@
 ---
 title: Use Scope, Slug, Element, and Modifier Syntax
-titleKo: 클래스명은 범위, 식별자, 요소, modifier 문법을 지킵니다
+titleKo: 클래스명은 범위, 식별자, 요소, 수정자 문법을 지킵니다
 impact: CRITICAL
 impactDescription: 클래스명만 보고 누가 소유하고 어떤 역할인지 읽힙니다
 appliesWhen:
-  - plain CSS의 project-owned 클래스를 새로 만들 때
-  - 이름, 범위, 식별자, 요소, modifier 구분자 또는 대소문자 표기을 변경할 때
+  - 일반 CSS에서 프로젝트가 소유한 클래스를 새로 만들 때
+  - 이름, 범위, 식별자, 요소, 수정자의 구분자나 대소문자 표기를 바꿀 때
 tags: naming, class-grammar, ownership
 ---
 
@@ -23,9 +23,9 @@ tags: naming, class-grammar, ownership
 | `scope` | 범위 | `pg`, `wg`, `ui` 중 하나. 소문자로 씁니다 |
 | `slug` | 식별자 | 그 CSS 파일 소유자의 이름. camelCase |
 | `element` | 요소 | 소유자 안의 UI 역할. `listButton`, `emptyState` |
-| `modifier` | modifier | 상태나 반복되는 모양. `routeActive`, `selected` |
+| `modifier` | 수정자 | 상태나 반복되는 모양. `routeActive`, `selected` |
 
-`modifier`만 영어를 그대로 씁니다. `variant` prop과 뜻이 겹쳐서 한국어로 바꾸면 헷갈립니다.
+수정자와 변형은 다릅니다. 수정자는 클래스 뒤에 붙는 `--이름`이고, 변형은 컴포넌트가 받는 `variant` prop입니다.
 
 식별자에는 접두사가 말하는 부분을 반복하지 않습니다. `UiButton`은 `ui_button`이고 `ui_uiButton`이 아닙니다.
 
@@ -43,7 +43,7 @@ pg_catalogDetail__main-content
 pg_catalogDetail__main--route_active
 ```
 
-**Correct (범위는 lowercase, 식별자·요소·modifier는 camelCase):**
+**Correct (범위는 소문자, 식별자·요소·수정자는 camelCase):**
 
 ```txt
 ui_tagList__root
