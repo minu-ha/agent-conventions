@@ -16,4 +16,4 @@ root modifier 하나만 붙이고 내부를 결합자로 잡지 않습니다.
 - 래핑 `div`를 습관적으로 만들지 않습니다. 부모의 flex·grid 자식 수가 바뀌고 역할 없는 클래스가 생깁니다.
 - `className`을 아예 받지 않는 wrapper면 그 계약을 추가하는 것이 먼저이고, 래핑은 마지막 수단입니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/02-04-composition-style-ui-components-through-owned-wrappers.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/03-04-composition-style-ui-components-through-owned-wrappers.md)을 읽습니다.

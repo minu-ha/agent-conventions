@@ -21,4 +21,4 @@ fallback이 필요한 쪽은 주입 주체가 프로젝트가 아닌 경계입�
 
 요청에 없는 CSS variable을 이 규칙 때문에 새로 발명하지 않습니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/04-02-values-always-provide-css-variable-fallbacks.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/05-02-values-always-provide-css-variable-fallbacks.md)을 읽습니다.

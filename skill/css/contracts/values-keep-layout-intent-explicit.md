@@ -8,4 +8,4 @@
 - `z-index`에는 숫자를 직접 쓰지 않고 layer 토큰을 씁니다. 토큰 이름이 곧 stacking 순서 문서입니다.
 - `sticky`나 `fixed`를 쓸 때는 기준 컨테이너를 주석 한 줄로 남깁니다. 어느 조상이 scroll container인지는 선언에 안 보입니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/04-01-values-keep-layout-intent-explicit.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/05-01-values-keep-layout-intent-explicit.md)을 읽습니다.

@@ -2,4 +2,4 @@
 
 **Impact: CRITICAL**
 
-> CRITICAL rule: must read the [full rule](../rules/01-06-naming-use-scope-slug-element-modifier-syntax.md) before implementation or review.
+> CRITICAL rule: must read the [full rule](../rules/01-02-naming-use-scope-slug-element-modifier-syntax.md) before implementation or review.

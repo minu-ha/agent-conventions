@@ -2,32 +2,32 @@
 
 이 파일은 CSS 컨벤션 rule의 섹션 순서, 영향도, 설명을 정의합니다.
 
-## 1. Naming and Ownership (naming)
-**TitleKo:** 이름과 소유
+## 1. Class Naming and Syntax (naming)
+**TitleKo:** class 이름과 문법
 **Impact:** CRITICAL
-**Description:** 클래스 문법, `pg_/wg_/ui_` scope별 slug 규칙, 네임스페이스 소유권, 화면/공용 owner 범위가
-  명확해야 스타일을 검색하고 안전하게 수정할 수 있습니다.
+**Description:** class 문법이 고정되어 있고 element·modifier 이름이 역할을 가리켜야 스타일을 이름으로 검색할 수 있고,
+  이름만 보고 무엇을 담당하는 class인지 알 수 있습니다.
 
-## 2. Class Composition and Wrapper Boundaries (composition)
-**TitleKo:** class 조합과 wrapper 경계
+## 2. Ownership and Boundaries (ownership)
+**TitleKo:** 소유와 경계
+**Impact:** CRITICAL
+**Description:** 한 CSS 파일이 어떤 owner의 class만 담는지, 다른 owner의 표현이 필요할 때 무엇을 하는지, 남의 라이브러리
+  DOM은 어디까지 겨냥하는지가 정해져야 한 파일을 고쳐서 다른 화면이 깨지는 일이 생기지 않습니다.
+
+## 3. Class Composition in TSX (composition)
+**TitleKo:** TSX class 조합
 **Impact:** HIGH
 **Description:** TSX class 조합과 wrapper 소유권 규칙은 스타일링 경계를 분명하게 유지하고, UI wrapper가 통제되지 않은
   스타일 hook을 노출하는 것을 막습니다.
 
-## 3. Selectors and Nesting Boundaries (selector)
-**TitleKo:** 셀렉터와 중첩 경계
-**Impact:** CRITICAL
-**Description:** 프로젝트 소유 selector를 평평하게 유지하고, DOM pseudo-state는 같은 block 안에 접고, rich text wrapper
-  예외와 서드파티 DOM 타게팅 범위를 명시해야 cascade surprise를 줄이고 selector 깊이를 예측 가능하게 유지할 수 있습니다.
-
-## 4. Values, Layout, and Interaction States (values)
-**TitleKo:** 값·레이아웃·상호작용 상태
+## 4. Selectors and Declaration Placement (selector)
+**TitleKo:** 셀렉터와 선언 배치
 **Impact:** HIGH
-**Description:** 토큰, 변수 fallback, 명시적인 레이아웃 의도, 앱 상태와 DOM 상태의 분리는 스타일을 더 견고하고 접근
-  가능하게 유지합니다.
+**Description:** 겨냥 대상이 코드에 그대로 쓰여 있고 한 class의 선언이 한 block에 모여 있어야, 스타일을 고칠 때 읽을
+  selector와 볼 block이 각각 하나로 정해집니다.
 
-## 5. File Organization and Guardrails (organization)
-**TitleKo:** 파일 구성과 가드레일
-**Impact:** MEDIUM
-**Description:** stylesheet는 하나의 owner에 맞춰 유지하고, 가벼운 구조 주석만 사용하며, 마무리 전에 금지 패턴을
-  점검해야 합니다.
+## 5. Values, Layout, and Accessibility (values)
+**TitleKo:** 값·레이아웃·접근성
+**Impact:** HIGH
+**Description:** 토큰, 변수 fallback, 명시적인 레이아웃 의도, 상태 경계, 눈에 보이는 포커스 표시는 스타일을 더 견고하고
+  접근 가능하게 유지합니다.

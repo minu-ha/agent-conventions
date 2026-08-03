@@ -4,9 +4,9 @@
 	"scenarios": [
 		{
 			"id": "css-route-style-scope-drift",
-			"prompt": "pure rendering change in src/routes/catalog/index.tsx, with React and TypeScript only.",
+			"prompt": "pure rendering change in src/page/catalog-index/pg-catalog-index.tsx, with React and TypeScript only.",
 			"files": [
-				"src/routes/catalog/index.tsx"
+				"src/page/catalog-index/pg-catalog-index.tsx"
 			],
 			"expectedSkills": [
 				"react",
@@ -19,10 +19,10 @@
 				]
 			},
 			"scopeDrift": {
-				"evidence": "add route-owned empty-state className, src/routes/catalog/_index.css, and its direct side-effect import in a project without a CSS Modules standard; final skills add CSS.",
+				"evidence": "add route-owned empty-state className, src/page/catalog-index/pg-catalog-index.css, and its direct side-effect import in a project without a CSS Modules standard; final skills add CSS.",
 				"files": [
-					"src/routes/catalog/index.tsx",
-					"src/routes/catalog/_index.css"
+					"src/page/catalog-index/pg-catalog-index.tsx",
+					"src/page/catalog-index/pg-catalog-index.css"
 				],
 				"expectedSkills": [
 					"react",
@@ -39,41 +39,40 @@
 					],
 					"css": [
 						"naming-default-to-plain-css-when-no-module-convention",
-						"naming-keep-scope-slug-unique-per-owner",
+						"naming-use-scope-slug-element-modifier-syntax",
 						"naming-name-elements-and-modifiers-by-role",
 						"naming-keep-page-slug-traceable",
-						"naming-separate-owner-style-scopes",
-						"naming-use-scope-slug-element-modifier-syntax",
-						"composition-compose-classes-with-clsx",
-						"organization-keep-style-files-owned-by-one-component-or-route"
+						"ownership-give-each-file-one-scope-slug",
+						"ownership-choose-scope-prefix-by-reuse-range",
+						"ownership-use-foreign-classes-only-under-your-own-root",
+						"composition-compose-classes-with-clsx"
 					]
 				}
 			}
 		},
 		{
 			"id": "css-owner-boundary-split",
-			"prompt": "split mixed route/document/local ownership from posts/_index.css into pages/_document.css and posts/_local/filter-dialog.css; class names do not change.",
+			"prompt": "pg-post-index.css holds both the page shell and the filter dialog; move the dialog styles into the component own CSS file and give that file its own slug.",
 			"files": [
-				"src/routes/posts/_index.css",
-				"src/pages/_document.css",
-				"src/routes/posts/_local/filter-dialog.css"
+				"src/page/post-index/pg-post-index.css",
+				"src/page/post-index/component/pg-post-filter-dialog.css"
 			],
 			"expectedSkills": [
 				"css"
 			],
 			"expectedSelected": {
 				"css": [
-					"naming-separate-owner-style-scopes",
-					"organization-keep-style-files-owned-by-one-component-or-route"
+					"ownership-give-each-file-one-scope-slug",
+					"ownership-choose-scope-prefix-by-reuse-range"
 				]
 			}
 		},
 		{
 			"id": "css-domain-state-class-contract",
-			"prompt": "split listButtonActive into base plus --active, add a direct clsx import, and compose with clsx() in catalog/index.tsx and _index.css; do not change pseudo-states.",
+			"prompt": "split listButtonActive into base plus --active, add a direct clsx import, and compose with clsx() in pg-catalog-index.tsx and _index.css; do not change pseudo-states.",
 			"files": [
-				"src/routes/catalog/index.tsx",
-				"src/routes/catalog/_index.css"
+				"src/page/catalog-index/pg-catalog-index.tsx",
+				"src/page/catalog-index/pg-catalog-index.css"
 			],
 			"expectedSkills": [
 				"react",
@@ -87,8 +86,8 @@
 					"guardrails-review-banned-typescript-shortcuts-before-finishing"
 				],
 				"css": [
-					"naming-name-elements-and-modifiers-by-role",
 					"naming-use-scope-slug-element-modifier-syntax",
+					"naming-name-elements-and-modifiers-by-role",
 					"composition-compose-classes-with-clsx",
 					"composition-do-not-build-structural-variants-with-modifiers",
 					"composition-keep-classes-single-purpose",
@@ -99,10 +98,10 @@
 		},
 		{
 			"id": "css-one-off-structural-modifier",
-			"prompt": "replace non-repeatable section--compactTop spacing patch with a role-named element in catalog/detail.tsx and detail.css; keep the existing clsx import.",
+			"prompt": "replace non-repeatable section--compactTop spacing patch with a role-named element in pg-catalog-detail.tsx and detail.css; keep the existing clsx import.",
 			"files": [
-				"src/routes/catalog/detail.tsx",
-				"src/routes/catalog/detail.css"
+				"src/page/catalog-detail/pg-catalog-detail.tsx",
+				"src/page/catalog-detail/pg-catalog-detail.css"
 			],
 			"expectedSkills": [
 				"react",
@@ -115,8 +114,8 @@
 					"guardrails-review-banned-typescript-shortcuts-before-finishing"
 				],
 				"css": [
-					"naming-name-elements-and-modifiers-by-role",
 					"naming-use-scope-slug-element-modifier-syntax",
+					"naming-name-elements-and-modifiers-by-role",
 					"composition-compose-classes-with-clsx",
 					"composition-do-not-build-structural-variants-with-modifiers"
 				]
@@ -126,8 +125,8 @@
 			"id": "css-ui-wrapper-third-party-dom",
 			"prompt": "add a direct clsx import and style UiCollapse Ant DOM from a new owned wrapper with the shortest chain in post-filter-dialog.tsx and post-filter-dialog.css; keep the existing hard-coded wrapper color.",
 			"files": [
-				"src/routes/posts/_local/post-filter-dialog.tsx",
-				"src/routes/posts/_local/post-filter-dialog.css"
+				"src/page/post-index/component/pg-post-filter-dialog.tsx",
+				"src/page/post-index/component/pg-post-filter-dialog.css"
 			],
 			"expectedSkills": [
 				"react",
@@ -141,19 +140,18 @@
 					"guardrails-review-banned-typescript-shortcuts-before-finishing"
 				],
 				"css": [
-					"naming-name-elements-and-modifiers-by-role",
 					"naming-use-scope-slug-element-modifier-syntax",
+					"naming-name-elements-and-modifiers-by-role",
+					"ownership-use-foreign-classes-only-under-your-own-root",
 					"composition-compose-classes-with-clsx",
-					"composition-style-ui-components-through-owned-wrappers",
-					"selector-avoid-deep-descendant-dependencies",
-					"selector-target-third-party-dom-from-owned-roots"
+					"composition-style-ui-components-through-owned-wrappers"
 				]
 			},
 			"scopeDrift": {
 				"evidence": "replace the hard-coded wrapper color with an optional CSS variable and provide its fallback.",
 				"files": [
-					"src/routes/posts/_local/post-filter-dialog.tsx",
-					"src/routes/posts/_local/post-filter-dialog.css"
+					"src/page/post-index/component/pg-post-filter-dialog.tsx",
+					"src/page/post-index/component/pg-post-filter-dialog.css"
 				],
 				"expectedSkills": [
 					"react",
@@ -167,12 +165,11 @@
 						"guardrails-review-banned-typescript-shortcuts-before-finishing"
 					],
 					"css": [
-						"naming-name-elements-and-modifiers-by-role",
 						"naming-use-scope-slug-element-modifier-syntax",
+						"naming-name-elements-and-modifiers-by-role",
+						"ownership-use-foreign-classes-only-under-your-own-root",
 						"composition-compose-classes-with-clsx",
 						"composition-style-ui-components-through-owned-wrappers",
-						"selector-avoid-deep-descendant-dependencies",
-						"selector-target-third-party-dom-from-owned-roots",
 						"values-always-provide-css-variable-fallbacks"
 					]
 				}
@@ -182,8 +179,8 @@
 			"id": "css-ui-wrapper-root-prop-contract",
 			"prompt": "directly type-import the official root className Props, expose documented UiButtonProps, destructure props inside ui-button.tsx, and pass an existing layout class from order-actions.tsx; add no internal selector or new class.",
 			"files": [
-				"src/components/ui/button/ui-button.tsx",
-				"src/routes/orders/order-actions.tsx"
+				"src/ui/button/ui-button.tsx",
+				"src/page/order-index/component/pg-order-actions.tsx"
 			],
 			"expectedSkills": [
 				"react",
@@ -211,16 +208,17 @@
 		},
 		{
 			"id": "css-rich-text-owner-block",
-			"prompt": "move top-level .wg_entryDetail__prose h2 and > :first-child into existing owner-block raw-element nesting; class names and values stay unchanged.",
+			"prompt": "move top-level .wg_entryDetail__prose h2 and > :first-child into the existing owner block; the body comes from dangerouslySetInnerHTML so classes cannot be added.",
 			"files": [
-				"src/components/widgets/entry-detail/wg-entry-detail.css"
+				"src/widget/entry-detail/wg-entry-detail.css"
 			],
 			"expectedSkills": [
 				"css"
 			],
 			"expectedSelected": {
 				"css": [
-					"selector-limit-nesting-block-depth"
+					"selector-limit-nesting-block-depth",
+					"selector-use-classes-instead-of-element-selectors"
 				]
 			}
 		},
@@ -228,7 +226,7 @@
 			"id": "css-dom-interaction-states",
 			"prompt": "move top-level hover/focus/disabled into the same class block's &: nesting and preserve the focus ring; no app modifier or value is added.",
 			"files": [
-				"src/components/ui/button/ui-button.css"
+				"src/ui/button/ui-button.css"
 			],
 			"expectedSkills": [
 				"css"
@@ -236,7 +234,9 @@
 			"expectedSelected": {
 				"css": [
 					"selector-use-pseudo-classes-for-dom-owned-states",
-					"values-separate-domain-state-modifiers-from-dom-interaction-states"
+					"selector-nest-dom-state-in-the-owning-block",
+					"values-separate-domain-state-modifiers-from-dom-interaction-states",
+					"values-always-provide-a-visible-focus-indicator"
 				]
 			}
 		},
@@ -244,27 +244,57 @@
 			"id": "css-repeated-values-and-optional-token",
 			"prompt": "scope a global .ant-tree selector under the existing .ui_themePreview owner root with one descendant level, and replace repeated color/spacing/radius with optional CSS variables and fallbacks; keep the file and owner name unchanged.",
 			"files": [
-				"src/components/ui/theme-preview/theme-preview.css"
+				"src/ui/theme-preview/ui-theme-preview.css"
 			],
 			"expectedSkills": [
 				"css"
 			],
 			"expectedSelected": {
 				"css": [
-					"selector-avoid-deep-descendant-dependencies",
-					"selector-target-third-party-dom-from-owned-roots",
+					"ownership-use-foreign-classes-only-under-your-own-root",
 					"selector-use-pseudo-classes-for-dom-owned-states",
 					"values-always-provide-css-variable-fallbacks",
-					"values-separate-domain-state-modifiers-from-dom-interaction-states",
+					"values-tokenize-repeated-visual-values",
+					"values-separate-domain-state-modifiers-from-dom-interaction-states"
+				]
+			}
+		},
+		{
+			"id": "css-shared-declaration-group",
+			"prompt": "split the shared .pg_spikePanel__glyph--* comma group so each modifier block declares its own width and height; do not introduce local custom properties.",
+			"files": [
+				"src/page/detail/component/spike-pattern-panel/pg-spike-pattern-panel.css"
+			],
+			"expectedSkills": [
+				"css"
+			],
+			"expectedSelected": {
+				"css": [
+					"selector-do-not-group-classes-with-commas",
 					"values-tokenize-repeated-visual-values"
 				]
 			}
 		},
 		{
-			"id": "css-sticky-layout-intent",
-			"prompt": "clarify sticky basis and z-index ownership and remove excessive width/height forcing in dashboard/_index.css; tokens and selectors stay unchanged.",
+			"id": "css-split-class-declaration",
+			"prompt": "the same .pg_catalogIndex__toolbar block is opened twice in one file and the later one overrides padding; consolidate into a single block keeping the final value.",
 			"files": [
-				"src/routes/dashboard/_index.css"
+				"src/page/catalog-index/pg-catalog-index.css"
+			],
+			"expectedSkills": [
+				"css"
+			],
+			"expectedSelected": {
+				"css": [
+					"selector-declare-each-class-in-one-block"
+				]
+			}
+		},
+		{
+			"id": "css-sticky-layout-intent",
+			"prompt": "clarify sticky basis and z-index ownership and remove excessive width/height forcing in pg-dashboard.css; tokens and selectors stay unchanged.",
+			"files": [
+				"src/page/dashboard/pg-dashboard.css"
 			],
 			"expectedSkills": [
 				"css"
@@ -276,18 +306,37 @@
 			}
 		},
 		{
-			"id": "css-deep-project-descendant-chain",
-			"prompt": "flatten .layout .panel .detail .item to a target element top-level block without changing class names or values.",
+			"id": "css-cross-owner-internal-targeting",
+			"prompt": "the detail page styles .wg_chartCard__caption from pg-detail.css; move the change so the page no longer declares widget classes.",
 			"files": [
-				"src/routes/catalog/_index.css"
+				"src/page/detail/pg-detail.css",
+				"src/widget/chart-card/wg-chart-card.css"
 			],
 			"expectedSkills": [
 				"css"
 			],
 			"expectedSelected": {
 				"css": [
-					"selector-avoid-deep-descendant-dependencies",
-					"selector-limit-nesting-block-depth"
+					"ownership-use-foreign-classes-only-under-your-own-root",
+					"ownership-change-other-owners-through-their-api"
+				]
+			}
+		},
+		{
+			"id": "css-negated-domain-state",
+			"prompt": "remove the :not(--checked) ancestor condition that drives the descendant checkbox preview; keep the hover and focus feedback.",
+			"files": [
+				"src/page/detail/component/spike-pattern-panel/pg-spike-pattern-panel.css"
+			],
+			"expectedSkills": [
+				"css"
+			],
+			"expectedSelected": {
+				"css": [
+					"selector-limit-nesting-block-depth",
+					"selector-do-not-group-classes-with-commas",
+					"selector-nest-dom-state-in-the-owning-block",
+					"selector-do-not-invert-domain-state-with-not"
 				]
 			}
 		}

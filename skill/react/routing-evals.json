@@ -4,10 +4,10 @@
 	"scenarios": [
 		{
 			"id": "RTE01-import-contract-cleanup",
-			"prompt": "rename UserCard.tsx to user-card.tsx, remove index.ts barrel, replace React.MouseEvent and a duplicate API view type with existing contracts in src/components/ui/user-card.tsx and src/components/ui/index.ts.",
+			"prompt": "rename UserCard.tsx to user-card.tsx, remove index.ts barrel, replace React.MouseEvent and a duplicate API view type with existing contracts in src/ui/user-card/ui-user-card.tsx and src/ui/index.ts.",
 			"files": [
-				"src/components/ui/user-card.tsx",
-				"src/components/ui/index.ts"
+				"src/ui/user-card/ui-user-card.tsx",
+				"src/ui/index.ts"
 			],
 			"expectedSkills": [
 				"react",
@@ -90,15 +90,15 @@
 					],
 					"css": [
 						"naming-default-to-plain-css-when-no-module-convention",
-						"naming-keep-scope-slug-unique-per-owner",
+						"naming-use-scope-slug-element-modifier-syntax",
 						"naming-name-elements-and-modifiers-by-role",
 						"naming-keep-page-slug-traceable",
-						"naming-separate-owner-style-scopes",
-						"naming-use-scope-slug-element-modifier-syntax",
+						"ownership-give-each-file-one-scope-slug",
+						"ownership-choose-scope-prefix-by-reuse-range",
+						"ownership-use-foreign-classes-only-under-your-own-root",
 						"composition-compose-classes-with-clsx",
 						"composition-do-not-build-structural-variants-with-modifiers",
-						"values-separate-domain-state-modifiers-from-dom-interaction-states",
-						"organization-keep-style-files-owned-by-one-component-or-route"
+						"values-separate-domain-state-modifiers-from-dom-interaction-states"
 					]
 				}
 			}
@@ -140,8 +140,8 @@
 			"id": "RTE04-shared-config",
 			"prompt": "move a duplicated menu key and default page size from two screens into a documented snake_case as const config object in src/shared/config.ts and directly import and use config.* from both route pages.",
 			"files": [
-				"src/routes/entries/page.tsx",
-				"src/routes/reports/page.tsx",
+				"src/page/entries/pg-entries.tsx",
+				"src/page/reports/pg-reports.tsx",
 				"src/shared/config.ts"
 			],
 			"expectedSkills": [
@@ -169,7 +169,7 @@
 			"id": "RTE05-toolbar-composition",
 			"prompt": "replace compact/edit/search/focus booleans and static render props on wg-entry-toolbar.tsx with stateless compound parts plus repeated explicit variants, and document public parts.",
 			"files": [
-				"src/components/widgets/entry-toolbar/wg-entry-toolbar.tsx"
+				"src/widget/entry-toolbar/wg-entry-toolbar.tsx"
 			],
 			"expectedSkills": [
 				"react",
@@ -198,7 +198,7 @@
 			"id": "RTE06-nested-forwardref",
 			"prompt": "hoist an existing nested forwardRef search input that resets focus to module scope and convert it to a React 19 ref prop in ui-search-card.tsx.",
 			"files": [
-				"src/components/ui/search-card/ui-search-card.tsx"
+				"src/ui/search-card/ui-search-card.tsx"
 			],
 			"expectedSkills": [
 				"react",
@@ -225,7 +225,7 @@
 			"id": "RTE07-visibility-lifecycle",
 			"prompt": "change only the show/hide branch for an already-mounted sidebar to the already-imported project Activity primitive to preserve expanded state; keep empty-state unmount behavior.",
 			"files": [
-				"src/routes/entries/-local/entry-sidebar.tsx"
+				"src/page/entries/component/pg-entry-sidebar.tsx"
 			],
 			"expectedSkills": [
 				"react",
@@ -244,7 +244,7 @@
 			"id": "RTE08-delete-handler-flow",
 			"prompt": "move a row delete inline async branch, mutation, navigation, and state+effect replay into one curried named handler, keep an unused React event as _event, directly import its reused callback type, and keep screen-only flow inside page.tsx.",
 			"files": [
-				"src/routes/entries/page.tsx"
+				"src/page/entries/pg-entries.tsx"
 			],
 			"expectedSkills": [
 				"react",
@@ -275,10 +275,10 @@
 		},
 		{
 			"id": "RTE09-route-runtime-section",
-			"prompt": "extract only the tree section that owns local search and expanded state plus a tree adapter into -local, implement a named selection handler from EntryTreeSectionProps[\"onCategorySelect\"], and keep search params, navigation, page query, and mutation in the route entry.",
+			"prompt": "extract only the tree section that owns local search and expanded state plus a tree adapter into the owner component folder, implement a named selection handler from EntryTreeSectionProps[\"onCategorySelect\"], and keep search params, navigation, page query, and mutation in the page entry.",
 			"files": [
-				"src/routes/entries/page.tsx",
-				"src/routes/entries/-local/entry-tree-section.tsx"
+				"src/page/entries/pg-entries.tsx",
+				"src/page/entries/component/pg-entry-tree-section.tsx"
 			],
 			"expectedSkills": [
 				"react",
@@ -315,7 +315,7 @@
 			"id": "RTE10-derived-selection-state",
 			"prompt": "extract the inline selection toggle into a named handleSelectionToggle handler, replace selectedIds-derived count and flag effect+state synchronization with render calculation near use, and use a functional updater; do not change navigation or styling.",
 			"files": [
-				"src/routes/entries/page.tsx"
+				"src/page/entries/pg-entries.tsx"
 			],
 			"expectedSkills": [
 				"react",
@@ -349,7 +349,7 @@
 			"prompt": "synchronize shared capability once at the owning layout and store for multiple screens, menu, and guards; do not copy single-screen server fields into the store.",
 			"files": [
 				"src/routes/_authenticated/layout.tsx",
-				"src/stores/capability-store.ts"
+				"src/store/capability-store.ts"
 			],
 			"expectedSkills": [
 				"react",
@@ -376,7 +376,7 @@
 			"id": "RTE12-query-shaping",
 			"prompt": "move repeated raw list, items, and meta render shaping into query select, rename bindings to response... and mutation..., and remove wide aliases.",
 			"files": [
-				"src/routes/entries/page.tsx"
+				"src/page/entries/pg-entries.tsx"
 			],
 			"expectedSkills": [
 				"react",
@@ -402,7 +402,7 @@
 			"id": "RTE13-heavy-search",
 			"prompt": "for a 50k-row search, directly import newly used React hooks, use lazy initialization, urgent input plus deferred result, a non-urgent category transition, and only evidence-backed memoization; update the constraint comment.",
 			"files": [
-				"src/routes/entries/-local/entry-search.tsx"
+				"src/page/entries/component/pg-entry-search.tsx"
 			],
 			"expectedSkills": [
 				"react",
@@ -431,7 +431,7 @@
 			"id": "RTE14-subscription-effectevent",
 			"prompt": "directly import useEffectEvent, replace only a socket subscription latest-callback ref-sync hack with a named handleMessage = useEffectEvent(...), and update subscription lifecycle JSDoc; do not change click or submit actions.",
 			"files": [
-				"src/routes/entries/-local/entry-socket.tsx"
+				"src/page/entries/component/pg-entry-socket.tsx"
 			],
 			"expectedSkills": [
 				"react",
@@ -456,7 +456,7 @@
 			"id": "RTE15-suspense-absence",
 			"prompt": "replace Suspense detail ?? [], || \"-\", a local pending Spinner, and top-level aliases with an explicit empty state and origin chaining; remove an ungrounded explanatory comment.",
 			"files": [
-				"src/routes/entries/detail.tsx"
+				"src/page/entry-detail/pg-entry-detail.tsx"
 			],
 			"expectedSkills": [
 				"react",

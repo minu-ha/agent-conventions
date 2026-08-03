@@ -1,24 +1,25 @@
-# Limit Nesting Block Depth
+# Limit Nesting to One Level and Write the Rest Inline
 
-**Impact: HIGH (들여쓰기가 깊어져 규칙의 적용 대상을 머릿속에서 조립해야 하는 상태를 막습니다)**
+**Impact: HIGH (중첩을 항상 한 겹으로 고정해 실제 selector가 코드에 그대로 보이게 합니다)**
 
-**중첩**은 `{}`를 겹치는 것이고, 브라우저는 이를 펼쳐서 평가합니다.
-그래서 이 규칙은 가독성만 담당합니다. 결합자 개수는 `selector-avoid-deep-descendant-dependencies`가 셉니다.
+**중첩**은 `{}`를 겹치는 것입니다. 규칙은 하나입니다.
 
-- 중첩 block은 2단까지 씁니다. top-level class block 안에 한 겹만 더 엽니다.
-- 중첩 block 안에서 다시 중첩 block을 열지 않습니다.
-- third-party 경로는 결합자가 몇 개든 한 줄로 적습니다. 중첩으로 나누면 깊이가 보이지 않습니다.
+> 중첩은 항상 한 겹이고, `&`도 한 selector에 한 번입니다.
 
-중첩을 펼쳐도 펼친 selector가 같아서 마크업 변경에 똑같이 깨집니다. 펼치는 것은 개선이 아닙니다.
+`&`는 **그 block이 소유한 요소 하나**를 가리킵니다.
+그 요소에 조건이나 pseudo-element를 붙일 때만 `&`를 씁니다.
+다른 요소로 내려가면 `&`를 다시 열지 않고 같은 selector 줄에 이어 씁니다.
 
-동작 차이는 `,` 목록 안의 `&`뿐입니다.
-`.a, #x { & .b { } }`는 `:is(.a, #x) .b`가 되어 specificity가 `#x` 기준입니다. 그 밖에는 시각적 차이뿐입니다.
+- `.box { &::before { } }` — box 자신의 pseudo-element라서 `&`입니다.
+- `.button { &:hover .box::before { } }` — 이 `::before`는 box의 것이라 `&`로 쓸 수 없습니다.
 
-기계 검증은 `max-nesting-depth`입니다.
+그래서 `&`를 어디에 쓸지는 고르는 것이 아니라 **어느 요소를 가리키는지로 정해집니다.**
+"언제는 중첩, 언제는 한 줄"이 아니라 한 겹까지가 중첩이고 그 다음은 늘 한 줄입니다.
 
-`__prose`, `__copy`, `__content`처럼 raw HTML wrapper가 owner boundary라면
-같은 block 안에서 `& h2`, `& p`, `& > :first-child`를 씁니다.
-raw HTML에는 클래스를 붙일 수 없어서 element selector가 유일한 수단입니다.
-이 예외는 raw element에만 적용하고, 다른 project-owned class를 체이닝하는 근거로 쓰지 않습니다.
+중첩을 두 겹 이상 열면 실제 selector가 숨습니다.
+`.pg_a { & .pg_b { & .pg_c { } } }`에 쓰인 selector는 `& .pg_c`뿐이어서
+`.pg_a .pg_b .pg_c` 체이닝이 보이지 않습니다. lint도 각 block만 봅니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/03-02-selector-limit-nesting-block-depth.md)을 읽습니다.
+기계 검증은 `max-nesting-depth: 1`입니다. top-level이 0단입니다.
+
+> 예시·예외가 필요하면 [full rule](../rules/04-01-selector-limit-nesting-block-depth.md)을 읽습니다.

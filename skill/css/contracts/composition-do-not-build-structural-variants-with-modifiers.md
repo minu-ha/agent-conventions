@@ -20,4 +20,4 @@ modifier가 표현할 수 있는 것은 두 가지입니다.
 쓸 수 있으면 반복되는 모양이라 허용합니다.
 그 화면에서만 뜻이 통하면 이름이 이미 위치 정보를 담고 있다는 뜻이라 element로 바꿉니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/02-02-composition-do-not-build-structural-variants-with-modifiers.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/03-02-composition-do-not-build-structural-variants-with-modifiers.md)을 읽습니다.

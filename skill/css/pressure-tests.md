@@ -82,20 +82,20 @@ Pure CSS fixture는 CSS만 partition합니다. Mixed fixture 5개는 progressive
 ### C2. Third-party DOM Anchoring
 
 - Focus
-  - `selector-target-third-party-dom-from-owned-roots`
-  - `selector-avoid-deep-descendant-dependencies`
+  - `ownership-use-foreign-classes-only-under-your-own-root`
 - Prompt
   - "Ant Design tree 내부 DOM 스타일을 조금 손봐야 해. CSS skill 기준으로 안전하게 작성해줘."
 - Expected pass signals
   - selector가 항상 owner root block 안에서 `& .ant-*`로 시작함
   - owner root를 `.pg_* .ant-*`처럼 top-level에서 다시 체이닝하지 않음
-  - 직접 식별 가능한 target은 `& .ant-tree-node-content-wrapper`로 쓰고 중간 library root를 생략함
+  - 직접 식별 가능한 target은 owner block 안에서 `& .ant-tree-node-content-wrapper`처럼 씀
+  - 남의 DOM 경로는 결합자 개수를 줄이려 하지 않고 라이브러리 구조 그대로 씀
   - 경로가 길어져도 한 줄로 적고 중첩 block으로 나누지 않음
 - Likely fail signals
   - `.ant-tree-node-content-wrapper { ... }`
   - `.pg_treePanel__root .ant-tree-title { ... }`
   - 경로를 중첩 block으로 나눠 깊이를 숨김
-  - project-owned 클래스끼리 깊은 descendant chain을 만듦
+  - root 없는 단독 `.ant-*` 또는 `.wg_*` selector를 씀
 
 ### C3. Plain CSS and Slug Traceability
 
@@ -131,8 +131,8 @@ Pure CSS fixture는 CSS만 partition합니다. Mixed fixture 5개는 progressive
 ### C5. Route, Private, and Document Ownership
 
 - Focus
-  - `naming-separate-owner-style-scopes`
-  - `organization-keep-style-files-owned-by-one-component-or-route`
+  - `ownership-choose-scope-prefix-by-reuse-range`
+  - `ownership-give-each-file-one-scope-slug`
 - Prompt
   - "route page CSS와 filter dialog CSS, `_document.css`를 같이 정리해줘."
 - Expected pass signals
@@ -140,7 +140,7 @@ Pure CSS fixture는 CSS만 partition합니다. Mixed fixture 5개는 progressive
   - 자기 CSS 파일을 가진 page-private component는 자기 `pg_*` slug를 사용함
   - 파일도 route owner, document owner, private owner 단위로 나뉨
 - Likely fail signals
-  - 하나의 CSS 파일에 서로 다른 `pg_*`, `pg_*`, `ui_*` owner가 섞임
+  - 하나의 CSS 파일에 서로 다른 `pg_*` slug나 `wg_*`, `ui_*`가 섞임
   - 별도 CSS 파일인데 부모 `pg_*` slug를 계속 사용함
   - document shell 스타일을 route CSS 안에 넣음
 
@@ -164,24 +164,29 @@ Pure CSS fixture는 CSS만 partition합니다. Mixed fixture 5개는 progressive
 
 - Focus
   - `selector-use-pseudo-classes-for-dom-owned-states`
+  - `selector-nest-dom-state-in-the-owning-block`
   - `selector-limit-nesting-block-depth`
+  - `selector-use-classes-instead-of-element-selectors`
 - Prompt
   - "link hover/visited 상태와 prose wrapper 타이포를 CSS skill 기준으로 정리해줘."
 - Expected pass signals
   - `:hover`, `:visited` 같은 DOM state가 같은 클래스 block 안 nested `&:`로 정리됨
-  - `__prose`, `__copy`, `__content` 같은 owner wrapper는 자기 block 안에서만 `& h2`, `& p`, `& > :first-child`를 사용함
-  - parent hover가 child에 영향을 주면 descendant coupling 대신 CSS 변수나 명시적 contract를 사용함
+  - `dangerouslySetInnerHTML` 지점만 wrapper block 안에서 `& h2`, `& p`, `& > :first-child`로 겨냥함
+  - 우리가 렌더하는 마크업에는 element selector 대신 class를 붙임
+  - parent hover가 child에 영향을 주면 지역 CSS 변수를 만들지 않고 같은 block 안에서 `&:hover .child`로 결합자 하나를 씀
+  - 조상 modifier로 자손 표현을 결정하지 않고 자손에 자기 modifier를 붙임
 - Likely fail signals
-  - `.foo:hover { ... }`
-  - `.foo:hover .foo__icon { ... }`
+  - `.foo:hover { ... }` 를 top-level selector 로 다시 엶
+  - 여러 상태를 `:is()` 대신 `,` 목록으로 나열함
+  - `&`를 두 번 열어 `& .child { &::before { } }`처럼 중첩을 두 겹으로 만듦
   - `.owner__prose h2 { ... }`
   - `.owner__copy > :first-child { ... }`
 
 ### C8. Owner-based Scope Assignment
 
 - Focus
-  - `naming-separate-owner-style-scopes`
-  - `naming-keep-scope-slug-unique-per-owner`
+  - `ownership-choose-scope-prefix-by-reuse-range`
+  - `ownership-give-each-file-one-scope-slug`
 - Prompt
   - "route entry가 조립하는 toolbar section과 filter dialog의 스타일 owner를 정리해줘."
 - Expected pass signals
@@ -242,6 +247,91 @@ Pure CSS fixture는 CSS만 partition합니다. Mixed fixture 5개는 progressive
 - Likely fail signals
   - 삭제+추가 line만 보고 동일 property-value 이동을 새 layout/token 사용으로 과선택함
   - base/modifier 이름은 맞지만 hover를 `--active` 아래에 넣어 interaction 대상을 좁힘
+
+### C12. Shared Declaration Group
+
+- Focus
+  - `selector-do-not-group-classes-with-commas`
+  - `values-tokenize-repeated-visual-values`
+- Prompt
+  - "legend glyph modifier 여섯 개가 같은 width/height를 반복하고 있어. CSS skill 기준으로 정리해줘."
+- Expected pass signals
+  - 각 modifier block이 자기 `width`·`height`를 그대로 갖고 중복을 감수함
+  - 공통 선언을 `,` 목록으로 빼고 아래에서 일부만 다시 열지 않음
+  - 반복을 없애려고 지역 custom property를 새로 만들지 않음
+  - 한 대상에 진입 조건이 여럿이면 `,` 대신 `:is()`로 한 selector로 씀
+- Likely fail signals
+  - `.a--line, .a--dashed, .a--band { width: 24px; }` 뒤에 `.a--band { background: ... }`를 다시 엶
+  - 반복 값을 `--loc-glyph-width` 같은 지역 변수로 추출함
+  - 중복 제거를 이유로 전역 core token에 없는 항목을 새로 발명함
+  - `&:hover .box, &.Mui-focusVisible .box` 처럼 진입 조건을 `,` 로 나열함
+
+### C13. Cross-owner Internal Targeting
+
+- Focus
+  - `ownership-use-foreign-classes-only-under-your-own-root`
+  - `ownership-change-other-owners-through-their-api`
+- Prompt
+  - "detail 화면에서 chart card의 caption 색만 바꿔야 해. CSS skill 기준으로 처리해줘."
+- Expected pass signals
+  - selector가 내 slug로 시작하는지만 보고 판정함
+  - `wg_*`를 겨냥할 때 내 root class block 안에서 `& .wg_*`로 씀
+  - root 배치만 필요한지 먼저 확인하고, 그렇다면 호출부가 `className`을 넘겨 자기 class로 잡음
+  - 내부 표현이 필요하면 widget이 modifier나 variant를 노출하도록 바꿈
+  - 이 화면만 다르면 승격이 이른 것으로 보고 화면 폴더 안으로 내림
+- Likely fail signals
+  - `.wg_chartCard__caption { ... }` 를 root 없이 단독으로 씀
+  - root block 을 열지 않고 top-level 에서 `.pg_* .wg_*` 로 체이닝함
+  - `captionClassName` 같은 내부 노드 class prop을 새로 엶
+  - 배치·variant·강등 세 갈래를 보지 않고 곧바로 override 로 감
+
+### C14. Split Class Declaration
+
+- Focus
+  - `selector-declare-each-class-in-one-block`
+- Prompt
+  - "toolbar 스타일이 파일 위아래 두 곳에 나뉘어 있고 아래에서 padding을 덮어쓰고 있어. 정리해줘."
+- Expected pass signals
+  - 같은 class block을 하나로 합치고 최종 값만 남김
+  - 선언 순서에 의존하는 override가 남지 않음
+  - `@media` 안의 재선언은 그대로 둠
+- Likely fail signals
+  - 아래쪽 block을 남긴 채 위쪽에 `!important`를 붙임
+  - base와 modifier를 한 block으로 합쳐 상태를 끌 수 없게 만듦
+  - `@media` 안 재선언까지 합치려다 조건을 잃음
+
+### C15. Negated Domain State
+
+- Focus
+  - `selector-do-not-invert-domain-state-with-not`
+  - `values-always-provide-a-visible-focus-indicator`
+- Prompt
+  - "checkbox hover preview가 `:not(--checked)` 조건으로 걸려 있고 중첩이 네 단이야. CSS skill 기준으로 정리해줘."
+- Expected pass signals
+  - `:not(.--modifier)`가 사라지고 각 요소의 modifier가 자기 표현을 가짐
+  - 조상 modifier로 자손 표현을 결정하지 않음
+  - `:not(:disabled)`처럼 DOM이 소유한 조건은 그대로 둠
+  - focus 표시가 색만 바뀌지 않고 형태가 바뀌는 신호를 유지함
+- Likely fail signals
+  - 중첩만 펴고 `:not(.--checked)`를 그대로 남김
+  - hover 링을 없애서 부정 조건을 회피함
+  - `--focused` 같은 앱 modifier로 `:focus-visible`을 대체함
+
+### C16. Ampersand Scope and One-line Paths
+
+- Focus
+  - `selector-limit-nesting-block-depth`
+- Prompt
+  - "버튼 hover가 안쪽 checkbox의 `::before`를 바꿔야 해. CSS skill 기준으로 작성해줘."
+- Expected pass signals
+  - `&`를 한 번만 쓰고 그 다음 경로는 같은 selector 줄에 이어 씀
+  - `&:hover .pg_x__box::before`처럼 다른 요소의 pseudo-element는 `&` 없이 인라인으로 씀
+  - 그 요소 자신의 pseudo-element는 그 요소 block 안에서 `&::before`로 씀
+  - "언제 중첩이고 언제 한 줄인가"를 묻지 않고 한 겹까지만 중첩함
+- Likely fail signals
+  - `& .pg_x__box { &::before { } }` 로 두 겹을 엶
+  - `.pg_x__box { }` 를 top-level 로 빼면서 조상 상태를 잃음
+  - 한 줄로 쓰라는 규칙을 third-party 경로에만 적용되는 것으로 읽음
 
 ## 유지보수 원칙
 

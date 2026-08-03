@@ -1,7 +1,7 @@
 # React 컨벤션 Rule Index
 
 - Skill: `react`
-- Routing digest: `sha256:498882737df1d4f298945917308ce06148901e18817107c6ec8ca04654247895`
+- Routing digest: `sha256:b1364cabfe065bf932888ccad5e3a9f0463185498c9e1f7c37546555e14156d5`
 
 ## Direct Companions
 
@@ -12,8 +12,8 @@
 
 - R01 | ownership-import-react-types-directly | \`React.\*\` namespace 타입과 direct \`import type\` 중 선택할 때. 같은 module path의 type/value import 구성을 추가·삭제·전환할 때. 제외: 일반 direct value import만 바꾸는 경우.
 - R02 | ownership-prefer-plain-ts-for-local-react-helpers | 화면 전용 계산·정규화·payload 조립을 custom hook으로 추출하려 할 때. 화면 전용 순수 로직을 별도 support module로 옮기려 할 때. | reviewWith: ownership-keep-lifecycle-in-the-owning-component, ownership-place-owner-files-in-role-folders, screen-extract-utilities-selectively, typescript/functions-extract-helpers-only-when-the-boundary-is-real
-- R03 | ownership-layer-component-boundaries | 컴포넌트를 ui·widget·page 중 어느 소유 레이어에 둘지 정할 때. 컴포넌트를 레이어 사이에서 옮기거나 공용화할 때. | reviewWith: css/naming-separate-owner-style-scopes, ownership-place-owner-files-in-role-folders
-- R04 | ownership-place-owner-files-in-role-folders | owner 아래 \`component\`·\`config\`·\`function\`·\`hook\`·\`type\` 폴더를 만들거나 옮길 때. 추출한 component·함수·타입의 배치 위치를 정할 때. 제외: 기존 파일 내부 구현만 바꾸는 경우. | reviewWith: css/naming-separate-owner-style-scopes, ownership-keep-component-imports-flowing-downward
+- R03 | ownership-layer-component-boundaries | 컴포넌트를 ui·widget·page 중 어느 소유 레이어에 둘지 정할 때. 컴포넌트를 레이어 사이에서 옮기거나 공용화할 때. | reviewWith: css/ownership-choose-scope-prefix-by-reuse-range, ownership-place-owner-files-in-role-folders
+- R04 | ownership-place-owner-files-in-role-folders | owner 아래 \`component\`·\`config\`·\`function\`·\`hook\`·\`type\` 폴더를 만들거나 옮길 때. 추출한 component·함수·타입의 배치 위치를 정할 때. 제외: 기존 파일 내부 구현만 바꾸는 경우. | reviewWith: css/ownership-choose-scope-prefix-by-reuse-range, ownership-keep-component-imports-flowing-downward
 - R05 | ownership-shared-config-entry-points | 둘 이상의 화면이 쓰는 상수·설정·순수 함수를 추가하거나 옮길 때. leaf 파일에 중복 선언된 공용 값을 정리할 때. | reviewWith: typescript/naming-centralize-shared-config-namespaces, typescript/naming-preserve-config-origin-with-chained-access
 - R06 | ownership-use-consistent-file-and-symbol-naming | React/TSX 파일·컴포넌트·exported symbol·공용 설정 이름을 정하거나 바꿀 때. sibling \`.ts\` support 파일·symbol을 만들거나 옮길 때. 제외: local query·mutation binding 이름만 바꾸는 경우.
 - R07 | ownership-keep-component-imports-flowing-downward | \`component\` 폴더 안의 파일을 다른 파일에서 import할 때. \`../\`나 \`@/page\` 경로로 component를 가져오려 할 때. 여러 자식이 같은 component를 필요로 해 배치를 다시 정할 때. | reviewWith: ownership-layer-component-boundaries

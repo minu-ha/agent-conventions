@@ -7,8 +7,10 @@ interaction selector를 modifier 아래로 옮겨 적용 대상을 좁히지 않
 modifier block에는 `active`·`selected`·`error`처럼 app state가 소유하는 presentation만 남깁니다.
 modifier가 켜진 경우에만 interaction이 달라져야 한다는 제품 요구가 있을 때만 그 예외를 명시합니다.
 
-포커스 링 제거는 금지합니다. `outline: none`을 쓰면 대체 포커스 스타일을 반드시 제공합니다.
+modifier 아래로 옮기면 그 상태가 아닐 때 hover와 focus가 사라집니다.
+읽는 사람은 base block만 보고 interaction이 없다고 판단하게 됩니다.
 
+포커스 표시 자체는 `values-always-provide-a-visible-focus-indicator`가 담당합니다.
 무엇을 modifier로 두고 무엇을 pseudo-class로 둘지는 `selector-use-pseudo-classes-for-dom-owned-states`가 정합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/04-03-values-separate-domain-state-modifiers-from-dom-interaction-states.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/05-04-values-separate-domain-state-modifiers-from-dom-interaction-states.md)을 읽습니다.

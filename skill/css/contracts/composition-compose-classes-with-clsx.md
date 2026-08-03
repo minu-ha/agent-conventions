@@ -9,4 +9,4 @@ TSX에서 `className`은 `clsx()` 사용을 기본으로 합니다.
 modifier가 붙는 순간 문자열 연결로 되돌아가는 diff를 막으려는 것이고,
 `className` 형태가 파일마다 갈리지 않게 해서 grep과 리뷰가 한 패턴만 보게 합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/02-01-composition-compose-classes-with-clsx.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/03-01-composition-compose-classes-with-clsx.md)을 읽습니다.

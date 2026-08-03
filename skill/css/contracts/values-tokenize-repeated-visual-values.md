@@ -14,6 +14,9 @@ core token 목록에 없는 변수는 fallback이 필요해서 값이 결국 사
 읽는 사람은 선언을 한 번 더 찾아가야 하는데 바꿀 지점은 여전히 여러 곳이라 얻는 것이 없습니다.
 
 조상 상태를 자손에 전달할 때도 변수를 쓰지 않고 결합자 하나로 자손을 겨냥합니다.
-그 상한은 `selector-avoid-deep-descendant-dependencies`가 정합니다.
+결합자를 쓸 수 있는 범위는 `ownership-use-foreign-classes-only-under-your-own-root`이 정합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/04-04-values-tokenize-repeated-visual-values.md)을 읽습니다.
+selector 쪽 같은 판단은 `selector-do-not-group-classes-with-commas`입니다.
+여러 클래스를 `,`로 묶어 공통 선언을 빼지 않고 각 클래스에 중복으로 씁니다.
+
+> 예시·예외가 필요하면 [full rule](../rules/05-03-values-tokenize-repeated-visual-values.md)을 읽습니다.

@@ -106,24 +106,29 @@ const typescriptRuleUniverse = [
 
 const cssRuleUniverse = [
 	"naming-default-to-plain-css-when-no-module-convention",
-	"naming-keep-scope-slug-unique-per-owner",
+	"naming-use-scope-slug-element-modifier-syntax",
 	"naming-name-elements-and-modifiers-by-role",
 	"naming-keep-page-slug-traceable",
-	"naming-separate-owner-style-scopes",
-	"naming-use-scope-slug-element-modifier-syntax",
+	"ownership-give-each-file-one-scope-slug",
+	"ownership-choose-scope-prefix-by-reuse-range",
+	"ownership-use-foreign-classes-only-under-your-own-root",
+	"ownership-change-other-owners-through-their-api",
 	"composition-compose-classes-with-clsx",
 	"composition-do-not-build-structural-variants-with-modifiers",
 	"composition-keep-classes-single-purpose",
 	"composition-style-ui-components-through-owned-wrappers",
-	"selector-avoid-deep-descendant-dependencies",
 	"selector-limit-nesting-block-depth",
-	"selector-target-third-party-dom-from-owned-roots",
+	"selector-use-classes-instead-of-element-selectors",
+	"selector-do-not-group-classes-with-commas",
+	"selector-declare-each-class-in-one-block",
 	"selector-use-pseudo-classes-for-dom-owned-states",
+	"selector-nest-dom-state-in-the-owning-block",
+	"selector-do-not-invert-domain-state-with-not",
 	"values-keep-layout-intent-explicit",
 	"values-always-provide-css-variable-fallbacks",
-	"values-separate-domain-state-modifiers-from-dom-interaction-states",
 	"values-tokenize-repeated-visual-values",
-	"organization-keep-style-files-owned-by-one-component-or-route",
+	"values-separate-domain-state-modifiers-from-dom-interaction-states",
+	"values-always-provide-a-visible-focus-indicator",
 ] as const;
 
 /**
@@ -282,8 +287,8 @@ const cssRuleRouting = {
 			"프로젝트 표준 미확정 상태에서 새 stylesheet 접근 형식(plain CSS·CSS Modules)을 선택하거나 `.module.css`·`styles.*`로 전환할 때. 제외: 기존 plain CSS class rename만 하는 경우.",
 		reviewWith: [],
 	},
-	"naming-keep-scope-slug-unique-per-owner": {
-		appliesWhen: "새 `scope_slug`를 만들거나 기존 slug를 복사·이름 변경할 때. 서로 다른 컴포넌트가 같은 slug를 쓸 가능성이 있을 때.",
+	"naming-use-scope-slug-element-modifier-syntax": {
+		appliesWhen: "plain CSS의 project-owned class를 새로 만들 때. 이름, scope, slug, element, modifier 구분자 또는 casing을 변경할 때.",
 		reviewWith: [],
 	},
 	"naming-name-elements-and-modifiers-by-role": {
@@ -294,13 +299,25 @@ const cssRuleRouting = {
 		appliesWhen: "`pg_*` owner의 class slug를 새로 만들거나 이름을 바꿀 때. 같은 이름 component가 여러 화면에 생겨 slug를 구분해야 할 때.",
 		reviewWith: [],
 	},
-	"naming-separate-owner-style-scopes": {
-		appliesWhen: "스타일 owner를 화면 내부, widget, primitive 중에서 결정할 때. 새 CSS 파일을 만들거나 기존 owner 범위를 옮길 때.",
-		reviewWith: ["naming-keep-scope-slug-unique-per-owner", "organization-keep-style-files-owned-by-one-component-or-route"],
-	},
-	"naming-use-scope-slug-element-modifier-syntax": {
-		appliesWhen: "plain CSS의 project-owned class를 새로 만들 때. 이름, scope, slug, element, modifier 구분자 또는 casing을 변경할 때.",
+	"ownership-give-each-file-one-scope-slug": {
+		appliesWhen: "새 `scope_slug`를 만들거나 기존 slug를 복사·이름 변경할 때. 서로 다른 컴포넌트가 같은 slug를 쓸 가능성이 있을 때.",
 		reviewWith: [],
+	},
+	"ownership-choose-scope-prefix-by-reuse-range": {
+		appliesWhen: "새 CSS 파일을 만들며 `pg_`·`wg_`·`ui_` 중 하나를 고를 때. owner의 재사용 범위가 바뀌어 prefix를 옮길 때.",
+		reviewWith: ["ownership-give-each-file-one-scope-slug", "ownership-use-foreign-classes-only-under-your-own-root"],
+	},
+	"ownership-use-foreign-classes-only-under-your-own-root": {
+		appliesWhen: "`.ant-*`·`.rc-*`·`.Mui-*` 같은 third-party class를 쓸 때. 다른 `scope_slug`의 class를 겨냥할 때.",
+		reviewWith: [
+			"ownership-change-other-owners-through-their-api",
+			"ownership-give-each-file-one-scope-slug",
+			"selector-limit-nesting-block-depth",
+		],
+	},
+	"ownership-change-other-owners-through-their-api": {
+		appliesWhen: "다른 component의 배치나 내부 표현을 바꿔야 할 때. component에 class 관련 prop을 추가할 때.",
+		reviewWith: ["ownership-use-foreign-classes-only-under-your-own-root", "composition-style-ui-components-through-owned-wrappers"],
 	},
 	"composition-compose-classes-with-clsx": {
 		appliesWhen: "TSX의 `className`을 추가·수정할 때. base class, modifier, optional class를 조합할 때.",
@@ -318,31 +335,42 @@ const cssRuleRouting = {
 	"composition-style-ui-components-through-owned-wrappers": {
 		appliesWhen:
 			"`Ui*` wrapper에 `className`을 주거나 wrapper가 노출할 class 계약을 정할 때. `Ui*` 내부 노드의 모양을 화면마다 다르게 해야 할 때. 제외: 기존 CSS owner root 아래 third-party selector만 수정하는 경우.",
-		reviewWith: ["selector-target-third-party-dom-from-owned-roots"],
-	},
-	"selector-avoid-deep-descendant-dependencies": {
-		appliesWhen:
-			"공백·`>`·`+`·`~`로 요소 사이 관계를 표현하는 selector를 추가·수정할 때. DOM 계층에 의존하는 project-owned·third-party selector를 검토할 때.",
-		reviewWith: [
-			"selector-limit-nesting-block-depth",
-			"selector-use-pseudo-classes-for-dom-owned-states",
-			"selector-target-third-party-dom-from-owned-roots",
-			"composition-style-ui-components-through-owned-wrappers",
-		],
+		reviewWith: ["ownership-use-foreign-classes-only-under-your-own-root", "ownership-change-other-owners-through-their-api"],
 	},
 	"selector-limit-nesting-block-depth": {
-		appliesWhen:
-			"중첩 `{}` block을 추가하거나 기존 block을 펼치거나 합칠 때. raw HTML prose·copy·content wrapper 안 element selector를 추가·수정할 때.",
-		reviewWith: ["selector-avoid-deep-descendant-dependencies"],
+		appliesWhen: "중첩 `{}` block을 추가하거나 기존 block을 펼치거나 합칠 때. `&`로 조건이나 pseudo-element를 붙일 때.",
+		reviewWith: ["selector-use-classes-instead-of-element-selectors", "selector-declare-each-class-in-one-block"],
 	},
-	"selector-target-third-party-dom-from-owned-roots": {
-		appliesWhen: "`.ant-*`, `.rc-*`, `.tippy-*` 등 third-party 내부 DOM selector를 추가·수정할 때. owner root 아래로 범위를 제한할 때.",
-		reviewWith: ["selector-limit-nesting-block-depth", "selector-avoid-deep-descendant-dependencies"],
+	"selector-use-classes-instead-of-element-selectors": {
+		appliesWhen:
+			"`p`, `h2`, `span`, `button` 같은 element selector를 쓰려 할 때. `dangerouslySetInnerHTML`이나 Markdown 렌더러 출력을 스타일링할 때.",
+		reviewWith: ["naming-name-elements-and-modifiers-by-role"],
+	},
+	"selector-do-not-group-classes-with-commas": {
+		appliesWhen: "여러 class가 같은 선언을 반복해 `,`로 묶으려 할 때. 한 대상에 진입 조건이 여럿일 때.",
+		reviewWith: ["selector-declare-each-class-in-one-block", "values-tokenize-repeated-visual-values"],
+	},
+	"selector-declare-each-class-in-one-block": {
+		appliesWhen: "이미 선언한 class에 스타일을 더 추가할 때. 파일 아래쪽에서 위쪽 선언을 덮어쓰려 할 때.",
+		reviewWith: ["selector-do-not-group-classes-with-commas"],
 	},
 	"selector-use-pseudo-classes-for-dom-owned-states": {
 		appliesWhen:
 			"`:hover`, `:visited`, `:focus*`, `:disabled`, `:checked`를 추가·수정할 때. parent DOM state가 child styling에 영향을 줄 때.",
 		reviewWith: [],
+	},
+	"selector-nest-dom-state-in-the-owning-block": {
+		appliesWhen:
+			"`:hover`, `:focus-visible`, `:disabled`, `:checked` 스타일을 추가·수정할 때. 조상의 DOM 상태가 자손 스타일을 바꿔야 할 때.",
+		reviewWith: [
+			"selector-limit-nesting-block-depth",
+			"selector-use-pseudo-classes-for-dom-owned-states",
+			"selector-do-not-group-classes-with-commas",
+		],
+	},
+	"selector-do-not-invert-domain-state-with-not": {
+		appliesWhen: "`:not(.--modifier)`로 앱 상태를 뒤집으려 할 때. 조상의 modifier가 자손의 표현을 결정해야 할 것 같을 때.",
+		reviewWith: ["selector-use-pseudo-classes-for-dom-owned-states"],
 	},
 	"values-keep-layout-intent-explicit": {
 		appliesWhen:
@@ -353,18 +381,17 @@ const cssRuleRouting = {
 		appliesWhen: "`var(--*)` 사용을 추가하거나 변수 이름·fallback을 바꿀 때. core token 목록에 항목을 추가·제거할 때.",
 		reviewWith: ["values-tokenize-repeated-visual-values"],
 	},
-	"values-separate-domain-state-modifiers-from-dom-interaction-states": {
-		appliesWhen: "app/domain state modifier와 hover·focus·disabled 같은 DOM interaction state를 추가·변경할 때. focus ring을 수정할 때.",
-		reviewWith: ["composition-do-not-build-structural-variants-with-modifiers"],
-	},
 	"values-tokenize-repeated-visual-values": {
 		appliesWhen: "여러 파일이 같은 색·간격·radius·타이포·그림자 값을 쓸 때. 새 CSS custom property를 선언할 때.",
 		reviewWith: ["values-always-provide-css-variable-fallbacks"],
 	},
-	"organization-keep-style-files-owned-by-one-component-or-route": {
-		appliesWhen:
-			"stylesheet를 새로 만들거나 이동·분할·병합해 한 파일에 component, route, document, local, shared owner가 섞일 가능성이 있을 때.",
-		reviewWith: [],
+	"values-separate-domain-state-modifiers-from-dom-interaction-states": {
+		appliesWhen: "app/domain state modifier와 hover·focus·disabled 같은 DOM interaction state를 추가·변경할 때. focus ring을 수정할 때.",
+		reviewWith: ["composition-do-not-build-structural-variants-with-modifiers"],
+	},
+	"values-always-provide-a-visible-focus-indicator": {
+		appliesWhen: "`outline`, `:focus`, `:focus-visible` 스타일을 추가·수정할 때. interactive 요소의 기본 포커스 링을 덮어쓸 때.",
+		reviewWith: ["values-separate-domain-state-modifiers-from-dom-interaction-states"],
 	},
 } as const;
 
@@ -389,12 +416,12 @@ const reactRuleRouting = {
 	},
 	"ownership-layer-component-boundaries": {
 		appliesWhen: "컴포넌트를 ui·widget·page 중 어느 소유 레이어에 둘지 정할 때. 컴포넌트를 레이어 사이에서 옮기거나 공용화할 때.",
-		reviewWith: ["ownership-place-owner-files-in-role-folders", "css/naming-separate-owner-style-scopes"],
+		reviewWith: ["ownership-place-owner-files-in-role-folders", "css/ownership-choose-scope-prefix-by-reuse-range"],
 	},
 	"ownership-place-owner-files-in-role-folders": {
 		appliesWhen:
 			"owner 아래 `component`·`config`·`function`·`hook`·`type` 폴더를 만들거나 옮길 때. 추출한 component·함수·타입의 배치 위치를 정할 때. 제외: 기존 파일 내부 구현만 바꾸는 경우.",
-		reviewWith: ["ownership-keep-component-imports-flowing-downward", "css/naming-separate-owner-style-scopes"],
+		reviewWith: ["ownership-keep-component-imports-flowing-downward", "css/ownership-choose-scope-prefix-by-reuse-range"],
 	},
 	"ownership-shared-config-entry-points": {
 		appliesWhen: "둘 이상의 화면이 쓰는 상수·설정·순수 함수를 추가하거나 옮길 때. leaf 파일에 중복 선언된 공용 값을 정리할 때.",
@@ -740,8 +767,8 @@ const reactScenarioStages = {
 	"RTE01-import-contract-cleanup": {
 		initial: {
 			prompt:
-				"rename UserCard.tsx to user-card.tsx, remove index.ts barrel, replace React.MouseEvent and a duplicate API view type with existing contracts in src/components/ui/user-card.tsx and src/components/ui/index.ts.",
-			files: ["src/components/ui/user-card.tsx", "src/components/ui/index.ts"],
+				"rename UserCard.tsx to user-card.tsx, remove index.ts barrel, replace React.MouseEvent and a duplicate API view type with existing contracts in src/ui/user-card/ui-user-card.tsx and src/ui/index.ts.",
+			files: ["src/ui/user-card/ui-user-card.tsx", "src/ui/index.ts"],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
 				react: [
@@ -814,15 +841,15 @@ const reactScenarioStages = {
 				],
 				css: [
 					"naming-default-to-plain-css-when-no-module-convention",
-					"naming-keep-scope-slug-unique-per-owner",
+					"naming-use-scope-slug-element-modifier-syntax",
 					"naming-name-elements-and-modifiers-by-role",
 					"naming-keep-page-slug-traceable",
-					"naming-separate-owner-style-scopes",
-					"naming-use-scope-slug-element-modifier-syntax",
+					"ownership-give-each-file-one-scope-slug",
+					"ownership-choose-scope-prefix-by-reuse-range",
+					"ownership-use-foreign-classes-only-under-your-own-root",
 					"composition-compose-classes-with-clsx",
 					"composition-do-not-build-structural-variants-with-modifiers",
 					"values-separate-domain-state-modifiers-from-dom-interaction-states",
-					"organization-keep-style-files-owned-by-one-component-or-route",
 				],
 			},
 		},
@@ -860,7 +887,7 @@ const reactScenarioStages = {
 		initial: {
 			prompt:
 				"move a duplicated menu key and default page size from two screens into a documented snake_case as const config object in src/shared/config.ts and directly import and use config.* from both route pages.",
-			files: ["src/routes/entries/page.tsx", "src/routes/reports/page.tsx", "src/shared/config.ts"],
+			files: ["src/page/entries/pg-entries.tsx", "src/page/reports/pg-reports.tsx", "src/shared/config.ts"],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
 				react: ["ownership-shared-config-entry-points", "ownership-use-consistent-file-and-symbol-naming"],
@@ -881,7 +908,7 @@ const reactScenarioStages = {
 		initial: {
 			prompt:
 				"replace compact/edit/search/focus booleans and static render props on wg-entry-toolbar.tsx with stateless compound parts plus repeated explicit variants, and document public parts.",
-			files: ["src/components/widgets/entry-toolbar/wg-entry-toolbar.tsx"],
+			files: ["src/widget/entry-toolbar/wg-entry-toolbar.tsx"],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
 				react: [
@@ -907,7 +934,7 @@ const reactScenarioStages = {
 		initial: {
 			prompt:
 				"hoist an existing nested forwardRef search input that resets focus to module scope and convert it to a React 19 ref prop in ui-search-card.tsx.",
-			files: ["src/components/ui/search-card/ui-search-card.tsx"],
+			files: ["src/ui/search-card/ui-search-card.tsx"],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
 				react: [
@@ -931,7 +958,7 @@ const reactScenarioStages = {
 		initial: {
 			prompt:
 				"change only the show/hide branch for an already-mounted sidebar to the already-imported project Activity primitive to preserve expanded state; keep empty-state unmount behavior.",
-			files: ["src/routes/entries/-local/entry-sidebar.tsx"],
+			files: ["src/page/entries/component/pg-entry-sidebar.tsx"],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
 				react: ["composition-use-activity-for-render-branches"],
@@ -943,7 +970,7 @@ const reactScenarioStages = {
 		initial: {
 			prompt:
 				"move a row delete inline async branch, mutation, navigation, and state+effect replay into one curried named handler, keep an unused React event as _event, directly import its reused callback type, and keep screen-only flow inside page.tsx.",
-			files: ["src/routes/entries/page.tsx"],
+			files: ["src/page/entries/pg-entries.tsx"],
 			expectedSkills: ["react", "typescript", "tanstack-route"],
 			expectedSelected: {
 				react: [
@@ -971,8 +998,8 @@ const reactScenarioStages = {
 	"RTE09-route-runtime-section": {
 		initial: {
 			prompt:
-				'extract only the tree section that owns local search and expanded state plus a tree adapter into -local, implement a named selection handler from EntryTreeSectionProps["onCategorySelect"], and keep search params, navigation, page query, and mutation in the route entry.',
-			files: ["src/routes/entries/page.tsx", "src/routes/entries/-local/entry-tree-section.tsx"],
+				'extract only the tree section that owns local search and expanded state plus a tree adapter into the owner component folder, implement a named selection handler from EntryTreeSectionProps["onCategorySelect"], and keep search params, navigation, page query, and mutation in the page entry.',
+			files: ["src/page/entries/pg-entries.tsx", "src/page/entries/component/pg-entry-tree-section.tsx"],
 			expectedSkills: ["react", "typescript", "tanstack-route"],
 			expectedSelected: {
 				react: [
@@ -1005,7 +1032,7 @@ const reactScenarioStages = {
 		initial: {
 			prompt:
 				"extract the inline selection toggle into a named handleSelectionToggle handler, replace selectedIds-derived count and flag effect+state synchronization with render calculation near use, and use a functional updater; do not change navigation or styling.",
-			files: ["src/routes/entries/page.tsx"],
+			files: ["src/page/entries/pg-entries.tsx"],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
 				react: [
@@ -1035,7 +1062,7 @@ const reactScenarioStages = {
 		initial: {
 			prompt:
 				"synchronize shared capability once at the owning layout and store for multiple screens, menu, and guards; do not copy single-screen server fields into the store.",
-			files: ["src/routes/_authenticated/layout.tsx", "src/stores/capability-store.ts"],
+			files: ["src/routes/_authenticated/layout.tsx", "src/store/capability-store.ts"],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
 				react: [
@@ -1059,7 +1086,7 @@ const reactScenarioStages = {
 		initial: {
 			prompt:
 				"move repeated raw list, items, and meta render shaping into query select, rename bindings to response... and mutation..., and remove wide aliases.",
-			files: ["src/routes/entries/page.tsx"],
+			files: ["src/page/entries/pg-entries.tsx"],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
 				react: [
@@ -1082,7 +1109,7 @@ const reactScenarioStages = {
 		initial: {
 			prompt:
 				"for a 50k-row search, directly import newly used React hooks, use lazy initialization, urgent input plus deferred result, a non-urgent category transition, and only evidence-backed memoization; update the constraint comment.",
-			files: ["src/routes/entries/-local/entry-search.tsx"],
+			files: ["src/page/entries/component/pg-entry-search.tsx"],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
 				react: [
@@ -1108,7 +1135,7 @@ const reactScenarioStages = {
 		initial: {
 			prompt:
 				"directly import useEffectEvent, replace only a socket subscription latest-callback ref-sync hack with a named handleMessage = useEffectEvent(...), and update subscription lifecycle JSDoc; do not change click or submit actions.",
-			files: ["src/routes/entries/-local/entry-socket.tsx"],
+			files: ["src/page/entries/component/pg-entry-socket.tsx"],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
 				react: [
@@ -1130,7 +1157,7 @@ const reactScenarioStages = {
 		initial: {
 			prompt:
 				'replace Suspense detail ?? [], || "-", a local pending Spinner, and top-level aliases with an explicit empty state and origin chaining; remove an ungrounded explanatory comment.',
-			files: ["src/routes/entries/detail.tsx"],
+			files: ["src/page/entry-detail/pg-entry-detail.tsx"],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
 				react: [
@@ -1201,28 +1228,28 @@ const reactScenarioStages = {
 const cssScenarioStages = {
 	"css-route-style-scope-drift": {
 		initial: {
-			prompt: "pure rendering change in src/routes/catalog/index.tsx, with React and TypeScript only.",
-			files: ["src/routes/catalog/index.tsx"],
+			prompt: "pure rendering change in src/page/catalog-index/pg-catalog-index.tsx, with React and TypeScript only.",
+			files: ["src/page/catalog-index/pg-catalog-index.tsx"],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {react: [], typescript: ["guardrails-review-banned-typescript-shortcuts-before-finishing"]},
 		},
 		scopeDrift: {
 			evidence:
-				"add route-owned empty-state className, src/routes/catalog/_index.css, and its direct side-effect import in a project without a CSS Modules standard; final skills add CSS.",
-			files: ["src/routes/catalog/index.tsx", "src/routes/catalog/_index.css"],
+				"add route-owned empty-state className, src/page/catalog-index/pg-catalog-index.css, and its direct side-effect import in a project without a CSS Modules standard; final skills add CSS.",
+			files: ["src/page/catalog-index/pg-catalog-index.tsx", "src/page/catalog-index/pg-catalog-index.css"],
 			expectedSkills: ["react", "typescript", "css"],
 			expectedSelected: {
 				react: ["ownership-place-owner-files-in-role-folders"],
 				typescript: ["naming-use-direct-imports-and-public-entry-points", "guardrails-review-banned-typescript-shortcuts-before-finishing"],
 				css: [
 					"naming-default-to-plain-css-when-no-module-convention",
-					"naming-keep-scope-slug-unique-per-owner",
+					"naming-use-scope-slug-element-modifier-syntax",
 					"naming-name-elements-and-modifiers-by-role",
 					"naming-keep-page-slug-traceable",
-					"naming-separate-owner-style-scopes",
-					"naming-use-scope-slug-element-modifier-syntax",
+					"ownership-give-each-file-one-scope-slug",
+					"ownership-choose-scope-prefix-by-reuse-range",
+					"ownership-use-foreign-classes-only-under-your-own-root",
 					"composition-compose-classes-with-clsx",
-					"organization-keep-style-files-owned-by-one-component-or-route",
 				],
 			},
 		},
@@ -1230,24 +1257,24 @@ const cssScenarioStages = {
 	"css-owner-boundary-split": {
 		initial: {
 			prompt:
-				"split mixed route/document/local ownership from posts/_index.css into pages/_document.css and posts/_local/filter-dialog.css; class names do not change.",
-			files: ["src/routes/posts/_index.css", "src/pages/_document.css", "src/routes/posts/_local/filter-dialog.css"],
+				"pg-post-index.css holds both the page shell and the filter dialog; move the dialog styles into the component own CSS file and give that file its own slug.",
+			files: ["src/page/post-index/pg-post-index.css", "src/page/post-index/component/pg-post-filter-dialog.css"],
 			expectedSkills: ["css"],
-			expectedSelected: {css: ["naming-separate-owner-style-scopes", "organization-keep-style-files-owned-by-one-component-or-route"]},
+			expectedSelected: {css: ["ownership-give-each-file-one-scope-slug", "ownership-choose-scope-prefix-by-reuse-range"]},
 		},
 	},
 	"css-domain-state-class-contract": {
 		initial: {
 			prompt:
-				"split listButtonActive into base plus --active, add a direct clsx import, and compose with clsx() in catalog/index.tsx and _index.css; do not change pseudo-states.",
-			files: ["src/routes/catalog/index.tsx", "src/routes/catalog/_index.css"],
+				"split listButtonActive into base plus --active, add a direct clsx import, and compose with clsx() in pg-catalog-index.tsx and _index.css; do not change pseudo-states.",
+			files: ["src/page/catalog-index/pg-catalog-index.tsx", "src/page/catalog-index/pg-catalog-index.css"],
 			expectedSkills: ["react", "typescript", "css"],
 			expectedSelected: {
 				react: [],
 				typescript: ["naming-use-direct-imports-and-public-entry-points", "guardrails-review-banned-typescript-shortcuts-before-finishing"],
 				css: [
-					"naming-name-elements-and-modifiers-by-role",
 					"naming-use-scope-slug-element-modifier-syntax",
+					"naming-name-elements-and-modifiers-by-role",
 					"composition-compose-classes-with-clsx",
 					"composition-do-not-build-structural-variants-with-modifiers",
 					"composition-keep-classes-single-purpose",
@@ -1260,15 +1287,15 @@ const cssScenarioStages = {
 	"css-one-off-structural-modifier": {
 		initial: {
 			prompt:
-				"replace non-repeatable section--compactTop spacing patch with a role-named element in catalog/detail.tsx and detail.css; keep the existing clsx import.",
-			files: ["src/routes/catalog/detail.tsx", "src/routes/catalog/detail.css"],
+				"replace non-repeatable section--compactTop spacing patch with a role-named element in pg-catalog-detail.tsx and detail.css; keep the existing clsx import.",
+			files: ["src/page/catalog-detail/pg-catalog-detail.tsx", "src/page/catalog-detail/pg-catalog-detail.css"],
 			expectedSkills: ["react", "typescript", "css"],
 			expectedSelected: {
 				react: [],
 				typescript: ["guardrails-review-banned-typescript-shortcuts-before-finishing"],
 				css: [
-					"naming-name-elements-and-modifiers-by-role",
 					"naming-use-scope-slug-element-modifier-syntax",
+					"naming-name-elements-and-modifiers-by-role",
 					"composition-compose-classes-with-clsx",
 					"composition-do-not-build-structural-variants-with-modifiers",
 				],
@@ -1279,35 +1306,33 @@ const cssScenarioStages = {
 		initial: {
 			prompt:
 				"add a direct clsx import and style UiCollapse Ant DOM from a new owned wrapper with the shortest chain in post-filter-dialog.tsx and post-filter-dialog.css; keep the existing hard-coded wrapper color.",
-			files: ["src/routes/posts/_local/post-filter-dialog.tsx", "src/routes/posts/_local/post-filter-dialog.css"],
+			files: ["src/page/post-index/component/pg-post-filter-dialog.tsx", "src/page/post-index/component/pg-post-filter-dialog.css"],
 			expectedSkills: ["react", "typescript", "css"],
 			expectedSelected: {
 				react: [],
 				typescript: ["naming-use-direct-imports-and-public-entry-points", "guardrails-review-banned-typescript-shortcuts-before-finishing"],
 				css: [
-					"naming-name-elements-and-modifiers-by-role",
 					"naming-use-scope-slug-element-modifier-syntax",
+					"naming-name-elements-and-modifiers-by-role",
+					"ownership-use-foreign-classes-only-under-your-own-root",
 					"composition-compose-classes-with-clsx",
 					"composition-style-ui-components-through-owned-wrappers",
-					"selector-avoid-deep-descendant-dependencies",
-					"selector-target-third-party-dom-from-owned-roots",
 				],
 			},
 		},
 		scopeDrift: {
 			evidence: "replace the hard-coded wrapper color with an optional CSS variable and provide its fallback.",
-			files: ["src/routes/posts/_local/post-filter-dialog.tsx", "src/routes/posts/_local/post-filter-dialog.css"],
+			files: ["src/page/post-index/component/pg-post-filter-dialog.tsx", "src/page/post-index/component/pg-post-filter-dialog.css"],
 			expectedSkills: ["react", "typescript", "css"],
 			expectedSelected: {
 				react: [],
 				typescript: ["naming-use-direct-imports-and-public-entry-points", "guardrails-review-banned-typescript-shortcuts-before-finishing"],
 				css: [
-					"naming-name-elements-and-modifiers-by-role",
 					"naming-use-scope-slug-element-modifier-syntax",
+					"naming-name-elements-and-modifiers-by-role",
+					"ownership-use-foreign-classes-only-under-your-own-root",
 					"composition-compose-classes-with-clsx",
 					"composition-style-ui-components-through-owned-wrappers",
-					"selector-avoid-deep-descendant-dependencies",
-					"selector-target-third-party-dom-from-owned-roots",
 					"values-always-provide-css-variable-fallbacks",
 				],
 			},
@@ -1317,7 +1342,7 @@ const cssScenarioStages = {
 		initial: {
 			prompt:
 				"directly type-import the official root className Props, expose documented UiButtonProps, destructure props inside ui-button.tsx, and pass an existing layout class from order-actions.tsx; add no internal selector or new class.",
-			files: ["src/components/ui/button/ui-button.tsx", "src/routes/orders/order-actions.tsx"],
+			files: ["src/ui/button/ui-button.tsx", "src/page/order-index/component/pg-order-actions.tsx"],
 			expectedSkills: ["react", "typescript", "css"],
 			expectedSelected: {
 				react: ["composition-destructure-props-inside", "docs-require-jsdoc-on-key-declarations"],
@@ -1336,20 +1361,25 @@ const cssScenarioStages = {
 	"css-rich-text-owner-block": {
 		initial: {
 			prompt:
-				"move top-level .wg_entryDetail__prose h2 and > :first-child into existing owner-block raw-element nesting; class names and values stay unchanged.",
-			files: ["src/components/widgets/entry-detail/wg-entry-detail.css"],
+				"move top-level .wg_entryDetail__prose h2 and > :first-child into the existing owner block; the body comes from dangerouslySetInnerHTML so classes cannot be added.",
+			files: ["src/widget/entry-detail/wg-entry-detail.css"],
 			expectedSkills: ["css"],
-			expectedSelected: {css: ["selector-limit-nesting-block-depth"]},
+			expectedSelected: {css: ["selector-limit-nesting-block-depth", "selector-use-classes-instead-of-element-selectors"]},
 		},
 	},
 	"css-dom-interaction-states": {
 		initial: {
 			prompt:
 				"move top-level hover/focus/disabled into the same class block's &: nesting and preserve the focus ring; no app modifier or value is added.",
-			files: ["src/components/ui/button/ui-button.css"],
+			files: ["src/ui/button/ui-button.css"],
 			expectedSkills: ["css"],
 			expectedSelected: {
-				css: ["selector-use-pseudo-classes-for-dom-owned-states", "values-separate-domain-state-modifiers-from-dom-interaction-states"],
+				css: [
+					"selector-use-pseudo-classes-for-dom-owned-states",
+					"selector-nest-dom-state-in-the-owning-block",
+					"values-separate-domain-state-modifiers-from-dom-interaction-states",
+					"values-always-provide-a-visible-focus-indicator",
+				],
 			},
 		},
 	},
@@ -1357,35 +1387,71 @@ const cssScenarioStages = {
 		initial: {
 			prompt:
 				"scope a global .ant-tree selector under the existing .ui_themePreview owner root with one descendant level, and replace repeated color/spacing/radius with optional CSS variables and fallbacks; keep the file and owner name unchanged.",
-			files: ["src/components/ui/theme-preview/theme-preview.css"],
+			files: ["src/ui/theme-preview/ui-theme-preview.css"],
 			expectedSkills: ["css"],
 			expectedSelected: {
 				css: [
-					"selector-avoid-deep-descendant-dependencies",
-					"selector-target-third-party-dom-from-owned-roots",
+					"ownership-use-foreign-classes-only-under-your-own-root",
 					"selector-use-pseudo-classes-for-dom-owned-states",
 					"values-always-provide-css-variable-fallbacks",
-					"values-separate-domain-state-modifiers-from-dom-interaction-states",
 					"values-tokenize-repeated-visual-values",
+					"values-separate-domain-state-modifiers-from-dom-interaction-states",
 				],
 			},
+		},
+	},
+	"css-shared-declaration-group": {
+		initial: {
+			prompt:
+				"split the shared .pg_spikePanel__glyph--* comma group so each modifier block declares its own width and height; do not introduce local custom properties.",
+			files: ["src/page/detail/component/spike-pattern-panel/pg-spike-pattern-panel.css"],
+			expectedSkills: ["css"],
+			expectedSelected: {css: ["selector-do-not-group-classes-with-commas", "values-tokenize-repeated-visual-values"]},
+		},
+	},
+	"css-split-class-declaration": {
+		initial: {
+			prompt:
+				"the same .pg_catalogIndex__toolbar block is opened twice in one file and the later one overrides padding; consolidate into a single block keeping the final value.",
+			files: ["src/page/catalog-index/pg-catalog-index.css"],
+			expectedSkills: ["css"],
+			expectedSelected: {css: ["selector-declare-each-class-in-one-block"]},
 		},
 	},
 	"css-sticky-layout-intent": {
 		initial: {
 			prompt:
-				"clarify sticky basis and z-index ownership and remove excessive width/height forcing in dashboard/_index.css; tokens and selectors stay unchanged.",
-			files: ["src/routes/dashboard/_index.css"],
+				"clarify sticky basis and z-index ownership and remove excessive width/height forcing in pg-dashboard.css; tokens and selectors stay unchanged.",
+			files: ["src/page/dashboard/pg-dashboard.css"],
 			expectedSkills: ["css"],
 			expectedSelected: {css: ["values-keep-layout-intent-explicit"]},
 		},
 	},
-	"css-deep-project-descendant-chain": {
+	"css-cross-owner-internal-targeting": {
 		initial: {
-			prompt: "flatten .layout .panel .detail .item to a target element top-level block without changing class names or values.",
-			files: ["src/routes/catalog/_index.css"],
+			prompt:
+				"the detail page styles .wg_chartCard__caption from pg-detail.css; move the change so the page no longer declares widget classes.",
+			files: ["src/page/detail/pg-detail.css", "src/widget/chart-card/wg-chart-card.css"],
 			expectedSkills: ["css"],
-			expectedSelected: {css: ["selector-avoid-deep-descendant-dependencies", "selector-limit-nesting-block-depth"]},
+			expectedSelected: {
+				css: ["ownership-use-foreign-classes-only-under-your-own-root", "ownership-change-other-owners-through-their-api"],
+			},
+		},
+	},
+	"css-negated-domain-state": {
+		initial: {
+			prompt:
+				"remove the :not(--checked) ancestor condition that drives the descendant checkbox preview; keep the hover and focus feedback.",
+			files: ["src/page/detail/component/spike-pattern-panel/pg-spike-pattern-panel.css"],
+			expectedSkills: ["css"],
+			expectedSelected: {
+				css: [
+					"selector-limit-nesting-block-depth",
+					"selector-do-not-group-classes-with-commas",
+					"selector-nest-dom-state-in-the-owning-block",
+					"selector-do-not-invert-domain-state-with-not",
+				],
+			},
 		},
 	},
 } as const;
@@ -1922,7 +1988,7 @@ test("React routing manifest is the exact seventeen-scenario Appendix B/D oracle
 	assert.equal(cssDrift.expectedSelected.typescript?.includes("docs-write-concise-korean-comments-about-purpose-and-constraints"), true);
 	assert.equal(cssDrift.expectedSelected.css?.includes("composition-do-not-build-structural-variants-with-modifiers"), true);
 	assert.equal(cssDrift.expectedSelected.css?.includes("values-separate-domain-state-modifiers-from-dom-interaction-states"), true);
-	assert.equal(cssDrift.expectedSelected.css?.includes("naming-separate-owner-style-scopes"), true);
+	assert.equal(cssDrift.expectedSelected.css?.includes("ownership-choose-scope-prefix-by-reuse-range"), true);
 	assert.equal(cssDrift.expectedSelected.css?.includes("naming-keep-page-slug-traceable") ?? false, true);
 
 	const routeSupport = scenarioById.get("RTE03-route-support-extraction");
@@ -2011,7 +2077,7 @@ test("CSS progressive metadata and rule routing match Appendix C exactly", async
 	assert.deepEqual(document.metadata.companions, [
 		{skill: "typescript", mode: "conditional", appliesWhen: "TS/TSX class contract, wrapper Props 또는 style import를 함께 변경한다."},
 	]);
-	assert.equal(document.rules.length, 19);
+	assert.equal(document.rules.length, 24);
 	assert.deepEqual(
 		Object.fromEntries(document.rules.map((rule) => [getRuleId(rule), {appliesWhen: rule.appliesWhen, reviewWith: rule.reviewWith}])),
 		cssRuleRouting,
@@ -2067,10 +2133,10 @@ test("CSS routing manifest is the exact eleven-scenario and thirteen-stage Appen
 		manifest.scenarios.map((scenario) => scenario.id),
 		expectedScenarioIds,
 	);
-	assert.equal(manifest.scenarios.length, 11);
+	assert.equal(manifest.scenarios.length, 14);
 	assert.equal(
 		manifest.scenarios.reduce((count, scenario) => count + (scenario.scopeDrift ? 2 : 1), 0),
-		13,
+		16,
 	);
 
 	const coveredCssRules = new Set<string>();
@@ -2524,22 +2590,87 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	);
 	assert.doesNotMatch(headerDocs, /\bT\d{2}\b/);
 
-	const descendantDepth = await readRule("css", "selector-avoid-deep-descendant-dependencies");
+	const foreignRoot = await readRule("css", "ownership-use-foreign-classes-only-under-your-own-root");
 	assertMentions(
-		descendantDepth,
-		[/\*\*결합자\*\*는 요소 사이 관계 기호/, /중첩을 펼친 selector로 셉니다/, /같은 요소에 붙는/],
-		"descendantDepth",
+		foreignRoot,
+		[/내 root class block 안에서만/, /단독 top-level selector로 쓰지 않습니다/, /selector가 내 slug로 시작하는지/],
+		"foreignRoot",
 	);
-	assertMentions(descendantDepth, [/기본은 결합자 0/, /소유 root 아래 third-party 내부 DOM/], "descendantDepth");
+	assertMentions(
+		foreignRoot,
+		[
+			/그 라이브러리를 쓰는 앱 전체에 걸립니다/,
+			/그 widget을 쓰는 화면 전체에 걸립니다/,
+			/결합자 개수는 제한하지 않습니다/,
+			/selector-disallowed-list/,
+		],
+		"foreignRoot",
+	);
+	assert.match(foreignRoot, /& \.ant-tree-node-content-wrapper/);
 
-	const thirdPartyRoot = await readRule("css", "selector-target-third-party-dom-from-owned-roots");
+	const otherOwnerApi = await readRule("css", "ownership-change-other-owners-through-their-api");
 	assertMentions(
-		thirdPartyRoot,
-		[/owner root class block 안에서만/, /instance를 한정/i, /중간 library root/i, /권고이고 위반이 아닙니다/],
-		"thirdPartyRoot",
+		otherOwnerApi,
+		[
+			/styling hook은 \*\*root class 하나\*\*입니다/,
+			/내부 노드로 가는 class prop을 늘리지 않습니다/,
+			/막다른 길이 아니라 마지막 선택지입니다/,
+			/root까지만 닿는 것은 제약이 아니라 경계입니다/,
+		],
+		"otherOwnerApi",
 	);
-	assertMentions(thirdPartyRoot, [/결합자 개수는 이 규칙이 제한하지 않습니다/, /selector-disallowed-list/], "thirdPartyRoot");
-	assert.match(thirdPartyRoot, /& \.ant-tree-node-content-wrapper/);
+
+	const ampersandScope = await readRule("css", "selector-limit-nesting-block-depth");
+	assertMentions(
+		ampersandScope,
+		[/중첩은 항상 한 겹이고, `&`도 한 selector에 한 번입니다/, /그 block이 소유한 요소 하나/, /어느 요소를 가리키는지로 정해집니다/],
+		"ampersandScope",
+	);
+
+	const rawWrapper = await readRule("css", "selector-use-classes-instead-of-element-selectors");
+	assertMentions(
+		rawWrapper,
+		[/우리가 렌더하는 마크업에는 element selector를 쓰지 않습니다/, /dangerouslySetInnerHTML/, /selector-max-type/],
+		"rawWrapper",
+	);
+
+	const nestingDepth = await readRule("css", "selector-limit-nesting-block-depth");
+	assertMentions(nestingDepth, [/실제 selector가 숨습니다/, /max-nesting-depth: 1/, /top-level이 0단/], "nestingDepth");
+
+	const commaGroup = await readRule("css", "selector-do-not-group-classes-with-commas");
+	assertMentions(
+		commaGroup,
+		[/중복을 감수합니다/, /`,` 대신 `:is\(\)`로 한 selector로 씁니다/, /no-duplicate-selectors/, /disallowInList/],
+		"commaGroup",
+	);
+
+	const oneBlockPerClass = await readRule("css", "selector-declare-each-class-in-one-block");
+	assertMentions(
+		oneBlockPerClass,
+		[/한 block에만 있습니다/, /선언 순서에 의존하는 override가 생기지 않습니다/, /@media/],
+		"oneBlockPerClass",
+	);
+
+	const nestDomState = await readRule("css", "selector-nest-dom-state-in-the-owning-block");
+	assertMentions(
+		nestDomState,
+		[/top-level selector로 다시 열지 않습니다/, /slug가 같은 자손을 결합자 하나로 겨냥합니다/, /부모 선택자가 없어서/],
+		"nestDomState",
+	);
+
+	const notInversion = await readRule("css", "selector-do-not-invert-domain-state-with-not");
+	assertMentions(
+		notInversion,
+		[/조상의 modifier로 자손의 표현을 결정하려 했기 때문입니다/, /부정 조건이 필요 없어집니다/, /:not\(:disabled\)/],
+		"notInversion",
+	);
+
+	const focusIndicator = await readRule("css", "values-always-provide-a-visible-focus-indicator");
+	assertMentions(
+		focusIndicator,
+		[/포커스 표시를 없애지 않습니다/, /:focus-visible/, /색각 이상에서 구분되지 않습니다/, /브라우저만 알 수 있어서/],
+		"focusIndicator",
+	);
 
 	const typescriptPressure = await readFile(path.join(realSkillRootDir, "typescript", "pressure-tests.md"), "utf8");
 	assert.match(typescriptPressure, /route-local entry tree props/);
@@ -2551,8 +2682,8 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 		[
 			["typescript", "docs-require-header-jsdoc-on-key-declarations"],
 			["typescript", "docs-write-concise-korean-comments-about-purpose-and-constraints"],
-			["css", "selector-avoid-deep-descendant-dependencies"],
-			["css", "selector-target-third-party-dom-from-owned-roots"],
+			["css", "selector-nest-dom-state-in-the-owning-block"],
+			["css", "ownership-use-foreign-classes-only-under-your-own-root"],
 		].map(([skillName, ruleId]) => readFile(path.join(realSkillRootDir, skillName!, "contracts", `${ruleId}.md`), "utf8")),
 	);
 	assert.match(
@@ -2560,7 +2691,7 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 		/영문 label[\s\S]*docs-write-concise-korean-comments-about-purpose-and-constraints[\s\S]*content gate/i,
 	);
 	assertMentions(generatedContracts[1]!, [/주석 본문 전체/i, /(?:ASCII|영문)/i], "generatedContracts");
-	assert.match(generatedContracts[2]!, /결합자[\s\S]*중첩을 펼친 selector/i);
+	assert.match(generatedContracts[2]!, /pseudo-class[\s\S]*slug가 같은 자손을 결합자 하나로 겨냥합니다/i);
 	assert.match(generatedContracts[3]!, /CRITICAL rule[\s\S]*full rule/i);
 });
 
@@ -2574,8 +2705,8 @@ test("CSS generated index is canonical, complete, body-preserving, and within it
 		entries.map((entry) => entry.id),
 		cssRuleUniverse,
 	);
-	assert.equal(entries.length, 19);
-	assert.equal(getRulesIndexByteBudget(entries.length), 7_660);
+	assert.equal(entries.length, 24);
+	assert.equal(getRulesIndexByteBudget(entries.length), 9_360);
 	assert.equal(Buffer.byteLength(source, "utf8") <= getRulesIndexByteBudget(entries.length), true);
 
 	for (const entry of entries) {

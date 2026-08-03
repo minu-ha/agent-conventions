@@ -202,7 +202,7 @@ const request = buildMediaUploadPayload(files);
 
 **Applies when:** 컴포넌트를 ui·widget·page 중 어느 소유 레이어에 둘지 정할 때. 컴포넌트를 레이어 사이에서 옮기거나 공용화할 때.
 
-**Review with:** `css/naming-separate-owner-style-scopes`, `ownership-place-owner-files-in-role-folders`
+**Review with:** `css/ownership-choose-scope-prefix-by-reuse-range`, `ownership-place-owner-files-in-role-folders`
 
 **Impact: CRITICAL (공용 책임과 화면 전용 책임이 같은 레이어로 섞이는 것을 막습니다)**
 
@@ -311,7 +311,7 @@ const PgDeleteEntryButton = () => {
 
 **Applies when:** owner 아래 `component`·`config`·`function`·`hook`·`type` 폴더를 만들거나 옮길 때. 추출한 component·함수·타입의 배치 위치를 정할 때. 제외: 기존 파일 내부 구현만 바꾸는 경우.
 
-**Review with:** `css/naming-separate-owner-style-scopes`, `ownership-keep-component-imports-flowing-downward`
+**Review with:** `css/ownership-choose-scope-prefix-by-reuse-range`, `ownership-keep-component-imports-flowing-downward`
 
 **Impact: CRITICAL (추출한 파일이 소유자를 따라 예측 가능한 위치에 놓이게 합니다)**
 

@@ -49,7 +49,11 @@ export interface ParsedRuleBody {
 	examples: RuleExample[];
 }
 
-const examplePattern = /^\*\*(Incorrect|Correct)\s*(?:\(([^)]*)\))?\s*:?\*\*/;
+/**
+ * 라벨 본문에 `clsx()`, `:is()`처럼 괄호가 들어가므로 마지막 `)`까지 greedy 로 잡는다.
+ * `[^)]*`로 잡으면 첫 `)`에서 끊겨 라벨이 인식되지 않고 예시가 앞 카드에 병합된다.
+ */
+const examplePattern = /^\*\*(Incorrect|Correct)\s*(?:\((.+)\))?\s*:?\*\*/;
 
 /**
  * @helper 본문 선두의 `## 제목`과 `**Impact: …**` 줄 제거

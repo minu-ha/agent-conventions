@@ -10,4 +10,4 @@ base class와 `--modifier`를 따로 두면 둘 다 해결됩니다.
 
 modifier가 상태를 표현할 자격이 있는지는 `composition-do-not-build-structural-variants-with-modifiers`가 판정합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/02-03-composition-keep-classes-single-purpose.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/03-03-composition-keep-classes-single-purpose.md)을 읽습니다.

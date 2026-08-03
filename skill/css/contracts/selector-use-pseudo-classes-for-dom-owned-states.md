@@ -10,16 +10,16 @@
 | DOM | `:hover`, `:visited`, `:focus-visible`, `:disabled`, `:checked` | 같은 block 안 `&:` |
 | 앱 | `selected`, `active`, `error`, `expanded`, `current` | `--modifier` class |
 
-- pseudo-class를 top-level selector로 다시 열지 않습니다.
-- 도메인 상태를 `:not(.--modifier)`로 뒤집지 않습니다.
-  읽는 사람이 부정 조건을 뒤집어야 하고 결합자도 함께 먹습니다. 예외는 자손 modifier로 옮깁니다.
+갈리는 기준은 **누가 그 값을 아는가**입니다.
+브라우저가 부여하는 상태는 앱이 알 수 없고, 앱이 아는 상태는 브라우저가 알 수 없습니다.
 
-조상의 DOM 상태가 자손을 바꿔야 하면 같은 파일이 둘을 소유할 때만 결합자 하나로 겨냥합니다.
-자손의 `:hover`는 포인터가 자손 위에 있을 때만 걸려서 조상 상태를 알 방법이 없기 때문입니다.
-앱이 값을 아는 상태는 결합자 없이 각 노드에 modifier를 붙입니다.
+- 앱이 아는 상태를 `[aria-selected="true"]`처럼 속성으로 겨냥하지 않습니다.
+- `aria-*`는 접근성 계약이라 마크업에 그대로 두고, 스타일은 modifier로 겨냥합니다.
+- 같은 상태를 두 표기로 쓰지 않습니다. 어느 쪽이 참인지 알 수 없게 됩니다.
 
-base/modifier 배치와 focus 접근성은 `values-separate-domain-state-modifiers-from-dom-interaction-states`가 담당합니다.
+pseudo-class를 어디에 쓰는지는 `selector-nest-dom-state-in-the-owning-block`이 정합니다.
+`:not(.--modifier)` 반전은 `selector-do-not-invert-domain-state-with-not`이 막습니다.
 
 **Requires selected:** `values-separate-domain-state-modifiers-from-dom-interaction-states` · 함께 적용
 
-> 예시·예외가 필요하면 [full rule](../rules/03-04-selector-use-pseudo-classes-for-dom-owned-states.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/04-05-selector-use-pseudo-classes-for-dom-owned-states.md)을 읽습니다.

@@ -7,7 +7,7 @@ appliesWhen:
   - `Ui*` wrapper에 `className`을 주거나 wrapper가 노출할 class 계약을 정할 때
   - `Ui*` 내부 노드의 모양을 화면마다 다르게 해야 할 때
   - 제외: 기존 CSS owner root 아래 third-party selector만 수정하는 경우
-reviewWith: selector-target-third-party-dom-from-owned-roots
+reviewWith: ownership-use-foreign-classes-only-under-your-own-root, ownership-change-other-owners-through-their-api
 tags: ui-components, wrappers, third-party
 ---
 
