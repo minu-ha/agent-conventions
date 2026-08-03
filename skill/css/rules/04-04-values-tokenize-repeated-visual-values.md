@@ -1,44 +1,99 @@
 ---
-title: Tokenize Repeated Visual Values
-titleKo: 반복되는 시각 값의 토큰화
-impact: HIGH
-impactDescription: 반복되는 색·간격·radius 값이 매직 넘버로 흐르지 않고 공용 디자인 토큰에 맞게 유지합니다
+title: Use Global Tokens and Do Not Invent Local Ones
+titleKo: 전역 토큰 사용과 지역 토큰 발명 금지
+impact: MEDIUM-HIGH
+impactDescription: 공용 시각 값은 전역 토큰으로 모으고 값 재사용 목적의 지역 변수는 늘리지 않습니다
 appliesWhen:
-  - 색상·간격·radius·타이포·그림자 등 같은 시각 값이 2회 이상 반복될 때
-  - 새 shared visual value를 하드코딩할 때
+  - 여러 파일이 같은 색·간격·radius·타이포·그림자 값을 쓸 때
+  - 새 CSS custom property를 선언할 때
 reviewWith: values-always-provide-css-variable-fallbacks
 tags: tokens, variables, reuse
 ---
 
-## Tokenize Repeated Visual Values
+## Use Global Tokens and Do Not Invent Local Ones
 
-**Impact: HIGH (반복되는 색·간격·radius 값이 매직 넘버로 흐르지 않고 공용 디자인 토큰에 맞게 유지합니다)**
+**Impact: MEDIUM-HIGH (공용 시각 값은 전역 토큰으로 모으고 값 재사용 목적의 지역 변수는 늘리지 않습니다)**
 
-색상, 간격, 타이포, 그림자 같은 반복 가능한 시각 값은 CSS 변수와 디자인 토큰을 우선 사용합니다.
-같은 값이 2회 이상 반복되면 하드코딩을 늘리기 전에 토큰화 여부를 먼저 검토합니다.
+판정 기준은 **파일 경계**입니다.
 
-**Incorrect (반복 가능한 값을 그대로 하드코딩):**
+| 반복 범위 | 처리 |
+| --- | --- |
+| 여러 파일 | 전역 core token을 쓰거나, 없으면 core token 목록에 추가를 검토합니다 |
+| 한 파일 안 | 값을 그대로 둡니다. 지역 변수를 만들지 않습니다 |
+
+같은 파일 안에서 `8px`이 세 번 나온다고 지역 custom property를 만들지 않습니다.
+core token 목록에 없는 변수는 `values-always-provide-css-variable-fallbacks`에 따라 fallback이 필요해서
+`var(--pg-detail-gap, 8px)`처럼 값이 결국 사용처에 남습니다.
+읽는 사람은 변수 선언을 한 번 더 찾아가야 하고, 값을 바꿀 지점은 여전히 여러 곳입니다.
+
+지역 custom property는 값 재사용이 아니라 **조상에서 자손으로 상태를 전달할 때만** 씁니다.
+그 용도는 `selector-avoid-deep-descendant-dependencies`가 결합자를 줄이는 수단으로 인정합니다.
+
+**Incorrect (한 파일 안 반복을 지역 변수로 감쌈):**
 
 ```css
-.ui_table__toolbar {
-	gap: 12px;
+.pg_catalogIndex__toolbar {
+	--pg-catalog-gap: 12px;
+	gap: var(--pg-catalog-gap, 12px);
 }
 
-.ui_table__row {
-	background: #f5f5f5;
-	border-radius: 4px;
+.pg_catalogIndex__footer {
+	gap: var(--pg-catalog-gap, 12px);
 }
 ```
 
-**Correct (토큰과 변수를 우선 사용):**
+**Incorrect (여러 파일이 쓰는 값을 각 파일에 하드코딩):**
 
 ```css
-.ui_table__toolbar {
-	gap: var(--app-space-3);
+/* pg-catalog-index.css */
+.pg_catalogIndex__row {
+	background: #f5f5f5;
+}
+```
+
+```css
+/* pg-catalog-detail.css */
+.pg_catalogDetail__row {
+	background: #f5f5f5;
+}
+```
+
+**Correct (여러 파일이 쓰는 값은 전역 core token으로):**
+
+```css
+/* app/style/token.css */
+:root {
+	--app-color-fill-muted: #f5f5f5;
+	--app-space-3: 12px;
+}
+```
+
+```css
+.pg_catalogIndex__row {
+	background: var(--app-color-fill-muted);
+}
+```
+
+**Correct (한 파일 안 반복은 값을 그대로 두고, 지역 변수는 상태 전달에만):**
+
+```css
+.pg_catalogIndex__toolbar {
+	gap: 12px;
 }
 
-.ui_table__row--selected {
-	background: var(--app-color-fill-muted);
-	border-radius: var(--app-radius-control);
+.pg_catalogIndex__footer {
+	gap: 12px;
+}
+
+.pg_catalogIndex__row {
+	--pg-catalog-row-accent: transparent;
+
+	&:hover {
+		--pg-catalog-row-accent: var(--app-color-accent);
+	}
+}
+
+.pg_catalogIndex__rowBadge {
+	border-color: var(--pg-catalog-row-accent);
 }
 ```

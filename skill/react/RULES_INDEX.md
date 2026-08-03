@@ -1,7 +1,7 @@
 # React 컨벤션 Rule Index
 
 - Skill: `react`
-- Routing digest: `sha256:e80ae2a669f6da9d340cbc0018551fc6c5d8520229ea266adf019ad1ef3e9cd6`
+- Routing digest: `sha256:498882737df1d4f298945917308ce06148901e18817107c6ec8ca04654247895`
 
 ## Direct Companions
 
@@ -19,7 +19,7 @@
 - R07 | ownership-keep-component-imports-flowing-downward | \`component\` 폴더 안의 파일을 다른 파일에서 import할 때. \`../\`나 \`@/page\` 경로로 component를 가져오려 할 때. 여러 자식이 같은 component를 필요로 해 배치를 다시 정할 때. | reviewWith: ownership-layer-component-boundaries
 - R08 | ownership-keep-lifecycle-in-the-owning-component | 외부 library instance 생성·resize·구독·dispose를 한 component가 소유할 때. lifecycle 코드를 custom hook으로 옮겨 파일을 줄이려 할 때. 제외: 여러 owner가 같은 lifecycle 계약을 실제로 호출하는 경우. | reviewWith: ownership-prefer-plain-ts-for-local-react-helpers
 - R09 | typing-function-type-first | React 이벤트 핸들러나 prop callback의 선언·시그니처를 추가·변경할 때. 기존 React alias나 callback 계약을 그대로 쓸 수 있는 상황일 때. curried factory가 최종 반환하는 handler를 다룰 때. | reviewWith: ownership-import-react-types-directly, typing-reuse-existing-contracts
-- R10 | typing-reuse-existing-contracts | Props callback 구현을 추가·변경할 때. API 응답 기반 view type을 추가·변경하는데 기존 prop·API 계약과 같은 shape가 보일 때. | reviewWith: typescript/types-reuse-callback-signatures-from-existing-contracts, typescript/types-reuse-existing-contracts-before-new-types
+- R10 | typing-reuse-existing-contracts | Props callback 구현을 추가·변경할 때. API 응답 기반 view type을 추가·변경하는데 기존 prop·API 계약과 같은 shape가 보일 때. wrapper 컴포넌트 사용처에서 Props 타입을 참조할 때. | reviewWith: typescript/types-reuse-callback-signatures-from-existing-contracts, typescript/types-reuse-existing-contracts-before-new-types
 - R11 | strategy-avoid-boolean-prop-proliferation | 여러 곳에서 쓰는 shared component에 boolean mode·visibility prop을 추가할 때. 기존 boolean prop 조합과 JSX 분기가 늘어날 때.
 - R12 | strategy-choose-single-composition-compound-and-variants | exported shared component에 slot·public part·shared context/action을 추가할 때. 반복되는 preset이나 mode API를 추가할 때. shared component의 조립 구조를 재설계할 때. | reviewWith: screen-avoid-premature-abstraction, strategy-avoid-boolean-prop-proliferation, strategy-prefer-children-over-render-props
 - R13 | strategy-prefer-children-over-render-props | shared component에 header·footer·action 같은 정적 slot을 추가·변경할 때. render prop을 추가·변경하는데 runtime data 주입이 꼭 필요한지 불분명할 때.

@@ -1,4 +1,4 @@
-# Keep Each \`scope\_slug\` Unique Per Owner
+# Give Each CSS File Its Own \`scope\_slug\`
 
 **Impact: CRITICAL**
 

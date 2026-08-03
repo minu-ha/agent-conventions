@@ -2,7 +2,7 @@
 title: Review Banned CSS Patterns Before Finishing
 titleKo: 마무리 전에 금지된 CSS 패턴 점검
 impact: MEDIUM
-impactDescription: 위험한 셀렉터·modifier·라이브러리 타겟팅 지름길을 공용 스타일 체계에 들어가기 전에 잡습니다
+impactDescription: 선택되지 않은 규칙의 위반이 그대로 병합되는 것을 완료 직전에 잡습니다
 appliesWhen:
   - CSS 또는 TSX class contract 변경이 완료 단계에 들어갈 때
 requiredOnCompletion: true
@@ -11,27 +11,23 @@ tags: review, banned-patterns, guardrails
 
 ## Review Banned CSS Patterns Before Finishing
 
-**Impact: MEDIUM (위험한 셀렉터·modifier·라이브러리 타겟팅 지름길을 공용 스타일 체계에 들어가기 전에 잡습니다)**
+**Impact: MEDIUM (선택되지 않은 규칙의 위반이 그대로 병합되는 것을 완료 직전에 잡습니다)**
 
-작업을 마치기 전에 금지 패턴을 다시 확인합니다.
+이 규칙은 새 기준을 만들지 않습니다. 판정을 놓친 규칙도 마무리에서 한 번 걸리게 하는 색인이고,
+각 항목의 정본은 소관 규칙입니다.
 
-금지:
+| 확인할 것 | 소관 규칙 |
+| --- | --- |
+| 요소 선택자 중심 스타일링 | `selector-limit-nesting-block-depth` |
+| 결합자 상한 초과 | `selector-avoid-deep-descendant-dependencies` |
+| root 없는 library class targeting | `selector-target-third-party-dom-from-owned-roots` |
+| top-level pseudo selector 재오픈 | `selector-use-pseudo-classes-for-dom-owned-states` |
+| 재사용 근거 없는 structural modifier | `composition-do-not-build-structural-variants-with-modifiers` |
+| base와 state를 이름 하나에 융합 | `composition-keep-classes-single-purpose` |
+| core token에 붙은 fallback, 지역 토큰 발명 | `values-always-provide-css-variable-fallbacks` |
+| owner가 섞인 stylesheet | `organization-keep-style-files-owned-by-one-component-or-route` |
 
-- 요소 선택자 중심 스타일링
-- 깊은 project-owned descendant chain
-- 재사용 근거 없는 structural modifier
-- root 없는 library class targeting
-- top-level pseudo selector 재오픈
-- project-owned parent state descendant coupling
-- `!important` 남용
-
-허용 가능한 예외:
-
-- 반복되는 명시적 variant modifier
-- owner block 안 rich text wrapper의 nested raw element selector
-- owned root 아래의 최소 third-party selector chain
-
-예외는 관련 rule에서 허용한 범위 안에서만 사용합니다.
+`!important`만 여기서 직접 금지합니다. third-party가 inline style로 덮는 경우에만 근거 주석과 함께 남깁니다.
 
 **Incorrect (금지 패턴을 그대로 남김):**
 
@@ -53,7 +49,7 @@ div {
 }
 ```
 
-**Correct (소유 클래스와 허용된 구조/상태 표현으로 정리):**
+**Correct (소유 클래스와 허용된 구조·상태 표현으로 정리):**
 
 ```css
 .wg_siteHeader__brandLink {

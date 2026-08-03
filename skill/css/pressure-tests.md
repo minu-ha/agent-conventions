@@ -104,7 +104,7 @@ Pure CSS fixture는 CSS만 partition합니다. Mixed fixture 5개는 progressive
 
 - Focus
   - `naming-default-to-plain-css-when-no-module-convention`
-  - `naming-preserve-route-slug-traceability`
+  - `naming-keep-page-slug-traceable`
   - `naming-use-scope-slug-element-modifier-syntax`
 - Prompt
   - "새 route 화면 스타일을 추가해줘. 프로젝트가 CSS Modules를 표준화한 건 아니야."

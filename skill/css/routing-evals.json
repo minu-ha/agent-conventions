@@ -41,7 +41,7 @@
 						"naming-default-to-plain-css-when-no-module-convention",
 						"naming-keep-scope-slug-unique-per-owner",
 						"naming-name-elements-and-modifiers-by-role",
-						"naming-preserve-route-slug-traceability",
+						"naming-keep-page-slug-traceable",
 						"naming-separate-owner-style-scopes",
 						"naming-use-scope-slug-element-modifier-syntax",
 						"composition-compose-classes-with-clsx",
@@ -211,7 +211,6 @@
 				],
 				"css": [
 					"composition-compose-classes-with-clsx",
-					"composition-prefer-ui-wrapper-prop-types",
 					"composition-style-ui-components-through-owned-wrappers",
 					"organization-review-banned-css-patterns-before-finishing"
 				]

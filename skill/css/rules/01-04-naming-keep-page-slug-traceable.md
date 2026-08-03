@@ -1,27 +1,25 @@
 ---
-title: Preserve Route Slug Traceability
-titleKo: route slug 추적성 유지
+title: Keep Page Slugs Traceable to Their Screen
+titleKo: page slug의 소속 화면 추적성
 impact: HIGH
-impactDescription: 화면 범위 class namespace를 소속 화면으로 거슬러 읽을 수 있게 유지합니다
+impactDescription: class 이름만 보고 어느 화면 소속인지 거슬러 읽을 수 있게 유지합니다
 appliesWhen:
   - `pg_*` owner의 class slug를 새로 만들거나 이름을 바꿀 때
   - 같은 이름 component가 여러 화면에 생겨 slug를 구분해야 할 때
 tags: slug, page-scope, traceability
 ---
 
-## Preserve Route Slug Traceability
+## Keep Page Slugs Traceable to Their Screen
 
-**Impact: HIGH (화면 범위 class namespace를 소속 화면으로 거슬러 읽을 수 있게 유지합니다)**
+**Impact: HIGH (class 이름만 보고 어느 화면 소속인지 거슬러 읽을 수 있게 유지합니다)**
 
-`pg_*` slug는 소속 화면까지 다시 추적할 수 있어야 합니다.
-CSS skill은 어떤 파일이 화면 소유인지 결정하지 않고, 이미 선택된 owner가 클래스명에서 흐려지지 않게 지킵니다.
+`pg_*` slug만 보고 어느 화면의 것인지 알 수 있어야 합니다.
+어떤 파일이 화면 소유인지는 framework convention이 정하고, CSS는 그 소유가 이름에서 흐려지지 않게 지킵니다.
 
-기본 판단:
-
-- 화면 shell slug는 route 이름을 씁니다. route family와 screen role이 읽혀야 합니다.
-- 화면 내부 component slug는 자기 component 이름만 씁니다.
-- 팀이 공유하는 route map이 없는 opaque acronym은 피합니다.
-- `wg_*`, `ui_*`는 각 owner scope의 naming style을 따릅니다.
+- 화면 shell은 page 이름을 slug로 씁니다. `pg_postsDetail`처럼 화면 계열과 역할이 읽혀야 합니다.
+- 화면 안의 컴포넌트는 자기 이름만 slug로 씁니다.
+- 팀이 공유하는 화면 목록에 없는 줄임말은 쓰지 않습니다.
+- `wg_*`, `ui_*`는 각자의 이름 규칙을 따릅니다.
 
 부모 이름을 미리 붙이지 않습니다.
 충돌이 실제로 생겼을 때만 최소 범위로 덧붙입니다.
@@ -42,11 +40,11 @@ pg_detailSpikePatternPanelOverviewSection__root
 pg_detailSpikePatternPanelSummaryBand__root
 ```
 
-**Correct (shell은 route 이름, component는 자기 이름):**
+**Correct (shell은 page 이름, component는 자기 이름):**
 
 ```txt
-posts index route  -> pg_postsIndex__root
-posts detail route -> pg_postsDetail__body
+posts index page   -> pg_postsIndex__root
+posts detail page  -> pg_postsDetail__body
 document shell     -> pg_document__body
 
 overview section   -> pg_overviewSection__root

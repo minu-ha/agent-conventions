@@ -28,17 +28,16 @@
 
 1. [Naming and Ownership](#1-naming-and-ownership) — **CRITICAL**
     - 1.1 [Default to Plain CSS Unless the Project Explicitly Standardizes on CSS Modules](#11-default-to-plain-css-unless-the-project-explicitly-standardizes-on-css-modules)
-    - 1.2 [Keep Each `scope_slug` Unique Per Owner](#12-keep-each-scope-slug-unique-per-owner)
+    - 1.2 [Give Each CSS File Its Own `scope_slug`](#12-give-each-css-file-its-own-scope-slug)
     - 1.3 [Name Elements and Modifiers by Role](#13-name-elements-and-modifiers-by-role)
-    - 1.4 [Preserve Route Slug Traceability](#14-preserve-route-slug-traceability)
+    - 1.4 [Keep Page Slugs Traceable to Their Screen](#14-keep-page-slugs-traceable-to-their-screen)
     - 1.5 [Separate Owner Style Scopes](#15-separate-owner-style-scopes)
     - 1.6 [Use Scope, Slug, Element, and Modifier Syntax](#16-use-scope-slug-element-and-modifier-syntax)
 2. [Class Composition and Wrapper Boundaries](#2-class-composition-and-wrapper-boundaries) — **HIGH**
     - 2.1 [Compose Classes With `clsx()`](#21-compose-classes-with-clsx)
     - 2.2 [Do Not Use Modifiers for One-off Structural Patches](#22-do-not-use-modifiers-for-one-off-structural-patches)
     - 2.3 [Keep Classes Single-purpose](#23-keep-classes-single-purpose)
-    - 2.4 [Prefer `Ui*` Wrapper Prop Types](#24-prefer-ui-wrapper-prop-types)
-    - 2.5 [Prefer Owned Wrappers for `Ui*` Component Styling](#25-prefer-owned-wrappers-for-ui-component-styling)
+    - 2.4 [Style `Ui*` Components Through Their Root Class Contract](#24-style-ui-components-through-their-root-class-contract)
 3. [Selectors and Nesting Boundaries](#3-selectors-and-nesting-boundaries) — **CRITICAL**
     - 3.1 [Avoid Deep Descendant Selector Dependencies](#31-avoid-deep-descendant-selector-dependencies)
     - 3.2 [Limit Nesting Block Depth](#32-limit-nesting-block-depth)
@@ -48,7 +47,7 @@
     - 4.1 [Keep Layout Intent Explicit](#41-keep-layout-intent-explicit)
     - 4.2 [Declare Core Tokens Once and Fall Back Everywhere Else](#42-declare-core-tokens-once-and-fall-back-everywhere-else)
     - 4.3 [Separate Domain State Modifiers From DOM Interaction States](#43-separate-domain-state-modifiers-from-dom-interaction-states)
-    - 4.4 [Tokenize Repeated Visual Values](#44-tokenize-repeated-visual-values)
+    - 4.4 [Use Global Tokens and Do Not Invent Local Ones](#44-use-global-tokens-and-do-not-invent-local-ones)
 5. [File Organization and Guardrails](#5-file-organization-and-guardrails) — **MEDIUM**
     - 5.1 [Keep Style Files Owned by One Component or Route Surface](#51-keep-style-files-owned-by-one-component-or-route-surface)
     - 5.2 [Review Banned CSS Patterns Before Finishing](#52-review-banned-css-patterns-before-finishing)
@@ -116,21 +115,20 @@ import "./_index.css";
 }
 ```
 
-### 1.2 Keep Each `scope_slug` Unique Per Owner
+### 1.2 Give Each CSS File Its Own `scope_slug`
 
 **Rule:** `C02` · `naming-keep-scope-slug-unique-per-owner`
 
-**Applies when:** 새 `scope_slug` namespace를 추가·복사·이름 변경할 때. 서로 다른 owner의 class가 같은 namespace를 사용할 가능성이 있을 때.
+**Applies when:** 새 `scope_slug`를 만들거나 기존 slug를 복사·이름 변경할 때. 서로 다른 컴포넌트가 같은 slug를 쓸 가능성이 있을 때.
 
-**Impact: CRITICAL (관련 없는 route나 컴포넌트가 같은 namespace를 공유해 전역 class 공간에서 충돌하는 것을 막습니다)**
+**Impact: CRITICAL (서로 다른 컴포넌트가 같은 namespace를 나눠 쓰다가 전역 class 공간에서 충돌하는 것을 막습니다)**
 
-클래스명은 프로젝트 전역에서 고유해야 하며, 동일한 `scope_slug` 조합은 단일 소유자만 사용할 수 있습니다.
-새 스타일을 추가할 때는 먼저 기존 `scope_slug` 충돌 여부를 확인하고,
-의미가 겹치더라도 파일이 다르면 별도 slug를 부여합니다.
+CSS 파일 하나가 slug 하나를 가집니다. 그 slug는 프로젝트 전역에서 그 파일만 씁니다.
 
-CSS 파일 하나가 slug 하나를 소유합니다.
-여러 하위 component가 부모 slug를 나눠 쓰는 것도 같은 위반입니다.
-자기 CSS 파일이 있으면 자기 slug를 만들고, 부모 slug를 계속 쓰려면 스타일도 부모 파일에 두어야 합니다.
+- 새 스타일을 추가하기 전에 같은 slug를 쓰는 파일이 이미 있는지 확인합니다.
+- 의미가 겹쳐도 파일이 다르면 slug를 따로 만듭니다.
+- 하위 컴포넌트 여럿이 부모 slug를 나눠 쓰는 것도 같은 위반입니다.
+- 자기 CSS 파일이 있으면 자기 slug를 만듭니다. 부모 slug를 계속 쓰려면 스타일도 부모 파일에 둡니다.
 
 **Incorrect (이미 다른 소유자가 쓰는 `scope_slug`를 재사용):**
 
@@ -182,23 +180,21 @@ ui_card__body--active
 pg_catalogDetail__detailSection
 ```
 
-### 1.4 Preserve Route Slug Traceability
+### 1.4 Keep Page Slugs Traceable to Their Screen
 
-**Rule:** `C04` · `naming-preserve-route-slug-traceability`
+**Rule:** `C04` · `naming-keep-page-slug-traceable`
 
 **Applies when:** `pg_*` owner의 class slug를 새로 만들거나 이름을 바꿀 때. 같은 이름 component가 여러 화면에 생겨 slug를 구분해야 할 때.
 
-**Impact: HIGH (화면 범위 class namespace를 소속 화면으로 거슬러 읽을 수 있게 유지합니다)**
+**Impact: HIGH (class 이름만 보고 어느 화면 소속인지 거슬러 읽을 수 있게 유지합니다)**
 
-`pg_*` slug는 소속 화면까지 다시 추적할 수 있어야 합니다.
-CSS skill은 어떤 파일이 화면 소유인지 결정하지 않고, 이미 선택된 owner가 클래스명에서 흐려지지 않게 지킵니다.
+`pg_*` slug만 보고 어느 화면의 것인지 알 수 있어야 합니다.
+어떤 파일이 화면 소유인지는 framework convention이 정하고, CSS는 그 소유가 이름에서 흐려지지 않게 지킵니다.
 
-기본 판단:
-
-- 화면 shell slug는 route 이름을 씁니다. route family와 screen role이 읽혀야 합니다.
-- 화면 내부 component slug는 자기 component 이름만 씁니다.
-- 팀이 공유하는 route map이 없는 opaque acronym은 피합니다.
-- `wg_*`, `ui_*`는 각 owner scope의 naming style을 따릅니다.
+- 화면 shell은 page 이름을 slug로 씁니다. `pg_postsDetail`처럼 화면 계열과 역할이 읽혀야 합니다.
+- 화면 안의 컴포넌트는 자기 이름만 slug로 씁니다.
+- 팀이 공유하는 화면 목록에 없는 줄임말은 쓰지 않습니다.
+- `wg_*`, `ui_*`는 각자의 이름 규칙을 따릅니다.
 
 부모 이름을 미리 붙이지 않습니다.
 충돌이 실제로 생겼을 때만 최소 범위로 덧붙입니다.
@@ -219,11 +215,11 @@ pg_detailSpikePatternPanelOverviewSection__root
 pg_detailSpikePatternPanelSummaryBand__root
 ```
 
-**Correct (shell은 route 이름, component는 자기 이름):**
+**Correct (shell은 page 이름, component는 자기 이름):**
 
 ```txt
-posts index route  -> pg_postsIndex__root
-posts detail route -> pg_postsDetail__body
+posts index page   -> pg_postsIndex__root
+posts detail page  -> pg_postsDetail__body
 document shell     -> pg_document__body
 
 overview section   -> pg_overviewSection__root
@@ -334,26 +330,28 @@ ui/button/ui-button.css
 
 slug에는 prefix가 말하는 부분을 반복하지 않습니다. `UiButton`은 `ui_button`이고 `ui_uiButton`이 아닙니다.
 
-**Incorrect (slug나 element casing이 흔들림):**
+**Incorrect (slug와 element에 snake_case·kebab-case가 섞임):**
 
 ```txt
 ui_tag_list__root
-pg_catalog_page__root
+ui_tagList__list-item
+wg_site_header__root
+wg_siteHeader__brand-link
+pg_catalog_detail__root
 pg_catalogDetail__main-content
-wg_site_header__brandLink
-pg_document__main-content
-pg_document__main--route_active
+pg_catalogDetail__main--route_active
 ```
 
 **Correct (scope는 lowercase, slug·element·modifier는 camelCase):**
 
 ```txt
 ui_tagList__root
-pg_catalogIndex__root
-pg_catalogDetail__mainContent
+ui_tagList__listItem
+wg_siteHeader__root
 wg_siteHeader__brandLink
-pg_document__main
-pg_document__main--routeActive
+pg_catalogDetail__root
+pg_catalogDetail__mainContent
+pg_catalogDetail__main--routeActive
 ```
 
 ## 2. Class Composition and Wrapper Boundaries
@@ -468,81 +466,73 @@ modifier가 상태를 표현할 자격이 있는지는 `composition-do-not-build
 <div className={clsx("pg_catalogIndex__listButton", isActive && "pg_catalogIndex__listButton--active")} />
 ```
 
-### 2.4 Prefer `Ui*` Wrapper Prop Types
+### 2.4 Style `Ui*` Components Through Their Root Class Contract
 
-**Rule:** `C10` · `composition-prefer-ui-wrapper-prop-types`
+**Rule:** `C10` · `composition-style-ui-components-through-owned-wrappers`
 
-**Applies when:** `Ui*` wrapper 사용처나 wrapper API에서 Props 타입을 선언·추론·재사용할 때. 라이브러리 원본 Props 참조를 검토할 때.
-
-**Requires selected:** `typescript/types-reuse-existing-contracts-before-new-types` · 함께 적용
-
-**Impact: MEDIUM-HIGH (라이브러리 원본 prop 타입이 사용처로 새지 않게 wrapper 수준의 스타일·API 계약을 지킵니다)**
-
-`Ui*` 래퍼 컴포넌트를 사용할 때는 라이브러리 원본 Props 타입이 아니라 래퍼가 노출한 `Ui*Props` 타입을 우선 사용합니다.
-그래야 wrapper가 의도적으로 제한하거나 보강한 스타일링 계약과 API 경계를 유지할 수 있습니다.
-
-**Incorrect (라이브러리 원본 Props 타입을 직접 참조):**
-
-```tsx
-import UiCollapse, {type AntDesignCollapseProps} from "<project-alias>/components/ui/collapse/ui-collapse.tsx";
-
-const items: NonNullable<AntDesignCollapseProps["items"]> = [];
-```
-
-**Correct (wrapper가 노출한 Props 타입을 사용):**
-
-```tsx
-import UiCollapse, {type UiCollapseProps} from "<project-alias>/components/ui/collapse/ui-collapse.tsx";
-
-const items: NonNullable<UiCollapseProps["items"]> = [];
-```
-
-### 2.5 Prefer Owned Wrappers for `Ui*` Component Styling
-
-**Rule:** `C11` · `composition-style-ui-components-through-owned-wrappers`
-
-**Applies when:** 실제 `Ui*` React wrapper 사용처·API에서 내부 DOM styling 경계를 정할 때. root `className`·slot prop hook을 주입·노출·사용할 때. 제외: 기존 CSS owner root 아래 third-party selector만 수정하는 경우.
+**Applies when:** `Ui*` wrapper에 `className`을 주거나 wrapper가 노출할 class 계약을 정할 때. `Ui*` 내부 DOM을 겨냥하는 스타일을 추가할 때. 제외: 기존 CSS owner root 아래 third-party selector만 수정하는 경우.
 
 **Review with:** `selector-target-third-party-dom-from-owned-roots`
 
-**Impact: HIGH (공용 UI wrapper가 즉석 className 주입으로 통제되지 않는 스타일 훅을 노출하는 것을 막습니다)**
+**Impact: HIGH (공용 UI wrapper의 내부 DOM이 사용처에서 임의로 스타일링되는 것을 막습니다)**
 
-이 규칙은 실제 `Ui*` React wrapper 컴포넌트/API 경계에만 적용합니다.
-`.ui_*` 같은 기존 CSS owner root 아래에서 third-party selector만 스코프하는 CSS-only 변경은
-`selector-target-third-party-dom-from-owned-roots`가 담당합니다.
+`Ui*` wrapper는 root `className`을 받는 것이 기본 계약입니다.
+레이아웃 참여, spacing, 크기처럼 root에 걸리는 스타일은 `<UiCollapse className={clsx("pg_x__collapse")} />`처럼
+그 계약으로 직접 줍니다.
 
-`Ui*` 컴포넌트(`UiCollapse`, `UiAvatar`,
-`UiButton` 등)의 내부 DOM을 꾸미기 위한 ad-hoc `className` 주입은 기본적으로 피합니다.
-스타일링이 필요하면 화면이나 local 래퍼 클래스를 두고,
-그 래퍼 아래에서만 서드파티 라이브러리 내부 DOM을 제한적으로 타겟팅합니다.
-다만 wrapper가 root `className`이나 slot prop을 공식 styling contract로 노출했다면,
-레이아웃 참여나 spacing 같은 root-level 스타일에는 그 contract를 그대로 사용할 수 있습니다.
+래핑 `div`를 습관적으로 만들지 않습니다.
+DOM 노드가 늘어 flex·grid child 수가 바뀌고, 역할 없는 wrapper class가 생겨
+`naming-name-elements-and-modifiers-by-role`과 부딪힙니다.
 
-**Incorrect (내부 DOM을 만지기 위해 `Ui*`에 ad-hoc className을 주입):**
+wrapper는 받은 `className`을 root 노드에만 붙입니다.
+내부 노드에 forward하면 소비자가 내부 구조를 알게 되고, 그 구조가 바뀔 때 사용처가 함께 깨집니다.
+내부 노드를 스타일링 대상으로 열어야 하면 `headerClassName`처럼 이름 있는 slot prop을 명시적으로 노출합니다.
+
+소비자는 slot prop이 없는 내부 노드를 owner root class 아래에서만 좁힙니다.
+방법은 `selector-target-third-party-dom-from-owned-roots`가 정합니다.
+wrapper가 root `className`을 아예 받지 않으면 wrapper에 계약을 추가하는 것이 먼저이고,
+래핑 `div`는 그것이 불가능할 때의 마지막 수단입니다.
+
+**Incorrect (래핑 div로 root 스타일을 우회):**
+
+```tsx
+<div className={clsx("pg_postFilterDialog__collapseWrapper")}>
+	<UiCollapse />
+</div>
+```
+
+**Incorrect (wrapper가 받은 className을 내부 노드로 forward):**
+
+```tsx
+export const UiCollapse = (props: UiCollapseProps) => {
+	const { className, items } = props;
+	return <AntCollapse items={items} rootClassName="" expandIconPosition="end" itemClassName={className} />;
+};
+```
+
+**Correct (root 계약으로 root 스타일을 주고, 내부는 owner root 안에서만 좁힘):**
 
 ```tsx
 <UiCollapse className={clsx("pg_postFilterDialog__collapse")} />
 ```
 
-**Correct (내부 DOM 스타일링은 소유 래퍼 아래로 제한하고, 공식 root contract는 예외적으로 허용):**
-
-```tsx
-<div className={clsx("pg_postFilterDialog__collapse")}>
-	<UiCollapse />
-</div>
-```
-
 ```css
 .pg_postFilterDialog__collapse {
+	margin-block-start: var(--app-space-3);
+
 	& .ant-collapse-item {
 		border-radius: var(--mk-size-radius-card, 10px);
 	}
 }
 ```
 
+**Correct (내부 노드를 열려면 이름 있는 slot prop으로 노출):**
+
 ```tsx
-// UiButton이 root className contract를 공식적으로 노출하는 경우에만 허용
-<UiButton className={clsx("pg_postFilterDialog__submitButton")} />
+export interface UiCollapseProps {
+	className?: string;
+	headerClassName?: string;
+}
 ```
 
 ## 3. Selectors and Nesting Boundaries
@@ -553,41 +543,41 @@ const items: NonNullable<UiCollapseProps["items"]> = [];
 
 ### 3.1 Avoid Deep Descendant Selector Dependencies
 
-**Rule:** `C12` · `selector-avoid-deep-descendant-dependencies`
+**Rule:** `C11` · `selector-avoid-deep-descendant-dependencies`
 
-**Applies when:** descendant·child·sibling combinator를 추가·수정할 때. DOM 계층에 의존하는 project-owned·third-party selector를 검토할 때.
+**Applies when:** 공백·`>`·`+`·`~`로 요소 사이 관계를 표현하는 selector를 추가·수정할 때. DOM 계층에 의존하는 project-owned·third-party selector를 검토할 때.
 
-**Review with:** `selector-limit-nesting-block-depth`
+**Review with:** `composition-style-ui-components-through-owned-wrappers`, `selector-limit-nesting-block-depth`, `selector-target-third-party-dom-from-owned-roots`, `selector-use-pseudo-classes-for-dom-owned-states`
 
-**Impact: HIGH (selector가 훑는 요소 수를 제한해 마크업 변경에 함께 깨지지 않게 합니다)**
+**Impact: HIGH (한 규칙이 훑는 요소 수를 줄여 마크업이 조금 바뀌어도 스타일이 깨지지 않게 합니다)**
 
-중첩을 펼친 effective selector의 combinator 개수를 셉니다.
-같은 요소에 붙는 조건인 `.a.b`, `:hover`, `:not()`, `::before`는 DOM 관계가 아니므로 세지 않습니다.
+규칙 하나가 훑는 요소가 많을수록 마크업이 조금 바뀌어도 함께 깨집니다.
 
-기본값은 combinator 0입니다. 규칙 하나가 요소 하나만 겨냥하고, 상태는 그 요소의 modifier class로 받습니다.
+세는 방법:
 
-combinator를 쓸 수 있는 경우와 상한은 넷뿐입니다.
+- 요소 사이 관계 기호인 공백, `>`, `+`, `~`의 개수를 셉니다. 이것을 결합자라고 부릅니다.
+- 중첩은 펼친 뒤에 셉니다.
+- 같은 요소에 붙는 `.a.b`, `:hover`, `:not()`, `::before`는 DOM 관계가 아니라 세지 않습니다.
+
+`.pg_panel__button:hover .pg_panel__box`는 결합자 1개, 요소 2개입니다.
+
+기본값은 결합자 0입니다. 상태는 그 요소의 modifier class로 받습니다.
+
+결합자를 쓸 수 있는 경우와 상한:
 
 | 경우 | 상한 |
 | --- | --- |
 | 조상의 DOM 상호작용 상태가 자손 모양을 바꿈 | 1 |
 | 소유 root 아래 third-party 내부 DOM | 2 |
 | raw HTML wrapper 안 element selector | 1 |
-| 공유 컴포넌트가 slot class prop을 열지 않은 부분 override | 1 |
+| wrapper가 slot class를 열지 않은 부분 override | 1 |
 
-첫 항목은 CSS에 부모 선택자가 없어 생기는 정상 소비입니다.
-다만 도메인 상태까지 부모 조건으로 얹지 말고 자손 modifier로 옮깁니다.
+각 경우의 상세는 `reviewWith` 규칙이 담당합니다.
+첫 항목은 CSS에 부모 선택자가 없어 생기는 정상 소비이고, 도메인 상태까지 얹지 말고 자손 modifier로 옮깁니다.
 
-상한을 넘으면 순서대로 시도합니다.
+상한을 넘으면 자손 modifier로 펴기, 조상이 custom property를 바꾸기, 예외 근거 주석, 리팩터 순으로 시도합니다.
 
-1. 자손에 modifier를 주고 combinator 0으로 편다
-2. 조상 block에서 custom property를 바꾸고 자손이 그 값을 읽는다
-3. 위 네 경우 중 무엇인지 주석 한 줄로 남긴다
-4. 어디에도 안 걸리면 리팩터 대상이다
-
-중첩을 펼쳐도 effective selector는 같아서 결합도가 줄지 않습니다. 블록 깊이는 별도 규칙이 담당합니다.
-
-**Incorrect (project-owned 클래스를 네 요소까지 체이닝):**
+**Incorrect (요소 네 개를 훑음):**
 
 ```css
 .pg_catalogIndex__layout .pg_catalogIndex__panel .pg_catalogIndex__detail .pg_catalogIndex__item {
@@ -595,7 +585,7 @@ combinator를 쓸 수 있는 경우와 상한은 넷뿐입니다.
 }
 ```
 
-**Incorrect (도메인 상태를 부모 조건으로 얹어 예산을 낭비):**
+**Incorrect (도메인 상태를 부모 조건으로 얹어 상한을 낭비):**
 
 ```css
 .pg_spikePanel__spreadButton:not(.pg_spikePanel__spreadButton--checked):hover .pg_spikePanel__spreadBox {
@@ -603,7 +593,7 @@ combinator를 쓸 수 있는 경우와 상한은 넷뿐입니다.
 }
 ```
 
-**Correct (대상 element 클래스에 직접 스타일을 둠):**
+**Correct (대상 요소 클래스에 직접 스타일을 둠):**
 
 ```css
 .pg_catalogIndex__item {
@@ -615,7 +605,7 @@ combinator를 쓸 수 있는 경우와 상한은 넷뿐입니다.
 }
 ```
 
-**Correct (조상 hover는 combinator 1개로 쓰고, 도메인 상태는 자손 modifier가 처리):**
+**Correct (조상 hover는 결합자 1개로 쓰고, 도메인 상태는 자손 modifier가 처리):**
 
 ```css
 .pg_spikePanel__spreadButton {
@@ -629,7 +619,7 @@ combinator를 쓸 수 있는 경우와 상한은 넷뿐입니다.
 }
 ```
 
-**Correct (조상 상태를 custom property로 내려 combinator 0으로 유지):**
+**Correct (조상 상태를 custom property로 내려 결합자 0으로 유지):**
 
 ```css
 .pg_spikePanel__spreadButton {
@@ -647,7 +637,7 @@ combinator를 쓸 수 있는 경우와 상한은 넷뿐입니다.
 
 ### 3.2 Limit Nesting Block Depth
 
-**Rule:** `C13` · `selector-limit-nesting-block-depth`
+**Rule:** `C12` · `selector-limit-nesting-block-depth`
 
 **Applies when:** 중첩 `{}` block을 추가하거나 기존 block을 펼치거나 합칠 때. raw HTML prose·copy·content wrapper 안 element selector를 추가·수정할 때.
 
@@ -656,20 +646,21 @@ combinator를 쓸 수 있는 경우와 상한은 넷뿐입니다.
 **Impact: HIGH (들여쓰기가 깊어져 규칙의 적용 대상을 머릿속에서 조립해야 하는 상태를 막습니다)**
 
 중첩 `{}`는 소스 형식이고 브라우저는 이를 펼쳐서 평가합니다.
-그래서 이 규칙은 결합도가 아니라 **가독성**만 담당합니다. 결합도는 `selector-avoid-deep-descendant-dependencies`가 셉니다.
+그래서 이 규칙은 가독성만 담당합니다. 훑는 요소 수는 `selector-avoid-deep-descendant-dependencies`가 셉니다.
 
 - 중첩 block은 2단까지 씁니다. top-level class block 안에 한 겹만 더 엽니다.
 - nested block 안에서 다시 nested block을 열지 않습니다.
 - 관련 선언은 owner class block 안에 모아 둡니다.
 
-**중첩을 펼치는 것은 개선이 아닙니다.**
-`.a { & .b { } }`를 `.a .b { }`로 바꿔도 effective selector가 같아서 마크업 변경에 똑같이 깨집니다.
+중첩을 펼치는 것은 개선이 아닙니다.
+`.a { & .b { } }`를 `.a .b { }`로 바꿔도 펼친 결과가 같아서 마크업 변경에 똑같이 깨집니다.
 오히려 owner 소속이 보이지 않게 되어 파일 아무 곳에나 흩어질 수 있습니다.
-깊이를 줄이려면 combinator를 줄여야 하고, 그 방법은 위 규칙이 정합니다.
+실제로 결합을 줄이려면 결합자를 줄여야 합니다.
 
 `__prose`, `__copy`, `__content`처럼 raw HTML wrapper가 owner boundary라면
 같은 block 안에서 `& h2`, `& p`, `& > :first-child`를 씁니다.
-이 예외는 raw element styling에만 적용하고, 다른 project-owned class를 체이닝하는 근거로 쓰지 않습니다.
+raw HTML에는 클래스를 붙일 수 없어서 element selector가 유일한 수단입니다.
+이 예외는 raw element에만 적용하고, 다른 project-owned class를 체이닝하는 근거로 쓰지 않습니다.
 
 **Incorrect (nested block 안에서 다시 nested block을 열어 3단이 됨):**
 
@@ -719,7 +710,7 @@ combinator를 쓸 수 있는 경우와 상한은 넷뿐입니다.
 
 ### 3.3 Target Third-party DOM Only From Owned Roots
 
-**Rule:** `C14` · `selector-target-third-party-dom-from-owned-roots`
+**Rule:** `C13` · `selector-target-third-party-dom-from-owned-roots`
 
 **Applies when:** `.ant-*`, `.rc-*`, `.tippy-*` 등 third-party 내부 DOM selector를 추가·수정할 때. owned wrapper 아래로 범위를 제한할 때.
 
@@ -794,7 +785,7 @@ third-party DOM은 그 표에서 2까지 허용되고, 2를 넘겨야 하면 라
 
 ### 3.4 Use Pseudo-classes for DOM-owned States
 
-**Rule:** `C15` · `selector-use-pseudo-classes-for-dom-owned-states`
+**Rule:** `C14` · `selector-use-pseudo-classes-for-dom-owned-states`
 
 **Applies when:** `:hover`, `:visited`, `:focus*`, `:disabled`, `:checked`를 추가·수정할 때. parent DOM state가 child styling에 영향을 줄 때.
 
@@ -882,7 +873,7 @@ base/modifier 배치와 focus 접근성은 `values-separate-domain-state-modifie
 
 ### 4.1 Keep Layout Intent Explicit
 
-**Rule:** `C16` · `values-keep-layout-intent-explicit`
+**Rule:** `C15` · `values-keep-layout-intent-explicit`
 
 **Applies when:** `sticky`·`fixed`, `z-index`, 강제 width·height 또는 부모·자식 layout 책임을 추가·변경할 때. 제외: 같은 element의 base/modifier 분리에서 기존 `display`·spacing 선언을 값 그대로 재배치하는 경우.
 
@@ -924,7 +915,7 @@ base/modifier 배치와 focus 접근성은 `values-separate-domain-state-modifie
 
 ### 4.2 Declare Core Tokens Once and Fall Back Everywhere Else
 
-**Rule:** `C17` · `values-always-provide-css-variable-fallbacks`
+**Rule:** `C16` · `values-always-provide-css-variable-fallbacks`
 
 **Applies when:** `var(--*)` 사용을 추가하거나 변수 이름·fallback을 바꿀 때. core token 목록에 항목을 추가·제거할 때.
 
@@ -993,7 +984,7 @@ fallback이 필요한 쪽은 주입 주체가 프로젝트가 아닌 경계입�
 
 ### 4.3 Separate Domain State Modifiers From DOM Interaction States
 
-**Rule:** `C18` · `values-separate-domain-state-modifiers-from-dom-interaction-states`
+**Rule:** `C17` · `values-separate-domain-state-modifiers-from-dom-interaction-states`
 
 **Applies when:** app/domain state modifier와 hover·focus·disabled 같은 DOM interaction state를 추가·변경할 때. focus ring을 수정할 때.
 
@@ -1043,42 +1034,97 @@ modifier가 켜진 경우에만 interaction이 달라져야 한다는 제품 요
 }
 ```
 
-### 4.4 Tokenize Repeated Visual Values
+### 4.4 Use Global Tokens and Do Not Invent Local Ones
 
-**Rule:** `C19` · `values-tokenize-repeated-visual-values`
+**Rule:** `C18` · `values-tokenize-repeated-visual-values`
 
-**Applies when:** 색상·간격·radius·타이포·그림자 등 같은 시각 값이 2회 이상 반복될 때. 새 shared visual value를 하드코딩할 때.
+**Applies when:** 여러 파일이 같은 색·간격·radius·타이포·그림자 값을 쓸 때. 새 CSS custom property를 선언할 때.
 
 **Review with:** `values-always-provide-css-variable-fallbacks`
 
-**Impact: HIGH (반복되는 색·간격·radius 값이 매직 넘버로 흐르지 않고 공용 디자인 토큰에 맞게 유지합니다)**
+**Impact: MEDIUM-HIGH (공용 시각 값은 전역 토큰으로 모으고 값 재사용 목적의 지역 변수는 늘리지 않습니다)**
 
-색상, 간격, 타이포, 그림자 같은 반복 가능한 시각 값은 CSS 변수와 디자인 토큰을 우선 사용합니다.
-같은 값이 2회 이상 반복되면 하드코딩을 늘리기 전에 토큰화 여부를 먼저 검토합니다.
+판정 기준은 **파일 경계**입니다.
 
-**Incorrect (반복 가능한 값을 그대로 하드코딩):**
+| 반복 범위 | 처리 |
+| --- | --- |
+| 여러 파일 | 전역 core token을 쓰거나, 없으면 core token 목록에 추가를 검토합니다 |
+| 한 파일 안 | 값을 그대로 둡니다. 지역 변수를 만들지 않습니다 |
+
+같은 파일 안에서 `8px`이 세 번 나온다고 지역 custom property를 만들지 않습니다.
+core token 목록에 없는 변수는 `values-always-provide-css-variable-fallbacks`에 따라 fallback이 필요해서
+`var(--pg-detail-gap, 8px)`처럼 값이 결국 사용처에 남습니다.
+읽는 사람은 변수 선언을 한 번 더 찾아가야 하고, 값을 바꿀 지점은 여전히 여러 곳입니다.
+
+지역 custom property는 값 재사용이 아니라 **조상에서 자손으로 상태를 전달할 때만** 씁니다.
+그 용도는 `selector-avoid-deep-descendant-dependencies`가 결합자를 줄이는 수단으로 인정합니다.
+
+**Incorrect (한 파일 안 반복을 지역 변수로 감쌈):**
 
 ```css
-.ui_table__toolbar {
-	gap: 12px;
+.pg_catalogIndex__toolbar {
+	--pg-catalog-gap: 12px;
+	gap: var(--pg-catalog-gap, 12px);
 }
 
-.ui_table__row {
-	background: #f5f5f5;
-	border-radius: 4px;
+.pg_catalogIndex__footer {
+	gap: var(--pg-catalog-gap, 12px);
 }
 ```
 
-**Correct (토큰과 변수를 우선 사용):**
+**Incorrect (여러 파일이 쓰는 값을 각 파일에 하드코딩):**
 
 ```css
-.ui_table__toolbar {
-	gap: var(--app-space-3);
+/* pg-catalog-index.css */
+.pg_catalogIndex__row {
+	background: #f5f5f5;
+}
+```
+
+```css
+/* pg-catalog-detail.css */
+.pg_catalogDetail__row {
+	background: #f5f5f5;
+}
+```
+
+**Correct (여러 파일이 쓰는 값은 전역 core token으로):**
+
+```css
+/* app/style/token.css */
+:root {
+	--app-color-fill-muted: #f5f5f5;
+	--app-space-3: 12px;
+}
+```
+
+```css
+.pg_catalogIndex__row {
+	background: var(--app-color-fill-muted);
+}
+```
+
+**Correct (한 파일 안 반복은 값을 그대로 두고, 지역 변수는 상태 전달에만):**
+
+```css
+.pg_catalogIndex__toolbar {
+	gap: 12px;
 }
 
-.ui_table__row--selected {
-	background: var(--app-color-fill-muted);
-	border-radius: var(--app-radius-control);
+.pg_catalogIndex__footer {
+	gap: 12px;
+}
+
+.pg_catalogIndex__row {
+	--pg-catalog-row-accent: transparent;
+
+	&:hover {
+		--pg-catalog-row-accent: var(--app-color-accent);
+	}
+}
+
+.pg_catalogIndex__rowBadge {
+	border-color: var(--pg-catalog-row-accent);
 }
 ```
 
@@ -1090,7 +1136,7 @@ stylesheet는 하나의 owner에 맞춰 유지하고, 가벼운 구조 주석만
 
 ### 5.1 Keep Style Files Owned by One Component or Route Surface
 
-**Rule:** `C20` · `organization-keep-style-files-owned-by-one-component-or-route`
+**Rule:** `C19` · `organization-keep-style-files-owned-by-one-component-or-route`
 
 **Applies when:** stylesheet를 새로 만들거나 이동·분할·병합해 한 파일에 component, route, document, local, shared owner가 섞일 가능성이 있을 때.
 
@@ -1140,33 +1186,29 @@ stylesheet는 하나의 owner에 맞춰 유지하고, 가벼운 구조 주석만
 
 ### 5.2 Review Banned CSS Patterns Before Finishing
 
-**Rule:** `C21` · `organization-review-banned-css-patterns-before-finishing`
+**Rule:** `C20` · `organization-review-banned-css-patterns-before-finishing`
 
 **Applies when:** CSS 또는 TSX class contract 변경이 완료 단계에 들어갈 때.
 
 **Required on completion:** 마무리 시 항상 적용
 
-**Impact: MEDIUM (위험한 셀렉터·modifier·라이브러리 타겟팅 지름길을 공용 스타일 체계에 들어가기 전에 잡습니다)**
+**Impact: MEDIUM (선택되지 않은 규칙의 위반이 그대로 병합되는 것을 완료 직전에 잡습니다)**
 
-작업을 마치기 전에 금지 패턴을 다시 확인합니다.
+이 규칙은 새 기준을 만들지 않습니다. 판정을 놓친 규칙도 마무리에서 한 번 걸리게 하는 색인이고,
+각 항목의 정본은 소관 규칙입니다.
 
-금지:
+| 확인할 것 | 소관 규칙 |
+| --- | --- |
+| 요소 선택자 중심 스타일링 | `selector-limit-nesting-block-depth` |
+| 결합자 상한 초과 | `selector-avoid-deep-descendant-dependencies` |
+| root 없는 library class targeting | `selector-target-third-party-dom-from-owned-roots` |
+| top-level pseudo selector 재오픈 | `selector-use-pseudo-classes-for-dom-owned-states` |
+| 재사용 근거 없는 structural modifier | `composition-do-not-build-structural-variants-with-modifiers` |
+| base와 state를 이름 하나에 융합 | `composition-keep-classes-single-purpose` |
+| core token에 붙은 fallback, 지역 토큰 발명 | `values-always-provide-css-variable-fallbacks` |
+| owner가 섞인 stylesheet | `organization-keep-style-files-owned-by-one-component-or-route` |
 
-- 요소 선택자 중심 스타일링
-- 깊은 project-owned descendant chain
-- 재사용 근거 없는 structural modifier
-- root 없는 library class targeting
-- top-level pseudo selector 재오픈
-- project-owned parent state descendant coupling
-- `!important` 남용
-
-허용 가능한 예외:
-
-- 반복되는 명시적 variant modifier
-- owner block 안 rich text wrapper의 nested raw element selector
-- owned root 아래의 최소 third-party selector chain
-
-예외는 관련 rule에서 허용한 범위 안에서만 사용합니다.
+`!important`만 여기서 직접 금지합니다. third-party가 inline style로 덮는 경우에만 근거 주석과 함께 남깁니다.
 
 **Incorrect (금지 패턴을 그대로 남김):**
 
@@ -1188,7 +1230,7 @@ div {
 }
 ```
 
-**Correct (소유 클래스와 허용된 구조/상태 표현으로 정리):**
+**Correct (소유 클래스와 허용된 구조·상태 표현으로 정리):**
 
 ```css
 .wg_siteHeader__brandLink {

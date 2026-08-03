@@ -25,24 +25,26 @@ tags: naming, class-grammar, ownership
 
 slug에는 prefix가 말하는 부분을 반복하지 않습니다. `UiButton`은 `ui_button`이고 `ui_uiButton`이 아닙니다.
 
-**Incorrect (slug나 element casing이 흔들림):**
+**Incorrect (slug와 element에 snake_case·kebab-case가 섞임):**
 
 ```txt
 ui_tag_list__root
-pg_catalog_page__root
+ui_tagList__list-item
+wg_site_header__root
+wg_siteHeader__brand-link
+pg_catalog_detail__root
 pg_catalogDetail__main-content
-wg_site_header__brandLink
-pg_document__main-content
-pg_document__main--route_active
+pg_catalogDetail__main--route_active
 ```
 
 **Correct (scope는 lowercase, slug·element·modifier는 camelCase):**
 
 ```txt
 ui_tagList__root
-pg_catalogIndex__root
-pg_catalogDetail__mainContent
+ui_tagList__listItem
+wg_siteHeader__root
 wg_siteHeader__brandLink
-pg_document__main
-pg_document__main--routeActive
+pg_catalogDetail__root
+pg_catalogDetail__mainContent
+pg_catalogDetail__main--routeActive
 ```

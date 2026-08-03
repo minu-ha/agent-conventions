@@ -108,13 +108,12 @@ const cssRuleUniverse = [
 	"naming-default-to-plain-css-when-no-module-convention",
 	"naming-keep-scope-slug-unique-per-owner",
 	"naming-name-elements-and-modifiers-by-role",
-	"naming-preserve-route-slug-traceability",
+	"naming-keep-page-slug-traceable",
 	"naming-separate-owner-style-scopes",
 	"naming-use-scope-slug-element-modifier-syntax",
 	"composition-compose-classes-with-clsx",
 	"composition-do-not-build-structural-variants-with-modifiers",
 	"composition-keep-classes-single-purpose",
-	"composition-prefer-ui-wrapper-prop-types",
 	"composition-style-ui-components-through-owned-wrappers",
 	"selector-avoid-deep-descendant-dependencies",
 	"selector-limit-nesting-block-depth",
@@ -285,15 +284,14 @@ const cssRuleRouting = {
 		reviewWith: [],
 	},
 	"naming-keep-scope-slug-unique-per-owner": {
-		appliesWhen:
-			"새 `scope_slug` namespace를 추가·복사·이름 변경할 때. 서로 다른 owner의 class가 같은 namespace를 사용할 가능성이 있을 때.",
+		appliesWhen: "새 `scope_slug`를 만들거나 기존 slug를 복사·이름 변경할 때. 서로 다른 컴포넌트가 같은 slug를 쓸 가능성이 있을 때.",
 		reviewWith: [],
 	},
 	"naming-name-elements-and-modifiers-by-role": {
 		appliesWhen: "element 또는 modifier class 이름을 새로 지을 때. `container`, `wrapper`, `box`, 치수·간격 중심 이름을 변경할 때.",
 		reviewWith: [],
 	},
-	"naming-preserve-route-slug-traceability": {
+	"naming-keep-page-slug-traceable": {
 		appliesWhen: "`pg_*` owner의 class slug를 새로 만들거나 이름을 바꿀 때. 같은 이름 component가 여러 화면에 생겨 slug를 구분해야 할 때.",
 		reviewWith: [],
 	},
@@ -318,19 +316,20 @@ const cssRuleRouting = {
 			"기존 class가 base와 state·variant 책임을 함께 갖거나 독립 시각 책임을 추가·재사용·분리할 때. 제외: 기존 결합 책임을 분리하지 않고 처음부터 새 single-purpose pair를 만들거나 책임 보존 rename만 하는 경우.",
 		reviewWith: [],
 	},
-	"composition-prefer-ui-wrapper-prop-types": {
-		appliesWhen: "`Ui*` wrapper 사용처나 wrapper API에서 Props 타입을 선언·추론·재사용할 때. 라이브러리 원본 Props 참조를 검토할 때.",
-		reviewWith: [],
-	},
 	"composition-style-ui-components-through-owned-wrappers": {
 		appliesWhen:
-			"실제 `Ui*` React wrapper 사용처·API에서 내부 DOM styling 경계를 정할 때. root `className`·slot prop hook을 주입·노출·사용할 때. 제외: 기존 CSS owner root 아래 third-party selector만 수정하는 경우.",
+			"`Ui*` wrapper에 `className`을 주거나 wrapper가 노출할 class 계약을 정할 때. `Ui*` 내부 DOM을 겨냥하는 스타일을 추가할 때. 제외: 기존 CSS owner root 아래 third-party selector만 수정하는 경우.",
 		reviewWith: ["selector-target-third-party-dom-from-owned-roots"],
 	},
 	"selector-avoid-deep-descendant-dependencies": {
 		appliesWhen:
-			"descendant·child·sibling combinator를 추가·수정할 때. DOM 계층에 의존하는 project-owned·third-party selector를 검토할 때.",
-		reviewWith: ["selector-limit-nesting-block-depth"],
+			"공백·`>`·`+`·`~`로 요소 사이 관계를 표현하는 selector를 추가·수정할 때. DOM 계층에 의존하는 project-owned·third-party selector를 검토할 때.",
+		reviewWith: [
+			"selector-limit-nesting-block-depth",
+			"selector-use-pseudo-classes-for-dom-owned-states",
+			"selector-target-third-party-dom-from-owned-roots",
+			"composition-style-ui-components-through-owned-wrappers",
+		],
 	},
 	"selector-limit-nesting-block-depth": {
 		appliesWhen:
@@ -360,7 +359,7 @@ const cssRuleRouting = {
 		reviewWith: ["composition-do-not-build-structural-variants-with-modifiers"],
 	},
 	"values-tokenize-repeated-visual-values": {
-		appliesWhen: "색상·간격·radius·타이포·그림자 등 같은 시각 값이 2회 이상 반복될 때. 새 shared visual value를 하드코딩할 때.",
+		appliesWhen: "여러 파일이 같은 색·간격·radius·타이포·그림자 값을 쓸 때. 새 CSS custom property를 선언할 때.",
 		reviewWith: ["values-always-provide-css-variable-fallbacks"],
 	},
 	"organization-keep-style-files-owned-by-one-component-or-route": {
@@ -428,7 +427,7 @@ const reactRuleRouting = {
 	},
 	"typing-reuse-existing-contracts": {
 		appliesWhen:
-			"Props callback 구현을 추가·변경할 때. API 응답 기반 view type을 추가·변경하는데 기존 prop·API 계약과 같은 shape가 보일 때.",
+			"Props callback 구현을 추가·변경할 때. API 응답 기반 view type을 추가·변경하는데 기존 prop·API 계약과 같은 shape가 보일 때. wrapper 컴포넌트 사용처에서 Props 타입을 참조할 때.",
 		reviewWith: [
 			"typescript/types-reuse-callback-signatures-from-existing-contracts",
 			"typescript/types-reuse-existing-contracts-before-new-types",
@@ -627,7 +626,6 @@ const mandatoryRuleRouting = {
 		"docs-require-header-jsdoc-on-key-declarations": ["docs-write-concise-korean-comments-about-purpose-and-constraints"],
 	},
 	css: {
-		"composition-prefer-ui-wrapper-prop-types": ["typescript/types-reuse-existing-contracts-before-new-types"],
 		"selector-target-third-party-dom-from-owned-roots": ["selector-avoid-deep-descendant-dependencies"],
 		"selector-use-pseudo-classes-for-dom-owned-states": ["values-separate-domain-state-modifiers-from-dom-interaction-states"],
 	},
@@ -830,7 +828,7 @@ const reactScenarioStages = {
 					"naming-default-to-plain-css-when-no-module-convention",
 					"naming-keep-scope-slug-unique-per-owner",
 					"naming-name-elements-and-modifiers-by-role",
-					"naming-preserve-route-slug-traceability",
+					"naming-keep-page-slug-traceable",
 					"naming-separate-owner-style-scopes",
 					"naming-use-scope-slug-element-modifier-syntax",
 					"composition-compose-classes-with-clsx",
@@ -1233,7 +1231,7 @@ const cssScenarioStages = {
 					"naming-default-to-plain-css-when-no-module-convention",
 					"naming-keep-scope-slug-unique-per-owner",
 					"naming-name-elements-and-modifiers-by-role",
-					"naming-preserve-route-slug-traceability",
+					"naming-keep-page-slug-traceable",
 					"naming-separate-owner-style-scopes",
 					"naming-use-scope-slug-element-modifier-syntax",
 					"composition-compose-classes-with-clsx",
@@ -1357,7 +1355,6 @@ const cssScenarioStages = {
 				],
 				css: [
 					"composition-compose-classes-with-clsx",
-					"composition-prefer-ui-wrapper-prop-types",
 					"composition-style-ui-components-through-owned-wrappers",
 					"organization-review-banned-css-patterns-before-finishing",
 				],
@@ -1974,7 +1971,7 @@ test("React routing manifest is the exact seventeen-scenario Appendix B/D oracle
 	assert.equal(cssDrift.expectedSelected.css?.includes("composition-do-not-build-structural-variants-with-modifiers"), true);
 	assert.equal(cssDrift.expectedSelected.css?.includes("values-separate-domain-state-modifiers-from-dom-interaction-states"), true);
 	assert.equal(cssDrift.expectedSelected.css?.includes("naming-separate-owner-style-scopes"), true);
-	assert.equal(cssDrift.expectedSelected.css?.includes("naming-preserve-route-slug-traceability") ?? false, true);
+	assert.equal(cssDrift.expectedSelected.css?.includes("naming-keep-page-slug-traceable") ?? false, true);
 
 	const routeSupport = scenarioById.get("RTE03-route-support-extraction");
 	assert.equal(routeSupport?.expectedSelected.typescript?.includes("types-reuse-existing-contracts-before-new-types"), false);
@@ -2062,7 +2059,7 @@ test("CSS progressive metadata and rule routing match Appendix C exactly", async
 	assert.deepEqual(document.metadata.companions, [
 		{skill: "typescript", mode: "conditional", appliesWhen: "TS/TSX class contract, wrapper Props 또는 style import를 함께 변경한다."},
 	]);
-	assert.equal(document.rules.length, 21);
+	assert.equal(document.rules.length, 20);
 	assert.deepEqual(
 		Object.fromEntries(document.rules.map((rule) => [getRuleId(rule), {appliesWhen: rule.appliesWhen, reviewWith: rule.reviewWith}])),
 		cssRuleRouting,
@@ -2078,7 +2075,7 @@ test("CSS progressive metadata and rule routing match Appendix C exactly", async
 	const wrapperStylingRule = await readRuleSource("css", "composition-style-ui-components-through-owned-wrappers");
 	assertMentions(
 		wrapperStylingRule,
-		[/실제 `Ui\*` React wrapper/i, /CSS-only/i, /selector-target-third-party-dom-from-owned-roots/i],
+		[/root `className`을 받는 것이 기본 계약/i, /래핑 `div`/i, /selector-target-third-party-dom-from-owned-roots/i],
 		"wrapperStylingRule",
 	);
 	const singlePurposeRule = await readRuleSource("css", "composition-keep-classes-single-purpose");
@@ -2251,7 +2248,7 @@ test("routing activation and generated indexes use only the changed semantic del
 	assert.match(generatedIndex, /Routing digest: `sha256:[a-f0-9]{64}`/);
 	assert.match(generatedIndex, /^- T\d+ \| [^ |]+ \|/m);
 
-	const routeOwnerRule = await readRuleSource("css", "naming-preserve-route-slug-traceability");
+	const routeOwnerRule = await readRuleSource("css", "naming-keep-page-slug-traceable");
 	assert.match(routeOwnerRule, /`pg_\*` owner의 class slug를 새로 만들거나 이름을 바꿀 때/);
 });
 
@@ -2572,8 +2569,8 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	assert.doesNotMatch(headerDocs, /\bT\d{2}\b/);
 
 	const descendantDepth = await readRule("css", "selector-avoid-deep-descendant-dependencies");
-	assertMentions(descendantDepth, [/effective selector/i, /combinator 개수/i, /같은 요소에 붙는 조건/], "descendantDepth");
-	assertMentions(descendantDepth, [/combinator 0/, /소유 root 아래 third-party 내부 DOM/], "descendantDepth");
+	assertMentions(descendantDepth, [/결합자라고 부릅니다/, /중첩은 펼친 뒤에/, /같은 요소에 붙는/], "descendantDepth");
+	assertMentions(descendantDepth, [/기본값은 결합자 0/, /소유 root 아래 third-party 내부 DOM/], "descendantDepth");
 
 	const thirdPartyRoot = await readRule("css", "selector-target-third-party-dom-from-owned-roots");
 	assertMentions(
@@ -2605,7 +2602,7 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 		/영문 label[\s\S]*docs-write-concise-korean-comments-about-purpose-and-constraints[\s\S]*content gate/i,
 	);
 	assertMentions(generatedContracts[1]!, [/주석 본문 전체/i, /(?:ASCII|영문)/i], "generatedContracts");
-	assert.match(generatedContracts[2]!, /effective selector[\s\S]*combinator 개수/i);
+	assert.match(generatedContracts[2]!, /결합자[\s\S]*중첩은 펼친 뒤에/i);
 	assert.match(generatedContracts[3]!, /CRITICAL rule[\s\S]*full rule/i);
 });
 
@@ -2619,8 +2616,8 @@ test("CSS generated index is canonical, complete, body-preserving, and within it
 		entries.map((entry) => entry.id),
 		cssRuleUniverse,
 	);
-	assert.equal(entries.length, 21);
-	assert.equal(getRulesIndexByteBudget(entries.length), 8_340);
+	assert.equal(entries.length, 20);
+	assert.equal(getRulesIndexByteBudget(entries.length), 8_000);
 	assert.equal(Buffer.byteLength(source, "utf8") <= getRulesIndexByteBudget(entries.length), true);
 
 	for (const entry of entries) {
