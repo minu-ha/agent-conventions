@@ -258,7 +258,6 @@ const viewerBodyMarkup = `<header class="hd">
 		</div>
 		<div class="hd-r">
 			<span class="cnt" id="count"></span>
-			<button class="btn" id="lang" aria-label="제목 한국어·영어 전환">한 / EN</button>
 			<button class="btn" id="expand">전체 펼침</button>
 			<button class="btn" id="theme" aria-label="라이트·다크 전환">테마</button>
 		</div>
@@ -314,11 +313,9 @@ const viewerClientScript = `(() => {
 	const keyOf = (r) => r.skill + "/" + r.id;
 	const domIdOf = (r) => "r-" + r.skill + "--" + r.id;
 	const byKey = new Map(RULES.map((r) => [keyOf(r), r]));
-	// 규칙 본문은 한국어 하나뿐이므로 토글은 제목·섹션명만 바꾼다.
-	let langEn = localStorage.getItem("conv-lang") === "en";
-	const titleOf = (r) => (langEn ? r.title || r.titleKo : r.titleKo || r.title);
+	const titleOf = (r) => r.titleKo || r.title;
 	const secOf = (r) => DATA.sections.find((s) => s.skill === r.skill && s.prefix === r.sectionPrefix);
-	const secLabel = (s) => (langEn ? s.title || s.titleKo : s.titleKo || s.title);
+	const secLabel = (s) => s.titleKo || s.title;
 
 	// skill 은 단일 선택. section 은 skill 마다 같은 prefix 를 쓸 수 있어 "skill/prefix" 로 잡는다.
 	const state = {q: "", skill: "", impact: new Set(), section: "", tags: new Set(), open: new Set(), when: new Set(), why: new Set()};
@@ -641,20 +638,6 @@ const viewerClientScript = `(() => {
 		const allOpen = hits.length && hits.every((r) => state.open.has(keyOf(r)));
 		for (const r of hits) { const k = keyOf(r); allOpen ? state.open.delete(k) : state.open.add(k); }
 		render();
-	});
-
-	const langBtn = document.getElementById("lang");
-	const syncLangBtn = () => {
-		langBtn.textContent = langEn ? "EN / 한" : "한 / EN";
-		langBtn.setAttribute("aria-pressed", String(langEn));
-	};
-	syncLangBtn();
-	langBtn.addEventListener("click", () => {
-		langEn = !langEn;
-		localStorage.setItem("conv-lang", langEn ? "en" : "ko");
-		syncLangBtn();
-		render();
-		renderDialog();
 	});
 
 	document.getElementById("theme").addEventListener("click", () => {

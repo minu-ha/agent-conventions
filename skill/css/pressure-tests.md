@@ -177,7 +177,7 @@ Pure CSS fixture는 CSS만 partition합니다. Mixed fixture 5개는 progressive
   - 조상 modifier로 자손 표현을 결정하지 않고 자손에 자기 modifier를 붙임
 - Likely fail signals
   - `.foo:hover { ... }` 를 top-level selector 로 다시 엶
-  - 여러 상태를 `:is()` 대신 `,` 목록으로 나열함
+  - 여러 상태를 `,` 목록으로 나열함
   - `&`를 두 번 열어 `& .child { &::before { } }`처럼 중첩을 두 겹으로 만듦
   - `.owner__prose h2 { ... }`
   - `.owner__copy > :first-child { ... }`
@@ -259,7 +259,7 @@ Pure CSS fixture는 CSS만 partition합니다. Mixed fixture 5개는 progressive
   - 각 modifier block이 자기 `width`·`height`를 그대로 갖고 중복을 감수함
   - 공통 선언을 `,` 목록으로 빼고 아래에서 일부만 다시 열지 않음
   - 반복을 없애려고 지역 custom property를 새로 만들지 않음
-  - 한 대상에 진입 조건이 여럿이면 `,` 대신 `:is()`로 한 selector로 씀
+  - 한 대상에 진입 조건이 여럿이면 조건마다 블록을 따로 열고 선언을 그대로 씀
 - Likely fail signals
   - `.a--line, .a--dashed, .a--band { width: 24px; }` 뒤에 `.a--band { background: ... }`를 다시 엶
   - 반복 값을 `--loc-glyph-width` 같은 지역 변수로 추출함

@@ -67,7 +67,12 @@ tags: selector, state, negation
 }
 
 .pg_spikePanel__spreadButton {
-	&:is(:hover, .Mui-focusVisible) .pg_spikePanel__spreadBox::before {
+	&:hover .pg_spikePanel__spreadBox::before {
+		border-color: #9fadc7;
+		box-shadow: 0 0 0 2px rgb(159 173 199 / 20%);
+	}
+
+	&.Mui-focusVisible .pg_spikePanel__spreadBox::before {
 		border-color: #9fadc7;
 		box-shadow: 0 0 0 2px rgb(159 173 199 / 20%);
 	}

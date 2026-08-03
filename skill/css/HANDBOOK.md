@@ -1104,9 +1104,8 @@ TSX에서 그 지점이 보이므로 "이게 raw HTML인가"를 판단할 필요
 - 클래스를 추가·삭제할 때마다 목록도 함께 고쳐야 합니다.
 - 값을 지역 변수로 빼서 묶는 것도 같은 문제입니다. `values-tokenize-repeated-visual-values`가 막습니다.
 
-한 대상에 진입 조건이 여럿이면 `,` 대신 `:is()`로 한 선택자로 씁니다.
-`&:is(:hover, .Mui-focusVisible)`은 선택자 하나라 묶음이 아닙니다.
-`:is()`의 명시도는 인자 중 가장 높은 것이므로 인자가 모두 클래스나 pseudo-class면 값이 변하지 않습니다.
+한 대상에 진입 조건이 여럿이어도 같습니다. 조건마다 블록을 따로 열고 선언을 그대로 씁니다.
+`:is()`로 묶지도 않습니다. 묶는 방법을 둘로 두면 언제 어느 쪽인지 다시 판단해야 합니다.
 
 `@media`나 `@supports` 안에서 같은 클래스를 다시 선언하는 것은 이 규칙의 대상이 아닙니다.
 
@@ -1164,11 +1163,15 @@ TSX에서 그 지점이 보이므로 "이게 raw HTML인가"를 판단할 필요
 }
 ```
 
-**Correct (진입 조건이 여럿이면 `:is()`로 한 선택자로 씀):**
+**Correct (진입 조건마다 블록을 따로 열고 선언을 그대로 씀):**
 
 ```css
 .pg_spikePanel__spreadButton {
-	&:is(:hover, .Mui-focusVisible) .pg_spikePanel__spreadBox {
+	&:hover .pg_spikePanel__spreadBox {
+		border-color: #9fadc7;
+	}
+
+	&.Mui-focusVisible .pg_spikePanel__spreadBox {
 		border-color: #9fadc7;
 	}
 }
@@ -1343,7 +1346,7 @@ DOM 상태 pseudo-class는 그 요소의 클래스 블록 안에서 `&:`로 씁�
 
 - base와 상태가 한 block에 있어서 무엇이 어떻게 바뀌는지 한 자리에서 읽힙니다.
 - 파일 어디에 상태 스타일이 더 있는지 찾지 않습니다.
-- 여러 상태가 같은 선언을 쓰면 `:is()`로 묶습니다. `,` 목록은 쓰지 않습니다.
+- 여러 상태가 같은 선언을 쓰면 상태마다 블록을 따로 엽니다. `,`도 `:is()`도 쓰지 않습니다.
 
 조상의 DOM 상태가 자손을 바꿔야 하면 이름이 같은 자손을 결합자 하나로 겨냥합니다.
 자손의 `:hover`는 포인터가 자손 위에 있을 때만 걸려서 조상 상태를 알 방법이 없고,
@@ -1388,17 +1391,18 @@ CSS에 부모 선택자가 없어서 대체 수단이 없습니다.
 }
 ```
 
-**Correct (상태를 같은 블록 안 `&:`로 접고 여러 상태는 `:is()`로 묶음):**
+**Correct (상태를 같은 블록 안 `&:`로 접고 상태마다 블록을 따로 엶):**
 
 ```css
 .wg_siteHeader__brandLink {
 	color: #1677ff;
 
-	&:is(:hover, :focus-visible) {
+	&:hover {
 		color: #0958d9;
 	}
 
 	&:focus-visible {
+		color: #0958d9;
 		outline: 2px solid #1677ff;
 		outline-offset: 2px;
 	}
@@ -1484,7 +1488,12 @@ CSS에 부모 선택자가 없어서 대체 수단이 없습니다.
 }
 
 .pg_spikePanel__spreadButton {
-	&:is(:hover, .Mui-focusVisible) .pg_spikePanel__spreadBox::before {
+	&:hover .pg_spikePanel__spreadBox::before {
+		border-color: #9fadc7;
+		box-shadow: 0 0 0 2px rgb(159 173 199 / 20%);
+	}
+
+	&.Mui-focusVisible .pg_spikePanel__spreadBox::before {
 		border-color: #9fadc7;
 		box-shadow: 0 0 0 2px rgb(159 173 199 / 20%);
 	}

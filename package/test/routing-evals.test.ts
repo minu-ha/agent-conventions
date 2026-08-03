@@ -2753,7 +2753,7 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	const commaGroup = await readRule("css", "selector-do-not-group-classes-with-commas");
 	assertMentions(
 		commaGroup,
-		[/중복을 감수합니다/, /`,` 대신 `:is\(\)`로 한 선택자로 씁니다/, /no-duplicate-selectors/, /disallowInList/],
+		[/중복을 감수합니다/, /조건마다 블록을 따로 열고 선언을 그대로 씁니다/, /no-duplicate-selectors/, /disallowInList/],
 		"commaGroup",
 	);
 
