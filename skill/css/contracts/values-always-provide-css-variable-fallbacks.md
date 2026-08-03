@@ -1,6 +1,6 @@
 # Declare Core Tokens Once and Fall Back Everywhere Else
 
-**Impact: HIGH (토큰 누락이 스타일을 조용히 망가뜨리는 것을 막고 fallback이 매직 넘버로 번지는 것도 막습니다)**
+**Impact: HIGH (토큰이 빠지면 조용히 깨지지 않고 드러나며, fallback이 매직 넘버로 번지지도 않습니다)**
 
 프로젝트는 전역에서 항상 주입되는 **core token 목록**을 한 곳에 선언합니다.
 `:root` 또는 전역 theme 스타일시트가 그 목록의 단일 출처입니다.

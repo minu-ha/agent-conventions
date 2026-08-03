@@ -1,6 +1,6 @@
 # Do Not Add Wrapper Elements for Styling
 
-**Impact: MEDIUM-HIGH (래핑 element가 부모 레이아웃 계산을 바꾸고 역할 없는 클래스를 늘리는 것을 막습니다)**
+**Impact: MEDIUM-HIGH (래핑 element는 부모 레이아웃 계산을 바꾸고 역할 없는 클래스를 늘립니다)**
 
 스타일을 주려고 element를 새로 감싸지 않습니다.
 그 컴포넌트가 `className`을 받도록 먼저 고칩니다.

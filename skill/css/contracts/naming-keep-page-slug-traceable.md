@@ -1,9 +1,9 @@
 # Keep Page Slugs Traceable to Their Screen
 
-**Impact: HIGH (클래스 이름만 보고 어느 화면 소속인지 거슬러 읽을 수 있게 유지합니다)**
+**Impact: HIGH (클래스명만 보고 어느 화면 것인지 거슬러 찾습니다)**
 
 `pg_*` slug만 보고 어느 화면의 것인지 알 수 있어야 합니다.
-어떤 파일이 화면 소유인지는 framework convention이 정하고, CSS는 그 소유가 slug에서 흐려지지 않게 지킵니다.
+어떤 파일이 화면 소유인지는 프레임워크 규약이 정하고, CSS는 그 소유가 slug에서 흐려지지 않게 지킵니다.
 
 - 화면 shell은 page 이름을 slug로 씁니다. `pg_postsDetail`처럼 화면 계열과 역할이 읽혀야 합니다.
 - 화면 안의 컴포넌트는 자기 이름만 slug로 씁니다.

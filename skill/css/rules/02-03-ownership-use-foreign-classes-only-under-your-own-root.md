@@ -1,8 +1,8 @@
 ---
 title: Use Foreign Classes Only Under Your Own Root
-titleKo: 남의 클래스는 자기 root 블록 아래에서만 사용
+titleKo: 남의 클래스는 내 root 블록 안에서만 씁니다
 impact: CRITICAL
-impactDescription: 남의 클래스를 단독 선택자로 쓰지 못하게 해서 그 라이브러리나 widget을 쓰는 화면 전체가 함께 바뀌는 것을 막습니다
+impactDescription: 남의 클래스를 단독으로 쓰면 그 라이브러리나 widget을 쓰는 화면이 전부 함께 바뀝니다
 appliesWhen:
   - `.ant-*`·`.rc-*`·`.Mui-*` 같은 외부 라이브러리 클래스를 쓸 때
   - 다른 `scope_slug`의 클래스를 겨냥할 때
@@ -14,10 +14,10 @@ tags: ownership, scope, third-party
 
 ## Use Foreign Classes Only Under Your Own Root
 
-**Impact: CRITICAL (남의 클래스를 단독 선택자로 쓰지 못하게 해서 그 라이브러리나 widget을 쓰는 화면 전체가 함께 바뀌는 것을 막습니다)**
+**Impact: CRITICAL (남의 클래스를 단독으로 쓰면 그 라이브러리나 widget을 쓰는 화면이 전부 함께 바뀝니다)**
 
 내 파일이 소유하지 않은 클래스는 **내 root 클래스 블록 안에서만** 씁니다.
-단독 top-level 선택자로 쓰지 않습니다.
+단독 최상위 선택자로 쓰지 않습니다.
 
 `scope_slug`가 내 것이면 내 클래스입니다. 그 밖은 전부 남의 것입니다.
 외부 라이브러리든 다른 화면의 `pg_`든 widget의 `wg_`든 똑같이 다룹니다.
@@ -31,8 +31,8 @@ tags: ownership, scope, third-party
 | `.pg_x__button:hover .pg_x__box { }` | 내 클래스끼리라 대상이 아닙니다 |
 
 판정은 **선택자가 내 slug로 시작하는지**입니다. 소유 관계를 따로 조사하지 않습니다.
-top-level `.pg_x__root .ant-tree-title`도 쓰지 않습니다. root 블록을 열고 그 안에서 `&`로 씁니다.
-한 소유자의 override가 한 블록에 모이면 라이브러리를 올릴 때 볼 곳이 한 군데뿐입니다.
+최상위 `.pg_x__root .ant-tree-title`도 쓰지 않습니다. root 블록을 열고 그 안에서 `&`로 씁니다.
+한 소유자의 덮어쓰기가 한 블록에 모이면 라이브러리를 올릴 때 볼 곳이 한 군데뿐입니다.
 
 결합자 개수는 제한하지 않습니다. 남의 DOM 깊이는 우리가 정할 수 없습니다.
 `.ant-table-thead > tr > th`가 라이브러리의 구조라면 그것이 경로입니다.
@@ -70,7 +70,7 @@ top-level `.pg_x__root .ant-tree-title`도 쓰지 않습니다. root 블록을 �
 }
 ```
 
-**Incorrect (root 블록을 열지 않고 top-level에서 체이닝):**
+**Incorrect (root 블록을 열지 않고 최상위에서 체이닝):**
 
 ```css
 .pg_treePanel__root .ant-tree-title {

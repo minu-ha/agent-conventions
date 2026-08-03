@@ -1,8 +1,8 @@
 ---
 title: Keep Page Slugs Traceable to Their Screen
-titleKo: page slug의 소속 화면 추적성
+titleKo: slug만 보고 어느 화면인지 알 수 있게 짓습니다
 impact: HIGH
-impactDescription: 클래스 이름만 보고 어느 화면 소속인지 거슬러 읽을 수 있게 유지합니다
+impactDescription: 클래스명만 보고 어느 화면 것인지 거슬러 찾습니다
 appliesWhen:
   - `pg_*` 소유자의 클래스 slug를 새로 만들거나 이름을 바꿀 때
   - 같은 이름 컴포넌트가 여러 화면에 생겨 slug를 구분해야 할 때
@@ -11,10 +11,10 @@ tags: slug, page-scope, traceability
 
 ## Keep Page Slugs Traceable to Their Screen
 
-**Impact: HIGH (클래스 이름만 보고 어느 화면 소속인지 거슬러 읽을 수 있게 유지합니다)**
+**Impact: HIGH (클래스명만 보고 어느 화면 것인지 거슬러 찾습니다)**
 
 `pg_*` slug만 보고 어느 화면의 것인지 알 수 있어야 합니다.
-어떤 파일이 화면 소유인지는 framework convention이 정하고, CSS는 그 소유가 slug에서 흐려지지 않게 지킵니다.
+어떤 파일이 화면 소유인지는 프레임워크 규약이 정하고, CSS는 그 소유가 slug에서 흐려지지 않게 지킵니다.
 
 - 화면 shell은 page 이름을 slug로 씁니다. `pg_postsDetail`처럼 화면 계열과 역할이 읽혀야 합니다.
 - 화면 안의 컴포넌트는 자기 이름만 slug로 씁니다.
@@ -40,7 +40,7 @@ pg_detailSpikePatternPanelOverviewSection__root
 pg_detailSpikePatternPanelSummaryBand__root
 ```
 
-**Correct (shell은 page slug, 컴포넌트는 자기 slug):**
+**Correct (shell은 화면 slug, 컴포넌트는 자기 slug):**
 
 ```txt
 posts index page   -> pg_postsIndex__root

@@ -1,8 +1,8 @@
 ---
 title: Declare Core Tokens Once and Fall Back Everywhere Else
-titleKo: core token 선언과 그 밖 var()의 fallback 지정
+titleKo: core token은 한 곳에 선언하고 그 밖 var()에는 fallback을 둡니다
 impact: HIGH
-impactDescription: 토큰 누락이 스타일을 조용히 망가뜨리는 것을 막고 fallback이 매직 넘버로 번지는 것도 막습니다
+impactDescription: 토큰이 빠지면 조용히 깨지지 않고 드러나며, fallback이 매직 넘버로 번지지도 않습니다
 appliesWhen:
   - `var(--*)` 사용을 추가하거나 변수 이름이나 fallback을 바꿀 때
   - core token 목록에 항목을 추가·제거할 때
@@ -12,7 +12,7 @@ tags: variables, fallbacks, tokens
 
 ## Declare Core Tokens Once and Fall Back Everywhere Else
 
-**Impact: HIGH (토큰 누락이 스타일을 조용히 망가뜨리는 것을 막고 fallback이 매직 넘버로 번지는 것도 막습니다)**
+**Impact: HIGH (토큰이 빠지면 조용히 깨지지 않고 드러나며, fallback이 매직 넘버로 번지지도 않습니다)**
 
 프로젝트는 전역에서 항상 주입되는 **core token 목록**을 한 곳에 선언합니다.
 `:root` 또는 전역 theme 스타일시트가 그 목록의 단일 출처입니다.

@@ -1,8 +1,8 @@
 ---
 title: Expose Only a Root Class From Other Owners
-titleKo: 남의 컴포넌트에는 root 클래스 하나만 노출
+titleKo: 남의 컴포넌트에는 root 클래스 하나만 넘깁니다
 impact: HIGH
-impactDescription: 내부 노드로 가는 클래스 prop을 막고 배치, variant, 강등 중 무엇이 맞는지 먼저 보게 합니다
+impactDescription: 내부 노드로 가는 클래스 prop을 막고 배치, variant, 강등 가운데 무엇이 맞는지 먼저 봅니다
 appliesWhen:
   - 다른 컴포넌트의 배치나 내부 표현을 바꿔야 할 때
   - 컴포넌트에 클래스 관련 prop을 추가할 때
@@ -13,7 +13,7 @@ tags: ownership, api, promotion
 
 ## Expose Only a Root Class From Other Owners
 
-**Impact: HIGH (내부 노드로 가는 클래스 prop을 막고 배치, variant, 강등 중 무엇이 맞는지 먼저 보게 합니다)**
+**Impact: HIGH (내부 노드로 가는 클래스 prop을 막고 배치, variant, 강등 가운데 무엇이 맞는지 먼저 봅니다)**
 
 바꿀 것이 남의 표현이면 세 갈래를 순서대로 봅니다.
 
@@ -21,7 +21,7 @@ tags: ownership, api, promotion
 | --- | --- | --- |
 | root의 배치만 다름 | 사용처가 `className`을 넘기고 자기 클래스로 스타일 | 사용처 1곳 |
 | 여러 화면이 쓰고 하나만 내부가 다름 | 그 소유자가 modifier를 노출 | 소유자 파일 2줄 + 사용처 1줄 |
-| 이 화면만 씀 | 화면 폴더 안으로 내림 | 파일 이동과 접두사 rename |
+| 이 화면만 씀 | 화면 폴더 안으로 내림 | 파일 이동과 접두사 이름 변경 |
 
 세 행에 안 맞으면 `ownership-use-foreign-classes-only-under-your-own-root`에 따라
 내 root 블록 아래에서 겨냥합니다. **막다른 길이 아니라 마지막 선택지입니다.**

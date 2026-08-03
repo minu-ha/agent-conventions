@@ -1,8 +1,8 @@
 ---
 title: Give Each CSS File Its Own `scope_slug`
-titleKo: CSS 파일 하나당 scope_slug 하나
+titleKo: CSS 파일마다 scope_slug를 하나만 씁니다
 impact: CRITICAL
-impactDescription: 서로 다른 컴포넌트가 같은 네임스페이스를 나눠 쓰다가 전역 클래스 공간에서 충돌하는 것을 막습니다
+impactDescription: 여러 컴포넌트가 같은 네임스페이스를 나눠 쓰면 전역에서 충돌합니다
 appliesWhen:
   - 새 `scope_slug`를 만들거나 기존 slug를 복사·이름 변경할 때
   - 서로 다른 컴포넌트가 같은 slug를 쓸 가능성이 있을 때
@@ -11,7 +11,7 @@ tags: namespace, ownership, uniqueness
 
 ## Give Each CSS File Its Own `scope_slug`
 
-**Impact: CRITICAL (서로 다른 컴포넌트가 같은 네임스페이스를 나눠 쓰다가 전역 클래스 공간에서 충돌하는 것을 막습니다)**
+**Impact: CRITICAL (여러 컴포넌트가 같은 네임스페이스를 나눠 쓰면 전역에서 충돌합니다)**
 
 CSS 파일마다 slug가 하나입니다. 같은 slug를 쓰는 파일은 프로젝트 전역에서 그 하나뿐입니다.
 

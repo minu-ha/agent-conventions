@@ -71,9 +71,9 @@
 
 **Rule:** `C01` · `naming-default-to-plain-css-when-no-module-convention`
 
-**Applies when:** 프로젝트 표준 미확정 상태에서 새 스타일시트 접근 형식\(plain CSS, CSS Modules\)을 선택하거나 `.module.css`·`styles.*`로 전환할 때. 제외: 기존 plain CSS 클래스 rename만 하는 경우.
+**Applies when:** 프로젝트 표준 미확정 상태에서 새 스타일시트 접근 형식\(plain CSS, CSS Modules\)을 선택하거나 `.module.css`·`styles.*`로 전환할 때. 제외: 기존 plain CSS 클래스 이름 변경만 하는 경우.
 
-**Impact: HIGH (소유를 local module 간접층에 숨기지 않고 전역 scope_slug 이름 체계가 의미를 유지하게 합니다)**
+**Impact: HIGH (클래스명이 전역에서 고유해야 scope_slug로 소유자를 되짚을 수 있습니다)**
 
 이 CSS skill은 plain `*.css`와 전역에서 고유한 클래스명을 전제로 씁니다.
 `pg_*`, `wg_*`, `ui_*` 네임스페이스가 있는 이유는 전역 클래스 공간에서 소유자를 되짚기 위해서입니다.
@@ -126,9 +126,9 @@ import "./_index.css";
 
 **Rule:** `C02` · `naming-use-scope-slug-element-modifier-syntax`
 
-**Applies when:** plain CSS의 project-owned 클래스를 새로 만들 때. 이름, scope, slug, element, modifier 구분자 또는 casing을 변경할 때.
+**Applies when:** plain CSS의 project-owned 클래스를 새로 만들 때. 이름, scope, slug, element, modifier 구분자 또는 대소문자 표기을 변경할 때.
 
-**Impact: CRITICAL (classname만 보고도 클래스 소유와 UI 역할을 추적할 수 있게 합니다)**
+**Impact: CRITICAL (클래스명만 보고 누가 소유하고 어떤 역할인지 읽힙니다)**
 
 클래스명은 `<scope>_<slug>__<element>[--<modifier>]` 문법을 사용합니다.
 구분자는 `_`, `__`, `--`를 고정하고, 각 부분의 책임을 섞지 않습니다.
@@ -174,7 +174,7 @@ pg_catalogDetail__main--routeActive
 
 **Applies when:** element 또는 modifier 클래스 이름을 새로 지을 때. `container`, `wrapper`, `box`, 치수나 간격 중심 이름을 변경할 때.
 
-**Impact: HIGH (클래스가 UI 부위를 설명하지 못하게 만드는 모호하거나 레이아웃 중심인 이름을 피합니다)**
+**Impact: HIGH (이름이 모호하거나 치수를 가리키면 클래스가 어느 부위인지 알 수 없습니다)**
 
 `element`와 `modifier` 이름은 구조나 치수가 아니라 UI 역할을 표현해야 합니다.
 `container`, `wrapper`, `box` 같은 포괄 단어 단독 사용이나 `gap12` 같은 숫자 기반 의미는 피하고,
@@ -204,10 +204,10 @@ pg_catalogDetail__detailSection
 
 **Applies when:** `pg_*` 소유자의 클래스 slug를 새로 만들거나 이름을 바꿀 때. 같은 이름 컴포넌트가 여러 화면에 생겨 slug를 구분해야 할 때.
 
-**Impact: HIGH (클래스 이름만 보고 어느 화면 소속인지 거슬러 읽을 수 있게 유지합니다)**
+**Impact: HIGH (클래스명만 보고 어느 화면 것인지 거슬러 찾습니다)**
 
 `pg_*` slug만 보고 어느 화면의 것인지 알 수 있어야 합니다.
-어떤 파일이 화면 소유인지는 framework convention이 정하고, CSS는 그 소유가 slug에서 흐려지지 않게 지킵니다.
+어떤 파일이 화면 소유인지는 프레임워크 규약이 정하고, CSS는 그 소유가 slug에서 흐려지지 않게 지킵니다.
 
 - 화면 shell은 page 이름을 slug로 씁니다. `pg_postsDetail`처럼 화면 계열과 역할이 읽혀야 합니다.
 - 화면 안의 컴포넌트는 자기 이름만 slug로 씁니다.
@@ -233,7 +233,7 @@ pg_detailSpikePatternPanelOverviewSection__root
 pg_detailSpikePatternPanelSummaryBand__root
 ```
 
-**Correct (shell은 page slug, 컴포넌트는 자기 slug):**
+**Correct (shell은 화면 slug, 컴포넌트는 자기 slug):**
 
 ```txt
 posts index page   -> pg_postsIndex__root
@@ -263,7 +263,7 @@ pg_indexOverviewSection__root
 
 **Applies when:** 새 `scope_slug`를 만들거나 기존 slug를 복사·이름 변경할 때. 서로 다른 컴포넌트가 같은 slug를 쓸 가능성이 있을 때.
 
-**Impact: CRITICAL (서로 다른 컴포넌트가 같은 네임스페이스를 나눠 쓰다가 전역 클래스 공간에서 충돌하는 것을 막습니다)**
+**Impact: CRITICAL (여러 컴포넌트가 같은 네임스페이스를 나눠 쓰면 전역에서 충돌합니다)**
 
 CSS 파일마다 slug가 하나입니다. 같은 slug를 쓰는 파일은 프로젝트 전역에서 그 하나뿐입니다.
 
@@ -300,15 +300,15 @@ pg_dashboardIndex__header
 
 **Review with:** `ownership-give-each-file-one-scope-slug`, `ownership-use-foreign-classes-only-under-your-own-root`
 
-**Impact: HIGH (폴더 경로가 아니라 재사용 범위로 접두사를 정하게 해서 이름만 보고 어디서 쓰이는지 알게 합니다)**
+**Impact: HIGH (접두사를 재사용 범위로 정하면 이름만 보고 어디서 쓰이는지 압니다)**
 
 scope 접두사는 폴더 경로가 아니라 그 CSS 파일 소유자의 **재사용 범위**를 가리킵니다.
 
 | 접두사 | 재사용 범위 |
 | --- | --- |
 | `pg_` | 한 화면 안에서만 쓰이는 shell과 컴포넌트 |
-| `wg_` | 여러 화면이 재사용하는 widget과 그 part |
-| `ui_` | 도메인 지식이 없는 primitive 컴포넌트와 그 part |
+| `wg_` | 여러 화면이 재사용하는 widget과 그 구성 요소 |
+| `ui_` | 도메인 지식이 없는 primitive 컴포넌트와 그 구성 요소 |
 
 `pg_`는 화면 shell과 그 아래 컴포넌트를 함께 덮습니다.
 shell은 slug가 route 이름과 같아서 따로 표시하지 않아도 구분됩니다.
@@ -318,7 +318,7 @@ shell은 slug가 route 이름과 같아서 따로 표시하지 않아도 구분�
 - 한 화면만 쓰는데 `wg_`를 붙이지 않습니다. 재사용을 예상해서 미리 올리지 않습니다.
 - 여러 화면이 쓰기 시작하면 그때 `pg_`에서 `wg_`로 옮깁니다.
 
-어떤 파일이 화면 소유인지는 활성화된 framework convention이 판단합니다.
+어떤 파일이 화면 소유인지는 활성화된 프레임워크 규약이 판단합니다.
 
 **Incorrect (widget 내부 part를 폴더 이름만 보고 화면 scope로 내림):**
 
@@ -358,10 +358,10 @@ ui/button/ui-button.css
 
 **Review with:** `ownership-change-other-owners-through-their-api`, `ownership-give-each-file-one-scope-slug`, `selector-limit-nesting-block-depth`
 
-**Impact: CRITICAL (남의 클래스를 단독 선택자로 쓰지 못하게 해서 그 라이브러리나 widget을 쓰는 화면 전체가 함께 바뀌는 것을 막습니다)**
+**Impact: CRITICAL (남의 클래스를 단독으로 쓰면 그 라이브러리나 widget을 쓰는 화면이 전부 함께 바뀝니다)**
 
 내 파일이 소유하지 않은 클래스는 **내 root 클래스 블록 안에서만** 씁니다.
-단독 top-level 선택자로 쓰지 않습니다.
+단독 최상위 선택자로 쓰지 않습니다.
 
 `scope_slug`가 내 것이면 내 클래스입니다. 그 밖은 전부 남의 것입니다.
 외부 라이브러리든 다른 화면의 `pg_`든 widget의 `wg_`든 똑같이 다룹니다.
@@ -375,8 +375,8 @@ ui/button/ui-button.css
 | `.pg_x__button:hover .pg_x__box { }` | 내 클래스끼리라 대상이 아닙니다 |
 
 판정은 **선택자가 내 slug로 시작하는지**입니다. 소유 관계를 따로 조사하지 않습니다.
-top-level `.pg_x__root .ant-tree-title`도 쓰지 않습니다. root 블록을 열고 그 안에서 `&`로 씁니다.
-한 소유자의 override가 한 블록에 모이면 라이브러리를 올릴 때 볼 곳이 한 군데뿐입니다.
+최상위 `.pg_x__root .ant-tree-title`도 쓰지 않습니다. root 블록을 열고 그 안에서 `&`로 씁니다.
+한 소유자의 덮어쓰기가 한 블록에 모이면 라이브러리를 올릴 때 볼 곳이 한 군데뿐입니다.
 
 결합자 개수는 제한하지 않습니다. 남의 DOM 깊이는 우리가 정할 수 없습니다.
 `.ant-table-thead > tr > th`가 라이브러리의 구조라면 그것이 경로입니다.
@@ -414,7 +414,7 @@ top-level `.pg_x__root .ant-tree-title`도 쓰지 않습니다. root 블록을 �
 }
 ```
 
-**Incorrect (root 블록을 열지 않고 top-level에서 체이닝):**
+**Incorrect (root 블록을 열지 않고 최상위에서 체이닝):**
 
 ```css
 .pg_treePanel__root .ant-tree-title {
@@ -487,7 +487,7 @@ top-level `.pg_x__root .ant-tree-title`도 쓰지 않습니다. root 블록을 �
 
 **Review with:** `composition-inject-classes-only-at-the-entry-point`, `ownership-use-foreign-classes-only-under-your-own-root`
 
-**Impact: HIGH (내부 노드로 가는 클래스 prop을 막고 배치, variant, 강등 중 무엇이 맞는지 먼저 보게 합니다)**
+**Impact: HIGH (내부 노드로 가는 클래스 prop을 막고 배치, variant, 강등 가운데 무엇이 맞는지 먼저 봅니다)**
 
 바꿀 것이 남의 표현이면 세 갈래를 순서대로 봅니다.
 
@@ -495,7 +495,7 @@ top-level `.pg_x__root .ant-tree-title`도 쓰지 않습니다. root 블록을 �
 | --- | --- | --- |
 | root의 배치만 다름 | 사용처가 `className`을 넘기고 자기 클래스로 스타일 | 사용처 1곳 |
 | 여러 화면이 쓰고 하나만 내부가 다름 | 그 소유자가 modifier를 노출 | 소유자 파일 2줄 + 사용처 1줄 |
-| 이 화면만 씀 | 화면 폴더 안으로 내림 | 파일 이동과 접두사 rename |
+| 이 화면만 씀 | 화면 폴더 안으로 내림 | 파일 이동과 접두사 이름 변경 |
 
 세 행에 안 맞으면 `ownership-use-foreign-classes-only-under-your-own-root`에 따라
 내 root 블록 아래에서 겨냥합니다. **막다른 길이 아니라 마지막 선택지입니다.**
@@ -565,12 +565,12 @@ TSX 클래스 조합과 래퍼 소유권 규칙은 스타일링 경계를 분명
 
 **Rule:** `C09` · `composition-compose-classes-with-clsx`
 
-**Applies when:** TSX의 `className`을 추가·수정할 때. base 클래스, modifier, optional 클래스를 조합할 때.
+**Applies when:** TSX의 `className`을 추가·수정할 때. 기본 클래스, modifier, optional 클래스를 조합할 때.
 
-**Impact: HIGH (base 클래스와 상태 modifier를 조합할 때 TSX 클래스 조립을 읽을 수 있게 유지합니다)**
+**Impact: HIGH (기본 클래스와 상태 modifier를 섞어도 TSX 조립이 한눈에 읽힙니다)**
 
 TSX에서 `className`은 `clsx()`로 조립합니다.
-문자열을 이어 붙이거나 ternary를 겹쳐 쓰지 않습니다.
+문자열을 이어 붙이거나 삼항 연산자를 겹쳐 쓰지 않습니다.
 
 클래스가 하나일 때도 `clsx()`를 씁니다.
 modifier가 붙는 순간 문자열 연결로 되돌아가는 diff를 막습니다.
@@ -650,16 +650,16 @@ modifier는 두 가지만 표현합니다.
 
 **Rule:** `C11` · `composition-keep-classes-single-purpose`
 
-**Applies when:** 기존 클래스가 base와 state·variant 책임을 함께 갖거나 독립 시각 책임을 추가·재사용·분리할 때. 제외: 기존 결합 책임을 분리하지 않고 처음부터 새 single-purpose pair를 만들거나 책임 보존 rename만 하는 경우.
+**Applies when:** 기존 클래스가 기본과 상태·variant 책임을 함께 갖거나 독립 시각 책임을 추가·재사용·분리할 때. 제외: 기존 결합 책임을 분리하지 않고 처음부터 새 single-purpose pair를 만들거나 책임 보존 이름 변경만 하는 경우.
 
-**Impact: HIGH (클래스 하나가 base 스타일과 여러 상태·구조 의미를 동시에 지는 것을 막습니다)**
+**Impact: HIGH (클래스 하나가 기본 스타일과 상태 의미를 함께 지면 상태를 끌 방법이 없습니다)**
 
 클래스 하나는 시각 책임 하나만 집니다.
-base 스타일과 state를 이름 하나에 녹이지 않습니다.
+기본 스타일과 상태를 이름 하나에 녹이지 않습니다.
 한 클래스를 서로 다른 시각 책임에 돌려 쓰지도 않습니다.
 
-`listButtonActive`처럼 상태를 이름에 녹이면 base만 필요한 곳에서 재사용할 수 없고 상태를 끄는 방법도 없습니다.
-base 클래스와 `--modifier`를 따로 두면 둘 다 해결됩니다.
+`listButtonActive`처럼 상태를 이름에 녹이면 기본만 필요한 곳에서 재사용할 수 없고 상태를 끄는 방법도 없습니다.
+기본 클래스와 `--modifier`를 따로 두면 둘 다 해결됩니다.
 
 modifier가 상태를 표현할 자격이 있는지는 `composition-do-not-build-structural-variants-with-modifiers`가 판정합니다.
 
@@ -683,7 +683,7 @@ modifier가 상태를 표현할 자격이 있는지는 `composition-do-not-build
 
 **Review with:** `ownership-change-other-owners-through-their-api`, `ownership-use-foreign-classes-only-under-your-own-root`
 
-**Impact: HIGH (우리가 만든 컴포넌트가 내부 노드 스타일링 창구를 열어 사용처가 내부 구조에 묶이는 것을 막습니다)**
+**Impact: HIGH (내부 노드마다 창구를 열면 사용처가 그 컴포넌트 구조에 묶입니다)**
 
 우리가 만든 컴포넌트가 여는 스타일 창구는 **진입점 하나**입니다.
 `ui_`든 `wg_`든 `pg_`든 같습니다. 외부에서 주입하는 클래스는 그 컴포넌트의 root까지만 닿습니다.
@@ -803,7 +803,7 @@ export const UiCollapse = (props: UiCollapseProps) => {
 
 **Review with:** `composition-inject-classes-only-at-the-entry-point`, `naming-name-elements-and-modifiers-by-role`
 
-**Impact: MEDIUM-HIGH (래핑 element가 부모 레이아웃 계산을 바꾸고 역할 없는 클래스를 늘리는 것을 막습니다)**
+**Impact: MEDIUM-HIGH (래핑 element는 부모 레이아웃 계산을 바꾸고 역할 없는 클래스를 늘립니다)**
 
 스타일을 주려고 element를 새로 감싸지 않습니다.
 그 컴포넌트가 `className`을 받도록 먼저 고칩니다.
@@ -897,7 +897,7 @@ export const UiCollapse = ({className, items}: UiCollapseProps) => (
 
 **Review with:** `selector-declare-each-class-in-one-block`, `selector-use-classes-instead-of-element-selectors`
 
-**Impact: HIGH (중첩을 항상 한 겹으로 고정해 실제 선택자가 코드에 그대로 보이게 합니다)**
+**Impact: HIGH (중첩이 늘 한 겹이라 실제 선택자가 코드에 그대로 보입니다)**
 
 **중첩**은 `{}`를 겹치는 것입니다. 규칙은 하나입니다.
 
@@ -917,7 +917,7 @@ export const UiCollapse = ({className, items}: UiCollapseProps) => (
 `.pg_a { & .pg_b { & .pg_c { } } }`에 쓰인 선택자는 `& .pg_c`뿐이어서
 `.pg_a .pg_b .pg_c` 체이닝이 보이지 않습니다. lint도 각 블록만 봅니다.
 
-기계 검증은 `max-nesting-depth: 1`입니다. top-level이 0단입니다.
+기계 검증은 `max-nesting-depth: 1`입니다. 최상위가 0단입니다.
 
 **Incorrect (중첩을 두 겹 이상 열어 실제 선택자를 숨김):**
 
@@ -989,7 +989,7 @@ export const UiCollapse = ({className, items}: UiCollapseProps) => (
 
 **Review with:** `naming-name-elements-and-modifiers-by-role`
 
-**Impact: MEDIUM (태그를 바꾸는 것만으로 스타일이 사라지지 않게 우리가 렌더하는 마크업에는 클래스를 붙입니다)**
+**Impact: MEDIUM (태그만 바꿔도 스타일이 사라지므로 우리가 렌더하는 마크업에는 클래스를 붙입니다)**
 
 우리가 렌더하는 마크업에는 element 선택자를 쓰지 않습니다. 클래스를 붙입니다.
 
@@ -1003,7 +1003,7 @@ element 선택자를 쓸 수 있는 경우는 하나입니다.
 `dangerouslySetInnerHTML`, Markdown 렌더러, 리치 텍스트 에디터 출력이 여기 해당합니다.
 TSX에서 그 지점이 보이므로 "이게 raw HTML인가"를 판단할 필요가 없습니다.
 
-- 그때도 래퍼 클래스 블록 안에서만 씁니다. top-level `h2 { }`는 그 페이지 모든 `h2`에 걸립니다.
+- 그때도 래퍼 클래스 블록 안에서만 씁니다. 최상위 `h2 { }`는 그 페이지 모든 `h2`에 걸립니다.
 - `:first-child` 같은 구조 선택자도 같습니다. 우리가 렌더하면 클래스를 붙입니다.
 
 `selector-disallowed-list`가 중첩 안 element 선택자를 막습니다.
@@ -1028,7 +1028,7 @@ TSX에서 그 지점이 보이므로 "이게 raw HTML인가"를 판단할 필요
 }
 ```
 
-**Incorrect (element 선택자를 top-level에 둠):**
+**Incorrect (element 선택자를 최상위에 둠):**
 
 ```css
 .wg_entryDetail__prose h2 {
@@ -1096,7 +1096,7 @@ TSX에서 그 지점이 보이므로 "이게 raw HTML인가"를 판단할 필요
 
 **Review with:** `selector-declare-each-class-in-one-block`, `values-tokenize-repeated-visual-values`
 
-**Impact: MEDIUM-HIGH (공통 선언을 묶음으로 빼지 않고 각 클래스에 두게 해서 한 클래스를 한 곳에서 읽게 합니다)**
+**Impact: MEDIUM-HIGH (공통 선언을 묶지 않고 각 클래스에 두면 한 클래스를 한 곳에서 읽습니다)**
 
 여러 클래스를 `,`로 묶어 공통 선언을 공유하지 않습니다.
 반복되는 선언은 각 클래스 블록에 그대로 씁니다. **중복을 감수합니다.**
@@ -1186,14 +1186,14 @@ TSX에서 그 지점이 보이므로 "이게 raw HTML인가"를 판단할 필요
 
 **Review with:** `selector-do-not-group-classes-with-commas`
 
-**Impact: MEDIUM-HIGH (한 클래스의 선언을 파일 안 한 블록에 모아 고칠 때 볼 블록을 하나로 정합니다)**
+**Impact: MEDIUM-HIGH (한 클래스의 선언이 한 블록에 모여 고칠 때 볼 곳이 한 군데입니다)**
 
 한 클래스의 선언은 파일 안 한 블록에만 있습니다.
 같은 클래스를 여러 곳에서 다시 열어 선언을 나누지 않습니다.
 
-- 고칠 때 볼 블록이 하나로 정해집니다. 아래에 override가 더 있는지 찾지 않습니다.
-- 선언 순서에 의존하는 override가 생기지 않습니다. 블록을 옮겨도 결과가 같습니다.
-- base와 modifier는 서로 다른 클래스이므로 각자 자기 블록을 갖습니다.
+- 고칠 때 볼 블록이 하나로 정해집니다. 아래에 덮어쓰기가 더 있는지 찾지 않습니다.
+- 선언 순서에 의존하는 덮어쓰기가 생기지 않습니다. 블록을 옮겨도 결과가 같습니다.
+- 기본 클래스와 modifier는 서로 다른 클래스이므로 각자 자기 블록을 갖습니다.
 
 `,` 묶음으로 선언을 나누는 형태는 `selector-do-not-group-classes-with-commas`가 막습니다.
 이 규칙은 묶음 없이 같은 클래스를 두 번 여는 경우를 막습니다.
@@ -1258,7 +1258,7 @@ TSX에서 그 지점이 보이므로 "이게 raw HTML인가"를 판단할 필요
 
 **Requires selected:** `values-separate-domain-state-modifiers-from-dom-interaction-states` · 함께 적용
 
-**Impact: HIGH (브라우저가 소유한 상호작용 상태를 앱이 소유한 상태 modifier와 분리합니다)**
+**Impact: HIGH (브라우저가 주는 상호작용 상태와 앱이 정하는 상태 modifier를 나눕니다)**
 
 브라우저와 DOM이 직접 부여하는 상태는 같은 클래스 블록 안 `&:`로 표현합니다.
 화면이나 도메인이 결정하는 상태는 modifier 클래스로 분리합니다.
@@ -1340,12 +1340,12 @@ pseudo-class를 어디에 쓰는지는 `selector-nest-dom-state-in-the-owning-bl
 
 **Review with:** `selector-do-not-group-classes-with-commas`, `selector-limit-nesting-block-depth`, `selector-use-pseudo-classes-for-dom-owned-states`
 
-**Impact: HIGH (한 요소의 상태 스타일을 그 요소 블록 안에 모아 base와 상태를 한 자리에서 읽게 합니다)**
+**Impact: HIGH (한 요소의 기본 모습과 상태 변화를 한 블록에서 나란히 읽습니다)**
 
 DOM 상태 pseudo-class는 그 요소의 클래스 블록 안에서 `&:`로 씁니다.
-같은 pseudo-class를 top-level 선택자로 다시 열지 않습니다.
+같은 pseudo-class를 최상위 선택자로 다시 열지 않습니다.
 
-- base와 상태가 한 블록에 있어서 무엇이 어떻게 바뀌는지 한 자리에서 읽힙니다.
+- 기본 모습과 상태 변화가 한 블록에 있어서 무엇이 어떻게 바뀌는지 바로 읽힙니다.
 - 파일 어디에 상태 스타일이 더 있는지 찾지 않습니다.
 - 여러 상태가 같은 선언을 쓰면 상태마다 블록을 따로 엽니다. `,`도 `:is()`도 쓰지 않습니다.
 
@@ -1353,14 +1353,14 @@ DOM 상태 pseudo-class는 그 요소의 클래스 블록 안에서 `&:`로 씁�
 자손의 `:hover`는 포인터가 자손 위에 있을 때만 걸려서 조상 상태를 알 방법이 없고,
 CSS에 부모 선택자가 없어서 대체 수단이 없습니다.
 
-자손의 base 블록은 조상 규칙보다 **앞에** 둡니다.
+자손의 기본 블록은 조상 규칙보다 **앞에** 둡니다.
 뒤에 두면 명시도가 낮은 규칙이 높은 규칙 뒤에 오고, `no-descending-specificity`가 이를 잡습니다.
 
 지역 custom property로 상태를 전달하지 않습니다. `values-tokenize-repeated-visual-values`가 막습니다.
 
 기계 검증은 `max-nesting-depth: 1`과 `no-descending-specificity`입니다.
 
-**Incorrect (pseudo-class를 top-level 선택자로 다시 엶):**
+**Incorrect (pseudo-class를 최상위 선택자로 다시 엶):**
 
 ```css
 .wg_siteHeader__brandLink {
@@ -1434,10 +1434,10 @@ CSS에 부모 선택자가 없어서 대체 수단이 없습니다.
 
 **Review with:** `selector-use-pseudo-classes-for-dom-owned-states`
 
-**Impact: HIGH (상태가 아닐 때의 표현을 base에 두게 해서 부정 조건과 조상 의존이 함께 사라지게 합니다)**
+**Impact: HIGH (그 상태가 아닐 때의 모습을 기본 블록에 두면 부정 조건과 조상 의존이 함께 사라집니다)**
 
 도메인 상태를 `:not(.--modifier)`로 뒤집지 않습니다.
-그 상태가 아닐 때의 표현은 base 블록에 두고, 그 상태일 때의 표현만 modifier 블록에 둡니다.
+그 상태가 아닐 때의 표현은 기본 블록에 두고, 그 상태일 때의 표현만 modifier 블록에 둡니다.
 
 `:not()`이 나오는 원인은 하나입니다.
 
@@ -1523,15 +1523,15 @@ CSS에 부모 선택자가 없어서 대체 수단이 없습니다.
 
 **Rule:** `C21` · `values-keep-layout-intent-explicit`
 
-**Applies when:** `sticky`·`fixed`, `z-index`, 강제 width나 height 또는 부모·자식 layout 책임을 추가·변경할 때. 제외: 같은 element의 base/modifier 분리에서 기존 `display`·spacing 선언을 값 그대로 재배치하는 경우.
+**Applies when:** `sticky`·`fixed`, `z-index`, 강제 width나 height 또는 부모·자식 layout 책임을 추가·변경할 때. 제외: 같은 element의 기본/modifier 분리에서 기존 `display`·spacing 선언을 값 그대로 재배치하는 경우.
 
-**Impact: MEDIUM-HIGH (DOM을 역추적하지 않고도 sticky, fixed, 박스 책임을 이해할 수 있게 합니다)**
+**Impact: MEDIUM-HIGH (DOM을 거슬러 올라가지 않고 sticky, fixed, 박스 책임을 파악합니다)**
 
 레이아웃 의도는 클래스명과 선언만 보고 바로 읽혀야 합니다.
 `position`, `width`, `height`를 억지로 고정하지 않고 부모와 자식의 레이아웃 책임을 나눕니다.
 
-- `z-index`에는 숫자를 직접 쓰지 않고 layer 토큰을 씁니다. 토큰 이름이 곧 stacking 순서 문서입니다.
-- `sticky`나 `fixed`를 쓸 때는 기준 컨테이너를 주석 한 줄로 남깁니다. 어느 조상이 scroll container인지는 선언에 안 보입니다.
+- `z-index`에는 숫자를 직접 쓰지 않고 layer 토큰을 씁니다. 토큰 이름이 곧 쌓임 순서 문서입니다.
+- `sticky`나 `fixed`를 쓸 때는 기준 컨테이너를 주석 한 줄로 남깁니다. 어느 조상이 스크롤 컨테이너인지는 선언에 안 보입니다.
 
 **Incorrect (레이아웃 강제가 많고 기준 설명이 없음):**
 
@@ -1569,7 +1569,7 @@ CSS에 부모 선택자가 없어서 대체 수단이 없습니다.
 
 **Review with:** `values-tokenize-repeated-visual-values`
 
-**Impact: HIGH (토큰 누락이 스타일을 조용히 망가뜨리는 것을 막고 fallback이 매직 넘버로 번지는 것도 막습니다)**
+**Impact: HIGH (토큰이 빠지면 조용히 깨지지 않고 드러나며, fallback이 매직 넘버로 번지지도 않습니다)**
 
 프로젝트는 전역에서 항상 주입되는 **core token 목록**을 한 곳에 선언합니다.
 `:root` 또는 전역 theme 스타일시트가 그 목록의 단일 출처입니다.
@@ -1641,7 +1641,7 @@ fallback이 필요한 곳은 프로젝트가 직접 주입하지 않는 경계�
 
 **Review with:** `values-always-provide-css-variable-fallbacks`
 
-**Impact: MEDIUM-HIGH (공용 시각 값은 전역 토큰으로 모으고 그 밖의 값은 선언 자리에 그대로 두게 합니다)**
+**Impact: MEDIUM-HIGH (여러 파일이 쓰는 값은 전역 토큰으로 모으고 나머지는 선언 자리에 그대로 둡니다)**
 
 판정 기준은 **파일 경계**입니다.
 
@@ -1747,19 +1747,19 @@ core token 목록에 없는 변수는 fallback이 필요해서 값이 결국 사
 
 **Rule:** `C24` · `values-separate-domain-state-modifiers-from-dom-interaction-states`
 
-**Applies when:** app/domain state modifier와 hover, focus, disabled 같은 DOM interaction state를 추가·변경할 때. focus ring을 수정할 때.
+**Applies when:** 앱 상태 modifier와 hover, focus, disabled 같은 DOM 상호작용 상태를 추가·변경할 때. 포커스 링을 수정할 때.
 
 **Review with:** `composition-do-not-build-structural-variants-with-modifiers`
 
-**Impact: HIGH (앱 상태, 포커스 가시성, hover 동작의 책임을 섞지 않고 읽기 쉽고 접근성 있게 유지합니다)**
+**Impact: HIGH (앱 상태와 hover, 포커스 동작을 섞지 않아 읽기 쉽고 접근성도 지킵니다)**
 
-domain state와 무관한 hover, focus, disabled interaction은 조건 없는 base element 블록에 둡니다.
-interaction 선택자를 modifier 아래로 옮겨 적용 대상을 좁히지 않습니다.
-modifier 블록에는 `active`·`selected`·`error`처럼 app state가 소유하는 presentation만 남깁니다.
-modifier가 켜진 경우에만 interaction이 달라져야 한다는 제품 요구가 있을 때만 그 예외를 명시합니다.
+도메인 상태와 무관한 hover, focus, disabled는 조건 없는 기본 블록에 둡니다.
+이 선택자들을 modifier 아래로 옮겨 적용 대상을 좁히지 않습니다.
+modifier 블록에는 `active`, `selected`, `error`처럼 앱이 정하는 모습만 남깁니다.
+modifier가 켜진 경우에만 상호작용이 달라져야 한다는 제품 요구가 있을 때만 그 예외를 명시합니다.
 
 modifier 아래로 옮기면 그 상태가 아닐 때 hover와 focus가 사라집니다.
-읽는 사람은 base 블록만 보고 interaction이 없다고 판단합니다.
+읽는 사람은 기본 블록만 보고 상호작용이 없다고 판단합니다.
 
 포커스 표시 자체는 `values-always-provide-a-visible-focus-indicator`가 담당합니다.
 무엇을 modifier로 두고 무엇을 pseudo-class로 둘지는 `selector-use-pseudo-classes-for-dom-owned-states`가 정합니다.
@@ -1805,15 +1805,15 @@ modifier 아래로 옮기면 그 상태가 아닐 때 hover와 focus가 사라�
 
 **Review with:** `values-separate-domain-state-modifiers-from-dom-interaction-states`
 
-**Impact: HIGH (키보드 사용자가 현재 위치를 볼 수 있게 포커스 표시를 없애지 않고 형태로 구분되게 합니다)**
+**Impact: HIGH (포커스 표시를 없애지 않고 형태로 구분해 키보드 사용자가 현재 위치를 봅니다)**
 
 포커스 표시를 없애지 않습니다. `outline: none`을 쓰면 대체 스타일을 반드시 함께 제공합니다.
 
 - `:focus`보다 `:focus-visible`을 씁니다. 포인터 클릭에는 링이 안 나오고 키보드 이동에는 나옵니다.
-- 색만 바꾸는 것으로 끝내지 않습니다. `outline`, `box-shadow` ring, `border` 두께처럼
+- 색만 바꾸는 것으로 끝내지 않습니다. `outline`, `box-shadow` 링, `border` 두께처럼
   형태가 바뀌는 신호를 함께 씁니다. 색만 쓰면 색각 이상에서 구분되지 않습니다.
 - 배경과 링의 대비를 확인합니다. 링이 배경과 같은 계열이면 없는 것과 같습니다.
-- base 블록에 둡니다. modifier 블록 안에만 두면 그 상태가 아닐 때 표시가 사라집니다.
+- 기본 블록에 둡니다. modifier 블록 안에만 두면 그 상태가 아닐 때 표시가 사라집니다.
 
 포커스 표시를 `--focused` 같은 앱 modifier로 대체하지 않습니다.
 키보드로 들어왔는지 포인터로 들어왔는지는 브라우저만 알 수 있어서 앱이 재현할 수 없습니다.
@@ -1839,7 +1839,7 @@ modifier 아래로 옮기면 그 상태가 아닐 때 hover와 focus가 사라�
 }
 ```
 
-**Correct (`:focus-visible`에 형태가 바뀌는 표시를 base 블록에 둠):**
+**Correct (`:focus-visible`에 형태가 바뀌는 표시를 기본 블록에 둠):**
 
 ```css
 .ui_button__root {
@@ -1852,7 +1852,7 @@ modifier 아래로 옮기면 그 상태가 아닐 때 hover와 focus가 사라�
 }
 ```
 
-**Correct (`outline`을 덮어쓰면 ring으로 대체함):**
+**Correct (`outline`을 덮어쓰면 링으로 대체함):**
 
 ```css
 .ui_input__field {
@@ -1880,7 +1880,7 @@ modifier 아래로 옮기면 그 상태가 아닐 때 hover와 focus가 사라�
 
 **Review with:** `naming-use-scope-slug-element-modifier-syntax`, `ownership-use-foreign-classes-only-under-your-own-root`, `selector-limit-nesting-block-depth`
 
-**Impact: MEDIUM (기계가 잡는 항목을 설정으로 고정해 리뷰는 판단이 필요한 것만 보게 합니다)**
+**Impact: MEDIUM (기계가 잡는 항목을 설정에 고정하면 리뷰는 판단이 필요한 것만 봅니다)**
 
 `stylelint-config-standard`를 확장하고 그 위에 이 컨벤션용 규칙을 얹습니다.
 
@@ -1892,10 +1892,10 @@ modifier 아래로 옮기면 그 상태가 아닐 때 hover와 focus가 사라�
 | `no-duplicate-selectors` | `selector-do-not-group-classes-with-commas`, `selector-declare-each-class-in-one-block` |
 | `property-disallowed-list` | `values-tokenize-repeated-visual-values` |
 | `selector-attribute-name-disallowed-list` | `selector-use-pseudo-classes-for-dom-owned-states` |
-| `no-descending-specificity` | 자손 base 블록을 조상 규칙보다 앞에 두게 합니다 |
+| `no-descending-specificity` | 자손 기본 블록을 조상 규칙보다 앞에 두게 합니다 |
 
 접두사가 디렉터리마다 달라서 `selector-class-pattern`과 `selector-disallowed-list`는 `overrides`로 나눕니다.
-중첩이 한 겹이라 블록 안 선택자는 `&`로 시작하고, 그래서 단독 top-level만 걸립니다.
+중첩이 한 겹이라 블록 안 선택자는 `&`로 시작하고, 그래서 단독 최상위만 걸립니다.
 
 `selector-max-combinators`와 `selector-max-type`은 넣지 않습니다.
 우리 체이닝과 라이브러리 경로를 개수로 구분할 수 없습니다.

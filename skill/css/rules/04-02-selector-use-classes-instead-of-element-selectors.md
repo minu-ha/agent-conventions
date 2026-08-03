@@ -1,8 +1,8 @@
 ---
 title: Use Classes Instead of Element Selectors
-titleKo: element 선택자 대신 클래스 사용
+titleKo: element 선택자 대신 클래스를 붙입니다
 impact: MEDIUM
-impactDescription: 태그를 바꾸는 것만으로 스타일이 사라지지 않게 우리가 렌더하는 마크업에는 클래스를 붙입니다
+impactDescription: 태그만 바꿔도 스타일이 사라지므로 우리가 렌더하는 마크업에는 클래스를 붙입니다
 appliesWhen:
   - `p`, `h2`, `span`, `button` 같은 element 선택자를 쓰려 할 때
   - `dangerouslySetInnerHTML`이나 Markdown 렌더러 출력을 스타일링할 때
@@ -12,7 +12,7 @@ tags: selector, element-selectors, markup
 
 ## Use Classes Instead of Element Selectors
 
-**Impact: MEDIUM (태그를 바꾸는 것만으로 스타일이 사라지지 않게 우리가 렌더하는 마크업에는 클래스를 붙입니다)**
+**Impact: MEDIUM (태그만 바꿔도 스타일이 사라지므로 우리가 렌더하는 마크업에는 클래스를 붙입니다)**
 
 우리가 렌더하는 마크업에는 element 선택자를 쓰지 않습니다. 클래스를 붙입니다.
 
@@ -26,7 +26,7 @@ element 선택자를 쓸 수 있는 경우는 하나입니다.
 `dangerouslySetInnerHTML`, Markdown 렌더러, 리치 텍스트 에디터 출력이 여기 해당합니다.
 TSX에서 그 지점이 보이므로 "이게 raw HTML인가"를 판단할 필요가 없습니다.
 
-- 그때도 래퍼 클래스 블록 안에서만 씁니다. top-level `h2 { }`는 그 페이지 모든 `h2`에 걸립니다.
+- 그때도 래퍼 클래스 블록 안에서만 씁니다. 최상위 `h2 { }`는 그 페이지 모든 `h2`에 걸립니다.
 - `:first-child` 같은 구조 선택자도 같습니다. 우리가 렌더하면 클래스를 붙입니다.
 
 `selector-disallowed-list`가 중첩 안 element 선택자를 막습니다.
@@ -51,7 +51,7 @@ TSX에서 그 지점이 보이므로 "이게 raw HTML인가"를 판단할 필요
 }
 ```
 
-**Incorrect (element 선택자를 top-level에 둠):**
+**Incorrect (element 선택자를 최상위에 둠):**
 
 ```css
 .wg_entryDetail__prose h2 {

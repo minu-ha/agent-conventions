@@ -1,6 +1,6 @@
 # Use Pseudo-classes for DOM-owned States
 
-**Impact: HIGH (브라우저가 소유한 상호작용 상태를 앱이 소유한 상태 modifier와 분리합니다)**
+**Impact: HIGH (브라우저가 주는 상호작용 상태와 앱이 정하는 상태 modifier를 나눕니다)**
 
 브라우저와 DOM이 직접 부여하는 상태는 같은 클래스 블록 안 `&:`로 표현합니다.
 화면이나 도메인이 결정하는 상태는 modifier 클래스로 분리합니다.

@@ -1,6 +1,6 @@
 ---
 title: Use Modifiers Only for States and Repeated Variants
-titleKo: modifier의 상태·반복 variant 한정 사용
+titleKo: modifier는 상태와 반복되는 모양에만 씁니다
 impact: HIGH
 impactDescription: modifier가 두 번째 레이아웃 이름 체계로 자라지 않게 막습니다
 appliesWhen:

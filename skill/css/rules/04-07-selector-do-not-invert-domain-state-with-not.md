@@ -1,8 +1,8 @@
 ---
 title: Do Not Invert Domain State With `:not()`
-titleKo: 도메인 상태의 `:not()` 반전 금지
+titleKo: 도메인 상태를 :not()으로 뒤집지 않습니다
 impact: HIGH
-impactDescription: 상태가 아닐 때의 표현을 base에 두게 해서 부정 조건과 조상 의존이 함께 사라지게 합니다
+impactDescription: 그 상태가 아닐 때의 모습을 기본 블록에 두면 부정 조건과 조상 의존이 함께 사라집니다
 appliesWhen:
   - `:not(.--modifier)`로 앱 상태를 뒤집으려 할 때
   - 조상의 modifier가 자손의 표현을 결정해야 할 것 같을 때
@@ -12,10 +12,10 @@ tags: selector, state, negation
 
 ## Do Not Invert Domain State With `:not()`
 
-**Impact: HIGH (상태가 아닐 때의 표현을 base에 두게 해서 부정 조건과 조상 의존이 함께 사라지게 합니다)**
+**Impact: HIGH (그 상태가 아닐 때의 모습을 기본 블록에 두면 부정 조건과 조상 의존이 함께 사라집니다)**
 
 도메인 상태를 `:not(.--modifier)`로 뒤집지 않습니다.
-그 상태가 아닐 때의 표현은 base 블록에 두고, 그 상태일 때의 표현만 modifier 블록에 둡니다.
+그 상태가 아닐 때의 표현은 기본 블록에 두고, 그 상태일 때의 표현만 modifier 블록에 둡니다.
 
 `:not()`이 나오는 원인은 하나입니다.
 

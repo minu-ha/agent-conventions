@@ -1,8 +1,8 @@
 ---
 title: Do Not Group Classes With Commas to Share Declarations
-titleKo: 공통 선언 목적의 `,` 클래스 묶음 금지
+titleKo: 공통 선언을 쓰려고 클래스를 쉼표로 묶지 않습니다
 impact: MEDIUM-HIGH
-impactDescription: 공통 선언을 묶음으로 빼지 않고 각 클래스에 두게 해서 한 클래스를 한 곳에서 읽게 합니다
+impactDescription: 공통 선언을 묶지 않고 각 클래스에 두면 한 클래스를 한 곳에서 읽습니다
 appliesWhen:
   - 여러 클래스가 같은 선언을 반복해 `,`로 묶으려 할 때
   - 한 대상에 진입 조건이 여럿일 때
@@ -13,7 +13,7 @@ tags: selector, duplication, maintainability
 
 ## Do Not Group Classes With Commas to Share Declarations
 
-**Impact: MEDIUM-HIGH (공통 선언을 묶음으로 빼지 않고 각 클래스에 두게 해서 한 클래스를 한 곳에서 읽게 합니다)**
+**Impact: MEDIUM-HIGH (공통 선언을 묶지 않고 각 클래스에 두면 한 클래스를 한 곳에서 읽습니다)**
 
 여러 클래스를 `,`로 묶어 공통 선언을 공유하지 않습니다.
 반복되는 선언은 각 클래스 블록에 그대로 씁니다. **중복을 감수합니다.**
