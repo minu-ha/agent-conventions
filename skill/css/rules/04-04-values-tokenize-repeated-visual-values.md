@@ -76,7 +76,7 @@ core token 목록에 없는 변수는 fallback이 필요해서 값이 결국 사
 **Correct (여러 파일이 쓰는 값은 전역 core token으로):**
 
 ```css
-/* app/style/token.css */
+/* src/style/token.css */
 :root {
 	--app-color-fill-muted: #f5f5f5;
 	--app-space-3: 12px;

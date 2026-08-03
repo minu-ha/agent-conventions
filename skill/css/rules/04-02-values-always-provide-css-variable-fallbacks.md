@@ -55,7 +55,7 @@ fallback이 필요한 쪽은 주입 주체가 프로젝트가 아닌 경계입�
 **Correct (core token은 fallback 없이, 그 밖은 fallback과 함께):**
 
 ```css
-/* core token 목록: app/style/token.css */
+/* core token 목록: src/style/token.css */
 :root {
 	--app-space-3: 12px;
 	--app-color-text-primary: #212529;

@@ -2,12 +2,12 @@
 
 **Impact: HIGH (브라우저가 소유한 상호작용 상태를 앱이 소유한 상태 modifier와 분리합니다)**
 
-브라우저와 DOM이 직접 부여하는 상태는 같은 클래스 block 안의 nested `&:`로 표현합니다.
+브라우저와 DOM이 직접 부여하는 상태는 같은 클래스 block 안 `&:`로 표현합니다.
 화면이나 도메인이 결정하는 상태는 modifier class로 분리합니다.
 
 | 소유 | 상태 | 표현 |
 | --- | --- | --- |
-| DOM | `:hover`, `:visited`, `:focus-visible`, `:disabled`, `:checked` | 같은 block 안 nested `&:` |
+| DOM | `:hover`, `:visited`, `:focus-visible`, `:disabled`, `:checked` | 같은 block 안 `&:` |
 | 앱 | `selected`, `active`, `error`, `expanded`, `current` | `--modifier` class |
 
 - pseudo-class를 top-level selector로 다시 열지 않습니다.

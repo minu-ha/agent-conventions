@@ -2528,8 +2528,12 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	assert.doesNotMatch(headerDocs, /\bT\d{2}\b/);
 
 	const descendantDepth = await readRule("css", "selector-avoid-deep-descendant-dependencies");
-	assertMentions(descendantDepth, [/결합자라고 부릅니다/, /중첩은 펼친 뒤에/, /같은 요소에 붙는/], "descendantDepth");
-	assertMentions(descendantDepth, [/기본값은 결합자 0/, /소유 root 아래 third-party 내부 DOM/], "descendantDepth");
+	assertMentions(
+		descendantDepth,
+		[/\*\*결합자\*\*는 요소 사이 관계 기호/, /중첩을 펼친 selector로 셉니다/, /같은 요소에 붙는/],
+		"descendantDepth",
+	);
+	assertMentions(descendantDepth, [/기본은 결합자 0/, /소유 root 아래 third-party 내부 DOM/], "descendantDepth");
 
 	const thirdPartyRoot = await readRule("css", "selector-target-third-party-dom-from-owned-roots");
 	assertMentions(
@@ -2537,7 +2541,7 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 		[/owned root/i, /instance를 한정/i, /중간 (?:library root|라이브러리 root)/i, /(?:생략|반복하지 않)/i],
 		"thirdPartyRoot",
 	);
-	assertMentions(thirdPartyRoot, [/selector-avoid-deep-descendant-dependencies/i, /주석 한 줄/i, /(?:근거|evidence)/i], "thirdPartyRoot");
+	assertMentions(thirdPartyRoot, [/결합자 상한은 없습니다/, /한 줄로/, /중첩 block으로 나누지 않습니다/], "thirdPartyRoot");
 	assert.match(thirdPartyRoot, /& \.ant-tree \.ant-tree-node-content-wrapper/);
 	assert.match(thirdPartyRoot, /& \.ant-tree-node-content-wrapper/);
 
@@ -2561,7 +2565,7 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 		/영문 label[\s\S]*docs-write-concise-korean-comments-about-purpose-and-constraints[\s\S]*content gate/i,
 	);
 	assertMentions(generatedContracts[1]!, [/주석 본문 전체/i, /(?:ASCII|영문)/i], "generatedContracts");
-	assert.match(generatedContracts[2]!, /결합자[\s\S]*중첩은 펼친 뒤에/i);
+	assert.match(generatedContracts[2]!, /결합자[\s\S]*중첩을 펼친 selector/i);
 	assert.match(generatedContracts[3]!, /CRITICAL rule[\s\S]*full rule/i);
 });
 

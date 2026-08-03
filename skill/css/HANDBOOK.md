@@ -612,28 +612,27 @@ export const UiCollapse = (props: UiCollapseProps) => {
 
 **Impact: HIGH (한 규칙이 훑는 요소 수를 줄여 마크업이 조금 바뀌어도 스타일이 깨지지 않게 합니다)**
 
-세는 방법:
+**결합자**는 요소 사이 관계 기호 공백, `>`, `+`, `~`입니다. 그 개수가 기준입니다.
 
-- 요소 사이 관계 기호인 공백, `>`, `+`, `~`의 개수를 셉니다. 이것을 결합자라고 부릅니다.
-- 중첩은 펼친 뒤에 셉니다. `.pg_panel__button:hover .pg_panel__box`는 결합자 1개, 요소 2개입니다.
-- 같은 요소에 붙는 `.a.b`, `:hover`, `:not()`, `::before`는 DOM 관계가 아니라 세지 않습니다.
+- 중첩을 펼친 selector로 셉니다. `.pg_panel__button:hover .pg_panel__box`는 결합자 1개입니다.
+- 같은 요소에 붙는 `.a.b`, `:hover`, `:not()`, `::before`는 세지 않습니다.
 - 상한은 selector 하나당입니다. selector 개수는 제한하지 않습니다.
 
-기본값은 결합자 0입니다. 상태는 그 요소의 modifier class로 받습니다.
+기본은 결합자 0이고, 상태는 그 요소의 modifier로 받습니다.
 
-결합자를 쓸 수 있는 경우와 상한:
-
-| 경우 | 상한 |
+| 경우 | 결합자 상한 |
 | --- | --- |
 | 같은 파일이 소유한 조상의 `:hover`·`:focus-visible`·`:checked`가 자손을 바꿈 | 1 |
-| 소유 root 아래 third-party 내부 DOM | 2 |
 | raw HTML wrapper 안 element selector | 1 |
 | wrapper가 slot class를 열지 않은 부분 override | 1 |
+| 소유 root 아래 third-party 내부 DOM | 제한 없음 |
 
-첫 항목만 결합자가 유일한 수단입니다. 자손의 `:hover`는 포인터가 자손 위에 있을 때만 걸립니다.
-앱이 이미 아는 상태(variant, selected)는 결합자 대신 각 노드에 modifier를 붙입니다.
+자손의 `:hover`는 포인터가 자손 위에 있을 때만 걸려서 첫 항목은 결합자가 유일한 수단입니다.
+앱이 값을 아는 상태(variant, selected)는 각 노드에 modifier를 붙입니다.
 
-상한을 넘으면 자손 modifier로 펴기, 예외 근거 주석, 리팩터 순으로 시도합니다.
+third-party만 상한이 없습니다. 남의 DOM 깊이는 줄일 수 없어서 상한이 예외 주석만 늘립니다.
+
+상한을 넘으면 자손 modifier로 펴고, 안 되면 리팩터 대상입니다.
 
 **Incorrect (요소 네 개를 훑음):**
 
@@ -707,24 +706,26 @@ export const UiCollapse = (props: UiCollapseProps) => {
 
 **Impact: HIGH (들여쓰기가 깊어져 규칙의 적용 대상을 머릿속에서 조립해야 하는 상태를 막습니다)**
 
-중첩 `{}`는 소스 형식이고 브라우저는 이를 펼쳐서 평가합니다.
-그래서 이 규칙은 가독성만 담당합니다. 훑는 요소 수는 `selector-avoid-deep-descendant-dependencies`가 셉니다.
+**중첩**은 `{}`를 겹치는 것이고, 브라우저는 이를 펼쳐서 평가합니다.
+그래서 이 규칙은 가독성만 담당합니다. 결합자 개수는 `selector-avoid-deep-descendant-dependencies`가 셉니다.
 
 - 중첩 block은 2단까지 씁니다. top-level class block 안에 한 겹만 더 엽니다.
-- nested block 안에서 다시 nested block을 열지 않습니다.
+- 중첩 block 안에서 다시 중첩 block을 열지 않습니다.
 - 관련 선언은 owner class block 안에 모아 둡니다.
 
 중첩을 펼치는 것은 개선이 아닙니다.
-`.a { & .b { } }`를 `.a .b { }`로 바꿔도 펼친 결과가 같아서 마크업 변경에 똑같이 깨집니다.
-오히려 owner 소속이 보이지 않게 되어 파일 아무 곳에나 흩어질 수 있습니다.
-실제로 결합을 줄이려면 결합자를 줄여야 합니다.
+`.a { & .b { } }`를 `.a .b { }`로 바꿔도 펼친 selector가 같아서 마크업 변경에 똑같이 깨지고,
+오히려 owner 소속이 보이지 않게 됩니다.
+
+동작 차이는 하나뿐입니다. `,`로 묶은 목록 안의 `&`는 specificity가 목록 중 가장 높은 것으로 계산됩니다.
+`.a, #x { & .b { } }`는 `:is(.a, #x) .b`가 되어 `#x` 기준입니다. 그 경우가 아니면 시각적 차이뿐입니다.
 
 `__prose`, `__copy`, `__content`처럼 raw HTML wrapper가 owner boundary라면
 같은 block 안에서 `& h2`, `& p`, `& > :first-child`를 씁니다.
 raw HTML에는 클래스를 붙일 수 없어서 element selector가 유일한 수단입니다.
 이 예외는 raw element에만 적용하고, 다른 project-owned class를 체이닝하는 근거로 쓰지 않습니다.
 
-**Incorrect (nested block 안에서 다시 nested block을 열어 3단이 됨):**
+**Incorrect (중첩 block 안에서 다시 중첩 block을 열어 3단이 됨):**
 
 ```css
 .pg_spikePanel__spreadButton {
@@ -785,21 +786,21 @@ raw HTML에는 클래스를 붙일 수 없어서 element selector가 유일한 �
 
 판단 기준:
 
-- 항상 owned root class block을 먼저 엽니다.
-- root 없는 `.ant-*` 단독 selector는 금지합니다.
-- `.pg_* .ant-*` 같은 one-line chaining보다 root block 안의 `& .ant-*`를 사용합니다.
-- owned root가 이미 instance를 한정하므로 `.ant-tree` 같은 중간 library root를 반복하지 않습니다.
+- 항상 owner root class block을 먼저 엽니다. top-level `.pg_* .ant-*`는 owner 소속이 보이지 않아 쓰지 않습니다.
+- root 없는 `.ant-*` 단독 selector는 금지합니다. 앱 전체로 새어 나갑니다.
+- third-party 경로는 그 block 안에서 **한 줄로** 적습니다. `& .ant-table-thead > tr > th`처럼 씁니다.
+- 경로 중간을 중첩 block으로 나누지 않습니다. 몇 단계인지 한눈에 보여야 합니다.
+- 상한은 selector 하나당이라 겨냥할 노드가 다섯 개면 같은 block 안에 selector를 다섯 개 씁니다.
 
-결합자 상한은 `selector-avoid-deep-descendant-dependencies`가 정하고 third-party DOM은 2까지입니다.
-상한은 selector 하나당이라 겨냥할 노드가 다섯 개면 같은 root block 안에 selector를 다섯 개 씁니다.
+**결합자 상한은 없습니다.** 남의 DOM 깊이는 우리가 줄일 수 없고, 라이브러리를 올리면 상한을 지켜도 깨집니다.
+상한을 두면 예외 주석만 늘어나므로 owner root 격리와 한 줄 표기로 대신합니다.
 
-2를 쓰려면 왜 1로 안 되는지를 선언 바로 위 주석 한 줄로 남깁니다.
-같은 라이브러리 클래스가 여러 계층에 나타나 겨냥이 모호할 때가 대표적인 근거입니다.
-라이브러리가 클래스 없이 `> tr > th`처럼 element만 노출해 2로 줄일 수 없으면 그 사실을 주석으로 남기고 예외로 씁니다.
+짧게 쓸 수 있으면 짧게 씁니다.
+owner root가 이미 instance를 한정하므로 `.ant-tree` 같은 중간 library root는 반복하지 않습니다.
 
 이 예외는 third-party DOM path에만 적용됩니다. project-owned class끼리의 깊은 descendant coupling은 여전히 금지입니다.
 
-**Incorrect (루트 없이 타겟팅하거나 중간 root를 반복하거나 nested 안에서 다시 nested를 엶):**
+**Incorrect (루트 없이 타겟팅하거나 중간 root를 반복하거나 경로를 중첩 block으로 나눔):**
 
 ```css
 .ant-tree-node-content-wrapper {
@@ -842,11 +843,10 @@ raw HTML에는 클래스를 붙일 수 없어서 element selector가 유일한 �
 }
 ```
 
-**Correct (같은 클래스가 header와 body 양쪽에 있어 겨냥이 모호할 때만 상한 2를 쓰고 근거를 남김):**
+**Correct (같은 클래스가 header와 body 양쪽에 있으면 한 줄로 계층을 더 적음):**
 
 ```css
 .pg_orderTable__root {
-	/* .ant-table-cell은 thead와 tbody 양쪽에 붙어서 header만 겨냥하려면 1단계로 안 된다 */
 	& .ant-table-thead .ant-table-cell {
 		font-weight: 600;
 		background: #fafafa;
@@ -884,11 +884,10 @@ raw HTML에는 클래스를 붙일 수 없어서 element selector가 유일한 �
 }
 ```
 
-**Correct (라이브러리가 element만 노출해 2로 줄일 수 없을 때만 근거를 남기고 초과):**
+**Correct (라이브러리가 클래스 없이 element만 노출하면 그 경로를 한 줄로 적음):**
 
 ```css
 .pg_orderTable__root {
-	/* antd가 이 행에 클래스를 주지 않아 tr·th element로만 겨냥할 수 있다 */
 	& .ant-table-thead > tr > th {
 		border-bottom: 2px solid #d9d9d9;
 	}
@@ -899,7 +898,7 @@ raw HTML에는 클래스를 붙일 수 없어서 element selector가 유일한 �
 
 ```css
 .pg_treePanel__toolbar {
-	/* 툴바 직계 버튼만 대상이다. 트리 노드 안의 버튼 아이콘은 제외한다 */
+	/* 툴바 직계 버튼만 대상이다. 트리 노드 안의 아이콘은 제외한다 */
 	& > .ant-btn > .ant-btn-icon {
 		color: #8c8c8c;
 	}
@@ -916,12 +915,12 @@ raw HTML에는 클래스를 붙일 수 없어서 element selector가 유일한 �
 
 **Impact: HIGH (브라우저가 소유한 상호작용 상태를 앱이 소유한 상태 modifier와 분리합니다)**
 
-브라우저와 DOM이 직접 부여하는 상태는 같은 클래스 block 안의 nested `&:`로 표현합니다.
+브라우저와 DOM이 직접 부여하는 상태는 같은 클래스 block 안 `&:`로 표현합니다.
 화면이나 도메인이 결정하는 상태는 modifier class로 분리합니다.
 
 | 소유 | 상태 | 표현 |
 | --- | --- | --- |
-| DOM | `:hover`, `:visited`, `:focus-visible`, `:disabled`, `:checked` | 같은 block 안 nested `&:` |
+| DOM | `:hover`, `:visited`, `:focus-visible`, `:disabled`, `:checked` | 같은 block 안 `&:` |
 | 앱 | `selected`, `active`, `error`, `expanded`, `current` | `--modifier` class |
 
 - pseudo-class를 top-level selector로 다시 열지 않습니다.
@@ -954,7 +953,7 @@ base/modifier 배치와 focus 접근성은 `values-separate-domain-state-modifie
 }
 ```
 
-**Correct (DOM 상태는 같은 block 안 nested `&:`로 두고, 화면 상태는 modifier로 분리):**
+**Correct (DOM 상태는 같은 block 안 `&:`로 두고, 화면 상태는 modifier로 분리):**
 
 ```css
 .wg_siteHeader__brandLink {
@@ -1089,7 +1088,7 @@ fallback이 필요한 쪽은 주입 주체가 프로젝트가 아닌 경계입�
 **Correct (core token은 fallback 없이, 그 밖은 fallback과 함께):**
 
 ```css
-/* core token 목록: app/style/token.css */
+/* core token 목록: src/style/token.css */
 :root {
 	--app-space-3: 12px;
 	--app-color-text-primary: #212529;
@@ -1231,7 +1230,7 @@ core token 목록에 없는 변수는 fallback이 필요해서 값이 결국 사
 **Correct (여러 파일이 쓰는 값은 전역 core token으로):**
 
 ```css
-/* app/style/token.css */
+/* src/style/token.css */
 :root {
 	--app-color-fill-muted: #f5f5f5;
 	--app-space-3: 12px;

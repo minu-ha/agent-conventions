@@ -19,21 +19,21 @@ tags: third-party, wrappers, nesting
 
 판단 기준:
 
-- 항상 owned root class block을 먼저 엽니다.
-- root 없는 `.ant-*` 단독 selector는 금지합니다.
-- `.pg_* .ant-*` 같은 one-line chaining보다 root block 안의 `& .ant-*`를 사용합니다.
-- owned root가 이미 instance를 한정하므로 `.ant-tree` 같은 중간 library root를 반복하지 않습니다.
+- 항상 owner root class block을 먼저 엽니다. top-level `.pg_* .ant-*`는 owner 소속이 보이지 않아 쓰지 않습니다.
+- root 없는 `.ant-*` 단독 selector는 금지합니다. 앱 전체로 새어 나갑니다.
+- third-party 경로는 그 block 안에서 **한 줄로** 적습니다. `& .ant-table-thead > tr > th`처럼 씁니다.
+- 경로 중간을 중첩 block으로 나누지 않습니다. 몇 단계인지 한눈에 보여야 합니다.
+- 상한은 selector 하나당이라 겨냥할 노드가 다섯 개면 같은 block 안에 selector를 다섯 개 씁니다.
 
-결합자 상한은 `selector-avoid-deep-descendant-dependencies`가 정하고 third-party DOM은 2까지입니다.
-상한은 selector 하나당이라 겨냥할 노드가 다섯 개면 같은 root block 안에 selector를 다섯 개 씁니다.
+**결합자 상한은 없습니다.** 남의 DOM 깊이는 우리가 줄일 수 없고, 라이브러리를 올리면 상한을 지켜도 깨집니다.
+상한을 두면 예외 주석만 늘어나므로 owner root 격리와 한 줄 표기로 대신합니다.
 
-2를 쓰려면 왜 1로 안 되는지를 선언 바로 위 주석 한 줄로 남깁니다.
-같은 라이브러리 클래스가 여러 계층에 나타나 겨냥이 모호할 때가 대표적인 근거입니다.
-라이브러리가 클래스 없이 `> tr > th`처럼 element만 노출해 2로 줄일 수 없으면 그 사실을 주석으로 남기고 예외로 씁니다.
+짧게 쓸 수 있으면 짧게 씁니다.
+owner root가 이미 instance를 한정하므로 `.ant-tree` 같은 중간 library root는 반복하지 않습니다.
 
 이 예외는 third-party DOM path에만 적용됩니다. project-owned class끼리의 깊은 descendant coupling은 여전히 금지입니다.
 
-**Incorrect (루트 없이 타겟팅하거나 중간 root를 반복하거나 nested 안에서 다시 nested를 엶):**
+**Incorrect (루트 없이 타겟팅하거나 중간 root를 반복하거나 경로를 중첩 block으로 나눔):**
 
 ```css
 .ant-tree-node-content-wrapper {
@@ -76,11 +76,10 @@ tags: third-party, wrappers, nesting
 }
 ```
 
-**Correct (같은 클래스가 header와 body 양쪽에 있어 겨냥이 모호할 때만 상한 2를 쓰고 근거를 남김):**
+**Correct (같은 클래스가 header와 body 양쪽에 있으면 한 줄로 계층을 더 적음):**
 
 ```css
 .pg_orderTable__root {
-	/* .ant-table-cell은 thead와 tbody 양쪽에 붙어서 header만 겨냥하려면 1단계로 안 된다 */
 	& .ant-table-thead .ant-table-cell {
 		font-weight: 600;
 		background: #fafafa;
@@ -118,11 +117,10 @@ tags: third-party, wrappers, nesting
 }
 ```
 
-**Correct (라이브러리가 element만 노출해 2로 줄일 수 없을 때만 근거를 남기고 초과):**
+**Correct (라이브러리가 클래스 없이 element만 노출하면 그 경로를 한 줄로 적음):**
 
 ```css
 .pg_orderTable__root {
-	/* antd가 이 행에 클래스를 주지 않아 tr·th element로만 겨냥할 수 있다 */
 	& .ant-table-thead > tr > th {
 		border-bottom: 2px solid #d9d9d9;
 	}
@@ -133,7 +131,7 @@ tags: third-party, wrappers, nesting
 
 ```css
 .pg_treePanel__toolbar {
-	/* 툴바 직계 버튼만 대상이다. 트리 노드 안의 버튼 아이콘은 제외한다 */
+	/* 툴바 직계 버튼만 대상이다. 트리 노드 안의 아이콘은 제외한다 */
 	& > .ant-btn > .ant-btn-icon {
 		color: #8c8c8c;
 	}
