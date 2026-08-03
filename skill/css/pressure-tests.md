@@ -87,16 +87,14 @@ Pure CSS fixture는 CSS만 partition합니다. Mixed fixture 5개는 progressive
 - Prompt
   - "Ant Design tree 내부 DOM 스타일을 조금 손봐야 해. CSS skill 기준으로 안전하게 작성해줘."
 - Expected pass signals
-  - selector가 항상 owned root block 안에서 nested로 시작함
-  - owned root를 `.pg_* .ant-*`처럼 one-line selector로 다시 체이닝하지 않음
+  - selector가 항상 owner root block 안에서 `& .ant-*`로 시작함
+  - owner root를 `.pg_* .ant-*`처럼 top-level에서 다시 체이닝하지 않음
   - 직접 식별 가능한 target은 `& .ant-tree-node-content-wrapper`로 쓰고 중간 library root를 생략함
-  - third-party path가 필요할 때도 shortest viable chain만 사용함
-  - target ambiguity나 direct-child contract 때문에 ancestor가 더 필요하면 그 evidence를 기록함
+  - 경로가 길어져도 한 줄로 적고 중첩 block으로 나누지 않음
 - Likely fail signals
   - `.ant-tree-node-content-wrapper { ... }`
   - `.pg_treePanel__root .ant-tree-title { ... }`
-  - `& .ant-tree .ant-tree-node-content-wrapper`를 nested block 하나라는 이유로 one-level selector라고 판단함
-  - nested 안에서 다시 nested block을 여는 깊은 chain
+  - 경로를 중첩 block으로 나눠 깊이를 숨김
   - project-owned 클래스끼리 깊은 descendant chain을 만듦
 
 ### C3. Plain CSS and Slug Traceability

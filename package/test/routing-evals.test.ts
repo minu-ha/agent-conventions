@@ -336,8 +336,8 @@ const cssRuleRouting = {
 		reviewWith: ["selector-avoid-deep-descendant-dependencies"],
 	},
 	"selector-target-third-party-dom-from-owned-roots": {
-		appliesWhen: "`.ant-*`, `.rc-*`, `.tippy-*` 등 third-party 내부 DOM selector를 추가·수정할 때. owned wrapper 아래로 범위를 제한할 때.",
-		reviewWith: [],
+		appliesWhen: "`.ant-*`, `.rc-*`, `.tippy-*` 등 third-party 내부 DOM selector를 추가·수정할 때. owner root 아래로 범위를 제한할 때.",
+		reviewWith: ["selector-limit-nesting-block-depth", "selector-avoid-deep-descendant-dependencies"],
 	},
 	"selector-use-pseudo-classes-for-dom-owned-states": {
 		appliesWhen:
@@ -620,10 +620,7 @@ const mandatoryRuleRouting = {
 		],
 		"docs-require-header-jsdoc-on-key-declarations": ["docs-write-concise-korean-comments-about-purpose-and-constraints"],
 	},
-	css: {
-		"selector-target-third-party-dom-from-owned-roots": ["selector-avoid-deep-descendant-dependencies"],
-		"selector-use-pseudo-classes-for-dom-owned-states": ["values-separate-domain-state-modifiers-from-dom-interaction-states"],
-	},
+	css: {"selector-use-pseudo-classes-for-dom-owned-states": ["values-separate-domain-state-modifiers-from-dom-interaction-states"]},
 } as const;
 
 const completionGateRouting = {react: [], typescript: ["guardrails-review-banned-typescript-shortcuts-before-finishing"], css: []} as const;
@@ -2538,18 +2535,16 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	const thirdPartyRoot = await readRule("css", "selector-target-third-party-dom-from-owned-roots");
 	assertMentions(
 		thirdPartyRoot,
-		[/owned root/i, /instance를 한정/i, /중간 (?:library root|라이브러리 root)/i, /(?:생략|반복하지 않)/i],
+		[/owner root class block 안에서만/, /instance를 한정/i, /중간 library root/i, /권고이고 위반이 아닙니다/],
 		"thirdPartyRoot",
 	);
-	assertMentions(thirdPartyRoot, [/결합자 상한은 없습니다/, /한 줄로/, /중첩 block으로 나누지 않습니다/], "thirdPartyRoot");
-	assert.match(thirdPartyRoot, /& \.ant-tree \.ant-tree-node-content-wrapper/);
+	assertMentions(thirdPartyRoot, [/결합자 개수는 이 규칙이 제한하지 않습니다/, /selector-disallowed-list/], "thirdPartyRoot");
 	assert.match(thirdPartyRoot, /& \.ant-tree-node-content-wrapper/);
 
 	const typescriptPressure = await readFile(path.join(realSkillRootDir, "typescript", "pressure-tests.md"), "utf8");
 	assert.match(typescriptPressure, /route-local entry tree props/);
 	assert.match(typescriptPressure, /route-local 엔트리 트리 입력 계약/);
 	const cssPressure = await readFile(path.join(realSkillRootDir, "css", "pressure-tests.md"), "utf8");
-	assert.match(cssPressure, /& \.ant-tree \.ant-tree-node-content-wrapper/);
 	assert.match(cssPressure, /& \.ant-tree-node-content-wrapper/);
 
 	const generatedContracts = await Promise.all(

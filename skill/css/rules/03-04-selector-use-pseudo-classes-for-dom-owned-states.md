@@ -24,9 +24,11 @@ tags: pseudo-classes, state, interaction
 
 - pseudo-class를 top-level selector로 다시 열지 않습니다.
 - 도메인 상태를 `:not(.--modifier)`로 뒤집지 않습니다.
-  읽는 사람이 부정 조건을 뒤집어야 하고 combinator 예산도 함께 먹습니다. 예외는 자손 modifier로 옮깁니다.
-- 조상의 DOM 상태가 자손을 바꿔야 하면 같은 파일이 둘을 소유할 때만 결합자 하나로 겨냥합니다.
-- 앱이 값을 아는 상태는 결합자 없이 각 노드에 modifier를 직접 붙입니다.
+  읽는 사람이 부정 조건을 뒤집어야 하고 결합자도 함께 먹습니다. 예외는 자손 modifier로 옮깁니다.
+
+조상의 DOM 상태가 자손을 바꿔야 하면 같은 파일이 둘을 소유할 때만 결합자 하나로 겨냥합니다.
+자손의 `:hover`는 포인터가 자손 위에 있을 때만 걸려서 조상 상태를 알 방법이 없기 때문입니다.
+앱이 값을 아는 상태는 결합자 없이 각 노드에 modifier를 붙입니다.
 
 base/modifier 배치와 focus 접근성은 `values-separate-domain-state-modifiers-from-dom-interaction-states`가 담당합니다.
 

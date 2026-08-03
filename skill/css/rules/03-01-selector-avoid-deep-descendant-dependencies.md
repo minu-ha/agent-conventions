@@ -31,12 +31,10 @@ tags: descendants, selector-depth, guardrails
 | wrapper가 slot class를 열지 않은 부분 override | 1 |
 | 소유 root 아래 third-party 내부 DOM | 제한 없음 |
 
-자손의 `:hover`는 포인터가 자손 위에 있을 때만 걸려서 첫 항목은 결합자가 유일한 수단입니다.
-앱이 값을 아는 상태(variant, selected)는 각 노드에 modifier를 붙입니다.
-
 third-party만 상한이 없습니다. 남의 DOM 깊이는 줄일 수 없어서 상한이 예외 주석만 늘립니다.
-
 상한을 넘으면 자손 modifier로 펴고, 안 되면 리팩터 대상입니다.
+
+각 경우의 판단은 `reviewWith` 규칙이 소유합니다. 기계 검증은 `selector-max-combinators`입니다.
 
 **Incorrect (요소 네 개를 훑음):**
 

@@ -1,7 +1,7 @@
 # CSS 컨벤션 Rule Index
 
 - Skill: `css`
-- Routing digest: `sha256:2dffed4681416522aa2755feaaf9438e15ab35f2a5d5ca20b4d5225aea713d4e`
+- Routing digest: `sha256:8d81df70ce1820503107546bfa6e016e978a21f2e2a2d4de582eb0de98c4da01`
 
 ## Direct Companions
 
@@ -21,7 +21,7 @@
 - C10 | composition-style-ui-components-through-owned-wrappers | \`Ui\*\` wrapper에 \`className\`을 주거나 wrapper가 노출할 class 계약을 정할 때. \`Ui\*\` 내부 노드의 모양을 화면마다 다르게 해야 할 때. 제외: 기존 CSS owner root 아래 third-party selector만 수정하는 경우. | reviewWith: selector-target-third-party-dom-from-owned-roots
 - C11 | selector-avoid-deep-descendant-dependencies | 공백·\`\>\`·\`+\`·\`~\`로 요소 사이 관계를 표현하는 selector를 추가·수정할 때. DOM 계층에 의존하는 project-owned·third-party selector를 검토할 때. | reviewWith: composition-style-ui-components-through-owned-wrappers, selector-limit-nesting-block-depth, selector-target-third-party-dom-from-owned-roots, selector-use-pseudo-classes-for-dom-owned-states
 - C12 | selector-limit-nesting-block-depth | 중첩 \`{}\` block을 추가하거나 기존 block을 펼치거나 합칠 때. raw HTML prose·copy·content wrapper 안 element selector를 추가·수정할 때. | reviewWith: selector-avoid-deep-descendant-dependencies
-- C13 | selector-target-third-party-dom-from-owned-roots | \`.ant-\*\`, \`.rc-\*\`, \`.tippy-\*\` 등 third-party 내부 DOM selector를 추가·수정할 때. owned wrapper 아래로 범위를 제한할 때.
+- C13 | selector-target-third-party-dom-from-owned-roots | \`.ant-\*\`, \`.rc-\*\`, \`.tippy-\*\` 등 third-party 내부 DOM selector를 추가·수정할 때. owner root 아래로 범위를 제한할 때. | reviewWith: selector-avoid-deep-descendant-dependencies, selector-limit-nesting-block-depth
 - C14 | selector-use-pseudo-classes-for-dom-owned-states | \`:hover\`, \`:visited\`, \`:focus\*\`, \`:disabled\`, \`:checked\`를 추가·수정할 때. parent DOM state가 child styling에 영향을 줄 때.
 - C15 | values-keep-layout-intent-explicit | \`sticky\`·\`fixed\`, \`z-index\`, 강제 width·height 또는 부모·자식 layout 책임을 추가·변경할 때. 제외: 같은 element의 base/modifier 분리에서 기존 \`display\`·spacing 선언을 값 그대로 재배치하는 경우.
 - C16 | values-always-provide-css-variable-fallbacks | \`var\(--\*\)\` 사용을 추가하거나 변수 이름·fallback을 바꿀 때. core token 목록에 항목을 추가·제거할 때. | reviewWith: values-tokenize-repeated-visual-values

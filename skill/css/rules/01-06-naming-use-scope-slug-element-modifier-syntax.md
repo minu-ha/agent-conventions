@@ -25,6 +25,8 @@ tags: naming, class-grammar, ownership
 
 slug에는 prefix가 말하는 부분을 반복하지 않습니다. `UiButton`은 `ui_button`이고 `ui_uiButton`이 아닙니다.
 
+기계 검증은 `selector-class-pattern`에 이 문법을 정규식으로 넣는 것입니다.
+
 **Incorrect (slug와 element에 snake_case·kebab-case가 섞임):**
 
 ```txt
