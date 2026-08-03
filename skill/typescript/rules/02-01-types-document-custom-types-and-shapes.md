@@ -1,43 +1,43 @@
 ---
 title: Document Custom Types and Declarative Shapes
-titleKo: 커스텀 타입과 선언적 shape 문서화
+titleKo: 커스텀 타입과 선언형 형태를 문서화합니다
 impact: CRITICAL
-impactDescription: 구현 세부를 파헤치지 않고도 도메인 전용 계약을 이해할 수 있게 합니다
+impactDescription: 구현을 파헤치지 않고도 도메인 전용 계약을 이해합니다
 appliesWhen:
-  - type·interface·schema root·객체 상수·계약 field·파생 alias를 추가·변경할 때
-  - named shape에 callable 역할을 추가할 때
-  - 제외: 외부·generated·read-only·shared unchanged shape나 익명 추론 반환인 경우
+  - 타입, 인터페이스, 스키마 최상단, 객체 상수, 계약 필드, 파생 별칭을 추가·변경할 때
+  - 이름 붙인 형태에 호출 계약 역할을 새로 얹을 때
+  - 제외: 외부·생성된·읽기 전용·공용 형태를 그대로 쓰거나 익명으로 추론된 반환인 경우
 tags: types, jsdoc, shapes
 ---
 
 ## Document Custom Types and Declarative Shapes
 
-**Impact: CRITICAL (구현 세부를 파헤치지 않고도 도메인 전용 계약을 이해할 수 있게 합니다)**
+**Impact: CRITICAL (구현을 파헤치지 않고도 도메인 전용 계약을 이해합니다)**
 
-선언형 shape는 헤더와 필드를 나눠 문서화합니다.
+선언형 형태는 헤더와 필드를 나눠 문서화합니다.
 
-- custom `type`, `interface`, schema root, 객체형 상수: 선언 위 헤더 doc 주석
-- 객체형 계약과 schema field: 각 필드 바로 위 doc 주석
-- `Pick`/`Omit`/Indexed Access alias: 필드가 없으므로 헤더만 작성
+- 커스텀 `type`, `interface`, 스키마 최상단, 객체형 상수: 선언 위에 헤더 문서 주석
+- 객체형 계약과 스키마 필드: 각 필드 바로 위에 문서 주석
+- `Pick`, `Omit`, Indexed Access 별칭: 필드가 없으므로 헤더만 씁니다
 
-헤더와 필드 주석은 존재만으로 완료되지 않으며,
-각 body가 `docs-write-concise-korean-comments-about-purpose-and-constraints`의 한국어 content gate를 만족해야 합니다.
+주석이 있다고 끝나지 않습니다.
+각 본문이 `docs-write-concise-korean-comments-about-purpose-and-constraints`의 한국어 조건을 만족해야 합니다.
 
-기존 named shape의 field가 byte-equivalent여도,
-positional 인자를 대체하는 새 callable input이나 함수 결과를 고정하는 output 계약 역할에 처음 연결되면
-이 규칙은 Selected입니다.
-선언의 새 계약 역할을 헤더와 각 필드 주석으로 설명합니다.
-새 callable input 또는 output 역할은 새 type·interface 선언을 요구하지 않습니다.
-호환되는 로컬 소유 named shape가 있으면 그대로 연결하고, 그 선언의 헤더와 필드 문서를 새 역할에 맞게 보강합니다.
+이름 붙인 형태의 필드가 한 글자도 안 바뀌었더라도,
+위치 인자를 대체하는 입력 계약이나 함수 결과를 고정하는 출력 계약 역할을 처음 맡으면
+이 규칙을 적용합니다.
+새로 맡은 역할을 헤더와 각 필드 주석으로 설명합니다.
+새 입력이나 출력 역할이 새 타입 선언을 요구하지는 않습니다.
+맞는 형태가 이미 우리 코드에 있으면 그대로 연결하고, 그 선언의 헤더와 필드 문서를 새 역할에 맞게 보강합니다.
 
-외부·generated·read-only·shared owner의 unchanged shape 사용만으로는 N/A입니다.
-owner 선언은 수정하지 않고 문서화만을 위한 local alias도 만들지 않습니다.
-callable 문서화 여부는 `docs-require-header-jsdoc-on-key-declarations` 등 docs rule의 applicability로만 판정합니다.
+외부·생성된·읽기 전용·공용 형태를 그대로 쓰기만 하면 해당하지 않습니다.
+그 선언을 고치지 않고, 문서를 붙이려고 지역 별칭을 새로 만들지도 않습니다.
+호출 계약을 문서화할지는 `docs-require-header-jsdoc-on-key-declarations` 같은 문서 규칙이 따로 판정합니다.
 
-반대로 별도 named type·interface·schema root·객체형 상수 없이 구현 안에서만 추론되는 익명 객체 literal은 이 규칙의
-선언형 shape가 아닙니다.
-특히 query `select`의 익명 inferred 반환 literal은 N/A이며,
-이 규칙을 스스로 활성화하려고 field JSDoc이나 새 type alias를 추가하지 않습니다.
+이름 붙인 선언 없이 구현 안에서만 추론되는 익명 객체는 이 규칙의
+선언형 형태가 아닙니다.
+질의의 `select`가 익명으로 반환하는 객체가 그 경우입니다.
+이 규칙을 억지로 켜려고 필드 주석이나 새 타입 별칭을 만들지 않습니다.
 
 **Incorrect (필드 설명을 생략하거나 예전 방식으로 헤더에 몰아씀):**
 

@@ -1,28 +1,27 @@
 ---
 title: Prefer Function Variable Types Over Parameter Annotations
-titleKo: 매개변수 annotation 대신 함수 변수 타입 사용
+titleKo: 매개변수마다 타입을 붙이지 않고 함수 변수 타입을 씁니다
 impact: CRITICAL
-impactDescription: callable 계약을 재사용 가능하게 유지하고 지역 매개변수 annotation이 공용 함수 타입을 조각내는 것을 막습니다
+impactDescription: 호출 계약을 재사용할 수 있게 두고 지역 타입 표기가 공용 함수 타입을 조각내지 않게 합니다
 appliesWhen:
-  - 기존 callable 계약을 named·shared 함수 구현에 재사용할 때
-  - 같은 시그니처를 여러 구현이 공유하도록 바꿀 때
-  - 제외: annotation 없는 one-off contextually typed inline callback인 경우
+  - 기존 호출 계약을 이름 붙인 함수나 공용 함수 구현에 다시 쓸 때
+  - 같은 시그니처를 여러 구현이 함께 쓰도록 바꿀 때
+  - 제외: 타입 표기 없이 문맥으로 추론되는 일회성 인라인 콜백인 경우
 tags: function-types, annotations, contracts
 ---
 
 ## Prefer Function Variable Types Over Parameter Annotations
 
-**Impact: CRITICAL (callable 계약을 재사용 가능하게 유지하고 지역 매개변수 annotation이 공용 함수 타입을 조각내는 것을 막습니다)**
+**Impact: CRITICAL (호출 계약을 재사용할 수 있게 두고 지역 타입 표기가 공용 함수 타입을 조각내지 않게 합니다)**
 
 재사용 가능한 콜백이나 함수 타입이 있다면 매개변수 타입 선언보다 함수 변수 타입 선언을 우선합니다.
-이미 존재하는 interface, object contract, framework alias를 먼저 재사용하고,
-동일 callable contract를 여러 구현이 공유할 때만 별도 함수 타입 alias를 선언합니다.
-한 번만 쓰는 로컬 함수 때문에 함수 타입 alias를 늘리는 것은 지양합니다.
+이미 있는 인터페이스, 객체 계약, 프레임워크 별칭을 먼저 씁니다.
+같은 호출 계약을 여러 구현이 함께 쓸 때만 함수 타입 별칭을 따로 선언합니다.
+한 번만 쓰는 지역 함수 때문에 함수 타입 별칭을 늘리지 않습니다.
 
-객체 literal 안에서 한 번만 쓰이고 매개변수·반환 타입 annotation이 없는 contextually typed inline callback은
-named/shared 함수 구현 계약이 아니므로 N/A입니다.
-예를 들어 `query.select: (response) => ({...})`를 이 규칙 때문에 밖으로 빼거나 별도 함수 타입으로 고정하지 않습니다.
-반대로 named handler나 curried factory의 반환 handler를 기존 framework alias로 고정하는 변경은 Selected입니다.
+객체 안에서 한 번만 쓰이고 타입 표기도 없이 문맥으로 추론되는 인라인 콜백은 대상이 아닙니다.
+`query.select: (response) => ({...})`를 이 규칙 때문에 밖으로 빼거나 함수 타입으로 고정하지 않습니다.
+반대로 이름 붙인 핸들러나 커링 팩토리가 돌려주는 핸들러를 기존 프레임워크 별칭으로 고정하면 이 규칙을 적용합니다.
 
 **Incorrect (공유 가능한 함수 계약이 있는데 매개변수 타입만 사용):**
 

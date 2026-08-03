@@ -186,96 +186,94 @@ const reactRuleUniverse = [
  */
 const typescriptRuleRouting = {
 	"naming-centralize-shared-config-namespaces": {
-		appliesWhen:
-			"여러 leaf 모듈이 함께 쓰는 URL, feature flag, 페이지 크기나 상수를 추가·이동·중복 정의할 때. shared config 경계를 바꿀 때.",
+		appliesWhen: "여러 말단 모듈이 함께 쓰는 URL, 기능 플래그, 페이지 크기나 상수를 추가·이동·중복 정의할 때. 공용 설정 경계를 바꿀 때.",
 		reviewWith: ["naming-preserve-config-origin-with-chained-access", "naming-use-direct-imports-and-public-entry-points"],
 	},
 	"naming-preserve-config-origin-with-chained-access": {
-		appliesWhen:
-			"`config` 또는 `util` 값을 leaf 모듈에서 접근하며 넓은 스코프 구조분해, 별칭 또는 feature-local namespace를 추가·변경할 때.",
+		appliesWhen: "말단 모듈에서 `config`나 `util` 값을 쓰면서 넓은 스코프 구조분해, 별칭, 기능별 네임스페이스를 추가·변경할 때.",
 		reviewWith: [],
 	},
 	"naming-use-consistent-file-and-symbol-naming": {
 		appliesWhen:
-			"TypeScript 파일, local 변수·함수·타입, 객체·schema field 또는 enum-like 상수의 이름을 새로 만들거나 바꿀 때. 제외: alias 없는 third-party import binding 추가인 경우.",
+			"TypeScript 파일, 지역 변수·함수·타입, 객체·스키마 필드, enum 성격 상수의 이름을 새로 만들거나 바꿀 때. 제외: 별칭 없이 외부 패키지 import 를 추가하는 경우.",
 		reviewWith: [],
 	},
 	"naming-use-direct-imports-and-public-entry-points": {
 		appliesWhen:
-			"TypeScript import/export, barrel, shared 공개 진입점·owner support module 경계를 추가·변경할 때. 절대경로 alias로 다른 모듈을 가져올 때. 같은 module path의 value/type specifier를 추가·삭제·전환할 때.",
+			"import·export, 배럴, 공용 진입점, 소유자 보조 모듈의 경계를 추가·변경할 때. 절대경로 별칭으로 다른 모듈을 가져올 때. 같은 경로에서 값과 타입 중 무엇을 가져올지 추가·삭제·전환할 때.",
 		reviewWith: [],
 	},
 	"types-document-custom-types-and-shapes": {
 		appliesWhen:
-			"type·interface·schema root·객체 상수·계약 field·파생 alias를 추가·변경할 때. named shape에 callable 역할을 추가할 때. 제외: 외부·generated·read-only·shared unchanged shape나 익명 추론 반환인 경우.",
+			"타입, 인터페이스, 스키마 최상단, 객체 상수, 계약 필드, 파생 별칭을 추가·변경할 때. 이름 붙인 형태에 호출 계약 역할을 새로 얹을 때. 제외: 외부·생성된·읽기 전용·공용 형태를 그대로 쓰거나 익명으로 추론된 반환인 경우.",
 		reviewWith: [],
 	},
 	"types-mark-unused-parameters-with-underscore": {
 		appliesWhen:
-			"기존 callback·framework 계약 구현을 추가·변경하며 parameter를 생략하거나 사용하지 않을 때. curried handler가 반환하는 최종 callback에서 parameter를 생략할 때.",
+			"기존 콜백이나 프레임워크 계약을 구현하면서 매개변수를 빼거나 쓰지 않을 때. 커링한 핸들러가 마지막에 돌려주는 콜백에서 매개변수를 뺄 때.",
 		reviewWith: [],
 	},
 	"types-prefer-function-variable-types-over-parameter-annotations": {
 		appliesWhen:
-			"기존 callable 계약을 named·shared 함수 구현에 재사용할 때. 같은 시그니처를 여러 구현이 공유하도록 바꿀 때. 제외: annotation 없는 one-off contextually typed inline callback인 경우.",
+			"기존 호출 계약을 이름 붙인 함수나 공용 함수 구현에 다시 쓸 때. 같은 시그니처를 여러 구현이 함께 쓰도록 바꿀 때. 제외: 타입 표기 없이 문맥으로 추론되는 일회성 인라인 콜백인 경우.",
 		reviewWith: [],
 	},
 	"types-reuse-callback-signatures-from-existing-contracts": {
 		appliesWhen:
-			"interface·객체·framework의 named·shared callback 구현에서 기존 시그니처를 재사용·변경할 때. 제외: annotation 없는 one-off contextually typed inline callback인 경우.",
+			"인터페이스, 객체, 프레임워크가 정한 콜백을 구현하면서 기존 시그니처를 다시 쓰거나 바꿀 때. 제외: 타입 표기 없이 문맥으로 추론되는 일회성 인라인 콜백인 경우.",
 		reviewWith: ["types-mark-unused-parameters-with-underscore"],
 	},
 	"types-reuse-existing-contracts-before-new-types": {
 		appliesWhen:
-			"의미상 같은 기존 type·interface·schema 대신 shape를 새로 선언·변경·복제·파생할 때. 중복 shape를 도입·제거할 때. 제외: 호환 후보 없는 새 shape, 순수 owner 이동, unchanged contract의 새 사용처인 경우.",
+			"뜻이 같은 기존 타입, 인터페이스, 스키마가 있는데 형태를 새로 선언·변경·복제·파생할 때. 같은 형태를 두 번 선언했다가 넣거나 뺄 때. 제외: 맞는 후보가 없는 새 형태, 소유자만 옮긴 경우, 그대로인 계약을 새 자리에서 쓰는 경우.",
 		reviewWith: ["types-document-custom-types-and-shapes"],
 	},
 	"functions-avoid-imperative-assembly-in-wide-scopes": {
-		appliesWhen: "파일 상단이나 넓은 스코프에서 `let` 재대입, 배열 `push` 또는 조건부 누적으로 값을 조립하거나 리팩터링할 때.",
+		appliesWhen: "파일 위쪽이나 넓은 스코프에서 `let` 재대입, 배열 `push`, 조건부 누적으로 값을 만들거나 정리할 때.",
 		reviewWith: [],
 	},
 	"functions-extract-helpers-only-when-the-boundary-is-real": {
 		appliesWhen:
-			"support function을 추출·이동·export·공유할 때. generic helper 파일, 단일 owner 전용 mapper 또는 작은 sub-step 경계를 바꿀 때.",
+			"보조 함수를 빼내거나 옮기거나 내보내거나 공유할 때. 범용 보조 파일, 소유자 하나만 쓰는 변환 함수, 잔손질 단계의 경계를 바꿀 때.",
 		reviewWith: ["docs-require-header-jsdoc-on-key-declarations"],
 	},
 	"functions-prefer-immutable-array-sorting": {
-		appliesWhen: "props, state, 매개변수 또는 공유 입력에서 온 배열을 정렬할 때. 기존 `.sort()` 호출을 추가·변경할 때.",
+		appliesWhen: "props, state, 매개변수, 공유 입력에서 온 배열을 정렬할 때. 기존 `.sort()` 호출을 추가·변경할 때.",
 		reviewWith: [],
 	},
 	"functions-replace-enum-with-as-const-objects": {
-		appliesWhen: "`enum` 또는 타입과 런타임에서 함께 쓰는 enum-like 값 집합을 추가·변경할 때.",
+		appliesWhen: "`enum` 이나 타입과 실행 양쪽에서 함께 쓰는 값 묶음을 추가·변경할 때.",
 		reviewWith: [],
 	},
 	"functions-use-named-object-params-for-complex-signatures": {
 		appliesWhen:
-			"매개변수 3개 이상 또는 같은 계열 인자를 받는 일반 함수를 추가·변경할 때. 객체 매개변수의 구조분해 위치를 바꿀 때. 제외: React 함수 컴포넌트의 props 수신·구조분해만 바꾸는 경우.",
+			"매개변수가 3개를 넘거나 같은 계열 인자를 받는 함수를 추가·변경할 때. 객체 매개변수를 어디서 구조분해할지 바꿀 때. 제외: React 함수 컴포넌트가 props 를 받고 구조분해하는 방식만 바꾸는 경우.",
 		reviewWith: [],
 	},
 	"functions-use-set-and-map-for-repeated-lookups": {
-		appliesWhen: "같은 컬렉션에 `includes`, `find` 또는 keyed lookup을 여러 번 수행하는 코드를 추가·변경할 때.",
+		appliesWhen: "같은 목록에 `includes`, `find`, 키 조회를 여러 번 하는 코드를 추가·변경할 때.",
 		reviewWith: [],
 	},
 	"absence-expose-optional-values-instead-of-silent-fallbacks": {
-		appliesWhen: "optional 값의 읽기·정규화·전달을 바꿀 때. `??`, `||`, 기본값 또는 빈 값 대체 분기를 추가·변경할 때.",
+		appliesWhen: "선택 값을 읽거나 정규화하거나 넘기는 방식을 바꿀 때. `??`, `||`, 기본값, 빈 값 대체 분기를 추가·변경할 때.",
 		reviewWith: ["docs-keep-inline-comments-for-constraints-and-caveats"],
 	},
 	"docs-keep-inline-comments-for-constraints-and-caveats": {
-		appliesWhen: "함수 본문의 `//` 주석을 추가·수정·유지할 때. 도메인 규칙, 예외 방어, 외부 제약 또는 부수효과 순서를 주석으로 설명할 때.",
+		appliesWhen: "함수 본문의 `//` 주석을 추가·수정·유지할 때. 도메인 규칙, 예외 방어, 외부 제약, 부수효과 순서를 주석으로 설명할 때.",
 		reviewWith: [],
 	},
 	"docs-require-header-jsdoc-on-key-declarations": {
 		appliesWhen:
-			"query·mutation, 원격 함수, 비자명한 handler/effect, exported helper·hook, custom type·interface, store 선언을 추가·변경할 때. 선언 위 주석의 형식이나 태그를 정할 때.",
+			"질의·변경 요청, 원격 함수, 뻔하지 않은 핸들러와 이펙트, 내보낸 보조 함수와 훅, 커스텀 타입, 스토어 선언을 추가·변경할 때. 선언 위 주석의 형식이나 태그를 정할 때.",
 		reviewWith: [],
 	},
 	"docs-write-concise-korean-comments-about-purpose-and-constraints": {
-		appliesWhen: "TypeScript/TSX의 JSDoc이나 inline comment 문구를 추가·수정·번역하거나 리뷰할 때.",
+		appliesWhen: "TypeScript·TSX 의 문서 주석이나 인라인 주석 문구를 추가·수정·번역하거나 검토할 때.",
 		reviewWith: [],
 	},
 	"guardrails-review-banned-typescript-shortcuts-before-finishing": {
 		appliesWhen:
-			"TypeScript/TSX 변경을 완료 판정할 때. diff에서 barrel, 중복 타입, 조기 helper, 넓은 조립, 무근거 fallback 또는 자명한 주석을 점검할 때.",
+			"TypeScript·TSX 변경을 끝났다고 판정할 때. 변경 내역에서 배럴, 중복 타입, 이른 보조 함수, 넓은 조립, 근거 없는 기본값, 자명한 주석을 점검할 때.",
 		reviewWith: [],
 	},
 } as const;
@@ -1678,7 +1676,7 @@ test("TypeScript progressive metadata matches Appendix A exactly", async () => {
 		true,
 	);
 	const headerJsdocRule = await readRuleSource("typescript", "docs-require-header-jsdoc-on-key-declarations");
-	assert.match(headerJsdocRule, /annotation 태그는 쓰지 않습니다/);
+	assert.match(headerJsdocRule, /역할 태그는 쓰지 않습니다/);
 	assert.equal(
 		readFrontmatterValue(headerJsdocRule, "requiresSelected"),
 		"docs-write-concise-korean-comments-about-purpose-and-constraints",
@@ -2365,16 +2363,29 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 	);
 
 	const documentedShape = await readRule("typescript", "types-document-custom-types-and-shapes");
-	assertMentions(documentedShape, [/기존 named shape/i, /새 callable (?:input|입력)/i, /(?:output|출력)/i, /Selected/i], "documentedShape");
-	assertMentions(documentedShape, [/익명/i, /(?:inferred|추론)/i, /(?:query )?`select`/i, /N\/A/i], "documentedShape");
-	assertMentions(documentedShape, [/JSDoc/i, /(?:스스로|자기)/i, /(?:활성화|Selected)/i, /(?:하지 않|금지)/i], "documentedShape");
+	assertMentions(
+		documentedShape,
+		[
+			/이름 붙인 형태의 필드가 한 글자도 안 바뀌었더라도/i,
+			/입력 계약이나 함수 결과를 고정하는 출력 계약/i,
+			/(?:output|출력)/i,
+			/이 규칙을 적용합니다/i,
+		],
+		"documentedShape",
+	);
+	assertMentions(documentedShape, [/익명/i, /(?:inferred|추론)/i, /(?:query )?`select`/i, /해당하지 않습니다/i], "documentedShape");
+	assertMentions(documentedShape, [/JSDoc/i, /억지로/i, /(?:억지로 켜려고|켜지 않습니다)/i, /(?:하지 않|금지)/i], "documentedShape");
 
 	const directImports = await readRule("typescript", "naming-use-direct-imports-and-public-entry-points");
-	assertMentions(readAppliesWhen(directImports), ["같은 module path", /(?:value|type) specifier/, "추가·삭제·전환"], "directImports");
+	assertMentions(readAppliesWhen(directImports), ["같은 경로에서", /값과 타입 중 무엇을 가져올지/, "추가·삭제·전환"], "directImports");
 
 	const unusedParameters = await readRule("typescript", "types-mark-unused-parameters-with-underscore");
-	assertMentions(readAppliesWhen(unusedParameters), ["curried handler", "최종 callback", /(?:생략|사용하지 않)/], "unusedParameters");
-	assertMentions(unusedParameters, [/framework alias/i, /매개변수 생략/i, /N\/A.*아니/i, /`_event`/i], "unusedParameters");
+	assertMentions(readAppliesWhen(unusedParameters), ["커링한 핸들러", "마지막에 돌려주는 콜백", /(?:빼거나|쓰지 않)/], "unusedParameters");
+	assertMentions(
+		unusedParameters,
+		[/프레임워크 별칭/i, /매개변수를 쓰지 않는 경우도 예외가 아닙니다/i, /예외가 아닙니다/i, /`\(_event\) =>`/i],
+		"unusedParameters",
+	);
 
 	for (const ruleId of [
 		"types-prefer-function-variable-types-over-parameter-annotations",
@@ -2385,13 +2396,13 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 		// 제외 표지는 불렛 앞(`제외:`)에도 문장 끝(`… 제외한다`)에도 올 수 있다. 순서가 아니라 개념 존재만 본다.
 		assertMentions(
 			readAppliesWhen(contextualCallback),
-			[/annotation/i, "없는", /one-off/i, /contextual(?:ly)? typed/i, /N\/A|제외/],
+			[/타입 표기/i, "없이", /일회성/i, /문맥으로 추론/i, /제외/],
 			`${ruleId} appliesWhen`,
 		);
 	}
 
 	const existingContract = await readRule("typescript", "types-reuse-existing-contracts-before-new-types");
-	assertMentions(existingContract, [/unchanged contract/i, /새 사용처/i, /(?:N\/A|제외)/i], "existingContract");
+	assertMentions(existingContract, [/그대로인 계약/i, /새 자리에서 쓰는 경우/i, /(?:N\/A|제외)/i], "existingContract");
 
 	const typescriptContracts = await Promise.all(
 		[
@@ -2403,12 +2414,12 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 			"types-reuse-existing-contracts-before-new-types",
 		].map((ruleId) => readFile(path.join(realSkillRootDir, "typescript", "contracts", `${ruleId}.md`), "utf8")),
 	);
-	assert.match(typescriptContracts[0]!, /same module path|같은 module path/i);
+	assert.match(typescriptContracts[0]!, /경로가 같아도 값과 타입 중 무엇을 가져오는지가 바뀌면/i);
 	assert.match(typescriptContracts[1]!, /CRITICAL rule[\s\S]*full rule/i);
-	assertMentions(typescriptContracts[2]!, [/curried handler/i, /최종 callback/i], "typescriptContracts");
+	assertMentions(typescriptContracts[2]!, [/커링한 핸들러/i, /마지막 콜백/i], "typescriptContracts");
 	assert.match(typescriptContracts[3]!, /CRITICAL rule[\s\S]*full rule/i);
-	assert.match(typescriptContracts[4]!, /one-off contextually typed inline callback/i);
-	assertMentions(typescriptContracts[5]!, [/unchanged contract/i, /(?:새 함수 인자|새 사용처|call site)/i], "typescriptContracts");
+	assert.match(typescriptContracts[4]!, /문맥으로 추론되는 일회성 인라인 콜백/i);
+	assertMentions(typescriptContracts[5]!, [/그대로인 계약/i, /새 자리에서 쓰는 것만으로는/i], "typescriptContracts");
 
 	const stylesheetFormat = await readRule("css", "naming-default-to-plain-css-when-no-module-convention");
 	assertMentions(stylesheetFormat, [/스타일시트 방식/i, /plain CSS/i, /CSS Modules/i], "stylesheetFormat");
@@ -2523,60 +2534,51 @@ test("v17 TypeScript boundaries exclude React props and prevent self-created dup
 
 	const namedObjectParams = await readRule("typescript", "functions-use-named-object-params-for-complex-signatures");
 	assertMentions(readAppliesWhen(namedObjectParams), [/React (?:함수 )?컴포넌트/, "props", /(?:N\/A|제외)/], "namedObjectParams");
-	assert.match(
-		namedObjectParams,
-		/기존 named contract[\s\S]*그대로 재사용[\s\S]*`\*Params`[\s\S]*`\*Args`[\s\S]*(?:새로 만들지 않|추가하지 않)/i,
-	);
+	assert.match(namedObjectParams, /뜻이 같은 계약이 이미 있으면 그대로 씁니다[\s\S]*`\*Params`[\s\S]*`\*Args`[\s\S]*새로 만들지 않/i);
 
 	const documentedShape = await readRule("typescript", "types-document-custom-types-and-shapes");
 	// 위와 같은 이유로 순서를 박지 않는다.
 	assertMentions(
 		readAppliesWhen(documentedShape),
-		[/external|generated|read-only|shared/, /unchanged|변경하지 않/, /N\/A|제외/],
+		[/외부·생성된·읽기 전용·공용/, /그대로 쓰거나/, /N\/A|제외/],
 		"documentedShape appliesWhen",
 	);
 	assert.match(
 		readAppliesWhen(documentedShape),
-		/schema root[\s\S]+계약 field[\s\S]+파생 alias[\s\S]+추가·변경[\s\S]+named shape[\s\S]+callable 역할[\s\S]+추가/,
+		/스키마 최상단[\s\S]+계약 필드[\s\S]+파생 별칭[\s\S]+추가·변경[\s\S]+이름 붙인 형태[\s\S]+호출 계약 역할/,
 	);
 	assert.doesNotMatch(readAppliesWhen(documentedShape), /객체형 상수·field·alias/);
 	assert.match(
 		documentedShape,
-		/새 callable (?:input|입력)[^\n]+(?:output|출력)[^\n]*역할[\s\S]*새 (?:type|interface|선언)[\s\S]*요구하지 않[\s\S]*(?:기존|로컬 소유)[^\n]*named shape[\s\S]*(?:문서|JSDoc|`@summary`)[\s\S]*(?:보강|갱신)/i,
+		/새 입력이나 출력 역할이 새 타입 선언을 요구하지는 않습니다[\s\S]*맞는 형태가 이미 우리 코드에 있으면[\s\S]*보강/i,
 	);
 	assert.match(
 		documentedShape,
-		/(?:외부|external|generated|read-only|shared)[\s\S]*(?:소유자|선언)[^\n]+(?:수정하지 않|보강하지 않)[\s\S]*(?:local alias|별도 alias)[^\n]+(?:만들지 않|추가하지 않)[\s\S]*callable 문서화 여부[^\n]+docs-require-header-jsdoc-on-key-declarations[^\n]+(?:독립|applicability|판정)/i,
+		/외부·생성된·읽기 전용·공용 형태를 그대로 쓰기만 하면[\s\S]*지역 별칭을 새로 만들지도 않습니다[\s\S]*docs-require-header-jsdoc-on-key-declarations[^\n]+판정/i,
 	);
 	assert.doesNotMatch(documentedShape, /callable 선언에서[^\n]+(?:역할|계약)[^\n]+설명/);
 
 	const existingContract = await readRule("typescript", "types-reuse-existing-contracts-before-new-types");
 	assert.match(
 		flattenWhitespace(existingContract),
-		/positional[\s\S]*object[\s\S]*(?:수정 가능한 로컬 소유|기존) (?:호환|compatible) (?:named )?(?:shape|contract)[\s\S]*types-document-custom-types-and-shapes[^\n]+Selected[\s\S]*types-reuse-existing-contracts-before-new-types[^\n]+N\/A/i,
+		/위치 인자를 객체 입력으로 바꾸면서 고칠 수 있는 우리 형태를 다시 쓰면[\s\S]*types-document-custom-types-and-shapes[^\n]+걸리고 이 규칙은 걸리지 않습니다/i,
 	);
-	assert.match(
-		existingContract,
-		/요청[^\n]+(?:semantic delta[^\n]+없는|밖)[\s\S]*`\*Params`[\s\S]*`\*Input`[\s\S]*(?:스스로|자기|자가)[\s\S]*(?:활성화|Selected)[\s\S]*(?:하지 않|금지)/i,
-	);
+	assert.match(existingContract, /요청에 없는 `\*Params`나 `\*Input`을 만들어 이 규칙을 스스로 켜지 않습니다/i);
 	assert.match(
 		flattenWhitespace(existingContract),
-		/types-document-custom-types-and-shapes[\s\S]+Selected[\s\S]*types-reuse-existing-contracts-before-new-types[\s\S]+N\/A[\s\S]*(?:외부|external|generated|read-only|shared)[\s\S]+(?:두 type 규칙|두 규칙|모두)[\s\S]+N\/A[\s\S]*callable 문서화 여부[\s\S]+docs rule[\s\S]+독립 판정/i,
+		/types-document-custom-types-and-shapes[\s\S]+걸리고 이 규칙은 걸리지 않습니다[\s\S]*외부·생성된·읽기 전용·공용 형태를 그대로 쓰면 두 타입 규칙 모두 대상이 아니고[\s\S]+문서 규칙이 따로 판정/i,
 	);
 	assert.doesNotMatch(existingContract, /callable header[^\n]+문서화/);
 	assert.doesNotMatch(readAppliesWhen(existingContract), /재사용 결정을 바꾼다/);
 	assert.match(
 		existingContract,
-		/(?:정규화 전|raw input)[\s\S]*(?:정규화 후|normalized (?:output|payload)|payload)[\s\S]*(?:같은 field|field[^\n]+같)[\s\S]*의미[^\n]+(?:다르|달라)[\s\S]*(?:별도|새) (?:input )?(?:shape|contract)[\s\S]*types-reuse-existing-contracts-before-new-types[^\n]+N\/A/i,
+		/원본 입력과 정규화한 값은 필드가 같아도 뜻이 달라 입력 형태를 따로 두는 것이 맞습니다[\s\S]*이 규칙은 걸리지 않습니다/i,
 	);
 	assert.doesNotMatch(documentedShape, /\bT\d{2}\b/);
 	assert.doesNotMatch(existingContract, /\bT\d{2}\b/);
 
 	const typescriptPressure = await readFile(path.join(realSkillRootDir, "typescript", "pressure-tests.md"), "utf8");
-	assert.match(
-		typescriptPressure,
-		/CreateEntryPayloadParams[\s\S]*(?:정규화 전|raw input)[\s\S]*CreateEntryPayload[\s\S]*(?:정규화 후|payload)/i,
-	);
+	assert.match(typescriptPressure, /CreateEntryPayloadParams[\s\S]*CreateEntryPayload/i);
 	assert.match(
 		typescriptPressure,
 		/External Contract and Documentation Independence[\s\S]*types-document-custom-types-and-shapes[\s\S]*types-reuse-existing-contracts-before-new-types[\s\S]*(?:둘 다|모두) N\/A[\s\S]*docs-require-header-jsdoc-on-key-declarations[\s\S]*독립[^\n]+Selected/i,
@@ -2605,9 +2607,9 @@ test("v17 TypeScript boundaries exclude React props and prevent self-created dup
 			"types-reuse-existing-contracts-before-new-types",
 		].map((ruleId) => readFile(path.join(realSkillRootDir, "typescript", "contracts", `${ruleId}.md`), "utf8")),
 	);
-	assertMentions(generatedContracts[0]!, [/React 함수 컴포넌트/i, /기존 named contract/i], "generatedContracts");
+	assertMentions(generatedContracts[0]!, [/React 함수 컴포넌트/i, /뜻이 같은 계약이 이미 있으면/i], "generatedContracts");
 	assert.match(generatedContracts[1]!, /CRITICAL rule[\s\S]*full rule/i);
-	assertMentions(generatedContracts[2]!, [/positional/i, /object/i, /`\*Params`/i, /(?:스스로|자기|자가)/i], "generatedContracts");
+	assertMentions(generatedContracts[2]!, [/위치 인자/i, /객체/i, /`\*Params`/i, /(?:스스로|자기|자가)/i], "generatedContracts");
 });
 
 test("v17 semantic contracts reject English-only annotations and effective deep third-party chains", async () => {
@@ -2616,27 +2618,24 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	};
 
 	const koreanComments = await readRule("typescript", "docs-write-concise-korean-comments-about-purpose-and-constraints");
-	assertMentions(koreanComments, [/주석 본문 전체/i, /(?:ASCII|영문)/i, /(?:한글 주석으로 인정하지 않|실패)/i], "koreanComments");
+	assertMentions(koreanComments, [/주석 본문이 전부 영어이면/i, /영어/i, /한국어 주석으로 인정하지 않/i], "koreanComments");
 	assert.match(koreanComments, /route-local entry tree props/);
 	assert.match(koreanComments, /route-local 엔트리 트리 입력 계약/);
 
 	const documentedShape = await readRule("typescript", "types-document-custom-types-and-shapes");
 	assert.match(
 		documentedShape,
-		/헤더와 필드 주석[\s\S]*존재만으로[\s\S]*docs-write-concise-korean-comments-about-purpose-and-constraints[\s\S]*(?:content|한국어)[^\n]+gate/i,
+		/주석이 있다고 끝나지 않습니다[\s\S]*docs-write-concise-korean-comments-about-purpose-and-constraints[\s\S]*한국어 조건/i,
 	);
 	const headerDocs = await readRule("typescript", "docs-require-header-jsdoc-on-key-declarations");
 	assert.match(
 		flattenWhitespace(headerDocs),
-		/헤더 doc 주석[\s\S]*(?:영문 label|영문 라벨)[\s\S]*(?:충족하지 않|미충족|완료되지 않)[\s\S]*docs-write-concise-korean-comments-about-purpose-and-constraints[\s\S]*content gate/i,
+		/헤더 문서 주석[\s\S]*영문 라벨[\s\S]*요구를 채우지 못합니다[\s\S]*docs-write-concise-korean-comments-about-purpose-and-constraints[\s\S]*한국어 내용/i,
 	);
 	assert.doesNotMatch(headerDocs, /\bT\d{2}\b/);
 
 	const typescriptPressure = await readFile(path.join(realSkillRootDir, "typescript", "pressure-tests.md"), "utf8");
-	assert.match(
-		typescriptPressure,
-		/CreateEntryPayloadParams[\s\S]*(?:정규화 전|raw input)[\s\S]*CreateEntryPayload[\s\S]*(?:정규화 후|payload)/i,
-	);
+	assert.match(typescriptPressure, /CreateEntryPayloadParams[\s\S]*CreateEntryPayload/i);
 	assert.match(
 		typescriptPressure,
 		/External Contract and Documentation Independence[\s\S]*types-document-custom-types-and-shapes[\s\S]*types-reuse-existing-contracts-before-new-types[\s\S]*(?:둘 다|모두) N\/A[\s\S]*docs-require-header-jsdoc-on-key-declarations[\s\S]*독립[^\n]+Selected/i,
@@ -2665,9 +2664,9 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 			"types-reuse-existing-contracts-before-new-types",
 		].map((ruleId) => readFile(path.join(realSkillRootDir, "typescript", "contracts", `${ruleId}.md`), "utf8")),
 	);
-	assertMentions(generatedContracts[0]!, [/React 함수 컴포넌트/i, /기존 named contract/i], "generatedContracts");
+	assertMentions(generatedContracts[0]!, [/React 함수 컴포넌트/i, /뜻이 같은 계약이 이미 있으면/i], "generatedContracts");
 	assert.match(generatedContracts[1]!, /CRITICAL rule[\s\S]*full rule/i);
-	assertMentions(generatedContracts[2]!, [/positional/i, /object/i, /`\*Params`/i, /(?:스스로|자기|자가)/i], "generatedContracts");
+	assertMentions(generatedContracts[2]!, [/위치 인자/i, /객체/i, /`\*Params`/i, /(?:스스로|자기|자가)/i], "generatedContracts");
 });
 
 test("v17 semantic contracts reject English-only annotations and effective deep third-party chains", async () => {
@@ -2676,19 +2675,19 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	};
 
 	const koreanComments = await readRule("typescript", "docs-write-concise-korean-comments-about-purpose-and-constraints");
-	assertMentions(koreanComments, [/주석 본문 전체/i, /(?:ASCII|영문)/i, /(?:한글 주석으로 인정하지 않|실패)/i], "koreanComments");
+	assertMentions(koreanComments, [/주석 본문이 전부 영어이면/i, /영어/i, /한국어 주석으로 인정하지 않/i], "koreanComments");
 	assert.match(koreanComments, /route-local entry tree props/);
 	assert.match(koreanComments, /route-local 엔트리 트리 입력 계약/);
 
 	const documentedShape = await readRule("typescript", "types-document-custom-types-and-shapes");
 	assert.match(
 		documentedShape,
-		/헤더와 필드 주석[\s\S]*존재만으로[\s\S]*docs-write-concise-korean-comments-about-purpose-and-constraints[\s\S]*(?:content|한국어)[^\n]+gate/i,
+		/주석이 있다고 끝나지 않습니다[\s\S]*docs-write-concise-korean-comments-about-purpose-and-constraints[\s\S]*한국어 조건/i,
 	);
 	const headerDocs = await readRule("typescript", "docs-require-header-jsdoc-on-key-declarations");
 	assert.match(
 		flattenWhitespace(headerDocs),
-		/헤더 doc 주석[\s\S]*(?:영문 label|영문 라벨)[\s\S]*(?:충족하지 않|미충족|완료되지 않)[\s\S]*docs-write-concise-korean-comments-about-purpose-and-constraints[\s\S]*content gate/i,
+		/헤더 문서 주석[\s\S]*영문 라벨[\s\S]*요구를 채우지 못합니다[\s\S]*docs-write-concise-korean-comments-about-purpose-and-constraints[\s\S]*한국어 내용/i,
 	);
 	assert.doesNotMatch(headerDocs, /\bT\d{2}\b/);
 
@@ -2799,9 +2798,9 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	);
 	assert.match(
 		flattenWhitespace(generatedContracts[0]!),
-		/영문 label[\s\S]*docs-write-concise-korean-comments-about-purpose-and-constraints[\s\S]*content gate/i,
+		/영문 라벨[\s\S]*docs-write-concise-korean-comments-about-purpose-and-constraints[\s\S]*한국어 내용/i,
 	);
-	assertMentions(generatedContracts[1]!, [/주석 본문 전체/i, /(?:ASCII|영문)/i], "generatedContracts");
+	assertMentions(generatedContracts[1]!, [/주석 본문이 전부 영어이면/i, /영어/i], "generatedContracts");
 	assert.match(generatedContracts[2]!, /pseudo-class[\s\S]*식별자가 같은 자손을 결합자 하나로 겨냥합니다/i);
 	assert.match(generatedContracts[3]!, /CRITICAL rule[\s\S]*full rule/i);
 });

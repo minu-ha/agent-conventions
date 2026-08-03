@@ -51,26 +51,27 @@
 
 **Impact: HIGH**
 
-식별자, import, public entry point, config 접근 패턴은 소유권과 오리진을 바로 드러내야 합니다.
+식별자, import, 공개 진입점, 설정 접근 방식이 소유자와 출처를 바로 드러내야 합니다.
 
 ### 1.1 Centralize Shared Config Under `shared/config.ts`
 
 **Rule:** `T01` · `naming-centralize-shared-config-namespaces`
 
-**Applies when:** 여러 leaf 모듈이 함께 쓰는 URL, feature flag, 페이지 크기나 상수를 추가·이동·중복 정의할 때. shared config 경계를 바꿀 때.
+**Applies when:** 여러 말단 모듈이 함께 쓰는 URL, 기능 플래그, 페이지 크기나 상수를 추가·이동·중복 정의할 때. 공용 설정 경계를 바꿀 때.
 
 **Review with:** `naming-preserve-config-origin-with-chained-access`, `naming-use-direct-imports-and-public-entry-points`
 
-**Impact: HIGH (공용 설정 값이 leaf 파일로 흩어져 공개 출처 하나를 잃는 것을 막습니다)**
+**Impact: HIGH (공용 설정 값이 말단 파일로 흩어져 공개 출처를 잃는 것을 막습니다)**
 
-여러 파일에서 공유되는 설정과 상수는 기본적으로 `shared/config.ts` 한 파일을 공개 진입점으로 삼아 `config` namespace
-아래에 모읍니다.
-leaf 파일마다 공용 URL, feature flag, 페이지 크기, 상수 문자열을 흩뿌리지 말고,
-`config.*` 체이닝으로 읽을 수 있게 정리합니다.
-수가 많지 않을 때는 폴더로 미리 쪼개지 말고 단일 `config.ts`를 유지하고,
-여러 독립 섹션으로 커졌을 때만 분리를 검토합니다.
-owner 하나만 쓰는 선언형 설정은 전역으로 올리지 않고 그 owner 아래 `config` 폴더에 `<owner>_config`로 둡니다.
-`constants` 폴더는 만들지 않습니다.
+여러 파일이 함께 쓰는 설정과 상수는 `shared/config.ts` 한 파일을 공개 진입점으로 삼아 `config` 네임스페이스 아래에 모읍니다.
+말단 파일마다 공용 URL, 기능 플래그, 페이지 크기, 상수 문자열을 흩뿌리지 않습니다.
+`config.*` 체인으로 읽히게 정리합니다.
+
+수가 많지 않으면 폴더로 미리 쪼개지 않고 `config.ts` 하나로 둡니다.
+서로 독립된 여러 묶음으로 커졌을 때만 나눌지 검토합니다.
+
+소유자 하나만 쓰는 선언형 설정은 전역으로 올리지 않습니다.
+그 소유자 아래 `config` 폴더에 `<owner>_config`로 둡니다. `constants` 폴더는 만들지 않습니다.
 
 **Incorrect (공용 설정을 leaf 파일마다 흩뿌림):**
 
@@ -94,15 +95,16 @@ config.pagination.default_page_size;
 
 **Rule:** `T02` · `naming-preserve-config-origin-with-chained-access`
 
-**Applies when:** `config` 또는 `util` 값을 leaf 모듈에서 접근하며 넓은 스코프 구조분해, 별칭 또는 feature-local namespace를 추가·변경할 때.
+**Applies when:** 말단 모듈에서 `config`나 `util` 값을 쓰면서 넓은 스코프 구조분해, 별칭, 기능별 네임스페이스를 추가·변경할 때.
 
-**Impact: HIGH (넓은 스코프 별칭으로 출처를 숨기지 않고 값이 어디서 오는지 읽는 사람이 알 수 있게 합니다)**
+**Impact: HIGH (넓은 스코프 별칭으로 출처를 숨기지 않아 값이 어디서 오는지 읽힙니다)**
 
-공용 설정과 공용 순수 함수는 leaf 모듈 직접 import 뒤에 `config.*`, `util.*` 체이닝 접근을 기본으로 합니다.
-넓은 스코프에서 구조분해하거나 별칭 상수로 끊어 원본 오리진을 흐리지 말고,
-필요한 구조분해는 함수 내부의 좁은 스코프에서만 제한적으로 사용합니다.
-특히 `shared/config.ts`와 `shared/util.ts`는 발견성을 위해 namespace를 유지하고,
-feature-local `helper.ts`나 `utils.ts` 대신 공용 경계에서만 `config`/`util` 이름을 사용합니다.
+공용 설정과 공용 순수 함수는 말단 모듈에서 직접 import 한 뒤 `config.*`, `util.*` 체인으로 씁니다.
+넓은 스코프에서 구조분해하거나 별칭 상수로 끊어 출처를 흐리지 않습니다.
+구조분해가 필요하면 함수 안 좁은 스코프에서만 씁니다.
+
+`shared/config.ts`와 `shared/util.ts`는 찾기 쉬우라고 네임스페이스를 유지합니다.
+기능별 `helper.ts`나 `utils.ts`를 만들지 않고, `config`와 `util` 이름은 공용 경계에서만 씁니다.
 
 **Incorrect (넓은 스코프에서 원본 오리진을 감춤):**
 
@@ -129,18 +131,19 @@ util.number.clamp(score, 0, 100);
 
 **Rule:** `T03` · `naming-use-consistent-file-and-symbol-naming`
 
-**Applies when:** TypeScript 파일, local 변수·함수·타입, 객체·schema field 또는 enum-like 상수의 이름을 새로 만들거나 바꿀 때. 제외: alias 없는 third-party import binding 추가인 경우.
+**Applies when:** TypeScript 파일, 지역 변수·함수·타입, 객체·스키마 필드, enum 성격 상수의 이름을 새로 만들거나 바꿀 때. 제외: 별칭 없이 외부 패키지 import 를 추가하는 경우.
 
-**Impact: HIGH (모듈과 런타임 구조를 넘나들며 파일명·심볼·shape 필드를 예측 가능하게 유지합니다)**
+**Impact: HIGH (모듈과 실행 구조를 넘나들며 파일명, 심볼, 형태 필드가 예측대로 유지됩니다)**
 
-파일명은 `kebab-case`, 일반 변수와 함수는 `camelCase`, 타입은 `PascalCase`를 사용합니다.
+파일명은 `kebab-case`, 변수와 함수는 `camelCase`, 타입은 `PascalCase`입니다.
 폴더명은 `kebab-case` 단수로 쓰고 프레임워크가 강제하는 이름만 예외로 둡니다.
-`const`인지 여부로 별도 casing을 두지 않고, 모듈 안의 로컬 값은 모두 `camelCase`로 맞춥니다.
-공용 설정 객체 키와 enum-like 상수 객체 이름 및 그 키는 `snake_case`, 일반 객체 키, schema 키,
-커스텀 타입 필드는 `camelCase`를 유지합니다.
-외부 package가 export한 이름을 alias 없이 그대로 가져오는 third-party import binding은 local symbol을 새로 작명하는
-변경이 아니므로 이 규칙의 대상이 아닙니다.
-local alias를 추가하거나 import binding 이름을 바꿀 때만 다시 판정합니다.
+`const`인지에 따라 표기를 달리하지 않습니다. 모듈 안 지역 값은 모두 `camelCase`로 맞춥니다.
+
+공용 설정 객체의 키와 enum 성격 상수 객체의 이름과 키는 `snake_case`입니다.
+일반 객체 키, 스키마 키, 커스텀 타입 필드는 `camelCase`를 유지합니다.
+
+외부 패키지가 내보낸 이름을 별칭 없이 그대로 가져오는 것은 지역 심볼을 새로 짓는 일이 아니라 이 규칙의 대상이 아닙니다.
+지역 별칭을 추가하거나 import 이름을 바꿀 때만 다시 봅니다.
 
 **Incorrect (파일명, 심볼명, 필드명이 제각각임):**
 
@@ -170,17 +173,17 @@ const userProfileSchema = z.object({
 
 **Rule:** `T04` · `naming-use-direct-imports-and-public-entry-points`
 
-**Applies when:** TypeScript import/export, barrel, shared 공개 진입점·owner support module 경계를 추가·변경할 때. 절대경로 alias로 다른 모듈을 가져올 때. 같은 module path의 value/type specifier를 추가·삭제·전환할 때.
+**Applies when:** import·export, 배럴, 공용 진입점, 소유자 보조 모듈의 경계를 추가·변경할 때. 절대경로 별칭으로 다른 모듈을 가져올 때. 같은 경로에서 값과 타입 중 무엇을 가져올지 추가·삭제·전환할 때.
 
-**Impact: HIGH (barrel이나 모호한 재노출 계층에 기대지 않고 import 소유를 명시적으로 드러냅니다)**
+**Impact: HIGH (배럴이나 모호한 재노출 계층에 기대지 않고 import 소유를 드러냅니다)**
 
-`index.ts` 기반 barrel export를 만들지 않고 직접 export/import 구조를 유지합니다.
-role 폴더를 `index.ts`로 묶는 것도 barrel이므로 만들지 않습니다.
+`index.ts`로 묶어 다시 내보내는 배럴을 만들지 않습니다. 필요한 파일에서 바로 가져옵니다.
+역할 폴더를 `index.ts`로 묶는 것도 배럴이라 만들지 않습니다.
 같은 파일이 소유한 `export const Dialog = { Root, Header } as const` 같은 조립 객체는
-재노출 계층이 아니므로 barrel이 아닙니다.
-타입 전용 import는 `import type`을 사용해 계약과 런타임 의존을 분리합니다.
+다시 내보내는 계층이 아니라 배럴이 아닙니다.
+타입만 가져올 때는 `import type`을 써서 계약과 실행 의존을 나눕니다.
 
-절대경로 alias는 전역 레이어 루트만 가리킵니다.
+절대경로 별칭은 전역 레이어 루트만 가리킵니다.
 
 | 경로 | 판정 |
 | --- | --- |
@@ -188,11 +191,11 @@ role 폴더를 `index.ts`로 묶는 것도 barrel이므로 만들지 않습니�
 | `@/shared`, `@/service`, `@/store`, `@/asset` | 허용 |
 | `@/page/...` 등 화면 내부 | 금지 |
 
-화면이나 owner 내부 모듈은 절대경로로 열지 않고 `./`로만 접근합니다.
-owner 밖에서 필요해지면 경로를 뚫는 대신 전역 레이어로 올립니다.
+화면이나 소유자 내부 모듈은 절대경로로 열지 않고 `./`로만 접근합니다.
+소유자 밖에서 필요해지면 경로를 뚫는 대신 전역 레이어로 올립니다.
 
-같은 module path를 계속 사용하더라도 import specifier의 value/type 구성이 추가·삭제·전환되면
-import 계약 변경이므로 Selected입니다.
+경로가 같아도 값과 타입 중 무엇을 가져오는지가 바뀌면
+import 계약이 바뀐 것이라 이 규칙을 적용합니다.
 
 **Incorrect (barrel과 혼합 import로 경계를 흐림):**
 
@@ -220,40 +223,40 @@ import {buildUserSaveRequest} from "./function/build-user-save-request";
 
 **Impact: CRITICAL**
 
-함수 시그니처, callback 재사용, 타입 중복 제거, custom shape 문서화는 계약을 명시적이고 재사용 가능하게 유지해야 합니다.
+함수 시그니처, 콜백 재사용, 타입 중복 제거, 커스텀 형태 문서화가 계약을 드러내고 다시 쓸 수 있게 유지해야 합니다.
 
 ### 2.1 Document Custom Types and Declarative Shapes
 
 **Rule:** `T05` · `types-document-custom-types-and-shapes`
 
-**Applies when:** type·interface·schema root·객체 상수·계약 field·파생 alias를 추가·변경할 때. named shape에 callable 역할을 추가할 때. 제외: 외부·generated·read-only·shared unchanged shape나 익명 추론 반환인 경우.
+**Applies when:** 타입, 인터페이스, 스키마 최상단, 객체 상수, 계약 필드, 파생 별칭을 추가·변경할 때. 이름 붙인 형태에 호출 계약 역할을 새로 얹을 때. 제외: 외부·생성된·읽기 전용·공용 형태를 그대로 쓰거나 익명으로 추론된 반환인 경우.
 
-**Impact: CRITICAL (구현 세부를 파헤치지 않고도 도메인 전용 계약을 이해할 수 있게 합니다)**
+**Impact: CRITICAL (구현을 파헤치지 않고도 도메인 전용 계약을 이해합니다)**
 
-선언형 shape는 헤더와 필드를 나눠 문서화합니다.
+선언형 형태는 헤더와 필드를 나눠 문서화합니다.
 
-- custom `type`, `interface`, schema root, 객체형 상수: 선언 위 헤더 doc 주석
-- 객체형 계약과 schema field: 각 필드 바로 위 doc 주석
-- `Pick`/`Omit`/Indexed Access alias: 필드가 없으므로 헤더만 작성
+- 커스텀 `type`, `interface`, 스키마 최상단, 객체형 상수: 선언 위에 헤더 문서 주석
+- 객체형 계약과 스키마 필드: 각 필드 바로 위에 문서 주석
+- `Pick`, `Omit`, Indexed Access 별칭: 필드가 없으므로 헤더만 씁니다
 
-헤더와 필드 주석은 존재만으로 완료되지 않으며,
-각 body가 `docs-write-concise-korean-comments-about-purpose-and-constraints`의 한국어 content gate를 만족해야 합니다.
+주석이 있다고 끝나지 않습니다.
+각 본문이 `docs-write-concise-korean-comments-about-purpose-and-constraints`의 한국어 조건을 만족해야 합니다.
 
-기존 named shape의 field가 byte-equivalent여도,
-positional 인자를 대체하는 새 callable input이나 함수 결과를 고정하는 output 계약 역할에 처음 연결되면
-이 규칙은 Selected입니다.
-선언의 새 계약 역할을 헤더와 각 필드 주석으로 설명합니다.
-새 callable input 또는 output 역할은 새 type·interface 선언을 요구하지 않습니다.
-호환되는 로컬 소유 named shape가 있으면 그대로 연결하고, 그 선언의 헤더와 필드 문서를 새 역할에 맞게 보강합니다.
+이름 붙인 형태의 필드가 한 글자도 안 바뀌었더라도,
+위치 인자를 대체하는 입력 계약이나 함수 결과를 고정하는 출력 계약 역할을 처음 맡으면
+이 규칙을 적용합니다.
+새로 맡은 역할을 헤더와 각 필드 주석으로 설명합니다.
+새 입력이나 출력 역할이 새 타입 선언을 요구하지는 않습니다.
+맞는 형태가 이미 우리 코드에 있으면 그대로 연결하고, 그 선언의 헤더와 필드 문서를 새 역할에 맞게 보강합니다.
 
-외부·generated·read-only·shared owner의 unchanged shape 사용만으로는 N/A입니다.
-owner 선언은 수정하지 않고 문서화만을 위한 local alias도 만들지 않습니다.
-callable 문서화 여부는 `docs-require-header-jsdoc-on-key-declarations` 등 docs rule의 applicability로만 판정합니다.
+외부·생성된·읽기 전용·공용 형태를 그대로 쓰기만 하면 해당하지 않습니다.
+그 선언을 고치지 않고, 문서를 붙이려고 지역 별칭을 새로 만들지도 않습니다.
+호출 계약을 문서화할지는 `docs-require-header-jsdoc-on-key-declarations` 같은 문서 규칙이 따로 판정합니다.
 
-반대로 별도 named type·interface·schema root·객체형 상수 없이 구현 안에서만 추론되는 익명 객체 literal은 이 규칙의
-선언형 shape가 아닙니다.
-특히 query `select`의 익명 inferred 반환 literal은 N/A이며,
-이 규칙을 스스로 활성화하려고 field JSDoc이나 새 type alias를 추가하지 않습니다.
+이름 붙인 선언 없이 구현 안에서만 추론되는 익명 객체는 이 규칙의
+선언형 형태가 아닙니다.
+질의의 `select`가 익명으로 반환하는 객체가 그 경우입니다.
+이 규칙을 억지로 켜려고 필드 주석이나 새 타입 별칭을 만들지 않습니다.
 
 **Incorrect (필드 설명을 생략하거나 예전 방식으로 헤더에 몰아씀):**
 
@@ -300,17 +303,17 @@ const publishResultSchema = z.object({
 
 **Rule:** `T06` · `types-mark-unused-parameters-with-underscore`
 
-**Applies when:** 기존 callback·framework 계약 구현을 추가·변경하며 parameter를 생략하거나 사용하지 않을 때. curried handler가 반환하는 최종 callback에서 parameter를 생략할 때.
+**Applies when:** 기존 콜백이나 프레임워크 계약을 구현하면서 매개변수를 빼거나 쓰지 않을 때. 커링한 핸들러가 마지막에 돌려주는 콜백에서 매개변수를 뺄 때.
 
-**Impact: MEDIUM-HIGH (계약의 일부를 조용히 버리지 않고 의도적으로 무시한 callback 매개변수를 드러냅니다)**
+**Impact: MEDIUM-HIGH (계약의 일부를 조용히 버리지 않고 일부러 무시한 매개변수를 드러냅니다)**
 
 미사용 매개변수도 생략하지 않고 `_` 접두사로 명시합니다.
-이렇게 해야 callback 시그니처 계약을 유지하면서도, 현재 구현에서 의도적으로 쓰지 않는 값이라는 점이 드러납니다.
+그래야 콜백 시그니처를 그대로 지키면서, 지금 구현이 일부러 쓰지 않는 값이라는 점이 드러납니다.
 
-curried handler의 최종 callback을 포함해,
-framework alias나 기존 callback 계약이 선언한 매개변수를 구현 함수에서 생략하는 경우도 Selected입니다.
-`MouseEventHandler`를 반환하면서 event 매개변수를 쓰지 않는다면 매개변수 생략은 N/A 근거가 아니며,
-`() =>` 대신 `_event`를 받는 `(_event) =>`로 계약을 보존합니다.
+커링한 핸들러의 마지막 콜백도 마찬가지입니다.
+프레임워크 별칭이나 기존 콜백 계약이 선언한 매개변수를 구현에서 빼면 이 규칙을 적용합니다.
+`MouseEventHandler`를 돌려주면서 이벤트 매개변수를 쓰지 않는 경우도 예외가 아닙니다.
+`() =>` 대신 `(_event) =>`로 받아 계약을 남깁니다.
 
 **Incorrect (계약의 일부인 callback 매개변수를 조용히 생략):**
 
@@ -337,19 +340,18 @@ const noopLog: LogSink = (_message, _level) => {};
 
 **Rule:** `T07` · `types-prefer-function-variable-types-over-parameter-annotations`
 
-**Applies when:** 기존 callable 계약을 named·shared 함수 구현에 재사용할 때. 같은 시그니처를 여러 구현이 공유하도록 바꿀 때. 제외: annotation 없는 one-off contextually typed inline callback인 경우.
+**Applies when:** 기존 호출 계약을 이름 붙인 함수나 공용 함수 구현에 다시 쓸 때. 같은 시그니처를 여러 구현이 함께 쓰도록 바꿀 때. 제외: 타입 표기 없이 문맥으로 추론되는 일회성 인라인 콜백인 경우.
 
-**Impact: CRITICAL (callable 계약을 재사용 가능하게 유지하고 지역 매개변수 annotation이 공용 함수 타입을 조각내는 것을 막습니다)**
+**Impact: CRITICAL (호출 계약을 재사용할 수 있게 두고 지역 타입 표기가 공용 함수 타입을 조각내지 않게 합니다)**
 
 재사용 가능한 콜백이나 함수 타입이 있다면 매개변수 타입 선언보다 함수 변수 타입 선언을 우선합니다.
-이미 존재하는 interface, object contract, framework alias를 먼저 재사용하고,
-동일 callable contract를 여러 구현이 공유할 때만 별도 함수 타입 alias를 선언합니다.
-한 번만 쓰는 로컬 함수 때문에 함수 타입 alias를 늘리는 것은 지양합니다.
+이미 있는 인터페이스, 객체 계약, 프레임워크 별칭을 먼저 씁니다.
+같은 호출 계약을 여러 구현이 함께 쓸 때만 함수 타입 별칭을 따로 선언합니다.
+한 번만 쓰는 지역 함수 때문에 함수 타입 별칭을 늘리지 않습니다.
 
-객체 literal 안에서 한 번만 쓰이고 매개변수·반환 타입 annotation이 없는 contextually typed inline callback은
-named/shared 함수 구현 계약이 아니므로 N/A입니다.
-예를 들어 `query.select: (response) => ({...})`를 이 규칙 때문에 밖으로 빼거나 별도 함수 타입으로 고정하지 않습니다.
-반대로 named handler나 curried factory의 반환 handler를 기존 framework alias로 고정하는 변경은 Selected입니다.
+객체 안에서 한 번만 쓰이고 타입 표기도 없이 문맥으로 추론되는 인라인 콜백은 대상이 아닙니다.
+`query.select: (response) => ({...})`를 이 규칙 때문에 밖으로 빼거나 함수 타입으로 고정하지 않습니다.
+반대로 이름 붙인 핸들러나 커링 팩토리가 돌려주는 핸들러를 기존 프레임워크 별칭으로 고정하면 이 규칙을 적용합니다.
 
 **Incorrect (공유 가능한 함수 계약이 있는데 매개변수 타입만 사용):**
 
@@ -396,23 +398,22 @@ const normalizeSearchRequest: NormalizeRequest = (request) => {
 
 **Rule:** `T08` · `types-reuse-callback-signatures-from-existing-contracts`
 
-**Applies when:** interface·객체·framework의 named·shared callback 구현에서 기존 시그니처를 재사용·변경할 때. 제외: annotation 없는 one-off contextually typed inline callback인 경우.
+**Applies when:** 인터페이스, 객체, 프레임워크가 정한 콜백을 구현하면서 기존 시그니처를 다시 쓰거나 바꿀 때. 제외: 타입 표기 없이 문맥으로 추론되는 일회성 인라인 콜백인 경우.
 
 **Requires selected:** `types-prefer-function-variable-types-over-parameter-annotations` · 함께 적용
 
 **Review with:** `types-mark-unused-parameters-with-underscore`
 
-**Impact: HIGH (기존 interface나 객체 계약이 이미 정의한 callback 시그니처가 어긋나는 것을 막습니다)**
+**Impact: HIGH (기존 인터페이스나 객체 계약이 이미 정한 콜백 시그니처가 어긋나지 않습니다)**
 
-콜백 구현 시 매개변수를 다시 타이핑하기보다, 이미 존재하는 인터페이스나 계약의 시그니처를 Indexed Access로 재사용합니다.
-재사용한 계약에 현재 구현이 쓰지 않는 parameter가 있으면 `types-mark-unused-parameters-with-underscore`를 다시
-판정합니다.
-이렇게 해야 구현과 계약 사이의 타입 정의가 한곳에서 유지됩니다.
+콜백을 구현할 때 매개변수 타입을 다시 적지 않습니다. 이미 있는 인터페이스나 계약의 시그니처를 Indexed Access로 가져다 씁니다.
+가져온 계약에 지금 구현이 쓰지 않는 매개변수가 있으면 `types-mark-unused-parameters-with-underscore`를 다시 봅니다.
+그래야 구현과 계약의 타입 정의가 한곳에 남습니다.
 
-annotation 없는 one-off contextually typed inline callback은 시그니처를 재선언한 것이 아니므로 N/A입니다.
-예를 들어 framework option 객체의 `select: (response) => ...`는 contextual inference를 그대로 사용합니다.
-반대로 named callback과 curried factory의 최종 반환 handler를 interface·객체·framework alias로 고정하는 작업은 기존
-callback 계약 재사용이므로 Selected입니다.
+타입 표기 없이 문맥으로 추론되는 일회성 인라인 콜백은 시그니처를 다시 선언한 것이 아니라 대상이 아닙니다.
+프레임워크 옵션 객체의 `select: (response) => ...`는 문맥 추론을 그대로 씁니다.
+반대로 이름 붙인 콜백이나 커링 팩토리의 마지막 핸들러를 인터페이스·객체·프레임워크 별칭으로 고정하면
+기존 콜백 계약을 다시 쓰는 것이라 이 규칙을 적용합니다.
 
 **Incorrect (기존 계약이 있는데 콜백 시그니처를 다시 씀):**
 
@@ -448,28 +449,26 @@ const formatMessage: ToastFormatters["formatMessage"] = (message) => {
 
 **Rule:** `T09` · `types-reuse-existing-contracts-before-new-types`
 
-**Applies when:** 의미상 같은 기존 type·interface·schema 대신 shape를 새로 선언·변경·복제·파생할 때. 중복 shape를 도입·제거할 때. 제외: 호환 후보 없는 새 shape, 순수 owner 이동, unchanged contract의 새 사용처인 경우.
+**Applies when:** 뜻이 같은 기존 타입, 인터페이스, 스키마가 있는데 형태를 새로 선언·변경·복제·파생할 때. 같은 형태를 두 번 선언했다가 넣거나 뺄 때. 제외: 맞는 후보가 없는 새 형태, 소유자만 옮긴 경우, 그대로인 계약을 새 자리에서 쓰는 경우.
 
 **Review with:** `types-document-custom-types-and-shapes`
 
-**Impact: HIGH (의미가 그대로일 때 기존 타입·스키마에서 파생해 중복 shape 선언을 줄입니다)**
+**Impact: HIGH (의미가 그대로면 기존 타입이나 스키마에서 파생해 같은 형태를 두 번 선언하지 않습니다)**
 
-기존 type/schema와 field type·optionality·의미가 같으면 직접 참조하거나 `Pick`/`Omit`/Indexed Access로 파생합니다.
-신규 선언은 의미가 다를 때만 허용하며 owner 이동·이름·JSDoc만 바뀌면 N/A입니다.
+기존 타입이나 스키마와 필드 타입, 선택 여부, 뜻이 같으면 그대로 참조하거나 `Pick`, `Omit`, Indexed Access로 파생합니다.
+새로 선언하는 것은 뜻이 다를 때만입니다. 소유자 이동이나 이름, 주석만 바뀌면 대상이 아닙니다.
 
-shape delta 없는 unchanged contract의 새 use/call site에서 `types-reuse-existing-contracts-before-new-types`는
-N/A입니다.
-callable 역할은 `types-document-custom-types-and-shapes`를 별도 판정합니다.
+형태가 그대로인 계약을 새 자리에서 쓰는 것만으로는 이 규칙이 걸리지 않습니다.
+호출 계약 역할은 `types-document-custom-types-and-shapes`가 따로 판정합니다.
 
-positional→object input에서 수정 가능한 로컬 소유 호환 shape를 재사용하면
-`types-document-custom-types-and-shapes`는 Selected, `types-reuse-existing-contracts-before-new-types`는 N/A입니다.
-외부·generated·read-only·shared unchanged shape면 두 type 규칙 모두 N/A이고 callable 문서화 여부는 docs rule이 독립
-판정합니다.
-요청 밖 `*Params`/`*Input`으로 자가 활성화하지 않습니다.
-호환 shape 없는 새 domain contract는 문서화 규칙만 Selected입니다.
+위치 인자를 객체 입력으로 바꾸면서 고칠 수 있는 우리 형태를 다시 쓰면
+`types-document-custom-types-and-shapes`만 걸리고 이 규칙은 걸리지 않습니다.
+외부·생성된·읽기 전용·공용 형태를 그대로 쓰면 두 타입 규칙 모두 대상이 아니고, 문서화는 문서 규칙이 따로 판정합니다.
+요청에 없는 `*Params`나 `*Input`을 만들어 이 규칙을 스스로 켜지 않습니다.
+맞는 형태가 없는 새 도메인 계약은 문서화 규칙만 걸립니다.
 
-raw input과 normalized payload는 field가 같아도 의미가 달라 별도 input shape를 허용합니다.
-`types-document-custom-types-and-shapes`는 Selected, `types-reuse-existing-contracts-before-new-types`는 N/A입니다.
+원본 입력과 정규화한 값은 필드가 같아도 뜻이 달라 입력 형태를 따로 두는 것이 맞습니다.
+그때도 문서화 규칙만 걸리고 이 규칙은 걸리지 않습니다.
 
 **Incorrect (기존 계약과 동일한 구조를 다시 선언):**
 
@@ -493,19 +492,19 @@ type UserPreview = Pick<UserRecord, "id" | "name">;
 
 **Impact: HIGH**
 
-함수 시그니처와 helper 추출 규칙은 읽기 쉬운 local flow를 유지하면서 진짜 재사용 로직만 분리해야 합니다.
+함수 시그니처와 보조 함수 추출 규칙이 읽기 쉬운 흐름을 지키면서 진짜 재사용할 로직만 떼어 내야 합니다.
 
 ### 3.1 Avoid Imperative Assembly in Wide Scopes
 
 **Rule:** `T10` · `functions-avoid-imperative-assembly-in-wide-scopes`
 
-**Applies when:** 파일 상단이나 넓은 스코프에서 `let` 재대입, 배열 `push` 또는 조건부 누적으로 값을 조립하거나 리팩터링할 때.
+**Applies when:** 파일 위쪽이나 넓은 스코프에서 `let` 재대입, 배열 `push`, 조건부 누적으로 값을 만들거나 정리할 때.
 
-**Impact: HIGH (분기로 공유 지역 변수를 변형하지 않고 파일 전역 로직을 선언적으로 유지합니다)**
+**Impact: HIGH (분기로 공유 지역 변수를 바꾸지 않아 파일 전역 로직이 선언형으로 남습니다)**
 
-파일 상단이나 넓은 스코프에서 `let` 재대입, 배열 `push`, 조건부 누적 조립을 하지 않습니다.
-단회성 사용이면 실제 사용하는 좁은 스코프에서 직접 계산하고, 분기와 보정이 결합된 계산은 `resolve*`, `build*`,
-`normalize*` 형태 유틸로 분리합니다.
+파일 위쪽이나 넓은 스코프에서 `let` 재대입, 배열 `push`, 조건부 누적으로 값을 쌓지 않습니다.
+한 번만 쓰면 실제 쓰는 좁은 스코프에서 바로 계산합니다.
+분기와 보정이 얽힌 계산은 `resolve*`, `build*`, `normalize*` 같은 함수로 떼어 냅니다.
 
 **Incorrect (넓은 스코프에서 명령형으로 누적 조립):**
 
@@ -529,23 +528,23 @@ const visibleTabs = canManageItems
 
 **Rule:** `T11` · `functions-extract-helpers-only-when-the-boundary-is-real`
 
-**Applies when:** support function을 추출·이동·export·공유할 때. generic helper 파일, 단일 owner 전용 mapper 또는 작은 sub-step 경계를 바꿀 때.
+**Applies when:** 보조 함수를 빼내거나 옮기거나 내보내거나 공유할 때. 범용 보조 파일, 소유자 하나만 쓰는 변환 함수, 잔손질 단계의 경계를 바꿀 때.
 
 **Review with:** `docs-require-header-jsdoc-on-key-declarations`
 
-**Impact: HIGH (재사용 계약이나 테스트 경계가 실제로 없을 때 헬퍼 추출이 지역 흐름을 조각내는 것을 막습니다)**
+**Impact: HIGH (재사용 계약이나 테스트 경계가 없는데 보조 함수를 빼서 흐름이 조각나는 것을 막습니다)**
 
-support function은 "이름"이 아니라 "호출 경계"가 있을 때만 분리합니다.
+보조 함수는 "이름"이 아니라 "호출 경계"가 있을 때만 떼어 냅니다.
 
-- 필수: 명확한 input/output, 런타임 문맥 없는 독립 검증 가능성
-- 추출 신호: 여러 owner의 직접 호출, 여러 export에서 반복되는 도메인 규칙
-- 유지: 한 번만 쓰는 짧은 계산, optional 보정, label fallback, 단일 namespace method 전용 mapper
-- 배치: generic `helper.ts`/`utils.ts` 금지, owner 아래 `function` 폴더에 대표 export 하나당 파일 하나
-- 깊이: 호출은 owner → exported function → 파일 내부 private까지 두 단계로 끝냅니다
-- 승격: 여러 owner가 실제 공유하는 범용 pure function만 `shared/util.ts`의 `util.*`
+- 필수: 입력과 출력이 분명하고, 실행 문맥 없이도 따로 검증할 수 있어야 합니다
+- 떼어 낼 신호: 여러 소유자가 직접 호출하거나, 여러 내보낸 함수에서 같은 도메인 규칙이 반복됩니다
+- 그대로 둘 것: 한 번만 쓰는 짧은 계산, 선택 값 보정, 라벨 기본값, 메서드 하나만 쓰는 변환 함수
+- 배치: 범용 `helper.ts`나 `utils.ts`는 만들지 않고, 소유자 아래 `function` 폴더에 대표 함수 하나당 파일 하나
+- 깊이: 호출은 소유자에서 내보낸 함수, 그 파일 안 비공개 함수까지 두 단계로 끝냅니다
+- 승격: 여러 소유자가 실제로 함께 쓰는 순수 함수만 `shared/util.ts`의 `util.*`로 올립니다
 
-export 함수가 다른 export 함수를 따라가는 사슬은 만들지 않습니다.
-읽는 사람이 흐름을 알려고 파일을 왕복하게 되면 경계가 아니라 분해입니다.
+내보낸 함수가 또 다른 내보낸 함수를 타고 가는 사슬은 만들지 않습니다.
+흐름을 알려고 파일을 왕복해야 하면 경계가 아니라 그냥 쪼갠 것입니다.
 
 **Incorrect (단회성 계산을 generic util 파일로 분리):**
 
@@ -675,14 +674,14 @@ export const util = {
 
 **Rule:** `T12` · `functions-prefer-immutable-array-sorting`
 
-**Applies when:** props, state, 매개변수 또는 공유 입력에서 온 배열을 정렬할 때. 기존 `.sort()` 호출을 추가·변경할 때.
+**Applies when:** props, state, 매개변수, 공유 입력에서 온 배열을 정렬할 때. 기존 `.sort()` 호출을 추가·변경할 때.
 
-**Impact: MEDIUM (props·state·공유 입력에서 온 배열을 정렬할 때 변형 버그를 피합니다)**
+**Impact: MEDIUM (props, state, 공유 입력에서 온 배열을 정렬할 때 원본이 바뀌는 버그를 피합니다)**
 
-정렬이 필요한데 원본 배열을 계속 써야 한다면 `.sort()`로 제자리 mutation을 하지 않습니다.
-프로젝트 런타임이 ES2023 이상이거나 `toSorted()` 지원이 보장되면 `.toSorted()`를 우선하고,
-그렇지 않으면 복사 후 정렬합니다.
-companion skill이므로 지원 여부가 불분명한 환경에 무조건 `toSorted()`를 강제하지는 않습니다.
+원본 배열을 계속 써야 하면 `.sort()`로 제자리에서 바꾸지 않습니다.
+실행 환경이 ES2023 이상이거나 `toSorted()`를 쓸 수 있으면 `.toSorted()`를 먼저 씁니다.
+아니면 복사한 뒤 정렬합니다.
+동반 스킬이므로 지원 여부가 불분명한 환경에 `toSorted()`를 강제하지는 않습니다.
 
 **Incorrect (원본 배열을 직접 mutation):**
 
@@ -704,14 +703,14 @@ const sortedUsers = [...users].sort((left, right) => left.name.localeCompare(rig
 
 **Rule:** `T13` · `functions-replace-enum-with-as-const-objects`
 
-**Applies when:** `enum` 또는 타입과 런타임에서 함께 쓰는 enum-like 값 집합을 추가·변경할 때.
+**Applies when:** `enum` 이나 타입과 실행 양쪽에서 함께 쓰는 값 묶음을 추가·변경할 때.
 
 **Requires selected:** `naming-use-consistent-file-and-symbol-naming`, `types-document-custom-types-and-shapes` · 함께 적용
 
-**Impact: MEDIUM-HIGH (enum 특유의 동작을 들이지 않고 런타임 값을 명시적으로, 타입 추출을 가볍게 유지합니다)**
+**Impact: MEDIUM-HIGH (enum 특유의 동작을 들이지 않고 실행 값을 드러내며 타입 추출도 가볍게 둡니다)**
 
-`enum` 대신 객체 리터럴과 `as const`를 사용합니다.
-이렇게 하면 런타임 값과 타입 추론을 함께 유지하면서도 enum 고유 문법과 번들 영향을 피할 수 있습니다.
+`enum` 대신 객체와 `as const`를 씁니다.
+그러면 실행 값과 타입 추론을 함께 두면서 enum 고유 문법과 번들 부담을 피합니다.
 
 **Incorrect (`enum`을 직접 사용):**
 
@@ -742,19 +741,19 @@ type AuditStatus = (typeof audit_status)[keyof typeof audit_status];
 
 **Rule:** `T14` · `functions-use-named-object-params-for-complex-signatures`
 
-**Applies when:** 매개변수 3개 이상 또는 같은 계열 인자를 받는 일반 함수를 추가·변경할 때. 객체 매개변수의 구조분해 위치를 바꿀 때. 제외: React 함수 컴포넌트의 props 수신·구조분해만 바꾸는 경우.
+**Applies when:** 매개변수가 3개를 넘거나 같은 계열 인자를 받는 함수를 추가·변경할 때. 객체 매개변수를 어디서 구조분해할지 바꿀 때. 제외: React 함수 컴포넌트가 props 를 받고 구조분해하는 방식만 바꾸는 경우.
 
-**Impact: HIGH (긴 함수 시그니처를 읽을 수 있게 유지하고 위치 혼동 없이 묶인 입력을 확장하게 합니다)**
+**Impact: HIGH (긴 시그니처를 읽을 수 있게 두고 위치를 헷갈리지 않으면서 입력을 늘립니다)**
 
-매개변수가 3개 이상이거나 같은 계열 값이 묶여 전달되면 단일 객체 매개변수로 묶고,
-함수 시그니처에서 바로 구조분해하지 않습니다.
-객체 매개변수 타입은 파일 최상단의 named contract를 사용하고, 함수 본문 첫 줄에서 구조분해해 사용합니다.
-구조분해 줄이 길어 formatter 예외가 꼭 필요할 때도 함수 본문 안에서 처리합니다.
+매개변수가 3개를 넘거나 같은 계열 값이 함께 넘어오면 객체 하나로 묶습니다.
+시그니처 자리에서 바로 구조분해하지 않습니다.
+객체 매개변수 타입은 파일 위쪽에 이름을 붙여 선언하고, 함수 본문 첫 줄에서 구조분해합니다.
+구조분해 줄이 길어 포매터 예외가 필요해도 함수 본문 안에서 처리합니다.
 
-React 함수 컴포넌트의 props 전체 수신과 본문 구조분해만 바뀌는 경우는 `react/composition-destructure-props-inside`가
-담당하므로 이 규칙을 중복 선택하지 않습니다.
-객체 인자와 field type·optionality·의미가 같은 기존 named contract가 있으면 그대로 재사용하고,
-이 규칙을 지키기 위해 별도 `*Params`나 `*Args`를 새로 만들지 않습니다.
+React 함수 컴포넌트가 props 를 통째로 받아 본문에서 구조분해하는 것만 바뀌면
+`react/composition-destructure-props-inside`가 담당하므로 이 규칙을 겹쳐 적용하지 않습니다.
+객체 인자와 필드 타입, 선택 여부, 뜻이 같은 계약이 이미 있으면 그대로 씁니다.
+이 규칙을 지키려고 `*Params`나 `*Args`를 새로 만들지 않습니다.
 
 **Incorrect (시그니처에서 바로 구조분해):**
 
@@ -792,13 +791,13 @@ const buildRequestUrl = (args: BuildRequestUrlArgs): URL => {
 
 **Rule:** `T15` · `functions-use-set-and-map-for-repeated-lookups`
 
-**Applies when:** 같은 컬렉션에 `includes`, `find` 또는 keyed lookup을 여러 번 수행하는 코드를 추가·변경할 때.
+**Applies when:** 같은 목록에 `includes`, `find`, 키 조회를 여러 번 하는 코드를 추가·변경할 때.
 
-**Impact: MEDIUM (조회 횟수가 늘어나면 반복되는 포함 검사와 키 접근을 명시적으로 드러냅니다)**
+**Impact: MEDIUM (조회가 늘어나면 반복되는 포함 검사와 키 접근을 드러냅니다)**
 
-같은 컬렉션에 대해 membership check나 keyed access를 여러 번 반복한다면 배열 `includes`,
-`find`를 매번 다시 돌리지 말고 `Set`이나 `Map`으로 한 번 정리합니다.
-단발성 한두 번 조회면 그대로 두고, 반복 lookup이 실제로 있는 경우에만 승격합니다.
+같은 목록에 포함 검사나 키 조회를 여러 번 한다면 `includes`와 `find`를 매번 돌리지 않습니다.
+`Set`이나 `Map`으로 한 번 정리합니다.
+한두 번 조회면 그대로 두고, 반복이 실제로 있을 때만 바꿉니다.
 
 **Incorrect (같은 배열을 반복 순회하며 membership을 확인):**
 
@@ -830,21 +829,21 @@ const approver = userById.get(approverId);
 
 **Impact: HIGH**
 
-결측값은 casual fallback 연산자로 숨기지 말고 의도적으로 드러내야 합니다.
+빠진 값을 기본값 연산자로 덮지 않고 일부러 드러내야 합니다.
 
 ### 4.1 Expose Optional Values Instead of Silent Fallbacks
 
 **Rule:** `T16` · `absence-expose-optional-values-instead-of-silent-fallbacks`
 
-**Applies when:** optional 값의 읽기·정규화·전달을 바꿀 때. `??`, `||`, 기본값 또는 빈 값 대체 분기를 추가·변경할 때.
+**Applies when:** 선택 값을 읽거나 정규화하거나 넘기는 방식을 바꿀 때. `??`, `||`, 기본값, 빈 값 대체 분기를 추가·변경할 때.
 
 **Review with:** `docs-keep-inline-comments-for-constraints-and-caveats`
 
-**Impact: HIGH (일반 기본값으로 부재를 조용히 덮지 않고 결측 데이터가 드러나게 합니다)**
+**Impact: HIGH (일반 기본값으로 부재를 덮지 않아 빠진 데이터가 드러납니다)**
 
-optional 값에 대해 `??`, `||`로 기본값을 넣는 fallback 처리를 기본적으로 금지합니다.
-값이 없을 수 있음을 명확히 드러내고, 꼭 필요할 때만 도메인상 기본값이 명확하며
-코드 바로 위 이유 주석이 있을 때 제한적으로 허용합니다.
+선택 값에 `??`나 `||`로 기본값을 채워 없음을 덮지 않습니다.
+값이 없을 수 있다는 사실을 그대로 드러냅니다.
+도메인상 기본값이 분명하고 코드 바로 위에 이유 주석이 있을 때만 예외로 씁니다.
 
 **Incorrect (결측을 호출부에서 조용히 숨김):**
 
@@ -880,13 +879,14 @@ const resolvePageSize = (query: SearchQuery): string => {
 
 **Rule:** `T17` · `docs-keep-inline-comments-for-constraints-and-caveats`
 
-**Applies when:** 함수 본문의 `//` 주석을 추가·수정·유지할 때. 도메인 규칙, 예외 방어, 외부 제약 또는 부수효과 순서를 주석으로 설명할 때.
+**Applies when:** 함수 본문의 `//` 주석을 추가·수정·유지할 때. 도메인 규칙, 예외 방어, 외부 제약, 부수효과 순서를 주석으로 설명할 때.
 
-**Impact: MEDIUM (자명한 코드를 설명하는 주석은 막고 실제 오해를 방지하는 메모는 남깁니다)**
+**Impact: MEDIUM (자명한 코드를 설명하는 주석은 막고 오해를 막는 메모만 남깁니다)**
 
-함수 본문 내부에서는 JSDoc 블록 주석을 사용하지 않고, `//` 주석은 도메인 규칙, 예외 방어 의도, 외부 라이브러리 제약,
-부수효과 순서처럼 없으면 오해될 수 있는 경우에만 씁니다.
-변수명 그대로 반복하는 설명은 남기지 않습니다.
+함수 본문 안에서는 블록 주석을 쓰지 않습니다.
+`//` 주석은 도메인 규칙, 예외를 막은 의도, 외부 라이브러리 제약, 부수효과 순서처럼
+없으면 오해할 자리에만 씁니다.
+변수명을 그대로 되풀이하는 설명은 남기지 않습니다.
 
 **Incorrect (자명한 동작을 그대로 설명):**
 
@@ -908,28 +908,28 @@ if (!normalizedToken) {
 
 **Rule:** `T18` · `docs-require-header-jsdoc-on-key-declarations`
 
-**Applies when:** query·mutation, 원격 함수, 비자명한 handler/effect, exported helper·hook, custom type·interface, store 선언을 추가·변경할 때. 선언 위 주석의 형식이나 태그를 정할 때.
+**Applies when:** 질의·변경 요청, 원격 함수, 뻔하지 않은 핸들러와 이펙트, 내보낸 보조 함수와 훅, 커스텀 타입, 스토어 선언을 추가·변경할 때. 선언 위 주석의 형식이나 태그를 정할 때.
 
 **Requires selected:** `docs-write-concise-korean-comments-about-purpose-and-constraints` · 함께 적용
 
-**Impact: MEDIUM-HIGH (구현 본문을 읽기 전에 중요한 경계를 검색하고 설명할 수 있게 합니다)**
+**Impact: MEDIUM-HIGH (구현을 읽기 전에 중요한 경계를 찾고 설명할 수 있습니다)**
 
-named query·mutation binding, 원격 함수, 비자명한 handler/effect, reusable/exported helper와 custom hook,
-커스텀 `type`/`interface`, store, formatter, 예외 memo 선언에는 헤더 doc 주석을 작성합니다.
-중요한 경계가 파일 검색에서 바로 보이게 하는 것이 목적입니다.
+이름 붙인 질의와 변경 요청, 원격 함수, 뻔하지 않은 핸들러와 이펙트, 재사용하거나 내보낸 보조 함수,
+커스텀 훅, 커스텀 `type`과 `interface`, 스토어, 포매터, 예외 메모 선언에는 헤더 문서 주석을 씁니다.
+중요한 경계가 파일 검색에서 바로 보이게 하려는 것입니다.
 
 형식은 여러 줄 블록으로 고정합니다.
-`/**`, `*`, `*/`를 각각 줄로 나누고 `/** 한 줄 */` 형태는 쓰지 않습니다.
+`/**`, `*`, `*/`를 각각 줄로 나누고 `/** 한 줄 */`은 쓰지 않습니다.
 선언 설명에 `//`를 쓰지 않습니다. `//`는 본문 안 제약 설명 몫입니다.
 
-annotation 태그는 쓰지 않습니다.
-`@api`, `@helper`, `@summary` 같은 역할 태그를 붙이지 않고 `@schema`처럼 새로 만들지도 않습니다.
-선언 종류는 이름 규칙과 문법이 이미 드러냅니다.
+역할 태그는 쓰지 않습니다.
+`@api`, `@helper`, `@summary` 같은 태그를 붙이지 않고 `@schema`처럼 새로 만들지도 않습니다.
+선언이 무엇인지는 이름 규칙과 문법이 이미 드러냅니다.
 `@deprecated`, `@example`처럼 TSDoc 규격에 있는 태그만 필요할 때 씁니다.
 
-헤더 doc 주석은 본문이 비어 있거나 영문 label뿐이면 요구를 충족하지 않습니다.
-`requiresSelected`의 `docs-write-concise-korean-comments-about-purpose-and-constraints`는
-선택 bookkeeping이 아니라 실제 한국어 content gate입니다.
+헤더 문서 주석은 본문이 비어 있거나 영문 라벨뿐이면 요구를 채우지 못합니다.
+함께 선택되는 `docs-write-concise-korean-comments-about-purpose-and-constraints`는
+형식만 맞추는 절차가 아니라 실제 한국어 내용을 요구합니다.
 
 **Incorrect (주요 선언에 헤더 설명이 없음):**
 
@@ -982,18 +982,17 @@ const responseEntryList = useEntryList();
 
 **Rule:** `T19` · `docs-write-concise-korean-comments-about-purpose-and-constraints`
 
-**Applies when:** TypeScript/TSX의 JSDoc이나 inline comment 문구를 추가·수정·번역하거나 리뷰할 때.
+**Applies when:** TypeScript·TSX 의 문서 주석이나 인라인 주석 문구를 추가·수정·번역하거나 검토할 때.
 
-**Impact: MEDIUM (코드 동작을 서술하지 않고 의도와 제약에 주석을 집중시킵니다)**
+**Impact: MEDIUM (코드 동작을 옮겨 적지 않고 의도와 제약에 주석을 모읍니다)**
 
-주석은 한글로 작성하고, 목적, 제약, 부작용 중심으로 간결하게 적습니다.
-헤더와 필드 doc 주석 문장은 명사형 종결이나 개조식 표현을 기본으로 하며,
-코드 동작 설명보다 도입 이유와 제약 설명을 우선합니다.
+주석은 한국어로 쓰고 목적, 제약, 부수효과를 짧게 적습니다.
+코드가 무엇을 하는지 옮겨 적기보다 왜 넣었고 무엇을 조심해야 하는지를 먼저 씁니다.
 
-기술 용어와 identifier는 영문으로 섞을 수 있지만
-주석 본문 전체가 ASCII 또는 영문 label이면 한글 주석으로 인정하지 않습니다.
-새로 추가하거나 바꾼 각 doc 주석 본문에는 그 선언의 목적이나 제약을 설명하는 한글 구절이 있어야 합니다.
-다른 필드 주석이 한글이어도 영문-only 헤더 주석을 대신 통과시키지 않습니다.
+기술 용어와 식별자는 영어로 섞어도 됩니다.
+다만 주석 본문이 전부 영어이면 한국어 주석으로 인정하지 않습니다.
+새로 넣거나 고친 문서 주석에는 그 선언의 목적이나 제약을 설명하는 한국어 구절이 있어야 합니다.
+다른 필드 주석이 한국어라고 영어뿐인 헤더 주석을 대신 통과시키지 않습니다.
 
 **Incorrect (영문 또는 How 중심의 장황한 설명):**
 
@@ -1023,21 +1022,21 @@ const responseEntryList = useEntryList();
 
 **Impact: MEDIUM**
 
-마무리 전에는 TypeScript 컨벤션을 가장 자주 무너뜨리는 반복 shortcut 기준으로 코드를 점검해야 합니다.
+마무리 전에 컨벤션을 가장 자주 무너뜨리는 지름길을 기준으로 코드를 점검해야 합니다.
 
 ### 6.1 Review Banned TypeScript Shortcuts Before Finishing
 
 **Rule:** `T20` · `guardrails-review-banned-typescript-shortcuts-before-finishing`
 
-**Applies when:** TypeScript/TSX 변경을 완료 판정할 때. diff에서 barrel, 중복 타입, 조기 helper, 넓은 조립, 무근거 fallback 또는 자명한 주석을 점검할 때.
+**Applies when:** TypeScript·TSX 변경을 끝났다고 판정할 때. 변경 내역에서 배럴, 중복 타입, 이른 보조 함수, 넓은 조립, 근거 없는 기본값, 자명한 주석을 점검할 때.
 
 **Required on completion:** 마무리 시 항상 적용
 
-**Impact: MEDIUM (import·타입·헬퍼·fallback·주석 규율을 가장 자주 무너뜨리는 지름길을 잡아냅니다)**
+**Impact: MEDIUM (import, 타입, 보조 함수, 기본값, 주석 규율을 가장 자주 무너뜨리는 지름길을 잡아냅니다)**
 
-작업을 끝냈다고 보기 전에 반복적으로 금지되는 TypeScript 지름길을 다시 확인합니다.
-barrel export, 기존 타입 재선언, 재사용 근거 없는 조기 추상화, 넓은 스코프 명령형 조립, 사유 없는 폴백,
-자명한 코드 설명 주석은 마무리 전에 제거합니다.
+끝났다고 보기 전에 자주 되풀이되는 지름길을 다시 확인합니다.
+배럴, 기존 타입 재선언, 재사용 근거 없이 앞당긴 추상화, 넓은 스코프 조립, 이유 없는 기본값,
+자명한 코드를 설명하는 주석은 마무리 전에 지웁니다.
 
 **Incorrect (금지 패턴을 그대로 남김):**
 

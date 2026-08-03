@@ -1,9 +1,9 @@
 # Avoid Imperative Assembly in Wide Scopes
 
-**Impact: HIGH (분기로 공유 지역 변수를 변형하지 않고 파일 전역 로직을 선언적으로 유지합니다)**
+**Impact: HIGH (분기로 공유 지역 변수를 바꾸지 않아 파일 전역 로직이 선언형으로 남습니다)**
 
-파일 상단이나 넓은 스코프에서 `let` 재대입, 배열 `push`, 조건부 누적 조립을 하지 않습니다.
-단회성 사용이면 실제 사용하는 좁은 스코프에서 직접 계산하고, 분기와 보정이 결합된 계산은 `resolve*`, `build*`,
-`normalize*` 형태 유틸로 분리합니다.
+파일 위쪽이나 넓은 스코프에서 `let` 재대입, 배열 `push`, 조건부 누적으로 값을 쌓지 않습니다.
+한 번만 쓰면 실제 쓰는 좁은 스코프에서 바로 계산합니다.
+분기와 보정이 얽힌 계산은 `resolve*`, `build*`, `normalize*` 같은 함수로 떼어 냅니다.
 
 > 예시·예외가 필요하면 [full rule](../rules/03-01-functions-avoid-imperative-assembly-in-wide-scopes.md)을 읽습니다.

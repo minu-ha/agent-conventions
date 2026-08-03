@@ -1,22 +1,22 @@
 ---
 title: Expose Optional Values Instead of Silent Fallbacks
-titleKo: 조용한 fallback 대신 optional 노출
+titleKo: 없는 값을 기본값으로 덮지 않고 선택 값으로 드러냅니다
 impact: HIGH
-impactDescription: 일반 기본값으로 부재를 조용히 덮지 않고 결측 데이터가 드러나게 합니다
+impactDescription: 일반 기본값으로 부재를 덮지 않아 빠진 데이터가 드러납니다
 appliesWhen:
-  - optional 값의 읽기·정규화·전달을 바꿀 때
-  - `??`, `||`, 기본값 또는 빈 값 대체 분기를 추가·변경할 때
+  - 선택 값을 읽거나 정규화하거나 넘기는 방식을 바꿀 때
+  - `??`, `||`, 기본값, 빈 값 대체 분기를 추가·변경할 때
 reviewWith: docs-keep-inline-comments-for-constraints-and-caveats
 tags: optional, fallback, absence
 ---
 
 ## Expose Optional Values Instead of Silent Fallbacks
 
-**Impact: HIGH (일반 기본값으로 부재를 조용히 덮지 않고 결측 데이터가 드러나게 합니다)**
+**Impact: HIGH (일반 기본값으로 부재를 덮지 않아 빠진 데이터가 드러납니다)**
 
-optional 값에 대해 `??`, `||`로 기본값을 넣는 fallback 처리를 기본적으로 금지합니다.
-값이 없을 수 있음을 명확히 드러내고, 꼭 필요할 때만 도메인상 기본값이 명확하며
-코드 바로 위 이유 주석이 있을 때 제한적으로 허용합니다.
+선택 값에 `??`나 `||`로 기본값을 채워 없음을 덮지 않습니다.
+값이 없을 수 있다는 사실을 그대로 드러냅니다.
+도메인상 기본값이 분명하고 코드 바로 위에 이유 주석이 있을 때만 예외로 씁니다.
 
 **Incorrect (결측을 호출부에서 조용히 숨김):**
 

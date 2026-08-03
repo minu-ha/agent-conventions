@@ -1,13 +1,13 @@
 # Mark Unused Parameters With an Underscore Prefix
 
-**Impact: MEDIUM-HIGH (계약의 일부를 조용히 버리지 않고 의도적으로 무시한 callback 매개변수를 드러냅니다)**
+**Impact: MEDIUM-HIGH (계약의 일부를 조용히 버리지 않고 일부러 무시한 매개변수를 드러냅니다)**
 
 미사용 매개변수도 생략하지 않고 `_` 접두사로 명시합니다.
-이렇게 해야 callback 시그니처 계약을 유지하면서도, 현재 구현에서 의도적으로 쓰지 않는 값이라는 점이 드러납니다.
+그래야 콜백 시그니처를 그대로 지키면서, 지금 구현이 일부러 쓰지 않는 값이라는 점이 드러납니다.
 
-curried handler의 최종 callback을 포함해,
-framework alias나 기존 callback 계약이 선언한 매개변수를 구현 함수에서 생략하는 경우도 Selected입니다.
-`MouseEventHandler`를 반환하면서 event 매개변수를 쓰지 않는다면 매개변수 생략은 N/A 근거가 아니며,
-`() =>` 대신 `_event`를 받는 `(_event) =>`로 계약을 보존합니다.
+커링한 핸들러의 마지막 콜백도 마찬가지입니다.
+프레임워크 별칭이나 기존 콜백 계약이 선언한 매개변수를 구현에서 빼면 이 규칙을 적용합니다.
+`MouseEventHandler`를 돌려주면서 이벤트 매개변수를 쓰지 않는 경우도 예외가 아닙니다.
+`() =>` 대신 `(_event) =>`로 받아 계약을 남깁니다.
 
 > 예시·예외가 필요하면 [full rule](../rules/02-02-types-mark-unused-parameters-with-underscore.md)을 읽습니다.

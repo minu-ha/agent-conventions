@@ -1,30 +1,30 @@
 ---
 title: Extract Support Functions Only When the Boundary Is Real
-titleKo: 실재하는 경계 기준의 support 함수 추출
+titleKo: 호출 경계가 실제로 있을 때만 보조 함수를 뺍니다
 impact: HIGH
-impactDescription: 재사용 계약이나 테스트 경계가 실제로 없을 때 헬퍼 추출이 지역 흐름을 조각내는 것을 막습니다
+impactDescription: 재사용 계약이나 테스트 경계가 없는데 보조 함수를 빼서 흐름이 조각나는 것을 막습니다
 appliesWhen:
-  - support function을 추출·이동·export·공유할 때
-  - generic helper 파일, 단일 owner 전용 mapper 또는 작은 sub-step 경계를 바꿀 때
+  - 보조 함수를 빼내거나 옮기거나 내보내거나 공유할 때
+  - 범용 보조 파일, 소유자 하나만 쓰는 변환 함수, 잔손질 단계의 경계를 바꿀 때
 reviewWith: docs-require-header-jsdoc-on-key-declarations
 tags: helpers, extraction, boundaries
 ---
 
 ## Extract Support Functions Only When the Boundary Is Real
 
-**Impact: HIGH (재사용 계약이나 테스트 경계가 실제로 없을 때 헬퍼 추출이 지역 흐름을 조각내는 것을 막습니다)**
+**Impact: HIGH (재사용 계약이나 테스트 경계가 없는데 보조 함수를 빼서 흐름이 조각나는 것을 막습니다)**
 
-support function은 "이름"이 아니라 "호출 경계"가 있을 때만 분리합니다.
+보조 함수는 "이름"이 아니라 "호출 경계"가 있을 때만 떼어 냅니다.
 
-- 필수: 명확한 input/output, 런타임 문맥 없는 독립 검증 가능성
-- 추출 신호: 여러 owner의 직접 호출, 여러 export에서 반복되는 도메인 규칙
-- 유지: 한 번만 쓰는 짧은 계산, optional 보정, label fallback, 단일 namespace method 전용 mapper
-- 배치: generic `helper.ts`/`utils.ts` 금지, owner 아래 `function` 폴더에 대표 export 하나당 파일 하나
-- 깊이: 호출은 owner → exported function → 파일 내부 private까지 두 단계로 끝냅니다
-- 승격: 여러 owner가 실제 공유하는 범용 pure function만 `shared/util.ts`의 `util.*`
+- 필수: 입력과 출력이 분명하고, 실행 문맥 없이도 따로 검증할 수 있어야 합니다
+- 떼어 낼 신호: 여러 소유자가 직접 호출하거나, 여러 내보낸 함수에서 같은 도메인 규칙이 반복됩니다
+- 그대로 둘 것: 한 번만 쓰는 짧은 계산, 선택 값 보정, 라벨 기본값, 메서드 하나만 쓰는 변환 함수
+- 배치: 범용 `helper.ts`나 `utils.ts`는 만들지 않고, 소유자 아래 `function` 폴더에 대표 함수 하나당 파일 하나
+- 깊이: 호출은 소유자에서 내보낸 함수, 그 파일 안 비공개 함수까지 두 단계로 끝냅니다
+- 승격: 여러 소유자가 실제로 함께 쓰는 순수 함수만 `shared/util.ts`의 `util.*`로 올립니다
 
-export 함수가 다른 export 함수를 따라가는 사슬은 만들지 않습니다.
-읽는 사람이 흐름을 알려고 파일을 왕복하게 되면 경계가 아니라 분해입니다.
+내보낸 함수가 또 다른 내보낸 함수를 타고 가는 사슬은 만들지 않습니다.
+흐름을 알려고 파일을 왕복해야 하면 경계가 아니라 그냥 쪼갠 것입니다.
 
 **Incorrect (단회성 계산을 generic util 파일로 분리):**
 

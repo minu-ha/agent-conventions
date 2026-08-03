@@ -1,28 +1,28 @@
 ---
 title: Use Named Object Params for Complex Signatures
-titleKo: 복잡한 시그니처의 named 객체 매개변수 적용
+titleKo: 시그니처가 복잡해지면 이름 붙인 객체 매개변수로 묶습니다
 impact: HIGH
-impactDescription: 긴 함수 시그니처를 읽을 수 있게 유지하고 위치 혼동 없이 묶인 입력을 확장하게 합니다
+impactDescription: 긴 시그니처를 읽을 수 있게 두고 위치를 헷갈리지 않으면서 입력을 늘립니다
 appliesWhen:
-  - 매개변수 3개 이상 또는 같은 계열 인자를 받는 일반 함수를 추가·변경할 때
-  - 객체 매개변수의 구조분해 위치를 바꿀 때
-  - 제외: React 함수 컴포넌트의 props 수신·구조분해만 바꾸는 경우
+  - 매개변수가 3개를 넘거나 같은 계열 인자를 받는 함수를 추가·변경할 때
+  - 객체 매개변수를 어디서 구조분해할지 바꿀 때
+  - 제외: React 함수 컴포넌트가 props 를 받고 구조분해하는 방식만 바꾸는 경우
 tags: functions, params, signatures
 ---
 
 ## Use Named Object Params for Complex Signatures
 
-**Impact: HIGH (긴 함수 시그니처를 읽을 수 있게 유지하고 위치 혼동 없이 묶인 입력을 확장하게 합니다)**
+**Impact: HIGH (긴 시그니처를 읽을 수 있게 두고 위치를 헷갈리지 않으면서 입력을 늘립니다)**
 
-매개변수가 3개 이상이거나 같은 계열 값이 묶여 전달되면 단일 객체 매개변수로 묶고,
-함수 시그니처에서 바로 구조분해하지 않습니다.
-객체 매개변수 타입은 파일 최상단의 named contract를 사용하고, 함수 본문 첫 줄에서 구조분해해 사용합니다.
-구조분해 줄이 길어 formatter 예외가 꼭 필요할 때도 함수 본문 안에서 처리합니다.
+매개변수가 3개를 넘거나 같은 계열 값이 함께 넘어오면 객체 하나로 묶습니다.
+시그니처 자리에서 바로 구조분해하지 않습니다.
+객체 매개변수 타입은 파일 위쪽에 이름을 붙여 선언하고, 함수 본문 첫 줄에서 구조분해합니다.
+구조분해 줄이 길어 포매터 예외가 필요해도 함수 본문 안에서 처리합니다.
 
-React 함수 컴포넌트의 props 전체 수신과 본문 구조분해만 바뀌는 경우는 `react/composition-destructure-props-inside`가
-담당하므로 이 규칙을 중복 선택하지 않습니다.
-객체 인자와 field type·optionality·의미가 같은 기존 named contract가 있으면 그대로 재사용하고,
-이 규칙을 지키기 위해 별도 `*Params`나 `*Args`를 새로 만들지 않습니다.
+React 함수 컴포넌트가 props 를 통째로 받아 본문에서 구조분해하는 것만 바뀌면
+`react/composition-destructure-props-inside`가 담당하므로 이 규칙을 겹쳐 적용하지 않습니다.
+객체 인자와 필드 타입, 선택 여부, 뜻이 같은 계약이 이미 있으면 그대로 씁니다.
+이 규칙을 지키려고 `*Params`나 `*Args`를 새로 만들지 않습니다.
 
 **Incorrect (시그니처에서 바로 구조분해):**
 
