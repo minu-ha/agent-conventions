@@ -293,7 +293,9 @@ test("viewer markup lists skills as rail chips, not a dropdown", () => {
 
 	assert.match(html, /id="f-skill"/);
 	assert.equal(/<select/.test(html), false, "skill selection must be rail chips, not a dropdown");
-	assert.match(html, /id="companion"/);
+	// 동반 skill 힌트는 뺐다. 노출되는 skill 이 셋뿐이라 칩만으로 충분하다.
+	assert.equal(/id="companion"/.test(html), false, "companion hint row must stay removed");
+	assert.match(html, /<span class="grp-lb">영향도<\/span>/);
 	// rail 4개 그룹: skill, impact, section, tag
 	assert.match(html, /id="f-impact"/);
 	assert.match(html, /id="f-section"/);

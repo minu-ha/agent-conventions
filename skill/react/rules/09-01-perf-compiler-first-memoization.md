@@ -5,7 +5,7 @@ impact: MEDIUM-HIGH
 impactDescription: 효과를 확인하지 않은 방어적 useMemo 와 useCallback 을 막습니다
 appliesWhen:
   - `useMemo`·`useCallback`을 추가하거나 제거할 때
-  - 참조 동일성·실측 병목·무거운 deferred 계산을 이유로 수동 memoization을 검토할 때
+  - 참조 동일성·실측 병목·무거운 지연 계산을 이유로 수동 memoization을 검토할 때
 tags: state, react, memoization
 ---
 

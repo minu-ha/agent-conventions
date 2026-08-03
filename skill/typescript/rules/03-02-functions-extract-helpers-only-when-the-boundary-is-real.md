@@ -59,7 +59,7 @@ export const buildProfileUpdatePayload = (
 };
 ```
 
-**Incorrect (한 namespace method만 위해 mapper/helper를 쪼갬):**
+**Incorrect (네임스페이스 메서드 하나 때문에 변환 함수를 쪼갬):**
 
 ```ts
 const readLabelText = (label: Label) => label.name.trim() || label.code;

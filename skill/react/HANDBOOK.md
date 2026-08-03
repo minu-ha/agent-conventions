@@ -92,7 +92,7 @@ ui, widget, owner-private 코드는 소유 경계가 분명해야 에이전트�
 
 **Rule:** `R01` · `ownership-import-react-types-directly`
 
-**Applies when:** `React.*` 네임스페이스 타입과 direct `import type` 중 선택할 때. 같은 모듈 경로에서 타입과 값 중 무엇을 가져올지 추가·삭제·전환할 때. 제외: 일반 direct 값 import만 바꾸는 경우.
+**Applies when:** `React.*` 네임스페이스 타입과 직접 `import type` 중 선택할 때. 같은 모듈 경로에서 타입과 값 중 무엇을 가져올지 추가·삭제·전환할 때. 제외: 일반 직접 값 import만 바꾸는 경우.
 
 **Requires selected:** `typescript/naming-use-direct-imports-and-public-entry-points` · 함께 적용
 
@@ -107,7 +107,7 @@ React 타입은 `React.MouseEvent` 같은 전역 네임스페이스 대신 `impo
 - 같은 이름이 이미 지역에 있으면 import에 별칭을 붙이지 말고 지역 이름을 바꿉니다.
 - 같은 모듈 path여도 타입은 `import type`으로 따로 가져와 런타임 의존과 분리합니다.
 - 같은 경로에서 타입과 값 중 무엇을 가져오는지가 바뀌면 import 계약이 바뀐 것이라 이 규칙을 다시 봅니다.
-- 일반 third-party 값을 별칭 없이 직접 import하는 변경만으로는 걸리지 않습니다.
+- 일반 외부 패키지 값을 별칭 없이 직접 import하는 변경만으로는 걸리지 않습니다.
 
 barrel과 공개 진입점 판단은 `typescript/naming-use-direct-imports-and-public-entry-points`가 소유합니다.
 
@@ -143,13 +143,13 @@ const handleClick: MouseEventHandler<HTMLButtonElement> = (_event) => {
 
 **Rule:** `R02` · `ownership-prefer-plain-ts-for-local-react-helpers`
 
-**Applies when:** 화면 전용 계산·정규화·payload 조립을 커스텀 훅으로 추출하려 할 때. 화면 전용 순수 로직을 별도 보조 모듈으로 옮기려 할 때.
+**Applies when:** 화면 전용 계산·정규화·전송 값 조립을 커스텀 훅으로 추출하려 할 때. 화면 전용 순수 로직을 별도 보조 모듈으로 옮기려 할 때.
 
 **Review with:** `ownership-keep-lifecycle-in-the-owning-component`, `ownership-place-owner-files-in-role-folders`, `screen-extract-utilities-selectively`, `typescript/functions-extract-helpers-only-when-the-boundary-is-real`
 
 **Impact: HIGH (React 전용 추상을 실제 생명주기나 문맥이 얽힌 자리로만 한정합니다)**
 
-화면 하나에 종속된 계산, 정규화, payload 조립은 커스텀 훅으로 포장하지 않습니다.
+화면 하나에 종속된 계산, 정규화, 전송 값 조립은 커스텀 훅으로 포장하지 않습니다.
 먼저 일반 `.ts` 보조 모듈에 둡니다.
 
 - 추출 위치는 소유자 아래 `function` 폴더이고, 대표 내보낸 함수 하나당 파일 하나를 둡니다.
@@ -208,7 +208,7 @@ const request = buildMediaUploadPayload(files);
 
 컴포넌트는 소유 레이어를 이름으로 드러냅니다.
 
-| 레이어 | 책임 | 파일 · 심볼 · slug |
+| 레이어 | 책임 | 파일 · 심볼 · 식별자 |
 | --- | --- | --- |
 | `ui` | 도메인을 모르는 순수 화면 | `ui-button.tsx` · `UiButton` · `ui_button` |
 | `widget` | 화면 조립을 전제하지 않는 공용 조합 | `wg-chart.tsx` · `WgChart` · `wg_chart` |
@@ -216,7 +216,7 @@ const request = buildMediaUploadPayload(files);
 
 세 레이어 모두 파일명과 심볼에 계층 접두사를 붙이고 예외를 두지 않습니다.
 폴더에는 붙이지 않습니다. 상위 계층 폴더가 이미 계층을 말합니다.
-slug에서는 접두사가 말하는 부분을 반복하지 않습니다.
+식별자에서는 접두사가 말하는 부분을 반복하지 않습니다.
 
 레이어 판정은 두 축으로 갈립니다.
 
@@ -335,7 +335,7 @@ const PgDeleteEntryButton = () => {
 
 - 필요한 역할 폴더만 그때 만듭니다. 빈 폴더를 미리 만들어 두지 않습니다.
 - 파일이 하나뿐인 역할 폴더도 그대로 둡니다. 형제 `.ts` 하나로 대신하지 않습니다.
-- 자기 역할 폴더가 필요한 컴포넌트만 자기 폴더를 갖고, leaf는 `component` 아래 파일로 둡니다.
+- 자기 역할 폴더가 필요한 컴포넌트만 자기 폴더를 갖고, 말단은 `component` 아래 파일로 둡니다.
 - Props는 해당 TSX에 두고 여러 파일이 공유하는 계약만 `type`으로 옮깁니다.
 - 컴포넌트 파일명에는 계층 접두사를 붙이고 폴더명에는 붙이지 않습니다.
 - 소유자 중첩이 3단계에 닿으면 분리가 맞는지, widget 으로 나갈 대상인지 다시 봅니다.
@@ -367,7 +367,7 @@ page/detail/
 └── helpers/
 ```
 
-**Correct (필요한 역할 폴더만 만들고 leaf는 파일로 둠):**
+**Correct (필요한 역할 폴더만 만들고 말단은 파일로 둠):**
 
 ```txt
 page/detail/
@@ -399,13 +399,13 @@ ui/button/
 
 **Rule:** `R05` · `ownership-shared-config-entry-points`
 
-**Applies when:** 둘 이상의 화면이 쓰는 상수·설정·순수 함수를 추가하거나 옮길 때. leaf 파일에 중복 선언된 공용 값을 정리할 때.
+**Applies when:** 둘 이상의 화면이 쓰는 상수·설정·순수 함수를 추가하거나 옮길 때. 말단 파일에 중복 선언된 공용 값을 정리할 때.
 
 **Review with:** `typescript/naming-centralize-shared-config-namespaces`, `typescript/naming-preserve-config-origin-with-chained-access`
 
 **Impact: HIGH (공용 상수가 라우트와 지역 컴포넌트 곳곳으로 흩어지지 않습니다)**
 
-여러 화면에서 쓰는 상수와 설정은 라우트 파일이나 private 컴포넌트에 흩뿌리지 않습니다.
+여러 화면에서 쓰는 상수와 설정은 라우트 파일이나 비공개 컴포넌트에 흩뿌리지 않습니다.
 기본 출처는 `shared/config.ts` 한 파일입니다.
 
 | 대상 | 위치 |
@@ -439,7 +439,7 @@ config.navigation.project_menu_key.dashboard;
 
 **Rule:** `R06` · `ownership-use-consistent-file-and-symbol-naming`
 
-**Applies when:** React/TSX 파일·컴포넌트·내보낸 symbol·공용 설정 이름을 정하거나 바꿀 때. 형제 `.ts` 보조 파일·symbol을 만들거나 옮길 때. 제외: 지역 질의·변경 요청 바인딩 이름만 바꾸는 경우.
+**Applies when:** React/TSX 파일·컴포넌트·내보낸 심볼·공용 설정 이름을 정하거나 바꿀 때. 형제 `.ts` 보조 파일·심볼을 만들거나 옮길 때. 제외: 지역 질의·변경 요청 바인딩 이름만 바꾸는 경우.
 
 **Requires selected:** `typescript/naming-use-consistent-file-and-symbol-naming` · 함께 적용
 
@@ -461,7 +461,7 @@ config.navigation.project_menu_key.dashboard;
 
 - 형제 `.ts` 보조 파일을 만들거나 지역 선언을 이름 붙인 export로 옮기면
   이름 자체가 그대로여도 이 규칙을 확인합니다.
-- non-exported 지역 symbol은 TypeScript `naming-use-consistent-file-and-symbol-naming`이,
+- non-exported 지역 심볼은 TypeScript `naming-use-consistent-file-and-symbol-naming`이,
   지역 질의·변경 요청 바인딩은 `data-name-query-and-mutation-bindings-consistently`가 담당합니다.
   그것만 바꾸면 이 규칙은 적용하지 않습니다.
 
@@ -568,13 +568,13 @@ import { WgLegendPanel } from "@/widget/legend-panel/wg-legend-panel";
 
 **Rule:** `R08` · `ownership-keep-lifecycle-in-the-owning-component`
 
-**Applies when:** 외부 라이브러리 instance 생성·resize·구독·dispose를 한 컴포넌트가 소유할 때. 생명주기 코드를 커스텀 훅으로 옮겨 파일을 줄이려 할 때. 제외: 여러 소유자가 같은 생명주기 계약을 실제로 호출하는 경우.
+**Applies when:** 외부 라이브러리 인스턴스 생성·크기 변경·구독·정리를 한 컴포넌트가 소유할 때. 생명주기 코드를 커스텀 훅으로 옮겨 파일을 줄이려 할 때. 제외: 여러 소유자가 같은 생명주기 계약을 실제로 호출하는 경우.
 
 **Review with:** `ownership-prefer-plain-ts-for-local-react-helpers`
 
 **Impact: HIGH (파일 길이를 줄이려고 생명주기를 훅 뒤로 숨겨 실행 흐름이 사라지지 않습니다)**
 
-외부 라이브러리의 instance 생성, resize, 이벤트 구독, dispose는 그 하위 트리를 소유한 컴포넌트가 직접 가집니다.
+외부 라이브러리의 인스턴스 생성, 크기 변경, 이벤트 구독, 정리는 그 하위 트리를 소유한 컴포넌트가 직접 가집니다.
 파일이 길어졌다는 이유만으로 커스텀 훅을 만들어 생명주기를 숨기지 않습니다.
 
 - 한 소유자만 쓰는 생명주기는 그 컴포넌트 안의 이펙트로 둡니다.
@@ -667,7 +667,7 @@ React가 제공하는 핸들러와 prop 계약은 선언 위치에서 바로 드
 
 **Rule:** `R09` · `typing-function-type-first`
 
-**Applies when:** React 이벤트 핸들러나 prop 콜백의 선언·시그니처를 추가·변경할 때. 기존 React 별칭이나 콜백 계약을 그대로 쓸 수 있는 상황일 때. curried 팩토리가 최종 반환하는 핸들러를 다룰 때.
+**Applies when:** React 이벤트 핸들러나 prop 콜백의 선언·시그니처를 추가·변경할 때. 기존 React 별칭이나 콜백 계약을 그대로 쓸 수 있는 상황일 때. 커링한 팩토리가 최종 반환하는 핸들러를 다룰 때.
 
 **Requires selected:** `typescript/types-reuse-callback-signatures-from-existing-contracts` · 함께 적용
 
@@ -678,15 +678,15 @@ React가 제공하는 핸들러와 prop 계약은 선언 위치에서 바로 드
 React가 제공하는 이벤트 핸들러 타입이나 prop 콜백 계약이 이미 있다면
 매개변수 타입보다 함수 변수 타입 선언을 우선합니다.
 
-curried 핸들러 팩토리가 반환하는 함수도 JSX 이벤트 prop에 전달되는 React 핸들러 선언입니다.
-JSX가 나중에 contextual 타입 지정을 제공한다는 이유로 반환 함수 타입을 생략하지 않고,
+커링한 핸들러 팩토리가 반환하는 함수도 JSX 이벤트 prop에 전달되는 React 핸들러 선언입니다.
+JSX가 나중에 문맥 타입 지정을 제공한다는 이유로 반환 함수 타입을 생략하지 않고,
 팩토리 반환 타입을 `MouseEventHandler<...>` 같은 기존 별칭으로 고정합니다.
 
-- `query.select` 같은 훅 option의 one-off contextual 콜백과 UI-agnostic domain function은
+- `query.select` 같은 훅 옵션의 one-off 문맥 콜백과 UI를 모르는 도메인 함수은
   React 이벤트 핸들러나 prop 콜백 구현이 아닙니다. 이 경우 이 규칙은 적용하지 않습니다.
 - React 별칭을 쓰려고 type import를 추가·변경하면
   `ownership-import-react-types-directly`를 다시 판단합니다.
-- 일반 TypeScript 함수 타입 규칙은 companion skill인 `convention-typescript`가 다룹니다.
+- 일반 TypeScript 함수 타입 규칙은 동반 스킬인 `convention-typescript`가 다룹니다.
   여기서는 React 핸들러 별칭을 바로 쓰는 경우만 봅니다.
 
 **Incorrect (핸들러 타입이 있는데 매개변수만 타입 지정):**
@@ -714,7 +714,7 @@ const handleAddButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => {
 
 **Rule:** `R10` · `typing-reuse-existing-contracts`
 
-**Applies when:** Props 콜백 구현을 추가·변경할 때. API 응답 기반 화면 type을 추가·변경하는데 기존 prop·API 계약과 같은 shape가 보일 때. 래퍼 컴포넌트 사용처에서 Props 타입을 참조할 때.
+**Applies when:** Props 콜백 구현을 추가·변경할 때. API 응답 기반 화면 type을 추가·변경하는데 기존 prop·API 계약과 같은 형태가 보일 때. 래퍼 컴포넌트 사용처에서 Props 타입을 참조할 때.
 
 **Review with:** `typescript/types-reuse-callback-signatures-from-existing-contracts`, `typescript/types-reuse-existing-contracts-before-new-types`
 
@@ -758,7 +758,7 @@ Shared 컴포넌트는 single 컴포넌트, 합성 컴포넌트, explicit 변형
 
 **Rule:** `R11` · `strategy-avoid-boolean-prop-proliferation`
 
-**Applies when:** 여러 곳에서 쓰는 공용 컴포넌트에 boolean mode·표시 prop을 추가할 때. 기존 boolean prop 조합과 JSX 분기가 늘어날 때.
+**Applies when:** 여러 곳에서 쓰는 공용 컴포넌트에 boolean 모드·표시 prop을 추가할 때. 기존 boolean prop 조합과 JSX 분기가 늘어날 때.
 
 **Impact: HIGH (공용 컴포넌트가 숨은 조합을 쌓지 않고 구조를 드러냅니다)**
 
@@ -768,7 +768,7 @@ boolean이 늘어날수록 가능한 조합이 급증하고, JSX 분기와 스�
 
 - 라우트 진입 안의 일회성 분기는 로컬에서 유지해도 됩니다.
 - 공용 `ui`나 `widget`는 explicit 변형 컴포넌트나 합성 컴포넌트로 드러냅니다.
-- `.Root` 같은 namespaced 부품 문법은 권장 예시일 뿐입니다.
+- `.Root` 같은 네임스페이스 부품 문법은 권장 예시일 뿐입니다.
   본질은 boolean을 없애고 구조를 명시적으로 드러내는 데 있습니다.
 
 **Incorrect (boolean prop 조합으로 공용 컴포넌트가 비대해짐):**
@@ -829,7 +829,7 @@ export const WgEntryEditToolbar = () => {
 
 **Rule:** `R12` · `strategy-choose-single-composition-compound-and-variants`
 
-**Applies when:** 내보낸 공용 컴포넌트에 슬롯·공개 부품·공용 컨텍스트/동작을 추가할 때. 반복되는 기본 설정이나 mode API를 추가할 때. 공용 컴포넌트의 조립 구조를 재설계할 때.
+**Applies when:** 내보낸 공용 컴포넌트에 슬롯·공개 부품·공용 컨텍스트/동작을 추가할 때. 반복되는 기본 설정이나 모드 API를 추가할 때. 공용 컴포넌트의 조립 구조를 재설계할 때.
 
 **Review with:** `screen-avoid-premature-abstraction`, `strategy-avoid-boolean-prop-proliferation`, `strategy-prefer-children-over-render-props`
 
@@ -846,7 +846,7 @@ export const WgEntryEditToolbar = () => {
 | 부품 조립만 필요함 | `stateless compound component` |
 | 여러 부품이 같은 상태/동작/컨텍스트를 읽음 | `stateful compound component` |
 | 같은 합성 조합이 반복됨 | `explicit variant component` |
-| parent가 실행 환경 데이터를 child 콜백에 전달해야 함 | `render prop` |
+| 부모가 실행 환경 데이터를 자식 콜백에 전달해야 함 | `render prop` |
 
 공개 부품은 소비자가 이름으로 조립해야 하거나 공용 컨텍스트/동작을 직접 쓰는 영역만 공개합니다.
 단순 class 래퍼, spacing 보정 DOM, 내부 레이아웃 보조 함수는 숨깁니다.
@@ -981,8 +981,8 @@ export const ReadOnlyProfileDialog = () => {
 **Impact: MEDIUM (부모가 콜백으로 값을 내려보낼 필요가 없으면 조립이 읽기 쉬워집니다)**
 
 공용 컴포넌트가 `stateless compound component`로 충분할 때는 `renderHeader`,
-`renderFooter` 같은 렌더 prop보다 `children`과 namespaced 슬롯 부품을 우선합니다.
-렌더 prop은 parent가 child에 item, index, 상태 같은 실행 환경 데이터를 전달해야 할 때만 사용합니다.
+`renderFooter` 같은 렌더 prop보다 `children`과 네임스페이스 슬롯 부품을 우선합니다.
+렌더 prop은 부모가 자식에 item, index, 상태 같은 실행 환경 데이터를 전달해야 할 때만 사용합니다.
 
 **Incorrect (정적인 구조를 렌더 prop으로 조립):**
 
@@ -1005,7 +1005,7 @@ export const Panel = (props: PanelProps) => {
 };
 ```
 
-**Correct (children과 namespaced 슬롯 부품으로 구조를 드러냄):**
+**Correct (children과 네임스페이스 슬롯 부품으로 구조를 드러냄):**
 
 ```tsx
 export interface PanelProps {
@@ -1100,13 +1100,13 @@ const UserCard = (props: UserCardProps) => {
 
 **Rule:** `R15` · `composition-do-not-define-components-inside-components`
 
-**Applies when:** 컴포넌트 본문 안에 JSX를 반환하는 로컬 함수·컴포넌트를 추가하거나 옮길 때. 재렌더 시 재마운트·focus reset 징후를 다룰 때.
+**Applies when:** 컴포넌트 본문 안에 JSX를 반환하는 로컬 함수·컴포넌트를 추가하거나 옮길 때. 재렌더 시 재마운트·focus 초기화 징후를 다룰 때.
 
 **Impact: HIGH (렌더마다 컴포넌트 타입을 다시 만들어 생기는 재마운트와 상태 초기화를 막습니다)**
 
 컴포넌트 본문 안에서 다른 컴포넌트를 새로 정의하지 않습니다.
-parent가 다시 렌더될 때마다 child 컴포넌트 type도 새로 만들어져
-재마운트, focus reset, animation restart, 이펙트 재실행이 생깁니다.
+부모가 다시 렌더될 때마다 자식 컴포넌트 type도 새로 만들어져
+재마운트, focus 초기화, animation restart, 이펙트 재실행이 생깁니다.
 
 로컬에서 JSX 조각을 재사용하려면 보조 함수 함수 호출로 남기거나,
 독립 컴포넌트로 빼고 props를 전달합니다.
@@ -1246,18 +1246,18 @@ const handleRemoveEntryButtonClick: MouseEventHandler<HTMLButtonElement> = async
 
 **Rule:** `R18` · `composition-use-ref-prop-instead-of-forwardref-in-react-19`
 
-**Applies when:** React 19 컴포넌트에 focus·scroll·measure용 ref 공개 API를 추가·변경할 때. 새 `forwardRef` 래퍼를 도입하려 할 때.
+**Applies when:** React 19 컴포넌트에 focus·스크롤·측정용 ref 공개 API를 추가·변경할 때. 새 `forwardRef` 래퍼를 도입하려 할 때.
 
 **Impact: MEDIUM-HIGH (컴포넌트 정의를 단순하게 두고 습관처럼 붙는 옛 래퍼를 막습니다)**
 
 React 19 codebase에서 `ref`는 외부에서 실제로 제어해야 하는 공개 imperative 계약입니다.
 
-- focus, scroll, measure 같은 계약이 있을 때만 `ref` prop을 엽니다.
+- focus, 스크롤, 측정 같은 계약이 있을 때만 `ref` prop을 엽니다.
 - 그 경우에도 새 `forwardRef` 래퍼 대신 `ref`를 일반 prop처럼 직접 받습니다.
 - 외부 제어가 필요 없는 단순 화면 컴포넌트에는 `ref` prop을 추가하지 않습니다.
 
 기존 `forwardRef`를 모두 지우라는 뜻은 아닙니다.
-third-party 타입 제약이나 점진적 마이그레이션 때문에 유지해야 하면 예외로 둡니다.
+외부 패키지 타입 제약이나 점진적 마이그레이션 때문에 유지해야 하면 예외로 둡니다.
 
 **Incorrect (React 19에서도 새 `forwardRef`를 추가):**
 
@@ -1327,9 +1327,9 @@ React 19의 `<Activity />` 또는 프로젝트가 이미 채택한 동등한 표
 이미 마운트된 하위 트리를 보여주거나 숨기는 의도일 때만 씁니다.
 
 삼항 렌더링과 표시 방식은 같은 의미가 아닙니다.
-삼항은 branch를 아예 unmount하지만, 표시 방식은 숨겨진 하위 트리의 상태와 이펙트를 유지합니다.
+삼항은 branch를 아예 해제하지만, 표시 방식은 숨겨진 하위 트리의 상태와 이펙트를 유지합니다.
 
-- mount/unmount 의미가 중요하면 기존 조건부 렌더링을 유지합니다.
+- 마운트와 해제 자체가 의미를 가지면 기존 조건부 렌더링을 유지합니다.
 - 코드베이스에 `Activity`가 아직 없으면 이 규칙 때문에 새 추상화를 들이지 말고 기존 패턴을 따릅니다.
 
 **Incorrect (생명주기 의미가 다른 분기를 무비판적으로 표시 방식으로 치환):**
@@ -1361,13 +1361,13 @@ return hasItems ? <ItemList /> : <EmptyState />;
 
 **Impact: HIGH**
 
-Route 진입은 화면 흐름을 분명하게 보여줘야 하며, 보조 함수 추출도 경계가 정당할 때만 해야 합니다. layout-only 분리는 지양하지만 async, 상태, interaction 같은 실행 환경 boundary를 소유한 route-local 섹션은 추출할 수 있습니다.
+Route 진입은 화면 흐름을 분명하게 보여줘야 하며, 보조 함수 추출도 경계가 정당할 때만 해야 합니다. layout-only 분리는 지양하지만 async, 상태, 상호작용 같은 실행 환경 경계를 소유한 route-local 섹션은 추출할 수 있습니다.
 
 ### 5.1 Avoid Premature Abstraction in Screen Code
 
 **Rule:** `R20` · `screen-avoid-premature-abstraction`
 
-**Applies when:** screen 코드를 보조 함수·훅·컴포넌트·모듈으로 추출할 때. 한 곳에서만 쓰는 기존 추상화를 다시 접어 넣을 때.
+**Applies when:** 화면 코드를 보조 함수·훅·컴포넌트·모듈으로 추출할 때. 한 곳에서만 쓰는 기존 추상화를 다시 접어 넣을 때.
 
 **Review with:** `screen-extract-local-section-components-for-runtime-boundaries`, `screen-extract-utilities-selectively`, `typescript/functions-extract-helpers-only-when-the-boundary-is-real`
 
@@ -1379,13 +1379,13 @@ Route 진입은 화면 흐름을 분명하게 보여줘야 하며, 보조 함수
 
 - 한 함수 안에서 단계 변수, 섹션 comment, 내부 블록으로 정리
 - 화면 지역 JSX에 남기고 흐름을 보이게 유지
-- 작은 mapper, href 조립, fallback 처리는 호출 위치에 유지
+- 작은 변환 함수, href 조립, 기본값 처리는 호출 위치에 유지
 
 추출을 허용하는 경우:
 
 - 여러 화면/모듈이 같은 이름의 계약으로 직접 호출하는 경우
-- 상태·이펙트·컨텍스트·form·스토어 연결을 한 커스텀 훅이 실제로 소유하는 경우
-- 화면 지역 컴포넌트가 비동기, 상태, provider, 상호작용 같은 실행 경계를 소유하는 경우
+- 상태·이펙트·컨텍스트·폼·스토어 연결을 한 커스텀 훅이 실제로 소유하는 경우
+- 화면 지역 컴포넌트가 비동기, 상태, 프로바이더, 상호작용 같은 실행 경계를 소유하는 경우
 
 금지하는 구조:
 
@@ -1485,21 +1485,21 @@ export const EntryTable = (props: EntryTableProps) => {
 
 **Rule:** `R21` · `screen-extract-local-section-components-for-runtime-boundaries`
 
-**Applies when:** 화면 지역 섹션 컴포넌트를 새로 추출할 때. 기존 섹션이 비동기·상태·provider·interaction·라이브러리·performance 경계를 소유하는지 바꿀 때.
+**Applies when:** 화면 지역 섹션 컴포넌트를 새로 추출할 때. 기존 섹션이 비동기·상태·프로바이더·상호작용·라이브러리·성능 경계를 소유하는지 바꿀 때.
 
 **Impact: HIGH (화면 흐름은 보이게 두고 실제 실행 경계가 있는 부분만 떼어 냅니다)**
 
 라우트 진입의 지역 컴포넌트는 `runtime boundary`가 있을 때만 추출합니다.
 단순 레이아웃 래퍼, className grouping, 들여쓰기 감소만으로는 추출하지 않습니다.
 
-추출 가능한 boundary:
+추출 가능한 경계:
 
-- 비동기: `Suspense`, skeleton, loading, error, empty 상태
-- 상태, provider: 지역 상태, 이펙트 sync, form provider, 컨텍스트, scoped 스토어
-- interaction: popover, modal, selection, inline edit, drag, expandable tree
-- 라이브러리, 성능: dense 위젯 adapter, virtualization, 전환, deferred 값
+- 비동기: `Suspense`, skeleton, 로딩, error, empty 상태
+- 상태, 프로바이더: 지역 상태, 이펙트 sync, 폼 프로바이더, 컨텍스트, scoped 스토어
+- 상호작용: 팝오버, 모달, 선택, 인라인 편집, 드래그, 펼치는 트리
+- 라이브러리, 성능: dense 위젯 어댑터, virtualization, 전환, 지연 값
 
-검색 param, navigation, page-level 질의/변경 요청, cross-section 이펙트, invalidate, redirect,
+검색 매개변수, 화면 이동, page-level 질의/변경 요청, 화면 전체 이펙트, 무효화, 이동,
 여러 섹션에 걸친 파생값은 라우트 진입에 둡니다.
 
 호출 계층은 폴더 깊이가 아니라 진입 파일의 조립이 드러냅니다.
@@ -1541,7 +1541,7 @@ export const PgEntries = () => {
 };
 ```
 
-**Correct (실행 환경 boundary를 소유하는 섹션만 화면 지역 컴포넌트로 추출):**
+**Correct (실행 환경 경계를 소유하는 섹션만 화면 지역 컴포넌트로 추출):**
 
 ```tsx
 interface  PgEntryTreeSection Props {
@@ -1643,7 +1643,7 @@ export const PgEntries = () => {
 
 **Rule:** `R22` · `screen-extract-utilities-selectively`
 
-**Applies when:** 화면 계산·변환·기본 설정·option·column meta를 별도 함수나 보조 모듈으로 옮길 때. 화면 보조 경계를 바꿀 때. 제외: 질의 `select` 내부 shaping만 바꾸는 경우.
+**Applies when:** 화면 계산·변환·기본 설정·옵션·column 메타를 별도 함수나 보조 모듈으로 옮길 때. 화면 보조 경계를 바꿀 때. 제외: 질의 `select` 내부 shaping만 바꾸는 경우.
 
 **Review with:** `ownership-place-owner-files-in-role-folders`, `typescript/functions-extract-helpers-only-when-the-boundary-is-real`
 
@@ -1654,22 +1654,22 @@ export const PgEntries = () => {
 추출 후보:
 
 - React 상태/훅과 직접 결합되지 않은 pure function
-- 입력/출력 계약이 명확한 화면 전용 변환, 기본 설정, option, column meta
-- 밖으로 빼면 라우트 진입의 response, 상태, 핸들러, 렌더 flow가 더 잘 보이는 코드
+- 입력/출력 계약이 명확한 화면 전용 변환, 기본 설정, 옵션, column 메타
+- 밖으로 빼면 라우트 진입의 응답, 상태, 핸들러, 렌더 flow가 더 잘 보이는 코드
 - 여러 내보낸 함수에서 같은 단계가 반복되는 이름 있는 도메인 규칙
 
 호출 지점에 남길 대상:
 
-- 작은 1회성 guard, URL 조립, 빈 검색어 생략 같은 호출 지점 계산
-- 핸들러/이펙트 안에 있어야 문맥이 보이는 질의 invalidation, navigation, fallback 처리
-- 질의 `select` 내부 mapper.
+- 작은 1회성 가드, URL 조립, 빈 검색어 생략 같은 호출 지점 계산
+- 핸들러/이펙트 안에 있어야 문맥이 보이는 질의 invalidation, 화면 이동, 기본값 처리
+- 질의 `select` 내부 변환 함수.
   `data-shape-query-data-with-select`가 담당하므로 별도 함수나 보조 모듈 경계가 없으면 이 규칙은 적용하지 않습니다.
 
 배치 기준:
 
 - 소유자 아래 `function` 폴더에 대표 내보낸 함수 하나당 파일 하나로 둡니다.
 - `helper.ts`, `helpers.ts`, `utils.ts`, `common.ts` 같은 generic 파일명은 만들지 않습니다.
-- 한 파일 안에서 작은 private 보조 함수를 쌓지 말고, 기본은 한 내보낸 함수 안에서 단계별로 정리합니다.
+- 한 파일 안에서 작은 비공개 보조 함수를 쌓지 말고, 기본은 한 내보낸 함수 안에서 단계별로 정리합니다.
 
 **Incorrect (한 파일에 export 보조 함수를 단계별로 쌓아 서로 호출하게 만듦):**
 
@@ -1764,7 +1764,7 @@ export const EntryTable = (props: EntryTableProps) => {
 
 **Rule:** `R23` · `screen-keep-derived-values-close`
 
-**Applies when:** 오리진을 끊는 별칭·flag·표시값을 넓은 screen scope에 추가·이동·제거할 때. `let` 재할당이나 배열 `push` 기반 조립을 바꿀 때.
+**Applies when:** 오리진을 끊는 별칭·flag·표시값을 넓은 화면 scope에 추가·이동·제거할 때. `let` 재할당이나 배열 `push` 기반 조립을 바꿀 때.
 
 **Impact: HIGH (출처가 남고 화면 진입 파일이 별칭과 준비 코드로 채워지지 않습니다)**
 
@@ -1807,19 +1807,19 @@ return <UiInput value={selectedNodeContext?.node?.name} />;
 
 **Rule:** `R24` · `screen-keep-route-flow-visible`
 
-**Applies when:** 라우트 진입의 검색·navigate·질의·변경 요청·cross-section 이펙트를 옮기거나 나눌 때. page 섹션 조립의 순서나 소유자를 바꿀 때. 제외: 같은 소유자 안에서 표현만 바꾸는 경우.
+**Applies when:** 라우트 진입의 검색·navigate·질의·변경 요청·화면 전체 이펙트를 옮기거나 나눌 때. page 섹션 조립의 순서나 소유자를 바꿀 때. 제외: 같은 소유자 안에서 표현만 바꾸는 경우.
 
 **Review with:** `ownership-place-owner-files-in-role-folders`, `screen-extract-local-section-components-for-runtime-boundaries`
 
 **Impact: HIGH (진입 파일만 봐도 화면 흐름을 따라갈 수 있습니다)**
 
-Route 진입은 검색, navigate, page 질의·변경 요청, cross-section 이펙트와 렌더 조립을 보여줍니다.
-비동기·상태·interaction 경계를 가진 섹션을 분리해도 이 흐름 제어 자체는 라우트 진입에 남깁니다.
+Route 진입은 검색, navigate, page 질의·변경 요청, 화면 전체 이펙트와 렌더 조립을 보여줍니다.
+비동기·상태·상호작용 경계를 가진 섹션을 분리해도 이 흐름 제어 자체는 라우트 진입에 남깁니다.
 
 소유자가 그대로인 변경은 대상이 아닙니다.
 
-- `query.select` shape, 바인딩·별칭 정리, derived-state 이펙트를 렌더 계산으로 옮기는 것
-- 순수 type·payload builder·기본 설정의 형제 `.ts` 이동. support-code 규칙이 담당합니다.
+- `query.select` 형태, 바인딩·별칭 정리, derived-state 이펙트를 렌더 계산으로 옮기는 것
+- 순수 type·전송 값 builder·기본 설정의 형제 `.ts` 이동. support-code 규칙이 담당합니다.
 
 **Incorrect (흐름보다 분해 자체가 목적이 됨):**
 
@@ -1880,7 +1880,7 @@ Event 핸들러는 이름이 예측 가능하고 이펙트 재실행을 유발�
 
 **Rule:** `R25` · `events-keep-handler-flow-inline`
 
-**Applies when:** 화면 전용 이름 붙인 핸들러의 분기·변경 요청·navigation·후처리를 여러 보조 함수나 훅으로 나눌 때. 쪼개져 있던 핸들러 흐름을 다시 합칠 때.
+**Applies when:** 화면 전용 이름 붙인 핸들러의 분기·변경 요청·화면 이동·후처리를 여러 보조 함수나 훅으로 나눌 때. 쪼개져 있던 핸들러 흐름을 다시 합칠 때.
 
 **Review with:** `screen-extract-utilities-selectively`
 
@@ -1941,14 +1941,14 @@ const handleSubmitButtonClick: MouseEventHandler<HTMLButtonElement> = async (_ev
 | DOM 이벤트 | `handle + Target + Event` |
 | 동작 문맥이 분명할 때 | `handle + DomainAction` |
 
-인라인 콜백을 `handle*`로 추출할 때 이벤트 외 추가 인자가 필요하면 팩토리가 이벤트 boundary를 소유합니다.
+인라인 콜백을 `handle*`로 추출할 때 이벤트 외 추가 인자가 필요하면 팩토리가 이벤트 경계를 소유합니다.
 `(id): MouseEventHandler<Element> => (_event) => ...` 반환값을 JSX에 직접 전달합니다.
 `onClick={() => handleSelectionToggle(id)}` 같은 래퍼로 우회한 상태는 이 규칙을 만족하지 않습니다.
 
 - 최종 반환 React 핸들러는 `typing-function-type-first`를 다시 판단합니다.
-  별칭이나 prop 콜백 계약을 쓸 수 있으면 그 규칙도 함께 적용하고 contextual 타입 지정으로 숨기지 않습니다.
-- 기존 UI-agnostic domain command나 커스텀 컴포넌트 prop 콜백이 `(id) => void`이면
-  direct 콜백이나 최소 adapter를 유지합니다.
+  별칭이나 prop 콜백 계약을 쓸 수 있으면 그 규칙도 함께 적용하고 문맥 타입 지정으로 숨기지 않습니다.
+- 기존 UI를 모르는 도메인 명령나 커스텀 컴포넌트 prop 콜백이 `(id) => void`이면
+  직접 콜백이나 최소 어댑터를 유지합니다.
 - `useEffectEvent`에도 계약에 없는 DOM 이벤트나 curry를 만들지 않습니다.
   이 경우 React DOM 핸들러 타입 지정 규칙은 적용하지 않습니다.
 
@@ -1990,7 +1990,7 @@ const handleListItemClick =
 **Impact: HIGH (한 번뿐인 동작을 상태와 이펙트 재실행으로 흉내 내지 않습니다)**
 
 제출, 저장, 삭제, 닫기 같은 사용자 액션은 해당 핸들러 안에서 바로 실행합니다.
-액션 자체를 상태로 올린 뒤 `useEffect`가 나중에 실행하게 만들면 unrelated dependency 변화에도 재실행되기 쉽고,
+액션 자체를 상태로 올린 뒤 `useEffect`가 나중에 실행하게 만들면 무관한 의존성 변화에도 재실행되기 쉽고,
 흐름도 읽기 어려워집니다.
 
 **Incorrect (사용자 액션을 상태 + 이펙트로 모델링):**
@@ -2032,7 +2032,7 @@ Query와 변경 요청은 오리진을 보존해야 하며, 응답 변형은 `qu
 
 **Rule:** `R28` · `data-avoid-fallback-defaults-and-loading-flags`
 
-**Applies when:** optional 응답에 `??`·`||` 기본값을 넣을 때. Suspense 화면 본문에 초기 loading return을 추가·변경할 때. 결측·로딩 UX를 다룰 때.
+**Applies when:** optional 응답에 `??`·`||` 기본값을 넣을 때. Suspense 화면 본문에 초기 로딩 return을 추가·변경할 때. 결측·로딩 UX를 다룰 때.
 
 **Review with:** `data-preserve-origin-chaining`, `screen-keep-derived-values-close`, `typescript/absence-expose-optional-values-instead-of-silent-fallbacks`
 
@@ -2044,7 +2044,7 @@ Suspense 질의의 초기 blocking 로딩도 화면 본문에서 즉석 분기�
 
 - `isPending`, `isFetching` 같은 상태는 기존 UI를 보조하는 좁은 용도로만 씁니다.
   버튼 비활성화, background refetch indicator, 저장 중 배지가 그런 경우입니다.
-- 화면 전체를 가리는 로컬 loading 분기가 꼭 필요하면 가까운 한글 주석으로 이유를 남깁니다.
+- 화면 전체를 가리는 로컬 로딩 분기가 꼭 필요하면 가까운 한글 주석으로 이유를 남깁니다.
 
 **Incorrect (결측과 로딩을 즉석에서 숨김):**
 
@@ -2119,7 +2119,7 @@ const mutationEntryRemove = useEntryRemove();
 
 **Rule:** `R30` · `data-preserve-origin-chaining`
 
-**Applies when:** page·레이아웃·screen 넓은 스코프에서 response·변경 요청·스토어를 구조분해할 때. 원본을 별칭으로 끊고 값 접근 방식을 바꿀 때.
+**Applies when:** page·레이아웃·화면 넓은 스코프에서 응답·변경 요청·스토어를 구조분해할 때. 원본을 별칭으로 끊고 값 접근 방식을 바꿀 때.
 
 **Review with:** `screen-keep-derived-values-close`
 
@@ -2161,7 +2161,7 @@ useEffect(() => {
 
 **Rule:** `R31` · `data-shape-query-data-with-select`
 
-**Applies when:** 서버 응답의 list·items·meta 등을 렌더에서 가공하거나 반복 소비할 때. React Query `select`의 결과 shape를 추가·변경할 때.
+**Applies when:** 서버 응답의 목록·items·메타 등을 렌더에서 가공하거나 반복 소비할 때. React Query `select`의 결과 형태를 추가·변경할 때.
 
 **Requires selected:** `docs-require-jsdoc-on-key-declarations` · 함께 적용
 
@@ -2206,15 +2206,15 @@ const responseEntryListSuspense = useEntryListSuspense({
 
 **Rule:** `R32` · `state-calculate-derived-values-during-render`
 
-**Applies when:** 현재 props·상태·검색·response에서 계산 가능한 값을 별도 상태와 이펙트로 동기화할 때. 그런 동기화를 제거할 때.
+**Applies when:** 현재 props·상태·검색·응답에서 계산 가능한 값을 별도 상태와 이펙트로 동기화할 때. 그런 동기화를 제거할 때.
 
 **Requires selected:** `screen-keep-derived-values-close` · 함께 적용
 
 **Impact: HIGH (지금 입력으로 구할 수 있는 값을 상태로 두고 이펙트로 맞추지 않습니다)**
 
-현재 props, 상태, 검색, response에서 바로 계산할 수 있는 값은
+현재 props, 상태, 검색, 응답에서 바로 계산할 수 있는 값은
 `useEffect`와 `useState`로 다시 동기화하지 않습니다.
-렌더 중에 계산하면 추가 렌더와 drift가 줄고, 이펙트 dependency도 억지로 늘어나지 않습니다.
+렌더 중에 계산하면 추가 렌더와 drift가 줄고, 이펙트 의존성도 억지로 늘어나지 않습니다.
 
 파생값은 렌더 중에 만들고 사용 지점 가까이에 둡니다.
 배치 기준은 `screen-keep-derived-values-close`가 함께 정합니다.
@@ -2281,13 +2281,13 @@ const responseUserGetItemSuspense = useUserGetItemSuspense();
 
 **Rule:** `R34` · `state-store-derived-authority`
 
-**Applies when:** 여러 화면·메뉴·라우트 guard가 쓰는 권한·capability 같은 derived decision을 스토어에 저장·동기화할 때. 단일 화면에서만 쓰는 값까지 스토어로 올리려 할 때.
+**Applies when:** 여러 화면·메뉴·라우트 가드가 쓰는 권한·권한 같은 파생 판단을 스토어에 저장·동기화할 때. 단일 화면에서만 쓰는 값까지 스토어로 올리려 할 때.
 
 **Review with:** `docs-require-jsdoc-on-key-declarations`
 
 **Impact: HIGH (같은 도메인 판별 로직이 여러 화면에 퍼지지 않습니다)**
 
-여러 화면, 메뉴, 라우트 guard에서 반복해서 필요한 derived decision만 스토어에 승격합니다.
+여러 화면, 메뉴, 라우트 가드에서 반복해서 필요한 파생 판단만 스토어에 승격합니다.
 단일 화면에서 한두 번 읽는 질의 필드까지 스토어로 복제하지 않습니다.
 
 스토어에 올리기로 했다면 문자열 비교나 도메인 판별은 초기화나 레이아웃 같은 한 경계에만 모으고,
@@ -2306,7 +2306,7 @@ useEffect(() => {
 }, [accessStore, canEditRecord]);
 ```
 
-**Correct (공용 derived decision은 소유자가 분명한 경계에서만 적재하고 화면은 결과만 참조):**
+**Correct (공용 파생 판단은 소유자가 분명한 경계에서만 적재하고 화면은 결과만 참조):**
 
 ```ts
 const accessStore = useAccessStore();
@@ -2337,8 +2337,8 @@ useEffect(() => {
 
 **Impact: MEDIUM-HIGH (다음 값이 현재 상태에 달려 있을 때 낡은 값을 붙잡는 버그를 막습니다)**
 
-다음 상태가 현재 상태 값에 의존하면 직접 바깥 변수를 참조하지 말고 functional updater를 사용합니다.
-특히 핸들러, 비동기 콜백, 여러 번 연속 호출될 수 있는 갱신에서는 stale closure를 막는 데 중요합니다.
+다음 상태가 현재 상태 값에 의존하면 직접 바깥 변수를 참조하지 말고 함수형 갱신자를 사용합니다.
+특히 핸들러, 비동기 콜백, 여러 번 연속 호출될 수 있는 갱신에서는 낡은 값 붙잡기를 막는 데 중요합니다.
 
 **Incorrect (현재 상태를 바깥 closure에서 직접 읽음):**
 
@@ -2353,7 +2353,7 @@ const handleToggleUser = (userId: string) => {
 };
 ```
 
-**Correct (functional updater로 항상 최신 상태를 기준으로 갱신):**
+**Correct (함수형 갱신자로 항상 최신 상태를 기준으로 갱신):**
 
 ```tsx
 /**
@@ -2374,7 +2374,7 @@ const handleToggleUser = (userId: string) => {
 
 **Rule:** `R36` · `state-use-effectevent-for-non-reactive-effect-callbacks`
 
-**Applies when:** subscription 이펙트가 최신 prop·상태 콜백을 읽어야 할 때. ref 동기화 hack, dependency 재설치, `useEffectEvent`를 추가·변경할 때.
+**Applies when:** subscription 이펙트가 최신 prop·상태 콜백을 읽어야 할 때. ref 동기화 hack, 의존성 재설치, `useEffectEvent`를 추가·변경할 때.
 
 **Requires selected:** `docs-require-jsdoc-on-key-declarations` · 함께 적용
 
@@ -2432,13 +2432,13 @@ useEffect(() => {
 
 **Impact: MEDIUM-HIGH**
 
-메모이제이션은 React Compiler를 기본으로 두고 직접 손대지 않습니다. 실제로 무거운 초기화와 갱신만 lazy initializer, 전환, deferred value로 미룹니다.
+메모이제이션은 React Compiler를 기본으로 두고 직접 손대지 않습니다. 실제로 무거운 초기화와 갱신만 lazy initializer, 전환, 지연 value로 미룹니다.
 
 ### 9.1 Prefer React Compiler Defaults Over Manual Memoization
 
 **Rule:** `R37` · `perf-compiler-first-memoization`
 
-**Applies when:** `useMemo`·`useCallback`을 추가하거나 제거할 때. 참조 동일성·실측 병목·무거운 deferred 계산을 이유로 수동 memoization을 검토할 때.
+**Applies when:** `useMemo`·`useCallback`을 추가하거나 제거할 때. 참조 동일성·실측 병목·무거운 지연 계산을 이유로 수동 memoization을 검토할 때.
 
 **Impact: MEDIUM-HIGH (효과를 확인하지 않은 방어적 useMemo 와 useCallback 을 막습니다)**
 
@@ -2498,11 +2498,11 @@ const [draftFilter] = useState(() => {
 
 **Rule:** `R39` · `perf-use-starttransition-for-non-urgent-updates`
 
-**Applies when:** 클릭·선택·필터 변경 뒤 큰 list·table·tree를 다시 그리는 상태 update를 다룰 때. 상태 update의 우선순위나 전환 처리를 바꿀 때.
+**Applies when:** 클릭·선택·필터 변경 뒤 큰 목록·표·트리를 다시 그리는 상태 update를 다룰 때. 상태 update의 우선순위나 전환 처리를 바꿀 때.
 
 **Impact: MEDIUM (상태 변경이 무거운 목록이나 표를 건드릴 때도 반응이 유지됩니다)**
 
-클릭이나 선택 이후 무거운 list, table, tree 렌더가 따라오는 비긴급 시각 업데이트는 `startTransition`으로 감쌉니다.
+클릭이나 선택 이후 무거운 목록, 표, 트리 렌더가 따라오는 비긴급 시각 업데이트는 `startTransition`으로 감쌉니다.
 입력값 자체, 폼 에러, 즉시 비활성화 같은 urgent feedback까지 전환에 넣지는 않습니다.
 
 **Incorrect (무거운 비긴급 업데이트를 urgent 상태로 처리):**
@@ -2536,12 +2536,12 @@ const handleStatusFilterChange = (nextStatus: EntryStatusFilter) => {
 
 **Impact: MEDIUM (무거운 화면이 따라오는 동안에도 입력과 작은 조작이 반응합니다)**
 
-검색어, 필터, 정렬 입력이 무거운 파생 렌더를 유발하면 원본 입력값을 그대로 expensive 화면에 연결하지 않습니다.
+검색어, 필터, 정렬 입력이 무거운 파생 렌더를 유발하면 원본 입력값을 그대로 무거운 화면에 연결하지 않습니다.
 `useDeferredValue`로 한 박자 늦춘 값을 만들고, 필요하면 그 값을 기준으로 필터링이나 정렬을 계산합니다.
 
 - 작은 배열이나 단순 문자열 가공까지 습관적으로 defer하지 않습니다.
 - 이 경우의 `useMemo`는 `perf-compiler-first-memoization`의 예외적 허용 사례입니다.
-  deferred 값 기준 재계산 비용이 실제로 크고,
+  지연 값 기준 재계산 비용이 실제로 크고,
   렌더마다 같은 작업을 반복하지 않으려는 목적이 분명할 때만 함께 씁니다.
 
 **Incorrect (입력과 무거운 파생 렌더를 같은 값에 묶음):**
@@ -2551,7 +2551,7 @@ const [keyword, setKeyword] = useState("");
 const filteredRows = rows.filter((row) => fuzzyMatchRow(row, keyword));
 ```
 
-**Correct (입력은 urgent, 무거운 파생 렌더는 deferred 값과 제한적인 memoization으로 계산):**
+**Correct (입력은 urgent, 무거운 파생 렌더는 지연 값과 제한적인 memoization으로 계산):**
 
 ```tsx
 const [keyword, setKeyword] = useState("");
@@ -2566,7 +2566,7 @@ const filteredRows = useMemo(() => {
 
 **Impact: MEDIUM**
 
-React 경계 선언에는 companion skill인 `convention-typescript`의 doc 주석 표준을 적용하고, 합성 컴포넌트의 공개 부품은 props `interface` 위 설명으로 문서화하며, inline comment는 JSX나 핸들러 흐름에서 비자명한 제약만 설명해야 합니다.
+React 경계 선언에는 동반 스킬인 `convention-typescript`의 doc 주석 표준을 적용하고, 합성 컴포넌트의 공개 부품은 props `interface` 위 설명으로 문서화하며, inline comment는 JSX나 핸들러 흐름에서 비자명한 제약만 설명해야 합니다.
 
 ### 10.1 Limit Inline Comments to Non-obvious Logic
 
@@ -2585,7 +2585,7 @@ React 경계 선언에는 companion skill인 `convention-typescript`의 doc 주�
 - 남기지 않는 경우: 변수명 반복, 단순 매핑 설명
 
 헤더 JSDoc과 annotation 태그 선택은 `docs-require-jsdoc-on-key-declarations`와
-companion skill인 `convention-typescript`의 표준을 따릅니다.
+동반 스킬인 `convention-typescript`의 표준을 따릅니다.
 
 **Incorrect (코드 그대로를 반복하는 주석):**
 
@@ -2626,7 +2626,7 @@ export되지 않은 file-local `type`/`interface`는 공개이라는 이유만�
 필수 대상:
 
 - 라우트·화면·레이아웃 소유자의 질의와 변경 요청 바인딩
-- 분기, 비동기, navigation, invalidation을 가진 이벤트 핸들러
+- 분기, 비동기, 화면 이동, invalidation을 가진 이벤트 핸들러
 - 동기화 의도가 중요한 `useEffect`
 - 내보낸 pure 보조 function, 커스텀 훅, 스토어 선언
 - 내보낸 공개 `type`과 `interface`, 합성 컴포넌트의 공개 부품

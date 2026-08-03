@@ -8,7 +8,7 @@ boolean이 늘어날수록 가능한 조합이 급증하고, JSX 분기와 스�
 
 - 라우트 진입 안의 일회성 분기는 로컬에서 유지해도 됩니다.
 - 공용 `ui`나 `widget`는 explicit 변형 컴포넌트나 합성 컴포넌트로 드러냅니다.
-- `.Root` 같은 namespaced 부품 문법은 권장 예시일 뿐입니다.
+- `.Root` 같은 네임스페이스 부품 문법은 권장 예시일 뿐입니다.
   본질은 boolean을 없애고 구조를 명시적으로 드러내는 데 있습니다.
 
 > 예시·예외가 필요하면 [full rule](../rules/03-01-strategy-avoid-boolean-prop-proliferation.md)을 읽습니다.

@@ -5,14 +5,14 @@
 라우트 진입의 지역 컴포넌트는 `runtime boundary`가 있을 때만 추출합니다.
 단순 레이아웃 래퍼, className grouping, 들여쓰기 감소만으로는 추출하지 않습니다.
 
-추출 가능한 boundary:
+추출 가능한 경계:
 
-- 비동기: `Suspense`, skeleton, loading, error, empty 상태
-- 상태, provider: 지역 상태, 이펙트 sync, form provider, 컨텍스트, scoped 스토어
-- interaction: popover, modal, selection, inline edit, drag, expandable tree
-- 라이브러리, 성능: dense 위젯 adapter, virtualization, 전환, deferred 값
+- 비동기: `Suspense`, skeleton, 로딩, error, empty 상태
+- 상태, 프로바이더: 지역 상태, 이펙트 sync, 폼 프로바이더, 컨텍스트, scoped 스토어
+- 상호작용: 팝오버, 모달, 선택, 인라인 편집, 드래그, 펼치는 트리
+- 라이브러리, 성능: dense 위젯 어댑터, virtualization, 전환, 지연 값
 
-검색 param, navigation, page-level 질의/변경 요청, cross-section 이펙트, invalidate, redirect,
+검색 매개변수, 화면 이동, page-level 질의/변경 요청, 화면 전체 이펙트, 무효화, 이동,
 여러 섹션에 걸친 파생값은 라우트 진입에 둡니다.
 
 호출 계층은 폴더 깊이가 아니라 진입 파일의 조립이 드러냅니다.

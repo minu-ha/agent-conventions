@@ -4,8 +4,8 @@ titleKo: 파일과 심볼 이름 규칙을 통일합니다
 impact: HIGH
 impactDescription: 파일을 만들거나 옮길 때 소유 경계와 의도가 이름에서 드러납니다
 appliesWhen:
-  - React/TSX 파일·컴포넌트·내보낸 symbol·공용 설정 이름을 정하거나 바꿀 때
-  - 형제 `.ts` 보조 파일·symbol을 만들거나 옮길 때
+  - React/TSX 파일·컴포넌트·내보낸 심볼·공용 설정 이름을 정하거나 바꿀 때
+  - 형제 `.ts` 보조 파일·심볼을 만들거나 옮길 때
   - 제외: 지역 질의·변경 요청 바인딩 이름만 바꾸는 경우
 requiresSelected: typescript/naming-use-consistent-file-and-symbol-naming
 tags: ownership, naming, files
@@ -31,7 +31,7 @@ tags: ownership, naming, files
 
 - 형제 `.ts` 보조 파일을 만들거나 지역 선언을 이름 붙인 export로 옮기면
   이름 자체가 그대로여도 이 규칙을 확인합니다.
-- non-exported 지역 symbol은 TypeScript `naming-use-consistent-file-and-symbol-naming`이,
+- non-exported 지역 심볼은 TypeScript `naming-use-consistent-file-and-symbol-naming`이,
   지역 질의·변경 요청 바인딩은 `data-name-query-and-mutation-bindings-consistently`가 담당합니다.
   그것만 바꾸면 이 규칙은 적용하지 않습니다.
 

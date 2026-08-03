@@ -23,7 +23,7 @@ export되지 않은 file-local `type`/`interface`는 공개이라는 이유만�
 필수 대상:
 
 - 라우트·화면·레이아웃 소유자의 질의와 변경 요청 바인딩
-- 분기, 비동기, navigation, invalidation을 가진 이벤트 핸들러
+- 분기, 비동기, 화면 이동, invalidation을 가진 이벤트 핸들러
 - 동기화 의도가 중요한 `useEffect`
 - 내보낸 pure 보조 function, 커스텀 훅, 스토어 선언
 - 내보낸 공개 `type`과 `interface`, 합성 컴포넌트의 공개 부품

@@ -5,7 +5,7 @@ impact: HIGH
 impactDescription: 공용 상수가 라우트와 지역 컴포넌트 곳곳으로 흩어지지 않습니다
 appliesWhen:
   - 둘 이상의 화면이 쓰는 상수·설정·순수 함수를 추가하거나 옮길 때
-  - leaf 파일에 중복 선언된 공용 값을 정리할 때
+  - 말단 파일에 중복 선언된 공용 값을 정리할 때
 reviewWith: >-
   typescript/naming-centralize-shared-config-namespaces, typescript/naming-preserve-config-origin-with-chained-access
 tags: ownership, config, constants
@@ -15,7 +15,7 @@ tags: ownership, config, constants
 
 **Impact: HIGH (공용 상수가 라우트와 지역 컴포넌트 곳곳으로 흩어지지 않습니다)**
 
-여러 화면에서 쓰는 상수와 설정은 라우트 파일이나 private 컴포넌트에 흩뿌리지 않습니다.
+여러 화면에서 쓰는 상수와 설정은 라우트 파일이나 비공개 컴포넌트에 흩뿌리지 않습니다.
 기본 출처는 `shared/config.ts` 한 파일입니다.
 
 | 대상 | 위치 |

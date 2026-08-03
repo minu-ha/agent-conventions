@@ -4,7 +4,7 @@ titleKo: 파생 값은 쓰는 자리 가까이에 둡니다
 impact: HIGH
 impactDescription: 출처가 남고 화면 진입 파일이 별칭과 준비 코드로 채워지지 않습니다
 appliesWhen:
-  - 오리진을 끊는 별칭·flag·표시값을 넓은 screen scope에 추가·이동·제거할 때
+  - 오리진을 끊는 별칭·flag·표시값을 넓은 화면 scope에 추가·이동·제거할 때
   - `let` 재할당이나 배열 `push` 기반 조립을 바꿀 때
 tags: screen, derived-values, origin
 ---

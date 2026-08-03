@@ -21,7 +21,7 @@ tags: docs, comments, inline
 - 남기지 않는 경우: 변수명 반복, 단순 매핑 설명
 
 헤더 JSDoc과 annotation 태그 선택은 `docs-require-jsdoc-on-key-declarations`와
-companion skill인 `convention-typescript`의 표준을 따릅니다.
+동반 스킬인 `convention-typescript`의 표준을 따릅니다.
 
 **Incorrect (코드 그대로를 반복하는 주석):**
 

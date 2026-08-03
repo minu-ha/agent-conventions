@@ -4,7 +4,7 @@ titleKo: 화면 진입 파일은 흐름 위주로 둡니다
 impact: HIGH
 impactDescription: 진입 파일만 봐도 화면 흐름을 따라갈 수 있습니다
 appliesWhen:
-  - 라우트 진입의 검색·navigate·질의·변경 요청·cross-section 이펙트를 옮기거나 나눌 때
+  - 라우트 진입의 검색·navigate·질의·변경 요청·화면 전체 이펙트를 옮기거나 나눌 때
   - page 섹션 조립의 순서나 소유자를 바꿀 때
   - 제외: 같은 소유자 안에서 표현만 바꾸는 경우
 reviewWith: >-
@@ -16,13 +16,13 @@ tags: screen, routes, flow
 
 **Impact: HIGH (진입 파일만 봐도 화면 흐름을 따라갈 수 있습니다)**
 
-Route 진입은 검색, navigate, page 질의·변경 요청, cross-section 이펙트와 렌더 조립을 보여줍니다.
-비동기·상태·interaction 경계를 가진 섹션을 분리해도 이 흐름 제어 자체는 라우트 진입에 남깁니다.
+Route 진입은 검색, navigate, page 질의·변경 요청, 화면 전체 이펙트와 렌더 조립을 보여줍니다.
+비동기·상태·상호작용 경계를 가진 섹션을 분리해도 이 흐름 제어 자체는 라우트 진입에 남깁니다.
 
 소유자가 그대로인 변경은 대상이 아닙니다.
 
-- `query.select` shape, 바인딩·별칭 정리, derived-state 이펙트를 렌더 계산으로 옮기는 것
-- 순수 type·payload builder·기본 설정의 형제 `.ts` 이동. support-code 규칙이 담당합니다.
+- `query.select` 형태, 바인딩·별칭 정리, derived-state 이펙트를 렌더 계산으로 옮기는 것
+- 순수 type·전송 값 builder·기본 설정의 형제 `.ts` 이동. support-code 규칙이 담당합니다.
 
 **Incorrect (흐름보다 분해 자체가 목적이 됨):**
 

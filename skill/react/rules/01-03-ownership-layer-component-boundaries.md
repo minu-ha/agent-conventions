@@ -16,7 +16,7 @@ tags: ownership, ui, widget, page, naming
 
 컴포넌트는 소유 레이어를 이름으로 드러냅니다.
 
-| 레이어 | 책임 | 파일 · 심볼 · slug |
+| 레이어 | 책임 | 파일 · 심볼 · 식별자 |
 | --- | --- | --- |
 | `ui` | 도메인을 모르는 순수 화면 | `ui-button.tsx` · `UiButton` · `ui_button` |
 | `widget` | 화면 조립을 전제하지 않는 공용 조합 | `wg-chart.tsx` · `WgChart` · `wg_chart` |
@@ -24,7 +24,7 @@ tags: ownership, ui, widget, page, naming
 
 세 레이어 모두 파일명과 심볼에 계층 접두사를 붙이고 예외를 두지 않습니다.
 폴더에는 붙이지 않습니다. 상위 계층 폴더가 이미 계층을 말합니다.
-slug에서는 접두사가 말하는 부분을 반복하지 않습니다.
+식별자에서는 접두사가 말하는 부분을 반복하지 않습니다.
 
 레이어 판정은 두 축으로 갈립니다.
 

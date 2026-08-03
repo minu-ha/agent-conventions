@@ -5,7 +5,7 @@ impact: HIGH
 impactDescription: 필요한 확장점은 열면서 가장 단순한 구조를 고르게 돕습니다
 appliesWhen:
   - 내보낸 공용 컴포넌트에 슬롯·공개 부품·공용 컨텍스트/동작을 추가할 때
-  - 반복되는 기본 설정이나 mode API를 추가할 때
+  - 반복되는 기본 설정이나 모드 API를 추가할 때
   - 공용 컴포넌트의 조립 구조를 재설계할 때
 reviewWith: >-
   strategy-avoid-boolean-prop-proliferation, strategy-prefer-children-over-render-props,
@@ -28,7 +28,7 @@ tags: composition, compound-components, variants, component-design
 | 부품 조립만 필요함 | `stateless compound component` |
 | 여러 부품이 같은 상태/동작/컨텍스트를 읽음 | `stateful compound component` |
 | 같은 합성 조합이 반복됨 | `explicit variant component` |
-| parent가 실행 환경 데이터를 child 콜백에 전달해야 함 | `render prop` |
+| 부모가 실행 환경 데이터를 자식 콜백에 전달해야 함 | `render prop` |
 
 공개 부품은 소비자가 이름으로 조립해야 하거나 공용 컨텍스트/동작을 직접 쓰는 영역만 공개합니다.
 단순 class 래퍼, spacing 보정 DOM, 내부 레이아웃 보조 함수는 숨깁니다.

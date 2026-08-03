@@ -219,6 +219,10 @@ pre.code + .code-lb { border-top: 1px solid var(--soft); }
 .ref:hover { background: color-mix(in srgb, var(--coral) 14%, transparent); }
 .ref[data-ext="1"] { border-style: dashed; }
 .ref[disabled] { color: var(--faint); background: none; border-color: var(--soft); cursor: default; }
+/* 본문 문장 안에 섞이는 참조 칩. 코드 조각이 아니라 규칙이라는 것을 보이게 한다. */
+.ref-in { display: inline; padding: 0 5px; border-radius: 2px; font-family: var(--sans); font-size: .95em; line-height: inherit; color: var(--coral-dk); background: color-mix(in srgb, var(--coral) 7%, transparent); border: 1px solid color-mix(in srgb, var(--coral) 28%, transparent); }
+.ref-in:hover { background: color-mix(in srgb, var(--coral) 16%, transparent); }
+.ref-in::after { content: " ↗"; font-size: .8em; color: var(--coral); }
 
 .rtags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--hover); }
 .rtag { min-height: 22px; padding: 0 8px; border-radius: 999px; font-family: var(--mono); font-size: 10px; color: var(--muted); border: 1px solid var(--hair); }
@@ -278,10 +282,9 @@ body:has(.dlg[open]) { overflow: hidden; }
 			<div>
 				<div class="grp-hd"><span class="grp-lb">Skill</span><span class="grp-note">단일 선택</span></div>
 				<div class="col" id="f-skill"></div>
-				<div class="comp" id="companion"></div>
 			</div>
 			<div>
-				<div class="grp-hd"><span class="grp-lb">Impact</span><button class="grp-clear" data-clear="impact">해제</button></div>
+				<div class="grp-hd"><span class="grp-lb">영향도</span><button class="grp-clear" data-clear="impact">해제</button></div>
 				<div class="col" id="f-impact"></div>
 			</div>
 			<div>
@@ -356,24 +359,35 @@ body:has(.dlg[open]) { overflow: hidden; }
 		return s.replace(/\u0000(\d+)\u0000/g, (_, i) => hold[+i]);
 	}
 
-	const inline = (t) => esc(t).replace(/`([^`]+)`/g, "<code>$1</code>").replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+	// 백틱 안이 규칙 ID 면 코드가 아니라 열 수 있는 참조 칩으로 그린다.
+	const codeOrRef = (raw, ownerSkill) => {
+		const key = raw.includes("/") ? raw : ownerSkill + "/" + raw;
+		const rule = ownerSkill ? byKey.get(key) : undefined;
+		if (!rule) return "<code>" + esc(raw) + "</code>";
+		const label = (rule.skill === ownerSkill ? "" : rule.skill + " ") + rule.number + "  " + titleOf(rule);
+		return '<button class="ref-in" data-goto="' + esc(key) + '" title="' + esc(key) + '">' + esc(label) + "</button>";
+	};
+	const inline = (t, ownerSkill) =>
+		esc(t)
+			.replace(/`([^`]+)`/g, (_, raw) => codeOrRef(raw, ownerSkill))
+			.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
 
-	function renderProse(prose) {
+	function renderProse(prose, ownerSkill) {
 		let out = "", para = [], tbl = null, list = null;
 		// 원문은 한 줄에 한 문장이다. 문장이 끝난 자리만 줄바꿈하고, 이어지는 줄은 공백으로 붙인다.
 		const joinSentences = (lines) =>
 			lines.reduce((acc, line, i) => (i === 0 ? line : acc + (/[.:?!]$/.test(lines[i - 1]) ? "<br>" : " ") + line), "");
-		const flushP = () => { if (para.length) { out += "<p>" + joinSentences(para.map(inline)) + "</p>"; para = []; } };
+		const flushP = () => { if (para.length) { out += "<p>" + joinSentences(para.map((line) => inline(line, ownerSkill))) + "</p>"; para = []; } };
 		const flushL = () => {
 			if (!list) return;
-			out += "<ul>" + list.map((item) => "<li>" + inline(item) + "</li>").join("") + "</ul>";
+			out += "<ul>" + list.map((item) => "<li>" + inline(item, ownerSkill) + "</li>").join("") + "</ul>";
 			list = null;
 		};
 		const flushT = () => {
 			if (!tbl) return;
 			const head = tbl[0], body = tbl.slice(1);
-			out += '<div class="tw"><table><thead><tr>' + head.map((c) => "<th>" + inline(c) + "</th>").join("") + "</tr></thead><tbody>";
-			out += body.map((r) => "<tr>" + r.map((c) => "<td>" + inline(c) + "</td>").join("") + "</tr>").join("");
+			out += '<div class="tw"><table><thead><tr>' + head.map((c) => "<th>" + inline(c, ownerSkill) + "</th>").join("") + "</tr></thead><tbody>";
+			out += body.map((r) => "<tr>" + r.map((c) => "<td>" + inline(c, ownerSkill) + "</td>").join("") + "</tr>").join("");
 			out += "</tbody></table></div>";
 			tbl = null;
 		};
@@ -458,7 +472,8 @@ body:has(.dlg[open]) { overflow: hidden; }
 		const ext = target.includes("/");
 		const key = ext ? target : ownerSkill + "/" + target;
 		const rule = byKey.get(key);
-		const label = rule ? (ext ? rule.skill + " · " : "") + titleOf(rule) : target;
+		// 번호를 앞에 붙여 몇 번째 규칙인지 바로 보이게 한다.
+		const label = rule ? (ext ? rule.skill + " " : "") + rule.number + "  " + titleOf(rule) : target;
 		return '<button class="ref" data-ext="' + (ext ? 1 : 0) + '" title="' + esc(key) + '"' +
 			(rule ? ' data-goto="' + esc(key) + '"' : " disabled") + ">" + esc(label) + "</button>";
 	};
@@ -524,7 +539,7 @@ body:has(.dlg[open]) { overflow: hidden; }
 					: "") +
 				(r.prose.length || r.impactDescription
 					? acc("why", "이 규칙이 왜 필요할까요?", whyOpen, () =>
-						(r.impactDescription ? '<p class="lead">' + esc(r.impactDescription) + "</p>" : "") + renderProse(r.prose))
+						(r.impactDescription ? '<p class="lead">' + esc(r.impactDescription) + "</p>" : "") + renderProse(r.prose, r.skill))
 					: "") +
 				"</div>" +
 				(refs.length ? '<div class="refs">' + refs.map((g) => '<div class="ref-g"><span class="ref-lb">' + g[0] + "</span>" +
@@ -584,15 +599,6 @@ body:has(.dlg[open]) { overflow: hidden; }
 			.map((e) => '<button class="tg" data-tag="' + esc(e[0]) + '" aria-pressed="' + state.tags.has(e[0]) + '">' +
 				"<span>" + esc(e[0]) + '</span><span class="tg-n">' + e[1] + "</span></button>").join("");
 
-		const seen = new Set();
-		const hints = [];
-		const skill = DATA.skills.find((s) => s.name === state.skill);
-		for (const c of skill ? skill.companions : []) {
-			if (c.skill === state.skill || seen.has(c.skill)) continue;
-			seen.add(c.skill);
-			hints.push('<button class="comp-ch" data-skill="' + c.skill + '">\u2192 ' + c.skill + (c.mode === "required" ? " 필수" : " 조건") + "</button>");
-		}
-		document.getElementById("companion").innerHTML = hints.length ? '<span class="comp-lb">동반</span>' + hints.join("") : "";
 	}
 
 	function render() {

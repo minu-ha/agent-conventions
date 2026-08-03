@@ -5,7 +5,7 @@ impact: HIGH
 impactDescription: 같은 구조를 두 번 선언해 시간이 지나며 어긋나는 것을 막습니다
 appliesWhen:
   - Props 콜백 구현을 추가·변경할 때
-  - API 응답 기반 화면 type을 추가·변경하는데 기존 prop·API 계약과 같은 shape가 보일 때
+  - API 응답 기반 화면 type을 추가·변경하는데 기존 prop·API 계약과 같은 형태가 보일 때
   - 래퍼 컴포넌트 사용처에서 Props 타입을 참조할 때
 reviewWith: >-
   typescript/types-reuse-callback-signatures-from-existing-contracts,

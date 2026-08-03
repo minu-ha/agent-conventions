@@ -11,7 +11,7 @@ React 타입은 `React.MouseEvent` 같은 전역 네임스페이스 대신 `impo
 - 같은 이름이 이미 지역에 있으면 import에 별칭을 붙이지 말고 지역 이름을 바꿉니다.
 - 같은 모듈 path여도 타입은 `import type`으로 따로 가져와 런타임 의존과 분리합니다.
 - 같은 경로에서 타입과 값 중 무엇을 가져오는지가 바뀌면 import 계약이 바뀐 것이라 이 규칙을 다시 봅니다.
-- 일반 third-party 값을 별칭 없이 직접 import하는 변경만으로는 걸리지 않습니다.
+- 일반 외부 패키지 값을 별칭 없이 직접 import하는 변경만으로는 걸리지 않습니다.
 
 barrel과 공개 진입점 판단은 `typescript/naming-use-direct-imports-and-public-entry-points`가 소유합니다.
 

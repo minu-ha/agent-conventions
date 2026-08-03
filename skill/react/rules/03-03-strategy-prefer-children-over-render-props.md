@@ -14,8 +14,8 @@ tags: composition, children, render-props, component-design
 **Impact: MEDIUM (부모가 콜백으로 값을 내려보낼 필요가 없으면 조립이 읽기 쉬워집니다)**
 
 공용 컴포넌트가 `stateless compound component`로 충분할 때는 `renderHeader`,
-`renderFooter` 같은 렌더 prop보다 `children`과 namespaced 슬롯 부품을 우선합니다.
-렌더 prop은 parent가 child에 item, index, 상태 같은 실행 환경 데이터를 전달해야 할 때만 사용합니다.
+`renderFooter` 같은 렌더 prop보다 `children`과 네임스페이스 슬롯 부품을 우선합니다.
+렌더 prop은 부모가 자식에 item, index, 상태 같은 실행 환경 데이터를 전달해야 할 때만 사용합니다.
 
 **Incorrect (정적인 구조를 렌더 prop으로 조립):**
 
@@ -38,7 +38,7 @@ export const Panel = (props: PanelProps) => {
 };
 ```
 
-**Correct (children과 namespaced 슬롯 부품으로 구조를 드러냄):**
+**Correct (children과 네임스페이스 슬롯 부품으로 구조를 드러냄):**
 
 ```tsx
 export interface PanelProps {

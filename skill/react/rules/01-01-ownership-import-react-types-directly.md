@@ -4,9 +4,9 @@ titleKo: React 타입은 import type 으로 직접 가져옵니다
 impact: HIGH
 impactDescription: React 타입 출처를 숨기지 않고 타입 import 와 값 import 를 나눕니다
 appliesWhen:
-  - `React.*` 네임스페이스 타입과 direct `import type` 중 선택할 때
+  - `React.*` 네임스페이스 타입과 직접 `import type` 중 선택할 때
   - 같은 모듈 경로에서 타입과 값 중 무엇을 가져올지 추가·삭제·전환할 때
-  - 제외: 일반 direct 값 import만 바꾸는 경우
+  - 제외: 일반 직접 값 import만 바꾸는 경우
 requiresSelected: typescript/naming-use-direct-imports-and-public-entry-points
 tags: ownership, imports, react, types
 ---
@@ -24,7 +24,7 @@ React 타입은 `React.MouseEvent` 같은 전역 네임스페이스 대신 `impo
 - 같은 이름이 이미 지역에 있으면 import에 별칭을 붙이지 말고 지역 이름을 바꿉니다.
 - 같은 모듈 path여도 타입은 `import type`으로 따로 가져와 런타임 의존과 분리합니다.
 - 같은 경로에서 타입과 값 중 무엇을 가져오는지가 바뀌면 import 계약이 바뀐 것이라 이 규칙을 다시 봅니다.
-- 일반 third-party 값을 별칭 없이 직접 import하는 변경만으로는 걸리지 않습니다.
+- 일반 외부 패키지 값을 별칭 없이 직접 import하는 변경만으로는 걸리지 않습니다.
 
 barrel과 공개 진입점 판단은 `typescript/naming-use-direct-imports-and-public-entry-points`가 소유합니다.
 

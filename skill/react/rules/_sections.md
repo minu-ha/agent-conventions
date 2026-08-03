@@ -31,7 +31,7 @@
 **TitleKo:** 화면 파일 규율
 **Impact:** HIGH
 **Description:** Route 진입은 화면 흐름을 분명하게 보여줘야 하며, 보조 함수 추출도 경계가 정당할 때만 해야 합니다.
-  layout-only 분리는 지양하지만 async, 상태, interaction 같은 실행 환경 boundary를 소유한 route-local 섹션은 추출할 수
+  layout-only 분리는 지양하지만 async, 상태, 상호작용 같은 실행 환경 경계를 소유한 route-local 섹션은 추출할 수
   있습니다.
 
 ## 6. Events and Interaction Flow (events)
@@ -56,11 +56,11 @@
 **TitleKo:** 렌더 성능
 **Impact:** MEDIUM-HIGH
 **Description:** 메모이제이션은 React Compiler를 기본으로 두고 직접 손대지 않습니다. 실제로 무거운 초기화와 갱신만 lazy
-  initializer, 전환, deferred value로 미룹니다.
+  initializer, 전환, 지연 value로 미룹니다.
 
 ## 10. Documentation and Comments (docs)
 **TitleKo:** 문서화와 주석
 **Impact:** MEDIUM
-**Description:** React 경계 선언에는 companion skill인 `convention-typescript`의 doc 주석 표준을 적용하고, 합성
+**Description:** React 경계 선언에는 동반 스킬인 `convention-typescript`의 doc 주석 표준을 적용하고, 합성
   컴포넌트의 공개 부품은 props `interface` 위 설명으로 문서화하며, inline comment는 JSX나 핸들러 흐름에서
   비자명한 제약만 설명해야 합니다.

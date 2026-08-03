@@ -1624,7 +1624,7 @@ CSS에 부모 선택자가 없어서 대체 수단이 없습니다.
 ```
 
 ```css
-/* src/page/post-index/컴포넌트/pg-post-filter-dialog.css */
+/* src/page/post-index/component/pg-post-filter-dialog.css */
 .pg_postFilterDialog__panel {
 	gap: var(--app-space-3);
 	color: var(--app-color-text-primary);

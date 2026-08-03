@@ -5,7 +5,7 @@ impact: HIGH
 impactDescription: 빠진 데이터를 숨기지 않고 로딩은 Suspense 나 명시적 처리로 보냅니다
 appliesWhen:
   - optional 응답에 `??`·`||` 기본값을 넣을 때
-  - Suspense 화면 본문에 초기 loading return을 추가·변경할 때
+  - Suspense 화면 본문에 초기 로딩 return을 추가·변경할 때
   - 결측·로딩 UX를 다룰 때
 reviewWith: >-
   data-preserve-origin-chaining, screen-keep-derived-values-close,
@@ -23,7 +23,7 @@ Suspense 질의의 초기 blocking 로딩도 화면 본문에서 즉석 분기�
 
 - `isPending`, `isFetching` 같은 상태는 기존 UI를 보조하는 좁은 용도로만 씁니다.
   버튼 비활성화, background refetch indicator, 저장 중 배지가 그런 경우입니다.
-- 화면 전체를 가리는 로컬 loading 분기가 꼭 필요하면 가까운 한글 주석으로 이유를 남깁니다.
+- 화면 전체를 가리는 로컬 로딩 분기가 꼭 필요하면 가까운 한글 주석으로 이유를 남깁니다.
 
 **Incorrect (결측과 로딩을 즉석에서 숨김):**
 

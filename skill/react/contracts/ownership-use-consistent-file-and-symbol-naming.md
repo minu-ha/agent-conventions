@@ -18,7 +18,7 @@
 
 - 형제 `.ts` 보조 파일을 만들거나 지역 선언을 이름 붙인 export로 옮기면
   이름 자체가 그대로여도 이 규칙을 확인합니다.
-- non-exported 지역 symbol은 TypeScript `naming-use-consistent-file-and-symbol-naming`이,
+- non-exported 지역 심볼은 TypeScript `naming-use-consistent-file-and-symbol-naming`이,
   지역 질의·변경 요청 바인딩은 `data-name-query-and-mutation-bindings-consistently`가 담당합니다.
   그것만 바꾸면 이 규칙은 적용하지 않습니다.
 

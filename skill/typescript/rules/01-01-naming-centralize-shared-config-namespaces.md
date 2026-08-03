@@ -24,7 +24,7 @@ tags: config, namespace, ownership
 소유자 하나만 쓰는 선언형 설정은 전역으로 올리지 않습니다.
 그 소유자 아래 `config` 폴더에 `<owner>_config`로 둡니다. `constants` 폴더는 만들지 않습니다.
 
-**Incorrect (공용 설정을 leaf 파일마다 흩뿌림):**
+**Incorrect (공용 설정을 말단 파일마다 흩뿌림):**
 
 ```ts
 const defaultPageSize = 20;

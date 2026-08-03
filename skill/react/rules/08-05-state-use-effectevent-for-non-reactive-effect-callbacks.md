@@ -5,7 +5,7 @@ impact: MEDIUM-HIGH
 impactDescription: 핸들러 로직은 최신으로 읽고 이펙트는 실제 구독에만 반응합니다
 appliesWhen:
   - subscription 이펙트가 최신 prop·상태 콜백을 읽어야 할 때
-  - ref 동기화 hack, dependency 재설치, `useEffectEvent`를 추가·변경할 때
+  - ref 동기화 hack, 의존성 재설치, `useEffectEvent`를 추가·변경할 때
 requiresSelected: docs-require-jsdoc-on-key-declarations
 reviewWith: events-run-user-actions-in-handlers-not-effects
 tags: state, react19, useeffectevent, effects

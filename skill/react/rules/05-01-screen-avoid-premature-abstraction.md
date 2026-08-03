@@ -4,7 +4,7 @@ titleKo: 화면 코드를 미리 추상화하지 않습니다
 impact: HIGH
 impactDescription: 짐작으로 빼내지 않고 실제 재사용 경계에 맞춰 화면 코드를 둡니다
 appliesWhen:
-  - screen 코드를 보조 함수·훅·컴포넌트·모듈으로 추출할 때
+  - 화면 코드를 보조 함수·훅·컴포넌트·모듈으로 추출할 때
   - 한 곳에서만 쓰는 기존 추상화를 다시 접어 넣을 때
 reviewWith: >-
   screen-extract-local-section-components-for-runtime-boundaries, screen-extract-utilities-selectively,
@@ -22,13 +22,13 @@ tags: screen, abstraction, reuse
 
 - 한 함수 안에서 단계 변수, 섹션 comment, 내부 블록으로 정리
 - 화면 지역 JSX에 남기고 흐름을 보이게 유지
-- 작은 mapper, href 조립, fallback 처리는 호출 위치에 유지
+- 작은 변환 함수, href 조립, 기본값 처리는 호출 위치에 유지
 
 추출을 허용하는 경우:
 
 - 여러 화면/모듈이 같은 이름의 계약으로 직접 호출하는 경우
-- 상태·이펙트·컨텍스트·form·스토어 연결을 한 커스텀 훅이 실제로 소유하는 경우
-- 화면 지역 컴포넌트가 비동기, 상태, provider, 상호작용 같은 실행 경계를 소유하는 경우
+- 상태·이펙트·컨텍스트·폼·스토어 연결을 한 커스텀 훅이 실제로 소유하는 경우
+- 화면 지역 컴포넌트가 비동기, 상태, 프로바이더, 상호작용 같은 실행 경계를 소유하는 경우
 
 금지하는 구조:
 
