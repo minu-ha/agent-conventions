@@ -290,7 +290,7 @@ const cssRuleRouting = {
 		reviewWith: [],
 	},
 	"naming-use-scope-slug-element-modifier-syntax": {
-		appliesWhen: "plain CSS의 project-owned 클래스를 새로 만들 때. 이름, scope, 이름, element, modifier 구분자 또는 casing을 변경할 때.",
+		appliesWhen: "plain CSS의 project-owned 클래스를 새로 만들 때. 이름, scope, slug, element, modifier 구분자 또는 casing을 변경할 때.",
 		reviewWith: [],
 	},
 	"naming-name-elements-and-modifiers-by-role": {
@@ -298,11 +298,11 @@ const cssRuleRouting = {
 		reviewWith: [],
 	},
 	"naming-keep-page-slug-traceable": {
-		appliesWhen: "`pg_*` 소유자의 클래스 이름을 새로 만들거나 이름을 바꿀 때. 같은 이름 컴포넌트가 여러 화면에 생겨 이름을 구분해야 할 때.",
+		appliesWhen: "`pg_*` 소유자의 클래스 slug를 새로 만들거나 이름을 바꿀 때. 같은 이름 컴포넌트가 여러 화면에 생겨 slug를 구분해야 할 때.",
 		reviewWith: [],
 	},
 	"ownership-give-each-file-one-scope-slug": {
-		appliesWhen: "새 `scope_slug`를 만들거나 기존 이름을 복사·이름 변경할 때. 서로 다른 컴포넌트가 같은 이름을 쓸 가능성이 있을 때.",
+		appliesWhen: "새 `scope_slug`를 만들거나 기존 slug를 복사·이름 변경할 때. 서로 다른 컴포넌트가 같은 slug를 쓸 가능성이 있을 때.",
 		reviewWith: [],
 	},
 	"ownership-choose-scope-prefix-by-reuse-range": {
@@ -2311,7 +2311,7 @@ test("routing activation and generated indexes use only the changed semantic del
 	assert.match(generatedIndex, /^- T\d+ \| [^ |]+ \|/m);
 
 	const routeOwnerRule = await readRuleSource("css", "naming-keep-page-slug-traceable");
-	assert.match(routeOwnerRule, /`pg_\*` 소유자의 클래스 이름을 새로 만들거나 이름을 바꿀 때/);
+	assert.match(routeOwnerRule, /`pg_\*` 소유자의 클래스 slug를 새로 만들거나 이름을 바꿀 때/);
 });
 
 test("v16 boundary contracts distinguish semantic role changes from contextual and byte-equivalent noise", async () => {
@@ -2697,7 +2697,7 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	const foreignRoot = await readRule("css", "ownership-use-foreign-classes-only-under-your-own-root");
 	assertMentions(
 		foreignRoot,
-		[/내 root 클래스 블록 안에서만/, /단독 top-level 선택자로 쓰지 않습니다/, /선택자가 내 이름으로 시작하는지/],
+		[/내 root 클래스 블록 안에서만/, /단독 top-level 선택자로 쓰지 않습니다/, /선택자가 내 slug로 시작하는지/],
 		"foreignRoot",
 	);
 	assertMentions(
@@ -2767,7 +2767,7 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	const nestDomState = await readRule("css", "selector-nest-dom-state-in-the-owning-block");
 	assertMentions(
 		nestDomState,
-		[/top-level 선택자로 다시 열지 않습니다/, /이름이 같은 자손을 결합자 하나로 겨냥합니다/, /부모 선택자가 없어서/],
+		[/top-level 선택자로 다시 열지 않습니다/, /slug가 같은 자손을 결합자 하나로 겨냥합니다/, /부모 선택자가 없어서/],
 		"nestDomState",
 	);
 
@@ -2804,7 +2804,7 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 		/영문 label[\s\S]*docs-write-concise-korean-comments-about-purpose-and-constraints[\s\S]*content gate/i,
 	);
 	assertMentions(generatedContracts[1]!, [/주석 본문 전체/i, /(?:ASCII|영문)/i], "generatedContracts");
-	assert.match(generatedContracts[2]!, /pseudo-class[\s\S]*이름이 같은 자손을 결합자 하나로 겨냥합니다/i);
+	assert.match(generatedContracts[2]!, /pseudo-class[\s\S]*slug가 같은 자손을 결합자 하나로 겨냥합니다/i);
 	assert.match(generatedContracts[3]!, /CRITICAL rule[\s\S]*full rule/i);
 });
 

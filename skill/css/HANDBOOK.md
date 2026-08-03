@@ -126,7 +126,7 @@ import "./_index.css";
 
 **Rule:** `C02` · `naming-use-scope-slug-element-modifier-syntax`
 
-**Applies when:** plain CSS의 project-owned 클래스를 새로 만들 때. 이름, scope, 이름, element, modifier 구분자 또는 casing을 변경할 때.
+**Applies when:** plain CSS의 project-owned 클래스를 새로 만들 때. 이름, scope, slug, element, modifier 구분자 또는 casing을 변경할 때.
 
 **Impact: CRITICAL (classname만 보고도 클래스 소유와 UI 역할을 추적할 수 있게 합니다)**
 
@@ -140,11 +140,11 @@ import "./_index.css";
 - `element`: 소유자 안의 UI 역할. `listButton`, `emptyState`처럼 camelCase
 - `modifier`: 상태나 반복 variant. `routeActive`, `selected`처럼 camelCase
 
-이름에는 접두사가 말하는 부분을 반복하지 않습니다. `UiButton`은 `ui_button`이고 `ui_uiButton`이 아닙니다.
+slug에는 접두사가 말하는 부분을 반복하지 않습니다. `UiButton`은 `ui_button`이고 `ui_uiButton`이 아닙니다.
 
 기계 검증은 `selector-class-pattern`에 이 문법을 정규식으로 넣는 것입니다.
 
-**Incorrect (이름과 element에 snake_case·kebab-case가 섞임):**
+**Incorrect (slug와 element에 snake_case·kebab-case가 섞임):**
 
 ```txt
 ui_tag_list__root
@@ -156,7 +156,7 @@ pg_catalogDetail__main-content
 pg_catalogDetail__main--route_active
 ```
 
-**Correct (scope는 lowercase, 이름·element·modifier는 camelCase):**
+**Correct (scope는 lowercase, slug·element·modifier는 camelCase):**
 
 ```txt
 ui_tagList__root
@@ -202,23 +202,23 @@ pg_catalogDetail__detailSection
 
 **Rule:** `C04` · `naming-keep-page-slug-traceable`
 
-**Applies when:** `pg_*` 소유자의 클래스 이름을 새로 만들거나 이름을 바꿀 때. 같은 이름 컴포넌트가 여러 화면에 생겨 이름을 구분해야 할 때.
+**Applies when:** `pg_*` 소유자의 클래스 slug를 새로 만들거나 이름을 바꿀 때. 같은 이름 컴포넌트가 여러 화면에 생겨 slug를 구분해야 할 때.
 
 **Impact: HIGH (클래스 이름만 보고 어느 화면 소속인지 거슬러 읽을 수 있게 유지합니다)**
 
-`pg_*` 이름만 보고 어느 화면의 것인지 알 수 있어야 합니다.
-어떤 파일이 화면 소유인지는 framework convention이 정하고, CSS는 그 소유가 이름에서 흐려지지 않게 지킵니다.
+`pg_*` slug만 보고 어느 화면의 것인지 알 수 있어야 합니다.
+어떤 파일이 화면 소유인지는 framework convention이 정하고, CSS는 그 소유가 slug에서 흐려지지 않게 지킵니다.
 
-- 화면 shell은 화면 이름을 그대로 씁니다. `pg_postsDetail`처럼 화면 계열과 역할이 읽혀야 합니다.
-- 화면 안의 컴포넌트는 자기 이름만 씁니다.
+- 화면 shell은 page 이름을 slug로 씁니다. `pg_postsDetail`처럼 화면 계열과 역할이 읽혀야 합니다.
+- 화면 안의 컴포넌트는 자기 이름만 slug로 씁니다.
 - 팀이 공유하는 화면 목록에 없는 줄임말은 쓰지 않습니다.
-- `wg_*`, `ui_*`는 각자의 이름 규칙을 따릅니다.
+- `wg_*`, `ui_*`는 각자의 slug 규칙을 따릅니다.
 
-부모 이름을 미리 붙이지 않습니다.
+부모 slug를 미리 붙이지 않습니다.
 충돌이 실제로 생겼을 때만 최소 범위로 덧붙입니다.
-미리 붙이면 깊이에 따라 이름이 계속 자라서 충돌을 걱정하기 전에 읽기가 무너집니다.
+미리 붙이면 깊이에 따라 slug가 계속 자라서 충돌을 걱정하기 전에 읽기가 무너집니다.
 
-**Incorrect (의미가 약하거나 계층 순서가 흐려진 이름):**
+**Incorrect (의미가 약하거나 계층 순서가 흐려진 slug):**
 
 ```txt
 pg_shell__body
@@ -226,14 +226,14 @@ pg_doc__content
 pg_x__root
 ```
 
-**Incorrect (충돌이 없는데도 부모 이름을 미리 붙임):**
+**Incorrect (충돌이 없는데도 부모 slug를 미리 붙임):**
 
 ```txt
 pg_detailSpikePatternPanelOverviewSection__root
 pg_detailSpikePatternPanelSummaryBand__root
 ```
 
-**Correct (shell은 page 이름, 컴포넌트는 자기 이름):**
+**Correct (shell은 page slug, 컴포넌트는 자기 slug):**
 
 ```txt
 posts index page   -> pg_postsIndex__root
@@ -244,7 +244,7 @@ overview section   -> pg_overviewSection__root
 summary band       -> pg_summaryBand__root
 ```
 
-**Correct (같은 이름이 실제로 두 화면에 생겼을 때만 구분):**
+**Correct (같은 slug가 실제로 두 화면에 생겼을 때만 구분):**
 
 ```txt
 pg_detailOverviewSection__root
@@ -261,16 +261,16 @@ pg_indexOverviewSection__root
 
 **Rule:** `C05` · `ownership-give-each-file-one-scope-slug`
 
-**Applies when:** 새 `scope_slug`를 만들거나 기존 이름을 복사·이름 변경할 때. 서로 다른 컴포넌트가 같은 이름을 쓸 가능성이 있을 때.
+**Applies when:** 새 `scope_slug`를 만들거나 기존 slug를 복사·이름 변경할 때. 서로 다른 컴포넌트가 같은 slug를 쓸 가능성이 있을 때.
 
 **Impact: CRITICAL (서로 다른 컴포넌트가 같은 네임스페이스를 나눠 쓰다가 전역 클래스 공간에서 충돌하는 것을 막습니다)**
 
-CSS 파일 하나가 이름 하나를 가집니다. 그 이름은 프로젝트 전역에서 그 파일만 씁니다.
+CSS 파일 하나가 slug 하나를 가집니다. 그 slug는 프로젝트 전역에서 그 파일만 씁니다.
 
-- 새 스타일을 추가하기 전에 같은 이름을 쓰는 파일이 이미 있는지 확인합니다.
-- 의미가 겹쳐도 파일이 다르면 이름을 따로 만듭니다.
-- 하위 컴포넌트 여럿이 부모 이름을 나눠 쓰는 것도 같은 위반입니다.
-- 자기 CSS 파일이 있으면 자기 이름을 만듭니다. 부모 이름을 계속 쓰려면 스타일도 부모 파일에 둡니다.
+- 새 스타일을 추가하기 전에 같은 slug를 쓰는 파일이 이미 있는지 확인합니다.
+- 의미가 겹쳐도 파일이 다르면 slug를 따로 만듭니다.
+- 하위 컴포넌트 여럿이 부모 slug를 나눠 쓰는 것도 같은 위반입니다.
+- 자기 CSS 파일이 있으면 자기 slug를 만듭니다. 부모 slug를 계속 쓰려면 스타일도 부모 파일에 둡니다.
 
 **Incorrect (이미 다른 소유자가 쓰는 `scope_slug`를 재사용):**
 
@@ -282,7 +282,7 @@ pg_catalogIndex__header
 pg_catalogIndex__toolbar
 ```
 
-**Correct (소유자가 다르면 별도 이름을 부여):**
+**Correct (소유자가 다르면 별도 slug를 부여):**
 
 ```txt
 // catalog/index route
@@ -311,7 +311,7 @@ scope 접두사는 폴더 경로가 아니라 그 CSS 파일 소유자의 **재�
 | `ui_` | 도메인 지식이 없는 primitive 컴포넌트와 그 part |
 
 `pg_`는 화면 shell과 그 아래 컴포넌트를 함께 덮습니다.
-shell은 이름이 route 이름과 같아서 따로 표시하지 않아도 구분됩니다.
+shell은 slug가 route 이름과 같아서 따로 표시하지 않아도 구분됩니다.
 
 - 폴더가 아니라 가장 가까운 공개 패키지 경계로 판정합니다.
   widget 내부 part가 `component` 폴더에 있어도 `wg_`입니다.
@@ -374,7 +374,7 @@ ui/button/ui-button.css
 | `.pg_x__root { & .wg_chartCard__caption { } }` | 씁니다 |
 | `.pg_x__button:hover .pg_x__box { }` | 내 클래스끼리라 대상이 아닙니다 |
 
-판정은 **선택자가 내 이름으로 시작하는지**입니다. 소유 관계를 따로 조사하지 않습니다.
+판정은 **선택자가 내 slug로 시작하는지**입니다. 소유 관계를 따로 조사하지 않습니다.
 top-level `.pg_x__root .ant-tree-title`도 쓰지 않습니다. root block을 열고 그 안에서 `&`로 씁니다.
 한 소유자의 override가 한 block에 모여서 라이브러리를 올릴 때 볼 곳이 하나가 됩니다.
 
@@ -1348,7 +1348,7 @@ DOM 상태 pseudo-class는 그 요소의 클래스 블록 안에서 `&:`로 씁�
 - 파일 어디에 상태 스타일이 더 있는지 찾지 않습니다.
 - 여러 상태가 같은 선언을 쓰면 상태마다 블록을 따로 엽니다. `,`도 `:is()`도 쓰지 않습니다.
 
-조상의 DOM 상태가 자손을 바꿔야 하면 이름이 같은 자손을 결합자 하나로 겨냥합니다.
+조상의 DOM 상태가 자손을 바꿔야 하면 slug가 같은 자손을 결합자 하나로 겨냥합니다.
 자손의 `:hover`는 포인터가 자손 위에 있을 때만 걸려서 조상 상태를 알 방법이 없고,
 CSS에 부모 선택자가 없어서 대체 수단이 없습니다.
 

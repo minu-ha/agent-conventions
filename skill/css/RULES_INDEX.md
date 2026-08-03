@@ -1,7 +1,7 @@
 # CSS 컨벤션 Rule Index
 
 - Skill: `css`
-- Routing digest: `sha256:5393679ed389e07c3ad3935f876b7e569c9fdcd3c41a7a91b01d28617623c2eb`
+- Routing digest: `sha256:84e44d17541c208d10494003b226c467fa3867e7b40556215182470c501f2364`
 
 ## Direct Companions
 
@@ -10,10 +10,10 @@
 ## Local Rules
 
 - C01 | naming-default-to-plain-css-when-no-module-convention | 프로젝트 표준 미확정 상태에서 새 스타일시트 접근 형식\(plain CSS·CSS Modules\)을 선택하거나 \`.module.css\`·\`styles.\*\`로 전환할 때. 제외: 기존 plain CSS 클래스 rename만 하는 경우.
-- C02 | naming-use-scope-slug-element-modifier-syntax | plain CSS의 project-owned 클래스를 새로 만들 때. 이름, scope, 이름, element, modifier 구분자 또는 casing을 변경할 때.
+- C02 | naming-use-scope-slug-element-modifier-syntax | plain CSS의 project-owned 클래스를 새로 만들 때. 이름, scope, slug, element, modifier 구분자 또는 casing을 변경할 때.
 - C03 | naming-name-elements-and-modifiers-by-role | element 또는 modifier 클래스 이름을 새로 지을 때. \`container\`, \`wrapper\`, \`box\`, 치수·간격 중심 이름을 변경할 때.
-- C04 | naming-keep-page-slug-traceable | \`pg\_\*\` 소유자의 클래스 이름을 새로 만들거나 이름을 바꿀 때. 같은 이름 컴포넌트가 여러 화면에 생겨 이름을 구분해야 할 때.
-- C05 | ownership-give-each-file-one-scope-slug | 새 \`scope\_slug\`를 만들거나 기존 이름을 복사·이름 변경할 때. 서로 다른 컴포넌트가 같은 이름을 쓸 가능성이 있을 때.
+- C04 | naming-keep-page-slug-traceable | \`pg\_\*\` 소유자의 클래스 slug를 새로 만들거나 이름을 바꿀 때. 같은 이름 컴포넌트가 여러 화면에 생겨 slug를 구분해야 할 때.
+- C05 | ownership-give-each-file-one-scope-slug | 새 \`scope\_slug\`를 만들거나 기존 slug를 복사·이름 변경할 때. 서로 다른 컴포넌트가 같은 slug를 쓸 가능성이 있을 때.
 - C06 | ownership-choose-scope-prefix-by-reuse-range | 새 CSS 파일을 만들며 \`pg\_\`·\`wg\_\`·\`ui\_\` 중 하나를 고를 때. 소유자의 재사용 범위가 바뀌어 접두사를 옮길 때. | reviewWith: ownership-give-each-file-one-scope-slug, ownership-use-foreign-classes-only-under-your-own-root
 - C07 | ownership-use-foreign-classes-only-under-your-own-root | \`.ant-\*\`·\`.rc-\*\`·\`.Mui-\*\` 같은 외부 라이브러리 클래스를 쓸 때. 다른 \`scope\_slug\`의 클래스를 겨냥할 때. | reviewWith: ownership-change-other-owners-through-their-api, ownership-give-each-file-one-scope-slug, selector-limit-nesting-block-depth
 - C08 | ownership-change-other-owners-through-their-api | 다른 컴포넌트의 배치나 내부 표현을 바꿔야 할 때. 컴포넌트에 클래스 관련 prop을 추가할 때. | reviewWith: composition-inject-classes-only-at-the-entry-point, ownership-use-foreign-classes-only-under-your-own-root
