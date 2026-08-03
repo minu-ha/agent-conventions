@@ -1,8 +1,8 @@
 ---
 title: Configure Stylelint to Enforce These Rules
-titleKo: 이 규칙을 강제하는 stylelint 설정
+titleKo: 컨벤션을 강제하는 stylelint 설정
 impact: MEDIUM
-impactDescription: 기계가 잡을 수 있는 항목을 설정으로 고정해 리뷰가 볼 목록을 판단이 필요한 것만 남깁니다
+impactDescription: 기계가 잡는 항목을 설정으로 고정해 리뷰는 판단이 필요한 것만 보게 합니다
 appliesWhen:
   - stylelint 설정을 새로 만들거나 규칙을 추가·수정할 때
   - 이 컨벤션 중 어디까지 자동으로 잡히는지 확인할 때
@@ -14,7 +14,7 @@ tags: tooling, stylelint, automation
 
 ## Configure Stylelint to Enforce These Rules
 
-**Impact: MEDIUM (기계가 잡을 수 있는 항목을 설정으로 고정해 리뷰가 볼 목록을 판단이 필요한 것만 남깁니다)**
+**Impact: MEDIUM (기계가 잡는 항목을 설정으로 고정해 리뷰는 판단이 필요한 것만 보게 합니다)**
 
 `stylelint-config-standard`를 확장하고 그 위에 이 컨벤션용 규칙을 얹습니다.
 

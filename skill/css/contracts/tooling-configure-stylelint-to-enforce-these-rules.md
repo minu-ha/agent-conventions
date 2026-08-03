@@ -1,6 +1,6 @@
 # Configure Stylelint to Enforce These Rules
 
-**Impact: MEDIUM (기계가 잡을 수 있는 항목을 설정으로 고정해 리뷰가 볼 목록을 판단이 필요한 것만 남깁니다)**
+**Impact: MEDIUM (기계가 잡는 항목을 설정으로 고정해 리뷰는 판단이 필요한 것만 보게 합니다)**
 
 `stylelint-config-standard`를 확장하고 그 위에 이 컨벤션용 규칙을 얹습니다.
 

@@ -286,7 +286,7 @@ const typescriptRuleRouting = {
 const cssRuleRouting = {
 	"naming-default-to-plain-css-when-no-module-convention": {
 		appliesWhen:
-			"프로젝트 표준 미확정 상태에서 새 스타일시트 접근 형식(plain CSS·CSS Modules)을 선택하거나 `.module.css`·`styles.*`로 전환할 때. 제외: 기존 plain CSS 클래스 rename만 하는 경우.",
+			"프로젝트 표준 미확정 상태에서 새 스타일시트 접근 형식(plain CSS, CSS Modules)을 선택하거나 `.module.css`·`styles.*`로 전환할 때. 제외: 기존 plain CSS 클래스 rename만 하는 경우.",
 		reviewWith: [],
 	},
 	"naming-use-scope-slug-element-modifier-syntax": {
@@ -294,7 +294,7 @@ const cssRuleRouting = {
 		reviewWith: [],
 	},
 	"naming-name-elements-and-modifiers-by-role": {
-		appliesWhen: "element 또는 modifier 클래스 이름을 새로 지을 때. `container`, `wrapper`, `box`, 치수·간격 중심 이름을 변경할 때.",
+		appliesWhen: "element 또는 modifier 클래스 이름을 새로 지을 때. `container`, `wrapper`, `box`, 치수나 간격 중심 이름을 변경할 때.",
 		reviewWith: [],
 	},
 	"naming-keep-page-slug-traceable": {
@@ -344,7 +344,7 @@ const cssRuleRouting = {
 		reviewWith: ["composition-inject-classes-only-at-the-entry-point", "naming-name-elements-and-modifiers-by-role"],
 	},
 	"selector-limit-nesting-block-depth": {
-		appliesWhen: "중첩 `{}` block을 추가하거나 기존 block을 펼치거나 합칠 때. `&`로 조건이나 pseudo-element를 붙일 때.",
+		appliesWhen: "중첩 `{}` 블록을 추가하거나 기존 블록을 펼치거나 합칠 때. `&`로 조건이나 pseudo-element를 붙일 때.",
 		reviewWith: ["selector-use-classes-instead-of-element-selectors", "selector-declare-each-class-in-one-block"],
 	},
 	"selector-use-classes-instead-of-element-selectors": {
@@ -380,19 +380,19 @@ const cssRuleRouting = {
 	},
 	"values-keep-layout-intent-explicit": {
 		appliesWhen:
-			"`sticky`·`fixed`, `z-index`, 강제 width·height 또는 부모·자식 layout 책임을 추가·변경할 때. 제외: 같은 element의 base/modifier 분리에서 기존 `display`·spacing 선언을 값 그대로 재배치하는 경우.",
+			"`sticky`·`fixed`, `z-index`, 강제 width나 height 또는 부모·자식 layout 책임을 추가·변경할 때. 제외: 같은 element의 base/modifier 분리에서 기존 `display`·spacing 선언을 값 그대로 재배치하는 경우.",
 		reviewWith: [],
 	},
 	"values-always-provide-css-variable-fallbacks": {
-		appliesWhen: "`var(--*)` 사용을 추가하거나 변수 이름·fallback을 바꿀 때. core token 목록에 항목을 추가·제거할 때.",
+		appliesWhen: "`var(--*)` 사용을 추가하거나 변수 이름이나 fallback을 바꿀 때. core token 목록에 항목을 추가·제거할 때.",
 		reviewWith: ["values-tokenize-repeated-visual-values"],
 	},
 	"values-tokenize-repeated-visual-values": {
-		appliesWhen: "여러 파일이 같은 색·간격·radius·타이포·그림자 값을 쓸 때. 새 CSS custom property를 선언할 때.",
+		appliesWhen: "여러 파일이 같은 색, 간격, radius, 타이포, 그림자 값을 쓸 때. 새 CSS custom property를 선언할 때.",
 		reviewWith: ["values-always-provide-css-variable-fallbacks"],
 	},
 	"values-separate-domain-state-modifiers-from-dom-interaction-states": {
-		appliesWhen: "app/domain state modifier와 hover·focus·disabled 같은 DOM interaction state를 추가·변경할 때. focus ring을 수정할 때.",
+		appliesWhen: "app/domain state modifier와 hover, focus, disabled 같은 DOM interaction state를 추가·변경할 때. focus ring을 수정할 때.",
 		reviewWith: ["composition-do-not-build-structural-variants-with-modifiers"],
 	},
 	"values-always-provide-a-visible-focus-indicator": {
@@ -2437,7 +2437,7 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 		const interactionState = await readRule("css", ruleId);
 		assert.match(
 			interactionState,
-			/(?:hover|focus|disabled)[\s\S]*unconditional base element block[\s\S]*modifier 아래[\s\S]*(?:좁히지 않|두지 않)/i,
+			/(?:hover|focus|disabled)[\s\S]*조건 없는 base element 블록[\s\S]*modifier 아래[\s\S]*(?:좁히지 않|두지 않)/i,
 		);
 	}
 	const cssInteractionContracts = await Promise.all(
@@ -2446,7 +2446,7 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 		),
 	);
 	for (const contract of cssInteractionContracts) {
-		assertMentions(contract, [/base(?: element)? block/i, /modifier 아래/i], "contract");
+		assertMentions(contract, [/base(?: element)? 블록/i, /modifier 아래/i], "contract");
 	}
 
 	const mixedManifest = await readRoutingEvalManifest(getSkillPaths("react", realSkillRootDir));
@@ -2722,7 +2722,7 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	const ampersandScope = await readRule("css", "selector-limit-nesting-block-depth");
 	assertMentions(
 		ampersandScope,
-		[/중첩은 항상 한 겹이고, `&`도 한 선택자에 한 번입니다/, /그 block이 소유한 요소 하나/, /어느 요소를 가리키는지로 정해집니다/],
+		[/중첩은 항상 한 겹이고, `&`도 한 선택자에 한 번입니다/, /그 블록이 소유한 요소 하나/, /어느 요소를 가리키느냐가 정합니다/],
 		"ampersandScope",
 	);
 
@@ -2760,7 +2760,7 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	const oneBlockPerClass = await readRule("css", "selector-declare-each-class-in-one-block");
 	assertMentions(
 		oneBlockPerClass,
-		[/한 block에만 있습니다/, /선언 순서에 의존하는 override가 생기지 않습니다/, /@media/],
+		[/한 블록에만 있습니다/, /선언 순서에 의존하는 override가 생기지 않습니다/, /@media/],
 		"oneBlockPerClass",
 	);
 

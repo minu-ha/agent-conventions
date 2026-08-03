@@ -102,18 +102,20 @@ tags: tag1, tag2
 | `tags` | 선택 | 검색용 |
 
 `titleKo` 는 영어 제목의 직역이 아니라 같은 뜻의 자연스러운 한국어로 쓴다.
-코드 식별자는 영어로 남긴다. 보고서 목차처럼 명사형으로 끝맺고
-`~하기` · `~않기` 같은 동작 지시형 어미는 쓰지 않는다.
+코드 식별자는 영어로 남긴다.
 
 ```markdown
 title: Use Named Handlers Instead of Hiding Logic in JSX
-titleKo: JSX 인라인 로직의 명명된 핸들러 분리
+titleKo: JSX 인라인 로직을 명명된 핸들러로 분리
 ```
 
-`impactDescription` 은 `~합니다` 로 끝나는 한 문장으로 쓰고, 본문 산문도 `~합니다` 문체로 통일한다.
+한국어 문장은 `humanizer`, `grammar-checker`, `style-guide` 스킬로 다듬는다.
+`.agents/skills/` 에 vendoring 되어 있고, 없으면 `npx skills add daleseo/korean-skills` 로 설치한다.
+어미나 문체를 이 문서에서 규정하지 않는다. 세 스킬의 판정을 따른다.
 
 `appliesWhen` 불렛은 `conventions.html` 의 "언제 적용할까요?" 목록에 그대로 노출된다.
 각 항목은 `~할 때` 로 끝맺고, 걸리지 않는 조건은 `제외:` 로 시작한다.
+이 둘은 문체가 아니라 라우팅 문장 생성 규칙이다.
 라우팅용 한 줄 문장은 불렛을 마침표로 이어 붙여 자동 생성되므로 항목 순서가 곧 문장 순서다.
 
 섹션도 한국어 제목이 필수다. `rules/_sections.md` 의 각 헤더 아래,

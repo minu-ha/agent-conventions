@@ -1,6 +1,6 @@
 ---
 title: Rule Title Here
-titleKo: 사람이 화면에서 읽을 한국어 제목. 보고서 목차처럼 명사형으로 끝맺는다
+titleKo: 사람이 화면에서 읽을 한국어 제목
 impact: MEDIUM
 impactDescription: 영향도 설명. ~합니다 로 끝나는 한 문장
 appliesWhen:
@@ -13,7 +13,7 @@ tags: tag1, tag2
 
 **Impact: MEDIUM (영향도 설명. ~합니다 로 끝나는 한 문장)**
 
-규칙의 핵심과 이유를 짧고 분명하게 쓴다. 본문 산문은 `~합니다` 문체로 통일한다.
+규칙의 핵심과 이유를 짧고 분명하게 쓴다.
 
 규범과 예외는 여기까지 끝낸다.
 아래에는 `Incorrect` / `Correct` 라벨, 코드 펜스, 빈 줄만 둔다.

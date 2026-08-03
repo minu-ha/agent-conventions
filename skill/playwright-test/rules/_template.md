@@ -1,6 +1,6 @@
 ---
 title: Rule Title Here
-titleKo: 사람이 화면에서 읽을 한국어 제목. 보고서 목차처럼 명사형으로 끝맺는다
+titleKo: 사람이 화면에서 읽을 한국어 제목
 impact: MEDIUM
 impactDescription: 영향도 설명. ~합니다 로 끝나는 한 문장
 tags: tag1, tag2

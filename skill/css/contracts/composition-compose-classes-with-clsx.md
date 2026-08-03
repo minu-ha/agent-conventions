@@ -2,11 +2,11 @@
 
 **Impact: HIGH (base 클래스와 상태 modifier를 조합할 때 TSX 클래스 조립을 읽을 수 있게 유지합니다)**
 
-TSX에서 `className`은 `clsx()` 사용을 기본으로 합니다.
-문자열 연결이나 중복 ternary로 `className`을 조립하지 않습니다.
+TSX에서 `className`은 `clsx()`로 조립합니다.
+문자열을 이어 붙이거나 ternary를 겹쳐 쓰지 않습니다.
 
 클래스가 하나일 때도 `clsx()`를 씁니다.
-modifier가 붙는 순간 문자열 연결로 되돌아가는 diff를 막으려는 것이고,
-`className` 형태가 파일마다 갈리지 않게 해서 grep과 리뷰가 한 패턴만 보게 합니다.
+modifier가 붙는 순간 문자열 연결로 되돌아가는 diff를 막습니다.
+그리고 `className` 형태가 파일마다 갈리지 않아서 grep과 리뷰가 한 패턴만 봅니다.
 
 > 예시·예외가 필요하면 [full rule](../rules/03-01-composition-compose-classes-with-clsx.md)을 읽습니다.

@@ -4,7 +4,7 @@ titleKo: core token 선언과 그 밖 var()의 fallback 지정
 impact: HIGH
 impactDescription: 토큰 누락이 스타일을 조용히 망가뜨리는 것을 막고 fallback이 매직 넘버로 번지는 것도 막습니다
 appliesWhen:
-  - `var(--*)` 사용을 추가하거나 변수 이름·fallback을 바꿀 때
+  - `var(--*)` 사용을 추가하거나 변수 이름이나 fallback을 바꿀 때
   - core token 목록에 항목을 추가·제거할 때
 reviewWith: values-tokenize-repeated-visual-values
 tags: variables, fallbacks, tokens
@@ -28,8 +28,8 @@ core token에 fallback을 붙이지 않는 이유는 `values-tokenize-repeated-v
 `var(--app-space-3, 12px)`가 100곳에 있으면 `12px`을 100곳에 하드코딩한 것과 같아서 토큰화의 목적이 사라집니다.
 값을 한 곳에서 바꾸려면 그 한 곳이 유일해야 합니다.
 
-fallback이 필요한 쪽은 주입 주체가 프로젝트가 아닌 경계입니다.
-서드파티 래퍼 내부, 선택적 theme, 임시 overlay, 조건부로만 주입되는 변수가 여기 해당합니다.
+fallback이 필요한 곳은 프로젝트가 직접 주입하지 않는 경계입니다.
+서드파티 래퍼 내부, 켜고 끄는 theme, 임시 overlay, 조건부로만 주입되는 변수가 여기 해당합니다.
 
 요청에 없는 CSS variable을 이 규칙 때문에 새로 발명하지 않습니다.
 

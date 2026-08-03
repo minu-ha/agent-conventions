@@ -27,7 +27,7 @@
   선택자와 볼 block이 각각 하나로 정해집니다.
 
 ## 5. Values, Layout, and Accessibility (values)
-**TitleKo:** 값·레이아웃·접근성
+**TitleKo:** 값, 레이아웃, 접근성
 **Impact:** HIGH
 **Description:** 토큰, 변수 fallback, 명시적인 레이아웃 의도, 상태 경계, 눈에 보이는 포커스 표시는 스타일을 더 견고하고
   접근 가능하게 유지합니다.

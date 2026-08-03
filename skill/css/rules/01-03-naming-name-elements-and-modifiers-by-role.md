@@ -5,7 +5,7 @@ impact: HIGH
 impactDescription: 클래스가 UI 부위를 설명하지 못하게 만드는 모호하거나 레이아웃 중심인 이름을 피합니다
 appliesWhen:
   - element 또는 modifier 클래스 이름을 새로 지을 때
-  - `container`, `wrapper`, `box`, 치수·간격 중심 이름을 변경할 때
+  - `container`, `wrapper`, `box`, 치수나 간격 중심 이름을 변경할 때
 tags: naming, semantics, modifiers
 ---
 

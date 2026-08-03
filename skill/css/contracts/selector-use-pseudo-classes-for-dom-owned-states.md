@@ -15,7 +15,7 @@
 
 - 앱이 아는 상태를 `[aria-selected="true"]`처럼 속성으로 겨냥하지 않습니다.
 - `aria-*`는 접근성 계약이라 마크업에 그대로 두고, 스타일은 modifier로 겨냥합니다.
-- 같은 상태를 두 표기로 쓰지 않습니다. 어느 쪽이 참인지 알 수 없게 됩니다.
+- 같은 상태를 두 표기로 쓰지 않습니다. 어느 쪽이 참인지 가릴 수 없습니다.
 
 pseudo-class를 어디에 쓰는지는 `selector-nest-dom-state-in-the-owning-block`이 정합니다.
 `:not(.--modifier)` 반전은 `selector-do-not-invert-domain-state-with-not`이 막습니다.

@@ -2,9 +2,9 @@
 
 **Impact: HIGH (modifier가 두 번째 레이아웃 이름 체계로 자라지 않게 막습니다)**
 
-modifier가 표현할 수 있는 것은 두 가지입니다.
+modifier는 두 가지만 표현합니다.
 
-| 쓸 수 있는 것 | 예 |
+| 쓰는 자리 | 예 |
 | --- | --- |
 | 켜지고 꺼지는 상태 | `--active`, `--selected`, `--disabled`, `--error`, `--hidden` |
 | 여러 곳에서 반복되는 모양 | `--dense`, `--compact`, `--horizontal` |
@@ -18,6 +18,6 @@ modifier가 표현할 수 있는 것은 두 가지입니다.
 > 이 modifier를 다른 화면에서도 같은 이름으로 쓸 수 있는가?
 
 쓸 수 있으면 반복되는 모양이라 허용합니다.
-그 화면에서만 뜻이 통하면 이름이 이미 위치 정보를 담고 있다는 뜻이라 element로 바꿉니다.
+그 화면에서만 통하는 이름이면 이미 위치 정보를 담고 있으니 element로 바꿉니다.
 
 > 예시·예외가 필요하면 [full rule](../rules/03-02-composition-do-not-build-structural-variants-with-modifiers.md)을 읽습니다.
