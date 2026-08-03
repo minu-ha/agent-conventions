@@ -3,13 +3,13 @@
 	"version": "1.0.0",
 	"organization": "Agent Conventions",
 	"date": "2026년 4월",
-	"abstract": "에이전트 협업 팀을 위한 CSS 코딩 컨벤션입니다. plain CSS를 기본으로 한 전역 고유 네이밍, `pg_/wg_/ui_` owner scope, 예측 가능한 TSX class 조합, 평평한 selector, wrapper 기준 서드파티 스타일링, 토큰화된 값, 절제된 stylesheet 구성을 강조합니다. TSX의 class contract를 함께 바꿀 때는 React와 TypeScript 규칙도 함께 봅니다. `rules/` 아래 rule 파일이 source of truth입니다.",
+	"abstract": "에이전트 협업 팀을 위한 CSS 코딩 컨벤션입니다. plain CSS를 기본으로 한 전역 고유 네이밍, `pg_/wg_/ui_` 소유 범위, 예측 가능한 TSX 클래스 조합, 평평한 선택자, 남의 클래스는 자기 root 아래에서만 겨냥하는 경계, 토큰화된 값, 눈에 보이는 포커스 표시, stylelint 설정을 강조합니다. TSX의 클래스 계약을 함께 바꿀 때는 React와 TypeScript 규칙도 함께 봅니다. `rules/` 아래 rule 파일이 source of truth입니다.",
 	"progressiveDisclosure": true,
 	"companions": [
 		{
 			"skill": "typescript",
 			"mode": "conditional",
-			"appliesWhen": "TS/TSX class contract, wrapper Props 또는 style import를 함께 변경한다."
+			"appliesWhen": "TS/TSX 클래스 계약, 래퍼 Props 또는 style import를 함께 변경한다."
 		}
 	],
 	"references": [

@@ -116,7 +116,8 @@ const cssRuleUniverse = [
 	"composition-compose-classes-with-clsx",
 	"composition-do-not-build-structural-variants-with-modifiers",
 	"composition-keep-classes-single-purpose",
-	"composition-style-ui-components-through-owned-wrappers",
+	"composition-inject-classes-only-at-the-entry-point",
+	"composition-do-not-add-wrapper-elements-for-styling",
 	"selector-limit-nesting-block-depth",
 	"selector-use-classes-instead-of-element-selectors",
 	"selector-do-not-group-classes-with-commas",
@@ -129,6 +130,7 @@ const cssRuleUniverse = [
 	"values-tokenize-repeated-visual-values",
 	"values-separate-domain-state-modifiers-from-dom-interaction-states",
 	"values-always-provide-a-visible-focus-indicator",
+	"tooling-configure-stylelint-to-enforce-these-rules",
 ] as const;
 
 /**
@@ -284,31 +286,31 @@ const typescriptRuleRouting = {
 const cssRuleRouting = {
 	"naming-default-to-plain-css-when-no-module-convention": {
 		appliesWhen:
-			"프로젝트 표준 미확정 상태에서 새 stylesheet 접근 형식(plain CSS·CSS Modules)을 선택하거나 `.module.css`·`styles.*`로 전환할 때. 제외: 기존 plain CSS class rename만 하는 경우.",
+			"프로젝트 표준 미확정 상태에서 새 스타일시트 접근 형식(plain CSS·CSS Modules)을 선택하거나 `.module.css`·`styles.*`로 전환할 때. 제외: 기존 plain CSS 클래스 rename만 하는 경우.",
 		reviewWith: [],
 	},
 	"naming-use-scope-slug-element-modifier-syntax": {
-		appliesWhen: "plain CSS의 project-owned class를 새로 만들 때. 이름, scope, slug, element, modifier 구분자 또는 casing을 변경할 때.",
+		appliesWhen: "plain CSS의 project-owned 클래스를 새로 만들 때. 이름, scope, 이름, element, modifier 구분자 또는 casing을 변경할 때.",
 		reviewWith: [],
 	},
 	"naming-name-elements-and-modifiers-by-role": {
-		appliesWhen: "element 또는 modifier class 이름을 새로 지을 때. `container`, `wrapper`, `box`, 치수·간격 중심 이름을 변경할 때.",
+		appliesWhen: "element 또는 modifier 클래스 이름을 새로 지을 때. `container`, `wrapper`, `box`, 치수·간격 중심 이름을 변경할 때.",
 		reviewWith: [],
 	},
 	"naming-keep-page-slug-traceable": {
-		appliesWhen: "`pg_*` owner의 class slug를 새로 만들거나 이름을 바꿀 때. 같은 이름 component가 여러 화면에 생겨 slug를 구분해야 할 때.",
+		appliesWhen: "`pg_*` 소유자의 클래스 이름을 새로 만들거나 이름을 바꿀 때. 같은 이름 컴포넌트가 여러 화면에 생겨 이름을 구분해야 할 때.",
 		reviewWith: [],
 	},
 	"ownership-give-each-file-one-scope-slug": {
-		appliesWhen: "새 `scope_slug`를 만들거나 기존 slug를 복사·이름 변경할 때. 서로 다른 컴포넌트가 같은 slug를 쓸 가능성이 있을 때.",
+		appliesWhen: "새 `scope_slug`를 만들거나 기존 이름을 복사·이름 변경할 때. 서로 다른 컴포넌트가 같은 이름을 쓸 가능성이 있을 때.",
 		reviewWith: [],
 	},
 	"ownership-choose-scope-prefix-by-reuse-range": {
-		appliesWhen: "새 CSS 파일을 만들며 `pg_`·`wg_`·`ui_` 중 하나를 고를 때. owner의 재사용 범위가 바뀌어 prefix를 옮길 때.",
+		appliesWhen: "새 CSS 파일을 만들며 `pg_`·`wg_`·`ui_` 중 하나를 고를 때. 소유자의 재사용 범위가 바뀌어 접두사를 옮길 때.",
 		reviewWith: ["ownership-give-each-file-one-scope-slug", "ownership-use-foreign-classes-only-under-your-own-root"],
 	},
 	"ownership-use-foreign-classes-only-under-your-own-root": {
-		appliesWhen: "`.ant-*`·`.rc-*`·`.Mui-*` 같은 third-party class를 쓸 때. 다른 `scope_slug`의 class를 겨냥할 때.",
+		appliesWhen: "`.ant-*`·`.rc-*`·`.Mui-*` 같은 외부 라이브러리 클래스를 쓸 때. 다른 `scope_slug`의 클래스를 겨냥할 때.",
 		reviewWith: [
 			"ownership-change-other-owners-through-their-api",
 			"ownership-give-each-file-one-scope-slug",
@@ -316,11 +318,11 @@ const cssRuleRouting = {
 		],
 	},
 	"ownership-change-other-owners-through-their-api": {
-		appliesWhen: "다른 component의 배치나 내부 표현을 바꿔야 할 때. component에 class 관련 prop을 추가할 때.",
-		reviewWith: ["ownership-use-foreign-classes-only-under-your-own-root", "composition-style-ui-components-through-owned-wrappers"],
+		appliesWhen: "다른 컴포넌트의 배치나 내부 표현을 바꿔야 할 때. 컴포넌트에 클래스 관련 prop을 추가할 때.",
+		reviewWith: ["ownership-use-foreign-classes-only-under-your-own-root", "composition-inject-classes-only-at-the-entry-point"],
 	},
 	"composition-compose-classes-with-clsx": {
-		appliesWhen: "TSX의 `className`을 추가·수정할 때. base class, modifier, optional class를 조합할 때.",
+		appliesWhen: "TSX의 `className`을 추가·수정할 때. base 클래스, modifier, optional 클래스를 조합할 때.",
 		reviewWith: [],
 	},
 	"composition-do-not-build-structural-variants-with-modifiers": {
@@ -329,13 +331,17 @@ const cssRuleRouting = {
 	},
 	"composition-keep-classes-single-purpose": {
 		appliesWhen:
-			"기존 class가 base와 state·variant 책임을 함께 갖거나 독립 시각 책임을 추가·재사용·분리할 때. 제외: 기존 결합 책임을 분리하지 않고 처음부터 새 single-purpose pair를 만들거나 책임 보존 rename만 하는 경우.",
+			"기존 클래스가 base와 state·variant 책임을 함께 갖거나 독립 시각 책임을 추가·재사용·분리할 때. 제외: 기존 결합 책임을 분리하지 않고 처음부터 새 single-purpose pair를 만들거나 책임 보존 rename만 하는 경우.",
 		reviewWith: [],
 	},
-	"composition-style-ui-components-through-owned-wrappers": {
+	"composition-inject-classes-only-at-the-entry-point": {
 		appliesWhen:
-			"`Ui*` wrapper에 `className`을 주거나 wrapper가 노출할 class 계약을 정할 때. `Ui*` 내부 노드의 모양을 화면마다 다르게 해야 할 때. 제외: 기존 CSS owner root 아래 third-party selector만 수정하는 경우.",
+			"우리가 만든 컴포넌트에 `className`이나 클래스 관련 prop을 추가할 때. 그 컴포넌트 내부 노드의 모양을 화면마다 다르게 해야 할 때. 제외: 기존 CSS root 아래 외부 라이브러리 선택자만 수정하는 경우.",
 		reviewWith: ["ownership-use-foreign-classes-only-under-your-own-root", "ownership-change-other-owners-through-their-api"],
+	},
+	"composition-do-not-add-wrapper-elements-for-styling": {
+		appliesWhen: "스타일을 주려고 `div`나 `span`을 새로 감쌀 때. `className`을 받지 않는 컴포넌트에 여백이나 크기를 줘야 할 때.",
+		reviewWith: ["composition-inject-classes-only-at-the-entry-point", "naming-name-elements-and-modifiers-by-role"],
 	},
 	"selector-limit-nesting-block-depth": {
 		appliesWhen: "중첩 `{}` block을 추가하거나 기존 block을 펼치거나 합칠 때. `&`로 조건이나 pseudo-element를 붙일 때.",
@@ -343,15 +349,15 @@ const cssRuleRouting = {
 	},
 	"selector-use-classes-instead-of-element-selectors": {
 		appliesWhen:
-			"`p`, `h2`, `span`, `button` 같은 element selector를 쓰려 할 때. `dangerouslySetInnerHTML`이나 Markdown 렌더러 출력을 스타일링할 때.",
+			"`p`, `h2`, `span`, `button` 같은 element 선택자를 쓰려 할 때. `dangerouslySetInnerHTML`이나 Markdown 렌더러 출력을 스타일링할 때.",
 		reviewWith: ["naming-name-elements-and-modifiers-by-role"],
 	},
 	"selector-do-not-group-classes-with-commas": {
-		appliesWhen: "여러 class가 같은 선언을 반복해 `,`로 묶으려 할 때. 한 대상에 진입 조건이 여럿일 때.",
+		appliesWhen: "여러 클래스가 같은 선언을 반복해 `,`로 묶으려 할 때. 한 대상에 진입 조건이 여럿일 때.",
 		reviewWith: ["selector-declare-each-class-in-one-block", "values-tokenize-repeated-visual-values"],
 	},
 	"selector-declare-each-class-in-one-block": {
-		appliesWhen: "이미 선언한 class에 스타일을 더 추가할 때. 파일 아래쪽에서 위쪽 선언을 덮어쓰려 할 때.",
+		appliesWhen: "이미 선언한 클래스에 스타일을 더 추가할 때. 파일 아래쪽에서 위쪽 선언을 덮어쓰려 할 때.",
 		reviewWith: ["selector-do-not-group-classes-with-commas"],
 	},
 	"selector-use-pseudo-classes-for-dom-owned-states": {
@@ -392,6 +398,14 @@ const cssRuleRouting = {
 	"values-always-provide-a-visible-focus-indicator": {
 		appliesWhen: "`outline`, `:focus`, `:focus-visible` 스타일을 추가·수정할 때. interactive 요소의 기본 포커스 링을 덮어쓸 때.",
 		reviewWith: ["values-separate-domain-state-modifiers-from-dom-interaction-states"],
+	},
+	"tooling-configure-stylelint-to-enforce-these-rules": {
+		appliesWhen: "stylelint 설정을 새로 만들거나 규칙을 추가·수정할 때. 이 컨벤션 중 어디까지 자동으로 잡히는지 확인할 때.",
+		reviewWith: [
+			"ownership-use-foreign-classes-only-under-your-own-root",
+			"selector-limit-nesting-block-depth",
+			"naming-use-scope-slug-element-modifier-syntax",
+		],
 	},
 } as const;
 
@@ -1316,7 +1330,7 @@ const cssScenarioStages = {
 					"naming-name-elements-and-modifiers-by-role",
 					"ownership-use-foreign-classes-only-under-your-own-root",
 					"composition-compose-classes-with-clsx",
-					"composition-style-ui-components-through-owned-wrappers",
+					"composition-inject-classes-only-at-the-entry-point",
 				],
 			},
 		},
@@ -1332,7 +1346,7 @@ const cssScenarioStages = {
 					"naming-name-elements-and-modifiers-by-role",
 					"ownership-use-foreign-classes-only-under-your-own-root",
 					"composition-compose-classes-with-clsx",
-					"composition-style-ui-components-through-owned-wrappers",
+					"composition-inject-classes-only-at-the-entry-point",
 					"values-always-provide-css-variable-fallbacks",
 				],
 			},
@@ -1354,7 +1368,22 @@ const cssScenarioStages = {
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"guardrails-review-banned-typescript-shortcuts-before-finishing",
 				],
-				css: ["composition-compose-classes-with-clsx", "composition-style-ui-components-through-owned-wrappers"],
+				css: ["composition-compose-classes-with-clsx", "composition-inject-classes-only-at-the-entry-point"],
+			},
+		},
+	},
+	"css-wrapper-element-for-spacing": {
+		initial: {
+			prompt:
+				"a wrapper div was added around UiCollapse only to give it margin; remove it by adding a className contract to the component.",
+			files: ["src/ui/collapse/ui-collapse.tsx", "src/page/post-index/component/pg-post-filter-dialog.tsx"],
+			expectedSkills: ["css"],
+			expectedSelected: {
+				css: [
+					"naming-name-elements-and-modifiers-by-role",
+					"composition-inject-classes-only-at-the-entry-point",
+					"composition-do-not-add-wrapper-elements-for-styling",
+				],
 			},
 		},
 	},
@@ -1450,6 +1479,21 @@ const cssScenarioStages = {
 					"selector-do-not-group-classes-with-commas",
 					"selector-nest-dom-state-in-the-owning-block",
 					"selector-do-not-invert-domain-state-with-not",
+				],
+			},
+		},
+	},
+	"css-stylelint-config-setup": {
+		initial: {
+			prompt: "add a stylelint config for this convention with per-directory prefix overrides; keep stylelint-config-standard as the base.",
+			files: ["stylelint.config.mjs"],
+			expectedSkills: ["css"],
+			expectedSelected: {
+				css: [
+					"naming-use-scope-slug-element-modifier-syntax",
+					"ownership-use-foreign-classes-only-under-your-own-root",
+					"selector-limit-nesting-block-depth",
+					"tooling-configure-stylelint-to-enforce-these-rules",
 				],
 			},
 		},
@@ -2075,9 +2119,9 @@ test("CSS progressive metadata and rule routing match Appendix C exactly", async
 	// abstract 는 사람이 읽는 개요다. 로딩 경로 설명을 넣지 않는다.
 	assert.doesNotMatch(document.metadata.abstract, /SKILL\.md|RULES_INDEX\.md|contracts\/|opt-in/);
 	assert.deepEqual(document.metadata.companions, [
-		{skill: "typescript", mode: "conditional", appliesWhen: "TS/TSX class contract, wrapper Props 또는 style import를 함께 변경한다."},
+		{skill: "typescript", mode: "conditional", appliesWhen: "TS/TSX 클래스 계약, 래퍼 Props 또는 style import를 함께 변경한다."},
 	]);
-	assert.equal(document.rules.length, 24);
+	assert.equal(document.rules.length, 26);
 	assert.deepEqual(
 		Object.fromEntries(document.rules.map((rule) => [getRuleId(rule), {appliesWhen: rule.appliesWhen, reviewWith: rule.reviewWith}])),
 		cssRuleRouting,
@@ -2090,10 +2134,10 @@ test("CSS progressive metadata and rule routing match Appendix C exactly", async
 		document.rules.every((rule) => (rule.appliesWhen?.length ?? 0) <= 160),
 		true,
 	);
-	const wrapperStylingRule = await readRuleSource("css", "composition-style-ui-components-through-owned-wrappers");
+	const wrapperStylingRule = await readRuleSource("css", "composition-inject-classes-only-at-the-entry-point");
 	assertMentions(
 		wrapperStylingRule,
-		[/스타일 창구는 `className` 하나/i, /래핑 `div`/i, /variant.*modifier로 붙입니다/i],
+		[/스타일 창구는 \*\*진입점 하나\*\*/i, /slot 클래스 prop을 늘리지 않습니다/i, /variant.*modifier로 붙입니다/i],
 		"wrapperStylingRule",
 	);
 	const singlePurposeRule = await readRuleSource("css", "composition-keep-classes-single-purpose");
@@ -2133,10 +2177,10 @@ test("CSS routing manifest is the exact eleven-scenario and thirteen-stage Appen
 		manifest.scenarios.map((scenario) => scenario.id),
 		expectedScenarioIds,
 	);
-	assert.equal(manifest.scenarios.length, 14);
+	assert.equal(manifest.scenarios.length, 16);
 	assert.equal(
 		manifest.scenarios.reduce((count, scenario) => count + (scenario.scopeDrift ? 2 : 1), 0),
-		16,
+		18,
 	);
 
 	const coveredCssRules = new Set<string>();
@@ -2267,7 +2311,7 @@ test("routing activation and generated indexes use only the changed semantic del
 	assert.match(generatedIndex, /^- T\d+ \| [^ |]+ \|/m);
 
 	const routeOwnerRule = await readRuleSource("css", "naming-keep-page-slug-traceable");
-	assert.match(routeOwnerRule, /`pg_\*` owner의 class slug를 새로 만들거나 이름을 바꿀 때/);
+	assert.match(routeOwnerRule, /`pg_\*` 소유자의 클래스 이름을 새로 만들거나 이름을 바꿀 때/);
 });
 
 test("v16 boundary contracts distinguish semantic role changes from contextual and byte-equivalent noise", async () => {
@@ -2366,7 +2410,7 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 	assertMentions(typescriptContracts[5]!, [/unchanged contract/i, /(?:새 함수 인자|새 사용처|call site)/i], "typescriptContracts");
 
 	const stylesheetFormat = await readRule("css", "naming-default-to-plain-css-when-no-module-convention");
-	assertMentions(stylesheetFormat, [/stylesheet 접근 형식/i, /plain CSS/i, /CSS Modules/i], "stylesheetFormat");
+	assertMentions(stylesheetFormat, [/스타일시트 접근 형식/i, /plain CSS/i, /CSS Modules/i], "stylesheetFormat");
 	assertMentions(
 		stylesheetFormat,
 		[/기존 plain CSS/i, /(?:class|selector)/i, /(?:rename|이름 변경)/i, /(?:N\/A|제외)/i],
@@ -2504,7 +2548,7 @@ test("v17 TypeScript boundaries exclude React props and prevent self-created dup
 	);
 	assert.match(
 		documentedShape,
-		/(?:외부|external|generated|read-only|shared)[\s\S]*(?:owner|선언)[^\n]+(?:수정하지 않|보강하지 않)[\s\S]*(?:local alias|별도 alias)[^\n]+(?:만들지 않|추가하지 않)[\s\S]*callable 문서화 여부[^\n]+docs-require-header-jsdoc-on-key-declarations[^\n]+(?:독립|applicability|판정)/i,
+		/(?:외부|external|generated|read-only|shared)[\s\S]*(?:소유자|선언)[^\n]+(?:수정하지 않|보강하지 않)[\s\S]*(?:local alias|별도 alias)[^\n]+(?:만들지 않|추가하지 않)[\s\S]*callable 문서화 여부[^\n]+docs-require-header-jsdoc-on-key-declarations[^\n]+(?:독립|applicability|판정)/i,
 	);
 	assert.doesNotMatch(documentedShape, /callable 선언에서[^\n]+(?:역할|계약)[^\n]+설명/);
 
@@ -2590,10 +2634,70 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	);
 	assert.doesNotMatch(headerDocs, /\bT\d{2}\b/);
 
+	const typescriptPressure = await readFile(path.join(realSkillRootDir, "typescript", "pressure-tests.md"), "utf8");
+	assert.match(
+		typescriptPressure,
+		/CreateEntryPayloadParams[\s\S]*(?:정규화 전|raw input)[\s\S]*CreateEntryPayload[\s\S]*(?:정규화 후|payload)/i,
+	);
+	assert.match(
+		typescriptPressure,
+		/External Contract and Documentation Independence[\s\S]*types-document-custom-types-and-shapes[\s\S]*types-reuse-existing-contracts-before-new-types[\s\S]*(?:둘 다|모두) N\/A[\s\S]*docs-require-header-jsdoc-on-key-declarations[\s\S]*독립[^\n]+Selected/i,
+	);
+
+	const mixedManifest = await readRoutingEvalManifest(getSkillPaths("react", realSkillRootDir));
+	const ownerMove = mixedManifest.scenarios.find(({id}) => id === "RTE02-owner-placement-css-drift");
+	assert.equal(ownerMove?.expectedSelected.typescript?.includes("functions-use-named-object-params-for-complex-signatures"), false);
+	assert.equal(
+		ownerMove?.expectedSelected.typescript?.includes("functions-use-named-object-params-for-complex-signatures") ?? false,
+		false,
+	);
+	assert.equal(
+		ownerMove?.scopeDrift?.expectedSelected.typescript?.includes("functions-use-named-object-params-for-complex-signatures"),
+		false,
+	);
+
+	const typescriptManifest = await readRoutingEvalManifest(getSkillPaths("typescript", realSkillRootDir));
+	const namedObjectParam = typescriptManifest.scenarios.find(({id}) => id === "named-object-param");
+	assert.equal(namedObjectParam?.expectedSelected.typescript?.includes("functions-use-named-object-params-for-complex-signatures"), true);
+
+	const generatedContracts = await Promise.all(
+		[
+			"functions-use-named-object-params-for-complex-signatures",
+			"types-document-custom-types-and-shapes",
+			"types-reuse-existing-contracts-before-new-types",
+		].map((ruleId) => readFile(path.join(realSkillRootDir, "typescript", "contracts", `${ruleId}.md`), "utf8")),
+	);
+	assertMentions(generatedContracts[0]!, [/React 함수 컴포넌트/i, /기존 named contract/i], "generatedContracts");
+	assert.match(generatedContracts[1]!, /CRITICAL rule[\s\S]*full rule/i);
+	assertMentions(generatedContracts[2]!, [/positional/i, /object/i, /`\*Params`/i, /(?:스스로|자기|자가)/i], "generatedContracts");
+});
+
+test("v17 semantic contracts reject English-only annotations and effective deep third-party chains", async () => {
+	const readRule = async (skillName: "typescript" | "css", ruleId: string): Promise<string> => {
+		return await readRuleSource(skillName, ruleId);
+	};
+
+	const koreanComments = await readRule("typescript", "docs-write-concise-korean-comments-about-purpose-and-constraints");
+	assertMentions(koreanComments, [/주석 본문 전체/i, /(?:ASCII|영문)/i, /(?:한글 주석으로 인정하지 않|실패)/i], "koreanComments");
+	assert.match(koreanComments, /route-local entry tree props/);
+	assert.match(koreanComments, /route-local 엔트리 트리 입력 계약/);
+
+	const documentedShape = await readRule("typescript", "types-document-custom-types-and-shapes");
+	assert.match(
+		documentedShape,
+		/헤더와 필드 주석[\s\S]*존재만으로[\s\S]*docs-write-concise-korean-comments-about-purpose-and-constraints[\s\S]*(?:content|한국어)[^\n]+gate/i,
+	);
+	const headerDocs = await readRule("typescript", "docs-require-header-jsdoc-on-key-declarations");
+	assert.match(
+		flattenWhitespace(headerDocs),
+		/헤더 doc 주석[\s\S]*(?:영문 label|영문 라벨)[\s\S]*(?:충족하지 않|미충족|완료되지 않)[\s\S]*docs-write-concise-korean-comments-about-purpose-and-constraints[\s\S]*content gate/i,
+	);
+	assert.doesNotMatch(headerDocs, /\bT\d{2}\b/);
+
 	const foreignRoot = await readRule("css", "ownership-use-foreign-classes-only-under-your-own-root");
 	assertMentions(
 		foreignRoot,
-		[/내 root class block 안에서만/, /단독 top-level selector로 쓰지 않습니다/, /selector가 내 slug로 시작하는지/],
+		[/내 root 클래스 블록 안에서만/, /단독 top-level 선택자로 쓰지 않습니다/, /선택자가 내 이름으로 시작하는지/],
 		"foreignRoot",
 	);
 	assertMentions(
@@ -2611,36 +2715,45 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	const otherOwnerApi = await readRule("css", "ownership-change-other-owners-through-their-api");
 	assertMentions(
 		otherOwnerApi,
-		[
-			/styling hook은 \*\*root class 하나\*\*입니다/,
-			/내부 노드로 가는 class prop을 늘리지 않습니다/,
-			/막다른 길이 아니라 마지막 선택지입니다/,
-			/root까지만 닿는 것은 제약이 아니라 경계입니다/,
-		],
+		[/세 갈래를 순서대로 봅니다/, /막다른 길이 아니라 마지막 선택지입니다/, /root까지만 닿는 것은 제약이 아니라 경계입니다/],
 		"otherOwnerApi",
 	);
 
 	const ampersandScope = await readRule("css", "selector-limit-nesting-block-depth");
 	assertMentions(
 		ampersandScope,
-		[/중첩은 항상 한 겹이고, `&`도 한 selector에 한 번입니다/, /그 block이 소유한 요소 하나/, /어느 요소를 가리키는지로 정해집니다/],
+		[/중첩은 항상 한 겹이고, `&`도 한 선택자에 한 번입니다/, /그 block이 소유한 요소 하나/, /어느 요소를 가리키는지로 정해집니다/],
 		"ampersandScope",
 	);
 
 	const rawWrapper = await readRule("css", "selector-use-classes-instead-of-element-selectors");
 	assertMentions(
 		rawWrapper,
-		[/우리가 렌더하는 마크업에는 element selector를 쓰지 않습니다/, /dangerouslySetInnerHTML/, /selector-max-type/],
+		[/우리가 렌더하는 마크업에는 element 선택자를 쓰지 않습니다/, /dangerouslySetInnerHTML/, /stylelint-disable-next-line/],
 		"rawWrapper",
 	);
 
+	const entryPoint = await readRule("css", "composition-inject-classes-only-at-the-entry-point");
+	assertMentions(
+		entryPoint,
+		[/스타일 창구는 \*\*진입점 하나\*\*입니다/, /`ui_`든 `wg_`든 `pg_`든 같습니다/, /slot 클래스 prop을 늘리지 않습니다/],
+		"entryPoint",
+	);
+
+	const stylelintConfig = await readRule("css", "tooling-configure-stylelint-to-enforce-these-rules");
+	assertMentions(
+		stylelintConfig,
+		[/stylelint-config-standard/, /selector-max-combinators/, /overrides/, /리뷰가 담당합니다/],
+		"stylelintConfig",
+	);
+
 	const nestingDepth = await readRule("css", "selector-limit-nesting-block-depth");
-	assertMentions(nestingDepth, [/실제 selector가 숨습니다/, /max-nesting-depth: 1/, /top-level이 0단/], "nestingDepth");
+	assertMentions(nestingDepth, [/실제 선택자가 숨습니다/, /max-nesting-depth: 1/, /top-level이 0단/], "nestingDepth");
 
 	const commaGroup = await readRule("css", "selector-do-not-group-classes-with-commas");
 	assertMentions(
 		commaGroup,
-		[/중복을 감수합니다/, /`,` 대신 `:is\(\)`로 한 selector로 씁니다/, /no-duplicate-selectors/, /disallowInList/],
+		[/중복을 감수합니다/, /`,` 대신 `:is\(\)`로 한 선택자로 씁니다/, /no-duplicate-selectors/, /disallowInList/],
 		"commaGroup",
 	);
 
@@ -2654,7 +2767,7 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	const nestDomState = await readRule("css", "selector-nest-dom-state-in-the-owning-block");
 	assertMentions(
 		nestDomState,
-		[/top-level selector로 다시 열지 않습니다/, /slug가 같은 자손을 결합자 하나로 겨냥합니다/, /부모 선택자가 없어서/],
+		[/top-level 선택자로 다시 열지 않습니다/, /이름이 같은 자손을 결합자 하나로 겨냥합니다/, /부모 선택자가 없어서/],
 		"nestDomState",
 	);
 
@@ -2691,7 +2804,7 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 		/영문 label[\s\S]*docs-write-concise-korean-comments-about-purpose-and-constraints[\s\S]*content gate/i,
 	);
 	assertMentions(generatedContracts[1]!, [/주석 본문 전체/i, /(?:ASCII|영문)/i], "generatedContracts");
-	assert.match(generatedContracts[2]!, /pseudo-class[\s\S]*slug가 같은 자손을 결합자 하나로 겨냥합니다/i);
+	assert.match(generatedContracts[2]!, /pseudo-class[\s\S]*이름이 같은 자손을 결합자 하나로 겨냥합니다/i);
 	assert.match(generatedContracts[3]!, /CRITICAL rule[\s\S]*full rule/i);
 });
 
@@ -2705,8 +2818,8 @@ test("CSS generated index is canonical, complete, body-preserving, and within it
 		entries.map((entry) => entry.id),
 		cssRuleUniverse,
 	);
-	assert.equal(entries.length, 24);
-	assert.equal(getRulesIndexByteBudget(entries.length), 9_360);
+	assert.equal(entries.length, 26);
+	assert.equal(getRulesIndexByteBudget(entries.length), 10_040);
 	assert.equal(Buffer.byteLength(source, "utf8") <= getRulesIndexByteBudget(entries.length), true);
 
 	for (const entry of entries) {
@@ -2719,7 +2832,7 @@ test("CSS generated index is canonical, complete, body-preserving, and within it
 	assert.doesNotMatch(handbook, /metadata\.json\.extends/);
 	assert.match(handbook, /^## 함께 따르는 규칙$/m);
 	assert.match(handbook, /- \[TypeScript Convention\]\(\.\.\/typescript\/HANDBOOK\.md\) — 다음 조건에서 함께 적용합니다\./);
-	assert.match(handbook, /다음 조건에서 함께 적용합니다\. TS\/TSX class contract, wrapper Props 또는 style import를 함께 변경한다\./);
+	assert.match(handbook, /다음 조건에서 함께 적용합니다\. TS\/TSX 클래스 계약, 래퍼 Props 또는 style import를 함께 변경한다\./);
 	assert.match(handbook, /\.\.\/typescript\/HANDBOOK\.md/);
 	for (const rule of document.rules) {
 		const bodyWithoutHeading = rule.body.replace(/^## .+\n+/, "");

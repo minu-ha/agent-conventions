@@ -148,7 +148,7 @@ Pure CSS fixture는 CSS만 partition합니다. Mixed fixture 5개는 progressive
 
 - Focus
   - `composition-compose-classes-with-clsx`
-  - `composition-style-ui-components-through-owned-wrappers`
+  - `composition-inject-classes-only-at-the-entry-point`
 - Prompt
   - "TSX에서 route class와 상태 modifier, Ui wrapper class를 같이 정리해줘. CSS skill 기준으로 className 조합도 맞춰줘."
 - Expected pass signals

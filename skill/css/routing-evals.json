@@ -144,7 +144,7 @@
 					"naming-name-elements-and-modifiers-by-role",
 					"ownership-use-foreign-classes-only-under-your-own-root",
 					"composition-compose-classes-with-clsx",
-					"composition-style-ui-components-through-owned-wrappers"
+					"composition-inject-classes-only-at-the-entry-point"
 				]
 			},
 			"scopeDrift": {
@@ -169,7 +169,7 @@
 						"naming-name-elements-and-modifiers-by-role",
 						"ownership-use-foreign-classes-only-under-your-own-root",
 						"composition-compose-classes-with-clsx",
-						"composition-style-ui-components-through-owned-wrappers",
+						"composition-inject-classes-only-at-the-entry-point",
 						"values-always-provide-css-variable-fallbacks"
 					]
 				}
@@ -202,7 +202,25 @@
 				],
 				"css": [
 					"composition-compose-classes-with-clsx",
-					"composition-style-ui-components-through-owned-wrappers"
+					"composition-inject-classes-only-at-the-entry-point"
+				]
+			}
+		},
+		{
+			"id": "css-wrapper-element-for-spacing",
+			"prompt": "a wrapper div was added around UiCollapse only to give it margin; remove it by adding a className contract to the component.",
+			"files": [
+				"src/ui/collapse/ui-collapse.tsx",
+				"src/page/post-index/component/pg-post-filter-dialog.tsx"
+			],
+			"expectedSkills": [
+				"css"
+			],
+			"expectedSelected": {
+				"css": [
+					"naming-name-elements-and-modifiers-by-role",
+					"composition-inject-classes-only-at-the-entry-point",
+					"composition-do-not-add-wrapper-elements-for-styling"
 				]
 			}
 		},
@@ -337,6 +355,24 @@
 					"selector-do-not-group-classes-with-commas",
 					"selector-nest-dom-state-in-the-owning-block",
 					"selector-do-not-invert-domain-state-with-not"
+				]
+			}
+		},
+		{
+			"id": "css-stylelint-config-setup",
+			"prompt": "add a stylelint config for this convention with per-directory prefix overrides; keep stylelint-config-standard as the base.",
+			"files": [
+				"stylelint.config.mjs"
+			],
+			"expectedSkills": [
+				"css"
+			],
+			"expectedSelected": {
+				"css": [
+					"naming-use-scope-slug-element-modifier-syntax",
+					"ownership-use-foreign-classes-only-under-your-own-root",
+					"selector-limit-nesting-block-depth",
+					"tooling-configure-stylelint-to-enforce-these-rules"
 				]
 			}
 		}

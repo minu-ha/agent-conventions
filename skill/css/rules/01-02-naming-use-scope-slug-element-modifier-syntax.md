@@ -1,33 +1,33 @@
 ---
 title: Use Scope, Slug, Element, and Modifier Syntax
-titleKo: scope·slug·element·modifier 문법 준수
+titleKo: scope·이름·element·modifier 문법 준수
 impact: CRITICAL
-impactDescription: classname만 보고도 class 소유와 UI 역할을 추적할 수 있게 합니다
+impactDescription: classname만 보고도 클래스 소유와 UI 역할을 추적할 수 있게 합니다
 appliesWhen:
-  - plain CSS의 project-owned class를 새로 만들 때
-  - 이름, scope, slug, element, modifier 구분자 또는 casing을 변경할 때
+  - plain CSS의 project-owned 클래스를 새로 만들 때
+  - 이름, scope, 이름, element, modifier 구분자 또는 casing을 변경할 때
 tags: naming, class-grammar, ownership
 ---
 
 ## Use Scope, Slug, Element, and Modifier Syntax
 
-**Impact: CRITICAL (classname만 보고도 class 소유와 UI 역할을 추적할 수 있게 합니다)**
+**Impact: CRITICAL (classname만 보고도 클래스 소유와 UI 역할을 추적할 수 있게 합니다)**
 
 클래스명은 `<scope>_<slug>__<element>[--<modifier>]` 문법을 사용합니다.
 구분자는 `_`, `__`, `--`를 고정하고, 각 부분의 책임을 섞지 않습니다.
 
 구성 요소:
 
-- `scope`: `pg`, `wg`, `ui` 중 하나. lowercase owner namespace
-- `slug`: owner 식별자. `camelCase`
-- `element`: owner 안의 UI 역할. `listButton`, `emptyState`처럼 camelCase
+- `scope`: `pg`, `wg`, `ui` 중 하나. lowercase 소유자 네임스페이스
+- `slug`: 소유자 식별자. `camelCase`
+- `element`: 소유자 안의 UI 역할. `listButton`, `emptyState`처럼 camelCase
 - `modifier`: 상태나 반복 variant. `routeActive`, `selected`처럼 camelCase
 
-slug에는 prefix가 말하는 부분을 반복하지 않습니다. `UiButton`은 `ui_button`이고 `ui_uiButton`이 아닙니다.
+이름에는 접두사가 말하는 부분을 반복하지 않습니다. `UiButton`은 `ui_button`이고 `ui_uiButton`이 아닙니다.
 
 기계 검증은 `selector-class-pattern`에 이 문법을 정규식으로 넣는 것입니다.
 
-**Incorrect (slug와 element에 snake_case·kebab-case가 섞임):**
+**Incorrect (이름과 element에 snake_case·kebab-case가 섞임):**
 
 ```txt
 ui_tag_list__root
@@ -39,7 +39,7 @@ pg_catalogDetail__main-content
 pg_catalogDetail__main--route_active
 ```
 
-**Correct (scope는 lowercase, slug·element·modifier는 camelCase):**
+**Correct (scope는 lowercase, 이름·element·modifier는 camelCase):**
 
 ```txt
 ui_tagList__root

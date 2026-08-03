@@ -7,7 +7,7 @@ appliesWhen:
   - `:not(.--modifier)`로 앱 상태를 뒤집으려 할 때
   - 조상의 modifier가 자손의 표현을 결정해야 할 것 같을 때
 reviewWith: selector-use-pseudo-classes-for-dom-owned-states
-tags: selectors, state, negation
+tags: selector, state, negation
 ---
 
 ## Do Not Invert Domain State With `:not()`
@@ -38,7 +38,7 @@ tags: selectors, state, negation
 		&:hover {
 			.pg_spikePanel__spreadBox::before {
 				border-color: #9fadc7;
-				box-shadow: 0 0 0 2px rgba(159, 173, 199, 0.2);
+				box-shadow: 0 0 0 2px rgb(159 173 199 / 20%);
 			}
 		}
 	}
@@ -48,13 +48,6 @@ tags: selectors, state, negation
 **Correct (각 요소의 modifier가 그 요소의 표현을 가짐):**
 
 ```css
-.pg_spikePanel__spreadButton {
-	&:is(:hover, .Mui-focusVisible) .pg_spikePanel__spreadBox::before {
-		border-color: #9fadc7;
-		box-shadow: 0 0 0 2px rgba(159, 173, 199, 0.2);
-	}
-}
-
 .pg_spikePanel__spreadBox {
 	&::before {
 		content: '';
@@ -70,6 +63,13 @@ tags: selectors, state, negation
 	&::before {
 		border-color: #9fadc7;
 		background: #9fadc7;
+	}
+}
+
+.pg_spikePanel__spreadButton {
+	&:is(:hover, .Mui-focusVisible) .pg_spikePanel__spreadBox::before {
+		border-color: #9fadc7;
+		box-shadow: 0 0 0 2px rgb(159 173 199 / 20%);
 	}
 }
 ```

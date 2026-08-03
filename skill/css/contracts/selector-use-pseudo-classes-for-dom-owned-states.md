@@ -2,13 +2,13 @@
 
 **Impact: HIGH (브라우저가 소유한 상호작용 상태를 앱이 소유한 상태 modifier와 분리합니다)**
 
-브라우저와 DOM이 직접 부여하는 상태는 같은 클래스 block 안 `&:`로 표현합니다.
-화면이나 도메인이 결정하는 상태는 modifier class로 분리합니다.
+브라우저와 DOM이 직접 부여하는 상태는 같은 클래스 블록 안 `&:`로 표현합니다.
+화면이나 도메인이 결정하는 상태는 modifier 클래스로 분리합니다.
 
 | 소유 | 상태 | 표현 |
 | --- | --- | --- |
-| DOM | `:hover`, `:visited`, `:focus-visible`, `:disabled`, `:checked` | 같은 block 안 `&:` |
-| 앱 | `selected`, `active`, `error`, `expanded`, `current` | `--modifier` class |
+| DOM | `:hover`, `:visited`, `:focus-visible`, `:disabled`, `:checked` | 같은 블록 안 `&:` |
+| 앱 | `selected`, `active`, `error`, `expanded`, `current` | `--modifier` 클래스 |
 
 갈리는 기준은 **누가 그 값을 아는가**입니다.
 브라우저가 부여하는 상태는 앱이 알 수 없고, 앱이 아는 상태는 브라우저가 알 수 없습니다.

@@ -15,7 +15,7 @@ tags: state, focus, accessibility
 **Impact: HIGH (앱 상태·포커스 가시성·hover 동작의 책임을 섞지 않고 읽기 쉽고 접근성 있게 유지합니다)**
 
 domain state와 무관한 hover, focus, disabled interaction은 unconditional base element block에 둡니다.
-interaction selector를 modifier 아래로 옮겨 적용 대상을 좁히지 않습니다.
+interaction 선택자를 modifier 아래로 옮겨 적용 대상을 좁히지 않습니다.
 modifier block에는 `active`·`selected`·`error`처럼 app state가 소유하는 presentation만 남깁니다.
 modifier가 켜진 경우에만 interaction이 달라져야 한다는 제품 요구가 있을 때만 그 예외를 명시합니다.
 
