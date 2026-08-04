@@ -352,15 +352,31 @@ import {SalesChartCard} from "./component/sales-chart-card";
 그때가 인덱스 접근을 쓰는 자리입니다.
 소유자 이동이나 이름, 주석만 바뀌면 대상이 아닙니다.
 
-`Pick`과 `Omit`은 쓰지 않습니다.
-한 형태로 고정합니다.
+**`Pick`은 쓰지 않습니다.** 고른 필드를 `interface`에 적으면 되고 그편이 더 잘 보입니다.
+**`Omit`은 손으로 적을 수 없을 때만 씁니다.**
 
-이 규칙이 보는 것은 **우리 도메인 계약을 다른 계약에서 끌어올 때**입니다.
-플랫폼 타입 묶음에서 부딪히는 멤버 하나를 빼려고 `Omit<HTMLAttributes<T>, "color">`처럼 쓰는 것은
-계약을 끌어오는 일이 아니라 이 규칙의 대상이 아닙니다.
-그 자리는 `react/typing-narrow-library-wrapper-contracts`가 정합니다.
+가르는 질문은 하나입니다.
+**원본에 필드가 하나 늘면 이 타입도 따라 늘어야 하는가.**
 
-| 인덱스 접근 `interface` | `Pick` · `Omit` |
+| 답 | 무엇인가 | 쓰는 것 |
+| --- | --- | --- |
+| 아니다 | 우리가 고른 닫힌 집합 | `interface` + `원본["필드"]` |
+| 그렇다 | 원본을 따라가야 하는 열린 집합 | `Omit<원본, "뺄 이름">` |
+
+`UserPreview`는 `UserRecord`에 `ssn`이 생겨도 받으면 안 됩니다.
+닫힌 집합이라 필드를 손으로 적습니다.
+래퍼의 `Omit<HTMLAttributes<T>, "color">`는 리액트가 새 DOM 속성을 더하면 받아야 합니다.
+열린 집합이라 뺄 이름만 적습니다.
+남는 이백여 개를 손으로 적을 수도 없습니다.
+
+**`Pick`이 필요한 자리는 없습니다.** 고르는 것은 언제나 닫힌 집합이라 적을 수 있습니다.
+써드파티 타입이라고 달라지지 않습니다.
+차트 라이브러리 옵션에서 몇 개를 고를 때도 `Pick`이 아니라 `interface`에 인덱스 접근으로 적습니다.
+
+`Partial`과 `Required`도 원본을 따라가야 하는 자리에서만 씁니다.
+`ReturnType`·`Parameters`·`Awaited`는 형태에서 필드를 고르는 일이 아니라 이 규칙 대상이 아닙니다.
+
+| 인덱스 접근 `interface` | `Pick` |
 | --- | --- |
 | 필드 이름이 선언에 그대로 보입니다 | 이름이 문자열 인자 안에 숨습니다 |
 | 필드마다 문서 주석을 답니다. `types-document-custom-types-and-shapes`가 그렇게 요구합니다 | 필드가 없어 헤더 주석밖에 못 답니다 |
@@ -405,7 +421,7 @@ interface UserPreview {
 }
 ```
 
-**Incorrect (`Pick`으로 뽑아 필드 이름과 설명이 사라짐):**
+**Incorrect (`Pick`으로 골라 필드 이름과 설명이 사라짐):**
 
 ```ts
 type UserPreview = Pick<UserRecord, "id" | "name">;
@@ -530,7 +546,8 @@ const toSearchRequest: ToRequest = (request) => {
 
 - 커스텀 `type`, `interface`, 스키마 최상단, 객체형 상수: 선언 위에 헤더 문서 주석
 - 객체형 계약과 스키마 필드: 각 필드 바로 위에 문서 주석
-- 필드가 없는 인덱스 접근 별칭(`type ProductId = ProductRecord["id"]`): 헤더만 씁니다.
+- 필드가 없는 인덱스 접근 별칭(`type ProductId = ProductRecord["id"]`)과
+  `Omit`으로 뺀 형태: 적을 필드가 없으므로 헤더만 씁니다.
   필드를 가진 `interface`는 원본에서 가져온 필드여도 각 필드에 주석을 답니다
 
 주석이 있다고 끝나지 않습니다.
