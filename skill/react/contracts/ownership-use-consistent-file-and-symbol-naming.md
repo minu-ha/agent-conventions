@@ -14,11 +14,11 @@
 
 컴포넌트 파일과 심볼에는 계층 접두사를 붙이고 폴더명에는 붙이지 않습니다.
 폴더명은 단수로 씁니다. 복수형은 쓰지 않고 프레임워크가 강제하는 이름만 예외입니다.
-`const` 여부로 casing을 나누지 않고, 화면과 모듈 안의 로컬 값은 모두 `camelCase`로 맞춥니다.
+`const` 여부로 대소문자 표기을 나누지 않고, 화면과 모듈 안의 로컬 값은 모두 `camelCase`로 맞춥니다.
 
-- 형제 `.ts` 보조 파일을 만들거나 지역 선언을 이름 붙인 export로 옮기면
+- 형제 `.ts` 보조 파일을 만들거나 지역 선언을 이름 붙인 내보내기로 옮기면
   이름 자체가 그대로여도 이 규칙을 확인합니다.
-- non-exported 지역 심볼은 TypeScript `naming-use-consistent-file-and-symbol-naming`이,
+- 내보내지 않은 지역 심볼은 TypeScript `naming-use-consistent-file-and-symbol-naming`이,
   지역 질의·변경 요청 바인딩은 `data-name-query-and-mutation-bindings-consistently`가 담당합니다.
   그것만 바꾸면 이 규칙은 적용하지 않습니다.
 

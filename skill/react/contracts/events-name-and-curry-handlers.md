@@ -13,11 +13,11 @@
 `(id): MouseEventHandler<Element> => (_event) => ...` 반환값을 JSX에 직접 전달합니다.
 `onClick={() => handleSelectionToggle(id)}` 같은 래퍼로 우회한 상태는 이 규칙을 만족하지 않습니다.
 
-- 최종 반환 React 핸들러는 `typing-function-type-first`를 다시 판단합니다.
+- 최종 반환 리액트 핸들러는 `typing-function-type-first`를 다시 판단합니다.
   별칭이나 prop 콜백 계약을 쓸 수 있으면 그 규칙도 함께 적용하고 문맥 타입 지정으로 숨기지 않습니다.
 - 기존 UI를 모르는 도메인 명령나 커스텀 컴포넌트 prop 콜백이 `(id) => void`이면
   직접 콜백이나 최소 어댑터를 유지합니다.
-- `useEffectEvent`에도 계약에 없는 DOM 이벤트나 curry를 만들지 않습니다.
-  이 경우 React DOM 핸들러 타입 지정 규칙은 적용하지 않습니다.
+- `useEffectEvent`에도 계약에 없는 DOM 이벤트나 커링를 만들지 않습니다.
+  이 경우 리액트 DOM 핸들러 타입 지정 규칙은 적용하지 않습니다.
 
 > 예시·예외가 필요하면 [full rule](../rules/06-02-events-name-and-curry-handlers.md)을 읽습니다.

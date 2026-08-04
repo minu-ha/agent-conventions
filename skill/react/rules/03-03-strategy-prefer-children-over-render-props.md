@@ -4,8 +4,8 @@ titleKo: 정적 조립에서는 렌더 prop 대신 children 을 씁니다
 impact: MEDIUM
 impactDescription: 부모가 콜백으로 값을 내려보낼 필요가 없으면 조립이 읽기 쉬워집니다
 appliesWhen:
-  - 공용 컴포넌트에 header·footer·동작 같은 정적 슬롯을 추가·변경할 때
-  - 렌더 prop을 추가·변경하는데 실행 환경 data 주입이 꼭 필요한지 불분명할 때
+  - 공용 컴포넌트에 머리말·꼬리말·동작 같은 정적 슬롯을 추가·변경할 때
+  - 렌더 prop을 추가·변경하는데 실행 환경 데이터 주입이 꼭 필요한지 불분명할 때
 tags: composition, children, render-props, component-design
 ---
 
@@ -15,7 +15,7 @@ tags: composition, children, render-props, component-design
 
 공용 컴포넌트가 `stateless compound component`로 충분할 때는 `renderHeader`,
 `renderFooter` 같은 렌더 prop보다 `children`과 네임스페이스 슬롯 부품을 우선합니다.
-렌더 prop은 부모가 자식에 item, index, 상태 같은 실행 환경 데이터를 전달해야 할 때만 사용합니다.
+렌더 prop은 부모가 자식에 항목, 순번, 상태 같은 실행 환경 데이터를 전달해야 할 때만 사용합니다.
 
 **Incorrect (정적인 구조를 렌더 prop으로 조립):**
 

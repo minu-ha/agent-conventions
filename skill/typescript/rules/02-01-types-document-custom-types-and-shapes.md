@@ -18,7 +18,7 @@ tags: types, jsdoc, shapes
 
 - 커스텀 `type`, `interface`, 스키마 최상단, 객체형 상수: 선언 위에 헤더 문서 주석
 - 객체형 계약과 스키마 필드: 각 필드 바로 위에 문서 주석
-- `Pick`, `Omit`, Indexed Access 별칭: 필드가 없으므로 헤더만 씁니다
+- `Pick`, `Omit`, 인덱스 접근 별칭: 필드가 없으므로 헤더만 씁니다
 
 주석이 있다고 끝나지 않습니다.
 각 본문이 `docs-write-concise-korean-comments-about-purpose-and-constraints`의 한국어 조건을 만족해야 합니다.

@@ -1,10 +1,10 @@
 ---
 title: Use Direct Imports and Dedicated Public Entry Points
-titleKo: 직접 import 하고 공개 진입점만 씁니다
+titleKo: 필요한 파일에서 바로 가져오고 공개 진입점만 씁니다
 impact: HIGH
-impactDescription: 배럴이나 모호한 재노출 계층에 기대지 않고 import 소유를 드러냅니다
+impactDescription: 배럴이나 모호한 재노출 계층에 기대지 않고 가져오기 소유를 드러냅니다
 appliesWhen:
-  - import·export, 배럴, 공용 진입점, 소유자 보조 모듈의 경계를 추가·변경할 때
+  - 가져오기·내보내기, 배럴, 공용 진입점, 소유자 보조 모듈의 경계를 추가·변경할 때
   - 절대경로 별칭으로 다른 모듈을 가져올 때
   - 같은 경로에서 값과 타입 중 무엇을 가져올지 추가·삭제·전환할 때
 tags: imports, exports, public-entry
@@ -12,7 +12,7 @@ tags: imports, exports, public-entry
 
 ## Use Direct Imports and Dedicated Public Entry Points
 
-**Impact: HIGH (배럴이나 모호한 재노출 계층에 기대지 않고 import 소유를 드러냅니다)**
+**Impact: HIGH (배럴이나 모호한 재노출 계층에 기대지 않고 가져오기 소유를 드러냅니다)**
 
 `index.ts`로 묶어 다시 내보내는 배럴을 만들지 않습니다. 필요한 파일에서 바로 가져옵니다.
 역할 폴더를 `index.ts`로 묶는 것도 배럴이라 만들지 않습니다.
@@ -32,9 +32,9 @@ tags: imports, exports, public-entry
 소유자 밖에서 필요해지면 경로를 뚫는 대신 전역 레이어로 올립니다.
 
 경로가 같아도 값과 타입 중 무엇을 가져오는지가 바뀌면
-import 계약이 바뀐 것이라 이 규칙을 적용합니다.
+가져오기 계약이 바뀐 것이라 이 규칙을 적용합니다.
 
-**Incorrect (barrel과 혼합 import로 경계를 흐림):**
+**Incorrect (배럴과 섞인 가져오기로 경계를 흐림):**
 
 ```ts
 import {config, util, UserProfile} from "./index";
@@ -46,7 +46,7 @@ import {config, util, UserProfile} from "./index";
 import {SpikeChartCard} from "@/page/detail/component/spike-pattern-panel/component/spike-chart-card";
 ```
 
-**Correct (직접 import와 공개 진입점을 구분):**
+**Correct (직접 가져오기와 공개 진입점을 구분):**
 
 ```ts
 import type {UserProfile} from "@/shared/contracts";

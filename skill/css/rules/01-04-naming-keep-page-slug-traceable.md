@@ -40,7 +40,7 @@ pg_detailSpikePatternPanelOverviewSection__root
 pg_detailSpikePatternPanelSummaryBand__root
 ```
 
-**Correct (shell은 화면 식별자, 컴포넌트는 자기 식별자):**
+**Correct (뼈대는 화면 식별자, 컴포넌트는 자기 식별자):**
 
 ```txt
 posts index page   -> pg_postsIndex__root

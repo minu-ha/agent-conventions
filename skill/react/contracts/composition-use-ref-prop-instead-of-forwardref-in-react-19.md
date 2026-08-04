@@ -2,7 +2,7 @@
 
 **Impact: MEDIUM-HIGH (컴포넌트 정의를 단순하게 두고 습관처럼 붙는 옛 래퍼를 막습니다)**
 
-React 19 codebase에서 `ref`는 외부에서 실제로 제어해야 하는 공개 imperative 계약입니다.
+리액트 19 코드베이스에서 `ref`는 외부에서 실제로 제어해야 하는 공개 명령형 계약입니다.
 
 - focus, 스크롤, 측정 같은 계약이 있을 때만 `ref` prop을 엽니다.
 - 그 경우에도 새 `forwardRef` 래퍼 대신 `ref`를 일반 prop처럼 직접 받습니다.

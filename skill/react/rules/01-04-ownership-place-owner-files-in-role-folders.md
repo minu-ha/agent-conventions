@@ -57,7 +57,7 @@ ui/button/
 └── type/
 ```
 
-**Incorrect (generic 이름 폴더와 복수형을 섞어 씀):**
+**Incorrect (범용 이름 폴더와 복수형을 섞어 씀):**
 
 ```txt
 page/detail/

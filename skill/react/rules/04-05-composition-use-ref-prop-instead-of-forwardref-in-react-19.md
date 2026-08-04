@@ -1,10 +1,10 @@
 ---
 title: Use ref Props Instead of New forwardRef Wrappers in React 19
-titleKo: React 19 에서는 forwardRef 대신 ref prop 을 씁니다
+titleKo: 리액트 19 에서는 forwardRef 대신 ref prop 을 씁니다
 impact: MEDIUM-HIGH
 impactDescription: 컴포넌트 정의를 단순하게 두고 습관처럼 붙는 옛 래퍼를 막습니다
 appliesWhen:
-  - React 19 컴포넌트에 focus·스크롤·측정용 ref 공개 API를 추가·변경할 때
+  - 리액트 19 컴포넌트에 focus·스크롤·측정용 ref 공개 API를 추가·변경할 때
   - 새 `forwardRef` 래퍼를 도입하려 할 때
 tags: composition, react19, ref, forwardref
 ---
@@ -13,7 +13,7 @@ tags: composition, react19, ref, forwardref
 
 **Impact: MEDIUM-HIGH (컴포넌트 정의를 단순하게 두고 습관처럼 붙는 옛 래퍼를 막습니다)**
 
-React 19 codebase에서 `ref`는 외부에서 실제로 제어해야 하는 공개 imperative 계약입니다.
+리액트 19 코드베이스에서 `ref`는 외부에서 실제로 제어해야 하는 공개 명령형 계약입니다.
 
 - focus, 스크롤, 측정 같은 계약이 있을 때만 `ref` prop을 엽니다.
 - 그 경우에도 새 `forwardRef` 래퍼 대신 `ref`를 일반 prop처럼 직접 받습니다.
@@ -22,7 +22,7 @@ React 19 codebase에서 `ref`는 외부에서 실제로 제어해야 하는 공�
 기존 `forwardRef`를 모두 지우라는 뜻은 아닙니다.
 외부 패키지 타입 제약이나 점진적 마이그레이션 때문에 유지해야 하면 예외로 둡니다.
 
-**Incorrect (React 19에서도 새 `forwardRef`를 추가):**
+**Incorrect (리액트 19에서도 새 `forwardRef`를 추가):**
 
 ```tsx
 import { forwardRef } from "react";
@@ -48,7 +48,7 @@ export const UiStatusBadge = (props: UiStatusBadgeProps) => {
 };
 ```
 
-**Correct (`ref`가 실제로 필요한 공개 API일 때만 React 19 방식으로 직접 받음):**
+**Correct (`ref`가 실제로 필요한 공개 API일 때만 리액트 19 방식으로 직접 받음):**
 
 ```tsx
 import type { ChangeEventHandler, Ref } from "react";

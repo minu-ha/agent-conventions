@@ -195,12 +195,12 @@ const typescriptRuleRouting = {
 	},
 	"naming-use-consistent-file-and-symbol-naming": {
 		appliesWhen:
-			"TypeScript 파일, 지역 변수·함수·타입, 객체·스키마 필드, enum 성격 상수의 이름을 새로 만들거나 바꿀 때. 제외: 별칭 없이 외부 패키지 import 를 추가하는 경우.",
+			"TypeScript 파일, 지역 변수·함수·타입, 객체·스키마 필드, enum 성격 상수의 이름을 새로 만들거나 바꿀 때. 제외: 별칭 없이 외부 패키지에서 그대로 가져오는 경우.",
 		reviewWith: [],
 	},
 	"naming-use-direct-imports-and-public-entry-points": {
 		appliesWhen:
-			"import·export, 배럴, 공용 진입점, 소유자 보조 모듈의 경계를 추가·변경할 때. 절대경로 별칭으로 다른 모듈을 가져올 때. 같은 경로에서 값과 타입 중 무엇을 가져올지 추가·삭제·전환할 때.",
+			"가져오기·내보내기, 배럴, 공용 진입점, 소유자 보조 모듈의 경계를 추가·변경할 때. 절대경로 별칭으로 다른 모듈을 가져올 때. 같은 경로에서 값과 타입 중 무엇을 가져올지 추가·삭제·전환할 때.",
 		reviewWith: [],
 	},
 	"types-document-custom-types-and-shapes": {
@@ -238,7 +238,7 @@ const typescriptRuleRouting = {
 		reviewWith: ["docs-require-header-jsdoc-on-key-declarations"],
 	},
 	"functions-prefer-immutable-array-sorting": {
-		appliesWhen: "props, state, 매개변수, 공유 입력에서 온 배열을 정렬할 때. 기존 `.sort()` 호출을 추가·변경할 때.",
+		appliesWhen: "props, 상태, 매개변수, 공유 입력에서 온 배열을 정렬할 때. 기존 `.sort()` 호출을 추가·변경할 때.",
 		reviewWith: [],
 	},
 	"functions-replace-enum-with-as-const-objects": {
@@ -247,7 +247,7 @@ const typescriptRuleRouting = {
 	},
 	"functions-use-named-object-params-for-complex-signatures": {
 		appliesWhen:
-			"매개변수가 3개를 넘거나 같은 계열 인자를 받는 함수를 추가·변경할 때. 객체 매개변수를 어디서 구조분해할지 바꿀 때. 제외: React 함수 컴포넌트가 props 를 받고 구조분해하는 방식만 바꾸는 경우.",
+			"매개변수가 3개를 넘거나 같은 계열 인자를 받는 함수를 추가·변경할 때. 객체 매개변수를 어디서 구조분해할지 바꿀 때. 제외: 리액트 함수 컴포넌트가 props 를 받고 구조분해하는 방식만 바꾸는 경우.",
 		reviewWith: [],
 	},
 	"functions-use-set-and-map-for-repeated-lookups": {
@@ -414,7 +414,7 @@ const cssRuleRouting = {
 const reactRuleRouting = {
 	"ownership-import-react-types-directly": {
 		appliesWhen:
-			"`React.*` 네임스페이스 타입과 직접 `import type` 중 선택할 때. 같은 모듈 경로에서 타입과 값 중 무엇을 가져올지 추가·삭제·전환할 때. 제외: 일반 직접 값 import만 바꾸는 경우.",
+			"`React.*` 네임스페이스 타입과 직접 `import type` 중 선택할 때. 같은 모듈 경로에서 타입과 값 중 무엇을 가져올지 추가·삭제·전환할 때. 제외: 일반 직접 값 가져오기만 바꾸는 경우.",
 		reviewWith: [],
 	},
 	"ownership-prefer-plain-ts-for-local-react-helpers": {
@@ -442,12 +442,12 @@ const reactRuleRouting = {
 	},
 	"ownership-use-consistent-file-and-symbol-naming": {
 		appliesWhen:
-			"React/TSX 파일·컴포넌트·내보낸 심볼·공용 설정 이름을 정하거나 바꿀 때. 형제 `.ts` 보조 파일·심볼을 만들거나 옮길 때. 제외: 지역 질의·변경 요청 바인딩 이름만 바꾸는 경우.",
+			"리액트 파일, 컴포넌트, 내보낸 심볼, 공용 설정 이름을 정하거나 바꿀 때. 형제 `.ts` 보조 파일·심볼을 만들거나 옮길 때. 제외: 지역 질의·변경 요청 바인딩 이름만 바꾸는 경우.",
 		reviewWith: [],
 	},
 	"ownership-keep-component-imports-flowing-downward": {
 		appliesWhen:
-			"`component` 폴더 안의 파일을 다른 파일에서 import할 때. `../`나 `@/page` 경로로 컴포넌트를 가져오려 할 때. 여러 자식이 같은 컴포넌트를 필요로 해 배치를 다시 정할 때.",
+			"`component` 폴더 안의 파일을 다른 파일에서 가져오기할 때. `../`나 `@/page` 경로로 컴포넌트를 가져오려 할 때. 여러 자식이 같은 컴포넌트를 필요로 해 배치를 다시 정할 때.",
 		reviewWith: ["ownership-layer-component-boundaries"],
 	},
 	"ownership-keep-lifecycle-in-the-owning-component": {
@@ -457,19 +457,19 @@ const reactRuleRouting = {
 	},
 	"typing-function-type-first": {
 		appliesWhen:
-			"React 이벤트 핸들러나 prop 콜백의 선언·시그니처를 추가·변경할 때. 기존 React 별칭이나 콜백 계약을 그대로 쓸 수 있는 상황일 때. 커링한 팩토리가 최종 반환하는 핸들러를 다룰 때.",
+			"리액트 이벤트 핸들러나 prop 콜백의 선언·시그니처를 추가·변경할 때. 기존 리액트 별칭이나 콜백 계약을 그대로 쓸 수 있는 상황일 때. 커링한 팩토리가 최종 반환하는 핸들러를 다룰 때.",
 		reviewWith: ["typing-reuse-existing-contracts", "ownership-import-react-types-directly"],
 	},
 	"typing-reuse-existing-contracts": {
 		appliesWhen:
-			"Props 콜백 구현을 추가·변경할 때. API 응답 기반 화면 type을 추가·변경하는데 기존 prop·API 계약과 같은 형태가 보일 때. 래퍼 컴포넌트 사용처에서 Props 타입을 참조할 때.",
+			"Props 콜백 구현을 추가·변경할 때. API 응답 기반 화면 타입을 추가·변경하는데 기존 prop·API 계약과 같은 형태가 보일 때. 래퍼 컴포넌트 사용처에서 Props 타입을 참조할 때.",
 		reviewWith: [
 			"typescript/types-reuse-callback-signatures-from-existing-contracts",
 			"typescript/types-reuse-existing-contracts-before-new-types",
 		],
 	},
 	"strategy-avoid-boolean-prop-proliferation": {
-		appliesWhen: "여러 곳에서 쓰는 공용 컴포넌트에 boolean 모드·표시 prop을 추가할 때. 기존 boolean prop 조합과 JSX 분기가 늘어날 때.",
+		appliesWhen: "여러 곳에서 쓰는 공용 컴포넌트에 불리언 모드·표시 prop을 추가할 때. 기존 불리언 prop 조합과 JSX 분기가 늘어날 때.",
 		reviewWith: [],
 	},
 	"strategy-choose-single-composition-compound-and-variants": {
@@ -483,7 +483,7 @@ const reactRuleRouting = {
 	},
 	"strategy-prefer-children-over-render-props": {
 		appliesWhen:
-			"공용 컴포넌트에 header·footer·동작 같은 정적 슬롯을 추가·변경할 때. 렌더 prop을 추가·변경하는데 실행 환경 data 주입이 꼭 필요한지 불분명할 때.",
+			"공용 컴포넌트에 머리말·꼬리말·동작 같은 정적 슬롯을 추가·변경할 때. 렌더 prop을 추가·변경하는데 실행 환경 데이터 주입이 꼭 필요한지 불분명할 때.",
 		reviewWith: [],
 	},
 	"composition-destructure-props-inside": {
@@ -498,16 +498,16 @@ const reactRuleRouting = {
 	},
 	"composition-prefer-arrow-functions-and-object-params": {
 		appliesWhen:
-			"React 인접 코드에 `function` 선언이 생길 때. 함수가 매개변수를 3개 이상 받을 때. 함수가 함께 이동하는 같은 계열 값을 받을 때.",
+			"리액트 인접 코드에 `function` 선언이 생길 때. 함수가 매개변수를 3개 이상 받을 때. 함수가 함께 이동하는 같은 계열 값을 받을 때.",
 		reviewWith: ["typescript/functions-use-named-object-params-for-complex-signatures"],
 	},
 	"composition-named-handlers-over-inline": {
 		appliesWhen:
-			"TSX 이벤트 prop의 인라인 콜백에 분기나 비동기 호출을 추가·수정할 때. 인라인 콜백에 여러 동작·부수효과나 비자명한 상태 전환이 들어갈 때. 제외: 단순 setter나 인자 전달 한 줄 위임만 있는 경우.",
+			"TSX 이벤트 prop의 인라인 콜백에 분기나 비동기 호출을 추가·수정할 때. 인라인 콜백에 여러 동작·부수효과나 비자명한 상태 전환이 들어갈 때. 제외: 단순 설정 함수나 인자 전달 한 줄 위임만 있는 경우.",
 		reviewWith: ["events-keep-handler-flow-inline", "events-run-user-actions-in-handlers-not-effects"],
 	},
 	"composition-use-ref-prop-instead-of-forwardref-in-react-19": {
-		appliesWhen: "React 19 컴포넌트에 focus·스크롤·측정용 ref 공개 API를 추가·변경할 때. 새 `forwardRef` 래퍼를 도입하려 할 때.",
+		appliesWhen: "리액트 19 컴포넌트에 focus·스크롤·측정용 ref 공개 API를 추가·변경할 때. 새 `forwardRef` 래퍼를 도입하려 할 때.",
 		reviewWith: [],
 	},
 	"composition-use-activity-for-render-branches": {
@@ -530,17 +530,17 @@ const reactRuleRouting = {
 	},
 	"screen-extract-utilities-selectively": {
 		appliesWhen:
-			"화면 계산·변환·기본 설정·옵션·column 메타를 별도 함수나 보조 모듈으로 옮길 때. 화면 보조 경계를 바꿀 때. 제외: 질의 `select` 내부 shaping만 바꾸는 경우.",
+			"화면 계산·변환·기본 설정·옵션·열 메타를 별도 함수나 보조 모듈으로 옮길 때. 화면 보조 경계를 바꿀 때. 제외: 질의 `select` 내부 가공만 바꾸는 경우.",
 		reviewWith: ["ownership-place-owner-files-in-role-folders", "typescript/functions-extract-helpers-only-when-the-boundary-is-real"],
 	},
 	"screen-keep-derived-values-close": {
 		appliesWhen:
-			"오리진을 끊는 별칭·flag·표시값을 넓은 화면 scope에 추가·이동·제거할 때. `let` 재할당이나 배열 `push` 기반 조립을 바꿀 때.",
+			"오리진을 끊는 별칭·플래그·표시값을 넓은 화면 범위에 추가·이동·제거할 때. `let` 재할당이나 배열 `push` 기반 조립을 바꿀 때.",
 		reviewWith: [],
 	},
 	"screen-keep-route-flow-visible": {
 		appliesWhen:
-			"라우트 진입의 검색·navigate·질의·변경 요청·화면 전체 이펙트를 옮기거나 나눌 때. page 섹션 조립의 순서나 소유자를 바꿀 때. 제외: 같은 소유자 안에서 표현만 바꾸는 경우.",
+			"라우트 진입의 검색·화면 이동·질의·변경 요청·화면 전체 이펙트를 옮기거나 나눌 때. page 섹션 조립의 순서나 소유자를 바꿀 때. 제외: 같은 소유자 안에서 표현만 바꾸는 경우.",
 		reviewWith: ["screen-extract-local-section-components-for-runtime-boundaries", "ownership-place-owner-files-in-role-folders"],
 	},
 	"events-keep-handler-flow-inline": {
@@ -550,17 +550,17 @@ const reactRuleRouting = {
 	},
 	"events-name-and-curry-handlers": {
 		appliesWhen:
-			"이벤트 핸들러를 새로 만들 때. 핸들러 이름이나 대상, 이벤트 표기를 바꿀 때. 추가 인자 전달 방식이나 최종 React 핸들러 시그니처를 바꿀 때.",
+			"이벤트 핸들러를 새로 만들 때. 핸들러 이름이나 대상, 이벤트 표기를 바꿀 때. 추가 인자 전달 방식이나 최종 리액트 핸들러 시그니처를 바꿀 때.",
 		reviewWith: ["typing-function-type-first", "typescript/naming-use-consistent-file-and-symbol-naming"],
 	},
 	"events-run-user-actions-in-handlers-not-effects": {
 		appliesWhen:
-			"제출·저장·삭제·닫기 같은 one-shot 사용자 액션을 핸들러와 상태+이펙트 사이에서 옮길 때. one-shot 사용자 액션의 실행 흐름을 바꿀 때.",
+			"제출·저장·삭제·닫기 같은 한 번뿐인 사용자 액션을 핸들러와 상태+이펙트 사이에서 옮길 때. 한 번뿐인 사용자 액션의 실행 흐름을 바꿀 때.",
 		reviewWith: [],
 	},
 	"data-avoid-fallback-defaults-and-loading-flags": {
 		appliesWhen:
-			"optional 응답에 `??`·`||` 기본값을 넣을 때. Suspense 화면 본문에 초기 로딩 return을 추가·변경할 때. 결측·로딩 UX를 다룰 때.",
+			"선택 응답에 `??`·`||` 기본값을 넣을 때. Suspense 화면 본문에 초기 로딩 반환을 추가·변경할 때. 결측·로딩 사용성를 다룰 때.",
 		reviewWith: [
 			"data-preserve-origin-chaining",
 			"screen-keep-derived-values-close",
@@ -568,7 +568,7 @@ const reactRuleRouting = {
 		],
 	},
 	"data-name-query-and-mutation-bindings-consistently": {
-		appliesWhen: "React Query 질의·변경 요청 훅의 로컬 바인딩을 추가하거나 이름을 바꿀 때. 역할이 드러나지 않는 별칭이 diff에 보일 때.",
+		appliesWhen: "리액트 Query 질의·변경 요청 훅의 로컬 바인딩을 추가하거나 이름을 바꿀 때. 역할이 드러나지 않는 별칭이 diff에 보일 때.",
 		reviewWith: ["data-preserve-origin-chaining"],
 	},
 	"data-preserve-origin-chaining": {
@@ -576,7 +576,7 @@ const reactRuleRouting = {
 		reviewWith: ["screen-keep-derived-values-close"],
 	},
 	"data-shape-query-data-with-select": {
-		appliesWhen: "서버 응답의 목록·items·메타 등을 렌더에서 가공하거나 반복 소비할 때. React Query `select`의 결과 형태를 추가·변경할 때.",
+		appliesWhen: "서버 응답의 목록·항목·메타 등을 렌더에서 가공하거나 반복 소비할 때. 리액트 Query `select`의 결과 형태를 추가·변경할 때.",
 		reviewWith: ["data-name-query-and-mutation-bindings-consistently", "data-preserve-origin-chaining"],
 	},
 	"state-calculate-derived-values-during-render": {
@@ -584,8 +584,7 @@ const reactRuleRouting = {
 		reviewWith: [],
 	},
 	"state-choose-state-tools-by-source-of-truth": {
-		appliesWhen:
-			"로컬 UI·전역 client·server 데이터를 새 상태 도구로 옮길 때. 서로 다른 source of truth 사이에 값을 복제하거나 동기화할 때.",
+		appliesWhen: "로컬 UI·전역 클라이언트·서버 데이터를 새 상태 도구로 옮길 때. 서로 다른 진짜 출처 사이에 값을 복제하거나 동기화할 때.",
 		reviewWith: ["state-store-derived-authority"],
 	},
 	"state-store-derived-authority": {
@@ -598,13 +597,12 @@ const reactRuleRouting = {
 		reviewWith: [],
 	},
 	"state-use-effectevent-for-non-reactive-effect-callbacks": {
-		appliesWhen:
-			"subscription 이펙트가 최신 prop·상태 콜백을 읽어야 할 때. ref 동기화 hack, 의존성 재설치, `useEffectEvent`를 추가·변경할 때.",
+		appliesWhen: "구독 이펙트가 최신 prop·상태 콜백을 읽어야 할 때. ref 동기화 우회, 의존성 재설치, `useEffectEvent`를 추가·변경할 때.",
 		reviewWith: ["events-run-user-actions-in-handlers-not-effects"],
 	},
 	"perf-compiler-first-memoization": {
 		appliesWhen:
-			"`useMemo`·`useCallback`을 추가하거나 제거할 때. 참조 동일성·실측 병목·무거운 지연 계산을 이유로 수동 memoization을 검토할 때.",
+			"`useMemo`·`useCallback`을 추가하거나 제거할 때. 참조 동일성·실측 병목·무거운 지연 계산을 이유로 수동 메모이제이션을 검토할 때.",
 		reviewWith: [],
 	},
 	"perf-use-lazy-state-initializers-for-expensive-defaults": {
@@ -612,8 +610,7 @@ const reactRuleRouting = {
 		reviewWith: [],
 	},
 	"perf-use-starttransition-for-non-urgent-updates": {
-		appliesWhen:
-			"클릭·선택·필터 변경 뒤 큰 목록·표·트리를 다시 그리는 상태 update를 다룰 때. 상태 update의 우선순위나 전환 처리를 바꿀 때.",
+		appliesWhen: "클릭·선택·필터 변경 뒤 큰 목록·표·트리를 다시 그리는 상태 갱신을 다룰 때. 상태 갱신의 우선순위나 전환 처리를 바꿀 때.",
 		reviewWith: [],
 	},
 	"perf-use-usedeferredvalue-for-heavy-derived-renders": {
@@ -622,12 +619,12 @@ const reactRuleRouting = {
 		reviewWith: ["perf-compiler-first-memoization", "perf-use-starttransition-for-non-urgent-updates"],
 	},
 	"docs-limit-inline-comments-to-non-obvious-logic": {
-		appliesWhen: "React 함수·핸들러·JSX 인접 로직 안의 `//` 주석을 추가·수정할 때. 자명한 설명과 실제 제약을 구분해 주석을 정리할 때.",
+		appliesWhen: "리액트 함수·핸들러·JSX 인접 로직 안의 `//` 주석을 추가·수정할 때. 자명한 설명과 실제 제약을 구분해 주석을 정리할 때.",
 		reviewWith: [],
 	},
 	"docs-require-jsdoc-on-key-declarations": {
 		appliesWhen:
-			"질의·변경 요청이나 비자명한 핸들러/이펙트를 추가·변경할 때. 내보낸 보조 함수·훅·스토어 선언을 추가·변경할 때. re-export 포함 공개 type·interface나 합성 공개 부품을 추가·변경할 때.",
+			"질의·변경 요청이나 비자명한 핸들러/이펙트를 추가·변경할 때. 내보낸 보조 함수·훅·스토어 선언을 추가·변경할 때. 다시 내보내기 포함 공개 타입·인터페이스나 합성 공개 부품을 추가·변경할 때.",
 		reviewWith: [],
 	},
 } as const;
@@ -2319,15 +2316,15 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 	};
 
 	const routeFlow = await readRule("react", "screen-keep-route-flow-visible");
-	assertMentions(routeFlow, ["소유자가 그대로인 변경은 대상이 아", "바인딩·별칭", "support-code 규칙"], "routeFlow");
+	assertMentions(routeFlow, ["소유자가 그대로인 변경은 대상이 아", "바인딩·별칭", "보조 코드 규칙"], "routeFlow");
 	assert.match(
 		routeFlow,
-		/소유자가 그대로인 변경은 대상이 아[\s\S]*`query\.select`[\s\S]*바인딩·별칭[\s\S]*derived-state 이펙트[\s\S]*렌더 계산/i,
+		/소유자가 그대로인 변경은 대상이 아[\s\S]*`query\.select`[\s\S]*바인딩·별칭[\s\S]*파생 상태 이펙트[\s\S]*렌더 계산/i,
 	);
 
 	const curriedHandler = await readRule("react", "events-name-and-curry-handlers");
 	assertMentions(curriedHandler, [/인라인 콜백/i, /추가 인자/i, /이벤트 경계/i, /래퍼/i, /(?:완료가 아|우회)/i], "curriedHandler");
-	assertMentions(curriedHandler, [/최종 반환/i, /React 핸들러/i, /typing-function-type-first/i, /함께 적용/i], "curriedHandler");
+	assertMentions(curriedHandler, [/최종 반환/i, /리액트 핸들러/i, /typing-function-type-first/i, /함께 적용/i], "curriedHandler");
 	assert.match(
 		curriedHandler,
 		/UI를 모르는 도메인[\s\S]*커스텀 컴포넌트 prop 콜백[\s\S]*`useEffectEvent`[\s\S]*DOM 이벤트[\s\S]*만들지 않/i,
@@ -2338,7 +2335,7 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 	assertMentions(reactHandlerType, [/문맥 타입 지정/i, /반환 함수 타입/i, /생략하지 않/i], "reactHandlerType");
 	assertMentions(
 		reactHandlerType,
-		[/`query\.select`/i, /one-off 문맥 콜백/i, /UI를 모르는 도메인 함수/i, /적용하지 않/i],
+		[/`query\.select`/i, /일회성 문맥 콜백/i, /UI를 모르는 도메인 함수/i, /적용하지 않/i],
 		"reactHandlerType",
 	);
 
@@ -2347,9 +2344,9 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 			readFile(path.join(realSkillRootDir, "react", "contracts", `${ruleId}.md`), "utf8"),
 		),
 	);
-	assertMentions(reactContracts[0]!, [/(?:`query\.select`|query `select`)/i, /derived-state 이펙트/i, /렌더 계산/i], "reactContracts");
+	assertMentions(reactContracts[0]!, [/(?:`query\.select`|query `select`)/i, /파생 상태 이펙트/i, /렌더 계산/i], "reactContracts");
 	assertMentions(reactContracts[1]!, [/인라인 콜백/i, /커스텀 컴포넌트 prop 콜백/i], "reactContracts");
-	assert.match(reactContracts[2]!, /커링한 핸들러 팩토리[\s\S]*one-off 문맥 콜백/i);
+	assert.match(reactContracts[2]!, /커링한 핸들러 팩토리[\s\S]*일회성 문맥 콜백/i);
 
 	const typescriptRouter = await readFile(path.join(realSkillRootDir, "typescript", "SKILL.md"), "utf8");
 	assertMentions(
@@ -2529,7 +2526,7 @@ test("v17 TypeScript boundaries exclude React props and prevent self-created dup
 	};
 
 	const namedObjectParams = await readRule("typescript", "functions-use-named-object-params-for-complex-signatures");
-	assertMentions(readAppliesWhen(namedObjectParams), [/React (?:함수 )?컴포넌트/, "props", /(?:N\/A|제외)/], "namedObjectParams");
+	assertMentions(readAppliesWhen(namedObjectParams), [/리액트 (?:함수 )?컴포넌트/, "props", /(?:N\/A|제외)/], "namedObjectParams");
 	assert.match(namedObjectParams, /뜻이 같은 계약이 이미 있으면 그대로 씁니다[\s\S]*`\*Params`[\s\S]*`\*Args`[\s\S]*새로 만들지 않/i);
 
 	const documentedShape = await readRule("typescript", "types-document-custom-types-and-shapes");
@@ -2603,7 +2600,7 @@ test("v17 TypeScript boundaries exclude React props and prevent self-created dup
 			"types-reuse-existing-contracts-before-new-types",
 		].map((ruleId) => readFile(path.join(realSkillRootDir, "typescript", "contracts", `${ruleId}.md`), "utf8")),
 	);
-	assertMentions(generatedContracts[0]!, [/React 함수 컴포넌트/i, /뜻이 같은 계약이 이미 있으면/i], "generatedContracts");
+	assertMentions(generatedContracts[0]!, [/리액트 함수 컴포넌트/i, /뜻이 같은 계약이 이미 있으면/i], "generatedContracts");
 	assert.match(generatedContracts[1]!, /CRITICAL rule[\s\S]*full rule/i);
 	assertMentions(generatedContracts[2]!, [/위치 인자/i, /객체/i, /`\*Params`/i, /(?:스스로|자기|자가)/i], "generatedContracts");
 });
@@ -2660,7 +2657,7 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 			"types-reuse-existing-contracts-before-new-types",
 		].map((ruleId) => readFile(path.join(realSkillRootDir, "typescript", "contracts", `${ruleId}.md`), "utf8")),
 	);
-	assertMentions(generatedContracts[0]!, [/React 함수 컴포넌트/i, /뜻이 같은 계약이 이미 있으면/i], "generatedContracts");
+	assertMentions(generatedContracts[0]!, [/리액트 함수 컴포넌트/i, /뜻이 같은 계약이 이미 있으면/i], "generatedContracts");
 	assert.match(generatedContracts[1]!, /CRITICAL rule[\s\S]*full rule/i);
 	assertMentions(generatedContracts[2]!, [/위치 인자/i, /객체/i, /`\*Params`/i, /(?:스스로|자기|자가)/i], "generatedContracts");
 });

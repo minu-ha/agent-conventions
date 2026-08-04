@@ -6,7 +6,7 @@ impactDescription: 중요한 API, 핸들러, 이펙트, 타입 선언을 검토�
 appliesWhen:
   - 질의·변경 요청이나 비자명한 핸들러/이펙트를 추가·변경할 때
   - 내보낸 보조 함수·훅·스토어 선언을 추가·변경할 때
-  - re-export 포함 공개 type·interface나 합성 공개 부품을 추가·변경할 때
+  - 다시 내보내기 포함 공개 타입·인터페이스나 합성 공개 부품을 추가·변경할 때
 requiresSelected: typescript/docs-require-header-jsdoc-on-key-declarations
 tags: docs, jsdoc, handlers, effects
 ---
@@ -17,15 +17,15 @@ tags: docs, jsdoc, handlers, effects
 
 doc 주석은 경계를 설명할 때만 붙입니다. 자명한 지역 변수에는 강제하지 않습니다.
 
-여기서 공개 선언은 다른 모듈이 소비할 수 있도록 실제 내보낸 또는 re-exported 된 선언만 뜻합니다.
-export되지 않은 file-local `type`/`interface`는 공개이라는 이유만으로 이 규칙을 선택하지 않습니다.
+여기서 공개 선언은 다른 모듈이 소비할 수 있도록 실제 내보낸 또는 다시 내보낸 된 선언만 뜻합니다.
+내보내기되지 않은 파일 지역 `type`/`interface`는 공개이라는 이유만으로 이 규칙을 선택하지 않습니다.
 
 필수 대상:
 
 - 라우트·화면·레이아웃 소유자의 질의와 변경 요청 바인딩
-- 분기, 비동기, 화면 이동, invalidation을 가진 이벤트 핸들러
+- 분기, 비동기, 화면 이동, 무효화를 가진 이벤트 핸들러
 - 동기화 의도가 중요한 `useEffect`
-- 내보낸 pure 보조 function, 커스텀 훅, 스토어 선언
+- 내보낸 순수 보조 함수, 커스텀 훅, 스토어 선언
 - 내보낸 공개 `type`과 `interface`, 합성 컴포넌트의 공개 부품
 - 예외적으로 남긴 `useMemo`/`useCallback`
 

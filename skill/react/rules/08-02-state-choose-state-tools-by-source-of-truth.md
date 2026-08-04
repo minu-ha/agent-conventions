@@ -4,8 +4,8 @@ titleKo: 상태 도구는 진짜 출처를 기준으로 고릅니다
 impact: MEDIUM-HIGH
 impactDescription: 지역 UI 상태, 전역 상태, 서버 상태가 서로 섞이지 않습니다
 appliesWhen:
-  - 로컬 UI·전역 client·server 데이터를 새 상태 도구로 옮길 때
-  - 서로 다른 source of truth 사이에 값을 복제하거나 동기화할 때
+  - 로컬 UI·전역 클라이언트·서버 데이터를 새 상태 도구로 옮길 때
+  - 서로 다른 진짜 출처 사이에 값을 복제하거나 동기화할 때
 reviewWith: state-store-derived-authority
 tags: state, react-query, zustand, local-state
 ---
@@ -24,8 +24,8 @@ tags: state, react-query, zustand, local-state
 
 이 기준으로 고르면 화면 파일이 더 읽기 쉬워지고 중복 동기화가 줄어듭니다.
 
-프로젝트가 이미 다른 전역 스토어나 server-state 도구를 표준으로 쓴다면 그것을 유지합니다.
-`Zustand`나 `react-query`를 새로 들여오지 말고 source-of-truth 원칙만 지킵니다.
+프로젝트가 이미 다른 전역 스토어나 서버 상태 도구를 표준으로 쓴다면 그것을 유지합니다.
+`Zustand`나 `react-query`를 새로 들여오지 말고 진짜 출처 원칙만 지킵니다.
 
 **Incorrect (서버 상태를 로컬 상태로 복제):**
 
@@ -34,7 +34,7 @@ const responseUserGetItemSuspense = useUserGetItemSuspense();
 const [userName, setUserName] = useState(responseUserGetItemSuspense.data.name);
 ```
 
-**Correct (도구를 source of truth에 맞춤):**
+**Correct (도구를 진짜 출처에 맞춤):**
 
 ```ts
 const [isOpen, setIsOpen] = useState(false);

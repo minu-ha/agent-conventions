@@ -26,7 +26,7 @@ tags: helpers, extraction, boundaries
 내보낸 함수가 또 다른 내보낸 함수를 타고 가는 사슬은 만들지 않습니다.
 흐름을 알려고 파일을 왕복해야 하면 경계가 아니라 그냥 쪼갠 것입니다.
 
-**Incorrect (단회성 계산을 generic util 파일로 분리):**
+**Incorrect (단회성 계산을 범용 util 파일로 분리):**
 
 ```ts
 // utils.ts
@@ -37,7 +37,7 @@ export const util = {
 };
 ```
 
-**Incorrect (support module 안에서도 export helper를 단계별로 누적):**
+**Incorrect (support module 안에서도 내보내기 helper를 단계별로 누적):**
 
 ```ts
 export const normalizeProfileValues = (formValues: ProfileFormValues) => {
@@ -86,13 +86,13 @@ export const api = {
 };
 ```
 
-**Correct (작은 계산은 local flow에 둠):**
+**Correct (작은 계산은 local 흐름에 둠):**
 
 ```ts
 const nextIteration = iteration + 1;
 ```
 
-**Correct (feature-local support module은 domain-sized export 안에서 단계별로 정리):**
+**Correct (feature-local support module은 domain-sized 내보내기 안에서 단계별로 정리):**
 
 ```ts
 // profile-support.ts

@@ -1,6 +1,6 @@
 # Use Direct Imports and Dedicated Public Entry Points
 
-**Impact: HIGH (배럴이나 모호한 재노출 계층에 기대지 않고 import 소유를 드러냅니다)**
+**Impact: HIGH (배럴이나 모호한 재노출 계층에 기대지 않고 가져오기 소유를 드러냅니다)**
 
 `index.ts`로 묶어 다시 내보내는 배럴을 만들지 않습니다. 필요한 파일에서 바로 가져옵니다.
 역할 폴더를 `index.ts`로 묶는 것도 배럴이라 만들지 않습니다.
@@ -20,6 +20,6 @@
 소유자 밖에서 필요해지면 경로를 뚫는 대신 전역 레이어로 올립니다.
 
 경로가 같아도 값과 타입 중 무엇을 가져오는지가 바뀌면
-import 계약이 바뀐 것이라 이 규칙을 적용합니다.
+가져오기 계약이 바뀐 것이라 이 규칙을 적용합니다.
 
 > 예시·예외가 필요하면 [full rule](../rules/01-04-naming-use-direct-imports-and-public-entry-points.md)을 읽습니다.

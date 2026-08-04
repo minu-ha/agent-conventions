@@ -20,7 +20,7 @@ tags: ownership, ui, widget, page, naming
 | --- | --- | --- |
 | `ui` | 도메인을 모르는 순수 화면 | `ui-button.tsx` · `UiButton` · `ui_button` |
 | `widget` | 화면 조립을 전제하지 않는 공용 조합 | `wg-chart.tsx` · `WgChart` · `wg_chart` |
-| `page` | 한 화면 안에서만 쓰이는 shell과 컴포넌트 | `pg-detail.tsx` · `PgDetail` · `pg_detail` |
+| `page` | 한 화면 안에서만 쓰이는 뼈대와 컴포넌트 | `pg-detail.tsx` · `PgDetail` · `pg_detail` |
 
 세 레이어 모두 파일명과 심볼에 계층 접두사를 붙이고 예외를 두지 않습니다.
 폴더에는 붙이지 않습니다. 상위 계층 폴더가 이미 계층을 말합니다.

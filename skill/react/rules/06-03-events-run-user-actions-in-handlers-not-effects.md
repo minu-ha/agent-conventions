@@ -4,8 +4,8 @@ titleKo: 사용자 동작은 이펙트가 아니라 핸들러에서 실행합니
 impact: HIGH
 impactDescription: 한 번뿐인 동작을 상태와 이펙트 재실행으로 흉내 내지 않습니다
 appliesWhen:
-  - 제출·저장·삭제·닫기 같은 one-shot 사용자 액션을 핸들러와 상태+이펙트 사이에서 옮길 때
-  - one-shot 사용자 액션의 실행 흐름을 바꿀 때
+  - 제출·저장·삭제·닫기 같은 한 번뿐인 사용자 액션을 핸들러와 상태+이펙트 사이에서 옮길 때
+  - 한 번뿐인 사용자 액션의 실행 흐름을 바꿀 때
 tags: events, handlers, effects, actions
 ---
 

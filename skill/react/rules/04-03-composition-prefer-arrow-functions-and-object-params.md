@@ -4,7 +4,7 @@ titleKo: 시그니처가 복잡해지면 화살표 함수와 객체 매개변수
 impact: MEDIUM-HIGH
 impactDescription: 함수 선언과 여러 인자 계약을 넓히고 고치기 쉬워집니다
 appliesWhen:
-  - React 인접 코드에 `function` 선언이 생길 때
+  - 리액트 인접 코드에 `function` 선언이 생길 때
   - 함수가 매개변수를 3개 이상 받을 때
   - 함수가 함께 이동하는 같은 계열 값을 받을 때
 reviewWith: typescript/functions-use-named-object-params-for-complex-signatures

@@ -8,7 +8,7 @@
 - 남기는 경우: 도메인 규칙, 예외 방어, 라이브러리 제약, 부수효과 순서
 - 남기지 않는 경우: 변수명 반복, 단순 매핑 설명
 
-헤더 JSDoc과 annotation 태그 선택은 `docs-require-jsdoc-on-key-declarations`와
+헤더 JSDoc과 타입 표기 태그 선택은 `docs-require-jsdoc-on-key-declarations`와
 동반 스킬인 `convention-typescript`의 표준을 따릅니다.
 
 **Requires selected:** `typescript/docs-keep-inline-comments-for-constraints-and-caveats` · 함께 적용

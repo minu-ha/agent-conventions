@@ -16,7 +16,7 @@
 | 부모가 실행 환경 데이터를 자식 콜백에 전달해야 함 | `render prop` |
 
 공개 부품은 소비자가 이름으로 조립해야 하거나 공용 컨텍스트/동작을 직접 쓰는 영역만 공개합니다.
-단순 class 래퍼, spacing 보정 DOM, 내부 레이아웃 보조 함수는 숨깁니다.
-stateless 합성에 상태가 필요해지면 공개 이름은 유지하고 컨텍스트만 추가합니다.
+단순 class 래퍼, 여백 보정 DOM, 내부 레이아웃 보조 함수는 숨깁니다.
+상태 없는 합성에 상태가 필요해지면 공개 이름은 유지하고 컨텍스트만 추가합니다.
 
 > 예시·예외가 필요하면 [full rule](../rules/03-02-strategy-choose-single-composition-compound-and-variants.md)을 읽습니다.

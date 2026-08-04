@@ -1,11 +1,11 @@
 ---
 title: Prefer React Compiler Defaults Over Manual Memoization
-titleKo: 직접 메모이제이션하지 않고 React Compiler 에 맡깁니다
+titleKo: 직접 메모이제이션하지 않고 리액트 컴파일러 에 맡깁니다
 impact: MEDIUM-HIGH
 impactDescription: 효과를 확인하지 않은 방어적 useMemo 와 useCallback 을 막습니다
 appliesWhen:
   - `useMemo`·`useCallback`을 추가하거나 제거할 때
-  - 참조 동일성·실측 병목·무거운 지연 계산을 이유로 수동 memoization을 검토할 때
+  - 참조 동일성·실측 병목·무거운 지연 계산을 이유로 수동 메모이제이션을 검토할 때
 tags: state, react, memoization
 ---
 
@@ -13,7 +13,7 @@ tags: state, react, memoization
 
 **Impact: MEDIUM-HIGH (효과를 확인하지 않은 방어적 useMemo 와 useCallback 을 막습니다)**
 
-React Compiler가 처리하는 범위에서는 `useMemo`, `useCallback`을 기본적으로 쓰지 않습니다.
+리액트 컴파일러가 처리하는 범위에서는 `useMemo`, `useCallback`을 기본적으로 쓰지 않습니다.
 
 허용하는 경우는 다음 셋뿐이며, 어느 경우든 바로 위에 한글 주석으로 이유를 남깁니다.
 
@@ -23,7 +23,7 @@ React Compiler가 처리하는 범위에서는 `useMemo`, `useCallback`을 기�
 
 마지막 경우에도 실제로 무거운 계산인지를 먼저 확인합니다.
 
-**Incorrect (단순 가공을 관성적으로 memoization):**
+**Incorrect (단순 가공을 관성적으로 메모이제이션):**
 
 ```ts
 const columns = useMemo(() => buildColumns(response.data.columns), [response.data.columns]);

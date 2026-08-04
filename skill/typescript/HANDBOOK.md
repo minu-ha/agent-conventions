@@ -51,7 +51,7 @@
 
 **Impact: HIGH**
 
-식별자, import, 공개 진입점, 설정 접근 방식이 소유자와 출처를 바로 드러내야 합니다.
+식별자, 가져오기, 공개 진입점, 설정 접근 방식이 소유자와 출처를 바로 드러내야 합니다.
 
 ### 1.1 Centralize Shared Config Under `shared/config.ts`
 
@@ -99,7 +99,7 @@ config.pagination.default_page_size;
 
 **Impact: HIGH (넓은 스코프 별칭으로 출처를 숨기지 않아 값이 어디서 오는지 읽힙니다)**
 
-공용 설정과 공용 순수 함수는 말단 모듈에서 직접 import 한 뒤 `config.*`, `util.*` 체인으로 씁니다.
+공용 설정과 공용 순수 함수는 말단 모듈에서 직접 가져오기 한 뒤 `config.*`, `util.*` 체인으로 씁니다.
 넓은 스코프에서 구조분해하거나 별칭 상수로 끊어 출처를 흐리지 않습니다.
 구조분해가 필요하면 함수 안 좁은 스코프에서만 씁니다.
 
@@ -131,7 +131,7 @@ util.number.clamp(score, 0, 100);
 
 **Rule:** `T03` · `naming-use-consistent-file-and-symbol-naming`
 
-**Applies when:** TypeScript 파일, 지역 변수·함수·타입, 객체·스키마 필드, enum 성격 상수의 이름을 새로 만들거나 바꿀 때. 제외: 별칭 없이 외부 패키지 import 를 추가하는 경우.
+**Applies when:** TypeScript 파일, 지역 변수·함수·타입, 객체·스키마 필드, enum 성격 상수의 이름을 새로 만들거나 바꿀 때. 제외: 별칭 없이 외부 패키지에서 그대로 가져오는 경우.
 
 **Impact: HIGH (모듈과 실행 구조를 넘나들며 파일명, 심볼, 형태 필드가 예측대로 유지됩니다)**
 
@@ -143,7 +143,7 @@ util.number.clamp(score, 0, 100);
 일반 객체 키, 스키마 키, 커스텀 타입 필드는 `camelCase`를 유지합니다.
 
 외부 패키지가 내보낸 이름을 별칭 없이 그대로 가져오는 것은 지역 심볼을 새로 짓는 일이 아니라 이 규칙의 대상이 아닙니다.
-지역 별칭을 추가하거나 import 이름을 바꿀 때만 다시 봅니다.
+지역 별칭을 추가하거나 가져오기 이름을 바꿀 때만 다시 봅니다.
 
 **Incorrect (파일명, 심볼명, 필드명이 제각각임):**
 
@@ -173,9 +173,9 @@ const userProfileSchema = z.object({
 
 **Rule:** `T04` · `naming-use-direct-imports-and-public-entry-points`
 
-**Applies when:** import·export, 배럴, 공용 진입점, 소유자 보조 모듈의 경계를 추가·변경할 때. 절대경로 별칭으로 다른 모듈을 가져올 때. 같은 경로에서 값과 타입 중 무엇을 가져올지 추가·삭제·전환할 때.
+**Applies when:** 가져오기·내보내기, 배럴, 공용 진입점, 소유자 보조 모듈의 경계를 추가·변경할 때. 절대경로 별칭으로 다른 모듈을 가져올 때. 같은 경로에서 값과 타입 중 무엇을 가져올지 추가·삭제·전환할 때.
 
-**Impact: HIGH (배럴이나 모호한 재노출 계층에 기대지 않고 import 소유를 드러냅니다)**
+**Impact: HIGH (배럴이나 모호한 재노출 계층에 기대지 않고 가져오기 소유를 드러냅니다)**
 
 `index.ts`로 묶어 다시 내보내는 배럴을 만들지 않습니다. 필요한 파일에서 바로 가져옵니다.
 역할 폴더를 `index.ts`로 묶는 것도 배럴이라 만들지 않습니다.
@@ -195,9 +195,9 @@ const userProfileSchema = z.object({
 소유자 밖에서 필요해지면 경로를 뚫는 대신 전역 레이어로 올립니다.
 
 경로가 같아도 값과 타입 중 무엇을 가져오는지가 바뀌면
-import 계약이 바뀐 것이라 이 규칙을 적용합니다.
+가져오기 계약이 바뀐 것이라 이 규칙을 적용합니다.
 
-**Incorrect (barrel과 혼합 import로 경계를 흐림):**
+**Incorrect (배럴과 섞인 가져오기로 경계를 흐림):**
 
 ```ts
 import {config, util, UserProfile} from "./index";
@@ -209,7 +209,7 @@ import {config, util, UserProfile} from "./index";
 import {SpikeChartCard} from "@/page/detail/component/spike-pattern-panel/component/spike-chart-card";
 ```
 
-**Correct (직접 import와 공개 진입점을 구분):**
+**Correct (직접 가져오기와 공개 진입점을 구분):**
 
 ```ts
 import type {UserProfile} from "@/shared/contracts";
@@ -237,7 +237,7 @@ import {buildUserSaveRequest} from "./function/build-user-save-request";
 
 - 커스텀 `type`, `interface`, 스키마 최상단, 객체형 상수: 선언 위에 헤더 문서 주석
 - 객체형 계약과 스키마 필드: 각 필드 바로 위에 문서 주석
-- `Pick`, `Omit`, Indexed Access 별칭: 필드가 없으므로 헤더만 씁니다
+- `Pick`, `Omit`, 인덱스 접근 별칭: 필드가 없으므로 헤더만 씁니다
 
 주석이 있다고 끝나지 않습니다.
 각 본문이 `docs-write-concise-korean-comments-about-purpose-and-constraints`의 한국어 조건을 만족해야 합니다.
@@ -406,7 +406,7 @@ const normalizeSearchRequest: NormalizeRequest = (request) => {
 
 **Impact: HIGH (기존 인터페이스나 객체 계약이 이미 정한 콜백 시그니처가 어긋나지 않습니다)**
 
-콜백을 구현할 때 매개변수 타입을 다시 적지 않습니다. 이미 있는 인터페이스나 계약의 시그니처를 Indexed Access로 가져다 씁니다.
+콜백을 구현할 때 매개변수 타입을 다시 적지 않습니다. 이미 있는 인터페이스나 계약의 시그니처를 인덱스 접근로 가져다 씁니다.
 가져온 계약에 지금 구현이 쓰지 않는 매개변수가 있으면 `types-mark-unused-parameters-with-underscore`를 다시 봅니다.
 그래야 구현과 계약의 타입 정의가 한곳에 남습니다.
 
@@ -455,7 +455,7 @@ const formatMessage: ToastFormatters["formatMessage"] = (message) => {
 
 **Impact: HIGH (의미가 그대로면 기존 타입이나 스키마에서 파생해 같은 형태를 두 번 선언하지 않습니다)**
 
-기존 타입이나 스키마와 필드 타입, 선택 여부, 뜻이 같으면 그대로 참조하거나 `Pick`, `Omit`, Indexed Access로 파생합니다.
+기존 타입이나 스키마와 필드 타입, 선택 여부, 뜻이 같으면 그대로 참조하거나 `Pick`, `Omit`, 인덱스 접근로 파생합니다.
 새로 선언하는 것은 뜻이 다를 때만입니다. 소유자 이동이나 이름, 주석만 바뀌면 대상이 아닙니다.
 
 형태가 그대로인 계약을 새 자리에서 쓰는 것만으로는 이 규칙이 걸리지 않습니다.
@@ -546,7 +546,7 @@ const visibleTabs = canManageItems
 내보낸 함수가 또 다른 내보낸 함수를 타고 가는 사슬은 만들지 않습니다.
 흐름을 알려고 파일을 왕복해야 하면 경계가 아니라 그냥 쪼갠 것입니다.
 
-**Incorrect (단회성 계산을 generic util 파일로 분리):**
+**Incorrect (단회성 계산을 범용 util 파일로 분리):**
 
 ```ts
 // utils.ts
@@ -557,7 +557,7 @@ export const util = {
 };
 ```
 
-**Incorrect (support module 안에서도 export helper를 단계별로 누적):**
+**Incorrect (support module 안에서도 내보내기 helper를 단계별로 누적):**
 
 ```ts
 export const normalizeProfileValues = (formValues: ProfileFormValues) => {
@@ -606,13 +606,13 @@ export const api = {
 };
 ```
 
-**Correct (작은 계산은 local flow에 둠):**
+**Correct (작은 계산은 local 흐름에 둠):**
 
 ```ts
 const nextIteration = iteration + 1;
 ```
 
-**Correct (feature-local support module은 domain-sized export 안에서 단계별로 정리):**
+**Correct (feature-local support module은 domain-sized 내보내기 안에서 단계별로 정리):**
 
 ```ts
 // profile-support.ts
@@ -674,9 +674,9 @@ export const util = {
 
 **Rule:** `T12` · `functions-prefer-immutable-array-sorting`
 
-**Applies when:** props, state, 매개변수, 공유 입력에서 온 배열을 정렬할 때. 기존 `.sort()` 호출을 추가·변경할 때.
+**Applies when:** props, 상태, 매개변수, 공유 입력에서 온 배열을 정렬할 때. 기존 `.sort()` 호출을 추가·변경할 때.
 
-**Impact: MEDIUM (props, state, 공유 입력에서 온 배열을 정렬할 때 원본이 바뀌는 버그를 피합니다)**
+**Impact: MEDIUM (props, 상태, 공유 입력에서 온 배열을 정렬할 때 원본이 바뀌는 버그를 피합니다)**
 
 원본 배열을 계속 써야 하면 `.sort()`로 제자리에서 바꾸지 않습니다.
 실행 환경이 ES2023 이상이거나 `toSorted()`를 쓸 수 있으면 `.toSorted()`를 먼저 씁니다.
@@ -741,7 +741,7 @@ type AuditStatus = (typeof audit_status)[keyof typeof audit_status];
 
 **Rule:** `T14` · `functions-use-named-object-params-for-complex-signatures`
 
-**Applies when:** 매개변수가 3개를 넘거나 같은 계열 인자를 받는 함수를 추가·변경할 때. 객체 매개변수를 어디서 구조분해할지 바꿀 때. 제외: React 함수 컴포넌트가 props 를 받고 구조분해하는 방식만 바꾸는 경우.
+**Applies when:** 매개변수가 3개를 넘거나 같은 계열 인자를 받는 함수를 추가·변경할 때. 객체 매개변수를 어디서 구조분해할지 바꿀 때. 제외: 리액트 함수 컴포넌트가 props 를 받고 구조분해하는 방식만 바꾸는 경우.
 
 **Impact: HIGH (긴 시그니처를 읽을 수 있게 두고 위치를 헷갈리지 않으면서 입력을 늘립니다)**
 
@@ -750,7 +750,7 @@ type AuditStatus = (typeof audit_status)[keyof typeof audit_status];
 객체 매개변수 타입은 파일 위쪽에 이름을 붙여 선언하고, 함수 본문 첫 줄에서 구조분해합니다.
 구조분해 줄이 길어 포매터 예외가 필요해도 함수 본문 안에서 처리합니다.
 
-React 함수 컴포넌트가 props 를 통째로 받아 본문에서 구조분해하는 것만 바뀌면
+리액트 함수 컴포넌트가 props 를 통째로 받아 본문에서 구조분해하는 것만 바뀌면
 `react/composition-destructure-props-inside`가 담당하므로 이 규칙을 겹쳐 적용하지 않습니다.
 객체 인자와 필드 타입, 선택 여부, 뜻이 같은 계약이 이미 있으면 그대로 씁니다.
 이 규칙을 지키려고 `*Params`나 `*Args`를 새로 만들지 않습니다.
@@ -1032,7 +1032,7 @@ const responseEntryList = useEntryList();
 
 **Required on completion:** 마무리 시 항상 적용
 
-**Impact: MEDIUM (import, 타입, 보조 함수, 기본값, 주석 규율을 가장 자주 무너뜨리는 지름길을 잡아냅니다)**
+**Impact: MEDIUM (가져오기, 타입, 보조 함수, 기본값, 주석 규율을 가장 자주 무너뜨리는 지름길을 잡아냅니다)**
 
 끝났다고 보기 전에 자주 되풀이되는 지름길을 다시 확인합니다.
 배럴, 기존 타입 재선언, 재사용 근거 없이 앞당긴 추상화, 넓은 스코프 조립, 이유 없는 기본값,

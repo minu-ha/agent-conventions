@@ -5,7 +5,7 @@
 ## 1. Naming and Module Boundaries (naming)
 **TitleKo:** 이름과 모듈 경계
 **Impact:** HIGH
-**Description:** 식별자, import, 공개 진입점, 설정 접근 방식이 소유자와 출처를 바로 드러내야 합니다.
+**Description:** 식별자, 가져오기, 공개 진입점, 설정 접근 방식이 소유자와 출처를 바로 드러내야 합니다.
 
 ## 2. Types and Contracts (types)
 **TitleKo:** 타입과 계약
