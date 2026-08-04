@@ -224,7 +224,7 @@ const typescriptRuleRouting = {
 	},
 	"functions-avoid-imperative-assembly-in-wide-scopes": {
 		appliesWhen: "파일 위쪽이나 넓은 스코프에서 `let` 재대입, 배열 `push`, 조건부 누적으로 값을 만들거나 정리할 때.",
-		reviewWith: [],
+		reviewWith: ["functions-extract-helpers-only-when-the-boundary-is-real"],
 	},
 	"functions-extract-helpers-only-when-the-boundary-is-real": {
 		appliesWhen:
@@ -480,7 +480,7 @@ const reactRuleRouting = {
 	},
 	"composition-named-handlers-over-inline": {
 		appliesWhen:
-			"TSX 이벤트 프롭의 인라인 콜백에 분기나 비동기 호출을 추가·수정할 때. 인라인 콜백에 여러 동작·부수효과나 비자명한 상태 전환이 들어갈 때. 제외: 단순 설정 함수나 인자 전달 한 줄 위임만 있는 경우.",
+			"TSX 이벤트 프롭의 인라인 콜백에 분기나 비동기 호출을 추가·수정할 때. 인라인 콜백에 여러 동작·부수효과나 비자명한 상태 전환이 들어갈 때. 제외: 인자 없이 핸들러 참조만 넘기는 경우.",
 		reviewWith: ["events-keep-handler-flow-inline", "events-run-user-actions-in-handlers-not-effects"],
 	},
 	"composition-open-ref-props-only-for-imperative-contracts": {
@@ -2227,18 +2227,22 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 	};
 
 	const routeFlow = await readRule("react", "screen-keep-route-flow-visible");
-	assertMentions(routeFlow, ["소유자가 그대로인 변경은 대상이 아", "바인딩·별칭", "functions-extract-helpers-only-when-the-boundary-is-real"], "routeFlow");
+	assertMentions(
+		routeFlow,
+		["소유자가 그대로인 변경은 대상이 아", "바인딩·별칭", "functions-extract-helpers-only-when-the-boundary-is-real"],
+		"routeFlow",
+	);
 	assert.match(
 		routeFlow,
 		/소유자가 그대로인 변경은 대상이 아[\s\S]*`query\.select`[\s\S]*바인딩·별칭[\s\S]*파생 상태 이펙트[\s\S]*렌더 계산/i,
 	);
 
 	const curriedHandler = await readRule("react", "events-name-and-curry-handlers");
-	assertMentions(curriedHandler, [/인라인 콜백/i, /추가 인자/i, /이벤트 경계/i, /래퍼/i, /(?:완료가 아|우회)/i], "curriedHandler");
+	assertMentions(curriedHandler, [/DOM 이벤트 프롭에만/i, /추가 인자/i, /이벤트 경계/i, /래퍼/i, /(?:완료가 아|우회)/i], "curriedHandler");
 	assertMentions(curriedHandler, [/최종 반환/i, /리액트 핸들러/i, /typing-function-type-first/i, /함께 적용/i], "curriedHandler");
 	assert.match(
 		curriedHandler,
-		/UI를 모르는 도메인[\s\S]*커스텀 컴포넌트 프롭 콜백[\s\S]*`useEffectEvent`[\s\S]*DOM 이벤트[\s\S]*만들지 않/i,
+		/이벤트 객체를 받지 않는 프롭 콜백[\s\S]*감싸는 화살표를 새로 만들지 않[\s\S]*`useEffectEvent`[\s\S]*DOM 이벤트[\s\S]*만들지 않/i,
 	);
 
 	const reactHandlerType = await readRule("react", "typing-function-type-first");
@@ -2256,7 +2260,7 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 		),
 	);
 	assertMentions(reactContracts[0]!, [/(?:`query\.select`|query `select`)/i, /파생 상태 이펙트/i, /렌더 계산/i], "reactContracts");
-	assertMentions(reactContracts[1]!, [/인라인 콜백/i, /커스텀 컴포넌트 프롭 콜백/i], "reactContracts");
+	assertMentions(reactContracts[1]!, [/DOM 이벤트 프롭에만/i, /이벤트 객체를 받지 않는 프롭 콜백/i], "reactContracts");
 	assert.match(reactContracts[2]!, /커링한 핸들러 팩토리[\s\S]*일회성 문맥 콜백/i);
 
 	const typescriptRouter = await readFile(path.join(realSkillRootDir, "typescript", "SKILL.md"), "utf8");

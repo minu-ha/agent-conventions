@@ -6,7 +6,7 @@ impactDescription: 부수효과, 분기, 비동기 흐름을 일반 코드 흐�
 appliesWhen:
   - TSX 이벤트 프롭의 인라인 콜백에 분기나 비동기 호출을 추가·수정할 때
   - 인라인 콜백에 여러 동작·부수효과나 비자명한 상태 전환이 들어갈 때
-  - 제외: 단순 설정 함수나 인자 전달 한 줄 위임만 있는 경우
+  - 제외: 인자 없이 핸들러 참조만 넘기는 경우
 requiresSelected: docs-require-jsdoc-on-key-declarations, events-name-and-curry-handlers
 reviewWith: events-keep-handler-flow-inline, events-run-user-actions-in-handlers-not-effects
 tags: composition, jsx, handlers
@@ -16,8 +16,11 @@ tags: composition, jsx, handlers
 
 **Impact: HIGH (부수효과, 분기, 비동기 흐름을 일반 코드 흐름에서 읽습니다)**
 
-JSX에서는 명명된 핸들러 참조를 기본으로 하고, 아주 짧은 단순 위임만 인라인 함수로 허용합니다.
-분기, 비동기 호출, 여러 부수효과가 들어가면 반드시 핸들러로 분리합니다.
+JSX에는 이름 붙인 핸들러 참조만 넘깁니다.
+분기, 비동기 호출, 여러 부수효과가 들어가면 핸들러로 분리합니다.
+
+추가 인자를 넘기려고 `onClick={() => handleX(id)}` 같은 인라인 래퍼를 쓰지 않습니다.
+그 자리는 `events-name-and-curry-handlers`가 커링으로 정합니다.
 
 **Incorrect (분기와 비동기를 JSX 안에 숨김):**
 

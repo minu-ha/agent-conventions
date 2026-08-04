@@ -22,6 +22,10 @@ tags: state, usedeferredvalue, performance, derived
   지연 값 기준 재계산 비용이 실제로 크고,
   렌더마다 같은 작업을 반복하지 않으려는 목적이 분명할 때만 함께 씁니다.
 
+내가 부르는 `setState`가 원인이면 이 규칙이 아니라
+`perf-use-starttransition-for-non-urgent-updates`로 그 호출을 감쌉니다.
+입력은 즉시 반응해야 하고 비용이 그 값에서 파생되는 렌더에 있을 때 이 규칙을 씁니다.
+
 **Incorrect (입력과 무거운 파생 렌더를 같은 값에 묶음):**
 
 ```tsx

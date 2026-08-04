@@ -92,10 +92,13 @@
 **Impact: HIGH (리액트 전용 추상을 실제 생명주기나 문맥이 얽힌 자리로만 한정합니다)**
 
 화면 하나에 종속된 계산, 정규화, 전송 값 조립은 커스텀 훅으로 포장하지 않습니다.
-먼저 일반 `.ts` 보조 모듈에 둡니다.
+일반 함수로 둡니다.
 
-- 추출 위치는 소유자 아래 `function` 폴더이고, 대표 내보낸 함수 하나당 파일 하나를 둡니다.
+- 이 규칙은 훅으로 감쌀지만 판정합니다.
+  그 함수를 아예 밖으로 뺄지는 `typescript/functions-extract-helpers-only-when-the-boundary-is-real`가,
+  뺀 결과를 어디 둘지는 `ownership-place-owner-files-in-role-folders`가 정합니다.
 - 화면 지역 커스텀 훅은 상태, 컨텍스트, 다른 훅 호출 순서를 실제로 캡슐화할 때만 허용합니다.
+- 보조 모듈을 네임스페이스 객체로 감싸지 않고 이름 붙인 내보내기로 둡니다.
 - 생명주기가 실제로 있어도 파일 분량을 줄이려는 추출은 허용하지 않습니다.
   그 판단은 `ownership-keep-lifecycle-in-the-owning-component`가 담당합니다.
 - 단순 계산을 훅처럼 보이게 만드는 추상화는 피합니다.
@@ -1000,7 +1003,7 @@ export const UserProfileCard = (props: UserProfileCardProps) => {
 
 **Rule:** `R13` · `composition-named-handlers-over-inline`
 
-**Applies when:** TSX 이벤트 프롭의 인라인 콜백에 분기나 비동기 호출을 추가·수정할 때. 인라인 콜백에 여러 동작·부수효과나 비자명한 상태 전환이 들어갈 때. 제외: 단순 설정 함수나 인자 전달 한 줄 위임만 있는 경우.
+**Applies when:** TSX 이벤트 프롭의 인라인 콜백에 분기나 비동기 호출을 추가·수정할 때. 인라인 콜백에 여러 동작·부수효과나 비자명한 상태 전환이 들어갈 때. 제외: 인자 없이 핸들러 참조만 넘기는 경우.
 
 **Requires selected:** `docs-require-jsdoc-on-key-declarations`, `events-name-and-curry-handlers` · 함께 적용
 
@@ -1008,8 +1011,11 @@ export const UserProfileCard = (props: UserProfileCardProps) => {
 
 **Impact: HIGH (부수효과, 분기, 비동기 흐름을 일반 코드 흐름에서 읽습니다)**
 
-JSX에서는 명명된 핸들러 참조를 기본으로 하고, 아주 짧은 단순 위임만 인라인 함수로 허용합니다.
-분기, 비동기 호출, 여러 부수효과가 들어가면 반드시 핸들러로 분리합니다.
+JSX에는 이름 붙인 핸들러 참조만 넘깁니다.
+분기, 비동기 호출, 여러 부수효과가 들어가면 핸들러로 분리합니다.
+
+추가 인자를 넘기려고 `onClick={() => handleX(id)}` 같은 인라인 래퍼를 쓰지 않습니다.
+그 자리는 `events-name-and-curry-handlers`가 커링으로 정합니다.
 
 **Incorrect (분기와 비동기를 JSX 안에 숨김):**
 
@@ -1566,14 +1572,15 @@ const handleSubmitButtonClick: MouseEventHandler<HTMLButtonElement> = async (_ev
 | DOM 이벤트 | `handle + Target + Event` |
 | 동작 문맥이 분명할 때 | `handle + DomainAction` |
 
-인라인 콜백을 `handle*`로 추출할 때 이벤트 외 추가 인자가 필요하면 팩토리가 이벤트 경계를 소유합니다.
+커링은 DOM 이벤트 프롭에만 요구합니다.
+`onClick`, `onChange`처럼 이벤트 객체를 받는 자리에 추가 인자가 필요하면 팩토리가 이벤트 경계를 소유합니다.
 `(id): MouseEventHandler<Element> => (_event) => ...` 반환값을 JSX에 직접 전달합니다.
 `onClick={() => handleSelectionToggle(id)}` 같은 래퍼로 우회한 상태는 이 규칙을 만족하지 않습니다.
 
 - 최종 반환 리액트 핸들러는 `typing-function-type-first`를 다시 판단합니다.
   별칭이나 프롭 콜백 계약을 쓸 수 있으면 그 규칙도 함께 적용하고 문맥 타입 지정으로 숨기지 않습니다.
-- 기존 UI를 모르는 도메인 명령이나 커스텀 컴포넌트 프롭 콜백이 `(id) => void`이면
-  직접 콜백이나 최소 어댑터를 유지합니다.
+- 이벤트 객체를 받지 않는 프롭 콜백은 커링 대상이 아닙니다.
+  `(id) => void` 계약이면 이름 붙인 핸들러를 그대로 넘깁니다. 감싸는 화살표를 새로 만들지 않습니다.
 - `useEffectEvent`에도 계약에 없는 DOM 이벤트나 커링를 만들지 않습니다.
   이 경우 리액트 DOM 핸들러 타입 지정 규칙은 적용하지 않습니다.
 
@@ -2139,6 +2146,11 @@ const [draftFilter] = useState(() => {
 클릭이나 선택 이후 무거운 목록, 표, 트리 렌더가 따라오는 비긴급 시각 업데이트는 `startTransition`으로 감쌉니다.
 입력값 자체, 폼 에러, 즉시 비활성화 같은 급한 반응까지 전환에 넣지는 않습니다.
 
+갈림길은 `set` 함수를 내가 갖고 있는지입니다.
+내가 부르는 `setState`가 무거운 렌더를 일으키면 이 규칙으로 그 호출을 감쌉니다.
+`set` 함수가 내 것이 아니거나 비용이 파생 렌더 쪽에 있으면
+`perf-use-usedeferredvalue-for-heavy-derived-renders`를 씁니다.
+
 **Incorrect (급하지 않은 갱신을 급한 갱신으로 처리):**
 
 ```tsx
@@ -2178,6 +2190,10 @@ const handleStatusFilterChange = (nextStatus: EntryStatusFilter) => {
   지연 값 기준 재계산 비용이 실제로 크고,
   렌더마다 같은 작업을 반복하지 않으려는 목적이 분명할 때만 함께 씁니다.
 
+내가 부르는 `setState`가 원인이면 이 규칙이 아니라
+`perf-use-starttransition-for-non-urgent-updates`로 그 호출을 감쌉니다.
+입력은 즉시 반응해야 하고 비용이 그 값에서 파생되는 렌더에 있을 때 이 규칙을 씁니다.
+
 **Incorrect (입력과 무거운 파생 렌더를 같은 값에 묶음):**
 
 ```tsx
@@ -2215,8 +2231,8 @@ const filteredRows = useMemo(() => {
 
 문서 주석은 경계를 설명할 때만 붙입니다. 자명한 지역 변수에는 강제하지 않습니다.
 
-여기서 공개 선언은 다른 모듈이 소비할 수 있도록 실제로 내보내거나 다시 내보낸 선언만 뜻합니다.
-내보내기되지 않은 파일 지역 `type`/`interface`는 공개라는 이유만으로 이 규칙을 선택하지 않습니다.
+`type`과 `interface` 문서화는 `typescript/types-document-custom-types-and-shapes`가 정합니다.
+내보냈는지와 무관하게 그 규칙을 따르고, 여기서 다시 판정하지 않습니다.
 
 필수 대상:
 
@@ -2224,7 +2240,7 @@ const filteredRows = useMemo(() => {
 - 분기, 비동기, 화면 이동, 무효화를 가진 이벤트 핸들러
 - 동기화 의도가 중요한 `useEffect`
 - 내보낸 순수 보조 함수, 커스텀 훅, 스토어 선언
-- 내보낸 공개 `type`과 `interface`, 합성 컴포넌트의 공개 부품
+- 합성 컴포넌트의 공개 부품
 - 예외적으로 남긴 `useMemo`/`useCallback`
 
 합성 공개 부품은 프롭스 `interface` 위에 설명을 두고 컴포넌트 선언을 그 아래에 둡니다.

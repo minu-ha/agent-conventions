@@ -1,7 +1,7 @@
 # TypeScript 컨벤션 Rule Index
 
 - Skill: `typescript`
-- Routing digest: `sha256:3ccd1bac8732731c6bd600c0fc2e04aada3dbb68f563916adac9d2b78b7ec040`
+- Routing digest: `sha256:39ef16cf9ec043b43ebcb213887e6d9c87f9b3596c69161ea1a9d7dd1840368e`
 
 ## Local Rules
 
@@ -14,7 +14,7 @@
 - T07 | types-prefer-function-variable-types-over-parameter-annotations | 기존 호출 계약을 이름 붙인 함수나 공용 함수 구현에 다시 쓸 때. 같은 시그니처를 여러 구현이 함께 쓰도록 바꿀 때. 제외: 타입 표기 없이 문맥으로 추론되는 일회성 인라인 콜백인 경우.
 - T08 | types-reuse-callback-signatures-from-existing-contracts | 인터페이스, 객체, 프레임워크가 정한 콜백을 구현하면서 기존 시그니처를 다시 쓰거나 바꿀 때. 제외: 타입 표기 없이 문맥으로 추론되는 일회성 인라인 콜백인 경우. | reviewWith: types-mark-unused-parameters-with-underscore
 - T09 | types-reuse-existing-contracts-before-new-types | 뜻이 같은 기존 타입, 인터페이스, 스키마가 있는데 형태를 새로 선언·변경·복제·파생할 때. 같은 형태를 두 번 선언했다가 넣거나 뺄 때. 제외: 맞는 후보가 없는 새 형태, 소유자만 옮긴 경우, 그대로인 계약을 새 자리에서 쓰는 경우. | reviewWith: types-document-custom-types-and-shapes
-- T10 | functions-avoid-imperative-assembly-in-wide-scopes | 파일 위쪽이나 넓은 스코프에서 \`let\` 재대입, 배열 \`push\`, 조건부 누적으로 값을 만들거나 정리할 때.
+- T10 | functions-avoid-imperative-assembly-in-wide-scopes | 파일 위쪽이나 넓은 스코프에서 \`let\` 재대입, 배열 \`push\`, 조건부 누적으로 값을 만들거나 정리할 때. | reviewWith: functions-extract-helpers-only-when-the-boundary-is-real
 - T11 | functions-extract-helpers-only-when-the-boundary-is-real | 보조 함수를 빼내거나 옮기거나 내보내거나 공유할 때. 범용 보조 파일, 소유자 하나만 쓰는 변환 함수, 잔손질 단계의 경계를 바꿀 때. | reviewWith: docs-require-header-jsdoc-on-key-declarations
 - T12 | functions-prefer-immutable-array-sorting | 프롭스, 상태, 매개변수, 공유 입력에서 온 배열을 정렬할 때. 기존 \`.sort\(\)\` 호출을 추가·변경할 때.
 - T13 | functions-replace-enum-with-as-const-objects | \`enum\` 이나 타입과 실행 양쪽에서 함께 쓰는 값 묶음을 추가·변경할 때.
