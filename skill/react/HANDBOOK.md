@@ -1418,7 +1418,9 @@ const responseEntryListSuspense = useEntryListSuspense({
 ```
 
 ```tsx
-<Activity mode={selectedRows.length > 0 ? "visible" : "hidden"} />
+<Activity mode={selectedRows.length > 0 ? "visible" : "hidden"}>
+  <PgEntryBulkActionBar selectedRows={selectedRows} />
+</Activity>
 ```
 
 ```tsx
@@ -1794,7 +1796,7 @@ useEffect(() => {
 
 **Review with:** `data-name-query-and-mutation-bindings-consistently`, `data-preserve-origin-chaining`
 
-**Impact: CRITICAL (변환을 통신 경계 가까이 두고 렌더마다 다시 매핑하지 않습니다)**
+**Impact: CRITICAL (변환이 통신 경계 한 곳에 모여 화면이 응답 원형을 모릅니다)**
 
 서버 응답 가공은 렌더링 본문이 아니라 `query.select`에서 처리합니다.
 
@@ -1812,7 +1814,7 @@ useEffect(() => {
 const items = responseEntryListSuspense.data.list;
 ```
 
-**Correct (데이터를 가져오는 시점에 필요한 모양으로 변환):**
+**Correct (통신 경계에서 화면이 쓸 모양으로 변환):**
 
 ```ts
 /**
@@ -1951,13 +1953,11 @@ if (accessStore.canEditRecord) {
 /**
  * bootstrap capability 응답을 access store에 동기화
  */
-useEffect(() => {
-  if (!responseAccessBootstrapSuspense.data) {
-    return;
-  }
+const setCapabilities = useAccessStore((state) => state.setCapabilities);
 
-  accessStore.setCapabilities(responseAccessBootstrapSuspense.data.capabilities);
-}, [accessStore, responseAccessBootstrapSuspense.data]);
+useEffect(() => {
+  setCapabilities(responseAccessBootstrapSuspense.data.capabilities);
+}, [setCapabilities, responseAccessBootstrapSuspense.data]);
 ```
 
 ### 8.4 Use Functional setState Updates When Based on Previous State
@@ -2191,6 +2191,7 @@ const filteredRows = rows.filter((row) => fuzzyMatchRow(row, keyword));
 const [keyword, setKeyword] = useState("");
 const deferredKeyword = useDeferredValue(keyword);
 
+// 지연한 검색어에만 다시 계산하도록 묶는다. 행이 수천 개라 매 렌더 필터링은 측정에서 병목이었다.
 const filteredRows = useMemo(() => {
 	return rows.filter((row) => fuzzyMatchRow(row, deferredKeyword));
 }, [deferredKeyword, rows]);

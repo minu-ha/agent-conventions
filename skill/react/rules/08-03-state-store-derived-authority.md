@@ -47,11 +47,9 @@ if (accessStore.canEditRecord) {
 /**
  * bootstrap capability 응답을 access store에 동기화
  */
-useEffect(() => {
-  if (!responseAccessBootstrapSuspense.data) {
-    return;
-  }
+const setCapabilities = useAccessStore((state) => state.setCapabilities);
 
-  accessStore.setCapabilities(responseAccessBootstrapSuspense.data.capabilities);
-}, [accessStore, responseAccessBootstrapSuspense.data]);
+useEffect(() => {
+  setCapabilities(responseAccessBootstrapSuspense.data.capabilities);
+}, [setCapabilities, responseAccessBootstrapSuspense.data]);
 ```

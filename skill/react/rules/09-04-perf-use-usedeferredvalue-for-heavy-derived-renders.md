@@ -35,6 +35,7 @@ const filteredRows = rows.filter((row) => fuzzyMatchRow(row, keyword));
 const [keyword, setKeyword] = useState("");
 const deferredKeyword = useDeferredValue(keyword);
 
+// 지연한 검색어에만 다시 계산하도록 묶는다. 행이 수천 개라 매 렌더 필터링은 측정에서 병목이었다.
 const filteredRows = useMemo(() => {
 	return rows.filter((row) => fuzzyMatchRow(row, deferredKeyword));
 }, [deferredKeyword, rows]);

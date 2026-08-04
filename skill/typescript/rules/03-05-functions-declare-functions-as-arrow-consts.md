@@ -64,6 +64,8 @@ export const buildEntryLabel = (entry: Entry): string => decorate(entry.title);
 
 ```ts
 export class EntryCursor {
+	private buffer: Entry[] = [];
+
 	*pages(): Generator<Entry[]> {
 		yield this.buffer;
 	}

@@ -2,7 +2,7 @@
 title: Shape React Query Data in query.select
 titleKo: 응답 가공은 `query.select` 에서 합니다
 impact: CRITICAL
-impactDescription: 변환을 통신 경계 가까이 두고 렌더마다 다시 매핑하지 않습니다
+impactDescription: 변환이 통신 경계 한 곳에 모여 화면이 응답 원형을 모릅니다
 appliesWhen:
   - 서버 응답의 목록·항목·메타 등을 렌더에서 가공하거나 반복 소비할 때
   - 리액트 Query `select`의 결과 형태를 추가·변경할 때
@@ -13,7 +13,7 @@ tags: state, react-query, select
 
 ## Shape React Query Data in query.select
 
-**Impact: CRITICAL (변환을 통신 경계 가까이 두고 렌더마다 다시 매핑하지 않습니다)**
+**Impact: CRITICAL (변환이 통신 경계 한 곳에 모여 화면이 응답 원형을 모릅니다)**
 
 서버 응답 가공은 렌더링 본문이 아니라 `query.select`에서 처리합니다.
 
@@ -31,7 +31,7 @@ tags: state, react-query, select
 const items = responseEntryListSuspense.data.list;
 ```
 
-**Correct (데이터를 가져오는 시점에 필요한 모양으로 변환):**
+**Correct (통신 경계에서 화면이 쓸 모양으로 변환):**
 
 ```ts
 /**

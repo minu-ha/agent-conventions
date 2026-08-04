@@ -41,7 +41,9 @@ const responseEntryListSuspense = useEntryListSuspense({
 ```
 
 ```tsx
-<Activity mode={selectedRows.length > 0 ? "visible" : "hidden"} />
+<Activity mode={selectedRows.length > 0 ? "visible" : "hidden"}>
+  <PgEntryBulkActionBar selectedRows={selectedRows} />
+</Activity>
 ```
 
 ```tsx
