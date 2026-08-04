@@ -14,13 +14,13 @@ tags: ownership, widget, naming
 
 **Impact: CRITICAL (공용 책임과 화면 전용 책임이 같은 레이어에 섞이지 않습니다)**
 
-컴포넌트는 소유 레이어를 이름으로 드러냅니다.
+컴포넌트는 셋 중 한 레이어가 소유합니다.
 
-| 레이어 | 책임 | 파일 · 심볼 · 식별자 |
-| --- | --- | --- |
-| `ui` | 도메인을 모르는 순수 화면 | `ui-button.tsx` · `UiButton` · `ui_button` |
-| `widget` | 화면 조립을 전제하지 않는 공용 조합 | `wg-chart.tsx` · `WgChart` · `wg_chart` |
-| `page` | 한 화면 안에서만 쓰이는 뼈대와 컴포넌트 | `pg-detail.tsx` · `PgDetail` · `pg_detail` |
+| 레이어 | 책임 |
+| --- | --- |
+| `ui` | 도메인을 모르는 순수 화면 |
+| `widget` | 화면 조립을 전제하지 않는 공용 조합 |
+| `page` | 한 화면 안에서만 쓰이는 뼈대와 컴포넌트 |
 
 이름 표기는 `ownership-prefix-layer-names-on-files-and-symbols`가 정합니다.
 여기서는 어느 레이어인지만 판정합니다.
@@ -90,7 +90,7 @@ export const WgEntryToolbar = (props: WgEntryToolbarProps) => {
 // widget/spike-legend-glyph/wg-spike-legend-glyph.tsx
 export const WgSpikeLegendGlyph = (props: WgSpikeLegendGlyphProps) => {
 	const { item } = props;
-	return <svg className="wg_spikeLegendGlyph__root">{/* ... */}</svg>;
+	return <svg className={clsx("wg_spikeLegendGlyph__root")}>{/* ... */}</svg>;
 };
 ```
 
@@ -100,6 +100,14 @@ export const WgSpikeLegendGlyph = (props: WgSpikeLegendGlyphProps) => {
 // page/entries/component/pg-delete-entry-button.tsx
 const PgDeleteEntryButton = () => {
 	const navigate = useNavigate();
-	return <UiButton onClick={() => void navigate({ to: "/entries" })} />;
+
+	/**
+	 * 삭제 후 목록으로 이동
+	 */
+	const handleDeleteButtonClick: MouseEventHandler<HTMLButtonElement> = () => {
+		void navigate({ to: "/entries" });
+	};
+
+	return <UiButton onClick={handleDeleteButtonClick} />;
 };
 ```

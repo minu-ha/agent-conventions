@@ -23,6 +23,10 @@ tags: state, effects
 
 `useEffectEvent`는 리액트 19.2 이상에만 있습니다. 그보다 낮으면 이 규칙을 적용하지 않습니다.
 
+`useEffectEvent`로 감싼 콜백에는 계약에 없는 DOM 이벤트나 커링을 만들지 않습니다.
+그래서 `typing-take-handler-types-from-existing-contracts`의 리액트 핸들러 타입 규칙은 이 자리에 적용하지 않습니다.
+이펙트 안에서만 부르는 콜백이고 JSX 이벤트 프롭에 전달되지 않기 때문입니다.
+
 **Incorrect (최신 콜백을 위해 `ref`를 수동 동기화):**
 
 ```tsx

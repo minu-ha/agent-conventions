@@ -31,7 +31,7 @@ const supportEmail = settings.supportEmail ?? "help@example.com";
 const supportEmail: string | undefined = settings.supportEmail;
 
 if (!supportEmail) {
-	return <SupportEmailMissingNotice />;
+	throw new MissingSupportEmailError();
 }
 ```
 

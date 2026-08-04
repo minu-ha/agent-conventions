@@ -35,7 +35,7 @@ export interface UiPanelHeaderProps {
  */
 export const UiPanelHeader = (props: UiPanelHeaderProps) => {
 	const { children } = props;
-	return <header className="ui_panel__header">{children}</header>;
+	return <header className={clsx("ui_panel__header")}>{children}</header>;
 };
 ```
 
@@ -53,6 +53,6 @@ export interface UiPanelHeaderProps {
 
 export const UiPanelHeader = (props: UiPanelHeaderProps) => {
 	const { children } = props;
-	return <header className="ui_panel__header">{children}</header>;
+	return <header className={clsx("ui_panel__header")}>{children}</header>;
 };
 ```

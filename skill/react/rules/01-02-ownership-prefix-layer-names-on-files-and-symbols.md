@@ -33,7 +33,7 @@ tags: ownership, naming
 ```tsx
 // page/detail/component/spike-pattern-panel.tsx
 export const SpikePatternPanel = (props: SpikePatternPanelProps) => {
-	return <section className="pg_spikePatternPanel__root">{/* ... */}</section>;
+	return <section className={clsx("pg_spikePatternPanel__root")}>{/* ... */}</section>;
 };
 ```
 
@@ -51,6 +51,6 @@ export const UiButtonButton = (props: UiButtonButtonProps) => {
 ```tsx
 // page/detail/component/pg-spike-pattern-panel.tsx
 export const PgSpikePatternPanel = (props: PgSpikePatternPanelProps) => {
-	return <section className="pg_spikePatternPanel__root">{/* ... */}</section>;
+	return <section className={clsx("pg_spikePatternPanel__root")}>{/* ... */}</section>;
 };
 ```

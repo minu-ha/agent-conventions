@@ -5,7 +5,6 @@ impact: HIGH
 impactDescription: 배럴이나 모호한 재노출 계층에 기대지 않고 가져오기 소유를 드러냅니다
 appliesWhen:
   - 가져오기·내보내기, 배럴, 공용 진입점, 소유자 보조 모듈의 경계를 추가·변경할 때
-  - 절대경로 별칭으로 다른 모듈을 가져올 때
   - 같은 경로에서 값과 타입 중 무엇을 가져올지 추가·삭제·전환할 때
 tags: naming
 ---
@@ -29,12 +28,6 @@ tags: naming
 
 ```ts
 import {config, util, UserProfile} from "./index";
-```
-
-**Incorrect (절대경로로 다른 화면 내부를 가져옴):**
-
-```ts
-import {SpikeChartCard} from "@/page/detail/component/spike-pattern-panel/component/spike-chart-card";
 ```
 
 **Correct (직접 가져오기와 공개 진입점을 구분):**

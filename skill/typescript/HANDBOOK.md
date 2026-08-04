@@ -69,7 +69,8 @@
 
 **Impact: HIGH (공용 설정 값이 말단 파일로 흩어져 공개 출처를 잃는 것을 막습니다)**
 
-여러 파일이 함께 쓰는 설정과 상수는 `shared/config.ts` 한 파일을 공개 진입점으로 삼아 `config` 네임스페이스 아래에 모읍니다.
+**두 소유자 이상이 같은 값을 쓰면** `shared/config.ts` 한 파일을 공개 진입점으로 삼아 `config` 네임스페이스 아래에 모읍니다.
+소유자 하나만 쓰는 값은 아직 여기 올리지 않습니다.
 말단 파일마다 공용 URL, 기능 플래그, 페이지 크기, 상수 문자열을 흩뿌리지 않습니다.
 `config.*` 체인으로 읽히게 정리합니다.
 
@@ -119,8 +120,7 @@ config.pagination.default_page_size;
 - 파일은 `config/<owner>-config.ts`, 내보내는 상수는 `<owner>Config`입니다.
   이름 표기는 `naming-use-consistent-file-and-symbol-naming`을 따릅니다.
 - `constants` 폴더는 만들지 않습니다.
-- 두 번째 소유자가 같은 값을 쓰게 되면 그때 `shared/config.ts`로 올립니다.
-  그 판정은 `naming-centralize-shared-config-namespaces`가 합니다.
+- 두 번째 소유자가 같은 값을 쓰게 되면 `naming-centralize-shared-config-namespaces`를 따라 올립니다.
 
 **Incorrect (소유자 하나만 쓰는 설정을 전역으로 올림):**
 
@@ -128,7 +128,7 @@ config.pagination.default_page_size;
 // shared/config.ts
 export const config = {
 	entryDetail: {
-		chart_axis_tick_count: 6,
+		chartAxisTickCount: 6,
 	},
 } as const;
 ```
@@ -228,7 +228,7 @@ const userProfileSchema = z.object({
 
 **Rule:** `T05` · `naming-use-direct-imports-and-public-entry-points`
 
-**Applies when:** 가져오기·내보내기, 배럴, 공용 진입점, 소유자 보조 모듈의 경계를 추가·변경할 때. 절대경로 별칭으로 다른 모듈을 가져올 때. 같은 경로에서 값과 타입 중 무엇을 가져올지 추가·삭제·전환할 때.
+**Applies when:** 가져오기·내보내기, 배럴, 공용 진입점, 소유자 보조 모듈의 경계를 추가·변경할 때. 같은 경로에서 값과 타입 중 무엇을 가져올지 추가·삭제·전환할 때.
 
 **Impact: HIGH (배럴이나 모호한 재노출 계층에 기대지 않고 가져오기 소유를 드러냅니다)**
 
@@ -247,12 +247,6 @@ const userProfileSchema = z.object({
 
 ```ts
 import {config, util, UserProfile} from "./index";
-```
-
-**Incorrect (절대경로로 다른 화면 내부를 가져옴):**
-
-```ts
-import {SpikeChartCard} from "@/page/detail/component/spike-pattern-panel/component/spike-chart-card";
 ```
 
 **Correct (직접 가져오기와 공개 진입점을 구분):**
@@ -288,7 +282,7 @@ import {buildUserSaveRequest} from "./function/build-user-save-request";
 - 화면이나 소유자 내부 모듈은 절대경로로 열지 않고 `./`로만 접근합니다.
 - 소유자 밖에서 필요해지면 경로를 뚫는 대신 전역 레이어로 올립니다.
 
-**Incorrect (화면 내부를 절대경로로 열음):**
+**Incorrect (화면 내부 모듈을 절대경로로 가져옴):**
 
 ```ts
 import {SpikeChartCard} from "@/page/detail/component/spike-pattern-panel/component/spike-chart-card";
@@ -323,7 +317,7 @@ import {SpikeChartCard} from "./component/spike-chart-card";
 형태가 그대로인 계약을 새 자리에서 쓰는 것만으로는 이 규칙이 걸리지 않습니다.
 호출 계약 역할은 `types-document-custom-types-and-shapes`가 따로 판정합니다.
 
-위치 인자를 객체 입력으로 바꾸면서 고칠 수 있는 우리 형태를 다시 쓰면
+위치 인자를 객체 입력으로 바꾸면서, 우리가 고칠 수 있는 기존 형태를 그대로 다시 쓰면
 `types-document-custom-types-and-shapes`만 걸리고 이 규칙은 걸리지 않습니다.
 외부·생성된·읽기 전용·공용 형태를 그대로 쓰면 두 타입 규칙 모두 대상이 아니고, 문서화는 문서 규칙이 따로 판정합니다.
 요청에 없는 `*Params`나 `*Input`을 만들어 이 규칙을 스스로 켜지 않습니다.
@@ -356,6 +350,8 @@ type UserPreview = Pick<UserRecord, "id" | "name">;
 
 **Applies when:** 기존 호출 계약을 이름 붙인 함수나 공용 함수 구현에 다시 쓸 때. 같은 시그니처를 여러 구현이 함께 쓰도록 바꿀 때. 제외: 타입 표기 없이 문맥으로 추론되는 일회성 인라인 콜백인 경우.
 
+**Review with:** `types-mark-unused-parameters-with-underscore`
+
 **Impact: CRITICAL (계약을 한 자리에서 읽을 수 있고 같은 시그니처를 여러 곳에 베끼지 않습니다)**
 
 타입을 붙일 자리가 둘 있습니다.
@@ -376,7 +372,7 @@ type UserPreview = Pick<UserRecord, "id" | "name">;
 
 객체 안에서 한 번만 쓰이고 타입 표기도 없이 문맥으로 추론되는 인라인 콜백은 대상이 아닙니다.
 `query.select: (response) => ({...})`를 이 규칙 때문에 밖으로 빼거나 함수 타입으로 고정하지 않습니다.
-반대로 이름 붙인 핸들러나 커링 팩토리가 돌려주는 핸들러를 기존 프레임워크 별칭으로 고정하면 이 규칙을 적용합니다.
+커링 팩토리가 돌려주는 리액트 핸들러는 `react/typing-take-handler-types-from-existing-contracts`가 판정합니다.
 
 **Incorrect (공유 가능한 함수 계약이 있는데 매개변수 타입만 사용):**
 
@@ -542,7 +538,7 @@ const noopLog: LogSink = (_message, _level) => {};
 - 한 파일 안에서 두 형태를 섞으면 어느 것이 공개 계약인지 형태로 구분할 수 없습니다.
 - `function` 선언문은 호이스팅되므로 선언보다 위에서 호출해도 동작합니다.
   그러면 읽는 순서와 실행 순서가 달라집니다.
-- 화살표 함수는 `this`를 새로 만들지 않아 콜백으로 넘길 때 묶어 줄 필요가 없습니다.
+- 화살표 함수는 `this`를 새로 만들지 않아 콜백으로 넘길 때 `bind` 로 `this` 를 다시 묶지 않아도 됩니다.
 
 세 자리는 예외로 둡니다.
 
@@ -551,6 +547,7 @@ const noopLog: LogSink = (_message, _level) => {};
 | 클래스 메서드 | 메서드 문법이 정본입니다. 화살표 필드로 바꾸지 않습니다 |
 | 제너레이터 | `function*` 없이 쓸 수 없습니다 |
 | 오버로드 선언 | 시그니처를 여러 줄로 겹쳐 쓰려면 `function` 선언문이 필요합니다 |
+| 객체 리터럴 메서드 | `util.date.normalize(value)` 처럼 네임스페이스 안 멤버는 메서드 문법을 씁니다 |
 
 **Incorrect (`function` 선언문과 화살표를 한 파일에서 섞음):**
 
@@ -562,7 +559,7 @@ export function normalizeEntryTitle(rawTitle: string): string {
 export const buildEntrySlug = (title: string): string => normalizeEntryTitle(title).toLowerCase();
 ```
 
-**Incorrect (선언보다 위에서 호출해 호이스팅에 기댐):**
+**Incorrect (쓰는 곳이 선언보다 위에 와서 읽는 순서가 어긋남):**
 
 ```ts
 export const buildEntryLabel = (entry: Entry): string => decorate(entry.title);
@@ -611,8 +608,9 @@ export class EntryCursor {
 객체 매개변수 타입은 파일 위쪽에 이름을 붙여 선언하고, 함수 본문 첫 줄에서 구조분해합니다.
 구조분해 줄이 길어 포매터 예외가 필요해도 함수 본문 안에서 처리합니다.
 
-리액트 함수 컴포넌트가 프롭스를 통째로 받아 본문에서 구조분해하는 것만 바뀌면
-`react/composition-destructure-props-inside`가 담당하므로 이 규칙을 겹쳐 적용하지 않습니다.
+리액트 컴포넌트의 프롭스는 이 규칙 대상이 아닙니다.
+구조분해는 `react/composition-destructure-props-inside`가, 타입 선언 위치는
+`react/composition-declare-props-interface-above-the-component`가 담당합니다.
 객체 인자와 필드 타입, 선택 여부, 뜻이 같은 계약이 이미 있으면 그대로 씁니다.
 이 규칙을 지키려고 `*Params`나 `*Args`를 새로 만들지 않습니다.
 
@@ -666,7 +664,6 @@ const buildRequestUrl = (args: BuildRequestUrlArgs): URL => {
 떼어 낸 다음 어디 두고 언제 공용으로 올릴지는
 `functions-place-and-promote-support-functions`가 정합니다.
 
-내보낸 함수가 또 다른 내보낸 함수를 타고 가는 사슬은 만들지 않습니다.
 흐름을 알려고 파일을 왕복해야 하면 경계가 아니라 그냥 쪼갠 것입니다.
 
 **Incorrect (단회성 계산을 범용 유틸 파일로 분리):**
@@ -797,7 +794,7 @@ export const util = {
 
 **Rule:** `T14` · `functions-place-and-promote-support-functions`
 
-**Applies when:** 보조 함수를 둘 파일이나 폴더를 정할 때. 보조 함수를 공용으로 올릴지 정할 때.
+**Applies when:** 보조 함수를 둘 파일이나 폴더를 정할 때. `shared/` 아래로 파일을 옮기거나 `util.*` 에 항목을 추가할 때.
 
 **Requires selected:** `functions-extract-helpers-only-when-the-boundary-is-real` · 함께 적용
 
@@ -806,9 +803,10 @@ export const util = {
 떼어 낼지는 `functions-extract-helpers-only-when-the-boundary-is-real`가 먼저 판정합니다.
 이 규칙은 그 결과를 어디 두고 언제 올릴지만 봅니다.
 
-- 범용 `helper.ts`, `helpers.ts`, `utils.ts`는 만들지 않습니다.
-  소유자 아래 어느 폴더에 둘지는 프레임워크 skill 의 역할 폴더 규칙이 정합니다.
-- 대표 내보낸 함수 하나당 파일 하나입니다.
+- 소유자 아래에 `helper.ts`, `helpers.ts`, `utils.ts` 같은 잡동사니 파일을 만들지 않습니다.
+  어느 폴더에 둘지는 프레임워크 skill 의 역할 폴더 규칙이 정합니다.
+- 소유자 아래에서는 대표 내보낸 함수 하나당 파일 하나입니다.
+  전역 `shared/util.ts` 는 여러 소유자가 함께 쓰는 순수 함수를 모으는 자리라 예외입니다.
 - 호출 깊이는 소유자에서 내보낸 함수, 그 파일 안 비공개 함수까지 두 단계로 끝냅니다.
   내보낸 함수가 또 다른 내보낸 함수를 타고 가는 사슬은 만들지 않습니다.
 - 공용 승격은 **두 소유자 이상이 이미 직접 호출할 때만** 합니다.
@@ -842,10 +840,14 @@ export const buildEntrySaveRequest = (values: EntryFormValues) => {
 ```ts
 // shared/util.ts
 export const util = {
-	/**
-	 * 화면 표시용 날짜 문자열 변환
-	 */
-	formatDisplayDate: (value: string) => new Date(value).toLocaleDateString("ko-KR"),
+	date: {
+		/**
+		 * 화면 표시용 날짜 문자열 변환
+		 */
+		formatDisplayDate(value: string): string {
+			return new Date(value).toLocaleDateString("ko-KR");
+		},
+	},
 } as const;
 ```
 
@@ -1025,7 +1027,7 @@ const supportEmail = settings.supportEmail ?? "help@example.com";
 const supportEmail: string | undefined = settings.supportEmail;
 
 if (!supportEmail) {
-	return <SupportEmailMissingNotice />;
+	throw new MissingSupportEmailError();
 }
 ```
 
@@ -1076,7 +1078,7 @@ if (!normalizedToken) {
 
 **Rule:** `T21` · `docs-require-header-jsdoc-on-key-declarations`
 
-**Applies when:** 쿼리·뮤테이션, 원격 함수, 분기나 `await` 가 있는 핸들러와 이펙트, 내보낸 보조 함수와 훅, 커스텀 타입, 스토어 선언을 추가·변경할 때. 선언 위 주석의 형식이나 태그를 정할 때.
+**Applies when:** 쿼리·뮤테이션, 원격 함수, 분기나 `await` 가 있는 핸들러와 이펙트, 내보낸 보조 함수와 훅, 커스텀 타입, 스토어 선언을 추가·변경할 때.
 
 **Requires selected:** `docs-write-concise-korean-comments-about-purpose-and-constraints`, `docs-write-doc-comments-as-multiline-blocks` · 함께 적용
 
@@ -1097,29 +1099,6 @@ if (!normalizedToken) {
 **Incorrect (주요 선언에 헤더 설명이 없음):**
 
 ```ts
-export const normalizeUserIds = (userIds: string[]): string[] => {
-	return Array.from(new Set(userIds)).sort();
-};
-```
-
-**Incorrect (한 줄 형태와 `//` 설명을 섞어 씀):**
-
-```ts
-/** 중복 제거 후 사용자 ID 정렬 */
-export const normalizeUserIds = (userIds: string[]): string[] => {
-	return Array.from(new Set(userIds)).sort();
-};
-
-// entry 목록 조회 API
-const responseEntryList = useEntryList();
-```
-
-**Incorrect (역할 태그를 붙임):**
-
-```ts
-/**
- * @helper 중복 제거 후 사용자 ID 정렬
- */
 export const normalizeUserIds = (userIds: string[]): string[] => {
 	return Array.from(new Set(userIds)).sort();
 };
@@ -1189,13 +1168,15 @@ const responseEntryList = useEntryList();
 
 **Review with:** `docs-require-header-jsdoc-on-key-declarations`
 
-**Impact: MEDIUM (선언 위 주석 형태가 파일마다 같아 검색과 훑어보기가 됩니다)**
+**Impact: MEDIUM (선언 위 주석 형태가 파일마다 같아 주석을 검색하고 훑어보기 쉬워집니다)**
 
 문서 주석은 여러 줄 블록으로 고정합니다.
 `/**`, `*`, `*/`를 각각 줄로 나눕니다.
 
 - `/** 한 줄 */` 형태는 쓰지 않습니다.
-- 선언 설명에 `//`를 쓰지 않습니다. `//`는 함수 본문 안 제약 설명 몫입니다.
+- 선언이 무엇인지 설명할 때는 `//`를 쓰지 않습니다.
+  규칙이 허용한 예외의 이유를 적을 때는 `//` 한 줄을 씁니다.
+  그 형식은 `docs-justify-convention-exceptions-with-a-reason-comment`가 정합니다.
 - 어느 선언에 붙일지는 `docs-require-header-jsdoc-on-key-declarations`가 정합니다.
 
 **Incorrect (한 줄 블록과 `//` 로 선언을 설명):**
@@ -1243,7 +1224,8 @@ export const saveEntry = async (entry: Entry): Promise<void> => {
 선언이 무엇인지는 이름 규칙과 문법이 이미 드러냅니다.
 그것을 태그로 다시 적지 않습니다.
 
-- `@api`, `@helper`, `@summary`, `@field` 같은 역할 태그를 붙이지 않습니다.
+- `@api`, `@helper`, `@field` 같은 역할 태그를 붙이지 않습니다.
+- `@summary` 는 헤더 첫 줄이 이미 하는 일이라 쓰지 않습니다.
 - `@schema`처럼 새 태그를 만들지 않습니다.
 - `@deprecated`, `@example`, `@param`, `@returns`처럼 TSDoc 규격에 있는 태그만 필요할 때 씁니다.
 
@@ -1331,6 +1313,7 @@ const pageSize = settings.pageSize ?? 20;
 // ag-grid 는 columnDefs 참조가 바뀌면 컬럼 상태를 초기화한다. 참조를 고정해야 한다.
 const columns = useMemo(() => buildColumns(response.data.columns), [response.data.columns]);
 
+// 기본 페이지 크기는 config.pagination.default_page_size 가 정본이다.
 const pageSize = settings.pageSize ?? config.pagination.default_page_size;
 ```
 
@@ -1351,7 +1334,7 @@ const filteredRows = useMemo(() => rows.filter((row) => matchRow(row, deferredKe
 
 **Rule:** `T26` · `tooling-configure-biome-to-enforce-these-rules`
 
-**Applies when:** 프로젝트에 `biome` 설정을 처음 넣거나 lint 규칙을 바꿀 때. 이 컨벤션 규칙을 사람이 검토할지 도구가 막을지 정할 때.
+**Applies when:** 프로젝트에 `biome` 설정을 처음 넣거나 lint 규칙을 바꿀 때. `biome.json` 의 `linter.rules` 에 항목을 추가·삭제할 때.
 
 **Impact: MEDIUM (기계가 잡는 항목을 설정에 고정하면 리뷰는 판단이 필요한 것만 봅니다)**
 
@@ -1362,17 +1345,22 @@ const filteredRows = useMemo(() => rows.filter((row) => matchRow(row, deferredKe
 | --- | --- |
 | `style/noEnum` | `functions-replace-enum-with-as-const-objects` |
 | `style/useImportType` | `naming-use-direct-imports-and-public-entry-points` |
-| `style/noRestrictedImports` | `naming-use-direct-imports-and-public-entry-points`의 경로 표 |
+| `style/noRestrictedImports` | `naming-restrict-absolute-aliases-to-layer-roots`의 경로 표 |
 | `style/useNamingConvention` | `naming-use-consistent-file-and-symbol-naming` |
 | `correctness/noUnusedFunctionParameters` | `types-mark-unused-parameters-with-underscore` |
-| `style/useConst`, `style/noParameterAssign` | `functions-avoid-imperative-assembly-in-wide-scopes` |
 | `performance/noNamespaceImport` | `naming-use-direct-imports-and-public-entry-points` |
 
-도구가 끝까지 못 가는 자리가 둘 있습니다. 이 둘은 리뷰가 봅니다.
+도구가 끝까지 못 가는 자리가 넷 있습니다. 이 넷은 리뷰가 봅니다.
 
 - `enum` 성격 상수 객체에만 `snake_case`를 쓰는 구분은 `useNamingConvention`으로 표현할 수 없습니다.
-  모듈 최상위 `const`에 두 표기를 다 허용해 두고, 어느 쪽이 맞는지는 사람이 봅니다.
-- `functions-declare-functions-as-arrow-consts`는 `biome`에 대응 규칙이 없습니다.
+  모듈 최상위 `const`에 세 표기를 다 허용해 두고, 어느 쪽이 맞는지는 사람이 봅니다.
+  `functions-declare-functions-as-arrow-consts` 때문에 이름 붙인 함수도 이 항목에 들어가므로
+  함수 이름의 `camelCase`도 도구가 아니라 리뷰가 봅니다.
+- `functions-declare-functions-as-arrow-consts` 자체는 `biome`에 대응 규칙이 없습니다.
+- `functions-avoid-imperative-assembly-in-wide-scopes`는 `useConst`로 잡히지 않습니다.
+  `let` 을 `const` 로 바꿔 주기만 하고 `push` 누적은 그대로 남습니다.
+- `types-mark-unused-parameters-with-underscore` 중 **매개변수를 아예 생략한 경우**는 도구가 못 봅니다.
+  `noUnusedFunctionParameters`는 남겨 둔 매개변수만 봅니다.
 
 **Incorrect (`recommended` 만 켜고 컨벤션 항목을 리뷰에 맡김):**
 
@@ -1412,7 +1400,6 @@ const filteredRows = useMemo(() => rows.filter((row) => matchRow(row, deferredKe
 						"strictCase": false,
 						"conventions": [
 							{"selector": {"kind": "typeLike"}, "formats": ["PascalCase"]},
-							{"selector": {"kind": "function"}, "formats": ["camelCase"]},
 							{"selector": {"kind": "const", "scope": "global"}, "formats": ["camelCase", "PascalCase", "snake_case"]},
 							{"selector": {"kind": "variable"}, "formats": ["camelCase", "PascalCase"]}
 						]

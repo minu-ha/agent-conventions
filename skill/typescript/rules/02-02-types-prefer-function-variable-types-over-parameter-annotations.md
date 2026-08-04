@@ -7,6 +7,7 @@ appliesWhen:
   - 기존 호출 계약을 이름 붙인 함수나 공용 함수 구현에 다시 쓸 때
   - 같은 시그니처를 여러 구현이 함께 쓰도록 바꿀 때
   - 제외: 타입 표기 없이 문맥으로 추론되는 일회성 인라인 콜백인 경우
+reviewWith: types-mark-unused-parameters-with-underscore
 tags: types
 ---
 
@@ -32,7 +33,7 @@ tags: types
 
 객체 안에서 한 번만 쓰이고 타입 표기도 없이 문맥으로 추론되는 인라인 콜백은 대상이 아닙니다.
 `query.select: (response) => ({...})`를 이 규칙 때문에 밖으로 빼거나 함수 타입으로 고정하지 않습니다.
-반대로 이름 붙인 핸들러나 커링 팩토리가 돌려주는 핸들러를 기존 프레임워크 별칭으로 고정하면 이 규칙을 적용합니다.
+커링 팩토리가 돌려주는 리액트 핸들러는 `react/typing-take-handler-types-from-existing-contracts`가 판정합니다.
 
 **Incorrect (공유 가능한 함수 계약이 있는데 매개변수 타입만 사용):**
 

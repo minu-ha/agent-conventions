@@ -16,8 +16,8 @@
 			"expectedSelected": {
 				"react": [
 					"ownership-prefix-layer-names-on-files-and-symbols",
-					"typing-function-type-first",
-					"events-name-and-curry-handlers",
+					"typing-take-handler-types-from-existing-contracts",
+					"events-name-handlers-predictably",
 					"events-curry-extra-handler-arguments"
 				],
 				"typescript": [
@@ -230,10 +230,10 @@
 			],
 			"expectedSelected": {
 				"react": [
-					"typing-function-type-first",
+					"typing-take-handler-types-from-existing-contracts",
 					"composition-named-handlers-over-inline",
 					"events-keep-handler-flow-inline",
-					"events-name-and-curry-handlers",
+					"events-name-handlers-predictably",
 					"events-curry-extra-handler-arguments",
 					"events-run-user-actions-in-handlers-not-effects",
 					"docs-require-jsdoc-on-key-declarations"
@@ -266,7 +266,7 @@
 				"react": [
 					"ownership-layer-component-boundaries",
 					"ownership-place-owner-files-in-role-folders",
-					"typing-function-type-first",
+					"typing-take-handler-types-from-existing-contracts",
 					"composition-destructure-props-inside",
 					"composition-use-activity-only-to-preserve-mounted-subtrees",
 					"screen-keep-route-flow-visible",
@@ -274,7 +274,7 @@
 					"screen-extract-local-section-components-for-runtime-boundaries",
 					"screen-place-suspense-boundaries-at-the-section-owner",
 					"screen-avoid-ad-hoc-loading-branches",
-					"events-name-and-curry-handlers",
+					"events-name-handlers-predictably",
 					"events-curry-extra-handler-arguments",
 					"docs-require-jsdoc-on-key-declarations"
 				],
@@ -303,10 +303,10 @@
 			],
 			"expectedSelected": {
 				"react": [
-					"typing-function-type-first",
+					"typing-take-handler-types-from-existing-contracts",
 					"composition-named-handlers-over-inline",
 					"screen-keep-derived-values-close",
-					"events-name-and-curry-handlers",
+					"events-name-handlers-predictably",
 					"events-curry-extra-handler-arguments",
 					"state-calculate-derived-values-during-render",
 					"state-use-functional-setstate-updates",
@@ -418,7 +418,7 @@
 			],
 			"expectedSelected": {
 				"react": [
-					"events-name-and-curry-handlers",
+					"events-name-handlers-predictably",
 					"state-use-effectevent-for-non-reactive-effect-callbacks",
 					"docs-require-jsdoc-on-key-declarations"
 				],
@@ -476,7 +476,8 @@
 					"strategy-prefer-children-over-render-props"
 				],
 				"typescript": [
-					"naming-use-direct-imports-and-public-entry-points"
+					"naming-use-direct-imports-and-public-entry-points",
+					"naming-restrict-absolute-aliases-to-layer-roots"
 				]
 			}
 		},

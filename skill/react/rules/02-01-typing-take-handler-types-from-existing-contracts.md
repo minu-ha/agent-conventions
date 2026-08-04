@@ -19,8 +19,9 @@ tags: typing, handlers, props
 정합니다. 여기서는 그 규칙이 다루지 않는 리액트 두 자리만 봅니다.
 
 **커링 팩토리가 돌려주는 함수에도 타입을 적습니다.**
-JSX에 넘기면 리액트가 알아서 타입을 붙여 주지만, 그러면 팩토리 선언만 봐서는 무엇을
-돌려주는지 알 수 없습니다. `MouseEventHandler<...>` 같은 리액트 별칭을 반환 타입으로 적습니다.
+JSX에 바로 쓴 화살표는 리액트가 타입을 붙여 주지만, 팩토리가 돌려주는 함수는 그러지 않습니다.
+안쪽 매개변수가 암묵적 `any`가 되어 `strict`에서 컴파일이 막힙니다.
+`MouseEventHandler<...>` 같은 리액트 별칭을 팩토리 반환 타입으로 적습니다.
 
 **`Ui*` 래퍼를 쓸 때는 래퍼가 내보낸 `Ui*Props`를 가져옵니다.**
 안에서 쓰는 라이브러리의 원본 프롭스 타입을 가져오지 않습니다.
@@ -28,10 +29,10 @@ JSX에 넘기면 리액트가 알아서 타입을 붙여 주지만, 그러면 �
 
 `query.select` 같은 훅 옵션의 일회성 문맥 콜백은 리액트 핸들러 구현이 아니라 대상이 아닙니다.
 
-**Incorrect (팩토리 반환 타입을 JSX 문맥에 떠넘김):**
+**Incorrect (팩토리 반환 타입을 적지 않아 이벤트가 암묵적 `any` 가 됨):**
 
 ```ts
-const handleRowSelectToggle = (rowId: string) => (event: MouseEvent<HTMLLIElement>) => {
+const handleRowSelectToggle = (rowId: string) => (event) => {
   event.preventDefault();
   toggleSelection(rowId);
 };

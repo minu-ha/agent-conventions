@@ -27,7 +27,7 @@ tags: naming, imports
 - 화면이나 소유자 내부 모듈은 절대경로로 열지 않고 `./`로만 접근합니다.
 - 소유자 밖에서 필요해지면 경로를 뚫는 대신 전역 레이어로 올립니다.
 
-**Incorrect (화면 내부를 절대경로로 열음):**
+**Incorrect (화면 내부 모듈을 절대경로로 가져옴):**
 
 ```ts
 import {SpikeChartCard} from "@/page/detail/component/spike-pattern-panel/component/spike-chart-card";

@@ -43,7 +43,7 @@
 ## 7. Server Data Flow (data)
 **TitleKo:** 서버 데이터 흐름
 **Impact:** CRITICAL
-**Description:** 쿼리와 뮤테이션는 오리진을 보존해야 하며, 응답 변형은 `query.select`처럼 소스에 가장 가까운 지점에서
+**Description:** 쿼리와 뮤테이션은 오리진을 보존해야 하며, 응답 변형은 `query.select`처럼 소스에 가장 가까운 지점에서
   끝내야 합니다. 바인딩 이름도 어떤 API에서 왔는지 드러내야 합니다.
 
 ## 8. State Ownership and Updates (state)

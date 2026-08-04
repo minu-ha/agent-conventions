@@ -97,13 +97,13 @@
 
 **Impact: CRITICAL (공용 책임과 화면 전용 책임이 같은 레이어에 섞이지 않습니다)**
 
-컴포넌트는 소유 레이어를 이름으로 드러냅니다.
+컴포넌트는 셋 중 한 레이어가 소유합니다.
 
-| 레이어 | 책임 | 파일 · 심볼 · 식별자 |
-| --- | --- | --- |
-| `ui` | 도메인을 모르는 순수 화면 | `ui-button.tsx` · `UiButton` · `ui_button` |
-| `widget` | 화면 조립을 전제하지 않는 공용 조합 | `wg-chart.tsx` · `WgChart` · `wg_chart` |
-| `page` | 한 화면 안에서만 쓰이는 뼈대와 컴포넌트 | `pg-detail.tsx` · `PgDetail` · `pg_detail` |
+| 레이어 | 책임 |
+| --- | --- |
+| `ui` | 도메인을 모르는 순수 화면 |
+| `widget` | 화면 조립을 전제하지 않는 공용 조합 |
+| `page` | 한 화면 안에서만 쓰이는 뼈대와 컴포넌트 |
 
 이름 표기는 `ownership-prefix-layer-names-on-files-and-symbols`가 정합니다.
 여기서는 어느 레이어인지만 판정합니다.
@@ -173,7 +173,7 @@ export const WgEntryToolbar = (props: WgEntryToolbarProps) => {
 // widget/spike-legend-glyph/wg-spike-legend-glyph.tsx
 export const WgSpikeLegendGlyph = (props: WgSpikeLegendGlyphProps) => {
 	const { item } = props;
-	return <svg className="wg_spikeLegendGlyph__root">{/* ... */}</svg>;
+	return <svg className={clsx("wg_spikeLegendGlyph__root")}>{/* ... */}</svg>;
 };
 ```
 
@@ -183,7 +183,15 @@ export const WgSpikeLegendGlyph = (props: WgSpikeLegendGlyphProps) => {
 // page/entries/component/pg-delete-entry-button.tsx
 const PgDeleteEntryButton = () => {
 	const navigate = useNavigate();
-	return <UiButton onClick={() => void navigate({ to: "/entries" })} />;
+
+	/**
+	 * 삭제 후 목록으로 이동
+	 */
+	const handleDeleteButtonClick: MouseEventHandler<HTMLButtonElement> = () => {
+		void navigate({ to: "/entries" });
+	};
+
+	return <UiButton onClick={handleDeleteButtonClick} />;
 };
 ```
 
@@ -216,7 +224,7 @@ const PgDeleteEntryButton = () => {
 ```tsx
 // page/detail/component/spike-pattern-panel.tsx
 export const SpikePatternPanel = (props: SpikePatternPanelProps) => {
-	return <section className="pg_spikePatternPanel__root">{/* ... */}</section>;
+	return <section className={clsx("pg_spikePatternPanel__root")}>{/* ... */}</section>;
 };
 ```
 
@@ -234,7 +242,7 @@ export const UiButtonButton = (props: UiButtonButtonProps) => {
 ```tsx
 // page/detail/component/pg-spike-pattern-panel.tsx
 export const PgSpikePatternPanel = (props: PgSpikePatternPanelProps) => {
-	return <section className="pg_spikePatternPanel__root">{/* ... */}</section>;
+	return <section className={clsx("pg_spikePatternPanel__root")}>{/* ... */}</section>;
 };
 ```
 
@@ -270,7 +278,7 @@ export const PgSpikePatternPanel = (props: PgSpikePatternPanelProps) => {
 - 파일이 하나뿐인 역할 폴더도 그대로 둡니다. 형제 `.ts` 하나로 대신하지 않습니다.
 - 자기 역할 폴더가 필요한 컴포넌트만 자기 폴더를 갖고, 말단은 `component` 아래 파일로 둡니다.
 - 프롭스는 해당 TSX에 두고 여러 파일이 공유하는 계약만 `type`으로 옮깁니다.
-- 컴포넌트 파일명에는 계층 접두사를 붙이고 폴더명에는 붙이지 않습니다.
+- 파일명과 심볼의 계층 접두사는 `ownership-prefix-layer-names-on-files-and-symbols`가 정합니다.
 - 소유자 중첩이 3단계에 닿으면 분리가 맞는지 `widget`으로 나갈 대상인지 다시 봅니다.
 
 무엇을 추출할지는 이 규칙이 정하지 않습니다.
@@ -335,7 +343,7 @@ ui/button/
 
 **Applies when:** `component` 폴더 안의 파일을 다른 파일에서 가져오기할 때. `../`나 `@/page` 경로로 컴포넌트를 가져오려 할 때. 여러 자식이 같은 컴포넌트를 필요로 해 배치를 다시 정할 때.
 
-**Requires selected:** `typescript/naming-use-direct-imports-and-public-entry-points` · 함께 적용
+**Requires selected:** `typescript/naming-restrict-absolute-aliases-to-layer-roots` · 함께 적용
 
 **Review with:** `ownership-layer-component-boundaries`
 
@@ -346,7 +354,7 @@ ui/button/
 - `component` 폴더 안의 파일은 그 폴더의 소유자만 가져오기합니다.
 - 형제끼리는 가져오기하지 않습니다.
 - `../`로 컴포넌트를 가져오지 않습니다.
-- 절대경로 별칭의 허용 범위는 `typescript/naming-use-direct-imports-and-public-entry-points`가 정합니다.
+- 절대경로 별칭의 허용 범위는 `typescript/naming-restrict-absolute-aliases-to-layer-roots`가 정합니다.
 
 여러 자식이 같은 컴포넌트를 필요로 하면 셋 중 하나로 해소합니다.
 
@@ -560,7 +568,7 @@ export const WgChartRoot = (props: ChartRootProps) => {
 
 ### 2.1 Take React Handler and Wrapper Prop Types From Existing Contracts
 
-**Rule:** `R07` · `typing-function-type-first`
+**Rule:** `R07` · `typing-take-handler-types-from-existing-contracts`
 
 **Applies when:** 커링 팩토리가 돌려주는 리액트 핸들러의 타입을 정할 때. `Ui*` 래퍼 사용처에서 프롭스 타입을 참조할 때. 제외: `query.select` 같은 훅 옵션의 일회성 문맥 콜백인 경우.
 
@@ -572,8 +580,9 @@ export const WgChartRoot = (props: ChartRootProps) => {
 정합니다. 여기서는 그 규칙이 다루지 않는 리액트 두 자리만 봅니다.
 
 **커링 팩토리가 돌려주는 함수에도 타입을 적습니다.**
-JSX에 넘기면 리액트가 알아서 타입을 붙여 주지만, 그러면 팩토리 선언만 봐서는 무엇을
-돌려주는지 알 수 없습니다. `MouseEventHandler<...>` 같은 리액트 별칭을 반환 타입으로 적습니다.
+JSX에 바로 쓴 화살표는 리액트가 타입을 붙여 주지만, 팩토리가 돌려주는 함수는 그러지 않습니다.
+안쪽 매개변수가 암묵적 `any`가 되어 `strict`에서 컴파일이 막힙니다.
+`MouseEventHandler<...>` 같은 리액트 별칭을 팩토리 반환 타입으로 적습니다.
 
 **`Ui*` 래퍼를 쓸 때는 래퍼가 내보낸 `Ui*Props`를 가져옵니다.**
 안에서 쓰는 라이브러리의 원본 프롭스 타입을 가져오지 않습니다.
@@ -581,10 +590,10 @@ JSX에 넘기면 리액트가 알아서 타입을 붙여 주지만, 그러면 �
 
 `query.select` 같은 훅 옵션의 일회성 문맥 콜백은 리액트 핸들러 구현이 아니라 대상이 아닙니다.
 
-**Incorrect (팩토리 반환 타입을 JSX 문맥에 떠넘김):**
+**Incorrect (팩토리 반환 타입을 적지 않아 이벤트가 암묵적 `any` 가 됨):**
 
 ```ts
-const handleRowSelectToggle = (rowId: string) => (event: MouseEvent<HTMLLIElement>) => {
+const handleRowSelectToggle = (rowId: string) => (event) => {
   event.preventDefault();
   toggleSelection(rowId);
 };
@@ -792,7 +801,7 @@ export const ReadOnlyProfileDialog = () => {
 
 공개 부품은 두 경우만 엽니다.
 
-- 소비자가 이름으로 직접 조립해야 하는 영역
+- 부품이 없으면 소비자가 그 자리에 자기 JSX 를 넣을 수 없는 영역
 - 공용 컨텍스트나 동작을 직접 쓰는 영역
 
 그 밖은 숨깁니다. 특히 다음 셋은 공개하지 않습니다.
@@ -840,7 +849,8 @@ export const UiPanel = {
 두 신호 중 하나라도 보이면 구조를 다시 고릅니다.
 
 - 모양이나 모드를 정하는 불리언 프롭이 둘 이상입니다.
-- 불리언 프롭 두 개가 조합되어 JSX 분기를 만듭니다.
+- 같은 불리언이 JSX 분기와 클래스 조건에 동시에 쓰입니다.
+
 불리언이 늘어날수록 가능한 조합이 급증하고, JSX 분기와 스타일 조건도 함께 불어납니다.
 
 - 라우트 진입 안의 일회성 분기는 로컬에서 유지해도 됩니다.
@@ -862,8 +872,8 @@ export const WgEntryToolbar = (props: WgEntryToolbarProps) => {
 
 	return (
 		<header>
-			{showSearch ? <EntrySearchField /> : null}
-			{isEditing ? <EntryEditActions compact={isCompact} /> : <EntryBrowseActions compact={isCompact} />}
+			{showSearch ? <WgEntrySearchField /> : null}
+			{isEditing ? <WgEntryEditActions compact={isCompact} /> : <WgEntryBrowseActions compact={isCompact} />}
 		</header>
 	);
 };
@@ -872,16 +882,23 @@ export const WgEntryToolbar = (props: WgEntryToolbarProps) => {
 **Correct (변형을 드러난 컴포넌트와 상태 없는 합성 컴포넌트로 분리):**
 
 ```tsx
-const WgEntryToolbarRoot = (props: { children: ReactNode }) => {
+/**
+ * 툴바 껍데기 부품
+ */
+export interface WgEntryToolbarRootProps {
+	children: ReactNode;
+}
+
+const WgEntryToolbarRoot = (props: WgEntryToolbarRootProps) => {
 	const { children } = props;
-	return <header>{children}</header>;
+	return <header className={clsx("wg_entryToolbar__root")}>{children}</header>;
 };
 
 export const WgEntryToolbar = {
 	Root: WgEntryToolbarRoot,
-	Search: EntrySearchField,
-	BrowseActions: EntryBrowseActions,
-	EditActions: EntryEditActions,
+	Search: WgEntrySearchField,
+	BrowseActions: WgEntryBrowseActions,
+	EditActions: WgEntryEditActions,
 } as const;
 
 export const WgEntryBrowseToolbar = () => {
@@ -1119,6 +1136,8 @@ JSX에는 이름 붙인 핸들러 참조만 넘깁니다.
 **Correct (로직을 명명된 핸들러로 노출):**
 
 ```tsx
+import type { MouseEventHandler } from "react";
+
 /**
  * 선택된 entry 삭제와 다음 화면 이동 처리
  */
@@ -1196,11 +1215,11 @@ export const UiStatusBadge = (props: UiStatusBadgeProps) => {
 
 **Rule:** `R16` · `composition-use-activity-only-to-preserve-mounted-subtrees`
 
-**Applies when:** 조건부 렌더링과 `Activity` 사이를 오갈 때. 숨겼다 되돌릴 때 하위 트리 상태를 살릴지 정할 때.
+**Applies when:** 조건부 렌더링과 `Activity` 사이를 오갈 때. `<Activity>` 를 추가·삭제하거나 `mode` 를 계산하는 식을 바꿀 때.
 
 **Review with:** `composition-do-not-define-components-inside-components`
 
-**Impact: MEDIUM (감추기와 해제가 다른 일이라는 것이 화면마다 같은 방식으로 남습니다)**
+**Impact: MEDIUM (숨기기와 마운트 해제를 구분해 써서 되돌릴 때 상태가 사라지는 사고를 막습니다)**
 
 기본은 조건부 렌더링입니다.
 `<Activity>`는 **숨겼다 되돌릴 때 하위 트리 상태를 그대로 살려야 할 때만** 씁니다.
@@ -1267,7 +1286,8 @@ return hasItems ? <PgEntryList /> : <PgEntryEmptyState />;
 - 이름은 컴포넌트 이름에 `Props`를 붙입니다. `UiButton`이면 `UiButtonProps`입니다.
 - 사용처가 이 계약을 참조할 수 있어야 하므로 `export`합니다.
   래퍼 사용처가 원본 라이브러리 프롭스를 보지 않게 하려는 것입니다.
-- 파일 위쪽에 타입을 모아 두지 않습니다. 컴포넌트가 여러 개면 각자 위에 둡니다.
+- 프롭스 타입은 파일 위쪽에 모으지 않습니다. 컴포넌트가 여러 개면 각자 위에 둡니다.
+  컴포넌트가 아닌 함수의 객체 매개변수 타입은 `typescript/functions-use-named-object-params-for-complex-signatures`가 정합니다.
 - 문서 주석은 `typescript/types-document-custom-types-and-shapes`가 정합니다.
 
 **Incorrect (파일 위쪽에 타입을 모으고 내보내지 않음):**
@@ -1285,12 +1305,12 @@ const helperText = "…";
 
 export const UiBadge = (props: UiBadgeProps) => {
   const { label } = props;
-  return <span className="ui_badge__root">{label}</span>;
+  return <span className={clsx("ui_badge__root")}>{label}</span>;
 };
 
 export const UiChip = (props: UiChipProps) => {
   const { label } = props;
-  return <span className="ui_chip__root">{label}</span>;
+  return <span className={clsx("ui_chip__root")}>{label}</span>;
 };
 ```
 
@@ -1309,7 +1329,7 @@ export interface UiBadgeProps {
 
 export const UiBadge = (props: UiBadgeProps) => {
   const { label } = props;
-  return <span className="ui_badge__root">{label}</span>;
+  return <span className={clsx("ui_badge__root")}>{label}</span>;
 };
 ```
 
@@ -1603,7 +1623,7 @@ const PgEntryTreeSection = (props: PgEntryTreeSectionProps) => {
 				onChange={(event) => setTreeSearchKeyword(event.target.value)}
 			/>
 
-			<Activity mode={filteredCategoryNodes.length > 0 ? "visible" : "hidden"}>
+			{filteredCategoryNodes.length > 0 ? (
 				<UiTree
 					treeData={filteredCategoryNodes.map(mapEntryNodeToTreeData)}
 					expandedKeys={expandedKeys}
@@ -1611,11 +1631,9 @@ const PgEntryTreeSection = (props: PgEntryTreeSectionProps) => {
 					onExpand={(keys) => setExpandedKeys(keys.map(String))}
 					onSelect={handleTreeSelect}
 				/>
-			</Activity>
-
-			<Activity mode={filteredCategoryNodes.length > 0 ? "hidden" : "visible"}>
-				<UiEmpty description="No matching results" />
-			</Activity>
+			) : (
+				<UiEmpty description="검색 결과가 없습니다" />
+			)}
 		</section>
 	);
 };
@@ -1732,14 +1750,16 @@ return <UiInput value={selectedNodeContext?.node?.name} />;
 경계와 대체 화면은 거기 한 곳에만 둡니다.
 
 - 섹션이 따로 없으면 라우트 진입이 경계를 갖습니다.
+- 라우트 진입이 직접 쿼리를 부르면 그 라우트의 레이아웃이나 상위 라우트가 경계를 갖습니다.
+  자기 자신을 감쌀 수 없기 때문입니다.
 - 한 화면에 경계를 여러 겹 쌓지 않습니다. 섹션이 독립적으로 채워져야 할 때만 나눕니다.
-- 대체 화면은 채워질 내용과 같은 높이를 차지해야 합니다. 그러지 않으면 레이아웃이 튑니다.
+- 대체 화면에 실제 내용의 최소 높이를 `min-height` 로 고정합니다. 그러지 않으면 레이아웃이 튑니다.
 - 쿼리를 부르는 컴포넌트 자신은 경계를 갖지 않습니다. 자기 자신을 감쌀 수 없습니다.
 
 경계가 있으므로 화면 본문에는 로딩 분기가 남지 않습니다.
 그 판정은 `screen-avoid-ad-hoc-loading-branches`가 합니다.
 
-**Incorrect (쿼리를 부르는 컴포넌트 안에서 로딩을 직접 처리):**
+**Incorrect (진입에 경계가 없어 화면 전체가 함께 멈춤):**
 
 ```tsx
 export const PgEntryTreeSection = () => {
@@ -1783,7 +1803,8 @@ Suspense 쿼리를 쓰는 화면은 본문에서 초기 로딩을 다시 분기�
   Suspense 쿼리의 `isPending`은 타입이 `false`로 고정되어 분기 자체가 죽은 코드입니다.
   뮤테이션의 `isPending`은 씁니다.
   버튼 비활성화, 백그라운드 다시 불러오기 표시, 저장 중 배지가 그런 경우입니다.
-- 화면 전체를 가리는 지역 로딩 분기가 꼭 필요하면 `typescript/docs-justify-convention-exceptions-with-a-reason-comment`를 따라 이유를 남깁니다.
+- 가리는 분기는 가리지 않으면 외부 SDK 나 폼이 잘못된 값으로 초기화되는 경우에만 씁니다.
+  그때 `typescript/docs-justify-convention-exceptions-with-a-reason-comment`를 따라 이유를 남깁니다.
 
 값이 없을 수 있다는 사실을 기본값으로 덮는 문제는 이 규칙이 아니라
 `typescript/absence-expose-optional-values-instead-of-silent-fallbacks`가 판정합니다.
@@ -1876,7 +1897,7 @@ const handleSubmitButtonClick: MouseEventHandler<HTMLButtonElement> = async (_ev
 
 ### 6.2 Name Handlers Predictably
 
-**Rule:** `R25` · `events-name-and-curry-handlers`
+**Rule:** `R25` · `events-name-handlers-predictably`
 
 **Applies when:** 이벤트 핸들러를 새로 만들 때. 핸들러 이름이나 대상, 이벤트 표기를 바꿀 때.
 
@@ -1889,7 +1910,7 @@ const handleSubmitButtonClick: MouseEventHandler<HTMLButtonElement> = async (_ev
 | 상황 | 이름 |
 | --- | --- |
 | DOM 이벤트 | `handle + Target + Event` |
-| 동작 문맥이 분명할 때 | `handle + DomainAction` |
+| 한 컴포넌트에 그 동작의 트리거가 하나뿐일 때 | `handle + DomainAction` |
 
 - `on*`은 프롭 이름입니다. 구현에는 쓰지 않습니다.
   `onClick`을 받아 처리하는 함수는 `handleRowClick`입니다.
@@ -1899,6 +1920,8 @@ const handleSubmitButtonClick: MouseEventHandler<HTMLButtonElement> = async (_ev
 **Incorrect (`on*` 접두사와 제각각인 이름):**
 
 ```ts
+import type { MouseEvent } from "react";
+
 const onSelect = (id: string, event: MouseEvent<HTMLLIElement>) => {
   console.log(id, event.currentTarget);
 };
@@ -1934,7 +1957,7 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (event) => {
 
 **Applies when:** DOM 이벤트 프롭에 추가 인자를 넘기는 핸들러를 추가·변경할 때. 인라인 래퍼로 인자를 넘기던 자리를 바꿀 때. 제외: 이벤트 객체를 받지 않는 프롭 콜백인 경우.
 
-**Requires selected:** `typing-function-type-first` · 함께 적용
+**Requires selected:** `typing-take-handler-types-from-existing-contracts` · 함께 적용
 
 **Review with:** `composition-named-handlers-over-inline`
 
@@ -1946,10 +1969,10 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (event) => {
 반환값을 JSX에 그대로 전달합니다.
 `onClick={() => handleSelectionToggle(id)}`처럼 감싸는 화살표를 만들지 않습니다.
 
-- 팩토리 반환 타입은 `typing-function-type-first`를 따라 리액트 별칭으로 고정합니다.
+- 팩토리 반환 타입은 `typing-take-handler-types-from-existing-contracts`를 따라 리액트 별칭으로 고정합니다.
 - 이벤트 객체를 받지 않는 프롭 콜백은 대상이 아닙니다.
   `(id) => void` 계약이면 이름 붙인 핸들러를 그대로 넘깁니다.
-- `useEffectEvent`에는 계약에 없는 DOM 이벤트나 커링을 만들지 않습니다.
+- `useEffectEvent` 로 만든 함수에는 DOM 이벤트 매개변수나 커링을 덧붙이지 않습니다.
 
 **Incorrect (인라인 래퍼로 인자를 넘김):**
 
@@ -2025,7 +2048,7 @@ const handleSubmit = async () => {
 
 **Impact: CRITICAL**
 
-쿼리와 뮤테이션는 오리진을 보존해야 하며, 응답 변형은 `query.select`처럼 소스에 가장 가까운 지점에서 끝내야 합니다. 바인딩 이름도 어떤 API에서 왔는지 드러내야 합니다.
+쿼리와 뮤테이션은 오리진을 보존해야 하며, 응답 변형은 `query.select`처럼 소스에 가장 가까운 지점에서 끝내야 합니다. 바인딩 이름도 어떤 API에서 왔는지 드러내야 합니다.
 
 ### 7.1 Name Query and Mutation Bindings Consistently
 
@@ -2369,6 +2392,10 @@ const handleToggleUser = (userId: string) => {
 
 `useEffectEvent`는 리액트 19.2 이상에만 있습니다. 그보다 낮으면 이 규칙을 적용하지 않습니다.
 
+`useEffectEvent`로 감싼 콜백에는 계약에 없는 DOM 이벤트나 커링을 만들지 않습니다.
+그래서 `typing-take-handler-types-from-existing-contracts`의 리액트 핸들러 타입 규칙은 이 자리에 적용하지 않습니다.
+이펙트 안에서만 부르는 콜백이고 JSX 이벤트 프롭에 전달되지 않기 때문입니다.
+
 **Incorrect (최신 콜백을 위해 `ref`를 수동 동기화):**
 
 ```tsx
@@ -2426,15 +2453,14 @@ useEffect(() => {
 **Impact: MEDIUM-HIGH (효과를 확인하지 않은 방어적 `useMemo`, `useCallback` 을 막습니다)**
 
 `useMemo`와 `useCallback`은 기본적으로 쓰지 않습니다.
-쓰는 경우는 다음 넷뿐이며, 어느 경우든 `typescript/docs-justify-convention-exceptions-with-a-reason-comment`를 따라 이유를 남깁니다.
+쓰는 경우는 다음 셋뿐이며, 어느 경우든 `typescript/docs-justify-convention-exceptions-with-a-reason-comment`를 따라 이유를 남깁니다.
 
 - 외부 라이브러리가 참조 동일성에 민감할 때
 - 병목이 실제로 측정됐을 때
 - `useDeferredValue` 기준으로 무거운 파생 계산을 늦출 때
-- 리액트 컴파일러를 아직 켜지 않아 프로젝트가 수동 메모이제이션을 표준으로 쓸 때
 
-마지막 경우에도 규칙은 같습니다. 감으로 붙이지 않고 무거운 계산인지 먼저 확인합니다.
-리액트 컴파일러가 켜져 있으면 처음 셋 말고는 손대지 않습니다.
+리액트 컴파일러를 켜지 않은 프로젝트도 같습니다.
+"컴파일러가 없으니 다 감싼다"는 이유는 이 셋에 없습니다. 자리마다 위 셋 중 하나가 있어야 합니다.
 
 **Incorrect (단순 가공을 관성적으로 메모이제이션):**
 
@@ -2566,7 +2592,7 @@ const filteredRows = useMemo(() => {
 
 **Rule:** `R40` · `docs-require-jsdoc-on-key-declarations`
 
-**Applies when:** 쿼리·뮤테이션이나 비자명한 핸들러/이펙트를 추가·변경할 때. 내보낸 보조 함수·훅·스토어 선언을 추가·변경할 때. 다시 내보내기 포함 공개 타입·인터페이스나 합성 공개 부품을 추가·변경할 때.
+**Applies when:** 쿼리·뮤테이션이나 비자명한 핸들러/이펙트를 추가·변경할 때. 내보낸 보조 함수·훅·스토어 선언을 추가·변경할 때. 다시 내보내기 포함 공개 타입·인터페이스를 추가·변경할 때.
 
 **Requires selected:** `typescript/docs-require-header-jsdoc-on-key-declarations` · 함께 적용
 
@@ -2644,22 +2670,6 @@ export const buildEntryPayload = (formValues: EntryFormValues) => {
 };
 ```
 
-**Correct (합성 공개 부품은 프롭스 `interface` 위에 설명을 두고 컴포넌트를 바로 아래에 둠):**
-
-```tsx
-/**
- * dialog 제목과 닫기 버튼을 담는 header part
- */
-export interface DialogHeaderProps {
-	children: ReactNode;
-}
-
-const DialogHeader = (props: DialogHeaderProps) => {
-	const { children } = props;
-	return <header className="wg_dialog__header">{children}</header>;
-};
-```
-
 ### 10.2 Document Compound Parts Above the Props Interface
 
 **Rule:** `R41` · `docs-document-compound-parts-above-props-interface`
@@ -2691,7 +2701,7 @@ export interface UiPanelHeaderProps {
  */
 export const UiPanelHeader = (props: UiPanelHeaderProps) => {
 	const { children } = props;
-	return <header className="ui_panel__header">{children}</header>;
+	return <header className={clsx("ui_panel__header")}>{children}</header>;
 };
 ```
 
@@ -2709,7 +2719,7 @@ export interface UiPanelHeaderProps {
 
 export const UiPanelHeader = (props: UiPanelHeaderProps) => {
 	const { children } = props;
-	return <header className="ui_panel__header">{children}</header>;
+	return <header className={clsx("ui_panel__header")}>{children}</header>;
 };
 ```
 

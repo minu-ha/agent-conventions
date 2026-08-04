@@ -5,7 +5,6 @@ impact: MEDIUM-HIGH
 impactDescription: 구현을 읽기 전에 중요한 경계를 찾고 설명할 수 있습니다
 appliesWhen:
   - 쿼리·뮤테이션, 원격 함수, 분기나 `await` 가 있는 핸들러와 이펙트, 내보낸 보조 함수와 훅, 커스텀 타입, 스토어 선언을 추가·변경할 때
-  - 선언 위 주석의 형식이나 태그를 정할 때
 requiresSelected: docs-write-concise-korean-comments-about-purpose-and-constraints, docs-write-doc-comments-as-multiline-blocks
 tags: docs, jsdoc, declarations, boundaries
 ---
@@ -29,29 +28,6 @@ tags: docs, jsdoc, declarations, boundaries
 **Incorrect (주요 선언에 헤더 설명이 없음):**
 
 ```ts
-export const normalizeUserIds = (userIds: string[]): string[] => {
-	return Array.from(new Set(userIds)).sort();
-};
-```
-
-**Incorrect (한 줄 형태와 `//` 설명을 섞어 씀):**
-
-```ts
-/** 중복 제거 후 사용자 ID 정렬 */
-export const normalizeUserIds = (userIds: string[]): string[] => {
-	return Array.from(new Set(userIds)).sort();
-};
-
-// entry 목록 조회 API
-const responseEntryList = useEntryList();
-```
-
-**Incorrect (역할 태그를 붙임):**
-
-```ts
-/**
- * @helper 중복 제거 후 사용자 ID 정렬
- */
 export const normalizeUserIds = (userIds: string[]): string[] => {
 	return Array.from(new Set(userIds)).sort();
 };

@@ -19,7 +19,7 @@ tags: events, naming
 | 상황 | 이름 |
 | --- | --- |
 | DOM 이벤트 | `handle + Target + Event` |
-| 동작 문맥이 분명할 때 | `handle + DomainAction` |
+| 한 컴포넌트에 그 동작의 트리거가 하나뿐일 때 | `handle + DomainAction` |
 
 - `on*`은 프롭 이름입니다. 구현에는 쓰지 않습니다.
   `onClick`을 받아 처리하는 함수는 `handleRowClick`입니다.
@@ -29,6 +29,8 @@ tags: events, naming
 **Incorrect (`on*` 접두사와 제각각인 이름):**
 
 ```ts
+import type { MouseEvent } from "react";
+
 const onSelect = (id: string, event: MouseEvent<HTMLLIElement>) => {
   console.log(id, event.currentTarget);
 };

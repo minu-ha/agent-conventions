@@ -5,7 +5,7 @@ impact: HIGH
 impactDescription: 잡동사니 파일이 생기지 않고 공용 승격이 실제 사용처를 근거로 일어납니다
 appliesWhen:
   - 보조 함수를 둘 파일이나 폴더를 정할 때
-  - 보조 함수를 공용으로 올릴지 정할 때
+  - `shared/` 아래로 파일을 옮기거나 `util.*` 에 항목을 추가할 때
 requiresSelected: functions-extract-helpers-only-when-the-boundary-is-real
 tags: functions, boundaries
 ---
@@ -17,9 +17,10 @@ tags: functions, boundaries
 떼어 낼지는 `functions-extract-helpers-only-when-the-boundary-is-real`가 먼저 판정합니다.
 이 규칙은 그 결과를 어디 두고 언제 올릴지만 봅니다.
 
-- 범용 `helper.ts`, `helpers.ts`, `utils.ts`는 만들지 않습니다.
-  소유자 아래 어느 폴더에 둘지는 프레임워크 skill 의 역할 폴더 규칙이 정합니다.
-- 대표 내보낸 함수 하나당 파일 하나입니다.
+- 소유자 아래에 `helper.ts`, `helpers.ts`, `utils.ts` 같은 잡동사니 파일을 만들지 않습니다.
+  어느 폴더에 둘지는 프레임워크 skill 의 역할 폴더 규칙이 정합니다.
+- 소유자 아래에서는 대표 내보낸 함수 하나당 파일 하나입니다.
+  전역 `shared/util.ts` 는 여러 소유자가 함께 쓰는 순수 함수를 모으는 자리라 예외입니다.
 - 호출 깊이는 소유자에서 내보낸 함수, 그 파일 안 비공개 함수까지 두 단계로 끝냅니다.
   내보낸 함수가 또 다른 내보낸 함수를 타고 가는 사슬은 만들지 않습니다.
 - 공용 승격은 **두 소유자 이상이 이미 직접 호출할 때만** 합니다.
@@ -53,9 +54,13 @@ export const buildEntrySaveRequest = (values: EntryFormValues) => {
 ```ts
 // shared/util.ts
 export const util = {
-	/**
-	 * 화면 표시용 날짜 문자열 변환
-	 */
-	formatDisplayDate: (value: string) => new Date(value).toLocaleDateString("ko-KR"),
+	date: {
+		/**
+		 * 화면 표시용 날짜 문자열 변환
+		 */
+		formatDisplayDate(value: string): string {
+			return new Date(value).toLocaleDateString("ko-KR");
+		},
+	},
 } as const;
 ```

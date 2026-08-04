@@ -20,7 +20,8 @@ tags: composition, props
 - 이름은 컴포넌트 이름에 `Props`를 붙입니다. `UiButton`이면 `UiButtonProps`입니다.
 - 사용처가 이 계약을 참조할 수 있어야 하므로 `export`합니다.
   래퍼 사용처가 원본 라이브러리 프롭스를 보지 않게 하려는 것입니다.
-- 파일 위쪽에 타입을 모아 두지 않습니다. 컴포넌트가 여러 개면 각자 위에 둡니다.
+- 프롭스 타입은 파일 위쪽에 모으지 않습니다. 컴포넌트가 여러 개면 각자 위에 둡니다.
+  컴포넌트가 아닌 함수의 객체 매개변수 타입은 `typescript/functions-use-named-object-params-for-complex-signatures`가 정합니다.
 - 문서 주석은 `typescript/types-document-custom-types-and-shapes`가 정합니다.
 
 **Incorrect (파일 위쪽에 타입을 모으고 내보내지 않음):**
@@ -38,12 +39,12 @@ const helperText = "…";
 
 export const UiBadge = (props: UiBadgeProps) => {
   const { label } = props;
-  return <span className="ui_badge__root">{label}</span>;
+  return <span className={clsx("ui_badge__root")}>{label}</span>;
 };
 
 export const UiChip = (props: UiChipProps) => {
   const { label } = props;
-  return <span className="ui_chip__root">{label}</span>;
+  return <span className={clsx("ui_chip__root")}>{label}</span>;
 };
 ```
 
@@ -62,6 +63,6 @@ export interface UiBadgeProps {
 
 export const UiBadge = (props: UiBadgeProps) => {
   const { label } = props;
-  return <span className="ui_badge__root">{label}</span>;
+  return <span className={clsx("ui_badge__root")}>{label}</span>;
 };
 ```

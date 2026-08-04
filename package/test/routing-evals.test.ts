@@ -149,7 +149,7 @@ const reactRuleUniverse = [
 	"ownership-keep-component-imports-flowing-downward",
 	"ownership-prefer-plain-ts-for-local-react-helpers",
 	"ownership-keep-lifecycle-in-the-owning-component",
-	"typing-function-type-first",
+	"typing-take-handler-types-from-existing-contracts",
 	"strategy-choose-single-composition-compound-and-variants",
 	"strategy-expose-only-assembled-compound-parts",
 	"strategy-avoid-boolean-prop-proliferation",
@@ -167,7 +167,7 @@ const reactRuleUniverse = [
 	"screen-place-suspense-boundaries-at-the-section-owner",
 	"screen-avoid-ad-hoc-loading-branches",
 	"events-keep-handler-flow-inline",
-	"events-name-and-curry-handlers",
+	"events-name-handlers-predictably",
 	"events-curry-extra-handler-arguments",
 	"events-run-user-actions-in-handlers-not-effects",
 	"data-name-query-and-mutation-bindings-consistently",
@@ -209,7 +209,7 @@ const typescriptRuleRouting = {
 	},
 	"naming-use-direct-imports-and-public-entry-points": {
 		appliesWhen:
-			"가져오기·내보내기, 배럴, 공용 진입점, 소유자 보조 모듈의 경계를 추가·변경할 때. 절대경로 별칭으로 다른 모듈을 가져올 때. 같은 경로에서 값과 타입 중 무엇을 가져올지 추가·삭제·전환할 때.",
+			"가져오기·내보내기, 배럴, 공용 진입점, 소유자 보조 모듈의 경계를 추가·변경할 때. 같은 경로에서 값과 타입 중 무엇을 가져올지 추가·삭제·전환할 때.",
 		reviewWith: [],
 	},
 	"naming-restrict-absolute-aliases-to-layer-roots": {
@@ -224,7 +224,7 @@ const typescriptRuleRouting = {
 	"types-prefer-function-variable-types-over-parameter-annotations": {
 		appliesWhen:
 			"기존 호출 계약을 이름 붙인 함수나 공용 함수 구현에 다시 쓸 때. 같은 시그니처를 여러 구현이 함께 쓰도록 바꿀 때. 제외: 타입 표기 없이 문맥으로 추론되는 일회성 인라인 콜백인 경우.",
-		reviewWith: [],
+		reviewWith: ["types-mark-unused-parameters-with-underscore"],
 	},
 	"types-document-custom-types-and-shapes": {
 		appliesWhen:
@@ -251,7 +251,7 @@ const typescriptRuleRouting = {
 		reviewWith: ["functions-place-and-promote-support-functions", "docs-require-header-jsdoc-on-key-declarations"],
 	},
 	"functions-place-and-promote-support-functions": {
-		appliesWhen: "보조 함수를 둘 파일이나 폴더를 정할 때. 보조 함수를 공용으로 올릴지 정할 때.",
+		appliesWhen: "보조 함수를 둘 파일이나 폴더를 정할 때. `shared/` 아래로 파일을 옮기거나 `util.*` 에 항목을 추가할 때.",
 		reviewWith: [],
 	},
 	"functions-avoid-imperative-assembly-in-wide-scopes": {
@@ -280,7 +280,7 @@ const typescriptRuleRouting = {
 	},
 	"docs-require-header-jsdoc-on-key-declarations": {
 		appliesWhen:
-			"쿼리·뮤테이션, 원격 함수, 분기나 `await` 가 있는 핸들러와 이펙트, 내보낸 보조 함수와 훅, 커스텀 타입, 스토어 선언을 추가·변경할 때. 선언 위 주석의 형식이나 태그를 정할 때.",
+			"쿼리·뮤테이션, 원격 함수, 분기나 `await` 가 있는 핸들러와 이펙트, 내보낸 보조 함수와 훅, 커스텀 타입, 스토어 선언을 추가·변경할 때.",
 		reviewWith: [],
 	},
 	"docs-write-concise-korean-comments-about-purpose-and-constraints": {
@@ -301,7 +301,7 @@ const typescriptRuleRouting = {
 		reviewWith: ["docs-write-concise-korean-comments-about-purpose-and-constraints"],
 	},
 	"tooling-configure-biome-to-enforce-these-rules": {
-		appliesWhen: "프로젝트에 `biome` 설정을 처음 넣거나 lint 규칙을 바꿀 때. 이 컨벤션 규칙을 사람이 검토할지 도구가 막을지 정할 때.",
+		appliesWhen: "프로젝트에 `biome` 설정을 처음 넣거나 lint 규칙을 바꿀 때. `biome.json` 의 `linter.rules` 에 항목을 추가·삭제할 때.",
 		reviewWith: [],
 	},
 } as const;
@@ -471,7 +471,7 @@ const reactRuleRouting = {
 			"외부 라이브러리 인스턴스 생성·크기 변경·구독·정리를 한 컴포넌트가 소유할 때. 생명주기 코드를 커스텀 훅으로 옮겨 파일을 줄이려 할 때. 제외: 여러 소유자가 같은 생명주기 계약을 실제로 호출하는 경우.",
 		reviewWith: ["ownership-prefer-plain-ts-for-local-react-helpers"],
 	},
-	"typing-function-type-first": {
+	"typing-take-handler-types-from-existing-contracts": {
 		appliesWhen:
 			"커링 팩토리가 돌려주는 리액트 핸들러의 타입을 정할 때. `Ui*` 래퍼 사용처에서 프롭스 타입을 참조할 때. 제외: `query.select` 같은 훅 옵션의 일회성 문맥 콜백인 경우.",
 		reviewWith: [],
@@ -519,7 +519,7 @@ const reactRuleRouting = {
 		reviewWith: ["strategy-avoid-boolean-prop-proliferation"],
 	},
 	"composition-use-activity-only-to-preserve-mounted-subtrees": {
-		appliesWhen: "조건부 렌더링과 `Activity` 사이를 오갈 때. 숨겼다 되돌릴 때 하위 트리 상태를 살릴지 정할 때.",
+		appliesWhen: "조건부 렌더링과 `Activity` 사이를 오갈 때. `<Activity>` 를 추가·삭제하거나 `mode` 를 계산하는 식을 바꿀 때.",
 		reviewWith: ["composition-do-not-define-components-inside-components"],
 	},
 	"composition-declare-props-interface-above-the-component": {
@@ -562,7 +562,7 @@ const reactRuleRouting = {
 			"화면 전용 이름 붙인 핸들러의 분기·뮤테이션·화면 이동·후처리를 여러 보조 함수나 훅으로 나눌 때. 쪼개져 있던 핸들러 흐름을 다시 합칠 때.",
 		reviewWith: ["typescript/functions-extract-helpers-only-when-the-boundary-is-real"],
 	},
-	"events-name-and-curry-handlers": {
+	"events-name-handlers-predictably": {
 		appliesWhen: "이벤트 핸들러를 새로 만들 때. 핸들러 이름이나 대상, 이벤트 표기를 바꿀 때.",
 		reviewWith: ["typescript/naming-use-consistent-file-and-symbol-naming"],
 	},
@@ -630,7 +630,7 @@ const reactRuleRouting = {
 	},
 	"docs-require-jsdoc-on-key-declarations": {
 		appliesWhen:
-			"쿼리·뮤테이션이나 비자명한 핸들러/이펙트를 추가·변경할 때. 내보낸 보조 함수·훅·스토어 선언을 추가·변경할 때. 다시 내보내기 포함 공개 타입·인터페이스나 합성 공개 부품을 추가·변경할 때.",
+			"쿼리·뮤테이션이나 비자명한 핸들러/이펙트를 추가·변경할 때. 내보낸 보조 함수·훅·스토어 선언을 추가·변경할 때. 다시 내보내기 포함 공개 타입·인터페이스를 추가·변경할 때.",
 		reviewWith: [],
 	},
 	"docs-document-compound-parts-above-props-interface": {
@@ -644,9 +644,9 @@ const reactRuleRouting = {
  */
 const mandatoryRuleRouting = {
 	react: {
-		"ownership-keep-component-imports-flowing-downward": ["typescript/naming-use-direct-imports-and-public-entry-points"],
-		"typing-function-type-first": ["typescript/types-prefer-function-variable-types-over-parameter-annotations"],
-		"events-curry-extra-handler-arguments": ["typing-function-type-first"],
+		"ownership-keep-component-imports-flowing-downward": ["typescript/naming-restrict-absolute-aliases-to-layer-roots"],
+		"typing-take-handler-types-from-existing-contracts": ["typescript/types-prefer-function-variable-types-over-parameter-annotations"],
+		"events-curry-extra-handler-arguments": ["typing-take-handler-types-from-existing-contracts"],
 		"composition-named-handlers-over-inline": ["docs-require-jsdoc-on-key-declarations", "events-curry-extra-handler-arguments"],
 		"data-name-query-and-mutation-bindings-consistently": [
 			"typescript/naming-use-consistent-file-and-symbol-naming",
@@ -790,8 +790,8 @@ const reactScenarioStages = {
 			expectedSelected: {
 				react: [
 					"ownership-prefix-layer-names-on-files-and-symbols",
-					"typing-function-type-first",
-					"events-name-and-curry-handlers",
+					"typing-take-handler-types-from-existing-contracts",
+					"events-name-handlers-predictably",
 					"events-curry-extra-handler-arguments",
 				],
 				typescript: [
@@ -978,10 +978,10 @@ const reactScenarioStages = {
 			expectedSkills: ["react", "typescript", "tanstack-route"],
 			expectedSelected: {
 				react: [
-					"typing-function-type-first",
+					"typing-take-handler-types-from-existing-contracts",
 					"composition-named-handlers-over-inline",
 					"events-keep-handler-flow-inline",
-					"events-name-and-curry-handlers",
+					"events-name-handlers-predictably",
 					"events-curry-extra-handler-arguments",
 					"events-run-user-actions-in-handlers-not-effects",
 					"docs-require-jsdoc-on-key-declarations",
@@ -1009,7 +1009,7 @@ const reactScenarioStages = {
 				react: [
 					"ownership-layer-component-boundaries",
 					"ownership-place-owner-files-in-role-folders",
-					"typing-function-type-first",
+					"typing-take-handler-types-from-existing-contracts",
 					"composition-destructure-props-inside",
 					"composition-use-activity-only-to-preserve-mounted-subtrees",
 					"screen-keep-route-flow-visible",
@@ -1017,7 +1017,7 @@ const reactScenarioStages = {
 					"screen-extract-local-section-components-for-runtime-boundaries",
 					"screen-place-suspense-boundaries-at-the-section-owner",
 					"screen-avoid-ad-hoc-loading-branches",
-					"events-name-and-curry-handlers",
+					"events-name-handlers-predictably",
 					"events-curry-extra-handler-arguments",
 					"docs-require-jsdoc-on-key-declarations",
 				],
@@ -1043,10 +1043,10 @@ const reactScenarioStages = {
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
 				react: [
-					"typing-function-type-first",
+					"typing-take-handler-types-from-existing-contracts",
 					"composition-named-handlers-over-inline",
 					"screen-keep-derived-values-close",
-					"events-name-and-curry-handlers",
+					"events-name-handlers-predictably",
 					"events-curry-extra-handler-arguments",
 					"state-calculate-derived-values-during-render",
 					"state-use-functional-setstate-updates",
@@ -1145,7 +1145,7 @@ const reactScenarioStages = {
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
 				react: [
-					"events-name-and-curry-handlers",
+					"events-name-handlers-predictably",
 					"state-use-effectevent-for-non-reactive-effect-callbacks",
 					"docs-require-jsdoc-on-key-declarations",
 				],
@@ -1198,7 +1198,7 @@ const reactScenarioStages = {
 					"ownership-keep-component-imports-flowing-downward",
 					"strategy-prefer-children-over-render-props",
 				],
-				typescript: ["naming-use-direct-imports-and-public-entry-points"],
+				typescript: ["naming-use-direct-imports-and-public-entry-points", "naming-restrict-absolute-aliases-to-layer-roots"],
 			},
 		},
 	},
@@ -2294,20 +2294,21 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 
 	const curriedHandler = await readRule("react", "events-curry-extra-handler-arguments");
 	assertMentions(curriedHandler, [/이벤트 객체를 받는 자리/i, /추가 인자/i, /팩토리/i, /감싸는 화살표/i], "curriedHandler");
-	assertMentions(curriedHandler, [/팩토리 반환 타입/i, /typing-function-type-first/i, /리액트 별칭/i], "curriedHandler");
-	assert.match(
+	assertMentions(
 		curriedHandler,
-		/이벤트 객체를 받지 않는 프롭 콜백[\s\S]*그대로 넘깁니다[\s\S]*`useEffectEvent`[\s\S]*DOM 이벤트[\s\S]*만들지 않/i,
+		[/팩토리 반환 타입/i, /typing-take-handler-types-from-existing-contracts/i, /리액트 별칭/i],
+		"curriedHandler",
 	);
+	assert.match(curriedHandler, /이벤트 객체를 받지 않는 프롭 콜백[\s\S]*그대로 넘깁니다[\s\S]*`useEffectEvent`[\s\S]*덧붙이지 않/i);
 
-	const reactHandlerType = await readRule("react", "typing-function-type-first");
+	const reactHandlerType = await readRule("react", "typing-take-handler-types-from-existing-contracts");
 	assert.match(reactHandlerType, /커링한|커링|고차 함수/i);
-	assertMentions(reactHandlerType, [/리액트가 알아서 타입을 붙여/i, /반환 타입/i, /리액트 별칭/i], "reactHandlerType");
+	assertMentions(reactHandlerType, [/JSX에 바로 쓴 화살표/i, /암묵적 `any`/i, /리액트 별칭/i], "reactHandlerType");
 	assertMentions(reactHandlerType, [/`query\.select`/i, /일회성 문맥 콜백/i, /`Ui\*Props`/i, /대상이 아닙니다/i], "reactHandlerType");
 
 	const reactContracts = await Promise.all(
-		["screen-keep-route-flow-visible", "events-curry-extra-handler-arguments", "typing-function-type-first"].map((ruleId) =>
-			readFile(path.join(realSkillRootDir, "react", "contracts", `${ruleId}.md`), "utf8"),
+		["screen-keep-route-flow-visible", "events-curry-extra-handler-arguments", "typing-take-handler-types-from-existing-contracts"].map(
+			(ruleId) => readFile(path.join(realSkillRootDir, "react", "contracts", `${ruleId}.md`), "utf8"),
 		),
 	);
 	assertMentions(reactContracts[0]!, [/(?:`query\.select`|query `select`)/i, /파생 상태 이펙트/i, /렌더 계산/i], "reactContracts");
@@ -2471,15 +2472,15 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 	assert.equal(selected("RTE09-route-runtime-section", "screen-keep-route-flow-visible"), true);
 	assert.equal(notApplicable("RTE10-derived-selection-state", "screen-keep-route-flow-visible"), true);
 	assert.equal(notApplicable("RTE12-query-shaping", "screen-keep-route-flow-visible"), true);
-	for (const ruleId of ["typing-function-type-first", "events-name-and-curry-handlers"]) {
+	for (const ruleId of ["typing-take-handler-types-from-existing-contracts", "events-name-handlers-predictably"]) {
 		assert.equal(selected("RTE10-derived-selection-state", ruleId), true);
 	}
 	for (const scenarioId of ["RTE08-delete-handler-flow", "RTE09-route-runtime-section"]) {
-		assert.equal(selected(scenarioId, "events-name-and-curry-handlers"), true);
-		assert.equal(selected(scenarioId, "typing-function-type-first"), true);
+		assert.equal(selected(scenarioId, "events-name-handlers-predictably"), true);
+		assert.equal(selected(scenarioId, "typing-take-handler-types-from-existing-contracts"), true);
 	}
-	assert.equal(selected("RTE14-subscription-effectevent", "events-name-and-curry-handlers"), true);
-	assert.equal(notApplicable("RTE14-subscription-effectevent", "typing-function-type-first"), true);
+	assert.equal(selected("RTE14-subscription-effectevent", "events-name-handlers-predictably"), true);
+	assert.equal(notApplicable("RTE14-subscription-effectevent", "typing-take-handler-types-from-existing-contracts"), true);
 });
 
 test("v17 TypeScript boundaries exclude React props and prevent self-created duplicate contracts", async () => {
@@ -2516,7 +2517,7 @@ test("v17 TypeScript boundaries exclude React props and prevent self-created dup
 	const existingContract = await readRule("typescript", "types-reuse-existing-contracts-before-new-types");
 	assert.match(
 		flattenWhitespace(existingContract),
-		/위치 인자를 객체 입력으로 바꾸면서 고칠 수 있는 우리 형태를 다시 쓰면[\s\S]*types-document-custom-types-and-shapes[^\n]+걸리고 이 규칙은 걸리지 않습니다/i,
+		/위치 인자를 객체 입력으로 바꾸면서, 우리가 고칠 수 있는 기존 형태를 그대로 다시 쓰면[\s\S]*types-document-custom-types-and-shapes[^\n]+걸리고 이 규칙은 걸리지 않습니다/i,
 	);
 	assert.match(existingContract, /요청에 없는 `\*Params`나 `\*Input`을 만들어 이 규칙을 스스로 켜지 않습니다/i);
 	assert.match(
@@ -2555,7 +2556,11 @@ test("v17 TypeScript boundaries exclude React props and prevent self-created dup
 			"types-reuse-existing-contracts-before-new-types",
 		].map((ruleId) => readFile(path.join(realSkillRootDir, "typescript", "contracts", `${ruleId}.md`), "utf8")),
 	);
-	assertMentions(generatedContracts[0]!, [/리액트 함수 컴포넌트/i, /뜻이 같은 계약이 이미 있으면/i], "generatedContracts");
+	assertMentions(
+		generatedContracts[0]!,
+		[/리액트 컴포넌트의 프롭스는 이 규칙 대상이 아닙니다/i, /뜻이 같은 계약이 이미 있으면/i],
+		"generatedContracts",
+	);
 	assert.match(generatedContracts[1]!, /CRITICAL rule[\s\S]*full rule/i);
 	assertMentions(generatedContracts[2]!, [/위치 인자/i, /객체/i, /`\*Params`/i, /(?:스스로|자기|자가)/i], "generatedContracts");
 });
@@ -2605,7 +2610,11 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 			"types-reuse-existing-contracts-before-new-types",
 		].map((ruleId) => readFile(path.join(realSkillRootDir, "typescript", "contracts", `${ruleId}.md`), "utf8")),
 	);
-	assertMentions(generatedContracts[0]!, [/리액트 함수 컴포넌트/i, /뜻이 같은 계약이 이미 있으면/i], "generatedContracts");
+	assertMentions(
+		generatedContracts[0]!,
+		[/리액트 컴포넌트의 프롭스는 이 규칙 대상이 아닙니다/i, /뜻이 같은 계약이 이미 있으면/i],
+		"generatedContracts",
+	);
 	assert.match(generatedContracts[1]!, /CRITICAL rule[\s\S]*full rule/i);
 	assertMentions(generatedContracts[2]!, [/위치 인자/i, /객체/i, /`\*Params`/i, /(?:스스로|자기|자가)/i], "generatedContracts");
 });

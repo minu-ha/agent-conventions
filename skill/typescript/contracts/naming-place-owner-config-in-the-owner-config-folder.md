@@ -8,7 +8,6 @@
 - 파일은 `config/<owner>-config.ts`, 내보내는 상수는 `<owner>Config`입니다.
   이름 표기는 `naming-use-consistent-file-and-symbol-naming`을 따릅니다.
 - `constants` 폴더는 만들지 않습니다.
-- 두 번째 소유자가 같은 값을 쓰게 되면 그때 `shared/config.ts`로 올립니다.
-  그 판정은 `naming-centralize-shared-config-namespaces`가 합니다.
+- 두 번째 소유자가 같은 값을 쓰게 되면 `naming-centralize-shared-config-namespaces`를 따라 올립니다.
 
 > 예시·예외가 필요하면 [full rule](../rules/01-02-naming-place-owner-config-in-the-owner-config-folder.md)을 읽습니다.

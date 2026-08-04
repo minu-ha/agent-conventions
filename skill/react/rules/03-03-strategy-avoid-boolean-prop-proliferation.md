@@ -19,7 +19,8 @@ tags: strategy, composition, props, variants, component-design
 두 신호 중 하나라도 보이면 구조를 다시 고릅니다.
 
 - 모양이나 모드를 정하는 불리언 프롭이 둘 이상입니다.
-- 불리언 프롭 두 개가 조합되어 JSX 분기를 만듭니다.
+- 같은 불리언이 JSX 분기와 클래스 조건에 동시에 쓰입니다.
+
 불리언이 늘어날수록 가능한 조합이 급증하고, JSX 분기와 스타일 조건도 함께 불어납니다.
 
 - 라우트 진입 안의 일회성 분기는 로컬에서 유지해도 됩니다.
@@ -41,8 +42,8 @@ export const WgEntryToolbar = (props: WgEntryToolbarProps) => {
 
 	return (
 		<header>
-			{showSearch ? <EntrySearchField /> : null}
-			{isEditing ? <EntryEditActions compact={isCompact} /> : <EntryBrowseActions compact={isCompact} />}
+			{showSearch ? <WgEntrySearchField /> : null}
+			{isEditing ? <WgEntryEditActions compact={isCompact} /> : <WgEntryBrowseActions compact={isCompact} />}
 		</header>
 	);
 };
@@ -51,16 +52,23 @@ export const WgEntryToolbar = (props: WgEntryToolbarProps) => {
 **Correct (변형을 드러난 컴포넌트와 상태 없는 합성 컴포넌트로 분리):**
 
 ```tsx
-const WgEntryToolbarRoot = (props: { children: ReactNode }) => {
+/**
+ * 툴바 껍데기 부품
+ */
+export interface WgEntryToolbarRootProps {
+	children: ReactNode;
+}
+
+const WgEntryToolbarRoot = (props: WgEntryToolbarRootProps) => {
 	const { children } = props;
-	return <header>{children}</header>;
+	return <header className={clsx("wg_entryToolbar__root")}>{children}</header>;
 };
 
 export const WgEntryToolbar = {
 	Root: WgEntryToolbarRoot,
-	Search: EntrySearchField,
-	BrowseActions: EntryBrowseActions,
-	EditActions: EntryEditActions,
+	Search: WgEntrySearchField,
+	BrowseActions: WgEntryBrowseActions,
+	EditActions: WgEntryEditActions,
 } as const;
 
 export const WgEntryBrowseToolbar = () => {

@@ -6,7 +6,7 @@ impactDescription: 중요한 API, 핸들러, 이펙트, 타입 선언을 검토�
 appliesWhen:
   - 쿼리·뮤테이션이나 비자명한 핸들러/이펙트를 추가·변경할 때
   - 내보낸 보조 함수·훅·스토어 선언을 추가·변경할 때
-  - 다시 내보내기 포함 공개 타입·인터페이스나 합성 공개 부품을 추가·변경할 때
+  - 다시 내보내기 포함 공개 타입·인터페이스를 추가·변경할 때
 requiresSelected: typescript/docs-require-header-jsdoc-on-key-declarations
 tags: docs, handlers, effects
 ---
@@ -87,18 +87,3 @@ export const buildEntryPayload = (formValues: EntryFormValues) => {
 };
 ```
 
-**Correct (합성 공개 부품은 프롭스 `interface` 위에 설명을 두고 컴포넌트를 바로 아래에 둠):**
-
-```tsx
-/**
- * dialog 제목과 닫기 버튼을 담는 header part
- */
-export interface DialogHeaderProps {
-	children: ReactNode;
-}
-
-const DialogHeader = (props: DialogHeaderProps) => {
-	const { children } = props;
-	return <header className="wg_dialog__header">{children}</header>;
-};
-```

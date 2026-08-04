@@ -49,6 +49,7 @@ const pageSize = settings.pageSize ?? 20;
 // ag-grid 는 columnDefs 참조가 바뀌면 컬럼 상태를 초기화한다. 참조를 고정해야 한다.
 const columns = useMemo(() => buildColumns(response.data.columns), [response.data.columns]);
 
+// 기본 페이지 크기는 config.pagination.default_page_size 가 정본이다.
 const pageSize = settings.pageSize ?? config.pagination.default_page_size;
 ```
 

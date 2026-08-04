@@ -20,8 +20,7 @@ tags: naming, config
 - 파일은 `config/<owner>-config.ts`, 내보내는 상수는 `<owner>Config`입니다.
   이름 표기는 `naming-use-consistent-file-and-symbol-naming`을 따릅니다.
 - `constants` 폴더는 만들지 않습니다.
-- 두 번째 소유자가 같은 값을 쓰게 되면 그때 `shared/config.ts`로 올립니다.
-  그 판정은 `naming-centralize-shared-config-namespaces`가 합니다.
+- 두 번째 소유자가 같은 값을 쓰게 되면 `naming-centralize-shared-config-namespaces`를 따라 올립니다.
 
 **Incorrect (소유자 하나만 쓰는 설정을 전역으로 올림):**
 
@@ -29,7 +28,7 @@ tags: naming, config
 // shared/config.ts
 export const config = {
 	entryDetail: {
-		chart_axis_tick_count: 6,
+		chartAxisTickCount: 6,
 	},
 } as const;
 ```

@@ -103,7 +103,7 @@ const PgEntryTreeSection = (props: PgEntryTreeSectionProps) => {
 				onChange={(event) => setTreeSearchKeyword(event.target.value)}
 			/>
 
-			<Activity mode={filteredCategoryNodes.length > 0 ? "visible" : "hidden"}>
+			{filteredCategoryNodes.length > 0 ? (
 				<UiTree
 					treeData={filteredCategoryNodes.map(mapEntryNodeToTreeData)}
 					expandedKeys={expandedKeys}
@@ -111,11 +111,9 @@ const PgEntryTreeSection = (props: PgEntryTreeSectionProps) => {
 					onExpand={(keys) => setExpandedKeys(keys.map(String))}
 					onSelect={handleTreeSelect}
 				/>
-			</Activity>
-
-			<Activity mode={filteredCategoryNodes.length > 0 ? "hidden" : "visible"}>
-				<UiEmpty description="No matching results" />
-			</Activity>
+			) : (
+				<UiEmpty description="검색 결과가 없습니다" />
+			)}
 		</section>
 	);
 };
