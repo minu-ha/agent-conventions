@@ -144,7 +144,6 @@ const reactRuleUniverse = [
 	"ownership-keep-component-imports-flowing-downward",
 	"ownership-keep-lifecycle-in-the-owning-component",
 	"typing-function-type-first",
-	"typing-reuse-existing-contracts",
 	"strategy-avoid-boolean-prop-proliferation",
 	"strategy-choose-single-composition-compound-and-variants",
 	"strategy-prefer-children-over-render-props",
@@ -439,16 +438,8 @@ const reactRuleRouting = {
 	},
 	"typing-function-type-first": {
 		appliesWhen:
-			"리액트 이벤트 핸들러나 프롭 콜백의 선언·시그니처를 추가·변경할 때. 기존 리액트 별칭이나 콜백 계약을 그대로 쓸 수 있는 상황일 때. 커링한 팩토리가 최종 반환하는 핸들러를 다룰 때.",
-		reviewWith: ["typing-reuse-existing-contracts"],
-	},
-	"typing-reuse-existing-contracts": {
-		appliesWhen:
-			"프롭스 콜백 구현을 추가·변경할 때. API 응답 기반 화면 타입을 추가·변경하는데 기존 프롭·API 계약과 같은 형태가 보일 때. 래퍼 컴포넌트 사용처에서 프롭스 타입을 참조할 때.",
-		reviewWith: [
-			"typescript/types-reuse-callback-signatures-from-existing-contracts",
-			"typescript/types-reuse-existing-contracts-before-new-types",
-		],
+			"커링 팩토리가 돌려주는 리액트 핸들러의 타입을 정할 때. `Ui*` 래퍼 사용처에서 프롭스 타입을 참조할 때. 제외: `query.select` 같은 훅 옵션의 일회성 문맥 콜백인 경우.",
+		reviewWith: ["typescript/types-prefer-function-variable-types-over-parameter-annotations"],
 	},
 	"strategy-avoid-boolean-prop-proliferation": {
 		appliesWhen: "여러 곳에서 쓰는 공용 컴포넌트에 불리언 모드·표시 프롭을 추가할 때. 기존 불리언 프롭 조합과 JSX 분기가 늘어날 때.",
@@ -738,7 +729,7 @@ const reactScenarioStages = {
 			files: ["src/ui/user-card/ui-user-card.tsx", "src/ui/index.ts"],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
-				react: ["typing-function-type-first", "typing-reuse-existing-contracts", "events-name-and-curry-handlers"],
+				react: ["typing-function-type-first", "events-name-and-curry-handlers"],
 				typescript: [
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
@@ -950,7 +941,6 @@ const reactScenarioStages = {
 					"ownership-layer-component-boundaries",
 					"ownership-place-owner-files-in-role-folders",
 					"typing-function-type-first",
-					"typing-reuse-existing-contracts",
 					"composition-destructure-props-inside",
 					"screen-avoid-premature-abstraction",
 					"screen-extract-local-section-components-for-runtime-boundaries",
@@ -964,6 +954,7 @@ const reactScenarioStages = {
 					"types-document-custom-types-and-shapes",
 					"types-prefer-function-variable-types-over-parameter-annotations",
 					"types-reuse-callback-signatures-from-existing-contracts",
+					"types-reuse-existing-contracts-before-new-types",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"guardrails-review-banned-typescript-shortcuts-before-finishing",
@@ -1796,7 +1787,7 @@ test("TypeScript SKILL.md is a compact router without receipt or audit machinery
 	assertMentions(extractSection(body, 1), ["React/CSS", "companion"], "typescript 1절");
 });
 
-test("React progressive metadata and all 35 rule routes match Appendix B exactly", async () => {
+test("React progressive metadata and all 34 rule routes match Appendix B exactly", async () => {
 	const skillPaths = getSkillPaths("react", realSkillRootDir);
 	const document = await readSkillDocument(skillPaths);
 
@@ -1807,7 +1798,7 @@ test("React progressive metadata and all 35 rule routes match Appendix B exactly
 		{skill: "typescript", mode: "required"},
 		{skill: "css", mode: "conditional", appliesWhen: "class contract, stylesheet 또는 styling surface를 변경한다."},
 	]);
-	assert.equal(document.rules.length, 35);
+	assert.equal(document.rules.length, 34);
 	assert.deepEqual(
 		Object.fromEntries(document.rules.map((rule) => [getRuleId(rule), {appliesWhen: rule.appliesWhen, reviewWith: rule.reviewWith}])),
 		reactRuleRouting,
@@ -1960,8 +1951,8 @@ test("React generated index and handbook preserve canonical local rules and comp
 		entries.map((entry) => entry.id),
 		reactRuleUniverse,
 	);
-	assert.equal(entries.length, 35);
-	assert.equal(getRulesIndexByteBudget(entries.length), 13_100);
+	assert.equal(entries.length, 34);
+	assert.equal(getRulesIndexByteBudget(entries.length), 12_760);
 	assert.equal(Buffer.byteLength(source, "utf8") <= getRulesIndexByteBudget(entries.length), true);
 
 	for (const entry of entries) {
@@ -2247,10 +2238,10 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 
 	const reactHandlerType = await readRule("react", "typing-function-type-first");
 	assert.match(reactHandlerType, /커링한|커링|고차 함수/i);
-	assertMentions(reactHandlerType, [/문맥 타입 지정/i, /반환 함수 타입/i, /생략하지 않/i], "reactHandlerType");
+	assertMentions(reactHandlerType, [/문맥 타입/i, /반환 타입/i, /생략하지 않/i], "reactHandlerType");
 	assertMentions(
 		reactHandlerType,
-		[/`query\.select`/i, /일회성 문맥 콜백/i, /UI를 모르는 도메인 함수/i, /적용하지 않/i],
+		[/`query\.select`/i, /일회성 문맥 콜백/i, /`Ui\*Props`/i, /대상이 아닙니다/i],
 		"reactHandlerType",
 	);
 
@@ -2261,7 +2252,7 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 	);
 	assertMentions(reactContracts[0]!, [/(?:`query\.select`|query `select`)/i, /파생 상태 이펙트/i, /렌더 계산/i], "reactContracts");
 	assertMentions(reactContracts[1]!, [/DOM 이벤트 프롭에만/i, /이벤트 객체를 받지 않는 프롭 콜백/i], "reactContracts");
-	assert.match(reactContracts[2]!, /커링한 핸들러 팩토리[\s\S]*일회성 문맥 콜백/i);
+	assert.match(reactContracts[2]!, /커링 팩토리의 반환 함수도 리액트 핸들러[\s\S]*일회성 문맥 콜백/i);
 
 	const typescriptRouter = await readFile(path.join(realSkillRootDir, "typescript", "SKILL.md"), "utf8");
 	assertMentions(

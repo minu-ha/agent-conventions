@@ -16,7 +16,6 @@
 			"expectedSelected": {
 				"react": [
 					"typing-function-type-first",
-					"typing-reuse-existing-contracts",
 					"events-name-and-curry-handlers"
 				],
 				"typescript": [
@@ -261,7 +260,6 @@
 					"ownership-layer-component-boundaries",
 					"ownership-place-owner-files-in-role-folders",
 					"typing-function-type-first",
-					"typing-reuse-existing-contracts",
 					"composition-destructure-props-inside",
 					"screen-avoid-premature-abstraction",
 					"screen-extract-local-section-components-for-runtime-boundaries",
@@ -275,6 +273,7 @@
 					"types-document-custom-types-and-shapes",
 					"types-prefer-function-variable-types-over-parameter-annotations",
 					"types-reuse-callback-signatures-from-existing-contracts",
+					"types-reuse-existing-contracts-before-new-types",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"guardrails-review-banned-typescript-shortcuts-before-finishing"

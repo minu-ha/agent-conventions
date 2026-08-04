@@ -1,18 +1,20 @@
-# Prefer React Handler Type Aliases Over Inline Event Parameter Annotations
+# Pin React Handler and Wrapper Prop Types at the Declaration
 
-**Impact: HIGH (핸들러 시그니처와 콜백 의도가 선언 자리에서 바로 드러납니다)**
+**Impact: HIGH (핸들러 시그니처와 래퍼가 좁힌 계약이 선언 자리에서 바로 드러납니다)**
 
-리액트가 제공하는 이벤트 핸들러 타입이나 프롭 콜백 계약이 이미 있다면
-매개변수 타입보다 함수 변수 타입 선언을 우선합니다.
+매개변수마다 타입을 붙이지 않고 함수 변수 타입을 쓰는 일반 규칙은
+`typescript/types-prefer-function-variable-types-over-parameter-annotations`가 정합니다.
+여기서는 그 규칙이 다루지 않는 리액트 두 자리만 봅니다.
 
-커링한 핸들러 팩토리가 반환하는 함수도 JSX 이벤트 프롭에 전달되는 리액트 핸들러 선언입니다.
-JSX가 나중에 문맥 타입 지정을 제공한다는 이유로 반환 함수 타입을 생략하지 않고,
-팩토리 반환 타입을 `MouseEventHandler<...>` 같은 기존 별칭으로 고정합니다.
+**커링 팩토리의 반환 함수도 리액트 핸들러입니다.**
+JSX가 나중에 문맥 타입을 준다는 이유로 반환 타입을 생략하지 않고,
+`MouseEventHandler<...>` 같은 기존 별칭으로 팩토리 반환 타입을 고정합니다.
 
-- `query.select` 같은 훅 옵션의 일회성 문맥 콜백과 UI를 모르는 도메인 함수는
-  리액트 이벤트 핸들러나 프롭 콜백 구현이 아닙니다. 이 경우 이 규칙은 적용하지 않습니다.
-- 일반 TypeScript 함수 타입 규칙은 동반 스킬인 `convention-typescript`가 다룹니다.
-  여기서는 리액트 핸들러 별칭을 바로 쓰는 경우만 봅니다.
+**`Ui*` 래퍼를 쓸 때는 라이브러리 원본 프롭스를 참조하지 않습니다.**
+래퍼가 노출한 `Ui*Props`를 참조합니다.
+래퍼가 의도적으로 좁히거나 보강한 계약이 사용처로 새지 않게 하려는 것입니다.
+
+`query.select` 같은 훅 옵션의 일회성 문맥 콜백은 리액트 핸들러 구현이 아니라 대상이 아닙니다.
 
 **Requires selected:** `typescript/types-reuse-callback-signatures-from-existing-contracts` · 함께 적용
 

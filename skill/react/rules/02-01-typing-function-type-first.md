@@ -1,50 +1,78 @@
 ---
-title: Prefer React Handler Type Aliases Over Inline Event Parameter Annotations
-titleKo: 매개변수마다 타입을 붙이지 않고 리액트 핸들러 별칭을 씁니다
+title: Pin React Handler and Wrapper Prop Types at the Declaration
+titleKo: 리액트 핸들러와 래퍼 프롭 타입은 선언 자리에서 고정합니다
 impact: HIGH
-impactDescription: 핸들러 시그니처와 콜백 의도가 선언 자리에서 바로 드러납니다
+impactDescription: 핸들러 시그니처와 래퍼가 좁힌 계약이 선언 자리에서 바로 드러납니다
 appliesWhen:
-  - 리액트 이벤트 핸들러나 프롭 콜백의 선언·시그니처를 추가·변경할 때
-  - 기존 리액트 별칭이나 콜백 계약을 그대로 쓸 수 있는 상황일 때
-  - 커링한 팩토리가 최종 반환하는 핸들러를 다룰 때
-reviewWith: typing-reuse-existing-contracts
+  - 커링 팩토리가 돌려주는 리액트 핸들러의 타입을 정할 때
+  - `Ui*` 래퍼 사용처에서 프롭스 타입을 참조할 때
+  - 제외: `query.select` 같은 훅 옵션의 일회성 문맥 콜백인 경우
 requiresSelected: typescript/types-reuse-callback-signatures-from-existing-contracts
+reviewWith: typescript/types-prefer-function-variable-types-over-parameter-annotations
 tags: typing, handlers, props
 ---
 
-## Prefer React Handler Type Aliases Over Inline Event Parameter Annotations
+## Pin React Handler and Wrapper Prop Types at the Declaration
 
-**Impact: HIGH (핸들러 시그니처와 콜백 의도가 선언 자리에서 바로 드러납니다)**
+**Impact: HIGH (핸들러 시그니처와 래퍼가 좁힌 계약이 선언 자리에서 바로 드러납니다)**
 
-리액트가 제공하는 이벤트 핸들러 타입이나 프롭 콜백 계약이 이미 있다면
-매개변수 타입보다 함수 변수 타입 선언을 우선합니다.
+매개변수마다 타입을 붙이지 않고 함수 변수 타입을 쓰는 일반 규칙은
+`typescript/types-prefer-function-variable-types-over-parameter-annotations`가 정합니다.
+여기서는 그 규칙이 다루지 않는 리액트 두 자리만 봅니다.
 
-커링한 핸들러 팩토리가 반환하는 함수도 JSX 이벤트 프롭에 전달되는 리액트 핸들러 선언입니다.
-JSX가 나중에 문맥 타입 지정을 제공한다는 이유로 반환 함수 타입을 생략하지 않고,
-팩토리 반환 타입을 `MouseEventHandler<...>` 같은 기존 별칭으로 고정합니다.
+**커링 팩토리의 반환 함수도 리액트 핸들러입니다.**
+JSX가 나중에 문맥 타입을 준다는 이유로 반환 타입을 생략하지 않고,
+`MouseEventHandler<...>` 같은 기존 별칭으로 팩토리 반환 타입을 고정합니다.
 
-- `query.select` 같은 훅 옵션의 일회성 문맥 콜백과 UI를 모르는 도메인 함수는
-  리액트 이벤트 핸들러나 프롭 콜백 구현이 아닙니다. 이 경우 이 규칙은 적용하지 않습니다.
-- 일반 TypeScript 함수 타입 규칙은 동반 스킬인 `convention-typescript`가 다룹니다.
-  여기서는 리액트 핸들러 별칭을 바로 쓰는 경우만 봅니다.
+**`Ui*` 래퍼를 쓸 때는 라이브러리 원본 프롭스를 참조하지 않습니다.**
+래퍼가 노출한 `Ui*Props`를 참조합니다.
+래퍼가 의도적으로 좁히거나 보강한 계약이 사용처로 새지 않게 하려는 것입니다.
 
-**Incorrect (핸들러 타입이 있는데 매개변수만 타입 지정):**
+`query.select` 같은 훅 옵션의 일회성 문맥 콜백은 리액트 핸들러 구현이 아니라 대상이 아닙니다.
+
+**Incorrect (팩토리 반환 타입을 JSX 문맥에 떠넘김):**
 
 ```ts
-const handleAddButtonClick = (event: MouseEvent<HTMLButtonElement>): void => {
+const handleRowSelectToggle = (rowId: string) => (event: MouseEvent<HTMLLIElement>) => {
   event.preventDefault();
+  toggleSelection(rowId);
 };
 ```
 
-**Correct (함수 변수 타입으로 시그니처를 고정):**
+**Correct (팩토리 반환 타입을 기존 별칭으로 고정):**
 
 ```ts
 import type { MouseEventHandler } from "react";
 
 /**
- * 추가 버튼 클릭 기본 동작 차단
+ * 행 선택 토글 핸들러 팩토리
  */
-const handleAddButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => {
-  // ...
+const handleRowSelectToggle =
+  (rowId: string): MouseEventHandler<HTMLLIElement> =>
+  (_event) => {
+    toggleSelection(rowId);
+  };
+```
+
+**Incorrect (래퍼를 쓰면서 라이브러리 원본 프롭스를 참조):**
+
+```ts
+import type { ButtonProps } from "antd";
+
+const handleSubmitClick: ButtonProps["onClick"] = (event) => {
+  event.preventDefault();
+};
+```
+
+**Correct (래퍼가 노출한 계약을 참조):**
+
+```ts
+import type { UiButtonProps } from "@/ui/ui-button";
+
+/**
+ * 저장 버튼 클릭 기본 동작 차단
+ */
+const handleSubmitClick: UiButtonProps["onClick"] = (event) => {
+  event.preventDefault();
 };
 ```

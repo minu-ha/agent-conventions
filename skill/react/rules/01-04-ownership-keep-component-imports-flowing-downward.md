@@ -21,7 +21,7 @@ tags: ownership, imports, direction, private
 - `component` 폴더 안의 파일은 그 폴더의 소유자만 가져오기합니다.
 - 형제끼리는 가져오기하지 않습니다.
 - `../`로 컴포넌트를 가져오지 않습니다.
-- 절대경로는 전역 레이어 루트만 가리킵니다. `@/page/...`로 화면 내부를 가져오지 않습니다.
+- 절대경로 별칭의 허용 범위는 `typescript/naming-use-direct-imports-and-public-entry-points`가 정합니다.
 
 여러 자식이 같은 컴포넌트를 필요로 하면 셋 중 하나로 해소합니다.
 

@@ -34,8 +34,7 @@
     - 1.4 [Keep Component Imports Flowing Downward](#14-keep-component-imports-flowing-downward)
     - 1.5 [Keep Library Lifecycle in the Owning Component](#15-keep-library-lifecycle-in-the-owning-component)
 2. [Typing and Contracts](#2-typing-and-contracts) — **HIGH**
-    - 2.1 [Prefer React Handler Type Aliases Over Inline Event Parameter Annotations](#21-prefer-react-handler-type-aliases-over-inline-event-parameter-annotations)
-    - 2.2 [Reuse Prop and API Contracts Before Creating New Types](#22-reuse-prop-and-api-contracts-before-creating-new-types)
+    - 2.1 [Pin React Handler and Wrapper Prop Types at the Declaration](#21-pin-react-handler-and-wrapper-prop-types-at-the-declaration)
 3. [Composition Strategy](#3-composition-strategy) — **HIGH**
     - 3.1 [Avoid Boolean Prop Proliferation in Shared Components](#31-avoid-boolean-prop-proliferation-in-shared-components)
     - 3.2 [Choose Single Components, Compound Components, and Variants Deliberately](#32-choose-single-components-compound-components-and-variants-deliberately)
@@ -358,7 +357,7 @@ ui/button/
 - `component` 폴더 안의 파일은 그 폴더의 소유자만 가져오기합니다.
 - 형제끼리는 가져오기하지 않습니다.
 - `../`로 컴포넌트를 가져오지 않습니다.
-- 절대경로는 전역 레이어 루트만 가리킵니다. `@/page/...`로 화면 내부를 가져오지 않습니다.
+- 절대경로 별칭의 허용 범위는 `typescript/naming-use-direct-imports-and-public-entry-points`가 정합니다.
 
 여러 자식이 같은 컴포넌트를 필요로 하면 셋 중 하나로 해소합니다.
 
@@ -510,85 +509,75 @@ export const ChartRoot = (props: ChartRootProps) => {
 
 리액트가 제공하는 핸들러와 프롭 계약은 선언 위치에서 바로 드러나야 하며, 프롭스와 콜백 시그니처 재사용도 리액트 문맥에 맞게 유지해야 합니다.
 
-### 2.1 Prefer React Handler Type Aliases Over Inline Event Parameter Annotations
+### 2.1 Pin React Handler and Wrapper Prop Types at the Declaration
 
 **Rule:** `R06` · `typing-function-type-first`
 
-**Applies when:** 리액트 이벤트 핸들러나 프롭 콜백의 선언·시그니처를 추가·변경할 때. 기존 리액트 별칭이나 콜백 계약을 그대로 쓸 수 있는 상황일 때. 커링한 팩토리가 최종 반환하는 핸들러를 다룰 때.
+**Applies when:** 커링 팩토리가 돌려주는 리액트 핸들러의 타입을 정할 때. `Ui*` 래퍼 사용처에서 프롭스 타입을 참조할 때. 제외: `query.select` 같은 훅 옵션의 일회성 문맥 콜백인 경우.
 
 **Requires selected:** `typescript/types-reuse-callback-signatures-from-existing-contracts` · 함께 적용
 
-**Review with:** `typing-reuse-existing-contracts`
+**Review with:** `typescript/types-prefer-function-variable-types-over-parameter-annotations`
 
-**Impact: HIGH (핸들러 시그니처와 콜백 의도가 선언 자리에서 바로 드러납니다)**
+**Impact: HIGH (핸들러 시그니처와 래퍼가 좁힌 계약이 선언 자리에서 바로 드러납니다)**
 
-리액트가 제공하는 이벤트 핸들러 타입이나 프롭 콜백 계약이 이미 있다면
-매개변수 타입보다 함수 변수 타입 선언을 우선합니다.
+매개변수마다 타입을 붙이지 않고 함수 변수 타입을 쓰는 일반 규칙은
+`typescript/types-prefer-function-variable-types-over-parameter-annotations`가 정합니다.
+여기서는 그 규칙이 다루지 않는 리액트 두 자리만 봅니다.
 
-커링한 핸들러 팩토리가 반환하는 함수도 JSX 이벤트 프롭에 전달되는 리액트 핸들러 선언입니다.
-JSX가 나중에 문맥 타입 지정을 제공한다는 이유로 반환 함수 타입을 생략하지 않고,
-팩토리 반환 타입을 `MouseEventHandler<...>` 같은 기존 별칭으로 고정합니다.
+**커링 팩토리의 반환 함수도 리액트 핸들러입니다.**
+JSX가 나중에 문맥 타입을 준다는 이유로 반환 타입을 생략하지 않고,
+`MouseEventHandler<...>` 같은 기존 별칭으로 팩토리 반환 타입을 고정합니다.
 
-- `query.select` 같은 훅 옵션의 일회성 문맥 콜백과 UI를 모르는 도메인 함수는
-  리액트 이벤트 핸들러나 프롭 콜백 구현이 아닙니다. 이 경우 이 규칙은 적용하지 않습니다.
-- 일반 TypeScript 함수 타입 규칙은 동반 스킬인 `convention-typescript`가 다룹니다.
-  여기서는 리액트 핸들러 별칭을 바로 쓰는 경우만 봅니다.
+**`Ui*` 래퍼를 쓸 때는 라이브러리 원본 프롭스를 참조하지 않습니다.**
+래퍼가 노출한 `Ui*Props`를 참조합니다.
+래퍼가 의도적으로 좁히거나 보강한 계약이 사용처로 새지 않게 하려는 것입니다.
 
-**Incorrect (핸들러 타입이 있는데 매개변수만 타입 지정):**
+`query.select` 같은 훅 옵션의 일회성 문맥 콜백은 리액트 핸들러 구현이 아니라 대상이 아닙니다.
+
+**Incorrect (팩토리 반환 타입을 JSX 문맥에 떠넘김):**
 
 ```ts
-const handleAddButtonClick = (event: MouseEvent<HTMLButtonElement>): void => {
+const handleRowSelectToggle = (rowId: string) => (event: MouseEvent<HTMLLIElement>) => {
   event.preventDefault();
+  toggleSelection(rowId);
 };
 ```
 
-**Correct (함수 변수 타입으로 시그니처를 고정):**
+**Correct (팩토리 반환 타입을 기존 별칭으로 고정):**
 
 ```ts
 import type { MouseEventHandler } from "react";
 
 /**
- * 추가 버튼 클릭 기본 동작 차단
+ * 행 선택 토글 핸들러 팩토리
  */
-const handleAddButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => {
-  // ...
+const handleRowSelectToggle =
+  (rowId: string): MouseEventHandler<HTMLLIElement> =>
+  (_event) => {
+    toggleSelection(rowId);
+  };
+```
+
+**Incorrect (래퍼를 쓰면서 라이브러리 원본 프롭스를 참조):**
+
+```ts
+import type { ButtonProps } from "antd";
+
+const handleSubmitClick: ButtonProps["onClick"] = (event) => {
+  event.preventDefault();
 };
 ```
 
-### 2.2 Reuse Prop and API Contracts Before Creating New Types
-
-**Rule:** `R07` · `typing-reuse-existing-contracts`
-
-**Applies when:** 프롭스 콜백 구현을 추가·변경할 때. API 응답 기반 화면 타입을 추가·변경하는데 기존 프롭·API 계약과 같은 형태가 보일 때. 래퍼 컴포넌트 사용처에서 프롭스 타입을 참조할 때.
-
-**Review with:** `typescript/types-reuse-callback-signatures-from-existing-contracts`, `typescript/types-reuse-existing-contracts-before-new-types`
-
-**Impact: HIGH (같은 구조를 두 번 선언해 시간이 지나며 어긋나는 것을 막습니다)**
-
-프롭스 콜백 구현 시에는 프롭스 시그니처를 재사용하고, API 응답 타입이 이미 있으면 새 인터페이스를 만들지 않습니다.
-필요하면 `Pick`, `Omit`, 인덱스 접근 같은 파생 타입으로 좁힙니다.
-`Ui*` 래퍼를 쓸 때는 라이브러리 원본 프롭스가 아니라 래퍼가 노출한 `Ui*Props`를 참조합니다.
-래퍼가 의도적으로 좁히거나 보강한 계약이 사용처로 새지 않게 하려는 것입니다.
-
-**Incorrect (같은 계약을 새 타입으로 다시 정의):**
+**Correct (래퍼가 노출한 계약을 참조):**
 
 ```ts
-interface EntrySummaryValues {
-  id: number;
-  title: string;
-  status: string;
-}
-```
-
-**Correct (기존 계약을 직접 재사용):**
-
-```ts
-type EntrySummary = Pick<EntrySummaryResponse, "id" | "title">;
+import type { UiButtonProps } from "@/ui/ui-button";
 
 /**
- * 링크 클릭 기본 이동 차단
+ * 저장 버튼 클릭 기본 동작 차단
  */
-const handleLinkClick: LinkProps["onLinkClick"] = (event) => {
+const handleSubmitClick: UiButtonProps["onClick"] = (event) => {
   event.preventDefault();
 };
 ```
@@ -601,7 +590,7 @@ const handleLinkClick: LinkProps["onLinkClick"] = (event) => {
 
 ### 3.1 Avoid Boolean Prop Proliferation in Shared Components
 
-**Rule:** `R08` · `strategy-avoid-boolean-prop-proliferation`
+**Rule:** `R07` · `strategy-avoid-boolean-prop-proliferation`
 
 **Applies when:** 여러 곳에서 쓰는 공용 컴포넌트에 불리언 모드·표시 프롭을 추가할 때. 기존 불리언 프롭 조합과 JSX 분기가 늘어날 때.
 
@@ -672,7 +661,7 @@ export const WgEntryEditToolbar = () => {
 
 ### 3.2 Choose Single Components, Compound Components, and Variants Deliberately
 
-**Rule:** `R09` · `strategy-choose-single-composition-compound-and-variants`
+**Rule:** `R08` · `strategy-choose-single-composition-compound-and-variants`
 
 **Applies when:** 내보낸 공용 컴포넌트에 슬롯·공개 부품·공용 컨텍스트/동작을 추가할 때. 반복되는 기본 설정이나 모드 API를 추가할 때. 공용 컴포넌트의 조립 구조를 재설계할 때.
 
@@ -820,7 +809,7 @@ export const ReadOnlyProfileDialog = () => {
 
 ### 3.3 Prefer Children Over Render Props for Static Composition
 
-**Rule:** `R10` · `strategy-prefer-children-over-render-props`
+**Rule:** `R09` · `strategy-prefer-children-over-render-props`
 
 **Applies when:** 공용 컴포넌트에 머리말·꼬리말·동작 같은 정적 슬롯을 추가·변경할 때. 렌더 프롭을 추가·변경하는데 실행 환경 데이터 주입이 꼭 필요한지 불분명할 때.
 
@@ -912,7 +901,7 @@ export const EntryScreen = () => {
 
 ### 4.1 Accept props as a Whole and Destructure Inside the Component
 
-**Rule:** `R11` · `composition-destructure-props-inside`
+**Rule:** `R10` · `composition-destructure-props-inside`
 
 **Applies when:** 프롭스를 받는 함수 컴포넌트의 시그니처나 구조분해 방식을 추가·변경할 때. 프롭스를 받는 컴포넌트를 다른 파일로 옮기거나 이름을 바꿀 때.
 
@@ -944,7 +933,7 @@ const UserCard = (props: UserCardProps) => {
 
 ### 4.2 Do Not Define Components Inside Components
 
-**Rule:** `R12` · `composition-do-not-define-components-inside-components`
+**Rule:** `R11` · `composition-do-not-define-components-inside-components`
 
 **Applies when:** 컴포넌트 본문 안에 JSX를 반환하는 로컬 함수·컴포넌트를 추가하거나 옮길 때. 재렌더 시 재마운트·focus 초기화 징후를 다룰 때.
 
@@ -1001,7 +990,7 @@ export const UserProfileCard = (props: UserProfileCardProps) => {
 
 ### 4.3 Use Named Handlers Instead of Hiding Logic in JSX
 
-**Rule:** `R13` · `composition-named-handlers-over-inline`
+**Rule:** `R12` · `composition-named-handlers-over-inline`
 
 **Applies when:** TSX 이벤트 프롭의 인라인 콜백에 분기나 비동기 호출을 추가·수정할 때. 인라인 콜백에 여러 동작·부수효과나 비자명한 상태 전환이 들어갈 때. 제외: 인자 없이 핸들러 참조만 넘기는 경우.
 
@@ -1047,7 +1036,7 @@ const handleRemoveEntryButtonClick: MouseEventHandler<HTMLButtonElement> = async
 
 ### 4.4 Open ref Props Only for Real Imperative Contracts
 
-**Rule:** `R14` · `composition-open-ref-props-only-for-imperative-contracts`
+**Rule:** `R13` · `composition-open-ref-props-only-for-imperative-contracts`
 
 **Applies when:** 컴포넌트에 `ref` 프롭을 추가하거나 공개할 대상을 바꿀 때. 제외: 이미 있는 `ref` 계약의 타입만 바꾸는 경우.
 
@@ -1116,7 +1105,7 @@ export const UiStatusBadge = (props: UiStatusBadgeProps) => {
 
 ### 5.1 Avoid Premature Abstraction in Screen Code
 
-**Rule:** `R15` · `screen-avoid-premature-abstraction`
+**Rule:** `R14` · `screen-avoid-premature-abstraction`
 
 **Applies when:** 화면 코드를 보조 함수·훅·컴포넌트·모듈으로 추출할 때. 한 곳에서만 쓰는 기존 추상화를 다시 접어 넣을 때.
 
@@ -1232,7 +1221,7 @@ export const EntryTable = (props: EntryTableProps) => {
 
 ### 5.2 Extract Route-local Section Components Only for Runtime Boundaries
 
-**Rule:** `R16` · `screen-extract-local-section-components-for-runtime-boundaries`
+**Rule:** `R15` · `screen-extract-local-section-components-for-runtime-boundaries`
 
 **Applies when:** 화면 지역 섹션 컴포넌트를 새로 추출할 때. 기존 섹션이 비동기·상태·프로바이더·상호작용·라이브러리·성능 경계를 소유하는지 바꿀 때.
 
@@ -1390,7 +1379,7 @@ export const PgEntries = () => {
 
 ### 5.3 Keep Derived Values Close to Where They Are Used
 
-**Rule:** `R17` · `screen-keep-derived-values-close`
+**Rule:** `R16` · `screen-keep-derived-values-close`
 
 **Applies when:** 오리진을 끊는 별칭·플래그·표시값을 넓은 화면 범위에 추가·이동·제거할 때. `let` 재할당이나 배열 `push` 기반 조립을 바꿀 때.
 
@@ -1435,7 +1424,7 @@ return <UiInput value={selectedNodeContext?.node?.name} />;
 
 ### 5.4 Keep Route Entry Files Focused on Screen Flow
 
-**Rule:** `R18` · `screen-keep-route-flow-visible`
+**Rule:** `R17` · `screen-keep-route-flow-visible`
 
 **Applies when:** 라우트 진입의 검색·화면 이동·질의·변경 요청·화면 전체 이펙트를 옮기거나 나눌 때. page 섹션 조립의 순서나 소유자를 바꿀 때. 제외: 같은 소유자 안에서 표현만 바꾸는 경우.
 
@@ -1509,7 +1498,7 @@ return (
 
 ### 6.1 Keep Screen-specific Handler Flow Local Until a Real Utility Emerges
 
-**Rule:** `R19` · `events-keep-handler-flow-inline`
+**Rule:** `R18` · `events-keep-handler-flow-inline`
 
 **Applies when:** 화면 전용 이름 붙인 핸들러의 분기·변경 요청·화면 이동·후처리를 여러 보조 함수나 훅으로 나눌 때. 쪼개져 있던 핸들러 흐름을 다시 합칠 때.
 
@@ -1557,7 +1546,7 @@ const handleSubmitButtonClick: MouseEventHandler<HTMLButtonElement> = async (_ev
 
 ### 6.2 Name Handlers Predictably and Curry Extra Arguments
 
-**Rule:** `R20` · `events-name-and-curry-handlers`
+**Rule:** `R19` · `events-name-and-curry-handlers`
 
 **Applies when:** 이벤트 핸들러를 새로 만들 때. 핸들러 이름이나 대상, 이벤트 표기를 바꿀 때. 추가 인자 전달 방식이나 최종 리액트 핸들러 시그니처를 바꿀 때.
 
@@ -1615,7 +1604,7 @@ const handleListItemClick =
 
 ### 6.3 Run User Actions in Handlers, Not Effects
 
-**Rule:** `R21` · `events-run-user-actions-in-handlers-not-effects`
+**Rule:** `R20` · `events-run-user-actions-in-handlers-not-effects`
 
 **Applies when:** 제출·저장·삭제·닫기 같은 한 번뿐인 사용자 액션을 핸들러와 상태+이펙트 사이에서 옮길 때. 한 번뿐인 사용자 액션의 실행 흐름을 바꿀 때.
 
@@ -1662,7 +1651,7 @@ const handleSubmit = async () => {
 
 ### 7.1 Avoid Ad-hoc Loading Branches in Screen Bodies
 
-**Rule:** `R22` · `data-avoid-ad-hoc-loading-branches`
+**Rule:** `R21` · `data-avoid-ad-hoc-loading-branches`
 
 **Applies when:** Suspense 질의를 쓰는 화면 본문에 초기 로딩 반환을 추가·변경할 때. `isPending`·`isFetching`으로 화면을 가리는 분기를 넣을 때. 제외: 선택 값에 기본값을 채우는 것만 바꾸는 경우.
 
@@ -1716,7 +1705,7 @@ if (mutationOrderConfirm.isPending) {
 
 ### 7.2 Name Query and Mutation Bindings Consistently
 
-**Rule:** `R23` · `data-name-query-and-mutation-bindings-consistently`
+**Rule:** `R22` · `data-name-query-and-mutation-bindings-consistently`
 
 **Applies when:** 리액트 Query 질의·변경 요청 훅의 로컬 바인딩을 추가하거나 이름을 바꿀 때. 역할이 드러나지 않는 별칭이 diff에 보일 때.
 
@@ -1753,7 +1742,7 @@ const mutationEntryRemove = useEntryRemove();
 
 ### 7.3 Preserve Response and Store Origin in Wide Scopes
 
-**Rule:** `R24` · `data-preserve-origin-chaining`
+**Rule:** `R23` · `data-preserve-origin-chaining`
 
 **Applies when:** page·레이아웃·화면 넓은 스코프에서 응답·변경 요청·스토어를 구조분해할 때. 원본을 별칭으로 끊고 값 접근 방식을 바꿀 때.
 
@@ -1795,7 +1784,7 @@ useEffect(() => {
 
 ### 7.4 Shape React Query Data in query.select
 
-**Rule:** `R25` · `data-shape-query-data-with-select`
+**Rule:** `R24` · `data-shape-query-data-with-select`
 
 **Applies when:** 서버 응답의 목록·항목·메타 등을 렌더에서 가공하거나 반복 소비할 때. 리액트 Query `select`의 결과 형태를 추가·변경할 때.
 
@@ -1844,7 +1833,7 @@ const responseEntryListSuspense = useEntryListSuspense({
 
 ### 8.1 Calculate Derived Values During Rendering
 
-**Rule:** `R26` · `state-calculate-derived-values-during-render`
+**Rule:** `R25` · `state-calculate-derived-values-during-render`
 
 **Applies when:** 현재 프롭스·상태·검색·응답에서 계산 가능한 값을 별도 상태와 이펙트로 동기화할 때. 그런 동기화를 제거할 때.
 
@@ -1877,7 +1866,7 @@ return <SelectedCountBadge count={selectedIds.length} />;
 
 ### 8.2 Choose State Tools by Source of Truth
 
-**Rule:** `R27` · `state-choose-state-tools-by-source-of-truth`
+**Rule:** `R26` · `state-choose-state-tools-by-source-of-truth`
 
 **Applies when:** 로컬 UI·전역 클라이언트·서버 데이터를 새 상태 도구로 옮길 때. 서로 다른 진짜 출처 사이에 값을 복제하거나 동기화할 때.
 
@@ -1919,7 +1908,7 @@ const responseUserGetItemSuspense = useUserGetItemSuspense();
 
 ### 8.3 Store Shared Derived Decisions Only When They Are Truly Shared
 
-**Rule:** `R28` · `state-store-derived-authority`
+**Rule:** `R27` · `state-store-derived-authority`
 
 **Applies when:** 여러 화면·메뉴·라우트 가드가 쓰는 접근 권한 같은 파생 판단을 스토어에 저장·동기화할 때. 단일 화면에서만 쓰는 값까지 스토어로 올리려 할 때.
 
@@ -1969,7 +1958,7 @@ useEffect(() => {
 
 ### 8.4 Use Functional setState Updates When Based on Previous State
 
-**Rule:** `R29` · `state-use-functional-setstate-updates`
+**Rule:** `R28` · `state-use-functional-setstate-updates`
 
 **Applies when:** 다음 상태가 현재 상태에 의존하는 갱신을 추가·변경할 때. 핸들러·비동기 콜백·연속 호출에서 `setState` 방식을 바꿀 때.
 
@@ -2010,7 +1999,7 @@ const handleToggleUser = (userId: string) => {
 
 ### 8.5 Use useEffectEvent for Non-reactive Effect Callbacks
 
-**Rule:** `R30` · `state-use-effectevent-for-non-reactive-effect-callbacks`
+**Rule:** `R29` · `state-use-effectevent-for-non-reactive-effect-callbacks`
 
 **Applies when:** 구독 이펙트가 최신 프롭·상태 콜백을 읽어야 할 때. ref 동기화 우회, 의존성 재설치, `useEffectEvent`를 추가·변경할 때.
 
@@ -2074,7 +2063,7 @@ useEffect(() => {
 
 ### 9.1 Do Not Memoize Without a Confirmed Reason
 
-**Rule:** `R31` · `perf-avoid-defensive-memoization`
+**Rule:** `R30` · `perf-avoid-defensive-memoization`
 
 **Applies when:** `useMemo`·`useCallback`을 추가하거나 제거할 때. 참조 동일성·실측 병목·무거운 지연 계산을 이유로 수동 메모이제이션을 검토할 때.
 
@@ -2108,7 +2097,7 @@ const columns = useMemo(() => buildColumns(response.data.columns), [response.dat
 
 ### 9.2 Use Lazy State Initializers for Expensive Defaults
 
-**Rule:** `R32` · `perf-use-lazy-state-initializers-for-expensive-defaults`
+**Rule:** `R31` · `perf-use-lazy-state-initializers-for-expensive-defaults`
 
 **Applies when:** `useState` 초기값에 localStorage 파싱, 인덱스 생성, 큰 배열 정규화 같은 비용 있는 계산을 넣을 때.
 
@@ -2137,7 +2126,7 @@ const [draftFilter] = useState(() => {
 
 ### 9.3 Use startTransition for Non-urgent Visual Updates
 
-**Rule:** `R33` · `perf-use-starttransition-for-non-urgent-updates`
+**Rule:** `R32` · `perf-use-starttransition-for-non-urgent-updates`
 
 **Applies when:** 클릭·선택·필터 변경 뒤 큰 목록·표·트리를 다시 그리는 상태 갱신을 다룰 때. 상태 갱신의 우선순위나 전환 처리를 바꿀 때.
 
@@ -2174,7 +2163,7 @@ const handleStatusFilterChange = (nextStatus: EntryStatusFilter) => {
 
 ### 9.4 Use useDeferredValue for Heavy Derived Renders
 
-**Rule:** `R34` · `perf-use-usedeferredvalue-for-heavy-derived-renders`
+**Rule:** `R33` · `perf-use-usedeferredvalue-for-heavy-derived-renders`
 
 **Applies when:** 검색어·필터·정렬 입력마다 큰 목록이나 표를 다시 계산해 입력 반응이 늦어질 때. `useDeferredValue` 기반 계산을 추가·변경할 때.
 
@@ -2221,7 +2210,7 @@ const filteredRows = useMemo(() => {
 
 ### 10.1 Require Doc Comments on React Hooks, Handlers, and Key Declarations
 
-**Rule:** `R35` · `docs-require-jsdoc-on-key-declarations`
+**Rule:** `R34` · `docs-require-jsdoc-on-key-declarations`
 
 **Applies when:** 질의·변경 요청이나 비자명한 핸들러/이펙트를 추가·변경할 때. 내보낸 보조 함수·훅·스토어 선언을 추가·변경할 때. 다시 내보내기 포함 공개 타입·인터페이스나 합성 공개 부품을 추가·변경할 때.
 
