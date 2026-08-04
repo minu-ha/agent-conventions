@@ -27,7 +27,7 @@ tags: state, react-query, select
 const items = responseEntryListSuspense.data.list;
 ```
 
-**Correct (fetch 시점에 필요한 모양으로 변환):**
+**Correct (데이터를 가져오는 시점에 필요한 모양으로 변환):**
 
 ```ts
 /**

@@ -35,7 +35,7 @@ if (responseUserGetItemSuspense.isPending) {
 }
 ```
 
-**Correct (결측은 명시적으로 드러내고, pending/fetching은 보조 UI에만 사용):**
+**Correct (결측은 명시적으로 드러내고, 로딩과 갱신 상태는 보조 UI에만 사용):**
 
 ```tsx
 if (!responseUserGetItemSuspense.data?.name) {

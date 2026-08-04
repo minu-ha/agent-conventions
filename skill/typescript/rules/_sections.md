@@ -1,6 +1,6 @@
 # 섹션
 
-이 파일은 TypeScript 컨벤션 rule의 섹션 순서, 영향도, 설명을 정의합니다.
+이 파일은 TypeScript 컨벤션 규칙의 섹션 순서, 영향도, 설명을 정의합니다.
 
 ## 1. Naming and Module Boundaries (naming)
 **TitleKo:** 이름과 모듈 경계

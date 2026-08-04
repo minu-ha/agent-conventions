@@ -12,9 +12,9 @@ tags: state, usestate, initialization, performance
 
 **Impact: MEDIUM (초기 상태 계산이 무거울 때 준비 작업이 렌더마다 되풀이되지 않습니다)**
 
-`useState` 초기값이 localStorage 파싱, 인덱스 생성,
-큰 배열 정규화처럼 무거운 계산이라면 값을 바로 넣지 말고 초기화 함수 함수로 감쌉니다.
-싼 literal이나 단순 prop 단순 전달까지 전부 함수형으로 감쌀 필요는 없습니다.
+`useState` 초기값이 `localStorage` 파싱, 인덱스 생성,
+큰 배열 정규화처럼 무거운 계산이라면 값을 바로 넣지 말고 초기화 함수로 감쌉니다.
+숫자나 문자열 같은 값, 프롭을 그대로 넘기는 경우까지 감쌀 필요는 없습니다.
 
 **Incorrect (비싼 초기화가 렌더마다 다시 평가됨):**
 

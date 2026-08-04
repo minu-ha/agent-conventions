@@ -37,7 +37,7 @@ return (
 );
 ```
 
-**Correct (show/hide가 목적일 때만 표시 방식을 사용하고, mount 의미가 중요하면 조건부 렌더링을 유지):**
+**Correct (보이기·숨기기가 목적일 때만 표시 방식을 사용하고, 마운트 의미가 중요하면 조건부 렌더링을 유지):**
 
 ```tsx
 return <Activity mode={isSidebarOpen ? "visible" : "hidden"}><EntrySidebar /></Activity>;

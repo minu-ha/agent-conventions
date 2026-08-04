@@ -25,7 +25,7 @@ tags: naming, class-grammar, ownership
 | `element` | 요소 | 소유자 안의 UI 역할. `listButton`, `emptyState` |
 | `modifier` | 수정자 | 상태나 반복되는 모양. `routeActive`, `selected` |
 
-수정자와 변형은 다릅니다. 수정자는 클래스 뒤에 붙는 `--이름`이고, 변형은 컴포넌트가 받는 `variant` prop입니다.
+수정자와 변형은 다릅니다. 수정자는 클래스 뒤에 붙는 `--이름`이고, 변형은 컴포넌트가 받는 `variant` 프롭입니다.
 
 식별자에는 접두사가 말하는 부분을 반복하지 않습니다. `UiButton`은 `ui_button`이고 `ui_uiButton`이 아닙니다.
 

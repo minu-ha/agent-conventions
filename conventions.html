@@ -364,7 +364,7 @@ body:has(.dlg[open]) { overflow: hidden; }
 		const key = raw.includes("/") ? raw : ownerSkill + "/" + raw;
 		const rule = ownerSkill ? byKey.get(key) : undefined;
 		if (!rule) return "<code>" + esc(raw) + "</code>";
-		const label = (rule.skill === ownerSkill ? "" : rule.skill + " ") + rule.number + "  " + titleOf(rule);
+		const label = (rule.skill === ownerSkill ? "" : rule.skill + " ") + rule.number + "  " + titleText(rule);
 		return '<button class="ref-in" data-goto="' + esc(key) + '" title="' + esc(key) + '">' + esc(label) + "</button>";
 	};
 	const inline = (t, ownerSkill) =>
@@ -453,6 +453,9 @@ body:has(.dlg[open]) { overflow: hidden; }
 
 	// 검색 하이라이트를 유지한 채 backtick 구간만 <code> 로 감싼다.
 	const inlineHi = (t) => String(t == null ? "" : t).split("`").map((seg, i) => (i % 2 ? "<code>" + esc(seg) + "</code>" : hi(seg))).join("");
+	// 제목에도 백틱이 온다. 코드 식별자를 영어 낱말처럼 보이지 않게 <code> 로 감싼다.
+	const titleHtml = (r) => inlineHi(titleOf(r));
+	const titleText = (r) => titleOf(r).replace(/`/g, "");
 
 	// 적용 조건은 불렛이 있으면 불렛으로, 없으면 appliesWhen 원문 문단으로 보여준다.
 	// "제외:" 로 시작하는 항목은 걸리지 않는 조건이라 라벨 칩으로 갈라 보여준다.
@@ -473,7 +476,7 @@ body:has(.dlg[open]) { overflow: hidden; }
 		const key = ext ? target : ownerSkill + "/" + target;
 		const rule = byKey.get(key);
 		// 번호를 앞에 붙여 몇 번째 규칙인지 바로 보이게 한다.
-		const label = rule ? (ext ? rule.skill + " " : "") + rule.number + "  " + titleOf(rule) : target;
+		const label = rule ? (ext ? rule.skill + " " : "") + rule.number + "  " + titleText(rule) : target;
 		return '<button class="ref" data-ext="' + (ext ? 1 : 0) + '" title="' + esc(key) + '"' +
 			(rule ? ' data-goto="' + esc(key) + '"' : " disabled") + ">" + esc(label) + "</button>";
 	};
@@ -551,11 +554,11 @@ body:has(.dlg[open]) { overflow: hidden; }
 		const head = dlg
 			? '<div class="row-hd row-hd-dlg">' +
 				'<span class="row-no" title="' + esc(r.skill) + " HANDBOOK " + r.number + '">' + r.number + "</span>" +
-				'<span class="row-ti">' + hi(titleOf(r)) + "</span>" +
+				'<span class="row-ti">' + titleHtml(r) + "</span>" +
 				'<span class="row-meta"><span class="imp imp-' + r.impact + '">' + r.impact + "</span></span></div>"
 			: '<button class="row-hd" data-rule="' + esc(key) + '" aria-expanded="' + open + '">' +
 				'<span class="row-no" title="' + esc(r.skill) + " HANDBOOK " + r.number + '">' + r.number + "</span>" +
-				'<span class="row-ti">' + hi(titleOf(r)) + "</span>" +
+				'<span class="row-ti">' + titleHtml(r) + "</span>" +
 				'<span class="row-meta"><span class="imp imp-' + r.impact + '">' + r.impact + "</span>" +
 				'<span class="car" aria-hidden="true">' + (open ? "\u25be" : "\u25b8") + "</span></span></button>";
 
@@ -622,7 +625,7 @@ body:has(.dlg[open]) { overflow: hidden; }
 		if (!dlgKey) return;
 		const r = byKey.get(dlgKey);
 		if (!r) return;
-		dlg.setAttribute("aria-label", titleOf(r));
+		dlg.setAttribute("aria-label", titleText(r));
 		dlg.innerHTML = '<button class="dlg-x" data-close="1" aria-label="닫기">\u2715</button>' +
 			'<div class="dlg-scroll">' + ruleHtml(r, true) + "</div>";
 	}

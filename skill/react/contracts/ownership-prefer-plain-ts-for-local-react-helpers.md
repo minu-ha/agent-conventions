@@ -11,4 +11,4 @@
   그 판단은 `ownership-keep-lifecycle-in-the-owning-component`가 담당합니다.
 - 단순 계산을 훅처럼 보이게 만드는 추상화는 피합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/01-02-ownership-prefer-plain-ts-for-local-react-helpers.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/01-01-ownership-prefer-plain-ts-for-local-react-helpers.md)을 읽습니다.

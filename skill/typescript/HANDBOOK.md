@@ -80,7 +80,7 @@ const defaultPageSize = 20;
 const billing_feature_keys = ["invoices", "refunds"];
 ```
 
-**Correct (공용 설정은 `shared/config.ts` namespace에서 읽음):**
+**Correct (공용 설정은 `shared/config.ts` 이름 공간에서 읽음):**
 
 ```ts
 import {config} from "@/shared/config";
@@ -139,7 +139,7 @@ util.number.clamp(score, 0, 100);
 폴더명은 `kebab-case` 단수로 쓰고 프레임워크가 강제하는 이름만 예외로 둡니다.
 `const`인지에 따라 표기를 달리하지 않습니다. 모듈 안 지역 값은 모두 `camelCase`로 맞춥니다.
 
-공용 설정 객체의 키와 enum 성격 상수 객체의 이름과 키는 `snake_case`입니다.
+공용 설정 객체의 키와 `enum` 성격 상수 객체의 이름과 키는 `snake_case`입니다.
 일반 객체 키, 스키마 키, 커스텀 타입 필드는 `camelCase`를 유지합니다.
 
 외부 패키지가 내보낸 이름을 별칭 없이 그대로 가져오는 것은 지역 심볼을 새로 짓는 일이 아니라 이 규칙의 대상이 아닙니다.
@@ -271,7 +271,7 @@ interface PublishResult {
 }
 ```
 
-**Correct (헤더와 필드별 doc 주석을 사용):**
+**Correct (헤더와 필드별 문서 주석을 사용):**
 
 ```ts
 /**
@@ -315,7 +315,7 @@ const publishResultSchema = z.object({
 `MouseEventHandler`를 돌려주면서 이벤트 매개변수를 쓰지 않는 경우도 예외가 아닙니다.
 `() =>` 대신 `(_event) =>`로 받아 계약을 남깁니다.
 
-**Incorrect (계약의 일부인 callback 매개변수를 조용히 생략):**
+**Incorrect (계약의 일부인 콜백 매개변수를 조용히 생략):**
 
 ```ts
 type LogSink = (message: string, level: "info" | "error") => void;
@@ -361,7 +361,7 @@ const formatState = (state: Record<string, unknown>): string => {
 };
 ```
 
-**Correct (기존 계약이나 실제 공유되는 callable contract를 재사용해 함수 변수 타입을 고정):**
+**Correct (기존 계약이나 실제로 공유되는 호출 계약을 재사용해 함수 변수 타입을 고정):**
 
 ```ts
 /**
@@ -546,7 +546,7 @@ const visibleTabs = canManageItems
 내보낸 함수가 또 다른 내보낸 함수를 타고 가는 사슬은 만들지 않습니다.
 흐름을 알려고 파일을 왕복해야 하면 경계가 아니라 그냥 쪼갠 것입니다.
 
-**Incorrect (단회성 계산을 범용 util 파일로 분리):**
+**Incorrect (단회성 계산을 범용 유틸 파일로 분리):**
 
 ```ts
 // utils.ts
@@ -557,7 +557,7 @@ export const util = {
 };
 ```
 
-**Incorrect (support module 안에서도 내보내기 helper를 단계별로 누적):**
+**Incorrect (보조 모듈 안에서도 내보내기 도우미를 단계별로 누적):**
 
 ```ts
 export const normalizeProfileValues = (formValues: ProfileFormValues) => {
@@ -606,13 +606,13 @@ export const api = {
 };
 ```
 
-**Correct (작은 계산은 local 흐름에 둠):**
+**Correct (작은 계산은 지역 흐름에 둠):**
 
 ```ts
 const nextIteration = iteration + 1;
 ```
 
-**Correct (feature-local support module은 domain-sized 내보내기 안에서 단계별로 정리):**
+**Correct (기능 지역 보조 모듈은 도메인 단위 내보내기 안에서 단계별로 정리):**
 
 ```ts
 // profile-support.ts
@@ -628,7 +628,7 @@ export const buildProfileUpdatePayload = (formValues: ProfileFormValues) => {
 };
 ```
 
-**Correct (단일 owner namespace의 단계는 메서드 본문에 둠):**
+**Correct (단일 소유자 이름 공간의 단계는 메서드 본문에 둠):**
 
 ```ts
 export const api = {
@@ -674,16 +674,16 @@ export const util = {
 
 **Rule:** `T12` · `functions-prefer-immutable-array-sorting`
 
-**Applies when:** props, 상태, 매개변수, 공유 입력에서 온 배열을 정렬할 때. 기존 `.sort()` 호출을 추가·변경할 때.
+**Applies when:** 프롭스, 상태, 매개변수, 공유 입력에서 온 배열을 정렬할 때. 기존 `.sort()` 호출을 추가·변경할 때.
 
-**Impact: MEDIUM (props, 상태, 공유 입력에서 온 배열을 정렬할 때 원본이 바뀌는 버그를 피합니다)**
+**Impact: MEDIUM (프롭스, 상태, 공유 입력에서 온 배열을 정렬할 때 원본이 바뀌는 버그를 피합니다)**
 
 원본 배열을 계속 써야 하면 `.sort()`로 제자리에서 바꾸지 않습니다.
 실행 환경이 ES2023 이상이거나 `toSorted()`를 쓸 수 있으면 `.toSorted()`를 먼저 씁니다.
 아니면 복사한 뒤 정렬합니다.
 동반 스킬이므로 지원 여부가 불분명한 환경에 `toSorted()`를 강제하지는 않습니다.
 
-**Incorrect (원본 배열을 직접 mutation):**
+**Incorrect (원본 배열을 직접 변경):**
 
 ```ts
 const sortedUsers = users.sort((left, right) => left.name.localeCompare(right.name));
@@ -710,7 +710,7 @@ const sortedUsers = [...users].sort((left, right) => left.name.localeCompare(rig
 **Impact: MEDIUM-HIGH (enum 특유의 동작을 들이지 않고 실행 값을 드러내며 타입 추출도 가볍게 둡니다)**
 
 `enum` 대신 객체와 `as const`를 씁니다.
-그러면 실행 값과 타입 추론을 함께 두면서 enum 고유 문법과 번들 부담을 피합니다.
+그러면 실행 값과 타입 추론을 함께 두면서 `enum` 고유 문법과 번들 부담을 피합니다.
 
 **Incorrect (`enum`을 직접 사용):**
 
@@ -741,7 +741,7 @@ type AuditStatus = (typeof audit_status)[keyof typeof audit_status];
 
 **Rule:** `T14` · `functions-use-named-object-params-for-complex-signatures`
 
-**Applies when:** 매개변수가 3개를 넘거나 같은 계열 인자를 받는 함수를 추가·변경할 때. 객체 매개변수를 어디서 구조분해할지 바꿀 때. 제외: 리액트 함수 컴포넌트가 props 를 받고 구조분해하는 방식만 바꾸는 경우.
+**Applies when:** 매개변수가 3개를 넘거나 같은 계열 인자를 받는 함수를 추가·변경할 때. 객체 매개변수를 어디서 구조분해할지 바꿀 때. 제외: 리액트 함수 컴포넌트가 프롭스를 받고 구조분해하는 방식만 바꾸는 경우.
 
 **Impact: HIGH (긴 시그니처를 읽을 수 있게 두고 위치를 헷갈리지 않으면서 입력을 늘립니다)**
 
@@ -750,7 +750,7 @@ type AuditStatus = (typeof audit_status)[keyof typeof audit_status];
 객체 매개변수 타입은 파일 위쪽에 이름을 붙여 선언하고, 함수 본문 첫 줄에서 구조분해합니다.
 구조분해 줄이 길어 포매터 예외가 필요해도 함수 본문 안에서 처리합니다.
 
-리액트 함수 컴포넌트가 props 를 통째로 받아 본문에서 구조분해하는 것만 바뀌면
+리액트 함수 컴포넌트가 프롭스를 통째로 받아 본문에서 구조분해하는 것만 바뀌면
 `react/composition-destructure-props-inside`가 담당하므로 이 규칙을 겹쳐 적용하지 않습니다.
 객체 인자와 필드 타입, 선택 여부, 뜻이 같은 계약이 이미 있으면 그대로 씁니다.
 이 규칙을 지키려고 `*Params`나 `*Args`를 새로 만들지 않습니다.
@@ -799,14 +799,14 @@ const buildRequestUrl = (args: BuildRequestUrlArgs): URL => {
 `Set`이나 `Map`으로 한 번 정리합니다.
 한두 번 조회면 그대로 두고, 반복이 실제로 있을 때만 바꿉니다.
 
-**Incorrect (같은 배열을 반복 순회하며 membership을 확인):**
+**Incorrect (같은 배열을 반복 순회하며 포함 여부를 확인):**
 
 ```ts
 const visibleEntries = entries.filter((entry) => allowedEntryIds.includes(entry.id));
 const disabledEntries = archivedEntries.filter((entry) => allowedEntryIds.includes(entry.id));
 ```
 
-**Correct (반복 lookup은 `Set`으로 승격):**
+**Correct (반복 조회는 `Set`으로 승격):**
 
 ```ts
 const allowedEntryIdSet = new Set(allowedEntryIds);
@@ -815,7 +815,7 @@ const visibleEntries = entries.filter((entry) => allowedEntryIdSet.has(entry.id)
 const disabledEntries = archivedEntries.filter((entry) => allowedEntryIdSet.has(entry.id));
 ```
 
-**Correct (반복 keyed access는 `Map`으로 승격):**
+**Correct (반복 키 조회는 `Map`으로 승격):**
 
 ```ts
 const userById = new Map(users.map((user) => [user.id, user]));
@@ -994,7 +994,7 @@ const responseEntryList = useEntryList();
 새로 넣거나 고친 문서 주석에는 그 선언의 목적이나 제약을 설명하는 한국어 구절이 있어야 합니다.
 다른 필드 주석이 한국어라고 영어뿐인 헤더 주석을 대신 통과시키지 않습니다.
 
-**Incorrect (영문 또는 How 중심의 장황한 설명):**
+**Incorrect (영문이거나 방법만 늘어놓는 장황한 설명):**
 
 ```ts
 /**

@@ -39,7 +39,7 @@ import styles from "./catalog-index.module.css";
 }
 ```
 
-**Correct (기본은 plain CSS와 전역 고유 클래스명을 사용):**
+**Correct (기본은 일반 CSS와 전역에서 고유한 클래스 이름을 사용):**
 
 ```tsx
 import { clsx } from "clsx";

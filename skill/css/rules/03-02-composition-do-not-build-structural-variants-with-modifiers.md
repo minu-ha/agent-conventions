@@ -32,7 +32,7 @@ tags: modifiers, structure, naming
 쓸 수 있으면 반복되는 모양이라 허용합니다.
 그 화면에서만 통하는 이름이면 이미 위치 정보를 담고 있으니 요소로 바꿉니다.
 
-**Incorrect (그 화면 하나를 고치려고 modifier를 붙임):**
+**Incorrect (그 화면 하나를 고치려고 수정자를 붙임):**
 
 ```tsx
 <div className={clsx("pg_catalogDetail__section", "pg_catalogDetail__section--compactTop")} />
@@ -46,7 +46,7 @@ tags: modifiers, structure, naming
 <div className={clsx("pg_catalogDetail__flushAside")} />
 ```
 
-**Correct (상태와 반복되는 모양만 modifier로):**
+**Correct (상태와 반복되는 모양만 수정자로):**
 
 ```tsx
 <div className={clsx("ui_table__root", isDense && "ui_table__root--dense")} />

@@ -5,7 +5,7 @@
 스타일을 주려고 요소를 새로 감싸지 않습니다.
 그 컴포넌트가 `className`을 받도록 먼저 고칩니다.
 
-- 래핑 `div` 하나가 부모의 flex나 grid 자식 수를 바꿉니다.
+- 래핑 `div` 하나가 부모의 `flex`나 `grid` 자식 수를 바꿉니다.
   `gap`, `:nth-child()`, `grid-auto-flow`가 함께 흔들립니다.
 - 역할 없는 클래스가 하나 늘어납니다.
   `naming-name-elements-and-modifiers-by-role`이 역할 이름을 요구하는데 줄 이름이 없습니다.

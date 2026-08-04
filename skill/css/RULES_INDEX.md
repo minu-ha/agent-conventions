@@ -1,7 +1,7 @@
 # CSS 컨벤션 Rule Index
 
 - Skill: `css`
-- Routing digest: `sha256:a49e39e120629af00e88e3829bcec44b24ed9cab1e0d4ba56458aa05a168a493`
+- Routing digest: `sha256:6418370938564a64657172a5e442b7141e72207ccf2bdc3cb404d9432294ab5f`
 
 ## Direct Companions
 
@@ -16,11 +16,11 @@
 - C05 | ownership-give-each-file-one-scope-slug | 새 \`scope\_slug\`를 만들거나 기존 식별자를 복사·이름 변경할 때. 서로 다른 컴포넌트가 같은 식별자를 쓸 가능성이 있을 때.
 - C06 | ownership-choose-scope-prefix-by-reuse-range | 새 CSS 파일을 만들며 \`pg\_\`·\`wg\_\`·\`ui\_\` 중 하나를 고를 때. 소유자의 재사용 범위가 바뀌어 접두사를 옮길 때. | reviewWith: ownership-give-each-file-one-scope-slug, ownership-use-foreign-classes-only-under-your-own-root
 - C07 | ownership-use-foreign-classes-only-under-your-own-root | \`.ant-\*\`·\`.rc-\*\`·\`.Mui-\*\` 같은 외부 라이브러리 클래스를 쓸 때. 다른 \`scope\_slug\`의 클래스를 겨냥할 때. | reviewWith: ownership-change-other-owners-through-their-api, ownership-give-each-file-one-scope-slug, selector-limit-nesting-block-depth
-- C08 | ownership-change-other-owners-through-their-api | 다른 컴포넌트의 배치나 내부 표현을 바꿔야 할 때. 컴포넌트에 클래스 관련 prop을 추가할 때. | reviewWith: composition-inject-classes-only-at-the-entry-point, ownership-use-foreign-classes-only-under-your-own-root
+- C08 | ownership-change-other-owners-through-their-api | 다른 컴포넌트의 배치나 내부 표현을 바꿔야 할 때. 컴포넌트에 클래스 관련 프롭을 추가할 때. | reviewWith: composition-inject-classes-only-at-the-entry-point, ownership-use-foreign-classes-only-under-your-own-root
 - C09 | composition-compose-classes-with-clsx | TSX의 \`className\`을 추가·수정할 때. 기본 클래스, 수정자, 선택 클래스를 함께 엮을 때.
 - C10 | composition-do-not-build-structural-variants-with-modifiers | 수정자를 추가·변경할 때. 여러 곳에서 쓰이는 변형인지 한 곳만의 보정인지 가릴 때. | reviewWith: naming-name-elements-and-modifiers-by-role
 - C11 | composition-keep-classes-single-purpose | 기존 클래스가 기본과 상태·변형 책임을 함께 갖거나 독립 시각 책임을 추가·재사용·분리할 때. 제외: 기존 결합 책임을 그대로 두고 처음부터 단일 책임 쌍을 만들거나 책임이 그대로인 이름 변경만 하는 경우.
-- C12 | composition-inject-classes-only-at-the-entry-point | 우리가 만든 컴포넌트에 \`className\`이나 클래스 관련 prop을 추가할 때. 그 컴포넌트 내부 노드의 모양을 화면마다 다르게 해야 할 때. 제외: 기존 CSS 최상위 블록 아래 외부 라이브러리 선택자만 고치는 경우. | reviewWith: ownership-change-other-owners-through-their-api, ownership-use-foreign-classes-only-under-your-own-root
+- C12 | composition-inject-classes-only-at-the-entry-point | 우리가 만든 컴포넌트에 \`className\`이나 클래스 관련 프롭을 추가할 때. 그 컴포넌트 내부 노드의 모양을 화면마다 다르게 해야 할 때. 제외: 기존 CSS 최상위 블록 아래 외부 라이브러리 선택자만 고치는 경우. | reviewWith: ownership-change-other-owners-through-their-api, ownership-use-foreign-classes-only-under-your-own-root
 - C13 | composition-do-not-add-wrapper-elements-for-styling | 스타일을 주려고 \`div\`나 \`span\`을 새로 감쌀 때. \`className\`을 받지 않는 컴포넌트에 여백이나 크기를 줘야 할 때. | reviewWith: composition-inject-classes-only-at-the-entry-point, naming-name-elements-and-modifiers-by-role
 - C14 | selector-limit-nesting-block-depth | 중첩 \`{}\` 블록을 추가하거나 기존 블록을 펼치거나 합칠 때. \`&\`로 조건이나 가상 요소를 붙일 때. | reviewWith: selector-declare-each-class-in-one-block, selector-use-classes-instead-of-element-selectors
 - C15 | selector-use-classes-instead-of-element-selectors | \`p\`, \`h2\`, \`span\`, \`button\` 같은 요소 선택자를 쓰려 할 때. \`dangerouslySetInnerHTML\`이나 Markdown 렌더러 출력을 스타일링할 때. | reviewWith: naming-name-elements-and-modifiers-by-role

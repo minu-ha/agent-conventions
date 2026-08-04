@@ -1,6 +1,6 @@
 ---
 title: Use useDeferredValue for Heavy Derived Renders
-titleKo: 무거운 파생 화면에는 useDeferredValue 를 씁니다
+titleKo: 무거운 파생 화면에는 `useDeferredValue` 를 씁니다
 impact: MEDIUM
 impactDescription: 무거운 화면이 따라오는 동안에도 입력과 작은 조작이 반응합니다
 appliesWhen:
@@ -29,7 +29,7 @@ const [keyword, setKeyword] = useState("");
 const filteredRows = rows.filter((row) => fuzzyMatchRow(row, keyword));
 ```
 
-**Correct (입력은 urgent, 무거운 파생 렌더는 지연 값과 제한적인 메모이제이션으로 계산):**
+**Correct (입력은 급한 갱신으로, 무거운 파생 렌더는 지연 값과 제한적인 메모이제이션으로 계산):**
 
 ```tsx
 const [keyword, setKeyword] = useState("");

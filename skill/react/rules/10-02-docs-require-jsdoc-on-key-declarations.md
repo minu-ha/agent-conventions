@@ -15,7 +15,7 @@ tags: docs, jsdoc, handlers, effects
 
 **Impact: MEDIUM-HIGH (중요한 API, 핸들러, 이펙트, 타입 선언을 검토하고 다시 쓰기 쉬워집니다)**
 
-doc 주석은 경계를 설명할 때만 붙입니다. 자명한 지역 변수에는 강제하지 않습니다.
+문서 주석은 경계를 설명할 때만 붙입니다. 자명한 지역 변수에는 강제하지 않습니다.
 
 여기서 공개 선언은 다른 모듈이 소비할 수 있도록 실제 내보낸 또는 다시 내보낸 된 선언만 뜻합니다.
 내보내기되지 않은 파일 지역 `type`/`interface`는 공개이라는 이유만으로 이 규칙을 선택하지 않습니다.
@@ -29,7 +29,7 @@ doc 주석은 경계를 설명할 때만 붙입니다. 자명한 지역 변수�
 - 내보낸 공개 `type`과 `interface`, 합성 컴포넌트의 공개 부품
 - 예외적으로 남긴 `useMemo`/`useCallback`
 
-합성 공개 부품은 props `interface` 바로 위에 설명을 두고 컴포넌트 선언을 그 `interface` 바로 아래에 둡니다.
+합성 공개 부품은 프롭스 `interface` 위에 설명을 두고 컴포넌트 선언을 그 아래에 둡니다.
 단순 내부 래퍼에는 부품 문서를 만들지 않습니다.
 
 형식과 태그 기준은 `typescript/docs-require-header-jsdoc-on-key-declarations`가 정합니다.
@@ -87,7 +87,7 @@ export const buildEntryPayload = (formValues: EntryFormValues) => {
 };
 ```
 
-**Correct (합성 공개 부품은 props `interface` 위에 설명을 두고 컴포넌트를 바로 아래에 둠):**
+**Correct (합성 공개 부품은 프롭스 `interface` 위에 설명을 두고 컴포넌트를 바로 아래에 둠):**
 
 ```tsx
 /**

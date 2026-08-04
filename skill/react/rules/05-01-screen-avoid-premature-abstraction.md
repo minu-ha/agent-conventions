@@ -22,7 +22,7 @@ tags: screen, abstraction, reuse
 
 - 한 함수 안에서 단계 변수, 섹션 주석, 내부 블록으로 정리
 - 화면 지역 JSX에 남기고 흐름을 보이게 유지
-- 작은 변환 함수, href 조립, 기본값 처리는 호출 위치에 유지
+- 작은 변환 함수, `href` 조립, 기본값 처리는 호출 위치에 유지
 
 추출을 허용하는 경우:
 
@@ -102,7 +102,7 @@ export const buildEntryPayload = (formValues: EntryFormValues) => {
 };
 ```
 
-**Correct (작은 질의 가공과 href 조립은 사용 지점에 둠):**
+**Correct (작은 질의 가공과 `href` 조립은 사용 지점에 둠):**
 
 ```tsx
 export const EntryTable = (props: EntryTableProps) => {

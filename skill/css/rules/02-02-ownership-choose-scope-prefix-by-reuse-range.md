@@ -33,7 +33,7 @@ tags: ownership, scope, prefix
 
 어떤 파일이 화면 소유인지는 활성화된 프레임워크 규약이 판단합니다.
 
-**Incorrect (widget 내부 part를 폴더 이름만 보고 화면 범위로 내림):**
+**Incorrect (`widget` 내부 부품을 폴더 이름만 보고 화면 범위로 내림):**
 
 ```txt
 widget/chart/component/wg-chart-header.css

@@ -21,7 +21,7 @@ tags: parameters, callbacks, naming
 `MouseEventHandler`를 돌려주면서 이벤트 매개변수를 쓰지 않는 경우도 예외가 아닙니다.
 `() =>` 대신 `(_event) =>`로 받아 계약을 남깁니다.
 
-**Incorrect (계약의 일부인 callback 매개변수를 조용히 생략):**
+**Incorrect (계약의 일부인 콜백 매개변수를 조용히 생략):**
 
 ```ts
 type LogSink = (message: string, level: "info" | "error") => void;

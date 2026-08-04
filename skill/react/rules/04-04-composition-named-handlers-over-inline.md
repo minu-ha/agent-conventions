@@ -1,10 +1,10 @@
 ---
 title: Use Named Handlers Instead of Hiding Logic in JSX
-titleKo: JSX 안 로직은 이름 붙인 핸들러로 뺍니다
+titleKo: `JSX` 안 로직은 이름 붙인 핸들러로 뺍니다
 impact: HIGH
 impactDescription: 부수효과, 분기, 비동기 흐름을 일반 코드 흐름에서 읽습니다
 appliesWhen:
-  - TSX 이벤트 prop의 인라인 콜백에 분기나 비동기 호출을 추가·수정할 때
+  - TSX 이벤트 프롭의 인라인 콜백에 분기나 비동기 호출을 추가·수정할 때
   - 인라인 콜백에 여러 동작·부수효과나 비자명한 상태 전환이 들어갈 때
   - 제외: 단순 설정 함수나 인자 전달 한 줄 위임만 있는 경우
 requiresSelected: docs-require-jsdoc-on-key-declarations, events-name-and-curry-handlers

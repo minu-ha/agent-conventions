@@ -15,10 +15,10 @@ tags: composition, components, remount, performance
 
 컴포넌트 본문 안에서 다른 컴포넌트를 새로 정의하지 않습니다.
 부모가 다시 렌더될 때마다 자식 컴포넌트 타입도 새로 만들어져
-재마운트, focus 초기화, 애니메이션 재시작, 이펙트 재실행이 생깁니다.
+재마운트, 포커스 초기화, 애니메이션 재시작, 이펙트 재실행이 생깁니다.
 
 로컬에서 JSX 조각을 재사용하려면 보조 함수 함수 호출로 남기거나,
-독립 컴포넌트로 빼고 props를 전달합니다.
+독립 컴포넌트로 빼고 프롭스를 전달합니다.
 
 **Incorrect (렌더마다 새 컴포넌트 타입을 생성):**
 
@@ -38,7 +38,7 @@ export const UserProfileCard = (props: UserProfileCardProps) => {
 };
 ```
 
-**Correct (컴포넌트를 바깥으로 분리하고 props로 전달):**
+**Correct (컴포넌트를 바깥으로 분리하고 프롭스로 전달):**
 
 ```tsx
 export interface UserProfileAvatarProps {

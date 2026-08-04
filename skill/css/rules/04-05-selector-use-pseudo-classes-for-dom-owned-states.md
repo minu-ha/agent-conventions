@@ -60,7 +60,7 @@ tags: pseudo-classes, state, interaction
 }
 ```
 
-**Correct (`aria-*`는 마크업에 두고 스타일은 modifier로 겨냥):**
+**Correct (`aria-*`는 마크업에 두고 스타일은 수정자로 겨냥):**
 
 ```tsx
 <button

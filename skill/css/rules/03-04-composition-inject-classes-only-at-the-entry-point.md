@@ -4,7 +4,7 @@ titleKo: 클래스 주입은 컴포넌트 진입점까지만 닿습니다
 impact: HIGH
 impactDescription: 내부 노드마다 창구를 열면 사용처가 그 컴포넌트 구조에 묶입니다
 appliesWhen:
-  - 우리가 만든 컴포넌트에 `className`이나 클래스 관련 prop을 추가할 때
+  - 우리가 만든 컴포넌트에 `className`이나 클래스 관련 프롭을 추가할 때
   - 그 컴포넌트 내부 노드의 모양을 화면마다 다르게 해야 할 때
   - 제외: 기존 CSS 최상위 블록 아래 외부 라이브러리 선택자만 고치는 경우
 reviewWith: >-
@@ -22,10 +22,10 @@ tags: components, entry-point, class-props
 컴포넌트는 받은 `className`을 자기 최상위 클래스와 `clsx()`로 합칩니다.
 사용처는 그 클래스로 배치, 여백, 크기만 줍니다.
 
-`headerClassName`, `itemClassName`처럼 내부 노드로 가는 클래스 prop을 늘리지 않습니다.
+`headerClassName`, `itemClassName`처럼 내부 노드로 가는 클래스 프롭을 늘리지 않습니다.
 창구가 늘어나면 사용처가 내부 구조를 알게 되고, 내부가 바뀔 때 사용처가 함께 깨집니다.
 
-내부 모양이 화면마다 달라야 하면 컴포넌트가 `variant` prop을 받아 처리합니다.
+내부 모양이 화면마다 달라야 하면 컴포넌트가 `variant` 프롭을 받아 처리합니다.
 변형은 최상위뿐 아니라 머리말이나 본문처럼 필요한 노드에 각각 수정자로 붙입니다.
 최상위에 수정자 하나만 붙이고 내부를 결합자로 잡지 않습니다.
 
@@ -34,7 +34,7 @@ tags: components, entry-point, class-props
 사용처 쪽에서 무엇을 고를지는 `ownership-change-other-owners-through-their-api`가 정하고,
 `className`을 받지 않는 컴포넌트를 어떻게 다룰지는 `composition-do-not-add-wrapper-elements-for-styling`이 정합니다.
 
-**Incorrect (내부 노드마다 클래스 prop을 열어 창구를 늘림):**
+**Incorrect (내부 노드마다 클래스 프롭을 열어 창구를 늘림):**
 
 ```tsx
 export interface UiCollapseProps {
@@ -45,7 +45,7 @@ export interface UiCollapseProps {
 }
 ```
 
-**Incorrect (받은 className을 내부 노드로 넘김):**
+**Incorrect (받은 `className`을 내부 노드로 넘김):**
 
 ```tsx
 export const UiCollapse = (props: UiCollapseProps) => {
@@ -74,7 +74,7 @@ export const UiCollapse = (props: UiCollapseProps) => {
 }
 ```
 
-**Correct (className은 최상위 클래스와 합치고, 변형은 필요한 노드마다 수정자로 붙임):**
+**Correct (`className`은 최상위 클래스와 합치고, 변형은 필요한 노드마다 수정자로 붙임):**
 
 ```tsx
 export interface UiCollapseProps {
@@ -113,7 +113,7 @@ export const UiCollapse = (props: UiCollapseProps) => {
 }
 ```
 
-**Correct (사용처는 최상위 스타일만 주고 내부 의도는 prop으로 넘김):**
+**Correct (사용처는 최상위 스타일만 주고 내부 의도는 프롭으로 넘김):**
 
 ```tsx
 <UiCollapse className={clsx("pg_postFilterDialog__collapse")} variant="compact" title="필터" />

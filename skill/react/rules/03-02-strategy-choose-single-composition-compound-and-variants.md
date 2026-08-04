@@ -17,7 +17,7 @@ tags: composition, compound-components, variants, component-design
 
 **Impact: HIGH (필요한 확장점은 열면서 가장 단순한 구조를 고르게 돕습니다)**
 
-공용 컴포넌트는 props보다 구조를 먼저 고릅니다.
+공용 컴포넌트는 프롭스보다 구조를 먼저 고릅니다.
 고정 UI, 공개 부품 조립, 공용 상태/동작/컨텍스트, 반복 기본 설정 중 무엇이 필요한지 순서대로 봅니다.
 
 **빠른 선택표**
@@ -34,7 +34,7 @@ tags: composition, compound-components, variants, component-design
 단순 class 래퍼, 여백 보정 DOM, 내부 레이아웃 보조 함수는 숨깁니다.
 상태 없는 합성에 상태가 필요해지면 공개 이름은 유지하고 컨텍스트만 추가합니다.
 
-**Incorrect (single·합성·드러난 변형의 경계를 구분하지 않고 한 컴포넌트에 몰아넣음):**
+**Incorrect (단일·합성·드러난 변형의 경계를 구분하지 않고 한 컴포넌트에 몰아넣음):**
 
 ```tsx
 export interface ProfileDialogProps {
@@ -62,7 +62,7 @@ export const ProfileDialog = (props: ProfileDialogProps) => {
 };
 ```
 
-**Correct (고정 구조면 single 컴포넌트로 유지):**
+**Correct (고정 구조면 단일 컴포넌트로 유지):**
 
 ```tsx
 export interface EmptyStateProps {
@@ -112,7 +112,7 @@ export const Section = {
 } as const;
 ```
 
-**Correct (여러 부품이 상태를 공유하면 stateful 합성 컴포넌트로 확장):**
+**Correct (여러 부품이 상태를 공유하면 상태를 가진 합성 컴포넌트로 확장):**
 
 ```tsx
 const TabsContext = createContext<TabsContextValue | null>(null);
@@ -141,7 +141,7 @@ const TabsPanel = (props: TabsPanelProps) => {
 };
 ```
 
-**Correct (같은 family 조합이 반복되면 드러난 변형으로 감쌈):**
+**Correct (같은 계열 조합이 반복되면 드러난 변형으로 감쌈):**
 
 ```tsx
 export const ReadOnlyProfileDialog = () => {

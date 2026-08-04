@@ -1,6 +1,6 @@
 ---
 title: Prefer React Compiler Defaults Over Manual Memoization
-titleKo: 직접 메모이제이션하지 않고 리액트 컴파일러 에 맡깁니다
+titleKo: 직접 메모이제이션하지 않고 리액트 컴파일러에 맡깁니다
 impact: MEDIUM-HIGH
 impactDescription: 효과를 확인하지 않은 방어적 useMemo 와 useCallback 을 막습니다
 appliesWhen:

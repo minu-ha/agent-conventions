@@ -2,10 +2,10 @@
 title: Expose Only a Root Class From Other Owners
 titleKo: 남의 컴포넌트에는 최상위 클래스 하나만 넘깁니다
 impact: HIGH
-impactDescription: 내부 노드로 가는 클래스 prop을 막고 배치, 변형, 강등 가운데 무엇이 맞는지 먼저 봅니다
+impactDescription: 내부 노드로 가는 클래스 프롭을 막고 배치, 변형, 강등 가운데 무엇이 맞는지 먼저 봅니다
 appliesWhen:
   - 다른 컴포넌트의 배치나 내부 표현을 바꿔야 할 때
-  - 컴포넌트에 클래스 관련 prop을 추가할 때
+  - 컴포넌트에 클래스 관련 프롭을 추가할 때
 reviewWith: >-
   ownership-use-foreign-classes-only-under-your-own-root, composition-inject-classes-only-at-the-entry-point
 tags: ownership, api, promotion
@@ -13,7 +13,7 @@ tags: ownership, api, promotion
 
 ## Expose Only a Root Class From Other Owners
 
-**Impact: HIGH (내부 노드로 가는 클래스 prop을 막고 배치, 변형, 강등 가운데 무엇이 맞는지 먼저 봅니다)**
+**Impact: HIGH (내부 노드로 가는 클래스 프롭을 막고 배치, 변형, 강등 가운데 무엇이 맞는지 먼저 봅니다)**
 
 바꿀 것이 남의 표현이면 세 갈래를 순서대로 봅니다.
 
@@ -27,12 +27,12 @@ tags: ownership, api, promotion
 내 최상위 블록 안에서 겨냥합니다. **막다른 길이 아니라 마지막 선택지입니다.**
 
 셋째 행이 흔히 놓치는 답입니다. 한 화면만 쓰는 컴포넌트는 위젯이 아닙니다.
-승격 기준은 맥락 독립성입니다. 내릴 때 prop을 열지 않습니다. 파일만 옮깁니다.
+승격 기준은 맥락 독립성입니다. 내릴 때 프롭을 열지 않습니다. 파일만 옮깁니다.
 
 `className`이 최상위까지만 닿는 것은 제약이 아니라 경계입니다.
 컴포넌트가 무엇을 노출하는지는 `composition-inject-classes-only-at-the-entry-point`가 정합니다.
 
-**Incorrect (내부 노드마다 클래스 prop을 열어 남이 스타일을 넣게 함):**
+**Incorrect (내부 노드마다 클래스 프롭을 열어 남이 스타일을 넣게 함):**
 
 ```tsx
 <WgChartCard
@@ -56,7 +56,7 @@ tags: ownership, api, promotion
 }
 ```
 
-**Correct (여러 화면이 쓰는 변형은 소유자가 modifier로 노출함):**
+**Correct (여러 화면이 쓰는 변형은 소유자가 수정자로 노출함):**
 
 ```tsx
 <WgChartCard tone="muted" />

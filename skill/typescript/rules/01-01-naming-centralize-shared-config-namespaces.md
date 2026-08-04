@@ -1,6 +1,6 @@
 ---
 title: Centralize Shared Config Under `shared/config.ts`
-titleKo: 공용 설정은 shared/config.ts 한 곳에 모읍니다
+titleKo: 공용 설정은 `shared/config.ts` 한 곳에 모읍니다
 impact: HIGH
 impactDescription: 공용 설정 값이 말단 파일로 흩어져 공개 출처를 잃는 것을 막습니다
 appliesWhen:
@@ -31,7 +31,7 @@ const defaultPageSize = 20;
 const billing_feature_keys = ["invoices", "refunds"];
 ```
 
-**Correct (공용 설정은 `shared/config.ts` namespace에서 읽음):**
+**Correct (공용 설정은 `shared/config.ts` 이름 공간에서 읽음):**
 
 ```ts
 import {config} from "@/shared/config";

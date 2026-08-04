@@ -1,6 +1,6 @@
 ---
 title: Keep UI, Widget, and Page Ownership Separate
-titleKo: 컴포넌트를 ui, widget, page 소유 레이어로 나눕니다
+titleKo: 컴포넌트를 `ui`, `widget`, `page` 소유 레이어로 나눕니다
 impact: CRITICAL
 impactDescription: 공용 책임과 화면 전용 책임이 같은 레이어에 섞이지 않습니다
 appliesWhen:
@@ -93,7 +93,7 @@ export const WgEntryToolbar = (props: WgEntryToolbarProps) => {
 };
 ```
 
-**Correct (맥락 독립·도메인 인지 부품은 widget 으로 올림):**
+**Correct (맥락 독립·도메인 인지 부품은 `widget`으로 올림):**
 
 ```tsx
 // widget/spike-legend-glyph/wg-spike-legend-glyph.tsx

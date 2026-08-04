@@ -19,7 +19,7 @@ tags: composition, functions, params
 단일 객체 매개변수로 묶습니다.
 객체 매개변수 타입은 파일 상단에 선언해 계약을 먼저 드러냅니다.
 
-**Incorrect (길고 취약한 positional parameter 나열):**
+**Incorrect (길고 취약한 위치 인자 나열):**
 
 ```ts
 export function updateEntryMediaUploadFileByUid(

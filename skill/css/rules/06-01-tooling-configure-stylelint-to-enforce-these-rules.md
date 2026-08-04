@@ -1,6 +1,6 @@
 ---
 title: Configure Stylelint to Enforce These Rules
-titleKo: stylelint 설정으로 이 컨벤션을 강제합니다
+titleKo: `stylelint` 설정으로 이 컨벤션을 강제합니다
 impact: MEDIUM
 impactDescription: 기계가 잡는 항목을 설정에 고정하면 리뷰는 판단이 필요한 것만 봅니다
 appliesWhen:

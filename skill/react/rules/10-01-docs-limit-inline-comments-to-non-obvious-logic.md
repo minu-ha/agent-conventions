@@ -30,7 +30,7 @@ tags: docs, comments, inline
 const selectedKey = selectedKeys[0];
 ```
 
-**Correct (도메인 제약이나 caveat를 설명):**
+**Correct (도메인 제약이나 주의점을 설명):**
 
 ```ts
 // TABLE 단건 ON 시 해당 TABLE의 상위 FOLDER만 ON으로 복구하고 형제 TABLE 상태는 유지

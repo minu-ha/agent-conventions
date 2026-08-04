@@ -1,6 +1,6 @@
 ---
 title: Use Set and Map for Repeated Lookups
-titleKo: 같은 조회를 반복하면 Set이나 Map으로 정리합니다
+titleKo: 같은 조회를 반복하면 `Set` 이나 `Map` 으로 정리합니다
 impact: MEDIUM
 impactDescription: 조회가 늘어나면 반복되는 포함 검사와 키 접근을 드러냅니다
 appliesWhen:
@@ -16,14 +16,14 @@ tags: functions, set, map, lookups, performance
 `Set`이나 `Map`으로 한 번 정리합니다.
 한두 번 조회면 그대로 두고, 반복이 실제로 있을 때만 바꿉니다.
 
-**Incorrect (같은 배열을 반복 순회하며 membership을 확인):**
+**Incorrect (같은 배열을 반복 순회하며 포함 여부를 확인):**
 
 ```ts
 const visibleEntries = entries.filter((entry) => allowedEntryIds.includes(entry.id));
 const disabledEntries = archivedEntries.filter((entry) => allowedEntryIds.includes(entry.id));
 ```
 
-**Correct (반복 lookup은 `Set`으로 승격):**
+**Correct (반복 조회는 `Set`으로 승격):**
 
 ```ts
 const allowedEntryIdSet = new Set(allowedEntryIds);
@@ -32,7 +32,7 @@ const visibleEntries = entries.filter((entry) => allowedEntryIdSet.has(entry.id)
 const disabledEntries = archivedEntries.filter((entry) => allowedEntryIdSet.has(entry.id));
 ```
 
-**Correct (반복 keyed access는 `Map`으로 승격):**
+**Correct (반복 키 조회는 `Map`으로 승격):**
 
 ```ts
 const userById = new Map(users.map((user) => [user.id, user]));

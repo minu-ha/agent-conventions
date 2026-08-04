@@ -101,7 +101,7 @@ import styles from "./catalog-index.module.css";
 }
 ```
 
-**Correct (기본은 plain CSS와 전역 고유 클래스명을 사용):**
+**Correct (기본은 일반 CSS와 전역에서 고유한 클래스 이름을 사용):**
 
 ```tsx
 import { clsx } from "clsx";
@@ -142,7 +142,7 @@ import "./_index.css";
 | `element` | 요소 | 소유자 안의 UI 역할. `listButton`, `emptyState` |
 | `modifier` | 수정자 | 상태나 반복되는 모양. `routeActive`, `selected` |
 
-수정자와 변형은 다릅니다. 수정자는 클래스 뒤에 붙는 `--이름`이고, 변형은 컴포넌트가 받는 `variant` prop입니다.
+수정자와 변형은 다릅니다. 수정자는 클래스 뒤에 붙는 `--이름`이고, 변형은 컴포넌트가 받는 `variant` 프롭입니다.
 
 식별자에는 접두사가 말하는 부분을 반복하지 않습니다. `UiButton`은 `ui_button`이고 `ui_uiButton`이 아닙니다.
 
@@ -324,7 +324,7 @@ pg_dashboardIndex__header
 
 어떤 파일이 화면 소유인지는 활성화된 프레임워크 규약이 판단합니다.
 
-**Incorrect (widget 내부 part를 폴더 이름만 보고 화면 범위로 내림):**
+**Incorrect (`widget` 내부 부품을 폴더 이름만 보고 화면 범위로 내림):**
 
 ```txt
 widget/chart/component/wg-chart-header.css
@@ -487,11 +487,11 @@ ui/button/ui-button.css
 
 **Rule:** `C08` · `ownership-change-other-owners-through-their-api`
 
-**Applies when:** 다른 컴포넌트의 배치나 내부 표현을 바꿔야 할 때. 컴포넌트에 클래스 관련 prop을 추가할 때.
+**Applies when:** 다른 컴포넌트의 배치나 내부 표현을 바꿔야 할 때. 컴포넌트에 클래스 관련 프롭을 추가할 때.
 
 **Review with:** `composition-inject-classes-only-at-the-entry-point`, `ownership-use-foreign-classes-only-under-your-own-root`
 
-**Impact: HIGH (내부 노드로 가는 클래스 prop을 막고 배치, 변형, 강등 가운데 무엇이 맞는지 먼저 봅니다)**
+**Impact: HIGH (내부 노드로 가는 클래스 프롭을 막고 배치, 변형, 강등 가운데 무엇이 맞는지 먼저 봅니다)**
 
 바꿀 것이 남의 표현이면 세 갈래를 순서대로 봅니다.
 
@@ -505,12 +505,12 @@ ui/button/ui-button.css
 내 최상위 블록 안에서 겨냥합니다. **막다른 길이 아니라 마지막 선택지입니다.**
 
 셋째 행이 흔히 놓치는 답입니다. 한 화면만 쓰는 컴포넌트는 위젯이 아닙니다.
-승격 기준은 맥락 독립성입니다. 내릴 때 prop을 열지 않습니다. 파일만 옮깁니다.
+승격 기준은 맥락 독립성입니다. 내릴 때 프롭을 열지 않습니다. 파일만 옮깁니다.
 
 `className`이 최상위까지만 닿는 것은 제약이 아니라 경계입니다.
 컴포넌트가 무엇을 노출하는지는 `composition-inject-classes-only-at-the-entry-point`가 정합니다.
 
-**Incorrect (내부 노드마다 클래스 prop을 열어 남이 스타일을 넣게 함):**
+**Incorrect (내부 노드마다 클래스 프롭을 열어 남이 스타일을 넣게 함):**
 
 ```tsx
 <WgChartCard
@@ -534,7 +534,7 @@ ui/button/ui-button.css
 }
 ```
 
-**Correct (여러 화면이 쓰는 변형은 소유자가 modifier로 노출함):**
+**Correct (여러 화면이 쓰는 변형은 소유자가 수정자로 노출함):**
 
 ```tsx
 <WgChartCard tone="muted" />
@@ -563,7 +563,7 @@ after
 
 **Impact: HIGH**
 
-TSX 클래스 조합과 래퍼 소유 규칙은 스타일링 경계를 분명하게 유지하고, UI 래퍼가 통제되지 않은 스타일 hook을 노출하는 것을 막습니다.
+TSX 클래스 조합과 래퍼 소유 규칙은 스타일링 경계를 분명하게 유지하고, UI 래퍼가 통제되지 않은 스타일 연결 지점을 노출하는 것을 막습니다.
 
 ### 3.1 Compose Classes With `clsx()`
 
@@ -577,8 +577,8 @@ TSX에서 `className`은 `clsx()`로 조립합니다.
 문자열을 이어 붙이거나 삼항 연산자를 겹쳐 쓰지 않습니다.
 
 클래스가 하나일 때도 `clsx()`를 씁니다.
-수정자가 붙는 순간 문자열 연결로 되돌아가는 diff를 막습니다.
-그리고 `className` 형태가 파일마다 갈리지 않아서 grep과 리뷰가 한 패턴만 봅니다.
+수정자가 붙는 순간 문자열 연결로 되돌아가는 변경을 막습니다.
+그리고 `className` 형태가 파일마다 갈리지 않아서 검색과 리뷰가 한 패턴만 봅니다.
 
 **Incorrect (문자열 연결로 클래스 조합을 숨김):**
 
@@ -588,7 +588,7 @@ TSX에서 `className`은 `clsx()`로 조립합니다.
 </button>
 ```
 
-**Correct (기본 클래스와 modifier를 `clsx()`로 조합):**
+**Correct (기본 클래스와 수정자를 `clsx()`로 조합):**
 
 ```tsx
 <button
@@ -629,7 +629,7 @@ TSX에서 `className`은 `clsx()`로 조립합니다.
 쓸 수 있으면 반복되는 모양이라 허용합니다.
 그 화면에서만 통하는 이름이면 이미 위치 정보를 담고 있으니 요소로 바꿉니다.
 
-**Incorrect (그 화면 하나를 고치려고 modifier를 붙임):**
+**Incorrect (그 화면 하나를 고치려고 수정자를 붙임):**
 
 ```tsx
 <div className={clsx("pg_catalogDetail__section", "pg_catalogDetail__section--compactTop")} />
@@ -643,7 +643,7 @@ TSX에서 `className`은 `clsx()`로 조립합니다.
 <div className={clsx("pg_catalogDetail__flushAside")} />
 ```
 
-**Correct (상태와 반복되는 모양만 modifier로):**
+**Correct (상태와 반복되는 모양만 수정자로):**
 
 ```tsx
 <div className={clsx("ui_table__root", isDense && "ui_table__root--dense")} />
@@ -683,7 +683,7 @@ TSX에서 `className`은 `clsx()`로 조립합니다.
 
 **Rule:** `C12` · `composition-inject-classes-only-at-the-entry-point`
 
-**Applies when:** 우리가 만든 컴포넌트에 `className`이나 클래스 관련 prop을 추가할 때. 그 컴포넌트 내부 노드의 모양을 화면마다 다르게 해야 할 때. 제외: 기존 CSS 최상위 블록 아래 외부 라이브러리 선택자만 고치는 경우.
+**Applies when:** 우리가 만든 컴포넌트에 `className`이나 클래스 관련 프롭을 추가할 때. 그 컴포넌트 내부 노드의 모양을 화면마다 다르게 해야 할 때. 제외: 기존 CSS 최상위 블록 아래 외부 라이브러리 선택자만 고치는 경우.
 
 **Review with:** `ownership-change-other-owners-through-their-api`, `ownership-use-foreign-classes-only-under-your-own-root`
 
@@ -695,10 +695,10 @@ TSX에서 `className`은 `clsx()`로 조립합니다.
 컴포넌트는 받은 `className`을 자기 최상위 클래스와 `clsx()`로 합칩니다.
 사용처는 그 클래스로 배치, 여백, 크기만 줍니다.
 
-`headerClassName`, `itemClassName`처럼 내부 노드로 가는 클래스 prop을 늘리지 않습니다.
+`headerClassName`, `itemClassName`처럼 내부 노드로 가는 클래스 프롭을 늘리지 않습니다.
 창구가 늘어나면 사용처가 내부 구조를 알게 되고, 내부가 바뀔 때 사용처가 함께 깨집니다.
 
-내부 모양이 화면마다 달라야 하면 컴포넌트가 `variant` prop을 받아 처리합니다.
+내부 모양이 화면마다 달라야 하면 컴포넌트가 `variant` 프롭을 받아 처리합니다.
 변형은 최상위뿐 아니라 머리말이나 본문처럼 필요한 노드에 각각 수정자로 붙입니다.
 최상위에 수정자 하나만 붙이고 내부를 결합자로 잡지 않습니다.
 
@@ -707,7 +707,7 @@ TSX에서 `className`은 `clsx()`로 조립합니다.
 사용처 쪽에서 무엇을 고를지는 `ownership-change-other-owners-through-their-api`가 정하고,
 `className`을 받지 않는 컴포넌트를 어떻게 다룰지는 `composition-do-not-add-wrapper-elements-for-styling`이 정합니다.
 
-**Incorrect (내부 노드마다 클래스 prop을 열어 창구를 늘림):**
+**Incorrect (내부 노드마다 클래스 프롭을 열어 창구를 늘림):**
 
 ```tsx
 export interface UiCollapseProps {
@@ -718,7 +718,7 @@ export interface UiCollapseProps {
 }
 ```
 
-**Incorrect (받은 className을 내부 노드로 넘김):**
+**Incorrect (받은 `className`을 내부 노드로 넘김):**
 
 ```tsx
 export const UiCollapse = (props: UiCollapseProps) => {
@@ -747,7 +747,7 @@ export const UiCollapse = (props: UiCollapseProps) => {
 }
 ```
 
-**Correct (className은 최상위 클래스와 합치고, 변형은 필요한 노드마다 수정자로 붙임):**
+**Correct (`className`은 최상위 클래스와 합치고, 변형은 필요한 노드마다 수정자로 붙임):**
 
 ```tsx
 export interface UiCollapseProps {
@@ -786,7 +786,7 @@ export const UiCollapse = (props: UiCollapseProps) => {
 }
 ```
 
-**Correct (사용처는 최상위 스타일만 주고 내부 의도는 prop으로 넘김):**
+**Correct (사용처는 최상위 스타일만 주고 내부 의도는 프롭으로 넘김):**
 
 ```tsx
 <UiCollapse className={clsx("pg_postFilterDialog__collapse")} variant="compact" title="필터" />
@@ -812,7 +812,7 @@ export const UiCollapse = (props: UiCollapseProps) => {
 스타일을 주려고 요소를 새로 감싸지 않습니다.
 그 컴포넌트가 `className`을 받도록 먼저 고칩니다.
 
-- 래핑 `div` 하나가 부모의 flex나 grid 자식 수를 바꿉니다.
+- 래핑 `div` 하나가 부모의 `flex`나 `grid` 자식 수를 바꿉니다.
   `gap`, `:nth-child()`, `grid-auto-flow`가 함께 흔들립니다.
 - 역할 없는 클래스가 하나 늘어납니다.
   `naming-name-elements-and-modifiers-by-role`이 역할 이름을 요구하는데 줄 이름이 없습니다.
@@ -824,7 +824,7 @@ export const UiCollapse = (props: UiCollapseProps) => {
 
 그때는 래퍼에 역할 이름을 붙이고 왜 감쌌는지 주석으로 남깁니다.
 
-**Incorrect (래핑 `div`로 root 스타일을 우회):**
+**Incorrect (래핑 `div`로 최상위 스타일을 우회):**
 
 ```tsx
 <div className="pg_postIndex__collapseWrap">
@@ -891,7 +891,7 @@ export const UiCollapse = ({className, items}: UiCollapseProps) => (
 
 **Impact: HIGH**
 
-겨냥 대상이 코드에 그대로 쓰여 있고 한 클래스의 선언이 한 block에 모여 있어야, 스타일을 고칠 때 읽을 선택자와 볼 block이 각각 하나로 정해집니다.
+겨냥 대상이 코드에 그대로 쓰여 있고 한 클래스의 선언이 한 블록에 모여 있어야, 스타일을 고칠 때 읽을 선택자와 볼 블록이 각각 하나로 정해집니다.
 
 ### 4.1 Limit Nesting to One Level and Write the Rest Inline
 
@@ -1310,7 +1310,7 @@ TSX에서 그 지점이 보이므로 "이게 원본 HTML인가"를 따질 필요
 }
 ```
 
-**Correct (`aria-*`는 마크업에 두고 스타일은 modifier로 겨냥):**
+**Correct (`aria-*`는 마크업에 두고 스타일은 수정자로 겨냥):**
 
 ```tsx
 <button
@@ -1521,7 +1521,7 @@ CSS에 부모 선택자가 없어서 대체 수단이 없습니다.
 
 **Impact: HIGH**
 
-토큰, 변수 fallback, 명시적인 레이아웃 의도, 상태 경계, 눈에 보이는 포커스 표시는 스타일을 더 견고하고 접근 가능하게 유지합니다.
+토큰, 변수 대체값, 명시적인 레이아웃 의도, 상태 경계, 눈에 보이는 포커스 표시는 스타일을 더 견고하고 접근 가능하게 유지합니다.
 
 ### 5.1 Keep Layout Intent Explicit
 
@@ -1757,12 +1757,12 @@ CSS에 부모 선택자가 없어서 대체 수단이 없습니다.
 
 **Impact: HIGH (앱 상태와 hover, 포커스 동작을 섞지 않아 읽기 쉽고 접근성도 지킵니다)**
 
-도메인 상태와 무관한 hover, focus, disabled는 조건 없는 기본 블록에 둡니다.
+도메인 상태와 무관한 `:hover`, `:focus`, `:disabled`는 조건 없는 기본 블록에 둡니다.
 이 선택자들을 수정자 아래로 옮겨 적용 대상을 좁히지 않습니다.
 수정자 블록에는 `active`, `selected`, `error`처럼 앱이 정하는 모습만 남깁니다.
 수정자가 켜진 경우에만 상호작용이 달라져야 한다는 제품 요구가 있을 때만 그 예외를 적습니다.
 
-수정자 아래로 옮기면 그 상태가 아닐 때 hover와 focus가 사라집니다.
+수정자 아래로 옮기면 그 상태가 아닐 때 `:hover`와 `:focus`가 사라집니다.
 읽는 사람은 기본 블록만 보고 상호작용이 없다고 판단합니다.
 
 포커스 표시 자체는 `values-always-provide-a-visible-focus-indicator`가 담당합니다.

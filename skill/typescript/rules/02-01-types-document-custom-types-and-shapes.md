@@ -52,7 +52,7 @@ interface PublishResult {
 }
 ```
 
-**Correct (헤더와 필드별 doc 주석을 사용):**
+**Correct (헤더와 필드별 문서 주석을 사용):**
 
 ```ts
 /**

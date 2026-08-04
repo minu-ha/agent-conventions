@@ -72,7 +72,6 @@ Scope drift 뒤에는 file, activated skill, 기존 Selected rule을 제거하�
 ### RP1. React Type Import Decision
 
 - Focus
-  - `ownership-import-react-types-directly`
   - `typing-function-type-first`
 - Prompt
   - "기존 `React.MouseEvent` parameter annotation을 `MouseEventHandler<HTMLButtonElement>` 함수 변수 타입과 direct `import type`으로 바꿔줘."

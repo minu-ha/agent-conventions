@@ -1,6 +1,6 @@
 ---
 title: Name Elements and Modifiers by Role
-titleKo: 요소와 수정자는 역할으로 이름 짓습니다
+titleKo: 요소와 수정자는 역할로 이름 짓습니다
 impact: HIGH
 impactDescription: 이름이 모호하거나 치수를 가리키면 클래스가 어느 부위인지 알 수 없습니다
 appliesWhen:

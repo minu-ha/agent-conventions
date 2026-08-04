@@ -31,7 +31,7 @@ const formatState = (state: Record<string, unknown>): string => {
 };
 ```
 
-**Correct (기존 계약이나 실제 공유되는 callable contract를 재사용해 함수 변수 타입을 고정):**
+**Correct (기존 계약이나 실제로 공유되는 호출 계약을 재사용해 함수 변수 타입을 고정):**
 
 ```ts
 /**
