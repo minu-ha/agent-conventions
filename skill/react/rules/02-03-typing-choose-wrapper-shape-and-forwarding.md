@@ -66,6 +66,9 @@ export const UiIconButton = (props: UiIconButtonProps) => (
 ```tsx
 /**
  * 아이콘만 있는 버튼
+ *
+ * `icon` 과 `label` 은 안쪽 컴포넌트가 모르는 자기 프롭이라 타입을 직접 적는다.
+ * `disabled` 는 라이브러리에 이미 있어 인덱스 접근으로 가져온다.
  */
 export interface UiIconButtonProps {
 	/**
@@ -77,9 +80,13 @@ export interface UiIconButtonProps {
 	 */
 	icon: ReactNode;
 	/**
-	 * 화면 낭독기가 읽을 이름
+	 * 화면 낭독기가 읽을 이름. `aria-label` 로 내려간다
 	 */
 	label: string;
+	/**
+	 * 비활성 여부
+	 */
+	disabled?: LibButtonProps["disabled"];
 	/**
 	 * 눌렀을 때
 	 */
@@ -90,6 +97,7 @@ export const UiIconButton = (props: UiIconButtonProps) => (
 	<LibButton
 		className={clsx("ui_iconButton__root", props.className)}
 		aria-label={props.label}
+		disabled={props.disabled}
 		onClick={props.onClick}
 	>
 		{props.icon}
