@@ -4,7 +4,7 @@ titleKo: 훅, 핸들러, 핵심 선언에는 문서 주석을 붙입니다
 impact: MEDIUM-HIGH
 impactDescription: 중요한 API, 핸들러, 이펙트, 타입 선언을 검토하고 다시 쓰기 쉬워집니다
 appliesWhen:
-  - 질의·변경 요청이나 비자명한 핸들러/이펙트를 추가·변경할 때
+  - 쿼리·뮤테이션이나 비자명한 핸들러/이펙트를 추가·변경할 때
   - 내보낸 보조 함수·훅·스토어 선언을 추가·변경할 때
   - 다시 내보내기 포함 공개 타입·인터페이스나 합성 공개 부품을 추가·변경할 때
 requiresSelected: typescript/docs-require-header-jsdoc-on-key-declarations
@@ -22,7 +22,7 @@ tags: docs, handlers, effects
 
 필수 대상:
 
-- 라우트·화면·레이아웃 소유자의 질의와 변경 요청 바인딩
+- 라우트·화면·레이아웃 소유자의 쿼리와 뮤테이션 바인딩
 - 분기, 비동기, 화면 이동, 무효화를 가진 이벤트 핸들러
 - 정리 함수가 있거나 의존성이 둘 이상인 `useEffect`
 - 내보낸 순수 보조 함수, 커스텀 훅, 스토어 선언

@@ -371,10 +371,21 @@ const viewerClientScript = `(() => {
 		const label = (rule.skill === ownerSkill ? "" : rule.skill + " ") + rule.number + "  " + titleText(rule);
 		return '<button class="ref-in" data-goto="' + esc(key) + '" title="' + esc(key) + '">' + esc(label) + "</button>";
 	};
-	const inline = (t, ownerSkill) =>
-		esc(t)
-			.replace(/\`([^\`]+)\`/g, (_, raw) => codeOrRef(raw, ownerSkill))
-			.replace(/\\*\\*([^*]+)\\*\\*/g, "<strong>$1</strong>");
+	/**
+	 * 원문을 backtick 으로 잘라 조각마다 한 번만 escape 한다.
+	 * escape 한 다음 backtick 을 찾으면 \`<Activity>\` 가 \`&lt;Activity&gt;\` 로 바뀐 뒤 다시 escape 돼
+	 * 화면에 &amp;lt; 가 그대로 보인다. 코드 조각은 자리표시자로 빼 두고 굵게 처리 뒤 되돌린다.
+	 */
+	const inline = (t, ownerSkill) => {
+		const hold = [];
+		const parked = String(t == null ? "" : t)
+			.split("\`")
+			.map((seg, i) => (i % 2 ? "\\u0000" + (hold.push(codeOrRef(seg, ownerSkill)) - 1) + "\\u0000" : esc(seg)))
+			.join("");
+		return parked
+			.replace(/\\*\\*([^*]+)\\*\\*/g, "<strong>$1</strong>")
+			.replace(/\\u0000(\\d+)\\u0000/g, (_, i) => hold[+i]);
+	};
 
 	function renderProse(prose, ownerSkill) {
 		let out = "", para = [], tbl = null, list = null;

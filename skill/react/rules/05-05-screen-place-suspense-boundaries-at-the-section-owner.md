@@ -4,7 +4,7 @@ titleKo: `Suspense` 경계는 섹션 소유자에 둡니다
 impact: HIGH
 impactDescription: 막는 로딩을 화면 본문이 아니라 정해진 한 자리에서 처리합니다
 appliesWhen:
-  - `Suspense` 질의를 쓰는 화면에서 로딩 대체 화면의 위치를 정할 때
+  - `Suspense` 쿼리를 쓰는 화면에서 로딩 대체 화면의 위치를 정할 때
   - `Suspense` 경계를 추가하거나 옮길 때
 requiresSelected: screen-avoid-ad-hoc-loading-branches
 reviewWith: screen-extract-local-section-components-for-runtime-boundaries
@@ -15,18 +15,18 @@ tags: screen, suspense, loading
 
 **Impact: HIGH (막는 로딩을 화면 본문이 아니라 정해진 한 자리에서 처리합니다)**
 
-`Suspense` 질의를 쓰는 컴포넌트마다 그 **바로 위 섹션 소유자**가 경계를 갖습니다.
+`Suspense` 쿼리를 쓰는 컴포넌트마다 그 **바로 위 섹션 소유자**가 경계를 갖습니다.
 경계와 대체 화면은 거기 한 곳에만 둡니다.
 
 - 섹션이 따로 없으면 라우트 진입이 경계를 갖습니다.
 - 한 화면에 경계를 여러 겹 쌓지 않습니다. 섹션이 독립적으로 채워져야 할 때만 나눕니다.
 - 대체 화면은 채워질 내용과 같은 높이를 차지해야 합니다. 그러지 않으면 레이아웃이 튑니다.
-- 질의를 부르는 컴포넌트 자신은 경계를 갖지 않습니다. 자기 자신을 감쌀 수 없습니다.
+- 쿼리를 부르는 컴포넌트 자신은 경계를 갖지 않습니다. 자기 자신을 감쌀 수 없습니다.
 
 경계가 있으므로 화면 본문에는 로딩 분기가 남지 않습니다.
 그 판정은 `screen-avoid-ad-hoc-loading-branches`가 합니다.
 
-**Incorrect (질의를 부르는 컴포넌트 안에서 로딩을 직접 처리):**
+**Incorrect (쿼리를 부르는 컴포넌트 안에서 로딩을 직접 처리):**
 
 ```tsx
 export const PgEntryTreeSection = () => {

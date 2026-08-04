@@ -1,7 +1,7 @@
 # React 컨벤션 Rule Index
 
 - Skill: `react`
-- Routing digest: `sha256:96e2770acfdc66047b33edd8c9d551d83dc92338f414066ec48e1fc0b6c87452`
+- Routing digest: `sha256:7650161db0de3aff70ebb28c578f6a8fc7ff2bc063f227aea8e8016a5aa0a24b`
 
 ## Direct Companions
 
@@ -27,21 +27,21 @@
 - R15 | composition-open-ref-props-only-for-imperative-contracts | 컴포넌트에 \`ref\` 프롭을 추가하거나 공개할 대상을 바꿀 때. 제외: 이미 있는 \`ref\` 계약의 타입만 바꾸는 경우. | reviewWith: strategy-avoid-boolean-prop-proliferation
 - R16 | composition-use-activity-only-to-preserve-mounted-subtrees | 조건부 렌더링과 \`Activity\` 사이를 오갈 때. 숨겼다 되돌릴 때 하위 트리 상태를 살릴지 정할 때. | reviewWith: composition-do-not-define-components-inside-components
 - R17 | composition-declare-props-interface-above-the-component | 컴포넌트 프롭스 타입을 새로 선언할 때. 프롭스 타입의 위치나 공개 범위를 바꿀 때. | reviewWith: composition-destructure-props-inside, typescript/types-document-custom-types-and-shapes
-- R18 | screen-keep-route-flow-visible | 라우트 진입의 검색·화면 이동·질의·변경 요청·화면 전체 이펙트를 옮기거나 나눌 때. page 섹션 조립의 순서나 소유자를 바꿀 때. 제외: 같은 소유자 안에서 표현만 바꾸는 경우. | reviewWith: ownership-place-owner-files-in-role-folders, screen-extract-local-section-components-for-runtime-boundaries
+- R18 | screen-keep-route-flow-visible | 라우트 진입의 검색·화면 이동·쿼리·뮤테이션·화면 전체 이펙트를 옮기거나 나눌 때. page 섹션 조립의 순서나 소유자를 바꿀 때. 제외: 같은 소유자 안에서 표현만 바꾸는 경우. | reviewWith: ownership-place-owner-files-in-role-folders, screen-extract-local-section-components-for-runtime-boundaries
 - R19 | screen-avoid-premature-abstraction | 화면 코드를 보조 함수·훅·컴포넌트·모듈으로 추출할 때. 한 곳에서만 쓰는 기존 추상화를 다시 접어 넣을 때. | reviewWith: screen-extract-local-section-components-for-runtime-boundaries, typescript/functions-extract-helpers-only-when-the-boundary-is-real
 - R20 | screen-extract-local-section-components-for-runtime-boundaries | 화면 지역 섹션 컴포넌트를 새로 추출할 때. 기존 섹션이 비동기·상태·프로바이더·상호작용·라이브러리·성능 경계를 소유하는지 바꿀 때.
 - R21 | screen-keep-derived-values-close | 오리진을 끊는 별칭·플래그·표시값을 넓은 화면 범위에 추가·이동·제거할 때. \`let\` 재할당이나 배열 \`push\` 기반 조립을 바꿀 때.
-- R22 | screen-place-suspense-boundaries-at-the-section-owner | \`Suspense\` 질의를 쓰는 화면에서 로딩 대체 화면의 위치를 정할 때. \`Suspense\` 경계를 추가하거나 옮길 때. | reviewWith: screen-extract-local-section-components-for-runtime-boundaries
-- R23 | screen-avoid-ad-hoc-loading-branches | Suspense 질의를 쓰는 화면 본문에 초기 로딩 반환을 추가·변경할 때. \`isFetching\`이나 변경 요청 \`isPending\`으로 화면을 가리는 분기를 넣을 때. 제외: 선택 값에 기본값을 채우는 것만 바꾸는 경우. | reviewWith: data-preserve-origin-chaining, screen-keep-derived-values-close
-- R24 | events-keep-handler-flow-inline | 화면 전용 이름 붙인 핸들러의 분기·변경 요청·화면 이동·후처리를 여러 보조 함수나 훅으로 나눌 때. 쪼개져 있던 핸들러 흐름을 다시 합칠 때. | reviewWith: typescript/functions-extract-helpers-only-when-the-boundary-is-real
+- R22 | screen-place-suspense-boundaries-at-the-section-owner | \`Suspense\` 쿼리를 쓰는 화면에서 로딩 대체 화면의 위치를 정할 때. \`Suspense\` 경계를 추가하거나 옮길 때. | reviewWith: screen-extract-local-section-components-for-runtime-boundaries
+- R23 | screen-avoid-ad-hoc-loading-branches | Suspense 쿼리를 쓰는 화면 본문에 초기 로딩 반환을 추가·변경할 때. \`isFetching\`이나 뮤테이션 \`isPending\`으로 화면을 가리는 분기를 넣을 때. 제외: 선택 값에 기본값을 채우는 것만 바꾸는 경우. | reviewWith: data-preserve-origin-chaining, screen-keep-derived-values-close
+- R24 | events-keep-handler-flow-inline | 화면 전용 이름 붙인 핸들러의 분기·뮤테이션·화면 이동·후처리를 여러 보조 함수나 훅으로 나눌 때. 쪼개져 있던 핸들러 흐름을 다시 합칠 때. | reviewWith: typescript/functions-extract-helpers-only-when-the-boundary-is-real
 - R25 | events-name-and-curry-handlers | 이벤트 핸들러를 새로 만들 때. 핸들러 이름이나 대상, 이벤트 표기를 바꿀 때. | reviewWith: typescript/naming-use-consistent-file-and-symbol-naming
 - R26 | events-curry-extra-handler-arguments | DOM 이벤트 프롭에 추가 인자를 넘기는 핸들러를 추가·변경할 때. 인라인 래퍼로 인자를 넘기던 자리를 바꿀 때. 제외: 이벤트 객체를 받지 않는 프롭 콜백인 경우. | reviewWith: composition-named-handlers-over-inline
 - R27 | events-run-user-actions-in-handlers-not-effects | 제출·저장·삭제·닫기 같은 한 번뿐인 사용자 액션을 핸들러와 상태+이펙트 사이에서 옮길 때. 한 번뿐인 사용자 액션의 실행 흐름을 바꿀 때.
-- R28 | data-name-query-and-mutation-bindings-consistently | 리액트 Query 질의·변경 요청 훅의 로컬 바인딩을 추가하거나 이름을 바꿀 때. 역할이 드러나지 않는 별칭이 diff에 보일 때. | reviewWith: data-preserve-origin-chaining
+- R28 | data-name-query-and-mutation-bindings-consistently | 리액트 Query 쿼리·뮤테이션 훅의 로컬 바인딩을 추가하거나 이름을 바꿀 때. 역할이 드러나지 않는 별칭이 diff에 보일 때. | reviewWith: data-preserve-origin-chaining
 - R29 | data-shape-query-data-with-select | 서버 응답의 목록·항목·메타 등을 렌더에서 가공하거나 반복 소비할 때. 리액트 Query \`select\`의 결과 형태를 추가·변경할 때. | reviewWith: data-name-query-and-mutation-bindings-consistently, data-preserve-origin-chaining
-- R30 | data-preserve-origin-chaining | page·레이아웃·화면 넓은 스코프에서 응답·변경 요청·스토어를 구조분해할 때. 원본을 별칭으로 끊고 값 접근 방식을 바꿀 때. | reviewWith: screen-keep-derived-values-close
+- R30 | data-preserve-origin-chaining | page·레이아웃·화면 넓은 스코프에서 응답·뮤테이션·스토어를 구조분해할 때. 원본을 별칭으로 끊고 값 접근 방식을 바꿀 때. | reviewWith: screen-keep-derived-values-close
 - R31 | state-calculate-derived-values-during-render | 현재 프롭스·상태·검색·응답에서 계산 가능한 값을 별도 상태와 이펙트로 동기화할 때. 그런 동기화를 제거할 때.
-- R32 | state-choose-state-tools-by-source-of-truth | 로컬 UI·전역 클라이언트·서버 데이터를 새 상태 도구로 옮길 때. 서로 다른 진짜 출처 사이에 값을 복제하거나 동기화할 때. | reviewWith: state-store-derived-authority
+- R32 | state-choose-state-tools-by-source-of-truth | 로컬 UI·전역 클라이언트·서버 데이터를 새 상태 도구로 옮길 때. 합성 컴포넌트나 컴포넌트 묶음에 공유 상태를 넣을 때. 서로 다른 진짜 출처 사이에 값을 복제하거나 동기화할 때. | reviewWith: state-store-derived-authority, strategy-choose-single-composition-compound-and-variants
 - R33 | state-store-derived-authority | 여러 화면·메뉴·라우트 가드가 쓰는 접근 권한 같은 파생 판단을 스토어에 저장·동기화할 때. 단일 화면에서만 쓰는 값까지 스토어로 올리려 할 때. | reviewWith: docs-require-jsdoc-on-key-declarations
 - R34 | state-use-functional-setstate-updates | 다음 상태가 현재 상태에 의존하는 갱신을 추가·변경할 때. 핸들러·비동기 콜백·연속 호출에서 \`setState\` 방식을 바꿀 때.
 - R35 | state-use-effectevent-for-non-reactive-effect-callbacks | 구독 이펙트가 최신 프롭·상태 콜백을 읽어야 할 때. ref 동기화 우회, 의존성 재설치, \`useEffectEvent\`를 추가·변경할 때. | reviewWith: events-run-user-actions-in-handlers-not-effects
@@ -49,5 +49,5 @@
 - R37 | perf-use-lazy-state-initializers-for-expensive-defaults | \`useState\` 초기값에 localStorage 파싱, 인덱스 생성, 큰 배열 정규화 같은 비용 있는 계산을 넣을 때.
 - R38 | perf-use-starttransition-for-non-urgent-updates | 클릭·선택·필터 변경 뒤 큰 목록·표·트리를 다시 그리는 상태 갱신을 다룰 때. 상태 갱신의 우선순위나 전환 처리를 바꿀 때.
 - R39 | perf-use-usedeferredvalue-for-heavy-derived-renders | 검색어·필터·정렬 입력마다 큰 목록이나 표를 다시 계산해 입력 반응이 늦어질 때. \`useDeferredValue\` 기반 계산을 추가·변경할 때. | reviewWith: perf-avoid-defensive-memoization, perf-use-starttransition-for-non-urgent-updates
-- R40 | docs-require-jsdoc-on-key-declarations | 질의·변경 요청이나 비자명한 핸들러/이펙트를 추가·변경할 때. 내보낸 보조 함수·훅·스토어 선언을 추가·변경할 때. 다시 내보내기 포함 공개 타입·인터페이스나 합성 공개 부품을 추가·변경할 때.
+- R40 | docs-require-jsdoc-on-key-declarations | 쿼리·뮤테이션이나 비자명한 핸들러/이펙트를 추가·변경할 때. 내보낸 보조 함수·훅·스토어 선언을 추가·변경할 때. 다시 내보내기 포함 공개 타입·인터페이스나 합성 공개 부품을 추가·변경할 때.
 - R41 | docs-document-compound-parts-above-props-interface | 합성 컴포넌트의 공개 부품이나 그 프롭스 타입을 추가·변경할 때. 부품 설명의 위치를 바꿀 때. | reviewWith: composition-declare-props-interface-above-the-component, docs-require-jsdoc-on-key-declarations

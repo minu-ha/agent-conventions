@@ -196,11 +196,6 @@ npm --prefix package run test
 `skill/<name>` 안에서 작업하면 `--prefix ../../package` 로 바꾼다.
 자세한 script 설명은 [package/README.md](./package/README.md).
 
-`react` · `typescript` · `css` · `figma-visual-parity` 에는 `pressure-tests.md` 가 있다.
-규칙을 크게 바꿨을 때 회귀 확인용이고 정본은 아니다.
-
----
-
 ## 6. 함께 갱신할 문서
 
 | 변경 | 갱신 대상 |

@@ -1,7 +1,7 @@
 # TypeScript 컨벤션 Rule Index
 
 - Skill: `typescript`
-- Routing digest: `sha256:64af8afe5d662c8274f855e3e0da7912b483c00914d5a31d557dcdb4d71a0f0a`
+- Routing digest: `sha256:41ca6322e0b0fdfe1874301979b544da71567978bf6732052fd98e9fc5d4b549`
 
 ## Local Rules
 
@@ -25,7 +25,7 @@
 - T18 | functions-use-set-and-map-for-repeated-lookups | 같은 목록에 \`includes\`, \`find\`, 키 조회를 여러 번 하는 코드를 추가·변경할 때.
 - T19 | absence-expose-optional-values-instead-of-silent-fallbacks | 선택 값을 읽거나 정규화하거나 넘기는 방식을 바꿀 때. \`??\`, \`\|\|\`, 기본값, 빈 값 대체 분기를 추가·변경할 때. | reviewWith: docs-keep-inline-comments-for-constraints-and-caveats
 - T20 | docs-keep-inline-comments-for-constraints-and-caveats | 함수 본문의 \`//\` 주석을 추가·수정·유지할 때. 도메인 규칙, 예외 방어, 외부 제약, 부수효과 순서를 주석으로 설명할 때.
-- T21 | docs-require-header-jsdoc-on-key-declarations | 질의·변경 요청, 원격 함수, 분기나 \`await\` 가 있는 핸들러와 이펙트, 내보낸 보조 함수와 훅, 커스텀 타입, 스토어 선언을 추가·변경할 때. 선언 위 주석의 형식이나 태그를 정할 때.
+- T21 | docs-require-header-jsdoc-on-key-declarations | 쿼리·뮤테이션, 원격 함수, 분기나 \`await\` 가 있는 핸들러와 이펙트, 내보낸 보조 함수와 훅, 커스텀 타입, 스토어 선언을 추가·변경할 때. 선언 위 주석의 형식이나 태그를 정할 때.
 - T22 | docs-write-concise-korean-comments-about-purpose-and-constraints | TypeScript·TSX 의 문서 주석이나 인라인 주석 문구를 추가·수정·번역하거나 검토할 때.
 - T23 | docs-write-doc-comments-as-multiline-blocks | 선언 위 문서 주석을 새로 쓰거나 형식을 바꿀 때. 한 줄 \`/\*\* … \*/\` 이나 \`//\` 로 선언을 설명하려 할 때. | reviewWith: docs-require-header-jsdoc-on-key-declarations
 - T24 | docs-avoid-role-tags-in-doc-comments | 문서 주석에 태그를 넣거나 바꿀 때. 새 태그 이름을 만들려 할 때. | reviewWith: docs-require-header-jsdoc-on-key-declarations

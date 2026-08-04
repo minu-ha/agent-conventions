@@ -52,20 +52,3 @@ test("figma visual parity skill requires available advanced Figma integrations",
 		assert.match(source, new RegExp(expectedText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")), expectedText);
 	}
 });
-
-test("figma visual parity pressure tests cover failure-prone scenarios", async () => {
-	const source = await readSkillFile("pressure-tests.md");
-
-	for (const expectedText of [
-		"Baseline failure",
-		"Figma 링크만 주고",
-		"스타일만 맞춰줘",
-		"API 값",
-		"node가 너무 커서",
-		"browser screenshot",
-		"REST API token",
-		"Code Connect",
-	]) {
-		assert.match(source, new RegExp(expectedText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")), expectedText);
-	}
-});

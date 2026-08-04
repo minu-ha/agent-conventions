@@ -4,7 +4,7 @@ titleKo: 화면 전용 핸들러 흐름은 그 자리에 둡니다
 impact: MEDIUM
 impactDescription: 모든 분기를 잔 함수로 쪼개지 않고도 읽힙니다
 appliesWhen:
-  - 화면 전용 이름 붙인 핸들러의 분기·변경 요청·화면 이동·후처리를 여러 보조 함수나 훅으로 나눌 때
+  - 화면 전용 이름 붙인 핸들러의 분기·뮤테이션·화면 이동·후처리를 여러 보조 함수나 훅으로 나눌 때
   - 쪼개져 있던 핸들러 흐름을 다시 합칠 때
 reviewWith: typescript/functions-extract-helpers-only-when-the-boundary-is-real
 tags: events, handlers, flow

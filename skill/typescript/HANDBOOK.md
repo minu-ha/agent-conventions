@@ -356,10 +356,19 @@ type UserPreview = Pick<UserRecord, "id" | "name">;
 
 **Applies when:** 기존 호출 계약을 이름 붙인 함수나 공용 함수 구현에 다시 쓸 때. 같은 시그니처를 여러 구현이 함께 쓰도록 바꿀 때. 제외: 타입 표기 없이 문맥으로 추론되는 일회성 인라인 콜백인 경우.
 
-**Impact: CRITICAL (호출 계약을 재사용할 수 있게 두고 지역 타입 표기가 공용 함수 타입을 조각내지 않게 합니다)**
+**Impact: CRITICAL (계약을 한 자리에서 읽을 수 있고 같은 시그니처를 여러 곳에 베끼지 않습니다)**
 
-재사용 가능한 콜백이나 함수 타입이 있다면 매개변수 타입 선언보다 함수 변수 타입 선언을 우선합니다.
-이미 있는 인터페이스, 객체 계약, 프레임워크 별칭을 먼저 씁니다.
+타입을 붙일 자리가 둘 있습니다.
+
+| 붙이는 자리 | 형태 |
+| --- | --- |
+| 매개변수와 반환값에 하나씩 | `const handleClick = (event: MouseEvent<HTMLButtonElement>): void => …` |
+| 함수를 담는 변수에 한 번 | `const handleClick: MouseEventHandler<HTMLButtonElement> = (event) => …` |
+
+쓸 수 있는 계약이 이미 있으면 아래쪽을 씁니다.
+이름 하나로 매개변수와 반환값이 함께 정해져서 계약을 한 자리에서 읽습니다.
+이미 있는 인터페이스, 객체 계약, 프레임워크 별칭을 먼저 찾고,
+매개변수 타입은 쓸 계약이 없을 때만 직접 적습니다.
 인터페이스가 콜백을 필드로 갖고 있으면 `Contract["onSelect"]`처럼 인덱스 접근으로 가져다 씁니다.
 가져온 계약에 지금 구현이 쓰지 않는 매개변수가 있으면 `types-mark-unused-parameters-with-underscore`를 다시 봅니다.
 함수 타입 별칭을 새로 선언하는 것은 같은 시그니처를 쓰는 구현이 이미 둘 이상일 때만입니다.
@@ -430,7 +439,7 @@ const normalizeSearchRequest: NormalizeRequest = (request) => {
 
 이름 붙인 선언 없이 구현 안에서만 추론되는 익명 객체는 이 규칙의
 선언형 형태가 아닙니다.
-질의의 `select`가 익명으로 반환하는 객체가 그 경우입니다.
+쿼리의 `select`가 익명으로 반환하는 객체가 그 경우입니다.
 이 규칙을 억지로 켜려고 필드 주석이나 새 타입 별칭을 만들지 않습니다.
 
 **Incorrect (필드 설명을 생략하거나 예전 방식으로 헤더에 몰아씀):**
@@ -1067,13 +1076,13 @@ if (!normalizedToken) {
 
 **Rule:** `T21` · `docs-require-header-jsdoc-on-key-declarations`
 
-**Applies when:** 질의·변경 요청, 원격 함수, 분기나 `await` 가 있는 핸들러와 이펙트, 내보낸 보조 함수와 훅, 커스텀 타입, 스토어 선언을 추가·변경할 때. 선언 위 주석의 형식이나 태그를 정할 때.
+**Applies when:** 쿼리·뮤테이션, 원격 함수, 분기나 `await` 가 있는 핸들러와 이펙트, 내보낸 보조 함수와 훅, 커스텀 타입, 스토어 선언을 추가·변경할 때. 선언 위 주석의 형식이나 태그를 정할 때.
 
 **Requires selected:** `docs-write-concise-korean-comments-about-purpose-and-constraints`, `docs-write-doc-comments-as-multiline-blocks` · 함께 적용
 
 **Impact: MEDIUM-HIGH (구현을 읽기 전에 중요한 경계를 찾고 설명할 수 있습니다)**
 
-이름 붙인 질의와 변경 요청, 원격 함수, 본문에 분기·`await`·두 개 이상의 동작이 있는 핸들러와 이펙트,
+이름 붙인 쿼리와 뮤테이션, 원격 함수, 본문에 분기·`await`·두 개 이상의 동작이 있는 핸들러와 이펙트,
 재사용하거나 내보낸 보조 함수,
 커스텀 훅, 커스텀 `type`과 `interface`, 스토어, 포매터, 예외 메모 선언에는 헤더 문서 주석을 씁니다.
 중요한 경계가 파일 검색에서 바로 보이게 하려는 것입니다.

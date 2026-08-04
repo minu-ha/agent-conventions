@@ -7,10 +7,20 @@
 | 상태의 소유자 | 기본 도구 |
 | --- | --- |
 | 로컬 UI | `useState` 또는 `useReducer` |
+| 한 컴포넌트 묶음 안에서 공유하는 UI | `useState` + `Context` |
 | 전역 클라이언트 | `Zustand` |
 | 서버 | `@tanstack/react-query` |
 
 이 기준으로 고르면 화면 파일이 더 읽기 쉬워지고 중복 동기화가 줄어듭니다.
+
+`Context`는 전역 상태 도구가 아니라 **한 컴포넌트 묶음 안에서 프롭 전달을 줄이는 수단**입니다.
+합성 컴포넌트가 부품끼리 상태를 나눠 쓸 때, 작은 컴포넌트 묶음이 두세 단계 아래로 값을 내릴 때 씁니다.
+`strategy-choose-single-composition-compound-and-variants`가 상태를 가진 합성으로 확장하라고 할 때
+그 상태를 담는 자리가 여기입니다.
+
+- 값의 출처는 여전히 `useState`입니다. `Context`는 그 값을 나르는 통로입니다.
+- 묶음 밖에서도 필요해지면 `Context`를 위로 올리지 않고 전역 스토어로 옮깁니다.
+  그 판정은 `state-store-derived-authority`가 합니다.
 
 프로젝트가 이미 다른 전역 스토어나 서버 상태 도구를 표준으로 쓴다면 그것을 유지합니다.
 `Zustand`나 `react-query`를 새로 들여오지 말고 진짜 출처 원칙만 지킵니다.

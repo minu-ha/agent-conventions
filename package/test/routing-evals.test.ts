@@ -280,7 +280,7 @@ const typescriptRuleRouting = {
 	},
 	"docs-require-header-jsdoc-on-key-declarations": {
 		appliesWhen:
-			"질의·변경 요청, 원격 함수, 분기나 `await` 가 있는 핸들러와 이펙트, 내보낸 보조 함수와 훅, 커스텀 타입, 스토어 선언을 추가·변경할 때. 선언 위 주석의 형식이나 태그를 정할 때.",
+			"쿼리·뮤테이션, 원격 함수, 분기나 `await` 가 있는 핸들러와 이펙트, 내보낸 보조 함수와 훅, 커스텀 타입, 스토어 선언을 추가·변경할 때. 선언 위 주석의 형식이나 태그를 정할 때.",
 		reviewWith: [],
 	},
 	"docs-write-concise-korean-comments-about-purpose-and-constraints": {
@@ -528,7 +528,7 @@ const reactRuleRouting = {
 	},
 	"screen-keep-route-flow-visible": {
 		appliesWhen:
-			"라우트 진입의 검색·화면 이동·질의·변경 요청·화면 전체 이펙트를 옮기거나 나눌 때. page 섹션 조립의 순서나 소유자를 바꿀 때. 제외: 같은 소유자 안에서 표현만 바꾸는 경우.",
+			"라우트 진입의 검색·화면 이동·쿼리·뮤테이션·화면 전체 이펙트를 옮기거나 나눌 때. page 섹션 조립의 순서나 소유자를 바꿀 때. 제외: 같은 소유자 안에서 표현만 바꾸는 경우.",
 		reviewWith: ["screen-extract-local-section-components-for-runtime-boundaries", "ownership-place-owner-files-in-role-folders"],
 	},
 	"screen-avoid-premature-abstraction": {
@@ -549,17 +549,17 @@ const reactRuleRouting = {
 		reviewWith: [],
 	},
 	"screen-place-suspense-boundaries-at-the-section-owner": {
-		appliesWhen: "`Suspense` 질의를 쓰는 화면에서 로딩 대체 화면의 위치를 정할 때. `Suspense` 경계를 추가하거나 옮길 때.",
+		appliesWhen: "`Suspense` 쿼리를 쓰는 화면에서 로딩 대체 화면의 위치를 정할 때. `Suspense` 경계를 추가하거나 옮길 때.",
 		reviewWith: ["screen-extract-local-section-components-for-runtime-boundaries"],
 	},
 	"screen-avoid-ad-hoc-loading-branches": {
 		appliesWhen:
-			"Suspense 질의를 쓰는 화면 본문에 초기 로딩 반환을 추가·변경할 때. `isFetching`이나 변경 요청 `isPending`으로 화면을 가리는 분기를 넣을 때. 제외: 선택 값에 기본값을 채우는 것만 바꾸는 경우.",
+			"Suspense 쿼리를 쓰는 화면 본문에 초기 로딩 반환을 추가·변경할 때. `isFetching`이나 뮤테이션 `isPending`으로 화면을 가리는 분기를 넣을 때. 제외: 선택 값에 기본값을 채우는 것만 바꾸는 경우.",
 		reviewWith: ["data-preserve-origin-chaining", "screen-keep-derived-values-close"],
 	},
 	"events-keep-handler-flow-inline": {
 		appliesWhen:
-			"화면 전용 이름 붙인 핸들러의 분기·변경 요청·화면 이동·후처리를 여러 보조 함수나 훅으로 나눌 때. 쪼개져 있던 핸들러 흐름을 다시 합칠 때.",
+			"화면 전용 이름 붙인 핸들러의 분기·뮤테이션·화면 이동·후처리를 여러 보조 함수나 훅으로 나눌 때. 쪼개져 있던 핸들러 흐름을 다시 합칠 때.",
 		reviewWith: ["typescript/functions-extract-helpers-only-when-the-boundary-is-real"],
 	},
 	"events-name-and-curry-handlers": {
@@ -577,7 +577,7 @@ const reactRuleRouting = {
 		reviewWith: [],
 	},
 	"data-name-query-and-mutation-bindings-consistently": {
-		appliesWhen: "리액트 Query 질의·변경 요청 훅의 로컬 바인딩을 추가하거나 이름을 바꿀 때. 역할이 드러나지 않는 별칭이 diff에 보일 때.",
+		appliesWhen: "리액트 Query 쿼리·뮤테이션 훅의 로컬 바인딩을 추가하거나 이름을 바꿀 때. 역할이 드러나지 않는 별칭이 diff에 보일 때.",
 		reviewWith: ["data-preserve-origin-chaining"],
 	},
 	"data-shape-query-data-with-select": {
@@ -585,7 +585,7 @@ const reactRuleRouting = {
 		reviewWith: ["data-name-query-and-mutation-bindings-consistently", "data-preserve-origin-chaining"],
 	},
 	"data-preserve-origin-chaining": {
-		appliesWhen: "page·레이아웃·화면 넓은 스코프에서 응답·변경 요청·스토어를 구조분해할 때. 원본을 별칭으로 끊고 값 접근 방식을 바꿀 때.",
+		appliesWhen: "page·레이아웃·화면 넓은 스코프에서 응답·뮤테이션·스토어를 구조분해할 때. 원본을 별칭으로 끊고 값 접근 방식을 바꿀 때.",
 		reviewWith: ["screen-keep-derived-values-close"],
 	},
 	"state-calculate-derived-values-during-render": {
@@ -593,8 +593,9 @@ const reactRuleRouting = {
 		reviewWith: [],
 	},
 	"state-choose-state-tools-by-source-of-truth": {
-		appliesWhen: "로컬 UI·전역 클라이언트·서버 데이터를 새 상태 도구로 옮길 때. 서로 다른 진짜 출처 사이에 값을 복제하거나 동기화할 때.",
-		reviewWith: ["state-store-derived-authority"],
+		appliesWhen:
+			"로컬 UI·전역 클라이언트·서버 데이터를 새 상태 도구로 옮길 때. 합성 컴포넌트나 컴포넌트 묶음에 공유 상태를 넣을 때. 서로 다른 진짜 출처 사이에 값을 복제하거나 동기화할 때.",
+		reviewWith: ["state-store-derived-authority", "strategy-choose-single-composition-compound-and-variants"],
 	},
 	"state-store-derived-authority": {
 		appliesWhen:
@@ -629,7 +630,7 @@ const reactRuleRouting = {
 	},
 	"docs-require-jsdoc-on-key-declarations": {
 		appliesWhen:
-			"질의·변경 요청이나 비자명한 핸들러/이펙트를 추가·변경할 때. 내보낸 보조 함수·훅·스토어 선언을 추가·변경할 때. 다시 내보내기 포함 공개 타입·인터페이스나 합성 공개 부품을 추가·변경할 때.",
+			"쿼리·뮤테이션이나 비자명한 핸들러/이펙트를 추가·변경할 때. 내보낸 보조 함수·훅·스토어 선언을 추가·변경할 때. 다시 내보내기 포함 공개 타입·인터페이스나 합성 공개 부품을 추가·변경할 때.",
 		reviewWith: [],
 	},
 	"docs-document-compound-parts-above-props-interface": {
@@ -2301,7 +2302,7 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 
 	const reactHandlerType = await readRule("react", "typing-function-type-first");
 	assert.match(reactHandlerType, /커링한|커링|고차 함수/i);
-	assertMentions(reactHandlerType, [/문맥 타입/i, /반환 타입/i, /생략하지 않/i], "reactHandlerType");
+	assertMentions(reactHandlerType, [/리액트가 알아서 타입을 붙여/i, /반환 타입/i, /리액트 별칭/i], "reactHandlerType");
 	assertMentions(reactHandlerType, [/`query\.select`/i, /일회성 문맥 콜백/i, /`Ui\*Props`/i, /대상이 아닙니다/i], "reactHandlerType");
 
 	const reactContracts = await Promise.all(
@@ -2311,7 +2312,7 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 	);
 	assertMentions(reactContracts[0]!, [/(?:`query\.select`|query `select`)/i, /파생 상태 이펙트/i, /렌더 계산/i], "reactContracts");
 	assertMentions(reactContracts[1]!, [/이벤트 객체를 받는 자리/i, /이벤트 객체를 받지 않는 프롭 콜백/i], "reactContracts");
-	assert.match(reactContracts[2]!, /커링 팩토리의 반환 함수도 리액트 핸들러[\s\S]*일회성 문맥 콜백/i);
+	assert.match(reactContracts[2]!, /커링 팩토리가 돌려주는 함수에도 타입을 적습니다[\s\S]*일회성 문맥 콜백/i);
 
 	const typescriptRouter = await readFile(path.join(realSkillRootDir, "typescript", "SKILL.md"), "utf8");
 	assertMentions(
@@ -2531,13 +2532,6 @@ test("v17 TypeScript boundaries exclude React props and prevent self-created dup
 	assert.doesNotMatch(documentedShape, /\bT\d{2}\b/);
 	assert.doesNotMatch(existingContract, /\bT\d{2}\b/);
 
-	const typescriptPressure = await readFile(path.join(realSkillRootDir, "typescript", "pressure-tests.md"), "utf8");
-	assert.match(typescriptPressure, /CreateEntryPayloadParams[\s\S]*CreateEntryPayload/i);
-	assert.match(
-		typescriptPressure,
-		/External Contract and Documentation Independence[\s\S]*types-document-custom-types-and-shapes[\s\S]*types-reuse-existing-contracts-before-new-types[\s\S]*(?:둘 다|모두) N\/A[\s\S]*docs-require-header-jsdoc-on-key-declarations[\s\S]*독립[^\n]+Selected/i,
-	);
-
 	const mixedManifest = await readRoutingEvalManifest(getSkillPaths("react", realSkillRootDir));
 	const ownerMove = mixedManifest.scenarios.find(({id}) => id === "RTE02-owner-placement-css-drift");
 	assert.equal(ownerMove?.expectedSelected.typescript?.includes("functions-use-named-object-params-for-complex-signatures"), false);
@@ -2587,13 +2581,6 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 		/헤더 문서 주석[\s\S]*영문 라벨[\s\S]*요구를 채우지 못합니다[\s\S]*docs-write-concise-korean-comments-about-purpose-and-constraints[\s\S]*한국어 내용/i,
 	);
 	assert.doesNotMatch(headerDocs, /\bT\d{2}\b/);
-
-	const typescriptPressure = await readFile(path.join(realSkillRootDir, "typescript", "pressure-tests.md"), "utf8");
-	assert.match(typescriptPressure, /CreateEntryPayloadParams[\s\S]*CreateEntryPayload/i);
-	assert.match(
-		typescriptPressure,
-		/External Contract and Documentation Independence[\s\S]*types-document-custom-types-and-shapes[\s\S]*types-reuse-existing-contracts-before-new-types[\s\S]*(?:둘 다|모두) N\/A[\s\S]*docs-require-header-jsdoc-on-key-declarations[\s\S]*독립[^\n]+Selected/i,
-	);
 
 	const mixedManifest = await readRoutingEvalManifest(getSkillPaths("react", realSkillRootDir));
 	const ownerMove = mixedManifest.scenarios.find(({id}) => id === "RTE02-owner-placement-css-drift");
@@ -2735,12 +2722,6 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 		[/포커스 표시를 없애지 않습니다/, /:focus-visible/, /색각 이상에서 구분되지 않습니다/, /브라우저만 알 수 있어서/],
 		"focusIndicator",
 	);
-
-	const typescriptPressure = await readFile(path.join(realSkillRootDir, "typescript", "pressure-tests.md"), "utf8");
-	assert.match(typescriptPressure, /route-local entry tree props/);
-	assert.match(typescriptPressure, /route-local 엔트리 트리 입력 계약/);
-	const cssPressure = await readFile(path.join(realSkillRootDir, "css", "pressure-tests.md"), "utf8");
-	assert.match(cssPressure, /& \.ant-tree-node-content-wrapper/);
 
 	const generatedContracts = await Promise.all(
 		[

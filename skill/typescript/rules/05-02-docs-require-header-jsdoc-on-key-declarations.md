@@ -4,7 +4,7 @@ titleKo: 핵심 선언에는 헤더 문서 주석을 붙입니다
 impact: MEDIUM-HIGH
 impactDescription: 구현을 읽기 전에 중요한 경계를 찾고 설명할 수 있습니다
 appliesWhen:
-  - 질의·변경 요청, 원격 함수, 분기나 `await` 가 있는 핸들러와 이펙트, 내보낸 보조 함수와 훅, 커스텀 타입, 스토어 선언을 추가·변경할 때
+  - 쿼리·뮤테이션, 원격 함수, 분기나 `await` 가 있는 핸들러와 이펙트, 내보낸 보조 함수와 훅, 커스텀 타입, 스토어 선언을 추가·변경할 때
   - 선언 위 주석의 형식이나 태그를 정할 때
 requiresSelected: docs-write-concise-korean-comments-about-purpose-and-constraints, docs-write-doc-comments-as-multiline-blocks
 tags: docs, jsdoc, declarations, boundaries
@@ -14,7 +14,7 @@ tags: docs, jsdoc, declarations, boundaries
 
 **Impact: MEDIUM-HIGH (구현을 읽기 전에 중요한 경계를 찾고 설명할 수 있습니다)**
 
-이름 붙인 질의와 변경 요청, 원격 함수, 본문에 분기·`await`·두 개 이상의 동작이 있는 핸들러와 이펙트,
+이름 붙인 쿼리와 뮤테이션, 원격 함수, 본문에 분기·`await`·두 개 이상의 동작이 있는 핸들러와 이펙트,
 재사용하거나 내보낸 보조 함수,
 커스텀 훅, 커스텀 `type`과 `interface`, 스토어, 포매터, 예외 메모 선언에는 헤더 문서 주석을 씁니다.
 중요한 경계가 파일 검색에서 바로 보이게 하려는 것입니다.
