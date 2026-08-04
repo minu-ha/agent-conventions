@@ -15,7 +15,6 @@
 			],
 			"expectedSelected": {
 				"react": [
-					"ownership-use-consistent-file-and-symbol-naming",
 					"typing-function-type-first",
 					"typing-reuse-existing-contracts",
 					"events-name-and-curry-handlers"
@@ -48,7 +47,6 @@
 				"react": [
 					"ownership-layer-component-boundaries",
 					"ownership-place-owner-files-in-role-folders",
-					"ownership-use-consistent-file-and-symbol-naming",
 					"composition-destructure-props-inside"
 				],
 				"typescript": [
@@ -76,7 +74,6 @@
 					"react": [
 						"ownership-layer-component-boundaries",
 						"ownership-place-owner-files-in-role-folders",
-						"ownership-use-consistent-file-and-symbol-naming",
 						"composition-destructure-props-inside"
 					],
 					"typescript": [
@@ -117,10 +114,7 @@
 				"react": [
 					"ownership-prefer-plain-ts-for-local-react-helpers",
 					"ownership-place-owner-files-in-role-folders",
-					"ownership-use-consistent-file-and-symbol-naming",
-					"composition-prefer-arrow-functions-and-object-params",
 					"screen-avoid-premature-abstraction",
-					"screen-extract-utilities-selectively",
 					"docs-require-jsdoc-on-key-declarations"
 				],
 				"typescript": [
@@ -128,6 +122,7 @@
 					"naming-use-direct-imports-and-public-entry-points",
 					"types-document-custom-types-and-shapes",
 					"functions-extract-helpers-only-when-the-boundary-is-real",
+					"functions-declare-functions-as-arrow-consts",
 					"functions-use-named-object-params-for-complex-signatures",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
@@ -148,10 +143,7 @@
 				"typescript"
 			],
 			"expectedSelected": {
-				"react": [
-					"ownership-shared-config-entry-points",
-					"ownership-use-consistent-file-and-symbol-naming"
-				],
+				"react": [],
 				"typescript": [
 					"naming-centralize-shared-config-namespaces",
 					"naming-preserve-config-origin-with-chained-access",
@@ -176,7 +168,6 @@
 			],
 			"expectedSelected": {
 				"react": [
-					"ownership-use-consistent-file-and-symbol-naming",
 					"strategy-avoid-boolean-prop-proliferation",
 					"strategy-choose-single-composition-compound-and-variants",
 					"strategy-prefer-children-over-render-props",
@@ -207,7 +198,7 @@
 				"react": [
 					"composition-destructure-props-inside",
 					"composition-do-not-define-components-inside-components",
-					"composition-use-ref-prop-instead-of-forwardref-in-react-19",
+					"composition-open-ref-props-only-for-imperative-contracts",
 					"docs-require-jsdoc-on-key-declarations"
 				],
 				"typescript": [
@@ -216,25 +207,6 @@
 					"types-document-custom-types-and-shapes",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
-					"guardrails-review-banned-typescript-shortcuts-before-finishing"
-				]
-			}
-		},
-		{
-			"id": "RTE07-visibility-lifecycle",
-			"prompt": "change only the show/hide branch for an already-mounted sidebar to the already-imported project Activity primitive to preserve expanded state; keep empty-state unmount behavior.",
-			"files": [
-				"src/page/entries/component/pg-entry-sidebar.tsx"
-			],
-			"expectedSkills": [
-				"react",
-				"typescript"
-			],
-			"expectedSelected": {
-				"react": [
-					"composition-use-activity-for-render-branches"
-				],
-				"typescript": [
 					"guardrails-review-banned-typescript-shortcuts-before-finishing"
 				]
 			}
@@ -288,7 +260,6 @@
 				"react": [
 					"ownership-layer-component-boundaries",
 					"ownership-place-owner-files-in-role-folders",
-					"ownership-use-consistent-file-and-symbol-naming",
 					"typing-function-type-first",
 					"typing-reuse-existing-contracts",
 					"composition-destructure-props-inside",
@@ -408,11 +379,10 @@
 			],
 			"expectedSelected": {
 				"react": [
-					"perf-compiler-first-memoization",
+					"perf-avoid-defensive-memoization",
 					"perf-use-lazy-state-initializers-for-expensive-defaults",
 					"perf-use-starttransition-for-non-urgent-updates",
 					"perf-use-usedeferredvalue-for-heavy-derived-renders",
-					"docs-limit-inline-comments-to-non-obvious-logic",
 					"docs-require-jsdoc-on-key-declarations"
 				],
 				"typescript": [
@@ -463,9 +433,8 @@
 			"expectedSelected": {
 				"react": [
 					"screen-keep-derived-values-close",
-					"data-avoid-fallback-defaults-and-loading-flags",
-					"data-preserve-origin-chaining",
-					"docs-limit-inline-comments-to-non-obvious-logic"
+					"data-avoid-ad-hoc-loading-branches",
+					"data-preserve-origin-chaining"
 				],
 				"typescript": [
 					"absence-expose-optional-values-instead-of-silent-fallbacks",

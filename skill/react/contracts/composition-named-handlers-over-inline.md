@@ -7,4 +7,4 @@ JSX에서는 명명된 핸들러 참조를 기본으로 하고, 아주 짧은 �
 
 **Requires selected:** `docs-require-jsdoc-on-key-declarations`, `events-name-and-curry-handlers` · 함께 적용
 
-> 예시·예외가 필요하면 [full rule](../rules/04-04-composition-named-handlers-over-inline.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/04-03-composition-named-handlers-over-inline.md)을 읽습니다.

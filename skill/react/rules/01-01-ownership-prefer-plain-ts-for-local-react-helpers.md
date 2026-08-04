@@ -5,11 +5,10 @@ impact: HIGH
 impactDescription: 리액트 전용 추상을 실제 생명주기나 문맥이 얽힌 자리로만 한정합니다
 appliesWhen:
   - 화면 전용 계산·정규화·전송 값 조립을 커스텀 훅으로 추출하려 할 때
-  - 화면 전용 순수 로직을 별도 보조 모듈으로 옮기려 할 때
+  - 화면 전용 순수 로직을 별도 보조 모듈로 옮기려 할 때
 reviewWith: >-
-  screen-extract-utilities-selectively, ownership-place-owner-files-in-role-folders,
-  ownership-keep-lifecycle-in-the-owning-component,
-  typescript/functions-extract-helpers-only-when-the-boundary-is-real
+  typescript/functions-extract-helpers-only-when-the-boundary-is-real, ownership-place-owner-files-in-role-folders,
+  ownership-keep-lifecycle-in-the-owning-component
 tags: ownership, hooks, helpers, widget
 ---
 

@@ -160,6 +160,7 @@
 			"expectedSelected": {
 				"typescript": [
 					"naming-use-consistent-file-and-symbol-naming",
+					"functions-declare-functions-as-arrow-consts",
 					"functions-use-named-object-params-for-complex-signatures",
 					"guardrails-review-banned-typescript-shortcuts-before-finishing"
 				]

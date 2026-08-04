@@ -34,8 +34,9 @@
     - 3.2 [Extract Support Functions Only When the Boundary Is Real](#32-extract-support-functions-only-when-the-boundary-is-real)
     - 3.3 [Prefer Immutable Array Sorting](#33-prefer-immutable-array-sorting)
     - 3.4 [Replace `enum` With `as const` Objects](#34-replace-enum-with-as-const-objects)
-    - 3.5 [Use Named Object Params for Complex Signatures](#35-use-named-object-params-for-complex-signatures)
-    - 3.6 [Use Set and Map for Repeated Lookups](#36-use-set-and-map-for-repeated-lookups)
+    - 3.5 [Declare Functions as Arrow Consts](#35-declare-functions-as-arrow-consts)
+    - 3.6 [Use Named Object Params for Complex Signatures](#36-use-named-object-params-for-complex-signatures)
+    - 3.7 [Use Set and Map for Repeated Lookups](#37-use-set-and-map-for-repeated-lookups)
 4. [Absence and Fallback Handling](#4-absence-and-fallback-handling) — **HIGH**
     - 4.1 [Expose Optional Values Instead of Silent Fallbacks](#41-expose-optional-values-instead-of-silent-fallbacks)
 5. [JSDoc and Comment Conventions](#5-jsdoc-and-comment-conventions) — **MEDIUM-HIGH**
@@ -737,9 +738,79 @@ const audit_status = {
 type AuditStatus = (typeof audit_status)[keyof typeof audit_status];
 ```
 
-### 3.5 Use Named Object Params for Complex Signatures
+### 3.5 Declare Functions as Arrow Consts
 
-**Rule:** `T14` · `functions-use-named-object-params-for-complex-signatures`
+**Rule:** `T14` · `functions-declare-functions-as-arrow-consts`
+
+**Applies when:** 이름 붙인 함수를 새로 만들거나 선언 형태를 바꿀 때. 제외: 클래스 메서드, 제너레이터, 오버로드 선언.
+
+**Review with:** `functions-use-named-object-params-for-complex-signatures`
+
+**Impact: MEDIUM (선언 형태가 한 가지로 고정되어 호이스팅에 기대는 순서 의존이 생기지 않습니다)**
+
+이름 붙인 함수는 `const`에 화살표 함수를 담아 선언합니다.
+`function` 선언문은 쓰지 않습니다.
+
+- 한 파일 안에서 두 형태를 섞으면 어느 것이 공개 계약인지 형태로 구분할 수 없습니다.
+- `function` 선언문은 호이스팅되므로 선언보다 위에서 호출해도 동작합니다.
+  그러면 읽는 순서와 실행 순서가 달라집니다.
+- 화살표 함수는 `this`를 새로 만들지 않아 콜백으로 넘길 때 묶어 줄 필요가 없습니다.
+
+세 자리는 예외로 둡니다.
+
+| 예외 | 이유 |
+| --- | --- |
+| 클래스 메서드 | 메서드 문법이 정본입니다. 화살표 필드로 바꾸지 않습니다 |
+| 제너레이터 | `function*` 없이 쓸 수 없습니다 |
+| 오버로드 선언 | 시그니처를 여러 줄로 겹쳐 쓰려면 `function` 선언문이 필요합니다 |
+
+**Incorrect (`function` 선언문과 화살표를 한 파일에서 섞음):**
+
+```ts
+export function normalizeEntryTitle(rawTitle: string): string {
+	return rawTitle.trim().replace(/\s+/g, " ");
+}
+
+export const buildEntrySlug = (title: string): string => normalizeEntryTitle(title).toLowerCase();
+```
+
+**Incorrect (선언보다 위에서 호출해 호이스팅에 기댐):**
+
+```ts
+export const buildEntryLabel = (entry: Entry): string => decorate(entry.title);
+
+function decorate(title: string): string {
+	return `# ${title}`;
+}
+```
+
+**Correct (모두 `const` 화살표로 선언하고 쓰기 전에 선언):**
+
+```ts
+const decorate = (title: string): string => `# ${title}`;
+
+export const normalizeEntryTitle = (rawTitle: string): string => rawTitle.trim().replace(/\s+/g, " ");
+
+export const buildEntryLabel = (entry: Entry): string => decorate(entry.title);
+```
+
+**Correct (클래스 메서드와 제너레이터는 그대로 둠):**
+
+```ts
+export class EntryCursor {
+	*pages(): Generator<Entry[]> {
+		yield this.buffer;
+	}
+
+	reset(): void {
+		this.buffer = [];
+	}
+}
+```
+
+### 3.6 Use Named Object Params for Complex Signatures
+
+**Rule:** `T15` · `functions-use-named-object-params-for-complex-signatures`
 
 **Applies when:** 매개변수가 3개를 넘거나 같은 계열 인자를 받는 함수를 추가·변경할 때. 객체 매개변수를 어디서 구조분해할지 바꿀 때. 제외: 리액트 함수 컴포넌트가 프롭스를 받고 구조분해하는 방식만 바꾸는 경우.
 
@@ -787,9 +858,9 @@ const buildRequestUrl = (args: BuildRequestUrlArgs): URL => {
 };
 ```
 
-### 3.6 Use Set and Map for Repeated Lookups
+### 3.7 Use Set and Map for Repeated Lookups
 
-**Rule:** `T15` · `functions-use-set-and-map-for-repeated-lookups`
+**Rule:** `T16` · `functions-use-set-and-map-for-repeated-lookups`
 
 **Applies when:** 같은 목록에 `includes`, `find`, 키 조회를 여러 번 하는 코드를 추가·변경할 때.
 
@@ -833,7 +904,7 @@ const approver = userById.get(approverId);
 
 ### 4.1 Expose Optional Values Instead of Silent Fallbacks
 
-**Rule:** `T16` · `absence-expose-optional-values-instead-of-silent-fallbacks`
+**Rule:** `T17` · `absence-expose-optional-values-instead-of-silent-fallbacks`
 
 **Applies when:** 선택 값을 읽거나 정규화하거나 넘기는 방식을 바꿀 때. `??`, `||`, 기본값, 빈 값 대체 분기를 추가·변경할 때.
 
@@ -877,7 +948,7 @@ const resolvePageSize = (query: SearchQuery): string => {
 
 ### 5.1 Keep Inline Comments for Constraints and Caveats Only
 
-**Rule:** `T17` · `docs-keep-inline-comments-for-constraints-and-caveats`
+**Rule:** `T18` · `docs-keep-inline-comments-for-constraints-and-caveats`
 
 **Applies when:** 함수 본문의 `//` 주석을 추가·수정·유지할 때. 도메인 규칙, 예외 방어, 외부 제약, 부수효과 순서를 주석으로 설명할 때.
 
@@ -906,7 +977,7 @@ if (!normalizedToken) {
 
 ### 5.2 Require Header Doc Comments on Key Declarations
 
-**Rule:** `T18` · `docs-require-header-jsdoc-on-key-declarations`
+**Rule:** `T19` · `docs-require-header-jsdoc-on-key-declarations`
 
 **Applies when:** 질의·변경 요청, 원격 함수, 뻔하지 않은 핸들러와 이펙트, 내보낸 보조 함수와 훅, 커스텀 타입, 스토어 선언을 추가·변경할 때. 선언 위 주석의 형식이나 태그를 정할 때.
 
@@ -980,7 +1051,7 @@ const responseEntryList = useEntryList();
 
 ### 5.3 Write Concise Korean Comments About Purpose and Constraints
 
-**Rule:** `T19` · `docs-write-concise-korean-comments-about-purpose-and-constraints`
+**Rule:** `T20` · `docs-write-concise-korean-comments-about-purpose-and-constraints`
 
 **Applies when:** TypeScript·TSX 의 문서 주석이나 인라인 주석 문구를 추가·수정·번역하거나 검토할 때.
 
@@ -1026,7 +1097,7 @@ const responseEntryList = useEntryList();
 
 ### 6.1 Review Banned TypeScript Shortcuts Before Finishing
 
-**Rule:** `T20` · `guardrails-review-banned-typescript-shortcuts-before-finishing`
+**Rule:** `T21` · `guardrails-review-banned-typescript-shortcuts-before-finishing`
 
 **Applies when:** TypeScript·TSX 변경을 끝났다고 판정할 때. 변경 내역에서 배럴, 중복 타입, 이른 보조 함수, 넓은 조립, 근거 없는 기본값, 자명한 주석을 점검할 때.
 

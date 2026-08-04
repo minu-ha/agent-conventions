@@ -32,7 +32,6 @@ protocol v3 결과에는 coordinator가 dispatch 전에 고정한 repository HEA
 - `RTE04-shared-config`: shared config entry와 `config.*` origin
 - `RTE05-toolbar-composition`: boolean/render-prop 제거, compound/variant와 public part docs
 - `RTE06-nested-forwardref`: nested component hoist와 React 19 ref prop
-- `RTE07-visibility-lifecycle`: show/hide lifecycle에만 Activity 사용
 - `RTE08-delete-handler-flow`: curried named handler 안에 one-shot flow 유지
 - `RTE09-route-runtime-section`: runtime owner만 `component`로 추출하고 route flow 유지
 - `RTE10-derived-selection-state`: inline callback의 named handler 추출, render-derived value와 functional updater

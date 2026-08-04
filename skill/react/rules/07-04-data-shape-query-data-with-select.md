@@ -21,6 +21,10 @@ tags: state, react-query, select
   도메인 의미가 드러나는 필드 이름으로 한 번 변환합니다.
 - 여러 쿼리 데이터를 함께 가공해야 해도 먼저 `select`나 전용 훅 경계에서 풀 수 있는지 봅니다.
 
+`select` 안 변환 함수는 이 규칙이 담당합니다.
+별도 함수나 보조 모듈 경계가 없으면 `typescript/functions-extract-helpers-only-when-the-boundary-is-real`은
+적용하지 않습니다.
+
 **Incorrect (응답 원형을 화면에서 직접 소비):**
 
 ```ts

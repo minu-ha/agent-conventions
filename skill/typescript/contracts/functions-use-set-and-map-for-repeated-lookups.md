@@ -6,4 +6,4 @@
 `Set`이나 `Map`으로 한 번 정리합니다.
 한두 번 조회면 그대로 두고, 반복이 실제로 있을 때만 바꿉니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/03-06-functions-use-set-and-map-for-repeated-lookups.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/03-07-functions-use-set-and-map-for-repeated-lookups.md)을 읽습니다.

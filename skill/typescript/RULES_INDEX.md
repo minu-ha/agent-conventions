@@ -1,7 +1,7 @@
 # TypeScript 컨벤션 Rule Index
 
 - Skill: `typescript`
-- Routing digest: `sha256:ac6d96ed8c23128eeeaab6fe378d99259dd3c2d968ac4e1498ce0c99f0ea38a3`
+- Routing digest: `sha256:2968c54def20efeb9ddf204af505615280c45e916a977b55734d7132ae2b2baf`
 
 ## Local Rules
 
@@ -18,10 +18,11 @@
 - T11 | functions-extract-helpers-only-when-the-boundary-is-real | 보조 함수를 빼내거나 옮기거나 내보내거나 공유할 때. 범용 보조 파일, 소유자 하나만 쓰는 변환 함수, 잔손질 단계의 경계를 바꿀 때. | reviewWith: docs-require-header-jsdoc-on-key-declarations
 - T12 | functions-prefer-immutable-array-sorting | 프롭스, 상태, 매개변수, 공유 입력에서 온 배열을 정렬할 때. 기존 \`.sort\(\)\` 호출을 추가·변경할 때.
 - T13 | functions-replace-enum-with-as-const-objects | \`enum\` 이나 타입과 실행 양쪽에서 함께 쓰는 값 묶음을 추가·변경할 때.
-- T14 | functions-use-named-object-params-for-complex-signatures | 매개변수가 3개를 넘거나 같은 계열 인자를 받는 함수를 추가·변경할 때. 객체 매개변수를 어디서 구조분해할지 바꿀 때. 제외: 리액트 함수 컴포넌트가 프롭스를 받고 구조분해하는 방식만 바꾸는 경우.
-- T15 | functions-use-set-and-map-for-repeated-lookups | 같은 목록에 \`includes\`, \`find\`, 키 조회를 여러 번 하는 코드를 추가·변경할 때.
-- T16 | absence-expose-optional-values-instead-of-silent-fallbacks | 선택 값을 읽거나 정규화하거나 넘기는 방식을 바꿀 때. \`??\`, \`\|\|\`, 기본값, 빈 값 대체 분기를 추가·변경할 때. | reviewWith: docs-keep-inline-comments-for-constraints-and-caveats
-- T17 | docs-keep-inline-comments-for-constraints-and-caveats | 함수 본문의 \`//\` 주석을 추가·수정·유지할 때. 도메인 규칙, 예외 방어, 외부 제약, 부수효과 순서를 주석으로 설명할 때.
-- T18 | docs-require-header-jsdoc-on-key-declarations | 질의·변경 요청, 원격 함수, 뻔하지 않은 핸들러와 이펙트, 내보낸 보조 함수와 훅, 커스텀 타입, 스토어 선언을 추가·변경할 때. 선언 위 주석의 형식이나 태그를 정할 때.
-- T19 | docs-write-concise-korean-comments-about-purpose-and-constraints | TypeScript·TSX 의 문서 주석이나 인라인 주석 문구를 추가·수정·번역하거나 검토할 때.
-- T20 | guardrails-review-banned-typescript-shortcuts-before-finishing | TypeScript·TSX 변경을 끝났다고 판정할 때. 변경 내역에서 배럴, 중복 타입, 이른 보조 함수, 넓은 조립, 근거 없는 기본값, 자명한 주석을 점검할 때. | completionGate
+- T14 | functions-declare-functions-as-arrow-consts | 이름 붙인 함수를 새로 만들거나 선언 형태를 바꿀 때. 제외: 클래스 메서드, 제너레이터, 오버로드 선언. | reviewWith: functions-use-named-object-params-for-complex-signatures
+- T15 | functions-use-named-object-params-for-complex-signatures | 매개변수가 3개를 넘거나 같은 계열 인자를 받는 함수를 추가·변경할 때. 객체 매개변수를 어디서 구조분해할지 바꿀 때. 제외: 리액트 함수 컴포넌트가 프롭스를 받고 구조분해하는 방식만 바꾸는 경우.
+- T16 | functions-use-set-and-map-for-repeated-lookups | 같은 목록에 \`includes\`, \`find\`, 키 조회를 여러 번 하는 코드를 추가·변경할 때.
+- T17 | absence-expose-optional-values-instead-of-silent-fallbacks | 선택 값을 읽거나 정규화하거나 넘기는 방식을 바꿀 때. \`??\`, \`\|\|\`, 기본값, 빈 값 대체 분기를 추가·변경할 때. | reviewWith: docs-keep-inline-comments-for-constraints-and-caveats
+- T18 | docs-keep-inline-comments-for-constraints-and-caveats | 함수 본문의 \`//\` 주석을 추가·수정·유지할 때. 도메인 규칙, 예외 방어, 외부 제약, 부수효과 순서를 주석으로 설명할 때.
+- T19 | docs-require-header-jsdoc-on-key-declarations | 질의·변경 요청, 원격 함수, 뻔하지 않은 핸들러와 이펙트, 내보낸 보조 함수와 훅, 커스텀 타입, 스토어 선언을 추가·변경할 때. 선언 위 주석의 형식이나 태그를 정할 때.
+- T20 | docs-write-concise-korean-comments-about-purpose-and-constraints | TypeScript·TSX 의 문서 주석이나 인라인 주석 문구를 추가·수정·번역하거나 검토할 때.
+- T21 | guardrails-review-banned-typescript-shortcuts-before-finishing | TypeScript·TSX 변경을 끝났다고 판정할 때. 변경 내역에서 배럴, 중복 타입, 이른 보조 함수, 넓은 조립, 근거 없는 기본값, 자명한 주석을 점검할 때. | completionGate

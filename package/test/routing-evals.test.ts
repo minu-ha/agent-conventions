@@ -95,6 +95,7 @@ const typescriptRuleUniverse = [
 	"functions-extract-helpers-only-when-the-boundary-is-real",
 	"functions-prefer-immutable-array-sorting",
 	"functions-replace-enum-with-as-const-objects",
+	"functions-declare-functions-as-arrow-consts",
 	"functions-use-named-object-params-for-complex-signatures",
 	"functions-use-set-and-map-for-repeated-lookups",
 	"absence-expose-optional-values-instead-of-silent-fallbacks",
@@ -140,8 +141,6 @@ const reactRuleUniverse = [
 	"ownership-prefer-plain-ts-for-local-react-helpers",
 	"ownership-layer-component-boundaries",
 	"ownership-place-owner-files-in-role-folders",
-	"ownership-shared-config-entry-points",
-	"ownership-use-consistent-file-and-symbol-naming",
 	"ownership-keep-component-imports-flowing-downward",
 	"ownership-keep-lifecycle-in-the-owning-component",
 	"typing-function-type-first",
@@ -151,19 +150,16 @@ const reactRuleUniverse = [
 	"strategy-prefer-children-over-render-props",
 	"composition-destructure-props-inside",
 	"composition-do-not-define-components-inside-components",
-	"composition-prefer-arrow-functions-and-object-params",
 	"composition-named-handlers-over-inline",
-	"composition-use-ref-prop-instead-of-forwardref-in-react-19",
-	"composition-use-activity-for-render-branches",
+	"composition-open-ref-props-only-for-imperative-contracts",
 	"screen-avoid-premature-abstraction",
 	"screen-extract-local-section-components-for-runtime-boundaries",
-	"screen-extract-utilities-selectively",
 	"screen-keep-derived-values-close",
 	"screen-keep-route-flow-visible",
 	"events-keep-handler-flow-inline",
 	"events-name-and-curry-handlers",
 	"events-run-user-actions-in-handlers-not-effects",
-	"data-avoid-fallback-defaults-and-loading-flags",
+	"data-avoid-ad-hoc-loading-branches",
 	"data-name-query-and-mutation-bindings-consistently",
 	"data-preserve-origin-chaining",
 	"data-shape-query-data-with-select",
@@ -172,11 +168,10 @@ const reactRuleUniverse = [
 	"state-store-derived-authority",
 	"state-use-functional-setstate-updates",
 	"state-use-effectevent-for-non-reactive-effect-callbacks",
-	"perf-compiler-first-memoization",
+	"perf-avoid-defensive-memoization",
 	"perf-use-lazy-state-initializers-for-expensive-defaults",
 	"perf-use-starttransition-for-non-urgent-updates",
 	"perf-use-usedeferredvalue-for-heavy-derived-renders",
-	"docs-limit-inline-comments-to-non-obvious-logic",
 	"docs-require-jsdoc-on-key-declarations",
 ] as const;
 
@@ -243,6 +238,10 @@ const typescriptRuleRouting = {
 	"functions-replace-enum-with-as-const-objects": {
 		appliesWhen: "`enum` 이나 타입과 실행 양쪽에서 함께 쓰는 값 묶음을 추가·변경할 때.",
 		reviewWith: [],
+	},
+	"functions-declare-functions-as-arrow-consts": {
+		appliesWhen: "이름 붙인 함수를 새로 만들거나 선언 형태를 바꿀 때. 제외: 클래스 메서드, 제너레이터, 오버로드 선언.",
+		reviewWith: ["functions-use-named-object-params-for-complex-signatures"],
 	},
 	"functions-use-named-object-params-for-complex-signatures": {
 		appliesWhen:
@@ -412,13 +411,11 @@ const cssRuleRouting = {
  */
 const reactRuleRouting = {
 	"ownership-prefer-plain-ts-for-local-react-helpers": {
-		appliesWhen:
-			"화면 전용 계산·정규화·전송 값 조립을 커스텀 훅으로 추출하려 할 때. 화면 전용 순수 로직을 별도 보조 모듈으로 옮기려 할 때.",
+		appliesWhen: "화면 전용 계산·정규화·전송 값 조립을 커스텀 훅으로 추출하려 할 때. 화면 전용 순수 로직을 별도 보조 모듈로 옮기려 할 때.",
 		reviewWith: [
-			"screen-extract-utilities-selectively",
+			"typescript/functions-extract-helpers-only-when-the-boundary-is-real",
 			"ownership-place-owner-files-in-role-folders",
 			"ownership-keep-lifecycle-in-the-owning-component",
-			"typescript/functions-extract-helpers-only-when-the-boundary-is-real",
 		],
 	},
 	"ownership-layer-component-boundaries": {
@@ -429,15 +426,6 @@ const reactRuleRouting = {
 		appliesWhen:
 			"소유자 아래 `component`·`config`·`function`·`hook`·`type` 폴더를 만들거나 옮길 때. 추출한 컴포넌트·함수·타입의 배치 위치를 정할 때. 제외: 기존 파일 내부 구현만 바꾸는 경우.",
 		reviewWith: ["ownership-keep-component-imports-flowing-downward", "css/ownership-choose-scope-prefix-by-reuse-range"],
-	},
-	"ownership-shared-config-entry-points": {
-		appliesWhen: "둘 이상의 화면이 쓰는 상수·설정·순수 함수를 추가하거나 옮길 때. 말단 파일에 중복 선언된 공용 값을 정리할 때.",
-		reviewWith: ["typescript/naming-centralize-shared-config-namespaces", "typescript/naming-preserve-config-origin-with-chained-access"],
-	},
-	"ownership-use-consistent-file-and-symbol-naming": {
-		appliesWhen:
-			"리액트 파일, 컴포넌트, 내보낸 심볼, 공용 설정 이름을 정하거나 바꿀 때. 형제 `.ts` 보조 파일·심볼을 만들거나 옮길 때. 제외: 지역 질의·변경 요청 바인딩 이름만 바꾸는 경우.",
-		reviewWith: [],
 	},
 	"ownership-keep-component-imports-flowing-downward": {
 		appliesWhen:
@@ -490,30 +478,19 @@ const reactRuleRouting = {
 			"컴포넌트 본문 안에 JSX를 반환하는 로컬 함수·컴포넌트를 추가하거나 옮길 때. 재렌더 시 재마운트·focus 초기화 징후를 다룰 때.",
 		reviewWith: [],
 	},
-	"composition-prefer-arrow-functions-and-object-params": {
-		appliesWhen:
-			"리액트 인접 코드에 `function` 선언이 생길 때. 함수가 매개변수를 3개 이상 받을 때. 함수가 함께 이동하는 같은 계열 값을 받을 때.",
-		reviewWith: ["typescript/functions-use-named-object-params-for-complex-signatures"],
-	},
 	"composition-named-handlers-over-inline": {
 		appliesWhen:
 			"TSX 이벤트 프롭의 인라인 콜백에 분기나 비동기 호출을 추가·수정할 때. 인라인 콜백에 여러 동작·부수효과나 비자명한 상태 전환이 들어갈 때. 제외: 단순 설정 함수나 인자 전달 한 줄 위임만 있는 경우.",
 		reviewWith: ["events-keep-handler-flow-inline", "events-run-user-actions-in-handlers-not-effects"],
 	},
-	"composition-use-ref-prop-instead-of-forwardref-in-react-19": {
-		appliesWhen: "리액트 19 컴포넌트에 focus·스크롤·측정용 ref 공개 API를 추가·변경할 때. 새 `forwardRef` 래퍼를 도입하려 할 때.",
-		reviewWith: [],
-	},
-	"composition-use-activity-for-render-branches": {
-		appliesWhen:
-			"마운트된 하위 트리의 표시 상태를 보존하려고 조건부 렌더링을 Activity로 바꿀 때. Activity 등 표시 방식과 조건부 렌더링 사이를 오갈 때.",
-		reviewWith: [],
+	"composition-open-ref-props-only-for-imperative-contracts": {
+		appliesWhen: "컴포넌트에 `ref` 프롭을 추가하거나 공개할 대상을 바꿀 때. 제외: 이미 있는 `ref` 계약의 타입만 바꾸는 경우.",
+		reviewWith: ["strategy-avoid-boolean-prop-proliferation"],
 	},
 	"screen-avoid-premature-abstraction": {
 		appliesWhen: "화면 코드를 보조 함수·훅·컴포넌트·모듈으로 추출할 때. 한 곳에서만 쓰는 기존 추상화를 다시 접어 넣을 때.",
 		reviewWith: [
 			"screen-extract-local-section-components-for-runtime-boundaries",
-			"screen-extract-utilities-selectively",
 			"typescript/functions-extract-helpers-only-when-the-boundary-is-real",
 		],
 	},
@@ -521,11 +498,6 @@ const reactRuleRouting = {
 		appliesWhen:
 			"화면 지역 섹션 컴포넌트를 새로 추출할 때. 기존 섹션이 비동기·상태·프로바이더·상호작용·라이브러리·성능 경계를 소유하는지 바꿀 때.",
 		reviewWith: [],
-	},
-	"screen-extract-utilities-selectively": {
-		appliesWhen:
-			"화면 계산·변환·기본 설정·옵션·열 메타를 별도 함수나 보조 모듈으로 옮길 때. 화면 보조 경계를 바꿀 때. 제외: 질의 `select` 내부 가공만 바꾸는 경우.",
-		reviewWith: ["ownership-place-owner-files-in-role-folders", "typescript/functions-extract-helpers-only-when-the-boundary-is-real"],
 	},
 	"screen-keep-derived-values-close": {
 		appliesWhen:
@@ -540,7 +512,7 @@ const reactRuleRouting = {
 	"events-keep-handler-flow-inline": {
 		appliesWhen:
 			"화면 전용 이름 붙인 핸들러의 분기·변경 요청·화면 이동·후처리를 여러 보조 함수나 훅으로 나눌 때. 쪼개져 있던 핸들러 흐름을 다시 합칠 때.",
-		reviewWith: ["screen-extract-utilities-selectively"],
+		reviewWith: ["typescript/functions-extract-helpers-only-when-the-boundary-is-real"],
 	},
 	"events-name-and-curry-handlers": {
 		appliesWhen:
@@ -552,14 +524,10 @@ const reactRuleRouting = {
 			"제출·저장·삭제·닫기 같은 한 번뿐인 사용자 액션을 핸들러와 상태+이펙트 사이에서 옮길 때. 한 번뿐인 사용자 액션의 실행 흐름을 바꿀 때.",
 		reviewWith: [],
 	},
-	"data-avoid-fallback-defaults-and-loading-flags": {
+	"data-avoid-ad-hoc-loading-branches": {
 		appliesWhen:
-			"선택 응답에 `??`·`||` 기본값을 넣을 때. Suspense 화면 본문에 초기 로딩 반환을 추가·변경할 때. 결측·로딩 사용성를 다룰 때.",
-		reviewWith: [
-			"data-preserve-origin-chaining",
-			"screen-keep-derived-values-close",
-			"typescript/absence-expose-optional-values-instead-of-silent-fallbacks",
-		],
+			"Suspense 질의를 쓰는 화면 본문에 초기 로딩 반환을 추가·변경할 때. `isPending`·`isFetching`으로 화면을 가리는 분기를 넣을 때. 제외: 선택 값에 기본값을 채우는 것만 바꾸는 경우.",
+		reviewWith: ["data-preserve-origin-chaining", "screen-keep-derived-values-close"],
 	},
 	"data-name-query-and-mutation-bindings-consistently": {
 		appliesWhen: "리액트 Query 질의·변경 요청 훅의 로컬 바인딩을 추가하거나 이름을 바꿀 때. 역할이 드러나지 않는 별칭이 diff에 보일 때.",
@@ -594,10 +562,10 @@ const reactRuleRouting = {
 		appliesWhen: "구독 이펙트가 최신 프롭·상태 콜백을 읽어야 할 때. ref 동기화 우회, 의존성 재설치, `useEffectEvent`를 추가·변경할 때.",
 		reviewWith: ["events-run-user-actions-in-handlers-not-effects"],
 	},
-	"perf-compiler-first-memoization": {
+	"perf-avoid-defensive-memoization": {
 		appliesWhen:
 			"`useMemo`·`useCallback`을 추가하거나 제거할 때. 참조 동일성·실측 병목·무거운 지연 계산을 이유로 수동 메모이제이션을 검토할 때.",
-		reviewWith: [],
+		reviewWith: ["perf-use-usedeferredvalue-for-heavy-derived-renders"],
 	},
 	"perf-use-lazy-state-initializers-for-expensive-defaults": {
 		appliesWhen: "`useState` 초기값에 localStorage 파싱, 인덱스 생성, 큰 배열 정규화 같은 비용 있는 계산을 넣을 때.",
@@ -610,11 +578,7 @@ const reactRuleRouting = {
 	"perf-use-usedeferredvalue-for-heavy-derived-renders": {
 		appliesWhen:
 			"검색어·필터·정렬 입력이 무거운 파생 화면을 갱신해 타입 지정 지연이 생길 때. `useDeferredValue` 기반 계산을 추가·변경할 때.",
-		reviewWith: ["perf-compiler-first-memoization", "perf-use-starttransition-for-non-urgent-updates"],
-	},
-	"docs-limit-inline-comments-to-non-obvious-logic": {
-		appliesWhen: "리액트 함수·핸들러·JSX 인접 로직 안의 `//` 주석을 추가·수정할 때. 자명한 설명과 실제 제약을 구분해 주석을 정리할 때.",
-		reviewWith: [],
+		reviewWith: ["perf-avoid-defensive-memoization", "perf-use-starttransition-for-non-urgent-updates"],
 	},
 	"docs-require-jsdoc-on-key-declarations": {
 		appliesWhen:
@@ -628,7 +592,6 @@ const reactRuleRouting = {
  */
 const mandatoryRuleRouting = {
 	react: {
-		"ownership-use-consistent-file-and-symbol-naming": ["typescript/naming-use-consistent-file-and-symbol-naming"],
 		"ownership-keep-component-imports-flowing-downward": ["typescript/naming-use-direct-imports-and-public-entry-points"],
 		"typing-function-type-first": ["typescript/types-reuse-callback-signatures-from-existing-contracts"],
 		"composition-named-handlers-over-inline": ["docs-require-jsdoc-on-key-declarations", "events-name-and-curry-handlers"],
@@ -636,10 +599,10 @@ const mandatoryRuleRouting = {
 			"typescript/naming-use-consistent-file-and-symbol-naming",
 			"docs-require-jsdoc-on-key-declarations",
 		],
+		"data-avoid-ad-hoc-loading-branches": ["typescript/absence-expose-optional-values-instead-of-silent-fallbacks"],
 		"data-shape-query-data-with-select": ["docs-require-jsdoc-on-key-declarations"],
 		"state-calculate-derived-values-during-render": ["screen-keep-derived-values-close"],
 		"state-use-effectevent-for-non-reactive-effect-callbacks": ["docs-require-jsdoc-on-key-declarations"],
-		"docs-limit-inline-comments-to-non-obvious-logic": ["typescript/docs-keep-inline-comments-for-constraints-and-caveats"],
 		"docs-require-jsdoc-on-key-declarations": ["typescript/docs-require-header-jsdoc-on-key-declarations"],
 	},
 	typescript: {
@@ -659,6 +622,12 @@ const completionGateRouting = {react: [], typescript: ["guardrails-review-banned
  * @summary Appendix A scenario별 initial exact selected rule oracle
  */
 const typescriptSelections = {
+	"shared-config-existing-source": [
+		"naming-centralize-shared-config-namespaces",
+		"naming-preserve-config-origin-with-chained-access",
+		"naming-use-direct-imports-and-public-entry-points",
+		"guardrails-review-banned-typescript-shortcuts-before-finishing",
+	],
 	"callback-contract-implementation": [
 		"naming-use-consistent-file-and-symbol-naming",
 		"types-mark-unused-parameters-with-underscore",
@@ -673,6 +642,15 @@ const typescriptSelections = {
 		"docs-write-concise-korean-comments-about-purpose-and-constraints",
 		"guardrails-review-banned-typescript-shortcuts-before-finishing",
 	],
+	"helper-boundary-scope-drift": [
+		"functions-extract-helpers-only-when-the-boundary-is-real",
+		"guardrails-review-banned-typescript-shortcuts-before-finishing",
+	],
+	"shared-collection-lookups-and-sort": [
+		"functions-prefer-immutable-array-sorting",
+		"functions-use-set-and-map-for-repeated-lookups",
+		"guardrails-review-banned-typescript-shortcuts-before-finishing",
+	],
 	"enum-like-runtime-contract": [
 		"naming-use-consistent-file-and-symbol-naming",
 		"types-document-custom-types-and-shapes",
@@ -681,34 +659,20 @@ const typescriptSelections = {
 		"docs-write-concise-korean-comments-about-purpose-and-constraints",
 		"guardrails-review-banned-typescript-shortcuts-before-finishing",
 	],
-	"explicit-product-fallback": [
-		"absence-expose-optional-values-instead-of-silent-fallbacks",
-		"docs-keep-inline-comments-for-constraints-and-caveats",
-		"docs-write-concise-korean-comments-about-purpose-and-constraints",
-		"guardrails-review-banned-typescript-shortcuts-before-finishing",
-	],
-	"helper-boundary-scope-drift": [
-		"functions-extract-helpers-only-when-the-boundary-is-real",
+	"wide-scope-assembly": [
+		"functions-avoid-imperative-assembly-in-wide-scopes",
 		"guardrails-review-banned-typescript-shortcuts-before-finishing",
 	],
 	"named-object-param": [
 		"naming-use-consistent-file-and-symbol-naming",
+		"functions-declare-functions-as-arrow-consts",
 		"functions-use-named-object-params-for-complex-signatures",
 		"guardrails-review-banned-typescript-shortcuts-before-finishing",
 	],
-	"shared-collection-lookups-and-sort": [
-		"functions-prefer-immutable-array-sorting",
-		"functions-use-set-and-map-for-repeated-lookups",
-		"guardrails-review-banned-typescript-shortcuts-before-finishing",
-	],
-	"shared-config-existing-source": [
-		"naming-centralize-shared-config-namespaces",
-		"naming-preserve-config-origin-with-chained-access",
-		"naming-use-direct-imports-and-public-entry-points",
-		"guardrails-review-banned-typescript-shortcuts-before-finishing",
-	],
-	"wide-scope-assembly": [
-		"functions-avoid-imperative-assembly-in-wide-scopes",
+	"explicit-product-fallback": [
+		"absence-expose-optional-values-instead-of-silent-fallbacks",
+		"docs-keep-inline-comments-for-constraints-and-caveats",
+		"docs-write-concise-korean-comments-about-purpose-and-constraints",
 		"guardrails-review-banned-typescript-shortcuts-before-finishing",
 	],
 } as const;
@@ -774,12 +738,7 @@ const reactScenarioStages = {
 			files: ["src/ui/user-card/ui-user-card.tsx", "src/ui/index.ts"],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
-				react: [
-					"ownership-use-consistent-file-and-symbol-naming",
-					"typing-function-type-first",
-					"typing-reuse-existing-contracts",
-					"events-name-and-curry-handlers",
-				],
+				react: ["typing-function-type-first", "typing-reuse-existing-contracts", "events-name-and-curry-handlers"],
 				typescript: [
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
@@ -804,7 +763,6 @@ const reactScenarioStages = {
 				react: [
 					"ownership-layer-component-boundaries",
 					"ownership-place-owner-files-in-role-folders",
-					"ownership-use-consistent-file-and-symbol-naming",
 					"composition-destructure-props-inside",
 				],
 				typescript: [
@@ -830,7 +788,6 @@ const reactScenarioStages = {
 				react: [
 					"ownership-layer-component-boundaries",
 					"ownership-place-owner-files-in-role-folders",
-					"ownership-use-consistent-file-and-symbol-naming",
 					"composition-destructure-props-inside",
 				],
 				typescript: [
@@ -866,10 +823,7 @@ const reactScenarioStages = {
 				react: [
 					"ownership-prefer-plain-ts-for-local-react-helpers",
 					"ownership-place-owner-files-in-role-folders",
-					"ownership-use-consistent-file-and-symbol-naming",
-					"composition-prefer-arrow-functions-and-object-params",
 					"screen-avoid-premature-abstraction",
-					"screen-extract-utilities-selectively",
 					"docs-require-jsdoc-on-key-declarations",
 				],
 				typescript: [
@@ -877,6 +831,7 @@ const reactScenarioStages = {
 					"naming-use-direct-imports-and-public-entry-points",
 					"types-document-custom-types-and-shapes",
 					"functions-extract-helpers-only-when-the-boundary-is-real",
+					"functions-declare-functions-as-arrow-consts",
 					"functions-use-named-object-params-for-complex-signatures",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
@@ -892,7 +847,7 @@ const reactScenarioStages = {
 			files: ["src/page/entries/pg-entries.tsx", "src/page/reports/pg-reports.tsx", "src/shared/config.ts"],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
-				react: ["ownership-shared-config-entry-points", "ownership-use-consistent-file-and-symbol-naming"],
+				react: [],
 				typescript: [
 					"naming-centralize-shared-config-namespaces",
 					"naming-preserve-config-origin-with-chained-access",
@@ -914,7 +869,6 @@ const reactScenarioStages = {
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
 				react: [
-					"ownership-use-consistent-file-and-symbol-naming",
 					"strategy-avoid-boolean-prop-proliferation",
 					"strategy-choose-single-composition-compound-and-variants",
 					"strategy-prefer-children-over-render-props",
@@ -942,7 +896,7 @@ const reactScenarioStages = {
 				react: [
 					"composition-destructure-props-inside",
 					"composition-do-not-define-components-inside-components",
-					"composition-use-ref-prop-instead-of-forwardref-in-react-19",
+					"composition-open-ref-props-only-for-imperative-contracts",
 					"docs-require-jsdoc-on-key-declarations",
 				],
 				typescript: [
@@ -953,18 +907,6 @@ const reactScenarioStages = {
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"guardrails-review-banned-typescript-shortcuts-before-finishing",
 				],
-			},
-		},
-	},
-	"RTE07-visibility-lifecycle": {
-		initial: {
-			prompt:
-				"change only the show/hide branch for an already-mounted sidebar to the already-imported project Activity primitive to preserve expanded state; keep empty-state unmount behavior.",
-			files: ["src/page/entries/component/pg-entry-sidebar.tsx"],
-			expectedSkills: ["react", "typescript"],
-			expectedSelected: {
-				react: ["composition-use-activity-for-render-branches"],
-				typescript: ["guardrails-review-banned-typescript-shortcuts-before-finishing"],
 			},
 		},
 	},
@@ -1007,7 +949,6 @@ const reactScenarioStages = {
 				react: [
 					"ownership-layer-component-boundaries",
 					"ownership-place-owner-files-in-role-folders",
-					"ownership-use-consistent-file-and-symbol-naming",
 					"typing-function-type-first",
 					"typing-reuse-existing-contracts",
 					"composition-destructure-props-inside",
@@ -1114,11 +1055,10 @@ const reactScenarioStages = {
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
 				react: [
-					"perf-compiler-first-memoization",
+					"perf-avoid-defensive-memoization",
 					"perf-use-lazy-state-initializers-for-expensive-defaults",
 					"perf-use-starttransition-for-non-urgent-updates",
 					"perf-use-usedeferredvalue-for-heavy-derived-renders",
-					"docs-limit-inline-comments-to-non-obvious-logic",
 					"docs-require-jsdoc-on-key-declarations",
 				],
 				typescript: [
@@ -1161,12 +1101,7 @@ const reactScenarioStages = {
 			files: ["src/page/entry-detail/pg-entry-detail.tsx"],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
-				react: [
-					"screen-keep-derived-values-close",
-					"data-avoid-fallback-defaults-and-loading-flags",
-					"data-preserve-origin-chaining",
-					"docs-limit-inline-comments-to-non-obvious-logic",
-				],
+				react: ["screen-keep-derived-values-close", "data-avoid-ad-hoc-loading-branches", "data-preserve-origin-chaining"],
 				typescript: [
 					"absence-expose-optional-values-instead-of-silent-fallbacks",
 					"docs-keep-inline-comments-for-constraints-and-caveats",
@@ -1650,7 +1585,7 @@ test("TypeScript progressive metadata matches Appendix A exactly", async () => {
 
 	assert.equal(document.metadata.progressiveDisclosure, true);
 	assert.deepEqual(document.metadata.companions ?? [], []);
-	assert.equal(document.rules.length, 20);
+	assert.equal(document.rules.length, 21);
 	assert.deepEqual(
 		Object.fromEntries(document.rules.map((rule) => [getRuleId(rule), {appliesWhen: rule.appliesWhen, reviewWith: rule.reviewWith}])),
 		typescriptRuleRouting,
@@ -1740,8 +1675,8 @@ test("TypeScript generated index is complete and within the deterministic byte b
 	const expectedIds = document.rules.map((rule) => getRuleId(rule)).sort();
 
 	assert.deepEqual(ids, expectedIds);
-	assert.equal(ids.length, 20);
-	assert.equal(getRulesIndexByteBudget(ids.length), 8_000);
+	assert.equal(ids.length, 21);
+	assert.equal(getRulesIndexByteBudget(ids.length), 8_340);
 	assert.equal(Buffer.byteLength(source, "utf8") <= getRulesIndexByteBudget(ids.length), true);
 
 	for (const entry of entries) {
@@ -1781,8 +1716,8 @@ test("JSDoc routing closure and query-select ownership stay exact across every m
 	const queryShaping = reactManifest.scenarios.find(({id}) => id === "RTE12-query-shaping");
 	assert.ok(queryShaping);
 	assert.ok(queryShaping.expectedSelected.react?.includes("data-shape-query-data-with-select"));
-	assert.ok(!(queryShaping.expectedSelected.react?.includes("screen-extract-utilities-selectively") ?? false));
-	assert.equal(queryShaping.expectedSelected.react?.includes("screen-extract-utilities-selectively"), false);
+	// `select` 안 변환은 7.4 몫이다. 추출 경계 규칙이 같이 걸리면 두 규칙이 같은 코드를 두 번 판정한다.
+	assert.equal(queryShaping.expectedSelected.typescript?.includes("functions-extract-helpers-only-when-the-boundary-is-real"), false);
 });
 
 test("induced naming closure and activated finish gates stay mandatory across every manifest stage", async () => {
@@ -1861,7 +1796,7 @@ test("TypeScript SKILL.md is a compact router without receipt or audit machinery
 	assertMentions(extractSection(body, 1), ["React/CSS", "companion"], "typescript 1절");
 });
 
-test("React progressive metadata and all 41 rule routes match Appendix B exactly", async () => {
+test("React progressive metadata and all 35 rule routes match Appendix B exactly", async () => {
 	const skillPaths = getSkillPaths("react", realSkillRootDir);
 	const document = await readSkillDocument(skillPaths);
 
@@ -1872,7 +1807,7 @@ test("React progressive metadata and all 41 rule routes match Appendix B exactly
 		{skill: "typescript", mode: "required"},
 		{skill: "css", mode: "conditional", appliesWhen: "class contract, stylesheet 또는 styling surface를 변경한다."},
 	]);
-	assert.equal(document.rules.length, 41);
+	assert.equal(document.rules.length, 35);
 	assert.deepEqual(
 		Object.fromEntries(document.rules.map((rule) => [getRuleId(rule), {appliesWhen: rule.appliesWhen, reviewWith: rule.reviewWith}])),
 		reactRuleRouting,
@@ -1892,21 +1827,6 @@ test("React progressive metadata and all 41 rule routes match Appendix B exactly
 			assert.doesNotMatch(ruleSource, /^reviewWith:/m, `${ruleId} must omit an empty reviewWith key`);
 		}
 	}
-	const ownershipNamingRule = await readRuleSource("react", "ownership-use-consistent-file-and-symbol-naming");
-	assertMentions(readAppliesWhen(ownershipNamingRule), ["바꿀 때", "형제 `.ts` 보조 파일"], "ownershipNamingRule");
-	assert.match(
-		ownershipNamingRule,
-		/지역 질의·변경 요청 바인딩[^\n]+data-name-query-and-mutation-bindings-consistently|data-name-query-and-mutation-bindings-consistently[^\n]+지역 질의·변경 요청 바인딩/i,
-	);
-	const screenExtractionRule = await readRuleSource("react", "screen-extract-utilities-selectively");
-	assert.match(
-		screenExtractionRule,
-		/질의 `select`[\s\S]+data-shape-query-data-with-select[\s\S]+별도 함수나 보조 모듈 경계[\s\S]+적용하지 않/i,
-	);
-	assert.match(screenExtractionRule, /Incorrect[\s\S]*normalizeEntryValues[\s\S]*mergeEntryPayload/i);
-	assert.match(screenExtractionRule, /Correct[\s\S]*normalizeTreeNodes[\s\S]*handleSave/i);
-	assertMentions(screenExtractionRule, [/Correct/i, /한 내보낸 함수/i, /buildEntryPayload/i], "screenExtractionRule");
-
 	const template = await readFile(path.join(skillPaths.rulesDir, "_template.md"), "utf8");
 	assert.match(readAppliesWhen(template), / /);
 	assert.doesNotMatch(template, /^reviewWith:/m);
@@ -1918,7 +1838,7 @@ test("React progressive metadata and all 41 rule routes match Appendix B exactly
 	assert.match(contributing, /대상이 없으면.*key\s*를 생략/i);
 });
 
-test("React routing manifest is the exact seventeen-scenario Appendix B/D oracle with full positive coverage", async () => {
+test("React routing manifest is the exact sixteen-scenario Appendix B/D oracle with full positive coverage", async () => {
 	const skillPaths = getSkillPaths("react", realSkillRootDir);
 	await validateRoutingEvalManifest(skillPaths);
 	await validateRoutingEvalManifests(realSkillRootDir);
@@ -1932,10 +1852,10 @@ test("React routing manifest is the exact seventeen-scenario Appendix B/D oracle
 		manifest.scenarios.map((scenario) => scenario.id),
 		expectedScenarioIds,
 	);
-	assert.equal(manifest.scenarios.length, 17);
+	assert.equal(manifest.scenarios.length, 16);
 	assert.equal(
 		manifest.scenarios.reduce((count, scenario) => count + (scenario.scopeDrift ? 2 : 1), 0),
-		18,
+		17,
 	);
 
 	const universeBySkillName: Record<string, readonly string[]> = {
@@ -2040,8 +1960,8 @@ test("React generated index and handbook preserve canonical local rules and comp
 		entries.map((entry) => entry.id),
 		reactRuleUniverse,
 	);
-	assert.equal(entries.length, 41);
-	assert.equal(getRulesIndexByteBudget(entries.length), 15_140);
+	assert.equal(entries.length, 35);
+	assert.equal(getRulesIndexByteBudget(entries.length), 13_100);
 	assert.equal(Buffer.byteLength(source, "utf8") <= getRulesIndexByteBudget(entries.length), true);
 
 	for (const entry of entries) {

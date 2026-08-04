@@ -6,7 +6,7 @@ impactDescription: 모든 분기를 잔 함수로 쪼개지 않고도 읽힙니�
 appliesWhen:
   - 화면 전용 이름 붙인 핸들러의 분기·변경 요청·화면 이동·후처리를 여러 보조 함수나 훅으로 나눌 때
   - 쪼개져 있던 핸들러 흐름을 다시 합칠 때
-reviewWith: screen-extract-utilities-selectively
+reviewWith: typescript/functions-extract-helpers-only-when-the-boundary-is-real
 tags: events, handlers, flow
 ---
 
@@ -19,7 +19,7 @@ tags: events, handlers, flow
 핸들러가 길어져도 바로 `function` 폴더나 공용 보조 코드로 쪼개지 않습니다.
 
 - 먼저 이른 반환, 단계적 지역 변수, 의미 있는 블록 구분으로 읽기 쉽게 유지합니다.
-- `screen-extract-utilities-selectively`를 만족할 때만 분리합니다.
+- `typescript/functions-extract-helpers-only-when-the-boundary-is-real`를 만족할 때만 분리합니다.
 - 화면 하나에서만 쓰는 커스텀 훅으로 우회해 흐름을 숨기는 것도 피합니다.
 - 인라인 콜백을 같은 컴포넌트 안의 이름 붙인 핸들러로 옮기기만 하는 변경은 대상이 아닙니다.
 

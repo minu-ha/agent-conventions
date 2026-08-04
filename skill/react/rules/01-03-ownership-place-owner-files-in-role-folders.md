@@ -42,7 +42,8 @@ tags: ownership, structure, folders, owner
 - 소유자 중첩이 3단계에 닿으면 분리가 맞는지 `widget`으로 나갈 대상인지 다시 봅니다.
 
 무엇을 추출할지는 이 규칙이 정하지 않습니다.
-`screen-extract-utilities-selectively`가 추출 여부를 먼저 판정하고 이 규칙은 그 결과의 위치만 정합니다.
+`typescript/functions-extract-helpers-only-when-the-boundary-is-real`가 추출 여부를 먼저 판정하고
+이 규칙은 그 결과의 위치만 정합니다.
 
 **Incorrect (단순 컴포넌트에 역할 폴더를 미리 다 만듦):**
 

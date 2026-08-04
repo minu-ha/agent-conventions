@@ -10,4 +10,4 @@
 - 훅 파라미터, JSX 표시값, 이펙트 내부 계산은 쓰는 자리의 좁은 스코프에서 직접 계산합니다.
 - JSX 전용 표시값은 화면 상단 `const`로 빼지 말고 원본 체이닝으로 직접 참조합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/05-04-screen-keep-derived-values-close.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/05-03-screen-keep-derived-values-close.md)을 읽습니다.
