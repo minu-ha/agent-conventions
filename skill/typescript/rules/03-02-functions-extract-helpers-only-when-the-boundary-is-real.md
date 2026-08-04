@@ -6,7 +6,7 @@ impactDescription: 재사용 계약이나 테스트 경계가 없는데 보조 �
 appliesWhen:
   - 보조 함수를 빼내거나 옮기거나 내보내거나 공유할 때
   - 범용 보조 파일, 소유자 하나만 쓰는 변환 함수, 잔손질 단계의 경계를 바꿀 때
-reviewWith: docs-require-header-jsdoc-on-key-declarations
+reviewWith: functions-place-and-promote-support-functions, docs-require-header-jsdoc-on-key-declarations
 tags: functions, boundaries
 ---
 
@@ -19,10 +19,8 @@ tags: functions, boundaries
 - 필수: 입력과 출력이 분명하고, 실행 문맥 없이도 따로 검증할 수 있어야 합니다
 - 떼어 낼 신호: 여러 소유자가 직접 호출하거나, 여러 내보낸 함수에서 같은 도메인 규칙이 반복됩니다
 - 그대로 둘 것: 한 번만 쓰는 짧은 계산, 선택 값 보정, 라벨 기본값, 메서드 하나만 쓰는 변환 함수
-- 배치: 범용 `helper.ts`나 `utils.ts`는 만들지 않습니다.
-  소유자 아래 어느 폴더에 둘지는 프레임워크 skill 의 역할 폴더 규칙이 정합니다.
-- 깊이: 호출은 소유자에서 내보낸 함수, 그 파일 안 비공개 함수까지 두 단계로 끝냅니다
-- 승격: 여러 소유자가 실제로 함께 쓰는 순수 함수만 `shared/util.ts`의 `util.*`로 올립니다
+떼어 낸 다음 어디 두고 언제 공용으로 올릴지는
+`functions-place-and-promote-support-functions`가 정합니다.
 
 내보낸 함수가 또 다른 내보낸 함수를 타고 가는 사슬은 만들지 않습니다.
 흐름을 알려고 파일을 왕복해야 하면 경계가 아니라 그냥 쪼갠 것입니다.

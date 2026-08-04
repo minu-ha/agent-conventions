@@ -15,8 +15,10 @@
 			],
 			"expectedSelected": {
 				"react": [
+					"ownership-prefix-layer-names-on-files-and-symbols",
 					"typing-function-type-first",
-					"events-name-and-curry-handlers"
+					"events-name-and-curry-handlers",
+					"events-curry-extra-handler-arguments"
 				],
 				"typescript": [
 					"naming-use-consistent-file-and-symbol-naming",
@@ -27,6 +29,7 @@
 					"types-reuse-existing-contracts-before-new-types",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-doc-comments-as-multiline-blocks",
 					"guardrails-review-banned-typescript-shortcuts-before-finishing"
 				]
 			}
@@ -45,6 +48,7 @@
 			"expectedSelected": {
 				"react": [
 					"ownership-layer-component-boundaries",
+					"ownership-prefix-layer-names-on-files-and-symbols",
 					"ownership-place-owner-files-in-role-folders",
 					"composition-destructure-props-inside",
 					"composition-declare-props-interface-above-the-component"
@@ -55,6 +59,7 @@
 					"types-document-custom-types-and-shapes",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-doc-comments-as-multiline-blocks",
 					"guardrails-review-banned-typescript-shortcuts-before-finishing"
 				]
 			},
@@ -73,6 +78,7 @@
 				"expectedSelected": {
 					"react": [
 						"ownership-layer-component-boundaries",
+						"ownership-prefix-layer-names-on-files-and-symbols",
 						"ownership-place-owner-files-in-role-folders",
 						"composition-destructure-props-inside",
 						"composition-declare-props-interface-above-the-component"
@@ -83,6 +89,7 @@
 						"types-document-custom-types-and-shapes",
 						"docs-require-header-jsdoc-on-key-declarations",
 						"docs-write-concise-korean-comments-about-purpose-and-constraints",
+						"docs-write-doc-comments-as-multiline-blocks",
 						"guardrails-review-banned-typescript-shortcuts-before-finishing"
 					],
 					"css": [
@@ -127,6 +134,7 @@
 					"functions-use-named-object-params-for-complex-signatures",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-doc-comments-as-multiline-blocks",
 					"guardrails-review-banned-typescript-shortcuts-before-finishing"
 				]
 			}
@@ -171,10 +179,12 @@
 				"react": [
 					"strategy-avoid-boolean-prop-proliferation",
 					"strategy-choose-single-composition-compound-and-variants",
+					"strategy-expose-only-assembled-compound-parts",
 					"strategy-prefer-children-over-render-props",
 					"composition-destructure-props-inside",
 					"composition-declare-props-interface-above-the-component",
-					"docs-require-jsdoc-on-key-declarations"
+					"docs-require-jsdoc-on-key-declarations",
+					"docs-document-compound-parts-above-props-interface"
 				],
 				"typescript": [
 					"naming-use-consistent-file-and-symbol-naming",
@@ -182,6 +192,7 @@
 					"types-document-custom-types-and-shapes",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-doc-comments-as-multiline-blocks",
 					"guardrails-review-banned-typescript-shortcuts-before-finishing"
 				]
 			}
@@ -209,6 +220,7 @@
 					"types-document-custom-types-and-shapes",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-doc-comments-as-multiline-blocks",
 					"guardrails-review-banned-typescript-shortcuts-before-finishing"
 				]
 			}
@@ -230,6 +242,7 @@
 					"composition-named-handlers-over-inline",
 					"events-keep-handler-flow-inline",
 					"events-name-and-curry-handlers",
+					"events-curry-extra-handler-arguments",
 					"events-run-user-actions-in-handlers-not-effects",
 					"docs-require-jsdoc-on-key-declarations"
 				],
@@ -242,6 +255,7 @@
 					"functions-extract-helpers-only-when-the-boundary-is-real",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-doc-comments-as-multiline-blocks",
 					"guardrails-review-banned-typescript-shortcuts-before-finishing"
 				]
 			}
@@ -271,6 +285,7 @@
 					"screen-place-suspense-boundaries-at-the-section-owner",
 					"screen-avoid-ad-hoc-loading-branches",
 					"events-name-and-curry-handlers",
+					"events-curry-extra-handler-arguments",
 					"docs-require-jsdoc-on-key-declarations"
 				],
 				"typescript": [
@@ -283,6 +298,7 @@
 					"absence-expose-optional-values-instead-of-silent-fallbacks",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-doc-comments-as-multiline-blocks",
 					"guardrails-review-banned-typescript-shortcuts-before-finishing"
 				]
 			}
@@ -303,6 +319,7 @@
 					"composition-named-handlers-over-inline",
 					"screen-keep-derived-values-close",
 					"events-name-and-curry-handlers",
+					"events-curry-extra-handler-arguments",
 					"state-calculate-derived-values-during-render",
 					"state-use-functional-setstate-updates",
 					"docs-require-jsdoc-on-key-declarations"
@@ -315,6 +332,7 @@
 					"types-reuse-callback-signatures-from-existing-contracts",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-doc-comments-as-multiline-blocks",
 					"guardrails-review-banned-typescript-shortcuts-before-finishing"
 				]
 			}
@@ -343,6 +361,7 @@
 					"types-document-custom-types-and-shapes",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-doc-comments-as-multiline-blocks",
 					"guardrails-review-banned-typescript-shortcuts-before-finishing"
 				]
 			}
@@ -369,6 +388,7 @@
 					"naming-use-consistent-file-and-symbol-naming",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-doc-comments-as-multiline-blocks",
 					"guardrails-review-banned-typescript-shortcuts-before-finishing"
 				]
 			}
@@ -397,6 +417,7 @@
 					"docs-keep-inline-comments-for-constraints-and-caveats",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-doc-comments-as-multiline-blocks",
 					"docs-justify-convention-exceptions-with-a-reason-comment",
 					"guardrails-review-banned-typescript-shortcuts-before-finishing"
 				]
@@ -421,8 +442,11 @@
 				"typescript": [
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
+					"types-prefer-function-variable-types-over-parameter-annotations",
+					"types-reuse-callback-signatures-from-existing-contracts",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-doc-comments-as-multiline-blocks",
 					"guardrails-review-banned-typescript-shortcuts-before-finishing"
 				]
 			}
@@ -499,6 +523,7 @@
 				"typescript": [
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-doc-comments-as-multiline-blocks",
 					"guardrails-review-banned-typescript-shortcuts-before-finishing"
 				]
 			}

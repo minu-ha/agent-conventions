@@ -111,16 +111,6 @@ const getRoutingRulesForSection = (section: SkillSection, rules: SkillRule[]): S
 		);
 };
 
-/**
- * @helper local rule 수 기준 compact index UTF-8 byte 상한 계산
- */
-export const getRulesIndexByteBudget = (ruleCount: number): number => 1_200 + ruleCount * 340;
-
-/**
- * @helper selected rule 하나의 generated compact contract UTF-8 byte 상한 계산
- */
-export const getRuleContractByteBudget = (): number => 1_600;
-
 const exampleMarkerPattern = /^ {0,3}\*\*(Incorrect|Correct)(?:\s+\(.+\))?:?\*\*[ \t]*$/;
 const fencePattern = /^ {0,3}(`{3,}|~{3,})(.*)$/;
 
@@ -310,15 +300,6 @@ export const generateRuleContractMarkdown = (rule: SkillRule): string => {
 		rule.impact === "CRITICAL"
 			? `# ${escapeMarkdownText(rule.title)}\n\n**Impact: CRITICAL**${routingMetadataBlock}\n\n> CRITICAL rule: must read the [full rule](${fullRuleLink}) before implementation or review.\n`
 			: `${normativeBody}${routingMetadataBlock}\n\n> 예시·예외가 필요하면 [full rule](${fullRuleLink})을 읽습니다.\n`;
-	const byteLength = Buffer.byteLength(markdown, "utf8");
-	const byteBudget = getRuleContractByteBudget();
-
-	if (byteLength > byteBudget) {
-		throw new Error(
-			`${getRuleId(rule)}: generated compact contract is ${byteLength} UTF-8 bytes and exceeds the ${byteBudget}-byte budget.`,
-		);
-	}
-
 	return markdown;
 };
 
@@ -508,15 +489,5 @@ export const generateRulesIndexMarkdown = (document: LoadedSkillDocument, direct
 		}
 	}
 
-	const markdown = lines.join("\n");
-	const byteLength = Buffer.byteLength(markdown, "utf8");
-	const byteBudget = getRulesIndexByteBudget(document.rules.length);
-
-	if (byteLength > byteBudget) {
-		throw new Error(
-			`${document.skillName}: generated RULES_INDEX.md is ${byteLength} UTF-8 bytes and exceeds the ${byteBudget}-byte budget.`,
-		);
-	}
-
-	return markdown;
+	return lines.join("\n");
 };

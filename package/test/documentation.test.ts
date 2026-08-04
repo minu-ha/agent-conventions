@@ -176,7 +176,6 @@ test("source files use convention-specific JSDoc tags for helper and boundary fu
 		["src/routing.ts", "escapeMarkdownText", "@helper"],
 		["src/routing.ts", "getRuleId", "@helper"],
 		["src/routing.ts", "getRulesForSection", "@helper"],
-		["src/routing.ts", "getRulesIndexByteBudget", "@helper"],
 		["src/routing.ts", "getCanonicalRoutingRuleIds", "@helper"],
 		["src/routing.ts", "generateRulesIndexMarkdown", "@helper"],
 		["src/routing-evals.ts", "readRoutingEvalManifest", "@api"],

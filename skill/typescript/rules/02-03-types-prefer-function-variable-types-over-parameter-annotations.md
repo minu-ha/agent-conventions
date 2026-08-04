@@ -16,7 +16,7 @@ tags: types
 
 재사용 가능한 콜백이나 함수 타입이 있다면 매개변수 타입 선언보다 함수 변수 타입 선언을 우선합니다.
 이미 있는 인터페이스, 객체 계약, 프레임워크 별칭을 먼저 씁니다.
-같은 호출 계약을 여러 구현이 함께 쓸 때만 함수 타입 별칭을 따로 선언합니다.
+함수 타입 별칭을 새로 선언하는 것은 같은 시그니처를 쓰는 구현이 이미 둘 이상일 때만입니다.
 한 번만 쓰는 지역 함수 때문에 함수 타입 별칭을 늘리지 않습니다.
 
 객체 안에서 한 번만 쓰이고 타입 표기도 없이 문맥으로 추론되는 인라인 콜백은 대상이 아닙니다.
@@ -31,19 +31,9 @@ const formatState = (state: Record<string, unknown>): string => {
 };
 ```
 
-**Correct (기존 계약이나 실제로 공유되는 호출 계약을 재사용해 함수 변수 타입을 고정):**
+**Correct (이미 있는 계약에서 시그니처를 가져와 함수 변수 타입을 고정):**
 
 ```ts
-/**
- * 사용자 formatter 계약
- */
-interface UserFormatters {
-	/**
-	 * 상태 문자열 formatter
-	 */
-	formatState: (state: Record<string, unknown>) => string;
-}
-
 const formatState: UserFormatters["formatState"] = (state) => {
 	return JSON.stringify(state);
 };

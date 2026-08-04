@@ -15,12 +15,7 @@ import {getSkillPaths, isBuildableSkill, listSkillNames} from "../src/config.js"
 import {replaceGeneratedFiles} from "../src/generated-files.js";
 import type {GeneratedFileOperations} from "../src/generated-files.js";
 import {parseFrontmatter, parseSections, readResolvedSkillDocuments, readSkillRules} from "../src/parser.js";
-import {
-	generateRuleContractMarkdown,
-	generateRulesIndexMarkdown,
-	getRuleContractByteBudget,
-	getRulesIndexByteBudget,
-} from "../src/routing.js";
+import {generateRuleContractMarkdown, generateRulesIndexMarkdown} from "../src/routing.js";
 import type {LoadedSkillDocument, SkillCompanion} from "../src/types.js";
 import {validateSkill} from "../src/validate.js";
 
@@ -29,7 +24,37 @@ const packageDir = path.resolve(currentDir, "..");
 const tsxCliPath = path.join(packageDir, "node_modules", "tsx", "dist", "cli.mjs");
 const validateModulePath = path.join(packageDir, "src", "validate.ts");
 
+/** 계약 생성이 반드시 실패하는 본문. build 트랜잭션이 기존 생성물을 덮지 않는지 확인하는 데 쓴다. */
+const EMPTY_EXAMPLE_BODY = [
+	"---",
+	"title: Fixture Rule",
+	"titleKo: 픽스처 규칙",
+	"impact: HIGH",
+	"impactDescription: Fixture impact description.",
+	"appliesWhen: Editing owner code.",
+	"tags: fixture",
+	"---",
+	"",
+	"## Fixture Rule",
+	"",
+	"**Impact: HIGH (Fixture impact description.)**",
+	"",
+	"Fixture normative guidance.",
+	"",
+	"**Incorrect**",
+	"",
+	"```ts",
+	"```",
+	"",
+	"**Correct**",
+	"",
+	"```ts",
+	"```",
+	"",
+].join("\n");
+
 interface RuleFixture {
+	body?: string;
 	bodyMarker?: string;
 	fileName?: string;
 	frontmatter?: string;
@@ -117,7 +142,8 @@ const writeSkillFixture = async (skillRootDir: string, skillName: string, fixtur
 		const impactDescription = rule.impactDescription ?? "Fixture impact description.";
 		await writeFile(
 			path.join(rulesDir, fileName),
-			`---\n${toFrontmatter(rule)}\n---\n## ${rule.title ?? "Fixture Rule"}\n\n**Impact: ${impact} (${impactDescription})**\n\n${rule.bodyMarker ?? "Fixture normative guidance."}\n\n**Incorrect**\n\n\`\`\`ts\nconst bad = true;\n\`\`\`\n\n**Correct**\n\n\`\`\`ts\nconst good = true;\n\`\`\`\n`,
+			rule.body ??
+				`---\n${toFrontmatter(rule)}\n---\n## ${rule.title ?? "Fixture Rule"}\n\n**Impact: ${impact} (${impactDescription})**\n\n${rule.bodyMarker ?? "Fixture normative guidance."}\n\n**Incorrect**\n\n\`\`\`ts\nconst bad = true;\n\`\`\`\n\n**Correct**\n\n\`\`\`ts\nconst good = true;\n\`\`\`\n`,
 			"utf8",
 		);
 	}
@@ -316,7 +342,6 @@ test("compact rule index is deterministic, complete, routing-only, and body-free
 		{ordinal: "R02", id: "composition-second", fileName: "composition-second.md"},
 		{ordinal: "R03", id: "state-observe", fileName: "state-observe.md"},
 	]);
-	assert.equal(Buffer.byteLength(first, "utf8") <= getRulesIndexByteBudget(document.rules.length), true);
 });
 
 test("generated rule contract preserves the normative prefix and defers examples to the full rule", () => {
@@ -354,7 +379,6 @@ test("generated rule contract preserves the normative prefix and defers examples
 	assert.match(contract, /\[full rule\]\(\.\.\/rules\/state-observe\.md\)/);
 	assert.doesNotMatch(contract, /Incorrect|Correct|hiddenBad|hiddenGood|```/);
 	assert.doesNotMatch(contract, /[ \t]+$/m);
-	assert.equal(Buffer.byteLength(contract, "utf8") <= getRuleContractByteBudget(), true);
 });
 
 test("long Impact and Description declarations may fold across source lines", () => {
@@ -437,10 +461,6 @@ test("generated rule contract rejects missing boundaries and oversized normative
 	emptyExamplesRule.body =
 		"## Observe State\n\n**Impact: HIGH (State impact.)**\n\nNormative guidance.\n\n**Incorrect**\n\n```ts\n```\n\n**Correct**\n\n```ts\n```";
 	assert.throws(() => generateRuleContractMarkdown(emptyExamplesRule), /state-observe.*Incorrect.*non-whitespace content/i);
-
-	const oversizedRule = createRoutingDocument().rules[0]!;
-	oversizedRule.body = `## Observe State\n\n**Impact: HIGH (State impact.)**\n\n${"규칙".repeat(getRuleContractByteBudget())}\n\n**Incorrect:**\n\n\`\`\`ts\nconst bad = true;\n\`\`\`\n\n**Correct:**\n\n\`\`\`ts\nconst good = true;\n\`\`\``;
-	assert.throws(() => generateRuleContractMarkdown(oversizedRule), /state-observe.*contract.*byte budget/i);
 });
 
 test("critical contracts require the full source while non-critical contracts reject prose hidden after examples", () => {
@@ -765,7 +785,7 @@ test("progressive validation rejects an unsafe routing prefix even when its sect
 	});
 });
 
-test("rule index rejects duplicate IDs, missing or duplicate section assignments, and oversized output", () => {
+test("rule index rejects duplicate IDs and missing or duplicate section assignments", () => {
 	const duplicateIdDocument = createRoutingDocument();
 	duplicateIdDocument.rules[1]!.fileName = duplicateIdDocument.rules[0]!.fileName;
 	assert.throws(() => generateRulesIndexMarkdown(duplicateIdDocument, directCompanions), /duplicate.*stable.*id/i);
@@ -784,15 +804,6 @@ test("rule index rejects duplicate IDs, missing or duplicate section assignments
 		description: "Duplicate assignment.",
 	});
 	assert.throws(() => generateRulesIndexMarkdown(duplicateAssignmentDocument, directCompanions), /assigned exactly once.*state-observe/i);
-
-	const oversizedCompanions = Array.from({length: 400}, (_, index) => ({skill: `companion-${index}`, mode: "required" as const}));
-	assert.throws(() => generateRulesIndexMarkdown(createRoutingDocument(), oversizedCompanions), /RULES_INDEX\.md.*byte budget/i);
-	assert.equal(getRulesIndexByteBudget(0), 1_200);
-	assert.equal(getRulesIndexByteBudget(3), 2_220);
-	assert.equal(getRulesIndexByteBudget(21), 8_340);
-	assert.equal(getRulesIndexByteBudget(22), 8_680);
-	assert.equal(getRulesIndexByteBudget(23), 9_020);
-	assert.equal(getRulesIndexByteBudget(42), 15_480);
 });
 
 test("temporary progressive build and stale check are deterministic without repository writes", async () => {
@@ -869,7 +880,6 @@ test("temporary progressive build and stale check are deterministic without repo
 		assert.match(firstIndex, /`dependency` \(`conditional`\)/);
 		assert.doesNotMatch(firstIndex, /`leaf` \(`/);
 		assert.doesNotMatch(firstIndex, /Fixture Rule|leaf\/rules|dependency\/rules/);
-		assert.equal(Buffer.byteLength(firstIndex, "utf8") <= getRulesIndexByteBudget(2), true);
 		assert.match(firstHandbook, /^### 1\.1 Own Composition$/m);
 		assert.match(
 			firstHandbook,
@@ -1094,13 +1104,13 @@ test("build renders and prepares every output before replacing existing generate
 	await withFixtureRoot(async (skillRootDir) => {
 		await writeSkillFixture(skillRootDir, "owner", {
 			metadata: {progressiveDisclosure: true},
-			rules: [{appliesWhen: "Editing owner code.", bodyMarker: "규칙".repeat(getRuleContractByteBudget())}],
+			rules: [{appliesWhen: "Editing owner code.", body: EMPTY_EXAMPLE_BODY}],
 		});
 		const ownerPaths = getSkillPaths("owner", skillRootDir);
 		await writeFile(ownerPaths.outputPath, "ORIGINAL AGENTS\n", "utf8");
 		await writeFile(ownerPaths.rulesIndexPath, "ORIGINAL INDEX\n", "utf8");
 
-		await assert.rejects(() => buildSkill(ownerPaths), /compact contract.*byte budget/i);
+		await assert.rejects(() => buildSkill(ownerPaths), /Incorrect.*non-whitespace content/i);
 		assert.equal(await readFile(ownerPaths.outputPath, "utf8"), "ORIGINAL AGENTS\n");
 		assert.equal(await readFile(ownerPaths.rulesIndexPath, "utf8"), "ORIGINAL INDEX\n");
 	});

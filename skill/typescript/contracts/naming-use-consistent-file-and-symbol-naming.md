@@ -12,4 +12,4 @@
 외부 패키지가 내보낸 이름을 별칭 없이 그대로 가져오는 것은 지역 심볼을 새로 짓는 일이 아니라 이 규칙의 대상이 아닙니다.
 지역 별칭을 추가하거나 가져오기 이름을 바꿀 때만 다시 봅니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/01-03-naming-use-consistent-file-and-symbol-naming.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/01-04-naming-use-consistent-file-and-symbol-naming.md)을 읽습니다.

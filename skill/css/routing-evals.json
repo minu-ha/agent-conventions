@@ -198,6 +198,7 @@
 					"types-reuse-existing-contracts-before-new-types",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-doc-comments-as-multiline-blocks",
 					"guardrails-review-banned-typescript-shortcuts-before-finishing"
 				],
 				"css": [

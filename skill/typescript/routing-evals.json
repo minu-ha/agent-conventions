@@ -15,8 +15,10 @@
 			"expectedSelected": {
 				"typescript": [
 					"naming-centralize-shared-config-namespaces",
+					"naming-place-owner-config-in-the-owner-config-folder",
 					"naming-preserve-config-origin-with-chained-access",
 					"naming-use-direct-imports-and-public-entry-points",
+					"naming-restrict-absolute-aliases-to-layer-roots",
 					"guardrails-review-banned-typescript-shortcuts-before-finishing"
 				]
 			}
@@ -55,6 +57,8 @@
 					"types-reuse-existing-contracts-before-new-types",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-doc-comments-as-multiline-blocks",
+					"docs-avoid-role-tags-in-doc-comments",
 					"guardrails-review-banned-typescript-shortcuts-before-finishing"
 				]
 			}
@@ -71,6 +75,7 @@
 			"expectedSelected": {
 				"typescript": [
 					"functions-extract-helpers-only-when-the-boundary-is-real",
+					"functions-place-and-promote-support-functions",
 					"guardrails-review-banned-typescript-shortcuts-before-finishing"
 				]
 			},
@@ -88,8 +93,10 @@
 					"typescript": [
 						"naming-use-direct-imports-and-public-entry-points",
 						"functions-extract-helpers-only-when-the-boundary-is-real",
+						"functions-place-and-promote-support-functions",
 						"docs-require-header-jsdoc-on-key-declarations",
 						"docs-write-concise-korean-comments-about-purpose-and-constraints",
+						"docs-write-doc-comments-as-multiline-blocks",
 						"guardrails-review-banned-typescript-shortcuts-before-finishing"
 					]
 				}
@@ -128,6 +135,7 @@
 					"functions-replace-enum-with-as-const-objects",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-doc-comments-as-multiline-blocks",
 					"guardrails-review-banned-typescript-shortcuts-before-finishing",
 					"tooling-configure-biome-to-enforce-these-rules"
 				]

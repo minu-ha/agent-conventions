@@ -13,4 +13,4 @@
 `ownership-prefer-plain-ts-for-local-react-helpers`는 순수 계산을 훅으로 포장하는 것을 막고,
 이 규칙은 반대로 실제 생명주기가 있어도 분량 때문에 훅으로 옮기는 것을 막습니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/01-05-ownership-keep-lifecycle-in-the-owning-component.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/01-06-ownership-keep-lifecycle-in-the-owning-component.md)을 읽습니다.

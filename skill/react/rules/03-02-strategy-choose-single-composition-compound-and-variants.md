@@ -8,8 +8,8 @@ appliesWhen:
   - 반복되는 기본 설정이나 모드 API를 추가할 때
   - 공용 컴포넌트의 조립 구조를 재설계할 때
 reviewWith: >-
-  strategy-avoid-boolean-prop-proliferation, strategy-prefer-children-over-render-props,
-  screen-avoid-premature-abstraction
+  strategy-expose-only-assembled-compound-parts, strategy-avoid-boolean-prop-proliferation,
+  strategy-prefer-children-over-render-props, screen-avoid-premature-abstraction
 tags: strategy, composition, variants, component-design
 ---
 
@@ -31,9 +31,7 @@ tags: strategy, composition, variants, component-design
 
 렌더 프롭을 쓸 자리인지는 `strategy-prefer-children-over-render-props`가 따로 판정합니다.
 
-공개 부품은 소비자가 이름으로 조립해야 하거나 공용 컨텍스트/동작을 직접 쓰는 영역만 공개합니다.
-단순 class 래퍼, 여백 보정 DOM, 내부 레이아웃 보조 함수는 숨깁니다.
-상태 없는 합성에 상태가 필요해지면 공개 이름은 유지하고 컨텍스트만 추가합니다.
+무엇을 공개 부품으로 열지는 `strategy-expose-only-assembled-compound-parts`가 정합니다.
 
 **Incorrect (단일·합성·드러난 변형의 경계를 구분하지 않고 한 컴포넌트에 몰아넣음):**
 

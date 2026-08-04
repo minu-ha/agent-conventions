@@ -6,8 +6,8 @@
 **TitleKo:** 소유와 경계
 **Impact:** CRITICAL
 **Description:** `ui`, `widget`, `page` 세 레이어의 소유 경계가 분명해야 코드를 예측 가능하게 배치할 수
-  있습니다. 소유자 아래 역할 폴더, 하향 단방향 가져오기, 생명주기 소유가 이 경계를 지탱하고, 순수 계산을 훅으로
-  감싸지 않는 규율도 여기에 속합니다.
+  있습니다. 레이어 판정과 이름 표기, 역할 폴더, 하향 단방향 가져오기, 생명주기 소유가 이 경계를 지탱하고, 순수
+  계산을 훅으로 감싸지 않는 규율도 여기에 속합니다.
 
 ## 2. Typing and Contracts (typing)
 **TitleKo:** 타입과 계약
@@ -19,8 +19,8 @@
 **TitleKo:** 조립 전략
 **Impact:** HIGH
 **Description:** 공용 컴포넌트는 단일 컴포넌트, 합성 컴포넌트, 드러난 변형 중 어떤 구조를 쓸지 먼저
-  결정해야 하며, 합성 컴포넌트는 상태 없는 조립 구조에서 시작해 필요할 때 같은 공개 이름을 유지한 채 상태를 가진
-  구조로 확장될 수 있어야 합니다.
+  결정하고, 그다음 무엇을 공개 부품으로 열지 정합니다. 합성 컴포넌트는 상태 없는 조립에서 시작해 같은 공개 이름을
+  유지한 채 상태를 가진 구조로 확장될 수 있어야 합니다.
 
 ## 4. Component Structure and JSX (composition)
 **TitleKo:** 컴포넌트 구조와 JSX
@@ -37,8 +37,8 @@
 ## 6. Events and Interaction Flow (events)
 **TitleKo:** 이벤트와 상호작용 흐름
 **Impact:** MEDIUM-HIGH
-**Description:** 이벤트 핸들러는 이름이 예측 가능하고, 사용자 동작을 이펙트가 아니라 핸들러에서 실행해야 합니다.
-  핸들러 흐름은 재사용 근거가 생길 때까지 그 자리에 둡니다.
+**Description:** 이벤트 핸들러는 이름이 예측 가능하고 추가 인자를 커링으로 넘겨야 하며, 사용자 동작은 이펙트가
+  아니라 핸들러에서 실행해야 합니다. 핸들러 흐름은 재사용 근거가 생길 때까지 그 자리에 둡니다.
 
 ## 7. Server Data Flow (data)
 **TitleKo:** 서버 데이터 흐름
@@ -62,5 +62,5 @@
 ## 10. Documentation and Comments (docs)
 **TitleKo:** 문서화와 주석
 **Impact:** MEDIUM
-**Description:** 리액트 경계 선언에는 동반 스킬인 `convention-typescript`의 문서 주석 표준을 적용하고, 합성
-  컴포넌트의 공개 부품은 프롭스 `interface` 위 설명으로 문서화해야 합니다.
+**Description:** 리액트 경계 선언에는 동반 스킬인 `convention-typescript`의 문서 주석 표준을 적용합니다. 어느
+  선언에 붙일지와 합성 부품 설명을 어디 두는지를 따로 정합니다.

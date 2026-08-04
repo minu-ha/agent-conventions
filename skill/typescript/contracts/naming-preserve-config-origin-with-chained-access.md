@@ -9,4 +9,4 @@
 `shared/config.ts`와 `shared/util.ts`는 찾기 쉬우라고 네임스페이스를 유지합니다.
 기능별 `helper.ts`나 `utils.ts`를 만들지 않고, `config`와 `util` 이름은 공용 경계에서만 씁니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/01-02-naming-preserve-config-origin-with-chained-access.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/01-03-naming-preserve-config-origin-with-chained-access.md)을 읽습니다.

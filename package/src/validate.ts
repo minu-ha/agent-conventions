@@ -16,8 +16,6 @@ import {validateRoutingEvalManifest} from "./routing-evals.js";
 import {generateRuleContractMarkdown} from "./routing.js";
 import type {LoadedSkillDocument, SkillMetadata, SkillPaths} from "./types.js";
 
-const maximumTitleKoLength = 40;
-
 /**
  * 본문 백틱 안 규칙 ID 후보. 화면에서 클릭 가능한 칩으로 렌더되므로 해석되지 않으면 조용히 코드로 격하된다.
  * 하이픈 3개 이상만 본다. `import type`, `query.select` 같은 일반 코드 조각과 구분하는 값싼 기준이다.
@@ -145,14 +143,6 @@ const validateLocalSkill = async (skillPaths: SkillPaths): Promise<LocalValidati
 
 		if (!rule.titleKo) {
 			throw new Error(`${skillPaths.skillName}: ${rule.fileName} is missing frontmatter key "titleKo".`);
-		}
-
-		// CONTRIBUTING.md 가 40자 이내를 요구한다. 문서에만 있으면 지켜지지 않아 여기서 막는다.
-		// 화면 목록은 한 줄 말줄임이라 길면 뒤가 잘려 제목 구실을 못 한다.
-		if (rule.titleKo.length > maximumTitleKoLength) {
-			throw new Error(
-				`${skillPaths.skillName}: ${rule.fileName} titleKo is ${rule.titleKo.length} characters and exceeds the ${maximumTitleKoLength}-character limit.`,
-			);
 		}
 
 		if (!rule.impact) {

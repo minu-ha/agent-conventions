@@ -99,7 +99,7 @@ Scope drift 뒤에는 file, activated skill, 기존 Selected rule을 제거하�
 
 - Focus
   - `composition-named-handlers-over-inline`
-  - `events-name-and-curry-handlers`
+  - `events-name-and-curry-handlers`, `events-curry-extra-handler-arguments`
   - `events-keep-handler-flow-inline`
 - Prompt
   - "분기와 mutation이 있는 inline callback을 같은 component 안의 `handleDeleteButtonClick`으로만 옮겨줘. helper나 hook으로 쪼개지는 않아."
@@ -126,7 +126,7 @@ Scope drift 뒤에는 file, activated skill, 기존 Selected rule을 제거하�
 ### RP5. DOM Handler Curry Closure
 
 - Focus
-  - `events-name-and-curry-handlers`
+  - `events-name-and-curry-handlers`, `events-curry-extra-handler-arguments`
   - `typing-function-type-first`
   - TypeScript callback contract rules
 - Prompt

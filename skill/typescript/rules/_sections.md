@@ -5,7 +5,8 @@
 ## 1. Naming and Module Boundaries (naming)
 **TitleKo:** 이름과 모듈 경계
 **Impact:** HIGH
-**Description:** 식별자, 가져오기, 공개 진입점, 설정 접근 방식이 소유자와 출처를 바로 드러내야 합니다.
+**Description:** 식별자, 가져오기, 공개 진입점, 절대경로 별칭 범위, 설정 위치가 소유자와 출처를 바로 드러내야
+  합니다.
 
 ## 2. Types and Contracts (types)
 **TitleKo:** 타입과 계약
@@ -16,8 +17,8 @@
 ## 3. Functions and Helper Boundaries (functions)
 **TitleKo:** 함수와 보조 함수 경계
 **Impact:** HIGH
-**Description:** 함수 시그니처와 보조 함수 추출 규칙이 읽기 쉬운 흐름을 지키면서 진짜 재사용할 로직만 떼어 내야
-  합니다.
+**Description:** 함수 선언 형태와 시그니처는 한 가지로 고정하고, 보조 함수는 호출 경계가 있을 때만 떼어 내 정해진
+  자리에 둡니다. 값과 자료구조를 다루는 관용구도 여기에 모입니다.
 
 ## 4. Absence and Fallback Handling (absence)
 **TitleKo:** 없는 값 다루기
@@ -27,7 +28,8 @@
 ## 5. JSDoc and Comment Conventions (docs)
 **TitleKo:** 문서 주석과 주석 규약
 **Impact:** MEDIUM-HIGH
-**Description:** 주석 규칙은 역할 태그 없이 여러 줄 블록과 한국어 본문으로 선언의 목적과 제약을 드러내야 합니다.
+**Description:** 문서 주석은 어느 선언에 붙일지, 어떤 형식으로 쓸지, 태그를 붙일지가 따로 정해져 있습니다. 본문은
+  한국어로 목적과 제약을 적고, 규칙이 허용한 예외에는 확인할 수 있는 이유를 남깁니다.
 
 ## 6. Guardrails and Review Checks (guardrails)
 **TitleKo:** 가드레일과 마무리 점검

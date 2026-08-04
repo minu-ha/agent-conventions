@@ -21,8 +21,8 @@ tags: naming, config
 수가 많지 않으면 폴더로 미리 쪼개지 않고 `config.ts` 하나로 둡니다.
 서로 독립된 여러 묶음으로 커졌을 때만 나눌지 검토합니다.
 
-소유자 하나만 쓰는 선언형 설정은 전역으로 올리지 않습니다.
-그 소유자 아래 `config` 폴더에 `<owner>_config`로 둡니다. `constants` 폴더는 만들지 않습니다.
+소유자 하나만 쓰는 선언형 설정을 어디 둘지는
+`naming-place-owner-config-in-the-owner-config-folder`가 정합니다.
 
 **Incorrect (공용 설정을 말단 파일마다 흩뿌림):**
 

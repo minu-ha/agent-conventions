@@ -24,13 +24,13 @@ tags: docs, handlers, effects
 
 - 라우트·화면·레이아웃 소유자의 질의와 변경 요청 바인딩
 - 분기, 비동기, 화면 이동, 무효화를 가진 이벤트 핸들러
-- 동기화 의도가 중요한 `useEffect`
+- 정리 함수가 있거나 의존성이 둘 이상인 `useEffect`
 - 내보낸 순수 보조 함수, 커스텀 훅, 스토어 선언
 - 합성 컴포넌트의 공개 부품
 - 예외적으로 남긴 `useMemo`/`useCallback`
 
-합성 공개 부품은 프롭스 `interface` 위에 설명을 두고 컴포넌트 선언을 그 아래에 둡니다.
-단순 내부 래퍼에는 부품 문서를 만들지 않습니다.
+합성 공개 부품의 설명을 어디 두는지는
+`docs-document-compound-parts-above-props-interface`가 정합니다.
 
 형식과 태그 기준은 `typescript/docs-require-header-jsdoc-on-key-declarations`가 정합니다.
 여러 줄 블록으로 쓰고 역할 태그는 붙이지 않습니다.

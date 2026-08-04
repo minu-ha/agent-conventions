@@ -8,18 +8,9 @@
 다시 내보내는 계층이 아니라 배럴이 아닙니다.
 타입만 가져올 때는 `import type`을 써서 계약과 실행 의존을 나눕니다.
 
-절대경로 별칭은 전역 레이어 루트만 가리킵니다.
-
-| 경로 | 판정 |
-| --- | --- |
-| `@/ui`, `@/widget` | 허용 |
-| `@/shared`, `@/service`, `@/store`, `@/asset` | 허용 |
-| `@/page/...` 등 화면 내부 | 금지 |
-
-화면이나 소유자 내부 모듈은 절대경로로 열지 않고 `./`로만 접근합니다.
-소유자 밖에서 필요해지면 경로를 뚫는 대신 전역 레이어로 올립니다.
+절대경로 별칭으로 어디까지 열지는 `naming-restrict-absolute-aliases-to-layer-roots`가 정합니다.
 
 경로가 같아도 값과 타입 중 무엇을 가져오는지가 바뀌면
 가져오기 계약이 바뀐 것이라 이 규칙을 적용합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/01-04-naming-use-direct-imports-and-public-entry-points.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/01-05-naming-use-direct-imports-and-public-entry-points.md)을 읽습니다.

@@ -20,9 +20,11 @@
 
 1. [Naming and Module Boundaries](#1-naming-and-module-boundaries) — **HIGH**
     - 1.1 [Centralize Shared Config Under `shared/config.ts`](#11-centralize-shared-config-under-shared-config-ts)
-    - 1.2 [Preserve Shared Namespace Origin With Chained Access](#12-preserve-shared-namespace-origin-with-chained-access)
-    - 1.3 [Use Consistent File, Symbol, and Field Naming](#13-use-consistent-file-symbol-and-field-naming)
-    - 1.4 [Use Direct Imports and Dedicated Public Entry Points](#14-use-direct-imports-and-dedicated-public-entry-points)
+    - 1.2 [Place Owner-only Config in the Owner Config Folder](#12-place-owner-only-config-in-the-owner-config-folder)
+    - 1.3 [Preserve Shared Namespace Origin With Chained Access](#13-preserve-shared-namespace-origin-with-chained-access)
+    - 1.4 [Use Consistent File, Symbol, and Field Naming](#14-use-consistent-file-symbol-and-field-naming)
+    - 1.5 [Use Direct Imports and Dedicated Public Entry Points](#15-use-direct-imports-and-dedicated-public-entry-points)
+    - 1.6 [Restrict Absolute Aliases to Layer Roots](#16-restrict-absolute-aliases-to-layer-roots)
 2. [Types and Contracts](#2-types-and-contracts) — **CRITICAL**
     - 2.1 [Document Custom Types and Declarative Shapes](#21-document-custom-types-and-declarative-shapes)
     - 2.2 [Mark Unused Parameters With an Underscore Prefix](#22-mark-unused-parameters-with-an-underscore-prefix)
@@ -36,14 +38,17 @@
     - 3.4 [Replace `enum` With `as const` Objects](#34-replace-enum-with-as-const-objects)
     - 3.5 [Declare Functions as Arrow Consts](#35-declare-functions-as-arrow-consts)
     - 3.6 [Use Named Object Params for Complex Signatures](#36-use-named-object-params-for-complex-signatures)
-    - 3.7 [Use Set and Map for Repeated Lookups](#37-use-set-and-map-for-repeated-lookups)
+    - 3.7 [Place and Promote Support Functions Deliberately](#37-place-and-promote-support-functions-deliberately)
+    - 3.8 [Use Set and Map for Repeated Lookups](#38-use-set-and-map-for-repeated-lookups)
 4. [Absence and Fallback Handling](#4-absence-and-fallback-handling) — **HIGH**
     - 4.1 [Expose Optional Values Instead of Silent Fallbacks](#41-expose-optional-values-instead-of-silent-fallbacks)
 5. [JSDoc and Comment Conventions](#5-jsdoc-and-comment-conventions) — **MEDIUM-HIGH**
     - 5.1 [Keep Inline Comments for Constraints and Caveats Only](#51-keep-inline-comments-for-constraints-and-caveats-only)
     - 5.2 [Require Header Doc Comments on Key Declarations](#52-require-header-doc-comments-on-key-declarations)
     - 5.3 [Write Concise Korean Comments About Purpose and Constraints](#53-write-concise-korean-comments-about-purpose-and-constraints)
-    - 5.4 [Justify Convention Exceptions With a Checkable Reason Comment](#54-justify-convention-exceptions-with-a-checkable-reason-comment)
+    - 5.4 [Write Doc Comments as Multiline Blocks](#54-write-doc-comments-as-multiline-blocks)
+    - 5.5 [Avoid Role Tags in Doc Comments](#55-avoid-role-tags-in-doc-comments)
+    - 5.6 [Justify Convention Exceptions With a Checkable Reason Comment](#56-justify-convention-exceptions-with-a-checkable-reason-comment)
 6. [Guardrails and Review Checks](#6-guardrails-and-review-checks) — **MEDIUM**
     - 6.1 [Review Banned TypeScript Shortcuts Before Finishing](#61-review-banned-typescript-shortcuts-before-finishing)
 7. [Tooling](#7-tooling) — **MEDIUM**
@@ -55,7 +60,7 @@
 
 **Impact: HIGH**
 
-식별자, 가져오기, 공개 진입점, 설정 접근 방식이 소유자와 출처를 바로 드러내야 합니다.
+식별자, 가져오기, 공개 진입점, 절대경로 별칭 범위, 설정 위치가 소유자와 출처를 바로 드러내야 합니다.
 
 ### 1.1 Centralize Shared Config Under `shared/config.ts`
 
@@ -74,8 +79,8 @@
 수가 많지 않으면 폴더로 미리 쪼개지 않고 `config.ts` 하나로 둡니다.
 서로 독립된 여러 묶음으로 커졌을 때만 나눌지 검토합니다.
 
-소유자 하나만 쓰는 선언형 설정은 전역으로 올리지 않습니다.
-그 소유자 아래 `config` 폴더에 `<owner>_config`로 둡니다. `constants` 폴더는 만들지 않습니다.
+소유자 하나만 쓰는 선언형 설정을 어디 둘지는
+`naming-place-owner-config-in-the-owner-config-folder`가 정합니다.
 
 **Incorrect (공용 설정을 말단 파일마다 흩뿌림):**
 
@@ -95,9 +100,51 @@ config.features.enable_refunds;
 config.pagination.default_page_size;
 ```
 
-### 1.2 Preserve Shared Namespace Origin With Chained Access
+### 1.2 Place Owner-only Config in the Owner Config Folder
 
-**Rule:** `T02` · `naming-preserve-config-origin-with-chained-access`
+**Rule:** `T02` · `naming-place-owner-config-in-the-owner-config-folder`
+
+**Applies when:** 소유자 하나만 쓰는 선언형 설정을 추가하거나 옮길 때. 전역 설정과 소유자 전용 설정 사이에서 위치를 바꿀 때.
+
+**Review with:** `naming-centralize-shared-config-namespaces`, `naming-use-consistent-file-and-symbol-naming`
+
+**Impact: MEDIUM-HIGH (한 소유자만 쓰는 설정이 전역 진입점을 넓히지 않습니다)**
+
+소유자 하나만 쓰는 선언형 설정은 전역으로 올리지 않습니다.
+그 소유자 아래 `config` 폴더에 둡니다.
+
+- 파일은 `config/<owner>-config.ts`, 내보내는 상수는 `<owner>Config`입니다.
+  이름 표기는 `naming-use-consistent-file-and-symbol-naming`을 따릅니다.
+- `constants` 폴더는 만들지 않습니다.
+- 두 번째 소유자가 같은 값을 쓰게 되면 그때 `shared/config.ts`로 올립니다.
+  그 판정은 `naming-centralize-shared-config-namespaces`가 합니다.
+
+**Incorrect (소유자 하나만 쓰는 설정을 전역으로 올림):**
+
+```ts
+// shared/config.ts
+export const config = {
+	entryDetail: {
+		chart_axis_tick_count: 6,
+	},
+} as const;
+```
+
+**Correct (소유자 아래 `config` 폴더에 둠):**
+
+```ts
+// page/entry-detail/config/entry-detail-config.ts
+/**
+ * entry 상세 화면 전용 표시 설정
+ */
+export const entryDetailConfig = {
+	chartAxisTickCount: 6,
+} as const;
+```
+
+### 1.3 Preserve Shared Namespace Origin With Chained Access
+
+**Rule:** `T03` · `naming-preserve-config-origin-with-chained-access`
 
 **Applies when:** 말단 모듈에서 `config`나 `util` 값을 쓰면서 넓은 스코프 구조분해, 별칭, 기능별 네임스페이스를 추가·변경할 때.
 
@@ -131,9 +178,9 @@ util.date.normalize(createdAt);
 util.number.clamp(score, 0, 100);
 ```
 
-### 1.3 Use Consistent File, Symbol, and Field Naming
+### 1.4 Use Consistent File, Symbol, and Field Naming
 
-**Rule:** `T03` · `naming-use-consistent-file-and-symbol-naming`
+**Rule:** `T04` · `naming-use-consistent-file-and-symbol-naming`
 
 **Applies when:** TypeScript 파일, 지역 변수·함수·타입, 객체·스키마 필드, enum 성격 상수의 이름을 새로 만들거나 바꿀 때. 제외: 별칭 없이 외부 패키지에서 그대로 가져오는 경우.
 
@@ -173,9 +220,9 @@ const userProfileSchema = z.object({
 });
 ```
 
-### 1.4 Use Direct Imports and Dedicated Public Entry Points
+### 1.5 Use Direct Imports and Dedicated Public Entry Points
 
-**Rule:** `T04` · `naming-use-direct-imports-and-public-entry-points`
+**Rule:** `T05` · `naming-use-direct-imports-and-public-entry-points`
 
 **Applies when:** 가져오기·내보내기, 배럴, 공용 진입점, 소유자 보조 모듈의 경계를 추가·변경할 때. 절대경로 별칭으로 다른 모듈을 가져올 때. 같은 경로에서 값과 타입 중 무엇을 가져올지 추가·삭제·전환할 때.
 
@@ -187,16 +234,7 @@ const userProfileSchema = z.object({
 다시 내보내는 계층이 아니라 배럴이 아닙니다.
 타입만 가져올 때는 `import type`을 써서 계약과 실행 의존을 나눕니다.
 
-절대경로 별칭은 전역 레이어 루트만 가리킵니다.
-
-| 경로 | 판정 |
-| --- | --- |
-| `@/ui`, `@/widget` | 허용 |
-| `@/shared`, `@/service`, `@/store`, `@/asset` | 허용 |
-| `@/page/...` 등 화면 내부 | 금지 |
-
-화면이나 소유자 내부 모듈은 절대경로로 열지 않고 `./`로만 접근합니다.
-소유자 밖에서 필요해지면 경로를 뚫는 대신 전역 레이어로 올립니다.
+절대경로 별칭으로 어디까지 열지는 `naming-restrict-absolute-aliases-to-layer-roots`가 정합니다.
 
 경로가 같아도 값과 타입 중 무엇을 가져오는지가 바뀌면
 가져오기 계약이 바뀐 것이라 이 규칙을 적용합니다.
@@ -223,6 +261,42 @@ import {WgChartCard} from "@/widget/chart-card/wg-chart-card";
 import {buildUserSaveRequest} from "./function/build-user-save-request";
 ```
 
+### 1.6 Restrict Absolute Aliases to Layer Roots
+
+**Rule:** `T06` · `naming-restrict-absolute-aliases-to-layer-roots`
+
+**Applies when:** 절대경로 별칭으로 다른 모듈을 가져올 때. 별칭이 가리키는 경로 깊이를 바꿀 때.
+
+**Review with:** `naming-use-direct-imports-and-public-entry-points`
+
+**Impact: HIGH (소유자 내부 모듈이 밖에서 직접 열리지 않아 경계가 남습니다)**
+
+절대경로 별칭의 첫 마디는 전역 레이어 루트여야 합니다.
+
+| 경로 | 판정 |
+| --- | --- |
+| `@/ui`, `@/widget` | 허용 |
+| `@/shared`, `@/service`, `@/store`, `@/asset` | 허용 |
+| `@/page/...` 등 화면 내부 | 금지 |
+
+- 첫 마디가 레이어 루트면 그 아래 깊이는 제한하지 않습니다.
+  `@/widget/chart-card/wg-chart-card`는 허용입니다.
+- 화면이나 소유자 내부 모듈은 절대경로로 열지 않고 `./`로만 접근합니다.
+- 소유자 밖에서 필요해지면 경로를 뚫는 대신 전역 레이어로 올립니다.
+
+**Incorrect (화면 내부를 절대경로로 열음):**
+
+```ts
+import {SpikeChartCard} from "@/page/detail/component/spike-pattern-panel/component/spike-chart-card";
+```
+
+**Correct (레이어 루트로 시작하는 별칭과 소유자 안 상대경로):**
+
+```ts
+import {WgChartCard} from "@/widget/chart-card/wg-chart-card";
+import {SpikeChartCard} from "./component/spike-chart-card";
+```
+
 ## 2. Types and Contracts
 
 **Impact: CRITICAL**
@@ -231,7 +305,7 @@ import {buildUserSaveRequest} from "./function/build-user-save-request";
 
 ### 2.1 Document Custom Types and Declarative Shapes
 
-**Rule:** `T05` · `types-document-custom-types-and-shapes`
+**Rule:** `T07` · `types-document-custom-types-and-shapes`
 
 **Applies when:** 타입, 인터페이스, 스키마 최상단, 객체 상수, 계약 필드, 파생 별칭을 추가·변경할 때. 이름 붙인 형태에 호출 계약 역할을 새로 얹을 때. 제외: 외부·생성된·읽기 전용·공용 형태를 그대로 쓰거나 익명으로 추론된 반환인 경우.
 
@@ -305,7 +379,7 @@ const publishResultSchema = z.object({
 
 ### 2.2 Mark Unused Parameters With an Underscore Prefix
 
-**Rule:** `T06` · `types-mark-unused-parameters-with-underscore`
+**Rule:** `T08` · `types-mark-unused-parameters-with-underscore`
 
 **Applies when:** 기존 콜백이나 프레임워크 계약을 구현하면서 매개변수를 빼거나 쓰지 않을 때. 커링한 핸들러가 마지막에 돌려주는 콜백에서 매개변수를 뺄 때.
 
@@ -342,7 +416,7 @@ const noopLog: LogSink = (_message, _level) => {};
 
 ### 2.3 Prefer Function Variable Types Over Parameter Annotations
 
-**Rule:** `T07` · `types-prefer-function-variable-types-over-parameter-annotations`
+**Rule:** `T09` · `types-prefer-function-variable-types-over-parameter-annotations`
 
 **Applies when:** 기존 호출 계약을 이름 붙인 함수나 공용 함수 구현에 다시 쓸 때. 같은 시그니처를 여러 구현이 함께 쓰도록 바꿀 때. 제외: 타입 표기 없이 문맥으로 추론되는 일회성 인라인 콜백인 경우.
 
@@ -350,7 +424,7 @@ const noopLog: LogSink = (_message, _level) => {};
 
 재사용 가능한 콜백이나 함수 타입이 있다면 매개변수 타입 선언보다 함수 변수 타입 선언을 우선합니다.
 이미 있는 인터페이스, 객체 계약, 프레임워크 별칭을 먼저 씁니다.
-같은 호출 계약을 여러 구현이 함께 쓸 때만 함수 타입 별칭을 따로 선언합니다.
+함수 타입 별칭을 새로 선언하는 것은 같은 시그니처를 쓰는 구현이 이미 둘 이상일 때만입니다.
 한 번만 쓰는 지역 함수 때문에 함수 타입 별칭을 늘리지 않습니다.
 
 객체 안에서 한 번만 쓰이고 타입 표기도 없이 문맥으로 추론되는 인라인 콜백은 대상이 아닙니다.
@@ -365,19 +439,9 @@ const formatState = (state: Record<string, unknown>): string => {
 };
 ```
 
-**Correct (기존 계약이나 실제로 공유되는 호출 계약을 재사용해 함수 변수 타입을 고정):**
+**Correct (이미 있는 계약에서 시그니처를 가져와 함수 변수 타입을 고정):**
 
 ```ts
-/**
- * 사용자 formatter 계약
- */
-interface UserFormatters {
-	/**
-	 * 상태 문자열 formatter
-	 */
-	formatState: (state: Record<string, unknown>) => string;
-}
-
 const formatState: UserFormatters["formatState"] = (state) => {
 	return JSON.stringify(state);
 };
@@ -400,7 +464,7 @@ const normalizeSearchRequest: NormalizeRequest = (request) => {
 
 ### 2.4 Reuse Callback Signatures From Existing Contracts
 
-**Rule:** `T08` · `types-reuse-callback-signatures-from-existing-contracts`
+**Rule:** `T10` · `types-reuse-callback-signatures-from-existing-contracts`
 
 **Applies when:** 인터페이스, 객체, 프레임워크가 정한 콜백을 구현하면서 기존 시그니처를 다시 쓰거나 바꿀 때. 제외: 타입 표기 없이 문맥으로 추론되는 일회성 인라인 콜백인 경우.
 
@@ -451,7 +515,7 @@ const formatMessage: ToastFormatters["formatMessage"] = (message) => {
 
 ### 2.5 Reuse Existing Contracts Before Declaring New Types
 
-**Rule:** `T09` · `types-reuse-existing-contracts-before-new-types`
+**Rule:** `T11` · `types-reuse-existing-contracts-before-new-types`
 
 **Applies when:** 뜻이 같은 기존 타입, 인터페이스, 스키마가 있는데 형태를 새로 선언·변경·복제·파생할 때. 같은 형태를 두 번 선언했다가 넣거나 뺄 때. 제외: 맞는 후보가 없는 새 형태, 소유자만 옮긴 경우, 그대로인 계약을 새 자리에서 쓰는 경우.
 
@@ -459,8 +523,8 @@ const formatMessage: ToastFormatters["formatMessage"] = (message) => {
 
 **Impact: HIGH (의미가 그대로면 기존 타입이나 스키마에서 파생해 같은 형태를 두 번 선언하지 않습니다)**
 
-기존 타입이나 스키마와 필드 타입, 선택 여부, 뜻이 같으면 그대로 참조하거나 `Pick`, `Omit`, 인덱스 접근로 파생합니다.
-새로 선언하는 것은 뜻이 다를 때만입니다. 소유자 이동이나 이름, 주석만 바뀌면 대상이 아닙니다.
+필드 이름, 타입, 선택 여부가 모두 같은 선언이 이미 있으면 그대로 참조하거나 `Pick`, `Omit`, 인덱스 접근으로 파생합니다.
+필드가 하나라도 다르면 새로 선언합니다. 소유자 이동이나 이름, 주석만 바뀌면 대상이 아닙니다.
 
 형태가 그대로인 계약을 새 자리에서 쓰는 것만으로는 이 규칙이 걸리지 않습니다.
 호출 계약 역할은 `types-document-custom-types-and-shapes`가 따로 판정합니다.
@@ -496,11 +560,11 @@ type UserPreview = Pick<UserRecord, "id" | "name">;
 
 **Impact: HIGH**
 
-함수 시그니처와 보조 함수 추출 규칙이 읽기 쉬운 흐름을 지키면서 진짜 재사용할 로직만 떼어 내야 합니다.
+함수 선언 형태와 시그니처는 한 가지로 고정하고, 보조 함수는 호출 경계가 있을 때만 떼어 내 정해진 자리에 둡니다. 값과 자료구조를 다루는 관용구도 여기에 모입니다.
 
 ### 3.1 Avoid Imperative Assembly in Wide Scopes
 
-**Rule:** `T10` · `functions-avoid-imperative-assembly-in-wide-scopes`
+**Rule:** `T12` · `functions-avoid-imperative-assembly-in-wide-scopes`
 
 **Applies when:** 파일 위쪽이나 넓은 스코프에서 `let` 재대입, 배열 `push`, 조건부 누적으로 값을 만들거나 정리할 때.
 
@@ -534,11 +598,11 @@ const visibleTabs = canManageItems
 
 ### 3.2 Extract Support Functions Only When the Boundary Is Real
 
-**Rule:** `T11` · `functions-extract-helpers-only-when-the-boundary-is-real`
+**Rule:** `T13` · `functions-extract-helpers-only-when-the-boundary-is-real`
 
 **Applies when:** 보조 함수를 빼내거나 옮기거나 내보내거나 공유할 때. 범용 보조 파일, 소유자 하나만 쓰는 변환 함수, 잔손질 단계의 경계를 바꿀 때.
 
-**Review with:** `docs-require-header-jsdoc-on-key-declarations`
+**Review with:** `docs-require-header-jsdoc-on-key-declarations`, `functions-place-and-promote-support-functions`
 
 **Impact: HIGH (재사용 계약이나 테스트 경계가 없는데 보조 함수를 빼서 흐름이 조각나는 것을 막습니다)**
 
@@ -547,10 +611,8 @@ const visibleTabs = canManageItems
 - 필수: 입력과 출력이 분명하고, 실행 문맥 없이도 따로 검증할 수 있어야 합니다
 - 떼어 낼 신호: 여러 소유자가 직접 호출하거나, 여러 내보낸 함수에서 같은 도메인 규칙이 반복됩니다
 - 그대로 둘 것: 한 번만 쓰는 짧은 계산, 선택 값 보정, 라벨 기본값, 메서드 하나만 쓰는 변환 함수
-- 배치: 범용 `helper.ts`나 `utils.ts`는 만들지 않습니다.
-  소유자 아래 어느 폴더에 둘지는 프레임워크 skill 의 역할 폴더 규칙이 정합니다.
-- 깊이: 호출은 소유자에서 내보낸 함수, 그 파일 안 비공개 함수까지 두 단계로 끝냅니다
-- 승격: 여러 소유자가 실제로 함께 쓰는 순수 함수만 `shared/util.ts`의 `util.*`로 올립니다
+떼어 낸 다음 어디 두고 언제 공용으로 올릴지는
+`functions-place-and-promote-support-functions`가 정합니다.
 
 내보낸 함수가 또 다른 내보낸 함수를 타고 가는 사슬은 만들지 않습니다.
 흐름을 알려고 파일을 왕복해야 하면 경계가 아니라 그냥 쪼갠 것입니다.
@@ -681,7 +743,7 @@ export const util = {
 
 ### 3.3 Prefer Immutable Array Sorting
 
-**Rule:** `T12` · `functions-prefer-immutable-array-sorting`
+**Rule:** `T14` · `functions-prefer-immutable-array-sorting`
 
 **Applies when:** 프롭스, 상태, 매개변수, 공유 입력에서 온 배열을 정렬할 때. 기존 `.sort()` 호출을 추가·변경할 때.
 
@@ -710,7 +772,7 @@ const sortedUsers = [...users].sort((left, right) => left.name.localeCompare(rig
 
 ### 3.4 Replace `enum` With `as const` Objects
 
-**Rule:** `T13` · `functions-replace-enum-with-as-const-objects`
+**Rule:** `T15` · `functions-replace-enum-with-as-const-objects`
 
 **Applies when:** `enum` 이나 타입과 실행 양쪽에서 함께 쓰는 값 묶음을 추가·변경할 때.
 
@@ -748,7 +810,7 @@ type AuditStatus = (typeof audit_status)[keyof typeof audit_status];
 
 ### 3.5 Declare Functions as Arrow Consts
 
-**Rule:** `T14` · `functions-declare-functions-as-arrow-consts`
+**Rule:** `T16` · `functions-declare-functions-as-arrow-consts`
 
 **Applies when:** 이름 붙인 함수를 새로 만들거나 선언 형태를 바꿀 때. 제외: 클래스 메서드, 제너레이터, 오버로드 선언.
 
@@ -820,7 +882,7 @@ export class EntryCursor {
 
 ### 3.6 Use Named Object Params for Complex Signatures
 
-**Rule:** `T15` · `functions-use-named-object-params-for-complex-signatures`
+**Rule:** `T17` · `functions-use-named-object-params-for-complex-signatures`
 
 **Applies when:** 매개변수가 3개를 넘거나 같은 계열 인자를 받는 함수를 추가·변경할 때. 객체 매개변수를 어디서 구조분해할지 바꿀 때. 제외: 리액트 함수 컴포넌트가 프롭스를 받고 구조분해하는 방식만 바꾸는 경우.
 
@@ -868,9 +930,65 @@ const buildRequestUrl = (args: BuildRequestUrlArgs): URL => {
 };
 ```
 
-### 3.7 Use Set and Map for Repeated Lookups
+### 3.7 Place and Promote Support Functions Deliberately
 
-**Rule:** `T16` · `functions-use-set-and-map-for-repeated-lookups`
+**Rule:** `T18` · `functions-place-and-promote-support-functions`
+
+**Applies when:** 보조 함수를 둘 파일이나 폴더를 정할 때. 보조 함수를 공용으로 올릴지 정할 때.
+
+**Requires selected:** `functions-extract-helpers-only-when-the-boundary-is-real` · 함께 적용
+
+**Impact: HIGH (잡동사니 파일이 생기지 않고 공용 승격이 실제 사용처를 근거로 일어납니다)**
+
+떼어 낼지는 `functions-extract-helpers-only-when-the-boundary-is-real`가 먼저 판정합니다.
+이 규칙은 그 결과를 어디 두고 언제 올릴지만 봅니다.
+
+- 범용 `helper.ts`, `helpers.ts`, `utils.ts`는 만들지 않습니다.
+  소유자 아래 어느 폴더에 둘지는 프레임워크 skill 의 역할 폴더 규칙이 정합니다.
+- 대표 내보낸 함수 하나당 파일 하나입니다.
+- 호출 깊이는 소유자에서 내보낸 함수, 그 파일 안 비공개 함수까지 두 단계로 끝냅니다.
+  내보낸 함수가 또 다른 내보낸 함수를 타고 가는 사슬은 만들지 않습니다.
+- 공용 승격은 **두 소유자 이상이 이미 직접 호출할 때만** 합니다.
+  그때 `shared/util.ts`의 `util.*`로 올립니다. 나중에 쓸 것 같아서 올리지 않습니다.
+
+**Incorrect (잡동사니 파일과 세 단계 사슬):**
+
+```ts
+// utils.ts
+export const util = {
+	normalizeTitle: (title: string) => title.trim(),
+	buildPayload: (values: EntryFormValues) => ({title: util.normalizeTitle(values.title)}),
+	buildRequest: (values: EntryFormValues) => ({body: util.buildPayload(values)}),
+};
+```
+
+**Correct (소유자 아래 대표 함수 하나당 파일 하나):**
+
+```ts
+// page/entry-form/function/build-entry-save-request.ts
+/**
+ * entry 폼 값을 저장 요청으로 조립
+ */
+export const buildEntrySaveRequest = (values: EntryFormValues) => {
+	return {body: {title: values.title.trim()}};
+};
+```
+
+**Correct (두 소유자가 이미 쓰는 순수 함수만 공용으로 올림):**
+
+```ts
+// shared/util.ts
+export const util = {
+	/**
+	 * 화면 표시용 날짜 문자열 변환
+	 */
+	formatDisplayDate: (value: string) => new Date(value).toLocaleDateString("ko-KR"),
+} as const;
+```
+
+### 3.8 Use Set and Map for Repeated Lookups
+
+**Rule:** `T19` · `functions-use-set-and-map-for-repeated-lookups`
 
 **Applies when:** 같은 목록에 `includes`, `find`, 키 조회를 여러 번 하는 코드를 추가·변경할 때.
 
@@ -878,7 +996,10 @@ const buildRequestUrl = (args: BuildRequestUrlArgs): URL => {
 
 같은 목록에 포함 검사나 키 조회를 여러 번 한다면 `includes`와 `find`를 매번 돌리지 않습니다.
 `Set`이나 `Map`으로 한 번 정리합니다.
-한두 번 조회면 그대로 두고, 반복이 실제로 있을 때만 바꿉니다.
+다음 중 하나면 바꿉니다. 그 밖에는 그대로 둡니다.
+
+- 같은 목록을 겨냥한 조회가 루프나 `map`·`filter`·`some` 콜백 안에 있습니다.
+- 같은 목록을 겨냥한 조회가 서로 다른 세 지점 이상에서 일어납니다.
 
 **Incorrect (같은 배열을 반복 순회하며 포함 여부를 확인):**
 
@@ -914,7 +1035,7 @@ const approver = userById.get(approverId);
 
 ### 4.1 Expose Optional Values Instead of Silent Fallbacks
 
-**Rule:** `T17` · `absence-expose-optional-values-instead-of-silent-fallbacks`
+**Rule:** `T20` · `absence-expose-optional-values-instead-of-silent-fallbacks`
 
 **Applies when:** 선택 값을 읽거나 정규화하거나 넘기는 방식을 바꿀 때. `??`, `||`, 기본값, 빈 값 대체 분기를 추가·변경할 때.
 
@@ -955,11 +1076,11 @@ const resolvePageSize = (query: SearchQuery): string => {
 
 **Impact: MEDIUM-HIGH**
 
-주석 규칙은 역할 태그 없이 여러 줄 블록과 한국어 본문으로 선언의 목적과 제약을 드러내야 합니다.
+문서 주석은 어느 선언에 붙일지, 어떤 형식으로 쓸지, 태그를 붙일지가 따로 정해져 있습니다. 본문은 한국어로 목적과 제약을 적고, 규칙이 허용한 예외에는 확인할 수 있는 이유를 남깁니다.
 
 ### 5.1 Keep Inline Comments for Constraints and Caveats Only
 
-**Rule:** `T18` · `docs-keep-inline-comments-for-constraints-and-caveats`
+**Rule:** `T21` · `docs-keep-inline-comments-for-constraints-and-caveats`
 
 **Applies when:** 함수 본문의 `//` 주석을 추가·수정·유지할 때. 도메인 규칙, 예외 방어, 외부 제약, 부수효과 순서를 주석으로 설명할 때.
 
@@ -988,26 +1109,21 @@ if (!normalizedToken) {
 
 ### 5.2 Require Header Doc Comments on Key Declarations
 
-**Rule:** `T19` · `docs-require-header-jsdoc-on-key-declarations`
+**Rule:** `T22` · `docs-require-header-jsdoc-on-key-declarations`
 
-**Applies when:** 질의·변경 요청, 원격 함수, 뻔하지 않은 핸들러와 이펙트, 내보낸 보조 함수와 훅, 커스텀 타입, 스토어 선언을 추가·변경할 때. 선언 위 주석의 형식이나 태그를 정할 때.
+**Applies when:** 질의·변경 요청, 원격 함수, 분기나 `await` 가 있는 핸들러와 이펙트, 내보낸 보조 함수와 훅, 커스텀 타입, 스토어 선언을 추가·변경할 때. 선언 위 주석의 형식이나 태그를 정할 때.
 
-**Requires selected:** `docs-write-concise-korean-comments-about-purpose-and-constraints` · 함께 적용
+**Requires selected:** `docs-write-concise-korean-comments-about-purpose-and-constraints`, `docs-write-doc-comments-as-multiline-blocks` · 함께 적용
 
 **Impact: MEDIUM-HIGH (구현을 읽기 전에 중요한 경계를 찾고 설명할 수 있습니다)**
 
-이름 붙인 질의와 변경 요청, 원격 함수, 뻔하지 않은 핸들러와 이펙트, 재사용하거나 내보낸 보조 함수,
+이름 붙인 질의와 변경 요청, 원격 함수, 본문에 분기·`await`·두 개 이상의 동작이 있는 핸들러와 이펙트,
+재사용하거나 내보낸 보조 함수,
 커스텀 훅, 커스텀 `type`과 `interface`, 스토어, 포매터, 예외 메모 선언에는 헤더 문서 주석을 씁니다.
 중요한 경계가 파일 검색에서 바로 보이게 하려는 것입니다.
 
-형식은 여러 줄 블록으로 고정합니다.
-`/**`, `*`, `*/`를 각각 줄로 나누고 `/** 한 줄 */`은 쓰지 않습니다.
-선언 설명에 `//`를 쓰지 않습니다. `//`는 본문 안 제약 설명 몫입니다.
-
-역할 태그는 쓰지 않습니다.
-`@api`, `@helper`, `@summary` 같은 태그를 붙이지 않고 `@schema`처럼 새로 만들지도 않습니다.
-선언이 무엇인지는 이름 규칙과 문법이 이미 드러냅니다.
-`@deprecated`, `@example`처럼 TSDoc 규격에 있는 태그만 필요할 때 씁니다.
+주석의 형식은 `docs-write-doc-comments-as-multiline-blocks`가,
+태그를 붙일지는 `docs-avoid-role-tags-in-doc-comments`가 정합니다.
 
 헤더 문서 주석은 본문이 비어 있거나 영문 라벨뿐이면 요구를 채우지 못합니다.
 함께 선택되는 `docs-write-concise-korean-comments-about-purpose-and-constraints`는
@@ -1062,7 +1178,7 @@ const responseEntryList = useEntryList();
 
 ### 5.3 Write Concise Korean Comments About Purpose and Constraints
 
-**Rule:** `T20` · `docs-write-concise-korean-comments-about-purpose-and-constraints`
+**Rule:** `T23` · `docs-write-concise-korean-comments-about-purpose-and-constraints`
 
 **Applies when:** TypeScript·TSX 의 문서 주석이나 인라인 주석 문구를 추가·수정·번역하거나 검토할 때.
 
@@ -1100,9 +1216,115 @@ const responseEntryList = useEntryList();
  */
 ```
 
-### 5.4 Justify Convention Exceptions With a Checkable Reason Comment
+### 5.4 Write Doc Comments as Multiline Blocks
 
-**Rule:** `T21` · `docs-justify-convention-exceptions-with-a-reason-comment`
+**Rule:** `T24` · `docs-write-doc-comments-as-multiline-blocks`
+
+**Applies when:** 선언 위 문서 주석을 새로 쓰거나 형식을 바꿀 때. 한 줄 `/** … */` 이나 `//` 로 선언을 설명하려 할 때.
+
+**Review with:** `docs-require-header-jsdoc-on-key-declarations`
+
+**Impact: MEDIUM (선언 위 주석 형태가 파일마다 같아 검색과 훑어보기가 됩니다)**
+
+문서 주석은 여러 줄 블록으로 고정합니다.
+`/**`, `*`, `*/`를 각각 줄로 나눕니다.
+
+- `/** 한 줄 */` 형태는 쓰지 않습니다.
+- 선언 설명에 `//`를 쓰지 않습니다. `//`는 함수 본문 안 제약 설명 몫입니다.
+- 어느 선언에 붙일지는 `docs-require-header-jsdoc-on-key-declarations`가 정합니다.
+
+**Incorrect (한 줄 블록과 `//` 로 선언을 설명):**
+
+```ts
+/** entry 목록 조회 */
+export const fetchEntryList = async (): Promise<Entry[]> => {
+	return await client.get("/entries");
+};
+
+// entry 저장 요청
+export const saveEntry = async (entry: Entry): Promise<void> => {
+	await client.post("/entries", entry);
+};
+```
+
+**Correct (여러 줄 블록으로 고정):**
+
+```ts
+/**
+ * entry 목록 조회
+ */
+export const fetchEntryList = async (): Promise<Entry[]> => {
+	return await client.get("/entries");
+};
+
+/**
+ * entry 저장 요청
+ */
+export const saveEntry = async (entry: Entry): Promise<void> => {
+	await client.post("/entries", entry);
+};
+```
+
+### 5.5 Avoid Role Tags in Doc Comments
+
+**Rule:** `T25` · `docs-avoid-role-tags-in-doc-comments`
+
+**Applies when:** 문서 주석에 태그를 넣거나 바꿀 때. 새 태그 이름을 만들려 할 때.
+
+**Review with:** `docs-require-header-jsdoc-on-key-declarations`
+
+**Impact: MEDIUM (선언의 성격을 태그로 두 번 적지 않아 태그가 어긋날 일이 없습니다)**
+
+선언이 무엇인지는 이름 규칙과 문법이 이미 드러냅니다.
+그것을 태그로 다시 적지 않습니다.
+
+- `@api`, `@helper`, `@summary`, `@field` 같은 역할 태그를 붙이지 않습니다.
+- `@schema`처럼 새 태그를 만들지 않습니다.
+- `@deprecated`, `@example`, `@param`, `@returns`처럼 TSDoc 규격에 있는 태그만 필요할 때 씁니다.
+
+역할 태그는 선언이 바뀌어도 함께 바뀌지 않아 시간이 지나면 어긋납니다.
+
+**Incorrect (역할 태그로 선언 성격을 다시 적음):**
+
+```ts
+/**
+ * @api entry 목록 조회
+ */
+export const fetchEntryList = async (): Promise<Entry[]> => {
+	return await client.get("/entries");
+};
+
+/**
+ * @schema entry 저장 입력
+ */
+export interface SaveEntryInput {
+	title: string;
+}
+```
+
+**Correct (설명만 적고 규격 태그만 필요할 때 씁니다):**
+
+```ts
+/**
+ * entry 목록 조회
+ */
+export const fetchEntryList = async (): Promise<Entry[]> => {
+	return await client.get("/entries");
+};
+
+/**
+ * entry 저장 입력
+ *
+ * @deprecated `SaveEntryRequest` 로 옮기는 중이다.
+ */
+export interface SaveEntryInput {
+	title: string;
+}
+```
+
+### 5.6 Justify Convention Exceptions With a Checkable Reason Comment
+
+**Rule:** `T26` · `docs-justify-convention-exceptions-with-a-reason-comment`
 
 **Applies when:** 규칙이 허용한 예외를 코드에 남길 때. 이미 있는 예외 주석의 내용을 바꿀 때. 제외: 규칙이 요구하지 않은 일반 설명 주석인 경우.
 
@@ -1162,7 +1384,7 @@ const filteredRows = useMemo(() => rows.filter((row) => matchRow(row, deferredKe
 
 ### 6.1 Review Banned TypeScript Shortcuts Before Finishing
 
-**Rule:** `T22` · `guardrails-review-banned-typescript-shortcuts-before-finishing`
+**Rule:** `T27` · `guardrails-review-banned-typescript-shortcuts-before-finishing`
 
 **Applies when:** TypeScript·TSX 변경을 끝났다고 판정할 때. 변경 내역에서 배럴, 중복 타입, 이른 보조 함수, 넓은 조립, 근거 없는 기본값, 자명한 주석을 점검할 때.
 
@@ -1209,7 +1431,7 @@ if (!settings.supportEmail) {
 
 ### 7.1 Configure Biome to Enforce the Mechanical Rules
 
-**Rule:** `T23` · `tooling-configure-biome-to-enforce-these-rules`
+**Rule:** `T28` · `tooling-configure-biome-to-enforce-these-rules`
 
 **Applies when:** 프로젝트에 `biome` 설정을 처음 넣거나 lint 규칙을 바꿀 때. 이 컨벤션 규칙을 사람이 검토할지 도구가 막을지 정할 때.
 

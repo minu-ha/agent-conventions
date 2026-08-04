@@ -92,10 +92,10 @@ tags: tag1, tag2
 | 키 | 필수 | 의미 |
 | --- | --- | --- |
 | `title` | 필수 | 영어. 핸드북 헤딩과 앵커 슬러그의 기반. 바꾸면 링크가 깨진다 |
-| `titleKo` | 필수 | 한국어. `conventions.html` 에 노출된다. 40자 이내를 `validate` 가 강제한다 |
+| `titleKo` | 필수 | 한국어. `conventions.html` 에 노출된다 |
 | `impact` | 필수 | `CRITICAL` · `HIGH` · `MEDIUM` · `LOW` |
 | `impactDescription` | 필수 | 한국어 영향도 설명. 본문 `**Impact:**` 줄과 일치해야 하고 `contracts/*.md` 와 `conventions.html` 로 나간다 |
-| `appliesWhen` | 필수 | `- ` 조건 불렛 리스트 또는 한 줄 스칼라. 불렛이면 라우팅 문장은 이어 붙여 자동 생성된다. 합쳐서 160자 이내 |
+| `appliesWhen` | 필수 | `- ` 조건 불렛 리스트 또는 한 줄 스칼라. 불렛이면 라우팅 문장은 이어 붙여 자동 생성된다. 라우팅 문장은 한 줄 160자 |
 | `requiresSelected` | 선택 | 걸리면 target 도 반드시 함께 적용 |
 | `reviewWith` | 선택 | 자동 선택이 아니라 다시 판정하라는 재평가 힌트 |
 | `requiredOnCompletion` | 선택 | 마무리 시 항상 적용 |
