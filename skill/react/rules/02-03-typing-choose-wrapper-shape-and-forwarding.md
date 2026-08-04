@@ -23,11 +23,11 @@ tags: typing, wrapper, contracts
 | --- | --- |
 | 안쪽 요소가 하나다 | 반환하는 JSX에 요소가 하나입니다 |
 | **자기 프롭**이 하나도 없다 | 선언한 프롭을 안쪽 컴포넌트가 전부 받습니다 |
-| `extends HTMLAttributes<T>`가 컴파일된다 | `typing-narrow-library-wrapper-contracts`가 정합니다 |
+| DOM 표면을 `extends`로 열 수 있다 | `typing-narrow-library-wrapper-contracts`의 1·2단계입니다 |
 
 **자기 프롭**은 안쪽 컴포넌트가 받지 않는 프롭입니다.
-`UiIconButtonProps`의 `icon`은 `ButtonBase`가 모르므로 자기 프롭이고,
-`UiTableRowProps`의 `selected`는 `TableRow`가 받으므로 자기 프롭이 아닙니다.
+`UiIconButtonProps`의 `icon`은 감싸는 컴포넌트가 모르므로 자기 프롭이고,
+`UiTableRowProps`의 `selected`는 감싸는 컴포넌트가 받으므로 자기 프롭이 아닙니다.
 
 **자기 프롭이 있는데 `{...props}`를 쓰면 그 프롭이 DOM까지 내려갑니다.**
 `icon`이 `<button icon="…">`이 되어 리액트가 경고합니다.
@@ -54,10 +54,10 @@ export interface UiIconButtonProps extends HTMLAttributes<HTMLButtonElement> {
 
 // icon 이 <button icon="…"> 으로 내려간다. 컴파일은 통과한다
 export const UiIconButton = (props: UiIconButtonProps) => (
-	<ButtonBase {...props}>
+	<LibButton {...props}>
 		{props.icon}
 		{props.children}
-	</ButtonBase>
+	</LibButton>
 );
 ```
 
@@ -87,13 +87,13 @@ export interface UiIconButtonProps {
 }
 
 export const UiIconButton = (props: UiIconButtonProps) => (
-	<ButtonBase
+	<LibButton
 		className={clsx("ui_iconButton__root", props.className)}
 		aria-label={props.label}
 		onClick={props.onClick}
 	>
 		{props.icon}
-	</ButtonBase>
+	</LibButton>
 );
 ```
 
@@ -135,7 +135,7 @@ export const UiField = (props: UiFieldProps) => (
 		<label className={clsx("ui_field__label")} htmlFor={props.inputId}>
 			{props.label}
 		</label>
-		<TextField id={props.inputId} value={props.value} onChange={props.onChange} />
+		<LibTextField id={props.inputId} value={props.value} onChange={props.onChange} />
 		{props.helperText ? (
 			<span className={clsx("ui_field__helper")}>{props.helperText}</span>
 		) : null}
@@ -149,16 +149,16 @@ export const UiField = (props: UiFieldProps) => (
 /**
  * 표 줄
  *
- * TableRow는 `color`를 좁히지 않아 `HTMLAttributes`를 그대로 받을 수 있다.
+ * 감싸는 컴포넌트가 `color`를 좁히지 않아 `HTMLAttributes`를 그대로 받을 수 있다.
  */
 export interface UiTableRowProps extends HTMLAttributes<HTMLTableRowElement> {
 	/**
 	 * 선택된 줄로 표시할지
 	 */
-	selected?: TableRowProps["selected"];
+	selected?: LibTableRowProps["selected"];
 }
 
 export const UiTableRow = (props: UiTableRowProps) => (
-	<TableRow {...props} className={clsx("ui_table__row", props.className)} />
+	<LibTableRow {...props} className={clsx("ui_table__row", props.className)} />
 );
 ```

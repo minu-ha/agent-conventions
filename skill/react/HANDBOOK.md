@@ -653,144 +653,167 @@ const handleSubmitClick: UiButtonProps["onClick"] = (event) => {
 라이브러리 컴포넌트는 화면에서 직접 쓰지 않고 `Ui*` 래퍼를 거칩니다.
 래퍼가 있어야 라이브러리를 올리거나 바꿀 때 한 파일만 고칩니다.
 
-**`export type UiXProps = LibraryXProps`로 두지 않습니다.**
-라이브러리 표면이 통째로 열려서 `sx`, `classes`, `component`까지 화면이 쓸 수 있게 됩니다.
+**`export type UiXProps = LibXProps`로 두지 않습니다.**
+라이브러리 표면이 통째로 열려서 그 라이브러리의 스타일 통로까지 화면이 쓸 수 있게 됩니다.
 `css/composition-inject-classes-only-at-the-entry-point`가 정한 스타일 창구가 그 자리에서 뚫립니다.
 
-**기본은 여는 프롭을 하나씩 선언하는 것입니다.**
-값 타입은 손으로 적지 않고 인덱스 접근으로 가져옵니다.
+계약은 세 갈래로 나눠 각각 다르게 엽니다.
 
-| 프롭의 출처 | 타입을 어디서 가져오는가 |
+| 표면 | 어떻게 |
 | --- | --- |
-| 라이브러리가 정한 표시 프롭 (`padding`, `sortDirection`, `color`) | `LibraryXProps["padding"]` |
-| DOM 이벤트와 표준 속성 (`onClick`, `id`, `role`, `tabIndex`) | `MouseEventHandler<T>` 같은 리액트 타입 |
-| 라이브러리 스타일 우회로 (`sx`, `classes`, `component`, `slotProps`) | 선언하지 않습니다 |
+| 요소 공통 DOM (`id`, `role`, `tabIndex`, `aria-*`, 이벤트) | `extends HTMLAttributes<대상요소>`로 통째로 |
+| 라이브러리가 정한 표시 프롭 (`color`, `padding`, `size`) | `LibXProps["color"]` 인덱스 접근으로 하나씩 |
+| 라이브러리 스타일 통로 (테마 스타일 프롭, 클래스 맵, 렌더 태그 교체) | 선언하지 않습니다 |
+
+**DOM 표면을 여는 방법은 세 단계이고 위에서부터 되는 것을 씁니다.**
+어느 단계인지는 컴파일러가 알려 주므로 미리 고민하지 않습니다.
+
+| 단계 | 언제 | 형태 |
+| --- | --- | --- |
+| 1 | 그냥 컴파일된다 | `extends HTMLAttributes<T>` |
+| 2 | 라이브러리가 같은 이름 프롭의 **값을 좁혀** 부딪힌다 | `extends Omit<HTMLAttributes<T>, "color">`로 빼고 그 프롭을 인덱스 접근으로 다시 연다 |
+| 3 | 감싸는 요소와 이벤트 대상 요소가 **서로 다르다** | `extends`를 쓰지 않고 필요한 프롭만 선언합니다 |
+
+2단계가 필요한 이유는 `HTMLAttributes`가 `color`, `title`, `onChange`, `defaultValue`를 갖고 있어서입니다.
+라이브러리가 그중 하나를 자기 값 집합으로 좁혀 두면 `extends`가 막힙니다.
+그때는 **부딪히는 이름만 빼면 되지, 나머지 DOM 표면을 포기하지 않습니다.**
+
+3단계는 입력 래퍼에서 나옵니다.
+겉을 `div`로 감싸면서 이벤트는 안쪽 `input`이 받는 컴포넌트가 그렇습니다.
+값이 아니라 요소 타입이 어긋나므로 `Omit`으로 한둘 빼도 이벤트 핸들러가 줄줄이 걸립니다.
+
+`Omit`을 여기 쓰는 것은 `typescript/types-reuse-existing-contracts-before-new-types`와 부딪히지 않습니다.
+그 규칙은 **우리 도메인 계약**을 다른 계약에서 끌어올 때를 봅니다.
+플랫폼 타입 묶음에서 부딪히는 멤버 하나를 빼는 것은 계약을 끌어오는 일이 아닙니다.
 
 - 인덱스 접근은 상속 사슬을 따라갑니다.
-  `StandardProps`나 `TableCellBaseProps`를 직접 가져올 필요 없이 바깥 타입 이름 하나만 씁니다.
+  바깥 타입 이름 하나만 쓰면 됩니다.
 - 값을 손으로 다시 적는 것은 일부러 좁힐 때만 합니다.
   그때는 좁힌 이유를 문서 주석에 남깁니다.
-  같은 값을 다시 적는 것은 `typescript/types-reuse-existing-contracts-before-new-types`가 막습니다.
 - `aria-*`와 `data-*`는 하이픈이 들어 있어 TypeScript가 검사하지 않습니다.
-  선언하지 않아도 넘어가므로 목록에 적지 않습니다.
+  선언하지 않아도 넘어갑니다.
 - `ref`를 여는 기준은 `composition-open-ref-props-only-for-imperative-contracts`가 정합니다.
-- 사용처가 이 계약을 어떻게 참조하는지는 `typing-take-handler-types-from-existing-contracts`가 정합니다.
 - 프롭을 어떻게 넘기는지는 `typing-choose-wrapper-shape-and-forwarding`가 정합니다.
-
-**DOM 표면을 통째로 열고 싶으면 `extends HTMLAttributes<대상요소>`를 씁니다.
-다만 늘 되지는 않습니다.**
-`HTMLAttributes`에는 `color`, `title`, `onChange`, `defaultValue`가 들어 있고
-라이브러리가 그중 하나라도 좁혀 놓으면 컴파일이 막힙니다.
-MUI 기준으로 `TableCell`·`TableRow`·`ButtonBase`는 통과하고
-`Button`·`Alert`·`Checkbox`·`TextField`는 막힙니다.
-**막히면 그 래퍼는 프롭을 하나씩 선언하는 형태로 갑니다.** 어느 쪽인지는 컴파일러가 알려 줍니다.
-
-요소 전용 타입(`ThHTMLAttributes`, `InputHTMLAttributes`)은 `extends` 하지 않습니다.
-그 자리가 바로 라이브러리가 뜻을 바꿔 놓는 자리라 거의 항상 부딪힙니다.
-
-`HTMLAttributes`를 `extends` 하면 `style`도 같이 열립니다.
-인라인 `style`을 쓸지는 `css/values-do-not-style-through-the-style-attribute`가 정합니다.
+- `HTMLAttributes`를 `extends` 하면 `style`도 같이 열립니다.
+  인라인 `style`을 쓸지는 `css/values-do-not-style-through-the-style-attribute`가 정합니다.
 
 **Incorrect (라이브러리 타입을 그대로 내보냄):**
 
 ```tsx
-export type UiTableCellProps = TableCellProps;
+export type UiButtonProps = LibButtonProps;
 
-export const UiTableCell = (props: UiTableCellProps) => <TableCell {...props} />;
+export const UiButton = (props: UiButtonProps) => <LibButton {...props} />;
 ```
 
-**Incorrect (라이브러리가 좁혀 놓은 프롭까지 `extends`로 열려다 막힘):**
+**Incorrect (프롭 하나가 부딪힌다고 DOM 표면을 통째로 포기함):**
 
 ```tsx
-export interface UiAlertProps extends HTMLAttributes<HTMLDivElement> {}
-
-export const UiAlert = (props: UiAlertProps) => <Alert {...props} />;
-```
-
-```text
-error TS2322: Type '{ … }' is not assignable to type 'AlertProps'.
-  Types of property 'color' are incompatible.
-    Type 'string | undefined' is not assignable to type 'OverridableStringUnion<AlertColor, AlertPropsColorOverrides> | undefined'.
-```
-
-**Correct (여는 프롭을 하나씩 선언):**
-
-```tsx
-import { Button } from "@mui/material";
-import type { ButtonProps } from "@mui/material";
-import { clsx } from "clsx";
-import type { MouseEventHandler, ReactNode } from "react";
-
-/**
- * 기본 버튼
- *
- * MUI Button 을 감싼다. 라이브러리를 바꾸면 이 파일만 고친다.
- */
+// id·role·tabIndex·aria-*·이벤트를 전부 잃고 다섯 개만 남았다
 export interface UiButtonProps {
-	/**
-	 * 최상위에 얹을 클래스
-	 */
 	className?: string;
-	/**
-	 * 버튼 안에 넣을 내용
-	 */
 	children?: ReactNode;
-	/**
-	 * 강조 단계
-	 */
-	color?: ButtonProps["color"];
-	/**
-	 * 비활성 여부
-	 */
-	disabled?: ButtonProps["disabled"];
-	/**
-	 * 눌렀을 때
-	 */
+	color?: LibButtonProps["color"];
+	disabled?: LibButtonProps["disabled"];
 	onClick?: MouseEventHandler<HTMLButtonElement>;
 }
-
-export const UiButton = (props: UiButtonProps) => (
-	<Button
-		className={clsx("ui_button__root", props.className)}
-		color={props.color}
-		disabled={props.disabled}
-		onClick={props.onClick}
-	>
-		{props.children}
-	</Button>
-);
 ```
 
-**Correct (`extends`가 컴파일되는 래퍼에서는 DOM 표면을 통째로):**
+**Correct (1단계 — 그냥 통과하는 래퍼):**
 
 ```tsx
-import { TableCell } from "@mui/material";
-import type { TableCellProps } from "@mui/material";
+import { LibTableCell } from "@ui-lib/core";
+import type { LibTableCellProps } from "@ui-lib/core";
 import { clsx } from "clsx";
 import type { HTMLAttributes } from "react";
 
 /**
  * 표 셀
- *
- * TableCell은 `color`를 좁히지 않아 `HTMLAttributes`를 그대로 받을 수 있다.
  */
 export interface UiTableCellProps extends HTMLAttributes<HTMLTableCellElement> {
 	/**
 	 * 내용 가로 정렬
 	 */
-	align?: TableCellProps["align"];
+	align?: LibTableCellProps["align"];
 	/**
 	 * 셀 여백
 	 */
-	padding?: TableCellProps["padding"];
-	/**
-	 * 가로로 합칠 칸 수
-	 */
-	colSpan?: TableCellProps["colSpan"];
+	padding?: LibTableCellProps["padding"];
 }
 
 export const UiTableCell = (props: UiTableCellProps) => (
-	<TableCell {...props} className={clsx("ui_table__cell", props.className)} />
+	<LibTableCell {...props} className={clsx("ui_table__cell", props.className)} />
+);
+```
+
+**Correct (2단계 — 부딪히는 이름만 빼고 다시 엶):**
+
+```tsx
+import { LibButton } from "@ui-lib/core";
+import type { LibButtonProps } from "@ui-lib/core";
+import { clsx } from "clsx";
+import type { HTMLAttributes } from "react";
+
+/**
+ * 기본 버튼
+ *
+ * 라이브러리가 `color` 를 자기 값 집합으로 좁혀 두어 그 이름만 빼고 다시 연다.
+ */
+export interface UiButtonProps extends Omit<HTMLAttributes<HTMLButtonElement>, "color"> {
+	/**
+	 * 강조 단계
+	 */
+	color?: LibButtonProps["color"];
+}
+
+export const UiButton = (props: UiButtonProps) => (
+	<LibButton {...props} className={clsx("ui_button__root", props.className)} />
+);
+```
+
+**Correct (3단계 — 요소 타입이 어긋나 필요한 프롭만 선언):**
+
+```tsx
+import { LibTextField } from "@ui-lib/core";
+import type { LibTextFieldProps } from "@ui-lib/core";
+import { clsx } from "clsx";
+import type { ChangeEventHandler } from "react";
+
+/**
+ * 한 줄 입력
+ *
+ * 겉은 `div` 인데 이벤트는 안쪽 `input` 이 받아 `HTMLAttributes` 를 그대로 못 쓴다.
+ */
+export interface UiTextFieldProps {
+	/**
+	 * 최상위에 얹을 클래스
+	 */
+	className?: string;
+	/**
+	 * 입력 식별자
+	 */
+	id?: string;
+	/**
+	 * 입력값
+	 */
+	value: string;
+	/**
+	 * 입력이 바뀔 때
+	 */
+	onChange: ChangeEventHandler<HTMLInputElement>;
+	/**
+	 * 오류 표시 여부
+	 */
+	error?: LibTextFieldProps["error"];
+}
+
+export const UiTextField = (props: UiTextFieldProps) => (
+	<LibTextField
+		className={clsx("ui_textField__root", props.className)}
+		id={props.id}
+		value={props.value}
+		onChange={props.onChange}
+		error={props.error}
+	/>
 );
 ```
 
@@ -813,11 +836,11 @@ export const UiTableCell = (props: UiTableCellProps) => (
 | --- | --- |
 | 안쪽 요소가 하나다 | 반환하는 JSX에 요소가 하나입니다 |
 | **자기 프롭**이 하나도 없다 | 선언한 프롭을 안쪽 컴포넌트가 전부 받습니다 |
-| `extends HTMLAttributes<T>`가 컴파일된다 | `typing-narrow-library-wrapper-contracts`가 정합니다 |
+| DOM 표면을 `extends`로 열 수 있다 | `typing-narrow-library-wrapper-contracts`의 1·2단계입니다 |
 
 **자기 프롭**은 안쪽 컴포넌트가 받지 않는 프롭입니다.
-`UiIconButtonProps`의 `icon`은 `ButtonBase`가 모르므로 자기 프롭이고,
-`UiTableRowProps`의 `selected`는 `TableRow`가 받으므로 자기 프롭이 아닙니다.
+`UiIconButtonProps`의 `icon`은 감싸는 컴포넌트가 모르므로 자기 프롭이고,
+`UiTableRowProps`의 `selected`는 감싸는 컴포넌트가 받으므로 자기 프롭이 아닙니다.
 
 **자기 프롭이 있는데 `{...props}`를 쓰면 그 프롭이 DOM까지 내려갑니다.**
 `icon`이 `<button icon="…">`이 되어 리액트가 경고합니다.
@@ -844,10 +867,10 @@ export interface UiIconButtonProps extends HTMLAttributes<HTMLButtonElement> {
 
 // icon 이 <button icon="…"> 으로 내려간다. 컴파일은 통과한다
 export const UiIconButton = (props: UiIconButtonProps) => (
-	<ButtonBase {...props}>
+	<LibButton {...props}>
 		{props.icon}
 		{props.children}
-	</ButtonBase>
+	</LibButton>
 );
 ```
 
@@ -877,13 +900,13 @@ export interface UiIconButtonProps {
 }
 
 export const UiIconButton = (props: UiIconButtonProps) => (
-	<ButtonBase
+	<LibButton
 		className={clsx("ui_iconButton__root", props.className)}
 		aria-label={props.label}
 		onClick={props.onClick}
 	>
 		{props.icon}
-	</ButtonBase>
+	</LibButton>
 );
 ```
 
@@ -925,7 +948,7 @@ export const UiField = (props: UiFieldProps) => (
 		<label className={clsx("ui_field__label")} htmlFor={props.inputId}>
 			{props.label}
 		</label>
-		<TextField id={props.inputId} value={props.value} onChange={props.onChange} />
+		<LibTextField id={props.inputId} value={props.value} onChange={props.onChange} />
 		{props.helperText ? (
 			<span className={clsx("ui_field__helper")}>{props.helperText}</span>
 		) : null}
@@ -939,17 +962,17 @@ export const UiField = (props: UiFieldProps) => (
 /**
  * 표 줄
  *
- * TableRow는 `color`를 좁히지 않아 `HTMLAttributes`를 그대로 받을 수 있다.
+ * 감싸는 컴포넌트가 `color`를 좁히지 않아 `HTMLAttributes`를 그대로 받을 수 있다.
  */
 export interface UiTableRowProps extends HTMLAttributes<HTMLTableRowElement> {
 	/**
 	 * 선택된 줄로 표시할지
 	 */
-	selected?: TableRowProps["selected"];
+	selected?: LibTableRowProps["selected"];
 }
 
 export const UiTableRow = (props: UiTableRowProps) => (
-	<TableRow {...props} className={clsx("ui_table__row", props.className)} />
+	<LibTableRow {...props} className={clsx("ui_table__row", props.className)} />
 );
 ```
 
