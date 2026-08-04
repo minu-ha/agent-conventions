@@ -1,6 +1,6 @@
 ---
 title: Prefer Children Over Render Props for Static Composition
-titleKo: 정적 조립에서는 렌더 프롭 대신 `children` 을 씁니다
+titleKo: 정적 조립에서는 렌더 프롭 대신 `children`을 씁니다
 impact: MEDIUM
 impactDescription: 부모가 콜백으로 값을 내려보낼 필요가 없으면 조립이 읽기 쉬워집니다
 appliesWhen:
@@ -26,13 +26,11 @@ export interface UiPanelProps {
 }
 
 export const UiPanel = (props: UiPanelProps) => {
-	const { renderHeader, renderFooter } = props;
-
 	return (
 		<section className={clsx("ui_panel__root")}>
-			{renderHeader?.()}
+			{props.renderHeader?.()}
 			<ItemList />
-			{renderFooter?.()}
+			{props.renderFooter?.()}
 		</section>
 	);
 };
@@ -46,18 +44,15 @@ export interface UiPanelProps {
 }
 
 const UiPanelRoot = (props: UiPanelProps) => {
-	const { children } = props;
-	return <section className={clsx("ui_panel__root")}>{children}</section>;
+	return <section className={clsx("ui_panel__root")}>{props.children}</section>;
 };
 
 const UiPanelHeader = (props: UiPanelProps) => {
-	const { children } = props;
-	return <header className={clsx("ui_panel__header")}>{children}</header>;
+	return <header className={clsx("ui_panel__header")}>{props.children}</header>;
 };
 
 const UiPanelFooter = (props: UiPanelProps) => {
-	const { children } = props;
-	return <footer className={clsx("ui_panel__footer")}>{children}</footer>;
+	return <footer className={clsx("ui_panel__footer")}>{props.children}</footer>;
 };
 
 export const UiPanel = {
@@ -66,15 +61,15 @@ export const UiPanel = {
 	Footer: UiPanelFooter,
 } as const;
 
-export const PgEntryScreen = () => {
+export const PgProductScreen = () => {
 	return (
-		<>
+		<Fragment>
 			<UiPanel.Root>
 				<UiPanel.Header>
-					<h2>Entries</h2>
-					<EntrySearchField />
+					<h2>Products</h2>
+					<ProductSearchField />
 				</UiPanel.Header>
-				<EntryList />
+				<ProductList />
 				<UiPanel.Footer>
 					<Pagination />
 				</UiPanel.Footer>
@@ -82,11 +77,11 @@ export const PgEntryScreen = () => {
 
 			<UiPanel.Root>
 				<UiPanel.Header>
-					<h2>Create entry</h2>
+					<h2>Create product</h2>
 				</UiPanel.Header>
-				<EntryCreateForm />
+				<ProductCreateForm />
 			</UiPanel.Root>
-		</>
+		</Fragment>
 	);
 };
 ```

@@ -4,7 +4,7 @@ titleKo: 훅, 핸들러, 핵심 선언에는 문서 주석을 붙입니다
 impact: MEDIUM-HIGH
 impactDescription: 중요한 API, 핸들러, 이펙트, 타입 선언을 검토하고 다시 쓰기 쉬워집니다
 appliesWhen:
-  - 쿼리·뮤테이션이나 비자명한 핸들러/이펙트를 추가·변경할 때
+  - 쿼리·뮤테이션이나 읽어서 의도가 안 보이는 핸들러/이펙트를 추가·변경할 때
   - 내보낸 보조 함수·훅·스토어 선언을 추가·변경할 때
   - 다시 내보내기 포함 공개 타입·인터페이스를 추가·변경할 때
 requiresSelected: typescript/docs-require-header-jsdoc-on-key-declarations
@@ -15,7 +15,8 @@ tags: docs, handlers, effects
 
 **Impact: MEDIUM-HIGH (중요한 API, 핸들러, 이펙트, 타입 선언을 검토하고 다시 쓰기 쉬워집니다)**
 
-문서 주석은 경계를 설명할 때만 붙입니다. 자명한 지역 변수에는 강제하지 않습니다.
+문서 주석은 경계를 설명할 때만 붙입니다.
+코드만 봐도 아는 지역 변수에는 강제하지 않습니다.
 
 `type`과 `interface` 문서화는 `typescript/types-document-custom-types-and-shapes`가 정합니다.
 내보냈는지와 무관하게 그 규칙을 따르고, 여기서 다시 판정하지 않습니다.
@@ -30,20 +31,20 @@ tags: docs, handlers, effects
 - 예외적으로 남긴 `useMemo`/`useCallback`
 
 합성 공개 부품의 설명을 어디 두는지는
-`docs-document-compound-parts-above-props-interface`가 정합니다.
+`composition-declare-props-interface-above-the-component`가 정합니다.
 
 형식과 태그 기준은 `typescript/docs-require-header-jsdoc-on-key-declarations`가 정합니다.
 여러 줄 블록으로 쓰고 역할 태그는 붙이지 않습니다.
 
-**Incorrect (비자명한 경계 선언에 문맥 설명이 없음):**
+**Incorrect (읽어서 의도가 안 보이는 경계 선언에 설명이 없음):**
 
 ```ts
-const handleRemoveEntryButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
-	if (!selectedEntry) {
+const handleRemoveProductButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
+	if (!selectedProduct) {
 		return;
 	}
 
-	await mutationEntryRemove.mutateAsync({ params: { entryId } });
+	await mutationProductRemove.mutateAsync({ params: { productId } });
 };
 
 useEffect(() => {
@@ -51,23 +52,23 @@ useEffect(() => {
 }, [userData, resetForm]);
 ```
 
-**Correct (비자명한 선언 의도를 바로 위에 여러 줄 블록으로 문서화):**
+**Correct (선언 의도를 바로 위에 여러 줄 블록으로 문서화):**
 
 ```ts
 /**
- * entry 삭제 API
+ * product 삭제 API
  */
-const mutationEntryRemove = useEntryRemove();
+const mutationProductRemove = useProductRemove();
 
 /**
- * 선택된 entry 삭제와 다음 화면 이동 처리
+ * 선택된 product 삭제와 다음 화면 이동 처리
  */
-const handleRemoveEntryButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
-	if (!selectedEntry) {
+const handleRemoveProductButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
+	if (!selectedProduct) {
 		return;
 	}
 
-	await mutationEntryRemove.mutateAsync({ params: { entryId } });
+	await mutationProductRemove.mutateAsync({ params: { productId } });
 };
 
 /**
@@ -78,9 +79,9 @@ useEffect(() => {
 }, [userData, resetForm]);
 
 /**
- * entry 저장 요청 payload 생성
+ * product 저장 요청 payload 생성
  */
-export const buildEntryPayload = (formValues: EntryFormValues) => {
+export const toProductSaveRequest = (formValues: ProductFormValues) => {
 	return {
 		title: formValues.title.trim(),
 	};

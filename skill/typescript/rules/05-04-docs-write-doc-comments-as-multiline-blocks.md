@@ -5,7 +5,7 @@ impact: MEDIUM
 impactDescription: 선언 위 주석 형태가 파일마다 같아 주석을 검색하고 훑어보기 쉬워집니다
 appliesWhen:
   - 선언 위 문서 주석을 새로 쓰거나 형식을 바꿀 때
-  - 한 줄 `/** … */` 이나 `//` 로 선언을 설명하려 할 때
+  - 한 줄 `/** … */`이나 `//`로 선언을 설명하려 할 때
 reviewWith: docs-require-header-jsdoc-on-key-declarations
 tags: docs, declarations
 ---
@@ -23,17 +23,17 @@ tags: docs, declarations
   그 형식은 `docs-justify-convention-exceptions-with-a-reason-comment`가 정합니다.
 - 어느 선언에 붙일지는 `docs-require-header-jsdoc-on-key-declarations`가 정합니다.
 
-**Incorrect (한 줄 블록과 `//` 로 선언을 설명):**
+**Incorrect (한 줄 블록과 `//`로 선언을 설명):**
 
 ```ts
-/** entry 목록 조회 */
-export const fetchEntryList = async (): Promise<Entry[]> => {
-	return await client.get("/entries");
+/** product 목록 조회 */
+export const fetchProductList = async (): Promise<Product[]> => {
+	return await client.get("/products");
 };
 
-// entry 저장 요청
-export const saveEntry = async (entry: Entry): Promise<void> => {
-	await client.post("/entries", entry);
+// product 저장 요청
+export const saveProduct = async (product: Product): Promise<void> => {
+	await client.post("/products", product);
 };
 ```
 
@@ -41,16 +41,16 @@ export const saveEntry = async (entry: Entry): Promise<void> => {
 
 ```ts
 /**
- * entry 목록 조회
+ * product 목록 조회
  */
-export const fetchEntryList = async (): Promise<Entry[]> => {
-	return await client.get("/entries");
+export const fetchProductList = async (): Promise<Product[]> => {
+	return await client.get("/products");
 };
 
 /**
- * entry 저장 요청
+ * product 저장 요청
  */
-export const saveEntry = async (entry: Entry): Promise<void> => {
-	await client.post("/entries", entry);
+export const saveProduct = async (product: Product): Promise<void> => {
+	await client.post("/products", product);
 };
 ```

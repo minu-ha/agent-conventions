@@ -62,8 +62,8 @@ export interface UiCollapseProps {
 	items: UiCollapseItem[];
 }
 
-export const UiCollapse = ({className, items}: UiCollapseProps) => (
-	<div className={clsx("ui_collapse__root", className)}>{/* … */}</div>
+export const UiCollapse = (props: UiCollapseProps) => (
+	<div className={clsx("ui_collapse__root", props.className)}>{/* … */}</div>
 );
 ```
 

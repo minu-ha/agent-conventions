@@ -16,7 +16,8 @@ tags: typing, handlers, props
 **Impact: HIGH (같은 시그니처를 손으로 다시 적지 않아 계약이 어긋나지 않습니다)**
 
 타입을 어디에 붙일지는 `typescript/types-prefer-function-variable-types-over-parameter-annotations`가
-정합니다. 여기서는 그 규칙이 다루지 않는 리액트 두 자리만 봅니다.
+정합니다.
+여기서는 그 규칙이 다루지 않는 리액트 두 자리만 봅니다.
 
 **커링 팩토리가 돌려주는 함수에도 타입을 적습니다.**
 JSX에 바로 쓴 화살표는 리액트가 타입을 붙여 주지만, 팩토리가 돌려주는 함수는 그러지 않습니다.
@@ -29,7 +30,7 @@ JSX에 바로 쓴 화살표는 리액트가 타입을 붙여 주지만, 팩토�
 
 `query.select` 같은 훅 옵션의 일회성 문맥 콜백은 리액트 핸들러 구현이 아니라 대상이 아닙니다.
 
-**Incorrect (팩토리 반환 타입을 적지 않아 이벤트가 암묵적 `any` 가 됨):**
+**Incorrect (팩토리 반환 타입을 적지 않아 이벤트가 암묵적 `any`가 됨):**
 
 ```ts
 const handleRowSelectToggle = (rowId: string) => (event) => {

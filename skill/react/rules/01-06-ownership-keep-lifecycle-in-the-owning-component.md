@@ -19,7 +19,8 @@ tags: ownership, hooks
 파일이 길어졌다는 이유만으로 커스텀 훅을 만들어 생명주기를 숨기지 않습니다.
 
 - 한 소유자만 쓰는 생명주기는 그 컴포넌트 안의 이펙트로 둡니다.
-- 줄 수 감소는 추출 근거가 아닙니다. 읽는 사람이 파일을 왕복하게 만들 뿐입니다.
+- 줄 수 감소는 추출 근거가 아닙니다.
+  읽는 사람이 파일을 왕복하게 만들 뿐입니다.
 - 여러 소유자가 같은 생명주기 계약을 실제로 호출할 때만 훅으로 올립니다.
 - 파일이 길면 생명주기를 옮기기보다 도메인 계산을 `function`으로 분리합니다.
 
@@ -65,7 +66,6 @@ export const WgChartRoot = (props: WgChartRootProps) => {
 ```tsx
 // widget/chart/component/chart-root/wg-chart-root.tsx
 export const WgChartRoot = (props: WgChartRootProps) => {
-	const { option } = props;
 	const containerRef = useRef<HTMLDivElement>(null);
 	const [chart, setChart] = useState<EChartsType | null>(null);
 
@@ -91,8 +91,8 @@ export const WgChartRoot = (props: WgChartRootProps) => {
 	 * option이 바뀌면 기존 instance에 다시 반영
 	 */
 	useEffect(() => {
-		chart?.setOption(option);
-	}, [chart, option]);
+		chart?.setOption(props.option);
+	}, [chart, props.option]);
 
 	return <div ref={containerRef} className={clsx("wg_chart__canvas")} />;
 };

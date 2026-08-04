@@ -4,7 +4,7 @@ titleKo: `enum` 대신 `as const` 객체를 씁니다
 impact: MEDIUM-HIGH
 impactDescription: enum 특유의 동작을 들이지 않고 실행 값을 드러내며 타입 추출도 가볍게 둡니다
 appliesWhen:
-  - `enum` 이나 타입과 실행 양쪽에서 함께 쓰는 값 묶음을 추가·변경할 때
+  - `enum`이나 타입과 실행 양쪽에서 함께 쓰는 값 묶음을 추가·변경할 때
 requiresSelected: naming-use-consistent-file-and-symbol-naming, types-document-custom-types-and-shapes
 tags: functions
 ---
@@ -19,7 +19,7 @@ tags: functions
 **Incorrect (`enum`을 직접 사용):**
 
 ```ts
-enum AuditStatus {
+enum ProductStatus {
 	pending = "pending",
 	passed = "passed",
 	failed = "failed",
@@ -29,7 +29,7 @@ enum AuditStatus {
 **Correct (객체 리터럴과 타입 추출을 조합):**
 
 ```ts
-const audit_status = {
+const product_status = {
 	pending: "pending",
 	passed: "passed",
 	failed: "failed",
@@ -38,5 +38,5 @@ const audit_status = {
 /**
  * 감사 상태 값 집합
  */
-type AuditStatus = (typeof audit_status)[keyof typeof audit_status];
+type ProductStatus = (typeof product_status)[keyof typeof product_status];
 ```

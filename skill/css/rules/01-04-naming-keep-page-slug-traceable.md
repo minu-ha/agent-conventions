@@ -16,7 +16,8 @@ tags: slug, page-scope, traceability
 `pg_*` 식별자만 보고 어느 화면의 것인지 알 수 있어야 합니다.
 어떤 파일이 화면 소유인지는 프레임워크 규약이 정하고, CSS는 그 소유가 식별자에서 흐려지지 않게 지킵니다.
 
-- 화면 뼈대는 화면 이름을 그대로 식별자로 씁니다. `pg_postsDetail`처럼 화면 계열과 역할이 읽혀야 합니다.
+- 화면 뼈대는 화면 이름을 그대로 식별자로 씁니다.
+  `pg_postsDetail`처럼 화면 계열과 역할이 읽혀야 합니다.
 - 화면 안의 컴포넌트는 자기 이름만 식별자로 씁니다.
 - 팀이 함께 쓰는 화면 목록에 없는 줄임말은 쓰지 않습니다.
 - `wg_*`, `ui_*`는 각자의 식별자 규칙을 따릅니다.
@@ -36,8 +37,8 @@ pg_x__root
 **Incorrect (충돌이 없는데도 부모 식별자를 미리 붙임):**
 
 ```txt
-pg_detailSpikePatternPanelOverviewSection__root
-pg_detailSpikePatternPanelSummaryBand__root
+pg_detailSalesTrendPanelOverviewSection__root
+pg_detailSalesTrendPanelSummaryBand__root
 ```
 
 **Correct (뼈대는 화면 식별자, 컴포넌트는 자기 식별자):**

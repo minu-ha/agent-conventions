@@ -19,16 +19,16 @@ tags: perf, state, performance
 **Incorrect (비싼 초기화가 렌더마다 다시 평가됨):**
 
 ```tsx
-const [searchIndex] = useState(buildSearchIndex(entryList));
-const [draftFilter] = useState(JSON.parse(localStorage.getItem("entry-filter") ?? "{}"));
+const [searchIndex] = useState(toSearchIndex(productList));
+const [draftFilter] = useState(JSON.parse(localStorage.getItem("product-filter") ?? "{}"));
 ```
 
 **Correct (비싼 초기화는 최초 렌더에서만 수행):**
 
 ```tsx
-const [searchIndex] = useState(() => buildSearchIndex(entryList));
+const [searchIndex] = useState(() => toSearchIndex(productList));
 const [draftFilter] = useState(() => {
-	const storedValue = localStorage.getItem("entry-filter");
+	const storedValue = localStorage.getItem("product-filter");
 	return storedValue ? JSON.parse(storedValue) : {};
 });
 ```

@@ -61,13 +61,13 @@ const formatState: UserFormatters["formatState"] = (state) => {
 /**
  * request 정규화 계약
  */
-type NormalizeRequest = (request: string) => string;
+type ToRequest = (request: string) => string;
 
-const normalizeRequest: NormalizeRequest = (request) => {
+const toRequest: ToRequest = (request) => {
 	return request.trim();
 };
 
-const normalizeSearchRequest: NormalizeRequest = (request) => {
+const toSearchRequest: ToRequest = (request) => {
 	return request.replaceAll(/\s+/g, " ").trim();
 };
 ```

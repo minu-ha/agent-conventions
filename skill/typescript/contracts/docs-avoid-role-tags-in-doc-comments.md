@@ -6,7 +6,7 @@
 그것을 태그로 다시 적지 않습니다.
 
 - `@api`, `@helper`, `@field` 같은 역할 태그를 붙이지 않습니다.
-- `@summary` 는 헤더 첫 줄이 이미 하는 일이라 쓰지 않습니다.
+- `@summary`는 헤더 첫 줄이 이미 하는 일이라 쓰지 않습니다.
 - `@schema`처럼 새 태그를 만들지 않습니다.
 - `@deprecated`, `@example`, `@param`, `@returns`처럼 TSDoc 규격에 있는 태그만 필요할 때 씁니다.
 

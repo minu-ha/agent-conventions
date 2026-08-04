@@ -6,6 +6,7 @@
 한 번만 쓰면 실제 쓰는 좁은 스코프에서 바로 계산합니다.
 분기와 보정이 얽혀 좁은 스코프에 담기지 않으면 떼어 낼지를 다시 봅니다.
 그 판정은 `functions-extract-helpers-only-when-the-boundary-is-real`가 합니다.
-떼어 내기로 정했을 때 이름은 `resolve*`, `build*`, `normalize*`를 씁니다.
+떼어 낸 함수의 이름은 `functions-name-functions-by-what-comes-out`가 정하고,
+중간값에 이름을 붙일지는 `functions-name-a-value-only-when-it-is-reused`가 정합니다.
 
 > 예시·예외가 필요하면 [full rule](../rules/03-05-functions-avoid-imperative-assembly-in-wide-scopes.md)을 읽습니다.

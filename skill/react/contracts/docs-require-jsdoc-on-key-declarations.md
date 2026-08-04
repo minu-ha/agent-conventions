@@ -2,7 +2,8 @@
 
 **Impact: MEDIUM-HIGH (중요한 API, 핸들러, 이펙트, 타입 선언을 검토하고 다시 쓰기 쉬워집니다)**
 
-문서 주석은 경계를 설명할 때만 붙입니다. 자명한 지역 변수에는 강제하지 않습니다.
+문서 주석은 경계를 설명할 때만 붙입니다.
+코드만 봐도 아는 지역 변수에는 강제하지 않습니다.
 
 `type`과 `interface` 문서화는 `typescript/types-document-custom-types-and-shapes`가 정합니다.
 내보냈는지와 무관하게 그 규칙을 따르고, 여기서 다시 판정하지 않습니다.
@@ -17,7 +18,7 @@
 - 예외적으로 남긴 `useMemo`/`useCallback`
 
 합성 공개 부품의 설명을 어디 두는지는
-`docs-document-compound-parts-above-props-interface`가 정합니다.
+`composition-declare-props-interface-above-the-component`가 정합니다.
 
 형식과 태그 기준은 `typescript/docs-require-header-jsdoc-on-key-declarations`가 정합니다.
 여러 줄 블록으로 쓰고 역할 태그는 붙이지 않습니다.

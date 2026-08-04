@@ -21,9 +21,12 @@ tags: screen, suspense, loading
 - 섹션이 따로 없으면 라우트 진입이 경계를 갖습니다.
 - 라우트 진입이 직접 쿼리를 부르면 그 라우트의 레이아웃이나 상위 라우트가 경계를 갖습니다.
   자기 자신을 감쌀 수 없기 때문입니다.
-- 한 화면에 경계를 여러 겹 쌓지 않습니다. 섹션이 독립적으로 채워져야 할 때만 나눕니다.
-- 대체 화면에 실제 내용의 최소 높이를 `min-height` 로 고정합니다. 그러지 않으면 레이아웃이 튑니다.
-- 쿼리를 부르는 컴포넌트 자신은 경계를 갖지 않습니다. 자기 자신을 감쌀 수 없습니다.
+- 한 화면에 경계를 여러 겹 쌓지 않습니다.
+  섹션이 독립적으로 채워져야 할 때만 나눕니다.
+- 대체 화면에 실제 내용의 최소 높이를 `min-height`로 고정합니다.
+  그러지 않으면 레이아웃이 튑니다.
+- 쿼리를 부르는 컴포넌트 자신은 경계를 갖지 않습니다.
+  자기 자신을 감쌀 수 없습니다.
 
 경계가 있으므로 화면 본문에는 로딩 분기가 남지 않습니다.
 그 판정은 `screen-avoid-ad-hoc-loading-branches`가 합니다.
@@ -31,24 +34,24 @@ tags: screen, suspense, loading
 **Incorrect (진입에 경계가 없어 화면 전체가 함께 멈춤):**
 
 ```tsx
-export const PgEntryTreeSection = () => {
-  const responseEntryTreeSuspense = useEntryTreeSuspense();
+export const PgProductTreeSection = () => {
+  const responseProductTreeSuspense = useProductTreeSuspense();
 
-  return <UiTree nodes={responseEntryTreeSuspense.data.categoryNodes} />;
+  return <UiTree nodes={responseProductTreeSuspense.data.categoryNodes} />;
 };
 ```
 
 ```tsx
 // 진입 파일: 경계가 없어 화면 전체가 함께 멈춘다
-return <PgEntryTreeSection />;
+return <PgProductTreeSection />;
 ```
 
 **Correct (섹션 소유자가 경계와 대체 화면을 가짐):**
 
 ```tsx
 return (
-  <Suspense fallback={<PgEntryTreeSkeleton />}>
-    <PgEntryTreeSection />
+  <Suspense fallback={<PgProductTreeSkeleton />}>
+    <PgProductTreeSection />
   </Suspense>
 );
 ```

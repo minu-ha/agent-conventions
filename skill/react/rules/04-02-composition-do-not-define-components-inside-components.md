@@ -24,10 +24,8 @@ tags: composition, performance
 
 ```tsx
 export const WgUserProfileCard = (props: WgUserProfileCardProps) => {
-	const { theme, user } = props;
-
 	const Avatar = () => {
-		return <img className={clsx("wg_userProfileAvatar__image", theme === "dark" && "wg_userProfileAvatar__image--dark")} src={user.avatarUrl} />;
+		return <img className={clsx("wg_userProfileAvatar__image", props.theme === "dark" && "wg_userProfileAvatar__image--dark")} src={props.user.avatarUrl} />;
 	};
 
 	return (
@@ -47,16 +45,13 @@ export interface WgUserProfileAvatarProps {
 }
 
 export const WgUserProfileAvatar = (props: WgUserProfileAvatarProps) => {
-	const { theme, src } = props;
-	return <img className={clsx("wg_userProfileAvatar__image", theme === "dark" && "wg_userProfileAvatar__image--dark")} src={src} />;
+	return <img className={clsx("wg_userProfileAvatar__image", props.theme === "dark" && "wg_userProfileAvatar__image--dark")} src={props.src} />;
 };
 
 export const WgUserProfileCard = (props: WgUserProfileCardProps) => {
-	const { theme, user } = props;
-
 	return (
 		<section>
-			<WgUserProfileAvatar src={user.avatarUrl} theme={theme} />
+			<WgUserProfileAvatar src={props.user.avatarUrl} theme={props.theme} />
 		</section>
 	);
 };

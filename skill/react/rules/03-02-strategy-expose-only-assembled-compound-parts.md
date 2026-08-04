@@ -16,10 +16,11 @@ tags: strategy, composition
 
 공개 부품은 두 경우만 엽니다.
 
-- 부품이 없으면 소비자가 그 자리에 자기 JSX 를 넣을 수 없는 영역
+- 부품이 없으면 소비자가 그 자리에 자기 JSX를 넣을 수 없는 영역
 - 공용 컨텍스트나 동작을 직접 쓰는 영역
 
-그 밖은 숨깁니다. 특히 다음 셋은 공개하지 않습니다.
+그 밖은 숨깁니다.
+특히 다음 셋은 공개하지 않습니다.
 
 - 단순 `className` 래퍼
 - 여백 보정용 DOM. `css/composition-do-not-add-wrapper-elements-for-styling`가 애초에 만들지 말라고 합니다.

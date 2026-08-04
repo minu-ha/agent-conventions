@@ -1,6 +1,6 @@
 ---
 title: Use startTransition for Non-urgent Visual Updates
-titleKo: 급하지 않은 화면 갱신은 `startTransition` 으로 넘깁니다
+titleKo: 급하지 않은 화면 갱신은 `startTransition`으로 넘깁니다
 impact: MEDIUM
 impactDescription: 상태 변경이 무거운 목록이나 표를 건드릴 때도 반응이 유지됩니다
 appliesWhen:
@@ -24,7 +24,7 @@ tags: perf, state, performance
 **Incorrect (급하지 않은 갱신을 급한 갱신으로 처리):**
 
 ```tsx
-const handleStatusFilterChange = (nextStatus: EntryStatusFilter) => {
+const handleStatusFilterChange = (nextStatus: ProductStatusFilter) => {
 	setStatusFilter(nextStatus);
 };
 ```
@@ -35,7 +35,7 @@ const handleStatusFilterChange = (nextStatus: EntryStatusFilter) => {
 /**
  * 상태 필터 변경으로 인한 무거운 목록 갱신을 transition으로 예약
  */
-const handleStatusFilterChange = (nextStatus: EntryStatusFilter) => {
+const handleStatusFilterChange = (nextStatus: ProductStatusFilter) => {
 	startTransition(() => {
 		setStatusFilter(nextStatus);
 	});

@@ -56,6 +56,7 @@
     - 5.3 [Use Global Tokens and Do Not Create Local Ones](#53-use-global-tokens-and-do-not-create-local-ones)
     - 5.4 [Separate Domain State Modifiers From DOM Interaction States](#54-separate-domain-state-modifiers-from-dom-interaction-states)
     - 5.5 [Always Provide a Visible Focus Indicator](#55-always-provide-a-visible-focus-indicator)
+    - 5.6 [Do Not Style Through the `style` Attribute](#56-do-not-style-through-the-style-attribute)
 6. [Tooling](#6-tooling) — **MEDIUM**
     - 6.1 [Configure Stylelint to Enforce These Rules](#61-configure-stylelint-to-enforce-these-rules)
 
@@ -133,7 +134,8 @@ import "./_index.css";
 클래스명은 `<scope>_<slug>__<element>[--<modifier>]` 문법을 씁니다.
 구분자 `_`, `__`, `--`를 고정하고 각 자리의 책임을 섞지 않습니다.
 
-네 자리를 아래처럼 읽습니다. 앞으로 규칙 본문은 한국어 쪽 이름을 씁니다.
+네 자리를 아래처럼 읽습니다.
+앞으로 규칙 본문은 한국어 쪽 이름을 씁니다.
 
 | 자리 | 읽는 이름 | 무엇을 담는가 |
 | --- | --- | --- |
@@ -142,9 +144,11 @@ import "./_index.css";
 | `element` | 요소 | 소유자 안의 UI 역할. `listButton`, `emptyState` |
 | `modifier` | 수정자 | 상태나 반복되는 모양. `routeActive`, `selected` |
 
-수정자와 변형은 다릅니다. 수정자는 클래스 뒤에 붙는 `--이름`이고, 변형은 컴포넌트가 받는 `variant` 프롭입니다.
+수정자와 변형은 다릅니다.
+수정자는 클래스 뒤에 붙는 `--이름`이고, 변형은 컴포넌트가 받는 `variant` 프롭입니다.
 
-식별자에는 접두사가 말하는 부분을 반복하지 않습니다. `UiButton`은 `ui_button`이고 `ui_uiButton`이 아닙니다.
+식별자에는 접두사가 말하는 부분을 반복하지 않습니다.
+`UiButton`은 `ui_button`이고 `ui_uiButton`이 아닙니다.
 
 `selector-class-pattern`에 이 문법을 정규식으로 넣으면 기계가 검사합니다.
 
@@ -213,7 +217,8 @@ pg_catalogDetail__detailSection
 `pg_*` 식별자만 보고 어느 화면의 것인지 알 수 있어야 합니다.
 어떤 파일이 화면 소유인지는 프레임워크 규약이 정하고, CSS는 그 소유가 식별자에서 흐려지지 않게 지킵니다.
 
-- 화면 뼈대는 화면 이름을 그대로 식별자로 씁니다. `pg_postsDetail`처럼 화면 계열과 역할이 읽혀야 합니다.
+- 화면 뼈대는 화면 이름을 그대로 식별자로 씁니다.
+  `pg_postsDetail`처럼 화면 계열과 역할이 읽혀야 합니다.
 - 화면 안의 컴포넌트는 자기 이름만 식별자로 씁니다.
 - 팀이 함께 쓰는 화면 목록에 없는 줄임말은 쓰지 않습니다.
 - `wg_*`, `ui_*`는 각자의 식별자 규칙을 따릅니다.
@@ -233,8 +238,8 @@ pg_x__root
 **Incorrect (충돌이 없는데도 부모 식별자를 미리 붙임):**
 
 ```txt
-pg_detailSpikePatternPanelOverviewSection__root
-pg_detailSpikePatternPanelSummaryBand__root
+pg_detailSalesTrendPanelOverviewSection__root
+pg_detailSalesTrendPanelSummaryBand__root
 ```
 
 **Correct (뼈대는 화면 식별자, 컴포넌트는 자기 식별자):**
@@ -269,12 +274,14 @@ pg_indexOverviewSection__root
 
 **Impact: CRITICAL (여러 컴포넌트가 같은 네임스페이스를 나눠 쓰면 전역에서 충돌합니다)**
 
-CSS 파일마다 식별자가 하나입니다. 같은 식별자를 쓰는 파일은 프로젝트 전역에서 그 하나뿐입니다.
+CSS 파일마다 식별자가 하나입니다.
+같은 식별자를 쓰는 파일은 프로젝트 전역에서 그 하나뿐입니다.
 
 - 새 스타일을 추가하기 전에 같은 식별자를 쓰는 파일이 이미 있는지 확인합니다.
 - 의미가 겹쳐도 파일이 다르면 식별자를 따로 만듭니다.
 - 하위 컴포넌트 여럿이 부모 식별자를 나눠 쓰는 것도 같은 위반입니다.
-- 자기 CSS 파일이 있으면 자기 식별자를 만듭니다. 부모 식별자를 계속 쓰려면 스타일도 부모 파일에 둡니다.
+- 자기 CSS 파일이 있으면 자기 식별자를 만듭니다.
+  부모 식별자를 계속 쓰려면 스타일도 부모 파일에 둡니다.
 
 **Incorrect (이미 다른 소유자가 쓰는 `scope_slug`를 재사용):**
 
@@ -319,7 +326,8 @@ pg_dashboardIndex__header
 
 - 폴더가 아니라 가장 가까운 공개 패키지 경계로 판정합니다.
   위젯 내부 부품이 `component` 폴더에 있어도 `wg_`입니다.
-- 한 화면만 쓰는데 `wg_`를 붙이지 않습니다. 재사용을 예상해서 미리 올리지 않습니다.
+- 한 화면만 쓰는데 `wg_`를 붙이지 않습니다.
+  재사용을 예상해서 미리 올리지 않습니다.
 - 여러 화면이 쓰기 시작하면 그때 `pg_`에서 `wg_`로 옮깁니다.
 
 어떤 파일이 화면 소유인지는 활성화된 프레임워크 규약이 판단합니다.
@@ -334,8 +342,8 @@ widget/chart/component/wg-chart-header.css
 **Incorrect (한 화면만 쓰는 컴포넌트를 재사용 예상으로 미리 `wg_`로 올림):**
 
 ```txt
-page/detail/component/pg-spike-pattern-panel.css
-  wg_spikePatternPanel__root
+page/detail/component/pg-sales-trend-panel.css
+  wg_salesTrendPanel__root
 ```
 
 **Correct (재사용 범위대로 접두사를 붙임):**
@@ -344,8 +352,8 @@ page/detail/component/pg-spike-pattern-panel.css
 page/detail/pg-detail.css
   pg_detail__root
 
-page/detail/component/pg-spike-pattern-panel.css
-  pg_spikePatternPanel__root
+page/detail/component/pg-sales-trend-panel.css
+  pg_salesTrendPanel__root
 
 widget/chart/component/wg-chart-header.css
   wg_chartHeader__root
@@ -367,7 +375,8 @@ ui/button/ui-button.css
 내 파일이 소유하지 않은 클래스는 **내 최상위 클래스 블록 안에서만** 씁니다.
 블록 바깥에 홀로 두지 않습니다.
 
-`scope_slug`가 내 것이면 내 클래스입니다. 그 밖은 전부 남의 것입니다.
+`scope_slug`가 내 것이면 내 클래스입니다.
+그 밖은 전부 남의 것입니다.
 외부 라이브러리든 다른 화면의 `pg_`든 위젯의 `wg_`든 똑같이 다룹니다.
 
 | 선택자 | 판정 |
@@ -378,11 +387,14 @@ ui/button/ui-button.css
 | `.pg_x__root { & .wg_chartCard__caption { } }` | 씁니다 |
 | `.pg_x__button:hover .pg_x__box { }` | 내 클래스끼리라 대상이 아닙니다 |
 
-판정은 **선택자가 내 식별자로 시작하는지**입니다. 소유 관계를 따로 조사하지 않습니다.
-`.pg_x__root .ant-tree-title`처럼 바깥에서 이어 쓰지도 않습니다. 최상위 블록을 열고 그 안에서 `&`로 씁니다.
+판정은 **선택자가 내 식별자로 시작하는지**입니다.
+소유 관계를 따로 조사하지 않습니다.
+`.pg_x__root .ant-tree-title`처럼 바깥에서 이어 쓰지도 않습니다.
+최상위 블록을 열고 그 안에서 `&`로 씁니다.
 한 소유자의 덮어쓰기가 한 블록에 모이면 라이브러리를 올릴 때 볼 곳이 한 군데뿐입니다.
 
-결합자 개수는 제한하지 않습니다. 남의 DOM 깊이는 우리가 정할 수 없습니다.
+결합자 개수는 제한하지 않습니다.
+남의 DOM 깊이는 우리가 정할 수 없습니다.
 `.ant-table-thead > tr > th`가 라이브러리의 구조라면 그것이 경로입니다.
 경로가 길면 `selector-limit-nesting-block-depth`에 따라 한 줄로 씁니다.
 
@@ -502,10 +514,14 @@ ui/button/ui-button.css
 | 이 화면만 씀 | 화면 폴더 안으로 내림 | 파일 이동과 접두사 이름 변경 |
 
 세 행에 안 맞으면 `ownership-use-foreign-classes-only-under-your-own-root`에 따라
-내 최상위 블록 안에서 겨냥합니다. **막다른 길이 아니라 마지막 선택지입니다.**
+내 최상위 블록 안에서 겨냥합니다.
+**막다른 길이 아니라 마지막 선택지입니다.**
 
-셋째 행이 흔히 놓치는 답입니다. 한 화면만 쓰는 컴포넌트는 위젯이 아닙니다.
-승격 기준은 맥락 독립성입니다. 내릴 때 프롭을 열지 않습니다. 파일만 옮깁니다.
+셋째 행이 흔히 놓치는 답입니다.
+한 화면만 쓰는 컴포넌트는 위젯이 아닙니다.
+승격 기준은 맥락 독립성입니다.
+내릴 때 프롭을 열지 않습니다.
+파일만 옮깁니다.
 
 `className`이 최상위까지만 닿는 것은 제약이 아니라 경계입니다.
 컴포넌트가 무엇을 노출하는지는 `composition-inject-classes-only-at-the-entry-point`가 정합니다.
@@ -690,7 +706,8 @@ TSX에서 `className`은 `clsx()`로 조립합니다.
 **Impact: HIGH (내부 노드마다 창구를 열면 사용처가 그 컴포넌트 구조에 묶입니다)**
 
 우리가 만든 컴포넌트가 여는 스타일 창구는 **진입점 하나**입니다.
-`ui_`든 `wg_`든 `pg_`든 같습니다. 외부에서 주입하는 클래스는 그 컴포넌트의 최상위까지만 닿습니다.
+`ui_`든 `wg_`든 `pg_`든 같습니다.
+외부에서 주입하는 클래스는 그 컴포넌트의 최상위까지만 닿습니다.
 
 컴포넌트는 받은 `className`을 자기 최상위 클래스와 `clsx()`로 합칩니다.
 사용처는 그 클래스로 배치, 여백, 크기만 줍니다.
@@ -722,14 +739,12 @@ export interface UiCollapseProps {
 
 ```tsx
 export const UiCollapse = (props: UiCollapseProps) => {
-	const { className, title, children } = props;
-
 	return (
 		<div className={clsx("ui_collapse__root")}>
-			<button className={clsx("ui_collapse__header", className)} type="button">
-				{title}
+			<button className={clsx("ui_collapse__header", props.className)} type="button">
+				{props.title}
 			</button>
-			<div className={clsx("ui_collapse__content")}>{children}</div>
+			<div className={clsx("ui_collapse__content")}>{props.children}</div>
 		</div>
 	);
 };
@@ -758,15 +773,14 @@ export interface UiCollapseProps {
 }
 
 export const UiCollapse = (props: UiCollapseProps) => {
-	const { className, variant = "default", title, children } = props;
-	const isCompact = variant === "compact";
+	const isCompact = props.variant === "compact";
 
 	return (
-		<div className={clsx("ui_collapse__root", isCompact && "ui_collapse__root--compact", className)}>
+		<div className={clsx("ui_collapse__root", isCompact && "ui_collapse__root--compact", props.className)}>
 			<button className={clsx("ui_collapse__header", isCompact && "ui_collapse__header--compact")} type="button">
-				<span className={clsx("ui_collapse__title", isCompact && "ui_collapse__title--compact")}>{title}</span>
+				<span className={clsx("ui_collapse__title", isCompact && "ui_collapse__title--compact")}>{props.title}</span>
 			</button>
-			<div className={clsx("ui_collapse__content", isCompact && "ui_collapse__content--compact")}>{children}</div>
+			<div className={clsx("ui_collapse__content", isCompact && "ui_collapse__content--compact")}>{props.children}</div>
 		</div>
 	);
 };
@@ -789,7 +803,9 @@ export const UiCollapse = (props: UiCollapseProps) => {
 **Correct (사용처는 최상위 스타일만 주고 내부 의도는 프롭으로 넘김):**
 
 ```tsx
-<UiCollapse className={clsx("pg_postFilterDialog__collapse")} variant="compact" title="필터" />
+<UiCollapse className={clsx("pg_postFilterDialog__collapse")} variant="compact" title="필터">
+	<PgPostFilterFields />
+</UiCollapse>
 ```
 
 ```css
@@ -856,8 +872,8 @@ export interface UiCollapseProps {
 	items: UiCollapseItem[];
 }
 
-export const UiCollapse = ({className, items}: UiCollapseProps) => (
-	<div className={clsx("ui_collapse__root", className)}>{/* … */}</div>
+export const UiCollapse = (props: UiCollapseProps) => (
+	<div className={clsx("ui_collapse__root", props.className)}>{/* … */}</div>
 );
 ```
 
@@ -903,7 +919,8 @@ export const UiCollapse = ({className, items}: UiCollapseProps) => (
 
 **Impact: HIGH (중첩이 늘 한 겹이라 실제 선택자가 코드에 그대로 보입니다)**
 
-**중첩**은 `{}`를 겹치는 것입니다. 규칙은 하나입니다.
+**중첩**은 `{}`를 겹치는 것입니다.
+규칙은 하나입니다.
 
 > 중첩은 항상 한 겹이고, `&`도 한 선택자에 한 번입니다.
 
@@ -914,22 +931,25 @@ export const UiCollapse = ({className, items}: UiCollapseProps) => (
 - `.box { &::before { } }` — `.box` 자신의 가상 요소라서 `&`입니다.
 - `.button { &:hover .box::before { } }` — 이 `::before`는 `.box`의 것이라 `&`로 쓸 수 없습니다.
 
-그래서 `&`를 어디에 쓸지 고르지 않습니다. **어느 요소를 가리키느냐가 정합니다.**
-"언제는 중첩, 언제는 한 줄"이 아니라 한 겹까지가 중첩이고 그 다음은 늘 한 줄입니다.
+그래서 `&`를 어디에 쓸지 고르지 않습니다.
+**어느 요소를 가리키느냐가 정합니다.**
+"언제는 중첩, 언제는 한 줄"이 아니라 한 겹까지가 중첩이고 그다음은 늘 한 줄입니다.
 
 중첩을 두 겹 이상 열면 실제 선택자가 숨습니다.
 `.pg_a { & .pg_b { & .pg_c { } } }`에 쓰인 선택자는 `& .pg_c`뿐이어서
-`.pg_a .pg_b .pg_c`로 이어지는 것이 보이지 않습니다. 검사 도구도 각 블록만 봅니다.
+`.pg_a .pg_b .pg_c`로 이어지는 것이 보이지 않습니다.
+검사 도구도 각 블록만 봅니다.
 
-기계 검증은 `max-nesting-depth: 1`입니다. 최상위가 0단입니다.
+기계 검증은 `max-nesting-depth: 1`입니다.
+최상위가 0단입니다.
 
 **Incorrect (중첩을 두 겹 이상 열어 실제 선택자를 숨김):**
 
 ```css
-.pg_spikePanel__spreadButton {
+.pg_salesPanel__spreadButton {
 	&.MuiButtonBase-root {
 		&:hover {
-			.pg_spikePanel__spreadBox {
+			.pg_salesPanel__spreadBox {
 				border-color: #9fadc7;
 			}
 		}
@@ -940,8 +960,8 @@ export const UiCollapse = ({className, items}: UiCollapseProps) => (
 **Incorrect (다른 요소의 pseudo-element를 `&`로 다시 엶):**
 
 ```css
-.pg_spikePanel__spreadButton {
-	&:hover .pg_spikePanel__spreadBox {
+.pg_salesPanel__spreadButton {
+	&:hover .pg_salesPanel__spreadBox {
 		&::before {
 			border-color: #9fadc7;
 		}
@@ -949,10 +969,10 @@ export const UiCollapse = ({className, items}: UiCollapseProps) => (
 }
 ```
 
-**Correct (`&`는 한 번, 그 다음 경로는 같은 줄에 이어 씀):**
+**Correct (`&`는 한 번, 그다음 경로는 같은 줄에 이어 씀):**
 
 ```css
-.pg_spikePanel__spreadBox {
+.pg_salesPanel__spreadBox {
 	&::before {
 		content: '';
 		width: 18px;
@@ -962,14 +982,14 @@ export const UiCollapse = ({className, items}: UiCollapseProps) => (
 	}
 }
 
-.pg_spikePanel__spreadButton {
+.pg_salesPanel__spreadButton {
 	&.MuiButtonBase-root {
 		display: inline-flex;
 		align-items: center;
 		gap: 4px;
 	}
 
-	&:hover .pg_spikePanel__spreadBox::before {
+	&:hover .pg_salesPanel__spreadBox::before {
 		border-color: #9fadc7;
 	}
 }
@@ -995,7 +1015,8 @@ export const UiCollapse = ({className, items}: UiCollapseProps) => (
 
 **Impact: MEDIUM (태그만 바꿔도 스타일이 사라지므로 우리가 렌더하는 마크업에는 클래스를 붙입니다)**
 
-우리가 렌더하는 마크업에는 요소 선택자를 쓰지 않습니다. 클래스를 붙입니다.
+우리가 렌더하는 마크업에는 요소 선택자를 쓰지 않습니다.
+클래스를 붙입니다.
 
 `div`를 `section`으로, `span`을 `p`로 바꾸는 것만으로 스타일이 사라집니다.
 그 변경은 TSX에서 일어나고 CSS 파일에는 흔적이 남지 않습니다.
@@ -1007,8 +1028,10 @@ export const UiCollapse = ({className, items}: UiCollapseProps) => (
 `dangerouslySetInnerHTML`, Markdown 렌더러, 리치 텍스트 에디터 출력이 여기 해당합니다.
 TSX에서 그 지점이 보이므로 "이게 원본 HTML인가"를 따질 필요가 없습니다.
 
-- 그때도 감싼 클래스 블록 안에서만 씁니다. 블록 바깥에 `h2 { }`를 두면 그 화면 모든 `h2`에 걸립니다.
-- `:first-child` 같은 구조 선택자도 같습니다. 우리가 렌더하면 클래스를 붙입니다.
+- 그때도 감싼 클래스 블록 안에서만 씁니다.
+  블록 바깥에 `h2 { }`를 두면 그 화면 모든 `h2`에 걸립니다.
+- `:first-child` 같은 구조 선택자도 같습니다.
+  우리가 렌더하면 클래스를 붙입니다.
 
 `selector-disallowed-list`가 중첩 안 요소 선택자를 막습니다.
 그래서 이 예외를 쓸 때는 `stylelint-disable-next-line` 주석이 필요합니다.
@@ -1035,7 +1058,7 @@ TSX에서 그 지점이 보이므로 "이게 원본 HTML인가"를 따질 필요
 **Incorrect (요소 선택자를 최상위에 둠):**
 
 ```css
-.wg_entryDetail__prose h2 {
+.wg_productDetail__prose h2 {
 	margin: 24px 0 12px;
 }
 ```
@@ -1067,14 +1090,14 @@ TSX에서 그 지점이 보이므로 "이게 원본 HTML인가"를 따질 필요
 
 ```tsx
 <div
-	className="wg_entryDetail__prose"
-	dangerouslySetInnerHTML={{__html: entry.bodyHtml}}
+	className="wg_productDetail__prose"
+	dangerouslySetInnerHTML={{__html: product.bodyHtml}}
 />
 ```
 
 ```css
 /* stylelint-disable selector-disallowed-list -- dangerouslySetInnerHTML 로 들어온 마크업 */
-.wg_entryDetail__prose {
+.wg_productDetail__prose {
 	& h2 {
 		margin: 24px 0 12px;
 		font-size: 18px;
@@ -1103,14 +1126,18 @@ TSX에서 그 지점이 보이므로 "이게 원본 HTML인가"를 따질 필요
 **Impact: MEDIUM-HIGH (공통 선언을 묶지 않고 각 클래스에 두면 한 클래스를 한 곳에서 읽습니다)**
 
 여러 클래스를 `,`로 묶어 공통 선언을 공유하지 않습니다.
-반복되는 선언은 각 클래스 블록에 그대로 씁니다. **중복을 감수합니다.**
+반복되는 선언은 각 클래스 블록에 그대로 씁니다.
+**중복을 감수합니다.**
 
 - 묶으면 한 클래스를 알기 위해 두 곳을 읽고, 그 클래스가 목록에 있는지도 확인해야 합니다.
 - 클래스를 추가·삭제할 때마다 목록도 함께 고쳐야 합니다.
-- 값을 지역 변수로 빼서 묶는 것도 같은 문제입니다. `values-tokenize-repeated-visual-values`가 막습니다.
+- 값을 지역 변수로 빼서 묶는 것도 같은 문제입니다.
+  `values-tokenize-repeated-visual-values`가 막습니다.
 
-한 대상에 진입 조건이 여럿이어도 같습니다. 조건마다 블록을 따로 열고 선언을 그대로 씁니다.
-`:is()`로 묶지도 않습니다. 묶는 방법을 둘로 두면 언제 어느 쪽인지 다시 판단해야 합니다.
+한 대상에 진입 조건이 여럿이어도 같습니다.
+조건마다 블록을 따로 열고 선언을 그대로 씁니다.
+`:is()`로 묶지도 않습니다.
+묶는 방법을 둘로 두면 언제 어느 쪽인지 다시 판단해야 합니다.
 
 `@media`나 `@supports` 안에서 같은 클래스를 다시 선언하는 것은 이 규칙의 대상이 아닙니다.
 
@@ -1119,15 +1146,15 @@ TSX에서 그 지점이 보이므로 "이게 원본 HTML인가"를 따질 필요
 **Incorrect (`,`로 공통 선언을 묶고 아래에서 일부만 다시 엶):**
 
 ```css
-.pg_spikePanel__glyph--line,
-.pg_spikePanel__glyph--dashed,
-.pg_spikePanel__glyph--pin,
-.pg_spikePanel__glyph--band {
+.pg_salesPanel__glyph--line,
+.pg_salesPanel__glyph--dashed,
+.pg_salesPanel__glyph--pin,
+.pg_salesPanel__glyph--band {
 	width: 24px;
 	height: 24px;
 }
 
-.pg_spikePanel__glyph--band {
+.pg_salesPanel__glyph--band {
 	background: rgb(140 152 160 / 12%);
 }
 ```
@@ -1135,9 +1162,9 @@ TSX에서 그 지점이 보이므로 "이게 원본 HTML인가"를 따질 필요
 **Incorrect (한 대상의 진입 조건을 `,`로 나열):**
 
 ```css
-.pg_spikePanel__spreadButton {
-	&:hover .pg_spikePanel__spreadBox,
-	&.Mui-focusVisible .pg_spikePanel__spreadBox {
+.pg_salesPanel__spreadButton {
+	&:hover .pg_salesPanel__spreadBox,
+	&.Mui-focusVisible .pg_salesPanel__spreadBox {
 		border-color: #9fadc7;
 	}
 }
@@ -1146,22 +1173,22 @@ TSX에서 그 지점이 보이므로 "이게 원본 HTML인가"를 따질 필요
 **Correct (각 클래스가 자기 선언을 전부 가짐):**
 
 ```css
-.pg_spikePanel__glyph--line {
+.pg_salesPanel__glyph--line {
 	width: 24px;
 	height: 24px;
 }
 
-.pg_spikePanel__glyph--dashed {
+.pg_salesPanel__glyph--dashed {
 	width: 24px;
 	height: 24px;
 }
 
-.pg_spikePanel__glyph--pin {
+.pg_salesPanel__glyph--pin {
 	width: 24px;
 	height: 24px;
 }
 
-.pg_spikePanel__glyph--band {
+.pg_salesPanel__glyph--band {
 	width: 24px;
 	height: 24px;
 	background: rgb(140 152 160 / 12%);
@@ -1171,12 +1198,12 @@ TSX에서 그 지점이 보이므로 "이게 원본 HTML인가"를 따질 필요
 **Correct (진입 조건마다 블록을 따로 열고 선언을 그대로 씀):**
 
 ```css
-.pg_spikePanel__spreadButton {
-	&:hover .pg_spikePanel__spreadBox {
+.pg_salesPanel__spreadButton {
+	&:hover .pg_salesPanel__spreadBox {
 		border-color: #9fadc7;
 	}
 
-	&.Mui-focusVisible .pg_spikePanel__spreadBox {
+	&.Mui-focusVisible .pg_salesPanel__spreadBox {
 		border-color: #9fadc7;
 	}
 }
@@ -1195,14 +1222,17 @@ TSX에서 그 지점이 보이므로 "이게 원본 HTML인가"를 따질 필요
 한 클래스의 선언은 파일 안 한 블록에만 있습니다.
 같은 클래스를 여러 곳에서 다시 열어 선언을 나누지 않습니다.
 
-- 고칠 때 볼 블록이 하나로 정해집니다. 아래에 덮어쓰기가 더 있는지 찾지 않습니다.
-- 선언 순서에 의존하는 덮어쓰기가 생기지 않습니다. 블록을 옮겨도 결과가 같습니다.
+- 고칠 때 볼 블록이 하나로 정해집니다.
+  아래에 덮어쓰기가 더 있는지 찾지 않습니다.
+- 선언 순서에 의존하는 덮어쓰기가 생기지 않습니다.
+  블록을 옮겨도 결과가 같습니다.
 - 기본 클래스와 수정자는 서로 다른 클래스이므로 각자 자기 블록을 갖습니다.
 
 `,` 묶음으로 선언을 나누는 형태는 `selector-do-not-group-classes-with-commas`가 막습니다.
 이 규칙은 묶음 없이 같은 클래스를 두 번 여는 경우를 막습니다.
 
-`@media`나 `@supports` 안의 재선언은 대상이 아닙니다. 조건이 다른 별개 블록입니다.
+`@media`나 `@supports` 안의 재선언은 대상이 아닙니다.
+조건이 다른 별개 블록입니다.
 
 기계 검증은 `no-duplicate-selectors`입니다.
 
@@ -1277,7 +1307,8 @@ TSX에서 그 지점이 보이므로 "이게 원본 HTML인가"를 따질 필요
 
 - 앱이 아는 상태를 `[aria-selected="true"]`처럼 속성으로 겨냥하지 않습니다.
 - `aria-*`는 접근성 계약이라 마크업에 그대로 두고, 스타일은 수정자로 겨냥합니다.
-- 같은 상태를 두 표기로 쓰지 않습니다. 어느 쪽이 참인지 가릴 수 없습니다.
+- 같은 상태를 두 표기로 쓰지 않습니다.
+  어느 쪽이 참인지 가릴 수 없습니다.
 
 가상 클래스를 어디에 쓰는지는 `selector-nest-dom-state-in-the-owning-block`이 정합니다.
 `:not(.--수정자)` 반전은 `selector-do-not-invert-domain-state-with-not`이 막습니다.
@@ -1351,7 +1382,8 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 
 - 기본 모습과 상태 변화가 한 블록에 있어서 무엇이 어떻게 바뀌는지 바로 읽힙니다.
 - 파일 어디에 상태 스타일이 더 있는지 찾지 않습니다.
-- 여러 상태가 같은 선언을 쓰면 상태마다 블록을 따로 엽니다. `,`도 `:is()`도 쓰지 않습니다.
+- 여러 상태가 같은 선언을 쓰면 상태마다 블록을 따로 엽니다.
+  `,`도 `:is()`도 쓰지 않습니다.
 
 조상의 DOM 상태가 자손을 바꿔야 하면 식별자가 같은 자손을 결합자 하나로 겨냥합니다.
 자손의 `:hover`는 포인터가 자손 위에 있을 때만 걸려서 조상 상태를 알 방법이 없고,
@@ -1360,7 +1392,8 @@ CSS에 부모 선택자가 없어서 대체 수단이 없습니다.
 자손의 기본 블록은 조상 규칙보다 **앞에** 둡니다.
 뒤에 두면 명시도가 낮은 규칙이 높은 규칙 뒤에 오고, `no-descending-specificity`가 이를 잡습니다.
 
-지역 사용자 정의 속성으로 상태를 전달하지 않습니다. `values-tokenize-repeated-visual-values`가 막습니다.
+지역 사용자 정의 속성으로 상태를 전달하지 않습니다.
+`values-tokenize-repeated-visual-values`가 막습니다.
 
 기계 검증은 `max-nesting-depth: 1`과 `no-descending-specificity`입니다.
 
@@ -1451,18 +1484,20 @@ CSS에 부모 선택자가 없어서 대체 수단이 없습니다.
 자손에 자기 수정자를 붙이면 부정 조건이 필요 없어집니다.
 
 - 각 요소의 수정자가 그 요소의 모습을 전부 갖습니다.
-- 앱이 아는 상태는 그 요소에 수정자로 씁니다. 조상에서 다시 읽지 않습니다.
-- `:not(:disabled)`처럼 DOM이 소유한 조건은 대상이 아닙니다. 앱이 그 값을 알 수 없습니다.
+- 앱이 아는 상태는 그 요소에 수정자로 씁니다.
+  조상에서 다시 읽지 않습니다.
+- `:not(:disabled)`처럼 DOM이 소유한 조건은 대상이 아닙니다.
+  앱이 그 값을 알 수 없습니다.
 
 무엇이 DOM 상태이고 무엇이 앱 상태인지는 `selector-use-pseudo-classes-for-dom-owned-states`가 정합니다.
 
 **Incorrect (조상 수정자로 자손 모습을 정해 부정 조건과 중첩이 따라옴):**
 
 ```css
-.pg_spikePanel__spreadButton:not(.pg_spikePanel__spreadButton--checked) {
+.pg_salesPanel__spreadButton:not(.pg_salesPanel__spreadButton--checked) {
 	&.MuiButtonBase-root {
 		&:hover {
-			.pg_spikePanel__spreadBox::before {
+			.pg_salesPanel__spreadBox::before {
 				border-color: #9fadc7;
 				box-shadow: 0 0 0 2px rgb(159 173 199 / 20%);
 			}
@@ -1474,7 +1509,7 @@ CSS에 부모 선택자가 없어서 대체 수단이 없습니다.
 **Correct (각 요소의 수정자가 그 요소의 모습을 가짐):**
 
 ```css
-.pg_spikePanel__spreadBox {
+.pg_salesPanel__spreadBox {
 	&::before {
 		content: '';
 		width: 18px;
@@ -1485,20 +1520,20 @@ CSS에 부모 선택자가 없어서 대체 수단이 없습니다.
 	}
 }
 
-.pg_spikePanel__spreadBox--checked {
+.pg_salesPanel__spreadBox--checked {
 	&::before {
 		border-color: #9fadc7;
 		background: #9fadc7;
 	}
 }
 
-.pg_spikePanel__spreadButton {
-	&:hover .pg_spikePanel__spreadBox::before {
+.pg_salesPanel__spreadButton {
+	&:hover .pg_salesPanel__spreadBox::before {
 		border-color: #9fadc7;
 		box-shadow: 0 0 0 2px rgb(159 173 199 / 20%);
 	}
 
-	&.Mui-focusVisible .pg_spikePanel__spreadBox::before {
+	&.Mui-focusVisible .pg_salesPanel__spreadBox::before {
 		border-color: #9fadc7;
 		box-shadow: 0 0 0 2px rgb(159 173 199 / 20%);
 	}
@@ -1521,7 +1556,7 @@ CSS에 부모 선택자가 없어서 대체 수단이 없습니다.
 
 **Impact: HIGH**
 
-토큰, 변수 대체값, 명시적인 레이아웃 의도, 상태 경계, 눈에 보이는 포커스 표시는 스타일을 더 견고하고 접근 가능하게 유지합니다.
+토큰, 변수 대체값, 명시적인 레이아웃 의도, 상태 경계, 눈에 보이는 포커스 표시는 스타일을 더 견고하고 접근 가능하게 유지합니다. 시각 결정은 인라인 `style`이 아니라 스타일시트에 남깁니다.
 
 ### 5.1 Keep Layout Intent Explicit
 
@@ -1534,8 +1569,10 @@ CSS에 부모 선택자가 없어서 대체 수단이 없습니다.
 레이아웃 의도는 클래스명과 선언만 보고 바로 읽혀야 합니다.
 `position`, `width`, `height`를 억지로 고정하지 않고 부모와 자식의 레이아웃 책임을 나눕니다.
 
-- `z-index`에는 숫자를 직접 쓰지 않고 층 토큰을 씁니다. 토큰 이름이 곧 쌓임 순서 문서입니다.
-- `sticky`나 `fixed`를 쓸 때는 기준 컨테이너를 주석 한 줄로 남깁니다. 어느 조상이 스크롤 컨테이너인지는 선언에 안 보입니다.
+- `z-index`에는 숫자를 직접 쓰지 않고 층 토큰을 씁니다.
+  토큰 이름이 곧 쌓임 순서 문서입니다.
+- `sticky`나 `fixed`를 쓸 때는 기준 컨테이너를 주석 한 줄로 남깁니다.
+  어느 조상이 스크롤 컨테이너인지는 선언에 안 보입니다.
 
 **Incorrect (레이아웃 강제가 많고 기준 설명이 없음):**
 
@@ -1811,13 +1848,19 @@ CSS에 부모 선택자가 없어서 대체 수단이 없습니다.
 
 **Impact: HIGH (포커스 표시를 없애지 않고 형태로 구분해 키보드 사용자가 현재 위치를 봅니다)**
 
-포커스 표시를 없애지 않습니다. `outline: none`을 쓰면 대체 스타일을 반드시 함께 제공합니다.
+포커스 표시를 없애지 않습니다.
+`outline: none`을 쓰면 대체 스타일을 반드시 함께 제공합니다.
 
-- `:focus`보다 `:focus-visible`을 씁니다. 포인터 클릭에는 링이 안 나오고 키보드 이동에는 나옵니다.
-- 색만 바꾸는 것으로 끝내지 않습니다. `outline`, `box-shadow` 링, `border` 두께처럼
-  형태가 바뀌는 신호를 함께 씁니다. 색만 쓰면 색각 이상에서 구분되지 않습니다.
-- 배경과 링의 대비를 확인합니다. 링이 배경과 같은 계열이면 없는 것과 같습니다.
-- 기본 블록에 둡니다. 수정자 블록 안에만 두면 그 상태가 아닐 때 표시가 사라집니다.
+- `:focus`보다 `:focus-visible`을 씁니다.
+  포인터 클릭에는 링이 안 나오고 키보드 이동에는 나옵니다.
+- 색만 바꾸는 것으로 끝내지 않습니다.
+  `outline`, `box-shadow` 링, `border` 두께처럼
+  형태가 바뀌는 신호를 함께 씁니다.
+  색만 쓰면 색각 이상에서 구분되지 않습니다.
+- 배경과 링의 대비를 확인합니다.
+  링이 배경과 같은 계열이면 없는 것과 같습니다.
+- 기본 블록에 둡니다.
+  수정자 블록 안에만 두면 그 상태가 아닐 때 표시가 사라집니다.
 
 포커스 표시를 `--focused` 같은 앱 수정자로 대체하지 않습니다.
 키보드로 들어왔는지 포인터로 들어왔는지는 브라우저만 알 수 있어서 앱이 재현할 수 없습니다.
@@ -1870,6 +1913,77 @@ CSS에 부모 선택자가 없어서 대체 수단이 없습니다.
 }
 ```
 
+### 5.6 Do Not Style Through the `style` Attribute
+
+**Rule:** `C26` · `values-do-not-style-through-the-style-attribute`
+
+**Applies when:** TSX에 `style={{ … }}`를 추가하거나 그 안의 선언을 바꿀 때. 컴포넌트 프롭으로 `style`을 받아 넘길 때.
+
+**Review with:** `composition-inject-classes-only-at-the-entry-point`, `values-always-provide-css-variable-fallbacks`, `values-tokenize-repeated-visual-values`
+
+**Impact: HIGH (모든 시각 결정이 스타일시트에 남아 검색과 덮어쓰기가 예측대로 동작합니다)**
+
+시각 결정은 스타일시트에 씁니다.
+`style={{ … }}`로 쓰지 않습니다.
+
+- 인라인 선언은 클래스보다 우선순위가 높아 스타일시트에서 덮을 수 없습니다.
+- CSS 파일을 검색해도 안 나옵니다.
+  어디서 온 여백인지 찾을 수 없습니다.
+- `:hover`, `@media`, `@container`를 쓸 수 없어 결국 클래스를 다시 만들게 됩니다.
+
+값이 화면마다 달라야 하면 수정자 클래스를 붙입니다.
+클래스를 어디서 주입할지는 `composition-inject-classes-only-at-the-entry-point`가 정합니다.
+
+**실행 중에 계산해야만 아는 수치 하나**는 예외입니다.
+가상 스크롤 위치, 드래그 좌표, 측정한 높이처럼 스타일시트에 적을 수 없는 값입니다.
+이때도 CSS 변수 한 개만 넘기고 실제 선언은 스타일시트에 둡니다.
+변수가 없을 때를 대비한 대체값은 `values-always-provide-css-variable-fallbacks`가 정합니다.
+
+래퍼가 `HTMLAttributes`를 `extends` 하면 `style`이 함께 열립니다.
+타입에서 막을 방법이 없으므로 이 규칙을 리뷰가 봅니다.
+
+**Incorrect (인라인으로 꾸밈):**
+
+```tsx
+<section className={clsx("pg_report__summary")} style={{ marginTop: 16, color: "#c00" }}>
+	{summary}
+</section>
+```
+
+**Correct (스타일시트에 두고 수정자로 가름):**
+
+```tsx
+<section className={clsx("pg_report__summary", isCritical && "pg_report__summary--critical")}>
+	{summary}
+</section>
+```
+
+```css
+.pg_report__summary {
+	margin-block-start: 16px;
+}
+
+.pg_report__summary--critical {
+	color: var(--color-text-danger);
+}
+```
+
+**Correct (실행 중에만 아는 수치를 CSS 변수 하나로 넘김):**
+
+```tsx
+<div
+	className={clsx("pg_report__virtualRow")}
+	style={{ "--pg-report-row-offset": `${rowOffset}px` } as CSSProperties}
+/>
+```
+
+```css
+.pg_report__virtualRow {
+	position: absolute;
+	transform: translateY(var(--pg-report-row-offset, 0));
+}
+```
+
 ## 6. Tooling
 
 **Impact: MEDIUM**
@@ -1878,7 +1992,7 @@ CSS에 부모 선택자가 없어서 대체 수단이 없습니다.
 
 ### 6.1 Configure Stylelint to Enforce These Rules
 
-**Rule:** `C26` · `tooling-configure-stylelint-to-enforce-these-rules`
+**Rule:** `C27` · `tooling-configure-stylelint-to-enforce-these-rules`
 
 **Applies when:** stylelint 설정을 새로 만들거나 규칙을 추가·수정할 때. 이 컨벤션 중 어디까지 자동으로 잡히는지 확인할 때.
 

@@ -17,16 +17,17 @@ tags: tag1, tag2
 
 규범과 예외는 여기까지 끝낸다.
 아래에는 `Incorrect` / `Correct` 라벨, 코드 펜스, 빈 줄만 둔다.
-예시가 여러 개면 Incorrect 를 먼저 모두 배치한다.
+예시가 여러 개면 Incorrect를 먼저 모두 배치한다.
 
 <!--
 frontmatter 키와 appliesWhen 작성 기준은 CONTRIBUTING.md 3절 참고.
-  appliesWhen           걸리는 조건 불렛 목록. 규칙의 결론이 아니라 diff 에서 관찰 가능한 것.
+  appliesWhen           걸리는 조건 불렛 목록. 규칙의 결론이 아니라 diff에서 관찰 가능한 것.
                         라우팅용 문장은 불렛을 이어 붙여 자동 생성되고 합쳐서 160자 이내
   requiresSelected      이 규칙이 걸리면 반드시 함께 적용할 규칙
   reviewWith            함께 다시 판단해 볼 규칙. 자동 적용 아님
   requiredOnCompletion  마무리 시 항상 적용하는 규칙에만
-대상이 없는 키는 생략한다. 같은 target 을 두 키에 넣지 않는다.
+대상이 없는 키는 생략한다.
+같은 target을 두 키에 넣지 않는다.
 이 주석은 새 규칙을 만든 뒤 지운다.
 -->
 

@@ -16,7 +16,7 @@ tags: functions
 원본 배열을 계속 써야 하면 `.sort()`로 제자리에서 바꾸지 않습니다.
 실행 환경이 ES2023 이상이거나 `toSorted()`를 쓸 수 있으면 `.toSorted()`를 먼저 씁니다.
 아니면 복사한 뒤 정렬합니다.
-`toSorted()`는 ES2023 이라 `tsconfig` 의 `lib` 에 `ES2023` 이상이 있어야 씁니다.
+`toSorted()`는 ES2023이라 `tsconfig`의 `lib`에 `ES2023` 이상이 있어야 씁니다.
 없으면 복사 후 정렬을 씁니다.
 
 **Incorrect (원본 배열을 직접 변경):**

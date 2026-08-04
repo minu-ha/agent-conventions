@@ -17,8 +17,10 @@ tags: composition
 `ref`는 밖에서 실제로 제어해야 하는 공개 명령형 계약입니다.
 포커스, 스크롤, 측정처럼 호출부가 직접 다뤄야 하는 일이 있을 때만 엽니다.
 
-- 지금 쓰는 호출부가 없으면 열지 않습니다. 나중에 필요해지면 그때 엽니다.
-- 열 때는 `ref`를 일반 프롭처럼 직접 받습니다. 감싸는 래퍼를 새로 만들지 않습니다.
+- 지금 쓰는 호출부가 없으면 열지 않습니다.
+  나중에 필요해지면 그때 엽니다.
+- 열 때는 `ref`를 일반 프롭처럼 직접 받습니다.
+  감싸는 래퍼를 새로 만들지 않습니다.
 - 외부 패키지 타입 제약 때문에 래퍼가 필요하면 그 이유를 바로 위에 한국어 주석으로 남깁니다.
 
 **Incorrect (`ref` 계약이 필요 없는 단순 화면 컴포넌트에도 습관적으로 `ref`를 노출):**
@@ -32,8 +34,7 @@ export interface UiStatusBadgeProps {
 }
 
 export const UiStatusBadge = (props: UiStatusBadgeProps) => {
-	const { ref, label } = props;
-	return <span ref={ref}>{label}</span>;
+	return <span ref={props.ref}>{props.label}</span>;
 };
 ```
 
@@ -49,8 +50,7 @@ export interface UiSearchInputProps {
 }
 
 export const UiSearchInput = (props: UiSearchInputProps) => {
-	const { ref, value, onChange } = props;
-	return <input ref={ref} onChange={onChange} value={value} />;
+	return <input ref={props.ref} onChange={props.onChange} value={props.value} />;
 };
 ```
 
@@ -62,7 +62,6 @@ export interface UiStatusBadgeProps {
 }
 
 export const UiStatusBadge = (props: UiStatusBadgeProps) => {
-	const { label } = props;
-	return <span>{label}</span>;
+	return <span>{props.label}</span>;
 };
 ```

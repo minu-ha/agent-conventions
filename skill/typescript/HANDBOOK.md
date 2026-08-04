@@ -36,15 +36,17 @@
     - 3.3 [Extract Support Functions Only When the Boundary Is Real](#33-extract-support-functions-only-when-the-boundary-is-real)
     - 3.4 [Place and Promote Support Functions Deliberately](#34-place-and-promote-support-functions-deliberately)
     - 3.5 [Avoid Imperative Assembly in Wide Scopes](#35-avoid-imperative-assembly-in-wide-scopes)
-    - 3.6 [Prefer Immutable Array Sorting](#36-prefer-immutable-array-sorting)
-    - 3.7 [Replace `enum` With `as const` Objects](#37-replace-enum-with-as-const-objects)
-    - 3.8 [Use Set and Map for Repeated Lookups](#38-use-set-and-map-for-repeated-lookups)
+    - 3.6 [Name a Value Only When It Is Reused](#36-name-a-value-only-when-it-is-reused)
+    - 3.7 [Prefer Immutable Array Sorting](#37-prefer-immutable-array-sorting)
+    - 3.8 [Replace `enum` With `as const` Objects](#38-replace-enum-with-as-const-objects)
+    - 3.9 [Use Set and Map for Repeated Lookups](#39-use-set-and-map-for-repeated-lookups)
+    - 3.10 [Name Functions by What Comes Out](#310-name-functions-by-what-comes-out)
 4. [Absence and Fallback Handling](#4-absence-and-fallback-handling) — **HIGH**
     - 4.1 [Expose Optional Values Instead of Silent Fallbacks](#41-expose-optional-values-instead-of-silent-fallbacks)
 5. [JSDoc and Comment Conventions](#5-jsdoc-and-comment-conventions) — **MEDIUM-HIGH**
-    - 5.1 [Keep Inline Comments for Constraints and Caveats Only](#51-keep-inline-comments-for-constraints-and-caveats-only)
+    - 5.1 [Keep Body Comments for Intent and Steps](#51-keep-body-comments-for-intent-and-steps)
     - 5.2 [Require Header Doc Comments on Key Declarations](#52-require-header-doc-comments-on-key-declarations)
-    - 5.3 [Write Concise Korean Comments About Purpose and Constraints](#53-write-concise-korean-comments-about-purpose-and-constraints)
+    - 5.3 [Write Korean Comments About Purpose and Constraints](#53-write-korean-comments-about-purpose-and-constraints)
     - 5.4 [Write Doc Comments as Multiline Blocks](#54-write-doc-comments-as-multiline-blocks)
     - 5.5 [Avoid Role Tags in Doc Comments](#55-avoid-role-tags-in-doc-comments)
     - 5.6 [Justify Convention Exceptions With a Checkable Reason Comment](#56-justify-convention-exceptions-with-a-checkable-reason-comment)
@@ -57,21 +59,21 @@
 
 **Impact: HIGH**
 
-식별자, 가져오기, 공개 진입점, 절대경로 별칭 범위, 설정 위치가 소유자와 출처를 바로 드러내야 합니다.
+식별자, 가져오기, 공개 진입점, 절대경로 별칭 범위, 설정 위치가 소유자와 출처를 바로 드러내야 합니다. 여기서 **소유자**는 자기 폴더를 가진 모듈 하나입니다 그 폴더 안 파일들은 그 소유자만 씁니다.
 
 ### 1.1 Centralize Shared Config Under `shared/config.ts`
 
 **Rule:** `T01` · `naming-centralize-shared-config-namespaces`
 
-**Applies when:** 여러 말단 모듈이 함께 쓰는 URL, 기능 플래그, 페이지 크기나 상수를 추가·이동·중복 정의할 때. 공용 설정 경계를 바꿀 때.
+**Applies when:** 여러 모듈이 함께 쓰는 URL, 기능 플래그, 페이지 크기나 상수를 추가·이동·중복 정의할 때. 공용 설정 경계를 바꿀 때.
 
 **Review with:** `naming-preserve-config-origin-with-chained-access`, `naming-use-direct-imports-and-public-entry-points`
 
-**Impact: HIGH (공용 설정 값이 말단 파일로 흩어져 공개 출처를 잃는 것을 막습니다)**
+**Impact: HIGH (공용 설정 값이 쓰는 파일마다 흩어져 공개 출처를 잃는 것을 막습니다)**
 
 **두 소유자 이상이 같은 값을 쓰면** `shared/config.ts` 한 파일을 공개 진입점으로 삼아 `config` 네임스페이스 아래에 모읍니다.
 소유자 하나만 쓰는 값은 아직 여기 올리지 않습니다.
-말단 파일마다 공용 URL, 기능 플래그, 페이지 크기, 상수 문자열을 흩뿌리지 않습니다.
+쓰는 파일마다 공용 URL, 기능 플래그, 페이지 크기, 상수 문자열을 흩뿌리지 않습니다.
 `config.*` 체인으로 읽히게 정리합니다.
 
 수가 많지 않으면 폴더로 미리 쪼개지 않고 `config.ts` 하나로 둡니다.
@@ -83,7 +85,7 @@
 **Incorrect (같은 값을 두 소유자가 각자 선언):**
 
 ```ts
-// page/entries/pg-entries.tsx
+// page/products/pg-products.tsx
 const defaultPageSize = 20;
 const billing_feature_keys = ["invoices", "refunds"];
 ```
@@ -93,7 +95,7 @@ const billing_feature_keys = ["invoices", "refunds"];
 const defaultPageSize = 20;
 ```
 
-**Correct (공용 설정은 `shared/config.ts` 이름 공간에서 읽음):**
+**Correct (공용 설정은 `shared/config.ts` 네임스페이스에서 읽음):**
 
 ```ts
 import {config} from "@/shared/config";
@@ -118,6 +120,7 @@ config.pagination.default_page_size;
 그 소유자 아래 `config` 폴더에 둡니다.
 
 - 파일은 `config/<owner>-config.ts`, 내보내는 상수는 `<owner>Config`입니다.
+  키는 공용 설정과 똑같이 `snake_case`라서 나중에 `shared/config.ts`로 올릴 때 이름을 고치지 않습니다.
   이름 표기는 `naming-use-consistent-file-and-symbol-naming`을 따릅니다.
 - `constants` 폴더는 만들지 않습니다.
 - 두 번째 소유자가 같은 값을 쓰게 되면 `naming-centralize-shared-config-namespaces`를 따라 올립니다.
@@ -127,8 +130,8 @@ config.pagination.default_page_size;
 ```ts
 // shared/config.ts
 export const config = {
-	entryDetail: {
-		chartAxisTickCount: 6,
+	product_detail: {
+		chart_axis_tick_count: 6,
 	},
 } as const;
 ```
@@ -136,12 +139,12 @@ export const config = {
 **Correct (소유자 아래 `config` 폴더에 둠):**
 
 ```ts
-// page/entry-detail/config/entry-detail-config.ts
+// page/product-detail/config/product-detail-config.ts
 /**
- * entry 상세 화면 전용 표시 설정
+ * product 상세 화면 전용 표시 설정
  */
-export const entryDetailConfig = {
-	chartAxisTickCount: 6,
+export const productDetailConfig = {
+	chart_axis_tick_count: 6,
 } as const;
 ```
 
@@ -149,26 +152,27 @@ export const entryDetailConfig = {
 
 **Rule:** `T03` · `naming-preserve-config-origin-with-chained-access`
 
-**Applies when:** 말단 모듈에서 `config`나 `util` 값을 쓰면서 넓은 스코프 구조분해, 별칭, 기능별 네임스페이스를 추가·변경할 때.
+**Applies when:** `config`나 `util` 값을 쓰면서 넓은 스코프 구조분해, 별칭, 기능별 네임스페이스를 추가·변경할 때.
 
 **Impact: HIGH (넓은 스코프 별칭으로 출처를 숨기지 않아 값이 어디서 오는지 읽힙니다)**
 
-공용 설정과 공용 순수 함수는 말단 모듈에서 직접 가져오기 한 뒤 `config.*`, `util.*` 체인으로 씁니다.
+공용 설정과 공용 순수 함수는 쓰는 파일에서 직접 가져온 뒤 `config.*`, `util.*` 체인으로 씁니다.
 넓은 스코프에서 구조분해하거나 별칭 상수로 끊어 출처를 흐리지 않습니다.
 구조분해가 필요하면 함수 안 좁은 스코프에서만 씁니다.
 
 `shared/config.ts`와 `shared/util.ts`는 찾기 쉬우라고 네임스페이스를 유지합니다.
-`config`와 `util` 이름은 공용 경계에서만 씁니다. 기능별로 같은 이름을 다시 쓰지 않습니다.
+`config`와 `util` 이름은 공용 경계에서만 씁니다.
+기능별로 같은 이름을 다시 쓰지 않습니다.
 보조 함수 파일을 어디 둘지는 `functions-place-and-promote-support-functions`가 정합니다.
 
-**Incorrect (넓은 스코프에서 원본 오리진을 감춤):**
+**Incorrect (넓은 스코프에서 원본 출처를 감춤):**
 
 ```ts
 const {api, features} = config;
 const {date} = util;
 const billingBaseUrl = api.billing_base_url;
 const enableRefunds = features.enable_refunds;
-const normalizedDate = date.normalize(createdAt);
+const isoDate = date.toIsoString(createdAt);
 ```
 
 **Correct (체이닝으로 출처를 유지):**
@@ -178,7 +182,7 @@ config.api.billing_base_url;
 config.features.enable_refunds;
 config.pagination.default_page_size;
 config.env.sentry_dsn;
-util.date.normalize(createdAt);
+util.date.toIsoString(createdAt);
 util.number.clamp(score, 0, 100);
 ```
 
@@ -190,14 +194,27 @@ util.number.clamp(score, 0, 100);
 
 **Impact: HIGH (모듈과 실행 구조를 넘나들며 파일명, 심볼, 형태 필드가 예측대로 유지됩니다)**
 
-파일명은 `kebab-case`, 변수와 함수는 `camelCase`, 타입은 `PascalCase`입니다.
-폴더명은 `kebab-case` 단수로 쓰고 프레임워크가 강제하는 이름만 예외로 둡니다.
-`const`인지에 따라 표기를 달리하지 않습니다. 모듈 안 지역 값은 모두 `camelCase`로 맞춥니다.
+| 대상 | 표기 |
+| --- | --- |
+| 파일명 | `kebab-case` |
+| 폴더명 | `kebab-case` 단수 |
+| 변수 · 함수 | `camelCase` |
+| 타입 · 인터페이스 · 컴포넌트 | `PascalCase` |
+| 선언형 설정 객체의 키 | `snake_case` |
+| `enum` 성격 상수 객체의 이름과 키 | `snake_case` |
+| 일반 객체 키 · 스키마 키 · 타입 필드 | `camelCase` |
 
-공용 설정 객체의 키와 `enum` 성격 상수 객체의 이름과 키는 `snake_case`입니다.
-일반 객체 키, 스키마 키, 커스텀 타입 필드는 `camelCase`를 유지합니다.
+`const`인지에 따라 표기를 달리하지 않습니다.
+설정과 `enum` 성격 객체를 뺀 나머지 모듈 값은 `camelCase`입니다.
+설정 키는 공용이든 소유자 전용이든 `snake_case`라, 소유자 설정을 공용으로 올릴 때 키를 고치지 않습니다.
+폴더명은 프레임워크가 강제하는 이름만 예외로 둡니다.
 
-외부 패키지가 내보낸 이름을 별칭 없이 그대로 가져오는 것은 지역 심볼을 새로 짓는 일이 아니라 이 규칙의 대상이 아닙니다.
+**두 표기를 가르는 기준은 그 객체가 우리 코드 밖으로 나가는지입니다.**
+라이브러리 인자, API 요청 본문, DOM 속성으로 그대로 넘어가면 받는 쪽 표기를 따라 `camelCase`입니다.
+우리 코드만 읽는 값이면 `snake_case`로 두어 `config.pagination.default_page_size`처럼
+경로로 읽을 때 낱말 경계가 보이게 합니다.
+
+외부 패키지가 내보낸 이름을 별칭 없이 그대로 가져오는 것은 지역 심볼을 새로 짓는 일이 아닙니다.
 지역 별칭을 추가하거나 가져오기 이름을 바꿀 때만 다시 봅니다.
 
 **Incorrect (파일명, 심볼명, 필드명이 제각각임):**
@@ -209,10 +226,10 @@ const User_ProfileSchema = z.object({
 });
 ```
 
-**Correct (형태별 네이밍 규칙을 일관되게 적용):**
+**Correct (파일명은 `kebab-case`, 스키마 키는 `camelCase`):**
 
 ```ts
-// chat-state.ts
+// user-settings.ts
 /**
  * 사용자 프로필 스키마
  */
@@ -224,6 +241,22 @@ const userProfileSchema = z.object({
 });
 ```
 
+**Correct (우리 코드만 읽는 설정과 고정 값 집합은 `snake_case`):**
+
+```ts
+// shared/config.ts
+export const config = {
+	pagination: {
+		default_page_size: 20,
+	},
+} as const;
+
+const product_status = {
+	draft: "draft",
+	published: "published",
+} as const;
+```
+
 ### 1.5 Use Direct Imports and Dedicated Public Entry Points
 
 **Rule:** `T05` · `naming-use-direct-imports-and-public-entry-points`
@@ -232,10 +265,11 @@ const userProfileSchema = z.object({
 
 **Impact: HIGH (배럴이나 모호한 재노출 계층에 기대지 않고 가져오기 소유를 드러냅니다)**
 
-`index.ts`로 묶어 다시 내보내는 배럴을 만들지 않습니다. 필요한 파일에서 바로 가져옵니다.
+`index.ts`로 묶어 다시 내보내는 배럴을 만들지 않습니다.
+필요한 파일에서 바로 가져옵니다.
 역할 폴더를 `index.ts`로 묶는 것도 배럴이라 만들지 않습니다.
 같은 파일이 소유한 `export const Dialog = { Root, Header } as const` 같은 조립 객체는
-다시 내보내는 계층이 아니라 배럴이 아닙니다.
+다시 내보내는 계층이 아니므로 배럴이 아닙니다.
 타입만 가져올 때는 `import type`을 써서 계약과 실행 의존을 나눕니다.
 
 절대경로 별칭으로 어디까지 열지는 `naming-restrict-absolute-aliases-to-layer-roots`가 정합니다.
@@ -256,7 +290,7 @@ import type {UserProfile} from "@/shared/contracts";
 import {config} from "@/shared/config";
 import {util} from "@/shared/util";
 import {WgChartCard} from "@/widget/chart-card/wg-chart-card";
-import {buildUserSaveRequest} from "./function/build-user-save-request";
+import {toUserSaveRequest} from "./function/to-user-save-request";
 ```
 
 ### 1.6 Restrict Absolute Aliases to Layer Roots
@@ -285,14 +319,14 @@ import {buildUserSaveRequest} from "./function/build-user-save-request";
 **Incorrect (화면 내부 모듈을 절대경로로 가져옴):**
 
 ```ts
-import {SpikeChartCard} from "@/page/detail/component/spike-pattern-panel/component/spike-chart-card";
+import {SalesChartCard} from "@/page/detail/component/sales-trend-panel/component/sales-chart-card";
 ```
 
 **Correct (레이어 루트로 시작하는 별칭과 소유자 안 상대경로):**
 
 ```ts
 import {WgChartCard} from "@/widget/chart-card/wg-chart-card";
-import {SpikeChartCard} from "./component/spike-chart-card";
+import {SalesChartCard} from "./component/sales-chart-card";
 ```
 
 ## 2. Types and Contracts
@@ -309,10 +343,34 @@ import {SpikeChartCard} from "./component/spike-chart-card";
 
 **Review with:** `types-document-custom-types-and-shapes`
 
-**Impact: HIGH (의미가 그대로면 기존 타입이나 스키마에서 파생해 같은 형태를 두 번 선언하지 않습니다)**
+**Impact: HIGH (뜻이 그대로면 기존 타입이나 스키마에서 끌어와 같은 형태를 두 번 선언하지 않습니다)**
 
-필드 이름, 타입, 선택 여부가 모두 같은 선언이 이미 있으면 그대로 참조하거나 `Pick`, `Omit`, 인덱스 접근으로 파생합니다.
-필드가 하나라도 다르면 새로 선언합니다. 소유자 이동이나 이름, 주석만 바뀌면 대상이 아닙니다.
+필드 이름, 타입, 선택 여부가 모두 같은 선언이 이미 있으면 그대로 참조합니다.
+그중 일부만 필요하면 **`interface`를 선언하고 각 필드를 `원본["필드"]` 인덱스 접근으로 가져옵니다.**
+같은 이름의 필드가 타입이나 선택 여부에서 하나라도 다르면 끌어오지 않고 새로 선언합니다.
+필드 구성이 부분집합인 것은 다른 것이 아닙니다.
+그때가 인덱스 접근을 쓰는 자리입니다.
+소유자 이동이나 이름, 주석만 바뀌면 대상이 아닙니다.
+
+`Pick`과 `Omit`은 쓰지 않습니다.
+한 형태로 고정합니다.
+
+| 인덱스 접근 `interface` | `Pick` · `Omit` |
+| --- | --- |
+| 필드 이름이 선언에 그대로 보입니다 | 이름이 문자열 인자 안에 숨습니다 |
+| 필드마다 문서 주석을 답니다. `types-document-custom-types-and-shapes`가 그렇게 요구합니다 | 필드가 없어 헤더 주석밖에 못 답니다 |
+| 필드마다 출처가 따로 남아 여러 계약에서 모을 수 있습니다 | 원본 하나에서만 뽑을 수 있습니다 |
+
+원본 필드의 타입이 바뀌면 둘 다 따라가고, 원본에서 필드가 사라지면 둘 다 그 자리에서 컴파일 오류가 납니다.
+
+**인덱스 접근은 타입만 가져오고 `?`와 `readonly`는 가져오지 않습니다.
+직접 적습니다.**
+`nickname?: string`을 `nickname: Src["nickname"]`으로 옮기면 `string | undefined`인 **필수** 필드가 됩니다.
+`readonly id: string`도 인덱스 접근으로 옮기면 쓰기가 열립니다.
+원본에서 `?`나 `readonly`가 붙은 필드는 파생한 `interface`에도 같이 적습니다.
+
+필드가 없는 별칭 하나만 필요하면 인덱스 접근을 그대로 씁니다.
+`type ProductId = ProductRecord["id"];`가 그 경우입니다.
 
 형태가 그대로인 계약을 새 자리에서 쓰는 것만으로는 이 규칙이 걸리지 않습니다.
 호출 계약 역할은 `types-document-custom-types-and-shapes`가 따로 판정합니다.
@@ -343,13 +401,50 @@ interface UserPreview {
 }
 ```
 
-**Correct (기존 계약에서 필요한 부분만 파생):**
+**Incorrect (`Pick`으로 뽑아 필드 이름과 설명이 사라짐):**
+
+```ts
+type UserPreview = Pick<UserRecord, "id" | "name">;
+```
+
+**Correct (필드마다 출처를 인덱스 접근으로 가져옴):**
 
 ```ts
 /**
  * 사용자 미리보기 계약
  */
-type UserPreview = Pick<UserRecord, "id" | "name">;
+interface UserPreview {
+	/**
+	 * 사용자 식별자
+	 */
+	id: UserRecord["id"];
+	/**
+	 * 목록에 표시할 이름
+	 */
+	name: UserRecord["name"];
+}
+```
+
+**Correct (여러 계약에서 필드를 모으고 `?`·`readonly`를 직접 적음):**
+
+```ts
+/**
+ * product 목록 한 행의 표시 계약
+ */
+interface ProductListRow {
+	/**
+	 * product 식별자
+	 */
+	readonly id: ProductRecord["id"];
+	/**
+	 * 소속 분류 이름
+	 */
+	categoryName: CategoryRecord["name"];
+	/**
+	 * 마지막 수정자 이름. 원본에서 선택 필드라 여기서도 선택으로 둔다
+	 */
+	ownerName?: UserRecord["name"];
+}
 ```
 
 ### 2.2 Prefer Function Variable Types Over Parameter Annotations
@@ -408,13 +503,13 @@ const formatState: UserFormatters["formatState"] = (state) => {
 /**
  * request 정규화 계약
  */
-type NormalizeRequest = (request: string) => string;
+type ToRequest = (request: string) => string;
 
-const normalizeRequest: NormalizeRequest = (request) => {
+const toRequest: ToRequest = (request) => {
 	return request.trim();
 };
 
-const normalizeSearchRequest: NormalizeRequest = (request) => {
+const toSearchRequest: ToRequest = (request) => {
 	return request.replaceAll(/\s+/g, " ").trim();
 };
 ```
@@ -431,7 +526,8 @@ const normalizeSearchRequest: NormalizeRequest = (request) => {
 
 - 커스텀 `type`, `interface`, 스키마 최상단, 객체형 상수: 선언 위에 헤더 문서 주석
 - 객체형 계약과 스키마 필드: 각 필드 바로 위에 문서 주석
-- `Pick`, `Omit`, 인덱스 접근 별칭: 필드가 없으므로 헤더만 씁니다
+- 필드가 없는 인덱스 접근 별칭(`type ProductId = ProductRecord["id"]`): 헤더만 씁니다.
+  필드를 가진 `interface`는 원본에서 가져온 필드여도 각 필드에 주석을 답니다
 
 주석이 있다고 끝나지 않습니다.
 각 본문이 `docs-write-concise-korean-comments-about-purpose-and-constraints`의 한국어 조건을 만족해야 합니다.
@@ -534,7 +630,7 @@ const noopLog: LogSink = (_message, _level) => {};
 
 **Impact: HIGH**
 
-함수 선언 형태와 시그니처는 한 가지로 고정하고, 보조 함수는 호출 경계가 있을 때만 떼어 내 정해진 자리에 둡니다. 값과 자료구조를 다루는 관용구도 여기에 모입니다.
+함수 선언 형태와 시그니처는 한 가지로 고정하고, 보조 함수는 호출 경계가 있을 때만 떼어 내 정해진 자리에 둡니다. 이름은 무엇이 나오는지로 짓고, 값에 이름은 두 번 이상 쓸 때만 붙입니다. 값과 자료구조를 다루는 관용구도 여기에 모입니다.
 
 ### 3.1 Declare Functions as Arrow Consts
 
@@ -552,31 +648,31 @@ const noopLog: LogSink = (_message, _level) => {};
 - 한 파일 안에서 두 형태를 섞으면 어느 것이 공개 계약인지 형태로 구분할 수 없습니다.
 - `function` 선언문은 호이스팅되므로 선언보다 위에서 호출해도 동작합니다.
   그러면 읽는 순서와 실행 순서가 달라집니다.
-- 화살표 함수는 `this`를 새로 만들지 않아 콜백으로 넘길 때 `bind` 로 `this` 를 다시 묶지 않아도 됩니다.
+- 화살표 함수는 `this`를 새로 만들지 않아 콜백으로 넘길 때 `bind`로 `this`를 다시 묶지 않아도 됩니다.
 
-세 자리는 예외로 둡니다.
+네 자리는 예외로 둡니다.
 
 | 예외 | 이유 |
 | --- | --- |
-| 클래스 메서드 | 메서드 문법이 정본입니다. 화살표 필드로 바꾸지 않습니다 |
+| 클래스 메서드 | 메서드 문법을 그대로 씁니다. 화살표 필드로 바꾸지 않습니다 |
 | 제너레이터 | `function*` 없이 쓸 수 없습니다 |
 | 오버로드 선언 | 시그니처를 여러 줄로 겹쳐 쓰려면 `function` 선언문이 필요합니다 |
-| 객체 리터럴 메서드 | `util.date.normalize(value)` 처럼 네임스페이스 안 멤버는 메서드 문법을 씁니다 |
+| 객체 리터럴 메서드 | `util.date.toIsoString(value)`처럼 네임스페이스 안 멤버는 메서드 문법을 씁니다 |
 
 **Incorrect (`function` 선언문과 화살표를 한 파일에서 섞음):**
 
 ```ts
-export function normalizeEntryTitle(rawTitle: string): string {
+export function toTrimmedTitle(rawTitle: string): string {
 	return rawTitle.trim().replace(/\s+/g, " ");
 }
 
-export const buildEntrySlug = (title: string): string => normalizeEntryTitle(title).toLowerCase();
+export const toProductSlug = (title: string): string => toTrimmedTitle(title).toLowerCase();
 ```
 
 **Incorrect (쓰는 곳이 선언보다 위에 와서 읽는 순서가 어긋남):**
 
 ```ts
-export const buildEntryLabel = (entry: Entry): string => decorate(entry.title);
+export const toProductLabel = (product: Product): string => decorate(product.title);
 
 function decorate(title: string): string {
 	return `# ${title}`;
@@ -588,18 +684,18 @@ function decorate(title: string): string {
 ```ts
 const decorate = (title: string): string => `# ${title}`;
 
-export const normalizeEntryTitle = (rawTitle: string): string => rawTitle.trim().replace(/\s+/g, " ");
+export const toTrimmedTitle = (rawTitle: string): string => rawTitle.trim().replace(/\s+/g, " ");
 
-export const buildEntryLabel = (entry: Entry): string => decorate(entry.title);
+export const toProductLabel = (product: Product): string => decorate(product.title);
 ```
 
 **Correct (클래스 메서드와 제너레이터는 그대로 둠):**
 
 ```ts
-export class EntryCursor {
-	private buffer: Entry[] = [];
+export class ProductCursor {
+	private buffer: Product[] = [];
 
-	*pages(): Generator<Entry[]> {
+	*pages(): Generator<Product[]> {
 		yield this.buffer;
 	}
 
@@ -623,7 +719,7 @@ export class EntryCursor {
 구조분해 줄이 길어 포매터 예외가 필요해도 함수 본문 안에서 처리합니다.
 
 리액트 컴포넌트의 프롭스는 이 규칙 대상이 아닙니다.
-구조분해는 `react/composition-destructure-props-inside`가, 타입 선언 위치는
+구조분해는 `react/composition-read-props-without-destructuring`이, 타입 선언 위치는
 `react/composition-declare-props-interface-above-the-component`가 담당합니다.
 객체 인자와 필드 타입, 선택 여부, 뜻이 같은 계약이 이미 있으면 그대로 씁니다.
 이 규칙을 지키려고 `*Params`나 `*Args`를 새로 만들지 않습니다.
@@ -631,7 +727,7 @@ export class EntryCursor {
 **Incorrect (시그니처에서 바로 구조분해):**
 
 ```ts
-const buildRequestUrl = ({baseUrl, resourcePath, searchParams}: BuildRequestUrlArgs): URL => {
+const toRequestUrl = ({baseUrl, resourcePath, searchParams}: ToRequestUrlArgs): URL => {
 	const requestUrl = new URL(resourcePath, baseUrl);
 
 	for (const [key, value] of Object.entries(searchParams)) {
@@ -648,7 +744,7 @@ const buildRequestUrl = ({baseUrl, resourcePath, searchParams}: BuildRequestUrlA
 /**
  * grouped args로 API request URL 생성
  */
-const buildRequestUrl = (args: BuildRequestUrlArgs): URL => {
+const toRequestUrl = (args: ToRequestUrlArgs): URL => {
 	const {baseUrl, resourcePath, searchParams} = args;
 	const requestUrl = new URL(resourcePath, baseUrl);
 
@@ -664,21 +760,45 @@ const buildRequestUrl = (args: BuildRequestUrlArgs): URL => {
 
 **Rule:** `T13` · `functions-extract-helpers-only-when-the-boundary-is-real`
 
-**Applies when:** 보조 함수를 빼내거나 옮기거나 내보내거나 공유할 때. 범용 보조 파일, 소유자 하나만 쓰는 변환 함수, 잔손질 단계의 경계를 바꿀 때.
+**Applies when:** 보조 함수를 빼내거나 옮기거나 내보내거나 공유할 때. 범용 보조 파일, 소유자 하나만 쓰는 변환 함수, 자잘한 정리 단계의 경계를 바꿀 때.
 
 **Review with:** `docs-require-header-jsdoc-on-key-declarations`, `functions-place-and-promote-support-functions`
 
-**Impact: HIGH (재사용 계약이나 테스트 경계가 없는데 보조 함수를 빼서 흐름이 조각나는 것을 막습니다)**
+**Impact: HIGH (흐름을 읽으려고 파일을 왕복하게 만드는 조각내기를 막습니다)**
 
-보조 함수는 "이름"이 아니라 "호출 경계"가 있을 때만 떼어 냅니다.
+기본은 빼지 않는 것입니다.
+흐름은 한 자리에서 위에서 아래로 읽히는 편이 낫습니다.
+빼는 사유는 둘뿐입니다.
+둘 중 하나에 해당해야 뺍니다.
 
-- 필수: 입력과 출력이 분명하고, 실행 문맥 없이도 따로 검증할 수 있어야 합니다
-- 떼어 낼 신호: 여러 소유자가 직접 호출하거나, 여러 내보낸 함수에서 같은 도메인 규칙이 반복됩니다
-- 그대로 둘 것: 한 번만 쓰는 짧은 계산, 선택 값 보정, 라벨 기본값, 메서드 하나만 쓰는 변환 함수
-떼어 낸 다음 어디 두고 언제 공용으로 올릴지는
+| 사유 | 조건 |
+| --- | --- |
+| 재사용 | **이 변경을 적용한 뒤의 트리**에서 서로 다른 파일 둘 이상이 실제로 부릅니다. 호출부 추가가 예정만 되어 있으면 세지 않습니다 |
+| 렌더 파일 밖으로 | `.tsx` 안의 **요청·저장 payload 조립** 함수입니다. 훅·JSX·컴포넌트 상태를 하나도 쓰지 않으면 호출부가 하나여도 형제 `.ts`로 옮깁니다 |
+
+두 번째 사유는 재사용이 아니라 `.tsx`에 렌더가 아닌 코드를 남기지 않으려는 것입니다.
+`.ts` 안에서는 해당하지 않습니다.
+**표시용 가공은 여기 들지 않습니다.** 목록을 화면 모양으로 바꾸거나 문자열을 조립하는 것은
+쓰는 자리에 그대로 둡니다.
+밖으로 내는 것은 서버로 보낼 값을 만드는 함수뿐입니다.
+
+어느 사유든 그 함수만 따로 읽어도 뜻이 통해야 합니다.
+바깥 변수, 훅, 컴포넌트 상태에 기대면 아직 뺄 수 없습니다.
+
+**`.ts` 안에서 같은 파일만 쓰는 함수는 몇 번 반복되든 빼지 않습니다.**
+같은 계산을 두세 번 적어도 괜찮습니다.
+파일을 하나 더 여는 쪽이 더 비쌉니다.
+"나중에 또 쓸 것 같아서"는 사유가 아닙니다.
+그때 가서 뺍니다.
+
+사유와 무관하게 빼지 않는 것:
+
+- 본문이 한 줄인 계산
+- `.map()` 콜백 하나에만 쓰이는 변환
+- 선택 값 보정, 라벨 기본값 같은 자잘한 정리 단계
+
+뺀 다음 어디 두고 언제 공용으로 올릴지는
 `functions-place-and-promote-support-functions`가 정합니다.
-
-흐름을 알려고 파일을 왕복해야 하면 경계가 아니라 그냥 쪼갠 것입니다.
 
 **Incorrect (한 번만 쓰는 한 줄 계산을 파일로 분리):**
 
@@ -687,124 +807,94 @@ const buildRequestUrl = (args: BuildRequestUrlArgs): URL => {
 export const getNextIteration = (iteration: number): number => iteration + 1;
 ```
 
-**Incorrect (보조 모듈 안에서도 내보내기 도우미를 단계별로 누적):**
-
-```ts
-export const normalizeProfileValues = (formValues: ProfileFormValues) => {
-	// ...
-};
-
-export const buildAvatarRequests = (files: UploadFile[]) => {
-	// ...
-};
-
-export const buildProfileUpdatePayload = (
-	formValues: ProfileFormValues,
-	files: UploadFile[],
-) => {
-	return {
-		...normalizeProfileValues(formValues),
-		avatarRequests: buildAvatarRequests(files),
-	};
-};
-```
-
 **Incorrect (네임스페이스 메서드 하나 때문에 변환 함수를 쪼갬):**
 
 ```ts
-const readLabelText = (label: Label) => label.name.trim() || label.code;
+const toLabelText = (label: Label) => label.name.trim() || label.code;
 
-const mapRecordToEntryView = (record: RecordItem): EntryView => {
-	const summary = record.description ?? record.memo;
-
+const toProductView = (record: RecordItem): ProductView => {
 	return {
 		id: record.id,
-		url: record.url,
-		data: {
-			type: "record",
-			title: record.title,
-			summary,
-			labels: record.labels.map(readLabelText),
-		},
+		labels: record.labels.map(toLabelText),
 	};
 };
 
 export const api = {
 	record: {
-		mapEntry: (record: RecordItem) => mapRecordToEntryView(record),
+		toProductView: (record: RecordItem) => toProductView(record),
 	},
 };
 ```
 
-**Correct (작은 계산은 지역 흐름에 둠):**
+**Correct (작은 계산은 쓰는 자리에 그대로 둠):**
 
 ```ts
-const nextIteration = iteration + 1;
-```
-
-**Correct (기능 지역 보조 모듈은 도메인 단위 내보내기 안에서 단계별로 정리):**
-
-```ts
-// profile-support.ts
-/**
- * profile form 값을 저장 payload로 조립
- */
-export const buildProfileUpdatePayload = (formValues: ProfileFormValues) => {
-	const normalizedDisplayName = formValues.displayName.trim();
-
-	return {
-		displayName: normalizedDisplayName,
-	};
+// page/profile/pg-profile.tsx
+const handleNextClick = () => {
+	setIteration(iteration + 1);
 };
 ```
 
-**Correct (단일 소유자 이름 공간의 단계는 메서드 본문에 둠):**
+**Correct (단일 소유자 네임스페이스의 단계는 메서드 본문에 둠):**
 
 ```ts
 export const api = {
 	record: {
-		mapEntry: (record: RecordItem): EntryView => {
-			const summary = record.description ?? record.memo;
-
+		toProductView: (record: RecordItem): ProductView => {
 			return {
 				id: record.id,
-				url: record.url,
-				data: {
-					type: "record",
-					title: record.title,
-					summary,
-					labels: record.labels.map((label) => label.name.trim() || label.code),
-				},
+				labels: record.labels.map((label) => label.name.trim() || label.code),
 			};
 		},
 	},
 };
 ```
 
+**Correct (서로 다른 파일 둘이 이미 부르는 순수 함수를 뺌):**
+
 ```ts
-// profile-form.ts
-import { buildProfileUpdatePayload } from "./profile-support";
+// page/profile/function/to-profile-save-request.ts
+/**
+ * profile form 값을 저장 payload로 조립
+ */
+export const toProfileSaveRequest = (formValues: ProfileFormValues) => {
+	return {
+		displayName: formValues.displayName.trim(),
+	};
+};
 ```
 
 ```ts
-// shared/util.ts
-export const util = {
-	date: {
-		/**
-		 * date 입력값을 ISO 문자열로 정규화
-		 */
-		normalize(value: Date | string): string {
-			return new Date(value).toISOString();
-		},
-	},
+// page/profile/pg-profile-form.tsx 와 page/profile/pg-profile-drawer.tsx 가 함께 부른다
+import { toProfileSaveRequest } from "./function/to-profile-save-request";
+```
+
+**Correct (`.tsx` 안의 순수 조립 함수는 호출부가 하나여도 형제 `.ts`로 냄):**
+
+```ts
+// page/products/function/to-product-save-request.ts
+/**
+ * product 폼 값을 저장 요청으로 조립
+ */
+export const toProductSaveRequest = (formValues: ProductFormValues) => {
+	return {
+		title: formValues.title.trim(),
+		categoryId: formValues.categoryId,
+		attachmentIds: formValues.attachments.map((attachment) => attachment.id),
+	};
 };
+```
+
+```tsx
+// page/products/pg-products.tsx 하나만 부르지만 훅도 JSX도 쓰지 않는 계산이다
+import { toProductSaveRequest } from "./function/to-product-save-request";
 ```
 
 ### 3.4 Place and Promote Support Functions Deliberately
 
 **Rule:** `T14` · `functions-place-and-promote-support-functions`
 
-**Applies when:** 보조 함수를 둘 파일이나 폴더를 정할 때. `shared/` 아래로 파일을 옮기거나 `util.*` 에 항목을 추가할 때.
+**Applies when:** 보조 함수를 둘 파일이나 폴더를 정할 때. `shared/` 아래로 파일을 옮기거나 `util.*`에 항목을 추가할 때.
 
 **Requires selected:** `functions-extract-helpers-only-when-the-boundary-is-real` · 함께 적용
 
@@ -814,33 +904,58 @@ export const util = {
 이 규칙은 그 결과를 어디 두고 언제 올릴지만 봅니다.
 
 - 소유자 아래에 `helper.ts`, `helpers.ts`, `utils.ts` 같은 잡동사니 파일을 만들지 않습니다.
-  어느 폴더에 둘지는 프레임워크 skill 의 역할 폴더 규칙이 정합니다.
+  어느 폴더에 둘지는 프레임워크 skill의 역할 폴더 규칙이 정합니다.
 - 소유자 아래에서는 대표 내보낸 함수 하나당 파일 하나입니다.
-  전역 `shared/util.ts` 는 여러 소유자가 함께 쓰는 순수 함수를 모으는 자리라 예외입니다.
+  전역 `shared/util.ts`는 여러 소유자가 함께 쓰는 순수 함수를 모으는 자리라 예외입니다.
 - 호출 깊이는 소유자에서 내보낸 함수, 그 파일 안 비공개 함수까지 두 단계로 끝냅니다.
   내보낸 함수가 또 다른 내보낸 함수를 타고 가는 사슬은 만들지 않습니다.
+  단계를 나누고 싶으면 내보내지 말고 한 함수 본문 안에 지역 변수로 둡니다.
 - 공용 승격은 **두 소유자 이상이 이미 직접 호출할 때만** 합니다.
-  그때 `shared/util.ts`의 `util.*`로 올립니다. 나중에 쓸 것 같아서 올리지 않습니다.
+  그때 `shared/util.ts`의 `util.*`로 올립니다.
+  나중에 쓸 것 같아서 올리지 않습니다.
 
 **Incorrect (잡동사니 파일과 세 단계 사슬):**
 
 ```ts
 // utils.ts
 export const util = {
-	normalizeTitle: (title: string) => title.trim(),
-	buildPayload: (values: EntryFormValues) => ({title: util.normalizeTitle(values.title)}),
-	buildRequest: (values: EntryFormValues) => ({body: util.buildPayload(values)}),
+	toTrimmedTitle: (title: string) => title.trim(),
+	toPayload: (values: ProductFormValues) => ({title: util.toTrimmedTitle(values.title)}),
+	toRequest: (values: ProductFormValues) => ({body: util.toPayload(values)}),
+};
+```
+
+**Incorrect (보조 모듈 안에서 내보낸 함수가 내보낸 함수를 타고 감):**
+
+```ts
+// profile-support.ts
+export const toProfileValues = (formValues: ProfileFormValues) => {
+	// ...
+};
+
+export const toAvatarRequests = (files: UploadFile[]) => {
+	// ...
+};
+
+export const toProfileSaveRequest = (
+	formValues: ProfileFormValues,
+	files: UploadFile[],
+) => {
+	return {
+		...toProfileValues(formValues),
+		avatarRequests: toAvatarRequests(files),
+	};
 };
 ```
 
 **Correct (소유자 아래 대표 함수 하나당 파일 하나):**
 
 ```ts
-// page/entry-form/function/build-entry-save-request.ts
+// page/product-form/function/to-product-save-request.ts
 /**
- * entry 폼 값을 저장 요청으로 조립
+ * product 폼 값을 저장 요청으로 조립
  */
-export const buildEntrySaveRequest = (values: EntryFormValues) => {
+export const toProductSaveRequest = (values: ProductFormValues) => {
 	return {body: {title: values.title.trim()}};
 };
 ```
@@ -854,7 +969,7 @@ export const util = {
 		/**
 		 * 화면 표시용 날짜 문자열 변환
 		 */
-		formatDisplayDate(value: string): string {
+		toDisplayDate(value: string): string {
 			return new Date(value).toLocaleDateString("ko-KR");
 		},
 	},
@@ -875,7 +990,8 @@ export const util = {
 한 번만 쓰면 실제 쓰는 좁은 스코프에서 바로 계산합니다.
 분기와 보정이 얽혀 좁은 스코프에 담기지 않으면 떼어 낼지를 다시 봅니다.
 그 판정은 `functions-extract-helpers-only-when-the-boundary-is-real`가 합니다.
-떼어 내기로 정했을 때 이름은 `resolve*`, `build*`, `normalize*`를 씁니다.
+떼어 낸 함수의 이름은 `functions-name-functions-by-what-comes-out`가 정하고,
+중간값에 이름을 붙일지는 `functions-name-a-value-only-when-it-is-reused`가 정합니다.
 
 **Incorrect (넓은 스코프에서 명령형으로 누적 조립):**
 
@@ -895,9 +1011,110 @@ const visibleTabs = canManageItems
 	: ["overview"];
 ```
 
-### 3.6 Prefer Immutable Array Sorting
+### 3.6 Name a Value Only When It Is Reused
 
-**Rule:** `T16` · `functions-prefer-immutable-array-sorting`
+**Rule:** `T16` · `functions-name-a-value-only-when-it-is-reused`
+
+**Applies when:** 순수 계산의 결과를 지역 `const`로 받는 줄을 추가·삭제할 때. 식을 그 자리에 적을지 이름을 붙일지 정할 때.
+
+**Review with:** `functions-avoid-imperative-assembly-in-wide-scopes`
+
+**Impact: HIGH (한 번 쓸 값에 이름을 붙이지 않아 식의 출처가 쓰는 자리에 그대로 남습니다)**
+
+부수효과 없는 순수 식의 결과를 **한 번만 쓰면 이름을 붙이지 않고 그 자리에 적습니다.**
+두 번 이상 쓰면 그 자리들을 모두 감싸는 가장 좁은 스코프에 `const`로 둡니다.
+
+이름을 붙이는 순간 읽는 사람은 그 값이 어디서 왔는지 확인하러 위로 올라가야 합니다.
+한 번 쓸 값이면 올라갈 이유가 없게 그 자리에 적는 편이 낫습니다.
+
+대상은 순수 식의 결과뿐입니다.
+아래는 이름을 붙이는 것이 문법이거나 순서가 뜻을 갖는 자리라 해당하지 않습니다.
+
+| 대상이 아닌 것 | 이유 |
+| --- | --- |
+| **콜백이나 반복문 안으로 들어가는 값** | 글로 한 번이어도 실행은 원소마다 한 번씩입니다 |
+| 훅 호출과 `useState` 반환 | 부르는 자리와 횟수가 정해져 있습니다 |
+| `await`나 `yield`가 붙은 값 | 실행 순서가 뜻을 갖습니다 |
+| 바깥과 주고받는 호출 (`init()`, `localStorage.getItem()`) | 옮기면 부르는 시점이 달라집니다 |
+| 함수 값에 붙인 이름 | 이름이 곧 계약입니다 |
+
+**글에서 한 번인 것과 실행에서 한 번인 것은 다릅니다.**
+`.map()`이나 `.filter()` 콜백 안, 반복문 안으로 옮기면 원소 수만큼 다시 계산합니다.
+그런 값은 콜백 밖에 이름을 붙여 둡니다.
+`functions-use-set-and-map-for-repeated-lookups`가 만드는 `Set`도 같은 이유로 밖에 둡니다.
+
+`let` 재할당과 배열 `push` 누적은 `functions-avoid-imperative-assembly-in-wide-scopes`가 봅니다.
+
+**Incorrect (한 번 쓸 값에 이름을 붙임):**
+
+```ts
+const toNextIteration = (iteration: number): number => {
+	const nextIteration = iteration + 1;
+
+	return nextIteration;
+};
+
+const toRowLabel = (row: Row): string => {
+	const rowLabel = `${row.title} (${row.id})`;
+
+	return rowLabel;
+};
+```
+
+**Correct (그 자리에 적음):**
+
+```ts
+const toNextIteration = (iteration: number): number => {
+	return iteration + 1;
+};
+
+const toRowLabel = (row: Row): string => {
+	return `${row.title} (${row.id})`;
+};
+```
+
+**Correct (두 번 이상 쓰므로 이름을 붙임):**
+
+```ts
+const toRowClassNames = (row: Row): string[] => {
+	const isOverdue = row.dueDate < today;
+
+	return [
+		isOverdue ? "ui_row__root--overdue" : "ui_row__root",
+		isOverdue ? "ui_row__badge--overdue" : "ui_row__badge",
+	];
+};
+```
+
+**Correct (콜백 밖이라 이름을 붙여 둠):**
+
+```ts
+const filterVisibleRows = (rows: Row[], keyword: string): Row[] => {
+	// 콜백 안으로 옮기면 행마다 다시 계산한다
+	const normalizedKeyword = keyword.trim().toLowerCase();
+
+	return rows.filter((row) => row.title.toLowerCase().includes(normalizedKeyword));
+};
+```
+
+**Correct (바깥과 주고받는 호출이라 대상이 아님):**
+
+```ts
+/**
+ * 초안을 저장한 뒤 목록 캐시를 비운다
+ */
+const submitDraft = async (draft: Draft) => {
+	const savedRecord = await saveRecord(draft);
+
+	await queryClient.invalidateQueries({queryKey: ["records"]});
+
+	return savedRecord;
+};
+```
+
+### 3.7 Prefer Immutable Array Sorting
+
+**Rule:** `T17` · `functions-prefer-immutable-array-sorting`
 
 **Applies when:** 프롭스, 상태, 매개변수, 공유 입력에서 온 배열을 정렬할 때. 기존 `.sort()` 호출을 추가·변경할 때.
 
@@ -906,7 +1123,7 @@ const visibleTabs = canManageItems
 원본 배열을 계속 써야 하면 `.sort()`로 제자리에서 바꾸지 않습니다.
 실행 환경이 ES2023 이상이거나 `toSorted()`를 쓸 수 있으면 `.toSorted()`를 먼저 씁니다.
 아니면 복사한 뒤 정렬합니다.
-`toSorted()`는 ES2023 이라 `tsconfig` 의 `lib` 에 `ES2023` 이상이 있어야 씁니다.
+`toSorted()`는 ES2023이라 `tsconfig`의 `lib`에 `ES2023` 이상이 있어야 씁니다.
 없으면 복사 후 정렬을 씁니다.
 
 **Incorrect (원본 배열을 직접 변경):**
@@ -925,11 +1142,11 @@ const sortedUsers = users.toSorted((left, right) => left.name.localeCompare(righ
 const sortedUsers = [...users].sort((left, right) => left.name.localeCompare(right.name));
 ```
 
-### 3.7 Replace `enum` With `as const` Objects
+### 3.8 Replace `enum` With `as const` Objects
 
-**Rule:** `T17` · `functions-replace-enum-with-as-const-objects`
+**Rule:** `T18` · `functions-replace-enum-with-as-const-objects`
 
-**Applies when:** `enum` 이나 타입과 실행 양쪽에서 함께 쓰는 값 묶음을 추가·변경할 때.
+**Applies when:** `enum`이나 타입과 실행 양쪽에서 함께 쓰는 값 묶음을 추가·변경할 때.
 
 **Requires selected:** `naming-use-consistent-file-and-symbol-naming`, `types-document-custom-types-and-shapes` · 함께 적용
 
@@ -941,7 +1158,7 @@ const sortedUsers = [...users].sort((left, right) => left.name.localeCompare(rig
 **Incorrect (`enum`을 직접 사용):**
 
 ```ts
-enum AuditStatus {
+enum ProductStatus {
 	pending = "pending",
 	passed = "passed",
 	failed = "failed",
@@ -951,7 +1168,7 @@ enum AuditStatus {
 **Correct (객체 리터럴과 타입 추출을 조합):**
 
 ```ts
-const audit_status = {
+const product_status = {
 	pending: "pending",
 	passed: "passed",
 	failed: "failed",
@@ -960,12 +1177,12 @@ const audit_status = {
 /**
  * 감사 상태 값 집합
  */
-type AuditStatus = (typeof audit_status)[keyof typeof audit_status];
+type ProductStatus = (typeof product_status)[keyof typeof product_status];
 ```
 
-### 3.8 Use Set and Map for Repeated Lookups
+### 3.9 Use Set and Map for Repeated Lookups
 
-**Rule:** `T18` · `functions-use-set-and-map-for-repeated-lookups`
+**Rule:** `T19` · `functions-use-set-and-map-for-repeated-lookups`
 
 **Applies when:** 같은 목록에 `includes`, `find`, 키 조회를 여러 번 하는 코드를 추가·변경할 때.
 
@@ -973,7 +1190,8 @@ type AuditStatus = (typeof audit_status)[keyof typeof audit_status];
 
 같은 목록에 포함 검사나 키 조회를 여러 번 한다면 `includes`와 `find`를 매번 돌리지 않습니다.
 `Set`이나 `Map`으로 한 번 정리합니다.
-다음 중 하나면 바꿉니다. 그 밖에는 그대로 둡니다.
+다음 중 하나면 바꿉니다.
+그 밖에는 그대로 둡니다.
 
 - 같은 목록을 겨냥한 조회가 루프나 `map`·`filter`·`some` 콜백 안에 있습니다.
 - 같은 목록을 겨냥한 조회가 서로 다른 세 지점 이상에서 일어납니다.
@@ -981,17 +1199,17 @@ type AuditStatus = (typeof audit_status)[keyof typeof audit_status];
 **Incorrect (같은 배열을 반복 순회하며 포함 여부를 확인):**
 
 ```ts
-const visibleEntries = entries.filter((entry) => allowedEntryIds.includes(entry.id));
-const disabledEntries = archivedEntries.filter((entry) => allowedEntryIds.includes(entry.id));
+const visibleProducts = products.filter((product) => allowedProductIds.includes(product.id));
+const disabledProducts = archivedProducts.filter((product) => allowedProductIds.includes(product.id));
 ```
 
 **Correct (반복 조회는 `Set`으로 승격):**
 
 ```ts
-const allowedEntryIdSet = new Set(allowedEntryIds);
+const allowedProductIdSet = new Set(allowedProductIds);
 
-const visibleEntries = entries.filter((entry) => allowedEntryIdSet.has(entry.id));
-const disabledEntries = archivedEntries.filter((entry) => allowedEntryIdSet.has(entry.id));
+const visibleProducts = products.filter((product) => allowedProductIdSet.has(product.id));
+const disabledProducts = archivedProducts.filter((product) => allowedProductIdSet.has(product.id));
 ```
 
 **Correct (반복 키 조회는 `Map`으로 승격):**
@@ -1004,6 +1222,84 @@ const reviewer = userById.get(reviewerId);
 const approver = userById.get(approverId);
 ```
 
+### 3.10 Name Functions by What Comes Out
+
+**Rule:** `T20` · `functions-name-functions-by-what-comes-out`
+
+**Applies when:** 이름 붙인 함수를 새로 만들거나 이름을 바꿀 때. 제외: 외부 패키지가 정한 이름을 별칭 없이 그대로 쓰는 경우.
+
+**Impact: MEDIUM-HIGH (이름만 읽고 결과를 알 수 있어 구현을 열어 보지 않아도 됩니다)**
+
+`build`, `create`, `normalize`, `resolve`, `process`는 서로 바꿔 써도 뜻이 안 변합니다.
+그런 동사는 이름 자리를 차지하면서 아무것도 알려 주지 않습니다.
+
+**형태를 바꾸는 함수는 `to<나오는 것>`으로 짓습니다.**
+반환 타입을 이름이 말해 주므로 구현을 열지 않아도 됩니다.
+
+| 하는 일 | 이름 |
+| --- | --- |
+| 형태를 바꾼다 | `to<결과>` |
+| 이미 있는 값을 꺼낸다 | `get<대상>` |
+| 찾는데 없을 수 있다 | `find<대상>` |
+| 참·거짓을 답한다 | `is<상태>` · `has<대상>` · `can<동작>` |
+| 걸러 낸다 | `filter<대상>` |
+| 정렬한다 | `sort<대상>` |
+| 서버를 부른다 | `fetch<대상>` · `save<대상>` · `remove<대상>` |
+
+표에 없는 도메인 동작은 그 동작의 이름을 그대로 씁니다.
+`submitOrder`, `cancelBooking`처럼 씁니다.
+표는 자주 나오는 갈래를 못 박은 것이고, 아래 금지 목록만 예외 없이 지킵니다.
+
+**이름의 첫 동사만 봅니다.** `isCheckedRow`나 `handleCheckAll`처럼 뒤에 섞인 낱말은 대상이 아닙니다.
+
+첫 동사로 쓰지 않는 것입니다.
+무엇이 나오는지를 이름이 안 말해 줍니다.
+
+`build` · `make` · `normalize` · `resolve` · `process` · `manage` · `do` · `perform` · `execute`
+
+- `update<대상>`은 무엇이 어떻게 바뀌는지 알 수 없어 쓰지 않습니다.
+  `save<대상>`이나 `to<결과>`로 나눠 적습니다.
+- `handle`은 이벤트 핸들러 이름에만 씁니다.
+  리액트 규칙이 그 형태를 따로 정합니다.
+- 프레임워크가 이름을 정해 둔 자리는 대상이 아닙니다.
+  NestJS 리소스 컨트롤러와 서비스의 `create`·`findAll`·`findOne`·`update`·`remove`가 그 경우입니다.
+- `new Promise((resolve, reject) => …)`의 매개변수처럼 언어 관용구가 정한 이름도 대상이 아닙니다.
+- 외부 패키지가 `createClient`처럼 지어 둔 이름은 그대로 씁니다.
+  우리가 짓는 이름만 봅니다.
+
+**Incorrect (동사가 결과를 안 알려 줌):**
+
+```ts
+export const buildUserPayload = (formValues: UserFormValues) => { /* … */ };
+export const normalizeUserValues = (formValues: UserFormValues) => { /* … */ };
+export const resolveUserLabel = (user: User) => { /* … */ };
+export const processUserRows = (rows: UserRow[]) => { /* … */ };
+```
+
+**Correct (이름이 결과를 말함):**
+
+```ts
+/**
+ * 사용자 폼 값을 저장 요청으로 바꾼다
+ */
+export const toUserSaveRequest = (formValues: UserFormValues) => { /* … */ };
+
+/**
+ * 목록에 표시할 사용자 이름을 만든다. 표시 이름이 비면 이메일 앞부분을 쓴다
+ */
+export const toUserDisplayName = (user: User) => { /* … */ };
+
+/**
+ * 비활성 사용자를 뺀 목록
+ */
+export const filterActiveUsers = (rows: UserRow[]) => { /* … */ };
+
+/**
+ * 관리자 권한이 있는지 판정
+ */
+export const isAdminUser = (user: User) => { /* … */ };
+```
+
 ## 4. Absence and Fallback Handling
 
 **Impact: HIGH**
@@ -1012,83 +1308,142 @@ const approver = userById.get(approverId);
 
 ### 4.1 Expose Optional Values Instead of Silent Fallbacks
 
-**Rule:** `T19` · `absence-expose-optional-values-instead-of-silent-fallbacks`
+**Rule:** `T21` · `absence-expose-optional-values-instead-of-silent-fallbacks`
 
 **Applies when:** 선택 값을 읽거나 정규화하거나 넘기는 방식을 바꿀 때. `??`, `||`, 기본값, 빈 값 대체 분기를 추가·변경할 때.
 
-**Review with:** `docs-keep-inline-comments-for-constraints-and-caveats`
+**Impact: HIGH (그 자리에서 지어낸 값으로 덮지 않아 빠진 데이터가 드러납니다)**
 
-**Impact: HIGH (일반 기본값으로 부재를 덮지 않아 빠진 데이터가 드러납니다)**
+**`??`와 `||` 오른쪽에 리터럴을 적지 않습니다.
+이미 선언된 이름만 가리킵니다.**
 
-선택 값에 `??`나 `||`로 기본값을 채워 없음을 덮지 않습니다.
-값이 없을 수 있다는 사실을 그대로 드러냅니다.
-도메인상 기본값이 분명하고 `docs-justify-convention-exceptions-with-a-reason-comment`를
-만족하는 이유 주석이 있을 때만 예외로 씁니다.
+| 형태 | 판정 |
+| --- | --- |
+| `?? "help@example.com"`, `?? 0`, `?? []`, `\|\| "-"` 같은 리터럴 | 위반 |
+| `?? config.pagination.default_page_size`처럼 설정에 선언된 이름 | 통과 |
+| 같은 파일 지역 `const`로 리터럴만 옮긴 것 | 위반. 자리만 바꾼 것입니다 |
+| 기본 매개변수 `(size = 10) =>`, 구조분해 기본값 `{size = 10}` | 위반 |
+| 삼항 `value ? value : "-"`, `String(value ?? "")` | 위반 |
 
-**Incorrect (결측을 호출부에서 조용히 숨김):**
+기본값이 정말 필요하면 그 기본값에 이름을 붙여 선언하고 그 이름을 가리킵니다.
+여러 소유자가 쓰면 `naming-centralize-shared-config-namespaces`,
+한 소유자만 쓰면 `naming-place-owner-config-in-the-owner-config-folder`가 자리를 정합니다.
+같은 파일 위쪽에 `const supportEmailFallback = "help@example.com";`을 두는 것으로는 통과하지 못합니다.
+설정에 선언된 이름이어야 합니다.
+
+이유 주석으로 이 규칙을 통과하지는 못합니다.
+주석은 리터럴을 선언된 이름으로 바꾸지 않습니다.
+
+빈 배열도 리터럴입니다.
+`items ?? []` 대신 `items?.map(…)`으로 값이 없는 상태를 그대로 다룹니다.
+선택 값을 그대로 비교하면 기본값이 아예 필요 없는 경우가 많습니다.
+
+**Incorrect (없는 값을 그 자리에서 지어낸 값으로 덮음):**
 
 ```ts
 const supportEmail = settings.supportEmail ?? "help@example.com";
+const productRows = response.data.rows ?? [];
+const isCompact = (variant ?? "default") === "compact";
 ```
 
 **Correct (없을 수 있다는 사실을 그대로 드러냄):**
 
 ```ts
-const supportEmail: string | undefined = settings.supportEmail;
-
-if (!supportEmail) {
+if (!settings.supportEmail) {
 	throw new MissingSupportEmailError();
 }
+
+sendInvite({from: settings.supportEmail});
 ```
 
-**Correct (설정 키를 가리키는 근거가 있을 때만 `??` 를 씁니다):**
+**Correct (선언된 기본값을 가리킴):**
 
 ```ts
-// 기본 페이지 크기는 config.pagination.default_page_size 가 정본이다.
 const pageSize = query.pageSize ?? config.pagination.default_page_size;
+```
+
+**Correct (그대로 비교하면 기본값이 필요 없음):**
+
+```ts
+const isCompact = variant === "compact";
+const productIds = response.data.rows?.map((row) => row.id);
 ```
 
 ## 5. JSDoc and Comment Conventions
 
 **Impact: MEDIUM-HIGH**
 
-함수 본문 안 주석은 제약과 예외만 적습니다. 선언 위 문서 주석은 어디에 붙일지, 어떤 형식으로 쓸지, 태그를 붙일지가 따로 정해져 있습니다. 본문은 한국어로 목적과 제약을 적고, 규칙이 허용한 예외에는 확인할 수 있는 이유를 남깁니다.
+함수 본문 안 주석은 의도와 긴 절차의 단계를 적고 코드를 옮겨 적지 않습니다. 선언 위 문서 주석은 어디에 붙일지, 어떤 형식으로 쓸지, 태그를 붙일지가 따로 정해져 있습니다. 본문은 한국어로 목적과 제약을 적고, 규칙이 허용한 예외에는 확인할 수 있는 이유를 남깁니다.
 
-### 5.1 Keep Inline Comments for Constraints and Caveats Only
+### 5.1 Keep Body Comments for Intent and Steps
 
-**Rule:** `T20` · `docs-keep-inline-comments-for-constraints-and-caveats`
+**Rule:** `T22` · `docs-keep-body-comments-for-intent-and-steps`
 
-**Applies when:** 함수 본문의 `//` 주석을 추가·수정·유지할 때. 도메인 규칙, 예외 방어, 외부 제약, 부수효과 순서를 주석으로 설명할 때.
+**Applies when:** 함수 본문의 `//` 주석을 추가·수정·유지할 때. 도메인 규칙, 예외 방어, 외부 제약, 부수효과 순서, 긴 절차의 단계를 주석으로 설명할 때.
 
-**Impact: MEDIUM (자명한 코드를 설명하는 주석은 막고 오해를 막는 메모만 남깁니다)**
+**Review with:** `docs-write-concise-korean-comments-about-purpose-and-constraints`
 
-함수 본문 안에서는 블록 주석을 쓰지 않습니다.
-`//` 주석은 도메인 규칙, 예외를 막은 의도, 외부 라이브러리 제약, 부수효과 순서처럼
-없으면 오해할 자리에만 씁니다.
+**Impact: MEDIUM (코드를 옮겨 적은 주석은 막고 읽는 데 필요한 설명은 남깁니다)**
+
+본문 안에서 문장이나 단계를 설명할 때는 `//`만 씁니다.
+블록 주석을 쓰지 않습니다.
+본문 안이라도 **선언 위**에는 문서 주석 블록을 씁니다.
+컴포넌트 본문의 핸들러, 이펙트, 쿼리 바인딩이 그 자리입니다.
+어느 선언에 붙일지는 `docs-require-header-jsdoc-on-key-declarations`가,
+형식은 `docs-write-doc-comments-as-multiline-blocks`가 정합니다.
+
+본문 주석은 이런 자리에 답니다.
+
+- 도메인 규칙
+- 예외를 막은 의도
+- 외부 라이브러리나 API의 제약
+- 부수효과의 순서
+- **긴 절차의 단계 구분.** 흐름을 쪼개지 않고 한 자리에 두기로 한 함수일수록 단계 표시가 필요합니다
+
 주석에 무엇을 쓸지는 `docs-write-concise-korean-comments-about-purpose-and-constraints`가 정합니다.
-이 규칙은 어디에 두는지만 봅니다.
+이 규칙은 본문 안 어디에 다는지만 봅니다.
 
-**Incorrect (자명한 동작을 그대로 설명):**
+**Incorrect (본문에 블록 주석을 쓰고 코드를 그대로 옮겨 적음):**
 
 ```ts
-// count를 1 증가시킨다.
-const nextCount = count + 1;
+const filterProducts = (products: Product[], keyword: string) => {
+	/**
+	 * keyword를 소문자로 바꾼다.
+	 */
+	const normalizedKeyword = keyword.trim().toLowerCase();
+
+	// products를 순회하면서 title이 포함하는지 확인한다.
+	return products.filter((product) => product.title.toLowerCase().includes(normalizedKeyword));
+};
 ```
 
-**Correct (제약이나 우회 이유를 설명):**
+**Correct (`//`로 제약과 단계를 표시):**
 
 ```ts
-// SDK가 빈 문자열을 허용하지 않아 trim 이후 값이 없으면 호출하지 않는다.
-if (!normalizedToken) {
-	return;
-}
+const submitProductDraft = async (draft: ProductDraft) => {
+	// SDK가 빈 문자열을 허용하지 않아 trim 이후 값이 없으면 호출하지 않는다.
+	if (!draft.title.trim()) {
+		return;
+	}
+
+	// 1. 첨부를 먼저 올려야 본문 저장에서 참조 ID를 쓸 수 있다.
+	const uploadedAttachments = await uploadAttachments(draft.attachments);
+
+	// 2. 본문 저장
+	const savedProduct = await saveProduct({title: draft.title, attachments: uploadedAttachments});
+
+	// 3. 목록 캐시 무효화는 저장이 끝난 뒤에만 한다. 순서가 바뀌면 옛 목록이 다시 채워진다.
+	await queryClient.invalidateQueries({queryKey: ["products"]});
+
+	return savedProduct;
+};
 ```
 
 ### 5.2 Require Header Doc Comments on Key Declarations
 
-**Rule:** `T21` · `docs-require-header-jsdoc-on-key-declarations`
+**Rule:** `T23` · `docs-require-header-jsdoc-on-key-declarations`
 
-**Applies when:** 쿼리·뮤테이션, 원격 함수, 분기나 `await` 가 있는 핸들러와 이펙트, 내보낸 보조 함수와 훅, 커스텀 타입, 스토어 선언을 추가·변경할 때.
+**Applies when:** 쿼리·뮤테이션, 원격 함수, 분기나 `await`가 있는 핸들러와 이펙트, 내보낸 보조 함수와 훅, 커스텀 타입, 스토어 선언을 추가·변경할 때.
 
 **Requires selected:** `docs-write-concise-korean-comments-about-purpose-and-constraints`, `docs-write-doc-comments-as-multiline-blocks` · 함께 적용
 
@@ -1109,7 +1464,7 @@ if (!normalizedToken) {
 **Incorrect (주요 선언에 헤더 설명이 없음):**
 
 ```ts
-export const normalizeUserIds = (userIds: string[]): string[] => {
+export const toSortedUserIds = (userIds: string[]): string[] => {
 	return Array.from(new Set(userIds)).sort();
 };
 ```
@@ -1120,61 +1475,104 @@ export const normalizeUserIds = (userIds: string[]): string[] => {
 /**
  * 중복 제거 후 사용자 ID 정렬
  */
-export const normalizeUserIds = (userIds: string[]): string[] => {
+export const toSortedUserIds = (userIds: string[]): string[] => {
 	return Array.from(new Set(userIds)).sort();
 };
 
 /**
- * entry 목록 조회 API
+ * product 목록 조회 API
  */
-const responseEntryList = useEntryList();
+const responseProductList = useProductList();
 ```
 
-### 5.3 Write Concise Korean Comments About Purpose and Constraints
+### 5.3 Write Korean Comments About Purpose and Constraints
 
-**Rule:** `T22` · `docs-write-concise-korean-comments-about-purpose-and-constraints`
+**Rule:** `T24` · `docs-write-concise-korean-comments-about-purpose-and-constraints`
 
-**Applies when:** TypeScript·TSX 의 문서 주석이나 인라인 주석 문구를 추가·수정·번역하거나 검토할 때.
+**Applies when:** TypeScript·TSX의 문서 주석이나 인라인 주석 문구를 추가·수정·번역하거나 검토할 때.
 
 **Impact: MEDIUM (코드 동작을 옮겨 적지 않고 의도와 제약에 주석을 모읍니다)**
 
-주석은 한국어로 쓰고 목적, 제약, 부수효과를 짧게 적습니다.
+주석은 한국어로 쓰고 목적, 제약, 부수효과를 적습니다.
 코드가 무엇을 하는지 옮겨 적기보다 왜 넣었고 무엇을 조심해야 하는지를 먼저 씁니다.
+
+길이 제한은 두지 않습니다.
+한 줄로 뜻이 통하면 한 줄로 쓰고, 읽는 사람이 배경을 알아야 하면 여러 줄로 씁니다.
+기준은 길이가 아니라 그 주석을 읽고 이해되는지입니다.
+
+쓰지 않는 것:
+
+- 선언 이름의 낱말을 한국어로 바꿔 적기만 하고 새 정보가 없는 문장.
+  `sortRuleRefs`에 `/** 규칙 참조를 정렬 */`이 그 경우입니다
+- 코드를 한 줄씩 따라 읽으며 옮겨 적은 문장
+- 설명 없이 `@param`·`@returns`만 나열한 주석. 어떤 태그를 쓸지는 `docs-avoid-role-tags-in-doc-comments`가 정합니다
 
 기술 용어와 식별자는 영어로 섞어도 됩니다.
 다만 주석 본문이 전부 영어이면 한국어 주석으로 인정하지 않습니다.
 새로 넣거나 고친 문서 주석에는 그 선언의 목적이나 제약을 설명하는 한국어 구절이 있어야 합니다.
 다른 필드 주석이 한국어라고 영어뿐인 헤더 주석을 대신 통과시키지 않습니다.
 
-**Incorrect (영문이거나 방법만 늘어놓는 장황한 설명):**
+**Incorrect (영문이거나 선언 이름을 옮겨 적기만 함):**
 
 ```ts
 /**
  * This function sorts rule refs and returns the result.
  */
+export const sortRuleRefs = (refs: RuleRef[]): RuleRef[] => {
+	return Array.from(new Set(refs)).sort();
+};
 
 /**
- * route-local entry tree props
+ * 규칙 참조를 정렬하는 함수
  */
+export const sortRuleRefs = (refs: RuleRef[]): RuleRef[] => {
+	return Array.from(new Set(refs)).sort();
+};
+
+/**
+ * route-local product tree props
+ */
+export interface PgProductTreeProps {
+	categoryNodes: ProductCategoryNode[];
+}
 ```
 
-**Correct (한글, 명사형, 의도 중심 설명):**
+**Correct (이름에 없는 정보를 더함):**
 
 ```ts
 /**
- * 중복 제거 후 규칙 경로 정렬
+ * 중복을 제거한 뒤 정렬한다. 호출부가 목록을 다시 정렬하지 않아도 되게 하려는 것이다.
  */
+export const sortRuleRefs = (refs: RuleRef[]): RuleRef[] => {
+	return Array.from(new Set(refs)).sort();
+};
 
 /**
- * route-local 엔트리 트리 입력 계약
+ * 저장 응답의 정렬 순서를 그대로 믿지 않고 다시 정렬한다.
+ *
+ * 서버가 같은 updatedAt 인 항목의 순서를 보장하지 않아
+ * 목록이 새로고침할 때마다 흔들리는 문제가 있었다.
  */
+export const sortProductsByUpdatedAt = (products: Product[]): Product[] => {
+	return [...products].sort((left, right) => right.updatedAt.localeCompare(left.updatedAt));
+};
+
+/**
+ * route-local 제품 트리 입력 계약
+ */
+export interface PgProductTreeProps {
+	/**
+	 * 사이드바에 그릴 분류 노드 목록
+	 */
+	categoryNodes: ProductCategoryNode[];
+}
 ```
 
 ### 5.4 Write Doc Comments as Multiline Blocks
 
-**Rule:** `T23` · `docs-write-doc-comments-as-multiline-blocks`
+**Rule:** `T25` · `docs-write-doc-comments-as-multiline-blocks`
 
-**Applies when:** 선언 위 문서 주석을 새로 쓰거나 형식을 바꿀 때. 한 줄 `/** … */` 이나 `//` 로 선언을 설명하려 할 때.
+**Applies when:** 선언 위 문서 주석을 새로 쓰거나 형식을 바꿀 때. 한 줄 `/** … */`이나 `//`로 선언을 설명하려 할 때.
 
 **Review with:** `docs-require-header-jsdoc-on-key-declarations`
 
@@ -1189,17 +1587,17 @@ const responseEntryList = useEntryList();
   그 형식은 `docs-justify-convention-exceptions-with-a-reason-comment`가 정합니다.
 - 어느 선언에 붙일지는 `docs-require-header-jsdoc-on-key-declarations`가 정합니다.
 
-**Incorrect (한 줄 블록과 `//` 로 선언을 설명):**
+**Incorrect (한 줄 블록과 `//`로 선언을 설명):**
 
 ```ts
-/** entry 목록 조회 */
-export const fetchEntryList = async (): Promise<Entry[]> => {
-	return await client.get("/entries");
+/** product 목록 조회 */
+export const fetchProductList = async (): Promise<Product[]> => {
+	return await client.get("/products");
 };
 
-// entry 저장 요청
-export const saveEntry = async (entry: Entry): Promise<void> => {
-	await client.post("/entries", entry);
+// product 저장 요청
+export const saveProduct = async (product: Product): Promise<void> => {
+	await client.post("/products", product);
 };
 ```
 
@@ -1207,23 +1605,23 @@ export const saveEntry = async (entry: Entry): Promise<void> => {
 
 ```ts
 /**
- * entry 목록 조회
+ * product 목록 조회
  */
-export const fetchEntryList = async (): Promise<Entry[]> => {
-	return await client.get("/entries");
+export const fetchProductList = async (): Promise<Product[]> => {
+	return await client.get("/products");
 };
 
 /**
- * entry 저장 요청
+ * product 저장 요청
  */
-export const saveEntry = async (entry: Entry): Promise<void> => {
-	await client.post("/entries", entry);
+export const saveProduct = async (product: Product): Promise<void> => {
+	await client.post("/products", product);
 };
 ```
 
 ### 5.5 Avoid Role Tags in Doc Comments
 
-**Rule:** `T24` · `docs-avoid-role-tags-in-doc-comments`
+**Rule:** `T26` · `docs-avoid-role-tags-in-doc-comments`
 
 **Applies when:** 문서 주석에 태그를 넣거나 바꿀 때. 새 태그 이름을 만들려 할 때.
 
@@ -1235,7 +1633,7 @@ export const saveEntry = async (entry: Entry): Promise<void> => {
 그것을 태그로 다시 적지 않습니다.
 
 - `@api`, `@helper`, `@field` 같은 역할 태그를 붙이지 않습니다.
-- `@summary` 는 헤더 첫 줄이 이미 하는 일이라 쓰지 않습니다.
+- `@summary`는 헤더 첫 줄이 이미 하는 일이라 쓰지 않습니다.
 - `@schema`처럼 새 태그를 만들지 않습니다.
 - `@deprecated`, `@example`, `@param`, `@returns`처럼 TSDoc 규격에 있는 태그만 필요할 때 씁니다.
 
@@ -1245,16 +1643,16 @@ export const saveEntry = async (entry: Entry): Promise<void> => {
 
 ```ts
 /**
- * @api entry 목록 조회
+ * @api product 목록 조회
  */
-export const fetchEntryList = async (): Promise<Entry[]> => {
-	return await client.get("/entries");
+export const fetchProductList = async (): Promise<Product[]> => {
+	return await client.get("/products");
 };
 
 /**
- * @schema entry 저장 입력
+ * @schema product 저장 입력
  */
-export interface SaveEntryInput {
+export interface SaveProductInput {
 	title: string;
 }
 ```
@@ -1263,25 +1661,25 @@ export interface SaveEntryInput {
 
 ```ts
 /**
- * entry 목록 조회
+ * product 목록 조회
  */
-export const fetchEntryList = async (): Promise<Entry[]> => {
-	return await client.get("/entries");
+export const fetchProductList = async (): Promise<Product[]> => {
+	return await client.get("/products");
 };
 
 /**
- * entry 저장 입력
+ * product 저장 입력
  *
- * @deprecated `SaveEntryRequest` 로 옮기는 중이다.
+ * @deprecated `SaveProductRequest`로 옮기는 중이다.
  */
-export interface SaveEntryInput {
+export interface SaveProductInput {
 	title: string;
 }
 ```
 
 ### 5.6 Justify Convention Exceptions With a Checkable Reason Comment
 
-**Rule:** `T25` · `docs-justify-convention-exceptions-with-a-reason-comment`
+**Rule:** `T27` · `docs-justify-convention-exceptions-with-a-reason-comment`
 
 **Applies when:** 규칙이 허용한 예외를 코드에 남길 때. 이미 있는 예외 주석의 내용을 바꿀 때. 제외: 규칙이 요구하지 않은 일반 설명 주석인 경우.
 
@@ -1304,14 +1702,14 @@ export interface SaveEntryInput {
 "성능을 위해", "안전하게", "필요해서"처럼 다시 확인할 수 없는 말은 근거가 아닙니다.
 그런 주석은 예외 조건을 채우지 못합니다.
 
-주석은 예외가 일어나는 줄 바로 위에 한국어 한 줄로 씁니다.
+주석은 예외가 일어나는 줄 바로 위에 `//`로 씁니다.
 형식과 어투는 `docs-write-concise-korean-comments-about-purpose-and-constraints`를 따릅니다.
 
 **Incorrect (확인할 수 없는 말로 예외를 정당화):**
 
 ```ts
 // 성능을 위해 메모이제이션
-const columns = useMemo(() => buildColumns(response.data.columns), [response.data.columns]);
+const columns = useMemo(() => toTableColumns(response.data.columns), [response.data.columns]);
 
 // 안전하게 기본값 처리
 const pageSize = settings.pageSize ?? 20;
@@ -1321,9 +1719,9 @@ const pageSize = settings.pageSize ?? 20;
 
 ```ts
 // ag-grid 는 columnDefs 참조가 바뀌면 컬럼 상태를 초기화한다. 참조를 고정해야 한다.
-const columns = useMemo(() => buildColumns(response.data.columns), [response.data.columns]);
+const columns = useMemo(() => toTableColumns(response.data.columns), [response.data.columns]);
 
-// 기본 페이지 크기는 config.pagination.default_page_size 가 정본이다.
+// 기본 페이지 크기는 config.pagination.default_page_size 가 기준이다.
 const pageSize = settings.pageSize ?? config.pagination.default_page_size;
 ```
 
@@ -1342,13 +1740,14 @@ const filteredRows = useMemo(() => rows.filter((row) => matchRow(row, deferredKe
 
 ### 6.1 Configure Biome to Enforce the Mechanical Rules
 
-**Rule:** `T26` · `tooling-configure-biome-to-enforce-these-rules`
+**Rule:** `T28` · `tooling-configure-biome-to-enforce-these-rules`
 
-**Applies when:** 프로젝트에 `biome` 설정을 처음 넣거나 lint 규칙을 바꿀 때. `biome.json` 의 `linter.rules` 에 항목을 추가·삭제할 때.
+**Applies when:** 프로젝트에 `biome` 설정을 처음 넣거나 lint 규칙을 바꿀 때. `biome.json`의 `linter.rules`에 항목을 추가·삭제할 때.
 
 **Impact: MEDIUM (기계가 잡는 항목을 설정에 고정하면 리뷰는 판단이 필요한 것만 봅니다)**
 
-이 컨벤션의 여러 항목은 읽어서 판정할 필요가 없습니다. `biome`이 막습니다.
+이 컨벤션의 여러 항목은 읽어서 판정할 필요가 없습니다.
+`biome`이 막습니다.
 아래 설정을 얹고, 리뷰는 판단이 필요한 규칙에만 씁니다.
 
 | `biome` 규칙 | 담당 컨벤션 |
@@ -1360,19 +1759,36 @@ const filteredRows = useMemo(() => rows.filter((row) => matchRow(row, deferredKe
 | `correctness/noUnusedFunctionParameters` | `types-mark-unused-parameters-with-underscore` |
 | `performance/noNamespaceImport` | `naming-use-direct-imports-and-public-entry-points` |
 
-도구가 끝까지 못 가는 자리가 넷 있습니다. 이 넷은 리뷰가 봅니다.
+도구가 끝까지 못 가는 자리가 있습니다.
+이 넷은 리뷰가 봅니다.
 
-- `enum` 성격 상수 객체에만 `snake_case`를 쓰는 구분은 `useNamingConvention`으로 표현할 수 없습니다.
-  모듈 최상위 `const`에 세 표기를 다 허용해 두고, 어느 쪽이 맞는지는 사람이 봅니다.
+- 선언형 설정과 `enum` 성격 상수 객체에만 `snake_case`를 쓰는 구분은 `useNamingConvention`으로 표현할 수 없습니다.
+  모듈 최상위 `const`와 객체 리터럴 키에 표기를 다 허용해 두고, 어느 쪽이 맞는지는 사람이 봅니다.
+  `objectLiteralProperty`를 좁히면 규범이 요구하는 형태가 막힙니다.
+  `snake_case`를 빼면 `config.pagination.default_page_size`가, `PascalCase`를 빼면
+  합성 컴포넌트의 `{Root, Header, Footer}`가 걸립니다.
+  설정 객체에 타입을 붙이면 키가 `typeProperty` 로도 검사되므로 그쪽에도 `snake_case`를 허용합니다.
   `functions-declare-functions-as-arrow-consts` 때문에 이름 붙인 함수도 이 항목에 들어가므로
   함수 이름의 `camelCase`도 도구가 아니라 리뷰가 봅니다.
+- 폴더명 `kebab-case` 단수는 어떤 `biome` 규칙도 보지 않습니다.
+  리뷰가 봅니다.
+- 지역 변수의 `camelCase`도 끝까지 못 갑니다.
+  `variable` 선택자에 `PascalCase`를 함께 허용해 컴포넌트 지역 선언을 통과시키기 때문입니다.
+- 파일명 `kebab-case`는 `useNamingConvention`이 보지 않습니다.
+  `style/useFilenamingConvention`이 따로 봅니다.
+  이 설정에는 넣지 않았습니다.
+  파일명은 리뷰가 봅니다.
 - `functions-declare-functions-as-arrow-consts` 자체는 `biome`에 대응 규칙이 없습니다.
 - `functions-avoid-imperative-assembly-in-wide-scopes`는 `useConst`로 잡히지 않습니다.
-  `let` 을 `const` 로 바꿔 주기만 하고 `push` 누적은 그대로 남습니다.
+  `let`을 `const`로 바꿔 주기만 하고 `push` 누적은 그대로 남습니다.
 - `types-mark-unused-parameters-with-underscore` 중 **매개변수를 아예 생략한 경우**는 도구가 못 봅니다.
   `noUnusedFunctionParameters`는 남겨 둔 매개변수만 봅니다.
 
-**Incorrect (`recommended` 만 켜고 컨벤션 항목을 리뷰에 맡김):**
+일부러 켜지 않는 규칙이 하나 있습니다.
+`style/useFragmentSyntax`는 JSX 조각을 `<>`로 바꾸라고 합니다.
+리액트 컨벤션이 `<Fragment>`를 그대로 쓰라고 정하므로 이 규칙은 켜지 않습니다.
+
+**Incorrect (`recommended`만 켜고 컨벤션 항목을 리뷰에 맡김):**
 
 ```json
 {
@@ -1401,7 +1817,7 @@ const filteredRows = useMemo(() => rows.filter((row) => matchRow(row, deferredKe
 				"noRestrictedImports": {
 					"level": "error",
 					"options": {
-						"patterns": [{"group": ["@/page/*/*"], "message": "화면 내부는 절대경로로 가져오지 않습니다."}]
+						"patterns": [{"group": ["@/page/**"], "message": "화면 내부는 절대경로로 가져오지 않습니다."}]
 					}
 				},
 				"useNamingConvention": {
@@ -1411,6 +1827,8 @@ const filteredRows = useMemo(() => rows.filter((row) => matchRow(row, deferredKe
 						"conventions": [
 							{"selector": {"kind": "typeLike"}, "formats": ["PascalCase"]},
 							{"selector": {"kind": "const", "scope": "global"}, "formats": ["camelCase", "PascalCase", "snake_case"]},
+							{"selector": {"kind": "objectLiteralProperty"}, "formats": ["camelCase", "PascalCase", "snake_case"]},
+							{"selector": {"kind": "typeProperty"}, "formats": ["camelCase", "snake_case"]},
 							{"selector": {"kind": "variable"}, "formats": ["camelCase", "PascalCase"]}
 						]
 					}

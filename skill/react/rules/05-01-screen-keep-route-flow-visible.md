@@ -44,32 +44,32 @@ const navigate = useNavigate();
 const search = Route.useSearch();
 
 /**
- * entry 목록 조회 API
+ * product 목록 조회 API
  */
-const responseEntryListSuspense = useEntryListSuspense({
+const responseProductListSuspense = useProductListSuspense({
   page: search.page,
 });
 
 /**
- * entry 저장 API
+ * product 저장 API
  */
-const mutationEntrySave = useEntrySave();
+const mutationProductSave = useProductSave();
 
 /**
- * entry 저장 후 현재 화면 흐름을 유지한 채 route search를 갱신
+ * product 저장 후 현재 화면 흐름을 유지한 채 route search를 갱신
  */
 const handleSubmitButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
-  await mutationEntrySave.mutateAsync({ data: request });
+  await mutationProductSave.mutateAsync({ data: request });
   void navigate({
-    to: "/entries",
+    to: "/products",
     search: { ...search, page: 1 },
   });
 };
 
 return (
   <Fragment>
-    <EntryFilterSection />
-    <EntryListSection onSubmit={handleSubmitButtonClick} />
+    <ProductFilterSection />
+    <ProductListSection onSubmit={handleSubmitButtonClick} />
   </Fragment>
 );
 ```

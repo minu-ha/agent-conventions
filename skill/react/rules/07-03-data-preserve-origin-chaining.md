@@ -18,19 +18,21 @@ tags: data, state, origin
 넓은 스코프의 구조분해와 별칭 상수는 값의 출처를 흐립니다.
 
 - 실제로 필요하면 핸들러나 이펙트 내부의 좁은 스코프에서만 제한적으로 구조분해합니다.
-- `props`를 본문 첫 줄에서 구조분해하는 패턴만 예외입니다.
+- 프롭스에는 이 예외도 없습니다.
+  `composition-read-props-without-destructuring`가
+  `props`를 구조분해하지 않고 그대로 읽으라고 정합니다.
 
 **Incorrect (넓은 스코프 구조분해로 출처가 흐려짐):**
 
 ```ts
-const { entries, selectedEntry } = responseEntryListSuspense.data;
+const { products, selectedProduct } = responseProductListSuspense.data;
 ```
 
 **Correct (원본 체이닝으로 출처를 유지):**
 
 ```tsx
-<UiList dataSource={responseEntryListSuspense.data.entries} />
-<UiTable dataSource={responseEntryListSuspense.data.selectedEntry.fields} />
+<UiList dataSource={responseProductListSuspense.data.products} />
+<UiTable dataSource={responseProductListSuspense.data.selectedProduct.fields} />
 ```
 
 ```ts
@@ -38,10 +40,10 @@ const { entries, selectedEntry } = responseEntryListSuspense.data;
  * 검색 응답이 비어 있을 때만 후속 동기화를 건너뜀
  */
 useEffect(() => {
-  if (responseEntrySearchSuspense.data.entries.length > 0) {
+  if (responseProductSearchSuspense.data.products.length > 0) {
     return;
   }
 
   reportEmptySearch(search.keyword);
-}, [responseEntrySearchSuspense.data.entries, search.keyword]);
+}, [responseProductSearchSuspense.data.products, search.keyword]);
 ```

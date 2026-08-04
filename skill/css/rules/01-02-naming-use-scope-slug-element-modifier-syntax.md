@@ -16,7 +16,8 @@ tags: naming, class-grammar, ownership
 클래스명은 `<scope>_<slug>__<element>[--<modifier>]` 문법을 씁니다.
 구분자 `_`, `__`, `--`를 고정하고 각 자리의 책임을 섞지 않습니다.
 
-네 자리를 아래처럼 읽습니다. 앞으로 규칙 본문은 한국어 쪽 이름을 씁니다.
+네 자리를 아래처럼 읽습니다.
+앞으로 규칙 본문은 한국어 쪽 이름을 씁니다.
 
 | 자리 | 읽는 이름 | 무엇을 담는가 |
 | --- | --- | --- |
@@ -25,9 +26,11 @@ tags: naming, class-grammar, ownership
 | `element` | 요소 | 소유자 안의 UI 역할. `listButton`, `emptyState` |
 | `modifier` | 수정자 | 상태나 반복되는 모양. `routeActive`, `selected` |
 
-수정자와 변형은 다릅니다. 수정자는 클래스 뒤에 붙는 `--이름`이고, 변형은 컴포넌트가 받는 `variant` 프롭입니다.
+수정자와 변형은 다릅니다.
+수정자는 클래스 뒤에 붙는 `--이름`이고, 변형은 컴포넌트가 받는 `variant` 프롭입니다.
 
-식별자에는 접두사가 말하는 부분을 반복하지 않습니다. `UiButton`은 `ui_button`이고 `ui_uiButton`이 아닙니다.
+식별자에는 접두사가 말하는 부분을 반복하지 않습니다.
+`UiButton`은 `ui_button`이고 `ui_uiButton`이 아닙니다.
 
 `selector-class-pattern`에 이 문법을 정규식으로 넣으면 기계가 검사합니다.
 

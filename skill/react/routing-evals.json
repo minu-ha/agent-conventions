@@ -34,10 +34,10 @@
 		},
 		{
 			"id": "RTE02-owner-placement-css-drift",
-			"prompt": "move a route-only tree renderer from shared UI to src/page/entries/component/pg-entry-tree.tsx and rename it as owner-private; carry its existing className and style import through unchanged and make no styling change.",
+			"prompt": "move a route-only tree renderer from shared UI to src/page/products/component/pg-product-tree.tsx and rename it as owner-private; carry its existing className and style import through unchanged and make no styling change.",
 			"files": [
-				"src/ui/entry-tree/ui-entry-tree.tsx",
-				"src/page/entries/component/pg-entry-tree.tsx"
+				"src/ui/product-tree/ui-product-tree.tsx",
+				"src/page/products/component/pg-product-tree.tsx"
 			],
 			"expectedSkills": [
 				"react",
@@ -48,7 +48,7 @@
 					"ownership-layer-component-boundaries",
 					"ownership-prefix-layer-names-on-files-and-symbols",
 					"ownership-place-owner-files-in-role-folders",
-					"composition-destructure-props-inside",
+					"composition-read-props-without-destructuring",
 					"composition-declare-props-interface-above-the-component"
 				],
 				"typescript": [
@@ -61,11 +61,11 @@
 				]
 			},
 			"scopeDrift": {
-				"evidence": "in a project without a CSS Modules standard, add directly imported src/page/entries/component/pg-entry-tree.css, create owner-unique pg_* role-named classes, and compose the changed className contract with the existing direct clsx import; final skills add CSS with no additional React rule.",
+				"evidence": "in a project without a CSS Modules standard, add directly imported src/page/products/component/pg-product-tree.css, create owner-unique pg_* role-named classes, and compose the changed className contract with the existing direct clsx import; final skills add CSS with no additional React rule.",
 				"files": [
-					"src/ui/entry-tree/ui-entry-tree.tsx",
-					"src/page/entries/component/pg-entry-tree.tsx",
-					"src/page/entries/component/pg-entry-tree.css"
+					"src/ui/product-tree/ui-product-tree.tsx",
+					"src/page/products/component/pg-product-tree.tsx",
+					"src/page/products/component/pg-product-tree.css"
 				],
 				"expectedSkills": [
 					"react",
@@ -77,7 +77,7 @@
 						"ownership-layer-component-boundaries",
 						"ownership-prefix-layer-names-on-files-and-symbols",
 						"ownership-place-owner-files-in-role-folders",
-						"composition-destructure-props-inside",
+						"composition-read-props-without-destructuring",
 						"composition-declare-props-interface-above-the-component"
 					],
 					"typescript": [
@@ -105,10 +105,10 @@
 		},
 		{
 			"id": "RTE03-route-support-extraction",
-			"prompt": "move one real four-argument multi-line payload boundary out of src/page/entries/pg-entries.tsx into src/page/entries/function/build-entry-payload.ts; do not create a hook, generic utils file, or helper soup.",
+			"prompt": "move one real four-argument multi-line payload boundary out of src/page/products/pg-products.tsx into src/page/products/function/to-product-save-request.ts; do not create a hook, generic utils file, or helper soup.",
 			"files": [
-				"src/page/entries/pg-entries.tsx",
-				"src/page/entries/function/build-entry-payload.ts"
+				"src/page/products/pg-products.tsx",
+				"src/page/products/function/to-product-save-request.ts"
 			],
 			"expectedSkills": [
 				"react",
@@ -138,7 +138,7 @@
 			"id": "RTE04-shared-config",
 			"prompt": "move a duplicated menu key and default page size from two screens into a documented snake_case as const config object in src/shared/config.ts and directly import and use config.* from both route pages.",
 			"files": [
-				"src/page/entries/pg-entries.tsx",
+				"src/page/products/pg-products.tsx",
 				"src/page/reports/pg-reports.tsx",
 				"src/shared/config.ts"
 			],
@@ -161,9 +161,9 @@
 		},
 		{
 			"id": "RTE05-toolbar-composition",
-			"prompt": "replace compact/edit/search/focus booleans and static render props on wg-entry-toolbar.tsx with stateless compound parts plus repeated explicit variants, and document public parts.",
+			"prompt": "replace compact/edit/search/focus booleans and static render props on wg-product-toolbar.tsx with stateless compound parts plus repeated explicit variants, and document public parts.",
 			"files": [
-				"src/widget/entry-toolbar/wg-entry-toolbar.tsx"
+				"src/widget/product-toolbar/wg-product-toolbar.tsx"
 			],
 			"expectedSkills": [
 				"react",
@@ -175,10 +175,9 @@
 					"strategy-expose-only-assembled-compound-parts",
 					"strategy-avoid-boolean-prop-proliferation",
 					"strategy-prefer-children-over-render-props",
-					"composition-destructure-props-inside",
+					"composition-read-props-without-destructuring",
 					"composition-declare-props-interface-above-the-component",
-					"docs-require-jsdoc-on-key-declarations",
-					"docs-document-compound-parts-above-props-interface"
+					"docs-require-jsdoc-on-key-declarations"
 				],
 				"typescript": [
 					"naming-use-consistent-file-and-symbol-naming",
@@ -192,7 +191,7 @@
 		},
 		{
 			"id": "RTE06-nested-forwardref",
-			"prompt": "hoist an existing nested forwardRef search input that resets focus to module scope and convert it to a React 19 ref prop in ui-search-card.tsx.",
+			"prompt": "hoist an existing nested forwardRef search input that resets focus to module scope, convert it to a React 19 ref prop, and narrow UiSearchCardProps so it extends HTMLAttributes and opens only the library props in use in ui-search-card.tsx.",
 			"files": [
 				"src/ui/search-card/ui-search-card.tsx"
 			],
@@ -202,7 +201,9 @@
 			],
 			"expectedSelected": {
 				"react": [
-					"composition-destructure-props-inside",
+					"typing-narrow-library-wrapper-contracts",
+					"typing-choose-wrapper-shape-and-forwarding",
+					"composition-read-props-without-destructuring",
 					"composition-do-not-define-components-inside-components",
 					"composition-open-ref-props-only-for-imperative-contracts",
 					"docs-require-jsdoc-on-key-declarations"
@@ -221,7 +222,7 @@
 			"id": "RTE08-delete-handler-flow",
 			"prompt": "move a row delete inline async branch, mutation, navigation, and state+effect replay into one curried named handler, keep an unused React event as _event, directly import its reused callback type, and keep screen-only flow inside page.tsx.",
 			"files": [
-				"src/page/entries/pg-entries.tsx"
+				"src/page/products/pg-products.tsx"
 			],
 			"expectedSkills": [
 				"react",
@@ -252,10 +253,10 @@
 		},
 		{
 			"id": "RTE09-route-runtime-section",
-			"prompt": "extract only the tree section that owns local search and expanded state plus a tree adapter into the owner component folder, implement a named selection handler from EntryTreeSectionProps[\"onCategorySelect\"], and keep search params, navigation, page query, and mutation in the page entry.",
+			"prompt": "extract only the tree section that owns local search and expanded state plus a tree adapter into the owner component folder, implement a named selection handler from ProductTreeSectionProps[\"onCategorySelect\"], and keep search params, navigation, page query, and mutation in the page product.",
 			"files": [
-				"src/page/entries/pg-entries.tsx",
-				"src/page/entries/component/pg-entry-tree-section.tsx"
+				"src/page/products/pg-products.tsx",
+				"src/page/products/component/pg-product-tree-section.tsx"
 			],
 			"expectedSkills": [
 				"react",
@@ -267,7 +268,7 @@
 					"ownership-layer-component-boundaries",
 					"ownership-place-owner-files-in-role-folders",
 					"typing-take-handler-types-from-existing-contracts",
-					"composition-destructure-props-inside",
+					"composition-read-props-without-destructuring",
 					"composition-use-activity-only-to-preserve-mounted-subtrees",
 					"screen-keep-route-flow-visible",
 					"screen-avoid-premature-abstraction",
@@ -295,7 +296,7 @@
 			"id": "RTE10-derived-selection-state",
 			"prompt": "extract the inline selection toggle into a named handleSelectionToggle handler, replace selectedIds-derived count and flag effect+state synchronization with render calculation near use, and use a functional updater; do not change navigation or styling.",
 			"files": [
-				"src/page/entries/pg-entries.tsx"
+				"src/page/products/pg-products.tsx"
 			],
 			"expectedSkills": [
 				"react",
@@ -355,7 +356,7 @@
 			"id": "RTE12-query-shaping",
 			"prompt": "move repeated raw list, items, and meta render shaping into query select, rename bindings to response... and mutation..., and remove wide aliases.",
 			"files": [
-				"src/page/entries/pg-entries.tsx"
+				"src/page/products/pg-products.tsx"
 			],
 			"expectedSkills": [
 				"react",
@@ -381,7 +382,7 @@
 			"id": "RTE13-heavy-search",
 			"prompt": "for a 50k-row search, directly import newly used React hooks, use lazy initialization, urgent input plus deferred result, a non-urgent category transition, and only evidence-backed memoization; update the constraint comment.",
 			"files": [
-				"src/page/entries/component/pg-entry-search.tsx"
+				"src/page/products/component/pg-product-search.tsx"
 			],
 			"expectedSkills": [
 				"react",
@@ -398,7 +399,7 @@
 				"typescript": [
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
-					"docs-keep-inline-comments-for-constraints-and-caveats",
+					"docs-keep-body-comments-for-intent-and-steps",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks",
@@ -410,7 +411,7 @@
 			"id": "RTE14-subscription-effectevent",
 			"prompt": "directly import useEffectEvent, replace only a socket subscription latest-callback ref-sync hack with a named handleMessage = useEffectEvent(...), and update subscription lifecycle JSDoc; do not change click or submit actions.",
 			"files": [
-				"src/page/entries/component/pg-entry-socket.tsx"
+				"src/page/products/component/pg-product-socket.tsx"
 			],
 			"expectedSkills": [
 				"react",
@@ -436,7 +437,7 @@
 			"id": "RTE15-suspense-absence",
 			"prompt": "replace Suspense detail ?? [], || \"-\", a local pending Spinner, and top-level aliases with an explicit empty state and origin chaining; remove an ungrounded explanatory comment.",
 			"files": [
-				"src/page/entry-detail/pg-entry-detail.tsx"
+				"src/page/product-detail/pg-product-detail.tsx"
 			],
 			"expectedSkills": [
 				"react",
@@ -444,6 +445,7 @@
 			],
 			"expectedSelected": {
 				"react": [
+					"composition-name-fragments-explicitly",
 					"screen-keep-derived-values-close",
 					"screen-place-suspense-boundaries-at-the-section-owner",
 					"screen-avoid-ad-hoc-loading-branches",
@@ -451,7 +453,7 @@
 				],
 				"typescript": [
 					"absence-expose-optional-values-instead-of-silent-fallbacks",
-					"docs-keep-inline-comments-for-constraints-and-caveats",
+					"docs-keep-body-comments-for-intent-and-steps",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"docs-justify-convention-exceptions-with-a-reason-comment"
 				]
@@ -459,11 +461,11 @@
 		},
 		{
 			"id": "RTE16-private-component-import-direction",
-			"prompt": "two sibling files under src/page/detail/component/spike-pattern-panel/component/ import each other's legend row through ../; make the panel own the shared legend row and pass it down as an element prop, and remove the sibling and @/page component imports.",
+			"prompt": "two sibling files under src/page/detail/component/sales-trend-panel/component/ import each other's legend row through ../; make the panel own the shared legend row and pass it down as an element prop, and remove the sibling and @/page component imports.",
 			"files": [
-				"src/page/detail/component/spike-pattern-panel/pg-spike-pattern-panel.tsx",
-				"src/page/detail/component/spike-pattern-panel/component/pg-detection-section.tsx",
-				"src/page/detail/component/spike-pattern-panel/component/pg-summary-band.tsx"
+				"src/page/detail/component/sales-trend-panel/pg-sales-trend-panel.tsx",
+				"src/page/detail/component/sales-trend-panel/component/pg-detection-section.tsx",
+				"src/page/detail/component/sales-trend-panel/component/pg-summary-band.tsx"
 			],
 			"expectedSkills": [
 				"react",
@@ -487,7 +489,7 @@
 			"files": [
 				"src/widget/chart/component/wg-chart-root.tsx",
 				"src/widget/chart/hook/use-chart-instance.ts",
-				"src/widget/chart/function/build-chart-option.ts"
+				"src/widget/chart/function/to-chart-option.ts"
 			],
 			"expectedSkills": [
 				"react",

@@ -28,7 +28,8 @@ tags: ownership, scope, prefix
 
 - 폴더가 아니라 가장 가까운 공개 패키지 경계로 판정합니다.
   위젯 내부 부품이 `component` 폴더에 있어도 `wg_`입니다.
-- 한 화면만 쓰는데 `wg_`를 붙이지 않습니다. 재사용을 예상해서 미리 올리지 않습니다.
+- 한 화면만 쓰는데 `wg_`를 붙이지 않습니다.
+  재사용을 예상해서 미리 올리지 않습니다.
 - 여러 화면이 쓰기 시작하면 그때 `pg_`에서 `wg_`로 옮깁니다.
 
 어떤 파일이 화면 소유인지는 활성화된 프레임워크 규약이 판단합니다.
@@ -43,8 +44,8 @@ widget/chart/component/wg-chart-header.css
 **Incorrect (한 화면만 쓰는 컴포넌트를 재사용 예상으로 미리 `wg_`로 올림):**
 
 ```txt
-page/detail/component/pg-spike-pattern-panel.css
-  wg_spikePatternPanel__root
+page/detail/component/pg-sales-trend-panel.css
+  wg_salesTrendPanel__root
 ```
 
 **Correct (재사용 범위대로 접두사를 붙임):**
@@ -53,8 +54,8 @@ page/detail/component/pg-spike-pattern-panel.css
 page/detail/pg-detail.css
   pg_detail__root
 
-page/detail/component/pg-spike-pattern-panel.css
-  pg_spikePatternPanel__root
+page/detail/component/pg-sales-trend-panel.css
+  pg_salesTrendPanel__root
 
 widget/chart/component/wg-chart-header.css
   wg_chartHeader__root

@@ -29,14 +29,17 @@ tags: ownership
 | `hook` | 실제 상태·이펙트·컨텍스트를 소유한 커스텀 훅 |
 | `type` | 여러 파일이 공유하는 계약 |
 
-`util`, `helper`, `constant`, `common`, `shared` 같은 폴더는 만들지 않습니다.
+소유자 아래에는 `util`, `helper`, `constant`, `common`, `shared` 같은 폴더를 만들지 않습니다.
+전역 `shared/`는 다른 자리라 여기 해당하지 않습니다.
 폴더 이름은 단수로 쓰고 프레임워크가 강제하는 이름만 예외로 둡니다.
 
 배치 기준입니다.
 
-- 필요한 역할 폴더만 그때 만듭니다. 빈 폴더를 미리 만들어 두지 않습니다.
-- 파일이 하나뿐인 역할 폴더도 그대로 둡니다. 형제 `.ts` 하나로 대신하지 않습니다.
-- 자기 역할 폴더가 필요한 컴포넌트만 자기 폴더를 갖고, 말단은 `component` 아래 파일로 둡니다.
+- 필요한 역할 폴더만 그때 만듭니다.
+  빈 폴더를 미리 만들어 두지 않습니다.
+- 파일이 하나뿐인 역할 폴더도 그대로 둡니다.
+  형제 `.ts` 하나로 대신하지 않습니다.
+- 자기 역할 폴더가 필요한 컴포넌트만 자기 폴더를 갖고, 더 나뉘지 않는 것은 `component` 아래 파일로 둡니다.
 - 프롭스는 해당 TSX에 두고 여러 파일이 공유하는 계약만 `type`으로 옮깁니다.
 - 파일명과 심볼의 계층 접두사는 `ownership-prefix-layer-names-on-files-and-symbols`가 정합니다.
 - 소유자 중첩이 3단계에 닿으면 분리가 맞는지 `widget`으로 나갈 대상인지 다시 봅니다.
@@ -69,24 +72,24 @@ page/detail/
 └── helpers/
 ```
 
-**Correct (필요한 역할 폴더만 만들고 말단은 파일로 둠):**
+**Correct (필요한 역할 폴더만 만들고 나머지는 파일로 둠):**
 
 ```txt
 page/detail/
 ├── pg-detail.tsx
 ├── pg-detail.css
 ├── function/
-│   └── map-api-response-to-view-model.ts
+│   └── to-product-view-model.ts
 ├── type/
 │   └── detail-view-model.ts
 └── component/
     ├── pg-summary-band.tsx
     ├── pg-summary-band.css
-    └── spike-pattern-panel/
-        ├── pg-spike-pattern-panel.tsx
-        ├── pg-spike-pattern-panel.css
+    └── sales-trend-panel/
+        ├── pg-sales-trend-panel.tsx
+        ├── pg-sales-trend-panel.css
         └── function/
-            └── resolve-chart-viewport.ts
+            └── to-chart-viewport.ts
 ```
 
 **Correct (지원 코드가 없으면 폴더 없이 파일만 둠):**

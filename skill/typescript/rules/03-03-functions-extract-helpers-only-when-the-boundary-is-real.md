@@ -1,28 +1,52 @@
 ---
 title: Extract Support Functions Only When the Boundary Is Real
-titleKo: 호출 경계가 실제로 있을 때만 보조 함수를 뺍니다
+titleKo: 재사용이 생기거나 렌더 파일 밖으로 낼 때만 보조 함수를 뺍니다
 impact: HIGH
-impactDescription: 재사용 계약이나 테스트 경계가 없는데 보조 함수를 빼서 흐름이 조각나는 것을 막습니다
+impactDescription: 흐름을 읽으려고 파일을 왕복하게 만드는 조각내기를 막습니다
 appliesWhen:
   - 보조 함수를 빼내거나 옮기거나 내보내거나 공유할 때
-  - 범용 보조 파일, 소유자 하나만 쓰는 변환 함수, 잔손질 단계의 경계를 바꿀 때
+  - 범용 보조 파일, 소유자 하나만 쓰는 변환 함수, 자잘한 정리 단계의 경계를 바꿀 때
 reviewWith: functions-place-and-promote-support-functions, docs-require-header-jsdoc-on-key-declarations
 tags: functions, boundaries
 ---
 
 ## Extract Support Functions Only When the Boundary Is Real
 
-**Impact: HIGH (재사용 계약이나 테스트 경계가 없는데 보조 함수를 빼서 흐름이 조각나는 것을 막습니다)**
+**Impact: HIGH (흐름을 읽으려고 파일을 왕복하게 만드는 조각내기를 막습니다)**
 
-보조 함수는 "이름"이 아니라 "호출 경계"가 있을 때만 떼어 냅니다.
+기본은 빼지 않는 것입니다.
+흐름은 한 자리에서 위에서 아래로 읽히는 편이 낫습니다.
+빼는 사유는 둘뿐입니다.
+둘 중 하나에 해당해야 뺍니다.
 
-- 필수: 입력과 출력이 분명하고, 실행 문맥 없이도 따로 검증할 수 있어야 합니다
-- 떼어 낼 신호: 여러 소유자가 직접 호출하거나, 여러 내보낸 함수에서 같은 도메인 규칙이 반복됩니다
-- 그대로 둘 것: 한 번만 쓰는 짧은 계산, 선택 값 보정, 라벨 기본값, 메서드 하나만 쓰는 변환 함수
-떼어 낸 다음 어디 두고 언제 공용으로 올릴지는
+| 사유 | 조건 |
+| --- | --- |
+| 재사용 | **이 변경을 적용한 뒤의 트리**에서 서로 다른 파일 둘 이상이 실제로 부릅니다. 호출부 추가가 예정만 되어 있으면 세지 않습니다 |
+| 렌더 파일 밖으로 | `.tsx` 안의 **요청·저장 payload 조립** 함수입니다. 훅·JSX·컴포넌트 상태를 하나도 쓰지 않으면 호출부가 하나여도 형제 `.ts`로 옮깁니다 |
+
+두 번째 사유는 재사용이 아니라 `.tsx`에 렌더가 아닌 코드를 남기지 않으려는 것입니다.
+`.ts` 안에서는 해당하지 않습니다.
+**표시용 가공은 여기 들지 않습니다.** 목록을 화면 모양으로 바꾸거나 문자열을 조립하는 것은
+쓰는 자리에 그대로 둡니다.
+밖으로 내는 것은 서버로 보낼 값을 만드는 함수뿐입니다.
+
+어느 사유든 그 함수만 따로 읽어도 뜻이 통해야 합니다.
+바깥 변수, 훅, 컴포넌트 상태에 기대면 아직 뺄 수 없습니다.
+
+**`.ts` 안에서 같은 파일만 쓰는 함수는 몇 번 반복되든 빼지 않습니다.**
+같은 계산을 두세 번 적어도 괜찮습니다.
+파일을 하나 더 여는 쪽이 더 비쌉니다.
+"나중에 또 쓸 것 같아서"는 사유가 아닙니다.
+그때 가서 뺍니다.
+
+사유와 무관하게 빼지 않는 것:
+
+- 본문이 한 줄인 계산
+- `.map()` 콜백 하나에만 쓰이는 변환
+- 선택 값 보정, 라벨 기본값 같은 자잘한 정리 단계
+
+뺀 다음 어디 두고 언제 공용으로 올릴지는
 `functions-place-and-promote-support-functions`가 정합니다.
-
-흐름을 알려고 파일을 왕복해야 하면 경계가 아니라 그냥 쪼갠 것입니다.
 
 **Incorrect (한 번만 쓰는 한 줄 계산을 파일로 분리):**
 
@@ -31,115 +55,85 @@ tags: functions, boundaries
 export const getNextIteration = (iteration: number): number => iteration + 1;
 ```
 
-**Incorrect (보조 모듈 안에서도 내보내기 도우미를 단계별로 누적):**
-
-```ts
-export const normalizeProfileValues = (formValues: ProfileFormValues) => {
-	// ...
-};
-
-export const buildAvatarRequests = (files: UploadFile[]) => {
-	// ...
-};
-
-export const buildProfileUpdatePayload = (
-	formValues: ProfileFormValues,
-	files: UploadFile[],
-) => {
-	return {
-		...normalizeProfileValues(formValues),
-		avatarRequests: buildAvatarRequests(files),
-	};
-};
-```
-
 **Incorrect (네임스페이스 메서드 하나 때문에 변환 함수를 쪼갬):**
 
 ```ts
-const readLabelText = (label: Label) => label.name.trim() || label.code;
+const toLabelText = (label: Label) => label.name.trim() || label.code;
 
-const mapRecordToEntryView = (record: RecordItem): EntryView => {
-	const summary = record.description ?? record.memo;
-
+const toProductView = (record: RecordItem): ProductView => {
 	return {
 		id: record.id,
-		url: record.url,
-		data: {
-			type: "record",
-			title: record.title,
-			summary,
-			labels: record.labels.map(readLabelText),
-		},
+		labels: record.labels.map(toLabelText),
 	};
 };
 
 export const api = {
 	record: {
-		mapEntry: (record: RecordItem) => mapRecordToEntryView(record),
+		toProductView: (record: RecordItem) => toProductView(record),
 	},
 };
 ```
 
-**Correct (작은 계산은 지역 흐름에 둠):**
+**Correct (작은 계산은 쓰는 자리에 그대로 둠):**
 
 ```ts
-const nextIteration = iteration + 1;
-```
-
-**Correct (기능 지역 보조 모듈은 도메인 단위 내보내기 안에서 단계별로 정리):**
-
-```ts
-// profile-support.ts
-/**
- * profile form 값을 저장 payload로 조립
- */
-export const buildProfileUpdatePayload = (formValues: ProfileFormValues) => {
-	const normalizedDisplayName = formValues.displayName.trim();
-
-	return {
-		displayName: normalizedDisplayName,
-	};
+// page/profile/pg-profile.tsx
+const handleNextClick = () => {
+	setIteration(iteration + 1);
 };
 ```
 
-**Correct (단일 소유자 이름 공간의 단계는 메서드 본문에 둠):**
+**Correct (단일 소유자 네임스페이스의 단계는 메서드 본문에 둠):**
 
 ```ts
 export const api = {
 	record: {
-		mapEntry: (record: RecordItem): EntryView => {
-			const summary = record.description ?? record.memo;
-
+		toProductView: (record: RecordItem): ProductView => {
 			return {
 				id: record.id,
-				url: record.url,
-				data: {
-					type: "record",
-					title: record.title,
-					summary,
-					labels: record.labels.map((label) => label.name.trim() || label.code),
-				},
+				labels: record.labels.map((label) => label.name.trim() || label.code),
 			};
 		},
 	},
 };
 ```
 
+**Correct (서로 다른 파일 둘이 이미 부르는 순수 함수를 뺌):**
+
 ```ts
-// profile-form.ts
-import { buildProfileUpdatePayload } from "./profile-support";
+// page/profile/function/to-profile-save-request.ts
+/**
+ * profile form 값을 저장 payload로 조립
+ */
+export const toProfileSaveRequest = (formValues: ProfileFormValues) => {
+	return {
+		displayName: formValues.displayName.trim(),
+	};
+};
 ```
 
 ```ts
-// shared/util.ts
-export const util = {
-	date: {
-		/**
-		 * date 입력값을 ISO 문자열로 정규화
-		 */
-		normalize(value: Date | string): string {
-			return new Date(value).toISOString();
-		},
-	},
+// page/profile/pg-profile-form.tsx 와 page/profile/pg-profile-drawer.tsx 가 함께 부른다
+import { toProfileSaveRequest } from "./function/to-profile-save-request";
+```
+
+**Correct (`.tsx` 안의 순수 조립 함수는 호출부가 하나여도 형제 `.ts`로 냄):**
+
+```ts
+// page/products/function/to-product-save-request.ts
+/**
+ * product 폼 값을 저장 요청으로 조립
+ */
+export const toProductSaveRequest = (formValues: ProductFormValues) => {
+	return {
+		title: formValues.title.trim(),
+		categoryId: formValues.categoryId,
+		attachmentIds: formValues.attachments.map((attachment) => attachment.id),
+	};
 };
+```
+
+```tsx
+// page/products/pg-products.tsx 하나만 부르지만 훅도 JSX도 쓰지 않는 계산이다
+import { toProductSaveRequest } from "./function/to-product-save-request";
 ```

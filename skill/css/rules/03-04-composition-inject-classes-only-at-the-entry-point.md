@@ -17,7 +17,8 @@ tags: components, entry-point, class-props
 **Impact: HIGH (내부 노드마다 창구를 열면 사용처가 그 컴포넌트 구조에 묶입니다)**
 
 우리가 만든 컴포넌트가 여는 스타일 창구는 **진입점 하나**입니다.
-`ui_`든 `wg_`든 `pg_`든 같습니다. 외부에서 주입하는 클래스는 그 컴포넌트의 최상위까지만 닿습니다.
+`ui_`든 `wg_`든 `pg_`든 같습니다.
+외부에서 주입하는 클래스는 그 컴포넌트의 최상위까지만 닿습니다.
 
 컴포넌트는 받은 `className`을 자기 최상위 클래스와 `clsx()`로 합칩니다.
 사용처는 그 클래스로 배치, 여백, 크기만 줍니다.
@@ -49,14 +50,12 @@ export interface UiCollapseProps {
 
 ```tsx
 export const UiCollapse = (props: UiCollapseProps) => {
-	const { className, title, children } = props;
-
 	return (
 		<div className={clsx("ui_collapse__root")}>
-			<button className={clsx("ui_collapse__header", className)} type="button">
-				{title}
+			<button className={clsx("ui_collapse__header", props.className)} type="button">
+				{props.title}
 			</button>
-			<div className={clsx("ui_collapse__content")}>{children}</div>
+			<div className={clsx("ui_collapse__content")}>{props.children}</div>
 		</div>
 	);
 };
@@ -85,15 +84,14 @@ export interface UiCollapseProps {
 }
 
 export const UiCollapse = (props: UiCollapseProps) => {
-	const { className, variant = "default", title, children } = props;
-	const isCompact = variant === "compact";
+	const isCompact = props.variant === "compact";
 
 	return (
-		<div className={clsx("ui_collapse__root", isCompact && "ui_collapse__root--compact", className)}>
+		<div className={clsx("ui_collapse__root", isCompact && "ui_collapse__root--compact", props.className)}>
 			<button className={clsx("ui_collapse__header", isCompact && "ui_collapse__header--compact")} type="button">
-				<span className={clsx("ui_collapse__title", isCompact && "ui_collapse__title--compact")}>{title}</span>
+				<span className={clsx("ui_collapse__title", isCompact && "ui_collapse__title--compact")}>{props.title}</span>
 			</button>
-			<div className={clsx("ui_collapse__content", isCompact && "ui_collapse__content--compact")}>{children}</div>
+			<div className={clsx("ui_collapse__content", isCompact && "ui_collapse__content--compact")}>{props.children}</div>
 		</div>
 	);
 };
@@ -116,7 +114,9 @@ export const UiCollapse = (props: UiCollapseProps) => {
 **Correct (사용처는 최상위 스타일만 주고 내부 의도는 프롭으로 넘김):**
 
 ```tsx
-<UiCollapse className={clsx("pg_postFilterDialog__collapse")} variant="compact" title="필터" />
+<UiCollapse className={clsx("pg_postFilterDialog__collapse")} variant="compact" title="필터">
+	<PgPostFilterFields />
+</UiCollapse>
 ```
 
 ```css

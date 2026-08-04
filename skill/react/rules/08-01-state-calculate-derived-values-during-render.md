@@ -1,6 +1,6 @@
 ---
 title: Calculate Derived Values During Rendering
-titleKo: 파생 값은 렌더 중에 계산합니다
+titleKo: 파생값은 렌더 중에 계산합니다
 impact: HIGH
 impactDescription: 지금 입력으로 구할 수 있는 값을 상태로 두고 이펙트로 맞추지 않습니다
 appliesWhen:

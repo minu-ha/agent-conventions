@@ -18,7 +18,8 @@
 `strategy-choose-single-composition-compound-and-variants`가 상태를 가진 합성으로 확장하라고 할 때
 그 상태를 담는 자리가 여기입니다.
 
-- 값의 출처는 여전히 `useState`입니다. `Context`는 그 값을 나르는 통로입니다.
+- 값의 출처는 여전히 `useState`입니다.
+  `Context`는 그 값을 나르는 통로입니다.
 - 묶음 밖에서도 필요해지면 `Context`를 위로 올리지 않고 전역 스토어로 옮깁니다.
   그 판정은 `state-store-derived-authority`가 합니다.
 

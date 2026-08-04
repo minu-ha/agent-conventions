@@ -24,26 +24,28 @@ tags: strategy, composition, props, variants, component-design
 불리언이 늘어날수록 가능한 조합이 급증하고, JSX 분기와 스타일 조건도 함께 불어납니다.
 
 - 라우트 진입 안의 일회성 분기는 로컬에서 유지해도 됩니다.
-- 공용 `ui`나 `widget`는 드러난 변형 컴포넌트나 합성 컴포넌트로 드러냅니다.
+- 공용 `ui`나 `widget`은 드러난 변형 컴포넌트나 합성 컴포넌트로 드러냅니다.
 - `.Root` 같은 네임스페이스 부품 문법은 권장 예시일 뿐입니다.
   본질은 불리언을 없애고 구조를 명시적으로 드러내는 데 있습니다.
 
 **Incorrect (불리언 프롭 조합으로 공용 컴포넌트가 비대해짐):**
 
 ```tsx
-export interface WgEntryToolbarProps {
+export interface WgProductToolbarProps {
 	isCompact?: boolean;
 	isEditing?: boolean;
 	showSearch?: boolean;
 }
 
-export const WgEntryToolbar = (props: WgEntryToolbarProps) => {
-	const { isCompact, isEditing, showSearch } = props;
-
+export const WgProductToolbar = (props: WgProductToolbarProps) => {
 	return (
 		<header>
-			{showSearch ? <WgEntrySearchField /> : null}
-			{isEditing ? <WgEntryEditActions compact={isCompact} /> : <WgEntryBrowseActions compact={isCompact} />}
+			{props.showSearch ? <WgProductSearchField /> : null}
+			{props.isEditing ? (
+				<WgProductEditActions compact={props.isCompact} />
+			) : (
+				<WgProductBrowseActions compact={props.isCompact} />
+			)}
 		</header>
 	);
 };
@@ -55,36 +57,35 @@ export const WgEntryToolbar = (props: WgEntryToolbarProps) => {
 /**
  * 툴바 껍데기 부품
  */
-export interface WgEntryToolbarRootProps {
+export interface WgProductToolbarRootProps {
 	children: ReactNode;
 }
 
-const WgEntryToolbarRoot = (props: WgEntryToolbarRootProps) => {
-	const { children } = props;
-	return <header className={clsx("wg_entryToolbar__root")}>{children}</header>;
+const WgProductToolbarRoot = (props: WgProductToolbarRootProps) => {
+	return <header className={clsx("wg_productToolbar__root")}>{props.children}</header>;
 };
 
-export const WgEntryToolbar = {
-	Root: WgEntryToolbarRoot,
-	Search: WgEntrySearchField,
-	BrowseActions: WgEntryBrowseActions,
-	EditActions: WgEntryEditActions,
+export const WgProductToolbar = {
+	Root: WgProductToolbarRoot,
+	Search: WgProductSearchField,
+	BrowseActions: WgProductBrowseActions,
+	EditActions: WgProductEditActions,
 } as const;
 
-export const WgEntryBrowseToolbar = () => {
+export const WgProductBrowseToolbar = () => {
 	return (
-		<WgEntryToolbar.Root>
-			<WgEntryToolbar.Search />
-			<WgEntryToolbar.BrowseActions />
-		</WgEntryToolbar.Root>
+		<WgProductToolbar.Root>
+			<WgProductToolbar.Search />
+			<WgProductToolbar.BrowseActions />
+		</WgProductToolbar.Root>
 	);
 };
 
-export const WgEntryEditToolbar = () => {
+export const WgProductEditToolbar = () => {
 	return (
-		<WgEntryToolbar.Root>
-			<WgEntryToolbar.EditActions />
-		</WgEntryToolbar.Root>
+		<WgProductToolbar.Root>
+			<WgProductToolbar.EditActions />
+		</WgProductToolbar.Root>
 	);
 };
 ```

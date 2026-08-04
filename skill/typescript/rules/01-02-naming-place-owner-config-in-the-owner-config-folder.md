@@ -18,6 +18,7 @@ tags: naming, config
 그 소유자 아래 `config` 폴더에 둡니다.
 
 - 파일은 `config/<owner>-config.ts`, 내보내는 상수는 `<owner>Config`입니다.
+  키는 공용 설정과 똑같이 `snake_case`라서 나중에 `shared/config.ts`로 올릴 때 이름을 고치지 않습니다.
   이름 표기는 `naming-use-consistent-file-and-symbol-naming`을 따릅니다.
 - `constants` 폴더는 만들지 않습니다.
 - 두 번째 소유자가 같은 값을 쓰게 되면 `naming-centralize-shared-config-namespaces`를 따라 올립니다.
@@ -27,8 +28,8 @@ tags: naming, config
 ```ts
 // shared/config.ts
 export const config = {
-	entryDetail: {
-		chartAxisTickCount: 6,
+	product_detail: {
+		chart_axis_tick_count: 6,
 	},
 } as const;
 ```
@@ -36,11 +37,11 @@ export const config = {
 **Correct (소유자 아래 `config` 폴더에 둠):**
 
 ```ts
-// page/entry-detail/config/entry-detail-config.ts
+// page/product-detail/config/product-detail-config.ts
 /**
- * entry 상세 화면 전용 표시 설정
+ * product 상세 화면 전용 표시 설정
  */
-export const entryDetailConfig = {
-	chartAxisTickCount: 6,
+export const productDetailConfig = {
+	chart_axis_tick_count: 6,
 } as const;
 ```

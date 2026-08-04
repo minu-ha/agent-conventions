@@ -169,7 +169,7 @@
 		},
 		{
 			"id": "css-ui-wrapper-root-prop-contract",
-			"prompt": "directly type-import the official root className Props, expose documented UiButtonProps, destructure props inside ui-button.tsx, and pass an existing layout class from order-actions.tsx; add no internal selector or new class.",
+			"prompt": "narrow UiButtonProps so it extends HTMLAttributes and opens only the library props we use, expose it documented, read props through the props object in ui-button.tsx, and pass an existing layout class from order-actions.tsx; add no internal selector or new class.",
 			"files": [
 				"src/ui/button/ui-button.tsx",
 				"src/page/order-index/component/pg-order-actions.tsx"
@@ -181,7 +181,9 @@
 			],
 			"expectedSelected": {
 				"react": [
-					"composition-destructure-props-inside",
+					"typing-narrow-library-wrapper-contracts",
+					"typing-choose-wrapper-shape-and-forwarding",
+					"composition-read-props-without-destructuring",
 					"docs-require-jsdoc-on-key-declarations"
 				],
 				"typescript": [
@@ -200,7 +202,7 @@
 		},
 		{
 			"id": "css-wrapper-element-for-spacing",
-			"prompt": "a wrapper div was added around UiCollapse only to give it margin; remove it by adding a className contract to the component.",
+			"prompt": "a wrapper div with an inline style margin was added around UiCollapse only for spacing; remove both by adding a className contract to the component.",
 			"files": [
 				"src/ui/collapse/ui-collapse.tsx",
 				"src/page/post-index/component/pg-post-filter-dialog.tsx"
@@ -212,15 +214,16 @@
 				"css": [
 					"naming-name-elements-and-modifiers-by-role",
 					"composition-inject-classes-only-at-the-entry-point",
-					"composition-do-not-add-wrapper-elements-for-styling"
+					"composition-do-not-add-wrapper-elements-for-styling",
+					"values-do-not-style-through-the-style-attribute"
 				]
 			}
 		},
 		{
 			"id": "css-rich-text-owner-block",
-			"prompt": "move top-level .wg_entryDetail__prose h2 and > :first-child into the existing owner block; the body comes from dangerouslySetInnerHTML so classes cannot be added.",
+			"prompt": "move top-level .wg_productDetail__prose h2 and > :first-child into the existing owner block; the body comes from dangerouslySetInnerHTML so classes cannot be added.",
 			"files": [
-				"src/widget/entry-detail/wg-entry-detail.css"
+				"src/widget/product-detail/wg-product-detail.css"
 			],
 			"expectedSkills": [
 				"css"
@@ -271,9 +274,9 @@
 		},
 		{
 			"id": "css-shared-declaration-group",
-			"prompt": "split the shared .pg_spikePanel__glyph--* comma group so each modifier block declares its own width and height; do not introduce local custom properties.",
+			"prompt": "split the shared .pg_salesPanel__glyph--* comma group so each modifier block declares its own width and height; do not introduce local custom properties.",
 			"files": [
-				"src/page/detail/component/spike-pattern-panel/pg-spike-pattern-panel.css"
+				"src/page/detail/component/sales-trend-panel/pg-sales-trend-panel.css"
 			],
 			"expectedSkills": [
 				"css"
@@ -336,7 +339,7 @@
 			"id": "css-negated-domain-state",
 			"prompt": "remove the :not(--checked) ancestor condition that drives the descendant checkbox preview; keep the hover and focus feedback.",
 			"files": [
-				"src/page/detail/component/spike-pattern-panel/pg-spike-pattern-panel.css"
+				"src/page/detail/component/sales-trend-panel/pg-sales-trend-panel.css"
 			],
 			"expectedSkills": [
 				"css"

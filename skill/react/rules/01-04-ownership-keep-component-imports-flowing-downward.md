@@ -35,7 +35,7 @@ tags: ownership
 **Incorrect (형제 컴포넌트를 직접 가져와 소유 관계가 사라짐):**
 
 ```tsx
-// page/detail/component/spike-pattern-panel/component/pg-detection-section.tsx
+// page/detail/component/sales-trend-panel/component/pg-detection-section.tsx
 import { PgLegendRow } from "./pg-legend-row";
 import { SectionHeading } from "../../section-heading/section-heading";
 ```
@@ -43,24 +43,22 @@ import { SectionHeading } from "../../section-heading/section-heading";
 **Incorrect (절대경로로 다른 화면 내부를 가져옴):**
 
 ```tsx
-import { PgSpikeChartCard } from "@/page/detail/component/spike-pattern-panel/component/pg-spike-chart-card";
+import { PgSalesChartCard } from "@/page/detail/component/sales-trend-panel/component/pg-sales-chart-card";
 ```
 
 **Correct (부모가 조립해서 내려보냄):**
 
 ```tsx
-// page/detail/component/spike-pattern-panel/pg-spike-pattern-panel.tsx
+// page/detail/component/sales-trend-panel/pg-sales-trend-panel.tsx
 import { UiSectionHeading } from "@/ui/section-heading/ui-section-heading";
 
 import { PgDetectionSection } from "./component/pg-detection-section";
 import { PgSummaryBand } from "./component/pg-summary-band";
 
-export const PgSpikePatternPanel = (props: PgSpikePatternPanelProps) => {
-	const { legendItems } = props;
-
+export const PgSalesTrendPanel = (props: PgSalesTrendPanelProps) => {
 	return (
-		<section className={clsx("pg_spikePatternPanel__root")}>
-			<PgDetectionSection heading={<UiSectionHeading title="상단 이탈 감지" />} legendItems={legendItems} />
+		<section className={clsx("pg_salesTrendPanel__root")}>
+			<PgDetectionSection heading={<UiSectionHeading title="매출 추이" />} legendItems={props.legendItems} />
 			<PgSummaryBand heading={<UiSectionHeading title="요약" />} />
 		</section>
 	);
@@ -70,6 +68,6 @@ export const PgSpikePatternPanel = (props: PgSpikePatternPanelProps) => {
 **Correct (맥락 독립 컴포넌트는 전역 레이어에서 가져옴):**
 
 ```tsx
-// page/detail/component/spike-pattern-panel/component/pg-detection-section.tsx
+// page/detail/component/sales-trend-panel/component/pg-detection-section.tsx
 import { WgLegendPanel } from "@/widget/legend-panel/wg-legend-panel";
 ```

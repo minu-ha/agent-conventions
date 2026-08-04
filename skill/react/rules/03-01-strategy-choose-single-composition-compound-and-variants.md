@@ -45,17 +45,15 @@ export interface UiProfileDialogProps {
 }
 
 export const UiProfileDialog = (props: UiProfileDialogProps) => {
-	const { isCompact, showActivity, showFocus, dialogTitle, renderFooter } = props;
-
 	return (
-		<section className={isCompact ? "dialog dialog--compact" : "dialog"}>
+		<section className={props.isCompact ? "dialog dialog--compact" : "dialog"}>
 			<header>
-				<h3>{dialogTitle ?? "Profile"}</h3>
+				<h3>{props.dialogTitle}</h3>
 			</header>
 			<ProfileSummary />
-			{showActivity ? <ActivityPanel /> : null}
-			{showFocus ? <FocusPanel /> : null}
-			<footer>{renderFooter?.()}</footer>
+			{props.showActivity ? <ActivityPanel /> : null}
+			{props.showFocus ? <FocusPanel /> : null}
+			<footer>{props.renderFooter?.()}</footer>
 		</section>
 	);
 };
@@ -70,13 +68,11 @@ export interface UiEmptyStateProps {
 }
 
 export const UiEmptyState = (props: UiEmptyStateProps) => {
-	const { title, description } = props;
-
 	return (
 		<section className={clsx("ui_emptyState__root")}>
 			<EmptyFolderIllustration />
-			<h2>{title}</h2>
-			<p>{description}</p>
+			<h2>{props.title}</h2>
+			<p>{props.description}</p>
 		</section>
 	);
 };
@@ -90,18 +86,15 @@ export interface UiSectionProps {
 }
 
 const UiSectionRoot = (props: UiSectionProps) => {
-	const { children } = props;
-	return <section className={clsx("ui_section__root")}>{children}</section>;
+	return <section className={clsx("ui_section__root")}>{props.children}</section>;
 };
 
 const UiSectionHeader = (props: UiSectionProps) => {
-	const { children } = props;
-	return <header className={clsx("ui_section__header")}>{children}</header>;
+	return <header className={clsx("ui_section__header")}>{props.children}</header>;
 };
 
 const UiSectionFooter = (props: UiSectionProps) => {
-	const { children } = props;
-	return <footer className={clsx("ui_section__footer")}>{children}</footer>;
+	return <footer className={clsx("ui_section__footer")}>{props.children}</footer>;
 };
 
 export const UiSection = {
@@ -117,38 +110,35 @@ export const UiSection = {
 const UiTabsContext = createContext<UiTabsContextValue | null>(null);
 
 const UiTabsRoot = (props: UiTabsRootProps) => {
-	const { defaultValue, children } = props;
-	const [activeValue, setActiveValue] = useState(defaultValue);
+	const [activeValue, setActiveValue] = useState(props.defaultValue);
 
 	return (
 		<UiTabsContext value={{ activeValue, setActiveValue }}>
-			<section>{children}</section>
+			<section>{props.children}</section>
 		</UiTabsContext>
 	);
 };
 
 const UiTabsTrigger = (props: UiTabsTriggerProps) => {
-	const { value, children } = props;
 	const tabs = useTabsContext();
 
 	/**
 	 * 탭 버튼 클릭 시 활성 값 전환
 	 */
 	const handleTriggerClick: MouseEventHandler<HTMLButtonElement> = () => {
-		tabs.setActiveValue(value);
+		tabs.setActiveValue(props.value);
 	};
 
 	return (
 		<button className={clsx("ui_tabs__trigger")} onClick={handleTriggerClick}>
-			{children}
+			{props.children}
 		</button>
 	);
 };
 
 const UiTabsPanel = (props: UiTabsPanelProps) => {
-	const { value, children } = props;
 	const tabs = useTabsContext();
-	return tabs.activeValue === value ? <section>{children}</section> : null;
+	return tabs.activeValue === props.value ? <section>{props.children}</section> : null;
 };
 ```
 

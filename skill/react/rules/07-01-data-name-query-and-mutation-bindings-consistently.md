@@ -17,25 +17,25 @@ tags: data, state, naming
 
 프로젝트가 이미 채택한 쿼리/뮤테이션 훅 이름은 유지하되, 로컬 바인딩 접두사는 `response`와 `mutation`만 사용합니다.
 코드 생성기 여부와 무관하게 쿼리는 `response...`,
-뮤테이션는 `mutation...`으로 맞춰야 화면 파일에서 역할과 오리진이 한눈에 보입니다.
+뮤테이션은 `mutation...`으로 맞춰야 화면 파일에서 역할과 출처가 한눈에 보입니다.
 
 **Incorrect (쿼리와 뮤테이션 바인딩 이름이 제각각임):**
 
 ```ts
-const list = useEntryListSuspense();
-const removeApi = useEntryRemove();
+const list = useProductListSuspense();
+const removeApi = useProductRemove();
 ```
 
 **Correct (로컬 바인딩 접두사를 통일):**
 
 ```ts
 /**
- * entry 목록 조회 API
+ * product 목록 조회 API
  */
-const responseEntryListSuspense = useEntryListSuspense();
+const responseProductListSuspense = useProductListSuspense();
 
 /**
- * entry 삭제 API
+ * product 삭제 API
  */
-const mutationEntryRemove = useEntryRemove();
+const mutationProductRemove = useProductRemove();
 ```

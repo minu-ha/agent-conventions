@@ -2,7 +2,7 @@
 title: Reuse Existing Contracts Before Declaring New Types
 titleKo: 새 타입을 선언하기 전에 기존 계약을 먼저 씁니다
 impact: HIGH
-impactDescription: 의미가 그대로면 기존 타입이나 스키마에서 파생해 같은 형태를 두 번 선언하지 않습니다
+impactDescription: 뜻이 그대로면 기존 타입이나 스키마에서 끌어와 같은 형태를 두 번 선언하지 않습니다
 appliesWhen:
   - 뜻이 같은 기존 타입, 인터페이스, 스키마가 있는데 형태를 새로 선언·변경·복제·파생할 때
   - 같은 형태를 두 번 선언했다가 넣거나 뺄 때
@@ -13,10 +13,34 @@ tags: types
 
 ## Reuse Existing Contracts Before Declaring New Types
 
-**Impact: HIGH (의미가 그대로면 기존 타입이나 스키마에서 파생해 같은 형태를 두 번 선언하지 않습니다)**
+**Impact: HIGH (뜻이 그대로면 기존 타입이나 스키마에서 끌어와 같은 형태를 두 번 선언하지 않습니다)**
 
-필드 이름, 타입, 선택 여부가 모두 같은 선언이 이미 있으면 그대로 참조하거나 `Pick`, `Omit`, 인덱스 접근으로 파생합니다.
-필드가 하나라도 다르면 새로 선언합니다. 소유자 이동이나 이름, 주석만 바뀌면 대상이 아닙니다.
+필드 이름, 타입, 선택 여부가 모두 같은 선언이 이미 있으면 그대로 참조합니다.
+그중 일부만 필요하면 **`interface`를 선언하고 각 필드를 `원본["필드"]` 인덱스 접근으로 가져옵니다.**
+같은 이름의 필드가 타입이나 선택 여부에서 하나라도 다르면 끌어오지 않고 새로 선언합니다.
+필드 구성이 부분집합인 것은 다른 것이 아닙니다.
+그때가 인덱스 접근을 쓰는 자리입니다.
+소유자 이동이나 이름, 주석만 바뀌면 대상이 아닙니다.
+
+`Pick`과 `Omit`은 쓰지 않습니다.
+한 형태로 고정합니다.
+
+| 인덱스 접근 `interface` | `Pick` · `Omit` |
+| --- | --- |
+| 필드 이름이 선언에 그대로 보입니다 | 이름이 문자열 인자 안에 숨습니다 |
+| 필드마다 문서 주석을 답니다. `types-document-custom-types-and-shapes`가 그렇게 요구합니다 | 필드가 없어 헤더 주석밖에 못 답니다 |
+| 필드마다 출처가 따로 남아 여러 계약에서 모을 수 있습니다 | 원본 하나에서만 뽑을 수 있습니다 |
+
+원본 필드의 타입이 바뀌면 둘 다 따라가고, 원본에서 필드가 사라지면 둘 다 그 자리에서 컴파일 오류가 납니다.
+
+**인덱스 접근은 타입만 가져오고 `?`와 `readonly`는 가져오지 않습니다.
+직접 적습니다.**
+`nickname?: string`을 `nickname: Src["nickname"]`으로 옮기면 `string | undefined`인 **필수** 필드가 됩니다.
+`readonly id: string`도 인덱스 접근으로 옮기면 쓰기가 열립니다.
+원본에서 `?`나 `readonly`가 붙은 필드는 파생한 `interface`에도 같이 적습니다.
+
+필드가 없는 별칭 하나만 필요하면 인덱스 접근을 그대로 씁니다.
+`type ProductId = ProductRecord["id"];`가 그 경우입니다.
 
 형태가 그대로인 계약을 새 자리에서 쓰는 것만으로는 이 규칙이 걸리지 않습니다.
 호출 계약 역할은 `types-document-custom-types-and-shapes`가 따로 판정합니다.
@@ -47,11 +71,48 @@ interface UserPreview {
 }
 ```
 
-**Correct (기존 계약에서 필요한 부분만 파생):**
+**Incorrect (`Pick`으로 뽑아 필드 이름과 설명이 사라짐):**
+
+```ts
+type UserPreview = Pick<UserRecord, "id" | "name">;
+```
+
+**Correct (필드마다 출처를 인덱스 접근으로 가져옴):**
 
 ```ts
 /**
  * 사용자 미리보기 계약
  */
-type UserPreview = Pick<UserRecord, "id" | "name">;
+interface UserPreview {
+	/**
+	 * 사용자 식별자
+	 */
+	id: UserRecord["id"];
+	/**
+	 * 목록에 표시할 이름
+	 */
+	name: UserRecord["name"];
+}
+```
+
+**Correct (여러 계약에서 필드를 모으고 `?`·`readonly`를 직접 적음):**
+
+```ts
+/**
+ * product 목록 한 행의 표시 계약
+ */
+interface ProductListRow {
+	/**
+	 * product 식별자
+	 */
+	readonly id: ProductRecord["id"];
+	/**
+	 * 소속 분류 이름
+	 */
+	categoryName: CategoryRecord["name"];
+	/**
+	 * 마지막 수정자 이름. 원본에서 선택 필드라 여기서도 선택으로 둔다
+	 */
+	ownerName?: UserRecord["name"];
+}
 ```

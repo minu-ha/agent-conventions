@@ -1,6 +1,6 @@
 ---
 title: Use useEffectEvent for Non-reactive Effect Callbacks
-titleKo: 이펙트 안 비반응 콜백은 `useEffectEvent` 로 감쌉니다
+titleKo: 이펙트 안 비반응 콜백은 `useEffectEvent`로 감쌉니다
 impact: MEDIUM-HIGH
 impactDescription: 핸들러 로직은 최신으로 읽고 이펙트는 실제 구독에만 반응합니다
 appliesWhen:
@@ -21,7 +21,8 @@ tags: state, effects
 이벤트 핸들러를 이펙트로 옮기라는 뜻이 아닙니다.
 실제 구독·연결 이펙트 안에서만 쓰고, 클릭·제출 같은 사용자 액션은 이름 붙인 핸들러에 둡니다.
 
-`useEffectEvent`는 리액트 19.2 이상에만 있습니다. 그보다 낮으면 이 규칙을 적용하지 않습니다.
+`useEffectEvent`는 리액트 19.2 이상에만 있습니다.
+그보다 낮으면 이 규칙을 적용하지 않습니다.
 
 `useEffectEvent`로 감싼 콜백에는 계약에 없는 DOM 이벤트나 커링을 만들지 않습니다.
 그래서 `typing-take-handler-types-from-existing-contracts`의 리액트 핸들러 타입 규칙은 이 자리에 적용하지 않습니다.

@@ -41,7 +41,7 @@
 		},
 		{
 			"id": "derive-existing-contract-with-docs",
-			"prompt": "replace a duplicate `UserPreview` interface with a same-name `Pick<UserRecord, ...>` alias and add concise Korean header doc comments; imports and names otherwise stay unchanged.",
+			"prompt": "replace a duplicate `UserPreview` interface with a same-name interface that pulls each field through `UserRecord[\"id\"]` indexed access and add Korean header and field doc comments; imports and names otherwise stay unchanged.",
 			"files": [
 				"src/users/user-preview.ts"
 			],
@@ -61,7 +61,7 @@
 		},
 		{
 			"id": "helper-boundary-scope-drift",
-			"prompt": "inline a single-owner mapper/sub-step into `profile-api.ts`.",
+			"prompt": "inline a single-owner `mapProfileRow` sub-step into `profile-api.ts` and rename the remaining exported builder by its result.",
 			"files": [
 				"src/profile/profile-api.ts"
 			],
@@ -70,8 +70,10 @@
 			],
 			"expectedSelected": {
 				"typescript": [
+					"naming-use-consistent-file-and-symbol-naming",
 					"functions-extract-helpers-only-when-the-boundary-is-real",
-					"functions-place-and-promote-support-functions"
+					"functions-place-and-promote-support-functions",
+					"functions-name-functions-by-what-comes-out"
 				]
 			},
 			"scopeDrift": {
@@ -86,9 +88,11 @@
 				],
 				"expectedSelected": {
 					"typescript": [
+						"naming-use-consistent-file-and-symbol-naming",
 						"naming-use-direct-imports-and-public-entry-points",
 						"functions-extract-helpers-only-when-the-boundary-is-real",
 						"functions-place-and-promote-support-functions",
+						"functions-name-functions-by-what-comes-out",
 						"docs-require-header-jsdoc-on-key-declarations",
 						"docs-write-concise-korean-comments-about-purpose-and-constraints",
 						"docs-write-doc-comments-as-multiline-blocks"
@@ -100,7 +104,7 @@
 			"id": "shared-collection-lookups-and-sort",
 			"prompt": "replace repeated `includes` with an existing Set's `has` and replace shared-input `.sort()` with `.toSorted()`; declarations, imports, and docs stay unchanged.",
 			"files": [
-				"src/search/filter-entries.ts"
+				"src/search/filter-products.ts"
 			],
 			"expectedSkills": [
 				"typescript"
@@ -114,7 +118,7 @@
 		},
 		{
 			"id": "enum-like-runtime-contract",
-			"prompt": "replace `enum AuditStatus` with snake_case `audit_status as const`, derive `AuditStatus`, and document the object, every key, and derived type in Korean.",
+			"prompt": "replace `enum ProductStatus` with snake_case `product_status as const`, derive `ProductStatus`, and document the object, every key, and derived type in Korean.",
 			"files": [
 				"src/audit/audit-status.ts"
 			],
@@ -135,7 +139,7 @@
 		},
 		{
 			"id": "wide-scope-assembly",
-			"prompt": "replace an existing top-level `let` plus conditional `push` flow with a declarative calculation assigned to the same `visibleTabs` name; imports and docs stay unchanged.",
+			"prompt": "replace an existing top-level `let` plus conditional `push` flow with a declarative calculation assigned to the same `visibleTabs` name and inline the single-use intermediate const; imports and docs stay unchanged.",
 			"files": [
 				"src/navigation/visible-tabs.ts"
 			],
@@ -144,7 +148,8 @@
 			],
 			"expectedSelected": {
 				"typescript": [
-					"functions-avoid-imperative-assembly-in-wide-scopes"
+					"functions-avoid-imperative-assembly-in-wide-scopes",
+					"functions-name-a-value-only-when-it-is-reused"
 				]
 			}
 		},
@@ -152,7 +157,7 @@
 			"id": "named-object-param",
 			"prompt": "change a function that destructures `BuildRequestUrlArgs` in the signature to accept `args` and destructure on the first body line; no other contract/docs/import changes.",
 			"files": [
-				"src/http/build-request-url.ts"
+				"src/http/to-request-url.ts"
 			],
 			"expectedSkills": [
 				"typescript"
@@ -167,7 +172,7 @@
 		},
 		{
 			"id": "explicit-product-fallback",
-			"prompt": "replace an ungrounded optional page-size `??` with an explicit branch for the specified product default 20 and a short Korean constraint comment; helper/header boundaries stay unchanged.",
+			"prompt": "replace an ungrounded optional page-size `??` literal with a reference to the declared config default and a Korean constraint comment; helper/header boundaries stay unchanged.",
 			"files": [
 				"src/search/resolve-page-size.ts"
 			],
@@ -177,7 +182,7 @@
 			"expectedSelected": {
 				"typescript": [
 					"absence-expose-optional-values-instead-of-silent-fallbacks",
-					"docs-keep-inline-comments-for-constraints-and-caveats",
+					"docs-keep-body-comments-for-intent-and-steps",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"docs-justify-convention-exceptions-with-a-reason-comment"
 				]

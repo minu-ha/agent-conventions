@@ -18,7 +18,7 @@ tags: docs, declarations
 그것을 태그로 다시 적지 않습니다.
 
 - `@api`, `@helper`, `@field` 같은 역할 태그를 붙이지 않습니다.
-- `@summary` 는 헤더 첫 줄이 이미 하는 일이라 쓰지 않습니다.
+- `@summary`는 헤더 첫 줄이 이미 하는 일이라 쓰지 않습니다.
 - `@schema`처럼 새 태그를 만들지 않습니다.
 - `@deprecated`, `@example`, `@param`, `@returns`처럼 TSDoc 규격에 있는 태그만 필요할 때 씁니다.
 
@@ -28,16 +28,16 @@ tags: docs, declarations
 
 ```ts
 /**
- * @api entry 목록 조회
+ * @api product 목록 조회
  */
-export const fetchEntryList = async (): Promise<Entry[]> => {
-	return await client.get("/entries");
+export const fetchProductList = async (): Promise<Product[]> => {
+	return await client.get("/products");
 };
 
 /**
- * @schema entry 저장 입력
+ * @schema product 저장 입력
  */
-export interface SaveEntryInput {
+export interface SaveProductInput {
 	title: string;
 }
 ```
@@ -46,18 +46,18 @@ export interface SaveEntryInput {
 
 ```ts
 /**
- * entry 목록 조회
+ * product 목록 조회
  */
-export const fetchEntryList = async (): Promise<Entry[]> => {
-	return await client.get("/entries");
+export const fetchProductList = async (): Promise<Product[]> => {
+	return await client.get("/products");
 };
 
 /**
- * entry 저장 입력
+ * product 저장 입력
  *
- * @deprecated `SaveEntryRequest` 로 옮기는 중이다.
+ * @deprecated `SaveProductRequest`로 옮기는 중이다.
  */
-export interface SaveEntryInput {
+export interface SaveProductInput {
 	title: string;
 }
 ```

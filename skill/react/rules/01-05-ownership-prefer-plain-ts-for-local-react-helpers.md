@@ -40,7 +40,7 @@ export const useMediaUploadPayload = (files: UploadFile[]) => {
 
 ```ts
 export const page = {
-	buildMediaUploadPayload(files: UploadFile[]) {
+	toMediaUploadRequest(files: UploadFile[]) {
 		return files.map((file) => ({ uid: file.uid }));
 	},
 };
@@ -49,11 +49,11 @@ export const page = {
 **Correct (순수 계산은 소유자의 `function` 폴더에서 이름 붙인 내보내기로 유지):**
 
 ```ts
-// page/entries/function/build-media-upload-payload.ts
+// page/products/function/to-media-upload-request.ts
 /**
  * 업로드 파일 목록을 저장 payload로 정규화
  */
-export const buildMediaUploadPayload = (files: UploadFile[]) => {
+export const toMediaUploadRequest = (files: UploadFile[]) => {
 	return files.map((file) => ({ uid: file.uid }));
 };
 ```
@@ -61,7 +61,7 @@ export const buildMediaUploadPayload = (files: UploadFile[]) => {
 **Correct (이름 붙인 내보내기를 직접 가져옴):**
 
 ```tsx
-import { buildMediaUploadPayload } from "./function/build-media-upload-payload";
+import { toMediaUploadRequest } from "./function/to-media-upload-request";
 
-const request = buildMediaUploadPayload(files);
+void saveMedia(toMediaUploadRequest(files));
 ```

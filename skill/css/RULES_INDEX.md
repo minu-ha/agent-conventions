@@ -1,7 +1,7 @@
 # CSS 컨벤션 Rule Index
 
 - Skill: `css`
-- Routing digest: `sha256:e3ad66e9f733dfd609c06eb0cab416e22bdd77cbc440ebc7709644dbe5fc6dfd`
+- Routing digest: `sha256:4749a83da3f2ef366c86c4afafa1f13f906963787bc0f270dc8af4c627c01594`
 
 ## Direct Companions
 
@@ -34,4 +34,5 @@
 - C23 | values-tokenize-repeated-visual-values | 여러 파일이 같은 색, 간격, radius, 타이포, 그림자 값을 쓸 때. 새 사용자 정의 속성을 선언할 때. | reviewWith: values-always-provide-css-variable-fallbacks
 - C24 | values-separate-domain-state-modifiers-from-dom-interaction-states | 앱 상태 수정자와 hover, focus, disabled 같은 DOM 상호작용 상태를 추가·변경할 때. 포커스 링을 수정할 때. | reviewWith: composition-do-not-build-structural-variants-with-modifiers
 - C25 | values-always-provide-a-visible-focus-indicator | \`outline\`, \`:focus\`, \`:focus-visible\` 스타일을 추가·수정할 때. 상호작용 요소의 기본 포커스 링을 덮어쓸 때. | reviewWith: values-separate-domain-state-modifiers-from-dom-interaction-states
-- C26 | tooling-configure-stylelint-to-enforce-these-rules | stylelint 설정을 새로 만들거나 규칙을 추가·수정할 때. 이 컨벤션 중 어디까지 자동으로 잡히는지 확인할 때. | reviewWith: naming-use-scope-slug-element-modifier-syntax, ownership-use-foreign-classes-only-under-your-own-root, selector-limit-nesting-block-depth
+- C26 | values-do-not-style-through-the-style-attribute | TSX에 \`style={{ … }}\`를 추가하거나 그 안의 선언을 바꿀 때. 컴포넌트 프롭으로 \`style\`을 받아 넘길 때. | reviewWith: composition-inject-classes-only-at-the-entry-point, values-always-provide-css-variable-fallbacks, values-tokenize-repeated-visual-values
+- C27 | tooling-configure-stylelint-to-enforce-these-rules | stylelint 설정을 새로 만들거나 규칙을 추가·수정할 때. 이 컨벤션 중 어디까지 자동으로 잡히는지 확인할 때. | reviewWith: naming-use-scope-slug-element-modifier-syntax, ownership-use-foreign-classes-only-under-your-own-root, selector-limit-nesting-block-depth

@@ -14,7 +14,8 @@ tags: selector, element-selectors, markup
 
 **Impact: MEDIUM (태그만 바꿔도 스타일이 사라지므로 우리가 렌더하는 마크업에는 클래스를 붙입니다)**
 
-우리가 렌더하는 마크업에는 요소 선택자를 쓰지 않습니다. 클래스를 붙입니다.
+우리가 렌더하는 마크업에는 요소 선택자를 쓰지 않습니다.
+클래스를 붙입니다.
 
 `div`를 `section`으로, `span`을 `p`로 바꾸는 것만으로 스타일이 사라집니다.
 그 변경은 TSX에서 일어나고 CSS 파일에는 흔적이 남지 않습니다.
@@ -26,8 +27,10 @@ tags: selector, element-selectors, markup
 `dangerouslySetInnerHTML`, Markdown 렌더러, 리치 텍스트 에디터 출력이 여기 해당합니다.
 TSX에서 그 지점이 보이므로 "이게 원본 HTML인가"를 따질 필요가 없습니다.
 
-- 그때도 감싼 클래스 블록 안에서만 씁니다. 블록 바깥에 `h2 { }`를 두면 그 화면 모든 `h2`에 걸립니다.
-- `:first-child` 같은 구조 선택자도 같습니다. 우리가 렌더하면 클래스를 붙입니다.
+- 그때도 감싼 클래스 블록 안에서만 씁니다.
+  블록 바깥에 `h2 { }`를 두면 그 화면 모든 `h2`에 걸립니다.
+- `:first-child` 같은 구조 선택자도 같습니다.
+  우리가 렌더하면 클래스를 붙입니다.
 
 `selector-disallowed-list`가 중첩 안 요소 선택자를 막습니다.
 그래서 이 예외를 쓸 때는 `stylelint-disable-next-line` 주석이 필요합니다.
@@ -54,7 +57,7 @@ TSX에서 그 지점이 보이므로 "이게 원본 HTML인가"를 따질 필요
 **Incorrect (요소 선택자를 최상위에 둠):**
 
 ```css
-.wg_entryDetail__prose h2 {
+.wg_productDetail__prose h2 {
 	margin: 24px 0 12px;
 }
 ```
@@ -86,14 +89,14 @@ TSX에서 그 지점이 보이므로 "이게 원본 HTML인가"를 따질 필요
 
 ```tsx
 <div
-	className="wg_entryDetail__prose"
-	dangerouslySetInnerHTML={{__html: entry.bodyHtml}}
+	className="wg_productDetail__prose"
+	dangerouslySetInnerHTML={{__html: product.bodyHtml}}
 />
 ```
 
 ```css
 /* stylelint-disable selector-disallowed-list -- dangerouslySetInnerHTML 로 들어온 마크업 */
-.wg_entryDetail__prose {
+.wg_productDetail__prose {
 	& h2 {
 		margin: 24px 0 12px;
 		font-size: 18px;

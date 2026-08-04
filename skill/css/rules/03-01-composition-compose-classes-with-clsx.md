@@ -1,6 +1,6 @@
 ---
 title: Compose Classes With `clsx()`
-titleKo: 클래스는 `clsx()` 로 조립합니다
+titleKo: 클래스는 `clsx()`로 조립합니다
 impact: HIGH
 impactDescription: 기본 클래스와 상태 수정자를 섞어도 TSX 조립이 한눈에 읽힙니다
 appliesWhen:

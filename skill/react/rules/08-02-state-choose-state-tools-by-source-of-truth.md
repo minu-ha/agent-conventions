@@ -31,7 +31,8 @@ tags: state, react-query, zustand
 `strategy-choose-single-composition-compound-and-variants`가 상태를 가진 합성으로 확장하라고 할 때
 그 상태를 담는 자리가 여기입니다.
 
-- 값의 출처는 여전히 `useState`입니다. `Context`는 그 값을 나르는 통로입니다.
+- 값의 출처는 여전히 `useState`입니다.
+  `Context`는 그 값을 나르는 통로입니다.
 - 묶음 밖에서도 필요해지면 `Context`를 위로 올리지 않고 전역 스토어로 옮깁니다.
   그 판정은 `state-store-derived-authority`가 합니다.
 
@@ -57,7 +58,7 @@ const themeStore = useThemeStore();
 const responseUserGetItemSuspense = useUserGetItemSuspense();
 ```
 
-**Correct (합성 컴포넌트 안에서 부품끼리 나눠 쓰는 상태는 `Context` 로 나름):**
+**Correct (합성 컴포넌트 안에서 부품끼리 나눠 쓰는 상태는 `Context`로 나름):**
 
 ```tsx
 interface UiTabsContextValue {
@@ -68,9 +69,8 @@ interface UiTabsContextValue {
 const UiTabsContext = createContext<UiTabsContextValue | null>(null);
 
 export const UiTabsRoot = (props: UiTabsRootProps) => {
-	const { children, defaultId } = props;
-	const [selectedId, setSelectedId] = useState(defaultId);
+	const [selectedId, setSelectedId] = useState(props.defaultId);
 
-	return <UiTabsContext value={{ selectedId, onSelect: setSelectedId }}>{children}</UiTabsContext>;
+	return <UiTabsContext value={{ selectedId, onSelect: setSelectedId }}>{props.children}</UiTabsContext>;
 };
 ```

@@ -1,6 +1,6 @@
 ---
 title: Declare Core Tokens Once and Fall Back Everywhere Else
-titleKo: 공통 토큰은 한 곳에 선언하고 그 밖 `var()` 에는 대체값을 둡니다
+titleKo: 공통 토큰은 한 곳에 선언하고 그 밖 `var()`에는 대체값을 둡니다
 impact: HIGH
 impactDescription: 토큰이 빠지면 조용히 깨지지 않고 드러나며, 대체값이 매직 넘버로 번지지도 않습니다
 appliesWhen:

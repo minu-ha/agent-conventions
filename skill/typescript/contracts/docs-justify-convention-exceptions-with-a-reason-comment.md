@@ -17,7 +17,7 @@
 "성능을 위해", "안전하게", "필요해서"처럼 다시 확인할 수 없는 말은 근거가 아닙니다.
 그런 주석은 예외 조건을 채우지 못합니다.
 
-주석은 예외가 일어나는 줄 바로 위에 한국어 한 줄로 씁니다.
+주석은 예외가 일어나는 줄 바로 위에 `//`로 씁니다.
 형식과 어투는 `docs-write-concise-korean-comments-about-purpose-and-constraints`를 따릅니다.
 
 > 예시·예외가 필요하면 [full rule](../rules/05-06-docs-justify-convention-exceptions-with-a-reason-comment.md)을 읽습니다.

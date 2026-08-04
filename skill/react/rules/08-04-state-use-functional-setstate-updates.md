@@ -1,6 +1,6 @@
 ---
 title: Use Functional setState Updates When Based on Previous State
-titleKo: 이전 상태를 쓸 때는 함수형 `setState` 를 씁니다
+titleKo: 이전 상태를 쓸 때는 함수형 `setState`를 씁니다
 impact: MEDIUM-HIGH
 impactDescription: 다음 값이 현재 상태에 달려 있을 때 낡은 값을 붙잡는 버그를 막습니다
 appliesWhen:

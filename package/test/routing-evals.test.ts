@@ -97,11 +97,13 @@ const typescriptRuleUniverse = [
 	"functions-extract-helpers-only-when-the-boundary-is-real",
 	"functions-place-and-promote-support-functions",
 	"functions-avoid-imperative-assembly-in-wide-scopes",
+	"functions-name-a-value-only-when-it-is-reused",
 	"functions-prefer-immutable-array-sorting",
 	"functions-replace-enum-with-as-const-objects",
 	"functions-use-set-and-map-for-repeated-lookups",
+	"functions-name-functions-by-what-comes-out",
 	"absence-expose-optional-values-instead-of-silent-fallbacks",
-	"docs-keep-inline-comments-for-constraints-and-caveats",
+	"docs-keep-body-comments-for-intent-and-steps",
 	"docs-require-header-jsdoc-on-key-declarations",
 	"docs-write-concise-korean-comments-about-purpose-and-constraints",
 	"docs-write-doc-comments-as-multiline-blocks",
@@ -136,6 +138,7 @@ const cssRuleUniverse = [
 	"values-tokenize-repeated-visual-values",
 	"values-separate-domain-state-modifiers-from-dom-interaction-states",
 	"values-always-provide-a-visible-focus-indicator",
+	"values-do-not-style-through-the-style-attribute",
 	"tooling-configure-stylelint-to-enforce-these-rules",
 ] as const;
 
@@ -150,16 +153,19 @@ const reactRuleUniverse = [
 	"ownership-prefer-plain-ts-for-local-react-helpers",
 	"ownership-keep-lifecycle-in-the-owning-component",
 	"typing-take-handler-types-from-existing-contracts",
+	"typing-narrow-library-wrapper-contracts",
+	"typing-choose-wrapper-shape-and-forwarding",
 	"strategy-choose-single-composition-compound-and-variants",
 	"strategy-expose-only-assembled-compound-parts",
 	"strategy-avoid-boolean-prop-proliferation",
 	"strategy-prefer-children-over-render-props",
-	"composition-destructure-props-inside",
+	"composition-read-props-without-destructuring",
 	"composition-do-not-define-components-inside-components",
 	"composition-named-handlers-over-inline",
 	"composition-open-ref-props-only-for-imperative-contracts",
 	"composition-use-activity-only-to-preserve-mounted-subtrees",
 	"composition-declare-props-interface-above-the-component",
+	"composition-name-fragments-explicitly",
 	"screen-keep-route-flow-visible",
 	"screen-avoid-premature-abstraction",
 	"screen-extract-local-section-components-for-runtime-boundaries",
@@ -183,7 +189,6 @@ const reactRuleUniverse = [
 	"perf-use-starttransition-for-non-urgent-updates",
 	"perf-use-usedeferredvalue-for-heavy-derived-renders",
 	"docs-require-jsdoc-on-key-declarations",
-	"docs-document-compound-parts-above-props-interface",
 ] as const;
 
 /**
@@ -191,7 +196,7 @@ const reactRuleUniverse = [
  */
 const typescriptRuleRouting = {
 	"naming-centralize-shared-config-namespaces": {
-		appliesWhen: "여러 말단 모듈이 함께 쓰는 URL, 기능 플래그, 페이지 크기나 상수를 추가·이동·중복 정의할 때. 공용 설정 경계를 바꿀 때.",
+		appliesWhen: "여러 모듈이 함께 쓰는 URL, 기능 플래그, 페이지 크기나 상수를 추가·이동·중복 정의할 때. 공용 설정 경계를 바꿀 때.",
 		reviewWith: ["naming-preserve-config-origin-with-chained-access", "naming-use-direct-imports-and-public-entry-points"],
 	},
 	"naming-place-owner-config-in-the-owner-config-folder": {
@@ -199,7 +204,7 @@ const typescriptRuleRouting = {
 		reviewWith: ["naming-centralize-shared-config-namespaces", "naming-use-consistent-file-and-symbol-naming"],
 	},
 	"naming-preserve-config-origin-with-chained-access": {
-		appliesWhen: "말단 모듈에서 `config`나 `util` 값을 쓰면서 넓은 스코프 구조분해, 별칭, 기능별 네임스페이스를 추가·변경할 때.",
+		appliesWhen: "`config`나 `util` 값을 쓰면서 넓은 스코프 구조분해, 별칭, 기능별 네임스페이스를 추가·변경할 때.",
 		reviewWith: [],
 	},
 	"naming-use-consistent-file-and-symbol-naming": {
@@ -247,48 +252,57 @@ const typescriptRuleRouting = {
 	},
 	"functions-extract-helpers-only-when-the-boundary-is-real": {
 		appliesWhen:
-			"보조 함수를 빼내거나 옮기거나 내보내거나 공유할 때. 범용 보조 파일, 소유자 하나만 쓰는 변환 함수, 잔손질 단계의 경계를 바꿀 때.",
+			"보조 함수를 빼내거나 옮기거나 내보내거나 공유할 때. 범용 보조 파일, 소유자 하나만 쓰는 변환 함수, 자잘한 정리 단계의 경계를 바꿀 때.",
 		reviewWith: ["functions-place-and-promote-support-functions", "docs-require-header-jsdoc-on-key-declarations"],
 	},
 	"functions-place-and-promote-support-functions": {
-		appliesWhen: "보조 함수를 둘 파일이나 폴더를 정할 때. `shared/` 아래로 파일을 옮기거나 `util.*` 에 항목을 추가할 때.",
+		appliesWhen: "보조 함수를 둘 파일이나 폴더를 정할 때. `shared/` 아래로 파일을 옮기거나 `util.*`에 항목을 추가할 때.",
 		reviewWith: [],
 	},
 	"functions-avoid-imperative-assembly-in-wide-scopes": {
 		appliesWhen: "파일 위쪽이나 넓은 스코프에서 `let` 재대입, 배열 `push`, 조건부 누적으로 값을 만들거나 정리할 때.",
 		reviewWith: ["functions-extract-helpers-only-when-the-boundary-is-real"],
 	},
+	"functions-name-a-value-only-when-it-is-reused": {
+		appliesWhen: "순수 계산의 결과를 지역 `const`로 받는 줄을 추가·삭제할 때. 식을 그 자리에 적을지 이름을 붙일지 정할 때.",
+		reviewWith: ["functions-avoid-imperative-assembly-in-wide-scopes"],
+	},
 	"functions-prefer-immutable-array-sorting": {
 		appliesWhen: "프롭스, 상태, 매개변수, 공유 입력에서 온 배열을 정렬할 때. 기존 `.sort()` 호출을 추가·변경할 때.",
 		reviewWith: [],
 	},
 	"functions-replace-enum-with-as-const-objects": {
-		appliesWhen: "`enum` 이나 타입과 실행 양쪽에서 함께 쓰는 값 묶음을 추가·변경할 때.",
+		appliesWhen: "`enum`이나 타입과 실행 양쪽에서 함께 쓰는 값 묶음을 추가·변경할 때.",
 		reviewWith: [],
 	},
 	"functions-use-set-and-map-for-repeated-lookups": {
 		appliesWhen: "같은 목록에 `includes`, `find`, 키 조회를 여러 번 하는 코드를 추가·변경할 때.",
 		reviewWith: [],
 	},
+	"functions-name-functions-by-what-comes-out": {
+		appliesWhen: "이름 붙인 함수를 새로 만들거나 이름을 바꿀 때. 제외: 외부 패키지가 정한 이름을 별칭 없이 그대로 쓰는 경우.",
+		reviewWith: [],
+	},
 	"absence-expose-optional-values-instead-of-silent-fallbacks": {
 		appliesWhen: "선택 값을 읽거나 정규화하거나 넘기는 방식을 바꿀 때. `??`, `||`, 기본값, 빈 값 대체 분기를 추가·변경할 때.",
-		reviewWith: ["docs-keep-inline-comments-for-constraints-and-caveats"],
-	},
-	"docs-keep-inline-comments-for-constraints-and-caveats": {
-		appliesWhen: "함수 본문의 `//` 주석을 추가·수정·유지할 때. 도메인 규칙, 예외 방어, 외부 제약, 부수효과 순서를 주석으로 설명할 때.",
 		reviewWith: [],
+	},
+	"docs-keep-body-comments-for-intent-and-steps": {
+		appliesWhen:
+			"함수 본문의 `//` 주석을 추가·수정·유지할 때. 도메인 규칙, 예외 방어, 외부 제약, 부수효과 순서, 긴 절차의 단계를 주석으로 설명할 때.",
+		reviewWith: ["docs-write-concise-korean-comments-about-purpose-and-constraints"],
 	},
 	"docs-require-header-jsdoc-on-key-declarations": {
 		appliesWhen:
-			"쿼리·뮤테이션, 원격 함수, 분기나 `await` 가 있는 핸들러와 이펙트, 내보낸 보조 함수와 훅, 커스텀 타입, 스토어 선언을 추가·변경할 때.",
+			"쿼리·뮤테이션, 원격 함수, 분기나 `await`가 있는 핸들러와 이펙트, 내보낸 보조 함수와 훅, 커스텀 타입, 스토어 선언을 추가·변경할 때.",
 		reviewWith: [],
 	},
 	"docs-write-concise-korean-comments-about-purpose-and-constraints": {
-		appliesWhen: "TypeScript·TSX 의 문서 주석이나 인라인 주석 문구를 추가·수정·번역하거나 검토할 때.",
+		appliesWhen: "TypeScript·TSX의 문서 주석이나 인라인 주석 문구를 추가·수정·번역하거나 검토할 때.",
 		reviewWith: [],
 	},
 	"docs-write-doc-comments-as-multiline-blocks": {
-		appliesWhen: "선언 위 문서 주석을 새로 쓰거나 형식을 바꿀 때. 한 줄 `/** … */` 이나 `//` 로 선언을 설명하려 할 때.",
+		appliesWhen: "선언 위 문서 주석을 새로 쓰거나 형식을 바꿀 때. 한 줄 `/** … */`이나 `//`로 선언을 설명하려 할 때.",
 		reviewWith: ["docs-require-header-jsdoc-on-key-declarations"],
 	},
 	"docs-avoid-role-tags-in-doc-comments": {
@@ -301,7 +315,7 @@ const typescriptRuleRouting = {
 		reviewWith: ["docs-write-concise-korean-comments-about-purpose-and-constraints"],
 	},
 	"tooling-configure-biome-to-enforce-these-rules": {
-		appliesWhen: "프로젝트에 `biome` 설정을 처음 넣거나 lint 규칙을 바꿀 때. `biome.json` 의 `linter.rules` 에 항목을 추가·삭제할 때.",
+		appliesWhen: "프로젝트에 `biome` 설정을 처음 넣거나 lint 규칙을 바꿀 때. `biome.json`의 `linter.rules`에 항목을 추가·삭제할 때.",
 		reviewWith: [],
 	},
 } as const;
@@ -426,6 +440,14 @@ const cssRuleRouting = {
 		appliesWhen: "`outline`, `:focus`, `:focus-visible` 스타일을 추가·수정할 때. 상호작용 요소의 기본 포커스 링을 덮어쓸 때.",
 		reviewWith: ["values-separate-domain-state-modifiers-from-dom-interaction-states"],
 	},
+	"values-do-not-style-through-the-style-attribute": {
+		appliesWhen: "TSX에 `style={{ … }}`를 추가하거나 그 안의 선언을 바꿀 때. 컴포넌트 프롭으로 `style`을 받아 넘길 때.",
+		reviewWith: [
+			"composition-inject-classes-only-at-the-entry-point",
+			"values-tokenize-repeated-visual-values",
+			"values-always-provide-css-variable-fallbacks",
+		],
+	},
 	"tooling-configure-stylelint-to-enforce-these-rules": {
 		appliesWhen: "stylelint 설정을 새로 만들거나 규칙을 추가·수정할 때. 이 컨벤션 중 어디까지 자동으로 잡히는지 확인할 때.",
 		reviewWith: [
@@ -476,6 +498,18 @@ const reactRuleRouting = {
 			"커링 팩토리가 돌려주는 리액트 핸들러의 타입을 정할 때. `Ui*` 래퍼 사용처에서 프롭스 타입을 참조할 때. 제외: `query.select` 같은 훅 옵션의 일회성 문맥 콜백인 경우.",
 		reviewWith: [],
 	},
+	"typing-narrow-library-wrapper-contracts": {
+		appliesWhen: "라이브러리 컴포넌트를 감싸는 `Ui*` 래퍼의 프롭스 타입을 만들거나 바꿀 때. 래퍼에 프롭을 추가하거나 여는 범위를 넓힐 때.",
+		reviewWith: [
+			"typing-take-handler-types-from-existing-contracts",
+			"typing-choose-wrapper-shape-and-forwarding",
+			"css/values-do-not-style-through-the-style-attribute",
+		],
+	},
+	"typing-choose-wrapper-shape-and-forwarding": {
+		appliesWhen: "래퍼가 받은 프롭을 안쪽 컴포넌트나 요소로 넘기는 코드를 추가·변경할 때. 래퍼에 자기 프롭을 더하거나 안쪽 요소를 늘릴 때.",
+		reviewWith: [],
+	},
 	"strategy-choose-single-composition-compound-and-variants": {
 		appliesWhen:
 			"내보낸 공용 컴포넌트에 슬롯·공개 부품·공용 컨텍스트/동작을 추가할 때. 반복되는 기본 설정이나 모드 API를 추가할 때. 공용 컴포넌트의 조립 구조를 재설계할 때.",
@@ -499,10 +533,10 @@ const reactRuleRouting = {
 			"공용 컴포넌트에 머리말·꼬리말·동작 같은 정적 슬롯을 추가·변경할 때. 렌더 프롭을 추가·변경하는데 실행 환경 데이터 주입이 꼭 필요한지 불분명할 때.",
 		reviewWith: [],
 	},
-	"composition-destructure-props-inside": {
+	"composition-read-props-without-destructuring": {
 		appliesWhen:
-			"프롭스를 받는 함수 컴포넌트의 시그니처나 구조분해 방식을 추가·변경할 때. 프롭스를 받는 컴포넌트를 다른 파일로 옮기거나 이름을 바꿀 때.",
-		reviewWith: [],
+			"함수 컴포넌트의 시그니처나 본문에서 프롭스를 읽는 코드를 추가·변경할 때. 컴포넌트 안에서 `props`를 구조분해하는 줄을 넣거나 뺄 때.",
+		reviewWith: ["screen-keep-derived-values-close", "data-preserve-origin-chaining"],
 	},
 	"composition-do-not-define-components-inside-components": {
 		appliesWhen:
@@ -511,7 +545,7 @@ const reactRuleRouting = {
 	},
 	"composition-named-handlers-over-inline": {
 		appliesWhen:
-			"TSX 이벤트 프롭의 인라인 콜백에 분기나 비동기 호출을 추가·수정할 때. 인라인 콜백에 여러 동작·부수효과나 비자명한 상태 전환이 들어갈 때. 제외: 인자 없이 핸들러 참조만 넘기는 경우.",
+			"TSX 이벤트 프롭의 인라인 콜백에 분기나 비동기 호출을 추가·수정할 때. 인라인 콜백에 여러 동작·부수효과나 읽어서 의도가 안 보이는 상태 전환이 들어갈 때. 제외: 인자 없이 핸들러 참조만 넘기는 경우.",
 		reviewWith: ["events-keep-handler-flow-inline", "events-run-user-actions-in-handlers-not-effects"],
 	},
 	"composition-open-ref-props-only-for-imperative-contracts": {
@@ -519,12 +553,16 @@ const reactRuleRouting = {
 		reviewWith: ["strategy-avoid-boolean-prop-proliferation"],
 	},
 	"composition-use-activity-only-to-preserve-mounted-subtrees": {
-		appliesWhen: "조건부 렌더링과 `Activity` 사이를 오갈 때. `<Activity>` 를 추가·삭제하거나 `mode` 를 계산하는 식을 바꿀 때.",
+		appliesWhen: "조건부 렌더링과 `Activity` 사이를 오갈 때. `<Activity>`를 추가·삭제하거나 `mode`를 계산하는 식을 바꿀 때.",
 		reviewWith: ["composition-do-not-define-components-inside-components"],
 	},
 	"composition-declare-props-interface-above-the-component": {
 		appliesWhen: "컴포넌트 프롭스 타입을 새로 선언할 때. 프롭스 타입의 위치나 공개 범위를 바꿀 때.",
-		reviewWith: ["composition-destructure-props-inside", "typescript/types-document-custom-types-and-shapes"],
+		reviewWith: ["composition-read-props-without-destructuring", "typescript/types-document-custom-types-and-shapes"],
+	},
+	"composition-name-fragments-explicitly": {
+		appliesWhen: "JSX에서 여러 요소를 감쌀 조각 문법을 추가·변경할 때. 조각에 `key`를 붙이거나 떼어 낼 때.",
+		reviewWith: [],
 	},
 	"screen-keep-route-flow-visible": {
 		appliesWhen:
@@ -532,7 +570,7 @@ const reactRuleRouting = {
 		reviewWith: ["screen-extract-local-section-components-for-runtime-boundaries", "ownership-place-owner-files-in-role-folders"],
 	},
 	"screen-avoid-premature-abstraction": {
-		appliesWhen: "화면 코드를 보조 함수·훅·컴포넌트·모듈으로 추출할 때. 한 곳에서만 쓰는 기존 추상화를 다시 접어 넣을 때.",
+		appliesWhen: "화면 코드를 보조 함수·훅·컴포넌트·모듈로 추출할 때. 한 곳에서만 쓰는 기존 추상화를 다시 접어 넣을 때.",
 		reviewWith: [
 			"screen-extract-local-section-components-for-runtime-boundaries",
 			"typescript/functions-extract-helpers-only-when-the-boundary-is-real",
@@ -540,12 +578,12 @@ const reactRuleRouting = {
 	},
 	"screen-extract-local-section-components-for-runtime-boundaries": {
 		appliesWhen:
-			"화면 지역 섹션 컴포넌트를 새로 추출할 때. 기존 섹션이 비동기·상태·프로바이더·상호작용·라이브러리·성능 경계를 소유하는지 바꿀 때.",
+			"화면 지역 섹션 컴포넌트를 새로 추출할 때. 기존 섹션이 비동기·상태·프로바이더·상호작용·라이브러리·성능을 직접 소유하는지 바꿀 때.",
 		reviewWith: [],
 	},
 	"screen-keep-derived-values-close": {
 		appliesWhen:
-			"오리진을 끊는 별칭·플래그·표시값을 넓은 화면 범위에 추가·이동·제거할 때. `let` 재할당이나 배열 `push` 기반 조립을 바꿀 때.",
+			"화면 진입 파일이나 섹션 최상단에 `const` 별칭·플래그·표시값을 추가·이동·제거할 때. 훅 인자, JSX 표시값, 이펙트 안 계산을 위쪽 `const`로 빼거나 되돌릴 때.",
 		reviewWith: [],
 	},
 	"screen-place-suspense-boundaries-at-the-section-owner": {
@@ -630,12 +668,8 @@ const reactRuleRouting = {
 	},
 	"docs-require-jsdoc-on-key-declarations": {
 		appliesWhen:
-			"쿼리·뮤테이션이나 비자명한 핸들러/이펙트를 추가·변경할 때. 내보낸 보조 함수·훅·스토어 선언을 추가·변경할 때. 다시 내보내기 포함 공개 타입·인터페이스를 추가·변경할 때.",
+			"쿼리·뮤테이션이나 읽어서 의도가 안 보이는 핸들러/이펙트를 추가·변경할 때. 내보낸 보조 함수·훅·스토어 선언을 추가·변경할 때. 다시 내보내기 포함 공개 타입·인터페이스를 추가·변경할 때.",
 		reviewWith: [],
-	},
-	"docs-document-compound-parts-above-props-interface": {
-		appliesWhen: "합성 컴포넌트의 공개 부품이나 그 프롭스 타입을 추가·변경할 때. 부품 설명의 위치를 바꿀 때.",
-		reviewWith: ["docs-require-jsdoc-on-key-declarations", "composition-declare-props-interface-above-the-component"],
 	},
 } as const;
 
@@ -658,6 +692,7 @@ const mandatoryRuleRouting = {
 		"state-calculate-derived-values-during-render": ["screen-keep-derived-values-close"],
 		"state-use-effectevent-for-non-reactive-effect-callbacks": ["docs-require-jsdoc-on-key-declarations"],
 		"docs-require-jsdoc-on-key-declarations": ["typescript/docs-require-header-jsdoc-on-key-declarations"],
+		"typing-choose-wrapper-shape-and-forwarding": ["typing-narrow-library-wrapper-contracts"],
 	},
 	typescript: {
 		"functions-replace-enum-with-as-const-objects": [
@@ -700,8 +735,10 @@ const typescriptSelections = {
 		"docs-avoid-role-tags-in-doc-comments",
 	],
 	"helper-boundary-scope-drift": [
+		"naming-use-consistent-file-and-symbol-naming",
 		"functions-extract-helpers-only-when-the-boundary-is-real",
 		"functions-place-and-promote-support-functions",
+		"functions-name-functions-by-what-comes-out",
 	],
 	"shared-collection-lookups-and-sort": ["functions-prefer-immutable-array-sorting", "functions-use-set-and-map-for-repeated-lookups"],
 	"enum-like-runtime-contract": [
@@ -713,7 +750,7 @@ const typescriptSelections = {
 		"docs-write-doc-comments-as-multiline-blocks",
 		"tooling-configure-biome-to-enforce-these-rules",
 	],
-	"wide-scope-assembly": ["functions-avoid-imperative-assembly-in-wide-scopes"],
+	"wide-scope-assembly": ["functions-avoid-imperative-assembly-in-wide-scopes", "functions-name-a-value-only-when-it-is-reused"],
 	"named-object-param": [
 		"naming-use-consistent-file-and-symbol-naming",
 		"functions-declare-functions-as-arrow-consts",
@@ -721,7 +758,7 @@ const typescriptSelections = {
 	],
 	"explicit-product-fallback": [
 		"absence-expose-optional-values-instead-of-silent-fallbacks",
-		"docs-keep-inline-comments-for-constraints-and-caveats",
+		"docs-keep-body-comments-for-intent-and-steps",
 		"docs-write-concise-korean-comments-about-purpose-and-constraints",
 		"docs-justify-convention-exceptions-with-a-reason-comment",
 	],
@@ -738,32 +775,32 @@ const typescriptScenarioEvidence = {
 	},
 	"derive-existing-contract-with-docs": {
 		prompt:
-			"replace a duplicate `UserPreview` interface with a same-name `Pick<UserRecord, ...>` alias and add concise Korean header doc comments; imports and names otherwise stay unchanged.",
+			'replace a duplicate `UserPreview` interface with a same-name interface that pulls each field through `UserRecord["id"]` indexed access and add Korean header and field doc comments; imports and names otherwise stay unchanged.',
 		files: ["src/users/user-preview.ts"],
 	},
 	"enum-like-runtime-contract": {
 		prompt:
-			"replace `enum AuditStatus` with snake_case `audit_status as const`, derive `AuditStatus`, and document the object, every key, and derived type in Korean.",
+			"replace `enum ProductStatus` with snake_case `product_status as const`, derive `ProductStatus`, and document the object, every key, and derived type in Korean.",
 		files: ["src/audit/audit-status.ts"],
 	},
 	"explicit-product-fallback": {
 		prompt:
-			"replace an ungrounded optional page-size `??` with an explicit branch for the specified product default 20 and a short Korean constraint comment; helper/header boundaries stay unchanged.",
+			"replace an ungrounded optional page-size `??` literal with a reference to the declared config default and a Korean constraint comment; helper/header boundaries stay unchanged.",
 		files: ["src/search/resolve-page-size.ts"],
 	},
 	"helper-boundary-scope-drift": {
-		prompt: "inline a single-owner mapper/sub-step into `profile-api.ts`.",
+		prompt: "inline a single-owner `mapProfileRow` sub-step into `profile-api.ts` and rename the remaining exported builder by its result.",
 		files: ["src/profile/profile-api.ts"],
 	},
 	"named-object-param": {
 		prompt:
 			"change a function that destructures `BuildRequestUrlArgs` in the signature to accept `args` and destructure on the first body line; no other contract/docs/import changes.",
-		files: ["src/http/build-request-url.ts"],
+		files: ["src/http/to-request-url.ts"],
 	},
 	"shared-collection-lookups-and-sort": {
 		prompt:
 			"replace repeated `includes` with an existing Set's `has` and replace shared-input `.sort()` with `.toSorted()`; declarations, imports, and docs stay unchanged.",
-		files: ["src/search/filter-entries.ts"],
+		files: ["src/search/filter-products.ts"],
 	},
 	"shared-config-existing-source": {
 		prompt:
@@ -772,7 +809,7 @@ const typescriptScenarioEvidence = {
 	},
 	"wide-scope-assembly": {
 		prompt:
-			"replace an existing top-level `let` plus conditional `push` flow with a declarative calculation assigned to the same `visibleTabs` name; imports and docs stay unchanged.",
+			"replace an existing top-level `let` plus conditional `push` flow with a declarative calculation assigned to the same `visibleTabs` name and inline the single-use intermediate const; imports and docs stay unchanged.",
 		files: ["src/navigation/visible-tabs.ts"],
 	},
 } as const;
@@ -810,15 +847,15 @@ const reactScenarioStages = {
 	"RTE02-owner-placement-css-drift": {
 		initial: {
 			prompt:
-				"move a route-only tree renderer from shared UI to src/page/entries/component/pg-entry-tree.tsx and rename it as owner-private; carry its existing className and style import through unchanged and make no styling change.",
-			files: ["src/ui/entry-tree/ui-entry-tree.tsx", "src/page/entries/component/pg-entry-tree.tsx"],
+				"move a route-only tree renderer from shared UI to src/page/products/component/pg-product-tree.tsx and rename it as owner-private; carry its existing className and style import through unchanged and make no styling change.",
+			files: ["src/ui/product-tree/ui-product-tree.tsx", "src/page/products/component/pg-product-tree.tsx"],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
 				react: [
 					"ownership-layer-component-boundaries",
 					"ownership-prefix-layer-names-on-files-and-symbols",
 					"ownership-place-owner-files-in-role-folders",
-					"composition-destructure-props-inside",
+					"composition-read-props-without-destructuring",
 					"composition-declare-props-interface-above-the-component",
 				],
 				typescript: [
@@ -833,11 +870,11 @@ const reactScenarioStages = {
 		},
 		scopeDrift: {
 			evidence:
-				"in a project without a CSS Modules standard, add directly imported src/page/entries/component/pg-entry-tree.css, create owner-unique pg_* role-named classes, and compose the changed className contract with the existing direct clsx import; final skills add CSS with no additional React rule.",
+				"in a project without a CSS Modules standard, add directly imported src/page/products/component/pg-product-tree.css, create owner-unique pg_* role-named classes, and compose the changed className contract with the existing direct clsx import; final skills add CSS with no additional React rule.",
 			files: [
-				"src/ui/entry-tree/ui-entry-tree.tsx",
-				"src/page/entries/component/pg-entry-tree.tsx",
-				"src/page/entries/component/pg-entry-tree.css",
+				"src/ui/product-tree/ui-product-tree.tsx",
+				"src/page/products/component/pg-product-tree.tsx",
+				"src/page/products/component/pg-product-tree.css",
 			],
 			expectedSkills: ["react", "typescript", "css"],
 			expectedSelected: {
@@ -845,7 +882,7 @@ const reactScenarioStages = {
 					"ownership-layer-component-boundaries",
 					"ownership-prefix-layer-names-on-files-and-symbols",
 					"ownership-place-owner-files-in-role-folders",
-					"composition-destructure-props-inside",
+					"composition-read-props-without-destructuring",
 					"composition-declare-props-interface-above-the-component",
 				],
 				typescript: [
@@ -874,8 +911,8 @@ const reactScenarioStages = {
 	"RTE03-route-support-extraction": {
 		initial: {
 			prompt:
-				"move one real four-argument multi-line payload boundary out of src/page/entries/pg-entries.tsx into src/page/entries/function/build-entry-payload.ts; do not create a hook, generic utils file, or helper soup.",
-			files: ["src/page/entries/pg-entries.tsx", "src/page/entries/function/build-entry-payload.ts"],
+				"move one real four-argument multi-line payload boundary out of src/page/products/pg-products.tsx into src/page/products/function/to-product-save-request.ts; do not create a hook, generic utils file, or helper soup.",
+			files: ["src/page/products/pg-products.tsx", "src/page/products/function/to-product-save-request.ts"],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
 				react: [
@@ -902,7 +939,7 @@ const reactScenarioStages = {
 		initial: {
 			prompt:
 				"move a duplicated menu key and default page size from two screens into a documented snake_case as const config object in src/shared/config.ts and directly import and use config.* from both route pages.",
-			files: ["src/page/entries/pg-entries.tsx", "src/page/reports/pg-reports.tsx", "src/shared/config.ts"],
+			files: ["src/page/products/pg-products.tsx", "src/page/reports/pg-reports.tsx", "src/shared/config.ts"],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
 				react: [],
@@ -921,8 +958,8 @@ const reactScenarioStages = {
 	"RTE05-toolbar-composition": {
 		initial: {
 			prompt:
-				"replace compact/edit/search/focus booleans and static render props on wg-entry-toolbar.tsx with stateless compound parts plus repeated explicit variants, and document public parts.",
-			files: ["src/widget/entry-toolbar/wg-entry-toolbar.tsx"],
+				"replace compact/edit/search/focus booleans and static render props on wg-product-toolbar.tsx with stateless compound parts plus repeated explicit variants, and document public parts.",
+			files: ["src/widget/product-toolbar/wg-product-toolbar.tsx"],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
 				react: [
@@ -930,10 +967,9 @@ const reactScenarioStages = {
 					"strategy-expose-only-assembled-compound-parts",
 					"strategy-avoid-boolean-prop-proliferation",
 					"strategy-prefer-children-over-render-props",
-					"composition-destructure-props-inside",
+					"composition-read-props-without-destructuring",
 					"composition-declare-props-interface-above-the-component",
 					"docs-require-jsdoc-on-key-declarations",
-					"docs-document-compound-parts-above-props-interface",
 				],
 				typescript: [
 					"naming-use-consistent-file-and-symbol-naming",
@@ -949,12 +985,14 @@ const reactScenarioStages = {
 	"RTE06-nested-forwardref": {
 		initial: {
 			prompt:
-				"hoist an existing nested forwardRef search input that resets focus to module scope and convert it to a React 19 ref prop in ui-search-card.tsx.",
+				"hoist an existing nested forwardRef search input that resets focus to module scope, convert it to a React 19 ref prop, and narrow UiSearchCardProps so it extends HTMLAttributes and opens only the library props in use in ui-search-card.tsx.",
 			files: ["src/ui/search-card/ui-search-card.tsx"],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
 				react: [
-					"composition-destructure-props-inside",
+					"typing-narrow-library-wrapper-contracts",
+					"typing-choose-wrapper-shape-and-forwarding",
+					"composition-read-props-without-destructuring",
 					"composition-do-not-define-components-inside-components",
 					"composition-open-ref-props-only-for-imperative-contracts",
 					"docs-require-jsdoc-on-key-declarations",
@@ -974,7 +1012,7 @@ const reactScenarioStages = {
 		initial: {
 			prompt:
 				"move a row delete inline async branch, mutation, navigation, and state+effect replay into one curried named handler, keep an unused React event as _event, directly import its reused callback type, and keep screen-only flow inside page.tsx.",
-			files: ["src/page/entries/pg-entries.tsx"],
+			files: ["src/page/products/pg-products.tsx"],
 			expectedSkills: ["react", "typescript", "tanstack-route"],
 			expectedSelected: {
 				react: [
@@ -1002,15 +1040,15 @@ const reactScenarioStages = {
 	"RTE09-route-runtime-section": {
 		initial: {
 			prompt:
-				'extract only the tree section that owns local search and expanded state plus a tree adapter into the owner component folder, implement a named selection handler from EntryTreeSectionProps["onCategorySelect"], and keep search params, navigation, page query, and mutation in the page entry.',
-			files: ["src/page/entries/pg-entries.tsx", "src/page/entries/component/pg-entry-tree-section.tsx"],
+				'extract only the tree section that owns local search and expanded state plus a tree adapter into the owner component folder, implement a named selection handler from ProductTreeSectionProps["onCategorySelect"], and keep search params, navigation, page query, and mutation in the page product.',
+			files: ["src/page/products/pg-products.tsx", "src/page/products/component/pg-product-tree-section.tsx"],
 			expectedSkills: ["react", "typescript", "tanstack-route"],
 			expectedSelected: {
 				react: [
 					"ownership-layer-component-boundaries",
 					"ownership-place-owner-files-in-role-folders",
 					"typing-take-handler-types-from-existing-contracts",
-					"composition-destructure-props-inside",
+					"composition-read-props-without-destructuring",
 					"composition-use-activity-only-to-preserve-mounted-subtrees",
 					"screen-keep-route-flow-visible",
 					"screen-avoid-premature-abstraction",
@@ -1039,7 +1077,7 @@ const reactScenarioStages = {
 		initial: {
 			prompt:
 				"extract the inline selection toggle into a named handleSelectionToggle handler, replace selectedIds-derived count and flag effect+state synchronization with render calculation near use, and use a functional updater; do not change navigation or styling.",
-			files: ["src/page/entries/pg-entries.tsx"],
+			files: ["src/page/products/pg-products.tsx"],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
 				react: [
@@ -1092,7 +1130,7 @@ const reactScenarioStages = {
 		initial: {
 			prompt:
 				"move repeated raw list, items, and meta render shaping into query select, rename bindings to response... and mutation..., and remove wide aliases.",
-			files: ["src/page/entries/pg-entries.tsx"],
+			files: ["src/page/products/pg-products.tsx"],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
 				react: [
@@ -1115,7 +1153,7 @@ const reactScenarioStages = {
 		initial: {
 			prompt:
 				"for a 50k-row search, directly import newly used React hooks, use lazy initialization, urgent input plus deferred result, a non-urgent category transition, and only evidence-backed memoization; update the constraint comment.",
-			files: ["src/page/entries/component/pg-entry-search.tsx"],
+			files: ["src/page/products/component/pg-product-search.tsx"],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
 				react: [
@@ -1128,7 +1166,7 @@ const reactScenarioStages = {
 				typescript: [
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
-					"docs-keep-inline-comments-for-constraints-and-caveats",
+					"docs-keep-body-comments-for-intent-and-steps",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks",
@@ -1141,7 +1179,7 @@ const reactScenarioStages = {
 		initial: {
 			prompt:
 				"directly import useEffectEvent, replace only a socket subscription latest-callback ref-sync hack with a named handleMessage = useEffectEvent(...), and update subscription lifecycle JSDoc; do not change click or submit actions.",
-			files: ["src/page/entries/component/pg-entry-socket.tsx"],
+			files: ["src/page/products/component/pg-product-socket.tsx"],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
 				react: [
@@ -1164,10 +1202,11 @@ const reactScenarioStages = {
 		initial: {
 			prompt:
 				'replace Suspense detail ?? [], || "-", a local pending Spinner, and top-level aliases with an explicit empty state and origin chaining; remove an ungrounded explanatory comment.',
-			files: ["src/page/entry-detail/pg-entry-detail.tsx"],
+			files: ["src/page/product-detail/pg-product-detail.tsx"],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
 				react: [
+					"composition-name-fragments-explicitly",
 					"screen-keep-derived-values-close",
 					"screen-place-suspense-boundaries-at-the-section-owner",
 					"screen-avoid-ad-hoc-loading-branches",
@@ -1175,7 +1214,7 @@ const reactScenarioStages = {
 				],
 				typescript: [
 					"absence-expose-optional-values-instead-of-silent-fallbacks",
-					"docs-keep-inline-comments-for-constraints-and-caveats",
+					"docs-keep-body-comments-for-intent-and-steps",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"docs-justify-convention-exceptions-with-a-reason-comment",
 				],
@@ -1185,11 +1224,11 @@ const reactScenarioStages = {
 	"RTE16-private-component-import-direction": {
 		initial: {
 			prompt:
-				"two sibling files under src/page/detail/component/spike-pattern-panel/component/ import each other's legend row through ../; make the panel own the shared legend row and pass it down as an element prop, and remove the sibling and @/page component imports.",
+				"two sibling files under src/page/detail/component/sales-trend-panel/component/ import each other's legend row through ../; make the panel own the shared legend row and pass it down as an element prop, and remove the sibling and @/page component imports.",
 			files: [
-				"src/page/detail/component/spike-pattern-panel/pg-spike-pattern-panel.tsx",
-				"src/page/detail/component/spike-pattern-panel/component/pg-detection-section.tsx",
-				"src/page/detail/component/spike-pattern-panel/component/pg-summary-band.tsx",
+				"src/page/detail/component/sales-trend-panel/pg-sales-trend-panel.tsx",
+				"src/page/detail/component/sales-trend-panel/component/pg-detection-section.tsx",
+				"src/page/detail/component/sales-trend-panel/component/pg-summary-band.tsx",
 			],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
@@ -1209,7 +1248,7 @@ const reactScenarioStages = {
 			files: [
 				"src/widget/chart/component/wg-chart-root.tsx",
 				"src/widget/chart/hook/use-chart-instance.ts",
-				"src/widget/chart/function/build-chart-option.ts",
+				"src/widget/chart/function/to-chart-option.ts",
 			],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
@@ -1348,11 +1387,16 @@ const cssScenarioStages = {
 	"css-ui-wrapper-root-prop-contract": {
 		initial: {
 			prompt:
-				"directly type-import the official root className Props, expose documented UiButtonProps, destructure props inside ui-button.tsx, and pass an existing layout class from order-actions.tsx; add no internal selector or new class.",
+				"narrow UiButtonProps so it extends HTMLAttributes and opens only the library props we use, expose it documented, read props through the props object in ui-button.tsx, and pass an existing layout class from order-actions.tsx; add no internal selector or new class.",
 			files: ["src/ui/button/ui-button.tsx", "src/page/order-index/component/pg-order-actions.tsx"],
 			expectedSkills: ["react", "typescript", "css"],
 			expectedSelected: {
-				react: ["composition-destructure-props-inside", "docs-require-jsdoc-on-key-declarations"],
+				react: [
+					"typing-narrow-library-wrapper-contracts",
+					"typing-choose-wrapper-shape-and-forwarding",
+					"composition-read-props-without-destructuring",
+					"docs-require-jsdoc-on-key-declarations",
+				],
 				typescript: [
 					"naming-use-direct-imports-and-public-entry-points",
 					"types-reuse-existing-contracts-before-new-types",
@@ -1368,7 +1412,7 @@ const cssScenarioStages = {
 	"css-wrapper-element-for-spacing": {
 		initial: {
 			prompt:
-				"a wrapper div was added around UiCollapse only to give it margin; remove it by adding a className contract to the component.",
+				"a wrapper div with an inline style margin was added around UiCollapse only for spacing; remove both by adding a className contract to the component.",
 			files: ["src/ui/collapse/ui-collapse.tsx", "src/page/post-index/component/pg-post-filter-dialog.tsx"],
 			expectedSkills: ["css"],
 			expectedSelected: {
@@ -1376,6 +1420,7 @@ const cssScenarioStages = {
 					"naming-name-elements-and-modifiers-by-role",
 					"composition-inject-classes-only-at-the-entry-point",
 					"composition-do-not-add-wrapper-elements-for-styling",
+					"values-do-not-style-through-the-style-attribute",
 				],
 			},
 		},
@@ -1383,8 +1428,8 @@ const cssScenarioStages = {
 	"css-rich-text-owner-block": {
 		initial: {
 			prompt:
-				"move top-level .wg_entryDetail__prose h2 and > :first-child into the existing owner block; the body comes from dangerouslySetInnerHTML so classes cannot be added.",
-			files: ["src/widget/entry-detail/wg-entry-detail.css"],
+				"move top-level .wg_productDetail__prose h2 and > :first-child into the existing owner block; the body comes from dangerouslySetInnerHTML so classes cannot be added.",
+			files: ["src/widget/product-detail/wg-product-detail.css"],
 			expectedSkills: ["css"],
 			expectedSelected: {css: ["selector-limit-nesting-block-depth", "selector-use-classes-instead-of-element-selectors"]},
 		},
@@ -1425,8 +1470,8 @@ const cssScenarioStages = {
 	"css-shared-declaration-group": {
 		initial: {
 			prompt:
-				"split the shared .pg_spikePanel__glyph--* comma group so each modifier block declares its own width and height; do not introduce local custom properties.",
-			files: ["src/page/detail/component/spike-pattern-panel/pg-spike-pattern-panel.css"],
+				"split the shared .pg_salesPanel__glyph--* comma group so each modifier block declares its own width and height; do not introduce local custom properties.",
+			files: ["src/page/detail/component/sales-trend-panel/pg-sales-trend-panel.css"],
 			expectedSkills: ["css"],
 			expectedSelected: {css: ["selector-do-not-group-classes-with-commas", "values-tokenize-repeated-visual-values"]},
 		},
@@ -1464,7 +1509,7 @@ const cssScenarioStages = {
 		initial: {
 			prompt:
 				"remove the :not(--checked) ancestor condition that drives the descendant checkbox preview; keep the hover and focus feedback.",
-			files: ["src/page/detail/component/spike-pattern-panel/pg-spike-pattern-panel.css"],
+			files: ["src/page/detail/component/sales-trend-panel/pg-sales-trend-panel.css"],
 			expectedSkills: ["css"],
 			expectedSelected: {
 				css: [
@@ -1656,7 +1701,7 @@ test("TypeScript progressive metadata matches Appendix A exactly", async () => {
 
 	assert.equal(document.metadata.progressiveDisclosure, true);
 	assert.deepEqual(document.metadata.companions ?? [], []);
-	assert.equal(document.rules.length, 26);
+	assert.equal(document.rules.length, 28);
 	assert.deepEqual(
 		Object.fromEntries(document.rules.map((rule) => [getRuleId(rule), {appliesWhen: rule.appliesWhen, reviewWith: rule.reviewWith}])),
 		typescriptRuleRouting,
@@ -1731,9 +1776,11 @@ test("TypeScript routing manifest is an exact nine-scenario partition with full 
 		"src/bulk/bulk-profile.ts",
 	]);
 	assert.deepEqual(driftScenario.scopeDrift.expectedSelected.typescript, [
+		"naming-use-consistent-file-and-symbol-naming",
 		"naming-use-direct-imports-and-public-entry-points",
 		"functions-extract-helpers-only-when-the-boundary-is-real",
 		"functions-place-and-promote-support-functions",
+		"functions-name-functions-by-what-comes-out",
 		"docs-require-header-jsdoc-on-key-declarations",
 		"docs-write-concise-korean-comments-about-purpose-and-constraints",
 		"docs-write-doc-comments-as-multiline-blocks",
@@ -1749,7 +1796,7 @@ test("TypeScript generated index is complete and within the deterministic byte b
 	const expectedIds = document.rules.map((rule) => getRuleId(rule)).sort();
 
 	assert.deepEqual(ids, expectedIds);
-	assert.equal(ids.length, 26);
+	assert.equal(ids.length, 28);
 
 	for (const entry of entries) {
 		assert.equal(entry.fileName, `${entry.id}.md`);
@@ -1859,7 +1906,7 @@ test("TypeScript SKILL.md is a compact router without receipt or audit machinery
 	assertMentions(extractSection(body, 1), ["React/CSS", "companion"], "typescript 1절");
 });
 
-test("React progressive metadata and all 41 rule routes match Appendix B exactly", async () => {
+test("React progressive metadata and all 43 rule routes match Appendix B exactly", async () => {
 	const skillPaths = getSkillPaths("react", realSkillRootDir);
 	const document = await readSkillDocument(skillPaths);
 
@@ -1870,7 +1917,7 @@ test("React progressive metadata and all 41 rule routes match Appendix B exactly
 		{skill: "typescript", mode: "required"},
 		{skill: "css", mode: "conditional", appliesWhen: "class contract, stylesheet 또는 styling surface를 변경한다."},
 	]);
-	assert.equal(document.rules.length, 41);
+	assert.equal(document.rules.length, 43);
 	assert.deepEqual(
 		Object.fromEntries(document.rules.map((rule) => [getRuleId(rule), {appliesWhen: rule.appliesWhen, reviewWith: rule.reviewWith}])),
 		reactRuleRouting,
@@ -1990,13 +2037,13 @@ test("React routing manifest is the exact sixteen-scenario Appendix B/D oracle w
 	assert.ok(ownerMove);
 	assert.equal(ownerMove.expectedSkills.includes("css"), false);
 	assert.match(ownerMove.prompt, /className and style import through unchanged.*no styling change/i);
-	assert.equal(ownerMove.expectedSelected.react?.includes("composition-destructure-props-inside"), true);
+	assert.equal(ownerMove.expectedSelected.react?.includes("composition-read-props-without-destructuring"), true);
 	assert.equal(ownerMove.expectedSelected.typescript?.includes("types-document-custom-types-and-shapes"), true);
 	assert.equal(ownerMove.expectedSelected.typescript?.includes("docs-require-header-jsdoc-on-key-declarations"), true);
 	assert.equal(ownerMove.expectedSelected.typescript?.includes("docs-write-concise-korean-comments-about-purpose-and-constraints"), true);
 	const cssDrift = ownerMove.scopeDrift;
 	assert.ok(cssDrift);
-	assert.equal(cssDrift.expectedSelected.react?.includes("composition-destructure-props-inside"), true);
+	assert.equal(cssDrift.expectedSelected.react?.includes("composition-read-props-without-destructuring"), true);
 	assert.equal(cssDrift.expectedSelected.typescript?.includes("types-document-custom-types-and-shapes"), true);
 	assert.equal(cssDrift.expectedSelected.typescript?.includes("docs-require-header-jsdoc-on-key-declarations"), true);
 	assert.equal(cssDrift.expectedSelected.typescript?.includes("docs-write-concise-korean-comments-about-purpose-and-constraints"), true);
@@ -2023,7 +2070,7 @@ test("React generated index and handbook preserve canonical local rules and comp
 		entries.map((entry) => entry.id),
 		reactRuleUniverse,
 	);
-	assert.equal(entries.length, 41);
+	assert.equal(entries.length, 43);
 
 	for (const entry of entries) {
 		assert.equal(entry.fileName, `${entry.id}.md`);
@@ -2089,7 +2136,7 @@ test("CSS progressive metadata and rule routing match Appendix C exactly", async
 	assert.deepEqual(document.metadata.companions, [
 		{skill: "typescript", mode: "conditional", appliesWhen: "TS/TSX 클래스 계약, 래퍼 Props 또는 style import를 함께 변경한다."},
 	]);
-	assert.equal(document.rules.length, 26);
+	assert.equal(document.rules.length, 27);
 	assert.deepEqual(
 		Object.fromEntries(document.rules.map((rule) => [getRuleId(rule), {appliesWhen: rule.appliesWhen, reviewWith: rule.reviewWith}])),
 		cssRuleRouting,
@@ -2572,8 +2619,8 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 
 	const koreanComments = await readRule("typescript", "docs-write-concise-korean-comments-about-purpose-and-constraints");
 	assertMentions(koreanComments, [/주석 본문이 전부 영어이면/i, /영어/i, /한국어 주석으로 인정하지 않/i], "koreanComments");
-	assert.match(koreanComments, /route-local entry tree props/);
-	assert.match(koreanComments, /route-local 엔트리 트리 입력 계약/);
+	assert.match(koreanComments, /route-local product tree props/);
+	assert.match(koreanComments, /route-local 제품 트리 입력 계약/);
 
 	const documentedShape = await readRule("typescript", "types-document-custom-types-and-shapes");
 	assert.match(
@@ -2626,8 +2673,8 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 
 	const koreanComments = await readRule("typescript", "docs-write-concise-korean-comments-about-purpose-and-constraints");
 	assertMentions(koreanComments, [/주석 본문이 전부 영어이면/i, /영어/i, /한국어 주석으로 인정하지 않/i], "koreanComments");
-	assert.match(koreanComments, /route-local entry tree props/);
-	assert.match(koreanComments, /route-local 엔트리 트리 입력 계약/);
+	assert.match(koreanComments, /route-local product tree props/);
+	assert.match(koreanComments, /route-local 제품 트리 입력 계약/);
 
 	const documentedShape = await readRule("typescript", "types-document-custom-types-and-shapes");
 	assert.match(
@@ -2759,7 +2806,7 @@ test("CSS generated index is canonical, complete, body-preserving, and within it
 		entries.map((entry) => entry.id),
 		cssRuleUniverse,
 	);
-	assert.equal(entries.length, 26);
+	assert.equal(entries.length, 27);
 
 	for (const entry of entries) {
 		assert.equal(entry.fileName, `${entry.id}.md`);

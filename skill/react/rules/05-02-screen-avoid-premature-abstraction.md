@@ -4,7 +4,7 @@ titleKo: 화면 코드를 미리 추상화하지 않습니다
 impact: HIGH
 impactDescription: 짐작으로 빼내지 않고 실제 재사용 경계에 맞춰 화면 코드를 둡니다
 appliesWhen:
-  - 화면 코드를 보조 함수·훅·컴포넌트·모듈으로 추출할 때
+  - 화면 코드를 보조 함수·훅·컴포넌트·모듈로 추출할 때
   - 한 곳에서만 쓰는 기존 추상화를 다시 접어 넣을 때
 reviewWith: >-
   screen-extract-local-section-components-for-runtime-boundaries, typescript/functions-extract-helpers-only-when-the-boundary-is-real
@@ -36,11 +36,11 @@ tags: screen
 **Incorrect (반복만 보고 성급하게 추상화):**
 
 ```ts
-const useEntryAccessA = () => {
+const useProductAccessA = () => {
   // 유사 로직
 };
 
-const useEntryAccessB = () => {
+const useProductAccessB = () => {
   // 유사 로직
 };
 ```
@@ -48,20 +48,19 @@ const useEntryAccessB = () => {
 **Incorrect (컴포넌트 하나만 쓰는 단계 보조 함수를 보조 모듈에 남김):**
 
 ```tsx
-const buildEditHref = ({ editHrefBase, row }: { editHrefBase: string; row: EntryRow }) =>
+const toEditHref = ({ editHrefBase, row }: { editHrefBase: string; row: ProductRow }) =>
 	`${editHrefBase}${row.id}/`;
 
-const mapResponseToRows = (response: EntryListResponse) =>
-	response.data.map((entry) => ({ id: entry.id, title: entry.title }));
+const toProductRows = (response: ProductListResponse) =>
+	response.data.map((product) => ({ id: product.id, title: product.title }));
 
-export const PgEntryTable = (props: PgEntryTableProps) => {
-	const { editHrefBase } = props;
-	const responseEntriesQuery = useListEntriesSuspense({}, {
-		query: { select: mapResponseToRows },
+export const PgProductTable = (props: PgProductTableProps) => {
+	const responseProductsQuery = useProductListSuspense({}, {
+		query: { select: toProductRows },
 	});
 
-	return responseEntriesQuery.data.map((row) => (
-		<a href={buildEditHref({ editHrefBase, row })} key={row.id}>
+	return responseProductsQuery.data.map((row) => (
+		<a href={toEditHref({ editHrefBase: props.editHrefBase, row })} key={row.id}>
 			{row.title}
 		</a>
 	));
@@ -74,16 +73,16 @@ export const PgEntryTable = (props: PgEntryTableProps) => {
 /**
  * form state, 저장 mutation, 오류 노출을 함께 오케스트레이션하는 editor contract
  */
-export const useEntryEditor = () => {
-  const form = useForm<EntryEditorFormValues>();
+export const useProductEditor = () => {
+  const form = useForm<ProductEditorFormValues>();
 
   /**
-   * entry 저장 API
+   * product 저장 API
    */
-  const mutationEntrySave = useEntrySave();
+  const mutationProductSave = useProductSave();
   const [submitErrorMessage, setSubmitErrorMessage] = useState<string | null>(null);
 
-  return { form, mutationEntrySave, setSubmitErrorMessage, submitErrorMessage };
+  return { form, mutationProductSave, setSubmitErrorMessage, submitErrorMessage };
 };
 ```
 
@@ -91,9 +90,9 @@ export const useEntryEditor = () => {
 
 ```ts
 /**
- * entry form values를 API payload로 조립
+ * product form values를 API payload로 조립
  */
-export const buildEntryPayload = (formValues: EntryFormValues) => {
+export const toProductSaveRequest = (formValues: ProductFormValues) => {
 	// 1. 공통 문자열 값 정규화
 	// 2. API payload 형태로 조립
 	// 3. 결과 반환
@@ -103,20 +102,19 @@ export const buildEntryPayload = (formValues: EntryFormValues) => {
 **Correct (작은 쿼리 가공과 `href` 조립은 사용 지점에 둠):**
 
 ```tsx
-export const PgEntryTable = (props: PgEntryTableProps) => {
-	const { editHrefBase } = props;
-	const responseEntriesQuery = useListEntriesSuspense(
+export const PgProductTable = (props: PgProductTableProps) => {
+	const responseProductsQuery = useProductListSuspense(
 		{},
 		{
 			query: {
 				select: (response) =>
-					response.data.map((entry) => ({ id: entry.id, title: entry.title })),
+					response.data.map((product) => ({ id: product.id, title: product.title })),
 			},
 		},
 	);
 
-	return responseEntriesQuery.data.map((row) => (
-		<a href={`${editHrefBase}${row.id}/`} key={row.id}>
+	return responseProductsQuery.data.map((row) => (
+		<a href={`${props.editHrefBase}${row.id}/`} key={row.id}>
 			{row.title}
 		</a>
 	));

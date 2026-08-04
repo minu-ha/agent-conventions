@@ -5,7 +5,7 @@ impact: HIGH
 impactDescription: 잡동사니 파일이 생기지 않고 공용 승격이 실제 사용처를 근거로 일어납니다
 appliesWhen:
   - 보조 함수를 둘 파일이나 폴더를 정할 때
-  - `shared/` 아래로 파일을 옮기거나 `util.*` 에 항목을 추가할 때
+  - `shared/` 아래로 파일을 옮기거나 `util.*`에 항목을 추가할 때
 requiresSelected: functions-extract-helpers-only-when-the-boundary-is-real
 tags: functions, boundaries
 ---
@@ -18,33 +18,58 @@ tags: functions, boundaries
 이 규칙은 그 결과를 어디 두고 언제 올릴지만 봅니다.
 
 - 소유자 아래에 `helper.ts`, `helpers.ts`, `utils.ts` 같은 잡동사니 파일을 만들지 않습니다.
-  어느 폴더에 둘지는 프레임워크 skill 의 역할 폴더 규칙이 정합니다.
+  어느 폴더에 둘지는 프레임워크 skill의 역할 폴더 규칙이 정합니다.
 - 소유자 아래에서는 대표 내보낸 함수 하나당 파일 하나입니다.
-  전역 `shared/util.ts` 는 여러 소유자가 함께 쓰는 순수 함수를 모으는 자리라 예외입니다.
+  전역 `shared/util.ts`는 여러 소유자가 함께 쓰는 순수 함수를 모으는 자리라 예외입니다.
 - 호출 깊이는 소유자에서 내보낸 함수, 그 파일 안 비공개 함수까지 두 단계로 끝냅니다.
   내보낸 함수가 또 다른 내보낸 함수를 타고 가는 사슬은 만들지 않습니다.
+  단계를 나누고 싶으면 내보내지 말고 한 함수 본문 안에 지역 변수로 둡니다.
 - 공용 승격은 **두 소유자 이상이 이미 직접 호출할 때만** 합니다.
-  그때 `shared/util.ts`의 `util.*`로 올립니다. 나중에 쓸 것 같아서 올리지 않습니다.
+  그때 `shared/util.ts`의 `util.*`로 올립니다.
+  나중에 쓸 것 같아서 올리지 않습니다.
 
 **Incorrect (잡동사니 파일과 세 단계 사슬):**
 
 ```ts
 // utils.ts
 export const util = {
-	normalizeTitle: (title: string) => title.trim(),
-	buildPayload: (values: EntryFormValues) => ({title: util.normalizeTitle(values.title)}),
-	buildRequest: (values: EntryFormValues) => ({body: util.buildPayload(values)}),
+	toTrimmedTitle: (title: string) => title.trim(),
+	toPayload: (values: ProductFormValues) => ({title: util.toTrimmedTitle(values.title)}),
+	toRequest: (values: ProductFormValues) => ({body: util.toPayload(values)}),
+};
+```
+
+**Incorrect (보조 모듈 안에서 내보낸 함수가 내보낸 함수를 타고 감):**
+
+```ts
+// profile-support.ts
+export const toProfileValues = (formValues: ProfileFormValues) => {
+	// ...
+};
+
+export const toAvatarRequests = (files: UploadFile[]) => {
+	// ...
+};
+
+export const toProfileSaveRequest = (
+	formValues: ProfileFormValues,
+	files: UploadFile[],
+) => {
+	return {
+		...toProfileValues(formValues),
+		avatarRequests: toAvatarRequests(files),
+	};
 };
 ```
 
 **Correct (소유자 아래 대표 함수 하나당 파일 하나):**
 
 ```ts
-// page/entry-form/function/build-entry-save-request.ts
+// page/product-form/function/to-product-save-request.ts
 /**
- * entry 폼 값을 저장 요청으로 조립
+ * product 폼 값을 저장 요청으로 조립
  */
-export const buildEntrySaveRequest = (values: EntryFormValues) => {
+export const toProductSaveRequest = (values: ProductFormValues) => {
 	return {body: {title: values.title.trim()}};
 };
 ```
@@ -58,7 +83,7 @@ export const util = {
 		/**
 		 * 화면 표시용 날짜 문자열 변환
 		 */
-		formatDisplayDate(value: string): string {
+		toDisplayDate(value: string): string {
 			return new Date(value).toLocaleDateString("ko-KR");
 		},
 	},

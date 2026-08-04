@@ -20,31 +20,31 @@ tags: functions, declarations
 - 한 파일 안에서 두 형태를 섞으면 어느 것이 공개 계약인지 형태로 구분할 수 없습니다.
 - `function` 선언문은 호이스팅되므로 선언보다 위에서 호출해도 동작합니다.
   그러면 읽는 순서와 실행 순서가 달라집니다.
-- 화살표 함수는 `this`를 새로 만들지 않아 콜백으로 넘길 때 `bind` 로 `this` 를 다시 묶지 않아도 됩니다.
+- 화살표 함수는 `this`를 새로 만들지 않아 콜백으로 넘길 때 `bind`로 `this`를 다시 묶지 않아도 됩니다.
 
-세 자리는 예외로 둡니다.
+네 자리는 예외로 둡니다.
 
 | 예외 | 이유 |
 | --- | --- |
-| 클래스 메서드 | 메서드 문법이 정본입니다. 화살표 필드로 바꾸지 않습니다 |
+| 클래스 메서드 | 메서드 문법을 그대로 씁니다. 화살표 필드로 바꾸지 않습니다 |
 | 제너레이터 | `function*` 없이 쓸 수 없습니다 |
 | 오버로드 선언 | 시그니처를 여러 줄로 겹쳐 쓰려면 `function` 선언문이 필요합니다 |
-| 객체 리터럴 메서드 | `util.date.normalize(value)` 처럼 네임스페이스 안 멤버는 메서드 문법을 씁니다 |
+| 객체 리터럴 메서드 | `util.date.toIsoString(value)`처럼 네임스페이스 안 멤버는 메서드 문법을 씁니다 |
 
 **Incorrect (`function` 선언문과 화살표를 한 파일에서 섞음):**
 
 ```ts
-export function normalizeEntryTitle(rawTitle: string): string {
+export function toTrimmedTitle(rawTitle: string): string {
 	return rawTitle.trim().replace(/\s+/g, " ");
 }
 
-export const buildEntrySlug = (title: string): string => normalizeEntryTitle(title).toLowerCase();
+export const toProductSlug = (title: string): string => toTrimmedTitle(title).toLowerCase();
 ```
 
 **Incorrect (쓰는 곳이 선언보다 위에 와서 읽는 순서가 어긋남):**
 
 ```ts
-export const buildEntryLabel = (entry: Entry): string => decorate(entry.title);
+export const toProductLabel = (product: Product): string => decorate(product.title);
 
 function decorate(title: string): string {
 	return `# ${title}`;
@@ -56,18 +56,18 @@ function decorate(title: string): string {
 ```ts
 const decorate = (title: string): string => `# ${title}`;
 
-export const normalizeEntryTitle = (rawTitle: string): string => rawTitle.trim().replace(/\s+/g, " ");
+export const toTrimmedTitle = (rawTitle: string): string => rawTitle.trim().replace(/\s+/g, " ");
 
-export const buildEntryLabel = (entry: Entry): string => decorate(entry.title);
+export const toProductLabel = (product: Product): string => decorate(product.title);
 ```
 
 **Correct (클래스 메서드와 제너레이터는 그대로 둠):**
 
 ```ts
-export class EntryCursor {
-	private buffer: Entry[] = [];
+export class ProductCursor {
+	private buffer: Product[] = [];
 
-	*pages(): Generator<Entry[]> {
+	*pages(): Generator<Product[]> {
 		yield this.buffer;
 	}
 

@@ -29,12 +29,13 @@ tags: ownership, widget, naming
 
 - 프롭스 타입이 그 화면의 응답·뷰모델 타입이나 라우트 검색 매개변수를 참조합니다.
 - 쿼리, 뮤테이션, 라우터 훅, 화면 스토어를 직접 부릅니다.
-- `Suspense`, 폼 프로바이더, 모달처럼 실행 환경 경계를 소유합니다.
+- `Suspense`, 폼 프로바이더, 모달을 직접 소유합니다.
 
 **`page`가 아니면 도메인 지식으로 갈립니다.**
 
 - 도메인을 모르면 `ui`입니다.
-- 도메인을 알면 `widget`입니다. 이름에 도메인 단어가 남아도 됩니다.
+- 도메인을 알면 `widget`입니다.
+  이름에 도메인 단어가 남아도 됩니다.
 
 사용 횟수는 판정 기준이 아닙니다.
 한 화면에서만 쓰여도 위 셋에 해당하지 않으면 `widget`입니다.
@@ -43,22 +44,21 @@ tags: ownership, widget, naming
 **Incorrect (화면 레이어와 화면 전용 로직이 섞임):**
 
 ```tsx
-// ui/button/ui-delete-entry-button.tsx
-const UiDeleteEntryButton = () => {
+// ui/button/ui-delete-product-button.tsx
+const UiDeleteProductButton = () => {
 	const navigate = useNavigate();
 
-	return <button onClick={() => void navigate({ to: "/entries" })}>삭제</button>;
+	return <button onClick={() => void navigate({ to: "/products" })}>삭제</button>;
 };
 ```
 
 **Incorrect (화면 타입도 안 쓰고 훅도 안 부르는 부품을 사용 횟수만 보고 화면에 남김):**
 
 ```tsx
-// page/detail/component/pg-spike-legend-glyph.tsx
+// page/detail/component/pg-sales-legend-glyph.tsx
 // 프롭스가 도메인 타입 하나만 받고 훅도 부르지 않는다. 이 화면에서만 쓴다는 이유로 남아 있다.
-export const PgSpikeLegendGlyph = (props: {item: SpikeLegendItem}) => {
-	const { item } = props;
-	return <svg className="pg_spikeLegendGlyph__root">{/* ... */}</svg>;
+export const PgSalesLegendGlyph = (props: {item: SalesLegendItem}) => {
+	return <svg className="pg_salesLegendGlyph__root">{/* ... */}</svg>;
 };
 ```
 
@@ -71,41 +71,38 @@ export interface UiButtonProps {
 }
 
 export const UiButton = (props: UiButtonProps) => {
-	const { onClick } = props;
-	return <button onClick={onClick} />;
+	return <button onClick={props.onClick} />;
 };
 ```
 
 ```tsx
-// widget/entry-toolbar/wg-entry-toolbar.tsx
-export const WgEntryToolbar = (props: WgEntryToolbarProps) => {
-	const { onClose } = props;
-	return <UiButton onClick={onClose} />;
+// widget/product-toolbar/wg-product-toolbar.tsx
+export const WgProductToolbar = (props: WgProductToolbarProps) => {
+	return <UiButton onClick={props.onClose} />;
 };
 ```
 
 **Correct (화면 타입도 훅도 쓰지 않는 도메인 부품은 `widget`으로 올림):**
 
 ```tsx
-// widget/spike-legend-glyph/wg-spike-legend-glyph.tsx
-export const WgSpikeLegendGlyph = (props: WgSpikeLegendGlyphProps) => {
-	const { item } = props;
-	return <svg className={clsx("wg_spikeLegendGlyph__root")}>{/* ... */}</svg>;
+// widget/sales-legend-glyph/wg-sales-legend-glyph.tsx
+export const WgSalesLegendGlyph = (props: WgSalesLegendGlyphProps) => {
+	return <svg className={clsx("wg_salesLegendGlyph__root")}>{/* ... */}</svg>;
 };
 ```
 
 **Correct (라우터 훅을 부르는 코드는 화면 레이어에 남김):**
 
 ```tsx
-// page/entries/component/pg-delete-entry-button.tsx
-const PgDeleteEntryButton = () => {
+// page/products/component/pg-delete-product-button.tsx
+const PgDeleteProductButton = () => {
 	const navigate = useNavigate();
 
 	/**
 	 * 삭제 후 목록으로 이동
 	 */
 	const handleDeleteButtonClick: MouseEventHandler<HTMLButtonElement> = () => {
-		void navigate({ to: "/entries" });
+		void navigate({ to: "/products" });
 	};
 
 	return <UiButton onClick={handleDeleteButtonClick} />;

@@ -45,10 +45,10 @@ export const Route = createRootRoute({
 
 function Root() {
 	return (
-		<>
+		<Fragment>
 			<GlobalModalHost />
 			<Outlet />
-		</>
+		</Fragment>
 	);
 }
 ```

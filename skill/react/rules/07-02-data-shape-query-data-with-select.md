@@ -1,6 +1,6 @@
 ---
 title: Shape React Query Data in query.select
-titleKo: 응답 가공은 `query.select` 에서 합니다
+titleKo: 응답 가공은 `query.select`에서 합니다
 impact: CRITICAL
 impactDescription: 변환이 통신 경계 한 곳에 모여 화면이 응답 원형을 모릅니다
 appliesWhen:
@@ -28,16 +28,16 @@ tags: data, state, react-query
 **Incorrect (응답 원형을 화면에서 직접 소비):**
 
 ```ts
-const items = responseEntryListSuspense.data.list;
+const items = responseProductListSuspense.data.list;
 ```
 
 **Correct (통신 경계에서 화면이 쓸 모양으로 변환):**
 
 ```ts
 /**
- * entry 목록 조회 API
+ * product 목록 조회 API
  */
-const responseEntryListSuspense = useEntryListSuspense({
+const responseProductListSuspense = useProductListSuspense({
   query: {
     select: (response) => ({
       items: response.data.list,

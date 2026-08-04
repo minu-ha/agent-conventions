@@ -30,14 +30,14 @@ tags: docs, comments
 "성능을 위해", "안전하게", "필요해서"처럼 다시 확인할 수 없는 말은 근거가 아닙니다.
 그런 주석은 예외 조건을 채우지 못합니다.
 
-주석은 예외가 일어나는 줄 바로 위에 한국어 한 줄로 씁니다.
+주석은 예외가 일어나는 줄 바로 위에 `//`로 씁니다.
 형식과 어투는 `docs-write-concise-korean-comments-about-purpose-and-constraints`를 따릅니다.
 
 **Incorrect (확인할 수 없는 말로 예외를 정당화):**
 
 ```ts
 // 성능을 위해 메모이제이션
-const columns = useMemo(() => buildColumns(response.data.columns), [response.data.columns]);
+const columns = useMemo(() => toTableColumns(response.data.columns), [response.data.columns]);
 
 // 안전하게 기본값 처리
 const pageSize = settings.pageSize ?? 20;
@@ -47,9 +47,9 @@ const pageSize = settings.pageSize ?? 20;
 
 ```ts
 // ag-grid 는 columnDefs 참조가 바뀌면 컬럼 상태를 초기화한다. 참조를 고정해야 한다.
-const columns = useMemo(() => buildColumns(response.data.columns), [response.data.columns]);
+const columns = useMemo(() => toTableColumns(response.data.columns), [response.data.columns]);
 
-// 기본 페이지 크기는 config.pagination.default_page_size 가 정본이다.
+// 기본 페이지 크기는 config.pagination.default_page_size 가 기준이다.
 const pageSize = settings.pageSize ?? config.pagination.default_page_size;
 ```
 
