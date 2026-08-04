@@ -32,22 +32,32 @@ tags: composition, jsx
 - 숨긴 하위 트리도 렌더 비용이 계속 듭니다. 무거운 트리를 습관적으로 감춰 두지 않습니다.
 - `<Activity>`는 리액트 19.2 이상에만 있습니다. 그보다 낮으면 조건부 렌더링만 씁니다.
 
-**Incorrect (생명주기 의미가 다른 분기를 표시 방식으로 치환):**
+**Incorrect (폼 초기화가 필요한 자리를 표시 방식으로 치환):**
 
 ```tsx
+// 편집을 취소했다가 다시 들어가면 지난 입력이 그대로 남는다
 return (
   <>
     <Activity mode={isEditing ? "visible" : "hidden"}>
-      <EditorForm />
+      <PgEntryEditorForm />
     </Activity>
     <Activity mode={isEditing ? "hidden" : "visible"}>
-      <PreviewPane />
+      <PgEntryPreviewPane />
     </Activity>
   </>
 );
 ```
 
-**Correct (되돌릴 때 상태를 살려야 하는 자리에만 사용):**
+**Correct (되돌릴 때 살려야 할 상태가 하위 트리에 있는 자리에만 사용):**
+
+```tsx
+const PgEntrySidebar = () => {
+  // 접어 둔 노드와 스크롤 위치가 사이드바 안에 있다. 닫았다 열면 그대로 있어야 한다
+  const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
+
+  return <UiTree expandedKeys={expandedKeys} onExpand={setExpandedKeys} />;
+};
+```
 
 ```tsx
 return (

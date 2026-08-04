@@ -59,7 +59,7 @@ export const PgSpikePatternPanel = (props: PgSpikePatternPanelProps) => {
 	const { legendItems } = props;
 
 	return (
-		<section className="pg_spikePatternPanel__root">
+		<section className={clsx("pg_spikePatternPanel__root")}>
 			<PgDetectionSection heading={<UiSectionHeading title="상단 이탈 감지" />} legendItems={legendItems} />
 			<PgSummaryBand heading={<UiSectionHeading title="요약" />} />
 		</section>

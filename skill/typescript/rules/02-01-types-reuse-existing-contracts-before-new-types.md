@@ -33,6 +33,14 @@ tags: types
 **Incorrect (기존 계약과 동일한 구조를 다시 선언):**
 
 ```ts
+// 이미 있는 계약
+interface UserRecord {
+	id: string;
+	name: string;
+	email: string;
+}
+
+// 필드 이름·타입·선택 여부가 그대로인데 새로 선언했다
 interface UserPreview {
 	id: string;
 	name: string;

@@ -35,7 +35,7 @@ tags: screen, routes
 ```tsx
 const PgEntrySidebarPanel = () => {
 	return (
-		<section className="entry-layout__sidebar">
+		<section className={clsx("pg_entries__sidebar")}>
 			<SidebarStats />
 			<SearchField />
 			<EntryTree />
@@ -57,7 +57,7 @@ export const PgEntries = () => {
 	const responseEntryListSuspense = useEntryListSuspense();
 
 	return (
-		<div className="pg_entries__layout">
+		<div className={clsx("pg_entries__layout")}>
 			<PgEntrySidebarPanel />
 			<PgEntryDetailPanel />
 		</div>
@@ -97,7 +97,7 @@ const PgEntryTreeSection = (props: PgEntryTreeSectionProps) => {
 	};
 
 	return (
-		<section className="entry-layout__sidebar">
+		<section className={clsx("pg_entries__sidebar")}>
 			<UiInput
 				value={treeSearchKeyword}
 				onChange={(event) => setTreeSearchKeyword(event.target.value)}
@@ -151,7 +151,7 @@ export const PgEntries = () => {
 	};
 
 	return (
-		<div className="pg_entries__layout">
+		<div className={clsx("pg_entries__layout")}>
 			<PgEntryTreeSection
 				categoryNodes={responseEntryTreeSuspense.data.categoryNodes}
 				selectedCategoryId={search.categoryId}

@@ -52,11 +52,11 @@ export const useChartInstance = (containerRef: RefObject<HTMLDivElement | null>)
 
 ```tsx
 // widget/chart/component/chart-root/wg-chart-root.tsx
-export const WgChartRoot = (props: ChartRootProps) => {
+export const WgChartRoot = (props: WgChartRootProps) => {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const chart = useChartInstance(containerRef);
 
-	return <div ref={containerRef} className="wg_chart__canvas" />;
+	return <div ref={containerRef} className={clsx("wg_chart__canvas")} />;
 };
 ```
 
@@ -64,7 +64,7 @@ export const WgChartRoot = (props: ChartRootProps) => {
 
 ```tsx
 // widget/chart/component/chart-root/wg-chart-root.tsx
-export const WgChartRoot = (props: ChartRootProps) => {
+export const WgChartRoot = (props: WgChartRootProps) => {
 	const { option } = props;
 	const containerRef = useRef<HTMLDivElement>(null);
 	const [chart, setChart] = useState<EChartsType | null>(null);
@@ -94,6 +94,6 @@ export const WgChartRoot = (props: ChartRootProps) => {
 		chart?.setOption(option);
 	}, [chart, option]);
 
-	return <div ref={containerRef} className="wg_chart__canvas" />;
+	return <div ref={containerRef} className={clsx("wg_chart__canvas")} />;
 };
 ```

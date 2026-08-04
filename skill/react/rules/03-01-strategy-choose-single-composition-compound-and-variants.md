@@ -36,7 +36,7 @@ tags: strategy, composition, variants, component-design
 **Incorrect (단일·합성·드러난 변형의 경계를 구분하지 않고 한 컴포넌트에 몰아넣음):**
 
 ```tsx
-export interface ProfileDialogProps {
+export interface UiProfileDialogProps {
 	isCompact?: boolean;
 	showActivity?: boolean;
 	showFocus?: boolean;
@@ -44,7 +44,7 @@ export interface ProfileDialogProps {
 	renderFooter?: () => ReactNode;
 }
 
-export const UiProfileDialog = (props: ProfileDialogProps) => {
+export const UiProfileDialog = (props: UiProfileDialogProps) => {
 	const { isCompact, showActivity, showFocus, dialogTitle, renderFooter } = props;
 
 	return (
@@ -64,16 +64,16 @@ export const UiProfileDialog = (props: ProfileDialogProps) => {
 **Correct (고정 구조면 단일 컴포넌트로 유지):**
 
 ```tsx
-export interface EmptyStateProps {
+export interface UiEmptyStateProps {
 	title: string;
 	description: string;
 }
 
-export const UiEmptyState = (props: EmptyStateProps) => {
+export const UiEmptyState = (props: UiEmptyStateProps) => {
 	const { title, description } = props;
 
 	return (
-		<section className="empty-state">
+		<section className={clsx("ui_emptyState__root")}>
 			<EmptyFolderIllustration />
 			<h2>{title}</h2>
 			<p>{description}</p>
@@ -85,55 +85,67 @@ export const UiEmptyState = (props: EmptyStateProps) => {
 **Correct (구조를 열어야 하면 상태 없는 합성 컴포넌트로 시작):**
 
 ```tsx
-export interface SectionProps {
+export interface UiSectionProps {
 	children: ReactNode;
 }
 
-const SectionRoot = (props: SectionProps) => {
+const UiSectionRoot = (props: UiSectionProps) => {
 	const { children } = props;
 	return <section className={clsx("ui_section__root")}>{children}</section>;
 };
 
-const SectionHeader = (props: SectionProps) => {
+const UiSectionHeader = (props: UiSectionProps) => {
 	const { children } = props;
 	return <header className={clsx("ui_section__header")}>{children}</header>;
 };
 
-const SectionFooter = (props: SectionProps) => {
+const UiSectionFooter = (props: UiSectionProps) => {
 	const { children } = props;
 	return <footer className={clsx("ui_section__footer")}>{children}</footer>;
 };
 
-export const Section = {
-	Root: SectionRoot,
-	Header: SectionHeader,
-	Footer: SectionFooter,
+export const UiSection = {
+	Root: UiSectionRoot,
+	Header: UiSectionHeader,
+	Footer: UiSectionFooter,
 } as const;
 ```
 
 **Correct (여러 부품이 상태를 공유하면 상태를 가진 합성 컴포넌트로 확장):**
 
 ```tsx
-const TabsContext = createContext<TabsContextValue | null>(null);
+const UiTabsContext = createContext<UiTabsContextValue | null>(null);
 
-const TabsRoot = (props: TabsRootProps) => {
+const UiTabsRoot = (props: UiTabsRootProps) => {
 	const { defaultValue, children } = props;
 	const [activeValue, setActiveValue] = useState(defaultValue);
 
 	return (
-		<TabsContext value={{ activeValue, setActiveValue }}>
+		<UiTabsContext value={{ activeValue, setActiveValue }}>
 			<section>{children}</section>
-		</TabsContext>
+		</UiTabsContext>
 	);
 };
 
-const TabsTrigger = (props: TabsTriggerProps) => {
+const UiTabsTrigger = (props: UiTabsTriggerProps) => {
 	const { value, children } = props;
 	const tabs = useTabsContext();
-	return <button onClick={() => tabs.setActiveValue(value)}>{children}</button>;
+
+	/**
+	 * 탭 버튼 클릭 시 활성 값 전환
+	 */
+	const handleTriggerClick: MouseEventHandler<HTMLButtonElement> = () => {
+		tabs.setActiveValue(value);
+	};
+
+	return (
+		<button className={clsx("ui_tabs__trigger")} onClick={handleTriggerClick}>
+			{children}
+		</button>
+	);
 };
 
-const TabsPanel = (props: TabsPanelProps) => {
+const UiTabsPanel = (props: UiTabsPanelProps) => {
 	const { value, children } = props;
 	const tabs = useTabsContext();
 	return tabs.activeValue === value ? <section>{children}</section> : null;
@@ -143,7 +155,7 @@ const TabsPanel = (props: TabsPanelProps) => {
 **Correct (같은 계열 조합이 반복되면 드러난 변형으로 감쌈):**
 
 ```tsx
-export const ReadOnlyProfileDialog = () => {
+export const UiReadOnlyProfileDialog = () => {
 	return (
 		<Dialog.Root>
 			<Dialog.Trigger>View profile</Dialog.Trigger>

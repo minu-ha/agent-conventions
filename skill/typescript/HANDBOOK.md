@@ -329,6 +329,14 @@ import {SpikeChartCard} from "./component/spike-chart-card";
 **Incorrect (기존 계약과 동일한 구조를 다시 선언):**
 
 ```ts
+// 이미 있는 계약
+interface UserRecord {
+	id: string;
+	name: string;
+	email: string;
+}
+
+// 필드 이름·타입·선택 여부가 그대로인데 새로 선언했다
 interface UserPreview {
 	id: string;
 	name: string;
@@ -382,9 +390,15 @@ const formatState = (state: Record<string, unknown>): string => {
 };
 ```
 
-**Correct (이미 있는 계약에서 시그니처를 가져와 함수 변수 타입을 고정):**
+**Correct (이미 있는 계약에서 시그니처를 가져와 함수 전체에 타입을 붙임):**
 
 ```ts
+// 이미 있는 계약
+interface UserFormatters {
+	formatState: (state: Record<string, unknown>) => string;
+	formatRole: (role: string) => string;
+}
+
 const formatState: UserFormatters["formatState"] = (state) => {
 	return JSON.stringify(state);
 };
@@ -666,15 +680,11 @@ const buildRequestUrl = (args: BuildRequestUrlArgs): URL => {
 
 흐름을 알려고 파일을 왕복해야 하면 경계가 아니라 그냥 쪼갠 것입니다.
 
-**Incorrect (단회성 계산을 범용 유틸 파일로 분리):**
+**Incorrect (한 번만 쓰는 한 줄 계산을 파일로 분리):**
 
 ```ts
-// utils.ts
-export const util = {
-	getNextIteration(iteration: number) {
-		return iteration + 1;
-	},
-};
+// page/profile/function/get-next-iteration.ts
+export const getNextIteration = (iteration: number): number => iteration + 1;
 ```
 
 **Incorrect (보조 모듈 안에서도 내보내기 도우미를 단계별로 누적):**
@@ -1042,7 +1052,7 @@ const pageSize = query.pageSize ?? config.pagination.default_page_size;
 
 **Impact: MEDIUM-HIGH**
 
-문서 주석은 어느 선언에 붙일지, 어떤 형식으로 쓸지, 태그를 붙일지가 따로 정해져 있습니다. 본문은 한국어로 목적과 제약을 적고, 규칙이 허용한 예외에는 확인할 수 있는 이유를 남깁니다.
+함수 본문 안 주석은 제약과 예외만 적습니다. 선언 위 문서 주석은 어디에 붙일지, 어떤 형식으로 쓸지, 태그를 붙일지가 따로 정해져 있습니다. 본문은 한국어로 목적과 제약을 적고, 규칙이 허용한 예외에는 확인할 수 있는 이유를 남깁니다.
 
 ### 5.1 Keep Inline Comments for Constraints and Caveats Only
 

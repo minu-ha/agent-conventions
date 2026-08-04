@@ -43,9 +43,15 @@ const formatState = (state: Record<string, unknown>): string => {
 };
 ```
 
-**Correct (이미 있는 계약에서 시그니처를 가져와 함수 변수 타입을 고정):**
+**Correct (이미 있는 계약에서 시그니처를 가져와 함수 전체에 타입을 붙임):**
 
 ```ts
+// 이미 있는 계약
+interface UserFormatters {
+	formatState: (state: Record<string, unknown>) => string;
+	formatRole: (role: string) => string;
+}
+
 const formatState: UserFormatters["formatState"] = (state) => {
 	return JSON.stringify(state);
 };

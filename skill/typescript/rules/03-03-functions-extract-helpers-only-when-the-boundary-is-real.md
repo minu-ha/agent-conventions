@@ -24,15 +24,11 @@ tags: functions, boundaries
 
 흐름을 알려고 파일을 왕복해야 하면 경계가 아니라 그냥 쪼갠 것입니다.
 
-**Incorrect (단회성 계산을 범용 유틸 파일로 분리):**
+**Incorrect (한 번만 쓰는 한 줄 계산을 파일로 분리):**
 
 ```ts
-// utils.ts
-export const util = {
-	getNextIteration(iteration: number) {
-		return iteration + 1;
-	},
-};
+// page/profile/function/get-next-iteration.ts
+export const getNextIteration = (iteration: number): number => iteration + 1;
 ```
 
 **Incorrect (보조 모듈 안에서도 내보내기 도우미를 단계별로 누적):**

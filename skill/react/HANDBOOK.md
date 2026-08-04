@@ -392,7 +392,7 @@ export const PgSpikePatternPanel = (props: PgSpikePatternPanelProps) => {
 	const { legendItems } = props;
 
 	return (
-		<section className="pg_spikePatternPanel__root">
+		<section className={clsx("pg_spikePatternPanel__root")}>
 			<PgDetectionSection heading={<UiSectionHeading title="상단 이탈 감지" />} legendItems={legendItems} />
 			<PgSummaryBand heading={<UiSectionHeading title="요약" />} />
 		</section>
@@ -514,11 +514,11 @@ export const useChartInstance = (containerRef: RefObject<HTMLDivElement | null>)
 
 ```tsx
 // widget/chart/component/chart-root/wg-chart-root.tsx
-export const WgChartRoot = (props: ChartRootProps) => {
+export const WgChartRoot = (props: WgChartRootProps) => {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const chart = useChartInstance(containerRef);
 
-	return <div ref={containerRef} className="wg_chart__canvas" />;
+	return <div ref={containerRef} className={clsx("wg_chart__canvas")} />;
 };
 ```
 
@@ -526,7 +526,7 @@ export const WgChartRoot = (props: ChartRootProps) => {
 
 ```tsx
 // widget/chart/component/chart-root/wg-chart-root.tsx
-export const WgChartRoot = (props: ChartRootProps) => {
+export const WgChartRoot = (props: WgChartRootProps) => {
 	const { option } = props;
 	const containerRef = useRef<HTMLDivElement>(null);
 	const [chart, setChart] = useState<EChartsType | null>(null);
@@ -556,7 +556,7 @@ export const WgChartRoot = (props: ChartRootProps) => {
 		chart?.setOption(option);
 	}, [chart, option]);
 
-	return <div ref={containerRef} className="wg_chart__canvas" />;
+	return <div ref={containerRef} className={clsx("wg_chart__canvas")} />;
 };
 ```
 
@@ -641,7 +641,7 @@ const handleSubmitClick: UiButtonProps["onClick"] = (event) => {
 
 **Impact: HIGH**
 
-공용 컴포넌트는 단일 컴포넌트, 합성 컴포넌트, 드러난 변형 중 어떤 구조를 쓸지 먼저 결정하고, 그다음 무엇을 공개 부품으로 열지 정합니다. 합성 컴포넌트는 상태 없는 조립에서 시작해 같은 공개 이름을 유지한 채 상태를 가진 구조로 확장될 수 있어야 합니다.
+공용 컴포넌트는 단일 컴포넌트, 합성 컴포넌트, 드러난 변형 중 어떤 구조를 쓸지 먼저 결정하고, 그다음 무엇을 공개 부품으로 열지 정합니다. 불리언 프롭으로 모드를 늘리지 않고, 정적 조립에는 렌더 프롭 대신 `children` 을 씁니다. 합성 컴포넌트는 상태 없는 조립에서 시작해 같은 공개 이름을 유지한 채 상태를 가진 구조로 확장될 수 있어야 합니다.
 
 ### 3.1 Choose Single Components, Compound Components, and Variants Deliberately
 
@@ -672,7 +672,7 @@ const handleSubmitClick: UiButtonProps["onClick"] = (event) => {
 **Incorrect (단일·합성·드러난 변형의 경계를 구분하지 않고 한 컴포넌트에 몰아넣음):**
 
 ```tsx
-export interface ProfileDialogProps {
+export interface UiProfileDialogProps {
 	isCompact?: boolean;
 	showActivity?: boolean;
 	showFocus?: boolean;
@@ -680,7 +680,7 @@ export interface ProfileDialogProps {
 	renderFooter?: () => ReactNode;
 }
 
-export const UiProfileDialog = (props: ProfileDialogProps) => {
+export const UiProfileDialog = (props: UiProfileDialogProps) => {
 	const { isCompact, showActivity, showFocus, dialogTitle, renderFooter } = props;
 
 	return (
@@ -700,16 +700,16 @@ export const UiProfileDialog = (props: ProfileDialogProps) => {
 **Correct (고정 구조면 단일 컴포넌트로 유지):**
 
 ```tsx
-export interface EmptyStateProps {
+export interface UiEmptyStateProps {
 	title: string;
 	description: string;
 }
 
-export const UiEmptyState = (props: EmptyStateProps) => {
+export const UiEmptyState = (props: UiEmptyStateProps) => {
 	const { title, description } = props;
 
 	return (
-		<section className="empty-state">
+		<section className={clsx("ui_emptyState__root")}>
 			<EmptyFolderIllustration />
 			<h2>{title}</h2>
 			<p>{description}</p>
@@ -721,55 +721,67 @@ export const UiEmptyState = (props: EmptyStateProps) => {
 **Correct (구조를 열어야 하면 상태 없는 합성 컴포넌트로 시작):**
 
 ```tsx
-export interface SectionProps {
+export interface UiSectionProps {
 	children: ReactNode;
 }
 
-const SectionRoot = (props: SectionProps) => {
+const UiSectionRoot = (props: UiSectionProps) => {
 	const { children } = props;
 	return <section className={clsx("ui_section__root")}>{children}</section>;
 };
 
-const SectionHeader = (props: SectionProps) => {
+const UiSectionHeader = (props: UiSectionProps) => {
 	const { children } = props;
 	return <header className={clsx("ui_section__header")}>{children}</header>;
 };
 
-const SectionFooter = (props: SectionProps) => {
+const UiSectionFooter = (props: UiSectionProps) => {
 	const { children } = props;
 	return <footer className={clsx("ui_section__footer")}>{children}</footer>;
 };
 
-export const Section = {
-	Root: SectionRoot,
-	Header: SectionHeader,
-	Footer: SectionFooter,
+export const UiSection = {
+	Root: UiSectionRoot,
+	Header: UiSectionHeader,
+	Footer: UiSectionFooter,
 } as const;
 ```
 
 **Correct (여러 부품이 상태를 공유하면 상태를 가진 합성 컴포넌트로 확장):**
 
 ```tsx
-const TabsContext = createContext<TabsContextValue | null>(null);
+const UiTabsContext = createContext<UiTabsContextValue | null>(null);
 
-const TabsRoot = (props: TabsRootProps) => {
+const UiTabsRoot = (props: UiTabsRootProps) => {
 	const { defaultValue, children } = props;
 	const [activeValue, setActiveValue] = useState(defaultValue);
 
 	return (
-		<TabsContext value={{ activeValue, setActiveValue }}>
+		<UiTabsContext value={{ activeValue, setActiveValue }}>
 			<section>{children}</section>
-		</TabsContext>
+		</UiTabsContext>
 	);
 };
 
-const TabsTrigger = (props: TabsTriggerProps) => {
+const UiTabsTrigger = (props: UiTabsTriggerProps) => {
 	const { value, children } = props;
 	const tabs = useTabsContext();
-	return <button onClick={() => tabs.setActiveValue(value)}>{children}</button>;
+
+	/**
+	 * 탭 버튼 클릭 시 활성 값 전환
+	 */
+	const handleTriggerClick: MouseEventHandler<HTMLButtonElement> = () => {
+		tabs.setActiveValue(value);
+	};
+
+	return (
+		<button className={clsx("ui_tabs__trigger")} onClick={handleTriggerClick}>
+			{children}
+		</button>
+	);
 };
 
-const TabsPanel = (props: TabsPanelProps) => {
+const UiTabsPanel = (props: UiTabsPanelProps) => {
 	const { value, children } = props;
 	const tabs = useTabsContext();
 	return tabs.activeValue === value ? <section>{children}</section> : null;
@@ -779,7 +791,7 @@ const TabsPanel = (props: TabsPanelProps) => {
 **Correct (같은 계열 조합이 반복되면 드러난 변형으로 감쌈):**
 
 ```tsx
-export const ReadOnlyProfileDialog = () => {
+export const UiReadOnlyProfileDialog = () => {
 	return (
 		<Dialog.Root>
 			<Dialog.Trigger>View profile</Dialog.Trigger>
@@ -934,12 +946,12 @@ export const WgEntryEditToolbar = () => {
 **Incorrect (정적인 구조를 렌더 프롭으로 조립):**
 
 ```tsx
-export interface PanelProps {
+export interface UiPanelProps {
 	renderHeader?: () => ReactNode;
 	renderFooter?: () => ReactNode;
 }
 
-export const UiPanel = (props: PanelProps) => {
+export const UiPanel = (props: UiPanelProps) => {
 	const { renderHeader, renderFooter } = props;
 
 	return (
@@ -955,51 +967,51 @@ export const UiPanel = (props: PanelProps) => {
 **Correct (`children`과 네임스페이스 슬롯 부품으로 구조를 드러냄):**
 
 ```tsx
-export interface PanelProps {
+export interface UiPanelProps {
 	children: ReactNode;
 }
 
-const PanelRoot = (props: PanelProps) => {
+const UiPanelRoot = (props: UiPanelProps) => {
 	const { children } = props;
 	return <section className={clsx("ui_panel__root")}>{children}</section>;
 };
 
-const PanelHeader = (props: PanelProps) => {
+const UiPanelHeader = (props: UiPanelProps) => {
 	const { children } = props;
 	return <header className={clsx("ui_panel__header")}>{children}</header>;
 };
 
-const PanelFooter = (props: PanelProps) => {
+const UiPanelFooter = (props: UiPanelProps) => {
 	const { children } = props;
 	return <footer className={clsx("ui_panel__footer")}>{children}</footer>;
 };
 
-export const Panel = {
-	Root: PanelRoot,
-	Header: PanelHeader,
-	Footer: PanelFooter,
+export const UiPanel = {
+	Root: UiPanelRoot,
+	Header: UiPanelHeader,
+	Footer: UiPanelFooter,
 } as const;
 
-export const EntryScreen = () => {
+export const PgEntryScreen = () => {
 	return (
 		<>
-			<Panel.Root>
-				<Panel.Header>
+			<UiPanel.Root>
+				<UiPanel.Header>
 					<h2>Entries</h2>
 					<EntrySearchField />
-				</Panel.Header>
+				</UiPanel.Header>
 				<EntryList />
-				<Panel.Footer>
+				<UiPanel.Footer>
 					<Pagination />
-				</Panel.Footer>
-			</Panel.Root>
+				</UiPanel.Footer>
+			</UiPanel.Root>
 
-			<Panel.Root>
-				<Panel.Header>
+			<UiPanel.Root>
+				<UiPanel.Header>
 					<h2>Create entry</h2>
-				</Panel.Header>
+				</UiPanel.Header>
 				<EntryCreateForm />
-			</Panel.Root>
+			</UiPanel.Root>
 		</>
 	);
 };
@@ -1029,7 +1041,7 @@ export const EntryScreen = () => {
 **Incorrect (시그니처에서 바로 구조분해):**
 
 ```tsx
-const UserCard = ({ id, onSave }: UserCardProps) => {
+const WgUserCard = ({ id, onSave }: WgUserCardProps) => {
   return <button onClick={onSave}>{id}</button>;
 };
 ```
@@ -1037,7 +1049,7 @@ const UserCard = ({ id, onSave }: UserCardProps) => {
 **Correct (계약과 사용 위치를 분리):**
 
 ```tsx
-const UserCard = (props: UserCardProps) => {
+const WgUserCard = (props: WgUserCardProps) => {
   const { id, onSave } = props;
   return <button onClick={onSave}>{id}</button>;
 };
@@ -1061,7 +1073,7 @@ const UserCard = (props: UserCardProps) => {
 **Incorrect (렌더마다 새 컴포넌트 타입을 생성):**
 
 ```tsx
-export const WgUserProfileCard = (props: UserProfileCardProps) => {
+export const WgUserProfileCard = (props: WgUserProfileCardProps) => {
 	const { theme, user } = props;
 
 	const Avatar = () => {
@@ -1079,22 +1091,22 @@ export const WgUserProfileCard = (props: UserProfileCardProps) => {
 **Correct (컴포넌트를 바깥으로 분리하고 프롭스로 전달):**
 
 ```tsx
-export interface UserProfileAvatarProps {
+export interface WgUserProfileAvatarProps {
 	theme: "dark" | "light";
 	src: string;
 }
 
-export const WgUserProfileAvatar = (props: UserProfileAvatarProps) => {
+export const WgUserProfileAvatar = (props: WgUserProfileAvatarProps) => {
 	const { theme, src } = props;
 	return <img className={clsx("wg_userProfileAvatar__image", theme === "dark" && "wg_userProfileAvatar__image--dark")} src={src} />;
 };
 
-export const WgUserProfileCard = (props: UserProfileCardProps) => {
+export const WgUserProfileCard = (props: WgUserProfileCardProps) => {
 	const { theme, user } = props;
 
 	return (
 		<section>
-			<UserProfileAvatar src={user.avatarUrl} theme={theme} />
+			<WgUserProfileAvatar src={user.avatarUrl} theme={theme} />
 		</section>
 	);
 };
@@ -1239,22 +1251,32 @@ export const UiStatusBadge = (props: UiStatusBadgeProps) => {
 - 숨긴 하위 트리도 렌더 비용이 계속 듭니다. 무거운 트리를 습관적으로 감춰 두지 않습니다.
 - `<Activity>`는 리액트 19.2 이상에만 있습니다. 그보다 낮으면 조건부 렌더링만 씁니다.
 
-**Incorrect (생명주기 의미가 다른 분기를 표시 방식으로 치환):**
+**Incorrect (폼 초기화가 필요한 자리를 표시 방식으로 치환):**
 
 ```tsx
+// 편집을 취소했다가 다시 들어가면 지난 입력이 그대로 남는다
 return (
   <>
     <Activity mode={isEditing ? "visible" : "hidden"}>
-      <EditorForm />
+      <PgEntryEditorForm />
     </Activity>
     <Activity mode={isEditing ? "hidden" : "visible"}>
-      <PreviewPane />
+      <PgEntryPreviewPane />
     </Activity>
   </>
 );
 ```
 
-**Correct (되돌릴 때 상태를 살려야 하는 자리에만 사용):**
+**Correct (되돌릴 때 살려야 할 상태가 하위 트리에 있는 자리에만 사용):**
+
+```tsx
+const PgEntrySidebar = () => {
+  // 접어 둔 노드와 스크롤 위치가 사이드바 안에 있다. 닫았다 열면 그대로 있어야 한다
+  const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
+
+  return <UiTree expandedKeys={expandedKeys} onExpand={setExpandedKeys} />;
+};
+```
 
 ```tsx
 return (
@@ -1284,6 +1306,9 @@ return hasItems ? <PgEntryList /> : <PgEntryEmptyState />;
 파일을 열면 계약이 먼저 보이고 구현이 그 아래 옵니다.
 
 - 이름은 컴포넌트 이름에 `Props`를 붙입니다. `UiButton`이면 `UiButtonProps`입니다.
+- 합성 부품 여럿이 형태가 완전히 같으면 묶음 이름으로 하나를 선언해 나눠 씁니다.
+  `UiSectionRoot`·`UiSectionHeader`·`UiSectionFooter`가 모두 `{children}`이면 `UiSectionProps` 하나입니다.
+  같은 형태를 부품마다 다시 선언하면 `typescript/types-reuse-existing-contracts-before-new-types`가 걸립니다.
 - 사용처가 이 계약을 참조할 수 있어야 하므로 `export`합니다.
   래퍼 사용처가 원본 라이브러리 프롭스를 보지 않게 하려는 것입니다.
 - 프롭스 타입은 파일 위쪽에 모으지 않습니다. 컴포넌트가 여러 개면 각자 위에 둡니다.
@@ -1555,7 +1580,7 @@ export const PgEntryTable = (props: PgEntryTableProps) => {
 ```tsx
 const PgEntrySidebarPanel = () => {
 	return (
-		<section className="entry-layout__sidebar">
+		<section className={clsx("pg_entries__sidebar")}>
 			<SidebarStats />
 			<SearchField />
 			<EntryTree />
@@ -1577,7 +1602,7 @@ export const PgEntries = () => {
 	const responseEntryListSuspense = useEntryListSuspense();
 
 	return (
-		<div className="pg_entries__layout">
+		<div className={clsx("pg_entries__layout")}>
 			<PgEntrySidebarPanel />
 			<PgEntryDetailPanel />
 		</div>
@@ -1617,7 +1642,7 @@ const PgEntryTreeSection = (props: PgEntryTreeSectionProps) => {
 	};
 
 	return (
-		<section className="entry-layout__sidebar">
+		<section className={clsx("pg_entries__sidebar")}>
 			<UiInput
 				value={treeSearchKeyword}
 				onChange={(event) => setTreeSearchKeyword(event.target.value)}
@@ -1671,7 +1696,7 @@ export const PgEntries = () => {
 	};
 
 	return (
-		<div className="pg_entries__layout">
+		<div className={clsx("pg_entries__layout")}>
 			<PgEntryTreeSection
 				categoryNodes={responseEntryTreeSuspense.data.categoryNodes}
 				selectedCategoryId={search.categoryId}

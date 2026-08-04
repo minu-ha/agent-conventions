@@ -1936,10 +1936,14 @@ export default {
 const ownClassPattern = (scope) =>
 	`^(?:(?!${scope}_).*|${scope}_[a-z][a-zA-Z0-9]*__[a-z][a-zA-Z0-9]*(?:--[a-z][a-zA-Z0-9]*)?)$`;
 
-/** 우리가 이름을 정하지 않는 라이브러리 클래스 */
+/**
+ * 우리가 이름을 정하지 않는 라이브러리 클래스
+ */
 const libraryPrefixes = [/^\.ant-/, /^\.rc-/, /^\.tippy-/, /^\.Mui-/];
 
-/** 우리가 마크업을 쓰는 자리에서 금지되는 형태 */
+/**
+ * 우리가 마크업을 쓰는 자리에서 금지되는 형태
+ */
 const ownMarkupPatterns = [
 	// 상태 pseudo-class 를 top-level 선택자로 다시 여는 것
 	/^\.[\w-]+:(hover|focus|focus-visible|focus-within|active|disabled|checked|visited)/,

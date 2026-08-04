@@ -20,12 +20,12 @@ tags: strategy, composition, component-design
 **Incorrect (정적인 구조를 렌더 프롭으로 조립):**
 
 ```tsx
-export interface PanelProps {
+export interface UiPanelProps {
 	renderHeader?: () => ReactNode;
 	renderFooter?: () => ReactNode;
 }
 
-export const UiPanel = (props: PanelProps) => {
+export const UiPanel = (props: UiPanelProps) => {
 	const { renderHeader, renderFooter } = props;
 
 	return (
@@ -41,51 +41,51 @@ export const UiPanel = (props: PanelProps) => {
 **Correct (`children`과 네임스페이스 슬롯 부품으로 구조를 드러냄):**
 
 ```tsx
-export interface PanelProps {
+export interface UiPanelProps {
 	children: ReactNode;
 }
 
-const PanelRoot = (props: PanelProps) => {
+const UiPanelRoot = (props: UiPanelProps) => {
 	const { children } = props;
 	return <section className={clsx("ui_panel__root")}>{children}</section>;
 };
 
-const PanelHeader = (props: PanelProps) => {
+const UiPanelHeader = (props: UiPanelProps) => {
 	const { children } = props;
 	return <header className={clsx("ui_panel__header")}>{children}</header>;
 };
 
-const PanelFooter = (props: PanelProps) => {
+const UiPanelFooter = (props: UiPanelProps) => {
 	const { children } = props;
 	return <footer className={clsx("ui_panel__footer")}>{children}</footer>;
 };
 
-export const Panel = {
-	Root: PanelRoot,
-	Header: PanelHeader,
-	Footer: PanelFooter,
+export const UiPanel = {
+	Root: UiPanelRoot,
+	Header: UiPanelHeader,
+	Footer: UiPanelFooter,
 } as const;
 
-export const EntryScreen = () => {
+export const PgEntryScreen = () => {
 	return (
 		<>
-			<Panel.Root>
-				<Panel.Header>
+			<UiPanel.Root>
+				<UiPanel.Header>
 					<h2>Entries</h2>
 					<EntrySearchField />
-				</Panel.Header>
+				</UiPanel.Header>
 				<EntryList />
-				<Panel.Footer>
+				<UiPanel.Footer>
 					<Pagination />
-				</Panel.Footer>
-			</Panel.Root>
+				</UiPanel.Footer>
+			</UiPanel.Root>
 
-			<Panel.Root>
-				<Panel.Header>
+			<UiPanel.Root>
+				<UiPanel.Header>
 					<h2>Create entry</h2>
-				</Panel.Header>
+				</UiPanel.Header>
 				<EntryCreateForm />
-			</Panel.Root>
+			</UiPanel.Root>
 		</>
 	);
 };

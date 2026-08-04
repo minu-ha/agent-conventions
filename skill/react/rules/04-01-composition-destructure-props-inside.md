@@ -23,7 +23,7 @@ tags: composition, props
 **Incorrect (시그니처에서 바로 구조분해):**
 
 ```tsx
-const UserCard = ({ id, onSave }: UserCardProps) => {
+const WgUserCard = ({ id, onSave }: WgUserCardProps) => {
   return <button onClick={onSave}>{id}</button>;
 };
 ```
@@ -31,7 +31,7 @@ const UserCard = ({ id, onSave }: UserCardProps) => {
 **Correct (계약과 사용 위치를 분리):**
 
 ```tsx
-const UserCard = (props: UserCardProps) => {
+const WgUserCard = (props: WgUserCardProps) => {
   const { id, onSave } = props;
   return <button onClick={onSave}>{id}</button>;
 };

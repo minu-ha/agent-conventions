@@ -23,7 +23,7 @@ tags: composition, performance
 **Incorrect (렌더마다 새 컴포넌트 타입을 생성):**
 
 ```tsx
-export const WgUserProfileCard = (props: UserProfileCardProps) => {
+export const WgUserProfileCard = (props: WgUserProfileCardProps) => {
 	const { theme, user } = props;
 
 	const Avatar = () => {
@@ -41,22 +41,22 @@ export const WgUserProfileCard = (props: UserProfileCardProps) => {
 **Correct (컴포넌트를 바깥으로 분리하고 프롭스로 전달):**
 
 ```tsx
-export interface UserProfileAvatarProps {
+export interface WgUserProfileAvatarProps {
 	theme: "dark" | "light";
 	src: string;
 }
 
-export const WgUserProfileAvatar = (props: UserProfileAvatarProps) => {
+export const WgUserProfileAvatar = (props: WgUserProfileAvatarProps) => {
 	const { theme, src } = props;
 	return <img className={clsx("wg_userProfileAvatar__image", theme === "dark" && "wg_userProfileAvatar__image--dark")} src={src} />;
 };
 
-export const WgUserProfileCard = (props: UserProfileCardProps) => {
+export const WgUserProfileCard = (props: WgUserProfileCardProps) => {
 	const { theme, user } = props;
 
 	return (
 		<section>
-			<UserProfileAvatar src={user.avatarUrl} theme={theme} />
+			<WgUserProfileAvatar src={user.avatarUrl} theme={theme} />
 		</section>
 	);
 };
