@@ -7,7 +7,7 @@ appliesWhen:
   - 기존 호출 계약을 이름 붙인 함수나 공용 함수 구현에 다시 쓸 때
   - 같은 시그니처를 여러 구현이 함께 쓰도록 바꿀 때
   - 제외: 타입 표기 없이 문맥으로 추론되는 일회성 인라인 콜백인 경우
-tags: function-types, annotations, contracts
+tags: types
 ---
 
 ## Prefer Function Variable Types Over Parameter Annotations

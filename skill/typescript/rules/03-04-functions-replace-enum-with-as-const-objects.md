@@ -6,7 +6,7 @@ impactDescription: enum 특유의 동작을 들이지 않고 실행 값을 드�
 appliesWhen:
   - `enum` 이나 타입과 실행 양쪽에서 함께 쓰는 값 묶음을 추가·변경할 때
 requiresSelected: naming-use-consistent-file-and-symbol-naming, types-document-custom-types-and-shapes
-tags: enum, as-const, values
+tags: functions
 ---
 
 ## Replace `enum` With `as const` Objects

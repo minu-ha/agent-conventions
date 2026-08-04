@@ -8,7 +8,7 @@ appliesWhen:
   - 제외: 타입 표기 없이 문맥으로 추론되는 일회성 인라인 콜백인 경우
 requiresSelected: types-prefer-function-variable-types-over-parameter-annotations
 reviewWith: types-mark-unused-parameters-with-underscore
-tags: callbacks, indexed-access, reuse
+tags: types, callbacks
 ---
 
 ## Reuse Callback Signatures From Existing Contracts

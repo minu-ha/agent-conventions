@@ -6,7 +6,7 @@ impactDescription: 프롭스, 상태, 공유 입력에서 온 배열을 정렬�
 appliesWhen:
   - 프롭스, 상태, 매개변수, 공유 입력에서 온 배열을 정렬할 때
   - 기존 `.sort()` 호출을 추가·변경할 때
-tags: functions, arrays, sorting, immutability
+tags: functions
 ---
 
 ## Prefer Immutable Array Sorting

@@ -6,7 +6,7 @@ impactDescription: 분기로 공유 지역 변수를 바꾸지 않아 파일 전
 appliesWhen:
   - 파일 위쪽이나 넓은 스코프에서 `let` 재대입, 배열 `push`, 조건부 누적으로 값을 만들거나 정리할 때
 reviewWith: functions-extract-helpers-only-when-the-boundary-is-real
-tags: imperative, scope, assembly
+tags: functions
 ---
 
 ## Avoid Imperative Assembly in Wide Scopes

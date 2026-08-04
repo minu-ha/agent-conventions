@@ -6,7 +6,7 @@ impactDescription: 모듈과 실행 구조를 넘나들며 파일명, 심볼, �
 appliesWhen:
   - TypeScript 파일, 지역 변수·함수·타입, 객체·스키마 필드, enum 성격 상수의 이름을 새로 만들거나 바꿀 때
   - 제외: 별칭 없이 외부 패키지에서 그대로 가져오는 경우
-tags: naming, files, symbols
+tags: naming
 ---
 
 ## Use Consistent File, Symbol, and Field Naming

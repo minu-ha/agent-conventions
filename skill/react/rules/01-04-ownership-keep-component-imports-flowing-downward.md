@@ -9,7 +9,7 @@ appliesWhen:
   - 여러 자식이 같은 컴포넌트를 필요로 해 배치를 다시 정할 때
 requiresSelected: typescript/naming-use-direct-imports-and-public-entry-points
 reviewWith: ownership-layer-component-boundaries
-tags: ownership, imports, direction, private
+tags: ownership
 ---
 
 ## Keep Component Imports Flowing Downward

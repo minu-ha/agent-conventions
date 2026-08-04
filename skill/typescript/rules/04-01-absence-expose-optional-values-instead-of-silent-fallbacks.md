@@ -7,7 +7,7 @@ appliesWhen:
   - 선택 값을 읽거나 정규화하거나 넘기는 방식을 바꿀 때
   - `??`, `||`, 기본값, 빈 값 대체 분기를 추가·변경할 때
 reviewWith: docs-keep-inline-comments-for-constraints-and-caveats
-tags: optional, fallback, absence
+tags: absence
 ---
 
 ## Expose Optional Values Instead of Silent Fallbacks

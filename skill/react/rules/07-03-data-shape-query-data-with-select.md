@@ -8,7 +8,7 @@ appliesWhen:
   - 리액트 Query `select`의 결과 형태를 추가·변경할 때
 requiresSelected: docs-require-jsdoc-on-key-declarations
 reviewWith: data-name-query-and-mutation-bindings-consistently, data-preserve-origin-chaining
-tags: state, react-query, select
+tags: data, state, react-query
 ---
 
 ## Shape React Query Data in query.select

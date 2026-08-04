@@ -7,7 +7,7 @@ appliesWhen:
   - 컴포넌트 프롭스 타입을 새로 선언할 때
   - 프롭스 타입의 위치나 공개 범위를 바꿀 때
 reviewWith: composition-destructure-props-inside, typescript/types-document-custom-types-and-shapes
-tags: composition, props, declarations
+tags: composition, props
 ---
 
 ## Declare and Export Props Interfaces Above the Component

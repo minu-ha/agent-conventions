@@ -7,7 +7,7 @@ appliesWhen:
   - 여러 말단 모듈이 함께 쓰는 URL, 기능 플래그, 페이지 크기나 상수를 추가·이동·중복 정의할 때
   - 공용 설정 경계를 바꿀 때
 reviewWith: naming-preserve-config-origin-with-chained-access, naming-use-direct-imports-and-public-entry-points
-tags: config, namespace, ownership
+tags: naming, config
 ---
 
 ## Centralize Shared Config Under `shared/config.ts`

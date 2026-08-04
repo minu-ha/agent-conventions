@@ -7,7 +7,7 @@ appliesWhen:
   - 조건부 렌더링과 `Activity` 사이를 오갈 때
   - 숨겼다 되돌릴 때 하위 트리 상태를 살릴지 정할 때
 reviewWith: composition-do-not-define-components-inside-components
-tags: composition, jsx, activity
+tags: composition, jsx
 ---
 
 ## Use Activity Only to Preserve Mounted Subtrees

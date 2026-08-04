@@ -7,7 +7,7 @@ appliesWhen:
   - 이름 붙인 함수를 새로 만들거나 선언 형태를 바꿀 때
   - 제외: 클래스 메서드, 제너레이터, 오버로드 선언
 reviewWith: functions-use-named-object-params-for-complex-signatures
-tags: functions, declarations, arrow
+tags: functions, declarations
 ---
 
 ## Declare Functions as Arrow Consts

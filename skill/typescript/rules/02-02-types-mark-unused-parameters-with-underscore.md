@@ -6,7 +6,7 @@ impactDescription: 계약의 일부를 조용히 버리지 않고 일부러 무�
 appliesWhen:
   - 기존 콜백이나 프레임워크 계약을 구현하면서 매개변수를 빼거나 쓰지 않을 때
   - 커링한 핸들러가 마지막에 돌려주는 콜백에서 매개변수를 뺄 때
-tags: parameters, callbacks, naming
+tags: types, callbacks, naming
 ---
 
 ## Mark Unused Parameters With an Underscore Prefix

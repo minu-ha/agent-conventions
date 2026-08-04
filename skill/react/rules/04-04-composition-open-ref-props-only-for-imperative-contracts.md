@@ -7,7 +7,7 @@ appliesWhen:
   - 컴포넌트에 `ref` 프롭을 추가하거나 공개할 대상을 바꿀 때
   - 제외: 이미 있는 `ref` 계약의 타입만 바꾸는 경우
 reviewWith: strategy-avoid-boolean-prop-proliferation
-tags: composition, ref, imperative
+tags: composition
 ---
 
 ## Open ref Props Only for Real Imperative Contracts

@@ -16,6 +16,48 @@ import {validateRoutingEvalManifest} from "./routing-evals.js";
 import {generateRuleContractMarkdown} from "./routing.js";
 import type {LoadedSkillDocument, SkillMetadata, SkillPaths} from "./types.js";
 
+const maximumTitleKoLength = 40;
+
+/**
+ * 본문 백틱 안 규칙 ID 후보. 화면에서 클릭 가능한 칩으로 렌더되므로 해석되지 않으면 조용히 코드로 격하된다.
+ * 하이픈 3개 이상만 본다. `import type`, `query.select` 같은 일반 코드 조각과 구분하는 값싼 기준이다.
+ */
+const proseRuleReferencePattern = /`((?:[a-z][a-z0-9]*\/)?[a-z][a-z0-9]*(?:-[a-z0-9]+){3,})`/g;
+
+/**
+ * @helper 본문 산문의 규칙 ID 참조가 실재하는 규칙을 가리키는지 검증
+ * @description frontmatter 참조만 검사하면 규칙을 지울 때 본문 참조가 남아 화면에서 링크가 사라진다.
+ *   외부 도구 규칙 이름과 구분하려고 첫 마디가 우리 section prefix 인 것만 본다.
+ *   도구 설정을 담은 `tooling` 규칙은 stylelint·biome 규칙 이름을 대량으로 인용하므로 건너뛴다.
+ */
+const assertProseRuleReferences = (document: LoadedSkillDocument, knownIds: ReadonlySet<string>, knownPrefixes: ReadonlySet<string>): void => {
+	for (const rule of document.rules) {
+		if (rule.prefix === "tooling") {
+			continue;
+		}
+
+		// 코드 펜스 안은 실제 코드라 대상이 아니다.
+		const prose = rule.body.replace(/```[\s\S]*?```/g, "");
+
+		for (const [, reference] of prose.matchAll(proseRuleReferencePattern)) {
+			const [ownerOrPrefix = "", nextSegment = ""] = reference.split("/");
+			const localId = reference.includes("/") ? nextSegment : reference;
+
+			if (!knownPrefixes.has(localId.split("-")[0] ?? "")) {
+				continue;
+			}
+
+			const key = reference.includes("/") ? reference : `${document.skillName}/${reference}`;
+
+			if (!knownIds.has(key)) {
+				throw new Error(
+					`${document.skillName}: ${rule.fileName} prose references unknown rule "${reference}" (owner "${ownerOrPrefix}"). Use an existing rule ID or drop the backticks.`,
+				);
+			}
+		}
+	}
+};
+
 interface LocalValidationResult {
 	/**
 	 * @field 검증한 local skill 문서
@@ -99,6 +141,14 @@ const validateLocalSkill = async (skillPaths: SkillPaths): Promise<LocalValidati
 
 		if (!rule.titleKo) {
 			throw new Error(`${skillPaths.skillName}: ${rule.fileName} is missing frontmatter key "titleKo".`);
+		}
+
+		// CONTRIBUTING.md 가 40자 이내를 요구한다. 문서에만 있으면 지켜지지 않아 여기서 막는다.
+		// 화면 목록은 한 줄 말줄임이라 길면 뒤가 잘려 제목 구실을 못 한다.
+		if (rule.titleKo.length > maximumTitleKoLength) {
+			throw new Error(
+				`${skillPaths.skillName}: ${rule.fileName} titleKo is ${rule.titleKo.length} characters and exceeds the ${maximumTitleKoLength}-character limit.`,
+			);
 		}
 
 		if (!rule.impact) {
@@ -255,6 +305,29 @@ const validateSkillTree = async (
 };
 
 /**
+ * @helper 저장소 전체 rule stable ID 수집
+ * @description 프로즈 참조 검사용이다. dependency 트리로 좁히면 아래 계층이 위 계층을 알려 주는 배제 문장까지 막힌다.
+ */
+const collectAllRuleIds = async (skillRootDir?: string): Promise<{ids: Set<string>; prefixes: Set<string>}> => {
+	const ids = new Set<string>();
+	const prefixes = new Set<string>();
+
+	for (const skillName of await listSkillNames(skillRootDir)) {
+		if (!(await isBuildableSkill(skillName, skillRootDir))) {
+			continue;
+		}
+
+		for (const fileName of await readSkillRuleFileNames(getSkillPaths(skillName, skillRootDir))) {
+			const stableId = getRuleStableId(fileName);
+			ids.add(`${skillName}/${stableId}`);
+			prefixes.add(stableId.split("-")[0] ?? "");
+		}
+	}
+
+	return {ids, prefixes};
+};
+
+/**
  * @helper skill dependency 그래프에서 도달 가능한 skill 이름 수집
  */
 const collectReachableSkillNames = (
@@ -334,6 +407,8 @@ export const validateSkill = async (skillPaths: SkillPaths): Promise<void> => {
 	const rootResult = await validateSkillTree(skillPaths, [], validatedSkillNames, documents, dependenciesBySkill);
 
 	validateRoutingTargets(documents, dependenciesBySkill);
+	const allRules = await collectAllRuleIds(path.dirname(skillPaths.skillDir));
+	assertProseRuleReferences(rootResult.document, allRules.ids, allRules.prefixes);
 
 	if (rootResult.document.metadata.progressiveDisclosure === true) {
 		await validateRoutingEvalManifest(skillPaths);

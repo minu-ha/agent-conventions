@@ -5,7 +5,7 @@ impact: MEDIUM
 impactDescription: 코드 동작을 옮겨 적지 않고 의도와 제약에 주석을 모읍니다
 appliesWhen:
   - TypeScript·TSX 의 문서 주석이나 인라인 주석 문구를 추가·수정·번역하거나 검토할 때
-tags: comments, korean, purpose
+tags: docs, comments
 ---
 
 ## Write Concise Korean Comments About Purpose and Constraints

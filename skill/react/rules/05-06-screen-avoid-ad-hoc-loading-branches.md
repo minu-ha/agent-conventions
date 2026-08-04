@@ -9,7 +9,7 @@ appliesWhen:
   - 제외: 선택 값에 기본값을 채우는 것만 바꾸는 경우
 requiresSelected: typescript/absence-expose-optional-values-instead-of-silent-fallbacks
 reviewWith: data-preserve-origin-chaining, screen-keep-derived-values-close
-tags: loading, suspense, pending
+tags: screen, loading, suspense
 ---
 
 ## Avoid Ad-hoc Loading Branches in Screen Bodies

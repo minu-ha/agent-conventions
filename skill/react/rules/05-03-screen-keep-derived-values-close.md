@@ -6,7 +6,7 @@ impactDescription: 출처가 남고 화면 진입 파일이 별칭과 준비 코
 appliesWhen:
   - 오리진을 끊는 별칭·플래그·표시값을 넓은 화면 범위에 추가·이동·제거할 때
   - `let` 재할당이나 배열 `push` 기반 조립을 바꿀 때
-tags: screen, derived-values, origin
+tags: screen, origin
 ---
 
 ## Keep Derived Values Close to Where They Are Used

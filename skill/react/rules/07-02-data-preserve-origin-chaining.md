@@ -7,7 +7,7 @@ appliesWhen:
   - page·레이아웃·화면 넓은 스코프에서 응답·변경 요청·스토어를 구조분해할 때
   - 원본을 별칭으로 끊고 값 접근 방식을 바꿀 때
 reviewWith: screen-keep-derived-values-close
-tags: state, origin, response, store
+tags: data, state, origin
 ---
 
 ## Preserve Response and Store Origin in Wide Scopes

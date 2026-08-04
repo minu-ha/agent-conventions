@@ -7,7 +7,7 @@ appliesWhen:
   - 질의·변경 요청, 원격 함수, 뻔하지 않은 핸들러와 이펙트, 내보낸 보조 함수와 훅, 커스텀 타입, 스토어 선언을 추가·변경할 때
   - 선언 위 주석의 형식이나 태그를 정할 때
 requiresSelected: docs-write-concise-korean-comments-about-purpose-and-constraints
-tags: jsdoc, declarations, boundaries
+tags: docs, jsdoc, declarations, boundaries
 ---
 
 ## Require Header Doc Comments on Key Declarations

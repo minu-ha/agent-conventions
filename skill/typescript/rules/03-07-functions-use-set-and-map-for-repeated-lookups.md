@@ -5,7 +5,7 @@ impact: MEDIUM
 impactDescription: 조회가 늘어나면 반복되는 포함 검사와 키 접근을 드러냅니다
 appliesWhen:
   - 같은 목록에 `includes`, `find`, 키 조회를 여러 번 하는 코드를 추가·변경할 때
-tags: functions, set, map, lookups, performance
+tags: functions
 ---
 
 ## Use Set and Map for Repeated Lookups

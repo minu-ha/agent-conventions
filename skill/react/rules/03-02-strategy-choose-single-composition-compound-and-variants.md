@@ -10,7 +10,7 @@ appliesWhen:
 reviewWith: >-
   strategy-avoid-boolean-prop-proliferation, strategy-prefer-children-over-render-props,
   screen-avoid-premature-abstraction
-tags: composition, compound-components, variants, component-design
+tags: strategy, composition, variants, component-design
 ---
 
 ## Choose Single Components, Compound Components, and Variants Deliberately

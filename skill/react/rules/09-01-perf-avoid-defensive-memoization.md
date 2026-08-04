@@ -7,7 +7,7 @@ appliesWhen:
   - `useMemo`·`useCallback`을 추가하거나 제거할 때
   - 참조 동일성·실측 병목·무거운 지연 계산을 이유로 수동 메모이제이션을 검토할 때
 reviewWith: perf-use-usedeferredvalue-for-heavy-derived-renders
-tags: state, react, memoization
+tags: perf, state
 ---
 
 ## Do Not Memoize Without a Confirmed Reason

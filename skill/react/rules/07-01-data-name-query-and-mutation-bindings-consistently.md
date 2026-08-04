@@ -8,7 +8,7 @@ appliesWhen:
   - 역할이 드러나지 않는 별칭이 diff에 보일 때
 requiresSelected: typescript/naming-use-consistent-file-and-symbol-naming, docs-require-jsdoc-on-key-declarations
 reviewWith: data-preserve-origin-chaining
-tags: state, query, mutation, naming
+tags: data, state, naming
 ---
 
 ## Name Query and Mutation Bindings Consistently

@@ -9,7 +9,7 @@ appliesWhen:
   - 제외: 기존 파일 내부 구현만 바꾸는 경우
 reviewWith: >-
   ownership-keep-component-imports-flowing-downward, css/ownership-choose-scope-prefix-by-reuse-range
-tags: ownership, structure, folders, owner
+tags: ownership
 ---
 
 ## Place Owner Files in Role Folders

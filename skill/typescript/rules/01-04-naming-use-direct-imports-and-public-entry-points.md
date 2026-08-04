@@ -7,7 +7,7 @@ appliesWhen:
   - 가져오기·내보내기, 배럴, 공용 진입점, 소유자 보조 모듈의 경계를 추가·변경할 때
   - 절대경로 별칭으로 다른 모듈을 가져올 때
   - 같은 경로에서 값과 타입 중 무엇을 가져올지 추가·삭제·전환할 때
-tags: imports, exports, public-entry
+tags: naming
 ---
 
 ## Use Direct Imports and Dedicated Public Entry Points

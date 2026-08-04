@@ -6,7 +6,7 @@ impactDescription: 다음 값이 현재 상태에 달려 있을 때 낡은 값�
 appliesWhen:
   - 다음 상태가 현재 상태에 의존하는 갱신을 추가·변경할 때
   - 핸들러·비동기 콜백·연속 호출에서 `setState` 방식을 바꿀 때
-tags: state, setstate, closures, handlers
+tags: state, handlers
 ---
 
 ## Use Functional setState Updates When Based on Previous State

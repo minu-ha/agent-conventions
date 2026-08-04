@@ -6,7 +6,7 @@ impactDescription: 상태 변경이 무거운 목록이나 표를 건드릴 때�
 appliesWhen:
   - 클릭·선택·필터 변경 뒤 큰 목록·표·트리를 다시 그리는 상태 갱신을 다룰 때
   - 상태 갱신의 우선순위나 전환 처리를 바꿀 때
-tags: state, transitions, starttransition, performance
+tags: perf, state, performance
 ---
 
 ## Use startTransition for Non-urgent Visual Updates

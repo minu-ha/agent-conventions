@@ -7,7 +7,7 @@ appliesWhen:
   - 여러 화면·메뉴·라우트 가드가 쓰는 접근 권한 같은 파생 판단을 스토어에 저장·동기화할 때
   - 단일 화면에서만 쓰는 값까지 스토어로 올리려 할 때
 reviewWith: docs-require-jsdoc-on-key-declarations
-tags: state, zustand, derived-decisions
+tags: state, zustand
 ---
 
 ## Store Shared Derived Decisions Only When They Are Truly Shared

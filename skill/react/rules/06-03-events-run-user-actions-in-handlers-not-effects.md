@@ -6,7 +6,7 @@ impactDescription: 한 번뿐인 동작을 상태와 이펙트 재실행으로 �
 appliesWhen:
   - 제출·저장·삭제·닫기 같은 한 번뿐인 사용자 액션을 핸들러와 상태+이펙트 사이에서 옮길 때
   - 한 번뿐인 사용자 액션의 실행 흐름을 바꿀 때
-tags: events, handlers, effects, actions
+tags: events, handlers, effects
 ---
 
 ## Run User Actions in Handlers, Not Effects

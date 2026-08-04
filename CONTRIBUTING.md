@@ -92,7 +92,7 @@ tags: tag1, tag2
 | 키 | 필수 | 의미 |
 | --- | --- | --- |
 | `title` | 필수 | 영어. 핸드북 헤딩과 앵커 슬러그의 기반. 바꾸면 링크가 깨진다 |
-| `titleKo` | 필수 | 한국어. `conventions.html` 에 노출된다. 40자 이내 |
+| `titleKo` | 필수 | 한국어. `conventions.html` 에 노출된다. 40자 이내를 `validate` 가 강제한다 |
 | `impact` | 필수 | `CRITICAL` · `HIGH` · `MEDIUM` · `LOW` |
 | `impactDescription` | 필수 | 한국어 영향도 설명. 본문 `**Impact:**` 줄과 일치해야 하고 `contracts/*.md` 와 `conventions.html` 로 나간다 |
 | `appliesWhen` | 필수 | `- ` 조건 불렛 리스트 또는 한 줄 스칼라. 불렛이면 라우팅 문장은 이어 붙여 자동 생성된다. 합쳐서 160자 이내 |
@@ -152,6 +152,10 @@ appliesWhen: TSX event prop 의 인라인 callback 에 분기, 비동기 호출 
 
 - 대상이 없으면 그 optional key 를 생략한다.
 - 같은 target 을 두 키에 중복해서 넣지 않는다.
+- 본문에서 다른 규칙을 백틱으로 가리키면 화면에서 열 수 있는 칩이 된다.
+  `validate` 가 해석되는지 검사하므로 없는 ID 를 쓰면 빌드가 막힌다.
+- 아래 계층 skill 은 위 계층 규칙 ID 를 가리키지 않는다.
+  `typescript` 가 `react/...` 를 가리키면 typescript 만 쓰는 쪽에서 끊긴다.
 - `_` 로 시작하는 파일은 생성물에서 빠진다.
 - 섹션은 파일명 prefix 로 정해지고 순서는 제목 순으로 자동 생성된다.
 

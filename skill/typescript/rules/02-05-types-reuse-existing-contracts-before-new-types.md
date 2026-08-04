@@ -8,7 +8,7 @@ appliesWhen:
   - 같은 형태를 두 번 선언했다가 넣거나 뺄 때
   - 제외: 맞는 후보가 없는 새 형태, 소유자만 옮긴 경우, 그대로인 계약을 새 자리에서 쓰는 경우
 reviewWith: types-document-custom-types-and-shapes
-tags: type-reuse, pick, omit
+tags: types
 ---
 
 ## Reuse Existing Contracts Before Declaring New Types

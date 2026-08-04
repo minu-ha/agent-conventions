@@ -8,7 +8,7 @@ appliesWhen:
   - 한 곳에서만 쓰는 기존 추상화를 다시 접어 넣을 때
 reviewWith: >-
   screen-extract-local-section-components-for-runtime-boundaries, typescript/functions-extract-helpers-only-when-the-boundary-is-real
-tags: screen, abstraction, reuse
+tags: screen
 ---
 
 ## Avoid Premature Abstraction in Screen Code

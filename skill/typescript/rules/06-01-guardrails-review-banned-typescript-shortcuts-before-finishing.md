@@ -7,7 +7,7 @@ appliesWhen:
   - TypeScript·TSX 변경을 끝났다고 판정할 때
   - 변경 내역에서 배럴, 중복 타입, 이른 보조 함수, 넓은 조립, 근거 없는 기본값, 자명한 주석을 점검할 때
 requiredOnCompletion: true
-tags: review, banned-patterns, guardrails
+tags: guardrails
 ---
 
 ## Review Banned TypeScript Shortcuts Before Finishing

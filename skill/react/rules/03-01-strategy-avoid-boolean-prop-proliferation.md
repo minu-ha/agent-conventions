@@ -6,7 +6,7 @@ impactDescription: 공용 컴포넌트가 숨은 조합을 쌓지 않고 구조�
 appliesWhen:
   - 여러 곳에서 쓰는 공용 컴포넌트에 불리언 모드·표시 프롭을 추가할 때
   - 기존 불리언 프롭 조합과 JSX 분기가 늘어날 때
-tags: composition, props, variants, component-design
+tags: strategy, composition, props, variants, component-design
 ---
 
 ## Avoid Boolean Prop Proliferation in Shared Components

@@ -6,7 +6,7 @@ impactDescription: 화면 흐름은 보이게 두고 실제 실행 경계가 있
 appliesWhen:
   - 화면 지역 섹션 컴포넌트를 새로 추출할 때
   - 기존 섹션이 비동기·상태·프로바이더·상호작용·라이브러리·성능 경계를 소유하는지 바꿀 때
-tags: screen, routes, local-components, boundaries
+tags: screen, routes
 ---
 
 ## Extract Route-local Section Components Only for Runtime Boundaries

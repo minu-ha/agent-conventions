@@ -8,7 +8,7 @@ appliesWhen:
   - 이미 있는 예외 주석의 내용을 바꿀 때
   - 제외: 규칙이 요구하지 않은 일반 설명 주석인 경우
 reviewWith: docs-write-concise-korean-comments-about-purpose-and-constraints
-tags: docs, exceptions, comments
+tags: docs, comments
 ---
 
 ## Justify Convention Exceptions With a Checkable Reason Comment

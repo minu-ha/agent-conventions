@@ -7,7 +7,7 @@ appliesWhen:
   - 매개변수가 3개를 넘거나 같은 계열 인자를 받는 함수를 추가·변경할 때
   - 객체 매개변수를 어디서 구조분해할지 바꿀 때
   - 제외: 리액트 함수 컴포넌트가 프롭스를 받고 구조분해하는 방식만 바꾸는 경우
-tags: functions, params, signatures
+tags: functions
 ---
 
 ## Use Named Object Params for Complex Signatures

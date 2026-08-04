@@ -8,7 +8,7 @@ appliesWhen:
   - 내보낸 보조 함수·훅·스토어 선언을 추가·변경할 때
   - 다시 내보내기 포함 공개 타입·인터페이스나 합성 공개 부품을 추가·변경할 때
 requiresSelected: typescript/docs-require-header-jsdoc-on-key-declarations
-tags: docs, jsdoc, handlers, effects
+tags: docs, handlers, effects
 ---
 
 ## Require Doc Comments on React Hooks, Handlers, and Key Declarations

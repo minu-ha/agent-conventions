@@ -6,7 +6,7 @@ impactDescription: 렌더마다 컴포넌트 타입을 다시 만들어 생기�
 appliesWhen:
   - 컴포넌트 본문 안에 JSX를 반환하는 로컬 함수·컴포넌트를 추가하거나 옮길 때
   - 재렌더 시 재마운트·focus 초기화 징후를 다룰 때
-tags: composition, components, remount, performance
+tags: composition, performance
 ---
 
 ## Do Not Define Components Inside Components

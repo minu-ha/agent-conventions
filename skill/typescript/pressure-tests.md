@@ -58,7 +58,6 @@ protocol v3 결과에는 coordinator가 dispatch 전에 고정한 repository HEA
 
 - Focus
   - `functions-extract-helpers-only-when-the-boundary-is-real`
-  - `docs-use-helper-for-reusable-pure-helper-functions`
   - `docs-require-header-jsdoc-on-key-declarations`
 - Prompt
   - "payload 조립과 정규화 코드가 길어. TypeScript skill 기준으로 정리해줘."
@@ -91,11 +90,11 @@ protocol v3 결과에는 coordinator가 dispatch 전에 고정한 repository HEA
 ### T4. Comment and Annotation Discipline
 
 - Focus
-  - `docs-standardize-annotation-tags-by-declaration-role`
+  - `docs-require-header-jsdoc-on-key-declarations`
   - `docs-write-concise-korean-comments-about-purpose-and-constraints`
   - `docs-keep-inline-comments-for-constraints-and-caveats`
 - Prompt
-  - "주석과 JSDoc을 TypeScript skill 기준으로 정리해줘. 설명성 주석은 줄이고 역할 태그는 맞춰줘."
+  - "주석과 JSDoc을 TypeScript skill 기준으로 정리해줘. 설명성 주석은 줄여줘."
 - Expected pass signals
   - 헤더와 필드 주석이 역할 태그 없이 여러 줄 블록으로 일관됨
   - 기술 identifier를 영문으로 섞더라도 `route-local 엔트리 트리 입력 계약`처럼 각 주석 본문에 목적을 나타내는 한글 구절이 있음

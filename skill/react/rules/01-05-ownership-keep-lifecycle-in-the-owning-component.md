@@ -8,7 +8,7 @@ appliesWhen:
   - 생명주기 코드를 커스텀 훅으로 옮겨 파일을 줄이려 할 때
   - 제외: 여러 소유자가 같은 생명주기 계약을 실제로 호출하는 경우
 reviewWith: ownership-prefer-plain-ts-for-local-react-helpers
-tags: ownership, lifecycle, hooks, library
+tags: ownership, hooks
 ---
 
 ## Keep Library Lifecycle in the Owning Component

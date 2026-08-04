@@ -7,7 +7,7 @@ appliesWhen:
   - 현재 프롭스·상태·검색·응답에서 계산 가능한 값을 별도 상태와 이펙트로 동기화할 때
   - 그런 동기화를 제거할 때
 requiresSelected: screen-keep-derived-values-close
-tags: state, derived-state, render, effects
+tags: state, effects
 ---
 
 ## Calculate Derived Values During Rendering

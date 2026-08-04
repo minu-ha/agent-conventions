@@ -8,7 +8,7 @@ appliesWhen:
   - ref 동기화 우회, 의존성 재설치, `useEffectEvent`를 추가·변경할 때
 requiresSelected: docs-require-jsdoc-on-key-declarations
 reviewWith: events-run-user-actions-in-handlers-not-effects
-tags: state, react19, useeffectevent, effects
+tags: state, effects
 ---
 
 ## Use useEffectEvent for Non-reactive Effect Callbacks

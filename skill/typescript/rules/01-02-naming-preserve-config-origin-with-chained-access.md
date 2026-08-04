@@ -5,7 +5,7 @@ impact: HIGH
 impactDescription: 넓은 스코프 별칭으로 출처를 숨기지 않아 값이 어디서 오는지 읽힙니다
 appliesWhen:
   - 말단 모듈에서 `config`나 `util` 값을 쓰면서 넓은 스코프 구조분해, 별칭, 기능별 네임스페이스를 추가·변경할 때
-tags: config, chaining, traceability
+tags: naming, config
 ---
 
 ## Preserve Shared Namespace Origin With Chained Access

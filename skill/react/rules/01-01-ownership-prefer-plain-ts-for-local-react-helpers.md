@@ -9,7 +9,7 @@ appliesWhen:
 reviewWith: >-
   typescript/functions-extract-helpers-only-when-the-boundary-is-real, ownership-place-owner-files-in-role-folders,
   ownership-keep-lifecycle-in-the-owning-component
-tags: ownership, hooks, helpers, widget
+tags: ownership, hooks, widget
 ---
 
 ## Do Not Create Screen-local Custom Hooks for Pure Logic

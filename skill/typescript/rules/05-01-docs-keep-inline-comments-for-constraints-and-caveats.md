@@ -6,7 +6,7 @@ impactDescription: 자명한 코드를 설명하는 주석은 막고 오해를 �
 appliesWhen:
   - 함수 본문의 `//` 주석을 추가·수정·유지할 때
   - 도메인 규칙, 예외 방어, 외부 제약, 부수효과 순서를 주석으로 설명할 때
-tags: comments, inline, caveats
+tags: docs, comments
 ---
 
 ## Keep Inline Comments for Constraints and Caveats Only

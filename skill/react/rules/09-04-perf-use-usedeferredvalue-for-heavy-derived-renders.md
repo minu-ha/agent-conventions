@@ -7,7 +7,7 @@ appliesWhen:
   - 검색어·필터·정렬 입력마다 큰 목록이나 표를 다시 계산해 입력 반응이 늦어질 때
   - `useDeferredValue` 기반 계산을 추가·변경할 때
 reviewWith: perf-avoid-defensive-memoization, perf-use-starttransition-for-non-urgent-updates
-tags: state, usedeferredvalue, performance, derived
+tags: perf, state, performance
 ---
 
 ## Use useDeferredValue for Heavy Derived Renders

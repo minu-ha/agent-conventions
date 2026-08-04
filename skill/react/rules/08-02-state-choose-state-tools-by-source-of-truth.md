@@ -7,7 +7,7 @@ appliesWhen:
   - 로컬 UI·전역 클라이언트·서버 데이터를 새 상태 도구로 옮길 때
   - 서로 다른 진짜 출처 사이에 값을 복제하거나 동기화할 때
 reviewWith: state-store-derived-authority
-tags: state, react-query, zustand, local-state
+tags: state, react-query, zustand
 ---
 
 ## Choose State Tools by Source of Truth
