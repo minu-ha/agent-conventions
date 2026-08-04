@@ -33,3 +33,9 @@
 **TitleKo:** 가드레일과 마무리 점검
 **Impact:** MEDIUM
 **Description:** 마무리 전에 컨벤션을 가장 자주 무너뜨리는 지름길을 기준으로 코드를 점검해야 합니다.
+
+## 7. Tooling (tooling)
+**TitleKo:** 도구 설정
+**Impact:** MEDIUM
+**Description:** 이 컨벤션 중 기계가 잡을 수 있는 항목은 biome 설정으로 고정하고, 잡을 수 없는 항목은 리뷰가
+  담당한다는 것을 명시해야 사람이 검사할 목록이 좁아집니다.

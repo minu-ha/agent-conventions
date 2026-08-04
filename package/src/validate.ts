@@ -30,7 +30,11 @@ const proseRuleReferencePattern = /`((?:[a-z][a-z0-9]*\/)?[a-z][a-z0-9]*(?:-[a-z
  *   외부 도구 규칙 이름과 구분하려고 첫 마디가 우리 section prefix 인 것만 본다.
  *   도구 설정을 담은 `tooling` 규칙은 stylelint·biome 규칙 이름을 대량으로 인용하므로 건너뛴다.
  */
-const assertProseRuleReferences = (document: LoadedSkillDocument, knownIds: ReadonlySet<string>, knownPrefixes: ReadonlySet<string>): void => {
+const assertProseRuleReferences = (
+	document: LoadedSkillDocument,
+	knownIds: ReadonlySet<string>,
+	knownPrefixes: ReadonlySet<string>,
+): void => {
 	for (const rule of document.rules) {
 		if (rule.prefix === "tooling") {
 			continue;

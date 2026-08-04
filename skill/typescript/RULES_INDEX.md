@@ -1,7 +1,7 @@
 # TypeScript 컨벤션 Rule Index
 
 - Skill: `typescript`
-- Routing digest: `sha256:aa4c2b68687cf3013d6cb6173c2f275a8bbfe206130b60be12e6fae4a4476a30`
+- Routing digest: `sha256:5b49f289c1437eda7fcd78ae6198552b21599b2b2488a12477ea764fc154cac3`
 
 ## Local Rules
 
@@ -27,3 +27,4 @@
 - T20 | docs-write-concise-korean-comments-about-purpose-and-constraints | TypeScript·TSX 의 문서 주석이나 인라인 주석 문구를 추가·수정·번역하거나 검토할 때.
 - T21 | docs-justify-convention-exceptions-with-a-reason-comment | 규칙이 허용한 예외를 코드에 남길 때. 이미 있는 예외 주석의 내용을 바꿀 때. 제외: 규칙이 요구하지 않은 일반 설명 주석인 경우. | reviewWith: docs-write-concise-korean-comments-about-purpose-and-constraints
 - T22 | guardrails-review-banned-typescript-shortcuts-before-finishing | TypeScript·TSX 변경을 끝났다고 판정할 때. 변경 내역에서 배럴, 중복 타입, 이른 보조 함수, 넓은 조립, 근거 없는 기본값, 자명한 주석을 점검할 때. | completionGate
+- T23 | tooling-configure-biome-to-enforce-these-rules | 프로젝트에 \`biome\` 설정을 처음 넣거나 lint 규칙을 바꿀 때. 이 컨벤션 규칙을 사람이 검토할지 도구가 막을지 정할 때.

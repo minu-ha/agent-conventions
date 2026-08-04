@@ -128,7 +128,8 @@
 					"functions-replace-enum-with-as-const-objects",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
-					"guardrails-review-banned-typescript-shortcuts-before-finishing"
+					"guardrails-review-banned-typescript-shortcuts-before-finishing",
+					"tooling-configure-biome-to-enforce-these-rules"
 				]
 			}
 		},

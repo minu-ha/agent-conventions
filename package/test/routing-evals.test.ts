@@ -104,6 +104,7 @@ const typescriptRuleUniverse = [
 	"docs-write-concise-korean-comments-about-purpose-and-constraints",
 	"docs-justify-convention-exceptions-with-a-reason-comment",
 	"guardrails-review-banned-typescript-shortcuts-before-finishing",
+	"tooling-configure-biome-to-enforce-these-rules",
 ] as const;
 
 const cssRuleUniverse = [
@@ -280,6 +281,10 @@ const typescriptRuleRouting = {
 	"guardrails-review-banned-typescript-shortcuts-before-finishing": {
 		appliesWhen:
 			"TypeScript·TSX 변경을 끝났다고 판정할 때. 변경 내역에서 배럴, 중복 타입, 이른 보조 함수, 넓은 조립, 근거 없는 기본값, 자명한 주석을 점검할 때.",
+		reviewWith: [],
+	},
+	"tooling-configure-biome-to-enforce-these-rules": {
+		appliesWhen: "프로젝트에 `biome` 설정을 처음 넣거나 lint 규칙을 바꿀 때. 이 컨벤션 규칙을 사람이 검토할지 도구가 막을지 정할 때.",
 		reviewWith: [],
 	},
 } as const;
@@ -671,6 +676,7 @@ const typescriptSelections = {
 		"docs-require-header-jsdoc-on-key-declarations",
 		"docs-write-concise-korean-comments-about-purpose-and-constraints",
 		"guardrails-review-banned-typescript-shortcuts-before-finishing",
+		"tooling-configure-biome-to-enforce-these-rules",
 	],
 	"wide-scope-assembly": [
 		"functions-avoid-imperative-assembly-in-wide-scopes",
@@ -1613,7 +1619,7 @@ test("TypeScript progressive metadata matches Appendix A exactly", async () => {
 
 	assert.equal(document.metadata.progressiveDisclosure, true);
 	assert.deepEqual(document.metadata.companions ?? [], []);
-	assert.equal(document.rules.length, 22);
+	assert.equal(document.rules.length, 23);
 	assert.deepEqual(
 		Object.fromEntries(document.rules.map((rule) => [getRuleId(rule), {appliesWhen: rule.appliesWhen, reviewWith: rule.reviewWith}])),
 		typescriptRuleRouting,
@@ -1703,8 +1709,8 @@ test("TypeScript generated index is complete and within the deterministic byte b
 	const expectedIds = document.rules.map((rule) => getRuleId(rule)).sort();
 
 	assert.deepEqual(ids, expectedIds);
-	assert.equal(ids.length, 22);
-	assert.equal(getRulesIndexByteBudget(ids.length), 8_680);
+	assert.equal(ids.length, 23);
+	assert.equal(getRulesIndexByteBudget(ids.length), 9_020);
 	assert.equal(Buffer.byteLength(source, "utf8") <= getRulesIndexByteBudget(ids.length), true);
 
 	for (const entry of entries) {
