@@ -1,7 +1,7 @@
 # React 컨벤션 Rule Index
 
 - Skill: `react`
-- Routing digest: `sha256:dc29b1952d3ad24097b855172cdee5e6dc98869db03678d0778f5440097e6baa`
+- Routing digest: `sha256:371490e867210bdef0823541ed04b70c7d6ad71a9d0db7b88f82e075154a1dea`
 
 ## Direct Companions
 
@@ -37,11 +37,11 @@
 - R25 | data-shape-query-data-with-select | 서버 응답의 목록·항목·메타 등을 렌더에서 가공하거나 반복 소비할 때. 리액트 Query \`select\`의 결과 형태를 추가·변경할 때. | reviewWith: data-name-query-and-mutation-bindings-consistently, data-preserve-origin-chaining
 - R26 | state-calculate-derived-values-during-render | 현재 프롭스·상태·검색·응답에서 계산 가능한 값을 별도 상태와 이펙트로 동기화할 때. 그런 동기화를 제거할 때.
 - R27 | state-choose-state-tools-by-source-of-truth | 로컬 UI·전역 클라이언트·서버 데이터를 새 상태 도구로 옮길 때. 서로 다른 진짜 출처 사이에 값을 복제하거나 동기화할 때. | reviewWith: state-store-derived-authority
-- R28 | state-store-derived-authority | 여러 화면·메뉴·라우트 가드가 쓰는 권한·권한 같은 파생 판단을 스토어에 저장·동기화할 때. 단일 화면에서만 쓰는 값까지 스토어로 올리려 할 때. | reviewWith: docs-require-jsdoc-on-key-declarations
+- R28 | state-store-derived-authority | 여러 화면·메뉴·라우트 가드가 쓰는 접근 권한 같은 파생 판단을 스토어에 저장·동기화할 때. 단일 화면에서만 쓰는 값까지 스토어로 올리려 할 때. | reviewWith: docs-require-jsdoc-on-key-declarations
 - R29 | state-use-functional-setstate-updates | 다음 상태가 현재 상태에 의존하는 갱신을 추가·변경할 때. 핸들러·비동기 콜백·연속 호출에서 \`setState\` 방식을 바꿀 때.
 - R30 | state-use-effectevent-for-non-reactive-effect-callbacks | 구독 이펙트가 최신 프롭·상태 콜백을 읽어야 할 때. ref 동기화 우회, 의존성 재설치, \`useEffectEvent\`를 추가·변경할 때. | reviewWith: events-run-user-actions-in-handlers-not-effects
 - R31 | perf-avoid-defensive-memoization | \`useMemo\`·\`useCallback\`을 추가하거나 제거할 때. 참조 동일성·실측 병목·무거운 지연 계산을 이유로 수동 메모이제이션을 검토할 때. | reviewWith: perf-use-usedeferredvalue-for-heavy-derived-renders
 - R32 | perf-use-lazy-state-initializers-for-expensive-defaults | \`useState\` 초기값에 localStorage 파싱, 인덱스 생성, 큰 배열 정규화 같은 비용 있는 계산을 넣을 때.
 - R33 | perf-use-starttransition-for-non-urgent-updates | 클릭·선택·필터 변경 뒤 큰 목록·표·트리를 다시 그리는 상태 갱신을 다룰 때. 상태 갱신의 우선순위나 전환 처리를 바꿀 때.
-- R34 | perf-use-usedeferredvalue-for-heavy-derived-renders | 검색어·필터·정렬 입력이 무거운 파생 화면을 갱신해 타입 지정 지연이 생길 때. \`useDeferredValue\` 기반 계산을 추가·변경할 때. | reviewWith: perf-avoid-defensive-memoization, perf-use-starttransition-for-non-urgent-updates
+- R34 | perf-use-usedeferredvalue-for-heavy-derived-renders | 검색어·필터·정렬 입력마다 큰 목록이나 표를 다시 계산해 입력 반응이 늦어질 때. \`useDeferredValue\` 기반 계산을 추가·변경할 때. | reviewWith: perf-avoid-defensive-memoization, perf-use-starttransition-for-non-urgent-updates
 - R35 | docs-require-jsdoc-on-key-declarations | 질의·변경 요청이나 비자명한 핸들러/이펙트를 추가·변경할 때. 내보낸 보조 함수·훅·스토어 선언을 추가·변경할 때. 다시 내보내기 포함 공개 타입·인터페이스나 합성 공개 부품을 추가·변경할 때.

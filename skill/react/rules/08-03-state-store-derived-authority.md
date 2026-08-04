@@ -4,7 +4,7 @@ titleKo: 여러 화면이 함께 쓰는 판단만 스토어로 올립니다
 impact: HIGH
 impactDescription: 같은 도메인 판별 로직이 여러 화면에 퍼지지 않습니다
 appliesWhen:
-  - 여러 화면·메뉴·라우트 가드가 쓰는 권한·권한 같은 파생 판단을 스토어에 저장·동기화할 때
+  - 여러 화면·메뉴·라우트 가드가 쓰는 접근 권한 같은 파생 판단을 스토어에 저장·동기화할 때
   - 단일 화면에서만 쓰는 값까지 스토어로 올리려 할 때
 reviewWith: docs-require-jsdoc-on-key-declarations
 tags: state, zustand, derived-decisions

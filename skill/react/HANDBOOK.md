@@ -389,7 +389,7 @@ import { UiSectionHeading } from "@/ui/section-heading/ui-section-heading";
 import { PgDetectionSection } from "./component/pg-detection-section";
 import { PgSummaryBand } from "./component/pg-summary-band";
 
-export const PgSpikePatternPanel = (props:  PgSpikePatternPanel Props) => {
+export const PgSpikePatternPanel = (props: PgSpikePatternPanelProps) => {
 	const { legendItems } = props;
 
 	return (
@@ -951,7 +951,7 @@ const UserCard = (props: UserCardProps) => {
 부모가 다시 렌더될 때마다 자식 컴포넌트 타입도 새로 만들어져
 재마운트, 포커스 초기화, 애니메이션 재시작, 이펙트 재실행이 생깁니다.
 
-로컬에서 JSX 조각을 재사용하려면 보조 함수 함수 호출로 남기거나,
+로컬에서 JSX 조각을 재사용하려면 보조 함수 호출로 남기거나,
 독립 컴포넌트로 빼고 프롭스를 전달합니다.
 
 **Incorrect (렌더마다 새 컴포넌트 타입을 생성):**
@@ -1287,13 +1287,13 @@ export const PgEntries = () => {
 **Correct (실행 환경 경계를 소유하는 섹션만 화면 지역 컴포넌트로 추출):**
 
 ```tsx
-interface  PgEntryTreeSection Props {
+interface PgEntryTreeSectionProps {
 	categoryNodes: EntryCategoryNode[];
 	selectedCategoryId?: string;
 	onCategorySelect: (categoryId: string) => void;
 }
 
-const PgEntryTreeSection = (props:  PgEntryTreeSection Props) => {
+const PgEntryTreeSection = (props: PgEntryTreeSectionProps) => {
 	const { categoryNodes, selectedCategoryId, onCategorySelect } = props;
 	const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
 	const [treeSearchKeyword, setTreeSearchKeyword] = useState("");
@@ -1360,7 +1360,7 @@ export const PgEntries = () => {
 	/**
 	 * tree에서 선택한 category로 route search를 갱신
 	 */
-	const handleCategorySelect:  PgEntryTreeSection Props["onCategorySelect"] = (categoryId) => {
+	const handleCategorySelect: PgEntryTreeSectionProps["onCategorySelect"] = (categoryId) => {
 		void navigate({
 			to: "/entries",
 			search: { page: search.page, size: search.size, categoryId },
@@ -1441,7 +1441,8 @@ return <UiInput value={selectedNodeContext?.node?.name} />;
 소유자가 그대로인 변경은 대상이 아닙니다.
 
 - `query.select` 형태, 바인딩·별칭 정리, 파생 상태 이펙트를 렌더 계산으로 옮기는 것
-- 순수 타입·전송 값 조립 함수·기본 설정의 형제 `.ts` 이동. 보조 코드 규칙이 담당합니다.
+- 순수 타입·전송 값 조립 함수·기본 설정의 형제 `.ts` 이동.
+  `typescript/functions-extract-helpers-only-when-the-boundary-is-real`가 담당합니다.
 
 **Incorrect (흐름보다 분해 자체가 목적이 됨):**
 
@@ -1911,7 +1912,7 @@ const responseUserGetItemSuspense = useUserGetItemSuspense();
 
 **Rule:** `R28` · `state-store-derived-authority`
 
-**Applies when:** 여러 화면·메뉴·라우트 가드가 쓰는 권한·권한 같은 파생 판단을 스토어에 저장·동기화할 때. 단일 화면에서만 쓰는 값까지 스토어로 올리려 할 때.
+**Applies when:** 여러 화면·메뉴·라우트 가드가 쓰는 접근 권한 같은 파생 판단을 스토어에 저장·동기화할 때. 단일 화면에서만 쓰는 값까지 스토어로 올리려 할 때.
 
 **Review with:** `docs-require-jsdoc-on-key-declarations`
 
@@ -2163,7 +2164,7 @@ const handleStatusFilterChange = (nextStatus: EntryStatusFilter) => {
 
 **Rule:** `R34` · `perf-use-usedeferredvalue-for-heavy-derived-renders`
 
-**Applies when:** 검색어·필터·정렬 입력이 무거운 파생 화면을 갱신해 타입 지정 지연이 생길 때. `useDeferredValue` 기반 계산을 추가·변경할 때.
+**Applies when:** 검색어·필터·정렬 입력마다 큰 목록이나 표를 다시 계산해 입력 반응이 늦어질 때. `useDeferredValue` 기반 계산을 추가·변경할 때.
 
 **Review with:** `perf-avoid-defensive-memoization`, `perf-use-starttransition-for-non-urgent-updates`
 
@@ -2213,8 +2214,8 @@ const filteredRows = useMemo(() => {
 
 문서 주석은 경계를 설명할 때만 붙입니다. 자명한 지역 변수에는 강제하지 않습니다.
 
-여기서 공개 선언은 다른 모듈이 소비할 수 있도록 실제 내보낸 또는 다시 내보낸 된 선언만 뜻합니다.
-내보내기되지 않은 파일 지역 `type`/`interface`는 공개이라는 이유만으로 이 규칙을 선택하지 않습니다.
+여기서 공개 선언은 다른 모듈이 소비할 수 있도록 실제로 내보내거나 다시 내보낸 선언만 뜻합니다.
+내보내기되지 않은 파일 지역 `type`/`interface`는 공개라는 이유만으로 이 규칙을 선택하지 않습니다.
 
 필수 대상:
 

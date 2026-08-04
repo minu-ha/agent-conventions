@@ -551,7 +551,7 @@ const reactRuleRouting = {
 	},
 	"state-store-derived-authority": {
 		appliesWhen:
-			"여러 화면·메뉴·라우트 가드가 쓰는 권한·권한 같은 파생 판단을 스토어에 저장·동기화할 때. 단일 화면에서만 쓰는 값까지 스토어로 올리려 할 때.",
+			"여러 화면·메뉴·라우트 가드가 쓰는 접근 권한 같은 파생 판단을 스토어에 저장·동기화할 때. 단일 화면에서만 쓰는 값까지 스토어로 올리려 할 때.",
 		reviewWith: ["docs-require-jsdoc-on-key-declarations"],
 	},
 	"state-use-functional-setstate-updates": {
@@ -577,7 +577,7 @@ const reactRuleRouting = {
 	},
 	"perf-use-usedeferredvalue-for-heavy-derived-renders": {
 		appliesWhen:
-			"검색어·필터·정렬 입력이 무거운 파생 화면을 갱신해 타입 지정 지연이 생길 때. `useDeferredValue` 기반 계산을 추가·변경할 때.",
+			"검색어·필터·정렬 입력마다 큰 목록이나 표를 다시 계산해 입력 반응이 늦어질 때. `useDeferredValue` 기반 계산을 추가·변경할 때.",
 		reviewWith: ["perf-avoid-defensive-memoization", "perf-use-starttransition-for-non-urgent-updates"],
 	},
 	"docs-require-jsdoc-on-key-declarations": {
@@ -2227,7 +2227,7 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 	};
 
 	const routeFlow = await readRule("react", "screen-keep-route-flow-visible");
-	assertMentions(routeFlow, ["소유자가 그대로인 변경은 대상이 아", "바인딩·별칭", "보조 코드 규칙"], "routeFlow");
+	assertMentions(routeFlow, ["소유자가 그대로인 변경은 대상이 아", "바인딩·별칭", "functions-extract-helpers-only-when-the-boundary-is-real"], "routeFlow");
 	assert.match(
 		routeFlow,
 		/소유자가 그대로인 변경은 대상이 아[\s\S]*`query\.select`[\s\S]*바인딩·별칭[\s\S]*파생 상태 이펙트[\s\S]*렌더 계산/i,

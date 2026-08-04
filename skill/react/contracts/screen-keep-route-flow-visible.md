@@ -8,6 +8,7 @@
 소유자가 그대로인 변경은 대상이 아닙니다.
 
 - `query.select` 형태, 바인딩·별칭 정리, 파생 상태 이펙트를 렌더 계산으로 옮기는 것
-- 순수 타입·전송 값 조립 함수·기본 설정의 형제 `.ts` 이동. 보조 코드 규칙이 담당합니다.
+- 순수 타입·전송 값 조립 함수·기본 설정의 형제 `.ts` 이동.
+  `typescript/functions-extract-helpers-only-when-the-boundary-is-real`가 담당합니다.
 
 > 예시·예외가 필요하면 [full rule](../rules/05-04-screen-keep-route-flow-visible.md)을 읽습니다.
