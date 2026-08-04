@@ -26,19 +26,18 @@
     - 1.5 [Use Direct Imports and Dedicated Public Entry Points](#15-use-direct-imports-and-dedicated-public-entry-points)
     - 1.6 [Restrict Absolute Aliases to Layer Roots](#16-restrict-absolute-aliases-to-layer-roots)
 2. [Types and Contracts](#2-types-and-contracts) — **CRITICAL**
-    - 2.1 [Document Custom Types and Declarative Shapes](#21-document-custom-types-and-declarative-shapes)
-    - 2.2 [Mark Unused Parameters With an Underscore Prefix](#22-mark-unused-parameters-with-an-underscore-prefix)
-    - 2.3 [Prefer Function Variable Types Over Parameter Annotations](#23-prefer-function-variable-types-over-parameter-annotations)
-    - 2.4 [Reuse Callback Signatures From Existing Contracts](#24-reuse-callback-signatures-from-existing-contracts)
-    - 2.5 [Reuse Existing Contracts Before Declaring New Types](#25-reuse-existing-contracts-before-declaring-new-types)
+    - 2.1 [Reuse Existing Contracts Before Declaring New Types](#21-reuse-existing-contracts-before-declaring-new-types)
+    - 2.2 [Prefer Function Variable Types Over Parameter Annotations](#22-prefer-function-variable-types-over-parameter-annotations)
+    - 2.3 [Document Custom Types and Declarative Shapes](#23-document-custom-types-and-declarative-shapes)
+    - 2.4 [Mark Unused Parameters With an Underscore Prefix](#24-mark-unused-parameters-with-an-underscore-prefix)
 3. [Functions and Helper Boundaries](#3-functions-and-helper-boundaries) — **HIGH**
-    - 3.1 [Avoid Imperative Assembly in Wide Scopes](#31-avoid-imperative-assembly-in-wide-scopes)
-    - 3.2 [Extract Support Functions Only When the Boundary Is Real](#32-extract-support-functions-only-when-the-boundary-is-real)
-    - 3.3 [Prefer Immutable Array Sorting](#33-prefer-immutable-array-sorting)
-    - 3.4 [Replace `enum` With `as const` Objects](#34-replace-enum-with-as-const-objects)
-    - 3.5 [Declare Functions as Arrow Consts](#35-declare-functions-as-arrow-consts)
-    - 3.6 [Use Named Object Params for Complex Signatures](#36-use-named-object-params-for-complex-signatures)
-    - 3.7 [Place and Promote Support Functions Deliberately](#37-place-and-promote-support-functions-deliberately)
+    - 3.1 [Declare Functions as Arrow Consts](#31-declare-functions-as-arrow-consts)
+    - 3.2 [Use Named Object Params for Complex Signatures](#32-use-named-object-params-for-complex-signatures)
+    - 3.3 [Extract Support Functions Only When the Boundary Is Real](#33-extract-support-functions-only-when-the-boundary-is-real)
+    - 3.4 [Place and Promote Support Functions Deliberately](#34-place-and-promote-support-functions-deliberately)
+    - 3.5 [Avoid Imperative Assembly in Wide Scopes](#35-avoid-imperative-assembly-in-wide-scopes)
+    - 3.6 [Prefer Immutable Array Sorting](#36-prefer-immutable-array-sorting)
+    - 3.7 [Replace `enum` With `as const` Objects](#37-replace-enum-with-as-const-objects)
     - 3.8 [Use Set and Map for Repeated Lookups](#38-use-set-and-map-for-repeated-lookups)
 4. [Absence and Fallback Handling](#4-absence-and-fallback-handling) — **HIGH**
     - 4.1 [Expose Optional Values Instead of Silent Fallbacks](#41-expose-optional-values-instead-of-silent-fallbacks)
@@ -49,10 +48,8 @@
     - 5.4 [Write Doc Comments as Multiline Blocks](#54-write-doc-comments-as-multiline-blocks)
     - 5.5 [Avoid Role Tags in Doc Comments](#55-avoid-role-tags-in-doc-comments)
     - 5.6 [Justify Convention Exceptions With a Checkable Reason Comment](#56-justify-convention-exceptions-with-a-checkable-reason-comment)
-6. [Guardrails and Review Checks](#6-guardrails-and-review-checks) — **MEDIUM**
-    - 6.1 [Review Banned TypeScript Shortcuts Before Finishing](#61-review-banned-typescript-shortcuts-before-finishing)
-7. [Tooling](#7-tooling) — **MEDIUM**
-    - 7.1 [Configure Biome to Enforce the Mechanical Rules](#71-configure-biome-to-enforce-the-mechanical-rules)
+6. [Tooling](#6-tooling) — **MEDIUM**
+    - 6.1 [Configure Biome to Enforce the Mechanical Rules](#61-configure-biome-to-enforce-the-mechanical-rules)
 
 ---
 
@@ -82,11 +79,17 @@
 소유자 하나만 쓰는 선언형 설정을 어디 둘지는
 `naming-place-owner-config-in-the-owner-config-folder`가 정합니다.
 
-**Incorrect (공용 설정을 말단 파일마다 흩뿌림):**
+**Incorrect (같은 값을 두 소유자가 각자 선언):**
 
 ```ts
+// page/entries/pg-entries.tsx
 const defaultPageSize = 20;
 const billing_feature_keys = ["invoices", "refunds"];
+```
+
+```ts
+// page/billing/pg-billing.tsx
+const defaultPageSize = 20;
 ```
 
 **Correct (공용 설정은 `shared/config.ts` 이름 공간에서 읽음):**
@@ -155,7 +158,8 @@ export const entryDetailConfig = {
 구조분해가 필요하면 함수 안 좁은 스코프에서만 씁니다.
 
 `shared/config.ts`와 `shared/util.ts`는 찾기 쉬우라고 네임스페이스를 유지합니다.
-기능별 `helper.ts`나 `utils.ts`를 만들지 않고, `config`와 `util` 이름은 공용 경계에서만 씁니다.
+`config`와 `util` 이름은 공용 경계에서만 씁니다. 기능별로 같은 이름을 다시 쓰지 않습니다.
+보조 함수 파일을 어디 둘지는 `functions-place-and-promote-support-functions`가 정합니다.
 
 **Incorrect (넓은 스코프에서 원본 오리진을 감춤):**
 
@@ -303,9 +307,102 @@ import {SpikeChartCard} from "./component/spike-chart-card";
 
 함수 시그니처, 콜백 재사용, 타입 중복 제거, 커스텀 형태 문서화가 계약을 드러내고 다시 쓸 수 있게 유지해야 합니다.
 
-### 2.1 Document Custom Types and Declarative Shapes
+### 2.1 Reuse Existing Contracts Before Declaring New Types
 
-**Rule:** `T07` · `types-document-custom-types-and-shapes`
+**Rule:** `T07` · `types-reuse-existing-contracts-before-new-types`
+
+**Applies when:** 뜻이 같은 기존 타입, 인터페이스, 스키마가 있는데 형태를 새로 선언·변경·복제·파생할 때. 같은 형태를 두 번 선언했다가 넣거나 뺄 때. 제외: 맞는 후보가 없는 새 형태, 소유자만 옮긴 경우, 그대로인 계약을 새 자리에서 쓰는 경우.
+
+**Review with:** `types-document-custom-types-and-shapes`
+
+**Impact: HIGH (의미가 그대로면 기존 타입이나 스키마에서 파생해 같은 형태를 두 번 선언하지 않습니다)**
+
+필드 이름, 타입, 선택 여부가 모두 같은 선언이 이미 있으면 그대로 참조하거나 `Pick`, `Omit`, 인덱스 접근으로 파생합니다.
+필드가 하나라도 다르면 새로 선언합니다. 소유자 이동이나 이름, 주석만 바뀌면 대상이 아닙니다.
+
+형태가 그대로인 계약을 새 자리에서 쓰는 것만으로는 이 규칙이 걸리지 않습니다.
+호출 계약 역할은 `types-document-custom-types-and-shapes`가 따로 판정합니다.
+
+위치 인자를 객체 입력으로 바꾸면서 고칠 수 있는 우리 형태를 다시 쓰면
+`types-document-custom-types-and-shapes`만 걸리고 이 규칙은 걸리지 않습니다.
+외부·생성된·읽기 전용·공용 형태를 그대로 쓰면 두 타입 규칙 모두 대상이 아니고, 문서화는 문서 규칙이 따로 판정합니다.
+요청에 없는 `*Params`나 `*Input`을 만들어 이 규칙을 스스로 켜지 않습니다.
+맞는 형태가 없는 새 도메인 계약은 문서화 규칙만 걸립니다.
+
+원본 입력과 정규화한 값은 필드가 같아도 뜻이 달라 입력 형태를 따로 두는 것이 맞습니다.
+그때도 문서화 규칙만 걸리고 이 규칙은 걸리지 않습니다.
+
+**Incorrect (기존 계약과 동일한 구조를 다시 선언):**
+
+```ts
+interface UserPreview {
+	id: string;
+	name: string;
+}
+```
+
+**Correct (기존 계약에서 필요한 부분만 파생):**
+
+```ts
+/**
+ * 사용자 미리보기 계약
+ */
+type UserPreview = Pick<UserRecord, "id" | "name">;
+```
+
+### 2.2 Prefer Function Variable Types Over Parameter Annotations
+
+**Rule:** `T08` · `types-prefer-function-variable-types-over-parameter-annotations`
+
+**Applies when:** 기존 호출 계약을 이름 붙인 함수나 공용 함수 구현에 다시 쓸 때. 같은 시그니처를 여러 구현이 함께 쓰도록 바꿀 때. 제외: 타입 표기 없이 문맥으로 추론되는 일회성 인라인 콜백인 경우.
+
+**Impact: CRITICAL (호출 계약을 재사용할 수 있게 두고 지역 타입 표기가 공용 함수 타입을 조각내지 않게 합니다)**
+
+재사용 가능한 콜백이나 함수 타입이 있다면 매개변수 타입 선언보다 함수 변수 타입 선언을 우선합니다.
+이미 있는 인터페이스, 객체 계약, 프레임워크 별칭을 먼저 씁니다.
+인터페이스가 콜백을 필드로 갖고 있으면 `Contract["onSelect"]`처럼 인덱스 접근으로 가져다 씁니다.
+가져온 계약에 지금 구현이 쓰지 않는 매개변수가 있으면 `types-mark-unused-parameters-with-underscore`를 다시 봅니다.
+함수 타입 별칭을 새로 선언하는 것은 같은 시그니처를 쓰는 구현이 이미 둘 이상일 때만입니다.
+한 번만 쓰는 지역 함수 때문에 함수 타입 별칭을 늘리지 않습니다.
+
+객체 안에서 한 번만 쓰이고 타입 표기도 없이 문맥으로 추론되는 인라인 콜백은 대상이 아닙니다.
+`query.select: (response) => ({...})`를 이 규칙 때문에 밖으로 빼거나 함수 타입으로 고정하지 않습니다.
+반대로 이름 붙인 핸들러나 커링 팩토리가 돌려주는 핸들러를 기존 프레임워크 별칭으로 고정하면 이 규칙을 적용합니다.
+
+**Incorrect (공유 가능한 함수 계약이 있는데 매개변수 타입만 사용):**
+
+```ts
+const formatState = (state: Record<string, unknown>): string => {
+	return JSON.stringify(state);
+};
+```
+
+**Correct (이미 있는 계약에서 시그니처를 가져와 함수 변수 타입을 고정):**
+
+```ts
+const formatState: UserFormatters["formatState"] = (state) => {
+	return JSON.stringify(state);
+};
+```
+
+```ts
+/**
+ * request 정규화 계약
+ */
+type NormalizeRequest = (request: string) => string;
+
+const normalizeRequest: NormalizeRequest = (request) => {
+	return request.trim();
+};
+
+const normalizeSearchRequest: NormalizeRequest = (request) => {
+	return request.replaceAll(/\s+/g, " ").trim();
+};
+```
+
+### 2.3 Document Custom Types and Declarative Shapes
+
+**Rule:** `T09` · `types-document-custom-types-and-shapes`
 
 **Applies when:** 타입, 인터페이스, 스키마 최상단, 객체 상수, 계약 필드, 파생 별칭을 추가·변경할 때. 이름 붙인 형태에 호출 계약 역할을 새로 얹을 때. 제외: 외부·생성된·읽기 전용·공용 형태를 그대로 쓰거나 익명으로 추론된 반환인 경우.
 
@@ -377,9 +474,9 @@ const publishResultSchema = z.object({
 });
 ```
 
-### 2.2 Mark Unused Parameters With an Underscore Prefix
+### 2.4 Mark Unused Parameters With an Underscore Prefix
 
-**Rule:** `T08` · `types-mark-unused-parameters-with-underscore`
+**Rule:** `T10` · `types-mark-unused-parameters-with-underscore`
 
 **Applies when:** 기존 콜백이나 프레임워크 계약을 구현하면서 매개변수를 빼거나 쓰지 않을 때. 커링한 핸들러가 마지막에 돌려주는 콜백에서 매개변수를 뺄 때.
 
@@ -414,189 +511,135 @@ type LogSink = (message: string, level: "info" | "error") => void;
 const noopLog: LogSink = (_message, _level) => {};
 ```
 
-### 2.3 Prefer Function Variable Types Over Parameter Annotations
-
-**Rule:** `T09` · `types-prefer-function-variable-types-over-parameter-annotations`
-
-**Applies when:** 기존 호출 계약을 이름 붙인 함수나 공용 함수 구현에 다시 쓸 때. 같은 시그니처를 여러 구현이 함께 쓰도록 바꿀 때. 제외: 타입 표기 없이 문맥으로 추론되는 일회성 인라인 콜백인 경우.
-
-**Impact: CRITICAL (호출 계약을 재사용할 수 있게 두고 지역 타입 표기가 공용 함수 타입을 조각내지 않게 합니다)**
-
-재사용 가능한 콜백이나 함수 타입이 있다면 매개변수 타입 선언보다 함수 변수 타입 선언을 우선합니다.
-이미 있는 인터페이스, 객체 계약, 프레임워크 별칭을 먼저 씁니다.
-함수 타입 별칭을 새로 선언하는 것은 같은 시그니처를 쓰는 구현이 이미 둘 이상일 때만입니다.
-한 번만 쓰는 지역 함수 때문에 함수 타입 별칭을 늘리지 않습니다.
-
-객체 안에서 한 번만 쓰이고 타입 표기도 없이 문맥으로 추론되는 인라인 콜백은 대상이 아닙니다.
-`query.select: (response) => ({...})`를 이 규칙 때문에 밖으로 빼거나 함수 타입으로 고정하지 않습니다.
-반대로 이름 붙인 핸들러나 커링 팩토리가 돌려주는 핸들러를 기존 프레임워크 별칭으로 고정하면 이 규칙을 적용합니다.
-
-**Incorrect (공유 가능한 함수 계약이 있는데 매개변수 타입만 사용):**
-
-```ts
-const formatState = (state: Record<string, unknown>): string => {
-	return JSON.stringify(state);
-};
-```
-
-**Correct (이미 있는 계약에서 시그니처를 가져와 함수 변수 타입을 고정):**
-
-```ts
-const formatState: UserFormatters["formatState"] = (state) => {
-	return JSON.stringify(state);
-};
-```
-
-```ts
-/**
- * request 정규화 계약
- */
-type NormalizeRequest = (request: string) => string;
-
-const normalizeRequest: NormalizeRequest = (request) => {
-	return request.trim();
-};
-
-const normalizeSearchRequest: NormalizeRequest = (request) => {
-	return request.replaceAll(/\s+/g, " ").trim();
-};
-```
-
-### 2.4 Reuse Callback Signatures From Existing Contracts
-
-**Rule:** `T10` · `types-reuse-callback-signatures-from-existing-contracts`
-
-**Applies when:** 인터페이스, 객체, 프레임워크가 정한 콜백을 구현하면서 기존 시그니처를 다시 쓰거나 바꿀 때. 제외: 타입 표기 없이 문맥으로 추론되는 일회성 인라인 콜백인 경우.
-
-**Requires selected:** `types-prefer-function-variable-types-over-parameter-annotations` · 함께 적용
-
-**Review with:** `types-mark-unused-parameters-with-underscore`
-
-**Impact: HIGH (기존 인터페이스나 객체 계약이 이미 정한 콜백 시그니처가 어긋나지 않습니다)**
-
-콜백을 구현할 때 매개변수 타입을 다시 적지 않습니다. 이미 있는 인터페이스나 계약의 시그니처를 인덱스 접근로 가져다 씁니다.
-가져온 계약에 지금 구현이 쓰지 않는 매개변수가 있으면 `types-mark-unused-parameters-with-underscore`를 다시 봅니다.
-그래야 구현과 계약의 타입 정의가 한곳에 남습니다.
-
-타입 표기 없이 문맥으로 추론되는 일회성 인라인 콜백은 시그니처를 다시 선언한 것이 아니라 대상이 아닙니다.
-프레임워크 옵션 객체의 `select: (response) => ...`는 문맥 추론을 그대로 씁니다.
-반대로 이름 붙인 콜백이나 커링 팩토리의 마지막 핸들러를 인터페이스·객체·프레임워크 별칭으로 고정하면
-기존 콜백 계약을 다시 쓰는 것이라 이 규칙을 적용합니다.
-
-**Incorrect (기존 계약이 있는데 콜백 시그니처를 다시 씀):**
-
-```ts
-interface ToastFormatters {
-	formatMessage: (message: string) => string;
-}
-
-const formatMessage = (message: string): string => {
-	return `[app] ${message}`;
-};
-```
-
-**Correct (기존 계약의 시그니처를 직접 참조):**
-
-```ts
-/**
- * toast formatter 계약
- */
-interface ToastFormatters {
-	/**
-	 * toast 메시지 포맷 함수
-	 */
-	formatMessage: (message: string) => string;
-}
-
-const formatMessage: ToastFormatters["formatMessage"] = (message) => {
-	return `[app] ${message}`;
-};
-```
-
-### 2.5 Reuse Existing Contracts Before Declaring New Types
-
-**Rule:** `T11` · `types-reuse-existing-contracts-before-new-types`
-
-**Applies when:** 뜻이 같은 기존 타입, 인터페이스, 스키마가 있는데 형태를 새로 선언·변경·복제·파생할 때. 같은 형태를 두 번 선언했다가 넣거나 뺄 때. 제외: 맞는 후보가 없는 새 형태, 소유자만 옮긴 경우, 그대로인 계약을 새 자리에서 쓰는 경우.
-
-**Review with:** `types-document-custom-types-and-shapes`
-
-**Impact: HIGH (의미가 그대로면 기존 타입이나 스키마에서 파생해 같은 형태를 두 번 선언하지 않습니다)**
-
-필드 이름, 타입, 선택 여부가 모두 같은 선언이 이미 있으면 그대로 참조하거나 `Pick`, `Omit`, 인덱스 접근으로 파생합니다.
-필드가 하나라도 다르면 새로 선언합니다. 소유자 이동이나 이름, 주석만 바뀌면 대상이 아닙니다.
-
-형태가 그대로인 계약을 새 자리에서 쓰는 것만으로는 이 규칙이 걸리지 않습니다.
-호출 계약 역할은 `types-document-custom-types-and-shapes`가 따로 판정합니다.
-
-위치 인자를 객체 입력으로 바꾸면서 고칠 수 있는 우리 형태를 다시 쓰면
-`types-document-custom-types-and-shapes`만 걸리고 이 규칙은 걸리지 않습니다.
-외부·생성된·읽기 전용·공용 형태를 그대로 쓰면 두 타입 규칙 모두 대상이 아니고, 문서화는 문서 규칙이 따로 판정합니다.
-요청에 없는 `*Params`나 `*Input`을 만들어 이 규칙을 스스로 켜지 않습니다.
-맞는 형태가 없는 새 도메인 계약은 문서화 규칙만 걸립니다.
-
-원본 입력과 정규화한 값은 필드가 같아도 뜻이 달라 입력 형태를 따로 두는 것이 맞습니다.
-그때도 문서화 규칙만 걸리고 이 규칙은 걸리지 않습니다.
-
-**Incorrect (기존 계약과 동일한 구조를 다시 선언):**
-
-```ts
-interface UserPreview {
-	id: string;
-	name: string;
-}
-```
-
-**Correct (기존 계약에서 필요한 부분만 파생):**
-
-```ts
-/**
- * 사용자 미리보기 계약
- */
-type UserPreview = Pick<UserRecord, "id" | "name">;
-```
-
 ## 3. Functions and Helper Boundaries
 
 **Impact: HIGH**
 
 함수 선언 형태와 시그니처는 한 가지로 고정하고, 보조 함수는 호출 경계가 있을 때만 떼어 내 정해진 자리에 둡니다. 값과 자료구조를 다루는 관용구도 여기에 모입니다.
 
-### 3.1 Avoid Imperative Assembly in Wide Scopes
+### 3.1 Declare Functions as Arrow Consts
 
-**Rule:** `T12` · `functions-avoid-imperative-assembly-in-wide-scopes`
+**Rule:** `T11` · `functions-declare-functions-as-arrow-consts`
 
-**Applies when:** 파일 위쪽이나 넓은 스코프에서 `let` 재대입, 배열 `push`, 조건부 누적으로 값을 만들거나 정리할 때.
+**Applies when:** 이름 붙인 함수를 새로 만들거나 선언 형태를 바꿀 때. 제외: 클래스 메서드, 제너레이터, 오버로드 선언.
 
-**Review with:** `functions-extract-helpers-only-when-the-boundary-is-real`
+**Review with:** `functions-use-named-object-params-for-complex-signatures`
 
-**Impact: HIGH (분기로 공유 지역 변수를 바꾸지 않아 파일 전역 로직이 선언형으로 남습니다)**
+**Impact: MEDIUM (선언 형태가 한 가지로 고정되어 호이스팅에 기대는 순서 의존이 생기지 않습니다)**
 
-파일 위쪽이나 넓은 스코프에서 `let` 재대입, 배열 `push`, 조건부 누적으로 값을 쌓지 않습니다.
-한 번만 쓰면 실제 쓰는 좁은 스코프에서 바로 계산합니다.
-분기와 보정이 얽혀 좁은 스코프에 담기지 않으면 떼어 낼지를 다시 봅니다.
-그 판정은 `functions-extract-helpers-only-when-the-boundary-is-real`가 합니다.
-떼어 내기로 정했을 때 이름은 `resolve*`, `build*`, `normalize*`를 씁니다.
+이름 붙인 함수는 `const`에 화살표 함수를 담아 선언합니다.
+`function` 선언문은 쓰지 않습니다.
 
-**Incorrect (넓은 스코프에서 명령형으로 누적 조립):**
+- 한 파일 안에서 두 형태를 섞으면 어느 것이 공개 계약인지 형태로 구분할 수 없습니다.
+- `function` 선언문은 호이스팅되므로 선언보다 위에서 호출해도 동작합니다.
+  그러면 읽는 순서와 실행 순서가 달라집니다.
+- 화살표 함수는 `this`를 새로 만들지 않아 콜백으로 넘길 때 묶어 줄 필요가 없습니다.
+
+세 자리는 예외로 둡니다.
+
+| 예외 | 이유 |
+| --- | --- |
+| 클래스 메서드 | 메서드 문법이 정본입니다. 화살표 필드로 바꾸지 않습니다 |
+| 제너레이터 | `function*` 없이 쓸 수 없습니다 |
+| 오버로드 선언 | 시그니처를 여러 줄로 겹쳐 쓰려면 `function` 선언문이 필요합니다 |
+
+**Incorrect (`function` 선언문과 화살표를 한 파일에서 섞음):**
 
 ```ts
-let visibleTabs = ["overview"];
+export function normalizeEntryTitle(rawTitle: string): string {
+	return rawTitle.trim().replace(/\s+/g, " ");
+}
 
-if (canManageItems) {
-	visibleTabs.push("items");
+export const buildEntrySlug = (title: string): string => normalizeEntryTitle(title).toLowerCase();
+```
+
+**Incorrect (선언보다 위에서 호출해 호이스팅에 기댐):**
+
+```ts
+export const buildEntryLabel = (entry: Entry): string => decorate(entry.title);
+
+function decorate(title: string): string {
+	return `# ${title}`;
 }
 ```
 
-**Correct (좁은 스코프에서 한 번에 계산):**
+**Correct (모두 `const` 화살표로 선언하고 쓰기 전에 선언):**
 
 ```ts
-const visibleTabs = canManageItems
-	? ["overview", "items"]
-	: ["overview"];
+const decorate = (title: string): string => `# ${title}`;
+
+export const normalizeEntryTitle = (rawTitle: string): string => rawTitle.trim().replace(/\s+/g, " ");
+
+export const buildEntryLabel = (entry: Entry): string => decorate(entry.title);
 ```
 
-### 3.2 Extract Support Functions Only When the Boundary Is Real
+**Correct (클래스 메서드와 제너레이터는 그대로 둠):**
+
+```ts
+export class EntryCursor {
+	private buffer: Entry[] = [];
+
+	*pages(): Generator<Entry[]> {
+		yield this.buffer;
+	}
+
+	reset(): void {
+		this.buffer = [];
+	}
+}
+```
+
+### 3.2 Use Named Object Params for Complex Signatures
+
+**Rule:** `T12` · `functions-use-named-object-params-for-complex-signatures`
+
+**Applies when:** 매개변수가 3개를 넘거나 같은 계열 인자를 받는 함수를 추가·변경할 때. 객체 매개변수를 어디서 구조분해할지 바꿀 때. 제외: 리액트 함수 컴포넌트가 프롭스를 받고 구조분해하는 방식만 바꾸는 경우.
+
+**Impact: HIGH (긴 시그니처를 읽을 수 있게 두고 위치를 헷갈리지 않으면서 입력을 늘립니다)**
+
+매개변수가 3개를 넘거나 같은 계열 값이 함께 넘어오면 객체 하나로 묶습니다.
+시그니처 자리에서 바로 구조분해하지 않습니다.
+객체 매개변수 타입은 파일 위쪽에 이름을 붙여 선언하고, 함수 본문 첫 줄에서 구조분해합니다.
+구조분해 줄이 길어 포매터 예외가 필요해도 함수 본문 안에서 처리합니다.
+
+리액트 함수 컴포넌트가 프롭스를 통째로 받아 본문에서 구조분해하는 것만 바뀌면
+`react/composition-destructure-props-inside`가 담당하므로 이 규칙을 겹쳐 적용하지 않습니다.
+객체 인자와 필드 타입, 선택 여부, 뜻이 같은 계약이 이미 있으면 그대로 씁니다.
+이 규칙을 지키려고 `*Params`나 `*Args`를 새로 만들지 않습니다.
+
+**Incorrect (시그니처에서 바로 구조분해):**
+
+```ts
+const buildRequestUrl = ({baseUrl, resourcePath, searchParams}: BuildRequestUrlArgs): URL => {
+	const requestUrl = new URL(resourcePath, baseUrl);
+
+	for (const [key, value] of Object.entries(searchParams)) {
+		requestUrl.searchParams.set(key, value);
+	}
+
+	return requestUrl;
+};
+```
+
+**Correct (객체 전체를 받고 본문에서 구조분해):**
+
+```ts
+/**
+ * grouped args로 API request URL 생성
+ */
+const buildRequestUrl = (args: BuildRequestUrlArgs): URL => {
+	const {baseUrl, resourcePath, searchParams} = args;
+	const requestUrl = new URL(resourcePath, baseUrl);
+
+	for (const [key, value] of Object.entries(searchParams)) {
+		requestUrl.searchParams.set(key, value);
+	}
+
+	return requestUrl;
+};
+```
+
+### 3.3 Extract Support Functions Only When the Boundary Is Real
 
 **Rule:** `T13` · `functions-extract-helpers-only-when-the-boundary-is-real`
 
@@ -741,198 +784,9 @@ export const util = {
 };
 ```
 
-### 3.3 Prefer Immutable Array Sorting
+### 3.4 Place and Promote Support Functions Deliberately
 
-**Rule:** `T14` · `functions-prefer-immutable-array-sorting`
-
-**Applies when:** 프롭스, 상태, 매개변수, 공유 입력에서 온 배열을 정렬할 때. 기존 `.sort()` 호출을 추가·변경할 때.
-
-**Impact: MEDIUM (프롭스, 상태, 공유 입력에서 온 배열을 정렬할 때 원본이 바뀌는 버그를 피합니다)**
-
-원본 배열을 계속 써야 하면 `.sort()`로 제자리에서 바꾸지 않습니다.
-실행 환경이 ES2023 이상이거나 `toSorted()`를 쓸 수 있으면 `.toSorted()`를 먼저 씁니다.
-아니면 복사한 뒤 정렬합니다.
-동반 스킬이므로 지원 여부가 불분명한 환경에 `toSorted()`를 강제하지는 않습니다.
-
-**Incorrect (원본 배열을 직접 변경):**
-
-```ts
-const sortedUsers = users.sort((left, right) => left.name.localeCompare(right.name));
-```
-
-**Correct (`toSorted()` 또는 복사 후 정렬로 불변성 유지):**
-
-```ts
-const sortedUsers = users.toSorted((left, right) => left.name.localeCompare(right.name));
-```
-
-```ts
-const sortedUsers = [...users].sort((left, right) => left.name.localeCompare(right.name));
-```
-
-### 3.4 Replace `enum` With `as const` Objects
-
-**Rule:** `T15` · `functions-replace-enum-with-as-const-objects`
-
-**Applies when:** `enum` 이나 타입과 실행 양쪽에서 함께 쓰는 값 묶음을 추가·변경할 때.
-
-**Requires selected:** `naming-use-consistent-file-and-symbol-naming`, `types-document-custom-types-and-shapes` · 함께 적용
-
-**Impact: MEDIUM-HIGH (enum 특유의 동작을 들이지 않고 실행 값을 드러내며 타입 추출도 가볍게 둡니다)**
-
-`enum` 대신 객체와 `as const`를 씁니다.
-그러면 실행 값과 타입 추론을 함께 두면서 `enum` 고유 문법과 번들 부담을 피합니다.
-
-**Incorrect (`enum`을 직접 사용):**
-
-```ts
-enum AuditStatus {
-	pending = "pending",
-	passed = "passed",
-	failed = "failed",
-}
-```
-
-**Correct (객체 리터럴과 타입 추출을 조합):**
-
-```ts
-const audit_status = {
-	pending: "pending",
-	passed: "passed",
-	failed: "failed",
-} as const;
-
-/**
- * 감사 상태 값 집합
- */
-type AuditStatus = (typeof audit_status)[keyof typeof audit_status];
-```
-
-### 3.5 Declare Functions as Arrow Consts
-
-**Rule:** `T16` · `functions-declare-functions-as-arrow-consts`
-
-**Applies when:** 이름 붙인 함수를 새로 만들거나 선언 형태를 바꿀 때. 제외: 클래스 메서드, 제너레이터, 오버로드 선언.
-
-**Review with:** `functions-use-named-object-params-for-complex-signatures`
-
-**Impact: MEDIUM (선언 형태가 한 가지로 고정되어 호이스팅에 기대는 순서 의존이 생기지 않습니다)**
-
-이름 붙인 함수는 `const`에 화살표 함수를 담아 선언합니다.
-`function` 선언문은 쓰지 않습니다.
-
-- 한 파일 안에서 두 형태를 섞으면 어느 것이 공개 계약인지 형태로 구분할 수 없습니다.
-- `function` 선언문은 호이스팅되므로 선언보다 위에서 호출해도 동작합니다.
-  그러면 읽는 순서와 실행 순서가 달라집니다.
-- 화살표 함수는 `this`를 새로 만들지 않아 콜백으로 넘길 때 묶어 줄 필요가 없습니다.
-
-세 자리는 예외로 둡니다.
-
-| 예외 | 이유 |
-| --- | --- |
-| 클래스 메서드 | 메서드 문법이 정본입니다. 화살표 필드로 바꾸지 않습니다 |
-| 제너레이터 | `function*` 없이 쓸 수 없습니다 |
-| 오버로드 선언 | 시그니처를 여러 줄로 겹쳐 쓰려면 `function` 선언문이 필요합니다 |
-
-**Incorrect (`function` 선언문과 화살표를 한 파일에서 섞음):**
-
-```ts
-export function normalizeEntryTitle(rawTitle: string): string {
-	return rawTitle.trim().replace(/\s+/g, " ");
-}
-
-export const buildEntrySlug = (title: string): string => normalizeEntryTitle(title).toLowerCase();
-```
-
-**Incorrect (선언보다 위에서 호출해 호이스팅에 기댐):**
-
-```ts
-export const buildEntryLabel = (entry: Entry): string => decorate(entry.title);
-
-function decorate(title: string): string {
-	return `# ${title}`;
-}
-```
-
-**Correct (모두 `const` 화살표로 선언하고 쓰기 전에 선언):**
-
-```ts
-const decorate = (title: string): string => `# ${title}`;
-
-export const normalizeEntryTitle = (rawTitle: string): string => rawTitle.trim().replace(/\s+/g, " ");
-
-export const buildEntryLabel = (entry: Entry): string => decorate(entry.title);
-```
-
-**Correct (클래스 메서드와 제너레이터는 그대로 둠):**
-
-```ts
-export class EntryCursor {
-	private buffer: Entry[] = [];
-
-	*pages(): Generator<Entry[]> {
-		yield this.buffer;
-	}
-
-	reset(): void {
-		this.buffer = [];
-	}
-}
-```
-
-### 3.6 Use Named Object Params for Complex Signatures
-
-**Rule:** `T17` · `functions-use-named-object-params-for-complex-signatures`
-
-**Applies when:** 매개변수가 3개를 넘거나 같은 계열 인자를 받는 함수를 추가·변경할 때. 객체 매개변수를 어디서 구조분해할지 바꿀 때. 제외: 리액트 함수 컴포넌트가 프롭스를 받고 구조분해하는 방식만 바꾸는 경우.
-
-**Impact: HIGH (긴 시그니처를 읽을 수 있게 두고 위치를 헷갈리지 않으면서 입력을 늘립니다)**
-
-매개변수가 3개를 넘거나 같은 계열 값이 함께 넘어오면 객체 하나로 묶습니다.
-시그니처 자리에서 바로 구조분해하지 않습니다.
-객체 매개변수 타입은 파일 위쪽에 이름을 붙여 선언하고, 함수 본문 첫 줄에서 구조분해합니다.
-구조분해 줄이 길어 포매터 예외가 필요해도 함수 본문 안에서 처리합니다.
-
-리액트 함수 컴포넌트가 프롭스를 통째로 받아 본문에서 구조분해하는 것만 바뀌면
-`react/composition-destructure-props-inside`가 담당하므로 이 규칙을 겹쳐 적용하지 않습니다.
-객체 인자와 필드 타입, 선택 여부, 뜻이 같은 계약이 이미 있으면 그대로 씁니다.
-이 규칙을 지키려고 `*Params`나 `*Args`를 새로 만들지 않습니다.
-
-**Incorrect (시그니처에서 바로 구조분해):**
-
-```ts
-const buildRequestUrl = ({baseUrl, resourcePath, searchParams}: BuildRequestUrlArgs): URL => {
-	const requestUrl = new URL(resourcePath, baseUrl);
-
-	for (const [key, value] of Object.entries(searchParams)) {
-		requestUrl.searchParams.set(key, value);
-	}
-
-	return requestUrl;
-};
-```
-
-**Correct (객체 전체를 받고 본문에서 구조분해):**
-
-```ts
-/**
- * grouped args로 API request URL 생성
- */
-const buildRequestUrl = (args: BuildRequestUrlArgs): URL => {
-	const {baseUrl, resourcePath, searchParams} = args;
-	const requestUrl = new URL(resourcePath, baseUrl);
-
-	for (const [key, value] of Object.entries(searchParams)) {
-		requestUrl.searchParams.set(key, value);
-	}
-
-	return requestUrl;
-};
-```
-
-### 3.7 Place and Promote Support Functions Deliberately
-
-**Rule:** `T18` · `functions-place-and-promote-support-functions`
+**Rule:** `T14` · `functions-place-and-promote-support-functions`
 
 **Applies when:** 보조 함수를 둘 파일이나 폴더를 정할 때. 보조 함수를 공용으로 올릴지 정할 때.
 
@@ -986,9 +840,111 @@ export const util = {
 } as const;
 ```
 
+### 3.5 Avoid Imperative Assembly in Wide Scopes
+
+**Rule:** `T15` · `functions-avoid-imperative-assembly-in-wide-scopes`
+
+**Applies when:** 파일 위쪽이나 넓은 스코프에서 `let` 재대입, 배열 `push`, 조건부 누적으로 값을 만들거나 정리할 때.
+
+**Review with:** `functions-extract-helpers-only-when-the-boundary-is-real`
+
+**Impact: HIGH (분기로 공유 지역 변수를 바꾸지 않아 파일 전역 로직이 선언형으로 남습니다)**
+
+파일 위쪽이나 넓은 스코프에서 `let` 재대입, 배열 `push`, 조건부 누적으로 값을 쌓지 않습니다.
+한 번만 쓰면 실제 쓰는 좁은 스코프에서 바로 계산합니다.
+분기와 보정이 얽혀 좁은 스코프에 담기지 않으면 떼어 낼지를 다시 봅니다.
+그 판정은 `functions-extract-helpers-only-when-the-boundary-is-real`가 합니다.
+떼어 내기로 정했을 때 이름은 `resolve*`, `build*`, `normalize*`를 씁니다.
+
+**Incorrect (넓은 스코프에서 명령형으로 누적 조립):**
+
+```ts
+let visibleTabs = ["overview"];
+
+if (canManageItems) {
+	visibleTabs.push("items");
+}
+```
+
+**Correct (좁은 스코프에서 한 번에 계산):**
+
+```ts
+const visibleTabs = canManageItems
+	? ["overview", "items"]
+	: ["overview"];
+```
+
+### 3.6 Prefer Immutable Array Sorting
+
+**Rule:** `T16` · `functions-prefer-immutable-array-sorting`
+
+**Applies when:** 프롭스, 상태, 매개변수, 공유 입력에서 온 배열을 정렬할 때. 기존 `.sort()` 호출을 추가·변경할 때.
+
+**Impact: MEDIUM (프롭스, 상태, 공유 입력에서 온 배열을 정렬할 때 원본이 바뀌는 버그를 피합니다)**
+
+원본 배열을 계속 써야 하면 `.sort()`로 제자리에서 바꾸지 않습니다.
+실행 환경이 ES2023 이상이거나 `toSorted()`를 쓸 수 있으면 `.toSorted()`를 먼저 씁니다.
+아니면 복사한 뒤 정렬합니다.
+`toSorted()`는 ES2023 이라 `tsconfig` 의 `lib` 에 `ES2023` 이상이 있어야 씁니다.
+없으면 복사 후 정렬을 씁니다.
+
+**Incorrect (원본 배열을 직접 변경):**
+
+```ts
+const sortedUsers = users.sort((left, right) => left.name.localeCompare(right.name));
+```
+
+**Correct (`toSorted()` 또는 복사 후 정렬로 불변성 유지):**
+
+```ts
+const sortedUsers = users.toSorted((left, right) => left.name.localeCompare(right.name));
+```
+
+```ts
+const sortedUsers = [...users].sort((left, right) => left.name.localeCompare(right.name));
+```
+
+### 3.7 Replace `enum` With `as const` Objects
+
+**Rule:** `T17` · `functions-replace-enum-with-as-const-objects`
+
+**Applies when:** `enum` 이나 타입과 실행 양쪽에서 함께 쓰는 값 묶음을 추가·변경할 때.
+
+**Requires selected:** `naming-use-consistent-file-and-symbol-naming`, `types-document-custom-types-and-shapes` · 함께 적용
+
+**Impact: MEDIUM-HIGH (enum 특유의 동작을 들이지 않고 실행 값을 드러내며 타입 추출도 가볍게 둡니다)**
+
+`enum` 대신 객체와 `as const`를 씁니다.
+그러면 실행 값과 타입 추론을 함께 두면서 `enum` 고유 문법과 번들 부담을 피합니다.
+
+**Incorrect (`enum`을 직접 사용):**
+
+```ts
+enum AuditStatus {
+	pending = "pending",
+	passed = "passed",
+	failed = "failed",
+}
+```
+
+**Correct (객체 리터럴과 타입 추출을 조합):**
+
+```ts
+const audit_status = {
+	pending: "pending",
+	passed: "passed",
+	failed: "failed",
+} as const;
+
+/**
+ * 감사 상태 값 집합
+ */
+type AuditStatus = (typeof audit_status)[keyof typeof audit_status];
+```
+
 ### 3.8 Use Set and Map for Repeated Lookups
 
-**Rule:** `T19` · `functions-use-set-and-map-for-repeated-lookups`
+**Rule:** `T18` · `functions-use-set-and-map-for-repeated-lookups`
 
 **Applies when:** 같은 목록에 `includes`, `find`, 키 조회를 여러 번 하는 코드를 추가·변경할 때.
 
@@ -1035,7 +991,7 @@ const approver = userById.get(approverId);
 
 ### 4.1 Expose Optional Values Instead of Silent Fallbacks
 
-**Rule:** `T20` · `absence-expose-optional-values-instead-of-silent-fallbacks`
+**Rule:** `T19` · `absence-expose-optional-values-instead-of-silent-fallbacks`
 
 **Applies when:** 선택 값을 읽거나 정규화하거나 넘기는 방식을 바꿀 때. `??`, `||`, 기본값, 빈 값 대체 분기를 추가·변경할 때.
 
@@ -1054,22 +1010,21 @@ const approver = userById.get(approverId);
 const supportEmail = settings.supportEmail ?? "help@example.com";
 ```
 
-**Correct (기본값이 명확한 예외만 이유와 함께 허용):**
+**Correct (없을 수 있다는 사실을 그대로 드러냄):**
 
 ```ts
-/**
- * 제품 명세에 따라 페이지 크기 기본값 적용
- */
-const resolvePageSize = (query: SearchQuery): string => {
-	const normalizedPageSize = query.pageSize?.trim();
+const supportEmail: string | undefined = settings.supportEmail;
 
-	if (!normalizedPageSize) {
-		// 기본 페이지 크기는 제품 명세상 20으로 고정한다.
-		return "20";
-	}
+if (!supportEmail) {
+	return <SupportEmailMissingNotice />;
+}
+```
 
-	return normalizedPageSize;
-};
+**Correct (설정 키를 가리키는 근거가 있을 때만 `??` 를 씁니다):**
+
+```ts
+// 기본 페이지 크기는 config.pagination.default_page_size 가 정본이다.
+const pageSize = query.pageSize ?? config.pagination.default_page_size;
 ```
 
 ## 5. JSDoc and Comment Conventions
@@ -1080,7 +1035,7 @@ const resolvePageSize = (query: SearchQuery): string => {
 
 ### 5.1 Keep Inline Comments for Constraints and Caveats Only
 
-**Rule:** `T21` · `docs-keep-inline-comments-for-constraints-and-caveats`
+**Rule:** `T20` · `docs-keep-inline-comments-for-constraints-and-caveats`
 
 **Applies when:** 함수 본문의 `//` 주석을 추가·수정·유지할 때. 도메인 규칙, 예외 방어, 외부 제약, 부수효과 순서를 주석으로 설명할 때.
 
@@ -1089,7 +1044,8 @@ const resolvePageSize = (query: SearchQuery): string => {
 함수 본문 안에서는 블록 주석을 쓰지 않습니다.
 `//` 주석은 도메인 규칙, 예외를 막은 의도, 외부 라이브러리 제약, 부수효과 순서처럼
 없으면 오해할 자리에만 씁니다.
-변수명을 그대로 되풀이하는 설명은 남기지 않습니다.
+주석에 무엇을 쓸지는 `docs-write-concise-korean-comments-about-purpose-and-constraints`가 정합니다.
+이 규칙은 어디에 두는지만 봅니다.
 
 **Incorrect (자명한 동작을 그대로 설명):**
 
@@ -1109,7 +1065,7 @@ if (!normalizedToken) {
 
 ### 5.2 Require Header Doc Comments on Key Declarations
 
-**Rule:** `T22` · `docs-require-header-jsdoc-on-key-declarations`
+**Rule:** `T21` · `docs-require-header-jsdoc-on-key-declarations`
 
 **Applies when:** 질의·변경 요청, 원격 함수, 분기나 `await` 가 있는 핸들러와 이펙트, 내보낸 보조 함수와 훅, 커스텀 타입, 스토어 선언을 추가·변경할 때. 선언 위 주석의 형식이나 태그를 정할 때.
 
@@ -1178,7 +1134,7 @@ const responseEntryList = useEntryList();
 
 ### 5.3 Write Concise Korean Comments About Purpose and Constraints
 
-**Rule:** `T23` · `docs-write-concise-korean-comments-about-purpose-and-constraints`
+**Rule:** `T22` · `docs-write-concise-korean-comments-about-purpose-and-constraints`
 
 **Applies when:** TypeScript·TSX 의 문서 주석이나 인라인 주석 문구를 추가·수정·번역하거나 검토할 때.
 
@@ -1218,7 +1174,7 @@ const responseEntryList = useEntryList();
 
 ### 5.4 Write Doc Comments as Multiline Blocks
 
-**Rule:** `T24` · `docs-write-doc-comments-as-multiline-blocks`
+**Rule:** `T23` · `docs-write-doc-comments-as-multiline-blocks`
 
 **Applies when:** 선언 위 문서 주석을 새로 쓰거나 형식을 바꿀 때. 한 줄 `/** … */` 이나 `//` 로 선언을 설명하려 할 때.
 
@@ -1267,7 +1223,7 @@ export const saveEntry = async (entry: Entry): Promise<void> => {
 
 ### 5.5 Avoid Role Tags in Doc Comments
 
-**Rule:** `T25` · `docs-avoid-role-tags-in-doc-comments`
+**Rule:** `T24` · `docs-avoid-role-tags-in-doc-comments`
 
 **Applies when:** 문서 주석에 태그를 넣거나 바꿀 때. 새 태그 이름을 만들려 할 때.
 
@@ -1324,7 +1280,7 @@ export interface SaveEntryInput {
 
 ### 5.6 Justify Convention Exceptions With a Checkable Reason Comment
 
-**Rule:** `T26` · `docs-justify-convention-exceptions-with-a-reason-comment`
+**Rule:** `T25` · `docs-justify-convention-exceptions-with-a-reason-comment`
 
 **Applies when:** 규칙이 허용한 예외를 코드에 남길 때. 이미 있는 예외 주석의 내용을 바꿀 때. 제외: 규칙이 요구하지 않은 일반 설명 주석인 경우.
 
@@ -1376,62 +1332,15 @@ const pageSize = settings.pageSize ?? config.pagination.default_page_size;
 const filteredRows = useMemo(() => rows.filter((row) => matchRow(row, deferredKeyword)), [deferredKeyword, rows]);
 ```
 
-## 6. Guardrails and Review Checks
-
-**Impact: MEDIUM**
-
-마무리 전에 컨벤션을 가장 자주 무너뜨리는 지름길을 기준으로 코드를 점검해야 합니다.
-
-### 6.1 Review Banned TypeScript Shortcuts Before Finishing
-
-**Rule:** `T27` · `guardrails-review-banned-typescript-shortcuts-before-finishing`
-
-**Applies when:** TypeScript·TSX 변경을 끝났다고 판정할 때. 변경 내역에서 배럴, 중복 타입, 이른 보조 함수, 넓은 조립, 근거 없는 기본값, 자명한 주석을 점검할 때.
-
-**Required on completion:** 마무리 시 항상 적용
-
-**Impact: MEDIUM (가져오기, 타입, 보조 함수, 기본값, 주석 규율을 가장 자주 무너뜨리는 지름길을 잡아냅니다)**
-
-끝났다고 보기 전에 자주 되풀이되는 지름길을 다시 확인합니다.
-배럴, 기존 타입 재선언, 재사용 근거 없이 앞당긴 추상화, 넓은 스코프 조립, 이유 없는 기본값,
-자명한 코드를 설명하는 주석은 마무리 전에 지웁니다.
-
-**Incorrect (금지 패턴을 그대로 남김):**
-
-```ts
-export * from "./index";
-
-interface RequestSnapshot {
-	request: string;
-}
-
-const supportEmail = settings.supportEmail ?? "help@example.com";
-```
-
-**Correct (공개 경계와 결측 처리를 명시적으로 유지):**
-
-```ts
-import type {UserRecord} from "<type-public-import>";
-
-/**
- * 사용자 미리보기 계약
- */
-type UserPreview = Pick<UserRecord, "id" | "name">;
-
-if (!settings.supportEmail) {
-	throw new Error("supportEmail is required.");
-}
-```
-
-## 7. Tooling
+## 6. Tooling
 
 **Impact: MEDIUM**
 
 이 컨벤션 중 기계가 잡을 수 있는 항목은 biome 설정으로 고정하고, 잡을 수 없는 항목은 리뷰가 담당한다는 것을 명시해야 사람이 검사할 목록이 좁아집니다.
 
-### 7.1 Configure Biome to Enforce the Mechanical Rules
+### 6.1 Configure Biome to Enforce the Mechanical Rules
 
-**Rule:** `T28` · `tooling-configure-biome-to-enforce-these-rules`
+**Rule:** `T26` · `tooling-configure-biome-to-enforce-these-rules`
 
 **Applies when:** 프로젝트에 `biome` 설정을 처음 넣거나 lint 규칙을 바꿀 때. 이 컨벤션 규칙을 사람이 검토할지 도구가 막을지 정할 때.
 

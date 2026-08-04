@@ -18,8 +18,7 @@
 					"naming-place-owner-config-in-the-owner-config-folder",
 					"naming-preserve-config-origin-with-chained-access",
 					"naming-use-direct-imports-and-public-entry-points",
-					"naming-restrict-absolute-aliases-to-layer-roots",
-					"guardrails-review-banned-typescript-shortcuts-before-finishing"
+					"naming-restrict-absolute-aliases-to-layer-roots"
 				]
 			}
 		},
@@ -35,10 +34,8 @@
 			"expectedSelected": {
 				"typescript": [
 					"naming-use-consistent-file-and-symbol-naming",
-					"types-mark-unused-parameters-with-underscore",
 					"types-prefer-function-variable-types-over-parameter-annotations",
-					"types-reuse-callback-signatures-from-existing-contracts",
-					"guardrails-review-banned-typescript-shortcuts-before-finishing"
+					"types-mark-unused-parameters-with-underscore"
 				]
 			}
 		},
@@ -53,13 +50,12 @@
 			],
 			"expectedSelected": {
 				"typescript": [
-					"types-document-custom-types-and-shapes",
 					"types-reuse-existing-contracts-before-new-types",
+					"types-document-custom-types-and-shapes",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks",
-					"docs-avoid-role-tags-in-doc-comments",
-					"guardrails-review-banned-typescript-shortcuts-before-finishing"
+					"docs-avoid-role-tags-in-doc-comments"
 				]
 			}
 		},
@@ -75,8 +71,7 @@
 			"expectedSelected": {
 				"typescript": [
 					"functions-extract-helpers-only-when-the-boundary-is-real",
-					"functions-place-and-promote-support-functions",
-					"guardrails-review-banned-typescript-shortcuts-before-finishing"
+					"functions-place-and-promote-support-functions"
 				]
 			},
 			"scopeDrift": {
@@ -96,8 +91,7 @@
 						"functions-place-and-promote-support-functions",
 						"docs-require-header-jsdoc-on-key-declarations",
 						"docs-write-concise-korean-comments-about-purpose-and-constraints",
-						"docs-write-doc-comments-as-multiline-blocks",
-						"guardrails-review-banned-typescript-shortcuts-before-finishing"
+						"docs-write-doc-comments-as-multiline-blocks"
 					]
 				}
 			}
@@ -114,8 +108,7 @@
 			"expectedSelected": {
 				"typescript": [
 					"functions-prefer-immutable-array-sorting",
-					"functions-use-set-and-map-for-repeated-lookups",
-					"guardrails-review-banned-typescript-shortcuts-before-finishing"
+					"functions-use-set-and-map-for-repeated-lookups"
 				]
 			}
 		},
@@ -136,7 +129,6 @@
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks",
-					"guardrails-review-banned-typescript-shortcuts-before-finishing",
 					"tooling-configure-biome-to-enforce-these-rules"
 				]
 			}
@@ -152,8 +144,7 @@
 			],
 			"expectedSelected": {
 				"typescript": [
-					"functions-avoid-imperative-assembly-in-wide-scopes",
-					"guardrails-review-banned-typescript-shortcuts-before-finishing"
+					"functions-avoid-imperative-assembly-in-wide-scopes"
 				]
 			}
 		},
@@ -170,8 +161,7 @@
 				"typescript": [
 					"naming-use-consistent-file-and-symbol-naming",
 					"functions-declare-functions-as-arrow-consts",
-					"functions-use-named-object-params-for-complex-signatures",
-					"guardrails-review-banned-typescript-shortcuts-before-finishing"
+					"functions-use-named-object-params-for-complex-signatures"
 				]
 			}
 		},
@@ -189,8 +179,7 @@
 					"absence-expose-optional-values-instead-of-silent-fallbacks",
 					"docs-keep-inline-comments-for-constraints-and-caveats",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
-					"docs-justify-convention-exceptions-with-a-reason-comment",
-					"guardrails-review-banned-typescript-shortcuts-before-finishing"
+					"docs-justify-convention-exceptions-with-a-reason-comment"
 				]
 			}
 		}

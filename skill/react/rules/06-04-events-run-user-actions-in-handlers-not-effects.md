@@ -27,8 +27,8 @@ useEffect(() => {
 		return;
 	}
 
-	void createEntryMutation.mutateAsync(formValues);
-}, [createEntryMutation, formValues, shouldSubmit]);
+	void mutationEntryCreate.mutateAsync(formValues);
+}, [mutationEntryCreate, formValues, shouldSubmit]);
 
 const handleSubmit = () => {
 	setShouldSubmit(true);
@@ -42,6 +42,6 @@ const handleSubmit = () => {
  * 제출 버튼 클릭 시 생성 요청 실행
  */
 const handleSubmit = async () => {
-	await createEntryMutation.mutateAsync(formValues);
+	await mutationEntryCreate.mutateAsync(formValues);
 };
 ```

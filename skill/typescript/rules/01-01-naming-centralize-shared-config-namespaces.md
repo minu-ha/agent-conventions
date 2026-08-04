@@ -24,11 +24,17 @@ tags: naming, config
 소유자 하나만 쓰는 선언형 설정을 어디 둘지는
 `naming-place-owner-config-in-the-owner-config-folder`가 정합니다.
 
-**Incorrect (공용 설정을 말단 파일마다 흩뿌림):**
+**Incorrect (같은 값을 두 소유자가 각자 선언):**
 
 ```ts
+// page/entries/pg-entries.tsx
 const defaultPageSize = 20;
 const billing_feature_keys = ["invoices", "refunds"];
+```
+
+```ts
+// page/billing/pg-billing.tsx
+const defaultPageSize = 20;
 ```
 
 **Correct (공용 설정은 `shared/config.ts` 이름 공간에서 읽음):**

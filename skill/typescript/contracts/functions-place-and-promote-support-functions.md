@@ -15,4 +15,4 @@
 
 **Requires selected:** `functions-extract-helpers-only-when-the-boundary-is-real` · 함께 적용
 
-> 예시·예외가 필요하면 [full rule](../rules/03-07-functions-place-and-promote-support-functions.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/03-04-functions-place-and-promote-support-functions.md)을 읽습니다.

@@ -23,14 +23,12 @@
 				"typescript": [
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
-					"types-document-custom-types-and-shapes",
-					"types-prefer-function-variable-types-over-parameter-annotations",
-					"types-reuse-callback-signatures-from-existing-contracts",
 					"types-reuse-existing-contracts-before-new-types",
+					"types-prefer-function-variable-types-over-parameter-annotations",
+					"types-document-custom-types-and-shapes",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
-					"docs-write-doc-comments-as-multiline-blocks",
-					"guardrails-review-banned-typescript-shortcuts-before-finishing"
+					"docs-write-doc-comments-as-multiline-blocks"
 				]
 			}
 		},
@@ -59,8 +57,7 @@
 					"types-document-custom-types-and-shapes",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
-					"docs-write-doc-comments-as-multiline-blocks",
-					"guardrails-review-banned-typescript-shortcuts-before-finishing"
+					"docs-write-doc-comments-as-multiline-blocks"
 				]
 			},
 			"scopeDrift": {
@@ -89,8 +86,7 @@
 						"types-document-custom-types-and-shapes",
 						"docs-require-header-jsdoc-on-key-declarations",
 						"docs-write-concise-korean-comments-about-purpose-and-constraints",
-						"docs-write-doc-comments-as-multiline-blocks",
-						"guardrails-review-banned-typescript-shortcuts-before-finishing"
+						"docs-write-doc-comments-as-multiline-blocks"
 					],
 					"css": [
 						"naming-default-to-plain-css-when-no-module-convention",
@@ -120,8 +116,8 @@
 			],
 			"expectedSelected": {
 				"react": [
-					"ownership-prefer-plain-ts-for-local-react-helpers",
 					"ownership-place-owner-files-in-role-folders",
+					"ownership-prefer-plain-ts-for-local-react-helpers",
 					"screen-avoid-premature-abstraction",
 					"docs-require-jsdoc-on-key-declarations"
 				],
@@ -129,13 +125,12 @@
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
 					"types-document-custom-types-and-shapes",
-					"functions-extract-helpers-only-when-the-boundary-is-real",
 					"functions-declare-functions-as-arrow-consts",
 					"functions-use-named-object-params-for-complex-signatures",
+					"functions-extract-helpers-only-when-the-boundary-is-real",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
-					"docs-write-doc-comments-as-multiline-blocks",
-					"guardrails-review-banned-typescript-shortcuts-before-finishing"
+					"docs-write-doc-comments-as-multiline-blocks"
 				]
 			}
 		},
@@ -160,8 +155,7 @@
 					"naming-use-direct-imports-and-public-entry-points",
 					"types-document-custom-types-and-shapes",
 					"functions-replace-enum-with-as-const-objects",
-					"docs-write-concise-korean-comments-about-purpose-and-constraints",
-					"guardrails-review-banned-typescript-shortcuts-before-finishing"
+					"docs-write-concise-korean-comments-about-purpose-and-constraints"
 				]
 			}
 		},
@@ -177,9 +171,9 @@
 			],
 			"expectedSelected": {
 				"react": [
-					"strategy-avoid-boolean-prop-proliferation",
 					"strategy-choose-single-composition-compound-and-variants",
 					"strategy-expose-only-assembled-compound-parts",
+					"strategy-avoid-boolean-prop-proliferation",
 					"strategy-prefer-children-over-render-props",
 					"composition-destructure-props-inside",
 					"composition-declare-props-interface-above-the-component",
@@ -192,8 +186,7 @@
 					"types-document-custom-types-and-shapes",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
-					"docs-write-doc-comments-as-multiline-blocks",
-					"guardrails-review-banned-typescript-shortcuts-before-finishing"
+					"docs-write-doc-comments-as-multiline-blocks"
 				]
 			}
 		},
@@ -220,8 +213,7 @@
 					"types-document-custom-types-and-shapes",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
-					"docs-write-doc-comments-as-multiline-blocks",
-					"guardrails-review-banned-typescript-shortcuts-before-finishing"
+					"docs-write-doc-comments-as-multiline-blocks"
 				]
 			}
 		},
@@ -249,14 +241,12 @@
 				"typescript": [
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
-					"types-mark-unused-parameters-with-underscore",
 					"types-prefer-function-variable-types-over-parameter-annotations",
-					"types-reuse-callback-signatures-from-existing-contracts",
+					"types-mark-unused-parameters-with-underscore",
 					"functions-extract-helpers-only-when-the-boundary-is-real",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
-					"docs-write-doc-comments-as-multiline-blocks",
-					"guardrails-review-banned-typescript-shortcuts-before-finishing"
+					"docs-write-doc-comments-as-multiline-blocks"
 				]
 			}
 		},
@@ -279,9 +269,9 @@
 					"typing-function-type-first",
 					"composition-destructure-props-inside",
 					"composition-use-activity-only-to-preserve-mounted-subtrees",
+					"screen-keep-route-flow-visible",
 					"screen-avoid-premature-abstraction",
 					"screen-extract-local-section-components-for-runtime-boundaries",
-					"screen-keep-route-flow-visible",
 					"screen-place-suspense-boundaries-at-the-section-owner",
 					"screen-avoid-ad-hoc-loading-branches",
 					"events-name-and-curry-handlers",
@@ -291,15 +281,13 @@
 				"typescript": [
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
-					"types-document-custom-types-and-shapes",
-					"types-prefer-function-variable-types-over-parameter-annotations",
-					"types-reuse-callback-signatures-from-existing-contracts",
 					"types-reuse-existing-contracts-before-new-types",
+					"types-prefer-function-variable-types-over-parameter-annotations",
+					"types-document-custom-types-and-shapes",
 					"absence-expose-optional-values-instead-of-silent-fallbacks",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
-					"docs-write-doc-comments-as-multiline-blocks",
-					"guardrails-review-banned-typescript-shortcuts-before-finishing"
+					"docs-write-doc-comments-as-multiline-blocks"
 				]
 			}
 		},
@@ -327,13 +315,11 @@
 				"typescript": [
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
-					"types-mark-unused-parameters-with-underscore",
 					"types-prefer-function-variable-types-over-parameter-annotations",
-					"types-reuse-callback-signatures-from-existing-contracts",
+					"types-mark-unused-parameters-with-underscore",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
-					"docs-write-doc-comments-as-multiline-blocks",
-					"guardrails-review-banned-typescript-shortcuts-before-finishing"
+					"docs-write-doc-comments-as-multiline-blocks"
 				]
 			}
 		},
@@ -361,8 +347,7 @@
 					"types-document-custom-types-and-shapes",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
-					"docs-write-doc-comments-as-multiline-blocks",
-					"guardrails-review-banned-typescript-shortcuts-before-finishing"
+					"docs-write-doc-comments-as-multiline-blocks"
 				]
 			}
 		},
@@ -380,16 +365,15 @@
 				"react": [
 					"screen-keep-derived-values-close",
 					"data-name-query-and-mutation-bindings-consistently",
-					"data-preserve-origin-chaining",
 					"data-shape-query-data-with-select",
+					"data-preserve-origin-chaining",
 					"docs-require-jsdoc-on-key-declarations"
 				],
 				"typescript": [
 					"naming-use-consistent-file-and-symbol-naming",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
-					"docs-write-doc-comments-as-multiline-blocks",
-					"guardrails-review-banned-typescript-shortcuts-before-finishing"
+					"docs-write-doc-comments-as-multiline-blocks"
 				]
 			}
 		},
@@ -418,8 +402,7 @@
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks",
-					"docs-justify-convention-exceptions-with-a-reason-comment",
-					"guardrails-review-banned-typescript-shortcuts-before-finishing"
+					"docs-justify-convention-exceptions-with-a-reason-comment"
 				]
 			}
 		},
@@ -443,11 +426,9 @@
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
 					"types-prefer-function-variable-types-over-parameter-annotations",
-					"types-reuse-callback-signatures-from-existing-contracts",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
-					"docs-write-doc-comments-as-multiline-blocks",
-					"guardrails-review-banned-typescript-shortcuts-before-finishing"
+					"docs-write-doc-comments-as-multiline-blocks"
 				]
 			}
 		},
@@ -472,8 +453,7 @@
 					"absence-expose-optional-values-instead-of-silent-fallbacks",
 					"docs-keep-inline-comments-for-constraints-and-caveats",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
-					"docs-justify-convention-exceptions-with-a-reason-comment",
-					"guardrails-review-banned-typescript-shortcuts-before-finishing"
+					"docs-justify-convention-exceptions-with-a-reason-comment"
 				]
 			}
 		},
@@ -496,8 +476,7 @@
 					"strategy-prefer-children-over-render-props"
 				],
 				"typescript": [
-					"naming-use-direct-imports-and-public-entry-points",
-					"guardrails-review-banned-typescript-shortcuts-before-finishing"
+					"naming-use-direct-imports-and-public-entry-points"
 				]
 			}
 		},
@@ -515,16 +494,15 @@
 			],
 			"expectedSelected": {
 				"react": [
-					"ownership-prefer-plain-ts-for-local-react-helpers",
 					"ownership-place-owner-files-in-role-folders",
+					"ownership-prefer-plain-ts-for-local-react-helpers",
 					"ownership-keep-lifecycle-in-the-owning-component",
 					"docs-require-jsdoc-on-key-declarations"
 				],
 				"typescript": [
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
-					"docs-write-doc-comments-as-multiline-blocks",
-					"guardrails-review-banned-typescript-shortcuts-before-finishing"
+					"docs-write-doc-comments-as-multiline-blocks"
 				]
 			}
 		}

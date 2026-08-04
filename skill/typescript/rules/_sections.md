@@ -31,12 +31,8 @@
 **Description:** 문서 주석은 어느 선언에 붙일지, 어떤 형식으로 쓸지, 태그를 붙일지가 따로 정해져 있습니다. 본문은
   한국어로 목적과 제약을 적고, 규칙이 허용한 예외에는 확인할 수 있는 이유를 남깁니다.
 
-## 6. Guardrails and Review Checks (guardrails)
-**TitleKo:** 가드레일과 마무리 점검
-**Impact:** MEDIUM
-**Description:** 마무리 전에 컨벤션을 가장 자주 무너뜨리는 지름길을 기준으로 코드를 점검해야 합니다.
 
-## 7. Tooling (tooling)
+## 6. Tooling (tooling)
 **TitleKo:** 도구 설정
 **Impact:** MEDIUM
 **Description:** 이 컨벤션 중 기계가 잡을 수 있는 항목은 biome 설정으로 고정하고, 잡을 수 없는 항목은 리뷰가

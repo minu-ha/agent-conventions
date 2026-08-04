@@ -11,4 +11,4 @@
 - 순수 타입·전송 값 조립 함수·기본 설정의 형제 `.ts` 이동.
   `typescript/functions-extract-helpers-only-when-the-boundary-is-real`가 담당합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/05-04-screen-keep-route-flow-visible.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/05-01-screen-keep-route-flow-visible.md)을 읽습니다.

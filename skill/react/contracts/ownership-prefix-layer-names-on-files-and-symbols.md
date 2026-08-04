@@ -16,4 +16,4 @@
 - 어느 레이어인지 정하는 것은 `ownership-layer-component-boundaries`가 먼저 판정합니다.
   이 규칙은 그 결과를 이름에 적는 것만 봅니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/01-03-ownership-prefix-layer-names-on-files-and-symbols.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/01-02-ownership-prefix-layer-names-on-files-and-symbols.md)을 읽습니다.

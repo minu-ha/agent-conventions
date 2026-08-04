@@ -7,8 +7,7 @@ appliesWhen:
   - 커링 팩토리가 돌려주는 리액트 핸들러의 타입을 정할 때
   - `Ui*` 래퍼 사용처에서 프롭스 타입을 참조할 때
   - 제외: `query.select` 같은 훅 옵션의 일회성 문맥 콜백인 경우
-requiresSelected: typescript/types-reuse-callback-signatures-from-existing-contracts
-reviewWith: typescript/types-prefer-function-variable-types-over-parameter-annotations
+requiresSelected: typescript/types-prefer-function-variable-types-over-parameter-annotations
 tags: typing, handlers, props
 ---
 

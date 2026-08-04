@@ -16,6 +16,6 @@ JSX가 나중에 문맥 타입을 준다는 이유로 반환 타입을 생략하
 
 `query.select` 같은 훅 옵션의 일회성 문맥 콜백은 리액트 핸들러 구현이 아니라 대상이 아닙니다.
 
-**Requires selected:** `typescript/types-reuse-callback-signatures-from-existing-contracts` · 함께 적용
+**Requires selected:** `typescript/types-prefer-function-variable-types-over-parameter-annotations` · 함께 적용
 
 > 예시·예외가 필요하면 [full rule](../rules/02-01-typing-function-type-first.md)을 읽습니다.

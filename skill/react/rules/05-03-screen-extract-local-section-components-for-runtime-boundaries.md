@@ -57,7 +57,7 @@ export const PgEntries = () => {
 	const responseEntryListSuspense = useEntryListSuspense();
 
 	return (
-		<div className="entry-layout">
+		<div className="pg_entries__layout">
 			<PgEntrySidebarPanel />
 			<PgEntryDetailPanel />
 		</div>
@@ -131,12 +131,16 @@ export const PgEntries = () => {
 	/**
 	 * tree sidebar 조회 API
 	 */
-	const responseEntryTreeSuspense = useEntryTreeSuspense<EntryTreeSelectData>();
+	const responseEntryTreeSuspense = useEntryTreeSuspense({}, {
+		query: {select: (response) => ({categoryNodes: response.data.nodes})},
+	});
 
 	/**
 	 * entry 목록 조회 API
 	 */
-	const responseEntryListSuspense = useEntryListSuspense<EntryListSelectData>();
+	const responseEntryListSuspense = useEntryListSuspense({}, {
+		query: {select: (response) => ({entries: response.data.list})},
+	});
 
 	/**
 	 * tree에서 선택한 category로 route search를 갱신
@@ -149,14 +153,14 @@ export const PgEntries = () => {
 	};
 
 	return (
-		<div className="entry-layout">
+		<div className="pg_entries__layout">
 			<PgEntryTreeSection
 				categoryNodes={responseEntryTreeSuspense.data.categoryNodes}
 				selectedCategoryId={search.categoryId}
 				onCategorySelect={handleCategorySelect}
 			/>
 			<PgEntryTableSection
-				entries={responseEntryListSuspense.data?.entries}
+				entries={responseEntryListSuspense.data.entries}
 			/>
 		</div>
 	);

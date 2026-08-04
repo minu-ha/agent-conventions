@@ -44,7 +44,7 @@ export interface ProfileDialogProps {
 	renderFooter?: () => ReactNode;
 }
 
-export const ProfileDialog = (props: ProfileDialogProps) => {
+export const UiProfileDialog = (props: ProfileDialogProps) => {
 	const { isCompact, showActivity, showFocus, dialogTitle, renderFooter } = props;
 
 	return (
@@ -69,7 +69,7 @@ export interface EmptyStateProps {
 	description: string;
 }
 
-export const EmptyState = (props: EmptyStateProps) => {
+export const UiEmptyState = (props: EmptyStateProps) => {
 	const { title, description } = props;
 
 	return (
@@ -91,17 +91,17 @@ export interface SectionProps {
 
 const SectionRoot = (props: SectionProps) => {
 	const { children } = props;
-	return <section className="section">{children}</section>;
+	return <section className={clsx("ui_section__root")}>{children}</section>;
 };
 
 const SectionHeader = (props: SectionProps) => {
 	const { children } = props;
-	return <header className="section__header">{children}</header>;
+	return <header className={clsx("ui_section__header")}>{children}</header>;
 };
 
 const SectionFooter = (props: SectionProps) => {
 	const { children } = props;
-	return <footer className="section__footer">{children}</footer>;
+	return <footer className={clsx("ui_section__footer")}>{children}</footer>;
 };
 
 export const Section = {

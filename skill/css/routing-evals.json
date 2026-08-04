@@ -14,9 +14,7 @@
 			],
 			"expectedSelected": {
 				"react": [],
-				"typescript": [
-					"guardrails-review-banned-typescript-shortcuts-before-finishing"
-				]
+				"typescript": []
 			},
 			"scopeDrift": {
 				"evidence": "add route-owned empty-state className, src/page/catalog-index/pg-catalog-index.css, and its direct side-effect import in a project without a CSS Modules standard; final skills add CSS.",
@@ -34,8 +32,7 @@
 						"ownership-place-owner-files-in-role-folders"
 					],
 					"typescript": [
-						"naming-use-direct-imports-and-public-entry-points",
-						"guardrails-review-banned-typescript-shortcuts-before-finishing"
+						"naming-use-direct-imports-and-public-entry-points"
 					],
 					"css": [
 						"naming-default-to-plain-css-when-no-module-convention",
@@ -82,8 +79,7 @@
 			"expectedSelected": {
 				"react": [],
 				"typescript": [
-					"naming-use-direct-imports-and-public-entry-points",
-					"guardrails-review-banned-typescript-shortcuts-before-finishing"
+					"naming-use-direct-imports-and-public-entry-points"
 				],
 				"css": [
 					"naming-use-scope-slug-element-modifier-syntax",
@@ -110,9 +106,7 @@
 			],
 			"expectedSelected": {
 				"react": [],
-				"typescript": [
-					"guardrails-review-banned-typescript-shortcuts-before-finishing"
-				],
+				"typescript": [],
 				"css": [
 					"naming-use-scope-slug-element-modifier-syntax",
 					"naming-name-elements-and-modifiers-by-role",
@@ -136,8 +130,7 @@
 			"expectedSelected": {
 				"react": [],
 				"typescript": [
-					"naming-use-direct-imports-and-public-entry-points",
-					"guardrails-review-banned-typescript-shortcuts-before-finishing"
+					"naming-use-direct-imports-and-public-entry-points"
 				],
 				"css": [
 					"naming-use-scope-slug-element-modifier-syntax",
@@ -161,8 +154,7 @@
 				"expectedSelected": {
 					"react": [],
 					"typescript": [
-						"naming-use-direct-imports-and-public-entry-points",
-						"guardrails-review-banned-typescript-shortcuts-before-finishing"
+						"naming-use-direct-imports-and-public-entry-points"
 					],
 					"css": [
 						"naming-use-scope-slug-element-modifier-syntax",
@@ -194,12 +186,11 @@
 				],
 				"typescript": [
 					"naming-use-direct-imports-and-public-entry-points",
-					"types-document-custom-types-and-shapes",
 					"types-reuse-existing-contracts-before-new-types",
+					"types-document-custom-types-and-shapes",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
-					"docs-write-doc-comments-as-multiline-blocks",
-					"guardrails-review-banned-typescript-shortcuts-before-finishing"
+					"docs-write-doc-comments-as-multiline-blocks"
 				],
 				"css": [
 					"composition-compose-classes-with-clsx",

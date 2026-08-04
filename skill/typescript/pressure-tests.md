@@ -75,7 +75,7 @@ protocol v3 결과에는 coordinator가 dispatch 전에 고정한 repository HEA
 - Focus
   - `types-document-custom-types-and-shapes`
   - `types-reuse-existing-contracts-before-new-types`
-  - `types-reuse-callback-signatures-from-existing-contracts`
+  - types-prefer-function-variable-types-over-parameter-annotations
 - Prompt
   - "기존 타입 재사용과 문서화를 같이 맞춰줘. 새 타입은 최소화하고 계약 문서는 유지해야 해."
 - Expected pass signals
@@ -141,7 +141,7 @@ protocol v3 결과에는 coordinator가 dispatch 전에 고정한 repository HEA
 
 - Focus
   - `types-prefer-function-variable-types-over-parameter-annotations`
-  - `types-reuse-callback-signatures-from-existing-contracts`
+  - types-prefer-function-variable-types-over-parameter-annotations
   - `types-mark-unused-parameters-with-underscore`
 - Prompt
   - "formatter, normalizer, callback 함수 시그니처를 TypeScript skill 기준으로 정리해줘. 기존 계약 재사용이 우선이었으면 좋겠어."
@@ -174,7 +174,7 @@ protocol v3 결과에는 coordinator가 dispatch 전에 고정한 repository HEA
 ### T9. Callback and Naming Applicability Precision
 
 - Focus
-  - `types-reuse-callback-signatures-from-existing-contracts`
+  - types-prefer-function-variable-types-over-parameter-annotations
   - `types-mark-unused-parameters-with-underscore`
   - `naming-use-consistent-file-and-symbol-naming`
 - Prompt
@@ -206,7 +206,7 @@ protocol v3 결과에는 coordinator가 dispatch 전에 고정한 repository HEA
   - `types-document-custom-types-and-shapes`
   - `types-reuse-existing-contracts-before-new-types`
   - `types-prefer-function-variable-types-over-parameter-annotations`
-  - `types-reuse-callback-signatures-from-existing-contracts`
+  - types-prefer-function-variable-types-over-parameter-annotations
 - Positive control
   - 기존 named shape가 positional 함수의 새 object input 계약 역할을 얻으면 shape가 같아도 문서화 rule은 Selected
 - Negative controls
@@ -222,7 +222,7 @@ protocol v3 결과에는 coordinator가 dispatch 전에 고정한 repository HEA
   - `naming-use-direct-imports-and-public-entry-points`
   - `types-mark-unused-parameters-with-underscore`
   - `types-prefer-function-variable-types-over-parameter-annotations`
-  - `types-reuse-callback-signatures-from-existing-contracts`
+  - types-prefer-function-variable-types-over-parameter-annotations
 - Prompt
   - "entry id를 받는 curried button handler를 기존 `MouseEventHandler` 계약으로 구현해줘."
 - Expected pass signals

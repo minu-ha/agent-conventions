@@ -54,13 +54,14 @@ const buildEditHref = ({ editHrefBase, row }: { editHrefBase: string; row: Entry
 const mapResponseToRows = (response: EntryListResponse) =>
 	response.data.map((entry) => ({ id: entry.id, title: entry.title }));
 
-export const EntryTable = (props: EntryTableProps) => {
-	const responseEntriesQuery = useListEntriesSuspense<EntryRow[]>({}, {
+export const PgEntryTable = (props: PgEntryTableProps) => {
+	const { editHrefBase } = props;
+	const responseEntriesQuery = useListEntriesSuspense({}, {
 		query: { select: mapResponseToRows },
 	});
 
 	return responseEntriesQuery.data.map((row) => (
-		<a href={buildEditHref({ editHrefBase: props.editHrefBase, row })} key={row.id}>
+		<a href={buildEditHref({ editHrefBase, row })} key={row.id}>
 			{row.title}
 		</a>
 	));
@@ -102,8 +103,9 @@ export const buildEntryPayload = (formValues: EntryFormValues) => {
 **Correct (작은 질의 가공과 `href` 조립은 사용 지점에 둠):**
 
 ```tsx
-export const EntryTable = (props: EntryTableProps) => {
-	const responseEntriesQuery = useListEntriesSuspense<EntryRow[]>(
+export const PgEntryTable = (props: PgEntryTableProps) => {
+	const { editHrefBase } = props;
+	const responseEntriesQuery = useListEntriesSuspense(
 		{},
 		{
 			query: {
@@ -114,7 +116,7 @@ export const EntryTable = (props: EntryTableProps) => {
 	);
 
 	return responseEntriesQuery.data.map((row) => (
-		<a href={`${props.editHrefBase}${row.id}/`} key={row.id}>
+		<a href={`${editHrefBase}${row.id}/`} key={row.id}>
 			{row.title}
 		</a>
 	));

@@ -88,18 +88,17 @@ const typescriptRuleUniverse = [
 	"naming-use-consistent-file-and-symbol-naming",
 	"naming-use-direct-imports-and-public-entry-points",
 	"naming-restrict-absolute-aliases-to-layer-roots",
+	"types-reuse-existing-contracts-before-new-types",
+	"types-prefer-function-variable-types-over-parameter-annotations",
 	"types-document-custom-types-and-shapes",
 	"types-mark-unused-parameters-with-underscore",
-	"types-prefer-function-variable-types-over-parameter-annotations",
-	"types-reuse-callback-signatures-from-existing-contracts",
-	"types-reuse-existing-contracts-before-new-types",
-	"functions-avoid-imperative-assembly-in-wide-scopes",
-	"functions-extract-helpers-only-when-the-boundary-is-real",
-	"functions-prefer-immutable-array-sorting",
-	"functions-replace-enum-with-as-const-objects",
 	"functions-declare-functions-as-arrow-consts",
 	"functions-use-named-object-params-for-complex-signatures",
+	"functions-extract-helpers-only-when-the-boundary-is-real",
 	"functions-place-and-promote-support-functions",
+	"functions-avoid-imperative-assembly-in-wide-scopes",
+	"functions-prefer-immutable-array-sorting",
+	"functions-replace-enum-with-as-const-objects",
 	"functions-use-set-and-map-for-repeated-lookups",
 	"absence-expose-optional-values-instead-of-silent-fallbacks",
 	"docs-keep-inline-comments-for-constraints-and-caveats",
@@ -108,7 +107,6 @@ const typescriptRuleUniverse = [
 	"docs-write-doc-comments-as-multiline-blocks",
 	"docs-avoid-role-tags-in-doc-comments",
 	"docs-justify-convention-exceptions-with-a-reason-comment",
-	"guardrails-review-banned-typescript-shortcuts-before-finishing",
 	"tooling-configure-biome-to-enforce-these-rules",
 ] as const;
 
@@ -145,16 +143,16 @@ const cssRuleUniverse = [
  * @summary generated React index의 canonical codepoint rule universe
  */
 const reactRuleUniverse = [
-	"ownership-prefer-plain-ts-for-local-react-helpers",
 	"ownership-layer-component-boundaries",
 	"ownership-prefix-layer-names-on-files-and-symbols",
 	"ownership-place-owner-files-in-role-folders",
 	"ownership-keep-component-imports-flowing-downward",
+	"ownership-prefer-plain-ts-for-local-react-helpers",
 	"ownership-keep-lifecycle-in-the-owning-component",
 	"typing-function-type-first",
-	"strategy-avoid-boolean-prop-proliferation",
 	"strategy-choose-single-composition-compound-and-variants",
 	"strategy-expose-only-assembled-compound-parts",
+	"strategy-avoid-boolean-prop-proliferation",
 	"strategy-prefer-children-over-render-props",
 	"composition-destructure-props-inside",
 	"composition-do-not-define-components-inside-components",
@@ -162,10 +160,10 @@ const reactRuleUniverse = [
 	"composition-open-ref-props-only-for-imperative-contracts",
 	"composition-use-activity-only-to-preserve-mounted-subtrees",
 	"composition-declare-props-interface-above-the-component",
+	"screen-keep-route-flow-visible",
 	"screen-avoid-premature-abstraction",
 	"screen-extract-local-section-components-for-runtime-boundaries",
 	"screen-keep-derived-values-close",
-	"screen-keep-route-flow-visible",
 	"screen-place-suspense-boundaries-at-the-section-owner",
 	"screen-avoid-ad-hoc-loading-branches",
 	"events-keep-handler-flow-inline",
@@ -173,8 +171,8 @@ const reactRuleUniverse = [
 	"events-curry-extra-handler-arguments",
 	"events-run-user-actions-in-handlers-not-effects",
 	"data-name-query-and-mutation-bindings-consistently",
-	"data-preserve-origin-chaining",
 	"data-shape-query-data-with-select",
+	"data-preserve-origin-chaining",
 	"state-calculate-derived-values-during-render",
 	"state-choose-state-tools-by-source-of-truth",
 	"state-store-derived-authority",
@@ -218,6 +216,16 @@ const typescriptRuleRouting = {
 		appliesWhen: "절대경로 별칭으로 다른 모듈을 가져올 때. 별칭이 가리키는 경로 깊이를 바꿀 때.",
 		reviewWith: ["naming-use-direct-imports-and-public-entry-points"],
 	},
+	"types-reuse-existing-contracts-before-new-types": {
+		appliesWhen:
+			"뜻이 같은 기존 타입, 인터페이스, 스키마가 있는데 형태를 새로 선언·변경·복제·파생할 때. 같은 형태를 두 번 선언했다가 넣거나 뺄 때. 제외: 맞는 후보가 없는 새 형태, 소유자만 옮긴 경우, 그대로인 계약을 새 자리에서 쓰는 경우.",
+		reviewWith: ["types-document-custom-types-and-shapes"],
+	},
+	"types-prefer-function-variable-types-over-parameter-annotations": {
+		appliesWhen:
+			"기존 호출 계약을 이름 붙인 함수나 공용 함수 구현에 다시 쓸 때. 같은 시그니처를 여러 구현이 함께 쓰도록 바꿀 때. 제외: 타입 표기 없이 문맥으로 추론되는 일회성 인라인 콜백인 경우.",
+		reviewWith: [],
+	},
 	"types-document-custom-types-and-shapes": {
 		appliesWhen:
 			"타입, 인터페이스, 스키마 최상단, 객체 상수, 계약 필드, 파생 별칭을 추가·변경할 때. 이름 붙인 형태에 호출 계약 역할을 새로 얹을 때. 제외: 외부·생성된·읽기 전용·공용 형태를 그대로 쓰거나 익명으로 추론된 반환인 경우.",
@@ -226,38 +234,6 @@ const typescriptRuleRouting = {
 	"types-mark-unused-parameters-with-underscore": {
 		appliesWhen:
 			"기존 콜백이나 프레임워크 계약을 구현하면서 매개변수를 빼거나 쓰지 않을 때. 커링한 핸들러가 마지막에 돌려주는 콜백에서 매개변수를 뺄 때.",
-		reviewWith: [],
-	},
-	"types-prefer-function-variable-types-over-parameter-annotations": {
-		appliesWhen:
-			"기존 호출 계약을 이름 붙인 함수나 공용 함수 구현에 다시 쓸 때. 같은 시그니처를 여러 구현이 함께 쓰도록 바꿀 때. 제외: 타입 표기 없이 문맥으로 추론되는 일회성 인라인 콜백인 경우.",
-		reviewWith: [],
-	},
-	"types-reuse-callback-signatures-from-existing-contracts": {
-		appliesWhen:
-			"인터페이스, 객체, 프레임워크가 정한 콜백을 구현하면서 기존 시그니처를 다시 쓰거나 바꿀 때. 제외: 타입 표기 없이 문맥으로 추론되는 일회성 인라인 콜백인 경우.",
-		reviewWith: ["types-mark-unused-parameters-with-underscore"],
-	},
-	"types-reuse-existing-contracts-before-new-types": {
-		appliesWhen:
-			"뜻이 같은 기존 타입, 인터페이스, 스키마가 있는데 형태를 새로 선언·변경·복제·파생할 때. 같은 형태를 두 번 선언했다가 넣거나 뺄 때. 제외: 맞는 후보가 없는 새 형태, 소유자만 옮긴 경우, 그대로인 계약을 새 자리에서 쓰는 경우.",
-		reviewWith: ["types-document-custom-types-and-shapes"],
-	},
-	"functions-avoid-imperative-assembly-in-wide-scopes": {
-		appliesWhen: "파일 위쪽이나 넓은 스코프에서 `let` 재대입, 배열 `push`, 조건부 누적으로 값을 만들거나 정리할 때.",
-		reviewWith: ["functions-extract-helpers-only-when-the-boundary-is-real"],
-	},
-	"functions-extract-helpers-only-when-the-boundary-is-real": {
-		appliesWhen:
-			"보조 함수를 빼내거나 옮기거나 내보내거나 공유할 때. 범용 보조 파일, 소유자 하나만 쓰는 변환 함수, 잔손질 단계의 경계를 바꿀 때.",
-		reviewWith: ["functions-place-and-promote-support-functions", "docs-require-header-jsdoc-on-key-declarations"],
-	},
-	"functions-prefer-immutable-array-sorting": {
-		appliesWhen: "프롭스, 상태, 매개변수, 공유 입력에서 온 배열을 정렬할 때. 기존 `.sort()` 호출을 추가·변경할 때.",
-		reviewWith: [],
-	},
-	"functions-replace-enum-with-as-const-objects": {
-		appliesWhen: "`enum` 이나 타입과 실행 양쪽에서 함께 쓰는 값 묶음을 추가·변경할 때.",
 		reviewWith: [],
 	},
 	"functions-declare-functions-as-arrow-consts": {
@@ -269,8 +245,25 @@ const typescriptRuleRouting = {
 			"매개변수가 3개를 넘거나 같은 계열 인자를 받는 함수를 추가·변경할 때. 객체 매개변수를 어디서 구조분해할지 바꿀 때. 제외: 리액트 함수 컴포넌트가 프롭스를 받고 구조분해하는 방식만 바꾸는 경우.",
 		reviewWith: [],
 	},
+	"functions-extract-helpers-only-when-the-boundary-is-real": {
+		appliesWhen:
+			"보조 함수를 빼내거나 옮기거나 내보내거나 공유할 때. 범용 보조 파일, 소유자 하나만 쓰는 변환 함수, 잔손질 단계의 경계를 바꿀 때.",
+		reviewWith: ["functions-place-and-promote-support-functions", "docs-require-header-jsdoc-on-key-declarations"],
+	},
 	"functions-place-and-promote-support-functions": {
 		appliesWhen: "보조 함수를 둘 파일이나 폴더를 정할 때. 보조 함수를 공용으로 올릴지 정할 때.",
+		reviewWith: [],
+	},
+	"functions-avoid-imperative-assembly-in-wide-scopes": {
+		appliesWhen: "파일 위쪽이나 넓은 스코프에서 `let` 재대입, 배열 `push`, 조건부 누적으로 값을 만들거나 정리할 때.",
+		reviewWith: ["functions-extract-helpers-only-when-the-boundary-is-real"],
+	},
+	"functions-prefer-immutable-array-sorting": {
+		appliesWhen: "프롭스, 상태, 매개변수, 공유 입력에서 온 배열을 정렬할 때. 기존 `.sort()` 호출을 추가·변경할 때.",
+		reviewWith: [],
+	},
+	"functions-replace-enum-with-as-const-objects": {
+		appliesWhen: "`enum` 이나 타입과 실행 양쪽에서 함께 쓰는 값 묶음을 추가·변경할 때.",
 		reviewWith: [],
 	},
 	"functions-use-set-and-map-for-repeated-lookups": {
@@ -306,11 +299,6 @@ const typescriptRuleRouting = {
 		appliesWhen:
 			"규칙이 허용한 예외를 코드에 남길 때. 이미 있는 예외 주석의 내용을 바꿀 때. 제외: 규칙이 요구하지 않은 일반 설명 주석인 경우.",
 		reviewWith: ["docs-write-concise-korean-comments-about-purpose-and-constraints"],
-	},
-	"guardrails-review-banned-typescript-shortcuts-before-finishing": {
-		appliesWhen:
-			"TypeScript·TSX 변경을 끝났다고 판정할 때. 변경 내역에서 배럴, 중복 타입, 이른 보조 함수, 넓은 조립, 근거 없는 기본값, 자명한 주석을 점검할 때.",
-		reviewWith: [],
 	},
 	"tooling-configure-biome-to-enforce-these-rules": {
 		appliesWhen: "프로젝트에 `biome` 설정을 처음 넣거나 lint 규칙을 바꿀 때. 이 컨벤션 규칙을 사람이 검토할지 도구가 막을지 정할 때.",
@@ -452,14 +440,6 @@ const cssRuleRouting = {
  * @summary Appendix B의 React rule별 exact routing metadata oracle
  */
 const reactRuleRouting = {
-	"ownership-prefer-plain-ts-for-local-react-helpers": {
-		appliesWhen: "화면 전용 계산·정규화·전송 값 조립을 커스텀 훅으로 추출하려 할 때. 화면 전용 순수 로직을 별도 보조 모듈로 옮기려 할 때.",
-		reviewWith: [
-			"typescript/functions-extract-helpers-only-when-the-boundary-is-real",
-			"ownership-place-owner-files-in-role-folders",
-			"ownership-keep-lifecycle-in-the-owning-component",
-		],
-	},
 	"ownership-layer-component-boundaries": {
 		appliesWhen: "컴포넌트를 ui·widget·page 중 어느 소유 레이어에 둘지 정할 때. 컴포넌트를 레이어 사이에서 옮기거나 공용화할 때.",
 		reviewWith: ["ownership-place-owner-files-in-role-folders", "css/ownership-choose-scope-prefix-by-reuse-range"],
@@ -478,6 +458,14 @@ const reactRuleRouting = {
 			"`component` 폴더 안의 파일을 다른 파일에서 가져오기할 때. `../`나 `@/page` 경로로 컴포넌트를 가져오려 할 때. 여러 자식이 같은 컴포넌트를 필요로 해 배치를 다시 정할 때.",
 		reviewWith: ["ownership-layer-component-boundaries"],
 	},
+	"ownership-prefer-plain-ts-for-local-react-helpers": {
+		appliesWhen: "화면 전용 계산·정규화·전송 값 조립을 커스텀 훅으로 추출하려 할 때. 화면 전용 순수 로직을 별도 보조 모듈로 옮기려 할 때.",
+		reviewWith: [
+			"typescript/functions-extract-helpers-only-when-the-boundary-is-real",
+			"ownership-place-owner-files-in-role-folders",
+			"ownership-keep-lifecycle-in-the-owning-component",
+		],
+	},
 	"ownership-keep-lifecycle-in-the-owning-component": {
 		appliesWhen:
 			"외부 라이브러리 인스턴스 생성·크기 변경·구독·정리를 한 컴포넌트가 소유할 때. 생명주기 코드를 커스텀 훅으로 옮겨 파일을 줄이려 할 때. 제외: 여러 소유자가 같은 생명주기 계약을 실제로 호출하는 경우.",
@@ -486,10 +474,6 @@ const reactRuleRouting = {
 	"typing-function-type-first": {
 		appliesWhen:
 			"커링 팩토리가 돌려주는 리액트 핸들러의 타입을 정할 때. `Ui*` 래퍼 사용처에서 프롭스 타입을 참조할 때. 제외: `query.select` 같은 훅 옵션의 일회성 문맥 콜백인 경우.",
-		reviewWith: ["typescript/types-prefer-function-variable-types-over-parameter-annotations"],
-	},
-	"strategy-avoid-boolean-prop-proliferation": {
-		appliesWhen: "여러 곳에서 쓰는 공용 컴포넌트에 불리언 모드·표시 프롭을 추가할 때. 기존 불리언 프롭 조합과 JSX 분기가 늘어날 때.",
 		reviewWith: [],
 	},
 	"strategy-choose-single-composition-compound-and-variants": {
@@ -505,6 +489,10 @@ const reactRuleRouting = {
 	"strategy-expose-only-assembled-compound-parts": {
 		appliesWhen: "합성 컴포넌트의 공개 부품 목록에 부품을 넣거나 뺄 때. 상태 없는 합성에 상태를 넣으면서 공개 이름을 바꾸려 할 때.",
 		reviewWith: ["strategy-choose-single-composition-compound-and-variants", "css/composition-do-not-add-wrapper-elements-for-styling"],
+	},
+	"strategy-avoid-boolean-prop-proliferation": {
+		appliesWhen: "여러 곳에서 쓰는 공용 컴포넌트에 불리언 모드·표시 프롭을 추가할 때. 기존 불리언 프롭 조합과 JSX 분기가 늘어날 때.",
+		reviewWith: [],
 	},
 	"strategy-prefer-children-over-render-props": {
 		appliesWhen:
@@ -538,6 +526,11 @@ const reactRuleRouting = {
 		appliesWhen: "컴포넌트 프롭스 타입을 새로 선언할 때. 프롭스 타입의 위치나 공개 범위를 바꿀 때.",
 		reviewWith: ["composition-destructure-props-inside", "typescript/types-document-custom-types-and-shapes"],
 	},
+	"screen-keep-route-flow-visible": {
+		appliesWhen:
+			"라우트 진입의 검색·화면 이동·질의·변경 요청·화면 전체 이펙트를 옮기거나 나눌 때. page 섹션 조립의 순서나 소유자를 바꿀 때. 제외: 같은 소유자 안에서 표현만 바꾸는 경우.",
+		reviewWith: ["screen-extract-local-section-components-for-runtime-boundaries", "ownership-place-owner-files-in-role-folders"],
+	},
 	"screen-avoid-premature-abstraction": {
 		appliesWhen: "화면 코드를 보조 함수·훅·컴포넌트·모듈으로 추출할 때. 한 곳에서만 쓰는 기존 추상화를 다시 접어 넣을 때.",
 		reviewWith: [
@@ -555,18 +548,13 @@ const reactRuleRouting = {
 			"오리진을 끊는 별칭·플래그·표시값을 넓은 화면 범위에 추가·이동·제거할 때. `let` 재할당이나 배열 `push` 기반 조립을 바꿀 때.",
 		reviewWith: [],
 	},
-	"screen-keep-route-flow-visible": {
-		appliesWhen:
-			"라우트 진입의 검색·화면 이동·질의·변경 요청·화면 전체 이펙트를 옮기거나 나눌 때. page 섹션 조립의 순서나 소유자를 바꿀 때. 제외: 같은 소유자 안에서 표현만 바꾸는 경우.",
-		reviewWith: ["screen-extract-local-section-components-for-runtime-boundaries", "ownership-place-owner-files-in-role-folders"],
-	},
 	"screen-place-suspense-boundaries-at-the-section-owner": {
 		appliesWhen: "`Suspense` 질의를 쓰는 화면에서 로딩 대체 화면의 위치를 정할 때. `Suspense` 경계를 추가하거나 옮길 때.",
 		reviewWith: ["screen-extract-local-section-components-for-runtime-boundaries"],
 	},
 	"screen-avoid-ad-hoc-loading-branches": {
 		appliesWhen:
-			"Suspense 질의를 쓰는 화면 본문에 초기 로딩 반환을 추가·변경할 때. `isPending`·`isFetching`으로 화면을 가리는 분기를 넣을 때. 제외: 선택 값에 기본값을 채우는 것만 바꾸는 경우.",
+			"Suspense 질의를 쓰는 화면 본문에 초기 로딩 반환을 추가·변경할 때. `isFetching`이나 변경 요청 `isPending`으로 화면을 가리는 분기를 넣을 때. 제외: 선택 값에 기본값을 채우는 것만 바꾸는 경우.",
 		reviewWith: ["data-preserve-origin-chaining", "screen-keep-derived-values-close"],
 	},
 	"events-keep-handler-flow-inline": {
@@ -592,13 +580,13 @@ const reactRuleRouting = {
 		appliesWhen: "리액트 Query 질의·변경 요청 훅의 로컬 바인딩을 추가하거나 이름을 바꿀 때. 역할이 드러나지 않는 별칭이 diff에 보일 때.",
 		reviewWith: ["data-preserve-origin-chaining"],
 	},
-	"data-preserve-origin-chaining": {
-		appliesWhen: "page·레이아웃·화면 넓은 스코프에서 응답·변경 요청·스토어를 구조분해할 때. 원본을 별칭으로 끊고 값 접근 방식을 바꿀 때.",
-		reviewWith: ["screen-keep-derived-values-close"],
-	},
 	"data-shape-query-data-with-select": {
 		appliesWhen: "서버 응답의 목록·항목·메타 등을 렌더에서 가공하거나 반복 소비할 때. 리액트 Query `select`의 결과 형태를 추가·변경할 때.",
 		reviewWith: ["data-name-query-and-mutation-bindings-consistently", "data-preserve-origin-chaining"],
+	},
+	"data-preserve-origin-chaining": {
+		appliesWhen: "page·레이아웃·화면 넓은 스코프에서 응답·변경 요청·스토어를 구조분해할 때. 원본을 별칭으로 끊고 값 접근 방식을 바꿀 때.",
+		reviewWith: ["screen-keep-derived-values-close"],
 	},
 	"state-calculate-derived-values-during-render": {
 		appliesWhen: "현재 프롭스·상태·검색·응답에서 계산 가능한 값을 별도 상태와 이펙트로 동기화할 때. 그런 동기화를 제거할 때.",
@@ -656,7 +644,7 @@ const reactRuleRouting = {
 const mandatoryRuleRouting = {
 	react: {
 		"ownership-keep-component-imports-flowing-downward": ["typescript/naming-use-direct-imports-and-public-entry-points"],
-		"typing-function-type-first": ["typescript/types-reuse-callback-signatures-from-existing-contracts"],
+		"typing-function-type-first": ["typescript/types-prefer-function-variable-types-over-parameter-annotations"],
 		"events-curry-extra-handler-arguments": ["typing-function-type-first"],
 		"composition-named-handlers-over-inline": ["docs-require-jsdoc-on-key-declarations", "events-curry-extra-handler-arguments"],
 		"data-name-query-and-mutation-bindings-consistently": [
@@ -671,7 +659,6 @@ const mandatoryRuleRouting = {
 		"docs-require-jsdoc-on-key-declarations": ["typescript/docs-require-header-jsdoc-on-key-declarations"],
 	},
 	typescript: {
-		"types-reuse-callback-signatures-from-existing-contracts": ["types-prefer-function-variable-types-over-parameter-annotations"],
 		"functions-replace-enum-with-as-const-objects": [
 			"naming-use-consistent-file-and-symbol-naming",
 			"types-document-custom-types-and-shapes",
@@ -685,7 +672,7 @@ const mandatoryRuleRouting = {
 	css: {"selector-use-pseudo-classes-for-dom-owned-states": ["values-separate-domain-state-modifiers-from-dom-interaction-states"]},
 } as const;
 
-const completionGateRouting = {react: [], typescript: ["guardrails-review-banned-typescript-shortcuts-before-finishing"], css: []} as const;
+const completionGateRouting = {react: [], typescript: [], css: []} as const;
 
 /**
  * @summary Appendix A scenario별 initial exact selected rule oracle
@@ -697,34 +684,25 @@ const typescriptSelections = {
 		"naming-preserve-config-origin-with-chained-access",
 		"naming-use-direct-imports-and-public-entry-points",
 		"naming-restrict-absolute-aliases-to-layer-roots",
-		"guardrails-review-banned-typescript-shortcuts-before-finishing",
 	],
 	"callback-contract-implementation": [
 		"naming-use-consistent-file-and-symbol-naming",
-		"types-mark-unused-parameters-with-underscore",
 		"types-prefer-function-variable-types-over-parameter-annotations",
-		"types-reuse-callback-signatures-from-existing-contracts",
-		"guardrails-review-banned-typescript-shortcuts-before-finishing",
+		"types-mark-unused-parameters-with-underscore",
 	],
 	"derive-existing-contract-with-docs": [
-		"types-document-custom-types-and-shapes",
 		"types-reuse-existing-contracts-before-new-types",
+		"types-document-custom-types-and-shapes",
 		"docs-require-header-jsdoc-on-key-declarations",
 		"docs-write-concise-korean-comments-about-purpose-and-constraints",
 		"docs-write-doc-comments-as-multiline-blocks",
 		"docs-avoid-role-tags-in-doc-comments",
-		"guardrails-review-banned-typescript-shortcuts-before-finishing",
 	],
 	"helper-boundary-scope-drift": [
 		"functions-extract-helpers-only-when-the-boundary-is-real",
 		"functions-place-and-promote-support-functions",
-		"guardrails-review-banned-typescript-shortcuts-before-finishing",
 	],
-	"shared-collection-lookups-and-sort": [
-		"functions-prefer-immutable-array-sorting",
-		"functions-use-set-and-map-for-repeated-lookups",
-		"guardrails-review-banned-typescript-shortcuts-before-finishing",
-	],
+	"shared-collection-lookups-and-sort": ["functions-prefer-immutable-array-sorting", "functions-use-set-and-map-for-repeated-lookups"],
 	"enum-like-runtime-contract": [
 		"naming-use-consistent-file-and-symbol-naming",
 		"types-document-custom-types-and-shapes",
@@ -732,25 +710,19 @@ const typescriptSelections = {
 		"docs-require-header-jsdoc-on-key-declarations",
 		"docs-write-concise-korean-comments-about-purpose-and-constraints",
 		"docs-write-doc-comments-as-multiline-blocks",
-		"guardrails-review-banned-typescript-shortcuts-before-finishing",
 		"tooling-configure-biome-to-enforce-these-rules",
 	],
-	"wide-scope-assembly": [
-		"functions-avoid-imperative-assembly-in-wide-scopes",
-		"guardrails-review-banned-typescript-shortcuts-before-finishing",
-	],
+	"wide-scope-assembly": ["functions-avoid-imperative-assembly-in-wide-scopes"],
 	"named-object-param": [
 		"naming-use-consistent-file-and-symbol-naming",
 		"functions-declare-functions-as-arrow-consts",
 		"functions-use-named-object-params-for-complex-signatures",
-		"guardrails-review-banned-typescript-shortcuts-before-finishing",
 	],
 	"explicit-product-fallback": [
 		"absence-expose-optional-values-instead-of-silent-fallbacks",
 		"docs-keep-inline-comments-for-constraints-and-caveats",
 		"docs-write-concise-korean-comments-about-purpose-and-constraints",
 		"docs-justify-convention-exceptions-with-a-reason-comment",
-		"guardrails-review-banned-typescript-shortcuts-before-finishing",
 	],
 } as const;
 
@@ -824,14 +796,12 @@ const reactScenarioStages = {
 				typescript: [
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
-					"types-document-custom-types-and-shapes",
-					"types-prefer-function-variable-types-over-parameter-annotations",
-					"types-reuse-callback-signatures-from-existing-contracts",
 					"types-reuse-existing-contracts-before-new-types",
+					"types-prefer-function-variable-types-over-parameter-annotations",
+					"types-document-custom-types-and-shapes",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks",
-					"guardrails-review-banned-typescript-shortcuts-before-finishing",
 				],
 			},
 		},
@@ -857,7 +827,6 @@ const reactScenarioStages = {
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks",
-					"guardrails-review-banned-typescript-shortcuts-before-finishing",
 				],
 			},
 		},
@@ -885,7 +854,6 @@ const reactScenarioStages = {
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks",
-					"guardrails-review-banned-typescript-shortcuts-before-finishing",
 				],
 				css: [
 					"naming-default-to-plain-css-when-no-module-convention",
@@ -910,8 +878,8 @@ const reactScenarioStages = {
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
 				react: [
-					"ownership-prefer-plain-ts-for-local-react-helpers",
 					"ownership-place-owner-files-in-role-folders",
+					"ownership-prefer-plain-ts-for-local-react-helpers",
 					"screen-avoid-premature-abstraction",
 					"docs-require-jsdoc-on-key-declarations",
 				],
@@ -919,13 +887,12 @@ const reactScenarioStages = {
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
 					"types-document-custom-types-and-shapes",
-					"functions-extract-helpers-only-when-the-boundary-is-real",
 					"functions-declare-functions-as-arrow-consts",
 					"functions-use-named-object-params-for-complex-signatures",
+					"functions-extract-helpers-only-when-the-boundary-is-real",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks",
-					"guardrails-review-banned-typescript-shortcuts-before-finishing",
 				],
 			},
 		},
@@ -946,7 +913,6 @@ const reactScenarioStages = {
 					"types-document-custom-types-and-shapes",
 					"functions-replace-enum-with-as-const-objects",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
-					"guardrails-review-banned-typescript-shortcuts-before-finishing",
 				],
 			},
 		},
@@ -959,9 +925,9 @@ const reactScenarioStages = {
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
 				react: [
-					"strategy-avoid-boolean-prop-proliferation",
 					"strategy-choose-single-composition-compound-and-variants",
 					"strategy-expose-only-assembled-compound-parts",
+					"strategy-avoid-boolean-prop-proliferation",
 					"strategy-prefer-children-over-render-props",
 					"composition-destructure-props-inside",
 					"composition-declare-props-interface-above-the-component",
@@ -975,7 +941,6 @@ const reactScenarioStages = {
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks",
-					"guardrails-review-banned-typescript-shortcuts-before-finishing",
 				],
 			},
 		},
@@ -1000,7 +965,6 @@ const reactScenarioStages = {
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks",
-					"guardrails-review-banned-typescript-shortcuts-before-finishing",
 				],
 			},
 		},
@@ -1024,14 +988,12 @@ const reactScenarioStages = {
 				typescript: [
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
-					"types-mark-unused-parameters-with-underscore",
 					"types-prefer-function-variable-types-over-parameter-annotations",
-					"types-reuse-callback-signatures-from-existing-contracts",
+					"types-mark-unused-parameters-with-underscore",
 					"functions-extract-helpers-only-when-the-boundary-is-real",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks",
-					"guardrails-review-banned-typescript-shortcuts-before-finishing",
 				],
 			},
 		},
@@ -1049,9 +1011,9 @@ const reactScenarioStages = {
 					"typing-function-type-first",
 					"composition-destructure-props-inside",
 					"composition-use-activity-only-to-preserve-mounted-subtrees",
+					"screen-keep-route-flow-visible",
 					"screen-avoid-premature-abstraction",
 					"screen-extract-local-section-components-for-runtime-boundaries",
-					"screen-keep-route-flow-visible",
 					"screen-place-suspense-boundaries-at-the-section-owner",
 					"screen-avoid-ad-hoc-loading-branches",
 					"events-name-and-curry-handlers",
@@ -1061,15 +1023,13 @@ const reactScenarioStages = {
 				typescript: [
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
-					"types-document-custom-types-and-shapes",
-					"types-prefer-function-variable-types-over-parameter-annotations",
-					"types-reuse-callback-signatures-from-existing-contracts",
 					"types-reuse-existing-contracts-before-new-types",
+					"types-prefer-function-variable-types-over-parameter-annotations",
+					"types-document-custom-types-and-shapes",
 					"absence-expose-optional-values-instead-of-silent-fallbacks",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks",
-					"guardrails-review-banned-typescript-shortcuts-before-finishing",
 				],
 			},
 		},
@@ -1094,13 +1054,11 @@ const reactScenarioStages = {
 				typescript: [
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
-					"types-mark-unused-parameters-with-underscore",
 					"types-prefer-function-variable-types-over-parameter-annotations",
-					"types-reuse-callback-signatures-from-existing-contracts",
+					"types-mark-unused-parameters-with-underscore",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks",
-					"guardrails-review-banned-typescript-shortcuts-before-finishing",
 				],
 			},
 		},
@@ -1125,7 +1083,6 @@ const reactScenarioStages = {
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks",
-					"guardrails-review-banned-typescript-shortcuts-before-finishing",
 				],
 			},
 		},
@@ -1140,8 +1097,8 @@ const reactScenarioStages = {
 				react: [
 					"screen-keep-derived-values-close",
 					"data-name-query-and-mutation-bindings-consistently",
-					"data-preserve-origin-chaining",
 					"data-shape-query-data-with-select",
+					"data-preserve-origin-chaining",
 					"docs-require-jsdoc-on-key-declarations",
 				],
 				typescript: [
@@ -1149,7 +1106,6 @@ const reactScenarioStages = {
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks",
-					"guardrails-review-banned-typescript-shortcuts-before-finishing",
 				],
 			},
 		},
@@ -1176,7 +1132,6 @@ const reactScenarioStages = {
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks",
 					"docs-justify-convention-exceptions-with-a-reason-comment",
-					"guardrails-review-banned-typescript-shortcuts-before-finishing",
 				],
 			},
 		},
@@ -1197,11 +1152,9 @@ const reactScenarioStages = {
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
 					"types-prefer-function-variable-types-over-parameter-annotations",
-					"types-reuse-callback-signatures-from-existing-contracts",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks",
-					"guardrails-review-banned-typescript-shortcuts-before-finishing",
 				],
 			},
 		},
@@ -1224,7 +1177,6 @@ const reactScenarioStages = {
 					"docs-keep-inline-comments-for-constraints-and-caveats",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"docs-justify-convention-exceptions-with-a-reason-comment",
-					"guardrails-review-banned-typescript-shortcuts-before-finishing",
 				],
 			},
 		},
@@ -1245,7 +1197,7 @@ const reactScenarioStages = {
 					"ownership-keep-component-imports-flowing-downward",
 					"strategy-prefer-children-over-render-props",
 				],
-				typescript: ["naming-use-direct-imports-and-public-entry-points", "guardrails-review-banned-typescript-shortcuts-before-finishing"],
+				typescript: ["naming-use-direct-imports-and-public-entry-points"],
 			},
 		},
 	},
@@ -1261,8 +1213,8 @@ const reactScenarioStages = {
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
 				react: [
-					"ownership-prefer-plain-ts-for-local-react-helpers",
 					"ownership-place-owner-files-in-role-folders",
+					"ownership-prefer-plain-ts-for-local-react-helpers",
 					"ownership-keep-lifecycle-in-the-owning-component",
 					"docs-require-jsdoc-on-key-declarations",
 				],
@@ -1270,7 +1222,6 @@ const reactScenarioStages = {
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks",
-					"guardrails-review-banned-typescript-shortcuts-before-finishing",
 				],
 			},
 		},
@@ -1286,7 +1237,7 @@ const cssScenarioStages = {
 			prompt: "pure rendering change in src/page/catalog-index/pg-catalog-index.tsx, with React and TypeScript only.",
 			files: ["src/page/catalog-index/pg-catalog-index.tsx"],
 			expectedSkills: ["react", "typescript"],
-			expectedSelected: {react: [], typescript: ["guardrails-review-banned-typescript-shortcuts-before-finishing"]},
+			expectedSelected: {react: [], typescript: []},
 		},
 		scopeDrift: {
 			evidence:
@@ -1295,7 +1246,7 @@ const cssScenarioStages = {
 			expectedSkills: ["react", "typescript", "css"],
 			expectedSelected: {
 				react: ["ownership-place-owner-files-in-role-folders"],
-				typescript: ["naming-use-direct-imports-and-public-entry-points", "guardrails-review-banned-typescript-shortcuts-before-finishing"],
+				typescript: ["naming-use-direct-imports-and-public-entry-points"],
 				css: [
 					"naming-default-to-plain-css-when-no-module-convention",
 					"naming-use-scope-slug-element-modifier-syntax",
@@ -1326,7 +1277,7 @@ const cssScenarioStages = {
 			expectedSkills: ["react", "typescript", "css"],
 			expectedSelected: {
 				react: [],
-				typescript: ["naming-use-direct-imports-and-public-entry-points", "guardrails-review-banned-typescript-shortcuts-before-finishing"],
+				typescript: ["naming-use-direct-imports-and-public-entry-points"],
 				css: [
 					"naming-use-scope-slug-element-modifier-syntax",
 					"naming-name-elements-and-modifiers-by-role",
@@ -1347,7 +1298,7 @@ const cssScenarioStages = {
 			expectedSkills: ["react", "typescript", "css"],
 			expectedSelected: {
 				react: [],
-				typescript: ["guardrails-review-banned-typescript-shortcuts-before-finishing"],
+				typescript: [],
 				css: [
 					"naming-use-scope-slug-element-modifier-syntax",
 					"naming-name-elements-and-modifiers-by-role",
@@ -1365,7 +1316,7 @@ const cssScenarioStages = {
 			expectedSkills: ["react", "typescript", "css"],
 			expectedSelected: {
 				react: [],
-				typescript: ["naming-use-direct-imports-and-public-entry-points", "guardrails-review-banned-typescript-shortcuts-before-finishing"],
+				typescript: ["naming-use-direct-imports-and-public-entry-points"],
 				css: [
 					"naming-use-scope-slug-element-modifier-syntax",
 					"naming-name-elements-and-modifiers-by-role",
@@ -1381,7 +1332,7 @@ const cssScenarioStages = {
 			expectedSkills: ["react", "typescript", "css"],
 			expectedSelected: {
 				react: [],
-				typescript: ["naming-use-direct-imports-and-public-entry-points", "guardrails-review-banned-typescript-shortcuts-before-finishing"],
+				typescript: ["naming-use-direct-imports-and-public-entry-points"],
 				css: [
 					"naming-use-scope-slug-element-modifier-syntax",
 					"naming-name-elements-and-modifiers-by-role",
@@ -1403,12 +1354,11 @@ const cssScenarioStages = {
 				react: ["composition-destructure-props-inside", "docs-require-jsdoc-on-key-declarations"],
 				typescript: [
 					"naming-use-direct-imports-and-public-entry-points",
-					"types-document-custom-types-and-shapes",
 					"types-reuse-existing-contracts-before-new-types",
+					"types-document-custom-types-and-shapes",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks",
-					"guardrails-review-banned-typescript-shortcuts-before-finishing",
 				],
 				css: ["composition-compose-classes-with-clsx", "composition-inject-classes-only-at-the-entry-point"],
 			},
@@ -1705,7 +1655,7 @@ test("TypeScript progressive metadata matches Appendix A exactly", async () => {
 
 	assert.equal(document.metadata.progressiveDisclosure, true);
 	assert.deepEqual(document.metadata.companions ?? [], []);
-	assert.equal(document.rules.length, 28);
+	assert.equal(document.rules.length, 26);
 	assert.deepEqual(
 		Object.fromEntries(document.rules.map((rule) => [getRuleId(rule), {appliesWhen: rule.appliesWhen, reviewWith: rule.reviewWith}])),
 		typescriptRuleRouting,
@@ -1786,7 +1736,6 @@ test("TypeScript routing manifest is an exact nine-scenario partition with full 
 		"docs-require-header-jsdoc-on-key-declarations",
 		"docs-write-concise-korean-comments-about-purpose-and-constraints",
 		"docs-write-doc-comments-as-multiline-blocks",
-		"guardrails-review-banned-typescript-shortcuts-before-finishing",
 	]);
 });
 
@@ -1799,7 +1748,7 @@ test("TypeScript generated index is complete and within the deterministic byte b
 	const expectedIds = document.rules.map((rule) => getRuleId(rule)).sort();
 
 	assert.deepEqual(ids, expectedIds);
-	assert.equal(ids.length, 28);
+	assert.equal(ids.length, 26);
 
 	for (const entry of entries) {
 		assert.equal(entry.fileName, `${entry.id}.md`);
@@ -1862,13 +1811,6 @@ test("induced naming closure and activated finish gates stay mandatory across ev
 
 		for (const scenario of manifest.scenarios) {
 			for (const stage of [scenario, scenario.scopeDrift].filter((candidate) => candidate !== undefined)) {
-				if (stage.expectedSkills.includes("typescript")) {
-					assert.ok(
-						stage.expectedSelected.typescript?.includes("guardrails-review-banned-typescript-shortcuts-before-finishing"),
-						`${skillName}/${scenario.id} must select the TypeScript finish gate`,
-					);
-				}
-
 				if (stage.expectedSelected.react?.includes("data-name-query-and-mutation-bindings-consistently")) {
 					assert.ok(
 						stage.expectedSelected.typescript?.includes("naming-use-consistent-file-and-symbol-naming"),
@@ -1882,12 +1824,10 @@ test("induced naming closure and activated finish gates stay mandatory across ev
 	const derivedRule = await readRuleSource("react", "screen-keep-derived-values-close");
 	const bindingRule = await readRuleSource("react", "data-name-query-and-mutation-bindings-consistently");
 	const originRule = await readRuleSource("react", "data-preserve-origin-chaining");
-	const typescriptFinishRule = await readRuleSource("typescript", "guardrails-review-banned-typescript-shortcuts-before-finishing");
 
 	assertMentions(readAppliesWhen(derivedRule), ["별칭", "추가·이동·제거"], "derivedRule");
 	assert.match(originRule, /^reviewWith:[^\n]+screen-keep-derived-values-close/m);
 	assert.match(bindingRule, /^requiresSelected:[^\n]+typescript\/naming-use-consistent-file-and-symbol-naming/m);
-	assert.match(typescriptFinishRule, /^requiredOnCompletion: true$/m);
 
 	// companion router 도 두 gate 를 가르쳐야 한다. 문구가 아니라 언급과 극성으로 본다
 	for (const skillName of ["typescript", "css"] as const) {
@@ -2275,15 +2215,9 @@ test("CSS routing manifest is the exact eleven-scenario and thirteen-stage Appen
 
 	assert.deepEqual([...coveredCssRules].sort(), [...cssRuleUniverse].sort());
 	const routeDrift = scenarioById.get("css-route-style-scope-drift");
-	assert.deepEqual(routeDrift?.expectedSelected, {
-		react: [],
-		typescript: ["guardrails-review-banned-typescript-shortcuts-before-finishing"],
-	});
+	assert.deepEqual(routeDrift?.expectedSelected, {react: [], typescript: []});
 	assert.deepEqual(routeDrift?.scopeDrift?.expectedSelected.react, ["ownership-place-owner-files-in-role-folders"]);
-	assert.deepEqual(routeDrift?.scopeDrift?.expectedSelected.typescript, [
-		"naming-use-direct-imports-and-public-entry-points",
-		"guardrails-review-banned-typescript-shortcuts-before-finishing",
-	]);
+	assert.deepEqual(routeDrift?.scopeDrift?.expectedSelected.typescript, ["naming-use-direct-imports-and-public-entry-points"]);
 	const domainState = scenarioById.get("css-domain-state-class-contract");
 	assert.equal(domainState?.expectedSelected.css?.includes("selector-use-pseudo-classes-for-dom-owned-states"), true);
 
@@ -2413,7 +2347,7 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 
 	for (const ruleId of [
 		"types-prefer-function-variable-types-over-parameter-annotations",
-		"types-reuse-callback-signatures-from-existing-contracts",
+		"types-prefer-function-variable-types-over-parameter-annotations",
 	]) {
 		const contextualCallback = await readRule("typescript", ruleId);
 
@@ -2434,7 +2368,6 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 			"types-document-custom-types-and-shapes",
 			"types-mark-unused-parameters-with-underscore",
 			"types-prefer-function-variable-types-over-parameter-annotations",
-			"types-reuse-callback-signatures-from-existing-contracts",
 			"types-reuse-existing-contracts-before-new-types",
 		].map((ruleId) => readFile(path.join(realSkillRootDir, "typescript", "contracts", `${ruleId}.md`), "utf8")),
 	);
@@ -2442,8 +2375,7 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 	assert.match(typescriptContracts[1]!, /CRITICAL rule[\s\S]*full rule/i);
 	assertMentions(typescriptContracts[2]!, [/커링한 핸들러/i, /마지막 콜백/i], "typescriptContracts");
 	assert.match(typescriptContracts[3]!, /CRITICAL rule[\s\S]*full rule/i);
-	assert.match(typescriptContracts[4]!, /문맥으로 추론되는 일회성 인라인 콜백/i);
-	assertMentions(typescriptContracts[5]!, [/그대로인 계약/i, /새 자리에서 쓰는 것만으로는/i], "typescriptContracts");
+	assertMentions(typescriptContracts[4]!, [/그대로인 계약/i, /새 자리에서 쓰는 것만으로는/i], "typescriptContracts");
 
 	const stylesheetFormat = await readRule("css", "naming-default-to-plain-css-when-no-module-convention");
 	assertMentions(stylesheetFormat, [/스타일시트 방식/i, /plain CSS/i, /CSS Modules/i], "stylesheetFormat");
@@ -2494,14 +2426,14 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 		"naming-use-direct-imports-and-public-entry-points",
 		"types-mark-unused-parameters-with-underscore",
 		"types-prefer-function-variable-types-over-parameter-annotations",
-		"types-reuse-callback-signatures-from-existing-contracts",
+		"types-prefer-function-variable-types-over-parameter-annotations",
 	]) {
 		assert.equal(tsSelected("RTE10-derived-selection-state", ruleId), true);
 	}
 	for (const ruleId of [
 		"types-document-custom-types-and-shapes",
 		"types-prefer-function-variable-types-over-parameter-annotations",
-		"types-reuse-callback-signatures-from-existing-contracts",
+		"types-prefer-function-variable-types-over-parameter-annotations",
 		"types-reuse-existing-contracts-before-new-types",
 	]) {
 		assert.equal(tsNotApplicable("RTE12-query-shaping", ruleId), true);

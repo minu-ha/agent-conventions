@@ -16,4 +16,4 @@
 상태 없는 합성에 상태가 필요해지면 공개 이름은 그대로 두고 컨텍스트만 추가합니다.
 공개 이름이 바뀌면 소비자 코드가 모두 바뀝니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/03-03-strategy-expose-only-assembled-compound-parts.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/03-02-strategy-expose-only-assembled-compound-parts.md)을 읽습니다.

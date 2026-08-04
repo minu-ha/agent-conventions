@@ -8,4 +8,4 @@
 그 판정은 `functions-extract-helpers-only-when-the-boundary-is-real`가 합니다.
 떼어 내기로 정했을 때 이름은 `resolve*`, `build*`, `normalize*`를 씁니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/03-01-functions-avoid-imperative-assembly-in-wide-scopes.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/03-05-functions-avoid-imperative-assembly-in-wide-scopes.md)을 읽습니다.

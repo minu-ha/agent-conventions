@@ -25,11 +25,11 @@ export interface PanelProps {
 	renderFooter?: () => ReactNode;
 }
 
-export const Panel = (props: PanelProps) => {
+export const UiPanel = (props: PanelProps) => {
 	const { renderHeader, renderFooter } = props;
 
 	return (
-		<section className="panel">
+		<section className={clsx("ui_panel__root")}>
 			{renderHeader?.()}
 			<ItemList />
 			{renderFooter?.()}
@@ -47,17 +47,17 @@ export interface PanelProps {
 
 const PanelRoot = (props: PanelProps) => {
 	const { children } = props;
-	return <section className="panel">{children}</section>;
+	return <section className={clsx("ui_panel__root")}>{children}</section>;
 };
 
 const PanelHeader = (props: PanelProps) => {
 	const { children } = props;
-	return <header className="panel__header">{children}</header>;
+	return <header className={clsx("ui_panel__header")}>{children}</header>;
 };
 
 const PanelFooter = (props: PanelProps) => {
 	const { children } = props;
-	return <footer className="panel__footer">{children}</footer>;
+	return <footer className={clsx("ui_panel__footer")}>{children}</footer>;
 };
 
 export const Panel = {

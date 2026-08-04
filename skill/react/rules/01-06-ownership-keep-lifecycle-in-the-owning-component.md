@@ -30,7 +30,7 @@ tags: ownership, hooks
 
 ```tsx
 // component/chart-root/use-chart-instance.ts
-export const useChartInstance = (containerRef: RefObject<HTMLDivElement>) => {
+export const useChartInstance = (containerRef: RefObject<HTMLDivElement | null>) => {
 	const [chart, setChart] = useState<EChartsType | null>(null);
 
 	useEffect(() => {
@@ -51,8 +51,8 @@ export const useChartInstance = (containerRef: RefObject<HTMLDivElement>) => {
 ```
 
 ```tsx
-// component/chart-root/chart-root.tsx
-export const ChartRoot = (props: ChartRootProps) => {
+// widget/chart/component/chart-root/wg-chart-root.tsx
+export const WgChartRoot = (props: ChartRootProps) => {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const chart = useChartInstance(containerRef);
 
@@ -63,8 +63,8 @@ export const ChartRoot = (props: ChartRootProps) => {
 **Correct (생명주기를 소유 컴포넌트가 직접 가짐):**
 
 ```tsx
-// component/chart-root/chart-root.tsx
-export const ChartRoot = (props: ChartRootProps) => {
+// widget/chart/component/chart-root/wg-chart-root.tsx
+export const WgChartRoot = (props: ChartRootProps) => {
 	const { option } = props;
 	const containerRef = useRef<HTMLDivElement>(null);
 	const [chart, setChart] = useState<EChartsType | null>(null);

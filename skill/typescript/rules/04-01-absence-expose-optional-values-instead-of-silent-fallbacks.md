@@ -25,20 +25,19 @@ tags: absence
 const supportEmail = settings.supportEmail ?? "help@example.com";
 ```
 
-**Correct (기본값이 명확한 예외만 이유와 함께 허용):**
+**Correct (없을 수 있다는 사실을 그대로 드러냄):**
 
 ```ts
-/**
- * 제품 명세에 따라 페이지 크기 기본값 적용
- */
-const resolvePageSize = (query: SearchQuery): string => {
-	const normalizedPageSize = query.pageSize?.trim();
+const supportEmail: string | undefined = settings.supportEmail;
 
-	if (!normalizedPageSize) {
-		// 기본 페이지 크기는 제품 명세상 20으로 고정한다.
-		return "20";
-	}
+if (!supportEmail) {
+	return <SupportEmailMissingNotice />;
+}
+```
 
-	return normalizedPageSize;
-};
+**Correct (설정 키를 가리키는 근거가 있을 때만 `??` 를 씁니다):**
+
+```ts
+// 기본 페이지 크기는 config.pagination.default_page_size 가 정본이다.
+const pageSize = query.pageSize ?? config.pagination.default_page_size;
 ```

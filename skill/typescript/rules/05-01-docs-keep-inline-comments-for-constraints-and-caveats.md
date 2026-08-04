@@ -16,7 +16,8 @@ tags: docs, comments
 함수 본문 안에서는 블록 주석을 쓰지 않습니다.
 `//` 주석은 도메인 규칙, 예외를 막은 의도, 외부 라이브러리 제약, 부수효과 순서처럼
 없으면 오해할 자리에만 씁니다.
-변수명을 그대로 되풀이하는 설명은 남기지 않습니다.
+주석에 무엇을 쓸지는 `docs-write-concise-korean-comments-about-purpose-and-constraints`가 정합니다.
+이 규칙은 어디에 두는지만 봅니다.
 
 **Incorrect (자명한 동작을 그대로 설명):**
 

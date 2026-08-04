@@ -18,4 +18,4 @@
 | 제너레이터 | `function*` 없이 쓸 수 없습니다 |
 | 오버로드 선언 | 시그니처를 여러 줄로 겹쳐 쓰려면 `function` 선언문이 필요합니다 |
 
-> 예시·예외가 필요하면 [full rule](../rules/03-05-functions-declare-functions-as-arrow-consts.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/03-01-functions-declare-functions-as-arrow-consts.md)을 읽습니다.

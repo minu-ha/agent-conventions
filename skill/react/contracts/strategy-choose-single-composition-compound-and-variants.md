@@ -18,4 +18,4 @@
 
 무엇을 공개 부품으로 열지는 `strategy-expose-only-assembled-compound-parts`가 정합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/03-02-strategy-choose-single-composition-compound-and-variants.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/03-01-strategy-choose-single-composition-compound-and-variants.md)을 읽습니다.

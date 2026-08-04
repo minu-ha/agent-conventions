@@ -12,4 +12,4 @@
 객체 인자와 필드 타입, 선택 여부, 뜻이 같은 계약이 이미 있으면 그대로 씁니다.
 이 규칙을 지키려고 `*Params`나 `*Args`를 새로 만들지 않습니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/03-06-functions-use-named-object-params-for-complex-signatures.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/03-02-functions-use-named-object-params-for-complex-signatures.md)을 읽습니다.

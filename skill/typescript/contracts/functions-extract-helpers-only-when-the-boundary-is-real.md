@@ -13,4 +13,4 @@
 내보낸 함수가 또 다른 내보낸 함수를 타고 가는 사슬은 만들지 않습니다.
 흐름을 알려고 파일을 왕복해야 하면 경계가 아니라 그냥 쪼갠 것입니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/03-02-functions-extract-helpers-only-when-the-boundary-is-real.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/03-03-functions-extract-helpers-only-when-the-boundary-is-real.md)을 읽습니다.

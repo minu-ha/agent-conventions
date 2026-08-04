@@ -19,4 +19,4 @@
 "어느 컴포넌트가 이걸 쓰는지"를 폴더 경로로 표현하려고 중첩을 늘리지 않습니다.
 진입의 JSX와 가져오기 목록을 위에서 아래로 읽으면 답이 나와야 하고, 그러지 않으면 섹션을 과하게 쪼갠 것입니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/05-02-screen-extract-local-section-components-for-runtime-boundaries.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/05-03-screen-extract-local-section-components-for-runtime-boundaries.md)을 읽습니다.

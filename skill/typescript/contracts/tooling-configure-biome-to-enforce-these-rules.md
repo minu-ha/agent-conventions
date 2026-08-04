@@ -21,4 +21,4 @@
   모듈 최상위 `const`에 두 표기를 다 허용해 두고, 어느 쪽이 맞는지는 사람이 봅니다.
 - `functions-declare-functions-as-arrow-consts`는 `biome`에 대응 규칙이 없습니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/07-01-tooling-configure-biome-to-enforce-these-rules.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/06-01-tooling-configure-biome-to-enforce-these-rules.md)을 읽습니다.

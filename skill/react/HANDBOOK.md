@@ -28,18 +28,18 @@
 ## 목차
 
 1. [Ownership and Boundaries](#1-ownership-and-boundaries) — **CRITICAL**
-    - 1.1 [Do Not Create Screen-local Custom Hooks for Pure Logic](#11-do-not-create-screen-local-custom-hooks-for-pure-logic)
-    - 1.2 [Keep UI, Widget, and Page Ownership Separate](#12-keep-ui-widget-and-page-ownership-separate)
-    - 1.3 [Prefix Layer Names on Files and Symbols](#13-prefix-layer-names-on-files-and-symbols)
-    - 1.4 [Place Owner Files in Role Folders](#14-place-owner-files-in-role-folders)
-    - 1.5 [Keep Component Imports Flowing Downward](#15-keep-component-imports-flowing-downward)
+    - 1.1 [Keep UI, Widget, and Page Ownership Separate](#11-keep-ui-widget-and-page-ownership-separate)
+    - 1.2 [Prefix Layer Names on Files and Symbols](#12-prefix-layer-names-on-files-and-symbols)
+    - 1.3 [Place Owner Files in Role Folders](#13-place-owner-files-in-role-folders)
+    - 1.4 [Keep Component Imports Flowing Downward](#14-keep-component-imports-flowing-downward)
+    - 1.5 [Do Not Create Screen-local Custom Hooks for Pure Logic](#15-do-not-create-screen-local-custom-hooks-for-pure-logic)
     - 1.6 [Keep Library Lifecycle in the Owning Component](#16-keep-library-lifecycle-in-the-owning-component)
 2. [Typing and Contracts](#2-typing-and-contracts) — **HIGH**
     - 2.1 [Pin React Handler and Wrapper Prop Types at the Declaration](#21-pin-react-handler-and-wrapper-prop-types-at-the-declaration)
 3. [Composition Strategy](#3-composition-strategy) — **HIGH**
-    - 3.1 [Avoid Boolean Prop Proliferation in Shared Components](#31-avoid-boolean-prop-proliferation-in-shared-components)
-    - 3.2 [Choose Single Components, Compound Components, and Variants Deliberately](#32-choose-single-components-compound-components-and-variants-deliberately)
-    - 3.3 [Expose Only Compound Parts the Consumer Assembles](#33-expose-only-compound-parts-the-consumer-assembles)
+    - 3.1 [Choose Single Components, Compound Components, and Variants Deliberately](#31-choose-single-components-compound-components-and-variants-deliberately)
+    - 3.2 [Expose Only Compound Parts the Consumer Assembles](#32-expose-only-compound-parts-the-consumer-assembles)
+    - 3.3 [Avoid Boolean Prop Proliferation in Shared Components](#33-avoid-boolean-prop-proliferation-in-shared-components)
     - 3.4 [Prefer Children Over Render Props for Static Composition](#34-prefer-children-over-render-props-for-static-composition)
 4. [Component Structure and JSX](#4-component-structure-and-jsx) — **HIGH**
     - 4.1 [Accept props as a Whole and Destructure Inside the Component](#41-accept-props-as-a-whole-and-destructure-inside-the-component)
@@ -49,10 +49,10 @@
     - 4.5 [Use Activity Only to Preserve Mounted Subtrees](#45-use-activity-only-to-preserve-mounted-subtrees)
     - 4.6 [Declare and Export Props Interfaces Above the Component](#46-declare-and-export-props-interfaces-above-the-component)
 5. [Screen File Discipline](#5-screen-file-discipline) — **HIGH**
-    - 5.1 [Avoid Premature Abstraction in Screen Code](#51-avoid-premature-abstraction-in-screen-code)
-    - 5.2 [Extract Route-local Section Components Only for Runtime Boundaries](#52-extract-route-local-section-components-only-for-runtime-boundaries)
-    - 5.3 [Keep Derived Values Close to Where They Are Used](#53-keep-derived-values-close-to-where-they-are-used)
-    - 5.4 [Keep Route Entry Files Focused on Screen Flow](#54-keep-route-entry-files-focused-on-screen-flow)
+    - 5.1 [Keep Route Entry Files Focused on Screen Flow](#51-keep-route-entry-files-focused-on-screen-flow)
+    - 5.2 [Avoid Premature Abstraction in Screen Code](#52-avoid-premature-abstraction-in-screen-code)
+    - 5.3 [Extract Route-local Section Components Only for Runtime Boundaries](#53-extract-route-local-section-components-only-for-runtime-boundaries)
+    - 5.4 [Keep Derived Values Close to Where They Are Used](#54-keep-derived-values-close-to-where-they-are-used)
     - 5.5 [Place Suspense Boundaries at the Section Owner](#55-place-suspense-boundaries-at-the-section-owner)
     - 5.6 [Avoid Ad-hoc Loading Branches in Screen Bodies](#56-avoid-ad-hoc-loading-branches-in-screen-bodies)
 6. [Events and Interaction Flow](#6-events-and-interaction-flow) — **MEDIUM-HIGH**
@@ -62,8 +62,8 @@
     - 6.4 [Run User Actions in Handlers, Not Effects](#64-run-user-actions-in-handlers-not-effects)
 7. [Server Data Flow](#7-server-data-flow) — **CRITICAL**
     - 7.1 [Name Query and Mutation Bindings Consistently](#71-name-query-and-mutation-bindings-consistently)
-    - 7.2 [Preserve Response and Store Origin in Wide Scopes](#72-preserve-response-and-store-origin-in-wide-scopes)
-    - 7.3 [Shape React Query Data in query.select](#73-shape-react-query-data-in-query-select)
+    - 7.2 [Shape React Query Data in query.select](#72-shape-react-query-data-in-query-select)
+    - 7.3 [Preserve Response and Store Origin in Wide Scopes](#73-preserve-response-and-store-origin-in-wide-scopes)
 8. [State Ownership and Updates](#8-state-ownership-and-updates) — **HIGH**
     - 8.1 [Calculate Derived Values During Rendering](#81-calculate-derived-values-during-rendering)
     - 8.2 [Choose State Tools by Source of Truth](#82-choose-state-tools-by-source-of-truth)
@@ -87,69 +87,9 @@
 
 `ui`, `widget`, `page` 세 레이어의 소유 경계가 분명해야 코드를 예측 가능하게 배치할 수 있습니다. 레이어 판정과 이름 표기, 역할 폴더, 하향 단방향 가져오기, 생명주기 소유가 이 경계를 지탱하고, 순수 계산을 훅으로 감싸지 않는 규율도 여기에 속합니다.
 
-### 1.1 Do Not Create Screen-local Custom Hooks for Pure Logic
+### 1.1 Keep UI, Widget, and Page Ownership Separate
 
-**Rule:** `R01` · `ownership-prefer-plain-ts-for-local-react-helpers`
-
-**Applies when:** 화면 전용 계산·정규화·전송 값 조립을 커스텀 훅으로 추출하려 할 때. 화면 전용 순수 로직을 별도 보조 모듈로 옮기려 할 때.
-
-**Review with:** `ownership-keep-lifecycle-in-the-owning-component`, `ownership-place-owner-files-in-role-folders`, `typescript/functions-extract-helpers-only-when-the-boundary-is-real`
-
-**Impact: HIGH (리액트 전용 추상을 실제 생명주기나 문맥이 얽힌 자리로만 한정합니다)**
-
-화면 하나에 종속된 계산, 정규화, 전송 값 조립은 커스텀 훅으로 포장하지 않습니다.
-일반 함수로 둡니다.
-
-- 이 규칙은 훅으로 감쌀지만 판정합니다.
-  그 함수를 아예 밖으로 뺄지는 `typescript/functions-extract-helpers-only-when-the-boundary-is-real`가,
-  뺀 결과를 어디 둘지는 `ownership-place-owner-files-in-role-folders`가 정합니다.
-- 화면 지역 커스텀 훅은 상태, 컨텍스트, 다른 훅 호출 순서를 실제로 캡슐화할 때만 허용합니다.
-- 보조 모듈을 네임스페이스 객체로 감싸지 않고 이름 붙인 내보내기로 둡니다.
-- 생명주기가 실제로 있어도 파일 분량을 줄이려는 추출은 허용하지 않습니다.
-  그 판단은 `ownership-keep-lifecycle-in-the-owning-component`가 담당합니다.
-- 단순 계산을 훅처럼 보이게 만드는 추상화는 피합니다.
-
-**Incorrect (로컬 계산을 습관적으로 훅으로 포장):**
-
-```ts
-export const useMediaUploadPayload = (files: UploadFile[]) => {
-	return files.map((file) => ({ uid: file.uid }));
-};
-```
-
-**Incorrect (보조 모듈을 불필요한 네임스페이스 객체로 감쌈):**
-
-```ts
-export const page = {
-	buildMediaUploadPayload(files: UploadFile[]) {
-		return files.map((file) => ({ uid: file.uid }));
-	},
-};
-```
-
-**Correct (순수 계산은 소유자의 `function` 폴더에서 이름 붙인 내보내기로 유지):**
-
-```ts
-// page/entries/function/build-media-upload-payload.ts
-/**
- * 업로드 파일 목록을 저장 payload로 정규화
- */
-export const buildMediaUploadPayload = (files: UploadFile[]) => {
-	return files.map((file) => ({ uid: file.uid }));
-};
-```
-
-**Correct (이름 붙인 내보내기를 직접 가져옴):**
-
-```tsx
-import { buildMediaUploadPayload } from "./function/build-media-upload-payload";
-
-const request = buildMediaUploadPayload(files);
-```
-
-### 1.2 Keep UI, Widget, and Page Ownership Separate
-
-**Rule:** `R02` · `ownership-layer-component-boundaries`
+**Rule:** `R01` · `ownership-layer-component-boundaries`
 
 **Applies when:** 컴포넌트를 ui·widget·page 중 어느 소유 레이어에 둘지 정할 때. 컴포넌트를 레이어 사이에서 옮기거나 공용화할 때.
 
@@ -247,9 +187,9 @@ const PgDeleteEntryButton = () => {
 };
 ```
 
-### 1.3 Prefix Layer Names on Files and Symbols
+### 1.2 Prefix Layer Names on Files and Symbols
 
-**Rule:** `R03` · `ownership-prefix-layer-names-on-files-and-symbols`
+**Rule:** `R02` · `ownership-prefix-layer-names-on-files-and-symbols`
 
 **Applies when:** 컴포넌트 파일이나 심볼 이름을 새로 지을 때. 컴포넌트를 다른 레이어로 옮기면서 이름을 바꿀 때.
 
@@ -298,9 +238,9 @@ export const PgSpikePatternPanel = (props: PgSpikePatternPanelProps) => {
 };
 ```
 
-### 1.4 Place Owner Files in Role Folders
+### 1.3 Place Owner Files in Role Folders
 
-**Rule:** `R04` · `ownership-place-owner-files-in-role-folders`
+**Rule:** `R03` · `ownership-place-owner-files-in-role-folders`
 
 **Applies when:** 소유자 아래 `component`·`config`·`function`·`hook`·`type` 폴더를 만들거나 옮길 때. 추출한 컴포넌트·함수·타입의 배치 위치를 정할 때. 제외: 기존 파일 내부 구현만 바꾸는 경우.
 
@@ -389,9 +329,9 @@ ui/button/
 └── ui-button.css
 ```
 
-### 1.5 Keep Component Imports Flowing Downward
+### 1.4 Keep Component Imports Flowing Downward
 
-**Rule:** `R05` · `ownership-keep-component-imports-flowing-downward`
+**Rule:** `R04` · `ownership-keep-component-imports-flowing-downward`
 
 **Applies when:** `component` 폴더 안의 파일을 다른 파일에서 가져오기할 때. `../`나 `@/page` 경로로 컴포넌트를 가져오려 할 때. 여러 자식이 같은 컴포넌트를 필요로 해 배치를 다시 정할 때.
 
@@ -459,6 +399,66 @@ export const PgSpikePatternPanel = (props: PgSpikePatternPanelProps) => {
 import { WgLegendPanel } from "@/widget/legend-panel/wg-legend-panel";
 ```
 
+### 1.5 Do Not Create Screen-local Custom Hooks for Pure Logic
+
+**Rule:** `R05` · `ownership-prefer-plain-ts-for-local-react-helpers`
+
+**Applies when:** 화면 전용 계산·정규화·전송 값 조립을 커스텀 훅으로 추출하려 할 때. 화면 전용 순수 로직을 별도 보조 모듈로 옮기려 할 때.
+
+**Review with:** `ownership-keep-lifecycle-in-the-owning-component`, `ownership-place-owner-files-in-role-folders`, `typescript/functions-extract-helpers-only-when-the-boundary-is-real`
+
+**Impact: HIGH (리액트 전용 추상을 실제 생명주기나 문맥이 얽힌 자리로만 한정합니다)**
+
+화면 하나에 종속된 계산, 정규화, 전송 값 조립은 커스텀 훅으로 포장하지 않습니다.
+일반 함수로 둡니다.
+
+- 이 규칙은 훅으로 감쌀지만 판정합니다.
+  그 함수를 아예 밖으로 뺄지는 `typescript/functions-extract-helpers-only-when-the-boundary-is-real`가,
+  뺀 결과를 어디 둘지는 `ownership-place-owner-files-in-role-folders`가 정합니다.
+- 화면 지역 커스텀 훅은 상태, 컨텍스트, 다른 훅 호출 순서를 실제로 캡슐화할 때만 허용합니다.
+- 보조 모듈을 네임스페이스 객체로 감싸지 않고 이름 붙인 내보내기로 둡니다.
+- 생명주기가 실제로 있어도 파일 분량을 줄이려는 추출은 허용하지 않습니다.
+  그 판단은 `ownership-keep-lifecycle-in-the-owning-component`가 담당합니다.
+- 단순 계산을 훅처럼 보이게 만드는 추상화는 피합니다.
+
+**Incorrect (로컬 계산을 습관적으로 훅으로 포장):**
+
+```ts
+export const useMediaUploadPayload = (files: UploadFile[]) => {
+	return files.map((file) => ({ uid: file.uid }));
+};
+```
+
+**Incorrect (보조 모듈을 불필요한 네임스페이스 객체로 감쌈):**
+
+```ts
+export const page = {
+	buildMediaUploadPayload(files: UploadFile[]) {
+		return files.map((file) => ({ uid: file.uid }));
+	},
+};
+```
+
+**Correct (순수 계산은 소유자의 `function` 폴더에서 이름 붙인 내보내기로 유지):**
+
+```ts
+// page/entries/function/build-media-upload-payload.ts
+/**
+ * 업로드 파일 목록을 저장 payload로 정규화
+ */
+export const buildMediaUploadPayload = (files: UploadFile[]) => {
+	return files.map((file) => ({ uid: file.uid }));
+};
+```
+
+**Correct (이름 붙인 내보내기를 직접 가져옴):**
+
+```tsx
+import { buildMediaUploadPayload } from "./function/build-media-upload-payload";
+
+const request = buildMediaUploadPayload(files);
+```
+
 ### 1.6 Keep Library Lifecycle in the Owning Component
 
 **Rule:** `R06` · `ownership-keep-lifecycle-in-the-owning-component`
@@ -484,7 +484,7 @@ import { WgLegendPanel } from "@/widget/legend-panel/wg-legend-panel";
 
 ```tsx
 // component/chart-root/use-chart-instance.ts
-export const useChartInstance = (containerRef: RefObject<HTMLDivElement>) => {
+export const useChartInstance = (containerRef: RefObject<HTMLDivElement | null>) => {
 	const [chart, setChart] = useState<EChartsType | null>(null);
 
 	useEffect(() => {
@@ -505,8 +505,8 @@ export const useChartInstance = (containerRef: RefObject<HTMLDivElement>) => {
 ```
 
 ```tsx
-// component/chart-root/chart-root.tsx
-export const ChartRoot = (props: ChartRootProps) => {
+// widget/chart/component/chart-root/wg-chart-root.tsx
+export const WgChartRoot = (props: ChartRootProps) => {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const chart = useChartInstance(containerRef);
 
@@ -517,8 +517,8 @@ export const ChartRoot = (props: ChartRootProps) => {
 **Correct (생명주기를 소유 컴포넌트가 직접 가짐):**
 
 ```tsx
-// component/chart-root/chart-root.tsx
-export const ChartRoot = (props: ChartRootProps) => {
+// widget/chart/component/chart-root/wg-chart-root.tsx
+export const WgChartRoot = (props: ChartRootProps) => {
 	const { option } = props;
 	const containerRef = useRef<HTMLDivElement>(null);
 	const [chart, setChart] = useState<EChartsType | null>(null);
@@ -564,9 +564,7 @@ export const ChartRoot = (props: ChartRootProps) => {
 
 **Applies when:** 커링 팩토리가 돌려주는 리액트 핸들러의 타입을 정할 때. `Ui*` 래퍼 사용처에서 프롭스 타입을 참조할 때. 제외: `query.select` 같은 훅 옵션의 일회성 문맥 콜백인 경우.
 
-**Requires selected:** `typescript/types-reuse-callback-signatures-from-existing-contracts` · 함께 적용
-
-**Review with:** `typescript/types-prefer-function-variable-types-over-parameter-annotations`
+**Requires selected:** `typescript/types-prefer-function-variable-types-over-parameter-annotations` · 함께 적용
 
 **Impact: HIGH (핸들러 시그니처와 래퍼가 좁힌 계약이 선언 자리에서 바로 드러납니다)**
 
@@ -637,9 +635,201 @@ const handleSubmitClick: UiButtonProps["onClick"] = (event) => {
 
 공용 컴포넌트는 단일 컴포넌트, 합성 컴포넌트, 드러난 변형 중 어떤 구조를 쓸지 먼저 결정하고, 그다음 무엇을 공개 부품으로 열지 정합니다. 합성 컴포넌트는 상태 없는 조립에서 시작해 같은 공개 이름을 유지한 채 상태를 가진 구조로 확장될 수 있어야 합니다.
 
-### 3.1 Avoid Boolean Prop Proliferation in Shared Components
+### 3.1 Choose Single Components, Compound Components, and Variants Deliberately
 
-**Rule:** `R08` · `strategy-avoid-boolean-prop-proliferation`
+**Rule:** `R08` · `strategy-choose-single-composition-compound-and-variants`
+
+**Applies when:** 내보낸 공용 컴포넌트에 슬롯·공개 부품·공용 컨텍스트/동작을 추가할 때. 반복되는 기본 설정이나 모드 API를 추가할 때. 공용 컴포넌트의 조립 구조를 재설계할 때.
+
+**Review with:** `screen-avoid-premature-abstraction`, `strategy-avoid-boolean-prop-proliferation`, `strategy-expose-only-assembled-compound-parts`, `strategy-prefer-children-over-render-props`
+
+**Impact: HIGH (필요한 확장점은 열면서 가장 단순한 구조를 고르게 돕습니다)**
+
+공용 컴포넌트는 프롭스보다 구조를 먼저 고릅니다.
+고정 UI, 공개 부품 조립, 공용 상태/동작/컨텍스트, 반복 기본 설정 중 무엇이 필요한지 순서대로 봅니다.
+
+**빠른 선택표**
+
+| 상황 | 선택 |
+| --- | --- |
+| 고정 UI | `single component` 또는 화면 지역 JSX |
+| 부품 조립만 필요함 | `stateless compound component` |
+| 여러 부품이 같은 상태/동작/컨텍스트를 읽음 | `stateful compound component` |
+| 같은 합성 조합이 반복됨 | `explicit variant component` |
+
+렌더 프롭을 쓸 자리인지는 `strategy-prefer-children-over-render-props`가 따로 판정합니다.
+
+무엇을 공개 부품으로 열지는 `strategy-expose-only-assembled-compound-parts`가 정합니다.
+
+**Incorrect (단일·합성·드러난 변형의 경계를 구분하지 않고 한 컴포넌트에 몰아넣음):**
+
+```tsx
+export interface ProfileDialogProps {
+	isCompact?: boolean;
+	showActivity?: boolean;
+	showFocus?: boolean;
+	dialogTitle?: string;
+	renderFooter?: () => ReactNode;
+}
+
+export const UiProfileDialog = (props: ProfileDialogProps) => {
+	const { isCompact, showActivity, showFocus, dialogTitle, renderFooter } = props;
+
+	return (
+		<section className={isCompact ? "dialog dialog--compact" : "dialog"}>
+			<header>
+				<h3>{dialogTitle ?? "Profile"}</h3>
+			</header>
+			<ProfileSummary />
+			{showActivity ? <ActivityPanel /> : null}
+			{showFocus ? <FocusPanel /> : null}
+			<footer>{renderFooter?.()}</footer>
+		</section>
+	);
+};
+```
+
+**Correct (고정 구조면 단일 컴포넌트로 유지):**
+
+```tsx
+export interface EmptyStateProps {
+	title: string;
+	description: string;
+}
+
+export const UiEmptyState = (props: EmptyStateProps) => {
+	const { title, description } = props;
+
+	return (
+		<section className="empty-state">
+			<EmptyFolderIllustration />
+			<h2>{title}</h2>
+			<p>{description}</p>
+		</section>
+	);
+};
+```
+
+**Correct (구조를 열어야 하면 상태 없는 합성 컴포넌트로 시작):**
+
+```tsx
+export interface SectionProps {
+	children: ReactNode;
+}
+
+const SectionRoot = (props: SectionProps) => {
+	const { children } = props;
+	return <section className={clsx("ui_section__root")}>{children}</section>;
+};
+
+const SectionHeader = (props: SectionProps) => {
+	const { children } = props;
+	return <header className={clsx("ui_section__header")}>{children}</header>;
+};
+
+const SectionFooter = (props: SectionProps) => {
+	const { children } = props;
+	return <footer className={clsx("ui_section__footer")}>{children}</footer>;
+};
+
+export const Section = {
+	Root: SectionRoot,
+	Header: SectionHeader,
+	Footer: SectionFooter,
+} as const;
+```
+
+**Correct (여러 부품이 상태를 공유하면 상태를 가진 합성 컴포넌트로 확장):**
+
+```tsx
+const TabsContext = createContext<TabsContextValue | null>(null);
+
+const TabsRoot = (props: TabsRootProps) => {
+	const { defaultValue, children } = props;
+	const [activeValue, setActiveValue] = useState(defaultValue);
+
+	return (
+		<TabsContext value={{ activeValue, setActiveValue }}>
+			<section>{children}</section>
+		</TabsContext>
+	);
+};
+
+const TabsTrigger = (props: TabsTriggerProps) => {
+	const { value, children } = props;
+	const tabs = useTabsContext();
+	return <button onClick={() => tabs.setActiveValue(value)}>{children}</button>;
+};
+
+const TabsPanel = (props: TabsPanelProps) => {
+	const { value, children } = props;
+	const tabs = useTabsContext();
+	return tabs.activeValue === value ? <section>{children}</section> : null;
+};
+```
+
+**Correct (같은 계열 조합이 반복되면 드러난 변형으로 감쌈):**
+
+```tsx
+export const ReadOnlyProfileDialog = () => {
+	return (
+		<Dialog.Root>
+			<Dialog.Trigger>View profile</Dialog.Trigger>
+			<Dialog.Content>...</Dialog.Content>
+		</Dialog.Root>
+	);
+};
+```
+
+### 3.2 Expose Only Compound Parts the Consumer Assembles
+
+**Rule:** `R09` · `strategy-expose-only-assembled-compound-parts`
+
+**Applies when:** 합성 컴포넌트의 공개 부품 목록에 부품을 넣거나 뺄 때. 상태 없는 합성에 상태를 넣으면서 공개 이름을 바꾸려 할 때.
+
+**Review with:** `css/composition-do-not-add-wrapper-elements-for-styling`, `strategy-choose-single-composition-compound-and-variants`
+
+**Impact: HIGH (내부 구조가 공개 계약이 되지 않아 나중에 바꿀 수 있습니다)**
+
+공개 부품은 두 경우만 엽니다.
+
+- 소비자가 이름으로 직접 조립해야 하는 영역
+- 공용 컨텍스트나 동작을 직접 쓰는 영역
+
+그 밖은 숨깁니다. 특히 다음 셋은 공개하지 않습니다.
+
+- 단순 `className` 래퍼
+- 여백 보정용 DOM. `css/composition-do-not-add-wrapper-elements-for-styling`가 애초에 만들지 말라고 합니다.
+- 내부 레이아웃 보조 함수
+
+상태 없는 합성에 상태가 필요해지면 공개 이름은 그대로 두고 컨텍스트만 추가합니다.
+공개 이름이 바뀌면 소비자 코드가 모두 바뀝니다.
+
+**Incorrect (내부 구조를 전부 공개해 계약으로 굳힘):**
+
+```tsx
+export const UiPanel = {
+	Root: UiPanelRoot,
+	Header: UiPanelHeader,
+	HeaderInner: UiPanelHeaderInner,
+	Spacer: UiPanelSpacer,
+	Body: UiPanelBody,
+} as const;
+```
+
+**Correct (조립에 필요한 것만 공개):**
+
+```tsx
+export const UiPanel = {
+	Root: UiPanelRoot,
+	Header: UiPanelHeader,
+	Body: UiPanelBody,
+} as const;
+```
+
+### 3.3 Avoid Boolean Prop Proliferation in Shared Components
+
+**Rule:** `R10` · `strategy-avoid-boolean-prop-proliferation`
 
 **Applies when:** 여러 곳에서 쓰는 공용 컴포넌트에 불리언 모드·표시 프롭을 추가할 때. 기존 불리언 프롭 조합과 JSX 분기가 늘어날 때.
 
@@ -713,198 +903,6 @@ export const WgEntryEditToolbar = () => {
 };
 ```
 
-### 3.2 Choose Single Components, Compound Components, and Variants Deliberately
-
-**Rule:** `R09` · `strategy-choose-single-composition-compound-and-variants`
-
-**Applies when:** 내보낸 공용 컴포넌트에 슬롯·공개 부품·공용 컨텍스트/동작을 추가할 때. 반복되는 기본 설정이나 모드 API를 추가할 때. 공용 컴포넌트의 조립 구조를 재설계할 때.
-
-**Review with:** `screen-avoid-premature-abstraction`, `strategy-avoid-boolean-prop-proliferation`, `strategy-expose-only-assembled-compound-parts`, `strategy-prefer-children-over-render-props`
-
-**Impact: HIGH (필요한 확장점은 열면서 가장 단순한 구조를 고르게 돕습니다)**
-
-공용 컴포넌트는 프롭스보다 구조를 먼저 고릅니다.
-고정 UI, 공개 부품 조립, 공용 상태/동작/컨텍스트, 반복 기본 설정 중 무엇이 필요한지 순서대로 봅니다.
-
-**빠른 선택표**
-
-| 상황 | 선택 |
-| --- | --- |
-| 고정 UI | `single component` 또는 화면 지역 JSX |
-| 부품 조립만 필요함 | `stateless compound component` |
-| 여러 부품이 같은 상태/동작/컨텍스트를 읽음 | `stateful compound component` |
-| 같은 합성 조합이 반복됨 | `explicit variant component` |
-
-렌더 프롭을 쓸 자리인지는 `strategy-prefer-children-over-render-props`가 따로 판정합니다.
-
-무엇을 공개 부품으로 열지는 `strategy-expose-only-assembled-compound-parts`가 정합니다.
-
-**Incorrect (단일·합성·드러난 변형의 경계를 구분하지 않고 한 컴포넌트에 몰아넣음):**
-
-```tsx
-export interface ProfileDialogProps {
-	isCompact?: boolean;
-	showActivity?: boolean;
-	showFocus?: boolean;
-	dialogTitle?: string;
-	renderFooter?: () => ReactNode;
-}
-
-export const ProfileDialog = (props: ProfileDialogProps) => {
-	const { isCompact, showActivity, showFocus, dialogTitle, renderFooter } = props;
-
-	return (
-		<section className={isCompact ? "dialog dialog--compact" : "dialog"}>
-			<header>
-				<h3>{dialogTitle ?? "Profile"}</h3>
-			</header>
-			<ProfileSummary />
-			{showActivity ? <ActivityPanel /> : null}
-			{showFocus ? <FocusPanel /> : null}
-			<footer>{renderFooter?.()}</footer>
-		</section>
-	);
-};
-```
-
-**Correct (고정 구조면 단일 컴포넌트로 유지):**
-
-```tsx
-export interface EmptyStateProps {
-	title: string;
-	description: string;
-}
-
-export const EmptyState = (props: EmptyStateProps) => {
-	const { title, description } = props;
-
-	return (
-		<section className="empty-state">
-			<EmptyFolderIllustration />
-			<h2>{title}</h2>
-			<p>{description}</p>
-		</section>
-	);
-};
-```
-
-**Correct (구조를 열어야 하면 상태 없는 합성 컴포넌트로 시작):**
-
-```tsx
-export interface SectionProps {
-	children: ReactNode;
-}
-
-const SectionRoot = (props: SectionProps) => {
-	const { children } = props;
-	return <section className="section">{children}</section>;
-};
-
-const SectionHeader = (props: SectionProps) => {
-	const { children } = props;
-	return <header className="section__header">{children}</header>;
-};
-
-const SectionFooter = (props: SectionProps) => {
-	const { children } = props;
-	return <footer className="section__footer">{children}</footer>;
-};
-
-export const Section = {
-	Root: SectionRoot,
-	Header: SectionHeader,
-	Footer: SectionFooter,
-} as const;
-```
-
-**Correct (여러 부품이 상태를 공유하면 상태를 가진 합성 컴포넌트로 확장):**
-
-```tsx
-const TabsContext = createContext<TabsContextValue | null>(null);
-
-const TabsRoot = (props: TabsRootProps) => {
-	const { defaultValue, children } = props;
-	const [activeValue, setActiveValue] = useState(defaultValue);
-
-	return (
-		<TabsContext value={{ activeValue, setActiveValue }}>
-			<section>{children}</section>
-		</TabsContext>
-	);
-};
-
-const TabsTrigger = (props: TabsTriggerProps) => {
-	const { value, children } = props;
-	const tabs = useTabsContext();
-	return <button onClick={() => tabs.setActiveValue(value)}>{children}</button>;
-};
-
-const TabsPanel = (props: TabsPanelProps) => {
-	const { value, children } = props;
-	const tabs = useTabsContext();
-	return tabs.activeValue === value ? <section>{children}</section> : null;
-};
-```
-
-**Correct (같은 계열 조합이 반복되면 드러난 변형으로 감쌈):**
-
-```tsx
-export const ReadOnlyProfileDialog = () => {
-	return (
-		<Dialog.Root>
-			<Dialog.Trigger>View profile</Dialog.Trigger>
-			<Dialog.Content>...</Dialog.Content>
-		</Dialog.Root>
-	);
-};
-```
-
-### 3.3 Expose Only Compound Parts the Consumer Assembles
-
-**Rule:** `R10` · `strategy-expose-only-assembled-compound-parts`
-
-**Applies when:** 합성 컴포넌트의 공개 부품 목록에 부품을 넣거나 뺄 때. 상태 없는 합성에 상태를 넣으면서 공개 이름을 바꾸려 할 때.
-
-**Review with:** `css/composition-do-not-add-wrapper-elements-for-styling`, `strategy-choose-single-composition-compound-and-variants`
-
-**Impact: HIGH (내부 구조가 공개 계약이 되지 않아 나중에 바꿀 수 있습니다)**
-
-공개 부품은 두 경우만 엽니다.
-
-- 소비자가 이름으로 직접 조립해야 하는 영역
-- 공용 컨텍스트나 동작을 직접 쓰는 영역
-
-그 밖은 숨깁니다. 특히 다음 셋은 공개하지 않습니다.
-
-- 단순 `className` 래퍼
-- 여백 보정용 DOM. `css/composition-do-not-add-wrapper-elements-for-styling`가 애초에 만들지 말라고 합니다.
-- 내부 레이아웃 보조 함수
-
-상태 없는 합성에 상태가 필요해지면 공개 이름은 그대로 두고 컨텍스트만 추가합니다.
-공개 이름이 바뀌면 소비자 코드가 모두 바뀝니다.
-
-**Incorrect (내부 구조를 전부 공개해 계약으로 굳힘):**
-
-```tsx
-export const UiPanel = {
-	Root: UiPanelRoot,
-	Header: UiPanelHeader,
-	HeaderInner: UiPanelHeaderInner,
-	Spacer: UiPanelSpacer,
-	Body: UiPanelBody,
-} as const;
-```
-
-**Correct (조립에 필요한 것만 공개):**
-
-```tsx
-export const UiPanel = {
-	Root: UiPanelRoot,
-	Header: UiPanelHeader,
-	Body: UiPanelBody,
-} as const;
-```
-
 ### 3.4 Prefer Children Over Render Props for Static Composition
 
 **Rule:** `R11` · `strategy-prefer-children-over-render-props`
@@ -925,11 +923,11 @@ export interface PanelProps {
 	renderFooter?: () => ReactNode;
 }
 
-export const Panel = (props: PanelProps) => {
+export const UiPanel = (props: PanelProps) => {
 	const { renderHeader, renderFooter } = props;
 
 	return (
-		<section className="panel">
+		<section className={clsx("ui_panel__root")}>
 			{renderHeader?.()}
 			<ItemList />
 			{renderFooter?.()}
@@ -947,17 +945,17 @@ export interface PanelProps {
 
 const PanelRoot = (props: PanelProps) => {
 	const { children } = props;
-	return <section className="panel">{children}</section>;
+	return <section className={clsx("ui_panel__root")}>{children}</section>;
 };
 
 const PanelHeader = (props: PanelProps) => {
 	const { children } = props;
-	return <header className="panel__header">{children}</header>;
+	return <header className={clsx("ui_panel__header")}>{children}</header>;
 };
 
 const PanelFooter = (props: PanelProps) => {
 	const { children } = props;
-	return <footer className="panel__footer">{children}</footer>;
+	return <footer className={clsx("ui_panel__footer")}>{children}</footer>;
 };
 
 export const Panel = {
@@ -1047,11 +1045,11 @@ const UserCard = (props: UserCardProps) => {
 **Incorrect (렌더마다 새 컴포넌트 타입을 생성):**
 
 ```tsx
-export const UserProfileCard = (props: UserProfileCardProps) => {
+export const WgUserProfileCard = (props: UserProfileCardProps) => {
 	const { theme, user } = props;
 
 	const Avatar = () => {
-		return <img className={theme === "dark" ? "avatar-dark" : "avatar-light"} src={user.avatarUrl} />;
+		return <img className={clsx("wg_userProfileAvatar__image", theme === "dark" && "wg_userProfileAvatar__image--dark")} src={user.avatarUrl} />;
 	};
 
 	return (
@@ -1070,12 +1068,12 @@ export interface UserProfileAvatarProps {
 	src: string;
 }
 
-export const UserProfileAvatar = (props: UserProfileAvatarProps) => {
+export const WgUserProfileAvatar = (props: UserProfileAvatarProps) => {
 	const { theme, src } = props;
-	return <img className={theme === "dark" ? "avatar-dark" : "avatar-light"} src={src} />;
+	return <img className={clsx("wg_userProfileAvatar__image", theme === "dark" && "wg_userProfileAvatar__image--dark")} src={src} />;
 };
 
-export const UserProfileCard = (props: UserProfileCardProps) => {
+export const WgUserProfileCard = (props: UserProfileCardProps) => {
 	const { theme, user } = props;
 
 	return (
@@ -1322,9 +1320,77 @@ export const UiBadge = (props: UiBadgeProps) => {
 
 라우트 진입은 화면 흐름을 분명하게 보여줘야 하며, 실행 환경 경계를 소유한 섹션만 떼어냅니다. 파생값은 쓰는 자리에서 계산하고, 막는 로딩은 화면 본문이 아니라 섹션 소유자의 `Suspense` 경계가 처리합니다.
 
-### 5.1 Avoid Premature Abstraction in Screen Code
+### 5.1 Keep Route Entry Files Focused on Screen Flow
 
-**Rule:** `R18` · `screen-avoid-premature-abstraction`
+**Rule:** `R18` · `screen-keep-route-flow-visible`
+
+**Applies when:** 라우트 진입의 검색·화면 이동·질의·변경 요청·화면 전체 이펙트를 옮기거나 나눌 때. page 섹션 조립의 순서나 소유자를 바꿀 때. 제외: 같은 소유자 안에서 표현만 바꾸는 경우.
+
+**Review with:** `ownership-place-owner-files-in-role-folders`, `screen-extract-local-section-components-for-runtime-boundaries`
+
+**Impact: HIGH (진입 파일만 봐도 화면 흐름을 따라갈 수 있습니다)**
+
+라우트 진입은 검색, 화면 이동, 페이지 질의·변경 요청, 화면 전체 이펙트와 렌더 조립을 보여줍니다.
+비동기·상태·상호작용 경계를 가진 섹션을 분리해도 이 흐름 제어 자체는 라우트 진입에 남깁니다.
+
+소유자가 그대로인 변경은 대상이 아닙니다.
+
+- `query.select` 형태, 바인딩·별칭 정리, 파생 상태 이펙트를 렌더 계산으로 옮기는 것
+- 순수 타입·전송 값 조립 함수·기본 설정의 형제 `.ts` 이동.
+  `typescript/functions-extract-helpers-only-when-the-boundary-is-real`가 담당합니다.
+
+**Incorrect (흐름보다 분해 자체가 목적이 됨):**
+
+```tsx
+return (
+  <PageShell>
+    <PageHeaderSection />
+    <PageContentSection />
+    <PageFooterSection />
+  </PageShell>
+);
+```
+
+**Correct (라우트 진입에서 흐름이 보이고, 실제 경계가 있는 섹션만 분리):**
+
+```tsx
+const navigate = useNavigate();
+const search = Route.useSearch();
+
+/**
+ * entry 목록 조회 API
+ */
+const responseEntryListSuspense = useEntryListSuspense({
+  page: search.page,
+});
+
+/**
+ * entry 저장 API
+ */
+const mutationEntrySave = useEntrySave();
+
+/**
+ * entry 저장 후 현재 화면 흐름을 유지한 채 route search를 갱신
+ */
+const handleSubmitButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
+  await mutationEntrySave.mutateAsync({ data: request });
+  void navigate({
+    to: "/entries",
+    search: { ...search, page: 1 },
+  });
+};
+
+return (
+  <Fragment>
+    <EntryFilterSection />
+    <EntryListSection onSubmit={handleSubmitButtonClick} />
+  </Fragment>
+);
+```
+
+### 5.2 Avoid Premature Abstraction in Screen Code
+
+**Rule:** `R19` · `screen-avoid-premature-abstraction`
 
 **Applies when:** 화면 코드를 보조 함수·훅·컴포넌트·모듈으로 추출할 때. 한 곳에서만 쓰는 기존 추상화를 다시 접어 넣을 때.
 
@@ -1371,13 +1437,14 @@ const buildEditHref = ({ editHrefBase, row }: { editHrefBase: string; row: Entry
 const mapResponseToRows = (response: EntryListResponse) =>
 	response.data.map((entry) => ({ id: entry.id, title: entry.title }));
 
-export const EntryTable = (props: EntryTableProps) => {
-	const responseEntriesQuery = useListEntriesSuspense<EntryRow[]>({}, {
+export const PgEntryTable = (props: PgEntryTableProps) => {
+	const { editHrefBase } = props;
+	const responseEntriesQuery = useListEntriesSuspense({}, {
 		query: { select: mapResponseToRows },
 	});
 
 	return responseEntriesQuery.data.map((row) => (
-		<a href={buildEditHref({ editHrefBase: props.editHrefBase, row })} key={row.id}>
+		<a href={buildEditHref({ editHrefBase, row })} key={row.id}>
 			{row.title}
 		</a>
 	));
@@ -1419,8 +1486,9 @@ export const buildEntryPayload = (formValues: EntryFormValues) => {
 **Correct (작은 질의 가공과 `href` 조립은 사용 지점에 둠):**
 
 ```tsx
-export const EntryTable = (props: EntryTableProps) => {
-	const responseEntriesQuery = useListEntriesSuspense<EntryRow[]>(
+export const PgEntryTable = (props: PgEntryTableProps) => {
+	const { editHrefBase } = props;
+	const responseEntriesQuery = useListEntriesSuspense(
 		{},
 		{
 			query: {
@@ -1431,16 +1499,16 @@ export const EntryTable = (props: EntryTableProps) => {
 	);
 
 	return responseEntriesQuery.data.map((row) => (
-		<a href={`${props.editHrefBase}${row.id}/`} key={row.id}>
+		<a href={`${editHrefBase}${row.id}/`} key={row.id}>
 			{row.title}
 		</a>
 	));
 };
 ```
 
-### 5.2 Extract Route-local Section Components Only for Runtime Boundaries
+### 5.3 Extract Route-local Section Components Only for Runtime Boundaries
 
-**Rule:** `R19` · `screen-extract-local-section-components-for-runtime-boundaries`
+**Rule:** `R20` · `screen-extract-local-section-components-for-runtime-boundaries`
 
 **Applies when:** 화면 지역 섹션 컴포넌트를 새로 추출할 때. 기존 섹션이 비동기·상태·프로바이더·상호작용·라이브러리·성능 경계를 소유하는지 바꿀 때.
 
@@ -1490,7 +1558,7 @@ export const PgEntries = () => {
 	const responseEntryListSuspense = useEntryListSuspense();
 
 	return (
-		<div className="entry-layout">
+		<div className="pg_entries__layout">
 			<PgEntrySidebarPanel />
 			<PgEntryDetailPanel />
 		</div>
@@ -1564,12 +1632,16 @@ export const PgEntries = () => {
 	/**
 	 * tree sidebar 조회 API
 	 */
-	const responseEntryTreeSuspense = useEntryTreeSuspense<EntryTreeSelectData>();
+	const responseEntryTreeSuspense = useEntryTreeSuspense({}, {
+		query: {select: (response) => ({categoryNodes: response.data.nodes})},
+	});
 
 	/**
 	 * entry 목록 조회 API
 	 */
-	const responseEntryListSuspense = useEntryListSuspense<EntryListSelectData>();
+	const responseEntryListSuspense = useEntryListSuspense({}, {
+		query: {select: (response) => ({entries: response.data.list})},
+	});
 
 	/**
 	 * tree에서 선택한 category로 route search를 갱신
@@ -1582,23 +1654,23 @@ export const PgEntries = () => {
 	};
 
 	return (
-		<div className="entry-layout">
+		<div className="pg_entries__layout">
 			<PgEntryTreeSection
 				categoryNodes={responseEntryTreeSuspense.data.categoryNodes}
 				selectedCategoryId={search.categoryId}
 				onCategorySelect={handleCategorySelect}
 			/>
 			<PgEntryTableSection
-				entries={responseEntryListSuspense.data?.entries}
+				entries={responseEntryListSuspense.data.entries}
 			/>
 		</div>
 	);
 };
 ```
 
-### 5.3 Keep Derived Values Close to Where They Are Used
+### 5.4 Keep Derived Values Close to Where They Are Used
 
-**Rule:** `R20` · `screen-keep-derived-values-close`
+**Rule:** `R21` · `screen-keep-derived-values-close`
 
 **Applies when:** 오리진을 끊는 별칭·플래그·표시값을 넓은 화면 범위에 추가·이동·제거할 때. `let` 재할당이나 배열 `push` 기반 조립을 바꿀 때.
 
@@ -1606,6 +1678,10 @@ export const PgEntries = () => {
 
 파생값은 실제 쓰는 자리에서 계산합니다.
 화면 상단으로 끌어올리면 값의 출처를 잃습니다.
+
+어느 파일이 그 값을 소유하는지는 이 규칙이 정하지 않습니다.
+`screen-extract-local-section-components-for-runtime-boundaries`가 정합니다.
+여기서는 소유한 파일 안에서 얼마나 가까이 두는지만 봅니다.
 
 - 오리진을 잃는 별칭 상수, `let` 재할당, 배열 `push` 기반 명령형 조립을 새로 만들지 않고
   기존 항목은 제거합니다.
@@ -1639,74 +1715,6 @@ const responseEntryListSuspense = useEntryListSuspense({
 
 ```tsx
 return <UiInput value={selectedNodeContext?.node?.name} />;
-```
-
-### 5.4 Keep Route Entry Files Focused on Screen Flow
-
-**Rule:** `R21` · `screen-keep-route-flow-visible`
-
-**Applies when:** 라우트 진입의 검색·화면 이동·질의·변경 요청·화면 전체 이펙트를 옮기거나 나눌 때. page 섹션 조립의 순서나 소유자를 바꿀 때. 제외: 같은 소유자 안에서 표현만 바꾸는 경우.
-
-**Review with:** `ownership-place-owner-files-in-role-folders`, `screen-extract-local-section-components-for-runtime-boundaries`
-
-**Impact: HIGH (진입 파일만 봐도 화면 흐름을 따라갈 수 있습니다)**
-
-라우트 진입은 검색, 화면 이동, 페이지 질의·변경 요청, 화면 전체 이펙트와 렌더 조립을 보여줍니다.
-비동기·상태·상호작용 경계를 가진 섹션을 분리해도 이 흐름 제어 자체는 라우트 진입에 남깁니다.
-
-소유자가 그대로인 변경은 대상이 아닙니다.
-
-- `query.select` 형태, 바인딩·별칭 정리, 파생 상태 이펙트를 렌더 계산으로 옮기는 것
-- 순수 타입·전송 값 조립 함수·기본 설정의 형제 `.ts` 이동.
-  `typescript/functions-extract-helpers-only-when-the-boundary-is-real`가 담당합니다.
-
-**Incorrect (흐름보다 분해 자체가 목적이 됨):**
-
-```tsx
-return (
-  <PageShell>
-    <PageHeaderSection />
-    <PageContentSection />
-    <PageFooterSection />
-  </PageShell>
-);
-```
-
-**Correct (라우트 진입에서 흐름이 보이고, 실제 경계가 있는 섹션만 분리):**
-
-```tsx
-const navigate = useNavigate();
-const search = Route.useSearch();
-
-/**
- * entry 목록 조회 API
- */
-const responseEntryListSuspense = useEntryListSuspense({
-  page: search.page,
-});
-
-/**
- * entry 저장 API
- */
-const mutationEntrySave = useEntrySave();
-
-/**
- * entry 저장 후 현재 화면 흐름을 유지한 채 route search를 갱신
- */
-const handleSubmitButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
-  await mutationEntrySave.mutateAsync({ data: request });
-  void navigate({
-    to: "/entries",
-    search: { ...search, page: 1 },
-  });
-};
-
-return (
-  <Fragment>
-    <EntryFilterSection />
-    <EntryListSection onSubmit={handleSubmitButtonClick} />
-  </Fragment>
-);
 ```
 
 ### 5.5 Place Suspense Boundaries at the Section Owner
@@ -1761,7 +1769,7 @@ return (
 
 **Rule:** `R23` · `screen-avoid-ad-hoc-loading-branches`
 
-**Applies when:** Suspense 질의를 쓰는 화면 본문에 초기 로딩 반환을 추가·변경할 때. `isPending`·`isFetching`으로 화면을 가리는 분기를 넣을 때. 제외: 선택 값에 기본값을 채우는 것만 바꾸는 경우.
+**Applies when:** Suspense 질의를 쓰는 화면 본문에 초기 로딩 반환을 추가·변경할 때. `isFetching`이나 변경 요청 `isPending`으로 화면을 가리는 분기를 넣을 때. 제외: 선택 값에 기본값을 채우는 것만 바꾸는 경우.
 
 **Requires selected:** `typescript/absence-expose-optional-values-instead-of-silent-fallbacks` · 함께 적용
 
@@ -1772,7 +1780,9 @@ return (
 Suspense 질의를 쓰는 화면은 본문에서 초기 로딩을 다시 분기하지 않습니다.
 막는 로딩은 Suspense 경계나 상위 레이아웃이 이미 처리합니다.
 
-- `isPending`, `isFetching`은 이미 그려진 화면을 보조할 때만 씁니다.
+- `isFetching`은 이미 그려진 화면을 보조할 때만 씁니다.
+  Suspense 질의의 `isPending`은 타입이 `false`로 고정되어 분기 자체가 죽은 코드입니다.
+  변경 요청의 `isPending`은 씁니다.
   버튼 비활성화, 백그라운드 다시 불러오기 표시, 저장 중 배지가 그런 경우입니다.
 - 화면 전체를 가리는 지역 로딩 분기가 꼭 필요하면 `typescript/docs-justify-convention-exceptions-with-a-reason-comment`를 따라 이유를 남깁니다.
 
@@ -1783,7 +1793,7 @@ Suspense 질의를 쓰는 화면은 본문에서 초기 로딩을 다시 분기�
 **Incorrect (Suspense 질의 화면에서 초기 로딩을 다시 분기):**
 
 ```tsx
-if (responseUserGetItemSuspense.isPending) {
+if (responseUserGetItemSuspense.isFetching) {
   return <Spinner />;
 }
 
@@ -1993,8 +2003,8 @@ useEffect(() => {
 		return;
 	}
 
-	void createEntryMutation.mutateAsync(formValues);
-}, [createEntryMutation, formValues, shouldSubmit]);
+	void mutationEntryCreate.mutateAsync(formValues);
+}, [mutationEntryCreate, formValues, shouldSubmit]);
 
 const handleSubmit = () => {
 	setShouldSubmit(true);
@@ -2008,7 +2018,7 @@ const handleSubmit = () => {
  * 제출 버튼 클릭 시 생성 요청 실행
  */
 const handleSubmit = async () => {
-	await createEntryMutation.mutateAsync(formValues);
+	await mutationEntryCreate.mutateAsync(formValues);
 };
 ```
 
@@ -2055,51 +2065,9 @@ const responseEntryListSuspense = useEntryListSuspense();
 const mutationEntryRemove = useEntryRemove();
 ```
 
-### 7.2 Preserve Response and Store Origin in Wide Scopes
+### 7.2 Shape React Query Data in query.select
 
-**Rule:** `R29` · `data-preserve-origin-chaining`
-
-**Applies when:** page·레이아웃·화면 넓은 스코프에서 응답·변경 요청·스토어를 구조분해할 때. 원본을 별칭으로 끊고 값 접근 방식을 바꿀 때.
-
-**Review with:** `screen-keep-derived-values-close`
-
-**Impact: CRITICAL (파일 전체에서 별칭을 따라가지 않고 값의 출처를 바로 압니다)**
-
-페이지, 레이아웃, 화면 스코프에서는 `response...`, `mutation...`, `*Store` 원본을 유지합니다.
-넓은 스코프의 구조분해와 별칭 상수는 값의 출처를 흐립니다.
-
-- 실제로 필요하면 핸들러나 이펙트 내부의 좁은 스코프에서만 제한적으로 구조분해합니다.
-- `props`를 본문 첫 줄에서 구조분해하는 패턴만 예외입니다.
-
-**Incorrect (넓은 스코프 구조분해로 출처가 흐려짐):**
-
-```ts
-const { entries, selectedEntry } = responseEntryListSuspense.data;
-```
-
-**Correct (원본 체이닝으로 출처를 유지):**
-
-```tsx
-<UiList dataSource={responseEntryListSuspense.data.entries} />
-<UiTable dataSource={responseEntryListSuspense.data.selectedEntry.fields} />
-```
-
-```ts
-/**
- * 검색 응답이 비어 있을 때만 후속 동기화를 건너뜀
- */
-useEffect(() => {
-  const { data, isFetching } = responseEntrySearchSuspense;
-
-  if (!isFetching && data.entries.length === 0) {
-    return;
-  }
-}, [responseEntrySearchSuspense]);
-```
-
-### 7.3 Shape React Query Data in query.select
-
-**Rule:** `R30` · `data-shape-query-data-with-select`
+**Rule:** `R29` · `data-shape-query-data-with-select`
 
 **Applies when:** 서버 응답의 목록·항목·메타 등을 렌더에서 가공하거나 반복 소비할 때. 리액트 Query `select`의 결과 형태를 추가·변경할 때.
 
@@ -2138,6 +2106,48 @@ const responseEntryListSuspense = useEntryListSuspense({
     }),
   },
 });
+```
+
+### 7.3 Preserve Response and Store Origin in Wide Scopes
+
+**Rule:** `R30` · `data-preserve-origin-chaining`
+
+**Applies when:** page·레이아웃·화면 넓은 스코프에서 응답·변경 요청·스토어를 구조분해할 때. 원본을 별칭으로 끊고 값 접근 방식을 바꿀 때.
+
+**Review with:** `screen-keep-derived-values-close`
+
+**Impact: CRITICAL (파일 전체에서 별칭을 따라가지 않고 값의 출처를 바로 압니다)**
+
+페이지, 레이아웃, 화면 스코프에서는 `response...`, `mutation...`, `*Store` 원본을 유지합니다.
+넓은 스코프의 구조분해와 별칭 상수는 값의 출처를 흐립니다.
+
+- 실제로 필요하면 핸들러나 이펙트 내부의 좁은 스코프에서만 제한적으로 구조분해합니다.
+- `props`를 본문 첫 줄에서 구조분해하는 패턴만 예외입니다.
+
+**Incorrect (넓은 스코프 구조분해로 출처가 흐려짐):**
+
+```ts
+const { entries, selectedEntry } = responseEntryListSuspense.data;
+```
+
+**Correct (원본 체이닝으로 출처를 유지):**
+
+```tsx
+<UiList dataSource={responseEntryListSuspense.data.entries} />
+<UiTable dataSource={responseEntryListSuspense.data.selectedEntry.fields} />
+```
+
+```ts
+/**
+ * 검색 응답이 비어 있을 때만 후속 동기화를 건너뜀
+ */
+useEffect(() => {
+  if (responseEntrySearchSuspense.data.entries.length > 0) {
+    return;
+  }
+
+  reportEmptySearch(search.keyword);
+}, [responseEntrySearchSuspense.data.entries, search.keyword]);
 ```
 
 ## 8. State Ownership and Updates

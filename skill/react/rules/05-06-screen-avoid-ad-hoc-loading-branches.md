@@ -5,7 +5,7 @@ impact: HIGH
 impactDescription: 초기 로딩은 Suspense 경계가 맡고 화면 본문에는 데이터가 있는 경로만 남습니다
 appliesWhen:
   - Suspense 질의를 쓰는 화면 본문에 초기 로딩 반환을 추가·변경할 때
-  - `isPending`·`isFetching`으로 화면을 가리는 분기를 넣을 때
+  - `isFetching`이나 변경 요청 `isPending`으로 화면을 가리는 분기를 넣을 때
   - 제외: 선택 값에 기본값을 채우는 것만 바꾸는 경우
 requiresSelected: typescript/absence-expose-optional-values-instead-of-silent-fallbacks
 reviewWith: data-preserve-origin-chaining, screen-keep-derived-values-close
@@ -19,7 +19,9 @@ tags: screen, loading, suspense
 Suspense 질의를 쓰는 화면은 본문에서 초기 로딩을 다시 분기하지 않습니다.
 막는 로딩은 Suspense 경계나 상위 레이아웃이 이미 처리합니다.
 
-- `isPending`, `isFetching`은 이미 그려진 화면을 보조할 때만 씁니다.
+- `isFetching`은 이미 그려진 화면을 보조할 때만 씁니다.
+  Suspense 질의의 `isPending`은 타입이 `false`로 고정되어 분기 자체가 죽은 코드입니다.
+  변경 요청의 `isPending`은 씁니다.
   버튼 비활성화, 백그라운드 다시 불러오기 표시, 저장 중 배지가 그런 경우입니다.
 - 화면 전체를 가리는 지역 로딩 분기가 꼭 필요하면 `typescript/docs-justify-convention-exceptions-with-a-reason-comment`를 따라 이유를 남깁니다.
 
@@ -30,7 +32,7 @@ Suspense 질의를 쓰는 화면은 본문에서 초기 로딩을 다시 분기�
 **Incorrect (Suspense 질의 화면에서 초기 로딩을 다시 분기):**
 
 ```tsx
-if (responseUserGetItemSuspense.isPending) {
+if (responseUserGetItemSuspense.isFetching) {
   return <Spinner />;
 }
 
