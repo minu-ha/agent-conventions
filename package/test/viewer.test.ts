@@ -93,7 +93,7 @@ test("parseRuleBody handles every rule in the repository", async () => {
 		}
 	}
 
-	assert.equal(ruleCount, 208);
+	assert.equal(ruleCount, 212);
 	assert.ok(blockCount > 400, `expected 400+ code blocks, found ${blockCount}`);
 });
 
@@ -167,13 +167,13 @@ test("buildViewerPayload collects only progressive skills", async () => {
 	const payload = await buildViewerPayload();
 
 	assert.equal(payload.skills.length, 3);
-	assert.equal(payload.rules.length, 81);
+	assert.equal(payload.rules.length, 85);
 	assert.equal(payload.sections.length, 22);
 
 	const react = payload.skills.find((skill) => skill.name === "react");
 	assert.equal(react?.title, "React 컨벤션");
 	assert.equal(react?.progressive, true);
-	assert.equal(react?.ruleCount, 34);
+	assert.equal(react?.ruleCount, 37);
 
 	// non-progressive skill 은 아직 작성 중이라 핸드북에 넣지 않는다
 	for (const excluded of ["astro", "nestjs", "playwright-test", "tanstack-route", "figma-visual-parity"]) {
@@ -374,7 +374,7 @@ test("generateViewerArtifacts keeps the payload in the data script and stays byt
 	assert.ok(encoded, "expected a global assignment in the data script");
 
 	const payload = JSON.parse(encoded);
-	assert.equal(payload.rules.length, 81);
+	assert.equal(payload.rules.length, 85);
 	assert.equal(payload.skills.length, 3);
 	assert.equal(payload.sections.length, 22);
 });

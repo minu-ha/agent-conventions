@@ -16,7 +16,8 @@ tags: optional, fallback, absence
 
 선택 값에 `??`나 `||`로 기본값을 채워 없음을 덮지 않습니다.
 값이 없을 수 있다는 사실을 그대로 드러냅니다.
-도메인상 기본값이 분명하고 코드 바로 위에 이유 주석이 있을 때만 예외로 씁니다.
+도메인상 기본값이 분명하고 `docs-justify-convention-exceptions-with-a-reason-comment`를
+만족하는 이유 주석이 있을 때만 예외로 씁니다.
 
 **Incorrect (결측을 호출부에서 조용히 숨김):**
 

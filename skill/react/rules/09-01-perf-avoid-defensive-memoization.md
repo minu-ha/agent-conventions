@@ -15,7 +15,7 @@ tags: state, react, memoization
 **Impact: MEDIUM-HIGH (효과를 확인하지 않은 방어적 `useMemo`, `useCallback` 을 막습니다)**
 
 `useMemo`와 `useCallback`은 기본적으로 쓰지 않습니다.
-쓰는 경우는 다음 넷뿐이며, 어느 경우든 바로 위에 한국어 주석으로 이유를 남깁니다.
+쓰는 경우는 다음 넷뿐이며, 어느 경우든 `typescript/docs-justify-convention-exceptions-with-a-reason-comment`를 따라 이유를 남깁니다.
 
 - 외부 라이브러리가 참조 동일성에 민감할 때
 - 병목이 실제로 측정됐을 때
@@ -31,9 +31,9 @@ tags: state, react, memoization
 const columns = useMemo(() => buildColumns(response.data.columns), [response.data.columns]);
 ```
 
-**Correct (필요할 때만 이유를 적고 사용):**
+**Correct (외부 패키지 제약을 가리키는 근거를 적고 사용):**
 
 ```ts
-// list library가 columns 참조 동일성을 요구하여 리렌더 폭증을 방지한다.
+// ag-grid 는 columnDefs 참조가 바뀌면 컬럼 폭·정렬 상태를 초기화한다. 참조를 고정해야 한다.
 const columns = useMemo(() => buildColumns(response.data.columns), [response.data.columns]);
 ```

@@ -44,20 +44,23 @@
     - 4.2 [Do Not Define Components Inside Components](#42-do-not-define-components-inside-components)
     - 4.3 [Use Named Handlers Instead of Hiding Logic in JSX](#43-use-named-handlers-instead-of-hiding-logic-in-jsx)
     - 4.4 [Open ref Props Only for Real Imperative Contracts](#44-open-ref-props-only-for-real-imperative-contracts)
+    - 4.5 [Use Activity Only to Preserve Mounted Subtrees](#45-use-activity-only-to-preserve-mounted-subtrees)
+    - 4.6 [Declare and Export Props Interfaces Above the Component](#46-declare-and-export-props-interfaces-above-the-component)
 5. [Screen File Discipline](#5-screen-file-discipline) — **HIGH**
     - 5.1 [Avoid Premature Abstraction in Screen Code](#51-avoid-premature-abstraction-in-screen-code)
     - 5.2 [Extract Route-local Section Components Only for Runtime Boundaries](#52-extract-route-local-section-components-only-for-runtime-boundaries)
     - 5.3 [Keep Derived Values Close to Where They Are Used](#53-keep-derived-values-close-to-where-they-are-used)
     - 5.4 [Keep Route Entry Files Focused on Screen Flow](#54-keep-route-entry-files-focused-on-screen-flow)
+    - 5.5 [Place Suspense Boundaries at the Section Owner](#55-place-suspense-boundaries-at-the-section-owner)
+    - 5.6 [Avoid Ad-hoc Loading Branches in Screen Bodies](#56-avoid-ad-hoc-loading-branches-in-screen-bodies)
 6. [Events and Interaction Flow](#6-events-and-interaction-flow) — **MEDIUM-HIGH**
     - 6.1 [Keep Screen-specific Handler Flow Local Until a Real Utility Emerges](#61-keep-screen-specific-handler-flow-local-until-a-real-utility-emerges)
     - 6.2 [Name Handlers Predictably and Curry Extra Arguments](#62-name-handlers-predictably-and-curry-extra-arguments)
     - 6.3 [Run User Actions in Handlers, Not Effects](#63-run-user-actions-in-handlers-not-effects)
 7. [Server Data Flow](#7-server-data-flow) — **CRITICAL**
-    - 7.1 [Avoid Ad-hoc Loading Branches in Screen Bodies](#71-avoid-ad-hoc-loading-branches-in-screen-bodies)
-    - 7.2 [Name Query and Mutation Bindings Consistently](#72-name-query-and-mutation-bindings-consistently)
-    - 7.3 [Preserve Response and Store Origin in Wide Scopes](#73-preserve-response-and-store-origin-in-wide-scopes)
-    - 7.4 [Shape React Query Data in query.select](#74-shape-react-query-data-in-query-select)
+    - 7.1 [Name Query and Mutation Bindings Consistently](#71-name-query-and-mutation-bindings-consistently)
+    - 7.2 [Preserve Response and Store Origin in Wide Scopes](#72-preserve-response-and-store-origin-in-wide-scopes)
+    - 7.3 [Shape React Query Data in query.select](#73-shape-react-query-data-in-query-select)
 8. [Local State](#8-local-state) — **HIGH**
     - 8.1 [Calculate Derived Values During Rendering](#81-calculate-derived-values-during-rendering)
     - 8.2 [Choose State Tools by Source of Truth](#82-choose-state-tools-by-source-of-truth)
@@ -1097,6 +1100,127 @@ export const UiStatusBadge = (props: UiStatusBadgeProps) => {
 };
 ```
 
+### 4.5 Use Activity Only to Preserve Mounted Subtrees
+
+**Rule:** `R14` · `composition-use-activity-only-to-preserve-mounted-subtrees`
+
+**Applies when:** 조건부 렌더링과 `Activity` 사이를 오갈 때. 숨겼다 되돌릴 때 하위 트리 상태를 살릴지 정할 때.
+
+**Review with:** `composition-do-not-define-components-inside-components`
+
+**Impact: MEDIUM (감추기와 해제가 다른 일이라는 것이 화면마다 같은 방식으로 남습니다)**
+
+기본은 조건부 렌더링입니다.
+`<Activity>`는 **숨겼다 되돌릴 때 하위 트리 상태를 그대로 살려야 할 때만** 씁니다.
+
+두 방식은 같은 일이 아닙니다.
+
+| | 조건부 렌더링 | `<Activity mode="hidden">` |
+| --- | --- | --- |
+| 하위 트리 | 해제됩니다 | 마운트된 채 남습니다 |
+| 상태 | 사라집니다 | 유지됩니다 |
+| 이펙트 | 정리됩니다 | 정리됩니다 |
+| 렌더 비용 | 없습니다 | 낮은 우선순위로 계속 듭니다 |
+| 보조 기술 | 없는 것으로 읽힙니다 | 숨겨진 것으로 읽힙니다 |
+
+- 마운트와 해제 자체가 의미를 가지면 조건부 렌더링을 유지합니다.
+  폼 초기화, 구독 해제, 첫 진입 애니메이션이 그런 경우입니다.
+- 숨긴 하위 트리도 렌더 비용이 계속 듭니다. 무거운 트리를 습관적으로 감춰 두지 않습니다.
+- `<Activity>`는 리액트 19.2 이상에만 있습니다. 그보다 낮으면 조건부 렌더링만 씁니다.
+
+**Incorrect (생명주기 의미가 다른 분기를 표시 방식으로 치환):**
+
+```tsx
+return (
+  <>
+    <Activity mode={isEditing ? "visible" : "hidden"}>
+      <EditorForm />
+    </Activity>
+    <Activity mode={isEditing ? "hidden" : "visible"}>
+      <PreviewPane />
+    </Activity>
+  </>
+);
+```
+
+**Correct (되돌릴 때 상태를 살려야 하는 자리에만 사용):**
+
+```tsx
+return (
+  <Activity mode={isSidebarOpen ? "visible" : "hidden"}>
+    <PgEntrySidebar />
+  </Activity>
+);
+```
+
+**Correct (마운트 의미가 있으면 조건부 렌더링을 유지):**
+
+```tsx
+return hasItems ? <PgEntryList /> : <PgEntryEmptyState />;
+```
+
+### 4.6 Declare and Export Props Interfaces Above the Component
+
+**Rule:** `R15` · `composition-declare-props-interface-above-the-component`
+
+**Applies when:** 컴포넌트 프롭스 타입을 새로 선언할 때. 프롭스 타입의 위치나 공개 범위를 바꿀 때.
+
+**Review with:** `composition-destructure-props-inside`, `typescript/types-document-custom-types-and-shapes`
+
+**Impact: MEDIUM (계약을 먼저 읽고 구현으로 내려가는 순서가 파일마다 같습니다)**
+
+프롭스 타입은 `interface`로 선언하고 컴포넌트 선언 바로 위에 둡니다.
+파일을 열면 계약이 먼저 보이고 구현이 그 아래 옵니다.
+
+- 이름은 컴포넌트 이름에 `Props`를 붙입니다. `UiButton`이면 `UiButtonProps`입니다.
+- 사용처가 이 계약을 참조할 수 있어야 하므로 `export`합니다.
+  래퍼 사용처가 원본 라이브러리 프롭스를 보지 않게 하려는 것입니다.
+- 파일 위쪽에 타입을 모아 두지 않습니다. 컴포넌트가 여러 개면 각자 위에 둡니다.
+- 문서 주석은 `typescript/types-document-custom-types-and-shapes`가 정합니다.
+
+**Incorrect (파일 위쪽에 타입을 모으고 내보내지 않음):**
+
+```tsx
+interface UiBadgeProps {
+  label: string;
+}
+
+interface UiChipProps {
+  label: string;
+}
+
+const helperText = "…";
+
+export const UiBadge = (props: UiBadgeProps) => {
+  const { label } = props;
+  return <span className="ui_badge__root">{label}</span>;
+};
+
+export const UiChip = (props: UiChipProps) => {
+  const { label } = props;
+  return <span className="ui_chip__root">{label}</span>;
+};
+```
+
+**Correct (각 컴포넌트 바로 위에 선언하고 내보냄):**
+
+```tsx
+/**
+ * 상태 배지 프롭스
+ */
+export interface UiBadgeProps {
+  /**
+   * 배지에 표시할 문구
+   */
+  label: string;
+}
+
+export const UiBadge = (props: UiBadgeProps) => {
+  const { label } = props;
+  return <span className="ui_badge__root">{label}</span>;
+};
+```
+
 ## 5. Screen File Discipline
 
 **Impact: HIGH**
@@ -1105,7 +1229,7 @@ export const UiStatusBadge = (props: UiStatusBadgeProps) => {
 
 ### 5.1 Avoid Premature Abstraction in Screen Code
 
-**Rule:** `R14` · `screen-avoid-premature-abstraction`
+**Rule:** `R16` · `screen-avoid-premature-abstraction`
 
 **Applies when:** 화면 코드를 보조 함수·훅·컴포넌트·모듈으로 추출할 때. 한 곳에서만 쓰는 기존 추상화를 다시 접어 넣을 때.
 
@@ -1221,7 +1345,7 @@ export const EntryTable = (props: EntryTableProps) => {
 
 ### 5.2 Extract Route-local Section Components Only for Runtime Boundaries
 
-**Rule:** `R15` · `screen-extract-local-section-components-for-runtime-boundaries`
+**Rule:** `R17` · `screen-extract-local-section-components-for-runtime-boundaries`
 
 **Applies when:** 화면 지역 섹션 컴포넌트를 새로 추출할 때. 기존 섹션이 비동기·상태·프로바이더·상호작용·라이브러리·성능 경계를 소유하는지 바꿀 때.
 
@@ -1379,7 +1503,7 @@ export const PgEntries = () => {
 
 ### 5.3 Keep Derived Values Close to Where They Are Used
 
-**Rule:** `R16` · `screen-keep-derived-values-close`
+**Rule:** `R18` · `screen-keep-derived-values-close`
 
 **Applies when:** 오리진을 끊는 별칭·플래그·표시값을 넓은 화면 범위에 추가·이동·제거할 때. `let` 재할당이나 배열 `push` 기반 조립을 바꿀 때.
 
@@ -1424,7 +1548,7 @@ return <UiInput value={selectedNodeContext?.node?.name} />;
 
 ### 5.4 Keep Route Entry Files Focused on Screen Flow
 
-**Rule:** `R17` · `screen-keep-route-flow-visible`
+**Rule:** `R19` · `screen-keep-route-flow-visible`
 
 **Applies when:** 라우트 진입의 검색·화면 이동·질의·변경 요청·화면 전체 이펙트를 옮기거나 나눌 때. page 섹션 조립의 순서나 소유자를 바꿀 때. 제외: 같은 소유자 안에서 표현만 바꾸는 경우.
 
@@ -1490,6 +1614,108 @@ return (
 );
 ```
 
+### 5.5 Place Suspense Boundaries at the Section Owner
+
+**Rule:** `R20` · `screen-place-suspense-boundaries-at-the-section-owner`
+
+**Applies when:** `Suspense` 질의를 쓰는 화면에서 로딩 대체 화면의 위치를 정할 때. `Suspense` 경계를 추가하거나 옮길 때.
+
+**Requires selected:** `screen-avoid-ad-hoc-loading-branches` · 함께 적용
+
+**Review with:** `screen-extract-local-section-components-for-runtime-boundaries`
+
+**Impact: HIGH (막는 로딩을 화면 본문이 아니라 정해진 한 자리에서 처리합니다)**
+
+`Suspense` 질의를 쓰는 컴포넌트마다 그 **바로 위 섹션 소유자**가 경계를 갖습니다.
+경계와 대체 화면은 거기 한 곳에만 둡니다.
+
+- 섹션이 따로 없으면 라우트 진입이 경계를 갖습니다.
+- 한 화면에 경계를 여러 겹 쌓지 않습니다. 섹션이 독립적으로 채워져야 할 때만 나눕니다.
+- 대체 화면은 채워질 내용과 같은 높이를 차지해야 합니다. 그러지 않으면 레이아웃이 튑니다.
+- 질의를 부르는 컴포넌트 자신은 경계를 갖지 않습니다. 자기 자신을 감쌀 수 없습니다.
+
+경계가 있으므로 화면 본문에는 로딩 분기가 남지 않습니다.
+그 판정은 `screen-avoid-ad-hoc-loading-branches`가 합니다.
+
+**Incorrect (질의를 부르는 컴포넌트 안에서 로딩을 직접 처리):**
+
+```tsx
+export const PgEntryTreeSection = () => {
+  const responseEntryTreeSuspense = useEntryTreeSuspense();
+
+  return <UiTree nodes={responseEntryTreeSuspense.data.categoryNodes} />;
+};
+```
+
+```tsx
+// 진입 파일: 경계가 없어 화면 전체가 함께 멈춘다
+return <PgEntryTreeSection />;
+```
+
+**Correct (섹션 소유자가 경계와 대체 화면을 가짐):**
+
+```tsx
+return (
+  <Suspense fallback={<PgEntryTreeSkeleton />}>
+    <PgEntryTreeSection />
+  </Suspense>
+);
+```
+
+### 5.6 Avoid Ad-hoc Loading Branches in Screen Bodies
+
+**Rule:** `R21` · `screen-avoid-ad-hoc-loading-branches`
+
+**Applies when:** Suspense 질의를 쓰는 화면 본문에 초기 로딩 반환을 추가·변경할 때. `isPending`·`isFetching`으로 화면을 가리는 분기를 넣을 때. 제외: 선택 값에 기본값을 채우는 것만 바꾸는 경우.
+
+**Requires selected:** `typescript/absence-expose-optional-values-instead-of-silent-fallbacks` · 함께 적용
+
+**Review with:** `data-preserve-origin-chaining`, `screen-keep-derived-values-close`
+
+**Impact: HIGH (초기 로딩은 Suspense 경계가 맡고 화면 본문에는 데이터가 있는 경로만 남습니다)**
+
+Suspense 질의를 쓰는 화면은 본문에서 초기 로딩을 다시 분기하지 않습니다.
+막는 로딩은 Suspense 경계나 상위 레이아웃이 이미 처리합니다.
+
+- `isPending`, `isFetching`은 이미 그려진 화면을 보조할 때만 씁니다.
+  버튼 비활성화, 백그라운드 다시 불러오기 표시, 저장 중 배지가 그런 경우입니다.
+- 화면 전체를 가리는 지역 로딩 분기가 꼭 필요하면 `typescript/docs-justify-convention-exceptions-with-a-reason-comment`를 따라 이유를 남깁니다.
+
+값이 없을 수 있다는 사실을 기본값으로 덮는 문제는 이 규칙이 아니라
+`typescript/absence-expose-optional-values-instead-of-silent-fallbacks`가 판정합니다.
+로딩 분기를 고치면서 `??`나 `||`도 함께 손대면 두 규칙이 같이 걸립니다.
+
+**Incorrect (Suspense 질의 화면에서 초기 로딩을 다시 분기):**
+
+```tsx
+if (responseUserGetItemSuspense.isPending) {
+  return <Spinner />;
+}
+
+return <UserName value={responseUserGetItemSuspense.data.name} />;
+```
+
+**Correct (로딩과 갱신 상태는 보조 UI에만 사용):**
+
+```tsx
+return (
+  <>
+    <UserName value={responseUserGetItemSuspense.data.name} />
+    <UiButton disabled={mutationUserSave.isPending}>저장</UiButton>
+    {responseUserGetItemSuspense.isFetching ? <RefreshIndicator /> : null}
+  </>
+);
+```
+
+**Correct (가리는 분기가 필요하면 이유를 남김):**
+
+```tsx
+// 결제 위젯은 금액 확정 전에 그리면 외부 SDK 가 잘못된 금액으로 초기화된다
+if (mutationOrderConfirm.isPending) {
+  return <OrderConfirmingScreen />;
+}
+```
+
 ## 6. Events and Interaction Flow
 
 **Impact: MEDIUM-HIGH**
@@ -1498,7 +1724,7 @@ return (
 
 ### 6.1 Keep Screen-specific Handler Flow Local Until a Real Utility Emerges
 
-**Rule:** `R18` · `events-keep-handler-flow-inline`
+**Rule:** `R22` · `events-keep-handler-flow-inline`
 
 **Applies when:** 화면 전용 이름 붙인 핸들러의 분기·변경 요청·화면 이동·후처리를 여러 보조 함수나 훅으로 나눌 때. 쪼개져 있던 핸들러 흐름을 다시 합칠 때.
 
@@ -1546,7 +1772,7 @@ const handleSubmitButtonClick: MouseEventHandler<HTMLButtonElement> = async (_ev
 
 ### 6.2 Name Handlers Predictably and Curry Extra Arguments
 
-**Rule:** `R19` · `events-name-and-curry-handlers`
+**Rule:** `R23` · `events-name-and-curry-handlers`
 
 **Applies when:** 이벤트 핸들러를 새로 만들 때. 핸들러 이름이나 대상, 이벤트 표기를 바꿀 때. 추가 인자 전달 방식이나 최종 리액트 핸들러 시그니처를 바꿀 때.
 
@@ -1604,7 +1830,7 @@ const handleListItemClick =
 
 ### 6.3 Run User Actions in Handlers, Not Effects
 
-**Rule:** `R20` · `events-run-user-actions-in-handlers-not-effects`
+**Rule:** `R24` · `events-run-user-actions-in-handlers-not-effects`
 
 **Applies when:** 제출·저장·삭제·닫기 같은 한 번뿐인 사용자 액션을 핸들러와 상태+이펙트 사이에서 옮길 때. 한 번뿐인 사용자 액션의 실행 흐름을 바꿀 때.
 
@@ -1649,63 +1875,9 @@ const handleSubmit = async () => {
 
 질의와 변경 요청은 오리진을 보존해야 하며, 응답 변형은 `query.select`처럼 소스에 가장 가까운 지점에서 끝내야 합니다. 바인딩 이름도 어떤 API에서 왔는지 드러내야 합니다.
 
-### 7.1 Avoid Ad-hoc Loading Branches in Screen Bodies
+### 7.1 Name Query and Mutation Bindings Consistently
 
-**Rule:** `R21` · `data-avoid-ad-hoc-loading-branches`
-
-**Applies when:** Suspense 질의를 쓰는 화면 본문에 초기 로딩 반환을 추가·변경할 때. `isPending`·`isFetching`으로 화면을 가리는 분기를 넣을 때. 제외: 선택 값에 기본값을 채우는 것만 바꾸는 경우.
-
-**Requires selected:** `typescript/absence-expose-optional-values-instead-of-silent-fallbacks` · 함께 적용
-
-**Review with:** `data-preserve-origin-chaining`, `screen-keep-derived-values-close`
-
-**Impact: HIGH (초기 로딩은 Suspense 경계가 맡고 화면 본문에는 데이터가 있는 경로만 남습니다)**
-
-Suspense 질의를 쓰는 화면은 본문에서 초기 로딩을 다시 분기하지 않습니다.
-막는 로딩은 Suspense 경계나 상위 레이아웃이 이미 처리합니다.
-
-- `isPending`, `isFetching`은 이미 그려진 화면을 보조할 때만 씁니다.
-  버튼 비활성화, 백그라운드 다시 불러오기 표시, 저장 중 배지가 그런 경우입니다.
-- 화면 전체를 가리는 지역 로딩 분기가 꼭 필요하면 바로 위에 한국어 주석으로 이유를 남깁니다.
-
-값이 없을 수 있다는 사실을 기본값으로 덮는 문제는 이 규칙이 아니라
-`typescript/absence-expose-optional-values-instead-of-silent-fallbacks`가 판정합니다.
-로딩 분기를 고치면서 `??`나 `||`도 함께 손대면 두 규칙이 같이 걸립니다.
-
-**Incorrect (Suspense 질의 화면에서 초기 로딩을 다시 분기):**
-
-```tsx
-if (responseUserGetItemSuspense.isPending) {
-  return <Spinner />;
-}
-
-return <UserName value={responseUserGetItemSuspense.data.name} />;
-```
-
-**Correct (로딩과 갱신 상태는 보조 UI에만 사용):**
-
-```tsx
-return (
-  <>
-    <UserName value={responseUserGetItemSuspense.data.name} />
-    <UiButton disabled={mutationUserSave.isPending}>저장</UiButton>
-    {responseUserGetItemSuspense.isFetching ? <RefreshIndicator /> : null}
-  </>
-);
-```
-
-**Correct (가리는 분기가 필요하면 이유를 남김):**
-
-```tsx
-// 결제 위젯은 금액 확정 전에 그리면 외부 SDK 가 잘못된 금액으로 초기화된다
-if (mutationOrderConfirm.isPending) {
-  return <OrderConfirmingScreen />;
-}
-```
-
-### 7.2 Name Query and Mutation Bindings Consistently
-
-**Rule:** `R22` · `data-name-query-and-mutation-bindings-consistently`
+**Rule:** `R25` · `data-name-query-and-mutation-bindings-consistently`
 
 **Applies when:** 리액트 Query 질의·변경 요청 훅의 로컬 바인딩을 추가하거나 이름을 바꿀 때. 역할이 드러나지 않는 별칭이 diff에 보일 때.
 
@@ -1740,9 +1912,9 @@ const responseEntryListSuspense = useEntryListSuspense();
 const mutationEntryRemove = useEntryRemove();
 ```
 
-### 7.3 Preserve Response and Store Origin in Wide Scopes
+### 7.2 Preserve Response and Store Origin in Wide Scopes
 
-**Rule:** `R23` · `data-preserve-origin-chaining`
+**Rule:** `R26` · `data-preserve-origin-chaining`
 
 **Applies when:** page·레이아웃·화면 넓은 스코프에서 응답·변경 요청·스토어를 구조분해할 때. 원본을 별칭으로 끊고 값 접근 방식을 바꿀 때.
 
@@ -1782,9 +1954,9 @@ useEffect(() => {
 }, [responseEntrySearchSuspense]);
 ```
 
-### 7.4 Shape React Query Data in query.select
+### 7.3 Shape React Query Data in query.select
 
-**Rule:** `R24` · `data-shape-query-data-with-select`
+**Rule:** `R27` · `data-shape-query-data-with-select`
 
 **Applies when:** 서버 응답의 목록·항목·메타 등을 렌더에서 가공하거나 반복 소비할 때. 리액트 Query `select`의 결과 형태를 추가·변경할 때.
 
@@ -1833,7 +2005,7 @@ const responseEntryListSuspense = useEntryListSuspense({
 
 ### 8.1 Calculate Derived Values During Rendering
 
-**Rule:** `R25` · `state-calculate-derived-values-during-render`
+**Rule:** `R28` · `state-calculate-derived-values-during-render`
 
 **Applies when:** 현재 프롭스·상태·검색·응답에서 계산 가능한 값을 별도 상태와 이펙트로 동기화할 때. 그런 동기화를 제거할 때.
 
@@ -1866,7 +2038,7 @@ return <SelectedCountBadge count={selectedIds.length} />;
 
 ### 8.2 Choose State Tools by Source of Truth
 
-**Rule:** `R26` · `state-choose-state-tools-by-source-of-truth`
+**Rule:** `R29` · `state-choose-state-tools-by-source-of-truth`
 
 **Applies when:** 로컬 UI·전역 클라이언트·서버 데이터를 새 상태 도구로 옮길 때. 서로 다른 진짜 출처 사이에 값을 복제하거나 동기화할 때.
 
@@ -1908,7 +2080,7 @@ const responseUserGetItemSuspense = useUserGetItemSuspense();
 
 ### 8.3 Store Shared Derived Decisions Only When They Are Truly Shared
 
-**Rule:** `R27` · `state-store-derived-authority`
+**Rule:** `R30` · `state-store-derived-authority`
 
 **Applies when:** 여러 화면·메뉴·라우트 가드가 쓰는 접근 권한 같은 파생 판단을 스토어에 저장·동기화할 때. 단일 화면에서만 쓰는 값까지 스토어로 올리려 할 때.
 
@@ -1922,7 +2094,7 @@ const responseUserGetItemSuspense = useUserGetItemSuspense();
 스토어에 올리기로 했다면 문자열 비교나 도메인 판별은 초기화나 레이아웃 같은 한 경계에만 모으고,
 화면은 `accessStore.canEditRecord` 같은 결과만 참조합니다.
 Suspense 질의처럼 `onSuccess`가 없어서 동기화가 필요하다면 소유자가 분명한 경계에서만 `useEffect` 또는
-`useLayoutEffect`를 사용하고, 선택자 최적화는 실제로 필요한 경우에만 근거 주석과 함께 예외적으로 사용합니다.
+`useLayoutEffect`를 사용하고, 선택자 최적화는 실제로 필요할 때만 쓰고 `typescript/docs-justify-convention-exceptions-with-a-reason-comment`를 따라 근거를 남깁니다.
 
 **Incorrect (화면마다 판별을 반복하면서 단일 화면용 값을 스토어에도 복제):**
 
@@ -1958,7 +2130,7 @@ useEffect(() => {
 
 ### 8.4 Use Functional setState Updates When Based on Previous State
 
-**Rule:** `R28` · `state-use-functional-setstate-updates`
+**Rule:** `R31` · `state-use-functional-setstate-updates`
 
 **Applies when:** 다음 상태가 현재 상태에 의존하는 갱신을 추가·변경할 때. 핸들러·비동기 콜백·연속 호출에서 `setState` 방식을 바꿀 때.
 
@@ -1999,7 +2171,7 @@ const handleToggleUser = (userId: string) => {
 
 ### 8.5 Use useEffectEvent for Non-reactive Effect Callbacks
 
-**Rule:** `R29` · `state-use-effectevent-for-non-reactive-effect-callbacks`
+**Rule:** `R32` · `state-use-effectevent-for-non-reactive-effect-callbacks`
 
 **Applies when:** 구독 이펙트가 최신 프롭·상태 콜백을 읽어야 할 때. ref 동기화 우회, 의존성 재설치, `useEffectEvent`를 추가·변경할 때.
 
@@ -2014,6 +2186,8 @@ const handleToggleUser = (userId: string) => {
 
 이벤트 핸들러를 이펙트로 옮기라는 뜻이 아닙니다.
 실제 구독·연결 이펙트 안에서만 쓰고, 클릭·제출 같은 사용자 액션은 이름 붙인 핸들러에 둡니다.
+
+`useEffectEvent`는 리액트 19.2 이상에만 있습니다. 그보다 낮으면 이 규칙을 적용하지 않습니다.
 
 **Incorrect (최신 콜백을 위해 `ref`를 수동 동기화):**
 
@@ -2063,7 +2237,7 @@ useEffect(() => {
 
 ### 9.1 Do Not Memoize Without a Confirmed Reason
 
-**Rule:** `R30` · `perf-avoid-defensive-memoization`
+**Rule:** `R33` · `perf-avoid-defensive-memoization`
 
 **Applies when:** `useMemo`·`useCallback`을 추가하거나 제거할 때. 참조 동일성·실측 병목·무거운 지연 계산을 이유로 수동 메모이제이션을 검토할 때.
 
@@ -2072,7 +2246,7 @@ useEffect(() => {
 **Impact: MEDIUM-HIGH (효과를 확인하지 않은 방어적 `useMemo`, `useCallback` 을 막습니다)**
 
 `useMemo`와 `useCallback`은 기본적으로 쓰지 않습니다.
-쓰는 경우는 다음 넷뿐이며, 어느 경우든 바로 위에 한국어 주석으로 이유를 남깁니다.
+쓰는 경우는 다음 넷뿐이며, 어느 경우든 `typescript/docs-justify-convention-exceptions-with-a-reason-comment`를 따라 이유를 남깁니다.
 
 - 외부 라이브러리가 참조 동일성에 민감할 때
 - 병목이 실제로 측정됐을 때
@@ -2088,16 +2262,16 @@ useEffect(() => {
 const columns = useMemo(() => buildColumns(response.data.columns), [response.data.columns]);
 ```
 
-**Correct (필요할 때만 이유를 적고 사용):**
+**Correct (외부 패키지 제약을 가리키는 근거를 적고 사용):**
 
 ```ts
-// list library가 columns 참조 동일성을 요구하여 리렌더 폭증을 방지한다.
+// ag-grid 는 columnDefs 참조가 바뀌면 컬럼 폭·정렬 상태를 초기화한다. 참조를 고정해야 한다.
 const columns = useMemo(() => buildColumns(response.data.columns), [response.data.columns]);
 ```
 
 ### 9.2 Use Lazy State Initializers for Expensive Defaults
 
-**Rule:** `R31` · `perf-use-lazy-state-initializers-for-expensive-defaults`
+**Rule:** `R34` · `perf-use-lazy-state-initializers-for-expensive-defaults`
 
 **Applies when:** `useState` 초기값에 localStorage 파싱, 인덱스 생성, 큰 배열 정규화 같은 비용 있는 계산을 넣을 때.
 
@@ -2126,7 +2300,7 @@ const [draftFilter] = useState(() => {
 
 ### 9.3 Use startTransition for Non-urgent Visual Updates
 
-**Rule:** `R32` · `perf-use-starttransition-for-non-urgent-updates`
+**Rule:** `R35` · `perf-use-starttransition-for-non-urgent-updates`
 
 **Applies when:** 클릭·선택·필터 변경 뒤 큰 목록·표·트리를 다시 그리는 상태 갱신을 다룰 때. 상태 갱신의 우선순위나 전환 처리를 바꿀 때.
 
@@ -2163,7 +2337,7 @@ const handleStatusFilterChange = (nextStatus: EntryStatusFilter) => {
 
 ### 9.4 Use useDeferredValue for Heavy Derived Renders
 
-**Rule:** `R33` · `perf-use-usedeferredvalue-for-heavy-derived-renders`
+**Rule:** `R36` · `perf-use-usedeferredvalue-for-heavy-derived-renders`
 
 **Applies when:** 검색어·필터·정렬 입력마다 큰 목록이나 표를 다시 계산해 입력 반응이 늦어질 때. `useDeferredValue` 기반 계산을 추가·변경할 때.
 
@@ -2210,7 +2384,7 @@ const filteredRows = useMemo(() => {
 
 ### 10.1 Require Doc Comments on React Hooks, Handlers, and Key Declarations
 
-**Rule:** `R34` · `docs-require-jsdoc-on-key-declarations`
+**Rule:** `R37` · `docs-require-jsdoc-on-key-declarations`
 
 **Applies when:** 질의·변경 요청이나 비자명한 핸들러/이펙트를 추가·변경할 때. 내보낸 보조 함수·훅·스토어 선언을 추가·변경할 때. 다시 내보내기 포함 공개 타입·인터페이스나 합성 공개 부품을 추가·변경할 때.
 

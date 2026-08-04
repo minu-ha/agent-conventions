@@ -180,6 +180,7 @@
 					"absence-expose-optional-values-instead-of-silent-fallbacks",
 					"docs-keep-inline-comments-for-constraints-and-caveats",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-justify-convention-exceptions-with-a-reason-comment",
 					"guardrails-review-banned-typescript-shortcuts-before-finishing"
 				]
 			}

@@ -3,7 +3,7 @@
 **Impact: MEDIUM-HIGH (효과를 확인하지 않은 방어적 `useMemo`, `useCallback` 을 막습니다)**
 
 `useMemo`와 `useCallback`은 기본적으로 쓰지 않습니다.
-쓰는 경우는 다음 넷뿐이며, 어느 경우든 바로 위에 한국어 주석으로 이유를 남깁니다.
+쓰는 경우는 다음 넷뿐이며, 어느 경우든 `typescript/docs-justify-convention-exceptions-with-a-reason-comment`를 따라 이유를 남깁니다.
 
 - 외부 라이브러리가 참조 동일성에 민감할 때
 - 병목이 실제로 측정됐을 때

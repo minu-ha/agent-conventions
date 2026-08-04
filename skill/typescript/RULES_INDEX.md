@@ -1,7 +1,7 @@
 # TypeScript 컨벤션 Rule Index
 
 - Skill: `typescript`
-- Routing digest: `sha256:eb0974543af2a7a921947a41ca747c32d2183f891e60785bd7184e97d09fd5c4`
+- Routing digest: `sha256:ce8c53afb07927f6d3f1f4ae1f59106d4960ae996be794462673240fb2622a53`
 
 ## Local Rules
 
@@ -25,4 +25,5 @@
 - T18 | docs-keep-inline-comments-for-constraints-and-caveats | 함수 본문의 \`//\` 주석을 추가·수정·유지할 때. 도메인 규칙, 예외 방어, 외부 제약, 부수효과 순서를 주석으로 설명할 때.
 - T19 | docs-require-header-jsdoc-on-key-declarations | 질의·변경 요청, 원격 함수, 뻔하지 않은 핸들러와 이펙트, 내보낸 보조 함수와 훅, 커스텀 타입, 스토어 선언을 추가·변경할 때. 선언 위 주석의 형식이나 태그를 정할 때.
 - T20 | docs-write-concise-korean-comments-about-purpose-and-constraints | TypeScript·TSX 의 문서 주석이나 인라인 주석 문구를 추가·수정·번역하거나 검토할 때.
-- T21 | guardrails-review-banned-typescript-shortcuts-before-finishing | TypeScript·TSX 변경을 끝났다고 판정할 때. 변경 내역에서 배럴, 중복 타입, 이른 보조 함수, 넓은 조립, 근거 없는 기본값, 자명한 주석을 점검할 때. | completionGate
+- T21 | docs-justify-convention-exceptions-with-a-reason-comment | 규칙이 허용한 예외를 코드에 남길 때. 이미 있는 예외 주석의 내용을 바꿀 때. 제외: 규칙이 요구하지 않은 일반 설명 주석인 경우. | reviewWith: docs-write-concise-korean-comments-about-purpose-and-constraints
+- T22 | guardrails-review-banned-typescript-shortcuts-before-finishing | TypeScript·TSX 변경을 끝났다고 판정할 때. 변경 내역에서 배럴, 중복 타입, 이른 보조 함수, 넓은 조립, 근거 없는 기본값, 자명한 주석을 점검할 때. | completionGate

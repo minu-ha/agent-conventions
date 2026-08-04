@@ -21,7 +21,7 @@ Suspense 질의를 쓰는 화면은 본문에서 초기 로딩을 다시 분기�
 
 - `isPending`, `isFetching`은 이미 그려진 화면을 보조할 때만 씁니다.
   버튼 비활성화, 백그라운드 다시 불러오기 표시, 저장 중 배지가 그런 경우입니다.
-- 화면 전체를 가리는 지역 로딩 분기가 꼭 필요하면 바로 위에 한국어 주석으로 이유를 남깁니다.
+- 화면 전체를 가리는 지역 로딩 분기가 꼭 필요하면 `typescript/docs-justify-convention-exceptions-with-a-reason-comment`를 따라 이유를 남깁니다.
 
 값이 없을 수 있다는 사실을 기본값으로 덮는 문제는 이 규칙이 아니라
 `typescript/absence-expose-optional-values-instead-of-silent-fallbacks`가 판정합니다.

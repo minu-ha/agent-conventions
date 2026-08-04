@@ -46,7 +46,8 @@
 				"react": [
 					"ownership-layer-component-boundaries",
 					"ownership-place-owner-files-in-role-folders",
-					"composition-destructure-props-inside"
+					"composition-destructure-props-inside",
+					"composition-declare-props-interface-above-the-component"
 				],
 				"typescript": [
 					"naming-use-consistent-file-and-symbol-naming",
@@ -73,7 +74,8 @@
 					"react": [
 						"ownership-layer-component-boundaries",
 						"ownership-place-owner-files-in-role-folders",
-						"composition-destructure-props-inside"
+						"composition-destructure-props-inside",
+						"composition-declare-props-interface-above-the-component"
 					],
 					"typescript": [
 						"naming-use-consistent-file-and-symbol-naming",
@@ -171,6 +173,7 @@
 					"strategy-choose-single-composition-compound-and-variants",
 					"strategy-prefer-children-over-render-props",
 					"composition-destructure-props-inside",
+					"composition-declare-props-interface-above-the-component",
 					"docs-require-jsdoc-on-key-declarations"
 				],
 				"typescript": [
@@ -261,9 +264,12 @@
 					"ownership-place-owner-files-in-role-folders",
 					"typing-function-type-first",
 					"composition-destructure-props-inside",
+					"composition-use-activity-only-to-preserve-mounted-subtrees",
 					"screen-avoid-premature-abstraction",
 					"screen-extract-local-section-components-for-runtime-boundaries",
 					"screen-keep-route-flow-visible",
+					"screen-place-suspense-boundaries-at-the-section-owner",
+					"screen-avoid-ad-hoc-loading-branches",
 					"events-name-and-curry-handlers",
 					"docs-require-jsdoc-on-key-declarations"
 				],
@@ -274,6 +280,7 @@
 					"types-prefer-function-variable-types-over-parameter-annotations",
 					"types-reuse-callback-signatures-from-existing-contracts",
 					"types-reuse-existing-contracts-before-new-types",
+					"absence-expose-optional-values-instead-of-silent-fallbacks",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"guardrails-review-banned-typescript-shortcuts-before-finishing"
@@ -390,6 +397,7 @@
 					"docs-keep-inline-comments-for-constraints-and-caveats",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-justify-convention-exceptions-with-a-reason-comment",
 					"guardrails-review-banned-typescript-shortcuts-before-finishing"
 				]
 			}
@@ -432,13 +440,15 @@
 			"expectedSelected": {
 				"react": [
 					"screen-keep-derived-values-close",
-					"data-avoid-ad-hoc-loading-branches",
+					"screen-place-suspense-boundaries-at-the-section-owner",
+					"screen-avoid-ad-hoc-loading-branches",
 					"data-preserve-origin-chaining"
 				],
 				"typescript": [
 					"absence-expose-optional-values-instead-of-silent-fallbacks",
 					"docs-keep-inline-comments-for-constraints-and-caveats",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-justify-convention-exceptions-with-a-reason-comment",
 					"guardrails-review-banned-typescript-shortcuts-before-finishing"
 				]
 			}
