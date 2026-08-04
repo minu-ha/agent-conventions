@@ -61,7 +61,7 @@ export const UiIconButton = (props: UiIconButtonProps) => (
 );
 ```
 
-**Correct (자기 프롭이 있으면 이름으로 넘김):**
+**Correct (안쪽 요소는 하나지만 자기 프롭이 있어 스프레드를 못 씀):**
 
 ```tsx
 /**
@@ -97,7 +97,7 @@ export const UiIconButton = (props: UiIconButtonProps) => (
 );
 ```
 
-**Correct (안쪽 요소가 여럿이면 각각 갈 곳에 이름으로 넘김):**
+**Correct (프롭이 서로 다른 요소로 갈라져 각각 이름으로 넘김):**
 
 ```tsx
 /**
@@ -136,9 +136,7 @@ export const UiField = (props: UiFieldProps) => (
 			{props.label}
 		</label>
 		<LibTextField id={props.inputId} value={props.value} onChange={props.onChange} />
-		{props.helperText ? (
-			<span className={clsx("ui_field__helper")}>{props.helperText}</span>
-		) : null}
+		{props.helperText && <span className={clsx("ui_field__helper")}>{props.helperText}</span>}
 	</div>
 );
 ```

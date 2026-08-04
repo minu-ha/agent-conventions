@@ -40,7 +40,7 @@ export interface WgProductToolbarProps {
 export const WgProductToolbar = (props: WgProductToolbarProps) => {
 	return (
 		<header>
-			{props.showSearch ? <WgProductSearchField /> : null}
+			{props.showSearch && <WgProductSearchField />}
 			{props.isEditing ? (
 				<WgProductEditActions compact={props.isCompact} />
 			) : (

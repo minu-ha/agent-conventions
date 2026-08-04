@@ -51,6 +51,7 @@
     - 4.5 [Use Activity Only to Preserve Mounted Subtrees](#45-use-activity-only-to-preserve-mounted-subtrees)
     - 4.6 [Declare and Export Props Interfaces Above the Component](#46-declare-and-export-props-interfaces-above-the-component)
     - 4.7 [Write Fragments as `Fragment`, Not the Shorthand](#47-write-fragments-as-fragment-not-the-shorthand)
+    - 4.8 [Render a Single Branch With `&&`, Not a Ternary](#48-render-a-single-branch-with-not-a-ternary)
 5. [Screen File Discipline](#5-screen-file-discipline) — **HIGH**
     - 5.1 [Keep Route Entry Files Focused on Screen Flow](#51-keep-route-entry-files-focused-on-screen-flow)
     - 5.2 [Avoid Premature Abstraction in Screen Code](#52-avoid-premature-abstraction-in-screen-code)
@@ -875,7 +876,7 @@ export const UiIconButton = (props: UiIconButtonProps) => (
 );
 ```
 
-**Correct (자기 프롭이 있으면 이름으로 넘김):**
+**Correct (안쪽 요소는 하나지만 자기 프롭이 있어 스프레드를 못 씀):**
 
 ```tsx
 /**
@@ -911,7 +912,7 @@ export const UiIconButton = (props: UiIconButtonProps) => (
 );
 ```
 
-**Correct (안쪽 요소가 여럿이면 각각 갈 곳에 이름으로 넘김):**
+**Correct (프롭이 서로 다른 요소로 갈라져 각각 이름으로 넘김):**
 
 ```tsx
 /**
@@ -950,9 +951,7 @@ export const UiField = (props: UiFieldProps) => (
 			{props.label}
 		</label>
 		<LibTextField id={props.inputId} value={props.value} onChange={props.onChange} />
-		{props.helperText ? (
-			<span className={clsx("ui_field__helper")}>{props.helperText}</span>
-		) : null}
+		{props.helperText && <span className={clsx("ui_field__helper")}>{props.helperText}</span>}
 	</div>
 );
 ```
@@ -1027,8 +1026,8 @@ export const UiProfileDialog = (props: UiProfileDialogProps) => {
 				<h3>{props.dialogTitle}</h3>
 			</header>
 			<ProfileSummary />
-			{props.showActivity ? <ActivityPanel /> : null}
-			{props.showFocus ? <FocusPanel /> : null}
+			{props.showActivity && <ActivityPanel />}
+			{props.showFocus && <FocusPanel />}
 			<footer>{props.renderFooter?.()}</footer>
 		</section>
 	);
@@ -1114,7 +1113,12 @@ const UiTabsTrigger = (props: UiTabsTriggerProps) => {
 
 const UiTabsPanel = (props: UiTabsPanelProps) => {
 	const tabs = useTabsContext();
-	return tabs.activeValue === props.value ? <section>{props.children}</section> : null;
+
+	if (tabs.activeValue !== props.value) {
+		return null;
+	}
+
+	return <section>{props.children}</section>;
 };
 ```
 
@@ -1213,7 +1217,7 @@ export interface WgProductToolbarProps {
 export const WgProductToolbar = (props: WgProductToolbarProps) => {
 	return (
 		<header>
-			{props.showSearch ? <WgProductSearchField /> : null}
+			{props.showSearch && <WgProductSearchField />}
 			{props.isEditing ? (
 				<WgProductEditActions compact={props.isCompact} />
 			) : (
@@ -1801,6 +1805,94 @@ export const PgProductRows = (props: PgProductRowsProps) => {
 };
 ```
 
+### 4.8 Render a Single Branch With `&&`, Not a Ternary
+
+**Rule:** `R21` · `composition-render-one-branch-with-and`
+
+**Applies when:** JSX 안에 조건부 렌더링을 추가하거나 조건식을 바꿀 때. 기존 `조건 ? … : null`을 넣거나 뺄 때.
+
+**Impact: MEDIUM (조건부 렌더링 형태가 하나로 고정되고 쓰지 않는 `: null`이 사라집니다)**
+
+JSX 안에서 그릴 갈래가 **하나면** `&&`를 씁니다.
+`조건 ? <X /> : null`로 쓰지 않습니다.
+`: null`은 아무것도 안 하면서 눈이 한 번 더 멈추는 자리를 만듭니다.
+
+컴포넌트가 통째로 아무것도 안 그릴 때는 `&&`를 쓰지 않습니다.
+`&&`는 조건이 거짓이면 `false`를 돌려주는데, 반환값 자리에서는 `null`이 뜻이 분명합니다.
+조건을 이른 반환으로 먼저 걸러 냅니다.
+
+**둘 중 하나를 그릴 때만** 삼항을 씁니다.
+그때는 두 갈래가 다 뜻을 갖습니다.
+
+| 그리는 것 | 쓰는 것 |
+| --- | --- |
+| 조건이 참일 때만 | `{조건 && <X />}` |
+| 참일 때와 거짓일 때 각각 | `{조건 ? <X /> : <Y />}` |
+
+**`&&` 왼쪽에 숫자를 두지 않습니다.**
+`0`은 거짓이지만 리액트가 화면에 `0`을 그대로 그립니다.
+`NaN`도 `NaN`으로 그려집니다.
+길이나 개수로 판단할 때는 비교식으로 바꿔 불리언을 만듭니다.
+
+문자열과 객체는 왼쪽에 두어도 됩니다.
+빈 문자열, `undefined`, `null`은 리액트가 아무것도 그리지 않습니다.
+
+삼항을 여러 개 겹치지 않습니다.
+갈래가 셋 이상이면 조건을 이름 붙인 값으로 꺼내거나 섹션 컴포넌트로 나눕니다.
+어느 쪽인지는 `screen-extract-local-section-components-for-runtime-boundaries`가 정합니다.
+
+숨긴 하위 트리의 상태를 살려야 하면 `composition-use-activity-only-to-preserve-mounted-subtrees`를 봅니다.
+
+**Incorrect (한 갈래인데 삼항과 `: null`을 씀):**
+
+```tsx
+return (
+	<section>
+		{props.helperText ? <span className={clsx("ui_field__helper")}>{props.helperText}</span> : null}
+		{responseProductListSuspense.isFetching ? <UiRefreshIndicator /> : null}
+	</section>
+);
+```
+
+**Incorrect (`&&` 왼쪽에 숫자를 둬서 `0`이 그려짐):**
+
+```tsx
+return <section>{selectedRows.length && <PgProductBulkActionBar />}</section>;
+```
+
+**Correct (한 갈래는 `&&`, 왼쪽은 불리언):**
+
+```tsx
+return (
+	<section>
+		{props.helperText && <span className={clsx("ui_field__helper")}>{props.helperText}</span>}
+		{selectedRows.length > 0 && <PgProductBulkActionBar selectedRows={selectedRows} />}
+	</section>
+);
+```
+
+**Correct (컴포넌트가 통째로 안 그리면 이른 반환):**
+
+```tsx
+const PgProductPanel = (props: PgProductPanelProps) => {
+	if (!props.isVisible) {
+		return null;
+	}
+
+	return <section className={clsx("pg_product__panel")}>{props.children}</section>;
+};
+```
+
+**Correct (두 갈래가 다 뜻을 가지면 삼항):**
+
+```tsx
+return filteredCategoryNodes.length > 0 ? (
+	<UiTree treeData={filteredCategoryNodes} />
+) : (
+	<UiEmpty description="검색 결과가 없습니다" />
+);
+```
+
 ## 5. Screen File Discipline
 
 **Impact: HIGH**
@@ -1809,7 +1901,7 @@ export const PgProductRows = (props: PgProductRowsProps) => {
 
 ### 5.1 Keep Route Entry Files Focused on Screen Flow
 
-**Rule:** `R21` · `screen-keep-route-flow-visible`
+**Rule:** `R22` · `screen-keep-route-flow-visible`
 
 **Applies when:** 라우트 진입의 검색·화면 이동·쿼리·뮤테이션·화면 전체 이펙트를 옮기거나 나눌 때. page 섹션 조립의 순서나 소유자를 바꿀 때. 제외: 같은 소유자 안에서 표현만 바꾸는 경우.
 
@@ -1877,7 +1969,7 @@ return (
 
 ### 5.2 Avoid Premature Abstraction in Screen Code
 
-**Rule:** `R22` · `screen-avoid-premature-abstraction`
+**Rule:** `R23` · `screen-avoid-premature-abstraction`
 
 **Applies when:** 화면 코드를 보조 함수·훅·컴포넌트·모듈로 추출할 때. 한 곳에서만 쓰는 기존 추상화를 다시 접어 넣을 때.
 
@@ -1993,7 +2085,7 @@ export const PgProductTable = (props: PgProductTableProps) => {
 
 ### 5.3 Do Not Extract Section Components That Only Group Layout
 
-**Rule:** `R23` · `screen-extract-local-section-components-for-runtime-boundaries`
+**Rule:** `R24` · `screen-extract-local-section-components-for-runtime-boundaries`
 
 **Applies when:** 화면 지역 섹션 컴포넌트를 새로 추출할 때. 기존 섹션이 비동기·상태·프로바이더·상호작용·라이브러리·성능을 직접 소유하는지 바꿀 때.
 
@@ -2152,7 +2244,7 @@ export const PgProducts = () => {
 
 ### 5.4 Keep Derived Values Close to Where They Are Used
 
-**Rule:** `R24` · `screen-keep-derived-values-close`
+**Rule:** `R25` · `screen-keep-derived-values-close`
 
 **Applies when:** 화면 진입 파일이나 섹션 최상단에 `const` 별칭·플래그·표시값을 추가·이동·제거할 때. 훅 인자, JSX 표시값, 이펙트 안 계산을 위쪽 `const`로 빼거나 되돌릴 때.
 
@@ -2215,7 +2307,7 @@ export const PgProducts = () => {
 
 ### 5.5 Place Suspense Boundaries at the Section Owner
 
-**Rule:** `R25` · `screen-place-suspense-boundaries-at-the-section-owner`
+**Rule:** `R26` · `screen-place-suspense-boundaries-at-the-section-owner`
 
 **Applies when:** `Suspense` 쿼리를 쓰는 화면에서 로딩 대체 화면의 위치를 정할 때. `Suspense` 경계를 추가하거나 옮길 때.
 
@@ -2268,7 +2360,7 @@ return (
 
 ### 5.6 Avoid Ad-hoc Loading Branches in Screen Bodies
 
-**Rule:** `R26` · `screen-avoid-ad-hoc-loading-branches`
+**Rule:** `R27` · `screen-avoid-ad-hoc-loading-branches`
 
 **Applies when:** Suspense 쿼리를 쓰는 화면 본문에 초기 로딩 반환을 추가·변경할 때. `isFetching`이나 뮤테이션 `isPending`으로 화면을 가리는 분기를 넣을 때. 제외: 선택 값에 기본값을 채우는 것만 바꾸는 경우.
 
@@ -2309,7 +2401,7 @@ return (
   <Fragment>
     <UserName value={responseUserGetItemSuspense.data.name} />
     <UiButton disabled={mutationUserSave.isPending}>저장</UiButton>
-    {responseUserGetItemSuspense.isFetching ? <RefreshIndicator /> : null}
+    {responseUserGetItemSuspense.isFetching && <RefreshIndicator />}
   </Fragment>
 );
 ```
@@ -2331,7 +2423,7 @@ if (mutationOrderConfirm.isPending) {
 
 ### 6.1 Keep Screen-specific Handler Flow Local Until a Real Utility Emerges
 
-**Rule:** `R27` · `events-keep-handler-flow-inline`
+**Rule:** `R28` · `events-keep-handler-flow-inline`
 
 **Applies when:** 화면 전용 이름 붙인 핸들러의 분기·뮤테이션·화면 이동·후처리를 여러 보조 함수나 훅으로 나눌 때. 쪼개져 있던 핸들러 흐름을 다시 합칠 때.
 
@@ -2381,7 +2473,7 @@ const handleSubmitButtonClick: MouseEventHandler<HTMLButtonElement> = async (_ev
 
 ### 6.2 Name Handlers Predictably
 
-**Rule:** `R28` · `events-name-handlers-predictably`
+**Rule:** `R29` · `events-name-handlers-predictably`
 
 **Applies when:** 이벤트 핸들러를 새로 만들 때. 핸들러 이름이나 대상, 이벤트 표기를 바꿀 때.
 
@@ -2439,7 +2531,7 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (event) => {
 
 ### 6.3 Curry Extra Arguments Into DOM Event Handlers
 
-**Rule:** `R29` · `events-curry-extra-handler-arguments`
+**Rule:** `R30` · `events-curry-extra-handler-arguments`
 
 **Applies when:** DOM 이벤트 프롭에 추가 인자를 넘기는 핸들러를 추가·변경할 때. 인라인 래퍼로 인자를 넘기던 자리를 바꿀 때. 제외: 이벤트 객체를 받지 않는 프롭 콜백인 경우.
 
@@ -2491,7 +2583,7 @@ const handleListItemClick =
 
 ### 6.4 Run User Actions in Handlers, Not Effects
 
-**Rule:** `R30` · `events-run-user-actions-in-handlers-not-effects`
+**Rule:** `R31` · `events-run-user-actions-in-handlers-not-effects`
 
 **Applies when:** 제출·저장·삭제·닫기 같은 한 번뿐인 사용자 액션을 핸들러와 상태+이펙트 사이에서 옮길 때. 한 번뿐인 사용자 액션의 실행 흐름을 바꿀 때.
 
@@ -2538,7 +2630,7 @@ const handleSubmit = async () => {
 
 ### 7.1 Name Query and Mutation Bindings Consistently
 
-**Rule:** `R31` · `data-name-query-and-mutation-bindings-consistently`
+**Rule:** `R32` · `data-name-query-and-mutation-bindings-consistently`
 
 **Applies when:** 리액트 Query 쿼리·뮤테이션 훅의 로컬 바인딩을 추가하거나 이름을 바꿀 때. 역할이 드러나지 않는 별칭이 diff에 보일 때.
 
@@ -2575,7 +2667,7 @@ const mutationProductRemove = useProductRemove();
 
 ### 7.2 Shape React Query Data in query.select
 
-**Rule:** `R32` · `data-shape-query-data-with-select`
+**Rule:** `R33` · `data-shape-query-data-with-select`
 
 **Applies when:** 서버 응답의 목록·항목·메타 등을 렌더에서 가공하거나 반복 소비할 때. 리액트 Query `select`의 결과 형태를 추가·변경할 때.
 
@@ -2618,7 +2710,7 @@ const responseProductListSuspense = useProductListSuspense({
 
 ### 7.3 Preserve Response and Store Origin in Wide Scopes
 
-**Rule:** `R33` · `data-preserve-origin-chaining`
+**Rule:** `R34` · `data-preserve-origin-chaining`
 
 **Applies when:** page·레이아웃·화면 넓은 스코프에서 응답·뮤테이션·스토어를 구조분해할 때. 원본을 별칭으로 끊고 값 접근 방식을 바꿀 때.
 
@@ -2668,7 +2760,7 @@ useEffect(() => {
 
 ### 8.1 Calculate Derived Values During Rendering
 
-**Rule:** `R34` · `state-calculate-derived-values-during-render`
+**Rule:** `R35` · `state-calculate-derived-values-during-render`
 
 **Applies when:** 현재 프롭스·상태·검색·응답에서 계산 가능한 값을 별도 상태와 이펙트로 동기화할 때. 그런 동기화를 제거할 때.
 
@@ -2701,7 +2793,7 @@ return <SelectedCountBadge count={selectedIds.length} />;
 
 ### 8.2 Choose State Tools by Source of Truth
 
-**Rule:** `R35` · `state-choose-state-tools-by-source-of-truth`
+**Rule:** `R36` · `state-choose-state-tools-by-source-of-truth`
 
 **Applies when:** 로컬 UI·전역 클라이언트·서버 데이터를 새 상태 도구로 옮길 때. 합성 컴포넌트나 컴포넌트 묶음에 공유 상태를 넣을 때. 서로 다른 진짜 출처 사이에 값을 복제하거나 동기화할 때.
 
@@ -2771,7 +2863,7 @@ export const UiTabsRoot = (props: UiTabsRootProps) => {
 
 ### 8.3 Store Shared Derived Decisions Only When They Are Truly Shared
 
-**Rule:** `R36` · `state-store-derived-authority`
+**Rule:** `R37` · `state-store-derived-authority`
 
 **Applies when:** 여러 화면·메뉴·라우트 가드가 쓰는 접근 권한 같은 파생 판단을 스토어에 저장·동기화할 때. 단일 화면에서만 쓰는 값까지 스토어로 올리려 할 때.
 
@@ -2821,7 +2913,7 @@ useEffect(() => {
 
 ### 8.4 Use Functional setState Updates When Based on Previous State
 
-**Rule:** `R37` · `state-use-functional-setstate-updates`
+**Rule:** `R38` · `state-use-functional-setstate-updates`
 
 **Applies when:** 다음 상태가 현재 상태에 의존하는 갱신을 추가·변경할 때. 핸들러·비동기 콜백·연속 호출에서 `setState` 방식을 바꿀 때.
 
@@ -2862,7 +2954,7 @@ const handleToggleUser = (userId: string) => {
 
 ### 8.5 Use useEffectEvent for Non-reactive Effect Callbacks
 
-**Rule:** `R38` · `state-use-effectevent-for-non-reactive-effect-callbacks`
+**Rule:** `R39` · `state-use-effectevent-for-non-reactive-effect-callbacks`
 
 **Applies when:** 구독 이펙트가 최신 프롭·상태 콜백을 읽어야 할 때. ref 동기화 우회, 의존성 재설치, `useEffectEvent`를 추가·변경할 때.
 
@@ -2933,7 +3025,7 @@ useEffect(() => {
 
 ### 9.1 Do Not Memoize Without a Confirmed Reason
 
-**Rule:** `R39` · `perf-avoid-defensive-memoization`
+**Rule:** `R40` · `perf-avoid-defensive-memoization`
 
 **Applies when:** `useMemo`·`useCallback`을 추가하거나 제거할 때. 참조 동일성·실측 병목·무거운 지연 계산을 이유로 수동 메모이제이션을 검토할 때.
 
@@ -2967,7 +3059,7 @@ const columns = useMemo(() => toTableColumns(response.data.columns), [response.d
 
 ### 9.2 Use Lazy State Initializers for Expensive Defaults
 
-**Rule:** `R40` · `perf-use-lazy-state-initializers-for-expensive-defaults`
+**Rule:** `R41` · `perf-use-lazy-state-initializers-for-expensive-defaults`
 
 **Applies when:** `useState` 초기값에 localStorage 파싱, 인덱스 생성, 큰 배열 정규화 같은 비용 있는 계산을 넣을 때.
 
@@ -2996,7 +3088,7 @@ const [draftFilter] = useState(() => {
 
 ### 9.3 Use startTransition for Non-urgent Visual Updates
 
-**Rule:** `R41` · `perf-use-starttransition-for-non-urgent-updates`
+**Rule:** `R42` · `perf-use-starttransition-for-non-urgent-updates`
 
 **Applies when:** 클릭·선택·필터 변경 뒤 큰 목록·표·트리를 다시 그리는 상태 갱신을 다룰 때. 상태 갱신의 우선순위나 전환 처리를 바꿀 때.
 
@@ -3033,7 +3125,7 @@ const handleStatusFilterChange = (nextStatus: ProductStatusFilter) => {
 
 ### 9.4 Use useDeferredValue for Heavy Derived Renders
 
-**Rule:** `R42` · `perf-use-usedeferredvalue-for-heavy-derived-renders`
+**Rule:** `R43` · `perf-use-usedeferredvalue-for-heavy-derived-renders`
 
 **Applies when:** 검색어·필터·정렬 입력마다 큰 목록이나 표를 다시 계산해 입력 반응이 늦어질 때. `useDeferredValue` 기반 계산을 추가·변경할 때.
 
@@ -3080,7 +3172,7 @@ const filteredRows = useMemo(() => {
 
 ### 10.1 Require Doc Comments on React Hooks, Handlers, and Key Declarations
 
-**Rule:** `R43` · `docs-require-jsdoc-on-key-declarations`
+**Rule:** `R44` · `docs-require-jsdoc-on-key-declarations`
 
 **Applies when:** 쿼리·뮤테이션이나 읽어서 의도가 안 보이는 핸들러/이펙트를 추가·변경할 때. 내보낸 보조 함수·훅·스토어 선언을 추가·변경할 때. 다시 내보내기 포함 공개 타입·인터페이스를 추가·변경할 때.
 

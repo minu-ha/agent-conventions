@@ -51,8 +51,8 @@ export const UiProfileDialog = (props: UiProfileDialogProps) => {
 				<h3>{props.dialogTitle}</h3>
 			</header>
 			<ProfileSummary />
-			{props.showActivity ? <ActivityPanel /> : null}
-			{props.showFocus ? <FocusPanel /> : null}
+			{props.showActivity && <ActivityPanel />}
+			{props.showFocus && <FocusPanel />}
 			<footer>{props.renderFooter?.()}</footer>
 		</section>
 	);
@@ -138,7 +138,12 @@ const UiTabsTrigger = (props: UiTabsTriggerProps) => {
 
 const UiTabsPanel = (props: UiTabsPanelProps) => {
 	const tabs = useTabsContext();
-	return tabs.activeValue === props.value ? <section>{props.children}</section> : null;
+
+	if (tabs.activeValue !== props.value) {
+		return null;
+	}
+
+	return <section>{props.children}</section>;
 };
 ```
 

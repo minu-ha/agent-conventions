@@ -435,7 +435,7 @@
 		},
 		{
 			"id": "RTE15-suspense-absence",
-			"prompt": "replace Suspense detail ?? [], || \"-\", a local pending Spinner, and top-level aliases with an explicit empty state and origin chaining; remove an ungrounded explanatory comment.",
+			"prompt": "replace Suspense detail ?? [], || \"-\", a local pending Spinner, single-branch ternaries, and top-level aliases with an explicit empty state and origin chaining; remove an ungrounded explanatory comment.",
 			"files": [
 				"src/page/product-detail/pg-product-detail.tsx"
 			],
@@ -446,6 +446,7 @@
 			"expectedSelected": {
 				"react": [
 					"composition-name-fragments-explicitly",
+					"composition-render-one-branch-with-and",
 					"screen-keep-derived-values-close",
 					"screen-place-suspense-boundaries-at-the-section-owner",
 					"screen-avoid-ad-hoc-loading-branches",

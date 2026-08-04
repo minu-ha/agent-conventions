@@ -47,7 +47,7 @@ return (
   <Fragment>
     <UserName value={responseUserGetItemSuspense.data.name} />
     <UiButton disabled={mutationUserSave.isPending}>저장</UiButton>
-    {responseUserGetItemSuspense.isFetching ? <RefreshIndicator /> : null}
+    {responseUserGetItemSuspense.isFetching && <RefreshIndicator />}
   </Fragment>
 );
 ```

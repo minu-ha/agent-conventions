@@ -166,6 +166,7 @@ const reactRuleUniverse = [
 	"composition-use-activity-only-to-preserve-mounted-subtrees",
 	"composition-declare-props-interface-above-the-component",
 	"composition-name-fragments-explicitly",
+	"composition-render-one-branch-with-and",
 	"screen-keep-route-flow-visible",
 	"screen-avoid-premature-abstraction",
 	"screen-extract-local-section-components-for-runtime-boundaries",
@@ -562,6 +563,10 @@ const reactRuleRouting = {
 	},
 	"composition-name-fragments-explicitly": {
 		appliesWhen: "JSX에서 여러 요소를 감쌀 조각 문법을 추가·변경할 때. 조각에 `key`를 붙이거나 떼어 낼 때.",
+		reviewWith: [],
+	},
+	"composition-render-one-branch-with-and": {
+		appliesWhen: "JSX 안에 조건부 렌더링을 추가하거나 조건식을 바꿀 때. 기존 `조건 ? … : null`을 넣거나 뺄 때.",
 		reviewWith: [],
 	},
 	"screen-keep-route-flow-visible": {
@@ -1201,12 +1206,13 @@ const reactScenarioStages = {
 	"RTE15-suspense-absence": {
 		initial: {
 			prompt:
-				'replace Suspense detail ?? [], || "-", a local pending Spinner, and top-level aliases with an explicit empty state and origin chaining; remove an ungrounded explanatory comment.',
+				'replace Suspense detail ?? [], || "-", a local pending Spinner, single-branch ternaries, and top-level aliases with an explicit empty state and origin chaining; remove an ungrounded explanatory comment.',
 			files: ["src/page/product-detail/pg-product-detail.tsx"],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
 				react: [
 					"composition-name-fragments-explicitly",
+					"composition-render-one-branch-with-and",
 					"screen-keep-derived-values-close",
 					"screen-place-suspense-boundaries-at-the-section-owner",
 					"screen-avoid-ad-hoc-loading-branches",
@@ -1906,7 +1912,7 @@ test("TypeScript SKILL.md is a compact router without receipt or audit machinery
 	assertMentions(extractSection(body, 1), ["React/CSS", "companion"], "typescript 1절");
 });
 
-test("React progressive metadata and all 43 rule routes match Appendix B exactly", async () => {
+test("React progressive metadata and all 44 rule routes match Appendix B exactly", async () => {
 	const skillPaths = getSkillPaths("react", realSkillRootDir);
 	const document = await readSkillDocument(skillPaths);
 
@@ -1917,7 +1923,7 @@ test("React progressive metadata and all 43 rule routes match Appendix B exactly
 		{skill: "typescript", mode: "required"},
 		{skill: "css", mode: "conditional", appliesWhen: "class contract, stylesheet 또는 styling surface를 변경한다."},
 	]);
-	assert.equal(document.rules.length, 43);
+	assert.equal(document.rules.length, 44);
 	assert.deepEqual(
 		Object.fromEntries(document.rules.map((rule) => [getRuleId(rule), {appliesWhen: rule.appliesWhen, reviewWith: rule.reviewWith}])),
 		reactRuleRouting,
@@ -2070,7 +2076,7 @@ test("React generated index and handbook preserve canonical local rules and comp
 		entries.map((entry) => entry.id),
 		reactRuleUniverse,
 	);
-	assert.equal(entries.length, 43);
+	assert.equal(entries.length, 44);
 
 	for (const entry of entries) {
 		assert.equal(entry.fileName, `${entry.id}.md`);
