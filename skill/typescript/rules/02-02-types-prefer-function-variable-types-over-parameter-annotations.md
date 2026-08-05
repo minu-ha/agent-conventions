@@ -35,10 +35,10 @@ tags: types
 `query.select: (response) => ({...})`를 이 규칙 때문에 밖으로 빼거나 함수 타입으로 고정하지 않습니다.
 커링 팩토리가 돌려주는 리액트 핸들러는 `react/typing-take-handler-types-from-existing-contracts`가 판정합니다.
 
-**Incorrect (공유 가능한 함수 계약이 있는데 매개변수 타입만 사용):**
+**Incorrect (`UserFormatters` 계약이 이미 있는데 매개변수 타입만 적음):**
 
 ```ts
-const formatState = (state: Record<string, unknown>): string => {
+const toStateLabel = (state: Record<string, unknown>): string => {
 	return JSON.stringify(state);
 };
 ```
@@ -47,19 +47,28 @@ const formatState = (state: Record<string, unknown>): string => {
 
 ```ts
 // 이미 있는 계약
+/**
+ * 사용자 화면 표시 문자열 계약
+ */
 interface UserFormatters {
-	formatState: (state: Record<string, unknown>) => string;
-	formatRole: (role: string) => string;
+	/**
+	 * 상태 객체를 화면 문자열로
+	 */
+	toStateLabel: (state: Record<string, unknown>) => string;
+	/**
+	 * 권한 코드를 화면 문자열로
+	 */
+	toRoleLabel: (role: string) => string;
 }
 
-const formatState: UserFormatters["formatState"] = (state) => {
+const toStateLabel: UserFormatters["toStateLabel"] = (state) => {
 	return JSON.stringify(state);
 };
 ```
 
 ```ts
 /**
- * request 정규화 계약
+ * request 변환 계약
  */
 type ToRequest = (request: string) => string;
 

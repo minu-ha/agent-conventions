@@ -21,12 +21,12 @@ tags: tooling, stylelint, automation
 | stylelint 규칙 | 담당 컨벤션 |
 | --- | --- |
 | `selector-class-pattern` | `naming-use-scope-slug-element-modifier-syntax` |
-| `selector-disallowed-list` | `ownership-use-foreign-classes-only-under-your-own-root` |
+| `selector-disallowed-list` | `ownership-use-foreign-classes-only-under-your-own-root`, `selector-nest-dom-state-in-the-owning-block`, `selector-use-classes-instead-of-element-selectors` |
 | `max-nesting-depth` | `selector-limit-nesting-block-depth` |
-| `no-duplicate-selectors` | `selector-do-not-group-classes-with-commas`, `selector-declare-each-class-in-one-block` |
+| `no-duplicate-selectors` | `selector-declare-each-class-in-one-block` |
 | `property-disallowed-list` | `values-tokenize-repeated-visual-values` |
 | `selector-attribute-name-disallowed-list` | `selector-use-pseudo-classes-for-dom-owned-states` |
-| `no-descending-specificity` | 자손 기본 블록을 조상 규칙보다 앞에 두게 합니다 |
+| `no-descending-specificity` | 자손 기본 블록을 조상 규칙보다 앞에 두게 합니다. `stylelint-config-standard`에서 옵니다 |
 
 접두사가 디렉터리마다 달라서 `selector-class-pattern`과 `selector-disallowed-list`는 `overrides`로 나눕니다.
 중첩이 한 겹이라 블록 안 선택자는 `&`로 시작하고, 그래서 블록 바깥에 홀로 둔 것만 걸립니다.
@@ -34,7 +34,14 @@ tags: tooling, stylelint, automation
 `selector-max-combinators`와 `selector-max-type`은 넣지 않습니다.
 우리 체이닝과 라이브러리 경로를 개수로 구분할 수 없습니다.
 
-역할 이름, 승격 판단, 변형 노출, 포커스 대비는 리뷰가 담당합니다.
+도구가 못 가는 자리를 적어 둡니다.
+
+- 쉼표로 묶은 선택자는 어떤 규칙도 막지 않습니다.
+  `no-duplicate-selectors`는 같은 선택자가 두 번 나올 때만 걸립니다.
+  `selector-do-not-group-classes-with-commas`는 리뷰가 봅니다.
+- 최상위 요소 선택자도 못 잡습니다.
+  `ownMarkupPatterns`가 `&`로 시작하는 형태만 보고, `selector-max-type`은 넣지 않았습니다.
+- 역할 이름, 승격 판단, 변형 노출, 포커스 대비도 리뷰가 담당합니다.
 
 **Incorrect (`stylelint-config-standard`의 기본 클래스 패턴을 그대로 씀):**
 
@@ -69,7 +76,7 @@ const ownClassPattern = (scope) =>
 /**
  * 우리가 이름을 정하지 않는 라이브러리 클래스
  */
-const libraryPrefixes = [/^\.ant-/, /^\.rc-/, /^\.tippy-/, /^\.Mui-/];
+const libraryPrefixes = [/^\.ant-/, /^\.rc-/, /^\.tippy-/, /^\.Mui/];
 
 /**
  * 우리가 마크업을 쓰는 자리에서 금지되는 형태
@@ -94,8 +101,9 @@ export default {
 		"no-duplicate-selectors": [true, {disallowInList: true}],
 		// 지역 custom property 선언을 막는다. var() 소비는 걸리지 않는다
 		"property-disallowed-list": ["/^--/"],
-		// 앱이 아는 상태는 modifier 로 표현한다
-		"selector-attribute-name-disallowed-list": [/^aria-/, /^data-/],
+		// 우리 마크업의 상태는 modifier 로 표현한다.
+		// 라이브러리가 상태를 data-* 로 내는 경우가 있어 우리 접두사만 막는다
+		"selector-attribute-name-disallowed-list": [/^aria-/, /^data-(pg|wg|ui)-/],
 		"selector-max-id": 0,
 	},
 	overrides: [
@@ -121,7 +129,16 @@ export default {
 			},
 		},
 		{
-			// 전역 토큰 파일만 custom property 선언을 허용하고 이름을 강제한다
+			// 전역 스타일시트는 우리 클래스 문법 대상이 아니다
+			files: ["src/style/**/*.css", "src/*.css"],
+			rules: {
+				"selector-class-pattern": null,
+				"keyframes-name-pattern": null,
+				"property-disallowed-list": null,
+			},
+		},
+		{
+			// 전역 토큰 파일만 이름을 강제한다
 			files: ["src/style/token.css"],
 			rules: {
 				"selector-class-pattern": null,

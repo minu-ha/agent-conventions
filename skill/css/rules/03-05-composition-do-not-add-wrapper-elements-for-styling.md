@@ -68,7 +68,7 @@ export const UiCollapse = (props: UiCollapseProps) => (
 ```
 
 ```tsx
-<UiCollapse className="pg_postIndex__collapse" items={items} />
+<UiCollapse className={clsx("pg_postIndex__collapse")} items={items} />
 ```
 
 ```css
@@ -81,7 +81,7 @@ export const UiCollapse = (props: UiCollapseProps) => (
 
 ```tsx
 {/* LegacyDatePicker 는 className 을 받지 않아 배치용 래퍼가 필요하다 */}
-<div className="pg_postIndex__dateField">
+<div className={clsx("pg_postIndex__dateField")}>
 	<LegacyDatePicker value={value} onChange={handleChange} />
 </div>
 ```

@@ -354,7 +354,7 @@
 		},
 		{
 			"id": "RTE12-query-shaping",
-			"prompt": "move repeated raw list, items, and meta render shaping into query select, rename bindings to response... and mutation..., and remove wide aliases.",
+			"prompt": "move repeated raw list, items, and meta render shaping into query select, combine the product and category responses through useQueries combine, rename bindings to response... and mutation..., and remove wide aliases.",
 			"files": [
 				"src/page/products/pg-products.tsx"
 			],
@@ -367,6 +367,7 @@
 					"screen-keep-derived-values-close",
 					"data-name-query-and-mutation-bindings-consistently",
 					"data-shape-query-data-with-select",
+					"data-combine-multiple-queries-with-combine",
 					"data-preserve-origin-chaining",
 					"docs-require-jsdoc-on-key-declarations"
 				],

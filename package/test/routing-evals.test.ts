@@ -179,6 +179,7 @@ const reactRuleUniverse = [
 	"events-run-user-actions-in-handlers-not-effects",
 	"data-name-query-and-mutation-bindings-consistently",
 	"data-shape-query-data-with-select",
+	"data-combine-multiple-queries-with-combine",
 	"data-preserve-origin-chaining",
 	"state-calculate-derived-values-during-render",
 	"state-choose-state-tools-by-source-of-truth",
@@ -626,6 +627,11 @@ const reactRuleRouting = {
 	"data-shape-query-data-with-select": {
 		appliesWhen: "서버 응답의 목록·항목·메타 등을 렌더에서 가공하거나 반복 소비할 때. 리액트 Query `select`의 결과 형태를 추가·변경할 때.",
 		reviewWith: ["data-name-query-and-mutation-bindings-consistently", "data-preserve-origin-chaining"],
+	},
+	"data-combine-multiple-queries-with-combine": {
+		appliesWhen:
+			"쿼리 결과 둘 이상을 하나의 값으로 합치는 코드를 추가·변경할 때. 화면 본문에서 두 `data`를 꺼내 함께 계산하는 코드를 넣거나 뺄 때.",
+		reviewWith: ["data-shape-query-data-with-select", "screen-keep-derived-values-close"],
 	},
 	"data-preserve-origin-chaining": {
 		appliesWhen: "page·레이아웃·화면 넓은 스코프에서 응답·뮤테이션·스토어를 구조분해할 때. 원본을 별칭으로 끊고 값 접근 방식을 바꿀 때.",
@@ -1134,7 +1140,7 @@ const reactScenarioStages = {
 	"RTE12-query-shaping": {
 		initial: {
 			prompt:
-				"move repeated raw list, items, and meta render shaping into query select, rename bindings to response... and mutation..., and remove wide aliases.",
+				"move repeated raw list, items, and meta render shaping into query select, combine the product and category responses through useQueries combine, rename bindings to response... and mutation..., and remove wide aliases.",
 			files: ["src/page/products/pg-products.tsx"],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
@@ -1142,6 +1148,7 @@ const reactScenarioStages = {
 					"screen-keep-derived-values-close",
 					"data-name-query-and-mutation-bindings-consistently",
 					"data-shape-query-data-with-select",
+					"data-combine-multiple-queries-with-combine",
 					"data-preserve-origin-chaining",
 					"docs-require-jsdoc-on-key-declarations",
 				],
@@ -1912,7 +1919,7 @@ test("TypeScript SKILL.md is a compact router without receipt or audit machinery
 	assertMentions(extractSection(body, 1), ["React/CSS", "companion"], "typescript 1절");
 });
 
-test("React progressive metadata and all 44 rule routes match Appendix B exactly", async () => {
+test("React progressive metadata and all 45 rule routes match Appendix B exactly", async () => {
 	const skillPaths = getSkillPaths("react", realSkillRootDir);
 	const document = await readSkillDocument(skillPaths);
 
@@ -1923,7 +1930,7 @@ test("React progressive metadata and all 44 rule routes match Appendix B exactly
 		{skill: "typescript", mode: "required"},
 		{skill: "css", mode: "conditional", appliesWhen: "class contract, stylesheet 또는 styling surface를 변경한다."},
 	]);
-	assert.equal(document.rules.length, 44);
+	assert.equal(document.rules.length, 45);
 	assert.deepEqual(
 		Object.fromEntries(document.rules.map((rule) => [getRuleId(rule), {appliesWhen: rule.appliesWhen, reviewWith: rule.reviewWith}])),
 		reactRuleRouting,
@@ -2076,7 +2083,7 @@ test("React generated index and handbook preserve canonical local rules and comp
 		entries.map((entry) => entry.id),
 		reactRuleUniverse,
 	);
-	assert.equal(entries.length, 44);
+	assert.equal(entries.length, 45);
 
 	for (const entry of entries) {
 		assert.equal(entry.fileName, `${entry.id}.md`);
@@ -2169,7 +2176,7 @@ test("CSS progressive metadata and rule routing match Appendix C exactly", async
 	assertMentions(readAppliesWhen(fallbackRule), ["`var(--*)`", "공통 토큰"], "fallbackRule");
 	assertMentions(
 		flattenWhitespace(fallbackRule),
-		[/공통 토큰 목록/i, /빠진 것을 곧바로 드러냅니다/, /values-tokenize-repeated-visual-values/i],
+		[/공통 토큰 목록/i, /상속 속성이면 상속값, 아니면 초기값/, /values-tokenize-repeated-visual-values/i],
 		"fallbackRule",
 	);
 
@@ -2753,7 +2760,7 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	const commaGroup = await readRule("css", "selector-do-not-group-classes-with-commas");
 	assertMentions(
 		commaGroup,
-		[/중복을 감수합니다/, /조건마다 블록을 따로 열고 선언을 그대로 씁니다/, /no-duplicate-selectors/, /disallowInList/],
+		[/중복을 감수합니다/, /조건마다 블록을 따로 열고 선언을 그대로 씁니다/, /no-duplicate-selectors/, /쉼표 묶음 자체는 막지 않습니다/],
 		"commaGroup",
 	);
 
@@ -2767,7 +2774,11 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	const nestDomState = await readRule("css", "selector-nest-dom-state-in-the-owning-block");
 	assertMentions(
 		nestDomState,
-		[/블록 바깥에서 다시 열지 않습니다/, /식별자가 같은 자손을 결합자 하나로 겨냥합니다/, /부모 선택자가 없어서/],
+		[
+			/블록 바깥에서 다시 열지 않습니다/,
+			/식별자가 같은 자손을 결합자 하나로 겨냥합니다/,
+			/`:has\(\)`로 조상을 겨냥할 수는 있지만 쓰지 않습니다/,
+		],
 		"nestDomState",
 	);
 

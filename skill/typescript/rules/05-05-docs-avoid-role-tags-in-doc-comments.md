@@ -38,6 +38,9 @@ export const fetchProductList = async (): Promise<Product[]> => {
  * @schema product 저장 입력
  */
 export interface SaveProductInput {
+	/**
+	 * 저장할 제목
+	 */
 	title: string;
 }
 ```
@@ -58,6 +61,9 @@ export const fetchProductList = async (): Promise<Product[]> => {
  * @deprecated `SaveProductRequest`로 옮기는 중이다.
  */
 export interface SaveProductInput {
+	/**
+	 * 저장할 제목
+	 */
 	title: string;
 }
 ```

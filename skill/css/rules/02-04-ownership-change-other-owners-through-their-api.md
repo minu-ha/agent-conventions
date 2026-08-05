@@ -49,7 +49,7 @@ tags: ownership, api, promotion
 **Correct (최상위 배치는 사용처가 자기 클래스로 잡음):**
 
 ```tsx
-<WgChartCard className="pg_detail__chartCard" />
+<WgChartCard className={clsx("pg_detail__chartCard")} />
 ```
 
 ```css

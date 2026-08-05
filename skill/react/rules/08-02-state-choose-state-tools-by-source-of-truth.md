@@ -61,8 +61,17 @@ const responseUserGetItemSuspense = useUserGetItemSuspense();
 **Correct (합성 컴포넌트 안에서 부품끼리 나눠 쓰는 상태는 `Context`로 나름):**
 
 ```tsx
+/**
+ * 탭 부품끼리 나눠 쓰는 값
+ */
 interface UiTabsContextValue {
+	/**
+	 * 지금 열린 탭 식별자
+	 */
 	selectedId: string;
+	/**
+	 * 탭을 고를 때
+	 */
 	onSelect: (id: string) => void;
 }
 

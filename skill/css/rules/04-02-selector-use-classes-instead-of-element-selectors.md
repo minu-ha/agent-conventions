@@ -65,11 +65,11 @@ TSX에서 그 지점이 보이므로 "이게 원본 HTML인가"를 따질 필요
 **Correct (우리가 렌더하면 클래스를 붙임):**
 
 ```tsx
-<div className="pg_catalogIndex__toolbar">
-	<div className="pg_catalogIndex__toolbarField">
+<div className={clsx("pg_catalogIndex__toolbar")}>
+	<div className={clsx("pg_catalogIndex__toolbarField")}>
 		<UiSearchInput />
 	</div>
-	<button type="button" className="pg_catalogIndex__toolbarButton">
+	<button type="button" className={clsx("pg_catalogIndex__toolbarButton")}>
 		초기화
 	</button>
 </div>
@@ -89,7 +89,7 @@ TSX에서 그 지점이 보이므로 "이게 원본 HTML인가"를 따질 필요
 
 ```tsx
 <div
-	className="wg_productDetail__prose"
+	className={clsx("wg_productDetail__prose")}
 	dangerouslySetInnerHTML={{__html: product.bodyHtml}}
 />
 ```

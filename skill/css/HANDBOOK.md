@@ -539,7 +539,7 @@ ui/button/ui-button.css
 **Correct (최상위 배치는 사용처가 자기 클래스로 잡음):**
 
 ```tsx
-<WgChartCard className="pg_detail__chartCard" />
+<WgChartCard className={clsx("pg_detail__chartCard")} />
 ```
 
 ```css
@@ -878,7 +878,7 @@ export const UiCollapse = (props: UiCollapseProps) => (
 ```
 
 ```tsx
-<UiCollapse className="pg_postIndex__collapse" items={items} />
+<UiCollapse className={clsx("pg_postIndex__collapse")} items={items} />
 ```
 
 ```css
@@ -891,7 +891,7 @@ export const UiCollapse = (props: UiCollapseProps) => (
 
 ```tsx
 {/* LegacyDatePicker 는 className 을 받지 않아 배치용 래퍼가 필요하다 */}
-<div className="pg_postIndex__dateField">
+<div className={clsx("pg_postIndex__dateField")}>
 	<LegacyDatePicker value={value} onChange={handleChange} />
 </div>
 ```
@@ -1066,11 +1066,11 @@ TSX에서 그 지점이 보이므로 "이게 원본 HTML인가"를 따질 필요
 **Correct (우리가 렌더하면 클래스를 붙임):**
 
 ```tsx
-<div className="pg_catalogIndex__toolbar">
-	<div className="pg_catalogIndex__toolbarField">
+<div className={clsx("pg_catalogIndex__toolbar")}>
+	<div className={clsx("pg_catalogIndex__toolbarField")}>
 		<UiSearchInput />
 	</div>
-	<button type="button" className="pg_catalogIndex__toolbarButton">
+	<button type="button" className={clsx("pg_catalogIndex__toolbarButton")}>
 		초기화
 	</button>
 </div>
@@ -1090,7 +1090,7 @@ TSX에서 그 지점이 보이므로 "이게 원본 HTML인가"를 따질 필요
 
 ```tsx
 <div
-	className="wg_productDetail__prose"
+	className={clsx("wg_productDetail__prose")}
 	dangerouslySetInnerHTML={{__html: product.bodyHtml}}
 />
 ```
@@ -1141,7 +1141,8 @@ TSX에서 그 지점이 보이므로 "이게 원본 HTML인가"를 따질 필요
 
 `@media`나 `@supports` 안에서 같은 클래스를 다시 선언하는 것은 이 규칙의 대상이 아닙니다.
 
-기계 검증은 `no-duplicate-selectors`의 `disallowInList: true`입니다.
+이 규칙은 리뷰가 봅니다.
+`no-duplicate-selectors`는 같은 선택자가 두 번 나올 때만 걸리고 쉼표 묶음 자체는 막지 않습니다.
 
 **Incorrect (`,`로 공통 선언을 묶고 아래에서 일부만 다시 엶):**
 
@@ -1387,7 +1388,8 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 
 조상의 DOM 상태가 자손을 바꿔야 하면 식별자가 같은 자손을 결합자 하나로 겨냥합니다.
 자손의 `:hover`는 포인터가 자손 위에 있을 때만 걸려서 조상 상태를 알 방법이 없고,
-CSS에 부모 선택자가 없어서 대체 수단이 없습니다.
+`:has()`로 조상을 겨냥할 수는 있지만 쓰지 않습니다.
+자손 블록에서 조상 조건을 읽으면 그 자손이 어디 놓였는지에 묶여, 조상을 옮길 때 조용히 깨집니다.
 
 자손의 기본 블록은 조상 규칙보다 **앞에** 둡니다.
 뒤에 두면 명시도가 낮은 규칙이 높은 규칙 뒤에 오고, `no-descending-specificity`가 이를 잡습니다.
@@ -1395,7 +1397,8 @@ CSS에 부모 선택자가 없어서 대체 수단이 없습니다.
 지역 사용자 정의 속성으로 상태를 전달하지 않습니다.
 `values-tokenize-repeated-visual-values`가 막습니다.
 
-기계 검증은 `max-nesting-depth: 1`과 `no-descending-specificity`입니다.
+기계 검증은 `selector-disallowed-list`가 남의 클래스에 붙은 상태를 잡고,
+`property-disallowed-list`가 지역 사용자 정의 속성 선언을 잡습니다.
 
 **Incorrect (pseudo-class를 최상위 선택자로 다시 엶):**
 
@@ -1571,8 +1574,13 @@ CSS에 부모 선택자가 없어서 대체 수단이 없습니다.
 
 - `z-index`에는 숫자를 직접 쓰지 않고 층 토큰을 씁니다.
   토큰 이름이 곧 쌓임 순서 문서입니다.
+- 층 순서는 **같은 쌓임 맥락 안에서만** 성립합니다.
+  조상에 `transform`·`filter`·`opacity`·`contain`이 있으면 새 맥락이 생겨 층이 뒤집힙니다.
+  `z-index`를 넣을 때 그 조상들을 먼저 확인합니다.
 - `sticky`나 `fixed`를 쓸 때는 기준 컨테이너를 주석 한 줄로 남깁니다.
   어느 조상이 스크롤 컨테이너인지는 선언에 안 보입니다.
+  `fixed`는 `transform`이 걸린 조상 아래에서 뷰포트 기준을 잃고,
+  `sticky`는 스크롤 조상이 `overflow: visible`이면 아무 일도 하지 않습니다.
 
 **Incorrect (레이아웃 강제가 많고 기준 설명이 없음):**
 
@@ -1610,7 +1618,7 @@ CSS에 부모 선택자가 없어서 대체 수단이 없습니다.
 
 **Review with:** `values-tokenize-repeated-visual-values`
 
-**Impact: HIGH (토큰이 빠지면 조용히 깨지지 않고 드러나며, 대체값이 매직 넘버로 번지지도 않습니다)**
+**Impact: HIGH (토큰 값을 한 곳에서 바꿀 수 있고 대체값이 매직 넘버로 번지지 않습니다)**
 
 프로젝트는 전역에서 항상 주입되는 **공통 토큰 목록**을 한 곳에 선언합니다.
 `:root`나 전역 테마 스타일시트가 그 목록의 단일 출처입니다.
@@ -1619,8 +1627,16 @@ CSS에 부모 선택자가 없어서 대체 수단이 없습니다.
 
 | 대상 | 대체값 |
 | --- | --- |
-| 공통 토큰 목록에 있는 변수 | **쓰지 않습니다.** 빠진 것을 곧바로 드러냅니다 |
-| 그 밖의 모든 `var()` | **씁니다.** 값이 없을 때 안전한 기본값을 둡니다 |
+| 공통 토큰 목록에 있는 변수 | **쓰지 않습니다.** 값을 바꿀 자리를 한 곳으로 남깁니다 |
+| 그 밖의 모든 `var()` | **씁니다.** 조건부로만 주입되는 값이라 없을 때를 대비합니다 |
+
+변수가 없을 때 무슨 일이 일어나는지 알아 둡니다.
+그 선언은 아래 규칙에 자리를 넘기지 않고 **상속 속성이면 상속값, 아니면 초기값**이 됩니다.
+`color`는 부모 색을 그대로 물려받고 `z-index`는 `auto`가 되어 **조용히 깨집니다.**
+그래서 공통 토큰은 이름이 목록에 있는지 눈으로 확인해야 합니다.
+
+대체값은 **변수가 선언되지 않았을 때만** 쓰입니다.
+선언은 있는데 그 속성에 맞지 않는 값이면 대체값이 아니라 위와 같은 결과가 됩니다.
 
 공통 토큰에 대체값을 붙이지 않는 이유는 `values-tokenize-repeated-visual-values`와 충돌하기 때문입니다.
 `var(--app-space-3, 12px)`가 100곳에 있으면 `12px`을 100곳에 하드코딩한 것과 같아서 토큰화의 목적이 사라집니다.
@@ -2005,12 +2021,12 @@ CSS에 부모 선택자가 없어서 대체 수단이 없습니다.
 | stylelint 규칙 | 담당 컨벤션 |
 | --- | --- |
 | `selector-class-pattern` | `naming-use-scope-slug-element-modifier-syntax` |
-| `selector-disallowed-list` | `ownership-use-foreign-classes-only-under-your-own-root` |
+| `selector-disallowed-list` | `ownership-use-foreign-classes-only-under-your-own-root`, `selector-nest-dom-state-in-the-owning-block`, `selector-use-classes-instead-of-element-selectors` |
 | `max-nesting-depth` | `selector-limit-nesting-block-depth` |
-| `no-duplicate-selectors` | `selector-do-not-group-classes-with-commas`, `selector-declare-each-class-in-one-block` |
+| `no-duplicate-selectors` | `selector-declare-each-class-in-one-block` |
 | `property-disallowed-list` | `values-tokenize-repeated-visual-values` |
 | `selector-attribute-name-disallowed-list` | `selector-use-pseudo-classes-for-dom-owned-states` |
-| `no-descending-specificity` | 자손 기본 블록을 조상 규칙보다 앞에 두게 합니다 |
+| `no-descending-specificity` | 자손 기본 블록을 조상 규칙보다 앞에 두게 합니다. `stylelint-config-standard`에서 옵니다 |
 
 접두사가 디렉터리마다 달라서 `selector-class-pattern`과 `selector-disallowed-list`는 `overrides`로 나눕니다.
 중첩이 한 겹이라 블록 안 선택자는 `&`로 시작하고, 그래서 블록 바깥에 홀로 둔 것만 걸립니다.
@@ -2018,7 +2034,14 @@ CSS에 부모 선택자가 없어서 대체 수단이 없습니다.
 `selector-max-combinators`와 `selector-max-type`은 넣지 않습니다.
 우리 체이닝과 라이브러리 경로를 개수로 구분할 수 없습니다.
 
-역할 이름, 승격 판단, 변형 노출, 포커스 대비는 리뷰가 담당합니다.
+도구가 못 가는 자리를 적어 둡니다.
+
+- 쉼표로 묶은 선택자는 어떤 규칙도 막지 않습니다.
+  `no-duplicate-selectors`는 같은 선택자가 두 번 나올 때만 걸립니다.
+  `selector-do-not-group-classes-with-commas`는 리뷰가 봅니다.
+- 최상위 요소 선택자도 못 잡습니다.
+  `ownMarkupPatterns`가 `&`로 시작하는 형태만 보고, `selector-max-type`은 넣지 않았습니다.
+- 역할 이름, 승격 판단, 변형 노출, 포커스 대비도 리뷰가 담당합니다.
 
 **Incorrect (`stylelint-config-standard`의 기본 클래스 패턴을 그대로 씀):**
 
@@ -2053,7 +2076,7 @@ const ownClassPattern = (scope) =>
 /**
  * 우리가 이름을 정하지 않는 라이브러리 클래스
  */
-const libraryPrefixes = [/^\.ant-/, /^\.rc-/, /^\.tippy-/, /^\.Mui-/];
+const libraryPrefixes = [/^\.ant-/, /^\.rc-/, /^\.tippy-/, /^\.Mui/];
 
 /**
  * 우리가 마크업을 쓰는 자리에서 금지되는 형태
@@ -2078,8 +2101,9 @@ export default {
 		"no-duplicate-selectors": [true, {disallowInList: true}],
 		// 지역 custom property 선언을 막는다. var() 소비는 걸리지 않는다
 		"property-disallowed-list": ["/^--/"],
-		// 앱이 아는 상태는 modifier 로 표현한다
-		"selector-attribute-name-disallowed-list": [/^aria-/, /^data-/],
+		// 우리 마크업의 상태는 modifier 로 표현한다.
+		// 라이브러리가 상태를 data-* 로 내는 경우가 있어 우리 접두사만 막는다
+		"selector-attribute-name-disallowed-list": [/^aria-/, /^data-(pg|wg|ui)-/],
 		"selector-max-id": 0,
 	},
 	overrides: [
@@ -2105,7 +2129,16 @@ export default {
 			},
 		},
 		{
-			// 전역 토큰 파일만 custom property 선언을 허용하고 이름을 강제한다
+			// 전역 스타일시트는 우리 클래스 문법 대상이 아니다
+			files: ["src/style/**/*.css", "src/*.css"],
+			rules: {
+				"selector-class-pattern": null,
+				"keyframes-name-pattern": null,
+				"property-disallowed-list": null,
+			},
+		},
+		{
+			// 전역 토큰 파일만 이름을 강제한다
 			files: ["src/style/token.css"],
 			rules: {
 				"selector-class-pattern": null,

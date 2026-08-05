@@ -2,4 +2,4 @@
 
 **Impact: CRITICAL**
 
-> CRITICAL rule: must read the [full rule](../rules/07-03-data-preserve-origin-chaining.md) before implementation or review.
+> CRITICAL rule: must read the [full rule](../rules/07-04-data-preserve-origin-chaining.md) before implementation or review.

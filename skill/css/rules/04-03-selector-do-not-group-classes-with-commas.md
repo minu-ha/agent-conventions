@@ -31,7 +31,8 @@ tags: selector, duplication, maintainability
 
 `@media`나 `@supports` 안에서 같은 클래스를 다시 선언하는 것은 이 규칙의 대상이 아닙니다.
 
-기계 검증은 `no-duplicate-selectors`의 `disallowInList: true`입니다.
+이 규칙은 리뷰가 봅니다.
+`no-duplicate-selectors`는 같은 선택자가 두 번 나올 때만 걸리고 쉼표 묶음 자체는 막지 않습니다.
 
 **Incorrect (`,`로 공통 선언을 묶고 아래에서 일부만 다시 엶):**
 

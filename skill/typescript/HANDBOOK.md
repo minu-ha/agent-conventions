@@ -497,10 +497,10 @@ interface ProductListRow {
 `query.select: (response) => ({...})`를 이 규칙 때문에 밖으로 빼거나 함수 타입으로 고정하지 않습니다.
 커링 팩토리가 돌려주는 리액트 핸들러는 `react/typing-take-handler-types-from-existing-contracts`가 판정합니다.
 
-**Incorrect (공유 가능한 함수 계약이 있는데 매개변수 타입만 사용):**
+**Incorrect (`UserFormatters` 계약이 이미 있는데 매개변수 타입만 적음):**
 
 ```ts
-const formatState = (state: Record<string, unknown>): string => {
+const toStateLabel = (state: Record<string, unknown>): string => {
 	return JSON.stringify(state);
 };
 ```
@@ -509,19 +509,28 @@ const formatState = (state: Record<string, unknown>): string => {
 
 ```ts
 // 이미 있는 계약
+/**
+ * 사용자 화면 표시 문자열 계약
+ */
 interface UserFormatters {
-	formatState: (state: Record<string, unknown>) => string;
-	formatRole: (role: string) => string;
+	/**
+	 * 상태 객체를 화면 문자열로
+	 */
+	toStateLabel: (state: Record<string, unknown>) => string;
+	/**
+	 * 권한 코드를 화면 문자열로
+	 */
+	toRoleLabel: (role: string) => string;
 }
 
-const formatState: UserFormatters["formatState"] = (state) => {
+const toStateLabel: UserFormatters["toStateLabel"] = (state) => {
 	return JSON.stringify(state);
 };
 ```
 
 ```ts
 /**
- * request 정규화 계약
+ * request 변환 계약
  */
 type ToRequest = (request: string) => string;
 
@@ -1189,6 +1198,9 @@ enum ProductStatus {
 **Correct (객체 리터럴과 타입 추출을 조합):**
 
 ```ts
+/**
+ * product 심사 상태 값 집합
+ */
 const product_status = {
 	pending: "pending",
 	passed: "passed",
@@ -1196,7 +1208,7 @@ const product_status = {
 } as const;
 
 /**
- * 감사 상태 값 집합
+ * product 심사 상태 타입
  */
 type ProductStatus = (typeof product_status)[keyof typeof product_status];
 ```
@@ -1673,6 +1685,9 @@ export const fetchProductList = async (): Promise<Product[]> => {
  * @schema product 저장 입력
  */
 export interface SaveProductInput {
+	/**
+	 * 저장할 제목
+	 */
 	title: string;
 }
 ```
@@ -1693,6 +1708,9 @@ export const fetchProductList = async (): Promise<Product[]> => {
  * @deprecated `SaveProductRequest`로 옮기는 중이다.
  */
 export interface SaveProductInput {
+	/**
+	 * 저장할 제목
+	 */
 	title: string;
 }
 ```

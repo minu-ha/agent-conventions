@@ -67,7 +67,8 @@
 7. [Server Data Flow](#7-server-data-flow) — **CRITICAL**
     - 7.1 [Name Query and Mutation Bindings Consistently](#71-name-query-and-mutation-bindings-consistently)
     - 7.2 [Shape React Query Data in query.select](#72-shape-react-query-data-in-query-select)
-    - 7.3 [Preserve Response and Store Origin in Wide Scopes](#73-preserve-response-and-store-origin-in-wide-scopes)
+    - 7.3 [Combine Multiple Queries With `useQueries` and `combine`](#73-combine-multiple-queries-with-usequeries-and-combine)
+    - 7.4 [Preserve Response and Store Origin in Wide Scopes](#74-preserve-response-and-store-origin-in-wide-scopes)
 8. [State Ownership and Updates](#8-state-ownership-and-updates) — **HIGH**
     - 8.1 [Calculate Derived Values During Rendering](#81-calculate-derived-values-during-rendering)
     - 8.2 [Choose State Tools by Source of Truth](#82-choose-state-tools-by-source-of-truth)
@@ -1457,8 +1458,17 @@ export const WgUserProfileCard = (props: WgUserProfileCardProps) => {
 **Correct (컴포넌트를 바깥으로 분리하고 프롭스로 전달):**
 
 ```tsx
+/**
+ * 사용자 프로필 아바타 프롭스
+ */
 export interface WgUserProfileAvatarProps {
+	/**
+	 * 어두운 배경에서 쓸지
+	 */
 	theme: "dark" | "light";
+	/**
+	 * 아바타 이미지 주소
+	 */
 	src: string;
 }
 
@@ -1517,7 +1527,12 @@ import type { MouseEventHandler } from "react";
  * 선택된 product 삭제와 다음 화면 이동 처리
  */
 const handleRemoveProductButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
-  // ...
+  if (!selectedProduct) {
+    return;
+  }
+
+  await mutationProductRemove.mutateAsync({ params: { productId: selectedProduct.id } });
+  void navigate({ to: "/products" });
 };
 
 <UiButton onClick={handleRemoveProductButtonClick} />;
@@ -1606,12 +1621,15 @@ export const UiStatusBadge = (props: UiStatusBadgeProps) => {
 | 상태 | 사라집니다 | 유지됩니다 |
 | 이펙트 | 정리됩니다 | 정리됩니다 |
 | 렌더 비용 | 없습니다 | 낮은 우선순위로 계속 듭니다 |
-| 보조 기술 | 없는 것으로 읽힙니다 | 숨겨진 것으로 읽힙니다 |
+| DOM 노드 | 문서에서 사라집니다 | 문서에 남습니다 |
 
 - 마운트와 해제 자체가 의미를 가지면 조건부 렌더링을 유지합니다.
   폼 초기화, 구독 해제, 첫 진입 애니메이션이 그런 경우입니다.
 - 숨긴 하위 트리도 렌더 비용이 계속 듭니다.
   무거운 트리를 습관적으로 감춰 두지 않습니다.
+- 접근성을 이유로 `<Activity>`를 고르지 않습니다.
+  리액트는 숨길 때 `display: none`만 걸고, 그 노드는 접근성 트리에서 빠집니다.
+  화면 낭독기에는 조건부 렌더링과 똑같이 없는 것으로 읽힙니다.
 - `<Activity>`는 리액트 19.2 이상에만 있습니다.
   그보다 낮으면 조건부 렌더링만 씁니다.
 
@@ -2699,7 +2717,14 @@ const mutationProductRemove = useProductRemove();
 
 - `data.list` 같은 원시 응답 구조를 화면 여러 군데에서 직접 해석하지 않습니다.
   도메인 의미가 드러나는 필드 이름으로 한 번 변환합니다.
-- 여러 쿼리 데이터를 함께 가공해야 해도 먼저 `select`나 전용 훅 경계에서 풀 수 있는지 봅니다.
+- 여러 쿼리 결과를 함께 가공하는 것은 `select`로 할 수 없습니다.
+  `select`는 자기 쿼리 데이터만 받습니다.
+  그 자리는 `data-combine-multiple-queries-with-combine`가 정합니다.
+
+**`select`를 인라인 화살표로 적으면 매 렌더 다시 돕니다.**
+라이브러리가 이전 `select`와 같은 함수인지로 재실행을 가르는데, 인라인은 매 렌더 새 함수라 그 비교가 늘 어긋납니다.
+변환이 무거우면 모듈 최상위 상수로 빼서 참조를 고정합니다.
+결과는 구조 공유되어 참조가 안정적이므로 `useMemo`로 감싸지 않습니다.
 
 `select` 안 변환 함수는 이 규칙이 담당합니다.
 별도 함수나 보조 모듈 경계가 없으면 `typescript/functions-extract-helpers-only-when-the-boundary-is-real`은
@@ -2726,9 +2751,111 @@ const responseProductListSuspense = useProductListSuspense({
 });
 ```
 
-### 7.3 Preserve Response and Store Origin in Wide Scopes
+### 7.3 Combine Multiple Queries With `useQueries` and `combine`
 
-**Rule:** `R34` · `data-preserve-origin-chaining`
+**Rule:** `R34` · `data-combine-multiple-queries-with-combine`
+
+**Applies when:** 쿼리 결과 둘 이상을 하나의 값으로 합치는 코드를 추가·변경할 때. 화면 본문에서 두 `data`를 꺼내 함께 계산하는 코드를 넣거나 뺄 때.
+
+**Review with:** `data-shape-query-data-with-select`, `screen-keep-derived-values-close`
+
+**Impact: HIGH (여러 응답을 합치는 자리가 통신 경계에 남고 화면 본문에 별칭이 쌓이지 않습니다)**
+
+쿼리 결과 둘 이상을 하나의 값으로 합쳐야 하면 `useQueries`에 `combine`을 넘깁니다.
+
+| 상황 | 쓰는 것 |
+| --- | --- |
+| 결과 둘 이상을 하나의 값으로 합친다 | `useQueries` + `combine` |
+| 각각 따로 그린다 | 합치지 않고 훅을 따로 부릅니다 |
+| 뒤 쿼리가 앞 결과를 입력으로 받는다 | `combine`이 아니라 `enabled`로 순서를 만듭니다 |
+
+`select`로는 못 합니다.
+`select`는 자기 쿼리 데이터만 받습니다.
+한 쿼리를 가공하는 자리는 `data-shape-query-data-with-select`가 정합니다.
+
+화면 본문에서 두 `data`를 꺼내 합치지 않습니다.
+합친 값이 화면 위쪽 `const`로 남아 출처를 잃습니다.
+`screen-keep-derived-values-close`가 그것을 막습니다.
+
+**`combine` 함수는 모듈 최상위 상수로 둡니다.**
+라이브러리가 이전 `combine`과 같은 함수인지로 재실행을 가르는데,
+인라인 화살표는 렌더마다 새 함수라 그 비교가 늘 어긋나 매번 다시 돕니다.
+`select`도 같은 이유로 같은 처방을 씁니다.
+
+합친 결과는 구조 공유되어 참조가 안정적입니다.
+그래서 `useMemo`로 다시 감싸지 않습니다.
+`perf-avoid-defensive-memoization`이 그것을 막습니다.
+
+**Incorrect (화면 본문에서 두 응답을 꺼내 합침):**
+
+```tsx
+const responseProductListSuspense = useProductListSuspense();
+const responseCategoryListSuspense = useCategoryListSuspense();
+
+const rows = responseProductListSuspense.data.products.map((product) => ({
+	id: product.id,
+	categoryName: responseCategoryListSuspense.data.categories.find(
+		(category) => category.id === product.categoryId,
+	)?.name,
+}));
+```
+
+**Incorrect (`combine`을 인라인으로 적어 렌더마다 다시 돎):**
+
+```tsx
+const rows = useQueries({
+	queries: [productListQueryOptions(), categoryListQueryOptions()],
+	combine: (results) => toProductRows(results),
+});
+```
+
+**Correct (모듈 최상위 `combine`으로 통신 경계에서 합침):**
+
+```tsx
+/**
+ * product 응답과 category 응답을 목록 한 행씩으로 합친다
+ */
+const combineProductRows = (
+	results: [UseQueryResult<ProductListResponse>, UseQueryResult<CategoryListResponse>],
+) => {
+	const [productResult, categoryResult] = results;
+
+	return {
+		isPending: productResult.isPending || categoryResult.isPending,
+		rows: toProductRows(productResult.data, categoryResult.data),
+	};
+};
+
+export const PgProducts = () => {
+	const responseProductRows = useQueries({
+		queries: [productListQueryOptions(), categoryListQueryOptions()],
+		combine: combineProductRows,
+	});
+
+	return <UiTable dataSource={responseProductRows.rows} />;
+};
+```
+
+**Correct (뒤 쿼리가 앞 결과를 받으면 `enabled`로 순서를 만듦):**
+
+```tsx
+/**
+ * 선택한 product 조회 API
+ */
+const responseProductSuspense = useProductGetItemSuspense({productId: search.productId});
+
+/**
+ * 그 product 의 배송 이력 조회 API. product 를 받은 뒤에만 부른다
+ */
+const responseShipmentList = useShipmentList(
+	{orderId: responseProductSuspense.data.orderId},
+	{query: {enabled: Boolean(responseProductSuspense.data.orderId)}},
+);
+```
+
+### 7.4 Preserve Response and Store Origin in Wide Scopes
+
+**Rule:** `R35` · `data-preserve-origin-chaining`
 
 **Applies when:** page·레이아웃·화면 넓은 스코프에서 응답·뮤테이션·스토어를 구조분해할 때. 원본을 별칭으로 끊고 값 접근 방식을 바꿀 때.
 
@@ -2778,7 +2905,7 @@ useEffect(() => {
 
 ### 8.1 Calculate Derived Values During Rendering
 
-**Rule:** `R35` · `state-calculate-derived-values-during-render`
+**Rule:** `R36` · `state-calculate-derived-values-during-render`
 
 **Applies when:** 현재 프롭스·상태·검색·응답에서 계산 가능한 값을 별도 상태와 이펙트로 동기화할 때. 그런 동기화를 제거할 때.
 
@@ -2811,7 +2938,7 @@ return <SelectedCountBadge count={selectedIds.length} />;
 
 ### 8.2 Choose State Tools by Source of Truth
 
-**Rule:** `R36` · `state-choose-state-tools-by-source-of-truth`
+**Rule:** `R37` · `state-choose-state-tools-by-source-of-truth`
 
 **Applies when:** 로컬 UI·전역 클라이언트·서버 데이터를 새 상태 도구로 옮길 때. 합성 컴포넌트나 컴포넌트 묶음에 공유 상태를 넣을 때. 서로 다른 진짜 출처 사이에 값을 복제하거나 동기화할 때.
 
@@ -2865,8 +2992,17 @@ const responseUserGetItemSuspense = useUserGetItemSuspense();
 **Correct (합성 컴포넌트 안에서 부품끼리 나눠 쓰는 상태는 `Context`로 나름):**
 
 ```tsx
+/**
+ * 탭 부품끼리 나눠 쓰는 값
+ */
 interface UiTabsContextValue {
+	/**
+	 * 지금 열린 탭 식별자
+	 */
 	selectedId: string;
+	/**
+	 * 탭을 고를 때
+	 */
 	onSelect: (id: string) => void;
 }
 
@@ -2881,7 +3017,7 @@ export const UiTabsRoot = (props: UiTabsRootProps) => {
 
 ### 8.3 Store Shared Derived Decisions Only When They Are Truly Shared
 
-**Rule:** `R37` · `state-store-derived-authority`
+**Rule:** `R38` · `state-store-derived-authority`
 
 **Applies when:** 여러 화면·메뉴·라우트 가드가 쓰는 접근 권한 같은 파생 판단을 스토어에 저장·동기화할 때. 단일 화면에서만 쓰는 값까지 스토어로 올리려 할 때.
 
@@ -2931,25 +3067,31 @@ useEffect(() => {
 
 ### 8.4 Use Functional setState Updates When Based on Previous State
 
-**Rule:** `R38` · `state-use-functional-setstate-updates`
+**Rule:** `R39` · `state-use-functional-setstate-updates`
 
 **Applies when:** 다음 상태가 현재 상태에 의존하는 갱신을 추가·변경할 때. 핸들러·비동기 콜백·연속 호출에서 `setState` 방식을 바꿀 때.
 
 **Impact: MEDIUM-HIGH (다음 값이 현재 상태에 달려 있을 때 낡은 값을 붙잡는 버그를 막습니다)**
 
-다음 상태가 현재 상태 값에 의존하면 직접 바깥 변수를 참조하지 말고 함수형 갱신자를 사용합니다.
-특히 핸들러, 비동기 콜백, 여러 번 연속 호출될 수 있는 갱신에서는 낡은 값 붙잡기를 막는 데 중요합니다.
+다음 상태가 현재 상태 값에 의존하면 바깥 변수를 직접 읽지 않고 함수형 갱신자를 씁니다.
+
+실제로 결과가 갈리는 자리는 셋입니다.
+
+- 한 이벤트 안에서 같은 상태를 두 번 이상 갱신할 때
+- `await` 뒤에 갱신할 때
+- 구독이나 타이머처럼 오래 사는 클로저 안에서 갱신할 때
+
+클릭 핸들러에서 한 번만 부르는 갱신은 두 형태가 같은 결과를 냅니다.
+리액트가 그 사이에 상태를 갱신해 두기 때문입니다.
+그래도 형태를 하나로 고정해 자리마다 다시 판단하지 않습니다.
 
 **Incorrect (현재 상태를 바깥 클로저에서 직접 읽음):**
 
 ```tsx
-const handleToggleUser = (userId: string) => {
-	if (selectedUserIds.includes(userId)) {
-		setSelectedUserIds(selectedUserIds.filter((currentUserId) => currentUserId !== userId));
-		return;
-	}
-
-	setSelectedUserIds([...selectedUserIds, userId]);
+// 한 이벤트에서 두 번 갱신한다. 둘 다 같은 렌더의 selectedUserIds 를 읽어 첫 갱신이 지워진다
+const handleSelectRange = (fromUserId: string, toUserId: string) => {
+	setSelectedUserIds([...selectedUserIds, fromUserId]);
+	setSelectedUserIds([...selectedUserIds, toUserId]);
 };
 ```
 
@@ -2957,22 +3099,17 @@ const handleToggleUser = (userId: string) => {
 
 ```tsx
 /**
- * 사용자 선택 목록 토글 처리
+ * 범위 선택으로 두 사용자를 한 번에 더한다
  */
-const handleToggleUser = (userId: string) => {
-	setSelectedUserIds((currentUserIds) => {
-		if (currentUserIds.includes(userId)) {
-			return currentUserIds.filter((currentUserId) => currentUserId !== userId);
-		}
-
-		return [...currentUserIds, userId];
-	});
+const handleSelectRange = (fromUserId: string, toUserId: string) => {
+	setSelectedUserIds((currentUserIds) => [...currentUserIds, fromUserId]);
+	setSelectedUserIds((currentUserIds) => [...currentUserIds, toUserId]);
 };
 ```
 
 ### 8.5 Use useEffectEvent for Non-reactive Effect Callbacks
 
-**Rule:** `R39` · `state-use-effectevent-for-non-reactive-effect-callbacks`
+**Rule:** `R40` · `state-use-effectevent-for-non-reactive-effect-callbacks`
 
 **Applies when:** 구독 이펙트가 최신 프롭·상태 콜백을 읽어야 할 때. ref 동기화 우회, 의존성 재설치, `useEffectEvent`를 추가·변경할 때.
 
@@ -3043,7 +3180,7 @@ useEffect(() => {
 
 ### 9.1 Do Not Memoize Without a Confirmed Reason
 
-**Rule:** `R40` · `perf-avoid-defensive-memoization`
+**Rule:** `R41` · `perf-avoid-defensive-memoization`
 
 **Applies when:** `useMemo`·`useCallback`을 추가하거나 제거할 때. 참조 동일성·실측 병목·무거운 지연 계산을 이유로 수동 메모이제이션을 검토할 때.
 
@@ -3055,8 +3192,12 @@ useEffect(() => {
 쓰는 경우는 다음 셋뿐이며, 어느 경우든 `typescript/docs-justify-convention-exceptions-with-a-reason-comment`를 따라 이유를 남깁니다.
 
 - 외부 라이브러리가 참조 동일성에 민감할 때
+- 이펙트 의존성으로 들어가는 객체나 배열이라, 감싸지 않으면 이펙트가 매 렌더 다시 돌 때
 - 병목이 실제로 측정됐을 때
 - `useDeferredValue` 기준으로 무거운 파생 계산을 늦출 때
+
+둘째는 성능이 아니라 정합성 문제입니다.
+객체와 배열은 렌더마다 새 참조라 의존성 비교가 늘 어긋납니다.
 
 리액트 컴파일러를 켜지 않은 프로젝트도 같습니다.
 "컴파일러가 없으니 다 감싼다"는 이유는 이 셋에 없습니다.
@@ -3068,6 +3209,12 @@ useEffect(() => {
 const columns = useMemo(() => toTableColumns(response.data.columns), [response.data.columns]);
 ```
 
+**Correct (근거가 없으면 감싸지 않고 그대로 계산):**
+
+```ts
+const columns = toTableColumns(response.data.columns);
+```
+
 **Correct (외부 패키지 제약을 가리키는 근거를 적고 사용):**
 
 ```ts
@@ -3075,9 +3222,23 @@ const columns = useMemo(() => toTableColumns(response.data.columns), [response.d
 const columns = useMemo(() => toTableColumns(response.data.columns), [response.data.columns]);
 ```
 
+**Correct (이펙트 의존성이라 참조를 고정):**
+
+```ts
+// 이 배열이 매 렌더 새 참조면 아래 이펙트가 매번 다시 구독한다.
+const watchedProductIds = useMemo(
+	() => responseProductListSuspense.data.products.map((product) => product.id),
+	[responseProductListSuspense.data.products],
+);
+
+useEffect(() => {
+	return subscribeToProductChanges(watchedProductIds);
+}, [watchedProductIds]);
+```
+
 ### 9.2 Use Lazy State Initializers for Expensive Defaults
 
-**Rule:** `R41` · `perf-use-lazy-state-initializers-for-expensive-defaults`
+**Rule:** `R42` · `perf-use-lazy-state-initializers-for-expensive-defaults`
 
 **Applies when:** `useState` 초기값에 localStorage 파싱, 인덱스 생성, 큰 배열 정규화 같은 비용 있는 계산을 넣을 때.
 
@@ -3100,13 +3261,18 @@ const [draftFilter] = useState(JSON.parse(localStorage.getItem("product-filter")
 const [searchIndex] = useState(() => toSearchIndex(productList));
 const [draftFilter] = useState(() => {
 	const storedValue = localStorage.getItem("product-filter");
-	return storedValue ? JSON.parse(storedValue) : {};
+
+	if (!storedValue) {
+		return productFilterSchema.parse({});
+	}
+
+	return productFilterSchema.parse(JSON.parse(storedValue));
 });
 ```
 
 ### 9.3 Use startTransition for Non-urgent Visual Updates
 
-**Rule:** `R42` · `perf-use-starttransition-for-non-urgent-updates`
+**Rule:** `R43` · `perf-use-starttransition-for-non-urgent-updates`
 
 **Applies when:** 클릭·선택·필터 변경 뒤 큰 목록·표·트리를 다시 그리는 상태 갱신을 다룰 때. 상태 갱신의 우선순위나 전환 처리를 바꿀 때.
 
@@ -3143,7 +3309,7 @@ const handleStatusFilterChange = (nextStatus: ProductStatusFilter) => {
 
 ### 9.4 Use useDeferredValue for Heavy Derived Renders
 
-**Rule:** `R43` · `perf-use-usedeferredvalue-for-heavy-derived-renders`
+**Rule:** `R44` · `perf-use-usedeferredvalue-for-heavy-derived-renders`
 
 **Applies when:** 검색어·필터·정렬 입력마다 큰 목록이나 표를 다시 계산해 입력 반응이 늦어질 때. `useDeferredValue` 기반 계산을 추가·변경할 때.
 
@@ -3190,7 +3356,7 @@ const filteredRows = useMemo(() => {
 
 ### 10.1 Require Doc Comments on React Hooks, Handlers, and Key Declarations
 
-**Rule:** `R44` · `docs-require-jsdoc-on-key-declarations`
+**Rule:** `R45` · `docs-require-jsdoc-on-key-declarations`
 
 **Applies when:** 쿼리·뮤테이션이나 읽어서 의도가 안 보이는 핸들러/이펙트를 추가·변경할 때. 내보낸 보조 함수·훅·스토어 선언을 추가·변경할 때. 다시 내보내기 포함 공개 타입·인터페이스를 추가·변경할 때.
 

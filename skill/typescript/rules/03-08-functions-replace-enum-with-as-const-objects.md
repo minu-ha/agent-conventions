@@ -29,6 +29,9 @@ enum ProductStatus {
 **Correct (객체 리터럴과 타입 추출을 조합):**
 
 ```ts
+/**
+ * product 심사 상태 값 집합
+ */
 const product_status = {
 	pending: "pending",
 	passed: "passed",
@@ -36,7 +39,7 @@ const product_status = {
 } as const;
 
 /**
- * 감사 상태 값 집합
+ * product 심사 상태 타입
  */
 type ProductStatus = (typeof product_status)[keyof typeof product_status];
 ```

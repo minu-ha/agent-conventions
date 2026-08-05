@@ -29,6 +29,11 @@ const [draftFilter] = useState(JSON.parse(localStorage.getItem("product-filter")
 const [searchIndex] = useState(() => toSearchIndex(productList));
 const [draftFilter] = useState(() => {
 	const storedValue = localStorage.getItem("product-filter");
-	return storedValue ? JSON.parse(storedValue) : {};
+
+	if (!storedValue) {
+		return productFilterSchema.parse({});
+	}
+
+	return productFilterSchema.parse(JSON.parse(storedValue));
 });
 ```

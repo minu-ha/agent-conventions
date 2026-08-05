@@ -39,8 +39,17 @@ export const WgUserProfileCard = (props: WgUserProfileCardProps) => {
 **Correct (컴포넌트를 바깥으로 분리하고 프롭스로 전달):**
 
 ```tsx
+/**
+ * 사용자 프로필 아바타 프롭스
+ */
 export interface WgUserProfileAvatarProps {
+	/**
+	 * 어두운 배경에서 쓸지
+	 */
 	theme: "dark" | "light";
+	/**
+	 * 아바타 이미지 주소
+	 */
 	src: string;
 }
 

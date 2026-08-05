@@ -46,7 +46,12 @@ import type { MouseEventHandler } from "react";
  * 선택된 product 삭제와 다음 화면 이동 처리
  */
 const handleRemoveProductButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
-  // ...
+  if (!selectedProduct) {
+    return;
+  }
+
+  await mutationProductRemove.mutateAsync({ params: { productId: selectedProduct.id } });
+  void navigate({ to: "/products" });
 };
 
 <UiButton onClick={handleRemoveProductButtonClick} />;
