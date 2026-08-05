@@ -52,6 +52,7 @@
     - 4.6 [Declare and Export Props Interfaces Above the Component](#46-declare-and-export-props-interfaces-above-the-component)
     - 4.7 [Write Fragments as `Fragment`, Not the Shorthand](#47-write-fragments-as-fragment-not-the-shorthand)
     - 4.8 [Render a Single Branch With `&&`, Not a Ternary](#48-render-a-single-branch-with-not-a-ternary)
+    - 4.9 [Give Interactive Elements an Accessible Name](#49-give-interactive-elements-an-accessible-name)
 5. [Screen File Discipline](#5-screen-file-discipline) — **HIGH**
     - 5.1 [Keep Route Entry Files Focused on Screen Flow](#51-keep-route-entry-files-focused-on-screen-flow)
     - 5.2 [Avoid Premature Abstraction in Screen Code](#52-avoid-premature-abstraction-in-screen-code)
@@ -59,16 +60,18 @@
     - 5.4 [Keep Derived Values Close to Where They Are Used](#54-keep-derived-values-close-to-where-they-are-used)
     - 5.5 [Place Suspense Boundaries at the Section Owner](#55-place-suspense-boundaries-at-the-section-owner)
     - 5.6 [Avoid Ad-hoc Loading Branches in Screen Bodies](#56-avoid-ad-hoc-loading-branches-in-screen-bodies)
+    - 5.7 [Place Error Boundaries by How Much Should Survive](#57-place-error-boundaries-by-how-much-should-survive)
 6. [Events and Interaction Flow](#6-events-and-interaction-flow) — **MEDIUM-HIGH**
-    - 6.1 [Keep Screen-specific Handler Flow Local Until a Real Utility Emerges](#61-keep-screen-specific-handler-flow-local-until-a-real-utility-emerges)
-    - 6.2 [Name Handlers Predictably](#62-name-handlers-predictably)
-    - 6.3 [Curry Extra Arguments Into DOM Event Handlers](#63-curry-extra-arguments-into-dom-event-handlers)
-    - 6.4 [Run User Actions in Handlers, Not Effects](#64-run-user-actions-in-handlers-not-effects)
+    - 6.1 [Name Handlers Predictably](#61-name-handlers-predictably)
+    - 6.2 [Curry Extra Arguments Into DOM Event Handlers](#62-curry-extra-arguments-into-dom-event-handlers)
+    - 6.3 [Run User Actions in Handlers, Not Effects](#63-run-user-actions-in-handlers-not-effects)
 7. [Server Data Flow](#7-server-data-flow) — **CRITICAL**
     - 7.1 [Name Query and Mutation Bindings Consistently](#71-name-query-and-mutation-bindings-consistently)
     - 7.2 [Shape React Query Data in query.select](#72-shape-react-query-data-in-query-select)
     - 7.3 [Combine Multiple Queries With `useQueries` and `combine`](#73-combine-multiple-queries-with-usequeries-and-combine)
     - 7.4 [Preserve Response and Store Origin in Wide Scopes](#74-preserve-response-and-store-origin-in-wide-scopes)
+    - 7.5 [Handle Mutation Failure Where the Mutation Is Called](#75-handle-mutation-failure-where-the-mutation-is-called)
+    - 7.6 [Invalidate the Queries a Mutation Changed](#76-invalidate-the-queries-a-mutation-changed)
 8. [State Ownership and Updates](#8-state-ownership-and-updates) — **HIGH**
     - 8.1 [Calculate Derived Values During Rendering](#81-calculate-derived-values-during-rendering)
     - 8.2 [Choose State Tools by Source of Truth](#82-choose-state-tools-by-source-of-truth)
@@ -78,8 +81,7 @@
 9. [Render Performance](#9-render-performance) — **MEDIUM-HIGH**
     - 9.1 [Do Not Memoize Without a Confirmed Reason](#91-do-not-memoize-without-a-confirmed-reason)
     - 9.2 [Use Lazy State Initializers for Expensive Defaults](#92-use-lazy-state-initializers-for-expensive-defaults)
-    - 9.3 [Use startTransition for Non-urgent Visual Updates](#93-use-starttransition-for-non-urgent-visual-updates)
-    - 9.4 [Use useDeferredValue for Heavy Derived Renders](#94-use-usedeferredvalue-for-heavy-derived-renders)
+    - 9.3 [Defer Heavy Renders Only With Measured Evidence](#93-defer-heavy-renders-only-with-measured-evidence)
 10. [Documentation and Comments](#10-documentation-and-comments) — **MEDIUM**
     - 10.1 [Require Doc Comments on React Hooks, Handlers, and Key Declarations](#101-require-doc-comments-on-react-hooks-handlers-and-key-declarations)
 
@@ -675,7 +677,7 @@ const handleSubmitClick: UiButtonProps["onClick"] = (event) => {
 
 첫 줄의 `extends`가 안 되는 래퍼에서는 DOM 프롭도 필요한 것만 적습니다.
 그때는 라이브러리 타입이 아니라 `string`, `ChangeEventHandler<HTMLInputElement>` 같은 플랫폼 타입을 씁니다.
-`value` 나 `onChange`처럼 DOM 이 이미 정한 이름은 라이브러리 것이 아닙니다.
+`value` 나 `onChange`처럼 DOM이 이미 정한 이름은 라이브러리 것이 아닙니다.
 
 **DOM 표면을 여는 방법은 세 단계이고 위에서부터 되는 것을 씁니다.**
 어느 단계인지는 컴파일러가 알려 주므로 미리 고민하지 않습니다.
@@ -769,7 +771,7 @@ import type { HTMLAttributes } from "react";
 /**
  * 기본 버튼
  *
- * 라이브러리가 `color` 를 자기 값 집합으로 좁혀 두어 그 이름만 빼고 다시 연다.
+ * 라이브러리가 `color`를 자기 값 집합으로 좁혀 두어 그 이름만 빼고 다시 연다.
  */
 export interface UiButtonProps extends Omit<HTMLAttributes<HTMLButtonElement>, "color"> {
 	/**
@@ -794,7 +796,7 @@ import type { ChangeEventHandler } from "react";
 /**
  * 한 줄 입력
  *
- * 겉은 `div` 인데 이벤트는 안쪽 `input` 이 받아 `HTMLAttributes` 를 그대로 못 쓴다.
+ * 겉은 `div` 인데 이벤트는 안쪽 `input`이 받아 `HTMLAttributes`를 그대로 못 쓴다.
  */
 export interface UiTextFieldProps {
 	/**
@@ -893,8 +895,8 @@ export const UiIconButton = (props: UiIconButtonProps) => (
 /**
  * 아이콘만 있는 버튼
  *
- * `icon` 과 `label` 은 안쪽 컴포넌트가 모르는 자기 프롭이라 타입을 직접 적는다.
- * `disabled` 는 라이브러리에 이미 있어 인덱스 접근으로 가져온다.
+ * `icon`과 `label`은 안쪽 컴포넌트가 모르는 자기 프롭이라 타입을 직접 적는다.
+ * `disabled`는 라이브러리에 이미 있어 인덱스 접근으로 가져온다.
  */
 export interface UiIconButtonProps {
 	/**
@@ -906,7 +908,7 @@ export interface UiIconButtonProps {
 	 */
 	icon: ReactNode;
 	/**
-	 * 화면 낭독기가 읽을 이름. `aria-label` 로 내려간다
+	 * 화면 낭독기가 읽을 이름. `aria-label`로 내려간다
 	 */
 	label: string;
 	/**
@@ -1493,7 +1495,7 @@ export const WgUserProfileCard = (props: WgUserProfileCardProps) => {
 
 **Requires selected:** `docs-require-jsdoc-on-key-declarations`, `events-curry-extra-handler-arguments` · 함께 적용
 
-**Review with:** `events-keep-handler-flow-inline`, `events-run-user-actions-in-handlers-not-effects`
+**Review with:** `events-run-user-actions-in-handlers-not-effects`, `typescript/functions-extract-helpers-only-when-the-boundary-is-real`
 
 **Impact: HIGH (부수효과, 분기, 비동기 흐름을 일반 코드 흐름에서 읽습니다)**
 
@@ -1929,6 +1931,70 @@ return filteredCategoryNodes.length > 0 ? (
 );
 ```
 
+### 4.9 Give Interactive Elements an Accessible Name
+
+**Rule:** `R22` · `composition-give-interactive-elements-an-accessible-name`
+
+**Applies when:** 클릭이나 입력을 받는 요소를 새로 만들 때. 글자 없이 아이콘만 있는 버튼을 추가할 때.
+
+**Impact: MEDIUM-HIGH (화면 낭독기와 테스트가 요소를 이름으로 찾을 수 있습니다)**
+
+클릭이나 입력을 받는 요소는 읽히는 이름을 갖습니다.
+
+| 요소 | 이름을 주는 방법 |
+| --- | --- |
+| 글자가 들어 있는 버튼 | 그 글자가 이름입니다. 따로 붙이지 않습니다 |
+| 아이콘만 있는 버튼 | `aria-label`로 붙입니다 |
+| 입력 | `<label htmlFor>`로 잇습니다. 라벨을 안 보이게 할 때만 `aria-label`을 씁니다 |
+
+누르는 것은 `button`으로 만듭니다.
+`div`나 `span`에 `onClick`을 달면 키보드로 못 누르고 이름도 안 생깁니다.
+누르면 이동하는 것은 `a`나 라우터 링크입니다.
+
+이름은 화면에 보이는 글자와 같게 씁니다.
+보이는 글자와 `aria-label`이 다르면 음성으로 조작하는 사용자가 부르는 이름과 화면이 어긋납니다.
+
+`aria-*`를 스타일 훅으로 쓰지 않습니다.
+`css/selector-use-pseudo-classes-for-dom-owned-states`가 그 자리를 정합니다.
+
+이 이름은 테스트가 요소를 찾는 근거이기도 합니다.
+`playwright-test/locator-prefer-accessible-playwright-locators`가 `getByRole`과 `getByLabel`을 요구하는데,
+이름이 없으면 그 규칙을 지킬 수 없습니다.
+
+포커스를 어디로 옮길지는 이 규칙이 정하지 않습니다.
+
+**Incorrect (누르는 `div`와 이름 없는 아이콘 버튼):**
+
+```tsx
+<Fragment>
+	<div className={clsx("pg_products__filterToggle")} onClick={handleFilterToggleClick}>
+		<UiFilterIcon />
+	</div>
+
+	<input value={props.keyword} onChange={props.onKeywordChange} />
+</Fragment>
+```
+
+**Correct (`button`으로 만들고 이름을 붙임):**
+
+```tsx
+<Fragment>
+	<button
+		type="button"
+		className={clsx("pg_products__filterToggle")}
+		aria-label="필터 열기"
+		onClick={handleFilterToggleClick}
+	>
+		<UiFilterIcon />
+	</button>
+
+	<label className={clsx("pg_products__keywordLabel")} htmlFor="product-keyword">
+		검색어
+	</label>
+	<input id="product-keyword" value={props.keyword} onChange={props.onKeywordChange} />
+</Fragment>
+```
+
 ## 5. Screen File Discipline
 
 **Impact: HIGH**
@@ -1937,7 +2003,7 @@ return filteredCategoryNodes.length > 0 ? (
 
 ### 5.1 Keep Route Entry Files Focused on Screen Flow
 
-**Rule:** `R22` · `screen-keep-route-flow-visible`
+**Rule:** `R23` · `screen-keep-route-flow-visible`
 
 **Applies when:** 라우트 진입의 검색·화면 이동·쿼리·뮤테이션·화면 전체 이펙트를 옮기거나 나눌 때. page 섹션 조립의 순서나 소유자를 바꿀 때. 제외: 같은 소유자 안에서 표현만 바꾸는 경우.
 
@@ -2005,7 +2071,7 @@ return (
 
 ### 5.2 Avoid Premature Abstraction in Screen Code
 
-**Rule:** `R23` · `screen-avoid-premature-abstraction`
+**Rule:** `R24` · `screen-avoid-premature-abstraction`
 
 **Applies when:** 화면 코드를 보조 함수·훅·컴포넌트·모듈로 추출할 때. 한 곳에서만 쓰는 기존 추상화를 다시 접어 넣을 때.
 
@@ -2121,7 +2187,7 @@ export const PgProductTable = (props: PgProductTableProps) => {
 
 ### 5.3 Do Not Extract Section Components That Only Group Layout
 
-**Rule:** `R24` · `screen-extract-local-section-components-for-runtime-boundaries`
+**Rule:** `R25` · `screen-extract-local-section-components-for-runtime-boundaries`
 
 **Applies when:** 화면 지역 섹션 컴포넌트를 새로 추출할 때. 기존 섹션이 비동기·상태·프로바이더·상호작용·라이브러리·성능을 직접 소유하는지 바꿀 때.
 
@@ -2280,7 +2346,7 @@ export const PgProducts = () => {
 
 ### 5.4 Keep Derived Values Close to Where They Are Used
 
-**Rule:** `R25` · `screen-keep-derived-values-close`
+**Rule:** `R26` · `screen-keep-derived-values-close`
 
 **Applies when:** 화면 진입 파일이나 섹션 최상단에 `const` 별칭·플래그·표시값을 추가·이동·제거할 때. 훅 인자, JSX 표시값, 이펙트 안 계산을 위쪽 `const`로 빼거나 되돌릴 때.
 
@@ -2343,7 +2409,7 @@ export const PgProducts = () => {
 
 ### 5.5 Place Suspense Boundaries at the Section Owner
 
-**Rule:** `R26` · `screen-place-suspense-boundaries-at-the-section-owner`
+**Rule:** `R27` · `screen-place-suspense-boundaries-at-the-section-owner`
 
 **Applies when:** `Suspense` 쿼리를 쓰는 화면에서 로딩 대체 화면의 위치를 정할 때. `Suspense` 경계를 추가하거나 옮길 때.
 
@@ -2396,7 +2462,7 @@ return (
 
 ### 5.6 Avoid Ad-hoc Loading Branches in Screen Bodies
 
-**Rule:** `R27` · `screen-avoid-ad-hoc-loading-branches`
+**Rule:** `R28` · `screen-avoid-ad-hoc-loading-branches`
 
 **Applies when:** Suspense 쿼리를 쓰는 화면 본문에 초기 로딩 반환을 추가·변경할 때. `isFetching`이나 뮤테이션 `isPending`으로 화면을 가리는 분기를 넣을 때. 제외: 선택 값에 기본값을 채우는 것만 바꾸는 경우.
 
@@ -2451,65 +2517,104 @@ if (mutationOrderConfirm.isPending) {
 }
 ```
 
+### 5.7 Place Error Boundaries by How Much Should Survive
+
+**Rule:** `R29` · `screen-place-error-boundaries-by-blast-radius`
+
+**Applies when:** 오류 경계를 추가하거나 옮길 때. 쿼리 실패를 화면 본문에서 분기로 다루려 할 때.
+
+**Requires selected:** `screen-place-suspense-boundaries-at-the-section-owner` · 함께 적용
+
+**Impact: HIGH (쿼리가 실패해도 받을 곳이 있고 화면 본문이 실패 분기로 채워지지 않습니다)**
+
+`Suspense` 쿼리는 실패하면 던집니다.
+받을 경계가 없으면 화면 전체가 빈 채로 남습니다.
+
+**자리는 "여기가 죽으면 무엇이 같이 죽는가"로 정합니다.** 세 층을 둡니다.
+
+| 층 | 두는 곳 | 이 층이 잡으면 살아남는 것 |
+| --- | --- | --- |
+| 앱 | 루트 한 번 | 아무것도 없습니다. 마지막 그물이라 반드시 하나 둡니다 |
+| 화면 | 라우트 진입 | 네비게이션과 레이아웃 셸 |
+| 섹션 | `Suspense` 경계와 같은 소유자 | 같은 화면의 다른 섹션 |
+
+섹션 층은 **그 섹션만 죽어도 나머지가 쓸모 있을 때만** 둡니다.
+목록이 실패했는데 옆 필터가 살아 있어도 할 수 있는 게 없으면 화면 층으로 충분합니다.
+
+경계 하나가 로딩과 실패를 함께 맡습니다.
+`Suspense`와 오류 경계를 같은 소유자에 두면 대체 화면 두 개가 한 자리에 모입니다.
+로딩 경계 자리는 `screen-place-suspense-boundaries-at-the-section-owner`가 정합니다.
+
+화면 본문에서 `isError`로 다시 분기하지 않습니다.
+경계가 이미 받은 것을 본문이 또 확인하면 대체 화면이 두 벌이 됩니다.
+`screen-avoid-ad-hoc-loading-branches`가 로딩에 대해 정한 것과 같은 이유입니다.
+
+**경계가 못 잡는 것이 있습니다.**
+이벤트 핸들러와 비동기 콜백에서 난 오류는 렌더 중이 아니라 경계를 지나칩니다.
+사용자 액션의 실패는 `data-handle-mutation-failure-where-it-is-called`가 정합니다.
+
+다시 시도를 열려면 대체 화면이 그 버튼을 갖고, 리액트 쿼리의 재설정 경계와 함께 씁니다.
+경계 안에서 상태를 되살릴 수 없으므로 다시 시도는 하위 트리를 새로 마운트합니다.
+
+**Incorrect (경계 없이 화면 본문에서 실패를 분기):**
+
+```tsx
+export const PgProducts = () => {
+	const responseProductListSuspense = useProductListSuspense();
+
+	if (responseProductListSuspense.isError) {
+		return <UiErrorState />;
+	}
+
+	return <UiTable dataSource={responseProductListSuspense.data.products} />;
+};
+```
+
+**Correct (화면 층 경계가 받고 셸은 살아남음):**
+
+```tsx
+export const Route = createFileRoute("/products")({
+	component: PgProducts,
+	errorComponent: PgProductsErrorState,
+});
+
+export const PgProducts = () => {
+	const responseProductListSuspense = useProductListSuspense();
+
+	return <UiTable dataSource={responseProductListSuspense.data.products} />;
+};
+```
+
+**Correct (섹션이 따로 죽어도 나머지가 쓸모 있을 때만 섹션 층):**
+
+```tsx
+export const PgProducts = () => {
+	return (
+		<div className={clsx("pg_products__layout")}>
+			<PgProductTreeSection />
+
+			{/* 추천 목록이 실패해도 본문 표는 그대로 쓸 수 있다 */}
+			<ErrorBoundary fallback={<UiInlineErrorState />}>
+				<Suspense fallback={<UiRecommendationSkeleton />}>
+					<PgProductRecommendationSection />
+				</Suspense>
+			</ErrorBoundary>
+
+			<PgProductTableSection />
+		</div>
+	);
+};
+```
+
 ## 6. Events and Interaction Flow
 
 **Impact: MEDIUM-HIGH**
 
 이벤트 핸들러는 이름이 예측 가능하고 추가 인자를 커링으로 넘겨야 하며, 사용자 동작은 이펙트가 아니라 핸들러에서 실행해야 합니다. 핸들러 흐름은 재사용 근거가 생길 때까지 그 자리에 둡니다.
 
-### 6.1 Keep Screen-specific Handler Flow Local Until a Real Utility Emerges
+### 6.1 Name Handlers Predictably
 
-**Rule:** `R28` · `events-keep-handler-flow-inline`
-
-**Applies when:** 화면 전용 이름 붙인 핸들러의 분기·뮤테이션·화면 이동·후처리를 여러 보조 함수나 훅으로 나눌 때. 쪼개져 있던 핸들러 흐름을 다시 합칠 때.
-
-**Review with:** `typescript/functions-extract-helpers-only-when-the-boundary-is-real`
-
-**Impact: MEDIUM (모든 분기를 자잘한 함수로 쪼개지 않고도 읽힙니다)**
-
-여기서 `local`은 JSX 인라인 핸들러가 아니라,
-이미 이름 붙은 핸들러 본문 안에서 흐름을 계속 읽을 수 있게 유지한다는 뜻입니다.
-핸들러가 길어져도 바로 `function` 폴더나 공용 보조 코드로 쪼개지 않습니다.
-
-- 먼저 이른 반환, 단계적 지역 변수, 의미 있는 블록 구분으로 읽기 쉽게 유지합니다.
-- `typescript/functions-extract-helpers-only-when-the-boundary-is-real`를 만족할 때만 분리합니다.
-- 화면 하나에서만 쓰는 커스텀 훅으로 우회해 흐름을 숨기는 것도 피합니다.
-- 인라인 콜백을 같은 컴포넌트 안의 이름 붙인 핸들러로 옮기기만 하는 변경은 대상이 아닙니다.
-
-**Incorrect (재사용 근거 없이 흐름을 지나치게 분해):**
-
-```ts
-const validate = () => {/* ... */};
-const toRequest = () => {/* ... */};
-const saveProduct = async () => {/* ... */};
-const postProcess = () => {/* ... */};
-```
-
-**Correct (핸들러에서 흐름을 직접 읽을 수 있게 유지):**
-
-```ts
-/**
- * 선택된 product 저장과 화면 이동 처리
- */
-const handleSubmitButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
-  if (!responseProductListSuspense.data.selectedProduct) {
-    return;
-  }
-
-  if (mutationProductSave.isPending) {
-    return;
-  }
-
-  await mutationProductSave.mutateAsync({
-    data: toProductSaveRequest(responseProductListSuspense.data.selectedProduct),
-  });
-  void navigate({ to: "/products" });
-};
-```
-
-### 6.2 Name Handlers Predictably
-
-**Rule:** `R29` · `events-name-handlers-predictably`
+**Rule:** `R30` · `events-name-handlers-predictably`
 
 **Applies when:** 이벤트 핸들러를 새로 만들 때. 핸들러 이름이나 대상, 이벤트 표기를 바꿀 때.
 
@@ -2565,9 +2670,9 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (event) => {
 };
 ```
 
-### 6.3 Curry Extra Arguments Into DOM Event Handlers
+### 6.2 Curry Extra Arguments Into DOM Event Handlers
 
-**Rule:** `R30` · `events-curry-extra-handler-arguments`
+**Rule:** `R31` · `events-curry-extra-handler-arguments`
 
 **Applies when:** DOM 이벤트 프롭에 추가 인자를 넘기는 핸들러를 추가·변경할 때. 인라인 래퍼로 인자를 넘기던 자리를 바꿀 때. 제외: 이벤트 객체를 받지 않는 프롭 콜백인 경우.
 
@@ -2617,9 +2722,9 @@ const handleListItemClick =
 <li onClick={handleListItemClick(product.id)} />;
 ```
 
-### 6.4 Run User Actions in Handlers, Not Effects
+### 6.3 Run User Actions in Handlers, Not Effects
 
-**Rule:** `R31` · `events-run-user-actions-in-handlers-not-effects`
+**Rule:** `R32` · `events-run-user-actions-in-handlers-not-effects`
 
 **Applies when:** 제출·저장·삭제·닫기 같은 한 번뿐인 사용자 액션을 핸들러와 상태+이펙트 사이에서 옮길 때. 한 번뿐인 사용자 액션의 실행 흐름을 바꿀 때.
 
@@ -2666,7 +2771,7 @@ const handleSubmit = async () => {
 
 ### 7.1 Name Query and Mutation Bindings Consistently
 
-**Rule:** `R32` · `data-name-query-and-mutation-bindings-consistently`
+**Rule:** `R33` · `data-name-query-and-mutation-bindings-consistently`
 
 **Applies when:** 리액트 Query 쿼리·뮤테이션 훅의 로컬 바인딩을 추가하거나 이름을 바꿀 때. 역할이 드러나지 않는 별칭이 diff에 보일 때.
 
@@ -2703,7 +2808,7 @@ const mutationProductRemove = useProductRemove();
 
 ### 7.2 Shape React Query Data in query.select
 
-**Rule:** `R33` · `data-shape-query-data-with-select`
+**Rule:** `R34` · `data-shape-query-data-with-select`
 
 **Applies when:** 서버 응답의 목록·항목·메타 등을 렌더에서 가공하거나 반복 소비할 때. 리액트 Query `select`의 결과 형태를 추가·변경할 때.
 
@@ -2757,7 +2862,7 @@ const responseProductListSuspense = useProductListSuspense({
 
 ### 7.3 Combine Multiple Queries With `useQueries` and `combine`
 
-**Rule:** `R34` · `data-combine-multiple-queries-with-combine`
+**Rule:** `R35` · `data-combine-multiple-queries-with-combine`
 
 **Applies when:** 쿼리 결과 둘 이상을 하나의 값으로 합치는 코드를 추가·변경할 때. 화면 본문에서 두 `data`를 꺼내 함께 계산하는 코드를 넣거나 뺄 때.
 
@@ -2841,7 +2946,7 @@ const responseShipmentList = useShipmentList(
 
 ### 7.4 Preserve Response and Store Origin in Wide Scopes
 
-**Rule:** `R35` · `data-preserve-origin-chaining`
+**Rule:** `R36` · `data-preserve-origin-chaining`
 
 **Applies when:** page·레이아웃·화면 넓은 스코프에서 응답·뮤테이션·스토어를 구조분해할 때. 원본을 별칭으로 끊고 값 접근 방식을 바꿀 때.
 
@@ -2883,6 +2988,172 @@ useEffect(() => {
 }, [responseProductSearchSuspense.data.products, search.keyword]);
 ```
 
+### 7.5 Handle Mutation Failure Where the Mutation Is Called
+
+**Rule:** `R37` · `data-handle-mutation-failure-where-it-is-called`
+
+**Applies when:** 뮤테이션을 부르는 코드를 추가·변경할 때. `mutate`와 `mutateAsync` 사이를 오갈 때.
+
+**Review with:** `data-invalidate-queries-the-mutation-changed`, `events-run-user-actions-in-handlers-not-effects`
+
+**Impact: HIGH (저장이 실패했는데 성공한 것처럼 넘어가거나 아무 표시 없이 끝나지 않습니다)**
+
+뮤테이션 실패는 오류 경계가 받지 못합니다.
+핸들러 안에서 난 오류는 렌더 중이 아니라 경계를 지나갑니다.
+`screen-place-error-boundaries-by-blast-radius`가 그 경계를 정하고, 여기서는 그 밖의 자리를 봅니다.
+
+**기본은 `mutate`와 `useMutation`의 `onError`·`onSuccess`입니다.**
+성공과 실패가 선언 자리에 함께 남고 핸들러는 부르기만 합니다.
+
+| 상황 | 쓰는 것 |
+| --- | --- |
+| 부른 뒤 핸들러가 더 할 일이 없다 | `mutate` + `onError`·`onSuccess` |
+| 부른 결과를 기다렸다가 핸들러가 이어서 해야 한다 | `mutateAsync` + `try`/`catch` |
+
+`mutateAsync`는 실패하면 던집니다.
+`await`만 하고 `catch`하지 않으면 그 뒤 줄이 실행되지 않고 사용자에게 아무 표시도 남지 않습니다.
+`mutateAsync`를 쓰기로 했으면 `try`/`catch`를 같이 씁니다.
+
+- 한 화면에서 두 형태를 섞지 않습니다.
+  실패를 어디서 받는지 자리마다 다시 찾게 됩니다.
+- 빈 `catch`로 실패를 삼키지 않습니다.
+  다시 던지든 표시하든 무엇이든 합니다.
+- 여러 번 눌러 같은 뮤테이션이 겹치는 것은 `isPending` 이른 반환으로 막습니다.
+- 성공 뒤 캐시를 되맞추는 것은 `data-invalidate-queries-the-mutation-changed`가 정합니다.
+
+실패했을 때 무엇을 보여 줄지는 이 규칙이 정하지 않습니다.
+제품마다 다르고 코드로 판정할 수 없습니다.
+
+**Incorrect (`await`만 하고 실패를 받지 않음):**
+
+```tsx
+const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
+	await mutationProductSave.mutateAsync({data: toProductSaveRequest(formValues)});
+	void navigate({to: "/products"});
+};
+```
+
+**Correct (핸들러가 더 할 일이 없어 콜백으로 받음):**
+
+```tsx
+/**
+ * product 저장 API
+ */
+const mutationProductSave = useProductSave({
+	mutation: {
+		onSuccess: () => {
+			void queryClient.invalidateQueries({queryKey: productListQueryKey()});
+			void navigate({to: "/products"});
+		},
+		onError: (error) => {
+			setSubmitErrorMessage(toSubmitErrorMessage(error));
+		},
+	},
+});
+
+/**
+ * 저장 버튼 클릭 처리
+ */
+const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => {
+	if (mutationProductSave.isPending) {
+		return;
+	}
+
+	mutationProductSave.mutate({data: toProductSaveRequest(formValues)});
+};
+```
+
+**Correct (결과를 기다려 이어서 해야 해서 `try`/`catch`):**
+
+```tsx
+/**
+ * 첨부를 먼저 올린 뒤 그 식별자로 product 를 저장한다
+ */
+const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
+	if (mutationAttachmentUpload.isPending) {
+		return;
+	}
+
+	try {
+		const uploaded = await mutationAttachmentUpload.mutateAsync({files: draftFiles});
+
+		await mutationProductSave.mutateAsync({
+			data: toProductSaveRequest(formValues, uploaded.attachmentIds),
+		});
+
+		void navigate({to: "/products"});
+	} catch (error) {
+		setSubmitErrorMessage(toSubmitErrorMessage(error));
+	}
+};
+```
+
+### 7.6 Invalidate the Queries a Mutation Changed
+
+**Rule:** `R38` · `data-invalidate-queries-the-mutation-changed`
+
+**Applies when:** 뮤테이션 성공 뒤 서버 상태를 되맞추는 코드를 추가·변경할 때. 캐시를 직접 쓰거나 다시 불러오는 코드를 넣을 때.
+
+**Review with:** `data-handle-mutation-failure-where-it-is-called`
+
+**Impact: HIGH (저장 뒤 화면이 옛 서버 상태를 계속 보여 주지 않습니다)**
+
+뮤테이션이 바꾼 서버 상태는 그 데이터를 소유한 쿼리 키로 `invalidateQueries`해서 되맞춥니다.
+
+| 하려는 것 | 쓰는 것 |
+| --- | --- |
+| 바뀐 서버 상태를 다시 읽는다 | `invalidateQueries` |
+| 응답으로 목록을 손으로 고쳐 넣는다 | 쓰지 않습니다 |
+| 지금 화면만 다시 불러온다 | 쓰지 않습니다 |
+
+`setQueryData`로 캐시를 조립하지 않습니다.
+서버가 계산한 결과를 화면이 흉내 내는 것이라, 정렬이나 집계가 서버와 어긋나면 조용히 틀린 화면이 남습니다.
+
+`refetch()`를 부르지 않습니다.
+그 훅 하나만 다시 읽어서, 같은 데이터를 보는 다른 화면은 옛 값을 그대로 갖습니다.
+
+- 쿼리 키 문자열을 화면에서 손으로 적지 않습니다.
+  쿼리 훅이 내보낸 키를 씁니다.
+- 무효화 대상이 여럿이면 성공 콜백에서 나란히 부릅니다.
+- 무효화를 이펙트로 옮기지 않습니다.
+  `events-run-user-actions-in-handlers-not-effects`가 그것을 막습니다.
+- 어디서 부를지는 `data-handle-mutation-failure-where-it-is-called`가 정한 자리와 같습니다.
+
+**Incorrect (캐시를 손으로 조립하고 키를 문자열로 적음):**
+
+```tsx
+const mutationProductSave = useProductSave({
+	mutation: {
+		onSuccess: (saved) => {
+			queryClient.setQueryData(["products"], (previous) => [...previous, saved]);
+		},
+	},
+});
+```
+
+**Incorrect (그 훅만 다시 읽어 다른 화면이 옛 값을 유지):**
+
+```tsx
+await mutationProductSave.mutateAsync({data: request});
+void responseProductListSuspense.refetch();
+```
+
+**Correct (바뀐 데이터를 소유한 키를 무효화):**
+
+```tsx
+/**
+ * product 저장 API
+ */
+const mutationProductSave = useProductSave({
+	mutation: {
+		onSuccess: () => {
+			void queryClient.invalidateQueries({queryKey: productListQueryKey()});
+			void queryClient.invalidateQueries({queryKey: productSummaryQueryKey()});
+		},
+	},
+});
+```
+
 ## 8. State Ownership and Updates
 
 **Impact: HIGH**
@@ -2891,7 +3162,7 @@ useEffect(() => {
 
 ### 8.1 Calculate Derived Values During Rendering
 
-**Rule:** `R36` · `state-calculate-derived-values-during-render`
+**Rule:** `R39` · `state-calculate-derived-values-during-render`
 
 **Applies when:** 현재 프롭스·상태·검색·응답에서 계산 가능한 값을 별도 상태와 이펙트로 동기화할 때. 그런 동기화를 제거할 때.
 
@@ -2924,7 +3195,7 @@ return <SelectedCountBadge count={selectedIds.length} />;
 
 ### 8.2 Choose State Tools by Source of Truth
 
-**Rule:** `R37` · `state-choose-state-tools-by-source-of-truth`
+**Rule:** `R40` · `state-choose-state-tools-by-source-of-truth`
 
 **Applies when:** 로컬 UI·전역 클라이언트·서버 데이터를 새 상태 도구로 옮길 때. 합성 컴포넌트나 컴포넌트 묶음에 공유 상태를 넣을 때. 서로 다른 진짜 출처 사이에 값을 복제하거나 동기화할 때.
 
@@ -2940,8 +3211,15 @@ return <SelectedCountBadge count={selectedIds.length} />;
 | 한 컴포넌트 묶음 안에서 공유하는 UI | `useState` + `Context` |
 | 전역 클라이언트 | `Zustand` |
 | 서버 | `@tanstack/react-query` |
+| 주소를 주고받으면 같은 화면이 나와야 하는 값 | 라우트 검색 매개변수 |
 
 이 기준으로 고르면 화면 파일이 더 읽기 쉬워지고 중복 동기화가 줄어듭니다.
+
+마지막 줄이 자주 빠집니다.
+목록의 필터, 정렬, 페이지, 고른 행처럼 새로고침·뒤로 가기·링크 공유로 살아남아야 하는 값은
+`useState`가 아니라 검색 매개변수가 소유합니다.
+열림과 닫힘, 마우스 올림, 입력 중인 임시 값은 주소에 올리지 않습니다.
+검색 매개변수를 `useState`로 복제해 출처를 둘로 만들지 않습니다.
 
 `Context`는 전역 상태 도구가 아니라 **한 컴포넌트 묶음 안에서 프롭 전달을 줄이는 수단**입니다.
 합성 컴포넌트가 부품끼리 상태를 나눠 쓸 때, 작은 컴포넌트 묶음이 두세 단계 아래로 값을 내릴 때 씁니다.
@@ -3003,7 +3281,7 @@ export const UiTabsRoot = (props: UiTabsRootProps) => {
 
 ### 8.3 Store Shared Derived Decisions Only When They Are Truly Shared
 
-**Rule:** `R38` · `state-store-derived-authority`
+**Rule:** `R41` · `state-store-derived-authority`
 
 **Applies when:** 여러 화면·메뉴·라우트 가드가 쓰는 접근 권한 같은 파생 판단을 스토어에 저장·동기화할 때. 단일 화면에서만 쓰는 값까지 스토어로 올리려 할 때.
 
@@ -3053,7 +3331,7 @@ useEffect(() => {
 
 ### 8.4 Use Functional setState Updates When Based on Previous State
 
-**Rule:** `R39` · `state-use-functional-setstate-updates`
+**Rule:** `R42` · `state-use-functional-setstate-updates`
 
 **Applies when:** 다음 상태가 현재 상태에 의존하는 갱신을 추가·변경할 때. 핸들러·비동기 콜백·연속 호출에서 `setState` 방식을 바꿀 때.
 
@@ -3095,7 +3373,7 @@ const handleSelectRange = (fromUserId: string, toUserId: string) => {
 
 ### 8.5 Use useEffectEvent for Non-reactive Effect Callbacks
 
-**Rule:** `R40` · `state-use-effectevent-for-non-reactive-effect-callbacks`
+**Rule:** `R43` · `state-use-effectevent-for-non-reactive-effect-callbacks`
 
 **Applies when:** 구독 이펙트가 최신 프롭·상태 콜백을 읽어야 할 때. ref 동기화 우회, 의존성 재설치, `useEffectEvent`를 추가·변경할 때.
 
@@ -3166,11 +3444,11 @@ useEffect(() => {
 
 ### 9.1 Do Not Memoize Without a Confirmed Reason
 
-**Rule:** `R41` · `perf-avoid-defensive-memoization`
+**Rule:** `R44` · `perf-avoid-defensive-memoization`
 
 **Applies when:** `useMemo`·`useCallback`을 추가하거나 제거할 때. 참조 동일성·실측 병목·무거운 지연 계산을 이유로 수동 메모이제이션을 검토할 때.
 
-**Review with:** `perf-use-usedeferredvalue-for-heavy-derived-renders`
+**Review with:** `perf-defer-heavy-renders-with-measured-evidence`
 
 **Impact: MEDIUM-HIGH (효과를 확인하지 않은 방어적 `useMemo`, `useCallback`을 막습니다)**
 
@@ -3180,7 +3458,7 @@ useEffect(() => {
 - 외부 라이브러리가 참조 동일성에 민감할 때
 - 이펙트 의존성으로 들어가는 객체나 배열이라, 감싸지 않으면 이펙트가 매 렌더 다시 돌 때
 - 병목이 실제로 측정됐을 때
-- `useDeferredValue` 기준으로 무거운 파생 계산을 늦출 때
+- `perf-defer-heavy-renders-with-measured-evidence`를 따라 늦춘 값 기준으로 다시 계산할 때
 
 둘째는 성능이 아니라 정합성 문제입니다.
 객체와 배열은 렌더마다 새 참조라 의존성 비교가 늘 어긋납니다.
@@ -3224,7 +3502,7 @@ useEffect(() => {
 
 ### 9.2 Use Lazy State Initializers for Expensive Defaults
 
-**Rule:** `R42` · `perf-use-lazy-state-initializers-for-expensive-defaults`
+**Rule:** `R45` · `perf-use-lazy-state-initializers-for-expensive-defaults`
 
 **Applies when:** `useState` 초기값에 localStorage 파싱, 인덱스 생성, 큰 배열 정규화 같은 비용 있는 계산을 넣을 때.
 
@@ -3256,35 +3534,48 @@ const [draftFilter] = useState(() => {
 });
 ```
 
-### 9.3 Use startTransition for Non-urgent Visual Updates
+### 9.3 Defer Heavy Renders Only With Measured Evidence
 
-**Rule:** `R43` · `perf-use-starttransition-for-non-urgent-updates`
+**Rule:** `R46` · `perf-defer-heavy-renders-with-measured-evidence`
 
-**Applies when:** 클릭·선택·필터 변경 뒤 큰 목록·표·트리를 다시 그리는 상태 갱신을 다룰 때. 상태 갱신의 우선순위나 전환 처리를 바꿀 때.
+**Applies when:** `startTransition`이나 `useDeferredValue`를 추가·삭제할 때. 목록이나 표가 커져 입력 반응이 늦다는 보고를 받았을 때.
 
-**Impact: MEDIUM (상태 변경이 무거운 목록이나 표를 건드릴 때도 반응이 유지됩니다)**
+**Review with:** `perf-avoid-defensive-memoization`
 
-클릭이나 선택 이후 무거운 목록, 표, 트리 렌더가 따라오는 비긴급 시각 업데이트는 `startTransition`으로 감쌉니다.
-입력값 자체, 폼 에러, 즉시 비활성화 같은 급한 반응까지 전환에 넣지는 않습니다.
+**Impact: MEDIUM (무겁다고 짐작해서 전환과 지연 값을 두르지 않고 실제로 무거운 자리만 미룹니다)**
 
-갈림길은 `set` 함수를 내가 갖고 있는지입니다.
-내가 부르는 `setState`가 무거운 렌더를 일으키면 이 규칙으로 그 호출을 감쌉니다.
-`set` 함수가 내 것이 아니거나 비용이 파생 렌더 쪽에 있으면
-`perf-use-usedeferredvalue-for-heavy-derived-renders`를 씁니다.
+렌더를 미루는 도구는 둘입니다.
+**먼저 미룰 만큼 무거운지 확인합니다.**
 
-**Incorrect (급하지 않은 갱신을 급한 갱신으로 처리):**
+`perf-avoid-defensive-memoization`이 메모이제이션에 요구하는 것과 같은 근거를 요구합니다.
+목록이 몇 줄인지, 어느 조작이 몇 밀리초 걸렸는지 확인한 뒤에 씁니다.
+"목록이 커질 것 같아서"는 근거가 아닙니다.
 
-```tsx
-const handleStatusFilterChange = (nextStatus: ProductStatusFilter) => {
-	setStatusFilter(nextStatus);
-};
-```
+미루기로 했으면 원인이 어디 있는지로 도구가 갈립니다.
 
-**Correct (비긴급 시각 업데이트는 전환으로 내림):**
+| 원인 | 쓰는 것 |
+| --- | --- |
+| 내가 부르는 `setState`가 무거운 렌더를 일으킨다 | `startTransition`으로 그 호출을 감쌉니다 |
+| 값은 즉시 반응해야 하는데 그 값에서 파생되는 렌더가 무겁다 | `useDeferredValue`로 한 박자 늦춘 값을 만듭니다 |
+
+`set` 함수가 내 것이 아니면 첫째 줄을 쓸 수 없습니다.
+그때는 둘째 줄입니다.
+
+- 입력값 자체, 폼 오류, 즉시 비활성화처럼 급한 반응은 전환에 넣지 않습니다.
+- `startTransition`은 대기 상태를 알려 주지 않습니다.
+  진행 표시가 필요하면 `useTransition`의 `isPending`을 씁니다.
+- `await` 뒤에 상태를 갱신하면 그 갱신을 다시 `startTransition`으로 감쌉니다.
+  앞의 전환은 거기서 이미 끝나 있습니다.
+- `useDeferredValue`로 늦춘 값을 받는 컴포넌트가 `memo`가 아니면 어차피 다시 렌더합니다.
+  받는 쪽을 함께 보지 않으면 늦춘 효과가 없습니다.
+- 지연 값 기준 재계산에 `useMemo`를 함께 쓰는 것은 `perf-avoid-defensive-memoization`의 허용 사유에 듭니다.
+  그때도 측정한 근거를 주석으로 남깁니다.
+
+**Incorrect (무거운지 확인하지 않고 전환부터 두름):**
 
 ```tsx
 /**
- * 상태 필터 변경으로 인한 무거운 목록 갱신을 transition으로 예약
+ * 상태 필터 변경
  */
 const handleStatusFilterChange = (nextStatus: ProductStatusFilter) => {
 	startTransition(() => {
@@ -3293,28 +3584,6 @@ const handleStatusFilterChange = (nextStatus: ProductStatusFilter) => {
 };
 ```
 
-### 9.4 Use useDeferredValue for Heavy Derived Renders
-
-**Rule:** `R44` · `perf-use-usedeferredvalue-for-heavy-derived-renders`
-
-**Applies when:** 검색어·필터·정렬 입력마다 큰 목록이나 표를 다시 계산해 입력 반응이 늦어질 때. `useDeferredValue` 기반 계산을 추가·변경할 때.
-
-**Review with:** `perf-avoid-defensive-memoization`, `perf-use-starttransition-for-non-urgent-updates`
-
-**Impact: MEDIUM (무거운 화면이 따라오는 동안에도 입력과 작은 조작이 반응합니다)**
-
-검색어, 필터, 정렬 입력이 무거운 파생 렌더를 유발하면 원본 입력값을 그대로 무거운 화면에 연결하지 않습니다.
-`useDeferredValue`로 한 박자 늦춘 값을 만들고, 필요하면 그 값을 기준으로 필터링이나 정렬을 계산합니다.
-
-- 작은 배열이나 단순 문자열 가공까지 습관적으로 지연하지 않습니다.
-- 이 경우의 `useMemo`는 `perf-avoid-defensive-memoization`의 예외적 허용 사례입니다.
-  지연 값 기준 재계산 비용이 실제로 크고,
-  렌더마다 같은 작업을 반복하지 않으려는 목적이 분명할 때만 함께 씁니다.
-
-내가 부르는 `setState`가 원인이면 이 규칙이 아니라
-`perf-use-starttransition-for-non-urgent-updates`로 그 호출을 감쌉니다.
-입력은 즉시 반응해야 하고 비용이 그 값에서 파생되는 렌더에 있을 때 이 규칙을 씁니다.
-
 **Incorrect (입력과 무거운 파생 렌더를 같은 값에 묶음):**
 
 ```tsx
@@ -3322,16 +3591,43 @@ const [keyword, setKeyword] = useState("");
 const filteredRows = rows.filter((row) => fuzzyMatchRow(row, keyword));
 ```
 
-**Correct (입력은 급한 갱신으로, 무거운 파생 렌더는 지연 값과 제한적인 메모이제이션으로 계산):**
+**Correct (내 `setState`가 원인이고 측정 근거가 있음):**
+
+```tsx
+/**
+ * 상태 필터 변경
+ */
+const handleStatusFilterChange = (nextStatus: ProductStatusFilter) => {
+	// 행 12000 개에서 필터 전환에 320ms 가 걸려 클릭이 밀렸다.
+	startTransition(() => {
+		setStatusFilter(nextStatus);
+	});
+};
+```
+
+**Correct (입력은 즉시 반응하고 파생 렌더만 늦춤):**
 
 ```tsx
 const [keyword, setKeyword] = useState("");
 const deferredKeyword = useDeferredValue(keyword);
 
-// 지연한 검색어에만 다시 계산하도록 묶는다. 행이 수천 개라 매 렌더 필터링은 측정에서 병목이었다.
+// 행이 수천 개라 매 렌더 필터링이 측정에서 병목이었다. 늦춘 검색어에만 다시 계산한다.
 const filteredRows = useMemo(() => {
 	return rows.filter((row) => fuzzyMatchRow(row, deferredKeyword));
 }, [deferredKeyword, rows]);
+
+return <PgProductRows rows={filteredRows} />;
+```
+
+**Correct (미룰 만큼 무겁지 않으면 그대로 둠):**
+
+```tsx
+/**
+ * 상태 필터 변경
+ */
+const handleStatusFilterChange = (nextStatus: ProductStatusFilter) => {
+	setStatusFilter(nextStatus);
+};
 ```
 
 ## 10. Documentation and Comments
@@ -3342,7 +3638,7 @@ const filteredRows = useMemo(() => {
 
 ### 10.1 Require Doc Comments on React Hooks, Handlers, and Key Declarations
 
-**Rule:** `R45` · `docs-require-jsdoc-on-key-declarations`
+**Rule:** `R47` · `docs-require-jsdoc-on-key-declarations`
 
 **Applies when:** 쿼리·뮤테이션이나 읽어서 의도가 안 보이는 핸들러/이펙트를 추가·변경할 때. 내보낸 보조 함수·훅·스토어 선언을 추가·변경할 때. 다시 내보내기 포함 공개 타입·인터페이스를 추가·변경할 때.
 

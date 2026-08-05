@@ -25,11 +25,13 @@
     - 1.4 [Use Consistent File, Symbol, and Field Naming](#14-use-consistent-file-symbol-and-field-naming)
     - 1.5 [Use Direct Imports and Dedicated Public Entry Points](#15-use-direct-imports-and-dedicated-public-entry-points)
     - 1.6 [Restrict Absolute Aliases to Layer Roots](#16-restrict-absolute-aliases-to-layer-roots)
+    - 1.7 [Read Environment Values Through Shared Config](#17-read-environment-values-through-shared-config)
 2. [Types and Contracts](#2-types-and-contracts) — **CRITICAL**
     - 2.1 [Reuse Existing Contracts Before Declaring New Types](#21-reuse-existing-contracts-before-declaring-new-types)
     - 2.2 [Prefer Function Variable Types Over Parameter Annotations](#22-prefer-function-variable-types-over-parameter-annotations)
     - 2.3 [Document Custom Types and Declarative Shapes](#23-document-custom-types-and-declarative-shapes)
     - 2.4 [Mark Unused Parameters With an Underscore Prefix](#24-mark-unused-parameters-with-an-underscore-prefix)
+    - 2.5 [Narrow `unknown` Instead of Asserting](#25-narrow-unknown-instead-of-asserting)
 3. [Functions and Helper Boundaries](#3-functions-and-helper-boundaries) — **HIGH**
     - 3.1 [Declare Functions as Arrow Consts](#31-declare-functions-as-arrow-consts)
     - 3.2 [Use Named Object Params for Complex Signatures](#32-use-named-object-params-for-complex-signatures)
@@ -48,8 +50,7 @@
     - 5.2 [Require Header Doc Comments on Key Declarations](#52-require-header-doc-comments-on-key-declarations)
     - 5.3 [Write Korean Comments About Purpose and Constraints](#53-write-korean-comments-about-purpose-and-constraints)
     - 5.4 [Write Doc Comments as Multiline Blocks](#54-write-doc-comments-as-multiline-blocks)
-    - 5.5 [Avoid Role Tags in Doc Comments](#55-avoid-role-tags-in-doc-comments)
-    - 5.6 [Justify Convention Exceptions With a Checkable Reason Comment](#56-justify-convention-exceptions-with-a-checkable-reason-comment)
+    - 5.5 [Justify Convention Exceptions With a Checkable Reason Comment](#55-justify-convention-exceptions-with-a-checkable-reason-comment)
 6. [Tooling](#6-tooling) — **MEDIUM**
     - 6.1 [Configure Biome to Enforce the Mechanical Rules](#61-configure-biome-to-enforce-the-mechanical-rules)
 
@@ -329,6 +330,65 @@ import {WgChartCard} from "@/widget/chart-card/wg-chart-card";
 import {SalesChartCard} from "./component/sales-chart-card";
 ```
 
+### 1.7 Read Environment Values Through Shared Config
+
+**Rule:** `T07` · `naming-read-environment-values-through-shared-config`
+
+**Applies when:** `import.meta.env` 나 `process.env`를 읽는 코드를 추가·이동할 때. 환경마다 달라지는 값을 새로 들여올 때.
+
+**Review with:** `absence-expose-optional-values-instead-of-silent-fallbacks`, `naming-centralize-shared-config-namespaces`
+
+**Impact: MEDIUM-HIGH (환경마다 달라지는 값이 쓰는 파일로 흩어지지 않고 한 곳에서 읽힙니다)**
+
+환경마다 값이 달라지는 것은 쓰는 파일에서 직접 읽지 않습니다.
+`shared/config.ts`가 한 번 읽어 `config.*`로 내보내고, 나머지는 그 이름을 씁니다.
+
+읽는 자리를 하나로 모으는 이유는 `naming-preserve-config-origin-with-chained-access`와 같습니다.
+`config.api.base_url`은 어디서 왔는지 경로가 말해 주지만
+`import.meta.env.VITE_API_BASE_URL`이 말단 파일마다 흩어지면 무엇이 환경 값인지 목록을 만들 수 없습니다.
+
+- 키가 없을 때 리터럴로 덮지 않습니다.
+  `absence-expose-optional-values-instead-of-silent-fallbacks`를 따라 그 자리에서 드러냅니다.
+- 값을 읽는 즉시 우리 이름으로 바꿔 담습니다.
+  `VITE_` 같은 번들러 접두사가 앱 안으로 새지 않게 합니다.
+- 비밀값은 클라이언트 번들에 들어가는 이름으로 읽지 않습니다.
+  번들러가 노출하는 접두사가 붙은 값은 브라우저에서 그대로 보입니다.
+
+**Incorrect (쓰는 파일마다 직접 읽고 없을 때 리터럴로 덮음):**
+
+```ts
+// service/product-client.ts
+const baseUrl = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3000";
+
+// service/report-client.ts
+const reportBaseUrl = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3000";
+```
+
+**Correct (공용 설정이 한 번 읽고 없으면 드러냄):**
+
+```ts
+// shared/config.ts
+if (!import.meta.env.VITE_API_BASE_URL) {
+	throw new MissingEnvironmentValueError("VITE_API_BASE_URL");
+}
+
+/**
+ * 환경마다 달라지는 공용 설정
+ */
+export const config = {
+	api: {
+		base_url: import.meta.env.VITE_API_BASE_URL,
+	},
+} as const;
+```
+
+```ts
+// service/product-client.ts
+import {config} from "@/shared/config";
+
+const productClient = createClient({baseUrl: config.api.base_url});
+```
+
 ## 2. Types and Contracts
 
 **Impact: CRITICAL**
@@ -337,7 +397,7 @@ import {SalesChartCard} from "./component/sales-chart-card";
 
 ### 2.1 Reuse Existing Contracts Before Declaring New Types
 
-**Rule:** `T07` · `types-reuse-existing-contracts-before-new-types`
+**Rule:** `T08` · `types-reuse-existing-contracts-before-new-types`
 
 **Applies when:** 뜻이 같은 기존 타입, 인터페이스, 스키마가 있는데 형태를 새로 선언·변경·복제·파생할 때. 같은 형태를 두 번 선언했다가 넣거나 뺄 때. 제외: 맞는 후보가 없는 새 형태, 소유자만 옮긴 경우, 그대로인 계약을 새 자리에서 쓰는 경우.
 
@@ -469,7 +529,7 @@ interface ProductListRow {
 
 ### 2.2 Prefer Function Variable Types Over Parameter Annotations
 
-**Rule:** `T08` · `types-prefer-function-variable-types-over-parameter-annotations`
+**Rule:** `T09` · `types-prefer-function-variable-types-over-parameter-annotations`
 
 **Applies when:** 기존 호출 계약을 이름 붙인 함수나 공용 함수 구현에 다시 쓸 때. 같은 시그니처를 여러 구현이 함께 쓰도록 바꿀 때. 제외: 타입 표기 없이 문맥으로 추론되는 일회성 인라인 콜백인 경우.
 
@@ -545,7 +605,7 @@ const toSearchRequest: ToRequest = (request) => {
 
 ### 2.3 Document Custom Types and Declarative Shapes
 
-**Rule:** `T09` · `types-document-custom-types-and-shapes`
+**Rule:** `T10` · `types-document-custom-types-and-shapes`
 
 **Applies when:** 타입, 인터페이스, 스키마 최상단, 객체 상수, 계약 필드, 파생 별칭을 추가·변경할 때. 이름 붙인 형태에 호출 계약 역할을 새로 얹을 때. 제외: 외부·생성된·읽기 전용·공용 형태를 그대로 쓰거나 익명으로 추론된 반환인 경우.
 
@@ -621,7 +681,7 @@ const publishResultSchema = z.object({
 
 ### 2.4 Mark Unused Parameters With an Underscore Prefix
 
-**Rule:** `T10` · `types-mark-unused-parameters-with-underscore`
+**Rule:** `T11` · `types-mark-unused-parameters-with-underscore`
 
 **Applies when:** 기존 콜백이나 프레임워크 계약을 구현하면서 매개변수를 빼거나 쓰지 않을 때. 커링한 핸들러가 마지막에 돌려주는 콜백에서 매개변수를 뺄 때.
 
@@ -656,6 +716,72 @@ type LogSink = (message: string, level: "info" | "error") => void;
 const noopLog: LogSink = (_message, _level) => {};
 ```
 
+### 2.5 Narrow `unknown` Instead of Asserting
+
+**Rule:** `T12` · `types-narrow-unknown-instead-of-asserting`
+
+**Applies when:** `as` 단언, `!` 비-널 단언, `any`, `@ts-expect-error`를 추가할 때. 앱 밖에서 들어온 값을 타입 붙여 쓰기 시작할 때.
+
+**Review with:** `docs-justify-convention-exceptions-with-a-reason-comment`, `tooling-configure-biome-to-enforce-these-rules`
+
+**Impact: HIGH (컴파일을 통과시키려고 타입 검사를 끄는 자리가 남지 않습니다)**
+
+컴파일러를 통과시키려고 `as`, `!`, `any`, `@ts-expect-error`를 쓰지 않습니다.
+넷 다 "여기는 검사하지 마라"는 뜻이고, 틀렸을 때 알려 줄 사람이 없습니다.
+
+형태를 모르는 값은 `unknown`으로 받고 좁혀서 씁니다.
+
+| 값의 출처 | 어떻게 |
+| --- | --- |
+| 앱 밖에서 옴 (`localStorage`, `postMessage`, URL, 검증하지 않은 응답) | 스키마로 검증하고 그 결과에서 타입을 얻습니다 |
+| 우리 코드 안에서 옴 | 좁히는 분기를 씁니다. 단언이 필요하면 타입이 잘못 잡힌 것입니다 |
+| 외부 패키지 타입이 실제와 다름 | 단언을 쓰되 확인할 수 있는 이유를 바로 위에 남깁니다 |
+
+`as const`와 `satisfies`는 대상이 아닙니다.
+값을 넓히지 않게 고정하거나 형태가 맞는지 검사하는 것이라 검사를 끄지 않습니다.
+
+셋째 줄의 이유 주석은 `docs-justify-convention-exceptions-with-a-reason-comment`가 정한 조건을 채워야 합니다.
+"타입이 이상해서" 같은 다시 확인할 수 없는 말은 근거가 아닙니다.
+
+`any`와 `!`는 `tooling-configure-biome-to-enforce-these-rules`가 기계로 막습니다.
+`as`와 `@ts-expect-error`는 리뷰가 봅니다.
+
+**Incorrect (검사를 끄고 넘어감):**
+
+```ts
+const storedFilter = JSON.parse(localStorage.getItem("product-filter") as string) as ProductFilter;
+
+const firstProduct = products.find((product) => product.isActive)!;
+
+// @ts-expect-error 타입이 이상하다
+chart.setOption(option);
+```
+
+**Correct (앱 밖에서 온 값은 스키마 결과에서 타입을 얻음):**
+
+```ts
+const storedValue = localStorage.getItem("product-filter");
+const storedFilter = productFilterSchema.parse(storedValue === null ? {} : JSON.parse(storedValue));
+```
+
+**Correct (없을 수 있으면 그대로 드러냄):**
+
+```ts
+const firstProduct = products.find((product) => product.isActive);
+
+if (!firstProduct) {
+	throw new NoActiveProductError();
+}
+```
+
+**Correct (외부 패키지 타입이 실제와 달라 확인할 수 있는 이유를 남김):**
+
+```ts
+// echarts 5.5 의 setOption 타입이 series 배열을 받지 못한다. 런타임은 배열을 받는다.
+// https://github.com/apache/echarts/issues/00000
+chart.setOption(option as EChartsOption);
+```
+
 ## 3. Functions and Helper Boundaries
 
 **Impact: HIGH**
@@ -664,7 +790,7 @@ const noopLog: LogSink = (_message, _level) => {};
 
 ### 3.1 Declare Functions as Arrow Consts
 
-**Rule:** `T11` · `functions-declare-functions-as-arrow-consts`
+**Rule:** `T13` · `functions-declare-functions-as-arrow-consts`
 
 **Applies when:** 이름 붙인 함수를 새로 만들거나 선언 형태를 바꿀 때. 제외: 클래스 메서드, 제너레이터, 오버로드 선언.
 
@@ -737,7 +863,7 @@ export class ProductCursor {
 
 ### 3.2 Use Named Object Params for Complex Signatures
 
-**Rule:** `T12` · `functions-use-named-object-params-for-complex-signatures`
+**Rule:** `T14` · `functions-use-named-object-params-for-complex-signatures`
 
 **Applies when:** 매개변수가 3개를 넘거나 같은 계열 인자를 받는 함수를 추가·변경할 때. 객체 매개변수를 어디서 구조분해할지 바꿀 때. 제외: 리액트 함수 컴포넌트가 프롭스를 받고 구조분해하는 방식만 바꾸는 경우.
 
@@ -788,7 +914,7 @@ const toRequestUrl = (args: ToRequestUrlArgs): URL => {
 
 ### 3.3 Extract Support Functions Only When the Boundary Is Real
 
-**Rule:** `T13` · `functions-extract-helpers-only-when-the-boundary-is-real`
+**Rule:** `T15` · `functions-extract-helpers-only-when-the-boundary-is-real`
 
 **Applies when:** 보조 함수를 빼내거나 옮기거나 내보내거나 공유할 때. 범용 보조 파일, 소유자 하나만 쓰는 변환 함수, 자잘한 정리 단계의 경계를 바꿀 때.
 
@@ -922,7 +1048,7 @@ import { toProductSaveRequest } from "./function/to-product-save-request";
 
 ### 3.4 Place and Promote Support Functions Deliberately
 
-**Rule:** `T14` · `functions-place-and-promote-support-functions`
+**Rule:** `T16` · `functions-place-and-promote-support-functions`
 
 **Applies when:** 보조 함수를 둘 파일이나 폴더를 정할 때. `shared/` 아래로 파일을 옮기거나 `util.*`에 항목을 추가할 때.
 
@@ -1008,7 +1134,7 @@ export const util = {
 
 ### 3.5 Avoid Imperative Assembly in Wide Scopes
 
-**Rule:** `T15` · `functions-avoid-imperative-assembly-in-wide-scopes`
+**Rule:** `T17` · `functions-avoid-imperative-assembly-in-wide-scopes`
 
 **Applies when:** 파일 위쪽이나 넓은 스코프에서 `let` 재대입, 배열 `push`, 조건부 누적으로 값을 만들거나 정리할 때.
 
@@ -1043,7 +1169,7 @@ const visibleTabs = canManageItems
 
 ### 3.6 Name a Value Only When It Is Reused
 
-**Rule:** `T16` · `functions-name-a-value-only-when-it-is-reused`
+**Rule:** `T18` · `functions-name-a-value-only-when-it-is-reused`
 
 **Applies when:** 순수 계산의 결과를 지역 `const`로 받는 줄을 추가·삭제할 때. 식을 그 자리에 적을지 이름을 붙일지 정할 때.
 
@@ -1144,7 +1270,7 @@ const submitDraft = async (draft: Draft) => {
 
 ### 3.7 Prefer Immutable Array Sorting
 
-**Rule:** `T17` · `functions-prefer-immutable-array-sorting`
+**Rule:** `T19` · `functions-prefer-immutable-array-sorting`
 
 **Applies when:** 프롭스, 상태, 매개변수, 공유 입력에서 온 배열을 정렬할 때. 기존 `.sort()` 호출을 추가·변경할 때.
 
@@ -1174,7 +1300,7 @@ const sortedUsers = [...users].sort((left, right) => left.name.localeCompare(rig
 
 ### 3.8 Replace `enum` With `as const` Objects
 
-**Rule:** `T18` · `functions-replace-enum-with-as-const-objects`
+**Rule:** `T20` · `functions-replace-enum-with-as-const-objects`
 
 **Applies when:** `enum`이나 타입과 실행 양쪽에서 함께 쓰는 값 묶음을 추가·변경할 때.
 
@@ -1215,7 +1341,7 @@ type ProductStatus = (typeof product_status)[keyof typeof product_status];
 
 ### 3.9 Use Set and Map for Repeated Lookups
 
-**Rule:** `T19` · `functions-use-set-and-map-for-repeated-lookups`
+**Rule:** `T21` · `functions-use-set-and-map-for-repeated-lookups`
 
 **Applies when:** 같은 목록에 `includes`, `find`, 키 조회를 여러 번 하는 코드를 추가·변경할 때.
 
@@ -1257,7 +1383,7 @@ const approver = userById.get(approverId);
 
 ### 3.10 Name Functions by What Comes Out
 
-**Rule:** `T20` · `functions-name-functions-by-what-comes-out`
+**Rule:** `T22` · `functions-name-functions-by-what-comes-out`
 
 **Applies when:** 이름 붙인 함수를 새로 만들거나 이름을 바꿀 때. 제외: 외부 패키지가 정한 이름을 별칭 없이 그대로 쓰는 경우.
 
@@ -1341,7 +1467,7 @@ export const isAdminUser = (user: User) => { /* … */ };
 
 ### 4.1 Expose Optional Values Instead of Silent Fallbacks
 
-**Rule:** `T21` · `absence-expose-optional-values-instead-of-silent-fallbacks`
+**Rule:** `T23` · `absence-expose-optional-values-instead-of-silent-fallbacks`
 
 **Applies when:** 선택 값을 읽거나 정규화하거나 넘기는 방식을 바꿀 때. `??`, `||`, 기본값, 빈 값 대체 분기를 추가·변경할 때.
 
@@ -1409,7 +1535,7 @@ const productIds = response.data.rows?.map((row) => row.id);
 
 ### 5.1 Keep Body Comments for Intent and Steps
 
-**Rule:** `T22` · `docs-keep-body-comments-for-intent-and-steps`
+**Rule:** `T24` · `docs-keep-body-comments-for-intent-and-steps`
 
 **Applies when:** 함수 본문의 `//` 주석을 추가·수정·유지할 때. 도메인 규칙, 예외 방어, 외부 제약, 부수효과 순서, 긴 절차의 단계를 주석으로 설명할 때.
 
@@ -1473,7 +1599,7 @@ const submitProductDraft = async (draft: ProductDraft) => {
 
 ### 5.2 Require Header Doc Comments on Key Declarations
 
-**Rule:** `T23` · `docs-require-header-jsdoc-on-key-declarations`
+**Rule:** `T25` · `docs-require-header-jsdoc-on-key-declarations`
 
 **Applies when:** 쿼리·뮤테이션, 원격 함수, 분기나 `await`가 있는 핸들러와 이펙트, 내보낸 보조 함수와 훅, 커스텀 타입, 스토어 선언을 추가·변경할 때.
 
@@ -1487,7 +1613,7 @@ const submitProductDraft = async (draft: ProductDraft) => {
 중요한 경계가 파일 검색에서 바로 보이게 하려는 것입니다.
 
 주석의 형식은 `docs-write-doc-comments-as-multiline-blocks`가,
-태그를 붙일지는 `docs-avoid-role-tags-in-doc-comments`가 정합니다.
+태그를 붙일지는 `docs-write-doc-comments-as-multiline-blocks`가 정합니다.
 
 헤더 문서 주석은 본문이 비어 있거나 영문 라벨뿐이면 요구를 채우지 못합니다.
 함께 선택되는 `docs-write-concise-korean-comments-about-purpose-and-constraints`는
@@ -1519,7 +1645,7 @@ const responseProductList = useProductList();
 
 ### 5.3 Write Korean Comments About Purpose and Constraints
 
-**Rule:** `T24` · `docs-write-concise-korean-comments-about-purpose-and-constraints`
+**Rule:** `T26` · `docs-write-concise-korean-comments-about-purpose-and-constraints`
 
 **Applies when:** TypeScript·TSX의 문서 주석이나 인라인 주석 문구를 추가·수정·번역하거나 검토할 때.
 
@@ -1537,7 +1663,7 @@ const responseProductList = useProductList();
 - 선언 이름의 낱말을 한국어로 바꿔 적기만 하고 새 정보가 없는 문장.
   `sortRuleRefs`에 `/** 규칙 참조를 정렬 */`이 그 경우입니다
 - 코드를 한 줄씩 따라 읽으며 옮겨 적은 문장
-- 설명 없이 `@param`·`@returns`만 나열한 주석. 어떤 태그를 쓸지는 `docs-avoid-role-tags-in-doc-comments`가 정합니다
+- 설명 없이 `@param`·`@returns`만 나열한 주석. 어떤 태그를 쓸지는 `docs-write-doc-comments-as-multiline-blocks`가 정합니다
 
 기술 용어와 식별자는 영어로 섞어도 됩니다.
 다만 주석 본문이 전부 영어이면 한국어 주석으로 인정하지 않습니다.
@@ -1602,7 +1728,7 @@ export interface PgProductTreeProps {
 
 ### 5.4 Write Doc Comments as Multiline Blocks
 
-**Rule:** `T25` · `docs-write-doc-comments-as-multiline-blocks`
+**Rule:** `T27` · `docs-write-doc-comments-as-multiline-blocks`
 
 **Applies when:** 선언 위 문서 주석을 새로 쓰거나 형식을 바꿀 때. 한 줄 `/** … */`이나 `//`로 선언을 설명하려 할 때.
 
@@ -1618,6 +1744,12 @@ export interface PgProductTreeProps {
   규칙이 허용한 예외의 이유를 적을 때는 `//` 한 줄을 씁니다.
   그 형식은 `docs-justify-convention-exceptions-with-a-reason-comment`가 정합니다.
 - 어느 선언에 붙일지는 `docs-require-header-jsdoc-on-key-declarations`가 정합니다.
+- 선언이 무엇인지는 이름과 문법이 이미 드러냅니다.
+  그것을 태그로 다시 적지 않습니다.
+  `@api`·`@helper`·`@field` 같은 역할 태그를 붙이지 않고 `@schema`처럼 새 태그를 만들지도 않습니다.
+  `@summary`는 헤더 첫 줄이 이미 하는 일이라 쓰지 않습니다.
+  `@deprecated`·`@example`·`@param`·`@returns`처럼 TSDoc 규격에 있는 태그만 필요할 때 씁니다.
+  역할 태그는 선언이 바뀌어도 함께 바뀌지 않아 시간이 지나면 어긋납니다.
 
 **Incorrect (한 줄 블록과 `//`로 선언을 설명):**
 
@@ -1630,6 +1762,17 @@ export const fetchProductList = async (): Promise<Product[]> => {
 // product 저장 요청
 export const saveProduct = async (product: Product): Promise<void> => {
 	await client.post("/products", product);
+};
+```
+
+**Incorrect (역할 태그로 선언의 성격을 다시 적음):**
+
+```ts
+/**
+ * @api product 목록 조회
+ */
+export const fetchProductList = async (): Promise<Product[]> => {
+	return await client.get("/products");
 };
 ```
 
@@ -1651,73 +1794,9 @@ export const saveProduct = async (product: Product): Promise<void> => {
 };
 ```
 
-### 5.5 Avoid Role Tags in Doc Comments
+### 5.5 Justify Convention Exceptions With a Checkable Reason Comment
 
-**Rule:** `T26` · `docs-avoid-role-tags-in-doc-comments`
-
-**Applies when:** 문서 주석에 태그를 넣거나 바꿀 때. 새 태그 이름을 만들려 할 때.
-
-**Review with:** `docs-require-header-jsdoc-on-key-declarations`
-
-**Impact: MEDIUM (선언의 성격을 태그로 두 번 적지 않아 태그가 어긋날 일이 없습니다)**
-
-선언이 무엇인지는 이름 규칙과 문법이 이미 드러냅니다.
-그것을 태그로 다시 적지 않습니다.
-
-- `@api`, `@helper`, `@field` 같은 역할 태그를 붙이지 않습니다.
-- `@summary`는 헤더 첫 줄이 이미 하는 일이라 쓰지 않습니다.
-- `@schema`처럼 새 태그를 만들지 않습니다.
-- `@deprecated`, `@example`, `@param`, `@returns`처럼 TSDoc 규격에 있는 태그만 필요할 때 씁니다.
-
-역할 태그는 선언이 바뀌어도 함께 바뀌지 않아 시간이 지나면 어긋납니다.
-
-**Incorrect (역할 태그로 선언 성격을 다시 적음):**
-
-```ts
-/**
- * @api product 목록 조회
- */
-export const fetchProductList = async (): Promise<Product[]> => {
-	return await client.get("/products");
-};
-
-/**
- * @schema product 저장 입력
- */
-export interface SaveProductInput {
-	/**
-	 * 저장할 제목
-	 */
-	title: string;
-}
-```
-
-**Correct (설명만 적고 규격 태그만 필요할 때 씁니다):**
-
-```ts
-/**
- * product 목록 조회
- */
-export const fetchProductList = async (): Promise<Product[]> => {
-	return await client.get("/products");
-};
-
-/**
- * product 저장 입력
- *
- * @deprecated `SaveProductRequest`로 옮기는 중이다.
- */
-export interface SaveProductInput {
-	/**
-	 * 저장할 제목
-	 */
-	title: string;
-}
-```
-
-### 5.6 Justify Convention Exceptions With a Checkable Reason Comment
-
-**Rule:** `T27` · `docs-justify-convention-exceptions-with-a-reason-comment`
+**Rule:** `T28` · `docs-justify-convention-exceptions-with-a-reason-comment`
 
 **Applies when:** 규칙이 허용한 예외를 코드에 남길 때. 이미 있는 예외 주석의 내용을 바꿀 때. 제외: 규칙이 요구하지 않은 일반 설명 주석인 경우.
 
@@ -1778,7 +1857,7 @@ const filteredRows = useMemo(() => rows.filter((row) => matchRow(row, deferredKe
 
 ### 6.1 Configure Biome to Enforce the Mechanical Rules
 
-**Rule:** `T28` · `tooling-configure-biome-to-enforce-these-rules`
+**Rule:** `T29` · `tooling-configure-biome-to-enforce-these-rules`
 
 **Applies when:** 프로젝트에 `biome` 설정을 처음 넣거나 lint 규칙을 바꿀 때. `biome.json`의 `linter.rules`에 항목을 추가·삭제할 때.
 
@@ -1796,6 +1875,8 @@ const filteredRows = useMemo(() => rows.filter((row) => matchRow(row, deferredKe
 | `style/useNamingConvention` | `naming-use-consistent-file-and-symbol-naming` |
 | `correctness/noUnusedFunctionParameters` | `types-mark-unused-parameters-with-underscore` |
 | `performance/noNamespaceImport` | `naming-use-direct-imports-and-public-entry-points` |
+| `suspicious/noExplicitAny` | `types-narrow-unknown-instead-of-asserting` |
+| `style/noNonNullAssertion` | `types-narrow-unknown-instead-of-asserting` |
 
 도구가 끝까지 못 가는 자리가 있습니다.
 이 넷은 리뷰가 봅니다.
@@ -1812,6 +1893,8 @@ const filteredRows = useMemo(() => rows.filter((row) => matchRow(row, deferredKe
   리뷰가 봅니다.
 - 지역 변수의 `camelCase`도 끝까지 못 갑니다.
   `variable` 선택자에 `PascalCase`를 함께 허용해 컴포넌트 지역 선언을 통과시키기 때문입니다.
+- `as` 단언과 `@ts-expect-error`는 `biome`이 막지 않습니다.
+  `types-narrow-unknown-instead-of-asserting` 중 그 둘은 리뷰가 봅니다.
 - 파일명 `kebab-case`는 `useNamingConvention`이 보지 않습니다.
   `style/useFilenamingConvention`이 따로 봅니다.
   이 설정에는 넣지 않았습니다.
@@ -1846,9 +1929,11 @@ const filteredRows = useMemo(() => rows.filter((row) => matchRow(row, deferredKe
 		"rules": {
 			"recommended": true,
 			"correctness": {"noUnusedFunctionParameters": "error"},
+			"suspicious": {"noExplicitAny": "error"},
 			"performance": {"noNamespaceImport": "error"},
 			"style": {
 				"noEnum": "error",
+				"noNonNullAssertion": "error",
 				"noParameterAssign": "error",
 				"useConst": "error",
 				"useImportType": "error",

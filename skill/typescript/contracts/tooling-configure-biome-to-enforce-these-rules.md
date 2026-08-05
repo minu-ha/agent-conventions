@@ -14,6 +14,8 @@
 | `style/useNamingConvention` | `naming-use-consistent-file-and-symbol-naming` |
 | `correctness/noUnusedFunctionParameters` | `types-mark-unused-parameters-with-underscore` |
 | `performance/noNamespaceImport` | `naming-use-direct-imports-and-public-entry-points` |
+| `suspicious/noExplicitAny` | `types-narrow-unknown-instead-of-asserting` |
+| `style/noNonNullAssertion` | `types-narrow-unknown-instead-of-asserting` |
 
 도구가 끝까지 못 가는 자리가 있습니다.
 이 넷은 리뷰가 봅니다.
@@ -30,6 +32,8 @@
   리뷰가 봅니다.
 - 지역 변수의 `camelCase`도 끝까지 못 갑니다.
   `variable` 선택자에 `PascalCase`를 함께 허용해 컴포넌트 지역 선언을 통과시키기 때문입니다.
+- `as` 단언과 `@ts-expect-error`는 `biome`이 막지 않습니다.
+  `types-narrow-unknown-instead-of-asserting` 중 그 둘은 리뷰가 봅니다.
 - 파일명 `kebab-case`는 `useNamingConvention`이 보지 않습니다.
   `style/useFilenamingConvention`이 따로 봅니다.
   이 설정에는 넣지 않았습니다.

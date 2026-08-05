@@ -1,0 +1,36 @@
+# Place Error Boundaries by How Much Should Survive
+
+**Impact: HIGH (쿼리가 실패해도 받을 곳이 있고 화면 본문이 실패 분기로 채워지지 않습니다)**
+
+`Suspense` 쿼리는 실패하면 던집니다.
+받을 경계가 없으면 화면 전체가 빈 채로 남습니다.
+
+**자리는 "여기가 죽으면 무엇이 같이 죽는가"로 정합니다.** 세 층을 둡니다.
+
+| 층 | 두는 곳 | 이 층이 잡으면 살아남는 것 |
+| --- | --- | --- |
+| 앱 | 루트 한 번 | 아무것도 없습니다. 마지막 그물이라 반드시 하나 둡니다 |
+| 화면 | 라우트 진입 | 네비게이션과 레이아웃 셸 |
+| 섹션 | `Suspense` 경계와 같은 소유자 | 같은 화면의 다른 섹션 |
+
+섹션 층은 **그 섹션만 죽어도 나머지가 쓸모 있을 때만** 둡니다.
+목록이 실패했는데 옆 필터가 살아 있어도 할 수 있는 게 없으면 화면 층으로 충분합니다.
+
+경계 하나가 로딩과 실패를 함께 맡습니다.
+`Suspense`와 오류 경계를 같은 소유자에 두면 대체 화면 두 개가 한 자리에 모입니다.
+로딩 경계 자리는 `screen-place-suspense-boundaries-at-the-section-owner`가 정합니다.
+
+화면 본문에서 `isError`로 다시 분기하지 않습니다.
+경계가 이미 받은 것을 본문이 또 확인하면 대체 화면이 두 벌이 됩니다.
+`screen-avoid-ad-hoc-loading-branches`가 로딩에 대해 정한 것과 같은 이유입니다.
+
+**경계가 못 잡는 것이 있습니다.**
+이벤트 핸들러와 비동기 콜백에서 난 오류는 렌더 중이 아니라 경계를 지나칩니다.
+사용자 액션의 실패는 `data-handle-mutation-failure-where-it-is-called`가 정합니다.
+
+다시 시도를 열려면 대체 화면이 그 버튼을 갖고, 리액트 쿼리의 재설정 경계와 함께 씁니다.
+경계 안에서 상태를 되살릴 수 없으므로 다시 시도는 하위 트리를 새로 마운트합니다.
+
+**Requires selected:** `screen-place-suspense-boundaries-at-the-section-owner` · 함께 적용
+
+> 예시·예외가 필요하면 [full rule](../rules/05-07-screen-place-error-boundaries-by-blast-radius.md)을 읽습니다.

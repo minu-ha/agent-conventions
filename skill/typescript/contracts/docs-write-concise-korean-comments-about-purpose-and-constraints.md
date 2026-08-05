@@ -14,7 +14,7 @@
 - 선언 이름의 낱말을 한국어로 바꿔 적기만 하고 새 정보가 없는 문장.
   `sortRuleRefs`에 `/** 규칙 참조를 정렬 */`이 그 경우입니다
 - 코드를 한 줄씩 따라 읽으며 옮겨 적은 문장
-- 설명 없이 `@param`·`@returns`만 나열한 주석. 어떤 태그를 쓸지는 `docs-avoid-role-tags-in-doc-comments`가 정합니다
+- 설명 없이 `@param`·`@returns`만 나열한 주석. 어떤 태그를 쓸지는 `docs-write-doc-comments-as-multiline-blocks`가 정합니다
 
 기술 용어와 식별자는 영어로 섞어도 됩니다.
 다만 주석 본문이 전부 영어이면 한국어 주석으로 인정하지 않습니다.

@@ -39,7 +39,7 @@ tags: typing, wrapper, contracts
 
 첫 줄의 `extends`가 안 되는 래퍼에서는 DOM 프롭도 필요한 것만 적습니다.
 그때는 라이브러리 타입이 아니라 `string`, `ChangeEventHandler<HTMLInputElement>` 같은 플랫폼 타입을 씁니다.
-`value` 나 `onChange`처럼 DOM 이 이미 정한 이름은 라이브러리 것이 아닙니다.
+`value` 나 `onChange`처럼 DOM이 이미 정한 이름은 라이브러리 것이 아닙니다.
 
 **DOM 표면을 여는 방법은 세 단계이고 위에서부터 되는 것을 씁니다.**
 어느 단계인지는 컴파일러가 알려 주므로 미리 고민하지 않습니다.
@@ -133,7 +133,7 @@ import type { HTMLAttributes } from "react";
 /**
  * 기본 버튼
  *
- * 라이브러리가 `color` 를 자기 값 집합으로 좁혀 두어 그 이름만 빼고 다시 연다.
+ * 라이브러리가 `color`를 자기 값 집합으로 좁혀 두어 그 이름만 빼고 다시 연다.
  */
 export interface UiButtonProps extends Omit<HTMLAttributes<HTMLButtonElement>, "color"> {
 	/**
@@ -158,7 +158,7 @@ import type { ChangeEventHandler } from "react";
 /**
  * 한 줄 입력
  *
- * 겉은 `div` 인데 이벤트는 안쪽 `input` 이 받아 `HTMLAttributes` 를 그대로 못 쓴다.
+ * 겉은 `div` 인데 이벤트는 안쪽 `input`이 받아 `HTMLAttributes`를 그대로 못 쓴다.
  */
 export interface UiTextFieldProps {
 	/**

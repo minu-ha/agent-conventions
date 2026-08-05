@@ -161,7 +161,7 @@
 		},
 		{
 			"id": "RTE05-toolbar-composition",
-			"prompt": "replace compact/edit/search/focus booleans and static render props on wg-product-toolbar.tsx with stateless compound parts plus repeated explicit variants, and document public parts.",
+			"prompt": "replace compact/edit/search/focus booleans and static render props on wg-product-toolbar.tsx with stateless compound parts plus repeated explicit variants, give the icon-only buttons accessible names, and document public parts.",
 			"files": [
 				"src/widget/product-toolbar/wg-product-toolbar.tsx"
 			],
@@ -177,6 +177,7 @@
 					"strategy-prefer-children-over-render-props",
 					"composition-read-props-without-destructuring",
 					"composition-declare-props-interface-above-the-component",
+					"composition-give-interactive-elements-an-accessible-name",
 					"docs-require-jsdoc-on-key-declarations"
 				],
 				"typescript": [
@@ -220,7 +221,7 @@
 		},
 		{
 			"id": "RTE08-delete-handler-flow",
-			"prompt": "move a row delete inline async branch, mutation, navigation, and state+effect replay into one curried named handler, keep an unused React event as _event, directly import its reused callback type, and keep screen-only flow inside page.tsx.",
+			"prompt": "move a row delete inline async branch, mutation, navigation, and state+effect replay into one curried named handler, handle the mutation failure and invalidate the affected list query, keep an unused React event as _event, directly import its reused callback type, and keep screen-only flow inside page.tsx.",
 			"files": [
 				"src/page/products/pg-products.tsx"
 			],
@@ -233,10 +234,11 @@
 				"react": [
 					"typing-take-handler-types-from-existing-contracts",
 					"composition-named-handlers-over-inline",
-					"events-keep-handler-flow-inline",
 					"events-name-handlers-predictably",
 					"events-curry-extra-handler-arguments",
 					"events-run-user-actions-in-handlers-not-effects",
+					"data-handle-mutation-failure-where-it-is-called",
+					"data-invalidate-queries-the-mutation-changed",
 					"docs-require-jsdoc-on-key-declarations"
 				],
 				"typescript": [
@@ -393,8 +395,7 @@
 				"react": [
 					"perf-avoid-defensive-memoization",
 					"perf-use-lazy-state-initializers-for-expensive-defaults",
-					"perf-use-starttransition-for-non-urgent-updates",
-					"perf-use-usedeferredvalue-for-heavy-derived-renders",
+					"perf-defer-heavy-renders-with-measured-evidence",
 					"docs-require-jsdoc-on-key-declarations"
 				],
 				"typescript": [
@@ -436,7 +437,7 @@
 		},
 		{
 			"id": "RTE15-suspense-absence",
-			"prompt": "replace Suspense detail ?? [], || \"-\", a local pending Spinner, single-branch ternaries, and top-level aliases with an explicit empty state and origin chaining; remove an ungrounded explanatory comment.",
+			"prompt": "replace Suspense detail ?? [], || \"-\", a local pending Spinner, an isError branch, single-branch ternaries, and top-level aliases with a route error boundary, an explicit empty state, and origin chaining; remove an ungrounded explanatory comment.",
 			"files": [
 				"src/page/product-detail/pg-product-detail.tsx"
 			],
@@ -451,6 +452,7 @@
 					"screen-keep-derived-values-close",
 					"screen-place-suspense-boundaries-at-the-section-owner",
 					"screen-avoid-ad-hoc-loading-branches",
+					"screen-place-error-boundaries-by-blast-radius",
 					"data-preserve-origin-chaining"
 				],
 				"typescript": [

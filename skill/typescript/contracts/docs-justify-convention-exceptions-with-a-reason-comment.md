@@ -20,4 +20,4 @@
 주석은 예외가 일어나는 줄 바로 위에 `//`로 씁니다.
 형식과 어투는 `docs-write-concise-korean-comments-about-purpose-and-constraints`를 따릅니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/05-06-docs-justify-convention-exceptions-with-a-reason-comment.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/05-05-docs-justify-convention-exceptions-with-a-reason-comment.md)을 읽습니다.

@@ -6,7 +6,7 @@ impactDescription: 효과를 확인하지 않은 방어적 `useMemo`, `useCallba
 appliesWhen:
   - `useMemo`·`useCallback`을 추가하거나 제거할 때
   - 참조 동일성·실측 병목·무거운 지연 계산을 이유로 수동 메모이제이션을 검토할 때
-reviewWith: perf-use-usedeferredvalue-for-heavy-derived-renders
+reviewWith: perf-defer-heavy-renders-with-measured-evidence
 tags: perf, state
 ---
 
@@ -20,7 +20,7 @@ tags: perf, state
 - 외부 라이브러리가 참조 동일성에 민감할 때
 - 이펙트 의존성으로 들어가는 객체나 배열이라, 감싸지 않으면 이펙트가 매 렌더 다시 돌 때
 - 병목이 실제로 측정됐을 때
-- `useDeferredValue` 기준으로 무거운 파생 계산을 늦출 때
+- `perf-defer-heavy-renders-with-measured-evidence`를 따라 늦춘 값 기준으로 다시 계산할 때
 
 둘째는 성능이 아니라 정합성 문제입니다.
 객체와 배열은 렌더마다 새 참조라 의존성 비교가 늘 어긋납니다.

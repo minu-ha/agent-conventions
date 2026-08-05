@@ -19,7 +19,7 @@ tags: docs, jsdoc, declarations, boundaries
 중요한 경계가 파일 검색에서 바로 보이게 하려는 것입니다.
 
 주석의 형식은 `docs-write-doc-comments-as-multiline-blocks`가,
-태그를 붙일지는 `docs-avoid-role-tags-in-doc-comments`가 정합니다.
+태그를 붙일지는 `docs-write-doc-comments-as-multiline-blocks`가 정합니다.
 
 헤더 문서 주석은 본문이 비어 있거나 영문 라벨뿐이면 요구를 채우지 못합니다.
 함께 선택되는 `docs-write-concise-korean-comments-about-purpose-and-constraints`는

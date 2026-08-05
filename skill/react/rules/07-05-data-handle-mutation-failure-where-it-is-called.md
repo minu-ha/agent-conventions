@@ -1,0 +1,105 @@
+---
+title: Handle Mutation Failure Where the Mutation Is Called
+titleKo: 뮤테이션 실패는 부른 자리에서 받습니다
+impact: HIGH
+impactDescription: 저장이 실패했는데 성공한 것처럼 넘어가거나 아무 표시 없이 끝나지 않습니다
+appliesWhen:
+  - 뮤테이션을 부르는 코드를 추가·변경할 때
+  - `mutate`와 `mutateAsync` 사이를 오갈 때
+reviewWith: data-invalidate-queries-the-mutation-changed, events-run-user-actions-in-handlers-not-effects
+tags: data, mutation, errors
+---
+
+## Handle Mutation Failure Where the Mutation Is Called
+
+**Impact: HIGH (저장이 실패했는데 성공한 것처럼 넘어가거나 아무 표시 없이 끝나지 않습니다)**
+
+뮤테이션 실패는 오류 경계가 받지 못합니다.
+핸들러 안에서 난 오류는 렌더 중이 아니라 경계를 지나갑니다.
+`screen-place-error-boundaries-by-blast-radius`가 그 경계를 정하고, 여기서는 그 밖의 자리를 봅니다.
+
+**기본은 `mutate`와 `useMutation`의 `onError`·`onSuccess`입니다.**
+성공과 실패가 선언 자리에 함께 남고 핸들러는 부르기만 합니다.
+
+| 상황 | 쓰는 것 |
+| --- | --- |
+| 부른 뒤 핸들러가 더 할 일이 없다 | `mutate` + `onError`·`onSuccess` |
+| 부른 결과를 기다렸다가 핸들러가 이어서 해야 한다 | `mutateAsync` + `try`/`catch` |
+
+`mutateAsync`는 실패하면 던집니다.
+`await`만 하고 `catch`하지 않으면 그 뒤 줄이 실행되지 않고 사용자에게 아무 표시도 남지 않습니다.
+`mutateAsync`를 쓰기로 했으면 `try`/`catch`를 같이 씁니다.
+
+- 한 화면에서 두 형태를 섞지 않습니다.
+  실패를 어디서 받는지 자리마다 다시 찾게 됩니다.
+- 빈 `catch`로 실패를 삼키지 않습니다.
+  다시 던지든 표시하든 무엇이든 합니다.
+- 여러 번 눌러 같은 뮤테이션이 겹치는 것은 `isPending` 이른 반환으로 막습니다.
+- 성공 뒤 캐시를 되맞추는 것은 `data-invalidate-queries-the-mutation-changed`가 정합니다.
+
+실패했을 때 무엇을 보여 줄지는 이 규칙이 정하지 않습니다.
+제품마다 다르고 코드로 판정할 수 없습니다.
+
+**Incorrect (`await`만 하고 실패를 받지 않음):**
+
+```tsx
+const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
+	await mutationProductSave.mutateAsync({data: toProductSaveRequest(formValues)});
+	void navigate({to: "/products"});
+};
+```
+
+**Correct (핸들러가 더 할 일이 없어 콜백으로 받음):**
+
+```tsx
+/**
+ * product 저장 API
+ */
+const mutationProductSave = useProductSave({
+	mutation: {
+		onSuccess: () => {
+			void queryClient.invalidateQueries({queryKey: productListQueryKey()});
+			void navigate({to: "/products"});
+		},
+		onError: (error) => {
+			setSubmitErrorMessage(toSubmitErrorMessage(error));
+		},
+	},
+});
+
+/**
+ * 저장 버튼 클릭 처리
+ */
+const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => {
+	if (mutationProductSave.isPending) {
+		return;
+	}
+
+	mutationProductSave.mutate({data: toProductSaveRequest(formValues)});
+};
+```
+
+**Correct (결과를 기다려 이어서 해야 해서 `try`/`catch`):**
+
+```tsx
+/**
+ * 첨부를 먼저 올린 뒤 그 식별자로 product 를 저장한다
+ */
+const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
+	if (mutationAttachmentUpload.isPending) {
+		return;
+	}
+
+	try {
+		const uploaded = await mutationAttachmentUpload.mutateAsync({files: draftFiles});
+
+		await mutationProductSave.mutateAsync({
+			data: toProductSaveRequest(formValues, uploaded.attachmentIds),
+		});
+
+		void navigate({to: "/products"});
+	} catch (error) {
+		setSubmitErrorMessage(toSubmitErrorMessage(error));
+	}
+};
+```

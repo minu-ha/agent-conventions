@@ -4,7 +4,7 @@
 	"scenarios": [
 		{
 			"id": "shared-config-existing-source",
-			"prompt": "`billing-request.ts` and `audit-request.ts` duplicate URL/page-size constants are replaced with the existing `shared/config.ts` values; use direct `config.*` access and do not change the declaration.",
+			"prompt": "`billing-request.ts` and `audit-request.ts` duplicate URL/page-size constants and read `import.meta.env` directly; move both into the documented `config` namespace and read them through `config.*`.",
 			"files": [
 				"src/features/billing/billing-request.ts",
 				"src/features/audit/audit-request.ts"
@@ -18,7 +18,8 @@
 					"naming-place-owner-config-in-the-owner-config-folder",
 					"naming-preserve-config-origin-with-chained-access",
 					"naming-use-direct-imports-and-public-entry-points",
-					"naming-restrict-absolute-aliases-to-layer-roots"
+					"naming-restrict-absolute-aliases-to-layer-roots",
+					"naming-read-environment-values-through-shared-config"
 				]
 			}
 		},
@@ -41,7 +42,7 @@
 		},
 		{
 			"id": "derive-existing-contract-with-docs",
-			"prompt": "replace a duplicate `UserPreview` interface with a same-name interface that pulls each field through `UserRecord[\"id\"]` indexed access and add Korean header and field doc comments; imports and names otherwise stay unchanged.",
+			"prompt": "replace a duplicate `UserPreview` interface with a same-name interface that pulls each field through `UserRecord[\"id\"]` indexed access, drop the `as unknown as` assertion that fed it, and add Korean header and field doc comments.",
 			"files": [
 				"src/users/user-preview.ts"
 			],
@@ -52,10 +53,10 @@
 				"typescript": [
 					"types-reuse-existing-contracts-before-new-types",
 					"types-document-custom-types-and-shapes",
+					"types-narrow-unknown-instead-of-asserting",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
-					"docs-write-doc-comments-as-multiline-blocks",
-					"docs-avoid-role-tags-in-doc-comments"
+					"docs-write-doc-comments-as-multiline-blocks"
 				]
 			}
 		},

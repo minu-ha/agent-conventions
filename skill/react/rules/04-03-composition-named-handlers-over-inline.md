@@ -8,7 +8,7 @@ appliesWhen:
   - 인라인 콜백에 여러 동작·부수효과나 읽어서 의도가 안 보이는 상태 전환이 들어갈 때
   - 제외: 인자 없이 핸들러 참조만 넘기는 경우
 requiresSelected: docs-require-jsdoc-on-key-declarations, events-curry-extra-handler-arguments
-reviewWith: events-keep-handler-flow-inline, events-run-user-actions-in-handlers-not-effects
+reviewWith: events-run-user-actions-in-handlers-not-effects, typescript/functions-extract-helpers-only-when-the-boundary-is-real
 tags: composition, jsx, handlers
 ---
 

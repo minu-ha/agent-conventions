@@ -15,4 +15,4 @@
 
 **Requires selected:** `typing-take-handler-types-from-existing-contracts` · 함께 적용
 
-> 예시·예외가 필요하면 [full rule](../rules/06-03-events-curry-extra-handler-arguments.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/06-02-events-curry-extra-handler-arguments.md)을 읽습니다.
