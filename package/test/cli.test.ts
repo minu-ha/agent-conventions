@@ -17,7 +17,6 @@ const repositoryAgentsPath = path.join(repoDir, "AGENTS.md");
 const templatePath = path.join(repoDir, "AGENTS.template.md");
 const repositoryReadmePath = path.join(repoDir, "README.md");
 const packageReadmePath = path.join(packageDir, "README.md");
-const astroAgentsPath = path.join(repoDir, "skill/astro/HANDBOOK.md");
 const reactAgentsPath = path.join(repoDir, "skill/react/HANDBOOK.md");
 const npmCommand = process.platform === "win32" ? "npm.cmd" : "npm";
 const packageBinDir = path.join(packageDir, "node_modules/.bin");
@@ -27,16 +26,7 @@ const tsxCliPath = path.join(packageDir, "node_modules", "tsx", "dist", "cli.mjs
 const buildModulePath = path.join(packageDir, "src", "build.ts");
 const checkGeneratedModulePath = path.join(packageDir, "src", "check-generated.ts");
 const checkHandbooksModulePath = path.join(packageDir, "src", "check-handbooks.ts");
-const expectedSkillScriptNames = [
-	"astro",
-	"react",
-	"css",
-	"figma-visual-parity",
-	"nestjs",
-	"playwright-test",
-	"tanstack-route",
-	"typescript",
-] as const;
+const expectedSkillScriptNames = ["react", "css", "typescript"] as const;
 const expectedProgressiveSkillNames = ["css", "react", "typescript"] as const;
 
 /**
@@ -444,7 +434,7 @@ test("repository documentation distinguishes source, router, and generated artif
 	assertMentions(artifactSection, ["사람이 직접 수정", "`SKILL.md`"], "artifactSection");
 
 	const skillTypes = extractMarkdownSection({source: repositoryAgents, heading: "2. Skill Types", level: 2});
-	assert.match(skillTypes, /\[skill\/astro\]\(\.\/skill\/astro\/HANDBOOK\.md\)/);
+	assert.match(skillTypes, /\[skill\/react\]\(\.\/skill\/react\/HANDBOOK\.md\)/);
 	assert.doesNotMatch(skillTypes, /\/AGENTS\.md\)/);
 
 	const editingRules = extractMarkdownSection({source: repositoryAgents, heading: "4. Editing Rules", level: 2});
@@ -566,12 +556,6 @@ test("generated-output check scripts support progressive TypeScript", () => {
 	assert.equal(aliasResult.status, 0, aliasResult.stderr);
 });
 
-test("generated-output check preserves non-progressive Astro compatibility", () => {
-	const result = runPackageCommand(["--prefix", packageDir, "run", "check:generated", "--", "--skill=astro"]);
-
-	assert.equal(result.status, 0, result.stderr);
-});
-
 test("generated-output check CLI executes for direct and symlinked entry paths", async (context) => {
 	const missingSkillName = "missing-generated-check-fixture";
 	const directResult = spawnSync(process.execPath, [tsxCliPath, checkGeneratedModulePath, `--skill=${missingSkillName}`], {
@@ -625,13 +609,6 @@ test("validate:react alias succeeds for the react skill", () => {
 	assert.match(result.stdout, /Validated react:/);
 });
 
-test("validate:astro alias succeeds for the astro skill", () => {
-	const result = runPackageCommand(["--prefix", packageDir, "run", "validate:astro"]);
-
-	assert.equal(result.status, 0, result.stderr);
-	assert.match(result.stdout, /Validated astro:/);
-});
-
 test("build script regenerates HANDBOOK.md for the react skill", async () => {
 	const result = runPackageCommand(["--prefix", packageDir, "run", "build", "--", "--skill=react"]);
 
@@ -669,29 +646,10 @@ test("build:react alias regenerates HANDBOOK.md for the react skill", async () =
 	assert.match(agentsSource, /^# React 컨벤션$/m);
 });
 
-test("build:astro alias regenerates HANDBOOK.md for the astro skill", async () => {
-	const result = runPackageCommand(["--prefix", packageDir, "run", "build:astro"]);
-
-	assert.equal(result.status, 0, result.stderr);
-	await access(astroAgentsPath);
-
-	const agentsSource = await readFile(astroAgentsPath, "utf8");
-	assert.match(agentsSource, /^# Astro 컨벤션$/m);
-	assert.match(agentsSource, /^## 함께 따르는 규칙$/m);
-	assert.match(agentsSource, /`convention-typescript`/);
-	assert.match(agentsSource, /metadata\.json\.extends/);
-	assert.match(agentsSource, /\.\.\/typescript\/HANDBOOK\.md/);
-	assert.doesNotMatch(agentsSource, /\.\.\/typescript\/(?:SKILL|RULES_INDEX)\.md/);
-	assert.match(agentsSource, /^ {4}- \d+\.\d+ \[Align Route Page Assets and `pg_\*` Surface Classes with Route Role\]/m);
-	assert.match(agentsSource, /^### \d+\.\d+ Compose Page-level Documents Through `_document\.astro` and `_head\.astro`$/m);
-});
-
-test("css and astro skills do not keep stale project-specific route naming guidance", async () => {
-	const cssFiles = (await listMarkdownFiles(path.join(repoDir, "skill/css"))).filter(
+test("css skill does not keep stale project-specific route naming guidance", async () => {
+	const checkedFiles = (await listMarkdownFiles(path.join(repoDir, "skill/css"))).filter(
 		(filePath) => !filePath.includes(`${path.sep}deprecated${path.sep}`),
 	);
-	const astroFiles = await listMarkdownFiles(path.join(repoDir, "skill/astro"));
-	const checkedFiles = [...cssFiles, ...astroFiles];
 
 	for (const filePath of checkedFiles) {
 		const relativePath = path.relative(repoDir, filePath);

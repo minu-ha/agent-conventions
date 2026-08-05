@@ -59,13 +59,8 @@ npm --prefix package run biome:check:all
 
 | Skill | Loading | Companion contract |
 | --- | --- | --- |
-| `astro` | non-progressive | extends `typescript`, `css` |
 | `react` | progressive | required `typescript`; conditional `css` |
 | `css` | progressive | conditional `typescript` |
-| `figma-visual-parity` | non-progressive | extends `react`, `css`, `playwright-test` |
-| `nestjs` | non-progressive | extends `typescript` |
-| `playwright-test` | non-progressive | extends `typescript` |
-| `tanstack-route` | non-progressive | extends `typescript` |
 | `typescript` | progressive | none |
 
 Progressive skill은 `SKILL.md` → activated `RULES_INDEX.md` 전체 scan과 completion gate → Selected/Unknown `contracts/*.md` → CRITICAL 또는 판정 근거가 필요한 `rules/*.md` full expansion → Unknown 해소 → final Selected의 `requiresSelected` closure 순서로 소비합니다. 새 selection이나 companion이 생기면 고정점까지 반복합니다. non-progressive structured skill은 각자의 `SKILL.md`가 기존 full-handbook 계약을 결정합니다. legacy single-document `java`는 structured build pipeline에서 의도적으로 제외합니다.
@@ -74,13 +69,8 @@ progressive owner는 `extends` 대신 `companions`를 사용하고 companion tar
 
 ## Per-Skill Aliases
 
-- `astro`
 - `react`
 - `css`
-- `figma-visual-parity`
-- `nestjs`
-- `playwright-test`
-- `tanstack-route`
 - `typescript`
 
 예시:

@@ -356,7 +356,7 @@ const viewerClientScript = `(() => {
 		s = s.replace(/\\/\\/[^\\n]*/g, (m) => wrap("c", m));
 		s = s.replace(/\\/\\*[\\s\\S]*?\\*\\//g, (m) => wrap("c", m));
 		s = s.replace(/(&#39;|'|"|\`)(?:\\\\.|(?!\\1)[\\s\\S])*?\\1/g, (m) => wrap("s", m));
-		if (lang === "tsx" || lang === "astro") {
+		if (lang === "tsx") {
 			s = s.replace(/&lt;\\/?([A-Za-z][\\w.-]*)/g, (m, n) => m.replace(n, '<span class="g">' + n + "</span>"));
 		}
 		s = s.replace(KW, '<span class="k">$&</span>');

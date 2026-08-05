@@ -93,8 +93,8 @@ test("parseRuleBody handles every rule in the repository", async () => {
 		}
 	}
 
-	assert.equal(ruleCount, 235);
-	assert.ok(blockCount > 400, `expected 400+ code blocks, found ${blockCount}`);
+	assert.equal(ruleCount, 108);
+	assert.ok(blockCount > 300, `expected 300+ code blocks, found ${blockCount}`);
 });
 
 test("readSkillRules exposes titleKo and tolerates its absence", async () => {
@@ -175,14 +175,6 @@ test("buildViewerPayload collects only progressive skills", async () => {
 	assert.equal(react?.progressive, true);
 	assert.equal(react?.ruleCount, 47);
 
-	// non-progressive skill 은 아직 작성 중이라 핸드북에 넣지 않는다
-	for (const excluded of ["astro", "nestjs", "playwright-test", "tanstack-route", "figma-visual-parity"]) {
-		assert.equal(
-			payload.skills.some((skill) => skill.name === excluded),
-			false,
-			`${excluded} must stay out of the viewer payload`,
-		);
-	}
 	assert.deepEqual(
 		payload.skills.map((skill) => skill.name),
 		["css", "react", "typescript"],

@@ -156,7 +156,7 @@ def flow_main():
 # ══ B. companion 그래프 ════════════════════════════════════════════
 
 def flow_companions():
-    W, H = 1000, 410
+    W, H = 1000, 210
     s = [DEFS]
 
     def sk(x, y, w, name, sub, kind=""):
@@ -164,9 +164,9 @@ def flow_companions():
 
     TS_X, TS_W, TS_Y = 400, 200, 70
     s += [
-        sk(90, TS_Y, 190, "react", "42 rules · progressive", "e"),
-        sk(TS_X, TS_Y, TS_W, "typescript", "20 rules · progressive", "e"),
-        sk(720, TS_Y, 190, "css", "26 rules · progressive", "e"),
+        sk(90, TS_Y, 190, "react", "47 rules · progressive", "e"),
+        sk(TS_X, TS_Y, TS_W, "typescript", "29 rules · progressive", "e"),
+        sk(720, TS_Y, 190, "css", "32 rules · progressive", "e"),
     ]
 
     # react → typescript (required)
@@ -177,21 +177,6 @@ def flow_companions():
     s += [path("M 185 118 C 185 192 815 192 815 118"),
           elabel(500, 188, "conditional — class contract · stylesheet 를 바꿨을 때")]
 
-
-    # non-progressive bus
-    npx = [(40, 168, "astro", "42 rules"), (232, 190, "tanstack-route", "24 rules"),
-           (446, 190, "playwright-test", "25 rules"), (660, 150, "nestjs", "21 rules")]
-    BUS = 250
-    for x, w, n, c in npx:
-        s.append(sk(x, 306, w, n, c))
-        s.append(path(f"M {x+w/2} 306 L {x+w/2} {BUS}", marker=None))
-    s.append(path(f"M 124 {BUS} L 735 {BUS}", marker=None))
-    s.append(path(f"M 500 {BUS} L 500 122"))
-    s.append(elabel(500, BUS - 10, "extends — typescript"))
-
-    s.append(sk(830, 306, 150, "figma-visual-parity", "15 rules"))
-    s.append(elabel(905, 376, "extends → react · css · playwright-test"))
-    s.append(elabel(124, 376, "astro 는 css 도 extends"))
 
     return (f'<svg viewBox="0 0 {W} {H}" class="fc" style="min-width:820px" '
             f'role="img" aria-label="스킬 간 companion 그래프">' + "".join(s) + "</svg>")

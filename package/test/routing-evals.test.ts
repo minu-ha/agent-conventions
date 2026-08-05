@@ -1070,7 +1070,7 @@ const reactScenarioStages = {
 			prompt:
 				"move a row delete inline async branch, mutation, navigation, and state+effect replay into one curried named handler, handle the mutation failure and invalidate the affected list query, keep an unused React event as _event, directly import its reused callback type, and keep screen-only flow inside page.tsx.",
 			files: ["src/page/products/pg-products.tsx"],
-			expectedSkills: ["react", "typescript", "tanstack-route"],
+			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
 				react: [
 					"typing-take-handler-types-from-existing-contracts",
@@ -1100,7 +1100,7 @@ const reactScenarioStages = {
 			prompt:
 				'extract only the tree section that owns local search and expanded state plus a tree adapter into the owner component folder, implement a named selection handler from ProductTreeSectionProps["onCategorySelect"], and keep search params, navigation, page query, and mutation in the page product.',
 			files: ["src/page/products/pg-products.tsx", "src/page/products/component/pg-product-tree-section.tsx"],
-			expectedSkills: ["react", "typescript", "tanstack-route"],
+			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
 				react: [
 					"ownership-layer-component-boundaries",

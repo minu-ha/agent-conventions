@@ -52,8 +52,8 @@ ln -s /absolute/path/to/agent-conventions/skill ~/.agents/skills/conventions
 새 프로젝트면 [AGENTS.template.md](./AGENTS.template.md) 를 복사해서 시작.
 이미 `AGENTS.md` 가 있으면 컨벤션 항목에 skill 이름만 추가.
 
-TypeScript 프레임워크 프로젝트는 framework skill 하나만 적지 말 것.
-`convention-astro` + `convention-typescript` + `convention-css` 처럼 companion 까지 적는다.
+skill 하나만 적지 말 것.
+`convention-react` + `convention-typescript` + `convention-css` 처럼 companion 까지 적는다.
 
 ### 1.3 담당 영역 핸드북
 
@@ -75,11 +75,6 @@ TypeScript 프레임워크 프로젝트는 framework skill 하나만 적지 말 
 | --- | --- |
 | React 화면 · 컴포넌트 | [react](./skill/react/HANDBOOK.md) + [typescript](./skill/typescript/HANDBOOK.md) |
 | 스타일시트 · `className` | 위 둘 + [css](./skill/css/HANDBOOK.md) |
-| Astro 페이지 | [astro](./skill/astro/HANDBOOK.md) |
-| TanStack Router 라우트 | [tanstack-route](./skill/tanstack-route/HANDBOOK.md) |
-| NestJS 백엔드 | [nestjs](./skill/nestjs/HANDBOOK.md) |
-| Playwright 테스트 | [playwright-test](./skill/playwright-test/HANDBOOK.md) |
-| Figma 기준 UI | [figma-visual-parity](./skill/figma-visual-parity/HANDBOOK.md) |
 
 핸드북마다 번호 목차와 Impact 등급이 있다. `CRITICAL` 부터 본다.
 규칙마다 Incorrect / Correct 예시가 붙어 있다.
@@ -136,13 +131,8 @@ TSX 파일 하나를 고쳐 달라고 시켜본다. 에이전트는 이 순서�
 | [react](./skill/react/HANDBOOK.md) | progressive | 컴포넌트 경계 · route-local · handler · state |
 | [typescript](./skill/typescript/HANDBOOK.md) | progressive | import · type · helper · JSDoc |
 | [css](./skill/css/HANDBOOK.md) | progressive | plain CSS · owner namespace · 토큰 |
-| [astro](./skill/astro/HANDBOOK.md) | 전체 로드 | route ownership · rendering · island |
-| [tanstack-route](./skill/tanstack-route/HANDBOOK.md) | 전체 로드 | route · layout · search param |
-| [playwright-test](./skill/playwright-test/HANDBOOK.md) | 전체 로드 | e2e 경계 · locator · mocking |
-| [nestjs](./skill/nestjs/HANDBOOK.md) | 전체 로드 | module · service · DTO · Prisma |
-| [figma-visual-parity](./skill/figma-visual-parity/HANDBOOK.md) | 전체 로드 | Figma 기준 visual parity |
 
-skill 이름은 `convention-<skill>`. `figma-visual-parity` 만 예외.
+skill 이름은 `convention-<skill>`.
 
 companion 은 `metadata.json` 이 선언하고 자동으로 켜진다.
 프로젝트에는 owner skill 만 적으면 된다.

@@ -49,14 +49,9 @@ build tooling 은 [package/](./package/README.md).
 | [skill/react](./skill/react/HANDBOOK.md) | progressive |
 | [skill/typescript](./skill/typescript/HANDBOOK.md) | progressive |
 | [skill/css](./skill/css/HANDBOOK.md) | progressive |
-| [skill/astro](./skill/astro/HANDBOOK.md) | 전체 로드 |
-| [skill/tanstack-route](./skill/tanstack-route/HANDBOOK.md) | 전체 로드 |
-| [skill/playwright-test](./skill/playwright-test/HANDBOOK.md) | 전체 로드 |
-| [skill/nestjs](./skill/nestjs/HANDBOOK.md) | 전체 로드 |
-| [skill/figma-visual-parity](./skill/figma-visual-parity/HANDBOOK.md) | 전체 로드 |
 
 progressive 는 `SKILL.md` → `RULES_INDEX.md` → 걸린 `contracts/*.md` 로 좁힌다.
-전체 로드는 `SKILL.md` 가 지시하는 `HANDBOOK.md` 를 통째로 읽는다.
+셋 다 progressive 다.
 
 `metadata.json.companions` 가 `required` 와 `conditional` 활성화를 선언한다.
 `extends` 는 아직 progressive 로 안 옮긴 skill 의 호환 계약.
@@ -121,8 +116,7 @@ npm --prefix package run check:handbooks:all
 npm --prefix package run test
 ```
 
-buildable skill: `astro` `css` `figma-visual-parity` `nestjs` `playwright-test`
-`react` `tanstack-route` `typescript`
+buildable skill: `css` `react` `typescript`
 
 ---
 

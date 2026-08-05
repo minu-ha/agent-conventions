@@ -102,16 +102,11 @@ interface PreparedSkillBuild {
 }
 
 const conventionTitleBySkillName: Record<string, string> = {
-	astro: "Astro Convention",
 	css: "CSS Convention",
-	"figma-visual-parity": "Figma Visual Parity",
-	nestjs: "NestJS Convention",
-	"playwright-test": "Playwright Test Convention",
 	react: "React Convention",
-	"tanstack-route": "TanStack Route Convention",
 	typescript: "TypeScript Convention",
 };
-const conventionSkillNameBySkillName: Record<string, string> = {"figma-visual-parity": "figma-visual-parity"};
+const conventionSkillNameBySkillName: Record<string, string> = {};
 const nestedTocIndent = " ".repeat(4);
 
 /**
