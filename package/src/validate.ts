@@ -12,6 +12,7 @@ import type {DependencyDeclaration} from "./dependencies.js";
 import {isDirectExecution} from "./entrypoint.js";
 import {readSkillDocument, readSkillRuleFileNames} from "./parser.js";
 import {assertProgressiveCompanionSource, assertProgressiveSkillEntrypoint} from "./progressive.js";
+import {assertRuleDiscipline} from "./rule-discipline.js";
 import {validateRoutingEvalManifest} from "./routing-evals.js";
 import {generateRuleContractMarkdown} from "./routing.js";
 import type {LoadedSkillDocument, SkillMetadata, SkillPaths} from "./types.js";
@@ -32,18 +33,27 @@ const assertProseRuleReferences = (
 	document: LoadedSkillDocument,
 	knownIds: ReadonlySet<string>,
 	knownPrefixes: ReadonlySet<string>,
+	skillsAbove: ReadonlySet<string>,
 ): void => {
 	for (const rule of document.rules) {
-		if (rule.prefix === "tooling") {
-			continue;
-		}
-
 		// 코드 펜스 안은 실제 코드라 대상이 아니다.
 		const prose = rule.body.replace(/```[\s\S]*?```/g, "");
 
 		for (const [, reference] of prose.matchAll(proseRuleReferencePattern)) {
 			const [ownerOrPrefix = "", nextSegment = ""] = reference.split("/");
 			const localId = reference.includes("/") ? nextSegment : reference;
+
+			if (reference.includes("/") && skillsAbove.has(ownerOrPrefix)) {
+				throw new Error(
+					`${document.skillName}: ${rule.fileName} prose references upper-layer rule "${reference}". ${document.skillName} 만 쓰는 쪽에서 끊긴다. skill 이름 없이 쓰거나 참조를 지워라.`,
+				);
+			}
+
+			// stylelint·biome 규칙 이름이 우리 prefix 와 겹쳐서 tooling 규칙은 ID 해석을 건너뛴다.
+			// 그래서 tooling 본문은 우리 규칙을 `css/…` 처럼 소유 skill 을 붙여 가리킨다.
+			if (rule.prefix === "tooling" && !reference.includes("/")) {
+				continue;
+			}
 
 			if (!knownPrefixes.has(localId.split("-")[0] ?? "")) {
 				continue;
@@ -58,6 +68,45 @@ const assertProseRuleReferences = (
 			}
 		}
 	}
+};
+
+/**
+ * @helper companion 선언에서 이 skill 보다 위 계층인 skill 이름을 모은다
+ * @description 나를 companion 으로 켜는 skill 이 위 계층이다. `typescript` 는 아무도 켜지 않으므로 가장 아래다.
+ *   아래 계층이 위 계층 규칙 ID 를 가리키면 아래 계층만 쓰는 프로젝트에서 그 참조가 끊긴다.
+ */
+const collectSkillsAbove = async (skillName: string, skillRootDir?: string): Promise<Set<string>> => {
+	const parentsBySkill = new Map<string, Set<string>>();
+
+	for (const candidateName of await listSkillNames(skillRootDir)) {
+		if (!(await isBuildableSkill(candidateName, skillRootDir))) {
+			continue;
+		}
+
+		const candidate = await readSkillDocument(getSkillPaths(candidateName, skillRootDir));
+
+		for (const companion of candidate.metadata.companions ?? []) {
+			const parents = parentsBySkill.get(companion.skill) ?? new Set<string>();
+			parents.add(candidateName);
+			parentsBySkill.set(companion.skill, parents);
+		}
+	}
+
+	const above = new Set<string>();
+	const pending = [...(parentsBySkill.get(skillName) ?? [])];
+
+	while (pending.length > 0) {
+		const parentName = pending.pop() as string;
+
+		if (above.has(parentName)) {
+			continue;
+		}
+
+		above.add(parentName);
+		pending.push(...(parentsBySkill.get(parentName) ?? []));
+	}
+
+	return above;
 };
 
 interface LocalValidationResult {
@@ -401,8 +450,11 @@ export const validateSkill = async (skillPaths: SkillPaths): Promise<void> => {
 	const rootResult = await validateSkillTree(skillPaths, [], validatedSkillNames, documents, dependenciesBySkill);
 
 	validateRoutingTargets(documents, dependenciesBySkill);
-	const allRules = await collectAllRuleIds(path.dirname(skillPaths.skillDir));
-	assertProseRuleReferences(rootResult.document, allRules.ids, allRules.prefixes);
+	const skillRootDir = path.dirname(skillPaths.skillDir);
+	const allRules = await collectAllRuleIds(skillRootDir);
+	const skillsAbove = await collectSkillsAbove(skillPaths.skillName, skillRootDir);
+	assertProseRuleReferences(rootResult.document, allRules.ids, allRules.prefixes, skillsAbove);
+	assertRuleDiscipline(rootResult.document);
 
 	if (rootResult.document.metadata.progressiveDisclosure === true) {
 		await validateRoutingEvalManifest(skillPaths);
