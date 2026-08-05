@@ -10,4 +10,4 @@ JSX에는 이름 붙인 핸들러 참조만 넘깁니다.
 
 **Requires selected:** `docs-require-jsdoc-on-key-declarations`, `events-curry-extra-handler-arguments` · 함께 적용
 
-> 예시·예외가 필요하면 [full rule](../rules/04-03-composition-named-handlers-over-inline.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/05-03-composition-named-handlers-over-inline.md)을 읽습니다.

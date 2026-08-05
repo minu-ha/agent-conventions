@@ -10,4 +10,4 @@
 - 같은 목록을 겨냥한 조회가 루프나 `map`·`filter`·`some` 콜백 안에 있습니다.
 - 같은 목록을 겨냥한 조회가 서로 다른 세 지점 이상에서 일어납니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/03-09-functions-use-set-and-map-for-repeated-lookups.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/04-02-values-use-set-and-map-for-repeated-lookups.md)을 읽습니다.

@@ -33,4 +33,4 @@
 - 애니메이션으로 바꾸는 속성은 `transform`과 `opacity`로 둡니다.
   `width`나 `top`을 애니메이션하면 매 프레임 레이아웃을 다시 계산합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/05-08-values-namespace-keyframes-and-respect-reduced-motion.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/07-02-a11y-namespace-keyframes-and-respect-reduced-motion.md)을 읽습니다.

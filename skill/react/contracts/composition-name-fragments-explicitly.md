@@ -15,4 +15,4 @@
 `biome`의 `style/useFragmentSyntax`는 정반대를 강제하므로 켜지 않습니다.
 설정은 `typescript/tooling-configure-biome-to-enforce-these-rules`에 적혀 있습니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/04-07-composition-name-fragments-explicitly.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/05-07-composition-name-fragments-explicitly.md)을 읽습니다.

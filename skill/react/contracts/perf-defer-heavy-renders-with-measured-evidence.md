@@ -32,4 +32,4 @@
 - 지연 값 기준 재계산에 `useMemo`를 함께 쓰는 것은 `perf-avoid-defensive-memoization`의 허용 사유에 듭니다.
   그때도 측정한 근거를 주석으로 남깁니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/09-03-perf-defer-heavy-renders-with-measured-evidence.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/10-03-perf-defer-heavy-renders-with-measured-evidence.md)을 읽습니다.

@@ -19,4 +19,4 @@ JSX에 바로 쓴 화살표는 리액트가 타입을 붙여 주지만, 팩토�
 
 **Requires selected:** `typescript/types-prefer-function-variable-types-over-parameter-annotations` · 함께 적용
 
-> 예시·예외가 필요하면 [full rule](../rules/02-01-typing-take-handler-types-from-existing-contracts.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/03-01-typing-take-handler-types-from-existing-contracts.md)을 읽습니다.

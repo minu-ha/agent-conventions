@@ -18,4 +18,4 @@
 - 이름을 붙일지 말지는 `typescript/functions-name-a-value-only-when-it-is-reused`가 정합니다.
   여기서는 이름을 붙인 값을 화면 어디에 두는지만 봅니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/05-04-screen-keep-derived-values-close.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/06-04-screen-keep-derived-values-close.md)을 읽습니다.

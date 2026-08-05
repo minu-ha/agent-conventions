@@ -1,7 +1,7 @@
 # CSS 컨벤션 Rule Index
 
 - Skill: `css`
-- Routing digest: `sha256:625e25c5a574531d6df594edc64e6f2d06071c564f71b493e4d329ea4183f8ff`
+- Routing digest: `sha256:8a66d951977bc0f58cf0af0c358de44f12f3cae717361f28936b5f6ffa5bd69c`
 
 ## Direct Companions
 
@@ -22,22 +22,22 @@
 - C11 | composition-keep-classes-single-purpose | 한 클래스 이름에 기본 스타일과 상태를 함께 넣을 때. 제외: 처음부터 기본 클래스와 수정자를 나눠 만드는 경우. 제외: 책임이 그대로인 이름 변경만 하는 경우.
 - C12 | composition-inject-classes-only-at-the-entry-point | 우리가 만든 컴포넌트에 \`className\`이나 클래스 관련 프롭을 추가할 때. 그 컴포넌트 내부 노드의 모양을 화면마다 다르게 해야 할 때. 제외: 기존 CSS 최상위 블록 아래 외부 라이브러리 선택자만 고치는 경우. | reviewWith: ownership-change-other-owners-through-their-api, ownership-use-foreign-classes-only-under-your-own-root
 - C13 | composition-do-not-add-wrapper-elements-for-styling | 스타일을 주려고 \`div\`나 \`span\`을 새로 감쌀 때. \`className\`을 받지 않는 컴포넌트에 여백이나 크기를 줘야 할 때. | reviewWith: composition-inject-classes-only-at-the-entry-point, naming-name-elements-and-modifiers-by-role
-- C14 | selector-limit-nesting-block-depth | 중첩 \`{}\` 블록을 추가하거나 기존 블록을 펼치거나 합칠 때. \`&\`로 조건이나 가상 요소를 붙일 때. | reviewWith: selector-declare-each-class-in-one-block, selector-use-classes-instead-of-element-selectors
-- C15 | selector-use-classes-instead-of-element-selectors | \`p\`, \`h2\`, \`span\`, \`button\` 같은 요소 선택자를 쓰려 할 때. \`dangerouslySetInnerHTML\`이나 Markdown 렌더러 출력을 스타일링할 때. | reviewWith: naming-name-elements-and-modifiers-by-role
-- C16 | selector-do-not-group-classes-with-commas | 여러 클래스가 같은 선언을 반복해 \`,\`로 묶으려 할 때. 한 대상에 진입 조건을 둘 이상 추가할 때. | reviewWith: selector-declare-each-class-in-one-block, values-tokenize-repeated-visual-values
-- C17 | selector-declare-each-class-in-one-block | 이미 선언한 클래스에 스타일을 더 추가할 때. 파일 아래쪽에서 위쪽 선언을 덮어쓰려 할 때. | reviewWith: selector-do-not-group-classes-with-commas, selector-group-breakpoints-at-the-file-bottom
-- C18 | selector-use-pseudo-classes-for-dom-owned-states | \`:hover\`, \`:visited\`, \`:focus\*\`, \`:disabled\`, \`:checked\`를 추가·수정할 때. 조상의 DOM 상태가 자손 스타일에 영향을 줄 때.
-- C19 | selector-nest-dom-state-in-the-owning-block | \`:hover\`, \`:focus-visible\`, \`:disabled\`, \`:checked\` 스타일을 추가·수정할 때. 조상의 DOM 상태가 자손 스타일을 바꿔야 할 때. | reviewWith: selector-do-not-group-classes-with-commas, selector-limit-nesting-block-depth, selector-use-pseudo-classes-for-dom-owned-states
-- C20 | selector-do-not-invert-domain-state-with-not | \`:not\(.--수정자\)\`로 앱 상태를 뒤집으려 할 때. 조상 클래스와 자손 클래스를 한 선택자에 함께 쓸 때. | reviewWith: selector-use-pseudo-classes-for-dom-owned-states
-- C21 | selector-group-breakpoints-at-the-file-bottom | \`@media\` 분기점을 추가하거나 옮길 때. 화면 폭에 따라 값이 달라지는 선언을 넣을 때. | reviewWith: selector-declare-each-class-in-one-block, values-reach-for-intrinsic-sizing-before-breakpoints, values-switch-themes-by-changing-token-values
-- C22 | values-keep-layout-intent-explicit | \`sticky\`·\`fixed\`, \`z-index\`, 강제 \`width\`·\`height\` 또는 부모·자식 레이아웃 책임을 추가·변경할 때. 대체 화면의 컨테이너나 높이를 정할 때. 제외: 같은 요소를 기본과 수정자로 나누면서 기존 \`display\`·여백 선언을 값 그대로 옮기는 경우. | reviewWith: values-declare-stacking-layers-as-tokens
+- C14 | composition-do-not-style-through-the-style-attribute | TSX에 \`style={{ … }}\`를 추가하거나 그 안의 선언을 바꿀 때. 컴포넌트 프롭으로 \`style\`을 받아 넘길 때. | reviewWith: composition-inject-classes-only-at-the-entry-point, values-always-provide-css-variable-fallbacks, values-tokenize-repeated-visual-values
+- C15 | selector-limit-nesting-block-depth | 중첩 \`{}\` 블록을 추가하거나 기존 블록을 펼치거나 합칠 때. \`&\`로 조건이나 가상 요소를 붙일 때. | reviewWith: selector-declare-each-class-in-one-block, selector-use-classes-instead-of-element-selectors
+- C16 | selector-use-classes-instead-of-element-selectors | \`p\`, \`h2\`, \`span\`, \`button\` 같은 요소 선택자를 쓰려 할 때. \`dangerouslySetInnerHTML\`이나 Markdown 렌더러 출력을 스타일링할 때. | reviewWith: naming-name-elements-and-modifiers-by-role
+- C17 | selector-do-not-group-classes-with-commas | 여러 클래스가 같은 선언을 반복해 \`,\`로 묶으려 할 때. 한 대상에 진입 조건을 둘 이상 추가할 때. | reviewWith: selector-declare-each-class-in-one-block, values-tokenize-repeated-visual-values
+- C18 | selector-declare-each-class-in-one-block | 이미 선언한 클래스에 스타일을 더 추가할 때. 파일 아래쪽에서 위쪽 선언을 덮어쓰려 할 때. | reviewWith: layout-group-breakpoints-at-the-file-bottom, selector-do-not-group-classes-with-commas
+- C19 | selector-use-pseudo-classes-for-dom-owned-states | \`:hover\`, \`:visited\`, \`:focus\*\`, \`:disabled\`, \`:checked\`를 추가·수정할 때. 조상의 DOM 상태가 자손 스타일에 영향을 줄 때.
+- C20 | selector-nest-dom-state-in-the-owning-block | \`:hover\`, \`:focus-visible\`, \`:disabled\`, \`:checked\` 스타일을 추가·수정할 때. 조상의 DOM 상태가 자손 스타일을 바꿔야 할 때. | reviewWith: selector-do-not-group-classes-with-commas, selector-limit-nesting-block-depth, selector-use-pseudo-classes-for-dom-owned-states
+- C21 | selector-do-not-invert-domain-state-with-not | \`:not\(.--수정자\)\`로 앱 상태를 뒤집으려 할 때. 조상 클래스와 자손 클래스를 한 선택자에 함께 쓸 때. | reviewWith: selector-use-pseudo-classes-for-dom-owned-states
+- C22 | selector-separate-domain-state-modifiers-from-dom-interaction-states | 앱 상태 수정자와 hover, focus, disabled 같은 DOM 상호작용 상태를 추가·변경할 때. 포커스 링을 수정할 때. | reviewWith: composition-do-not-build-structural-variants-with-modifiers
 - C23 | values-always-provide-css-variable-fallbacks | \`var\(--\*\)\`를 새로 쓰거나 변수 이름이나 대체값을 바꿀 때. 공통 토큰 목록에 항목을 넣거나 뺄 때. | reviewWith: values-tokenize-repeated-visual-values
-- C24 | values-tokenize-repeated-visual-values | 여러 파일이 같은 색, 간격, radius, 타이포, 그림자 값을 쓸 때. 새 사용자 정의 속성을 선언할 때. | reviewWith: values-always-provide-css-variable-fallbacks, values-do-not-style-through-the-style-attribute
-- C25 | values-separate-domain-state-modifiers-from-dom-interaction-states | 앱 상태 수정자와 hover, focus, disabled 같은 DOM 상호작용 상태를 추가·변경할 때. 포커스 링을 수정할 때. | reviewWith: composition-do-not-build-structural-variants-with-modifiers
-- C26 | values-always-provide-a-visible-focus-indicator | \`outline\`, \`:focus\`, \`:focus-visible\` 스타일을 추가·수정할 때. 상호작용 요소의 기본 포커스 링을 덮어쓸 때. | reviewWith: values-separate-domain-state-modifiers-from-dom-interaction-states
-- C27 | values-do-not-style-through-the-style-attribute | TSX에 \`style={{ … }}\`를 추가하거나 그 안의 선언을 바꿀 때. 컴포넌트 프롭으로 \`style\`을 받아 넘길 때. | reviewWith: composition-inject-classes-only-at-the-entry-point, values-always-provide-css-variable-fallbacks, values-tokenize-repeated-visual-values
-- C28 | values-declare-stacking-layers-as-tokens | \`z-index\`를 새로 넣거나 값을 바꿀 때. 겹쳐 뜨는 요소를 추가할 때. | reviewWith: values-keep-layout-intent-explicit, values-tokenize-repeated-visual-values
-- C29 | values-namespace-keyframes-and-respect-reduced-motion | \`@keyframes\` 이름이나 애니메이션 지속 시간, 감속 곡선을 선언하거나 바꿀 때. \`animation\`이나 \`transition\`으로 움직임을 새로 넣을 때. | reviewWith: tooling-configure-stylelint-to-enforce-these-rules, values-tokenize-repeated-visual-values
-- C30 | values-switch-themes-by-changing-token-values | 다크 모드나 테마 전환을 넣을 때. 컴포넌트 CSS에 \`prefers-color-scheme\`이나 \`\[data-theme\]\`를 쓰려 할 때. 색이나 그림자 토큰을 새로 만들거나 이름을 바꿀 때. | reviewWith: values-always-provide-css-variable-fallbacks, values-tokenize-repeated-visual-values
-- C31 | values-reach-for-intrinsic-sizing-before-breakpoints | \`@media\` 분기점을 새로 넣으려 할 때. 폭에 따라 줄바꿈, 열 개수, 크기가 달라져야 할 때. | reviewWith: selector-group-breakpoints-at-the-file-bottom, values-keep-layout-intent-explicit
+- C24 | values-tokenize-repeated-visual-values | 여러 파일이 같은 색, 간격, radius, 타이포, 그림자 값을 쓸 때. 새 사용자 정의 속성을 선언할 때. | reviewWith: composition-do-not-style-through-the-style-attribute, values-always-provide-css-variable-fallbacks
+- C25 | values-declare-stacking-layers-as-tokens | \`z-index\`를 새로 넣거나 값을 바꿀 때. 겹쳐 뜨는 요소를 추가할 때. | reviewWith: layout-keep-layout-intent-explicit, values-tokenize-repeated-visual-values
+- C26 | values-switch-themes-by-changing-token-values | 다크 모드나 테마 전환을 넣을 때. 컴포넌트 CSS에 \`prefers-color-scheme\`이나 \`\[data-theme\]\`를 쓰려 할 때. 색이나 그림자 토큰을 새로 만들거나 이름을 바꿀 때. | reviewWith: values-always-provide-css-variable-fallbacks, values-tokenize-repeated-visual-values
+- C27 | layout-group-breakpoints-at-the-file-bottom | \`@media\` 분기점을 추가하거나 옮길 때. 화면 폭에 따라 값이 달라지는 선언을 넣을 때. | reviewWith: layout-reach-for-intrinsic-sizing-before-breakpoints, selector-declare-each-class-in-one-block, values-switch-themes-by-changing-token-values
+- C28 | layout-keep-layout-intent-explicit | \`sticky\`·\`fixed\`, \`z-index\`, 강제 \`width\`·\`height\` 또는 부모·자식 레이아웃 책임을 추가·변경할 때. 대체 화면의 컨테이너나 높이를 정할 때. 제외: 같은 요소를 기본과 수정자로 나누면서 기존 \`display\`·여백 선언을 값 그대로 옮기는 경우. | reviewWith: values-declare-stacking-layers-as-tokens
+- C29 | layout-reach-for-intrinsic-sizing-before-breakpoints | \`@media\` 분기점을 새로 넣으려 할 때. 폭에 따라 줄바꿈, 열 개수, 크기가 달라져야 할 때. | reviewWith: layout-group-breakpoints-at-the-file-bottom, layout-keep-layout-intent-explicit
+- C30 | a11y-always-provide-a-visible-focus-indicator | \`outline\`, \`:focus\`, \`:focus-visible\` 스타일을 추가·수정할 때. 상호작용 요소의 기본 포커스 링을 덮어쓸 때. | reviewWith: selector-separate-domain-state-modifiers-from-dom-interaction-states
+- C31 | a11y-namespace-keyframes-and-respect-reduced-motion | \`@keyframes\` 이름이나 애니메이션 지속 시간, 감속 곡선을 선언하거나 바꿀 때. \`animation\`이나 \`transition\`으로 움직임을 새로 넣을 때. | reviewWith: tooling-configure-stylelint-to-enforce-these-rules, values-tokenize-repeated-visual-values
 - C32 | tooling-configure-stylelint-to-enforce-these-rules | stylelint 설정을 새로 만들거나 규칙을 추가·수정할 때. 이 컨벤션 중 어디까지 자동으로 잡히는지 확인할 때. | reviewWith: naming-use-scope-slug-element-modifier-syntax, ownership-use-foreign-classes-only-under-your-own-root, selector-limit-nesting-block-depth

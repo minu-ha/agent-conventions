@@ -26,4 +26,4 @@
 
 포커스를 어디로 옮길지는 이 규칙이 정하지 않습니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/04-09-composition-give-interactive-elements-an-accessible-name.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/11-01-a11y-give-interactive-elements-an-accessible-name.md)을 읽습니다.

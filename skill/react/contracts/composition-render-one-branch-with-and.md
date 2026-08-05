@@ -32,4 +32,4 @@ JSX 안에서 그릴 갈래가 **하나면** `&&`를 씁니다.
 
 숨긴 하위 트리의 상태를 살려야 하면 `composition-use-activity-only-to-preserve-mounted-subtrees`를 봅니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/04-08-composition-render-one-branch-with-and.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/05-08-composition-render-one-branch-with-and.md)을 읽습니다.

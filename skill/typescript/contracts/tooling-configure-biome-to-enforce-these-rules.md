@@ -8,7 +8,7 @@
 
 | `biome` 규칙 | 담당 컨벤션 |
 | --- | --- |
-| `style/noEnum` | `typescript/functions-replace-enum-with-as-const-objects` |
+| `style/noEnum` | `typescript/types-replace-enum-with-as-const-objects` |
 | `style/useImportType` | `typescript/naming-use-direct-imports-and-public-entry-points` |
 | `style/noRestrictedImports` | `typescript/naming-restrict-absolute-aliases-to-layer-roots`의 경로 표 |
 | `style/useNamingConvention` | `typescript/naming-use-consistent-file-and-symbol-naming`의 심볼 표기 |
@@ -52,4 +52,4 @@
 `recommended`에 없어 따로 켜야 하는데, 켜지 않습니다.
 프레임워크 컨벤션이 `<Fragment>`를 쓰라고 정하기 때문입니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/06-01-tooling-configure-biome-to-enforce-these-rules.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/07-01-tooling-configure-biome-to-enforce-these-rules.md)을 읽습니다.

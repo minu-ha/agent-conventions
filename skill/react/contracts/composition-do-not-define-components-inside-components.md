@@ -9,4 +9,4 @@
 로컬에서 JSX 조각을 재사용하려면 보조 함수 호출로 남기거나,
 독립 컴포넌트로 빼고 프롭스를 전달합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/04-02-composition-do-not-define-components-inside-components.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/05-02-composition-do-not-define-components-inside-components.md)을 읽습니다.

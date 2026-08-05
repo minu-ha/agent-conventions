@@ -21,4 +21,4 @@
   쿼리 결과는 `data-preserve-origin-chaining`, 계산한 값은 `screen-keep-derived-values-close`,
   설정 값은 `typescript/naming-preserve-config-origin-with-chained-access`가 같은 말을 합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/04-01-composition-read-props-without-destructuring.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/05-01-composition-read-props-without-destructuring.md)을 읽습니다.

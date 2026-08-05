@@ -20,4 +20,4 @@
 포커스 표시를 `--focused` 같은 앱 수정자로 대체하지 않습니다.
 키보드로 들어왔는지 포인터로 들어왔는지는 브라우저만 알 수 있어서 앱이 재현할 수 없습니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/05-05-values-always-provide-a-visible-focus-indicator.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/07-01-a11y-always-provide-a-visible-focus-indicator.md)을 읽습니다.

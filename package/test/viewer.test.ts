@@ -168,7 +168,7 @@ test("buildViewerPayload collects only progressive skills", async () => {
 
 	assert.equal(payload.skills.length, 3);
 	assert.equal(payload.rules.length, 108);
-	assert.equal(payload.sections.length, 22);
+	assert.equal(payload.sections.length, 27);
 
 	const react = payload.skills.find((skill) => skill.name === "react");
 	assert.equal(react?.title, "React 컨벤션");
@@ -368,7 +368,7 @@ test("generateViewerArtifacts keeps the payload in the data script and stays byt
 	const payload = JSON.parse(encoded);
 	assert.equal(payload.rules.length, 108);
 	assert.equal(payload.skills.length, 3);
-	assert.equal(payload.sections.length, 22);
+	assert.equal(payload.sections.length, 27);
 });
 
 test("renderViewerDataScript escapes closing script sequences", () => {

@@ -4,7 +4,7 @@
 
 뮤테이션 실패는 오류 경계가 받지 못합니다.
 핸들러 안에서 난 오류는 렌더 중이 아니라 경계를 지나갑니다.
-`screen-place-error-boundaries-by-blast-radius`가 그 경계를 정하고, 여기서는 그 밖의 자리를 봅니다.
+`runtime-place-error-boundaries-by-blast-radius`가 그 경계를 정하고, 여기서는 그 밖의 자리를 봅니다.
 
 **기본은 `mutate`와 `useMutation`의 `onError`·`onSuccess`입니다.**
 성공과 실패가 선언 자리에 함께 남고 핸들러는 부르기만 합니다.
@@ -29,4 +29,4 @@
 실패했을 때 무엇을 보여 줄지는 이 규칙이 정하지 않습니다.
 제품마다 다르고 코드로 판정할 수 없습니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/07-05-data-handle-mutation-failure-where-it-is-called.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/02-05-data-handle-mutation-failure-where-it-is-called.md)을 읽습니다.

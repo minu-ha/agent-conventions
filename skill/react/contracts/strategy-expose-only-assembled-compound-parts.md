@@ -17,4 +17,4 @@
 상태 없는 합성에 상태를 넣으면서 공개 이름을 어떻게 할지는
 `strategy-choose-single-composition-compound-and-variants`가 정합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/03-02-strategy-expose-only-assembled-compound-parts.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/04-02-strategy-expose-only-assembled-compound-parts.md)을 읽습니다.

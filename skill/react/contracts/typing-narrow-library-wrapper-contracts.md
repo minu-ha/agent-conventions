@@ -58,6 +58,6 @@ DOM 표면은 리액트가 속성을 더하면 래퍼도 따라 받아야 하는
 - `ref`를 여는 기준은 `composition-open-ref-props-only-for-imperative-contracts`가 정합니다.
 - 프롭을 어떻게 넘기는지는 `typing-choose-wrapper-shape-and-forwarding`이 정합니다.
 - `HTMLAttributes`를 `extends` 하면 `style`도 같이 열립니다.
-  인라인 `style`을 쓸지는 `css/values-do-not-style-through-the-style-attribute`가 정합니다.
+  인라인 `style`을 쓸지는 `css/composition-do-not-style-through-the-style-attribute`가 정합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/02-02-typing-narrow-library-wrapper-contracts.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/03-02-typing-narrow-library-wrapper-contracts.md)을 읽습니다.

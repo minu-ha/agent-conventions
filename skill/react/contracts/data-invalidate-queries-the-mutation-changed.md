@@ -25,4 +25,4 @@
   `events-run-user-actions-in-handlers-not-effects`가 그것을 막습니다.
 - 어디서 부를지는 `data-handle-mutation-failure-where-it-is-called`가 정한 자리와 같습니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/07-06-data-invalidate-queries-the-mutation-changed.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/02-06-data-invalidate-queries-the-mutation-changed.md)을 읽습니다.

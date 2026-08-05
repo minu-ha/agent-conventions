@@ -47,10 +47,10 @@
 `@media` 블록이 여러 파일에 반복되면 `composition-do-not-add-wrapper-elements-for-styling` 규칙이 소유자를 정합니다.
 
 분기점을 적기 전에 분기점 없이 되는지 먼저 봅니다.
-`values-reach-for-intrinsic-sizing-before-breakpoints` 규칙이 그 판정을 합니다.
+`layout-reach-for-intrinsic-sizing-before-breakpoints` 규칙이 그 판정을 합니다.
 
 테마 조건은 여기에 걸리지 않습니다.
 `prefers-color-scheme`은 토큰 파일에서 최상위 `@media`로 씁니다.
 `values-switch-themes-by-changing-token-values` 규칙이 그 자리를 정합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/04-08-selector-group-breakpoints-at-the-file-bottom.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/06-01-layout-group-breakpoints-at-the-file-bottom.md)을 읽습니다.

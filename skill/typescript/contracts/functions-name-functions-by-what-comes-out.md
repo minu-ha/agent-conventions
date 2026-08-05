@@ -40,4 +40,4 @@
 - 외부 패키지가 `createClient`처럼 지어 둔 이름은 그대로 씁니다.
   우리가 짓는 이름만 봅니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/03-10-functions-name-functions-by-what-comes-out.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/03-07-functions-name-functions-by-what-comes-out.md)을 읽습니다.

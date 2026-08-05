@@ -18,9 +18,9 @@
 
 경계 하나가 로딩과 실패를 함께 맡습니다.
 `Suspense`와 오류 경계를 같은 소유자에 두면 대체 화면 두 개가 한 자리에 모입니다.
-로딩 경계 자리는 `screen-place-suspense-boundaries-at-the-section-owner`가 정합니다.
+로딩 경계 자리는 `runtime-place-suspense-boundaries-at-the-section-owner`가 정합니다.
 
-화면 본문에 실패 분기를 남기지 않는 판정은 `screen-avoid-ad-hoc-loading-branches`가 로딩과 함께 봅니다.
+화면 본문에 실패 분기를 남기지 않는 판정은 `runtime-avoid-ad-hoc-loading-branches`가 로딩과 함께 봅니다.
 
 **경계가 못 잡는 것이 있습니다.**
 이벤트 핸들러와 비동기 콜백에서 난 오류는 렌더 중이 아니라 경계를 지나칩니다.
@@ -32,6 +32,6 @@
 다시 시도를 열려면 대체 화면이 그 버튼을 갖고, 리액트 쿼리의 `QueryErrorResetBoundary`와 함께 씁니다.
 경계 안에서 상태를 되살릴 수 없으므로 다시 시도는 하위 트리를 새로 마운트합니다.
 
-**Requires selected:** `screen-place-suspense-boundaries-at-the-section-owner` · 함께 적용
+**Requires selected:** `runtime-place-suspense-boundaries-at-the-section-owner` · 함께 적용
 
-> 예시·예외가 필요하면 [full rule](../rules/05-07-screen-place-error-boundaries-by-blast-radius.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/07-03-runtime-place-error-boundaries-by-blast-radius.md)을 읽습니다.

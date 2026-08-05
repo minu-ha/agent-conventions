@@ -8,7 +8,7 @@ appliesWhen:
   - 래퍼에 프롭을 추가하거나 여는 범위를 넓힐 때
 reviewWith: >-
   typing-take-handler-types-from-existing-contracts, typing-choose-wrapper-shape-and-forwarding,
-  css/values-do-not-style-through-the-style-attribute,
+  css/composition-do-not-style-through-the-style-attribute,
   typescript/docs-justify-convention-exceptions-with-a-reason-comment
 tags: typing, wrapper, contracts
 ---
@@ -73,7 +73,7 @@ DOM 표면은 리액트가 속성을 더하면 래퍼도 따라 받아야 하는
 - `ref`를 여는 기준은 `composition-open-ref-props-only-for-imperative-contracts`가 정합니다.
 - 프롭을 어떻게 넘기는지는 `typing-choose-wrapper-shape-and-forwarding`이 정합니다.
 - `HTMLAttributes`를 `extends` 하면 `style`도 같이 열립니다.
-  인라인 `style`을 쓸지는 `css/values-do-not-style-through-the-style-attribute`가 정합니다.
+  인라인 `style`을 쓸지는 `css/composition-do-not-style-through-the-style-attribute`가 정합니다.
 
 **Incorrect (라이브러리 타입을 그대로 내보냄):**
 

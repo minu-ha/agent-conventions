@@ -18,4 +18,4 @@
 지역 섹션 파일을 어느 폴더에 두는지는 `ownership-place-owner-files-in-role-folders`가 정합니다.
 진입 파일의 JSX에 나타나지 않는 섹션이 다른 섹션 파일 안에서 렌더되면 과하게 쪼갠 것입니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/05-03-screen-extract-local-section-components-for-runtime-boundaries.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/06-03-screen-extract-local-section-components-for-runtime-boundaries.md)을 읽습니다.

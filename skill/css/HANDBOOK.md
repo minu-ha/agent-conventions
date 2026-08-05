@@ -42,6 +42,7 @@
     - 3.3 [Keep Classes Single-purpose](#33-keep-classes-single-purpose)
     - 3.4 [Inject Classes Only at the Component Entry Point](#34-inject-classes-only-at-the-component-entry-point)
     - 3.5 [Do Not Add Wrapper Elements for Styling](#35-do-not-add-wrapper-elements-for-styling)
+    - 3.6 [Do Not Style Through the `style` Attribute](#36-do-not-style-through-the-style-attribute)
 4. [Selectors and Declaration Placement](#4-selectors-and-declaration-placement) — **HIGH**
     - 4.1 [Limit Nesting to One Level and Write the Rest Inline](#41-limit-nesting-to-one-level-and-write-the-rest-inline)
     - 4.2 [Use Classes Instead of Element Selectors](#42-use-classes-instead-of-element-selectors)
@@ -50,20 +51,21 @@
     - 4.5 [Use Pseudo-classes for DOM-owned States](#45-use-pseudo-classes-for-dom-owned-states)
     - 4.6 [Nest DOM State Pseudo-classes in the Owning Block](#46-nest-dom-state-pseudo-classes-in-the-owning-block)
     - 4.7 [Do Not Invert Domain State With `:not()`](#47-do-not-invert-domain-state-with-not)
-    - 4.8 [Group Breakpoints at the Bottom of the File](#48-group-breakpoints-at-the-bottom-of-the-file)
-5. [Values, Layout, and Accessibility](#5-values-layout-and-accessibility) — **HIGH**
-    - 5.1 [Keep Layout Intent Explicit](#51-keep-layout-intent-explicit)
-    - 5.2 [Declare Core Tokens Once and Fall Back Everywhere Else](#52-declare-core-tokens-once-and-fall-back-everywhere-else)
-    - 5.3 [Use Global Tokens and Do Not Create Local Ones](#53-use-global-tokens-and-do-not-create-local-ones)
-    - 5.4 [Separate Domain State Modifiers From DOM Interaction States](#54-separate-domain-state-modifiers-from-dom-interaction-states)
-    - 5.5 [Always Provide a Visible Focus Indicator](#55-always-provide-a-visible-focus-indicator)
-    - 5.6 [Do Not Style Through the `style` Attribute](#56-do-not-style-through-the-style-attribute)
-    - 5.7 [Declare Stacking Layers as Tokens in One Place](#57-declare-stacking-layers-as-tokens-in-one-place)
-    - 5.8 [Namespace Keyframes and Respect Reduced Motion](#58-namespace-keyframes-and-respect-reduced-motion)
-    - 5.9 [Switch Themes by Changing Token Values](#59-switch-themes-by-changing-token-values)
-    - 5.10 [Reach for Intrinsic Sizing Before Breakpoints](#510-reach-for-intrinsic-sizing-before-breakpoints)
-6. [Tooling](#6-tooling) — **MEDIUM**
-    - 6.1 [Configure Stylelint to Enforce These Rules](#61-configure-stylelint-to-enforce-these-rules)
+    - 4.8 [Separate Domain State Modifiers From DOM Interaction States](#48-separate-domain-state-modifiers-from-dom-interaction-states)
+5. [Design Tokens](#5-design-tokens) — **HIGH**
+    - 5.1 [Declare Core Tokens Once and Fall Back Everywhere Else](#51-declare-core-tokens-once-and-fall-back-everywhere-else)
+    - 5.2 [Use Global Tokens and Do Not Create Local Ones](#52-use-global-tokens-and-do-not-create-local-ones)
+    - 5.3 [Declare Stacking Layers as Tokens in One Place](#53-declare-stacking-layers-as-tokens-in-one-place)
+    - 5.4 [Switch Themes by Changing Token Values](#54-switch-themes-by-changing-token-values)
+6. [Layout and Responsiveness](#6-layout-and-responsiveness) — **HIGH**
+    - 6.1 [Group Breakpoints at the Bottom of the File](#61-group-breakpoints-at-the-bottom-of-the-file)
+    - 6.2 [Keep Layout Intent Explicit](#62-keep-layout-intent-explicit)
+    - 6.3 [Reach for Intrinsic Sizing Before Breakpoints](#63-reach-for-intrinsic-sizing-before-breakpoints)
+7. [Accessibility and Motion](#7-accessibility-and-motion) — **HIGH**
+    - 7.1 [Always Provide a Visible Focus Indicator](#71-always-provide-a-visible-focus-indicator)
+    - 7.2 [Namespace Keyframes and Respect Reduced Motion](#72-namespace-keyframes-and-respect-reduced-motion)
+8. [Tooling](#8-tooling) — **MEDIUM**
+    - 8.1 [Configure Stylelint to Enforce These Rules](#81-configure-stylelint-to-enforce-these-rules)
 
 ---
 
@@ -577,7 +579,7 @@ after
 
 **Impact: HIGH**
 
-TSX 클래스 조합과 래퍼 소유 규칙은 스타일링 경계를 분명하게 유지하고, UI 래퍼가 통제되지 않은 스타일 연결 지점을 노출하는 것을 막습니다. 한 클래스가 무엇까지 담당하는지, 수정자로 표현할 자격이 있는 모양은 무엇인지도 여기서 정합니다.
+TSX 클래스 조합과 래퍼 소유 규칙은 스타일링 경계를 분명하게 유지하고, UI 래퍼가 통제되지 않은 스타일 연결 지점을 노출하는 것을 막습니다. 한 클래스가 무엇까지 담당하는지, 수정자로 표현할 자격이 있는 모양은 무엇인지도 여기서 정합니다. 시각 결정을 인라인 `style`이 아니라 클래스로 넘기는 판정도 이 섹션입니다.
 
 ### 3.1 Compose Classes With `clsx()`
 
@@ -900,15 +902,86 @@ export const UiCollapse = (props: UiCollapseProps) => (
 }
 ```
 
+### 3.6 Do Not Style Through the `style` Attribute
+
+**Rule:** `C14` · `composition-do-not-style-through-the-style-attribute`
+
+**Applies when:** TSX에 `style={{ … }}`를 추가하거나 그 안의 선언을 바꿀 때. 컴포넌트 프롭으로 `style`을 받아 넘길 때.
+
+**Review with:** `composition-inject-classes-only-at-the-entry-point`, `values-always-provide-css-variable-fallbacks`, `values-tokenize-repeated-visual-values`
+
+**Impact: HIGH (모든 시각 결정이 스타일시트에 남아 검색과 덮어쓰기가 예측대로 동작합니다)**
+
+시각 결정은 스타일시트에 씁니다.
+`style={{ … }}`로 쓰지 않습니다.
+
+- 인라인 선언은 클래스보다 우선순위가 높아 `!important` 없이는 스타일시트에서 덮을 수 없습니다.
+- CSS 파일을 검색해도 안 나옵니다.
+  어디서 온 여백인지 찾을 수 없습니다.
+- `:hover`, `@media`, `@container`를 쓸 수 없어 결국 클래스를 다시 만들게 됩니다.
+
+값이 화면마다 달라야 하면 수정자 클래스를 붙입니다.
+클래스를 어디서 주입할지는 `composition-inject-classes-only-at-the-entry-point` 규칙이 정합니다.
+
+**실행 중에 계산해야만 아는 수치 하나**는 예외입니다.
+가상 스크롤 위치, 드래그 좌표, 측정한 높이처럼 스타일시트에 적을 수 없는 값입니다.
+이때도 CSS 변수 한 개만 넘기고 실제 선언은 스타일시트에 둡니다.
+변수가 없을 때를 대비한 대체값은 `values-always-provide-css-variable-fallbacks` 규칙이 정합니다.
+
+래퍼가 `HTMLAttributes`를 `extends`하면 `style`이 함께 열립니다.
+타입에서 막을 방법이 없으므로 이 규칙을 리뷰가 봅니다.
+
+**Incorrect (인라인으로 꾸밈):**
+
+```tsx
+<section className={clsx("pg_report__summary")} style={{ marginTop: 16, color: "#c00" }}>
+	{summary}
+</section>
+```
+
+**Correct (스타일시트에 두고 수정자로 가름):**
+
+```tsx
+<section className={clsx("pg_report__summary", isCritical && "pg_report__summary--critical")}>
+	{summary}
+</section>
+```
+
+```css
+.pg_report__summary {
+	margin-block-start: 16px;
+}
+
+.pg_report__summary--critical {
+	color: var(--app-color-text-danger);
+}
+```
+
+**Correct (실행 중에만 아는 수치를 CSS 변수 하나로 넘김):**
+
+```tsx
+<div
+	className={clsx("pg_report__virtualRow")}
+	style={{ "--pg-report-row-offset": `${rowOffset}px` } as CSSProperties}
+/>
+```
+
+```css
+.pg_report__virtualRow {
+	position: absolute;
+	transform: translateY(var(--pg-report-row-offset, 0));
+}
+```
+
 ## 4. Selectors and Declaration Placement
 
 **Impact: HIGH**
 
-겨냥 대상이 코드에 그대로 쓰여 있고 한 클래스의 선언이 한 블록에 모여 있어야, 스타일을 고칠 때 읽을 선택자와 볼 블록이 각각 하나로 정해집니다. 브라우저가 주는 DOM 상태는 가상 클래스로, 앱이 정하는 상태는 수정자로 갈라 그 요소 블록 안에 둡니다. 화면 폭 분기점도 파일 아래 한 자리에 모읍니다.
+겨냥 대상이 코드에 그대로 쓰여 있고 한 클래스의 선언이 한 블록에 모여 있어야, 스타일을 고칠 때 읽을 선택자와 볼 블록이 각각 하나로 정해집니다. 브라우저가 주는 DOM 상태는 가상 클래스로, 앱이 정하는 상태는 수정자로 갈라 그 요소 블록 안에 둡니다.
 
 ### 4.1 Limit Nesting to One Level and Write the Rest Inline
 
-**Rule:** `C14` · `selector-limit-nesting-block-depth`
+**Rule:** `C15` · `selector-limit-nesting-block-depth`
 
 **Applies when:** 중첩 `{}` 블록을 추가하거나 기존 블록을 펼치거나 합칠 때. `&`로 조건이나 가상 요소를 붙일 때.
 
@@ -1004,7 +1077,7 @@ export const UiCollapse = (props: UiCollapseProps) => (
 
 ### 4.2 Use Classes Instead of Element Selectors
 
-**Rule:** `C15` · `selector-use-classes-instead-of-element-selectors`
+**Rule:** `C16` · `selector-use-classes-instead-of-element-selectors`
 
 **Applies when:** `p`, `h2`, `span`, `button` 같은 요소 선택자를 쓰려 할 때. `dangerouslySetInnerHTML`이나 Markdown 렌더러 출력을 스타일링할 때.
 
@@ -1116,7 +1189,7 @@ TSX에서 그 지점이 보이므로 "이것이 원본 HTML인가"를 따질 필
 
 ### 4.3 Do Not Group Classes With Commas to Share Declarations
 
-**Rule:** `C16` · `selector-do-not-group-classes-with-commas`
+**Rule:** `C17` · `selector-do-not-group-classes-with-commas`
 
 **Applies when:** 여러 클래스가 같은 선언을 반복해 `,`로 묶으려 할 때. 한 대상에 진입 조건을 둘 이상 추가할 때.
 
@@ -1213,11 +1286,11 @@ TSX에서 그 지점이 보이므로 "이것이 원본 HTML인가"를 따질 필
 
 ### 4.4 Declare Each Class in One Block
 
-**Rule:** `C17` · `selector-declare-each-class-in-one-block`
+**Rule:** `C18` · `selector-declare-each-class-in-one-block`
 
 **Applies when:** 이미 선언한 클래스에 스타일을 더 추가할 때. 파일 아래쪽에서 위쪽 선언을 덮어쓰려 할 때.
 
-**Review with:** `selector-do-not-group-classes-with-commas`, `selector-group-breakpoints-at-the-file-bottom`
+**Review with:** `layout-group-breakpoints-at-the-file-bottom`, `selector-do-not-group-classes-with-commas`
 
 **Impact: MEDIUM-HIGH (한 클래스의 선언이 한 블록에 모여 고칠 때 볼 곳이 한 군데입니다)**
 
@@ -1235,7 +1308,7 @@ TSX에서 그 지점이 보이므로 "이것이 원본 HTML인가"를 따질 필
 
 `@media`나 `@supports` 안의 재선언은 대상이 아닙니다.
 조건이 다른 별개 블록입니다.
-그 블록을 파일 어디에 두는지는 `selector-group-breakpoints-at-the-file-bottom` 규칙이 정합니다.
+그 블록을 파일 어디에 두는지는 `layout-group-breakpoints-at-the-file-bottom` 규칙이 정합니다.
 
 기계 검증은 `no-duplicate-selectors`입니다.
 
@@ -1289,11 +1362,11 @@ TSX에서 그 지점이 보이므로 "이것이 원본 HTML인가"를 따질 필
 
 ### 4.5 Use Pseudo-classes for DOM-owned States
 
-**Rule:** `C18` · `selector-use-pseudo-classes-for-dom-owned-states`
+**Rule:** `C19` · `selector-use-pseudo-classes-for-dom-owned-states`
 
 **Applies when:** `:hover`, `:visited`, `:focus*`, `:disabled`, `:checked`를 추가·수정할 때. 조상의 DOM 상태가 자손 스타일에 영향을 줄 때.
 
-**Requires selected:** `values-separate-domain-state-modifiers-from-dom-interaction-states` · 함께 적용
+**Requires selected:** `selector-separate-domain-state-modifiers-from-dom-interaction-states` · 함께 적용
 
 **Impact: HIGH (브라우저가 주는 상호작용 상태와 앱이 정하는 상태 수정자를 나눕니다)**
 
@@ -1373,7 +1446,7 @@ TSX에서 그 지점이 보이므로 "이것이 원본 HTML인가"를 따질 필
 
 ### 4.6 Nest DOM State Pseudo-classes in the Owning Block
 
-**Rule:** `C19` · `selector-nest-dom-state-in-the-owning-block`
+**Rule:** `C20` · `selector-nest-dom-state-in-the-owning-block`
 
 **Applies when:** `:hover`, `:focus-visible`, `:disabled`, `:checked` 스타일을 추가·수정할 때. 조상의 DOM 상태가 자손 스타일을 바꿔야 할 때.
 
@@ -1471,7 +1544,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 
 ### 4.7 Do Not Invert Domain State With `:not()`
 
-**Rule:** `C20` · `selector-do-not-invert-domain-state-with-not`
+**Rule:** `C21` · `selector-do-not-invert-domain-state-with-not`
 
 **Applies when:** `:not(.--수정자)`로 앱 상태를 뒤집으려 할 때. 조상 클래스와 자손 클래스를 한 선택자에 함께 쓸 때.
 
@@ -1558,215 +1631,67 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
-### 4.8 Group Breakpoints at the Bottom of the File
+### 4.8 Separate Domain State Modifiers From DOM Interaction States
 
-**Rule:** `C21` · `selector-group-breakpoints-at-the-file-bottom`
+**Rule:** `C22` · `selector-separate-domain-state-modifiers-from-dom-interaction-states`
 
-**Applies when:** `@media` 분기점을 추가하거나 옮길 때. 화면 폭에 따라 값이 달라지는 선언을 넣을 때.
+**Applies when:** 앱 상태 수정자와 hover, focus, disabled 같은 DOM 상호작용 상태를 추가·변경할 때. 포커스 링을 수정할 때.
 
-**Review with:** `selector-declare-each-class-in-one-block`, `values-reach-for-intrinsic-sizing-before-breakpoints`, `values-switch-themes-by-changing-token-values`
+**Review with:** `composition-do-not-build-structural-variants-with-modifiers`
 
-**Impact: HIGH (한 분기점에서 무엇이 달라지는지 한 블록에서 읽히고 두 방향이 겹치지 않습니다)**
+**Impact: HIGH (앱 상태와 hover, 포커스 동작을 섞지 않아 읽기 쉽고 접근성도 지킵니다)**
 
-분기점 재선언은 파일 맨 아래 `@media` 블록에 모읍니다.
-클래스 블록 안에 `@media`를 중첩하지 않습니다.
+도메인 상태와 무관한 `:hover`, `:focus-visible`, `:disabled`는 조건 없는 기본 블록에 둡니다.
+이 선택자들을 수정자 아래로 옮겨 적용 대상을 좁히지 않습니다.
+수정자 블록에는 `active`, `selected`, `error`처럼 앱이 정하는 모습만 남깁니다.
+수정자가 켜진 경우에만 상호작용이 달라져야 한다는 제품 요구가 있을 때만 그 예외를 적습니다.
 
-분기점 하나는 보통 클래스 하나가 아니라 여러 클래스를 같이 건드립니다.
-툴바 간격만 줄이는 게 아니라 패널 여백과 사이드바 폭이 함께 바뀝니다.
-그 결정이 클래스 블록마다 흩어지면 "1024px 아래에서 무엇이 달라지는가"를 파일 전체를 훑어야 답합니다.
+수정자 아래로 옮기면 그 상태가 아닐 때 `:hover`와 `:focus-visible`이 사라집니다.
+읽는 사람은 기본 블록만 보고 상호작용이 없다고 판단합니다.
 
-**대가가 있습니다.**
-한 클래스의 선언이 기본 블록과 분기점 블록 두 곳에 있습니다.
-`selector-declare-each-class-in-one-block` 규칙이 `@media` 안의 재선언을 예외로 두는 이유가 이것입니다.
-여기서 그 예외의 자리를 못 박습니다.
-그래도 이쪽을 고릅니다.
-분기점을 고치는 일은 클래스 하나를 고치는 일이 아니라 그 폭에서 화면이 어떻게 보이는지를 고치는 일이기 때문입니다.
+포커스 표시 자체는 `a11y-always-provide-a-visible-focus-indicator` 규칙이 담당합니다.
+무엇을 수정자로 두고 무엇을 가상 클래스로 둘지는 `selector-use-pseudo-classes-for-dom-owned-states` 규칙이 정합니다.
 
-**데스크톱 퍼스트로 씁니다.**
-기본 선언이 가장 넓은 화면 기준이고, 좁아질 때만 덮습니다.
-`(width >= ...)` 조건과 섞지 않습니다.
-두 방향을 섞으면 둘 다 맞는 구간에서 어느 쪽이 이기는지 매번 따져야 합니다.
-
-블록 순서는 넓은 쪽부터 좁은 쪽입니다.
-좁은 화면에서는 조건이 여러 개 동시에 맞고 마지막에 쓴 것이 이깁니다.
-
-조건은 범위 표기로 씁니다.
-`(width < 1024px)`로 쓰고 `(max-width: 1023.98px)`로 쓰지 않습니다.
-`max-width: 1024px`은 1024를 포함해서 `min-width: 1024px`과 겹치므로 소수 보정이 필요했습니다.
-범위 표기는 겹치지 않습니다.
-`tooling-configure-stylelint-to-enforce-these-rules` 규칙이 그 표기를 강제합니다.
-
-분기점 숫자는 아래 셋만 씁니다.
-이름은 경계가 아니라 그 아래 구간을 가리킵니다.
-기본 선언은 `1440px` 이상 기준입니다.
-
-| 조건 | 구간 이름 | 여기부터 좁아짐 |
-| --- | --- | --- |
-| `(width < 1440px)` | `~lg` | 좁은 데스크톱 |
-| `(width < 1024px)` | `~md` | 가로 태블릿, 좁은 노트북 |
-| `(width < 640px)` | `~sm` | 세로 태블릿 아래 |
-
-숫자를 토큰으로 빼지 않습니다.
-`@media`의 조건에는 `var()`를 쓸 수 없어서 토큰으로 만들어도 그 자리에서 못 씁니다.
-그래서 세 값을 규칙에 못 박고 그대로 적습니다.
-
-`@media` 블록이 여러 파일에 반복되면 `composition-do-not-add-wrapper-elements-for-styling` 규칙이 소유자를 정합니다.
-
-분기점을 적기 전에 분기점 없이 되는지 먼저 봅니다.
-`values-reach-for-intrinsic-sizing-before-breakpoints` 규칙이 그 판정을 합니다.
-
-테마 조건은 여기에 걸리지 않습니다.
-`prefers-color-scheme`은 토큰 파일에서 최상위 `@media`로 씁니다.
-`values-switch-themes-by-changing-token-values` 규칙이 그 자리를 정합니다.
-
-**Incorrect (클래스 블록 안에 중첩해서 분기점이 흩어짐):**
+**Incorrect (포커스 스타일을 제거하거나 상태 경계를 섞음):**
 
 ```css
-.pg_products__toolbar {
-	display: flex;
-	gap: 24px;
-
-	@media (width < 1024px) {
-		gap: 8px;
+.ui_button__root {
+	&:focus {
+		outline: none;
 	}
 }
 
-.pg_products__panel {
-	padding: 24px;
+.ui_button__root--hover {
+	background: var(--app-color-accent);
+}
+```
 
-	@media (width < 1024px) {
-		padding: 12px;
+**Correct (도메인 상태와 상호작용 상태를 분리하고 포커스를 보존):**
+
+```css
+.ui_button__root--active {
+	background: var(--app-color-accent);
+}
+
+.ui_button__root {
+	&:focus-visible {
+		outline: 2px solid var(--app-color-accent);
+		outline-offset: 2px;
+	}
+
+	&:not(:disabled) {
+		cursor: pointer;
 	}
 }
 ```
 
-**Incorrect (두 방향을 섞어 겹치는 구간을 만듦):**
-
-```css
-.pg_products__toolbar {
-	display: flex;
-	gap: 16px;
-}
-
-@media (width >= 1440px) {
-	.pg_products__toolbar {
-		gap: 24px;
-	}
-}
-
-@media (width < 1024px) {
-	.pg_products__toolbar {
-		gap: 8px;
-	}
-}
-```
-
-**Correct (가장 넓은 화면을 기본으로 두고 파일 아래에서 좁혀 감):**
-
-```css
-.pg_products__toolbar {
-	display: flex;
-	gap: 24px;
-}
-
-.pg_products__panel {
-	padding: 24px;
-}
-
-@media (width < 1440px) {
-	.pg_products__toolbar {
-		gap: 16px;
-	}
-
-	.pg_products__panel {
-		padding: 20px;
-	}
-}
-
-@media (width < 1024px) {
-	.pg_products__toolbar {
-		gap: 8px;
-	}
-
-	.pg_products__panel {
-		padding: 12px;
-	}
-}
-```
-
-**Correct (분기점 안에서 상태를 한 겹 더 씀):**
-
-```css
-@media (width < 1024px) {
-	.pg_products__panel {
-		padding: 12px;
-
-		&:hover {
-			background-color: var(--app-color-surface-hover);
-		}
-	}
-}
-```
-
-## 5. Values, Layout, and Accessibility
+## 5. Design Tokens
 
 **Impact: HIGH**
 
-토큰, 변수 대체값, 명시적인 레이아웃 의도, 상태 경계, 눈에 보이는 포커스 표시는 스타일을 더 견고하고 접근 가능하게 유지합니다. 시각 결정은 인라인 `style`이 아니라 스타일시트에 남깁니다.
+여러 파일이 함께 쓰는 값은 전역 토큰 한 곳에서 정하고, 쓰는 자리에서는 그 이름만 가리킵니다. 대체값, 쌓임 층, 테마 전환이 모두 토큰 값을 바꾸는 일로 끝나야 색이나 층을 하나 더할 때 파일 여러 개를 열지 않습니다.
 
-### 5.1 Keep Layout Intent Explicit
-
-**Rule:** `C22` · `values-keep-layout-intent-explicit`
-
-**Applies when:** `sticky`·`fixed`, `z-index`, 강제 `width`·`height` 또는 부모·자식 레이아웃 책임을 추가·변경할 때. 대체 화면의 컨테이너나 높이를 정할 때. 제외: 같은 요소를 기본과 수정자로 나누면서 기존 `display`·여백 선언을 값 그대로 옮기는 경우.
-
-**Review with:** `values-declare-stacking-layers-as-tokens`
-
-**Impact: MEDIUM-HIGH (DOM을 거슬러 올라가지 않고 sticky, fixed, 박스 책임을 파악합니다)**
-
-레이아웃 의도는 클래스명과 선언만 보고 바로 읽혀야 합니다.
-크기를 어디까지 고정할지는 `values-reach-for-intrinsic-sizing-before-breakpoints` 규칙이 정합니다.
-
-- `z-index`에는 숫자를 직접 쓰지 않고 층 토큰을 씁니다.
-  토큰 이름이 곧 쌓임 순서 문서입니다.
-  층 목록과 쌓임 맥락 조건은 `values-declare-stacking-layers-as-tokens` 규칙이 정합니다.
-- `sticky`나 `fixed`를 쓸 때는 기준 컨테이너를 주석 한 줄로 남깁니다.
-  어느 조상이 스크롤 컨테이너인지는 선언에 안 보입니다.
-  `fixed`는 `transform`이 걸린 조상 아래에서 뷰포트 기준을 잃고,
-  `sticky`는 스크롤 조상이 `overflow: visible`이면 아무 일도 하지 않습니다.
-- 로딩 대체 화면은 실제 내용과 같은 컨테이너 클래스 안에 넣습니다.
-  높이를 대체 화면에만 따로 적으면 실제 내용이 들어올 때 그 값이 남아 레이아웃이 튑니다.
-
-**Incorrect (레이아웃 강제가 많고 기준 설명이 없음):**
-
-```css
-.pg_dashboard__toolbar {
-	position: sticky;
-	top: 0;
-	z-index: 9999;
-	width: 100%;
-	height: 48px;
-}
-```
-
-**Correct (기준 컨테이너와 의도를 드러냄):**
-
-```css
-.pg_dashboard__toolbar {
-	/* .pg_dashboard__content 가 스크롤 컨테이너다 */
-	position: sticky;
-	top: 0;
-	z-index: var(--app-z-index-sticky);
-}
-
-.pg_dashboard__content {
-	display: grid;
-	min-height: 0;
-	overflow-y: auto;
-}
-```
-
-### 5.2 Declare Core Tokens Once and Fall Back Everywhere Else
+### 5.1 Declare Core Tokens Once and Fall Back Everywhere Else
 
 **Rule:** `C23` · `values-always-provide-css-variable-fallbacks`
 
@@ -1846,13 +1771,13 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
-### 5.3 Use Global Tokens and Do Not Create Local Ones
+### 5.2 Use Global Tokens and Do Not Create Local Ones
 
 **Rule:** `C24` · `values-tokenize-repeated-visual-values`
 
 **Applies when:** 여러 파일이 같은 색, 간격, radius, 타이포, 그림자 값을 쓸 때. 새 사용자 정의 속성을 선언할 때.
 
-**Review with:** `values-always-provide-css-variable-fallbacks`, `values-do-not-style-through-the-style-attribute`
+**Review with:** `composition-do-not-style-through-the-style-attribute`, `values-always-provide-css-variable-fallbacks`
 
 **Impact: MEDIUM-HIGH (여러 파일이 쓰는 값은 전역 토큰으로 모으고 나머지는 선언 자리에 그대로 둡니다)**
 
@@ -1866,7 +1791,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 쌓임 층과 움직임 지속 시간, 감속 곡선은 예외입니다. 한 파일에서 한 번만 써도 토큰입니다.
 쌓임 순서와 움직임 리듬이 앱 전체에서 하나여야 하기 때문입니다.
 층 목록은 `values-declare-stacking-layers-as-tokens` 규칙이 정합니다.
-시간과 곡선 토큰은 `values-namespace-keyframes-and-respect-reduced-motion` 규칙이 정합니다.
+시간과 곡선 토큰은 `a11y-namespace-keyframes-and-respect-reduced-motion` 규칙이 정합니다.
 
 **지역 사용자 정의 속성은 만들지 않습니다.**
 공통 토큰 목록에 없는 변수는 대체값이 필요해서 값이 결국 사용처에 남습니다.
@@ -1874,7 +1799,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 
 예외는 실행 중에 계산해야만 아는 수치 하나입니다.
 그때만 지역 변수를 하나 만들어 TSX에서 넘깁니다.
-그 자리는 `values-do-not-style-through-the-style-attribute` 규칙이 정합니다.
+그 자리는 `composition-do-not-style-through-the-style-attribute` 규칙이 정합니다.
 
 조상 상태를 자손에 전달할 때도 변수를 쓰지 않고 결합자 하나로 자손을 겨냥합니다.
 결합자를 쓸 범위는 `ownership-use-foreign-classes-only-under-your-own-root` 규칙이 정합니다.
@@ -1968,219 +1893,18 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
-### 5.4 Separate Domain State Modifiers From DOM Interaction States
+### 5.3 Declare Stacking Layers as Tokens in One Place
 
-**Rule:** `C25` · `values-separate-domain-state-modifiers-from-dom-interaction-states`
-
-**Applies when:** 앱 상태 수정자와 hover, focus, disabled 같은 DOM 상호작용 상태를 추가·변경할 때. 포커스 링을 수정할 때.
-
-**Review with:** `composition-do-not-build-structural-variants-with-modifiers`
-
-**Impact: HIGH (앱 상태와 hover, 포커스 동작을 섞지 않아 읽기 쉽고 접근성도 지킵니다)**
-
-도메인 상태와 무관한 `:hover`, `:focus-visible`, `:disabled`는 조건 없는 기본 블록에 둡니다.
-이 선택자들을 수정자 아래로 옮겨 적용 대상을 좁히지 않습니다.
-수정자 블록에는 `active`, `selected`, `error`처럼 앱이 정하는 모습만 남깁니다.
-수정자가 켜진 경우에만 상호작용이 달라져야 한다는 제품 요구가 있을 때만 그 예외를 적습니다.
-
-수정자 아래로 옮기면 그 상태가 아닐 때 `:hover`와 `:focus-visible`이 사라집니다.
-읽는 사람은 기본 블록만 보고 상호작용이 없다고 판단합니다.
-
-포커스 표시 자체는 `values-always-provide-a-visible-focus-indicator` 규칙이 담당합니다.
-무엇을 수정자로 두고 무엇을 가상 클래스로 둘지는 `selector-use-pseudo-classes-for-dom-owned-states` 규칙이 정합니다.
-
-**Incorrect (포커스 스타일을 제거하거나 상태 경계를 섞음):**
-
-```css
-.ui_button__root {
-	&:focus {
-		outline: none;
-	}
-}
-
-.ui_button__root--hover {
-	background: var(--app-color-accent);
-}
-```
-
-**Correct (도메인 상태와 상호작용 상태를 분리하고 포커스를 보존):**
-
-```css
-.ui_button__root--active {
-	background: var(--app-color-accent);
-}
-
-.ui_button__root {
-	&:focus-visible {
-		outline: 2px solid var(--app-color-accent);
-		outline-offset: 2px;
-	}
-
-	&:not(:disabled) {
-		cursor: pointer;
-	}
-}
-```
-
-### 5.5 Always Provide a Visible Focus Indicator
-
-**Rule:** `C26` · `values-always-provide-a-visible-focus-indicator`
-
-**Applies when:** `outline`, `:focus`, `:focus-visible` 스타일을 추가·수정할 때. 상호작용 요소의 기본 포커스 링을 덮어쓸 때.
-
-**Review with:** `values-separate-domain-state-modifiers-from-dom-interaction-states`
-
-**Impact: HIGH (포커스 표시를 없애지 않고 형태로 구분해 키보드 사용자가 현재 위치를 알 수 있습니다)**
-
-포커스 표시를 없애지 않습니다.
-`outline: none`을 쓰면 대체 스타일을 반드시 함께 제공합니다.
-
-- `:focus`보다 `:focus-visible`을 씁니다.
-  포인터 클릭에는 링이 안 나오고 키보드 이동에는 나옵니다.
-- 색만 바꾸는 것으로 끝내지 않습니다.
-  `outline`, `box-shadow` 링, `border` 두께처럼
-  형태가 바뀌는 신호를 함께 씁니다.
-  색만 쓰면 색각 이상에서 구분되지 않습니다.
-- 링과 그 뒤 배경의 대비가 3:1 이상이고 두께가 2px 이상입니다.
-  WCAG 2.2 SC 1.4.11(AA)과 2.4.13(AAA)이 정한 값입니다.
-  링이 배경과 같은 계열이면 없는 것과 같습니다.
-- 기본 블록에 둡니다.
-  수정자 블록 안에만 두면 그 상태가 아닐 때 표시가 사라집니다.
-
-포커스 표시를 `--focused` 같은 앱 수정자로 대체하지 않습니다.
-키보드로 들어왔는지 포인터로 들어왔는지는 브라우저만 알 수 있어서 앱이 재현할 수 없습니다.
-
-**Incorrect (포커스 링을 제거하고 대체를 두지 않음):**
-
-```css
-.ui_button__root {
-	&:focus {
-		outline: none;
-	}
-}
-```
-
-**Incorrect (색만 바꾸고 수정자 안에만 둠):**
-
-```css
-.ui_button__root--active {
-	&:focus-visible {
-		outline: none;
-		color: #1677ff;
-	}
-}
-```
-
-**Correct (`:focus-visible`에 형태가 바뀌는 표시를 기본 블록에 둠):**
-
-```css
-.ui_button__root {
-	border: 1px solid #d9d9d9;
-
-	&:focus-visible {
-		outline: 2px solid #1677ff;
-		outline-offset: 2px;
-	}
-}
-```
-
-**Correct (`outline`을 덮어쓰면 링으로 대체함):**
-
-```css
-.ui_input__field {
-	border: 1px solid #d9d9d9;
-
-	&:focus-visible {
-		outline: none;
-		border-color: #1677ff;
-		box-shadow: 0 0 0 3px #1677ff;
-	}
-}
-```
-
-### 5.6 Do Not Style Through the `style` Attribute
-
-**Rule:** `C27` · `values-do-not-style-through-the-style-attribute`
-
-**Applies when:** TSX에 `style={{ … }}`를 추가하거나 그 안의 선언을 바꿀 때. 컴포넌트 프롭으로 `style`을 받아 넘길 때.
-
-**Review with:** `composition-inject-classes-only-at-the-entry-point`, `values-always-provide-css-variable-fallbacks`, `values-tokenize-repeated-visual-values`
-
-**Impact: HIGH (모든 시각 결정이 스타일시트에 남아 검색과 덮어쓰기가 예측대로 동작합니다)**
-
-시각 결정은 스타일시트에 씁니다.
-`style={{ … }}`로 쓰지 않습니다.
-
-- 인라인 선언은 클래스보다 우선순위가 높아 `!important` 없이는 스타일시트에서 덮을 수 없습니다.
-- CSS 파일을 검색해도 안 나옵니다.
-  어디서 온 여백인지 찾을 수 없습니다.
-- `:hover`, `@media`, `@container`를 쓸 수 없어 결국 클래스를 다시 만들게 됩니다.
-
-값이 화면마다 달라야 하면 수정자 클래스를 붙입니다.
-클래스를 어디서 주입할지는 `composition-inject-classes-only-at-the-entry-point` 규칙이 정합니다.
-
-**실행 중에 계산해야만 아는 수치 하나**는 예외입니다.
-가상 스크롤 위치, 드래그 좌표, 측정한 높이처럼 스타일시트에 적을 수 없는 값입니다.
-이때도 CSS 변수 한 개만 넘기고 실제 선언은 스타일시트에 둡니다.
-변수가 없을 때를 대비한 대체값은 `values-always-provide-css-variable-fallbacks` 규칙이 정합니다.
-
-래퍼가 `HTMLAttributes`를 `extends`하면 `style`이 함께 열립니다.
-타입에서 막을 방법이 없으므로 이 규칙을 리뷰가 봅니다.
-
-**Incorrect (인라인으로 꾸밈):**
-
-```tsx
-<section className={clsx("pg_report__summary")} style={{ marginTop: 16, color: "#c00" }}>
-	{summary}
-</section>
-```
-
-**Correct (스타일시트에 두고 수정자로 가름):**
-
-```tsx
-<section className={clsx("pg_report__summary", isCritical && "pg_report__summary--critical")}>
-	{summary}
-</section>
-```
-
-```css
-.pg_report__summary {
-	margin-block-start: 16px;
-}
-
-.pg_report__summary--critical {
-	color: var(--app-color-text-danger);
-}
-```
-
-**Correct (실행 중에만 아는 수치를 CSS 변수 하나로 넘김):**
-
-```tsx
-<div
-	className={clsx("pg_report__virtualRow")}
-	style={{ "--pg-report-row-offset": `${rowOffset}px` } as CSSProperties}
-/>
-```
-
-```css
-.pg_report__virtualRow {
-	position: absolute;
-	transform: translateY(var(--pg-report-row-offset, 0));
-}
-```
-
-### 5.7 Declare Stacking Layers as Tokens in One Place
-
-**Rule:** `C28` · `values-declare-stacking-layers-as-tokens`
+**Rule:** `C25` · `values-declare-stacking-layers-as-tokens`
 
 **Applies when:** `z-index`를 새로 넣거나 값을 바꿀 때. 겹쳐 뜨는 요소를 추가할 때.
 
-**Review with:** `values-keep-layout-intent-explicit`, `values-tokenize-repeated-visual-values`
+**Review with:** `layout-keep-layout-intent-explicit`, `values-tokenize-repeated-visual-values`
 
 **Impact: MEDIUM-HIGH (무엇이 무엇 위에 오는지가 한 파일에서 읽히고 숫자 경쟁이 생기지 않습니다)**
 
 층은 전역 토큰 파일에 한 번 선언하고 `z-index`는 그 이름만 씁니다.
-`values-keep-layout-intent-explicit` 규칙이 숫자를 직접 쓰지 말라고 하고, 여기서는 그 목록을 정합니다.
+`layout-keep-layout-intent-explicit` 규칙이 숫자를 직접 쓰지 말라고 하고, 여기서는 그 목록을 정합니다.
 
 층은 넷입니다.
 쓰는 쪽에서 사이 값을 만들지 않습니다.
@@ -2248,95 +1972,9 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
-### 5.8 Namespace Keyframes and Respect Reduced Motion
+### 5.4 Switch Themes by Changing Token Values
 
-**Rule:** `C29` · `values-namespace-keyframes-and-respect-reduced-motion`
-
-**Applies when:** `@keyframes` 이름이나 애니메이션 지속 시간, 감속 곡선을 선언하거나 바꿀 때. `animation`이나 `transition`으로 움직임을 새로 넣을 때.
-
-**Review with:** `tooling-configure-stylelint-to-enforce-these-rules`, `values-tokenize-repeated-visual-values`
-
-**Impact: MEDIUM-HIGH (전역 이름이 겹쳐 남의 애니메이션이 바뀌지 않고 움직임에 민감한 사용자를 막지 않습니다)**
-
-**`@keyframes` 이름은 전역입니다.**
-클래스와 달리 파일이나 블록에 갇히지 않아서, 같은 이름을 두 파일에서 선언하면 나중에 읽힌 것이 이깁니다.
-그래서 이름 앞에 소유자를 붙입니다.
-
-| 대상 | 이름 |
-| --- | --- |
-| `@keyframes` | `<범위><식별자>__<동작>` — `pgProducts__fadeIn` |
-| `animation` 지속 시간, 감속 곡선 | 토큰 — `var(--app-motion-duration-fast)` |
-
-지속 시간과 감속 곡선은 값을 직접 적지 않고 토큰만 씁니다.
-한 파일에서 한 번만 써도 토큰입니다. `values-tokenize-repeated-visual-values` 규칙이 그 예외를 정합니다.
-
-클래스 이름과 표기가 다릅니다.
-`-`는 `@keyframes` 이름에도 쓸 수 있지만, 클래스의 `--수정자` 표기와 섞이면
-어디까지가 이름인지 흐려지므로 범위와 식별자를 붙여 씁니다.
-`stylelint-config-standard`의 기본 패턴이 이 형태를 거부하므로
-`tooling-configure-stylelint-to-enforce-these-rules` 규칙이 `keyframes-name-pattern`을 다시 정합니다.
-
-**움직임을 줄여 달라고 한 사용자에게는 움직이지 않습니다.**
-파일마다 따로 처리하지 않고 전역 스타일시트에 한 번 선언합니다.
-어지럼증이나 전정 장애가 있는 사용자에게 움직임은 접근성 문제입니다.
-
-- 전역 블록에서 `animation`과 `transition`을 함께 멈춥니다.
-  위치가 바뀌는 것만 골라 끄지 않습니다. 전역 차단이 접근성 기본값입니다.
-  색이나 투명도 전환을 살려야 하면 그 클래스를 전역 블록에 예외로 적습니다.
-  컴포넌트 파일에서는 되살릴 수 없습니다. `!important`를 쓸 수 있는 자리가 전역 스타일시트뿐입니다.
-- 지속 시간을 `0`으로 만들지 않고 `0.01ms`로 둡니다.
-  `0`이면 `transitionend`가 오지 않아 그 이벤트를 기다리는 코드가 멈춥니다.
-- 애니메이션으로 바꾸는 속성은 `transform`과 `opacity`로 둡니다.
-  `width`나 `top`을 애니메이션하면 매 프레임 레이아웃을 다시 계산합니다.
-
-**Incorrect (전역 이름을 겹치게 쓰고 시간을 직접 적음):**
-
-```css
-@keyframes fadeIn {
-	from {
-		opacity: 0;
-	}
-}
-
-.pg_products__panel {
-	animation: fadeIn 200ms ease-out;
-}
-```
-
-**Correct (소유자를 붙인 이름과 토큰):**
-
-```css
-@keyframes pgProducts__fadeIn {
-	from {
-		opacity: 0;
-		transform: translateY(4px);
-	}
-}
-
-.pg_products__panel {
-	animation: pgProducts__fadeIn var(--app-motion-duration-fast) var(--app-motion-easing-out);
-}
-```
-
-**Correct (전역 스타일시트에서 한 번 처리):**
-
-```css
-/* style/motion.css */
-@media (prefers-reduced-motion: reduce) {
-	*,
-	*::before,
-	*::after {
-		animation-duration: 0.01ms !important;
-		animation-iteration-count: 1 !important;
-		transition-duration: 0.01ms !important;
-		scroll-behavior: auto !important;
-	}
-}
-```
-
-### 5.9 Switch Themes by Changing Token Values
-
-**Rule:** `C30` · `values-switch-themes-by-changing-token-values`
+**Rule:** `C26` · `values-switch-themes-by-changing-token-values`
 
 **Applies when:** 다크 모드나 테마 전환을 넣을 때. 컴포넌트 CSS에 `prefers-color-scheme`이나 `[data-theme]`를 쓰려 할 때. 색이나 그림자 토큰을 새로 만들거나 이름을 바꿀 때.
 
@@ -2348,7 +1986,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 `prefers-color-scheme`과 `[data-theme]`는 토큰 파일 안에만 둡니다.
 컴포넌트 CSS 파일에서 이 둘이 보이면 위반입니다.
 
-`selector-group-breakpoints-at-the-file-bottom` 규칙이 정하는 것은 폭 조건입니다.
+`layout-group-breakpoints-at-the-file-bottom` 규칙이 정하는 것은 폭 조건입니다.
 여기서 바꾸는 것은 클래스가 아니라 `:root`의 변수 값입니다.
 두 블록을 섞지 않습니다.
 
@@ -2462,13 +2100,221 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
-### 5.10 Reach for Intrinsic Sizing Before Breakpoints
+## 6. Layout and Responsiveness
 
-**Rule:** `C31` · `values-reach-for-intrinsic-sizing-before-breakpoints`
+**Impact: HIGH**
+
+배치 의도가 클래스명과 선언에서 바로 읽혀야 하고, 폭이 달라질 때 무엇이 바뀌는지가 한 자리에 모여야 합니다. 분기점을 적기 전에 스스로 접히는 크기 지정으로 되는지 먼저 보고, 남는 분기점은 파일 아래 한 곳에 데스크톱 퍼스트로 둡니다.
+
+### 6.1 Group Breakpoints at the Bottom of the File
+
+**Rule:** `C27` · `layout-group-breakpoints-at-the-file-bottom`
+
+**Applies when:** `@media` 분기점을 추가하거나 옮길 때. 화면 폭에 따라 값이 달라지는 선언을 넣을 때.
+
+**Review with:** `layout-reach-for-intrinsic-sizing-before-breakpoints`, `selector-declare-each-class-in-one-block`, `values-switch-themes-by-changing-token-values`
+
+**Impact: HIGH (한 분기점에서 무엇이 달라지는지 한 블록에서 읽히고 두 방향이 겹치지 않습니다)**
+
+분기점 재선언은 파일 맨 아래 `@media` 블록에 모읍니다.
+클래스 블록 안에 `@media`를 중첩하지 않습니다.
+
+분기점 하나는 보통 클래스 하나가 아니라 여러 클래스를 같이 건드립니다.
+툴바 간격만 줄이는 게 아니라 패널 여백과 사이드바 폭이 함께 바뀝니다.
+그 결정이 클래스 블록마다 흩어지면 "1024px 아래에서 무엇이 달라지는가"를 파일 전체를 훑어야 답합니다.
+
+**대가가 있습니다.**
+한 클래스의 선언이 기본 블록과 분기점 블록 두 곳에 있습니다.
+`selector-declare-each-class-in-one-block` 규칙이 `@media` 안의 재선언을 예외로 두는 이유가 이것입니다.
+여기서 그 예외의 자리를 못 박습니다.
+그래도 이쪽을 고릅니다.
+분기점을 고치는 일은 클래스 하나를 고치는 일이 아니라 그 폭에서 화면이 어떻게 보이는지를 고치는 일이기 때문입니다.
+
+**데스크톱 퍼스트로 씁니다.**
+기본 선언이 가장 넓은 화면 기준이고, 좁아질 때만 덮습니다.
+`(width >= ...)` 조건과 섞지 않습니다.
+두 방향을 섞으면 둘 다 맞는 구간에서 어느 쪽이 이기는지 매번 따져야 합니다.
+
+블록 순서는 넓은 쪽부터 좁은 쪽입니다.
+좁은 화면에서는 조건이 여러 개 동시에 맞고 마지막에 쓴 것이 이깁니다.
+
+조건은 범위 표기로 씁니다.
+`(width < 1024px)`로 쓰고 `(max-width: 1023.98px)`로 쓰지 않습니다.
+`max-width: 1024px`은 1024를 포함해서 `min-width: 1024px`과 겹치므로 소수 보정이 필요했습니다.
+범위 표기는 겹치지 않습니다.
+`tooling-configure-stylelint-to-enforce-these-rules` 규칙이 그 표기를 강제합니다.
+
+분기점 숫자는 아래 셋만 씁니다.
+이름은 경계가 아니라 그 아래 구간을 가리킵니다.
+기본 선언은 `1440px` 이상 기준입니다.
+
+| 조건 | 구간 이름 | 여기부터 좁아짐 |
+| --- | --- | --- |
+| `(width < 1440px)` | `~lg` | 좁은 데스크톱 |
+| `(width < 1024px)` | `~md` | 가로 태블릿, 좁은 노트북 |
+| `(width < 640px)` | `~sm` | 세로 태블릿 아래 |
+
+숫자를 토큰으로 빼지 않습니다.
+`@media`의 조건에는 `var()`를 쓸 수 없어서 토큰으로 만들어도 그 자리에서 못 씁니다.
+그래서 세 값을 규칙에 못 박고 그대로 적습니다.
+
+`@media` 블록이 여러 파일에 반복되면 `composition-do-not-add-wrapper-elements-for-styling` 규칙이 소유자를 정합니다.
+
+분기점을 적기 전에 분기점 없이 되는지 먼저 봅니다.
+`layout-reach-for-intrinsic-sizing-before-breakpoints` 규칙이 그 판정을 합니다.
+
+테마 조건은 여기에 걸리지 않습니다.
+`prefers-color-scheme`은 토큰 파일에서 최상위 `@media`로 씁니다.
+`values-switch-themes-by-changing-token-values` 규칙이 그 자리를 정합니다.
+
+**Incorrect (클래스 블록 안에 중첩해서 분기점이 흩어짐):**
+
+```css
+.pg_products__toolbar {
+	display: flex;
+	gap: 24px;
+
+	@media (width < 1024px) {
+		gap: 8px;
+	}
+}
+
+.pg_products__panel {
+	padding: 24px;
+
+	@media (width < 1024px) {
+		padding: 12px;
+	}
+}
+```
+
+**Incorrect (두 방향을 섞어 겹치는 구간을 만듦):**
+
+```css
+.pg_products__toolbar {
+	display: flex;
+	gap: 16px;
+}
+
+@media (width >= 1440px) {
+	.pg_products__toolbar {
+		gap: 24px;
+	}
+}
+
+@media (width < 1024px) {
+	.pg_products__toolbar {
+		gap: 8px;
+	}
+}
+```
+
+**Correct (가장 넓은 화면을 기본으로 두고 파일 아래에서 좁혀 감):**
+
+```css
+.pg_products__toolbar {
+	display: flex;
+	gap: 24px;
+}
+
+.pg_products__panel {
+	padding: 24px;
+}
+
+@media (width < 1440px) {
+	.pg_products__toolbar {
+		gap: 16px;
+	}
+
+	.pg_products__panel {
+		padding: 20px;
+	}
+}
+
+@media (width < 1024px) {
+	.pg_products__toolbar {
+		gap: 8px;
+	}
+
+	.pg_products__panel {
+		padding: 12px;
+	}
+}
+```
+
+**Correct (분기점 안에서 상태를 한 겹 더 씀):**
+
+```css
+@media (width < 1024px) {
+	.pg_products__panel {
+		padding: 12px;
+
+		&:hover {
+			background-color: var(--app-color-surface-hover);
+		}
+	}
+}
+```
+
+### 6.2 Keep Layout Intent Explicit
+
+**Rule:** `C28` · `layout-keep-layout-intent-explicit`
+
+**Applies when:** `sticky`·`fixed`, `z-index`, 강제 `width`·`height` 또는 부모·자식 레이아웃 책임을 추가·변경할 때. 대체 화면의 컨테이너나 높이를 정할 때. 제외: 같은 요소를 기본과 수정자로 나누면서 기존 `display`·여백 선언을 값 그대로 옮기는 경우.
+
+**Review with:** `values-declare-stacking-layers-as-tokens`
+
+**Impact: MEDIUM-HIGH (DOM을 거슬러 올라가지 않고 sticky, fixed, 박스 책임을 파악합니다)**
+
+레이아웃 의도는 클래스명과 선언만 보고 바로 읽혀야 합니다.
+크기를 어디까지 고정할지는 `layout-reach-for-intrinsic-sizing-before-breakpoints` 규칙이 정합니다.
+
+- `z-index`에는 숫자를 직접 쓰지 않고 층 토큰을 씁니다.
+  토큰 이름이 곧 쌓임 순서 문서입니다.
+  층 목록과 쌓임 맥락 조건은 `values-declare-stacking-layers-as-tokens` 규칙이 정합니다.
+- `sticky`나 `fixed`를 쓸 때는 기준 컨테이너를 주석 한 줄로 남깁니다.
+  어느 조상이 스크롤 컨테이너인지는 선언에 안 보입니다.
+  `fixed`는 `transform`이 걸린 조상 아래에서 뷰포트 기준을 잃고,
+  `sticky`는 스크롤 조상이 `overflow: visible`이면 아무 일도 하지 않습니다.
+- 로딩 대체 화면은 실제 내용과 같은 컨테이너 클래스 안에 넣습니다.
+  높이를 대체 화면에만 따로 적으면 실제 내용이 들어올 때 그 값이 남아 레이아웃이 튑니다.
+
+**Incorrect (레이아웃 강제가 많고 기준 설명이 없음):**
+
+```css
+.pg_dashboard__toolbar {
+	position: sticky;
+	top: 0;
+	z-index: 9999;
+	width: 100%;
+	height: 48px;
+}
+```
+
+**Correct (기준 컨테이너와 의도를 드러냄):**
+
+```css
+.pg_dashboard__toolbar {
+	/* .pg_dashboard__content 가 스크롤 컨테이너다 */
+	position: sticky;
+	top: 0;
+	z-index: var(--app-z-index-sticky);
+}
+
+.pg_dashboard__content {
+	display: grid;
+	min-height: 0;
+	overflow-y: auto;
+}
+```
+
+### 6.3 Reach for Intrinsic Sizing Before Breakpoints
+
+**Rule:** `C29` · `layout-reach-for-intrinsic-sizing-before-breakpoints`
 
 **Applies when:** `@media` 분기점을 새로 넣으려 할 때. 폭에 따라 줄바꿈, 열 개수, 크기가 달라져야 할 때.
 
-**Review with:** `selector-group-breakpoints-at-the-file-bottom`, `values-keep-layout-intent-explicit`
+**Review with:** `layout-group-breakpoints-at-the-file-bottom`, `layout-keep-layout-intent-explicit`
 
 **Impact: HIGH (슬롯 폭이 얼마든 맞는 배치라 같은 컴포넌트를 옮겨도 CSS를 다시 고치지 않습니다)**
 
@@ -2489,13 +2335,13 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 분기점이 남는 경우가 있습니다.
 배치가 통째로 달라질 때는 위 넷으로 안 됩니다.
 사이드바가 사라지거나, 가로 두 칸이 세로 스택이 되거나, 표가 카드 목록으로 바뀌는 것이 그 경우입니다.
-그때는 `selector-group-breakpoints-at-the-file-bottom` 규칙이 정한 자리에 적습니다.
+그때는 `layout-group-breakpoints-at-the-file-bottom` 규칙이 정한 자리에 적습니다.
 
 **버튼과 입력처럼 낱개로 쓰는 컴포넌트는 자기 폭을 정하지 않습니다.**
 버튼과 입력은 `padding`, `min-height`, 글자 크기까지만 자기 것입니다.
 폭은 그 컴포넌트를 놓은 쪽이 정합니다.
 놓는 쪽에서 그 폭을 왜 고정하는지가 클래스명과 선언에서 읽혀야 합니다.
-`values-keep-layout-intent-explicit` 규칙이 그 판정을 합니다.
+`layout-keep-layout-intent-explicit` 규칙이 그 판정을 합니다.
 
 **Incorrect (버튼이 자기 폭을 뷰포트로 정함):**
 
@@ -2595,13 +2441,181 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
-## 6. Tooling
+## 7. Accessibility and Motion
+
+**Impact: HIGH**
+
+키보드 사용자가 지금 어디에 있는지 보이고, 움직임에 민감한 사용자가 막히지 않아야 합니다. 포커스 표시는 없애지 않고 형태로 구분하며, 애니메이션은 전역 이름을 겹치지 않게 두고 사용자 설정을 따릅니다.
+
+### 7.1 Always Provide a Visible Focus Indicator
+
+**Rule:** `C30` · `a11y-always-provide-a-visible-focus-indicator`
+
+**Applies when:** `outline`, `:focus`, `:focus-visible` 스타일을 추가·수정할 때. 상호작용 요소의 기본 포커스 링을 덮어쓸 때.
+
+**Review with:** `selector-separate-domain-state-modifiers-from-dom-interaction-states`
+
+**Impact: HIGH (포커스 표시를 없애지 않고 형태로 구분해 키보드 사용자가 현재 위치를 알 수 있습니다)**
+
+포커스 표시를 없애지 않습니다.
+`outline: none`을 쓰면 대체 스타일을 반드시 함께 제공합니다.
+
+- `:focus`보다 `:focus-visible`을 씁니다.
+  포인터 클릭에는 링이 안 나오고 키보드 이동에는 나옵니다.
+- 색만 바꾸는 것으로 끝내지 않습니다.
+  `outline`, `box-shadow` 링, `border` 두께처럼
+  형태가 바뀌는 신호를 함께 씁니다.
+  색만 쓰면 색각 이상에서 구분되지 않습니다.
+- 링과 그 뒤 배경의 대비가 3:1 이상이고 두께가 2px 이상입니다.
+  WCAG 2.2 SC 1.4.11(AA)과 2.4.13(AAA)이 정한 값입니다.
+  링이 배경과 같은 계열이면 없는 것과 같습니다.
+- 기본 블록에 둡니다.
+  수정자 블록 안에만 두면 그 상태가 아닐 때 표시가 사라집니다.
+
+포커스 표시를 `--focused` 같은 앱 수정자로 대체하지 않습니다.
+키보드로 들어왔는지 포인터로 들어왔는지는 브라우저만 알 수 있어서 앱이 재현할 수 없습니다.
+
+**Incorrect (포커스 링을 제거하고 대체를 두지 않음):**
+
+```css
+.ui_button__root {
+	&:focus {
+		outline: none;
+	}
+}
+```
+
+**Incorrect (색만 바꾸고 수정자 안에만 둠):**
+
+```css
+.ui_button__root--active {
+	&:focus-visible {
+		outline: none;
+		color: #1677ff;
+	}
+}
+```
+
+**Correct (`:focus-visible`에 형태가 바뀌는 표시를 기본 블록에 둠):**
+
+```css
+.ui_button__root {
+	border: 1px solid #d9d9d9;
+
+	&:focus-visible {
+		outline: 2px solid #1677ff;
+		outline-offset: 2px;
+	}
+}
+```
+
+**Correct (`outline`을 덮어쓰면 링으로 대체함):**
+
+```css
+.ui_input__field {
+	border: 1px solid #d9d9d9;
+
+	&:focus-visible {
+		outline: none;
+		border-color: #1677ff;
+		box-shadow: 0 0 0 3px #1677ff;
+	}
+}
+```
+
+### 7.2 Namespace Keyframes and Respect Reduced Motion
+
+**Rule:** `C31` · `a11y-namespace-keyframes-and-respect-reduced-motion`
+
+**Applies when:** `@keyframes` 이름이나 애니메이션 지속 시간, 감속 곡선을 선언하거나 바꿀 때. `animation`이나 `transition`으로 움직임을 새로 넣을 때.
+
+**Review with:** `tooling-configure-stylelint-to-enforce-these-rules`, `values-tokenize-repeated-visual-values`
+
+**Impact: MEDIUM-HIGH (전역 이름이 겹쳐 남의 애니메이션이 바뀌지 않고 움직임에 민감한 사용자를 막지 않습니다)**
+
+**`@keyframes` 이름은 전역입니다.**
+클래스와 달리 파일이나 블록에 갇히지 않아서, 같은 이름을 두 파일에서 선언하면 나중에 읽힌 것이 이깁니다.
+그래서 이름 앞에 소유자를 붙입니다.
+
+| 대상 | 이름 |
+| --- | --- |
+| `@keyframes` | `<범위><식별자>__<동작>` — `pgProducts__fadeIn` |
+| `animation` 지속 시간, 감속 곡선 | 토큰 — `var(--app-motion-duration-fast)` |
+
+지속 시간과 감속 곡선은 값을 직접 적지 않고 토큰만 씁니다.
+한 파일에서 한 번만 써도 토큰입니다. `values-tokenize-repeated-visual-values` 규칙이 그 예외를 정합니다.
+
+클래스 이름과 표기가 다릅니다.
+`-`는 `@keyframes` 이름에도 쓸 수 있지만, 클래스의 `--수정자` 표기와 섞이면
+어디까지가 이름인지 흐려지므로 범위와 식별자를 붙여 씁니다.
+`stylelint-config-standard`의 기본 패턴이 이 형태를 거부하므로
+`tooling-configure-stylelint-to-enforce-these-rules` 규칙이 `keyframes-name-pattern`을 다시 정합니다.
+
+**움직임을 줄여 달라고 한 사용자에게는 움직이지 않습니다.**
+파일마다 따로 처리하지 않고 전역 스타일시트에 한 번 선언합니다.
+어지럼증이나 전정 장애가 있는 사용자에게 움직임은 접근성 문제입니다.
+
+- 전역 블록에서 `animation`과 `transition`을 함께 멈춥니다.
+  위치가 바뀌는 것만 골라 끄지 않습니다. 전역 차단이 접근성 기본값입니다.
+  색이나 투명도 전환을 살려야 하면 그 클래스를 전역 블록에 예외로 적습니다.
+  컴포넌트 파일에서는 되살릴 수 없습니다. `!important`를 쓸 수 있는 자리가 전역 스타일시트뿐입니다.
+- 지속 시간을 `0`으로 만들지 않고 `0.01ms`로 둡니다.
+  `0`이면 `transitionend`가 오지 않아 그 이벤트를 기다리는 코드가 멈춥니다.
+- 애니메이션으로 바꾸는 속성은 `transform`과 `opacity`로 둡니다.
+  `width`나 `top`을 애니메이션하면 매 프레임 레이아웃을 다시 계산합니다.
+
+**Incorrect (전역 이름을 겹치게 쓰고 시간을 직접 적음):**
+
+```css
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+}
+
+.pg_products__panel {
+	animation: fadeIn 200ms ease-out;
+}
+```
+
+**Correct (소유자를 붙인 이름과 토큰):**
+
+```css
+@keyframes pgProducts__fadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(4px);
+	}
+}
+
+.pg_products__panel {
+	animation: pgProducts__fadeIn var(--app-motion-duration-fast) var(--app-motion-easing-out);
+}
+```
+
+**Correct (전역 스타일시트에서 한 번 처리):**
+
+```css
+/* style/motion.css */
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
+}
+```
+
+## 8. Tooling
 
 **Impact: MEDIUM**
 
 이 컨벤션 중 기계가 잡을 수 있는 항목은 stylelint 설정으로 고정하고, 잡을 수 없는 항목은 리뷰가 담당한다는 것을 명시해야 사람이 검사할 목록이 좁아집니다.
 
-### 6.1 Configure Stylelint to Enforce These Rules
+### 8.1 Configure Stylelint to Enforce These Rules
 
 **Rule:** `C32` · `tooling-configure-stylelint-to-enforce-these-rules`
 
@@ -2618,12 +2632,12 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 | `selector-class-pattern` | `css/naming-use-scope-slug-element-modifier-syntax` |
 | `selector-disallowed-list` | `css/ownership-use-foreign-classes-only-under-your-own-root`, `css/selector-nest-dom-state-in-the-owning-block`, `css/selector-use-classes-instead-of-element-selectors` |
 | `max-nesting-depth` | `css/selector-limit-nesting-block-depth` |
-| `keyframes-name-pattern` | `css/values-namespace-keyframes-and-respect-reduced-motion` |
+| `keyframes-name-pattern` | `css/a11y-namespace-keyframes-and-respect-reduced-motion` |
 | `no-duplicate-selectors` | `css/selector-declare-each-class-in-one-block`, `css/selector-do-not-group-classes-with-commas`의 단독 재선언 |
 | `property-disallowed-list` | `css/values-tokenize-repeated-visual-values` |
 | `selector-attribute-name-disallowed-list` | `css/selector-use-pseudo-classes-for-dom-owned-states` |
-| `declaration-no-important` | `css/values-namespace-keyframes-and-respect-reduced-motion`의 전역 처리만 예외입니다 |
-| `media-feature-range-notation` | `css/selector-group-breakpoints-at-the-file-bottom`의 범위 표기. `stylelint-config-standard`에서 옵니다 |
+| `declaration-no-important` | `css/a11y-namespace-keyframes-and-respect-reduced-motion`의 전역 처리만 예외입니다 |
+| `media-feature-range-notation` | `css/layout-group-breakpoints-at-the-file-bottom`의 범위 표기. `stylelint-config-standard`에서 옵니다 |
 | `no-descending-specificity` | 자손 기본 블록을 조상 규칙보다 앞에 두게 합니다. `stylelint-config-standard`에서 옵니다 |
 
 접두사가 디렉터리마다 달라서 `selector-class-pattern`과 `selector-disallowed-list`는 `overrides`로 나눕니다.
@@ -2641,7 +2655,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
   `ownMarkupPatterns`의 요소 선택자 항목이 `&`로 시작하는 형태만 보고, `selector-max-type`은 넣지 않았습니다.
 - 클래스 블록 안에 중첩한 `@media`도 못 잡습니다.
   at-rule 이 최상위에 있어야 한다고 요구하는 규칙이 없습니다.
-  분기점 배치와 데스크톱 퍼스트 방향은 `css/selector-group-breakpoints-at-the-file-bottom` 규칙을 리뷰가 봅니다.
+  분기점 배치와 데스크톱 퍼스트 방향은 `css/layout-group-breakpoints-at-the-file-bottom` 규칙을 리뷰가 봅니다.
 - 구조 선택자로 우리 마크업을 겨냥한 것도 못 잡습니다.
   `:first-child`나 `:nth-child()`는 클래스에도 붙어서 형태로 구분할 수 없습니다.
 - 역할 이름, 승격 판단, 변형 노출, 포커스 대비도 리뷰가 담당합니다.

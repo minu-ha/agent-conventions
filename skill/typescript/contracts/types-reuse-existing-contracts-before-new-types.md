@@ -61,4 +61,4 @@
 원본 입력과 정규화한 값은 필드가 같아도 뜻이 달라 입력 형태를 따로 두는 것이 맞습니다.
 그때도 문서화 규칙만 걸리고 이 규칙은 걸리지 않습니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/02-01-types-reuse-existing-contracts-before-new-types.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/01-01-types-reuse-existing-contracts-before-new-types.md)을 읽습니다.

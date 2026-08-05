@@ -19,7 +19,7 @@ tags: tooling
 
 | `biome` 규칙 | 담당 컨벤션 |
 | --- | --- |
-| `style/noEnum` | `typescript/functions-replace-enum-with-as-const-objects` |
+| `style/noEnum` | `typescript/types-replace-enum-with-as-const-objects` |
 | `style/useImportType` | `typescript/naming-use-direct-imports-and-public-entry-points` |
 | `style/noRestrictedImports` | `typescript/naming-restrict-absolute-aliases-to-layer-roots`의 경로 표 |
 | `style/useNamingConvention` | `typescript/naming-use-consistent-file-and-symbol-naming`의 심볼 표기 |

@@ -6,7 +6,7 @@ impactDescription: 한 클래스의 선언이 한 블록에 모여 고칠 때 �
 appliesWhen:
   - 이미 선언한 클래스에 스타일을 더 추가할 때
   - 파일 아래쪽에서 위쪽 선언을 덮어쓰려 할 때
-reviewWith: selector-do-not-group-classes-with-commas, selector-group-breakpoints-at-the-file-bottom
+reviewWith: selector-do-not-group-classes-with-commas, layout-group-breakpoints-at-the-file-bottom
 tags: selector, cascade, maintainability
 ---
 
@@ -28,7 +28,7 @@ tags: selector, cascade, maintainability
 
 `@media`나 `@supports` 안의 재선언은 대상이 아닙니다.
 조건이 다른 별개 블록입니다.
-그 블록을 파일 어디에 두는지는 `selector-group-breakpoints-at-the-file-bottom` 규칙이 정합니다.
+그 블록을 파일 어디에 두는지는 `layout-group-breakpoints-at-the-file-bottom` 규칙이 정합니다.
 
 기계 검증은 `no-duplicate-selectors`입니다.
 

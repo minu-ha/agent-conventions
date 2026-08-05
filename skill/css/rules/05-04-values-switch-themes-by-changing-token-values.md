@@ -19,7 +19,7 @@ tags: values, theme
 `prefers-color-scheme`과 `[data-theme]`는 토큰 파일 안에만 둡니다.
 컴포넌트 CSS 파일에서 이 둘이 보이면 위반입니다.
 
-`selector-group-breakpoints-at-the-file-bottom` 규칙이 정하는 것은 폭 조건입니다.
+`layout-group-breakpoints-at-the-file-bottom` 규칙이 정하는 것은 폭 조건입니다.
 여기서 바꾸는 것은 클래스가 아니라 `:root`의 변수 값입니다.
 두 블록을 섞지 않습니다.
 

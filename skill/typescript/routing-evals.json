@@ -35,9 +35,9 @@
 			],
 			"expectedSelected": {
 				"typescript": [
-					"naming-use-consistent-file-and-symbol-naming",
 					"types-prefer-function-variable-types-over-parameter-annotations",
-					"types-mark-unused-parameters-with-underscore"
+					"types-mark-unused-parameters-with-underscore",
+					"naming-use-consistent-file-and-symbol-naming"
 				]
 			}
 		},
@@ -113,8 +113,8 @@
 			],
 			"expectedSelected": {
 				"typescript": [
-					"functions-prefer-immutable-array-sorting",
-					"functions-use-set-and-map-for-repeated-lookups"
+					"values-prefer-immutable-array-sorting",
+					"values-use-set-and-map-for-repeated-lookups"
 				]
 			}
 		},
@@ -129,9 +129,9 @@
 			],
 			"expectedSelected": {
 				"typescript": [
-					"naming-use-consistent-file-and-symbol-naming",
 					"types-document-custom-types-and-shapes",
-					"functions-replace-enum-with-as-const-objects",
+					"types-replace-enum-with-as-const-objects",
+					"naming-use-consistent-file-and-symbol-naming",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks",

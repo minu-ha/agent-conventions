@@ -14,4 +14,4 @@
 
 **Requires selected:** `naming-use-consistent-file-and-symbol-naming`, `types-document-custom-types-and-shapes` · 함께 적용
 
-> 예시·예외가 필요하면 [full rule](../rules/03-08-functions-replace-enum-with-as-const-objects.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/01-06-types-replace-enum-with-as-const-objects.md)을 읽습니다.

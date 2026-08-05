@@ -20,4 +20,4 @@
 소유자 하나만 쓰는 설정의 폴더 위치와 파일명은
 `naming-place-owner-config-in-the-owner-config-folder` 규칙이 정합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/01-01-naming-centralize-shared-config-namespaces.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/02-01-naming-centralize-shared-config-namespaces.md)을 읽습니다.

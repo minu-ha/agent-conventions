@@ -11,4 +11,4 @@
 기능별로 같은 이름을 다시 쓰지 않습니다.
 보조 함수 파일을 어디 둘지는 `functions-place-and-promote-support-functions` 규칙이 정합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/01-03-naming-preserve-config-origin-with-chained-access.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/02-03-naming-preserve-config-origin-with-chained-access.md)을 읽습니다.

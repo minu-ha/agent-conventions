@@ -14,4 +14,4 @@
 - 화면이나 소유자 내부 모듈은 절대경로로 열지 않고 `./`로만 접근합니다.
 - 소유자 밖에서 필요해지면 경로를 뚫는 대신 전역 레이어로 올립니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/01-06-naming-restrict-absolute-aliases-to-layer-roots.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/02-06-naming-restrict-absolute-aliases-to-layer-roots.md)을 읽습니다.

@@ -6,7 +6,7 @@ impactDescription: 슬롯 폭이 얼마든 맞는 배치라 같은 컴포넌트�
 appliesWhen:
   - `@media` 분기점을 새로 넣으려 할 때
   - 폭에 따라 줄바꿈, 열 개수, 크기가 달라져야 할 때
-reviewWith: values-keep-layout-intent-explicit, selector-group-breakpoints-at-the-file-bottom
+reviewWith: layout-keep-layout-intent-explicit, layout-group-breakpoints-at-the-file-bottom
 tags: values, layout, responsive
 ---
 
@@ -31,13 +31,13 @@ tags: values, layout, responsive
 분기점이 남는 경우가 있습니다.
 배치가 통째로 달라질 때는 위 넷으로 안 됩니다.
 사이드바가 사라지거나, 가로 두 칸이 세로 스택이 되거나, 표가 카드 목록으로 바뀌는 것이 그 경우입니다.
-그때는 `selector-group-breakpoints-at-the-file-bottom` 규칙이 정한 자리에 적습니다.
+그때는 `layout-group-breakpoints-at-the-file-bottom` 규칙이 정한 자리에 적습니다.
 
 **버튼과 입력처럼 낱개로 쓰는 컴포넌트는 자기 폭을 정하지 않습니다.**
 버튼과 입력은 `padding`, `min-height`, 글자 크기까지만 자기 것입니다.
 폭은 그 컴포넌트를 놓은 쪽이 정합니다.
 놓는 쪽에서 그 폭을 왜 고정하는지가 클래스명과 선언에서 읽혀야 합니다.
-`values-keep-layout-intent-explicit` 규칙이 그 판정을 합니다.
+`layout-keep-layout-intent-explicit` 규칙이 그 판정을 합니다.
 
 **Incorrect (버튼이 자기 폭을 뷰포트로 정함):**
 

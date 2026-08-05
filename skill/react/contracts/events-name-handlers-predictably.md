@@ -16,4 +16,4 @@
   대상이 다르면 대상 이름을 넣습니다.
 - 추가 인자를 어떻게 넘길지는 `events-curry-extra-handler-arguments`가 정합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/06-01-events-name-handlers-predictably.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/09-01-events-name-handlers-predictably.md)을 읽습니다.

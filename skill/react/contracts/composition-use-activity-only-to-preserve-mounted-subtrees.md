@@ -25,4 +25,4 @@
 - `<Activity>`는 리액트 19.2 이상에만 있습니다.
   그보다 낮으면 조건부 렌더링만 씁니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/04-05-composition-use-activity-only-to-preserve-mounted-subtrees.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/05-05-composition-use-activity-only-to-preserve-mounted-subtrees.md)을 읽습니다.

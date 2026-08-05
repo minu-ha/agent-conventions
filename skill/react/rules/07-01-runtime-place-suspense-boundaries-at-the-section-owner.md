@@ -6,11 +6,11 @@ impactDescription: 막는 로딩을 화면 본문이 아니라 정해진 한 자
 appliesWhen:
   - `Suspense` 쿼리를 쓰는 화면에서 로딩 대체 화면의 위치를 정할 때
   - `Suspense` 경계를 추가하거나 옮길 때
-requiresSelected: screen-avoid-ad-hoc-loading-branches
+requiresSelected: runtime-avoid-ad-hoc-loading-branches
 reviewWith: >-
   screen-extract-local-section-components-for-runtime-boundaries,
-  screen-place-error-boundaries-by-blast-radius,
-  css/values-keep-layout-intent-explicit
+  runtime-place-error-boundaries-by-blast-radius,
+  css/layout-keep-layout-intent-explicit
 tags: screen, suspense, loading
 ---
 
@@ -27,10 +27,10 @@ tags: screen, suspense, loading
 - 한 화면에 경계를 여러 겹 쌓지 않습니다.
   섹션이 독립적으로 채워져야 할 때만 나눕니다.
 
-대체 화면의 컨테이너와 높이는 `css/values-keep-layout-intent-explicit`가 정합니다.
+대체 화면의 컨테이너와 높이는 `css/layout-keep-layout-intent-explicit`가 정합니다.
 
 경계가 있으므로 화면 본문에는 로딩 분기가 남지 않습니다.
-그 판정은 `screen-avoid-ad-hoc-loading-branches`가 합니다.
+그 판정은 `runtime-avoid-ad-hoc-loading-branches`가 합니다.
 
 **Incorrect (진입에 경계가 없어 화면 전체가 함께 멈춤):**
 

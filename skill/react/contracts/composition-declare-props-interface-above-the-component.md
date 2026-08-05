@@ -23,4 +23,4 @@
   합성 공개 부품도 같은 순서입니다.
 - 문서 주석에 무엇을 쓸지는 `typescript/types-document-custom-types-and-shapes`가 정합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/04-06-composition-declare-props-interface-above-the-component.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/05-06-composition-declare-props-interface-above-the-component.md)을 읽습니다.

@@ -15,4 +15,4 @@
 - 비밀값은 클라이언트 번들에 들어가는 이름으로 읽지 않습니다.
   번들러가 노출하는 접두사가 붙은 값은 브라우저에서 그대로 보입니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/01-07-naming-read-environment-values-through-shared-config.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/02-07-naming-read-environment-values-through-shared-config.md)을 읽습니다.

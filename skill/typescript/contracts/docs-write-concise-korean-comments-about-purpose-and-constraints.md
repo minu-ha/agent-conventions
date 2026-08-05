@@ -31,4 +31,4 @@
 새로 넣거나 고친 문서 주석에는 그 선언의 목적이나 제약을 설명하는 한국어 구절이 있어야 합니다.
 필드 주석이 한국어여도 헤더 주석이 영어뿐이면 통과하지 못합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/05-03-docs-write-concise-korean-comments-about-purpose-and-constraints.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/06-03-docs-write-concise-korean-comments-about-purpose-and-constraints.md)을 읽습니다.

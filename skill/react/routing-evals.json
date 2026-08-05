@@ -21,11 +21,11 @@
 					"events-curry-extra-handler-arguments"
 				],
 				"typescript": [
-					"naming-use-consistent-file-and-symbol-naming",
-					"naming-use-direct-imports-and-public-entry-points",
 					"types-reuse-existing-contracts-before-new-types",
 					"types-prefer-function-variable-types-over-parameter-annotations",
 					"types-document-custom-types-and-shapes",
+					"naming-use-consistent-file-and-symbol-naming",
+					"naming-use-direct-imports-and-public-entry-points",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks"
@@ -52,9 +52,9 @@
 					"composition-declare-props-interface-above-the-component"
 				],
 				"typescript": [
+					"types-document-custom-types-and-shapes",
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
-					"types-document-custom-types-and-shapes",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks"
@@ -81,9 +81,9 @@
 						"composition-declare-props-interface-above-the-component"
 					],
 					"typescript": [
+						"types-document-custom-types-and-shapes",
 						"naming-use-consistent-file-and-symbol-naming",
 						"naming-use-direct-imports-and-public-entry-points",
-						"types-document-custom-types-and-shapes",
 						"docs-require-header-jsdoc-on-key-declarations",
 						"docs-write-concise-korean-comments-about-purpose-and-constraints",
 						"docs-write-doc-comments-as-multiline-blocks"
@@ -98,7 +98,7 @@
 						"ownership-use-foreign-classes-only-under-your-own-root",
 						"composition-compose-classes-with-clsx",
 						"composition-do-not-build-structural-variants-with-modifiers",
-						"values-separate-domain-state-modifiers-from-dom-interaction-states"
+						"selector-separate-domain-state-modifiers-from-dom-interaction-states"
 					]
 				}
 			}
@@ -122,9 +122,9 @@
 					"docs-require-jsdoc-on-key-declarations"
 				],
 				"typescript": [
+					"types-document-custom-types-and-shapes",
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
-					"types-document-custom-types-and-shapes",
 					"functions-declare-functions-as-arrow-consts",
 					"functions-use-named-object-params-for-complex-signatures",
 					"functions-extract-helpers-only-when-the-boundary-is-real",
@@ -149,12 +149,12 @@
 			"expectedSelected": {
 				"react": [],
 				"typescript": [
+					"types-document-custom-types-and-shapes",
+					"types-replace-enum-with-as-const-objects",
 					"naming-centralize-shared-config-namespaces",
 					"naming-preserve-config-origin-with-chained-access",
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
-					"types-document-custom-types-and-shapes",
-					"functions-replace-enum-with-as-const-objects",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks"
 				]
@@ -178,13 +178,13 @@
 					"strategy-prefer-children-over-render-props",
 					"composition-read-props-without-destructuring",
 					"composition-declare-props-interface-above-the-component",
-					"composition-give-interactive-elements-an-accessible-name",
+					"a11y-give-interactive-elements-an-accessible-name",
 					"docs-require-jsdoc-on-key-declarations"
 				],
 				"typescript": [
+					"types-document-custom-types-and-shapes",
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
-					"types-document-custom-types-and-shapes",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks"
@@ -211,9 +211,9 @@
 					"docs-require-jsdoc-on-key-declarations"
 				],
 				"typescript": [
+					"types-document-custom-types-and-shapes",
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
-					"types-document-custom-types-and-shapes",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks"
@@ -232,20 +232,20 @@
 			],
 			"expectedSelected": {
 				"react": [
+					"data-handle-mutation-failure-where-it-is-called",
+					"data-invalidate-queries-the-mutation-changed",
 					"typing-take-handler-types-from-existing-contracts",
 					"composition-named-handlers-over-inline",
 					"events-name-handlers-predictably",
 					"events-curry-extra-handler-arguments",
 					"events-run-user-actions-in-handlers-not-effects",
-					"data-handle-mutation-failure-where-it-is-called",
-					"data-invalidate-queries-the-mutation-changed",
 					"docs-require-jsdoc-on-key-declarations"
 				],
 				"typescript": [
-					"naming-use-consistent-file-and-symbol-naming",
-					"naming-use-direct-imports-and-public-entry-points",
 					"types-prefer-function-variable-types-over-parameter-annotations",
 					"types-mark-unused-parameters-with-underscore",
+					"naming-use-consistent-file-and-symbol-naming",
+					"naming-use-direct-imports-and-public-entry-points",
 					"functions-extract-helpers-only-when-the-boundary-is-real",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
@@ -274,18 +274,18 @@
 					"screen-keep-route-flow-visible",
 					"screen-avoid-premature-abstraction",
 					"screen-extract-local-section-components-for-runtime-boundaries",
-					"screen-place-suspense-boundaries-at-the-section-owner",
-					"screen-avoid-ad-hoc-loading-branches",
+					"runtime-place-suspense-boundaries-at-the-section-owner",
+					"runtime-avoid-ad-hoc-loading-branches",
 					"events-name-handlers-predictably",
 					"events-curry-extra-handler-arguments",
 					"docs-require-jsdoc-on-key-declarations"
 				],
 				"typescript": [
-					"naming-use-consistent-file-and-symbol-naming",
-					"naming-use-direct-imports-and-public-entry-points",
 					"types-reuse-existing-contracts-before-new-types",
 					"types-prefer-function-variable-types-over-parameter-annotations",
 					"types-document-custom-types-and-shapes",
+					"naming-use-consistent-file-and-symbol-naming",
+					"naming-use-direct-imports-and-public-entry-points",
 					"absence-expose-optional-values-instead-of-silent-fallbacks",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
@@ -308,17 +308,17 @@
 					"typing-take-handler-types-from-existing-contracts",
 					"composition-named-handlers-over-inline",
 					"screen-keep-derived-values-close",
-					"events-name-handlers-predictably",
-					"events-curry-extra-handler-arguments",
 					"state-calculate-derived-values-during-render",
 					"state-use-functional-setstate-updates",
+					"events-name-handlers-predictably",
+					"events-curry-extra-handler-arguments",
 					"docs-require-jsdoc-on-key-declarations"
 				],
 				"typescript": [
-					"naming-use-consistent-file-and-symbol-naming",
-					"naming-use-direct-imports-and-public-entry-points",
 					"types-prefer-function-variable-types-over-parameter-annotations",
 					"types-mark-unused-parameters-with-underscore",
+					"naming-use-consistent-file-and-symbol-naming",
+					"naming-use-direct-imports-and-public-entry-points",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks"
@@ -344,9 +344,9 @@
 					"docs-require-jsdoc-on-key-declarations"
 				],
 				"typescript": [
+					"types-document-custom-types-and-shapes",
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
-					"types-document-custom-types-and-shapes",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks"
@@ -365,11 +365,11 @@
 			],
 			"expectedSelected": {
 				"react": [
-					"screen-keep-derived-values-close",
 					"data-name-query-and-mutation-bindings-consistently",
 					"data-shape-query-data-with-select",
 					"data-combine-multiple-queries-with-combine",
 					"data-preserve-origin-chaining",
+					"screen-keep-derived-values-close",
 					"docs-require-jsdoc-on-key-declarations"
 				],
 				"typescript": [
@@ -420,14 +420,14 @@
 			],
 			"expectedSelected": {
 				"react": [
-					"events-name-handlers-predictably",
 					"state-use-effectevent-for-non-reactive-effect-callbacks",
+					"events-name-handlers-predictably",
 					"docs-require-jsdoc-on-key-declarations"
 				],
 				"typescript": [
+					"types-prefer-function-variable-types-over-parameter-annotations",
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
-					"types-prefer-function-variable-types-over-parameter-annotations",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks"
@@ -446,13 +446,13 @@
 			],
 			"expectedSelected": {
 				"react": [
+					"data-preserve-origin-chaining",
 					"composition-name-fragments-explicitly",
 					"composition-render-one-branch-with-and",
 					"screen-keep-derived-values-close",
-					"screen-place-suspense-boundaries-at-the-section-owner",
-					"screen-avoid-ad-hoc-loading-branches",
-					"screen-place-error-boundaries-by-blast-radius",
-					"data-preserve-origin-chaining"
+					"runtime-place-suspense-boundaries-at-the-section-owner",
+					"runtime-avoid-ad-hoc-loading-branches",
+					"runtime-place-error-boundaries-by-blast-radius"
 				],
 				"typescript": [
 					"absence-expose-optional-values-instead-of-silent-fallbacks",

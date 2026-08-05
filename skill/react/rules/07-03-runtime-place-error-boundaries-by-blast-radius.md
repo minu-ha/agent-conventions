@@ -6,7 +6,7 @@ impactDescription: 쿼리가 실패해도 받을 곳이 있고 화면 본문이 
 appliesWhen:
   - 오류 경계를 추가하거나 옮길 때
   - 화면 본문에 `isError` 분기나 실패 대체 화면 반환을 넣을 때
-requiresSelected: screen-place-suspense-boundaries-at-the-section-owner
+requiresSelected: runtime-place-suspense-boundaries-at-the-section-owner
 tags: screen, errors
 ---
 
@@ -30,9 +30,9 @@ tags: screen, errors
 
 경계 하나가 로딩과 실패를 함께 맡습니다.
 `Suspense`와 오류 경계를 같은 소유자에 두면 대체 화면 두 개가 한 자리에 모입니다.
-로딩 경계 자리는 `screen-place-suspense-boundaries-at-the-section-owner`가 정합니다.
+로딩 경계 자리는 `runtime-place-suspense-boundaries-at-the-section-owner`가 정합니다.
 
-화면 본문에 실패 분기를 남기지 않는 판정은 `screen-avoid-ad-hoc-loading-branches`가 로딩과 함께 봅니다.
+화면 본문에 실패 분기를 남기지 않는 판정은 `runtime-avoid-ad-hoc-loading-branches`가 로딩과 함께 봅니다.
 
 **경계가 못 잡는 것이 있습니다.**
 이벤트 핸들러와 비동기 콜백에서 난 오류는 렌더 중이 아니라 경계를 지나칩니다.

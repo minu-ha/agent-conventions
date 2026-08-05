@@ -6,7 +6,7 @@
 `prefers-color-scheme`과 `[data-theme]`는 토큰 파일 안에만 둡니다.
 컴포넌트 CSS 파일에서 이 둘이 보이면 위반입니다.
 
-`selector-group-breakpoints-at-the-file-bottom` 규칙이 정하는 것은 폭 조건입니다.
+`layout-group-breakpoints-at-the-file-bottom` 규칙이 정하는 것은 폭 조건입니다.
 여기서 바꾸는 것은 클래스가 아니라 `:root`의 변수 값입니다.
 두 블록을 섞지 않습니다.
 
@@ -33,4 +33,4 @@
 **다크 모드를 지원하지 않기로 했으면 `prefers-color-scheme`을 아예 쓰지 않습니다.**
 일부 화면만 대응하면 같은 앱 안에서 화면마다 배경이 달라져 지원하지 않는 것보다 나쁩니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/05-09-values-switch-themes-by-changing-token-values.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/05-04-values-switch-themes-by-changing-token-values.md)을 읽습니다.

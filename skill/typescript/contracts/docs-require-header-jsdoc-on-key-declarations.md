@@ -20,4 +20,4 @@
 
 **Requires selected:** `docs-write-concise-korean-comments-about-purpose-and-constraints`, `docs-write-doc-comments-as-multiline-blocks` · 함께 적용
 
-> 예시·예외가 필요하면 [full rule](../rules/05-02-docs-require-header-jsdoc-on-key-declarations.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/06-02-docs-require-header-jsdoc-on-key-declarations.md)을 읽습니다.

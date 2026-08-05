@@ -12,4 +12,4 @@
 - 어느 선언에 붙일지는 `docs-require-header-jsdoc-on-key-declarations`가 정합니다.
 - 어떤 태그를 붙일지는 `docs-write-concise-korean-comments-about-purpose-and-constraints`가 정합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/05-04-docs-write-doc-comments-as-multiline-blocks.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/06-04-docs-write-doc-comments-as-multiline-blocks.md)을 읽습니다.

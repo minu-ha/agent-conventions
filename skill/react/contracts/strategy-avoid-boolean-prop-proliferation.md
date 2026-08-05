@@ -17,4 +17,4 @@
 - `.Root` 같은 네임스페이스 부품 문법은 권장 예시일 뿐입니다.
   본질은 불리언을 없애고 구조를 명시적으로 드러내는 데 있습니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/03-03-strategy-avoid-boolean-prop-proliferation.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/04-03-strategy-avoid-boolean-prop-proliferation.md)을 읽습니다.

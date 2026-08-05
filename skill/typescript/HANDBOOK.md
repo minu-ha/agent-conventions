@@ -18,20 +18,21 @@
 
 ## 목차
 
-1. [Naming and Module Boundaries](#1-naming-and-module-boundaries) — **HIGH**
-    - 1.1 [Centralize Shared Config Under `shared/config.ts`](#11-centralize-shared-config-under-shared-config-ts)
-    - 1.2 [Place Owner-only Config in the Owner Config Folder](#12-place-owner-only-config-in-the-owner-config-folder)
-    - 1.3 [Preserve Shared Namespace Origin With Chained Access](#13-preserve-shared-namespace-origin-with-chained-access)
-    - 1.4 [Use Consistent File, Symbol, and Field Naming](#14-use-consistent-file-symbol-and-field-naming)
-    - 1.5 [Use Direct Imports and Dedicated Public Entry Points](#15-use-direct-imports-and-dedicated-public-entry-points)
-    - 1.6 [Restrict Absolute Aliases to Layer Roots](#16-restrict-absolute-aliases-to-layer-roots)
-    - 1.7 [Read Environment Values Through Shared Config](#17-read-environment-values-through-shared-config)
-2. [Types and Contracts](#2-types-and-contracts) — **CRITICAL**
-    - 2.1 [Reuse Existing Contracts Before Declaring New Types](#21-reuse-existing-contracts-before-declaring-new-types)
-    - 2.2 [Prefer Function Variable Types Over Parameter Annotations](#22-prefer-function-variable-types-over-parameter-annotations)
-    - 2.3 [Document Custom Types and Declarative Shapes](#23-document-custom-types-and-declarative-shapes)
-    - 2.4 [Mark Unused Parameters With an Underscore Prefix](#24-mark-unused-parameters-with-an-underscore-prefix)
-    - 2.5 [Narrow `unknown` Instead of Asserting](#25-narrow-unknown-instead-of-asserting)
+1. [Types and Contracts](#1-types-and-contracts) — **CRITICAL**
+    - 1.1 [Reuse Existing Contracts Before Declaring New Types](#11-reuse-existing-contracts-before-declaring-new-types)
+    - 1.2 [Prefer Function Variable Types Over Parameter Annotations](#12-prefer-function-variable-types-over-parameter-annotations)
+    - 1.3 [Document Custom Types and Declarative Shapes](#13-document-custom-types-and-declarative-shapes)
+    - 1.4 [Mark Unused Parameters With an Underscore Prefix](#14-mark-unused-parameters-with-an-underscore-prefix)
+    - 1.5 [Narrow `unknown` Instead of Asserting](#15-narrow-unknown-instead-of-asserting)
+    - 1.6 [Replace `enum` With `as const` Objects](#16-replace-enum-with-as-const-objects)
+2. [Naming and Module Boundaries](#2-naming-and-module-boundaries) — **HIGH**
+    - 2.1 [Centralize Shared Config Under `shared/config.ts`](#21-centralize-shared-config-under-shared-config-ts)
+    - 2.2 [Place Owner-only Config in the Owner Config Folder](#22-place-owner-only-config-in-the-owner-config-folder)
+    - 2.3 [Preserve Shared Namespace Origin With Chained Access](#23-preserve-shared-namespace-origin-with-chained-access)
+    - 2.4 [Use Consistent File, Symbol, and Field Naming](#24-use-consistent-file-symbol-and-field-naming)
+    - 2.5 [Use Direct Imports and Dedicated Public Entry Points](#25-use-direct-imports-and-dedicated-public-entry-points)
+    - 2.6 [Restrict Absolute Aliases to Layer Roots](#26-restrict-absolute-aliases-to-layer-roots)
+    - 2.7 [Read Environment Values Through Shared Config](#27-read-environment-values-through-shared-config)
 3. [Functions and Helper Boundaries](#3-functions-and-helper-boundaries) — **HIGH**
     - 3.1 [Declare Functions as Arrow Consts](#31-declare-functions-as-arrow-consts)
     - 3.2 [Use Named Object Params for Complex Signatures](#32-use-named-object-params-for-complex-signatures)
@@ -39,395 +40,32 @@
     - 3.4 [Place and Promote Support Functions Deliberately](#34-place-and-promote-support-functions-deliberately)
     - 3.5 [Avoid Imperative Assembly in Wide Scopes](#35-avoid-imperative-assembly-in-wide-scopes)
     - 3.6 [Name a Value Only When It Is Reused](#36-name-a-value-only-when-it-is-reused)
-    - 3.7 [Prefer Immutable Array Sorting](#37-prefer-immutable-array-sorting)
-    - 3.8 [Replace `enum` With `as const` Objects](#38-replace-enum-with-as-const-objects)
-    - 3.9 [Use Set and Map for Repeated Lookups](#39-use-set-and-map-for-repeated-lookups)
-    - 3.10 [Name Functions by What Comes Out](#310-name-functions-by-what-comes-out)
-4. [Absence and Fallback Handling](#4-absence-and-fallback-handling) — **HIGH**
-    - 4.1 [Expose Optional Values Instead of Silent Fallbacks](#41-expose-optional-values-instead-of-silent-fallbacks)
-5. [JSDoc and Comment Conventions](#5-jsdoc-and-comment-conventions) — **MEDIUM-HIGH**
-    - 5.1 [Keep Body Comments for Intent and Steps](#51-keep-body-comments-for-intent-and-steps)
-    - 5.2 [Require Header Doc Comments on Key Declarations](#52-require-header-doc-comments-on-key-declarations)
-    - 5.3 [Write Concise Korean Comments About Purpose and Constraints](#53-write-concise-korean-comments-about-purpose-and-constraints)
-    - 5.4 [Write Doc Comments as Multiline Blocks](#54-write-doc-comments-as-multiline-blocks)
-    - 5.5 [Justify Convention Exceptions With a Checkable Reason Comment](#55-justify-convention-exceptions-with-a-checkable-reason-comment)
-6. [Tooling](#6-tooling) — **MEDIUM**
-    - 6.1 [Configure Biome to Enforce the Mechanical Rules](#61-configure-biome-to-enforce-the-mechanical-rules)
+    - 3.7 [Name Functions by What Comes Out](#37-name-functions-by-what-comes-out)
+4. [Values and Data Structures](#4-values-and-data-structures) — **HIGH**
+    - 4.1 [Prefer Immutable Array Sorting](#41-prefer-immutable-array-sorting)
+    - 4.2 [Use Set and Map for Repeated Lookups](#42-use-set-and-map-for-repeated-lookups)
+5. [Absence and Fallback Handling](#5-absence-and-fallback-handling) — **HIGH**
+    - 5.1 [Expose Optional Values Instead of Silent Fallbacks](#51-expose-optional-values-instead-of-silent-fallbacks)
+6. [JSDoc and Comment Conventions](#6-jsdoc-and-comment-conventions) — **MEDIUM-HIGH**
+    - 6.1 [Keep Body Comments for Intent and Steps](#61-keep-body-comments-for-intent-and-steps)
+    - 6.2 [Require Header Doc Comments on Key Declarations](#62-require-header-doc-comments-on-key-declarations)
+    - 6.3 [Write Concise Korean Comments About Purpose and Constraints](#63-write-concise-korean-comments-about-purpose-and-constraints)
+    - 6.4 [Write Doc Comments as Multiline Blocks](#64-write-doc-comments-as-multiline-blocks)
+    - 6.5 [Justify Convention Exceptions With a Checkable Reason Comment](#65-justify-convention-exceptions-with-a-checkable-reason-comment)
+7. [Tooling](#7-tooling) — **MEDIUM**
+    - 7.1 [Configure Biome to Enforce the Mechanical Rules](#71-configure-biome-to-enforce-the-mechanical-rules)
 
 ---
 
-## 1. Naming and Module Boundaries
-
-**Impact: HIGH**
-
-식별자, 가져오기, 공개 진입점, 절대경로 별칭 범위, 설정 위치가 소유자와 출처를 바로 드러내야 합니다. 여기서 **소유자**는 자기 폴더를 가진 모듈 하나입니다. 그 폴더 안 파일들은 그 소유자만 씁니다.
-
-### 1.1 Centralize Shared Config Under `shared/config.ts`
-
-**Rule:** `T01` · `naming-centralize-shared-config-namespaces`
-
-**Applies when:** 여러 모듈이 함께 쓰는 URL, 기능 플래그, 페이지 크기나 상수를 추가·이동·중복 정의할 때. 공용 설정 경계를 바꿀 때.
-
-**Review with:** `naming-preserve-config-origin-with-chained-access`, `naming-use-direct-imports-and-public-entry-points`
-
-**Impact: HIGH (공용 설정 값이 쓰는 파일마다 흩어져 공개 출처를 잃는 것을 막습니다)**
-
-설정을 어디 두는지는 그 값을 쓰는 소유자가 몇인지로 갈립니다.
-
-| 쓰는 소유자 | 자리 | 이름 |
-| --- | --- | --- |
-| 둘 이상 | `shared/config.ts` | `config.*` |
-| 하나 | `<owner>/config/<owner>-config.ts` | `<owner>Config` |
-
-**두 소유자 이상이 같은 값을 쓰면** `shared/config.ts` 한 파일을 공개 진입점으로 삼습니다.
-`config` 네임스페이스 아래에 모아 `config.*` 체인으로 읽히게 하고,
-쓰는 파일마다 공용 URL, 기능 플래그, 페이지 크기, 상수 문자열을 흩뿌리지 않습니다.
-소유자 하나만 쓰는 값은 아직 여기 올리지 않습니다.
-
-최상위 네임스페이스가 다섯을 넘고 서로 참조하지 않을 때만 `config.ts` 하나를 폴더로 나눌지 검토합니다.
-그 선에 닿기 전에는 미리 쪼개지 않습니다.
-
-소유자 하나만 쓰는 설정의 폴더 위치와 파일명은
-`naming-place-owner-config-in-the-owner-config-folder` 규칙이 정합니다.
-
-**Incorrect (같은 값을 두 소유자가 각자 선언):**
-
-```ts
-// page/products/pg-products.tsx
-const defaultPageSize = 20;
-const billingFeatureKeys = ["invoices", "refunds"];
-```
-
-```ts
-// page/billing/pg-billing.tsx
-const defaultPageSize = 20;
-```
-
-**Correct (공용 설정 네임스페이스에서 읽어 쓰는 자리에 넘김):**
-
-```ts
-// page/products/pg-products.tsx
-import {config} from "@/shared/config";
-
-const productClient = createClient({baseUrl: config.api.public_base_url});
-const productQuery = useProductQuery({
-	client: productClient,
-	pageSize: config.pagination.default_page_size,
-});
-```
-
-```ts
-// page/billing/pg-billing.tsx
-import {config} from "@/shared/config";
-
-const billingClient = createClient({baseUrl: config.api.billing_base_url});
-const billingQuery = useBillingQuery({
-	client: billingClient,
-	pageSize: config.pagination.default_page_size,
-	featureKeys: config.features.billing_feature_keys,
-});
-```
-
-### 1.2 Place Owner-only Config in the Owner Config Folder
-
-**Rule:** `T02` · `naming-place-owner-config-in-the-owner-config-folder`
-
-**Applies when:** 소유자 하나만 쓰는 선언형 설정을 추가하거나 옮길 때. 전역 설정과 소유자 전용 설정 사이에서 위치를 바꿀 때.
-
-**Requires selected:** `naming-use-consistent-file-and-symbol-naming` · 함께 적용
-
-**Review with:** `naming-centralize-shared-config-namespaces`
-
-**Impact: MEDIUM-HIGH (한 소유자만 쓰는 설정이 전역 진입점을 넓히지 않습니다)**
-
-소유자 하나만 쓰는 선언형 설정은 전역으로 올리지 않습니다.
-그 소유자 아래 `config` 폴더에 둡니다.
-전역과 소유자 중 어디에 두는지 가르는 표는 `naming-centralize-shared-config-namespaces` 규칙에 있습니다.
-
-- 파일은 소유자 폴더 바로 아래 `config/<owner>-config.ts`, 내보내는 상수는 `<owner>Config`입니다.
-- `constants` 폴더는 만들지 않습니다.
-- 두 번째 소유자가 같은 값을 쓰게 되면 `naming-centralize-shared-config-namespaces` 규칙을 따라 올립니다.
-
-**Incorrect (소유자 하나만 쓰는 설정을 전역으로 올림):**
-
-```ts
-// shared/config.ts
-export const config = {
-	product_detail: {
-		chart_axis_tick_count: 6,
-	},
-} as const;
-```
-
-**Correct (소유자 아래 `config` 폴더에 둠):**
-
-```ts
-// page/product-detail/config/product-detail-config.ts
-/**
- * product 상세 화면 전용 표시 설정
- */
-export const productDetailConfig = {
-	chart_axis_tick_count: 6,
-} as const;
-```
-
-### 1.3 Preserve Shared Namespace Origin With Chained Access
-
-**Rule:** `T03` · `naming-preserve-config-origin-with-chained-access`
-
-**Applies when:** `config`나 `util` 값을 쓰면서 넓은 스코프 구조분해, 별칭, 기능별 네임스페이스를 추가·변경할 때.
-
-**Review with:** `functions-place-and-promote-support-functions`
-
-**Impact: HIGH (넓은 스코프 별칭으로 출처를 숨기지 않아 값이 어디서 오는지 읽힙니다)**
-
-공용 설정과 공용 순수 함수는 쓰는 파일에서 직접 가져온 뒤 `config.*`, `util.*` 체인으로 씁니다.
-넓은 스코프에서 구조분해하거나 별칭 상수로 끊어 출처를 흐리지 않습니다.
-구조분해가 필요하면 함수 안 좁은 스코프에서만 씁니다.
-
-`shared/config.ts`와 `shared/util.ts`는 찾기 쉬우라고 네임스페이스를 유지합니다.
-`config`와 `util` 이름은 공용 경계에서만 씁니다.
-기능별로 같은 이름을 다시 쓰지 않습니다.
-보조 함수 파일을 어디 둘지는 `functions-place-and-promote-support-functions` 규칙이 정합니다.
-
-**Incorrect (넓은 스코프에서 원본 출처를 감춤):**
-
-```ts
-const {api, features} = config;
-const {date} = util;
-const billingBaseUrl = api.billing_base_url;
-const enableRefunds = features.enable_refunds;
-const isoDate = date.toIsoString(createdAt);
-```
-
-**Correct (쓰는 자리에서 체인 그대로 읽어 출처를 남김):**
-
-```ts
-const billingClient = createClient({baseUrl: config.api.billing_base_url});
-const createdAtLabel = util.date.toIsoString(createdAt);
-
-if (config.features.enable_refunds) {
-	openRefundDialog({client: billingClient, createdAtLabel});
-}
-```
-
-### 1.4 Use Consistent File, Symbol, and Field Naming
-
-**Rule:** `T04` · `naming-use-consistent-file-and-symbol-naming`
-
-**Applies when:** TypeScript 파일, 지역 변수, 함수, 타입, 객체·스키마 필드, enum 성격 상수의 이름을 새로 만들거나 바꿀 때. 제외: 별칭 없이 외부 패키지에서 그대로 가져오는 경우.
-
-**Impact: HIGH (모듈과 실행 구조를 넘나들며 파일명, 심볼, 형태 필드가 예측대로 유지됩니다)**
-
-| 대상 | 표기 |
-| --- | --- |
-| 파일명 | `kebab-case` |
-| 폴더명 | `kebab-case` 단수 |
-| 변수, 함수 | `camelCase` |
-| 타입, 인터페이스, 컴포넌트 | `PascalCase` |
-| 선언형 설정 객체의 키 | `snake_case` |
-| `enum` 성격 상수 객체의 이름과 키 | `snake_case` |
-| 일반 객체 키, 스키마 키, 타입 필드 | `camelCase` |
-
-`const`인지에 따라 표기를 달리하지 않습니다.
-설정과 `enum` 성격 객체를 뺀 나머지 모듈 값은 `camelCase`입니다.
-설정 키는 공용이든 소유자 전용이든 `snake_case`라, 소유자 설정을 공용으로 올릴 때 키를 고치지 않습니다.
-폴더명은 프레임워크가 강제하는 이름만 예외로 둡니다.
-
-**`snake_case`를 쓰는 자리는 선언형 설정 객체와 `enum` 성격 상수 객체뿐입니다.**
-라이브러리 인자, API 요청 본문, DOM 속성으로 그대로 넘어가는 키는 받는 쪽 표기를 그대로 씁니다.
-그 둘이 아니면 `camelCase`입니다.
-
-외부 패키지가 내보낸 이름을 별칭 없이 그대로 가져오는 것은 지역 심볼을 새로 짓는 일이 아닙니다.
-지역 별칭을 추가하거나 가져오기 이름을 바꿀 때만 다시 봅니다.
-
-**Incorrect (파일명, 심볼명, 필드명이 제각각임):**
-
-```ts
-// userSettings.ts
-// 우리 코드만 읽는 스키마다. 설정 객체도 enum 성격 상수도 아니라 키는 camelCase여야 한다
-const User_ProfileSchema = z.object({
-	repo_path: z.string(),
-});
-```
-
-**Correct (파일명은 `kebab-case`, 스키마 키는 `camelCase`):**
-
-```ts
-// user-settings.ts
-/**
- * 사용자 프로필 스키마
- */
-const userProfileSchema = z.object({
-	/**
-	 * 저장소 경로
-	 */
-	repoPath: z.string(),
-});
-```
-
-**Correct (선언형 설정 객체와 `enum` 성격 상수 객체만 `snake_case`):**
-
-```ts
-// shared/config.ts
-/**
- * 환경마다 달라지는 공용 설정
- */
-export const config = {
-	pagination: {
-		default_page_size: 20,
-	},
-} as const;
-
-/**
- * product 게시 상태 값 집합
- */
-const product_status = {
-	draft: "draft",
-	published: "published",
-} as const;
-```
-
-### 1.5 Use Direct Imports and Dedicated Public Entry Points
-
-**Rule:** `T05` · `naming-use-direct-imports-and-public-entry-points`
-
-**Applies when:** 가져오기, 내보내기, 배럴, 공용 진입점, 소유자 보조 모듈의 경계를 추가·변경할 때. 같은 경로에서 값과 타입 중 무엇을 가져올지 추가·삭제·전환할 때.
-
-**Review with:** `naming-restrict-absolute-aliases-to-layer-roots`
-
-**Impact: HIGH (배럴이나 모호한 재노출 계층에 기대지 않고 가져오기 소유를 드러냅니다)**
-
-`index.ts`로 묶어 다시 내보내는 배럴을 만들지 않습니다.
-필요한 파일에서 바로 가져옵니다.
-역할 폴더를 `index.ts`로 묶는 것도 배럴이라 만들지 않습니다.
-같은 파일이 소유한 `export const Dialog = { Root, Header } as const` 같은 조립 객체는
-다시 내보내는 계층이 아니므로 배럴이 아닙니다.
-타입만 가져올 때는 `import type`을 써서 계약과 실행 의존을 나눕니다.
-
-절대경로 별칭으로 어디까지 열지는 `naming-restrict-absolute-aliases-to-layer-roots` 규칙이 정합니다.
-
-경로가 같아도 값과 타입 중 무엇을 가져오는지가 바뀌면
-가져오기 계약이 바뀐 것이라 이 규칙을 적용합니다.
-
-**Incorrect (배럴과 섞인 가져오기로 경계를 흐림):**
-
-```ts
-import {config, util, UserProfile} from "./index";
-```
-
-**Correct (직접 가져오기와 공개 진입점을 구분):**
-
-```ts
-import type {UserProfile} from "@/shared/contracts";
-import {config} from "@/shared/config";
-import {util} from "@/shared/util";
-import {WgChartCard} from "@/widget/chart-card/wg-chart-card";
-import {toUserSaveRequest} from "./function/to-user-save-request";
-```
-
-### 1.6 Restrict Absolute Aliases to Layer Roots
-
-**Rule:** `T06` · `naming-restrict-absolute-aliases-to-layer-roots`
-
-**Applies when:** 절대경로 별칭으로 다른 모듈을 가져올 때. 별칭이 가리키는 경로 깊이를 바꿀 때.
-
-**Review with:** `naming-use-direct-imports-and-public-entry-points`
-
-**Impact: HIGH (소유자 내부 모듈이 밖에서 직접 열리지 않아 경계가 남습니다)**
-
-절대경로 별칭의 첫 마디는 전역 레이어 루트여야 합니다.
-
-| 경로 | 판정 |
-| --- | --- |
-| `@/ui`, `@/widget`, `@/shared`, `@/service`, `@/store`, `@/asset` | 허용 |
-| `@/page/...` 등 화면 내부 | 금지 |
-
-- 첫 마디가 레이어 루트면 그 아래 깊이는 제한하지 않습니다.
-  `@/widget/chart-card/wg-chart-card`는 허용입니다.
-- 화면이나 소유자 내부 모듈은 절대경로로 열지 않고 `./`로만 접근합니다.
-- 소유자 밖에서 필요해지면 경로를 뚫는 대신 전역 레이어로 올립니다.
-
-**Incorrect (화면 내부 모듈을 절대경로로 가져옴):**
-
-```ts
-import {SalesChartCard} from "@/page/detail/component/sales-trend-panel/component/sales-chart-card";
-```
-
-**Correct (레이어 루트로 시작하는 별칭과 소유자 안 상대경로):**
-
-```ts
-import {WgChartCard} from "@/widget/chart-card/wg-chart-card";
-import {SalesChartCard} from "./component/sales-chart-card";
-```
-
-### 1.7 Read Environment Values Through Shared Config
-
-**Rule:** `T07` · `naming-read-environment-values-through-shared-config`
-
-**Applies when:** `import.meta.env`나 `process.env`를 읽는 코드를 추가·이동할 때. 환경마다 달라지는 값을 새로 들여올 때.
-
-**Review with:** `absence-expose-optional-values-instead-of-silent-fallbacks`, `naming-centralize-shared-config-namespaces`
-
-**Impact: MEDIUM-HIGH (환경마다 달라지는 값이 쓰는 파일로 흩어지지 않고 한 곳에서 읽힙니다)**
-
-환경마다 값이 달라지는 것은 쓰는 파일에서 직접 읽지 않습니다.
-`shared/config.ts`가 한 번 읽어 `config.*`로 내보내고, 나머지는 그 이름을 씁니다.
-읽는 자리를 하나로 모으는 이유는 `naming-preserve-config-origin-with-chained-access` 규칙과 같습니다.
-
-환경 값이라 여기서 더 요구하는 것은 셋입니다.
-
-- 키가 없을 때 리터럴로 덮지 않습니다.
-  `absence-expose-optional-values-instead-of-silent-fallbacks` 규칙을 따라 그 자리에서 드러냅니다.
-- 값을 읽는 즉시 우리 이름으로 바꿔 담습니다.
-  `VITE_` 같은 번들러 접두사가 앱 안으로 새지 않게 합니다.
-- 비밀값은 클라이언트 번들에 들어가는 이름으로 읽지 않습니다.
-  번들러가 노출하는 접두사가 붙은 값은 브라우저에서 그대로 보입니다.
-
-**Incorrect (쓰는 파일마다 직접 읽고 없을 때 리터럴로 덮음):**
-
-```ts
-// service/product-client.ts
-const baseUrl = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3000";
-
-// service/report-client.ts
-const reportBaseUrl = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3000";
-```
-
-**Correct (공용 설정이 한 번 읽고 없으면 드러냄):**
-
-```ts
-// shared/config.ts
-if (!import.meta.env.VITE_API_BASE_URL) {
-	throw new MissingEnvironmentValueError("VITE_API_BASE_URL");
-}
-
-/**
- * 환경마다 달라지는 공용 설정
- */
-export const config = {
-	api: {
-		base_url: import.meta.env.VITE_API_BASE_URL,
-	},
-} as const;
-```
-
-```ts
-// service/product-client.ts
-import {config} from "@/shared/config";
-
-const productClient = createClient({baseUrl: config.api.base_url});
-```
-
-## 2. Types and Contracts
+## 1. Types and Contracts
 
 **Impact: CRITICAL**
 
-함수 시그니처, 콜백 재사용, 타입 중복 제거, 커스텀 형태 문서화가 계약을 드러내고 다시 쓸 수 있게 유지해야 합니다.
+함수 시그니처, 콜백 재사용, 타입 중복 제거, 커스텀 형태 문서화가 계약을 드러내고 다시 쓸 수 있게 유지해야 합니다. 실행 값과 타입을 한 선언에서 잡는 `as const` 객체도 여기서 정합니다.
 
-### 2.1 Reuse Existing Contracts Before Declaring New Types
+### 1.1 Reuse Existing Contracts Before Declaring New Types
 
-**Rule:** `T08` · `types-reuse-existing-contracts-before-new-types`
+**Rule:** `T01` · `types-reuse-existing-contracts-before-new-types`
 
 **Applies when:** 뜻이 같은 기존 타입, 인터페이스, 스키마가 있는데 형태를 새로 선언·변경·복제·파생할 때. 같은 형태를 두 번 선언했다가 넣거나 뺄 때. 제외: 맞는 후보가 없거나 소유자만 옮긴 경우, 그대로인 계약을 새 자리에서 쓰는 경우. 제외: 고칠 수 없는 형태를 그대로 쓰는 경우.
 
@@ -557,9 +195,9 @@ interface ProductListRow {
 }
 ```
 
-### 2.2 Prefer Function Variable Types Over Parameter Annotations
+### 1.2 Prefer Function Variable Types Over Parameter Annotations
 
-**Rule:** `T09` · `types-prefer-function-variable-types-over-parameter-annotations`
+**Rule:** `T02` · `types-prefer-function-variable-types-over-parameter-annotations`
 
 **Applies when:** 기존 호출 계약을 이름 붙인 함수나 공용 함수 구현에 다시 쓸 때. 같은 시그니처를 여러 구현이 함께 쓰도록 바꿀 때. 제외: 타입 표기 없이 문맥으로 추론되는 일회성 인라인 콜백인 경우.
 
@@ -648,9 +286,9 @@ const toSearchRequest: ToRequest = (request) => {
 };
 ```
 
-### 2.3 Document Custom Types and Declarative Shapes
+### 1.3 Document Custom Types and Declarative Shapes
 
-**Rule:** `T10` · `types-document-custom-types-and-shapes`
+**Rule:** `T03` · `types-document-custom-types-and-shapes`
 
 **Applies when:** 타입, 인터페이스, 스키마 최상단, 객체 상수, 계약 필드, 파생 별칭을 추가·변경할 때. 이름 붙인 형태에 호출 계약 역할을 새로 얹을 때. 제외: 외부·생성된·읽기 전용·공용 형태를 그대로 쓰거나 반환 타입이 익명으로 추론되는 경우.
 
@@ -729,9 +367,9 @@ const publishResultSchema = z.object({
 });
 ```
 
-### 2.4 Mark Unused Parameters With an Underscore Prefix
+### 1.4 Mark Unused Parameters With an Underscore Prefix
 
-**Rule:** `T11` · `types-mark-unused-parameters-with-underscore`
+**Rule:** `T04` · `types-mark-unused-parameters-with-underscore`
 
 **Applies when:** 기존 콜백이나 프레임워크 계약을 구현하면서 매개변수를 빼거나 쓰지 않을 때. 커링한 핸들러가 마지막에 돌려주는 콜백에서 매개변수를 뺄 때.
 
@@ -771,9 +409,9 @@ type LogSink = (message: string, level: "info" | "error") => void;
 const noopLog: LogSink = (_message, _level) => {};
 ```
 
-### 2.5 Narrow `unknown` Instead of Asserting
+### 1.5 Narrow `unknown` Instead of Asserting
 
-**Rule:** `T12` · `types-narrow-unknown-instead-of-asserting`
+**Rule:** `T05` · `types-narrow-unknown-instead-of-asserting`
 
 **Applies when:** `as` 단언, `!` 비-널 단언, `any`, `@ts-expect-error`를 추가할 때. 앱 밖에서 들어온 값을 타입 붙여 쓰기 시작할 때.
 
@@ -843,15 +481,426 @@ if (!firstProduct) {
 chart.setOption(option as EChartsOption);
 ```
 
+### 1.6 Replace `enum` With `as const` Objects
+
+**Rule:** `T06` · `types-replace-enum-with-as-const-objects`
+
+**Applies when:** `enum`이나 타입과 실행 양쪽에서 함께 쓰는 값 묶음을 추가·변경할 때. 제외: 외부 패키지가 내보낸 `enum` 값을 그대로 읽어 쓰는 경우.
+
+**Requires selected:** `naming-use-consistent-file-and-symbol-naming`, `types-document-custom-types-and-shapes` · 함께 적용
+
+**Impact: MEDIUM-HIGH (enum 특유의 동작을 들이지 않고 실행 값을 드러내며 타입 추출도 가볍게 둡니다)**
+
+`enum` 대신 객체와 `as const`를 씁니다.
+그러면 실행 값과 타입 추론을 함께 두면서 `enum` 고유 문법을 피합니다.
+
+`enum`은 타입 표기를 지우는 것만으로 실행 코드가 되지 않습니다.
+그래서 TypeScript 5.8의 `--erasableSyntaxOnly`나 타입만 지우는 번들러와 함께 쓸 수 없습니다.
+이 컨벤션의 `biome` 설정도 `style/noEnum`으로 `enum` 선언을 막습니다.
+
+외부 패키지가 `enum`을 내보내고 그 값을 그대로 넘겨야 하면 그 `enum`을 씁니다.
+우리가 새로 선언하는 값 묶음만 이 규칙 대상입니다.
+
+**Incorrect (`enum`을 직접 사용):**
+
+```ts
+enum ProductStatus {
+	pending = "pending",
+	passed = "passed",
+	failed = "failed",
+}
+```
+
+**Correct (객체 리터럴과 타입 추출을 조합):**
+
+```ts
+/**
+ * product 심사 상태 값 집합
+ */
+const product_status = {
+	pending: "pending",
+	passed: "passed",
+	failed: "failed",
+} as const;
+
+/**
+ * product 심사 상태 타입. product_status 에 값을 더하면 따라 넓어진다
+ */
+type ProductStatus = (typeof product_status)[keyof typeof product_status];
+```
+
+## 2. Naming and Module Boundaries
+
+**Impact: HIGH**
+
+식별자, 가져오기, 공개 진입점, 절대경로 별칭 범위, 설정 위치가 소유자와 출처를 바로 드러내야 합니다. 여기서 **소유자**는 자기 폴더를 가진 모듈 하나입니다. 그 폴더 안 파일들은 그 소유자만 씁니다.
+
+### 2.1 Centralize Shared Config Under `shared/config.ts`
+
+**Rule:** `T07` · `naming-centralize-shared-config-namespaces`
+
+**Applies when:** 여러 모듈이 함께 쓰는 URL, 기능 플래그, 페이지 크기나 상수를 추가·이동·중복 정의할 때. 공용 설정 경계를 바꿀 때.
+
+**Review with:** `naming-preserve-config-origin-with-chained-access`, `naming-use-direct-imports-and-public-entry-points`
+
+**Impact: HIGH (공용 설정 값이 쓰는 파일마다 흩어져 공개 출처를 잃는 것을 막습니다)**
+
+설정을 어디 두는지는 그 값을 쓰는 소유자가 몇인지로 갈립니다.
+
+| 쓰는 소유자 | 자리 | 이름 |
+| --- | --- | --- |
+| 둘 이상 | `shared/config.ts` | `config.*` |
+| 하나 | `<owner>/config/<owner>-config.ts` | `<owner>Config` |
+
+**두 소유자 이상이 같은 값을 쓰면** `shared/config.ts` 한 파일을 공개 진입점으로 삼습니다.
+`config` 네임스페이스 아래에 모아 `config.*` 체인으로 읽히게 하고,
+쓰는 파일마다 공용 URL, 기능 플래그, 페이지 크기, 상수 문자열을 흩뿌리지 않습니다.
+소유자 하나만 쓰는 값은 아직 여기 올리지 않습니다.
+
+최상위 네임스페이스가 다섯을 넘고 서로 참조하지 않을 때만 `config.ts` 하나를 폴더로 나눌지 검토합니다.
+그 선에 닿기 전에는 미리 쪼개지 않습니다.
+
+소유자 하나만 쓰는 설정의 폴더 위치와 파일명은
+`naming-place-owner-config-in-the-owner-config-folder` 규칙이 정합니다.
+
+**Incorrect (같은 값을 두 소유자가 각자 선언):**
+
+```ts
+// page/products/pg-products.tsx
+const defaultPageSize = 20;
+const billingFeatureKeys = ["invoices", "refunds"];
+```
+
+```ts
+// page/billing/pg-billing.tsx
+const defaultPageSize = 20;
+```
+
+**Correct (공용 설정 네임스페이스에서 읽어 쓰는 자리에 넘김):**
+
+```ts
+// page/products/pg-products.tsx
+import {config} from "@/shared/config";
+
+const productClient = createClient({baseUrl: config.api.public_base_url});
+const productQuery = useProductQuery({
+	client: productClient,
+	pageSize: config.pagination.default_page_size,
+});
+```
+
+```ts
+// page/billing/pg-billing.tsx
+import {config} from "@/shared/config";
+
+const billingClient = createClient({baseUrl: config.api.billing_base_url});
+const billingQuery = useBillingQuery({
+	client: billingClient,
+	pageSize: config.pagination.default_page_size,
+	featureKeys: config.features.billing_feature_keys,
+});
+```
+
+### 2.2 Place Owner-only Config in the Owner Config Folder
+
+**Rule:** `T08` · `naming-place-owner-config-in-the-owner-config-folder`
+
+**Applies when:** 소유자 하나만 쓰는 선언형 설정을 추가하거나 옮길 때. 전역 설정과 소유자 전용 설정 사이에서 위치를 바꿀 때.
+
+**Requires selected:** `naming-use-consistent-file-and-symbol-naming` · 함께 적용
+
+**Review with:** `naming-centralize-shared-config-namespaces`
+
+**Impact: MEDIUM-HIGH (한 소유자만 쓰는 설정이 전역 진입점을 넓히지 않습니다)**
+
+소유자 하나만 쓰는 선언형 설정은 전역으로 올리지 않습니다.
+그 소유자 아래 `config` 폴더에 둡니다.
+전역과 소유자 중 어디에 두는지 가르는 표는 `naming-centralize-shared-config-namespaces` 규칙에 있습니다.
+
+- 파일은 소유자 폴더 바로 아래 `config/<owner>-config.ts`, 내보내는 상수는 `<owner>Config`입니다.
+- `constants` 폴더는 만들지 않습니다.
+- 두 번째 소유자가 같은 값을 쓰게 되면 `naming-centralize-shared-config-namespaces` 규칙을 따라 올립니다.
+
+**Incorrect (소유자 하나만 쓰는 설정을 전역으로 올림):**
+
+```ts
+// shared/config.ts
+export const config = {
+	product_detail: {
+		chart_axis_tick_count: 6,
+	},
+} as const;
+```
+
+**Correct (소유자 아래 `config` 폴더에 둠):**
+
+```ts
+// page/product-detail/config/product-detail-config.ts
+/**
+ * product 상세 화면 전용 표시 설정
+ */
+export const productDetailConfig = {
+	chart_axis_tick_count: 6,
+} as const;
+```
+
+### 2.3 Preserve Shared Namespace Origin With Chained Access
+
+**Rule:** `T09` · `naming-preserve-config-origin-with-chained-access`
+
+**Applies when:** `config`나 `util` 값을 쓰면서 넓은 스코프 구조분해, 별칭, 기능별 네임스페이스를 추가·변경할 때.
+
+**Review with:** `functions-place-and-promote-support-functions`
+
+**Impact: HIGH (넓은 스코프 별칭으로 출처를 숨기지 않아 값이 어디서 오는지 읽힙니다)**
+
+공용 설정과 공용 순수 함수는 쓰는 파일에서 직접 가져온 뒤 `config.*`, `util.*` 체인으로 씁니다.
+넓은 스코프에서 구조분해하거나 별칭 상수로 끊어 출처를 흐리지 않습니다.
+구조분해가 필요하면 함수 안 좁은 스코프에서만 씁니다.
+
+`shared/config.ts`와 `shared/util.ts`는 찾기 쉬우라고 네임스페이스를 유지합니다.
+`config`와 `util` 이름은 공용 경계에서만 씁니다.
+기능별로 같은 이름을 다시 쓰지 않습니다.
+보조 함수 파일을 어디 둘지는 `functions-place-and-promote-support-functions` 규칙이 정합니다.
+
+**Incorrect (넓은 스코프에서 원본 출처를 감춤):**
+
+```ts
+const {api, features} = config;
+const {date} = util;
+const billingBaseUrl = api.billing_base_url;
+const enableRefunds = features.enable_refunds;
+const isoDate = date.toIsoString(createdAt);
+```
+
+**Correct (쓰는 자리에서 체인 그대로 읽어 출처를 남김):**
+
+```ts
+const billingClient = createClient({baseUrl: config.api.billing_base_url});
+const createdAtLabel = util.date.toIsoString(createdAt);
+
+if (config.features.enable_refunds) {
+	openRefundDialog({client: billingClient, createdAtLabel});
+}
+```
+
+### 2.4 Use Consistent File, Symbol, and Field Naming
+
+**Rule:** `T10` · `naming-use-consistent-file-and-symbol-naming`
+
+**Applies when:** TypeScript 파일, 지역 변수, 함수, 타입, 객체·스키마 필드, enum 성격 상수의 이름을 새로 만들거나 바꿀 때. 제외: 별칭 없이 외부 패키지에서 그대로 가져오는 경우.
+
+**Impact: HIGH (모듈과 실행 구조를 넘나들며 파일명, 심볼, 형태 필드가 예측대로 유지됩니다)**
+
+| 대상 | 표기 |
+| --- | --- |
+| 파일명 | `kebab-case` |
+| 폴더명 | `kebab-case` 단수 |
+| 변수, 함수 | `camelCase` |
+| 타입, 인터페이스, 컴포넌트 | `PascalCase` |
+| 선언형 설정 객체의 키 | `snake_case` |
+| `enum` 성격 상수 객체의 이름과 키 | `snake_case` |
+| 일반 객체 키, 스키마 키, 타입 필드 | `camelCase` |
+
+`const`인지에 따라 표기를 달리하지 않습니다.
+설정과 `enum` 성격 객체를 뺀 나머지 모듈 값은 `camelCase`입니다.
+설정 키는 공용이든 소유자 전용이든 `snake_case`라, 소유자 설정을 공용으로 올릴 때 키를 고치지 않습니다.
+폴더명은 프레임워크가 강제하는 이름만 예외로 둡니다.
+
+**`snake_case`를 쓰는 자리는 선언형 설정 객체와 `enum` 성격 상수 객체뿐입니다.**
+라이브러리 인자, API 요청 본문, DOM 속성으로 그대로 넘어가는 키는 받는 쪽 표기를 그대로 씁니다.
+그 둘이 아니면 `camelCase`입니다.
+
+외부 패키지가 내보낸 이름을 별칭 없이 그대로 가져오는 것은 지역 심볼을 새로 짓는 일이 아닙니다.
+지역 별칭을 추가하거나 가져오기 이름을 바꿀 때만 다시 봅니다.
+
+**Incorrect (파일명, 심볼명, 필드명이 제각각임):**
+
+```ts
+// userSettings.ts
+// 우리 코드만 읽는 스키마다. 설정 객체도 enum 성격 상수도 아니라 키는 camelCase여야 한다
+const User_ProfileSchema = z.object({
+	repo_path: z.string(),
+});
+```
+
+**Correct (파일명은 `kebab-case`, 스키마 키는 `camelCase`):**
+
+```ts
+// user-settings.ts
+/**
+ * 사용자 프로필 스키마
+ */
+const userProfileSchema = z.object({
+	/**
+	 * 저장소 경로
+	 */
+	repoPath: z.string(),
+});
+```
+
+**Correct (선언형 설정 객체와 `enum` 성격 상수 객체만 `snake_case`):**
+
+```ts
+// shared/config.ts
+/**
+ * 환경마다 달라지는 공용 설정
+ */
+export const config = {
+	pagination: {
+		default_page_size: 20,
+	},
+} as const;
+
+/**
+ * product 게시 상태 값 집합
+ */
+const product_status = {
+	draft: "draft",
+	published: "published",
+} as const;
+```
+
+### 2.5 Use Direct Imports and Dedicated Public Entry Points
+
+**Rule:** `T11` · `naming-use-direct-imports-and-public-entry-points`
+
+**Applies when:** 가져오기, 내보내기, 배럴, 공용 진입점, 소유자 보조 모듈의 경계를 추가·변경할 때. 같은 경로에서 값과 타입 중 무엇을 가져올지 추가·삭제·전환할 때.
+
+**Review with:** `naming-restrict-absolute-aliases-to-layer-roots`
+
+**Impact: HIGH (배럴이나 모호한 재노출 계층에 기대지 않고 가져오기 소유를 드러냅니다)**
+
+`index.ts`로 묶어 다시 내보내는 배럴을 만들지 않습니다.
+필요한 파일에서 바로 가져옵니다.
+역할 폴더를 `index.ts`로 묶는 것도 배럴이라 만들지 않습니다.
+같은 파일이 소유한 `export const Dialog = { Root, Header } as const` 같은 조립 객체는
+다시 내보내는 계층이 아니므로 배럴이 아닙니다.
+타입만 가져올 때는 `import type`을 써서 계약과 실행 의존을 나눕니다.
+
+절대경로 별칭으로 어디까지 열지는 `naming-restrict-absolute-aliases-to-layer-roots` 규칙이 정합니다.
+
+경로가 같아도 값과 타입 중 무엇을 가져오는지가 바뀌면
+가져오기 계약이 바뀐 것이라 이 규칙을 적용합니다.
+
+**Incorrect (배럴과 섞인 가져오기로 경계를 흐림):**
+
+```ts
+import {config, util, UserProfile} from "./index";
+```
+
+**Correct (직접 가져오기와 공개 진입점을 구분):**
+
+```ts
+import type {UserProfile} from "@/shared/contracts";
+import {config} from "@/shared/config";
+import {util} from "@/shared/util";
+import {WgChartCard} from "@/widget/chart-card/wg-chart-card";
+import {toUserSaveRequest} from "./function/to-user-save-request";
+```
+
+### 2.6 Restrict Absolute Aliases to Layer Roots
+
+**Rule:** `T12` · `naming-restrict-absolute-aliases-to-layer-roots`
+
+**Applies when:** 절대경로 별칭으로 다른 모듈을 가져올 때. 별칭이 가리키는 경로 깊이를 바꿀 때.
+
+**Review with:** `naming-use-direct-imports-and-public-entry-points`
+
+**Impact: HIGH (소유자 내부 모듈이 밖에서 직접 열리지 않아 경계가 남습니다)**
+
+절대경로 별칭의 첫 마디는 전역 레이어 루트여야 합니다.
+
+| 경로 | 판정 |
+| --- | --- |
+| `@/ui`, `@/widget`, `@/shared`, `@/service`, `@/store`, `@/asset` | 허용 |
+| `@/page/...` 등 화면 내부 | 금지 |
+
+- 첫 마디가 레이어 루트면 그 아래 깊이는 제한하지 않습니다.
+  `@/widget/chart-card/wg-chart-card`는 허용입니다.
+- 화면이나 소유자 내부 모듈은 절대경로로 열지 않고 `./`로만 접근합니다.
+- 소유자 밖에서 필요해지면 경로를 뚫는 대신 전역 레이어로 올립니다.
+
+**Incorrect (화면 내부 모듈을 절대경로로 가져옴):**
+
+```ts
+import {SalesChartCard} from "@/page/detail/component/sales-trend-panel/component/sales-chart-card";
+```
+
+**Correct (레이어 루트로 시작하는 별칭과 소유자 안 상대경로):**
+
+```ts
+import {WgChartCard} from "@/widget/chart-card/wg-chart-card";
+import {SalesChartCard} from "./component/sales-chart-card";
+```
+
+### 2.7 Read Environment Values Through Shared Config
+
+**Rule:** `T13` · `naming-read-environment-values-through-shared-config`
+
+**Applies when:** `import.meta.env`나 `process.env`를 읽는 코드를 추가·이동할 때. 환경마다 달라지는 값을 새로 들여올 때.
+
+**Review with:** `absence-expose-optional-values-instead-of-silent-fallbacks`, `naming-centralize-shared-config-namespaces`
+
+**Impact: MEDIUM-HIGH (환경마다 달라지는 값이 쓰는 파일로 흩어지지 않고 한 곳에서 읽힙니다)**
+
+환경마다 값이 달라지는 것은 쓰는 파일에서 직접 읽지 않습니다.
+`shared/config.ts`가 한 번 읽어 `config.*`로 내보내고, 나머지는 그 이름을 씁니다.
+읽는 자리를 하나로 모으는 이유는 `naming-preserve-config-origin-with-chained-access` 규칙과 같습니다.
+
+환경 값이라 여기서 더 요구하는 것은 셋입니다.
+
+- 키가 없을 때 리터럴로 덮지 않습니다.
+  `absence-expose-optional-values-instead-of-silent-fallbacks` 규칙을 따라 그 자리에서 드러냅니다.
+- 값을 읽는 즉시 우리 이름으로 바꿔 담습니다.
+  `VITE_` 같은 번들러 접두사가 앱 안으로 새지 않게 합니다.
+- 비밀값은 클라이언트 번들에 들어가는 이름으로 읽지 않습니다.
+  번들러가 노출하는 접두사가 붙은 값은 브라우저에서 그대로 보입니다.
+
+**Incorrect (쓰는 파일마다 직접 읽고 없을 때 리터럴로 덮음):**
+
+```ts
+// service/product-client.ts
+const baseUrl = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3000";
+
+// service/report-client.ts
+const reportBaseUrl = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3000";
+```
+
+**Correct (공용 설정이 한 번 읽고 없으면 드러냄):**
+
+```ts
+// shared/config.ts
+if (!import.meta.env.VITE_API_BASE_URL) {
+	throw new MissingEnvironmentValueError("VITE_API_BASE_URL");
+}
+
+/**
+ * 환경마다 달라지는 공용 설정
+ */
+export const config = {
+	api: {
+		base_url: import.meta.env.VITE_API_BASE_URL,
+	},
+} as const;
+```
+
+```ts
+// service/product-client.ts
+import {config} from "@/shared/config";
+
+const productClient = createClient({baseUrl: config.api.base_url});
+```
+
 ## 3. Functions and Helper Boundaries
 
 **Impact: HIGH**
 
-함수 선언 형태와 시그니처는 한 가지로 고정하고, 보조 함수는 호출 경계가 있을 때만 떼어 내 정해진 자리에 둡니다. 이름은 무엇이 나오는지로 짓고, 값에 이름은 두 번 이상 쓸 때만 붙입니다. 함수 안에서 값을 만드는 방식도 여기서 정합니다. 배열은 원본을 바꾸지 않고 정렬하고, 고정된 값 묶음은 as const 객체로 두고, 같은 조회를 반복하면 Set이나 Map으로 정리합니다.
+함수 선언 형태와 시그니처는 한 가지로 고정하고, 보조 함수는 호출 경계가 있을 때만 떼어 내 정해진 자리에 둡니다. 이름은 무엇이 나오는지로 짓고, 값에 이름은 두 번 이상 쓸 때만 붙입니다.
 
 ### 3.1 Declare Functions as Arrow Consts
 
-**Rule:** `T13` · `functions-declare-functions-as-arrow-consts`
+**Rule:** `T14` · `functions-declare-functions-as-arrow-consts`
 
 **Applies when:** 이름 붙인 함수를 새로 만들거나 선언 형태를 바꿀 때. 제외: 클래스 메서드, 제너레이터, 오버로드 선언, 객체 리터럴 메서드인 경우.
 
@@ -928,7 +977,7 @@ export class ProductCursor {
 
 ### 3.2 Use Named Object Params for Complex Signatures
 
-**Rule:** `T14` · `functions-use-named-object-params-for-complex-signatures`
+**Rule:** `T15` · `functions-use-named-object-params-for-complex-signatures`
 
 **Applies when:** 매개변수가 3개를 넘거나 같은 계열 인자를 받는 함수를 추가·변경할 때. 객체 매개변수를 어디서 구조분해할지 바꿀 때. 제외: 리액트 함수 컴포넌트가 프롭스를 받고 구조분해하는 방식만 바꾸는 경우.
 
@@ -985,7 +1034,7 @@ const toRequestUrl = (target: ApiRequestTarget): URL => {
 
 ### 3.3 Extract Support Functions Only When the Boundary Is Real
 
-**Rule:** `T15` · `functions-extract-helpers-only-when-the-boundary-is-real`
+**Rule:** `T16` · `functions-extract-helpers-only-when-the-boundary-is-real`
 
 **Applies when:** 보조 함수를 빼내거나 옮기거나 내보내거나 공유할 때. 범용 보조 파일, 소유자 하나만 쓰는 변환 함수, 자잘한 정리 단계의 경계를 바꿀 때.
 
@@ -1125,7 +1174,7 @@ import { toProductSaveRequest } from "./function/to-product-save-request";
 
 ### 3.4 Place and Promote Support Functions Deliberately
 
-**Rule:** `T16` · `functions-place-and-promote-support-functions`
+**Rule:** `T17` · `functions-place-and-promote-support-functions`
 
 **Applies when:** 보조 함수를 둘 파일이나 폴더를 정할 때. `shared/` 아래로 파일을 옮기거나 `util.*`에 항목을 추가할 때.
 
@@ -1215,7 +1264,7 @@ export const util = {
 
 ### 3.5 Avoid Imperative Assembly in Wide Scopes
 
-**Rule:** `T17` · `functions-avoid-imperative-assembly-in-wide-scopes`
+**Rule:** `T18` · `functions-avoid-imperative-assembly-in-wide-scopes`
 
 **Applies when:** 모듈 최상위나 함수 본문 전체를 덮는 스코프에서 `let` 재대입, 배열 `push`, 조건부 누적으로 값을 만들 때.
 
@@ -1262,7 +1311,7 @@ const visibleTabs = [
 
 ### 3.6 Name a Value Only When It Is Reused
 
-**Rule:** `T18` · `functions-name-a-value-only-when-it-is-reused`
+**Rule:** `T19` · `functions-name-a-value-only-when-it-is-reused`
 
 **Applies when:** 순수 계산의 결과를 지역 `const`로 받는 줄을 추가·삭제할 때. 식을 그 자리에 적을지 이름을 붙일지 정할 때.
 
@@ -1290,7 +1339,7 @@ const visibleTabs = [
 **코드에 한 번 적힌 것과 실행에서 한 번인 것은 다릅니다.**
 `.map()`이나 `.filter()` 콜백 안, 반복문 안으로 옮기면 원소 수만큼 다시 계산합니다.
 그런 값은 콜백 밖에 이름을 붙여 둡니다.
-`functions-use-set-and-map-for-repeated-lookups`가 만드는 `Set`도 같은 이유로 밖에 둡니다.
+`values-use-set-and-map-for-repeated-lookups`가 만드는 `Set`도 같은 이유로 밖에 둡니다.
 
 `let` 재할당과 배열 `push` 누적은 `functions-avoid-imperative-assembly-in-wide-scopes`가 봅니다.
 
@@ -1361,139 +1410,9 @@ const submitDraft = async (draft: Draft) => {
 };
 ```
 
-### 3.7 Prefer Immutable Array Sorting
+### 3.7 Name Functions by What Comes Out
 
-**Rule:** `T19` · `functions-prefer-immutable-array-sorting`
-
-**Applies when:** 프롭스, 상태, 매개변수, 모듈 상수에서 온 배열을 정렬할 때. 기존 `.sort()` 호출을 추가·변경할 때.
-
-**Impact: MEDIUM (프롭스, 상태, 모듈 상수에서 온 배열을 정렬할 때 원본이 바뀌는 버그를 피합니다)**
-
-이 함수가 만들지 않은 배열은 `.sort()`로 제자리에서 바꾸지 않습니다.
-프롭스, 상태, 매개변수, 모듈 상수로 들어온 배열이 그 경우입니다.
-
-`.toSorted()`를 먼저 씁니다.
-쓰려면 `tsconfig`의 `lib`에 `ES2023` 이상이 있어야 하고, **실행 환경도 지원해야 합니다.**
-`lib`는 타입 검사만 열어 주고 폴리필하지 않습니다.
-둘 중 하나라도 안 되면 `[...list].sort()`로 복사한 뒤 정렬합니다.
-
-**Incorrect (매개변수로 받은 배열을 제자리에서 변경):**
-
-```ts
-const toSortedUsers = (users: User[]): User[] => {
-	return users.sort((left, right) => left.name.localeCompare(right.name));
-};
-```
-
-**Correct (`toSorted()`로 새 배열을 만듦):**
-
-```ts
-const toSortedUsers = (users: User[]): User[] => {
-	return users.toSorted((left, right) => left.name.localeCompare(right.name));
-};
-```
-
-**Correct (`lib`나 실행 환경이 안 되면 복사 후 정렬):**
-
-```ts
-const toSortedUsers = (users: User[]): User[] => {
-	return [...users].sort((left, right) => left.name.localeCompare(right.name));
-};
-```
-
-### 3.8 Replace `enum` With `as const` Objects
-
-**Rule:** `T20` · `functions-replace-enum-with-as-const-objects`
-
-**Applies when:** `enum`이나 타입과 실행 양쪽에서 함께 쓰는 값 묶음을 추가·변경할 때. 제외: 외부 패키지가 내보낸 `enum` 값을 그대로 읽어 쓰는 경우.
-
-**Requires selected:** `naming-use-consistent-file-and-symbol-naming`, `types-document-custom-types-and-shapes` · 함께 적용
-
-**Impact: MEDIUM-HIGH (enum 특유의 동작을 들이지 않고 실행 값을 드러내며 타입 추출도 가볍게 둡니다)**
-
-`enum` 대신 객체와 `as const`를 씁니다.
-그러면 실행 값과 타입 추론을 함께 두면서 `enum` 고유 문법을 피합니다.
-
-`enum`은 타입 표기를 지우는 것만으로 실행 코드가 되지 않습니다.
-그래서 TypeScript 5.8의 `--erasableSyntaxOnly`나 타입만 지우는 번들러와 함께 쓸 수 없습니다.
-이 컨벤션의 `biome` 설정도 `style/noEnum`으로 `enum` 선언을 막습니다.
-
-외부 패키지가 `enum`을 내보내고 그 값을 그대로 넘겨야 하면 그 `enum`을 씁니다.
-우리가 새로 선언하는 값 묶음만 이 규칙 대상입니다.
-
-**Incorrect (`enum`을 직접 사용):**
-
-```ts
-enum ProductStatus {
-	pending = "pending",
-	passed = "passed",
-	failed = "failed",
-}
-```
-
-**Correct (객체 리터럴과 타입 추출을 조합):**
-
-```ts
-/**
- * product 심사 상태 값 집합
- */
-const product_status = {
-	pending: "pending",
-	passed: "passed",
-	failed: "failed",
-} as const;
-
-/**
- * product 심사 상태 타입. product_status 에 값을 더하면 따라 넓어진다
- */
-type ProductStatus = (typeof product_status)[keyof typeof product_status];
-```
-
-### 3.9 Use Set and Map for Repeated Lookups
-
-**Rule:** `T21` · `functions-use-set-and-map-for-repeated-lookups`
-
-**Applies when:** 같은 목록에 `includes`, `find`, 키 조회를 여러 번 하는 코드를 추가·변경할 때.
-
-**Impact: MEDIUM (조회가 늘어나면 반복되는 포함 검사와 키 접근을 드러냅니다)**
-
-같은 목록에 포함 검사나 키 조회를 여러 번 한다면 `includes`와 `find`를 매번 돌리지 않습니다.
-`Set`이나 `Map`으로 한 번 정리합니다.
-다음 중 하나면 바꿉니다.
-그 밖에는 그대로 둡니다.
-
-- 같은 목록을 겨냥한 조회가 루프나 `map`·`filter`·`some` 콜백 안에 있습니다.
-- 같은 목록을 겨냥한 조회가 서로 다른 세 지점 이상에서 일어납니다.
-
-**Incorrect (같은 배열을 반복 순회하며 포함 여부를 확인):**
-
-```ts
-const visibleProducts = products.filter((product) => allowedProductIds.includes(product.id));
-const disabledProducts = archivedProducts.filter((product) => allowedProductIds.includes(product.id));
-```
-
-**Correct (반복 조회는 `Set`으로 승격):**
-
-```ts
-const allowedProductIdSet = new Set(allowedProductIds);
-
-const visibleProducts = products.filter((product) => allowedProductIdSet.has(product.id));
-const disabledProducts = archivedProducts.filter((product) => allowedProductIdSet.has(product.id));
-```
-
-**Correct (반복 키 조회는 `Map`으로 승격):**
-
-```ts
-const userById = new Map(users.map((user) => [user.id, user]));
-
-const owner = userById.get(ownerId);
-const reviewer = userById.get(reviewerId);
-const approver = userById.get(approverId);
-```
-
-### 3.10 Name Functions by What Comes Out
-
-**Rule:** `T22` · `functions-name-functions-by-what-comes-out`
+**Rule:** `T20` · `functions-name-functions-by-what-comes-out`
 
 **Applies when:** 이름 붙인 함수를 새로 만들거나 이름을 바꿀 때. 제외: 외부 패키지가 정한 이름을 별칭 없이 그대로 쓰는 경우.
 
@@ -1570,13 +1489,101 @@ export const filterActiveUsers = (rows: UserRow[]) => { /* … */ };
 export const isAdminUser = (user: User) => { /* … */ };
 ```
 
-## 4. Absence and Fallback Handling
+## 4. Values and Data Structures
 
 **Impact: HIGH**
 
-선택 값, 빈 값, 오지 않은 응답처럼 값이 없을 수 있는 자리를 다룹니다. 없는 상태를 임의의 값으로 덮지 않고 호출부가 볼 수 있게 드러내는 것이 기준입니다.
+값을 다루는 관용구를 한 가지로 고정합니다. 내가 만들지 않은 배열은 제자리에서 바꾸지 않고, 반복되는 조회는 `Set`과 `Map`으로 드러냅니다.
 
-### 4.1 Expose Optional Values Instead of Silent Fallbacks
+### 4.1 Prefer Immutable Array Sorting
+
+**Rule:** `T21` · `values-prefer-immutable-array-sorting`
+
+**Applies when:** 프롭스, 상태, 매개변수, 모듈 상수에서 온 배열을 정렬할 때. 기존 `.sort()` 호출을 추가·변경할 때.
+
+**Impact: MEDIUM (프롭스, 상태, 모듈 상수에서 온 배열을 정렬할 때 원본이 바뀌는 버그를 피합니다)**
+
+이 함수가 만들지 않은 배열은 `.sort()`로 제자리에서 바꾸지 않습니다.
+프롭스, 상태, 매개변수, 모듈 상수로 들어온 배열이 그 경우입니다.
+
+`.toSorted()`를 먼저 씁니다.
+쓰려면 `tsconfig`의 `lib`에 `ES2023` 이상이 있어야 하고, **실행 환경도 지원해야 합니다.**
+`lib`는 타입 검사만 열어 주고 폴리필하지 않습니다.
+둘 중 하나라도 안 되면 `[...list].sort()`로 복사한 뒤 정렬합니다.
+
+**Incorrect (매개변수로 받은 배열을 제자리에서 변경):**
+
+```ts
+const toSortedUsers = (users: User[]): User[] => {
+	return users.sort((left, right) => left.name.localeCompare(right.name));
+};
+```
+
+**Correct (`toSorted()`로 새 배열을 만듦):**
+
+```ts
+const toSortedUsers = (users: User[]): User[] => {
+	return users.toSorted((left, right) => left.name.localeCompare(right.name));
+};
+```
+
+**Correct (`lib`나 실행 환경이 안 되면 복사 후 정렬):**
+
+```ts
+const toSortedUsers = (users: User[]): User[] => {
+	return [...users].sort((left, right) => left.name.localeCompare(right.name));
+};
+```
+
+### 4.2 Use Set and Map for Repeated Lookups
+
+**Rule:** `T22` · `values-use-set-and-map-for-repeated-lookups`
+
+**Applies when:** 같은 목록에 `includes`, `find`, 키 조회를 여러 번 하는 코드를 추가·변경할 때.
+
+**Impact: MEDIUM (조회가 늘어나면 반복되는 포함 검사와 키 접근을 드러냅니다)**
+
+같은 목록에 포함 검사나 키 조회를 여러 번 한다면 `includes`와 `find`를 매번 돌리지 않습니다.
+`Set`이나 `Map`으로 한 번 정리합니다.
+다음 중 하나면 바꿉니다.
+그 밖에는 그대로 둡니다.
+
+- 같은 목록을 겨냥한 조회가 루프나 `map`·`filter`·`some` 콜백 안에 있습니다.
+- 같은 목록을 겨냥한 조회가 서로 다른 세 지점 이상에서 일어납니다.
+
+**Incorrect (같은 배열을 반복 순회하며 포함 여부를 확인):**
+
+```ts
+const visibleProducts = products.filter((product) => allowedProductIds.includes(product.id));
+const disabledProducts = archivedProducts.filter((product) => allowedProductIds.includes(product.id));
+```
+
+**Correct (반복 조회는 `Set`으로 승격):**
+
+```ts
+const allowedProductIdSet = new Set(allowedProductIds);
+
+const visibleProducts = products.filter((product) => allowedProductIdSet.has(product.id));
+const disabledProducts = archivedProducts.filter((product) => allowedProductIdSet.has(product.id));
+```
+
+**Correct (반복 키 조회는 `Map`으로 승격):**
+
+```ts
+const userById = new Map(users.map((user) => [user.id, user]));
+
+const owner = userById.get(ownerId);
+const reviewer = userById.get(reviewerId);
+const approver = userById.get(approverId);
+```
+
+## 5. Absence and Fallback Handling
+
+**Impact: HIGH**
+
+값이 없을 수 있는 상태를 다루는 규칙을 모읍니다. 기본값으로 덮어 감추지 않고 없다는 사실을 호출부까지 남깁니다.
+
+### 5.1 Expose Optional Values Instead of Silent Fallbacks
 
 **Rule:** `T23` · `absence-expose-optional-values-instead-of-silent-fallbacks`
 
@@ -1641,13 +1648,13 @@ const isCompact = variant === "compact";
 const productIds = response.data.rows?.map((row) => row.id);
 ```
 
-## 5. JSDoc and Comment Conventions
+## 6. JSDoc and Comment Conventions
 
 **Impact: MEDIUM-HIGH**
 
-함수 본문 안 주석은 의도와 긴 절차의 단계를 적고 코드를 옮겨 적지 않습니다. 선언 위 문서 주석은 어디에 붙일지, 어떤 형식으로 쓸지, 태그를 붙일지가 규칙 셋으로 나뉘어 있습니다. 주석 본문은 한국어로 목적과 제약을 적고, 규칙이 허용한 예외에는 확인할 수 있는 이유를 남깁니다.
+함수 본문 안 주석은 의도와 긴 절차의 단계를 적고 코드를 옮겨 적지 않습니다. 선언 위 문서 주석은 어디에 붙일지, 어떤 형식으로 쓸지, 태그를 붙일지가 따로 정해져 있습니다. 본문은 한국어로 목적과 제약을 적고, 규칙이 허용한 예외에는 확인할 수 있는 이유를 남깁니다.
 
-### 5.1 Keep Body Comments for Intent and Steps
+### 6.1 Keep Body Comments for Intent and Steps
 
 **Rule:** `T24` · `docs-keep-body-comments-for-intent-and-steps`
 
@@ -1712,7 +1719,7 @@ const submitProductDraft = async (draft: ProductDraft) => {
 };
 ```
 
-### 5.2 Require Header Doc Comments on Key Declarations
+### 6.2 Require Header Doc Comments on Key Declarations
 
 **Rule:** `T25` · `docs-require-header-jsdoc-on-key-declarations`
 
@@ -1762,7 +1769,7 @@ export const toSortedUserIds = (userIds: string[]): string[] => {
 const responseProductList = useProductList();
 ```
 
-### 5.3 Write Concise Korean Comments About Purpose and Constraints
+### 6.3 Write Concise Korean Comments About Purpose and Constraints
 
 **Rule:** `T26` · `docs-write-concise-korean-comments-about-purpose-and-constraints`
 
@@ -1866,7 +1873,7 @@ export interface PgProductTreeProps {
 }
 ```
 
-### 5.4 Write Doc Comments as Multiline Blocks
+### 6.4 Write Doc Comments as Multiline Blocks
 
 **Rule:** `T27` · `docs-write-doc-comments-as-multiline-blocks`
 
@@ -1918,7 +1925,7 @@ export const saveProduct = async (product: Product): Promise<void> => {
 };
 ```
 
-### 5.5 Justify Convention Exceptions With a Checkable Reason Comment
+### 6.5 Justify Convention Exceptions With a Checkable Reason Comment
 
 **Rule:** `T28` · `docs-justify-convention-exceptions-with-a-reason-comment`
 
@@ -1967,13 +1974,13 @@ const columns = useMemo(() => toTableColumns(response.data.columns), [response.d
 const filteredRows = useMemo(() => rows.filter((row) => matchRow(row, deferredKeyword)), [deferredKeyword, rows]);
 ```
 
-## 6. Tooling
+## 7. Tooling
 
 **Impact: MEDIUM**
 
 이 컨벤션 중 기계가 잡을 수 있는 항목은 biome 설정으로 고정하고, 잡을 수 없는 항목은 리뷰가 담당한다는 것을 명시해야 사람이 검사할 목록이 좁아집니다.
 
-### 6.1 Configure Biome to Enforce the Mechanical Rules
+### 7.1 Configure Biome to Enforce the Mechanical Rules
 
 **Rule:** `T29` · `tooling-configure-biome-to-enforce-these-rules`
 
@@ -1987,7 +1994,7 @@ const filteredRows = useMemo(() => rows.filter((row) => matchRow(row, deferredKe
 
 | `biome` 규칙 | 담당 컨벤션 |
 | --- | --- |
-| `style/noEnum` | `typescript/functions-replace-enum-with-as-const-objects` |
+| `style/noEnum` | `typescript/types-replace-enum-with-as-const-objects` |
 | `style/useImportType` | `typescript/naming-use-direct-imports-and-public-entry-points` |
 | `style/noRestrictedImports` | `typescript/naming-restrict-absolute-aliases-to-layer-roots`의 경로 표 |
 | `style/useNamingConvention` | `typescript/naming-use-consistent-file-and-symbol-naming`의 심볼 표기 |

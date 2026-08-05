@@ -20,4 +20,4 @@
 "컴파일러가 없으니 다 감싼다"는 이유는 이 셋에 없습니다.
 자리마다 위 셋 중 하나가 있어야 합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/09-01-perf-avoid-defensive-memoization.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/10-01-perf-avoid-defensive-memoization.md)을 읽습니다.

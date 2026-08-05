@@ -12,4 +12,4 @@
 
 **Requires selected:** `naming-use-consistent-file-and-symbol-naming` · 함께 적용
 
-> 예시·예외가 필요하면 [full rule](../rules/01-02-naming-place-owner-config-in-the-owner-config-folder.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/02-02-naming-place-owner-config-in-the-owner-config-folder.md)을 읽습니다.

@@ -21,4 +21,4 @@
 래퍼가 `HTMLAttributes`를 `extends`하면 `style`이 함께 열립니다.
 타입에서 막을 방법이 없으므로 이 규칙을 리뷰가 봅니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/05-06-values-do-not-style-through-the-style-attribute.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/03-06-composition-do-not-style-through-the-style-attribute.md)을 읽습니다.

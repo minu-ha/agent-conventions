@@ -88,7 +88,7 @@
 					"composition-do-not-build-structural-variants-with-modifiers",
 					"composition-keep-classes-single-purpose",
 					"selector-use-pseudo-classes-for-dom-owned-states",
-					"values-separate-domain-state-modifiers-from-dom-interaction-states"
+					"selector-separate-domain-state-modifiers-from-dom-interaction-states"
 				]
 			}
 		},
@@ -187,9 +187,9 @@
 					"docs-require-jsdoc-on-key-declarations"
 				],
 				"typescript": [
-					"naming-use-direct-imports-and-public-entry-points",
 					"types-reuse-existing-contracts-before-new-types",
 					"types-document-custom-types-and-shapes",
+					"naming-use-direct-imports-and-public-entry-points",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks"
@@ -215,7 +215,7 @@
 					"naming-name-elements-and-modifiers-by-role",
 					"composition-inject-classes-only-at-the-entry-point",
 					"composition-do-not-add-wrapper-elements-for-styling",
-					"values-do-not-style-through-the-style-attribute"
+					"composition-do-not-style-through-the-style-attribute"
 				]
 			}
 		},
@@ -248,8 +248,8 @@
 				"css": [
 					"selector-use-pseudo-classes-for-dom-owned-states",
 					"selector-nest-dom-state-in-the-owning-block",
-					"values-separate-domain-state-modifiers-from-dom-interaction-states",
-					"values-always-provide-a-visible-focus-indicator"
+					"selector-separate-domain-state-modifiers-from-dom-interaction-states",
+					"a11y-always-provide-a-visible-focus-indicator"
 				]
 			}
 		},
@@ -266,10 +266,10 @@
 				"css": [
 					"ownership-use-foreign-classes-only-under-your-own-root",
 					"selector-use-pseudo-classes-for-dom-owned-states",
+					"selector-separate-domain-state-modifiers-from-dom-interaction-states",
 					"values-always-provide-css-variable-fallbacks",
 					"values-tokenize-repeated-visual-values",
-					"values-separate-domain-state-modifiers-from-dom-interaction-states",
-					"values-namespace-keyframes-and-respect-reduced-motion"
+					"a11y-namespace-keyframes-and-respect-reduced-motion"
 				]
 			}
 		},
@@ -301,7 +301,7 @@
 			"expectedSelected": {
 				"css": [
 					"selector-declare-each-class-in-one-block",
-					"selector-group-breakpoints-at-the-file-bottom"
+					"layout-group-breakpoints-at-the-file-bottom"
 				]
 			}
 		},
@@ -317,8 +317,8 @@
 			],
 			"expectedSelected": {
 				"css": [
-					"values-keep-layout-intent-explicit",
-					"values-reach-for-intrinsic-sizing-before-breakpoints"
+					"layout-keep-layout-intent-explicit",
+					"layout-reach-for-intrinsic-sizing-before-breakpoints"
 				]
 			}
 		},
@@ -333,8 +333,8 @@
 			],
 			"expectedSelected": {
 				"css": [
-					"values-keep-layout-intent-explicit",
-					"values-declare-stacking-layers-as-tokens"
+					"values-declare-stacking-layers-as-tokens",
+					"layout-keep-layout-intent-explicit"
 				]
 			}
 		},

@@ -22,7 +22,7 @@ tags: state, focus, accessibility
 수정자 아래로 옮기면 그 상태가 아닐 때 `:hover`와 `:focus-visible`이 사라집니다.
 읽는 사람은 기본 블록만 보고 상호작용이 없다고 판단합니다.
 
-포커스 표시 자체는 `values-always-provide-a-visible-focus-indicator` 규칙이 담당합니다.
+포커스 표시 자체는 `a11y-always-provide-a-visible-focus-indicator` 규칙이 담당합니다.
 무엇을 수정자로 두고 무엇을 가상 클래스로 둘지는 `selector-use-pseudo-classes-for-dom-owned-states` 규칙이 정합니다.
 
 **Incorrect (포커스 스타일을 제거하거나 상태 경계를 섞음):**

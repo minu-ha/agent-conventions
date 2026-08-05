@@ -26,4 +26,4 @@
 `items ?? []` 대신 `items?.map(…)`으로 값이 없는 상태를 그대로 다룹니다.
 선택 값을 그대로 비교하면 기본값이 아예 필요 없는 경우가 많습니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/04-01-absence-expose-optional-values-instead-of-silent-fallbacks.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/05-01-absence-expose-optional-values-instead-of-silent-fallbacks.md)을 읽습니다.

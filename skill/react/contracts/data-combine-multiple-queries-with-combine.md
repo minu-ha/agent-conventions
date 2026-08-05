@@ -4,7 +4,7 @@
 
 쿼리 결과 둘 이상을 하나의 값으로 합쳐야 하면 `useSuspenseQueries`나 `useQueries`에 `combine`을 넘깁니다.
 `Suspense` 쿼리를 쓰는 화면은 `useSuspenseQueries`를 쓰고, 합친 값에 `isPending`을 만들어 내보내지 않습니다.
-그 분기는 `screen-avoid-ad-hoc-loading-branches`가 죽은 코드로 봅니다.
+그 분기는 `runtime-avoid-ad-hoc-loading-branches`가 죽은 코드로 봅니다.
 
 | 상황 | 쓰는 것 |
 | --- | --- |
@@ -28,4 +28,4 @@
 그래서 `useMemo`로 다시 감싸지 않습니다.
 `perf-avoid-defensive-memoization`이 그것을 막습니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/07-03-data-combine-multiple-queries-with-combine.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/02-03-data-combine-multiple-queries-with-combine.md)을 읽습니다.

@@ -3,7 +3,7 @@
 **Impact: MEDIUM-HIGH (무엇이 무엇 위에 오는지가 한 파일에서 읽히고 숫자 경쟁이 생기지 않습니다)**
 
 층은 전역 토큰 파일에 한 번 선언하고 `z-index`는 그 이름만 씁니다.
-`values-keep-layout-intent-explicit` 규칙이 숫자를 직접 쓰지 말라고 하고, 여기서는 그 목록을 정합니다.
+`layout-keep-layout-intent-explicit` 규칙이 숫자를 직접 쓰지 말라고 하고, 여기서는 그 목록을 정합니다.
 
 층은 넷입니다.
 쓰는 쪽에서 사이 값을 만들지 않습니다.
@@ -32,4 +32,4 @@
 - 화면 밖으로 나가야 하는 것은 층을 올리지 말고 포털로 옮깁니다.
   그러면 조상의 쌓임 맥락에서 벗어납니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/05-07-values-declare-stacking-layers-as-tokens.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/05-03-values-declare-stacking-layers-as-tokens.md)을 읽습니다.

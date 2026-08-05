@@ -34,7 +34,7 @@ tags: functions, origin
 **코드에 한 번 적힌 것과 실행에서 한 번인 것은 다릅니다.**
 `.map()`이나 `.filter()` 콜백 안, 반복문 안으로 옮기면 원소 수만큼 다시 계산합니다.
 그런 값은 콜백 밖에 이름을 붙여 둡니다.
-`functions-use-set-and-map-for-repeated-lookups`가 만드는 `Set`도 같은 이유로 밖에 둡니다.
+`values-use-set-and-map-for-repeated-lookups`가 만드는 `Set`도 같은 이유로 밖에 둡니다.
 
 `let` 재할당과 배열 `push` 누적은 `functions-avoid-imperative-assembly-in-wide-scopes`가 봅니다.
 

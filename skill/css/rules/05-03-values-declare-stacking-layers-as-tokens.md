@@ -6,7 +6,7 @@ impactDescription: 무엇이 무엇 위에 오는지가 한 파일에서 읽히�
 appliesWhen:
   - `z-index`를 새로 넣거나 값을 바꿀 때
   - 겹쳐 뜨는 요소를 추가할 때
-reviewWith: values-keep-layout-intent-explicit, values-tokenize-repeated-visual-values
+reviewWith: layout-keep-layout-intent-explicit, values-tokenize-repeated-visual-values
 tags: values, layering
 ---
 
@@ -15,7 +15,7 @@ tags: values, layering
 **Impact: MEDIUM-HIGH (무엇이 무엇 위에 오는지가 한 파일에서 읽히고 숫자 경쟁이 생기지 않습니다)**
 
 층은 전역 토큰 파일에 한 번 선언하고 `z-index`는 그 이름만 씁니다.
-`values-keep-layout-intent-explicit` 규칙이 숫자를 직접 쓰지 말라고 하고, 여기서는 그 목록을 정합니다.
+`layout-keep-layout-intent-explicit` 규칙이 숫자를 직접 쓰지 말라고 하고, 여기서는 그 목록을 정합니다.
 
 층은 넷입니다.
 쓰는 쪽에서 사이 값을 만들지 않습니다.

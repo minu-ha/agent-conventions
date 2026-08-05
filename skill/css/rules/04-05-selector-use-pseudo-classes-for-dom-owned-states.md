@@ -6,7 +6,7 @@ impactDescription: 브라우저가 주는 상호작용 상태와 앱이 정하�
 appliesWhen:
   - `:hover`, `:visited`, `:focus*`, `:disabled`, `:checked`를 추가·수정할 때
   - 조상의 DOM 상태가 자손 스타일에 영향을 줄 때
-requiresSelected: values-separate-domain-state-modifiers-from-dom-interaction-states
+requiresSelected: selector-separate-domain-state-modifiers-from-dom-interaction-states
 tags: pseudo-classes, state, interaction
 ---
 

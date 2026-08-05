@@ -10,4 +10,4 @@
 `lib`는 타입 검사만 열어 주고 폴리필하지 않습니다.
 둘 중 하나라도 안 되면 `[...list].sort()`로 복사한 뒤 정렬합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/03-07-functions-prefer-immutable-array-sorting.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/04-01-values-prefer-immutable-array-sorting.md)을 읽습니다.

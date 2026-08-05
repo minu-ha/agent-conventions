@@ -13,4 +13,4 @@
   주석의 위치와 근거 기준은
   `typescript/docs-justify-convention-exceptions-with-a-reason-comment`가 정합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/04-04-composition-open-ref-props-only-for-imperative-contracts.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/05-04-composition-open-ref-props-only-for-imperative-contracts.md)을 읽습니다.
