@@ -30,10 +30,9 @@ tags: data, query
 합친 값이 화면 위쪽 `const`로 남아 출처를 잃습니다.
 `screen-keep-derived-values-close`가 그것을 막습니다.
 
-**`combine` 함수는 모듈 최상위 상수로 둡니다.**
-라이브러리가 이전 `combine`과 같은 함수인지로 재실행을 가르는데,
-인라인 화살표는 렌더마다 새 함수라 그 비교가 늘 어긋나 매번 다시 돕니다.
-`select`도 같은 이유로 같은 처방을 씁니다.
+**`combine`도 인라인으로 적습니다.** `select`와 같은 자리이고 같은 기준을 씁니다.
+무거워서 렌더마다 도는 것이 문제가 되면 그때만 모듈 최상위 상수로 뺍니다.
+판정은 `data-shape-query-data-with-select`가 정한 것과 같습니다.
 
 합친 결과는 구조 공유되어 참조가 안정적입니다.
 그래서 `useMemo`로 다시 감싸지 않습니다.
@@ -53,36 +52,19 @@ const rows = responseProductListSuspense.data.products.map((product) => ({
 }));
 ```
 
-**Incorrect (`combine`을 인라인으로 적어 렌더마다 다시 돎):**
+**Correct (통신 경계에서 인라인 `combine`으로 합침):**
 
 ```tsx
-const rows = useQueries({
-	queries: [productListQueryOptions(), categoryListQueryOptions()],
-	combine: (results) => toProductRows(results),
-});
-```
-
-**Correct (모듈 최상위 `combine`으로 통신 경계에서 합침):**
-
-```tsx
-/**
- * product 응답과 category 응답을 목록 한 행씩으로 합친다
- */
-const combineProductRows = (
-	results: [UseQueryResult<ProductListResponse>, UseQueryResult<CategoryListResponse>],
-) => {
-	const [productResult, categoryResult] = results;
-
-	return {
-		isPending: productResult.isPending || categoryResult.isPending,
-		rows: toProductRows(productResult.data, categoryResult.data),
-	};
-};
-
 export const PgProducts = () => {
+	/**
+	 * product 목록과 분류 목록을 표 한 행씩으로 합친다
+	 */
 	const responseProductRows = useQueries({
 		queries: [productListQueryOptions(), categoryListQueryOptions()],
-		combine: combineProductRows,
+		combine: ([productResult, categoryResult]) => ({
+			isPending: productResult.isPending || categoryResult.isPending,
+			rows: toProductRows(productResult.data, categoryResult.data),
+		}),
 	});
 
 	return <UiTable dataSource={responseProductRows.rows} />;

@@ -23,9 +23,13 @@ tags: data, state, react-query
   `select`는 자기 쿼리 데이터만 받습니다.
   그 자리는 `data-combine-multiple-queries-with-combine`가 정합니다.
 
-**`select`를 인라인 화살표로 적으면 매 렌더 다시 돕니다.**
-라이브러리가 이전 `select`와 같은 함수인지로 재실행을 가르는데, 인라인은 매 렌더 새 함수라 그 비교가 늘 어긋납니다.
-변환이 무거우면 모듈 최상위 상수로 빼서 참조를 고정합니다.
+**`select`는 인라인으로 적습니다.**
+인라인이면 렌더마다 다시 도는데, 그 비용은 렌더 중에 값을 계산하는 것과 같습니다.
+`state-calculate-derived-values-during-render`가 이미 허용하는 자리입니다.
+
+변환이 무거워서 렌더마다 도는 것이 문제가 되면 모듈 최상위 상수로 빼서 참조를 고정합니다.
+같은 파일 위쪽에 두면 되고 새 파일을 만들지 않습니다.
+무겁다는 근거는 `perf-avoid-defensive-memoization`이 요구하는 만큼 있어야 합니다.
 결과는 구조 공유되어 참조가 안정적이므로 `useMemo`로 감싸지 않습니다.
 
 `select` 안 변환 함수는 이 규칙이 담당합니다.
