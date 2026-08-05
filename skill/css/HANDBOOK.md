@@ -50,7 +50,7 @@
     - 4.5 [Use Pseudo-classes for DOM-owned States](#45-use-pseudo-classes-for-dom-owned-states)
     - 4.6 [Nest DOM State Pseudo-classes in the Owning Block](#46-nest-dom-state-pseudo-classes-in-the-owning-block)
     - 4.7 [Do Not Invert Domain State With `:not()`](#47-do-not-invert-domain-state-with-not)
-    - 4.8 [Keep Breakpoints Inside the Class Block](#48-keep-breakpoints-inside-the-class-block)
+    - 4.8 [Group Breakpoints at the Bottom of the File](#48-group-breakpoints-at-the-bottom-of-the-file)
 5. [Values, Layout, and Accessibility](#5-values-layout-and-accessibility) — **HIGH**
     - 5.1 [Keep Layout Intent Explicit](#51-keep-layout-intent-explicit)
     - 5.2 [Declare Core Tokens Once and Fall Back Everywhere Else](#52-declare-core-tokens-once-and-fall-back-everywhere-else)
@@ -61,6 +61,7 @@
     - 5.7 [Declare Stacking Layers as Tokens in One Place](#57-declare-stacking-layers-as-tokens-in-one-place)
     - 5.8 [Namespace Keyframes and Respect Reduced Motion](#58-namespace-keyframes-and-respect-reduced-motion)
     - 5.9 [Switch Themes by Changing Token Values](#59-switch-themes-by-changing-token-values)
+    - 5.10 [Reach for Intrinsic Sizing Before Breakpoints](#510-reach-for-intrinsic-sizing-before-breakpoints)
 6. [Tooling](#6-tooling) — **MEDIUM**
     - 6.1 [Configure Stylelint to Enforce These Rules](#61-configure-stylelint-to-enforce-these-rules)
 
@@ -1222,7 +1223,7 @@ TSX에서 그 지점이 보이므로 "이게 원본 HTML인가"를 따질 필요
 
 **Applies when:** 이미 선언한 클래스에 스타일을 더 추가할 때. 파일 아래쪽에서 위쪽 선언을 덮어쓰려 할 때.
 
-**Review with:** `selector-do-not-group-classes-with-commas`
+**Review with:** `selector-do-not-group-classes-with-commas`, `selector-group-breakpoints-at-the-file-bottom`
 
 **Impact: MEDIUM-HIGH (한 클래스의 선언이 한 블록에 모여 고칠 때 볼 곳이 한 군데입니다)**
 
@@ -1240,6 +1241,7 @@ TSX에서 그 지점이 보이므로 "이게 원본 HTML인가"를 따질 필요
 
 `@media`나 `@supports` 안의 재선언은 대상이 아닙니다.
 조건이 다른 별개 블록입니다.
+그 블록을 파일 어디에 두는지는 `selector-group-breakpoints-at-the-file-bottom`이 정합니다.
 
 기계 검증은 `no-duplicate-selectors`입니다.
 
@@ -1284,7 +1286,7 @@ TSX에서 그 지점이 보이므로 "이게 원본 HTML인가"를 따질 필요
 	padding: 12px 16px;
 }
 
-@media (width < 768px) {
+@media (width < 1024px) {
 	.pg_catalogIndex__toolbar {
 		padding: 8px;
 	}
@@ -1561,105 +1563,137 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
-### 4.8 Keep Breakpoints Inside the Class Block
+### 4.8 Group Breakpoints at the Bottom of the File
 
-**Rule:** `C21` · `selector-keep-breakpoints-inside-the-class-block`
+**Rule:** `C21` · `selector-group-breakpoints-at-the-file-bottom`
 
 **Applies when:** `@media` 분기점을 추가하거나 옮길 때. 화면 폭에 따라 값이 달라지는 선언을 넣을 때.
 
-**Review with:** `selector-declare-each-class-in-one-block`, `selector-limit-nesting-block-depth`, `values-switch-themes-by-changing-token-values`
+**Review with:** `selector-declare-each-class-in-one-block`, `values-reach-for-intrinsic-sizing-before-breakpoints`, `values-switch-themes-by-changing-token-values`
 
-**Impact: HIGH (한 클래스의 모든 크기 규칙이 한 블록에 모여 덮어쓰기를 찾아다니지 않습니다)**
+**Impact: HIGH (한 분기점에서 무엇이 달라지는지 한 블록에서 읽히고 두 방향이 겹치지 않습니다)**
 
-폭 조건 `@media`는 그 클래스 블록 안에 중첩합니다.
-파일 아래쪽에 최상위 `@media`를 따로 열어 같은 클래스를 다시 선언하지 않습니다.
-`selector-declare-each-class-in-one-block`이 요구하는 "클래스당 한 블록"이 그대로 유지됩니다.
+분기점 재선언은 파일 맨 아래 `@media` 블록에 모읍니다.
+클래스 블록 안에 `@media`를 중첩하지 않습니다.
 
-테마 조건은 여기에 걸리지 않습니다.
-`prefers-color-scheme`은 토큰 파일에서 최상위 `@media`로 씁니다.
-`values-switch-themes-by-changing-token-values`가 그 자리를 정합니다.
+분기점 하나는 보통 클래스 하나가 아니라 여러 클래스를 같이 건드립니다.
+툴바 간격만 줄이는 게 아니라 패널 여백과 사이드바 폭이 함께 바뀝니다.
+그 결정이 클래스 블록마다 흩어지면 "1024px 아래에서 무엇이 달라지는가"를 파일 전체를 훑어야 답합니다.
 
-**분기점은 좁은 쪽부터 씁니다.**
-기본 선언이 가장 좁은 화면 기준이고, 넓어질 때만 덮습니다.
-좁아질 때만 덮는 조건과 섞으면 두 방향이 만나는 구간에서 어느 쪽이 이기는지 매번 따져야 합니다.
+**대가가 있습니다.**
+한 클래스의 선언이 기본 블록과 분기점 블록 두 곳에 있습니다.
+`selector-declare-each-class-in-one-block`이 `@media` 안의 재선언을 예외로 두는 이유가 이것이고, 여기서 그 예외의 자리를 못 박습니다.
+그래도 이쪽을 고릅니다.
+분기점을 고치는 일은 클래스 하나를 고치는 일이 아니라 그 폭에서 화면이 어떻게 보이는지를 고치는 일이기 때문입니다.
+
+**데스크톱 퍼스트로 씁니다.**
+기본 선언이 가장 넓은 화면 기준이고, 좁아질 때만 덮습니다.
+`(width >= ...)` 조건과 섞지 않습니다.
+두 방향을 섞으면 둘 다 맞는 구간에서 어느 쪽이 이기는지 매번 따져야 합니다.
+
+블록 순서는 넓은 쪽부터 좁은 쪽입니다.
+좁은 화면에서는 조건이 여러 개 동시에 맞고 마지막에 쓴 것이 이깁니다.
 
 조건은 범위 표기로 씁니다.
-`(width >= 1024px)` 이고 `(min-width: 1024px)`이 아닙니다.
+`(width < 1024px)` 이고 `(max-width: 1023.98px)`이 아닙니다.
+`max-width: 1024px`은 1024를 포함해서 `min-width: 1024px`과 겹치므로 소수 보정이 필요했지만, 범위 표기는 겹치지 않습니다.
 `tooling-configure-stylelint-to-enforce-these-rules`가 그 표기를 강제합니다.
 
 분기점 숫자는 아래 셋만 씁니다.
+기본 선언은 `lg` 이상 기준입니다.
 
-| 이름 | 값 | 기준 |
+| 조건 | 이름 | 여기부터 좁아짐 |
 | --- | --- | --- |
-| `sm` | `640px` | 세로 태블릿 |
-| `md` | `1024px` | 가로 태블릿, 좁은 노트북 |
-| `lg` | `1440px` | 데스크톱 |
+| `(width < 1440px)` | `lg` | 좁은 데스크톱 |
+| `(width < 1024px)` | `md` | 가로 태블릿, 좁은 노트북 |
+| `(width < 640px)` | `sm` | 세로 태블릿 아래 |
 
 숫자를 토큰으로 빼지 않습니다.
 `@media`의 조건에는 `var()`를 쓸 수 없어서 토큰으로 만들어도 그 자리에서 못 씁니다.
 그래서 세 값을 규칙에 못 박고 그대로 적습니다.
 
-블록 안에 `@media`를 넣어도 중첩 깊이에 세지 않습니다.
-`tooling-configure-stylelint-to-enforce-these-rules`의 설정이 `@media`를 깊이 계산에서 뺍니다.
-그 안에서 `&:hover` 같은 상태를 한 겹 더 쓸 수 있습니다.
+**같은 분기 동작이 파일 여러 개에 반복되면 그것을 소유할 자리를 하나 만듭니다.**
+같은 `@media` 블록을 파일마다 복사하고 있으면 그건 분기점을 어디 두느냐의 문제가 아니라 소유자가 없는 문제입니다.
+바뀌는 것이 값이면 토큰 파일에서 분기하고, 바뀌는 것이 배치면 그 배치를 컴포넌트 하나로 만들어 그 파일에만 분기점을 둡니다.
 
-**대가가 있습니다.**
-한 분기점에서 레이아웃 전체가 바뀌면 그 한 번의 결정이 클래스 블록 여럿에 흩어집니다.
-"1024px에서 무엇이 달라지는가"를 한자리에서 읽을 수 없습니다.
-그래도 이쪽을 고릅니다.
-읽는 일보다 고치는 일이 잦고, 고칠 때 필요한 것은 "이 클래스의 모든 값"이지 "이 폭의 모든 클래스"가 아닙니다.
-분기점 값이 셋뿐이라 흩어진 자리도 `@media (width >= 1024px)`로 한 번에 찾습니다.
+분기점을 적기 전에 분기점 없이 되는지 먼저 봅니다.
+`values-reach-for-intrinsic-sizing-before-breakpoints`가 그 판정을 합니다.
 
-**Incorrect (파일 아래쪽에 최상위 `@media`로 같은 클래스를 다시 엶):**
+테마 조건은 여기에 걸리지 않습니다.
+`prefers-color-scheme`은 토큰 파일에서 최상위 `@media`로 씁니다.
+`values-switch-themes-by-changing-token-values`가 그 자리를 정합니다.
+
+**Incorrect (클래스 블록 안에 중첩해서 분기점이 흩어짐):**
 
 ```css
 .pg_products__toolbar {
 	display: flex;
-	gap: 8px;
-}
-
-.pg_products__panel {
-	padding: 12px;
-}
-
-@media (width >= 1024px) {
-	.pg_products__toolbar {
-		gap: 16px;
-	}
-}
-```
-
-**Incorrect (`max-width`와 `min-width`를 섞어 겹치는 구간을 만듦):**
-
-```css
-.pg_products__toolbar {
-	& {
-		gap: 16px;
-	}
+	gap: 24px;
 
 	@media (width < 1024px) {
 		gap: 8px;
 	}
+}
 
-	@media (width >= 1440px) {
-		gap: 24px;
+.pg_products__panel {
+	padding: 24px;
+
+	@media (width < 1024px) {
+		padding: 12px;
 	}
 }
 ```
 
-**Correct (좁은 쪽을 기본으로 두고 클래스 블록 안에서 넓힘):**
+**Incorrect (두 방향을 섞어 겹치는 구간을 만듦):**
 
 ```css
 .pg_products__toolbar {
 	display: flex;
-	gap: 8px;
+	gap: 16px;
+}
 
-	@media (width >= 1024px) {
+@media (width >= 1440px) {
+	.pg_products__toolbar {
+		gap: 24px;
+	}
+}
+
+@media (width < 1024px) {
+	.pg_products__toolbar {
+		gap: 8px;
+	}
+}
+```
+
+**Correct (가장 넓은 화면을 기본으로 두고 파일 아래에서 좁혀 감):**
+
+```css
+.pg_products__toolbar {
+	display: flex;
+	gap: 24px;
+}
+
+.pg_products__panel {
+	padding: 24px;
+}
+
+@media (width < 1440px) {
+	.pg_products__toolbar {
 		gap: 16px;
 	}
 
-	@media (width >= 1440px) {
-		gap: 24px;
+	.pg_products__panel {
+		padding: 20px;
+	}
+}
+
+@media (width < 1024px) {
+	.pg_products__toolbar {
+		gap: 8px;
+	}
+
+	.pg_products__panel {
+		padding: 12px;
 	}
 }
 ```
@@ -1667,11 +1701,9 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 **Correct (분기점 안에서 상태를 한 겹 더 씀):**
 
 ```css
-.pg_products__panel {
-	padding: 12px;
-
-	@media (width >= 1024px) {
-		padding: 20px;
+@media (width < 1024px) {
+	.pg_products__panel {
+		padding: 12px;
 
 		&:hover {
 			background-color: var(--app-color-surface-hover);
@@ -2298,8 +2330,8 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 `prefers-color-scheme`과 `[data-theme]`는 토큰 파일 안에만 둡니다.
 컴포넌트 CSS 파일에서 이 둘이 보이면 위반입니다.
 
-토큰 파일의 이 블록은 최상위 `@media`를 쓰는 유일한 자리입니다.
-`selector-keep-breakpoints-inside-the-class-block`이 막는 것은 폭 조건이고, 여기서 바꾸는 것은 클래스가 아니라 `:root`의 변수 값입니다.
+`selector-group-breakpoints-at-the-file-bottom`이 정하는 것은 폭 조건이고, 여기서 바꾸는 것은 클래스가 아니라 `:root`의 변수 값입니다.
+두 블록을 섞지 않습니다.
 
 컴포넌트가 분기를 가지면 색을 하나 더할 때마다 그 색을 쓰는 파일을 모두 찾아 두 번씩 적어야 합니다.
 빠뜨린 한 곳은 테마를 바꿔 보기 전까지 드러나지 않습니다.
@@ -2411,6 +2443,138 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
+### 5.10 Reach for Intrinsic Sizing Before Breakpoints
+
+**Rule:** `C31` · `values-reach-for-intrinsic-sizing-before-breakpoints`
+
+**Applies when:** `@media` 분기점을 새로 넣으려 할 때. 폭에 따라 줄바꿈, 열 개수, 크기가 달라져야 할 때.
+
+**Review with:** `selector-group-breakpoints-at-the-file-bottom`, `values-keep-layout-intent-explicit`
+
+**Impact: HIGH (슬롯 폭이 얼마든 맞는 배치라 같은 컴포넌트를 옮겨도 CSS를 다시 고치지 않습니다)**
+
+분기점을 적기 전에 분기점 없이 되는지 먼저 봅니다.
+아래 넷 중 하나에 해당하면 `@media`를 쓰지 않습니다.
+
+| 분기점에서 바꾸려는 것 | 분기점 없이 |
+| --- | --- |
+| 한 줄에 안 들어가서 줄을 바꾼다 | `flex-wrap: wrap` + `flex: 1 1 <기준폭>` |
+| 폭에 따라 열 개수가 달라진다 | `grid-template-columns: repeat(auto-fit, minmax(<최소>, 1fr))` |
+| 슬롯을 채우되 어느 선에서 멈춘다 | `width: 100%` + `max-width` |
+| 여백이나 글자 크기가 조금씩 달라진다 | `clamp(<최소>, <선호>, <최대>)` |
+
+**`@media`는 뷰포트만 알고 그 요소가 실제로 받은 폭은 모릅니다.**
+같은 컴포넌트를 넓은 본문에서 좁은 사이드바로 옮기면 뷰포트는 그대로인데 자리는 좁아집니다.
+분기점으로 짠 배치는 이때 깨지고, 스스로 접히는 배치는 그대로 맞습니다.
+
+분기점이 남는 경우가 있습니다.
+배치가 통째로 달라질 때는 위 넷으로 안 됩니다.
+사이드바가 사라지거나, 가로 두 칸이 세로 스택이 되거나, 표가 카드 목록으로 바뀌는 것이 그 경우입니다.
+그때는 `selector-group-breakpoints-at-the-file-bottom`이 정한 자리에 적습니다.
+
+**단위 하나짜리 컴포넌트는 자기 폭을 정하지 않습니다.**
+버튼과 입력은 `padding`, `min-height`, 글자 크기까지만 자기 것입니다.
+폭은 그 컴포넌트를 놓은 쪽이 정합니다.
+`values-keep-layout-intent-explicit`가 같은 것을 말합니다.
+
+**Incorrect (버튼이 자기 폭을 뷰포트로 정함):**
+
+```css
+.ui_button__root {
+	display: inline-flex;
+	min-height: 40px;
+	padding: 0 var(--app-space-4);
+	width: 300px;
+}
+
+@media (width < 1024px) {
+	.ui_button__root {
+		width: 200px;
+	}
+}
+
+@media (width < 640px) {
+	.ui_button__root {
+		width: 100%;
+	}
+}
+```
+
+**Incorrect (열 개수를 분기점으로 셈):**
+
+```css
+.pg_products__grid {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 16px;
+}
+
+@media (width < 1440px) {
+	.pg_products__grid {
+		grid-template-columns: repeat(3, 1fr);
+	}
+}
+
+@media (width < 1024px) {
+	.pg_products__grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+@media (width < 640px) {
+	.pg_products__grid {
+		grid-template-columns: 1fr;
+	}
+}
+```
+
+**Correct (버튼은 자기 모양만, 폭은 놓는 쪽이 정함):**
+
+```css
+/* ui-button.css — 폭 얘기가 없다 */
+.ui_button__root {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 40px;
+	padding: 0 var(--app-space-4);
+}
+```
+
+```css
+/* ui-form-footer.css — 한 번 쓰고 여러 화면에서 그대로 씀 */
+.ui_formFooter__root {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: flex-end;
+	gap: var(--app-space-3);
+}
+
+.ui_formFooter__action {
+	flex: 1 1 200px;
+	max-width: 300px;
+}
+```
+
+**Correct (열 개수는 자리가 정함):**
+
+```css
+.pg_products__grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+	gap: 16px;
+}
+```
+
+**Correct (값이 매끄럽게 변하면 `clamp`):**
+
+```css
+.pg_products__hero {
+	padding-block: clamp(24px, 4vw, 64px);
+	font-size: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+}
+```
+
 ## 6. Tooling
 
 **Impact: MEDIUM**
@@ -2419,7 +2583,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 
 ### 6.1 Configure Stylelint to Enforce These Rules
 
-**Rule:** `C31` · `tooling-configure-stylelint-to-enforce-these-rules`
+**Rule:** `C32` · `tooling-configure-stylelint-to-enforce-these-rules`
 
 **Applies when:** stylelint 설정을 새로 만들거나 규칙을 추가·수정할 때. 이 컨벤션 중 어디까지 자동으로 잡히는지 확인할 때.
 
@@ -2433,11 +2597,12 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 | --- | --- |
 | `selector-class-pattern` | `naming-use-scope-slug-element-modifier-syntax` |
 | `selector-disallowed-list` | `ownership-use-foreign-classes-only-under-your-own-root`, `selector-nest-dom-state-in-the-owning-block`, `selector-use-classes-instead-of-element-selectors` |
-| `max-nesting-depth` | `selector-limit-nesting-block-depth`, `selector-keep-breakpoints-inside-the-class-block` |
+| `max-nesting-depth` | `selector-limit-nesting-block-depth` |
 | `keyframes-name-pattern` | `values-namespace-keyframes-and-respect-reduced-motion` |
 | `no-duplicate-selectors` | `selector-declare-each-class-in-one-block` |
 | `property-disallowed-list` | `values-tokenize-repeated-visual-values` |
 | `selector-attribute-name-disallowed-list` | `selector-use-pseudo-classes-for-dom-owned-states` |
+| `media-feature-range-notation` | `selector-group-breakpoints-at-the-file-bottom`의 범위 표기. `stylelint-config-standard`에서 옵니다 |
 | `no-descending-specificity` | 자손 기본 블록을 조상 규칙보다 앞에 두게 합니다. `stylelint-config-standard`에서 옵니다 |
 
 접두사가 디렉터리마다 달라서 `selector-class-pattern`과 `selector-disallowed-list`는 `overrides`로 나눕니다.
@@ -2453,6 +2618,9 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
   `selector-do-not-group-classes-with-commas`는 리뷰가 봅니다.
 - 최상위 요소 선택자도 못 잡습니다.
   `ownMarkupPatterns`가 `&`로 시작하는 형태만 보고, `selector-max-type`은 넣지 않았습니다.
+- 클래스 블록 안에 중첩한 `@media`도 못 잡습니다.
+  at-rule 이 최상위에 있어야 한다고 요구하는 규칙이 없습니다.
+  분기점 배치와 데스크톱 퍼스트 방향은 `selector-group-breakpoints-at-the-file-bottom`을 리뷰가 봅니다.
 - 역할 이름, 승격 판단, 변형 노출, 포커스 대비도 리뷰가 담당합니다.
 
 **Incorrect (`stylelint-config-standard`의 기본 클래스 패턴을 그대로 씀):**
@@ -2509,7 +2677,7 @@ const disallowed = (foreignScopes) => [
 export default {
 	extends: ["stylelint-config-standard"],
 	rules: {
-		// @media 는 깊이로 세지 않는다. 분기점 안에서 상태를 한 겹 더 쓸 수 있어야 한다
+		// 최상위 @media 안의 클래스가 깊이 0 이 되게 한다. 분기점 안에서 상태를 한 겹 더 쓸 수 있다
 		"max-nesting-depth": [1, {ignoreAtRules: ["media", "supports", "container"]}],
 		// @keyframes 이름은 전역이라 소유자를 붙인다. 이름에는 - 를 쓸 수 없다
 		"keyframes-name-pattern": "^(pg|wg|ui)[A-Z][a-zA-Z0-9]*__[a-z][a-zA-Z0-9]*$",

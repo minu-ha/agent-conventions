@@ -134,7 +134,7 @@ const cssRuleUniverse = [
 	"selector-use-pseudo-classes-for-dom-owned-states",
 	"selector-nest-dom-state-in-the-owning-block",
 	"selector-do-not-invert-domain-state-with-not",
-	"selector-keep-breakpoints-inside-the-class-block",
+	"selector-group-breakpoints-at-the-file-bottom",
 	"values-keep-layout-intent-explicit",
 	"values-always-provide-css-variable-fallbacks",
 	"values-tokenize-repeated-visual-values",
@@ -144,6 +144,7 @@ const cssRuleUniverse = [
 	"values-declare-stacking-layers-as-tokens",
 	"values-namespace-keyframes-and-respect-reduced-motion",
 	"values-switch-themes-by-changing-token-values",
+	"values-reach-for-intrinsic-sizing-before-breakpoints",
 	"tooling-configure-stylelint-to-enforce-these-rules",
 ] as const;
 
@@ -413,7 +414,7 @@ const cssRuleRouting = {
 	},
 	"selector-declare-each-class-in-one-block": {
 		appliesWhen: "이미 선언한 클래스에 스타일을 더 추가할 때. 파일 아래쪽에서 위쪽 선언을 덮어쓰려 할 때.",
-		reviewWith: ["selector-do-not-group-classes-with-commas"],
+		reviewWith: ["selector-do-not-group-classes-with-commas", "selector-group-breakpoints-at-the-file-bottom"],
 	},
 	"selector-use-pseudo-classes-for-dom-owned-states": {
 		appliesWhen: "`:hover`, `:visited`, `:focus*`, `:disabled`, `:checked`를 추가·수정할 때. 조상의 DOM 상태가 자손 스타일에 영향을 줄 때.",
@@ -432,11 +433,11 @@ const cssRuleRouting = {
 		appliesWhen: "`:not(.--modifier)`로 앱 상태를 뒤집으려 할 때. 조상의 수정자가 자손의 모습을 정해야 할 것 같을 때.",
 		reviewWith: ["selector-use-pseudo-classes-for-dom-owned-states"],
 	},
-	"selector-keep-breakpoints-inside-the-class-block": {
+	"selector-group-breakpoints-at-the-file-bottom": {
 		appliesWhen: "`@media` 분기점을 추가하거나 옮길 때. 화면 폭에 따라 값이 달라지는 선언을 넣을 때.",
 		reviewWith: [
+			"values-reach-for-intrinsic-sizing-before-breakpoints",
 			"selector-declare-each-class-in-one-block",
-			"selector-limit-nesting-block-depth",
 			"values-switch-themes-by-changing-token-values",
 		],
 	},
@@ -481,6 +482,10 @@ const cssRuleRouting = {
 		appliesWhen:
 			"다크 모드나 테마 전환을 넣을 때. 컴포넌트 CSS에 `prefers-color-scheme`이나 `[data-theme]`를 쓰려 할 때. 색이나 그림자 토큰을 새로 만들거나 이름을 바꿀 때.",
 		reviewWith: ["values-always-provide-css-variable-fallbacks", "values-tokenize-repeated-visual-values"],
+	},
+	"values-reach-for-intrinsic-sizing-before-breakpoints": {
+		appliesWhen: "`@media` 분기점을 새로 넣으려 할 때. 폭에 따라 줄바꿈, 열 개수, 크기가 달라져야 할 때.",
+		reviewWith: ["values-keep-layout-intent-explicit", "selector-group-breakpoints-at-the-file-bottom"],
 	},
 	"tooling-configure-stylelint-to-enforce-these-rules": {
 		appliesWhen: "stylelint 설정을 새로 만들거나 규칙을 추가·수정할 때. 이 컨벤션 중 어디까지 자동으로 잡히는지 확인할 때.",
@@ -1535,10 +1540,19 @@ const cssScenarioStages = {
 	"css-split-class-declaration": {
 		initial: {
 			prompt:
-				"the same .pg_catalogIndex__toolbar block is opened twice in one file and the later one overrides the first from a top-level @media; fold both into one block with the breakpoint nested inside.",
+				"the same .pg_catalogIndex__toolbar block is opened twice at the top level of one file, and a third override sits nested inside the class block as @media; fold the plain duplicate into one block and move the breakpoint override into a grouped @media at the bottom of the file.",
 			files: ["src/page/catalog-index/pg-catalog-index.css"],
 			expectedSkills: ["css"],
-			expectedSelected: {css: ["selector-declare-each-class-in-one-block", "selector-keep-breakpoints-inside-the-class-block"]},
+			expectedSelected: {css: ["selector-declare-each-class-in-one-block", "selector-group-breakpoints-at-the-file-bottom"]},
+		},
+	},
+	"css-responsive-grid-and-button-width": {
+		initial: {
+			prompt:
+				"the product grid counts its columns with four @media steps and ui-button.css sets its own width at three breakpoints; make the grid and the button size themselves without breakpoints.",
+			files: ["src/page/products/pg-products.css", "src/ui/button/ui-button.css"],
+			expectedSkills: ["css"],
+			expectedSelected: {css: ["values-keep-layout-intent-explicit", "values-reach-for-intrinsic-sizing-before-breakpoints"]},
 		},
 	},
 	"css-sticky-layout-intent": {
@@ -2207,7 +2221,7 @@ test("CSS progressive metadata and rule routing match Appendix C exactly", async
 	assert.deepEqual(document.metadata.companions, [
 		{skill: "typescript", mode: "conditional", appliesWhen: "TS/TSX 클래스 계약, 래퍼 Props 또는 style import를 함께 변경한다."},
 	]);
-	assert.equal(document.rules.length, 31);
+	assert.equal(document.rules.length, 32);
 	assert.deepEqual(
 		Object.fromEntries(document.rules.map((rule) => [getRuleId(rule), {appliesWhen: rule.appliesWhen, reviewWith: rule.reviewWith}])),
 		cssRuleRouting,
@@ -2263,10 +2277,10 @@ test("CSS routing manifest is the exact eleven-scenario and thirteen-stage Appen
 		manifest.scenarios.map((scenario) => scenario.id),
 		expectedScenarioIds,
 	);
-	assert.equal(manifest.scenarios.length, 17);
+	assert.equal(manifest.scenarios.length, 18);
 	assert.equal(
 		manifest.scenarios.reduce((count, scenario) => count + (scenario.scopeDrift ? 2 : 1), 0),
-		19,
+		20,
 	);
 
 	const coveredCssRules = new Set<string>();
@@ -2881,7 +2895,7 @@ test("CSS generated index is canonical, complete, body-preserving, and within it
 		entries.map((entry) => entry.id),
 		cssRuleUniverse,
 	);
-	assert.equal(entries.length, 31);
+	assert.equal(entries.length, 32);
 
 	for (const entry of entries) {
 		assert.equal(entry.fileName, `${entry.id}.md`);

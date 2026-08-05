@@ -6,8 +6,8 @@
 `prefers-color-scheme`과 `[data-theme]`는 토큰 파일 안에만 둡니다.
 컴포넌트 CSS 파일에서 이 둘이 보이면 위반입니다.
 
-토큰 파일의 이 블록은 최상위 `@media`를 쓰는 유일한 자리입니다.
-`selector-keep-breakpoints-inside-the-class-block`이 막는 것은 폭 조건이고, 여기서 바꾸는 것은 클래스가 아니라 `:root`의 변수 값입니다.
+`selector-group-breakpoints-at-the-file-bottom`이 정하는 것은 폭 조건이고, 여기서 바꾸는 것은 클래스가 아니라 `:root`의 변수 값입니다.
+두 블록을 섞지 않습니다.
 
 컴포넌트가 분기를 가지면 색을 하나 더할 때마다 그 색을 쓰는 파일을 모두 찾아 두 번씩 적어야 합니다.
 빠뜨린 한 곳은 테마를 바꿔 보기 전까지 드러나지 않습니다.

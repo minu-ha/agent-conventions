@@ -291,7 +291,7 @@
 		},
 		{
 			"id": "css-split-class-declaration",
-			"prompt": "the same .pg_catalogIndex__toolbar block is opened twice in one file and the later one overrides the first from a top-level @media; fold both into one block with the breakpoint nested inside.",
+			"prompt": "the same .pg_catalogIndex__toolbar block is opened twice at the top level of one file, and a third override sits nested inside the class block as @media; fold the plain duplicate into one block and move the breakpoint override into a grouped @media at the bottom of the file.",
 			"files": [
 				"src/page/catalog-index/pg-catalog-index.css"
 			],
@@ -301,7 +301,24 @@
 			"expectedSelected": {
 				"css": [
 					"selector-declare-each-class-in-one-block",
-					"selector-keep-breakpoints-inside-the-class-block"
+					"selector-group-breakpoints-at-the-file-bottom"
+				]
+			}
+		},
+		{
+			"id": "css-responsive-grid-and-button-width",
+			"prompt": "the product grid counts its columns with four @media steps and ui-button.css sets its own width at three breakpoints; make the grid and the button size themselves without breakpoints.",
+			"files": [
+				"src/page/products/pg-products.css",
+				"src/ui/button/ui-button.css"
+			],
+			"expectedSkills": [
+				"css"
+			],
+			"expectedSelected": {
+				"css": [
+					"values-keep-layout-intent-explicit",
+					"values-reach-for-intrinsic-sizing-before-breakpoints"
 				]
 			}
 		},

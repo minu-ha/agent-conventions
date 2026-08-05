@@ -1,7 +1,7 @@
 # CSS 컨벤션 Rule Index
 
 - Skill: `css`
-- Routing digest: `sha256:6dc0563d60aecc3f2f11e2b4b4356e4d96901be641433d1b3fbbee00bfb80a9f`
+- Routing digest: `sha256:b0b3a557ab30abfb9968b576bd023645b0e46a421b5c06c06672f6456309253c`
 
 ## Direct Companions
 
@@ -25,11 +25,11 @@
 - C14 | selector-limit-nesting-block-depth | 중첩 \`{}\` 블록을 추가하거나 기존 블록을 펼치거나 합칠 때. \`&\`로 조건이나 가상 요소를 붙일 때. | reviewWith: selector-declare-each-class-in-one-block, selector-use-classes-instead-of-element-selectors
 - C15 | selector-use-classes-instead-of-element-selectors | \`p\`, \`h2\`, \`span\`, \`button\` 같은 요소 선택자를 쓰려 할 때. \`dangerouslySetInnerHTML\`이나 Markdown 렌더러 출력을 스타일링할 때. | reviewWith: naming-name-elements-and-modifiers-by-role
 - C16 | selector-do-not-group-classes-with-commas | 여러 클래스가 같은 선언을 반복해 \`,\`로 묶으려 할 때. 한 대상에 진입 조건이 여럿일 때. | reviewWith: selector-declare-each-class-in-one-block, values-tokenize-repeated-visual-values
-- C17 | selector-declare-each-class-in-one-block | 이미 선언한 클래스에 스타일을 더 추가할 때. 파일 아래쪽에서 위쪽 선언을 덮어쓰려 할 때. | reviewWith: selector-do-not-group-classes-with-commas
+- C17 | selector-declare-each-class-in-one-block | 이미 선언한 클래스에 스타일을 더 추가할 때. 파일 아래쪽에서 위쪽 선언을 덮어쓰려 할 때. | reviewWith: selector-do-not-group-classes-with-commas, selector-group-breakpoints-at-the-file-bottom
 - C18 | selector-use-pseudo-classes-for-dom-owned-states | \`:hover\`, \`:visited\`, \`:focus\*\`, \`:disabled\`, \`:checked\`를 추가·수정할 때. 조상의 DOM 상태가 자손 스타일에 영향을 줄 때.
 - C19 | selector-nest-dom-state-in-the-owning-block | \`:hover\`, \`:focus-visible\`, \`:disabled\`, \`:checked\` 스타일을 추가·수정할 때. 조상의 DOM 상태가 자손 스타일을 바꿔야 할 때. | reviewWith: selector-do-not-group-classes-with-commas, selector-limit-nesting-block-depth, selector-use-pseudo-classes-for-dom-owned-states
 - C20 | selector-do-not-invert-domain-state-with-not | \`:not\(.--modifier\)\`로 앱 상태를 뒤집으려 할 때. 조상의 수정자가 자손의 모습을 정해야 할 것 같을 때. | reviewWith: selector-use-pseudo-classes-for-dom-owned-states
-- C21 | selector-keep-breakpoints-inside-the-class-block | \`@media\` 분기점을 추가하거나 옮길 때. 화면 폭에 따라 값이 달라지는 선언을 넣을 때. | reviewWith: selector-declare-each-class-in-one-block, selector-limit-nesting-block-depth, values-switch-themes-by-changing-token-values
+- C21 | selector-group-breakpoints-at-the-file-bottom | \`@media\` 분기점을 추가하거나 옮길 때. 화면 폭에 따라 값이 달라지는 선언을 넣을 때. | reviewWith: selector-declare-each-class-in-one-block, values-reach-for-intrinsic-sizing-before-breakpoints, values-switch-themes-by-changing-token-values
 - C22 | values-keep-layout-intent-explicit | \`sticky\`·\`fixed\`, \`z-index\`, 강제 \`width\`·\`height\` 또는 부모·자식 레이아웃 책임을 추가·변경할 때. 제외: 같은 요소를 기본과 수정자로 나누면서 기존 \`display\`·여백 선언을 값 그대로 옮기는 경우.
 - C23 | values-always-provide-css-variable-fallbacks | \`var\(--\*\)\`를 새로 쓰거나 변수 이름이나 대체값을 바꿀 때. 공통 토큰 목록에 항목을 넣거나 뺄 때. | reviewWith: values-tokenize-repeated-visual-values
 - C24 | values-tokenize-repeated-visual-values | 여러 파일이 같은 색, 간격, radius, 타이포, 그림자 값을 쓸 때. 새 사용자 정의 속성을 선언할 때. | reviewWith: values-always-provide-css-variable-fallbacks
@@ -39,4 +39,5 @@
 - C28 | values-declare-stacking-layers-as-tokens | \`z-index\`를 새로 넣거나 값을 바꿀 때. 겹쳐 뜨는 요소를 추가할 때. | reviewWith: values-keep-layout-intent-explicit, values-tokenize-repeated-visual-values
 - C29 | values-namespace-keyframes-and-respect-reduced-motion | \`@keyframes\`를 선언하거나 \`animation\`·\`transition\`을 추가할 때. 애니메이션 이름이나 지속 시간을 바꿀 때. | reviewWith: tooling-configure-stylelint-to-enforce-these-rules, values-tokenize-repeated-visual-values
 - C30 | values-switch-themes-by-changing-token-values | 다크 모드나 테마 전환을 넣을 때. 컴포넌트 CSS에 \`prefers-color-scheme\`이나 \`\[data-theme\]\`를 쓰려 할 때. 색이나 그림자 토큰을 새로 만들거나 이름을 바꿀 때. | reviewWith: values-always-provide-css-variable-fallbacks, values-tokenize-repeated-visual-values
-- C31 | tooling-configure-stylelint-to-enforce-these-rules | stylelint 설정을 새로 만들거나 규칙을 추가·수정할 때. 이 컨벤션 중 어디까지 자동으로 잡히는지 확인할 때. | reviewWith: naming-use-scope-slug-element-modifier-syntax, ownership-use-foreign-classes-only-under-your-own-root, selector-limit-nesting-block-depth
+- C31 | values-reach-for-intrinsic-sizing-before-breakpoints | \`@media\` 분기점을 새로 넣으려 할 때. 폭에 따라 줄바꿈, 열 개수, 크기가 달라져야 할 때. | reviewWith: selector-group-breakpoints-at-the-file-bottom, values-keep-layout-intent-explicit
+- C32 | tooling-configure-stylelint-to-enforce-these-rules | stylelint 설정을 새로 만들거나 규칙을 추가·수정할 때. 이 컨벤션 중 어디까지 자동으로 잡히는지 확인할 때. | reviewWith: naming-use-scope-slug-element-modifier-syntax, ownership-use-foreign-classes-only-under-your-own-root, selector-limit-nesting-block-depth

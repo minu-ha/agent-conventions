@@ -16,6 +16,7 @@
 
 `@media`나 `@supports` 안의 재선언은 대상이 아닙니다.
 조건이 다른 별개 블록입니다.
+그 블록을 파일 어디에 두는지는 `selector-group-breakpoints-at-the-file-bottom`이 정합니다.
 
 기계 검증은 `no-duplicate-selectors`입니다.
 
