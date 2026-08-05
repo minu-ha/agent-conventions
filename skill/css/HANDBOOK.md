@@ -60,6 +60,7 @@
     - 5.6 [Do Not Style Through the `style` Attribute](#56-do-not-style-through-the-style-attribute)
     - 5.7 [Declare Stacking Layers as Tokens in One Place](#57-declare-stacking-layers-as-tokens-in-one-place)
     - 5.8 [Namespace Keyframes and Respect Reduced Motion](#58-namespace-keyframes-and-respect-reduced-motion)
+    - 5.9 [Switch Themes by Changing Token Values](#59-switch-themes-by-changing-token-values)
 6. [Tooling](#6-tooling) — **MEDIUM**
     - 6.1 [Configure Stylelint to Enforce These Rules](#61-configure-stylelint-to-enforce-these-rules)
 
@@ -220,22 +221,24 @@ pg_catalogDetail__detailSection
 `pg_*` 식별자만 보고 어느 화면의 것인지 알 수 있어야 합니다.
 어떤 파일이 화면 소유인지는 프레임워크 규약이 정하고, CSS는 그 소유가 식별자에서 흐려지지 않게 지킵니다.
 
-- 화면 뼈대는 화면 이름을 그대로 식별자로 씁니다.
-  `pg_postsDetail`처럼 화면 계열과 역할이 읽혀야 합니다.
+- 화면 뼈대의 식별자는 그 화면의 라우트 세그먼트나 폴더 이름과 같은 낱말입니다.
+  `posts/[id]` 화면이면 `pg_postsDetail`입니다.
+  `shell`, `page`, `content`처럼 어느 화면에나 붙는 역할 낱말은 식별자가 아닙니다.
 - 화면 안의 컴포넌트는 자기 이름만 식별자로 씁니다.
-- 팀이 함께 쓰는 화면 목록에 없는 줄임말은 쓰지 않습니다.
+- 라우트 경로나 폴더 이름에 없는 줄임말은 쓰지 않습니다.
+  `pg_prd__root`가 아니라 `pg_products__root`입니다.
 - `wg_*`, `ui_*`는 각자의 식별자 규칙을 따릅니다.
 
 부모 식별자를 미리 붙이지 않습니다.
 충돌이 실제로 생겼을 때만 최소한으로 덧붙입니다.
 미리 붙이면 깊이만큼 식별자가 자라서 충돌을 걱정하기 전에 읽기가 무너집니다.
 
-**Incorrect (의미가 약하거나 계층 순서가 흐려진 식별자):**
+**Incorrect (화면 이름이 아닌 식별자):**
 
 ```txt
-pg_shell__body
-pg_doc__content
-pg_x__root
+pg_shell__body    <- 역할 낱말이라 어느 화면인지 안 나옴
+pg_doc__content   <- 라우트에 없는 줄임말
+pg_x__root        <- 거슬러 찾을 이름이 없음
 ```
 
 **Incorrect (충돌이 없는데도 부모 식별자를 미리 붙임):**
@@ -327,7 +330,7 @@ pg_dashboardIndex__header
 `pg_`는 화면 뼈대와 그 아래 컴포넌트를 함께 덮습니다.
 뼈대는 식별자가 라우트 이름과 같아서 따로 표시하지 않아도 구분됩니다.
 
-- 폴더가 아니라 가장 가까운 공개 패키지 경계로 판정합니다.
+- 폴더 깊이가 아니라 그 파일이 `src/page`, `src/widget`, `src/ui` 중 어디 아래 있는지로 판정합니다.
   위젯 내부 부품이 `component` 폴더에 있어도 `wg_`입니다.
 - 한 화면만 쓰는데 `wg_`를 붙이지 않습니다.
   재사용을 예상해서 미리 올리지 않습니다.
@@ -522,7 +525,7 @@ ui/button/ui-button.css
 
 셋째 행이 흔히 놓치는 답입니다.
 한 화면만 쓰는 컴포넌트는 위젯이 아닙니다.
-승격 기준은 맥락 독립성입니다.
+승격 기준은 서로 다른 화면 소유자 둘 이상이 이미 그 컴포넌트를 가져다 쓰는지입니다.
 내릴 때 프롭을 열지 않습니다.
 파일만 옮깁니다.
 
@@ -643,7 +646,7 @@ TSX에서 `className`은 `clsx()`로 조립합니다.
 
 갈리는 기준은 하나입니다.
 
-> 이 수정자를 다른 화면에서도 같은 이름으로 쓸 수 있는가?
+> 이 수정자 이름이 지금 저장소에서 두 개 이상의 `scope_slug`에 이미 있는가?
 
 쓸 수 있으면 반복되는 모양이라 허용합니다.
 그 화면에서만 통하는 이름이면 이미 위치 정보를 담고 있으니 요소로 바꿉니다.
@@ -673,7 +676,7 @@ TSX에서 `className`은 `clsx()`로 조립합니다.
 
 **Rule:** `C11` · `composition-keep-classes-single-purpose`
 
-**Applies when:** 기존 클래스가 기본과 상태·변형 책임을 함께 갖거나 독립 시각 책임을 추가·재사용·분리할 때. 제외: 기존 결합 책임을 그대로 두고 처음부터 단일 책임 쌍을 만들거나 책임이 그대로인 이름 변경만 하는 경우.
+**Applies when:** 한 클래스 이름에 기본 스타일과 상태를 함께 넣을 때. 이미 있는 클래스를 다른 시각 책임에 돌려 쓸 때. 제외: 처음부터 기본 클래스와 수정자를 나눠 만들 때, 책임이 그대로인 이름 변경만 할 때.
 
 **Impact: HIGH (클래스 하나가 기본 스타일과 상태 의미를 함께 지면 상태를 끌 방법이 없습니다)**
 
@@ -1564,13 +1567,17 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 
 **Applies when:** `@media` 분기점을 추가하거나 옮길 때. 화면 폭에 따라 값이 달라지는 선언을 넣을 때.
 
-**Review with:** `selector-declare-each-class-in-one-block`, `selector-limit-nesting-block-depth`
+**Review with:** `selector-declare-each-class-in-one-block`, `selector-limit-nesting-block-depth`, `values-switch-themes-by-changing-token-values`
 
 **Impact: HIGH (한 클래스의 모든 크기 규칙이 한 블록에 모여 덮어쓰기를 찾아다니지 않습니다)**
 
-`@media`는 그 클래스 블록 안에 중첩합니다.
+폭 조건 `@media`는 그 클래스 블록 안에 중첩합니다.
 파일 아래쪽에 최상위 `@media`를 따로 열어 같은 클래스를 다시 선언하지 않습니다.
 `selector-declare-each-class-in-one-block`이 요구하는 "클래스당 한 블록"이 그대로 유지됩니다.
+
+테마 조건은 여기에 걸리지 않습니다.
+`prefers-color-scheme`은 토큰 파일에서 최상위 `@media`로 씁니다.
+`values-switch-themes-by-changing-token-values`가 그 자리를 정합니다.
 
 **분기점은 좁은 쪽부터 씁니다.**
 기본 선언이 가장 좁은 화면 기준이고, 넓어질 때만 덮습니다.
@@ -1595,6 +1602,13 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 블록 안에 `@media`를 넣어도 중첩 깊이에 세지 않습니다.
 `tooling-configure-stylelint-to-enforce-these-rules`의 설정이 `@media`를 깊이 계산에서 뺍니다.
 그 안에서 `&:hover` 같은 상태를 한 겹 더 쓸 수 있습니다.
+
+**대가가 있습니다.**
+한 분기점에서 레이아웃 전체가 바뀌면 그 한 번의 결정이 클래스 블록 여럿에 흩어집니다.
+"1024px에서 무엇이 달라지는가"를 한자리에서 읽을 수 없습니다.
+그래도 이쪽을 고릅니다.
+읽는 일보다 고치는 일이 잦고, 고칠 때 필요한 것은 "이 클래스의 모든 값"이지 "이 폭의 모든 클래스"가 아닙니다.
+분기점 값이 셋뿐이라 흩어진 자리도 `@media (width >= 1024px)`로 한 번에 찾습니다.
 
 **Incorrect (파일 아래쪽에 최상위 `@media`로 같은 클래스를 다시 엶):**
 
@@ -1681,7 +1695,8 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 **Impact: MEDIUM-HIGH (DOM을 거슬러 올라가지 않고 sticky, fixed, 박스 책임을 파악합니다)**
 
 레이아웃 의도는 클래스명과 선언만 보고 바로 읽혀야 합니다.
-`position`, `width`, `height`를 억지로 고정하지 않고 부모와 자식의 레이아웃 책임을 나눕니다.
+크기는 내용이 정하게 두고 필요한 최소만 고정합니다.
+고정 `height` 대신 `min-height`를, `width: 100%` 대신 부모의 `flex`나 `grid` 배치를 씁니다.
 
 - `z-index`에는 숫자를 직접 쓰지 않고 층 토큰을 씁니다.
   토큰 이름이 곧 쌓임 순서 문서입니다.
@@ -1815,7 +1830,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 
 | 반복 범위 | 처리 |
 | --- | --- |
-| 여러 파일 | 전역 공통 토큰을 쓰거나, 없으면 공통 토큰 목록에 넣을지 검토합니다 |
+| 여러 파일 | 전역 공통 토큰을 씁니다. 이름이 없으면 토큰 파일에 만들고 그 이름을 씁니다 |
 | 한 파일 안 | 값을 그대로 둡니다 |
 
 **지역 사용자 정의 속성은 만들지 않습니다.**
@@ -1984,7 +1999,8 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
   `outline`, `box-shadow` 링, `border` 두께처럼
   형태가 바뀌는 신호를 함께 씁니다.
   색만 쓰면 색각 이상에서 구분되지 않습니다.
-- 배경과 링의 대비를 확인합니다.
+- 링과 그 뒤 배경의 대비가 3:1 이상이고 두께가 2px 이상입니다.
+  WCAG 2.2 SC 1.4.11 과 2.4.13 이 정한 값입니다.
   링이 배경과 같은 계열이면 없는 것과 같습니다.
 - 기본 블록에 둡니다.
   수정자 블록 안에만 두면 그 상태가 아닐 때 표시가 사라집니다.
@@ -2268,6 +2284,133 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
+### 5.9 Switch Themes by Changing Token Values
+
+**Rule:** `C30` · `values-switch-themes-by-changing-token-values`
+
+**Applies when:** 다크 모드나 테마 전환을 넣을 때. 컴포넌트 CSS에 `prefers-color-scheme`이나 `[data-theme]`를 쓰려 할 때. 색이나 그림자 토큰을 새로 만들거나 이름을 바꿀 때.
+
+**Review with:** `values-always-provide-css-variable-fallbacks`, `values-tokenize-repeated-visual-values`
+
+**Impact: MEDIUM-HIGH (테마 분기가 한 파일에만 있어 색을 하나 더할 때 파일 여러 개를 열지 않습니다)**
+
+테마는 **토큰 값만** 바꿉니다.
+`prefers-color-scheme`과 `[data-theme]`는 토큰 파일 안에만 둡니다.
+컴포넌트 CSS 파일에서 이 둘이 보이면 위반입니다.
+
+토큰 파일의 이 블록은 최상위 `@media`를 쓰는 유일한 자리입니다.
+`selector-keep-breakpoints-inside-the-class-block`이 막는 것은 폭 조건이고, 여기서 바꾸는 것은 클래스가 아니라 `:root`의 변수 값입니다.
+
+컴포넌트가 분기를 가지면 색을 하나 더할 때마다 그 색을 쓰는 파일을 모두 찾아 두 번씩 적어야 합니다.
+빠뜨린 한 곳은 테마를 바꿔 보기 전까지 드러나지 않습니다.
+
+**토큰 이름은 값이 아니라 쓰임으로 짓습니다.**
+`--app-color-white`는 다크에서 이름이 거짓말이 됩니다.
+`--app-color-surface`는 값이 바뀌어도 이름이 그대로 맞습니다.
+
+| 짓는 법 | 예 |
+| --- | --- |
+| 쓰임 | `--app-color-surface`, `--app-color-text-primary`, `--app-color-border` |
+| 값 — 쓰지 않습니다 | `--app-color-white`, `--app-color-gray-100` |
+
+**`color-scheme`을 선언합니다.**
+스크롤바, 폼 컨트롤, 기본 배경은 우리 토큰이 닿지 않는 브라우저 UI라 이 속성으로만 따라옵니다.
+선언하지 않으면 어두운 화면에 밝은 스크롤바가 남습니다.
+
+**그림자도 테마 토큰입니다.**
+어두운 배경에서 검은 그림자는 보이지 않습니다.
+`box-shadow` 값을 직접 적지 말고 토큰으로 두어 테마마다 다르게 잡습니다.
+
+**다크 모드를 지원하지 않기로 했으면 `prefers-color-scheme`을 아예 쓰지 않습니다.**
+일부 화면만 대응하면 같은 앱 안에서 화면마다 배경이 달라져 지원하지 않는 것보다 나쁩니다.
+
+**Incorrect (컴포넌트 파일에서 테마를 분기):**
+
+```css
+/* src/page/products/pg-products.css */
+.pg_products__panel {
+	background-color: var(--app-color-surface);
+
+	@media (prefers-color-scheme: dark) {
+		background-color: #1f2225;
+	}
+}
+```
+
+**Incorrect (값으로 이름을 짓고 그림자를 직접 적음):**
+
+```css
+:root {
+	--app-color-white: #fff;
+	--app-color-gray-100: #f1f3f5;
+}
+
+.pg_products__panel {
+	background-color: var(--app-color-white);
+	box-shadow: 0 1px 3px rgb(0 0 0 / 12%);
+}
+```
+
+**Correct (토큰 파일 한 곳에서만 값을 바꿈):**
+
+```css
+/* src/style/token.css */
+:root {
+	color-scheme: light;
+
+	--app-color-surface: #fff;
+	--app-color-text-primary: #212529;
+	--app-color-border: #dee2e6;
+	--app-shadow-panel: 0 1px 3px rgb(0 0 0 / 12%);
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		color-scheme: dark;
+
+		--app-color-surface: #1f2225;
+		--app-color-text-primary: #e9ecef;
+		--app-color-border: #3a3f44;
+		--app-shadow-panel: 0 1px 3px rgb(0 0 0 / 60%);
+	}
+}
+```
+
+**Correct (사용자가 고른 테마가 시스템 설정을 이김):**
+
+```css
+/* src/style/token.css — 위 블록 다음에 온다 */
+:root[data-theme="light"] {
+	color-scheme: light;
+
+	--app-color-surface: #fff;
+	--app-color-text-primary: #212529;
+	--app-color-border: #dee2e6;
+	--app-shadow-panel: 0 1px 3px rgb(0 0 0 / 12%);
+}
+
+:root[data-theme="dark"] {
+	color-scheme: dark;
+
+	--app-color-surface: #1f2225;
+	--app-color-text-primary: #e9ecef;
+	--app-color-border: #3a3f44;
+	--app-shadow-panel: 0 1px 3px rgb(0 0 0 / 60%);
+}
+```
+
+**Correct (컴포넌트는 토큰만 씀):**
+
+```css
+/* src/page/products/pg-products.css */
+.pg_products__panel {
+	background-color: var(--app-color-surface);
+	color: var(--app-color-text-primary);
+	border: 1px solid var(--app-color-border);
+	box-shadow: var(--app-shadow-panel);
+}
+```
+
 ## 6. Tooling
 
 **Impact: MEDIUM**
@@ -2276,7 +2419,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 
 ### 6.1 Configure Stylelint to Enforce These Rules
 
-**Rule:** `C30` · `tooling-configure-stylelint-to-enforce-these-rules`
+**Rule:** `C31` · `tooling-configure-stylelint-to-enforce-these-rules`
 
 **Applies when:** stylelint 설정을 새로 만들거나 규칙을 추가·수정할 때. 이 컨벤션 중 어디까지 자동으로 잡히는지 확인할 때.
 

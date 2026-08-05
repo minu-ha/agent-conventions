@@ -322,6 +322,24 @@
 			}
 		},
 		{
+			"id": "css-theme-token-switch",
+			"prompt": "add dark mode: a page css file currently branches on prefers-color-scheme inside .pg_dashboard__panel and hardcodes #ffffff and a black box-shadow; move the branch into the token file and keep the component reading tokens only.",
+			"files": [
+				"src/style/token.css",
+				"src/page/dashboard/pg-dashboard.css"
+			],
+			"expectedSkills": [
+				"css"
+			],
+			"expectedSelected": {
+				"css": [
+					"values-always-provide-css-variable-fallbacks",
+					"values-tokenize-repeated-visual-values",
+					"values-switch-themes-by-changing-token-values"
+				]
+			}
+		},
+		{
 			"id": "css-cross-owner-internal-targeting",
 			"prompt": "the detail page styles .wg_chartCard__caption from pg-detail.css; move the change so the page no longer declares widget classes.",
 			"files": [

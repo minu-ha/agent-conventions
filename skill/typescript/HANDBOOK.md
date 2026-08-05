@@ -1136,13 +1136,14 @@ export const util = {
 
 **Rule:** `T17` · `functions-avoid-imperative-assembly-in-wide-scopes`
 
-**Applies when:** 파일 위쪽이나 넓은 스코프에서 `let` 재대입, 배열 `push`, 조건부 누적으로 값을 만들거나 정리할 때.
+**Applies when:** 모듈 최상위나 함수 본문 전체를 덮는 스코프에서 `let` 재대입, 배열 `push`, 조건부 누적으로 값을 만들 때.
 
 **Review with:** `functions-extract-helpers-only-when-the-boundary-is-real`
 
 **Impact: HIGH (분기로 공유 지역 변수를 바꾸지 않아 파일 전역 로직이 선언형으로 남습니다)**
 
-파일 위쪽이나 넓은 스코프에서 `let` 재대입, 배열 `push`, 조건부 누적으로 값을 쌓지 않습니다.
+모듈 최상위나 함수 본문 전체를 덮는 스코프에서 `let` 재대입, 배열 `push`, 조건부 누적으로 값을 쌓지 않습니다.
+`if`나 `for` 블록 안에서만 사는 누적은 대상이 아닙니다.
 한 번만 쓰면 실제 쓰는 좁은 스코프에서 바로 계산합니다.
 분기와 보정이 얽혀 좁은 스코프에 담기지 않으면 떼어 낼지를 다시 봅니다.
 그 판정은 `functions-extract-helpers-only-when-the-boundary-is-real`가 합니다.
@@ -1276,8 +1277,13 @@ const submitDraft = async (draft: Draft) => {
 
 **Impact: MEDIUM (프롭스, 상태, 공유 입력에서 온 배열을 정렬할 때 원본이 바뀌는 버그를 피합니다)**
 
-원본 배열을 계속 써야 하면 `.sort()`로 제자리에서 바꾸지 않습니다.
-실행 환경이 ES2023 이상이거나 `toSorted()`를 쓸 수 있으면 `.toSorted()`를 먼저 씁니다.
+이 함수가 만들지 않은 배열은 `.sort()`로 제자리에서 바꾸지 않습니다.
+프롭스, 상태, 매개변수, 모듈 상수로 들어온 배열이 그 경우입니다.
+
+`.toSorted()`를 먼저 씁니다.
+쓰려면 `tsconfig`의 `lib`에 `ES2023`이 있어야 하고, **실행 환경도 지원해야 합니다.**
+`lib`는 타입 검사만 열어 주고 폴리필하지 않습니다.
+지원하지 않는 환경이면 `[...list].sort()`를 씁니다.
 아니면 복사한 뒤 정렬합니다.
 `toSorted()`는 ES2023이라 `tsconfig`의 `lib`에 `ES2023` 이상이 있어야 씁니다.
 없으면 복사 후 정렬을 씁니다.

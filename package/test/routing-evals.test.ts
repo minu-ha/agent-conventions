@@ -143,6 +143,7 @@ const cssRuleUniverse = [
 	"values-do-not-style-through-the-style-attribute",
 	"values-declare-stacking-layers-as-tokens",
 	"values-namespace-keyframes-and-respect-reduced-motion",
+	"values-switch-themes-by-changing-token-values",
 	"tooling-configure-stylelint-to-enforce-these-rules",
 ] as const;
 
@@ -276,7 +277,7 @@ const typescriptRuleRouting = {
 		reviewWith: [],
 	},
 	"functions-avoid-imperative-assembly-in-wide-scopes": {
-		appliesWhen: "파일 위쪽이나 넓은 스코프에서 `let` 재대입, 배열 `push`, 조건부 누적으로 값을 만들거나 정리할 때.",
+		appliesWhen: "모듈 최상위나 함수 본문 전체를 덮는 스코프에서 `let` 재대입, 배열 `push`, 조건부 누적으로 값을 만들 때.",
 		reviewWith: ["functions-extract-helpers-only-when-the-boundary-is-real"],
 	},
 	"functions-name-a-value-only-when-it-is-reused": {
@@ -385,7 +386,7 @@ const cssRuleRouting = {
 	},
 	"composition-keep-classes-single-purpose": {
 		appliesWhen:
-			"기존 클래스가 기본과 상태·변형 책임을 함께 갖거나 독립 시각 책임을 추가·재사용·분리할 때. 제외: 기존 결합 책임을 그대로 두고 처음부터 단일 책임 쌍을 만들거나 책임이 그대로인 이름 변경만 하는 경우.",
+			"한 클래스 이름에 기본 스타일과 상태를 함께 넣을 때. 이미 있는 클래스를 다른 시각 책임에 돌려 쓸 때. 제외: 처음부터 기본 클래스와 수정자를 나눠 만들 때, 책임이 그대로인 이름 변경만 할 때.",
 		reviewWith: [],
 	},
 	"composition-inject-classes-only-at-the-entry-point": {
@@ -433,7 +434,11 @@ const cssRuleRouting = {
 	},
 	"selector-keep-breakpoints-inside-the-class-block": {
 		appliesWhen: "`@media` 분기점을 추가하거나 옮길 때. 화면 폭에 따라 값이 달라지는 선언을 넣을 때.",
-		reviewWith: ["selector-declare-each-class-in-one-block", "selector-limit-nesting-block-depth"],
+		reviewWith: [
+			"selector-declare-each-class-in-one-block",
+			"selector-limit-nesting-block-depth",
+			"values-switch-themes-by-changing-token-values",
+		],
 	},
 	"values-keep-layout-intent-explicit": {
 		appliesWhen:
@@ -471,6 +476,11 @@ const cssRuleRouting = {
 	"values-namespace-keyframes-and-respect-reduced-motion": {
 		appliesWhen: "`@keyframes`를 선언하거나 `animation`·`transition`을 추가할 때. 애니메이션 이름이나 지속 시간을 바꿀 때.",
 		reviewWith: ["values-tokenize-repeated-visual-values", "tooling-configure-stylelint-to-enforce-these-rules"],
+	},
+	"values-switch-themes-by-changing-token-values": {
+		appliesWhen:
+			"다크 모드나 테마 전환을 넣을 때. 컴포넌트 CSS에 `prefers-color-scheme`이나 `[data-theme]`를 쓰려 할 때. 색이나 그림자 토큰을 새로 만들거나 이름을 바꿀 때.",
+		reviewWith: ["values-always-provide-css-variable-fallbacks", "values-tokenize-repeated-visual-values"],
 	},
 	"tooling-configure-stylelint-to-enforce-these-rules": {
 		appliesWhen: "stylelint 설정을 새로 만들거나 규칙을 추가·수정할 때. 이 컨벤션 중 어디까지 자동으로 잡히는지 확인할 때.",
@@ -1540,6 +1550,21 @@ const cssScenarioStages = {
 			expectedSelected: {css: ["values-keep-layout-intent-explicit", "values-declare-stacking-layers-as-tokens"]},
 		},
 	},
+	"css-theme-token-switch": {
+		initial: {
+			prompt:
+				"add dark mode: a page css file currently branches on prefers-color-scheme inside .pg_dashboard__panel and hardcodes #ffffff and a black box-shadow; move the branch into the token file and keep the component reading tokens only.",
+			files: ["src/style/token.css", "src/page/dashboard/pg-dashboard.css"],
+			expectedSkills: ["css"],
+			expectedSelected: {
+				css: [
+					"values-always-provide-css-variable-fallbacks",
+					"values-tokenize-repeated-visual-values",
+					"values-switch-themes-by-changing-token-values",
+				],
+			},
+		},
+	},
 	"css-cross-owner-internal-targeting": {
 		initial: {
 			prompt:
@@ -2182,7 +2207,7 @@ test("CSS progressive metadata and rule routing match Appendix C exactly", async
 	assert.deepEqual(document.metadata.companions, [
 		{skill: "typescript", mode: "conditional", appliesWhen: "TS/TSX 클래스 계약, 래퍼 Props 또는 style import를 함께 변경한다."},
 	]);
-	assert.equal(document.rules.length, 30);
+	assert.equal(document.rules.length, 31);
 	assert.deepEqual(
 		Object.fromEntries(document.rules.map((rule) => [getRuleId(rule), {appliesWhen: rule.appliesWhen, reviewWith: rule.reviewWith}])),
 		cssRuleRouting,
@@ -2202,7 +2227,7 @@ test("CSS progressive metadata and rule routing match Appendix C exactly", async
 		"wrapperStylingRule",
 	);
 	const singlePurposeRule = await readRuleSource("css", "composition-keep-classes-single-purpose");
-	assertMentions(readAppliesWhen(singlePurposeRule), ["기존 결합 책임", "처음부터 단일 책임 쌍"], "singlePurposeRule");
+	assertMentions(readAppliesWhen(singlePurposeRule), ["기본 스타일과 상태를 함께", "기본 클래스와 수정자를 나눠"], "singlePurposeRule");
 	const layoutIntentRule = await readRuleSource("css", "values-keep-layout-intent-explicit");
 	assertMentions(readAppliesWhen(layoutIntentRule), ["기본과 수정자로 나누면서", "`display`·여백", "값 그대로"], "layoutIntentRule");
 	const fallbackRule = await readRuleSource("css", "values-always-provide-css-variable-fallbacks");
@@ -2238,10 +2263,10 @@ test("CSS routing manifest is the exact eleven-scenario and thirteen-stage Appen
 		manifest.scenarios.map((scenario) => scenario.id),
 		expectedScenarioIds,
 	);
-	assert.equal(manifest.scenarios.length, 16);
+	assert.equal(manifest.scenarios.length, 17);
 	assert.equal(
 		manifest.scenarios.reduce((count, scenario) => count + (scenario.scopeDrift ? 2 : 1), 0),
-		18,
+		19,
 	);
 
 	const coveredCssRules = new Set<string>();
@@ -2483,7 +2508,7 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 	const modifierClassification = await readRule("css", "composition-do-not-build-structural-variants-with-modifiers");
 	assertMentions(
 		modifierClassification,
-		[/켜지고 꺼지는 상태/, /여러 곳에서 반복되는 모양/, /다른 화면에서도 같은 이름으로/],
+		[/켜지고 꺼지는 상태/, /여러 곳에서 반복되는 모양/, /두 개 이상의 `scope_slug`에 이미 있는가/],
 		"modifierClassification",
 	);
 
@@ -2856,7 +2881,7 @@ test("CSS generated index is canonical, complete, body-preserving, and within it
 		entries.map((entry) => entry.id),
 		cssRuleUniverse,
 	);
-	assert.equal(entries.length, 30);
+	assert.equal(entries.length, 31);
 
 	for (const entry of entries) {
 		assert.equal(entry.fileName, `${entry.id}.md`);

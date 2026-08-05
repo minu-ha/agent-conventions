@@ -1,7 +1,7 @@
 # TypeScript 컨벤션 Rule Index
 
 - Skill: `typescript`
-- Routing digest: `sha256:8cc16f41b206935f6920eb5913153e48ee65fe9e2a6355a91efc6b15613ce44e`
+- Routing digest: `sha256:3422047191749047d7c87e1043d3a8e080cf4475c869ae2b099b715303db4605`
 
 ## Local Rules
 
@@ -21,7 +21,7 @@
 - T14 | functions-use-named-object-params-for-complex-signatures | 매개변수가 3개를 넘거나 같은 계열 인자를 받는 함수를 추가·변경할 때. 객체 매개변수를 어디서 구조분해할지 바꿀 때. 제외: 리액트 함수 컴포넌트가 프롭스를 받고 구조분해하는 방식만 바꾸는 경우.
 - T15 | functions-extract-helpers-only-when-the-boundary-is-real | 보조 함수를 빼내거나 옮기거나 내보내거나 공유할 때. 범용 보조 파일, 소유자 하나만 쓰는 변환 함수, 자잘한 정리 단계의 경계를 바꿀 때. | reviewWith: docs-require-header-jsdoc-on-key-declarations, functions-place-and-promote-support-functions
 - T16 | functions-place-and-promote-support-functions | 보조 함수를 둘 파일이나 폴더를 정할 때. \`shared/\` 아래로 파일을 옮기거나 \`util.\*\`에 항목을 추가할 때.
-- T17 | functions-avoid-imperative-assembly-in-wide-scopes | 파일 위쪽이나 넓은 스코프에서 \`let\` 재대입, 배열 \`push\`, 조건부 누적으로 값을 만들거나 정리할 때. | reviewWith: functions-extract-helpers-only-when-the-boundary-is-real
+- T17 | functions-avoid-imperative-assembly-in-wide-scopes | 모듈 최상위나 함수 본문 전체를 덮는 스코프에서 \`let\` 재대입, 배열 \`push\`, 조건부 누적으로 값을 만들 때. | reviewWith: functions-extract-helpers-only-when-the-boundary-is-real
 - T18 | functions-name-a-value-only-when-it-is-reused | 순수 계산의 결과를 지역 \`const\`로 받는 줄을 추가·삭제할 때. 식을 그 자리에 적을지 이름을 붙일지 정할 때. | reviewWith: functions-avoid-imperative-assembly-in-wide-scopes
 - T19 | functions-prefer-immutable-array-sorting | 프롭스, 상태, 매개변수, 공유 입력에서 온 배열을 정렬할 때. 기존 \`.sort\(\)\` 호출을 추가·변경할 때.
 - T20 | functions-replace-enum-with-as-const-objects | \`enum\`이나 타입과 실행 양쪽에서 함께 쓰는 값 묶음을 추가·변경할 때.
