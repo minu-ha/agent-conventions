@@ -28,14 +28,18 @@ tags: functions, boundaries
   그때 `shared/util.ts`의 `util.*`로 올립니다.
   나중에 쓸 것 같아서 올리지 않습니다.
 
-**Incorrect (잡동사니 파일과 세 단계 사슬):**
+**Incorrect (잡동사니 파일과 내보낸 함수 세 단계 사슬):**
 
 ```ts
 // utils.ts
-export const util = {
-	toTrimmedTitle: (title: string) => title.trim(),
-	toPayload: (values: ProductFormValues) => ({title: util.toTrimmedTitle(values.title)}),
-	toRequest: (values: ProductFormValues) => ({body: util.toPayload(values)}),
+export const toTrimmedTitle = (title: string) => title.trim();
+
+export const toProductPayload = (values: ProductFormValues) => {
+	return {title: toTrimmedTitle(values.title)};
+};
+
+export const toProductSaveRequest = (values: ProductFormValues) => {
+	return {body: toProductPayload(values)};
 };
 ```
 
@@ -67,7 +71,7 @@ export const toProfileSaveRequest = (
 ```ts
 // page/product-form/function/to-product-save-request.ts
 /**
- * product 폼 값을 저장 요청으로 조립
+ * product 저장 요청 조립. 서버가 앞뒤 공백이 붙은 title 을 거부한다
  */
 export const toProductSaveRequest = (values: ProductFormValues) => {
 	return {body: {title: values.title.trim()}};
@@ -81,7 +85,7 @@ export const toProductSaveRequest = (values: ProductFormValues) => {
 export const util = {
 	date: {
 		/**
-		 * 화면 표시용 날짜 문자열 변환
+		 * ko-KR 로 고정한다. 사용자 로케일을 따라가면 목록 정렬 기준과 어긋난다
 		 */
 		toDisplayDate(value: string): string {
 			return new Date(value).toLocaleDateString("ko-KR");

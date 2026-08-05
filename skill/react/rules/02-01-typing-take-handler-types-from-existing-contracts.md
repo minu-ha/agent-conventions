@@ -28,14 +28,24 @@ JSX에 바로 쓴 화살표는 리액트가 타입을 붙여 주지만, 팩토�
 안에서 쓰는 라이브러리의 원본 프롭스 타입을 가져오지 않습니다.
 래퍼가 일부러 좁히거나 늘린 계약이 사용처로 새지 않게 하려는 것입니다.
 
-`query.select` 같은 훅 옵션의 일회성 문맥 콜백은 리액트 핸들러 구현이 아니라 대상이 아닙니다.
+`query.select` 같은 훅 옵션의 일회성 문맥 콜백은 리액트 핸들러 구현이 아니므로 이 규칙 대상이 아닙니다.
 
 **Incorrect (팩토리 반환 타입을 적지 않아 이벤트가 암묵적 `any`가 됨):**
 
 ```ts
 const handleRowSelectToggle = (rowId: string) => (event) => {
-  event.preventDefault();
-  toggleSelection(rowId);
+	event.preventDefault();
+	toggleSelection(rowId);
+};
+```
+
+**Incorrect (래퍼를 쓰면서 라이브러리 원본 프롭스를 참조):**
+
+```ts
+import type { LibButtonProps } from "@ui-lib/core";
+
+const handleSubmitClick: LibButtonProps["onClick"] = (event) => {
+	event.preventDefault();
 };
 ```
 
@@ -45,23 +55,14 @@ const handleRowSelectToggle = (rowId: string) => (event) => {
 import type { MouseEventHandler } from "react";
 
 /**
- * 행 선택 토글 핸들러 팩토리
+ * 행 id를 커링으로 고정해 목록 JSX에 인라인 래퍼를 두지 않게 함
  */
 const handleRowSelectToggle =
-  (rowId: string): MouseEventHandler<HTMLLIElement> =>
-  (_event) => {
-    toggleSelection(rowId);
-  };
-```
-
-**Incorrect (래퍼를 쓰면서 라이브러리 원본 프롭스를 참조):**
-
-```ts
-import type { ButtonProps } from "antd";
-
-const handleSubmitClick: ButtonProps["onClick"] = (event) => {
-  event.preventDefault();
-};
+	(rowId: string): MouseEventHandler<HTMLLIElement> =>
+	(event) => {
+		event.preventDefault();
+		toggleSelection(rowId);
+	};
 ```
 
 **Correct (래퍼가 노출한 계약을 참조):**
@@ -73,6 +74,6 @@ import type { UiButtonProps } from "@/ui/ui-button";
  * 저장 버튼 클릭 기본 동작 차단
  */
 const handleSubmitClick: UiButtonProps["onClick"] = (event) => {
-  event.preventDefault();
+	event.preventDefault();
 };
 ```

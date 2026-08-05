@@ -48,7 +48,7 @@ JSX 안에서 그릴 갈래가 **하나면** `&&`를 씁니다.
 ```tsx
 return (
 	<section>
-		{props.helperText ? <span className={clsx("ui_field__helper")}>{props.helperText}</span> : null}
+		{props.helperText ? <span className={clsx("pg_products__helper")}>{props.helperText}</span> : null}
 		{responseProductListSuspense.isFetching ? <UiRefreshIndicator /> : null}
 	</section>
 );
@@ -65,7 +65,7 @@ return <section>{selectedRows.length && <PgProductBulkActionBar />}</section>;
 ```tsx
 return (
 	<section>
-		{props.helperText && <span className={clsx("ui_field__helper")}>{props.helperText}</span>}
+		{props.helperText && <span className={clsx("pg_products__helper")}>{props.helperText}</span>}
 		{selectedRows.length > 0 && <PgProductBulkActionBar selectedRows={selectedRows} />}
 	</section>
 );
@@ -79,7 +79,7 @@ const PgProductPanel = (props: PgProductPanelProps) => {
 		return null;
 	}
 
-	return <section className={clsx("pg_product__panel")}>{props.children}</section>;
+	return <section className={clsx("pg_productPanel__root")}>{props.children}</section>;
 };
 ```
 

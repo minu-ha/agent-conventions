@@ -12,7 +12,7 @@ metadata:
 
 요청·계획·diff에서 render·screen·owner/route-local 배치·handler·state·query·React support code의 실제 변경만 범위로 잡는다. 추가·삭제·이동·이름 변경·재선언은 포함하고, 특히 owner/route-local 이동 자체는 변경이다. read-only 문맥은 제외한다. owner 이동에 그대로 딸려온 내부 선언·본문·import·class/style은 diff에 삭제+추가로 보여도 변경으로 다시 세지 않는다. 적용되지 않는 규칙의 optional pattern을 새로 들여와 스스로 범위를 넓히지 않는다.
 
-`convention-typescript`는 항상 함께 활성화한다. class contract·stylesheet·styling surface가 바뀔 때만 `convention-css`를 추가하고, 아니면 켜지 않는다. route·search·navigation·브라우저 테스트가 걸리면 해당 전용 skill도 판정한다.
+`convention-typescript`는 항상 함께 활성화한다. class contract·stylesheet·styling surface가 바뀔 때만 `convention-css`를 추가하고, 아니면 켜지 않는다.
 
 ## 2. 인덱스 훑기
 
@@ -24,13 +24,13 @@ metadata:
 
 - `requiresSelected` target은 함께 적용한다. 다른 skill의 규칙이면 그 companion도 활성화한다.
 - `reviewWith` target은 변경 범위에 비춰 다시 판단한다. 자동으로 적용하지는 않는다.
-- `completionGate` 규칙은 마무리 시 항상 적용한다.
+- `completionGate` 규칙은 마무리 시 항상 적용한다. index가 그 표시를 달아 준다.
 
 규칙이나 companion이 새로 걸리면 인덱스를 다시 훑는다. 더 걸리는 게 없으면 멈춘다.
 
 ## 4. 범위 변경
 
-작업 중 범위가 늘거나 바뀌면 1번부터 다시 판정하고 활성 index를 다시 훑는다. conditional companion과 non-progressive skill도 다시 판정한다.
+작업 중 범위가 늘거나 바뀌면 1번부터 다시 판정하고 활성 index를 다시 훑는다. conditional companion도 다시 판정한다.
 
 ## 5. 마무리
 

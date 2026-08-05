@@ -9,6 +9,8 @@
   나중에 필요해지면 그때 엽니다.
 - 열 때는 `ref`를 일반 프롭처럼 직접 받습니다.
   감싸는 래퍼를 새로 만들지 않습니다.
-- 외부 패키지 타입 제약 때문에 래퍼가 필요하면 그 이유를 바로 위에 한국어 주석으로 남깁니다.
+- 외부 패키지 타입 제약 때문에 래퍼가 필요하면 그 이유를 주석으로 남깁니다.
+  주석의 위치와 근거 기준은
+  `typescript/docs-justify-convention-exceptions-with-a-reason-comment`가 정합니다.
 
 > 예시·예외가 필요하면 [full rule](../rules/04-04-composition-open-ref-props-only-for-imperative-contracts.md)을 읽습니다.

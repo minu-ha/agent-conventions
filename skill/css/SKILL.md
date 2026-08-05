@@ -16,15 +16,15 @@ TSX component/JSX의 `className`·style이 바뀌면 `convention-react`와 `conv
 
 ## 2. 인덱스 훑기
 
-[RULES_INDEX.md](./RULES_INDEX.md)를 끝까지 훑어 각 규칙의 `appliesWhen`을 변경 범위와 대조한다. 첫 match에서 멈추지 않는다. 애매하면 적용되는 쪽으로 본다.
+[RULES_INDEX.md](./RULES_INDEX.md)를 끝까지 훑어 각 규칙의 `appliesWhen`을 변경 범위와 대조한다. 함께 활성화한 companion skill도 그 `SKILL.md`의 load 계약을 따라 index를 끝까지 훑는다. 첫 match에서 멈추지 않는다. 애매하면 적용되는 쪽으로 본다.
 
 ## 3. 규칙 읽고 구현
 
-걸리는 규칙의 `contracts/<id>.md`를 읽는다. `CRITICAL`이면 `rules/<id>.md` 원문도 반드시 읽는다. 그 외에도 정확한 문법이나 예외 판단이 필요하면 원문으로 확장한다.
+걸리는 규칙의 `contracts/<id>.md`를 읽는다. `CRITICAL`이면 `rules/NN-MM-<id>.md` 원문도 반드시 읽는다. 정확한 원문 경로는 contract의 full rule 링크가 가리킨다. 그 외에도 정확한 문법이나 예외 판단이 필요하면 원문으로 확장한다.
 
 - `requiresSelected` target은 함께 적용한다. 다른 skill의 규칙이면 그 companion도 활성화한다.
 - `reviewWith` target은 변경 범위에 비춰 다시 판단한다. 자동으로 적용하지는 않는다.
-- `completionGate` 규칙은 마무리 시 항상 적용한다.
+- `completionGate` 규칙은 마무리 시 항상 적용한다. index가 그 표시를 달아 준다.
 
 규칙이나 companion이 새로 걸리면 인덱스를 다시 훑는다. 더 걸리는 게 없으면 멈춘다.
 

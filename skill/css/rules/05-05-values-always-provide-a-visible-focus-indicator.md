@@ -2,7 +2,7 @@
 title: Always Provide a Visible Focus Indicator
 titleKo: 포커스 표시는 눈에 보이게 항상 남깁니다
 impact: HIGH
-impactDescription: 포커스 표시를 없애지 않고 형태로 구분해 키보드 사용자가 현재 위치를 봅니다
+impactDescription: 포커스 표시를 없애지 않고 형태로 구분해 키보드 사용자가 현재 위치를 알 수 있습니다
 appliesWhen:
   - `outline`, `:focus`, `:focus-visible` 스타일을 추가·수정할 때
   - 상호작용 요소의 기본 포커스 링을 덮어쓸 때
@@ -12,7 +12,7 @@ tags: accessibility, focus, interaction
 
 ## Always Provide a Visible Focus Indicator
 
-**Impact: HIGH (포커스 표시를 없애지 않고 형태로 구분해 키보드 사용자가 현재 위치를 봅니다)**
+**Impact: HIGH (포커스 표시를 없애지 않고 형태로 구분해 키보드 사용자가 현재 위치를 알 수 있습니다)**
 
 포커스 표시를 없애지 않습니다.
 `outline: none`을 쓰면 대체 스타일을 반드시 함께 제공합니다.
@@ -24,7 +24,7 @@ tags: accessibility, focus, interaction
   형태가 바뀌는 신호를 함께 씁니다.
   색만 쓰면 색각 이상에서 구분되지 않습니다.
 - 링과 그 뒤 배경의 대비가 3:1 이상이고 두께가 2px 이상입니다.
-  WCAG 2.2 SC 1.4.11 과 2.4.13 이 정한 값입니다.
+  WCAG 2.2 SC 1.4.11(AA)과 2.4.13(AAA)이 정한 값입니다.
   링이 배경과 같은 계열이면 없는 것과 같습니다.
 - 기본 블록에 둡니다.
   수정자 블록 안에만 두면 그 상태가 아닐 때 표시가 사라집니다.
@@ -75,7 +75,7 @@ tags: accessibility, focus, interaction
 	&:focus-visible {
 		outline: none;
 		border-color: #1677ff;
-		box-shadow: 0 0 0 3px rgb(22 119 255 / 20%);
+		box-shadow: 0 0 0 3px #1677ff;
 	}
 }
 ```

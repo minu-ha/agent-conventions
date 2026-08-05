@@ -6,8 +6,7 @@
 
 | 경로 | 판정 |
 | --- | --- |
-| `@/ui`, `@/widget` | 허용 |
-| `@/shared`, `@/service`, `@/store`, `@/asset` | 허용 |
+| `@/ui`, `@/widget`, `@/shared`, `@/service`, `@/store`, `@/asset` | 허용 |
 | `@/page/...` 등 화면 내부 | 금지 |
 
 - 첫 마디가 레이어 루트면 그 아래 깊이는 제한하지 않습니다.

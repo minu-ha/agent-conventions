@@ -38,24 +38,18 @@ tags: docs, comments
 ```ts
 // 성능을 위해 메모이제이션
 const columns = useMemo(() => toTableColumns(response.data.columns), [response.data.columns]);
-
-// 안전하게 기본값 처리
-const pageSize = settings.pageSize ?? 20;
 ```
 
-**Correct (외부 제약과 설정 키를 가리킴):**
+**Correct (외부 패키지의 제약을 가리킴):**
 
 ```ts
-// ag-grid 는 columnDefs 참조가 바뀌면 컬럼 상태를 초기화한다. 참조를 고정해야 한다.
+// ag-grid는 columnDefs 참조가 바뀌면 컬럼 상태를 초기화한다. 참조를 고정해야 한다.
 const columns = useMemo(() => toTableColumns(response.data.columns), [response.data.columns]);
-
-// 기본 페이지 크기는 config.pagination.default_page_size 가 기준이다.
-const pageSize = settings.pageSize ?? config.pagination.default_page_size;
 ```
 
 **Correct (측정 결과를 가리킴):**
 
 ```ts
-// 행 5,000개에서 매 렌더 필터링이 120ms 로 측정됐다. 지연한 검색어에만 다시 계산한다.
+// 행 5,000개에서 매 렌더 필터링이 120ms로 측정됐다. 지연한 검색어에만 다시 계산한다.
 const filteredRows = useMemo(() => rows.filter((row) => matchRow(row, deferredKeyword)), [deferredKeyword, rows]);
 ```

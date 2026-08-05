@@ -14,6 +14,9 @@
 | 여러 부품이 같은 상태/동작/컨텍스트를 읽음 | `stateful compound component` |
 | 같은 합성 조합이 반복됨 | `explicit variant component` |
 
+아래 네 예시는 같은 대화상자 하나를 네 단계로 끌고 갑니다.
+필요가 늘 때 앞 단계에서 다음 단계로만 넘어가고, 공개 이름은 그대로 둡니다.
+
 렌더 프롭을 쓸 자리인지는 `strategy-prefer-children-over-render-props`가 따로 판정합니다.
 
 무엇을 공개 부품으로 열지는 `strategy-expose-only-assembled-compound-parts`가 정합니다.

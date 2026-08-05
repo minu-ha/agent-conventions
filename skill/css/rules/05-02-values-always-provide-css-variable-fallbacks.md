@@ -32,7 +32,7 @@ tags: variables, fallbacks, tokens
 대체값은 **변수가 선언되지 않았을 때만** 쓰입니다.
 선언은 있는데 그 속성에 맞지 않는 값이면 대체값이 아니라 위와 같은 결과가 됩니다.
 
-공통 토큰에 대체값을 붙이지 않는 이유는 `values-tokenize-repeated-visual-values`와 충돌하기 때문입니다.
+공통 토큰에 대체값을 붙이지 않는 이유는 `values-tokenize-repeated-visual-values` 규칙과 충돌하기 때문입니다.
 `var(--app-space-3, 12px)`가 100곳에 있으면 `12px`을 100곳에 하드코딩한 것과 같아서 토큰화의 목적이 사라집니다.
 값을 한 곳에서 바꾸려면 그 한 곳이 유일해야 합니다.
 

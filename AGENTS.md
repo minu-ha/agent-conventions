@@ -54,7 +54,8 @@ progressive 는 `SKILL.md` → `RULES_INDEX.md` → 걸린 `contracts/*.md` 로 
 셋 다 progressive 다.
 
 `metadata.json.companions` 가 `required` 와 `conditional` 활성화를 선언한다.
-`extends` 는 아직 progressive 로 안 옮긴 skill 의 호환 계약.
+계층은 이 선언이 정한다. 나를 companion 으로 켜는 skill 이 위 계층이고,
+`typescript` 는 아무도 켜지 않으므로 가장 아래다. 아래에서 위를 가리키지 않는다.
 
 ---
 
@@ -100,7 +101,7 @@ progressive `routing-evals.json`.
 | `appliesWhen` | 이 규칙이 걸리는 조건. 한 줄, 160자 이내 |
 | `requiresSelected` | 함께 적용하는 필수 관계. cross-skill 이면 companion 도 활성화 |
 | `reviewWith` | 재평가 힌트. 자동 적용 아님. 방향 있음 — 역방향 추론 금지 |
-| `requiredOnCompletion` | 마무리 시 항상 적용 |
+| `requiredOnCompletion` | 마무리 시 항상 적용. index 에는 `completionGate` 로 찍히고 `SKILL.md` 3절이 그 이름으로 안내한다. 지금 이 키를 쓰는 규칙은 없다 |
 
 ---
 

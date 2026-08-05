@@ -9,23 +9,19 @@
 라이브러리 표면이 통째로 열려서 그 라이브러리의 스타일 통로까지 화면이 쓸 수 있게 됩니다.
 `css/composition-inject-classes-only-at-the-entry-point`가 정한 스타일 창구가 그 자리에서 뚫립니다.
 
-계약은 네 갈래로 나눠 각각 다르게 씁니다.
+DOM 프롭이 아닌 계약은 세 갈래로 나눠 각각 다르게 씁니다.
+DOM 표면은 아래 세 단계 표가 맡습니다.
 
 | 프롭 | 어떻게 |
 | --- | --- |
-| 요소 공통 DOM (`id`, `role`, `tabIndex`, `aria-*`, 이벤트) | `extends HTMLAttributes<대상요소>`로 통째로 |
 | 라이브러리에 **이미 있는** 표시 프롭 (`color`, `padding`, `size`) | `LibXProps["color"]` 인덱스 접근으로 하나씩 |
-| 우리가 **새로 만든** 프롭 (`icon`, `label`, `helperText`) | 우리가 타입을 적습니다 |
+| 우리가 **새로 만든** 자기 프롭 (`icon`, `label`, `helperText`) | 우리가 타입을 적습니다 |
 | 라이브러리 스타일 통로 (테마 스타일 프롭, 클래스 맵, 렌더 태그 교체) | 선언하지 않습니다 |
 
-인덱스 접근은 **이미 있는 프롭을 그대로 여는 자리**에만 씁니다.
-안쪽 컴포넌트가 모르는 프롭을 새로 만들었으면 그 타입은 우리 것이라 우리가 적습니다.
-`icon: ReactNode` 나 `label: string`이 그 경우입니다.
-어느 쪽인지는 `typing-choose-wrapper-shape-and-forwarding`의 **자기 프롭** 판정과 같습니다.
-
-첫 줄의 `extends`가 안 되는 래퍼에서는 DOM 프롭도 필요한 것만 적습니다.
-그때는 라이브러리 타입이 아니라 `string`, `ChangeEventHandler<HTMLInputElement>` 같은 플랫폼 타입을 씁니다.
-`value` 나 `onChange`처럼 DOM이 이미 정한 이름은 라이브러리 것이 아닙니다.
+**자기 프롭**은 안쪽 컴포넌트가 받지 않는 프롭입니다.
+`UiIconButtonProps`의 `icon`은 감싸는 컴포넌트가 모르므로 자기 프롭이고,
+`UiTableRowProps`의 `selected`는 감싸는 컴포넌트가 받으므로 자기 프롭이 아닙니다.
+인덱스 접근은 자기 프롭이 아닌 것, 곧 **이미 있는 프롭을 그대로 여는 자리**에만 씁니다.
 
 **DOM 표면을 여는 방법은 세 단계이고 위에서부터 되는 것을 씁니다.**
 어느 단계인지는 컴파일러가 알려 주므로 미리 고민하지 않습니다.
@@ -43,6 +39,9 @@
 3단계는 입력 래퍼에서 나옵니다.
 겉을 `div`로 감싸면서 이벤트는 안쪽 `input`이 받는 컴포넌트가 그렇습니다.
 값이 아니라 요소 타입이 어긋나므로 `Omit`으로 한둘 빼도 이벤트 핸들러가 줄줄이 걸립니다.
+이때는 DOM 프롭도 필요한 것만 적고, 라이브러리 타입이 아니라 `string`,
+`ChangeEventHandler<HTMLInputElement>` 같은 플랫폼 타입을 씁니다.
+`value`나 `onChange`처럼 DOM이 이미 정한 이름은 라이브러리 것이 아닙니다.
 
 여기 쓰는 `Omit`은 `typescript/types-reuse-existing-contracts-before-new-types`가 허용하는 자리입니다.
 DOM 표면은 리액트가 속성을 더하면 래퍼도 따라 받아야 하는 열린 집합이라
@@ -52,11 +51,12 @@ DOM 표면은 리액트가 속성을 더하면 래퍼도 따라 받아야 하는
 - 인덱스 접근은 상속 사슬을 따라갑니다.
   바깥 타입 이름 하나만 쓰면 됩니다.
 - 값을 손으로 다시 적는 것은 일부러 좁힐 때만 합니다.
-  그때는 좁힌 이유를 문서 주석에 남깁니다.
+  좁힌 이유를 적는 형식과 근거 기준은
+  `typescript/docs-justify-convention-exceptions-with-a-reason-comment`가 정합니다.
 - `aria-*`와 `data-*`는 하이픈이 들어 있어 TypeScript가 검사하지 않습니다.
   선언하지 않아도 넘어갑니다.
 - `ref`를 여는 기준은 `composition-open-ref-props-only-for-imperative-contracts`가 정합니다.
-- 프롭을 어떻게 넘기는지는 `typing-choose-wrapper-shape-and-forwarding`가 정합니다.
+- 프롭을 어떻게 넘기는지는 `typing-choose-wrapper-shape-and-forwarding`이 정합니다.
 - `HTMLAttributes`를 `extends` 하면 `style`도 같이 열립니다.
   인라인 `style`을 쓸지는 `css/values-do-not-style-through-the-style-attribute`가 정합니다.
 

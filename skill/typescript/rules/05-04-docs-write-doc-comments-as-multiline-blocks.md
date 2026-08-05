@@ -22,50 +22,34 @@ tags: docs, declarations
   규칙이 허용한 예외의 이유를 적을 때는 `//` 한 줄을 씁니다.
   그 형식은 `docs-justify-convention-exceptions-with-a-reason-comment`가 정합니다.
 - 어느 선언에 붙일지는 `docs-require-header-jsdoc-on-key-declarations`가 정합니다.
-- 선언이 무엇인지는 이름과 문법이 이미 드러냅니다.
-  그것을 태그로 다시 적지 않습니다.
-  `@api`·`@helper`·`@field` 같은 역할 태그를 붙이지 않고 `@schema`처럼 새 태그를 만들지도 않습니다.
-  `@summary`는 헤더 첫 줄이 이미 하는 일이라 쓰지 않습니다.
-  `@deprecated`·`@example`·`@param`·`@returns`처럼 TSDoc 규격에 있는 태그만 필요할 때 씁니다.
-  역할 태그는 선언이 바뀌어도 함께 바뀌지 않아 시간이 지나면 어긋납니다.
+- 어떤 태그를 붙일지는 `docs-write-concise-korean-comments-about-purpose-and-constraints`가 정합니다.
 
 **Incorrect (한 줄 블록과 `//`로 선언을 설명):**
 
 ```ts
-/** product 목록 조회 */
+/** product 목록. 조회 실패는 호출부가 처리한다 */
 export const fetchProductList = async (): Promise<Product[]> => {
 	return await client.get("/products");
 };
 
-// product 저장 요청
+// product 저장 요청. 응답 본문이 없어 성공은 상태 코드로만 확인한다
 export const saveProduct = async (product: Product): Promise<void> => {
 	await client.post("/products", product);
 };
 ```
 
-**Incorrect (역할 태그로 선언의 성격을 다시 적음):**
+**Correct (같은 내용을 여러 줄 블록으로 고정):**
 
 ```ts
 /**
- * @api product 목록 조회
- */
-export const fetchProductList = async (): Promise<Product[]> => {
-	return await client.get("/products");
-};
-```
-
-**Correct (여러 줄 블록으로 고정):**
-
-```ts
-/**
- * product 목록 조회
+ * product 목록. 조회 실패는 호출부가 처리한다
  */
 export const fetchProductList = async (): Promise<Product[]> => {
 	return await client.get("/products");
 };
 
 /**
- * product 저장 요청
+ * product 저장 요청. 응답 본문이 없어 성공은 상태 코드로만 확인한다
  */
 export const saveProduct = async (product: Product): Promise<void> => {
 	await client.post("/products", product);

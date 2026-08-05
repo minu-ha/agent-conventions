@@ -11,12 +11,12 @@
   블록을 옮겨도 결과가 같습니다.
 - 기본 클래스와 수정자는 서로 다른 클래스이므로 각자 자기 블록을 갖습니다.
 
-`,` 묶음으로 선언을 나누는 형태는 `selector-do-not-group-classes-with-commas`가 막습니다.
+`,` 묶음으로 선언을 나누는 형태는 `selector-do-not-group-classes-with-commas` 규칙이 막습니다.
 이 규칙은 묶음 없이 같은 클래스를 두 번 여는 경우를 막습니다.
 
 `@media`나 `@supports` 안의 재선언은 대상이 아닙니다.
 조건이 다른 별개 블록입니다.
-그 블록을 파일 어디에 두는지는 `selector-group-breakpoints-at-the-file-bottom`이 정합니다.
+그 블록을 파일 어디에 두는지는 `selector-group-breakpoints-at-the-file-bottom` 규칙이 정합니다.
 
 기계 검증은 `no-duplicate-selectors`입니다.
 

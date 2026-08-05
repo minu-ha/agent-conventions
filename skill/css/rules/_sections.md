@@ -5,8 +5,9 @@
 ## 1. Class Naming and Syntax (naming)
 **TitleKo:** 클래스 이름과 문법
 **Impact:** CRITICAL
-**Description:** 클래스 문법이 고정되어 있고 요소·수정자 이름이 역할을 가리켜야 스타일을 이름으로 검색할 수 있고,
-  이름만 보고 무엇을 담당하는 클래스인지 알 수 있습니다.
+**Description:** 이 스킬은 일반 `*.css`와 전역에서 고유한 클래스명을 전제로 하고, 그 전제를 여기서 정합니다.
+  클래스 문법이 고정되어 있고 요소와 수정자 이름이 역할을 가리켜야 스타일을 이름으로 검색할 수 있습니다.
+  이름만 보고 무엇을 담당하는 클래스인지, 어느 화면 것인지 알 수 있습니다.
 
 ## 2. Ownership and Boundaries (ownership)
 **TitleKo:** 소유와 경계
@@ -19,12 +20,15 @@
 **Impact:** HIGH
 **Description:** TSX 클래스 조합과 래퍼 소유 규칙은 스타일링 경계를 분명하게 유지하고, UI 래퍼가 통제되지 않은
   스타일 연결 지점을 노출하는 것을 막습니다.
+  한 클래스가 무엇까지 담당하는지, 수정자로 표현할 자격이 있는 모양은 무엇인지도 여기서 정합니다.
 
 ## 4. Selectors and Declaration Placement (selector)
 **TitleKo:** 선택자와 선언 배치
 **Impact:** HIGH
 **Description:** 겨냥 대상이 코드에 그대로 쓰여 있고 한 클래스의 선언이 한 블록에 모여 있어야, 스타일을 고칠 때 읽을
   선택자와 볼 블록이 각각 하나로 정해집니다.
+  브라우저가 주는 DOM 상태는 가상 클래스로, 앱이 정하는 상태는 수정자로 갈라 그 요소 블록 안에 둡니다.
+  화면 폭 분기점도 파일 아래 한 자리에 모읍니다.
 
 ## 5. Values, Layout, and Accessibility (values)
 **TitleKo:** 값, 레이아웃, 접근성

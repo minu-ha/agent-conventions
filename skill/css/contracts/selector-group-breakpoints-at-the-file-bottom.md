@@ -11,7 +11,8 @@
 
 **대가가 있습니다.**
 한 클래스의 선언이 기본 블록과 분기점 블록 두 곳에 있습니다.
-`selector-declare-each-class-in-one-block`이 `@media` 안의 재선언을 예외로 두는 이유가 이것이고, 여기서 그 예외의 자리를 못 박습니다.
+`selector-declare-each-class-in-one-block` 규칙이 `@media` 안의 재선언을 예외로 두는 이유가 이것입니다.
+여기서 그 예외의 자리를 못 박습니다.
 그래도 이쪽을 고릅니다.
 분기점을 고치는 일은 클래스 하나를 고치는 일이 아니라 그 폭에서 화면이 어떻게 보이는지를 고치는 일이기 때문입니다.
 
@@ -24,32 +25,32 @@
 좁은 화면에서는 조건이 여러 개 동시에 맞고 마지막에 쓴 것이 이깁니다.
 
 조건은 범위 표기로 씁니다.
-`(width < 1024px)` 이고 `(max-width: 1023.98px)`이 아닙니다.
-`max-width: 1024px`은 1024를 포함해서 `min-width: 1024px`과 겹치므로 소수 보정이 필요했지만, 범위 표기는 겹치지 않습니다.
-`tooling-configure-stylelint-to-enforce-these-rules`가 그 표기를 강제합니다.
+`(width < 1024px)`로 쓰고 `(max-width: 1023.98px)`로 쓰지 않습니다.
+`max-width: 1024px`은 1024를 포함해서 `min-width: 1024px`과 겹치므로 소수 보정이 필요했습니다.
+범위 표기는 겹치지 않습니다.
+`tooling-configure-stylelint-to-enforce-these-rules` 규칙이 그 표기를 강제합니다.
 
 분기점 숫자는 아래 셋만 씁니다.
-기본 선언은 `lg` 이상 기준입니다.
+이름은 경계가 아니라 그 아래 구간을 가리킵니다.
+기본 선언은 `1440px` 이상 기준입니다.
 
-| 조건 | 이름 | 여기부터 좁아짐 |
+| 조건 | 구간 이름 | 여기부터 좁아짐 |
 | --- | --- | --- |
-| `(width < 1440px)` | `lg` | 좁은 데스크톱 |
-| `(width < 1024px)` | `md` | 가로 태블릿, 좁은 노트북 |
-| `(width < 640px)` | `sm` | 세로 태블릿 아래 |
+| `(width < 1440px)` | `~lg` | 좁은 데스크톱 |
+| `(width < 1024px)` | `~md` | 가로 태블릿, 좁은 노트북 |
+| `(width < 640px)` | `~sm` | 세로 태블릿 아래 |
 
 숫자를 토큰으로 빼지 않습니다.
 `@media`의 조건에는 `var()`를 쓸 수 없어서 토큰으로 만들어도 그 자리에서 못 씁니다.
 그래서 세 값을 규칙에 못 박고 그대로 적습니다.
 
-**같은 분기 동작이 파일 여러 개에 반복되면 그것을 소유할 자리를 하나 만듭니다.**
-같은 `@media` 블록을 파일마다 복사하고 있으면 그건 분기점을 어디 두느냐의 문제가 아니라 소유자가 없는 문제입니다.
-바뀌는 것이 값이면 토큰 파일에서 분기하고, 바뀌는 것이 배치면 그 배치를 컴포넌트 하나로 만들어 그 파일에만 분기점을 둡니다.
+`@media` 블록이 여러 파일에 반복되면 `composition-do-not-add-wrapper-elements-for-styling` 규칙이 소유자를 정합니다.
 
 분기점을 적기 전에 분기점 없이 되는지 먼저 봅니다.
-`values-reach-for-intrinsic-sizing-before-breakpoints`가 그 판정을 합니다.
+`values-reach-for-intrinsic-sizing-before-breakpoints` 규칙이 그 판정을 합니다.
 
 테마 조건은 여기에 걸리지 않습니다.
 `prefers-color-scheme`은 토큰 파일에서 최상위 `@media`로 씁니다.
-`values-switch-themes-by-changing-token-values`가 그 자리를 정합니다.
+`values-switch-themes-by-changing-token-values` 규칙이 그 자리를 정합니다.
 
 > 예시·예외가 필요하면 [full rule](../rules/04-08-selector-group-breakpoints-at-the-file-bottom.md)을 읽습니다.

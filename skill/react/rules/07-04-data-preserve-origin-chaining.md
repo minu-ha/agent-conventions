@@ -4,7 +4,7 @@ titleKo: 넓은 스코프에서 응답과 스토어 출처를 남깁니다
 impact: CRITICAL
 impactDescription: 파일 전체에서 별칭을 따라가지 않고 값의 출처를 바로 압니다
 appliesWhen:
-  - page·레이아웃·화면 넓은 스코프에서 응답·뮤테이션·스토어를 구조분해할 때
+  - page, 레이아웃, 화면 넓은 스코프에서 응답, 뮤테이션, 스토어를 구조분해할 때
   - 원본을 별칭으로 끊고 값 접근 방식을 바꿀 때
 reviewWith: screen-keep-derived-values-close
 tags: data, state, origin
@@ -25,25 +25,31 @@ tags: data, state, origin
 **Incorrect (넓은 스코프 구조분해로 출처가 흐려짐):**
 
 ```ts
-const { products, selectedProduct } = responseProductListSuspense.data;
+const {products, selectedProduct} = responseProductListSuspense.data;
 ```
 
 **Correct (원본 체이닝으로 출처를 유지):**
 
 ```tsx
-<UiList dataSource={responseProductListSuspense.data.products} />
-<UiTable dataSource={responseProductListSuspense.data.selectedProduct.fields} />
+<Fragment>
+	<UiList dataSource={responseProductListSuspense.data.products} />
+	<UiTable dataSource={responseProductListSuspense.data.selectedProduct.fields} />
+</Fragment>;
 ```
+
+**Correct (이펙트 안 좁은 스코프에서만 구조분해):**
 
 ```ts
 /**
- * 검색 응답이 비어 있을 때만 후속 동기화를 건너뜀
+ * 검색 결과가 있으면 빈 검색 보고를 건너뛴다. 결과가 없을 때만 한 번 보고한다
  */
 useEffect(() => {
-  if (responseProductSearchSuspense.data.products.length > 0) {
-    return;
-  }
+	const {products} = responseProductSearchSuspense.data;
 
-  reportEmptySearch(search.keyword);
-}, [responseProductSearchSuspense.data.products, search.keyword]);
+	if (products.length > 0) {
+		return;
+	}
+
+	reportEmptySearch(search.keyword);
+}, [responseProductSearchSuspense.data, search.keyword]);
 ```

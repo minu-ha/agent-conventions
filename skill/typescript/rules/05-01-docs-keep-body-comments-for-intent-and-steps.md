@@ -6,7 +6,9 @@ impactDescription: 코드를 옮겨 적은 주석은 막고 읽는 데 필요한
 appliesWhen:
   - 함수 본문의 `//` 주석을 추가·수정·유지할 때
   - 도메인 규칙, 예외 방어, 외부 제약, 부수효과 순서, 긴 절차의 단계를 주석으로 설명할 때
-reviewWith: docs-write-concise-korean-comments-about-purpose-and-constraints
+reviewWith: >-
+  docs-write-concise-korean-comments-about-purpose-and-constraints,
+  docs-justify-convention-exceptions-with-a-reason-comment
 tags: docs, comments
 ---
 
@@ -14,12 +16,12 @@ tags: docs, comments
 
 **Impact: MEDIUM (코드를 옮겨 적은 주석은 막고 읽는 데 필요한 설명은 남깁니다)**
 
-본문 안에서 문장이나 단계를 설명할 때는 `//`만 씁니다.
+본문 안에서 코드 한 줄이나 절차의 단계를 설명할 때는 `//`만 씁니다.
 블록 주석을 쓰지 않습니다.
-본문 안이라도 **선언 위**에는 문서 주석 블록을 씁니다.
+본문 안이라도 `docs-require-header-jsdoc-on-key-declarations`가 지목한 선언 위에는 블록을 씁니다.
 컴포넌트 본문의 핸들러, 이펙트, 쿼리 바인딩이 그 자리입니다.
-어느 선언에 붙일지는 `docs-require-header-jsdoc-on-key-declarations`가,
-형식은 `docs-write-doc-comments-as-multiline-blocks`가 정합니다.
+그 밖의 지역 선언에는 블록을 쓰지 않습니다.
+블록의 형식은 `docs-write-doc-comments-as-multiline-blocks`가 정합니다.
 
 본문 주석은 이런 자리에 답니다.
 
@@ -30,9 +32,11 @@ tags: docs, comments
 - **긴 절차의 단계 구분.** 흐름을 쪼개지 않고 한 자리에 두기로 한 함수일수록 단계 표시가 필요합니다
 
 주석에 무엇을 쓸지는 `docs-write-concise-korean-comments-about-purpose-and-constraints`가 정합니다.
+규칙이 허용한 예외의 이유를 남기는 주석은
+`docs-justify-convention-exceptions-with-a-reason-comment`가 따로 정합니다.
 이 규칙은 본문 안 어디에 다는지만 봅니다.
 
-**Incorrect (본문에 블록 주석을 쓰고 코드를 그대로 옮겨 적음):**
+**Incorrect (본문 안 지역 선언에 블록 주석을 씀):**
 
 ```ts
 const filterProducts = (products: Product[], keyword: string) => {
@@ -41,7 +45,6 @@ const filterProducts = (products: Product[], keyword: string) => {
 	 */
 	const normalizedKeyword = keyword.trim().toLowerCase();
 
-	// products를 순회하면서 title이 포함하는지 확인한다.
 	return products.filter((product) => product.title.toLowerCase().includes(normalizedKeyword));
 };
 ```

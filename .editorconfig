@@ -10,8 +10,9 @@ trim_trailing_whitespace = true
 # 문단 안의 줄바꿈은 Markdown 이 다시 합치므로 렌더링 결과는 바뀌지 않고,
 # diff 가 문장 단위로 남아 리뷰하기 쉽습니다.
 # 고정 컬럼으로 하드랩하지 마세요. 한 문장을 고칠 때 문단 전체가 재배치됩니다.
+# 값은 docs/semantic-wrap.py 의 MAX 와 같아야 합니다. 그 스크립트가 실제 기준입니다.
 [*.md]
-max_line_length = 100
+max_line_length = 120
 
 [*.{ts,json}]
 indent_style = tab

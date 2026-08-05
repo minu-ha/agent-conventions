@@ -9,7 +9,7 @@
 다시 내보내는 계층이 아니므로 배럴이 아닙니다.
 타입만 가져올 때는 `import type`을 써서 계약과 실행 의존을 나눕니다.
 
-절대경로 별칭으로 어디까지 열지는 `naming-restrict-absolute-aliases-to-layer-roots`가 정합니다.
+절대경로 별칭으로 어디까지 열지는 `naming-restrict-absolute-aliases-to-layer-roots` 규칙이 정합니다.
 
 경로가 같아도 값과 타입 중 무엇을 가져오는지가 바뀌면
 가져오기 계약이 바뀐 것이라 이 규칙을 적용합니다.

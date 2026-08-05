@@ -6,7 +6,7 @@ impactDescription: 렌더마다 컴포넌트 타입을 다시 만들어 생기�
 appliesWhen:
   - 컴포넌트 본문 안에 JSX를 반환하는 로컬 함수·컴포넌트를 추가하거나 옮길 때
   - 재렌더 시 재마운트·focus 초기화 징후를 다룰 때
-tags: composition, performance
+tags: composition, perf
 ---
 
 ## Do Not Define Components Inside Components
@@ -25,7 +25,15 @@ tags: composition, performance
 ```tsx
 export const WgUserProfileCard = (props: WgUserProfileCardProps) => {
 	const Avatar = () => {
-		return <img className={clsx("wg_userProfileAvatar__image", props.theme === "dark" && "wg_userProfileAvatar__image--dark")} src={props.user.avatarUrl} />;
+		return (
+			<img
+				className={clsx(
+					"wg_userProfileAvatar__image",
+					props.theme === "dark" && "wg_userProfileAvatar__image--dark",
+				)}
+				src={props.user.avatarUrl}
+			/>
+		);
 	};
 
 	return (
@@ -54,7 +62,15 @@ export interface WgUserProfileAvatarProps {
 }
 
 export const WgUserProfileAvatar = (props: WgUserProfileAvatarProps) => {
-	return <img className={clsx("wg_userProfileAvatar__image", props.theme === "dark" && "wg_userProfileAvatar__image--dark")} src={props.src} />;
+	return (
+		<img
+			className={clsx(
+				"wg_userProfileAvatar__image",
+				props.theme === "dark" && "wg_userProfileAvatar__image--dark",
+			)}
+			src={props.src}
+		/>
+	);
 };
 
 export const WgUserProfileCard = (props: WgUserProfileCardProps) => {

@@ -2,7 +2,7 @@
 title: Choose State Tools by Source of Truth
 titleKo: 상태 도구는 진짜 출처를 기준으로 고릅니다
 impact: MEDIUM-HIGH
-impactDescription: 지역 UI 상태, 전역 상태, 서버 상태가 서로 섞이지 않습니다
+impactDescription: 로컬 UI 상태, 전역 상태, 서버 상태가 서로 섞이지 않습니다
 appliesWhen:
   - 로컬 UI·전역 클라이언트·서버 데이터를 새 상태 도구로 옮길 때
   - 합성 컴포넌트나 컴포넌트 묶음에 공유 상태를 넣을 때
@@ -13,7 +13,7 @@ tags: state, react-query, zustand
 
 ## Choose State Tools by Source of Truth
 
-**Impact: MEDIUM-HIGH (지역 UI 상태, 전역 상태, 서버 상태가 서로 섞이지 않습니다)**
+**Impact: MEDIUM-HIGH (로컬 UI 상태, 전역 상태, 서버 상태가 서로 섞이지 않습니다)**
 
 상태 도구는 값의 수명과 소유자를 기준으로 고릅니다.
 
@@ -23,11 +23,11 @@ tags: state, react-query, zustand
 | 한 컴포넌트 묶음 안에서 공유하는 UI | `useState` + `Context` |
 | 전역 클라이언트 | `Zustand` |
 | 서버 | `@tanstack/react-query` |
-| 주소를 주고받으면 같은 화면이 나와야 하는 값 | 라우트 검색 매개변수 |
+| 링크를 공유해도 같은 화면이 열려야 하는 값 | 라우트 검색 매개변수 |
 
 이 기준으로 고르면 화면 파일이 더 읽기 쉬워지고 중복 동기화가 줄어듭니다.
 
-마지막 줄이 자주 빠집니다.
+표의 마지막 행이 자주 빠집니다.
 목록의 필터, 정렬, 페이지, 고른 행처럼 새로고침·뒤로 가기·링크 공유로 살아남아야 하는 값은
 `useState`가 아니라 검색 매개변수가 소유합니다.
 열림과 닫힘, 마우스 올림, 입력 중인 임시 값은 주소에 올리지 않습니다.
@@ -41,7 +41,8 @@ tags: state, react-query, zustand
 - 값의 출처는 여전히 `useState`입니다.
   `Context`는 그 값을 나르는 통로입니다.
 - 묶음 밖에서도 필요해지면 `Context`를 위로 올리지 않고 전역 스토어로 옮깁니다.
-  그 판정은 `state-store-derived-authority`가 합니다.
+  묶음 밖의 화면이나 레이아웃이 같은 값을 읽거나 바꾸면 옮길 때입니다.
+  탭 `selectedId`처럼 파생이 아닌 공유 UI 상태도 이 기준으로 봅니다.
 
 프로젝트가 이미 다른 전역 스토어나 서버 상태 도구를 표준으로 쓴다면 그것을 유지합니다.
 `Zustand`나 `react-query`를 새로 들여오지 말고 진짜 출처 원칙만 지킵니다.
@@ -83,6 +84,20 @@ interface UiTabsContextValue {
 }
 
 const UiTabsContext = createContext<UiTabsContextValue | null>(null);
+
+/**
+ * 탭 묶음 루트 입력 계약
+ */
+interface UiTabsRootProps {
+	/**
+	 * 처음 열어 둘 탭 식별자
+	 */
+	defaultId: string;
+	/**
+	 * 탭 목록과 패널 부품
+	 */
+	children: ReactNode;
+}
 
 export const UiTabsRoot = (props: UiTabsRootProps) => {
 	const [selectedId, setSelectedId] = useState(props.defaultId);

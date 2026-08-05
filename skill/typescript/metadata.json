@@ -3,7 +3,7 @@
 	"version": "1.0.0",
 	"organization": "Agent Conventions",
 	"date": "2026년 4월",
-	"abstract": "에이전트 협업 팀을 위한 TypeScript 코딩 컨벤션입니다. 명시적인 네이밍, 직접 import, 재사용 가능한 타입 계약, 절제된 helper 추출, 반복 lookup과 정렬의 불변성, 의도적인 결측값 처리, 일관된 JSDoc 경계를 강조합니다. React, NestJS, TanStack Route, Playwright Test 같은 TypeScript 기반 skill이 공통으로 함께 따르는 규칙 세트이기도 합니다. `rules/` 아래 rule 파일이 source of truth입니다.",
+	"abstract": "에이전트 협업 팀을 위한 TypeScript 코딩 컨벤션입니다. 명시적인 네이밍, 직접 import, 재사용 가능한 타입 계약, 절제된 helper 추출, 반복 lookup과 정렬의 불변성, 의도적인 결측값 처리, 일관된 JSDoc 경계를 강조합니다. React, CSS 같은 위 계층 skill이 공통으로 함께 따르는 규칙 세트이기도 합니다. `rules/` 아래 rule 파일이 source of truth입니다.",
 	"progressiveDisclosure": true,
 	"references": [
 		"https://www.typescriptlang.org/docs/",

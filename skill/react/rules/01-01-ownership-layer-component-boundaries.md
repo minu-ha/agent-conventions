@@ -41,7 +41,7 @@ tags: ownership, widget, naming
 한 화면에서만 쓰여도 위 셋에 해당하지 않으면 `widget`입니다.
 사용 횟수로 판정하면 쓰임이 변할 때마다 폴더를 옮겨 다닙니다.
 
-**Incorrect (화면 레이어와 화면 전용 로직이 섞임):**
+**Incorrect (공용 레이어에 화면 전용 로직이 섞임):**
 
 ```tsx
 // ui/button/ui-delete-product-button.tsx
@@ -57,8 +57,8 @@ const UiDeleteProductButton = () => {
 ```tsx
 // page/detail/component/pg-sales-legend-glyph.tsx
 // 프롭스가 도메인 타입 하나만 받고 훅도 부르지 않는다. 이 화면에서만 쓴다는 이유로 남아 있다.
-export const PgSalesLegendGlyph = (props: {item: SalesLegendItem}) => {
-	return <svg className="pg_salesLegendGlyph__root">{/* ... */}</svg>;
+export const PgSalesLegendGlyph = (props: PgSalesLegendGlyphProps) => {
+	return <svg className={clsx("pg_salesLegendGlyph__root")}>{/* ... */}</svg>;
 };
 ```
 
@@ -66,19 +66,31 @@ export const PgSalesLegendGlyph = (props: {item: SalesLegendItem}) => {
 
 ```tsx
 // ui/button/ui-button.tsx
+/**
+ * 도메인을 모르는 버튼 계약
+ *
+ * 표시할 글자를 프롭으로 받지 않고 `children`으로 받아 문구 결정을 사용처에 남긴다.
+ */
 export interface UiButtonProps {
+	/**
+	 * 버튼 안에 그릴 내용. 이 글자가 화면 낭독기가 읽는 이름이 된다
+	 */
+	children: ReactNode;
+	/**
+	 * 눌렀을 때
+	 */
 	onClick: MouseEventHandler<HTMLButtonElement>;
 }
 
 export const UiButton = (props: UiButtonProps) => {
-	return <button onClick={props.onClick} />;
+	return <button onClick={props.onClick}>{props.children}</button>;
 };
 ```
 
 ```tsx
 // widget/product-toolbar/wg-product-toolbar.tsx
 export const WgProductToolbar = (props: WgProductToolbarProps) => {
-	return <UiButton onClick={props.onClose} />;
+	return <UiButton onClick={props.onClose}>닫기</UiButton>;
 };
 ```
 
@@ -105,6 +117,6 @@ const PgDeleteProductButton = () => {
 		void navigate({ to: "/products" });
 	};
 
-	return <UiButton onClick={handleDeleteButtonClick} />;
+	return <UiButton onClick={handleDeleteButtonClick}>삭제</UiButton>;
 };
 ```

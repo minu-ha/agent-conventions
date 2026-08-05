@@ -4,9 +4,11 @@ titleKo: 공용 컴포넌트에 불리언 프롭을 늘리지 않습니다
 impact: HIGH
 impactDescription: 공용 컴포넌트가 숨은 조합을 쌓지 않고 구조를 드러냅니다
 appliesWhen:
-  - 여러 곳에서 쓰는 공용 컴포넌트에 불리언 모드·표시 프롭을 추가할 때
+  - `ui`나 `widget` 컴포넌트에 불리언 모드·표시 프롭을 추가할 때
   - 기존 불리언 프롭 조합과 JSX 분기가 늘어날 때
-tags: strategy, composition, props, variants, component-design
+  - 제외: 라우트 진입 파일 안에서만 쓰는 일회성 분기인 경우
+reviewWith: strategy-expose-only-assembled-compound-parts
+tags: strategy, composition, props, variants, components
 ---
 
 ## Avoid Boolean Prop Proliferation in Shared Components
@@ -58,6 +60,9 @@ export const WgProductToolbar = (props: WgProductToolbarProps) => {
  * 툴바 껍데기 부품
  */
 export interface WgProductToolbarRootProps {
+	/**
+	 * 툴바 줄에 늘어놓을 검색과 동작 부품
+	 */
 	children: ReactNode;
 }
 
@@ -65,18 +70,16 @@ const WgProductToolbarRoot = (props: WgProductToolbarRootProps) => {
 	return <header className={clsx("wg_productToolbar__root")}>{props.children}</header>;
 };
 
+// 조합은 아래 두 변형이 이미 제공하므로 소비자가 직접 조립할 `Root`만 공개한다
 export const WgProductToolbar = {
 	Root: WgProductToolbarRoot,
-	Search: WgProductSearchField,
-	BrowseActions: WgProductBrowseActions,
-	EditActions: WgProductEditActions,
 } as const;
 
 export const WgProductBrowseToolbar = () => {
 	return (
 		<WgProductToolbar.Root>
-			<WgProductToolbar.Search />
-			<WgProductToolbar.BrowseActions />
+			<WgProductSearchField />
+			<WgProductBrowseActions />
 		</WgProductToolbar.Root>
 	);
 };
@@ -84,7 +87,7 @@ export const WgProductBrowseToolbar = () => {
 export const WgProductEditToolbar = () => {
 	return (
 		<WgProductToolbar.Root>
-			<WgProductToolbar.EditActions />
+			<WgProductEditActions />
 		</WgProductToolbar.Root>
 	);
 };

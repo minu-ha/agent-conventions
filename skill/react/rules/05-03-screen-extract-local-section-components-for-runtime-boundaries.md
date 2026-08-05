@@ -1,15 +1,15 @@
 ---
-title: Do Not Extract Section Components That Only Group Layout
-titleKo: 레이아웃만 묶는 섹션 컴포넌트는 만들지 않습니다
+title: Extract Local Section Components Only for Runtime Boundaries
+titleKo: 런타임 경계를 가진 섹션만 화면 지역 컴포넌트로 뺍니다
 impact: HIGH
 impactDescription: 화면 흐름은 보이게 두고 자기 것을 직접 가진 부분만 떼어 냅니다
 appliesWhen:
   - 화면 지역 섹션 컴포넌트를 새로 추출할 때
-  - 기존 섹션이 비동기·상태·프로바이더·상호작용·라이브러리·성능을 직접 소유하는지 바꿀 때
+  - 기존 섹션에 비동기, 지역 상태, 프로바이더, 상호작용, 외부 위젯, 성능 처리를 넣거나 뺄 때
 tags: screen, routes
 ---
 
-## Do Not Extract Section Components That Only Group Layout
+## Extract Local Section Components Only for Runtime Boundaries
 
 **Impact: HIGH (화면 흐름은 보이게 두고 자기 것을 직접 가진 부분만 떼어 냅니다)**
 
@@ -23,39 +23,36 @@ tags: screen, routes
 - 상호작용: 팝오버, 모달, 선택, 인라인 편집, 드래그, 펼치는 트리
 - 라이브러리, 성능: 외부 위젯의 생명주기를 소유하는 어댑터, 가상 스크롤, 전환, 지연 값
 
-검색 매개변수, 화면 이동, 화면 단위 쿼리/뮤테이션, 화면 전체 이펙트, 무효화,
-여러 섹션에 걸친 파생값은 라우트 진입에 둡니다.
+흐름 제어는 섹션이 아니라 라우트 진입에 둡니다.
+그 목록은 `screen-keep-route-flow-visible`가 정합니다.
 
-호출 계층은 폴더 깊이가 아니라 진입 파일의 조립이 드러냅니다.
-"어느 컴포넌트가 이걸 쓰는지"를 폴더 경로로 표현하려고 중첩을 늘리지 않습니다.
+지역 섹션 파일을 어느 폴더에 두는지는 `ownership-place-owner-files-in-role-folders`가 정합니다.
 진입 파일의 JSX에 나타나지 않는 섹션이 다른 섹션 파일 안에서 렌더되면 과하게 쪼갠 것입니다.
 
-**Incorrect (레이아웃 래퍼만 분리해 라우트 흐름을 숨김):**
+**Incorrect (레이아웃 래퍼가 화면 단위 쿼리까지 삼켜 라우트 흐름이 안 보임):**
 
 ```tsx
 const PgProductSidebarPanel = () => {
+	const responseProductTreeSuspense = useProductTreeSuspense();
+
 	return (
 		<section className={clsx("pg_products__sidebar")}>
-			<SidebarStats />
-			<SearchField />
-			<ProductTree />
+			<UiTree treeData={responseProductTreeSuspense.data.nodes} />
 		</section>
 	);
 };
 
 const PgProductDetailPanel = () => {
+	const responseProductListSuspense = useProductListSuspense();
+
 	return (
-		<section className="product-layout__detail">
-			<DetailHeader />
-			<ProductTable />
+		<section className={clsx("pg_products__detail")}>
+			<UiTable dataSource={responseProductListSuspense.data.list} />
 		</section>
 	);
 };
 
 export const PgProducts = () => {
-	const responseProductTreeSuspense = useProductTreeSuspense();
-	const responseProductListSuspense = useProductListSuspense();
-
 	return (
 		<div className={clsx("pg_products__layout")}>
 			<PgProductSidebarPanel />
@@ -84,7 +81,21 @@ const PgProductTreeSection = (props: PgProductTreeSectionProps) => {
 	);
 
 	/**
-	 * tree에서 선택한 category key를 route search용 categoryId로 변환
+	 * 검색어는 이 섹션 안에만 두고 route search로 올리지 않는다
+	 */
+	const handleTreeSearchKeywordChange: UiInputProps["onChange"] = (event) => {
+		setTreeSearchKeyword(event.target.value);
+	};
+
+	/**
+	 * UiTree가 넘기는 key 타입이 넓어서 문자열로 좁혀 담는다
+	 */
+	const handleTreeExpand: UiTreeProps["onExpand"] = (keys) => {
+		setExpandedKeys(keys.map(String));
+	};
+
+	/**
+	 * tree가 넘긴 key에서 접두사를 떼어 route search가 받는 categoryId로 만든다
 	 */
 	const handleTreeSelect: UiTreeProps["onSelect"] = (keys, _info) => {
 		const selectedKey = keys[0];
@@ -97,17 +108,14 @@ const PgProductTreeSection = (props: PgProductTreeSectionProps) => {
 
 	return (
 		<section className={clsx("pg_products__sidebar")}>
-			<UiInput
-				value={treeSearchKeyword}
-				onChange={(event) => setTreeSearchKeyword(event.target.value)}
-			/>
+			<UiInput value={treeSearchKeyword} onChange={handleTreeSearchKeywordChange} />
 
 			{filteredCategoryNodes.length > 0 ? (
 				<UiTree
 					treeData={filteredCategoryNodes.map(toTreeData)}
 					expandedKeys={expandedKeys}
 					selectedKeys={props.selectedCategoryId ? [`category:${props.selectedCategoryId}`] : []}
-					onExpand={(keys) => setExpandedKeys(keys.map(String))}
+					onExpand={handleTreeExpand}
 					onSelect={handleTreeSelect}
 				/>
 			) : (
@@ -126,26 +134,28 @@ export const PgProducts = () => {
 	const search = Route.useSearch();
 
 	/**
-	 * tree sidebar 조회 API
+	 * 사이드바가 그릴 분류 노드만 남긴다. 트리 펼침 상태는 섹션이 따로 들고 있다
 	 */
-	const responseProductTreeSuspense = useProductTreeSuspense({}, {
-		query: {select: (response) => ({categoryNodes: response.data.nodes})},
-	});
+	const responseProductTreeSuspense = useProductTreeSuspense(
+		{},
+		{query: {select: (response) => ({categoryNodes: response.data.nodes})}},
+	);
 
 	/**
-	 * product 목록 조회 API
+	 * 표가 쓰는 필드 이름으로 목록을 바꿔서 표가 응답 구조를 모르게 한다
 	 */
-	const responseProductListSuspense = useProductListSuspense({}, {
-		query: {select: (response) => ({products: response.data.list})},
-	});
+	const responseProductListSuspense = useProductListSuspense(
+		{},
+		{query: {select: (response) => ({products: response.data.list})}},
+	);
 
 	/**
-	 * tree에서 선택한 category로 route search를 갱신
+	 * 고른 분류를 route search에 적어 두어 새로 고침해도 같은 화면이 열리게 한다
 	 */
 	const handleCategorySelect: PgProductTreeSectionProps["onCategorySelect"] = (categoryId) => {
 		void navigate({
 			to: "/products",
-			search: { page: search.page, size: search.size, categoryId },
+			search: {page: search.page, size: search.size, categoryId},
 		});
 	};
 

@@ -22,13 +22,13 @@ tags: state, handlers
 - 구독이나 타이머처럼 오래 사는 클로저 안에서 갱신할 때
 
 클릭 핸들러에서 한 번만 부르는 갱신은 두 형태가 같은 결과를 냅니다.
-리액트가 그 사이에 상태를 갱신해 두기 때문입니다.
+그 렌더의 클로저가 읽는 값이 아직 최신 커밋 값이기 때문입니다.
 그래도 형태를 하나로 고정해 자리마다 다시 판단하지 않습니다.
 
 **Incorrect (현재 상태를 바깥 클로저에서 직접 읽음):**
 
 ```tsx
-// 한 이벤트에서 두 번 갱신한다. 둘 다 같은 렌더의 selectedUserIds 를 읽어 첫 갱신이 지워진다
+// 한 이벤트에서 두 번 갱신한다. 둘 다 같은 렌더의 selectedUserIds를 읽어 첫 갱신이 지워진다
 const handleSelectRange = (fromUserId: string, toUserId: string) => {
 	setSelectedUserIds([...selectedUserIds, fromUserId]);
 	setSelectedUserIds([...selectedUserIds, toUserId]);
@@ -38,10 +38,8 @@ const handleSelectRange = (fromUserId: string, toUserId: string) => {
 **Correct (함수형 갱신자로 항상 최신 상태를 기준으로 갱신):**
 
 ```tsx
-/**
- * 범위 선택으로 두 사용자를 한 번에 더한다
- */
 const handleSelectRange = (fromUserId: string, toUserId: string) => {
+	// 두 번째 갱신이 첫 갱신 결과를 받아야 해서 함수형 갱신자를 쓴다
 	setSelectedUserIds((currentUserIds) => [...currentUserIds, fromUserId]);
 	setSelectedUserIds((currentUserIds) => [...currentUserIds, toUserId]);
 };

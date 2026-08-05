@@ -4,7 +4,7 @@ titleKo: 범위 접두사는 재사용 범위로 정합니다
 impact: HIGH
 impactDescription: 접두사를 재사용 범위로 정하면 이름만 보고 어디서 쓰이는지 압니다
 appliesWhen:
-  - 새 CSS 파일을 만들며 `pg_`·`wg_`·`ui_` 중 하나를 고를 때
+  - 새 CSS 파일을 만들면서 `pg_`, `wg_`, `ui_` 중 하나를 고를 때
   - 소유자의 재사용 범위가 바뀌어 접두사를 옮길 때
 reviewWith: >-
   ownership-give-each-file-one-scope-slug, ownership-use-foreign-classes-only-under-your-own-root
@@ -15,7 +15,10 @@ tags: ownership, scope, prefix
 
 **Impact: HIGH (접두사를 재사용 범위로 정하면 이름만 보고 어디서 쓰이는지 압니다)**
 
-범위 접두사는 폴더 경로가 아니라 그 CSS 파일 소유자의 **재사용 범위**를 가리킵니다.
+범위 접두사가 뜻하는 것은 그 CSS 파일 소유자의 **재사용 범위**입니다.
+재사용 범위는 파일이 `src/page`, `src/widget`, `src/ui` 중 어디 아래 있는지로 이미 정해져 있으니
+접두사는 그 최상위 폴더를 따릅니다.
+폴더 깊이는 보지 않습니다.
 
 | 접두사 | 재사용 범위 |
 | --- | --- |
@@ -24,17 +27,16 @@ tags: ownership, scope, prefix
 | `ui_` | 도메인 지식이 없는 원자 컴포넌트와 그 부품 |
 
 `pg_`는 화면 뼈대와 그 아래 컴포넌트를 함께 덮습니다.
-뼈대는 식별자가 라우트 이름과 같아서 따로 표시하지 않아도 구분됩니다.
+뼈대는 식별자가 라우트 이름과 같아서 접두사를 따로 나누지 않아도 컴포넌트와 구분됩니다.
 
-- 폴더 깊이가 아니라 그 파일이 `src/page`, `src/widget`, `src/ui` 중 어디 아래 있는지로 판정합니다.
-  위젯 내부 부품이 `component` 폴더에 있어도 `wg_`입니다.
-- 한 화면만 쓰는데 `wg_`를 붙이지 않습니다.
+- 위젯 내부 부품이 `component` 폴더에 있어도 최상위 폴더가 `src/widget`이라 `wg_`입니다.
+- 한 화면에서만 쓰는 컴포넌트에는 `wg_`를 붙이지 않습니다.
   재사용을 예상해서 미리 올리지 않습니다.
 - 여러 화면이 쓰기 시작하면 그때 `pg_`에서 `wg_`로 옮깁니다.
 
 어떤 파일이 화면 소유인지는 활성화된 프레임워크 규약이 판단합니다.
 
-**Incorrect (`widget` 내부 부품을 폴더 이름만 보고 화면 범위로 내림):**
+**Incorrect (최상위 폴더 대신 하위 폴더를 보고 `widget` 부품을 화면 범위로 내림):**
 
 ```txt
 widget/chart/component/wg-chart-header.css

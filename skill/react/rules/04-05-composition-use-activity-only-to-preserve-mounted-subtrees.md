@@ -24,12 +24,12 @@ tags: composition, jsx
 | 하위 트리 | 해제됩니다 | 마운트된 채 남습니다 |
 | 상태 | 사라집니다 | 유지됩니다 |
 | 이펙트 | 정리됩니다 | 정리됩니다 |
-| 렌더 비용 | 없습니다 | 낮은 우선순위로 계속 듭니다 |
+| 렌더 비용 | 없습니다 | 업데이트가 생기면 낮은 우선순위로 렌더됩니다 |
 | DOM 노드 | 문서에서 사라집니다 | 문서에 남습니다 |
 
 - 마운트와 해제 자체가 의미를 가지면 조건부 렌더링을 유지합니다.
   폼 초기화, 구독 해제, 첫 진입 애니메이션이 그런 경우입니다.
-- 숨긴 하위 트리도 렌더 비용이 계속 듭니다.
+- 숨긴 하위 트리도 업데이트가 생기면 다시 렌더됩니다.
   무거운 트리를 습관적으로 감춰 두지 않습니다.
 - 접근성을 이유로 `<Activity>`를 고르지 않습니다.
   리액트는 숨길 때 `display: none`만 걸고, 그 노드는 접근성 트리에서 빠집니다.
@@ -42,14 +42,14 @@ tags: composition, jsx
 ```tsx
 // 편집을 취소했다가 다시 들어가면 지난 입력이 그대로 남는다
 return (
-  <Fragment>
-    <Activity mode={isEditing ? "visible" : "hidden"}>
-      <PgProductEditorForm />
-    </Activity>
-    <Activity mode={isEditing ? "hidden" : "visible"}>
-      <PgProductPreviewPane />
-    </Activity>
-  </Fragment>
+	<Fragment>
+		<Activity mode={isEditing ? "visible" : "hidden"}>
+			<PgProductEditorForm />
+		</Activity>
+		<Activity mode={isEditing ? "hidden" : "visible"}>
+			<PgProductPreviewPane />
+		</Activity>
+	</Fragment>
 );
 ```
 
@@ -57,18 +57,18 @@ return (
 
 ```tsx
 const PgProductSidebar = () => {
-  // 접어 둔 노드와 스크롤 위치가 사이드바 안에 있다. 닫았다 열면 그대로 있어야 한다
-  const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
+	// 접어 둔 노드와 스크롤 위치가 사이드바 안에 있다. 닫았다 열면 그대로 있어야 한다
+	const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
 
-  return <UiTree expandedKeys={expandedKeys} onExpand={setExpandedKeys} />;
+	return <UiTree expandedKeys={expandedKeys} onExpand={setExpandedKeys} />;
 };
 ```
 
 ```tsx
 return (
-  <Activity mode={isSidebarOpen ? "visible" : "hidden"}>
-    <PgProductSidebar />
-  </Activity>
+	<Activity mode={isSidebarOpen ? "visible" : "hidden"}>
+		<PgProductSidebar />
+	</Activity>
 );
 ```
 

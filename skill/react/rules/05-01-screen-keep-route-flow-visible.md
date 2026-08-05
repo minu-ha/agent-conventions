@@ -1,14 +1,15 @@
 ---
 title: Keep Route Entry Files Focused on Screen Flow
-titleKo: 화면 진입 파일은 흐름 위주로 둡니다
+titleKo: 화면 진입 파일에는 화면 흐름만 남깁니다
 impact: HIGH
 impactDescription: 진입 파일만 봐도 화면 흐름을 따라갈 수 있습니다
 appliesWhen:
-  - 라우트 진입의 검색·화면 이동·쿼리·뮤테이션·화면 전체 이펙트를 옮기거나 나눌 때
+  - 라우트 진입의 search 파라미터, 화면 이동, 쿼리, 뮤테이션, 화면 전체 이펙트를 옮기거나 나눌 때
   - page 섹션 조립의 순서나 소유자를 바꿀 때
   - 제외: 같은 소유자 안에서 표현만 바꾸는 경우
 reviewWith: >-
-  screen-extract-local-section-components-for-runtime-boundaries, ownership-place-owner-files-in-role-folders
+  screen-extract-local-section-components-for-runtime-boundaries,
+  ownership-place-owner-files-in-role-folders
 tags: screen, routes, flow
 ---
 
@@ -16,8 +17,16 @@ tags: screen, routes, flow
 
 **Impact: HIGH (진입 파일만 봐도 화면 흐름을 따라갈 수 있습니다)**
 
-라우트 진입은 검색, 화면 이동, 페이지 쿼리·뮤테이션, 화면 전체 이펙트와 렌더 조립을 보여줍니다.
-비동기·상태·상호작용 경계를 가진 섹션을 분리해도 이 흐름 제어 자체는 라우트 진입에 남깁니다.
+라우트 진입이 소유하는 것은 다음 다섯입니다.
+다른 규칙이 이 목록을 가리킬 때는 여기가 정본입니다.
+
+- search 파라미터와 화면 이동
+- 화면 단위 쿼리와 뮤테이션, 그 무효화
+- 화면 전체 이펙트
+- 여러 섹션에 걸친 파생값
+- 섹션 렌더 조립
+
+비동기, 상태, 상호작용 경계를 가진 섹션을 분리해도 이 흐름 제어 자체는 라우트 진입에 남깁니다.
 
 소유자가 그대로인 변경은 대상이 아닙니다.
 
@@ -29,11 +38,11 @@ tags: screen, routes, flow
 
 ```tsx
 return (
-  <PageShell>
-    <PageHeaderSection />
-    <PageContentSection />
-    <PageFooterSection />
-  </PageShell>
+	<PgProductShell>
+		<PgProductHeaderSection />
+		<PgProductContentSection />
+		<PgProductFooterSection />
+	</PgProductShell>
 );
 ```
 
@@ -44,32 +53,38 @@ const navigate = useNavigate();
 const search = Route.useSearch();
 
 /**
- * product 목록 조회 API
+ * 표에 그릴 product를 route search의 page로 읽는다
  */
-const responseProductListSuspense = useProductListSuspense({
-  page: search.page,
+const responseProductListSuspense = useProductListSuspense(
+	{page: search.page},
+	{query: {select: (response) => ({products: response.data.list})}},
+);
+
+/**
+ * 저장에 성공하면 첫 페이지로 돌려 새로 저장한 product가 목록 맨 앞에 오게 한다
+ */
+const mutationProductSave = useProductSave({
+	mutation: {
+		onSuccess: () => {
+			void navigate({to: "/products", search: {...search, page: 1}});
+		},
+	},
 });
 
 /**
- * product 저장 API
+ * 폼 값을 전송 형태로 바꿔 저장만 부르고, 저장 뒤 흐름은 mutation 콜백이 이어 간다
  */
-const mutationProductSave = useProductSave();
-
-/**
- * product 저장 후 현재 화면 흐름을 유지한 채 route search를 갱신
- */
-const handleSubmitButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
-  await mutationProductSave.mutateAsync({ data: request });
-  void navigate({
-    to: "/products",
-    search: { ...search, page: 1 },
-  });
+const handleProductSave: PgProductListSectionProps["onSubmit"] = () => {
+	mutationProductSave.mutate({data: toProductSaveRequest(formValues)});
 };
 
 return (
-  <Fragment>
-    <ProductFilterSection />
-    <ProductListSection onSubmit={handleSubmitButtonClick} />
-  </Fragment>
+	<Fragment>
+		<PgProductFilterSection />
+		<PgProductListSection
+			products={responseProductListSuspense.data.products}
+			onSubmit={handleProductSave}
+		/>
+	</Fragment>
 );
 ```

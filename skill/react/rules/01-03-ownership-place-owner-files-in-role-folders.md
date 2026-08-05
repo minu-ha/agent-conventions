@@ -25,7 +25,7 @@ tags: ownership
 | --- | --- |
 | `component` | 이 소유자만 쓰는 하위 컴포넌트 |
 | `config` | 입력을 받지 않는 선언형 설정, 기본 설정, 기준값 |
-| `function` | 대표 내보낸 도메인 연산 |
+| `function` | 이름 붙여 내보낸 도메인 계산 |
 | `hook` | 실제 상태·이펙트·컨텍스트를 소유한 커스텀 훅 |
 | `type` | 여러 파일이 공유하는 계약 |
 
@@ -41,11 +41,11 @@ tags: ownership
   형제 `.ts` 하나로 대신하지 않습니다.
 - 자기 역할 폴더가 필요한 컴포넌트만 자기 폴더를 갖고, 더 나뉘지 않는 것은 `component` 아래 파일로 둡니다.
 - 프롭스는 해당 TSX에 두고 여러 파일이 공유하는 계약만 `type`으로 옮깁니다.
-- 파일명과 심볼의 계층 접두사는 `ownership-prefix-layer-names-on-files-and-symbols`가 정합니다.
+- 파일명과 심볼의 레이어 접두사는 `ownership-prefix-layer-names-on-files-and-symbols`가 정합니다.
 - 소유자 중첩이 3단계에 닿으면 분리가 맞는지 `widget`으로 나갈 대상인지 다시 봅니다.
 
 무엇을 추출할지는 이 규칙이 정하지 않습니다.
-`typescript/functions-extract-helpers-only-when-the-boundary-is-real`가 추출 여부를 먼저 판정하고
+`typescript/functions-extract-helpers-only-when-the-boundary-is-real`이 추출 여부를 먼저 판정하고
 이 규칙은 그 결과의 위치만 정합니다.
 
 **Incorrect (단순 컴포넌트에 역할 폴더를 미리 다 만듦):**

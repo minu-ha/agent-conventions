@@ -6,7 +6,10 @@ impactDescription: 구현을 파헤치지 않고도 도메인 전용 계약을 �
 appliesWhen:
   - 타입, 인터페이스, 스키마 최상단, 객체 상수, 계약 필드, 파생 별칭을 추가·변경할 때
   - 이름 붙인 형태에 호출 계약 역할을 새로 얹을 때
-  - 제외: 외부·생성된·읽기 전용·공용 형태를 그대로 쓰거나 익명으로 추론된 반환인 경우
+  - 제외: 외부·생성된·읽기 전용·공용 형태를 그대로 쓰거나 반환 타입이 익명으로 추론되는 경우
+requiresSelected: >-
+  docs-write-concise-korean-comments-about-purpose-and-constraints,
+  docs-write-doc-comments-as-multiline-blocks
 tags: types, jsdoc
 ---
 
@@ -17,13 +20,16 @@ tags: types, jsdoc
 선언형 형태는 헤더와 필드를 나눠 문서화합니다.
 
 - 커스텀 `type`, `interface`, 스키마 최상단, 객체형 상수: 선언 위에 헤더 문서 주석
-- 객체형 계약과 스키마 필드: 각 필드 바로 위에 문서 주석
+- `interface`, `type`, 스키마의 필드: 각 필드 바로 위에 문서 주석
+- 객체형 상수는 헤더만 씁니다.
+  필드 주석은 `interface`, `type`, 스키마에만 답니다.
+  `shared/config.ts`의 설정 객체와 `enum` 성격 상수 객체의 키에는 달지 않습니다
 - 필드가 없는 인덱스 접근 별칭(`type ProductId = ProductRecord["id"]`)과
   `Omit`으로 뺀 형태: 적을 필드가 없으므로 헤더만 씁니다.
   필드를 가진 `interface`는 원본에서 가져온 필드여도 각 필드에 주석을 답니다
 
 주석이 있다고 끝나지 않습니다.
-각 본문이 `docs-write-concise-korean-comments-about-purpose-and-constraints`의 한국어 조건을 만족해야 합니다.
+각 본문이 `docs-write-concise-korean-comments-about-purpose-and-constraints` 규칙의 한국어 조건을 만족해야 합니다.
 
 이름 붙인 형태의 필드가 한 글자도 안 바뀌었더라도,
 위치 인자를 대체하는 입력 계약이나 함수 결과를 고정하는 출력 계약 역할을 처음 맡으면

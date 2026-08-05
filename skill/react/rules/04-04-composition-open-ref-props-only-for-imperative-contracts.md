@@ -6,7 +6,9 @@ impactDescription: 쓰지도 않는 명령형 창구가 공용 컴포넌트마�
 appliesWhen:
   - 컴포넌트에 `ref` 프롭을 추가하거나 공개할 대상을 바꿀 때
   - 제외: 이미 있는 `ref` 계약의 타입만 바꾸는 경우
-reviewWith: strategy-avoid-boolean-prop-proliferation
+reviewWith: >-
+  typing-narrow-library-wrapper-contracts,
+  typescript/docs-justify-convention-exceptions-with-a-reason-comment
 tags: composition
 ---
 
@@ -21,7 +23,9 @@ tags: composition
   나중에 필요해지면 그때 엽니다.
 - 열 때는 `ref`를 일반 프롭처럼 직접 받습니다.
   감싸는 래퍼를 새로 만들지 않습니다.
-- 외부 패키지 타입 제약 때문에 래퍼가 필요하면 그 이유를 바로 위에 한국어 주석으로 남깁니다.
+- 외부 패키지 타입 제약 때문에 래퍼가 필요하면 그 이유를 주석으로 남깁니다.
+  주석의 위치와 근거 기준은
+  `typescript/docs-justify-convention-exceptions-with-a-reason-comment`가 정합니다.
 
 **Incorrect (`ref` 계약이 필요 없는 단순 화면 컴포넌트에도 습관적으로 `ref`를 노출):**
 
@@ -43,21 +47,55 @@ export const UiStatusBadge = (props: UiStatusBadgeProps) => {
 ```tsx
 import type { ChangeEventHandler, Ref } from "react";
 
+/**
+ * 검색 입력 계약
+ *
+ * 결과 목록에서 검색어로 포커스를 되돌려야 해 `ref`를 연다.
+ * 보이는 라벨을 둘 자리가 없어 이름은 `aria-label`로만 준다.
+ */
 export interface UiSearchInputProps {
+	/**
+	 * 호출부가 포커스를 옮길 때 쓰는 참조
+	 */
 	ref?: Ref<HTMLInputElement>;
+	/**
+	 * 화면 낭독기가 읽을 이름
+	 */
+	label: string;
+	/**
+	 * 입력값
+	 */
 	value: string;
+	/**
+	 * 입력이 바뀔 때
+	 */
 	onChange: ChangeEventHandler<HTMLInputElement>;
 }
 
 export const UiSearchInput = (props: UiSearchInputProps) => {
-	return <input ref={props.ref} onChange={props.onChange} value={props.value} />;
+	return (
+		<input
+			ref={props.ref}
+			aria-label={props.label}
+			onChange={props.onChange}
+			value={props.value}
+		/>
+	);
 };
 ```
 
 **Correct (`ref`가 실제 계약이 아닐 때는 일반 프롭만 유지):**
 
 ```tsx
+/**
+ * 상태 배지 계약
+ *
+ * 밖에서 다룰 일이 없어 `ref`를 열지 않는다.
+ */
 export interface UiStatusBadgeProps {
+	/**
+	 * 배지에 표시할 상태 문구
+	 */
 	label: string;
 }
 

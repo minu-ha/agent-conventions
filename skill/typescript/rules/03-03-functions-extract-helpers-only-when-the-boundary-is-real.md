@@ -22,10 +22,12 @@ tags: functions, boundaries
 | 사유 | 조건 |
 | --- | --- |
 | 재사용 | **이 변경을 적용한 뒤의 트리**에서 서로 다른 파일 둘 이상이 실제로 부릅니다. 호출부 추가가 예정만 되어 있으면 세지 않습니다 |
-| 렌더 파일 밖으로 | `.tsx` 안의 **요청·저장 payload 조립** 함수입니다. 훅·JSX·컴포넌트 상태를 하나도 쓰지 않으면 호출부가 하나여도 형제 `.ts`로 옮깁니다 |
+| 렌더 파일 밖으로 | `.tsx` 안의 **요청·저장 payload 조립** 함수입니다. 훅·JSX·컴포넌트 상태를 하나도 쓰지 않으면 호출부가 하나여도 `.ts`로 옮깁니다 |
 
 두 번째 사유는 재사용이 아니라 `.tsx`에 렌더가 아닌 코드를 남기지 않으려는 것입니다.
 `.ts` 안에서는 해당하지 않습니다.
+옮길 자리는 같은 소유자 폴더의 `.ts`입니다.
+어느 하위 폴더인지는 프레임워크 컨벤션의 역할 폴더 규칙이 정합니다.
 **표시용 가공은 여기 들지 않습니다.** 목록을 화면 모양으로 바꾸거나 문자열을 조립하는 것은
 쓰는 자리에 그대로 둡니다.
 밖으로 내는 것은 서버로 보낼 값을 만드는 함수뿐입니다.
@@ -33,7 +35,9 @@ tags: functions, boundaries
 어느 사유든 그 함수만 따로 읽어도 뜻이 통해야 합니다.
 바깥 변수, 훅, 컴포넌트 상태에 기대면 아직 뺄 수 없습니다.
 
-**`.ts` 안에서 같은 파일만 쓰는 함수는 몇 번 반복되든 빼지 않습니다.**
+**`.ts` 안에서 같은 파일만 쓰는 함수는 몇 번 반복되든 다른 파일로 빼지 않습니다.**
+이 규칙은 파일 경계만 봅니다.
+같은 파일 안에서 비공개 함수로 단계를 나누는 것은 대상이 아닙니다.
 같은 계산을 두세 번 적어도 괜찮습니다.
 파일을 하나 더 여는 쪽이 더 비쌉니다.
 "나중에 또 쓸 것 같아서"는 사유가 아닙니다.
@@ -69,14 +73,16 @@ const toProductView = (record: RecordItem): ProductView => {
 
 export const api = {
 	record: {
-		toProductView: (record: RecordItem) => toProductView(record),
+		toProductView(record: RecordItem): ProductView {
+			return toProductView(record);
+		},
 	},
 };
 ```
 
 **Correct (작은 계산은 쓰는 자리에 그대로 둠):**
 
-```ts
+```tsx
 // page/profile/pg-profile.tsx
 const handleNextClick = () => {
 	setIteration(iteration + 1);
@@ -88,7 +94,7 @@ const handleNextClick = () => {
 ```ts
 export const api = {
 	record: {
-		toProductView: (record: RecordItem): ProductView => {
+		toProductView(record: RecordItem): ProductView {
 			return {
 				id: record.id,
 				labels: record.labels.map((label) => label.name.trim() || label.code),
@@ -103,7 +109,7 @@ export const api = {
 ```ts
 // page/profile/function/to-profile-save-request.ts
 /**
- * profile form 값을 저장 payload로 조립
+ * profile 저장 payload 조립. 서버가 앞뒤 공백이 붙은 displayName 을 거부한다
  */
 export const toProfileSaveRequest = (formValues: ProfileFormValues) => {
 	return {
@@ -112,8 +118,8 @@ export const toProfileSaveRequest = (formValues: ProfileFormValues) => {
 };
 ```
 
-```ts
-// page/profile/pg-profile-form.tsx 와 page/profile/pg-profile-drawer.tsx 가 함께 부른다
+```tsx
+// page/profile/pg-profile-form.tsx와 page/profile/pg-profile-drawer.tsx가 함께 부른다
 import { toProfileSaveRequest } from "./function/to-profile-save-request";
 ```
 
@@ -122,7 +128,7 @@ import { toProfileSaveRequest } from "./function/to-profile-save-request";
 ```ts
 // page/products/function/to-product-save-request.ts
 /**
- * product 폼 값을 저장 요청으로 조립
+ * product 저장 요청 조립. 업로드가 끝난 첨부만 넘겨야 attachmentIds 가 채워진다
  */
 export const toProductSaveRequest = (formValues: ProductFormValues) => {
 	return {

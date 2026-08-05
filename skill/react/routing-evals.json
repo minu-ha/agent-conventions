@@ -155,7 +155,8 @@
 					"naming-use-direct-imports-and-public-entry-points",
 					"types-document-custom-types-and-shapes",
 					"functions-replace-enum-with-as-const-objects",
-					"docs-write-concise-korean-comments-about-purpose-and-constraints"
+					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-doc-comments-as-multiline-blocks"
 				]
 			}
 		},

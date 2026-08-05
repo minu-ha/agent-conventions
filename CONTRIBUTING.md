@@ -43,8 +43,7 @@ skill/react/
 생성물은 `HANDBOOK.md` · `RULES_INDEX.md` · `contracts/*.md` 셋.
 직접 고치면 다음 build 에서 사라지고 `check:generated` 가 실패한다.
 
-`react` · `typescript` · `css` 는 progressive 라 셋 다 생성한다.
-나머지 다섯은 `HANDBOOK.md` 만 생성하고 에이전트가 통째로 읽는다.
+`react` · `typescript` · `css` 셋이 전부이고 셋 다 progressive 라 세 생성물을 모두 만든다.
 
 ---
 
@@ -67,6 +66,8 @@ skill/react/
   생성되는 `contracts/*.md` 가 첫 `Incorrect` 앞부분만 뽑기 때문이다.
 - 모든 규칙은 최소 한 시나리오에서 걸려야 한다.
 - 문단은 문장 단위로 끊고 120칸을 넘기지 않는다. `docs/semantic-wrap.py` 가 정리한다.
+  한글은 두 칸으로 센다. `.editorconfig` 의 `max_line_length` 도 같은 값이다.
+- 코드 펜스 안 인덴트는 탭이다. `package/biome.json` 의 `indentStyle` 과 맞춘다.
 - `**Impact:` 로 시작하는 줄은 한 줄로 유지한다. build 가 그 형태로 파싱한다.
 
 ---
@@ -93,12 +94,12 @@ tags: tag1, tag2
 | --- | --- | --- |
 | `title` | 필수 | 영어. 핸드북 헤딩과 앵커 슬러그의 기반. 바꾸면 링크가 깨진다 |
 | `titleKo` | 필수 | 한국어. `conventions.html` 에 노출된다 |
-| `impact` | 필수 | `CRITICAL` · `HIGH` · `MEDIUM` · `LOW` |
+| `impact` | 필수 | `CRITICAL` · `HIGH` · `MEDIUM-HIGH` · `MEDIUM` · `LOW`. 에이전트 동작을 바꾸는 것은 `CRITICAL` 뿐이고 나머지는 사람이 읽는 우선순위 표시다 |
 | `impactDescription` | 필수 | 한국어 영향도 설명. 본문 `**Impact:**` 줄과 일치해야 하고 `contracts/*.md` 와 `conventions.html` 로 나간다 |
 | `appliesWhen` | 필수 | `- ` 조건 불렛 리스트 또는 한 줄 스칼라. 불렛이면 라우팅 문장은 이어 붙여 자동 생성된다. 라우팅 문장은 한 줄 160자 |
 | `requiresSelected` | 선택 | 걸리면 target 도 반드시 함께 적용 |
 | `reviewWith` | 선택 | 자동 선택이 아니라 다시 판정하라는 재평가 힌트 |
-| `requiredOnCompletion` | 선택 | 마무리 시 항상 적용 |
+| `requiredOnCompletion` | 선택 | 마무리 시 항상 적용. 지금 쓰는 규칙이 없다. 새로 켤 때는 세 `SKILL.md` 3절에 `completionGate` 지시를 함께 넣는다 |
 | `tags` | 선택 | 검색용 |
 
 `titleKo` 는 영어 제목의 직역이 아니라 같은 뜻의 자연스러운 한국어로 쓴다.
@@ -114,8 +115,9 @@ titleKo: JSX 인라인 로직을 명명된 핸들러로 분리
 어미나 문체를 이 문서에서 규정하지 않는다. 세 스킬의 판정을 따른다.
 
 `appliesWhen` 불렛은 `conventions.html` 의 "언제 적용할까요?" 목록에 그대로 노출된다.
-각 항목은 `~할 때` 로 끝맺고, 걸리지 않는 조건은 `제외:` 로 시작한다.
-이 둘은 문체가 아니라 라우팅 문장 생성 규칙이다.
+걸리는 조건은 `~할 때` 로 끝맺고, 걸리지 않는 조건은 `제외:` 로 시작해 `~경우` 로 끝맺는다.
+조건이 둘이면 불렛도 둘로 나눈다. 한 불렛에 쉼표로 이어 붙이지 않는다.
+이 셋은 문체가 아니라 라우팅 문장 생성 규칙이다.
 라우팅용 한 줄 문장은 불렛을 마침표로 이어 붙여 자동 생성되므로 항목 순서가 곧 문장 순서다.
 
 섹션도 한국어 제목이 필수다. `rules/_sections.md` 의 각 헤더 아래,
@@ -154,8 +156,13 @@ appliesWhen: TSX event prop 의 인라인 callback 에 분기, 비동기 호출 
 - 같은 target 을 두 키에 중복해서 넣지 않는다.
 - 본문에서 다른 규칙을 백틱으로 가리키면 화면에서 열 수 있는 칩이 된다.
   `validate` 가 해석되는지 검사하므로 없는 ID 를 쓰면 빌드가 막힌다.
+  `tooling` 규칙은 예외다. stylelint · biome 규칙 이름이 우리 prefix 와 겹쳐서 검사를 건너뛴다.
+  그래서 `tooling` 본문에서 우리 규칙을 가리킬 때는 `css/…` 처럼 소유 skill 을 붙여 도구 이름과 구분한다.
 - 아래 계층 skill 은 위 계층 규칙 ID 를 가리키지 않는다.
   `typescript` 가 `react/...` 를 가리키면 typescript 만 쓰는 쪽에서 끊긴다.
+  frontmatter 와 본문 산문 둘 다 해당하고 `validate` 가 막는다.
+  계층은 `metadata.json.companions` 가 정한다. 나를 companion 으로 켜는 skill 이 위 계층이다.
+  아래 계층에서 위 계층을 가리켜야 할 것 같으면 규칙 ID 대신 "프레임워크 규칙이 정한다" 처럼 skill 이름 없이 쓴다.
 - `_` 로 시작하는 파일은 생성물에서 빠진다.
 - 섹션은 파일명 prefix 로 정해지고 순서는 제목 순으로 자동 생성된다.
 

@@ -4,8 +4,12 @@ titleKo: 핵심 선언에는 헤더 문서 주석을 붙입니다
 impact: MEDIUM-HIGH
 impactDescription: 구현을 읽기 전에 중요한 경계를 찾고 설명할 수 있습니다
 appliesWhen:
-  - 쿼리·뮤테이션, 원격 함수, 분기나 `await`가 있는 핸들러와 이펙트, 내보낸 보조 함수와 훅, 커스텀 타입, 스토어 선언을 추가·변경할 때
-requiresSelected: docs-write-concise-korean-comments-about-purpose-and-constraints, docs-write-doc-comments-as-multiline-blocks
+  - 쿼리, 뮤테이션, 원격 함수, 커스텀 훅, 커스텀 타입, 스토어, 포매터 선언을 추가·변경할 때
+  - 분기나 `await`, 또는 두 개 이상의 동작이 있는 핸들러와 이펙트를 추가·변경할 때
+  - 다시 쓰거나 내보낸 보조 함수를 추가·변경할 때
+requiresSelected: >-
+  docs-write-concise-korean-comments-about-purpose-and-constraints,
+  docs-write-doc-comments-as-multiline-blocks
 tags: docs, jsdoc, declarations, boundaries
 ---
 
@@ -13,13 +17,17 @@ tags: docs, jsdoc, declarations, boundaries
 
 **Impact: MEDIUM-HIGH (구현을 읽기 전에 중요한 경계를 찾고 설명할 수 있습니다)**
 
-이름 붙인 쿼리와 뮤테이션, 원격 함수, 본문에 분기·`await`·두 개 이상의 동작이 있는 핸들러와 이펙트,
-재사용하거나 내보낸 보조 함수,
-커스텀 훅, 커스텀 `type`과 `interface`, 스토어, 포매터, 예외 메모 선언에는 헤더 문서 주석을 씁니다.
+이름 붙인 쿼리와 뮤테이션, 원격 함수, 커스텀 훅, 스토어, 표시 문자열을 만드는 포매터 선언에는
+헤더 문서 주석을 씁니다.
+본문에 분기나 `await`, 또는 두 개 이상의 동작이 있는 핸들러와 이펙트도 대상입니다.
+다시 쓰거나 내보낸 보조 함수도 대상입니다.
 중요한 경계가 파일 검색에서 바로 보이게 하려는 것입니다.
 
+커스텀 `type`과 `interface` 문서화는 `types-document-custom-types-and-shapes`가 정합니다.
+내보냈는지와 무관하게 그 규칙을 따르고 여기서 다시 판정하지 않습니다.
+
 주석의 형식은 `docs-write-doc-comments-as-multiline-blocks`가,
-태그를 붙일지는 `docs-write-doc-comments-as-multiline-blocks`가 정합니다.
+태그를 붙일지는 `docs-write-concise-korean-comments-about-purpose-and-constraints`가 정합니다.
 
 헤더 문서 주석은 본문이 비어 있거나 영문 라벨뿐이면 요구를 채우지 못합니다.
 함께 선택되는 `docs-write-concise-korean-comments-about-purpose-and-constraints`는
@@ -44,7 +52,7 @@ export const toSortedUserIds = (userIds: string[]): string[] => {
 };
 
 /**
- * product 목록 조회 API
+ * product 목록 조회. 로딩과 오류는 이 응답 객체로만 판단한다
  */
 const responseProductList = useProductList();
 ```

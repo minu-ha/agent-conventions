@@ -6,6 +6,7 @@ impactDescription: 그 자리에서 지어낸 값으로 덮지 않아 빠진 데
 appliesWhen:
   - 선택 값을 읽거나 정규화하거나 넘기는 방식을 바꿀 때
   - `??`, `||`, 기본값, 빈 값 대체 분기를 추가·변경할 때
+reviewWith: naming-centralize-shared-config-namespaces, naming-place-owner-config-in-the-owner-config-folder
 tags: absence
 ---
 
@@ -20,7 +21,8 @@ tags: absence
 | `?? "help@example.com"`, `?? 0`, `?? []`, `\|\| "-"` 같은 리터럴 | 위반 |
 | `?? config.pagination.default_page_size`처럼 설정에 선언된 이름 | 통과 |
 | 같은 파일 지역 `const`로 리터럴만 옮긴 것 | 위반. 자리만 바꾼 것입니다 |
-| 기본 매개변수 `(size = 10) =>`, 구조분해 기본값 `{size = 10}` | 위반 |
+| 기본 매개변수나 구조분해 기본값에 **리터럴**을 적은 것. `(size = 10) =>`, `{size = 10}` | 위반 |
+| 기본 매개변수가 선언된 이름을 가리키는 것. `(size = config.pagination.default_page_size) =>` | 통과 |
 | 삼항 `value ? value : "-"`, `String(value ?? "")` | 위반 |
 
 기본값이 정말 필요하면 그 기본값에 이름을 붙여 선언하고 그 이름을 가리킵니다.
@@ -36,7 +38,7 @@ tags: absence
 `items ?? []` 대신 `items?.map(…)`으로 값이 없는 상태를 그대로 다룹니다.
 선택 값을 그대로 비교하면 기본값이 아예 필요 없는 경우가 많습니다.
 
-**Incorrect (없는 값을 그 자리에서 지어낸 값으로 덮음):**
+**Incorrect (`??`와 `||` 오른쪽에 리터럴을 적음):**
 
 ```ts
 const supportEmail = settings.supportEmail ?? "help@example.com";

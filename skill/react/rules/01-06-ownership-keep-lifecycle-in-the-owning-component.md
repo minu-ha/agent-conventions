@@ -29,7 +29,7 @@ tags: ownership, hooks
 
 **Incorrect (줄 수를 줄이려고 생명주기를 훅 뒤로 옮김):**
 
-```tsx
+```ts
 // component/chart-root/use-chart-instance.ts
 export const useChartInstance = (containerRef: RefObject<HTMLDivElement | null>) => {
 	const [chart, setChart] = useState<EChartsType | null>(null);
@@ -56,6 +56,13 @@ export const useChartInstance = (containerRef: RefObject<HTMLDivElement | null>)
 export const WgChartRoot = (props: WgChartRootProps) => {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const chart = useChartInstance(containerRef);
+
+	/**
+	 * option이 바뀌면 기존 instance에 다시 반영
+	 */
+	useEffect(() => {
+		chart?.setOption(props.option);
+	}, [chart, props.option]);
 
 	return <div ref={containerRef} className={clsx("wg_chart__canvas")} />;
 };

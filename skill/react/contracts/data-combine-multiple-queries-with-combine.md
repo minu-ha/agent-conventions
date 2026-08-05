@@ -1,14 +1,16 @@
-# Combine Multiple Queries With `useQueries` and `combine`
+# Combine Multiple Queries With `combine`
 
 **Impact: HIGH (여러 응답을 합치는 자리가 통신 경계에 남고 화면 본문에 별칭이 쌓이지 않습니다)**
 
-쿼리 결과 둘 이상을 하나의 값으로 합쳐야 하면 `useQueries`에 `combine`을 넘깁니다.
+쿼리 결과 둘 이상을 하나의 값으로 합쳐야 하면 `useSuspenseQueries`나 `useQueries`에 `combine`을 넘깁니다.
+`Suspense` 쿼리를 쓰는 화면은 `useSuspenseQueries`를 쓰고, 합친 값에 `isPending`을 만들어 내보내지 않습니다.
+그 분기는 `screen-avoid-ad-hoc-loading-branches`가 죽은 코드로 봅니다.
 
 | 상황 | 쓰는 것 |
 | --- | --- |
-| 결과 둘 이상을 하나의 값으로 합친다 | `useQueries` + `combine` |
-| 각각 따로 그린다 | 합치지 않고 훅을 따로 부릅니다 |
-| 뒤 쿼리가 앞 결과를 입력으로 받는다 | `combine`이 아니라 `enabled`로 순서를 만듭니다 |
+| 결과 둘 이상을 하나의 값으로 합친다 | `useSuspenseQueries` 또는 `useQueries` + `combine` |
+| 각각 따로 그린다 | 합치지 않고 훅을 따로 부르기 |
+| 뒤 쿼리가 앞 결과를 입력으로 받는다 | `combine` 대신 `enabled`로 순서 만들기 |
 
 `select`로는 못 합니다.
 `select`는 자기 쿼리 데이터만 받습니다.

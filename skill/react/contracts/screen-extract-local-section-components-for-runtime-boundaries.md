@@ -1,4 +1,4 @@
-# Do Not Extract Section Components That Only Group Layout
+# Extract Local Section Components Only for Runtime Boundaries
 
 **Impact: HIGH (화면 흐름은 보이게 두고 자기 것을 직접 가진 부분만 떼어 냅니다)**
 
@@ -12,11 +12,10 @@
 - 상호작용: 팝오버, 모달, 선택, 인라인 편집, 드래그, 펼치는 트리
 - 라이브러리, 성능: 외부 위젯의 생명주기를 소유하는 어댑터, 가상 스크롤, 전환, 지연 값
 
-검색 매개변수, 화면 이동, 화면 단위 쿼리/뮤테이션, 화면 전체 이펙트, 무효화,
-여러 섹션에 걸친 파생값은 라우트 진입에 둡니다.
+흐름 제어는 섹션이 아니라 라우트 진입에 둡니다.
+그 목록은 `screen-keep-route-flow-visible`가 정합니다.
 
-호출 계층은 폴더 깊이가 아니라 진입 파일의 조립이 드러냅니다.
-"어느 컴포넌트가 이걸 쓰는지"를 폴더 경로로 표현하려고 중첩을 늘리지 않습니다.
+지역 섹션 파일을 어느 폴더에 두는지는 `ownership-place-owner-files-in-role-folders`가 정합니다.
 진입 파일의 JSX에 나타나지 않는 섹션이 다른 섹션 파일 안에서 렌더되면 과하게 쪼갠 것입니다.
 
 > 예시·예외가 필요하면 [full rule](../rules/05-03-screen-extract-local-section-components-for-runtime-boundaries.md)을 읽습니다.

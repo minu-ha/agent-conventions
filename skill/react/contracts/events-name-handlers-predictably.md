@@ -7,7 +7,7 @@
 | 상황 | 이름 |
 | --- | --- |
 | DOM 이벤트 | `handle + Target + Event` |
-| 한 컴포넌트에 그 동작의 트리거가 하나뿐일 때 | `handle + DomainAction` |
+| 그 동작을 일으키는 요소가 컴포넌트에 하나뿐일 때 | `handle + DomainAction` |
 
 - `on*`은 프롭 이름입니다.
   구현에는 쓰지 않습니다.

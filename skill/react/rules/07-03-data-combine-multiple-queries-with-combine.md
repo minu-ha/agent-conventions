@@ -1,6 +1,6 @@
 ---
-title: Combine Multiple Queries With `useQueries` and `combine`
-titleKo: 여러 쿼리를 합칠 때는 `useQueries`의 `combine`을 씁니다
+title: Combine Multiple Queries With `combine`
+titleKo: 여러 쿼리를 합칠 때는 `combine`을 씁니다
 impact: HIGH
 impactDescription: 여러 응답을 합치는 자리가 통신 경계에 남고 화면 본문에 별칭이 쌓이지 않습니다
 appliesWhen:
@@ -10,17 +10,19 @@ reviewWith: data-shape-query-data-with-select, screen-keep-derived-values-close
 tags: data, query
 ---
 
-## Combine Multiple Queries With `useQueries` and `combine`
+## Combine Multiple Queries With `combine`
 
 **Impact: HIGH (여러 응답을 합치는 자리가 통신 경계에 남고 화면 본문에 별칭이 쌓이지 않습니다)**
 
-쿼리 결과 둘 이상을 하나의 값으로 합쳐야 하면 `useQueries`에 `combine`을 넘깁니다.
+쿼리 결과 둘 이상을 하나의 값으로 합쳐야 하면 `useSuspenseQueries`나 `useQueries`에 `combine`을 넘깁니다.
+`Suspense` 쿼리를 쓰는 화면은 `useSuspenseQueries`를 쓰고, 합친 값에 `isPending`을 만들어 내보내지 않습니다.
+그 분기는 `screen-avoid-ad-hoc-loading-branches`가 죽은 코드로 봅니다.
 
 | 상황 | 쓰는 것 |
 | --- | --- |
-| 결과 둘 이상을 하나의 값으로 합친다 | `useQueries` + `combine` |
-| 각각 따로 그린다 | 합치지 않고 훅을 따로 부릅니다 |
-| 뒤 쿼리가 앞 결과를 입력으로 받는다 | `combine`이 아니라 `enabled`로 순서를 만듭니다 |
+| 결과 둘 이상을 하나의 값으로 합친다 | `useSuspenseQueries` 또는 `useQueries` + `combine` |
+| 각각 따로 그린다 | 합치지 않고 훅을 따로 부르기 |
+| 뒤 쿼리가 앞 결과를 입력으로 받는다 | `combine` 대신 `enabled`로 순서 만들기 |
 
 `select`로는 못 합니다.
 `select`는 자기 쿼리 데이터만 받습니다.
@@ -57,13 +59,17 @@ const rows = responseProductListSuspense.data.products.map((product) => ({
 ```tsx
 export const PgProducts = () => {
 	/**
-	 * product 목록과 분류 목록을 표 한 행씩으로 합친다
+	 * 분류 이름이 목록 응답에 없어서 표 한 행에 두 응답을 함께 담는다
 	 */
-	const responseProductRows = useQueries({
+	const responseProductRows = useSuspenseQueries({
 		queries: [productListQueryOptions(), categoryListQueryOptions()],
 		combine: ([productResult, categoryResult]) => ({
-			isPending: productResult.isPending || categoryResult.isPending,
-			rows: toProductRows(productResult.data, categoryResult.data),
+			rows: productResult.data.products.map((product) => ({
+				id: product.id,
+				categoryName: categoryResult.data.categories.find(
+					(category) => category.id === product.categoryId,
+				)?.name,
+			})),
 		}),
 	});
 
@@ -75,15 +81,15 @@ export const PgProducts = () => {
 
 ```tsx
 /**
- * 선택한 product 조회 API
+ * route search가 가리키는 product를 읽는다. 아래 배송 이력의 입력이 된다
  */
-const responseProductSuspense = useProductGetItemSuspense({productId: search.productId});
+const responseProductGetItemSuspense = useProductGetItemSuspense({productId: search.productId});
 
 /**
- * 그 product 의 배송 이력 조회 API. product 를 받은 뒤에만 부른다
+ * 배송 이력은 주문이 붙은 product에만 있어서 orderId를 받은 뒤에만 부른다
  */
 const responseShipmentList = useShipmentList(
-	{orderId: responseProductSuspense.data.orderId},
-	{query: {enabled: Boolean(responseProductSuspense.data.orderId)}},
+	{orderId: responseProductGetItemSuspense.data.orderId},
+	{query: {enabled: Boolean(responseProductGetItemSuspense.data.orderId)}},
 );
 ```

@@ -1,6 +1,6 @@
 ---
 title: Limit Nesting to One Level and Write the Rest Inline
-titleKo: 중첩은 한 겹까지고 그다음은 한 줄로 씁니다
+titleKo: 중첩은 한 겹까지, 그다음은 한 줄로 씁니다
 impact: HIGH
 impactDescription: 중첩이 늘 한 겹이라 실제 선택자가 코드에 그대로 보입니다
 appliesWhen:
@@ -29,7 +29,7 @@ tags: selector, nesting, ampersand
 
 그래서 `&`를 어디에 쓸지 고르지 않습니다.
 **어느 요소를 가리키느냐가 정합니다.**
-"언제는 중첩, 언제는 한 줄"이 아니라 한 겹까지가 중첩이고 그다음은 늘 한 줄입니다.
+"어떤 때는 중첩, 어떤 때는 한 줄"이 아니라 한 겹까지가 중첩이고 그다음은 늘 한 줄입니다.
 
 중첩을 두 겹 이상 열면 실제 선택자가 숨습니다.
 `.pg_a { & .pg_b { & .pg_c { } } }`에 쓰인 선택자는 `& .pg_c`뿐이어서
@@ -37,7 +37,7 @@ tags: selector, nesting, ampersand
 검사 도구도 각 블록만 봅니다.
 
 기계 검증은 `max-nesting-depth: 1`입니다.
-최상위가 0단입니다.
+최상위가 0겹입니다.
 
 **Incorrect (중첩을 두 겹 이상 열어 실제 선택자를 숨김):**
 
@@ -53,7 +53,7 @@ tags: selector, nesting, ampersand
 }
 ```
 
-**Incorrect (다른 요소의 pseudo-element를 `&`로 다시 엶):**
+**Incorrect (다른 요소의 가상 요소를 `&`로 다시 엶):**
 
 ```css
 .pg_salesPanel__spreadButton {

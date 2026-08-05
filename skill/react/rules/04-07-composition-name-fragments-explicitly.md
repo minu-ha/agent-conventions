@@ -16,11 +16,10 @@ tags: composition, jsx
 여러 요소를 감쌀 때는 `<Fragment>`를 `react`에서 직접 가져와 그대로 씁니다.
 `<>`와 `</>`는 쓰지 않습니다.
 
-- `<>`는 검색되지 않습니다.
-  조각을 어디서 감쌌는지 코드에서 찾을 방법이 없습니다.
+- `<>`와 `</>`는 검색해도 어느 컴포넌트의 조각인지 가릴 수 없습니다.
+  diff에도 이름 없는 줄로 남습니다.
 - 목록에서 `key`가 필요해지면 어차피 `<Fragment key={…}>`로 바꿔야 합니다.
   한 형태로 끝냅니다.
-- diff에서 `<>`와 `</>`는 어느 컴포넌트의 줄인지 알 수 없는 익명 줄로 남습니다.
 - 가져오기는 `typescript/naming-use-direct-imports-and-public-entry-points`를 따라
   `import { Fragment } from "react";`로 적습니다.
 
@@ -31,12 +30,12 @@ tags: composition, jsx
 
 ```tsx
 export const PgProductScreen = () => {
-  return (
-    <>
-      <PgProductFilterSection />
-      <PgProductTableSection />
-    </>
-  );
+	return (
+		<>
+			<PgProductFilterSection />
+			<PgProductTableSection />
+		</>
+	);
 };
 ```
 
@@ -46,12 +45,12 @@ export const PgProductScreen = () => {
 import { Fragment } from "react";
 
 export const PgProductScreen = () => {
-  return (
-    <Fragment>
-      <PgProductFilterSection />
-      <PgProductTableSection />
-    </Fragment>
-  );
+	return (
+		<Fragment>
+			<PgProductFilterSection />
+			<PgProductTableSection />
+		</Fragment>
+	);
 };
 ```
 
@@ -61,11 +60,11 @@ export const PgProductScreen = () => {
 import { Fragment } from "react";
 
 export const PgProductRows = (props: PgProductRowsProps) => {
-  return props.products.map((product) => (
-    <Fragment key={product.id}>
-      <PgProductRow product={product} />
-      <PgProductRowDivider />
-    </Fragment>
-  ));
+	return props.products.map((product) => (
+		<Fragment key={product.id}>
+			<PgProductRow product={product} />
+			<PgProductRowDivider />
+		</Fragment>
+	));
 };
 ```

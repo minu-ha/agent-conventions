@@ -7,7 +7,7 @@
 
 `:not()`이 나오는 원인은 하나입니다.
 
-> 조상의 수정자로 자손의 모습을 정하려 했기 때문입니다.
+> 조상의 수정자로 자손의 모습을 정하려 한 것입니다.
 
 조상이 자손을 결정하려면 조상이 "그 상태가 아님"을 알아야 합니다.
 자손에 자기 수정자를 붙이면 부정 조건이 필요 없어집니다.
@@ -18,6 +18,6 @@
 - `:not(:disabled)`처럼 DOM이 소유한 조건은 대상이 아닙니다.
   앱이 그 값을 알 수 없습니다.
 
-무엇이 DOM 상태이고 무엇이 앱 상태인지는 `selector-use-pseudo-classes-for-dom-owned-states`가 정합니다.
+무엇이 DOM 상태이고 무엇이 앱 상태인지는 `selector-use-pseudo-classes-for-dom-owned-states` 규칙이 정합니다.
 
 > 예시·예외가 필요하면 [full rule](../rules/04-07-selector-do-not-invert-domain-state-with-not.md)을 읽습니다.

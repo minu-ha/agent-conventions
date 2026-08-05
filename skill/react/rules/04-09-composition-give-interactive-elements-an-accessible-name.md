@@ -6,7 +6,7 @@ impactDescription: 화면 낭독기와 테스트가 요소를 이름으로 찾�
 appliesWhen:
   - 클릭이나 입력을 받는 요소를 새로 만들 때
   - 글자 없이 아이콘만 있는 버튼을 추가할 때
-tags: composition, a11y
+tags: composition, accessibility
 ---
 
 ## Give Interactive Elements an Accessible Name

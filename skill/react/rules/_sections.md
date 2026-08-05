@@ -15,8 +15,7 @@
 **Impact:** HIGH
 **Description:** 리액트 핸들러 타입과 래퍼가 노출한 프롭 계약은 선언 자리에서 바로 드러나야 합니다.
   라이브러리 래퍼는 여는 표면을 좁히고 형태에 맞는 방법으로 프롭을 넘깁니다.
-  일반
-  TypeScript 타입 규칙은 동반 스킬이 다루고 여기서는 리액트 문맥만 봅니다.
+  일반 TypeScript 타입 규칙은 동반 스킬이 다루고 여기서는 리액트 문맥만 봅니다.
 
 ## 3. Composition Strategy (strategy)
 **TitleKo:** 조립 전략
@@ -31,15 +30,18 @@
 ## 4. Component Structure and JSX (composition)
 **TitleKo:** 컴포넌트 구조와 JSX
 **Impact:** HIGH
-**Description:** 프롭스 계약은 컴포넌트 바로 위에서 읽히고, JSX 안에는 동작을 숨기지 않아야 합니다.
-컴포넌트를
-  컴포넌트 안에서 정의하지 않고, `ref`와 `Activity`처럼 밖으로 여는 창구는 실제 계약이 있을 때만 엽니다.
+**Description:** 프롭스 계약은 컴포넌트 바로 위에서 읽히고 값은 `props.`로 읽어 출처를 남깁니다.
+  JSX 안에는 동작을 숨기지 않고, 컴포넌트를 컴포넌트 안에서 정의하지 않습니다.
+  `ref`와 `Activity`처럼 밖으로 여는 창구는 실제 계약이 있을 때만 엽니다.
+  조각과 조건부 렌더링은 형태를 하나로 고정하고, 누르고 입력하는 요소에는 읽히는 이름을 붙입니다.
 
 ## 5. Screen File Discipline (screen)
 **TitleKo:** 화면 파일 규율
 **Impact:** HIGH
 **Description:** 라우트 진입은 화면 흐름을 분명하게 보여줘야 하며, 자기 상태나 비동기를 직접 가진 섹션만 떼어냅니다.
-  파생값은 쓰는 자리에서 계산하고, 막는 로딩은 화면 본문이 아니라 섹션 소유자의 `Suspense` 경계가 처리합니다.
+  파생값은 쓰는 자리에서 계산합니다.
+  막는 로딩과 실패는 화면 본문이 아니라 섹션 소유자의 `Suspense` 경계와 오류 경계가 처리하고,
+  그 경계를 어느 층에 두는지도 여기서 정합니다.
 
 ## 6. Events and Interaction Flow (events)
 **TitleKo:** 이벤트와 상호작용 흐름
@@ -72,7 +74,8 @@
 
 ## 10. Documentation and Comments (docs)
 **TitleKo:** 문서화와 주석
-**Impact:** MEDIUM
-**Description:** 리액트 경계 선언에는 동반 스킬인 `convention-typescript`의 문서 주석 표준을 적용합니다.
-어느
-  선언에 문서 주석을 붙일지를 여기서 정합니다.
+**Impact:** MEDIUM-HIGH
+**Description:** 문서 주석의 형식과 태그, 그리고 어느 선언에 붙일지의 기본 목록은 동반 스킬인
+  `convention-typescript`가 정합니다.
+  여기서는 그 목록에 리액트만 아는 대상을 더합니다.
+  합성 컴포넌트의 공개 부품과, 정리 함수나 여러 의존성을 가진 이펙트가 그 대상입니다.

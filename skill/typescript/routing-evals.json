@@ -17,6 +17,7 @@
 					"naming-centralize-shared-config-namespaces",
 					"naming-place-owner-config-in-the-owner-config-folder",
 					"naming-preserve-config-origin-with-chained-access",
+					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
 					"naming-restrict-absolute-aliases-to-layer-roots",
 					"naming-read-environment-values-through-shared-config"

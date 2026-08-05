@@ -15,7 +15,7 @@ JSX에 바로 쓴 화살표는 리액트가 타입을 붙여 주지만, 팩토�
 안에서 쓰는 라이브러리의 원본 프롭스 타입을 가져오지 않습니다.
 래퍼가 일부러 좁히거나 늘린 계약이 사용처로 새지 않게 하려는 것입니다.
 
-`query.select` 같은 훅 옵션의 일회성 문맥 콜백은 리액트 핸들러 구현이 아니라 대상이 아닙니다.
+`query.select` 같은 훅 옵션의 일회성 문맥 콜백은 리액트 핸들러 구현이 아니므로 이 규칙 대상이 아닙니다.
 
 **Requires selected:** `typescript/types-prefer-function-variable-types-over-parameter-annotations` · 함께 적용
 

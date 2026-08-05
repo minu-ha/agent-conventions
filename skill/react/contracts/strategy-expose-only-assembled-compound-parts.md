@@ -11,10 +11,10 @@
 특히 다음 셋은 공개하지 않습니다.
 
 - 단순 `className` 래퍼
-- 여백 보정용 DOM. `css/composition-do-not-add-wrapper-elements-for-styling`가 애초에 만들지 말라고 합니다.
+- 여백 보정용 DOM. `css/composition-do-not-add-wrapper-elements-for-styling`이 애초에 만들지 말라고 합니다.
 - 내부 레이아웃 보조 함수
 
-상태 없는 합성에 상태가 필요해지면 공개 이름은 그대로 두고 컨텍스트만 추가합니다.
-공개 이름이 바뀌면 소비자 코드가 모두 바뀝니다.
+상태 없는 합성에 상태를 넣으면서 공개 이름을 어떻게 할지는
+`strategy-choose-single-composition-compound-and-variants`가 정합니다.
 
 > 예시·예외가 필요하면 [full rule](../rules/03-02-strategy-expose-only-assembled-compound-parts.md)을 읽습니다.

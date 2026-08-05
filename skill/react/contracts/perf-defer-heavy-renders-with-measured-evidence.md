@@ -1,8 +1,8 @@
 # Defer Heavy Renders Only With Measured Evidence
 
-**Impact: MEDIUM (무겁다고 짐작해서 전환과 지연 값을 두르지 않고 실제로 무거운 자리만 미룹니다)**
+**Impact: MEDIUM (무겁다고 짐작해서 전환과 지연 값을 감싸지 않고 실제로 무거운 자리만 미룹니다)**
 
-렌더를 미루는 도구는 둘입니다.
+렌더를 미루는 도구는 `startTransition`, `useTransition`, `useDeferredValue`입니다.
 **먼저 미룰 만큼 무거운지 확인합니다.**
 
 `perf-avoid-defensive-memoization`이 메모이제이션에 요구하는 것과 같은 근거를 요구합니다.
@@ -16,16 +16,19 @@
 | 내가 부르는 `setState`가 무거운 렌더를 일으킨다 | `startTransition`으로 그 호출을 감쌉니다 |
 | 값은 즉시 반응해야 하는데 그 값에서 파생되는 렌더가 무겁다 | `useDeferredValue`로 한 박자 늦춘 값을 만듭니다 |
 
-`set` 함수가 내 것이 아니면 첫째 줄을 쓸 수 없습니다.
-그때는 둘째 줄입니다.
+`set` 함수가 내 것이 아니면 `startTransition`을 쓸 수 없습니다.
+그때는 `useDeferredValue`입니다.
 
 - 입력값 자체, 폼 오류, 즉시 비활성화처럼 급한 반응은 전환에 넣지 않습니다.
 - `startTransition`은 대기 상태를 알려 주지 않습니다.
   진행 표시가 필요하면 `useTransition`의 `isPending`을 씁니다.
 - `await` 뒤에 상태를 갱신하면 그 갱신을 다시 `startTransition`으로 감쌉니다.
-  앞의 전환은 거기서 이미 끝나 있습니다.
-- `useDeferredValue`로 늦춘 값을 받는 컴포넌트가 `memo`가 아니면 어차피 다시 렌더합니다.
-  받는 쪽을 함께 보지 않으면 늦춘 효과가 없습니다.
+  `await` 뒤에는 전환 범위가 끊깁니다.
+  리액트가 async 문맥을 이어가지 못하기 때문입니다.
+- 무거운 하위 트리의 렌더를 늦추려면 늦춘 값을 받는 컴포넌트가 `memo`여야 합니다.
+  `memo`가 아니면 부모가 다시 렌더할 때 그 트리도 함께 다시 렌더합니다.
+- 무거운 것이 하위 트리 렌더가 아니라 계산이면 `memo`가 필요 없습니다.
+  `useMemo`가 늦춘 값에서만 다시 계산하므로 급한 입력 렌더는 그 계산을 건너뜁니다.
 - 지연 값 기준 재계산에 `useMemo`를 함께 쓰는 것은 `perf-avoid-defensive-memoization`의 허용 사유에 듭니다.
   그때도 측정한 근거를 주석으로 남깁니다.
 

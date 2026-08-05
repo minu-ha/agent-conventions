@@ -1,20 +1,20 @@
 ---
 title: Defer Heavy Renders Only With Measured Evidence
-titleKo: 무거운 렌더를 미루는 것은 측정한 근거가 있을 때만 합니다
+titleKo: 측정한 근거가 있을 때만 무거운 렌더를 미룹니다
 impact: MEDIUM
-impactDescription: 무겁다고 짐작해서 전환과 지연 값을 두르지 않고 실제로 무거운 자리만 미룹니다
+impactDescription: 무겁다고 짐작해서 전환과 지연 값을 감싸지 않고 실제로 무거운 자리만 미룹니다
 appliesWhen:
-  - `startTransition`이나 `useDeferredValue`를 추가·삭제할 때
+  - `startTransition`·`useTransition`·`useDeferredValue`를 추가·삭제할 때
   - 목록이나 표가 커져 입력 반응이 늦다는 보고를 받았을 때
 reviewWith: perf-avoid-defensive-memoization
-tags: perf, state, performance
+tags: perf, state
 ---
 
 ## Defer Heavy Renders Only With Measured Evidence
 
-**Impact: MEDIUM (무겁다고 짐작해서 전환과 지연 값을 두르지 않고 실제로 무거운 자리만 미룹니다)**
+**Impact: MEDIUM (무겁다고 짐작해서 전환과 지연 값을 감싸지 않고 실제로 무거운 자리만 미룹니다)**
 
-렌더를 미루는 도구는 둘입니다.
+렌더를 미루는 도구는 `startTransition`, `useTransition`, `useDeferredValue`입니다.
 **먼저 미룰 만큼 무거운지 확인합니다.**
 
 `perf-avoid-defensive-memoization`이 메모이제이션에 요구하는 것과 같은 근거를 요구합니다.
@@ -28,30 +28,35 @@ tags: perf, state, performance
 | 내가 부르는 `setState`가 무거운 렌더를 일으킨다 | `startTransition`으로 그 호출을 감쌉니다 |
 | 값은 즉시 반응해야 하는데 그 값에서 파생되는 렌더가 무겁다 | `useDeferredValue`로 한 박자 늦춘 값을 만듭니다 |
 
-`set` 함수가 내 것이 아니면 첫째 줄을 쓸 수 없습니다.
-그때는 둘째 줄입니다.
+`set` 함수가 내 것이 아니면 `startTransition`을 쓸 수 없습니다.
+그때는 `useDeferredValue`입니다.
 
 - 입력값 자체, 폼 오류, 즉시 비활성화처럼 급한 반응은 전환에 넣지 않습니다.
 - `startTransition`은 대기 상태를 알려 주지 않습니다.
   진행 표시가 필요하면 `useTransition`의 `isPending`을 씁니다.
 - `await` 뒤에 상태를 갱신하면 그 갱신을 다시 `startTransition`으로 감쌉니다.
-  앞의 전환은 거기서 이미 끝나 있습니다.
-- `useDeferredValue`로 늦춘 값을 받는 컴포넌트가 `memo`가 아니면 어차피 다시 렌더합니다.
-  받는 쪽을 함께 보지 않으면 늦춘 효과가 없습니다.
+  `await` 뒤에는 전환 범위가 끊깁니다.
+  리액트가 async 문맥을 이어가지 못하기 때문입니다.
+- 무거운 하위 트리의 렌더를 늦추려면 늦춘 값을 받는 컴포넌트가 `memo`여야 합니다.
+  `memo`가 아니면 부모가 다시 렌더할 때 그 트리도 함께 다시 렌더합니다.
+- 무거운 것이 하위 트리 렌더가 아니라 계산이면 `memo`가 필요 없습니다.
+  `useMemo`가 늦춘 값에서만 다시 계산하므로 급한 입력 렌더는 그 계산을 건너뜁니다.
 - 지연 값 기준 재계산에 `useMemo`를 함께 쓰는 것은 `perf-avoid-defensive-memoization`의 허용 사유에 듭니다.
   그때도 측정한 근거를 주석으로 남깁니다.
 
-**Incorrect (무거운지 확인하지 않고 전환부터 두름):**
+**Incorrect (행 20개 목록을 다시 그리는 갱신까지 전환으로 감쌈):**
 
 ```tsx
-/**
- * 상태 필터 변경
- */
-const handleStatusFilterChange = (nextStatus: ProductStatusFilter) => {
+const [selectedTagId, setSelectedTagId] = useState("all");
+const tagRows = responseTagListSuspense.data.tags.slice(0, 20);
+
+const handleTagClick = (nextTagId: string) => {
 	startTransition(() => {
-		setStatusFilter(nextStatus);
+		setSelectedTagId(nextTagId);
 	});
 };
+
+return <UiTagRows rows={tagRows} selectedTagId={selectedTagId} />;
 ```
 
 **Incorrect (입력과 무거운 파생 렌더를 같은 값에 묶음):**
@@ -61,41 +66,31 @@ const [keyword, setKeyword] = useState("");
 const filteredRows = rows.filter((row) => fuzzyMatchRow(row, keyword));
 ```
 
-**Correct (내 `setState`가 원인이고 측정 근거가 있음):**
+**Correct (측정 근거가 있는 갱신만 전환으로 감싸고 행 20개 목록은 그대로 둠):**
 
 ```tsx
-/**
- * 상태 필터 변경
- */
+const handleTagClick = (nextTagId: string) => {
+	setSelectedTagId(nextTagId);
+};
+
 const handleStatusFilterChange = (nextStatus: ProductStatusFilter) => {
-	// 행 12000 개에서 필터 전환에 320ms 가 걸려 클릭이 밀렸다.
+	// 행 12,000개에서 필터 전환에 320ms가 걸려 클릭이 밀렸다.
 	startTransition(() => {
 		setStatusFilter(nextStatus);
 	});
 };
 ```
 
-**Correct (입력은 즉시 반응하고 파생 렌더만 늦춤):**
+**Correct (입력은 즉시 반응하고 무거운 파생 계산만 늦춤):**
 
 ```tsx
 const [keyword, setKeyword] = useState("");
 const deferredKeyword = useDeferredValue(keyword);
 
-// 행이 수천 개라 매 렌더 필터링이 측정에서 병목이었다. 늦춘 검색어에만 다시 계산한다.
+// 행 12,000개에서 매 렌더 필터링이 180ms로 측정됐다. 늦춘 검색어에만 다시 계산한다.
 const filteredRows = useMemo(() => {
 	return rows.filter((row) => fuzzyMatchRow(row, deferredKeyword));
 }, [deferredKeyword, rows]);
 
 return <PgProductRows rows={filteredRows} />;
-```
-
-**Correct (미룰 만큼 무겁지 않으면 그대로 둠):**
-
-```tsx
-/**
- * 상태 필터 변경
- */
-const handleStatusFilterChange = (nextStatus: ProductStatusFilter) => {
-	setStatusFilter(nextStatus);
-};
 ```
