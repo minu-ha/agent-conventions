@@ -1,8 +1,8 @@
 ---
 title: Avoid Ad-hoc Loading Branches in Screen Bodies
-titleKo: 화면 본문에서 로딩 분기를 즉석으로 만들지 않습니다
+titleKo: 화면 본문에서 로딩·실패 분기를 즉석으로 만들지 않습니다
 impact: HIGH
-impactDescription: 초기 로딩은 `Suspense` 경계가 맡고 화면 본문에는 데이터가 있는 경로만 남습니다
+impactDescription: 초기 로딩과 실패는 경계가 맡고 화면 본문에는 데이터가 있는 경로만 남습니다
 appliesWhen:
   - `Suspense` 쿼리를 쓰는 화면 본문에 초기 로딩 반환을 추가·변경할 때
   - `isFetching`이나 뮤테이션 `isPending`으로 화면을 가리는 분기를 넣을 때
@@ -15,7 +15,7 @@ tags: screen, loading, suspense
 
 ## Avoid Ad-hoc Loading Branches in Screen Bodies
 
-**Impact: HIGH (초기 로딩은 `Suspense` 경계가 맡고 화면 본문에는 데이터가 있는 경로만 남습니다)**
+**Impact: HIGH (초기 로딩과 실패는 경계가 맡고 화면 본문에는 데이터가 있는 경로만 남습니다)**
 
 `Suspense` 쿼리를 쓰는 화면은 본문에서 초기 로딩을 다시 분기하지 않습니다.
 막는 로딩은 `Suspense` 경계나 상위 레이아웃이 이미 처리합니다.

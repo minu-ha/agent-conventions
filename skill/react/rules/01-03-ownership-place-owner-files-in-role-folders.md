@@ -43,6 +43,8 @@ tags: ownership
 - 프롭스는 해당 TSX에 두고 여러 파일이 공유하는 계약만 `type`으로 옮깁니다.
 - 파일명과 심볼의 레이어 접두사는 `ownership-prefix-layer-names-on-files-and-symbols`가 정합니다.
 - 소유자 중첩이 3단계에 닿으면 분리가 맞는지 `widget`으로 나갈 대상인지 다시 봅니다.
+- 호출 계층은 폴더 깊이가 아니라 진입 파일의 조립이 드러냅니다.
+  어느 컴포넌트가 이것을 쓰는지 폴더 경로로 표현하려고 중첩을 늘리지 않습니다.
 
 무엇을 추출할지는 이 규칙이 정하지 않습니다.
 `typescript/functions-extract-helpers-only-when-the-boundary-is-real`이 추출 여부를 먼저 판정하고

@@ -300,6 +300,8 @@ export const PgSalesTrendPanel = (props: PgSalesTrendPanelProps) => {
 - 프롭스는 해당 TSX에 두고 여러 파일이 공유하는 계약만 `type`으로 옮깁니다.
 - 파일명과 심볼의 레이어 접두사는 `ownership-prefix-layer-names-on-files-and-symbols`가 정합니다.
 - 소유자 중첩이 3단계에 닿으면 분리가 맞는지 `widget`으로 나갈 대상인지 다시 봅니다.
+- 호출 계층은 폴더 깊이가 아니라 진입 파일의 조립이 드러냅니다.
+  어느 컴포넌트가 이것을 쓰는지 폴더 경로로 표현하려고 중첩을 늘리지 않습니다.
 
 무엇을 추출할지는 이 규칙이 정하지 않습니다.
 `typescript/functions-extract-helpers-only-when-the-boundary-is-real`이 추출 여부를 먼저 판정하고
@@ -2669,7 +2671,7 @@ export const PgProductTreeSection = () => {
 
 **Review with:** `data-preserve-origin-chaining`, `screen-keep-derived-values-close`, `typescript/absence-expose-optional-values-instead-of-silent-fallbacks`
 
-**Impact: HIGH (초기 로딩은 `Suspense` 경계가 맡고 화면 본문에는 데이터가 있는 경로만 남습니다)**
+**Impact: HIGH (초기 로딩과 실패는 경계가 맡고 화면 본문에는 데이터가 있는 경로만 남습니다)**
 
 `Suspense` 쿼리를 쓰는 화면은 본문에서 초기 로딩을 다시 분기하지 않습니다.
 막는 로딩은 `Suspense` 경계나 상위 레이아웃이 이미 처리합니다.
@@ -3938,10 +3940,12 @@ return <PgProductRows rows={filteredRows} />;
 `type`과 `interface` 문서화는 `typescript/types-document-custom-types-and-shapes`가 정합니다.
 내보냈는지와 무관하게 그 규칙을 따르고, 여기서 다시 판정하지 않습니다.
 
-필수 대상은 `typescript/docs-require-header-jsdoc-on-key-declarations`가 정한 목록에 다음 둘을 더한 것입니다.
+필수 대상은 `typescript/docs-require-header-jsdoc-on-key-declarations`가 정한 목록에 다음 셋을 더한 것입니다.
 
 - 합성 컴포넌트의 공개 부품
 - 정리 함수가 있거나 의존성이 둘 이상인 `useEffect`
+- 화면 이동이나 쿼리 무효화를 하는 이벤트 핸들러.
+  동작이 그 하나뿐이어도 대상입니다
 
 쿼리·뮤테이션 바인딩, 핸들러, 내보낸 보조 함수와 훅, 스토어 선언의 임계값은
 `typescript/docs-require-header-jsdoc-on-key-declarations`가 정한 것을 그대로 씁니다.

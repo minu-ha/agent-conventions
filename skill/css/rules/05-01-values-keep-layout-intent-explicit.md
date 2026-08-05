@@ -5,6 +5,7 @@ impact: MEDIUM-HIGH
 impactDescription: DOM을 거슬러 올라가지 않고 sticky, fixed, 박스 책임을 파악합니다
 appliesWhen:
   - `sticky`·`fixed`, `z-index`, 강제 `width`·`height` 또는 부모·자식 레이아웃 책임을 추가·변경할 때
+  - 대체 화면의 컨테이너나 높이를 정할 때
   - 제외: 같은 요소를 기본과 수정자로 나누면서 기존 `display`·여백 선언을 값 그대로 옮기는 경우
 reviewWith: values-declare-stacking-layers-as-tokens
 tags: layout, comments, sticky
@@ -24,6 +25,8 @@ tags: layout, comments, sticky
   어느 조상이 스크롤 컨테이너인지는 선언에 안 보입니다.
   `fixed`는 `transform`이 걸린 조상 아래에서 뷰포트 기준을 잃고,
   `sticky`는 스크롤 조상이 `overflow: visible`이면 아무 일도 하지 않습니다.
+- 로딩 대체 화면은 실제 내용과 같은 컨테이너 클래스 안에 넣습니다.
+  높이를 대체 화면에만 따로 적으면 실제 내용이 들어올 때 그 값이 남아 레이아웃이 튑니다.
 
 **Incorrect (레이아웃 강제가 많고 기준 설명이 없음):**
 

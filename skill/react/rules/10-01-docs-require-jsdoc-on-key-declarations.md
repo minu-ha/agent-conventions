@@ -21,10 +21,12 @@ tags: docs, handlers, effects
 `type`과 `interface` 문서화는 `typescript/types-document-custom-types-and-shapes`가 정합니다.
 내보냈는지와 무관하게 그 규칙을 따르고, 여기서 다시 판정하지 않습니다.
 
-필수 대상은 `typescript/docs-require-header-jsdoc-on-key-declarations`가 정한 목록에 다음 둘을 더한 것입니다.
+필수 대상은 `typescript/docs-require-header-jsdoc-on-key-declarations`가 정한 목록에 다음 셋을 더한 것입니다.
 
 - 합성 컴포넌트의 공개 부품
 - 정리 함수가 있거나 의존성이 둘 이상인 `useEffect`
+- 화면 이동이나 쿼리 무효화를 하는 이벤트 핸들러.
+  동작이 그 하나뿐이어도 대상입니다
 
 쿼리·뮤테이션 바인딩, 핸들러, 내보낸 보조 함수와 훅, 스토어 선언의 임계값은
 `typescript/docs-require-header-jsdoc-on-key-declarations`가 정한 것을 그대로 씁니다.

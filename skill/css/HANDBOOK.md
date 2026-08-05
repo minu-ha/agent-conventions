@@ -721,8 +721,10 @@ TSX에서 `className`은 `clsx()`로 조립합니다.
 
 내부 모양이 화면마다 달라야 하면 컴포넌트가 `variant` 프롭을 받아 처리합니다.
 변형은 머리말이나 본문처럼 필요한 노드마다 수정자로 붙입니다.
-조상의 DOM 상태를 자손에 전달할 때만 결합자 하나를 씁니다.
-최상위 수정자에서 내부를 결합자로 잡는 형태는 `selector-nest-dom-state-in-the-owning-block` 규칙이 막습니다.
+최상위에 수정자 하나만 붙이고 내부를 결합자로 잡지 않습니다.
+그렇게 잡으면 그 자손이 어느 조상 아래 있는지에 얽매여 내부 구조가 바뀔 때 조용히 깨집니다.
+조상의 **DOM 상태**를 자손에 전달할 때만 결합자 하나를 쓰고,
+그 자리의 배치는 `selector-nest-dom-state-in-the-owning-block` 규칙이 정합니다.
 
 받은 `className`을 내부 노드로 넘기지 않습니다.
 
@@ -1716,7 +1718,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 
 **Rule:** `C22` · `values-keep-layout-intent-explicit`
 
-**Applies when:** `sticky`·`fixed`, `z-index`, 강제 `width`·`height` 또는 부모·자식 레이아웃 책임을 추가·변경할 때. 제외: 같은 요소를 기본과 수정자로 나누면서 기존 `display`·여백 선언을 값 그대로 옮기는 경우.
+**Applies when:** `sticky`·`fixed`, `z-index`, 강제 `width`·`height` 또는 부모·자식 레이아웃 책임을 추가·변경할 때. 대체 화면의 컨테이너나 높이를 정할 때. 제외: 같은 요소를 기본과 수정자로 나누면서 기존 `display`·여백 선언을 값 그대로 옮기는 경우.
 
 **Review with:** `values-declare-stacking-layers-as-tokens`
 
@@ -1732,6 +1734,8 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
   어느 조상이 스크롤 컨테이너인지는 선언에 안 보입니다.
   `fixed`는 `transform`이 걸린 조상 아래에서 뷰포트 기준을 잃고,
   `sticky`는 스크롤 조상이 `overflow: visible`이면 아무 일도 하지 않습니다.
+- 로딩 대체 화면은 실제 내용과 같은 컨테이너 클래스 안에 넣습니다.
+  높이를 대체 화면에만 따로 적으면 실제 내용이 들어올 때 그 값이 남아 레이아웃이 튑니다.
 
 **Incorrect (레이아웃 강제가 많고 기준 설명이 없음):**
 
