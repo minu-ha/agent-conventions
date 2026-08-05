@@ -1,0 +1,33 @@
+# Keep Breakpoints Inside the Class Block
+
+**Impact: HIGH (한 클래스의 모든 크기 규칙이 한 블록에 모여 덮어쓰기를 찾아다니지 않습니다)**
+
+`@media`는 그 클래스 블록 안에 중첩합니다.
+파일 아래쪽에 최상위 `@media`를 따로 열어 같은 클래스를 다시 선언하지 않습니다.
+`selector-declare-each-class-in-one-block`이 요구하는 "클래스당 한 블록"이 그대로 유지됩니다.
+
+**분기점은 좁은 쪽부터 씁니다.**
+기본 선언이 가장 좁은 화면 기준이고, 넓어질 때만 덮습니다.
+좁아질 때만 덮는 조건과 섞으면 두 방향이 만나는 구간에서 어느 쪽이 이기는지 매번 따져야 합니다.
+
+조건은 범위 표기로 씁니다.
+`(width >= 1024px)` 이고 `(min-width: 1024px)`이 아닙니다.
+`tooling-configure-stylelint-to-enforce-these-rules`가 그 표기를 강제합니다.
+
+분기점 숫자는 아래 셋만 씁니다.
+
+| 이름 | 값 | 기준 |
+| --- | --- | --- |
+| `sm` | `640px` | 세로 태블릿 |
+| `md` | `1024px` | 가로 태블릿, 좁은 노트북 |
+| `lg` | `1440px` | 데스크톱 |
+
+숫자를 토큰으로 빼지 않습니다.
+`@media`의 조건에는 `var()`를 쓸 수 없어서 토큰으로 만들어도 그 자리에서 못 씁니다.
+그래서 세 값을 규칙에 못 박고 그대로 적습니다.
+
+블록 안에 `@media`를 넣어도 중첩 깊이에 세지 않습니다.
+`tooling-configure-stylelint-to-enforce-these-rules`의 설정이 `@media`를 깊이 계산에서 뺍니다.
+그 안에서 `&:hover` 같은 상태를 한 겹 더 쓸 수 있습니다.
+
+> 예시·예외가 필요하면 [full rule](../rules/04-08-selector-keep-breakpoints-inside-the-class-block.md)을 읽습니다.

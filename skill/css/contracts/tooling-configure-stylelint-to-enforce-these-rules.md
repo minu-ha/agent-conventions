@@ -8,7 +8,8 @@
 | --- | --- |
 | `selector-class-pattern` | `naming-use-scope-slug-element-modifier-syntax` |
 | `selector-disallowed-list` | `ownership-use-foreign-classes-only-under-your-own-root`, `selector-nest-dom-state-in-the-owning-block`, `selector-use-classes-instead-of-element-selectors` |
-| `max-nesting-depth` | `selector-limit-nesting-block-depth` |
+| `max-nesting-depth` | `selector-limit-nesting-block-depth`, `selector-keep-breakpoints-inside-the-class-block` |
+| `keyframes-name-pattern` | `values-namespace-keyframes-and-respect-reduced-motion` |
 | `no-duplicate-selectors` | `selector-declare-each-class-in-one-block` |
 | `property-disallowed-list` | `values-tokenize-repeated-visual-values` |
 | `selector-attribute-name-disallowed-list` | `selector-use-pseudo-classes-for-dom-owned-states` |

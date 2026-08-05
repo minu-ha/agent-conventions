@@ -255,7 +255,7 @@
 		},
 		{
 			"id": "css-repeated-values-and-optional-token",
-			"prompt": "scope a global .ant-tree selector under the existing .ui_themePreview owner root with one descendant level, and replace repeated color/spacing/radius with optional CSS variables and fallbacks; keep the file and owner name unchanged.",
+			"prompt": "scope a global .ant-tree selector under the existing .ui_themePreview owner root with one descendant level, and replace repeated color/spacing/radius with optional CSS variables and fallbacks; keep the file and owner name unchanged; also namespace the shared fade keyframes and add the global reduced-motion block.",
 			"files": [
 				"src/ui/theme-preview/ui-theme-preview.css"
 			],
@@ -268,7 +268,8 @@
 					"selector-use-pseudo-classes-for-dom-owned-states",
 					"values-always-provide-css-variable-fallbacks",
 					"values-tokenize-repeated-visual-values",
-					"values-separate-domain-state-modifiers-from-dom-interaction-states"
+					"values-separate-domain-state-modifiers-from-dom-interaction-states",
+					"values-namespace-keyframes-and-respect-reduced-motion"
 				]
 			}
 		},
@@ -290,7 +291,7 @@
 		},
 		{
 			"id": "css-split-class-declaration",
-			"prompt": "the same .pg_catalogIndex__toolbar block is opened twice in one file and the later one overrides padding; consolidate into a single block keeping the final value.",
+			"prompt": "the same .pg_catalogIndex__toolbar block is opened twice in one file and the later one overrides the first from a top-level @media; fold both into one block with the breakpoint nested inside.",
 			"files": [
 				"src/page/catalog-index/pg-catalog-index.css"
 			],
@@ -299,13 +300,14 @@
 			],
 			"expectedSelected": {
 				"css": [
-					"selector-declare-each-class-in-one-block"
+					"selector-declare-each-class-in-one-block",
+					"selector-keep-breakpoints-inside-the-class-block"
 				]
 			}
 		},
 		{
 			"id": "css-sticky-layout-intent",
-			"prompt": "clarify sticky basis and z-index ownership and remove excessive width/height forcing in pg-dashboard.css; tokens and selectors stay unchanged.",
+			"prompt": "clarify sticky basis and z-index ownership through layer tokens and remove excessive width/height forcing in pg-dashboard.css.",
 			"files": [
 				"src/page/dashboard/pg-dashboard.css"
 			],
@@ -314,7 +316,8 @@
 			],
 			"expectedSelected": {
 				"css": [
-					"values-keep-layout-intent-explicit"
+					"values-keep-layout-intent-explicit",
+					"values-declare-stacking-layers-as-tokens"
 				]
 			}
 		},

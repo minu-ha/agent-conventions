@@ -1,7 +1,7 @@
 # CSS 컨벤션 Rule Index
 
 - Skill: `css`
-- Routing digest: `sha256:bd8c85e0ef689bfd6d20c9a39f0014e19f7c7b4499f1e321b7c57d66c13ff966`
+- Routing digest: `sha256:21a944004cfc69b6bde376f0245adc0d93a6bfedd2b2ba5f1f5a3b7b012afe81`
 
 ## Direct Companions
 
@@ -29,10 +29,13 @@
 - C18 | selector-use-pseudo-classes-for-dom-owned-states | \`:hover\`, \`:visited\`, \`:focus\*\`, \`:disabled\`, \`:checked\`를 추가·수정할 때. 조상의 DOM 상태가 자손 스타일에 영향을 줄 때.
 - C19 | selector-nest-dom-state-in-the-owning-block | \`:hover\`, \`:focus-visible\`, \`:disabled\`, \`:checked\` 스타일을 추가·수정할 때. 조상의 DOM 상태가 자손 스타일을 바꿔야 할 때. | reviewWith: selector-do-not-group-classes-with-commas, selector-limit-nesting-block-depth, selector-use-pseudo-classes-for-dom-owned-states
 - C20 | selector-do-not-invert-domain-state-with-not | \`:not\(.--modifier\)\`로 앱 상태를 뒤집으려 할 때. 조상의 수정자가 자손의 모습을 정해야 할 것 같을 때. | reviewWith: selector-use-pseudo-classes-for-dom-owned-states
-- C21 | values-keep-layout-intent-explicit | \`sticky\`·\`fixed\`, \`z-index\`, 강제 \`width\`·\`height\` 또는 부모·자식 레이아웃 책임을 추가·변경할 때. 제외: 같은 요소를 기본과 수정자로 나누면서 기존 \`display\`·여백 선언을 값 그대로 옮기는 경우.
-- C22 | values-always-provide-css-variable-fallbacks | \`var\(--\*\)\`를 새로 쓰거나 변수 이름이나 대체값을 바꿀 때. 공통 토큰 목록에 항목을 넣거나 뺄 때. | reviewWith: values-tokenize-repeated-visual-values
-- C23 | values-tokenize-repeated-visual-values | 여러 파일이 같은 색, 간격, radius, 타이포, 그림자 값을 쓸 때. 새 사용자 정의 속성을 선언할 때. | reviewWith: values-always-provide-css-variable-fallbacks
-- C24 | values-separate-domain-state-modifiers-from-dom-interaction-states | 앱 상태 수정자와 hover, focus, disabled 같은 DOM 상호작용 상태를 추가·변경할 때. 포커스 링을 수정할 때. | reviewWith: composition-do-not-build-structural-variants-with-modifiers
-- C25 | values-always-provide-a-visible-focus-indicator | \`outline\`, \`:focus\`, \`:focus-visible\` 스타일을 추가·수정할 때. 상호작용 요소의 기본 포커스 링을 덮어쓸 때. | reviewWith: values-separate-domain-state-modifiers-from-dom-interaction-states
-- C26 | values-do-not-style-through-the-style-attribute | TSX에 \`style={{ … }}\`를 추가하거나 그 안의 선언을 바꿀 때. 컴포넌트 프롭으로 \`style\`을 받아 넘길 때. | reviewWith: composition-inject-classes-only-at-the-entry-point, values-always-provide-css-variable-fallbacks, values-tokenize-repeated-visual-values
-- C27 | tooling-configure-stylelint-to-enforce-these-rules | stylelint 설정을 새로 만들거나 규칙을 추가·수정할 때. 이 컨벤션 중 어디까지 자동으로 잡히는지 확인할 때. | reviewWith: naming-use-scope-slug-element-modifier-syntax, ownership-use-foreign-classes-only-under-your-own-root, selector-limit-nesting-block-depth
+- C21 | selector-keep-breakpoints-inside-the-class-block | \`@media\` 분기점을 추가하거나 옮길 때. 화면 폭에 따라 값이 달라지는 선언을 넣을 때. | reviewWith: selector-declare-each-class-in-one-block, selector-limit-nesting-block-depth
+- C22 | values-keep-layout-intent-explicit | \`sticky\`·\`fixed\`, \`z-index\`, 강제 \`width\`·\`height\` 또는 부모·자식 레이아웃 책임을 추가·변경할 때. 제외: 같은 요소를 기본과 수정자로 나누면서 기존 \`display\`·여백 선언을 값 그대로 옮기는 경우.
+- C23 | values-always-provide-css-variable-fallbacks | \`var\(--\*\)\`를 새로 쓰거나 변수 이름이나 대체값을 바꿀 때. 공통 토큰 목록에 항목을 넣거나 뺄 때. | reviewWith: values-tokenize-repeated-visual-values
+- C24 | values-tokenize-repeated-visual-values | 여러 파일이 같은 색, 간격, radius, 타이포, 그림자 값을 쓸 때. 새 사용자 정의 속성을 선언할 때. | reviewWith: values-always-provide-css-variable-fallbacks
+- C25 | values-separate-domain-state-modifiers-from-dom-interaction-states | 앱 상태 수정자와 hover, focus, disabled 같은 DOM 상호작용 상태를 추가·변경할 때. 포커스 링을 수정할 때. | reviewWith: composition-do-not-build-structural-variants-with-modifiers
+- C26 | values-always-provide-a-visible-focus-indicator | \`outline\`, \`:focus\`, \`:focus-visible\` 스타일을 추가·수정할 때. 상호작용 요소의 기본 포커스 링을 덮어쓸 때. | reviewWith: values-separate-domain-state-modifiers-from-dom-interaction-states
+- C27 | values-do-not-style-through-the-style-attribute | TSX에 \`style={{ … }}\`를 추가하거나 그 안의 선언을 바꿀 때. 컴포넌트 프롭으로 \`style\`을 받아 넘길 때. | reviewWith: composition-inject-classes-only-at-the-entry-point, values-always-provide-css-variable-fallbacks, values-tokenize-repeated-visual-values
+- C28 | values-declare-stacking-layers-as-tokens | \`z-index\`를 새로 넣거나 값을 바꿀 때. 겹쳐 뜨는 요소를 추가할 때. | reviewWith: values-keep-layout-intent-explicit, values-tokenize-repeated-visual-values
+- C29 | values-namespace-keyframes-and-respect-reduced-motion | \`@keyframes\`를 선언하거나 \`animation\`·\`transition\`을 추가할 때. 애니메이션 이름이나 지속 시간을 바꿀 때. | reviewWith: tooling-configure-stylelint-to-enforce-these-rules, values-tokenize-repeated-visual-values
+- C30 | tooling-configure-stylelint-to-enforce-these-rules | stylelint 설정을 새로 만들거나 규칙을 추가·수정할 때. 이 컨벤션 중 어디까지 자동으로 잡히는지 확인할 때. | reviewWith: naming-use-scope-slug-element-modifier-syntax, ownership-use-foreign-classes-only-under-your-own-root, selector-limit-nesting-block-depth

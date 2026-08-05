@@ -22,7 +22,8 @@ tags: tooling, stylelint, automation
 | --- | --- |
 | `selector-class-pattern` | `naming-use-scope-slug-element-modifier-syntax` |
 | `selector-disallowed-list` | `ownership-use-foreign-classes-only-under-your-own-root`, `selector-nest-dom-state-in-the-owning-block`, `selector-use-classes-instead-of-element-selectors` |
-| `max-nesting-depth` | `selector-limit-nesting-block-depth` |
+| `max-nesting-depth` | `selector-limit-nesting-block-depth`, `selector-keep-breakpoints-inside-the-class-block` |
+| `keyframes-name-pattern` | `values-namespace-keyframes-and-respect-reduced-motion` |
 | `no-duplicate-selectors` | `selector-declare-each-class-in-one-block` |
 | `property-disallowed-list` | `values-tokenize-repeated-visual-values` |
 | `selector-attribute-name-disallowed-list` | `selector-use-pseudo-classes-for-dom-owned-states` |
@@ -97,7 +98,10 @@ const disallowed = (foreignScopes) => [
 export default {
 	extends: ["stylelint-config-standard"],
 	rules: {
-		"max-nesting-depth": 1,
+		// @media 는 깊이로 세지 않는다. 분기점 안에서 상태를 한 겹 더 쓸 수 있어야 한다
+		"max-nesting-depth": [1, {ignoreAtRules: ["media", "supports", "container"]}],
+		// @keyframes 이름은 전역이라 소유자를 붙인다. 이름에는 - 를 쓸 수 없다
+		"keyframes-name-pattern": "^(pg|wg|ui)[A-Z][a-zA-Z0-9]*__[a-z][a-zA-Z0-9]*$",
 		"no-duplicate-selectors": [true, {disallowInList: true}],
 		// 지역 custom property 선언을 막는다. var() 소비는 걸리지 않는다
 		"property-disallowed-list": ["/^--/"],
@@ -135,6 +139,8 @@ export default {
 				"selector-class-pattern": null,
 				"keyframes-name-pattern": null,
 				"property-disallowed-list": null,
+				// 움직임 줄이기 전역 처리는 여기서만 한다
+				"declaration-no-important": null,
 			},
 		},
 		{

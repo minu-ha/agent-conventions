@@ -50,6 +50,7 @@
     - 4.5 [Use Pseudo-classes for DOM-owned States](#45-use-pseudo-classes-for-dom-owned-states)
     - 4.6 [Nest DOM State Pseudo-classes in the Owning Block](#46-nest-dom-state-pseudo-classes-in-the-owning-block)
     - 4.7 [Do Not Invert Domain State With `:not()`](#47-do-not-invert-domain-state-with-not)
+    - 4.8 [Keep Breakpoints Inside the Class Block](#48-keep-breakpoints-inside-the-class-block)
 5. [Values, Layout, and Accessibility](#5-values-layout-and-accessibility) — **HIGH**
     - 5.1 [Keep Layout Intent Explicit](#51-keep-layout-intent-explicit)
     - 5.2 [Declare Core Tokens Once and Fall Back Everywhere Else](#52-declare-core-tokens-once-and-fall-back-everywhere-else)
@@ -57,6 +58,8 @@
     - 5.4 [Separate Domain State Modifiers From DOM Interaction States](#54-separate-domain-state-modifiers-from-dom-interaction-states)
     - 5.5 [Always Provide a Visible Focus Indicator](#55-always-provide-a-visible-focus-indicator)
     - 5.6 [Do Not Style Through the `style` Attribute](#56-do-not-style-through-the-style-attribute)
+    - 5.7 [Declare Stacking Layers as Tokens in One Place](#57-declare-stacking-layers-as-tokens-in-one-place)
+    - 5.8 [Namespace Keyframes and Respect Reduced Motion](#58-namespace-keyframes-and-respect-reduced-motion)
 6. [Tooling](#6-tooling) — **MEDIUM**
     - 6.1 [Configure Stylelint to Enforce These Rules](#61-configure-stylelint-to-enforce-these-rules)
 
@@ -1555,6 +1558,114 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
+### 4.8 Keep Breakpoints Inside the Class Block
+
+**Rule:** `C21` · `selector-keep-breakpoints-inside-the-class-block`
+
+**Applies when:** `@media` 분기점을 추가하거나 옮길 때. 화면 폭에 따라 값이 달라지는 선언을 넣을 때.
+
+**Review with:** `selector-declare-each-class-in-one-block`, `selector-limit-nesting-block-depth`
+
+**Impact: HIGH (한 클래스의 모든 크기 규칙이 한 블록에 모여 덮어쓰기를 찾아다니지 않습니다)**
+
+`@media`는 그 클래스 블록 안에 중첩합니다.
+파일 아래쪽에 최상위 `@media`를 따로 열어 같은 클래스를 다시 선언하지 않습니다.
+`selector-declare-each-class-in-one-block`이 요구하는 "클래스당 한 블록"이 그대로 유지됩니다.
+
+**분기점은 좁은 쪽부터 씁니다.**
+기본 선언이 가장 좁은 화면 기준이고, 넓어질 때만 덮습니다.
+좁아질 때만 덮는 조건과 섞으면 두 방향이 만나는 구간에서 어느 쪽이 이기는지 매번 따져야 합니다.
+
+조건은 범위 표기로 씁니다.
+`(width >= 1024px)` 이고 `(min-width: 1024px)`이 아닙니다.
+`tooling-configure-stylelint-to-enforce-these-rules`가 그 표기를 강제합니다.
+
+분기점 숫자는 아래 셋만 씁니다.
+
+| 이름 | 값 | 기준 |
+| --- | --- | --- |
+| `sm` | `640px` | 세로 태블릿 |
+| `md` | `1024px` | 가로 태블릿, 좁은 노트북 |
+| `lg` | `1440px` | 데스크톱 |
+
+숫자를 토큰으로 빼지 않습니다.
+`@media`의 조건에는 `var()`를 쓸 수 없어서 토큰으로 만들어도 그 자리에서 못 씁니다.
+그래서 세 값을 규칙에 못 박고 그대로 적습니다.
+
+블록 안에 `@media`를 넣어도 중첩 깊이에 세지 않습니다.
+`tooling-configure-stylelint-to-enforce-these-rules`의 설정이 `@media`를 깊이 계산에서 뺍니다.
+그 안에서 `&:hover` 같은 상태를 한 겹 더 쓸 수 있습니다.
+
+**Incorrect (파일 아래쪽에 최상위 `@media`로 같은 클래스를 다시 엶):**
+
+```css
+.pg_products__toolbar {
+	display: flex;
+	gap: 8px;
+}
+
+.pg_products__panel {
+	padding: 12px;
+}
+
+@media (width >= 1024px) {
+	.pg_products__toolbar {
+		gap: 16px;
+	}
+}
+```
+
+**Incorrect (`max-width`와 `min-width`를 섞어 겹치는 구간을 만듦):**
+
+```css
+.pg_products__toolbar {
+	& {
+		gap: 16px;
+	}
+
+	@media (width < 1024px) {
+		gap: 8px;
+	}
+
+	@media (width >= 1440px) {
+		gap: 24px;
+	}
+}
+```
+
+**Correct (좁은 쪽을 기본으로 두고 클래스 블록 안에서 넓힘):**
+
+```css
+.pg_products__toolbar {
+	display: flex;
+	gap: 8px;
+
+	@media (width >= 1024px) {
+		gap: 16px;
+	}
+
+	@media (width >= 1440px) {
+		gap: 24px;
+	}
+}
+```
+
+**Correct (분기점 안에서 상태를 한 겹 더 씀):**
+
+```css
+.pg_products__panel {
+	padding: 12px;
+
+	@media (width >= 1024px) {
+		padding: 20px;
+
+		&:hover {
+			background-color: var(--app-color-surface-hover);
+		}
+	}
+}
+```
+
 ## 5. Values, Layout, and Accessibility
 
 **Impact: HIGH**
@@ -1563,7 +1674,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 
 ### 5.1 Keep Layout Intent Explicit
 
-**Rule:** `C21` · `values-keep-layout-intent-explicit`
+**Rule:** `C22` · `values-keep-layout-intent-explicit`
 
 **Applies when:** `sticky`·`fixed`, `z-index`, 강제 `width`·`height` 또는 부모·자식 레이아웃 책임을 추가·변경할 때. 제외: 같은 요소를 기본과 수정자로 나누면서 기존 `display`·여백 선언을 값 그대로 옮기는 경우.
 
@@ -1612,7 +1723,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 
 ### 5.2 Declare Core Tokens Once and Fall Back Everywhere Else
 
-**Rule:** `C22` · `values-always-provide-css-variable-fallbacks`
+**Rule:** `C23` · `values-always-provide-css-variable-fallbacks`
 
 **Applies when:** `var(--*)`를 새로 쓰거나 변수 이름이나 대체값을 바꿀 때. 공통 토큰 목록에 항목을 넣거나 뺄 때.
 
@@ -1692,7 +1803,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 
 ### 5.3 Use Global Tokens and Do Not Create Local Ones
 
-**Rule:** `C23` · `values-tokenize-repeated-visual-values`
+**Rule:** `C24` · `values-tokenize-repeated-visual-values`
 
 **Applies when:** 여러 파일이 같은 색, 간격, radius, 타이포, 그림자 값을 쓸 때. 새 사용자 정의 속성을 선언할 때.
 
@@ -1802,7 +1913,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 
 ### 5.4 Separate Domain State Modifiers From DOM Interaction States
 
-**Rule:** `C24` · `values-separate-domain-state-modifiers-from-dom-interaction-states`
+**Rule:** `C25` · `values-separate-domain-state-modifiers-from-dom-interaction-states`
 
 **Applies when:** 앱 상태 수정자와 hover, focus, disabled 같은 DOM 상호작용 상태를 추가·변경할 때. 포커스 링을 수정할 때.
 
@@ -1856,7 +1967,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 
 ### 5.5 Always Provide a Visible Focus Indicator
 
-**Rule:** `C25` · `values-always-provide-a-visible-focus-indicator`
+**Rule:** `C26` · `values-always-provide-a-visible-focus-indicator`
 
 **Applies when:** `outline`, `:focus`, `:focus-visible` 스타일을 추가·수정할 때. 상호작용 요소의 기본 포커스 링을 덮어쓸 때.
 
@@ -1931,7 +2042,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 
 ### 5.6 Do Not Style Through the `style` Attribute
 
-**Rule:** `C26` · `values-do-not-style-through-the-style-attribute`
+**Rule:** `C27` · `values-do-not-style-through-the-style-attribute`
 
 **Applies when:** TSX에 `style={{ … }}`를 추가하거나 그 안의 선언을 바꿀 때. 컴포넌트 프롭으로 `style`을 받아 넘길 때.
 
@@ -2000,6 +2111,163 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
+### 5.7 Declare Stacking Layers as Tokens in One Place
+
+**Rule:** `C28` · `values-declare-stacking-layers-as-tokens`
+
+**Applies when:** `z-index`를 새로 넣거나 값을 바꿀 때. 겹쳐 뜨는 요소를 추가할 때.
+
+**Review with:** `values-keep-layout-intent-explicit`, `values-tokenize-repeated-visual-values`
+
+**Impact: MEDIUM-HIGH (무엇이 무엇 위에 오는지가 한 파일에서 읽히고 숫자 경쟁이 생기지 않습니다)**
+
+층은 전역 토큰 파일에 한 번 선언하고 `z-index`는 그 이름만 씁니다.
+`values-keep-layout-intent-explicit`가 숫자를 직접 쓰지 말라고 하고, 여기서는 그 목록을 정합니다.
+
+층은 넷입니다.
+사이에 새 값을 끼워 넣지 않습니다.
+
+| 토큰 | 값 | 무엇이 오는가 |
+| --- | --- | --- |
+| `--app-z-index-base` | `0` | 보통 흐름 |
+| `--app-z-index-sticky` | `100` | 붙어 있는 머리말, 도구 모음 |
+| `--app-z-index-overlay` | `200` | 모달, 서랍, 뒤 배경 |
+| `--app-z-index-popper` | `300` | 툴팁, 드롭다운, 알림 |
+
+새 층이 필요해 보이면 먼저 넷 중 하나에 들어가는지 봅니다.
+정말 없으면 토큰 파일에 추가하고, 그 자리에서 순서를 다시 읽을 수 있게 값 간격을 유지합니다.
+
+**층 순서는 같은 쌓임 맥락 안에서만 성립합니다.**
+조상에 `transform`, `filter`, `opacity` 미만 1, `contain`, `will-change`, `backdrop-filter` 중 하나라도 있으면
+새 쌓임 맥락이 생기고, 그 안의 `popper`가 바깥의 `sticky`에 집니다.
+겹쳐 뜨는 요소가 가려지면 `z-index` 값을 올리기 전에 조상부터 확인합니다.
+
+- `position`이 `static`이면 `z-index`가 아무 일도 하지 않습니다.
+  `relative`부터 듣습니다.
+- 같은 층 안에서 순서를 다투면 층이 잘못 잡힌 것입니다.
+  값을 `+1` 하지 않습니다.
+- 화면 밖으로 나가야 하는 것은 층을 올리지 말고 포털로 옮깁니다.
+  그러면 조상의 쌓임 맥락에서 벗어납니다.
+
+**Incorrect (숫자를 직접 쓰고 경쟁으로 올림):**
+
+```css
+.pg_products__toolbar {
+	position: sticky;
+	z-index: 10;
+}
+
+.wg_productFilter__dropdown {
+	position: absolute;
+	z-index: 11;
+}
+```
+
+**Correct (층 토큰만 씀):**
+
+```css
+/* style/token.css */
+:root {
+	--app-z-index-base: 0;
+	--app-z-index-sticky: 100;
+	--app-z-index-overlay: 200;
+	--app-z-index-popper: 300;
+}
+```
+
+```css
+.pg_products__toolbar {
+	/* 조상에 transform 이 없어야 이 층이 유지된다 */
+	position: sticky;
+	z-index: var(--app-z-index-sticky);
+}
+
+.wg_productFilter__dropdown {
+	position: absolute;
+	z-index: var(--app-z-index-popper);
+}
+```
+
+### 5.8 Namespace Keyframes and Respect Reduced Motion
+
+**Rule:** `C29` · `values-namespace-keyframes-and-respect-reduced-motion`
+
+**Applies when:** `@keyframes`를 선언하거나 `animation`·`transition`을 추가할 때. 애니메이션 이름이나 지속 시간을 바꿀 때.
+
+**Review with:** `tooling-configure-stylelint-to-enforce-these-rules`, `values-tokenize-repeated-visual-values`
+
+**Impact: MEDIUM-HIGH (전역 이름이 겹쳐 남의 애니메이션이 바뀌지 않고 움직임에 민감한 사용자를 막지 않습니다)**
+
+**`@keyframes` 이름은 전역입니다.**
+클래스와 달리 파일이나 블록에 갇히지 않아서, 같은 이름을 두 파일에서 선언하면 나중에 읽힌 것이 이깁니다.
+그래서 이름 앞에 소유자를 붙입니다.
+
+| 대상 | 이름 |
+| --- | --- |
+| `@keyframes` | `<범위><식별자>__<동작>` — `pgProducts__fadeIn` |
+| `animation` 지속 시간·감속 곡선 | 토큰 — `var(--app-motion-duration-fast)` |
+
+클래스 이름과 표기가 다릅니다.
+`@keyframes` 이름에는 `-`를 쓸 수 없어서 범위와 식별자를 붙여 씁니다.
+`stylelint-config-standard`의 기본 패턴이 이 형태를 거부하므로
+`tooling-configure-stylelint-to-enforce-these-rules`가 `keyframes-name-pattern`을 다시 정합니다.
+
+**움직임을 줄여 달라고 한 사용자에게는 움직이지 않습니다.**
+파일마다 따로 처리하지 않고 전역 스타일시트에 한 번 선언합니다.
+어지럼증이나 전정 장애가 있는 사용자에게 움직임은 접근성 문제입니다.
+
+- 지속 시간을 `0`으로 만들지 않고 `0.01ms`로 둡니다.
+  `0`이면 완료 이벤트가 안 올라와 그 이벤트를 기다리는 코드가 멈춥니다.
+- 위치가 크게 바뀌는 움직임만 없앱니다.
+  색이나 투명도가 바뀌는 것은 남겨도 됩니다.
+- 애니메이션으로 바꾸는 속성은 `transform`과 `opacity`로 둡니다.
+  `width`나 `top`을 애니메이션하면 매 프레임 레이아웃을 다시 계산합니다.
+
+**Incorrect (전역 이름을 겹치게 쓰고 시간을 직접 적음):**
+
+```css
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+}
+
+.pg_products__panel {
+	animation: fadeIn 200ms ease-out;
+}
+```
+
+**Correct (소유자를 붙인 이름과 토큰):**
+
+```css
+@keyframes pgProducts__fadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(4px);
+	}
+}
+
+.pg_products__panel {
+	animation: pgProducts__fadeIn var(--app-motion-duration-fast) var(--app-motion-easing-out);
+}
+```
+
+**Correct (전역 스타일시트에서 한 번 처리):**
+
+```css
+/* style/motion.css */
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
+}
+```
+
 ## 6. Tooling
 
 **Impact: MEDIUM**
@@ -2008,7 +2276,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 
 ### 6.1 Configure Stylelint to Enforce These Rules
 
-**Rule:** `C27` · `tooling-configure-stylelint-to-enforce-these-rules`
+**Rule:** `C30` · `tooling-configure-stylelint-to-enforce-these-rules`
 
 **Applies when:** stylelint 설정을 새로 만들거나 규칙을 추가·수정할 때. 이 컨벤션 중 어디까지 자동으로 잡히는지 확인할 때.
 
@@ -2022,7 +2290,8 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 | --- | --- |
 | `selector-class-pattern` | `naming-use-scope-slug-element-modifier-syntax` |
 | `selector-disallowed-list` | `ownership-use-foreign-classes-only-under-your-own-root`, `selector-nest-dom-state-in-the-owning-block`, `selector-use-classes-instead-of-element-selectors` |
-| `max-nesting-depth` | `selector-limit-nesting-block-depth` |
+| `max-nesting-depth` | `selector-limit-nesting-block-depth`, `selector-keep-breakpoints-inside-the-class-block` |
+| `keyframes-name-pattern` | `values-namespace-keyframes-and-respect-reduced-motion` |
 | `no-duplicate-selectors` | `selector-declare-each-class-in-one-block` |
 | `property-disallowed-list` | `values-tokenize-repeated-visual-values` |
 | `selector-attribute-name-disallowed-list` | `selector-use-pseudo-classes-for-dom-owned-states` |
@@ -2097,7 +2366,10 @@ const disallowed = (foreignScopes) => [
 export default {
 	extends: ["stylelint-config-standard"],
 	rules: {
-		"max-nesting-depth": 1,
+		// @media 는 깊이로 세지 않는다. 분기점 안에서 상태를 한 겹 더 쓸 수 있어야 한다
+		"max-nesting-depth": [1, {ignoreAtRules: ["media", "supports", "container"]}],
+		// @keyframes 이름은 전역이라 소유자를 붙인다. 이름에는 - 를 쓸 수 없다
+		"keyframes-name-pattern": "^(pg|wg|ui)[A-Z][a-zA-Z0-9]*__[a-z][a-zA-Z0-9]*$",
 		"no-duplicate-selectors": [true, {disallowInList: true}],
 		// 지역 custom property 선언을 막는다. var() 소비는 걸리지 않는다
 		"property-disallowed-list": ["/^--/"],
@@ -2135,6 +2407,8 @@ export default {
 				"selector-class-pattern": null,
 				"keyframes-name-pattern": null,
 				"property-disallowed-list": null,
+				// 움직임 줄이기 전역 처리는 여기서만 한다
+				"declaration-no-important": null,
 			},
 		},
 		{

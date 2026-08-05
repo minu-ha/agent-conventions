@@ -134,12 +134,15 @@ const cssRuleUniverse = [
 	"selector-use-pseudo-classes-for-dom-owned-states",
 	"selector-nest-dom-state-in-the-owning-block",
 	"selector-do-not-invert-domain-state-with-not",
+	"selector-keep-breakpoints-inside-the-class-block",
 	"values-keep-layout-intent-explicit",
 	"values-always-provide-css-variable-fallbacks",
 	"values-tokenize-repeated-visual-values",
 	"values-separate-domain-state-modifiers-from-dom-interaction-states",
 	"values-always-provide-a-visible-focus-indicator",
 	"values-do-not-style-through-the-style-attribute",
+	"values-declare-stacking-layers-as-tokens",
+	"values-namespace-keyframes-and-respect-reduced-motion",
 	"tooling-configure-stylelint-to-enforce-these-rules",
 ] as const;
 
@@ -428,6 +431,10 @@ const cssRuleRouting = {
 		appliesWhen: "`:not(.--modifier)`로 앱 상태를 뒤집으려 할 때. 조상의 수정자가 자손의 모습을 정해야 할 것 같을 때.",
 		reviewWith: ["selector-use-pseudo-classes-for-dom-owned-states"],
 	},
+	"selector-keep-breakpoints-inside-the-class-block": {
+		appliesWhen: "`@media` 분기점을 추가하거나 옮길 때. 화면 폭에 따라 값이 달라지는 선언을 넣을 때.",
+		reviewWith: ["selector-declare-each-class-in-one-block", "selector-limit-nesting-block-depth"],
+	},
 	"values-keep-layout-intent-explicit": {
 		appliesWhen:
 			"`sticky`·`fixed`, `z-index`, 강제 `width`·`height` 또는 부모·자식 레이아웃 책임을 추가·변경할 때. 제외: 같은 요소를 기본과 수정자로 나누면서 기존 `display`·여백 선언을 값 그대로 옮기는 경우.",
@@ -456,6 +463,14 @@ const cssRuleRouting = {
 			"values-tokenize-repeated-visual-values",
 			"values-always-provide-css-variable-fallbacks",
 		],
+	},
+	"values-declare-stacking-layers-as-tokens": {
+		appliesWhen: "`z-index`를 새로 넣거나 값을 바꿀 때. 겹쳐 뜨는 요소를 추가할 때.",
+		reviewWith: ["values-keep-layout-intent-explicit", "values-tokenize-repeated-visual-values"],
+	},
+	"values-namespace-keyframes-and-respect-reduced-motion": {
+		appliesWhen: "`@keyframes`를 선언하거나 `animation`·`transition`을 추가할 때. 애니메이션 이름이나 지속 시간을 바꿀 때.",
+		reviewWith: ["values-tokenize-repeated-visual-values", "tooling-configure-stylelint-to-enforce-these-rules"],
 	},
 	"tooling-configure-stylelint-to-enforce-these-rules": {
 		appliesWhen: "stylelint 설정을 새로 만들거나 규칙을 추가·수정할 때. 이 컨벤션 중 어디까지 자동으로 잡히는지 확인할 때.",
@@ -1483,7 +1498,7 @@ const cssScenarioStages = {
 	"css-repeated-values-and-optional-token": {
 		initial: {
 			prompt:
-				"scope a global .ant-tree selector under the existing .ui_themePreview owner root with one descendant level, and replace repeated color/spacing/radius with optional CSS variables and fallbacks; keep the file and owner name unchanged.",
+				"scope a global .ant-tree selector under the existing .ui_themePreview owner root with one descendant level, and replace repeated color/spacing/radius with optional CSS variables and fallbacks; keep the file and owner name unchanged; also namespace the shared fade keyframes and add the global reduced-motion block.",
 			files: ["src/ui/theme-preview/ui-theme-preview.css"],
 			expectedSkills: ["css"],
 			expectedSelected: {
@@ -1493,6 +1508,7 @@ const cssScenarioStages = {
 					"values-always-provide-css-variable-fallbacks",
 					"values-tokenize-repeated-visual-values",
 					"values-separate-domain-state-modifiers-from-dom-interaction-states",
+					"values-namespace-keyframes-and-respect-reduced-motion",
 				],
 			},
 		},
@@ -1509,19 +1525,19 @@ const cssScenarioStages = {
 	"css-split-class-declaration": {
 		initial: {
 			prompt:
-				"the same .pg_catalogIndex__toolbar block is opened twice in one file and the later one overrides padding; consolidate into a single block keeping the final value.",
+				"the same .pg_catalogIndex__toolbar block is opened twice in one file and the later one overrides the first from a top-level @media; fold both into one block with the breakpoint nested inside.",
 			files: ["src/page/catalog-index/pg-catalog-index.css"],
 			expectedSkills: ["css"],
-			expectedSelected: {css: ["selector-declare-each-class-in-one-block"]},
+			expectedSelected: {css: ["selector-declare-each-class-in-one-block", "selector-keep-breakpoints-inside-the-class-block"]},
 		},
 	},
 	"css-sticky-layout-intent": {
 		initial: {
 			prompt:
-				"clarify sticky basis and z-index ownership and remove excessive width/height forcing in pg-dashboard.css; tokens and selectors stay unchanged.",
+				"clarify sticky basis and z-index ownership through layer tokens and remove excessive width/height forcing in pg-dashboard.css.",
 			files: ["src/page/dashboard/pg-dashboard.css"],
 			expectedSkills: ["css"],
-			expectedSelected: {css: ["values-keep-layout-intent-explicit"]},
+			expectedSelected: {css: ["values-keep-layout-intent-explicit", "values-declare-stacking-layers-as-tokens"]},
 		},
 	},
 	"css-cross-owner-internal-targeting": {
@@ -2166,7 +2182,7 @@ test("CSS progressive metadata and rule routing match Appendix C exactly", async
 	assert.deepEqual(document.metadata.companions, [
 		{skill: "typescript", mode: "conditional", appliesWhen: "TS/TSX 클래스 계약, 래퍼 Props 또는 style import를 함께 변경한다."},
 	]);
-	assert.equal(document.rules.length, 27);
+	assert.equal(document.rules.length, 30);
 	assert.deepEqual(
 		Object.fromEntries(document.rules.map((rule) => [getRuleId(rule), {appliesWhen: rule.appliesWhen, reviewWith: rule.reviewWith}])),
 		cssRuleRouting,
@@ -2840,7 +2856,7 @@ test("CSS generated index is canonical, complete, body-preserving, and within it
 		entries.map((entry) => entry.id),
 		cssRuleUniverse,
 	);
-	assert.equal(entries.length, 27);
+	assert.equal(entries.length, 30);
 
 	for (const entry of entries) {
 		assert.equal(entry.fileName, `${entry.id}.md`);

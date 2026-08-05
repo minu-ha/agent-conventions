@@ -40,6 +40,9 @@ tags: screen, errors
 이벤트 핸들러와 비동기 콜백에서 난 오류는 렌더 중이 아니라 경계를 지나칩니다.
 사용자 액션의 실패는 `data-handle-mutation-failure-where-it-is-called`가 정합니다.
 
+라우터가 화면 층 경계를 얹는 자기 API를 주면 그것을 씁니다.
+어느 API 인지는 라우터 스킬이 정하고, 여기서는 경계를 어느 층에 두는지만 봅니다.
+
 다시 시도를 열려면 대체 화면이 그 버튼을 갖고, 리액트 쿼리의 재설정 경계와 함께 씁니다.
 경계 안에서 상태를 되살릴 수 없으므로 다시 시도는 하위 트리를 새로 마운트합니다.
 
@@ -60,11 +63,22 @@ export const PgProducts = () => {
 **Correct (화면 층 경계가 받고 셸은 살아남음):**
 
 ```tsx
-export const Route = createFileRoute("/products")({
-	component: PgProducts,
-	errorComponent: PgProductsErrorState,
-});
+// widget/app-shell/wg-app-shell.tsx
+export const WgAppShell = (props: WgAppShellProps) => (
+	<div className={clsx("wg_appShell__root")}>
+		<WgAppNavigation />
 
+		<main className={clsx("wg_appShell__main")}>
+			<ErrorBoundary fallback={<UiScreenErrorState />}>
+				<Suspense fallback={<UiScreenSkeleton />}>{props.children}</Suspense>
+			</ErrorBoundary>
+		</main>
+	</div>
+);
+```
+
+```tsx
+// page/products/pg-products.tsx
 export const PgProducts = () => {
 	const responseProductListSuspense = useProductListSuspense();
 
