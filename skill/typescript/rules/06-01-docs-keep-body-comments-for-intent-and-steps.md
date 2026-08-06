@@ -39,13 +39,13 @@ tags: docs, comments
 **Incorrect (본문 안 지역 선언에 블록 주석을 씀):**
 
 ```ts
-const filterProducts = (products: Product[], keyword: string) => {
+const toMatchedProducts = (products: Product[], keyword: string) => {
 	/**
 	 * keyword를 소문자로 바꾼다.
 	 */
-	const normalizedKeyword = keyword.trim().toLowerCase();
+	const lowerKeyword = keyword.trim().toLowerCase();
 
-	return products.filter((product) => product.title.toLowerCase().includes(normalizedKeyword));
+	return products.filter((product) => product.title.toLowerCase().includes(lowerKeyword));
 };
 ```
 

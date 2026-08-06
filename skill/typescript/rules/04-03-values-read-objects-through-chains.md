@@ -111,7 +111,7 @@ for (const [key, value] of Object.entries(target.searchParams)) {
 **Correct (필드 읽기가 아니라 계산한 결과라 이름을 붙임):**
 
 ```ts
-const filterOverdueLines = (invoice: Invoice, today: Date): InvoiceLine[] => {
+const toOverdueLines = (invoice: Invoice, today: Date): InvoiceLine[] => {
 	// 콜백 안으로 옮기면 줄마다 다시 만든다
 	const overdueIds = new Set(invoice.overdueLineIds);
 

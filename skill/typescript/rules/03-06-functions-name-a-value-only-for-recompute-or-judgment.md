@@ -110,11 +110,11 @@ const toRowAction = (row: Row): RowAction => {
 **Correct (콜백 밖으로 빼 행마다 다시 계산하지 않음):**
 
 ```ts
-const filterVisibleRows = (rows: Row[], keyword: string): Row[] => {
+const toVisibleRows = (rows: Row[], keyword: string): Row[] => {
 	// 콜백 안으로 옮기면 행마다 다시 계산한다
-	const normalizedKeyword = keyword.trim().toLowerCase();
+	const lowerKeyword = keyword.trim().toLowerCase();
 
-	return rows.filter((row) => row.title.toLowerCase().includes(normalizedKeyword));
+	return rows.filter((row) => row.title.toLowerCase().includes(lowerKeyword));
 };
 ```
 

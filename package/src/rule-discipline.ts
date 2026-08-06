@@ -71,6 +71,12 @@ const curriedTail = /^\([^)]*\)(?:\s*:\s*[^=]+?)?\s*=>/;
 const objectLiteralMethod = /^\t+[a-z]\w*\([^)]*\)\s*(?::\s*[^{]+?)?\s*\{\s*$/;
 
 /**
+ * 결과를 말해 주지 않는 첫 동사. `functions-name-functions-by-what-comes-out`의 금지 목록이다.
+ * 호출은 보지 않고 우리가 짓는 선언 이름만 본다 — 외부 패키지의 `createClient()`는 그대로 쓴다.
+ */
+const emptyVerbDeclaration = /^\s*(?:export\s+)?const\s+(build|create|make|process|manage|do|perform|execute|filter)[A-Z]/;
+
+/**
  * 선언 좌변의 객체 구조분해. `const [a, b] =` 같은 배열·튜플은 잡지 않는다.
  */
 const objectDestructuringDeclaration = /^\s*(?:const|let|var)\s*\{/;
@@ -179,6 +185,12 @@ const collectRuleViolations = (rule: SkillRule): string[] => {
 
 				if (objectDestructuringDeclaration.test(line) || objectDestructuringParameter.test(line)) {
 					violations.push(`Correct 예제는 객체를 구조분해하지 않고 체인으로 읽는다: "${line.trim()}"`);
+				}
+
+				const emptyVerb = emptyVerbDeclaration.exec(line);
+
+				if (emptyVerb !== null) {
+					violations.push(`Correct 예제의 함수 이름은 결과를 말한다. "${emptyVerb[1]}"는 첫 동사로 쓰지 않는다: "${line.trim()}"`);
 				}
 
 				if (line.includes('className="')) {
