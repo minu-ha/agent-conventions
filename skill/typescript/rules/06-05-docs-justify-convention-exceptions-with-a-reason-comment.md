@@ -31,7 +31,7 @@ tags: docs, comments
 그런 주석은 예외 조건을 채우지 못합니다.
 
 주석은 예외가 일어나는 줄 바로 위에 `//`로 씁니다.
-형식과 어투는 `docs-write-concise-korean-comments-about-purpose-and-constraints`를 따릅니다.
+어투와 내용은 `docs-write-concise-korean-comments-about-purpose-and-constraints`를 따릅니다.
 
 **Incorrect (확인할 수 없는 말로 예외를 정당화):**
 

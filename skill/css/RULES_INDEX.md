@@ -1,7 +1,7 @@
 # CSS 컨벤션 Rule Index
 
 - Skill: `css`
-- Routing digest: `sha256:ddcc1eae1037fcff3b3372c981ce01af1af5a6becf233419f7a73eab1f5f91ff`
+- Routing digest: `sha256:a37761ed93e20c85a134b094f1831aa23227d4d1d28df421f08adf20bad1c65f`
 
 ## Direct Companions
 
@@ -32,7 +32,7 @@
 - C21 | selector-do-not-invert-domain-state-with-not | \`:not\(.--수정자\)\`로 앱 상태를 뒤집으려 할 때. 조상 클래스와 자손 클래스를 한 선택자에 함께 쓸 때. | reviewWith: selector-use-pseudo-classes-for-dom-owned-states
 - C22 | selector-separate-domain-state-modifiers-from-dom-interaction-states | 앱 상태 수정자와 \`:hover\`, \`:focus-visible\`, \`:disabled\` 같은 DOM 상호작용 상태를 추가·변경할 때. 포커스 링을 수정할 때. | reviewWith: composition-do-not-build-structural-variants-with-modifiers
 - C23 | values-always-provide-css-variable-fallbacks | \`var\(--\*\)\`를 새로 쓰거나 변수 이름이나 대체값을 바꿀 때. 공통 토큰 목록에 항목을 넣거나 뺄 때. | reviewWith: values-tokenize-repeated-visual-values
-- C24 | values-tokenize-repeated-visual-values | 여러 파일이 같은 색, 간격, 모서리 반경, 타이포그래피, 그림자 값을 쓸 때. 새 사용자 정의 속성을 선언할 때. | reviewWith: composition-do-not-style-through-the-style-attribute, values-always-provide-css-variable-fallbacks
+- C24 | values-tokenize-repeated-visual-values | 여러 파일이 같은 색, 간격, 모서리 반경, 타이포그래피, 그림자 값을 쓸 때. 새 변수를 선언할 때. | reviewWith: composition-do-not-style-through-the-style-attribute, values-always-provide-css-variable-fallbacks
 - C25 | values-declare-stacking-layers-as-tokens | \`z-index\`를 새로 넣거나 값을 바꿀 때. 겹쳐 뜨는 요소를 추가할 때. | reviewWith: layout-keep-layout-intent-explicit, values-tokenize-repeated-visual-values
 - C26 | values-switch-themes-by-changing-token-values | 다크 모드나 테마 전환을 넣을 때. 컴포넌트 CSS에 \`prefers-color-scheme\`이나 \`\[data-theme\]\`를 쓰려 할 때. 색이나 그림자 토큰을 새로 만들거나 이름을 바꿀 때. | reviewWith: values-always-provide-css-variable-fallbacks, values-tokenize-repeated-visual-values
 - C27 | layout-group-breakpoints-at-the-file-bottom | \`@media\` 브레이크포인트를 추가하거나 옮길 때. 화면 폭에 따라 값이 달라지는 선언을 넣을 때. | reviewWith: layout-reach-for-intrinsic-sizing-before-breakpoints, selector-declare-each-class-in-one-block, values-switch-themes-by-changing-token-values

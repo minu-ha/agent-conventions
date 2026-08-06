@@ -1,6 +1,6 @@
 ---
 title: Extract Local Section Components Only for Runtime Boundaries
-titleKo: 런타임 경계를 가진 섹션만 화면 지역 컴포넌트로 뺍니다
+titleKo: 런타임 경계가 있는 섹션만 화면 지역 컴포넌트로 뺍니다
 impact: MEDIUM-HIGH
 impactDescription: 화면 흐름은 보이게 두고 자기 것을 직접 가진 부분만 떼어 냅니다
 appliesWhen:

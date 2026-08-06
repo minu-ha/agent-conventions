@@ -1,6 +1,6 @@
 ---
 title: Change Other Owners Through Their API
-titleKo: 남의 모습은 그 소유자의 API로 바꿉니다
+titleKo: 남의 모습을 바꿀 때는 그 소유자의 API를 씁니다
 impact: MEDIUM-HIGH
 impactDescription: 남의 모습을 바꿀 때 배치, 변형, 내림 가운데 무엇이 맞는지 먼저 봅니다
 appliesWhen:

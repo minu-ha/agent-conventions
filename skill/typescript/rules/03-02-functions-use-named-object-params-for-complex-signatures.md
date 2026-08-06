@@ -19,7 +19,7 @@ tags: functions
 객체 매개변수 타입은 파일 위쪽에 이름을 붙여 선언합니다.
 
 받은 객체는 시그니처에서도 본문에서도 구조분해하지 않고 `target.baseUrl`처럼 체인으로 읽습니다.
-그 규범과 예외는 `values-read-objects-through-chains` 규칙이 모든 객체에 정합니다.
+그 규범은 `values-read-objects-through-chains` 규칙이 모든 객체에 정합니다.
 여기서는 매개변수를 언제 객체로 묶고 그 타입을 어디에 선언할지만 봅니다.
 
 리액트 컴포넌트의 프롭스는 이 규칙 대상이 아닙니다.

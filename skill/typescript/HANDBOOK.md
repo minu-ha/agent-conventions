@@ -62,7 +62,7 @@
 
 **Impact: HIGH**
 
-함수 시그니처, 콜백 재사용, 타입 중복 제거, 커스텀 형태 문서화로 계약을 드러내고 다시 쓸 수 있게 유지해야 합니다. 실행 값과 타입을 한 선언에서 잡는 `as const` 객체도 여기서 정합니다.
+함수 시그니처, 콜백 재사용, 타입 중복 제거, 커스텀 형태 문서화로 계약을 드러내고 다시 쓸 수 있게 유지해야 합니다. 실행 값과 타입을 한 선언에서 잡는 `as const` 객체와, 단언 대신 `unknown`을 좁히는 자리도 여기서 정합니다.
 
 ### 1.1 Reuse Existing Contracts Before Declaring New Types
 
@@ -306,7 +306,7 @@ const toSearchRequest: ToRequest = (request) => {
   `shared/config.ts`의 설정 객체와 `enum` 성격 상수 객체의 키에는 달지 않습니다.
 - 필드가 없는 인덱스 접근 별칭(`type ProductId = ProductRecord["id"]`)과
   `Omit`으로 뺀 형태: 적을 필드가 없으므로 헤더만 씁니다.
-  필드를 가진 `interface`는 원본에서 가져온 필드여도 각 필드에 주석을 답니다.
+  필드가 있는 `interface`는 원본에서 가져온 필드여도 각 필드에 주석을 답니다.
 
 주석이 있다고 끝나지 않습니다.
 각 본문이 `docs-write-concise-korean-comments-about-purpose-and-constraints` 규칙의 한국어 조건을 만족해야 합니다.
@@ -785,7 +785,7 @@ const toProductSaveBody = (values: ProductFormValues) => {
 
 **Rule:** `T11` · `naming-use-direct-imports-and-public-entry-points`
 
-**Applies when:** 가져오기, 내보내기, `index.ts` 배럴, 공용 진입점, 소유자 보조 모듈의 경계를 추가·변경할 때. 같은 경로에서 값과 타입 중 무엇을 가져올지 추가·삭제·전환할 때.
+**Applies when:** 가져오기, 내보내기, `index.ts` 배럴, 공개 진입점, 소유자 보조 모듈의 경계를 추가·변경할 때. 같은 경로에서 값과 타입 중 무엇을 가져올지 추가·삭제·전환할 때.
 
 **Review with:** `naming-restrict-absolute-aliases-to-layer-roots`
 
@@ -916,7 +916,7 @@ const productClient = createClient({baseUrl: config.api.baseUrl});
 
 **Impact: MEDIUM-HIGH**
 
-함수 선언 형태와 시그니처는 한 가지로 고정하고, 보조 함수는 호출 경계가 있을 때만 떼어 내 정해진 자리에 둡니다. 이름은 무엇이 나오는지로 짓고, 값에는 두 번 이상 쓸 때만 이름을 붙입니다.
+함수 선언 형태와 시그니처는 한 가지로 고정하고, 보조 함수는 호출 경계가 있을 때만 떼어 내 정해진 자리에 둡니다. 이름은 무엇이 나오는지로 짓고, 변수는 재계산을 막거나 판정을 설명할 때만 만듭니다. 넓은 스코프에서 `let` 재할당과 `push`로 값을 쌓지 않는 것도 여기서 봅니다.
 
 ### 3.1 Declare Functions as Arrow Consts
 
@@ -1089,7 +1089,7 @@ export class ProductCursor {
 객체 매개변수 타입은 파일 위쪽에 이름을 붙여 선언합니다.
 
 받은 객체는 시그니처에서도 본문에서도 구조분해하지 않고 `target.baseUrl`처럼 체인으로 읽습니다.
-그 규범과 예외는 `values-read-objects-through-chains` 규칙이 모든 객체에 정합니다.
+그 규범은 `values-read-objects-through-chains` 규칙이 모든 객체에 정합니다.
 여기서는 매개변수를 언제 객체로 묶고 그 타입을 어디에 선언할지만 봅니다.
 
 리액트 컴포넌트의 프롭스는 이 규칙 대상이 아닙니다.
@@ -1467,7 +1467,7 @@ const visibleTabs = [
 
 **Impact: MEDIUM (변수로 뺄지가 그 표현식 안에서 정해져 쓰는 자리가 하나 늘었다고 판정이 뒤집히지 않습니다)**
 
-표현식을 변수로 뺄 이유는 둘입니다.
+변수를 만드는 이유는 둘입니다.
 둘 다 아니면 표현식을 쓰는 자리에 그대로 적습니다.
 같은 표현식을 몇 번 적든 마찬가지입니다.
 
@@ -1486,7 +1486,7 @@ const visibleTabs = [
 `.map()`이나 `.filter()` 콜백 안, 반복문 안으로 옮기면 원소 수만큼 다시 계산합니다.
 `values-use-set-and-map-for-repeated-lookups`가 만드는 `Set`도 같은 이유로 콜백 밖에 둡니다.
 
-**2. 여러 항을 엮은 판정이라 이름이 결론을 대신 말합니다.**
+**2. 여러 항을 엮은 판정이라 이름이 결론을 대신 말해 줍니다.**
 
 `row.status === productStatus.draft && !row.lockedAt && row.ownerId === session.userId`는
 읽을 때마다 세 항을 머릿속에서 합쳐야 합니다.
@@ -1613,7 +1613,7 @@ const submitDraft = async (draft: Draft) => {
 
 표에 없는 도메인 동작은 그 동작의 이름을 그대로 씁니다.
 `submitOrder`, `cancelBooking`처럼 씁니다.
-표는 자주 나오는 경우를 못 박은 것이고, 아래 금지 목록만 예외 없이 지킵니다.
+표는 자주 나오는 경우를 못 박은 것이고, 아래 금지 목록은 우리가 짓는 이름에 예외 없이 지킵니다.
 
 **이름의 첫 동사만 봅니다.** `isCheckedRow`나 `handleCheckAll`처럼 뒤에 섞인 낱말은 대상이 아닙니다.
 
@@ -2195,7 +2195,7 @@ export const sortProductsByUpdatedAt = (products: Product[]): Product[] => {
 };
 
 /**
- * route-local 제품 트리 입력 계약
+ * route-local product 트리 입력 계약
  */
 export interface PgProductTreeProps {
 	/**
@@ -2283,7 +2283,7 @@ export const saveProduct = async (product: Product): Promise<void> => {
 그런 주석은 예외 조건을 채우지 못합니다.
 
 주석은 예외가 일어나는 줄 바로 위에 `//`로 씁니다.
-형식과 어투는 `docs-write-concise-korean-comments-about-purpose-and-constraints`를 따릅니다.
+어투와 내용은 `docs-write-concise-korean-comments-about-purpose-and-constraints`를 따릅니다.
 
 **Incorrect (확인할 수 없는 말로 예외를 정당화):**
 

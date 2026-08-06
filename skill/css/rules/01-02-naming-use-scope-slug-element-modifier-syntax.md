@@ -1,6 +1,6 @@
 ---
 title: Use Scope, Slug, Element, and Modifier Syntax
-titleKo: 클래스명은 범위, 식별자, 요소, 수정자 문법을 지킵니다
+titleKo: 클래스명은 `범위_식별자__요소--수정자` 문법을 지킵니다
 impact: MEDIUM-HIGH
 impactDescription: 클래스명만 보고 누가 소유하고 어떤 역할인지 읽힙니다
 appliesWhen:

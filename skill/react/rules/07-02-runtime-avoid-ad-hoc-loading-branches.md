@@ -1,6 +1,6 @@
 ---
 title: Avoid Ad-hoc Loading Branches in Screen Bodies
-titleKo: 화면 본문에서 로딩·실패 분기를 즉석으로 만들지 않습니다
+titleKo: 화면 본문에서 로딩·실패 분기를 그때그때 만들지 않습니다
 impact: HIGH
 impactDescription: 초기 로딩과 실패는 경계가 맡고 화면 본문에는 데이터가 있는 경로만 남습니다
 appliesWhen:

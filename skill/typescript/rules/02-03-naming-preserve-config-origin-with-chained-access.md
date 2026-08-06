@@ -1,6 +1,6 @@
 ---
 title: Preserve Shared Namespace Origin With Chained Access
-titleKo: `config`와 `util` 네임스페이스는 공용 경계에서만 씁니다
+titleKo: `config`와 `util`은 체인으로 읽고 그 이름은 공용 경계에서만 씁니다
 impact: MEDIUM
 impactDescription: 넓은 스코프 별칭으로 출처를 숨기지 않아 값이 어디서 오는지 읽힙니다
 appliesWhen:

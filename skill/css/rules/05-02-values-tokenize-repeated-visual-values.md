@@ -1,11 +1,11 @@
 ---
 title: Use Global Tokens and Do Not Create Local Ones
-titleKo: 공용 값은 전역 토큰으로 쓰고 지역 변수는 만들지 않습니다
+titleKo: 여러 파일이 쓰는 값은 전역 토큰으로 쓰고 지역 변수는 만들지 않습니다
 impact: MEDIUM-HIGH
 impactDescription: 여러 파일이 쓰는 값은 전역 토큰으로 모으고 나머지는 선언 자리에 그대로 둡니다
 appliesWhen:
   - 여러 파일이 같은 색, 간격, 모서리 반경, 타이포그래피, 그림자 값을 쓸 때
-  - 새 사용자 정의 속성을 선언할 때
+  - 새 변수를 선언할 때
 reviewWith: values-always-provide-css-variable-fallbacks, composition-do-not-style-through-the-style-attribute
 tags: tokens, variables, reuse
 ---

@@ -1,7 +1,7 @@
 # TypeScript 컨벤션 Rule Index
 
 - Skill: `typescript`
-- Routing digest: `sha256:359d9fd0b8904778d209747226421f08120cb49f88f085d8ff743024026925c5`
+- Routing digest: `sha256:12f6d6a6c007997fc4d84f6f0dd02b4cc333311a7057cf8b600dc8c1112c3fbe`
 
 ## Local Rules
 
@@ -15,7 +15,7 @@
 - T08 | naming-place-owner-config-in-the-owner-config-folder | 소유자 하나만 쓰는 선언형 설정을 추가하거나 옮길 때. 전역 설정과 소유자 전용 설정 사이에서 위치를 바꿀 때. | reviewWith: naming-centralize-shared-config-namespaces
 - T09 | naming-preserve-config-origin-with-chained-access | \`config\`나 \`util\` 값을 쓰면서 넓은 스코프 구조분해, 별칭, 기능별 네임스페이스를 추가·변경할 때. | reviewWith: functions-place-and-promote-support-functions, values-read-objects-through-chains
 - T10 | naming-use-consistent-file-and-symbol-naming | TypeScript 파일, 폴더, 변수, 함수, 타입, 객체·스키마 키의 이름을 새로 만들거나 바꿀 때. 밖으로 나가는 키를 받는 쪽 표기로 적을지 판단할 때. 제외: 별칭 없이 외부 패키지에서 그대로 가져오는 경우.
-- T11 | naming-use-direct-imports-and-public-entry-points | 가져오기, 내보내기, \`index.ts\` 배럴, 공용 진입점, 소유자 보조 모듈의 경계를 추가·변경할 때. 같은 경로에서 값과 타입 중 무엇을 가져올지 추가·삭제·전환할 때. | reviewWith: naming-restrict-absolute-aliases-to-layer-roots
+- T11 | naming-use-direct-imports-and-public-entry-points | 가져오기, 내보내기, \`index.ts\` 배럴, 공개 진입점, 소유자 보조 모듈의 경계를 추가·변경할 때. 같은 경로에서 값과 타입 중 무엇을 가져올지 추가·삭제·전환할 때. | reviewWith: naming-restrict-absolute-aliases-to-layer-roots
 - T12 | naming-restrict-absolute-aliases-to-layer-roots | 절대경로 별칭으로 다른 모듈을 가져올 때. 별칭이 가리키는 경로 깊이를 바꿀 때. | reviewWith: naming-use-direct-imports-and-public-entry-points
 - T13 | naming-read-environment-values-through-shared-config | \`import.meta.env\`나 \`process.env\`를 읽는 코드를 추가·이동할 때. 환경마다 달라지는 값을 새로 들여올 때. | reviewWith: absence-expose-optional-values-instead-of-silent-fallbacks, naming-centralize-shared-config-namespaces
 - T14 | functions-declare-functions-as-arrow-consts | 이름을 지어 선언하는 함수를 새로 만들거나 선언 형태나 본문 형태를 바꿀 때. 네임스페이스 객체에 멤버 함수를 추가·변경할 때. 제외: 인라인 콜백이거나 클래스 메서드, 제너레이터, 오버로드 선언인 경우. | reviewWith: functions-use-named-object-params-for-complex-signatures

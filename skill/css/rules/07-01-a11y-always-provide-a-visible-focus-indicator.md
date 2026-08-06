@@ -1,6 +1,6 @@
 ---
 title: Always Provide a Visible Focus Indicator
-titleKo: 포커스 표시는 눈에 보이게 항상 남깁니다
+titleKo: 포커스 표시는 항상 눈에 보이게 남깁니다
 impact: HIGH
 impactDescription: 포커스 표시를 없애지 않고 형태로 구분해 키보드 사용자가 현재 위치를 알 수 있습니다
 appliesWhen:

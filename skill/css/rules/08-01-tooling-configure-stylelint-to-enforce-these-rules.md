@@ -1,6 +1,6 @@
 ---
 title: Configure Stylelint to Enforce These Rules
-titleKo: `stylelint` 설정으로 이 컨벤션을 강제합니다
+titleKo: `stylelint` 설정으로 기계가 잡을 항목을 고정합니다
 impact: MEDIUM
 impactDescription: 기계가 잡는 항목을 설정에 고정하면 리뷰는 판단이 필요한 것만 봅니다
 appliesWhen:
@@ -115,7 +115,7 @@ export default {
 	rules: {
 		// 최상위 @media 안의 클래스가 깊이 0 이 되게 한다. 브레이크포인트 안에서 상태를 한 겹 더 쓸 수 있다
 		"max-nesting-depth": [1, {ignoreAtRules: ["media", "supports", "container"]}],
-		// @keyframes 이름은 전역이라 소유자를 붙인다. 하이픈은 클래스 --modifier 표기와 섞이니 쓰지 않는다
+		// @keyframes 이름은 전역이라 소유자를 붙인다. 하이픈은 클래스 --수정자 표기와 섞이니 쓰지 않는다
 		"keyframes-name-pattern": "^(pg|wg|ui)_[a-z][a-zA-Z0-9]*__[a-z][a-zA-Z0-9]*$",
 		// 쉼표 목록에 든 선택자를 아래에서 단독으로 다시 여는 것까지 잡는다
 		"no-duplicate-selectors": [true, {disallowInList: true}],
@@ -123,7 +123,7 @@ export default {
 		"declaration-no-important": true,
 		// 지역 변수 선언을 막는다. var() 소비는 걸리지 않는다
 		"property-disallowed-list": ["/^--/"],
-		// 우리 마크업의 상태는 modifier로 표현한다.
+		// 우리 마크업의 상태는 수정자로 표현한다.
 		// 라이브러리가 상태를 data-* 로 내는 경우가 있어 우리 접두사만 막는다
 		"selector-attribute-name-disallowed-list": [/^aria-/, /^data-(pg|wg|ui)-/],
 		"selector-max-id": 0,

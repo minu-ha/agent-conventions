@@ -254,7 +254,7 @@ const typescriptRuleRouting = {
 	},
 	"naming-use-direct-imports-and-public-entry-points": {
 		appliesWhen:
-			"가져오기, 내보내기, `index.ts` 배럴, 공용 진입점, 소유자 보조 모듈의 경계를 추가·변경할 때. 같은 경로에서 값과 타입 중 무엇을 가져올지 추가·삭제·전환할 때.",
+			"가져오기, 내보내기, `index.ts` 배럴, 공개 진입점, 소유자 보조 모듈의 경계를 추가·변경할 때. 같은 경로에서 값과 타입 중 무엇을 가져올지 추가·삭제·전환할 때.",
 		reviewWith: ["naming-restrict-absolute-aliases-to-layer-roots"],
 	},
 	"naming-restrict-absolute-aliases-to-layer-roots": {
@@ -462,7 +462,7 @@ const cssRuleRouting = {
 		reviewWith: ["values-tokenize-repeated-visual-values"],
 	},
 	"values-tokenize-repeated-visual-values": {
-		appliesWhen: "여러 파일이 같은 색, 간격, 모서리 반경, 타이포그래피, 그림자 값을 쓸 때. 새 사용자 정의 속성을 선언할 때.",
+		appliesWhen: "여러 파일이 같은 색, 간격, 모서리 반경, 타이포그래피, 그림자 값을 쓸 때. 새 변수를 선언할 때.",
 		reviewWith: ["values-always-provide-css-variable-fallbacks", "composition-do-not-style-through-the-style-attribute"],
 	},
 	"values-declare-stacking-layers-as-tokens": {
@@ -529,7 +529,7 @@ const reactRuleRouting = {
 	},
 	"ownership-keep-component-imports-flowing-downward": {
 		appliesWhen:
-			"`component` 폴더 안의 파일을 다른 파일에서 가져올 때. `../`나 `@/page` 경로로 컴포넌트를 가져오려 할 때. 여러 자식이 같은 컴포넌트를 필요로 해 배치를 다시 정할 때. 제외: `function`·`type`·`config` 파일을 가져오는 경우.",
+			"`component` 폴더 안의 파일을 다른 파일에서 가져올 때. `../`나 `@/page` 경로로 컴포넌트를 가져오려 할 때. 여러 자식이 같은 컴포넌트를 써야 해서 배치를 다시 정할 때. 제외: `function`·`type`·`config` 파일을 가져오는 경우.",
 		reviewWith: ["ownership-layer-component-boundaries"],
 	},
 	"ownership-prefer-plain-ts-for-local-react-helpers": {
@@ -2751,7 +2751,7 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	const koreanComments = await readRule("typescript", "docs-write-concise-korean-comments-about-purpose-and-constraints");
 	assertMentions(koreanComments, [/주석 본문이 전부 영어이면/i, /영어/i, /한국어 주석으로 인정하지 않/i], "koreanComments");
 	assert.match(koreanComments, /route-local product tree props/);
-	assert.match(koreanComments, /route-local 제품 트리 입력 계약/);
+	assert.match(koreanComments, /route-local product 트리 입력 계약/);
 
 	const documentedShape = await readRule("typescript", "types-document-custom-types-and-shapes");
 	assert.match(
@@ -2809,7 +2809,7 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	const koreanComments = await readRule("typescript", "docs-write-concise-korean-comments-about-purpose-and-constraints");
 	assertMentions(koreanComments, [/주석 본문이 전부 영어이면/i, /영어/i, /한국어 주석으로 인정하지 않/i], "koreanComments");
 	assert.match(koreanComments, /route-local product tree props/);
-	assert.match(koreanComments, /route-local 제품 트리 입력 계약/);
+	assert.match(koreanComments, /route-local product 트리 입력 계약/);
 
 	const documentedShape = await readRule("typescript", "types-document-custom-types-and-shapes");
 	assert.match(

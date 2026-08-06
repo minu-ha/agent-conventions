@@ -640,7 +640,7 @@ TSX에서 `className`은 `clsx()`로 조립합니다.
 
 한 곳에서만 필요한 여백이나 배치 보정에는 쓰지 않습니다.
 `--compactTop`, `--marginLeft0`, `--alignRight`처럼 그 화면 하나를 고치려고 붙이는 이름이 여기 해당합니다.
-그런 보정은 수정자가 아니라 **역할 이름을 가진 별도 요소 클래스**로 풉니다.
+그런 보정은 수정자가 아니라 **역할 이름이 있는 별도 요소 클래스**로 풉니다.
 
 갈리는 기준은 하나입니다.
 
@@ -658,7 +658,7 @@ TSX에서 `className`은 `clsx()`로 조립합니다.
 <div className={clsx("pg_catalogDetail__aside", "pg_catalogDetail__aside--marginLeft0")} />
 ```
 
-**Correct (한 곳만의 보정은 역할 이름을 가진 요소로 분리):**
+**Correct (한 곳만의 보정은 역할 이름이 있는 요소로 분리):**
 
 ```tsx
 <div className={clsx("pg_catalogDetail__detailSection")} />
@@ -680,8 +680,8 @@ TSX에서 `className`은 `clsx()`로 조립합니다.
 
 **Impact: MEDIUM-HIGH (클래스 하나가 기본 스타일과 상태 의미를 함께 담으면 상태를 끌 방법이 없습니다)**
 
-클래스 하나는 시각 결정 하나만 담습니다.
-기본 스타일과 상태를 이름 하나에 녹이지 않습니다.
+기본 스타일과 상태를 한 클래스에 섞지 않습니다.
+상태를 이름에 녹이지 않고 기본 클래스와 `--수정자`로 나눕니다.
 
 `listButtonActive`처럼 상태를 이름에 녹이면 기본만 필요한 곳에서 재사용할 수 없고 상태를 끄는 방법도 없습니다.
 기본 클래스와 `--수정자`를 따로 두면 둘 다 해결됩니다.
@@ -1752,7 +1752,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 **Correct (공통 토큰은 대체값 없이, 그 밖은 대체값과 함께):**
 
 ```css
-/* src/style/token.css — core token 목록의 단일 출처 */
+/* src/style/token.css — 공통 토큰 목록의 단일 출처 */
 :root {
 	--app-space-3: 12px;
 	--app-color-text-primary: #212529;
@@ -1777,7 +1777,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 
 **Rule:** `C24` · `values-tokenize-repeated-visual-values`
 
-**Applies when:** 여러 파일이 같은 색, 간격, 모서리 반경, 타이포그래피, 그림자 값을 쓸 때. 새 사용자 정의 속성을 선언할 때.
+**Applies when:** 여러 파일이 같은 색, 간격, 모서리 반경, 타이포그래피, 그림자 값을 쓸 때. 새 변수를 선언할 때.
 
 **Review with:** `composition-do-not-style-through-the-style-attribute`, `values-always-provide-css-variable-fallbacks`
 
@@ -2729,7 +2729,7 @@ export default {
 	rules: {
 		// 최상위 @media 안의 클래스가 깊이 0 이 되게 한다. 브레이크포인트 안에서 상태를 한 겹 더 쓸 수 있다
 		"max-nesting-depth": [1, {ignoreAtRules: ["media", "supports", "container"]}],
-		// @keyframes 이름은 전역이라 소유자를 붙인다. 하이픈은 클래스 --modifier 표기와 섞이니 쓰지 않는다
+		// @keyframes 이름은 전역이라 소유자를 붙인다. 하이픈은 클래스 --수정자 표기와 섞이니 쓰지 않는다
 		"keyframes-name-pattern": "^(pg|wg|ui)_[a-z][a-zA-Z0-9]*__[a-z][a-zA-Z0-9]*$",
 		// 쉼표 목록에 든 선택자를 아래에서 단독으로 다시 여는 것까지 잡는다
 		"no-duplicate-selectors": [true, {disallowInList: true}],
@@ -2737,7 +2737,7 @@ export default {
 		"declaration-no-important": true,
 		// 지역 변수 선언을 막는다. var() 소비는 걸리지 않는다
 		"property-disallowed-list": ["/^--/"],
-		// 우리 마크업의 상태는 modifier로 표현한다.
+		// 우리 마크업의 상태는 수정자로 표현한다.
 		// 라이브러리가 상태를 data-* 로 내는 경우가 있어 우리 접두사만 막는다
 		"selector-attribute-name-disallowed-list": [/^aria-/, /^data-(pg|wg|ui)-/],
 		"selector-max-id": 0,

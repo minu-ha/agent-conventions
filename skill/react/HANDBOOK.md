@@ -365,7 +365,7 @@ ui/button/
 
 **Rule:** `R04` · `ownership-keep-component-imports-flowing-downward`
 
-**Applies when:** `component` 폴더 안의 파일을 다른 파일에서 가져올 때. `../`나 `@/page` 경로로 컴포넌트를 가져오려 할 때. 여러 자식이 같은 컴포넌트를 필요로 해 배치를 다시 정할 때. 제외: `function`·`type`·`config` 파일을 가져오는 경우.
+**Applies when:** `component` 폴더 안의 파일을 다른 파일에서 가져올 때. `../`나 `@/page` 경로로 컴포넌트를 가져오려 할 때. 여러 자식이 같은 컴포넌트를 써야 해서 배치를 다시 정할 때. 제외: `function`·`type`·`config` 파일을 가져오는 경우.
 
 **Requires selected:** `typescript/naming-restrict-absolute-aliases-to-layer-roots` · 함께 적용
 
@@ -386,7 +386,7 @@ ui/button/
 2. 화면 조립을 전제하지 않는 컴포넌트면 `ui` 또는 `widget`으로 올립니다.
 3. 짧은 조각이면 그대로 중복해서 씁니다.
 
-세 자식 이상이 같은 것을 필요로 하는데 올릴 수도 없으면 자식 분리가 잘못됐다는 신호입니다.
+세 자식 이상이 같은 것을 써야 하는데 올릴 수도 없으면 자식 분리가 잘못됐다는 신호입니다.
 `function`, `type`, `config`는 렌더 트리를 만들지 않으므로 소유자 안에서 공유하고 이 방향 제약을 받지 않습니다.
 
 **Incorrect (형제 컴포넌트를 직접 가져와 소유 관계가 사라짐):**
@@ -597,7 +597,7 @@ export const WgChartRoot = (props: WgChartRootProps) => {
 
 **Impact: HIGH**
 
-쿼리와 뮤테이션은 출처를 보존해야 하며, 응답 변형은 `query.select`처럼 소스에 가장 가까운 지점에서 끝내야 합니다. 바인딩 이름도 어떤 API에서 왔는지 드러내야 하고, 실패와 무효화는 부른 자리에서 받습니다.
+쿼리와 뮤테이션은 출처를 보존해야 하며, 응답 변형은 `query.select`처럼 출처에 가장 가까운 지점에서 끝내야 합니다. 바인딩 이름도 어떤 API에서 왔는지 드러내야 하고, 실패와 무효화는 부른 자리에서 받습니다.
 
 ### 2.1 Name Query and Mutation Bindings Consistently
 
@@ -1932,7 +1932,7 @@ export const PgProductScreen = () => {
 컴포넌트는 `props` 전체를 받고 쓰는 자리마다 `props.id`로 읽습니다.
 시그니처에서도, 본문 어느 줄에서도, 본문 안 중첩 함수에서도 구조분해하지 않습니다.
 
-구조분해로 끊지 않는 규범과 그 예외는 `typescript/values-read-objects-through-chains`가 모든 객체에 정합니다.
+구조분해로 끊지 않는 규범은 `typescript/values-read-objects-through-chains`가 모든 객체에 정합니다.
 프롭스는 컴포넌트 시그니처라 끊고 싶은 압력이 가장 센 자리여서 여기서 한 번 더 못 박습니다.
 
 - `{...props}`로 그대로 펼치는 것은 구조분해가 아닙니다.
@@ -2556,7 +2556,7 @@ return filteredCategoryNodes.length > 0 ? (
 - 여러 섹션에 걸친 파생값
 - 섹션 렌더 조립
 
-비동기, 상태, 상호작용 경계를 가진 섹션을 분리해도 이 흐름 제어 자체는 라우트 진입에 남깁니다.
+비동기, 상태, 상호작용 경계가 있는 섹션을 분리해도 이 흐름 제어 자체는 라우트 진입에 남깁니다.
 
 소유자가 그대로인 변경은 대상이 아닙니다.
 
@@ -3282,7 +3282,7 @@ search 파라미터를 `useState`로 복제해 출처를 둘로 만들지 않습
 
 `Context`는 전역 상태 도구가 아니라 **한 컴포넌트 묶음 안에서 프롭 전달을 줄이는 수단**입니다.
 합성 컴포넌트가 부품끼리 상태를 나눠 쓸 때, 작은 컴포넌트 묶음이 두세 단계 아래로 값을 내릴 때 씁니다.
-`strategy-choose-single-composition-compound-and-variants`가 상태를 가진 합성으로 확장하라고 할 때
+`strategy-choose-single-composition-compound-and-variants`가 상태가 있는 합성으로 확장하라고 할 때
 그 상태를 담는 자리가 여기입니다.
 
 - 값의 출처는 여전히 `useState`입니다.
@@ -3697,7 +3697,7 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => 
 
 **Impact: MEDIUM**
 
-메모이제이션은 확인한 이유가 있을 때만 손댑니다. 실제로 무거운 초기화와 갱신만 게으른 초기화 함수, 전환, 지연 값으로 미룹니다.
+메모이제이션은 확인한 이유가 있을 때만 손댑니다. 실제로 무거운 초기화와 갱신만 초기화 함수, 전환, 지연 값으로 미룹니다.
 
 ### 10.1 Do Not Memoize Without a Confirmed Reason
 
@@ -3895,7 +3895,7 @@ return <PgProductRows rows={filteredRows} />;
 
 클릭이나 입력을 받는 요소는 접근 가능한 이름을 갖습니다.
 
-| 요소 | 이름을 주는 방법 |
+| 요소 | 이름을 붙이는 방법 |
 | --- | --- |
 | 글자가 들어 있는 버튼 | 그 글자가 이름입니다. 따로 붙이지 않습니다 |
 | 아이콘만 있는 버튼 | `aria-label`로 붙입니다 |

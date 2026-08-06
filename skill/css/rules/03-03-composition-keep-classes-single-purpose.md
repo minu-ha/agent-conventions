@@ -1,6 +1,6 @@
 ---
 title: Keep Classes Single-purpose
-titleKo: 클래스 하나는 시각 결정 하나만 담습니다
+titleKo: 기본 스타일과 상태를 한 클래스에 섞지 않습니다
 impact: MEDIUM-HIGH
 impactDescription: 클래스 하나가 기본 스타일과 상태 의미를 함께 담으면 상태를 끌 방법이 없습니다
 appliesWhen:
@@ -14,8 +14,8 @@ tags: composition, modifiers, responsibility
 
 **Impact: MEDIUM-HIGH (클래스 하나가 기본 스타일과 상태 의미를 함께 담으면 상태를 끌 방법이 없습니다)**
 
-클래스 하나는 시각 결정 하나만 담습니다.
-기본 스타일과 상태를 이름 하나에 녹이지 않습니다.
+기본 스타일과 상태를 한 클래스에 섞지 않습니다.
+상태를 이름에 녹이지 않고 기본 클래스와 `--수정자`로 나눕니다.
 
 `listButtonActive`처럼 상태를 이름에 녹이면 기본만 필요한 곳에서 재사용할 수 없고 상태를 끄는 방법도 없습니다.
 기본 클래스와 `--수정자`를 따로 두면 둘 다 해결됩니다.

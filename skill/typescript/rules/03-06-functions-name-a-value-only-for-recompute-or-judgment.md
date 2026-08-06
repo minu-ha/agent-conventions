@@ -1,6 +1,6 @@
 ---
 title: Name a Value Only to Prevent Recompute or Explain a Judgment
-titleKo: 표현식을 변수로 뺄 이유는 재계산을 막거나 판정에 이름을 주는 것뿐입니다
+titleKo: 변수는 재계산을 막거나 복잡한 판정에 이름을 붙일 때만 만듭니다
 impact: MEDIUM
 impactDescription: 변수로 뺄지가 그 표현식 안에서 정해져 쓰는 자리가 하나 늘었다고 판정이 뒤집히지 않습니다
 appliesWhen:
@@ -14,7 +14,7 @@ tags: functions, origin
 
 **Impact: MEDIUM (변수로 뺄지가 그 표현식 안에서 정해져 쓰는 자리가 하나 늘었다고 판정이 뒤집히지 않습니다)**
 
-표현식을 변수로 뺄 이유는 둘입니다.
+변수를 만드는 이유는 둘입니다.
 둘 다 아니면 표현식을 쓰는 자리에 그대로 적습니다.
 같은 표현식을 몇 번 적든 마찬가지입니다.
 
@@ -33,7 +33,7 @@ tags: functions, origin
 `.map()`이나 `.filter()` 콜백 안, 반복문 안으로 옮기면 원소 수만큼 다시 계산합니다.
 `values-use-set-and-map-for-repeated-lookups`가 만드는 `Set`도 같은 이유로 콜백 밖에 둡니다.
 
-**2. 여러 항을 엮은 판정이라 이름이 결론을 대신 말합니다.**
+**2. 여러 항을 엮은 판정이라 이름이 결론을 대신 말해 줍니다.**
 
 `row.status === productStatus.draft && !row.lockedAt && row.ownerId === session.userId`는
 읽을 때마다 세 항을 머릿속에서 합쳐야 합니다.

@@ -1,6 +1,6 @@
 ---
 title: Use Lazy State Initializers for Expensive Defaults
-titleKo: 초기값 계산이 비싸면 게으른 초기화를 씁니다
+titleKo: 초기값 계산이 비싸면 초기화 함수로 감쌉니다
 impact: MEDIUM
 impactDescription: 초기 상태 계산이 무거울 때 준비 작업이 렌더마다 되풀이되지 않습니다
 appliesWhen:

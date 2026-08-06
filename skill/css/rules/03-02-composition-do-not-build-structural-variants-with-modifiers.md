@@ -26,7 +26,7 @@ tags: modifiers, structure, naming
 
 한 곳에서만 필요한 여백이나 배치 보정에는 쓰지 않습니다.
 `--compactTop`, `--marginLeft0`, `--alignRight`처럼 그 화면 하나를 고치려고 붙이는 이름이 여기 해당합니다.
-그런 보정은 수정자가 아니라 **역할 이름을 가진 별도 요소 클래스**로 풉니다.
+그런 보정은 수정자가 아니라 **역할 이름이 있는 별도 요소 클래스**로 풉니다.
 
 갈리는 기준은 하나입니다.
 
@@ -44,7 +44,7 @@ tags: modifiers, structure, naming
 <div className={clsx("pg_catalogDetail__aside", "pg_catalogDetail__aside--marginLeft0")} />
 ```
 
-**Correct (한 곳만의 보정은 역할 이름을 가진 요소로 분리):**
+**Correct (한 곳만의 보정은 역할 이름이 있는 요소로 분리):**
 
 ```tsx
 <div className={clsx("pg_catalogDetail__detailSection")} />

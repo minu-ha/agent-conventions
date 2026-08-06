@@ -6,7 +6,7 @@ impactDescription: 비공개 컴포넌트를 형제나 위쪽에서 되짚어 �
 appliesWhen:
   - `component` 폴더 안의 파일을 다른 파일에서 가져올 때
   - `../`나 `@/page` 경로로 컴포넌트를 가져오려 할 때
-  - 여러 자식이 같은 컴포넌트를 필요로 해 배치를 다시 정할 때
+  - 여러 자식이 같은 컴포넌트를 써야 해서 배치를 다시 정할 때
   - 제외: `function`·`type`·`config` 파일을 가져오는 경우
 requiresSelected: typescript/naming-restrict-absolute-aliases-to-layer-roots
 reviewWith: ownership-layer-component-boundaries
@@ -30,7 +30,7 @@ tags: ownership
 2. 화면 조립을 전제하지 않는 컴포넌트면 `ui` 또는 `widget`으로 올립니다.
 3. 짧은 조각이면 그대로 중복해서 씁니다.
 
-세 자식 이상이 같은 것을 필요로 하는데 올릴 수도 없으면 자식 분리가 잘못됐다는 신호입니다.
+세 자식 이상이 같은 것을 써야 하는데 올릴 수도 없으면 자식 분리가 잘못됐다는 신호입니다.
 `function`, `type`, `config`는 렌더 트리를 만들지 않으므로 소유자 안에서 공유하고 이 방향 제약을 받지 않습니다.
 
 **Incorrect (형제 컴포넌트를 직접 가져와 소유 관계가 사라짐):**

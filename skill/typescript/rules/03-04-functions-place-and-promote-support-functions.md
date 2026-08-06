@@ -1,6 +1,6 @@
 ---
 title: Place and Promote Support Functions Deliberately
-titleKo: 보조 함수는 대표 함수마다 파일 하나로 두고 도메인을 모를 때만 공용으로 올립니다
+titleKo: 보조 함수는 한 파일에 하나만 내보내고 도메인을 모를 때만 공용으로 올립니다
 impact: MEDIUM-HIGH
 impactDescription: 잡동사니 파일이 생기지 않고 전역 `util`에 도메인 지식이 섞여 들어가지 않습니다
 appliesWhen:

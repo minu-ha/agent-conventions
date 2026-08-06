@@ -19,7 +19,7 @@ tags: composition, props, origin
 컴포넌트는 `props` 전체를 받고 쓰는 자리마다 `props.id`로 읽습니다.
 시그니처에서도, 본문 어느 줄에서도, 본문 안 중첩 함수에서도 구조분해하지 않습니다.
 
-구조분해로 끊지 않는 규범과 그 예외는 `typescript/values-read-objects-through-chains`가 모든 객체에 정합니다.
+구조분해로 끊지 않는 규범은 `typescript/values-read-objects-through-chains`가 모든 객체에 정합니다.
 프롭스는 컴포넌트 시그니처라 끊고 싶은 압력이 가장 센 자리여서 여기서 한 번 더 못 박습니다.
 
 - `{...props}`로 그대로 펼치는 것은 구조분해가 아닙니다.

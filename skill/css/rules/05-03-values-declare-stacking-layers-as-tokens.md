@@ -1,6 +1,6 @@
 ---
 title: Declare Stacking Layers as Tokens in One Place
-titleKo: `z-index` 층은 토큰 한 곳에 선언합니다
+titleKo: `z-index` 층은 토큰 파일 한 곳에 선언합니다
 impact: MEDIUM-HIGH
 impactDescription: 무엇이 무엇 위에 오는지가 한 파일에서 읽히고 숫자 경쟁이 생기지 않습니다
 appliesWhen:

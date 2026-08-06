@@ -11,7 +11,7 @@
   `shared/config.ts`의 설정 객체와 `enum` 성격 상수 객체의 키에는 달지 않습니다.
 - 필드가 없는 인덱스 접근 별칭(`type ProductId = ProductRecord["id"]`)과
   `Omit`으로 뺀 형태: 적을 필드가 없으므로 헤더만 씁니다.
-  필드를 가진 `interface`는 원본에서 가져온 필드여도 각 필드에 주석을 답니다.
+  필드가 있는 `interface`는 원본에서 가져온 필드여도 각 필드에 주석을 답니다.
 
 주석이 있다고 끝나지 않습니다.
 각 본문이 `docs-write-concise-korean-comments-about-purpose-and-constraints` 규칙의 한국어 조건을 만족해야 합니다.

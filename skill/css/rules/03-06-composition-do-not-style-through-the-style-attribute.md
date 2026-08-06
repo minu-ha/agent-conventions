@@ -1,6 +1,6 @@
 ---
 title: Do Not Style Through the `style` Attribute
-titleKo: 인라인 `style`로 꾸미지 않습니다
+titleKo: 인라인 `style`로 스타일을 주지 않습니다
 impact: HIGH
 impactDescription: 모든 시각 결정이 스타일시트에 남아 검색과 덮어쓰기가 예측대로 동작합니다
 appliesWhen:

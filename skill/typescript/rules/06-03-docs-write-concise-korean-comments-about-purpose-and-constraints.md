@@ -1,6 +1,6 @@
 ---
 title: Write Concise Korean Comments About Purpose and Constraints
-titleKo: 주석 내용은 한국어로 목적과 제약을 적습니다
+titleKo: 주석에는 목적과 제약을 한국어로 적습니다
 impact: MEDIUM
 impactDescription: 코드 동작을 옮겨 적지 않고 의도와 제약에 주석을 모읍니다
 appliesWhen:
@@ -99,7 +99,7 @@ export const sortProductsByUpdatedAt = (products: Product[]): Product[] => {
 };
 
 /**
- * route-local 제품 트리 입력 계약
+ * route-local product 트리 입력 계약
  */
 export interface PgProductTreeProps {
 	/**

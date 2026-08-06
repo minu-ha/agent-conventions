@@ -63,7 +63,7 @@ tags: variables, fallbacks, tokens
 **Correct (공통 토큰은 대체값 없이, 그 밖은 대체값과 함께):**
 
 ```css
-/* src/style/token.css — core token 목록의 단일 출처 */
+/* src/style/token.css — 공통 토큰 목록의 단일 출처 */
 :root {
 	--app-space-3: 12px;
 	--app-color-text-primary: #212529;
