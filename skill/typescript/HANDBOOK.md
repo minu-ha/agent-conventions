@@ -1461,15 +1461,15 @@ const visibleTabs = [
 
 **Rule:** `T19` · `functions-name-a-value-only-for-recompute-or-judgment`
 
-**Applies when:** 순수 계산의 결과를 지역 변수\(`const`\)로 받는 줄을 추가·삭제할 때. 식을 쓰는 자리에 그대로 적을지 변수로 뺄지 정할 때.
+**Applies when:** 순수 계산의 결과를 지역 변수\(`const`\)로 받는 줄을 추가·삭제할 때. 표현식을 쓰는 자리에 그대로 적을지 변수로 뺄지 정할 때.
 
 **Review with:** `functions-avoid-imperative-assembly-in-wide-scopes`, `values-read-objects-through-chains`
 
-**Impact: MEDIUM (변수로 뺄지가 그 식 안에서 정해져 쓰는 자리가 하나 늘었다고 판정이 뒤집히지 않습니다)**
+**Impact: MEDIUM (변수로 뺄지가 그 표현식 안에서 정해져 쓰는 자리가 하나 늘었다고 판정이 뒤집히지 않습니다)**
 
-식을 변수로 뺄 이유는 둘입니다.
-둘 다 아니면 식을 쓰는 자리에 그대로 적습니다.
-같은 식을 몇 번 적든 마찬가지입니다.
+표현식을 변수로 뺄 이유는 둘입니다.
+둘 다 아니면 표현식을 쓰는 자리에 그대로 적습니다.
+같은 표현식을 몇 번 적든 마찬가지입니다.
 
 **1. 다시 계산하면 값이 달라지거나 비용이 듭니다.**
 
@@ -1496,13 +1496,13 @@ const visibleTabs = [
   `row.dueDate < today`는 쓰는 자리에 그대로 적습니다.
 - 부정이 겹치면 이름으로 뒤집습니다.
   `!row.deletedAt && !row.archivedAt`보다 `isVisible`이 한 번에 읽힙니다.
-- 식에 리터럴이 보이면 변수로 뺄 자리가 아니라 그 리터럴을 선언할 자리입니다.
+- 표현식에 리터럴이 보이면 변수로 뺄 자리가 아니라 그 리터럴을 선언할 자리입니다.
   `types-replace-enum-with-as-const-objects`와 `naming-centralize-shared-config-namespaces`가 그 자리를 정합니다.
 
 **횟수는 기준이 아닙니다.**
 몇 번 쓰이는지는 파일 전체를 봐야 알고, 쓰는 자리를 하나 더하면 어제 맞던 판정이 오늘 뒤집힙니다.
 같은 코드에 다른 답이 나오는 기준은 지킬 수 없습니다.
-위 둘은 그 식 안에서 판정됩니다.
+위 둘은 그 표현식 안에서 판정됩니다.
 
 변수로 빼면 읽는 사람은 그 값이 어디서 왔는지 확인하러 위로 올라갑니다.
 그 비용을 치를 이유가 위 둘입니다.
@@ -1919,7 +1919,7 @@ const filterOverdueLines = (invoice: Invoice, today: Date): InvoiceLine[] => {
 4. **이름을 붙인다면 파생값임이 드러나는 이름으로 씁니다.**
    `pageSize`가 아니라 `effectivePageSize`입니다.
    붙일지 말지는 `functions-name-a-value-only-for-recompute-or-judgment`가 정하고,
-   횟수가 아니라 그 식이 무엇을 고른 값인지가 기준입니다.
+   횟수가 아니라 그 표현식이 무엇을 고른 값인지가 기준입니다.
 
 **`??` 합성은 별칭이 아닙니다.**
 `naming-preserve-config-origin-with-chained-access`가 막는 것은 같은 값에 새 이름만 붙이는 별칭입니다.

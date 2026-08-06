@@ -289,7 +289,8 @@ const typescriptRuleRouting = {
 		reviewWith: ["functions-extract-helpers-only-when-the-boundary-is-real"],
 	},
 	"functions-name-a-value-only-for-recompute-or-judgment": {
-		appliesWhen: "순수 계산의 결과를 지역 변수(`const`)로 받는 줄을 추가·삭제할 때. 식을 쓰는 자리에 그대로 적을지 변수로 뺄지 정할 때.",
+		appliesWhen:
+			"순수 계산의 결과를 지역 변수(`const`)로 받는 줄을 추가·삭제할 때. 표현식을 쓰는 자리에 그대로 적을지 변수로 뺄지 정할 때.",
 		reviewWith: ["functions-avoid-imperative-assembly-in-wide-scopes", "values-read-objects-through-chains"],
 	},
 	"functions-name-functions-by-what-comes-out": {
@@ -634,7 +635,7 @@ const reactRuleRouting = {
 		reviewWith: ["typing-narrow-library-wrapper-contracts", "typescript/docs-justify-convention-exceptions-with-a-reason-comment"],
 	},
 	"composition-use-activity-only-to-preserve-mounted-subtrees": {
-		appliesWhen: "조건부 렌더링과 `Activity` 사이를 오갈 때. `<Activity>`를 추가·삭제하거나 `mode`를 계산하는 식을 바꿀 때.",
+		appliesWhen: "조건부 렌더링과 `Activity` 사이를 오갈 때. `<Activity>`를 추가·삭제하거나 `mode`를 계산하는 표현식을 바꿀 때.",
 		reviewWith: ["composition-do-not-define-components-inside-components"],
 	},
 	"composition-declare-props-interface-above-the-component": {

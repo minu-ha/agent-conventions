@@ -50,7 +50,7 @@ tags: absence
 4. **이름을 붙인다면 파생값임이 드러나는 이름으로 씁니다.**
    `pageSize`가 아니라 `effectivePageSize`입니다.
    붙일지 말지는 `functions-name-a-value-only-for-recompute-or-judgment`가 정하고,
-   횟수가 아니라 그 식이 무엇을 고른 값인지가 기준입니다.
+   횟수가 아니라 그 표현식이 무엇을 고른 값인지가 기준입니다.
 
 **`??` 합성은 별칭이 아닙니다.**
 `naming-preserve-config-origin-with-chained-access`가 막는 것은 같은 값에 새 이름만 붙이는 별칭입니다.

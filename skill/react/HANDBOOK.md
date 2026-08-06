@@ -2203,7 +2203,7 @@ export const UiStatusBadge = (props: UiStatusBadgeProps) => {
 
 **Rule:** `R24` · `composition-use-activity-only-to-preserve-mounted-subtrees`
 
-**Applies when:** 조건부 렌더링과 `Activity` 사이를 오갈 때. `<Activity>`를 추가·삭제하거나 `mode`를 계산하는 식을 바꿀 때.
+**Applies when:** 조건부 렌더링과 `Activity` 사이를 오갈 때. `<Activity>`를 추가·삭제하거나 `mode`를 계산하는 표현식을 바꿀 때.
 
 **Review with:** `composition-do-not-define-components-inside-components`
 

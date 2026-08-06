@@ -5,7 +5,7 @@ impact: HIGH
 impactDescription: 숨기기와 마운트 해제를 구분해 써서 되돌릴 때 상태가 사라지는 사고를 막습니다
 appliesWhen:
   - 조건부 렌더링과 `Activity` 사이를 오갈 때
-  - `<Activity>`를 추가·삭제하거나 `mode`를 계산하는 식을 바꿀 때
+  - `<Activity>`를 추가·삭제하거나 `mode`를 계산하는 표현식을 바꿀 때
 reviewWith: composition-do-not-define-components-inside-components
 tags: composition, jsx
 ---
