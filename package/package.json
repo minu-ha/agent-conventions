@@ -37,5 +37,5 @@
 		"typecheck": "tsc --noEmit",
 		"test": "tsx --test --test-concurrency=1 test/*.test.ts"
 	},
-	"devDependencies": {"@types/node": "^24.6.0", "@biomejs/biome": "2.2.4", "typescript": "^5.9.3", "tsx": "^4.20.5"}
+	"devDependencies": {"@biomejs/biome": "^2.5.7", "@types/node": "^26.1.2", "tsx": "^4.23.9", "typescript": "^7.0.2"}
 }

@@ -37,7 +37,7 @@ tags: functions, declarations
 - 커링의 바깥 화살표. 안쪽 함수를 그대로 돌려주는 자리라 블록으로 감싸면 `return`만 늘어납니다.
   `(productId) => (event) => { … }`에서 블록으로 여는 것은 안쪽 하나입니다.
 
-`biome` 2.2.4에는 이 본문 형태를 강제할 규칙이 없습니다.
+`biome`의 `useConsistentArrowReturn`은 이 형태를 인라인 콜백과 커링에까지 강제해서 켜지 않습니다.
 `tooling-configure-biome-to-enforce-these-rules` 규칙이 그 사실과 이유를 적어 둡니다.
 
 **네임스페이스 객체의 멤버도 화살표 프로퍼티로 씁니다.**

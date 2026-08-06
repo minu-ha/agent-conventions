@@ -950,7 +950,7 @@ const productClient = createClient({baseUrl: config.api.baseUrl});
 - 커링의 바깥 화살표. 안쪽 함수를 그대로 돌려주는 자리라 블록으로 감싸면 `return`만 늘어납니다.
   `(productId) => (event) => { … }`에서 블록으로 여는 것은 안쪽 하나입니다.
 
-`biome` 2.2.4에는 이 본문 형태를 강제할 규칙이 없습니다.
+`biome`의 `useConsistentArrowReturn`은 이 형태를 인라인 콜백과 커링에까지 강제해서 켜지 않습니다.
 `tooling-configure-biome-to-enforce-these-rules` 규칙이 그 사실과 이유를 적어 둡니다.
 
 **네임스페이스 객체의 멤버도 화살표 프로퍼티로 씁니다.**
@@ -2370,7 +2370,7 @@ const filteredRows = useMemo(() => rows.filter((row) => matchRow(row, deferredKe
 | `suspicious/noExplicitAny` | `typescript/types-narrow-unknown-instead-of-asserting` |
 | `style/noNonNullAssertion` | `typescript/types-narrow-unknown-instead-of-asserting` |
 
-`style/useConst`는 `biome` 2.2.4의 `recommended`에 이미 있어 설정에 다시 적어도 동작이 달라지지 않습니다.
+`style/useConst`는 `biome` 2.5.7의 `recommended`에 이미 있어 설정에 다시 적어도 동작이 달라지지 않습니다.
 어느 컨벤션을 대신하는지 보이게 하려고 표와 설정에 남겨 둡니다.
 
 기계가 끝까지 못 가는 자리가 있습니다.
@@ -2383,9 +2383,9 @@ const filteredRows = useMemo(() => rows.filter((row) => matchRow(row, deferredKe
   `PascalCase`를 빼면 합성 컴포넌트의 `{Root, Header, Footer}`가 걸리므로 그쪽도 함께 엽니다.
   `typescript/functions-declare-functions-as-arrow-consts` 때문에 이름 붙인 함수도 `const` 항목에 들어가는데,
   그 항목은 컴포넌트 이름 때문에 `PascalCase`도 열려 있어 함수 이름의 `camelCase`는 리뷰가 봅니다.
-- 이름 붙인 함수의 본문을 `{}` 블록으로 고정하는 것은 `biome` 2.2.4가 못 합니다.
-  `useConsistentArrowReturn`은 nursery 규칙인 데다 한 줄 본문을 강제하고 옵션도 없어서 켜지 않습니다.
-  `typescript/functions-declare-functions-as-arrow-consts`의 본문 형태는 리뷰가 봅니다.
+- 이름 붙인 함수의 본문을 `{}` 블록으로 고정하는 것은 `biome` 2.5.7이 반만 합니다.
+  `style/useConsistentArrowReturn`에 `style: "always"`가 있지만 인라인 콜백과 커링 바깥 화살표까지 잡습니다.
+  `typescript/functions-declare-functions-as-arrow-consts`가 그 둘을 예외로 두므로 켜지 않고 리뷰가 봅니다.
 - 폴더명 `kebab-case` 단수는 어떤 `biome` 규칙도 보지 않습니다.
   `useFilenamingConvention`도 파일명만 보고 폴더명은 보지 않습니다.
   리뷰가 봅니다.
@@ -2410,7 +2410,7 @@ const filteredRows = useMemo(() => rows.filter((row) => matchRow(row, deferredKe
 {
 	"linter": {
 		"enabled": true,
-		"rules": {"recommended": true}
+		"rules": {"preset": "recommended"}
 	}
 }
 ```
@@ -2422,7 +2422,7 @@ const filteredRows = useMemo(() => rows.filter((row) => matchRow(row, deferredKe
 	"linter": {
 		"enabled": true,
 		"rules": {
-			"recommended": true,
+			"preset": "recommended",
 			"correctness": {"noUnusedFunctionParameters": "error"},
 			"suspicious": {"noExplicitAny": "error"},
 			"performance": {"noNamespaceImport": "error"},

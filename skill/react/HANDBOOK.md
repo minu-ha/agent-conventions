@@ -4074,7 +4074,7 @@ export const toProductSaveRequest = (formValues: ProductFormValues) => {
 `noNestedComponentDefinitions`는 도메인의 `recommended`에 없어 따로 켭니다.
 `react/composition-do-not-define-components-inside-components`와 판정 대상이 같아 이 규칙을 통째로 기계에 넘깁니다.
 
-`a11y` 묶음은 도메인이 아니라 `recommended: true`가 이미 켭니다.
+`a11y` 묶음은 도메인이 아니라 `preset: "recommended"`가 이미 켭니다.
 `useButtonType`, `useAltText`, `useValidAnchor`, `useKeyWithClickEvents`, `useSemanticElements`가 그것입니다.
 접근 가능한 이름을 실제로 붙였는지는 기계가 못 보고 리뷰가 봅니다.
 
@@ -4100,7 +4100,7 @@ export const toProductSaveRequest = (formValues: ProductFormValues) => {
 {
 	"linter": {
 		"enabled": true,
-		"rules": {"recommended": true}
+		"rules": {"preset": "recommended"}
 	}
 }
 ```
@@ -4113,7 +4113,7 @@ export const toProductSaveRequest = (formValues: ProductFormValues) => {
 		"enabled": true,
 		"domains": {"react": "recommended"},
 		"rules": {
-			"recommended": true,
+			"preset": "recommended",
 			"correctness": {"noNestedComponentDefinitions": "error"}
 		}
 	}

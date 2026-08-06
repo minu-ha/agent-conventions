@@ -20,7 +20,7 @@
 | `suspicious/noExplicitAny` | `typescript/types-narrow-unknown-instead-of-asserting` |
 | `style/noNonNullAssertion` | `typescript/types-narrow-unknown-instead-of-asserting` |
 
-`style/useConst`는 `biome` 2.2.4의 `recommended`에 이미 있어 설정에 다시 적어도 동작이 달라지지 않습니다.
+`style/useConst`는 `biome` 2.5.7의 `recommended`에 이미 있어 설정에 다시 적어도 동작이 달라지지 않습니다.
 어느 컨벤션을 대신하는지 보이게 하려고 표와 설정에 남겨 둡니다.
 
 기계가 끝까지 못 가는 자리가 있습니다.
@@ -33,9 +33,9 @@
   `PascalCase`를 빼면 합성 컴포넌트의 `{Root, Header, Footer}`가 걸리므로 그쪽도 함께 엽니다.
   `typescript/functions-declare-functions-as-arrow-consts` 때문에 이름 붙인 함수도 `const` 항목에 들어가는데,
   그 항목은 컴포넌트 이름 때문에 `PascalCase`도 열려 있어 함수 이름의 `camelCase`는 리뷰가 봅니다.
-- 이름 붙인 함수의 본문을 `{}` 블록으로 고정하는 것은 `biome` 2.2.4가 못 합니다.
-  `useConsistentArrowReturn`은 nursery 규칙인 데다 한 줄 본문을 강제하고 옵션도 없어서 켜지 않습니다.
-  `typescript/functions-declare-functions-as-arrow-consts`의 본문 형태는 리뷰가 봅니다.
+- 이름 붙인 함수의 본문을 `{}` 블록으로 고정하는 것은 `biome` 2.5.7이 반만 합니다.
+  `style/useConsistentArrowReturn`에 `style: "always"`가 있지만 인라인 콜백과 커링 바깥 화살표까지 잡습니다.
+  `typescript/functions-declare-functions-as-arrow-consts`가 그 둘을 예외로 두므로 켜지 않고 리뷰가 봅니다.
 - 폴더명 `kebab-case` 단수는 어떤 `biome` 규칙도 보지 않습니다.
   `useFilenamingConvention`도 파일명만 보고 폴더명은 보지 않습니다.
   리뷰가 봅니다.
