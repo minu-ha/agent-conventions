@@ -2,7 +2,7 @@
 title: Keep Classes Single-purpose
 titleKo: 클래스 하나는 시각 결정 하나만 담습니다
 impact: MEDIUM-HIGH
-impactDescription: 클래스 하나가 기본 스타일과 상태 의미를 함께 지면 상태를 끌 방법이 없습니다
+impactDescription: 클래스 하나가 기본 스타일과 상태 의미를 함께 담으면 상태를 끌 방법이 없습니다
 appliesWhen:
   - 한 클래스 이름에 기본 스타일과 상태를 함께 넣을 때
   - 제외: 처음부터 기본 클래스와 수정자를 나눠 만드는 경우
@@ -12,7 +12,7 @@ tags: composition, modifiers, responsibility
 
 ## Keep Classes Single-purpose
 
-**Impact: MEDIUM-HIGH (클래스 하나가 기본 스타일과 상태 의미를 함께 지면 상태를 끌 방법이 없습니다)**
+**Impact: MEDIUM-HIGH (클래스 하나가 기본 스타일과 상태 의미를 함께 담으면 상태를 끌 방법이 없습니다)**
 
 클래스 하나는 시각 결정 하나만 담습니다.
 기본 스타일과 상태를 이름 하나에 녹이지 않습니다.

@@ -41,7 +41,7 @@
 ## 6. Screen File Discipline (screen)
 **TitleKo:** 화면 파일 규율
 **Impact:** MEDIUM-HIGH
-**Description:** 라우트 진입은 화면 흐름을 분명하게 보여 줘야 하며, 자기 상태나 비동기를 직접 가진 섹션만 떼어 냅니다.
+**Description:** 라우트 진입은 화면 흐름을 분명하게 보여 줘야 하고, 떼어 내는 것은 자기 상태나 비동기를 직접 가진 섹션뿐입니다.
   파생값은 쓰는 자리에서 계산하고, 짐작으로 미리 빼내지 않습니다.
 
 ## 7. Runtime Boundaries (runtime)

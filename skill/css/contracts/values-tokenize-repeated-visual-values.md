@@ -12,7 +12,7 @@
 `z-index` 층과 움직임 지속 시간, 이징은 예외입니다. 한 파일에서 한 번만 써도 토큰입니다.
 쌓임 순서와 움직임 리듬이 앱 전체에서 하나여야 하기 때문입니다.
 층 목록은 `values-declare-stacking-layers-as-tokens` 규칙이 정합니다.
-시간과 곡선 토큰은 `a11y-namespace-keyframes-and-respect-reduced-motion` 규칙이 정합니다.
+시간과 이징 토큰은 `a11y-namespace-keyframes-and-respect-reduced-motion` 규칙이 정합니다.
 
 **지역 변수는 만들지 않습니다.**
 공통 토큰 목록에 없는 변수는 대체값이 필요해서 값이 결국 사용처에 남습니다.

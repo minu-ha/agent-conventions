@@ -46,9 +46,9 @@ const toRequestUrl = ({baseUrl, resourcePath, searchParams}: ApiRequestTarget): 
 
 ```ts
 /**
- * 요청 URL 조립. searchParams 는 set 으로 넣어 baseUrl 에 있던 같은 키를 덮는다.
+ * 요청 URL 조립. searchParams는 set으로 넣어 baseUrl에 있던 같은 키를 덮는다.
  *
- * 입력 계약은 shared/api/type.ts 의 ApiRequestTarget 을 그대로 쓴다
+ * 입력 계약은 shared/api/type.ts의 ApiRequestTarget을 그대로 쓴다
  */
 const toRequestUrl = (target: ApiRequestTarget): URL => {
 	const {baseUrl, resourcePath, searchParams} = target;

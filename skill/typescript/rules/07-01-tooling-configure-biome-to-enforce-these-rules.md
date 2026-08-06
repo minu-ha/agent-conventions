@@ -31,7 +31,7 @@ tags: tooling
 | `suspicious/noExplicitAny` | `typescript/types-narrow-unknown-instead-of-asserting` |
 | `style/noNonNullAssertion` | `typescript/types-narrow-unknown-instead-of-asserting` |
 
-`style/useConst`는 `biome` 2.2.4의 `recommended`에 이미 있어 설정에 다시 적어도 켜지는 것이 달라지지 않습니다.
+`style/useConst`는 `biome` 2.2.4의 `recommended`에 이미 있어 설정에 다시 적어도 동작이 달라지지 않습니다.
 어느 컨벤션을 대신하는지 보이게 하려고 표와 설정에 남겨 둡니다.
 
 도구가 끝까지 못 가는 자리가 있습니다.
@@ -39,7 +39,7 @@ tags: tooling
 
 - 선언형 설정과 `enum` 성격 상수 객체에만 `snake_case`를 쓰는 구분은 `useNamingConvention`으로 표현할 수 없습니다.
   모듈 최상위 `const`와 객체 리터럴 키에 표기를 다 허용해 두고, 어느 쪽이 맞는지는 사람이 봅니다.
-  `objectLiteralProperty`를 좁히면 규범이 요구하는 형태가 막힙니다.
+  `objectLiteralProperty`를 좁히면 이 컨벤션이 요구하는 형태가 막힙니다.
   `snake_case`를 빼면 `config.pagination.default_page_size`가, `PascalCase`를 빼면
   합성 컴포넌트의 `{Root, Header, Footer}`가 걸립니다.
   설정 객체에 타입을 붙이면 키가 `typeProperty`로도 검사되므로 그쪽에도 `snake_case`를 허용합니다.

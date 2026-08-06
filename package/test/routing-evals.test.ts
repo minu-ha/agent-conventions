@@ -455,7 +455,7 @@ const cssRuleRouting = {
 		reviewWith: ["values-tokenize-repeated-visual-values"],
 	},
 	"values-tokenize-repeated-visual-values": {
-		appliesWhen: "여러 파일이 같은 색, 간격, radius, 타이포, 그림자 값을 쓸 때. 새 사용자 정의 속성을 선언할 때.",
+		appliesWhen: "여러 파일이 같은 색, 간격, 모서리 반경, 타이포그래피, 그림자 값을 쓸 때. 새 사용자 정의 속성을 선언할 때.",
 		reviewWith: ["values-always-provide-css-variable-fallbacks", "composition-do-not-style-through-the-style-attribute"],
 	},
 	"values-declare-stacking-layers-as-tokens": {
@@ -508,7 +508,7 @@ const cssRuleRouting = {
  */
 const reactRuleRouting = {
 	"ownership-layer-component-boundaries": {
-		appliesWhen: "컴포넌트를 ui·widget·page 중 어느 소유 레이어에 둘지 정할 때. 컴포넌트를 레이어 사이에서 옮기거나 공용화할 때.",
+		appliesWhen: "컴포넌트를 `ui`, `widget`, `page` 중 어느 소유 레이어에 둘지 정할 때. 컴포넌트를 레이어 사이에서 옮기거나 공용화할 때.",
 		reviewWith: ["ownership-place-owner-files-in-role-folders", "css/ownership-choose-scope-prefix-by-reuse-range"],
 	},
 	"ownership-prefix-layer-names-on-files-and-symbols": {
@@ -522,7 +522,7 @@ const reactRuleRouting = {
 	},
 	"ownership-keep-component-imports-flowing-downward": {
 		appliesWhen:
-			"`component` 폴더 안의 파일을 다른 파일에서 가져오기할 때. `../`나 `@/page` 경로로 컴포넌트를 가져오려 할 때. 여러 자식이 같은 컴포넌트를 필요로 해 배치를 다시 정할 때. 제외: `function`·`type`·`config` 파일을 가져오는 경우.",
+			"`component` 폴더 안의 파일을 다른 파일에서 가져올 때. `../`나 `@/page` 경로로 컴포넌트를 가져오려 할 때. 여러 자식이 같은 컴포넌트를 필요로 해 배치를 다시 정할 때. 제외: `function`·`type`·`config` 파일을 가져오는 경우.",
 		reviewWith: ["ownership-layer-component-boundaries"],
 	},
 	"ownership-prefer-plain-ts-for-local-react-helpers": {
@@ -556,7 +556,7 @@ const reactRuleRouting = {
 	},
 	"data-preserve-origin-chaining": {
 		appliesWhen:
-			"page, 레이아웃, 화면 넓은 스코프에서 응답, 뮤테이션, 스토어를 구조분해할 때. 원본을 별칭으로 끊고 값 접근 방식을 바꿀 때.",
+			"페이지, 레이아웃, 화면처럼 넓은 스코프에서 응답, 뮤테이션, 스토어를 구조분해할 때. 원본을 별칭으로 끊고 값 접근 방식을 바꿀 때.",
 		reviewWith: ["screen-keep-derived-values-close"],
 	},
 	"data-handle-mutation-failure-where-it-is-called": {
@@ -621,7 +621,7 @@ const reactRuleRouting = {
 	},
 	"composition-named-handlers-over-inline": {
 		appliesWhen:
-			"TSX 이벤트 프롭의 인라인 콜백에 분기나 비동기 호출을 추가·수정할 때. 인라인 콜백에 여러 동작·부수효과나 읽어서 의도가 안 보이는 상태 전환이 들어갈 때. 제외: 인자 없이 핸들러 참조만 넘기는 경우.",
+			"TSX 이벤트 프롭의 인라인 콜백에 분기나 비동기 호출을 추가·수정할 때. 인라인 콜백에 여러 동작·부수효과나 읽어도 의도가 안 보이는 상태 전환이 들어갈 때. 제외: 인자 없이 핸들러 참조만 넘기는 경우.",
 		reviewWith: ["events-run-user-actions-in-handlers-not-effects", "typescript/functions-extract-helpers-only-when-the-boundary-is-real"],
 	},
 	"composition-open-ref-props-only-for-imperative-contracts": {
@@ -647,7 +647,7 @@ const reactRuleRouting = {
 	},
 	"screen-keep-route-flow-visible": {
 		appliesWhen:
-			"라우트 진입의 search 파라미터, 화면 이동, 쿼리, 뮤테이션, 화면 전체 이펙트를 옮기거나 나눌 때. page 섹션 조립의 순서나 소유자를 바꿀 때. 제외: 같은 소유자 안에서 표현만 바꾸는 경우.",
+			"라우트 진입의 search 파라미터, 화면 이동, 쿼리, 뮤테이션, 화면 전체 이펙트를 옮기거나 나눌 때. 화면 섹션 조립의 순서나 소유자를 바꿀 때. 제외: 같은 소유자 안에서 표현만 바꾸는 경우.",
 		reviewWith: ["screen-extract-local-section-components-for-runtime-boundaries", "ownership-place-owner-files-in-role-folders"],
 	},
 	"screen-avoid-premature-abstraction": {
@@ -690,7 +690,7 @@ const reactRuleRouting = {
 	},
 	"state-calculate-derived-values-during-render": {
 		appliesWhen:
-			"현재 프롭스·상태·search 파라미터·응답에서 계산 가능한 값을 별도 상태와 이펙트로 동기화할 때. 파생값 동기화 이펙트를 제거할 때.",
+			"현재 프롭스, 상태, search 파라미터, 응답에서 계산 가능한 값을 별도 상태와 이펙트로 동기화할 때. 파생값 동기화 이펙트를 제거할 때.",
 		reviewWith: ["screen-keep-derived-values-close"],
 	},
 	"state-choose-state-tools-by-source-of-truth": {
@@ -750,7 +750,7 @@ const reactRuleRouting = {
 	},
 	"docs-require-jsdoc-on-key-declarations": {
 		appliesWhen:
-			"쿼리·뮤테이션이나 읽어서 의도가 안 보이는 핸들러·이펙트를 추가·변경할 때. 내보낸 보조 함수·훅·스토어 선언을 추가·변경할 때.",
+			"쿼리·뮤테이션이나 읽어도 의도가 안 보이는 핸들러·이펙트를 추가·변경할 때. 내보낸 보조 함수·훅·스토어 선언을 추가·변경할 때.",
 		reviewWith: ["typescript/types-document-custom-types-and-shapes"],
 	},
 } as const;
@@ -2507,7 +2507,7 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 	assertMentions(readAppliesWhen(unusedParameters), ["커링한 핸들러", "마지막에 돌려주는 콜백", /(?:빼거나|쓰지 않)/], "unusedParameters");
 	assertMentions(
 		unusedParameters,
-		[/프레임워크 별칭/i, /매개변수를 쓰지 않는 경우도 예외가 아닙니다/i, /예외가 아닙니다/i, /`\(_event\) =>`/i],
+		[/프레임워크 별칭/i, /매개변수를 하나도 쓰지 않는 경우도 예외가 아닙니다/i, /예외가 아닙니다/i, /`\(_event\) =>`/i],
 		"unusedParameters",
 	);
 

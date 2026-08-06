@@ -66,7 +66,7 @@ const themeStore = useThemeStore();
 const responseUserGetItemSuspense = useUserGetItemSuspense();
 ```
 
-**Correct (합성 컴포넌트 안에서 부품끼리 나눠 쓰는 상태는 `Context`로 나름):**
+**Correct (합성 컴포넌트 안에서 부품끼리 나눠 쓰는 상태는 `Context`로 내려보냄):**
 
 ```tsx
 /**

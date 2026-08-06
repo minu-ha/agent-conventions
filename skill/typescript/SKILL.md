@@ -10,7 +10,7 @@ metadata:
 
 ## 1. 변경 범위 판정
 
-요청·계획·diff에서 `.ts`/`.tsx`·type·schema·config·API·helper·import/export·fallback·JSDoc의 실제 변경만 범위로 잡는다. 추가·삭제·이동·이름 변경·재선언은 포함하고 read-only 문맥은 제외한다. 이름·shape·동작이 그대로인 이동은 diff에 삭제+추가로 보여도 변경으로 다시 세지 않는다. 단 byte-equivalent named shape이 새 callable의 input/output 역할을 맡으면 변경으로 본다. 적용되지 않는 규칙의 optional pattern을 새로 들여와 스스로 범위를 넓히지 않는다.
+요청·계획·diff에서 `.ts`/`.tsx`·type·schema·config·API·helper·import/export·fallback·JSDoc의 실제 변경만 범위로 잡는다. 추가·삭제·이동·이름 변경·재선언은 포함하고 read-only 문맥은 제외한다. 이름·shape·동작이 그대로인 이동은 diff에 삭제+추가로 보여도 변경으로 다시 세지 않는다. 단 byte-equivalent named shape가 새 callable의 input/output 역할을 맡으면 변경으로 본다. 적용되지 않는 규칙의 optional pattern을 새로 들여와 스스로 범위를 넓히지 않는다.
 
 이 skill은 가장 아래 계층이라 companion을 선언하지 않는다. React나 CSS 경계가 함께 바뀌면 이 skill이 그쪽을 켜는 것이 아니라, 그쪽 skill이 이 skill을 companion으로 활성화한다. 그래서 위 계층 규칙 ID를 여기서 가리키지 않는다.
 

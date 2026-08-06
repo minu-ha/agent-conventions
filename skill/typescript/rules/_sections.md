@@ -5,7 +5,7 @@
 ## 1. Types and Contracts (types)
 **TitleKo:** 타입과 계약
 **Impact:** HIGH
-**Description:** 함수 시그니처, 콜백 재사용, 타입 중복 제거, 커스텀 형태 문서화가 계약을 드러내고 다시 쓸 수 있게
+**Description:** 함수 시그니처, 콜백 재사용, 타입 중복 제거, 커스텀 형태 문서화로 계약을 드러내고 다시 쓸 수 있게
   유지해야 합니다.
   실행 값과 타입을 한 선언에서 잡는 `as const` 객체도 여기서 정합니다.
 
@@ -21,19 +21,19 @@
 **Impact:** MEDIUM-HIGH
 **Description:** 함수 선언 형태와 시그니처는 한 가지로 고정하고, 보조 함수는 호출 경계가 있을 때만 떼어 내 정해진
   자리에 둡니다.
-  이름은 무엇이 나오는지로 짓고, 값에 이름은 두 번 이상 쓸 때만 붙입니다.
+  이름은 무엇이 나오는지로 짓고, 값에는 두 번 이상 쓸 때만 이름을 붙입니다.
 
 ## 4. Values and Data Structures (values)
 **TitleKo:** 값과 자료구조
 **Impact:** HIGH
 **Description:** 값을 다루는 관용구를 한 가지로 고정합니다.
-  이 함수가 만들지 않은 배열은 제자리에서 바꾸지 않고, 반복되는 조회는 `Set`과 `Map`으로 모읍니다.
+  넘겨받은 배열은 제자리에서 바꾸지 않고, 반복되는 조회는 `Set`과 `Map`으로 모읍니다.
 
 ## 5. Absence and Fallback Handling (absence)
 **TitleKo:** 없는 값 다루기
 **Impact:** HIGH
 **Description:** 값이 없을 수 있는 상태를 다루는 규칙을 모읍니다.
-  기본값으로 덮어 감추지 않고 없다는 사실을 호출부까지 남깁니다.
+  기본값으로 덮어 감추지 않고 없다는 사실을 사용처까지 남깁니다.
 
 ## 6. JSDoc and Comment Conventions (docs)
 **TitleKo:** JSDoc과 주석 규약

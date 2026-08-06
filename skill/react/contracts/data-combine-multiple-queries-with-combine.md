@@ -8,9 +8,9 @@
 
 | 상황 | 쓰는 것 |
 | --- | --- |
-| 결과 둘 이상을 하나의 값으로 합친다 | `useSuspenseQueries` 또는 `useQueries` + `combine` |
-| 각각 따로 그린다 | 합치지 않고 훅을 따로 부르기 |
-| 뒤 쿼리가 앞 결과를 입력으로 받는다 | `combine` 대신 `enabled`로 순서 만들기 |
+| 결과 둘 이상을 하나의 값으로 합침 | `useSuspenseQueries` 또는 `useQueries` + `combine` |
+| 각각 따로 그림 | 합치지 않고 훅을 따로 부르기 |
+| 뒤 쿼리가 앞 결과를 입력으로 받음 | `combine` 대신 `enabled`로 순서 만들기 |
 
 `select`로는 못 합니다.
 `select`는 자기 쿼리 데이터만 받습니다.

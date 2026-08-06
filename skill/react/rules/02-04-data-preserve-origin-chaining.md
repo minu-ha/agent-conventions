@@ -4,7 +4,7 @@ titleKo: 넓은 스코프에서 응답과 스토어 출처를 남깁니다
 impact: MEDIUM
 impactDescription: 파일 전체에서 별칭을 따라가지 않고 값의 출처를 바로 압니다
 appliesWhen:
-  - page, 레이아웃, 화면 넓은 스코프에서 응답, 뮤테이션, 스토어를 구조분해할 때
+  - 페이지, 레이아웃, 화면처럼 넓은 스코프에서 응답, 뮤테이션, 스토어를 구조분해할 때
   - 원본을 별칭으로 끊고 값 접근 방식을 바꿀 때
 reviewWith: screen-keep-derived-values-close
 tags: data, state, origin

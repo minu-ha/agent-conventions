@@ -20,16 +20,15 @@ tags: values, motion
 
 | 대상 | 이름 |
 | --- | --- |
-| `@keyframes` | `<범위><식별자>__<동작>` — `pgProducts__fadeIn` |
+| `@keyframes` | `<범위>_<식별자>__<동작>` — `pg_products__fadeIn` |
 | `animation` 지속 시간, 이징 | 토큰 — `var(--app-motion-duration-fast)` |
 
 지속 시간과 이징은 값을 직접 적지 않고 토큰만 씁니다.
 한 파일에서 한 번만 써도 토큰입니다. `values-tokenize-repeated-visual-values` 규칙이 그 예외를 정합니다.
 
-`@keyframes` 이름은 클래스 이름과 표기가 다릅니다.
-`-`는 `@keyframes` 이름에도 쓸 수 있지만, 클래스의 `--수정자` 표기와 섞이면
-어디까지가 이름인지 흐려지므로 범위와 식별자를 붙여 씁니다.
-`stylelint-config-standard`의 기본 패턴이 이 형태를 거부하므로
+소유자 접두사는 클래스와 똑같이 적습니다.
+`naming-use-scope-slug-element-modifier-syntax` 규칙의 `<범위>_<식별자>`를 그대로 쓰고 뒤에 동작을 붙입니다.
+`stylelint-config-standard`의 기본 패턴은 kebab-case만 받으므로
 `tooling-configure-stylelint-to-enforce-these-rules` 규칙이 `keyframes-name-pattern`을 다시 정합니다.
 
 **움직임을 줄여 달라고 한 사용자에게는 움직이지 않습니다.**
@@ -62,7 +61,7 @@ tags: values, motion
 **Correct (소유자를 붙인 이름과 토큰):**
 
 ```css
-@keyframes pgProducts__fadeIn {
+@keyframes pg_products__fadeIn {
 	from {
 		opacity: 0;
 		transform: translateY(4px);
@@ -70,7 +69,7 @@ tags: values, motion
 }
 
 .pg_products__panel {
-	animation: pgProducts__fadeIn var(--app-motion-duration-fast) var(--app-motion-easing-out);
+	animation: pg_products__fadeIn var(--app-motion-duration-fast) var(--app-motion-easing-out);
 }
 ```
 

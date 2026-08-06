@@ -43,9 +43,9 @@ DOM 표면은 아래 세 단계 표가 맡습니다.
 
 | 단계 | 언제 | 형태 |
 | --- | --- | --- |
-| 1 | 그냥 컴파일된다 | `extends HTMLAttributes<T>` |
-| 2 | 라이브러리가 같은 이름 프롭의 **값을 좁혀** 부딪힌다 | `extends Omit<HTMLAttributes<T>, "color">`로 빼고 그 프롭을 인덱스 접근으로 다시 연다 |
-| 3 | 감싸는 요소와 이벤트 대상 요소가 **서로 다르다** | `extends`를 쓰지 않고 필요한 프롭만 선언합니다 |
+| 1 | 그냥 컴파일됨 | `extends HTMLAttributes<T>` |
+| 2 | 라이브러리가 같은 이름 프롭의 **값을 좁혀** 부딪힘 | `extends Omit<HTMLAttributes<T>, "color">`로 빼고 그 프롭을 인덱스 접근으로 다시 엽니다 |
+| 3 | 감싸는 요소와 이벤트 대상 요소가 **서로 다름** | `extends`를 쓰지 않고 필요한 프롭만 선언합니다 |
 
 2단계가 필요한 이유는 `HTMLAttributes`에 `color`, `title`, `onChange`, `defaultValue`가 이미 있어서입니다.
 라이브러리가 그중 하나를 자기 값 집합으로 좁혀 두면 `extends`가 막힙니다.

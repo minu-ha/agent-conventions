@@ -4,7 +4,7 @@ titleKo: 공용 값은 전역 토큰으로 쓰고 지역 변수는 만들지 않
 impact: MEDIUM-HIGH
 impactDescription: 여러 파일이 쓰는 값은 전역 토큰으로 모으고 나머지는 선언 자리에 그대로 둡니다
 appliesWhen:
-  - 여러 파일이 같은 색, 간격, radius, 타이포, 그림자 값을 쓸 때
+  - 여러 파일이 같은 색, 간격, 모서리 반경, 타이포그래피, 그림자 값을 쓸 때
   - 새 사용자 정의 속성을 선언할 때
 reviewWith: values-always-provide-css-variable-fallbacks, composition-do-not-style-through-the-style-attribute
 tags: tokens, variables, reuse
@@ -24,7 +24,7 @@ tags: tokens, variables, reuse
 `z-index` 층과 움직임 지속 시간, 이징은 예외입니다. 한 파일에서 한 번만 써도 토큰입니다.
 쌓임 순서와 움직임 리듬이 앱 전체에서 하나여야 하기 때문입니다.
 층 목록은 `values-declare-stacking-layers-as-tokens` 규칙이 정합니다.
-시간과 곡선 토큰은 `a11y-namespace-keyframes-and-respect-reduced-motion` 규칙이 정합니다.
+시간과 이징 토큰은 `a11y-namespace-keyframes-and-respect-reduced-motion` 규칙이 정합니다.
 
 **지역 변수는 만들지 않습니다.**
 공통 토큰 목록에 없는 변수는 대체값이 필요해서 값이 결국 사용처에 남습니다.

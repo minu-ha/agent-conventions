@@ -16,7 +16,7 @@
 
 변환이 무겁다는 근거가 `perf-avoid-defensive-memoization`이 요구하는 만큼 있으면
 그때만 같은 파일 위쪽의 모듈 최상위 상수로 빼서 참조를 고정합니다.
-결과는 구조 공유되어 참조가 안정적이므로 `useMemo`로 감싸지 않습니다.
+결과는 구조를 공유해 참조가 안정적이므로 `useMemo`로 감싸지 않습니다.
 
 `select` 안 변환 함수는 이 규칙이 담당합니다.
 별도 함수나 보조 모듈 경계가 없으면 `typescript/functions-extract-helpers-only-when-the-boundary-is-real`은

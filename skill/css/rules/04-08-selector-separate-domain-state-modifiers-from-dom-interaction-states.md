@@ -2,7 +2,7 @@
 title: Separate Domain State Modifiers From DOM Interaction States
 titleKo: 도메인 상태 수정자와 DOM 상호작용 상태를 나눕니다
 impact: HIGH
-impactDescription: 앱 상태와 hover, 포커스 동작을 섞지 않아 읽기 쉽고 접근성도 지킵니다
+impactDescription: 앱 상태와 `:hover`, 포커스 동작을 섞지 않아 읽기 쉽고 접근성도 지킵니다
 appliesWhen:
   - 앱 상태 수정자와 `:hover`, `:focus-visible`, `:disabled` 같은 DOM 상호작용 상태를 추가·변경할 때
   - 포커스 링을 수정할 때
@@ -12,7 +12,7 @@ tags: state, focus, accessibility
 
 ## Separate Domain State Modifiers From DOM Interaction States
 
-**Impact: HIGH (앱 상태와 hover, 포커스 동작을 섞지 않아 읽기 쉽고 접근성도 지킵니다)**
+**Impact: HIGH (앱 상태와 `:hover`, 포커스 동작을 섞지 않아 읽기 쉽고 접근성도 지킵니다)**
 
 도메인 상태와 무관한 `:hover`, `:focus-visible`, `:disabled`는 조건 없는 기본 블록에 둡니다.
 이 선택자를 수정자 아래로 옮겨 적용 대상을 좁히지 않습니다.

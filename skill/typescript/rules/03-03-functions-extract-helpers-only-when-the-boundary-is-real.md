@@ -21,8 +21,8 @@ tags: functions, boundaries
 
 | 사유 | 조건 |
 | --- | --- |
-| 재사용 | **이 변경을 적용한 뒤의 트리**에서 서로 다른 파일 둘 이상이 실제로 부릅니다. 호출부 추가가 예정만 되어 있으면 세지 않습니다 |
-| 렌더 파일 밖으로 | `.tsx` 안의 **요청·저장 payload 조립** 함수입니다. 훅·JSX·컴포넌트 상태를 하나도 쓰지 않으면 호출부가 하나여도 `.ts`로 옮깁니다 |
+| 재사용 | **이 변경을 적용한 뒤의 트리**에서 서로 다른 파일 둘 이상이 실제로 부릅니다. 사용처를 나중에 추가할 계획만 있으면 세지 않습니다 |
+| 렌더 파일 밖으로 | `.tsx` 안의 **요청·저장 payload 조립** 함수입니다. 훅·JSX·컴포넌트 상태를 하나도 쓰지 않으면 사용처가 하나여도 `.ts`로 옮깁니다 |
 
 두 번째 사유는 재사용이 아니라 `.tsx`에 렌더가 아닌 코드를 남기지 않으려는 것입니다.
 `.ts` 안에서는 해당하지 않습니다.
@@ -109,7 +109,7 @@ export const api = {
 ```ts
 // page/profile/function/to-profile-save-request.ts
 /**
- * profile 저장 payload 조립. 서버가 앞뒤 공백이 붙은 displayName 을 거부한다
+ * profile 저장 payload 조립. 서버가 앞뒤 공백이 붙은 displayName을 거부한다
  */
 export const toProfileSaveRequest = (formValues: ProfileFormValues) => {
 	return {
@@ -123,12 +123,12 @@ export const toProfileSaveRequest = (formValues: ProfileFormValues) => {
 import { toProfileSaveRequest } from "./function/to-profile-save-request";
 ```
 
-**Correct (`.tsx` 안의 순수 조립 함수는 호출부가 하나여도 형제 `.ts`로 냄):**
+**Correct (`.tsx` 안의 순수 조립 함수는 사용처가 하나여도 형제 `.ts`로 냄):**
 
 ```ts
 // page/products/function/to-product-save-request.ts
 /**
- * product 저장 요청 조립. 업로드가 끝난 첨부만 넘겨야 attachmentIds 가 채워진다
+ * product 저장 요청 조립. 업로드가 끝난 첨부만 넘겨야 attachmentIds가 채워진다
  */
 export const toProductSaveRequest = (formValues: ProductFormValues) => {
 	return {

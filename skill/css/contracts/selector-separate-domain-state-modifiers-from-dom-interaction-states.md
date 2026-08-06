@@ -1,6 +1,6 @@
 # Separate Domain State Modifiers From DOM Interaction States
 
-**Impact: HIGH (앱 상태와 hover, 포커스 동작을 섞지 않아 읽기 쉽고 접근성도 지킵니다)**
+**Impact: HIGH (앱 상태와 `:hover`, 포커스 동작을 섞지 않아 읽기 쉽고 접근성도 지킵니다)**
 
 도메인 상태와 무관한 `:hover`, `:focus-visible`, `:disabled`는 조건 없는 기본 블록에 둡니다.
 이 선택자를 수정자 아래로 옮겨 적용 대상을 좁히지 않습니다.

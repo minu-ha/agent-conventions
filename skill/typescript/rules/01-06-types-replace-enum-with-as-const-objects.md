@@ -2,7 +2,7 @@
 title: Replace `enum` With `as const` Objects
 titleKo: `enum` 대신 `as const` 객체를 씁니다
 impact: MEDIUM-HIGH
-impactDescription: enum 특유의 동작을 들이지 않고 실행 값을 드러내며 타입 추출도 가볍게 둡니다
+impactDescription: `enum` 특유의 동작을 들이지 않고 실행 값을 드러내며 타입 추출도 가볍게 둡니다
 appliesWhen:
   - `enum`이나 타입과 실행 양쪽에서 함께 쓰는 값 집합을 추가·변경할 때
   - 제외: 외부 패키지가 내보낸 `enum` 값을 그대로 읽어 쓰는 경우
@@ -12,7 +12,7 @@ tags: functions
 
 ## Replace `enum` With `as const` Objects
 
-**Impact: MEDIUM-HIGH (enum 특유의 동작을 들이지 않고 실행 값을 드러내며 타입 추출도 가볍게 둡니다)**
+**Impact: MEDIUM-HIGH (`enum` 특유의 동작을 들이지 않고 실행 값을 드러내며 타입 추출도 가볍게 둡니다)**
 
 `enum` 대신 객체와 `as const`를 씁니다.
 그러면 실행 값과 타입 추론을 함께 두면서 `enum` 고유 문법을 피합니다.
@@ -47,7 +47,7 @@ const product_status = {
 } as const;
 
 /**
- * product 심사 상태 타입. product_status 에 값을 더하면 따라 넓어진다
+ * product 심사 상태 타입. product_status에 값을 더하면 따라 넓어진다
  */
 type ProductStatus = (typeof product_status)[keyof typeof product_status];
 ```

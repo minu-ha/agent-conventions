@@ -73,7 +73,7 @@
 
 **Impact: MEDIUM-HIGH**
 
-이 스킬은 일반 `*.css`와 전역에서 고유한 클래스명을 전제로 하고, 그 전제를 여기서 정합니다. 클래스 문법이 고정되어 있고 요소와 수정자 이름이 역할을 가리켜야 스타일을 이름으로 검색할 수 있습니다. 이름만 보고 무엇을 담당하는 클래스인지, 어느 화면 것인지 알 수 있습니다.
+이 스킬은 일반 `*.css`와 전역에서 고유한 클래스명을 전제로 하고, 그 전제를 여기서 정합니다. 클래스 문법이 고정되어 있고 요소와 수정자 이름이 역할을 가리켜야 스타일을 이름으로 검색할 수 있습니다. 이름만 보고 무엇을 담당하는 클래스인지, 어느 화면의 것인지 알 수 있습니다.
 
 ### 1.1 Default to Plain CSS Unless the Project Explicitly Standardizes on CSS Modules
 
@@ -144,7 +144,7 @@ import "./pg-catalog-index.css";
 구분자 `_`, `__`, `--`를 고정하고 각 자리의 책임을 섞지 않습니다.
 
 네 자리를 아래처럼 읽습니다.
-다른 규칙 본문도 이 한국어 이름으로 부릅니다.
+다른 규칙 본문에서도 이 한국어 이름으로 부릅니다.
 
 | 자리 | 읽는 이름 | 담는 것 |
 | --- | --- | --- |
@@ -505,7 +505,7 @@ ui/button/ui-button.css
 
 | 상황 | 방법 | 바꾸는 곳 |
 | --- | --- | --- |
-| 최상위 배치만 다름 | 사용처가 `className`을 넘기고 자기 클래스로 스타일 | 사용처 TSX와 사용처 CSS |
+| 최상위 배치만 다름 | 사용처가 `className`을 넘기고 자기 클래스로 스타일을 줌 | 사용처 TSX와 사용처 CSS |
 | 여러 화면이 쓰고 하나만 내부가 다름 | 그 소유자가 `variant` 프롭으로 수정자를 노출 | 소유자 TSX와 소유자 CSS, 사용처 TSX |
 | 이 화면만 씀 | 화면 폴더 안으로 내림 | 파일 위치와 접두사 |
 
@@ -630,7 +630,7 @@ TSX에서 `className`은 `clsx()`로 조립합니다.
 
 수정자는 두 가지만 표현합니다.
 
-| 쓰는 자리 | 예 |
+| 표현하는 것 | 예 |
 | --- | --- |
 | 앱이 켜고 끄는 상태 | `--active`, `--selected`, `--error`, `--expanded`, `--current` |
 | 여러 곳에서 반복되는 모양 | `--dense`, `--compact`, `--horizontal` |
@@ -678,7 +678,7 @@ TSX에서 `className`은 `clsx()`로 조립합니다.
 
 **Applies when:** 한 클래스 이름에 기본 스타일과 상태를 함께 넣을 때. 제외: 처음부터 기본 클래스와 수정자를 나눠 만드는 경우. 제외: 책임이 그대로인 이름 변경만 하는 경우.
 
-**Impact: MEDIUM-HIGH (클래스 하나가 기본 스타일과 상태 의미를 함께 지면 상태를 끌 방법이 없습니다)**
+**Impact: MEDIUM-HIGH (클래스 하나가 기본 스타일과 상태 의미를 함께 담으면 상태를 끌 방법이 없습니다)**
 
 클래스 하나는 시각 결정 하나만 담습니다.
 기본 스타일과 상태를 이름 하나에 녹이지 않습니다.
@@ -1093,7 +1093,7 @@ export const UiCollapse = (props: UiCollapseProps) => (
 
 요소 선택자를 쓸 수 있는 경우는 하나입니다.
 
-> **우리가 그 마크업을 쓰지 않아서 클래스를 붙일 수 없을 때**
+> **우리가 그 마크업을 렌더하지 않아서 클래스를 붙일 수 없을 때**
 
 `dangerouslySetInnerHTML`, Markdown 렌더러, 리치 텍스트 에디터 출력이 여기 해당합니다.
 TSX에서 그 지점이 보이므로 "이 마크업을 우리가 쓰는가"를 따질 필요가 없습니다.
@@ -1168,7 +1168,7 @@ TSX에서 그 지점이 보이므로 "이 마크업을 우리가 쓰는가"를 �
 ```
 
 ```css
-/* stylelint-disable selector-disallowed-list -- dangerouslySetInnerHTML 로 들어온 마크업 */
+/* stylelint-disable selector-disallowed-list -- dangerouslySetInnerHTML로 들어온 마크업 */
 .wg_productDetail__prose {
 	& h2 {
 		margin: 24px 0 12px;
@@ -1201,7 +1201,7 @@ TSX에서 그 지점이 보이므로 "이 마크업을 우리가 쓰는가"를 �
 반복되는 선언은 각 클래스 블록에 그대로 씁니다.
 **중복을 감수합니다.**
 
-- 묶으면 한 클래스의 선언을 다 보려고 두 곳을 읽고, 그 클래스가 목록에 있는지도 확인해야 합니다.
+- 묶으면 한 클래스의 선언을 다 보려고 두 곳을 읽어야 하고, 그 클래스가 목록에 있는지도 확인해야 합니다.
 - 클래스를 추가·삭제할 때마다 목록도 함께 고쳐야 합니다.
 - 값을 지역 변수로 빼서 묶는 것도 같은 문제입니다.
   `values-tokenize-repeated-visual-values` 규칙이 막습니다.
@@ -1639,7 +1639,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 
 **Review with:** `composition-do-not-build-structural-variants-with-modifiers`
 
-**Impact: HIGH (앱 상태와 hover, 포커스 동작을 섞지 않아 읽기 쉽고 접근성도 지킵니다)**
+**Impact: HIGH (앱 상태와 `:hover`, 포커스 동작을 섞지 않아 읽기 쉽고 접근성도 지킵니다)**
 
 도메인 상태와 무관한 `:hover`, `:focus-visible`, `:disabled`는 조건 없는 기본 블록에 둡니다.
 이 선택자를 수정자 아래로 옮겨 적용 대상을 좁히지 않습니다.
@@ -1712,7 +1712,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 | 그 밖의 모든 `var()` | **씁니다.** 조건부로만 주입되는 값이라 없을 때를 대비합니다 |
 
 변수가 없을 때 무슨 일이 일어나는지 알아 둡니다.
-그 선언은 아래 규칙에 자리를 넘기지 않고 **상속 속성이면 상속값, 아니면 초기값**이 됩니다.
+그 선언은 아래 규칙에 자리를 넘기지 않고, 그 속성이 **상속 속성이면 상속값, 아니면 초기값**이 됩니다.
 `color`는 부모 색을 그대로 물려받고 `z-index`는 `auto`가 되어 **조용히 깨집니다.**
 그래서 공통 토큰은 이름이 목록에 있는지 눈으로 확인해야 합니다.
 
@@ -1775,7 +1775,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 
 **Rule:** `C24` · `values-tokenize-repeated-visual-values`
 
-**Applies when:** 여러 파일이 같은 색, 간격, radius, 타이포, 그림자 값을 쓸 때. 새 사용자 정의 속성을 선언할 때.
+**Applies when:** 여러 파일이 같은 색, 간격, 모서리 반경, 타이포그래피, 그림자 값을 쓸 때. 새 사용자 정의 속성을 선언할 때.
 
 **Review with:** `composition-do-not-style-through-the-style-attribute`, `values-always-provide-css-variable-fallbacks`
 
@@ -1791,7 +1791,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 `z-index` 층과 움직임 지속 시간, 이징은 예외입니다. 한 파일에서 한 번만 써도 토큰입니다.
 쌓임 순서와 움직임 리듬이 앱 전체에서 하나여야 하기 때문입니다.
 층 목록은 `values-declare-stacking-layers-as-tokens` 규칙이 정합니다.
-시간과 곡선 토큰은 `a11y-namespace-keyframes-and-respect-reduced-motion` 규칙이 정합니다.
+시간과 이징 토큰은 `a11y-namespace-keyframes-and-respect-reduced-motion` 규칙이 정합니다.
 
 **지역 변수는 만들지 않습니다.**
 공통 토큰 목록에 없는 변수는 대체값이 필요해서 값이 결국 사용처에 남습니다.
@@ -1917,7 +1917,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 | `--app-z-index-popper` | `300` | 툴팁, 드롭다운, 알림 |
 
 새 층이 필요해 보이면 먼저 넷 중 하나에 들어가는지 봅니다.
-넷 다 아니면 토큰 파일에서 층을 추가합니다. 값 간격은 100을 유지합니다.
+넷 다 아니면 토큰 파일에 층을 추가합니다. 값 간격은 100을 유지합니다.
 
 **층 순서는 같은 쌓임 맥락 안에서만 성립합니다.**
 조상에 `transform`, `filter`, `will-change`, `backdrop-filter`가 있거나 `opacity`가 1 미만이거나
@@ -1926,7 +1926,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 겹쳐 뜨는 요소가 가려지면 `z-index` 값을 올리기 전에 조상부터 확인합니다.
 
 - `position`이 `static`이면 `z-index`가 적용되지 않고 `relative`부터 적용됩니다.
-  flex 아이템과 grid 아이템은 예외입니다.
+  `flex` 아이템과 `grid` 아이템은 예외입니다.
   `static`이어도 `z-index`가 `auto`가 아니면 그 값이 적용되고 쌓임 맥락도 만듭니다.
 - 같은 층 안에서 순서를 다투면 층이 잘못 잡힌 것입니다.
   값을 `+1` 하지 않습니다.
@@ -1961,7 +1961,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 
 ```css
 .pg_products__toolbar {
-	/* 조상에 transform 이 없어야 이 층이 유지된다 */
+	/* 조상에 transform이 없어야 이 층이 유지된다 */
 	position: sticky;
 	z-index: var(--app-z-index-sticky);
 }
@@ -2000,7 +2000,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 | 짓는 법 | 예 |
 | --- | --- |
 | 쓰임 | `--app-color-surface`, `--app-color-text-primary`, `--app-color-border` |
-| 값 — 쓰지 않습니다 | `--app-color-white`, `--app-color-gray-100` |
+| 값 — 쓰지 않음 | `--app-color-white`, `--app-color-gray-100` |
 
 **`color-scheme`을 선언합니다.**
 스크롤바, 폼 컨트롤, 기본 배경은 우리 토큰이 닿지 않는 브라우저 UI라 이 속성으로만 따라옵니다.
@@ -2268,7 +2268,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 
 **Review with:** `values-declare-stacking-layers-as-tokens`
 
-**Impact: MEDIUM (DOM을 거슬러 올라가지 않고 sticky, fixed, 박스 책임을 파악합니다)**
+**Impact: MEDIUM (DOM을 거슬러 올라가지 않고 `sticky`, `fixed`, 박스 책임을 파악합니다)**
 
 레이아웃 의도는 클래스명과 선언만 보고 바로 읽혀야 합니다.
 크기를 어디까지 고정할지는 `layout-reach-for-intrinsic-sizing-before-breakpoints` 규칙이 정합니다.
@@ -2299,7 +2299,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 
 ```css
 .pg_dashboard__toolbar {
-	/* .pg_dashboard__content 가 스크롤 컨테이너다 */
+	/* .pg_dashboard__content가 스크롤 컨테이너다 */
 	position: sticky;
 	top: 0;
 	z-index: var(--app-z-index-sticky);
@@ -2325,12 +2325,12 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 브레이크포인트를 적기 전에 그것 없이 되는지 봅니다.
 아래 넷 중 하나에 해당하면 `@media`를 쓰지 않습니다.
 
-| 브레이크포인트에서 바꾸려는 것 | 브레이크포인트 없이 |
+| 폭에 따라 바꾸려는 것 | 브레이크포인트 없이 쓰는 것 |
 | --- | --- |
-| 한 줄에 안 들어가서 줄을 바꿉니다 | `flex-wrap: wrap` + `flex: 1 1 <기준폭>` |
-| 폭에 따라 열 개수가 달라집니다 | `grid-template-columns: repeat(auto-fit, minmax(<최소>, 1fr))` |
-| 슬롯을 채우되 어느 선에서 멈춥니다 | `flex: 1 1 <기준폭>` + `max-width` |
-| 여백이나 글자 크기가 조금씩 달라집니다 | `clamp(<최소>, <선호>, <최대>)` |
+| 한 줄에 안 들어가서 줄을 바꿈 | `flex-wrap: wrap` + `flex: 1 1 <기준폭>` |
+| 폭에 따라 열 개수가 달라짐 | `grid-template-columns: repeat(auto-fit, minmax(<최소>, 1fr))` |
+| 슬롯을 채우되 어느 선에서 멈춤 | `flex: 1 1 <기준폭>` + `max-width` |
+| 여백이나 글자 크기가 조금씩 달라짐 | `clamp(<최소>, <선호>, <최대>)` |
 
 **`@media`는 뷰포트만 알고 그 요소가 실제로 받은 폭은 모릅니다.**
 같은 컴포넌트를 넓은 본문에서 좁은 사이드바로 옮기면 뷰포트는 그대로인데 자리는 좁아집니다.
@@ -2412,7 +2412,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 ```
 
 ```css
-/* ui-form-footer.css — 한 번 쓰고 여러 화면에서 그대로 씀 */
+/* ui-form-footer.css — 한 번 쓰고 여러 화면에서 그대로 쓴다 */
 .ui_formFooter__root {
 	display: flex;
 	flex-wrap: wrap;
@@ -2543,16 +2543,15 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 
 | 대상 | 이름 |
 | --- | --- |
-| `@keyframes` | `<범위><식별자>__<동작>` — `pgProducts__fadeIn` |
+| `@keyframes` | `<범위>_<식별자>__<동작>` — `pg_products__fadeIn` |
 | `animation` 지속 시간, 이징 | 토큰 — `var(--app-motion-duration-fast)` |
 
 지속 시간과 이징은 값을 직접 적지 않고 토큰만 씁니다.
 한 파일에서 한 번만 써도 토큰입니다. `values-tokenize-repeated-visual-values` 규칙이 그 예외를 정합니다.
 
-`@keyframes` 이름은 클래스 이름과 표기가 다릅니다.
-`-`는 `@keyframes` 이름에도 쓸 수 있지만, 클래스의 `--수정자` 표기와 섞이면
-어디까지가 이름인지 흐려지므로 범위와 식별자를 붙여 씁니다.
-`stylelint-config-standard`의 기본 패턴이 이 형태를 거부하므로
+소유자 접두사는 클래스와 똑같이 적습니다.
+`naming-use-scope-slug-element-modifier-syntax` 규칙의 `<범위>_<식별자>`를 그대로 쓰고 뒤에 동작을 붙입니다.
+`stylelint-config-standard`의 기본 패턴은 kebab-case만 받으므로
 `tooling-configure-stylelint-to-enforce-these-rules` 규칙이 `keyframes-name-pattern`을 다시 정합니다.
 
 **움직임을 줄여 달라고 한 사용자에게는 움직이지 않습니다.**
@@ -2585,7 +2584,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 **Correct (소유자를 붙인 이름과 토큰):**
 
 ```css
-@keyframes pgProducts__fadeIn {
+@keyframes pg_products__fadeIn {
 	from {
 		opacity: 0;
 		transform: translateY(4px);
@@ -2593,7 +2592,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 
 .pg_products__panel {
-	animation: pgProducts__fadeIn var(--app-motion-duration-fast) var(--app-motion-easing-out);
+	animation: pg_products__fadeIn var(--app-motion-duration-fast) var(--app-motion-easing-out);
 }
 ```
 
@@ -2678,7 +2677,7 @@ export default {
 export default {
 	extends: ["stylelint-config-standard"],
 	rules: {
-		// 중첩으로 우회되고 .ant-table-thead > tr > th 를 잡아 예외 주석만 늘어난다
+		// 중첩으로 우회되고 .ant-table-thead > tr > th를 잡아 예외 주석만 늘어난다
 		"selector-max-combinators": 1,
 	},
 };
@@ -2697,7 +2696,7 @@ const ownClassPattern = (scope) =>
 		// 우리 접두사로 시작하지 않는 클래스는 통과시킨다
 		`(?!${scope}_).*`,
 		"|",
-		// pg_scopeSlug__element 또는 pg_scopeSlug__element--modifier 만 통과시킨다
+		// pg_scopeSlug__element 또는 pg_scopeSlug__element--modifier만 통과시킨다
 		`${scope}_[a-z][a-zA-Z0-9]*__[a-z][a-zA-Z0-9]*(?:--[a-z][a-zA-Z0-9]*)?`,
 		")$",
 	].join("");
@@ -2711,7 +2710,7 @@ const libraryPrefixes = [/^\.ant-/, /^\.rc-/, /^\.tippy-/, /^\.Mui/];
  * 우리가 마크업을 쓰는 자리에서 금지되는 형태
  */
 const ownMarkupPatterns = [
-	// 상태 pseudo-class 를 top-level 선택자로 다시 여는 것
+	// 상태 pseudo-class를 top-level 선택자로 다시 여는 것
 	/^\.[\w-]+:(hover|focus|focus-visible|focus-within|active|disabled|checked|visited)/,
 	// 중첩 안에서 element 선택자로 우리 마크업을 겨냥하는 것.
 	// 우리가 쓰지 않는 마크업은 stylelint-disable 주석으로 예외를 표시한다
@@ -2729,14 +2728,14 @@ export default {
 		// 최상위 @media 안의 클래스가 깊이 0 이 되게 한다. 브레이크포인트 안에서 상태를 한 겹 더 쓸 수 있다
 		"max-nesting-depth": [1, {ignoreAtRules: ["media", "supports", "container"]}],
 		// @keyframes 이름은 전역이라 소유자를 붙인다. 하이픈은 클래스 --modifier 표기와 섞이니 쓰지 않는다
-		"keyframes-name-pattern": "^(pg|wg|ui)[A-Z][a-zA-Z0-9]*__[a-z][a-zA-Z0-9]*$",
+		"keyframes-name-pattern": "^(pg|wg|ui)_[a-z][a-zA-Z0-9]*__[a-z][a-zA-Z0-9]*$",
 		// 쉼표 목록에 든 선택자를 아래에서 단독으로 다시 여는 것까지 잡는다
 		"no-duplicate-selectors": [true, {disallowInList: true}],
 		// 움직임 줄이기 전역 처리 외에는 쓰지 않는다
 		"declaration-no-important": true,
 		// 지역 변수 선언을 막는다. var() 소비는 걸리지 않는다
 		"property-disallowed-list": ["/^--/"],
-		// 우리 마크업의 상태는 modifier 로 표현한다.
+		// 우리 마크업의 상태는 modifier로 표현한다.
 		// 라이브러리가 상태를 data-* 로 내는 경우가 있어 우리 접두사만 막는다
 		"selector-attribute-name-disallowed-list": [/^aria-/, /^data-(pg|wg|ui)-/],
 		"selector-max-id": 0,
@@ -2798,7 +2797,7 @@ export default {
 - 내부 모습을 변형으로 노출했는가, 아니면 최상위 블록 아래에서 겨냥했는가
 - 포커스 표시가 색만 바뀌지 않고 형태로 구분되는가
 - 중복 없는 쉼표 묶음으로 공통 선언을 공유하지 않았는가
-- 브레이크포인트가 파일 아래 한곳에 모여 있고 데스크톱 퍼스트 한 방향인가
+- 브레이크포인트가 파일 아래 한 곳에 모여 있고 데스크톱 퍼스트 한 방향인가
 - 구조 선택자로 우리 마크업을 겨냥하지 않았는가
 - 도메인 상태를 `:not()`으로 뒤집지 않았는가
 ```

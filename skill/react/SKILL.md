@@ -32,7 +32,7 @@ metadata:
 
 ## 4. 범위 변경
 
-작업 중 범위가 늘거나 바뀌면 1번부터 다시 판정하고 활성 index를 다시 훑는다. conditional companion도 다시 판정한다.
+작업 중 범위가 늘거나 바뀌면 1번부터 다시 판정하고 활성 인덱스를 다시 훑는다. conditional companion도 다시 판정한다.
 
 ## 5. 마무리
 

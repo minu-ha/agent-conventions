@@ -45,7 +45,7 @@ const billingFeatureKeys = ["invoices", "refunds"];
 const defaultPageSize = 20;
 ```
 
-**Correct (공용 설정 네임스페이스에서 읽어 쓰는 자리에 넘김):**
+**Correct (공용 설정 네임스페이스에서 읽은 값을 쓰는 자리로 넘김):**
 
 ```ts
 // page/products/pg-products.tsx

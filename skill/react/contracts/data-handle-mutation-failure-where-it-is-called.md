@@ -11,8 +11,8 @@
 
 | 상황 | 쓰는 것 |
 | --- | --- |
-| 부른 뒤 핸들러가 더 할 일이 없다 | `mutate` + `onError`·`onSuccess` |
-| 부른 결과를 기다렸다가 핸들러가 이어서 해야 한다 | `mutateAsync` + `try`/`catch` |
+| 부른 뒤 핸들러가 더 할 일이 없음 | `mutate` + `onError`·`onSuccess` |
+| 부른 결과를 기다렸다가 핸들러가 이어서 해야 함 | `mutateAsync` + `try`/`catch` |
 
 `mutateAsync`는 실패하면 던집니다.
 `await`만 하고 `catch`하지 않으면 그 뒤 줄이 실행되지 않고 사용자에게 아무 표시도 남지 않습니다.

@@ -4,7 +4,7 @@
 
 수정자는 두 가지만 표현합니다.
 
-| 쓰는 자리 | 예 |
+| 표현하는 것 | 예 |
 | --- | --- |
 | 앱이 켜고 끄는 상태 | `--active`, `--selected`, `--error`, `--expanded`, `--current` |
 | 여러 곳에서 반복되는 모양 | `--dense`, `--compact`, `--horizontal` |

@@ -153,7 +153,7 @@ const UiProfileDialogHeader = (props: UiProfileDialogPartProps) => {
 	const dialog = useUiProfileDialog();
 
 	/**
-	 * 헤더를 누르면 본문을 접거나 펼침
+	 * 헤더를 누르면 본문을 접거나 펼친다
 	 */
 	const handleHeaderClick: MouseEventHandler<HTMLButtonElement> = () => {
 		dialog.toggleBody();

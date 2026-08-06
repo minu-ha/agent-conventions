@@ -4,7 +4,7 @@ titleKo: 훅, 핸들러, 핵심 선언에는 문서 주석을 붙입니다
 impact: MEDIUM
 impactDescription: 리액트에만 있는 경계 선언을 동반 스킬 목록에 더해 빠뜨리지 않습니다
 appliesWhen:
-  - 쿼리·뮤테이션이나 읽어서 의도가 안 보이는 핸들러·이펙트를 추가·변경할 때
+  - 쿼리·뮤테이션이나 읽어도 의도가 안 보이는 핸들러·이펙트를 추가·변경할 때
   - 내보낸 보조 함수·훅·스토어 선언을 추가·변경할 때
 requiresSelected: typescript/docs-require-header-jsdoc-on-key-declarations
 reviewWith: typescript/types-document-custom-types-and-shapes
@@ -26,7 +26,7 @@ tags: docs, handlers, effects
 - 합성 컴포넌트의 공개 부품
 - 정리 함수가 있거나 의존성이 둘 이상인 `useEffect`
 - 화면 이동이나 쿼리 무효화를 하는 이벤트 핸들러.
-  동작이 그 하나뿐이어도 대상입니다
+  동작이 그 하나뿐이어도 대상입니다.
 
 쿼리·뮤테이션 바인딩, 핸들러, 내보낸 보조 함수와 훅, 스토어 선언에 붙이는 기준은
 `typescript/docs-require-header-jsdoc-on-key-declarations`가 정한 것을 그대로 씁니다.
@@ -40,7 +40,7 @@ tags: docs, handlers, effects
 
 형식과 태그 기준은 `typescript/docs-write-doc-comments-as-multiline-blocks`가 정합니다.
 
-**Incorrect (읽어서 의도가 안 보이는 경계 선언에 설명이 없음):**
+**Incorrect (읽어도 의도가 안 보이는 경계 선언에 설명이 없음):**
 
 ```ts
 const handleRemoveProductButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {

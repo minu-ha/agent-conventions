@@ -28,7 +28,7 @@ tags: values, layering
 | `--app-z-index-popper` | `300` | 툴팁, 드롭다운, 알림 |
 
 새 층이 필요해 보이면 먼저 넷 중 하나에 들어가는지 봅니다.
-넷 다 아니면 토큰 파일에서 층을 추가합니다. 값 간격은 100을 유지합니다.
+넷 다 아니면 토큰 파일에 층을 추가합니다. 값 간격은 100을 유지합니다.
 
 **층 순서는 같은 쌓임 맥락 안에서만 성립합니다.**
 조상에 `transform`, `filter`, `will-change`, `backdrop-filter`가 있거나 `opacity`가 1 미만이거나
@@ -37,7 +37,7 @@ tags: values, layering
 겹쳐 뜨는 요소가 가려지면 `z-index` 값을 올리기 전에 조상부터 확인합니다.
 
 - `position`이 `static`이면 `z-index`가 적용되지 않고 `relative`부터 적용됩니다.
-  flex 아이템과 grid 아이템은 예외입니다.
+  `flex` 아이템과 `grid` 아이템은 예외입니다.
   `static`이어도 `z-index`가 `auto`가 아니면 그 값이 적용되고 쌓임 맥락도 만듭니다.
 - 같은 층 안에서 순서를 다투면 층이 잘못 잡힌 것입니다.
   값을 `+1` 하지 않습니다.
@@ -72,7 +72,7 @@ tags: values, layering
 
 ```css
 .pg_products__toolbar {
-	/* 조상에 transform 이 없어야 이 층이 유지된다 */
+	/* 조상에 transform이 없어야 이 층이 유지된다 */
 	position: sticky;
 	z-index: var(--app-z-index-sticky);
 }

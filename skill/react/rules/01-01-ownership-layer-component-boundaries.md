@@ -4,7 +4,7 @@ titleKo: 컴포넌트를 `ui`, `widget`, `page` 소유 레이어로 나눕니다
 impact: CRITICAL
 impactDescription: 공용 책임과 화면 전용 책임이 같은 레이어에 섞이지 않습니다
 appliesWhen:
-  - 컴포넌트를 ui·widget·page 중 어느 소유 레이어에 둘지 정할 때
+  - 컴포넌트를 `ui`, `widget`, `page` 중 어느 소유 레이어에 둘지 정할 때
   - 컴포넌트를 레이어 사이에서 옮기거나 공용화할 때
 reviewWith: ownership-place-owner-files-in-role-folders, css/ownership-choose-scope-prefix-by-reuse-range
 tags: ownership, widget, naming
@@ -39,7 +39,7 @@ tags: ownership, widget, naming
 
 사용 횟수는 판정 기준이 아닙니다.
 한 화면에서만 쓰여도 위 셋에 해당하지 않으면 `widget`입니다.
-사용 횟수로 판정하면 쓰임이 변할 때마다 폴더를 옮겨 다닙니다.
+사용 횟수로 판정하면 쓰임이 변할 때마다 컴포넌트가 폴더를 옮겨 다니게 됩니다.
 
 **Incorrect (공용 레이어에 화면 전용 로직이 섞임):**
 

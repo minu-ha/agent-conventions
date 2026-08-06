@@ -1,6 +1,6 @@
 ---
 title: Reach for Intrinsic Sizing Before Breakpoints
-titleKo: 브레이크포인트보다 `auto-fit`·`flex-wrap`·`clamp`를 먼저 씁니다
+titleKo: 브레이크포인트를 적기 전에 내재적 크기로 되는지 봅니다
 impact: MEDIUM-HIGH
 impactDescription: 슬롯 폭이 얼마든 맞는 배치라 같은 컴포넌트를 옮겨도 CSS를 다시 고치지 않습니다
 appliesWhen:
@@ -17,12 +17,12 @@ tags: values, layout, responsive
 브레이크포인트를 적기 전에 그것 없이 되는지 봅니다.
 아래 넷 중 하나에 해당하면 `@media`를 쓰지 않습니다.
 
-| 브레이크포인트에서 바꾸려는 것 | 브레이크포인트 없이 |
+| 폭에 따라 바꾸려는 것 | 브레이크포인트 없이 쓰는 것 |
 | --- | --- |
-| 한 줄에 안 들어가서 줄을 바꿉니다 | `flex-wrap: wrap` + `flex: 1 1 <기준폭>` |
-| 폭에 따라 열 개수가 달라집니다 | `grid-template-columns: repeat(auto-fit, minmax(<최소>, 1fr))` |
-| 슬롯을 채우되 어느 선에서 멈춥니다 | `flex: 1 1 <기준폭>` + `max-width` |
-| 여백이나 글자 크기가 조금씩 달라집니다 | `clamp(<최소>, <선호>, <최대>)` |
+| 한 줄에 안 들어가서 줄을 바꿈 | `flex-wrap: wrap` + `flex: 1 1 <기준폭>` |
+| 폭에 따라 열 개수가 달라짐 | `grid-template-columns: repeat(auto-fit, minmax(<최소>, 1fr))` |
+| 슬롯을 채우되 어느 선에서 멈춤 | `flex: 1 1 <기준폭>` + `max-width` |
+| 여백이나 글자 크기가 조금씩 달라짐 | `clamp(<최소>, <선호>, <최대>)` |
 
 **`@media`는 뷰포트만 알고 그 요소가 실제로 받은 폭은 모릅니다.**
 같은 컴포넌트를 넓은 본문에서 좁은 사이드바로 옮기면 뷰포트는 그대로인데 자리는 좁아집니다.
@@ -104,7 +104,7 @@ tags: values, layout, responsive
 ```
 
 ```css
-/* ui-form-footer.css — 한 번 쓰고 여러 화면에서 그대로 씀 */
+/* ui-form-footer.css — 한 번 쓰고 여러 화면에서 그대로 쓴다 */
 .ui_formFooter__root {
 	display: flex;
 	flex-wrap: wrap;

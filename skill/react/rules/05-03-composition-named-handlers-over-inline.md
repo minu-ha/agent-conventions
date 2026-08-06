@@ -5,7 +5,7 @@ impact: MEDIUM
 impactDescription: 부수효과, 분기, 비동기 흐름을 일반 코드 흐름에서 읽습니다
 appliesWhen:
   - TSX 이벤트 프롭의 인라인 콜백에 분기나 비동기 호출을 추가·수정할 때
-  - 인라인 콜백에 여러 동작·부수효과나 읽어서 의도가 안 보이는 상태 전환이 들어갈 때
+  - 인라인 콜백에 여러 동작·부수효과나 읽어도 의도가 안 보이는 상태 전환이 들어갈 때
   - 제외: 인자 없이 핸들러 참조만 넘기는 경우
 requiresSelected: docs-require-jsdoc-on-key-declarations, events-curry-extra-handler-arguments
 reviewWith: >-

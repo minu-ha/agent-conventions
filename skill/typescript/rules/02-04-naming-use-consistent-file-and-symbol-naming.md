@@ -1,8 +1,8 @@
 ---
 title: Use Consistent File, Symbol, and Field Naming
-titleKo: 파일은 `kebab-case`, 심볼은 `camelCase`, 설정 키는 `snake_case`로 씁니다
+titleKo: 파일은 `kebab-case`, 값은 `camelCase`, 타입은 `PascalCase`, 설정 키는 `snake_case`로 씁니다
 impact: MEDIUM-HIGH
-impactDescription: 모듈과 실행 구조를 넘나들며 파일명, 심볼, 형태 필드가 예측대로 유지됩니다
+impactDescription: 모듈과 실행 구조가 달라져도 파일명, 심볼, 형태 필드의 표기가 예측대로 유지됩니다
 appliesWhen:
   - TypeScript 파일, 지역 변수, 함수, 타입, 객체·스키마 필드, enum 성격 상수의 이름을 새로 만들거나 바꿀 때
   - 제외: 별칭 없이 외부 패키지에서 그대로 가져오는 경우
@@ -11,7 +11,7 @@ tags: naming
 
 ## Use Consistent File, Symbol, and Field Naming
 
-**Impact: MEDIUM-HIGH (모듈과 실행 구조를 넘나들며 파일명, 심볼, 형태 필드가 예측대로 유지됩니다)**
+**Impact: MEDIUM-HIGH (모듈과 실행 구조가 달라져도 파일명, 심볼, 형태 필드의 표기가 예측대로 유지됩니다)**
 
 | 대상 | 표기 |
 | --- | --- |

@@ -1,6 +1,6 @@
 # Keep Layout Intent Explicit
 
-**Impact: MEDIUM (DOM을 거슬러 올라가지 않고 sticky, fixed, 박스 책임을 파악합니다)**
+**Impact: MEDIUM (DOM을 거슬러 올라가지 않고 `sticky`, `fixed`, 박스 책임을 파악합니다)**
 
 레이아웃 의도는 클래스명과 선언만 보고 바로 읽혀야 합니다.
 크기를 어디까지 고정할지는 `layout-reach-for-intrinsic-sizing-before-breakpoints` 규칙이 정합니다.

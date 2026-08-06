@@ -2,7 +2,7 @@
 title: Justify Convention Exceptions With a Checkable Reason Comment
 titleKo: 컨벤션 예외에는 확인할 수 있는 이유를 적습니다
 impact: MEDIUM
-impactDescription: 예외가 취향인지 근거가 있는 것인지 코드에서 바로 갈립니다
+impactDescription: 예외가 취향인지 근거가 있는지 코드에서 바로 드러납니다
 appliesWhen:
   - 규칙이 허용한 예외를 코드에 남길 때
   - 이미 있는 예외 주석의 내용을 바꿀 때
@@ -13,7 +13,7 @@ tags: docs, comments
 
 ## Justify Convention Exceptions With a Checkable Reason Comment
 
-**Impact: MEDIUM (예외가 취향인지 근거가 있는 것인지 코드에서 바로 갈립니다)**
+**Impact: MEDIUM (예외가 취향인지 근거가 있는지 코드에서 바로 드러납니다)**
 
 여러 규칙이 예외를 허용하면서 "이유를 주석으로 남긴다"를 조건으로 답니다.
 그 주석의 기준을 여기서 한 번만 정합니다.

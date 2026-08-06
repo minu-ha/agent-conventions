@@ -33,7 +33,7 @@ tags: values, theme
 | 짓는 법 | 예 |
 | --- | --- |
 | 쓰임 | `--app-color-surface`, `--app-color-text-primary`, `--app-color-border` |
-| 값 — 쓰지 않습니다 | `--app-color-white`, `--app-color-gray-100` |
+| 값 — 쓰지 않음 | `--app-color-white`, `--app-color-gray-100` |
 
 **`color-scheme`을 선언합니다.**
 스크롤바, 폼 컨트롤, 기본 배경은 우리 토큰이 닿지 않는 브라우저 UI라 이 속성으로만 따라옵니다.

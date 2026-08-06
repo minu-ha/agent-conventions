@@ -22,7 +22,7 @@ tags: selector, element-selectors, markup
 
 요소 선택자를 쓸 수 있는 경우는 하나입니다.
 
-> **우리가 그 마크업을 쓰지 않아서 클래스를 붙일 수 없을 때**
+> **우리가 그 마크업을 렌더하지 않아서 클래스를 붙일 수 없을 때**
 
 `dangerouslySetInnerHTML`, Markdown 렌더러, 리치 텍스트 에디터 출력이 여기 해당합니다.
 TSX에서 그 지점이 보이므로 "이 마크업을 우리가 쓰는가"를 따질 필요가 없습니다.
@@ -97,7 +97,7 @@ TSX에서 그 지점이 보이므로 "이 마크업을 우리가 쓰는가"를 �
 ```
 
 ```css
-/* stylelint-disable selector-disallowed-list -- dangerouslySetInnerHTML 로 들어온 마크업 */
+/* stylelint-disable selector-disallowed-list -- dangerouslySetInnerHTML로 들어온 마크업 */
 .wg_productDetail__prose {
 	& h2 {
 		margin: 24px 0 12px;

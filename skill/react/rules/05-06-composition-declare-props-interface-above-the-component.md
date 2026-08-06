@@ -77,7 +77,7 @@ export const UiPanelHeader = (props: UiPanelHeaderProps) => {
 
 ```tsx
 /**
- * 상태 배지 프롭스
+ * 상태 배지 계약
  */
 export interface UiBadgeProps {
 	/**

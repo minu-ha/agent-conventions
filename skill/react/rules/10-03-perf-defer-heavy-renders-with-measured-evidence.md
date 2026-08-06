@@ -17,7 +17,7 @@ tags: perf, state
 렌더를 미루는 도구는 `startTransition`, `useTransition`, `useDeferredValue`입니다.
 **먼저 미룰 만큼 무거운지 확인합니다.**
 
-`perf-avoid-defensive-memoization`이 메모이제이션에 요구하는 것과 같은 근거를 요구합니다.
+`perf-avoid-defensive-memoization`이 메모이제이션에 요구하는 것과 같은 근거가 필요합니다.
 목록이 몇 줄인지, 어느 조작이 몇 밀리초 걸렸는지 확인한 뒤에 씁니다.
 "목록이 커질 것 같아서"는 근거가 아닙니다.
 
@@ -25,8 +25,8 @@ tags: perf, state
 
 | 원인 | 쓰는 것 |
 | --- | --- |
-| 내가 부르는 `setState`가 무거운 렌더를 일으킨다 | `startTransition`으로 그 호출을 감쌉니다 |
-| 값은 즉시 반응해야 하는데 그 값에서 파생되는 렌더가 무겁다 | `useDeferredValue`로 한 박자 지연 값을 만듭니다 |
+| 내가 부르는 `setState`가 무거운 렌더를 일으킴 | `startTransition`으로 그 호출을 감쌉니다 |
+| 값은 즉시 반응해야 하는데 그 값에서 파생되는 렌더가 무거움 | `useDeferredValue`로 한 박자 지연 값을 만듭니다 |
 
 `set` 함수가 내 것이 아니면 `startTransition`을 쓸 수 없습니다.
 그때는 `useDeferredValue`입니다.

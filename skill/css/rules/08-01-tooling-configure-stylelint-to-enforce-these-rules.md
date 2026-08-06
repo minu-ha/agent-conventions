@@ -65,7 +65,7 @@ export default {
 export default {
 	extends: ["stylelint-config-standard"],
 	rules: {
-		// 중첩으로 우회되고 .ant-table-thead > tr > th 를 잡아 예외 주석만 늘어난다
+		// 중첩으로 우회되고 .ant-table-thead > tr > th를 잡아 예외 주석만 늘어난다
 		"selector-max-combinators": 1,
 	},
 };
@@ -84,7 +84,7 @@ const ownClassPattern = (scope) =>
 		// 우리 접두사로 시작하지 않는 클래스는 통과시킨다
 		`(?!${scope}_).*`,
 		"|",
-		// pg_scopeSlug__element 또는 pg_scopeSlug__element--modifier 만 통과시킨다
+		// pg_scopeSlug__element 또는 pg_scopeSlug__element--modifier만 통과시킨다
 		`${scope}_[a-z][a-zA-Z0-9]*__[a-z][a-zA-Z0-9]*(?:--[a-z][a-zA-Z0-9]*)?`,
 		")$",
 	].join("");
@@ -98,7 +98,7 @@ const libraryPrefixes = [/^\.ant-/, /^\.rc-/, /^\.tippy-/, /^\.Mui/];
  * 우리가 마크업을 쓰는 자리에서 금지되는 형태
  */
 const ownMarkupPatterns = [
-	// 상태 pseudo-class 를 top-level 선택자로 다시 여는 것
+	// 상태 pseudo-class를 top-level 선택자로 다시 여는 것
 	/^\.[\w-]+:(hover|focus|focus-visible|focus-within|active|disabled|checked|visited)/,
 	// 중첩 안에서 element 선택자로 우리 마크업을 겨냥하는 것.
 	// 우리가 쓰지 않는 마크업은 stylelint-disable 주석으로 예외를 표시한다
@@ -116,14 +116,14 @@ export default {
 		// 최상위 @media 안의 클래스가 깊이 0 이 되게 한다. 브레이크포인트 안에서 상태를 한 겹 더 쓸 수 있다
 		"max-nesting-depth": [1, {ignoreAtRules: ["media", "supports", "container"]}],
 		// @keyframes 이름은 전역이라 소유자를 붙인다. 하이픈은 클래스 --modifier 표기와 섞이니 쓰지 않는다
-		"keyframes-name-pattern": "^(pg|wg|ui)[A-Z][a-zA-Z0-9]*__[a-z][a-zA-Z0-9]*$",
+		"keyframes-name-pattern": "^(pg|wg|ui)_[a-z][a-zA-Z0-9]*__[a-z][a-zA-Z0-9]*$",
 		// 쉼표 목록에 든 선택자를 아래에서 단독으로 다시 여는 것까지 잡는다
 		"no-duplicate-selectors": [true, {disallowInList: true}],
 		// 움직임 줄이기 전역 처리 외에는 쓰지 않는다
 		"declaration-no-important": true,
 		// 지역 변수 선언을 막는다. var() 소비는 걸리지 않는다
 		"property-disallowed-list": ["/^--/"],
-		// 우리 마크업의 상태는 modifier 로 표현한다.
+		// 우리 마크업의 상태는 modifier로 표현한다.
 		// 라이브러리가 상태를 data-* 로 내는 경우가 있어 우리 접두사만 막는다
 		"selector-attribute-name-disallowed-list": [/^aria-/, /^data-(pg|wg|ui)-/],
 		"selector-max-id": 0,
@@ -185,7 +185,7 @@ export default {
 - 내부 모습을 변형으로 노출했는가, 아니면 최상위 블록 아래에서 겨냥했는가
 - 포커스 표시가 색만 바뀌지 않고 형태로 구분되는가
 - 중복 없는 쉼표 묶음으로 공통 선언을 공유하지 않았는가
-- 브레이크포인트가 파일 아래 한곳에 모여 있고 데스크톱 퍼스트 한 방향인가
+- 브레이크포인트가 파일 아래 한 곳에 모여 있고 데스크톱 퍼스트 한 방향인가
 - 구조 선택자로 우리 마크업을 겨냥하지 않았는가
 - 도메인 상태를 `:not()`으로 뒤집지 않았는가
 ```

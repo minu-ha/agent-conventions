@@ -4,7 +4,7 @@ titleKo: 컴포넌트는 위에서 아래로만 가져옵니다
 impact: CRITICAL
 impactDescription: 비공개 컴포넌트를 형제나 위쪽에서 되짚어 소유 관계가 무너지지 않습니다
 appliesWhen:
-  - `component` 폴더 안의 파일을 다른 파일에서 가져오기할 때
+  - `component` 폴더 안의 파일을 다른 파일에서 가져올 때
   - `../`나 `@/page` 경로로 컴포넌트를 가져오려 할 때
   - 여러 자식이 같은 컴포넌트를 필요로 해 배치를 다시 정할 때
   - 제외: `function`·`type`·`config` 파일을 가져오는 경우
@@ -19,8 +19,8 @@ tags: ownership
 
 컴포넌트 가져오기는 소유 관계를 따라 아래로만 흐릅니다.
 
-- `component` 폴더 안의 파일은 그 폴더의 소유자만 가져오기합니다.
-- 형제끼리는 가져오기하지 않습니다.
+- `component` 폴더 안의 파일은 그 폴더의 소유자만 가져옵니다.
+- 형제끼리는 가져오지 않습니다.
 - `../`로 컴포넌트를 가져오지 않습니다.
 - 절대경로 별칭의 허용 범위는 `typescript/naming-restrict-absolute-aliases-to-layer-roots`가 정합니다.
 

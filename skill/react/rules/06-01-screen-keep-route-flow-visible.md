@@ -5,7 +5,7 @@ impact: MEDIUM-HIGH
 impactDescription: 진입 파일만 봐도 화면 흐름을 따라갈 수 있습니다
 appliesWhen:
   - 라우트 진입의 search 파라미터, 화면 이동, 쿼리, 뮤테이션, 화면 전체 이펙트를 옮기거나 나눌 때
-  - page 섹션 조립의 순서나 소유자를 바꿀 때
+  - 화면 섹션 조립의 순서나 소유자를 바꿀 때
   - 제외: 같은 소유자 안에서 표현만 바꾸는 경우
 reviewWith: >-
   screen-extract-local-section-components-for-runtime-boundaries,
@@ -31,7 +31,7 @@ tags: screen, routes, flow
 소유자가 그대로인 변경은 대상이 아닙니다.
 
 - `query.select` 형태, 바인딩·별칭 정리, 파생 상태 이펙트를 렌더 계산으로 옮기는 것
-- 순수 타입·전송 값 조립 함수·기본 설정의 형제 `.ts` 이동.
+- 순수 타입, 전송 값 조립 함수, 기본 설정을 형제 `.ts` 파일로 옮기는 것
   `typescript/functions-extract-helpers-only-when-the-boundary-is-real`이 담당합니다.
 
 **Incorrect (흐름보다 분해 자체가 목적이 됨):**

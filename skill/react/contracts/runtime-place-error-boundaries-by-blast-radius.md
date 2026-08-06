@@ -29,7 +29,7 @@
 라우터가 화면 층 경계를 얹는 API를 제공하면 그것을 쓰고, 없으면 라우트 진입 컴포넌트를 직접 감쌉니다.
 어느 쪽이든 경계를 어느 층에 두는지는 위 표가 정합니다.
 
-다시 시도를 열려면 대체 화면이 그 버튼을 갖고, 리액트 쿼리의 `QueryErrorResetBoundary`와 함께 씁니다.
+다시 시도를 열려면 대체 화면에 그 버튼을 두고, React Query의 `QueryErrorResetBoundary`와 함께 씁니다.
 경계 안에서 상태를 되살릴 수 없으므로 다시 시도는 하위 트리를 새로 마운트합니다.
 
 **Requires selected:** `runtime-place-suspense-boundaries-at-the-section-owner` · 함께 적용

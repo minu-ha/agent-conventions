@@ -1,6 +1,6 @@
 # agent-conventions
 
-팀 코딩 컨벤션을 AI agent skill 로 관리하는 저장소.
+팀 코딩 컨벤션을 AI agent skill로 관리하는 저장소.
 
 - 규칙 정본은 `skill/` 한 곳
 - 프로젝트는 복사 없이 skill 이름만 참조
@@ -31,7 +31,7 @@
 
 ### 1.1 설치
 
-에이전트가 `~/.agents/skills/` 를 스캔하면 symlink 하나로 끝.
+에이전트가 `~/.agents/skills/`를 스캔하면 symlink 하나로 끝.
 
 ```bash
 mkdir -p ~/.agents/skills
@@ -47,13 +47,13 @@ ln -s /absolute/path/to/agent-conventions/skill ~/.agents/skills/conventions
 
 ### 1.2 프로젝트 연결
 
-프로젝트 `AGENTS.md` 에 쓸 skill 이름만 적는다. 규칙 본문은 복사하지 않는다.
+프로젝트 `AGENTS.md`에 쓸 skill 이름만 적는다. 규칙 본문은 복사하지 않는다.
 
 새 프로젝트면 [AGENTS.template.md](./AGENTS.template.md) 를 복사해서 시작.
-이미 `AGENTS.md` 가 있으면 컨벤션 항목에 skill 이름만 추가.
+이미 `AGENTS.md`가 있으면 컨벤션 항목에 skill 이름만 추가.
 
 skill 하나만 적지 말 것.
-`convention-react` + `convention-typescript` + `convention-css` 처럼 companion 까지 적는다.
+`convention-react` + `convention-typescript` + `convention-css`처럼 companion까지 적는다.
 
 ### 1.3 담당 영역 핸드북
 
@@ -62,11 +62,11 @@ skill 하나만 적지 말 것.
 브라우저로 파일을 그냥 열면 된다. 서버가 필요 없다.
 
 규칙을 펼치면 Incorrect / Correct 코드가 먼저 나오고, 적용 조건과 근거가 그 아래 온다.
-`CRITICAL` 부터 훑으려면 왼쪽 Impact 필터에서 `CRITICAL` 만 켠다.
-다른 skill 규칙을 가리키는 점선 칩을 누르면 그 skill 로 옮겨가 해당 규칙을 펼친다.
+`CRITICAL`부터 훑으려면 왼쪽 Impact 필터에서 `CRITICAL`만 켠다.
+다른 skill 규칙을 가리키는 점선 칩을 누르면 그 skill로 옮겨가 해당 규칙을 펼친다.
 규칙 번호(`1.1`, `7.2`)는 `HANDBOOK.md` 헤딩 번호와 같아서 두 문서를 번호로 맞춰 볼 수 있다.
 
-`HANDBOOK.md` 는 에이전트가 전체 검토를 요청받았을 때 읽는 생성물이다.
+`HANDBOOK.md`는 에이전트가 전체 검토를 요청받았을 때 읽는 생성물이다.
 사람이 통독할 문서로 만들어진 것이 아니다.
 
 전체를 외울 필요 없다. 담당 영역만 한 번 훑으면 리뷰에서 덜 돌아온다.
@@ -76,10 +76,10 @@ skill 하나만 적지 말 것.
 | React 화면 · 컴포넌트 | [react](./skill/react/HANDBOOK.md) + [typescript](./skill/typescript/HANDBOOK.md) |
 | 스타일시트 · `className` | 위 둘 + [css](./skill/css/HANDBOOK.md) |
 
-핸드북마다 번호 목차와 Impact 등급이 있다. `CRITICAL` 부터 본다.
+핸드북마다 번호 목차와 Impact 등급이 있다. `CRITICAL`부터 본다.
 규칙마다 Incorrect / Correct 예시가 붙어 있다.
 
-특정 규칙만 다시 찾을 때는 `RULES_INDEX.md` 가 빠르다. 규칙당 한 줄.
+특정 규칙만 다시 찾을 때는 `RULES_INDEX.md`가 빠르다. 규칙당 한 줄.
 
 ### 1.4 동작 확인
 
@@ -87,12 +87,12 @@ TSX 파일 하나를 고쳐 달라고 시켜본다. 에이전트는 이 순서�
 
 1. 변경 판정
 2. `convention-react` + `convention-typescript` 활성화
-3. `RULES_INDEX` 를 끝까지 훑어 걸리는 규칙 선별
-4. 걸린 `contracts` 를 읽고 구현
-5. 마무리로 diff 를 다시 훑어 위반 보고
+3. `RULES_INDEX`를 끝까지 훑어 걸리는 규칙 선별
+4. 걸린 `contracts`를 읽고 구현
+5. 마무리로 diff를 다시 훑어 위반 보고
 
-`className` 이나 stylesheet 를 건드리면 `convention-css` 추가.
-순수 CSS 만 고치면 TypeScript 는 안 켜진다.
+`className`이나 stylesheet를 건드리면 `convention-css` 추가.
+순수 CSS만 고치면 TypeScript는 안 켜진다.
 
 ---
 
@@ -104,7 +104,7 @@ TSX 파일 하나를 고쳐 달라고 시켜본다. 에이전트는 이 순서�
 | --- | --- |
 | README.md | 이 문서. 설치와 적용 |
 | [CONTRIBUTING.md](./CONTRIBUTING.md) | 규칙 추가·수정 절차 |
-| [conventions.html](./conventions.html) | **규칙 조회.** 8개 skill 212개를 검색·필터로 찾는다. 데이터인 `conventions-data.js` 와 같은 폴더에 두고 연다 |
+| [conventions.html](./conventions.html) | **규칙 조회.** 8개 skill 212개를 검색·필터로 찾는다. 데이터인 `conventions-data.js`와 같은 폴더에 두고 연다 |
 | `skill/<name>/HANDBOOK.md` | 규칙 전문. 에이전트 전체 검토용 생성물 |
 | [overview.html](./overview.html) | 실행 흐름 · 스킬 관계 · 규칙 관계 |
 | [docs/progressive-loading.html](./docs/progressive-loading.html) | 설계 배경 · 측정 · 검증 · 한계 |
@@ -134,9 +134,9 @@ TSX 파일 하나를 고쳐 달라고 시켜본다. 에이전트는 이 순서�
 
 skill 이름은 `convention-<skill>`.
 
-companion 은 `metadata.json` 이 선언하고 자동으로 켜진다.
-프로젝트에는 owner skill 만 적으면 된다.
-`react` 는 `typescript` 를 항상, `css` 를 styling surface 변경 시에만 켠다.
+companion은 `metadata.json`이 선언하고 자동으로 켜진다.
+프로젝트에는 owner skill만 적으면 된다.
+`react`는 `typescript`를 항상, `css`를 styling surface 변경 시에만 켠다.
 
 ---
 
@@ -151,9 +151,9 @@ progressive skill 셋은 규칙 전체를 안 읽는다. 단계마다 좁힌다.
 | 3 | `contracts/<id>.md` | 걸린 규칙의 규범만. 예시 제외 | 걸린 규칙만 |
 | 4 | `rules/<id>.md` | 원문 | `CRITICAL` 이거나 판단이 모호할 때 |
 
-`HANDBOOK.md` 는 이 경로 밖이다. 사람이 통독할 때 쓰고,
+`HANDBOOK.md`는 이 경로 밖이다. 사람이 통독할 때 쓰고,
 에이전트는 명시적 요청이 있을 때만 읽는다.
-전체 로드 skill 다섯은 `SKILL.md` 지시대로 `HANDBOOK.md` 를 통째로 읽는다.
+전체 로드 skill 다섯은 `SKILL.md` 지시대로 `HANDBOOK.md`를 통째로 읽는다.
 
 측정 결과와 근거는 [docs/progressive-loading.html](./docs/progressive-loading.html).
 
@@ -165,8 +165,8 @@ progressive skill 셋은 규칙 전체를 안 읽는다. 단계마다 좁힌다.
 | --- | --- |
 | 에이전트가 컨벤션을 모름 | symlink 미설치, 또는 재시작 안 함 |
 | 불필요한 규칙까지 적용 | 알려진 약점. 누락보다는 안전한 실패 |
-| `HANDBOOK.md` 수정이 되돌아옴 | 생성물. `rules/*.md` 를 고쳐야 함 |
-| 규칙이 걸린 이유가 불분명 | 그 규칙 frontmatter 의 `appliesWhen` 확인 |
+| `HANDBOOK.md` 수정이 되돌아옴 | 생성물. `rules/*.md`를 고쳐야 함 |
+| 규칙이 걸린 이유가 불분명 | 그 규칙 frontmatter의 `appliesWhen` 확인 |
 
 ---
 
@@ -174,14 +174,14 @@ progressive skill 셋은 규칙 전체를 안 읽는다. 단계마다 좁힌다.
 
 절차는 [CONTRIBUTING.md](./CONTRIBUTING.md). 착수 전 알 것 넷.
 
-1. 정본은 `rules/*.md`. `HANDBOOK.md` · `RULES_INDEX.md` · `contracts/*.md` 는 생성물.
+1. 정본은 `rules/*.md`. `HANDBOOK.md` · `RULES_INDEX.md` · `contracts/*.md`는 생성물.
 2. 규범은 첫 `Incorrect` 앞에서 끝낸다. 생성기가 그 앞부분만 계약으로 뽑는다.
 3. `appliesWhen` 한 줄이 라우팅을 결정한다. 규칙의 결론이 아니라 관찰 가능한 변경 조건.
 4. 고친 뒤 `npm --prefix package run dev:<skill>` → `check:generated`.
 
 이 저장소에서 AI 에이전트로 작업하면 [AGENTS.md](./AGENTS.md) 가 작업 규칙.
 
-버전은 `SKILL.md` 의 `name` 변경이 breaking, skill 추가와 호환 확장이 minor,
+버전은 `SKILL.md`의 `name` 변경이 breaking, skill 추가와 호환 확장이 minor,
 문구 수정이 patch.
 
 [reference/agent-skills-main/](./reference/agent-skills-main/README.md) 은 비교용 외부

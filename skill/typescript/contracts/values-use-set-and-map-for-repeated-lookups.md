@@ -1,6 +1,6 @@
 # Use Set and Map for Repeated Lookups
 
-**Impact: MEDIUM (조회가 늘어나면 반복되는 포함 검사와 키 접근을 드러냅니다)**
+**Impact: MEDIUM (반복되는 포함 검사와 키 접근을 한 번 만든 `Set`·`Map` 조회로 바꿉니다)**
 
 같은 목록에 포함 검사나 키 조회를 여러 번 한다면 `includes`와 `find`를 매번 돌리지 않습니다.
 `Set`이나 `Map`으로 한 번 정리합니다.

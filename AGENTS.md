@@ -5,13 +5,13 @@
 다른 프로젝트용 시작 템플릿은 [AGENTS.template.md](./AGENTS.template.md).
 그 문서는 이 저장소와 무관하게 독립적으로 동작한다.
 
-핵심 제약은 하나다. **사람이 고치는 곳은 `rules/*.md` 뿐**이고 나머지는 build 가 만든다.
+핵심 제약은 하나다. **사람이 고치는 곳은 `rules/*.md` 뿐**이고 나머지는 build가 만든다.
 
 | 단계 | 대상 | 성격 |
 | --- | --- | --- |
 | 입력 | `rules/*.md` | 정본 |
 | build | `HANDBOOK.md` · `RULES_INDEX.md` · `contracts/*.md` | 생성물. 직접 편집 시 소실 |
-| 로드 | `SKILL.md` 가 경로 결정 | progressive 는 index 부터, 전체 로드는 handbook 통째로 |
+| 로드 | `SKILL.md`가 경로 결정 | progressive는 index부터, 전체 로드는 handbook 통째로 |
 
 ---
 
@@ -26,23 +26,23 @@
 6. [Guardrails](#6-guardrails) — 금지 사항
 
 사람용 문서는 [README.md](./README.md) 와 [CONTRIBUTING.md](./CONTRIBUTING.md).
-build tooling 은 [package/](./package/README.md).
+build tooling은 [package/](./package/README.md).
 [reference/](./reference/agent-skills-main/README.md) 는 비교용. 정본 아님.
 
 ---
 
 ## 1. 원칙
 
-1. **정본만 수정.** `rules/*.md` 를 고친다. 생성물을 고치고 끝내지 않는다.
+1. **정본만 수정.** `rules/*.md`를 고친다. 생성물을 고치고 끝내지 않는다.
 2. **최소 변경.** 요청 범위 밖 리팩터링 금지. 인접 코드 개선 금지.
-3. **검증 후 보고.** `validate` → `build` → `check:generated` 의 실제 출력으로 말한다.
+3. **검증 후 보고.** `validate` → `build` → `check:generated`의 실제 출력으로 말한다.
 4. **불확실하면 질문.** 추측으로 규칙 의미를 바꾸지 않는다.
 
 ---
 
 ## 2. Skill Types
 
-모든 skill 이 structured skill.
+모든 skill이 structured skill.
 
 | Skill | Loading |
 | --- | --- |
@@ -50,12 +50,12 @@ build tooling 은 [package/](./package/README.md).
 | [skill/typescript](./skill/typescript/HANDBOOK.md) | progressive |
 | [skill/css](./skill/css/HANDBOOK.md) | progressive |
 
-progressive 는 `SKILL.md` → `RULES_INDEX.md` → 걸린 `contracts/*.md` 로 좁힌다.
+progressive는 `SKILL.md` → `RULES_INDEX.md` → 걸린 `contracts/*.md`로 좁힌다.
 셋 다 progressive 다.
 
-`metadata.json.companions` 가 `required` 와 `conditional` 활성화를 선언한다.
-계층은 이 선언이 정한다. 나를 companion 으로 켜는 skill 이 위 계층이고,
-`typescript` 는 아무도 켜지 않으므로 가장 아래다. 아래에서 위를 가리키지 않는다.
+`metadata.json.companions`가 `required`와 `conditional` 활성화를 선언한다.
+계층은 이 선언이 정한다. 나를 companion으로 켜는 skill이 위 계층이고,
+`typescript`는 아무도 켜지 않으므로 가장 아래다. 아래에서 위를 가리키지 않는다.
 
 ---
 
@@ -75,33 +75,33 @@ progressive 는 `SKILL.md` → `RULES_INDEX.md` → 걸린 `contracts/*.md` 로 
 `rules/_sections.md`, `rules/_template.md`, `rules/*.md`, `metadata.json`, `SKILL.md`,
 progressive `routing-evals.json`.
 
-`HANDBOOK.md`, progressive `RULES_INDEX.md`, progressive `contracts/*.md` 는 생성물.
+`HANDBOOK.md`, progressive `RULES_INDEX.md`, progressive `contracts/*.md`는 생성물.
 
 ---
 
 ## 4. Editing Rules
 
-1. `SKILL.md`, `metadata.json`, `rules/_sections.md` 를 먼저 훑어 현재 구성 확인.
+1. `SKILL.md`, `metadata.json`, `rules/_sections.md`를 먼저 훑어 현재 구성 확인.
 2. 규칙 변경은 `rules/_sections.md`, `rules/_template.md`, `rules/*.md`를 수정.
-   활성화 흐름이 바뀌면 `SKILL.md`, 라우팅 조건이 바뀌면 rule frontmatter 와
-   `routing-evals.json` 도 함께.
-3. 공통 규칙은 companion skill 로. framework · project 예외만 local overlay 로.
-4. `metadata.json.companions` 의 mode 가 현재 활성화 계약과 맞는지 확인.
+   활성화 흐름이 바뀌면 `SKILL.md`, 라우팅 조건이 바뀌면 rule frontmatter와
+   `routing-evals.json`도 함께.
+3. 공통 규칙은 companion skill로. framework · project 예외만 local overlay로.
+4. `metadata.json.companions`의 mode가 현재 활성화 계약과 맞는지 확인.
 5. 생성물은 직접 편집 금지.
 6. `validate` → `build` → `check:generated` 순서로 검증.
 7. skill 인벤토리나 artifact 역할이 바뀌면 [README.md](./README.md),
    [CONTRIBUTING.md](./CONTRIBUTING.md), [package/README.md](./package/README.md) 도 갱신.
 
-새 skill 은 이미 정리된 `react`, `typescript`, `css` 를 템플릿으로 삼는다.
+새 skill은 이미 정리된 `react`, `typescript`, `css`를 템플릿으로 삼는다.
 
 ### 4.1 routing 키
 
 | 키 | 동작 |
 | --- | --- |
 | `appliesWhen` | 이 규칙이 걸리는 조건. 한 줄, 160자 이내 |
-| `requiresSelected` | 함께 적용하는 필수 관계. cross-skill 이면 companion 도 활성화 |
+| `requiresSelected` | 함께 적용하는 필수 관계. cross-skill 이면 companion도 활성화 |
 | `reviewWith` | 재평가 힌트. 자동 적용 아님. 방향 있음 — 역방향 추론 금지 |
-| `requiredOnCompletion` | 마무리 시 항상 적용. index 에는 `completionGate` 로 찍히고 `SKILL.md` 3절이 그 이름으로 안내한다. 지금 이 키를 쓰는 규칙은 없다 |
+| `requiredOnCompletion` | 마무리 시 항상 적용. 인덱스에는 `completionGate`로 찍히고 `SKILL.md` 3절이 그 이름으로 안내한다. 지금 이 키를 쓰는 규칙은 없다 |
 
 ---
 
@@ -123,10 +123,10 @@ buildable skill: `css` `react` `typescript`
 
 ## 6. Guardrails
 
-1. 생성물을 고치고 끝내지 않는다. 항상 `rules/*.md` 부터.
-2. generic TypeScript 규칙은 `typescript` companion 으로. framework skill 에는 overlay 만.
-3. progressive 진입점은 router 와 index. full handbook 은 명시적 요청일 때만.
-4. `reviewWith` 는 자동 적용 아님. 역방향 추론 금지.
-5. skill 마다 구조가 다르다. 수정 전 실제 디렉터리 확인.
+1. 생성물을 고치고 끝내지 않는다. 항상 `rules/*.md`부터.
+2. generic TypeScript 규칙은 `typescript` companion으로 보낸다. framework skill에는 overlay만 둔다.
+3. progressive 진입점은 router와 인덱스다. full handbook은 명시적 요청일 때만 읽는다.
+4. `reviewWith`는 자동으로 적용하지 않는다. 역방향으로 추론하지 않는다.
+5. skill마다 구조가 다르다. 수정 전에 실제 디렉터리를 확인한다.
 6. `reference/agent-skills-main` 문장을 그대로 옮기지 않는다. 이 저장소 구조에 맞게 다시 쓴다.
 7. 루트 문서 갱신 시 현재 지원 skill 목록을 실제 상태로 기록한다.

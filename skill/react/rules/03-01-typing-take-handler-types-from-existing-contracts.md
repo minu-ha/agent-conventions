@@ -20,7 +20,7 @@ tags: typing, handlers, props
 여기서는 그 규칙이 다루지 않는 리액트 두 자리만 봅니다.
 
 **커링 팩토리가 돌려주는 함수에도 타입을 적습니다.**
-JSX에 바로 쓴 화살표는 리액트가 타입을 붙여 주지만, 팩토리가 돌려주는 함수는 그러지 않습니다.
+JSX에 바로 쓴 화살표 함수에는 리액트가 타입을 붙여 주지만, 팩토리가 돌려주는 함수에는 붙여 주지 않습니다.
 안쪽 매개변수가 암묵적 `any`가 되어 `strict`에서 컴파일이 막힙니다.
 `MouseEventHandler<...>` 같은 리액트 별칭을 팩토리 반환 타입으로 적습니다.
 
@@ -55,7 +55,7 @@ const handleSubmitClick: LibButtonProps["onClick"] = (event) => {
 import type { MouseEventHandler } from "react";
 
 /**
- * 행 id를 커링으로 고정해 목록 JSX에 인라인 래퍼를 두지 않게 함
+ * 행 id를 커링으로 고정해 목록 JSX에 인라인 래퍼를 두지 않게 한다
  */
 const handleRowSelectToggle =
 	(rowId: string): MouseEventHandler<HTMLLIElement> =>
