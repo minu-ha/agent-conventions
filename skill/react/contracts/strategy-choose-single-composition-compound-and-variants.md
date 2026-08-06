@@ -1,6 +1,6 @@
 # Choose Single Components, Compound Components, and Variants Deliberately
 
-**Impact: HIGH (필요한 확장점은 열면서 가장 단순한 구조를 고르게 돕습니다)**
+**Impact: MEDIUM-HIGH (필요한 확장점은 열면서 가장 단순한 구조를 고르게 돕습니다)**
 
 공용 컴포넌트는 프롭스보다 구조를 먼저 고릅니다.
 고정 UI, 공개 부품 조립, 공용 상태/동작/컨텍스트, 반복 기본 설정 중 무엇이 필요한지 순서대로 봅니다.

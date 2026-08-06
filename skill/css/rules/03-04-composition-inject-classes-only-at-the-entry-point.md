@@ -1,7 +1,7 @@
 ---
 title: Inject Classes Only at the Component Entry Point
 titleKo: 클래스 주입은 컴포넌트 진입점까지만 닿습니다
-impact: HIGH
+impact: MEDIUM-HIGH
 impactDescription: 내부 노드마다 창구를 열면 사용처가 그 컴포넌트 구조에 얽매입니다
 appliesWhen:
   - 우리가 만든 컴포넌트에 `className`이나 클래스 관련 프롭을 추가할 때
@@ -14,7 +14,7 @@ tags: components, entry-point, class-props
 
 ## Inject Classes Only at the Component Entry Point
 
-**Impact: HIGH (내부 노드마다 창구를 열면 사용처가 그 컴포넌트 구조에 얽매입니다)**
+**Impact: MEDIUM-HIGH (내부 노드마다 창구를 열면 사용처가 그 컴포넌트 구조에 얽매입니다)**
 
 우리가 만든 컴포넌트가 여는 스타일 창구는 **진입점 하나**입니다.
 `ui_`든 `wg_`든 `pg_`든 같습니다.

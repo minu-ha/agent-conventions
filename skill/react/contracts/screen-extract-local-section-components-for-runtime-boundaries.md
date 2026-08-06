@@ -1,6 +1,6 @@
 # Extract Local Section Components Only for Runtime Boundaries
 
-**Impact: HIGH (화면 흐름은 보이게 두고 자기 것을 직접 가진 부분만 떼어 냅니다)**
+**Impact: MEDIUM-HIGH (화면 흐름은 보이게 두고 자기 것을 직접 가진 부분만 떼어 냅니다)**
 
 라우트 진입의 지역 컴포넌트는 그 조각이 **직접 소유하는 것이 있을 때만** 추출합니다.
 감싸기만 하는 래퍼, `className` 묶기, 들여쓰기 감소만으로는 추출하지 않습니다.

@@ -1,7 +1,7 @@
 ---
 title: Keep Derived Values Close to Where They Are Used
 titleKo: 파생값은 쓰는 자리 가까이에 둡니다
-impact: HIGH
+impact: MEDIUM
 impactDescription: 출처가 남고 화면 진입 파일이 별칭과 준비 코드로 채워지지 않습니다
 appliesWhen:
   - 화면 진입 파일이나 섹션 최상단에 `const` 별칭, 플래그, 표시값을 추가·이동·제거할 때
@@ -12,7 +12,7 @@ tags: screen, origin
 
 ## Keep Derived Values Close to Where They Are Used
 
-**Impact: HIGH (출처가 남고 화면 진입 파일이 별칭과 준비 코드로 채워지지 않습니다)**
+**Impact: MEDIUM (출처가 남고 화면 진입 파일이 별칭과 준비 코드로 채워지지 않습니다)**
 
 계산한 값은 실제 쓰는 자리에서 만듭니다.
 화면 상단으로 끌어올리면 그 값이 어디서 왔는지 알 수 없게 됩니다.

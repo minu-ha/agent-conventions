@@ -1,7 +1,7 @@
 ---
 title: Avoid Imperative Assembly in Wide Scopes
 titleKo: 넓은 스코프에서 값을 조립하지 않습니다
-impact: HIGH
+impact: MEDIUM
 impactDescription: 분기로 공유 지역 변수를 바꾸지 않아 넓은 스코프의 값 조립이 선언형으로 남습니다
 appliesWhen:
   - 모듈 최상위나 함수 본문 전체를 덮는 스코프에서 `let` 재대입, 배열 `push`, 조건부 누적으로 값을 만들 때
@@ -11,7 +11,7 @@ tags: functions
 
 ## Avoid Imperative Assembly in Wide Scopes
 
-**Impact: HIGH (분기로 공유 지역 변수를 바꾸지 않아 넓은 스코프의 값 조립이 선언형으로 남습니다)**
+**Impact: MEDIUM (분기로 공유 지역 변수를 바꾸지 않아 넓은 스코프의 값 조립이 선언형으로 남습니다)**
 
 모듈 최상위나 함수 본문 전체를 덮는 스코프에서 `let` 재대입, 배열 `push`, 조건부 누적으로 값을 쌓지 않습니다.
 `if`나 `for` 블록 안에서만 사는 누적은 대상이 아닙니다.

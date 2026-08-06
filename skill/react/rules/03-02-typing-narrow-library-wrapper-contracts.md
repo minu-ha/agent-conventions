@@ -1,7 +1,7 @@
 ---
 title: Narrow the Contract a Library Wrapper Opens
 titleKo: 라이브러리 래퍼는 여는 표면을 좁힙니다
-impact: HIGH
+impact: CRITICAL
 impactDescription: 라이브러리의 스타일 우회로가 화면으로 새지 않고 교체할 때 래퍼 한 파일만 고칩니다
 appliesWhen:
   - 라이브러리 컴포넌트를 감싸는 `Ui*` 래퍼의 프롭스 타입을 만들거나 바꿀 때
@@ -15,7 +15,7 @@ tags: typing, wrapper, contracts
 
 ## Narrow the Contract a Library Wrapper Opens
 
-**Impact: HIGH (라이브러리의 스타일 우회로가 화면으로 새지 않고 교체할 때 래퍼 한 파일만 고칩니다)**
+**Impact: CRITICAL (라이브러리의 스타일 우회로가 화면으로 새지 않고 교체할 때 래퍼 한 파일만 고칩니다)**
 
 라이브러리 컴포넌트는 화면에서 직접 쓰지 않고 `Ui*` 래퍼를 거칩니다.
 래퍼가 있어야 라이브러리를 올리거나 바꿀 때 한 파일만 고칩니다.

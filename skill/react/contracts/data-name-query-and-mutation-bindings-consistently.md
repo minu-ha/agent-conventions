@@ -1,6 +1,6 @@
 # Name Query and Mutation Bindings Consistently
 
-**Impact: HIGH (생성된 API 훅과 지역 바인딩을 훑고 되짚기 쉬워집니다)**
+**Impact: MEDIUM (생성된 API 훅과 지역 바인딩을 훑고 되짚기 쉬워집니다)**
 
 프로젝트가 이미 채택한 쿼리/뮤테이션 훅 이름은 유지하고, 로컬 바인딩은 `response`와 `mutation` 접두사만 씁니다.
 훅 하나를 담는 바인딩 이름은 훅 이름에서 `use`를 떼고 앞에 `response` 또는 `mutation`을 붙여 만듭니다.

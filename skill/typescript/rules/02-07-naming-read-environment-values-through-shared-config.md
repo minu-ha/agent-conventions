@@ -1,7 +1,7 @@
 ---
 title: Read Environment Values Through Shared Config
 titleKo: 환경 값은 공용 설정을 거쳐서 읽습니다
-impact: MEDIUM-HIGH
+impact: HIGH
 impactDescription: 환경마다 달라지는 값이 쓰는 파일로 흩어지지 않고 한 곳에서 읽힙니다
 appliesWhen:
   - `import.meta.env`나 `process.env`를 읽는 코드를 추가·이동할 때
@@ -12,7 +12,7 @@ tags: naming, config
 
 ## Read Environment Values Through Shared Config
 
-**Impact: MEDIUM-HIGH (환경마다 달라지는 값이 쓰는 파일로 흩어지지 않고 한 곳에서 읽힙니다)**
+**Impact: HIGH (환경마다 달라지는 값이 쓰는 파일로 흩어지지 않고 한 곳에서 읽힙니다)**
 
 환경마다 값이 달라지는 것은 쓰는 파일에서 직접 읽지 않습니다.
 `shared/config.ts`가 한 번 읽어 `config.*`로 내보내고, 나머지는 그 이름을 씁니다.

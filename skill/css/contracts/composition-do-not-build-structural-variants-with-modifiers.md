@@ -1,6 +1,6 @@
 # Do Not Build Structural Variants With Modifiers
 
-**Impact: HIGH (수정자가 두 번째 레이아웃 이름 체계로 자라지 않게 막습니다)**
+**Impact: MEDIUM-HIGH (수정자가 두 번째 레이아웃 이름 체계로 자라지 않게 막습니다)**
 
 수정자는 두 가지만 표현합니다.
 

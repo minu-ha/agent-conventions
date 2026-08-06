@@ -1,7 +1,7 @@
 ---
 title: Use Named Object Params for Complex Signatures
 titleKo: 시그니처가 복잡해지면 이름 붙인 객체 매개변수로 묶습니다
-impact: HIGH
+impact: MEDIUM-HIGH
 impactDescription: 긴 시그니처를 읽을 수 있게 두고 위치를 헷갈리지 않으면서 입력을 늘립니다
 appliesWhen:
   - 매개변수가 3개를 넘거나 같은 계열 인자를 받는 함수를 추가·변경할 때
@@ -13,7 +13,7 @@ tags: functions
 
 ## Use Named Object Params for Complex Signatures
 
-**Impact: HIGH (긴 시그니처를 읽을 수 있게 두고 위치를 헷갈리지 않으면서 입력을 늘립니다)**
+**Impact: MEDIUM-HIGH (긴 시그니처를 읽을 수 있게 두고 위치를 헷갈리지 않으면서 입력을 늘립니다)**
 
 매개변수가 3개를 넘거나 같은 계열 값이 함께 넘어오면 위치 인자를 객체 하나로 묶습니다.
 시그니처 자리에서 바로 구조분해하지 않습니다.

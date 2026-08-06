@@ -1,6 +1,6 @@
 # Mark Unused Parameters With an Underscore Prefix
 
-**Impact: MEDIUM-HIGH (계약의 일부를 조용히 버리지 않고 일부러 무시한 매개변수를 드러냅니다)**
+**Impact: MEDIUM (계약의 일부를 조용히 버리지 않고 일부러 무시한 매개변수를 드러냅니다)**
 
 미사용 매개변수도 생략하지 않고 `_` 접두사로 명시합니다.
 그래야 콜백 시그니처를 그대로 지키면서, 지금 구현이 일부러 쓰지 않는 값이라는 점이 드러납니다.

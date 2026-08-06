@@ -1,7 +1,7 @@
 ---
 title: Keep Layout Intent Explicit
 titleKo: 레이아웃 의도가 클래스명과 선언에서 읽히게 씁니다
-impact: MEDIUM-HIGH
+impact: MEDIUM
 impactDescription: DOM을 거슬러 올라가지 않고 sticky, fixed, 박스 책임을 파악합니다
 appliesWhen:
   - `sticky`·`fixed`, `z-index`, 강제 `width`·`height` 또는 부모·자식 레이아웃 책임을 추가·변경할 때
@@ -13,7 +13,7 @@ tags: layout, comments, sticky
 
 ## Keep Layout Intent Explicit
 
-**Impact: MEDIUM-HIGH (DOM을 거슬러 올라가지 않고 sticky, fixed, 박스 책임을 파악합니다)**
+**Impact: MEDIUM (DOM을 거슬러 올라가지 않고 sticky, fixed, 박스 책임을 파악합니다)**
 
 레이아웃 의도는 클래스명과 선언만 보고 바로 읽혀야 합니다.
 크기를 어디까지 고정할지는 `layout-reach-for-intrinsic-sizing-before-breakpoints` 규칙이 정합니다.

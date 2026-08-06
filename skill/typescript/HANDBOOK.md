@@ -18,14 +18,14 @@
 
 ## 목차
 
-1. [Types and Contracts](#1-types-and-contracts) — **CRITICAL**
+1. [Types and Contracts](#1-types-and-contracts) — **HIGH**
     - 1.1 [Reuse Existing Contracts Before Declaring New Types](#11-reuse-existing-contracts-before-declaring-new-types)
     - 1.2 [Prefer Function Variable Types Over Parameter Annotations](#12-prefer-function-variable-types-over-parameter-annotations)
     - 1.3 [Document Custom Types and Declarative Shapes](#13-document-custom-types-and-declarative-shapes)
     - 1.4 [Mark Unused Parameters With an Underscore Prefix](#14-mark-unused-parameters-with-an-underscore-prefix)
     - 1.5 [Narrow `unknown` Instead of Asserting](#15-narrow-unknown-instead-of-asserting)
     - 1.6 [Replace `enum` With `as const` Objects](#16-replace-enum-with-as-const-objects)
-2. [Naming and Module Boundaries](#2-naming-and-module-boundaries) — **HIGH**
+2. [Naming and Module Boundaries](#2-naming-and-module-boundaries) — **CRITICAL**
     - 2.1 [Centralize Shared Config Under `shared/config.ts`](#21-centralize-shared-config-under-shared-config-ts)
     - 2.2 [Place Owner-only Config in the Owner Config Folder](#22-place-owner-only-config-in-the-owner-config-folder)
     - 2.3 [Preserve Shared Namespace Origin With Chained Access](#23-preserve-shared-namespace-origin-with-chained-access)
@@ -33,7 +33,7 @@
     - 2.5 [Use Direct Imports and Dedicated Public Entry Points](#25-use-direct-imports-and-dedicated-public-entry-points)
     - 2.6 [Restrict Absolute Aliases to Layer Roots](#26-restrict-absolute-aliases-to-layer-roots)
     - 2.7 [Read Environment Values Through Shared Config](#27-read-environment-values-through-shared-config)
-3. [Functions and Helper Boundaries](#3-functions-and-helper-boundaries) — **HIGH**
+3. [Functions and Helper Boundaries](#3-functions-and-helper-boundaries) — **MEDIUM-HIGH**
     - 3.1 [Declare Functions as Arrow Consts](#31-declare-functions-as-arrow-consts)
     - 3.2 [Use Named Object Params for Complex Signatures](#32-use-named-object-params-for-complex-signatures)
     - 3.3 [Extract Support Functions Only When the Boundary Is Real](#33-extract-support-functions-only-when-the-boundary-is-real)
@@ -46,7 +46,7 @@
     - 4.2 [Use Set and Map for Repeated Lookups](#42-use-set-and-map-for-repeated-lookups)
 5. [Absence and Fallback Handling](#5-absence-and-fallback-handling) — **HIGH**
     - 5.1 [Expose Optional Values Instead of Silent Fallbacks](#51-expose-optional-values-instead-of-silent-fallbacks)
-6. [JSDoc and Comment Conventions](#6-jsdoc-and-comment-conventions) — **MEDIUM-HIGH**
+6. [JSDoc and Comment Conventions](#6-jsdoc-and-comment-conventions) — **MEDIUM**
     - 6.1 [Keep Body Comments for Intent and Steps](#61-keep-body-comments-for-intent-and-steps)
     - 6.2 [Require Header Doc Comments on Key Declarations](#62-require-header-doc-comments-on-key-declarations)
     - 6.3 [Write Concise Korean Comments About Purpose and Constraints](#63-write-concise-korean-comments-about-purpose-and-constraints)
@@ -59,7 +59,7 @@
 
 ## 1. Types and Contracts
 
-**Impact: CRITICAL**
+**Impact: HIGH**
 
 함수 시그니처, 콜백 재사용, 타입 중복 제거, 커스텀 형태 문서화가 계약을 드러내고 다시 쓸 수 있게 유지해야 합니다. 실행 값과 타입을 한 선언에서 잡는 `as const` 객체도 여기서 정합니다.
 
@@ -71,7 +71,7 @@
 
 **Review with:** `types-document-custom-types-and-shapes`
 
-**Impact: HIGH (뜻이 그대로면 기존 타입이나 스키마에서 끌어와 같은 형태를 두 번 선언하지 않습니다)**
+**Impact: MEDIUM-HIGH (뜻이 그대로면 기존 타입이나 스키마에서 끌어와 같은 형태를 두 번 선언하지 않습니다)**
 
 필드 이름, 타입, 선택 여부가 모두 같은 선언이 이미 있으면 그대로 참조합니다.
 그중 일부만 필요하면 **`interface`를 선언하고 각 필드를 `원본["필드"]` 인덱스 접근으로 가져옵니다.**
@@ -203,7 +203,7 @@ interface ProductListRow {
 
 **Review with:** `types-mark-unused-parameters-with-underscore`
 
-**Impact: CRITICAL (계약을 한 자리에서 읽을 수 있고 같은 시그니처를 여러 곳에 베끼지 않습니다)**
+**Impact: MEDIUM-HIGH (계약을 한 자리에서 읽을 수 있고 같은 시그니처를 여러 곳에 베끼지 않습니다)**
 
 타입을 붙일 자리가 둘 있습니다.
 
@@ -294,7 +294,7 @@ const toSearchRequest: ToRequest = (request) => {
 
 **Requires selected:** `docs-write-concise-korean-comments-about-purpose-and-constraints`, `docs-write-doc-comments-as-multiline-blocks` · 함께 적용
 
-**Impact: CRITICAL (구현을 파헤치지 않고도 도메인 전용 계약을 이해합니다)**
+**Impact: MEDIUM (구현을 파헤치지 않고도 도메인 전용 계약을 이해합니다)**
 
 선언형 형태는 헤더와 필드를 나눠 문서화합니다.
 
@@ -373,7 +373,7 @@ const publishResultSchema = z.object({
 
 **Applies when:** 기존 콜백이나 프레임워크 계약을 구현하면서 매개변수를 빼거나 쓰지 않을 때. 커링한 핸들러가 마지막에 돌려주는 콜백에서 매개변수를 뺄 때.
 
-**Impact: MEDIUM-HIGH (계약의 일부를 조용히 버리지 않고 일부러 무시한 매개변수를 드러냅니다)**
+**Impact: MEDIUM (계약의 일부를 조용히 버리지 않고 일부러 무시한 매개변수를 드러냅니다)**
 
 미사용 매개변수도 생략하지 않고 `_` 접두사로 명시합니다.
 그래야 콜백 시그니처를 그대로 지키면서, 지금 구현이 일부러 쓰지 않는 값이라는 점이 드러납니다.
@@ -531,7 +531,7 @@ type ProductStatus = (typeof product_status)[keyof typeof product_status];
 
 ## 2. Naming and Module Boundaries
 
-**Impact: HIGH**
+**Impact: CRITICAL**
 
 식별자, 가져오기, 공개 진입점, 절대경로 별칭 범위, 설정 위치가 소유자와 출처를 바로 드러내야 합니다. 여기서 **소유자**는 자기 폴더를 가진 모듈 하나입니다. 그 폴더 안 파일들은 그 소유자만 씁니다.
 
@@ -543,7 +543,7 @@ type ProductStatus = (typeof product_status)[keyof typeof product_status];
 
 **Review with:** `naming-preserve-config-origin-with-chained-access`, `naming-use-direct-imports-and-public-entry-points`
 
-**Impact: HIGH (공용 설정 값이 쓰는 파일마다 흩어져 공개 출처를 잃는 것을 막습니다)**
+**Impact: MEDIUM-HIGH (공용 설정 값이 쓰는 파일마다 흩어져 공개 출처를 잃는 것을 막습니다)**
 
 설정을 어디 두는지는 그 값을 쓰는 소유자가 몇인지로 갈립니다.
 
@@ -652,7 +652,7 @@ export const productDetailConfig = {
 
 **Review with:** `functions-place-and-promote-support-functions`
 
-**Impact: HIGH (넓은 스코프 별칭으로 출처를 숨기지 않아 값이 어디서 오는지 읽힙니다)**
+**Impact: MEDIUM (넓은 스코프 별칭으로 출처를 숨기지 않아 값이 어디서 오는지 읽힙니다)**
 
 공용 설정과 공용 순수 함수는 쓰는 파일에서 직접 가져온 뒤 `config.*`, `util.*` 체인으로 씁니다.
 넓은 스코프에서 구조분해하거나 별칭 상수로 끊어 출처를 흐리지 않습니다.
@@ -690,7 +690,7 @@ if (config.features.enable_refunds) {
 
 **Applies when:** TypeScript 파일, 지역 변수, 함수, 타입, 객체·스키마 필드, enum 성격 상수의 이름을 새로 만들거나 바꿀 때. 제외: 별칭 없이 외부 패키지에서 그대로 가져오는 경우.
 
-**Impact: HIGH (모듈과 실행 구조를 넘나들며 파일명, 심볼, 형태 필드가 예측대로 유지됩니다)**
+**Impact: MEDIUM-HIGH (모듈과 실행 구조를 넘나들며 파일명, 심볼, 형태 필드가 예측대로 유지됩니다)**
 
 | 대상 | 표기 |
 | --- | --- |
@@ -769,7 +769,7 @@ const product_status = {
 
 **Review with:** `naming-restrict-absolute-aliases-to-layer-roots`
 
-**Impact: HIGH (배럴이나 모호한 재노출 계층에 기대지 않고 가져오기 소유를 드러냅니다)**
+**Impact: MEDIUM-HIGH (배럴이나 모호한 재노출 계층에 기대지 않고 가져오기 소유를 드러냅니다)**
 
 `index.ts`로 묶어 다시 내보내는 배럴을 만들지 않습니다.
 필요한 파일에서 바로 가져옵니다.
@@ -807,7 +807,7 @@ import {toUserSaveRequest} from "./function/to-user-save-request";
 
 **Review with:** `naming-use-direct-imports-and-public-entry-points`
 
-**Impact: HIGH (소유자 내부 모듈이 밖에서 직접 열리지 않아 경계가 남습니다)**
+**Impact: CRITICAL (소유자 내부 모듈이 밖에서 직접 열리지 않아 경계가 남습니다)**
 
 절대경로 별칭의 첫 마디는 전역 레이어 루트여야 합니다.
 
@@ -842,7 +842,7 @@ import {SalesChartCard} from "./component/sales-chart-card";
 
 **Review with:** `absence-expose-optional-values-instead-of-silent-fallbacks`, `naming-centralize-shared-config-namespaces`
 
-**Impact: MEDIUM-HIGH (환경마다 달라지는 값이 쓰는 파일로 흩어지지 않고 한 곳에서 읽힙니다)**
+**Impact: HIGH (환경마다 달라지는 값이 쓰는 파일로 흩어지지 않고 한 곳에서 읽힙니다)**
 
 환경마다 값이 달라지는 것은 쓰는 파일에서 직접 읽지 않습니다.
 `shared/config.ts`가 한 번 읽어 `config.*`로 내보내고, 나머지는 그 이름을 씁니다.
@@ -894,7 +894,7 @@ const productClient = createClient({baseUrl: config.api.base_url});
 
 ## 3. Functions and Helper Boundaries
 
-**Impact: HIGH**
+**Impact: MEDIUM-HIGH**
 
 함수 선언 형태와 시그니처는 한 가지로 고정하고, 보조 함수는 호출 경계가 있을 때만 떼어 내 정해진 자리에 둡니다. 이름은 무엇이 나오는지로 짓고, 값에 이름은 두 번 이상 쓸 때만 붙입니다.
 
@@ -983,7 +983,7 @@ export class ProductCursor {
 
 **Review with:** `types-reuse-existing-contracts-before-new-types`
 
-**Impact: HIGH (긴 시그니처를 읽을 수 있게 두고 위치를 헷갈리지 않으면서 입력을 늘립니다)**
+**Impact: MEDIUM-HIGH (긴 시그니처를 읽을 수 있게 두고 위치를 헷갈리지 않으면서 입력을 늘립니다)**
 
 매개변수가 3개를 넘거나 같은 계열 값이 함께 넘어오면 위치 인자를 객체 하나로 묶습니다.
 시그니처 자리에서 바로 구조분해하지 않습니다.
@@ -1040,7 +1040,7 @@ const toRequestUrl = (target: ApiRequestTarget): URL => {
 
 **Review with:** `docs-require-header-jsdoc-on-key-declarations`, `functions-place-and-promote-support-functions`
 
-**Impact: HIGH (흐름을 읽으려고 파일을 왕복하게 만드는 조각내기를 막습니다)**
+**Impact: MEDIUM (흐름을 읽으려고 파일을 왕복하게 만드는 조각내기를 막습니다)**
 
 기본은 빼지 않는 것입니다.
 흐름은 한 자리에서 위에서 아래로 읽히는 편이 낫습니다.
@@ -1180,7 +1180,7 @@ import { toProductSaveRequest } from "./function/to-product-save-request";
 
 **Requires selected:** `functions-extract-helpers-only-when-the-boundary-is-real` · 함께 적용
 
-**Impact: HIGH (잡동사니 파일이 생기지 않고 공용 승격이 실제 사용처를 근거로 일어납니다)**
+**Impact: MEDIUM-HIGH (잡동사니 파일이 생기지 않고 공용 승격이 실제 사용처를 근거로 일어납니다)**
 
 떼어 낼지는 `functions-extract-helpers-only-when-the-boundary-is-real`가 먼저 판정합니다.
 이 규칙은 그 결과를 어디 두고 언제 올릴지만 봅니다.
@@ -1270,7 +1270,7 @@ export const util = {
 
 **Review with:** `functions-extract-helpers-only-when-the-boundary-is-real`
 
-**Impact: HIGH (분기로 공유 지역 변수를 바꾸지 않아 넓은 스코프의 값 조립이 선언형으로 남습니다)**
+**Impact: MEDIUM (분기로 공유 지역 변수를 바꾸지 않아 넓은 스코프의 값 조립이 선언형으로 남습니다)**
 
 모듈 최상위나 함수 본문 전체를 덮는 스코프에서 `let` 재대입, 배열 `push`, 조건부 누적으로 값을 쌓지 않습니다.
 `if`나 `for` 블록 안에서만 사는 누적은 대상이 아닙니다.
@@ -1317,7 +1317,7 @@ const visibleTabs = [
 
 **Review with:** `functions-avoid-imperative-assembly-in-wide-scopes`
 
-**Impact: HIGH (한 번 쓸 값에 이름을 붙이지 않아 식의 출처가 쓰는 자리에 그대로 남습니다)**
+**Impact: MEDIUM (한 번 쓸 값에 이름을 붙이지 않아 식의 출처가 쓰는 자리에 그대로 남습니다)**
 
 부수효과 없는 순수 식의 결과를 **한 번만 쓰면 이름을 붙이지 않고 그 자리에 적습니다.**
 두 번 이상 쓰면 그 자리들을 모두 감싸는 가장 좁은 스코프에 `const`로 둡니다.
@@ -1416,7 +1416,7 @@ const submitDraft = async (draft: Draft) => {
 
 **Applies when:** 이름 붙인 함수를 새로 만들거나 이름을 바꿀 때. 제외: 외부 패키지가 정한 이름을 별칭 없이 그대로 쓰는 경우.
 
-**Impact: MEDIUM-HIGH (이름만 읽고 결과를 알 수 있어 구현을 열어 보지 않아도 됩니다)**
+**Impact: MEDIUM (이름만 읽고 결과를 알 수 있어 구현을 열어 보지 않아도 됩니다)**
 
 `build`, `create`, `normalize`, `resolve`, `process`는 서로 바꿔 써도 뜻이 안 변합니다.
 그런 동사는 이름 자리를 차지하면서 아무것도 알려 주지 않습니다.
@@ -1501,7 +1501,7 @@ export const isAdminUser = (user: User) => { /* … */ };
 
 **Applies when:** 프롭스, 상태, 매개변수, 모듈 상수에서 온 배열을 정렬할 때. 기존 `.sort()` 호출을 추가·변경할 때.
 
-**Impact: MEDIUM (프롭스, 상태, 모듈 상수에서 온 배열을 정렬할 때 원본이 바뀌는 버그를 피합니다)**
+**Impact: HIGH (프롭스, 상태, 모듈 상수에서 온 배열을 정렬할 때 원본이 바뀌는 버그를 피합니다)**
 
 이 함수가 만들지 않은 배열은 `.sort()`로 제자리에서 바꾸지 않습니다.
 프롭스, 상태, 매개변수, 모듈 상수로 들어온 배열이 그 경우입니다.
@@ -1650,7 +1650,7 @@ const productIds = response.data.rows?.map((row) => row.id);
 
 ## 6. JSDoc and Comment Conventions
 
-**Impact: MEDIUM-HIGH**
+**Impact: MEDIUM**
 
 함수 본문 안 주석은 의도와 긴 절차의 단계를 적고 코드를 옮겨 적지 않습니다. 선언 위 문서 주석은 어디에 붙일지, 어떤 형식으로 쓸지, 태그를 붙일지가 따로 정해져 있습니다. 본문은 한국어로 목적과 제약을 적고, 규칙이 허용한 예외에는 확인할 수 있는 이유를 남깁니다.
 
@@ -1727,7 +1727,7 @@ const submitProductDraft = async (draft: ProductDraft) => {
 
 **Requires selected:** `docs-write-concise-korean-comments-about-purpose-and-constraints`, `docs-write-doc-comments-as-multiline-blocks` · 함께 적용
 
-**Impact: MEDIUM-HIGH (구현을 읽기 전에 중요한 경계를 찾고 설명할 수 있습니다)**
+**Impact: MEDIUM (구현을 읽기 전에 중요한 경계를 찾고 설명할 수 있습니다)**
 
 이름 붙인 쿼리와 뮤테이션, 원격 함수, 커스텀 훅, 스토어, 표시 문자열을 만드는 포매터 선언에는
 헤더 문서 주석을 씁니다.
@@ -1881,7 +1881,7 @@ export interface PgProductTreeProps {
 
 **Review with:** `docs-require-header-jsdoc-on-key-declarations`
 
-**Impact: MEDIUM (선언 위 주석 형태가 파일마다 같아 주석을 검색하고 훑어보기 쉬워집니다)**
+**Impact: LOW (선언 위 주석 형태가 파일마다 같아 주석을 검색하고 훑어보기 쉬워집니다)**
 
 문서 주석은 여러 줄 블록으로 고정합니다.
 `/**`, `*`, `*/`를 각각 줄로 나눕니다.
@@ -1933,7 +1933,7 @@ export const saveProduct = async (product: Product): Promise<void> => {
 
 **Review with:** `docs-write-concise-korean-comments-about-purpose-and-constraints`
 
-**Impact: MEDIUM-HIGH (예외가 취향인지 근거가 있는 것인지 코드에서 바로 갈립니다)**
+**Impact: MEDIUM (예외가 취향인지 근거가 있는 것인지 코드에서 바로 갈립니다)**
 
 여러 규칙이 예외를 허용하면서 "이유를 주석으로 남긴다"를 조건으로 답니다.
 그 주석의 기준을 여기서 한 번만 정합니다.

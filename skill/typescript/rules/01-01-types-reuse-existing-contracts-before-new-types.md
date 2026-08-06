@@ -1,7 +1,7 @@
 ---
 title: Reuse Existing Contracts Before Declaring New Types
 titleKo: 새 타입을 선언하기 전에 기존 계약을 먼저 씁니다
-impact: HIGH
+impact: MEDIUM-HIGH
 impactDescription: 뜻이 그대로면 기존 타입이나 스키마에서 끌어와 같은 형태를 두 번 선언하지 않습니다
 appliesWhen:
   - 뜻이 같은 기존 타입, 인터페이스, 스키마가 있는데 형태를 새로 선언·변경·복제·파생할 때
@@ -14,7 +14,7 @@ tags: types
 
 ## Reuse Existing Contracts Before Declaring New Types
 
-**Impact: HIGH (뜻이 그대로면 기존 타입이나 스키마에서 끌어와 같은 형태를 두 번 선언하지 않습니다)**
+**Impact: MEDIUM-HIGH (뜻이 그대로면 기존 타입이나 스키마에서 끌어와 같은 형태를 두 번 선언하지 않습니다)**
 
 필드 이름, 타입, 선택 여부가 모두 같은 선언이 이미 있으면 그대로 참조합니다.
 그중 일부만 필요하면 **`interface`를 선언하고 각 필드를 `원본["필드"]` 인덱스 접근으로 가져옵니다.**

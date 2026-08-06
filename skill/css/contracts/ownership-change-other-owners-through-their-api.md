@@ -1,6 +1,6 @@
 # Change Other Owners Through Their API
 
-**Impact: HIGH (남의 표현을 바꿀 때 배치, 변형, 내림 가운데 무엇이 맞는지 먼저 봅니다)**
+**Impact: MEDIUM-HIGH (남의 표현을 바꿀 때 배치, 변형, 내림 가운데 무엇이 맞는지 먼저 봅니다)**
 
 바꿀 것이 남의 표현이면 세 갈래를 순서대로 봅니다.
 

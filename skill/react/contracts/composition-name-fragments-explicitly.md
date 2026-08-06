@@ -1,6 +1,6 @@
 # Write Fragments as `Fragment`, Not the Shorthand
 
-**Impact: MEDIUM (조각을 감싼 자리가 이름을 가져서 검색과 diff에 그대로 드러납니다)**
+**Impact: LOW (조각을 감싼 자리가 이름을 가져서 검색과 diff에 그대로 드러납니다)**
 
 여러 요소를 감쌀 때는 `<Fragment>`를 `react`에서 직접 가져와 그대로 씁니다.
 `<>`와 `</>`는 쓰지 않습니다.

@@ -1,7 +1,7 @@
 ---
 title: Require Doc Comments on React Hooks, Handlers, and Key Declarations
 titleKo: 훅, 핸들러, 핵심 선언에는 문서 주석을 붙입니다
-impact: MEDIUM-HIGH
+impact: MEDIUM
 impactDescription: 리액트가 아는 경계 선언을 동반 스킬 목록에 더해 빠뜨리지 않습니다
 appliesWhen:
   - 쿼리·뮤테이션이나 읽어서 의도가 안 보이는 핸들러·이펙트를 추가·변경할 때
@@ -13,7 +13,7 @@ tags: docs, handlers, effects
 
 ## Require Doc Comments on React Hooks, Handlers, and Key Declarations
 
-**Impact: MEDIUM-HIGH (리액트가 아는 경계 선언을 동반 스킬 목록에 더해 빠뜨리지 않습니다)**
+**Impact: MEDIUM (리액트가 아는 경계 선언을 동반 스킬 목록에 더해 빠뜨리지 않습니다)**
 
 문서 주석은 경계를 설명할 때만 붙입니다.
 코드만 봐도 아는 지역 변수에는 강제하지 않습니다.

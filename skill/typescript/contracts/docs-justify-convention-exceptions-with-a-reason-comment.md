@@ -1,6 +1,6 @@
 # Justify Convention Exceptions With a Checkable Reason Comment
 
-**Impact: MEDIUM-HIGH (예외가 취향인지 근거가 있는 것인지 코드에서 바로 갈립니다)**
+**Impact: MEDIUM (예외가 취향인지 근거가 있는 것인지 코드에서 바로 갈립니다)**
 
 여러 규칙이 예외를 허용하면서 "이유를 주석으로 남긴다"를 조건으로 답니다.
 그 주석의 기준을 여기서 한 번만 정합니다.

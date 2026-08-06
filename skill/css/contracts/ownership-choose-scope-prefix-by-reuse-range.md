@@ -1,6 +1,6 @@
 # Choose the Scope Prefix by Reuse Range
 
-**Impact: HIGH (접두사를 재사용 범위로 정하면 이름만 보고 어디서 쓰이는지 압니다)**
+**Impact: MEDIUM-HIGH (접두사를 재사용 범위로 정하면 이름만 보고 어디서 쓰이는지 압니다)**
 
 범위 접두사가 뜻하는 것은 그 CSS 파일 소유자의 **재사용 범위**입니다.
 재사용 범위는 파일이 `src/page`, `src/widget`, `src/ui` 중 어디 아래 있는지로 이미 정해져 있으니

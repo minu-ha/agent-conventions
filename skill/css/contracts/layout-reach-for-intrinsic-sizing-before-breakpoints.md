@@ -1,6 +1,6 @@
 # Reach for Intrinsic Sizing Before Breakpoints
 
-**Impact: HIGH (슬롯 폭이 얼마든 맞는 배치라 같은 컴포넌트를 옮겨도 CSS를 다시 고치지 않습니다)**
+**Impact: MEDIUM-HIGH (슬롯 폭이 얼마든 맞는 배치라 같은 컴포넌트를 옮겨도 CSS를 다시 고치지 않습니다)**
 
 분기점을 적기 전에 분기점 없이 되는지 먼저 봅니다.
 아래 넷 중 하나에 해당하면 `@media`를 쓰지 않습니다.

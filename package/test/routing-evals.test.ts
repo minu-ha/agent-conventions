@@ -2538,9 +2538,12 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 		].map((ruleId) => readFile(path.join(realSkillRootDir, "typescript", "contracts", `${ruleId}.md`), "utf8")),
 	);
 	assert.match(typescriptContracts[0]!, /경로가 같아도 값과 타입 중 무엇을 가져오는지가 바뀌면/i);
-	assert.match(typescriptContracts[1]!, /CRITICAL rule[\s\S]*full rule/i);
+	assert.match(
+		await readFile(path.join(realSkillRootDir, "typescript", "contracts", "naming-restrict-absolute-aliases-to-layer-roots.md"), "utf8"),
+		/CRITICAL rule[\s\S]*full rule/i,
+	);
 	assertMentions(typescriptContracts[2]!, [/커링한 핸들러/i, /마지막 콜백/i], "typescriptContracts");
-	assert.match(typescriptContracts[3]!, /CRITICAL rule[\s\S]*full rule/i);
+	assertMentions(typescriptContracts[3]!, [/타입을 붙일 자리가 둘 있습니다/i, /함수를 담는 변수에 한 번/i], "typescriptContracts");
 	assertMentions(typescriptContracts[4]!, [/그대로인 계약/i, /새 자리에서 쓰는 것만으로는/i], "typescriptContracts");
 
 	const stylesheetFormat = await readRule("css", "naming-default-to-plain-css-when-no-module-convention");
@@ -2725,7 +2728,11 @@ test("v17 TypeScript boundaries exclude React props and prevent self-created dup
 		[/리액트 컴포넌트의 프롭스는 이 규칙 대상이 아닙니다/i, /뜻이 같은 계약이 이미 있으면/i],
 		"generatedContracts",
 	);
-	assert.match(generatedContracts[1]!, /CRITICAL rule[\s\S]*full rule/i);
+	assertMentions(
+		generatedContracts[1]!,
+		[/선언형 형태는 헤더와 필드를 나눠 문서화합니다/i, /각 필드 바로 위에 문서 주석/i],
+		"generatedContracts",
+	);
 	assertMentions(generatedContracts[2]!, [/위치 인자/i, /객체/i, /`\*Params`/i, /(?:스스로|자기|자가)/i], "generatedContracts");
 });
 
@@ -2779,7 +2786,11 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 		[/리액트 컴포넌트의 프롭스는 이 규칙 대상이 아닙니다/i, /뜻이 같은 계약이 이미 있으면/i],
 		"generatedContracts",
 	);
-	assert.match(generatedContracts[1]!, /CRITICAL rule[\s\S]*full rule/i);
+	assertMentions(
+		generatedContracts[1]!,
+		[/선언형 형태는 헤더와 필드를 나눠 문서화합니다/i, /각 필드 바로 위에 문서 주석/i],
+		"generatedContracts",
+	);
 	assertMentions(generatedContracts[2]!, [/위치 인자/i, /객체/i, /`\*Params`/i, /(?:스스로|자기|자가)/i], "generatedContracts");
 });
 

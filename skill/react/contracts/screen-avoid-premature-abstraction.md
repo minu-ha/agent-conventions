@@ -1,6 +1,6 @@
 # Avoid Premature Abstraction in Screen Code
 
-**Impact: HIGH (짐작으로 빼내지 않고 실제 재사용 경계에 맞춰 화면 코드를 둡니다)**
+**Impact: MEDIUM-HIGH (짐작으로 빼내지 않고 실제 재사용 경계에 맞춰 화면 코드를 둡니다)**
 
 반복이 보인다는 이유만으로 공용 훅, 컴포넌트, 보조 함수를 만들지 않습니다.
 

@@ -1,7 +1,7 @@
 ---
 title: Document Custom Types and Declarative Shapes
 titleKo: 커스텀 타입과 선언형 형태를 문서화합니다
-impact: CRITICAL
+impact: MEDIUM
 impactDescription: 구현을 파헤치지 않고도 도메인 전용 계약을 이해합니다
 appliesWhen:
   - 타입, 인터페이스, 스키마 최상단, 객체 상수, 계약 필드, 파생 별칭을 추가·변경할 때
@@ -15,7 +15,7 @@ tags: types, jsdoc
 
 ## Document Custom Types and Declarative Shapes
 
-**Impact: CRITICAL (구현을 파헤치지 않고도 도메인 전용 계약을 이해합니다)**
+**Impact: MEDIUM (구현을 파헤치지 않고도 도메인 전용 계약을 이해합니다)**
 
 선언형 형태는 헤더와 필드를 나눠 문서화합니다.
 

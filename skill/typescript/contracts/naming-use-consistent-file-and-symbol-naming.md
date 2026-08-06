@@ -1,6 +1,6 @@
 # Use Consistent File, Symbol, and Field Naming
 
-**Impact: HIGH (모듈과 실행 구조를 넘나들며 파일명, 심볼, 형태 필드가 예측대로 유지됩니다)**
+**Impact: MEDIUM-HIGH (모듈과 실행 구조를 넘나들며 파일명, 심볼, 형태 필드가 예측대로 유지됩니다)**
 
 | 대상 | 표기 |
 | --- | --- |

@@ -34,18 +34,18 @@
     - 1.4 [Keep Component Imports Flowing Downward](#14-keep-component-imports-flowing-downward)
     - 1.5 [Do Not Create Screen-local Custom Hooks for Pure Logic](#15-do-not-create-screen-local-custom-hooks-for-pure-logic)
     - 1.6 [Keep Library Lifecycle in the Owning Component](#16-keep-library-lifecycle-in-the-owning-component)
-2. [Server Data Flow](#2-server-data-flow) — **CRITICAL**
+2. [Server Data Flow](#2-server-data-flow) — **HIGH**
     - 2.1 [Name Query and Mutation Bindings Consistently](#21-name-query-and-mutation-bindings-consistently)
     - 2.2 [Shape React Query Data in query.select](#22-shape-react-query-data-in-query-select)
     - 2.3 [Combine Multiple Queries With `combine`](#23-combine-multiple-queries-with-combine)
     - 2.4 [Preserve Response and Store Origin in Wide Scopes](#24-preserve-response-and-store-origin-in-wide-scopes)
     - 2.5 [Handle Mutation Failure Where the Mutation Is Called](#25-handle-mutation-failure-where-the-mutation-is-called)
     - 2.6 [Invalidate the Queries a Mutation Changed](#26-invalidate-the-queries-a-mutation-changed)
-3. [Typing and Contracts](#3-typing-and-contracts) — **HIGH**
+3. [Typing and Contracts](#3-typing-and-contracts) — **CRITICAL**
     - 3.1 [Take React Handler and Wrapper Prop Types From Existing Contracts](#31-take-react-handler-and-wrapper-prop-types-from-existing-contracts)
     - 3.2 [Narrow the Contract a Library Wrapper Opens](#32-narrow-the-contract-a-library-wrapper-opens)
     - 3.3 [Choose the Wrapper Shape and Forward Props Accordingly](#33-choose-the-wrapper-shape-and-forward-props-accordingly)
-4. [Composition Strategy](#4-composition-strategy) — **HIGH**
+4. [Composition Strategy](#4-composition-strategy) — **MEDIUM-HIGH**
     - 4.1 [Choose Single Components, Compound Components, and Variants Deliberately](#41-choose-single-components-compound-components-and-variants-deliberately)
     - 4.2 [Expose Only Compound Parts the Consumer Assembles](#42-expose-only-compound-parts-the-consumer-assembles)
     - 4.3 [Avoid Boolean Prop Proliferation in Shared Components](#43-avoid-boolean-prop-proliferation-in-shared-components)
@@ -59,7 +59,7 @@
     - 5.6 [Declare Props Interfaces Above the Component](#56-declare-props-interfaces-above-the-component)
     - 5.7 [Write Fragments as `Fragment`, Not the Shorthand](#57-write-fragments-as-fragment-not-the-shorthand)
     - 5.8 [Render a Single Branch With `&&`, Not a Ternary](#58-render-a-single-branch-with-not-a-ternary)
-6. [Screen File Discipline](#6-screen-file-discipline) — **HIGH**
+6. [Screen File Discipline](#6-screen-file-discipline) — **MEDIUM-HIGH**
     - 6.1 [Keep Route Entry Files Focused on Screen Flow](#61-keep-route-entry-files-focused-on-screen-flow)
     - 6.2 [Avoid Premature Abstraction in Screen Code](#62-avoid-premature-abstraction-in-screen-code)
     - 6.3 [Extract Local Section Components Only for Runtime Boundaries](#63-extract-local-section-components-only-for-runtime-boundaries)
@@ -74,17 +74,17 @@
     - 8.3 [Store Shared Derived Decisions Only When They Are Truly Shared](#83-store-shared-derived-decisions-only-when-they-are-truly-shared)
     - 8.4 [Use Functional setState Updates When Based on Previous State](#84-use-functional-setstate-updates-when-based-on-previous-state)
     - 8.5 [Use useEffectEvent for Non-reactive Effect Callbacks](#85-use-useeffectevent-for-non-reactive-effect-callbacks)
-9. [Events and Interaction Flow](#9-events-and-interaction-flow) — **MEDIUM-HIGH**
+9. [Events and Interaction Flow](#9-events-and-interaction-flow) — **HIGH**
     - 9.1 [Name Handlers Predictably](#91-name-handlers-predictably)
     - 9.2 [Curry Extra Arguments Into DOM Event Handlers](#92-curry-extra-arguments-into-dom-event-handlers)
     - 9.3 [Run User Actions in Handlers, Not Effects](#93-run-user-actions-in-handlers-not-effects)
-10. [Render Performance](#10-render-performance) — **MEDIUM-HIGH**
+10. [Render Performance](#10-render-performance) — **MEDIUM**
     - 10.1 [Do Not Memoize Without a Confirmed Reason](#101-do-not-memoize-without-a-confirmed-reason)
     - 10.2 [Use Lazy State Initializers for Expensive Defaults](#102-use-lazy-state-initializers-for-expensive-defaults)
     - 10.3 [Defer Heavy Renders Only With Measured Evidence](#103-defer-heavy-renders-only-with-measured-evidence)
-11. [Accessibility](#11-accessibility) — **MEDIUM-HIGH**
+11. [Accessibility](#11-accessibility) — **HIGH**
     - 11.1 [Give Interactive Elements an Accessible Name](#111-give-interactive-elements-an-accessible-name)
-12. [Documentation and Comments](#12-documentation-and-comments) — **MEDIUM-HIGH**
+12. [Documentation and Comments](#12-documentation-and-comments) — **MEDIUM**
     - 12.1 [Require Doc Comments on React Hooks, Handlers, and Key Declarations](#121-require-doc-comments-on-react-hooks-handlers-and-key-declarations)
 
 ---
@@ -220,7 +220,7 @@ const PgDeleteProductButton = () => {
 
 **Review with:** `ownership-layer-component-boundaries`, `typescript/naming-use-consistent-file-and-symbol-naming`
 
-**Impact: HIGH (파일 하나만 봐도 어느 레이어 소유인지 드러납니다)**
+**Impact: MEDIUM (파일 하나만 봐도 어느 레이어 소유인지 드러납니다)**
 
 세 레이어 모두 파일명과 심볼에 레이어 접두사를 붙입니다.
 예외를 두지 않습니다.
@@ -273,7 +273,7 @@ export const PgSalesTrendPanel = (props: PgSalesTrendPanelProps) => {
 
 **Review with:** `css/ownership-choose-scope-prefix-by-reuse-range`, `ownership-keep-component-imports-flowing-downward`
 
-**Impact: CRITICAL (빼낸 파일이 소유자를 따라가 예상한 자리에 놓입니다)**
+**Impact: MEDIUM-HIGH (빼낸 파일이 소유자를 따라가 예상한 자리에 놓입니다)**
 
 라우트와 복잡한 컴포넌트가 소유자이고, 추출한 파일은 그 소유자 아래 역할 폴더에 둡니다.
 소유자 이름이 폴더 이름이므로 위치만 보고 소유자를 알 수 있습니다.
@@ -437,7 +437,7 @@ import { WgLegendPanel } from "@/widget/legend-panel/wg-legend-panel";
 
 **Review with:** `ownership-keep-lifecycle-in-the-owning-component`, `ownership-place-owner-files-in-role-folders`, `typescript/functions-extract-helpers-only-when-the-boundary-is-real`, `typescript/naming-use-direct-imports-and-public-entry-points`
 
-**Impact: HIGH (리액트 전용 추상을 실제 생명주기나 문맥이 얽힌 자리로만 한정합니다)**
+**Impact: MEDIUM-HIGH (리액트 전용 추상을 실제 생명주기나 문맥이 얽힌 자리로만 한정합니다)**
 
 순수 계산은 훅으로 감싸지 않고 일반 `.ts` 파일의 함수로 둡니다.
 화면 하나에 종속된 계산, 정규화, 전송 값 조립이 모두 여기 해당합니다.
@@ -497,7 +497,7 @@ const PgMediaUploadPanel = (props: PgMediaUploadPanelProps) => {
 
 **Review with:** `ownership-prefer-plain-ts-for-local-react-helpers`
 
-**Impact: HIGH (파일 길이를 줄이려고 생명주기를 훅 뒤로 숨겨 실행 흐름이 사라지지 않습니다)**
+**Impact: MEDIUM (파일 길이를 줄이려고 생명주기를 훅 뒤로 숨겨 실행 흐름이 사라지지 않습니다)**
 
 외부 라이브러리의 인스턴스 생성, 크기 변경, 이벤트 구독, 정리는 그 하위 트리를 소유한 컴포넌트가 직접 가집니다.
 파일이 길어졌다는 이유만으로 커스텀 훅을 만들어 생명주기를 숨기지 않습니다.
@@ -591,7 +591,7 @@ export const WgChartRoot = (props: WgChartRootProps) => {
 
 ## 2. Server Data Flow
 
-**Impact: CRITICAL**
+**Impact: HIGH**
 
 쿼리와 뮤테이션은 출처를 보존해야 하며, 응답 변형은 `query.select`처럼 소스에 가장 가까운 지점에서 끝내야 합니다. 바인딩 이름도 어떤 API에서 왔는지 드러내야 하고, 실패와 무효화는 부른 자리에서 받습니다.
 
@@ -605,7 +605,7 @@ export const WgChartRoot = (props: WgChartRootProps) => {
 
 **Review with:** `data-preserve-origin-chaining`
 
-**Impact: HIGH (생성된 API 훅과 지역 바인딩을 훑고 되짚기 쉬워집니다)**
+**Impact: MEDIUM (생성된 API 훅과 지역 바인딩을 훑고 되짚기 쉬워집니다)**
 
 프로젝트가 이미 채택한 쿼리/뮤테이션 훅 이름은 유지하고, 로컬 바인딩은 `response`와 `mutation` 접두사만 씁니다.
 훅 하나를 담는 바인딩 이름은 훅 이름에서 `use`를 떼고 앞에 `response` 또는 `mutation`을 붙여 만듭니다.
@@ -643,7 +643,7 @@ const mutationProductRemove = useProductRemove();
 
 **Review with:** `data-name-query-and-mutation-bindings-consistently`, `data-preserve-origin-chaining`
 
-**Impact: CRITICAL (변환이 통신 경계 한 곳에 모여 화면이 응답 원본 구조를 모릅니다)**
+**Impact: MEDIUM-HIGH (변환이 통신 경계 한 곳에 모여 화면이 응답 원본 구조를 모릅니다)**
 
 서버 응답 가공은 렌더링 본문이 아니라 `query.select`에서 처리합니다.
 
@@ -696,7 +696,7 @@ const responseProductListSuspense = useProductListSuspense(
 
 **Review with:** `data-shape-query-data-with-select`, `screen-keep-derived-values-close`
 
-**Impact: HIGH (여러 응답을 합치는 자리가 통신 경계에 남고 화면 본문에 별칭이 쌓이지 않습니다)**
+**Impact: MEDIUM-HIGH (여러 응답을 합치는 자리가 통신 경계에 남고 화면 본문에 별칭이 쌓이지 않습니다)**
 
 쿼리 결과 둘 이상을 하나의 값으로 합쳐야 하면 `useSuspenseQueries`나 `useQueries`에 `combine`을 넘깁니다.
 `Suspense` 쿼리를 쓰는 화면은 `useSuspenseQueries`를 쓰고, 합친 값에 `isPending`을 만들어 내보내지 않습니다.
@@ -786,7 +786,7 @@ const responseShipmentList = useShipmentList(
 
 **Review with:** `screen-keep-derived-values-close`
 
-**Impact: CRITICAL (파일 전체에서 별칭을 따라가지 않고 값의 출처를 바로 압니다)**
+**Impact: MEDIUM (파일 전체에서 별칭을 따라가지 않고 값의 출처를 바로 압니다)**
 
 페이지, 레이아웃, 화면 스코프에서는 `response...`, `mutation...`, `*Store` 원본을 유지합니다.
 넓은 스코프의 구조분해와 별칭 상수는 값의 출처를 흐립니다.
@@ -1014,7 +1014,7 @@ const mutationProductSave = useProductSave({
 
 ## 3. Typing and Contracts
 
-**Impact: HIGH**
+**Impact: CRITICAL**
 
 리액트 핸들러 타입과 래퍼가 노출한 프롭 계약은 선언 자리에서 바로 드러나야 합니다. 라이브러리 래퍼는 여는 표면을 좁히고 형태에 맞는 방법으로 프롭을 넘깁니다. 일반 TypeScript 타입 규칙은 동반 스킬이 다루고 여기서는 리액트 문맥만 봅니다.
 
@@ -1026,7 +1026,7 @@ const mutationProductSave = useProductSave({
 
 **Requires selected:** `typescript/types-prefer-function-variable-types-over-parameter-annotations` · 함께 적용
 
-**Impact: HIGH (같은 시그니처를 손으로 다시 적지 않아 계약이 어긋나지 않습니다)**
+**Impact: MEDIUM-HIGH (같은 시그니처를 손으로 다시 적지 않아 계약이 어긋나지 않습니다)**
 
 타입을 어디에 붙일지는 `typescript/types-prefer-function-variable-types-over-parameter-annotations`가
 정합니다.
@@ -1099,7 +1099,7 @@ const handleSubmitClick: UiButtonProps["onClick"] = (event) => {
 
 **Review with:** `css/composition-do-not-style-through-the-style-attribute`, `typescript/docs-justify-convention-exceptions-with-a-reason-comment`, `typing-choose-wrapper-shape-and-forwarding`, `typing-take-handler-types-from-existing-contracts`
 
-**Impact: HIGH (라이브러리의 스타일 우회로가 화면으로 새지 않고 교체할 때 래퍼 한 파일만 고칩니다)**
+**Impact: CRITICAL (라이브러리의 스타일 우회로가 화면으로 새지 않고 교체할 때 래퍼 한 파일만 고칩니다)**
 
 라이브러리 컴포넌트는 화면에서 직접 쓰지 않고 `Ui*` 래퍼를 거칩니다.
 래퍼가 있어야 라이브러리를 올리거나 바꿀 때 한 파일만 고칩니다.
@@ -1445,7 +1445,7 @@ export const UiTableRow = (props: UiTableRowProps) => (
 
 ## 4. Composition Strategy
 
-**Impact: HIGH**
+**Impact: MEDIUM-HIGH**
 
 공용 컴포넌트는 단일 컴포넌트, 합성 컴포넌트, 드러난 변형 중 어떤 구조를 쓸지 먼저 결정하고, 그다음 무엇을 공개 부품으로 열지 정합니다. 불리언 프롭으로 모드를 늘리지 않고, 정적 조립에는 렌더 프롭 대신 `children`을 씁니다.
 
@@ -1457,7 +1457,7 @@ export const UiTableRow = (props: UiTableRowProps) => (
 
 **Review with:** `screen-avoid-premature-abstraction`, `strategy-avoid-boolean-prop-proliferation`, `strategy-expose-only-assembled-compound-parts`, `strategy-prefer-children-over-render-props`
 
-**Impact: HIGH (필요한 확장점은 열면서 가장 단순한 구조를 고르게 돕습니다)**
+**Impact: MEDIUM-HIGH (필요한 확장점은 열면서 가장 단순한 구조를 고르게 돕습니다)**
 
 공용 컴포넌트는 프롭스보다 구조를 먼저 고릅니다.
 고정 UI, 공개 부품 조립, 공용 상태/동작/컨텍스트, 반복 기본 설정 중 무엇이 필요한지 순서대로 봅니다.
@@ -1663,7 +1663,7 @@ export const UiReadOnlyProfileDialog = (props: UiReadOnlyProfileDialogProps) => 
 
 **Review with:** `css/composition-do-not-add-wrapper-elements-for-styling`, `strategy-choose-single-composition-compound-and-variants`
 
-**Impact: HIGH (내부 구조가 공개 계약이 되지 않아 나중에 바꿀 수 있습니다)**
+**Impact: MEDIUM-HIGH (내부 구조가 공개 계약이 되지 않아 나중에 바꿀 수 있습니다)**
 
 공개 부품은 두 경우만 엽니다.
 
@@ -1724,7 +1724,7 @@ export const UiPanel = {
 
 **Review with:** `strategy-expose-only-assembled-compound-parts`
 
-**Impact: HIGH (공용 컴포넌트가 숨은 조합을 쌓지 않고 구조를 드러냅니다)**
+**Impact: MEDIUM-HIGH (공용 컴포넌트가 숨은 조합을 쌓지 않고 구조를 드러냅니다)**
 
 여러 파일과 레이어에서 재사용되는 공용 컴포넌트에 `isCompact`, `isEditing`, `showSearch` 같은
 불리언 프롭을 늘리지 않습니다.
@@ -1907,7 +1907,7 @@ export const PgProductScreen = () => {
 
 **Review with:** `data-preserve-origin-chaining`, `screen-keep-derived-values-close`
 
-**Impact: MEDIUM-HIGH (값이 프롭스에서 왔다는 사실이 쓰는 자리마다 그대로 남습니다)**
+**Impact: MEDIUM (값이 프롭스에서 왔다는 사실이 쓰는 자리마다 그대로 남습니다)**
 
 컴포넌트는 `props` 전체를 받고 쓰는 자리마다 `props.id`로 읽습니다.
 시그니처에서도, 본문 어느 줄에서도, 본문 안 중첩 함수에서도 구조분해하지 않습니다.
@@ -2040,7 +2040,7 @@ export const WgUserProfileCard = (props: WgUserProfileCardProps) => {
 
 **Review with:** `events-run-user-actions-in-handlers-not-effects`, `typescript/functions-extract-helpers-only-when-the-boundary-is-real`
 
-**Impact: HIGH (부수효과, 분기, 비동기 흐름을 일반 코드 흐름에서 읽습니다)**
+**Impact: MEDIUM (부수효과, 분기, 비동기 흐름을 일반 코드 흐름에서 읽습니다)**
 
 JSX에는 이름 붙인 핸들러 참조만 넘깁니다.
 분기, 비동기 호출, 여러 부수효과가 들어가면 핸들러로 분리합니다.
@@ -2191,7 +2191,7 @@ export const UiStatusBadge = (props: UiStatusBadgeProps) => {
 
 **Review with:** `composition-do-not-define-components-inside-components`
 
-**Impact: MEDIUM (숨기기와 마운트 해제를 구분해 써서 되돌릴 때 상태가 사라지는 사고를 막습니다)**
+**Impact: HIGH (숨기기와 마운트 해제를 구분해 써서 되돌릴 때 상태가 사라지는 사고를 막습니다)**
 
 기본은 조건부 렌더링입니다.
 `<Activity>`는 **숨겼다 되돌릴 때 하위 트리 상태를 그대로 살려야 할 때만** 씁니다.
@@ -2369,7 +2369,7 @@ export const UiPanelHeader = (props: UiPanelHeaderProps) => {
 
 **Applies when:** JSX에서 여러 요소를 감쌀 조각 문법을 추가·변경할 때. 조각에 `key`를 붙이거나 떼어 낼 때.
 
-**Impact: MEDIUM (조각을 감싼 자리가 이름을 가져서 검색과 diff에 그대로 드러납니다)**
+**Impact: LOW (조각을 감싼 자리가 이름을 가져서 검색과 diff에 그대로 드러납니다)**
 
 여러 요소를 감쌀 때는 `<Fragment>`를 `react`에서 직접 가져와 그대로 씁니다.
 `<>`와 `</>`는 쓰지 않습니다.
@@ -2433,7 +2433,7 @@ export const PgProductRows = (props: PgProductRowsProps) => {
 
 **Applies when:** JSX 안에 조건부 렌더링을 추가하거나 조건식을 바꿀 때. 기존 `조건 ? … : null`을 넣거나 뺄 때.
 
-**Impact: MEDIUM (조건부 렌더링 형태가 하나로 고정되고 쓰지 않는 `: null`이 사라집니다)**
+**Impact: HIGH (조건부 렌더링 형태가 하나로 고정되고 쓰지 않는 `: null`이 사라집니다)**
 
 JSX 안에서 그릴 갈래가 **하나면** `&&`를 씁니다.
 `조건 ? <X /> : null`로 쓰지 않습니다.
@@ -2517,7 +2517,7 @@ return filteredCategoryNodes.length > 0 ? (
 
 ## 6. Screen File Discipline
 
-**Impact: HIGH**
+**Impact: MEDIUM-HIGH**
 
 라우트 진입은 화면 흐름을 분명하게 보여줘야 하며, 자기 상태나 비동기를 직접 가진 섹션만 떼어냅니다. 파생값은 쓰는 자리에서 계산하고, 짐작으로 미리 빼내지 않습니다.
 
@@ -2529,7 +2529,7 @@ return filteredCategoryNodes.length > 0 ? (
 
 **Review with:** `ownership-place-owner-files-in-role-folders`, `screen-extract-local-section-components-for-runtime-boundaries`
 
-**Impact: HIGH (진입 파일만 봐도 화면 흐름을 따라갈 수 있습니다)**
+**Impact: MEDIUM-HIGH (진입 파일만 봐도 화면 흐름을 따라갈 수 있습니다)**
 
 라우트 진입이 소유하는 것은 다음 다섯입니다.
 다른 규칙이 이 목록을 가리킬 때는 여기가 정본입니다.
@@ -2611,7 +2611,7 @@ return (
 
 **Review with:** `screen-extract-local-section-components-for-runtime-boundaries`, `typescript/functions-extract-helpers-only-when-the-boundary-is-real`
 
-**Impact: HIGH (짐작으로 빼내지 않고 실제 재사용 경계에 맞춰 화면 코드를 둡니다)**
+**Impact: MEDIUM-HIGH (짐작으로 빼내지 않고 실제 재사용 경계에 맞춰 화면 코드를 둡니다)**
 
 반복이 보인다는 이유만으로 공용 훅, 컴포넌트, 보조 함수를 만들지 않습니다.
 
@@ -2734,7 +2734,7 @@ export const PgProductTable = (props: PgProductTableProps) => {
 
 **Applies when:** 화면 지역 섹션 컴포넌트를 새로 추출할 때. 기존 섹션에 비동기, 지역 상태, 프로바이더, 상호작용, 외부 위젯, 성능 처리를 넣거나 뺄 때.
 
-**Impact: HIGH (화면 흐름은 보이게 두고 자기 것을 직접 가진 부분만 떼어 냅니다)**
+**Impact: MEDIUM-HIGH (화면 흐름은 보이게 두고 자기 것을 직접 가진 부분만 떼어 냅니다)**
 
 라우트 진입의 지역 컴포넌트는 그 조각이 **직접 소유하는 것이 있을 때만** 추출합니다.
 감싸기만 하는 래퍼, `className` 묶기, 들여쓰기 감소만으로는 추출하지 않습니다.
@@ -2905,7 +2905,7 @@ export const PgProducts = () => {
 
 **Review with:** `data-preserve-origin-chaining`
 
-**Impact: HIGH (출처가 남고 화면 진입 파일이 별칭과 준비 코드로 채워지지 않습니다)**
+**Impact: MEDIUM (출처가 남고 화면 진입 파일이 별칭과 준비 코드로 채워지지 않습니다)**
 
 계산한 값은 실제 쓰는 자리에서 만듭니다.
 화면 상단으로 끌어올리면 그 값이 어디서 왔는지 알 수 없게 됩니다.
@@ -3242,7 +3242,7 @@ return <UiSelectedCountBadge count={selectedIds.length} />;
 
 **Review with:** `state-store-derived-authority`, `strategy-choose-single-composition-compound-and-variants`
 
-**Impact: MEDIUM-HIGH (로컬 UI 상태, 전역 상태, 서버 상태가 서로 섞이지 않습니다)**
+**Impact: HIGH (로컬 UI 상태, 전역 상태, 서버 상태가 서로 섞이지 않습니다)**
 
 상태 도구는 값의 수명과 소유자를 기준으로 고릅니다.
 
@@ -3400,7 +3400,7 @@ useEffect(() => {
 
 **Applies when:** 다음 상태가 현재 상태에 의존하는 갱신을 추가·변경할 때. 핸들러·비동기 콜백·연속 호출에서 `setState` 방식을 바꿀 때.
 
-**Impact: MEDIUM-HIGH (다음 값이 현재 상태에 달려 있을 때 낡은 값을 붙잡는 버그를 막습니다)**
+**Impact: HIGH (다음 값이 현재 상태에 달려 있을 때 낡은 값을 붙잡는 버그를 막습니다)**
 
 다음 상태가 현재 상태 값에 의존하면 바깥 변수를 직접 읽지 않고 함수형 갱신자를 씁니다.
 
@@ -3505,7 +3505,7 @@ useEffect(() => {
 
 ## 9. Events and Interaction Flow
 
-**Impact: MEDIUM-HIGH**
+**Impact: HIGH**
 
 이벤트 핸들러는 이름이 예측 가능하고 추가 인자를 커링으로 넘겨야 하며, 사용자 동작은 이펙트가 아니라 핸들러에서 실행해야 합니다. 핸들러 흐름은 재사용 근거가 생길 때까지 그 자리에 둡니다.
 
@@ -3517,7 +3517,7 @@ useEffect(() => {
 
 **Review with:** `events-curry-extra-handler-arguments`, `typescript/naming-use-consistent-file-and-symbol-naming`
 
-**Impact: MEDIUM-HIGH (이벤트 흐름을 이름으로 검색할 수 있습니다)**
+**Impact: MEDIUM (이벤트 흐름을 이름으로 검색할 수 있습니다)**
 
 이벤트 핸들러는 `handle` 접두사와 역할명을 씁니다.
 
@@ -3578,7 +3578,7 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (event) => {
 
 **Review with:** `composition-named-handlers-over-inline`
 
-**Impact: MEDIUM-HIGH (JSX에 인자만 넘기려고 만든 래퍼 화살표가 쌓이지 않습니다)**
+**Impact: LOW (JSX에 인자만 넘기려고 만든 래퍼 화살표가 쌓이지 않습니다)**
 
 `onClick`, `onChange`처럼 이벤트 객체를 받는 자리에 추가 인자가 필요하면
 팩토리가 인자를 받고 안쪽 함수가 이벤트를 받습니다.
@@ -3676,7 +3676,7 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => 
 
 ## 10. Render Performance
 
-**Impact: MEDIUM-HIGH**
+**Impact: MEDIUM**
 
 메모이제이션은 확인한 이유가 있을 때만 손댑니다. 실제로 무거운 초기화와 갱신만 게으른 초기화 함수, 전환, 지연 값으로 미룹니다.
 
@@ -3688,7 +3688,7 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => 
 
 **Review with:** `perf-defer-heavy-renders-with-measured-evidence`
 
-**Impact: MEDIUM-HIGH (효과를 확인하지 않은 방어적 `useMemo`, `useCallback`을 막습니다)**
+**Impact: MEDIUM (효과를 확인하지 않은 방어적 `useMemo`, `useCallback`을 막습니다)**
 
 `useMemo`와 `useCallback`은 기본적으로 쓰지 않습니다.
 쓰는 경우는 다음 셋뿐입니다.
@@ -3862,7 +3862,7 @@ return <PgProductRows rows={filteredRows} />;
 
 ## 11. Accessibility
 
-**Impact: MEDIUM-HIGH**
+**Impact: HIGH**
 
 누르고 입력하는 요소는 화면 낭독기와 테스트가 이름으로 찾을 수 있어야 합니다. 보이는 글자가 곧 그 이름이고, 글자가 없으면 대체 이름을 따로 답니다.
 
@@ -3872,7 +3872,7 @@ return <PgProductRows rows={filteredRows} />;
 
 **Applies when:** 클릭이나 입력을 받는 요소를 새로 만들 때. 글자 없이 아이콘만 있는 버튼을 추가할 때.
 
-**Impact: MEDIUM-HIGH (화면 낭독기와 테스트가 요소를 이름으로 찾을 수 있습니다)**
+**Impact: HIGH (화면 낭독기와 테스트가 요소를 이름으로 찾을 수 있습니다)**
 
 클릭이나 입력을 받는 요소는 읽히는 이름을 갖습니다.
 
@@ -3932,7 +3932,7 @@ return <PgProductRows rows={filteredRows} />;
 
 ## 12. Documentation and Comments
 
-**Impact: MEDIUM-HIGH**
+**Impact: MEDIUM**
 
 문서 주석의 형식과 태그, 그리고 어느 선언에 붙일지의 기본 목록은 동반 스킬인 `convention-typescript`가 정합니다. 여기서는 그 목록에 리액트만 아는 대상을 더합니다.
 
@@ -3946,7 +3946,7 @@ return <PgProductRows rows={filteredRows} />;
 
 **Review with:** `typescript/types-document-custom-types-and-shapes`
 
-**Impact: MEDIUM-HIGH (리액트가 아는 경계 선언을 동반 스킬 목록에 더해 빠뜨리지 않습니다)**
+**Impact: MEDIUM (리액트가 아는 경계 선언을 동반 스킬 목록에 더해 빠뜨리지 않습니다)**
 
 문서 주석은 경계를 설명할 때만 붙입니다.
 코드만 봐도 아는 지역 변수에는 강제하지 않습니다.

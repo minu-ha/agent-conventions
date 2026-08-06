@@ -1,7 +1,7 @@
 ---
 title: Do Not Build Structural Variants With Modifiers
 titleKo: 수정자는 상태와 반복되는 모양에만 씁니다
-impact: HIGH
+impact: MEDIUM-HIGH
 impactDescription: 수정자가 두 번째 레이아웃 이름 체계로 자라지 않게 막습니다
 appliesWhen:
   - 수정자를 추가·변경할 때
@@ -12,7 +12,7 @@ tags: modifiers, structure, naming
 
 ## Do Not Build Structural Variants With Modifiers
 
-**Impact: HIGH (수정자가 두 번째 레이아웃 이름 체계로 자라지 않게 막습니다)**
+**Impact: MEDIUM-HIGH (수정자가 두 번째 레이아웃 이름 체계로 자라지 않게 막습니다)**
 
 수정자는 두 가지만 표현합니다.
 

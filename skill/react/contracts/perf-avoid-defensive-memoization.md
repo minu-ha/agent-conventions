@@ -1,6 +1,6 @@
 # Do Not Memoize Without a Confirmed Reason
 
-**Impact: MEDIUM-HIGH (효과를 확인하지 않은 방어적 `useMemo`, `useCallback`을 막습니다)**
+**Impact: MEDIUM (효과를 확인하지 않은 방어적 `useMemo`, `useCallback`을 막습니다)**
 
 `useMemo`와 `useCallback`은 기본적으로 쓰지 않습니다.
 쓰는 경우는 다음 셋뿐입니다.

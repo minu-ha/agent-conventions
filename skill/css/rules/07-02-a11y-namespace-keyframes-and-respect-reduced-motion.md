@@ -1,7 +1,7 @@
 ---
 title: Namespace Keyframes and Respect Reduced Motion
 titleKo: `@keyframes` 이름에 소유자를 붙이고 움직임 줄이기 설정을 따릅니다
-impact: MEDIUM-HIGH
+impact: CRITICAL
 impactDescription: 전역 이름이 겹쳐 남의 애니메이션이 바뀌지 않고 움직임에 민감한 사용자를 막지 않습니다
 appliesWhen:
   - `@keyframes` 이름이나 애니메이션 지속 시간, 감속 곡선을 선언하거나 바꿀 때
@@ -12,7 +12,7 @@ tags: values, motion
 
 ## Namespace Keyframes and Respect Reduced Motion
 
-**Impact: MEDIUM-HIGH (전역 이름이 겹쳐 남의 애니메이션이 바뀌지 않고 움직임에 민감한 사용자를 막지 않습니다)**
+**Impact: CRITICAL (전역 이름이 겹쳐 남의 애니메이션이 바뀌지 않고 움직임에 민감한 사용자를 막지 않습니다)**
 
 **`@keyframes` 이름은 전역입니다.**
 클래스와 달리 파일이나 블록에 갇히지 않아서, 같은 이름을 두 파일에서 선언하면 나중에 읽힌 것이 이깁니다.

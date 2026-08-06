@@ -1,6 +1,6 @@
 # Give Interactive Elements an Accessible Name
 
-**Impact: MEDIUM-HIGH (화면 낭독기와 테스트가 요소를 이름으로 찾을 수 있습니다)**
+**Impact: HIGH (화면 낭독기와 테스트가 요소를 이름으로 찾을 수 있습니다)**
 
 클릭이나 입력을 받는 요소는 읽히는 이름을 갖습니다.
 

@@ -1,6 +1,6 @@
 # Keep Route Entry Files Focused on Screen Flow
 
-**Impact: HIGH (진입 파일만 봐도 화면 흐름을 따라갈 수 있습니다)**
+**Impact: MEDIUM-HIGH (진입 파일만 봐도 화면 흐름을 따라갈 수 있습니다)**
 
 라우트 진입이 소유하는 것은 다음 다섯입니다.
 다른 규칙이 이 목록을 가리킬 때는 여기가 정본입니다.

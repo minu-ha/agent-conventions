@@ -26,6 +26,8 @@ TSX component/JSX의 `className`·style이 바뀌면 `convention-react`와 `conv
 - `reviewWith` target은 변경 범위에 비춰 다시 판단한다. 자동으로 적용하지는 않는다.
 - `completionGate` 규칙은 마무리 시 항상 적용한다. index가 그 표시를 달아 준다.
 
+걸린 규칙은 `impact`와 무관하게 전부 적용한다. 등급은 어겼을 때의 결과 크기를 말할 뿐 지킬지 말지를 정하지 않는다.
+
 규칙이나 companion이 새로 걸리면 인덱스를 다시 훑는다. 더 걸리는 게 없으면 멈춘다.
 
 ## 4. 범위 변경

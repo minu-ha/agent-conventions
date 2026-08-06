@@ -1,7 +1,7 @@
 ---
 title: Choose Single Components, Compound Components, and Variants Deliberately
 titleKo: 단일, 합성, 변형 중 가장 단순한 조립을 고릅니다
-impact: HIGH
+impact: MEDIUM-HIGH
 impactDescription: 필요한 확장점은 열면서 가장 단순한 구조를 고르게 돕습니다
 appliesWhen:
   - 내보낸 공용 컴포넌트에 슬롯, 공개 부품, 공용 컨텍스트나 동작을 추가할 때
@@ -15,7 +15,7 @@ tags: strategy, composition, variants, components
 
 ## Choose Single Components, Compound Components, and Variants Deliberately
 
-**Impact: HIGH (필요한 확장점은 열면서 가장 단순한 구조를 고르게 돕습니다)**
+**Impact: MEDIUM-HIGH (필요한 확장점은 열면서 가장 단순한 구조를 고르게 돕습니다)**
 
 공용 컴포넌트는 프롭스보다 구조를 먼저 고릅니다.
 고정 UI, 공개 부품 조립, 공용 상태/동작/컨텍스트, 반복 기본 설정 중 무엇이 필요한지 순서대로 봅니다.

@@ -1,7 +1,7 @@
 ---
 title: Prefix Layer Names on Files and Symbols
 titleKo: 파일명과 심볼에 레이어 접두사를 붙입니다
-impact: HIGH
+impact: MEDIUM
 impactDescription: 파일 하나만 봐도 어느 레이어 소유인지 드러납니다
 appliesWhen:
   - 컴포넌트 파일이나 심볼 이름을 새로 지을 때
@@ -12,7 +12,7 @@ tags: ownership, naming
 
 ## Prefix Layer Names on Files and Symbols
 
-**Impact: HIGH (파일 하나만 봐도 어느 레이어 소유인지 드러납니다)**
+**Impact: MEDIUM (파일 하나만 봐도 어느 레이어 소유인지 드러납니다)**
 
 세 레이어 모두 파일명과 심볼에 레이어 접두사를 붙입니다.
 예외를 두지 않습니다.

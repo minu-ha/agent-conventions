@@ -1,6 +1,6 @@
 # Centralize Shared Config Under `shared/config.ts`
 
-**Impact: HIGH (공용 설정 값이 쓰는 파일마다 흩어져 공개 출처를 잃는 것을 막습니다)**
+**Impact: MEDIUM-HIGH (공용 설정 값이 쓰는 파일마다 흩어져 공개 출처를 잃는 것을 막습니다)**
 
 설정을 어디 두는지는 그 값을 쓰는 소유자가 몇인지로 갈립니다.
 

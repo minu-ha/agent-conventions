@@ -1,7 +1,7 @@
 ---
 title: Name Functions by What Comes Out
 titleKo: 함수 이름은 무엇이 나오는지로 짓습니다
-impact: MEDIUM-HIGH
+impact: MEDIUM
 impactDescription: 이름만 읽고 결과를 알 수 있어 구현을 열어 보지 않아도 됩니다
 appliesWhen:
   - 이름 붙인 함수를 새로 만들거나 이름을 바꿀 때
@@ -11,7 +11,7 @@ tags: functions, naming
 
 ## Name Functions by What Comes Out
 
-**Impact: MEDIUM-HIGH (이름만 읽고 결과를 알 수 있어 구현을 열어 보지 않아도 됩니다)**
+**Impact: MEDIUM (이름만 읽고 결과를 알 수 있어 구현을 열어 보지 않아도 됩니다)**
 
 `build`, `create`, `normalize`, `resolve`, `process`는 서로 바꿔 써도 뜻이 안 변합니다.
 그런 동사는 이름 자리를 차지하면서 아무것도 알려 주지 않습니다.

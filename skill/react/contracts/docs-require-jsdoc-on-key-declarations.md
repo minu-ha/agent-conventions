@@ -1,6 +1,6 @@
 # Require Doc Comments on React Hooks, Handlers, and Key Declarations
 
-**Impact: MEDIUM-HIGH (리액트가 아는 경계 선언을 동반 스킬 목록에 더해 빠뜨리지 않습니다)**
+**Impact: MEDIUM (리액트가 아는 경계 선언을 동반 스킬 목록에 더해 빠뜨리지 않습니다)**
 
 문서 주석은 경계를 설명할 때만 붙입니다.
 코드만 봐도 아는 지역 변수에는 강제하지 않습니다.

@@ -1,7 +1,7 @@
 ---
 title: Keep Page Slugs Traceable to Their Screen
 titleKo: 식별자만 보고 어느 화면인지 알 수 있게 짓습니다
-impact: HIGH
+impact: MEDIUM
 impactDescription: 클래스명만 보고 어느 화면의 클래스인지 되짚습니다
 appliesWhen:
   - `pg_*` 소유자의 클래스 식별자를 새로 만들거나 이름을 바꿀 때
@@ -11,7 +11,7 @@ tags: slug, page-scope, traceability
 
 ## Keep Page Slugs Traceable to Their Screen
 
-**Impact: HIGH (클래스명만 보고 어느 화면의 클래스인지 되짚습니다)**
+**Impact: MEDIUM (클래스명만 보고 어느 화면의 클래스인지 되짚습니다)**
 
 `pg_*` 식별자만 보고 어느 화면의 것인지 알 수 있어야 합니다.
 어떤 파일이 화면 소유인지는 활성화된 프레임워크 규약이 판단합니다.

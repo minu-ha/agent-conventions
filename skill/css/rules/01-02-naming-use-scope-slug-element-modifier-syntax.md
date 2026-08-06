@@ -1,7 +1,7 @@
 ---
 title: Use Scope, Slug, Element, and Modifier Syntax
 titleKo: 클래스명은 범위, 식별자, 요소, 수정자 문법을 지킵니다
-impact: CRITICAL
+impact: MEDIUM-HIGH
 impactDescription: 클래스명만 보고 누가 소유하고 어떤 역할인지 읽힙니다
 appliesWhen:
   - 일반 CSS에서 프로젝트가 소유한 클래스를 새로 만들 때
@@ -11,7 +11,7 @@ tags: naming, class-grammar, ownership
 
 ## Use Scope, Slug, Element, and Modifier Syntax
 
-**Impact: CRITICAL (클래스명만 보고 누가 소유하고 어떤 역할인지 읽힙니다)**
+**Impact: MEDIUM-HIGH (클래스명만 보고 누가 소유하고 어떤 역할인지 읽힙니다)**
 
 클래스명은 `<scope>_<slug>__<element>[--<modifier>]` 문법을 씁니다.
 구분자 `_`, `__`, `--`를 고정하고 각 자리의 책임을 섞지 않습니다.

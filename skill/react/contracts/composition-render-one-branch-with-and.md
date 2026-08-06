@@ -1,6 +1,6 @@
 # Render a Single Branch With `&&`, Not a Ternary
 
-**Impact: MEDIUM (조건부 렌더링 형태가 하나로 고정되고 쓰지 않는 `: null`이 사라집니다)**
+**Impact: HIGH (조건부 렌더링 형태가 하나로 고정되고 쓰지 않는 `: null`이 사라집니다)**
 
 JSX 안에서 그릴 갈래가 **하나면** `&&`를 씁니다.
 `조건 ? <X /> : null`로 쓰지 않습니다.

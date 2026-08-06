@@ -1,7 +1,7 @@
 ---
 title: Place and Promote Support Functions Deliberately
 titleKo: 보조 함수의 위치와 공용 승격 기준을 지킵니다
-impact: HIGH
+impact: MEDIUM-HIGH
 impactDescription: 잡동사니 파일이 생기지 않고 공용 승격이 실제 사용처를 근거로 일어납니다
 appliesWhen:
   - 보조 함수를 둘 파일이나 폴더를 정할 때
@@ -12,7 +12,7 @@ tags: functions, boundaries
 
 ## Place and Promote Support Functions Deliberately
 
-**Impact: HIGH (잡동사니 파일이 생기지 않고 공용 승격이 실제 사용처를 근거로 일어납니다)**
+**Impact: MEDIUM-HIGH (잡동사니 파일이 생기지 않고 공용 승격이 실제 사용처를 근거로 일어납니다)**
 
 떼어 낼지는 `functions-extract-helpers-only-when-the-boundary-is-real`가 먼저 판정합니다.
 이 규칙은 그 결과를 어디 두고 언제 올릴지만 봅니다.

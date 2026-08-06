@@ -1,6 +1,6 @@
 # Name Elements and Modifiers by Role
 
-**Impact: HIGH (이름이 모호하거나 치수를 가리키면 클래스가 어느 부위인지 알 수 없습니다)**
+**Impact: MEDIUM (이름이 모호하거나 치수를 가리키면 클래스가 어느 부위인지 알 수 없습니다)**
 
 요소와 수정자 이름은 구조나 치수가 아니라 UI 역할을 드러냅니다.
 `container`, `wrapper`, `box`처럼 뭉뚱그린 낱말을 홀로 쓰지 않습니다.

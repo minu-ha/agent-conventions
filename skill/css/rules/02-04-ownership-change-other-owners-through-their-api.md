@@ -1,7 +1,7 @@
 ---
 title: Change Other Owners Through Their API
 titleKo: 남의 표현은 그 소유자의 API로 바꿉니다
-impact: HIGH
+impact: MEDIUM-HIGH
 impactDescription: 남의 표현을 바꿀 때 배치, 변형, 내림 가운데 무엇이 맞는지 먼저 봅니다
 appliesWhen:
   - 다른 컴포넌트의 배치나 내부 표현을 바꿔야 할 때
@@ -13,7 +13,7 @@ tags: ownership, api, promotion
 
 ## Change Other Owners Through Their API
 
-**Impact: HIGH (남의 표현을 바꿀 때 배치, 변형, 내림 가운데 무엇이 맞는지 먼저 봅니다)**
+**Impact: MEDIUM-HIGH (남의 표현을 바꿀 때 배치, 변형, 내림 가운데 무엇이 맞는지 먼저 봅니다)**
 
 바꿀 것이 남의 표현이면 세 갈래를 순서대로 봅니다.
 

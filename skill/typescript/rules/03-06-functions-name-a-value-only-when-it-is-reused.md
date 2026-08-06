@@ -1,7 +1,7 @@
 ---
 title: Name a Value Only When It Is Reused
 titleKo: 값에 이름은 두 번 이상 쓸 때만 붙입니다
-impact: HIGH
+impact: MEDIUM
 impactDescription: 한 번 쓸 값에 이름을 붙이지 않아 식의 출처가 쓰는 자리에 그대로 남습니다
 appliesWhen:
   - 순수 계산의 결과를 지역 `const`로 받는 줄을 추가·삭제할 때
@@ -12,7 +12,7 @@ tags: functions, origin
 
 ## Name a Value Only When It Is Reused
 
-**Impact: HIGH (한 번 쓸 값에 이름을 붙이지 않아 식의 출처가 쓰는 자리에 그대로 남습니다)**
+**Impact: MEDIUM (한 번 쓸 값에 이름을 붙이지 않아 식의 출처가 쓰는 자리에 그대로 남습니다)**
 
 부수효과 없는 순수 식의 결과를 **한 번만 쓰면 이름을 붙이지 않고 그 자리에 적습니다.**
 두 번 이상 쓰면 그 자리들을 모두 감싸는 가장 좁은 스코프에 `const`로 둡니다.

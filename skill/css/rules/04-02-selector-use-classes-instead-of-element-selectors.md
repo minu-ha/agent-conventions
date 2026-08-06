@@ -1,7 +1,7 @@
 ---
 title: Use Classes Instead of Element Selectors
 titleKo: 요소 선택자 대신 클래스를 붙입니다
-impact: MEDIUM
+impact: MEDIUM-HIGH
 impactDescription: 태그만 바꿔도 스타일이 사라지므로 우리가 렌더하는 마크업에는 클래스를 붙입니다
 appliesWhen:
   - `p`, `h2`, `span`, `button` 같은 요소 선택자를 쓰려 할 때
@@ -12,7 +12,7 @@ tags: selector, element-selectors, markup
 
 ## Use Classes Instead of Element Selectors
 
-**Impact: MEDIUM (태그만 바꿔도 스타일이 사라지므로 우리가 렌더하는 마크업에는 클래스를 붙입니다)**
+**Impact: MEDIUM-HIGH (태그만 바꿔도 스타일이 사라지므로 우리가 렌더하는 마크업에는 클래스를 붙입니다)**
 
 우리가 렌더하는 마크업에는 요소 선택자를 쓰지 않습니다.
 클래스를 붙입니다.

@@ -1,7 +1,7 @@
 ---
 title: Combine Multiple Queries With `combine`
 titleKo: 여러 쿼리를 합칠 때는 `combine`을 씁니다
-impact: HIGH
+impact: MEDIUM-HIGH
 impactDescription: 여러 응답을 합치는 자리가 통신 경계에 남고 화면 본문에 별칭이 쌓이지 않습니다
 appliesWhen:
   - 쿼리 결과 둘 이상을 하나의 값으로 합치는 코드를 추가·변경할 때
@@ -12,7 +12,7 @@ tags: data, query
 
 ## Combine Multiple Queries With `combine`
 
-**Impact: HIGH (여러 응답을 합치는 자리가 통신 경계에 남고 화면 본문에 별칭이 쌓이지 않습니다)**
+**Impact: MEDIUM-HIGH (여러 응답을 합치는 자리가 통신 경계에 남고 화면 본문에 별칭이 쌓이지 않습니다)**
 
 쿼리 결과 둘 이상을 하나의 값으로 합쳐야 하면 `useSuspenseQueries`나 `useQueries`에 `combine`을 넘깁니다.
 `Suspense` 쿼리를 쓰는 화면은 `useSuspenseQueries`를 쓰고, 합친 값에 `isPending`을 만들어 내보내지 않습니다.

@@ -1,7 +1,7 @@
 ---
 title: Place Owner Files in Role Folders
 titleKo: 추출한 파일은 소유자 아래 역할 폴더에 둡니다
-impact: CRITICAL
+impact: MEDIUM-HIGH
 impactDescription: 빼낸 파일이 소유자를 따라가 예상한 자리에 놓입니다
 appliesWhen:
   - 소유자 아래 `component`·`config`·`function`·`hook`·`type` 폴더를 만들거나 옮길 때
@@ -14,7 +14,7 @@ tags: ownership
 
 ## Place Owner Files in Role Folders
 
-**Impact: CRITICAL (빼낸 파일이 소유자를 따라가 예상한 자리에 놓입니다)**
+**Impact: MEDIUM-HIGH (빼낸 파일이 소유자를 따라가 예상한 자리에 놓입니다)**
 
 라우트와 복잡한 컴포넌트가 소유자이고, 추출한 파일은 그 소유자 아래 역할 폴더에 둡니다.
 소유자 이름이 폴더 이름이므로 위치만 보고 소유자를 알 수 있습니다.

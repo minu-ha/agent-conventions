@@ -4,7 +4,7 @@
 
 ## 1. Class Naming and Syntax (naming)
 **TitleKo:** 클래스 이름과 문법
-**Impact:** CRITICAL
+**Impact:** MEDIUM-HIGH
 **Description:** 이 스킬은 일반 `*.css`와 전역에서 고유한 클래스명을 전제로 하고, 그 전제를 여기서 정합니다.
   클래스 문법이 고정되어 있고 요소와 수정자 이름이 역할을 가리켜야 스타일을 이름으로 검색할 수 있습니다.
   이름만 보고 무엇을 담당하는 클래스인지, 어느 화면 것인지 알 수 있습니다.
@@ -38,13 +38,13 @@
 
 ## 6. Layout and Responsiveness (layout)
 **TitleKo:** 레이아웃과 반응형
-**Impact:** HIGH
+**Impact:** MEDIUM-HIGH
 **Description:** 배치 의도가 클래스명과 선언에서 바로 읽혀야 하고, 폭이 달라질 때 무엇이 바뀌는지가 한 자리에 모여야 합니다.
   분기점을 적기 전에 스스로 접히는 크기 지정으로 되는지 먼저 보고, 남는 분기점은 파일 아래 한 곳에 데스크톱 퍼스트로 둡니다.
 
 ## 7. Accessibility and Motion (a11y)
 **TitleKo:** 접근성과 움직임
-**Impact:** HIGH
+**Impact:** CRITICAL
 **Description:** 키보드 사용자가 지금 어디에 있는지 보이고, 움직임에 민감한 사용자가 막히지 않아야 합니다.
   포커스 표시는 없애지 않고 형태로 구분하며, 애니메이션은 전역 이름을 겹치지 않게 두고 사용자 설정을 따릅니다.
 

@@ -1,7 +1,7 @@
 ---
 title: Preserve Shared Namespace Origin With Chained Access
 titleKo: 설정과 유틸은 체인으로 접근해 출처를 남깁니다
-impact: HIGH
+impact: MEDIUM
 impactDescription: 넓은 스코프 별칭으로 출처를 숨기지 않아 값이 어디서 오는지 읽힙니다
 appliesWhen:
   - `config`나 `util` 값을 쓰면서 넓은 스코프 구조분해, 별칭, 기능별 네임스페이스를 추가·변경할 때
@@ -11,7 +11,7 @@ tags: naming, config
 
 ## Preserve Shared Namespace Origin With Chained Access
 
-**Impact: HIGH (넓은 스코프 별칭으로 출처를 숨기지 않아 값이 어디서 오는지 읽힙니다)**
+**Impact: MEDIUM (넓은 스코프 별칭으로 출처를 숨기지 않아 값이 어디서 오는지 읽힙니다)**
 
 공용 설정과 공용 순수 함수는 쓰는 파일에서 직접 가져온 뒤 `config.*`, `util.*` 체인으로 씁니다.
 넓은 스코프에서 구조분해하거나 별칭 상수로 끊어 출처를 흐리지 않습니다.

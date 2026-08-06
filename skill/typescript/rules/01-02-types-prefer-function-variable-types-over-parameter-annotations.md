@@ -1,7 +1,7 @@
 ---
 title: Prefer Function Variable Types Over Parameter Annotations
 titleKo: 쓸 계약이 있으면 함수 전체에 타입을 붙입니다
-impact: CRITICAL
+impact: MEDIUM-HIGH
 impactDescription: 계약을 한 자리에서 읽을 수 있고 같은 시그니처를 여러 곳에 베끼지 않습니다
 appliesWhen:
   - 기존 호출 계약을 이름 붙인 함수나 공용 함수 구현에 다시 쓸 때
@@ -13,7 +13,7 @@ tags: types
 
 ## Prefer Function Variable Types Over Parameter Annotations
 
-**Impact: CRITICAL (계약을 한 자리에서 읽을 수 있고 같은 시그니처를 여러 곳에 베끼지 않습니다)**
+**Impact: MEDIUM-HIGH (계약을 한 자리에서 읽을 수 있고 같은 시그니처를 여러 곳에 베끼지 않습니다)**
 
 타입을 붙일 자리가 둘 있습니다.
 

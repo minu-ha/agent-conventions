@@ -1,6 +1,6 @@
 # Name Functions by What Comes Out
 
-**Impact: MEDIUM-HIGH (이름만 읽고 결과를 알 수 있어 구현을 열어 보지 않아도 됩니다)**
+**Impact: MEDIUM (이름만 읽고 결과를 알 수 있어 구현을 열어 보지 않아도 됩니다)**
 
 `build`, `create`, `normalize`, `resolve`, `process`는 서로 바꿔 써도 뜻이 안 변합니다.
 그런 동사는 이름 자리를 차지하면서 아무것도 알려 주지 않습니다.

@@ -1,7 +1,7 @@
 ---
 title: Centralize Shared Config Under `shared/config.ts`
 titleKo: 공용 설정은 `shared/config.ts` 한 곳에 모읍니다
-impact: HIGH
+impact: MEDIUM-HIGH
 impactDescription: 공용 설정 값이 쓰는 파일마다 흩어져 공개 출처를 잃는 것을 막습니다
 appliesWhen:
   - 여러 모듈이 함께 쓰는 URL, 기능 플래그, 페이지 크기나 상수를 추가·이동·중복 정의할 때
@@ -12,7 +12,7 @@ tags: naming, config
 
 ## Centralize Shared Config Under `shared/config.ts`
 
-**Impact: HIGH (공용 설정 값이 쓰는 파일마다 흩어져 공개 출처를 잃는 것을 막습니다)**
+**Impact: MEDIUM-HIGH (공용 설정 값이 쓰는 파일마다 흩어져 공개 출처를 잃는 것을 막습니다)**
 
 설정을 어디 두는지는 그 값을 쓰는 소유자가 몇인지로 갈립니다.
 

@@ -1,6 +1,6 @@
 # Keep Derived Values Close to Where They Are Used
 
-**Impact: HIGH (출처가 남고 화면 진입 파일이 별칭과 준비 코드로 채워지지 않습니다)**
+**Impact: MEDIUM (출처가 남고 화면 진입 파일이 별칭과 준비 코드로 채워지지 않습니다)**
 
 계산한 값은 실제 쓰는 자리에서 만듭니다.
 화면 상단으로 끌어올리면 그 값이 어디서 왔는지 알 수 없게 됩니다.

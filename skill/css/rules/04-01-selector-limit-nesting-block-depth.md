@@ -1,7 +1,7 @@
 ---
 title: Limit Nesting to One Level and Write the Rest Inline
 titleKo: 중첩은 한 겹까지, 그다음은 한 줄로 씁니다
-impact: HIGH
+impact: MEDIUM
 impactDescription: 중첩이 늘 한 겹이라 실제 선택자가 코드에 그대로 보입니다
 appliesWhen:
   - 중첩 `{}` 블록을 추가하거나 기존 블록을 펼치거나 합칠 때
@@ -13,7 +13,7 @@ tags: selector, nesting, ampersand
 
 ## Limit Nesting to One Level and Write the Rest Inline
 
-**Impact: HIGH (중첩이 늘 한 겹이라 실제 선택자가 코드에 그대로 보입니다)**
+**Impact: MEDIUM (중첩이 늘 한 겹이라 실제 선택자가 코드에 그대로 보입니다)**
 
 **중첩**은 `{}`를 겹치는 것입니다.
 규칙은 하나입니다.

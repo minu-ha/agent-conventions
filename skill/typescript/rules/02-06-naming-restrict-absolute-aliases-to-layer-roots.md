@@ -1,7 +1,7 @@
 ---
 title: Restrict Absolute Aliases to Layer Roots
 titleKo: 절대경로 별칭은 전역 레이어 루트만 가리킵니다
-impact: HIGH
+impact: CRITICAL
 impactDescription: 소유자 내부 모듈이 밖에서 직접 열리지 않아 경계가 남습니다
 appliesWhen:
   - 절대경로 별칭으로 다른 모듈을 가져올 때
@@ -12,7 +12,7 @@ tags: naming, imports
 
 ## Restrict Absolute Aliases to Layer Roots
 
-**Impact: HIGH (소유자 내부 모듈이 밖에서 직접 열리지 않아 경계가 남습니다)**
+**Impact: CRITICAL (소유자 내부 모듈이 밖에서 직접 열리지 않아 경계가 남습니다)**
 
 절대경로 별칭의 첫 마디는 전역 레이어 루트여야 합니다.
 

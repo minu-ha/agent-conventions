@@ -1,7 +1,7 @@
 ---
 title: Preserve Response and Store Origin in Wide Scopes
 titleKo: 넓은 스코프에서 응답과 스토어 출처를 남깁니다
-impact: CRITICAL
+impact: MEDIUM
 impactDescription: 파일 전체에서 별칭을 따라가지 않고 값의 출처를 바로 압니다
 appliesWhen:
   - page, 레이아웃, 화면 넓은 스코프에서 응답, 뮤테이션, 스토어를 구조분해할 때
@@ -12,7 +12,7 @@ tags: data, state, origin
 
 ## Preserve Response and Store Origin in Wide Scopes
 
-**Impact: CRITICAL (파일 전체에서 별칭을 따라가지 않고 값의 출처를 바로 압니다)**
+**Impact: MEDIUM (파일 전체에서 별칭을 따라가지 않고 값의 출처를 바로 압니다)**
 
 페이지, 레이아웃, 화면 스코프에서는 `response...`, `mutation...`, `*Store` 원본을 유지합니다.
 넓은 스코프의 구조분해와 별칭 상수는 값의 출처를 흐립니다.

@@ -1,7 +1,7 @@
 ---
 title: Prefer Immutable Array Sorting
 titleKo: 원본을 바꾸지 않고 배열을 정렬합니다
-impact: MEDIUM
+impact: HIGH
 impactDescription: 프롭스, 상태, 모듈 상수에서 온 배열을 정렬할 때 원본이 바뀌는 버그를 피합니다
 appliesWhen:
   - 프롭스, 상태, 매개변수, 모듈 상수에서 온 배열을 정렬할 때
@@ -11,7 +11,7 @@ tags: functions, arrays, immutability
 
 ## Prefer Immutable Array Sorting
 
-**Impact: MEDIUM (프롭스, 상태, 모듈 상수에서 온 배열을 정렬할 때 원본이 바뀌는 버그를 피합니다)**
+**Impact: HIGH (프롭스, 상태, 모듈 상수에서 온 배열을 정렬할 때 원본이 바뀌는 버그를 피합니다)**
 
 이 함수가 만들지 않은 배열은 `.sort()`로 제자리에서 바꾸지 않습니다.
 프롭스, 상태, 매개변수, 모듈 상수로 들어온 배열이 그 경우입니다.

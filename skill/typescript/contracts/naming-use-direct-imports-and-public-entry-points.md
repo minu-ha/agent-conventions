@@ -1,6 +1,6 @@
 # Use Direct Imports and Dedicated Public Entry Points
 
-**Impact: HIGH (배럴이나 모호한 재노출 계층에 기대지 않고 가져오기 소유를 드러냅니다)**
+**Impact: MEDIUM-HIGH (배럴이나 모호한 재노출 계층에 기대지 않고 가져오기 소유를 드러냅니다)**
 
 `index.ts`로 묶어 다시 내보내는 배럴을 만들지 않습니다.
 필요한 파일에서 바로 가져옵니다.

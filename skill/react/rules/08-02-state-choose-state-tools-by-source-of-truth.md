@@ -1,7 +1,7 @@
 ---
 title: Choose State Tools by Source of Truth
 titleKo: 상태 도구는 진짜 출처를 기준으로 고릅니다
-impact: MEDIUM-HIGH
+impact: HIGH
 impactDescription: 로컬 UI 상태, 전역 상태, 서버 상태가 서로 섞이지 않습니다
 appliesWhen:
   - 로컬 UI·전역 클라이언트·서버 데이터를 새 상태 도구로 옮길 때
@@ -13,7 +13,7 @@ tags: state, react-query, zustand
 
 ## Choose State Tools by Source of Truth
 
-**Impact: MEDIUM-HIGH (로컬 UI 상태, 전역 상태, 서버 상태가 서로 섞이지 않습니다)**
+**Impact: HIGH (로컬 UI 상태, 전역 상태, 서버 상태가 서로 섞이지 않습니다)**
 
 상태 도구는 값의 수명과 소유자를 기준으로 고릅니다.
 

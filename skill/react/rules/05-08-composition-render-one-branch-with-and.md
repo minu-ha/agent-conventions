@@ -1,7 +1,7 @@
 ---
 title: Render a Single Branch With `&&`, Not a Ternary
 titleKo: 한 갈래만 그릴 때는 삼항 대신 `&&`를 씁니다
-impact: MEDIUM
+impact: HIGH
 impactDescription: 조건부 렌더링 형태가 하나로 고정되고 쓰지 않는 `: null`이 사라집니다
 appliesWhen:
   - JSX 안에 조건부 렌더링을 추가하거나 조건식을 바꿀 때
@@ -11,7 +11,7 @@ tags: composition, jsx
 
 ## Render a Single Branch With `&&`, Not a Ternary
 
-**Impact: MEDIUM (조건부 렌더링 형태가 하나로 고정되고 쓰지 않는 `: null`이 사라집니다)**
+**Impact: HIGH (조건부 렌더링 형태가 하나로 고정되고 쓰지 않는 `: null`이 사라집니다)**
 
 JSX 안에서 그릴 갈래가 **하나면** `&&`를 씁니다.
 `조건 ? <X /> : null`로 쓰지 않습니다.

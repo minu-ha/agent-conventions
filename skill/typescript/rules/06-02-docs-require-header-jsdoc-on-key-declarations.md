@@ -1,7 +1,7 @@
 ---
 title: Require Header Doc Comments on Key Declarations
 titleKo: 핵심 선언에는 헤더 문서 주석을 붙입니다
-impact: MEDIUM-HIGH
+impact: MEDIUM
 impactDescription: 구현을 읽기 전에 중요한 경계를 찾고 설명할 수 있습니다
 appliesWhen:
   - 쿼리, 뮤테이션, 원격 함수, 커스텀 훅, 커스텀 타입, 스토어, 포매터 선언을 추가·변경할 때
@@ -15,7 +15,7 @@ tags: docs, jsdoc, declarations, boundaries
 
 ## Require Header Doc Comments on Key Declarations
 
-**Impact: MEDIUM-HIGH (구현을 읽기 전에 중요한 경계를 찾고 설명할 수 있습니다)**
+**Impact: MEDIUM (구현을 읽기 전에 중요한 경계를 찾고 설명할 수 있습니다)**
 
 이름 붙인 쿼리와 뮤테이션, 원격 함수, 커스텀 훅, 스토어, 표시 문자열을 만드는 포매터 선언에는
 헤더 문서 주석을 씁니다.

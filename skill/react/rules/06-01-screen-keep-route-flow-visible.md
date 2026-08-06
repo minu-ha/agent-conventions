@@ -1,7 +1,7 @@
 ---
 title: Keep Route Entry Files Focused on Screen Flow
 titleKo: 화면 진입 파일에는 화면 흐름만 남깁니다
-impact: HIGH
+impact: MEDIUM-HIGH
 impactDescription: 진입 파일만 봐도 화면 흐름을 따라갈 수 있습니다
 appliesWhen:
   - 라우트 진입의 search 파라미터, 화면 이동, 쿼리, 뮤테이션, 화면 전체 이펙트를 옮기거나 나눌 때
@@ -15,7 +15,7 @@ tags: screen, routes, flow
 
 ## Keep Route Entry Files Focused on Screen Flow
 
-**Impact: HIGH (진입 파일만 봐도 화면 흐름을 따라갈 수 있습니다)**
+**Impact: MEDIUM-HIGH (진입 파일만 봐도 화면 흐름을 따라갈 수 있습니다)**
 
 라우트 진입이 소유하는 것은 다음 다섯입니다.
 다른 규칙이 이 목록을 가리킬 때는 여기가 정본입니다.

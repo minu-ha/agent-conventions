@@ -1,7 +1,7 @@
 ---
 title: Use Activity Only to Preserve Mounted Subtrees
 titleKo: 상태를 살려 둬야 할 때만 `Activity`로 감춥니다
-impact: MEDIUM
+impact: HIGH
 impactDescription: 숨기기와 마운트 해제를 구분해 써서 되돌릴 때 상태가 사라지는 사고를 막습니다
 appliesWhen:
   - 조건부 렌더링과 `Activity` 사이를 오갈 때
@@ -12,7 +12,7 @@ tags: composition, jsx
 
 ## Use Activity Only to Preserve Mounted Subtrees
 
-**Impact: MEDIUM (숨기기와 마운트 해제를 구분해 써서 되돌릴 때 상태가 사라지는 사고를 막습니다)**
+**Impact: HIGH (숨기기와 마운트 해제를 구분해 써서 되돌릴 때 상태가 사라지는 사고를 막습니다)**
 
 기본은 조건부 렌더링입니다.
 `<Activity>`는 **숨겼다 되돌릴 때 하위 트리 상태를 그대로 살려야 할 때만** 씁니다.

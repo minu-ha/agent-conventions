@@ -1,7 +1,7 @@
 ---
 title: Use Named Handlers Instead of Hiding Logic in JSX
 titleKo: JSX 안 로직은 이름 붙인 핸들러로 뺍니다
-impact: HIGH
+impact: MEDIUM
 impactDescription: 부수효과, 분기, 비동기 흐름을 일반 코드 흐름에서 읽습니다
 appliesWhen:
   - TSX 이벤트 프롭의 인라인 콜백에 분기나 비동기 호출을 추가·수정할 때
@@ -16,7 +16,7 @@ tags: composition, jsx, handlers
 
 ## Use Named Handlers Instead of Hiding Logic in JSX
 
-**Impact: HIGH (부수효과, 분기, 비동기 흐름을 일반 코드 흐름에서 읽습니다)**
+**Impact: MEDIUM (부수효과, 분기, 비동기 흐름을 일반 코드 흐름에서 읽습니다)**
 
 JSX에는 이름 붙인 핸들러 참조만 넘깁니다.
 분기, 비동기 호출, 여러 부수효과가 들어가면 핸들러로 분리합니다.

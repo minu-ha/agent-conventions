@@ -1,7 +1,7 @@
 ---
 title: Avoid Boolean Prop Proliferation in Shared Components
 titleKo: 공용 컴포넌트에 불리언 프롭을 늘리지 않습니다
-impact: HIGH
+impact: MEDIUM-HIGH
 impactDescription: 공용 컴포넌트가 숨은 조합을 쌓지 않고 구조를 드러냅니다
 appliesWhen:
   - `ui`나 `widget` 컴포넌트에 불리언 모드·표시 프롭을 추가할 때
@@ -13,7 +13,7 @@ tags: strategy, composition, props, variants, components
 
 ## Avoid Boolean Prop Proliferation in Shared Components
 
-**Impact: HIGH (공용 컴포넌트가 숨은 조합을 쌓지 않고 구조를 드러냅니다)**
+**Impact: MEDIUM-HIGH (공용 컴포넌트가 숨은 조합을 쌓지 않고 구조를 드러냅니다)**
 
 여러 파일과 레이어에서 재사용되는 공용 컴포넌트에 `isCompact`, `isEditing`, `showSearch` 같은
 불리언 프롭을 늘리지 않습니다.

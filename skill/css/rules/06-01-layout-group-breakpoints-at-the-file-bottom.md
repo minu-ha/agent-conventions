@@ -1,7 +1,7 @@
 ---
 title: Group Breakpoints at the Bottom of the File
 titleKo: 분기점은 파일 아래 한곳에 모읍니다
-impact: HIGH
+impact: MEDIUM-HIGH
 impactDescription: 한 분기점에서 무엇이 달라지는지 한 블록에서 읽히고 두 방향이 겹치지 않습니다
 appliesWhen:
   - `@media` 분기점을 추가하거나 옮길 때
@@ -14,7 +14,7 @@ tags: selector, responsive
 
 ## Group Breakpoints at the Bottom of the File
 
-**Impact: HIGH (한 분기점에서 무엇이 달라지는지 한 블록에서 읽히고 두 방향이 겹치지 않습니다)**
+**Impact: MEDIUM-HIGH (한 분기점에서 무엇이 달라지는지 한 블록에서 읽히고 두 방향이 겹치지 않습니다)**
 
 분기점 재선언은 파일 맨 아래 `@media` 블록에 모읍니다.
 클래스 블록 안에 `@media`를 중첩하지 않습니다.

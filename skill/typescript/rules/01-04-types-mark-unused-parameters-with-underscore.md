@@ -1,7 +1,7 @@
 ---
 title: Mark Unused Parameters With an Underscore Prefix
 titleKo: 쓰지 않는 매개변수도 밑줄을 붙여 남깁니다
-impact: MEDIUM-HIGH
+impact: MEDIUM
 impactDescription: 계약의 일부를 조용히 버리지 않고 일부러 무시한 매개변수를 드러냅니다
 appliesWhen:
   - 기존 콜백이나 프레임워크 계약을 구현하면서 매개변수를 빼거나 쓰지 않을 때
@@ -11,7 +11,7 @@ tags: types, callbacks, naming
 
 ## Mark Unused Parameters With an Underscore Prefix
 
-**Impact: MEDIUM-HIGH (계약의 일부를 조용히 버리지 않고 일부러 무시한 매개변수를 드러냅니다)**
+**Impact: MEDIUM (계약의 일부를 조용히 버리지 않고 일부러 무시한 매개변수를 드러냅니다)**
 
 미사용 매개변수도 생략하지 않고 `_` 접두사로 명시합니다.
 그래야 콜백 시그니처를 그대로 지키면서, 지금 구현이 일부러 쓰지 않는 값이라는 점이 드러납니다.

@@ -1,6 +1,6 @@
 # Limit Nesting to One Level and Write the Rest Inline
 
-**Impact: HIGH (중첩이 늘 한 겹이라 실제 선택자가 코드에 그대로 보입니다)**
+**Impact: MEDIUM (중첩이 늘 한 겹이라 실제 선택자가 코드에 그대로 보입니다)**
 
 **중첩**은 `{}`를 겹치는 것입니다.
 규칙은 하나입니다.

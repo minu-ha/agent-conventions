@@ -1,7 +1,7 @@
 ---
 title: Write Fragments as `Fragment`, Not the Shorthand
 titleKo: 빈 태그 대신 `Fragment`를 그대로 씁니다
-impact: MEDIUM
+impact: LOW
 impactDescription: 조각을 감싼 자리가 이름을 가져서 검색과 diff에 그대로 드러납니다
 appliesWhen:
   - JSX에서 여러 요소를 감쌀 조각 문법을 추가·변경할 때
@@ -11,7 +11,7 @@ tags: composition, jsx
 
 ## Write Fragments as `Fragment`, Not the Shorthand
 
-**Impact: MEDIUM (조각을 감싼 자리가 이름을 가져서 검색과 diff에 그대로 드러납니다)**
+**Impact: LOW (조각을 감싼 자리가 이름을 가져서 검색과 diff에 그대로 드러납니다)**
 
 여러 요소를 감쌀 때는 `<Fragment>`를 `react`에서 직접 가져와 그대로 씁니다.
 `<>`와 `</>`는 쓰지 않습니다.

@@ -1,7 +1,7 @@
 ---
 title: Keep Library Lifecycle in the Owning Component
 titleKo: 라이브러리 생명주기는 소유 컴포넌트가 직접 갖습니다
-impact: HIGH
+impact: MEDIUM
 impactDescription: 파일 길이를 줄이려고 생명주기를 훅 뒤로 숨겨 실행 흐름이 사라지지 않습니다
 appliesWhen:
   - 외부 라이브러리 인스턴스 생성·크기 변경·구독·정리를 한 컴포넌트가 소유할 때
@@ -13,7 +13,7 @@ tags: ownership, hooks
 
 ## Keep Library Lifecycle in the Owning Component
 
-**Impact: HIGH (파일 길이를 줄이려고 생명주기를 훅 뒤로 숨겨 실행 흐름이 사라지지 않습니다)**
+**Impact: MEDIUM (파일 길이를 줄이려고 생명주기를 훅 뒤로 숨겨 실행 흐름이 사라지지 않습니다)**
 
 외부 라이브러리의 인스턴스 생성, 크기 변경, 이벤트 구독, 정리는 그 하위 트리를 소유한 컴포넌트가 직접 가집니다.
 파일이 길어졌다는 이유만으로 커스텀 훅을 만들어 생명주기를 숨기지 않습니다.

@@ -1,7 +1,7 @@
 ---
 title: Curry Extra Arguments Into DOM Event Handlers
 titleKo: 이벤트 외 추가 인자는 커링으로 넘깁니다
-impact: MEDIUM-HIGH
+impact: LOW
 impactDescription: JSX에 인자만 넘기려고 만든 래퍼 화살표가 쌓이지 않습니다
 appliesWhen:
   - DOM 이벤트 프롭에 추가 인자를 넘기는 핸들러를 추가·변경할 때
@@ -14,7 +14,7 @@ tags: events, handlers
 
 ## Curry Extra Arguments Into DOM Event Handlers
 
-**Impact: MEDIUM-HIGH (JSX에 인자만 넘기려고 만든 래퍼 화살표가 쌓이지 않습니다)**
+**Impact: LOW (JSX에 인자만 넘기려고 만든 래퍼 화살표가 쌓이지 않습니다)**
 
 `onClick`, `onChange`처럼 이벤트 객체를 받는 자리에 추가 인자가 필요하면
 팩토리가 인자를 받고 안쪽 함수가 이벤트를 받습니다.

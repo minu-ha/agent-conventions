@@ -1,6 +1,6 @@
 # Do Not Group Classes With Commas to Share Declarations
 
-**Impact: MEDIUM-HIGH (공통 선언을 묶지 않고 각 클래스에 두면 한 클래스의 선언을 한 곳에서 읽습니다)**
+**Impact: MEDIUM (공통 선언을 묶지 않고 각 클래스에 두면 한 클래스의 선언을 한 곳에서 읽습니다)**
 
 여러 클래스를 `,`로 묶어 공통 선언을 공유하지 않습니다.
 반복되는 선언은 각 클래스 블록에 그대로 씁니다.

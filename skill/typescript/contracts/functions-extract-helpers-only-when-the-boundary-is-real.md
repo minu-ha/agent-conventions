@@ -1,6 +1,6 @@
 # Extract Support Functions Only When the Boundary Is Real
 
-**Impact: HIGH (흐름을 읽으려고 파일을 왕복하게 만드는 조각내기를 막습니다)**
+**Impact: MEDIUM (흐름을 읽으려고 파일을 왕복하게 만드는 조각내기를 막습니다)**
 
 기본은 빼지 않는 것입니다.
 흐름은 한 자리에서 위에서 아래로 읽히는 편이 낫습니다.

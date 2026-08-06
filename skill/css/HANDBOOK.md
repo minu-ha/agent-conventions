@@ -26,7 +26,7 @@
 
 ## 목차
 
-1. [Class Naming and Syntax](#1-class-naming-and-syntax) — **CRITICAL**
+1. [Class Naming and Syntax](#1-class-naming-and-syntax) — **MEDIUM-HIGH**
     - 1.1 [Default to Plain CSS Unless the Project Explicitly Standardizes on CSS Modules](#11-default-to-plain-css-unless-the-project-explicitly-standardizes-on-css-modules)
     - 1.2 [Use Scope, Slug, Element, and Modifier Syntax](#12-use-scope-slug-element-and-modifier-syntax)
     - 1.3 [Name Elements and Modifiers by Role](#13-name-elements-and-modifiers-by-role)
@@ -57,11 +57,11 @@
     - 5.2 [Use Global Tokens and Do Not Create Local Ones](#52-use-global-tokens-and-do-not-create-local-ones)
     - 5.3 [Declare Stacking Layers as Tokens in One Place](#53-declare-stacking-layers-as-tokens-in-one-place)
     - 5.4 [Switch Themes by Changing Token Values](#54-switch-themes-by-changing-token-values)
-6. [Layout and Responsiveness](#6-layout-and-responsiveness) — **HIGH**
+6. [Layout and Responsiveness](#6-layout-and-responsiveness) — **MEDIUM-HIGH**
     - 6.1 [Group Breakpoints at the Bottom of the File](#61-group-breakpoints-at-the-bottom-of-the-file)
     - 6.2 [Keep Layout Intent Explicit](#62-keep-layout-intent-explicit)
     - 6.3 [Reach for Intrinsic Sizing Before Breakpoints](#63-reach-for-intrinsic-sizing-before-breakpoints)
-7. [Accessibility and Motion](#7-accessibility-and-motion) — **HIGH**
+7. [Accessibility and Motion](#7-accessibility-and-motion) — **CRITICAL**
     - 7.1 [Always Provide a Visible Focus Indicator](#71-always-provide-a-visible-focus-indicator)
     - 7.2 [Namespace Keyframes and Respect Reduced Motion](#72-namespace-keyframes-and-respect-reduced-motion)
 8. [Tooling](#8-tooling) — **MEDIUM**
@@ -71,7 +71,7 @@
 
 ## 1. Class Naming and Syntax
 
-**Impact: CRITICAL**
+**Impact: MEDIUM-HIGH**
 
 이 스킬은 일반 `*.css`와 전역에서 고유한 클래스명을 전제로 하고, 그 전제를 여기서 정합니다. 클래스 문법이 고정되어 있고 요소와 수정자 이름이 역할을 가리켜야 스타일을 이름으로 검색할 수 있습니다. 이름만 보고 무엇을 담당하는 클래스인지, 어느 화면 것인지 알 수 있습니다.
 
@@ -81,7 +81,7 @@
 
 **Applies when:** 표준이 정해지지 않은 상태에서 스타일시트 방식\(일반 CSS, CSS Modules\)을 고르거나 `.module.css`나 `styles.*`로 옮길 때. 제외: 기존 일반 CSS 클래스 이름만 바꾸는 경우.
 
-**Impact: HIGH (클래스명이 전역에서 고유해야 범위_식별자로 소유자를 되짚을 수 있습니다)**
+**Impact: MEDIUM-HIGH (클래스명이 전역에서 고유해야 범위_식별자로 소유자를 되짚을 수 있습니다)**
 
 이 CSS 스킬 전체가 일반 `*.css`와 전역에서 고유한 클래스명을 전제로 합니다.
 이 스킬의 클래스 문법, 소유 경계, 선택자 규칙이 모두 이 전제 위에 서 있습니다.
@@ -138,7 +138,7 @@ import "./pg-catalog-index.css";
 
 **Applies when:** 일반 CSS에서 프로젝트가 소유한 클래스를 새로 만들 때. 이름, 범위, 식별자, 요소, 수정자의 구분자나 대소문자 표기를 바꿀 때.
 
-**Impact: CRITICAL (클래스명만 보고 누가 소유하고 어떤 역할인지 읽힙니다)**
+**Impact: MEDIUM-HIGH (클래스명만 보고 누가 소유하고 어떤 역할인지 읽힙니다)**
 
 클래스명은 `<scope>_<slug>__<element>[--<modifier>]` 문법을 씁니다.
 구분자 `_`, `__`, `--`를 고정하고 각 자리의 책임을 섞지 않습니다.
@@ -191,7 +191,7 @@ pg_catalogDetail__main--routeActive
 
 **Applies when:** 요소나 수정자 클래스 이름을 새로 지을 때. `container`, `wrapper`, `box`, 치수나 간격 중심 이름을 변경할 때.
 
-**Impact: HIGH (이름이 모호하거나 치수를 가리키면 클래스가 어느 부위인지 알 수 없습니다)**
+**Impact: MEDIUM (이름이 모호하거나 치수를 가리키면 클래스가 어느 부위인지 알 수 없습니다)**
 
 요소와 수정자 이름은 구조나 치수가 아니라 UI 역할을 드러냅니다.
 `container`, `wrapper`, `box`처럼 뭉뚱그린 낱말을 홀로 쓰지 않습니다.
@@ -223,7 +223,7 @@ ui_card__body--active
 
 **Applies when:** `pg_*` 소유자의 클래스 식별자를 새로 만들거나 이름을 바꿀 때. 같은 이름 컴포넌트가 여러 화면에 생겨 식별자를 구분해야 할 때.
 
-**Impact: HIGH (클래스명만 보고 어느 화면의 클래스인지 되짚습니다)**
+**Impact: MEDIUM (클래스명만 보고 어느 화면의 클래스인지 되짚습니다)**
 
 `pg_*` 식별자만 보고 어느 화면의 것인지 알 수 있어야 합니다.
 어떤 파일이 화면 소유인지는 활성화된 프레임워크 규약이 판단합니다.
@@ -326,7 +326,7 @@ pg_dashboardIndex__header
 
 **Review with:** `ownership-give-each-file-one-scope-slug`, `ownership-use-foreign-classes-only-under-your-own-root`
 
-**Impact: HIGH (접두사를 재사용 범위로 정하면 이름만 보고 어디서 쓰이는지 압니다)**
+**Impact: MEDIUM-HIGH (접두사를 재사용 범위로 정하면 이름만 보고 어디서 쓰이는지 압니다)**
 
 범위 접두사가 뜻하는 것은 그 CSS 파일 소유자의 **재사용 범위**입니다.
 재사용 범위는 파일이 `src/page`, `src/widget`, `src/ui` 중 어디 아래 있는지로 이미 정해져 있으니
@@ -499,7 +499,7 @@ ui/button/ui-button.css
 
 **Review with:** `composition-inject-classes-only-at-the-entry-point`, `ownership-use-foreign-classes-only-under-your-own-root`
 
-**Impact: HIGH (남의 표현을 바꿀 때 배치, 변형, 내림 가운데 무엇이 맞는지 먼저 봅니다)**
+**Impact: MEDIUM-HIGH (남의 표현을 바꿀 때 배치, 변형, 내림 가운데 무엇이 맞는지 먼저 봅니다)**
 
 바꿀 것이 남의 표현이면 세 갈래를 순서대로 봅니다.
 
@@ -587,7 +587,7 @@ TSX 클래스 조합과 래퍼 소유 규칙은 스타일링 경계를 분명하
 
 **Applies when:** TSX의 `className`을 추가·수정할 때. 기본 클래스, 수정자, 선택 클래스를 함께 엮을 때.
 
-**Impact: HIGH (기본 클래스와 상태 수정자를 섞어도 TSX 조립이 한눈에 읽힙니다)**
+**Impact: LOW (기본 클래스와 상태 수정자를 섞어도 TSX 조립이 한눈에 읽힙니다)**
 
 TSX에서 `className`은 `clsx()`로 조립합니다.
 문자열을 이어 붙이지 않습니다.
@@ -626,7 +626,7 @@ TSX에서 `className`은 `clsx()`로 조립합니다.
 
 **Review with:** `naming-name-elements-and-modifiers-by-role`
 
-**Impact: HIGH (수정자가 두 번째 레이아웃 이름 체계로 자라지 않게 막습니다)**
+**Impact: MEDIUM-HIGH (수정자가 두 번째 레이아웃 이름 체계로 자라지 않게 막습니다)**
 
 수정자는 두 가지만 표현합니다.
 
@@ -678,7 +678,7 @@ TSX에서 `className`은 `clsx()`로 조립합니다.
 
 **Applies when:** 한 클래스 이름에 기본 스타일과 상태를 함께 넣을 때. 제외: 처음부터 기본 클래스와 수정자를 나눠 만드는 경우. 제외: 책임이 그대로인 이름 변경만 하는 경우.
 
-**Impact: HIGH (클래스 하나가 기본 스타일과 상태 의미를 함께 지면 상태를 끌 방법이 없습니다)**
+**Impact: MEDIUM-HIGH (클래스 하나가 기본 스타일과 상태 의미를 함께 지면 상태를 끌 방법이 없습니다)**
 
 클래스 하나는 시각 결정 하나만 담습니다.
 기본 스타일과 상태를 이름 하나에 녹이지 않습니다.
@@ -709,7 +709,7 @@ TSX에서 `className`은 `clsx()`로 조립합니다.
 
 **Review with:** `ownership-change-other-owners-through-their-api`, `ownership-use-foreign-classes-only-under-your-own-root`
 
-**Impact: HIGH (내부 노드마다 창구를 열면 사용처가 그 컴포넌트 구조에 얽매입니다)**
+**Impact: MEDIUM-HIGH (내부 노드마다 창구를 열면 사용처가 그 컴포넌트 구조에 얽매입니다)**
 
 우리가 만든 컴포넌트가 여는 스타일 창구는 **진입점 하나**입니다.
 `ui_`든 `wg_`든 `pg_`든 같습니다.
@@ -821,7 +821,7 @@ export const UiCollapse = (props: UiCollapseProps) => {
 
 **Review with:** `composition-inject-classes-only-at-the-entry-point`, `naming-name-elements-and-modifiers-by-role`
 
-**Impact: MEDIUM-HIGH (래퍼 요소는 부모 레이아웃 계산을 바꾸고 역할 없는 클래스를 늘립니다)**
+**Impact: HIGH (래퍼 요소는 부모 레이아웃 계산을 바꾸고 역할 없는 클래스를 늘립니다)**
 
 스타일을 주려고 요소를 새로 감싸지 않습니다.
 그 컴포넌트가 `className`을 받도록 먼저 고칩니다.
@@ -987,7 +987,7 @@ export const UiCollapse = (props: UiCollapseProps) => (
 
 **Review with:** `selector-declare-each-class-in-one-block`, `selector-use-classes-instead-of-element-selectors`
 
-**Impact: HIGH (중첩이 늘 한 겹이라 실제 선택자가 코드에 그대로 보입니다)**
+**Impact: MEDIUM (중첩이 늘 한 겹이라 실제 선택자가 코드에 그대로 보입니다)**
 
 **중첩**은 `{}`를 겹치는 것입니다.
 규칙은 하나입니다.
@@ -1083,7 +1083,7 @@ export const UiCollapse = (props: UiCollapseProps) => (
 
 **Review with:** `naming-name-elements-and-modifiers-by-role`
 
-**Impact: MEDIUM (태그만 바꿔도 스타일이 사라지므로 우리가 렌더하는 마크업에는 클래스를 붙입니다)**
+**Impact: MEDIUM-HIGH (태그만 바꿔도 스타일이 사라지므로 우리가 렌더하는 마크업에는 클래스를 붙입니다)**
 
 우리가 렌더하는 마크업에는 요소 선택자를 쓰지 않습니다.
 클래스를 붙입니다.
@@ -1195,7 +1195,7 @@ TSX에서 그 지점이 보이므로 "이것이 원본 HTML인가"를 따질 필
 
 **Review with:** `selector-declare-each-class-in-one-block`, `values-tokenize-repeated-visual-values`
 
-**Impact: MEDIUM-HIGH (공통 선언을 묶지 않고 각 클래스에 두면 한 클래스의 선언을 한 곳에서 읽습니다)**
+**Impact: MEDIUM (공통 선언을 묶지 않고 각 클래스에 두면 한 클래스의 선언을 한 곳에서 읽습니다)**
 
 여러 클래스를 `,`로 묶어 공통 선언을 공유하지 않습니다.
 반복되는 선언은 각 클래스 블록에 그대로 씁니다.
@@ -1452,7 +1452,7 @@ TSX에서 그 지점이 보이므로 "이것이 원본 HTML인가"를 따질 필
 
 **Review with:** `selector-do-not-group-classes-with-commas`, `selector-limit-nesting-block-depth`, `selector-use-pseudo-classes-for-dom-owned-states`
 
-**Impact: HIGH (한 요소의 기본 모습과 상태 변화를 한 블록에서 나란히 읽습니다)**
+**Impact: MEDIUM (한 요소의 기본 모습과 상태 변화를 한 블록에서 나란히 읽습니다)**
 
 DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 씁니다.
 같은 가상 클래스를 블록 바깥에서 다시 열지 않습니다.
@@ -1550,7 +1550,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 
 **Review with:** `selector-use-pseudo-classes-for-dom-owned-states`
 
-**Impact: HIGH (그 상태가 아닐 때의 모습을 기본 블록에 두면 부정 조건과 조상 의존이 함께 사라집니다)**
+**Impact: MEDIUM-HIGH (그 상태가 아닐 때의 모습을 기본 블록에 두면 부정 조건과 조상 의존이 함께 사라집니다)**
 
 도메인 상태를 `:not(.--수정자)`로 뒤집지 않습니다.
 그 상태가 아닐 때의 모습은 기본 블록에 두고, 그 상태일 때의 모습만 수정자 블록에 둡니다.
@@ -2102,7 +2102,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 
 ## 6. Layout and Responsiveness
 
-**Impact: HIGH**
+**Impact: MEDIUM-HIGH**
 
 배치 의도가 클래스명과 선언에서 바로 읽혀야 하고, 폭이 달라질 때 무엇이 바뀌는지가 한 자리에 모여야 합니다. 분기점을 적기 전에 스스로 접히는 크기 지정으로 되는지 먼저 보고, 남는 분기점은 파일 아래 한 곳에 데스크톱 퍼스트로 둡니다.
 
@@ -2114,7 +2114,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 
 **Review with:** `layout-reach-for-intrinsic-sizing-before-breakpoints`, `selector-declare-each-class-in-one-block`, `values-switch-themes-by-changing-token-values`
 
-**Impact: HIGH (한 분기점에서 무엇이 달라지는지 한 블록에서 읽히고 두 방향이 겹치지 않습니다)**
+**Impact: MEDIUM-HIGH (한 분기점에서 무엇이 달라지는지 한 블록에서 읽히고 두 방향이 겹치지 않습니다)**
 
 분기점 재선언은 파일 맨 아래 `@media` 블록에 모읍니다.
 클래스 블록 안에 `@media`를 중첩하지 않습니다.
@@ -2264,7 +2264,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 
 **Review with:** `values-declare-stacking-layers-as-tokens`
 
-**Impact: MEDIUM-HIGH (DOM을 거슬러 올라가지 않고 sticky, fixed, 박스 책임을 파악합니다)**
+**Impact: MEDIUM (DOM을 거슬러 올라가지 않고 sticky, fixed, 박스 책임을 파악합니다)**
 
 레이아웃 의도는 클래스명과 선언만 보고 바로 읽혀야 합니다.
 크기를 어디까지 고정할지는 `layout-reach-for-intrinsic-sizing-before-breakpoints` 규칙이 정합니다.
@@ -2316,7 +2316,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 
 **Review with:** `layout-group-breakpoints-at-the-file-bottom`, `layout-keep-layout-intent-explicit`
 
-**Impact: HIGH (슬롯 폭이 얼마든 맞는 배치라 같은 컴포넌트를 옮겨도 CSS를 다시 고치지 않습니다)**
+**Impact: MEDIUM-HIGH (슬롯 폭이 얼마든 맞는 배치라 같은 컴포넌트를 옮겨도 CSS를 다시 고치지 않습니다)**
 
 분기점을 적기 전에 분기점 없이 되는지 먼저 봅니다.
 아래 넷 중 하나에 해당하면 `@media`를 쓰지 않습니다.
@@ -2443,7 +2443,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 
 ## 7. Accessibility and Motion
 
-**Impact: HIGH**
+**Impact: CRITICAL**
 
 키보드 사용자가 지금 어디에 있는지 보이고, 움직임에 민감한 사용자가 막히지 않아야 합니다. 포커스 표시는 없애지 않고 형태로 구분하며, 애니메이션은 전역 이름을 겹치지 않게 두고 사용자 설정을 따릅니다.
 
@@ -2531,7 +2531,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 
 **Review with:** `tooling-configure-stylelint-to-enforce-these-rules`, `values-tokenize-repeated-visual-values`
 
-**Impact: MEDIUM-HIGH (전역 이름이 겹쳐 남의 애니메이션이 바뀌지 않고 움직임에 민감한 사용자를 막지 않습니다)**
+**Impact: CRITICAL (전역 이름이 겹쳐 남의 애니메이션이 바뀌지 않고 움직임에 민감한 사용자를 막지 않습니다)**
 
 **`@keyframes` 이름은 전역입니다.**
 클래스와 달리 파일이나 블록에 갇히지 않아서, 같은 이름을 두 파일에서 선언하면 나중에 읽힌 것이 이깁니다.

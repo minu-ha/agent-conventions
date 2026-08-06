@@ -1,6 +1,6 @@
 # Expose Only Compound Parts the Consumer Assembles
 
-**Impact: HIGH (내부 구조가 공개 계약이 되지 않아 나중에 바꿀 수 있습니다)**
+**Impact: MEDIUM-HIGH (내부 구조가 공개 계약이 되지 않아 나중에 바꿀 수 있습니다)**
 
 공개 부품은 두 경우만 엽니다.
 

@@ -1,7 +1,7 @@
 ---
 title: Nest DOM State Pseudo-classes in the Owning Block
 titleKo: 상태 가상 클래스는 그 요소 블록 안에 넣습니다
-impact: HIGH
+impact: MEDIUM
 impactDescription: 한 요소의 기본 모습과 상태 변화를 한 블록에서 나란히 읽습니다
 appliesWhen:
   - `:hover`, `:focus-visible`, `:disabled`, `:checked` 스타일을 추가·수정할 때
@@ -14,7 +14,7 @@ tags: selector, pseudo-classes, nesting
 
 ## Nest DOM State Pseudo-classes in the Owning Block
 
-**Impact: HIGH (한 요소의 기본 모습과 상태 변화를 한 블록에서 나란히 읽습니다)**
+**Impact: MEDIUM (한 요소의 기본 모습과 상태 변화를 한 블록에서 나란히 읽습니다)**
 
 DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 씁니다.
 같은 가상 클래스를 블록 바깥에서 다시 열지 않습니다.

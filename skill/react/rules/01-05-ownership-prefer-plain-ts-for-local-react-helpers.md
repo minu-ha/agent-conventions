@@ -1,7 +1,7 @@
 ---
 title: Do Not Create Screen-local Custom Hooks for Pure Logic
 titleKo: 순수 계산을 감싸는 화면 전용 훅을 만들지 않습니다
-impact: HIGH
+impact: MEDIUM-HIGH
 impactDescription: 리액트 전용 추상을 실제 생명주기나 문맥이 얽힌 자리로만 한정합니다
 appliesWhen:
   - 화면 전용 계산·정규화·전송 값 조립을 커스텀 훅으로 추출하려 할 때
@@ -15,7 +15,7 @@ tags: ownership, hooks, widget
 
 ## Do Not Create Screen-local Custom Hooks for Pure Logic
 
-**Impact: HIGH (리액트 전용 추상을 실제 생명주기나 문맥이 얽힌 자리로만 한정합니다)**
+**Impact: MEDIUM-HIGH (리액트 전용 추상을 실제 생명주기나 문맥이 얽힌 자리로만 한정합니다)**
 
 순수 계산은 훅으로 감싸지 않고 일반 `.ts` 파일의 함수로 둡니다.
 화면 하나에 종속된 계산, 정규화, 전송 값 조립이 모두 여기 해당합니다.

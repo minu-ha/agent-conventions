@@ -1,6 +1,6 @@
 # Nest DOM State Pseudo-classes in the Owning Block
 
-**Impact: HIGH (한 요소의 기본 모습과 상태 변화를 한 블록에서 나란히 읽습니다)**
+**Impact: MEDIUM (한 요소의 기본 모습과 상태 변화를 한 블록에서 나란히 읽습니다)**
 
 DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 씁니다.
 같은 가상 클래스를 블록 바깥에서 다시 열지 않습니다.

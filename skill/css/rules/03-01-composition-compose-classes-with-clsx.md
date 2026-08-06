@@ -1,7 +1,7 @@
 ---
 title: Compose Classes With `clsx()`
 titleKo: 클래스는 `clsx()`로 조립합니다
-impact: HIGH
+impact: LOW
 impactDescription: 기본 클래스와 상태 수정자를 섞어도 TSX 조립이 한눈에 읽힙니다
 appliesWhen:
   - TSX의 `className`을 추가·수정할 때
@@ -11,7 +11,7 @@ tags: clsx, tsx, className
 
 ## Compose Classes With `clsx()`
 
-**Impact: HIGH (기본 클래스와 상태 수정자를 섞어도 TSX 조립이 한눈에 읽힙니다)**
+**Impact: LOW (기본 클래스와 상태 수정자를 섞어도 TSX 조립이 한눈에 읽힙니다)**
 
 TSX에서 `className`은 `clsx()`로 조립합니다.
 문자열을 이어 붙이지 않습니다.

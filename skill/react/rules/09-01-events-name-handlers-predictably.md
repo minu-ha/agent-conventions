@@ -1,7 +1,7 @@
 ---
 title: Name Handlers Predictably
 titleKo: 핸들러 이름에 `handle` 접두사를 붙입니다
-impact: MEDIUM-HIGH
+impact: MEDIUM
 impactDescription: 이벤트 흐름을 이름으로 검색할 수 있습니다
 appliesWhen:
   - 이벤트 핸들러를 새로 만들 때
@@ -12,7 +12,7 @@ tags: events, naming
 
 ## Name Handlers Predictably
 
-**Impact: MEDIUM-HIGH (이벤트 흐름을 이름으로 검색할 수 있습니다)**
+**Impact: MEDIUM (이벤트 흐름을 이름으로 검색할 수 있습니다)**
 
 이벤트 핸들러는 `handle` 접두사와 역할명을 씁니다.
 

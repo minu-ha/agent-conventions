@@ -1,6 +1,6 @@
 # Take React Handler and Wrapper Prop Types From Existing Contracts
 
-**Impact: HIGH (같은 시그니처를 손으로 다시 적지 않아 계약이 어긋나지 않습니다)**
+**Impact: MEDIUM-HIGH (같은 시그니처를 손으로 다시 적지 않아 계약이 어긋나지 않습니다)**
 
 타입을 어디에 붙일지는 `typescript/types-prefer-function-variable-types-over-parameter-annotations`가
 정합니다.
