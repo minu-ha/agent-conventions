@@ -922,13 +922,13 @@ const productClient = createClient({baseUrl: config.api.baseUrl});
 
 **Rule:** `T14` · `functions-declare-functions-as-arrow-consts`
 
-**Applies when:** 이름 붙인 함수를 새로 만들거나 선언 형태나 본문 형태를 바꿀 때. 네임스페이스 객체에 멤버 함수를 추가·변경할 때. 제외: 인라인 콜백이거나 클래스 메서드, 제너레이터, 오버로드 선언인 경우.
+**Applies when:** 이름을 지어 선언하는 함수를 새로 만들거나 선언 형태나 본문 형태를 바꿀 때. 네임스페이스 객체에 멤버 함수를 추가·변경할 때. 제외: 인라인 콜백이거나 클래스 메서드, 제너레이터, 오버로드 선언인 경우.
 
 **Review with:** `functions-use-named-object-params-for-complex-signatures`
 
 **Impact: MEDIUM (선언과 본문 형태가 하나로 고정되어 호이스팅 순서 의존이나 형태가 갈리는 diff가 생기지 않습니다)**
 
-이름 붙인 함수는 `const`에 화살표 함수를 담아 선언합니다.
+함수에 이름을 지어 선언할 때는 `const`에 화살표 함수를 담습니다.
 `function` 선언문은 쓰지 않습니다.
 
 - 한 파일 안에서 두 형태를 섞으면 어느 것이 공개 계약인지 형태로 구분할 수 없습니다.
@@ -1461,14 +1461,14 @@ const visibleTabs = [
 
 **Rule:** `T19` · `functions-name-a-value-only-for-recompute-or-judgment`
 
-**Applies when:** 순수 계산의 결과를 지역 `const`로 받는 줄을 추가·삭제할 때. 식을 그 자리에 적을지 이름을 붙일지 정할 때.
+**Applies when:** 순수 계산의 결과를 지역 `const`로 받는 줄을 추가·삭제할 때. 식을 쓰는 자리에 적을지 `const`에 담을지 정할 때.
 
 **Review with:** `functions-avoid-imperative-assembly-in-wide-scopes`, `values-read-objects-through-chains`
 
-**Impact: MEDIUM (이름을 붙일지가 그 식 안에서 정해져 쓰는 자리가 하나 늘었다고 판정이 뒤집히지 않습니다)**
+**Impact: MEDIUM (`const`에 담을지가 그 식 안에서 정해져 쓰는 자리가 하나 늘었다고 판정이 뒤집히지 않습니다)**
 
-이름을 붙이는 자리는 둘입니다.
-둘 다 아니면 식을 그 자리에 적습니다.
+식을 `const`에 담는 자리는 둘입니다.
+둘 다 아니면 식을 쓰는 자리에 그대로 적습니다.
 같은 식을 몇 번 적든 마찬가지입니다.
 
 **1. 다시 계산하면 값이 달라지거나 비용이 듭니다.**
@@ -1496,7 +1496,7 @@ const visibleTabs = [
   `row.dueDate < today`는 쓰는 자리에 그대로 적습니다.
 - 부정이 겹치면 이름으로 뒤집습니다.
   `!row.deletedAt && !row.archivedAt`보다 `isVisible`이 한 번에 읽힙니다.
-- 식에 리터럴이 보이면 이름을 붙일 자리가 아니라 그 리터럴을 선언할 자리입니다.
+- 식에 리터럴이 보이면 `const`에 담을 자리가 아니라 그 리터럴을 선언할 자리입니다.
   `types-replace-enum-with-as-const-objects`와 `naming-centralize-shared-config-namespaces`가 그 자리를 정합니다.
 
 **횟수는 기준이 아닙니다.**
@@ -1504,13 +1504,13 @@ const visibleTabs = [
 같은 코드에 다른 답이 나오는 기준은 지킬 수 없습니다.
 위 둘은 그 식 안에서 판정됩니다.
 
-이름을 붙이면 읽는 사람은 그 값이 어디서 왔는지 확인하러 위로 올라갑니다.
+`const`에 담으면 읽는 사람은 그 값이 어디서 왔는지 확인하러 위로 올라갑니다.
 그 비용을 치를 이유가 위 둘입니다.
 
 `let` 재할당과 배열 `push` 누적은 `functions-avoid-imperative-assembly-in-wide-scopes`가 봅니다.
 객체 필드를 그대로 읽는 것은 계산이 아니라 `values-read-objects-through-chains`가 봅니다.
 
-**Incorrect (돌려주기만 할 값에 이름을 붙임):**
+**Incorrect (돌려주기만 할 값을 `const`에 담음):**
 
 ```ts
 const toNextIteration = (iteration: number): number => {
@@ -1526,7 +1526,7 @@ const toRowLabel = (row: Row): string => {
 };
 ```
 
-**Incorrect (두 번 쓴다는 이유만으로 이름을 붙임):**
+**Incorrect (두 번 쓴다는 이유만으로 `const`에 담음):**
 
 ```ts
 const toRowClassNames = (row: Row): string[] => {
@@ -1539,7 +1539,7 @@ const toRowClassNames = (row: Row): string[] => {
 };
 ```
 
-**Correct (항이 하나라 두 번 적어도 이름을 붙이지 않음):**
+**Correct (항이 하나라 두 번 적어도 그 자리에 그대로 씀):**
 
 ```ts
 const toRowClassNames = (row: Row): string[] => {
@@ -1550,7 +1550,7 @@ const toRowClassNames = (row: Row): string[] => {
 };
 ```
 
-**Correct (한 번만 써도 합성 판정이라 이름을 붙임):**
+**Correct (한 번만 써도 합성 판정이라 `const`에 담음):**
 
 ```ts
 const toRowAction = (row: Row): RowAction => {
@@ -1560,7 +1560,7 @@ const toRowAction = (row: Row): RowAction => {
 };
 ```
 
-**Correct (콜백 밖이라 이름을 붙여 둠):**
+**Correct (콜백 밖에 `const`로 두어 행마다 다시 계산하지 않음):**
 
 ```ts
 const filterVisibleRows = (rows: Row[], keyword: string): Row[] => {
@@ -1571,7 +1571,7 @@ const filterVisibleRows = (rows: Row[], keyword: string): Row[] => {
 };
 ```
 
-**Correct (바깥과 주고받는 호출이라 이름을 붙임):**
+**Correct (바깥과 주고받는 호출이라 `const`에 담음):**
 
 ```ts
 /**

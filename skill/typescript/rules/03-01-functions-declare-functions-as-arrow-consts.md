@@ -1,10 +1,10 @@
 ---
 title: Declare Functions as Arrow Consts
-titleKo: 이름 붙인 함수는 `const` 화살표에 `{}` 블록 본문으로 선언합니다
+titleKo: 함수는 `const` 화살표로 선언하고 본문은 `{}` 블록으로 씁니다
 impact: MEDIUM
 impactDescription: 선언과 본문 형태가 하나로 고정되어 호이스팅 순서 의존이나 형태가 갈리는 diff가 생기지 않습니다
 appliesWhen:
-  - 이름 붙인 함수를 새로 만들거나 선언 형태나 본문 형태를 바꿀 때
+  - 이름을 지어 선언하는 함수를 새로 만들거나 선언 형태나 본문 형태를 바꿀 때
   - 네임스페이스 객체에 멤버 함수를 추가·변경할 때
   - 제외: 인라인 콜백이거나 클래스 메서드, 제너레이터, 오버로드 선언인 경우
 reviewWith: functions-use-named-object-params-for-complex-signatures
@@ -15,7 +15,7 @@ tags: functions, declarations
 
 **Impact: MEDIUM (선언과 본문 형태가 하나로 고정되어 호이스팅 순서 의존이나 형태가 갈리는 diff가 생기지 않습니다)**
 
-이름 붙인 함수는 `const`에 화살표 함수를 담아 선언합니다.
+함수에 이름을 지어 선언할 때는 `const`에 화살표 함수를 담습니다.
 `function` 선언문은 쓰지 않습니다.
 
 - 한 파일 안에서 두 형태를 섞으면 어느 것이 공개 계약인지 형태로 구분할 수 없습니다.

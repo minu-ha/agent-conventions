@@ -267,7 +267,7 @@ const typescriptRuleRouting = {
 	},
 	"functions-declare-functions-as-arrow-consts": {
 		appliesWhen:
-			"이름 붙인 함수를 새로 만들거나 선언 형태나 본문 형태를 바꿀 때. 네임스페이스 객체에 멤버 함수를 추가·변경할 때. 제외: 인라인 콜백이거나 클래스 메서드, 제너레이터, 오버로드 선언인 경우.",
+			"이름을 지어 선언하는 함수를 새로 만들거나 선언 형태나 본문 형태를 바꿀 때. 네임스페이스 객체에 멤버 함수를 추가·변경할 때. 제외: 인라인 콜백이거나 클래스 메서드, 제너레이터, 오버로드 선언인 경우.",
 		reviewWith: ["functions-use-named-object-params-for-complex-signatures"],
 	},
 	"functions-use-named-object-params-for-complex-signatures": {
@@ -289,7 +289,7 @@ const typescriptRuleRouting = {
 		reviewWith: ["functions-extract-helpers-only-when-the-boundary-is-real"],
 	},
 	"functions-name-a-value-only-for-recompute-or-judgment": {
-		appliesWhen: "순수 계산의 결과를 지역 `const`로 받는 줄을 추가·삭제할 때. 식을 그 자리에 적을지 이름을 붙일지 정할 때.",
+		appliesWhen: "순수 계산의 결과를 지역 `const`로 받는 줄을 추가·삭제할 때. 식을 쓰는 자리에 적을지 `const`에 담을지 정할 때.",
 		reviewWith: ["functions-avoid-imperative-assembly-in-wide-scopes", "values-read-objects-through-chains"],
 	},
 	"functions-name-functions-by-what-comes-out": {
