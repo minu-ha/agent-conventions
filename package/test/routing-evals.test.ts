@@ -100,7 +100,7 @@ const typescriptRuleUniverse = [
 	"functions-extract-helpers-only-when-the-boundary-is-real",
 	"functions-place-and-promote-support-functions",
 	"functions-avoid-imperative-assembly-in-wide-scopes",
-	"functions-name-a-value-only-when-it-is-reused",
+	"functions-name-a-value-only-for-recompute-or-judgment",
 	"functions-name-functions-by-what-comes-out",
 	"values-prefer-immutable-array-sorting",
 	"values-use-set-and-map-for-repeated-lookups",
@@ -288,9 +288,9 @@ const typescriptRuleRouting = {
 		appliesWhen: "모듈 최상위나 함수 본문 전체를 덮는 스코프에서 `let` 재할당, 배열 `push`, 조건부 누적으로 값을 만들 때.",
 		reviewWith: ["functions-extract-helpers-only-when-the-boundary-is-real"],
 	},
-	"functions-name-a-value-only-when-it-is-reused": {
+	"functions-name-a-value-only-for-recompute-or-judgment": {
 		appliesWhen: "순수 계산의 결과를 지역 `const`로 받는 줄을 추가·삭제할 때. 식을 그 자리에 적을지 이름을 붙일지 정할 때.",
-		reviewWith: ["functions-avoid-imperative-assembly-in-wide-scopes"],
+		reviewWith: ["functions-avoid-imperative-assembly-in-wide-scopes", "values-read-objects-through-chains"],
 	},
 	"functions-name-functions-by-what-comes-out": {
 		appliesWhen: "이름 붙인 함수를 새로 만들거나 이름을 바꿀 때. 제외: 외부 패키지가 정한 이름을 별칭 없이 그대로 쓰는 경우.",
@@ -307,7 +307,7 @@ const typescriptRuleRouting = {
 	"values-read-objects-through-chains": {
 		appliesWhen:
 			"구조분해로 객체에서 값을 꺼내는 줄을 추가·변경할 때. 객체 필드를 별칭 `const`에 담아 그 이름으로 쓰려 할 때. 제외: 배열이나 튜플을 자리로 푸는 경우.",
-		reviewWith: ["functions-name-a-value-only-when-it-is-reused"],
+		reviewWith: ["functions-name-a-value-only-for-recompute-or-judgment"],
 	},
 	"absence-expose-optional-values-instead-of-silent-fallbacks": {
 		appliesWhen: "선택 값을 읽거나 정규화하거나 넘기는 방식을 바꿀 때. `??`, `||`, 기본값, 빈 값 대체 분기를 추가·변경할 때.",
@@ -839,7 +839,7 @@ const typescriptSelections = {
 		"docs-write-doc-comments-as-multiline-blocks",
 		"tooling-configure-biome-to-enforce-these-rules",
 	],
-	"wide-scope-assembly": ["functions-avoid-imperative-assembly-in-wide-scopes", "functions-name-a-value-only-when-it-is-reused"],
+	"wide-scope-assembly": ["functions-avoid-imperative-assembly-in-wide-scopes", "functions-name-a-value-only-for-recompute-or-judgment"],
 	"named-object-param": [
 		"naming-use-consistent-file-and-symbol-naming",
 		"functions-declare-functions-as-arrow-consts",

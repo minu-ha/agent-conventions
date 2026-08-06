@@ -39,7 +39,7 @@
     - 3.3 [Extract Support Functions Only When the Boundary Is Real](#33-extract-support-functions-only-when-the-boundary-is-real)
     - 3.4 [Place and Promote Support Functions Deliberately](#34-place-and-promote-support-functions-deliberately)
     - 3.5 [Avoid Imperative Assembly in Wide Scopes](#35-avoid-imperative-assembly-in-wide-scopes)
-    - 3.6 [Name a Value Only When It Is Reused](#36-name-a-value-only-when-it-is-reused)
+    - 3.6 [Name a Value Only to Prevent Recompute or Explain a Judgment](#36-name-a-value-only-to-prevent-recompute-or-explain-a-judgment)
     - 3.7 [Name Functions by What Comes Out](#37-name-functions-by-what-comes-out)
 4. [Values and Data Structures](#4-values-and-data-structures) — **HIGH**
     - 4.1 [Prefer Immutable Array Sorting](#41-prefer-immutable-array-sorting)
@@ -1422,12 +1422,12 @@ export const util = {
 
 모듈 최상위나 함수 본문 전체를 덮는 스코프에서 `let` 재할당, 배열 `push`, 조건부 누적으로 값을 쌓지 않습니다.
 `if`나 `for` 블록 안에서만 사는 누적은 대상이 아닙니다.
-한 번만 쓰면 실제 쓰는 좁은 스코프에서 바로 계산합니다.
+쓰는 자리가 좁은 스코프 하나면 그 안에서 바로 계산합니다.
 조건이 둘 이상이면 삼항을 겹치지 않고 조건부 스프레드나 `filter`로 한 번에 조립합니다.
 분기와 보정이 얽혀 좁은 스코프에 담기지 않으면 떼어 낼지를 다시 봅니다.
 그 판정은 `functions-extract-helpers-only-when-the-boundary-is-real`이 합니다.
 떼어 낸 함수의 이름은 `functions-name-functions-by-what-comes-out`이 정하고,
-중간값에 이름을 붙일지는 `functions-name-a-value-only-when-it-is-reused`가 정합니다.
+중간값에 이름을 붙일지는 `functions-name-a-value-only-for-recompute-or-judgment`가 정합니다.
 
 **Incorrect (넓은 스코프에서 명령형으로 누적 조립):**
 
@@ -1457,41 +1457,60 @@ const visibleTabs = [
 	.map((tab) => tab.id);
 ```
 
-### 3.6 Name a Value Only When It Is Reused
+### 3.6 Name a Value Only to Prevent Recompute or Explain a Judgment
 
-**Rule:** `T19` · `functions-name-a-value-only-when-it-is-reused`
+**Rule:** `T19` · `functions-name-a-value-only-for-recompute-or-judgment`
 
 **Applies when:** 순수 계산의 결과를 지역 `const`로 받는 줄을 추가·삭제할 때. 식을 그 자리에 적을지 이름을 붙일지 정할 때.
 
-**Review with:** `functions-avoid-imperative-assembly-in-wide-scopes`
+**Review with:** `functions-avoid-imperative-assembly-in-wide-scopes`, `values-read-objects-through-chains`
 
-**Impact: MEDIUM (한 번 쓸 값에 이름을 붙이지 않아 식의 출처가 쓰는 자리에 그대로 남습니다)**
+**Impact: MEDIUM (이름을 붙일지가 그 식 안에서 정해져 쓰는 자리가 하나 늘었다고 판정이 뒤집히지 않습니다)**
 
-부수효과 없는 순수 식의 결과를 **한 번만 쓰면 이름을 붙이지 않고 그 자리에 적습니다.**
-두 번 이상 쓰면 그 자리를 모두 감싸는 가장 좁은 스코프에 `const`로 둡니다.
+이름을 붙이는 자리는 둘입니다.
+둘 다 아니면 식을 그 자리에 적습니다.
+같은 식을 몇 번 적든 마찬가지입니다.
 
-이름을 붙이는 순간 읽는 사람은 그 값이 어디서 왔는지 확인하러 위로 올라가야 합니다.
-한 번 쓸 값이면 올라갈 이유가 없게 그 자리에 적는 편이 낫습니다.
+**1. 다시 계산하면 값이 달라지거나 비용이 듭니다.**
 
-대상은 순수 식의 결과뿐입니다.
-아래는 문법이 이름을 요구하거나 순서가 뜻을 갖는 자리라 해당하지 않습니다.
-
-| 대상이 아닌 것 | 이유 |
+| 자리 | 이유 |
 | --- | --- |
-| **콜백이나 반복문 안으로 들어가는 값** | 코드에 한 번 적혀 있어도 실행은 원소마다 한 번씩입니다 |
-| 훅 호출과 `useState` 반환 | 부르는 자리와 횟수가 정해져 있습니다 |
+| 콜백이나 반복문 안으로 들어가는 값 | 코드에 한 번 적혀 있어도 실행은 원소마다 한 번씩입니다 |
+| 시각·난수처럼 부를 때마다 달라지는 값 | 두 자리가 서로 다른 값을 봅니다 |
 | `await`나 `yield`가 붙은 값 | 실행 순서가 뜻을 갖습니다 |
 | 바깥과 주고받는 호출 (`init()`, `localStorage.getItem()`) | 옮기면 부르는 시점이 달라집니다 |
-| 함수 값에 붙인 이름 | 이름이 곧 계약입니다 |
+| 훅 호출과 `useState` 반환 | 부르는 자리와 횟수가 정해져 있습니다 |
+| 함수 값 | 이름이 곧 계약입니다 |
 
 **코드에 한 번 적힌 것과 실행에서 한 번인 것은 다릅니다.**
 `.map()`이나 `.filter()` 콜백 안, 반복문 안으로 옮기면 원소 수만큼 다시 계산합니다.
-그런 값은 콜백 밖에 이름을 붙여 둡니다.
-`values-use-set-and-map-for-repeated-lookups`가 만드는 `Set`도 같은 이유로 밖에 둡니다.
+`values-use-set-and-map-for-repeated-lookups`가 만드는 `Set`도 같은 이유로 콜백 밖에 둡니다.
+
+**2. 여러 항을 엮은 판정이라 이름이 결론을 대신 말합니다.**
+
+`row.status === productStatus.draft && !row.lockedAt && row.ownerId === session.userId`는
+읽을 때마다 세 항을 머릿속에서 합쳐야 합니다.
+`isEditable`은 그 합성을 한 번만 하게 합니다.
+
+- 항이 하나면 이름이 더해 줄 것이 없습니다.
+  `row.dueDate < today`는 쓰는 자리에 그대로 적습니다.
+- 부정이 겹치면 이름으로 뒤집습니다.
+  `!row.deletedAt && !row.archivedAt`보다 `isVisible`이 한 번에 읽힙니다.
+- 식에 리터럴이 보이면 이름을 붙일 자리가 아니라 그 리터럴을 선언할 자리입니다.
+  `types-replace-enum-with-as-const-objects`와 `naming-centralize-shared-config-namespaces`가 그 자리를 정합니다.
+
+**횟수는 기준이 아닙니다.**
+몇 번 쓰이는지는 파일 전체를 봐야 알고, 쓰는 자리를 하나 더하면 어제 맞던 판정이 오늘 뒤집힙니다.
+같은 코드에 다른 답이 나오는 기준은 지킬 수 없습니다.
+위 둘은 그 식 안에서 판정됩니다.
+
+이름을 붙이면 읽는 사람은 그 값이 어디서 왔는지 확인하러 위로 올라갑니다.
+그 비용을 치를 이유가 위 둘입니다.
 
 `let` 재할당과 배열 `push` 누적은 `functions-avoid-imperative-assembly-in-wide-scopes`가 봅니다.
+객체 필드를 그대로 읽는 것은 계산이 아니라 `values-read-objects-through-chains`가 봅니다.
 
-**Incorrect (한 번 쓸 값에 이름을 붙임):**
+**Incorrect (돌려주기만 할 값에 이름을 붙임):**
 
 ```ts
 const toNextIteration = (iteration: number): number => {
@@ -1507,19 +1526,7 @@ const toRowLabel = (row: Row): string => {
 };
 ```
 
-**Correct (그 자리에 적음):**
-
-```ts
-const toNextIteration = (iteration: number): number => {
-	return iteration + 1;
-};
-
-const toRowLabel = (row: Row): string => {
-	return `${row.title} (${row.id})`;
-};
-```
-
-**Correct (두 번 이상 쓰므로 이름을 붙임):**
+**Incorrect (두 번 쓴다는 이유만으로 이름을 붙임):**
 
 ```ts
 const toRowClassNames = (row: Row): string[] => {
@@ -1529,6 +1536,27 @@ const toRowClassNames = (row: Row): string[] => {
 		isOverdue ? "ui_row__root--overdue" : "ui_row__root",
 		isOverdue ? "ui_row__badge--overdue" : "ui_row__badge",
 	];
+};
+```
+
+**Correct (항이 하나라 두 번 적어도 이름을 붙이지 않음):**
+
+```ts
+const toRowClassNames = (row: Row): string[] => {
+	return [
+		row.dueDate < today ? "ui_row__root--overdue" : "ui_row__root",
+		row.dueDate < today ? "ui_row__badge--overdue" : "ui_row__badge",
+	];
+};
+```
+
+**Correct (한 번만 써도 합성 판정이라 이름을 붙임):**
+
+```ts
+const toRowAction = (row: Row): RowAction => {
+	const isEditable = row.status === productStatus.draft && !row.lockedAt && row.ownerId === session.userId;
+
+	return isEditable ? rowAction.edit : rowAction.view;
 };
 ```
 
@@ -1543,7 +1571,7 @@ const filterVisibleRows = (rows: Row[], keyword: string): Row[] => {
 };
 ```
 
-**Correct (바깥과 주고받는 호출이라 대상이 아님):**
+**Correct (바깥과 주고받는 호출이라 이름을 붙임):**
 
 ```ts
 /**
@@ -1731,7 +1759,7 @@ const approver = userById.get(approverId);
 
 **Applies when:** 구조분해로 객체에서 값을 꺼내는 줄을 추가·변경할 때. 객체 필드를 별칭 `const`에 담아 그 이름으로 쓰려 할 때. 제외: 배열이나 튜플을 자리로 푸는 경우.
 
-**Review with:** `functions-name-a-value-only-when-it-is-reused`
+**Review with:** `functions-name-a-value-only-for-recompute-or-judgment`
 
 **Impact: MEDIUM-HIGH (값이 어느 객체에서 왔는지가 쓰는 자리마다 남아 이름만 보고 출처를 되짚지 않습니다)**
 
@@ -1754,7 +1782,7 @@ const approver = userById.get(approverId);
 - 이름을 바꿔 꺼내는 것도 구조분해입니다.
   `const {status: projectStatus} = project`는 출처를 지우면서 이름까지 갈아 끼웁니다.
 - 계산이 없으면 이름을 붙이지 않습니다.
-  `functions-name-a-value-only-when-it-is-reused`가 이름을 붙이라고 하는 것은 계산한 결과입니다.
+  `functions-name-a-value-only-for-recompute-or-judgment`가 이름을 붙이라고 하는 것은 계산한 결과입니다.
   필드를 그대로 읽는 것은 계산이 아닙니다.
 - 체인이 깊어 읽기 어려우면 꺼내는 자리가 아니라 **그 형태를 만드는 자리**를 봅니다.
   받는 쪽에서 끊는 것으로는 깊이가 줄지 않고 출처만 사라집니다.
@@ -1828,13 +1856,15 @@ for (const [key, value] of Object.entries(target.searchParams)) {
 }
 ```
 
-**Correct (계산한 결과에만 이름을 붙임):**
+**Correct (필드 읽기가 아니라 계산한 결과라 이름을 붙임):**
 
 ```ts
-const invoiceTotalLabel = `${config.pricing.defaultCurrency} ${invoice.amount.toFixed(2)}`;
+const filterOverdueLines = (invoice: Invoice, today: Date): InvoiceLine[] => {
+	// 콜백 안으로 옮기면 줄마다 다시 만든다
+	const overdueIds = new Set(invoice.overdueLineIds);
 
-setSummary(invoiceTotalLabel);
-setTooltip(invoiceTotalLabel);
+	return invoice.lines.filter((line) => overdueIds.has(line.id));
+};
 ```
 
 ## 5. Absence and Fallback Handling
@@ -1886,16 +1916,15 @@ setTooltip(invoiceTotalLabel);
    아래쪽 코드에서는 그 값이 더는 선택 값이 아니어서 `??`가 나올 일이 없습니다.
 3. **경계에서 못 하면 쓰는 자리에 그대로 적습니다.**
    `fetchProducts({pageSize: query.pageSize ?? config.pagination.defaultPageSize})`처럼 씁니다.
-   한 번만 쓰면 이름을 붙이지 않습니다.
-   그 판정은 `functions-name-a-value-only-when-it-is-reused`가 합니다.
-4. **두 번 이상 쓰면 파생값임이 드러나는 이름을 붙입니다.**
+4. **이름을 붙인다면 파생값임이 드러나는 이름으로 씁니다.**
    `pageSize`가 아니라 `effectivePageSize`입니다.
-   쓰는 자리를 모두 감싸는 가장 좁은 스코프에 둡니다.
+   붙일지 말지는 `functions-name-a-value-only-for-recompute-or-judgment`가 정하고,
+   횟수가 아니라 그 식이 무엇을 고른 값인지가 기준입니다.
 
 **`??` 합성은 별칭이 아닙니다.**
 `naming-preserve-config-origin-with-chained-access`가 막는 것은 같은 값에 새 이름만 붙이는 별칭입니다.
 `a ?? b`는 출처 둘을 놓고 하나를 고르는 계산이고, 그 결과는 어느 쪽에서 왔는지가 실행할 때 정해지는 파생값입니다.
-그래서 이름을 붙일지는 별칭 규칙이 아니라 `functions-name-a-value-only-when-it-is-reused`가 판정합니다.
+그래서 이름을 붙일지는 별칭 규칙이 아니라 `functions-name-a-value-only-for-recompute-or-judgment`가 판정합니다.
 
 **Incorrect (`??`와 `||` 오른쪽에 리터럴을 적음):**
 
@@ -1936,13 +1965,13 @@ const productSearchSchema = z.object({
 });
 ```
 
-**Correct (경계에서 못 하면 쓰는 자리에 그대로. 한 번만 쓰면 이름을 붙이지 않음):**
+**Correct (경계에서 못 하면 쓰는 자리에 그대로 적음):**
 
 ```ts
 fetchProducts({pageSize: query.pageSize ?? config.pagination.defaultPageSize});
 ```
 
-**Correct (두 번 이상 쓰면 파생값임이 드러나는 이름):**
+**Correct (이름을 붙인다면 파생값임이 드러나는 이름):**
 
 ```ts
 const effectivePageSize = query.pageSize ?? config.pagination.defaultPageSize;

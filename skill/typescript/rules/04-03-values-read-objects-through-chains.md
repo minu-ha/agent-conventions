@@ -7,7 +7,7 @@ appliesWhen:
   - 구조분해로 객체에서 값을 꺼내는 줄을 추가·변경할 때
   - 객체 필드를 별칭 `const`에 담아 그 이름으로 쓰려 할 때
   - 제외: 배열이나 튜플을 자리로 푸는 경우
-reviewWith: functions-name-a-value-only-when-it-is-reused
+reviewWith: functions-name-a-value-only-for-recompute-or-judgment
 tags: values, origin, destructuring
 ---
 
@@ -34,7 +34,7 @@ tags: values, origin, destructuring
 - 이름을 바꿔 꺼내는 것도 구조분해입니다.
   `const {status: projectStatus} = project`는 출처를 지우면서 이름까지 갈아 끼웁니다.
 - 계산이 없으면 이름을 붙이지 않습니다.
-  `functions-name-a-value-only-when-it-is-reused`가 이름을 붙이라고 하는 것은 계산한 결과입니다.
+  `functions-name-a-value-only-for-recompute-or-judgment`가 이름을 붙이라고 하는 것은 계산한 결과입니다.
   필드를 그대로 읽는 것은 계산이 아닙니다.
 - 체인이 깊어 읽기 어려우면 꺼내는 자리가 아니라 **그 형태를 만드는 자리**를 봅니다.
   받는 쪽에서 끊는 것으로는 깊이가 줄지 않고 출처만 사라집니다.
@@ -108,11 +108,13 @@ for (const [key, value] of Object.entries(target.searchParams)) {
 }
 ```
 
-**Correct (계산한 결과에만 이름을 붙임):**
+**Correct (필드 읽기가 아니라 계산한 결과라 이름을 붙임):**
 
 ```ts
-const invoiceTotalLabel = `${config.pricing.defaultCurrency} ${invoice.amount.toFixed(2)}`;
+const filterOverdueLines = (invoice: Invoice, today: Date): InvoiceLine[] => {
+	// 콜백 안으로 옮기면 줄마다 다시 만든다
+	const overdueIds = new Set(invoice.overdueLineIds);
 
-setSummary(invoiceTotalLabel);
-setTooltip(invoiceTotalLabel);
+	return invoice.lines.filter((line) => overdueIds.has(line.id));
+};
 ```

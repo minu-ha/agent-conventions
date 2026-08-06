@@ -151,7 +151,7 @@
 			"expectedSelected": {
 				"typescript": [
 					"functions-avoid-imperative-assembly-in-wide-scopes",
-					"functions-name-a-value-only-when-it-is-reused"
+					"functions-name-a-value-only-for-recompute-or-judgment"
 				]
 			}
 		},

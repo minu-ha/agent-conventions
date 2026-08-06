@@ -27,7 +27,7 @@ tags: screen, origin
 - 조건 플래그와 표시 문구를 화면 상단에 미리 만들어 두지 않고 쓰는 자리에서 계산합니다.
   `let` 재할당과 배열 `push` 조립은 `typescript/functions-avoid-imperative-assembly-in-wide-scopes`가 봅니다.
 - 훅 인자, JSX 표시값, 이펙트 내부 계산은 쓰는 자리의 좁은 스코프에서 직접 계산합니다.
-- 이름을 붙일지 말지는 `typescript/functions-name-a-value-only-when-it-is-reused`가 정합니다.
+- 이름을 붙일지 말지는 `typescript/functions-name-a-value-only-for-recompute-or-judgment`가 정합니다.
   여기서는 이름을 붙인 값을 화면 어디에 두는지만 봅니다.
 
 **Incorrect (쓰는 자리에서 먼 화면 상단에 플래그와 표시값을 쌓음):**

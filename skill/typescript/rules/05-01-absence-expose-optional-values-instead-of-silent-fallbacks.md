@@ -47,16 +47,15 @@ tags: absence
    아래쪽 코드에서는 그 값이 더는 선택 값이 아니어서 `??`가 나올 일이 없습니다.
 3. **경계에서 못 하면 쓰는 자리에 그대로 적습니다.**
    `fetchProducts({pageSize: query.pageSize ?? config.pagination.defaultPageSize})`처럼 씁니다.
-   한 번만 쓰면 이름을 붙이지 않습니다.
-   그 판정은 `functions-name-a-value-only-when-it-is-reused`가 합니다.
-4. **두 번 이상 쓰면 파생값임이 드러나는 이름을 붙입니다.**
+4. **이름을 붙인다면 파생값임이 드러나는 이름으로 씁니다.**
    `pageSize`가 아니라 `effectivePageSize`입니다.
-   쓰는 자리를 모두 감싸는 가장 좁은 스코프에 둡니다.
+   붙일지 말지는 `functions-name-a-value-only-for-recompute-or-judgment`가 정하고,
+   횟수가 아니라 그 식이 무엇을 고른 값인지가 기준입니다.
 
 **`??` 합성은 별칭이 아닙니다.**
 `naming-preserve-config-origin-with-chained-access`가 막는 것은 같은 값에 새 이름만 붙이는 별칭입니다.
 `a ?? b`는 출처 둘을 놓고 하나를 고르는 계산이고, 그 결과는 어느 쪽에서 왔는지가 실행할 때 정해지는 파생값입니다.
-그래서 이름을 붙일지는 별칭 규칙이 아니라 `functions-name-a-value-only-when-it-is-reused`가 판정합니다.
+그래서 이름을 붙일지는 별칭 규칙이 아니라 `functions-name-a-value-only-for-recompute-or-judgment`가 판정합니다.
 
 **Incorrect (`??`와 `||` 오른쪽에 리터럴을 적음):**
 
@@ -97,13 +96,13 @@ const productSearchSchema = z.object({
 });
 ```
 
-**Correct (경계에서 못 하면 쓰는 자리에 그대로. 한 번만 쓰면 이름을 붙이지 않음):**
+**Correct (경계에서 못 하면 쓰는 자리에 그대로 적음):**
 
 ```ts
 fetchProducts({pageSize: query.pageSize ?? config.pagination.defaultPageSize});
 ```
 
-**Correct (두 번 이상 쓰면 파생값임이 드러나는 이름):**
+**Correct (이름을 붙인다면 파생값임이 드러나는 이름):**
 
 ```ts
 const effectivePageSize = query.pageSize ?? config.pagination.defaultPageSize;

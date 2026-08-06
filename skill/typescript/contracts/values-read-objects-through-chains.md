@@ -21,7 +21,7 @@
 - 이름을 바꿔 꺼내는 것도 구조분해입니다.
   `const {status: projectStatus} = project`는 출처를 지우면서 이름까지 갈아 끼웁니다.
 - 계산이 없으면 이름을 붙이지 않습니다.
-  `functions-name-a-value-only-when-it-is-reused`가 이름을 붙이라고 하는 것은 계산한 결과입니다.
+  `functions-name-a-value-only-for-recompute-or-judgment`가 이름을 붙이라고 하는 것은 계산한 결과입니다.
   필드를 그대로 읽는 것은 계산이 아닙니다.
 - 체인이 깊어 읽기 어려우면 꺼내는 자리가 아니라 **그 형태를 만드는 자리**를 봅니다.
   받는 쪽에서 끊는 것으로는 깊이가 줄지 않고 출처만 사라집니다.
