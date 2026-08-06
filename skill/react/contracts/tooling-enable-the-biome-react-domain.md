@@ -1,0 +1,41 @@
+# Enable the Biome React Domain
+
+**Impact: MEDIUM (리액트 전용 검사를 도구가 맡아 리뷰는 판단이 필요한 규칙만 봅니다)**
+
+`biome` 2.x에는 **도메인**이 있습니다.
+`linter.domains`에 `react`를 켜면 `package.json`에 `react@>=16`이 있을 때만 리액트 검사가 붙습니다.
+`typescript/tooling-configure-biome-to-enforce-these-rules`가 세우는 설정 위에 이 항목을 더합니다.
+
+| `biome` 규칙 | 담당 컨벤션 |
+| --- | --- |
+| `correctness/noNestedComponentDefinitions` | `react/composition-do-not-define-components-inside-components` |
+| `correctness/useExhaustiveDependencies` | `react/state-use-effectevent-for-non-reactive-effect-callbacks`의 의존성 |
+| `correctness/useJsxKeyInIterable` | `react/composition-name-fragments-explicitly`의 `key` |
+| `a11y/*` 묶음 | `react/a11y-give-interactive-elements-an-accessible-name`의 일부 |
+
+`noNestedComponentDefinitions`는 도메인의 `recommended`에 없어 따로 켭니다.
+`react/composition-do-not-define-components-inside-components`와 판정 대상이 같아 이 규칙을 통째로 도구에 넘깁니다.
+
+`a11y` 묶음은 도메인이 아니라 `recommended: true`가 이미 켭니다.
+`useButtonType`, `useAltText`, `useValidAnchor`, `useKeyWithClickEvents`, `useSemanticElements`가 그것입니다.
+접근 가능한 이름을 실제로 붙였는지는 도구가 못 보고 리뷰가 봅니다.
+
+도구가 끝까지 못 가는 자리가 있습니다.
+아래 항목은 리뷰가 봅니다.
+
+- 소유 레이어, 화면 흐름, 조립 전략, 출처 체인처럼 **무엇이 어디에 속하는지**를 묻는 규칙은
+  어떤 린터도 판정하지 못합니다. 리액트 규칙 47개 중 대다수가 여기 있습니다.
+- `useExhaustiveDependencies`는 의존성 배열이 빠졌는지만 봅니다.
+  그 콜백을 `useEffectEvent`로 감싸야 하는지는 리뷰가 봅니다.
+- `useJsxKeyInIterable`은 `key`가 있는지만 봅니다.
+  `<>` 대신 `Fragment`를 썼는지는 리뷰가 봅니다.
+
+따로 켜지 않는 규칙이 둘 있습니다.
+
+- `style/useFragmentSyntax`는 조각을 `<>`로 바꾸라고 합니다.
+  `recommended`에 없어 따로 켜야 하는데, 켜지 않습니다.
+  `react/composition-name-fragments-explicitly`가 `Fragment`를 쓰라고 정하기 때문입니다.
+- `nursery/useReactFunctionComponents`는 도메인 `all`에만 있습니다.
+  `nursery`는 규칙이 바뀔 수 있어 켜지 않습니다.
+
+> 예시·예외가 필요하면 [full rule](../rules/13-01-tooling-enable-the-biome-react-domain.md)을 읽습니다.

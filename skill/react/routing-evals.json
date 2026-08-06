@@ -511,6 +511,25 @@
 					"docs-write-doc-comments-as-multiline-blocks"
 				]
 			}
+		},
+		{
+			"id": "react-biome-domain-setup",
+			"prompt": "add the react domain to the existing biome config and enable the nested-component rule that the domain leaves off; do not touch any component file.",
+			"files": [
+				"biome.json"
+			],
+			"expectedSkills": [
+				"react",
+				"typescript"
+			],
+			"expectedSelected": {
+				"react": [
+					"tooling-enable-the-biome-react-domain"
+				],
+				"typescript": [
+					"tooling-configure-biome-to-enforce-these-rules"
+				]
+			}
 		}
 	]
 }

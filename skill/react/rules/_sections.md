@@ -82,3 +82,10 @@
 **Description:** 문서 주석의 형식과 태그, 그리고 어느 선언에 붙일지의 기본 목록은 동반 스킬인
   `convention-typescript`가 정합니다.
   여기서는 그 목록에 리액트만 아는 대상을 더합니다.
+
+## 13. Tooling (tooling)
+**TitleKo:** 도구 설정
+**Impact:** MEDIUM
+**Description:** 리액트 전용 검사 중 `biome`이 잡을 수 있는 것은 도메인 설정으로 고정하고,
+  잡을 수 없는 것은 리뷰가 담당한다는 것을 명시해야 사람이 검사할 목록이 좁아집니다.
+

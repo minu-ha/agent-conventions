@@ -200,6 +200,7 @@ const reactRuleUniverse = [
 	"perf-defer-heavy-renders-with-measured-evidence",
 	"a11y-give-interactive-elements-an-accessible-name",
 	"docs-require-jsdoc-on-key-declarations",
+	"tooling-enable-the-biome-react-domain",
 ] as const;
 
 /**
@@ -758,6 +759,11 @@ const reactRuleRouting = {
 		appliesWhen:
 			"쿼리·뮤테이션이나 읽어도 의도가 안 보이는 핸들러·이펙트를 추가·변경할 때. 내보낸 보조 함수·훅·스토어 선언을 추가·변경할 때.",
 		reviewWith: ["typescript/types-document-custom-types-and-shapes"],
+	},
+	"tooling-enable-the-biome-react-domain": {
+		appliesWhen:
+			"프로젝트에 `biome` 설정을 처음 넣거나 lint 규칙을 바꿀 때. `biome.json`의 `linter.domains`나 `linter.rules`에 항목을 추가·삭제할 때.",
+		reviewWith: [],
 	},
 } as const;
 
@@ -1360,6 +1366,15 @@ const reactScenarioStages = {
 					"docs-write-doc-comments-as-multiline-blocks",
 				],
 			},
+		},
+	},
+	"react-biome-domain-setup": {
+		initial: {
+			prompt:
+				"add the react domain to the existing biome config and enable the nested-component rule that the domain leaves off; do not touch any component file.",
+			files: ["biome.json"],
+			expectedSkills: ["react", "typescript"],
+			expectedSelected: {react: ["tooling-enable-the-biome-react-domain"], typescript: ["tooling-configure-biome-to-enforce-these-rules"]},
 		},
 	},
 } as const;
@@ -2027,7 +2042,7 @@ test("TypeScript SKILL.md is a compact router without receipt or audit machinery
 	assertMentions(extractSection(body, 1), ["React", "CSS", "companion"], "typescript 1절");
 });
 
-test("React progressive metadata and all 47 rule routes match Appendix B exactly", async () => {
+test("React progressive metadata and all 48 rule routes match Appendix B exactly", async () => {
 	const skillPaths = getSkillPaths("react", realSkillRootDir);
 	const document = await readSkillDocument(skillPaths);
 
@@ -2038,7 +2053,7 @@ test("React progressive metadata and all 47 rule routes match Appendix B exactly
 		{skill: "typescript", mode: "required"},
 		{skill: "css", mode: "conditional", appliesWhen: "class contract, stylesheet 또는 styling surface를 변경한다."},
 	]);
-	assert.equal(document.rules.length, 47);
+	assert.equal(document.rules.length, 48);
 	assert.deepEqual(
 		Object.fromEntries(document.rules.map((rule) => [getRuleId(rule), {appliesWhen: rule.appliesWhen, reviewWith: rule.reviewWith}])),
 		reactRuleRouting,
@@ -2069,7 +2084,7 @@ test("React progressive metadata and all 47 rule routes match Appendix B exactly
 	assert.match(contributing, /대상이 없으면.*key\s*를 생략/i);
 });
 
-test("React routing manifest is the exact sixteen-scenario Appendix B/D oracle with full positive coverage", async () => {
+test("React routing manifest is the exact seventeen-scenario Appendix B/D oracle with full positive coverage", async () => {
 	const skillPaths = getSkillPaths("react", realSkillRootDir);
 	await validateRoutingEvalManifest(skillPaths);
 	await validateRoutingEvalManifests(realSkillRootDir);
@@ -2083,10 +2098,10 @@ test("React routing manifest is the exact sixteen-scenario Appendix B/D oracle w
 		manifest.scenarios.map((scenario) => scenario.id),
 		expectedScenarioIds,
 	);
-	assert.equal(manifest.scenarios.length, 16);
+	assert.equal(manifest.scenarios.length, 17);
 	assert.equal(
 		manifest.scenarios.reduce((count, scenario) => count + (scenario.scopeDrift ? 2 : 1), 0),
-		17,
+		18,
 	);
 
 	const universeBySkillName: Record<string, readonly string[]> = {
@@ -2191,7 +2206,7 @@ test("React generated index and handbook preserve canonical local rules and comp
 		entries.map((entry) => entry.id),
 		reactRuleUniverse,
 	);
-	assert.equal(entries.length, 47);
+	assert.equal(entries.length, 48);
 
 	for (const entry of entries) {
 		assert.equal(entry.fileName, `${entry.id}.md`);

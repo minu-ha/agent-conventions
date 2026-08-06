@@ -1,7 +1,7 @@
 # React 컨벤션 Rule Index
 
 - Skill: `react`
-- Routing digest: `sha256:917e5c7d7c01d2061e7fa02d56d83f5ed4a86a2524772ea8294cb05f67f27c7c`
+- Routing digest: `sha256:b3279f48ac6b03d48f95b568b804e9d5b27f5d76e646e17580a169cca7823733`
 
 ## Direct Companions
 
@@ -57,3 +57,4 @@
 - R45 | perf-defer-heavy-renders-with-measured-evidence | \`startTransition\`·\`useTransition\`·\`useDeferredValue\`를 추가·삭제할 때. 목록이나 표가 커져 입력 반응이 늦다는 보고를 받았을 때. | reviewWith: perf-avoid-defensive-memoization
 - R46 | a11y-give-interactive-elements-an-accessible-name | 클릭이나 입력을 받는 요소를 새로 만들 때. 글자 없이 아이콘만 있는 버튼을 추가할 때.
 - R47 | docs-require-jsdoc-on-key-declarations | 쿼리·뮤테이션이나 읽어도 의도가 안 보이는 핸들러·이펙트를 추가·변경할 때. 내보낸 보조 함수·훅·스토어 선언을 추가·변경할 때. | reviewWith: typescript/types-document-custom-types-and-shapes
+- R48 | tooling-enable-the-biome-react-domain | 프로젝트에 \`biome\` 설정을 처음 넣거나 lint 규칙을 바꿀 때. \`biome.json\`의 \`linter.domains\`나 \`linter.rules\`에 항목을 추가·삭제할 때.
