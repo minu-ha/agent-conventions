@@ -56,13 +56,17 @@ tags: functions, boundaries
 
 ```ts
 // page/profile/function/get-next-iteration.ts
-export const getNextIteration = (iteration: number): number => iteration + 1;
+export const getNextIteration = (previous: number, iterationCount: number): number => {
+	return (previous + 1) % iterationCount;
+};
 ```
 
-**Incorrect (네임스페이스 메서드 하나 때문에 변환 함수를 쪼갬):**
+**Incorrect (네임스페이스 멤버 하나 때문에 변환 함수를 쪼갬):**
 
 ```ts
-const toLabelText = (label: Label) => label.name.trim() || label.code;
+const toLabelText = (label: Label) => {
+	return label.name.trim() || label.code;
+};
 
 const toProductView = (record: RecordItem): ProductView => {
 	return {
@@ -73,7 +77,7 @@ const toProductView = (record: RecordItem): ProductView => {
 
 export const api = {
 	record: {
-		toProductView(record: RecordItem): ProductView {
+		toProductView: (record: RecordItem): ProductView => {
 			return toProductView(record);
 		},
 	},
@@ -85,16 +89,16 @@ export const api = {
 ```tsx
 // page/profile/pg-profile.tsx
 const handleNextClick = () => {
-	setIteration(iteration + 1);
+	setIteration((previous) => (previous + 1) % iterationCount);
 };
 ```
 
-**Correct (단일 소유자 네임스페이스의 단계는 메서드 본문에 둠):**
+**Correct (단일 소유자 네임스페이스의 단계는 멤버 본문에 둠):**
 
 ```ts
 export const api = {
 	record: {
-		toProductView(record: RecordItem): ProductView {
+		toProductView: (record: RecordItem): ProductView => {
 			return {
 				id: record.id,
 				labels: record.labels.map((label) => label.name.trim() || label.code),

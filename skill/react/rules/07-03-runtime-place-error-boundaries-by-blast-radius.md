@@ -62,17 +62,19 @@ export const PgProducts = () => {
 
 ```tsx
 // widget/app-shell/wg-app-shell.tsx
-export const WgAppShell = (props: WgAppShellProps) => (
-	<div className={clsx("wg_appShell__root")}>
-		<WgAppNavigation />
+export const WgAppShell = (props: WgAppShellProps) => {
+	return (
+		<div className={clsx("wg_appShell__root")}>
+			<WgAppNavigation />
 
-		<main className={clsx("wg_appShell__main")}>
-			<ErrorBoundary fallback={<UiScreenErrorState />}>
-				<Suspense fallback={<UiScreenSkeleton />}>{props.children}</Suspense>
-			</ErrorBoundary>
-		</main>
-	</div>
-);
+			<main className={clsx("wg_appShell__main")}>
+				<ErrorBoundary fallback={<UiScreenErrorState />}>
+					<Suspense fallback={<UiScreenSkeleton />}>{props.children}</Suspense>
+				</ErrorBoundary>
+			</main>
+		</div>
+	);
+};
 ```
 
 ```tsx

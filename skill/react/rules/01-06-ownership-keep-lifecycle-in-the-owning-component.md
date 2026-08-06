@@ -36,7 +36,9 @@ export const useChartInstance = (containerRef: RefObject<HTMLDivElement | null>)
 
 	useEffect(() => {
 		const instance = init(containerRef.current);
-		const handleResize = () => instance.resize();
+		const handleResize = () => {
+			instance.resize();
+		};
 
 		window.addEventListener("resize", handleResize);
 		setChart(instance);
@@ -83,7 +85,9 @@ export const WgChartRoot = (props: WgChartRootProps) => {
 		if (!containerRef.current) return;
 
 		const instance = init(containerRef.current);
-		const handleResize = () => instance.resize();
+		const handleResize = () => {
+			instance.resize();
+		};
 
 		window.addEventListener("resize", handleResize);
 		setChart(instance);

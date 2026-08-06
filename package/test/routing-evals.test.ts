@@ -248,7 +248,7 @@ const typescriptRuleRouting = {
 	},
 	"naming-use-consistent-file-and-symbol-naming": {
 		appliesWhen:
-			"TypeScript 파일, 지역 변수, 함수, 타입, 객체·스키마 필드, enum 성격 상수의 이름을 새로 만들거나 바꿀 때. 제외: 별칭 없이 외부 패키지에서 그대로 가져오는 경우.",
+			"TypeScript 파일, 폴더, 변수, 함수, 타입, 객체·스키마 키의 이름을 새로 만들거나 바꿀 때. 밖으로 나가는 키를 받는 쪽 표기로 적을지 판단할 때. 제외: 별칭 없이 외부 패키지에서 그대로 가져오는 경우.",
 		reviewWith: [],
 	},
 	"naming-use-direct-imports-and-public-entry-points": {
@@ -266,12 +266,12 @@ const typescriptRuleRouting = {
 	},
 	"functions-declare-functions-as-arrow-consts": {
 		appliesWhen:
-			"이름 붙인 함수를 새로 만들거나 선언 형태를 바꿀 때. 제외: 클래스 메서드, 제너레이터, 오버로드 선언, 객체 리터럴 메서드인 경우.",
+			"이름 붙인 함수를 새로 만들거나 선언 형태나 본문 형태를 바꿀 때. 네임스페이스 객체에 멤버 함수를 추가·변경할 때. 제외: 인라인 콜백이거나 클래스 메서드, 제너레이터, 오버로드 선언인 경우.",
 		reviewWith: ["functions-use-named-object-params-for-complex-signatures"],
 	},
 	"functions-use-named-object-params-for-complex-signatures": {
 		appliesWhen:
-			"매개변수가 3개를 넘거나 같은 계열 인자를 받는 함수를 추가·변경할 때. 객체 매개변수를 어디서 구조분해할지 바꿀 때. 제외: 리액트 함수 컴포넌트가 프롭스를 받고 구조분해하는 방식만 바꾸는 경우.",
+			"매개변수가 셋을 넘거나 같은 계열 인자를 받는 함수를 추가·변경할 때. 객체 매개변수의 필드를 읽는 방식을 바꿀 때. 제외: 리액트 함수 컴포넌트가 프롭스를 받는 방식만 바꾸는 경우.",
 		reviewWith: ["types-reuse-existing-contracts-before-new-types"],
 	},
 	"functions-extract-helpers-only-when-the-boundary-is-real": {
@@ -878,7 +878,7 @@ const typescriptScenarioEvidence = {
 	},
 	"enum-like-runtime-contract": {
 		prompt:
-			"replace `enum ProductStatus` with snake_case `product_status as const`, derive `ProductStatus`, and document the object, every key, and derived type in Korean.",
+			"replace `enum ProductStatus` with `productStatus as const`, derive `ProductStatus`, and document the object, every key, and derived type in Korean.",
 		files: ["src/audit/audit-status.ts"],
 	},
 	"wide-scope-assembly": {
@@ -1022,7 +1022,7 @@ const reactScenarioStages = {
 	"RTE04-shared-config": {
 		initial: {
 			prompt:
-				"move a duplicated menu key and default page size from two screens into a documented snake_case as const config object in src/shared/config.ts and directly import and use config.* from both route pages.",
+				"move a duplicated menu key and default page size from two screens into a documented as const config object in src/shared/config.ts and directly import and use config.* from both route pages.",
 			files: ["src/page/products/pg-products.tsx", "src/page/reports/pg-reports.tsx", "src/shared/config.ts"],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {

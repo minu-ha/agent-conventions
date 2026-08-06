@@ -520,7 +520,9 @@ export const useChartInstance = (containerRef: RefObject<HTMLDivElement | null>)
 
 	useEffect(() => {
 		const instance = init(containerRef.current);
-		const handleResize = () => instance.resize();
+		const handleResize = () => {
+			instance.resize();
+		};
 
 		window.addEventListener("resize", handleResize);
 		setChart(instance);
@@ -567,7 +569,9 @@ export const WgChartRoot = (props: WgChartRootProps) => {
 		if (!containerRef.current) return;
 
 		const instance = init(containerRef.current);
-		const handleResize = () => instance.resize();
+		const handleResize = () => {
+			instance.resize();
+		};
 
 		window.addEventListener("resize", handleResize);
 		setChart(instance);
@@ -1164,7 +1168,9 @@ DOM 표면은 리액트가 속성을 더하면 래퍼도 따라 받아야 하는
 ```tsx
 export type UiButtonProps = LibButtonProps;
 
-export const UiButton = (props: UiButtonProps) => <LibButton {...props} />;
+export const UiButton = (props: UiButtonProps) => {
+	return <LibButton {...props} />;
+};
 ```
 
 **Incorrect (프롭 하나가 부딪힌다고 DOM 표면을 통째로 포기함):**
@@ -1204,9 +1210,11 @@ export interface UiTableCellProps extends HTMLAttributes<HTMLTableCellElement> {
 	padding?: LibTableCellProps["padding"];
 }
 
-export const UiTableCell = (props: UiTableCellProps) => (
-	<LibTableCell {...props} className={clsx("ui_tableCell__root", props.className)} />
-);
+export const UiTableCell = (props: UiTableCellProps) => {
+	return (
+		<LibTableCell {...props} className={clsx("ui_tableCell__root", props.className)} />
+	);
+};
 ```
 
 **Correct (2단계 — 부딪히는 이름만 빼고 다시 엶):**
@@ -1229,9 +1237,11 @@ export interface UiButtonProps extends Omit<HTMLAttributes<HTMLButtonElement>, "
 	color?: LibButtonProps["color"];
 }
 
-export const UiButton = (props: UiButtonProps) => (
-	<LibButton {...props} className={clsx("ui_button__root", props.className)} />
-);
+export const UiButton = (props: UiButtonProps) => {
+	return (
+		<LibButton {...props} className={clsx("ui_button__root", props.className)} />
+	);
+};
 ```
 
 **Correct (3단계 — 요소 타입이 어긋나 필요한 프롭만 선언):**
@@ -1270,15 +1280,17 @@ export interface UiTextFieldProps {
 	error?: LibTextFieldProps["error"];
 }
 
-export const UiTextField = (props: UiTextFieldProps) => (
-	<LibTextField
-		className={clsx("ui_textField__root", props.className)}
-		id={props.id}
-		value={props.value}
-		onChange={props.onChange}
-		error={props.error}
-	/>
-);
+export const UiTextField = (props: UiTextFieldProps) => {
+	return (
+		<LibTextField
+			className={clsx("ui_textField__root", props.className)}
+			id={props.id}
+			value={props.value}
+			onChange={props.onChange}
+			error={props.error}
+		/>
+	);
+};
 ```
 
 ### 3.3 Choose the Wrapper Shape and Forward Props Accordingly
@@ -1367,16 +1379,18 @@ export interface UiIconButtonProps {
 	onClick?: MouseEventHandler<HTMLButtonElement>;
 }
 
-export const UiIconButton = (props: UiIconButtonProps) => (
-	<LibButton
-		className={clsx("ui_iconButton__root", props.className)}
-		aria-label={props.label}
-		disabled={props.disabled}
-		onClick={props.onClick}
-	>
-		{props.icon}
-	</LibButton>
-);
+export const UiIconButton = (props: UiIconButtonProps) => {
+	return (
+		<LibButton
+			className={clsx("ui_iconButton__root", props.className)}
+			aria-label={props.label}
+			disabled={props.disabled}
+			onClick={props.onClick}
+		>
+			{props.icon}
+		</LibButton>
+	);
+};
 ```
 
 **Correct (프롭이 서로 다른 요소로 갈라져 각각 이름으로 넘김):**
@@ -1412,15 +1426,17 @@ export interface UiFieldProps {
 	onChange: ChangeEventHandler<HTMLInputElement>;
 }
 
-export const UiField = (props: UiFieldProps) => (
-	<div className={clsx("ui_field__root", props.className)}>
-		<label className={clsx("ui_field__label")} htmlFor={props.inputId}>
-			{props.label}
-		</label>
-		<LibTextField id={props.inputId} value={props.value} onChange={props.onChange} />
-		{props.helperText && <span className={clsx("ui_field__helper")}>{props.helperText}</span>}
-	</div>
-);
+export const UiField = (props: UiFieldProps) => {
+	return (
+		<div className={clsx("ui_field__root", props.className)}>
+			<label className={clsx("ui_field__label")} htmlFor={props.inputId}>
+				{props.label}
+			</label>
+			<LibTextField id={props.inputId} value={props.value} onChange={props.onChange} />
+			{props.helperText && <span className={clsx("ui_field__helper")}>{props.helperText}</span>}
+		</div>
+	);
+};
 ```
 
 **Correct (셋을 모두 만족해 스프레드로 끝냄):**
@@ -1438,9 +1454,11 @@ export interface UiTableRowProps extends HTMLAttributes<HTMLTableRowElement> {
 	selected?: LibTableRowProps["selected"];
 }
 
-export const UiTableRow = (props: UiTableRowProps) => (
-	<LibTableRow {...props} className={clsx("ui_tableRow__root", props.className)} />
-);
+export const UiTableRow = (props: UiTableRowProps) => {
+	return (
+		<LibTableRow {...props} className={clsx("ui_tableRow__root", props.className)} />
+	);
+};
 ```
 
 ## 4. Composition Strategy
@@ -3146,17 +3164,19 @@ export const PgProducts = () => {
 
 ```tsx
 // widget/app-shell/wg-app-shell.tsx
-export const WgAppShell = (props: WgAppShellProps) => (
-	<div className={clsx("wg_appShell__root")}>
-		<WgAppNavigation />
+export const WgAppShell = (props: WgAppShellProps) => {
+	return (
+		<div className={clsx("wg_appShell__root")}>
+			<WgAppNavigation />
 
-		<main className={clsx("wg_appShell__main")}>
-			<ErrorBoundary fallback={<UiScreenErrorState />}>
-				<Suspense fallback={<UiScreenSkeleton />}>{props.children}</Suspense>
-			</ErrorBoundary>
-		</main>
-	</div>
-);
+			<main className={clsx("wg_appShell__main")}>
+				<ErrorBoundary fallback={<UiScreenErrorState />}>
+					<Suspense fallback={<UiScreenSkeleton />}>{props.children}</Suspense>
+				</ErrorBoundary>
+			</main>
+		</div>
+	);
+};
 ```
 
 ```tsx

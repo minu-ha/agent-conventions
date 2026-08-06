@@ -120,7 +120,7 @@
 		},
 		{
 			"id": "enum-like-runtime-contract",
-			"prompt": "replace `enum ProductStatus` with snake_case `product_status as const`, derive `ProductStatus`, and document the object, every key, and derived type in Korean.",
+			"prompt": "replace `enum ProductStatus` with `productStatus as const`, derive `ProductStatus`, and document the object, every key, and derived type in Korean.",
 			"files": [
 				"src/audit/audit-status.ts"
 			],

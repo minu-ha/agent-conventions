@@ -517,16 +517,16 @@ enum ProductStatus {
 /**
  * product 심사 상태 값 집합
  */
-const product_status = {
+const productStatus = {
 	pending: "pending",
 	passed: "passed",
 	failed: "failed",
 } as const;
 
 /**
- * product 심사 상태 타입. product_status에 값을 더하면 따라 넓어진다
+ * product 심사 상태 타입. productStatus에 값을 더하면 따라 넓어진다
  */
-type ProductStatus = (typeof product_status)[keyof typeof product_status];
+type ProductStatus = (typeof productStatus)[keyof typeof productStatus];
 ```
 
 ## 2. Naming and Module Boundaries
@@ -582,10 +582,10 @@ const defaultPageSize = 20;
 // page/products/pg-products.tsx
 import {config} from "@/shared/config";
 
-const productClient = createClient({baseUrl: config.api.public_base_url});
+const productClient = createClient({baseUrl: config.api.publicBaseUrl});
 const productQuery = useProductQuery({
 	client: productClient,
-	pageSize: config.pagination.default_page_size,
+	pageSize: config.pagination.defaultPageSize,
 });
 ```
 
@@ -593,11 +593,11 @@ const productQuery = useProductQuery({
 // page/billing/pg-billing.tsx
 import {config} from "@/shared/config";
 
-const billingClient = createClient({baseUrl: config.api.billing_base_url});
+const billingClient = createClient({baseUrl: config.api.billingBaseUrl});
 const billingQuery = useBillingQuery({
 	client: billingClient,
-	pageSize: config.pagination.default_page_size,
-	featureKeys: config.features.billing_feature_keys,
+	pageSize: config.pagination.defaultPageSize,
+	featureKeys: config.features.billingFeatureKeys,
 });
 ```
 
@@ -626,8 +626,8 @@ const billingQuery = useBillingQuery({
 ```ts
 // shared/config.ts
 export const config = {
-	product_detail: {
-		chart_axis_tick_count: 6,
+	productDetail: {
+		chartAxisTickCount: 6,
 	},
 } as const;
 ```
@@ -640,7 +640,7 @@ export const config = {
  * product 상세 화면 전용 표시 설정
  */
 export const productDetailConfig = {
-	chart_axis_tick_count: 6,
+	chartAxisTickCount: 6,
 } as const;
 ```
 
@@ -668,18 +668,18 @@ export const productDetailConfig = {
 ```ts
 const {api, features} = config;
 const {date} = util;
-const billingBaseUrl = api.billing_base_url;
-const enableRefunds = features.enable_refunds;
+const billingBaseUrl = api.billingBaseUrl;
+const enableRefunds = features.enableRefunds;
 const isoDate = date.toIsoString(createdAt);
 ```
 
 **Correct (쓰는 자리에서 체인 그대로 읽어 출처를 남김):**
 
 ```ts
-const billingClient = createClient({baseUrl: config.api.billing_base_url});
+const billingClient = createClient({baseUrl: config.api.billingBaseUrl});
 const createdAtLabel = util.date.toIsoString(createdAt);
 
-if (config.features.enable_refunds) {
+if (config.features.enableRefunds) {
 	openRefundDialog({client: billingClient, createdAtLabel});
 }
 ```
@@ -688,37 +688,42 @@ if (config.features.enable_refunds) {
 
 **Rule:** `T10` · `naming-use-consistent-file-and-symbol-naming`
 
-**Applies when:** TypeScript 파일, 지역 변수, 함수, 타입, 객체·스키마 필드, enum 성격 상수의 이름을 새로 만들거나 바꿀 때. 제외: 별칭 없이 외부 패키지에서 그대로 가져오는 경우.
+**Applies when:** TypeScript 파일, 폴더, 변수, 함수, 타입, 객체·스키마 키의 이름을 새로 만들거나 바꿀 때. 밖으로 나가는 키를 받는 쪽 표기로 적을지 판단할 때. 제외: 별칭 없이 외부 패키지에서 그대로 가져오는 경우.
 
-**Impact: MEDIUM-HIGH (모듈과 실행 구조가 달라져도 파일명, 심볼, 형태 필드의 표기가 예측대로 유지됩니다)**
+**Impact: MEDIUM-HIGH (이름을 지을 때 그 값이 무엇인지 따지지 않고 어느 자리인지만 보면 표기가 정해집니다)**
 
-| 대상 | 표기 |
+| 자리 | 표기 |
 | --- | --- |
 | 파일명 | `kebab-case` |
 | 폴더명 | `kebab-case` 단수 |
-| 변수, 함수 | `camelCase` |
 | 타입, 인터페이스, 컴포넌트 | `PascalCase` |
-| 선언형 설정 객체의 키 | `snake_case` |
-| `enum` 성격 상수 객체의 이름과 키 | `snake_case` |
-| 일반 객체 키, 스키마 키, 타입 필드 | `camelCase` |
+| 나머지 전부 — 변수, 함수, 객체 키, 스키마 키, 타입 필드 | `camelCase` |
 
-`const`인지에 따라 표기를 달리하지 않습니다.
-설정과 `enum` 성격 객체를 뺀 나머지 모듈 값은 `camelCase`입니다.
-설정 키는 공용이든 소유자 전용이든 `snake_case`라, 소유자 설정을 공용으로 올릴 때 키를 고치지 않습니다.
-폴더명은 프레임워크가 강제하는 이름만 예외로 둡니다.
+`const`인지, 설정인지, 상수 집합인지에 따라 표기를 달리하지 않습니다.
+그 값이 무엇인지는 표기가 아니라 이름과 자리가 말합니다.
 
-**`snake_case`를 쓰는 자리는 선언형 설정 객체와 `enum` 성격 상수 객체뿐입니다.**
-라이브러리 인자, API 요청 본문, DOM 속성으로 그대로 넘어가는 키는 받는 쪽 표기를 그대로 씁니다.
-그 둘이 아니면 `camelCase`입니다.
+설정 키도 `camelCase`입니다.
+`config.pagination.defaultPageSize`가 설정에서 왔다는 사실은 표기가 아니라 `config.` 체인이 말해 줍니다.
+`naming-preserve-config-origin-with-chained-access` 규칙이 그 체인을 강제하므로
+표기가 같은 말을 두 번 할 필요가 없습니다.
+`enum` 성격 상수도 같습니다.
+`types-replace-enum-with-as-const-objects` 규칙이 `as const`를 강제하고, 선언에 붙는 문서 주석이 값 집합임을 밝힙니다.
 
-외부 패키지가 내보낸 이름을 별칭 없이 그대로 가져오는 것은 지역 심볼을 새로 짓는 일이 아닙니다.
+**예외는 밖으로 나가는 키뿐입니다.**
+API 요청 본문, 라이브러리 인자, DOM 속성, 환경 변수처럼 받는 쪽이 이름을 정하는 자리는 받는 쪽 표기를 그대로 씁니다.
+`{user_id: 1}`을 보내야 하는 API에는 `user_id`로 적습니다.
+우리가 짓는 이름이 아니라 받는 쪽 계약이라 우리 표기로 바꾸지 않습니다.
+
+외부 패키지가 내보낸 이름을 별칭 없이 그대로 가져오는 것도 지역 심볼을 새로 짓는 일이 아닙니다.
 지역 별칭을 추가하거나 가져오기 이름을 바꿀 때만 다시 봅니다.
+
+폴더명은 프레임워크가 강제하는 이름만 예외로 둡니다.
 
 **Incorrect (파일명, 심볼명, 필드명이 제각각임):**
 
 ```ts
 // userSettings.ts
-// 우리 코드만 읽는 스키마다. 설정 객체도 enum 성격 상수도 아니라 키는 camelCase여야 한다
+// 밖으로 나가는 키가 아니라 우리가 짓는 이름이다. 파일명은 kebab-case, 키는 camelCase다
 const User_ProfileSchema = z.object({
 	repo_path: z.string(),
 });
@@ -739,7 +744,7 @@ const userProfileSchema = z.object({
 });
 ```
 
-**Correct (선언형 설정 객체와 `enum` 성격 상수 객체만 `snake_case`):**
+**Correct (설정과 값 집합도 `camelCase`. 출처는 체인과 선언이 말함):**
 
 ```ts
 // shared/config.ts
@@ -748,17 +753,31 @@ const userProfileSchema = z.object({
  */
 export const config = {
 	pagination: {
-		default_page_size: 20,
+		defaultPageSize: 20,
 	},
 } as const;
 
 /**
  * product 게시 상태 값 집합
  */
-const product_status = {
+const productStatus = {
 	draft: "draft",
 	published: "published",
 } as const;
+```
+
+**Correct (밖으로 나가는 키만 받는 쪽 표기를 그대로 씀):**
+
+```ts
+/**
+ * product 저장 요청 조립. 서버 계약이 snake_case라 그 표기를 그대로 넘긴다
+ */
+const toProductSaveBody = (values: ProductFormValues) => {
+	return {
+		product_id: values.productId,
+		display_name: values.displayName.trim(),
+	};
+};
 ```
 
 ### 2.5 Use Direct Imports and Dedicated Public Entry Points
@@ -880,7 +899,7 @@ if (!import.meta.env.VITE_API_BASE_URL) {
  */
 export const config = {
 	api: {
-		base_url: import.meta.env.VITE_API_BASE_URL,
+		baseUrl: import.meta.env.VITE_API_BASE_URL,
 	},
 } as const;
 ```
@@ -889,7 +908,7 @@ export const config = {
 // service/product-client.ts
 import {config} from "@/shared/config";
 
-const productClient = createClient({baseUrl: config.api.base_url});
+const productClient = createClient({baseUrl: config.api.baseUrl});
 ```
 
 ## 3. Functions and Helper Boundaries
@@ -902,11 +921,11 @@ const productClient = createClient({baseUrl: config.api.base_url});
 
 **Rule:** `T14` · `functions-declare-functions-as-arrow-consts`
 
-**Applies when:** 이름 붙인 함수를 새로 만들거나 선언 형태를 바꿀 때. 제외: 클래스 메서드, 제너레이터, 오버로드 선언, 객체 리터럴 메서드인 경우.
+**Applies when:** 이름 붙인 함수를 새로 만들거나 선언 형태나 본문 형태를 바꿀 때. 네임스페이스 객체에 멤버 함수를 추가·변경할 때. 제외: 인라인 콜백이거나 클래스 메서드, 제너레이터, 오버로드 선언인 경우.
 
 **Review with:** `functions-use-named-object-params-for-complex-signatures`
 
-**Impact: MEDIUM (선언 형태가 한 가지로 고정되어 호이스팅에 기대는 순서 의존이 생기지 않습니다)**
+**Impact: MEDIUM (선언과 본문 형태가 하나로 고정되어 호이스팅 순서 의존이나 형태가 갈리는 diff가 생기지 않습니다)**
 
 이름 붙인 함수는 `const`에 화살표 함수를 담아 선언합니다.
 `function` 선언문은 쓰지 않습니다.
@@ -915,14 +934,37 @@ const productClient = createClient({baseUrl: config.api.base_url});
 - `function` 선언문은 호이스팅되므로 선언보다 위에서 호출해도 동작합니다.
   그러면 읽는 순서와 실행 순서가 달라집니다.
 
-네 자리는 예외로 둡니다.
+**본문은 `{}` 블록으로 열고 `return`을 적습니다.**
+한 줄로 줄여 쓰지 않습니다.
+돌려줄 값이 없으면 `return` 없이 블록만 씁니다.
+
+- 줄이 하나 늘어나는 순간 블록으로 다시 감싸야 합니다.
+  한 줄을 더한 diff가 함수 전체를 고친 것처럼 보입니다.
+- 객체를 돌려줄 때 `({...})`로 괄호를 덧대야 하는 자리가 없어집니다.
+- 문서 주석과 본문이 늘 같은 형태로 이어져 선언을 훑을 때 경계가 일정합니다.
+
+두 자리는 이 규범에서 뺍니다.
+
+- 인라인 콜백. `rows.map((row) => row.id)`처럼 이름 없이 그 자리에서 넘기는 함수는 한 줄로 써도 됩니다.
+- 커링의 바깥 화살표. 안쪽 함수를 그대로 돌려주는 자리라 블록으로 감싸면 `return`만 늘어납니다.
+  `(productId) => (event) => { … }`에서 블록으로 여는 것은 안쪽 하나입니다.
+
+`biome` 2.2.4에는 이 본문 형태를 강제할 규칙이 없습니다.
+`tooling-configure-biome-to-enforce-these-rules` 규칙이 그 사실과 이유를 적어 둡니다.
+
+**네임스페이스 객체의 멤버도 화살표 프로퍼티로 씁니다.**
+`toIsoString(value) { … }` 같은 메서드 축약형은 쓰지 않습니다.
+축약형은 `this`가 그 객체에 묶입니다.
+`const toIsoString = util.date.toIsoString;`처럼 떼어 내면 `this`가 달라져 동작이 바뀝니다.
+화살표 프로퍼티에는 `this`가 없어 떼어 내도 동작이 같습니다.
+
+세 자리는 예외로 둡니다.
 
 | 예외 | 이유 |
 | --- | --- |
 | 클래스 메서드 | 메서드 문법을 그대로 씁니다. 화살표 필드로 바꾸지 않습니다 |
 | 제너레이터 | `function*` 없이 쓸 수 없습니다 |
 | 오버로드 선언 | 시그니처를 겹쳐 쓰는 선언 문법은 `const`로 옮길 수 없습니다 |
-| 객체 리터럴 메서드 | `util.date.toIsoString(value)`처럼 네임스페이스 안 멤버는 메서드 문법을 씁니다 |
 
 오버로드 **선언 문법**(`function` 시그니처를 겹쳐 쓰는 형태)은 `const`로 쓸 수 없습니다.
 호출 시그니처를 모은 타입을 `const`에 붙이는 형태를 쓸 수 있으면 그쪽을 씁니다.
@@ -934,29 +976,86 @@ export function toTrimmedTitle(rawTitle: string): string {
 	return rawTitle.trim().replace(/\s+/g, " ");
 }
 
-export const toProductSlug = (title: string): string => toTrimmedTitle(title).toLowerCase();
+export const toProductSlug = (title: string): string => {
+	return toTrimmedTitle(title).toLowerCase();
+};
 ```
 
 **Incorrect (쓰는 곳이 선언보다 위에 와서 읽는 순서가 어긋남):**
 
 ```ts
-export const toProductLabel = (product: Product): string => decorate(product.title);
+export const toProductLabel = (product: Product): string => {
+	return decorate(product.title);
+};
 
 function decorate(title: string): string {
 	return `# ${title}`;
 }
 ```
 
-**Correct (모두 `const` 화살표로 선언하고 쓰기 전에 선언):**
+**Incorrect (본문을 한 줄로 줄여 선언마다 형태가 갈림):**
 
 ```ts
 const decorate = (title: string): string => `# ${title}`;
 
-export const toTrimmedTitle = (rawTitle: string): string => rawTitle.trim().replace(/\s+/g, " ");
+export const toProductBadge = (product: Product): ProductBadge => ({
+	label: decorate(product.title),
+	tone: product.published ? "solid" : "muted",
+});
+```
 
-export const toProductSlug = (title: string): string => toTrimmedTitle(title).toLowerCase();
+**Incorrect (네임스페이스 멤버를 메서드 축약형으로 씀):**
 
-export const toProductLabel = (product: Product): string => decorate(product.title);
+```ts
+export const util = {
+	date: {
+		toIsoString(value: Date): string {
+			return value.toISOString();
+		},
+	},
+} as const;
+```
+
+**Correct (모두 `const` 화살표에 블록 본문. 쓰기 전에 선언):**
+
+```ts
+const decorate = (title: string): string => {
+	return `# ${title}`;
+};
+
+export const toTrimmedTitle = (rawTitle: string): string => {
+	return rawTitle.trim().replace(/\s+/g, " ");
+};
+
+export const toProductSlug = (title: string): string => {
+	return toTrimmedTitle(title).toLowerCase();
+};
+
+export const toProductBadge = (product: Product): ProductBadge => {
+	return {
+		label: decorate(product.title),
+		tone: product.published ? "solid" : "muted",
+	};
+};
+```
+
+**Correct (네임스페이스 멤버는 화살표 프로퍼티. 인라인 콜백은 한 줄):**
+
+```ts
+export const util = {
+	date: {
+		/**
+		 * 서버가 밀리초를 붙인 문자열을 거부한다
+		 */
+		toIsoString: (value: Date): string => {
+			return value.toISOString().replace(/\.\d{3}Z$/, "Z");
+		},
+	},
+} as const;
+
+export const toProductIds = (products: Product[]): string[] => {
+	return products.map((product) => product.id);
+};
 ```
 
 **Correct (클래스 메서드와 제너레이터는 그대로 둠):**
@@ -979,20 +1078,31 @@ export class ProductCursor {
 
 **Rule:** `T15` · `functions-use-named-object-params-for-complex-signatures`
 
-**Applies when:** 매개변수가 3개를 넘거나 같은 계열 인자를 받는 함수를 추가·변경할 때. 객체 매개변수를 어디서 구조분해할지 바꿀 때. 제외: 리액트 함수 컴포넌트가 프롭스를 받고 구조분해하는 방식만 바꾸는 경우.
+**Applies when:** 매개변수가 셋을 넘거나 같은 계열 인자를 받는 함수를 추가·변경할 때. 객체 매개변수의 필드를 읽는 방식을 바꿀 때. 제외: 리액트 함수 컴포넌트가 프롭스를 받는 방식만 바꾸는 경우.
 
 **Review with:** `types-reuse-existing-contracts-before-new-types`
 
-**Impact: MEDIUM-HIGH (긴 시그니처를 읽을 수 있게 두고 위치를 헷갈리지 않으면서 입력을 늘립니다)**
+**Impact: MEDIUM-HIGH (긴 시그니처를 읽을 수 있게 두고 그 값이 매개변수에서 왔다는 사실이 쓰는 자리마다 남습니다)**
 
-매개변수가 3개를 넘거나 같은 계열 값이 함께 넘어오면 위치 인자를 객체 하나로 묶습니다.
-시그니처 자리에서 바로 구조분해하지 않습니다.
-객체 매개변수 타입은 파일 위쪽에 이름을 붙여 선언하고, 함수 본문 첫 줄에서 구조분해합니다.
-구조분해 줄이 길어 `biome-ignore`가 필요해도 함수 본문 안에서 처리합니다.
-그 주석에 무엇을 근거로 적을지는 `docs-justify-convention-exceptions-with-a-reason-comment`가 정합니다.
+매개변수가 셋을 넘거나 같은 계열 값이 함께 넘어오면 위치 인자를 객체 하나로 묶습니다.
+객체 매개변수 타입은 파일 위쪽에 이름을 붙여 선언합니다.
+
+**받은 객체는 구조분해하지 않고 `target.baseUrl`처럼 체인으로 읽습니다.**
+시그니처에서도, 본문 어느 줄에서도 구조분해하지 않습니다.
+
+구조분해는 이름만 남기고 출처를 지웁니다.
+본문이 길어지면 `baseUrl`이 매개변수인지 지역 변수인지 바깥에서 가져온 값인지 읽는 쪽에서 구분할 수 없습니다.
+`target.baseUrl`은 그 값이 어디서 왔는지를 쓰는 자리마다 다시 말해 줍니다.
+
+출처를 남기라는 요구는 이 규칙에만 있지 않습니다.
+설정 값은 `naming-preserve-config-origin-with-chained-access`가 같은 말을 하고,
+프레임워크 컨벤션도 프롭스와 응답에 같은 것을 요구합니다.
+
+`for (const [key, value] of Object.entries(target.searchParams))`처럼 반복문이 튜플을 푸는 것은
+이 규칙이 막는 구조분해가 아닙니다. 그 자리에서만 쓰는 원소를 꺼내는 것이라 지울 출처가 없습니다.
 
 리액트 컴포넌트의 프롭스는 이 규칙 대상이 아닙니다.
-구조분해 방식과 프롭스 타입 선언 위치는 프레임워크 컨벤션이 담당합니다.
+프롭스를 읽는 방식과 타입 선언 위치는 프레임워크 컨벤션이 담당합니다.
 
 뜻이 같은 계약이 이미 있으면 그대로 씁니다.
 그 판정은 `types-reuse-existing-contracts-before-new-types`가 합니다.
@@ -1012,7 +1122,22 @@ const toRequestUrl = ({baseUrl, resourcePath, searchParams}: ApiRequestTarget): 
 };
 ```
 
-**Correct (객체 전체를 받고 본문에서 구조분해):**
+**Incorrect (본문 첫 줄로 옮겼을 뿐 출처는 똑같이 지워짐):**
+
+```ts
+const toRequestUrl = (target: ApiRequestTarget): URL => {
+	const {baseUrl, resourcePath, searchParams} = target;
+	const requestUrl = new URL(resourcePath, baseUrl);
+
+	for (const [key, value] of Object.entries(searchParams)) {
+		requestUrl.searchParams.set(key, value);
+	}
+
+	return requestUrl;
+};
+```
+
+**Correct (객체 전체를 받고 체인으로 읽음):**
 
 ```ts
 /**
@@ -1021,10 +1146,9 @@ const toRequestUrl = ({baseUrl, resourcePath, searchParams}: ApiRequestTarget): 
  * 입력 계약은 shared/api/type.ts의 ApiRequestTarget을 그대로 쓴다
  */
 const toRequestUrl = (target: ApiRequestTarget): URL => {
-	const {baseUrl, resourcePath, searchParams} = target;
-	const requestUrl = new URL(resourcePath, baseUrl);
+	const requestUrl = new URL(target.resourcePath, target.baseUrl);
 
-	for (const [key, value] of Object.entries(searchParams)) {
+	for (const [key, value] of Object.entries(target.searchParams)) {
 		requestUrl.searchParams.set(key, value);
 	}
 
@@ -1084,13 +1208,17 @@ const toRequestUrl = (target: ApiRequestTarget): URL => {
 
 ```ts
 // page/profile/function/get-next-iteration.ts
-export const getNextIteration = (iteration: number): number => iteration + 1;
+export const getNextIteration = (previous: number, iterationCount: number): number => {
+	return (previous + 1) % iterationCount;
+};
 ```
 
-**Incorrect (네임스페이스 메서드 하나 때문에 변환 함수를 쪼갬):**
+**Incorrect (네임스페이스 멤버 하나 때문에 변환 함수를 쪼갬):**
 
 ```ts
-const toLabelText = (label: Label) => label.name.trim() || label.code;
+const toLabelText = (label: Label) => {
+	return label.name.trim() || label.code;
+};
 
 const toProductView = (record: RecordItem): ProductView => {
 	return {
@@ -1101,7 +1229,7 @@ const toProductView = (record: RecordItem): ProductView => {
 
 export const api = {
 	record: {
-		toProductView(record: RecordItem): ProductView {
+		toProductView: (record: RecordItem): ProductView => {
 			return toProductView(record);
 		},
 	},
@@ -1113,16 +1241,16 @@ export const api = {
 ```tsx
 // page/profile/pg-profile.tsx
 const handleNextClick = () => {
-	setIteration(iteration + 1);
+	setIteration((previous) => (previous + 1) % iterationCount);
 };
 ```
 
-**Correct (단일 소유자 네임스페이스의 단계는 메서드 본문에 둠):**
+**Correct (단일 소유자 네임스페이스의 단계는 멤버 본문에 둠):**
 
 ```ts
 export const api = {
 	record: {
-		toProductView(record: RecordItem): ProductView {
+		toProductView: (record: RecordItem): ProductView => {
 			return {
 				id: record.id,
 				labels: record.labels.map((label) => label.name.trim() || label.code),
@@ -1180,7 +1308,7 @@ import { toProductSaveRequest } from "./function/to-product-save-request";
 
 **Requires selected:** `functions-extract-helpers-only-when-the-boundary-is-real` · 함께 적용
 
-**Impact: MEDIUM-HIGH (잡동사니 파일이 생기지 않고 공용 승격이 실제 사용처를 근거로 일어납니다)**
+**Impact: MEDIUM-HIGH (잡동사니 파일이 생기지 않고 전역 `util`에 도메인 지식이 섞여 들어가지 않습니다)**
 
 떼어 낼지는 `functions-extract-helpers-only-when-the-boundary-is-real`이 먼저 판정합니다.
 이 규칙은 그 결과를 어디 두고 언제 올릴지만 봅니다.
@@ -1188,19 +1316,32 @@ import { toProductSaveRequest } from "./function/to-product-save-request";
 - 소유자 아래에 `helper.ts`, `helpers.ts`, `utils.ts` 같은 잡동사니 파일을 만들지 않습니다.
   어느 폴더에 둘지는 프레임워크 컨벤션의 역할 폴더 규칙이 정합니다.
 - 소유자 아래에서는 내보낸 대표 함수 하나당 파일 하나입니다.
-  전역 `shared/util.ts`는 여러 소유자가 함께 쓰는 순수 함수를 모으는 자리라 예외입니다.
+  전역 `shared/util.ts`는 도메인을 모르는 순수 함수를 한 네임스페이스에 모으는 자리라 예외입니다.
 - 호출 깊이는 소유자에서 내보낸 함수, 그 파일 안 비공개 함수까지 두 단계로 끝냅니다.
   내보낸 함수가 또 다른 내보낸 함수를 타고 가는 사슬은 만들지 않습니다.
   단계를 나누고 싶으면 내보내지 말고 한 함수 본문 안에 지역 변수로 둡니다.
-- 공용 승격은 **두 소유자 이상이 이미 직접 호출할 때만** 합니다.
-  그때 `shared/util.ts`의 `util.*`로 올립니다.
-  나중에 쓸 것 같아서 올리지 않습니다.
+
+**공용 승격은 개수가 아니라 종류로 판정합니다.**
+`shared/util.ts`의 `util.*`는 **우리 도메인을 하나도 모르는** 순수 함수만 담습니다.
+날짜·문자열·숫자·배열을 다루는 함수가 여기 해당합니다.
+
+- 도메인을 모르면 지금 한 곳만 써도 올립니다.
+  `toDisplayDate`는 소유자가 하나든 셋이든 `util`에 둘 함수입니다.
+- 도메인을 알면 소유자가 몇이든 올리지 않습니다.
+  `toProfileSaveRequest`가 두 화면에서 쓰여도 `util`로 가면 전역 네임스페이스에 profile 지식이 들어갑니다.
+  그때는 두 소유자가 함께 보는 도메인 자리로 옮기고, 그 자리는 프레임워크 컨벤션의 폴더 규칙이 정합니다.
+
+개수는 도메인 함수를 **어느 도메인 자리로** 옮길지 정할 때만 봅니다.
+`util`로 갈지 말지에는 쓰지 않습니다.
+나중에 쓸 것 같아서 함수를 미리 만들지도 않습니다.
 
 **Incorrect (잡동사니 파일과 내보낸 함수 세 단계 사슬):**
 
 ```ts
 // utils.ts
-export const toTrimmedTitle = (title: string) => title.trim();
+export const toTrimmedTitle = (title: string) => {
+	return title.trim();
+};
 
 export const toProductPayload = (values: ProductFormValues) => {
 	return {title: toTrimmedTitle(values.title)};
@@ -1234,6 +1375,22 @@ export const toProfileSaveRequest = (
 };
 ```
 
+**Incorrect (두 소유자가 쓴다고 도메인 함수를 전역 `util`로 올림):**
+
+```ts
+// shared/util.ts
+export const util = {
+	profile: {
+		/**
+		 * 서버가 앞뒤 공백이 붙은 displayName을 거부한다
+		 */
+		toProfileSaveRequest: (values: ProfileFormValues) => {
+			return {body: {displayName: values.displayName.trim()}};
+		},
+	},
+} as const;
+```
+
 **Correct (소유자 아래 대표 함수 하나당 파일 하나):**
 
 ```ts
@@ -1246,7 +1403,7 @@ export const toProductSaveRequest = (values: ProductFormValues) => {
 };
 ```
 
-**Correct (두 소유자가 이미 쓰는 순수 함수만 공용으로 올림):**
+**Correct (도메인을 모르는 순수 함수라 공용으로 올림):**
 
 ```ts
 // shared/util.ts
@@ -1255,7 +1412,7 @@ export const util = {
 		/**
 		 * ko-KR로 고정한다. 사용자 로케일을 따라가면 목록 정렬 기준과 어긋난다
 		 */
-		toDisplayDate(value: string): string {
+		toDisplayDate: (value: string): string => {
 			return new Date(value).toLocaleDateString("ko-KR");
 		},
 	},
@@ -1598,10 +1755,11 @@ const approver = userById.get(approverId);
 | 형태 | 판정 |
 | --- | --- |
 | `?? "help@example.com"`, `?? 0`, `?? []`, `\|\| "-"` 같은 리터럴 | 위반 |
-| `?? config.pagination.default_page_size`처럼 설정에 선언된 이름 | 통과 |
-| 같은 파일 지역 `const`로 리터럴만 옮긴 것 | 위반. 자리만 바꾼 것입니다 |
+| `?? config.pagination.defaultPageSize`처럼 설정에 선언된 이름 | 통과 |
+| 같은 파일 지역 `const`로 리터럴만 옮긴 것. `const fallback = "-";` | 위반. 자리만 바꾼 것입니다 |
+| 선언된 이름 둘을 합성한 결과에 이름을 붙인 것 | 통과. 리터럴이 없습니다 |
 | 기본 매개변수나 구조분해 기본값에 **리터럴**을 적은 것. `(size = 10) =>`, `{size = 10}` | 위반 |
-| 기본 매개변수가 선언된 이름을 가리키는 것. `(size = config.pagination.default_page_size) =>` | 통과 |
+| 기본 매개변수가 선언된 이름을 가리키는 것. `(size = config.pagination.defaultPageSize) =>` | 통과 |
 | 삼항 `value ? value : "-"`, `String(value ?? "")` | 위반 |
 
 기본값이 정말 필요하면 그 기본값에 이름을 붙여 선언하고 그 이름을 가리킵니다.
@@ -1613,9 +1771,28 @@ const approver = userById.get(approverId);
 이유 주석으로 이 규칙을 통과하지는 못합니다.
 주석은 리터럴을 선언된 이름으로 바꾸지 않습니다.
 
-빈 배열도 리터럴입니다.
-`items ?? []` 대신 `items?.map(…)`으로 값이 없는 상태를 그대로 다룹니다.
-선택 값을 그대로 비교하면 기본값이 아예 필요 없는 경우가 많습니다.
+**어디서 해소할지는 순서로 정합니다.**
+
+1. **없어도 되는지 먼저 봅니다.**
+   빈 배열도 리터럴이라 `items ?? []` 대신 `items?.map(…)`으로 값이 없는 상태를 그대로 다룹니다.
+   `(variant ?? "default") === "compact"`도 `variant === "compact"`로 쓰면 끝납니다.
+   선택 값을 그대로 비교하면 기본값이 아예 필요 없는 경우가 가장 많습니다.
+2. **필요하면 값이 들어오는 경계에서 한 번만 해소합니다.**
+   라우트 search 스키마의 `.default(config.pagination.defaultPageSize)`, 응답 매핑, 쿼리의 `select`가 그 자리입니다.
+   기본값이 선언 안에 들어가므로 그 선언이 곧 출처가 됩니다.
+   아래쪽 코드에서는 그 값이 더는 선택 값이 아니어서 `??`가 나올 일이 없습니다.
+3. **경계에서 못 하면 쓰는 자리에 그대로 적습니다.**
+   `fetchProducts({pageSize: query.pageSize ?? config.pagination.defaultPageSize})`처럼 씁니다.
+   한 번만 쓰면 이름을 붙이지 않습니다.
+   그 판정은 `functions-name-a-value-only-when-it-is-reused`가 합니다.
+4. **두 번 이상 쓰면 파생값임이 드러나는 이름을 붙입니다.**
+   `pageSize`가 아니라 `effectivePageSize`입니다.
+   쓰는 자리를 모두 감싸는 가장 좁은 스코프에 둡니다.
+
+**`??` 합성은 별칭이 아닙니다.**
+`naming-preserve-config-origin-with-chained-access`가 막는 것은 같은 값에 새 이름만 붙이는 별칭입니다.
+`a ?? b`는 출처 둘을 놓고 하나를 고르는 계산이고, 그 결과는 어느 쪽에서 왔는지가 실행할 때 정해지는 파생값입니다.
+그래서 이름을 붙일지는 별칭 규칙이 아니라 `functions-name-a-value-only-when-it-is-reused`가 판정합니다.
 
 **Incorrect (`??`와 `||` 오른쪽에 리터럴을 적음):**
 
@@ -1635,17 +1812,40 @@ if (!settings.supportEmail) {
 sendInvite({from: settings.supportEmail});
 ```
 
-**Correct (선언된 기본값을 가리킴):**
-
-```ts
-const pageSize = query.pageSize ?? config.pagination.default_page_size;
-```
-
 **Correct (그대로 비교하면 기본값이 필요 없음):**
 
 ```ts
 const isCompact = variant === "compact";
 const productIds = response.data.rows?.map((row) => row.id);
+```
+
+**Correct (값이 들어오는 경계에서 한 번 해소해 아래쪽에는 선택 값이 오지 않음):**
+
+```ts
+/**
+ * product 목록 검색 조건. pageSize는 여기서 채워져 화면에서는 선택 값이 아니다
+ */
+const productSearchSchema = z.object({
+	/**
+	 * 한 번에 불러올 개수
+	 */
+	pageSize: z.number().default(config.pagination.defaultPageSize),
+});
+```
+
+**Correct (경계에서 못 하면 쓰는 자리에 그대로. 한 번만 쓰면 이름을 붙이지 않음):**
+
+```ts
+fetchProducts({pageSize: query.pageSize ?? config.pagination.defaultPageSize});
+```
+
+**Correct (두 번 이상 쓰면 파생값임이 드러나는 이름):**
+
+```ts
+const effectivePageSize = query.pageSize ?? config.pagination.defaultPageSize;
+
+fetchProducts({pageSize: effectivePageSize});
+setVisibleRowCount(effectivePageSize);
 ```
 
 ## 6. JSDoc and Comment Conventions
@@ -2012,14 +2212,16 @@ const filteredRows = useMemo(() => rows.filter((row) => matchRow(row, deferredKe
 도구가 끝까지 못 가는 자리가 있습니다.
 아래 항목은 리뷰가 봅니다.
 
-- 선언형 설정과 `enum` 성격 상수 객체에만 `snake_case`를 쓰는 구분은 `useNamingConvention`으로 표현할 수 없습니다.
-  모듈 최상위 `const`와 객체 리터럴 키에 표기를 다 허용해 두고, 어느 쪽이 맞는지는 사람이 봅니다.
-  `objectLiteralProperty`를 좁히면 이 컨벤션이 요구하는 형태가 막힙니다.
-  `snake_case`를 빼면 `config.pagination.default_page_size`가, `PascalCase`를 빼면
-  합성 컴포넌트의 `{Root, Header, Footer}`가 걸립니다.
-  설정 객체에 타입을 붙이면 키가 `typeProperty`로도 검사되므로 그쪽에도 `snake_case`를 허용합니다.
-  `typescript/functions-declare-functions-as-arrow-consts` 때문에 이름 붙인 함수도 이 항목에 들어가므로
-  함수 이름의 `camelCase`도 도구가 아니라 리뷰가 봅니다.
+- 객체 키의 `snake_case`가 밖으로 나가는 키인지는 `useNamingConvention`이 가리지 못합니다.
+  `objectLiteralProperty`와 `typeProperty`에 `snake_case`를 열어 두고, 그 키가 API 요청 본문이나
+  라이브러리 인자로 나가는지는 사람이 봅니다.
+  다만 판정은 "이 객체가 무엇인가"가 아니라 "이 키가 밖으로 나가는가"라 그 자리에서 바로 보입니다.
+  `PascalCase`를 빼면 합성 컴포넌트의 `{Root, Header, Footer}`가 걸리므로 그쪽도 함께 엽니다.
+  `typescript/functions-declare-functions-as-arrow-consts` 때문에 이름 붙인 함수도 `const` 항목에 들어가는데,
+  그 항목은 컴포넌트 이름 때문에 `PascalCase`도 열려 있어 함수 이름의 `camelCase`는 리뷰가 봅니다.
+- 이름 붙인 함수의 본문을 `{}` 블록으로 고정하는 것은 `biome` 2.2.4가 못 합니다.
+  `useConsistentArrowReturn`은 nursery 규칙인 데다 한 줄 본문을 강제하고 옵션도 없어서 켜지 않습니다.
+  `typescript/functions-declare-functions-as-arrow-consts`의 본문 형태는 리뷰가 봅니다.
 - 폴더명 `kebab-case` 단수는 어떤 `biome` 규칙도 보지 않습니다.
   `useFilenamingConvention`도 파일명만 보고 폴더명은 보지 않습니다.
   리뷰가 봅니다.
@@ -2027,7 +2229,7 @@ const filteredRows = useMemo(() => rows.filter((row) => matchRow(row, deferredKe
   `variable` 선택자에 `PascalCase`를 함께 허용해 컴포넌트 지역 선언을 통과시키기 때문입니다.
 - `as` 단언과 `@ts-expect-error`는 `biome`이 막지 않습니다.
   `typescript/types-narrow-unknown-instead-of-asserting` 중 그 둘은 리뷰가 봅니다.
-- `typescript/functions-declare-functions-as-arrow-consts` 자체는 `biome`에 대응 규칙이 없습니다.
+- `typescript/functions-declare-functions-as-arrow-consts`의 `const` 화살표 선언 자체도 `biome`이 보지 않습니다.
 - `typescript/functions-avoid-imperative-assembly-in-wide-scopes`는 `useConst`로 다 잡히지 않습니다.
   `let`을 `const`로 바꿔 주기만 하고 `push` 누적은 그대로 남습니다.
 - `typescript/types-mark-unused-parameters-with-underscore` 중 **매개변수를 아예 생략한 경우**는 도구가 못 봅니다.
@@ -2082,7 +2284,7 @@ const filteredRows = useMemo(() => rows.filter((row) => matchRow(row, deferredKe
 						"strictCase": false,
 						"conventions": [
 							{"selector": {"kind": "typeLike"}, "formats": ["PascalCase"]},
-							{"selector": {"kind": "const", "scope": "global"}, "formats": ["camelCase", "PascalCase", "snake_case"]},
+							{"selector": {"kind": "const", "scope": "global"}, "formats": ["camelCase", "PascalCase"]},
 							{"selector": {"kind": "objectLiteralProperty"}, "formats": ["camelCase", "PascalCase", "snake_case"]},
 							{"selector": {"kind": "typeProperty"}, "formats": ["camelCase", "snake_case"]},
 							{"selector": {"kind": "variable"}, "formats": ["camelCase", "PascalCase"]}

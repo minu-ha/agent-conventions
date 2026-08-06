@@ -51,10 +51,10 @@ const defaultPageSize = 20;
 // page/products/pg-products.tsx
 import {config} from "@/shared/config";
 
-const productClient = createClient({baseUrl: config.api.public_base_url});
+const productClient = createClient({baseUrl: config.api.publicBaseUrl});
 const productQuery = useProductQuery({
 	client: productClient,
-	pageSize: config.pagination.default_page_size,
+	pageSize: config.pagination.defaultPageSize,
 });
 ```
 
@@ -62,10 +62,10 @@ const productQuery = useProductQuery({
 // page/billing/pg-billing.tsx
 import {config} from "@/shared/config";
 
-const billingClient = createClient({baseUrl: config.api.billing_base_url});
+const billingClient = createClient({baseUrl: config.api.billingBaseUrl});
 const billingQuery = useBillingQuery({
 	client: billingClient,
-	pageSize: config.pagination.default_page_size,
-	featureKeys: config.features.billing_feature_keys,
+	pageSize: config.pagination.defaultPageSize,
+	featureKeys: config.features.billingFeatureKeys,
 });
 ```

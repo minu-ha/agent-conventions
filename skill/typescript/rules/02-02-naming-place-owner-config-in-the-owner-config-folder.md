@@ -28,8 +28,8 @@ tags: naming, config
 ```ts
 // shared/config.ts
 export const config = {
-	product_detail: {
-		chart_axis_tick_count: 6,
+	productDetail: {
+		chartAxisTickCount: 6,
 	},
 } as const;
 ```
@@ -42,6 +42,6 @@ export const config = {
  * product 상세 화면 전용 표시 설정
  */
 export const productDetailConfig = {
-	chart_axis_tick_count: 6,
+	chartAxisTickCount: 6,
 } as const;
 ```

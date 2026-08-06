@@ -90,16 +90,18 @@ export interface UiIconButtonProps {
 	onClick?: MouseEventHandler<HTMLButtonElement>;
 }
 
-export const UiIconButton = (props: UiIconButtonProps) => (
-	<LibButton
-		className={clsx("ui_iconButton__root", props.className)}
-		aria-label={props.label}
-		disabled={props.disabled}
-		onClick={props.onClick}
-	>
-		{props.icon}
-	</LibButton>
-);
+export const UiIconButton = (props: UiIconButtonProps) => {
+	return (
+		<LibButton
+			className={clsx("ui_iconButton__root", props.className)}
+			aria-label={props.label}
+			disabled={props.disabled}
+			onClick={props.onClick}
+		>
+			{props.icon}
+		</LibButton>
+	);
+};
 ```
 
 **Correct (프롭이 서로 다른 요소로 갈라져 각각 이름으로 넘김):**
@@ -135,15 +137,17 @@ export interface UiFieldProps {
 	onChange: ChangeEventHandler<HTMLInputElement>;
 }
 
-export const UiField = (props: UiFieldProps) => (
-	<div className={clsx("ui_field__root", props.className)}>
-		<label className={clsx("ui_field__label")} htmlFor={props.inputId}>
-			{props.label}
-		</label>
-		<LibTextField id={props.inputId} value={props.value} onChange={props.onChange} />
-		{props.helperText && <span className={clsx("ui_field__helper")}>{props.helperText}</span>}
-	</div>
-);
+export const UiField = (props: UiFieldProps) => {
+	return (
+		<div className={clsx("ui_field__root", props.className)}>
+			<label className={clsx("ui_field__label")} htmlFor={props.inputId}>
+				{props.label}
+			</label>
+			<LibTextField id={props.inputId} value={props.value} onChange={props.onChange} />
+			{props.helperText && <span className={clsx("ui_field__helper")}>{props.helperText}</span>}
+		</div>
+	);
+};
 ```
 
 **Correct (셋을 모두 만족해 스프레드로 끝냄):**
@@ -161,7 +165,9 @@ export interface UiTableRowProps extends HTMLAttributes<HTMLTableRowElement> {
 	selected?: LibTableRowProps["selected"];
 }
 
-export const UiTableRow = (props: UiTableRowProps) => (
-	<LibTableRow {...props} className={clsx("ui_tableRow__root", props.className)} />
-);
+export const UiTableRow = (props: UiTableRowProps) => {
+	return (
+		<LibTableRow {...props} className={clsx("ui_tableRow__root", props.className)} />
+	);
+};
 ```

@@ -136,7 +136,7 @@
 		},
 		{
 			"id": "RTE04-shared-config",
-			"prompt": "move a duplicated menu key and default page size from two screens into a documented snake_case as const config object in src/shared/config.ts and directly import and use config.* from both route pages.",
+			"prompt": "move a duplicated menu key and default page size from two screens into a documented as const config object in src/shared/config.ts and directly import and use config.* from both route pages.",
 			"files": [
 				"src/page/products/pg-products.tsx",
 				"src/page/reports/pg-reports.tsx",

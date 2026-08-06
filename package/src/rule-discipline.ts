@@ -55,6 +55,22 @@ const josaPairs = [
 const backtickedIdentifierJosa = /`([a-z][a-z0-9/-]{6,})`(이|가|은|는|을|를|과|와)(?![가-힣])/g;
 
 /**
+ * 이름 붙여 선언한 화살표 함수와 `=>` 뒤에 남은 꼬리.
+ * 꼬리가 비었으면 다음 줄로 이어지는 선언이고, `{`로 시작하면 블록 본문이다.
+ */
+const namedArrowBody = /^\s*(?:export\s+)?const\s+\w+(?:\s*:\s*[^=]+?)?\s*=\s*(?:async\s+)?\([^)]*\)(?:\s*:\s*[^=]+?)?\s*=>\s*(.*)$/;
+
+/**
+ * 커링의 바깥 화살표. 안쪽 함수를 그대로 돌려주는 자리라 블록 본문을 요구하지 않는다.
+ */
+const curriedTail = /^\([^)]*\)(?:\s*:\s*[^=]+?)?\s*=>/;
+
+/**
+ * 객체 리터럴의 메서드 축약형. `this`가 묶여서 떼어 내면 동작이 달라진다.
+ */
+const objectLiteralMethod = /^\t+[a-z]\w*\([^)]*\)\s*(?::\s*[^{]+?)?\s*\{\s*$/;
+
+/**
  * @helper 한글·전각 문자를 두 칸으로 세어 표시 폭을 구한다
  */
 const displayWidth = (text: string): number => {
@@ -129,6 +145,9 @@ const collectRuleViolations = (rule: SkillRule): string[] => {
 				continue;
 			}
 
+			// 클래스 메서드는 축약형이 규범이라, 클래스가 든 펜스에서는 축약형 검사를 끈다
+			const hasClass = /^\s*(?:export\s+)?(?:abstract\s+)?class\s/m.test(block.code);
+
 			for (const line of block.code.split("\n")) {
 				if (/\/\*\*.*\*\//.test(line)) {
 					violations.push(`Correct 예제의 문서 주석은 여러 줄 블록이다: "${line.trim()}"`);
@@ -136,6 +155,16 @@ const collectRuleViolations = (rule: SkillRule): string[] => {
 
 				if (/^\s*(?:export\s+)?function\s/.test(line)) {
 					violations.push(`Correct 예제는 함수를 화살표 const로 선언한다: "${line.trim()}"`);
+				}
+
+				const tail = namedArrowBody.exec(line)?.[1].trim() ?? "";
+
+				if (tail.length > 0 && !tail.startsWith("{") && !curriedTail.test(tail)) {
+					violations.push(`Correct 예제의 이름 붙인 함수는 {} 블록 본문이다: "${line.trim()}"`);
+				}
+
+				if (!hasClass && objectLiteralMethod.test(line)) {
+					violations.push(`Correct 예제의 객체 멤버는 화살표 프로퍼티다: "${line.trim()}"`);
 				}
 
 				if (line.includes('className="')) {

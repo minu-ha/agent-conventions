@@ -80,7 +80,9 @@ DOM 표면은 리액트가 속성을 더하면 래퍼도 따라 받아야 하는
 ```tsx
 export type UiButtonProps = LibButtonProps;
 
-export const UiButton = (props: UiButtonProps) => <LibButton {...props} />;
+export const UiButton = (props: UiButtonProps) => {
+	return <LibButton {...props} />;
+};
 ```
 
 **Incorrect (프롭 하나가 부딪힌다고 DOM 표면을 통째로 포기함):**
@@ -120,9 +122,11 @@ export interface UiTableCellProps extends HTMLAttributes<HTMLTableCellElement> {
 	padding?: LibTableCellProps["padding"];
 }
 
-export const UiTableCell = (props: UiTableCellProps) => (
-	<LibTableCell {...props} className={clsx("ui_tableCell__root", props.className)} />
-);
+export const UiTableCell = (props: UiTableCellProps) => {
+	return (
+		<LibTableCell {...props} className={clsx("ui_tableCell__root", props.className)} />
+	);
+};
 ```
 
 **Correct (2단계 — 부딪히는 이름만 빼고 다시 엶):**
@@ -145,9 +149,11 @@ export interface UiButtonProps extends Omit<HTMLAttributes<HTMLButtonElement>, "
 	color?: LibButtonProps["color"];
 }
 
-export const UiButton = (props: UiButtonProps) => (
-	<LibButton {...props} className={clsx("ui_button__root", props.className)} />
-);
+export const UiButton = (props: UiButtonProps) => {
+	return (
+		<LibButton {...props} className={clsx("ui_button__root", props.className)} />
+	);
+};
 ```
 
 **Correct (3단계 — 요소 타입이 어긋나 필요한 프롭만 선언):**
@@ -186,13 +192,15 @@ export interface UiTextFieldProps {
 	error?: LibTextFieldProps["error"];
 }
 
-export const UiTextField = (props: UiTextFieldProps) => (
-	<LibTextField
-		className={clsx("ui_textField__root", props.className)}
-		id={props.id}
-		value={props.value}
-		onChange={props.onChange}
-		error={props.error}
-	/>
-);
+export const UiTextField = (props: UiTextFieldProps) => {
+	return (
+		<LibTextField
+			className={clsx("ui_textField__root", props.className)}
+			id={props.id}
+			value={props.value}
+			onChange={props.onChange}
+			error={props.error}
+		/>
+	);
+};
 ```

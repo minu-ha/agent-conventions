@@ -26,14 +26,16 @@
 도구가 끝까지 못 가는 자리가 있습니다.
 아래 항목은 리뷰가 봅니다.
 
-- 선언형 설정과 `enum` 성격 상수 객체에만 `snake_case`를 쓰는 구분은 `useNamingConvention`으로 표현할 수 없습니다.
-  모듈 최상위 `const`와 객체 리터럴 키에 표기를 다 허용해 두고, 어느 쪽이 맞는지는 사람이 봅니다.
-  `objectLiteralProperty`를 좁히면 이 컨벤션이 요구하는 형태가 막힙니다.
-  `snake_case`를 빼면 `config.pagination.default_page_size`가, `PascalCase`를 빼면
-  합성 컴포넌트의 `{Root, Header, Footer}`가 걸립니다.
-  설정 객체에 타입을 붙이면 키가 `typeProperty`로도 검사되므로 그쪽에도 `snake_case`를 허용합니다.
-  `typescript/functions-declare-functions-as-arrow-consts` 때문에 이름 붙인 함수도 이 항목에 들어가므로
-  함수 이름의 `camelCase`도 도구가 아니라 리뷰가 봅니다.
+- 객체 키의 `snake_case`가 밖으로 나가는 키인지는 `useNamingConvention`이 가리지 못합니다.
+  `objectLiteralProperty`와 `typeProperty`에 `snake_case`를 열어 두고, 그 키가 API 요청 본문이나
+  라이브러리 인자로 나가는지는 사람이 봅니다.
+  다만 판정은 "이 객체가 무엇인가"가 아니라 "이 키가 밖으로 나가는가"라 그 자리에서 바로 보입니다.
+  `PascalCase`를 빼면 합성 컴포넌트의 `{Root, Header, Footer}`가 걸리므로 그쪽도 함께 엽니다.
+  `typescript/functions-declare-functions-as-arrow-consts` 때문에 이름 붙인 함수도 `const` 항목에 들어가는데,
+  그 항목은 컴포넌트 이름 때문에 `PascalCase`도 열려 있어 함수 이름의 `camelCase`는 리뷰가 봅니다.
+- 이름 붙인 함수의 본문을 `{}` 블록으로 고정하는 것은 `biome` 2.2.4가 못 합니다.
+  `useConsistentArrowReturn`은 nursery 규칙인 데다 한 줄 본문을 강제하고 옵션도 없어서 켜지 않습니다.
+  `typescript/functions-declare-functions-as-arrow-consts`의 본문 형태는 리뷰가 봅니다.
 - 폴더명 `kebab-case` 단수는 어떤 `biome` 규칙도 보지 않습니다.
   `useFilenamingConvention`도 파일명만 보고 폴더명은 보지 않습니다.
   리뷰가 봅니다.
@@ -41,7 +43,7 @@
   `variable` 선택자에 `PascalCase`를 함께 허용해 컴포넌트 지역 선언을 통과시키기 때문입니다.
 - `as` 단언과 `@ts-expect-error`는 `biome`이 막지 않습니다.
   `typescript/types-narrow-unknown-instead-of-asserting` 중 그 둘은 리뷰가 봅니다.
-- `typescript/functions-declare-functions-as-arrow-consts` 자체는 `biome`에 대응 규칙이 없습니다.
+- `typescript/functions-declare-functions-as-arrow-consts`의 `const` 화살표 선언 자체도 `biome`이 보지 않습니다.
 - `typescript/functions-avoid-imperative-assembly-in-wide-scopes`는 `useConst`로 다 잡히지 않습니다.
   `let`을 `const`로 바꿔 주기만 하고 `push` 누적은 그대로 남습니다.
 - `typescript/types-mark-unused-parameters-with-underscore` 중 **매개변수를 아예 생략한 경우**는 도구가 못 봅니다.
