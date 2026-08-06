@@ -1,6 +1,6 @@
 # Enable the Biome React Domain
 
-**Impact: MEDIUM (리액트 전용 검사를 도구가 맡아 리뷰는 판단이 필요한 규칙만 봅니다)**
+**Impact: MEDIUM (리액트 전용 검사를 기계가 맡아 리뷰는 판단이 필요한 규칙만 봅니다)**
 
 `biome` 2.x에는 **도메인**이 있습니다.
 `linter.domains`에 `react`를 켜면 `package.json`에 `react@>=16`이 있을 때만 리액트 검사가 붙습니다.
@@ -14,17 +14,15 @@
 | `a11y/*` 묶음 | `react/a11y-give-interactive-elements-an-accessible-name`의 일부 |
 
 `noNestedComponentDefinitions`는 도메인의 `recommended`에 없어 따로 켭니다.
-`react/composition-do-not-define-components-inside-components`와 판정 대상이 같아 이 규칙을 통째로 도구에 넘깁니다.
+`react/composition-do-not-define-components-inside-components`와 판정 대상이 같아 이 규칙을 통째로 기계에 넘깁니다.
 
 `a11y` 묶음은 도메인이 아니라 `recommended: true`가 이미 켭니다.
 `useButtonType`, `useAltText`, `useValidAnchor`, `useKeyWithClickEvents`, `useSemanticElements`가 그것입니다.
-접근 가능한 이름을 실제로 붙였는지는 도구가 못 보고 리뷰가 봅니다.
+접근 가능한 이름을 실제로 붙였는지는 기계가 못 보고 리뷰가 봅니다.
 
-도구가 끝까지 못 가는 자리가 있습니다.
+기계가 끝까지 못 가는 자리가 있습니다.
 아래 항목은 리뷰가 봅니다.
 
-- 소유 레이어, 화면 흐름, 조립 전략, 출처 체인처럼 **무엇이 어디에 속하는지**를 묻는 규칙은
-  어떤 린터도 판정하지 못합니다. 리액트 규칙 47개 중 대다수가 여기 있습니다.
 - `useExhaustiveDependencies`는 의존성 배열이 빠졌는지만 봅니다.
   그 콜백을 `useEffectEvent`로 감싸야 하는지는 리뷰가 봅니다.
 - `useJsxKeyInIterable`은 `key`가 있는지만 봅니다.

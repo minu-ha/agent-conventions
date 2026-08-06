@@ -37,7 +37,7 @@ tags: tooling, stylelint, automation
 `selector-max-combinators`와 `selector-max-type`은 넣지 않습니다.
 우리 체이닝과 라이브러리 경로를 개수로 구분할 수 없습니다.
 
-도구가 못 가는 자리를 적어 둡니다.
+기계가 못 가는 자리를 적어 둡니다.
 
 - 중복 없이 묶기만 한 쉼표 목록은 어떤 규칙도 막지 않습니다.
   `disallowInList` 옵션 덕분에 목록에 든 선택자를 아래에서 단독으로 다시 여는 형태는 걸립니다.

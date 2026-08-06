@@ -34,7 +34,7 @@ tags: selector, nesting, ampersand
 중첩을 두 겹 이상 열면 실제 선택자가 숨습니다.
 `.pg_a { & .pg_b { & .pg_c { } } }`에 쓰인 선택자는 `& .pg_c`뿐이어서
 `.pg_a .pg_b .pg_c`로 이어지는 것이 보이지 않습니다.
-검사 도구도 각 블록만 봅니다.
+기계 검사도 각 블록만 봅니다.
 
 기계 검증은 `max-nesting-depth: 1`입니다.
 최상위가 0겹입니다.

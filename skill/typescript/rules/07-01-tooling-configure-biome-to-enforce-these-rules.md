@@ -34,7 +34,7 @@ tags: tooling
 `style/useConst`는 `biome` 2.2.4의 `recommended`에 이미 있어 설정에 다시 적어도 동작이 달라지지 않습니다.
 어느 컨벤션을 대신하는지 보이게 하려고 표와 설정에 남겨 둡니다.
 
-도구가 끝까지 못 가는 자리가 있습니다.
+기계가 끝까지 못 가는 자리가 있습니다.
 아래 항목은 리뷰가 봅니다.
 
 - 객체 키의 `snake_case`가 밖으로 나가는 키인지는 `useNamingConvention`이 가리지 못합니다.
@@ -57,7 +57,7 @@ tags: tooling
 - `typescript/functions-declare-functions-as-arrow-consts`의 `const` 화살표 선언 자체도 `biome`이 보지 않습니다.
 - `typescript/functions-avoid-imperative-assembly-in-wide-scopes`는 `useConst`로 다 잡히지 않습니다.
   `let`을 `const`로 바꿔 주기만 하고 `push` 누적은 그대로 남습니다.
-- `typescript/types-mark-unused-parameters-with-underscore` 중 **매개변수를 아예 생략한 경우**는 도구가 못 봅니다.
+- `typescript/types-mark-unused-parameters-with-underscore` 중 **매개변수를 아예 생략한 경우**는 기계가 못 봅니다.
   `noUnusedFunctionParameters`는 남겨 둔 매개변수만 봅니다.
 
 따로 켜지 않는 규칙이 하나 있습니다.
