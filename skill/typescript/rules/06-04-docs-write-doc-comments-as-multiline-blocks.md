@@ -1,6 +1,6 @@
 ---
 title: Write Doc Comments as Multiline Blocks
-titleKo: 문서 주석은 여러 줄 블록으로 씁니다
+titleKo: JSDoc은 한 줄로 쓰지 않고 여러 줄 블록으로 씁니다
 impact: LOW
 impactDescription: 선언 위 주석 형태가 파일마다 같아 주석을 검색하고 훑어보기 쉬워집니다
 appliesWhen:

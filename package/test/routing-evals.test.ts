@@ -379,7 +379,7 @@ const cssRuleRouting = {
 		],
 	},
 	"ownership-change-other-owners-through-their-api": {
-		appliesWhen: "다른 컴포넌트의 배치나 내부 표현을 바꿔야 할 때. 컴포넌트에 클래스 관련 프롭을 추가할 때.",
+		appliesWhen: "다른 컴포넌트의 배치나 내부 모습을 바꿔야 할 때. 컴포넌트에 클래스 관련 프롭을 추가할 때.",
 		reviewWith: ["ownership-use-foreign-classes-only-under-your-own-root", "composition-inject-classes-only-at-the-entry-point"],
 	},
 	"composition-compose-classes-with-clsx": {

@@ -1,6 +1,6 @@
 ---
 title: Use Consistent File, Symbol, and Field Naming
-titleKo: 파일은 `kebab-case`, 값은 `camelCase`, 타입은 `PascalCase`, 설정 키는 `snake_case`로 씁니다
+titleKo: 파일·심볼·필드 표기를 통일하고 설정 키만 `snake_case`로 둡니다
 impact: MEDIUM-HIGH
 impactDescription: 모듈과 실행 구조가 달라져도 파일명, 심볼, 형태 필드의 표기가 예측대로 유지됩니다
 appliesWhen:

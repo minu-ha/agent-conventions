@@ -1,6 +1,6 @@
 ---
 title: Require Header Doc Comments on Key Declarations
-titleKo: 핵심 선언에는 헤더 문서 주석을 붙입니다
+titleKo: 경계가 되는 선언에는 JSDoc 헤더를 붙입니다
 impact: MEDIUM
 impactDescription: 구현을 읽기 전에 중요한 경계를 찾고 설명할 수 있습니다
 appliesWhen:

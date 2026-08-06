@@ -1,6 +1,6 @@
 ---
 title: Preserve Response and Store Origin in Wide Scopes
-titleKo: 넓은 스코프에서 응답과 스토어 출처를 남깁니다
+titleKo: 넓은 스코프에서는 응답·뮤테이션·스토어를 구조분해하지 않습니다
 impact: MEDIUM
 impactDescription: 파일 전체에서 별칭을 따라가지 않고 값의 출처를 바로 압니다
 appliesWhen:

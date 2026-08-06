@@ -1,6 +1,6 @@
 ---
 title: Preserve Shared Namespace Origin With Chained Access
-titleKo: 설정과 `util`은 체인으로 접근해 출처를 남깁니다
+titleKo: `config`와 `util`은 구조분해하지 않고 체인으로 씁니다
 impact: MEDIUM
 impactDescription: 넓은 스코프 별칭으로 출처를 숨기지 않아 값이 어디서 오는지 읽힙니다
 appliesWhen:

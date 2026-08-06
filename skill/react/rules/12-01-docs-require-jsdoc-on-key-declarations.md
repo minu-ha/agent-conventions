@@ -1,6 +1,6 @@
 ---
 title: Require Doc Comments on React Hooks, Handlers, and Key Declarations
-titleKo: 훅, 핸들러, 핵심 선언에는 문서 주석을 붙입니다
+titleKo: 리액트에만 있는 경계 선언에도 JSDoc 헤더를 붙입니다
 impact: MEDIUM
 impactDescription: 리액트에만 있는 경계 선언을 동반 스킬 목록에 더해 빠뜨리지 않습니다
 appliesWhen:

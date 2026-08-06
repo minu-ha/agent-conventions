@@ -1,7 +1,7 @@
 # CSS 컨벤션 Rule Index
 
 - Skill: `css`
-- Routing digest: `sha256:ceaa406093e49b247e8aae65785d4267590512014b122d08b3f4450a2ab2a9cc`
+- Routing digest: `sha256:e8f9f57a87c2cb7bcad2bdf59e2f51258eee5f1099435661a306e3718cce8f19`
 
 ## Direct Companions
 
@@ -16,7 +16,7 @@
 - C05 | ownership-give-each-file-one-scope-slug | 새 \`scope\_slug\`를 만들거나 기존 식별자를 복사·이름 변경할 때. 서로 다른 컴포넌트가 같은 식별자를 쓸 가능성이 있을 때.
 - C06 | ownership-choose-scope-prefix-by-reuse-range | 새 CSS 파일을 만들면서 \`pg\_\`, \`wg\_\`, \`ui\_\` 중 하나를 고를 때. 소유자의 재사용 범위가 바뀌어 접두사를 옮길 때. | reviewWith: ownership-give-each-file-one-scope-slug, ownership-use-foreign-classes-only-under-your-own-root
 - C07 | ownership-use-foreign-classes-only-under-your-own-root | \`.ant-\*\`, \`.rc-\*\`, \`.Mui-\*\` 같은 외부 라이브러리 클래스를 쓸 때. 다른 \`scope\_slug\`의 클래스를 겨냥할 때. | reviewWith: ownership-change-other-owners-through-their-api, ownership-give-each-file-one-scope-slug, selector-limit-nesting-block-depth
-- C08 | ownership-change-other-owners-through-their-api | 다른 컴포넌트의 배치나 내부 표현을 바꿔야 할 때. 컴포넌트에 클래스 관련 프롭을 추가할 때. | reviewWith: composition-inject-classes-only-at-the-entry-point, ownership-use-foreign-classes-only-under-your-own-root
+- C08 | ownership-change-other-owners-through-their-api | 다른 컴포넌트의 배치나 내부 모습을 바꿔야 할 때. 컴포넌트에 클래스 관련 프롭을 추가할 때. | reviewWith: composition-inject-classes-only-at-the-entry-point, ownership-use-foreign-classes-only-under-your-own-root
 - C09 | composition-compose-classes-with-clsx | TSX의 \`className\`을 추가·수정할 때. 기본 클래스, 수정자, 선택 클래스를 함께 엮을 때.
 - C10 | composition-do-not-build-structural-variants-with-modifiers | 수정자를 추가·변경할 때. 여러 곳에서 반복되는 모양인지 한 곳만의 보정인지 가릴 때. | reviewWith: naming-name-elements-and-modifiers-by-role
 - C11 | composition-keep-classes-single-purpose | 한 클래스 이름에 기본 스타일과 상태를 함께 넣을 때. 제외: 처음부터 기본 클래스와 수정자를 나눠 만드는 경우. 제외: 책임이 그대로인 이름 변경만 하는 경우.

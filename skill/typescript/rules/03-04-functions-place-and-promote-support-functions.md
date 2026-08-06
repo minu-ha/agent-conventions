@@ -1,6 +1,6 @@
 ---
 title: Place and Promote Support Functions Deliberately
-titleKo: 보조 함수의 위치와 공용 승격 기준을 지킵니다
+titleKo: 보조 함수는 대표 함수마다 파일 하나로 두고 두 소유자가 쓸 때 올립니다
 impact: MEDIUM-HIGH
 impactDescription: 잡동사니 파일이 생기지 않고 공용 승격이 실제 사용처를 근거로 일어납니다
 appliesWhen:

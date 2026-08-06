@@ -1,6 +1,6 @@
 ---
 title: Take React Handler and Wrapper Prop Types From Existing Contracts
-titleKo: 핸들러와 래퍼 프롭 타입은 이미 있는 계약에서 가져옵니다
+titleKo: 핸들러와 래퍼 프롭 타입은 리액트가 주는 타입에서 가져옵니다
 impact: MEDIUM-HIGH
 impactDescription: 같은 시그니처를 손으로 다시 적지 않아 계약이 어긋나지 않습니다
 appliesWhen:

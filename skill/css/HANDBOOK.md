@@ -495,13 +495,13 @@ ui/button/ui-button.css
 
 **Rule:** `C08` · `ownership-change-other-owners-through-their-api`
 
-**Applies when:** 다른 컴포넌트의 배치나 내부 표현을 바꿔야 할 때. 컴포넌트에 클래스 관련 프롭을 추가할 때.
+**Applies when:** 다른 컴포넌트의 배치나 내부 모습을 바꿔야 할 때. 컴포넌트에 클래스 관련 프롭을 추가할 때.
 
 **Review with:** `composition-inject-classes-only-at-the-entry-point`, `ownership-use-foreign-classes-only-under-your-own-root`
 
-**Impact: MEDIUM-HIGH (남의 표현을 바꿀 때 배치, 변형, 내림 가운데 무엇이 맞는지 먼저 봅니다)**
+**Impact: MEDIUM-HIGH (남의 모습을 바꿀 때 배치, 변형, 내림 가운데 무엇이 맞는지 먼저 봅니다)**
 
-바꿀 것이 남의 표현이면 세 가지를 순서대로 봅니다.
+바꿀 것이 남의 모습이면 세 가지를 순서대로 봅니다.
 
 | 상황 | 방법 | 바꾸는 곳 |
 | --- | --- | --- |

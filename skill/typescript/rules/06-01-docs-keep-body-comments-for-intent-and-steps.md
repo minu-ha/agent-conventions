@@ -1,6 +1,6 @@
 ---
 title: Keep Body Comments for Intent and Steps
-titleKo: 본문 주석은 의도와 단계를 적습니다
+titleKo: 본문 안 설명은 `//`로 적고 의도와 단계를 남깁니다
 impact: MEDIUM
 impactDescription: 코드를 옮겨 적은 주석은 막고 읽는 데 필요한 설명은 남깁니다
 appliesWhen:

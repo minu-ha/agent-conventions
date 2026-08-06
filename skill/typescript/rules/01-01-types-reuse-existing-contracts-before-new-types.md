@@ -1,6 +1,6 @@
 ---
 title: Reuse Existing Contracts Before Declaring New Types
-titleKo: 새 타입을 선언하기 전에 기존 계약을 먼저 씁니다
+titleKo: 새 타입을 선언하기 전에 이미 있는 타입과 스키마를 먼저 씁니다
 impact: MEDIUM-HIGH
 impactDescription: 뜻이 그대로면 기존 타입이나 스키마에서 끌어와 같은 형태를 두 번 선언하지 않습니다
 appliesWhen:
