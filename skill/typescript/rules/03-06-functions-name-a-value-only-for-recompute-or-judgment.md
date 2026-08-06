@@ -1,20 +1,20 @@
 ---
 title: Name a Value Only to Prevent Recompute or Explain a Judgment
-titleKo: 식은 재계산을 막거나 판정을 설명할 때만 `const`에 담습니다
+titleKo: 식을 변수로 뺄 이유는 재계산을 막거나 판정에 이름을 주는 것뿐입니다
 impact: MEDIUM
-impactDescription: `const`에 담을지가 그 식 안에서 정해져 쓰는 자리가 하나 늘었다고 판정이 뒤집히지 않습니다
+impactDescription: 변수로 뺄지가 그 식 안에서 정해져 쓰는 자리가 하나 늘었다고 판정이 뒤집히지 않습니다
 appliesWhen:
-  - 순수 계산의 결과를 지역 `const`로 받는 줄을 추가·삭제할 때
-  - 식을 쓰는 자리에 적을지 `const`에 담을지 정할 때
+  - 순수 계산의 결과를 지역 변수(`const`)로 받는 줄을 추가·삭제할 때
+  - 식을 쓰는 자리에 그대로 적을지 변수로 뺄지 정할 때
 reviewWith: functions-avoid-imperative-assembly-in-wide-scopes, values-read-objects-through-chains
 tags: functions, origin
 ---
 
 ## Name a Value Only to Prevent Recompute or Explain a Judgment
 
-**Impact: MEDIUM (`const`에 담을지가 그 식 안에서 정해져 쓰는 자리가 하나 늘었다고 판정이 뒤집히지 않습니다)**
+**Impact: MEDIUM (변수로 뺄지가 그 식 안에서 정해져 쓰는 자리가 하나 늘었다고 판정이 뒤집히지 않습니다)**
 
-식을 `const`에 담는 자리는 둘입니다.
+식을 변수로 뺄 이유는 둘입니다.
 둘 다 아니면 식을 쓰는 자리에 그대로 적습니다.
 같은 식을 몇 번 적든 마찬가지입니다.
 
@@ -27,7 +27,7 @@ tags: functions, origin
 | `await`나 `yield`가 붙은 값 | 실행 순서가 뜻을 갖습니다 |
 | 바깥과 주고받는 호출 (`init()`, `localStorage.getItem()`) | 옮기면 부르는 시점이 달라집니다 |
 | 훅 호출과 `useState` 반환 | 부르는 자리와 횟수가 정해져 있습니다 |
-| 함수 값 | 이름이 곧 계약입니다 |
+| 함수 값 | 이름이 곧 계약이고 선언 형태는 `functions-declare-functions-as-arrow-consts`가 정합니다 |
 
 **코드에 한 번 적힌 것과 실행에서 한 번인 것은 다릅니다.**
 `.map()`이나 `.filter()` 콜백 안, 반복문 안으로 옮기면 원소 수만큼 다시 계산합니다.
@@ -43,7 +43,7 @@ tags: functions, origin
   `row.dueDate < today`는 쓰는 자리에 그대로 적습니다.
 - 부정이 겹치면 이름으로 뒤집습니다.
   `!row.deletedAt && !row.archivedAt`보다 `isVisible`이 한 번에 읽힙니다.
-- 식에 리터럴이 보이면 `const`에 담을 자리가 아니라 그 리터럴을 선언할 자리입니다.
+- 식에 리터럴이 보이면 변수로 뺄 자리가 아니라 그 리터럴을 선언할 자리입니다.
   `types-replace-enum-with-as-const-objects`와 `naming-centralize-shared-config-namespaces`가 그 자리를 정합니다.
 
 **횟수는 기준이 아닙니다.**
@@ -51,13 +51,13 @@ tags: functions, origin
 같은 코드에 다른 답이 나오는 기준은 지킬 수 없습니다.
 위 둘은 그 식 안에서 판정됩니다.
 
-`const`에 담으면 읽는 사람은 그 값이 어디서 왔는지 확인하러 위로 올라갑니다.
+변수로 빼면 읽는 사람은 그 값이 어디서 왔는지 확인하러 위로 올라갑니다.
 그 비용을 치를 이유가 위 둘입니다.
 
 `let` 재할당과 배열 `push` 누적은 `functions-avoid-imperative-assembly-in-wide-scopes`가 봅니다.
 객체 필드를 그대로 읽는 것은 계산이 아니라 `values-read-objects-through-chains`가 봅니다.
 
-**Incorrect (돌려주기만 할 값을 `const`에 담음):**
+**Incorrect (돌려주기만 할 값을 변수로 뺌):**
 
 ```ts
 const toNextIteration = (iteration: number): number => {
@@ -73,7 +73,7 @@ const toRowLabel = (row: Row): string => {
 };
 ```
 
-**Incorrect (두 번 쓴다는 이유만으로 `const`에 담음):**
+**Incorrect (두 번 쓴다는 이유만으로 변수로 뺌):**
 
 ```ts
 const toRowClassNames = (row: Row): string[] => {
@@ -97,7 +97,7 @@ const toRowClassNames = (row: Row): string[] => {
 };
 ```
 
-**Correct (한 번만 써도 합성 판정이라 `const`에 담음):**
+**Correct (한 번만 써도 합성 판정이라 변수로 뺌):**
 
 ```ts
 const toRowAction = (row: Row): RowAction => {
@@ -107,7 +107,7 @@ const toRowAction = (row: Row): RowAction => {
 };
 ```
 
-**Correct (콜백 밖에 `const`로 두어 행마다 다시 계산하지 않음):**
+**Correct (콜백 밖으로 빼 행마다 다시 계산하지 않음):**
 
 ```ts
 const filterVisibleRows = (rows: Row[], keyword: string): Row[] => {
@@ -118,7 +118,7 @@ const filterVisibleRows = (rows: Row[], keyword: string): Row[] => {
 };
 ```
 
-**Correct (바깥과 주고받는 호출이라 `const`에 담음):**
+**Correct (바깥과 주고받는 호출이라 변수로 뺌):**
 
 ```ts
 /**

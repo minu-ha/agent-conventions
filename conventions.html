@@ -149,6 +149,7 @@ body {
 .imp-HIGH { background: color-mix(in srgb, var(--coral) 14%, transparent); color: var(--coral-dk); }
 .imp-MEDIUM-HIGH { color: var(--coral-dk); border-color: color-mix(in srgb, var(--coral) 50%, transparent); }
 .imp-MEDIUM { color: var(--muted); border-color: var(--hair); }
+.imp-LOW { color: var(--faint); border-color: var(--soft); }
 
 .body { border-top: 1px solid var(--soft); padding: 18px 20px 22px; }
 .meta { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; font-family: var(--mono); font-size: 10.5px; color: var(--faint); }
@@ -327,12 +328,13 @@ body:has(.dlg[open]) { overflow: hidden; }
 	}
 
 	const RULES = DATA.rules;
-	const IMPACTS = ["CRITICAL", "HIGH", "MEDIUM-HIGH", "MEDIUM"];
+	const IMPACTS = ["CRITICAL", "HIGH", "MEDIUM-HIGH", "MEDIUM", "LOW"];
 	const DOT = {
 		CRITICAL: "var(--coral)",
 		HIGH: "color-mix(in srgb, var(--coral) 75%, transparent)",
 		"MEDIUM-HIGH": "color-mix(in srgb, var(--coral) 40%, transparent)",
 		MEDIUM: "var(--edge)",
+		LOW: "var(--soft)",
 	};
 
 	const keyOf = (r) => r.skill + "/" + r.id;

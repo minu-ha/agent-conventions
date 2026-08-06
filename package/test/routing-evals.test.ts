@@ -289,7 +289,7 @@ const typescriptRuleRouting = {
 		reviewWith: ["functions-extract-helpers-only-when-the-boundary-is-real"],
 	},
 	"functions-name-a-value-only-for-recompute-or-judgment": {
-		appliesWhen: "순수 계산의 결과를 지역 `const`로 받는 줄을 추가·삭제할 때. 식을 쓰는 자리에 적을지 `const`에 담을지 정할 때.",
+		appliesWhen: "순수 계산의 결과를 지역 변수(`const`)로 받는 줄을 추가·삭제할 때. 식을 쓰는 자리에 그대로 적을지 변수로 뺄지 정할 때.",
 		reviewWith: ["functions-avoid-imperative-assembly-in-wide-scopes", "values-read-objects-through-chains"],
 	},
 	"functions-name-functions-by-what-comes-out": {

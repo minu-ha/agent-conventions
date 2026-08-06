@@ -1,7 +1,7 @@
 # TypeScript 컨벤션 Rule Index
 
 - Skill: `typescript`
-- Routing digest: `sha256:7cc6fb68732e2d36553a6cdd10e93ab3ef5e548c06396e6ba56ca99a93dc6580`
+- Routing digest: `sha256:a18c4dd87b381961c56b54b50cc939bce367cd8436d87b9ba23e2ab3524bdc9e`
 
 ## Local Rules
 
@@ -23,7 +23,7 @@
 - T16 | functions-extract-helpers-only-when-the-boundary-is-real | 보조 함수를 빼내거나 옮기거나 내보내거나 공유할 때. 범용 보조 파일, 소유자 하나만 쓰는 변환 함수, 자잘한 정리 단계의 경계를 바꿀 때. | reviewWith: docs-require-header-jsdoc-on-key-declarations, functions-place-and-promote-support-functions
 - T17 | functions-place-and-promote-support-functions | 보조 함수를 어느 파일이나 폴더에 둘지 정할 때. \`shared/\` 아래로 파일을 옮기거나 \`util.\*\`에 항목을 추가할 때.
 - T18 | functions-avoid-imperative-assembly-in-wide-scopes | 모듈 최상위나 함수 본문 전체를 덮는 스코프에서 \`let\` 재할당, 배열 \`push\`, 조건부 누적으로 값을 만들 때. | reviewWith: functions-extract-helpers-only-when-the-boundary-is-real
-- T19 | functions-name-a-value-only-for-recompute-or-judgment | 순수 계산의 결과를 지역 \`const\`로 받는 줄을 추가·삭제할 때. 식을 쓰는 자리에 적을지 \`const\`에 담을지 정할 때. | reviewWith: functions-avoid-imperative-assembly-in-wide-scopes, values-read-objects-through-chains
+- T19 | functions-name-a-value-only-for-recompute-or-judgment | 순수 계산의 결과를 지역 변수\(\`const\`\)로 받는 줄을 추가·삭제할 때. 식을 쓰는 자리에 그대로 적을지 변수로 뺄지 정할 때. | reviewWith: functions-avoid-imperative-assembly-in-wide-scopes, values-read-objects-through-chains
 - T20 | functions-name-functions-by-what-comes-out | 이름 붙인 함수를 새로 만들거나 이름을 바꿀 때. 제외: 외부 패키지가 정한 이름을 별칭 없이 그대로 쓰는 경우.
 - T21 | values-prefer-immutable-array-sorting | 프롭스, 상태, 매개변수, 모듈 상수에서 온 배열을 정렬할 때. 기존 \`.sort\(\)\` 호출을 추가·변경할 때.
 - T22 | values-use-set-and-map-for-repeated-lookups | 같은 목록에 \`includes\`, \`find\`, 키 조회를 여러 번 하는 코드를 추가·변경할 때.
