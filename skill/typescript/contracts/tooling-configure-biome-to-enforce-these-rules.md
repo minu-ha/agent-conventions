@@ -17,6 +17,11 @@
 | `style/useConst` | `typescript/functions-avoid-imperative-assembly-in-wide-scopes` |
 | `correctness/noUnusedFunctionParameters` | `typescript/types-mark-unused-parameters-with-underscore` |
 | `performance/noNamespaceImport` | `typescript/naming-use-direct-imports-and-public-entry-points` |
+| `performance/noBarrelFile` · `performance/noReExportAll` | `typescript/naming-use-direct-imports-and-public-entry-points`의 배럴 |
+| `complexity/useMaxParams` | `typescript/functions-use-named-object-params-for-complex-signatures`의 셋 |
+| `style/noNestedTernary` | `typescript/functions-avoid-imperative-assembly-in-wide-scopes`의 삼항 겹치기 |
+| `style/useAsConstAssertion` | `typescript/types-replace-enum-with-as-const-objects` |
+| `correctness/useSingleJsDocAsterisk` | `typescript/docs-write-doc-comments-as-multiline-blocks` |
 | `suspicious/noExplicitAny` | `typescript/types-narrow-unknown-instead-of-asserting` |
 | `style/noNonNullAssertion` | `typescript/types-narrow-unknown-instead-of-asserting` |
 
@@ -26,11 +31,11 @@
 기계가 끝까지 못 가는 자리가 있습니다.
 아래 항목은 리뷰가 봅니다.
 
-- 객체 키의 `snake_case`가 밖으로 나가는 키인지는 `useNamingConvention`이 가리지 못합니다.
-  `objectLiteralProperty`와 `typeProperty`에 `snake_case`를 열어 두고, 그 키가 API 요청 본문이나
-  라이브러리 인자로 나가는지는 사람이 봅니다.
-  다만 판정은 "이 객체가 무엇인가"가 아니라 "이 키가 밖으로 나가는가"라 그 자리에서 바로 보입니다.
-  `PascalCase`를 빼면 합성 컴포넌트의 `{Root, Header, Footer}`가 걸리므로 그쪽도 함께 엽니다.
+- 객체 키에서 `snake_case`를 닫았습니다.
+  밖으로 나가는 키는 그 자리에 `biome-ignore`를 달아 예외를 보이게 합니다.
+  `docs-justify-convention-exceptions-with-a-reason-comment` 규칙이 그 주석에 무엇을 적을지 정합니다.
+  기계가 못 가리는 판정을 열어 두는 대신 예외를 세는 쪽으로 바꾼 것입니다.
+  `PascalCase`는 합성 컴포넌트의 `{Root, Header, Footer}` 때문에 `objectLiteralProperty`에만 남깁니다.
   `typescript/functions-declare-functions-as-arrow-consts` 때문에 이름 붙인 함수도 `const` 항목에 들어가는데,
   그 항목은 컴포넌트 이름 때문에 `PascalCase`도 열려 있어 함수 이름의 `camelCase`는 리뷰가 봅니다.
 - 이름 붙인 함수의 본문을 `{}` 블록으로 고정하는 것은 `biome` 2.5.7이 반만 합니다.
@@ -48,6 +53,11 @@
   `let`을 `const`로 바꿔 주기만 하고 `push` 누적은 그대로 남습니다.
 - `typescript/types-mark-unused-parameters-with-underscore` 중 **매개변수를 아예 생략한 경우**는 기계가 못 봅니다.
   `noUnusedFunctionParameters`는 남겨 둔 매개변수만 봅니다.
+
+`style/noMagicNumbers`는 켜지 않습니다.
+숫자를 전부 이름 있는 상수로 빼라고 하는데, 이 컨벤션이 막는 것은
+`absence-expose-optional-values-instead-of-silent-fallbacks`의 기본값 자리 리터럴뿐입니다.
+규칙이 요구하지 않는 것을 기계가 강제하면 예외 주석만 늘어납니다.
 
 따로 켜지 않는 규칙이 하나 있습니다.
 `style/useFragmentSyntax`는 JSX 조각을 `<>`로 바꾸라고 합니다.
