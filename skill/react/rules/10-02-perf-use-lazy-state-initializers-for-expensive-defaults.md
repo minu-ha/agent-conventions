@@ -1,10 +1,10 @@
 ---
 title: Use Lazy State Initializers for Expensive Defaults
-titleKo: 초기값 계산이 비싸면 지연 초기화를 씁니다
+titleKo: 초기값 계산이 비싸면 게으른 초기화를 씁니다
 impact: MEDIUM
 impactDescription: 초기 상태 계산이 무거울 때 준비 작업이 렌더마다 되풀이되지 않습니다
 appliesWhen:
-  - `useState` 초기값에 localStorage 파싱, 인덱스 생성, 큰 배열 정규화 같은 비용 있는 계산을 넣을 때
+  - `useState` 초기값에 `localStorage` 파싱, 인덱스 생성, 큰 배열 정규화 같은 비용이 큰 계산을 넣을 때
   - 제외: 숫자·문자열 같은 단순 값이나 프롭을 그대로 초기값에 넣는 경우
 reviewWith: perf-avoid-defensive-memoization
 tags: perf, state

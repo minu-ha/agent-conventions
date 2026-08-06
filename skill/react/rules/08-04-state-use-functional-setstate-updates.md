@@ -1,6 +1,6 @@
 ---
 title: Use Functional setState Updates When Based on Previous State
-titleKo: 이전 상태를 쓸 때는 함수형 `setState`를 씁니다
+titleKo: 이전 상태에 기대는 갱신은 함수형 `setState`로 씁니다
 impact: HIGH
 impactDescription: 다음 값이 현재 상태에 달려 있을 때 낡은 값을 붙잡는 버그를 막습니다
 appliesWhen:
@@ -13,7 +13,7 @@ tags: state, handlers
 
 **Impact: HIGH (다음 값이 현재 상태에 달려 있을 때 낡은 값을 붙잡는 버그를 막습니다)**
 
-다음 상태가 현재 상태 값에 의존하면 바깥 변수를 직접 읽지 않고 함수형 갱신자를 씁니다.
+다음 상태가 현재 상태 값에 의존하면 바깥 변수를 직접 읽지 않고 함수형 업데이터를 씁니다.
 
 실제로 결과가 갈리는 자리는 셋입니다.
 
@@ -35,11 +35,11 @@ const handleSelectRange = (fromUserId: string, toUserId: string) => {
 };
 ```
 
-**Correct (함수형 갱신자로 항상 최신 상태를 기준으로 갱신):**
+**Correct (함수형 업데이터로 항상 최신 상태를 기준으로 갱신):**
 
 ```tsx
 const handleSelectRange = (fromUserId: string, toUserId: string) => {
-	// 두 번째 갱신이 첫 갱신 결과를 받아야 해서 함수형 갱신자를 쓴다
+	// 두 번째 갱신이 첫 갱신 결과를 받아야 해서 함수형 업데이터를 쓴다
 	setSelectedUserIds((currentUserIds) => [...currentUserIds, fromUserId]);
 	setSelectedUserIds((currentUserIds) => [...currentUserIds, toUserId]);
 };

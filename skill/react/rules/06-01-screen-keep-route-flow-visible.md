@@ -1,6 +1,6 @@
 ---
 title: Keep Route Entry Files Focused on Screen Flow
-titleKo: 화면 진입 파일에는 화면 흐름만 남깁니다
+titleKo: 라우트 진입 파일에는 화면 흐름만 남깁니다
 impact: MEDIUM-HIGH
 impactDescription: 진입 파일만 봐도 화면 흐름을 따라갈 수 있습니다
 appliesWhen:
@@ -32,7 +32,7 @@ tags: screen, routes, flow
 
 - `query.select` 형태, 바인딩·별칭 정리, 파생 상태 이펙트를 렌더 계산으로 옮기는 것
 - 순수 타입·전송 값 조립 함수·기본 설정의 형제 `.ts` 이동.
-  `typescript/functions-extract-helpers-only-when-the-boundary-is-real`가 담당합니다.
+  `typescript/functions-extract-helpers-only-when-the-boundary-is-real`이 담당합니다.
 
 **Incorrect (흐름보다 분해 자체가 목적이 됨):**
 

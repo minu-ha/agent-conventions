@@ -67,7 +67,7 @@
 
 **Rule:** `T01` · `types-reuse-existing-contracts-before-new-types`
 
-**Applies when:** 뜻이 같은 기존 타입, 인터페이스, 스키마가 있는데 형태를 새로 선언·변경·복제·파생할 때. 같은 형태를 두 번 선언했다가 넣거나 뺄 때. 제외: 맞는 후보가 없거나 소유자만 옮긴 경우, 그대로인 계약을 새 자리에서 쓰는 경우. 제외: 고칠 수 없는 형태를 그대로 쓰는 경우.
+**Applies when:** 뜻이 같은 기존 타입, 인터페이스, 스키마가 있는데 형태를 새로 선언·변경·복제·파생할 때. 같은 형태를 두 번 선언했다가 넣거나 뺄 때. 제외: 맞는 후보가 없거나 소유자만 옮긴 경우. 제외: 그대로인 계약을 새 자리에서 쓰는 경우. 제외: 고칠 수 없는 형태를 그대로 쓰는 경우.
 
 **Review with:** `types-document-custom-types-and-shapes`
 
@@ -76,12 +76,12 @@
 필드 이름, 타입, 선택 여부가 모두 같은 선언이 이미 있으면 그대로 참조합니다.
 그중 일부만 필요하면 **`interface`를 선언하고 각 필드를 `원본["필드"]` 인덱스 접근으로 가져옵니다.**
 같은 이름의 필드가 타입이나 선택 여부에서 하나라도 다르면 끌어오지 않고 새로 선언합니다.
-필드 구성이 부분집합인 것은 다른 것이 아닙니다.
+필드 구성이 부분집합인 것만으로는 다르다고 보지 않습니다.
 그때가 인덱스 접근을 쓰는 자리입니다.
 소유자 이동이나 이름, 주석만 바뀌면 대상이 아닙니다.
 
 **`Pick`은 쓰지 않습니다.** 고르는 것은 언제나 닫힌 집합이라
-써드파티 타입이어도 `interface`에 인덱스 접근으로 적을 수 있습니다.
+서드파티 타입이어도 `interface`에 인덱스 접근으로 적을 수 있습니다.
 **`Omit`은 원본을 따라가야 하는 자리에만 씁니다.**
 
 가르는 질문은 하나입니다.
@@ -101,7 +101,7 @@
 열린 집합이라 뺄 이름만 적고, 남는 속성을 손으로 다 적을 수도 없습니다.
 
 `Partial`과 `Required`도 원본을 따라가야 하는 자리에서만 씁니다.
-`ReturnType`, `Parameters`, `Awaited`는 형태에서 필드를 고르는 일이 아니라 이 규칙 대상이 아닙니다.
+`ReturnType`, `Parameters`, `Awaited`는 형태에서 필드를 고르는 일이 아니어서 이 규칙 대상이 아닙니다.
 
 | 인덱스 접근 `interface` | `Pick` |
 | --- | --- |
@@ -216,7 +216,7 @@ interface ProductListRow {
 이름 하나로 매개변수와 반환값이 함께 정해져서 계약을 한 자리에서 읽습니다.
 이미 있는 인터페이스, 객체 계약, 프레임워크 별칭을 먼저 찾고,
 매개변수 타입은 쓸 계약이 없을 때만 직접 적습니다.
-인터페이스가 콜백을 필드로 갖고 있으면 `Contract["onSelect"]`처럼 인덱스 접근으로 가져다 씁니다.
+인터페이스에 콜백 필드가 있으면 `Contract["onSelect"]`처럼 인덱스 접근으로 가져다 씁니다.
 가져온 계약에 지금 구현이 쓰지 않는 매개변수가 있으면 `types-mark-unused-parameters-with-underscore` 규칙을 다시 봅니다.
 함수 타입 별칭을 새로 선언하는 것은 같은 시그니처를 쓰는 구현이 이미 둘 이상일 때만입니다.
 한 번만 쓰는 지역 함수 때문에 함수 타입 별칭을 늘리지 않습니다.
@@ -375,7 +375,7 @@ const publishResultSchema = z.object({
 
 **Impact: MEDIUM (계약의 일부를 조용히 버리지 않고 일부러 무시한 매개변수를 드러냅니다)**
 
-미사용 매개변수도 생략하지 않고 `_` 접두사로 명시합니다.
+쓰지 않는 매개변수도 생략하지 않고 `_` 접두사로 명시합니다.
 그래야 콜백 시그니처를 그대로 지키면서, 지금 구현이 일부러 쓰지 않는 값이라는 점이 드러납니다.
 
 프레임워크 별칭이나 기존 콜백 계약이 선언한 매개변수를 구현에서 빼면 이 규칙을 적용합니다.
@@ -395,7 +395,7 @@ const noopLog: LogSink = () => {
 };
 ```
 
-**Correct (계약은 유지하고 미사용 매개변수만 `_`로 표시):**
+**Correct (계약은 유지하고 쓰지 않는 매개변수만 `_`로 표시):**
 
 ```ts
 /**
@@ -413,7 +413,7 @@ const noopLog: LogSink = (_message, _level) => {};
 
 **Rule:** `T05` · `types-narrow-unknown-instead-of-asserting`
 
-**Applies when:** `as` 단언, `!` 비-널 단언, `any`, `@ts-expect-error`를 추가할 때. 앱 밖에서 들어온 값을 타입 붙여 쓰기 시작할 때.
+**Applies when:** `as` 단언, `!` `null` 아님 단언, `any`, `@ts-expect-error`를 추가할 때. 앱 밖에서 들어온 값을 타입 붙여 쓰기 시작할 때.
 
 **Review with:** `docs-justify-convention-exceptions-with-a-reason-comment`, `tooling-configure-biome-to-enforce-these-rules`
 
@@ -485,7 +485,7 @@ chart.setOption(option as EChartsOption);
 
 **Rule:** `T06` · `types-replace-enum-with-as-const-objects`
 
-**Applies when:** `enum`이나 타입과 실행 양쪽에서 함께 쓰는 값 묶음을 추가·변경할 때. 제외: 외부 패키지가 내보낸 `enum` 값을 그대로 읽어 쓰는 경우.
+**Applies when:** `enum`이나 타입과 실행 양쪽에서 함께 쓰는 값 집합을 추가·변경할 때. 제외: 외부 패키지가 내보낸 `enum` 값을 그대로 읽어 쓰는 경우.
 
 **Requires selected:** `naming-use-consistent-file-and-symbol-naming`, `types-document-custom-types-and-shapes` · 함께 적용
 
@@ -499,7 +499,7 @@ chart.setOption(option as EChartsOption);
 이 컨벤션의 `biome` 설정도 `style/noEnum`으로 `enum` 선언을 막습니다.
 
 외부 패키지가 `enum`을 내보내고 그 값을 그대로 넘겨야 하면 그 `enum`을 씁니다.
-우리가 새로 선언하는 값 묶음만 이 규칙 대상입니다.
+우리가 새로 선언하는 값 집합만 이 규칙 대상입니다.
 
 **Incorrect (`enum`을 직접 사용):**
 
@@ -533,7 +533,7 @@ type ProductStatus = (typeof product_status)[keyof typeof product_status];
 
 **Impact: CRITICAL**
 
-식별자, 가져오기, 공개 진입점, 절대경로 별칭 범위, 설정 위치가 소유자와 출처를 바로 드러내야 합니다. 여기서 **소유자**는 자기 폴더를 가진 모듈 하나입니다. 그 폴더 안 파일들은 그 소유자만 씁니다.
+식별자, 가져오기, 공개 진입점, 절대경로 별칭 범위, 설정 위치가 소유자와 출처를 바로 드러내야 합니다. 여기서 **소유자**는 자기 폴더가 있는 모듈 하나입니다. 그 폴더 안 파일은 그 소유자만 씁니다.
 
 ### 2.1 Centralize Shared Config Under `shared/config.ts`
 
@@ -545,7 +545,7 @@ type ProductStatus = (typeof product_status)[keyof typeof product_status];
 
 **Impact: MEDIUM-HIGH (공용 설정 값이 쓰는 파일마다 흩어져 공개 출처를 잃는 것을 막습니다)**
 
-설정을 어디 두는지는 그 값을 쓰는 소유자가 몇인지로 갈립니다.
+설정을 어디 두는지는 그 값을 쓰는 소유자 수로 갈립니다.
 
 | 쓰는 소유자 | 자리 | 이름 |
 | --- | --- | --- |
@@ -765,7 +765,7 @@ const product_status = {
 
 **Rule:** `T11` · `naming-use-direct-imports-and-public-entry-points`
 
-**Applies when:** 가져오기, 내보내기, 배럴, 공용 진입점, 소유자 보조 모듈의 경계를 추가·변경할 때. 같은 경로에서 값과 타입 중 무엇을 가져올지 추가·삭제·전환할 때.
+**Applies when:** 가져오기, 내보내기, `index.ts` 배럴, 공용 진입점, 소유자 보조 모듈의 경계를 추가·변경할 때. 같은 경로에서 값과 타입 중 무엇을 가져올지 추가·삭제·전환할 때.
 
 **Review with:** `naming-restrict-absolute-aliases-to-layer-roots`
 
@@ -844,7 +844,7 @@ import {SalesChartCard} from "./component/sales-chart-card";
 
 **Impact: HIGH (환경마다 달라지는 값이 쓰는 파일로 흩어지지 않고 한 곳에서 읽힙니다)**
 
-환경마다 값이 달라지는 것은 쓰는 파일에서 직접 읽지 않습니다.
+환경마다 달라지는 값은 쓰는 파일에서 직접 읽지 않습니다.
 `shared/config.ts`가 한 번 읽어 `config.*`로 내보내고, 나머지는 그 이름을 씁니다.
 읽는 자리를 하나로 모으는 이유는 `naming-preserve-config-origin-with-chained-access` 규칙과 같습니다.
 
@@ -1056,7 +1056,7 @@ const toRequestUrl = (target: ApiRequestTarget): URL => {
 `.ts` 안에서는 해당하지 않습니다.
 옮길 자리는 같은 소유자 폴더의 `.ts`입니다.
 어느 하위 폴더인지는 프레임워크 컨벤션의 역할 폴더 규칙이 정합니다.
-**표시용 가공은 여기 들지 않습니다.** 목록을 화면 모양으로 바꾸거나 문자열을 조립하는 것은
+**표시용 가공은 여기에 해당하지 않습니다.** 목록을 화면 모양으로 바꾸거나 문자열을 조립하는 것은
 쓰는 자리에 그대로 둡니다.
 밖으로 내는 것은 서버로 보낼 값을 만드는 함수뿐입니다.
 
@@ -1176,18 +1176,18 @@ import { toProductSaveRequest } from "./function/to-product-save-request";
 
 **Rule:** `T17` · `functions-place-and-promote-support-functions`
 
-**Applies when:** 보조 함수를 둘 파일이나 폴더를 정할 때. `shared/` 아래로 파일을 옮기거나 `util.*`에 항목을 추가할 때.
+**Applies when:** 보조 함수를 어느 파일이나 폴더에 둘지 정할 때. `shared/` 아래로 파일을 옮기거나 `util.*`에 항목을 추가할 때.
 
 **Requires selected:** `functions-extract-helpers-only-when-the-boundary-is-real` · 함께 적용
 
 **Impact: MEDIUM-HIGH (잡동사니 파일이 생기지 않고 공용 승격이 실제 사용처를 근거로 일어납니다)**
 
-떼어 낼지는 `functions-extract-helpers-only-when-the-boundary-is-real`가 먼저 판정합니다.
+떼어 낼지는 `functions-extract-helpers-only-when-the-boundary-is-real`이 먼저 판정합니다.
 이 규칙은 그 결과를 어디 두고 언제 올릴지만 봅니다.
 
 - 소유자 아래에 `helper.ts`, `helpers.ts`, `utils.ts` 같은 잡동사니 파일을 만들지 않습니다.
   어느 폴더에 둘지는 프레임워크 skill의 역할 폴더 규칙이 정합니다.
-- 소유자 아래에서는 대표 내보낸 함수 하나당 파일 하나입니다.
+- 소유자 아래에서는 내보낸 대표 함수 하나당 파일 하나입니다.
   전역 `shared/util.ts`는 여러 소유자가 함께 쓰는 순수 함수를 모으는 자리라 예외입니다.
 - 호출 깊이는 소유자에서 내보낸 함수, 그 파일 안 비공개 함수까지 두 단계로 끝냅니다.
   내보낸 함수가 또 다른 내보낸 함수를 타고 가는 사슬은 만들지 않습니다.
@@ -1266,19 +1266,19 @@ export const util = {
 
 **Rule:** `T18` · `functions-avoid-imperative-assembly-in-wide-scopes`
 
-**Applies when:** 모듈 최상위나 함수 본문 전체를 덮는 스코프에서 `let` 재대입, 배열 `push`, 조건부 누적으로 값을 만들 때.
+**Applies when:** 모듈 최상위나 함수 본문 전체를 덮는 스코프에서 `let` 재할당, 배열 `push`, 조건부 누적으로 값을 만들 때.
 
 **Review with:** `functions-extract-helpers-only-when-the-boundary-is-real`
 
 **Impact: MEDIUM (분기로 공유 지역 변수를 바꾸지 않아 넓은 스코프의 값 조립이 선언형으로 남습니다)**
 
-모듈 최상위나 함수 본문 전체를 덮는 스코프에서 `let` 재대입, 배열 `push`, 조건부 누적으로 값을 쌓지 않습니다.
+모듈 최상위나 함수 본문 전체를 덮는 스코프에서 `let` 재할당, 배열 `push`, 조건부 누적으로 값을 쌓지 않습니다.
 `if`나 `for` 블록 안에서만 사는 누적은 대상이 아닙니다.
 한 번만 쓰면 실제 쓰는 좁은 스코프에서 바로 계산합니다.
 조건이 둘 이상이면 삼항을 겹치지 않고 조건부 스프레드나 `filter`로 한 번에 조립합니다.
 분기와 보정이 얽혀 좁은 스코프에 담기지 않으면 떼어 낼지를 다시 봅니다.
-그 판정은 `functions-extract-helpers-only-when-the-boundary-is-real`가 합니다.
-떼어 낸 함수의 이름은 `functions-name-functions-by-what-comes-out`가 정하고,
+그 판정은 `functions-extract-helpers-only-when-the-boundary-is-real`이 합니다.
+떼어 낸 함수의 이름은 `functions-name-functions-by-what-comes-out`이 정하고,
 중간값에 이름을 붙일지는 `functions-name-a-value-only-when-it-is-reused`가 정합니다.
 
 **Incorrect (넓은 스코프에서 명령형으로 누적 조립):**
@@ -1320,13 +1320,13 @@ const visibleTabs = [
 **Impact: MEDIUM (한 번 쓸 값에 이름을 붙이지 않아 식의 출처가 쓰는 자리에 그대로 남습니다)**
 
 부수효과 없는 순수 식의 결과를 **한 번만 쓰면 이름을 붙이지 않고 그 자리에 적습니다.**
-두 번 이상 쓰면 그 자리들을 모두 감싸는 가장 좁은 스코프에 `const`로 둡니다.
+두 번 이상 쓰면 그 자리를 모두 감싸는 가장 좁은 스코프에 `const`로 둡니다.
 
 이름을 붙이는 순간 읽는 사람은 그 값이 어디서 왔는지 확인하러 위로 올라가야 합니다.
 한 번 쓸 값이면 올라갈 이유가 없게 그 자리에 적는 편이 낫습니다.
 
 대상은 순수 식의 결과뿐입니다.
-아래는 이름을 붙이는 것이 문법이거나 순서가 뜻을 갖는 자리라 해당하지 않습니다.
+아래는 문법이 이름을 요구하거나 순서가 뜻을 갖는 자리라 해당하지 않습니다.
 
 | 대상이 아닌 것 | 이유 |
 | --- | --- |
@@ -1437,11 +1437,11 @@ const submitDraft = async (draft: Draft) => {
 
 표에 없는 도메인 동작은 그 동작의 이름을 그대로 씁니다.
 `submitOrder`, `cancelBooking`처럼 씁니다.
-표는 자주 나오는 갈래를 못 박은 것이고, 아래 금지 목록만 예외 없이 지킵니다.
+표는 자주 나오는 경우를 못 박은 것이고, 아래 금지 목록만 예외 없이 지킵니다.
 
 **이름의 첫 동사만 봅니다.** `isCheckedRow`나 `handleCheckAll`처럼 뒤에 섞인 낱말은 대상이 아닙니다.
 
-첫 동사로 쓰지 않는 것입니다.
+첫 동사로 쓰지 않는 낱말입니다.
 이름이 무엇이 나오는지 알려 주지 않습니다.
 
 `build`, `create`, `make`, `normalize`, `resolve`, `process`, `manage`, `do`, `perform`, `execute`
@@ -1493,7 +1493,7 @@ export const isAdminUser = (user: User) => { /* … */ };
 
 **Impact: HIGH**
 
-값을 다루는 관용구를 한 가지로 고정합니다. 내가 만들지 않은 배열은 제자리에서 바꾸지 않고, 반복되는 조회는 `Set`과 `Map`으로 드러냅니다.
+값을 다루는 관용구를 한 가지로 고정합니다. 이 함수가 만들지 않은 배열은 제자리에서 바꾸지 않고, 반복되는 조회는 `Set`과 `Map`으로 모읍니다.
 
 ### 4.1 Prefer Immutable Array Sorting
 
@@ -1782,7 +1782,7 @@ const responseProductList = useProductList();
 
 글자 수 제한은 두지 않지만 새 정보가 없는 문장은 쓰지 않습니다.
 내용이 한 문장으로 통하면 한 문장으로 쓰고, 읽는 사람이 배경을 알아야 하면 여러 문장으로 씁니다.
-기준은 길이가 아니라 그 주석을 읽고 이해되는지입니다.
+기준은 길이가 아니라 그 주석을 읽고 이해할 수 있는지입니다.
 문장이 몇 개든 형식은 언제나 여러 줄 블록이고 `docs-write-doc-comments-as-multiline-blocks`가 정합니다.
 
 쓰지 않는 것:
@@ -1801,7 +1801,7 @@ const responseProductList = useProductList();
 - `@deprecated`·`@example`·`@param`·`@returns`처럼 TSDoc 규격에 있는 태그만 필요할 때 씁니다.
 - 역할 태그는 선언이 바뀌어도 함께 바뀌지 않아 시간이 지나면 어긋납니다.
 
-기술 용어와 식별자는 영어로 섞어도 됩니다.
+기술 용어와 식별자는 영어를 섞어 써도 됩니다.
 다만 주석 본문이 전부 영어이면 한국어 주석으로 인정하지 않습니다.
 새로 넣거나 고친 문서 주석에는 그 선언의 목적이나 제약을 설명하는 한국어 구절이 있어야 합니다.
 필드 주석이 한국어여도 헤더 주석이 영어뿐이면 통과하지 못합니다.
@@ -1884,7 +1884,7 @@ export interface PgProductTreeProps {
 **Impact: LOW (선언 위 주석 형태가 파일마다 같아 주석을 검색하고 훑어보기 쉬워집니다)**
 
 문서 주석은 여러 줄 블록으로 고정합니다.
-`/**`, `*`, `*/`를 각각 줄로 나눕니다.
+`/**`, `*`, `*/`를 각각 다른 줄에 둡니다.
 
 - `/** 한 줄 */` 형태는 쓰지 않습니다.
 - 선언이 무엇인지 설명할 때는 `//`를 쓰지 않습니다.

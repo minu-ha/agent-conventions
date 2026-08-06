@@ -1,8 +1,8 @@
 ---
 title: Give Interactive Elements an Accessible Name
-titleKo: 누르고 입력하는 요소에는 읽히는 이름을 붙입니다
+titleKo: 누르고 입력하는 요소에는 접근 가능한 이름을 붙입니다
 impact: HIGH
-impactDescription: 화면 낭독기와 테스트가 요소를 이름으로 찾을 수 있습니다
+impactDescription: 스크린 리더와 테스트가 요소를 이름으로 찾을 수 있습니다
 appliesWhen:
   - 클릭이나 입력을 받는 요소를 새로 만들 때
   - 글자 없이 아이콘만 있는 버튼을 추가할 때
@@ -11,9 +11,9 @@ tags: composition, accessibility
 
 ## Give Interactive Elements an Accessible Name
 
-**Impact: HIGH (화면 낭독기와 테스트가 요소를 이름으로 찾을 수 있습니다)**
+**Impact: HIGH (스크린 리더와 테스트가 요소를 이름으로 찾을 수 있습니다)**
 
-클릭이나 입력을 받는 요소는 읽히는 이름을 갖습니다.
+클릭이나 입력을 받는 요소는 접근 가능한 이름을 갖습니다.
 
 | 요소 | 이름을 주는 방법 |
 | --- | --- |

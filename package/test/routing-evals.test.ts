@@ -207,7 +207,7 @@ const reactRuleUniverse = [
 const typescriptRuleRouting = {
 	"types-reuse-existing-contracts-before-new-types": {
 		appliesWhen:
-			"뜻이 같은 기존 타입, 인터페이스, 스키마가 있는데 형태를 새로 선언·변경·복제·파생할 때. 같은 형태를 두 번 선언했다가 넣거나 뺄 때. 제외: 맞는 후보가 없거나 소유자만 옮긴 경우, 그대로인 계약을 새 자리에서 쓰는 경우. 제외: 고칠 수 없는 형태를 그대로 쓰는 경우.",
+			"뜻이 같은 기존 타입, 인터페이스, 스키마가 있는데 형태를 새로 선언·변경·복제·파생할 때. 같은 형태를 두 번 선언했다가 넣거나 뺄 때. 제외: 맞는 후보가 없거나 소유자만 옮긴 경우. 제외: 그대로인 계약을 새 자리에서 쓰는 경우. 제외: 고칠 수 없는 형태를 그대로 쓰는 경우.",
 		reviewWith: ["types-document-custom-types-and-shapes"],
 	},
 	"types-prefer-function-variable-types-over-parameter-annotations": {
@@ -226,12 +226,12 @@ const typescriptRuleRouting = {
 		reviewWith: [],
 	},
 	"types-narrow-unknown-instead-of-asserting": {
-		appliesWhen: "`as` 단언, `!` 비-널 단언, `any`, `@ts-expect-error`를 추가할 때. 앱 밖에서 들어온 값을 타입 붙여 쓰기 시작할 때.",
+		appliesWhen: "`as` 단언, `!` `null` 아님 단언, `any`, `@ts-expect-error`를 추가할 때. 앱 밖에서 들어온 값을 타입 붙여 쓰기 시작할 때.",
 		reviewWith: ["docs-justify-convention-exceptions-with-a-reason-comment", "tooling-configure-biome-to-enforce-these-rules"],
 	},
 	"types-replace-enum-with-as-const-objects": {
 		appliesWhen:
-			"`enum`이나 타입과 실행 양쪽에서 함께 쓰는 값 묶음을 추가·변경할 때. 제외: 외부 패키지가 내보낸 `enum` 값을 그대로 읽어 쓰는 경우.",
+			"`enum`이나 타입과 실행 양쪽에서 함께 쓰는 값 집합을 추가·변경할 때. 제외: 외부 패키지가 내보낸 `enum` 값을 그대로 읽어 쓰는 경우.",
 		reviewWith: [],
 	},
 	"naming-centralize-shared-config-namespaces": {
@@ -253,7 +253,7 @@ const typescriptRuleRouting = {
 	},
 	"naming-use-direct-imports-and-public-entry-points": {
 		appliesWhen:
-			"가져오기, 내보내기, 배럴, 공용 진입점, 소유자 보조 모듈의 경계를 추가·변경할 때. 같은 경로에서 값과 타입 중 무엇을 가져올지 추가·삭제·전환할 때.",
+			"가져오기, 내보내기, `index.ts` 배럴, 공용 진입점, 소유자 보조 모듈의 경계를 추가·변경할 때. 같은 경로에서 값과 타입 중 무엇을 가져올지 추가·삭제·전환할 때.",
 		reviewWith: ["naming-restrict-absolute-aliases-to-layer-roots"],
 	},
 	"naming-restrict-absolute-aliases-to-layer-roots": {
@@ -280,11 +280,11 @@ const typescriptRuleRouting = {
 		reviewWith: ["functions-place-and-promote-support-functions", "docs-require-header-jsdoc-on-key-declarations"],
 	},
 	"functions-place-and-promote-support-functions": {
-		appliesWhen: "보조 함수를 둘 파일이나 폴더를 정할 때. `shared/` 아래로 파일을 옮기거나 `util.*`에 항목을 추가할 때.",
+		appliesWhen: "보조 함수를 어느 파일이나 폴더에 둘지 정할 때. `shared/` 아래로 파일을 옮기거나 `util.*`에 항목을 추가할 때.",
 		reviewWith: [],
 	},
 	"functions-avoid-imperative-assembly-in-wide-scopes": {
-		appliesWhen: "모듈 최상위나 함수 본문 전체를 덮는 스코프에서 `let` 재대입, 배열 `push`, 조건부 누적으로 값을 만들 때.",
+		appliesWhen: "모듈 최상위나 함수 본문 전체를 덮는 스코프에서 `let` 재할당, 배열 `push`, 조건부 누적으로 값을 만들 때.",
 		reviewWith: ["functions-extract-helpers-only-when-the-boundary-is-real"],
 	},
 	"functions-name-a-value-only-when-it-is-reused": {
@@ -447,7 +447,7 @@ const cssRuleRouting = {
 		reviewWith: ["selector-use-pseudo-classes-for-dom-owned-states"],
 	},
 	"selector-separate-domain-state-modifiers-from-dom-interaction-states": {
-		appliesWhen: "앱 상태 수정자와 hover, focus, disabled 같은 DOM 상호작용 상태를 추가·변경할 때. 포커스 링을 수정할 때.",
+		appliesWhen: "앱 상태 수정자와 `:hover`, `:focus-visible`, `:disabled` 같은 DOM 상호작용 상태를 추가·변경할 때. 포커스 링을 수정할 때.",
 		reviewWith: ["composition-do-not-build-structural-variants-with-modifiers"],
 	},
 	"values-always-provide-css-variable-fallbacks": {
@@ -468,7 +468,7 @@ const cssRuleRouting = {
 		reviewWith: ["values-always-provide-css-variable-fallbacks", "values-tokenize-repeated-visual-values"],
 	},
 	"layout-group-breakpoints-at-the-file-bottom": {
-		appliesWhen: "`@media` 분기점을 추가하거나 옮길 때. 화면 폭에 따라 값이 달라지는 선언을 넣을 때.",
+		appliesWhen: "`@media` 브레이크포인트를 추가하거나 옮길 때. 화면 폭에 따라 값이 달라지는 선언을 넣을 때.",
 		reviewWith: [
 			"layout-reach-for-intrinsic-sizing-before-breakpoints",
 			"selector-declare-each-class-in-one-block",
@@ -477,11 +477,11 @@ const cssRuleRouting = {
 	},
 	"layout-keep-layout-intent-explicit": {
 		appliesWhen:
-			"`sticky`·`fixed`, `z-index`, 강제 `width`·`height` 또는 부모·자식 레이아웃 책임을 추가·변경할 때. 대체 화면의 컨테이너나 높이를 정할 때. 제외: 같은 요소를 기본과 수정자로 나누면서 기존 `display`·여백 선언을 값 그대로 옮기는 경우.",
+			"`sticky`·`fixed`, `z-index`, 강제 `width`·`height`, 부모·자식 레이아웃 책임을 추가·변경할 때. 로딩 대체 화면의 컨테이너나 높이를 정할 때. 제외: 같은 요소를 기본과 수정자로 나누면서 기존 `display`·여백 선언을 값 그대로 옮기는 경우.",
 		reviewWith: ["values-declare-stacking-layers-as-tokens"],
 	},
 	"layout-reach-for-intrinsic-sizing-before-breakpoints": {
-		appliesWhen: "`@media` 분기점을 새로 넣으려 할 때. 폭에 따라 줄바꿈, 열 개수, 크기가 달라져야 할 때.",
+		appliesWhen: "`@media` 브레이크포인트를 새로 넣으려 할 때. 폭에 따라 줄바꿈, 열 개수, 크기가 달라져야 할 때.",
 		reviewWith: ["layout-keep-layout-intent-explicit", "layout-group-breakpoints-at-the-file-bottom"],
 	},
 	"a11y-always-provide-a-visible-focus-indicator": {
@@ -490,7 +490,7 @@ const cssRuleRouting = {
 	},
 	"a11y-namespace-keyframes-and-respect-reduced-motion": {
 		appliesWhen:
-			"`@keyframes` 이름이나 애니메이션 지속 시간, 감속 곡선을 선언하거나 바꿀 때. `animation`이나 `transition`으로 움직임을 새로 넣을 때.",
+			"`@keyframes` 이름이나 애니메이션 지속 시간, 이징을 선언하거나 바꿀 때. `animation`이나 `transition`으로 움직임을 새로 넣을 때.",
 		reviewWith: ["values-tokenize-repeated-visual-values", "tooling-configure-stylelint-to-enforce-these-rules"],
 	},
 	"tooling-configure-stylelint-to-enforce-these-rules": {
@@ -542,11 +542,11 @@ const reactRuleRouting = {
 	},
 	"data-name-query-and-mutation-bindings-consistently": {
 		appliesWhen:
-			"리액트 Query 쿼리·뮤테이션 훅의 로컬 바인딩을 추가하거나 이름을 바꿀 때. 쿼리나 뮤테이션 훅의 반환값을 새 지역 변수에 담을 때.",
+			"React Query 쿼리·뮤테이션 훅의 지역 바인딩을 추가하거나 이름을 바꿀 때. 쿼리나 뮤테이션 훅의 반환값을 새 지역 변수에 담을 때.",
 		reviewWith: ["data-preserve-origin-chaining"],
 	},
 	"data-shape-query-data-with-select": {
-		appliesWhen: "서버 응답의 목록·항목·메타 등을 렌더에서 가공하거나 반복 소비할 때. 리액트 Query `select`의 결과 형태를 추가·변경할 때.",
+		appliesWhen: "서버 응답의 목록·항목·메타 등을 렌더에서 가공하거나 반복 소비할 때. React Query `select`의 결과 형태를 추가·변경할 때.",
 		reviewWith: ["data-name-query-and-mutation-bindings-consistently", "data-preserve-origin-chaining"],
 	},
 	"data-combine-multiple-queries-with-combine": {
@@ -606,7 +606,7 @@ const reactRuleRouting = {
 	},
 	"strategy-prefer-children-over-render-props": {
 		appliesWhen:
-			"공용 컴포넌트에 머리말·꼬리말·동작 같은 정적 슬롯을 추가·변경할 때. 렌더 프롭을 추가·변경하는데 실행 환경 데이터 주입이 꼭 필요한지 불분명할 때.",
+			"공용 컴포넌트에 헤더·푸터·동작 같은 정적 슬롯을 추가·변경할 때. 렌더 프롭을 추가·변경하는데 실행 환경 데이터 주입이 꼭 필요한지 불분명할 때.",
 		reviewWith: [],
 	},
 	"composition-read-props-without-destructuring": {
@@ -616,7 +616,7 @@ const reactRuleRouting = {
 	},
 	"composition-do-not-define-components-inside-components": {
 		appliesWhen:
-			"컴포넌트 본문 안에 JSX를 반환하는 로컬 함수·컴포넌트를 추가하거나 옮길 때. 재렌더 시 재마운트·focus 초기화 징후를 다룰 때.",
+			"컴포넌트 본문 안에 JSX를 반환하는 로컬 함수·컴포넌트를 추가하거나 옮길 때. 재렌더 시 재마운트·포커스 초기화 징후를 다룰 때.",
 		reviewWith: [],
 	},
 	"composition-named-handlers-over-inline": {
@@ -634,11 +634,11 @@ const reactRuleRouting = {
 	},
 	"composition-declare-props-interface-above-the-component": {
 		appliesWhen:
-			"컴포넌트 프롭스 타입을 새로 선언할 때. 프롭스 타입의 위치나 공개 범위를 바꿀 때. 제외: 같은 파일에서만 쓰는 화면 지역 프롭스를 `export` 하지 않는 경우.",
+			"컴포넌트 프롭스 타입을 새로 선언할 때. 프롭스 타입의 위치나 공개 범위를 바꿀 때. 제외: 같은 파일에서만 쓰는 화면 지역 프롭스를 `export`하지 않는 경우.",
 		reviewWith: ["composition-read-props-without-destructuring", "typescript/types-document-custom-types-and-shapes"],
 	},
 	"composition-name-fragments-explicitly": {
-		appliesWhen: "JSX에서 여러 요소를 감쌀 조각 문법을 추가·변경할 때. 조각에 `key`를 붙이거나 떼어 낼 때.",
+		appliesWhen: "JSX에서 여러 요소를 `Fragment`나 `<>`로 감싸는 문법을 추가·변경할 때. `Fragment`에 `key`를 붙이거나 떼어 낼 때.",
 		reviewWith: [],
 	},
 	"composition-render-one-branch-with-and": {
@@ -690,7 +690,7 @@ const reactRuleRouting = {
 	},
 	"state-calculate-derived-values-during-render": {
 		appliesWhen:
-			"현재 프롭스·상태·검색 매개변수·응답에서 계산 가능한 값을 별도 상태와 이펙트로 동기화할 때. 파생값 동기화 이펙트를 제거할 때.",
+			"현재 프롭스·상태·search 파라미터·응답에서 계산 가능한 값을 별도 상태와 이펙트로 동기화할 때. 파생값 동기화 이펙트를 제거할 때.",
 		reviewWith: ["screen-keep-derived-values-close"],
 	},
 	"state-choose-state-tools-by-source-of-truth": {
@@ -736,7 +736,7 @@ const reactRuleRouting = {
 	},
 	"perf-use-lazy-state-initializers-for-expensive-defaults": {
 		appliesWhen:
-			"`useState` 초기값에 localStorage 파싱, 인덱스 생성, 큰 배열 정규화 같은 비용 있는 계산을 넣을 때. 제외: 숫자·문자열 같은 단순 값이나 프롭을 그대로 초기값에 넣는 경우.",
+			"`useState` 초기값에 `localStorage` 파싱, 인덱스 생성, 큰 배열 정규화 같은 비용이 큰 계산을 넣을 때. 제외: 숫자·문자열 같은 단순 값이나 프롭을 그대로 초기값에 넣는 경우.",
 		reviewWith: ["perf-avoid-defensive-memoization"],
 	},
 	"perf-defer-heavy-renders-with-measured-evidence": {
@@ -2837,7 +2837,7 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	const otherOwnerApi = await readRule("css", "ownership-change-other-owners-through-their-api");
 	assertMentions(
 		otherOwnerApi,
-		[/세 갈래를 순서대로 봅니다/, /막다른 길이 아니라 마지막 선택지입니다/, /최상위까지만 닿는 것은 제약이 아니라 경계입니다/],
+		[/세 가지를 순서대로 봅니다/, /막다른 길이 아니라 마지막 선택지입니다/, /최상위까지만 닿는 것은 제약이 아니라 경계입니다/],
 		"otherOwnerApi",
 	);
 

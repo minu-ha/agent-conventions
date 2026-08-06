@@ -18,7 +18,7 @@ tags: strategy, composition
 
 공개 부품은 두 경우만 엽니다.
 
-- 부품이 없으면 소비자가 그 자리에 자기 JSX를 넣을 수 없는 영역
+- 부품이 없으면 사용처가 그 자리에 자기 JSX를 넣을 수 없는 영역
 - 공용 컨텍스트나 동작을 직접 쓰는 영역
 
 그 밖은 숨깁니다.
@@ -34,7 +34,7 @@ tags: strategy, composition
 **Incorrect (내부 구조를 전부 공개해 계약으로 굳힘):**
 
 ```tsx
-// 소비자가 끼워 넣을 자리가 없는 래퍼와 여백 보정용 DOM까지 이름이 붙어 나갔다
+// 사용처가 끼워 넣을 자리가 없는 래퍼와 여백 보정용 DOM까지 이름이 붙어 나갔다
 const UiPanelHeaderInner = (props: UiPanelPartProps) => {
 	return <div className={clsx("ui_panel__headerInner")}>{props.children}</div>;
 };

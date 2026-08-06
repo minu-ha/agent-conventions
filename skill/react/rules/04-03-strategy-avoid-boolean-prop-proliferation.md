@@ -57,7 +57,7 @@ export const WgProductToolbar = (props: WgProductToolbarProps) => {
 
 ```tsx
 /**
- * 툴바 껍데기 부품
+ * 툴바 바깥 틀 부품
  */
 export interface WgProductToolbarRootProps {
 	/**
@@ -70,7 +70,7 @@ const WgProductToolbarRoot = (props: WgProductToolbarRootProps) => {
 	return <header className={clsx("wg_productToolbar__root")}>{props.children}</header>;
 };
 
-// 조합은 아래 두 변형이 이미 제공하므로 소비자가 직접 조립할 `Root`만 공개한다
+// 조합은 아래 두 변형이 이미 제공하므로 사용처가 직접 조립할 `Root`만 공개한다
 export const WgProductToolbar = {
 	Root: WgProductToolbarRoot,
 } as const;

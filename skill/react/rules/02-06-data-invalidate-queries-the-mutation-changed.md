@@ -1,6 +1,6 @@
 ---
 title: Invalidate the Queries a Mutation Changed
-titleKo: 뮤테이션이 바꾼 쿼리는 무효화로 다시 맞춥니다
+titleKo: 뮤테이션이 바꾼 쿼리는 `invalidateQueries`로 다시 맞춥니다
 impact: HIGH
 impactDescription: 저장 뒤 화면이 옛 서버 상태를 계속 보여 주지 않습니다
 appliesWhen:

@@ -26,12 +26,12 @@ tags: screen
 
 추출해도 되는 경계는 이 규칙이 정하지 않습니다.
 컴포넌트는 `screen-extract-local-section-components-for-runtime-boundaries`가,
-함수는 `typescript/functions-extract-helpers-only-when-the-boundary-is-real`가 판정합니다.
+함수는 `typescript/functions-extract-helpers-only-when-the-boundary-is-real`이 판정합니다.
 
 먼저 시도한 뒤에도 남는 금지 구조:
 
 - 한 컴포넌트, 한 핸들러, 한 쿼리 `select`만 쓰는 보조 함수를 보조 모듈에 쌓는 구조
-- 내보내기 보조 함수가 다른 내보내기 보조 함수 하나만 위해 존재하는 구조
+- 내보내기 보조 함수가 다른 내보내기 보조 함수 하나만을 위해 존재하는 구조
 - 이름이 그럴듯하다는 이유로 흐름을 파일 왕복 뒤에 숨기는 구조
 
 **Incorrect (호출자가 한 화면뿐인데 공용 훅으로 먼저 빼냄):**

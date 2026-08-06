@@ -41,8 +41,8 @@ tags: ownership, scope, third-party
 대신 중첩을 몇 겹까지 열지는 `selector-limit-nesting-block-depth` 규칙이 정합니다.
 
 우리가 소유한 클래스라면 그 클래스를 선언한 파일에서 고치는 편이 낫습니다.
-`ownership-change-other-owners-through-their-api` 규칙의 세 갈래를 먼저 보고
-그 세 갈래에 안 맞을 때 이 규칙으로 옵니다.
+`ownership-change-other-owners-through-their-api` 규칙의 세 가지를 먼저 보고
+그 세 가지에 안 맞을 때 이 규칙으로 옵니다.
 
 기계 검증은 `selector-disallowed-list`가 최상위에 홀로 둔 남의 클래스를 잡습니다.
 설정 전문은 `tooling-configure-stylelint-to-enforce-these-rules` 규칙이 정합니다.

@@ -13,8 +13,8 @@
 
 린터 버전도 함께 확인합니다.
 리액트 19.2 문서는 `eslint-plugin-react-hooks`를 최신 버전으로 올리라고 요구하고,
-`typescript/tooling-configure-biome-to-enforce-these-rules`가 세우는 `biome`도
-최근 버전에서야 `useEffectEvent`를 알아봅니다.
+`typescript/tooling-configure-biome-to-enforce-these-rules`가 설정하는 `biome`도
+최근 버전에서야 `useEffectEvent`를 인식합니다.
 낡은 버전에서는 아래 Correct 예제가 훅 규칙 위반으로 표시됩니다.
 
 `useEffectEvent`로 감싼 콜백에는 DOM 이벤트 매개변수나 커링을 덧붙이지 않습니다.

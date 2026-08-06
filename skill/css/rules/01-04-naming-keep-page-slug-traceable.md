@@ -1,6 +1,6 @@
 ---
 title: Keep Page Slugs Traceable to Their Screen
-titleKo: 식별자만 보고 어느 화면인지 알 수 있게 짓습니다
+titleKo: `pg_*` 식별자만 보고 어느 화면인지 알 수 있게 짓습니다
 impact: MEDIUM
 impactDescription: 클래스명만 보고 어느 화면의 클래스인지 되짚습니다
 appliesWhen:

@@ -27,7 +27,7 @@ tags: ownership, widget, naming
 
 **먼저 `page`인지 봅니다.** 다음 중 하나라도 해당하면 `page`입니다.
 
-- 프롭스 타입이 그 화면의 응답·뷰모델 타입이나 라우트 검색 매개변수를 참조합니다.
+- 프롭스 타입이 그 화면의 응답·뷰모델 타입이나 라우트 search 파라미터를 참조합니다.
 - 쿼리, 뮤테이션, 라우터 훅, 화면 스토어를 직접 부릅니다.
 - `Suspense`, 폼 프로바이더, 모달을 직접 소유합니다.
 
@@ -73,7 +73,7 @@ export const PgSalesLegendGlyph = (props: PgSalesLegendGlyphProps) => {
  */
 export interface UiButtonProps {
 	/**
-	 * 버튼 안에 그릴 내용. 이 글자가 화면 낭독기가 읽는 이름이 된다
+	 * 버튼 안에 그릴 내용. 이 글자가 스크린 리더가 읽는 이름이 된다
 	 */
 	children: ReactNode;
 	/**

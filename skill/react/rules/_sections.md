@@ -41,7 +41,7 @@
 ## 6. Screen File Discipline (screen)
 **TitleKo:** 화면 파일 규율
 **Impact:** MEDIUM-HIGH
-**Description:** 라우트 진입은 화면 흐름을 분명하게 보여줘야 하며, 자기 상태나 비동기를 직접 가진 섹션만 떼어냅니다.
+**Description:** 라우트 진입은 화면 흐름을 분명하게 보여 줘야 하며, 자기 상태나 비동기를 직접 가진 섹션만 떼어 냅니다.
   파생값은 쓰는 자리에서 계산하고, 짐작으로 미리 빼내지 않습니다.
 
 ## 7. Runtime Boundaries (runtime)
@@ -60,7 +60,7 @@
 ## 9. Events and Interaction Flow (events)
 **TitleKo:** 이벤트와 상호작용 흐름
 **Impact:** HIGH
-**Description:** 이벤트 핸들러는 이름이 예측 가능하고 추가 인자를 커링으로 넘겨야 하며, 사용자 동작은 이펙트가
+**Description:** 이벤트 핸들러는 이름이 예측 가능하고 추가 인자를 커링으로 넘겨야 하며, 사용자 액션은 이펙트가
   아니라 핸들러에서 실행해야 합니다.
   핸들러 흐름은 재사용 근거가 생길 때까지 그 자리에 둡니다.
 
@@ -73,7 +73,7 @@
 ## 11. Accessibility (a11y)
 **TitleKo:** 접근성
 **Impact:** HIGH
-**Description:** 누르고 입력하는 요소는 화면 낭독기와 테스트가 이름으로 찾을 수 있어야 합니다.
+**Description:** 누르고 입력하는 요소는 스크린 리더와 테스트가 이름으로 찾을 수 있어야 합니다.
   보이는 글자가 곧 그 이름이고, 글자가 없으면 대체 이름을 따로 답니다.
 
 ## 12. Documentation and Comments (docs)

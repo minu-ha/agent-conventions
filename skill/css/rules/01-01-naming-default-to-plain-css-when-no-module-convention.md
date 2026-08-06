@@ -1,6 +1,6 @@
 ---
 title: Default to Plain CSS Unless the Project Explicitly Standardizes on CSS Modules
-titleKo: 프로젝트 표준이 없으면 일반 CSS를 씁니다
+titleKo: 프로젝트 표준이 없으면 CSS Modules 대신 일반 CSS를 씁니다
 impact: MEDIUM-HIGH
 impactDescription: 클래스명이 전역에서 고유해야 범위_식별자로 소유자를 되짚을 수 있습니다
 appliesWhen:

@@ -1,6 +1,6 @@
 ---
 title: Render a Single Branch With `&&`, Not a Ternary
-titleKo: 한 갈래만 그릴 때는 삼항 대신 `&&`를 씁니다
+titleKo: 한 분기만 그릴 때는 삼항 대신 `&&`를 씁니다
 impact: HIGH
 impactDescription: 조건부 렌더링 형태가 하나로 고정되고 쓰지 않는 `: null`이 사라집니다
 appliesWhen:
@@ -13,7 +13,7 @@ tags: composition, jsx
 
 **Impact: HIGH (조건부 렌더링 형태가 하나로 고정되고 쓰지 않는 `: null`이 사라집니다)**
 
-JSX 안에서 그릴 갈래가 **하나면** `&&`를 씁니다.
+JSX 안에서 그릴 분기가 **하나면** `&&`를 씁니다.
 `조건 ? <X /> : null`로 쓰지 않습니다.
 `: null`은 아무것도 안 하면서 눈이 한 번 더 멈추는 자리를 만듭니다.
 
@@ -22,7 +22,7 @@ JSX 안에서 그릴 갈래가 **하나면** `&&`를 씁니다.
 조건을 이른 반환으로 먼저 걸러 냅니다.
 
 **둘 중 하나를 그릴 때만** 삼항을 씁니다.
-그때는 두 갈래가 다 뜻을 갖습니다.
+그때는 두 분기가 다 뜻을 갖습니다.
 
 | 그리는 것 | 쓰는 것 |
 | --- | --- |
@@ -38,12 +38,12 @@ JSX 안에서 그릴 갈래가 **하나면** `&&`를 씁니다.
 빈 문자열, `undefined`, `null`은 리액트가 아무것도 그리지 않습니다.
 
 삼항을 여러 개 겹치지 않습니다.
-갈래가 셋 이상이면 조건을 이름 붙인 값으로 꺼내거나 섹션 컴포넌트로 나눕니다.
+분기가 셋 이상이면 조건을 이름 붙인 값으로 꺼내거나 섹션 컴포넌트로 나눕니다.
 어느 쪽인지는 `screen-extract-local-section-components-for-runtime-boundaries`가 정합니다.
 
 숨긴 하위 트리의 상태를 살려야 하면 `composition-use-activity-only-to-preserve-mounted-subtrees`를 봅니다.
 
-**Incorrect (한 갈래인데 삼항과 `: null`을 씀):**
+**Incorrect (한 분기인데 삼항과 `: null`을 씀):**
 
 ```tsx
 return (
@@ -60,7 +60,7 @@ return (
 return <section>{selectedRows.length && <PgProductBulkActionBar />}</section>;
 ```
 
-**Correct (한 갈래는 `&&`, 왼쪽은 불리언):**
+**Correct (한 분기는 `&&`, 왼쪽은 불리언):**
 
 ```tsx
 return (
@@ -83,7 +83,7 @@ const PgProductPanel = (props: PgProductPanelProps) => {
 };
 ```
 
-**Correct (두 갈래가 다 뜻을 가지면 삼항):**
+**Correct (두 분기가 다 뜻을 가지면 삼항):**
 
 ```tsx
 return filteredCategoryNodes.length > 0 ? (

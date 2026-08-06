@@ -1,10 +1,10 @@
 ---
 title: Use Direct Imports and Dedicated Public Entry Points
-titleKo: 필요한 파일에서 바로 가져오고 공개 진입점만 씁니다
+titleKo: `index.ts` 배럴을 만들지 않고 필요한 파일에서 바로 가져옵니다
 impact: MEDIUM-HIGH
 impactDescription: 배럴이나 모호한 재노출 계층에 기대지 않고 가져오기 소유를 드러냅니다
 appliesWhen:
-  - 가져오기, 내보내기, 배럴, 공용 진입점, 소유자 보조 모듈의 경계를 추가·변경할 때
+  - 가져오기, 내보내기, `index.ts` 배럴, 공용 진입점, 소유자 보조 모듈의 경계를 추가·변경할 때
   - 같은 경로에서 값과 타입 중 무엇을 가져올지 추가·삭제·전환할 때
 reviewWith: naming-restrict-absolute-aliases-to-layer-roots
 tags: naming

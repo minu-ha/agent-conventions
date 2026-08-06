@@ -10,9 +10,9 @@
 
 | 토큰 | 값 | 무엇이 오는가 |
 | --- | --- | --- |
-| `--app-z-index-base` | `0` | 보통 흐름 |
-| `--app-z-index-sticky` | `100` | 붙어 있는 머리말, 도구 모음 |
-| `--app-z-index-overlay` | `200` | 모달, 서랍, 뒤 배경 |
+| `--app-z-index-base` | `0` | 일반 흐름 |
+| `--app-z-index-sticky` | `100` | `sticky` 헤더, 툴바 |
+| `--app-z-index-overlay` | `200` | 모달, 드로어, 백드롭 |
 | `--app-z-index-popper` | `300` | 툴팁, 드롭다운, 알림 |
 
 새 층이 필요해 보이면 먼저 넷 중 하나에 들어가는지 봅니다.

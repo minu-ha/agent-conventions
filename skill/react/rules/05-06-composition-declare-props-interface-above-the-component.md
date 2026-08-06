@@ -6,7 +6,7 @@ impactDescription: 계약을 먼저 읽고 구현으로 내려가는 순서가 �
 appliesWhen:
   - 컴포넌트 프롭스 타입을 새로 선언할 때
   - 프롭스 타입의 위치나 공개 범위를 바꿀 때
-  - 제외: 같은 파일에서만 쓰는 화면 지역 프롭스를 `export` 하지 않는 경우
+  - 제외: 같은 파일에서만 쓰는 화면 지역 프롭스를 `export`하지 않는 경우
 reviewWith: composition-read-props-without-destructuring, typescript/types-document-custom-types-and-shapes
 tags: composition, props
 ---
@@ -66,7 +66,7 @@ export interface UiPanelHeaderProps {
 }
 
 /**
- * 패널 머리말 부품
+ * 패널 헤더 부품
  */
 export const UiPanelHeader = (props: UiPanelHeaderProps) => {
 	return <header className={clsx("ui_panel__header")}>{props.children}</header>;
@@ -95,13 +95,13 @@ export const UiBadge = (props: UiBadgeProps) => {
 
 ```tsx
 /**
- * 패널 머리말 부품
+ * 패널 헤더 부품
  *
- * 제목과 우측 동작 영역을 소비자가 직접 조립한다.
+ * 제목과 우측 동작 영역을 사용처가 직접 조립한다.
  */
 export interface UiPanelHeaderProps {
 	/**
-	 * 머리말 줄에 늘어놓을 제목과 동작
+	 * 헤더 줄에 늘어놓을 제목과 동작
 	 */
 	children: ReactNode;
 }

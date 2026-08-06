@@ -4,7 +4,7 @@ titleKo: 정적 조립에서는 렌더 프롭 대신 `children`을 씁니다
 impact: MEDIUM
 impactDescription: 부모가 콜백으로 값을 내려보낼 필요가 없으면 조립이 읽기 쉬워집니다
 appliesWhen:
-  - 공용 컴포넌트에 머리말·꼬리말·동작 같은 정적 슬롯을 추가·변경할 때
+  - 공용 컴포넌트에 헤더·푸터·동작 같은 정적 슬롯을 추가·변경할 때
   - 렌더 프롭을 추가·변경하는데 실행 환경 데이터 주입이 꼭 필요한지 불분명할 때
 tags: strategy, composition, components
 ---
@@ -46,7 +46,7 @@ export const UiPanel = (props: UiPanelProps) => {
  */
 export interface UiPanelProps {
 	/**
-	 * 그 부품 자리에 소비자가 넣을 내용
+	 * 그 부품 자리에 사용처가 넣을 내용
 	 */
 	children: ReactNode;
 }

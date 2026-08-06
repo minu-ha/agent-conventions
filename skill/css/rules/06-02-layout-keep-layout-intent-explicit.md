@@ -4,8 +4,8 @@ titleKo: 레이아웃 의도가 클래스명과 선언에서 읽히게 씁니다
 impact: MEDIUM
 impactDescription: DOM을 거슬러 올라가지 않고 sticky, fixed, 박스 책임을 파악합니다
 appliesWhen:
-  - `sticky`·`fixed`, `z-index`, 강제 `width`·`height` 또는 부모·자식 레이아웃 책임을 추가·변경할 때
-  - 대체 화면의 컨테이너나 높이를 정할 때
+  - `sticky`·`fixed`, `z-index`, 강제 `width`·`height`, 부모·자식 레이아웃 책임을 추가·변경할 때
+  - 로딩 대체 화면의 컨테이너나 높이를 정할 때
   - 제외: 같은 요소를 기본과 수정자로 나누면서 기존 `display`·여백 선언을 값 그대로 옮기는 경우
 reviewWith: values-declare-stacking-layers-as-tokens
 tags: layout, comments, sticky

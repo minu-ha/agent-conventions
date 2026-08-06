@@ -10,7 +10,7 @@
 이 컨벤션의 `biome` 설정도 `style/noEnum`으로 `enum` 선언을 막습니다.
 
 외부 패키지가 `enum`을 내보내고 그 값을 그대로 넘겨야 하면 그 `enum`을 씁니다.
-우리가 새로 선언하는 값 묶음만 이 규칙 대상입니다.
+우리가 새로 선언하는 값 집합만 이 규칙 대상입니다.
 
 **Requires selected:** `naming-use-consistent-file-and-symbol-naming`, `types-document-custom-types-and-shapes` · 함께 적용
 

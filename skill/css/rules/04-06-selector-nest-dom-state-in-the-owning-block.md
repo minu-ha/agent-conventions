@@ -32,11 +32,11 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 자손의 기본 블록은 조상 규칙보다 **앞에** 둡니다.
 뒤에 두면 명시도가 낮은 규칙이 높은 규칙 뒤에 오고, `no-descending-specificity` 규칙이 이를 잡습니다.
 
-지역 사용자 정의 속성으로 상태를 전달하지 않습니다.
+지역 변수로 상태를 전달하지 않습니다.
 `values-tokenize-repeated-visual-values` 규칙이 막습니다.
 
 기계 검증은 `selector-disallowed-list` 규칙이 최상위에 다시 연 상태 가상 클래스를 잡고,
-`property-disallowed-list` 규칙이 지역 사용자 정의 속성 선언을 잡습니다.
+`property-disallowed-list` 규칙이 지역 변수 선언을 잡습니다.
 
 **Incorrect (가상 클래스를 최상위 선택자로 다시 엶):**
 

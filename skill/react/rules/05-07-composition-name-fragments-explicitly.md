@@ -1,11 +1,11 @@
 ---
 title: Write Fragments as `Fragment`, Not the Shorthand
-titleKo: 빈 태그 대신 `Fragment`를 그대로 씁니다
+titleKo: `<>` 단축 문법 대신 `Fragment`를 그대로 씁니다
 impact: LOW
 impactDescription: 조각을 감싼 자리가 이름을 가져서 검색과 diff에 그대로 드러납니다
 appliesWhen:
-  - JSX에서 여러 요소를 감쌀 조각 문법을 추가·변경할 때
-  - 조각에 `key`를 붙이거나 떼어 낼 때
+  - JSX에서 여러 요소를 `Fragment`나 `<>`로 감싸는 문법을 추가·변경할 때
+  - `Fragment`에 `key`를 붙이거나 떼어 낼 때
 tags: composition, jsx
 ---
 

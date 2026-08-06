@@ -1,10 +1,10 @@
 ---
 title: Namespace Keyframes and Respect Reduced Motion
-titleKo: `@keyframes` 이름에 소유자를 붙이고 움직임 줄이기 설정을 따릅니다
+titleKo: `@keyframes` 이름에 소유자를 붙이고 `prefers-reduced-motion`을 따릅니다
 impact: CRITICAL
 impactDescription: 전역 이름이 겹쳐 남의 애니메이션이 바뀌지 않고 움직임에 민감한 사용자를 막지 않습니다
 appliesWhen:
-  - `@keyframes` 이름이나 애니메이션 지속 시간, 감속 곡선을 선언하거나 바꿀 때
+  - `@keyframes` 이름이나 애니메이션 지속 시간, 이징을 선언하거나 바꿀 때
   - `animation`이나 `transition`으로 움직임을 새로 넣을 때
 reviewWith: values-tokenize-repeated-visual-values, tooling-configure-stylelint-to-enforce-these-rules
 tags: values, motion
@@ -21,12 +21,12 @@ tags: values, motion
 | 대상 | 이름 |
 | --- | --- |
 | `@keyframes` | `<범위><식별자>__<동작>` — `pgProducts__fadeIn` |
-| `animation` 지속 시간, 감속 곡선 | 토큰 — `var(--app-motion-duration-fast)` |
+| `animation` 지속 시간, 이징 | 토큰 — `var(--app-motion-duration-fast)` |
 
-지속 시간과 감속 곡선은 값을 직접 적지 않고 토큰만 씁니다.
+지속 시간과 이징은 값을 직접 적지 않고 토큰만 씁니다.
 한 파일에서 한 번만 써도 토큰입니다. `values-tokenize-repeated-visual-values` 규칙이 그 예외를 정합니다.
 
-클래스 이름과 표기가 다릅니다.
+`@keyframes` 이름은 클래스 이름과 표기가 다릅니다.
 `-`는 `@keyframes` 이름에도 쓸 수 있지만, 클래스의 `--수정자` 표기와 섞이면
 어디까지가 이름인지 흐려지므로 범위와 식별자를 붙여 씁니다.
 `stylelint-config-standard`의 기본 패턴이 이 형태를 거부하므로

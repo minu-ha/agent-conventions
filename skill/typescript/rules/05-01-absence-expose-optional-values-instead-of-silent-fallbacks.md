@@ -1,6 +1,6 @@
 ---
 title: Expose Optional Values Instead of Silent Fallbacks
-titleKo: 없는 값을 그 자리에서 지어낸 값으로 덮지 않습니다
+titleKo: `??`와 `||` 오른쪽에 리터럴 기본값을 적지 않습니다
 impact: HIGH
 impactDescription: 그 자리에서 지어낸 값으로 덮지 않아 빠진 데이터가 드러납니다
 appliesWhen:

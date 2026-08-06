@@ -13,8 +13,8 @@
 **TitleKo:** 이름과 모듈 경계
 **Impact:** CRITICAL
 **Description:** 식별자, 가져오기, 공개 진입점, 절대경로 별칭 범위, 설정 위치가 소유자와 출처를 바로 드러내야 합니다.
-  여기서 **소유자**는 자기 폴더를 가진 모듈 하나입니다.
-  그 폴더 안 파일들은 그 소유자만 씁니다.
+  여기서 **소유자**는 자기 폴더가 있는 모듈 하나입니다.
+  그 폴더 안 파일은 그 소유자만 씁니다.
 
 ## 3. Functions and Helper Boundaries (functions)
 **TitleKo:** 함수와 보조 함수 경계
@@ -27,7 +27,7 @@
 **TitleKo:** 값과 자료구조
 **Impact:** HIGH
 **Description:** 값을 다루는 관용구를 한 가지로 고정합니다.
-  내가 만들지 않은 배열은 제자리에서 바꾸지 않고, 반복되는 조회는 `Set`과 `Map`으로 드러냅니다.
+  이 함수가 만들지 않은 배열은 제자리에서 바꾸지 않고, 반복되는 조회는 `Set`과 `Map`으로 모읍니다.
 
 ## 5. Absence and Fallback Handling (absence)
 **TitleKo:** 없는 값 다루기
@@ -36,7 +36,7 @@
   기본값으로 덮어 감추지 않고 없다는 사실을 호출부까지 남깁니다.
 
 ## 6. JSDoc and Comment Conventions (docs)
-**TitleKo:** 문서 주석과 주석 규약
+**TitleKo:** JSDoc과 주석 규약
 **Impact:** MEDIUM
 **Description:** 함수 본문 안 주석은 의도와 긴 절차의 단계를 적고 코드를 옮겨 적지 않습니다.
   선언 위 문서 주석은 어디에 붙일지, 어떤 형식으로 쓸지, 태그를 붙일지가 따로 정해져 있습니다.

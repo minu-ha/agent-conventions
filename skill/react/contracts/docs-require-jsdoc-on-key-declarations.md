@@ -1,6 +1,6 @@
 # Require Doc Comments on React Hooks, Handlers, and Key Declarations
 
-**Impact: MEDIUM (리액트가 아는 경계 선언을 동반 스킬 목록에 더해 빠뜨리지 않습니다)**
+**Impact: MEDIUM (리액트에만 있는 경계 선언을 동반 스킬 목록에 더해 빠뜨리지 않습니다)**
 
 문서 주석은 경계를 설명할 때만 붙입니다.
 코드만 봐도 아는 지역 변수에는 강제하지 않습니다.
@@ -15,7 +15,7 @@
 - 화면 이동이나 쿼리 무효화를 하는 이벤트 핸들러.
   동작이 그 하나뿐이어도 대상입니다
 
-쿼리·뮤테이션 바인딩, 핸들러, 내보낸 보조 함수와 훅, 스토어 선언의 임계값은
+쿼리·뮤테이션 바인딩, 핸들러, 내보낸 보조 함수와 훅, 스토어 선언에 붙이는 기준은
 `typescript/docs-require-header-jsdoc-on-key-declarations`가 정한 것을 그대로 씁니다.
 여기서 다시 정하지 않습니다.
 

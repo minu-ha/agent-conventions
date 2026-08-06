@@ -24,7 +24,7 @@ tags: screen, routes
 - 라이브러리, 성능: 외부 위젯의 생명주기를 소유하는 어댑터, 가상 스크롤, 전환, 지연 값
 
 흐름 제어는 섹션이 아니라 라우트 진입에 둡니다.
-그 목록은 `screen-keep-route-flow-visible`가 정합니다.
+그 목록은 `screen-keep-route-flow-visible`이 정합니다.
 
 지역 섹션 파일을 어느 폴더에 두는지는 `ownership-place-owner-files-in-role-folders`가 정합니다.
 진입 파일의 JSX에 나타나지 않는 섹션이 다른 섹션 파일 안에서 렌더되면 과하게 쪼갠 것입니다.

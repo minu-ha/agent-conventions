@@ -12,6 +12,49 @@ const maxProseWidth = 120;
 const tabIndentedFenceLanguages = new Set(["ts", "tsx", "css", "js", "json"]);
 
 /**
+ * 이 저장소가 지어냈던 역어와 그 대체어.
+ * 기준은 하나다 — MDN·React·TypeScript 한국어 문서에 역어가 있으면 그것, 없으면 통용 외래어.
+ * 그 낱말로 검색할 사람이 있는데 저장소 밖 어디에도 없는 말이면 규칙을 못 찾는다.
+ * `쌓임 맥락`, `단언`, `좁히기`는 표준 역어라 목록에 없다.
+ */
+const bannedTerms: ReadonlyArray<readonly [string, string]> = [
+	["분기점", "브레이크포인트"],
+	["감속 곡선", "이징"],
+	["쌓임 층", "`z-index` 층"],
+	["스스로 접히는", "내재적 크기"],
+	["지역 사용자 정의 속성", "지역 변수"],
+	["화면 낭독기", "스크린 리더"],
+	["머리말", "헤더"],
+	["꼬리말", "푸터"],
+	["늦춘 값", "지연 값"],
+	["갱신자", "업데이터"],
+	["사용자 동작", "사용자 액션"],
+	["검색 매개변수", "search 파라미터"],
+	["읽히는 이름", "접근 가능한 이름"],
+	["리액트 Query", "React Query"],
+	["재대입", "재할당"],
+	["미사용 매개변수", "쓰지 않는 매개변수"],
+	["써드파티", "서드파티"],
+	["비-널", "`null` 아님"],
+	["값 묶음", "값 집합"],
+];
+
+/**
+ * 받침 유무로 갈리는 조사 짝. 같은 식별자가 파일마다 다른 쪽을 쓰면 둘 중 하나가 틀린 것이다.
+ */
+const josaPairs = [
+	["이", "가"],
+	["은", "는"],
+	["을", "를"],
+	["과", "와"],
+] as const;
+
+/**
+ * 백틱으로 감싼 규칙 ID·식별자와 바로 뒤에 붙은 조사.
+ */
+const backtickedIdentifierJosa = /`([a-z][a-z0-9/-]{6,})`(이|가|은|는|을|를|과|와)(?![가-힣])/g;
+
+/**
  * @helper 한글·전각 문자를 두 칸으로 세어 표시 폭을 구한다
  */
 const displayWidth = (text: string): number => {
@@ -106,7 +149,52 @@ const collectRuleViolations = (rule: SkillRule): string[] => {
 		}
 	}
 
+	for (const [banned, replacement] of bannedTerms) {
+		if (searchableText(rule).includes(banned)) {
+			violations.push(`"${banned}"은 이 저장소만 쓰는 말이다. "${replacement}"로 쓴다`);
+		}
+	}
+
 	return violations;
+};
+
+/**
+ * @helper 금칙어를 찾을 때 훑는 텍스트. 본문과 라우팅·표시에 쓰이는 frontmatter 를 함께 본다
+ */
+const searchableText = (rule: SkillRule): string => {
+	return [rule.titleKo, rule.impactDescription, ...(rule.appliesWhenBullets ?? []), rule.body].join("\n");
+};
+
+/**
+ * @helper 같은 백틱 식별자가 규칙마다 다른 조사를 달고 있는지 모은다
+ * @description 받침은 식별자마다 하나로 정해지므로 표기가 갈리면 한쪽은 반드시 틀렸다.
+ *   어느 쪽이 맞는지는 기계가 모르지만 갈렸다는 사실은 셀 수 있다.
+ */
+const collectJosaConflicts = (document: LoadedSkillDocument): string[] => {
+	const seen = new Map<string, Map<string, string>>();
+	const conflicts: string[] = [];
+
+	for (const rule of document.rules) {
+		for (const match of rule.body.matchAll(backtickedIdentifierJosa)) {
+			const [, identifier, josa] = match;
+			const byJosa = seen.get(identifier) ?? new Map<string, string>();
+			byJosa.set(josa, rule.fileName);
+			seen.set(identifier, byJosa);
+		}
+	}
+
+	for (const [identifier, byJosa] of seen) {
+		for (const pair of josaPairs) {
+			const used = pair.filter((josa) => byJosa.has(josa));
+
+			if (used.length > 1) {
+				const where = used.map((josa) => `"${josa}"(${byJosa.get(josa)})`).join(" vs ");
+				conflicts.push(`  \`${identifier}\` 뒤 조사가 갈린다: ${where}`);
+			}
+		}
+	}
+
+	return conflicts;
 };
 
 /**
@@ -123,6 +211,8 @@ export const assertRuleDiscipline = (document: LoadedSkillDocument): void => {
 			failures.push(`  ${rule.fileName}: ${violation}`);
 		}
 	}
+
+	failures.push(...collectJosaConflicts(document));
 
 	if (failures.length > 0) {
 		throw new Error(`${document.skillName}: rule discipline 위반 ${failures.length}건\n${failures.join("\n")}`);

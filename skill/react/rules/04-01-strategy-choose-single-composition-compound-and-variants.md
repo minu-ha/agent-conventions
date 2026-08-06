@@ -68,11 +68,11 @@ export const UiProfileDialog = (props: UiProfileDialogProps) => {
 /**
  * 프로필 요약만 보여 주는 고정 구조 대화상자
  *
- * 소비자가 끼워 넣을 자리가 없어 부품으로 쪼개지 않는다.
+ * 사용처가 끼워 넣을 자리가 없어 부품으로 쪼개지 않는다.
  */
 export interface UiProfileDialogProps {
 	/**
-	 * 머리말에 그릴 제목
+	 * 헤더에 그릴 제목
 	 */
 	title: string;
 	/**
@@ -103,7 +103,7 @@ export const UiProfileDialog = (props: UiProfileDialogProps) => {
  */
 export interface UiProfileDialogPartProps {
 	/**
-	 * 그 부품 자리에 소비자가 넣을 내용
+	 * 그 부품 자리에 사용처가 넣을 내용
 	 */
 	children: ReactNode;
 }
@@ -136,7 +136,7 @@ const UiProfileDialogRoot = (props: UiProfileDialogPartProps) => {
 	const [isBodyOpen, setIsBodyOpen] = useState(true);
 
 	/**
-	 * 머리말이 부를 접기 토글. 이전 값에 기대므로 함수형으로 갱신한다
+	 * 헤더가 부를 접기 토글. 이전 값에 기대므로 함수형으로 갱신한다
 	 */
 	const toggleBody = () => {
 		setIsBodyOpen((previous) => !previous);
@@ -153,7 +153,7 @@ const UiProfileDialogHeader = (props: UiProfileDialogPartProps) => {
 	const dialog = useUiProfileDialog();
 
 	/**
-	 * 머리말을 누르면 본문을 접거나 펼침
+	 * 헤더를 누르면 본문을 접거나 펼침
 	 */
 	const handleHeaderClick: MouseEventHandler<HTMLButtonElement> = () => {
 		dialog.toggleBody();
@@ -178,7 +178,7 @@ const UiProfileDialogBody = (props: UiProfileDialogPartProps) => {
 	return <section className={clsx("ui_profileDialog__body")}>{props.children}</section>;
 };
 
-// 상태가 늘었지만 소비자가 쓰는 이름은 2단계와 같다
+// 상태가 늘었지만 사용처가 쓰는 이름은 2단계와 같다
 export const UiProfileDialog = {
 	Root: UiProfileDialogRoot,
 	Header: UiProfileDialogHeader,

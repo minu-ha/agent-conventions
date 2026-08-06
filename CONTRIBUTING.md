@@ -102,16 +102,17 @@ tags: tag1, tag2
 | `requiredOnCompletion` | 선택 | 마무리 시 항상 적용. 지금 쓰는 규칙이 없다. 새로 켤 때는 세 `SKILL.md` 3절에 `completionGate` 지시를 함께 넣는다 |
 | `tags` | 선택 | 검색용 |
 
-`titleKo` 는 영어 제목의 직역이 아니라 같은 뜻의 자연스러운 한국어로 쓴다.
-코드 식별자는 영어로 남긴다.
+`titleKo` 는 영어 제목의 직역이 아니라 같은 뜻의 자연스러운 한국어로 쓰고 `~합니다` 로 끝맺는다.
+코드 식별자는 영어로 남긴다. 그 규칙이 무엇을 보고 판정하는지가 제목에 드러나야 한다 —
+`z-index` 규칙이면 제목에 `z-index` 가 있어야 사람이 목록에서 찾는다.
 
 ```markdown
 title: Use Named Handlers Instead of Hiding Logic in JSX
-titleKo: JSX 인라인 로직을 명명된 핸들러로 분리
+titleKo: JSX 안 로직은 이름 붙인 핸들러로 뺍니다
 ```
 
 한국어 문장은 `humanizer`, `grammar-checker`, `style-guide` 스킬로 다듬는다.
-`.agents/skills/` 에 vendoring 되어 있고, 없으면 `npx skills add daleseo/korean-skills` 로 설치한다.
+`.agents/skills/` 에 복사해 두었고, 없으면 `npx skills add daleseo/korean-skills` 로 설치한다.
 어미나 문체를 이 문서에서 규정하지 않는다. 세 스킬의 판정을 따른다.
 
 `appliesWhen` 불렛은 `conventions.html` 의 "언제 적용할까요?" 목록에 그대로 노출된다.
@@ -140,7 +141,7 @@ titleKo: JSX 인라인 로직을 명명된 핸들러로 분리
 appliesWhen: 핸들러를 명명해서 써야 한다.
 
 # 좋음 — 언제 읽어야 하는지
-appliesWhen: TSX event prop 의 인라인 callback 에 분기, 비동기 호출 또는 여러 동작을 추가·수정한다.
+appliesWhen: TSX event prop 의 인라인 callback 에 분기, 비동기 호출 또는 여러 동작을 추가·수정할 때
 ```
 
 ### 3.2 requiresSelected 와 reviewWith
@@ -165,6 +166,24 @@ appliesWhen: TSX event prop 의 인라인 callback 에 분기, 비동기 호출 
   아래 계층에서 위 계층을 가리켜야 할 것 같으면 규칙 ID 대신 "프레임워크 규칙이 정한다" 처럼 skill 이름 없이 쓴다.
 - `_` 로 시작하는 파일은 생성물에서 빠진다.
 - 섹션은 파일명 prefix 로 정해지고 순서는 제목 순으로 자동 생성된다.
+
+### 3.4 낱말 고르기
+
+기술 용어를 우리말로 옮길지는 취향이 아니라 검색성 문제다.
+기준은 하나다 — **그 낱말로 찾을 사람이 있으면 밖에서도 통하는 말로 쓴다.**
+
+1. MDN · React · TypeScript 한국어 문서에 역어가 있으면 그 역어 (`쌓임 맥락`, `단언`, `좁히기`)
+2. 없으면 통용 외래어 (`스크린 리더`, `브레이크포인트`, `이징`, `헤더`)
+3. 코드에 문자열로 있는 것은 그대로 (`z-index`, `@media`, `useMemo`)
+
+저장소가 지어낸 말은 쓰지 않는다. 밖 어디에도 없어서 그 낱말로는 규칙을 못 찾는다.
+`rule-discipline.ts` 의 `bannedTerms` 가 이미 걸러 낸 것들을 막고, 새로 발견하면 거기 추가한다.
+
+한 개념은 저장소 전체에서 한 이름으로 부른다.
+같은 것을 `지역 변수` 와 `지역 사용자 정의 속성` 으로 나눠 부르면 규칙끼리 참조할 때 같은 것인지 확신할 수 없다.
+
+백틱 친 식별자 뒤 조사는 발음의 받침을 따른다 — `-is-real` 은 [리얼] 이라 `이`, `-select` 는 [셀렉트] 라 `가`.
+같은 식별자가 파일마다 다른 조사를 달면 `validate` 가 막는다. 어느 쪽이 맞는지는 사람이 정한다.
 
 ---
 

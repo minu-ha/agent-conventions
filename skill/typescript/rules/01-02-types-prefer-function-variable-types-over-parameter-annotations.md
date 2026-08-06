@@ -1,6 +1,6 @@
 ---
 title: Prefer Function Variable Types Over Parameter Annotations
-titleKo: 쓸 계약이 있으면 함수 전체에 타입을 붙입니다
+titleKo: 매개변수마다 표기하지 않고 함수를 담는 변수에 타입을 붙입니다
 impact: MEDIUM-HIGH
 impactDescription: 계약을 한 자리에서 읽을 수 있고 같은 시그니처를 여러 곳에 베끼지 않습니다
 appliesWhen:
@@ -26,7 +26,7 @@ tags: types
 이름 하나로 매개변수와 반환값이 함께 정해져서 계약을 한 자리에서 읽습니다.
 이미 있는 인터페이스, 객체 계약, 프레임워크 별칭을 먼저 찾고,
 매개변수 타입은 쓸 계약이 없을 때만 직접 적습니다.
-인터페이스가 콜백을 필드로 갖고 있으면 `Contract["onSelect"]`처럼 인덱스 접근으로 가져다 씁니다.
+인터페이스에 콜백 필드가 있으면 `Contract["onSelect"]`처럼 인덱스 접근으로 가져다 씁니다.
 가져온 계약에 지금 구현이 쓰지 않는 매개변수가 있으면 `types-mark-unused-parameters-with-underscore` 규칙을 다시 봅니다.
 함수 타입 별칭을 새로 선언하는 것은 같은 시그니처를 쓰는 구현이 이미 둘 이상일 때만입니다.
 한 번만 쓰는 지역 함수 때문에 함수 타입 별칭을 늘리지 않습니다.

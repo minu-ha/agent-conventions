@@ -19,7 +19,7 @@ tags: data, state, origin
 
 - 실제로 필요하면 핸들러나 이펙트 내부의 좁은 스코프에서만 제한적으로 구조분해합니다.
 - 프롭스에는 이 예외도 없습니다.
-  `composition-read-props-without-destructuring`가
+  `composition-read-props-without-destructuring`이
   `props`를 구조분해하지 않고 그대로 읽으라고 정합니다.
 
 **Incorrect (넓은 스코프 구조분해로 출처가 흐려짐):**

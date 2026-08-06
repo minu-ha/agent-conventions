@@ -11,7 +11,7 @@
 - 한 화면에 경계를 여러 겹 쌓지 않습니다.
   섹션이 독립적으로 채워져야 할 때만 나눕니다.
 
-대체 화면의 컨테이너와 높이는 `css/layout-keep-layout-intent-explicit`가 정합니다.
+대체 화면의 컨테이너와 높이는 `css/layout-keep-layout-intent-explicit`이 정합니다.
 
 경계가 있으므로 화면 본문에는 로딩 분기가 남지 않습니다.
 그 판정은 `runtime-avoid-ad-hoc-loading-branches`가 합니다.

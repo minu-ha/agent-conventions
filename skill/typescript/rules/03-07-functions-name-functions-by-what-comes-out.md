@@ -32,11 +32,11 @@ tags: functions, naming
 
 표에 없는 도메인 동작은 그 동작의 이름을 그대로 씁니다.
 `submitOrder`, `cancelBooking`처럼 씁니다.
-표는 자주 나오는 갈래를 못 박은 것이고, 아래 금지 목록만 예외 없이 지킵니다.
+표는 자주 나오는 경우를 못 박은 것이고, 아래 금지 목록만 예외 없이 지킵니다.
 
 **이름의 첫 동사만 봅니다.** `isCheckedRow`나 `handleCheckAll`처럼 뒤에 섞인 낱말은 대상이 아닙니다.
 
-첫 동사로 쓰지 않는 것입니다.
+첫 동사로 쓰지 않는 낱말입니다.
 이름이 무엇이 나오는지 알려 주지 않습니다.
 
 `build`, `create`, `make`, `normalize`, `resolve`, `process`, `manage`, `do`, `perform`, `execute`

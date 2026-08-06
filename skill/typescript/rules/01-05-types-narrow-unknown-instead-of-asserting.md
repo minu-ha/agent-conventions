@@ -4,7 +4,7 @@ titleKo: 단언으로 넘기지 않고 `unknown`을 좁혀서 씁니다
 impact: HIGH
 impactDescription: 컴파일을 통과시키려고 타입 검사를 끄는 자리가 남지 않습니다
 appliesWhen:
-  - `as` 단언, `!` 비-널 단언, `any`, `@ts-expect-error`를 추가할 때
+  - `as` 단언, `!` `null` 아님 단언, `any`, `@ts-expect-error`를 추가할 때
   - 앱 밖에서 들어온 값을 타입 붙여 쓰기 시작할 때
 reviewWith: docs-justify-convention-exceptions-with-a-reason-comment, tooling-configure-biome-to-enforce-these-rules
 tags: types, safety

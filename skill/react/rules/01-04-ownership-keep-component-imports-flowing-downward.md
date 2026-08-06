@@ -24,7 +24,7 @@ tags: ownership
 - `../`로 컴포넌트를 가져오지 않습니다.
 - 절대경로 별칭의 허용 범위는 `typescript/naming-restrict-absolute-aliases-to-layer-roots`가 정합니다.
 
-여러 자식이 같은 컴포넌트를 필요로 하면 셋 중 하나로 해소합니다.
+여러 자식이 같은 컴포넌트를 써야 하면 셋 중 하나로 해소합니다.
 
 1. 부모가 조립해서 프롭이나 `children`으로 내려보냅니다.
 2. 화면 조립을 전제하지 않는 컴포넌트면 `ui` 또는 `widget`으로 올립니다.

@@ -1,6 +1,6 @@
 ---
 title: Choose the Wrapper Shape and Forward Props Accordingly
-titleKo: 래퍼 형태를 고르고 그에 맞게 프롭을 넘깁니다
+titleKo: 래퍼 형태를 고르고 조건이 맞을 때만 `{...props}`로 넘깁니다
 impact: HIGH
 impactDescription: 프롭이 엉뚱한 요소로 흘러가지 않고 어디로 가는지가 코드에 남습니다
 appliesWhen:
@@ -77,7 +77,7 @@ export interface UiIconButtonProps {
 	 */
 	icon: ReactNode;
 	/**
-	 * 화면 낭독기가 읽을 이름. `aria-label`로 내려간다
+	 * 스크린 리더가 읽을 이름. `aria-label`로 내려간다
 	 */
 	label: string;
 	/**

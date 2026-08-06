@@ -26,13 +26,13 @@
 도구가 못 가는 자리를 적어 둡니다.
 
 - 중복 없이 묶기만 한 쉼표 목록은 어떤 규칙도 막지 않습니다.
-  `disallowInList` 옵션 덕에 목록에 든 선택자를 아래에서 단독으로 다시 여는 형태는 걸립니다.
+  `disallowInList` 옵션 덕분에 목록에 든 선택자를 아래에서 단독으로 다시 여는 형태는 걸립니다.
   묶음 자체는 `css/selector-do-not-group-classes-with-commas` 규칙을 리뷰가 봅니다.
 - 요소 선택자를 최상위에 둔 형태는 못 잡습니다.
   `ownMarkupPatterns`의 요소 선택자 항목이 `&`로 시작하는 형태만 보고, `selector-max-type`은 넣지 않았습니다.
 - 클래스 블록 안에 중첩한 `@media`도 못 잡습니다.
-  at-rule 이 최상위에 있어야 한다고 요구하는 규칙이 없습니다.
-  분기점 배치와 데스크톱 퍼스트 방향은 `css/layout-group-breakpoints-at-the-file-bottom` 규칙을 리뷰가 봅니다.
+  `at-rule`이 최상위에 있어야 한다고 요구하는 규칙이 없습니다.
+  브레이크포인트 배치와 데스크톱 퍼스트 방향은 `css/layout-group-breakpoints-at-the-file-bottom` 규칙을 리뷰가 봅니다.
 - 구조 선택자로 우리 마크업을 겨냥한 것도 못 잡습니다.
   `:first-child`나 `:nth-child()`는 클래스에도 붙어서 형태로 구분할 수 없습니다.
 - 역할 이름, 승격 판단, 변형 노출, 포커스 대비도 리뷰가 담당합니다.

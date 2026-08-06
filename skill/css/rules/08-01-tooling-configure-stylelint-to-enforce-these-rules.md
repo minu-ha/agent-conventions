@@ -40,13 +40,13 @@ tags: tooling, stylelint, automation
 도구가 못 가는 자리를 적어 둡니다.
 
 - 중복 없이 묶기만 한 쉼표 목록은 어떤 규칙도 막지 않습니다.
-  `disallowInList` 옵션 덕에 목록에 든 선택자를 아래에서 단독으로 다시 여는 형태는 걸립니다.
+  `disallowInList` 옵션 덕분에 목록에 든 선택자를 아래에서 단독으로 다시 여는 형태는 걸립니다.
   묶음 자체는 `css/selector-do-not-group-classes-with-commas` 규칙을 리뷰가 봅니다.
 - 요소 선택자를 최상위에 둔 형태는 못 잡습니다.
   `ownMarkupPatterns`의 요소 선택자 항목이 `&`로 시작하는 형태만 보고, `selector-max-type`은 넣지 않았습니다.
 - 클래스 블록 안에 중첩한 `@media`도 못 잡습니다.
-  at-rule 이 최상위에 있어야 한다고 요구하는 규칙이 없습니다.
-  분기점 배치와 데스크톱 퍼스트 방향은 `css/layout-group-breakpoints-at-the-file-bottom` 규칙을 리뷰가 봅니다.
+  `at-rule`이 최상위에 있어야 한다고 요구하는 규칙이 없습니다.
+  브레이크포인트 배치와 데스크톱 퍼스트 방향은 `css/layout-group-breakpoints-at-the-file-bottom` 규칙을 리뷰가 봅니다.
 - 구조 선택자로 우리 마크업을 겨냥한 것도 못 잡습니다.
   `:first-child`나 `:nth-child()`는 클래스에도 붙어서 형태로 구분할 수 없습니다.
 - 역할 이름, 승격 판단, 변형 노출, 포커스 대비도 리뷰가 담당합니다.
@@ -113,7 +113,7 @@ const disallowed = (foreignScopes) => [
 export default {
 	extends: ["stylelint-config-standard"],
 	rules: {
-		// 최상위 @media 안의 클래스가 깊이 0 이 되게 한다. 분기점 안에서 상태를 한 겹 더 쓸 수 있다
+		// 최상위 @media 안의 클래스가 깊이 0 이 되게 한다. 브레이크포인트 안에서 상태를 한 겹 더 쓸 수 있다
 		"max-nesting-depth": [1, {ignoreAtRules: ["media", "supports", "container"]}],
 		// @keyframes 이름은 전역이라 소유자를 붙인다. 하이픈은 클래스 --modifier 표기와 섞이니 쓰지 않는다
 		"keyframes-name-pattern": "^(pg|wg|ui)[A-Z][a-zA-Z0-9]*__[a-z][a-zA-Z0-9]*$",
@@ -121,7 +121,7 @@ export default {
 		"no-duplicate-selectors": [true, {disallowInList: true}],
 		// 움직임 줄이기 전역 처리 외에는 쓰지 않는다
 		"declaration-no-important": true,
-		// 지역 custom property 선언을 막는다. var() 소비는 걸리지 않는다
+		// 지역 변수 선언을 막는다. var() 소비는 걸리지 않는다
 		"property-disallowed-list": ["/^--/"],
 		// 우리 마크업의 상태는 modifier 로 표현한다.
 		// 라이브러리가 상태를 data-* 로 내는 경우가 있어 우리 접두사만 막는다
@@ -185,7 +185,7 @@ export default {
 - 내부 모습을 변형으로 노출했는가, 아니면 최상위 블록 아래에서 겨냥했는가
 - 포커스 표시가 색만 바뀌지 않고 형태로 구분되는가
 - 중복 없는 쉼표 묶음으로 공통 선언을 공유하지 않았는가
-- 분기점이 파일 아래 한곳에 모여 있고 데스크톱 퍼스트 한 방향인가
+- 브레이크포인트가 파일 아래 한곳에 모여 있고 데스크톱 퍼스트 한 방향인가
 - 구조 선택자로 우리 마크업을 겨냥하지 않았는가
 - 도메인 상태를 `:not()`으로 뒤집지 않았는가
 ```

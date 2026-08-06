@@ -1,6 +1,6 @@
 ---
 title: Run User Actions in Handlers, Not Effects
-titleKo: 사용자 동작은 이펙트가 아니라 핸들러에서 실행합니다
+titleKo: 사용자 액션은 이펙트가 아니라 핸들러에서 실행합니다
 impact: HIGH
 impactDescription: 한 번뿐인 동작을 상태와 이펙트 재실행으로 대신하지 않습니다
 appliesWhen:

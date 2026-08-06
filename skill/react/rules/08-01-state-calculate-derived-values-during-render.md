@@ -4,7 +4,7 @@ titleKo: 파생값은 렌더 중에 계산합니다
 impact: HIGH
 impactDescription: 지금 입력으로 구할 수 있는 값을 상태로 두고 이펙트로 맞추지 않습니다
 appliesWhen:
-  - 현재 프롭스·상태·검색 매개변수·응답에서 계산 가능한 값을 별도 상태와 이펙트로 동기화할 때
+  - 현재 프롭스·상태·search 파라미터·응답에서 계산 가능한 값을 별도 상태와 이펙트로 동기화할 때
   - 파생값 동기화 이펙트를 제거할 때
 reviewWith: screen-keep-derived-values-close
 tags: state, effects
@@ -14,7 +14,7 @@ tags: state, effects
 
 **Impact: HIGH (지금 입력으로 구할 수 있는 값을 상태로 두고 이펙트로 맞추지 않습니다)**
 
-현재 프롭스, 상태, 검색 매개변수, 응답에서 바로 계산할 수 있는 값은
+현재 프롭스, 상태, search 파라미터, 응답에서 바로 계산할 수 있는 값은
 `useEffect`와 `useState`로 다시 동기화하지 않습니다.
 렌더 중에 계산하면 추가 렌더와 어긋남이 줄고, 이펙트 의존성도 억지로 늘어나지 않습니다.
 
