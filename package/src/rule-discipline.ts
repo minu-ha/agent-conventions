@@ -71,6 +71,16 @@ const curriedTail = /^\([^)]*\)(?:\s*:\s*[^=]+?)?\s*=>/;
 const objectLiteralMethod = /^\t+[a-z]\w*\([^)]*\)\s*(?::\s*[^{]+?)?\s*\{\s*$/;
 
 /**
+ * 선언 좌변의 객체 구조분해. `const [a, b] =` 같은 배열·튜플은 잡지 않는다.
+ */
+const objectDestructuringDeclaration = /^\s*(?:const|let|var)\s*\{/;
+
+/**
+ * 매개변수 자리의 객체 구조분해. `({a, b}: T)`와 `({a, b})` 둘 다 본다.
+ */
+const objectDestructuringParameter = /=\s*(?:async\s*)?\(\s*\{[^}]*\}\s*(?::|\))/;
+
+/**
  * @helper 한글·전각 문자를 두 칸으로 세어 표시 폭을 구한다
  */
 const displayWidth = (text: string): number => {
@@ -165,6 +175,10 @@ const collectRuleViolations = (rule: SkillRule): string[] => {
 
 				if (!hasClass && objectLiteralMethod.test(line)) {
 					violations.push(`Correct 예제의 객체 멤버는 화살표 프로퍼티다: "${line.trim()}"`);
+				}
+
+				if (objectDestructuringDeclaration.test(line) || objectDestructuringParameter.test(line)) {
+					violations.push(`Correct 예제는 객체를 구조분해하지 않고 체인으로 읽는다: "${line.trim()}"`);
 				}
 
 				if (line.includes('className="')) {

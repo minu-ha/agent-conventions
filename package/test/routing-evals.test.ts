@@ -104,6 +104,7 @@ const typescriptRuleUniverse = [
 	"functions-name-functions-by-what-comes-out",
 	"values-prefer-immutable-array-sorting",
 	"values-use-set-and-map-for-repeated-lookups",
+	"values-read-objects-through-chains",
 	"absence-expose-optional-values-instead-of-silent-fallbacks",
 	"docs-keep-body-comments-for-intent-and-steps",
 	"docs-require-header-jsdoc-on-key-declarations",
@@ -244,7 +245,7 @@ const typescriptRuleRouting = {
 	},
 	"naming-preserve-config-origin-with-chained-access": {
 		appliesWhen: "`config`나 `util` 값을 쓰면서 넓은 스코프 구조분해, 별칭, 기능별 네임스페이스를 추가·변경할 때.",
-		reviewWith: ["functions-place-and-promote-support-functions"],
+		reviewWith: ["functions-place-and-promote-support-functions", "values-read-objects-through-chains"],
 	},
 	"naming-use-consistent-file-and-symbol-naming": {
 		appliesWhen:
@@ -272,7 +273,7 @@ const typescriptRuleRouting = {
 	"functions-use-named-object-params-for-complex-signatures": {
 		appliesWhen:
 			"매개변수가 셋을 넘거나 같은 계열 인자를 받는 함수를 추가·변경할 때. 객체 매개변수의 필드를 읽는 방식을 바꿀 때. 제외: 리액트 함수 컴포넌트가 프롭스를 받는 방식만 바꾸는 경우.",
-		reviewWith: ["types-reuse-existing-contracts-before-new-types"],
+		reviewWith: ["types-reuse-existing-contracts-before-new-types", "values-read-objects-through-chains"],
 	},
 	"functions-extract-helpers-only-when-the-boundary-is-real": {
 		appliesWhen:
@@ -302,6 +303,11 @@ const typescriptRuleRouting = {
 	"values-use-set-and-map-for-repeated-lookups": {
 		appliesWhen: "같은 목록에 `includes`, `find`, 키 조회를 여러 번 하는 코드를 추가·변경할 때.",
 		reviewWith: [],
+	},
+	"values-read-objects-through-chains": {
+		appliesWhen:
+			"구조분해로 객체에서 값을 꺼내는 줄을 추가·변경할 때. 객체 필드를 별칭 `const`에 담아 그 이름으로 쓰려 할 때. 제외: 배열이나 튜플을 자리로 푸는 경우.",
+		reviewWith: ["functions-name-a-value-only-when-it-is-reused"],
 	},
 	"absence-expose-optional-values-instead-of-silent-fallbacks": {
 		appliesWhen: "선택 값을 읽거나 정규화하거나 넘기는 방식을 바꿀 때. `??`, `||`, 기본값, 빈 값 대체 분기를 추가·변경할 때.",
@@ -555,9 +561,8 @@ const reactRuleRouting = {
 		reviewWith: ["data-shape-query-data-with-select", "screen-keep-derived-values-close"],
 	},
 	"data-preserve-origin-chaining": {
-		appliesWhen:
-			"페이지, 레이아웃, 화면처럼 넓은 스코프에서 응답, 뮤테이션, 스토어를 구조분해할 때. 원본을 별칭으로 끊고 값 접근 방식을 바꿀 때.",
-		reviewWith: ["screen-keep-derived-values-close"],
+		appliesWhen: "응답, 뮤테이션, 스토어에서 값을 꺼내 쓰는 코드를 추가·변경할 때. 원본을 별칭으로 끊고 값 접근 방식을 바꿀 때.",
+		reviewWith: ["screen-keep-derived-values-close", "data-shape-query-data-with-select"],
 	},
 	"data-handle-mutation-failure-where-it-is-called": {
 		appliesWhen: "뮤테이션을 부르는 코드를 추가·변경할 때. `mutate`와 `mutateAsync` 사이를 오갈 때.",
@@ -612,7 +617,7 @@ const reactRuleRouting = {
 	"composition-read-props-without-destructuring": {
 		appliesWhen:
 			"함수 컴포넌트의 시그니처나 본문에서 프롭스를 읽는 코드를 추가·변경할 때. 컴포넌트 안에서 `props`를 구조분해하는 줄을 넣거나 뺄 때.",
-		reviewWith: ["screen-keep-derived-values-close", "data-preserve-origin-chaining"],
+		reviewWith: ["screen-keep-derived-values-close", "data-preserve-origin-chaining", "typescript/values-read-objects-through-chains"],
 	},
 	"composition-do-not-define-components-inside-components": {
 		appliesWhen:
@@ -839,6 +844,7 @@ const typescriptSelections = {
 		"naming-use-consistent-file-and-symbol-naming",
 		"functions-declare-functions-as-arrow-consts",
 		"functions-use-named-object-params-for-complex-signatures",
+		"values-read-objects-through-chains",
 	],
 	"explicit-product-fallback": [
 		"absence-expose-optional-values-instead-of-silent-fallbacks",
@@ -888,7 +894,7 @@ const typescriptScenarioEvidence = {
 	},
 	"named-object-param": {
 		prompt:
-			"change a function that destructures `BuildRequestUrlArgs` in the signature to accept `args` and destructure on the first body line; no other contract/docs/import changes.",
+			"change a function that destructures `BuildRequestUrlArgs` in the signature to accept `args` and read every field through `args.*`; no other contract/docs/import changes.",
 		files: ["src/http/to-request-url.ts"],
 	},
 	"explicit-product-fallback": {
@@ -1815,7 +1821,7 @@ test("TypeScript progressive metadata matches Appendix A exactly", async () => {
 
 	assert.equal(document.metadata.progressiveDisclosure, true);
 	assert.deepEqual(document.metadata.companions ?? [], []);
-	assert.equal(document.rules.length, 29);
+	assert.equal(document.rules.length, 30);
 	assert.deepEqual(
 		Object.fromEntries(document.rules.map((rule) => [getRuleId(rule), {appliesWhen: rule.appliesWhen, reviewWith: rule.reviewWith}])),
 		typescriptRuleRouting,
@@ -1910,7 +1916,7 @@ test("TypeScript generated index is complete and within the deterministic byte b
 	const expectedIds = document.rules.map((rule) => getRuleId(rule)).sort();
 
 	assert.deepEqual(ids, expectedIds);
-	assert.equal(ids.length, 29);
+	assert.equal(ids.length, 30);
 
 	for (const entry of entries) {
 		assert.equal(entry.fileName, `${entry.id}.md`);

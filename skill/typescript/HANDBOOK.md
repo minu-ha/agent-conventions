@@ -44,6 +44,7 @@
 4. [Values and Data Structures](#4-values-and-data-structures) — **HIGH**
     - 4.1 [Prefer Immutable Array Sorting](#41-prefer-immutable-array-sorting)
     - 4.2 [Use Set and Map for Repeated Lookups](#42-use-set-and-map-for-repeated-lookups)
+    - 4.3 [Read Object Fields Through Chains, Not Destructuring](#43-read-object-fields-through-chains-not-destructuring)
 5. [Absence and Fallback Handling](#5-absence-and-fallback-handling) — **HIGH**
     - 5.1 [Expose Optional Values Instead of Silent Fallbacks](#51-expose-optional-values-instead-of-silent-fallbacks)
 6. [JSDoc and Comment Conventions](#6-jsdoc-and-comment-conventions) — **MEDIUM**
@@ -650,13 +651,13 @@ export const productDetailConfig = {
 
 **Applies when:** `config`나 `util` 값을 쓰면서 넓은 스코프 구조분해, 별칭, 기능별 네임스페이스를 추가·변경할 때.
 
-**Review with:** `functions-place-and-promote-support-functions`
+**Review with:** `functions-place-and-promote-support-functions`, `values-read-objects-through-chains`
 
 **Impact: MEDIUM (넓은 스코프 별칭으로 출처를 숨기지 않아 값이 어디서 오는지 읽힙니다)**
 
 공용 설정과 공용 순수 함수는 쓰는 파일에서 직접 가져온 뒤 `config.*`, `util.*` 체인으로 씁니다.
-넓은 스코프에서 구조분해하거나 별칭 상수로 끊어 출처를 흐리지 않습니다.
-구조분해가 필요하면 함수 안 좁은 스코프에서만 씁니다.
+구조분해와 별칭으로 끊지 않는 것은 `values-read-objects-through-chains` 규칙이 모든 객체에 정합니다.
+여기서는 그 위에 공용 네임스페이스만 더 봅니다.
 
 `shared/config.ts`와 `shared/util.ts`는 찾기 쉽도록 네임스페이스를 유지합니다.
 `config`와 `util` 이름은 공용 경계에서만 씁니다.
@@ -1080,26 +1081,16 @@ export class ProductCursor {
 
 **Applies when:** 매개변수가 셋을 넘거나 같은 계열 인자를 받는 함수를 추가·변경할 때. 객체 매개변수의 필드를 읽는 방식을 바꿀 때. 제외: 리액트 함수 컴포넌트가 프롭스를 받는 방식만 바꾸는 경우.
 
-**Review with:** `types-reuse-existing-contracts-before-new-types`
+**Review with:** `types-reuse-existing-contracts-before-new-types`, `values-read-objects-through-chains`
 
-**Impact: MEDIUM-HIGH (긴 시그니처를 읽을 수 있게 두고 그 값이 매개변수에서 왔다는 사실이 쓰는 자리마다 남습니다)**
+**Impact: MEDIUM-HIGH (긴 시그니처를 읽을 수 있게 두고 위치를 헷갈리지 않으면서 입력을 늘립니다)**
 
 매개변수가 셋을 넘거나 같은 계열 값이 함께 넘어오면 위치 인자를 객체 하나로 묶습니다.
 객체 매개변수 타입은 파일 위쪽에 이름을 붙여 선언합니다.
 
-**받은 객체는 구조분해하지 않고 `target.baseUrl`처럼 체인으로 읽습니다.**
-시그니처에서도, 본문 어느 줄에서도 구조분해하지 않습니다.
-
-구조분해는 이름만 남기고 출처를 지웁니다.
-본문이 길어지면 `baseUrl`이 매개변수인지 지역 변수인지 바깥에서 가져온 값인지 읽는 쪽에서 구분할 수 없습니다.
-`target.baseUrl`은 그 값이 어디서 왔는지를 쓰는 자리마다 다시 말해 줍니다.
-
-출처를 남기라는 요구는 이 규칙에만 있지 않습니다.
-설정 값은 `naming-preserve-config-origin-with-chained-access`가 같은 말을 하고,
-프레임워크 컨벤션도 프롭스와 응답에 같은 것을 요구합니다.
-
-`for (const [key, value] of Object.entries(target.searchParams))`처럼 반복문이 튜플을 푸는 것은
-이 규칙이 막는 구조분해가 아닙니다. 그 자리에서만 쓰는 원소를 꺼내는 것이라 지울 출처가 없습니다.
+받은 객체는 시그니처에서도 본문에서도 구조분해하지 않고 `target.baseUrl`처럼 체인으로 읽습니다.
+그 규범과 예외는 `values-read-objects-through-chains` 규칙이 모든 객체에 정합니다.
+여기서는 매개변수를 언제 객체로 묶고 그 타입을 어디에 선언할지만 봅니다.
 
 리액트 컴포넌트의 프롭스는 이 규칙 대상이 아닙니다.
 프롭스를 읽는 방식과 타입 선언 위치는 프레임워크 컨벤션이 담당합니다.
@@ -1650,7 +1641,7 @@ export const isAdminUser = (user: User) => { /* … */ };
 
 **Impact: HIGH**
 
-값을 다루는 관용구를 한 가지로 고정합니다. 넘겨받은 배열은 제자리에서 바꾸지 않고, 반복되는 조회는 `Set`과 `Map`으로 모읍니다.
+값을 다루는 관용구를 한 가지로 고정합니다. 넘겨받은 배열은 제자리에서 바꾸지 않고, 반복되는 조회는 `Set`과 `Map`으로 모읍니다. 객체에서 값을 꺼낼 때는 구조분해로 끊지 않고 체인으로 읽어 출처를 남깁니다.
 
 ### 4.1 Prefer Immutable Array Sorting
 
@@ -1734,6 +1725,118 @@ const reviewer = userById.get(reviewerId);
 const approver = userById.get(approverId);
 ```
 
+### 4.3 Read Object Fields Through Chains, Not Destructuring
+
+**Rule:** `T23` · `values-read-objects-through-chains`
+
+**Applies when:** 구조분해로 객체에서 값을 꺼내는 줄을 추가·변경할 때. 객체 필드를 별칭 `const`에 담아 그 이름으로 쓰려 할 때. 제외: 배열이나 튜플을 자리로 푸는 경우.
+
+**Review with:** `functions-name-a-value-only-when-it-is-reused`
+
+**Impact: MEDIUM-HIGH (값이 어느 객체에서 왔는지가 쓰는 자리마다 남아 이름만 보고 출처를 되짚지 않습니다)**
+
+객체에서 값을 꺼낼 때 구조분해하지 않고 `product.title`처럼 체인으로 읽습니다.
+같은 값에 새 이름만 붙이는 별칭 `const`도 만들지 않습니다.
+
+구조분해와 별칭은 이름만 남기고 출처를 지웁니다.
+파일이 길어지면 `title`이 매개변수인지 응답인지 지역 변수인지 읽는 쪽에서 구분할 수 없습니다.
+`product.title`은 그 값이 어디서 왔는지를 쓰는 자리마다 다시 말해 줍니다.
+
+**배열과 튜플은 대상이 아닙니다.**
+`const [keyword, setKeyword] = useState("")`나
+`for (const [key, value] of Object.entries(target))`처럼 자리로 값을 꺼내는 것은 지울 이름이 없습니다.
+튜플에는 필드 이름이 없어서 출처가 지워지지 않습니다.
+
+**예외를 두지 않습니다.**
+`짧은 함수`나 `좁은 스코프`는 코드를 보고 판정할 수 없는 기준입니다.
+줄이 몇 개 늘었다고 판정이 뒤집히는 규칙은 지킬 수 없습니다.
+
+- 이름을 바꿔 꺼내는 것도 구조분해입니다.
+  `const {status: projectStatus} = project`는 출처를 지우면서 이름까지 갈아 끼웁니다.
+- 계산이 없으면 이름을 붙이지 않습니다.
+  `functions-name-a-value-only-when-it-is-reused`가 이름을 붙이라고 하는 것은 계산한 결과입니다.
+  필드를 그대로 읽는 것은 계산이 아닙니다.
+- 체인이 깊어 읽기 어려우면 꺼내는 자리가 아니라 **그 형태를 만드는 자리**를 봅니다.
+  받는 쪽에서 끊는 것으로는 깊이가 줄지 않고 출처만 사라집니다.
+
+**Incorrect (시그니처와 본문에서 구조분해해 출처가 사라짐):**
+
+```ts
+const toInvoiceLine = ({product, quantity}: InvoiceLineInput): InvoiceLine => {
+	const {title, unitPrice} = product;
+
+	return {
+		label: title,
+		amount: unitPrice * quantity,
+	};
+};
+```
+
+**Incorrect (별칭 `const`로 끊어 이름만 남김):**
+
+```ts
+const pricing = config.pricing;
+const currency = pricing.defaultCurrency;
+
+const toInvoiceTotal = (lines: InvoiceLine[]): InvoiceTotal => {
+	return {
+		currency,
+		amount: lines.reduce((sum, line) => sum + line.amount, 0),
+	};
+};
+```
+
+**Incorrect (이름을 바꿔 꺼내 출처와 원래 이름이 함께 사라짐):**
+
+```ts
+const {status: projectStatus, owner: projectOwner} = project;
+
+if (projectStatus === "archived") {
+	notify(projectOwner);
+}
+```
+
+**Correct (체인으로 읽어 출처가 쓰는 자리마다 남음):**
+
+```ts
+const toInvoiceLine = (input: InvoiceLineInput): InvoiceLine => {
+	return {
+		label: input.product.title,
+		amount: input.product.unitPrice * input.quantity,
+	};
+};
+
+const toInvoiceTotal = (lines: InvoiceLine[]): InvoiceTotal => {
+	return {
+		currency: config.pricing.defaultCurrency,
+		amount: lines.reduce((sum, line) => sum + line.amount, 0),
+	};
+};
+
+if (project.status === "archived") {
+	notify(project.owner);
+}
+```
+
+**Correct (배열과 튜플은 자리로 풀어도 됨):**
+
+```ts
+const [keyword, setKeyword] = useState("");
+
+for (const [key, value] of Object.entries(target.searchParams)) {
+	requestUrl.searchParams.set(key, value);
+}
+```
+
+**Correct (계산한 결과에만 이름을 붙임):**
+
+```ts
+const invoiceTotalLabel = `${config.pricing.defaultCurrency} ${invoice.amount.toFixed(2)}`;
+
+setSummary(invoiceTotalLabel);
+setTooltip(invoiceTotalLabel);
+```
+
 ## 5. Absence and Fallback Handling
 
 **Impact: HIGH**
@@ -1742,7 +1845,7 @@ const approver = userById.get(approverId);
 
 ### 5.1 Expose Optional Values Instead of Silent Fallbacks
 
-**Rule:** `T23` · `absence-expose-optional-values-instead-of-silent-fallbacks`
+**Rule:** `T24` · `absence-expose-optional-values-instead-of-silent-fallbacks`
 
 **Applies when:** 선택 값을 읽거나 정규화하거나 넘기는 방식을 바꿀 때. `??`, `||`, 기본값, 빈 값 대체 분기를 추가·변경할 때.
 
@@ -1856,7 +1959,7 @@ setVisibleRowCount(effectivePageSize);
 
 ### 6.1 Keep Body Comments for Intent and Steps
 
-**Rule:** `T24` · `docs-keep-body-comments-for-intent-and-steps`
+**Rule:** `T25` · `docs-keep-body-comments-for-intent-and-steps`
 
 **Applies when:** 함수 본문의 `//` 주석을 추가·수정·유지할 때. 도메인 규칙, 예외 방어, 외부 제약, 부수효과 순서, 긴 절차의 단계를 주석으로 설명할 때.
 
@@ -1921,7 +2024,7 @@ const submitProductDraft = async (draft: ProductDraft) => {
 
 ### 6.2 Require Header Doc Comments on Key Declarations
 
-**Rule:** `T25` · `docs-require-header-jsdoc-on-key-declarations`
+**Rule:** `T26` · `docs-require-header-jsdoc-on-key-declarations`
 
 **Applies when:** 쿼리, 뮤테이션, 원격 함수, 커스텀 훅, 커스텀 타입, 스토어, 포매터 선언을 추가·변경할 때. 분기나 `await`, 또는 두 개 이상의 동작이 있는 핸들러와 이펙트를 추가·변경할 때. 다시 쓰거나 내보낸 보조 함수를 추가·변경할 때.
 
@@ -1971,7 +2074,7 @@ const responseProductList = useProductList();
 
 ### 6.3 Write Concise Korean Comments About Purpose and Constraints
 
-**Rule:** `T26` · `docs-write-concise-korean-comments-about-purpose-and-constraints`
+**Rule:** `T27` · `docs-write-concise-korean-comments-about-purpose-and-constraints`
 
 **Applies when:** TypeScript·TSX의 문서 주석이나 인라인 주석 문구를 추가·수정·번역하거나 검토할 때. 문서 주석에 태그를 붙이거나 뺄 때.
 
@@ -2075,7 +2178,7 @@ export interface PgProductTreeProps {
 
 ### 6.4 Write Doc Comments as Multiline Blocks
 
-**Rule:** `T27` · `docs-write-doc-comments-as-multiline-blocks`
+**Rule:** `T28` · `docs-write-doc-comments-as-multiline-blocks`
 
 **Applies when:** 선언 위 문서 주석을 새로 쓰거나 형식을 바꿀 때. 한 줄 `/** … */`이나 `//`로 선언을 설명하려 할 때.
 
@@ -2127,7 +2230,7 @@ export const saveProduct = async (product: Product): Promise<void> => {
 
 ### 6.5 Justify Convention Exceptions With a Checkable Reason Comment
 
-**Rule:** `T28` · `docs-justify-convention-exceptions-with-a-reason-comment`
+**Rule:** `T29` · `docs-justify-convention-exceptions-with-a-reason-comment`
 
 **Applies when:** 규칙이 허용한 예외를 코드에 남길 때. 이미 있는 예외 주석의 내용을 바꿀 때. 제외: 규칙이 요구하지 않은 일반 설명 주석인 경우.
 
@@ -2182,7 +2285,7 @@ const filteredRows = useMemo(() => rows.filter((row) => matchRow(row, deferredKe
 
 ### 7.1 Configure Biome to Enforce the Mechanical Rules
 
-**Rule:** `T29` · `tooling-configure-biome-to-enforce-these-rules`
+**Rule:** `T30` · `tooling-configure-biome-to-enforce-these-rules`
 
 **Applies when:** 프로젝트에 `biome` 설정을 처음 넣거나 lint 규칙을 바꿀 때. `biome.json`의 `linter.rules`에 항목을 추가·삭제할 때.
 

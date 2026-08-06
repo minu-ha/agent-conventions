@@ -157,7 +157,7 @@
 		},
 		{
 			"id": "named-object-param",
-			"prompt": "change a function that destructures `BuildRequestUrlArgs` in the signature to accept `args` and destructure on the first body line; no other contract/docs/import changes.",
+			"prompt": "change a function that destructures `BuildRequestUrlArgs` in the signature to accept `args` and read every field through `args.*`; no other contract/docs/import changes.",
 			"files": [
 				"src/http/to-request-url.ts"
 			],
@@ -168,7 +168,8 @@
 				"typescript": [
 					"naming-use-consistent-file-and-symbol-naming",
 					"functions-declare-functions-as-arrow-consts",
-					"functions-use-named-object-params-for-complex-signatures"
+					"functions-use-named-object-params-for-complex-signatures",
+					"values-read-objects-through-chains"
 				]
 			}
 		},

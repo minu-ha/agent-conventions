@@ -38,7 +38,7 @@
     - 2.1 [Name Query and Mutation Bindings Consistently](#21-name-query-and-mutation-bindings-consistently)
     - 2.2 [Shape React Query Data in query.select](#22-shape-react-query-data-in-query-select)
     - 2.3 [Combine Multiple Queries With `combine`](#23-combine-multiple-queries-with-combine)
-    - 2.4 [Preserve Response and Store Origin in Wide Scopes](#24-preserve-response-and-store-origin-in-wide-scopes)
+    - 2.4 [Preserve Response and Store Origin Down to the JSX](#24-preserve-response-and-store-origin-down-to-the-jsx)
     - 2.5 [Handle Mutation Failure Where the Mutation Is Called](#25-handle-mutation-failure-where-the-mutation-is-called)
     - 2.6 [Invalidate the Queries a Mutation Changed](#26-invalidate-the-queries-a-mutation-changed)
 3. [Typing and Contracts](#3-typing-and-contracts) — **CRITICAL**
@@ -782,25 +782,29 @@ const responseShipmentList = useShipmentList(
 );
 ```
 
-### 2.4 Preserve Response and Store Origin in Wide Scopes
+### 2.4 Preserve Response and Store Origin Down to the JSX
 
 **Rule:** `R10` · `data-preserve-origin-chaining`
 
-**Applies when:** 페이지, 레이아웃, 화면처럼 넓은 스코프에서 응답, 뮤테이션, 스토어를 구조분해할 때. 원본을 별칭으로 끊고 값 접근 방식을 바꿀 때.
+**Applies when:** 응답, 뮤테이션, 스토어에서 값을 꺼내 쓰는 코드를 추가·변경할 때. 원본을 별칭으로 끊고 값 접근 방식을 바꿀 때.
 
-**Review with:** `screen-keep-derived-values-close`
+**Review with:** `data-shape-query-data-with-select`, `screen-keep-derived-values-close`
 
 **Impact: MEDIUM (파일 전체에서 별칭을 따라가지 않고 값의 출처를 바로 압니다)**
 
-페이지, 레이아웃, 화면 스코프에서는 `response...`, `mutation...`, `*Store` 원본을 유지합니다.
-넓은 스코프의 구조분해와 별칭 상수는 값의 출처를 흐립니다.
+`response...`, `mutation...`, `*Store` 원본은 JSX에 닿을 때까지 이름 그대로 갑니다.
+구조분해와 별칭으로 끊지 않는 규범은 `typescript/values-read-objects-through-chains`가 모든 객체에 정합니다.
+여기서는 리액트 화면에서 그 원본이 무엇인지만 짚습니다.
 
-- 실제로 필요하면 핸들러나 이펙트 내부의 좁은 스코프에서만 제한적으로 구조분해합니다.
-- 프롭스에는 이 예외도 없습니다.
-  `composition-read-props-without-destructuring`이
-  `props`를 구조분해하지 않고 그대로 읽으라고 정합니다.
+- 스코프가 넓든 좁든 같습니다.
+  핸들러 안이든 이펙트 안이든 `responseProductSearchSuspense.data.products`로 읽습니다.
+  `좁은 스코프`는 코드를 보고 판정할 수 없는 기준이라 예외로 두지 않습니다.
+- 쿼리 결과를 화면에서 다시 빚고 싶으면 끊지 말고 `data-shape-query-data-with-select`가 정한
+  `query.select`에서 형태를 잡습니다.
+  받는 쪽에서 끊으면 깊이는 그대로고 출처만 사라집니다.
+- 프롭스는 `composition-read-props-without-destructuring`이 같은 말을 한 번 더 합니다.
 
-**Incorrect (넓은 스코프 구조분해로 출처가 흐려짐):**
+**Incorrect (구조분해로 출처가 흐려짐):**
 
 ```ts
 const {products, selectedProduct} = responseProductListSuspense.data;
@@ -815,16 +819,14 @@ const {products, selectedProduct} = responseProductListSuspense.data;
 </Fragment>;
 ```
 
-**Correct (이펙트 안 좁은 스코프에서만 구조분해):**
+**Correct (이펙트 안에서도 원본 이름 그대로):**
 
 ```ts
 /**
  * 검색 결과가 있으면 빈 검색 보고를 건너뛴다. 결과가 없을 때만 한 번 보고한다
  */
 useEffect(() => {
-	const {products} = responseProductSearchSuspense.data;
-
-	if (products.length > 0) {
+	if (responseProductSearchSuspense.data.products.length > 0) {
 		return;
 	}
 
@@ -1923,28 +1925,24 @@ export const PgProductScreen = () => {
 
 **Applies when:** 함수 컴포넌트의 시그니처나 본문에서 프롭스를 읽는 코드를 추가·변경할 때. 컴포넌트 안에서 `props`를 구조분해하는 줄을 넣거나 뺄 때.
 
-**Review with:** `data-preserve-origin-chaining`, `screen-keep-derived-values-close`
+**Review with:** `data-preserve-origin-chaining`, `screen-keep-derived-values-close`, `typescript/values-read-objects-through-chains`
 
 **Impact: MEDIUM (값이 프롭스에서 왔다는 사실이 쓰는 자리마다 그대로 남습니다)**
 
 컴포넌트는 `props` 전체를 받고 쓰는 자리마다 `props.id`로 읽습니다.
 시그니처에서도, 본문 어느 줄에서도, 본문 안 중첩 함수에서도 구조분해하지 않습니다.
 
-구조분해는 이름만 남기고 출처를 지웁니다.
-파일이 길어지면 `id`가 프롭스인지 지역 변수인지 훅 결과인지 읽는 쪽에서 구분할 수 없습니다.
-`props.id`는 그 값이 어디서 왔는지를 쓰는 자리마다 다시 말해 줍니다.
+구조분해로 끊지 않는 규범과 그 예외는 `typescript/values-read-objects-through-chains`가 모든 객체에 정합니다.
+프롭스는 컴포넌트 시그니처라 끊고 싶은 압력이 가장 센 자리여서 여기서 한 번 더 못 박습니다.
 
-- 예외를 두지 않습니다.
-  `짧은 컴포넌트`나 `지역 스코프`는 코드를 보고 판정할 수 없는 기준입니다.
 - `{...props}`로 그대로 펼치는 것은 구조분해가 아닙니다.
   `props`를 이름 그대로 읽어 넘기는 것이라 출처가 지워지지 않습니다.
   스프레드를 쓸 조건은 `typing-choose-wrapper-shape-and-forwarding`이 정합니다.
 - 선택 프롭에 기본값이 필요하면
   `typescript/absence-expose-optional-values-instead-of-silent-fallbacks`를 따릅니다.
   프롭 값을 그대로 비교해서 쓰면 기본값 자체가 필요 없는 경우가 많습니다.
-- 출처를 남기라는 요구는 이 규칙에만 있지 않습니다.
-  쿼리 결과는 `data-preserve-origin-chaining`, 계산한 값은 `screen-keep-derived-values-close`,
-  설정 값은 `typescript/naming-preserve-config-origin-with-chained-access`가 같은 말을 합니다.
+- 쿼리 결과는 `data-preserve-origin-chaining`, 계산한 값은 `screen-keep-derived-values-close`가
+  같은 원본에 대해 각각 더 볼 것을 정합니다.
 
 **Incorrect (시그니처에서 구조분해):**
 

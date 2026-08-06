@@ -28,6 +28,7 @@
 **Impact:** HIGH
 **Description:** 값을 다루는 관용구를 한 가지로 고정합니다.
   넘겨받은 배열은 제자리에서 바꾸지 않고, 반복되는 조회는 `Set`과 `Map`으로 모읍니다.
+  객체에서 값을 꺼낼 때는 구조분해로 끊지 않고 체인으로 읽어 출처를 남깁니다.
 
 ## 5. Absence and Fallback Handling (absence)
 **TitleKo:** 없는 값 다루기

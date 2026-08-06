@@ -1,11 +1,11 @@
 ---
 title: Preserve Shared Namespace Origin With Chained Access
-titleKo: `config`와 `util`은 구조분해하지 않고 체인으로 씁니다
+titleKo: `config`와 `util` 네임스페이스는 공용 경계에서만 씁니다
 impact: MEDIUM
 impactDescription: 넓은 스코프 별칭으로 출처를 숨기지 않아 값이 어디서 오는지 읽힙니다
 appliesWhen:
   - `config`나 `util` 값을 쓰면서 넓은 스코프 구조분해, 별칭, 기능별 네임스페이스를 추가·변경할 때
-reviewWith: functions-place-and-promote-support-functions
+reviewWith: functions-place-and-promote-support-functions, values-read-objects-through-chains
 tags: naming, config
 ---
 
@@ -14,8 +14,8 @@ tags: naming, config
 **Impact: MEDIUM (넓은 스코프 별칭으로 출처를 숨기지 않아 값이 어디서 오는지 읽힙니다)**
 
 공용 설정과 공용 순수 함수는 쓰는 파일에서 직접 가져온 뒤 `config.*`, `util.*` 체인으로 씁니다.
-넓은 스코프에서 구조분해하거나 별칭 상수로 끊어 출처를 흐리지 않습니다.
-구조분해가 필요하면 함수 안 좁은 스코프에서만 씁니다.
+구조분해와 별칭으로 끊지 않는 것은 `values-read-objects-through-chains` 규칙이 모든 객체에 정합니다.
+여기서는 그 위에 공용 네임스페이스만 더 봅니다.
 
 `shared/config.ts`와 `shared/util.ts`는 찾기 쉽도록 네임스페이스를 유지합니다.
 `config`와 `util` 이름은 공용 경계에서만 씁니다.
