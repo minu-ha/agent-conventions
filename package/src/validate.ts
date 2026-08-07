@@ -29,13 +29,15 @@ const proseRuleReferencePattern = /`((?:[a-z][a-z0-9]*\/)?[a-z][a-z0-9]*(?:-[a-z
  *   외부 도구 규칙 이름과 구분하려고 첫 마디가 우리 section prefix 인 것만 본다.
  *   도구 설정을 담은 `tooling` 규칙은 stylelint·biome 규칙 이름을 대량으로 인용하므로 건너뛴다.
  */
-const assertProseRuleReferences = (
-	document: LoadedSkillDocument,
-	knownIds: ReadonlySet<string>,
-	knownPrefixes: ReadonlySet<string>,
-	skillsAbove: ReadonlySet<string>,
-): void => {
-	for (const rule of document.rules) {
+interface AssertProseRuleReferencesArgs {
+	document: LoadedSkillDocument;
+	knownIds: ReadonlySet<string>;
+	knownPrefixes: ReadonlySet<string>;
+	skillsAbove: ReadonlySet<string>;
+}
+
+const assertProseRuleReferences = (args: AssertProseRuleReferencesArgs): void => {
+	for (const rule of args.document.rules) {
 		// 코드 펜스 안은 실제 코드라 대상이 아니다.
 		const prose = rule.body.replace(/```[\s\S]*?```/g, "");
 
@@ -43,9 +45,9 @@ const assertProseRuleReferences = (
 			const [ownerOrPrefix = "", nextSegment = ""] = reference.split("/");
 			const localId = reference.includes("/") ? nextSegment : reference;
 
-			if (reference.includes("/") && skillsAbove.has(ownerOrPrefix)) {
+			if (reference.includes("/") && args.skillsAbove.has(ownerOrPrefix)) {
 				throw new Error(
-					`${document.skillName}: ${rule.fileName} prose references upper-layer rule "${reference}". ${document.skillName} 만 쓰는 쪽에서 끊긴다. skill 이름 없이 쓰거나 참조를 지워라.`,
+					`${args.document.skillName}: ${rule.fileName} prose references upper-layer rule "${reference}". ${args.document.skillName} 만 쓰는 쪽에서 끊긴다. skill 이름 없이 쓰거나 참조를 지워라.`,
 				);
 			}
 
@@ -55,15 +57,15 @@ const assertProseRuleReferences = (
 				continue;
 			}
 
-			if (!knownPrefixes.has(localId.split("-")[0] ?? "")) {
+			if (!args.knownPrefixes.has(localId.split("-")[0] ?? "")) {
 				continue;
 			}
 
-			const key = reference.includes("/") ? reference : `${document.skillName}/${reference}`;
+			const key = reference.includes("/") ? reference : `${args.document.skillName}/${reference}`;
 
-			if (!knownIds.has(key)) {
+			if (!args.knownIds.has(key)) {
 				throw new Error(
-					`${document.skillName}: ${rule.fileName} prose references unknown rule "${reference}" (owner "${ownerOrPrefix}"). Use an existing rule ID or drop the backticks.`,
+					`${args.document.skillName}: ${rule.fileName} prose references unknown rule "${reference}" (owner "${ownerOrPrefix}"). Use an existing rule ID or drop the backticks.`,
 				);
 			}
 		}
@@ -298,17 +300,19 @@ const validateLocalSkill = async (skillPaths: SkillPaths): Promise<LocalValidati
 /**
  * @helper dependency 그래프를 순회하며 각 skill을 한 번씩 검증
  */
-const validateSkillTree = async (
-	skillPaths: SkillPaths,
-	lineage: string[],
-	validatedSkillNames: Set<string>,
-	documents: Map<string, LoadedSkillDocument>,
-	dependenciesBySkill: Map<string, DependencyDeclaration>,
-): Promise<LocalValidationResult> => {
-	const cachedDocument = documents.get(skillPaths.skillName);
-	const cachedDependencies = dependenciesBySkill.get(skillPaths.skillName);
+interface ValidateSkillTreeArgs {
+	skillPaths: SkillPaths;
+	lineage: string[];
+	validatedSkillNames: Set<string>;
+	documents: Map<string, LoadedSkillDocument>;
+	dependenciesBySkill: Map<string, DependencyDeclaration>;
+}
 
-	if (validatedSkillNames.has(skillPaths.skillName) && cachedDocument && cachedDependencies) {
+const validateSkillTree = async (args: ValidateSkillTreeArgs): Promise<LocalValidationResult> => {
+	const cachedDocument = args.documents.get(args.skillPaths.skillName);
+	const cachedDependencies = args.dependenciesBySkill.get(args.skillPaths.skillName);
+
+	if (args.validatedSkillNames.has(args.skillPaths.skillName) && cachedDocument && cachedDependencies) {
 		return {
 			document: cachedDocument,
 			dependencies: cachedDependencies,
@@ -317,11 +321,11 @@ const validateSkillTree = async (
 		};
 	}
 
-	const localResult = await validateLocalSkill(skillPaths);
-	documents.set(skillPaths.skillName, localResult.document);
-	dependenciesBySkill.set(skillPaths.skillName, localResult.dependencies);
-	const nextLineage = [...lineage, skillPaths.skillName];
-	const targetSkillRootDir = path.dirname(skillPaths.skillDir);
+	const localResult = await validateLocalSkill(args.skillPaths);
+	args.documents.set(args.skillPaths.skillName, localResult.document);
+	args.dependenciesBySkill.set(args.skillPaths.skillName, localResult.dependencies);
+	const nextLineage = [...args.lineage, args.skillPaths.skillName];
+	const targetSkillRootDir = path.dirname(args.skillPaths.skillDir);
 
 	for (const dependencyName of localResult.dependencies.skillNames) {
 		if (nextLineage.includes(dependencyName)) {
@@ -330,20 +334,20 @@ const validateSkillTree = async (
 
 		if (!(await isBuildableSkill(dependencyName, targetSkillRootDir))) {
 			const dependencyLabel = localResult.dependencies.kind === "extends" ? "Extended" : "Companion";
-			throw new Error(`${dependencyLabel} skill "${dependencyName}" referenced by "${skillPaths.skillName}" is not buildable.`);
+			throw new Error(`${dependencyLabel} skill "${dependencyName}" referenced by "${args.skillPaths.skillName}" is not buildable.`);
 		}
 
-		const dependencyResult = await validateSkillTree(
-			getSkillPaths(dependencyName, targetSkillRootDir),
-			nextLineage,
-			validatedSkillNames,
-			documents,
-			dependenciesBySkill,
-		);
+		const dependencyResult = await validateSkillTree({
+			skillPaths: getSkillPaths(dependencyName, targetSkillRootDir),
+			lineage: nextLineage,
+			validatedSkillNames: args.validatedSkillNames,
+			documents: args.documents,
+			dependenciesBySkill: args.dependenciesBySkill,
+		});
 		assertProgressiveCompanionSource(localResult.document, dependencyResult.document);
 	}
 
-	validatedSkillNames.add(skillPaths.skillName);
+	args.validatedSkillNames.add(args.skillPaths.skillName);
 	return localResult;
 };
 
@@ -447,13 +451,13 @@ export const validateSkill = async (skillPaths: SkillPaths): Promise<void> => {
 	const validatedSkillNames = new Set<string>();
 	const documents = new Map<string, LoadedSkillDocument>();
 	const dependenciesBySkill = new Map<string, DependencyDeclaration>();
-	const rootResult = await validateSkillTree(skillPaths, [], validatedSkillNames, documents, dependenciesBySkill);
+	const rootResult = await validateSkillTree({skillPaths, lineage: [], validatedSkillNames, documents, dependenciesBySkill});
 
 	validateRoutingTargets(documents, dependenciesBySkill);
 	const skillRootDir = path.dirname(skillPaths.skillDir);
 	const allRules = await collectAllRuleIds(skillRootDir);
 	const skillsAbove = await collectSkillsAbove(skillPaths.skillName, skillRootDir);
-	assertProseRuleReferences(rootResult.document, allRules.ids, allRules.prefixes, skillsAbove);
+	assertProseRuleReferences({document: rootResult.document, knownIds: allRules.ids, knownPrefixes: allRules.prefixes, skillsAbove});
 	assertRuleDiscipline(rootResult.document);
 
 	if (rootResult.document.metadata.progressiveDisclosure === true) {

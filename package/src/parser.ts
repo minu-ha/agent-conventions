@@ -245,11 +245,18 @@ export const buildRuleAnchor = (sectionOrder: number, ruleOrder: number, title: 
 	return `#${slugify(`${sectionOrder}.${ruleOrder} ${normalizeAnchorTitle(title)}`)}`;
 };
 
+export interface ReplaceRuleHeadingArgs {
+	body: string;
+	sectionOrder: number;
+	ruleOrder: number;
+	title: string;
+}
+
 /**
  * @helper rule 본문의 제목을 compiled guide 번호 제목으로 교체
  */
-export const replaceRuleHeading = (body: string, sectionOrder: number, ruleOrder: number, title: string): string => {
-	return body.replace(/^## .+$/m, `### ${sectionOrder}.${ruleOrder} ${normalizeHeadingTitle(title)}`);
+export const replaceRuleHeading = (args: ReplaceRuleHeadingArgs): string => {
+	return args.body.replace(/^## .+$/m, `### ${args.sectionOrder}.${args.ruleOrder} ${normalizeHeadingTitle(args.title)}`);
 };
 
 /**

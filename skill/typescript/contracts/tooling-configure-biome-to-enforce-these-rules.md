@@ -55,6 +55,12 @@
 - `typescript/types-mark-unused-parameters-with-underscore` 중 **매개변수를 아예 생략한 경우**는 기계가 못 봅니다.
   `noUnusedFunctionParameters`는 남겨 둔 매개변수만 봅니다.
 
+**테스트 파일에서는 `noMagicNumbers`를 끕니다.**
+`assert.equal(rules.length, 111)`의 `111`은 설정으로 뺄 값이 아니라 그 테스트가 고정하는 계약입니다.
+설정에서 읽어 오면 설정과 설정을 비교하는 셈이라 테스트가 아무것도 검증하지 않게 됩니다.
+소스가 이미 이름을 붙여 둔 값은 테스트도 그 이름을 가져다 씁니다.
+끄는 것은 리터럴을 그대로 적어야 하는 기대값뿐입니다.
+
 따로 켜지 않는 규칙이 하나 있습니다.
 `style/useFragmentSyntax`는 JSX 조각을 `<>`로 바꾸라고 합니다.
 `recommended`에 없어 따로 켜야 하는데, 켜지 않습니다.

@@ -1930,13 +1930,20 @@ const toOverdueLines = (invoice: Invoice, today: Date): InvoiceLine[] => {
 | 배열 인덱스 | `rows[0]`, `parts[1]` |
 | 선언의 초기값 | `let count = 0` |
 | 설정 객체 자신의 값 | `{maxAttempts: 42}` |
+| 기본 매개변수 | `(limit = 42) => …` |
 
-기본 매개변수와 `??`·`||` 오른쪽은 이 규칙이 아니라
+`??`·`||` 오른쪽은 이 규칙이 아니라
 `absence-expose-optional-values-instead-of-silent-fallbacks`가 봅니다.
 없는 값을 다루는 자리라 판정이 다릅니다.
 
+**설정은 객체로 둡니다.**
+`{first: 0x1100, last: 0x115f}`처럼 키를 붙이면 그 값은 무시되지만
+`[0x1100, 0x115f]`처럼 배열에 담으면 자리마다 걸립니다.
+숫자 여러 개가 한 뜻을 이루는 표도 각 칸에 이름을 주라는 뜻입니다.
+
 `tooling-configure-biome-to-enforce-these-rules` 규칙이 `style/noMagicNumbers`로 이 선을 강제합니다.
-위 표가 그 규칙이 무시하는 목록과 같은 선입니다.
+그 규칙은 테스트 파일에서만 꺼집니다.
+기대값은 리터럴 자체가 계약이라 설정으로 빼면 검증할 것이 남지 않습니다.
 
 **Incorrect (뜻이 있는 숫자를 쓰는 자리에 적음):**
 
@@ -2518,6 +2525,12 @@ const filteredRows = useMemo(() => rows.filter((row) => matchRow(row, deferredKe
 - `typescript/types-mark-unused-parameters-with-underscore` 중 **매개변수를 아예 생략한 경우**는 기계가 못 봅니다.
   `noUnusedFunctionParameters`는 남겨 둔 매개변수만 봅니다.
 
+**테스트 파일에서는 `noMagicNumbers`를 끕니다.**
+`assert.equal(rules.length, 111)`의 `111`은 설정으로 뺄 값이 아니라 그 테스트가 고정하는 계약입니다.
+설정에서 읽어 오면 설정과 설정을 비교하는 셈이라 테스트가 아무것도 검증하지 않게 됩니다.
+소스가 이미 이름을 붙여 둔 값은 테스트도 그 이름을 가져다 씁니다.
+끄는 것은 리터럴을 그대로 적어야 하는 기대값뿐입니다.
+
 따로 켜지 않는 규칙이 하나 있습니다.
 `style/useFragmentSyntax`는 JSX 조각을 `<>`로 바꾸라고 합니다.
 `recommended`에 없어 따로 켜야 하는데, 켜지 않습니다.
@@ -2580,7 +2593,13 @@ const filteredRows = useMemo(() => rows.filter((row) => matchRow(row, deferredKe
 				}
 			}
 		}
-	}
+	},
+	"overrides": [
+		{
+			"includes": ["test/**/*.ts"],
+			"linter": {"rules": {"style": {"noMagicNumbers": "off"}}}
+		}
+	]
 }
 ```
 

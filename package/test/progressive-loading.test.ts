@@ -25,7 +25,7 @@ const tsxCliPath = path.join(packageDir, "node_modules", "tsx", "dist", "cli.mjs
 const validateModulePath = path.join(packageDir, "src", "validate.ts");
 
 /** 계약 생성이 반드시 실패하는 본문. build 트랜잭션이 기존 생성물을 덮지 않는지 확인하는 데 쓴다. */
-const EMPTY_EXAMPLE_BODY = [
+const EmptyExampleBody = [
 	"---",
 	"title: Fixture Rule",
 	"titleKo: 픽스처 규칙",
@@ -159,23 +159,25 @@ const withFixtureRoot = async (run: (skillRootDir: string) => Promise<void>): Pr
 	}
 };
 
+interface CreateSymlinkOrSkipArgs {
+	context: {skip: (message?: string) => void};
+	targetPath: string;
+	linkPath: string;
+	type: "file" | "dir";
+}
+
 /**
  * @helper symlink 기능이 없는 플랫폼에서는 회귀 테스트를 명시적으로 skip
  */
-const createSymlinkOrSkip = async (
-	context: {skip: (message?: string) => void},
-	targetPath: string,
-	linkPath: string,
-	type: "file" | "dir",
-): Promise<boolean> => {
+const createSymlinkOrSkip = async (args: CreateSymlinkOrSkipArgs): Promise<boolean> => {
 	try {
-		await symlink(targetPath, linkPath, type);
+		await symlink(args.targetPath, args.linkPath, args.type);
 		return true;
 	} catch (error) {
 		const errorCode = (error as NodeJS.ErrnoException).code;
 
 		if (errorCode === "EPERM" || errorCode === "EACCES" || errorCode === "ENOTSUP" || errorCode === "ENOSYS") {
-			context.skip(`Symlink creation is unavailable: ${errorCode}`);
+			args.context.skip(`Symlink creation is unavailable: ${errorCode}`);
 			return false;
 		}
 
@@ -345,7 +347,7 @@ test("compact rule index is deterministic, complete, routing-only, and body-free
 });
 
 test("generated rule contract preserves the normative prefix and defers examples to the full rule", () => {
-	const rule = createRoutingDocument().rules[0]!;
+	const rule = createRoutingDocument().rules[0];
 	rule.body = [
 		"## Observe State",
 		"",
@@ -383,7 +385,7 @@ test("generated rule contract preserves the normative prefix and defers examples
 
 test("long Impact and Description declarations may fold across source lines", () => {
 	// 규칙 본문. 접어 써도 계약에는 한 줄로 들어간다
-	const foldedRule = createRoutingDocument().rules[0]!;
+	const foldedRule = createRoutingDocument().rules[0];
 	foldedRule.body = [
 		"## Observe State",
 		"",
@@ -408,7 +410,7 @@ test("long Impact and Description declarations may fold across source lines", ()
 	assert.match(generateRuleContractMarkdown(foldedRule), /^\*\*Impact: HIGH \(State impact\.\)\*\*$/m);
 
 	// 접었다고 frontmatter 와 어긋나도 되는 건 아니다
-	const driftedRule = createRoutingDocument().rules[0]!;
+	const driftedRule = createRoutingDocument().rules[0];
 	driftedRule.body = foldedRule.body.replace("impact.)**", "impact drift.)**");
 
 	assert.throws(() => generateRuleContractMarkdown(driftedRule), /state-observe.*Impact declaration matching frontmatter/i);
@@ -429,42 +431,42 @@ test("long Impact and Description declarations may fold across source lines", ()
 });
 
 test("generated rule contract rejects missing boundaries and oversized normative prefixes", () => {
-	const missingBoundaryRule = createRoutingDocument().rules[0]!;
+	const missingBoundaryRule = createRoutingDocument().rules[0];
 	missingBoundaryRule.body = "## Observe State\n\nNormative text without an example boundary.";
 	assert.throws(() => generateRuleContractMarkdown(missingBoundaryRule), /state-observe.*Incorrect.*boundary/i);
 
-	const indentedMarkerRule = createRoutingDocument().rules[0]!;
+	const indentedMarkerRule = createRoutingDocument().rules[0];
 	indentedMarkerRule.body =
 		"## Observe State\n\n**Impact: HIGH (State impact.)**\n\nNormative guidance.\n\n    **Incorrect**\n\n    **Correct**";
 	assert.throws(() => generateRuleContractMarkdown(indentedMarkerRule), /state-observe.*Incorrect.*boundary/i);
 
-	const unfencedExamplesRule = createRoutingDocument().rules[0]!;
+	const unfencedExamplesRule = createRoutingDocument().rules[0];
 	unfencedExamplesRule.body = "## Observe State\n\n**Impact: HIGH (State impact.)**\n\nNormative guidance.\n\n**Incorrect**\n\n**Correct**";
 	assert.throws(() => generateRuleContractMarkdown(unfencedExamplesRule), /state-observe.*Incorrect.*fenced example/i);
 
-	const reversedExamplesRule = createRoutingDocument().rules[0]!;
+	const reversedExamplesRule = createRoutingDocument().rules[0];
 	reversedExamplesRule.body =
 		"## Observe State\n\n**Impact: HIGH (State impact.)**\n\nNormative guidance.\n\n**Correct**\n\n```ts\nconst good = true;\n```\n\n**Incorrect**\n\n```ts\nconst bad = true;\n```";
 	assert.throws(() => generateRuleContractMarkdown(reversedExamplesRule), /state-observe.*Correct.*before.*Incorrect/i);
 
-	const misspelledCriticalRule = createRoutingDocument().rules[2]!;
+	const misspelledCriticalRule = createRoutingDocument().rules[2];
 	misspelledCriticalRule.impact = "CRITCAL";
 	misspelledCriticalRule.body = misspelledCriticalRule.body.replace("Impact: CRITICAL", "Impact: CRITCAL");
 	assert.throws(() => generateRuleContractMarkdown(misspelledCriticalRule), /composition-first.*unsupported impact.*CRITCAL/i);
 
-	const conflictingImpactRule = createRoutingDocument().rules[0]!;
+	const conflictingImpactRule = createRoutingDocument().rules[0];
 	conflictingImpactRule.body =
 		"## Observe State\n\n**Impact: HIGH (State impact.)**\n\n**Impact: LOW (Conflicting impact.)**\n\nNormative guidance.\n\n**Incorrect**\n\n```ts\nconst bad = true;\n```\n\n**Correct**\n\n```ts\nconst good = true;\n```";
 	assert.throws(() => generateRuleContractMarkdown(conflictingImpactRule), /state-observe.*exactly one Impact declaration/i);
 
-	const emptyExamplesRule = createRoutingDocument().rules[0]!;
+	const emptyExamplesRule = createRoutingDocument().rules[0];
 	emptyExamplesRule.body =
 		"## Observe State\n\n**Impact: HIGH (State impact.)**\n\nNormative guidance.\n\n**Incorrect**\n\n```ts\n```\n\n**Correct**\n\n```ts\n```";
 	assert.throws(() => generateRuleContractMarkdown(emptyExamplesRule), /state-observe.*Incorrect.*non-whitespace content/i);
 });
 
 test("critical contracts require the full source while non-critical contracts reject prose hidden after examples", () => {
-	const criticalRule = createRoutingDocument().rules[2]!;
+	const criticalRule = createRoutingDocument().rules[2];
 	criticalRule.body =
 		"## First Composition\n\n**Impact: CRITICAL (First impact.)**\n\nKeep the critical boundary.\n\n**Incorrect**\n\n```ts\nconst bad = true;\n```\n\n**Correct**\n\n```ts\nconst good = true;\n```";
 	const criticalContract = generateRuleContractMarkdown(criticalRule);
@@ -477,7 +479,7 @@ test("critical contracts require the full source while non-critical contracts re
 	assert.match(criticalContract, /must read.*\[full rule\]\(\.\.\/rules\/composition-first\.md\)/i);
 	assert.doesNotMatch(criticalContract, /hidden body/);
 
-	const hiddenNormRule = createRoutingDocument().rules[0]!;
+	const hiddenNormRule = createRoutingDocument().rules[0];
 	hiddenNormRule.body = [
 		"## Observe State",
 		"",
@@ -503,7 +505,7 @@ test("critical contracts require the full source while non-critical contracts re
 });
 
 test("generated contracts use canonical requiresSelected target order", () => {
-	const rule = createRoutingDocument().rules[2]!;
+	const rule = createRoutingDocument().rules[2];
 	rule.requiresSelected = ["typescript/types-reuse-contracts", "state-observe"];
 	rule.body =
 		"## First Composition\n\n**Impact: CRITICAL (First impact.)**\n\nKeep the critical boundary.\n\n**Incorrect**\n\n```ts\nconst bad = true;\n```\n\n**Correct**\n\n```ts\nconst good = true;\n```";
@@ -518,7 +520,7 @@ test("generated contracts use canonical requiresSelected target order", () => {
 });
 
 test("non-critical contracts support every documented impact level", () => {
-	const lowImpactRule = createRoutingDocument().rules[0]!;
+	const lowImpactRule = createRoutingDocument().rules[0];
 	lowImpactRule.impact = "LOW";
 	lowImpactRule.impactDescription = "Low impact.";
 	lowImpactRule.body =
@@ -563,86 +565,86 @@ test("routing digest covers every routing field and ignores unsorted input order
 		[
 			"appliesWhen",
 			(document) => {
-				document.rules[0]!.appliesWhen = "A changed routing condition.";
+				document.rules[0].appliesWhen = "A changed routing condition.";
 			},
 		],
 		[
 			"requiresSelected",
 			(document) => {
-				document.rules[0]!.requiresSelected.push("composition-second");
+				document.rules[0].requiresSelected.push("composition-second");
 			},
 		],
 		[
 			"requiredOnCompletion",
 			(document) => {
-				document.rules[0]!.requiredOnCompletion = false;
+				document.rules[0].requiredOnCompletion = false;
 			},
 		],
 		[
 			"reviewWith",
 			(document) => {
-				document.rules[2]!.reviewWith.push("composition-second");
+				document.rules[2].reviewWith.push("composition-second");
 			},
 		],
 		[
 			"rule title",
 			(document) => {
-				document.rules[0]!.title = "Changed State Title";
+				document.rules[0].title = "Changed State Title";
 			},
 		],
 		[
 			"rule stable id",
 			(document) => {
-				document.rules[0]!.fileName = "state-observe-v2.md";
+				document.rules[0].fileName = "state-observe-v2.md";
 			},
 		],
 		[
 			"rule section assignment",
 			(document) => {
-				document.rules[0]!.prefix = "composition";
+				document.rules[0].prefix = "composition";
 			},
 		],
 		[
 			"rule impact",
 			(document) => {
-				document.rules[0]!.impact = "CRITICAL";
+				document.rules[0].impact = "CRITICAL";
 			},
 		],
 		[
 			"tags",
 			(document) => {
-				document.rules[0]!.tags.push("changed");
+				document.rules[0].tags.push("changed");
 			},
 		],
 		[
 			"full rule body",
 			(document) => {
-				document.rules[0]!.body = "## Observe State\n\nChanged guidance.\n\n**Incorrect** changed\n\n**Correct** changed";
+				document.rules[0].body = "## Observe State\n\nChanged guidance.\n\n**Incorrect** changed\n\n**Correct** changed";
 			},
 		],
 		[
 			"section order",
 			(document) => {
-				document.sections[0]!.order = 3;
+				document.sections[0].order = 3;
 			},
 		],
 		[
 			"section title",
 			(document) => {
-				document.sections[0]!.title = "State Ownership";
+				document.sections[0].title = "State Ownership";
 			},
 		],
 		[
 			"section prefix",
 			(document) => {
-				document.sections[0]!.prefix = "state-v2";
-				document.rules[0]!.prefix = "state-v2";
+				document.sections[0].prefix = "state-v2";
+				document.rules[0].prefix = "state-v2";
 			},
 		],
 		[
 			"section impact",
 			(document) => {
-				document.sections[0]!.impact = "CRITICAL";
+				document.sections[0].impact = "CRITICAL";
 			},
 		],
 		[
@@ -654,19 +656,19 @@ test("routing digest covers every routing field and ignores unsorted input order
 		[
 			"companion mode",
 			(_document, companions) => {
-				companions[0]!.mode = "conditional";
+				companions[0].mode = "conditional";
 			},
 		],
 		[
 			"companion skill",
 			(_document, companions) => {
-				companions[0]!.skill = "typescript-v2";
+				companions[0].skill = "typescript-v2";
 			},
 		],
 		[
 			"companion condition",
 			(_document, companions) => {
-				companions[1]!.appliesWhen = "Changing stylesheet ownership.";
+				companions[1].appliesWhen = "Changing stylesheet ownership.";
 			},
 		],
 	];
@@ -684,8 +686,8 @@ test("routing digest covers every routing field and ignores unsorted input order
 	nonRoutingDocument.metadata.date = "2099-01-01";
 	nonRoutingDocument.metadata.references = ["https://example.com/reference"];
 	nonRoutingDocument.metadata.progressiveDisclosure = false;
-	nonRoutingDocument.sections[0]!.description = "Changed section description.";
-	nonRoutingDocument.rules[0]!.impactDescription = "Changed impact explanation.";
+	nonRoutingDocument.sections[0].description = "Changed section description.";
+	nonRoutingDocument.rules[0].impactDescription = "Changed impact explanation.";
 	assert.equal(
 		readRoutingDigest(generateRulesIndexMarkdown(nonRoutingDocument, structuredClone(directCompanions))),
 		sourceDigest,
@@ -704,11 +706,11 @@ test("rule index escapes hostile display text and encodes safe path segments", (
 	const document = createRoutingDocument();
 	document.skillName = "react_v2.preview@team";
 	document.metadata.title = "React [Core](https://evil.example) # `Guide`";
-	document.sections[0]!.title = "State [Owner](https://evil.example)";
-	document.sections[0]!.impact = "HIGH `priority`";
-	document.rules[0]!.fileName = "state-observe@v2.md";
-	document.rules[0]!.title = "Observe ](https://evil.example) *State*";
-	document.rules[0]!.appliesWhen = "When [state](https://evil.example) or *markup* changes | completionGate.";
+	document.sections[0].title = "State [Owner](https://evil.example)";
+	document.sections[0].impact = "HIGH `priority`";
+	document.rules[0].fileName = "state-observe@v2.md";
+	document.rules[0].title = "Observe ](https://evil.example) *State*";
+	document.rules[0].appliesWhen = "When [state](https://evil.example) or *markup* changes | completionGate.";
 	const companions: SkillCompanion[] = [
 		{skill: "typescript_v2.preview@team", mode: "conditional", appliesWhen: "When [types](https://evil.example) or `contracts` change."},
 	];
@@ -735,25 +737,25 @@ test("rule index rejects unsafe skill names and routing identifiers", () => {
 		[
 			"rule stable id",
 			(document) => {
-				document.rules[0]!.fileName = "state unsafe.md";
+				document.rules[0].fileName = "state unsafe.md";
 			},
 		],
 		[
 			"section prefix",
 			(document) => {
-				document.sections[0]!.prefix = "state unsafe";
+				document.sections[0].prefix = "state unsafe";
 			},
 		],
 		[
 			"tag",
 			(document) => {
-				document.rules[0]!.tags = ["unsafe`tag"];
+				document.rules[0].tags = ["unsafe`tag"];
 			},
 		],
 		[
 			"reviewWith",
 			(document) => {
-				document.rules[2]!.reviewWith = ["unsafe]target"];
+				document.rules[2].reviewWith = ["unsafe]target"];
 			},
 		],
 	];
@@ -787,11 +789,11 @@ test("progressive validation rejects an unsafe routing prefix even when its sect
 
 test("rule index rejects duplicate IDs and missing or duplicate section assignments", () => {
 	const duplicateIdDocument = createRoutingDocument();
-	duplicateIdDocument.rules[1]!.fileName = duplicateIdDocument.rules[0]!.fileName;
+	duplicateIdDocument.rules[1].fileName = duplicateIdDocument.rules[0].fileName;
 	assert.throws(() => generateRulesIndexMarkdown(duplicateIdDocument, directCompanions), /duplicate.*stable.*id/i);
 
 	const missingAssignmentDocument = createRoutingDocument();
-	missingAssignmentDocument.rules[0]!.prefix = "missing";
+	missingAssignmentDocument.rules[0].prefix = "missing";
 	assert.throws(() => generateRulesIndexMarkdown(missingAssignmentDocument, directCompanions), /assigned exactly once.*state-observe/i);
 
 	const duplicateAssignmentDocument = createRoutingDocument();
@@ -968,7 +970,7 @@ test("generated checks reject missing, stale, and unexpected compact contracts",
 
 		const relocatedIndexPath = path.join(skillRootDir, "relocated-owner-index.md");
 		await rename(ownerPaths.rulesIndexPath, relocatedIndexPath);
-		if (!(await createSymlinkOrSkip(context, relocatedIndexPath, ownerPaths.rulesIndexPath, "file"))) {
+		if (!(await createSymlinkOrSkip({context, targetPath: relocatedIndexPath, linkPath: ownerPaths.rulesIndexPath, type: "file"}))) {
 			return;
 		}
 		await assert.rejects(() => checkGeneratedSkill(ownerPaths), /generated file.*regular file.*symlink/i);
@@ -996,7 +998,7 @@ test("generated checks validate the progressive companion closure and reject com
 
 		const relocatedIndexPath = path.join(skillRootDir, "relocated-dependency-index.md");
 		await rename(dependencyPaths.rulesIndexPath, relocatedIndexPath);
-		if (!(await createSymlinkOrSkip(context, relocatedIndexPath, dependencyPaths.rulesIndexPath, "file"))) {
+		if (!(await createSymlinkOrSkip({context, targetPath: relocatedIndexPath, linkPath: dependencyPaths.rulesIndexPath, type: "file"}))) {
 			return;
 		}
 		await assert.rejects(() => checkGeneratedSkill(ownerPaths), /generated file.*regular file.*symlink/i);
@@ -1104,7 +1106,7 @@ test("build renders and prepares every output before replacing existing generate
 	await withFixtureRoot(async (skillRootDir) => {
 		await writeSkillFixture(skillRootDir, "owner", {
 			metadata: {progressiveDisclosure: true},
-			rules: [{appliesWhen: "Editing owner code.", body: EMPTY_EXAMPLE_BODY}],
+			rules: [{appliesWhen: "Editing owner code.", body: EmptyExampleBody}],
 		});
 		const ownerPaths = getSkillPaths("owner", skillRootDir);
 		await writeFile(ownerPaths.outputPath, "ORIGINAL AGENTS\n", "utf8");
@@ -1196,7 +1198,7 @@ test("non-progressive checks reject a dangling generated-index symlink as an art
 		const legacyPaths = getSkillPaths("legacy", skillRootDir);
 		const missingTargetPath = path.join(skillRootDir, "missing-index.md");
 
-		if (!(await createSymlinkOrSkip(context, missingTargetPath, legacyPaths.rulesIndexPath, "file"))) {
+		if (!(await createSymlinkOrSkip({context, targetPath: missingTargetPath, linkPath: legacyPaths.rulesIndexPath, type: "file"}))) {
 			return;
 		}
 
@@ -1346,7 +1348,7 @@ test("skill directory symlinks cannot escape the configured root or receive gene
 				rules: [{appliesWhen: "Editing owner code."}],
 			});
 			const outsideSkillDir = path.join(outsideRootDir, "owner");
-			if (!(await createSymlinkOrSkip(context, outsideSkillDir, path.join(skillRootDir, "owner"), "dir"))) {
+			if (!(await createSymlinkOrSkip({context, targetPath: outsideSkillDir, linkPath: path.join(skillRootDir, "owner"), type: "dir"}))) {
 				return;
 			}
 			const escapedPaths = getSkillPaths("owner", skillRootDir);
@@ -1371,7 +1373,7 @@ test("skill root symlinks fail discovery instead of becoming a successful all-sk
 
 	try {
 		await writeSkillFixture(realSkillRootDir, "owner");
-		if (!(await createSymlinkOrSkip(context, realSkillRootDir, linkedSkillRootDir, "dir"))) {
+		if (!(await createSymlinkOrSkip({context, targetPath: realSkillRootDir, linkPath: linkedSkillRootDir, type: "dir"}))) {
 			return;
 		}
 		await assert.rejects(() => listSkillNames(linkedSkillRootDir), /skill root.*real directory.*symlink/i);
@@ -1605,7 +1607,7 @@ test("validate CLI recognizes a symlinked entry path", async (context) => {
 	const linkedValidatePath = path.join(temporaryDir, "validate-link.ts");
 
 	try {
-		if (!(await createSymlinkOrSkip(context, validateModulePath, linkedValidatePath, "file"))) {
+		if (!(await createSymlinkOrSkip({context, targetPath: validateModulePath, linkPath: linkedValidatePath, type: "file"}))) {
 			return;
 		}
 

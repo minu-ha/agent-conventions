@@ -6,10 +6,49 @@
 		"enabled": true,
 		"rules": {
 			"preset": "recommended",
-			"correctness": {"noUndeclaredVariables": "off", "noUnusedImports": "warn"},
-			"style": {"noNonNullAssertion": "off", "useConsistentArrayType": {"level": "warn", "options": {"syntax": "shorthand"}}},
-			"suspicious": {"noExtraNonNullAssertion": "warn", "noShadowRestrictedNames": "off"},
-			"complexity": {"noUselessConstructor": "warn", "noForEach": "off", "useLiteralKeys": "off"}
+			"correctness": {
+				"noUndeclaredVariables": "off",
+				"noUnusedImports": "warn",
+				"noUnusedFunctionParameters": "error",
+				"useSingleJsDocAsterisk": "error"
+			},
+			"style": {
+				"useConsistentArrayType": {"level": "warn", "options": {"syntax": "shorthand"}},
+				"noEnum": "error",
+				"noMagicNumbers": "error",
+				"noNestedTernary": "error",
+				"useAsConstAssertion": "error",
+				"noParameterAssign": "error",
+				"useConst": "error",
+				"useImportType": "error",
+				"useFilenamingConvention": {"level": "error", "options": {"filenameCases": ["kebab-case"]}},
+				"noRestrictedImports": {
+					"level": "error",
+					"options": {"patterns": [{"group": ["@/page/**"], "message": "화면 내부는 절대경로로 가져오지 않습니다."}]}
+				},
+				"useNamingConvention": {
+					"level": "error",
+					"options": {
+						"strictCase": false,
+						"conventions": [
+							{"selector": {"kind": "typeLike"}, "formats": ["PascalCase"]},
+							{"selector": {"kind": "const", "scope": "global"}, "formats": ["camelCase", "PascalCase"]},
+							{"selector": {"kind": "objectLiteralProperty"}, "formats": ["camelCase", "PascalCase"]},
+							{"selector": {"kind": "typeProperty"}, "formats": ["camelCase"]},
+							{"selector": {"kind": "variable"}, "formats": ["camelCase", "PascalCase"]}
+						]
+					}
+				},
+				"noNonNullAssertion": "error"
+			},
+			"suspicious": {"noExtraNonNullAssertion": "warn", "noShadowRestrictedNames": "off", "noExplicitAny": "error"},
+			"complexity": {
+				"noUselessConstructor": "warn",
+				"noForEach": "off",
+				"useLiteralKeys": "off",
+				"useMaxParams": {"level": "error", "options": {"max": 3}}
+			},
+			"performance": {"noNamespaceImport": "error", "noBarrelFile": "error", "noReExportAll": "error"}
 		}
 	},
 	"assist": {"actions": {"source": {"organizeImports": "off"}}},
@@ -24,5 +63,6 @@
 		"expand": "never"
 	},
 	"javascript": {"formatter": {"quoteStyle": "double", "arrowParentheses": "always"}},
-	"json": {"parser": {"allowComments": true, "allowTrailingCommas": true}}
+	"json": {"parser": {"allowComments": true, "allowTrailingCommas": true}},
+	"overrides": [{"includes": ["test/**/*.ts"], "linter": {"rules": {"style": {"noMagicNumbers": "off"}}}}]
 }

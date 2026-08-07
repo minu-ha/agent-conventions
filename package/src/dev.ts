@@ -7,6 +7,7 @@ const args = process.argv.slice(2);
 const npmCommand = process.platform === "win32" ? "npm.cmd" : "npm";
 const packageBinDir = path.join(packagePaths.packageDir, "node_modules/.bin");
 const nodeBinDir = path.dirname(process.execPath);
+// biome-ignore lint/style/useNamingConvention: PATH 는 OS 가 정한 환경변수 이름이라 우리가 바꿀 수 없다
 const commandEnv = {...process.env, PATH: [packageBinDir, nodeBinDir, process.env.PATH ?? ""].join(path.delimiter)};
 const tsxBinPath = path.join(packageBinDir, "tsx");
 

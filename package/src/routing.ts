@@ -3,7 +3,18 @@ import {createHash} from "node:crypto";
 import {assertRoutingCondition, assertValidRoutingIdentifier, assertValidRuleTarget, getRuleStableId} from "./dependencies.js";
 import type {LoadedSkillDocument, SkillCompanion, SkillRule, SkillSection} from "./types.js";
 
-const compareRoutingText = (left: string, right: string): number => (left < right ? -1 : left > right ? 1 : 0);
+/**
+ * 섹션 하나가 가질 수 있는 규칙 수의 상한. 섹션 순서를 앞자리로 밀어 정렬 키를 만든다
+ */
+const sectionOrdinalStride = 1_000;
+
+const compareRoutingText = (left: string, right: string): number => {
+	if (left < right) {
+		return -1;
+	}
+
+	return left > right ? 1 : 0;
+};
 const compareHandbookText = (left: string, right: string): number => left.localeCompare(right, "en-US");
 const rulesIndexRendererVersion = 2;
 const contractRendererVersion = 4;
@@ -75,7 +86,7 @@ export const getRuleId = (rule: SkillRule): string => getRuleStableId(rule.fileN
 const getRuleFileOrder = (rule: SkillRule): number => {
 	const numbered = /^(\d+)-(\d+)-/.exec(rule.fileName);
 
-	return numbered ? Number(numbered[1]) * 1_000 + Number(numbered[2]) : Number.MAX_SAFE_INTEGER;
+	return numbered ? Number(numbered[1]) * sectionOrdinalStride + Number(numbered[2]) : Number.MAX_SAFE_INTEGER;
 };
 
 /**
@@ -171,7 +182,7 @@ const readNormativeRuleContract = (rule: SkillRule): string => {
 		const fenceMatch = fencePattern.exec(line);
 
 		if (fenceMatch) {
-			const fence = fenceMatch[1]!;
+			const fence = fenceMatch[1];
 			const fenceCharacter = fence[0] as "`" | "~";
 
 			if (activeFenceCharacter === undefined) {

@@ -170,7 +170,7 @@ export const replaceGeneratedFiles = async (
 	const preparedMutations: PreparedMutation[] = [];
 
 	for (const [index, mutation] of mutations.entries()) {
-		const targetPath = targetPaths[index]!;
+		const targetPath = targetPaths[index];
 		const stats = await readTargetStats(targetPath, operations);
 
 		if (stats && !stats.isFile()) {

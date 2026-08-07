@@ -20,6 +20,11 @@ import {
 import type {CompiledSkillSection, LoadedSkillDocument, SkillCompanion, SkillMetadata, SkillPaths} from "./types.js";
 
 /**
+ * 목차에서 규칙 줄을 섹션 줄 아래로 들여쓰는 칸 수
+ */
+const tocIndentWidth = 4;
+
+/**
  * @summary compiled handbook에 표시할 companion skill 링크와 activation 선언
  */
 interface CompanionSkill {
@@ -107,7 +112,7 @@ const conventionTitleBySkillName: Record<string, string> = {
 	typescript: "TypeScript Convention",
 };
 const conventionSkillNameBySkillName: Record<string, string> = {};
-const nestedTocIndent = " ".repeat(4);
+const nestedTocIndent = " ".repeat(tocIndentWidth);
 
 /**
  * @helper skill 이름 기준 영어 convention 표시명 계산
@@ -199,6 +204,36 @@ const collectCompanionSkills = (rootDocument: LoadedSkillDocument, documents: Lo
 };
 
 /**
+ * @helper companion 을 언제 함께 적용하는지 한 줄로 적는다
+ */
+const toCompanionCondition = (declaration: SkillCompanion): string => {
+	if (declaration.mode === "required") {
+		return "항상 함께 적용합니다.";
+	}
+
+	if (declaration.appliesWhen === undefined) {
+		return "관련 변경이 있을 때 함께 적용합니다.";
+	}
+
+	return `다음 조건에서 함께 적용합니다. ${escapeMarkdownText(declaration.appliesWhen)}`;
+};
+
+/**
+ * @helper 의존성을 어느 metadata 키에서 읽었는지 돌려준다. 둘 다 없으면 undefined 다
+ */
+const toDependencySourceKey = (metadata: SkillMetadata): string | undefined => {
+	if (metadata.companions !== undefined) {
+		return "metadata.json.companions";
+	}
+
+	if (metadata.extends !== undefined) {
+		return "metadata.json.extends";
+	}
+
+	return undefined;
+};
+
+/**
  * @helper metadata와 resolved section을 compiled markdown 본문으로 조립
  */
 export const generateMarkdown = (args: GenerateMarkdownArgs): string => {
@@ -206,8 +241,7 @@ export const generateMarkdown = (args: GenerateMarkdownArgs): string => {
 	const lines: string[] = [];
 	const dependencyDeclaration = parseDependencyDeclaration(skillName, metadata);
 	const usesCompanionDeclarations = dependencyDeclaration.kind === "companions";
-	const dependencySourceKey =
-		metadata.companions !== undefined ? "metadata.json.companions" : metadata.extends !== undefined ? "metadata.json.extends" : undefined;
+	const dependencySourceKey = toDependencySourceKey(metadata);
 	const sourcePaths = ["`rules/*.md`", "`metadata.json`", ...(dependencySourceKey === undefined ? [] : [`\`${dependencySourceKey}\``])];
 
 	lines.push(`# ${metadata.title}`);
@@ -253,12 +287,7 @@ export const generateMarkdown = (args: GenerateMarkdownArgs): string => {
 					throw new Error(`Skill "${skillName}" is missing companion declaration for "${companionSkill.skillName}".`);
 				}
 
-				const condition =
-					declaration.mode === "required"
-						? "항상 함께 적용합니다."
-						: declaration.appliesWhen === undefined
-							? "관련 변경이 있을 때 함께 적용합니다."
-							: `다음 조건에서 함께 적용합니다. ${escapeMarkdownText(declaration.appliesWhen)}`;
+				const condition = toCompanionCondition(declaration);
 				lines.push(`- [${companionSkill.title}](${companionSkill.agentsGuidePath}) — ${condition}`);
 				continue;
 			}
@@ -305,7 +334,7 @@ export const generateMarkdown = (args: GenerateMarkdownArgs): string => {
 
 		for (const [ruleIndex, rule] of section.rules.entries()) {
 			const ruleOrder = ruleIndex + 1;
-			let renderedRule = replaceRuleHeading(rule.body.trim(), sectionOrder, ruleOrder, rule.title);
+			let renderedRule = replaceRuleHeading({body: rule.body.trim(), sectionOrder, ruleOrder, title: rule.title});
 
 			if (metadata.progressiveDisclosure === true && rule.appliesWhen !== undefined) {
 				const headingEnd = renderedRule.indexOf("\n");

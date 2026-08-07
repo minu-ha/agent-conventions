@@ -20,7 +20,7 @@ export interface DependencyDeclaration {
 	companions: SkillCompanion[];
 }
 
-const maximumConditionLength = 160;
+export const maximumConditionLength = 160;
 const safeStableNamePattern = /^[A-Za-z0-9][A-Za-z0-9._@-]*$/;
 
 /**

@@ -1,4 +1,9 @@
 /**
+ * 코드 펜스를 여닫는 표시. 뒤에 붙은 언어 이름은 이 길이만큼 잘라 낸다
+ */
+const fenceMarker = "```";
+
+/**
  * @summary rule 본문 코드 블록 하나
  */
 export interface RuleCodeBlock {
@@ -115,8 +120,8 @@ export const parseRuleBody = (body: string): ParsedRuleBody => {
 			continue;
 		}
 
-		if (line.startsWith("```")) {
-			const lang = line.slice(3).trim() || "text";
+		if (line.startsWith(fenceMarker)) {
+			const lang = line.slice(fenceMarker.length).trim() || "text";
 			const buffer: string[] = [];
 			index += 1;
 

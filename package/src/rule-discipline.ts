@@ -7,6 +7,11 @@ import type {LoadedSkillDocument, SkillRule} from "./types.js";
 const maxProseWidth = 120;
 
 /**
+ * 위반 메시지에 실어 보내는 원문 길이. 어느 줄인지 알아볼 만큼만 자른다.
+ */
+const violationExcerptLength = 40;
+
+/**
  * 인덴트를 탭으로 강제하는 코드 펜스 언어. `text`·`md`는 디렉터리 트리와 목록에 공백을 쓴다.
  */
 const tabIndentedFenceLanguages = new Set(["ts", "tsx", "css", "js", "json"]);
@@ -87,6 +92,20 @@ const objectDestructuringDeclaration = /^\s*(?:const|let|var)\s*\{/;
 const objectDestructuringParameter = /=\s*(?:async\s*)?\(\s*\{[^}]*\}\s*(?::|\))/;
 
 /**
+ * 터미널에서 두 칸을 차지하는 코드포인트 구간. 각 경계가 아니라 표 전체가 하나의 뜻이다.
+ * 출처는 Unicode East Asian Width 의 Wide·Fullwidth 구간이다.
+ */
+const wideCodePointRanges = {
+	hangulJamo: {first: 0x1100, last: 0x115f},
+	cjk: {first: 0x2e80, last: 0xa4cf},
+	hangulSyllable: {first: 0xac00, last: 0xd7a3},
+	cjkCompatibility: {first: 0xf900, last: 0xfaff},
+	verticalForm: {first: 0xfe30, last: 0xfe6f},
+	fullwidthForm: {first: 0xff00, last: 0xff60},
+	fullwidthSign: {first: 0xffe0, last: 0xffe6},
+} as const;
+
+/**
  * @helper 한글·전각 문자를 두 칸으로 세어 표시 폭을 구한다
  */
 const displayWidth = (text: string): number => {
@@ -94,14 +113,9 @@ const displayWidth = (text: string): number => {
 
 	for (const character of text) {
 		const codePoint = character.codePointAt(0) ?? 0;
-		const isWide =
-			(codePoint >= 0x1100 && codePoint <= 0x115f) ||
-			(codePoint >= 0x2e80 && codePoint <= 0xa4cf) ||
-			(codePoint >= 0xac00 && codePoint <= 0xd7a3) ||
-			(codePoint >= 0xf900 && codePoint <= 0xfaff) ||
-			(codePoint >= 0xfe30 && codePoint <= 0xfe6f) ||
-			(codePoint >= 0xff00 && codePoint <= 0xff60) ||
-			(codePoint >= 0xffe0 && codePoint <= 0xffe6);
+		const isWide = Object.values(wideCodePointRanges).some((range) => {
+			return codePoint >= range.first && codePoint <= range.last;
+		});
 		width += isWide ? 2 : 1;
 	}
 
@@ -133,7 +147,7 @@ const collectRuleViolations = (rule: SkillRule): string[] => {
 		}
 
 		if (displayWidth(node.text) > maxProseWidth) {
-			violations.push(`산문 ${maxProseWidth}칸 초과(${displayWidth(node.text)}칸): "${node.text.slice(0, 40)}…"`);
+			violations.push(`산문 ${maxProseWidth}칸 초과(${displayWidth(node.text)}칸): "${node.text.slice(0, violationExcerptLength)}…"`);
 		}
 	}
 

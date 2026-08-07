@@ -6,6 +6,11 @@ import type {RuleCodeBlock, RuleExample} from "./rule-body.js";
 import type {CompanionMode} from "./types.js";
 
 /**
+ * 섹션 하나가 가질 수 있는 규칙 수의 상한. 섹션 순서를 앞자리로 밀어 정렬 키를 만든다
+ */
+const sectionOrderStride = 1_000;
+
+/**
  * @summary 화면용 산문 노드. 일반 줄은 문자열, 코드 블록은 객체다
  * @description `{"type":"line","text":…}` 래퍼를 벗겨 인라인 JSON 크기를 줄인다. 산문 줄이 1,500개라 래퍼 비용이 크다.
  */
@@ -214,7 +219,7 @@ export const buildViewerPayload = async (): Promise<ViewerPayload> => {
 		for (const section of document.sections) {
 			getRulesForSection(section, document.rules).forEach((rule, index) => {
 				numberByFileName.set(rule.fileName, `${section.order}.${index + 1}`);
-				orderKey.set(`${document.skillName}/${getRuleId(rule)}`, section.order * 1000 + index);
+				orderKey.set(`${document.skillName}/${getRuleId(rule)}`, section.order * sectionOrderStride + index);
 			});
 		}
 
