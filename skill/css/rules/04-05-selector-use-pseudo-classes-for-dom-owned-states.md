@@ -32,7 +32,7 @@ tags: pseudo-classes, state, interaction
   어느 쪽이 참인지 가릴 수 없습니다.
 
 가상 클래스를 어디에 쓰는지는 `selector-nest-dom-state-in-the-owning-block` 규칙이 정합니다.
-`:not(.--수정자)` 반전은 `selector-do-not-invert-domain-state-with-not` 규칙이 막습니다.
+`:not()`은 `selector-do-not-negate-with-not` 규칙이 막습니다.
 
 **Incorrect (앱이 아는 상태를 속성 선택자로 겨냥함):**
 

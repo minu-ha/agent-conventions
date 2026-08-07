@@ -1,7 +1,7 @@
 # CSS 컨벤션 Rule Index
 
 - Skill: `css`
-- Routing digest: `sha256:ba7eed7d23bedd49604e6cba981c3abfa39a7aee7ec841bbbc36e62e5a4637c1`
+- Routing digest: `sha256:b8c8a8571fc3417bd72edc8566a70ed70f06ade884657ba7d8d396faab3c79d4`
 
 ## Direct Companions
 
@@ -29,7 +29,7 @@
 - C18 | selector-declare-each-class-in-one-block | 이미 선언한 클래스에 스타일을 더 추가할 때. 파일 아래쪽에서 위쪽 선언을 덮어쓰려 할 때. | reviewWith: layout-group-breakpoints-at-the-file-bottom, selector-do-not-group-classes-with-commas
 - C19 | selector-use-pseudo-classes-for-dom-owned-states | \`:hover\`, \`:visited\`, \`:focus\*\`, \`:disabled\`, \`:checked\`를 추가·수정할 때. 조상의 DOM 상태가 자손 스타일에 영향을 줄 때.
 - C20 | selector-nest-dom-state-in-the-owning-block | \`:hover\`, \`:focus-visible\`, \`:disabled\`, \`:checked\` 스타일을 추가·수정할 때. 조상의 DOM 상태가 자손 스타일을 바꿔야 할 때. | reviewWith: selector-do-not-group-classes-with-commas, selector-limit-nesting-block-depth, selector-use-pseudo-classes-for-dom-owned-states
-- C21 | selector-do-not-invert-domain-state-with-not | \`:not\(.--수정자\)\`로 앱 상태를 뒤집으려 할 때. 조상 클래스와 자손 클래스를 한 선택자에 함께 쓸 때. | reviewWith: selector-use-pseudo-classes-for-dom-owned-states
+- C21 | selector-do-not-negate-with-not | 선택자에 \`:not\(\)\`을 넣으려 할 때. 조상 클래스와 자손 클래스를 한 선택자에 함께 쓸 때. | reviewWith: selector-use-pseudo-classes-for-dom-owned-states
 - C22 | selector-separate-domain-state-modifiers-from-dom-interaction-states | 앱 상태 수정자와 \`:hover\`, \`:focus-visible\`, \`:disabled\` 같은 DOM 상호작용 상태를 추가·변경할 때. 포커스 링을 수정할 때. | reviewWith: composition-do-not-build-structural-variants-with-modifiers
 - C23 | values-always-provide-css-variable-fallbacks | \`var\(--\*\)\`를 새로 쓰거나 변수 이름이나 대체값을 바꿀 때. 공통 토큰 목록에 항목을 넣거나 뺄 때. | reviewWith: values-tokenize-repeated-visual-values
 - C24 | values-tokenize-repeated-visual-values | 여러 파일이 같은 색, 간격, 모서리 반경, 타이포그래피, 그림자 값을 쓸 때. 새 변수를 선언할 때. | reviewWith: composition-do-not-style-through-the-style-attribute, values-always-provide-css-variable-fallbacks

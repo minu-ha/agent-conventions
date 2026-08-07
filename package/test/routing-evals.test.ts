@@ -136,7 +136,7 @@ const cssRuleUniverse = [
 	"selector-declare-each-class-in-one-block",
 	"selector-use-pseudo-classes-for-dom-owned-states",
 	"selector-nest-dom-state-in-the-owning-block",
-	"selector-do-not-invert-domain-state-with-not",
+	"selector-do-not-negate-with-not",
 	"selector-separate-domain-state-modifiers-from-dom-interaction-states",
 	"values-always-provide-css-variable-fallbacks",
 	"values-tokenize-repeated-visual-values",
@@ -209,23 +209,19 @@ const reactRuleUniverse = [
  */
 const typescriptRuleRouting = {
 	"types-reuse-existing-contracts-before-new-types": {
-		appliesWhen:
-			"뜻이 같은 기존 타입, 인터페이스, 스키마가 있는데 형태를 새로 선언·변경·복제·파생할 때. 같은 형태를 두 번 선언했다가 넣거나 뺄 때. 제외: 맞는 후보가 없거나 소유자만 옮긴 경우. 제외: 그대로인 계약을 새 자리에서 쓰는 경우. 제외: 고칠 수 없는 형태를 그대로 쓰는 경우.",
+		appliesWhen: "뜻이 같은 기존 타입, 인터페이스, 스키마가 있는데 형태를 새로 선언·변경·복제·파생할 때. 같은 형태를 두 번 선언했다가 넣거나 뺄 때. 제외: 맞는 후보가 없거나 소유자만 옮긴 경우. 제외: 그대로인 계약을 새 자리에서 쓰는 경우. 제외: 고칠 수 없는 형태를 그대로 쓰는 경우.",
 		reviewWith: ["types-document-custom-types-and-shapes"],
 	},
 	"types-prefer-function-variable-types-over-parameter-annotations": {
-		appliesWhen:
-			"기존 호출 계약을 이름 붙인 함수나 공용 함수 구현에 다시 쓸 때. 같은 시그니처를 여러 구현이 함께 쓰도록 바꿀 때. 제외: 타입 표기 없이 문맥으로 추론되는 일회성 인라인 콜백인 경우.",
+		appliesWhen: "기존 호출 계약을 이름 붙인 함수나 공용 함수 구현에 다시 쓸 때. 같은 시그니처를 여러 구현이 함께 쓰도록 바꿀 때. 제외: 타입 표기 없이 문맥으로 추론되는 일회성 인라인 콜백인 경우.",
 		reviewWith: ["types-mark-unused-parameters-with-underscore"],
 	},
 	"types-document-custom-types-and-shapes": {
-		appliesWhen:
-			"타입, 인터페이스, 스키마 최상단, 객체 상수, 계약 필드, 파생 별칭을 추가·변경할 때. 이름 붙인 형태에 호출 계약 역할을 새로 얹을 때. 제외: 외부·생성된·읽기 전용·공용 형태를 그대로 쓰거나 반환 타입이 익명으로 추론되는 경우.",
+		appliesWhen: "타입, 인터페이스, 스키마 최상단, 객체 상수, 계약 필드, 파생 별칭을 추가·변경할 때. 이름 붙인 형태에 호출 계약 역할을 새로 얹을 때. 제외: 외부·생성된·읽기 전용·공용 형태를 그대로 쓰거나 반환 타입이 익명으로 추론되는 경우.",
 		reviewWith: [],
 	},
 	"types-mark-unused-parameters-with-underscore": {
-		appliesWhen:
-			"기존 콜백이나 프레임워크 계약을 구현하면서 매개변수를 빼거나 쓰지 않을 때. 커링한 핸들러가 마지막에 돌려주는 콜백에서 매개변수를 뺄 때.",
+		appliesWhen: "기존 콜백이나 프레임워크 계약을 구현하면서 매개변수를 빼거나 쓰지 않을 때. 커링한 핸들러가 마지막에 돌려주는 콜백에서 매개변수를 뺄 때.",
 		reviewWith: [],
 	},
 	"types-narrow-unknown-instead-of-asserting": {
@@ -233,8 +229,7 @@ const typescriptRuleRouting = {
 		reviewWith: ["docs-justify-convention-exceptions-with-a-reason-comment", "tooling-configure-biome-to-enforce-these-rules"],
 	},
 	"types-replace-enum-with-as-const-objects": {
-		appliesWhen:
-			"`enum`이나 타입과 실행 양쪽에서 함께 쓰는 값 집합을 추가·변경할 때. 제외: 외부 패키지가 내보낸 `enum` 값을 그대로 읽어 쓰는 경우.",
+		appliesWhen: "`enum`이나 타입과 실행 양쪽에서 함께 쓰는 값 집합을 추가·변경할 때. 제외: 외부 패키지가 내보낸 `enum` 값을 그대로 읽어 쓰는 경우.",
 		reviewWith: [],
 	},
 	"naming-centralize-shared-config-namespaces": {
@@ -250,13 +245,11 @@ const typescriptRuleRouting = {
 		reviewWith: ["functions-place-and-promote-support-functions", "values-read-objects-through-chains"],
 	},
 	"naming-use-consistent-file-and-symbol-naming": {
-		appliesWhen:
-			"TypeScript 파일, 폴더, 변수, 함수, 타입, 객체·스키마 키의 이름을 새로 만들거나 바꿀 때. 밖으로 나가는 키를 받는 쪽 표기로 적을지 판단할 때. 제외: 별칭 없이 외부 패키지에서 그대로 가져오는 경우.",
+		appliesWhen: "TypeScript 파일, 폴더, 변수, 함수, 타입, 객체·스키마 키의 이름을 새로 만들거나 바꿀 때. 밖으로 나가는 키를 받는 쪽 표기로 적을지 판단할 때. 제외: 별칭 없이 외부 패키지에서 그대로 가져오는 경우.",
 		reviewWith: [],
 	},
 	"naming-use-direct-imports-and-public-entry-points": {
-		appliesWhen:
-			"가져오기, 내보내기, `index.ts` 배럴, 공개 진입점, 소유자 보조 모듈의 경계를 추가·변경할 때. 같은 경로에서 값과 타입 중 무엇을 가져올지 추가·삭제·전환할 때.",
+		appliesWhen: "가져오기, 내보내기, `index.ts` 배럴, 공개 진입점, 소유자 보조 모듈의 경계를 추가·변경할 때. 같은 경로에서 값과 타입 중 무엇을 가져올지 추가·삭제·전환할 때.",
 		reviewWith: ["naming-restrict-absolute-aliases-to-layer-roots"],
 	},
 	"naming-restrict-absolute-aliases-to-layer-roots": {
@@ -268,18 +261,15 @@ const typescriptRuleRouting = {
 		reviewWith: ["naming-centralize-shared-config-namespaces", "absence-expose-optional-values-instead-of-silent-fallbacks"],
 	},
 	"functions-declare-functions-as-arrow-consts": {
-		appliesWhen:
-			"이름을 지어 선언하는 함수를 새로 만들거나 선언 형태나 본문 형태를 바꿀 때. 네임스페이스 객체에 멤버 함수를 추가·변경할 때. 제외: 인라인 콜백이거나 클래스 메서드, 제너레이터, 오버로드 선언인 경우.",
+		appliesWhen: "이름을 지어 선언하는 함수를 새로 만들거나 선언 형태나 본문 형태를 바꿀 때. 네임스페이스 객체에 멤버 함수를 추가·변경할 때. 제외: 인라인 콜백이거나 클래스 메서드, 제너레이터, 오버로드 선언인 경우.",
 		reviewWith: ["functions-use-named-object-params-for-complex-signatures"],
 	},
 	"functions-use-named-object-params-for-complex-signatures": {
-		appliesWhen:
-			"매개변수가 셋을 넘거나 같은 계열 인자를 받는 함수를 추가·변경할 때. 객체 매개변수의 필드를 읽는 방식을 바꿀 때. 제외: 리액트 함수 컴포넌트가 프롭스를 받는 방식만 바꾸는 경우.",
+		appliesWhen: "매개변수가 셋을 넘거나 같은 계열 인자를 받는 함수를 추가·변경할 때. 객체 매개변수의 필드를 읽는 방식을 바꿀 때. 제외: 리액트 함수 컴포넌트가 프롭스를 받는 방식만 바꾸는 경우.",
 		reviewWith: ["types-reuse-existing-contracts-before-new-types", "values-read-objects-through-chains"],
 	},
 	"functions-extract-helpers-only-when-the-boundary-is-real": {
-		appliesWhen:
-			"보조 함수를 빼내거나 옮기거나 내보내거나 공유할 때. 범용 보조 파일, 소유자 하나만 쓰는 변환 함수, 자잘한 정리 단계의 경계를 바꿀 때.",
+		appliesWhen: "보조 함수를 빼내거나 옮기거나 내보내거나 공유할 때. 범용 보조 파일, 소유자 하나만 쓰는 변환 함수, 자잘한 정리 단계의 경계를 바꿀 때.",
 		reviewWith: ["functions-place-and-promote-support-functions", "docs-require-header-jsdoc-on-key-declarations"],
 	},
 	"functions-place-and-promote-support-functions": {
@@ -291,8 +281,7 @@ const typescriptRuleRouting = {
 		reviewWith: ["functions-extract-helpers-only-when-the-boundary-is-real"],
 	},
 	"functions-name-a-value-only-for-recompute-or-judgment": {
-		appliesWhen:
-			"순수 계산의 결과를 지역 변수(`const`)로 받는 줄을 추가·삭제할 때. 표현식을 쓰는 자리에 그대로 적을지 변수로 뺄지 정할 때.",
+		appliesWhen: "순수 계산의 결과를 지역 변수(`const`)로 받는 줄을 추가·삭제할 때. 표현식을 쓰는 자리에 그대로 적을지 변수로 뺄지 정할 때.",
 		reviewWith: ["functions-avoid-imperative-assembly-in-wide-scopes", "values-read-objects-through-chains"],
 	},
 	"functions-name-functions-by-what-comes-out": {
@@ -308,8 +297,7 @@ const typescriptRuleRouting = {
 		reviewWith: [],
 	},
 	"values-read-objects-through-chains": {
-		appliesWhen:
-			"구조분해로 객체에서 값을 꺼내는 줄을 추가·변경할 때. 객체 필드를 별칭 `const`에 담아 그 이름으로 쓰려 할 때. 제외: 배열이나 튜플을 자리로 푸는 경우.",
+		appliesWhen: "구조분해로 객체에서 값을 꺼내는 줄을 추가·변경할 때. 객체 필드를 별칭 `const`에 담아 그 이름으로 쓰려 할 때. 제외: 배열이나 튜플을 자리로 푸는 경우.",
 		reviewWith: ["functions-name-a-value-only-for-recompute-or-judgment"],
 	},
 	"values-declare-meaningful-numbers": {
@@ -321,16 +309,11 @@ const typescriptRuleRouting = {
 		reviewWith: ["naming-centralize-shared-config-namespaces", "naming-place-owner-config-in-the-owner-config-folder"],
 	},
 	"docs-keep-body-comments-for-intent-and-steps": {
-		appliesWhen:
-			"함수 본문의 `//` 주석을 추가·수정·유지할 때. 도메인 규칙, 예외 방어, 외부 제약, 부수효과 순서, 긴 절차의 단계를 주석으로 설명할 때.",
-		reviewWith: [
-			"docs-write-concise-korean-comments-about-purpose-and-constraints",
-			"docs-justify-convention-exceptions-with-a-reason-comment",
-		],
+		appliesWhen: "함수 본문의 `//` 주석을 추가·수정·유지할 때. 도메인 규칙, 예외 방어, 외부 제약, 부수효과 순서, 긴 절차의 단계를 주석으로 설명할 때.",
+		reviewWith: ["docs-write-concise-korean-comments-about-purpose-and-constraints", "docs-justify-convention-exceptions-with-a-reason-comment"],
 	},
 	"docs-require-header-jsdoc-on-key-declarations": {
-		appliesWhen:
-			"쿼리, 뮤테이션, 원격 함수, 커스텀 훅, 커스텀 타입, 스토어, 포매터 선언을 추가·변경할 때. 분기나 `await`, 또는 두 개 이상의 동작이 있는 핸들러와 이펙트를 추가·변경할 때. 다시 쓰거나 내보낸 보조 함수를 추가·변경할 때.",
+		appliesWhen: "쿼리, 뮤테이션, 원격 함수, 커스텀 훅, 커스텀 타입, 스토어, 포매터 선언을 추가·변경할 때. 분기나 `await`, 또는 두 개 이상의 동작이 있는 핸들러와 이펙트를 추가·변경할 때. 다시 쓰거나 내보낸 보조 함수를 추가·변경할 때.",
 		reviewWith: [],
 	},
 	"docs-write-concise-korean-comments-about-purpose-and-constraints": {
@@ -342,8 +325,7 @@ const typescriptRuleRouting = {
 		reviewWith: ["docs-require-header-jsdoc-on-key-declarations"],
 	},
 	"docs-justify-convention-exceptions-with-a-reason-comment": {
-		appliesWhen:
-			"규칙이 허용한 예외를 코드에 남길 때. 이미 있는 예외 주석의 내용을 바꿀 때. 제외: 규칙이 요구하지 않은 일반 설명 주석인 경우.",
+		appliesWhen: "규칙이 허용한 예외를 코드에 남길 때. 이미 있는 예외 주석의 내용을 바꿀 때. 제외: 규칙이 요구하지 않은 일반 설명 주석인 경우.",
 		reviewWith: ["docs-write-concise-korean-comments-about-purpose-and-constraints"],
 	},
 	"tooling-configure-biome-to-enforce-these-rules": {
@@ -357,13 +339,11 @@ const typescriptRuleRouting = {
  */
 const cssRuleRouting = {
 	"naming-default-to-plain-css-when-no-module-convention": {
-		appliesWhen:
-			"표준이 정해지지 않은 상태에서 스타일시트 방식(일반 CSS, CSS Modules)을 고르거나 `.module.css`나 `styles.*`로 옮길 때. 제외: 기존 일반 CSS 클래스 이름만 바꾸는 경우.",
+		appliesWhen: "표준이 정해지지 않은 상태에서 스타일시트 방식(일반 CSS, CSS Modules)을 고르거나 `.module.css`나 `styles.*`로 옮길 때. 제외: 기존 일반 CSS 클래스 이름만 바꾸는 경우.",
 		reviewWith: [],
 	},
 	"naming-use-scope-slug-element-modifier-syntax": {
-		appliesWhen:
-			"일반 CSS에서 프로젝트가 소유한 클래스를 새로 만들 때. 이름, 범위, 식별자, 요소, 수정자의 구분자나 대소문자 표기를 바꿀 때.",
+		appliesWhen: "일반 CSS에서 프로젝트가 소유한 클래스를 새로 만들 때. 이름, 범위, 식별자, 요소, 수정자의 구분자나 대소문자 표기를 바꿀 때.",
 		reviewWith: [],
 	},
 	"naming-name-elements-and-modifiers-by-role": {
@@ -371,8 +351,7 @@ const cssRuleRouting = {
 		reviewWith: [],
 	},
 	"naming-keep-page-slug-traceable": {
-		appliesWhen:
-			"`pg_*` 소유자의 클래스 식별자를 새로 만들거나 이름을 바꿀 때. 같은 이름 컴포넌트가 여러 화면에 생겨 식별자를 구분해야 할 때.",
+		appliesWhen: "`pg_*` 소유자의 클래스 식별자를 새로 만들거나 이름을 바꿀 때. 같은 이름 컴포넌트가 여러 화면에 생겨 식별자를 구분해야 할 때.",
 		reviewWith: [],
 	},
 	"ownership-give-each-file-one-scope-slug": {
@@ -385,11 +364,7 @@ const cssRuleRouting = {
 	},
 	"ownership-use-foreign-classes-only-under-your-own-root": {
 		appliesWhen: "`.ant-*`, `.rc-*`, `.Mui-*` 같은 외부 라이브러리 클래스를 쓸 때. 다른 `scope_slug`의 클래스를 겨냥할 때.",
-		reviewWith: [
-			"ownership-change-other-owners-through-their-api",
-			"ownership-give-each-file-one-scope-slug",
-			"selector-limit-nesting-block-depth",
-		],
+		reviewWith: ["ownership-change-other-owners-through-their-api", "ownership-give-each-file-one-scope-slug", "selector-limit-nesting-block-depth"],
 	},
 	"ownership-change-other-owners-through-their-api": {
 		appliesWhen: "다른 컴포넌트의 배치나 내부 모습을 바꿔야 할 때. 컴포넌트에 클래스 관련 프롭을 추가할 때.",
@@ -404,13 +379,11 @@ const cssRuleRouting = {
 		reviewWith: ["naming-name-elements-and-modifiers-by-role"],
 	},
 	"composition-keep-classes-single-purpose": {
-		appliesWhen:
-			"한 클래스 이름에 기본 스타일과 상태를 함께 넣을 때. 제외: 처음부터 기본 클래스와 수정자를 나눠 만드는 경우. 제외: 책임이 그대로인 이름 변경만 하는 경우.",
+		appliesWhen: "한 클래스 이름에 기본 스타일과 상태를 함께 넣을 때. 제외: 처음부터 기본 클래스와 수정자를 나눠 만드는 경우. 제외: 책임이 그대로인 이름 변경만 하는 경우.",
 		reviewWith: [],
 	},
 	"composition-inject-classes-only-at-the-entry-point": {
-		appliesWhen:
-			"우리가 만든 컴포넌트에 `className`이나 클래스 관련 프롭을 추가할 때. 그 컴포넌트 내부 노드의 모양을 화면마다 다르게 해야 할 때. 제외: 기존 CSS 최상위 블록 아래 외부 라이브러리 선택자만 고치는 경우.",
+		appliesWhen: "우리가 만든 컴포넌트에 `className`이나 클래스 관련 프롭을 추가할 때. 그 컴포넌트 내부 노드의 모양을 화면마다 다르게 해야 할 때. 제외: 기존 CSS 최상위 블록 아래 외부 라이브러리 선택자만 고치는 경우.",
 		reviewWith: ["ownership-use-foreign-classes-only-under-your-own-root", "ownership-change-other-owners-through-their-api"],
 	},
 	"composition-do-not-add-wrapper-elements-for-styling": {
@@ -419,19 +392,14 @@ const cssRuleRouting = {
 	},
 	"composition-do-not-style-through-the-style-attribute": {
 		appliesWhen: "TSX에 `style={{ … }}`를 추가하거나 그 안의 선언을 바꿀 때. 컴포넌트 프롭으로 `style`을 받아 넘길 때.",
-		reviewWith: [
-			"composition-inject-classes-only-at-the-entry-point",
-			"values-tokenize-repeated-visual-values",
-			"values-always-provide-css-variable-fallbacks",
-		],
+		reviewWith: ["composition-inject-classes-only-at-the-entry-point", "values-tokenize-repeated-visual-values", "values-always-provide-css-variable-fallbacks"],
 	},
 	"selector-limit-nesting-block-depth": {
 		appliesWhen: "중첩 `{}` 블록을 추가하거나 기존 블록을 펼치거나 합칠 때. `&`로 조건이나 가상 요소를 붙일 때.",
 		reviewWith: ["selector-use-classes-instead-of-element-selectors", "selector-declare-each-class-in-one-block"],
 	},
 	"selector-use-classes-instead-of-element-selectors": {
-		appliesWhen:
-			"`p`, `h2`, `span`, `button` 같은 요소 선택자를 쓰려 할 때. `dangerouslySetInnerHTML`이나 Markdown 렌더러 출력을 스타일링할 때.",
+		appliesWhen: "`p`, `h2`, `span`, `button` 같은 요소 선택자를 쓰려 할 때. `dangerouslySetInnerHTML`이나 Markdown 렌더러 출력을 스타일링할 때.",
 		reviewWith: ["naming-name-elements-and-modifiers-by-role"],
 	},
 	"selector-do-not-group-classes-with-commas": {
@@ -447,16 +415,11 @@ const cssRuleRouting = {
 		reviewWith: [],
 	},
 	"selector-nest-dom-state-in-the-owning-block": {
-		appliesWhen:
-			"`:hover`, `:focus-visible`, `:disabled`, `:checked` 스타일을 추가·수정할 때. 조상의 DOM 상태가 자손 스타일을 바꿔야 할 때.",
-		reviewWith: [
-			"selector-limit-nesting-block-depth",
-			"selector-use-pseudo-classes-for-dom-owned-states",
-			"selector-do-not-group-classes-with-commas",
-		],
+		appliesWhen: "`:hover`, `:focus-visible`, `:disabled`, `:checked` 스타일을 추가·수정할 때. 조상의 DOM 상태가 자손 스타일을 바꿔야 할 때.",
+		reviewWith: ["selector-limit-nesting-block-depth", "selector-use-pseudo-classes-for-dom-owned-states", "selector-do-not-group-classes-with-commas"],
 	},
-	"selector-do-not-invert-domain-state-with-not": {
-		appliesWhen: "`:not(.--수정자)`로 앱 상태를 뒤집으려 할 때. 조상 클래스와 자손 클래스를 한 선택자에 함께 쓸 때.",
+	"selector-do-not-negate-with-not": {
+		appliesWhen: "선택자에 `:not()`을 넣으려 할 때. 조상 클래스와 자손 클래스를 한 선택자에 함께 쓸 때.",
 		reviewWith: ["selector-use-pseudo-classes-for-dom-owned-states"],
 	},
 	"selector-separate-domain-state-modifiers-from-dom-interaction-states": {
@@ -476,21 +439,15 @@ const cssRuleRouting = {
 		reviewWith: ["layout-keep-layout-intent-explicit", "values-tokenize-repeated-visual-values"],
 	},
 	"values-switch-themes-by-changing-token-values": {
-		appliesWhen:
-			"다크 모드나 테마 전환을 넣을 때. 컴포넌트 CSS에 `prefers-color-scheme`이나 `[data-theme]`를 쓰려 할 때. 색이나 그림자 토큰을 새로 만들거나 이름을 바꿀 때.",
+		appliesWhen: "다크 모드나 테마 전환을 넣을 때. 컴포넌트 CSS에 `prefers-color-scheme`이나 `[data-theme]`를 쓰려 할 때. 색이나 그림자 토큰을 새로 만들거나 이름을 바꿀 때.",
 		reviewWith: ["values-always-provide-css-variable-fallbacks", "values-tokenize-repeated-visual-values"],
 	},
 	"layout-group-breakpoints-at-the-file-bottom": {
 		appliesWhen: "`@media` 브레이크포인트를 추가하거나 옮길 때. 화면 폭에 따라 값이 달라지는 선언을 넣을 때.",
-		reviewWith: [
-			"layout-reach-for-intrinsic-sizing-before-breakpoints",
-			"selector-declare-each-class-in-one-block",
-			"values-switch-themes-by-changing-token-values",
-		],
+		reviewWith: ["layout-reach-for-intrinsic-sizing-before-breakpoints", "selector-declare-each-class-in-one-block", "values-switch-themes-by-changing-token-values"],
 	},
 	"layout-keep-layout-intent-explicit": {
-		appliesWhen:
-			"`sticky`·`fixed`, `z-index`, 강제 `width`·`height`, 부모·자식 레이아웃 책임을 추가·변경할 때. 로딩 대체 화면의 컨테이너나 높이를 정할 때. 제외: 같은 요소를 기본과 수정자로 나누면서 기존 `display`·여백 선언을 값 그대로 옮기는 경우.",
+		appliesWhen: "`sticky`·`fixed`, `z-index`, 강제 `width`·`height`, 부모·자식 레이아웃 책임을 추가·변경할 때. 로딩 대체 화면의 컨테이너나 높이를 정할 때. 제외: 같은 요소를 기본과 수정자로 나누면서 기존 `display`·여백 선언을 값 그대로 옮기는 경우.",
 		reviewWith: ["values-declare-stacking-layers-as-tokens"],
 	},
 	"layout-reach-for-intrinsic-sizing-before-breakpoints": {
@@ -502,17 +459,12 @@ const cssRuleRouting = {
 		reviewWith: ["selector-separate-domain-state-modifiers-from-dom-interaction-states"],
 	},
 	"a11y-namespace-keyframes-and-respect-reduced-motion": {
-		appliesWhen:
-			"`@keyframes` 이름이나 애니메이션 지속 시간, 이징을 선언하거나 바꿀 때. `animation`이나 `transition`으로 움직임을 새로 넣을 때.",
+		appliesWhen: "`@keyframes` 이름이나 애니메이션 지속 시간, 이징을 선언하거나 바꿀 때. `animation`이나 `transition`으로 움직임을 새로 넣을 때.",
 		reviewWith: ["values-tokenize-repeated-visual-values", "tooling-configure-stylelint-to-enforce-these-rules"],
 	},
 	"tooling-configure-stylelint-to-enforce-these-rules": {
 		appliesWhen: "stylelint 설정을 새로 만들거나 규칙을 추가·수정할 때. 이 컨벤션 중 어디까지 자동으로 잡히는지 확인할 때.",
-		reviewWith: [
-			"ownership-use-foreign-classes-only-under-your-own-root",
-			"selector-limit-nesting-block-depth",
-			"naming-use-scope-slug-element-modifier-syntax",
-		],
+		reviewWith: ["ownership-use-foreign-classes-only-under-your-own-root", "selector-limit-nesting-block-depth", "naming-use-scope-slug-element-modifier-syntax"],
 	},
 } as const;
 
@@ -529,33 +481,23 @@ const reactRuleRouting = {
 		reviewWith: ["ownership-layer-component-boundaries", "typescript/naming-use-consistent-file-and-symbol-naming"],
 	},
 	"ownership-place-owner-files-in-role-folders": {
-		appliesWhen:
-			"소유자 아래 `component`·`config`·`function`·`hook`·`type` 폴더를 만들거나 옮길 때. 추출한 컴포넌트·함수·타입의 배치 위치를 정할 때. 제외: 기존 파일 내부 구현만 바꾸는 경우.",
+		appliesWhen: "소유자 아래 `component`·`config`·`function`·`hook`·`type` 폴더를 만들거나 옮길 때. 추출한 컴포넌트·함수·타입의 배치 위치를 정할 때. 제외: 기존 파일 내부 구현만 바꾸는 경우.",
 		reviewWith: ["ownership-keep-component-imports-flowing-downward", "css/ownership-choose-scope-prefix-by-reuse-range"],
 	},
 	"ownership-keep-component-imports-flowing-downward": {
-		appliesWhen:
-			"`component` 폴더 안의 파일을 다른 파일에서 가져올 때. `../`나 `@/page` 경로로 컴포넌트를 가져오려 할 때. 여러 자식이 같은 컴포넌트를 써야 해서 배치를 다시 정할 때. 제외: `function`·`type`·`config` 파일을 가져오는 경우.",
+		appliesWhen: "`component` 폴더 안의 파일을 다른 파일에서 가져올 때. `../`나 `@/page` 경로로 컴포넌트를 가져오려 할 때. 여러 자식이 같은 컴포넌트를 써야 해서 배치를 다시 정할 때. 제외: `function`·`type`·`config` 파일을 가져오는 경우.",
 		reviewWith: ["ownership-layer-component-boundaries"],
 	},
 	"ownership-prefer-plain-ts-for-local-react-helpers": {
-		appliesWhen:
-			"화면 전용 계산·정규화·전송 값 조립을 커스텀 훅으로 추출하려 할 때. 화면 전용 순수 로직을 별도 보조 모듈로 옮기려 할 때. 제외: 상태·컨텍스트·다른 훅 호출 순서를 실제로 캡슐화하는 경우.",
-		reviewWith: [
-			"typescript/functions-extract-helpers-only-when-the-boundary-is-real",
-			"ownership-place-owner-files-in-role-folders",
-			"ownership-keep-lifecycle-in-the-owning-component",
-			"typescript/naming-use-direct-imports-and-public-entry-points",
-		],
+		appliesWhen: "화면 전용 계산·정규화·전송 값 조립을 커스텀 훅으로 추출하려 할 때. 화면 전용 순수 로직을 별도 보조 모듈로 옮기려 할 때. 제외: 상태·컨텍스트·다른 훅 호출 순서를 실제로 캡슐화하는 경우.",
+		reviewWith: ["typescript/functions-extract-helpers-only-when-the-boundary-is-real", "ownership-place-owner-files-in-role-folders", "ownership-keep-lifecycle-in-the-owning-component", "typescript/naming-use-direct-imports-and-public-entry-points"],
 	},
 	"ownership-keep-lifecycle-in-the-owning-component": {
-		appliesWhen:
-			"외부 라이브러리 인스턴스 생성·크기 변경·구독·정리를 한 컴포넌트가 소유할 때. 생명주기 코드를 커스텀 훅으로 옮겨 파일을 줄이려 할 때. 제외: 여러 소유자가 같은 생명주기 계약을 실제로 호출하는 경우.",
+		appliesWhen: "외부 라이브러리 인스턴스 생성·크기 변경·구독·정리를 한 컴포넌트가 소유할 때. 생명주기 코드를 커스텀 훅으로 옮겨 파일을 줄이려 할 때. 제외: 여러 소유자가 같은 생명주기 계약을 실제로 호출하는 경우.",
 		reviewWith: ["ownership-prefer-plain-ts-for-local-react-helpers"],
 	},
 	"data-name-query-and-mutation-bindings-consistently": {
-		appliesWhen:
-			"React Query 쿼리·뮤테이션 훅의 지역 바인딩을 추가하거나 이름을 바꿀 때. 쿼리나 뮤테이션 훅의 반환값을 새 지역 변수에 담을 때.",
+		appliesWhen: "React Query 쿼리·뮤테이션 훅의 지역 바인딩을 추가하거나 이름을 바꿀 때. 쿼리나 뮤테이션 훅의 반환값을 새 지역 변수에 담을 때.",
 		reviewWith: ["data-preserve-origin-chaining"],
 	},
 	"data-shape-query-data-with-select": {
@@ -563,8 +505,7 @@ const reactRuleRouting = {
 		reviewWith: ["data-name-query-and-mutation-bindings-consistently", "data-preserve-origin-chaining"],
 	},
 	"data-combine-multiple-queries-with-combine": {
-		appliesWhen:
-			"쿼리 결과 둘 이상을 하나의 값으로 합치는 코드를 추가·변경할 때. 화면 본문에서 두 `data`를 꺼내 함께 계산하는 코드를 넣거나 뺄 때.",
+		appliesWhen: "쿼리 결과 둘 이상을 하나의 값으로 합치는 코드를 추가·변경할 때. 화면 본문에서 두 `data`를 꺼내 함께 계산하는 코드를 넣거나 뺄 때.",
 		reviewWith: ["data-shape-query-data-with-select", "screen-keep-derived-values-close"],
 	},
 	"data-preserve-origin-chaining": {
@@ -580,60 +521,43 @@ const reactRuleRouting = {
 		reviewWith: ["data-handle-mutation-failure-where-it-is-called"],
 	},
 	"typing-take-handler-types-from-existing-contracts": {
-		appliesWhen:
-			"커링 팩토리가 돌려주는 리액트 핸들러의 타입을 정할 때. `Ui*` 래퍼 사용처에서 프롭스 타입을 참조할 때. 제외: `query.select` 같은 훅 옵션의 일회성 문맥 콜백인 경우.",
+		appliesWhen: "커링 팩토리가 돌려주는 리액트 핸들러의 타입을 정할 때. `Ui*` 래퍼 사용처에서 프롭스 타입을 참조할 때. 제외: `query.select` 같은 훅 옵션의 일회성 문맥 콜백인 경우.",
 		reviewWith: [],
 	},
 	"typing-narrow-library-wrapper-contracts": {
 		appliesWhen: "라이브러리 컴포넌트를 감싸는 `Ui*` 래퍼의 프롭스 타입을 만들거나 바꿀 때. 래퍼에 프롭을 추가하거나 여는 범위를 넓힐 때.",
-		reviewWith: [
-			"typing-take-handler-types-from-existing-contracts",
-			"typing-choose-wrapper-shape-and-forwarding",
-			"css/composition-do-not-style-through-the-style-attribute",
-			"typescript/docs-justify-convention-exceptions-with-a-reason-comment",
-		],
+		reviewWith: ["typing-take-handler-types-from-existing-contracts", "typing-choose-wrapper-shape-and-forwarding", "css/composition-do-not-style-through-the-style-attribute", "typescript/docs-justify-convention-exceptions-with-a-reason-comment"],
 	},
 	"typing-choose-wrapper-shape-and-forwarding": {
 		appliesWhen: "래퍼가 받은 프롭을 안쪽 컴포넌트나 요소로 넘기는 코드를 추가·변경할 때. 래퍼에 자기 프롭을 더하거나 안쪽 요소를 늘릴 때.",
 		reviewWith: [],
 	},
 	"strategy-choose-single-composition-compound-and-variants": {
-		appliesWhen:
-			"내보낸 공용 컴포넌트에 슬롯, 공개 부품, 공용 컨텍스트나 동작을 추가할 때. 반복되는 기본 설정이나 모드 API를 추가할 때. 공용 컴포넌트의 조립 구조를 재설계할 때.",
-		reviewWith: [
-			"strategy-expose-only-assembled-compound-parts",
-			"strategy-avoid-boolean-prop-proliferation",
-			"strategy-prefer-children-over-render-props",
-			"screen-avoid-premature-abstraction",
-		],
+		appliesWhen: "내보낸 공용 컴포넌트에 슬롯, 공개 부품, 공용 컨텍스트나 동작을 추가할 때. 반복되는 기본 설정이나 모드 API를 추가할 때. 공용 컴포넌트의 조립 구조를 재설계할 때.",
+		reviewWith: ["strategy-expose-only-assembled-compound-parts", "strategy-avoid-boolean-prop-proliferation", "strategy-prefer-children-over-render-props", "screen-avoid-premature-abstraction"],
 	},
 	"strategy-expose-only-assembled-compound-parts": {
 		appliesWhen: "합성 컴포넌트의 공개 부품 목록에 부품을 넣거나 뺄 때. 상태 없는 합성에 상태를 넣으면서 공개 이름을 바꾸려 할 때.",
 		reviewWith: ["strategy-choose-single-composition-compound-and-variants", "css/composition-do-not-add-wrapper-elements-for-styling"],
 	},
 	"strategy-avoid-boolean-prop-proliferation": {
-		appliesWhen:
-			"`ui`나 `widget` 컴포넌트에 불리언 모드·표시 프롭을 추가할 때. 기존 불리언 프롭 조합과 JSX 분기가 늘어날 때. 제외: 라우트 진입 파일 안에서만 쓰는 일회성 분기인 경우.",
+		appliesWhen: "`ui`나 `widget` 컴포넌트에 불리언 모드·표시 프롭을 추가할 때. 기존 불리언 프롭 조합과 JSX 분기가 늘어날 때. 제외: 라우트 진입 파일 안에서만 쓰는 일회성 분기인 경우.",
 		reviewWith: ["strategy-expose-only-assembled-compound-parts"],
 	},
 	"strategy-prefer-children-over-render-props": {
-		appliesWhen:
-			"공용 컴포넌트에 헤더·푸터·동작 같은 정적 슬롯을 추가·변경할 때. 렌더 프롭을 추가·변경하는데 실행 환경 데이터 주입이 꼭 필요한지 불분명할 때.",
+		appliesWhen: "공용 컴포넌트에 헤더·푸터·동작 같은 정적 슬롯을 추가·변경할 때. 렌더 프롭을 추가·변경하는데 실행 환경 데이터 주입이 꼭 필요한지 불분명할 때.",
 		reviewWith: [],
 	},
 	"composition-read-props-without-destructuring": {
-		appliesWhen:
-			"함수 컴포넌트의 시그니처나 본문에서 프롭스를 읽는 코드를 추가·변경할 때. 컴포넌트 안에서 `props`를 구조분해하는 줄을 넣거나 뺄 때.",
+		appliesWhen: "함수 컴포넌트의 시그니처나 본문에서 프롭스를 읽는 코드를 추가·변경할 때. 컴포넌트 안에서 `props`를 구조분해하는 줄을 넣거나 뺄 때.",
 		reviewWith: ["screen-keep-derived-values-close", "data-preserve-origin-chaining", "typescript/values-read-objects-through-chains"],
 	},
 	"composition-do-not-define-components-inside-components": {
-		appliesWhen:
-			"컴포넌트 본문 안에 JSX를 반환하는 로컬 함수·컴포넌트를 추가하거나 옮길 때. 재렌더 시 재마운트·포커스 초기화 징후를 다룰 때.",
+		appliesWhen: "컴포넌트 본문 안에 JSX를 반환하는 로컬 함수·컴포넌트를 추가하거나 옮길 때. 재렌더 시 재마운트·포커스 초기화 징후를 다룰 때.",
 		reviewWith: [],
 	},
 	"composition-named-handlers-over-inline": {
-		appliesWhen:
-			"TSX 이벤트 프롭의 인라인 콜백에 분기나 비동기 호출을 추가·수정할 때. 인라인 콜백에 여러 동작·부수효과나 읽어도 의도가 안 보이는 상태 전환이 들어갈 때. 제외: 인자 없이 핸들러 참조만 넘기는 경우.",
+		appliesWhen: "TSX 이벤트 프롭의 인라인 콜백에 분기나 비동기 호출을 추가·수정할 때. 인라인 콜백에 여러 동작·부수효과나 읽어도 의도가 안 보이는 상태 전환이 들어갈 때. 제외: 인자 없이 핸들러 참조만 넘기는 경우.",
 		reviewWith: ["events-run-user-actions-in-handlers-not-effects", "typescript/functions-extract-helpers-only-when-the-boundary-is-real"],
 	},
 	"composition-open-ref-props-only-for-imperative-contracts": {
@@ -645,8 +569,7 @@ const reactRuleRouting = {
 		reviewWith: ["composition-do-not-define-components-inside-components"],
 	},
 	"composition-declare-props-interface-above-the-component": {
-		appliesWhen:
-			"컴포넌트 프롭스 타입을 새로 선언할 때. 프롭스 타입의 위치나 공개 범위를 바꿀 때. 제외: 같은 파일에서만 쓰는 화면 지역 프롭스를 `export`하지 않는 경우.",
+		appliesWhen: "컴포넌트 프롭스 타입을 새로 선언할 때. 프롭스 타입의 위치나 공개 범위를 바꿀 때. 제외: 같은 파일에서만 쓰는 화면 지역 프롭스를 `export`하지 않는 경우.",
 		reviewWith: ["composition-read-props-without-destructuring", "typescript/types-document-custom-types-and-shapes"],
 	},
 	"composition-name-fragments-explicitly": {
@@ -658,61 +581,43 @@ const reactRuleRouting = {
 		reviewWith: [],
 	},
 	"screen-keep-route-flow-visible": {
-		appliesWhen:
-			"라우트 진입의 search 파라미터, 화면 이동, 쿼리, 뮤테이션, 화면 전체 이펙트를 옮기거나 나눌 때. 화면 섹션 조립의 순서나 소유자를 바꿀 때. 제외: 같은 소유자 안에서 표현만 바꾸는 경우.",
+		appliesWhen: "라우트 진입의 search 파라미터, 화면 이동, 쿼리, 뮤테이션, 화면 전체 이펙트를 옮기거나 나눌 때. 화면 섹션 조립의 순서나 소유자를 바꿀 때. 제외: 같은 소유자 안에서 표현만 바꾸는 경우.",
 		reviewWith: ["screen-extract-local-section-components-for-runtime-boundaries", "ownership-place-owner-files-in-role-folders"],
 	},
 	"screen-avoid-premature-abstraction": {
 		appliesWhen: "화면 코드를 보조 함수, 훅, 컴포넌트, 모듈로 추출할 때. 한 곳에서만 쓰는 기존 추상화를 다시 접어 넣을 때.",
-		reviewWith: [
-			"screen-extract-local-section-components-for-runtime-boundaries",
-			"typescript/functions-extract-helpers-only-when-the-boundary-is-real",
-		],
+		reviewWith: ["screen-extract-local-section-components-for-runtime-boundaries", "typescript/functions-extract-helpers-only-when-the-boundary-is-real"],
 	},
 	"screen-extract-local-section-components-for-runtime-boundaries": {
-		appliesWhen:
-			"화면 지역 섹션 컴포넌트를 새로 추출할 때. 기존 섹션에 비동기, 지역 상태, 프로바이더, 상호작용, 외부 위젯, 성능 처리를 넣거나 뺄 때.",
+		appliesWhen: "화면 지역 섹션 컴포넌트를 새로 추출할 때. 기존 섹션에 비동기, 지역 상태, 프로바이더, 상호작용, 외부 위젯, 성능 처리를 넣거나 뺄 때.",
 		reviewWith: [],
 	},
 	"screen-keep-derived-values-close": {
-		appliesWhen:
-			"화면 진입 파일이나 섹션 최상단에 `const` 별칭, 플래그, 표시값을 추가·이동·제거할 때. 훅 인자, JSX 표시값, 이펙트 안 계산을 위쪽 `const`로 빼거나 되돌릴 때.",
+		appliesWhen: "화면 진입 파일이나 섹션 최상단에 `const` 별칭, 플래그, 표시값을 추가·이동·제거할 때. 훅 인자, JSX 표시값, 이펙트 안 계산을 위쪽 `const`로 빼거나 되돌릴 때.",
 		reviewWith: ["data-preserve-origin-chaining"],
 	},
 	"runtime-place-suspense-boundaries-at-the-section-owner": {
 		appliesWhen: "`Suspense` 쿼리를 쓰는 화면에서 로딩 대체 화면의 위치를 정할 때. `Suspense` 경계를 추가하거나 옮길 때.",
-		reviewWith: [
-			"screen-extract-local-section-components-for-runtime-boundaries",
-			"runtime-place-error-boundaries-by-blast-radius",
-			"css/layout-keep-layout-intent-explicit",
-		],
+		reviewWith: ["screen-extract-local-section-components-for-runtime-boundaries", "runtime-place-error-boundaries-by-blast-radius", "css/layout-keep-layout-intent-explicit"],
 	},
 	"runtime-avoid-ad-hoc-loading-branches": {
-		appliesWhen:
-			"`Suspense` 쿼리를 쓰는 화면 본문에 초기 로딩 반환을 추가·변경할 때. `isFetching`이나 뮤테이션 `isPending`으로 화면을 가리는 분기를 넣을 때. 제외: 선택 값에 기본값을 채우는 것만 바꾸는 경우.",
-		reviewWith: [
-			"data-preserve-origin-chaining",
-			"screen-keep-derived-values-close",
-			"typescript/absence-expose-optional-values-instead-of-silent-fallbacks",
-		],
+		appliesWhen: "`Suspense` 쿼리를 쓰는 화면 본문에 초기 로딩 반환을 추가·변경할 때. `isFetching`이나 뮤테이션 `isPending`으로 화면을 가리는 분기를 넣을 때. 제외: 선택 값에 기본값을 채우는 것만 바꾸는 경우.",
+		reviewWith: ["data-preserve-origin-chaining", "screen-keep-derived-values-close", "typescript/absence-expose-optional-values-instead-of-silent-fallbacks"],
 	},
 	"runtime-place-error-boundaries-by-blast-radius": {
 		appliesWhen: "오류 경계를 추가하거나 옮길 때. 화면 본문에 `isError` 분기나 실패 대체 화면 반환을 넣을 때.",
 		reviewWith: [],
 	},
 	"state-calculate-derived-values-during-render": {
-		appliesWhen:
-			"현재 프롭스, 상태, search 파라미터, 응답에서 계산 가능한 값을 별도 상태와 이펙트로 동기화할 때. 파생값 동기화 이펙트를 제거할 때.",
+		appliesWhen: "현재 프롭스, 상태, search 파라미터, 응답에서 계산 가능한 값을 별도 상태와 이펙트로 동기화할 때. 파생값 동기화 이펙트를 제거할 때.",
 		reviewWith: ["screen-keep-derived-values-close"],
 	},
 	"state-choose-state-tools-by-source-of-truth": {
-		appliesWhen:
-			"로컬 UI·전역 클라이언트·서버 데이터를 새 상태 도구로 옮길 때. 합성 컴포넌트나 컴포넌트 묶음에 공유 상태를 넣을 때. 서로 다른 진짜 출처 사이에 값을 복제하거나 동기화할 때.",
+		appliesWhen: "로컬 UI·전역 클라이언트·서버 데이터를 새 상태 도구로 옮길 때. 합성 컴포넌트나 컴포넌트 묶음에 공유 상태를 넣을 때. 서로 다른 진짜 출처 사이에 값을 복제하거나 동기화할 때.",
 		reviewWith: ["state-store-derived-authority", "strategy-choose-single-composition-compound-and-variants"],
 	},
 	"state-store-derived-authority": {
-		appliesWhen:
-			"여러 화면·메뉴·라우트 가드가 쓰는 접근 권한 같은 파생 판단을 스토어에 저장·동기화할 때. 단일 화면에서만 쓰는 값까지 스토어로 올리려 할 때.",
+		appliesWhen: "여러 화면·메뉴·라우트 가드가 쓰는 접근 권한 같은 파생 판단을 스토어에 저장·동기화할 때. 단일 화면에서만 쓰는 값까지 스토어로 올리려 할 때.",
 		reviewWith: ["docs-require-jsdoc-on-key-declarations", "state-calculate-derived-values-during-render"],
 	},
 	"state-use-functional-setstate-updates": {
@@ -721,39 +626,30 @@ const reactRuleRouting = {
 	},
 	"state-use-effectevent-for-non-reactive-effect-callbacks": {
 		appliesWhen: "구독 이펙트가 최신 프롭·상태 콜백을 읽어야 할 때. ref 동기화 우회, 의존성 재설치, `useEffectEvent`를 추가·변경할 때.",
-		reviewWith: [
-			"docs-require-jsdoc-on-key-declarations",
-			"events-curry-extra-handler-arguments",
-			"events-run-user-actions-in-handlers-not-effects",
-		],
+		reviewWith: ["docs-require-jsdoc-on-key-declarations", "events-curry-extra-handler-arguments", "events-run-user-actions-in-handlers-not-effects"],
 	},
 	"events-name-handlers-predictably": {
 		appliesWhen: "이벤트 핸들러를 새로 만들 때. 핸들러 이름이나 대상, 이벤트 표기를 바꿀 때.",
 		reviewWith: ["typescript/naming-use-consistent-file-and-symbol-naming", "events-curry-extra-handler-arguments"],
 	},
 	"events-curry-extra-handler-arguments": {
-		appliesWhen:
-			"DOM 이벤트 프롭에 추가 인자를 넘기는 핸들러를 추가·변경할 때. 인라인 래퍼로 인자를 넘기던 자리를 바꿀 때. 제외: 이벤트 객체를 받지 않는 프롭 콜백인 경우.",
+		appliesWhen: "DOM 이벤트 프롭에 추가 인자를 넘기는 핸들러를 추가·변경할 때. 인라인 래퍼로 인자를 넘기던 자리를 바꿀 때. 제외: 이벤트 객체를 받지 않는 프롭 콜백인 경우.",
 		reviewWith: ["composition-named-handlers-over-inline"],
 	},
 	"events-run-user-actions-in-handlers-not-effects": {
-		appliesWhen:
-			"제출, 저장, 삭제, 닫기 같은 한 번뿐인 사용자 액션을 핸들러와 상태+이펙트 사이에서 옮길 때. 이펙트 안에서 뮤테이션이나 화면 이동을 호출하는 코드를 넣을 때.",
+		appliesWhen: "제출, 저장, 삭제, 닫기 같은 한 번뿐인 사용자 액션을 핸들러와 상태+이펙트 사이에서 옮길 때. 이펙트 안에서 뮤테이션이나 화면 이동을 호출하는 코드를 넣을 때.",
 		reviewWith: [],
 	},
 	"perf-avoid-defensive-memoization": {
-		appliesWhen:
-			"`useMemo`·`useCallback`을 추가하거나 제거할 때. 참조 동일성·실측 병목·무거운 지연 계산을 이유로 수동 메모이제이션을 검토할 때.",
+		appliesWhen: "`useMemo`·`useCallback`을 추가하거나 제거할 때. 참조 동일성·실측 병목·무거운 지연 계산을 이유로 수동 메모이제이션을 검토할 때.",
 		reviewWith: ["perf-defer-heavy-renders-with-measured-evidence"],
 	},
 	"perf-use-lazy-state-initializers-for-expensive-defaults": {
-		appliesWhen:
-			"`useState` 초기값에 `localStorage` 파싱, 인덱스 생성, 큰 배열 정규화 같은 비용이 큰 계산을 넣을 때. 제외: 숫자·문자열 같은 단순 값이나 프롭을 그대로 초기값에 넣는 경우.",
+		appliesWhen: "`useState` 초기값에 `localStorage` 파싱, 인덱스 생성, 큰 배열 정규화 같은 비용이 큰 계산을 넣을 때. 제외: 숫자·문자열 같은 단순 값이나 프롭을 그대로 초기값에 넣는 경우.",
 		reviewWith: ["perf-avoid-defensive-memoization"],
 	},
 	"perf-defer-heavy-renders-with-measured-evidence": {
-		appliesWhen:
-			"`startTransition`·`useTransition`·`useDeferredValue`를 추가·삭제할 때. 목록이나 표가 커져 입력 반응이 늦다는 보고를 받았을 때.",
+		appliesWhen: "`startTransition`·`useTransition`·`useDeferredValue`를 추가·삭제할 때. 목록이나 표가 커져 입력 반응이 늦다는 보고를 받았을 때.",
 		reviewWith: ["perf-avoid-defensive-memoization"],
 	},
 	"a11y-give-interactive-elements-an-accessible-name": {
@@ -761,13 +657,11 @@ const reactRuleRouting = {
 		reviewWith: [],
 	},
 	"docs-require-jsdoc-on-key-declarations": {
-		appliesWhen:
-			"쿼리·뮤테이션이나 읽어도 의도가 안 보이는 핸들러·이펙트를 추가·변경할 때. 내보낸 보조 함수·훅·스토어 선언을 추가·변경할 때.",
+		appliesWhen: "쿼리·뮤테이션이나 읽어도 의도가 안 보이는 핸들러·이펙트를 추가·변경할 때. 내보낸 보조 함수·훅·스토어 선언을 추가·변경할 때.",
 		reviewWith: ["typescript/types-document-custom-types-and-shapes"],
 	},
 	"tooling-enable-the-biome-react-domain": {
-		appliesWhen:
-			"프로젝트에 `biome` 설정을 처음 넣거나 lint 규칙을 바꿀 때. `biome.json`의 `linter.domains`나 `linter.rules`에 항목을 추가·삭제할 때.",
+		appliesWhen: "프로젝트에 `biome` 설정을 처음 넣거나 lint 규칙을 바꿀 때. `biome.json`의 `linter.domains`나 `linter.rules`에 항목을 추가·삭제할 때.",
 		reviewWith: [],
 	},
 } as const;
@@ -778,10 +672,7 @@ const reactRuleRouting = {
 const mandatoryRuleRouting = {
 	react: {
 		"ownership-keep-component-imports-flowing-downward": ["typescript/naming-restrict-absolute-aliases-to-layer-roots"],
-		"data-name-query-and-mutation-bindings-consistently": [
-			"typescript/naming-use-consistent-file-and-symbol-naming",
-			"docs-require-jsdoc-on-key-declarations",
-		],
+		"data-name-query-and-mutation-bindings-consistently": ["typescript/naming-use-consistent-file-and-symbol-naming", "docs-require-jsdoc-on-key-declarations"],
 		"data-shape-query-data-with-select": ["docs-require-jsdoc-on-key-declarations"],
 		"typing-take-handler-types-from-existing-contracts": ["typescript/types-prefer-function-variable-types-over-parameter-annotations"],
 		"typing-choose-wrapper-shape-and-forwarding": ["typing-narrow-library-wrapper-contracts"],
@@ -792,19 +683,15 @@ const mandatoryRuleRouting = {
 		"docs-require-jsdoc-on-key-declarations": ["typescript/docs-require-header-jsdoc-on-key-declarations"],
 	},
 	typescript: {
-		"types-document-custom-types-and-shapes": [
-			"docs-write-concise-korean-comments-about-purpose-and-constraints",
-			"docs-write-doc-comments-as-multiline-blocks",
-		],
+		"types-document-custom-types-and-shapes": ["docs-write-concise-korean-comments-about-purpose-and-constraints", "docs-write-doc-comments-as-multiline-blocks"],
 		"types-replace-enum-with-as-const-objects": ["naming-use-consistent-file-and-symbol-naming", "types-document-custom-types-and-shapes"],
 		"naming-place-owner-config-in-the-owner-config-folder": ["naming-use-consistent-file-and-symbol-naming"],
 		"functions-place-and-promote-support-functions": ["functions-extract-helpers-only-when-the-boundary-is-real"],
-		"docs-require-header-jsdoc-on-key-declarations": [
-			"docs-write-concise-korean-comments-about-purpose-and-constraints",
-			"docs-write-doc-comments-as-multiline-blocks",
-		],
+		"docs-require-header-jsdoc-on-key-declarations": ["docs-write-concise-korean-comments-about-purpose-and-constraints", "docs-write-doc-comments-as-multiline-blocks"],
 	},
-	css: {"selector-use-pseudo-classes-for-dom-owned-states": ["selector-separate-domain-state-modifiers-from-dom-interaction-states"]},
+	css: {
+		"selector-use-pseudo-classes-for-dom-owned-states": ["selector-separate-domain-state-modifiers-from-dom-interaction-states"],
+	},
 } as const;
 
 const completionGateRouting = {react: [], typescript: [], css: []} as const;
@@ -821,12 +708,12 @@ const typescriptSelections = {
 		"naming-use-direct-imports-and-public-entry-points",
 		"naming-restrict-absolute-aliases-to-layer-roots",
 		"naming-read-environment-values-through-shared-config",
-		"values-declare-meaningful-numbers",
+		"values-declare-meaningful-numbers"
 	],
 	"callback-contract-implementation": [
 		"types-prefer-function-variable-types-over-parameter-annotations",
 		"types-mark-unused-parameters-with-underscore",
-		"naming-use-consistent-file-and-symbol-naming",
+		"naming-use-consistent-file-and-symbol-naming"
 	],
 	"derive-existing-contract-with-docs": [
 		"types-reuse-existing-contracts-before-new-types",
@@ -834,15 +721,18 @@ const typescriptSelections = {
 		"types-narrow-unknown-instead-of-asserting",
 		"docs-require-header-jsdoc-on-key-declarations",
 		"docs-write-concise-korean-comments-about-purpose-and-constraints",
-		"docs-write-doc-comments-as-multiline-blocks",
+		"docs-write-doc-comments-as-multiline-blocks"
 	],
 	"helper-boundary-scope-drift": [
 		"naming-use-consistent-file-and-symbol-naming",
 		"functions-extract-helpers-only-when-the-boundary-is-real",
 		"functions-place-and-promote-support-functions",
-		"functions-name-functions-by-what-comes-out",
+		"functions-name-functions-by-what-comes-out"
 	],
-	"shared-collection-lookups-and-sort": ["values-prefer-immutable-array-sorting", "values-use-set-and-map-for-repeated-lookups"],
+	"shared-collection-lookups-and-sort": [
+		"values-prefer-immutable-array-sorting",
+		"values-use-set-and-map-for-repeated-lookups"
+	],
 	"enum-like-runtime-contract": [
 		"types-document-custom-types-and-shapes",
 		"types-replace-enum-with-as-const-objects",
@@ -850,21 +740,24 @@ const typescriptSelections = {
 		"docs-require-header-jsdoc-on-key-declarations",
 		"docs-write-concise-korean-comments-about-purpose-and-constraints",
 		"docs-write-doc-comments-as-multiline-blocks",
-		"tooling-configure-biome-to-enforce-these-rules",
+		"tooling-configure-biome-to-enforce-these-rules"
 	],
-	"wide-scope-assembly": ["functions-avoid-imperative-assembly-in-wide-scopes", "functions-name-a-value-only-for-recompute-or-judgment"],
+	"wide-scope-assembly": [
+		"functions-avoid-imperative-assembly-in-wide-scopes",
+		"functions-name-a-value-only-for-recompute-or-judgment"
+	],
 	"named-object-param": [
 		"naming-use-consistent-file-and-symbol-naming",
 		"functions-declare-functions-as-arrow-consts",
 		"functions-use-named-object-params-for-complex-signatures",
-		"values-read-objects-through-chains",
+		"values-read-objects-through-chains"
 	],
 	"explicit-product-fallback": [
 		"absence-expose-optional-values-instead-of-silent-fallbacks",
 		"docs-keep-body-comments-for-intent-and-steps",
 		"docs-write-concise-korean-comments-about-purpose-and-constraints",
-		"docs-justify-convention-exceptions-with-a-reason-comment",
-	],
+		"docs-justify-convention-exceptions-with-a-reason-comment"
+	]
 } as const;
 
 /**
@@ -872,49 +765,60 @@ const typescriptSelections = {
  */
 const typescriptScenarioEvidence = {
 	"shared-config-existing-source": {
-		prompt:
-			"`billing-request.ts` and `audit-request.ts` duplicate URL/page-size constants, write a retry threshold inline, and read `import.meta.env` directly; move all of them into the documented `config` namespace and read them through `config.*`.",
-		files: ["src/features/billing/billing-request.ts", "src/features/audit/audit-request.ts"],
+		prompt: "`billing-request.ts` and `audit-request.ts` duplicate URL/page-size constants, write a retry threshold inline, and read `import.meta.env` directly; move all of them into the documented `config` namespace and read them through `config.*`.",
+		files: [
+			"src/features/billing/billing-request.ts",
+			"src/features/audit/audit-request.ts"
+		]
 	},
 	"callback-contract-implementation": {
-		prompt:
-			"implement an existing documented interface callback through its Indexed Access function type and rename the unused contract parameter to `_level`; do not add types, imports, or docs.",
-		files: ["src/logging/log-sink.ts"],
+		prompt: "implement an existing documented interface callback through its Indexed Access function type and rename the unused contract parameter to `_level`; do not add types, imports, or docs.",
+		files: [
+			"src/logging/log-sink.ts"
+		]
 	},
 	"derive-existing-contract-with-docs": {
-		prompt:
-			'replace a duplicate `UserPreview` interface with a same-name interface that pulls each field through `UserRecord["id"]` indexed access, drop the `as unknown as` assertion that fed it, and add Korean header and field doc comments.',
-		files: ["src/users/user-preview.ts"],
+		prompt: "replace a duplicate `UserPreview` interface with a same-name interface that pulls each field through `UserRecord[\"id\"]` indexed access, drop the `as unknown as` assertion that fed it, and add Korean header and field doc comments.",
+		files: [
+			"src/users/user-preview.ts"
+		]
 	},
 	"helper-boundary-scope-drift": {
 		prompt: "inline a single-owner `mapProfileRow` sub-step into `profile-api.ts` and rename the remaining exported builder by its result.",
-		files: ["src/profile/profile-api.ts"],
+		files: [
+			"src/profile/profile-api.ts"
+		]
 	},
 	"shared-collection-lookups-and-sort": {
-		prompt:
-			"replace repeated `includes` with an existing Set's `has` and replace shared-input `.sort()` with `.toSorted()`; declarations, imports, and docs stay unchanged.",
-		files: ["src/search/filter-products.ts"],
+		prompt: "replace repeated `includes` with an existing Set's `has` and replace shared-input `.sort()` with `.toSorted()`; declarations, imports, and docs stay unchanged.",
+		files: [
+			"src/search/filter-products.ts"
+		]
 	},
 	"enum-like-runtime-contract": {
-		prompt:
-			"replace `enum ProductStatus` with `productStatus as const`, derive `ProductStatus`, and document the object, every key, and derived type in Korean.",
-		files: ["src/audit/audit-status.ts"],
+		prompt: "replace `enum ProductStatus` with `productStatus as const`, derive `ProductStatus`, and document the object, every key, and derived type in Korean.",
+		files: [
+			"src/audit/audit-status.ts"
+		]
 	},
 	"wide-scope-assembly": {
-		prompt:
-			"replace an existing top-level `let` plus conditional `push` flow with a declarative calculation assigned to the same `visibleTabs` name and inline the single-use intermediate const; imports and docs stay unchanged.",
-		files: ["src/navigation/visible-tabs.ts"],
+		prompt: "replace an existing top-level `let` plus conditional `push` flow with a declarative calculation assigned to the same `visibleTabs` name and inline the single-use intermediate const; imports and docs stay unchanged.",
+		files: [
+			"src/navigation/visible-tabs.ts"
+		]
 	},
 	"named-object-param": {
-		prompt:
-			"change a function that destructures `BuildRequestUrlArgs` in the signature to accept `args` and read every field through `args.*`; no other contract/docs/import changes.",
-		files: ["src/http/to-request-url.ts"],
+		prompt: "change a function that destructures `BuildRequestUrlArgs` in the signature to accept `args` and read every field through `args.*`; no other contract/docs/import changes.",
+		files: [
+			"src/http/to-request-url.ts"
+		]
 	},
 	"explicit-product-fallback": {
-		prompt:
-			"replace an ungrounded optional page-size `??` literal with a reference to the declared config default and a Korean constraint comment; helper/header boundaries stay unchanged.",
-		files: ["src/search/resolve-page-size.ts"],
-	},
+		prompt: "replace an ungrounded optional page-size `??` literal with a reference to the declared config default and a Korean constraint comment; helper/header boundaries stay unchanged.",
+		files: [
+			"src/search/resolve-page-size.ts"
+		]
+	}
 } as const;
 
 /**
@@ -923,16 +827,21 @@ const typescriptScenarioEvidence = {
 const reactScenarioStages = {
 	"RTE01-import-contract-cleanup": {
 		initial: {
-			prompt:
-				"rename UserCard.tsx to user-card.tsx, remove index.ts barrel, replace React.MouseEvent and a duplicate API view type with existing contracts in src/ui/user-card/ui-user-card.tsx and src/ui/index.ts.",
-			files: ["src/ui/user-card/ui-user-card.tsx", "src/ui/index.ts"],
-			expectedSkills: ["react", "typescript"],
+			prompt: "rename UserCard.tsx to user-card.tsx, remove index.ts barrel, replace React.MouseEvent and a duplicate API view type with existing contracts in src/ui/user-card/ui-user-card.tsx and src/ui/index.ts.",
+			files: [
+				"src/ui/user-card/ui-user-card.tsx",
+				"src/ui/index.ts"
+			],
+			expectedSkills: [
+				"react",
+				"typescript"
+			],
 			expectedSelected: {
 				react: [
 					"ownership-prefix-layer-names-on-files-and-symbols",
 					"typing-take-handler-types-from-existing-contracts",
 					"events-name-handlers-predictably",
-					"events-curry-extra-handler-arguments",
+					"events-curry-extra-handler-arguments"
 				],
 				typescript: [
 					"types-reuse-existing-contracts-before-new-types",
@@ -942,24 +851,29 @@ const reactScenarioStages = {
 					"naming-use-direct-imports-and-public-entry-points",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
-					"docs-write-doc-comments-as-multiline-blocks",
-				],
-			},
-		},
+					"docs-write-doc-comments-as-multiline-blocks"
+				]
+			}
+		}
 	},
 	"RTE02-owner-placement-css-drift": {
 		initial: {
-			prompt:
-				"move a route-only tree renderer from shared UI to src/page/products/component/pg-product-tree.tsx and rename it as owner-private; carry its existing className and style import through unchanged and make no styling change.",
-			files: ["src/ui/product-tree/ui-product-tree.tsx", "src/page/products/component/pg-product-tree.tsx"],
-			expectedSkills: ["react", "typescript"],
+			prompt: "move a route-only tree renderer from shared UI to src/page/products/component/pg-product-tree.tsx and rename it as owner-private; carry its existing className and style import through unchanged and make no styling change.",
+			files: [
+				"src/ui/product-tree/ui-product-tree.tsx",
+				"src/page/products/component/pg-product-tree.tsx"
+			],
+			expectedSkills: [
+				"react",
+				"typescript"
+			],
 			expectedSelected: {
 				react: [
 					"ownership-layer-component-boundaries",
 					"ownership-prefix-layer-names-on-files-and-symbols",
 					"ownership-place-owner-files-in-role-folders",
 					"composition-read-props-without-destructuring",
-					"composition-declare-props-interface-above-the-component",
+					"composition-declare-props-interface-above-the-component"
 				],
 				typescript: [
 					"types-document-custom-types-and-shapes",
@@ -967,26 +881,29 @@ const reactScenarioStages = {
 					"naming-use-direct-imports-and-public-entry-points",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
-					"docs-write-doc-comments-as-multiline-blocks",
-				],
-			},
+					"docs-write-doc-comments-as-multiline-blocks"
+				]
+			}
 		},
 		scopeDrift: {
-			evidence:
-				"in a project without a CSS Modules standard, add directly imported src/page/products/component/pg-product-tree.css, create owner-unique pg_* role-named classes, and compose the changed className contract with the existing direct clsx import; final skills add CSS with no additional React rule.",
+			evidence: "in a project without a CSS Modules standard, add directly imported src/page/products/component/pg-product-tree.css, create owner-unique pg_* role-named classes, and compose the changed className contract with the existing direct clsx import; final skills add CSS with no additional React rule.",
 			files: [
 				"src/ui/product-tree/ui-product-tree.tsx",
 				"src/page/products/component/pg-product-tree.tsx",
-				"src/page/products/component/pg-product-tree.css",
+				"src/page/products/component/pg-product-tree.css"
 			],
-			expectedSkills: ["react", "typescript", "css"],
+			expectedSkills: [
+				"react",
+				"typescript",
+				"css"
+			],
 			expectedSelected: {
 				react: [
 					"ownership-layer-component-boundaries",
 					"ownership-prefix-layer-names-on-files-and-symbols",
 					"ownership-place-owner-files-in-role-folders",
 					"composition-read-props-without-destructuring",
-					"composition-declare-props-interface-above-the-component",
+					"composition-declare-props-interface-above-the-component"
 				],
 				typescript: [
 					"types-document-custom-types-and-shapes",
@@ -994,7 +911,7 @@ const reactScenarioStages = {
 					"naming-use-direct-imports-and-public-entry-points",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
-					"docs-write-doc-comments-as-multiline-blocks",
+					"docs-write-doc-comments-as-multiline-blocks"
 				],
 				css: [
 					"naming-default-to-plain-css-when-no-module-convention",
@@ -1006,23 +923,28 @@ const reactScenarioStages = {
 					"ownership-use-foreign-classes-only-under-your-own-root",
 					"composition-compose-classes-with-clsx",
 					"composition-do-not-build-structural-variants-with-modifiers",
-					"selector-separate-domain-state-modifiers-from-dom-interaction-states",
-				],
-			},
-		},
+					"selector-separate-domain-state-modifiers-from-dom-interaction-states"
+				]
+			}
+		}
 	},
 	"RTE03-route-support-extraction": {
 		initial: {
-			prompt:
-				"move one real four-argument multi-line payload boundary out of src/page/products/pg-products.tsx into src/page/products/function/to-product-save-request.ts; do not create a hook, generic utils file, or helper soup.",
-			files: ["src/page/products/pg-products.tsx", "src/page/products/function/to-product-save-request.ts"],
-			expectedSkills: ["react", "typescript"],
+			prompt: "move one real four-argument multi-line payload boundary out of src/page/products/pg-products.tsx into src/page/products/function/to-product-save-request.ts; do not create a hook, generic utils file, or helper soup.",
+			files: [
+				"src/page/products/pg-products.tsx",
+				"src/page/products/function/to-product-save-request.ts"
+			],
+			expectedSkills: [
+				"react",
+				"typescript"
+			],
 			expectedSelected: {
 				react: [
 					"ownership-place-owner-files-in-role-folders",
 					"ownership-prefer-plain-ts-for-local-react-helpers",
 					"screen-avoid-premature-abstraction",
-					"docs-require-jsdoc-on-key-declarations",
+					"docs-require-jsdoc-on-key-declarations"
 				],
 				typescript: [
 					"types-document-custom-types-and-shapes",
@@ -1033,17 +955,23 @@ const reactScenarioStages = {
 					"functions-extract-helpers-only-when-the-boundary-is-real",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
-					"docs-write-doc-comments-as-multiline-blocks",
-				],
-			},
-		},
+					"docs-write-doc-comments-as-multiline-blocks"
+				]
+			}
+		}
 	},
 	"RTE04-shared-config": {
 		initial: {
-			prompt:
-				"move a duplicated menu key and default page size from two screens into a documented as const config object in src/shared/config.ts and directly import and use config.* from both route pages.",
-			files: ["src/page/products/pg-products.tsx", "src/page/reports/pg-reports.tsx", "src/shared/config.ts"],
-			expectedSkills: ["react", "typescript"],
+			prompt: "move a duplicated menu key and default page size from two screens into a documented as const config object in src/shared/config.ts and directly import and use config.* from both route pages.",
+			files: [
+				"src/page/products/pg-products.tsx",
+				"src/page/reports/pg-reports.tsx",
+				"src/shared/config.ts"
+			],
+			expectedSkills: [
+				"react",
+				"typescript"
+			],
 			expectedSelected: {
 				react: [],
 				typescript: [
@@ -1054,17 +982,21 @@ const reactScenarioStages = {
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
-					"docs-write-doc-comments-as-multiline-blocks",
-				],
-			},
-		},
+					"docs-write-doc-comments-as-multiline-blocks"
+				]
+			}
+		}
 	},
 	"RTE05-toolbar-composition": {
 		initial: {
-			prompt:
-				"replace compact/edit/search/focus booleans and static render props on wg-product-toolbar.tsx with stateless compound parts plus repeated explicit variants, give the icon-only buttons accessible names, and document public parts.",
-			files: ["src/widget/product-toolbar/wg-product-toolbar.tsx"],
-			expectedSkills: ["react", "typescript"],
+			prompt: "replace compact/edit/search/focus booleans and static render props on wg-product-toolbar.tsx with stateless compound parts plus repeated explicit variants, give the icon-only buttons accessible names, and document public parts.",
+			files: [
+				"src/widget/product-toolbar/wg-product-toolbar.tsx"
+			],
+			expectedSkills: [
+				"react",
+				"typescript"
+			],
 			expectedSelected: {
 				react: [
 					"strategy-choose-single-composition-compound-and-variants",
@@ -1074,7 +1006,7 @@ const reactScenarioStages = {
 					"composition-read-props-without-destructuring",
 					"composition-declare-props-interface-above-the-component",
 					"a11y-give-interactive-elements-an-accessible-name",
-					"docs-require-jsdoc-on-key-declarations",
+					"docs-require-jsdoc-on-key-declarations"
 				],
 				typescript: [
 					"types-document-custom-types-and-shapes",
@@ -1082,17 +1014,21 @@ const reactScenarioStages = {
 					"naming-use-direct-imports-and-public-entry-points",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
-					"docs-write-doc-comments-as-multiline-blocks",
-				],
-			},
-		},
+					"docs-write-doc-comments-as-multiline-blocks"
+				]
+			}
+		}
 	},
 	"RTE06-nested-forwardref": {
 		initial: {
-			prompt:
-				"hoist an existing nested forwardRef search input that resets focus to module scope, convert it to a React 19 ref prop, and narrow UiSearchCardProps so it extends HTMLAttributes and opens only the library props in use in ui-search-card.tsx.",
-			files: ["src/ui/search-card/ui-search-card.tsx"],
-			expectedSkills: ["react", "typescript"],
+			prompt: "hoist an existing nested forwardRef search input that resets focus to module scope, convert it to a React 19 ref prop, and narrow UiSearchCardProps so it extends HTMLAttributes and opens only the library props in use in ui-search-card.tsx.",
+			files: [
+				"src/ui/search-card/ui-search-card.tsx"
+			],
+			expectedSkills: [
+				"react",
+				"typescript"
+			],
 			expectedSelected: {
 				react: [
 					"typing-narrow-library-wrapper-contracts",
@@ -1100,7 +1036,7 @@ const reactScenarioStages = {
 					"composition-read-props-without-destructuring",
 					"composition-do-not-define-components-inside-components",
 					"composition-open-ref-props-only-for-imperative-contracts",
-					"docs-require-jsdoc-on-key-declarations",
+					"docs-require-jsdoc-on-key-declarations"
 				],
 				typescript: [
 					"types-document-custom-types-and-shapes",
@@ -1108,17 +1044,21 @@ const reactScenarioStages = {
 					"naming-use-direct-imports-and-public-entry-points",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
-					"docs-write-doc-comments-as-multiline-blocks",
-				],
-			},
-		},
+					"docs-write-doc-comments-as-multiline-blocks"
+				]
+			}
+		}
 	},
 	"RTE08-delete-handler-flow": {
 		initial: {
-			prompt:
-				"move a row delete inline async branch, mutation, navigation, and state+effect replay into one curried named handler, handle the mutation failure and invalidate the affected list query, keep an unused React event as _event, directly import its reused callback type, and keep screen-only flow inside page.tsx.",
-			files: ["src/page/products/pg-products.tsx"],
-			expectedSkills: ["react", "typescript"],
+			prompt: "move a row delete inline async branch, mutation, navigation, and state+effect replay into one curried named handler, handle the mutation failure and invalidate the affected list query, keep an unused React event as _event, directly import its reused callback type, and keep screen-only flow inside page.tsx.",
+			files: [
+				"src/page/products/pg-products.tsx"
+			],
+			expectedSkills: [
+				"react",
+				"typescript"
+			],
 			expectedSelected: {
 				react: [
 					"data-handle-mutation-failure-where-it-is-called",
@@ -1128,7 +1068,7 @@ const reactScenarioStages = {
 					"events-name-handlers-predictably",
 					"events-curry-extra-handler-arguments",
 					"events-run-user-actions-in-handlers-not-effects",
-					"docs-require-jsdoc-on-key-declarations",
+					"docs-require-jsdoc-on-key-declarations"
 				],
 				typescript: [
 					"types-prefer-function-variable-types-over-parameter-annotations",
@@ -1138,17 +1078,22 @@ const reactScenarioStages = {
 					"functions-extract-helpers-only-when-the-boundary-is-real",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
-					"docs-write-doc-comments-as-multiline-blocks",
-				],
-			},
-		},
+					"docs-write-doc-comments-as-multiline-blocks"
+				]
+			}
+		}
 	},
 	"RTE09-route-runtime-section": {
 		initial: {
-			prompt:
-				'extract only the tree section that owns local search and expanded state plus a tree adapter into the owner component folder, implement a named selection handler from ProductTreeSectionProps["onCategorySelect"], and keep search params, navigation, page query, and mutation in the page product.',
-			files: ["src/page/products/pg-products.tsx", "src/page/products/component/pg-product-tree-section.tsx"],
-			expectedSkills: ["react", "typescript"],
+			prompt: "extract only the tree section that owns local search and expanded state plus a tree adapter into the owner component folder, implement a named selection handler from ProductTreeSectionProps[\"onCategorySelect\"], and keep search params, navigation, page query, and mutation in the page product.",
+			files: [
+				"src/page/products/pg-products.tsx",
+				"src/page/products/component/pg-product-tree-section.tsx"
+			],
+			expectedSkills: [
+				"react",
+				"typescript"
+			],
 			expectedSelected: {
 				react: [
 					"ownership-layer-component-boundaries",
@@ -1163,7 +1108,7 @@ const reactScenarioStages = {
 					"runtime-avoid-ad-hoc-loading-branches",
 					"events-name-handlers-predictably",
 					"events-curry-extra-handler-arguments",
-					"docs-require-jsdoc-on-key-declarations",
+					"docs-require-jsdoc-on-key-declarations"
 				],
 				typescript: [
 					"types-reuse-existing-contracts-before-new-types",
@@ -1174,17 +1119,21 @@ const reactScenarioStages = {
 					"absence-expose-optional-values-instead-of-silent-fallbacks",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
-					"docs-write-doc-comments-as-multiline-blocks",
-				],
-			},
-		},
+					"docs-write-doc-comments-as-multiline-blocks"
+				]
+			}
+		}
 	},
 	"RTE10-derived-selection-state": {
 		initial: {
-			prompt:
-				"extract the inline selection toggle into a named handleSelectionToggle handler, replace selectedIds-derived count and flag effect+state synchronization with render calculation near use, and use a functional updater; do not change navigation or styling.",
-			files: ["src/page/products/pg-products.tsx"],
-			expectedSkills: ["react", "typescript"],
+			prompt: "extract the inline selection toggle into a named handleSelectionToggle handler, replace selectedIds-derived count and flag effect+state synchronization with render calculation near use, and use a functional updater; do not change navigation or styling.",
+			files: [
+				"src/page/products/pg-products.tsx"
+			],
+			expectedSkills: [
+				"react",
+				"typescript"
+			],
 			expectedSelected: {
 				react: [
 					"typing-take-handler-types-from-existing-contracts",
@@ -1194,7 +1143,7 @@ const reactScenarioStages = {
 					"state-use-functional-setstate-updates",
 					"events-name-handlers-predictably",
 					"events-curry-extra-handler-arguments",
-					"docs-require-jsdoc-on-key-declarations",
+					"docs-require-jsdoc-on-key-declarations"
 				],
 				typescript: [
 					"types-prefer-function-variable-types-over-parameter-annotations",
@@ -1203,23 +1152,28 @@ const reactScenarioStages = {
 					"naming-use-direct-imports-and-public-entry-points",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
-					"docs-write-doc-comments-as-multiline-blocks",
-				],
-			},
-		},
+					"docs-write-doc-comments-as-multiline-blocks"
+				]
+			}
+		}
 	},
 	"RTE11-shared-authority": {
 		initial: {
-			prompt:
-				"synchronize shared capability once at the owning layout and store for multiple screens, menu, and guards; do not copy single-screen server fields into the store.",
-			files: ["src/routes/_authenticated/layout.tsx", "src/store/capability-store.ts"],
-			expectedSkills: ["react", "typescript"],
+			prompt: "synchronize shared capability once at the owning layout and store for multiple screens, menu, and guards; do not copy single-screen server fields into the store.",
+			files: [
+				"src/routes/_authenticated/layout.tsx",
+				"src/store/capability-store.ts"
+			],
+			expectedSkills: [
+				"react",
+				"typescript"
+			],
 			expectedSelected: {
 				react: [
 					"data-preserve-origin-chaining",
 					"state-choose-state-tools-by-source-of-truth",
 					"state-store-derived-authority",
-					"docs-require-jsdoc-on-key-declarations",
+					"docs-require-jsdoc-on-key-declarations"
 				],
 				typescript: [
 					"types-document-custom-types-and-shapes",
@@ -1227,17 +1181,21 @@ const reactScenarioStages = {
 					"naming-use-direct-imports-and-public-entry-points",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
-					"docs-write-doc-comments-as-multiline-blocks",
-				],
-			},
-		},
+					"docs-write-doc-comments-as-multiline-blocks"
+				]
+			}
+		}
 	},
 	"RTE12-query-shaping": {
 		initial: {
-			prompt:
-				"move repeated raw list, items, and meta render shaping into query select, combine the product and category responses through useQueries combine, rename bindings to response... and mutation..., and remove wide aliases.",
-			files: ["src/page/products/pg-products.tsx"],
-			expectedSkills: ["react", "typescript"],
+			prompt: "move repeated raw list, items, and meta render shaping into query select, combine the product and category responses through useQueries combine, rename bindings to response... and mutation..., and remove wide aliases.",
+			files: [
+				"src/page/products/pg-products.tsx"
+			],
+			expectedSkills: [
+				"react",
+				"typescript"
+			],
 			expectedSelected: {
 				react: [
 					"data-name-query-and-mutation-bindings-consistently",
@@ -1245,29 +1203,33 @@ const reactScenarioStages = {
 					"data-combine-multiple-queries-with-combine",
 					"data-preserve-origin-chaining",
 					"screen-keep-derived-values-close",
-					"docs-require-jsdoc-on-key-declarations",
+					"docs-require-jsdoc-on-key-declarations"
 				],
 				typescript: [
 					"naming-use-consistent-file-and-symbol-naming",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
-					"docs-write-doc-comments-as-multiline-blocks",
-				],
-			},
-		},
+					"docs-write-doc-comments-as-multiline-blocks"
+				]
+			}
+		}
 	},
 	"RTE13-heavy-search": {
 		initial: {
-			prompt:
-				"for a 50k-row search, directly import newly used React hooks, use lazy initialization, urgent input plus deferred result, a non-urgent category transition, and only evidence-backed memoization; update the constraint comment.",
-			files: ["src/page/products/component/pg-product-search.tsx"],
-			expectedSkills: ["react", "typescript"],
+			prompt: "for a 50k-row search, directly import newly used React hooks, use lazy initialization, urgent input plus deferred result, a non-urgent category transition, and only evidence-backed memoization; update the constraint comment.",
+			files: [
+				"src/page/products/component/pg-product-search.tsx"
+			],
+			expectedSkills: [
+				"react",
+				"typescript"
+			],
 			expectedSelected: {
 				react: [
 					"perf-avoid-defensive-memoization",
 					"perf-use-lazy-state-initializers-for-expensive-defaults",
 					"perf-defer-heavy-renders-with-measured-evidence",
-					"docs-require-jsdoc-on-key-declarations",
+					"docs-require-jsdoc-on-key-declarations"
 				],
 				typescript: [
 					"naming-use-consistent-file-and-symbol-naming",
@@ -1276,22 +1238,26 @@ const reactScenarioStages = {
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks",
-					"docs-justify-convention-exceptions-with-a-reason-comment",
-				],
-			},
-		},
+					"docs-justify-convention-exceptions-with-a-reason-comment"
+				]
+			}
+		}
 	},
 	"RTE14-subscription-effectevent": {
 		initial: {
-			prompt:
-				"directly import useEffectEvent, replace only a socket subscription latest-callback ref-sync hack with a named handleMessage = useEffectEvent(...), and update subscription lifecycle JSDoc; do not change click or submit actions.",
-			files: ["src/page/products/component/pg-product-socket.tsx"],
-			expectedSkills: ["react", "typescript"],
+			prompt: "directly import useEffectEvent, replace only a socket subscription latest-callback ref-sync hack with a named handleMessage = useEffectEvent(...), and update subscription lifecycle JSDoc; do not change click or submit actions.",
+			files: [
+				"src/page/products/component/pg-product-socket.tsx"
+			],
+			expectedSkills: [
+				"react",
+				"typescript"
+			],
 			expectedSelected: {
 				react: [
 					"state-use-effectevent-for-non-reactive-effect-callbacks",
 					"events-name-handlers-predictably",
-					"docs-require-jsdoc-on-key-declarations",
+					"docs-require-jsdoc-on-key-declarations"
 				],
 				typescript: [
 					"types-prefer-function-variable-types-over-parameter-annotations",
@@ -1299,17 +1265,21 @@ const reactScenarioStages = {
 					"naming-use-direct-imports-and-public-entry-points",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
-					"docs-write-doc-comments-as-multiline-blocks",
-				],
-			},
-		},
+					"docs-write-doc-comments-as-multiline-blocks"
+				]
+			}
+		}
 	},
 	"RTE15-suspense-absence": {
 		initial: {
-			prompt:
-				'replace Suspense detail ?? [], || "-", a local pending Spinner, an isError branch, single-branch ternaries, and top-level aliases with a route error boundary, an explicit empty state, and origin chaining; remove an ungrounded explanatory comment.',
-			files: ["src/page/product-detail/pg-product-detail.tsx"],
-			expectedSkills: ["react", "typescript"],
+			prompt: "replace Suspense detail ?? [], || \"-\", a local pending Spinner, an isError branch, single-branch ternaries, and top-level aliases with a route error boundary, an explicit empty state, and origin chaining; remove an ungrounded explanatory comment.",
+			files: [
+				"src/page/product-detail/pg-product-detail.tsx"
+			],
+			expectedSkills: [
+				"react",
+				"typescript"
+			],
 			expectedSelected: {
 				react: [
 					"data-preserve-origin-chaining",
@@ -1318,71 +1288,89 @@ const reactScenarioStages = {
 					"screen-keep-derived-values-close",
 					"runtime-place-suspense-boundaries-at-the-section-owner",
 					"runtime-avoid-ad-hoc-loading-branches",
-					"runtime-place-error-boundaries-by-blast-radius",
+					"runtime-place-error-boundaries-by-blast-radius"
 				],
 				typescript: [
 					"absence-expose-optional-values-instead-of-silent-fallbacks",
 					"docs-keep-body-comments-for-intent-and-steps",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
-					"docs-justify-convention-exceptions-with-a-reason-comment",
-				],
-			},
-		},
+					"docs-justify-convention-exceptions-with-a-reason-comment"
+				]
+			}
+		}
 	},
 	"RTE16-private-component-import-direction": {
 		initial: {
-			prompt:
-				"two sibling files under src/page/detail/component/sales-trend-panel/component/ import each other's legend row through ../; make the panel own the shared legend row and pass it down as an element prop, and remove the sibling and @/page component imports.",
+			prompt: "two sibling files under src/page/detail/component/sales-trend-panel/component/ import each other's legend row through ../; make the panel own the shared legend row and pass it down as an element prop, and remove the sibling and @/page component imports.",
 			files: [
 				"src/page/detail/component/sales-trend-panel/pg-sales-trend-panel.tsx",
 				"src/page/detail/component/sales-trend-panel/component/pg-detection-section.tsx",
-				"src/page/detail/component/sales-trend-panel/component/pg-summary-band.tsx",
+				"src/page/detail/component/sales-trend-panel/component/pg-summary-band.tsx"
 			],
-			expectedSkills: ["react", "typescript"],
+			expectedSkills: [
+				"react",
+				"typescript"
+			],
 			expectedSelected: {
 				react: [
 					"ownership-place-owner-files-in-role-folders",
 					"ownership-keep-component-imports-flowing-downward",
-					"strategy-prefer-children-over-render-props",
+					"strategy-prefer-children-over-render-props"
 				],
-				typescript: ["naming-use-direct-imports-and-public-entry-points", "naming-restrict-absolute-aliases-to-layer-roots"],
-			},
-		},
+				typescript: [
+					"naming-use-direct-imports-and-public-entry-points",
+					"naming-restrict-absolute-aliases-to-layer-roots"
+				]
+			}
+		}
 	},
 	"RTE17-chart-lifecycle-ownership": {
 		initial: {
-			prompt:
-				"the ECharts init, resize listener, and dispose currently sit in src/widget/chart/hook/use-chart-instance.ts only to shorten the component; fold that lifecycle back into the owning chart root and leave the domain option builder in function/.",
+			prompt: "the ECharts init, resize listener, and dispose currently sit in src/widget/chart/hook/use-chart-instance.ts only to shorten the component; fold that lifecycle back into the owning chart root and leave the domain option builder in function/.",
 			files: [
 				"src/widget/chart/component/wg-chart-root.tsx",
 				"src/widget/chart/hook/use-chart-instance.ts",
-				"src/widget/chart/function/to-chart-option.ts",
+				"src/widget/chart/function/to-chart-option.ts"
 			],
-			expectedSkills: ["react", "typescript"],
+			expectedSkills: [
+				"react",
+				"typescript"
+			],
 			expectedSelected: {
 				react: [
 					"ownership-place-owner-files-in-role-folders",
 					"ownership-prefer-plain-ts-for-local-react-helpers",
 					"ownership-keep-lifecycle-in-the-owning-component",
-					"docs-require-jsdoc-on-key-declarations",
+					"docs-require-jsdoc-on-key-declarations"
 				],
 				typescript: [
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
-					"docs-write-doc-comments-as-multiline-blocks",
-				],
-			},
-		},
+					"docs-write-doc-comments-as-multiline-blocks"
+				]
+			}
+		}
 	},
 	"react-biome-domain-setup": {
 		initial: {
-			prompt:
-				"add the react domain to the existing biome config and enable the nested-component rule that the domain leaves off; do not touch any component file.",
-			files: ["biome.json"],
-			expectedSkills: ["react", "typescript"],
-			expectedSelected: {react: ["tooling-enable-the-biome-react-domain"], typescript: ["tooling-configure-biome-to-enforce-these-rules"]},
-		},
-	},
+			prompt: "add the react domain to the existing biome config and enable the nested-component rule that the domain leaves off; do not touch any component file.",
+			files: [
+				"biome.json"
+			],
+			expectedSkills: [
+				"react",
+				"typescript"
+			],
+			expectedSelected: {
+				react: [
+					"tooling-enable-the-biome-react-domain"
+				],
+				typescript: [
+					"tooling-configure-biome-to-enforce-these-rules"
+				]
+			}
+		}
+	}
 } as const;
 
 /**
@@ -1392,18 +1380,36 @@ const cssScenarioStages = {
 	"css-route-style-scope-drift": {
 		initial: {
 			prompt: "pure rendering change in src/page/catalog-index/pg-catalog-index.tsx, with React and TypeScript only.",
-			files: ["src/page/catalog-index/pg-catalog-index.tsx"],
-			expectedSkills: ["react", "typescript"],
-			expectedSelected: {react: [], typescript: []},
+			files: [
+				"src/page/catalog-index/pg-catalog-index.tsx"
+			],
+			expectedSkills: [
+				"react",
+				"typescript"
+			],
+			expectedSelected: {
+				react: [],
+				typescript: []
+			}
 		},
 		scopeDrift: {
-			evidence:
-				"add route-owned empty-state className, src/page/catalog-index/pg-catalog-index.css, and its direct side-effect import in a project without a CSS Modules standard; final skills add CSS.",
-			files: ["src/page/catalog-index/pg-catalog-index.tsx", "src/page/catalog-index/pg-catalog-index.css"],
-			expectedSkills: ["react", "typescript", "css"],
+			evidence: "add route-owned empty-state className, src/page/catalog-index/pg-catalog-index.css, and its direct side-effect import in a project without a CSS Modules standard; final skills add CSS.",
+			files: [
+				"src/page/catalog-index/pg-catalog-index.tsx",
+				"src/page/catalog-index/pg-catalog-index.css"
+			],
+			expectedSkills: [
+				"react",
+				"typescript",
+				"css"
+			],
 			expectedSelected: {
-				react: ["ownership-place-owner-files-in-role-folders"],
-				typescript: ["naming-use-direct-imports-and-public-entry-points"],
+				react: [
+					"ownership-place-owner-files-in-role-folders"
+				],
+				typescript: [
+					"naming-use-direct-imports-and-public-entry-points"
+				],
 				css: [
 					"naming-default-to-plain-css-when-no-module-convention",
 					"naming-use-scope-slug-element-modifier-syntax",
@@ -1412,29 +1418,46 @@ const cssScenarioStages = {
 					"ownership-give-each-file-one-scope-slug",
 					"ownership-choose-scope-prefix-by-reuse-range",
 					"ownership-use-foreign-classes-only-under-your-own-root",
-					"composition-compose-classes-with-clsx",
-				],
-			},
-		},
+					"composition-compose-classes-with-clsx"
+				]
+			}
+		}
 	},
 	"css-owner-boundary-split": {
 		initial: {
-			prompt:
-				"pg-post-index.css holds both the page shell and the filter dialog; move the dialog styles into the component own CSS file and give that file its own slug.",
-			files: ["src/page/post-index/pg-post-index.css", "src/page/post-index/component/pg-post-filter-dialog.css"],
-			expectedSkills: ["css"],
-			expectedSelected: {css: ["ownership-give-each-file-one-scope-slug", "ownership-choose-scope-prefix-by-reuse-range"]},
-		},
+			prompt: "pg-post-index.css holds both the page shell and the filter dialog; move the dialog styles into the component own CSS file and give that file its own slug.",
+			files: [
+				"src/page/post-index/pg-post-index.css",
+				"src/page/post-index/component/pg-post-filter-dialog.css"
+			],
+			expectedSkills: [
+				"css"
+			],
+			expectedSelected: {
+				css: [
+					"ownership-give-each-file-one-scope-slug",
+					"ownership-choose-scope-prefix-by-reuse-range"
+				]
+			}
+		}
 	},
 	"css-domain-state-class-contract": {
 		initial: {
-			prompt:
-				"split listButtonActive into base plus --active, add a direct clsx import, and compose with clsx() in pg-catalog-index.tsx and _index.css; do not change pseudo-states.",
-			files: ["src/page/catalog-index/pg-catalog-index.tsx", "src/page/catalog-index/pg-catalog-index.css"],
-			expectedSkills: ["react", "typescript", "css"],
+			prompt: "split listButtonActive into base plus --active, add a direct clsx import, and compose with clsx() in pg-catalog-index.tsx and _index.css; do not change pseudo-states.",
+			files: [
+				"src/page/catalog-index/pg-catalog-index.tsx",
+				"src/page/catalog-index/pg-catalog-index.css"
+			],
+			expectedSkills: [
+				"react",
+				"typescript",
+				"css"
+			],
 			expectedSelected: {
 				react: [],
-				typescript: ["naming-use-direct-imports-and-public-entry-points"],
+				typescript: [
+					"naming-use-direct-imports-and-public-entry-points"
+				],
 				css: [
 					"naming-use-scope-slug-element-modifier-syntax",
 					"naming-name-elements-and-modifiers-by-role",
@@ -1442,17 +1465,23 @@ const cssScenarioStages = {
 					"composition-do-not-build-structural-variants-with-modifiers",
 					"composition-keep-classes-single-purpose",
 					"selector-use-pseudo-classes-for-dom-owned-states",
-					"selector-separate-domain-state-modifiers-from-dom-interaction-states",
-				],
-			},
-		},
+					"selector-separate-domain-state-modifiers-from-dom-interaction-states"
+				]
+			}
+		}
 	},
 	"css-one-off-structural-modifier": {
 		initial: {
-			prompt:
-				"replace non-repeatable section--compactTop spacing patch with a role-named element in pg-catalog-detail.tsx and detail.css; keep the existing clsx import.",
-			files: ["src/page/catalog-detail/pg-catalog-detail.tsx", "src/page/catalog-detail/pg-catalog-detail.css"],
-			expectedSkills: ["react", "typescript", "css"],
+			prompt: "replace non-repeatable section--compactTop spacing patch with a role-named element in pg-catalog-detail.tsx and detail.css; keep the existing clsx import.",
+			files: [
+				"src/page/catalog-detail/pg-catalog-detail.tsx",
+				"src/page/catalog-detail/pg-catalog-detail.css"
+			],
+			expectedSkills: [
+				"react",
+				"typescript",
+				"css"
+			],
 			expectedSelected: {
 				react: [],
 				typescript: [],
@@ -1460,59 +1489,82 @@ const cssScenarioStages = {
 					"naming-use-scope-slug-element-modifier-syntax",
 					"naming-name-elements-and-modifiers-by-role",
 					"composition-compose-classes-with-clsx",
-					"composition-do-not-build-structural-variants-with-modifiers",
-				],
-			},
-		},
+					"composition-do-not-build-structural-variants-with-modifiers"
+				]
+			}
+		}
 	},
 	"css-ui-wrapper-third-party-dom": {
 		initial: {
-			prompt:
-				"add a direct clsx import and style UiCollapse Ant DOM from a new owned wrapper with the shortest chain in post-filter-dialog.tsx and post-filter-dialog.css; keep the existing hard-coded wrapper color.",
-			files: ["src/page/post-index/component/pg-post-filter-dialog.tsx", "src/page/post-index/component/pg-post-filter-dialog.css"],
-			expectedSkills: ["react", "typescript", "css"],
+			prompt: "add a direct clsx import and style UiCollapse Ant DOM from a new owned wrapper with the shortest chain in post-filter-dialog.tsx and post-filter-dialog.css; keep the existing hard-coded wrapper color.",
+			files: [
+				"src/page/post-index/component/pg-post-filter-dialog.tsx",
+				"src/page/post-index/component/pg-post-filter-dialog.css"
+			],
+			expectedSkills: [
+				"react",
+				"typescript",
+				"css"
+			],
 			expectedSelected: {
 				react: [],
-				typescript: ["naming-use-direct-imports-and-public-entry-points"],
+				typescript: [
+					"naming-use-direct-imports-and-public-entry-points"
+				],
 				css: [
 					"naming-use-scope-slug-element-modifier-syntax",
 					"naming-name-elements-and-modifiers-by-role",
 					"ownership-use-foreign-classes-only-under-your-own-root",
 					"composition-compose-classes-with-clsx",
-					"composition-inject-classes-only-at-the-entry-point",
-				],
-			},
+					"composition-inject-classes-only-at-the-entry-point"
+				]
+			}
 		},
 		scopeDrift: {
 			evidence: "replace the hard-coded wrapper color with an optional CSS variable and provide its fallback.",
-			files: ["src/page/post-index/component/pg-post-filter-dialog.tsx", "src/page/post-index/component/pg-post-filter-dialog.css"],
-			expectedSkills: ["react", "typescript", "css"],
+			files: [
+				"src/page/post-index/component/pg-post-filter-dialog.tsx",
+				"src/page/post-index/component/pg-post-filter-dialog.css"
+			],
+			expectedSkills: [
+				"react",
+				"typescript",
+				"css"
+			],
 			expectedSelected: {
 				react: [],
-				typescript: ["naming-use-direct-imports-and-public-entry-points"],
+				typescript: [
+					"naming-use-direct-imports-and-public-entry-points"
+				],
 				css: [
 					"naming-use-scope-slug-element-modifier-syntax",
 					"naming-name-elements-and-modifiers-by-role",
 					"ownership-use-foreign-classes-only-under-your-own-root",
 					"composition-compose-classes-with-clsx",
 					"composition-inject-classes-only-at-the-entry-point",
-					"values-always-provide-css-variable-fallbacks",
-				],
-			},
-		},
+					"values-always-provide-css-variable-fallbacks"
+				]
+			}
+		}
 	},
 	"css-ui-wrapper-root-prop-contract": {
 		initial: {
-			prompt:
-				"narrow UiButtonProps so it extends HTMLAttributes and opens only the library props we use, expose it documented, read props through the props object in ui-button.tsx, and pass an existing layout class from order-actions.tsx; add no internal selector or new class.",
-			files: ["src/ui/button/ui-button.tsx", "src/page/order-index/component/pg-order-actions.tsx"],
-			expectedSkills: ["react", "typescript", "css"],
+			prompt: "narrow UiButtonProps so it extends HTMLAttributes and opens only the library props we use, expose it documented, read props through the props object in ui-button.tsx, and pass an existing layout class from order-actions.tsx; add no internal selector or new class.",
+			files: [
+				"src/ui/button/ui-button.tsx",
+				"src/page/order-index/component/pg-order-actions.tsx"
+			],
+			expectedSkills: [
+				"react",
+				"typescript",
+				"css"
+			],
 			expectedSelected: {
 				react: [
 					"typing-narrow-library-wrapper-contracts",
 					"typing-choose-wrapper-shape-and-forwarding",
 					"composition-read-props-without-destructuring",
-					"docs-require-jsdoc-on-key-declarations",
+					"docs-require-jsdoc-on-key-declarations"
 				],
 				typescript: [
 					"types-reuse-existing-contracts-before-new-types",
@@ -1520,59 +1572,80 @@ const cssScenarioStages = {
 					"naming-use-direct-imports-and-public-entry-points",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
-					"docs-write-doc-comments-as-multiline-blocks",
+					"docs-write-doc-comments-as-multiline-blocks"
 				],
-				css: ["composition-compose-classes-with-clsx", "composition-inject-classes-only-at-the-entry-point"],
-			},
-		},
+				css: [
+					"composition-compose-classes-with-clsx",
+					"composition-inject-classes-only-at-the-entry-point"
+				]
+			}
+		}
 	},
 	"css-wrapper-element-for-spacing": {
 		initial: {
-			prompt:
-				"a wrapper div with an inline style margin was added around UiCollapse only for spacing; remove both by adding a className contract to the component.",
-			files: ["src/ui/collapse/ui-collapse.tsx", "src/page/post-index/component/pg-post-filter-dialog.tsx"],
-			expectedSkills: ["css"],
+			prompt: "a wrapper div with an inline style margin was added around UiCollapse only for spacing; remove both by adding a className contract to the component.",
+			files: [
+				"src/ui/collapse/ui-collapse.tsx",
+				"src/page/post-index/component/pg-post-filter-dialog.tsx"
+			],
+			expectedSkills: [
+				"css"
+			],
 			expectedSelected: {
 				css: [
 					"naming-name-elements-and-modifiers-by-role",
 					"composition-inject-classes-only-at-the-entry-point",
 					"composition-do-not-add-wrapper-elements-for-styling",
-					"composition-do-not-style-through-the-style-attribute",
-				],
-			},
-		},
+					"composition-do-not-style-through-the-style-attribute"
+				]
+			}
+		}
 	},
 	"css-rich-text-owner-block": {
 		initial: {
-			prompt:
-				"move top-level .wg_productDetail__prose h2 and > :first-child into the existing owner block; the body comes from dangerouslySetInnerHTML so classes cannot be added.",
-			files: ["src/widget/product-detail/wg-product-detail.css"],
-			expectedSkills: ["css"],
-			expectedSelected: {css: ["selector-limit-nesting-block-depth", "selector-use-classes-instead-of-element-selectors"]},
-		},
+			prompt: "move top-level .wg_productDetail__prose h2 and > :first-child into the existing owner block; the body comes from dangerouslySetInnerHTML so classes cannot be added.",
+			files: [
+				"src/widget/product-detail/wg-product-detail.css"
+			],
+			expectedSkills: [
+				"css"
+			],
+			expectedSelected: {
+				css: [
+					"selector-limit-nesting-block-depth",
+					"selector-use-classes-instead-of-element-selectors"
+				]
+			}
+		}
 	},
 	"css-dom-interaction-states": {
 		initial: {
-			prompt:
-				"move top-level hover/focus/disabled into the same class block's &: nesting and preserve the focus ring; no app modifier or value is added.",
-			files: ["src/ui/button/ui-button.css"],
-			expectedSkills: ["css"],
+			prompt: "move top-level hover/focus/disabled into the same class block's &: nesting and preserve the focus ring; no app modifier or value is added.",
+			files: [
+				"src/ui/button/ui-button.css"
+			],
+			expectedSkills: [
+				"css"
+			],
 			expectedSelected: {
 				css: [
 					"selector-use-pseudo-classes-for-dom-owned-states",
 					"selector-nest-dom-state-in-the-owning-block",
 					"selector-separate-domain-state-modifiers-from-dom-interaction-states",
-					"a11y-always-provide-a-visible-focus-indicator",
-				],
-			},
-		},
+					"a11y-always-provide-a-visible-focus-indicator"
+				]
+			}
+		}
 	},
 	"css-repeated-values-and-optional-token": {
 		initial: {
-			prompt:
-				"scope a global .ant-tree selector under the existing .ui_themePreview owner root with one descendant level, and replace repeated color/spacing/radius with optional CSS variables and fallbacks; keep the file and owner name unchanged; also namespace the shared fade keyframes and add the global reduced-motion block.",
-			files: ["src/ui/theme-preview/ui-theme-preview.css"],
-			expectedSkills: ["css"],
+			prompt: "scope a global .ant-tree selector under the existing .ui_themePreview owner root with one descendant level, and replace repeated color/spacing/radius with optional CSS variables and fallbacks; keep the file and owner name unchanged; also namespace the shared fade keyframes and add the global reduced-motion block.",
+			files: [
+				"src/ui/theme-preview/ui-theme-preview.css"
+			],
+			expectedSkills: [
+				"css"
+			],
 			expectedSelected: {
 				css: [
 					"ownership-use-foreign-classes-only-under-your-own-root",
@@ -1580,104 +1653,155 @@ const cssScenarioStages = {
 					"selector-separate-domain-state-modifiers-from-dom-interaction-states",
 					"values-always-provide-css-variable-fallbacks",
 					"values-tokenize-repeated-visual-values",
-					"a11y-namespace-keyframes-and-respect-reduced-motion",
-				],
-			},
-		},
+					"a11y-namespace-keyframes-and-respect-reduced-motion"
+				]
+			}
+		}
 	},
 	"css-shared-declaration-group": {
 		initial: {
-			prompt:
-				"split the shared .pg_salesPanel__glyph--* comma group so each modifier block declares its own width and height; do not introduce local custom properties.",
-			files: ["src/page/detail/component/sales-trend-panel/pg-sales-trend-panel.css"],
-			expectedSkills: ["css"],
-			expectedSelected: {css: ["selector-do-not-group-classes-with-commas", "values-tokenize-repeated-visual-values"]},
-		},
+			prompt: "split the shared .pg_salesPanel__glyph--* comma group so each modifier block declares its own width and height; do not introduce local custom properties.",
+			files: [
+				"src/page/detail/component/sales-trend-panel/pg-sales-trend-panel.css"
+			],
+			expectedSkills: [
+				"css"
+			],
+			expectedSelected: {
+				css: [
+					"selector-do-not-group-classes-with-commas",
+					"values-tokenize-repeated-visual-values"
+				]
+			}
+		}
 	},
 	"css-split-class-declaration": {
 		initial: {
-			prompt:
-				"the same .pg_catalogIndex__toolbar block is opened twice at the top level of one file, and a third override sits nested inside the class block as @media; fold the plain duplicate into one block and move the breakpoint override into a grouped @media at the bottom of the file.",
-			files: ["src/page/catalog-index/pg-catalog-index.css"],
-			expectedSkills: ["css"],
-			expectedSelected: {css: ["selector-declare-each-class-in-one-block", "layout-group-breakpoints-at-the-file-bottom"]},
-		},
+			prompt: "the same .pg_catalogIndex__toolbar block is opened twice at the top level of one file, and a third override sits nested inside the class block as @media; fold the plain duplicate into one block and move the breakpoint override into a grouped @media at the bottom of the file.",
+			files: [
+				"src/page/catalog-index/pg-catalog-index.css"
+			],
+			expectedSkills: [
+				"css"
+			],
+			expectedSelected: {
+				css: [
+					"selector-declare-each-class-in-one-block",
+					"layout-group-breakpoints-at-the-file-bottom"
+				]
+			}
+		}
 	},
 	"css-responsive-grid-and-button-width": {
 		initial: {
-			prompt:
-				"the product grid counts its columns with four @media steps and ui-button.css sets its own width at three breakpoints; make the grid and the button size themselves without breakpoints.",
-			files: ["src/page/products/pg-products.css", "src/ui/button/ui-button.css"],
-			expectedSkills: ["css"],
-			expectedSelected: {css: ["layout-keep-layout-intent-explicit", "layout-reach-for-intrinsic-sizing-before-breakpoints"]},
-		},
+			prompt: "the product grid counts its columns with four @media steps and ui-button.css sets its own width at three breakpoints; make the grid and the button size themselves without breakpoints.",
+			files: [
+				"src/page/products/pg-products.css",
+				"src/ui/button/ui-button.css"
+			],
+			expectedSkills: [
+				"css"
+			],
+			expectedSelected: {
+				css: [
+					"layout-keep-layout-intent-explicit",
+					"layout-reach-for-intrinsic-sizing-before-breakpoints"
+				]
+			}
+		}
 	},
 	"css-sticky-layout-intent": {
 		initial: {
-			prompt:
-				"clarify sticky basis and z-index ownership through layer tokens and remove excessive width/height forcing in pg-dashboard.css.",
-			files: ["src/page/dashboard/pg-dashboard.css"],
-			expectedSkills: ["css"],
-			expectedSelected: {css: ["values-declare-stacking-layers-as-tokens", "layout-keep-layout-intent-explicit"]},
-		},
+			prompt: "clarify sticky basis and z-index ownership through layer tokens and remove excessive width/height forcing in pg-dashboard.css.",
+			files: [
+				"src/page/dashboard/pg-dashboard.css"
+			],
+			expectedSkills: [
+				"css"
+			],
+			expectedSelected: {
+				css: [
+					"values-declare-stacking-layers-as-tokens",
+					"layout-keep-layout-intent-explicit"
+				]
+			}
+		}
 	},
 	"css-theme-token-switch": {
 		initial: {
-			prompt:
-				"add dark mode: a page css file currently branches on prefers-color-scheme inside .pg_dashboard__panel and hardcodes #ffffff and a black box-shadow; move the branch into the token file and keep the component reading tokens only.",
-			files: ["src/style/token.css", "src/page/dashboard/pg-dashboard.css"],
-			expectedSkills: ["css"],
+			prompt: "add dark mode: a page css file currently branches on prefers-color-scheme inside .pg_dashboard__panel and hardcodes #ffffff and a black box-shadow; move the branch into the token file and keep the component reading tokens only.",
+			files: [
+				"src/style/token.css",
+				"src/page/dashboard/pg-dashboard.css"
+			],
+			expectedSkills: [
+				"css"
+			],
 			expectedSelected: {
 				css: [
 					"values-always-provide-css-variable-fallbacks",
 					"values-tokenize-repeated-visual-values",
-					"values-switch-themes-by-changing-token-values",
-				],
-			},
-		},
+					"values-switch-themes-by-changing-token-values"
+				]
+			}
+		}
 	},
 	"css-cross-owner-internal-targeting": {
 		initial: {
-			prompt:
-				"the detail page styles .wg_chartCard__caption from pg-detail.css; move the change so the page no longer declares widget classes.",
-			files: ["src/page/detail/pg-detail.css", "src/widget/chart-card/wg-chart-card.css"],
-			expectedSkills: ["css"],
+			prompt: "the detail page styles .wg_chartCard__caption from pg-detail.css; move the change so the page no longer declares widget classes.",
+			files: [
+				"src/page/detail/pg-detail.css",
+				"src/widget/chart-card/wg-chart-card.css"
+			],
+			expectedSkills: [
+				"css"
+			],
 			expectedSelected: {
-				css: ["ownership-use-foreign-classes-only-under-your-own-root", "ownership-change-other-owners-through-their-api"],
-			},
-		},
+				css: [
+					"ownership-use-foreign-classes-only-under-your-own-root",
+					"ownership-change-other-owners-through-their-api"
+				]
+			}
+		}
 	},
 	"css-negated-domain-state": {
 		initial: {
-			prompt:
-				"remove the :not(--checked) ancestor condition that drives the descendant checkbox preview; keep the hover and focus feedback.",
-			files: ["src/page/detail/component/sales-trend-panel/pg-sales-trend-panel.css"],
-			expectedSkills: ["css"],
+			prompt: "remove the :not(--checked) ancestor condition that drives the descendant checkbox preview; keep the hover and focus feedback.",
+			files: [
+				"src/page/detail/component/sales-trend-panel/pg-sales-trend-panel.css"
+			],
+			expectedSkills: [
+				"css"
+			],
 			expectedSelected: {
 				css: [
 					"selector-limit-nesting-block-depth",
 					"selector-do-not-group-classes-with-commas",
 					"selector-nest-dom-state-in-the-owning-block",
-					"selector-do-not-invert-domain-state-with-not",
-				],
-			},
-		},
+					"selector-do-not-negate-with-not"
+				]
+			}
+		}
 	},
 	"css-stylelint-config-setup": {
 		initial: {
 			prompt: "add a stylelint config for this convention with per-directory prefix overrides; keep stylelint-config-standard as the base.",
-			files: ["stylelint.config.mjs"],
-			expectedSkills: ["css"],
+			files: [
+				"stylelint.config.mjs"
+			],
+			expectedSkills: [
+				"css"
+			],
 			expectedSelected: {
 				css: [
 					"naming-use-scope-slug-element-modifier-syntax",
 					"ownership-use-foreign-classes-only-under-your-own-root",
 					"selector-limit-nesting-block-depth",
-					"tooling-configure-stylelint-to-enforce-these-rules",
-				],
-			},
-		},
-	},
+					"tooling-configure-stylelint-to-enforce-these-rules"
+				]
+			}
+		}
+	}
 } as const;
 
 const fixtureRuleIds = ["fixture-first", "fixture-second"] as const;
@@ -2925,7 +3049,7 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 		"nestDomState",
 	);
 
-	const notInversion = await readRule("css", "selector-do-not-invert-domain-state-with-not");
+	const notInversion = await readRule("css", "selector-do-not-negate-with-not");
 	assertMentions(
 		notInversion,
 		[/조상의 수정자로 자손의 모습을 정하려 한 것입니다/, /부정 조건이 필요 없어집니다/, /:not\(:disabled\)/],

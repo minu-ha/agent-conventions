@@ -27,7 +27,7 @@ tags: tooling, stylelint, automation
 | `no-duplicate-selectors` | `css/selector-declare-each-class-in-one-block`, `css/selector-do-not-group-classes-with-commas`의 단독 재선언 |
 | `property-disallowed-list` | `css/values-tokenize-repeated-visual-values` |
 | `selector-attribute-name-disallowed-list` | `css/selector-use-pseudo-classes-for-dom-owned-states` |
-| `selector-disallowed-list`의 `:not(.` | `css/selector-do-not-invert-domain-state-with-not` |
+| `selector-pseudo-class-disallowed-list` | `css/selector-do-not-negate-with-not` |
 | `declaration-no-important` | `css/a11y-namespace-keyframes-and-respect-reduced-motion`의 전역 처리만 예외입니다 |
 | `media-feature-range-notation` | `css/layout-group-breakpoints-at-the-file-bottom`의 범위 표기. `stylelint-config-standard`에서 옵니다 |
 | `no-descending-specificity` | 자손 기본 블록을 조상 규칙보다 앞에 두게 합니다. `stylelint-config-standard`에서 옵니다 |
@@ -104,8 +104,6 @@ const ownMarkupPatterns = [
 	// 중첩 안에서 element 선택자로 우리 마크업을 겨냥하는 것.
 	// 우리가 쓰지 않는 마크업은 stylelint-disable 주석으로 예외를 표시한다
 	/^&\s*[>+~]?\s*[a-z]/,
-	// 도메인 상태를 :not(.--수정자) 로 뒤집는 것. DOM 이 소유한 :not(:disabled) 는 통과한다
-	/:not\(\s*\./,
 ];
 
 const disallowed = (foreignScopes) => [
@@ -130,6 +128,8 @@ export default {
 		// 라이브러리가 상태를 data-* 로 내는 경우가 있어 우리 접두사만 막는다
 		"selector-attribute-name-disallowed-list": [/^aria-/, /^data-(pg|wg|ui)-/],
 		"selector-max-id": 0,
+		// 부정 조건은 기본 블록으로 뒤집는다. 남의 마크업만 stylelint-disable 로 연다
+		"selector-pseudo-class-disallowed-list": ["not"],
 	},
 	overrides: [
 		{

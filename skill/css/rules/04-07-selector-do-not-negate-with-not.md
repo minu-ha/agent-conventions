@@ -1,21 +1,21 @@
 ---
-title: Do Not Invert Domain State With `:not()`
-titleKo: 도메인 상태를 `:not()`으로 뒤집지 않습니다
+title: Do Not Negate With `:not()`
+titleKo: 선택자에 `:not()`을 쓰지 않습니다
 impact: MEDIUM-HIGH
-impactDescription: 그 상태가 아닐 때의 모습을 기본 블록에 두면 부정 조건과 조상 의존이 함께 사라집니다
+impactDescription: 그 상태가 아닐 때의 모습이 늘 기본 블록에 있어 부정 조건을 되짚지 않습니다
 appliesWhen:
-  - `:not(.--수정자)`로 앱 상태를 뒤집으려 할 때
+  - 선택자에 `:not()`을 넣으려 할 때
   - 조상 클래스와 자손 클래스를 한 선택자에 함께 쓸 때
 reviewWith: selector-use-pseudo-classes-for-dom-owned-states
 tags: selector, state, negation
 ---
 
-## Do Not Invert Domain State With `:not()`
+## Do Not Negate With `:not()`
 
-**Impact: MEDIUM-HIGH (그 상태가 아닐 때의 모습을 기본 블록에 두면 부정 조건과 조상 의존이 함께 사라집니다)**
+**Impact: MEDIUM-HIGH (그 상태가 아닐 때의 모습이 늘 기본 블록에 있어 부정 조건을 되짚지 않습니다)**
 
-도메인 상태를 `:not(.--수정자)`로 뒤집지 않습니다.
-그 상태가 아닐 때의 모습은 기본 블록에 두고, 그 상태일 때의 모습만 수정자 블록에 둡니다.
+선택자에 `:not()`을 쓰지 않습니다.
+그 상태가 아닐 때의 모습은 기본 블록에 두고, 그 상태일 때의 모습만 상태 블록에 둡니다.
 
 `:not()`이 나오는 원인은 하나입니다.
 
@@ -27,8 +27,9 @@ tags: selector, state, negation
 - 각 요소의 수정자가 그 요소의 모습을 전부 갖습니다.
 - 앱이 아는 상태는 그 요소에 수정자로 씁니다.
   조상에서 다시 읽지 않습니다.
-- `:not(:disabled)`처럼 DOM이 소유한 조건은 대상이 아닙니다.
-  앱이 그 값을 알 수 없습니다.
+- DOM이 소유한 조건도 같습니다.
+  `&:not(:disabled)`로 쓰던 것은 기본 블록에 두고 `&:disabled`만 덮습니다.
+  앱이 그 값을 몰라도 "아닐 때"가 기본이라는 사실은 달라지지 않습니다.
 
 무엇이 DOM 상태이고 무엇이 앱 상태인지는 `selector-use-pseudo-classes-for-dom-owned-states` 규칙이 정합니다.
 
@@ -81,14 +82,14 @@ tags: selector, state, negation
 }
 ```
 
-**Correct (DOM이 소유한 조건은 그대로 `:not()`으로 씀):**
+**Correct (DOM 상태도 기본을 먼저 두고 그 상태만 덮음):**
 
 ```css
 .pg_assetIndex__cardButton {
-	cursor: default;
+	cursor: pointer;
 
-	&:not(:disabled) {
-		cursor: pointer;
+	&:disabled {
+		cursor: default;
 	}
 }
 ```

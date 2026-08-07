@@ -387,7 +387,7 @@
 					"selector-limit-nesting-block-depth",
 					"selector-do-not-group-classes-with-commas",
 					"selector-nest-dom-state-in-the-owning-block",
-					"selector-do-not-invert-domain-state-with-not"
+					"selector-do-not-negate-with-not"
 				]
 			}
 		},

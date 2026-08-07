@@ -52,8 +52,8 @@ tags: state, focus, accessibility
 		outline-offset: 2px;
 	}
 
-	&:not(:disabled) {
-		cursor: pointer;
+	&:disabled {
+		cursor: not-allowed;
 	}
 }
 ```

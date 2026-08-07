@@ -50,7 +50,7 @@
     - 4.4 [Declare Each Class in One Block](#44-declare-each-class-in-one-block)
     - 4.5 [Use Pseudo-classes for DOM-owned States](#45-use-pseudo-classes-for-dom-owned-states)
     - 4.6 [Nest DOM State Pseudo-classes in the Owning Block](#46-nest-dom-state-pseudo-classes-in-the-owning-block)
-    - 4.7 [Do Not Invert Domain State With `:not()`](#47-do-not-invert-domain-state-with-not)
+    - 4.7 [Do Not Negate With `:not()`](#47-do-not-negate-with-not)
     - 4.8 [Separate Domain State Modifiers From DOM Interaction States](#48-separate-domain-state-modifiers-from-dom-interaction-states)
 5. [Design Tokens](#5-design-tokens) — **HIGH**
     - 5.1 [Declare Core Tokens Once and Fall Back Everywhere Else](#51-declare-core-tokens-once-and-fall-back-everywhere-else)
@@ -1390,7 +1390,7 @@ TSX에서 그 지점이 보이므로 "이 마크업을 우리가 쓰는가"를 �
   어느 쪽이 참인지 가릴 수 없습니다.
 
 가상 클래스를 어디에 쓰는지는 `selector-nest-dom-state-in-the-owning-block` 규칙이 정합니다.
-`:not(.--수정자)` 반전은 `selector-do-not-invert-domain-state-with-not` 규칙이 막습니다.
+`:not()`은 `selector-do-not-negate-with-not` 규칙이 막습니다.
 
 **Incorrect (앱이 아는 상태를 속성 선택자로 겨냥함):**
 
@@ -1544,18 +1544,18 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
-### 4.7 Do Not Invert Domain State With `:not()`
+### 4.7 Do Not Negate With `:not()`
 
-**Rule:** `C21` · `selector-do-not-invert-domain-state-with-not`
+**Rule:** `C21` · `selector-do-not-negate-with-not`
 
-**Applies when:** `:not(.--수정자)`로 앱 상태를 뒤집으려 할 때. 조상 클래스와 자손 클래스를 한 선택자에 함께 쓸 때.
+**Applies when:** 선택자에 `:not()`을 넣으려 할 때. 조상 클래스와 자손 클래스를 한 선택자에 함께 쓸 때.
 
 **Review with:** `selector-use-pseudo-classes-for-dom-owned-states`
 
-**Impact: MEDIUM-HIGH (그 상태가 아닐 때의 모습을 기본 블록에 두면 부정 조건과 조상 의존이 함께 사라집니다)**
+**Impact: MEDIUM-HIGH (그 상태가 아닐 때의 모습이 늘 기본 블록에 있어 부정 조건을 되짚지 않습니다)**
 
-도메인 상태를 `:not(.--수정자)`로 뒤집지 않습니다.
-그 상태가 아닐 때의 모습은 기본 블록에 두고, 그 상태일 때의 모습만 수정자 블록에 둡니다.
+선택자에 `:not()`을 쓰지 않습니다.
+그 상태가 아닐 때의 모습은 기본 블록에 두고, 그 상태일 때의 모습만 상태 블록에 둡니다.
 
 `:not()`이 나오는 원인은 하나입니다.
 
@@ -1567,8 +1567,9 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 - 각 요소의 수정자가 그 요소의 모습을 전부 갖습니다.
 - 앱이 아는 상태는 그 요소에 수정자로 씁니다.
   조상에서 다시 읽지 않습니다.
-- `:not(:disabled)`처럼 DOM이 소유한 조건은 대상이 아닙니다.
-  앱이 그 값을 알 수 없습니다.
+- DOM이 소유한 조건도 같습니다.
+  `&:not(:disabled)`로 쓰던 것은 기본 블록에 두고 `&:disabled`만 덮습니다.
+  앱이 그 값을 몰라도 "아닐 때"가 기본이라는 사실은 달라지지 않습니다.
 
 무엇이 DOM 상태이고 무엇이 앱 상태인지는 `selector-use-pseudo-classes-for-dom-owned-states` 규칙이 정합니다.
 
@@ -1621,14 +1622,14 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
-**Correct (DOM이 소유한 조건은 그대로 `:not()`으로 씀):**
+**Correct (DOM 상태도 기본을 먼저 두고 그 상태만 덮음):**
 
 ```css
 .pg_assetIndex__cardButton {
-	cursor: default;
+	cursor: pointer;
 
-	&:not(:disabled) {
-		cursor: pointer;
+	&:disabled {
+		cursor: default;
 	}
 }
 ```
@@ -1681,8 +1682,8 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 		outline-offset: 2px;
 	}
 
-	&:not(:disabled) {
-		cursor: pointer;
+	&:disabled {
+		cursor: not-allowed;
 	}
 }
 ```
@@ -2641,7 +2642,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 | `no-duplicate-selectors` | `css/selector-declare-each-class-in-one-block`, `css/selector-do-not-group-classes-with-commas`의 단독 재선언 |
 | `property-disallowed-list` | `css/values-tokenize-repeated-visual-values` |
 | `selector-attribute-name-disallowed-list` | `css/selector-use-pseudo-classes-for-dom-owned-states` |
-| `selector-disallowed-list`의 `:not(.` | `css/selector-do-not-invert-domain-state-with-not` |
+| `selector-pseudo-class-disallowed-list` | `css/selector-do-not-negate-with-not` |
 | `declaration-no-important` | `css/a11y-namespace-keyframes-and-respect-reduced-motion`의 전역 처리만 예외입니다 |
 | `media-feature-range-notation` | `css/layout-group-breakpoints-at-the-file-bottom`의 범위 표기. `stylelint-config-standard`에서 옵니다 |
 | `no-descending-specificity` | 자손 기본 블록을 조상 규칙보다 앞에 두게 합니다. `stylelint-config-standard`에서 옵니다 |
@@ -2718,8 +2719,6 @@ const ownMarkupPatterns = [
 	// 중첩 안에서 element 선택자로 우리 마크업을 겨냥하는 것.
 	// 우리가 쓰지 않는 마크업은 stylelint-disable 주석으로 예외를 표시한다
 	/^&\s*[>+~]?\s*[a-z]/,
-	// 도메인 상태를 :not(.--수정자) 로 뒤집는 것. DOM 이 소유한 :not(:disabled) 는 통과한다
-	/:not\(\s*\./,
 ];
 
 const disallowed = (foreignScopes) => [
@@ -2744,6 +2743,8 @@ export default {
 		// 라이브러리가 상태를 data-* 로 내는 경우가 있어 우리 접두사만 막는다
 		"selector-attribute-name-disallowed-list": [/^aria-/, /^data-(pg|wg|ui)-/],
 		"selector-max-id": 0,
+		// 부정 조건은 기본 블록으로 뒤집는다. 남의 마크업만 stylelint-disable 로 연다
+		"selector-pseudo-class-disallowed-list": ["not"],
 	},
 	overrides: [
 		{
