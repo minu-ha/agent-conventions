@@ -14,6 +14,9 @@
 | 기본 매개변수가 선언된 이름을 가리키는 것. `(size = config.pagination.defaultPageSize) =>` | 통과 |
 | 삼항 `value ? value : "-"`, `String(value ?? "")` | 위반 |
 
+숫자 리터럴을 쓰는 자리에 적지 않는 일반 규범은 `values-declare-meaningful-numbers`가 정합니다.
+여기서는 없는 값을 덮는 자리만 봅니다.
+
 기본값이 정말 필요하면 그 기본값에 이름을 붙여 선언하고 그 이름을 가리킵니다.
 여러 소유자가 쓰면 `naming-centralize-shared-config-namespaces`,
 한 소유자만 쓰면 `naming-place-owner-config-in-the-owner-config-folder`가 자리를 정합니다.

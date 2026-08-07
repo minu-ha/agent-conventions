@@ -105,6 +105,7 @@ const typescriptRuleUniverse = [
 	"values-prefer-immutable-array-sorting",
 	"values-use-set-and-map-for-repeated-lookups",
 	"values-read-objects-through-chains",
+	"values-declare-meaningful-numbers",
 	"absence-expose-optional-values-instead-of-silent-fallbacks",
 	"docs-keep-body-comments-for-intent-and-steps",
 	"docs-require-header-jsdoc-on-key-declarations",
@@ -310,6 +311,10 @@ const typescriptRuleRouting = {
 		appliesWhen:
 			"구조분해로 객체에서 값을 꺼내는 줄을 추가·변경할 때. 객체 필드를 별칭 `const`에 담아 그 이름으로 쓰려 할 때. 제외: 배열이나 튜플을 자리로 푸는 경우.",
 		reviewWith: ["functions-name-a-value-only-for-recompute-or-judgment"],
+	},
+	"values-declare-meaningful-numbers": {
+		appliesWhen: "비교, 계산, 호출 인자에 숫자 리터럴을 새로 적을 때. 제외: 관용값이나 배열 인덱스처럼 뜻이 없는 숫자를 쓰는 경우.",
+		reviewWith: ["naming-centralize-shared-config-namespaces", "absence-expose-optional-values-instead-of-silent-fallbacks"],
 	},
 	"absence-expose-optional-values-instead-of-silent-fallbacks": {
 		appliesWhen: "선택 값을 읽거나 정규화하거나 넘기는 방식을 바꿀 때. `??`, `||`, 기본값, 빈 값 대체 분기를 추가·변경할 때.",
@@ -816,6 +821,7 @@ const typescriptSelections = {
 		"naming-use-direct-imports-and-public-entry-points",
 		"naming-restrict-absolute-aliases-to-layer-roots",
 		"naming-read-environment-values-through-shared-config",
+		"values-declare-meaningful-numbers",
 	],
 	"callback-contract-implementation": [
 		"types-prefer-function-variable-types-over-parameter-annotations",
@@ -867,7 +873,7 @@ const typescriptSelections = {
 const typescriptScenarioEvidence = {
 	"shared-config-existing-source": {
 		prompt:
-			"`billing-request.ts` and `audit-request.ts` duplicate URL/page-size constants and read `import.meta.env` directly; move both into the documented `config` namespace and read them through `config.*`.",
+			"`billing-request.ts` and `audit-request.ts` duplicate URL/page-size constants, write a retry threshold inline, and read `import.meta.env` directly; move all of them into the documented `config` namespace and read them through `config.*`.",
 		files: ["src/features/billing/billing-request.ts", "src/features/audit/audit-request.ts"],
 	},
 	"callback-contract-implementation": {
@@ -1837,7 +1843,7 @@ test("TypeScript progressive metadata matches Appendix A exactly", async () => {
 
 	assert.equal(document.metadata.progressiveDisclosure, true);
 	assert.deepEqual(document.metadata.companions ?? [], []);
-	assert.equal(document.rules.length, 30);
+	assert.equal(document.rules.length, 31);
 	assert.deepEqual(
 		Object.fromEntries(document.rules.map((rule) => [getRuleId(rule), {appliesWhen: rule.appliesWhen, reviewWith: rule.reviewWith}])),
 		typescriptRuleRouting,
@@ -1932,7 +1938,7 @@ test("TypeScript generated index is complete and within the deterministic byte b
 	const expectedIds = document.rules.map((rule) => getRuleId(rule)).sort();
 
 	assert.deepEqual(ids, expectedIds);
-	assert.equal(ids.length, 30);
+	assert.equal(ids.length, 31);
 
 	for (const entry of entries) {
 		assert.equal(entry.fileName, `${entry.id}.md`);

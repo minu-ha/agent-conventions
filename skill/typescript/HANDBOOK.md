@@ -45,6 +45,7 @@
     - 4.1 [Prefer Immutable Array Sorting](#41-prefer-immutable-array-sorting)
     - 4.2 [Use Set and Map for Repeated Lookups](#42-use-set-and-map-for-repeated-lookups)
     - 4.3 [Read Object Fields Through Chains, Not Destructuring](#43-read-object-fields-through-chains-not-destructuring)
+    - 4.4 [Declare Meaningful Numbers Instead of Writing Them Inline](#44-declare-meaningful-numbers-instead-of-writing-them-inline)
 5. [Absence and Fallback Handling](#5-absence-and-fallback-handling) — **HIGH**
     - 5.1 [Expose Optional Values Instead of Silent Fallbacks](#51-expose-optional-values-instead-of-silent-fallbacks)
 6. [JSDoc and Comment Conventions](#6-jsdoc-and-comment-conventions) — **MEDIUM**
@@ -1701,7 +1702,7 @@ export const assertLoggedIn = (session: Session): void => {
 
 **Impact: HIGH**
 
-값을 다루는 관용구를 한 가지로 고정합니다. 넘겨받은 배열은 제자리에서 바꾸지 않고, 반복되는 조회는 `Set`과 `Map`으로 모읍니다. 객체에서 값을 꺼낼 때는 구조분해로 끊지 않고 체인으로 읽어 출처를 남깁니다.
+값을 다루는 관용구를 한 가지로 고정합니다. 넘겨받은 배열은 제자리에서 바꾸지 않고, 반복되는 조회는 `Set`과 `Map`으로 모읍니다. 객체에서 값을 꺼낼 때는 구조분해로 끊지 않고 체인으로 읽어 출처를 남깁니다. 뜻이 있는 숫자는 쓰는 자리에 적지 않고 설정에 선언합니다.
 
 ### 4.1 Prefer Immutable Array Sorting
 
@@ -1899,6 +1900,115 @@ const toOverdueLines = (invoice: Invoice, today: Date): InvoiceLine[] => {
 };
 ```
 
+### 4.4 Declare Meaningful Numbers Instead of Writing Them Inline
+
+**Rule:** `T24` · `values-declare-meaningful-numbers`
+
+**Applies when:** 비교, 계산, 호출 인자에 숫자 리터럴을 새로 적을 때. 제외: 관용값이나 배열 인덱스처럼 뜻이 없는 숫자를 쓰는 경우.
+
+**Review with:** `absence-expose-optional-values-instead-of-silent-fallbacks`, `naming-centralize-shared-config-namespaces`
+
+**Impact: MEDIUM (숫자가 무엇을 뜻하는지 이름이 말하고 바꿀 때 고칠 자리가 한 곳입니다)**
+
+뜻이 있는 숫자는 쓰는 자리에 적지 않고 설정에 선언한 이름을 가리킵니다.
+`attempts > 42`가 아니라 `attempts > config.retry.maxAttempts`입니다.
+
+어디에 선언할지는 `naming-centralize-shared-config-namespaces`가 정합니다.
+두 소유자 이상이 쓰면 `shared/config.ts`, 하나만 쓰면 그 소유자의 `config` 폴더입니다.
+
+**같은 파일에 지역 `const`로 옮기는 것으로는 끝나지 않습니다.**
+`functions-name-a-value-only-for-recompute-or-judgment`가 지역 변수를 만들 자리를 따로 정하고,
+숫자를 옮기는 것은 그 둘 중 어디에도 없습니다.
+갈 곳은 지역 변수가 아니라 설정입니다.
+
+**뜻이 없는 숫자는 그대로 적습니다.**
+아래는 이름을 붙여도 읽는 사람이 얻는 것이 없습니다.
+
+| 그대로 적는 것 | 예 |
+| --- | --- |
+| 관용값 | `0`, `1`, `2`, `10`, `24`, `60` |
+| 배열 인덱스 | `rows[0]`, `parts[1]` |
+| 선언의 초기값 | `let count = 0` |
+| 설정 객체 자신의 값 | `{maxAttempts: 42}` |
+
+기본 매개변수와 `??`·`||` 오른쪽은 이 규칙이 아니라
+`absence-expose-optional-values-instead-of-silent-fallbacks`가 봅니다.
+없는 값을 다루는 자리라 판정이 다릅니다.
+
+`tooling-configure-biome-to-enforce-these-rules` 규칙이 `style/noMagicNumbers`로 이 선을 강제합니다.
+위 표가 그 규칙이 무시하는 목록과 같은 선입니다.
+
+**Incorrect (뜻이 있는 숫자를 쓰는 자리에 적음):**
+
+```ts
+const isOverRetryLimit = (attempts: number): boolean => {
+	return attempts > 42;
+};
+
+const toPreviewRows = (rows: Row[]): Row[] => {
+	return rows.slice(0, 37);
+};
+
+const toScheduledSave = (save: () => void): void => {
+	setTimeout(save, 300);
+};
+```
+
+**Incorrect (지역 `const`로 자리만 옮김):**
+
+```ts
+const maxAttempts = 42;
+
+const isOverRetryLimit = (attempts: number): boolean => {
+	return attempts > maxAttempts;
+};
+```
+
+**Correct (설정에 선언하고 이름을 가리킴):**
+
+```ts
+// shared/config.ts
+/**
+ * 환경마다 달라지는 공용 설정
+ */
+export const config = {
+	retry: {
+		/**
+		 * 이 횟수를 넘으면 사용자에게 실패를 보여 준다
+		 */
+		maxAttempts: 42,
+	},
+	preview: {
+		/**
+		 * 미리보기에 그릴 행 수. 서버가 한 번에 주는 최대치와 맞춘다
+		 */
+		rowCount: 37,
+	},
+} as const;
+```
+
+```ts
+const isOverRetryLimit = (attempts: number): boolean => {
+	return attempts > config.retry.maxAttempts;
+};
+
+const toPreviewRows = (rows: Row[]): Row[] => {
+	return rows.slice(0, config.preview.rowCount);
+};
+```
+
+**Correct (뜻이 없는 숫자는 그대로):**
+
+```ts
+const toFirstRow = (rows: Row[]): Row | undefined => {
+	return rows[0];
+};
+
+const toNextPage = (page: number): number => {
+	return page + 1;
+};
+```
+
 ## 5. Absence and Fallback Handling
 
 **Impact: HIGH**
@@ -1907,7 +2017,7 @@ const toOverdueLines = (invoice: Invoice, today: Date): InvoiceLine[] => {
 
 ### 5.1 Expose Optional Values Instead of Silent Fallbacks
 
-**Rule:** `T24` · `absence-expose-optional-values-instead-of-silent-fallbacks`
+**Rule:** `T25` · `absence-expose-optional-values-instead-of-silent-fallbacks`
 
 **Applies when:** 선택 값을 읽거나 정규화하거나 넘기는 방식을 바꿀 때. `??`, `||`, 기본값, 빈 값 대체 분기를 추가·변경할 때.
 
@@ -1926,6 +2036,9 @@ const toOverdueLines = (invoice: Invoice, today: Date): InvoiceLine[] => {
 | 기본 매개변수나 구조분해 기본값에 **리터럴**을 적은 것. `(size = 10) =>`, `{size = 10}` | 위반 |
 | 기본 매개변수가 선언된 이름을 가리키는 것. `(size = config.pagination.defaultPageSize) =>` | 통과 |
 | 삼항 `value ? value : "-"`, `String(value ?? "")` | 위반 |
+
+숫자 리터럴을 쓰는 자리에 적지 않는 일반 규범은 `values-declare-meaningful-numbers`가 정합니다.
+여기서는 없는 값을 덮는 자리만 봅니다.
 
 기본값이 정말 필요하면 그 기본값에 이름을 붙여 선언하고 그 이름을 가리킵니다.
 여러 소유자가 쓰면 `naming-centralize-shared-config-namespaces`,
@@ -2020,7 +2133,7 @@ setVisibleRowCount(effectivePageSize);
 
 ### 6.1 Keep Body Comments for Intent and Steps
 
-**Rule:** `T25` · `docs-keep-body-comments-for-intent-and-steps`
+**Rule:** `T26` · `docs-keep-body-comments-for-intent-and-steps`
 
 **Applies when:** 함수 본문의 `//` 주석을 추가·수정·유지할 때. 도메인 규칙, 예외 방어, 외부 제약, 부수효과 순서, 긴 절차의 단계를 주석으로 설명할 때.
 
@@ -2085,7 +2198,7 @@ const submitProductDraft = async (draft: ProductDraft) => {
 
 ### 6.2 Require Header Doc Comments on Key Declarations
 
-**Rule:** `T26` · `docs-require-header-jsdoc-on-key-declarations`
+**Rule:** `T27` · `docs-require-header-jsdoc-on-key-declarations`
 
 **Applies when:** 쿼리, 뮤테이션, 원격 함수, 커스텀 훅, 커스텀 타입, 스토어, 포매터 선언을 추가·변경할 때. 분기나 `await`, 또는 두 개 이상의 동작이 있는 핸들러와 이펙트를 추가·변경할 때. 다시 쓰거나 내보낸 보조 함수를 추가·변경할 때.
 
@@ -2135,7 +2248,7 @@ const responseProductList = useProductList();
 
 ### 6.3 Write Concise Korean Comments About Purpose and Constraints
 
-**Rule:** `T27` · `docs-write-concise-korean-comments-about-purpose-and-constraints`
+**Rule:** `T28` · `docs-write-concise-korean-comments-about-purpose-and-constraints`
 
 **Applies when:** TypeScript·TSX의 문서 주석이나 인라인 주석 문구를 추가·수정·번역하거나 검토할 때. 문서 주석에 태그를 붙이거나 뺄 때.
 
@@ -2239,7 +2352,7 @@ export interface PgProductTreeProps {
 
 ### 6.4 Write Doc Comments as Multiline Blocks
 
-**Rule:** `T28` · `docs-write-doc-comments-as-multiline-blocks`
+**Rule:** `T29` · `docs-write-doc-comments-as-multiline-blocks`
 
 **Applies when:** 선언 위 문서 주석을 새로 쓰거나 형식을 바꿀 때. 한 줄 `/** … */`이나 `//`로 선언을 설명하려 할 때.
 
@@ -2291,7 +2404,7 @@ export const saveProduct = async (product: Product): Promise<void> => {
 
 ### 6.5 Justify Convention Exceptions With a Checkable Reason Comment
 
-**Rule:** `T29` · `docs-justify-convention-exceptions-with-a-reason-comment`
+**Rule:** `T30` · `docs-justify-convention-exceptions-with-a-reason-comment`
 
 **Applies when:** 규칙이 허용한 예외를 코드에 남길 때. 이미 있는 예외 주석의 내용을 바꿀 때. 제외: 규칙이 요구하지 않은 일반 설명 주석인 경우.
 
@@ -2346,7 +2459,7 @@ const filteredRows = useMemo(() => rows.filter((row) => matchRow(row, deferredKe
 
 ### 7.1 Configure Biome to Enforce the Mechanical Rules
 
-**Rule:** `T30` · `tooling-configure-biome-to-enforce-these-rules`
+**Rule:** `T31` · `tooling-configure-biome-to-enforce-these-rules`
 
 **Applies when:** 프로젝트에 `biome` 설정을 처음 넣거나 lint 규칙을 바꿀 때. `biome.json`의 `linter.rules`에 항목을 추가·삭제할 때.
 
@@ -2371,6 +2484,7 @@ const filteredRows = useMemo(() => rows.filter((row) => matchRow(row, deferredKe
 | `complexity/useMaxParams` | `typescript/functions-use-named-object-params-for-complex-signatures`의 셋 |
 | `style/noNestedTernary` | `typescript/functions-avoid-imperative-assembly-in-wide-scopes`의 삼항 겹치기 |
 | `style/useAsConstAssertion` | `typescript/types-replace-enum-with-as-const-objects` |
+| `style/noMagicNumbers` | `typescript/values-declare-meaningful-numbers` |
 | `correctness/useSingleJsDocAsterisk` | `typescript/docs-write-doc-comments-as-multiline-blocks` |
 | `suspicious/noExplicitAny` | `typescript/types-narrow-unknown-instead-of-asserting` |
 | `style/noNonNullAssertion` | `typescript/types-narrow-unknown-instead-of-asserting` |
@@ -2404,11 +2518,6 @@ const filteredRows = useMemo(() => rows.filter((row) => matchRow(row, deferredKe
 - `typescript/types-mark-unused-parameters-with-underscore` 중 **매개변수를 아예 생략한 경우**는 기계가 못 봅니다.
   `noUnusedFunctionParameters`는 남겨 둔 매개변수만 봅니다.
 
-`style/noMagicNumbers`는 켜지 않습니다.
-숫자를 전부 이름 있는 상수로 빼라고 하는데, 이 컨벤션이 막는 것은
-`absence-expose-optional-values-instead-of-silent-fallbacks`의 기본값 자리 리터럴뿐입니다.
-규칙이 요구하지 않는 것을 기계가 강제하면 예외 주석만 늘어납니다.
-
 따로 켜지 않는 규칙이 하나 있습니다.
 `style/useFragmentSyntax`는 JSX 조각을 `<>`로 바꾸라고 합니다.
 `recommended`에 없어 따로 켜야 하는데, 켜지 않습니다.
@@ -2439,6 +2548,7 @@ const filteredRows = useMemo(() => rows.filter((row) => matchRow(row, deferredKe
 			"performance": {"noNamespaceImport": "error", "noBarrelFile": "error", "noReExportAll": "error"},
 			"style": {
 				"noEnum": "error",
+				"noMagicNumbers": "error",
 				"noNestedTernary": "error",
 				"useAsConstAssertion": "error",
 				"noNonNullAssertion": "error",

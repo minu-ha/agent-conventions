@@ -21,6 +21,7 @@
 | `complexity/useMaxParams` | `typescript/functions-use-named-object-params-for-complex-signatures`의 셋 |
 | `style/noNestedTernary` | `typescript/functions-avoid-imperative-assembly-in-wide-scopes`의 삼항 겹치기 |
 | `style/useAsConstAssertion` | `typescript/types-replace-enum-with-as-const-objects` |
+| `style/noMagicNumbers` | `typescript/values-declare-meaningful-numbers` |
 | `correctness/useSingleJsDocAsterisk` | `typescript/docs-write-doc-comments-as-multiline-blocks` |
 | `suspicious/noExplicitAny` | `typescript/types-narrow-unknown-instead-of-asserting` |
 | `style/noNonNullAssertion` | `typescript/types-narrow-unknown-instead-of-asserting` |
@@ -53,11 +54,6 @@
   `let`을 `const`로 바꿔 주기만 하고 `push` 누적은 그대로 남습니다.
 - `typescript/types-mark-unused-parameters-with-underscore` 중 **매개변수를 아예 생략한 경우**는 기계가 못 봅니다.
   `noUnusedFunctionParameters`는 남겨 둔 매개변수만 봅니다.
-
-`style/noMagicNumbers`는 켜지 않습니다.
-숫자를 전부 이름 있는 상수로 빼라고 하는데, 이 컨벤션이 막는 것은
-`absence-expose-optional-values-instead-of-silent-fallbacks`의 기본값 자리 리터럴뿐입니다.
-규칙이 요구하지 않는 것을 기계가 강제하면 예외 주석만 늘어납니다.
 
 따로 켜지 않는 규칙이 하나 있습니다.
 `style/useFragmentSyntax`는 JSX 조각을 `<>`로 바꾸라고 합니다.

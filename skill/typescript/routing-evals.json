@@ -4,7 +4,7 @@
 	"scenarios": [
 		{
 			"id": "shared-config-existing-source",
-			"prompt": "`billing-request.ts` and `audit-request.ts` duplicate URL/page-size constants and read `import.meta.env` directly; move both into the documented `config` namespace and read them through `config.*`.",
+			"prompt": "`billing-request.ts` and `audit-request.ts` duplicate URL/page-size constants, write a retry threshold inline, and read `import.meta.env` directly; move all of them into the documented `config` namespace and read them through `config.*`.",
 			"files": [
 				"src/features/billing/billing-request.ts",
 				"src/features/audit/audit-request.ts"
@@ -20,7 +20,8 @@
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
 					"naming-restrict-absolute-aliases-to-layer-roots",
-					"naming-read-environment-values-through-shared-config"
+					"naming-read-environment-values-through-shared-config",
+					"values-declare-meaningful-numbers"
 				]
 			}
 		},

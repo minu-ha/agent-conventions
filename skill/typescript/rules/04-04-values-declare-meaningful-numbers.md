@@ -1,0 +1,114 @@
+---
+title: Declare Meaningful Numbers Instead of Writing Them Inline
+titleKo: 뜻이 있는 숫자는 그 자리에 적지 않고 설정에 선언합니다
+impact: MEDIUM
+impactDescription: 숫자가 무엇을 뜻하는지 이름이 말하고 바꿀 때 고칠 자리가 한 곳입니다
+appliesWhen:
+  - 비교, 계산, 호출 인자에 숫자 리터럴을 새로 적을 때
+  - 제외: 관용값이나 배열 인덱스처럼 뜻이 없는 숫자를 쓰는 경우
+reviewWith: naming-centralize-shared-config-namespaces, absence-expose-optional-values-instead-of-silent-fallbacks
+tags: values, config
+---
+
+## Declare Meaningful Numbers Instead of Writing Them Inline
+
+**Impact: MEDIUM (숫자가 무엇을 뜻하는지 이름이 말하고 바꿀 때 고칠 자리가 한 곳입니다)**
+
+뜻이 있는 숫자는 쓰는 자리에 적지 않고 설정에 선언한 이름을 가리킵니다.
+`attempts > 42`가 아니라 `attempts > config.retry.maxAttempts`입니다.
+
+어디에 선언할지는 `naming-centralize-shared-config-namespaces`가 정합니다.
+두 소유자 이상이 쓰면 `shared/config.ts`, 하나만 쓰면 그 소유자의 `config` 폴더입니다.
+
+**같은 파일에 지역 `const`로 옮기는 것으로는 끝나지 않습니다.**
+`functions-name-a-value-only-for-recompute-or-judgment`가 지역 변수를 만들 자리를 따로 정하고,
+숫자를 옮기는 것은 그 둘 중 어디에도 없습니다.
+갈 곳은 지역 변수가 아니라 설정입니다.
+
+**뜻이 없는 숫자는 그대로 적습니다.**
+아래는 이름을 붙여도 읽는 사람이 얻는 것이 없습니다.
+
+| 그대로 적는 것 | 예 |
+| --- | --- |
+| 관용값 | `0`, `1`, `2`, `10`, `24`, `60` |
+| 배열 인덱스 | `rows[0]`, `parts[1]` |
+| 선언의 초기값 | `let count = 0` |
+| 설정 객체 자신의 값 | `{maxAttempts: 42}` |
+
+기본 매개변수와 `??`·`||` 오른쪽은 이 규칙이 아니라
+`absence-expose-optional-values-instead-of-silent-fallbacks`가 봅니다.
+없는 값을 다루는 자리라 판정이 다릅니다.
+
+`tooling-configure-biome-to-enforce-these-rules` 규칙이 `style/noMagicNumbers`로 이 선을 강제합니다.
+위 표가 그 규칙이 무시하는 목록과 같은 선입니다.
+
+**Incorrect (뜻이 있는 숫자를 쓰는 자리에 적음):**
+
+```ts
+const isOverRetryLimit = (attempts: number): boolean => {
+	return attempts > 42;
+};
+
+const toPreviewRows = (rows: Row[]): Row[] => {
+	return rows.slice(0, 37);
+};
+
+const toScheduledSave = (save: () => void): void => {
+	setTimeout(save, 300);
+};
+```
+
+**Incorrect (지역 `const`로 자리만 옮김):**
+
+```ts
+const maxAttempts = 42;
+
+const isOverRetryLimit = (attempts: number): boolean => {
+	return attempts > maxAttempts;
+};
+```
+
+**Correct (설정에 선언하고 이름을 가리킴):**
+
+```ts
+// shared/config.ts
+/**
+ * 환경마다 달라지는 공용 설정
+ */
+export const config = {
+	retry: {
+		/**
+		 * 이 횟수를 넘으면 사용자에게 실패를 보여 준다
+		 */
+		maxAttempts: 42,
+	},
+	preview: {
+		/**
+		 * 미리보기에 그릴 행 수. 서버가 한 번에 주는 최대치와 맞춘다
+		 */
+		rowCount: 37,
+	},
+} as const;
+```
+
+```ts
+const isOverRetryLimit = (attempts: number): boolean => {
+	return attempts > config.retry.maxAttempts;
+};
+
+const toPreviewRows = (rows: Row[]): Row[] => {
+	return rows.slice(0, config.preview.rowCount);
+};
+```
+
+**Correct (뜻이 없는 숫자는 그대로):**
+
+```ts
+const toFirstRow = (rows: Row[]): Row | undefined => {
+	return rows[0];
+};
+
+const toNextPage = (page: number): number => {
+	return page + 1;
+};
+```

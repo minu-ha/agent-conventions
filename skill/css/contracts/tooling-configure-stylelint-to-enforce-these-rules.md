@@ -13,6 +13,7 @@
 | `no-duplicate-selectors` | `css/selector-declare-each-class-in-one-block`, `css/selector-do-not-group-classes-with-commas`의 단독 재선언 |
 | `property-disallowed-list` | `css/values-tokenize-repeated-visual-values` |
 | `selector-attribute-name-disallowed-list` | `css/selector-use-pseudo-classes-for-dom-owned-states` |
+| `selector-disallowed-list`의 `:not(.` | `css/selector-do-not-invert-domain-state-with-not` |
 | `declaration-no-important` | `css/a11y-namespace-keyframes-and-respect-reduced-motion`의 전역 처리만 예외입니다 |
 | `media-feature-range-notation` | `css/layout-group-breakpoints-at-the-file-bottom`의 범위 표기. `stylelint-config-standard`에서 옵니다 |
 | `no-descending-specificity` | 자손 기본 블록을 조상 규칙보다 앞에 두게 합니다. `stylelint-config-standard`에서 옵니다 |
