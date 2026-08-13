@@ -7,7 +7,7 @@
 | 쓰는 소유자 | 자리 | 이름 |
 | --- | --- | --- |
 | 둘 이상 | `shared/config.ts` | `config.*` |
-| 하나 | `<owner>/config/<owner>-config.ts` | `<owner>Config` |
+| 하나 | `<owner>/config/<owner>-config.ts` | `<owner>_config` |
 
 **두 소유자 이상이 같은 값을 쓰면** `shared/config.ts` 한 파일을 공개 진입점으로 삼습니다.
 `config` 네임스페이스 아래에 모아 `config.*` 체인으로 읽히게 하고,

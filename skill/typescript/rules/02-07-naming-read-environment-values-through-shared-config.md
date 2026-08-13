@@ -50,7 +50,7 @@ if (!import.meta.env.VITE_API_BASE_URL) {
  */
 export const config = {
 	api: {
-		baseUrl: import.meta.env.VITE_API_BASE_URL,
+		base_url: import.meta.env.VITE_API_BASE_URL,
 	},
 } as const;
 ```
@@ -59,5 +59,5 @@ export const config = {
 // service/product-client.ts
 import {config} from "@/shared/config";
 
-const productClient = createClient({baseUrl: config.api.baseUrl});
+const productClient = createClient({baseUrl: config.api.base_url});
 ```

@@ -35,7 +35,7 @@ tags: functions, origin
 
 **2. 여러 항을 엮은 판정이라 이름이 결론을 대신 말해 줍니다.**
 
-`row.status === productStatus.draft && !row.lockedAt && row.ownerId === session.userId`는
+`row.status === product_status.draft && !row.lockedAt && row.ownerId === session.userId`는
 읽을 때마다 세 항을 머릿속에서 합쳐야 합니다.
 `isEditable`은 그 합성을 한 번만 하게 합니다.
 
@@ -101,7 +101,7 @@ const toRowClassNames = (row: Row): string[] => {
 
 ```ts
 const toRowAction = (row: Row): RowAction => {
-	const isEditable = row.status === productStatus.draft && !row.lockedAt && row.ownerId === session.userId;
+	const isEditable = row.status === product_status.draft && !row.lockedAt && row.ownerId === session.userId;
 
 	return isEditable ? rowAction.edit : rowAction.view;
 };

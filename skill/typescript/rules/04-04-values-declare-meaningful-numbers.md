@@ -15,7 +15,7 @@ tags: values, config
 **Impact: MEDIUM (숫자가 무엇을 뜻하는지 이름이 말하고 바꿀 때 고칠 자리가 한 곳입니다)**
 
 뜻이 있는 숫자는 쓰는 자리에 적지 않고 설정에 선언한 이름을 가리킵니다.
-`attempts > 42`가 아니라 `attempts > config.retry.maxAttempts`입니다.
+`attempts > 42`가 아니라 `attempts > config.retry.max_attempts`입니다.
 
 어디에 선언할지는 `naming-centralize-shared-config-namespaces`가 정합니다.
 두 소유자 이상이 쓰면 `shared/config.ts`, 하나만 쓰면 그 소유자의 `config` 폴더입니다.
@@ -33,7 +33,7 @@ tags: values, config
 | 관용값 | `0`, `1`, `2`, `10`, `24`, `60` |
 | 배열 인덱스 | `rows[0]`, `parts[1]` |
 | 선언의 초기값 | `let count = 0` |
-| 설정 객체 자신의 값 | `{maxAttempts: 42}` |
+| 설정 객체 자신의 값 | `{max_attempts: 42}` |
 | 기본 매개변수 | `(limit = 42) => …` |
 
 `??`·`||` 오른쪽은 이 규칙이 아니라
@@ -87,24 +87,24 @@ export const config = {
 		/**
 		 * 이 횟수를 넘으면 사용자에게 실패를 보여 준다
 		 */
-		maxAttempts: 42,
+		max_attempts: 42,
 	},
 	preview: {
 		/**
 		 * 미리보기에 그릴 행 수. 서버가 한 번에 주는 최대치와 맞춘다
 		 */
-		rowCount: 37,
+		row_count: 37,
 	},
 } as const;
 ```
 
 ```ts
 const isOverRetryLimit = (attempts: number): boolean => {
-	return attempts > config.retry.maxAttempts;
+	return attempts > config.retry.max_attempts;
 };
 
 const toPreviewRows = (rows: Row[]): Row[] => {
-	return rows.slice(0, config.preview.rowCount);
+	return rows.slice(0, config.preview.row_count);
 };
 ```
 

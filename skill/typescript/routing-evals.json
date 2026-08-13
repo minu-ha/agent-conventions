@@ -121,7 +121,7 @@
 		},
 		{
 			"id": "enum-like-runtime-contract",
-			"prompt": "replace `enum ProductStatus` with `productStatus as const`, derive `ProductStatus`, and document the object, every key, and derived type in Korean.",
+			"prompt": "replace `enum ProductStatus` with `product_status as const`, include a multiword `waiting_review` member, derive `ProductStatus`, and document the object, every key, and derived type in Korean.",
 			"files": [
 				"src/audit/audit-status.ts"
 			],

@@ -29,7 +29,7 @@
     - 2.1 [Centralize Shared Config Under `shared/config.ts`](#21-centralize-shared-config-under-shared-config-ts)
     - 2.2 [Place Owner-only Config in the Owner Config Folder](#22-place-owner-only-config-in-the-owner-config-folder)
     - 2.3 [Preserve Shared Namespace Origin With Chained Access](#23-preserve-shared-namespace-origin-with-chained-access)
-    - 2.4 [Use Consistent File, Symbol, and Field Naming](#24-use-consistent-file-symbol-and-field-naming)
+    - 2.4 [Use Role-Based File, Symbol, and Constant Naming](#24-use-role-based-file-symbol-and-constant-naming)
     - 2.5 [Use Direct Imports and Dedicated Public Entry Points](#25-use-direct-imports-and-dedicated-public-entry-points)
     - 2.6 [Restrict Absolute Aliases to Layer Roots](#26-restrict-absolute-aliases-to-layer-roots)
     - 2.7 [Read Environment Values Through Shared Config](#27-read-environment-values-through-shared-config)
@@ -519,16 +519,17 @@ enum ProductStatus {
 /**
  * product 심사 상태 값 집합
  */
-const productStatus = {
+const product_status = {
 	pending: "pending",
+	waiting_review: "waiting_review",
 	passed: "passed",
 	failed: "failed",
 } as const;
 
 /**
- * product 심사 상태 타입. productStatus에 값을 더하면 따라 넓어진다
+ * product 심사 상태 타입. product_status에 값을 더하면 따라 넓어진다
  */
-type ProductStatus = (typeof productStatus)[keyof typeof productStatus];
+type ProductStatus = (typeof product_status)[keyof typeof product_status];
 ```
 
 ## 2. Naming and Module Boundaries
@@ -552,7 +553,7 @@ type ProductStatus = (typeof productStatus)[keyof typeof productStatus];
 | 쓰는 소유자 | 자리 | 이름 |
 | --- | --- | --- |
 | 둘 이상 | `shared/config.ts` | `config.*` |
-| 하나 | `<owner>/config/<owner>-config.ts` | `<owner>Config` |
+| 하나 | `<owner>/config/<owner>-config.ts` | `<owner>_config` |
 
 **두 소유자 이상이 같은 값을 쓰면** `shared/config.ts` 한 파일을 공개 진입점으로 삼습니다.
 `config` 네임스페이스 아래에 모아 `config.*` 체인으로 읽히게 하고,
@@ -569,13 +570,13 @@ type ProductStatus = (typeof productStatus)[keyof typeof productStatus];
 
 ```ts
 // page/products/pg-products.tsx
-const defaultPageSize = 20;
-const billingFeatureKeys = ["invoices", "refunds"];
+const default_page_size = 20;
+const billing_feature_keys = ["invoices", "refunds"] as const;
 ```
 
 ```ts
 // page/billing/pg-billing.tsx
-const defaultPageSize = 20;
+const default_page_size = 20;
 ```
 
 **Correct (공용 설정 네임스페이스에서 읽은 값을 쓰는 자리로 넘김):**
@@ -584,10 +585,10 @@ const defaultPageSize = 20;
 // page/products/pg-products.tsx
 import {config} from "@/shared/config";
 
-const productClient = createClient({baseUrl: config.api.publicBaseUrl});
+const productClient = createClient({baseUrl: config.api.public_base_url});
 const productQuery = useProductQuery({
 	client: productClient,
-	pageSize: config.pagination.defaultPageSize,
+	pageSize: config.pagination.default_page_size,
 });
 ```
 
@@ -595,11 +596,11 @@ const productQuery = useProductQuery({
 // page/billing/pg-billing.tsx
 import {config} from "@/shared/config";
 
-const billingClient = createClient({baseUrl: config.api.billingBaseUrl});
+const billingClient = createClient({baseUrl: config.api.billing_base_url});
 const billingQuery = useBillingQuery({
 	client: billingClient,
-	pageSize: config.pagination.defaultPageSize,
-	featureKeys: config.features.billingFeatureKeys,
+	pageSize: config.pagination.default_page_size,
+	featureKeys: config.features.billing_feature_keys,
 });
 ```
 
@@ -619,7 +620,7 @@ const billingQuery = useBillingQuery({
 그 소유자 아래 `config` 폴더에 둡니다.
 전역과 소유자 중 어디에 두는지 가르는 표는 `naming-centralize-shared-config-namespaces` 규칙에 있습니다.
 
-- 파일은 소유자 폴더 바로 아래 `config/<owner>-config.ts`, 내보내는 상수는 `<owner>Config`입니다.
+- 파일은 소유자 폴더 바로 아래 `config/<owner>-config.ts`, 내보내는 상수는 `<owner>_config`입니다.
 - `constants` 폴더는 만들지 않습니다.
 - 두 번째 소유자가 같은 값을 쓰게 되면 `naming-centralize-shared-config-namespaces` 규칙을 따라 올립니다.
 
@@ -628,8 +629,8 @@ const billingQuery = useBillingQuery({
 ```ts
 // shared/config.ts
 export const config = {
-	productDetail: {
-		chartAxisTickCount: 6,
+	product_detail: {
+		chart_axis_tick_count: 6,
 	},
 } as const;
 ```
@@ -641,8 +642,8 @@ export const config = {
 /**
  * product 상세 화면 전용 표시 설정
  */
-export const productDetailConfig = {
-	chartAxisTickCount: 6,
+export const product_detail_config = {
+	chart_axis_tick_count: 6,
 } as const;
 ```
 
@@ -670,46 +671,53 @@ export const productDetailConfig = {
 ```ts
 const {api, features} = config;
 const {date} = util;
-const billingBaseUrl = api.billingBaseUrl;
-const enableRefunds = features.enableRefunds;
+const billingBaseUrl = api.billing_base_url;
+const enableRefunds = features.enable_refunds;
 const isoDate = date.toIsoString(createdAt);
 ```
 
 **Correct (쓰는 자리에서 체인 그대로 읽어 출처를 남김):**
 
 ```ts
-const billingClient = createClient({baseUrl: config.api.billingBaseUrl});
+const billingClient = createClient({baseUrl: config.api.billing_base_url});
 const createdAtLabel = util.date.toIsoString(createdAt);
 
-if (config.features.enableRefunds) {
+if (config.features.enable_refunds) {
 	openRefundDialog({client: billingClient, createdAtLabel});
 }
 ```
 
-### 2.4 Use Consistent File, Symbol, and Field Naming
+### 2.4 Use Role-Based File, Symbol, and Constant Naming
 
 **Rule:** `T10` · `naming-use-consistent-file-and-symbol-naming`
 
 **Applies when:** TypeScript 파일, 폴더, 변수, 함수, 타입, 객체·스키마 키의 이름을 새로 만들거나 바꿀 때. 밖으로 나가는 키를 받는 쪽 표기로 적을지 판단할 때. 제외: 별칭 없이 외부 패키지에서 그대로 가져오는 경우.
 
-**Impact: MEDIUM-HIGH (이름을 지을 때 그 값이 무엇인지 따지지 않고 어느 자리인지만 보면 표기가 정해집니다)**
+**Impact: MEDIUM-HIGH (일반 심볼과 불변 데이터 상수를 이름으로 구분해 읽는 사람이 의도를 바로 압니다)**
 
 | 자리 | 표기 |
 | --- | --- |
 | 파일명 | `kebab-case` |
 | 폴더명 | `kebab-case` 단수 |
 | 타입, 인터페이스, 컴포넌트 | `PascalCase` |
-| 나머지 전부 — 변수, 함수, 객체 키, 스키마 키, 타입 필드 | `camelCase` |
+| 모듈 스코프의 불변 데이터 상수, 상수 집합 | `snake_case` |
+| 불변 설정과 상수 집합 객체가 소유한 상수 키 | `snake_case` |
+| 그 외 변수, 함수, 객체 키, 스키마 키, 타입 필드 | `camelCase` |
 
-`const`인지, 설정인지, 상수 집합인지에 따라 표기를 달리하지 않습니다.
-그 값이 무엇인지는 표기가 아니라 이름과 자리가 말합니다.
+**`const` 선언을 전부 상수로 보지 않습니다.**
+함수, 컴포넌트, 훅이나 API 호출 결과, 스키마, 요청 객체, 지역 파생값은
+`const`로 선언해도 각 역할의 표기를 유지합니다.
 
-설정 키도 `camelCase`입니다.
-`config.pagination.defaultPageSize`가 설정에서 왔다는 사실은 표기가 아니라 `config.` 체인이 말해 줍니다.
-`naming-preserve-config-origin-with-chained-access` 규칙이 그 체인을 강제하므로
-표기가 같은 말을 두 번 할 필요가 없습니다.
-`enum` 성격 상수도 같습니다.
-`types-replace-enum-with-as-const-objects` 규칙이 `as const`를 강제하고, 선언에 붙는 문서 주석이 값 집합임을 밝힙니다.
+여기서 불변 데이터 상수는 모듈 스코프에 한 번 선언해 실행 중 같은 의미로 쓰는
+리터럴, 설정, 값 집합, 조회표입니다.
+객체와 배열은 `as const`나 읽기 전용 계약을 적용하고 변경하지 않습니다.
+불변 설정과 상수 집합의 하위 객체와 키도 같은 `snake_case`를 사용합니다.
+
+- `retry_policy.max_attempts`는 불변 설정과 그 상수 키입니다.
+- `product_status.waiting_review`는 값 집합과 그 상수 키입니다.
+- `fetchProducts({pageSize: config.pagination.default_page_size})`의 `pageSize`는
+  요청 계약 필드라 `camelCase`이고, 설정 키인 `default_page_size`만 `snake_case`입니다.
+- `productSearchSchema`는 실행 중 재할당하지 않아도 스키마 역할이므로 `camelCase`입니다.
 
 **예외는 밖으로 나가는 키뿐입니다.**
 API 요청 본문, 라이브러리 인자, DOM 속성, 환경 변수처럼 받는 쪽이 이름을 정하는 자리는 받는 쪽 표기를 그대로 씁니다.
@@ -721,14 +729,18 @@ API 요청 본문, 라이브러리 인자, DOM 속성, 환경 변수처럼 받�
 
 폴더명은 프레임워크가 강제하는 이름만 예외로 둡니다.
 
-**Incorrect (파일명, 심볼명, 필드명이 제각각임):**
+**Incorrect (역할과 맞지 않는 표기를 사용):**
 
 ```ts
 // userSettings.ts
-// 밖으로 나가는 키가 아니라 우리가 짓는 이름이다. 파일명은 kebab-case, 키는 camelCase다
+// 스키마와 그 필드는 일반 심볼이라 camelCase다
 const User_ProfileSchema = z.object({
 	repo_path: z.string(),
 });
+
+const retryPolicy = {
+	maxAttempts: 3,
+} as const;
 ```
 
 **Correct (파일명은 `kebab-case`, 스키마 키는 `camelCase`):**
@@ -746,7 +758,7 @@ const userProfileSchema = z.object({
 });
 ```
 
-**Correct (설정과 값 집합도 `camelCase`. 출처는 체인과 선언이 말함):**
+**Correct (불변 설정과 값 집합은 객체와 상수 키를 모두 `snake_case`로 표기):**
 
 ```ts
 // shared/config.ts
@@ -755,15 +767,16 @@ const userProfileSchema = z.object({
  */
 export const config = {
 	pagination: {
-		defaultPageSize: 20,
+		default_page_size: 20,
 	},
 } as const;
 
 /**
  * product 게시 상태 값 집합
  */
-const productStatus = {
+const product_status = {
 	draft: "draft",
+	waiting_review: "waiting_review",
 	published: "published",
 } as const;
 ```
@@ -901,7 +914,7 @@ if (!import.meta.env.VITE_API_BASE_URL) {
  */
 export const config = {
 	api: {
-		baseUrl: import.meta.env.VITE_API_BASE_URL,
+		base_url: import.meta.env.VITE_API_BASE_URL,
 	},
 } as const;
 ```
@@ -910,7 +923,7 @@ export const config = {
 // service/product-client.ts
 import {config} from "@/shared/config";
 
-const productClient = createClient({baseUrl: config.api.baseUrl});
+const productClient = createClient({baseUrl: config.api.base_url});
 ```
 
 ## 3. Functions and Helper Boundaries
@@ -1489,7 +1502,7 @@ const visibleTabs = [
 
 **2. 여러 항을 엮은 판정이라 이름이 결론을 대신 말해 줍니다.**
 
-`row.status === productStatus.draft && !row.lockedAt && row.ownerId === session.userId`는
+`row.status === product_status.draft && !row.lockedAt && row.ownerId === session.userId`는
 읽을 때마다 세 항을 머릿속에서 합쳐야 합니다.
 `isEditable`은 그 합성을 한 번만 하게 합니다.
 
@@ -1555,7 +1568,7 @@ const toRowClassNames = (row: Row): string[] => {
 
 ```ts
 const toRowAction = (row: Row): RowAction => {
-	const isEditable = row.status === productStatus.draft && !row.lockedAt && row.ownerId === session.userId;
+	const isEditable = row.status === product_status.draft && !row.lockedAt && row.ownerId === session.userId;
 
 	return isEditable ? rowAction.edit : rowAction.view;
 };
@@ -1837,7 +1850,7 @@ const toInvoiceLine = ({product, quantity}: InvoiceLineInput): InvoiceLine => {
 
 ```ts
 const pricing = config.pricing;
-const currency = pricing.defaultCurrency;
+const currency = pricing.default_currency;
 
 const toInvoiceTotal = (lines: InvoiceLine[]): InvoiceTotal => {
 	return {
@@ -1869,7 +1882,7 @@ const toInvoiceLine = (input: InvoiceLineInput): InvoiceLine => {
 
 const toInvoiceTotal = (lines: InvoiceLine[]): InvoiceTotal => {
 	return {
-		currency: config.pricing.defaultCurrency,
+		currency: config.pricing.default_currency,
 		amount: lines.reduce((sum, line) => sum + line.amount, 0),
 	};
 };
@@ -1911,7 +1924,7 @@ const toOverdueLines = (invoice: Invoice, today: Date): InvoiceLine[] => {
 **Impact: MEDIUM (숫자가 무엇을 뜻하는지 이름이 말하고 바꿀 때 고칠 자리가 한 곳입니다)**
 
 뜻이 있는 숫자는 쓰는 자리에 적지 않고 설정에 선언한 이름을 가리킵니다.
-`attempts > 42`가 아니라 `attempts > config.retry.maxAttempts`입니다.
+`attempts > 42`가 아니라 `attempts > config.retry.max_attempts`입니다.
 
 어디에 선언할지는 `naming-centralize-shared-config-namespaces`가 정합니다.
 두 소유자 이상이 쓰면 `shared/config.ts`, 하나만 쓰면 그 소유자의 `config` 폴더입니다.
@@ -1929,7 +1942,7 @@ const toOverdueLines = (invoice: Invoice, today: Date): InvoiceLine[] => {
 | 관용값 | `0`, `1`, `2`, `10`, `24`, `60` |
 | 배열 인덱스 | `rows[0]`, `parts[1]` |
 | 선언의 초기값 | `let count = 0` |
-| 설정 객체 자신의 값 | `{maxAttempts: 42}` |
+| 설정 객체 자신의 값 | `{max_attempts: 42}` |
 | 기본 매개변수 | `(limit = 42) => …` |
 
 `??`·`||` 오른쪽은 이 규칙이 아니라
@@ -1983,24 +1996,24 @@ export const config = {
 		/**
 		 * 이 횟수를 넘으면 사용자에게 실패를 보여 준다
 		 */
-		maxAttempts: 42,
+		max_attempts: 42,
 	},
 	preview: {
 		/**
 		 * 미리보기에 그릴 행 수. 서버가 한 번에 주는 최대치와 맞춘다
 		 */
-		rowCount: 37,
+		row_count: 37,
 	},
 } as const;
 ```
 
 ```ts
 const isOverRetryLimit = (attempts: number): boolean => {
-	return attempts > config.retry.maxAttempts;
+	return attempts > config.retry.max_attempts;
 };
 
 const toPreviewRows = (rows: Row[]): Row[] => {
-	return rows.slice(0, config.preview.rowCount);
+	return rows.slice(0, config.preview.row_count);
 };
 ```
 
@@ -2037,11 +2050,11 @@ const toNextPage = (page: number): number => {
 | 형태 | 판정 |
 | --- | --- |
 | `?? "help@example.com"`, `?? 0`, `?? []`, `\|\| "-"` 같은 리터럴 | 위반 |
-| `?? config.pagination.defaultPageSize`처럼 설정에 선언된 이름 | 통과 |
+| `?? config.pagination.default_page_size`처럼 설정에 선언된 이름 | 통과 |
 | 같은 파일 지역 `const`로 리터럴만 옮긴 것. `const fallback = "-";` | 위반. 자리만 바꾼 것입니다 |
 | 선언된 이름 둘을 합성한 결과에 이름을 붙인 것 | 통과. 리터럴이 없습니다 |
 | 기본 매개변수나 구조분해 기본값에 **리터럴**을 적은 것. `(size = 10) =>`, `{size = 10}` | 위반 |
-| 기본 매개변수가 선언된 이름을 가리키는 것. `(size = config.pagination.defaultPageSize) =>` | 통과 |
+| 기본 매개변수가 선언된 이름을 가리키는 것. `(size = config.pagination.default_page_size) =>` | 통과 |
 | 삼항 `value ? value : "-"`, `String(value ?? "")` | 위반 |
 
 숫자 리터럴을 쓰는 자리에 적지 않는 일반 규범은 `values-declare-meaningful-numbers`가 정합니다.
@@ -2063,11 +2076,11 @@ const toNextPage = (page: number): number => {
    `(variant ?? "default") === "compact"`도 `variant === "compact"`로 쓰면 끝납니다.
    선택 값을 그대로 비교하면 기본값이 아예 필요 없는 경우가 가장 많습니다.
 2. **필요하면 값이 들어오는 경계에서 한 번만 해소합니다.**
-   라우트 search 스키마의 `.default(config.pagination.defaultPageSize)`, 응답 매핑, 쿼리의 `select`가 그 자리입니다.
+   라우트 search 스키마의 `.default(config.pagination.default_page_size)`, 응답 매핑, 쿼리의 `select`가 그 자리입니다.
    기본값이 선언 안에 들어가므로 그 선언이 곧 출처가 됩니다.
    아래쪽 코드에서는 그 값이 더는 선택 값이 아니어서 `??`가 나올 일이 없습니다.
 3. **경계에서 못 하면 쓰는 자리에 그대로 적습니다.**
-   `fetchProducts({pageSize: query.pageSize ?? config.pagination.defaultPageSize})`처럼 씁니다.
+   `fetchProducts({pageSize: query.pageSize ?? config.pagination.default_page_size})`처럼 씁니다.
 4. **이름을 붙인다면 파생값임이 드러나는 이름으로 씁니다.**
    `pageSize`가 아니라 `effectivePageSize`입니다.
    붙일지 말지는 `functions-name-a-value-only-for-recompute-or-judgment`가 정하고,
@@ -2113,20 +2126,20 @@ const productSearchSchema = z.object({
 	/**
 	 * 한 번에 불러올 개수
 	 */
-	pageSize: z.number().default(config.pagination.defaultPageSize),
+	pageSize: z.number().default(config.pagination.default_page_size),
 });
 ```
 
 **Correct (경계에서 못 하면 쓰는 자리에 그대로 적음):**
 
 ```ts
-fetchProducts({pageSize: query.pageSize ?? config.pagination.defaultPageSize});
+fetchProducts({pageSize: query.pageSize ?? config.pagination.default_page_size});
 ```
 
 **Correct (이름을 붙인다면 파생값임이 드러나는 이름):**
 
 ```ts
-const effectivePageSize = query.pageSize ?? config.pagination.defaultPageSize;
+const effectivePageSize = query.pageSize ?? config.pagination.default_page_size;
 
 fetchProducts({pageSize: effectivePageSize});
 setVisibleRowCount(effectivePageSize);
@@ -2502,10 +2515,10 @@ const filteredRows = useMemo(() => rows.filter((row) => matchRow(row, deferredKe
 기계가 끝까지 못 가는 자리가 있습니다.
 아래 항목은 리뷰가 봅니다.
 
-- 객체 키에서 `snake_case`를 닫았습니다.
-  밖으로 나가는 키는 그 자리에 `biome-ignore`를 달아 예외를 보이게 합니다.
-  `docs-justify-convention-exceptions-with-a-reason-comment` 규칙이 그 주석에 무엇을 적을지 정합니다.
-  기계가 못 가리는 판정을 열어 두는 대신 예외를 세는 쪽으로 바꾼 것입니다.
+- 모듈 스코프 `const`와 객체 리터럴 키에는 `snake_case`를 허용합니다.
+  `biome`은 불변 데이터 상수와 함수, 스키마, 요청 객체를 구분하지 못하고,
+  어떤 객체 키가 불변 설정이나 상수 집합에 속하는지도 구분하지 못합니다.
+  `snake_case`를 쓸 자리는 `naming-use-consistent-file-and-symbol-naming` 규칙에 따라 리뷰가 판정합니다.
   `PascalCase`는 합성 컴포넌트의 `{Root, Header, Footer}` 때문에 `objectLiteralProperty`에만 남깁니다.
   `typescript/functions-declare-functions-as-arrow-consts` 때문에 이름 붙인 함수도 `const` 항목에 들어가는데,
   그 항목은 컴포넌트 이름 때문에 `PascalCase`도 열려 있어 함수 이름의 `camelCase`는 리뷰가 봅니다.
@@ -2584,8 +2597,8 @@ const filteredRows = useMemo(() => rows.filter((row) => matchRow(row, deferredKe
 						"strictCase": false,
 						"conventions": [
 							{"selector": {"kind": "typeLike"}, "formats": ["PascalCase"]},
-							{"selector": {"kind": "const", "scope": "global"}, "formats": ["camelCase", "PascalCase"]},
-							{"selector": {"kind": "objectLiteralProperty"}, "formats": ["camelCase", "PascalCase"]},
+							{"selector": {"kind": "const", "scope": "global"}, "formats": ["camelCase", "PascalCase", "snake_case"]},
+							{"selector": {"kind": "objectLiteralProperty"}, "formats": ["camelCase", "PascalCase", "snake_case"]},
 							{"selector": {"kind": "typeProperty"}, "formats": ["camelCase"]},
 							{"selector": {"kind": "variable"}, "formats": ["camelCase", "PascalCase"]}
 						]

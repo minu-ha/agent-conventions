@@ -898,7 +898,7 @@ const typescriptScenarioEvidence = {
 	},
 	"enum-like-runtime-contract": {
 		prompt:
-			"replace `enum ProductStatus` with `productStatus as const`, derive `ProductStatus`, and document the object, every key, and derived type in Korean.",
+			"replace `enum ProductStatus` with `product_status as const`, include a multiword `waiting_review` member, derive `ProductStatus`, and document the object, every key, and derived type in Korean.",
 		files: ["src/audit/audit-status.ts"],
 	},
 	"wide-scope-assembly": {
@@ -1886,6 +1886,27 @@ test("TypeScript progressive metadata matches Appendix A exactly", async () => {
 		"docs-write-concise-korean-comments-about-purpose-and-constraints, docs-write-doc-comments-as-multiline-blocks",
 	);
 	assert.doesNotMatch(headerJsdocRule, /^reviewWith:/m);
+});
+
+test("TypeScript naming keeps immutable data constants in snake_case without renaming role-based symbols", async () => {
+	const namingRule = await readRuleSource("typescript", "naming-use-consistent-file-and-symbol-naming");
+	const toolingRule = await readRuleSource("typescript", "tooling-configure-biome-to-enforce-these-rules");
+	const biomeConfigSource = await readFile(path.join(repoDir, "package/biome.json"), "utf8");
+	const snakeCaseFormat = /"formats": \["camelCase", "PascalCase", "snake_case"\]/g;
+
+	assertMentions(
+		namingRule,
+		[
+			"모듈 스코프의 불변 데이터 상수, 상수 집합 | `snake_case`",
+			"`retry_policy.max_attempts`",
+			"`product_status.waiting_review`",
+			"`productSearchSchema`",
+		],
+		"TypeScript constant naming rule",
+	);
+	assert.equal([...toolingRule.matchAll(snakeCaseFormat)].length, 2);
+	assert.equal([...biomeConfigSource.matchAll(snakeCaseFormat)].length, 2);
+	assert.match(toolingRule, /"kind": "typeProperty"}, "formats": \["camelCase"\]/);
 });
 
 test("TypeScript routing manifest is an exact nine-scenario partition with full positive coverage", async () => {

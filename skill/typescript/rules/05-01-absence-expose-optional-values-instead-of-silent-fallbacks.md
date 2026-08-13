@@ -19,11 +19,11 @@ tags: absence
 | 형태 | 판정 |
 | --- | --- |
 | `?? "help@example.com"`, `?? 0`, `?? []`, `\|\| "-"` 같은 리터럴 | 위반 |
-| `?? config.pagination.defaultPageSize`처럼 설정에 선언된 이름 | 통과 |
+| `?? config.pagination.default_page_size`처럼 설정에 선언된 이름 | 통과 |
 | 같은 파일 지역 `const`로 리터럴만 옮긴 것. `const fallback = "-";` | 위반. 자리만 바꾼 것입니다 |
 | 선언된 이름 둘을 합성한 결과에 이름을 붙인 것 | 통과. 리터럴이 없습니다 |
 | 기본 매개변수나 구조분해 기본값에 **리터럴**을 적은 것. `(size = 10) =>`, `{size = 10}` | 위반 |
-| 기본 매개변수가 선언된 이름을 가리키는 것. `(size = config.pagination.defaultPageSize) =>` | 통과 |
+| 기본 매개변수가 선언된 이름을 가리키는 것. `(size = config.pagination.default_page_size) =>` | 통과 |
 | 삼항 `value ? value : "-"`, `String(value ?? "")` | 위반 |
 
 숫자 리터럴을 쓰는 자리에 적지 않는 일반 규범은 `values-declare-meaningful-numbers`가 정합니다.
@@ -45,11 +45,11 @@ tags: absence
    `(variant ?? "default") === "compact"`도 `variant === "compact"`로 쓰면 끝납니다.
    선택 값을 그대로 비교하면 기본값이 아예 필요 없는 경우가 가장 많습니다.
 2. **필요하면 값이 들어오는 경계에서 한 번만 해소합니다.**
-   라우트 search 스키마의 `.default(config.pagination.defaultPageSize)`, 응답 매핑, 쿼리의 `select`가 그 자리입니다.
+   라우트 search 스키마의 `.default(config.pagination.default_page_size)`, 응답 매핑, 쿼리의 `select`가 그 자리입니다.
    기본값이 선언 안에 들어가므로 그 선언이 곧 출처가 됩니다.
    아래쪽 코드에서는 그 값이 더는 선택 값이 아니어서 `??`가 나올 일이 없습니다.
 3. **경계에서 못 하면 쓰는 자리에 그대로 적습니다.**
-   `fetchProducts({pageSize: query.pageSize ?? config.pagination.defaultPageSize})`처럼 씁니다.
+   `fetchProducts({pageSize: query.pageSize ?? config.pagination.default_page_size})`처럼 씁니다.
 4. **이름을 붙인다면 파생값임이 드러나는 이름으로 씁니다.**
    `pageSize`가 아니라 `effectivePageSize`입니다.
    붙일지 말지는 `functions-name-a-value-only-for-recompute-or-judgment`가 정하고,
@@ -95,20 +95,20 @@ const productSearchSchema = z.object({
 	/**
 	 * 한 번에 불러올 개수
 	 */
-	pageSize: z.number().default(config.pagination.defaultPageSize),
+	pageSize: z.number().default(config.pagination.default_page_size),
 });
 ```
 
 **Correct (경계에서 못 하면 쓰는 자리에 그대로 적음):**
 
 ```ts
-fetchProducts({pageSize: query.pageSize ?? config.pagination.defaultPageSize});
+fetchProducts({pageSize: query.pageSize ?? config.pagination.default_page_size});
 ```
 
 **Correct (이름을 붙인다면 파생값임이 드러나는 이름):**
 
 ```ts
-const effectivePageSize = query.pageSize ?? config.pagination.defaultPageSize;
+const effectivePageSize = query.pageSize ?? config.pagination.default_page_size;
 
 fetchProducts({pageSize: effectivePageSize});
 setVisibleRowCount(effectivePageSize);

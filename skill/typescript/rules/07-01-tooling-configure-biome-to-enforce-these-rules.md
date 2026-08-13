@@ -43,10 +43,10 @@ tags: tooling
 기계가 끝까지 못 가는 자리가 있습니다.
 아래 항목은 리뷰가 봅니다.
 
-- 객체 키에서 `snake_case`를 닫았습니다.
-  밖으로 나가는 키는 그 자리에 `biome-ignore`를 달아 예외를 보이게 합니다.
-  `docs-justify-convention-exceptions-with-a-reason-comment` 규칙이 그 주석에 무엇을 적을지 정합니다.
-  기계가 못 가리는 판정을 열어 두는 대신 예외를 세는 쪽으로 바꾼 것입니다.
+- 모듈 스코프 `const`와 객체 리터럴 키에는 `snake_case`를 허용합니다.
+  `biome`은 불변 데이터 상수와 함수, 스키마, 요청 객체를 구분하지 못하고,
+  어떤 객체 키가 불변 설정이나 상수 집합에 속하는지도 구분하지 못합니다.
+  `snake_case`를 쓸 자리는 `naming-use-consistent-file-and-symbol-naming` 규칙에 따라 리뷰가 판정합니다.
   `PascalCase`는 합성 컴포넌트의 `{Root, Header, Footer}` 때문에 `objectLiteralProperty`에만 남깁니다.
   `typescript/functions-declare-functions-as-arrow-consts` 때문에 이름 붙인 함수도 `const` 항목에 들어가는데,
   그 항목은 컴포넌트 이름 때문에 `PascalCase`도 열려 있어 함수 이름의 `camelCase`는 리뷰가 봅니다.
@@ -125,8 +125,8 @@ tags: tooling
 						"strictCase": false,
 						"conventions": [
 							{"selector": {"kind": "typeLike"}, "formats": ["PascalCase"]},
-							{"selector": {"kind": "const", "scope": "global"}, "formats": ["camelCase", "PascalCase"]},
-							{"selector": {"kind": "objectLiteralProperty"}, "formats": ["camelCase", "PascalCase"]},
+							{"selector": {"kind": "const", "scope": "global"}, "formats": ["camelCase", "PascalCase", "snake_case"]},
+							{"selector": {"kind": "objectLiteralProperty"}, "formats": ["camelCase", "PascalCase", "snake_case"]},
 							{"selector": {"kind": "typeProperty"}, "formats": ["camelCase"]},
 							{"selector": {"kind": "variable"}, "formats": ["camelCase", "PascalCase"]}
 						]

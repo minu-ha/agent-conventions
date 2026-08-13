@@ -19,7 +19,7 @@ tags: naming, config
 | 쓰는 소유자 | 자리 | 이름 |
 | --- | --- | --- |
 | 둘 이상 | `shared/config.ts` | `config.*` |
-| 하나 | `<owner>/config/<owner>-config.ts` | `<owner>Config` |
+| 하나 | `<owner>/config/<owner>-config.ts` | `<owner>_config` |
 
 **두 소유자 이상이 같은 값을 쓰면** `shared/config.ts` 한 파일을 공개 진입점으로 삼습니다.
 `config` 네임스페이스 아래에 모아 `config.*` 체인으로 읽히게 하고,
@@ -36,13 +36,13 @@ tags: naming, config
 
 ```ts
 // page/products/pg-products.tsx
-const defaultPageSize = 20;
-const billingFeatureKeys = ["invoices", "refunds"];
+const default_page_size = 20;
+const billing_feature_keys = ["invoices", "refunds"] as const;
 ```
 
 ```ts
 // page/billing/pg-billing.tsx
-const defaultPageSize = 20;
+const default_page_size = 20;
 ```
 
 **Correct (공용 설정 네임스페이스에서 읽은 값을 쓰는 자리로 넘김):**
@@ -51,10 +51,10 @@ const defaultPageSize = 20;
 // page/products/pg-products.tsx
 import {config} from "@/shared/config";
 
-const productClient = createClient({baseUrl: config.api.publicBaseUrl});
+const productClient = createClient({baseUrl: config.api.public_base_url});
 const productQuery = useProductQuery({
 	client: productClient,
-	pageSize: config.pagination.defaultPageSize,
+	pageSize: config.pagination.default_page_size,
 });
 ```
 
@@ -62,10 +62,10 @@ const productQuery = useProductQuery({
 // page/billing/pg-billing.tsx
 import {config} from "@/shared/config";
 
-const billingClient = createClient({baseUrl: config.api.billingBaseUrl});
+const billingClient = createClient({baseUrl: config.api.billing_base_url});
 const billingQuery = useBillingQuery({
 	client: billingClient,
-	pageSize: config.pagination.defaultPageSize,
-	featureKeys: config.features.billingFeatureKeys,
+	pageSize: config.pagination.default_page_size,
+	featureKeys: config.features.billing_feature_keys,
 });
 ```

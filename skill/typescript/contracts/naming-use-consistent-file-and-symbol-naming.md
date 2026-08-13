@@ -1,23 +1,30 @@
-# Use Consistent File, Symbol, and Field Naming
+# Use Role-Based File, Symbol, and Constant Naming
 
-**Impact: MEDIUM-HIGH (이름을 지을 때 그 값이 무엇인지 따지지 않고 어느 자리인지만 보면 표기가 정해집니다)**
+**Impact: MEDIUM-HIGH (일반 심볼과 불변 데이터 상수를 이름으로 구분해 읽는 사람이 의도를 바로 압니다)**
 
 | 자리 | 표기 |
 | --- | --- |
 | 파일명 | `kebab-case` |
 | 폴더명 | `kebab-case` 단수 |
 | 타입, 인터페이스, 컴포넌트 | `PascalCase` |
-| 나머지 전부 — 변수, 함수, 객체 키, 스키마 키, 타입 필드 | `camelCase` |
+| 모듈 스코프의 불변 데이터 상수, 상수 집합 | `snake_case` |
+| 불변 설정과 상수 집합 객체가 소유한 상수 키 | `snake_case` |
+| 그 외 변수, 함수, 객체 키, 스키마 키, 타입 필드 | `camelCase` |
 
-`const`인지, 설정인지, 상수 집합인지에 따라 표기를 달리하지 않습니다.
-그 값이 무엇인지는 표기가 아니라 이름과 자리가 말합니다.
+**`const` 선언을 전부 상수로 보지 않습니다.**
+함수, 컴포넌트, 훅이나 API 호출 결과, 스키마, 요청 객체, 지역 파생값은
+`const`로 선언해도 각 역할의 표기를 유지합니다.
 
-설정 키도 `camelCase`입니다.
-`config.pagination.defaultPageSize`가 설정에서 왔다는 사실은 표기가 아니라 `config.` 체인이 말해 줍니다.
-`naming-preserve-config-origin-with-chained-access` 규칙이 그 체인을 강제하므로
-표기가 같은 말을 두 번 할 필요가 없습니다.
-`enum` 성격 상수도 같습니다.
-`types-replace-enum-with-as-const-objects` 규칙이 `as const`를 강제하고, 선언에 붙는 문서 주석이 값 집합임을 밝힙니다.
+여기서 불변 데이터 상수는 모듈 스코프에 한 번 선언해 실행 중 같은 의미로 쓰는
+리터럴, 설정, 값 집합, 조회표입니다.
+객체와 배열은 `as const`나 읽기 전용 계약을 적용하고 변경하지 않습니다.
+불변 설정과 상수 집합의 하위 객체와 키도 같은 `snake_case`를 사용합니다.
+
+- `retry_policy.max_attempts`는 불변 설정과 그 상수 키입니다.
+- `product_status.waiting_review`는 값 집합과 그 상수 키입니다.
+- `fetchProducts({pageSize: config.pagination.default_page_size})`의 `pageSize`는
+  요청 계약 필드라 `camelCase`이고, 설정 키인 `default_page_size`만 `snake_case`입니다.
+- `productSearchSchema`는 실행 중 재할당하지 않아도 스키마 역할이므로 `camelCase`입니다.
 
 **예외는 밖으로 나가는 키뿐입니다.**
 API 요청 본문, 라이브러리 인자, DOM 속성, 환경 변수처럼 받는 쪽이 이름을 정하는 자리는 받는 쪽 표기를 그대로 씁니다.

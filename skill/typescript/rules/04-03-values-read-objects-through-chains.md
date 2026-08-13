@@ -56,7 +56,7 @@ const toInvoiceLine = ({product, quantity}: InvoiceLineInput): InvoiceLine => {
 
 ```ts
 const pricing = config.pricing;
-const currency = pricing.defaultCurrency;
+const currency = pricing.default_currency;
 
 const toInvoiceTotal = (lines: InvoiceLine[]): InvoiceTotal => {
 	return {
@@ -88,7 +88,7 @@ const toInvoiceLine = (input: InvoiceLineInput): InvoiceLine => {
 
 const toInvoiceTotal = (lines: InvoiceLine[]): InvoiceTotal => {
 	return {
-		currency: config.pricing.defaultCurrency,
+		currency: config.pricing.default_currency,
 		amount: lines.reduce((sum, line) => sum + line.amount, 0),
 	};
 };

@@ -27,18 +27,18 @@ tags: naming, config
 ```ts
 const {api, features} = config;
 const {date} = util;
-const billingBaseUrl = api.billingBaseUrl;
-const enableRefunds = features.enableRefunds;
+const billingBaseUrl = api.billing_base_url;
+const enableRefunds = features.enable_refunds;
 const isoDate = date.toIsoString(createdAt);
 ```
 
 **Correct (쓰는 자리에서 체인 그대로 읽어 출처를 남김):**
 
 ```ts
-const billingClient = createClient({baseUrl: config.api.billingBaseUrl});
+const billingClient = createClient({baseUrl: config.api.billing_base_url});
 const createdAtLabel = util.date.toIsoString(createdAt);
 
-if (config.features.enableRefunds) {
+if (config.features.enable_refunds) {
 	openRefundDialog({client: billingClient, createdAtLabel});
 }
 ```
