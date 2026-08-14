@@ -1,7 +1,7 @@
 # TypeScript 컨벤션 Rule Index
 
 - Skill: `typescript`
-- Routing digest: `sha256:3b517985790d52773e50d16bbe9f7c21c3c3c8dec04a0e696a4729e12819f457`
+- Routing digest: `sha256:11be20786ae604284e548073f4d95bfb2662d23218aeaed767e80e64ae190440`
 
 ## Local Rules
 
@@ -11,8 +11,8 @@
 - T01-04 | types-mark-unused-parameters-with-underscore | 기존 콜백이나 프레임워크 계약을 구현하면서 매개변수를 빼거나 쓰지 않을 때. 커링한 핸들러가 마지막에 돌려주는 콜백에서 매개변수를 뺄 때.
 - T01-05 | types-narrow-unknown-instead-of-asserting | \`as\` 단언, \`\!\` \`null\` 아님 단언, \`any\`, \`@ts-expect-error\`를 추가할 때. 앱 밖에서 들어온 값을 타입 붙여 쓰기 시작할 때. | reviewWith: docs-justify-convention-exceptions-with-a-reason-comment, tooling-configure-biome-to-enforce-these-rules
 - T01-06 | types-replace-enum-with-as-const-objects | \`enum\`이나 타입과 실행 양쪽에서 함께 쓰는 값 집합을 추가·변경할 때. 제외: 외부 패키지가 내보낸 \`enum\` 값을 그대로 읽어 쓰는 경우.
-- T02-01 | naming-centralize-shared-config-namespaces | 여러 모듈이 함께 쓰는 URL, 기능 플래그, 페이지 크기나 상수를 추가·이동·중복 정의할 때. 공용 설정 경계를 바꿀 때. | reviewWith: naming-preserve-config-origin-with-chained-access, naming-use-direct-imports-and-public-entry-points
-- T02-02 | naming-place-owner-config-in-the-owner-config-folder | 소유자 하나만 쓰는 선언형 설정을 추가하거나 옮길 때. 전역 설정과 소유자 전용 설정 사이에서 위치를 바꿀 때. | reviewWith: naming-centralize-shared-config-namespaces
+- T02-01 | naming-centralize-shared-config-namespaces | 프로젝트 전반이 쓰는 URL, 기능 플래그, 페이지 크기나 상수를 추가·이동·중복 정의할 때. 공용 설정 경계를 바꿀 때. | reviewWith: naming-preserve-config-origin-with-chained-access, naming-use-direct-imports-and-public-entry-points
+- T02-02 | naming-place-owner-config-in-the-owner-config-folder | 한 소유자의 선언형 설정을 추가하거나 옮길 때. 전역 설정과 소유자 전용 설정 사이에서 위치를 바꿀 때. | reviewWith: naming-centralize-shared-config-namespaces
 - T02-03 | naming-preserve-config-origin-with-chained-access | \`config\`나 \`util\` 값을 쓰면서 넓은 스코프 구조분해, 별칭, 기능별 네임스페이스를 추가·변경할 때. | reviewWith: functions-place-and-promote-support-functions, values-read-objects-through-chains
 - T02-04 | naming-use-consistent-file-and-symbol-naming | TypeScript 파일, 폴더, 변수, 함수, 타입, 객체·스키마 키의 이름을 새로 만들거나 바꿀 때. 밖으로 나가는 키를 받는 쪽 표기로 적을지 판단할 때. 제외: 별칭 없이 외부 패키지에서 그대로 가져오는 경우.
 - T02-05 | naming-use-direct-imports-and-public-entry-points | 가져오기, 내보내기, \`index.ts\` 배럴, 공개 진입점, 소유자 보조 모듈의 경계를 추가·변경할 때. 같은 경로에서 값과 타입 중 무엇을 가져올지 추가·삭제·전환할 때. | reviewWith: naming-restrict-absolute-aliases-to-layer-roots

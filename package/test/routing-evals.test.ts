@@ -239,11 +239,11 @@ const typescriptRuleRouting = {
 		reviewWith: [],
 	},
 	"naming-centralize-shared-config-namespaces": {
-		appliesWhen: "여러 모듈이 함께 쓰는 URL, 기능 플래그, 페이지 크기나 상수를 추가·이동·중복 정의할 때. 공용 설정 경계를 바꿀 때.",
+		appliesWhen: "프로젝트 전반이 쓰는 URL, 기능 플래그, 페이지 크기나 상수를 추가·이동·중복 정의할 때. 공용 설정 경계를 바꿀 때.",
 		reviewWith: ["naming-preserve-config-origin-with-chained-access", "naming-use-direct-imports-and-public-entry-points"],
 	},
 	"naming-place-owner-config-in-the-owner-config-folder": {
-		appliesWhen: "소유자 하나만 쓰는 선언형 설정을 추가하거나 옮길 때. 전역 설정과 소유자 전용 설정 사이에서 위치를 바꿀 때.",
+		appliesWhen: "한 소유자의 선언형 설정을 추가하거나 옮길 때. 전역 설정과 소유자 전용 설정 사이에서 위치를 바꿀 때.",
 		reviewWith: ["naming-centralize-shared-config-namespaces"],
 	},
 	"naming-preserve-config-origin-with-chained-access": {

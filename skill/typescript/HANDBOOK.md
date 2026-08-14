@@ -542,41 +542,47 @@ type ProductStatus = (typeof product_status)[keyof typeof product_status];
 
 **Rule:** `T02-01` · `naming-centralize-shared-config-namespaces`
 
-**Applies when:** 여러 모듈이 함께 쓰는 URL, 기능 플래그, 페이지 크기나 상수를 추가·이동·중복 정의할 때. 공용 설정 경계를 바꿀 때.
+**Applies when:** 프로젝트 전반이 쓰는 URL, 기능 플래그, 페이지 크기나 상수를 추가·이동·중복 정의할 때. 공용 설정 경계를 바꿀 때.
 
 **Review with:** `naming-preserve-config-origin-with-chained-access`, `naming-use-direct-imports-and-public-entry-points`
 
 **Impact: MEDIUM-HIGH (공용 설정 값이 쓰는 파일마다 흩어져 공개 출처를 잃는 것을 막습니다)**
 
-설정을 어디 두는지는 그 값을 쓰는 소유자 수로 갈립니다.
+설정을 어디 두는지는 그 값이 누구 것인지로 갈립니다.
 
-| 쓰는 소유자 | 자리 | 이름 |
+| 값 | 자리 | 이름 |
 | --- | --- | --- |
-| 둘 이상 | `shared/config.ts` | `config.*` |
-| 하나 | `<owner>/config/<owner>-config.ts` | `<owner>_config` |
+| 프로젝트 전반의 값 | `shared/config.ts` | `config.*` |
+| 한 소유자의 값 | `<owner>/config/<owner>-config.ts` | `<owner>_config` |
 
-**두 소유자 이상이 같은 값을 쓰면** `shared/config.ts` 한 파일을 공개 진입점으로 삼습니다.
+가르는 법은 소유자를 지워 보는 것입니다.
+소유자를 지웠을 때 값도 사라지면 그 소유자 것입니다.
+`chart_axis_tick_count`는 그 화면과 함께 사라지고, `billing_base_url`은 화면을 지워도 서버 주소로 남습니다.
+
+**프로젝트 전반의 값은** `shared/config.ts` 한 파일을 공개 진입점으로 삼습니다.
 `config` 네임스페이스 아래에 모아 `config.*` 체인으로 읽히게 하고,
 쓰는 파일마다 공용 URL, 기능 플래그, 페이지 크기, 상수 문자열을 흩뿌리지 않습니다.
-소유자 하나만 쓰는 값은 아직 여기 올리지 않습니다.
+
+쓰는 곳이 늘거나 줄어도 자리는 그대로입니다.
+개수로 판정하면 쓰임이 변할 때마다 값이 자리를 옮겨 다닙니다.
 
 최상위 네임스페이스가 다섯을 넘고 서로 참조하지 않을 때만 `config.ts` 하나를 폴더로 나눌지 검토합니다.
 그 선에 닿기 전에는 미리 쪼개지 않습니다.
 
-소유자 하나만 쓰는 설정의 폴더 위치와 파일명은
+한 소유자의 설정을 두는 폴더 위치와 파일명은
 `naming-place-owner-config-in-the-owner-config-folder` 규칙이 정합니다.
 
-**Incorrect (같은 값을 두 소유자가 각자 선언):**
+**Incorrect (프로젝트 전반의 값을 쓰는 자리에서 선언):**
 
 ```ts
 // page/products/pg-products.tsx
 const default_page_size = 20;
-const billing_feature_keys = ["invoices", "refunds"] as const;
 ```
 
 ```ts
 // page/billing/pg-billing.tsx
 const default_page_size = 20;
+const billing_base_url = "https://billing.example.com";
 ```
 
 **Correct (공용 설정 네임스페이스에서 읽은 값을 쓰는 자리로 넘김):**
@@ -600,7 +606,6 @@ const billingClient = createClient({baseUrl: config.api.billing_base_url});
 const billingQuery = useBillingQuery({
 	client: billingClient,
 	pageSize: config.pagination.default_page_size,
-	featureKeys: config.features.billing_feature_keys,
 });
 ```
 
@@ -608,23 +613,23 @@ const billingQuery = useBillingQuery({
 
 **Rule:** `T02-02` · `naming-place-owner-config-in-the-owner-config-folder`
 
-**Applies when:** 소유자 하나만 쓰는 선언형 설정을 추가하거나 옮길 때. 전역 설정과 소유자 전용 설정 사이에서 위치를 바꿀 때.
+**Applies when:** 한 소유자의 선언형 설정을 추가하거나 옮길 때. 전역 설정과 소유자 전용 설정 사이에서 위치를 바꿀 때.
 
 **Requires selected:** `naming-use-consistent-file-and-symbol-naming` · 함께 적용
 
 **Review with:** `naming-centralize-shared-config-namespaces`
 
-**Impact: MEDIUM-HIGH (한 소유자만 쓰는 설정이 전역 진입점을 넓히지 않습니다)**
+**Impact: MEDIUM-HIGH (한 소유자의 설정이 전역 진입점을 넓히지 않습니다)**
 
-소유자 하나만 쓰는 선언형 설정은 전역으로 올리지 않습니다.
+한 소유자의 선언형 설정은 전역으로 올리지 않습니다.
 그 소유자 아래 `config` 폴더에 둡니다.
 전역과 소유자 중 어디에 두는지 가르는 표는 `naming-centralize-shared-config-namespaces` 규칙에 있습니다.
 
 - 파일은 소유자 폴더 바로 아래 `config/<owner>-config.ts`, 내보내는 상수는 `<owner>_config`입니다.
 - `constants` 폴더는 만들지 않습니다.
-- 두 번째 소유자가 같은 값을 쓰게 되면 `naming-centralize-shared-config-namespaces` 규칙을 따라 올립니다.
+- 그 소유자를 지워도 남을 값이면 `naming-centralize-shared-config-namespaces` 규칙을 따라 올립니다.
 
-**Incorrect (소유자 하나만 쓰는 설정을 전역으로 올림):**
+**Incorrect (한 소유자의 설정을 전역으로 올림):**
 
 ```ts
 // shared/config.ts
@@ -853,7 +858,7 @@ import {toUserSaveRequest} from "./function/to-user-save-request";
 레이어 루트가 담는 것은 다음과 같습니다.
 `ui`와 `widget`의 경계는 프레임워크 컨벤션의 레이어 규칙이 정합니다.
 
-- `shared`는 도메인을 모르는 공용 설정과 순수 함수를 담습니다.
+- `shared`는 프로젝트 전반이 쓰는 설정과 함수를 담습니다.
 - `service`는 서버 통신 클라이언트를 담습니다.
 - `store`는 화면들이 함께 읽는 상태를 담습니다.
   상태 관리 라이브러리를 쓰든 컨텍스트를 쓰든 파일명은 `use-<name>-store.ts`입니다.
@@ -1322,7 +1327,7 @@ import { toProductSaveRequest } from "./function/to-product-save-request";
 
 **Requires selected:** `functions-extract-helpers-only-when-the-boundary-is-real` · 함께 적용
 
-**Impact: MEDIUM-HIGH (잡동사니 파일이 생기지 않고 전역 `util`에 도메인 지식이 섞여 들어가지 않습니다)**
+**Impact: MEDIUM-HIGH (잡동사니 파일이 생기지 않고 전역 `util`에 한 소유자의 함수가 섞이지 않습니다)**
 
 떼어 낼지는 `functions-extract-helpers-only-when-the-boundary-is-real`이 먼저 판정합니다.
 이 규칙은 그 결과를 어디 두고 언제 올릴지만 봅니다.
@@ -1330,32 +1335,33 @@ import { toProductSaveRequest } from "./function/to-product-save-request";
 - 소유자 아래에 `helper.ts`, `helpers.ts`, `utils.ts` 같은 잡동사니 파일을 만들지 않습니다.
   어느 폴더에 둘지는 프레임워크 컨벤션의 역할 폴더 규칙이 정합니다.
 - 소유자 아래에서는 내보낸 대표 함수 하나당 파일 하나입니다.
-  전역 `shared/util.ts`는 도메인을 모르는 순수 함수를 한 네임스페이스에 모으는 자리라 예외입니다.
+  전역 `shared/util.ts`는 프로젝트 전반이 쓰는 함수를 한 네임스페이스에 모으는 자리라 예외입니다.
 - 호출 깊이는 소유자에서 내보낸 함수, 그 파일 안 비공개 함수까지 두 단계로 끝냅니다.
   내보낸 함수가 또 다른 내보낸 함수를 타고 가는 사슬은 만들지 않습니다.
   단계를 나누고 싶으면 내보내지 말고 한 함수 본문 안에 지역 변수로 둡니다.
 
-**공용 승격은 개수가 아니라 종류로 판정합니다.**
-`shared/util.ts`의 `util.*`는 **우리 도메인을 하나도 모르는** 순수 함수만 담습니다.
-날짜·문자열·숫자·배열을 다루는 함수가 여기 해당합니다.
+**공용 승격은 그 함수가 누구 것인지로 판정합니다.**
+`shared/util.ts`의 `util.*`는 프로젝트 전반이 쓰는 함수를 담습니다.
 
-- 도메인을 모르면 지금 한 곳만 써도 올립니다.
+가르는 법은 소유자를 지워 보는 것입니다.
+소유자를 지웠을 때 함수도 사라지면 그 소유자 것입니다.
+
+- 소유자와 함께 사라지면 그 소유자 아래에 둡니다.
+  `toProfileSaveRequest`는 profile 저장 화면이 없어지면 조립할 요청도 없습니다.
+- 소유자를 지워도 남으면 지금 한 곳만 써도 올립니다.
   `toDisplayDate`는 소유자가 하나든 셋이든 `util`에 둘 함수입니다.
-- 도메인을 알면 소유자가 몇이든 올리지 않습니다.
-  `toProfileSaveRequest`가 두 화면에서 쓰여도 `util`로 가면 전역 네임스페이스에 profile 지식이 들어갑니다.
 
-두 소유자가 같은 도메인 함수를 써야 하면 셋 중 하나로 해소합니다.
+두 소유자가 같은 함수를 써야 하면 셋 중 하나로 해소합니다.
 
 1. 표시까지 같으면 `widget` 컴포넌트가 소유합니다.
 2. 계산만 같으면 각 소유자가 각자 갖습니다.
-3. 도메인을 모르는 계산이면 `util`로 올립니다.
+3. 프로젝트 전반의 계산이면 `util`로 올립니다.
 
 1번은 함수를 공유하는 것이 아니라 표시를 공유하는 것입니다.
 어느 레이어인지는 프레임워크 컨벤션의 레이어 규칙이 판정합니다.
 
-개수는 해소할 때가 됐는지만 알려 줍니다.
-어디로 갈지는 표시가 같은지가 정합니다.
-`util`로 갈지 말지에는 개수를 쓰지 않습니다.
+쓰는 곳이 늘거나 줄어도 자리는 그대로입니다.
+개수로 판정하면 쓰임이 변할 때마다 함수가 자리를 옮겨 다닙니다.
 나중에 쓸 것 같아서 함수를 미리 만들지도 않습니다.
 
 **Incorrect (잡동사니 파일과 내보낸 함수 세 단계 사슬):**
@@ -1398,7 +1404,7 @@ export const toProfileSaveRequest = (
 };
 ```
 
-**Incorrect (두 소유자가 쓴다고 도메인 함수를 전역 `util`로 올림):**
+**Incorrect (소유자와 함께 사라질 함수를 전역 `util`로 올림):**
 
 ```ts
 // shared/util.ts
@@ -1426,7 +1432,7 @@ export const toProductSaveRequest = (values: ProductFormValues) => {
 };
 ```
 
-**Correct (도메인을 모르는 순수 함수라 공용으로 올림):**
+**Correct (소유자를 지워도 남는 함수는 우리 계약을 받아도 올림):**
 
 ```ts
 // shared/util.ts
@@ -1437,6 +1443,15 @@ export const util = {
 		 */
 		toDisplayDate: (value: string): string => {
 			return new Date(value).toLocaleDateString("ko-KR");
+		},
+	},
+	money: {
+		/**
+		 * 금액 표시는 화면마다 다르지 않다. 소수 두 자리와 부호를 고정한다
+		 */
+		toSignedAmount: (amount: Amount): string => {
+			const sign = amount.value < 0 ? "-" : "+";
+			return `${sign}$${Math.abs(amount.value).toFixed(2)}`;
 		},
 	},
 } as const;
