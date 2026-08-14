@@ -566,8 +566,9 @@ type ProductStatus = (typeof product_status)[keyof typeof product_status];
 쓰는 곳이 늘거나 줄어도 자리는 그대로입니다.
 개수로 판정하면 쓰임이 변할 때마다 값이 자리를 옮겨 다닙니다.
 
-최상위 네임스페이스가 다섯을 넘고 서로 참조하지 않을 때만 `config.ts` 하나를 폴더로 나눌지 검토합니다.
-그 선에 닿기 전에는 미리 쪼개지 않습니다.
+`config.ts`는 파일 하나로 둡니다.
+한 파일에서 값을 찾기 어려워지면 `config.api`, `config.pagination` 같은 첫 마디를 기준으로 폴더로 나눕니다.
+첫 마디끼리 서로 참조하면 가져오기가 얽히므로 나누지 않습니다.
 
 한 소유자의 설정을 두는 폴더 위치와 파일명은
 `naming-place-owner-config-in-the-owner-config-folder` 규칙이 정합니다.
