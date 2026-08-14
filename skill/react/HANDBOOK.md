@@ -99,7 +99,7 @@
 
 ### 1.1 Keep UI, Widget, and Page Ownership Separate
 
-**Rule:** `R01` · `ownership-layer-component-boundaries`
+**Rule:** `R01-01` · `ownership-layer-component-boundaries`
 
 **Applies when:** 컴포넌트를 `ui`, `widget`, `page` 중 어느 소유 레이어에 둘지 정할 때. 컴포넌트를 레이어 사이에서 옮기거나 공용화할 때.
 
@@ -216,7 +216,7 @@ const PgDeleteProductButton = () => {
 
 ### 1.2 Prefix Layer Names on Files and Symbols
 
-**Rule:** `R02` · `ownership-prefix-layer-names-on-files-and-symbols`
+**Rule:** `R01-02` · `ownership-prefix-layer-names-on-files-and-symbols`
 
 **Applies when:** 컴포넌트 파일이나 심볼 이름을 새로 지을 때. 컴포넌트를 다른 레이어로 옮기면서 이름을 바꿀 때.
 
@@ -269,7 +269,7 @@ export const PgSalesTrendPanel = (props: PgSalesTrendPanelProps) => {
 
 ### 1.3 Place Owner Files in Role Folders
 
-**Rule:** `R03` · `ownership-place-owner-files-in-role-folders`
+**Rule:** `R01-03` · `ownership-place-owner-files-in-role-folders`
 
 **Applies when:** 소유자 아래 `component`·`config`·`function`·`hook`·`type` 폴더를 만들거나 옮길 때. 추출한 컴포넌트·함수·타입의 배치 위치를 정할 때. 제외: 기존 파일 내부 구현만 바꾸는 경우.
 
@@ -365,7 +365,7 @@ ui/button/
 
 ### 1.4 Keep Component Imports Flowing Downward
 
-**Rule:** `R04` · `ownership-keep-component-imports-flowing-downward`
+**Rule:** `R01-04` · `ownership-keep-component-imports-flowing-downward`
 
 **Applies when:** `component` 폴더 안의 파일을 다른 파일에서 가져올 때. `../`나 `@/page` 경로로 컴포넌트를 가져오려 할 때. 여러 자식이 같은 컴포넌트를 써야 해서 배치를 다시 정할 때. 제외: `function`·`type`·`config` 파일을 가져오는 경우.
 
@@ -433,7 +433,7 @@ import { WgLegendPanel } from "@/widget/legend-panel/wg-legend-panel";
 
 ### 1.5 Do Not Create Screen-local Custom Hooks for Pure Logic
 
-**Rule:** `R05` · `ownership-prefer-plain-ts-for-local-react-helpers`
+**Rule:** `R01-05` · `ownership-prefer-plain-ts-for-local-react-helpers`
 
 **Applies when:** 화면 전용 계산·정규화·전송 값 조립을 커스텀 훅으로 추출하려 할 때. 화면 전용 순수 로직을 별도 보조 모듈로 옮기려 할 때. 제외: 상태·컨텍스트·다른 훅 호출 순서를 실제로 캡슐화하는 경우.
 
@@ -493,7 +493,7 @@ const PgMediaUploadPanel = (props: PgMediaUploadPanelProps) => {
 
 ### 1.6 Keep Library Lifecycle in the Owning Component
 
-**Rule:** `R06` · `ownership-keep-lifecycle-in-the-owning-component`
+**Rule:** `R01-06` · `ownership-keep-lifecycle-in-the-owning-component`
 
 **Applies when:** 외부 라이브러리 인스턴스 생성·크기 변경·구독·정리를 한 컴포넌트가 소유할 때. 생명주기 코드를 커스텀 훅으로 옮겨 파일을 줄이려 할 때. 제외: 여러 소유자가 같은 생명주기 계약을 실제로 호출하는 경우.
 
@@ -603,7 +603,7 @@ export const WgChartRoot = (props: WgChartRootProps) => {
 
 ### 2.1 Name Query and Mutation Bindings Consistently
 
-**Rule:** `R07` · `data-name-query-and-mutation-bindings-consistently`
+**Rule:** `R02-01` · `data-name-query-and-mutation-bindings-consistently`
 
 **Applies when:** React Query 쿼리·뮤테이션 훅의 지역 바인딩을 추가하거나 이름을 바꿀 때. 쿼리나 뮤테이션 훅의 반환값을 새 지역 변수에 담을 때.
 
@@ -641,7 +641,7 @@ const mutationProductRemove = useProductRemove();
 
 ### 2.2 Shape React Query Data in query.select
 
-**Rule:** `R08` · `data-shape-query-data-with-select`
+**Rule:** `R02-02` · `data-shape-query-data-with-select`
 
 **Applies when:** 서버 응답의 목록·항목·메타 등을 렌더에서 가공하거나 반복 소비할 때. React Query `select`의 결과 형태를 추가·변경할 때.
 
@@ -696,7 +696,7 @@ const responseProductListSuspense = useProductListSuspense(
 
 ### 2.3 Combine Multiple Queries With `combine`
 
-**Rule:** `R09` · `data-combine-multiple-queries-with-combine`
+**Rule:** `R02-03` · `data-combine-multiple-queries-with-combine`
 
 **Applies when:** 쿼리 결과 둘 이상을 하나의 값으로 합치는 코드를 추가·변경할 때. 화면 본문에서 두 `data`를 꺼내 함께 계산하는 코드를 넣거나 뺄 때.
 
@@ -786,7 +786,7 @@ const responseShipmentList = useShipmentList(
 
 ### 2.4 Preserve Response and Store Origin Down to the JSX
 
-**Rule:** `R10` · `data-preserve-origin-chaining`
+**Rule:** `R02-04` · `data-preserve-origin-chaining`
 
 **Applies when:** 응답, 뮤테이션, 스토어에서 값을 꺼내 쓰는 코드를 추가·변경할 때. 원본을 별칭으로 끊고 값 접근 방식을 바꿀 때.
 
@@ -838,7 +838,7 @@ useEffect(() => {
 
 ### 2.5 Handle Mutation Failure Where the Mutation Is Called
 
-**Rule:** `R11` · `data-handle-mutation-failure-where-it-is-called`
+**Rule:** `R02-05` · `data-handle-mutation-failure-where-it-is-called`
 
 **Applies when:** 뮤테이션을 부르는 코드를 추가·변경할 때. `mutate`와 `mutateAsync` 사이를 오갈 때.
 
@@ -947,7 +947,7 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = async (_even
 
 ### 2.6 Invalidate the Queries a Mutation Changed
 
-**Rule:** `R12` · `data-invalidate-queries-the-mutation-changed`
+**Rule:** `R02-06` · `data-invalidate-queries-the-mutation-changed`
 
 **Applies when:** 뮤테이션 성공 뒤 서버 상태를 다시 맞추는 코드를 추가·변경할 때. 캐시를 직접 쓰거나 다시 불러오는 코드를 넣을 때.
 
@@ -1028,7 +1028,7 @@ const mutationProductSave = useProductSave({
 
 ### 3.1 Take React Handler and Wrapper Prop Types From Existing Contracts
 
-**Rule:** `R13` · `typing-take-handler-types-from-existing-contracts`
+**Rule:** `R03-01` · `typing-take-handler-types-from-existing-contracts`
 
 **Applies when:** 커링 팩토리가 돌려주는 리액트 핸들러의 타입을 정할 때. `Ui*` 래퍼 사용처에서 프롭스 타입을 참조할 때. 제외: `query.select` 같은 훅 옵션의 일회성 문맥 콜백인 경우.
 
@@ -1101,7 +1101,7 @@ const handleSubmitClick: UiButtonProps["onClick"] = (event) => {
 
 ### 3.2 Narrow the Contract a Library Wrapper Opens
 
-**Rule:** `R14` · `typing-narrow-library-wrapper-contracts`
+**Rule:** `R03-02` · `typing-narrow-library-wrapper-contracts`
 
 **Applies when:** 라이브러리 컴포넌트를 감싸는 `Ui*` 래퍼의 프롭스 타입을 만들거나 바꿀 때. 래퍼에 프롭을 추가하거나 여는 범위를 넓힐 때.
 
@@ -1299,7 +1299,7 @@ export const UiTextField = (props: UiTextFieldProps) => {
 
 ### 3.3 Choose the Wrapper Shape and Forward Props Accordingly
 
-**Rule:** `R15` · `typing-choose-wrapper-shape-and-forwarding`
+**Rule:** `R03-03` · `typing-choose-wrapper-shape-and-forwarding`
 
 **Applies when:** 래퍼가 받은 프롭을 안쪽 컴포넌트나 요소로 넘기는 코드를 추가·변경할 때. 래퍼에 자기 프롭을 더하거나 안쪽 요소를 늘릴 때.
 
@@ -1473,7 +1473,7 @@ export const UiTableRow = (props: UiTableRowProps) => {
 
 ### 4.1 Choose Single Components, Compound Components, and Variants Deliberately
 
-**Rule:** `R16` · `strategy-choose-single-composition-compound-and-variants`
+**Rule:** `R04-01` · `strategy-choose-single-composition-compound-and-variants`
 
 **Applies when:** 내보낸 공용 컴포넌트에 슬롯, 공개 부품, 공용 컨텍스트나 동작을 추가할 때. 반복되는 기본 설정이나 모드 API를 추가할 때. 공용 컴포넌트의 조립 구조를 재설계할 때.
 
@@ -1679,7 +1679,7 @@ export const UiReadOnlyProfileDialog = (props: UiReadOnlyProfileDialogProps) => 
 
 ### 4.2 Expose Only Compound Parts the Consumer Assembles
 
-**Rule:** `R17` · `strategy-expose-only-assembled-compound-parts`
+**Rule:** `R04-02` · `strategy-expose-only-assembled-compound-parts`
 
 **Applies when:** 합성 컴포넌트의 공개 부품 목록에 부품을 넣거나 뺄 때. 상태 없는 합성에 상태를 넣으면서 공개 이름을 바꾸려 할 때.
 
@@ -1740,7 +1740,7 @@ export const UiPanel = {
 
 ### 4.3 Avoid Boolean Prop Proliferation in Shared Components
 
-**Rule:** `R18` · `strategy-avoid-boolean-prop-proliferation`
+**Rule:** `R04-03` · `strategy-avoid-boolean-prop-proliferation`
 
 **Applies when:** `ui`나 `widget` 컴포넌트에 불리언 모드·표시 프롭을 추가할 때. 기존 불리언 프롭 조합과 JSX 분기가 늘어날 때. 제외: 라우트 진입 파일 안에서만 쓰는 일회성 분기인 경우.
 
@@ -1828,7 +1828,7 @@ export const WgProductEditToolbar = () => {
 
 ### 4.4 Prefer Children Over Render Props for Static Composition
 
-**Rule:** `R19` · `strategy-prefer-children-over-render-props`
+**Rule:** `R04-04` · `strategy-prefer-children-over-render-props`
 
 **Applies when:** 공용 컴포넌트에 헤더·푸터·동작 같은 정적 슬롯을 추가·변경할 때. 렌더 프롭을 추가·변경하는데 실행 환경 데이터 주입이 꼭 필요한지 불분명할 때.
 
@@ -1923,7 +1923,7 @@ export const PgProductScreen = () => {
 
 ### 5.1 Read Props Through the Props Object Without Destructuring
 
-**Rule:** `R20` · `composition-read-props-without-destructuring`
+**Rule:** `R05-01` · `composition-read-props-without-destructuring`
 
 **Applies when:** 함수 컴포넌트의 시그니처나 본문에서 프롭스를 읽는 코드를 추가·변경할 때. 컴포넌트 안에서 `props`를 구조분해하는 줄을 넣거나 뺄 때.
 
@@ -1973,7 +1973,7 @@ const WgUserCard = (props: WgUserCardProps) => {
 
 ### 5.2 Do Not Define Components Inside Components
 
-**Rule:** `R21` · `composition-do-not-define-components-inside-components`
+**Rule:** `R05-02` · `composition-do-not-define-components-inside-components`
 
 **Applies when:** 컴포넌트 본문 안에 JSX를 반환하는 로컬 함수·컴포넌트를 추가하거나 옮길 때. 재렌더 시 재마운트·포커스 초기화 징후를 다룰 때.
 
@@ -2050,7 +2050,7 @@ export const WgUserProfileCard = (props: WgUserProfileCardProps) => {
 
 ### 5.3 Use Named Handlers Instead of Hiding Logic in JSX
 
-**Rule:** `R22` · `composition-named-handlers-over-inline`
+**Rule:** `R05-03` · `composition-named-handlers-over-inline`
 
 **Applies when:** TSX 이벤트 프롭의 인라인 콜백에 분기나 비동기 호출을 추가·수정할 때. 인라인 콜백에 여러 동작·부수효과나 읽어도 의도가 안 보이는 상태 전환이 들어갈 때. 제외: 인자 없이 핸들러 참조만 넘기는 경우.
 
@@ -2105,7 +2105,7 @@ const handleRemoveProductButtonClick: MouseEventHandler<HTMLButtonElement> = asy
 
 ### 5.4 Open ref Props Only for Real Imperative Contracts
 
-**Rule:** `R23` · `composition-open-ref-props-only-for-imperative-contracts`
+**Rule:** `R05-04` · `composition-open-ref-props-only-for-imperative-contracts`
 
 **Applies when:** 컴포넌트에 `ref` 프롭을 추가하거나 공개할 대상을 바꿀 때. 제외: 이미 있는 `ref` 계약의 타입만 바꾸는 경우.
 
@@ -2203,7 +2203,7 @@ export const UiStatusBadge = (props: UiStatusBadgeProps) => {
 
 ### 5.5 Use Activity Only to Preserve Mounted Subtrees
 
-**Rule:** `R24` · `composition-use-activity-only-to-preserve-mounted-subtrees`
+**Rule:** `R05-05` · `composition-use-activity-only-to-preserve-mounted-subtrees`
 
 **Applies when:** 조건부 렌더링과 `Activity` 사이를 오갈 때. `<Activity>`를 추가·삭제하거나 `mode`를 계산하는 표현식을 바꿀 때.
 
@@ -2277,7 +2277,7 @@ return hasItems ? <PgProductList /> : <PgProductEmptyState />;
 
 ### 5.6 Declare Props Interfaces Above the Component
 
-**Rule:** `R25` · `composition-declare-props-interface-above-the-component`
+**Rule:** `R05-06` · `composition-declare-props-interface-above-the-component`
 
 **Applies when:** 컴포넌트 프롭스 타입을 새로 선언할 때. 프롭스 타입의 위치나 공개 범위를 바꿀 때. 제외: 같은 파일에서만 쓰는 화면 지역 프롭스를 `export`하지 않는 경우.
 
@@ -2383,7 +2383,7 @@ export const UiPanelHeader = (props: UiPanelHeaderProps) => {
 
 ### 5.7 Write Fragments as `Fragment`, Not the Shorthand
 
-**Rule:** `R26` · `composition-name-fragments-explicitly`
+**Rule:** `R05-07` · `composition-name-fragments-explicitly`
 
 **Applies when:** JSX에서 여러 요소를 `Fragment`나 `<>`로 감싸는 문법을 추가·변경할 때. `Fragment`에 `key`를 붙이거나 떼어 낼 때.
 
@@ -2447,7 +2447,7 @@ export const PgProductRows = (props: PgProductRowsProps) => {
 
 ### 5.8 Render a Single Branch With `&&`, Not a Ternary
 
-**Rule:** `R27` · `composition-render-one-branch-with-and`
+**Rule:** `R05-08` · `composition-render-one-branch-with-and`
 
 **Applies when:** JSX 안에 조건부 렌더링을 추가하거나 조건식을 바꿀 때. 기존 `조건 ? … : null`을 넣거나 뺄 때.
 
@@ -2541,7 +2541,7 @@ return filteredCategoryNodes.length > 0 ? (
 
 ### 6.1 Keep Route Entry Files Focused on Screen Flow
 
-**Rule:** `R28` · `screen-keep-route-flow-visible`
+**Rule:** `R06-01` · `screen-keep-route-flow-visible`
 
 **Applies when:** 라우트 진입의 search 파라미터, 화면 이동, 쿼리, 뮤테이션, 화면 전체 이펙트를 옮기거나 나눌 때. 화면 섹션 조립의 순서나 소유자를 바꿀 때. 제외: 같은 소유자 안에서 표현만 바꾸는 경우.
 
@@ -2623,7 +2623,7 @@ return (
 
 ### 6.2 Avoid Premature Abstraction in Screen Code
 
-**Rule:** `R29` · `screen-avoid-premature-abstraction`
+**Rule:** `R06-02` · `screen-avoid-premature-abstraction`
 
 **Applies when:** 화면 코드를 보조 함수, 훅, 컴포넌트, 모듈로 추출할 때. 한 곳에서만 쓰는 기존 추상화를 다시 접어 넣을 때.
 
@@ -2748,7 +2748,7 @@ export const PgProductTable = (props: PgProductTableProps) => {
 
 ### 6.3 Extract Local Section Components Only for Runtime Boundaries
 
-**Rule:** `R30` · `screen-extract-local-section-components-for-runtime-boundaries`
+**Rule:** `R06-03` · `screen-extract-local-section-components-for-runtime-boundaries`
 
 **Applies when:** 화면 지역 섹션 컴포넌트를 새로 추출할 때. 기존 섹션에 비동기, 지역 상태, 프로바이더, 상호작용, 외부 위젯, 성능 처리를 넣거나 뺄 때.
 
@@ -2917,7 +2917,7 @@ export const PgProducts = () => {
 
 ### 6.4 Keep Derived Values Close to Where They Are Used
 
-**Rule:** `R31` · `screen-keep-derived-values-close`
+**Rule:** `R06-04` · `screen-keep-derived-values-close`
 
 **Applies when:** 화면 진입 파일이나 섹션 최상단에 `const` 별칭, 플래그, 표시값을 추가·이동·제거할 때. 훅 인자, JSX 표시값, 이펙트 안 계산을 위쪽 `const`로 빼거나 되돌릴 때.
 
@@ -2994,7 +2994,7 @@ export const PgProductTableSection = (props: PgProductTableSectionProps) => {
 
 ### 7.1 Place Suspense Boundaries at the Section Owner
 
-**Rule:** `R32` · `runtime-place-suspense-boundaries-at-the-section-owner`
+**Rule:** `R07-01` · `runtime-place-suspense-boundaries-at-the-section-owner`
 
 **Applies when:** `Suspense` 쿼리를 쓰는 화면에서 로딩 대체 화면의 위치를 정할 때. `Suspense` 경계를 추가하거나 옮길 때.
 
@@ -3050,7 +3050,7 @@ export const PgProductTreeSection = () => {
 
 ### 7.2 Avoid Ad-hoc Loading Branches in Screen Bodies
 
-**Rule:** `R33` · `runtime-avoid-ad-hoc-loading-branches`
+**Rule:** `R07-02` · `runtime-avoid-ad-hoc-loading-branches`
 
 **Applies when:** `Suspense` 쿼리를 쓰는 화면 본문에 초기 로딩 반환을 추가·변경할 때. `isFetching`이나 뮤테이션 `isPending`으로 화면을 가리는 분기를 넣을 때. 제외: 선택 값에 기본값을 채우는 것만 바꾸는 경우.
 
@@ -3108,7 +3108,7 @@ return <PgPaymentWidgetSection amount={responseOrderAmountSuspense.data.confirme
 
 ### 7.3 Place Error Boundaries by How Much Should Survive
 
-**Rule:** `R34` · `runtime-place-error-boundaries-by-blast-radius`
+**Rule:** `R07-03` · `runtime-place-error-boundaries-by-blast-radius`
 
 **Applies when:** 오류 경계를 추가하거나 옮길 때. 화면 본문에 `isError` 분기나 실패 대체 화면 반환을 넣을 때.
 
@@ -3220,7 +3220,7 @@ export const PgProducts = () => {
 
 ### 8.1 Calculate Derived Values During Rendering
 
-**Rule:** `R35` · `state-calculate-derived-values-during-render`
+**Rule:** `R08-01` · `state-calculate-derived-values-during-render`
 
 **Applies when:** 현재 프롭스, 상태, search 파라미터, 응답에서 계산 가능한 값을 별도 상태와 이펙트로 동기화할 때. 파생값 동기화 이펙트를 제거할 때.
 
@@ -3256,7 +3256,7 @@ return <UiSelectedCountBadge count={selectedIds.length} />;
 
 ### 8.2 Choose State Tools by Source of Truth
 
-**Rule:** `R36` · `state-choose-state-tools-by-source-of-truth`
+**Rule:** `R08-02` · `state-choose-state-tools-by-source-of-truth`
 
 **Applies when:** 로컬 UI·전역 클라이언트·서버 데이터를 새 상태 도구로 옮길 때. 합성 컴포넌트나 컴포넌트 묶음에 공유 상태를 넣을 때. 서로 다른 진짜 출처 사이에 값을 복제하거나 동기화할 때.
 
@@ -3357,7 +3357,7 @@ export const UiTabsRoot = (props: UiTabsRootProps) => {
 
 ### 8.3 Store Shared Derived Decisions Only When They Are Truly Shared
 
-**Rule:** `R37` · `state-store-derived-authority`
+**Rule:** `R08-03` · `state-store-derived-authority`
 
 **Applies when:** 여러 화면·메뉴·라우트 가드가 쓰는 접근 권한 같은 파생 판단을 스토어에 저장·동기화할 때. 단일 화면에서만 쓰는 값까지 스토어로 올리려 할 때.
 
@@ -3417,7 +3417,7 @@ useEffect(() => {
 
 ### 8.4 Use Functional setState Updates When Based on Previous State
 
-**Rule:** `R38` · `state-use-functional-setstate-updates`
+**Rule:** `R08-04` · `state-use-functional-setstate-updates`
 
 **Applies when:** 다음 상태가 현재 상태에 의존하는 갱신을 추가·변경할 때. 핸들러·비동기 콜백·연속 호출에서 `setState` 방식을 바꿀 때.
 
@@ -3457,7 +3457,7 @@ const handleSelectRange = (fromUserId: string, toUserId: string) => {
 
 ### 8.5 Use useEffectEvent for Non-reactive Effect Callbacks
 
-**Rule:** `R39` · `state-use-effectevent-for-non-reactive-effect-callbacks`
+**Rule:** `R08-05` · `state-use-effectevent-for-non-reactive-effect-callbacks`
 
 **Applies when:** 구독 이펙트가 최신 프롭·상태 콜백을 읽어야 할 때. ref 동기화 우회, 의존성 재설치, `useEffectEvent`를 추가·변경할 때.
 
@@ -3532,7 +3532,7 @@ useEffect(() => {
 
 ### 9.1 Name Handlers Predictably
 
-**Rule:** `R40` · `events-name-handlers-predictably`
+**Rule:** `R09-01` · `events-name-handlers-predictably`
 
 **Applies when:** 이벤트 핸들러를 새로 만들 때. 핸들러 이름이나 대상, 이벤트 표기를 바꿀 때.
 
@@ -3591,7 +3591,7 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (event) => {
 
 ### 9.2 Curry Extra Arguments Into DOM Event Handlers
 
-**Rule:** `R41` · `events-curry-extra-handler-arguments`
+**Rule:** `R09-02` · `events-curry-extra-handler-arguments`
 
 **Applies when:** DOM 이벤트 프롭에 추가 인자를 넘기는 핸들러를 추가·변경할 때. 인라인 래퍼로 인자를 넘기던 자리를 바꿀 때. 제외: 이벤트 객체를 받지 않는 프롭 콜백인 경우.
 
@@ -3645,7 +3645,7 @@ const handleListItemClickWithProductId =
 
 ### 9.3 Run User Actions in Handlers, Not Effects
 
-**Rule:** `R42` · `events-run-user-actions-in-handlers-not-effects`
+**Rule:** `R09-03` · `events-run-user-actions-in-handlers-not-effects`
 
 **Applies when:** 제출, 저장, 삭제, 닫기 같은 한 번뿐인 사용자 액션을 핸들러와 상태+이펙트 사이에서 옮길 때. 이펙트 안에서 뮤테이션이나 화면 이동을 호출하는 코드를 넣을 때.
 
@@ -3703,7 +3703,7 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => 
 
 ### 10.1 Do Not Memoize Without a Confirmed Reason
 
-**Rule:** `R43` · `perf-avoid-defensive-memoization`
+**Rule:** `R10-01` · `perf-avoid-defensive-memoization`
 
 **Applies when:** `useMemo`·`useCallback`을 추가하거나 제거할 때. 참조 동일성·실측 병목·무거운 지연 계산을 이유로 수동 메모이제이션을 검토할 때.
 
@@ -3764,7 +3764,7 @@ useEffect(() => {
 
 ### 10.2 Use Lazy State Initializers for Expensive Defaults
 
-**Rule:** `R44` · `perf-use-lazy-state-initializers-for-expensive-defaults`
+**Rule:** `R10-02` · `perf-use-lazy-state-initializers-for-expensive-defaults`
 
 **Applies when:** `useState` 초기값에 `localStorage` 파싱, 인덱스 생성, 큰 배열 정규화 같은 비용이 큰 계산을 넣을 때. 제외: 숫자·문자열 같은 단순 값이나 프롭을 그대로 초기값에 넣는 경우.
 
@@ -3792,7 +3792,7 @@ const [draftFilter] = useState(() => JSON.parse(localStorage.getItem("product-fi
 
 ### 10.3 Defer Heavy Renders Only With Measured Evidence
 
-**Rule:** `R45` · `perf-defer-heavy-renders-with-measured-evidence`
+**Rule:** `R10-03` · `perf-defer-heavy-renders-with-measured-evidence`
 
 **Applies when:** `startTransition`·`useTransition`·`useDeferredValue`를 추가·삭제할 때. 목록이나 표가 커져 입력 반응이 늦다는 보고를 받았을 때.
 
@@ -3889,7 +3889,7 @@ return <PgProductRows rows={filteredRows} />;
 
 ### 11.1 Give Interactive Elements an Accessible Name
 
-**Rule:** `R46` · `a11y-give-interactive-elements-an-accessible-name`
+**Rule:** `R11-01` · `a11y-give-interactive-elements-an-accessible-name`
 
 **Applies when:** 클릭이나 입력을 받는 요소를 새로 만들 때. 글자 없이 아이콘만 있는 버튼을 추가할 때.
 
@@ -3959,7 +3959,7 @@ return <PgProductRows rows={filteredRows} />;
 
 ### 12.1 Require Doc Comments on React Hooks, Handlers, and Key Declarations
 
-**Rule:** `R47` · `docs-require-jsdoc-on-key-declarations`
+**Rule:** `R12-01` · `docs-require-jsdoc-on-key-declarations`
 
 **Applies when:** 쿼리·뮤테이션이나 읽어도 의도가 안 보이는 핸들러·이펙트를 추가·변경할 때. 내보낸 보조 함수·훅·스토어 선언을 추가·변경할 때.
 
@@ -4054,7 +4054,7 @@ export const toProductSaveRequest = (formValues: ProductFormValues) => {
 
 ### 13.1 Enable the Biome React Domain
 
-**Rule:** `R48` · `tooling-enable-the-biome-react-domain`
+**Rule:** `R13-01` · `tooling-enable-the-biome-react-domain`
 
 **Applies when:** 프로젝트에 `biome` 설정을 처음 넣거나 lint 규칙을 바꿀 때. `biome.json`의 `linter.domains`나 `linter.rules`에 항목을 추가·삭제할 때.
 

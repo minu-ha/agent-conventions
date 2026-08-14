@@ -455,6 +455,38 @@ export const getRoutingOrdinalPrefix = (skillName: string): string => {
 };
 
 /**
+ * @helper rule 파일명의 `NN-MM-` 번호로 local ordinal 계산.
+ * 핸드북이 부르는 번호와 `rules/` 파일명의 번호가 같아야 사람이 규칙을 바로 찾는다.
+ * 파일명 번호는 validate가 선택으로 두므로 번호가 없으면 예전처럼 순번으로 매긴다.
+ */
+export const getRoutingOrdinal = (skillName: string, fileName: string, localOrdinal: number): string => {
+	const ordinalPrefix = getRoutingOrdinalPrefix(skillName);
+	const numberMatch = /^(\d+)-(\d+)-/.exec(fileName);
+
+	if (!numberMatch) {
+		return `${ordinalPrefix}${String(localOrdinal).padStart(2, "0")}`;
+	}
+
+	const [, sectionNumber, ruleNumber] = numberMatch;
+
+	return `${ordinalPrefix}${sectionNumber}-${ruleNumber}`;
+};
+
+/**
+ * @helper compact index와 같은 순서의 rule ID별 local ordinal 계산
+ */
+export const getCanonicalRoutingOrdinals = (document: LoadedSkillDocument): Map<string, string> => {
+	const canonicalRules = getOrderedSections(document.sections).flatMap((section) => getRoutingRulesForSection(section, document.rules));
+
+	return new Map(
+		canonicalRules.map((rule, index): [string, string] => [
+			getRuleId(rule),
+			getRoutingOrdinal(document.skillName, rule.fileName, index + 1),
+		]),
+	);
+};
+
+/**
  * @helper compact deterministic `RULES_INDEX.md` 생성
  */
 export const generateRulesIndexMarkdown = (document: LoadedSkillDocument, directCompanions: SkillCompanion[]): string => {
@@ -465,7 +497,6 @@ export const generateRulesIndexMarkdown = (document: LoadedSkillDocument, direct
 
 	const canonicalRoutingSource = createCanonicalRoutingSource({document, sections: orderedSections, companions: orderedCompanions});
 	const digest = createHash("sha256").update(canonicalRoutingSource).digest("hex");
-	const ordinalPrefix = getRoutingOrdinalPrefix(document.skillName);
 	const lines = [
 		`# ${escapeMarkdownText(document.metadata.title)} Rule Index`,
 		"",
@@ -493,7 +524,7 @@ export const generateRulesIndexMarkdown = (document: LoadedSkillDocument, direct
 
 		for (const rule of rules) {
 			localOrdinal += 1;
-			const ordinal = `${ordinalPrefix}${String(localOrdinal).padStart(2, "0")}`;
+			const ordinal = getRoutingOrdinal(document.skillName, rule.fileName, localOrdinal);
 			const reviewWith = rule.reviewWith.length > 0 ? ` | reviewWith: ${getCanonicalRoutingTargets(rule.reviewWith).join(", ")}` : "";
 			const completionGate = rule.requiredOnCompletion ? " | completionGate" : "";
 			lines.push(`- ${ordinal} | ${getRuleId(rule)} | ${escapeMarkdownText(rule.appliesWhen ?? "")}${completionGate}${reviewWith}`);

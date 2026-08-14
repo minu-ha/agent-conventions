@@ -67,7 +67,7 @@
 
 ### 1.1 Reuse Existing Contracts Before Declaring New Types
 
-**Rule:** `T01` · `types-reuse-existing-contracts-before-new-types`
+**Rule:** `T01-01` · `types-reuse-existing-contracts-before-new-types`
 
 **Applies when:** 뜻이 같은 기존 타입, 인터페이스, 스키마가 있는데 형태를 새로 선언·변경·복제·파생할 때. 같은 형태를 두 번 선언했다가 넣거나 뺄 때. 제외: 맞는 후보가 없거나 소유자만 옮긴 경우. 제외: 그대로인 계약을 새 자리에서 쓰는 경우. 제외: 고칠 수 없는 형태를 그대로 쓰는 경우.
 
@@ -199,7 +199,7 @@ interface ProductListRow {
 
 ### 1.2 Prefer Function Variable Types Over Parameter Annotations
 
-**Rule:** `T02` · `types-prefer-function-variable-types-over-parameter-annotations`
+**Rule:** `T01-02` · `types-prefer-function-variable-types-over-parameter-annotations`
 
 **Applies when:** 기존 호출 계약을 이름 붙인 함수나 공용 함수 구현에 다시 쓸 때. 같은 시그니처를 여러 구현이 함께 쓰도록 바꿀 때. 제외: 타입 표기 없이 문맥으로 추론되는 일회성 인라인 콜백인 경우.
 
@@ -290,7 +290,7 @@ const toSearchRequest: ToRequest = (request) => {
 
 ### 1.3 Document Custom Types and Declarative Shapes
 
-**Rule:** `T03` · `types-document-custom-types-and-shapes`
+**Rule:** `T01-03` · `types-document-custom-types-and-shapes`
 
 **Applies when:** 타입, 인터페이스, 스키마 최상단, 객체 상수, 계약 필드, 파생 별칭을 추가·변경할 때. 이름 붙인 형태에 호출 계약 역할을 새로 얹을 때. 제외: 외부·생성된·읽기 전용·공용 형태를 그대로 쓰거나 반환 타입이 익명으로 추론되는 경우.
 
@@ -371,7 +371,7 @@ const publishResultSchema = z.object({
 
 ### 1.4 Mark Unused Parameters With an Underscore Prefix
 
-**Rule:** `T04` · `types-mark-unused-parameters-with-underscore`
+**Rule:** `T01-04` · `types-mark-unused-parameters-with-underscore`
 
 **Applies when:** 기존 콜백이나 프레임워크 계약을 구현하면서 매개변수를 빼거나 쓰지 않을 때. 커링한 핸들러가 마지막에 돌려주는 콜백에서 매개변수를 뺄 때.
 
@@ -413,7 +413,7 @@ const noopLog: LogSink = (_message, _level) => {};
 
 ### 1.5 Narrow `unknown` Instead of Asserting
 
-**Rule:** `T05` · `types-narrow-unknown-instead-of-asserting`
+**Rule:** `T01-05` · `types-narrow-unknown-instead-of-asserting`
 
 **Applies when:** `as` 단언, `!` `null` 아님 단언, `any`, `@ts-expect-error`를 추가할 때. 앱 밖에서 들어온 값을 타입 붙여 쓰기 시작할 때.
 
@@ -485,7 +485,7 @@ chart.setOption(option as EChartsOption);
 
 ### 1.6 Replace `enum` With `as const` Objects
 
-**Rule:** `T06` · `types-replace-enum-with-as-const-objects`
+**Rule:** `T01-06` · `types-replace-enum-with-as-const-objects`
 
 **Applies when:** `enum`이나 타입과 실행 양쪽에서 함께 쓰는 값 집합을 추가·변경할 때. 제외: 외부 패키지가 내보낸 `enum` 값을 그대로 읽어 쓰는 경우.
 
@@ -540,7 +540,7 @@ type ProductStatus = (typeof product_status)[keyof typeof product_status];
 
 ### 2.1 Centralize Shared Config Under `shared/config.ts`
 
-**Rule:** `T07` · `naming-centralize-shared-config-namespaces`
+**Rule:** `T02-01` · `naming-centralize-shared-config-namespaces`
 
 **Applies when:** 여러 모듈이 함께 쓰는 URL, 기능 플래그, 페이지 크기나 상수를 추가·이동·중복 정의할 때. 공용 설정 경계를 바꿀 때.
 
@@ -606,7 +606,7 @@ const billingQuery = useBillingQuery({
 
 ### 2.2 Place Owner-only Config in the Owner Config Folder
 
-**Rule:** `T08` · `naming-place-owner-config-in-the-owner-config-folder`
+**Rule:** `T02-02` · `naming-place-owner-config-in-the-owner-config-folder`
 
 **Applies when:** 소유자 하나만 쓰는 선언형 설정을 추가하거나 옮길 때. 전역 설정과 소유자 전용 설정 사이에서 위치를 바꿀 때.
 
@@ -649,7 +649,7 @@ export const product_detail_config = {
 
 ### 2.3 Preserve Shared Namespace Origin With Chained Access
 
-**Rule:** `T09` · `naming-preserve-config-origin-with-chained-access`
+**Rule:** `T02-03` · `naming-preserve-config-origin-with-chained-access`
 
 **Applies when:** `config`나 `util` 값을 쓰면서 넓은 스코프 구조분해, 별칭, 기능별 네임스페이스를 추가·변경할 때.
 
@@ -689,7 +689,7 @@ if (config.features.enable_refunds) {
 
 ### 2.4 Use Role-Based File, Symbol, and Constant Naming
 
-**Rule:** `T10` · `naming-use-consistent-file-and-symbol-naming`
+**Rule:** `T02-04` · `naming-use-consistent-file-and-symbol-naming`
 
 **Applies when:** TypeScript 파일, 폴더, 변수, 함수, 타입, 객체·스키마 키의 이름을 새로 만들거나 바꿀 때. 밖으로 나가는 키를 받는 쪽 표기로 적을지 판단할 때. 제외: 별칭 없이 외부 패키지에서 그대로 가져오는 경우.
 
@@ -797,7 +797,7 @@ const toProductSaveBody = (values: ProductFormValues) => {
 
 ### 2.5 Use Direct Imports and Dedicated Public Entry Points
 
-**Rule:** `T11` · `naming-use-direct-imports-and-public-entry-points`
+**Rule:** `T02-05` · `naming-use-direct-imports-and-public-entry-points`
 
 **Applies when:** 가져오기, 내보내기, `index.ts` 배럴, 공개 진입점, 소유자 보조 모듈의 경계를 추가·변경할 때. 같은 경로에서 값과 타입 중 무엇을 가져올지 추가·삭제·전환할 때.
 
@@ -835,7 +835,7 @@ import {toUserSaveRequest} from "./function/to-user-save-request";
 
 ### 2.6 Restrict Absolute Aliases to Layer Roots
 
-**Rule:** `T12` · `naming-restrict-absolute-aliases-to-layer-roots`
+**Rule:** `T02-06` · `naming-restrict-absolute-aliases-to-layer-roots`
 
 **Applies when:** 절대경로 별칭으로 다른 모듈을 가져올 때. 별칭이 가리키는 경로 깊이를 바꿀 때.
 
@@ -870,7 +870,7 @@ import {SalesChartCard} from "./component/sales-chart-card";
 
 ### 2.7 Read Environment Values Through Shared Config
 
-**Rule:** `T13` · `naming-read-environment-values-through-shared-config`
+**Rule:** `T02-07` · `naming-read-environment-values-through-shared-config`
 
 **Applies when:** `import.meta.env`나 `process.env`를 읽는 코드를 추가·이동할 때. 환경마다 달라지는 값을 새로 들여올 때.
 
@@ -934,7 +934,7 @@ const productClient = createClient({baseUrl: config.api.base_url});
 
 ### 3.1 Declare Functions as Arrow Consts
 
-**Rule:** `T14` · `functions-declare-functions-as-arrow-consts`
+**Rule:** `T03-01` · `functions-declare-functions-as-arrow-consts`
 
 **Applies when:** 이름을 지어 선언하는 함수를 새로 만들거나 선언 형태나 본문 형태를 바꿀 때. 네임스페이스 객체에 멤버 함수를 추가·변경할 때. 제외: 인라인 콜백이거나 클래스 메서드, 제너레이터, 오버로드 선언인 경우.
 
@@ -1091,7 +1091,7 @@ export class ProductCursor {
 
 ### 3.2 Use Named Object Params for Complex Signatures
 
-**Rule:** `T15` · `functions-use-named-object-params-for-complex-signatures`
+**Rule:** `T03-02` · `functions-use-named-object-params-for-complex-signatures`
 
 **Applies when:** 매개변수가 셋을 넘거나 같은 계열 인자를 받는 함수를 추가·변경할 때. 객체 매개변수의 필드를 읽는 방식을 바꿀 때. 제외: 리액트 함수 컴포넌트가 프롭스를 받는 방식만 바꾸는 경우.
 
@@ -1163,7 +1163,7 @@ const toRequestUrl = (target: ApiRequestTarget): URL => {
 
 ### 3.3 Extract Support Functions Only When the Boundary Is Real
 
-**Rule:** `T16` · `functions-extract-helpers-only-when-the-boundary-is-real`
+**Rule:** `T03-03` · `functions-extract-helpers-only-when-the-boundary-is-real`
 
 **Applies when:** 보조 함수를 빼내거나 옮기거나 내보내거나 공유할 때. 범용 보조 파일, 소유자 하나만 쓰는 변환 함수, 자잘한 정리 단계의 경계를 바꿀 때.
 
@@ -1307,7 +1307,7 @@ import { toProductSaveRequest } from "./function/to-product-save-request";
 
 ### 3.4 Place and Promote Support Functions Deliberately
 
-**Rule:** `T17` · `functions-place-and-promote-support-functions`
+**Rule:** `T03-04` · `functions-place-and-promote-support-functions`
 
 **Applies when:** 보조 함수를 어느 파일이나 폴더에 둘지 정할 때. `shared/` 아래로 파일을 옮기거나 `util.*`에 항목을 추가할 때.
 
@@ -1426,7 +1426,7 @@ export const util = {
 
 ### 3.5 Avoid Imperative Assembly in Wide Scopes
 
-**Rule:** `T18` · `functions-avoid-imperative-assembly-in-wide-scopes`
+**Rule:** `T03-05` · `functions-avoid-imperative-assembly-in-wide-scopes`
 
 **Applies when:** 모듈 최상위나 함수 본문 전체를 덮는 스코프에서 `let` 재할당, 배열 `push`, 조건부 누적으로 값을 만들 때.
 
@@ -1473,7 +1473,7 @@ const visibleTabs = [
 
 ### 3.6 Name a Value Only to Prevent Recompute or Explain a Judgment
 
-**Rule:** `T19` · `functions-name-a-value-only-for-recompute-or-judgment`
+**Rule:** `T03-06` · `functions-name-a-value-only-for-recompute-or-judgment`
 
 **Applies when:** 순수 계산의 결과를 지역 변수\(`const`\)로 받는 줄을 추가·삭제할 때. 표현식을 쓰는 자리에 그대로 적을지 변수로 뺄지 정할 때.
 
@@ -1602,7 +1602,7 @@ const submitDraft = async (draft: Draft) => {
 
 ### 3.7 Name Functions by What Comes Out
 
-**Rule:** `T20` · `functions-name-functions-by-what-comes-out`
+**Rule:** `T03-07` · `functions-name-functions-by-what-comes-out`
 
 **Applies when:** 이름 붙인 함수를 새로 만들거나 이름을 바꿀 때. 제외: 외부 패키지가 정한 이름을 별칭 없이 그대로 쓰는 경우.
 
@@ -1719,7 +1719,7 @@ export const assertLoggedIn = (session: Session): void => {
 
 ### 4.1 Prefer Immutable Array Sorting
 
-**Rule:** `T21` · `values-prefer-immutable-array-sorting`
+**Rule:** `T04-01` · `values-prefer-immutable-array-sorting`
 
 **Applies when:** 프롭스, 상태, 매개변수, 모듈 상수에서 온 배열을 정렬할 때. 기존 `.sort()` 호출을 추가·변경할 때.
 
@@ -1759,7 +1759,7 @@ const toSortedUsers = (users: User[]): User[] => {
 
 ### 4.2 Use Set and Map for Repeated Lookups
 
-**Rule:** `T22` · `values-use-set-and-map-for-repeated-lookups`
+**Rule:** `T04-02` · `values-use-set-and-map-for-repeated-lookups`
 
 **Applies when:** 같은 목록에 `includes`, `find`, 키 조회를 여러 번 하는 코드를 추가·변경할 때.
 
@@ -1801,7 +1801,7 @@ const approver = userById.get(approverId);
 
 ### 4.3 Read Object Fields Through Chains, Not Destructuring
 
-**Rule:** `T23` · `values-read-objects-through-chains`
+**Rule:** `T04-03` · `values-read-objects-through-chains`
 
 **Applies when:** 구조분해로 객체에서 값을 꺼내는 줄을 추가·변경할 때. 객체 필드를 별칭 `const`에 담아 그 이름으로 쓰려 할 때. 제외: 배열이나 튜플을 자리로 푸는 경우.
 
@@ -1915,7 +1915,7 @@ const toOverdueLines = (invoice: Invoice, today: Date): InvoiceLine[] => {
 
 ### 4.4 Declare Meaningful Numbers Instead of Writing Them Inline
 
-**Rule:** `T24` · `values-declare-meaningful-numbers`
+**Rule:** `T04-04` · `values-declare-meaningful-numbers`
 
 **Applies when:** 비교, 계산, 호출 인자에 숫자 리터럴을 새로 적을 때. 제외: 관용값이나 배열 인덱스처럼 뜻이 없는 숫자를 쓰는 경우.
 
@@ -2037,7 +2037,7 @@ const toNextPage = (page: number): number => {
 
 ### 5.1 Expose Optional Values Instead of Silent Fallbacks
 
-**Rule:** `T25` · `absence-expose-optional-values-instead-of-silent-fallbacks`
+**Rule:** `T05-01` · `absence-expose-optional-values-instead-of-silent-fallbacks`
 
 **Applies when:** 선택 값을 읽거나 정규화하거나 넘기는 방식을 바꿀 때. `??`, `||`, 기본값, 빈 값 대체 분기를 추가·변경할 때.
 
@@ -2153,7 +2153,7 @@ setVisibleRowCount(effectivePageSize);
 
 ### 6.1 Keep Body Comments for Intent and Steps
 
-**Rule:** `T26` · `docs-keep-body-comments-for-intent-and-steps`
+**Rule:** `T06-01` · `docs-keep-body-comments-for-intent-and-steps`
 
 **Applies when:** 함수 본문의 `//` 주석을 추가·수정·유지할 때. 도메인 규칙, 예외 방어, 외부 제약, 부수효과 순서, 긴 절차의 단계를 주석으로 설명할 때.
 
@@ -2218,7 +2218,7 @@ const submitProductDraft = async (draft: ProductDraft) => {
 
 ### 6.2 Require Header Doc Comments on Key Declarations
 
-**Rule:** `T27` · `docs-require-header-jsdoc-on-key-declarations`
+**Rule:** `T06-02` · `docs-require-header-jsdoc-on-key-declarations`
 
 **Applies when:** 쿼리, 뮤테이션, 원격 함수, 커스텀 훅, 커스텀 타입, 스토어, 포매터 선언을 추가·변경할 때. 분기나 `await`, 또는 두 개 이상의 동작이 있는 핸들러와 이펙트를 추가·변경할 때. 다시 쓰거나 내보낸 보조 함수를 추가·변경할 때.
 
@@ -2268,7 +2268,7 @@ const responseProductList = useProductList();
 
 ### 6.3 Write Concise Korean Comments About Purpose and Constraints
 
-**Rule:** `T28` · `docs-write-concise-korean-comments-about-purpose-and-constraints`
+**Rule:** `T06-03` · `docs-write-concise-korean-comments-about-purpose-and-constraints`
 
 **Applies when:** TypeScript·TSX의 문서 주석이나 인라인 주석 문구를 추가·수정·번역하거나 검토할 때. 문서 주석에 태그를 붙이거나 뺄 때.
 
@@ -2372,7 +2372,7 @@ export interface PgProductTreeProps {
 
 ### 6.4 Write Doc Comments as Multiline Blocks
 
-**Rule:** `T29` · `docs-write-doc-comments-as-multiline-blocks`
+**Rule:** `T06-04` · `docs-write-doc-comments-as-multiline-blocks`
 
 **Applies when:** 선언 위 문서 주석을 새로 쓰거나 형식을 바꿀 때. 한 줄 `/** … */`이나 `//`로 선언을 설명하려 할 때.
 
@@ -2424,7 +2424,7 @@ export const saveProduct = async (product: Product): Promise<void> => {
 
 ### 6.5 Justify Convention Exceptions With a Checkable Reason Comment
 
-**Rule:** `T30` · `docs-justify-convention-exceptions-with-a-reason-comment`
+**Rule:** `T06-05` · `docs-justify-convention-exceptions-with-a-reason-comment`
 
 **Applies when:** 규칙이 허용한 예외를 코드에 남길 때. 이미 있는 예외 주석의 내용을 바꿀 때. 제외: 규칙이 요구하지 않은 일반 설명 주석인 경우.
 
@@ -2479,7 +2479,7 @@ const filteredRows = useMemo(() => rows.filter((row) => matchRow(row, deferredKe
 
 ### 7.1 Configure Biome to Enforce the Mechanical Rules
 
-**Rule:** `T31` · `tooling-configure-biome-to-enforce-these-rules`
+**Rule:** `T07-01` · `tooling-configure-biome-to-enforce-these-rules`
 
 **Applies when:** 프로젝트에 `biome` 설정을 처음 넣거나 lint 규칙을 바꿀 때. `biome.json`의 `linter.rules`에 항목을 추가·삭제할 때.
 

@@ -1974,7 +1974,7 @@ test("TypeScript routing manifest is an exact nine-scenario partition with full 
 test("TypeScript generated index is complete and within the deterministic byte budget", async () => {
 	const skillPaths = getSkillPaths("typescript", realSkillRootDir);
 	const source = await readFile(skillPaths.rulesIndexPath, "utf8");
-	const entries = Array.from(source.matchAll(/^- T\d+ \| ([^ |]+) \|/gm), (match) => ({id: match[1], fileName: `${match[1]}.md`}));
+	const entries = Array.from(source.matchAll(/^- T\d+(?:-\d+)? \| ([^ |]+) \|/gm), (match) => ({id: match[1], fileName: `${match[1]}.md`}));
 	const ids = entries.map((entry) => entry.id).sort();
 	const document = await readSkillDocument(skillPaths);
 	const expectedIds = document.rules.map((rule) => getRuleId(rule)).sort();
@@ -2247,7 +2247,7 @@ test("React routing manifest is the exact seventeen-scenario Appendix B/D oracle
 test("React generated index and handbook preserve canonical local rules and compact companion links", async () => {
 	const skillPaths = getSkillPaths("react", realSkillRootDir);
 	const source = await readFile(skillPaths.rulesIndexPath, "utf8");
-	const entries = Array.from(source.matchAll(/^- R\d+ \| ([^ |]+) \|/gm), (match) => ({id: match[1], fileName: `${match[1]}.md`}));
+	const entries = Array.from(source.matchAll(/^- R\d+(?:-\d+)? \| ([^ |]+) \|/gm), (match) => ({id: match[1], fileName: `${match[1]}.md`}));
 	const document = await readSkillDocument(skillPaths);
 
 	assert.deepEqual(
@@ -2504,7 +2504,7 @@ test("routing activation and generated indexes use only the changed semantic del
 	const generatedIndex = generateRulesIndexMarkdown(typescriptDocument, []);
 	assert.doesNotMatch(generatedIndex, /변경 (?:semantic )?delta/i);
 	assert.match(generatedIndex, /Routing digest: `sha256:[a-f0-9]{64}`/);
-	assert.match(generatedIndex, /^- T\d+ \| [^ |]+ \|/m);
+	assert.match(generatedIndex, /^- T\d+(?:-\d+)? \| [^ |]+ \|/m);
 
 	const routeOwnerRule = await readRuleSource("css", "naming-keep-page-slug-traceable");
 	assert.match(routeOwnerRule, /`pg_\*` 소유자의 클래스 식별자를 새로 만들거나 이름을 바꿀 때/);
@@ -3001,7 +3001,7 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 test("CSS generated index is canonical, complete, body-preserving, and within its byte budget", async () => {
 	const skillPaths = getSkillPaths("css", realSkillRootDir);
 	const source = await readFile(skillPaths.rulesIndexPath, "utf8");
-	const entries = Array.from(source.matchAll(/^- C\d+ \| ([^ |]+) \|/gm), (match) => ({id: match[1], fileName: `${match[1]}.md`}));
+	const entries = Array.from(source.matchAll(/^- C\d+(?:-\d+)? \| ([^ |]+) \|/gm), (match) => ({id: match[1], fileName: `${match[1]}.md`}));
 	const document = await readSkillDocument(skillPaths);
 
 	assert.deepEqual(

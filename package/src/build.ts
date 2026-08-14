@@ -9,11 +9,10 @@ import {buildRuleAnchor, buildSectionAnchor, normalizeHeadingTitle, readResolved
 import {
 	escapeMarkdownProse,
 	escapeMarkdownText,
-	getCanonicalRoutingRuleIds,
+	getCanonicalRoutingOrdinals,
 	generateRuleContractMarkdown,
 	generateRulesIndexMarkdown,
 	getCanonicalRoutingTargets,
-	getRoutingOrdinalPrefix,
 	getRuleId,
 	getRulesForSection,
 } from "./routing.js";
@@ -411,10 +410,7 @@ const prepareSkillBuild = async (skillPaths: SkillPaths): Promise<PreparedSkillB
 	const companionSkills = collectCompanionSkills(rootDocument, documents);
 	const localSections = buildCompiledSections(skillPaths.skillName, [rootDocument]);
 	const localReferences = collectReferenceLinks([rootDocument]);
-	const ordinalPrefix = getRoutingOrdinalPrefix(rootDocument.skillName);
-	const routingOrdinalByRuleId = new Map(
-		getCanonicalRoutingRuleIds(rootDocument).map((ruleId, index) => [ruleId, `${ordinalPrefix}${String(index + 1).padStart(2, "0")}`]),
-	);
+	const routingOrdinalByRuleId = getCanonicalRoutingOrdinals(rootDocument);
 
 	return {
 		rootDocument,
