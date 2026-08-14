@@ -367,7 +367,7 @@ ui/button/
 
 **Rule:** `R01-04` · `ownership-keep-component-imports-flowing-downward`
 
-**Applies when:** `component` 폴더 안의 파일을 다른 파일에서 가져올 때. `../`나 `@/page` 경로로 컴포넌트를 가져오려 할 때. 여러 자식이 같은 컴포넌트를 써야 해서 배치를 다시 정할 때. 제외: `function`·`type`·`config` 파일을 가져오는 경우.
+**Applies when:** `component` 폴더 안의 파일을 다른 파일에서 가져올 때. `../`나 `@/page` 경로로 컴포넌트를 가져오려 할 때. 여러 자식이 같은 컴포넌트를 써야 해서 배치를 다시 정할 때. 제외: `function`·`type`·`config`·`hook` 파일을 가져오는 경우.
 
 **Requires selected:** `typescript/naming-restrict-absolute-aliases-to-layer-roots` · 함께 적용
 
@@ -389,7 +389,10 @@ ui/button/
 3. 짧은 조각이면 그대로 중복해서 씁니다.
 
 세 자식 이상이 같은 것을 써야 하는데 올릴 수도 없으면 자식 분리가 잘못됐다는 신호입니다.
-`function`, `type`, `config`는 렌더 트리를 만들지 않으므로 소유자 안에서 공유하고 이 방향 제약을 받지 않습니다.
+`function`, `type`, `config`, `hook`은 렌더 트리를 만들지 않으므로 소유자 안에서 공유하고 이 방향 제약을 받지 않습니다.
+`hook`이 예외인 근거는 `ownership-keep-lifecycle-in-the-owning-component`에 있습니다.
+여러 소유자가 함께 부르는 생명주기만 훅으로 올리라고 정하는데,
+올린 훅을 자식이 가져오지 못하면 그 규칙이 성립하지 않습니다.
 
 **Incorrect (형제 컴포넌트를 직접 가져와 소유 관계가 사라짐):**
 
@@ -4070,6 +4073,7 @@ export const toProductSaveRequest = (formValues: ProductFormValues) => {
 | `correctness/useExhaustiveDependencies` | `react/state-use-effectevent-for-non-reactive-effect-callbacks`의 의존성 |
 | `correctness/useJsxKeyInIterable` | `react/composition-name-fragments-explicitly`의 `key` |
 | `a11y/*` 묶음 | `react/a11y-give-interactive-elements-an-accessible-name`의 일부 |
+| `style/noRestrictedImports`의 `../` 패턴 | `react/ownership-keep-component-imports-flowing-downward`의 `../` 금지 |
 
 `noNestedComponentDefinitions`는 도메인의 `recommended`에 없어 따로 켭니다.
 `react/composition-do-not-define-components-inside-components`와 판정 대상이 같아 이 규칙을 통째로 기계에 넘깁니다.
@@ -4078,9 +4082,17 @@ export const toProductSaveRequest = (formValues: ProductFormValues) => {
 `useButtonType`, `useAltText`, `useValidAnchor`, `useKeyWithClickEvents`, `useSemanticElements`가 그것입니다.
 접근 가능한 이름을 실제로 붙였는지는 기계가 못 보고 리뷰가 봅니다.
 
+`typescript/tooling-configure-biome-to-enforce-these-rules`가 세운 `noRestrictedImports`에 패턴 하나를 더합니다.
+`../**`를 막고 `function`, `type`, `config`, `hook` 폴더만 부정 패턴으로 되돌리는 항목입니다.
+되돌리는 넷은 `ownership-keep-component-imports-flowing-downward`가 예외로 두는 역할 폴더입니다.
+`@/page/**` 패턴과 같은 배열에 나란히 두면 절대경로와 상대경로 양쪽이 한 규칙으로 막힙니다.
+
 기계가 끝까지 못 가는 자리가 있습니다.
 아래 항목은 리뷰가 봅니다.
 
+- 형제 가져오기는 어떤 설정으로도 못 잡습니다.
+  `./pg-summary-band`는 소유자가 쓰는 정당한 경로와 문자열이 같습니다.
+  `ownership-keep-component-imports-flowing-downward`의 형제 금지는 리뷰가 봅니다.
 - `useExhaustiveDependencies`는 의존성 배열이 빠졌는지만 봅니다.
   그 콜백을 `useEffectEvent`로 감싸야 하는지는 리뷰가 봅니다.
 - `useJsxKeyInIterable`은 `key`가 있는지만 봅니다.
@@ -4105,7 +4117,7 @@ export const toProductSaveRequest = (formValues: ProductFormValues) => {
 }
 ```
 
-**Correct (도메인을 켜고 `all`에만 있는 항목은 따로 적음):**
+**Correct (도메인을 켜고 `all`에만 있는 항목과 `../` 패턴을 따로 적음):**
 
 ```json
 {
@@ -4114,7 +4126,21 @@ export const toProductSaveRequest = (formValues: ProductFormValues) => {
 		"domains": {"react": "recommended"},
 		"rules": {
 			"preset": "recommended",
-			"correctness": {"noNestedComponentDefinitions": "error"}
+			"correctness": {"noNestedComponentDefinitions": "error"},
+			"style": {
+				"noRestrictedImports": {
+					"level": "error",
+					"options": {
+						"patterns": [
+							{"group": ["@/page/**"], "message": "화면 내부는 절대경로로 가져오지 않습니다."},
+							{
+								"group": ["../**", "!../**/function/**", "!../**/type/**", "!../**/config/**", "!../**/hook/**"],
+								"message": "컴포넌트는 `../`로 가져오지 않습니다."
+							}
+						]
+					}
+				}
+			}
 		}
 	}
 }

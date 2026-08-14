@@ -536,7 +536,7 @@ const reactRuleRouting = {
 	},
 	"ownership-keep-component-imports-flowing-downward": {
 		appliesWhen:
-			"`component` 폴더 안의 파일을 다른 파일에서 가져올 때. `../`나 `@/page` 경로로 컴포넌트를 가져오려 할 때. 여러 자식이 같은 컴포넌트를 써야 해서 배치를 다시 정할 때. 제외: `function`·`type`·`config` 파일을 가져오는 경우.",
+			"`component` 폴더 안의 파일을 다른 파일에서 가져올 때. `../`나 `@/page` 경로로 컴포넌트를 가져오려 할 때. 여러 자식이 같은 컴포넌트를 써야 해서 배치를 다시 정할 때. 제외: `function`·`type`·`config`·`hook` 파일을 가져오는 경우.",
 		reviewWith: ["ownership-layer-component-boundaries"],
 	},
 	"ownership-prefer-plain-ts-for-local-react-helpers": {
