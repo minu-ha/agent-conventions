@@ -1,6 +1,6 @@
 ---
 title: Place and Promote Support Functions Deliberately
-titleKo: 보조 함수는 한 파일에 하나만 내보내고 프로젝트 전반이 쓰는 것만 공용으로 올립니다
+titleKo: 보조 함수는 한 파일에 하나만 내보내고 프로젝트 전반이 쓸 때만 공용으로 올립니다
 impact: MEDIUM-HIGH
 impactDescription: 잡동사니 파일이 생기지 않고 전역 `util`에 한 소유자의 함수가 섞이지 않습니다
 appliesWhen:
@@ -32,7 +32,7 @@ tags: functions, boundaries
 소유자를 지웠을 때 함수도 사라지면 그 소유자 것입니다.
 
 - 소유자와 함께 사라지면 그 소유자 아래에 둡니다.
-  `toProfileSaveRequest`는 profile 저장 화면이 없어지면 조립할 요청도 없습니다.
+  profile 저장 화면이 없어지면 `toProfileSaveRequest`가 조립할 요청도 없습니다.
 - 소유자를 지워도 남으면 지금 한 곳만 써도 올립니다.
   `toDisplayDate`는 소유자가 하나든 셋이든 `util`에 둘 함수입니다.
 
@@ -117,7 +117,7 @@ export const toProductSaveRequest = (values: ProductFormValues) => {
 };
 ```
 
-**Correct (소유자를 지워도 남는 함수는 우리 계약을 받아도 올림):**
+**Correct (소유자를 지워도 남는 함수는 도메인 계약을 받아도 올림):**
 
 ```ts
 // shared/util.ts

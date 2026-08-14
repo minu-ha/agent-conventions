@@ -23,9 +23,9 @@ tags: naming, config
 
 가르는 법은 소유자를 지워 보는 것입니다.
 소유자를 지웠을 때 값도 사라지면 그 소유자 것입니다.
-`chart_axis_tick_count`는 그 화면과 함께 사라지고, `billing_base_url`은 화면을 지워도 서버 주소로 남습니다.
+`chart_axis_tick_count`는 화면과 함께 사라지고, `billing_base_url`은 화면을 지워도 서버 주소로 남습니다.
 
-**프로젝트 전반의 값은** `shared/config.ts` 한 파일을 공개 진입점으로 삼습니다.
+**프로젝트 전반의 값이면** `shared/config.ts` 한 파일을 공개 진입점으로 삼습니다.
 `config` 네임스페이스 아래에 모아 `config.*` 체인으로 읽히게 하고,
 쓰는 파일마다 공용 URL, 기능 플래그, 페이지 크기, 상수 문자열을 흩뿌리지 않습니다.
 

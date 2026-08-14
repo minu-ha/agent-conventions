@@ -20,7 +20,7 @@
 소유자를 지웠을 때 함수도 사라지면 그 소유자 것입니다.
 
 - 소유자와 함께 사라지면 그 소유자 아래에 둡니다.
-  `toProfileSaveRequest`는 profile 저장 화면이 없어지면 조립할 요청도 없습니다.
+  profile 저장 화면이 없어지면 `toProfileSaveRequest`가 조립할 요청도 없습니다.
 - 소유자를 지워도 남으면 지금 한 곳만 써도 올립니다.
   `toDisplayDate`는 소유자가 하나든 셋이든 `util`에 둘 함수입니다.
 

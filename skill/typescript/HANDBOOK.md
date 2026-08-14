@@ -557,9 +557,9 @@ type ProductStatus = (typeof product_status)[keyof typeof product_status];
 
 가르는 법은 소유자를 지워 보는 것입니다.
 소유자를 지웠을 때 값도 사라지면 그 소유자 것입니다.
-`chart_axis_tick_count`는 그 화면과 함께 사라지고, `billing_base_url`은 화면을 지워도 서버 주소로 남습니다.
+`chart_axis_tick_count`는 화면과 함께 사라지고, `billing_base_url`은 화면을 지워도 서버 주소로 남습니다.
 
-**프로젝트 전반의 값은** `shared/config.ts` 한 파일을 공개 진입점으로 삼습니다.
+**프로젝트 전반의 값이면** `shared/config.ts` 한 파일을 공개 진입점으로 삼습니다.
 `config` 네임스페이스 아래에 모아 `config.*` 체인으로 읽히게 하고,
 쓰는 파일마다 공용 URL, 기능 플래그, 페이지 크기, 상수 문자열을 흩뿌리지 않습니다.
 
@@ -860,7 +860,7 @@ import {toUserSaveRequest} from "./function/to-user-save-request";
 
 - `shared`는 프로젝트 전반이 쓰는 설정과 함수를 담습니다.
 - `service`는 서버 통신 클라이언트를 담습니다.
-- `store`는 화면들이 함께 읽는 상태를 담습니다.
+- `store`는 여러 화면이 함께 읽는 상태를 담습니다.
   상태 관리 라이브러리를 쓰든 컨텍스트를 쓰든 파일명은 `use-<name>-store.ts`입니다.
 - `asset`은 아이콘 같은 정적 자원을 담습니다.
 
@@ -1347,7 +1347,7 @@ import { toProductSaveRequest } from "./function/to-product-save-request";
 소유자를 지웠을 때 함수도 사라지면 그 소유자 것입니다.
 
 - 소유자와 함께 사라지면 그 소유자 아래에 둡니다.
-  `toProfileSaveRequest`는 profile 저장 화면이 없어지면 조립할 요청도 없습니다.
+  profile 저장 화면이 없어지면 `toProfileSaveRequest`가 조립할 요청도 없습니다.
 - 소유자를 지워도 남으면 지금 한 곳만 써도 올립니다.
   `toDisplayDate`는 소유자가 하나든 셋이든 `util`에 둘 함수입니다.
 
@@ -1432,7 +1432,7 @@ export const toProductSaveRequest = (values: ProductFormValues) => {
 };
 ```
 
-**Correct (소유자를 지워도 남는 함수는 우리 계약을 받아도 올림):**
+**Correct (소유자를 지워도 남는 함수는 도메인 계약을 받아도 올림):**
 
 ```ts
 // shared/util.ts
