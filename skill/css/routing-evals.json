@@ -40,7 +40,7 @@
 						"naming-name-elements-and-modifiers-by-role",
 						"naming-keep-page-slug-traceable",
 						"ownership-give-each-file-one-scope-slug",
-						"ownership-choose-scope-prefix-by-reuse-range",
+						"ownership-choose-scope-prefix-by-owner-layer",
 						"ownership-use-foreign-classes-only-under-your-own-root",
 						"composition-compose-classes-with-clsx"
 					]
@@ -60,7 +60,7 @@
 			"expectedSelected": {
 				"css": [
 					"ownership-give-each-file-one-scope-slug",
-					"ownership-choose-scope-prefix-by-reuse-range"
+					"ownership-choose-scope-prefix-by-owner-layer"
 				]
 			}
 		},

@@ -122,7 +122,7 @@ const cssRuleUniverse = [
 	"naming-name-elements-and-modifiers-by-role",
 	"naming-keep-page-slug-traceable",
 	"ownership-give-each-file-one-scope-slug",
-	"ownership-choose-scope-prefix-by-reuse-range",
+	"ownership-choose-scope-prefix-by-owner-layer",
 	"ownership-use-foreign-classes-only-under-your-own-root",
 	"ownership-change-other-owners-through-their-api",
 	"composition-compose-classes-with-clsx",
@@ -380,8 +380,8 @@ const cssRuleRouting = {
 		appliesWhen: "새 `scope_slug`를 만들거나 기존 식별자를 복사·이름 변경할 때. 서로 다른 컴포넌트가 같은 식별자를 쓸 가능성이 있을 때.",
 		reviewWith: [],
 	},
-	"ownership-choose-scope-prefix-by-reuse-range": {
-		appliesWhen: "새 CSS 파일을 만들면서 `pg_`, `wg_`, `ui_` 중 하나를 고를 때. 소유자의 재사용 범위가 바뀌어 접두사를 옮길 때.",
+	"ownership-choose-scope-prefix-by-owner-layer": {
+		appliesWhen: "새 CSS 파일을 만들면서 `pg_`, `wg_`, `ui_` 중 하나를 고를 때. 소유자의 레이어가 바뀌어 접두사를 옮길 때.",
 		reviewWith: ["ownership-give-each-file-one-scope-slug", "ownership-use-foreign-classes-only-under-your-own-root"],
 	},
 	"ownership-use-foreign-classes-only-under-your-own-root": {
@@ -523,7 +523,7 @@ const cssRuleRouting = {
 const reactRuleRouting = {
 	"ownership-layer-component-boundaries": {
 		appliesWhen: "컴포넌트를 `ui`, `widget`, `page` 중 어느 소유 레이어에 둘지 정할 때. 컴포넌트를 레이어 사이에서 옮기거나 공용화할 때.",
-		reviewWith: ["ownership-place-owner-files-in-role-folders", "css/ownership-choose-scope-prefix-by-reuse-range"],
+		reviewWith: ["ownership-place-owner-files-in-role-folders", "css/ownership-choose-scope-prefix-by-owner-layer"],
 	},
 	"ownership-prefix-layer-names-on-files-and-symbols": {
 		appliesWhen: "컴포넌트 파일이나 심볼 이름을 새로 지을 때. 컴포넌트를 다른 레이어로 옮기면서 이름을 바꿀 때.",
@@ -532,7 +532,7 @@ const reactRuleRouting = {
 	"ownership-place-owner-files-in-role-folders": {
 		appliesWhen:
 			"소유자 아래 `component`·`config`·`function`·`hook`·`type` 폴더를 만들거나 옮길 때. 추출한 컴포넌트·함수·타입의 배치 위치를 정할 때. 제외: 기존 파일 내부 구현만 바꾸는 경우.",
-		reviewWith: ["ownership-keep-component-imports-flowing-downward", "css/ownership-choose-scope-prefix-by-reuse-range"],
+		reviewWith: ["ownership-keep-component-imports-flowing-downward", "css/ownership-choose-scope-prefix-by-owner-layer"],
 	},
 	"ownership-keep-component-imports-flowing-downward": {
 		appliesWhen:
@@ -1003,7 +1003,7 @@ const reactScenarioStages = {
 					"naming-name-elements-and-modifiers-by-role",
 					"naming-keep-page-slug-traceable",
 					"ownership-give-each-file-one-scope-slug",
-					"ownership-choose-scope-prefix-by-reuse-range",
+					"ownership-choose-scope-prefix-by-owner-layer",
 					"ownership-use-foreign-classes-only-under-your-own-root",
 					"composition-compose-classes-with-clsx",
 					"composition-do-not-build-structural-variants-with-modifiers",
@@ -1411,7 +1411,7 @@ const cssScenarioStages = {
 					"naming-name-elements-and-modifiers-by-role",
 					"naming-keep-page-slug-traceable",
 					"ownership-give-each-file-one-scope-slug",
-					"ownership-choose-scope-prefix-by-reuse-range",
+					"ownership-choose-scope-prefix-by-owner-layer",
 					"ownership-use-foreign-classes-only-under-your-own-root",
 					"composition-compose-classes-with-clsx",
 				],
@@ -1424,7 +1424,7 @@ const cssScenarioStages = {
 				"pg-post-index.css holds both the page shell and the filter dialog; move the dialog styles into the component own CSS file and give that file its own slug.",
 			files: ["src/page/post-index/pg-post-index.css", "src/page/post-index/component/pg-post-filter-dialog.css"],
 			expectedSkills: ["css"],
-			expectedSelected: {css: ["ownership-give-each-file-one-scope-slug", "ownership-choose-scope-prefix-by-reuse-range"]},
+			expectedSelected: {css: ["ownership-give-each-file-one-scope-slug", "ownership-choose-scope-prefix-by-owner-layer"]},
 		},
 	},
 	"css-domain-state-class-contract": {
@@ -2233,7 +2233,7 @@ test("React routing manifest is the exact seventeen-scenario Appendix B/D oracle
 	assert.equal(cssDrift.expectedSelected.typescript?.includes("docs-write-concise-korean-comments-about-purpose-and-constraints"), true);
 	assert.equal(cssDrift.expectedSelected.css?.includes("composition-do-not-build-structural-variants-with-modifiers"), true);
 	assert.equal(cssDrift.expectedSelected.css?.includes("selector-separate-domain-state-modifiers-from-dom-interaction-states"), true);
-	assert.equal(cssDrift.expectedSelected.css?.includes("ownership-choose-scope-prefix-by-reuse-range"), true);
+	assert.equal(cssDrift.expectedSelected.css?.includes("ownership-choose-scope-prefix-by-owner-layer"), true);
 	assert.equal(cssDrift.expectedSelected.css?.includes("naming-keep-page-slug-traceable") ?? false, true);
 
 	const routeSupport = scenarioById.get("RTE03-route-support-extraction");

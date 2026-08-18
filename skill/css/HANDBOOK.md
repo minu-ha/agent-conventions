@@ -33,7 +33,7 @@
     - 1.4 [Keep Page Slugs Traceable to Their Screen](#14-keep-page-slugs-traceable-to-their-screen)
 2. [Ownership and Boundaries](#2-ownership-and-boundaries) — **CRITICAL**
     - 2.1 [Give Each CSS File Its Own `scope_slug`](#21-give-each-css-file-its-own-scope-slug)
-    - 2.2 [Choose the Scope Prefix by Reuse Range](#22-choose-the-scope-prefix-by-reuse-range)
+    - 2.2 [Choose the Scope Prefix by Owner Layer](#22-choose-the-scope-prefix-by-owner-layer)
     - 2.3 [Use Foreign Classes Only Under Your Own Root](#23-use-foreign-classes-only-under-your-own-root)
     - 2.4 [Change Other Owners Through Their API](#24-change-other-owners-through-their-api)
 3. [Class Composition in TSX](#3-class-composition-in-tsx) — **HIGH**
@@ -318,36 +318,36 @@ pg_catalogIndex__header
 pg_dashboardIndex__header
 ```
 
-### 2.2 Choose the Scope Prefix by Reuse Range
+### 2.2 Choose the Scope Prefix by Owner Layer
 
-**Rule:** `C02-02` · `ownership-choose-scope-prefix-by-reuse-range`
+**Rule:** `C02-02` · `ownership-choose-scope-prefix-by-owner-layer`
 
-**Applies when:** 새 CSS 파일을 만들면서 `pg_`, `wg_`, `ui_` 중 하나를 고를 때. 소유자의 재사용 범위가 바뀌어 접두사를 옮길 때.
+**Applies when:** 새 CSS 파일을 만들면서 `pg_`, `wg_`, `ui_` 중 하나를 고를 때. 소유자의 레이어가 바뀌어 접두사를 옮길 때.
 
 **Review with:** `ownership-give-each-file-one-scope-slug`, `ownership-use-foreign-classes-only-under-your-own-root`
 
-**Impact: MEDIUM-HIGH (접두사를 재사용 범위로 정하면 이름만 보고 어디서 쓰이는지 압니다)**
+**Impact: MEDIUM-HIGH (접두사를 소유 레이어로 정하면 이름만 보고 어느 레이어 것인지 압니다)**
 
-범위 접두사가 뜻하는 것은 그 CSS 파일 소유자의 **재사용 범위**입니다.
-재사용 범위는 파일이 `src/page`, `src/widget`, `src/ui` 중 어디 아래 있는지로 이미 정해져 있으니
+범위 접두사가 뜻하는 것은 그 CSS 파일 소유자가 속한 **레이어**입니다.
+레이어는 파일이 `src/page`, `src/widget`, `src/ui` 중 어디 아래 있는지로 이미 정해져 있으니
 접두사는 그 최상위 폴더를 따릅니다.
 폴더 깊이는 보지 않습니다.
 
-| 접두사 | 재사용 범위 |
+| 접두사 | 소유 레이어 |
 | --- | --- |
-| `pg_` | 한 화면 안에서만 쓰이는 화면 뼈대와 컴포넌트 |
-| `wg_` | 여러 화면이 재사용하는 위젯과 그 부품 |
-| `ui_` | 도메인 지식이 없는 원자 컴포넌트와 그 부품 |
+| `pg_` | 화면을 아는 화면 뼈대와 컴포넌트 |
+| `wg_` | 도메인은 알고 화면은 모르는 컴포넌트 |
+| `ui_` | 도메인도 화면도 모르는 컴포넌트 |
 
 `pg_`는 화면 뼈대와 그 아래 컴포넌트를 함께 덮습니다.
 뼈대는 식별자가 라우트 이름과 같아서 접두사를 따로 나누지 않아도 컴포넌트와 구분됩니다.
 
 - 위젯 내부 부품이 `component` 폴더에 있어도 최상위 폴더가 `src/widget`이라 `wg_`입니다.
-- 한 화면에서만 쓰는 컴포넌트에는 `wg_`를 붙이지 않습니다.
-  재사용을 예상해서 미리 올리지 않습니다.
-- 여러 화면이 쓰기 시작하면 그때 `pg_`에서 `wg_`로 옮깁니다.
+- 사용 횟수는 레이어를 가르지 않습니다.
+  재사용을 예상해서 미리 `wg_`로 올리지도, 한 화면만 쓴다고 `pg_`로 내리지도 않습니다.
+- 소유자가 레이어를 옮기면 접두사도 함께 옮깁니다.
 
-어떤 파일이 화면 소유인지는 활성화된 프레임워크 규약이 판단합니다.
+컴포넌트가 어느 레이어 것인지는 활성화된 프레임워크 규약이 판단합니다.
 
 **Incorrect (최상위 폴더 대신 하위 폴더를 보고 `widget` 부품을 화면 범위로 내림):**
 
@@ -356,14 +356,14 @@ widget/chart/component/wg-chart-header.css
   pg_chartHeader__root
 ```
 
-**Incorrect (한 화면만 쓰는 컴포넌트를 재사용 예상으로 미리 `wg_`로 올림):**
+**Incorrect (`src/page` 아래 파일에 재사용 예상으로 `wg_`를 붙임):**
 
 ```txt
 page/detail/component/pg-sales-trend-panel.css
   wg_salesTrendPanel__root
 ```
 
-**Correct (재사용 범위대로 접두사를 붙임):**
+**Correct (소유 레이어대로 접두사를 붙임):**
 
 ```txt
 page/detail/pg-detail.css
@@ -506,16 +506,16 @@ ui/button/ui-button.css
 | 상황 | 방법 | 바꾸는 곳 |
 | --- | --- | --- |
 | 최상위 배치만 다름 | 사용처가 `className`을 넘기고 자기 클래스로 스타일을 줌 | 사용처 TSX와 사용처 CSS |
-| 여러 화면이 쓰고 하나만 내부가 다름 | 그 소유자가 `variant` 프롭으로 수정자를 노출 | 소유자 TSX와 소유자 CSS, 사용처 TSX |
-| 이 화면만 씀 | 화면 폴더 안으로 내림 | 파일 위치와 접두사 |
+| 내부 모습이 사용처 하나에서만 다름 | 그 소유자가 `variant` 프롭으로 수정자를 노출 | 소유자 TSX와 소유자 CSS, 사용처 TSX |
+| 레이어 판정이 화면 소유로 나옴 | 화면 폴더 안으로 내림 | 파일 위치와 접두사 |
 
 세 행에 안 맞으면 `ownership-use-foreign-classes-only-under-your-own-root` 규칙에 따라
 내 최상위 블록 안에서 겨냥합니다.
 **막다른 길이 아니라 마지막 선택지입니다.**
 
 셋째 행을 흔히 놓칩니다.
-한 화면만 쓰는 컴포넌트는 위젯이 아닙니다.
-승격 기준은 서로 다른 화면 소유자 둘 이상이 이미 그 컴포넌트를 가져다 쓰는지입니다.
+내리는 기준은 사용 횟수가 아니라 레이어 판정입니다.
+컴포넌트가 어느 레이어 것인지는 활성화된 프레임워크 규약이 판단합니다.
 내릴 때 프롭을 열지 않습니다.
 파일만 옮깁니다.
 
@@ -563,11 +563,11 @@ ui/button/ui-button.css
 }
 ```
 
-**Correct (이 화면만 다르면 화면 안으로 내려 소유자를 하나로 만듦):**
+**Correct (레이어 판정이 화면 소유면 화면 안으로 내려 소유자를 하나로 만듦):**
 
 ```txt
 before
-  widget/chart-card/wg-chart-card.tsx      여러 화면이 쓰지 않음
+  widget/chart-card/wg-chart-card.tsx      detail 화면의 뷰모델 타입을 받음
   widget/chart-card/wg-chart-card.css      pg_detail 만 내부를 override 하고 있었음
 
 after

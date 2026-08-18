@@ -8,7 +8,7 @@ appliesWhen:
   - 추출한 컴포넌트·함수·타입의 배치 위치를 정할 때
   - 제외: 기존 파일 내부 구현만 바꾸는 경우
 reviewWith: >-
-  ownership-keep-component-imports-flowing-downward, css/ownership-choose-scope-prefix-by-reuse-range
+  ownership-keep-component-imports-flowing-downward, css/ownership-choose-scope-prefix-by-owner-layer
 tags: ownership
 ---
 

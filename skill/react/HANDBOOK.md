@@ -103,17 +103,18 @@
 
 **Applies when:** 컴포넌트를 `ui`, `widget`, `page` 중 어느 소유 레이어에 둘지 정할 때. 컴포넌트를 레이어 사이에서 옮기거나 공용화할 때.
 
-**Review with:** `css/ownership-choose-scope-prefix-by-reuse-range`, `ownership-place-owner-files-in-role-folders`
+**Review with:** `css/ownership-choose-scope-prefix-by-owner-layer`, `ownership-place-owner-files-in-role-folders`
 
 **Impact: CRITICAL (공용 책임과 화면 전용 책임이 같은 레이어에 섞이지 않습니다)**
 
 컴포넌트는 셋 중 한 레이어가 소유합니다.
+판정 축은 컴포넌트가 무엇을 아는가 하나입니다.
 
-| 레이어 | 책임 |
+| 레이어 | 담는 컴포넌트 |
 | --- | --- |
-| `ui` | 도메인을 모르는 순수 화면 |
-| `widget` | 화면 조립을 전제하지 않는 공용 조합 |
-| `page` | 한 화면 안에서만 쓰이는 뼈대와 컴포넌트 |
+| `ui` | 도메인도 화면도 모르는 컴포넌트 |
+| `widget` | 도메인은 알고 화면은 모르는 컴포넌트 |
+| `page` | 화면을 아는 뼈대와 컴포넌트 |
 
 이름 표기는 `ownership-prefix-layer-names-on-files-and-symbols`가 정합니다.
 여기서는 어느 레이어인지만 판정합니다.
@@ -131,8 +132,13 @@
   이름에 도메인 단어가 남아도 됩니다.
 
 사용 횟수는 판정 기준이 아닙니다.
-한 화면에서만 쓰여도 위 셋에 해당하지 않으면 `widget`입니다.
+한 화면에서만 쓰여도 위 셋에 해당하지 않으면 `page`가 아닙니다.
 사용 횟수로 판정하면 쓰임이 변할 때마다 컴포넌트가 폴더를 옮겨 다니게 됩니다.
+
+조립 규모도 판정 기준이 아닙니다.
+`ui` 부품 여럿을 조립한 컴포넌트라도 도메인을 모르면 `ui`입니다.
+조립 규모로 판정하면 도메인을 모르는 조합이 전부 `widget`에 쌓여
+레이어 이름이 소유를 말하지 못하게 됩니다.
 
 **Incorrect (공용 레이어에 화면 전용 로직이 섞임):**
 
@@ -152,6 +158,16 @@ const UiDeleteProductButton = () => {
 // 프롭스가 도메인 타입 하나만 받고 훅도 부르지 않는다. 이 화면에서만 쓴다는 이유로 남아 있다.
 export const PgSalesLegendGlyph = (props: PgSalesLegendGlyphProps) => {
 	return <svg className={clsx("pg_salesLegendGlyph__root")}>{/* ... */}</svg>;
+};
+```
+
+**Incorrect (도메인을 모르는 조합을 조립 규모만 보고 `widget`에 둠):**
+
+```tsx
+// widget/line-chart/wg-line-chart.tsx
+// 프롭스가 좌표 배열만 받고 도메인 타입을 모른다. ui 부품을 조립했다는 이유로 widget에 있다.
+export const WgLineChart = (props: WgLineChartProps) => {
+	return <svg className={clsx("wg_lineChart__root")}>{/* ... */}</svg>;
 };
 ```
 
@@ -193,6 +209,22 @@ export const WgProductToolbar = (props: WgProductToolbarProps) => {
 // widget/sales-legend-glyph/wg-sales-legend-glyph.tsx
 export const WgSalesLegendGlyph = (props: WgSalesLegendGlyphProps) => {
 	return <svg className={clsx("wg_salesLegendGlyph__root")}>{/* ... */}</svg>;
+};
+```
+
+**Correct (도메인을 모르는 조합은 `ui`로 내리고 도메인을 아는 조합만 `widget`에 남김):**
+
+```tsx
+// ui/line-chart/ui-line-chart.tsx
+export const UiLineChart = (props: UiLineChartProps) => {
+	return <svg className={clsx("ui_lineChart__root")}>{/* ... */}</svg>;
+};
+```
+
+```tsx
+// widget/sales-window-chart/wg-sales-window-chart.tsx
+export const WgSalesWindowChart = (props: WgSalesWindowChartProps) => {
+	return <UiLineChart points={toChartPoints(props.readings)} />;
 };
 ```
 
@@ -273,7 +305,7 @@ export const PgSalesTrendPanel = (props: PgSalesTrendPanelProps) => {
 
 **Applies when:** 소유자 아래 `component`·`config`·`function`·`hook`·`type` 폴더를 만들거나 옮길 때. 추출한 컴포넌트·함수·타입의 배치 위치를 정할 때. 제외: 기존 파일 내부 구현만 바꾸는 경우.
 
-**Review with:** `css/ownership-choose-scope-prefix-by-reuse-range`, `ownership-keep-component-imports-flowing-downward`
+**Review with:** `css/ownership-choose-scope-prefix-by-owner-layer`, `ownership-keep-component-imports-flowing-downward`
 
 **Impact: MEDIUM-HIGH (빼낸 파일이 소유자를 따라가 예상한 자리에 놓입니다)**
 
