@@ -15,7 +15,7 @@ tags: ownership, widget, naming
 **Impact: CRITICAL (공용 책임과 화면 전용 책임이 같은 레이어에 섞이지 않습니다)**
 
 컴포넌트는 셋 중 한 레이어가 소유합니다.
-판정 축은 컴포넌트가 무엇을 아는가 하나입니다.
+레이어는 컴포넌트가 무엇을 아는가로만 가릅니다.
 
 | 레이어 | 담는 컴포넌트 |
 | --- | --- |
@@ -39,7 +39,7 @@ tags: ownership, widget, naming
   이름에 도메인 단어가 남아도 됩니다.
 
 사용 횟수는 판정 기준이 아닙니다.
-한 화면에서만 쓰여도 위 셋에 해당하지 않으면 `page`가 아닙니다.
+한 화면에서만 쓰여도 위 `page` 판정에 해당하지 않으면 `page`가 아닙니다.
 사용 횟수로 판정하면 쓰임이 변할 때마다 컴포넌트가 폴더를 옮겨 다니게 됩니다.
 
 조립 규모도 판정 기준이 아닙니다.
@@ -75,38 +75,6 @@ export const PgSalesLegendGlyph = (props: PgSalesLegendGlyphProps) => {
 // 프롭스가 좌표 배열만 받고 도메인 타입을 모른다. ui 부품을 조립했다는 이유로 widget에 있다.
 export const WgLineChart = (props: WgLineChartProps) => {
 	return <svg className={clsx("wg_lineChart__root")}>{/* ... */}</svg>;
-};
-```
-
-**Correct (레이어별 책임과 이름이 분리됨):**
-
-```tsx
-// ui/button/ui-button.tsx
-/**
- * 도메인을 모르는 버튼 계약
- *
- * 표시할 글자를 프롭으로 받지 않고 `children`으로 받아 문구 결정을 사용처에 남긴다.
- */
-export interface UiButtonProps {
-	/**
-	 * 버튼 안에 그릴 내용. 이 글자가 스크린 리더가 읽는 이름이 된다
-	 */
-	children: ReactNode;
-	/**
-	 * 눌렀을 때
-	 */
-	onClick: MouseEventHandler<HTMLButtonElement>;
-}
-
-export const UiButton = (props: UiButtonProps) => {
-	return <button onClick={props.onClick}>{props.children}</button>;
-};
-```
-
-```tsx
-// widget/product-toolbar/wg-product-toolbar.tsx
-export const WgProductToolbar = (props: WgProductToolbarProps) => {
-	return <UiButton onClick={props.onClose}>닫기</UiButton>;
 };
 ```
 
