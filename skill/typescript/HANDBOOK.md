@@ -1188,13 +1188,14 @@ const toRequestUrl = (target: ApiRequestTarget): URL => {
 
 기본은 빼지 않는 것입니다.
 흐름은 한 자리에서 위에서 아래로 읽히는 편이 낫습니다.
-빼는 사유는 둘뿐입니다.
-둘 중 하나에 해당해야 뺍니다.
+빼는 사유는 셋뿐입니다.
+셋 중 하나에 해당해야 뺍니다.
 
 | 사유 | 조건 |
 | --- | --- |
 | 재사용 | **이 변경을 적용한 뒤의 트리**에서 서로 다른 파일 둘 이상이 실제로 부릅니다. 사용처를 나중에 추가할 계획만 있으면 세지 않습니다 |
 | 렌더 파일 밖으로 | `.tsx` 안의 **요청·저장 payload 조립** 함수입니다. 훅·JSX·컴포넌트 상태를 하나도 쓰지 않으면 사용처가 하나여도 `.ts`로 옮깁니다 |
+| 전용 보조 | 같은 파일에서 그 함수만 부르는 보조가 **둘 이상** 딸려 있습니다. 전용 보조는 새 파일 안에 비공개로 따라갑니다 |
 
 두 번째 사유는 재사용이 아니라 `.tsx`에 렌더가 아닌 코드를 남기지 않으려는 것입니다.
 `.ts` 안에서는 해당하지 않습니다.
@@ -1207,13 +1208,17 @@ const toRequestUrl = (target: ApiRequestTarget): URL => {
 어느 사유든 그 함수만 따로 읽어도 뜻이 통해야 합니다.
 바깥 변수, 훅, 컴포넌트 상태에 기대면 아직 뺄 수 없습니다.
 
-**`.ts` 안에서 같은 파일만 쓰는 함수는 몇 번 반복되든 다른 파일로 빼지 않습니다.**
+**같은 파일 안에서 몇 번 불리는지는 사유가 아닙니다.**
 이 규칙은 파일 경계만 봅니다.
 같은 파일 안에서 비공개 함수로 단계를 나누는 것은 대상이 아닙니다.
 같은 계산을 두세 번 적어도 괜찮습니다.
 파일을 하나 더 여는 쪽이 더 비쌉니다.
-"나중에 또 쓸 것 같아서"는 사유가 아닙니다.
+"나중에 또 쓸 것 같아서"도 사유가 아닙니다.
 그때 가서 뺍니다.
+
+전용 보조 사유는 반대 방향의 넘침을 막습니다.
+단계가 다시 단계를 거느리기 시작하면 한 파일이 계속 자랍니다.
+그때부터는 한 파일에 계속 두는 쪽이 더 비쌉니다.
 
 사유와 무관하게 빼지 않는 것:
 
@@ -1254,6 +1259,18 @@ export const api = {
 		},
 	},
 };
+```
+
+**Incorrect (전용 보조가 딸린 단계를 한 파일에 계속 쌓음):**
+
+```txt
+page/report/function/map-sales-report-response.ts
+  mapSalesReportResponse   내보낸 함수
+  toSummaryBand            내보낸 함수만 부름. 전용 보조 없음
+  toTrendChart             내보낸 함수만 부름. 전용 보조 셋이 딸림
+  toTrendBasePoints        toTrendChart만 부름
+  toTrendBaseLabel         toTrendChart만 부름
+  mapTrendPoints           toTrendChart만 부름
 ```
 
 **Correct (작은 계산은 쓰는 자리에 그대로 둠):**
@@ -1320,6 +1337,14 @@ export const toProductSaveRequest = (formValues: ProductFormValues) => {
 import { toProductSaveRequest } from "./function/to-product-save-request";
 ```
 
+**Correct (전용 보조가 딸린 단계만 자기 파일로 나감):**
+
+```txt
+page/report/function/map-sales-report-response/
+├── map-sales-report-response.ts   내보낸 함수와 toSummaryBand가 남음
+└── to-trend-chart.ts              전용 보조 셋을 비공개로 품음
+```
+
 ### 3.4 Place and Promote Support Functions Deliberately
 
 **Rule:** `T03-04` · `functions-place-and-promote-support-functions`
@@ -1336,10 +1361,15 @@ import { toProductSaveRequest } from "./function/to-product-save-request";
 - 소유자 아래에 `helper.ts`, `helpers.ts`, `utils.ts` 같은 잡동사니 파일을 만들지 않습니다.
   어느 폴더에 둘지는 프레임워크 컨벤션의 역할 폴더 규칙이 정합니다.
 - 소유자 아래에서는 내보낸 대표 함수 하나당 파일 하나입니다.
+  전용 보조가 파일로 나가면 대표 함수는 자기 이름 폴더를 갖고, 나간 파일은 그 안에 둡니다.
   전역 `shared/util.ts`는 프로젝트 전반이 쓰는 함수를 한 네임스페이스에 모으는 자리라 예외입니다.
-- 호출 깊이는 소유자에서 내보낸 함수, 그 파일 안 비공개 함수까지 두 단계로 끝냅니다.
-  내보낸 함수가 또 다른 내보낸 함수를 타고 가는 사슬은 만들지 않습니다.
-  단계를 나누고 싶으면 내보내지 말고 한 함수 본문 안에 지역 변수로 둡니다.
+- 호출 깊이는 파일마다 내보낸 함수 하나, 그 파일 안 비공개 함수까지 두 단계로 끝냅니다.
+  단계가 더 필요하면 먼저 같은 파일의 비공개 함수로 두고,
+  파일로 나갈지는 `functions-extract-helpers-only-when-the-boundary-is-real`의 사유가 정합니다.
+- 자기 폴더 밖에서는 내보낸 함수가 내보낸 함수를 타고 가는 사슬을 만들지 않습니다.
+  대표 함수가 자기 폴더 안 파일을 부르는 것은 사슬이 아니라 그 함수의 내부입니다.
+  자기 폴더 안 파일을 가져오는 것은 그 대표 함수뿐이고,
+  다른 파일도 부르게 되면 재사용이 생긴 것이니 `function` 바로 아래로 꺼냅니다.
 
 **공용 승격은 그 함수가 누구 것인지로 판정합니다.**
 `shared/util.ts`의 `util.*`는 프로젝트 전반이 쓰는 함수를 담습니다.
@@ -1431,6 +1461,16 @@ export const util = {
 export const toProductSaveRequest = (values: ProductFormValues) => {
 	return {body: {title: values.title.trim()}};
 };
+```
+
+**Correct (전용 보조가 나간 대표 함수는 자기 이름 폴더를 가짐):**
+
+```txt
+page/report/function/
+├── map-sales-report-response/
+│   ├── map-sales-report-response.ts   대표 함수. 자기 폴더 안 파일을 조립
+│   └── to-trend-chart.ts              이 폴더 밖에서는 가져오지 않음
+└── to-sales-filter-request.ts
 ```
 
 **Correct (소유자를 지워도 남는 함수는 도메인 계약을 받아도 올림):**

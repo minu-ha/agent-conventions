@@ -20,10 +20,15 @@ tags: functions, boundaries
 - 소유자 아래에 `helper.ts`, `helpers.ts`, `utils.ts` 같은 잡동사니 파일을 만들지 않습니다.
   어느 폴더에 둘지는 프레임워크 컨벤션의 역할 폴더 규칙이 정합니다.
 - 소유자 아래에서는 내보낸 대표 함수 하나당 파일 하나입니다.
+  전용 보조가 파일로 나가면 대표 함수는 자기 이름 폴더를 갖고, 나간 파일은 그 안에 둡니다.
   전역 `shared/util.ts`는 프로젝트 전반이 쓰는 함수를 한 네임스페이스에 모으는 자리라 예외입니다.
-- 호출 깊이는 소유자에서 내보낸 함수, 그 파일 안 비공개 함수까지 두 단계로 끝냅니다.
-  내보낸 함수가 또 다른 내보낸 함수를 타고 가는 사슬은 만들지 않습니다.
-  단계를 나누고 싶으면 내보내지 말고 한 함수 본문 안에 지역 변수로 둡니다.
+- 호출 깊이는 파일마다 내보낸 함수 하나, 그 파일 안 비공개 함수까지 두 단계로 끝냅니다.
+  단계가 더 필요하면 먼저 같은 파일의 비공개 함수로 두고,
+  파일로 나갈지는 `functions-extract-helpers-only-when-the-boundary-is-real`의 사유가 정합니다.
+- 자기 폴더 밖에서는 내보낸 함수가 내보낸 함수를 타고 가는 사슬을 만들지 않습니다.
+  대표 함수가 자기 폴더 안 파일을 부르는 것은 사슬이 아니라 그 함수의 내부입니다.
+  자기 폴더 안 파일을 가져오는 것은 그 대표 함수뿐이고,
+  다른 파일도 부르게 되면 재사용이 생긴 것이니 `function` 바로 아래로 꺼냅니다.
 
 **공용 승격은 그 함수가 누구 것인지로 판정합니다.**
 `shared/util.ts`의 `util.*`는 프로젝트 전반이 쓰는 함수를 담습니다.
@@ -115,6 +120,16 @@ export const util = {
 export const toProductSaveRequest = (values: ProductFormValues) => {
 	return {body: {title: values.title.trim()}};
 };
+```
+
+**Correct (전용 보조가 나간 대표 함수는 자기 이름 폴더를 가짐):**
+
+```txt
+page/report/function/
+├── map-sales-report-response/
+│   ├── map-sales-report-response.ts   대표 함수. 자기 폴더 안 파일을 조립
+│   └── to-trend-chart.ts              이 폴더 밖에서는 가져오지 않음
+└── to-sales-filter-request.ts
 ```
 
 **Correct (소유자를 지워도 남는 함수는 도메인 계약을 받아도 올림):**
