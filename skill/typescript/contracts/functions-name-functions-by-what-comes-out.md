@@ -17,11 +17,28 @@
 `.toSorted()`처럼 표준 라이브러리가 `to`를 붙이는 자리도 같은 이유입니다.
 원본을 두고 새 값을 돌려준다는 사실을 접두사가 말합니다.
 
+**이름에 넣는 것은 출력뿐입니다.**
+
+- 입력은 이름에 넣지 않습니다.
+  시그니처가 이미 말합니다.
+  이름에 `Response`가 보이면 출력이 아니라 입력을 이름 지은 것입니다.
+- 소유자 폴더가 말하는 도메인은 되풀이하지 않습니다.
+  `sales-trend-panel/function/` 안에서는 `toSalesTrendComparisonWindows`가 아니라 `toComparisonWindows`입니다.
+  같은 이름이 다른 소유자 아래 또 생겨도 가져오기 경로가 가릅니다.
+- 반환 타입 이름을 그대로 옮기지 않습니다.
+  `toReportViewModel`이 아니라 화면이 부르는 개념으로 `toReportRows`처럼 짓습니다.
+  서버로 보내는 값은 요청 계약이 곧 출력이라 `toUserSaveRequest`가 그대로 이름입니다.
+
 **`filter`는 첫 동사로 쓰지 않습니다.**
 `filterActiveUsers`는 활성 사용자를 남기는지 빼는지 말하지 않습니다.
 영어 filter는 거르는 쪽으로도 남기는 쪽으로도 읽히는데 `Array.prototype.filter`는 남기는 쪽입니다.
 이름이 정반대로 읽힐 수 있으면 결과를 말한 것이 아닙니다.
 남는 것을 이름에 담아 `toActiveUsers`로 씁니다.
+
+**`map`도 첫 동사로 쓰지 않습니다.**
+바꾼다는 동작만 말하고 무엇이 나오는지 말하지 않습니다.
+`mapProductRows`는 rows가 들어가는 쪽인지 나오는 쪽인지도 흐립니다.
+`to<결과>`로 바꾸면 `.map(toProductRow)`처럼 콜백 자리에서도 그대로 읽힙니다.
 
 **값이 아니라 효과를 내는 함수는 하는 일로 짓습니다.**
 돌려줄 값이 없으니 결과로 부를 수 없습니다.
@@ -38,7 +55,7 @@
 첫 동사로 쓰지 않는 낱말입니다.
 무엇이 나오는지를 어떤 자리에서도 말해 주지 않습니다.
 
-`build`, `create`, `make`, `process`, `manage`, `do`, `perform`, `execute`, `filter`
+`build`, `create`, `make`, `process`, `manage`, `do`, `perform`, `execute`, `filter`, `map`
 
 - `normalize`나 `resolve`처럼 대상에 따라 갈리는 동사는 위 기준으로 판정합니다.
   `normalizePath`는 경로가 나온다고 말하지만 `normalizeUserValues`는 아무것도 말하지 않습니다.

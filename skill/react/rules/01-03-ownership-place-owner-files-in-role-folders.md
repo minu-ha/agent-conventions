@@ -84,10 +84,10 @@ page/detail/
 ├── pg-detail.tsx
 ├── pg-detail.css
 ├── function/
-│   ├── to-product-view-model.ts
-│   └── map-detail-response/
-│       ├── map-detail-response.ts
-│       └── to-sales-chart.ts
+│   ├── to-product-summary.ts
+│   └── to-sales-chart/
+│       ├── to-sales-chart.ts
+│       └── to-chart-window.ts
 ├── type/
 │   └── detail-view-model.ts
 └── component/

@@ -132,19 +132,19 @@ export const toProductSaveRequest = (values: ProductFormValues) => {
 **Correct (내보낸 함수가 맨 위, 불리는 쪽이 호출자 아래로 이어짐):**
 
 ```ts
-// page/report/function/to-report-view-model.ts
+// page/report/function/to-summary-rows.ts
 /**
- * report 목록 화면이 그리는 뷰모델 조립
+ * 요약 표가 그리는 행 목록. 이름이 비면 코드로 표시한다
  */
-export const toReportViewModel = (response: ReportResponse): ReportViewModel => {
-	return {rows: response.items.map(toReportRow)};
+export const toSummaryRows = (response: SalesSummaryResponse): SummaryRow[] => {
+	return response.items.map(toSummaryRow);
 };
 
-const toReportRow = (item: ReportItem): ReportRow => {
-	return {id: item.id, label: toReportLabel(item)};
+const toSummaryRow = (item: SalesSummaryItem): SummaryRow => {
+	return {id: item.id, label: toSummaryLabel(item)};
 };
 
-const toReportLabel = (item: ReportItem): string => {
+const toSummaryLabel = (item: SalesSummaryItem): string => {
 	return item.name.trim() || item.code;
 };
 ```
@@ -153,9 +153,9 @@ const toReportLabel = (item: ReportItem): string => {
 
 ```txt
 page/report/function/
-├── map-sales-report-response/
-│   ├── map-sales-report-response.ts   대표 함수. 자기 폴더 안 파일을 조립
-│   └── to-trend-chart.ts              이 폴더 밖에서는 가져오지 않음
+├── to-sales-overview/
+│   ├── to-sales-overview.ts   대표 함수. 자기 폴더 안 파일을 조립
+│   └── to-trend-chart.ts      이 폴더 밖에서는 가져오지 않음
 └── to-sales-filter-request.ts
 ```
 

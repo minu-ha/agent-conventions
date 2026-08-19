@@ -92,13 +92,13 @@ export const api = {
 **Incorrect (전용 보조가 딸린 단계를 한 파일에 계속 쌓음):**
 
 ```txt
-page/report/function/map-sales-report-response.ts
-  mapSalesReportResponse   내보낸 함수
+page/report/function/to-sales-overview.ts
+  toSalesOverview          내보낸 함수
   toSummaryBand            내보낸 함수만 부름. 전용 보조 없음
   toTrendChart             내보낸 함수만 부름. 전용 보조 셋이 딸림
   toTrendBasePoints        toTrendChart만 부름
   toTrendBaseLabel         toTrendChart만 부름
-  mapTrendPoints           toTrendChart만 부름
+  toTrendPoints            toTrendChart만 부름
 ```
 
 **Correct (작은 계산은 쓰는 자리에 그대로 둠):**
@@ -168,7 +168,7 @@ import { toProductSaveRequest } from "./function/to-product-save-request";
 **Correct (전용 보조가 딸린 단계만 자기 파일로 나감):**
 
 ```txt
-page/report/function/map-sales-report-response/
-├── map-sales-report-response.ts   내보낸 함수와 toSummaryBand가 남음
-└── to-trend-chart.ts              전용 보조 셋을 비공개로 품음
+page/report/function/to-sales-overview/
+├── to-sales-overview.ts   내보낸 함수와 toSummaryBand가 남음
+└── to-trend-chart.ts      전용 보조 셋을 비공개로 품음
 ```
