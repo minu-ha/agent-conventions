@@ -58,7 +58,7 @@
     - 5.5 [Use Activity Only to Preserve Mounted Subtrees](#55-use-activity-only-to-preserve-mounted-subtrees)
     - 5.6 [Declare Props Interfaces Above the Component](#56-declare-props-interfaces-above-the-component)
     - 5.7 [Write Fragments as `Fragment`, Not the Shorthand](#57-write-fragments-as-fragment-not-the-shorthand)
-    - 5.8 [Render a Single Branch With `&&`, Not a Ternary](#58-render-a-single-branch-with-not-a-ternary)
+    - 5.8 [Render JSX Branches With Explicit Conditions](#58-render-jsx-branches-with-explicit-conditions)
     - 5.9 [Order Hooks, Handlers, Effects, Then Return](#59-order-hooks-handlers-effects-then-return)
 6. [Screen File Discipline](#6-screen-file-discipline) — **MEDIUM-HIGH**
     - 6.1 [Keep Route Entry Files Focused on Screen Flow](#61-keep-route-entry-files-focused-on-screen-flow)
@@ -673,12 +673,9 @@ const mutationProductRemove = useProductRemove();
   그 자리는 `data-combine-multiple-queries-with-combine`이 정합니다.
 
 **`select`는 인라인으로 적습니다.**
-인라인이면 렌더마다 다시 도는데, 그 비용은 렌더 중에 값을 계산하는 것과 같습니다.
-`state-calculate-derived-values-during-render`가 이미 허용하는 자리입니다.
-
-변환이 무겁다는 근거가 `perf-avoid-defensive-memoization`이 요구하는 만큼 있으면
-그때만 같은 파일 위쪽의 모듈 최상위 상수로 빼서 참조를 고정합니다.
-결과는 구조를 공유해 참조가 안정적이므로 `useMemo`로 감싸지 않습니다.
+다시 실행된다는 이유만으로 `useCallback`이나 `useMemo`로 감싸지 않습니다.
+React Query의 구조 공유가 바뀌지 않은 부분의 참조를 유지합니다.
+실측 병목일 때만 `perf-avoid-defensive-memoization`의 예외 기준을 따릅니다.
 
 `select` 안 변환 함수는 이 규칙이 담당합니다.
 별도 함수나 보조 모듈 경계가 없으면 `typescript/functions-extract-helpers-only-when-the-boundary-is-real`은
@@ -735,13 +732,10 @@ const responseProductListSuspense = useProductListSuspense(
 합친 값이 화면 위쪽 `const`로 남아 출처를 잃습니다.
 `screen-keep-derived-values-close`가 그것을 막습니다.
 
-**`combine`도 인라인으로 적습니다.** `select`와 같은 자리이고 같은 기준을 씁니다.
-무거워서 렌더마다 도는 것이 문제가 되면 그때만 모듈 최상위 상수로 뺍니다.
-판정은 `data-shape-query-data-with-select`가 정한 것과 같습니다.
-
-합친 결과는 구조 공유되어 참조가 안정적입니다.
-그래서 `useMemo`로 다시 감싸지 않습니다.
-`perf-avoid-defensive-memoization`이 그것을 막습니다.
+**`combine`도 인라인으로 적습니다.**
+다시 실행된다는 이유만으로 `useCallback`이나 `useMemo`로 감싸지 않습니다.
+React Query의 구조 공유가 합친 결과에서 바뀌지 않은 부분의 참조를 유지합니다.
+실측 병목의 예외 기준은 `data-shape-query-data-with-select`가 정합니다.
 
 **Incorrect (화면 본문에서 두 응답을 꺼내 합침):**
 
@@ -1317,6 +1311,8 @@ export const UiTextField = (props: UiTextFieldProps) => {
 **Applies when:** 래퍼가 받은 프롭을 안쪽 컴포넌트나 요소로 넘기는 코드를 추가·변경할 때. 래퍼에 자기 프롭을 더하거나 안쪽 요소를 늘릴 때.
 
 **Requires selected:** `typing-narrow-library-wrapper-contracts` · 함께 적용
+
+**Review with:** `typescript/values-avoid-lookup-tables-for-simple-choices`
 
 **Impact: HIGH (프롭이 엉뚱한 요소로 흘러가지 않고 어디로 가는지가 코드에 남습니다)**
 
@@ -2464,51 +2460,40 @@ export const PgProductRows = (props: PgProductRowsProps) => {
 };
 ```
 
-### 5.8 Render a Single Branch With `&&`, Not a Ternary
+### 5.8 Render JSX Branches With Explicit Conditions
 
 **Rule:** `R05-08` · `composition-render-one-branch-with-and`
 
-**Applies when:** JSX 안에 조건부 렌더링을 추가하거나 조건식을 바꿀 때. 기존 `조건 ? … : null`을 넣거나 뺄 때.
+**Applies when:** JSX 안에 조건부 렌더링을 추가하거나 조건식을 바꿀 때. 기존 JSX 삼항이나 `조건 && …`을 넣거나 뺄 때.
 
-**Impact: HIGH (조건부 렌더링 형태가 하나로 고정되고 쓰지 않는 `: null`이 사라집니다)**
+**Impact: HIGH (각 요소 바로 앞에 표시 조건이 남아 화면 분기를 바로 읽을 수 있습니다)**
 
-JSX 안에서 그릴 분기가 **하나면** `&&`를 씁니다.
-`조건 ? <X /> : null`로 쓰지 않습니다.
-`: null`은 아무것도 안 하면서 눈이 한 번 더 멈추는 자리를 만듭니다.
+JSX 요소를 조건에 따라 그릴 때는 분기마다 `&&`를 따로 적습니다.
+참일 때 그릴 요소와 거짓일 때 그릴 요소를 삼항 하나로 묶지 않습니다.
+각 요소의 표시 조건이 바로 앞에 남아야 합니다.
+두 조건은 같은 판별값을 기준으로 서로 겹치지 않게 적습니다.
 
 컴포넌트가 통째로 아무것도 안 그릴 때는 `&&`를 쓰지 않습니다.
-`&&`는 조건이 거짓이면 `false`를 돌려주는데, 반환값 자리에서는 `null`이 뜻이 더 분명합니다.
-조건을 이른 반환으로 먼저 걸러 냅니다.
+조건을 이른 반환으로 걸러 내고 `null`을 돌려줍니다.
 
-**둘 중 하나를 그릴 때만** 삼항을 씁니다.
-그때는 두 분기가 다 뜻을 갖습니다.
-
-| 그리는 것 | 쓰는 것 |
-| --- | --- |
-| 조건이 참일 때만 | `{조건 && <X />}` |
-| 참일 때와 거짓일 때 각각 | `{조건 ? <X /> : <Y />}` |
+삼항은 JSX 요소가 아니라 문자열·숫자·프롭처럼 값 하나를 고를 때만 씁니다.
 
 **`&&` 왼쪽에 숫자를 두지 않습니다.**
 `0`은 거짓이지만 리액트가 화면에 `0`을 그대로 그립니다.
 `NaN`도 `NaN`으로 그려집니다.
 길이나 개수로 판단할 때는 비교식으로 바꿔 불리언을 만듭니다.
 
-문자열과 객체는 왼쪽에 두어도 됩니다.
-빈 문자열, `undefined`, `null`은 리액트가 아무것도 그리지 않습니다.
-
-삼항을 여러 개 겹치지 않습니다.
 분기가 셋 이상이면 조건을 이름 붙인 값으로 꺼내거나 섹션 컴포넌트로 나눕니다.
 어느 쪽인지는 `screen-extract-local-section-components-for-runtime-boundaries`가 정합니다.
 
 숨긴 하위 트리의 상태를 살려야 하면 `composition-use-activity-only-to-preserve-mounted-subtrees`를 봅니다.
 
-**Incorrect (한 분기인데 삼항과 `: null`을 씀):**
+**Incorrect (JSX 두 분기를 삼항 하나로 묶음):**
 
 ```tsx
 return (
 	<section>
-		{props.helperText ? <span className={clsx("pg_products__helper")}>{props.helperText}</span> : null}
-		{responseProductListSuspense.isFetching ? <UiRefreshIndicator /> : null}
+		{props.view === "chart" ? <PgChart /> : <PgTable />}
 	</section>
 );
 ```
@@ -2519,15 +2504,21 @@ return (
 return <section>{selectedRows.length && <PgProductBulkActionBar />}</section>;
 ```
 
-**Correct (한 분기는 `&&`, 왼쪽은 불리언):**
+**Correct (각 JSX 요소 앞에 표시 조건을 둠):**
 
 ```tsx
 return (
 	<section>
-		{props.helperText && <span className={clsx("pg_products__helper")}>{props.helperText}</span>}
-		{selectedRows.length > 0 && <PgProductBulkActionBar selectedRows={selectedRows} />}
+		{props.view === "chart" && <PgChart />}
+		{props.view === "table" && <PgTable />}
 	</section>
 );
+```
+
+**Correct (한 분기는 `&&`, 왼쪽은 불리언):**
+
+```tsx
+return <section>{selectedRows.length > 0 && <PgProductBulkActionBar selectedRows={selectedRows} />}</section>;
 ```
 
 **Correct (컴포넌트가 통째로 안 그리면 이른 반환):**
@@ -2542,14 +2533,10 @@ const PgProductPanel = (props: PgProductPanelProps) => {
 };
 ```
 
-**Correct (두 분기가 다 뜻을 가지면 삼항):**
+**Correct (프롭 값 하나는 삼항으로 고름):**
 
 ```tsx
-return filteredCategoryNodes.length > 0 ? (
-	<UiTree treeData={filteredCategoryNodes} />
-) : (
-	<UiEmpty description="검색 결과가 없습니다" />
-);
+return <UiBadge tone={props.isSelected ? "accent" : "neutral"} />;
 ```
 
 ### 5.9 Order Hooks, Handlers, Effects, Then Return
@@ -3838,9 +3825,11 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => 
 쓰는 경우는 다음 셋뿐입니다.
 어느 경우든 `typescript/docs-justify-convention-exceptions-with-a-reason-comment`를 따라 이유를 남깁니다.
 
-- 외부 라이브러리가 참조 동일성에 민감할 때
+- 외부 라이브러리에서 참조 변경이 상태 초기화나 구독 재설치로 이어질 때
 - 이펙트 의존성으로 들어가는 객체나 배열이어서 감싸지 않으면 이펙트가 매 렌더 다시 돌 때
 - 병목이 실제로 측정됐을 때
+
+함수나 계산이 다시 실행된다는 사실만으로는 참조 동일성을 고정할 이유가 아닙니다.
 
 이펙트 의존성을 이유로 감쌀 때는 성능이 아니라 정합성 때문입니다.
 객체와 배열은 렌더마다 새 참조라 의존성 비교가 늘 어긋납니다.

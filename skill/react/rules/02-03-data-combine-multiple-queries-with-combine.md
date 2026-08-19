@@ -32,13 +32,10 @@ tags: data, query
 합친 값이 화면 위쪽 `const`로 남아 출처를 잃습니다.
 `screen-keep-derived-values-close`가 그것을 막습니다.
 
-**`combine`도 인라인으로 적습니다.** `select`와 같은 자리이고 같은 기준을 씁니다.
-무거워서 렌더마다 도는 것이 문제가 되면 그때만 모듈 최상위 상수로 뺍니다.
-판정은 `data-shape-query-data-with-select`가 정한 것과 같습니다.
-
-합친 결과는 구조 공유되어 참조가 안정적입니다.
-그래서 `useMemo`로 다시 감싸지 않습니다.
-`perf-avoid-defensive-memoization`이 그것을 막습니다.
+**`combine`도 인라인으로 적습니다.**
+다시 실행된다는 이유만으로 `useCallback`이나 `useMemo`로 감싸지 않습니다.
+React Query의 구조 공유가 합친 결과에서 바뀌지 않은 부분의 참조를 유지합니다.
+실측 병목의 예외 기준은 `data-shape-query-data-with-select`가 정합니다.
 
 **Incorrect (화면 본문에서 두 응답을 꺼내 합침):**
 

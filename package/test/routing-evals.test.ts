@@ -109,6 +109,7 @@ const typescriptRuleUniverse = [
 	"values-use-set-and-map-for-repeated-lookups",
 	"values-read-objects-through-chains",
 	"values-declare-meaningful-numbers",
+	"values-avoid-lookup-tables-for-simple-choices",
 	"absence-expose-optional-values-instead-of-silent-fallbacks",
 	"docs-keep-body-comments-for-intent-and-steps",
 	"docs-require-header-jsdoc-on-key-declarations",
@@ -331,6 +332,11 @@ const typescriptRuleRouting = {
 		appliesWhen: "비교, 계산, 호출 인자에 숫자 리터럴을 새로 적을 때. 제외: 관용값이나 배열 인덱스처럼 뜻이 없는 숫자를 쓰는 경우.",
 		reviewWith: ["naming-centralize-shared-config-namespaces", "absence-expose-optional-values-instead-of-silent-fallbacks"],
 	},
+	"values-avoid-lookup-tables-for-simple-choices": {
+		appliesWhen:
+			"상태나 `variant`에 따라 쓸 값 하나를 고르는 객체·Map을 추가·변경할 때. 조회표의 키로 프롭이나 상태를 읽어 값을 넘기는 코드를 추가·변경할 때.",
+		reviewWith: [],
+	},
 	"absence-expose-optional-values-instead-of-silent-fallbacks": {
 		appliesWhen: "선택 값을 읽거나 정규화하거나 넘기는 방식을 바꿀 때. `??`, `||`, 기본값, 빈 값 대체 분기를 추가·변경할 때.",
 		reviewWith: ["naming-centralize-shared-config-namespaces", "naming-place-owner-config-in-the-owner-config-folder"],
@@ -412,7 +418,7 @@ const cssRuleRouting = {
 	},
 	"composition-compose-classes-with-clsx": {
 		appliesWhen: "TSX의 `className`을 추가·수정할 때. 기본 클래스, 수정자, 선택 클래스를 함께 엮을 때.",
-		reviewWith: [],
+		reviewWith: ["typescript/values-avoid-lookup-tables-for-simple-choices"],
 	},
 	"composition-do-not-build-structural-variants-with-modifiers": {
 		appliesWhen: "수정자를 추가·변경할 때. 여러 곳에서 반복되는 모양인지 한 곳만의 보정인지 가릴 때.",
@@ -610,7 +616,7 @@ const reactRuleRouting = {
 	},
 	"typing-choose-wrapper-shape-and-forwarding": {
 		appliesWhen: "래퍼가 받은 프롭을 안쪽 컴포넌트나 요소로 넘기는 코드를 추가·변경할 때. 래퍼에 자기 프롭을 더하거나 안쪽 요소를 늘릴 때.",
-		reviewWith: [],
+		reviewWith: ["typescript/values-avoid-lookup-tables-for-simple-choices"],
 	},
 	"strategy-choose-single-composition-compound-and-variants": {
 		appliesWhen:
@@ -670,7 +676,7 @@ const reactRuleRouting = {
 		reviewWith: [],
 	},
 	"composition-render-one-branch-with-and": {
-		appliesWhen: "JSX 안에 조건부 렌더링을 추가하거나 조건식을 바꿀 때. 기존 `조건 ? … : null`을 넣거나 뺄 때.",
+		appliesWhen: "JSX 안에 조건부 렌더링을 추가하거나 조건식을 바꿀 때. 기존 JSX 삼항이나 `조건 && …`을 넣거나 뺄 때.",
 		reviewWith: [],
 	},
 	"composition-order-hooks-handlers-effects-then-return": {
@@ -819,6 +825,7 @@ const mandatoryRuleRouting = {
 		"types-replace-enum-with-as-const-objects": ["naming-use-consistent-file-and-symbol-naming", "types-document-custom-types-and-shapes"],
 		"naming-place-owner-config-in-the-owner-config-folder": ["naming-use-consistent-file-and-symbol-naming"],
 		"functions-place-and-promote-support-functions": ["functions-extract-helpers-only-when-the-boundary-is-real"],
+		"values-avoid-lookup-tables-for-simple-choices": ["docs-justify-convention-exceptions-with-a-reason-comment"],
 		"docs-require-header-jsdoc-on-key-declarations": [
 			"docs-write-concise-korean-comments-about-purpose-and-constraints",
 			"docs-write-doc-comments-as-multiline-blocks",
@@ -878,6 +885,11 @@ const typescriptSelections = {
 		"functions-name-functions-by-what-comes-out",
 	],
 	"shared-collection-lookups-and-sort": ["values-prefer-immutable-array-sorting", "values-use-set-and-map-for-repeated-lookups"],
+	"local-value-lookup": [
+		"naming-use-consistent-file-and-symbol-naming",
+		"values-avoid-lookup-tables-for-simple-choices",
+		"docs-justify-convention-exceptions-with-a-reason-comment",
+	],
 	"enum-like-runtime-contract": [
 		"types-document-custom-types-and-shapes",
 		"types-replace-enum-with-as-const-objects",
@@ -939,6 +951,11 @@ const typescriptScenarioEvidence = {
 		prompt:
 			"replace repeated `includes` with an existing Set's `has` and replace shared-input `.sort()` with `.toSorted()`; declarations, imports, and docs stay unchanged.",
 		files: ["src/search/filter-products.ts"],
+	},
+	"local-value-lookup": {
+		prompt:
+			"replace a one-use toolbar variant lookup object with a conditional value at the call site; leave the prop contract, imports, and docs unchanged.",
+		files: ["src/chart/to-toolbar-variant.ts"],
 	},
 	"enum-like-runtime-contract": {
 		prompt:
@@ -1909,7 +1926,7 @@ test("TypeScript progressive metadata matches Appendix A exactly", async () => {
 
 	assert.equal(document.metadata.progressiveDisclosure, true);
 	assert.deepEqual(document.metadata.companions ?? [], []);
-	assert.equal(document.rules.length, 33);
+	assert.equal(document.rules.length, 34);
 	assert.deepEqual(
 		Object.fromEntries(document.rules.map((rule) => [getRuleId(rule), {appliesWhen: rule.appliesWhen, reviewWith: rule.reviewWith}])),
 		typescriptRuleRouting,
@@ -1990,7 +2007,7 @@ test("type and function names expose contract role without repeating framework o
 	assertMentions(imperativeRefRule, ["`<Owner>Handle`", "`useImperativeHandle`", /DOM.*ref/s], "React handle naming");
 });
 
-test("TypeScript routing manifest is an exact eleven-scenario partition with full positive coverage", async () => {
+test("TypeScript routing manifest is an exact twelve-scenario partition with full positive coverage", async () => {
 	const skillPaths = getSkillPaths("typescript", realSkillRootDir);
 	await validateRoutingEvalManifest(skillPaths);
 	await validateRoutingEvalManifests(realSkillRootDir);
@@ -1999,7 +2016,7 @@ test("TypeScript routing manifest is an exact eleven-scenario partition with ful
 
 	assert.equal(manifest.version, 1);
 	assert.equal(manifest.skill, "typescript");
-	assert.equal(manifest.scenarios.length, 11);
+	assert.equal(manifest.scenarios.length, 12);
 	assert.deepEqual(
 		Object.fromEntries(manifest.scenarios.map((scenario) => [scenario.id, scenario.expectedSelected.typescript])),
 		typescriptSelections,
@@ -2061,7 +2078,7 @@ test("TypeScript generated index is complete and within the deterministic byte b
 	const expectedIds = document.rules.map((rule) => getRuleId(rule)).sort();
 
 	assert.deepEqual(ids, expectedIds);
-	assert.equal(ids.length, 33);
+	assert.equal(ids.length, 34);
 
 	for (const entry of entries) {
 		assert.equal(entry.fileName, `${entry.id}.md`);
@@ -2183,6 +2200,50 @@ test("Kubb and combined query bindings preserve the Suspense execution contract"
 	assert.match(combineSource, /const responseProductRowsSuspense = useSuspenseQueries\(\{/);
 	assert.match(combineSource, /responseProductRowsSuspense\.rows/);
 	assert.doesNotMatch(combineSource, /const responseProductRows = useSuspenseQueries\(\{/);
+});
+
+test("JSX branches, local value choices, and query selectors stay explicit at their use sites", async () => {
+	const renderRule = await readRuleSource("react", "composition-render-one-branch-with-and");
+	const renderNormative = splitFrontmatter(renderRule).body.split("**Incorrect", 1)[0] ?? "";
+	assertMentions(flattenWhitespace(renderNormative), [/JSX 요소/i, /분기마다.*`&&`/i, /삼항.*값 하나/i], "renderRule");
+	assert.doesNotMatch(renderNormative, /두 분기가 다 뜻을 가지면 삼항/);
+	assert.match(renderRule, /\{props\.view === "chart" && <PgChart \/>\}/);
+	assert.match(renderRule, /\{props\.view === "table" && <PgTable \/>\}/);
+
+	const lookupRule = await readRuleSource("typescript", "values-avoid-lookup-tables-for-simple-choices");
+	const lookupNormative = splitFrontmatter(lookupRule).body.split("**Incorrect", 1)[0] ?? "";
+	assertMentions(
+		flattenWhitespace(lookupNormative),
+		[/한 곳.*값.*조회표/i, /대응 관계 자체.*계약/i, /선언 바로 위.*확인할 수 있는 근거/i],
+		"lookupRule",
+	);
+	assert.match(lookupRule, /variant=\{props\.variant === "fill" \? "default" : props\.variant\}/);
+	assert.match(lookupRule, /GET \/orders.*P·C·D/);
+
+	const selectRule = await readRuleSource("react", "data-shape-query-data-with-select");
+	const selectNormative = splitFrontmatter(selectRule).body.split("**Incorrect", 1)[0] ?? "";
+	assertMentions(
+		flattenWhitespace(selectNormative),
+		[/`select`는 인라인/i, /다시 실행.*이유만으로.*`useCallback`.*`useMemo`/i, /구조 공유/i, /실측 병목/i],
+		"selectRule",
+	);
+
+	const combineRule = await readRuleSource("react", "data-combine-multiple-queries-with-combine");
+	const combineNormative = splitFrontmatter(combineRule).body.split("**Incorrect", 1)[0] ?? "";
+	assertMentions(
+		flattenWhitespace(combineNormative),
+		[/`combine`.*인라인/i, /다시 실행.*이유만으로.*`useCallback`.*`useMemo`/i, /구조 공유/i],
+		"combineRule",
+	);
+
+	const memoRule = await readRuleSource("react", "perf-avoid-defensive-memoization");
+	const memoNormative = splitFrontmatter(memoRule).body.split("**Incorrect", 1)[0] ?? "";
+	assertMentions(flattenWhitespace(memoNormative), [/상태 초기화.*구독 재설치/i, /다시 실행.*참조 동일성.*이유가 아닙니다/i], "memoRule");
+
+	const wrapperRule = await readRuleSource("react", "typing-choose-wrapper-shape-and-forwarding");
+	const classRule = await readRuleSource("css", "composition-compose-classes-with-clsx");
+	assert.match(wrapperRule, /^reviewWith: typescript\/values-avoid-lookup-tables-for-simple-choices$/m);
+	assert.match(classRule, /^reviewWith: typescript\/values-avoid-lookup-tables-for-simple-choices$/m);
 });
 
 test("TypeScript SKILL.md is a compact router without receipt or audit machinery", async () => {

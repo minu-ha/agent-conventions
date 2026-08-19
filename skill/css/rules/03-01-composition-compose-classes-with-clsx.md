@@ -6,6 +6,7 @@ impactDescription: 기본 클래스와 상태 수정자를 섞어도 TSX 조립�
 appliesWhen:
   - TSX의 `className`을 추가·수정할 때
   - 기본 클래스, 수정자, 선택 클래스를 함께 엮을 때
+reviewWith: typescript/values-avoid-lookup-tables-for-simple-choices
 tags: clsx, tsx, className
 ---
 

@@ -587,6 +587,8 @@ TSX 클래스 조합과 래퍼 소유 규칙은 스타일링 경계를 분명하
 
 **Applies when:** TSX의 `className`을 추가·수정할 때. 기본 클래스, 수정자, 선택 클래스를 함께 엮을 때.
 
+**Review with:** `typescript/values-avoid-lookup-tables-for-simple-choices`
+
 **Impact: LOW (기본 클래스와 상태 수정자를 섞어도 TSX 조립이 한눈에 읽힙니다)**
 
 TSX에서 `className`은 `clsx()`로 조립합니다.

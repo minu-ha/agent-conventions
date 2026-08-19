@@ -7,6 +7,7 @@ appliesWhen:
   - 래퍼가 받은 프롭을 안쪽 컴포넌트나 요소로 넘기는 코드를 추가·변경할 때
   - 래퍼에 자기 프롭을 더하거나 안쪽 요소를 늘릴 때
 requiresSelected: typing-narrow-library-wrapper-contracts
+reviewWith: typescript/values-avoid-lookup-tables-for-simple-choices
 tags: typing, wrapper, contracts
 ---
 

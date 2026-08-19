@@ -159,6 +159,23 @@
 			}
 		},
 		{
+			"id": "local-value-lookup",
+			"prompt": "replace a one-use toolbar variant lookup object with a conditional value at the call site; leave the prop contract, imports, and docs unchanged.",
+			"files": [
+				"src/chart/to-toolbar-variant.ts"
+			],
+			"expectedSkills": [
+				"typescript"
+			],
+			"expectedSelected": {
+				"typescript": [
+					"naming-use-consistent-file-and-symbol-naming",
+					"values-avoid-lookup-tables-for-simple-choices",
+					"docs-justify-convention-exceptions-with-a-reason-comment"
+				]
+			}
+		},
+		{
 			"id": "enum-like-runtime-contract",
 			"prompt": "replace `enum ProductStatus` with `product_status as const`, include a multiword `waiting_review` member, derive `ProductStatus`, and document the object, every key, and derived type in Korean.",
 			"files": [
