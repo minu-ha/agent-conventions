@@ -2159,6 +2159,20 @@ test("induced naming closure and activated finish gates stay mandatory across ev
 	assert.ok(!(sharedAuthority.expectedSelected.react?.includes("screen-keep-derived-values-close") ?? false));
 });
 
+test("Kubb API binding names replace request-only prefixes and keep result names behind the binding prefix", async () => {
+	const source = await readRuleSource("react", "data-name-query-and-mutation-bindings-consistently");
+	const {body} = splitFrontmatter(source);
+	const normative = body.split("**Incorrect", 1)[0] ?? "";
+
+	assertMentions(
+		normative,
+		["Kubb가 생성한 API 훅", "요청 종류만 나타내는 앞부분", "`response` 또는 `mutation`", "`select`나 `combine`", "접두사 뒤에 결과 이름"],
+		"Kubb API binding naming rule",
+	);
+	assert.doesNotMatch(normative, /훅 이름에서 `use`를 떼고/);
+	assert.match(body, /const responseProductListSuspense = useGetProductListSuspense\(\);/);
+});
+
 test("TypeScript SKILL.md is a compact router without receipt or audit machinery", async () => {
 	const source = await readFile(path.join(realSkillRootDir, "typescript", "SKILL.md"), "utf8");
 	const {body} = splitFrontmatter(source);
