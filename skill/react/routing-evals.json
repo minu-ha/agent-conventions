@@ -420,6 +420,7 @@
 			],
 			"expectedSelected": {
 				"react": [
+					"composition-order-hooks-handlers-effects-then-return",
 					"state-use-effectevent-for-non-reactive-effect-callbacks",
 					"events-name-handlers-predictably",
 					"docs-require-jsdoc-on-key-declarations"

@@ -1,7 +1,7 @@
 # TypeScript 컨벤션 Rule Index
 
 - Skill: `typescript`
-- Routing digest: `sha256:809a621797a359794731ba75b1127ebcb389a394210562013fb6c04bb586137e`
+- Routing digest: `sha256:f9934afd65cc28c3c89d93db5a5fc89ff73b9340fd5509446612c2c22688e5ed`
 
 ## Local Rules
 
@@ -21,7 +21,7 @@
 - T03-01 | functions-declare-functions-as-arrow-consts | 이름을 지어 선언하는 함수를 새로 만들거나 선언 형태나 본문 형태를 바꿀 때. 네임스페이스 객체에 멤버 함수를 추가·변경할 때. 제외: 인라인 콜백이거나 클래스 메서드, 제너레이터, 오버로드 선언인 경우. | reviewWith: functions-use-named-object-params-for-complex-signatures
 - T03-02 | functions-use-named-object-params-for-complex-signatures | 매개변수가 셋을 넘거나 같은 계열 인자를 받는 함수를 추가·변경할 때. 객체 매개변수의 필드를 읽는 방식을 바꿀 때. 제외: 리액트 함수 컴포넌트가 프롭스를 받는 방식만 바꾸는 경우. | reviewWith: types-reuse-existing-contracts-before-new-types, values-read-objects-through-chains
 - T03-03 | functions-extract-helpers-only-when-the-boundary-is-real | 보조 함수를 빼내거나 옮기거나 내보내거나 공유할 때. 범용 보조 파일, 소유자 하나만 쓰는 변환 함수, 자잘한 정리 단계의 경계를 바꿀 때. | reviewWith: docs-require-header-jsdoc-on-key-declarations, functions-place-and-promote-support-functions
-- T03-04 | functions-place-and-promote-support-functions | 보조 함수를 어느 파일이나 폴더에 둘지 정할 때. \`shared/\` 아래로 파일을 옮기거나 \`util.\*\`에 항목을 추가할 때.
+- T03-04 | functions-place-and-promote-support-functions | 보조 함수를 어느 파일이나 폴더에 둘지 정할 때. 파일 안에서 내보낸 함수와 비공개 보조의 선언 순서를 정할 때. \`shared/\` 아래로 파일을 옮기거나 \`util.\*\`에 항목을 추가할 때.
 - T03-05 | functions-avoid-imperative-assembly-in-wide-scopes | 모듈 최상위나 함수 본문 전체를 덮는 스코프에서 \`let\` 재할당, 배열 \`push\`, 조건부 누적으로 값을 만들 때. | reviewWith: functions-extract-helpers-only-when-the-boundary-is-real
 - T03-06 | functions-name-a-value-only-for-recompute-or-judgment | 순수 계산의 결과를 지역 변수\(\`const\`\)로 받는 줄을 추가·삭제할 때. 표현식을 쓰는 자리에 그대로 적을지 변수로 뺄지 정할 때. | reviewWith: functions-avoid-imperative-assembly-in-wide-scopes, values-read-objects-through-chains
 - T03-07 | functions-name-functions-by-what-comes-out | 이름 붙인 함수를 새로 만들거나 이름을 바꿀 때. 제외: 외부 패키지가 정한 이름을 별칭 없이 그대로 쓰는 경우.

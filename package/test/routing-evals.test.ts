@@ -182,6 +182,7 @@ const reactRuleUniverse = [
 	"composition-declare-props-interface-above-the-component",
 	"composition-name-fragments-explicitly",
 	"composition-render-one-branch-with-and",
+	"composition-order-hooks-handlers-effects-then-return",
 	"screen-keep-route-flow-visible",
 	"screen-avoid-premature-abstraction",
 	"screen-extract-local-section-components-for-runtime-boundaries",
@@ -284,7 +285,8 @@ const typescriptRuleRouting = {
 		reviewWith: ["functions-place-and-promote-support-functions", "docs-require-header-jsdoc-on-key-declarations"],
 	},
 	"functions-place-and-promote-support-functions": {
-		appliesWhen: "보조 함수를 어느 파일이나 폴더에 둘지 정할 때. `shared/` 아래로 파일을 옮기거나 `util.*`에 항목을 추가할 때.",
+		appliesWhen:
+			"보조 함수를 어느 파일이나 폴더에 둘지 정할 때. 파일 안에서 내보낸 함수와 비공개 보조의 선언 순서를 정할 때. `shared/` 아래로 파일을 옮기거나 `util.*`에 항목을 추가할 때.",
 		reviewWith: [],
 	},
 	"functions-avoid-imperative-assembly-in-wide-scopes": {
@@ -657,6 +659,10 @@ const reactRuleRouting = {
 	"composition-render-one-branch-with-and": {
 		appliesWhen: "JSX 안에 조건부 렌더링을 추가하거나 조건식을 바꿀 때. 기존 `조건 ? … : null`을 넣거나 뺄 때.",
 		reviewWith: [],
+	},
+	"composition-order-hooks-handlers-effects-then-return": {
+		appliesWhen: "컴포넌트 본문에 훅·핸들러·이펙트를 추가하거나 자리를 옮길 때. 본문 선언이 아래 선언을 참조해 순서를 다시 잡을 때.",
+		reviewWith: ["screen-keep-derived-values-close", "events-run-user-actions-in-handlers-not-effects"],
 	},
 	"screen-keep-route-flow-visible": {
 		appliesWhen:
@@ -1290,6 +1296,7 @@ const reactScenarioStages = {
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
 				react: [
+					"composition-order-hooks-handlers-effects-then-return",
 					"state-use-effectevent-for-non-reactive-effect-callbacks",
 					"events-name-handlers-predictably",
 					"docs-require-jsdoc-on-key-declarations",
@@ -2101,7 +2108,7 @@ test("React progressive metadata and all 48 rule routes match Appendix B exactly
 		{skill: "typescript", mode: "required"},
 		{skill: "css", mode: "conditional", appliesWhen: "class contract, stylesheet 또는 styling surface를 변경한다."},
 	]);
-	assert.equal(document.rules.length, 48);
+	assert.equal(document.rules.length, 49);
 	assert.deepEqual(
 		Object.fromEntries(document.rules.map((rule) => [getRuleId(rule), {appliesWhen: rule.appliesWhen, reviewWith: rule.reviewWith}])),
 		reactRuleRouting,
@@ -2254,7 +2261,7 @@ test("React generated index and handbook preserve canonical local rules and comp
 		entries.map((entry) => entry.id),
 		reactRuleUniverse,
 	);
-	assert.equal(entries.length, 48);
+	assert.equal(entries.length, 49);
 
 	for (const entry of entries) {
 		assert.equal(entry.fileName, `${entry.id}.md`);

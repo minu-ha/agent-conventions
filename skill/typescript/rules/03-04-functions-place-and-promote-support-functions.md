@@ -5,6 +5,7 @@ impact: MEDIUM-HIGH
 impactDescription: 잡동사니 파일이 생기지 않고 전역 `util`에 한 소유자의 함수가 섞이지 않습니다
 appliesWhen:
   - 보조 함수를 어느 파일이나 폴더에 둘지 정할 때
+  - 파일 안에서 내보낸 함수와 비공개 보조의 선언 순서를 정할 때
   - `shared/` 아래로 파일을 옮기거나 `util.*`에 항목을 추가할 때
 requiresSelected: functions-extract-helpers-only-when-the-boundary-is-real
 tags: functions, boundaries
@@ -22,6 +23,10 @@ tags: functions, boundaries
 - 소유자 아래에서는 내보낸 대표 함수 하나당 파일 하나입니다.
   전용 보조가 파일로 나가면 대표 함수는 자기 이름 폴더를 갖고, 나간 파일은 그 안에 둡니다.
   전역 `shared/util.ts`는 프로젝트 전반이 쓰는 함수를 한 네임스페이스에 모으는 자리라 예외입니다.
+- 파일 안에서는 import, 내보낸 계약 타입, 내보낸 대표 함수, 비공개 보조 순서로 둡니다.
+  함수 본문 속 참조는 호출 시점에 해석되므로 보조가 대표 함수 아래 있어도 됩니다.
+  모듈을 불러올 때 값이 계산되는 선언만 순서를 탑니다.
+  그런 선언은 자기가 부르는 선언 뒤에 둡니다.
 - 호출 깊이는 파일마다 내보낸 함수 하나, 그 파일 안 비공개 함수까지 두 단계로 끝냅니다.
   단계가 더 필요하면 먼저 같은 파일의 비공개 함수로 두고,
   파일로 나갈지는 `functions-extract-helpers-only-when-the-boundary-is-real`의 사유가 정합니다.
@@ -119,6 +124,22 @@ export const util = {
  */
 export const toProductSaveRequest = (values: ProductFormValues) => {
 	return {body: {title: values.title.trim()}};
+};
+```
+
+**Correct (내보낸 함수가 위, 전용 보조가 아래):**
+
+```ts
+// page/report/function/to-report-view-model.ts
+/**
+ * report 목록 화면이 그리는 뷰모델 조립
+ */
+export const toReportViewModel = (response: ReportResponse): ReportViewModel => {
+	return {rows: response.items.map(toReportRow)};
+};
+
+const toReportRow = (item: ReportItem): ReportRow => {
+	return {id: item.id, label: item.name.trim()};
 };
 ```
 

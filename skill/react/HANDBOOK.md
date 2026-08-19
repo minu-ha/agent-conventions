@@ -59,6 +59,7 @@
     - 5.6 [Declare Props Interfaces Above the Component](#56-declare-props-interfaces-above-the-component)
     - 5.7 [Write Fragments as `Fragment`, Not the Shorthand](#57-write-fragments-as-fragment-not-the-shorthand)
     - 5.8 [Render a Single Branch With `&&`, Not a Ternary](#58-render-a-single-branch-with-not-a-ternary)
+    - 5.9 [Order Hooks, Handlers, Effects, Then Return](#59-order-hooks-handlers-effects-then-return)
 6. [Screen File Discipline](#6-screen-file-discipline) — **MEDIUM-HIGH**
     - 6.1 [Keep Route Entry Files Focused on Screen Flow](#61-keep-route-entry-files-focused-on-screen-flow)
     - 6.2 [Avoid Premature Abstraction in Screen Code](#62-avoid-premature-abstraction-in-screen-code)
@@ -1928,7 +1929,7 @@ export const PgProductScreen = () => {
 
 **Impact: HIGH**
 
-프롭스 계약은 컴포넌트 바로 위에서 읽히고 값은 `props.`로 읽어 출처를 남깁니다. JSX 안에는 동작을 숨기지 않고, 컴포넌트를 컴포넌트 안에서 정의하지 않습니다. `ref`와 `Activity`처럼 밖으로 여는 창구는 실제 계약이 있을 때만 엽니다. 조각과 조건부 렌더링은 형태를 하나로 고정합니다.
+프롭스 계약은 컴포넌트 바로 위에서 읽히고 값은 `props.`로 읽어 출처를 남깁니다. 본문은 훅, 핸들러, 이펙트, 반환 순으로 읽힙니다. JSX 안에는 동작을 숨기지 않고, 컴포넌트를 컴포넌트 안에서 정의하지 않습니다. `ref`와 `Activity`처럼 밖으로 여는 창구는 실제 계약이 있을 때만 엽니다. 조각과 조건부 렌더링은 형태를 하나로 고정합니다.
 
 ### 5.1 Read Props Through the Props Object Without Destructuring
 
@@ -2540,6 +2541,110 @@ return filteredCategoryNodes.length > 0 ? (
 ) : (
 	<UiEmpty description="검색 결과가 없습니다" />
 );
+```
+
+### 5.9 Order Hooks, Handlers, Effects, Then Return
+
+**Rule:** `R05-09` · `composition-order-hooks-handlers-effects-then-return`
+
+**Applies when:** 컴포넌트 본문에 훅·핸들러·이펙트를 추가하거나 자리를 옮길 때. 본문 선언이 아래 선언을 참조해 순서를 다시 잡을 때.
+
+**Review with:** `events-run-user-actions-in-handlers-not-effects`, `screen-keep-derived-values-close`
+
+**Impact: MEDIUM (어느 컴포넌트를 열어도 같은 자리에서 같은 종류를 찾습니다)**
+
+컴포넌트 본문은 네 구획을 이 순서로 둡니다.
+
+| 순서 | 구획 | 담는 것 |
+| --- | --- | --- |
+| 1 | 훅 | 라우터·스토어·쿼리·컨텍스트·커스텀 훅과 `useState`·`useRef` |
+| 2 | 핸들러 | `handle*` 함수 |
+| 3 | 이펙트 | `useEffect`·`useLayoutEffect` |
+| 4 | 반환 | 조기 반환과 JSX |
+
+본문은 렌더마다 위에서 아래로 실행되므로 앞 선언은 뒤 선언을 참조하지 못합니다.
+이 순서는 그 제약을 그대로 따른 것입니다.
+
+- 이펙트의 인자와 의존성 배열은 그 줄에서 바로 평가됩니다.
+  이펙트를 마지막 훅으로 두면 본문의 어떤 선언이든 의존성에 넣을 수 있습니다.
+- 조기 반환은 어떤 훅보다도 뒤에 옵니다.
+  훅 호출 개수가 렌더마다 같아야 하기 때문입니다.
+- 구획 안에서는 참조가 선언 뒤에 오게만 하고 순서를 더 정하지 않습니다.
+- 파생 값은 구획이 아닙니다.
+  `screen-keep-derived-values-close`대로 쓰는 자리에서 계산합니다.
+
+**Incorrect (이펙트가 아래 선언을 의존성으로 참조해 초기화 전에 접근함):**
+
+```tsx
+export const PgOrderToolbar = () => {
+	// selectedIds는 아직 초기화 전이라 의존성 배열을 평가하는 이 줄에서 깨진다
+	useEffect(() => {
+		document.title = `주문 ${selectedIds.length}건 선택`;
+	}, [selectedIds]);
+
+	const [selectedIds, setSelectedIds] = useState<string[]>([]);
+
+	return <section className={clsx("pg_orderToolbar__root")}>{/* ... */}</section>;
+};
+```
+
+**Incorrect (같은 종류가 흩어져 위아래를 오가며 읽음):**
+
+```tsx
+export const PgOrderToolbar = () => {
+	const [selectedIds, setSelectedIds] = useState<string[]>([]);
+
+	const handleClearButtonClick: MouseEventHandler<HTMLButtonElement> = () => {
+		setSelectedIds([]);
+	};
+
+	const [isPanelOpen, setIsPanelOpen] = useState(false);
+
+	useEffect(() => {
+		document.title = `주문 ${selectedIds.length}건 선택`;
+	}, [selectedIds]);
+
+	const handlePanelOpenButtonClick: MouseEventHandler<HTMLButtonElement> = () => {
+		setIsPanelOpen(true);
+	};
+
+	return <section className={clsx("pg_orderToolbar__root")}>{/* ... */}</section>;
+};
+```
+
+**Correct (네 구획이 순서대로 놓임):**
+
+```tsx
+export const PgOrderToolbar = () => {
+	const [selectedIds, setSelectedIds] = useState<string[]>([]);
+	const [isPanelOpen, setIsPanelOpen] = useState(false);
+
+	/**
+	 * 비우기는 선택만 지우고 패널은 그대로 둔다
+	 */
+	const handleClearButtonClick: MouseEventHandler<HTMLButtonElement> = () => {
+		setSelectedIds([]);
+	};
+
+	/**
+	 * 필터 패널 열기
+	 */
+	const handlePanelOpenButtonClick: MouseEventHandler<HTMLButtonElement> = () => {
+		setIsPanelOpen(true);
+	};
+
+	useEffect(() => {
+		document.title = `주문 ${selectedIds.length}건 선택`;
+	}, [selectedIds]);
+
+	return (
+		<section className={clsx("pg_orderToolbar__root")}>
+			<UiButton onClick={handleClearButtonClick}>비우기</UiButton>
+			<UiButton onClick={handlePanelOpenButtonClick}>필터</UiButton>
+			{isPanelOpen && <PgOrderFilterPanel />}
+		</section>
+	);
+};
 ```
 
 ## 6. Screen File Discipline
