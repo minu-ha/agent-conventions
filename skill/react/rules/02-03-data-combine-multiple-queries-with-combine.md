@@ -61,7 +61,7 @@ export const PgProducts = () => {
 	/**
 	 * 분류 이름이 목록 응답에 없어서 표 한 행에 두 응답을 함께 담는다
 	 */
-	const responseProductRows = useSuspenseQueries({
+	const responseProductRowsSuspense = useSuspenseQueries({
 		queries: [productListQueryOptions(), categoryListQueryOptions()],
 		combine: ([productResult, categoryResult]) => ({
 			rows: productResult.data.products.map((product) => ({
@@ -73,7 +73,7 @@ export const PgProducts = () => {
 		}),
 	});
 
-	return <UiTable dataSource={responseProductRows.rows} />;
+	return <UiTable dataSource={responseProductRowsSuspense.rows} />;
 };
 ```
 

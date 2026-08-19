@@ -2159,18 +2159,30 @@ test("induced naming closure and activated finish gates stay mandatory across ev
 	assert.ok(!(sharedAuthority.expectedSelected.react?.includes("screen-keep-derived-values-close") ?? false));
 });
 
-test("Kubb API binding names replace request-only prefixes and keep result names behind the binding prefix", async () => {
+test("Kubb and combined query bindings preserve the Suspense execution contract", async () => {
 	const source = await readRuleSource("react", "data-name-query-and-mutation-bindings-consistently");
 	const {body} = splitFrontmatter(source);
 	const normative = body.split("**Incorrect", 1)[0] ?? "";
+	const combineSource = await readRuleSource("react", "data-combine-multiple-queries-with-combine");
 
 	assertMentions(
 		normative,
-		["Kubb가 생성한 API 훅", "요청 종류만 나타내는 앞부분", "`response` 또는 `mutation`", "`select`나 `combine`", "접두사 뒤에 결과 이름"],
+		[
+			"Kubb가 생성한 단일 API 훅",
+			"요청 종류만 나타내는 앞부분",
+			"`response` 또는 `mutation`",
+			"여러 쿼리를 합친 바인딩",
+			"`useSuspenseQueries`",
+			"끝에 `Suspense`를 유지",
+		],
 		"Kubb API binding naming rule",
 	);
 	assert.doesNotMatch(normative, /훅 이름에서 `use`를 떼고/);
+	assert.doesNotMatch(normative, /`select`/);
 	assert.match(body, /const responseProductListSuspense = useGetProductListSuspense\(\);/);
+	assert.match(combineSource, /const responseProductRowsSuspense = useSuspenseQueries\(\{/);
+	assert.match(combineSource, /responseProductRowsSuspense\.rows/);
+	assert.doesNotMatch(combineSource, /const responseProductRows = useSuspenseQueries\(\{/);
 });
 
 test("TypeScript SKILL.md is a compact router without receipt or audit machinery", async () => {
