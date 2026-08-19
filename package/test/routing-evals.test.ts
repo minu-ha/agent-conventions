@@ -89,6 +89,7 @@ const typescriptRuleUniverse = [
 	"types-mark-unused-parameters-with-underscore",
 	"types-narrow-unknown-instead-of-asserting",
 	"types-replace-enum-with-as-const-objects",
+	"types-choose-interface-for-object-contracts-and-type-for-composition",
 	"naming-centralize-shared-config-namespaces",
 	"naming-place-owner-config-in-the-owner-config-folder",
 	"naming-preserve-config-origin-with-chained-access",
@@ -96,6 +97,7 @@ const typescriptRuleUniverse = [
 	"naming-use-direct-imports-and-public-entry-points",
 	"naming-restrict-absolute-aliases-to-layer-roots",
 	"naming-read-environment-values-through-shared-config",
+	"naming-name-types-by-role-and-lifetime",
 	"functions-declare-functions-as-arrow-consts",
 	"functions-use-named-object-params-for-complex-signatures",
 	"functions-extract-helpers-only-when-the-boundary-is-real",
@@ -239,6 +241,11 @@ const typescriptRuleRouting = {
 			"`enum`이나 타입과 실행 양쪽에서 함께 쓰는 값 집합을 추가·변경할 때. 제외: 외부 패키지가 내보낸 `enum` 값을 그대로 읽어 쓰는 경우.",
 		reviewWith: [],
 	},
+	"types-choose-interface-for-object-contracts-and-type-for-composition": {
+		appliesWhen:
+			"`interface`와 `type` 사이에서 선언 형식을 바꿀 때. 객체 계약, union, tuple, 함수 시그니처, mapped·conditional type에 이름을 붙여 선언할 때. 제외: 외부·생성된 계약을 그대로 참조하는 경우.",
+		reviewWith: ["types-reuse-existing-contracts-before-new-types", "types-document-custom-types-and-shapes"],
+	},
 	"naming-centralize-shared-config-namespaces": {
 		appliesWhen: "프로젝트 전반이 쓰는 URL, 기능 플래그, 페이지 크기나 상수를 추가·이동·중복 정의할 때. 공용 설정 경계를 바꿀 때.",
 		reviewWith: ["naming-preserve-config-origin-with-chained-access", "naming-use-direct-imports-and-public-entry-points"],
@@ -268,6 +275,11 @@ const typescriptRuleRouting = {
 	"naming-read-environment-values-through-shared-config": {
 		appliesWhen: "`import.meta.env`나 `process.env`를 읽는 코드를 추가·이동할 때. 환경마다 달라지는 값을 새로 들여올 때.",
 		reviewWith: ["naming-centralize-shared-config-namespaces", "absence-expose-optional-values-instead-of-silent-fallbacks"],
+	},
+	"naming-name-types-by-role-and-lifetime": {
+		appliesWhen:
+			"타입·인터페이스나 그 파일의 이름을 새로 만들거나 바꿀 때. 타입을 소유자 폴더 안과 밖 사이에서 옮기며 이름을 바꿀 때. 제외: 외부·생성된 계약 이름을 그대로 쓰는 경우.",
+		reviewWith: ["naming-use-consistent-file-and-symbol-naming"],
 	},
 	"functions-declare-functions-as-arrow-consts": {
 		appliesWhen:
@@ -299,7 +311,7 @@ const typescriptRuleRouting = {
 		reviewWith: ["functions-avoid-imperative-assembly-in-wide-scopes", "values-read-objects-through-chains"],
 	},
 	"functions-name-functions-by-what-comes-out": {
-		appliesWhen: "이름 붙인 함수를 새로 만들거나 이름을 바꿀 때. 제외: 외부 패키지가 정한 이름을 별칭 없이 그대로 쓰는 경우.",
+		appliesWhen: "이름을 붙인 함수를 새로 만들거나 이름을 바꿀 때. 제외: 생성기·프레임워크·외부 계약이 정한 이름을 그대로 쓰는 경우.",
 		reviewWith: [],
 	},
 	"values-prefer-immutable-array-sorting": {
@@ -543,7 +555,7 @@ const reactRuleRouting = {
 	},
 	"ownership-prefer-plain-ts-for-local-react-helpers": {
 		appliesWhen:
-			"화면 전용 계산·정규화·전송 값 조립을 커스텀 훅으로 추출하려 할 때. 화면 전용 순수 로직을 별도 보조 모듈로 옮기려 할 때. 제외: 상태·컨텍스트·다른 훅 호출 순서를 실제로 캡슐화하는 경우.",
+			"화면 전용 계산·정규화·전송 값 조립을 커스텀 훅으로 추출하려 할 때. 화면 전용 순수 로직을 별도 보조 모듈로 옮기려 할 때. 화면 지역 함수에 `use` 접두사를 붙이거나 커스텀 훅 이름을 바꿀 때. 제외: 상태·컨텍스트·다른 훅 호출 순서를 실제로 캡슐화하는 경우.",
 		reviewWith: [
 			"typescript/functions-extract-helpers-only-when-the-boundary-is-real",
 			"ownership-place-owner-files-in-role-folders",
@@ -621,7 +633,7 @@ const reactRuleRouting = {
 	},
 	"strategy-prefer-children-over-render-props": {
 		appliesWhen:
-			"공용 컴포넌트에 헤더·푸터·동작 같은 정적 슬롯을 추가·변경할 때. 렌더 프롭을 추가·변경하는데 실행 환경 데이터 주입이 꼭 필요한지 불분명할 때.",
+			"공용 컴포넌트에 헤더·푸터·동작 같은 정적 슬롯을 추가·변경할 때. 렌더 프롭을 추가·변경하는데 실행 환경 데이터 주입이 꼭 필요한지 불분명할 때. `ReactNode` 슬롯이나 렌더 함수 계약에 이름을 붙이거나 바꿀 때.",
 		reviewWith: [],
 	},
 	"composition-read-props-without-destructuring": {
@@ -640,7 +652,8 @@ const reactRuleRouting = {
 		reviewWith: ["events-run-user-actions-in-handlers-not-effects", "typescript/functions-extract-helpers-only-when-the-boundary-is-real"],
 	},
 	"composition-open-ref-props-only-for-imperative-contracts": {
-		appliesWhen: "컴포넌트에 `ref` 프롭을 추가하거나 공개할 대상을 바꿀 때. 제외: 이미 있는 `ref` 계약의 타입만 바꾸는 경우.",
+		appliesWhen:
+			"컴포넌트에 `ref` 프롭을 추가하거나 공개할 대상을 바꿀 때. `useImperativeHandle`로 노출하는 명령형 계약 타입을 만들거나 이름을 바꿀 때. 제외: DOM 요소를 그대로 가리키는 기존 `ref` 계약의 타입만 바꾸는 경우.",
 		reviewWith: ["typing-narrow-library-wrapper-contracts", "typescript/docs-justify-convention-exceptions-with-a-reason-comment"],
 	},
 	"composition-use-activity-only-to-preserve-mounted-subtrees": {
@@ -843,6 +856,21 @@ const typescriptSelections = {
 		"docs-write-concise-korean-comments-about-purpose-and-constraints",
 		"docs-write-doc-comments-as-multiline-blocks",
 	],
+	"type-declaration-form": [
+		"types-document-custom-types-and-shapes",
+		"types-choose-interface-for-object-contracts-and-type-for-composition",
+		"docs-require-header-jsdoc-on-key-declarations",
+		"docs-write-concise-korean-comments-about-purpose-and-constraints",
+		"docs-write-doc-comments-as-multiline-blocks",
+	],
+	"type-role-and-lifetime": [
+		"types-document-custom-types-and-shapes",
+		"naming-use-consistent-file-and-symbol-naming",
+		"naming-name-types-by-role-and-lifetime",
+		"docs-require-header-jsdoc-on-key-declarations",
+		"docs-write-concise-korean-comments-about-purpose-and-constraints",
+		"docs-write-doc-comments-as-multiline-blocks",
+	],
 	"helper-boundary-scope-drift": [
 		"naming-use-consistent-file-and-symbol-naming",
 		"functions-extract-helpers-only-when-the-boundary-is-real",
@@ -892,6 +920,16 @@ const typescriptScenarioEvidence = {
 		prompt:
 			'replace a duplicate `UserPreview` interface with a same-name interface that pulls each field through `UserRecord["id"]` indexed access, drop the `as unknown as` assertion that fed it, and add Korean header and field doc comments.',
 		files: ["src/users/user-preview.ts"],
+	},
+	"type-declaration-form": {
+		prompt:
+			"replace an existing `type ProductSummary = {...}` with an `interface` because it is an independent field contract, and replace an object-shaped `interface ProductMode` with a literal-union `type`; keep both names, fields, imports, and docs unchanged.",
+		files: ["src/products/product-contracts.ts"],
+	},
+	"type-role-and-lifetime": {
+		prompt:
+			"rename the owner-local `SalesReportViewModel` interface and its `salesReportViewModel` value to `ReportSnapshot` and `reportSnapshot` because they freeze rows, filters, and pagination from one query; keep fields, imports, and docs unchanged.",
+		files: ["src/report/report-panel.ts"],
 	},
 	"helper-boundary-scope-drift": {
 		prompt: "inline a single-owner `mapProfileRow` sub-step into `profile-api.ts` and rename the remaining exported builder by its result.",
@@ -1871,7 +1909,7 @@ test("TypeScript progressive metadata matches Appendix A exactly", async () => {
 
 	assert.equal(document.metadata.progressiveDisclosure, true);
 	assert.deepEqual(document.metadata.companions ?? [], []);
-	assert.equal(document.rules.length, 31);
+	assert.equal(document.rules.length, 33);
 	assert.deepEqual(
 		Object.fromEntries(document.rules.map((rule) => [getRuleId(rule), {appliesWhen: rule.appliesWhen, reviewWith: rule.reviewWith}])),
 		typescriptRuleRouting,
@@ -1916,7 +1954,43 @@ test("TypeScript naming keeps immutable data constants in snake_case without ren
 	assert.match(toolingRule, /"kind": "typeProperty"}, "formats": \["camelCase"\]/);
 });
 
-test("TypeScript routing manifest is an exact nine-scenario partition with full positive coverage", async () => {
+test("type and function names expose contract role without repeating framework or owner context", async () => {
+	const declarationFormRule = await readRuleSource("typescript", "types-choose-interface-for-object-contracts-and-type-for-composition");
+	const typeRoleRule = await readRuleSource("typescript", "naming-name-types-by-role-and-lifetime");
+	const functionNameRule = await readRuleSource("typescript", "functions-name-functions-by-what-comes-out");
+	const hookBoundaryRule = await readRuleSource("react", "ownership-prefer-plain-ts-for-local-react-helpers");
+	const compositionRule = await readRuleSource("react", "strategy-prefer-children-over-render-props");
+	const imperativeRefRule = await readRuleSource("react", "composition-open-ref-props-only-for-imperative-contracts");
+
+	assertMentions(
+		declarationFormRule,
+		[/독립된.*객체.*`interface`/s, /union.*mapped.*conditional.*`type`/s, /선언 형식.*새.*별칭.*만들지/s],
+		"TypeScript declaration-form rule",
+	);
+	assertMentions(
+		typeRoleRule,
+		["`Params`", "`Snapshot`", "`Content`", "`VM`", "`ViewModel`", /소유자.*접두/s, /외부.*생성.*계약/s, /역할어.*새 타입.*만들지/s],
+		"TypeScript type-role rule",
+	);
+	assertMentions(
+		functionNameRule,
+		[
+			"`resolve<대상>`",
+			"`normalize<대상>`",
+			"`format<대상>`",
+			"`compare<대상>`",
+			"`load<대상>`",
+			"`should`",
+			/생성기.*프레임워크.*외부 계약/s,
+		],
+		"TypeScript function-name rule",
+	);
+	assert.match(hookBoundaryRule, /실제.*훅.*`use<Capability>`/s);
+	assertMentions(compositionRule, ["`<Owner>Slot`", "`<Owner>Renderer`", /ReactNode.*실행 문맥/s], "React slot and renderer naming");
+	assertMentions(imperativeRefRule, ["`<Owner>Handle`", "`useImperativeHandle`", /DOM.*ref/s], "React handle naming");
+});
+
+test("TypeScript routing manifest is an exact eleven-scenario partition with full positive coverage", async () => {
 	const skillPaths = getSkillPaths("typescript", realSkillRootDir);
 	await validateRoutingEvalManifest(skillPaths);
 	await validateRoutingEvalManifests(realSkillRootDir);
@@ -1925,7 +1999,7 @@ test("TypeScript routing manifest is an exact nine-scenario partition with full 
 
 	assert.equal(manifest.version, 1);
 	assert.equal(manifest.skill, "typescript");
-	assert.equal(manifest.scenarios.length, 9);
+	assert.equal(manifest.scenarios.length, 11);
 	assert.deepEqual(
 		Object.fromEntries(manifest.scenarios.map((scenario) => [scenario.id, scenario.expectedSelected.typescript])),
 		typescriptSelections,
@@ -1987,7 +2061,7 @@ test("TypeScript generated index is complete and within the deterministic byte b
 	const expectedIds = document.rules.map((rule) => getRuleId(rule)).sort();
 
 	assert.deepEqual(ids, expectedIds);
-	assert.equal(ids.length, 31);
+	assert.equal(ids.length, 33);
 
 	for (const entry of entries) {
 		assert.equal(entry.fileName, `${entry.id}.md`);

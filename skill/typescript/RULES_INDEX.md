@@ -1,7 +1,7 @@
 # TypeScript 컨벤션 Rule Index
 
 - Skill: `typescript`
-- Routing digest: `sha256:215d8e1500e13892027748c5265133f8b70476017cbd4d14b82d637c67205e41`
+- Routing digest: `sha256:3c3b6ba0f67d7deb2b17e54a3318c890fd4adaba0da1855ea42839b614c0d810`
 
 ## Local Rules
 
@@ -11,6 +11,7 @@
 - T01-04 | types-mark-unused-parameters-with-underscore | 기존 콜백이나 프레임워크 계약을 구현하면서 매개변수를 빼거나 쓰지 않을 때. 커링한 핸들러가 마지막에 돌려주는 콜백에서 매개변수를 뺄 때.
 - T01-05 | types-narrow-unknown-instead-of-asserting | \`as\` 단언, \`\!\` \`null\` 아님 단언, \`any\`, \`@ts-expect-error\`를 추가할 때. 앱 밖에서 들어온 값을 타입 붙여 쓰기 시작할 때. | reviewWith: docs-justify-convention-exceptions-with-a-reason-comment, tooling-configure-biome-to-enforce-these-rules
 - T01-06 | types-replace-enum-with-as-const-objects | \`enum\`이나 타입과 실행 양쪽에서 함께 쓰는 값 집합을 추가·변경할 때. 제외: 외부 패키지가 내보낸 \`enum\` 값을 그대로 읽어 쓰는 경우.
+- T01-07 | types-choose-interface-for-object-contracts-and-type-for-composition | \`interface\`와 \`type\` 사이에서 선언 형식을 바꿀 때. 객체 계약, union, tuple, 함수 시그니처, mapped·conditional type에 이름을 붙여 선언할 때. 제외: 외부·생성된 계약을 그대로 참조하는 경우. | reviewWith: types-document-custom-types-and-shapes, types-reuse-existing-contracts-before-new-types
 - T02-01 | naming-centralize-shared-config-namespaces | 프로젝트 전반이 쓰는 URL, 기능 플래그, 페이지 크기나 상수를 추가·이동·중복 정의할 때. 공용 설정 경계를 바꿀 때. | reviewWith: naming-preserve-config-origin-with-chained-access, naming-use-direct-imports-and-public-entry-points
 - T02-02 | naming-place-owner-config-in-the-owner-config-folder | 한 소유자의 선언형 설정을 추가하거나 옮길 때. 전역 설정과 소유자 전용 설정 사이에서 위치를 바꿀 때. | reviewWith: naming-centralize-shared-config-namespaces
 - T02-03 | naming-preserve-config-origin-with-chained-access | \`config\`나 \`util\` 값을 쓰면서 넓은 스코프 구조분해, 별칭, 기능별 네임스페이스를 추가·변경할 때. | reviewWith: functions-place-and-promote-support-functions, values-read-objects-through-chains
@@ -18,13 +19,14 @@
 - T02-05 | naming-use-direct-imports-and-public-entry-points | 가져오기, 내보내기, \`index.ts\` 배럴, 공개 진입점, 소유자 보조 모듈의 경계를 추가·변경할 때. 같은 경로에서 값과 타입 중 무엇을 가져올지 추가·삭제·전환할 때. | reviewWith: naming-restrict-absolute-aliases-to-layer-roots
 - T02-06 | naming-restrict-absolute-aliases-to-layer-roots | 절대경로 별칭으로 다른 모듈을 가져올 때. 별칭이 가리키는 경로 깊이를 바꿀 때. | reviewWith: naming-use-direct-imports-and-public-entry-points
 - T02-07 | naming-read-environment-values-through-shared-config | \`import.meta.env\`나 \`process.env\`를 읽는 코드를 추가·이동할 때. 환경마다 달라지는 값을 새로 들여올 때. | reviewWith: absence-expose-optional-values-instead-of-silent-fallbacks, naming-centralize-shared-config-namespaces
+- T02-08 | naming-name-types-by-role-and-lifetime | 타입·인터페이스나 그 파일의 이름을 새로 만들거나 바꿀 때. 타입을 소유자 폴더 안과 밖 사이에서 옮기며 이름을 바꿀 때. 제외: 외부·생성된 계약 이름을 그대로 쓰는 경우. | reviewWith: naming-use-consistent-file-and-symbol-naming
 - T03-01 | functions-declare-functions-as-arrow-consts | 이름을 지어 선언하는 함수를 새로 만들거나 선언 형태나 본문 형태를 바꿀 때. 네임스페이스 객체에 멤버 함수를 추가·변경할 때. 제외: 인라인 콜백이거나 클래스 메서드, 제너레이터, 오버로드 선언인 경우. | reviewWith: functions-use-named-object-params-for-complex-signatures
 - T03-02 | functions-use-named-object-params-for-complex-signatures | 매개변수가 셋을 넘거나 같은 계열 인자를 받는 함수를 추가·변경할 때. 객체 매개변수의 필드를 읽는 방식을 바꿀 때. 제외: 리액트 함수 컴포넌트가 프롭스를 받는 방식만 바꾸는 경우. | reviewWith: types-reuse-existing-contracts-before-new-types, values-read-objects-through-chains
 - T03-03 | functions-extract-helpers-only-when-the-boundary-is-real | 보조 함수를 빼내거나 옮기거나 내보내거나 공유할 때. 범용 보조 파일, 소유자 하나만 쓰는 변환 함수, 자잘한 정리 단계의 경계를 바꿀 때. | reviewWith: docs-require-header-jsdoc-on-key-declarations, functions-place-and-promote-support-functions
 - T03-04 | functions-place-and-promote-support-functions | 보조 함수를 어느 파일이나 폴더에 둘지 정할 때. 파일 안에서 내보낸 함수와 비공개 보조의 선언 순서를 정할 때. \`shared/\` 아래로 파일을 옮기거나 \`util.\*\`에 항목을 추가할 때.
 - T03-05 | functions-avoid-imperative-assembly-in-wide-scopes | 모듈 최상위나 함수 본문 전체를 덮는 스코프에서 \`let\` 재할당, 배열 \`push\`, 조건부 누적으로 값을 만들 때. | reviewWith: functions-extract-helpers-only-when-the-boundary-is-real
 - T03-06 | functions-name-a-value-only-for-recompute-or-judgment | 순수 계산의 결과를 지역 변수\(\`const\`\)로 받는 줄을 추가·삭제할 때. 표현식을 쓰는 자리에 그대로 적을지 변수로 뺄지 정할 때. | reviewWith: functions-avoid-imperative-assembly-in-wide-scopes, values-read-objects-through-chains
-- T03-07 | functions-name-functions-by-what-comes-out | 이름 붙인 함수를 새로 만들거나 이름을 바꿀 때. 제외: 외부 패키지가 정한 이름을 별칭 없이 그대로 쓰는 경우.
+- T03-07 | functions-name-functions-by-what-comes-out | 이름을 붙인 함수를 새로 만들거나 이름을 바꿀 때. 제외: 생성기·프레임워크·외부 계약이 정한 이름을 그대로 쓰는 경우.
 - T04-01 | values-prefer-immutable-array-sorting | 프롭스, 상태, 매개변수, 모듈 상수에서 온 배열을 정렬할 때. 기존 \`.sort\(\)\` 호출을 추가·변경할 때.
 - T04-02 | values-use-set-and-map-for-repeated-lookups | 같은 목록에 \`includes\`, \`find\`, 키 조회를 여러 번 하는 코드를 추가·변경할 때.
 - T04-03 | values-read-objects-through-chains | 구조분해로 객체에서 값을 꺼내는 줄을 추가·변경할 때. 객체 필드를 별칭 \`const\`에 담아 그 이름으로 쓰려 할 때. 제외: 배열이나 튜플을 자리로 푸는 경우. | reviewWith: functions-name-a-value-only-for-recompute-or-judgment

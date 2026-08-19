@@ -2,72 +2,61 @@
 
 **Impact: MEDIUM (이름만 읽고 결과를 알 수 있어 구현을 열어 보지 않아도 됩니다)**
 
-**기준은 하나입니다 — 이름만 보고 무엇이 나오는지 아는가.**
-동사가 결과를 말하면 그 동사를 쓰고, 말하지 않으면 `to<결과>`로 바꿉니다.
+함수 이름은 입력이나 구현 동작이 아니라 호출 뒤 얻는 값이나 효과를 말합니다.
+접미사를 먼저 정하지 말고 아래 구분에서 가장 구체적인 동사를 고릅니다.
 
-| 동사 | 무엇이 나온다고 말하는가 | 예 |
+| 이름 | 사용하는 때 | 예 |
 | --- | --- | --- |
-| `to<결과>` | 그 형태로 바꾼 값 | `toUserSaveRequest` |
-| `get<대상>` | 이미 있는 그 값 | `getSelectedRow` |
-| `find<대상>` | 그 값 또는 없음 | `findUserByEmail` |
-| `is`·`has`·`can` | 참이나 거짓 | `isAdminUser` |
-| `parse<대상>` | 텍스트에서 뽑은 그 구조 | `parseSearchParams` |
-| `sort<대상>` | 정렬한 그 목록 | `sortProductsByUpdatedAt` |
+| `to<대상>` | 입력 형태를 다른 출력 형태로 바꿀 때 | `toDetailContent` |
+| `get<대상>` | 이미 존재하는 값을 가져올 때 | `getSelectedRow` |
+| `find<대상>` | 값 하나 또는 없음을 돌려줄 때 | `findUserByEmail` |
+| `resolve<대상>` | 조건·fallback·현재 문맥에서 답 하나를 정할 때 | `resolveDisplayRows` |
+| `normalize<대상>` | 같은 개념의 값을 허용 범위나 기본 표현에 맞출 때 | `normalizePageSize` |
+| `parse<대상>` | 문자열·`unknown`을 검증하며 타입이 보장된 값으로 읽을 때 | `parseSearchParams` |
+| `format<대상>` | 값을 사람이 읽는 문자열로 표시할 때 | `formatCandidateDayCount` |
+| `compare<대상>` | 두 값을 비교해 정렬 순서를 돌려줄 때 | `compareIndexedDriver` |
+| `sort<대상>` | 정렬한 목록을 돌려줄 때 | `sortProductsByUpdatedAt` |
+| `load<대상>`·`fetch<대상>` | 비동기 I/O를 수행하거나 여러 요청을 조율할 때 | `loadPatternSearchExport` |
+| `is`·`has`·`can`·`should` | 참이나 거짓으로 질문에 답할 때 | `shouldShowSummary` |
 
-`.toSorted()`처럼 표준 라이브러리가 `to`를 붙이는 자리도 같은 이유입니다.
-원본을 두고 새 값을 돌려준다는 사실을 접두사가 말합니다.
+`resolve`는 여러 후보 중 답을 정할 때, `normalize`는 같은 개념의 표현을
+허용 범위에 맞출 때만 씁니다. 단지 계산 과정이 복잡하다는 이유로 붙이지 않습니다.
 
-**이름에 넣는 것은 출력뿐입니다.**
+**이름에는 출력 역할만 남깁니다.**
 
-- 입력은 이름에 넣지 않습니다.
-  시그니처가 이미 말합니다.
-  이름에 `Response`가 보이면 출력이 아니라 입력을 이름 지은 것입니다.
-- 소유자 폴더가 말하는 도메인은 되풀이하지 않습니다.
-  `sales-trend-panel/function/` 안에서는 `toSalesTrendComparisonWindows`가 아니라 `toComparisonWindows`입니다.
-  같은 이름이 다른 소유자 아래 또 생겨도 가져오기 경로가 가릅니다.
-- 반환 타입 이름을 그대로 옮기지 않습니다.
-  `toReportViewModel`이 아니라 화면이 부르는 개념으로 `toReportRows`처럼 짓습니다.
-  서버로 보내는 값은 요청 계약이 곧 출력이라 `toUserSaveRequest`가 그대로 이름입니다.
+- 입력은 시그니처가 말하므로 이름에 반복하지 않습니다.
+  `mapResponseToModel`처럼 입력과 막연한 접미사를 함께 적지 않습니다.
+- 소유자 경로가 이미 말하는 도메인을 되풀이하지 않습니다.
+  `sales-trend-panel/function/` 안에서는 `toSalesTrendComparisonWindows`보다
+  `toComparisonWindows`가 적절합니다.
+- 반환 타입 이름을 그대로 옮기기보다 호출자가 쓰는 결과 개념을 적습니다.
+  `toReportViewModel`보다 `toReportRows`가 구체적입니다.
+- 서버 요청처럼 계약 자체가 출력 역할이면 `toUserSaveRequest`처럼 계약 이름을 씁니다.
 
-**`filter`는 첫 동사로 쓰지 않습니다.**
-`filterActiveUsers`는 활성 사용자를 남기는지 빼는지 말하지 않습니다.
-영어 filter는 거르는 쪽으로도 남기는 쪽으로도 읽히는데 `Array.prototype.filter`는 남기는 쪽입니다.
-이름이 정반대로 읽힐 수 있으면 결과를 말한 것이 아닙니다.
-남는 것을 이름에 담아 `toActiveUsers`로 씁니다.
+**값 대신 효과를 내는 함수는 그 효과로 이름 짓습니다.**
 
-**`map`도 첫 동사로 쓰지 않습니다.**
-바꾼다는 동작만 말하고 무엇이 나오는지 말하지 않습니다.
-`mapProductRows`는 rows가 들어가는 쪽인지 나오는 쪽인지도 흐립니다.
-`to<결과>`로 바꾸면 `.map(toProductRow)`처럼 콜백 자리에서도 그대로 읽힙니다.
-
-**값이 아니라 효과를 내는 함수는 하는 일로 짓습니다.**
-돌려줄 값이 없으니 결과로 부를 수 없습니다.
-
-| 하는 일 | 이름 | 예 |
+| 효과 | 이름 | 예 |
 | --- | --- | --- |
-| 서버를 부름 | `fetch`·`save`·`remove` | `saveProduct` |
-| 어기면 던짐 | `assert<조건>` | `assertLoggedIn` |
-| 검사하고 결과나 오류를 돌려줌 | `validate<대상>` | `validateProductForm` |
-| 도메인 동작 | 그 동작 이름 | `submitOrder`, `cancelBooking` |
+| 저장·삭제 | `save<대상>`·`remove<대상>` | `saveProduct` |
+| 조건 위반 시 예외 | `assert<조건>` | `assertLoggedIn` |
+| 검사 결과 또는 오류 | `validate<대상>` | `validateProductForm` |
+| 도메인 동작 | 실제 업무 동사 | `submitOrder`, `cancelBooking` |
 
-**이름의 첫 동사만 봅니다.** `isCheckedRow`나 `handleCheckAll`처럼 뒤에 섞인 낱말은 대상이 아닙니다.
+`build`, `create`, `make`, `process`, `manage`, `do`, `perform`, `execute`,
+`filter`, `map`, `update`는 우리가 짓는 이름의 첫 동사로 쓰지 않습니다.
+무엇이 나오는지 또는 어떤 효과가 생기는지 구체적으로 말하지 못하기 때문입니다.
 
-첫 동사로 쓰지 않는 낱말입니다.
-무엇이 나오는지를 어떤 자리에서도 말해 주지 않습니다.
+- `filterActiveUsers`는 활성 사용자를 남기는지 제외하는지 모호합니다.
+  남은 목록이 출력이면 `toActiveUsers`로 씁니다.
+- `mapProductRows`는 행이 입력인지 출력인지 모호합니다.
+  행이 출력이면 `toProductRows`로 씁니다.
+- `updateProduct`는 저장 효과인지 새 값을 만드는 계산인지 모호합니다.
+  각각 `saveProduct`나 `toUpdatedProduct`처럼 나눕니다.
+- 배열의 짧은 인라인 변환에서 쓰는 `array.map(...)`은 함수 이름 규칙과 무관합니다.
+- `handle`과 `use`처럼 프레임워크가 의미를 정하는 이름은 해당 프레임워크 규칙이 판정합니다.
 
-`build`, `create`, `make`, `process`, `manage`, `do`, `perform`, `execute`, `filter`, `map`
-
-- `normalize`나 `resolve`처럼 대상에 따라 갈리는 동사는 위 기준으로 판정합니다.
-  `normalizePath`는 경로가 나온다고 말하지만 `normalizeUserValues`는 아무것도 말하지 않습니다.
-  뜻이 정해진 기술 용어면 남기고, 도메인 값에 붙어 뭉뚱그리면 `to<결과>`로 바꿉니다.
-- `update<대상>`은 무엇이 어떻게 바뀌는지 알 수 없어 쓰지 않습니다.
-  `save<대상>`이나 `to<결과>`로 나눠 적습니다.
-- `handle`은 이벤트 핸들러 이름에만 씁니다.
-  프레임워크 컨벤션이 그 형태를 따로 정합니다.
-- 프레임워크가 이름을 정해 둔 자리는 대상이 아닙니다.
-  규격이 요구하는 메서드 이름은 금지 목록에 있어도 그대로 씁니다.
-- `new Promise((resolve, reject) => …)`의 매개변수처럼 언어 관용구가 정한 이름도 대상이 아닙니다.
-- 외부 패키지가 `createClient`처럼 지어 둔 이름은 그대로 씁니다.
-  우리가 짓는 이름만 봅니다.
+생성기·프레임워크·외부 계약이 정한 이름은 그대로 씁니다.
+`new Promise((resolve, reject) => …)`의 매개변수와 생성된 API의 `fetch` 함수처럼
+우리가 소유하지 않는 이름을 이 규칙에 맞추려고 바꾸거나 감싸지 않습니다.
 
 > 예시·예외가 필요하면 [full rule](../rules/03-07-functions-name-functions-by-what-comes-out.md)을 읽습니다.

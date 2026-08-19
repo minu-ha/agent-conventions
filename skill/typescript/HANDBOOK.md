@@ -25,6 +25,7 @@
     - 1.4 [Mark Unused Parameters With an Underscore Prefix](#14-mark-unused-parameters-with-an-underscore-prefix)
     - 1.5 [Narrow `unknown` Instead of Asserting](#15-narrow-unknown-instead-of-asserting)
     - 1.6 [Replace `enum` With `as const` Objects](#16-replace-enum-with-as-const-objects)
+    - 1.7 [Choose Interface for Object Contracts and Type for Type Composition](#17-choose-interface-for-object-contracts-and-type-for-type-composition)
 2. [Naming and Module Boundaries](#2-naming-and-module-boundaries) — **CRITICAL**
     - 2.1 [Centralize Shared Config Under `shared/config.ts`](#21-centralize-shared-config-under-shared-config-ts)
     - 2.2 [Place Owner-only Config in the Owner Config Folder](#22-place-owner-only-config-in-the-owner-config-folder)
@@ -33,6 +34,7 @@
     - 2.5 [Use Direct Imports and Dedicated Public Entry Points](#25-use-direct-imports-and-dedicated-public-entry-points)
     - 2.6 [Restrict Absolute Aliases to Layer Roots](#26-restrict-absolute-aliases-to-layer-roots)
     - 2.7 [Read Environment Values Through Shared Config](#27-read-environment-values-through-shared-config)
+    - 2.8 [Name Types by Role and Lifetime](#28-name-types-by-role-and-lifetime)
 3. [Functions and Helper Boundaries](#3-functions-and-helper-boundaries) — **MEDIUM-HIGH**
     - 3.1 [Declare Functions as Arrow Consts](#31-declare-functions-as-arrow-consts)
     - 3.2 [Use Named Object Params for Complex Signatures](#32-use-named-object-params-for-complex-signatures)
@@ -63,7 +65,7 @@
 
 **Impact: HIGH**
 
-함수 시그니처, 콜백 재사용, 타입 중복 제거, 커스텀 형태 문서화로 계약을 드러내고 다시 쓸 수 있게 유지해야 합니다. 실행 값과 타입을 한 선언에서 잡는 `as const` 객체와, 단언 대신 `unknown`을 좁히는 자리도 여기서 정합니다.
+함수 시그니처, 콜백 재사용, 타입 중복 제거, 커스텀 형태 문서화로 계약을 드러내고 다시 쓸 수 있게 유지해야 합니다. 독립된 객체 계약은 `interface`, 타입 계산과 조합은 `type`으로 선언합니다. 실행 값과 타입을 한 선언에서 잡는 `as const` 객체와, 단언 대신 `unknown`을 좁히는 자리도 여기서 정합니다.
 
 ### 1.1 Reuse Existing Contracts Before Declaring New Types
 
@@ -532,11 +534,94 @@ const product_status = {
 type ProductStatus = (typeof product_status)[keyof typeof product_status];
 ```
 
+### 1.7 Choose Interface for Object Contracts and Type for Type Composition
+
+**Rule:** `T01-07` · `types-choose-interface-for-object-contracts-and-type-for-composition`
+
+**Applies when:** `interface`와 `type` 사이에서 선언 형식을 바꿀 때. 객체 계약, union, tuple, 함수 시그니처, mapped·conditional type에 이름을 붙여 선언할 때. 제외: 외부·생성된 계약을 그대로 참조하는 경우.
+
+**Review with:** `types-document-custom-types-and-shapes`, `types-reuse-existing-contracts-before-new-types`
+
+**Impact: MEDIUM (선언 형식만 보고도 필드 계약인지 타입 사이의 관계인지 구분할 수 있습니다)**
+
+이름이 있고 필드를 직접 읽는 독립 객체 계약은 `interface`로 선언합니다.
+다른 타입과의 계산이나 조합이 핵심인 선언은 `type`으로 둡니다.
+
+| 선언 대상 | 형식 |
+| --- | --- |
+| 독립된 객체 필드 계약 | `interface` |
+| literal union, primitive·tuple 별칭 | `type` |
+| 함수 시그니처 | `type` |
+| mapped·conditional type, indexed access | `type` |
+| `Omit`·`Record` 같은 계산과 교차 조합 | `type` |
+| union의 한 갈래이거나 타입 관계가 핵심인 객체 | `type` |
+
+객체 형태라는 이유만으로 모두 `interface`로 바꾸지는 않습니다.
+필드를 직접 설명하는 독립 계약이면 `interface`를 쓰고, 다른 타입에서 무엇을 고르거나 빼고 합치는지가 뜻의 중심이면
+`type`을 씁니다.
+`Draft`, `State` 같은 이름도 선언 형식을 정하지 않습니다.
+같은 역할 이름이라도 독립된 필드 계약이면 `interface`, 타입 계산 결과면 `type`입니다.
+
+선언 형식을 맞추려고 새 별칭을 만들지 않습니다.
+구현 안에서 충분히 추론되는 익명 결과와 외부·생성된 계약은 그대로 둡니다.
+같은 뜻의 계약이 이미 있으면 `types-reuse-existing-contracts-before-new-types`에 따라 먼저 재사용합니다.
+
+**Incorrect (독립된 필드 계약을 객체 `type` 별칭으로 선언):**
+
+```ts
+/**
+ * 상품 요약
+ */
+type ProductSummary = {
+	/**
+	 * 상품 식별자
+	 */
+	id: string;
+	/**
+	 * 목록에 표시할 이름
+	 */
+	name: string;
+};
+```
+
+**Correct (필드 계약은 `interface`, 타입 조합은 `type`으로 구분):**
+
+```ts
+/**
+ * 상품 요약
+ */
+interface ProductSummary {
+	/**
+	 * 상품 식별자
+	 */
+	id: string;
+	/**
+	 * 목록에 표시할 이름
+	 */
+	name: string;
+}
+
+/**
+ * 상품 목록 표시 방식
+ */
+type ProductMode = "list" | "grid";
+
+/**
+ * 자식 목록을 편집할 수 있는 행
+ */
+type MutableRow = Omit<Row, "children"> & {
+	/**
+	 * 편집 중인 자식 행
+	 */
+	children: Row[];
+};
+```
+
 ## 2. Naming and Module Boundaries
 
 **Impact: CRITICAL**
 
-식별자, 가져오기, 공개 진입점, 절대경로 별칭 범위, 설정 위치가 소유자와 출처를 바로 드러내야 합니다. 여기서 **소유자**는 자기 폴더가 있는 모듈 하나입니다. 그 폴더 안 파일은 그 소유자만 씁니다.
+식별자, 가져오기, 공개 진입점, 절대경로 별칭 범위, 설정 위치가 소유자와 출처를 바로 드러내야 합니다. 타입 이름은 값의 역할과 수명을 드러내고 소유자 경로가 이미 말하는 문맥을 반복하지 않습니다. 여기서 **소유자**는 자기 폴더가 있는 모듈 하나입니다. 그 폴더 안 파일은 그 소유자만 씁니다.
 
 ### 2.1 Centralize Shared Config Under `shared/config.ts`
 
@@ -968,6 +1053,95 @@ export const config = {
 import {config} from "@/shared/config";
 
 const productClient = createClient({baseUrl: config.api.base_url});
+```
+
+### 2.8 Name Types by Role and Lifetime
+
+**Rule:** `T02-08` · `naming-name-types-by-role-and-lifetime`
+
+**Applies when:** 타입·인터페이스나 그 파일의 이름을 새로 만들거나 바꿀 때. 타입을 소유자 폴더 안과 밖 사이에서 옮기며 이름을 바꿀 때. 제외: 외부·생성된 계약 이름을 그대로 쓰는 경우.
+
+**Review with:** `naming-use-consistent-file-and-symbol-naming`
+
+**Impact: MEDIUM-HIGH (이름만 읽고 값이 무엇이며 어느 시점에 존재하는지 구분할 수 있습니다)**
+
+접미사부터 고르지 않습니다.
+그 값이 무엇이고 언제 존재하는지 판단한 뒤, 역할어가 의미를 더할 때만 붙입니다.
+도메인 명사만으로 충분하면 `ChartPoint`, `TableRow`처럼 더 붙이지 않습니다.
+
+| 역할어 | 사용하는 때 |
+| --- | --- |
+| `Params` | 함수나 훅의 여러 입력을 객체 하나로 묶을 때 |
+| `Options` | 호출자가 동작을 선택적으로 조절할 때 |
+| `Payload` | 이벤트·적용·저장 경계를 한 번 넘어가는 메시지일 때 |
+| `State` | 시간에 따라 바뀌며 소유자가 보관할 때 |
+| `Draft` | 아직 적용하거나 저장하지 않은 편집 중 값일 때 |
+| `Snapshot` | 한 시점의 목록·상태·메타데이터를 함께 고정할 때 |
+| `Content` | 컴포넌트나 섹션이 바로 소비할 완성된 내용 묶음일 때 |
+| `Config` | 동작이나 표시 정책을 선언할 때 |
+| `Resolved*` | 원본·fallback·현재 조건을 합쳐 값이 확정됐을 때 |
+| `Condition` | 필터나 적용 여부를 가르는 조건일 때 |
+| `Criterion` | 정렬·평가 기준 한 건일 때 |
+| `Setting` | 사용자가 고르거나 조절하는 설정 한 건일 때 |
+| `Row`·`Column`·`Item`·`Point`·`Series` | 컬렉션 안 한 요소의 역할이 분명할 때 |
+
+`Result`는 더 구체적인 결과 명사가 없을 때만 씁니다.
+`Spec`은 외부 명세나 검증할 요구사항 자체를 나타낼 때, `Model`은 식별성·행동·도메인 규칙을 가진 실제 모델일 때만
+씁니다.
+단순 가공 결과나 화면 표시 계약에 `VM`, `ViewModel`, 막연한 `Model`을 기본 접미사로 붙이지 않습니다.
+
+역할어는 이미 필요한 계약의 이름을 고르는 기준입니다.
+`Params`, `Content`, `Snapshot`을 쓰려고 새 타입을 만들지 않습니다.
+맞는 기존 계약이나 추론되는 익명 결과가 있으면 그대로 씁니다.
+
+소유자 폴더가 이미 말하는 도메인은 타입 이름에 반복하지 않습니다.
+`sales-report/type/` 안에서는 `SalesReportSnapshot`이 아니라 `ReportSnapshot`처럼 남은 문맥만 이름에 둡니다.
+소유자 밖으로 내보내 문맥이 사라지거나 다른 타입과 충돌할 때만 필요한 도메인 접두를 유지합니다.
+
+타입 파일도 실제 명사로 짓습니다.
+`report-snapshot.ts`처럼 쓰고 `report-vm.ts`, `report-view-model.ts`, 막연한 `report-model.ts`는 쓰지 않습니다.
+외부·생성된 계약의 이름과 `DTO` 같은 접미사는 그 계약이 정한 그대로 보존하며, 직접 작성한 내부 계약에 반대편
+표식처럼 붙이지 않습니다.
+프레임워크 전용 `Props`, `Handle`, `Slot`, `Renderer`는 해당 프레임워크 규칙이 정합니다.
+
+**Incorrect (소유자와 막연한 화면 계약 접미사를 반복):**
+
+```ts
+/**
+ * 영업 보고서 화면 데이터
+ */
+interface SalesReportViewModel {
+	/**
+	 * 조회 시점의 행 목록
+	 */
+	rows: ReportRow[];
+	/**
+	 * 조회에 사용한 필터
+	 */
+	filters: ReportFilters;
+}
+
+const salesReportVM: SalesReportViewModel = response.data;
+```
+
+**Correct (한 조회 시점에 고정된 값이라는 역할을 이름에 표시):**
+
+```ts
+/**
+ * 한 조회 시점의 보고서 목록과 조건
+ */
+interface ReportSnapshot {
+	/**
+	 * 조회 시점의 행 목록
+	 */
+	rows: ReportRow[];
+	/**
+	 * 조회에 사용한 필터
+	 */
+	filters: ReportFilters;
+}
+
+const reportSnapshot: ReportSnapshot = response.data;
 ```
 
 ## 3. Functions and Helper Boundaries
@@ -1733,101 +1907,76 @@ const submitDraft = async (draft: Draft) => {
 
 **Rule:** `T03-07` · `functions-name-functions-by-what-comes-out`
 
-**Applies when:** 이름 붙인 함수를 새로 만들거나 이름을 바꿀 때. 제외: 외부 패키지가 정한 이름을 별칭 없이 그대로 쓰는 경우.
+**Applies when:** 이름을 붙인 함수를 새로 만들거나 이름을 바꿀 때. 제외: 생성기·프레임워크·외부 계약이 정한 이름을 그대로 쓰는 경우.
 
 **Impact: MEDIUM (이름만 읽고 결과를 알 수 있어 구현을 열어 보지 않아도 됩니다)**
 
-**기준은 하나입니다 — 이름만 보고 무엇이 나오는지 아는가.**
-동사가 결과를 말하면 그 동사를 쓰고, 말하지 않으면 `to<결과>`로 바꿉니다.
+함수 이름은 입력이나 구현 동작이 아니라 호출 뒤 얻는 값이나 효과를 말합니다.
+접미사를 먼저 정하지 말고 아래 구분에서 가장 구체적인 동사를 고릅니다.
 
-| 동사 | 무엇이 나온다고 말하는가 | 예 |
+| 이름 | 사용하는 때 | 예 |
 | --- | --- | --- |
-| `to<결과>` | 그 형태로 바꾼 값 | `toUserSaveRequest` |
-| `get<대상>` | 이미 있는 그 값 | `getSelectedRow` |
-| `find<대상>` | 그 값 또는 없음 | `findUserByEmail` |
-| `is`·`has`·`can` | 참이나 거짓 | `isAdminUser` |
-| `parse<대상>` | 텍스트에서 뽑은 그 구조 | `parseSearchParams` |
-| `sort<대상>` | 정렬한 그 목록 | `sortProductsByUpdatedAt` |
+| `to<대상>` | 입력 형태를 다른 출력 형태로 바꿀 때 | `toDetailContent` |
+| `get<대상>` | 이미 존재하는 값을 가져올 때 | `getSelectedRow` |
+| `find<대상>` | 값 하나 또는 없음을 돌려줄 때 | `findUserByEmail` |
+| `resolve<대상>` | 조건·fallback·현재 문맥에서 답 하나를 정할 때 | `resolveDisplayRows` |
+| `normalize<대상>` | 같은 개념의 값을 허용 범위나 기본 표현에 맞출 때 | `normalizePageSize` |
+| `parse<대상>` | 문자열·`unknown`을 검증하며 타입이 보장된 값으로 읽을 때 | `parseSearchParams` |
+| `format<대상>` | 값을 사람이 읽는 문자열로 표시할 때 | `formatCandidateDayCount` |
+| `compare<대상>` | 두 값을 비교해 정렬 순서를 돌려줄 때 | `compareIndexedDriver` |
+| `sort<대상>` | 정렬한 목록을 돌려줄 때 | `sortProductsByUpdatedAt` |
+| `load<대상>`·`fetch<대상>` | 비동기 I/O를 수행하거나 여러 요청을 조율할 때 | `loadPatternSearchExport` |
+| `is`·`has`·`can`·`should` | 참이나 거짓으로 질문에 답할 때 | `shouldShowSummary` |
 
-`.toSorted()`처럼 표준 라이브러리가 `to`를 붙이는 자리도 같은 이유입니다.
-원본을 두고 새 값을 돌려준다는 사실을 접두사가 말합니다.
+`resolve`는 여러 후보 중 답을 정할 때, `normalize`는 같은 개념의 표현을
+허용 범위에 맞출 때만 씁니다. 단지 계산 과정이 복잡하다는 이유로 붙이지 않습니다.
 
-**이름에 넣는 것은 출력뿐입니다.**
+**이름에는 출력 역할만 남깁니다.**
 
-- 입력은 이름에 넣지 않습니다.
-  시그니처가 이미 말합니다.
-  이름에 `Response`가 보이면 출력이 아니라 입력을 이름 지은 것입니다.
-- 소유자 폴더가 말하는 도메인은 되풀이하지 않습니다.
-  `sales-trend-panel/function/` 안에서는 `toSalesTrendComparisonWindows`가 아니라 `toComparisonWindows`입니다.
-  같은 이름이 다른 소유자 아래 또 생겨도 가져오기 경로가 가릅니다.
-- 반환 타입 이름을 그대로 옮기지 않습니다.
-  `toReportViewModel`이 아니라 화면이 부르는 개념으로 `toReportRows`처럼 짓습니다.
-  서버로 보내는 값은 요청 계약이 곧 출력이라 `toUserSaveRequest`가 그대로 이름입니다.
+- 입력은 시그니처가 말하므로 이름에 반복하지 않습니다.
+  `mapResponseToModel`처럼 입력과 막연한 접미사를 함께 적지 않습니다.
+- 소유자 경로가 이미 말하는 도메인을 되풀이하지 않습니다.
+  `sales-trend-panel/function/` 안에서는 `toSalesTrendComparisonWindows`보다
+  `toComparisonWindows`가 적절합니다.
+- 반환 타입 이름을 그대로 옮기기보다 호출자가 쓰는 결과 개념을 적습니다.
+  `toReportViewModel`보다 `toReportRows`가 구체적입니다.
+- 서버 요청처럼 계약 자체가 출력 역할이면 `toUserSaveRequest`처럼 계약 이름을 씁니다.
 
-**`filter`는 첫 동사로 쓰지 않습니다.**
-`filterActiveUsers`는 활성 사용자를 남기는지 빼는지 말하지 않습니다.
-영어 filter는 거르는 쪽으로도 남기는 쪽으로도 읽히는데 `Array.prototype.filter`는 남기는 쪽입니다.
-이름이 정반대로 읽힐 수 있으면 결과를 말한 것이 아닙니다.
-남는 것을 이름에 담아 `toActiveUsers`로 씁니다.
+**값 대신 효과를 내는 함수는 그 효과로 이름 짓습니다.**
 
-**`map`도 첫 동사로 쓰지 않습니다.**
-바꾼다는 동작만 말하고 무엇이 나오는지 말하지 않습니다.
-`mapProductRows`는 rows가 들어가는 쪽인지 나오는 쪽인지도 흐립니다.
-`to<결과>`로 바꾸면 `.map(toProductRow)`처럼 콜백 자리에서도 그대로 읽힙니다.
-
-**값이 아니라 효과를 내는 함수는 하는 일로 짓습니다.**
-돌려줄 값이 없으니 결과로 부를 수 없습니다.
-
-| 하는 일 | 이름 | 예 |
+| 효과 | 이름 | 예 |
 | --- | --- | --- |
-| 서버를 부름 | `fetch`·`save`·`remove` | `saveProduct` |
-| 어기면 던짐 | `assert<조건>` | `assertLoggedIn` |
-| 검사하고 결과나 오류를 돌려줌 | `validate<대상>` | `validateProductForm` |
-| 도메인 동작 | 그 동작 이름 | `submitOrder`, `cancelBooking` |
+| 저장·삭제 | `save<대상>`·`remove<대상>` | `saveProduct` |
+| 조건 위반 시 예외 | `assert<조건>` | `assertLoggedIn` |
+| 검사 결과 또는 오류 | `validate<대상>` | `validateProductForm` |
+| 도메인 동작 | 실제 업무 동사 | `submitOrder`, `cancelBooking` |
 
-**이름의 첫 동사만 봅니다.** `isCheckedRow`나 `handleCheckAll`처럼 뒤에 섞인 낱말은 대상이 아닙니다.
+`build`, `create`, `make`, `process`, `manage`, `do`, `perform`, `execute`,
+`filter`, `map`, `update`는 우리가 짓는 이름의 첫 동사로 쓰지 않습니다.
+무엇이 나오는지 또는 어떤 효과가 생기는지 구체적으로 말하지 못하기 때문입니다.
 
-첫 동사로 쓰지 않는 낱말입니다.
-무엇이 나오는지를 어떤 자리에서도 말해 주지 않습니다.
+- `filterActiveUsers`는 활성 사용자를 남기는지 제외하는지 모호합니다.
+  남은 목록이 출력이면 `toActiveUsers`로 씁니다.
+- `mapProductRows`는 행이 입력인지 출력인지 모호합니다.
+  행이 출력이면 `toProductRows`로 씁니다.
+- `updateProduct`는 저장 효과인지 새 값을 만드는 계산인지 모호합니다.
+  각각 `saveProduct`나 `toUpdatedProduct`처럼 나눕니다.
+- 배열의 짧은 인라인 변환에서 쓰는 `array.map(...)`은 함수 이름 규칙과 무관합니다.
+- `handle`과 `use`처럼 프레임워크가 의미를 정하는 이름은 해당 프레임워크 규칙이 판정합니다.
 
-`build`, `create`, `make`, `process`, `manage`, `do`, `perform`, `execute`, `filter`, `map`
+생성기·프레임워크·외부 계약이 정한 이름은 그대로 씁니다.
+`new Promise((resolve, reject) => …)`의 매개변수와 생성된 API의 `fetch` 함수처럼
+우리가 소유하지 않는 이름을 이 규칙에 맞추려고 바꾸거나 감싸지 않습니다.
 
-- `normalize`나 `resolve`처럼 대상에 따라 갈리는 동사는 위 기준으로 판정합니다.
-  `normalizePath`는 경로가 나온다고 말하지만 `normalizeUserValues`는 아무것도 말하지 않습니다.
-  뜻이 정해진 기술 용어면 남기고, 도메인 값에 붙어 뭉뚱그리면 `to<결과>`로 바꿉니다.
-- `update<대상>`은 무엇이 어떻게 바뀌는지 알 수 없어 쓰지 않습니다.
-  `save<대상>`이나 `to<결과>`로 나눠 적습니다.
-- `handle`은 이벤트 핸들러 이름에만 씁니다.
-  프레임워크 컨벤션이 그 형태를 따로 정합니다.
-- 프레임워크가 이름을 정해 둔 자리는 대상이 아닙니다.
-  규격이 요구하는 메서드 이름은 금지 목록에 있어도 그대로 씁니다.
-- `new Promise((resolve, reject) => …)`의 매개변수처럼 언어 관용구가 정한 이름도 대상이 아닙니다.
-- 외부 패키지가 `createClient`처럼 지어 둔 이름은 그대로 씁니다.
-  우리가 짓는 이름만 봅니다.
-
-**Incorrect (동사가 결과를 안 알려 줌):**
+**Incorrect (입력·구현 동작·막연한 접미사를 이름에 씀):**
 
 ```ts
 export const buildUserPayload = (formValues: UserFormValues) => { /* … */ };
-export const normalizeUserValues = (formValues: UserFormValues) => { /* … */ };
+export const mapResponseToModel = (response: UserResponse) => { /* … */ };
 export const processUserRows = (rows: UserRow[]) => { /* … */ };
 ```
 
-**Incorrect (`filter`라 남기는지 빼는지 이름이 말하지 않음):**
-
-```ts
-export const filterActiveUsers = (rows: UserRow[]) => { /* … */ };
-export const filterDeletedUsers = (rows: UserRow[]) => { /* … */ };
-```
-
-**Incorrect (출력이 아니라 입력과 소유자 도메인을 이름 지음):**
-
-```ts
-// page/detail/component/sales-trend-panel/function/map-sales-trend-comparison-response.ts
-export const mapSalesTrendComparisonResponse = (response: SalesTrendComparisonResponse) => { /* … */ };
-```
-
-**Correct (이름이 결과를 말함):**
+**Correct (출력 역할이나 효과를 이름에 씀):**
 
 ```ts
 /**
@@ -1836,42 +1985,23 @@ export const mapSalesTrendComparisonResponse = (response: SalesTrendComparisonRe
 export const toUserSaveRequest = (formValues: UserFormValues) => { /* … */ };
 
 /**
- * 목록에 표시할 사용자 이름. 표시 이름이 비면 이메일 앞부분을 쓴다
- */
-export const toUserDisplayName = (user: User) => { /* … */ };
-
-/**
- * 비활성 사용자를 뺀 목록
+ * 비활성 사용자를 제외한 목록
  */
 export const toActiveUsers = (rows: UserRow[]) => { /* … */ };
 
 /**
- * 관리자 권한 판정. 역할 목록이 비어 있으면 조회가 끝나지 않은 상태라 false 다
+ * 관리자 권한 판정. 역할 목록이 비어 있으면 조회 전 상태로 보고 false를 돌려준다
  */
 export const isAdminUser = (user: User) => { /* … */ };
-```
 
-**Correct (효과를 내는 함수는 하는 일로):**
-
-```ts
 /**
- * 로그인 상태가 아니면 던진다. 호출한 쪽이 화면 이동을 정한다
+ * 로그인 상태가 아니면 예외를 던진다. 화면 이동은 호출한 쪽이 정한다
  */
 export const assertLoggedIn = (session: Session): void => {
 	if (!session.userId) {
 		throw new NotLoggedInError();
 	}
 };
-```
-
-**Correct (출력 개념만 남김):**
-
-```ts
-// page/detail/component/sales-trend-panel/function/to-comparison-windows.ts
-/**
- * 비교 구간 목록. 겹침 구간과 전체 구간을 구간 id로 잇는다
- */
-export const toComparisonWindows = (response: SalesTrendComparisonResponse) => { /* … */ };
 ```
 
 ## 4. Values and Data Structures

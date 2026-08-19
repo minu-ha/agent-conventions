@@ -445,7 +445,7 @@ import { WgLegendPanel } from "@/widget/legend-panel/wg-legend-panel";
 
 **Rule:** `R01-05` · `ownership-prefer-plain-ts-for-local-react-helpers`
 
-**Applies when:** 화면 전용 계산·정규화·전송 값 조립을 커스텀 훅으로 추출하려 할 때. 화면 전용 순수 로직을 별도 보조 모듈로 옮기려 할 때. 제외: 상태·컨텍스트·다른 훅 호출 순서를 실제로 캡슐화하는 경우.
+**Applies when:** 화면 전용 계산·정규화·전송 값 조립을 커스텀 훅으로 추출하려 할 때. 화면 전용 순수 로직을 별도 보조 모듈로 옮기려 할 때. 화면 지역 함수에 `use` 접두사를 붙이거나 커스텀 훅 이름을 바꿀 때. 제외: 상태·컨텍스트·다른 훅 호출 순서를 실제로 캡슐화하는 경우.
 
 **Review with:** `ownership-keep-lifecycle-in-the-owning-component`, `ownership-place-owner-files-in-role-folders`, `typescript/functions-extract-helpers-only-when-the-boundary-is-real`, `typescript/naming-use-direct-imports-and-public-entry-points`
 
@@ -458,10 +458,13 @@ import { WgLegendPanel } from "@/widget/legend-panel/wg-legend-panel";
   그 함수를 아예 밖으로 뺄지는 `typescript/functions-extract-helpers-only-when-the-boundary-is-real`이,
   뺀 결과를 어디 둘지는 `ownership-place-owner-files-in-role-folders`가 정합니다.
 - 화면 지역 커스텀 훅은 상태, 컨텍스트, 다른 훅 호출 순서를 실제로 캡슐화할 때만 허용합니다.
+  실제로 훅인 함수만 `use<Capability>`로 이름 짓습니다.
+  `useData`, `useLogic`처럼 구현 범주를 되풀이하지 말고 훅이 제공하는 기능을 적습니다.
 - 보조 모듈의 내보내기와 가져오기 형태는 `typescript/naming-use-direct-imports-and-public-entry-points`가 정합니다.
 - 생명주기가 실제로 있어도 파일 분량을 줄이려는 추출은 허용하지 않습니다.
   그 판단은 `ownership-keep-lifecycle-in-the-owning-component`가 담당합니다.
 - 단순 계산을 훅처럼 보이게 만드는 추상화는 피합니다.
+  순수 함수에 `use`를 붙여 훅처럼 보이게 하는 것도 허용하지 않습니다.
 
 **Incorrect (로컬 계산을 습관적으로 훅으로 포장):**
 
@@ -476,7 +479,7 @@ export const useMediaUploadPayload = (files: UploadFile[]) => {
 ```ts
 // page/products/function/to-media-upload-request.ts
 /**
- * 업로드 파일 목록을 저장 payload로 정규화
+ * 업로드 파일 목록으로 저장 요청을 조립
  */
 export const toMediaUploadRequest = (files: UploadFile[]) => {
 	return files.map((file) => ({ uid: file.uid }));
@@ -1840,13 +1843,17 @@ export const WgProductEditToolbar = () => {
 
 **Rule:** `R04-04` · `strategy-prefer-children-over-render-props`
 
-**Applies when:** 공용 컴포넌트에 헤더·푸터·동작 같은 정적 슬롯을 추가·변경할 때. 렌더 프롭을 추가·변경하는데 실행 환경 데이터 주입이 꼭 필요한지 불분명할 때.
+**Applies when:** 공용 컴포넌트에 헤더·푸터·동작 같은 정적 슬롯을 추가·변경할 때. 렌더 프롭을 추가·변경하는데 실행 환경 데이터 주입이 꼭 필요한지 불분명할 때. `ReactNode` 슬롯이나 렌더 함수 계약에 이름을 붙이거나 바꿀 때.
 
 **Impact: MEDIUM (부모가 콜백으로 값을 내려보낼 필요가 없으면 조립이 읽기 쉬워집니다)**
 
 공용 컴포넌트가 `stateless compound component`로 충분할 때는 `renderHeader`,
 `renderFooter` 같은 렌더 프롭보다 `children`과 네임스페이스 슬롯 부품을 우선합니다.
 렌더 프롭은 부모가 자식에게 항목, 순번, 상태 같은 실행 환경 데이터를 전달해야 할 때만 씁니다.
+
+별도 이름이 필요한 `ReactNode` 값 계약은 `<Owner>Slot`, 실행 문맥을 받아
+`ReactNode`를 만드는 함수 계약은 `<Owner>Renderer`로 짓습니다.
+한 번만 쓰는 익명 형태에 접미사를 붙이려고 새 타입을 만들지는 않습니다.
 
 **Incorrect (정적인 구조를 렌더 프롭으로 조립):**
 
@@ -2117,7 +2124,7 @@ const handleRemoveProductButtonClick: MouseEventHandler<HTMLButtonElement> = asy
 
 **Rule:** `R05-04` · `composition-open-ref-props-only-for-imperative-contracts`
 
-**Applies when:** 컴포넌트에 `ref` 프롭을 추가하거나 공개할 대상을 바꿀 때. 제외: 이미 있는 `ref` 계약의 타입만 바꾸는 경우.
+**Applies when:** 컴포넌트에 `ref` 프롭을 추가하거나 공개할 대상을 바꿀 때. `useImperativeHandle`로 노출하는 명령형 계약 타입을 만들거나 이름을 바꿀 때. 제외: DOM 요소를 그대로 가리키는 기존 `ref` 계약의 타입만 바꾸는 경우.
 
 **Review with:** `typescript/docs-justify-convention-exceptions-with-a-reason-comment`, `typing-narrow-library-wrapper-contracts`
 
@@ -2130,6 +2137,8 @@ const handleRemoveProductButtonClick: MouseEventHandler<HTMLButtonElement> = asy
   나중에 필요해지면 그때 엽니다.
 - 열 때는 `ref`를 일반 프롭처럼 직접 받습니다.
   감싸는 래퍼를 새로 만들지 않습니다.
+- `useImperativeHandle`로 명령 메서드 묶음을 노출할 때만 계약을 `<Owner>Handle`로 짓습니다.
+  DOM 요소를 그대로 가리키는 `ref`에는 `Handle` 타입을 만들지 않습니다.
 - 외부 패키지 타입 제약 때문에 래퍼가 필요하면 그 이유를 주석으로 남깁니다.
   주석의 위치와 근거 기준은
   `typescript/docs-justify-convention-exceptions-with-a-reason-comment`가 정합니다.

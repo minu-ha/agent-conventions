@@ -63,6 +63,45 @@
 			}
 		},
 		{
+			"id": "type-declaration-form",
+			"prompt": "replace an existing `type ProductSummary = {...}` with an `interface` because it is an independent field contract, and replace an object-shaped `interface ProductMode` with a literal-union `type`; keep both names, fields, imports, and docs unchanged.",
+			"files": [
+				"src/products/product-contracts.ts"
+			],
+			"expectedSkills": [
+				"typescript"
+			],
+			"expectedSelected": {
+				"typescript": [
+					"types-document-custom-types-and-shapes",
+					"types-choose-interface-for-object-contracts-and-type-for-composition",
+					"docs-require-header-jsdoc-on-key-declarations",
+					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-doc-comments-as-multiline-blocks"
+				]
+			}
+		},
+		{
+			"id": "type-role-and-lifetime",
+			"prompt": "rename the owner-local `SalesReportViewModel` interface and its `salesReportViewModel` value to `ReportSnapshot` and `reportSnapshot` because they freeze rows, filters, and pagination from one query; keep fields, imports, and docs unchanged.",
+			"files": [
+				"src/report/report-panel.ts"
+			],
+			"expectedSkills": [
+				"typescript"
+			],
+			"expectedSelected": {
+				"typescript": [
+					"types-document-custom-types-and-shapes",
+					"naming-use-consistent-file-and-symbol-naming",
+					"naming-name-types-by-role-and-lifetime",
+					"docs-require-header-jsdoc-on-key-declarations",
+					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-doc-comments-as-multiline-blocks"
+				]
+			}
+		},
+		{
 			"id": "helper-boundary-scope-drift",
 			"prompt": "inline a single-owner `mapProfileRow` sub-step into `profile-api.ts` and rename the remaining exported builder by its result.",
 			"files": [

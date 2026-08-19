@@ -9,6 +9,8 @@
   나중에 필요해지면 그때 엽니다.
 - 열 때는 `ref`를 일반 프롭처럼 직접 받습니다.
   감싸는 래퍼를 새로 만들지 않습니다.
+- `useImperativeHandle`로 명령 메서드 묶음을 노출할 때만 계약을 `<Owner>Handle`로 짓습니다.
+  DOM 요소를 그대로 가리키는 `ref`에는 `Handle` 타입을 만들지 않습니다.
 - 외부 패키지 타입 제약 때문에 래퍼가 필요하면 그 이유를 주석으로 남깁니다.
   주석의 위치와 근거 기준은
   `typescript/docs-justify-convention-exceptions-with-a-reason-comment`가 정합니다.
