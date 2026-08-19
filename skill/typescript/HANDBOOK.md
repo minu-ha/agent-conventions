@@ -818,6 +818,12 @@ const toProductSaveBody = (values: ProductFormValues) => {
 다시 내보내는 계층이 아니므로 배럴이 아닙니다.
 타입만 가져올 때는 `import type`을 써서 계약과 실행 의존을 나눕니다.
 
+내보내기는 이름 붙인 내보내기만 씁니다.
+`default`는 이름을 사용처가 지어서 같은 것이 파일마다 다른 이름으로 불리고,
+이름 바꾸기도 사용처까지 번지지 않습니다.
+도구가 그 파일의 계약으로 `default`를 요구할 때만 씁니다.
+`vite.config.ts` 같은 설정 진입점이 그 자리입니다.
+
 절대경로 별칭으로 어디까지 열지는 `naming-restrict-absolute-aliases-to-layer-roots` 규칙이 정합니다.
 
 경로가 같아도 값과 타입 중 무엇을 가져오는지가 바뀌면
@@ -829,6 +835,22 @@ const toProductSaveBody = (values: ProductFormValues) => {
 import {config, util, UserProfile} from "./index";
 ```
 
+**Incorrect (`default`로 내보내 사용처마다 다른 이름이 생김):**
+
+```tsx
+// ui/tabs/ui-tabs.tsx
+const UiTabs = (props: UiTabsProps) => {
+	return <div role="tablist">{props.children}</div>;
+};
+
+export default UiTabs;
+```
+
+```tsx
+// 사용처가 이름을 지어서 같은 컴포넌트가 파일마다 다른 이름으로 불린다
+import Tabs from "@/ui/tabs/ui-tabs";
+```
+
 **Correct (직접 가져오기와 공개 진입점을 구분):**
 
 ```ts
@@ -837,6 +859,13 @@ import {config} from "@/shared/config";
 import {util} from "@/shared/util";
 import {WgChartCard} from "@/widget/chart-card/wg-chart-card";
 import {toUserSaveRequest} from "./function/to-user-save-request";
+```
+
+**Correct (도구가 계약으로 요구하는 파일만 `default`):**
+
+```ts
+// vite.config.ts
+export default defineConfig({plugins: [react()]});
 ```
 
 ### 2.6 Restrict Absolute Aliases to Layer Roots
@@ -2587,6 +2616,7 @@ const filteredRows = useMemo(() => rows.filter((row) => matchRow(row, deferredKe
 | --- | --- |
 | `style/noEnum` | `typescript/types-replace-enum-with-as-const-objects` |
 | `style/useImportType` | `typescript/naming-use-direct-imports-and-public-entry-points` |
+| `style/noDefaultExport` | `typescript/naming-use-direct-imports-and-public-entry-points`의 이름 붙인 내보내기 |
 | `style/noRestrictedImports` | `typescript/naming-restrict-absolute-aliases-to-layer-roots`의 경로 표 |
 | `style/useNamingConvention` | `typescript/naming-use-consistent-file-and-symbol-naming`의 심볼 표기 |
 | `style/useFilenamingConvention` | `typescript/naming-use-consistent-file-and-symbol-naming`의 파일명 |
@@ -2638,6 +2668,11 @@ const filteredRows = useMemo(() => rows.filter((row) => matchRow(row, deferredKe
 소스가 이미 이름을 붙여 둔 값은 테스트도 그 이름을 가져다 씁니다.
 끄는 것은 리터럴을 그대로 적어야 하는 기대값뿐입니다.
 
+**도구 설정 파일에서는 `noDefaultExport`를 끕니다.**
+`vite.config.ts` 같은 진입점은 도구가 `default`를 계약으로 요구합니다.
+언제 `default`를 쓰는지는 `typescript/naming-use-direct-imports-and-public-entry-points`가 정하고
+여기서는 그 예외를 설정으로 옮기기만 합니다.
+
 따로 켜지 않는 규칙이 하나 있습니다.
 `style/useFragmentSyntax`는 JSX 조각을 `<>`로 바꾸라고 합니다.
 `recommended`에 없어 따로 켜야 하는데, 켜지 않습니다.
@@ -2667,6 +2702,7 @@ const filteredRows = useMemo(() => rows.filter((row) => matchRow(row, deferredKe
 			"suspicious": {"noExplicitAny": "error"},
 			"performance": {"noNamespaceImport": "error", "noBarrelFile": "error", "noReExportAll": "error"},
 			"style": {
+				"noDefaultExport": "error",
 				"noEnum": "error",
 				"noMagicNumbers": "error",
 				"noNestedTernary": "error",
@@ -2705,6 +2741,10 @@ const filteredRows = useMemo(() => rows.filter((row) => matchRow(row, deferredKe
 		{
 			"includes": ["test/**/*.ts"],
 			"linter": {"rules": {"style": {"noMagicNumbers": "off"}}}
+		},
+		{
+			"includes": ["**/*.config.ts", "**/*.config.js"],
+			"linter": {"rules": {"style": {"noDefaultExport": "off"}}}
 		}
 	]
 }

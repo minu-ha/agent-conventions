@@ -21,6 +21,7 @@ tags: tooling
 | --- | --- |
 | `style/noEnum` | `typescript/types-replace-enum-with-as-const-objects` |
 | `style/useImportType` | `typescript/naming-use-direct-imports-and-public-entry-points` |
+| `style/noDefaultExport` | `typescript/naming-use-direct-imports-and-public-entry-points`의 이름 붙인 내보내기 |
 | `style/noRestrictedImports` | `typescript/naming-restrict-absolute-aliases-to-layer-roots`의 경로 표 |
 | `style/useNamingConvention` | `typescript/naming-use-consistent-file-and-symbol-naming`의 심볼 표기 |
 | `style/useFilenamingConvention` | `typescript/naming-use-consistent-file-and-symbol-naming`의 파일명 |
@@ -72,6 +73,11 @@ tags: tooling
 소스가 이미 이름을 붙여 둔 값은 테스트도 그 이름을 가져다 씁니다.
 끄는 것은 리터럴을 그대로 적어야 하는 기대값뿐입니다.
 
+**도구 설정 파일에서는 `noDefaultExport`를 끕니다.**
+`vite.config.ts` 같은 진입점은 도구가 `default`를 계약으로 요구합니다.
+언제 `default`를 쓰는지는 `typescript/naming-use-direct-imports-and-public-entry-points`가 정하고
+여기서는 그 예외를 설정으로 옮기기만 합니다.
+
 따로 켜지 않는 규칙이 하나 있습니다.
 `style/useFragmentSyntax`는 JSX 조각을 `<>`로 바꾸라고 합니다.
 `recommended`에 없어 따로 켜야 하는데, 켜지 않습니다.
@@ -101,6 +107,7 @@ tags: tooling
 			"suspicious": {"noExplicitAny": "error"},
 			"performance": {"noNamespaceImport": "error", "noBarrelFile": "error", "noReExportAll": "error"},
 			"style": {
+				"noDefaultExport": "error",
 				"noEnum": "error",
 				"noMagicNumbers": "error",
 				"noNestedTernary": "error",
@@ -139,6 +146,10 @@ tags: tooling
 		{
 			"includes": ["test/**/*.ts"],
 			"linter": {"rules": {"style": {"noMagicNumbers": "off"}}}
+		},
+		{
+			"includes": ["**/*.config.ts", "**/*.config.js"],
+			"linter": {"rules": {"style": {"noDefaultExport": "off"}}}
 		}
 	]
 }

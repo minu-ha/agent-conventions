@@ -21,6 +21,12 @@ tags: naming
 다시 내보내는 계층이 아니므로 배럴이 아닙니다.
 타입만 가져올 때는 `import type`을 써서 계약과 실행 의존을 나눕니다.
 
+내보내기는 이름 붙인 내보내기만 씁니다.
+`default`는 이름을 사용처가 지어서 같은 것이 파일마다 다른 이름으로 불리고,
+이름 바꾸기도 사용처까지 번지지 않습니다.
+도구가 그 파일의 계약으로 `default`를 요구할 때만 씁니다.
+`vite.config.ts` 같은 설정 진입점이 그 자리입니다.
+
 절대경로 별칭으로 어디까지 열지는 `naming-restrict-absolute-aliases-to-layer-roots` 규칙이 정합니다.
 
 경로가 같아도 값과 타입 중 무엇을 가져오는지가 바뀌면
@@ -32,6 +38,22 @@ tags: naming
 import {config, util, UserProfile} from "./index";
 ```
 
+**Incorrect (`default`로 내보내 사용처마다 다른 이름이 생김):**
+
+```tsx
+// ui/tabs/ui-tabs.tsx
+const UiTabs = (props: UiTabsProps) => {
+	return <div role="tablist">{props.children}</div>;
+};
+
+export default UiTabs;
+```
+
+```tsx
+// 사용처가 이름을 지어서 같은 컴포넌트가 파일마다 다른 이름으로 불린다
+import Tabs from "@/ui/tabs/ui-tabs";
+```
+
 **Correct (직접 가져오기와 공개 진입점을 구분):**
 
 ```ts
@@ -40,4 +62,11 @@ import {config} from "@/shared/config";
 import {util} from "@/shared/util";
 import {WgChartCard} from "@/widget/chart-card/wg-chart-card";
 import {toUserSaveRequest} from "./function/to-user-save-request";
+```
+
+**Correct (도구가 계약으로 요구하는 파일만 `default`):**
+
+```ts
+// vite.config.ts
+export default defineConfig({plugins: [react()]});
 ```
