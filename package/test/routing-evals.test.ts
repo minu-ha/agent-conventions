@@ -134,6 +134,7 @@ const cssRuleUniverse = [
 	"composition-inject-classes-only-at-the-entry-point",
 	"composition-do-not-add-wrapper-elements-for-styling",
 	"composition-do-not-style-through-the-style-attribute",
+	"composition-derive-modifiers-from-values-only-on-a-closed-map",
 	"selector-limit-nesting-block-depth",
 	"selector-use-classes-instead-of-element-selectors",
 	"selector-do-not-group-classes-with-commas",
@@ -418,7 +419,10 @@ const cssRuleRouting = {
 	},
 	"composition-compose-classes-with-clsx": {
 		appliesWhen: "TSX의 `className`을 추가·수정할 때. 기본 클래스, 수정자, 선택 클래스를 함께 엮을 때.",
-		reviewWith: ["typescript/values-avoid-lookup-tables-for-simple-choices"],
+		reviewWith: [
+			"composition-derive-modifiers-from-values-only-on-a-closed-map",
+			"typescript/values-avoid-lookup-tables-for-simple-choices",
+		],
 	},
 	"composition-do-not-build-structural-variants-with-modifiers": {
 		appliesWhen: "수정자를 추가·변경할 때. 여러 곳에서 반복되는 모양인지 한 곳만의 보정인지 가릴 때.",
@@ -445,6 +449,11 @@ const cssRuleRouting = {
 			"values-tokenize-repeated-visual-values",
 			"values-always-provide-css-variable-fallbacks",
 		],
+	},
+	"composition-derive-modifiers-from-values-only-on-a-closed-map": {
+		appliesWhen:
+			"값이나 `variant` 프롭으로 수정자를 고르는 `className`을 추가·변경할 때. 클래스 이름에 값을 끼워 넣는 템플릿 리터럴을 추가·변경할 때. 제외: 불리언 하나로 수정자가 붙거나 빠지는 경우.",
+		reviewWith: ["composition-compose-classes-with-clsx", "typescript/values-avoid-lookup-tables-for-simple-choices"],
 	},
 	"selector-limit-nesting-block-depth": {
 		appliesWhen: "중첩 `{}` 블록을 추가하거나 기존 블록을 펼치거나 합칠 때. `&`로 조건이나 가상 요소를 붙일 때.",
@@ -1528,6 +1537,23 @@ const cssScenarioStages = {
 			},
 		},
 	},
+	"css-value-driven-modifier": {
+		initial: {
+			prompt:
+				"pick the metricValue modifier from the four-value tone in pg-sales-trend-panel.tsx where the stylesheet defines --positive and --negative only; keep the existing clsx import and stylesheet.",
+			files: ["src/page/detail/component/sales-trend-panel/pg-sales-trend-panel.tsx"],
+			expectedSkills: ["react", "typescript", "css"],
+			expectedSelected: {
+				react: [],
+				typescript: [],
+				css: [
+					"composition-compose-classes-with-clsx",
+					"composition-do-not-build-structural-variants-with-modifiers",
+					"composition-derive-modifiers-from-values-only-on-a-closed-map",
+				],
+			},
+		},
+	},
 	"css-ui-wrapper-third-party-dom": {
 		initial: {
 			prompt:
@@ -2243,7 +2269,10 @@ test("JSX branches, local value choices, and query selectors stay explicit at th
 	const wrapperRule = await readRuleSource("react", "typing-choose-wrapper-shape-and-forwarding");
 	const classRule = await readRuleSource("css", "composition-compose-classes-with-clsx");
 	assert.match(wrapperRule, /^reviewWith: typescript\/values-avoid-lookup-tables-for-simple-choices$/m);
-	assert.match(classRule, /^reviewWith: typescript\/values-avoid-lookup-tables-for-simple-choices$/m);
+	assert.equal(
+		readFrontmatterValue(classRule, "reviewWith"),
+		"composition-derive-modifiers-from-values-only-on-a-closed-map, typescript/values-avoid-lookup-tables-for-simple-choices",
+	);
 });
 
 test("TypeScript SKILL.md is a compact router without receipt or audit machinery", async () => {
@@ -2488,7 +2517,7 @@ test("CSS progressive metadata and rule routing match Appendix C exactly", async
 	assert.deepEqual(document.metadata.companions, [
 		{skill: "typescript", mode: "conditional", appliesWhen: "TS/TSX 클래스 계약, 래퍼 Props 또는 style import를 함께 변경한다."},
 	]);
-	assert.equal(document.rules.length, 32);
+	assert.equal(document.rules.length, 33);
 	assert.deepEqual(
 		Object.fromEntries(document.rules.map((rule) => [getRuleId(rule), {appliesWhen: rule.appliesWhen, reviewWith: rule.reviewWith}])),
 		cssRuleRouting,
@@ -2519,6 +2548,29 @@ test("CSS progressive metadata and rule routing match Appendix C exactly", async
 		"fallbackRule",
 	);
 
+	const modifierMapRule = await readRuleSource("css", "composition-derive-modifiers-from-values-only-on-a-closed-map");
+	const modifierMapNormative = splitFrontmatter(modifierMapRule).body.split("**Incorrect", 1)[0] ?? "";
+	assertMentions(
+		flattenWhitespace(modifierMapNormative),
+		[
+			/수정자는 `조건 && "클래스"`로 적습니다/,
+			/한 값이 요소 둘 이상의 수정자를 정할 때\*\*뿐입니다/,
+			/요소가 하나면 나열은 값 수만큼이고 값을 더할 자리도 한 곳이라 `&&`로 적습니다/,
+			/우리가 값을 다 아는 닫힌 집합/,
+			/값마다 대응하는 수정자가 CSS에 있습니다/,
+			/값과 수정자가 같은 낱말입니다/,
+			/CSS 파일을 열어 확인합니다/,
+			/라이브러리 타입에서 그대로 열어 받은 값으로는 수정자를 만들지 않습니다/,
+			/`--undefined`가 붙지 않게 합니다/,
+		],
+		"modifierMapRule",
+	);
+	assert.match(modifierMapRule, /`pg_salesPanel__metricValue--\$\{tone\}`/);
+	assert.match(modifierMapRule, /tone === "positive" && "pg_salesPanel__metricValue--positive"/);
+	assert.match(modifierMapRule, /props\.variant === "fit" && "ui_tooltip__body--fit"/);
+	assert.match(modifierMapRule, /`wg_flowNode__title--\$\{props\.role\}`/);
+	assert.match(modifierMapRule, /variant\?: ButtonProps\["variant"\]/);
+
 	const template = await readFile(path.join(skillPaths.rulesDir, "_template.md"), "utf8");
 	assert.match(readAppliesWhen(template), / /);
 	assert.doesNotMatch(template, /^reviewWith:/m);
@@ -2544,10 +2596,10 @@ test("CSS routing manifest is the exact eleven-scenario and thirteen-stage Appen
 		manifest.scenarios.map((scenario) => scenario.id),
 		expectedScenarioIds,
 	);
-	assert.equal(manifest.scenarios.length, 18);
+	assert.equal(manifest.scenarios.length, 19);
 	assert.equal(
 		manifest.scenarios.reduce((count, scenario) => count + (scenario.scopeDrift ? 2 : 1), 0),
-		20,
+		21,
 	);
 
 	const coveredCssRules = new Set<string>();
@@ -3176,7 +3228,7 @@ test("CSS generated index is canonical, complete, body-preserving, and within it
 		entries.map((entry) => entry.id),
 		cssRuleUniverse,
 	);
-	assert.equal(entries.length, 32);
+	assert.equal(entries.length, 33);
 
 	for (const entry of entries) {
 		assert.equal(entry.fileName, `${entry.id}.md`);

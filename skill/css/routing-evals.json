@@ -116,6 +116,27 @@
 			}
 		},
 		{
+			"id": "css-value-driven-modifier",
+			"prompt": "pick the metricValue modifier from the four-value tone in pg-sales-trend-panel.tsx where the stylesheet defines --positive and --negative only; keep the existing clsx import and stylesheet.",
+			"files": [
+				"src/page/detail/component/sales-trend-panel/pg-sales-trend-panel.tsx"
+			],
+			"expectedSkills": [
+				"react",
+				"typescript",
+				"css"
+			],
+			"expectedSelected": {
+				"react": [],
+				"typescript": [],
+				"css": [
+					"composition-compose-classes-with-clsx",
+					"composition-do-not-build-structural-variants-with-modifiers",
+					"composition-derive-modifiers-from-values-only-on-a-closed-map"
+				]
+			}
+		},
+		{
 			"id": "css-ui-wrapper-third-party-dom",
 			"prompt": "add a direct clsx import and style UiCollapse Ant DOM from a new owned wrapper with the shortest chain in post-filter-dialog.tsx and post-filter-dialog.css; keep the existing hard-coded wrapper color.",
 			"files": [
