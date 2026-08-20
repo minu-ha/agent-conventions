@@ -97,7 +97,9 @@ export const PgProducts = () => {
 		<div className={clsx("pg_products__layout")}>
 			<PgProductTreeSection />
 
-			{/* 추천 목록이 실패해도 본문 표는 그대로 쓸 수 있다 */}
+			{/**
+			 * 추천 목록이 실패해도 본문 표는 그대로 쓸 수 있다
+			 */}
 			<ErrorBoundary fallback={<UiInlineErrorState />}>
 				<Suspense fallback={<UiRecommendationSkeleton />}>
 					<PgProductRecommendationSection />
