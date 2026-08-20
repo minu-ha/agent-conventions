@@ -134,7 +134,7 @@ const cssRuleUniverse = [
 	"composition-inject-classes-only-at-the-entry-point",
 	"composition-do-not-add-wrapper-elements-for-styling",
 	"composition-do-not-style-through-the-style-attribute",
-	"composition-derive-modifiers-from-values-only-on-a-closed-map",
+	"composition-write-modifiers-as-conditions",
 	"selector-limit-nesting-block-depth",
 	"selector-use-classes-instead-of-element-selectors",
 	"selector-do-not-group-classes-with-commas",
@@ -420,7 +420,7 @@ const cssRuleRouting = {
 	"composition-compose-classes-with-clsx": {
 		appliesWhen: "TSX의 `className`을 추가·수정할 때. 기본 클래스, 수정자, 선택 클래스를 함께 엮을 때.",
 		reviewWith: [
-			"composition-derive-modifiers-from-values-only-on-a-closed-map",
+			"composition-write-modifiers-as-conditions",
 			"typescript/values-avoid-lookup-tables-for-simple-choices",
 		],
 	},
@@ -450,7 +450,7 @@ const cssRuleRouting = {
 			"values-always-provide-css-variable-fallbacks",
 		],
 	},
-	"composition-derive-modifiers-from-values-only-on-a-closed-map": {
+	"composition-write-modifiers-as-conditions": {
 		appliesWhen:
 			"값이나 `variant` 프롭으로 수정자를 고르는 `className`을 추가·변경할 때. 클래스 이름에 값을 끼워 넣는 템플릿 리터럴을 추가·변경할 때. 제외: 불리언 하나로 수정자가 붙거나 빠지는 경우.",
 		reviewWith: ["composition-compose-classes-with-clsx", "typescript/values-avoid-lookup-tables-for-simple-choices"],
@@ -1549,7 +1549,7 @@ const cssScenarioStages = {
 				css: [
 					"composition-compose-classes-with-clsx",
 					"composition-do-not-build-structural-variants-with-modifiers",
-					"composition-derive-modifiers-from-values-only-on-a-closed-map",
+					"composition-write-modifiers-as-conditions",
 				],
 			},
 		},
@@ -2271,7 +2271,7 @@ test("JSX branches, local value choices, and query selectors stay explicit at th
 	assert.match(wrapperRule, /^reviewWith: typescript\/values-avoid-lookup-tables-for-simple-choices$/m);
 	assert.equal(
 		readFrontmatterValue(classRule, "reviewWith"),
-		"composition-derive-modifiers-from-values-only-on-a-closed-map, typescript/values-avoid-lookup-tables-for-simple-choices",
+		"composition-write-modifiers-as-conditions, typescript/values-avoid-lookup-tables-for-simple-choices",
 	);
 });
 
@@ -2548,27 +2548,27 @@ test("CSS progressive metadata and rule routing match Appendix C exactly", async
 		"fallbackRule",
 	);
 
-	const modifierMapRule = await readRuleSource("css", "composition-derive-modifiers-from-values-only-on-a-closed-map");
+	const modifierMapRule = await readRuleSource("css", "composition-write-modifiers-as-conditions");
 	const modifierMapNormative = splitFrontmatter(modifierMapRule).body.split("**Incorrect", 1)[0] ?? "";
 	assertMentions(
 		flattenWhitespace(modifierMapNormative),
 		[
-			/수정자는 `조건 && "클래스"`로 적습니다/,
-			/한 값이 요소 둘 이상의 수정자를 정할 때\*\*뿐입니다/,
-			/요소가 하나면 나열은 값 수만큼이고 값을 더할 자리도 한 곳이라 `&&`로 적습니다/,
-			/우리가 값을 다 아는 닫힌 집합/,
-			/값마다 대응하는 수정자가 CSS에 있습니다/,
-			/값과 수정자가 같은 낱말입니다/,
-			/CSS 파일을 열어 확인합니다/,
-			/라이브러리 타입에서 그대로 열어 받은 값으로는 수정자를 만들지 않습니다/,
-			/`--undefined`가 붙지 않게 합니다/,
+			/수정자는 조건으로 적습니다/,
+			/클래스 이름을 값으로 조립하지 않습니다/,
+			/그 클래스를 쓰는 자리가 검색에 걸리지 않습니다/,
+			/값이 여럿이면 값마다 한 줄씩 나열합니다/,
+			/줄 몇 개를 더 쓰는 것이 클래스 이름을 잃는 것보다 낫습니다/,
+			/요소 여러 개에 수정자를 붙일 때도 요소마다 나열합니다/,
+			/나열에는 CSS에 있는 수정자만 적습니다/,
+			/라이브러리 타입을 그대로 받는 값으로는 수정자를 만들지 않습니다/,
 		],
 		"modifierMapRule",
 	);
 	assert.match(modifierMapRule, /`pg_salesPanel__metricValue--\$\{tone\}`/);
 	assert.match(modifierMapRule, /tone === "positive" && "pg_salesPanel__metricValue--positive"/);
 	assert.match(modifierMapRule, /props\.variant === "fit" && "ui_tooltip__body--fit"/);
-	assert.match(modifierMapRule, /`wg_flowNode__title--\$\{props\.role\}`/);
+	assert.match(modifierMapRule, /props\.role === "trigger" && "wg_flowNode__title--trigger"/);
+	assert.doesNotMatch(modifierMapNormative, /끼워 넣습니다|조립합니다/);
 	assert.match(modifierMapRule, /variant\?: ButtonProps\["variant"\]/);
 
 	const template = await readFile(path.join(skillPaths.rulesDir, "_template.md"), "utf8");

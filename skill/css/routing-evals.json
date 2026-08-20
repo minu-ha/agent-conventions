@@ -132,7 +132,7 @@
 				"css": [
 					"composition-compose-classes-with-clsx",
 					"composition-do-not-build-structural-variants-with-modifiers",
-					"composition-derive-modifiers-from-values-only-on-a-closed-map"
+					"composition-write-modifiers-as-conditions"
 				]
 			}
 		},
