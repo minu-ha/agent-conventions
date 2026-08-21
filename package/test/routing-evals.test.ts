@@ -199,6 +199,7 @@ const reactRuleUniverse = [
 	"state-store-derived-authority",
 	"state-use-functional-setstate-updates",
 	"state-use-effectevent-for-non-reactive-effect-callbacks",
+	"state-name-url-state-bindings-as-a-set",
 	"events-name-handlers-predictably",
 	"events-curry-extra-handler-arguments",
 	"events-run-user-actions-in-handlers-not-effects",
@@ -760,6 +761,11 @@ const reactRuleRouting = {
 			"events-run-user-actions-in-handlers-not-effects",
 		],
 	},
+	"state-name-url-state-bindings-as-a-set": {
+		appliesWhen:
+			"라우트 search 파라미터를 읽거나 쓰는 바인딩을 추가·변경할 때. search 파라미터 파서 묶음을 만들거나 옮길 때. 제외: 서버 요청 쿼리·뮤테이션 바인딩만 바꾸는 경우.",
+		reviewWith: ["state-choose-state-tools-by-source-of-truth"],
+	},
 	"events-name-handlers-predictably": {
 		appliesWhen: "이벤트 핸들러를 새로 만들 때. 핸들러 이름이나 대상, 이벤트 표기를 바꿀 때.",
 		reviewWith: ["typescript/naming-use-consistent-file-and-symbol-naming", "events-curry-extra-handler-arguments"],
@@ -829,6 +835,7 @@ const mandatoryRuleRouting = {
 		"composition-named-handlers-over-inline": ["docs-require-jsdoc-on-key-declarations", "events-curry-extra-handler-arguments"],
 		"runtime-place-suspense-boundaries-at-the-section-owner": ["runtime-avoid-ad-hoc-loading-branches"],
 		"runtime-place-error-boundaries-by-blast-radius": ["runtime-place-suspense-boundaries-at-the-section-owner"],
+		"state-name-url-state-bindings-as-a-set": ["typescript/naming-place-owner-config-in-the-owner-config-folder"],
 		"events-curry-extra-handler-arguments": ["typing-take-handler-types-from-existing-contracts"],
 		"docs-require-jsdoc-on-key-declarations": ["typescript/docs-require-header-jsdoc-on-key-declarations"],
 	},
@@ -1446,6 +1453,26 @@ const reactScenarioStages = {
 					"docs-require-jsdoc-on-key-declarations",
 				],
 				typescript: [
+					"docs-require-header-jsdoc-on-key-declarations",
+					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-doc-comments-as-multiline-blocks",
+				],
+			},
+		},
+	},
+	"RTE18-url-state-naming": {
+		initial: {
+			prompt:
+				"move the product list page's inline URL param parser map into src/page/products/config/product-list-url-parsers.ts as productListUrlParsers, rename the parsed binding pair to urlParams/setUrlParams, keep the raw URLSearchParams builder named searchParams, and leave the server query and mutation bindings unchanged.",
+			files: ["src/page/products/pg-products.tsx", "src/page/products/config/product-list-url-parsers.ts"],
+			expectedSkills: ["react", "typescript"],
+			expectedSelected: {
+				react: ["state-name-url-state-bindings-as-a-set"],
+				typescript: [
+					"types-document-custom-types-and-shapes",
+					"naming-place-owner-config-in-the-owner-config-folder",
+					"naming-use-consistent-file-and-symbol-naming",
+					"naming-use-direct-imports-and-public-entry-points",
 					"docs-require-header-jsdoc-on-key-declarations",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks",
@@ -2294,7 +2321,7 @@ test("TypeScript SKILL.md is a compact router without receipt or audit machinery
 	assertMentions(extractSection(body, 1), ["React", "CSS", "companion"], "typescript 1절");
 });
 
-test("React progressive metadata and all 48 rule routes match Appendix B exactly", async () => {
+test("React progressive metadata and all 51 rule routes match Appendix B exactly", async () => {
 	const skillPaths = getSkillPaths("react", realSkillRootDir);
 	const document = await readSkillDocument(skillPaths);
 
@@ -2305,7 +2332,7 @@ test("React progressive metadata and all 48 rule routes match Appendix B exactly
 		{skill: "typescript", mode: "required"},
 		{skill: "css", mode: "conditional", appliesWhen: "class contract, stylesheet 또는 styling surface를 변경한다."},
 	]);
-	assert.equal(document.rules.length, 50);
+	assert.equal(document.rules.length, 51);
 	assert.deepEqual(
 		Object.fromEntries(document.rules.map((rule) => [getRuleId(rule), {appliesWhen: rule.appliesWhen, reviewWith: rule.reviewWith}])),
 		reactRuleRouting,
@@ -2336,7 +2363,7 @@ test("React progressive metadata and all 48 rule routes match Appendix B exactly
 	assert.match(contributing, /대상이 없으면.*key\s*를 생략/i);
 });
 
-test("React routing manifest is the exact seventeen-scenario Appendix B/D oracle with full positive coverage", async () => {
+test("React routing manifest is the exact eighteen-scenario Appendix B/D oracle with full positive coverage", async () => {
 	const skillPaths = getSkillPaths("react", realSkillRootDir);
 	await validateRoutingEvalManifest(skillPaths);
 	await validateRoutingEvalManifests(realSkillRootDir);
@@ -2350,10 +2377,10 @@ test("React routing manifest is the exact seventeen-scenario Appendix B/D oracle
 		manifest.scenarios.map((scenario) => scenario.id),
 		expectedScenarioIds,
 	);
-	assert.equal(manifest.scenarios.length, 17);
+	assert.equal(manifest.scenarios.length, 18);
 	assert.equal(
 		manifest.scenarios.reduce((count, scenario) => count + (scenario.scopeDrift ? 2 : 1), 0),
-		18,
+		19,
 	);
 
 	const universeBySkillName: Record<string, readonly string[]> = {
@@ -2458,7 +2485,7 @@ test("React generated index and handbook preserve canonical local rules and comp
 		entries.map((entry) => entry.id),
 		reactRuleUniverse,
 	);
-	assert.equal(entries.length, 50);
+	assert.equal(entries.length, 51);
 
 	for (const entry of entries) {
 		assert.equal(entry.fileName, `${entry.id}.md`);

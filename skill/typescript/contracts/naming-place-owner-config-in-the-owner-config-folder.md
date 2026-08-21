@@ -7,6 +7,9 @@
 전역과 소유자 중 어디에 두는지 가르는 표는 `naming-centralize-shared-config-namespaces` 규칙에 있습니다.
 
 - 파일은 소유자 폴더 바로 아래 `config/<owner>-config.ts`, 내보내는 상수는 `<owner>_config`입니다.
+- 파서 묶음이나 스키마처럼 함수를 담은 계약도 같은 `config` 폴더에 둡니다.
+  파일은 `config/<owner>-<contract>.ts`로 계약마다 나누고,
+  심볼 표기는 `naming-use-consistent-file-and-symbol-naming`이 정합니다.
 - `constants` 폴더는 만들지 않습니다.
 - 그 소유자를 지워도 남을 값이면 `naming-centralize-shared-config-namespaces` 규칙을 따라 올립니다.
 

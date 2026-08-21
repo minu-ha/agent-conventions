@@ -1,7 +1,7 @@
 # React 컨벤션 Rule Index
 
 - Skill: `react`
-- Routing digest: `sha256:ff5668f90ef765707c5a2e284ad1da2dc3a5b8ff39df768c0f353e9b14c84f85`
+- Routing digest: `sha256:a681c9f02931672930d3b261178f01da30ed045e4b1720080b2079c807e544b7`
 
 ## Direct Companions
 
@@ -50,6 +50,7 @@
 - R08-03 | state-store-derived-authority | 여러 화면·메뉴·라우트 가드가 쓰는 접근 권한 같은 파생 판단을 스토어에 저장·동기화할 때. 단일 화면에서만 쓰는 값까지 스토어로 올리려 할 때. | reviewWith: docs-require-jsdoc-on-key-declarations, state-calculate-derived-values-during-render
 - R08-04 | state-use-functional-setstate-updates | 다음 상태가 현재 상태에 의존하는 갱신을 추가·변경할 때. 핸들러·비동기 콜백·연속 호출에서 \`setState\` 방식을 바꿀 때.
 - R08-05 | state-use-effectevent-for-non-reactive-effect-callbacks | 구독 이펙트가 최신 프롭·상태 콜백을 읽어야 할 때. ref 동기화 우회, 의존성 재설치, \`useEffectEvent\`를 추가·변경할 때. | reviewWith: docs-require-jsdoc-on-key-declarations, events-curry-extra-handler-arguments, events-run-user-actions-in-handlers-not-effects
+- R08-06 | state-name-url-state-bindings-as-a-set | 라우트 search 파라미터를 읽거나 쓰는 바인딩을 추가·변경할 때. search 파라미터 파서 묶음을 만들거나 옮길 때. 제외: 서버 요청 쿼리·뮤테이션 바인딩만 바꾸는 경우. | reviewWith: state-choose-state-tools-by-source-of-truth
 - R09-01 | events-name-handlers-predictably | 이벤트 핸들러를 새로 만들 때. 핸들러 이름이나 대상, 이벤트 표기를 바꿀 때. | reviewWith: events-curry-extra-handler-arguments, typescript/naming-use-consistent-file-and-symbol-naming
 - R09-02 | events-curry-extra-handler-arguments | DOM 이벤트 프롭에 추가 인자를 넘기는 핸들러를 추가·변경할 때. 인라인 래퍼로 인자를 넘기던 자리를 바꿀 때. 제외: 이벤트 객체를 받지 않는 프롭 콜백인 경우. | reviewWith: composition-named-handlers-over-inline
 - R09-03 | events-run-user-actions-in-handlers-not-effects | 제출, 저장, 삭제, 닫기 같은 한 번뿐인 사용자 액션을 핸들러와 상태+이펙트 사이에서 옮길 때. 이펙트 안에서 뮤테이션이나 화면 이동을 호출하는 코드를 넣을 때.

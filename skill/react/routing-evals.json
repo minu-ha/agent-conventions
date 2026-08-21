@@ -515,6 +515,32 @@
 			}
 		},
 		{
+			"id": "RTE18-url-state-naming",
+			"prompt": "move the product list page's inline URL param parser map into src/page/products/config/product-list-url-parsers.ts as productListUrlParsers, rename the parsed binding pair to urlParams/setUrlParams, keep the raw URLSearchParams builder named searchParams, and leave the server query and mutation bindings unchanged.",
+			"files": [
+				"src/page/products/pg-products.tsx",
+				"src/page/products/config/product-list-url-parsers.ts"
+			],
+			"expectedSkills": [
+				"react",
+				"typescript"
+			],
+			"expectedSelected": {
+				"react": [
+					"state-name-url-state-bindings-as-a-set"
+				],
+				"typescript": [
+					"types-document-custom-types-and-shapes",
+					"naming-place-owner-config-in-the-owner-config-folder",
+					"naming-use-consistent-file-and-symbol-naming",
+					"naming-use-direct-imports-and-public-entry-points",
+					"docs-require-header-jsdoc-on-key-declarations",
+					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-doc-comments-as-multiline-blocks"
+				]
+			}
+		},
+		{
 			"id": "react-biome-domain-setup",
 			"prompt": "add the react domain to the existing biome config and enable the nested-component rule that the domain leaves off; do not touch any component file.",
 			"files": [
