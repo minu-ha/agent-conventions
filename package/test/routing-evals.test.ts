@@ -207,6 +207,7 @@ const reactRuleUniverse = [
 	"perf-defer-heavy-renders-with-measured-evidence",
 	"a11y-give-interactive-elements-an-accessible-name",
 	"docs-require-jsdoc-on-key-declarations",
+	"docs-write-jsx-comments-as-multiline-blocks",
 	"tooling-enable-the-biome-react-domain",
 ] as const;
 
@@ -419,10 +420,7 @@ const cssRuleRouting = {
 	},
 	"composition-compose-classes-with-clsx": {
 		appliesWhen: "TSX의 `className`을 추가·수정할 때. 기본 클래스, 수정자, 선택 클래스를 함께 엮을 때.",
-		reviewWith: [
-			"composition-write-modifiers-as-conditions",
-			"typescript/values-avoid-lookup-tables-for-simple-choices",
-		],
+		reviewWith: ["composition-write-modifiers-as-conditions", "typescript/values-avoid-lookup-tables-for-simple-choices"],
 	},
 	"composition-do-not-build-structural-variants-with-modifiers": {
 		appliesWhen: "수정자를 추가·변경할 때. 여러 곳에서 반복되는 모양인지 한 곳만의 보정인지 가릴 때.",
@@ -799,6 +797,14 @@ const reactRuleRouting = {
 		appliesWhen:
 			"쿼리·뮤테이션이나 읽어도 의도가 안 보이는 핸들러·이펙트를 추가·변경할 때. 내보낸 보조 함수·훅·스토어 선언을 추가·변경할 때.",
 		reviewWith: ["typescript/types-document-custom-types-and-shapes"],
+	},
+	"docs-write-jsx-comments-as-multiline-blocks": {
+		appliesWhen:
+			"JSX 자식 자리에 주석을 새로 쓰거나 기존 주석의 형식을 바꿀 때. 화면을 구역으로 나누고 그 구역이 무엇을 담당하는지 적을 때.",
+		reviewWith: [
+			"typescript/docs-write-doc-comments-as-multiline-blocks",
+			"typescript/docs-write-concise-korean-comments-about-purpose-and-constraints",
+		],
 	},
 	"tooling-enable-the-biome-react-domain": {
 		appliesWhen:
@@ -1217,7 +1223,7 @@ const reactScenarioStages = {
 	"RTE09-route-runtime-section": {
 		initial: {
 			prompt:
-				'extract only the tree section that owns local search and expanded state plus a tree adapter into the owner component folder, implement a named selection handler from ProductTreeSectionProps["onCategorySelect"], and keep search params, navigation, page query, and mutation in the page product.',
+				'extract only the tree section that owns local search and expanded state plus a tree adapter into the owner component folder, implement a named selection handler from ProductTreeSectionProps["onCategorySelect"], mark the remaining page sections in JSX, and keep search params, navigation, page query, and mutation in the page product.',
 			files: ["src/page/products/pg-products.tsx", "src/page/products/component/pg-product-tree-section.tsx"],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
@@ -1235,6 +1241,7 @@ const reactScenarioStages = {
 					"events-name-handlers-predictably",
 					"events-curry-extra-handler-arguments",
 					"docs-require-jsdoc-on-key-declarations",
+					"docs-write-jsx-comments-as-multiline-blocks",
 				],
 				typescript: [
 					"types-reuse-existing-contracts-before-new-types",
@@ -2298,7 +2305,7 @@ test("React progressive metadata and all 48 rule routes match Appendix B exactly
 		{skill: "typescript", mode: "required"},
 		{skill: "css", mode: "conditional", appliesWhen: "class contract, stylesheet 또는 styling surface를 변경한다."},
 	]);
-	assert.equal(document.rules.length, 49);
+	assert.equal(document.rules.length, 50);
 	assert.deepEqual(
 		Object.fromEntries(document.rules.map((rule) => [getRuleId(rule), {appliesWhen: rule.appliesWhen, reviewWith: rule.reviewWith}])),
 		reactRuleRouting,
@@ -2451,7 +2458,7 @@ test("React generated index and handbook preserve canonical local rules and comp
 		entries.map((entry) => entry.id),
 		reactRuleUniverse,
 	);
-	assert.equal(entries.length, 49);
+	assert.equal(entries.length, 50);
 
 	for (const entry of entries) {
 		assert.equal(entry.fileName, `${entry.id}.md`);

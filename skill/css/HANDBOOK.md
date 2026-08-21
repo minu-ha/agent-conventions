@@ -896,7 +896,9 @@ export const UiCollapse = (props: UiCollapseProps) => {
 **Correct (외부 라이브러리가 `className`을 받지 않으면 역할 이름을 붙여 감쌈):**
 
 ```tsx
-{/* LegacyDatePicker는 className을 받지 않아 배치용 래퍼가 필요하다 */}
+{/**
+ * LegacyDatePicker는 className을 받지 않아 배치용 래퍼가 필요하다
+ */}
 <div className={clsx("pg_postIndex__dateField")}>
 	<LegacyDatePicker value={value} onChange={handleChange} />
 </div>

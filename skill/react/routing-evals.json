@@ -255,7 +255,7 @@
 		},
 		{
 			"id": "RTE09-route-runtime-section",
-			"prompt": "extract only the tree section that owns local search and expanded state plus a tree adapter into the owner component folder, implement a named selection handler from ProductTreeSectionProps[\"onCategorySelect\"], and keep search params, navigation, page query, and mutation in the page product.",
+			"prompt": "extract only the tree section that owns local search and expanded state plus a tree adapter into the owner component folder, implement a named selection handler from ProductTreeSectionProps[\"onCategorySelect\"], mark the remaining page sections in JSX, and keep search params, navigation, page query, and mutation in the page product.",
 			"files": [
 				"src/page/products/pg-products.tsx",
 				"src/page/products/component/pg-product-tree-section.tsx"
@@ -278,7 +278,8 @@
 					"runtime-avoid-ad-hoc-loading-branches",
 					"events-name-handlers-predictably",
 					"events-curry-extra-handler-arguments",
-					"docs-require-jsdoc-on-key-declarations"
+					"docs-require-jsdoc-on-key-declarations",
+					"docs-write-jsx-comments-as-multiline-blocks"
 				],
 				"typescript": [
 					"types-reuse-existing-contracts-before-new-types",

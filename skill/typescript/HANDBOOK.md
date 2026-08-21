@@ -2506,6 +2506,8 @@ setVisibleRowCount(effectivePageSize);
 컴포넌트 본문의 핸들러, 이펙트, 쿼리 바인딩이 그 자리입니다.
 그 밖의 지역 선언에는 블록을 쓰지 않습니다.
 블록의 형식은 `docs-write-doc-comments-as-multiline-blocks`가 정합니다.
+JSX 자식 자리에는 `//`를 쓸 수 없어 이 규칙이 닿지 않습니다.
+그 자리의 주석 형태는 프레임워크 규칙이 정합니다.
 
 본문 주석은 이런 자리에 답니다.
 
@@ -2787,6 +2789,7 @@ export const saveProduct = async (product: Product): Promise<void> => {
 그런 주석은 예외 조건을 채우지 못합니다.
 
 주석은 예외가 일어나는 줄 바로 위에 `//`로 씁니다.
+JSX 자식 자리에는 `//`가 없어 프레임워크 규칙이 정한 형태로 씁니다.
 어투와 내용은 `docs-write-concise-korean-comments-about-purpose-and-constraints`를 따릅니다.
 
 **Incorrect (확인할 수 없는 말로 예외를 정당화):**

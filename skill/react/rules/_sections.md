@@ -82,7 +82,7 @@
 **Impact:** MEDIUM
 **Description:** 문서 주석의 형식과 태그, 그리고 어느 선언에 붙일지의 기본 목록은 동반 스킬인
   `convention-typescript`가 정합니다.
-  여기서는 그 목록에 리액트만 아는 대상을 더합니다.
+  여기서는 그 목록에 리액트만 아는 대상을 더하고, `//`를 쓸 수 없는 JSX 자식 자리의 주석 형태를 정합니다.
 
 ## 13. Tooling (tooling)
 **TitleKo:** 도구 설정
