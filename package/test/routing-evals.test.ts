@@ -90,13 +90,12 @@ const typescriptRuleUniverse = [
 	"types-narrow-unknown-instead-of-asserting",
 	"types-replace-enum-with-as-const-objects",
 	"types-choose-interface-for-object-contracts-and-type-for-composition",
-	"naming-centralize-shared-config-namespaces",
-	"naming-place-owner-config-in-the-owner-config-folder",
-	"naming-preserve-config-origin-with-chained-access",
+	"naming-place-project-constants-in-the-root-constant-folder",
+	"naming-place-owner-constants-in-the-owner-constant-folder",
 	"naming-use-consistent-file-and-symbol-naming",
 	"naming-use-direct-imports-and-public-entry-points",
 	"naming-restrict-absolute-aliases-to-layer-roots",
-	"naming-read-environment-values-through-shared-config",
+	"naming-read-environment-values-through-config-env",
 	"naming-name-types-by-role-and-lifetime",
 	"functions-declare-functions-as-arrow-consts",
 	"functions-use-named-object-params-for-complex-signatures",
@@ -250,17 +249,14 @@ const typescriptRuleRouting = {
 			"`interface`와 `type` 사이에서 선언 형식을 바꿀 때. 객체 계약, union, tuple, 함수 시그니처, mapped·conditional type에 이름을 붙여 선언할 때. 제외: 외부·생성된 계약을 그대로 참조하는 경우.",
 		reviewWith: ["types-reuse-existing-contracts-before-new-types", "types-document-custom-types-and-shapes"],
 	},
-	"naming-centralize-shared-config-namespaces": {
-		appliesWhen: "프로젝트 전반이 쓰는 URL, 기능 플래그, 페이지 크기나 상수를 추가·이동·중복 정의할 때. 공용 설정 경계를 바꿀 때.",
-		reviewWith: ["naming-preserve-config-origin-with-chained-access", "naming-use-direct-imports-and-public-entry-points"],
+	"naming-place-project-constants-in-the-root-constant-folder": {
+		appliesWhen:
+			"프로젝트 전반이 쓰는 URL 경로, 페이지 크기, 표시 문구, 기준값을 추가·이동·중복 정의할 때. 루트 `constant` 폴더의 파일이나 상수 이름을 바꿀 때.",
+		reviewWith: ["naming-place-owner-constants-in-the-owner-constant-folder", "naming-use-direct-imports-and-public-entry-points"],
 	},
-	"naming-place-owner-config-in-the-owner-config-folder": {
-		appliesWhen: "한 소유자의 선언형 설정을 추가하거나 옮길 때. 전역 설정과 소유자 전용 설정 사이에서 위치를 바꿀 때.",
-		reviewWith: ["naming-centralize-shared-config-namespaces"],
-	},
-	"naming-preserve-config-origin-with-chained-access": {
-		appliesWhen: "`config`나 `util` 값을 쓰면서 넓은 스코프 구조분해, 별칭, 기능별 네임스페이스를 추가·변경할 때.",
-		reviewWith: ["functions-place-and-promote-support-functions", "values-read-objects-through-chains"],
+	"naming-place-owner-constants-in-the-owner-constant-folder": {
+		appliesWhen: "한 소유자의 상수나 선언형 계약을 추가하거나 옮길 때. 루트 상수와 소유자 전용 상수 사이에서 위치를 바꿀 때.",
+		reviewWith: ["naming-place-project-constants-in-the-root-constant-folder"],
 	},
 	"naming-use-consistent-file-and-symbol-naming": {
 		appliesWhen:
@@ -276,9 +272,12 @@ const typescriptRuleRouting = {
 		appliesWhen: "절대경로 별칭으로 다른 모듈을 가져올 때. 별칭이 가리키는 경로 깊이를 바꿀 때.",
 		reviewWith: ["naming-use-direct-imports-and-public-entry-points"],
 	},
-	"naming-read-environment-values-through-shared-config": {
-		appliesWhen: "`import.meta.env`나 `process.env`를 읽는 코드를 추가·이동할 때. 환경마다 달라지는 값을 새로 들여올 때.",
-		reviewWith: ["naming-centralize-shared-config-namespaces", "absence-expose-optional-values-instead-of-silent-fallbacks"],
+	"naming-read-environment-values-through-config-env": {
+		appliesWhen: "`import.meta.env`나 `process.env`를 읽는 코드를 추가·이동할 때. 환경마다 달라지는 값이나 기능 플래그를 새로 들여올 때.",
+		reviewWith: [
+			"naming-place-project-constants-in-the-root-constant-folder",
+			"absence-expose-optional-values-instead-of-silent-fallbacks",
+		],
 	},
 	"naming-name-types-by-role-and-lifetime": {
 		appliesWhen:
@@ -287,7 +286,7 @@ const typescriptRuleRouting = {
 	},
 	"functions-declare-functions-as-arrow-consts": {
 		appliesWhen:
-			"이름을 지어 선언하는 함수를 새로 만들거나 선언 형태나 본문 형태를 바꿀 때. 네임스페이스 객체에 멤버 함수를 추가·변경할 때. 제외: 인라인 콜백이거나 클래스 메서드, 제너레이터, 오버로드 선언인 경우.",
+			"이름을 지어 선언하는 함수를 새로 만들거나 선언 형태나 본문 형태를 바꿀 때. 객체 프로퍼티에 함수를 담거나 그 형태를 바꿀 때. 제외: 인라인 콜백이거나 클래스 메서드, 제너레이터, 오버로드 선언인 경우.",
 		reviewWith: ["functions-use-named-object-params-for-complex-signatures"],
 	},
 	"functions-use-named-object-params-for-complex-signatures": {
@@ -302,7 +301,7 @@ const typescriptRuleRouting = {
 	},
 	"functions-place-and-promote-support-functions": {
 		appliesWhen:
-			"보조 함수를 어느 파일이나 폴더에 둘지 정할 때. 파일 안에서 내보낸 함수와 비공개 보조의 선언 순서를 정할 때. `shared/` 아래로 파일을 옮기거나 `util.*`에 항목을 추가할 때.",
+			"보조 함수를 어느 파일이나 폴더에 둘지 정할 때. 파일 안에서 내보낸 함수와 비공개 보조의 선언 순서를 정할 때. 루트 `util` 폴더로 파일을 옮기거나 종류 폴더를 새로 만들 때.",
 		reviewWith: [],
 	},
 	"functions-avoid-imperative-assembly-in-wide-scopes": {
@@ -333,7 +332,10 @@ const typescriptRuleRouting = {
 	},
 	"values-declare-meaningful-numbers": {
 		appliesWhen: "비교, 계산, 호출 인자에 숫자 리터럴을 새로 적을 때. 제외: 관용값이나 배열 인덱스처럼 뜻이 없는 숫자를 쓰는 경우.",
-		reviewWith: ["naming-centralize-shared-config-namespaces", "absence-expose-optional-values-instead-of-silent-fallbacks"],
+		reviewWith: [
+			"naming-place-project-constants-in-the-root-constant-folder",
+			"absence-expose-optional-values-instead-of-silent-fallbacks",
+		],
 	},
 	"values-avoid-lookup-tables-for-simple-choices": {
 		appliesWhen:
@@ -342,7 +344,7 @@ const typescriptRuleRouting = {
 	},
 	"absence-expose-optional-values-instead-of-silent-fallbacks": {
 		appliesWhen: "선택 값을 읽거나 정규화하거나 넘기는 방식을 바꿀 때. `??`, `||`, 기본값, 빈 값 대체 분기를 추가·변경할 때.",
-		reviewWith: ["naming-centralize-shared-config-namespaces", "naming-place-owner-config-in-the-owner-config-folder"],
+		reviewWith: ["naming-place-project-constants-in-the-root-constant-folder", "naming-place-owner-constants-in-the-owner-constant-folder"],
 	},
 	"docs-keep-body-comments-for-intent-and-steps": {
 		appliesWhen:
@@ -559,12 +561,12 @@ const reactRuleRouting = {
 	},
 	"ownership-place-owner-files-in-role-folders": {
 		appliesWhen:
-			"소유자 아래 `component`·`config`·`function`·`hook`·`type` 폴더를 만들거나 옮길 때. 추출한 컴포넌트·함수·타입의 배치 위치를 정할 때. 제외: 기존 파일 내부 구현만 바꾸는 경우.",
+			"소유자 아래 `component`·`constant`·`function`·`hook`·`type` 폴더를 만들거나 옮길 때. 추출한 컴포넌트·함수·타입의 배치 위치를 정할 때. 제외: 기존 파일 내부 구현만 바꾸는 경우.",
 		reviewWith: ["ownership-keep-component-imports-flowing-downward", "css/ownership-choose-scope-prefix-by-owner-layer"],
 	},
 	"ownership-keep-component-imports-flowing-downward": {
 		appliesWhen:
-			"`component` 폴더 안의 파일을 다른 파일에서 가져올 때. `../`나 `@/page` 경로로 컴포넌트를 가져오려 할 때. 여러 자식이 같은 컴포넌트를 써야 해서 배치를 다시 정할 때. 제외: `function`·`type`·`config`·`hook` 파일을 가져오는 경우.",
+			"`component` 폴더 안의 파일을 다른 파일에서 가져올 때. `../`나 `@/page` 경로로 컴포넌트를 가져오려 할 때. 여러 자식이 같은 컴포넌트를 써야 해서 배치를 다시 정할 때. 제외: `function`·`type`·`constant`·`hook` 파일을 가져오는 경우.",
 		reviewWith: ["ownership-layer-component-boundaries"],
 	},
 	"ownership-prefer-plain-ts-for-local-react-helpers": {
@@ -835,7 +837,7 @@ const mandatoryRuleRouting = {
 		"composition-named-handlers-over-inline": ["docs-require-jsdoc-on-key-declarations", "events-curry-extra-handler-arguments"],
 		"runtime-place-suspense-boundaries-at-the-section-owner": ["runtime-avoid-ad-hoc-loading-branches"],
 		"runtime-place-error-boundaries-by-blast-radius": ["runtime-place-suspense-boundaries-at-the-section-owner"],
-		"state-name-url-state-bindings-as-a-set": ["typescript/naming-place-owner-config-in-the-owner-config-folder"],
+		"state-name-url-state-bindings-as-a-set": ["typescript/naming-place-owner-constants-in-the-owner-constant-folder"],
 		"events-curry-extra-handler-arguments": ["typing-take-handler-types-from-existing-contracts"],
 		"docs-require-jsdoc-on-key-declarations": ["typescript/docs-require-header-jsdoc-on-key-declarations"],
 	},
@@ -845,7 +847,7 @@ const mandatoryRuleRouting = {
 			"docs-write-doc-comments-as-multiline-blocks",
 		],
 		"types-replace-enum-with-as-const-objects": ["naming-use-consistent-file-and-symbol-naming", "types-document-custom-types-and-shapes"],
-		"naming-place-owner-config-in-the-owner-config-folder": ["naming-use-consistent-file-and-symbol-naming"],
+		"naming-place-owner-constants-in-the-owner-constant-folder": ["naming-use-consistent-file-and-symbol-naming"],
 		"functions-place-and-promote-support-functions": ["functions-extract-helpers-only-when-the-boundary-is-real"],
 		"values-avoid-lookup-tables-for-simple-choices": ["docs-justify-convention-exceptions-with-a-reason-comment"],
 		"docs-require-header-jsdoc-on-key-declarations": [
@@ -862,14 +864,13 @@ const completionGateRouting = {react: [], typescript: [], css: []} as const;
  * @summary Appendix A scenario별 initial exact selected rule oracle
  */
 const typescriptSelections = {
-	"shared-config-existing-source": [
-		"naming-centralize-shared-config-namespaces",
-		"naming-place-owner-config-in-the-owner-config-folder",
-		"naming-preserve-config-origin-with-chained-access",
+	"root-constant-existing-source": [
+		"naming-place-project-constants-in-the-root-constant-folder",
+		"naming-place-owner-constants-in-the-owner-constant-folder",
 		"naming-use-consistent-file-and-symbol-naming",
 		"naming-use-direct-imports-and-public-entry-points",
 		"naming-restrict-absolute-aliases-to-layer-roots",
-		"naming-read-environment-values-through-shared-config",
+		"naming-read-environment-values-through-config-env",
 		"values-declare-meaningful-numbers",
 	],
 	"callback-contract-implementation": [
@@ -940,9 +941,9 @@ const typescriptSelections = {
  * @summary Appendix A scenario별 exact prompt와 file evidence oracle
  */
 const typescriptScenarioEvidence = {
-	"shared-config-existing-source": {
+	"root-constant-existing-source": {
 		prompt:
-			"`billing-request.ts` and `audit-request.ts` duplicate URL/page-size constants, write a retry threshold inline, and read `import.meta.env` directly; move all of them into the documented `config` namespace and read them through `config.*`.",
+			"`billing-request.ts` and `audit-request.ts` duplicate URL/page-size constants, write a retry threshold inline, and read `import.meta.env` directly; move the constants into flat `constant/<topic>.ts` files, read the environment value through `config/env.ts`, and import each name directly.",
 		files: ["src/features/billing/billing-request.ts", "src/features/audit/audit-request.ts"],
 	},
 	"callback-contract-implementation": {
@@ -1122,19 +1123,23 @@ const reactScenarioStages = {
 			},
 		},
 	},
-	"RTE04-shared-config": {
+	"RTE04-root-constant": {
 		initial: {
 			prompt:
-				"move a duplicated menu key and default page size from two screens into a documented as const config object in src/shared/config.ts and directly import and use config.* from both route pages.",
-			files: ["src/page/products/pg-products.tsx", "src/page/reports/pg-reports.tsx", "src/shared/config.ts"],
+				"move a duplicated menu key set and default page size from two screens into documented flat constants in src/constant/navigation.ts and src/constant/pagination.ts and import each name directly from both route pages.",
+			files: [
+				"src/page/products/pg-products.tsx",
+				"src/page/reports/pg-reports.tsx",
+				"src/constant/navigation.ts",
+				"src/constant/pagination.ts",
+			],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
 				react: [],
 				typescript: [
 					"types-document-custom-types-and-shapes",
 					"types-replace-enum-with-as-const-objects",
-					"naming-centralize-shared-config-namespaces",
-					"naming-preserve-config-origin-with-chained-access",
+					"naming-place-project-constants-in-the-root-constant-folder",
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
@@ -1470,7 +1475,7 @@ const reactScenarioStages = {
 				react: ["state-name-url-state-bindings-as-a-set"],
 				typescript: [
 					"types-document-custom-types-and-shapes",
-					"naming-place-owner-config-in-the-owner-config-folder",
+					"naming-place-owner-constants-in-the-owner-constant-folder",
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
 					"docs-require-header-jsdoc-on-key-declarations",
@@ -1986,7 +1991,7 @@ test("TypeScript progressive metadata matches Appendix A exactly", async () => {
 
 	assert.equal(document.metadata.progressiveDisclosure, true);
 	assert.deepEqual(document.metadata.companions ?? [], []);
-	assert.equal(document.rules.length, 34);
+	assert.equal(document.rules.length, 33);
 	assert.deepEqual(
 		Object.fromEntries(document.rules.map((rule) => [getRuleId(rule), {appliesWhen: rule.appliesWhen, reviewWith: rule.reviewWith}])),
 		typescriptRuleRouting,
@@ -2138,7 +2143,7 @@ test("TypeScript generated index is complete and within the deterministic byte b
 	const expectedIds = document.rules.map((rule) => getRuleId(rule)).sort();
 
 	assert.deepEqual(ids, expectedIds);
-	assert.equal(ids.length, 34);
+	assert.equal(ids.length, 33);
 
 	for (const entry of entries) {
 		assert.equal(entry.fileName, `${entry.id}.md`);

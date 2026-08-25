@@ -35,7 +35,7 @@ tags: naming
 **Incorrect (배럴과 섞인 가져오기로 경계를 흐림):**
 
 ```ts
-import {config, util, UserProfile} from "./index";
+import {pagination_default_page_size, toDisplayDate, UserProfile} from "./index";
 ```
 
 **Incorrect (`default`로 내보내 사용처마다 다른 이름이 생김):**
@@ -57,9 +57,9 @@ import Tabs from "@/ui/tabs/ui-tabs";
 **Correct (직접 가져오기와 공개 진입점을 구분):**
 
 ```ts
-import type {UserProfile} from "@/shared/contracts";
-import {config} from "@/shared/config";
-import {util} from "@/shared/util";
+import type {UserProfile} from "@/type/user-profile";
+import {pagination_default_page_size} from "@/constant/pagination";
+import {toDisplayDate} from "@/util/date/to-display-date";
 import {WgChartCard} from "@/widget/chart-card/wg-chart-card";
 import {toUserSaveRequest} from "./function/to-user-save-request";
 ```

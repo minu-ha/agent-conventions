@@ -55,6 +55,8 @@
   `let`을 `const`로 바꿔 주기만 하고 `push` 누적은 그대로 남습니다.
 - `typescript/types-mark-unused-parameters-with-underscore` 중 **매개변수를 아예 생략한 경우**는 기계가 못 봅니다.
   `noUnusedFunctionParameters`는 남겨 둔 매개변수만 봅니다.
+- `import.meta.env`와 `process.env`를 `config/env.ts` 밖에서 읽는 것을 막는 `biome` 규칙은 없습니다.
+  `typescript/naming-read-environment-values-through-config-env`는 리뷰가 보거나 CI가 문자열 검색으로 잡습니다.
 
 **테스트 파일에서는 `noMagicNumbers`를 끕니다.**
 `assert.equal(rules.length, 111)`의 `111`은 설정으로 뺄 값이 아니라 그 테스트가 고정하는 계약입니다.

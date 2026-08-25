@@ -32,7 +32,8 @@
 - 부정이 겹치면 이름으로 뒤집습니다.
   `!row.deletedAt && !row.archivedAt`보다 `isVisible`이 한 번에 읽힙니다.
 - 표현식에 리터럴이 보이면 변수로 뺄 자리가 아니라 그 리터럴을 선언할 자리입니다.
-  `types-replace-enum-with-as-const-objects`와 `naming-centralize-shared-config-namespaces`가 그 자리를 정합니다.
+  `types-replace-enum-with-as-const-objects`와
+  `naming-place-project-constants-in-the-root-constant-folder` 규칙이 그 자리를 정합니다.
 
 **횟수는 기준이 아닙니다.**
 몇 번 쓰이는지는 파일 전체를 봐야 알고, 쓰는 자리를 하나 더하면 어제 맞던 판정이 오늘 뒤집힙니다.

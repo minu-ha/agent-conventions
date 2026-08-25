@@ -274,7 +274,7 @@ export const PgSalesTrendPanel = (props: PgSalesTrendPanelProps) => {
 
 **Rule:** `R01-03` · `ownership-place-owner-files-in-role-folders`
 
-**Applies when:** 소유자 아래 `component`·`config`·`function`·`hook`·`type` 폴더를 만들거나 옮길 때. 추출한 컴포넌트·함수·타입의 배치 위치를 정할 때. 제외: 기존 파일 내부 구현만 바꾸는 경우.
+**Applies when:** 소유자 아래 `component`·`constant`·`function`·`hook`·`type` 폴더를 만들거나 옮길 때. 추출한 컴포넌트·함수·타입의 배치 위치를 정할 때. 제외: 기존 파일 내부 구현만 바꾸는 경우.
 
 **Review with:** `css/ownership-choose-scope-prefix-by-owner-layer`, `ownership-keep-component-imports-flowing-downward`
 
@@ -288,13 +288,15 @@ export const PgSalesTrendPanel = (props: PgSalesTrendPanelProps) => {
 | 폴더 | 담는 것 |
 | --- | --- |
 | `component` | 이 소유자만 쓰는 하위 컴포넌트 |
-| `config` | 입력을 받지 않는 선언형 설정, 기본 설정, 기준값 |
+| `constant` | 입력을 받지 않는 상수, 기본값, 기준값, 파서 묶음 같은 선언형 계약 |
 | `function` | 이름 붙여 내보낸 도메인 계산 |
 | `hook` | 실제 상태·이펙트·컨텍스트를 소유한 커스텀 훅 |
 | `type` | 여러 파일이 공유하는 계약 |
 
-소유자 아래에는 `util`, `helper`, `constant`, `common`, `shared` 같은 폴더를 만들지 않습니다.
-전역 `shared/`는 다른 자리라 여기 해당하지 않습니다.
+소유자 아래에는 `util`, `helper`, `config`, `constants`, `common`, `shared` 같은 폴더를 만들지 않습니다.
+루트의 `constant`·`type`·`hook`은 프로젝트가 소유자인 자리라 같은 역할 폴더 규칙을 따릅니다.
+루트에만 있는 `util`과 `config`는 `typescript/functions-place-and-promote-support-functions`와
+`typescript/naming-read-environment-values-through-config-env`가 정합니다.
 폴더 이름은 단수로 쓰고 프레임워크가 강제하는 이름만 예외로 둡니다.
 
 배치 기준입니다.
@@ -324,7 +326,7 @@ ui/button/
 ├── ui-button.tsx
 ├── ui-button.css
 ├── component/
-├── config/
+├── constant/
 ├── function/
 ├── hook/
 └── type/
@@ -376,7 +378,7 @@ ui/button/
 
 **Rule:** `R01-04` · `ownership-keep-component-imports-flowing-downward`
 
-**Applies when:** `component` 폴더 안의 파일을 다른 파일에서 가져올 때. `../`나 `@/page` 경로로 컴포넌트를 가져오려 할 때. 여러 자식이 같은 컴포넌트를 써야 해서 배치를 다시 정할 때. 제외: `function`·`type`·`config`·`hook` 파일을 가져오는 경우.
+**Applies when:** `component` 폴더 안의 파일을 다른 파일에서 가져올 때. `../`나 `@/page` 경로로 컴포넌트를 가져오려 할 때. 여러 자식이 같은 컴포넌트를 써야 해서 배치를 다시 정할 때. 제외: `function`·`type`·`constant`·`hook` 파일을 가져오는 경우.
 
 **Requires selected:** `typescript/naming-restrict-absolute-aliases-to-layer-roots` · 함께 적용
 
@@ -398,7 +400,7 @@ ui/button/
 3. 짧은 조각이면 그대로 중복해서 씁니다.
 
 세 자식 이상이 같은 것을 써야 하는데 올릴 수도 없으면 자식 분리가 잘못됐다는 신호입니다.
-`function`, `type`, `config`, `hook`은 렌더 트리를 만들지 않으므로 소유자 안에서 공유하고 이 방향 제약을 받지 않습니다.
+`function`, `type`, `constant`, `hook`은 렌더 트리를 만들지 않아 소유자 안에서 공유하고 이 방향 제약을 받지 않습니다.
 `hook`이 예외인 근거는 `ownership-keep-lifecycle-in-the-owning-component`에 있습니다.
 여러 소유자가 함께 부르는 생명주기만 훅으로 올리라고 정하는데,
 올린 훅을 자식이 가져오지 못하면 그 규칙이 성립하지 않습니다.
@@ -3644,7 +3646,7 @@ useEffect(() => {
 
 **Applies when:** 라우트 search 파라미터를 읽거나 쓰는 바인딩을 추가·변경할 때. search 파라미터 파서 묶음을 만들거나 옮길 때. 제외: 서버 요청 쿼리·뮤테이션 바인딩만 바꾸는 경우.
 
-**Requires selected:** `typescript/naming-place-owner-config-in-the-owner-config-folder` · 함께 적용
+**Requires selected:** `typescript/naming-place-owner-constants-in-the-owner-constant-folder` · 함께 적용
 
 **Review with:** `state-choose-state-tools-by-source-of-truth`
 
@@ -3659,8 +3661,8 @@ useEffect(() => {
 | 파싱을 거친 값과 그 갱신 함수 | `urlParams` · `setUrlParams` |
 | 플랫폼 `URLSearchParams` 객체 | `searchParams` |
 
-- 파서 묶음은 화면이 주소에 올린 상태의 계약이므로 소유자 `config` 폴더에 둡니다.
-  자리는 `typescript/naming-place-owner-config-in-the-owner-config-folder`가,
+- 파서 묶음은 화면이 주소에 올린 상태의 계약이므로 소유자 `constant` 폴더에 둡니다.
+  자리는 `typescript/naming-place-owner-constants-in-the-owner-constant-folder`가,
   파일과 심볼 표기는 `typescript/naming-use-consistent-file-and-symbol-naming`이 정합니다.
 - `searchParams`는 플랫폼 객체를 그대로 쥔 자리에만 씁니다.
   파싱을 거친 값이 이 이름을 쓰면 원본과 구분되지 않습니다.
@@ -3671,7 +3673,7 @@ useEffect(() => {
 **Incorrect (세 자리가 이름으로 구분되지 않음):**
 
 ```ts
-// page/product-list/config/product-list-search.ts
+// page/product-list/constant/product-list-search.ts
 export const productListSearch = {
 	page: parsePage,
 	keyword: parseKeyword,
@@ -3683,10 +3685,10 @@ const [searchParams, setSearchParams] = useUrlParams(productListSearch);
 const query = searchParams.keyword;
 ```
 
-**Correct (파서 묶음은 `<범위>UrlParsers`로 소유자 `config` 폴더에 둠):**
+**Correct (파서 묶음은 `<범위>UrlParsers`로 소유자 `constant` 폴더에 둠):**
 
 ```ts
-// page/product-list/config/product-list-url-parsers.ts
+// page/product-list/constant/product-list-url-parsers.ts
 /**
  * product 목록 화면이 주소에 올린 상태의 파서 묶음
  */

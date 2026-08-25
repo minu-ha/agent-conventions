@@ -135,12 +135,13 @@
 			}
 		},
 		{
-			"id": "RTE04-shared-config",
-			"prompt": "move a duplicated menu key and default page size from two screens into a documented as const config object in src/shared/config.ts and directly import and use config.* from both route pages.",
+			"id": "RTE04-root-constant",
+			"prompt": "move a duplicated menu key set and default page size from two screens into documented flat constants in src/constant/navigation.ts and src/constant/pagination.ts and import each name directly from both route pages.",
 			"files": [
 				"src/page/products/pg-products.tsx",
 				"src/page/reports/pg-reports.tsx",
-				"src/shared/config.ts"
+				"src/constant/navigation.ts",
+				"src/constant/pagination.ts"
 			],
 			"expectedSkills": [
 				"react",
@@ -151,8 +152,7 @@
 				"typescript": [
 					"types-document-custom-types-and-shapes",
 					"types-replace-enum-with-as-const-objects",
-					"naming-centralize-shared-config-namespaces",
-					"naming-preserve-config-origin-with-chained-access",
+					"naming-place-project-constants-in-the-root-constant-folder",
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
@@ -531,7 +531,7 @@
 				],
 				"typescript": [
 					"types-document-custom-types-and-shapes",
-					"naming-place-owner-config-in-the-owner-config-folder",
+					"naming-place-owner-constants-in-the-owner-constant-folder",
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
 					"docs-require-header-jsdoc-on-key-declarations",

@@ -55,8 +55,7 @@ const toInvoiceLine = ({product, quantity}: InvoiceLineInput): InvoiceLine => {
 **Incorrect (별칭 `const`로 끊어 이름만 남김):**
 
 ```ts
-const pricing = config.pricing;
-const currency = pricing.default_currency;
+const currency = pricing_default_currency;
 
 const toInvoiceTotal = (lines: InvoiceLine[]): InvoiceTotal => {
 	return {
@@ -88,7 +87,7 @@ const toInvoiceLine = (input: InvoiceLineInput): InvoiceLine => {
 
 const toInvoiceTotal = (lines: InvoiceLine[]): InvoiceTotal => {
 	return {
-		currency: config.pricing.default_currency,
+		currency: pricing_default_currency,
 		amount: lines.reduce((sum, line) => sum + line.amount, 0),
 	};
 };

@@ -41,4 +41,4 @@
 표식처럼 붙이지 않습니다.
 프레임워크 전용 `Props`, `Handle`, `Slot`, `Renderer`는 해당 프레임워크 규칙이 정합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/02-08-naming-name-types-by-role-and-lifetime.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/02-07-naming-name-types-by-role-and-lifetime.md)을 읽습니다.

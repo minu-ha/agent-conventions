@@ -4,7 +4,7 @@ titleKo: 추출한 파일은 소유자 아래 역할 폴더에 둡니다
 impact: MEDIUM-HIGH
 impactDescription: 빼낸 파일이 소유자를 따라가 예상한 자리에 놓입니다
 appliesWhen:
-  - 소유자 아래 `component`·`config`·`function`·`hook`·`type` 폴더를 만들거나 옮길 때
+  - 소유자 아래 `component`·`constant`·`function`·`hook`·`type` 폴더를 만들거나 옮길 때
   - 추출한 컴포넌트·함수·타입의 배치 위치를 정할 때
   - 제외: 기존 파일 내부 구현만 바꾸는 경우
 reviewWith: >-
@@ -24,13 +24,15 @@ tags: ownership
 | 폴더 | 담는 것 |
 | --- | --- |
 | `component` | 이 소유자만 쓰는 하위 컴포넌트 |
-| `config` | 입력을 받지 않는 선언형 설정, 기본 설정, 기준값 |
+| `constant` | 입력을 받지 않는 상수, 기본값, 기준값, 파서 묶음 같은 선언형 계약 |
 | `function` | 이름 붙여 내보낸 도메인 계산 |
 | `hook` | 실제 상태·이펙트·컨텍스트를 소유한 커스텀 훅 |
 | `type` | 여러 파일이 공유하는 계약 |
 
-소유자 아래에는 `util`, `helper`, `constant`, `common`, `shared` 같은 폴더를 만들지 않습니다.
-전역 `shared/`는 다른 자리라 여기 해당하지 않습니다.
+소유자 아래에는 `util`, `helper`, `config`, `constants`, `common`, `shared` 같은 폴더를 만들지 않습니다.
+루트의 `constant`·`type`·`hook`은 프로젝트가 소유자인 자리라 같은 역할 폴더 규칙을 따릅니다.
+루트에만 있는 `util`과 `config`는 `typescript/functions-place-and-promote-support-functions`와
+`typescript/naming-read-environment-values-through-config-env`가 정합니다.
 폴더 이름은 단수로 쓰고 프레임워크가 강제하는 이름만 예외로 둡니다.
 
 배치 기준입니다.
@@ -60,7 +62,7 @@ ui/button/
 ├── ui-button.tsx
 ├── ui-button.css
 ├── component/
-├── config/
+├── constant/
 ├── function/
 ├── hook/
 └── type/

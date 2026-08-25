@@ -3,8 +3,8 @@
 	"skill": "typescript",
 	"scenarios": [
 		{
-			"id": "shared-config-existing-source",
-			"prompt": "`billing-request.ts` and `audit-request.ts` duplicate URL/page-size constants, write a retry threshold inline, and read `import.meta.env` directly; move all of them into the documented `config` namespace and read them through `config.*`.",
+			"id": "root-constant-existing-source",
+			"prompt": "`billing-request.ts` and `audit-request.ts` duplicate URL/page-size constants, write a retry threshold inline, and read `import.meta.env` directly; move the constants into flat `constant/<topic>.ts` files, read the environment value through `config/env.ts`, and import each name directly.",
 			"files": [
 				"src/features/billing/billing-request.ts",
 				"src/features/audit/audit-request.ts"
@@ -14,13 +14,12 @@
 			],
 			"expectedSelected": {
 				"typescript": [
-					"naming-centralize-shared-config-namespaces",
-					"naming-place-owner-config-in-the-owner-config-folder",
-					"naming-preserve-config-origin-with-chained-access",
+					"naming-place-project-constants-in-the-root-constant-folder",
+					"naming-place-owner-constants-in-the-owner-constant-folder",
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
 					"naming-restrict-absolute-aliases-to-layer-roots",
-					"naming-read-environment-values-through-shared-config",
+					"naming-read-environment-values-through-config-env",
 					"values-declare-meaningful-numbers"
 				]
 			}

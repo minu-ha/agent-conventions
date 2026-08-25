@@ -1,28 +1,28 @@
 ---
 title: Place and Promote Support Functions Deliberately
-titleKo: 보조 함수는 한 파일에 하나만 내보내고 프로젝트 전반이 쓸 때만 공용으로 올립니다
+titleKo: 보조 함수는 한 파일에 하나만 내보내고 프로젝트 전반이 쓸 때만 루트 `util`로 올립니다
 impact: MEDIUM-HIGH
-impactDescription: 잡동사니 파일이 생기지 않고 전역 `util`에 한 소유자의 함수가 섞이지 않습니다
+impactDescription: 잡동사니 파일이 생기지 않고 루트 `util`에 한 소유자의 함수가 섞이지 않습니다
 appliesWhen:
   - 보조 함수를 어느 파일이나 폴더에 둘지 정할 때
   - 파일 안에서 내보낸 함수와 비공개 보조의 선언 순서를 정할 때
-  - `shared/` 아래로 파일을 옮기거나 `util.*`에 항목을 추가할 때
+  - 루트 `util` 폴더로 파일을 옮기거나 종류 폴더를 새로 만들 때
 requiresSelected: functions-extract-helpers-only-when-the-boundary-is-real
 tags: functions, boundaries
 ---
 
 ## Place and Promote Support Functions Deliberately
 
-**Impact: MEDIUM-HIGH (잡동사니 파일이 생기지 않고 전역 `util`에 한 소유자의 함수가 섞이지 않습니다)**
+**Impact: MEDIUM-HIGH (잡동사니 파일이 생기지 않고 루트 `util`에 한 소유자의 함수가 섞이지 않습니다)**
 
 떼어 낼지는 `functions-extract-helpers-only-when-the-boundary-is-real`이 먼저 판정합니다.
 이 규칙은 그 결과를 어디 두고 언제 올릴지만 봅니다.
 
 - 소유자 아래에 `helper.ts`, `helpers.ts`, `utils.ts` 같은 잡동사니 파일을 만들지 않습니다.
   어느 폴더에 둘지는 프레임워크 컨벤션의 역할 폴더 규칙이 정합니다.
-- 소유자 아래에서는 내보낸 대표 함수 하나당 파일 하나입니다.
+- 내보낸 대표 함수 하나당 파일 하나이고, 파일명은 그 함수 이름입니다.
   전용 보조가 파일로 나가면 대표 함수는 자기 이름 폴더를 갖고, 나간 파일은 그 안에 둡니다.
-  전역 `shared/util.ts`는 프로젝트 전반이 쓰는 함수를 한 네임스페이스에 모으는 자리라 예외입니다.
+  루트 `util`도 같습니다.
 - 파일 안에서는 import, 내보낸 계약 타입, 내보낸 대표 함수, 비공개 보조 순서로 둡니다.
   비공개 보조끼리도 같은 방향입니다.
   부르는 쪽을 위에, 불리는 쪽을 아래에 두어 파일 전체가 위에서 아래로 읽히게 합니다.
@@ -36,9 +36,24 @@ tags: functions, boundaries
   대표 함수가 자기 폴더 안 파일을 부르는 것은 사슬이 아니라 그 함수의 내부입니다.
   자기 폴더 안 파일을 가져오는 것은 그 대표 함수뿐이고,
   다른 파일도 부르게 되면 재사용이 생긴 것이니 `function` 바로 아래로 꺼냅니다.
+  루트 `util` 함수가 다른 루트 `util` 함수를 가져오는 것도 사슬이 아닙니다.
+  둘 다 공개 진입점이고, 가져오는 줄에서 어느 종류 폴더의 무엇인지 그대로 읽힙니다.
 
-**공용 승격은 그 함수가 누구 것인지로 판정합니다.**
-`shared/util.ts`의 `util.*`는 프로젝트 전반이 쓰는 함수를 담습니다.
+**루트 `util`은 프로젝트가 소유자인 함수 폴더입니다.**
+파일 하나에 함수 하나, 전용 보조는 자기 이름 폴더라는 규칙은 소유자 아래와 같습니다.
+다른 점은 폴더 한 겹입니다.
+함수가 많아 종류 폴더로 묶습니다.
+
+- 종류는 함수가 받는 값의 타입입니다.
+  `date`, `money`, `string`, `array`, `dom`, `url`이 그 이름입니다.
+- 도메인 타입도 값의 타입입니다.
+  `Spread`를 받는 함수는 `util/spread/`에 둡니다.
+- 화면이나 기능 이름으로는 짓지 않습니다.
+  받는 값의 타입으로 종류를 짓지 못하면 그 함수는 `util`이 아니라 소유자 함수입니다.
+- 소유자 아래 `function` 폴더에는 종류 폴더를 두지 않습니다.
+  함수가 몇 개라 파일 목록으로 충분합니다.
+
+**루트 승격은 그 함수가 누구 것인지로 판정합니다.**
 
 가르는 법은 소유자를 지워 보는 것입니다.
 소유자를 지웠을 때 함수도 사라지면 그 소유자 것입니다.
@@ -46,13 +61,13 @@ tags: functions, boundaries
 - 소유자와 함께 사라지면 그 소유자 아래에 둡니다.
   profile 저장 화면이 없어지면 `toProfileSaveRequest`가 조립할 요청도 없습니다.
 - 소유자를 지워도 남으면 지금 한 곳만 써도 올립니다.
-  `toDisplayDate`는 소유자가 하나든 셋이든 `util`에 둘 함수입니다.
+  `toDisplayDate`는 소유자가 하나든 셋이든 `util/date/`에 둘 함수입니다.
 
 두 소유자가 같은 함수를 써야 하면 셋 중 하나로 해소합니다.
 
 1. 표시까지 같으면 `widget` 컴포넌트가 소유합니다.
 2. 계산만 같으면 각 소유자가 각자 갖습니다.
-3. 프로젝트 전반의 계산이면 `util`로 올립니다.
+3. 프로젝트 전반의 계산이면 루트 `util`로 올립니다.
 
 1번은 함수를 공유하는 것이 아니라 표시를 공유하는 것입니다.
 어느 레이어인지는 프레임워크 컨벤션의 레이어 규칙이 판정합니다.
@@ -101,20 +116,17 @@ export const toProfileSaveRequest = (
 };
 ```
 
-**Incorrect (소유자와 함께 사라질 함수를 전역 `util`로 올림):**
+**Incorrect (소유자와 함께 사라질 함수를 루트 `util`로 올림):**
 
 ```ts
-// shared/util.ts
-export const util = {
-	profile: {
-		/**
-		 * 서버가 앞뒤 공백이 붙은 displayName을 거부한다
-		 */
-		toProfileSaveRequest: (values: ProfileFormValues) => {
-			return {body: {displayName: values.displayName.trim()}};
-		},
-	},
-} as const;
+// util/profile/to-profile-save-request.ts
+// profile은 값의 종류가 아니라 화면 이름이다. 화면이 없어지면 이 요청도 없다
+/**
+ * 서버가 앞뒤 공백이 붙은 displayName을 거부한다
+ */
+export const toProfileSaveRequest = (values: ProfileFormValues) => {
+	return {body: {displayName: values.displayName.trim()}};
+};
 ```
 
 **Correct (소유자 아래 대표 함수 하나당 파일 하나):**
@@ -159,27 +171,34 @@ page/report/function/
 └── to-sales-filter-request.ts
 ```
 
-**Correct (소유자를 지워도 남는 함수는 도메인 계약을 받아도 올림):**
+**Correct (소유자를 지워도 남는 함수는 종류 폴더에 파일 하나로 올림):**
+
+```txt
+util/
+├── date/
+│   ├── to-display-date.ts
+│   └── to-display-date.test.ts
+└── money/
+    └── to-signed-amount.ts
+```
 
 ```ts
-// shared/util.ts
-export const util = {
-	date: {
-		/**
-		 * ko-KR로 고정한다. 사용자 로케일을 따라가면 목록 정렬 기준과 어긋난다
-		 */
-		toDisplayDate: (value: string): string => {
-			return new Date(value).toLocaleDateString("ko-KR");
-		},
-	},
-	money: {
-		/**
-		 * 금액 표시는 화면마다 다르지 않다. 소수 두 자리와 부호를 고정한다
-		 */
-		toSignedAmount: (amount: Amount): string => {
-			const sign = amount.value < 0 ? "-" : "+";
-			return `${sign}$${Math.abs(amount.value).toFixed(2)}`;
-		},
-	},
-} as const;
+// util/date/to-display-date.ts
+/**
+ * ko-KR로 고정한다. 사용자 로케일을 따라가면 목록 정렬 기준과 어긋난다
+ */
+export const toDisplayDate = (value: string): string => {
+	return new Date(value).toLocaleDateString("ko-KR");
+};
+```
+
+```ts
+// util/money/to-signed-amount.ts
+/**
+ * 금액 표시는 화면마다 다르지 않다. 소수 두 자리와 부호를 고정한다
+ */
+export const toSignedAmount = (amount: Amount): string => {
+	const sign = amount.value < 0 ? "-" : "+";
+	return `${sign}$${Math.abs(amount.value).toFixed(2)}`;
+};
 ```

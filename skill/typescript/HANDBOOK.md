@@ -27,14 +27,13 @@
     - 1.6 [Replace `enum` With `as const` Objects](#16-replace-enum-with-as-const-objects)
     - 1.7 [Choose Interface for Object Contracts and Type for Type Composition](#17-choose-interface-for-object-contracts-and-type-for-type-composition)
 2. [Naming and Module Boundaries](#2-naming-and-module-boundaries) — **CRITICAL**
-    - 2.1 [Centralize Shared Config Under `shared/config.ts`](#21-centralize-shared-config-under-shared-config-ts)
-    - 2.2 [Place Owner-only Config in the Owner Config Folder](#22-place-owner-only-config-in-the-owner-config-folder)
-    - 2.3 [Preserve Shared Namespace Origin With Chained Access](#23-preserve-shared-namespace-origin-with-chained-access)
-    - 2.4 [Use Role-Based File, Symbol, and Constant Naming](#24-use-role-based-file-symbol-and-constant-naming)
-    - 2.5 [Use Direct Imports and Dedicated Public Entry Points](#25-use-direct-imports-and-dedicated-public-entry-points)
-    - 2.6 [Restrict Absolute Aliases to Layer Roots](#26-restrict-absolute-aliases-to-layer-roots)
-    - 2.7 [Read Environment Values Through Shared Config](#27-read-environment-values-through-shared-config)
-    - 2.8 [Name Types by Role and Lifetime](#28-name-types-by-role-and-lifetime)
+    - 2.1 [Place Project-wide Constants in the Root `constant` Folder](#21-place-project-wide-constants-in-the-root-constant-folder)
+    - 2.2 [Place Owner-only Constants in the Owner `constant` Folder](#22-place-owner-only-constants-in-the-owner-constant-folder)
+    - 2.3 [Use Role-Based File, Symbol, and Constant Naming](#23-use-role-based-file-symbol-and-constant-naming)
+    - 2.4 [Use Direct Imports and Dedicated Public Entry Points](#24-use-direct-imports-and-dedicated-public-entry-points)
+    - 2.5 [Restrict Absolute Aliases to Layer Roots](#25-restrict-absolute-aliases-to-layer-roots)
+    - 2.6 [Read Environment Values Through `config/env.ts`](#26-read-environment-values-through-config-env-ts)
+    - 2.7 [Name Types by Role and Lifetime](#27-name-types-by-role-and-lifetime)
 3. [Functions and Helper Boundaries](#3-functions-and-helper-boundaries) — **MEDIUM-HIGH**
     - 3.1 [Declare Functions as Arrow Consts](#31-declare-functions-as-arrow-consts)
     - 3.2 [Use Named Object Params for Complex Signatures](#32-use-named-object-params-for-complex-signatures)
@@ -307,7 +306,7 @@ const toSearchRequest: ToRequest = (request) => {
 - `interface`, `type`, 스키마의 필드: 각 필드 바로 위에 문서 주석
 - 객체형 상수는 헤더만 씁니다.
   필드 주석은 `interface`, `type`, 스키마에만 답니다.
-  `shared/config.ts`의 설정 객체와 `enum` 성격 상수 객체의 키에는 달지 않습니다.
+  `constant` 폴더의 상수와 `enum` 성격 상수 객체의 키에는 달지 않습니다.
 - 필드가 없는 인덱스 접근 별칭(`type ProductId = ProductRecord["id"]`)과
   `Omit`으로 뺀 형태: 적을 필드가 없으므로 헤더만 씁니다.
   필드가 있는 `interface`는 원본에서 가져온 필드여도 각 필드에 주석을 답니다.
@@ -622,42 +621,54 @@ type MutableRow = Omit<Row, "children"> & {
 
 **Impact: CRITICAL**
 
-식별자, 가져오기, 공개 진입점, 절대경로 별칭 범위, 설정 위치가 소유자와 출처를 바로 드러내야 합니다. 타입 이름은 값의 역할과 수명을 드러내고 소유자 경로가 이미 말하는 문맥을 반복하지 않습니다. 여기서 **소유자**는 자기 폴더가 있는 모듈 하나입니다. 그 폴더 안 파일은 그 소유자만 씁니다.
+식별자, 가져오기, 공개 진입점, 절대경로 별칭 범위, 상수 위치가 소유자와 출처를 바로 드러내야 합니다. 타입 이름은 값의 역할과 수명을 드러내고 소유자 경로가 이미 말하는 문맥을 반복하지 않습니다. 여기서 **소유자**는 자기 폴더가 있는 모듈 하나입니다. 그 폴더 안 파일은 그 소유자만 씁니다.
 
-### 2.1 Centralize Shared Config Under `shared/config.ts`
+### 2.1 Place Project-wide Constants in the Root `constant` Folder
 
-**Rule:** `T02-01` · `naming-centralize-shared-config-namespaces`
+**Rule:** `T02-01` · `naming-place-project-constants-in-the-root-constant-folder`
 
-**Applies when:** 프로젝트 전반이 쓰는 URL, 기능 플래그, 페이지 크기나 상수를 추가·이동·중복 정의할 때. 공용 설정 경계를 바꿀 때.
+**Applies when:** 프로젝트 전반이 쓰는 URL 경로, 페이지 크기, 표시 문구, 기준값을 추가·이동·중복 정의할 때. 루트 `constant` 폴더의 파일이나 상수 이름을 바꿀 때.
 
-**Review with:** `naming-preserve-config-origin-with-chained-access`, `naming-use-direct-imports-and-public-entry-points`
+**Review with:** `naming-place-owner-constants-in-the-owner-constant-folder`, `naming-use-direct-imports-and-public-entry-points`
 
-**Impact: MEDIUM-HIGH (공용 설정 값이 쓰는 파일마다 흩어져 공개 출처를 잃는 것을 막습니다)**
+**Impact: MEDIUM-HIGH (프로젝트 전반의 값이 쓰는 파일마다 흩어지지 않고 이름만으로 종류와 주제가 읽힙니다)**
 
-설정을 어디 두는지는 그 값이 누구 것인지로 갈립니다.
+상수를 어디 두는지는 그 값이 누구 것인지로 갈립니다.
 
 | 값 | 자리 | 이름 |
 | --- | --- | --- |
-| 프로젝트 전반의 값 | `shared/config.ts` | `config.*` |
-| 한 소유자의 값 | `<owner>/config/<owner>-config.ts` | `<owner>_config` |
+| 프로젝트 전반의 값 | `constant/<주제>.ts` | `<주제>_<이름>` |
+| 한 소유자의 값 | `<owner>/constant/<주제>.ts` | `<주제>_<이름>` |
 
 가르는 법은 소유자를 지워 보는 것입니다.
 소유자를 지웠을 때 값도 사라지면 그 소유자 것입니다.
-`chart_axis_tick_count`는 화면과 함께 사라지고, `billing_base_url`은 화면을 지워도 서버 주소로 남습니다.
-
-**프로젝트 전반의 값이면** `shared/config.ts` 한 파일을 공개 진입점으로 삼습니다.
-`config` 네임스페이스 아래에 모아 `config.*` 체인으로 읽히게 하고,
-쓰는 파일마다 공용 URL, 기능 플래그, 페이지 크기, 상수 문자열을 흩뿌리지 않습니다.
+`chart_axis_tick_count`는 화면과 함께 사라집니다.
+`api_request_timeout_ms`는 화면을 지워도 서버 통신에 남습니다.
+루트는 프로젝트가 소유자인 자리라 위 표의 두 행이 같은 모양입니다.
+한 소유자의 값을 두는 법은 `naming-place-owner-constants-in-the-owner-constant-folder` 규칙이 정합니다.
 
 쓰는 곳이 늘거나 줄어도 자리는 그대로입니다.
 개수로 판정하면 쓰임이 변할 때마다 값이 자리를 옮겨 다닙니다.
 
-`config.ts`는 파일 하나로 둡니다.
-한 파일에서 값을 찾기 어려워지면 `config.api`, `config.pagination` 같은 첫 마디를 기준으로 폴더로 나눕니다.
-첫 마디끼리 서로 참조하면 가져오기가 얽히므로 나누지 않습니다.
+**파일은 주제 하나이고, 상수는 그 주제로 시작합니다.**
 
-한 소유자의 설정을 두는 폴더 위치와 파일명은
-`naming-place-owner-config-in-the-owner-config-folder` 규칙이 정합니다.
+- 파일명은 안에 있는 상수 이름이 공유하는 첫 마디입니다.
+  `constant/api.ts`에는 `api_base_path`와 `api_request_timeout_ms`만 있습니다.
+- 상수는 모듈 스코프에 하나씩 이름 붙여 내보냅니다.
+  `config`나 `api_config` 같은 객체 하나에 모으지 않습니다.
+  객체는 손으로 유지하는 색인이 되고, 안 쓰는 값까지 번들에 남습니다.
+- 값은 객체나 배열이어도 됩니다.
+  `page_size_by_mode`처럼 함께 읽히는 값은 상수 하나입니다.
+  한 겹으로 펴는 것은 이름이지 값이 아닙니다.
+- 사용자에게 보이는 문장은 주제가 `copy`입니다.
+  `copy_empty_value_text`처럼 모아 두면 번역 파일로 옮길 때 파일 하나만 바뀝니다.
+- 한 단어 상수는 만들지 않습니다.
+  주제 접두사가 붙어 상수는 늘 두 단어 이상이라 `snake_case` 표기가 눈에 보입니다.
+
+이 폴더에는 코드와 함께 바뀌는 값만 둡니다.
+환경마다 달라지는 값과 기능 플래그는 `config` 폴더에서 읽습니다.
+그 자리는 `naming-read-environment-values-through-config-env` 규칙이 정합니다.
+색상과 간격 같은 디자인 토큰은 스타일시트의 CSS 변수가 단일 출처라 여기 두지 않습니다.
 
 **Incorrect (프로젝트 전반의 값을 쓰는 자리에서 선언):**
 
@@ -669,122 +680,104 @@ const default_page_size = 20;
 ```ts
 // page/billing/pg-billing.tsx
 const default_page_size = 20;
-const billing_base_url = "https://billing.example.com";
+const request_timeout_ms = 20_000;
 ```
 
-**Correct (공용 설정 네임스페이스에서 읽은 값을 쓰는 자리로 넘김):**
+**Incorrect (객체 하나에 모아 색인을 손으로 유지함):**
 
 ```ts
-// page/products/pg-products.tsx
-import {config} from "@/shared/config";
-
-const productClient = createClient({baseUrl: config.api.public_base_url});
-const productQuery = useProductQuery({
-	client: productClient,
-	pageSize: config.pagination.default_page_size,
-});
-```
-
-```ts
-// page/billing/pg-billing.tsx
-import {config} from "@/shared/config";
-
-const billingClient = createClient({baseUrl: config.api.billing_base_url});
-const billingQuery = useBillingQuery({
-	client: billingClient,
-	pageSize: config.pagination.default_page_size,
-});
-```
-
-### 2.2 Place Owner-only Config in the Owner Config Folder
-
-**Rule:** `T02-02` · `naming-place-owner-config-in-the-owner-config-folder`
-
-**Applies when:** 한 소유자의 선언형 설정을 추가하거나 옮길 때. 전역 설정과 소유자 전용 설정 사이에서 위치를 바꿀 때.
-
-**Requires selected:** `naming-use-consistent-file-and-symbol-naming` · 함께 적용
-
-**Review with:** `naming-centralize-shared-config-namespaces`
-
-**Impact: MEDIUM-HIGH (한 소유자의 설정이 전역 진입점을 넓히지 않습니다)**
-
-한 소유자의 선언형 설정은 전역으로 올리지 않습니다.
-그 소유자 아래 `config` 폴더에 둡니다.
-전역과 소유자 중 어디에 두는지 가르는 표는 `naming-centralize-shared-config-namespaces` 규칙에 있습니다.
-
-- 파일은 소유자 폴더 바로 아래 `config/<owner>-config.ts`, 내보내는 상수는 `<owner>_config`입니다.
-- 파서 묶음이나 스키마처럼 함수를 담은 계약도 같은 `config` 폴더에 둡니다.
-  파일은 `config/<owner>-<contract>.ts`로 계약마다 나누고,
-  심볼 표기는 `naming-use-consistent-file-and-symbol-naming`이 정합니다.
-- `constants` 폴더는 만들지 않습니다.
-- 그 소유자를 지워도 남을 값이면 `naming-centralize-shared-config-namespaces` 규칙을 따라 올립니다.
-
-**Incorrect (한 소유자의 설정을 전역으로 올림):**
-
-```ts
-// shared/config.ts
+// constant/config.ts
 export const config = {
-	product_detail: {
-		chart_axis_tick_count: 6,
-	},
+	api: {request_timeout_ms: 20_000},
+	pagination: {default_page_size: 20},
 } as const;
 ```
 
-**Correct (소유자 아래 `config` 폴더에 둠):**
+**Correct (주제 파일에 상수를 하나씩 내보내고 쓰는 자리에서 이름으로 가져옴):**
 
 ```ts
-// page/product-detail/config/product-detail-config.ts
+// constant/api.ts
 /**
- * product 상세 화면 전용 표시 설정
+ * 요청 하나를 기다리는 최대 시간. 게이트웨이가 30초에 끊어 그보다 먼저 실패를 알린다
  */
+export const api_request_timeout_ms = 20_000;
+```
+
+```ts
+// constant/pagination.ts
+/**
+ * 목록 화면이 처음 불러오는 개수
+ */
+export const pagination_default_page_size = 20;
+```
+
+```ts
+// page/products/pg-products.tsx
+import {api_request_timeout_ms} from "@/constant/api";
+import {pagination_default_page_size} from "@/constant/pagination";
+
+const productClient = createClient({timeoutMs: api_request_timeout_ms});
+const productQuery = useProductQuery({client: productClient, pageSize: pagination_default_page_size});
+```
+
+### 2.2 Place Owner-only Constants in the Owner `constant` Folder
+
+**Rule:** `T02-02` · `naming-place-owner-constants-in-the-owner-constant-folder`
+
+**Applies when:** 한 소유자의 상수나 선언형 계약을 추가하거나 옮길 때. 루트 상수와 소유자 전용 상수 사이에서 위치를 바꿀 때.
+
+**Requires selected:** `naming-use-consistent-file-and-symbol-naming` · 함께 적용
+
+**Review with:** `naming-place-project-constants-in-the-root-constant-folder`
+
+**Impact: MEDIUM-HIGH (한 소유자의 상수가 루트 폴더를 넓히지 않고 소유자 이름을 되풀이하지 않습니다)**
+
+한 소유자의 상수는 루트로 올리지 않습니다.
+그 소유자 아래 `constant` 폴더에 둡니다.
+루트와 소유자 중 어디에 두는지 가르는 표와 파일·이름의 모양은
+`naming-place-project-constants-in-the-root-constant-folder` 규칙에 있습니다.
+여기서는 소유자 아래에서만 다른 것을 봅니다.
+
+- 파일은 `constant/<주제>.ts`이고 상수는 `<주제>_`로 시작합니다.
+  소유자 이름은 폴더가 이미 말하므로 접두사로 되풀이하지 않습니다.
+  `page/detail/constant/legend.ts`의 상수는 `legend_hit_tolerance_px`입니다.
+  `detail_legend_hit_tolerance_px`처럼 소유자 이름을 앞에 붙이지 않습니다.
+- 파서 묶음이나 스키마처럼 함수를 담은 계약도 같은 `constant` 폴더에 둡니다.
+  파일은 계약마다 나누고, 이름은 그 계약을 정한 규칙과 `naming-use-consistent-file-and-symbol-naming`이 정합니다.
+- 소유자 아래에 `config`, `constants`, `common` 폴더는 만들지 않습니다.
+- 파일이 하나뿐인 `constant` 폴더도 그대로 둡니다.
+- 그 소유자를 지워도 남을 값이면 루트 규칙을 따라 올립니다.
+
+**Incorrect (한 소유자의 상수를 루트로 올림):**
+
+```ts
+// constant/chart.ts
+// product 상세 화면만 쓰는 값이 루트에 있다
+export const chart_axis_tick_count = 6;
+```
+
+**Incorrect (소유자 이름을 되풀이하고 객체 하나에 모음):**
+
+```ts
+// page/product-detail/constant/product-detail.ts
 export const product_detail_config = {
 	chart_axis_tick_count: 6,
 } as const;
 ```
 
-### 2.3 Preserve Shared Namespace Origin With Chained Access
-
-**Rule:** `T02-03` · `naming-preserve-config-origin-with-chained-access`
-
-**Applies when:** `config`나 `util` 값을 쓰면서 넓은 스코프 구조분해, 별칭, 기능별 네임스페이스를 추가·변경할 때.
-
-**Review with:** `functions-place-and-promote-support-functions`, `values-read-objects-through-chains`
-
-**Impact: MEDIUM (넓은 스코프 별칭으로 출처를 숨기지 않아 값이 어디서 오는지 읽힙니다)**
-
-공용 설정과 공용 순수 함수는 쓰는 파일에서 직접 가져온 뒤 `config.*`, `util.*` 체인으로 씁니다.
-구조분해와 별칭으로 끊지 않는 것은 `values-read-objects-through-chains` 규칙이 모든 객체에 정합니다.
-여기서는 그 위에 공용 네임스페이스만 더 봅니다.
-
-`shared/config.ts`와 `shared/util.ts`는 찾기 쉽도록 네임스페이스를 유지합니다.
-`config`와 `util` 이름은 공용 경계에서만 씁니다.
-기능별로 같은 이름을 다시 쓰지 않습니다.
-보조 함수 파일을 어디 둘지는 `functions-place-and-promote-support-functions` 규칙이 정합니다.
-
-**Incorrect (넓은 스코프에서 원본 출처를 감춤):**
+**Correct (소유자 아래 주제 파일에 둠):**
 
 ```ts
-const {api, features} = config;
-const {date} = util;
-const billingBaseUrl = api.billing_base_url;
-const enableRefunds = features.enable_refunds;
-const isoDate = date.toIsoString(createdAt);
+// page/product-detail/constant/chart.ts
+/**
+ * product 상세 차트의 축 눈금 수. 표시 폭이 좁아 여섯을 넘기면 라벨이 겹친다
+ */
+export const chart_axis_tick_count = 6;
 ```
 
-**Correct (쓰는 자리에서 체인 그대로 읽어 출처를 남김):**
+### 2.3 Use Role-Based File, Symbol, and Constant Naming
 
-```ts
-const billingClient = createClient({baseUrl: config.api.billing_base_url});
-const createdAtLabel = util.date.toIsoString(createdAt);
-
-if (config.features.enable_refunds) {
-	openRefundDialog({client: billingClient, createdAtLabel});
-}
-```
-
-### 2.4 Use Role-Based File, Symbol, and Constant Naming
-
-**Rule:** `T02-04` · `naming-use-consistent-file-and-symbol-naming`
+**Rule:** `T02-03` · `naming-use-consistent-file-and-symbol-naming`
 
 **Applies when:** TypeScript 파일, 폴더, 변수, 함수, 타입, 객체·스키마 키의 이름을 새로 만들거나 바꿀 때. 밖으로 나가는 키를 받는 쪽 표기로 적을지 판단할 때. 제외: 별칭 없이 외부 패키지에서 그대로 가져오는 경우.
 
@@ -810,9 +803,21 @@ if (config.features.enable_refunds) {
 
 - `retry_policy.max_attempts`는 불변 설정과 그 상수 키입니다.
 - `product_status.waiting_review`는 값 집합과 그 상수 키입니다.
-- `fetchProducts({pageSize: config.pagination.default_page_size})`의 `pageSize`는
-  요청 계약 필드라 `camelCase`이고, 설정 키인 `default_page_size`만 `snake_case`입니다.
+- `fetchProducts({pageSize: pagination_default_page_size})`의 `pageSize`는
+  요청 계약 필드라 `camelCase`이고, 상수인 `pagination_default_page_size`만 `snake_case`입니다.
 - `productSearchSchema`는 실행 중 재할당하지 않아도 스키마 역할이므로 `camelCase`입니다.
+
+**종류는 이름이 말합니다.**
+함수는 동사가, 상수는 `snake_case`와 주제 접두사가, 컴포넌트는 레이어 접두사가 종류를 말합니다.
+`formatUsd`, `api_base_path`, `PgDetail`은 폴더를 보지 않아도 무엇인지 읽힙니다.
+그래서 한 단어 상수는 만들지 않습니다.
+`api`는 밑줄이 없어 상수인지 변수인지 보이지 않고, `api_base_path`는 보입니다.
+
+**파일명은 안에 있는 이름이 공유하는 부분입니다.**
+함수 파일은 내보낸 이름이 하나라 파일명이 곧 함수 이름입니다.
+`format-usd.ts`가 `formatUsd`를 내보냅니다.
+상수 파일은 이름이 공유하는 첫 마디가 파일명입니다.
+`constant/api.ts`가 `api_base_path`와 `api_request_timeout_ms`를 내보냅니다.
 
 **예외는 밖으로 나가는 키뿐입니다.**
 API 요청 본문, 라이브러리 인자, DOM 속성, 환경 변수처럼 받는 쪽이 이름을 정하는 자리는 받는 쪽 표기를 그대로 씁니다.
@@ -853,19 +858,17 @@ const userProfileSchema = z.object({
 });
 ```
 
-**Correct (불변 설정과 값 집합은 객체와 상수 키를 모두 `snake_case`로 표기):**
+**Correct (불변 데이터 상수와 값 집합은 이름과 상수 키를 모두 `snake_case`로 표기):**
 
 ```ts
-// shared/config.ts
+// constant/pagination.ts
 /**
- * 환경마다 달라지는 공용 설정
+ * 목록 화면이 처음 불러오는 개수
  */
-export const config = {
-	pagination: {
-		default_page_size: 20,
-	},
-} as const;
+export const pagination_default_page_size = 20;
+```
 
+```ts
 /**
  * product 게시 상태 값 집합
  */
@@ -890,9 +893,9 @@ const toProductSaveBody = (values: ProductFormValues) => {
 };
 ```
 
-### 2.5 Use Direct Imports and Dedicated Public Entry Points
+### 2.4 Use Direct Imports and Dedicated Public Entry Points
 
-**Rule:** `T02-05` · `naming-use-direct-imports-and-public-entry-points`
+**Rule:** `T02-04` · `naming-use-direct-imports-and-public-entry-points`
 
 **Applies when:** 가져오기, 내보내기, `index.ts` 배럴, 공개 진입점, 소유자 보조 모듈의 경계를 추가·변경할 때. 같은 경로에서 값과 타입 중 무엇을 가져올지 추가·삭제·전환할 때.
 
@@ -921,7 +924,7 @@ const toProductSaveBody = (values: ProductFormValues) => {
 **Incorrect (배럴과 섞인 가져오기로 경계를 흐림):**
 
 ```ts
-import {config, util, UserProfile} from "./index";
+import {pagination_default_page_size, toDisplayDate, UserProfile} from "./index";
 ```
 
 **Incorrect (`default`로 내보내 사용처마다 다른 이름이 생김):**
@@ -943,9 +946,9 @@ import Tabs from "@/ui/tabs/ui-tabs";
 **Correct (직접 가져오기와 공개 진입점을 구분):**
 
 ```ts
-import type {UserProfile} from "@/shared/contracts";
-import {config} from "@/shared/config";
-import {util} from "@/shared/util";
+import type {UserProfile} from "@/type/user-profile";
+import {pagination_default_page_size} from "@/constant/pagination";
+import {toDisplayDate} from "@/util/date/to-display-date";
 import {WgChartCard} from "@/widget/chart-card/wg-chart-card";
 import {toUserSaveRequest} from "./function/to-user-save-request";
 ```
@@ -957,9 +960,9 @@ import {toUserSaveRequest} from "./function/to-user-save-request";
 export default defineConfig({plugins: [react()]});
 ```
 
-### 2.6 Restrict Absolute Aliases to Layer Roots
+### 2.5 Restrict Absolute Aliases to Layer Roots
 
-**Rule:** `T02-06` · `naming-restrict-absolute-aliases-to-layer-roots`
+**Rule:** `T02-05` · `naming-restrict-absolute-aliases-to-layer-roots`
 
 **Applies when:** 절대경로 별칭으로 다른 모듈을 가져올 때. 별칭이 가리키는 경로 깊이를 바꿀 때.
 
@@ -971,17 +974,21 @@ export default defineConfig({plugins: [react()]});
 
 | 경로 | 판정 |
 | --- | --- |
-| `@/ui`, `@/widget`, `@/shared`, `@/service`, `@/store`, `@/asset` | 허용 |
+| `@/ui`, `@/widget`, `@/constant`, `@/config`, `@/util`, `@/type`, `@/hook`, `@/service`, `@/store`, `@/asset` | 허용 |
 | `@/page/...` 등 화면 내부 | 금지 |
 
 레이어 루트가 담는 것은 다음과 같습니다.
 `ui`와 `widget`의 경계는 프레임워크 컨벤션의 레이어 규칙이 정합니다.
 
-- `shared`는 프로젝트 전반이 쓰는 설정과 함수를 담습니다.
+- `constant`는 프로젝트 전반이 쓰는 상수를, `config`는 환경마다 달라지는 값을 담습니다.
+- `util`은 프로젝트 전반이 쓰는 함수를 값의 종류 폴더로 묶어 담습니다.
+- `type`은 프로젝트 전반이 쓰는 계약을, `hook`은 여러 소유자가 쓰는 훅을 담습니다.
 - `service`는 서버 통신 클라이언트를 담습니다.
 - `store`는 여러 화면이 함께 읽는 상태를 담습니다.
   상태 관리 라이브러리를 쓰든 컨텍스트를 쓰든 파일명은 `use-<name>-store.ts`입니다.
 - `asset`은 아이콘 같은 정적 자원을 담습니다.
+
+루트는 프로젝트가 소유자인 자리라 `constant`·`util`·`type`·`hook`은 소유자 아래 역할 폴더와 같은 규칙을 따릅니다.
 
 - 첫 마디가 레이어 루트면 그 아래 깊이는 제한하지 않습니다.
   `@/widget/chart-card/wg-chart-card`는 허용입니다.
@@ -1001,19 +1008,25 @@ import {WgChartCard} from "@/widget/chart-card/wg-chart-card";
 import {SalesChartCard} from "./component/sales-chart-card";
 ```
 
-### 2.7 Read Environment Values Through Shared Config
+### 2.6 Read Environment Values Through `config/env.ts`
 
-**Rule:** `T02-07` · `naming-read-environment-values-through-shared-config`
+**Rule:** `T02-06` · `naming-read-environment-values-through-config-env`
 
-**Applies when:** `import.meta.env`나 `process.env`를 읽는 코드를 추가·이동할 때. 환경마다 달라지는 값을 새로 들여올 때.
+**Applies when:** `import.meta.env`나 `process.env`를 읽는 코드를 추가·이동할 때. 환경마다 달라지는 값이나 기능 플래그를 새로 들여올 때.
 
-**Review with:** `absence-expose-optional-values-instead-of-silent-fallbacks`, `naming-centralize-shared-config-namespaces`
+**Review with:** `absence-expose-optional-values-instead-of-silent-fallbacks`, `naming-place-project-constants-in-the-root-constant-folder`
 
-**Impact: HIGH (환경마다 달라지는 값이 쓰는 파일로 흩어지지 않고 한 곳에서 읽힙니다)**
+**Impact: HIGH (환경마다 달라지는 값이 쓰는 파일로 흩어지지 않고 한 파일에서 읽힙니다)**
 
 환경마다 달라지는 값은 쓰는 파일에서 직접 읽지 않습니다.
-`shared/config.ts`가 한 번 읽어 `config.*`로 내보내고, 나머지는 그 이름을 씁니다.
-읽는 자리를 하나로 모으는 이유는 `naming-preserve-config-origin-with-chained-access` 규칙과 같습니다.
+루트 `config/env.ts`가 한 번 읽어 `env_` 상수로 내보내고, 나머지는 그 이름을 씁니다.
+`import.meta.env`와 `process.env`가 나오는 파일은 이 파일 하나입니다.
+
+`constant` 폴더와 `config` 폴더는 값이 바뀌는 때가 다릅니다.
+`constant`의 값은 코드와 함께 바뀌고, `config`의 값은 배포마다 바뀝니다.
+배포 환경은 프로젝트 단위라 `config` 폴더는 루트에만 있고 소유자 아래에는 만들지 않습니다.
+기능 플래그도 배포마다 바뀌는 값이라 `config/feature.ts`에 `feature_` 상수로 둡니다.
+상수 파일과 이름의 모양은 `naming-place-project-constants-in-the-root-constant-folder` 규칙과 같습니다.
 
 환경 값이라 여기서 더 요구하는 것은 셋입니다.
 
@@ -1034,34 +1047,30 @@ const baseUrl = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3000";
 const reportBaseUrl = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3000";
 ```
 
-**Correct (공용 설정이 한 번 읽고 없으면 드러냄):**
+**Correct (`config/env.ts`가 한 번 읽고 없으면 드러냄):**
 
 ```ts
-// shared/config.ts
+// config/env.ts
 if (!import.meta.env.VITE_API_BASE_URL) {
 	throw new MissingEnvironmentValueError("VITE_API_BASE_URL");
 }
 
 /**
- * 환경마다 달라지는 공용 설정
+ * API 서버 주소. 배포 환경마다 다르다
  */
-export const config = {
-	api: {
-		base_url: import.meta.env.VITE_API_BASE_URL,
-	},
-} as const;
+export const env_api_base_url = import.meta.env.VITE_API_BASE_URL;
 ```
 
 ```ts
 // service/product-client.ts
-import {config} from "@/shared/config";
+import {env_api_base_url} from "@/config/env";
 
-const productClient = createClient({baseUrl: config.api.base_url});
+const productClient = createClient({baseUrl: env_api_base_url});
 ```
 
-### 2.8 Name Types by Role and Lifetime
+### 2.7 Name Types by Role and Lifetime
 
-**Rule:** `T02-08` · `naming-name-types-by-role-and-lifetime`
+**Rule:** `T02-07` · `naming-name-types-by-role-and-lifetime`
 
 **Applies when:** 타입·인터페이스나 그 파일의 이름을 새로 만들거나 바꿀 때. 타입을 소유자 폴더 안과 밖 사이에서 옮기며 이름을 바꿀 때. 제외: 외부·생성된 계약 이름을 그대로 쓰는 경우.
 
@@ -1158,7 +1167,7 @@ const reportSnapshot: ReportSnapshot = response.data;
 
 **Rule:** `T03-01` · `functions-declare-functions-as-arrow-consts`
 
-**Applies when:** 이름을 지어 선언하는 함수를 새로 만들거나 선언 형태나 본문 형태를 바꿀 때. 네임스페이스 객체에 멤버 함수를 추가·변경할 때. 제외: 인라인 콜백이거나 클래스 메서드, 제너레이터, 오버로드 선언인 경우.
+**Applies when:** 이름을 지어 선언하는 함수를 새로 만들거나 선언 형태나 본문 형태를 바꿀 때. 객체 프로퍼티에 함수를 담거나 그 형태를 바꿀 때. 제외: 인라인 콜백이거나 클래스 메서드, 제너레이터, 오버로드 선언인 경우.
 
 **Review with:** `functions-use-named-object-params-for-complex-signatures`
 
@@ -1189,10 +1198,10 @@ const reportSnapshot: ReportSnapshot = response.data;
 `biome`의 `useConsistentArrowReturn`은 이 형태를 인라인 콜백과 커링에까지 강제해서 켜지 않습니다.
 `tooling-configure-biome-to-enforce-these-rules` 규칙이 그 사실과 이유를 적어 둡니다.
 
-**네임스페이스 객체의 멤버도 화살표 프로퍼티로 씁니다.**
-`toIsoString(value) { … }` 같은 메서드 축약형은 쓰지 않습니다.
+**객체 프로퍼티에 담는 함수도 화살표로 씁니다.**
+`text(value) { … }` 같은 메서드 축약형은 쓰지 않습니다.
 축약형은 `this`가 그 객체에 묶입니다.
-`const toIsoString = util.date.toIsoString;`처럼 떼어 내면 `this`가 달라져 동작이 바뀝니다.
+`const formatText = cell_formatter_by_value_type.text;`처럼 떼어 내면 `this`가 달라져 동작이 바뀝니다.
 화살표 프로퍼티에는 `this`가 없어 떼어 내도 동작이 같습니다.
 
 세 자리는 예외로 둡니다.
@@ -1241,14 +1250,12 @@ export const toProductBadge = (product: Product): ProductBadge => ({
 });
 ```
 
-**Incorrect (네임스페이스 멤버를 메서드 축약형으로 씀):**
+**Incorrect (객체 프로퍼티의 함수를 메서드 축약형으로 씀):**
 
 ```ts
-export const util = {
-	date: {
-		toIsoString(value: Date): string {
-			return value.toISOString();
-		},
+export const cell_formatter_by_value_type = {
+	text(value: string): string {
+		return value.trim();
 	},
 } as const;
 ```
@@ -1276,17 +1283,15 @@ export const toProductBadge = (product: Product): ProductBadge => {
 };
 ```
 
-**Correct (네임스페이스 멤버는 화살표 프로퍼티. 인라인 콜백은 한 줄):**
+**Correct (객체 프로퍼티의 함수는 화살표. 인라인 콜백은 한 줄):**
 
 ```ts
-export const util = {
-	date: {
-		/**
-		 * 서버가 밀리초를 붙인 문자열을 거부한다
-		 */
-		toIsoString: (value: Date): string => {
-			return value.toISOString().replace(/\.\d{3}Z$/, "Z");
-		},
+export const cell_formatter_by_value_type = {
+	/**
+	 * 표 셀의 문자열은 앞뒤 공백을 지워 보여 준다
+	 */
+	text: (value: string): string => {
+		return value.trim();
 	},
 } as const;
 
@@ -1370,7 +1375,7 @@ const toRequestUrl = (target: ApiRequestTarget): URL => {
 /**
  * 요청 URL 조립. searchParams는 set으로 넣어 baseUrl에 있던 같은 키를 덮는다.
  *
- * 입력 계약은 shared/api/type.ts의 ApiRequestTarget을 그대로 쓴다
+ * 입력 계약은 type/api-request-target.ts의 ApiRequestTarget을 그대로 쓴다
  */
 const toRequestUrl = (target: ApiRequestTarget): URL => {
 	const requestUrl = new URL(target.resourcePath, target.baseUrl);
@@ -1556,20 +1561,20 @@ page/report/function/to-sales-overview/
 
 **Rule:** `T03-04` · `functions-place-and-promote-support-functions`
 
-**Applies when:** 보조 함수를 어느 파일이나 폴더에 둘지 정할 때. 파일 안에서 내보낸 함수와 비공개 보조의 선언 순서를 정할 때. `shared/` 아래로 파일을 옮기거나 `util.*`에 항목을 추가할 때.
+**Applies when:** 보조 함수를 어느 파일이나 폴더에 둘지 정할 때. 파일 안에서 내보낸 함수와 비공개 보조의 선언 순서를 정할 때. 루트 `util` 폴더로 파일을 옮기거나 종류 폴더를 새로 만들 때.
 
 **Requires selected:** `functions-extract-helpers-only-when-the-boundary-is-real` · 함께 적용
 
-**Impact: MEDIUM-HIGH (잡동사니 파일이 생기지 않고 전역 `util`에 한 소유자의 함수가 섞이지 않습니다)**
+**Impact: MEDIUM-HIGH (잡동사니 파일이 생기지 않고 루트 `util`에 한 소유자의 함수가 섞이지 않습니다)**
 
 떼어 낼지는 `functions-extract-helpers-only-when-the-boundary-is-real`이 먼저 판정합니다.
 이 규칙은 그 결과를 어디 두고 언제 올릴지만 봅니다.
 
 - 소유자 아래에 `helper.ts`, `helpers.ts`, `utils.ts` 같은 잡동사니 파일을 만들지 않습니다.
   어느 폴더에 둘지는 프레임워크 컨벤션의 역할 폴더 규칙이 정합니다.
-- 소유자 아래에서는 내보낸 대표 함수 하나당 파일 하나입니다.
+- 내보낸 대표 함수 하나당 파일 하나이고, 파일명은 그 함수 이름입니다.
   전용 보조가 파일로 나가면 대표 함수는 자기 이름 폴더를 갖고, 나간 파일은 그 안에 둡니다.
-  전역 `shared/util.ts`는 프로젝트 전반이 쓰는 함수를 한 네임스페이스에 모으는 자리라 예외입니다.
+  루트 `util`도 같습니다.
 - 파일 안에서는 import, 내보낸 계약 타입, 내보낸 대표 함수, 비공개 보조 순서로 둡니다.
   비공개 보조끼리도 같은 방향입니다.
   부르는 쪽을 위에, 불리는 쪽을 아래에 두어 파일 전체가 위에서 아래로 읽히게 합니다.
@@ -1583,9 +1588,24 @@ page/report/function/to-sales-overview/
   대표 함수가 자기 폴더 안 파일을 부르는 것은 사슬이 아니라 그 함수의 내부입니다.
   자기 폴더 안 파일을 가져오는 것은 그 대표 함수뿐이고,
   다른 파일도 부르게 되면 재사용이 생긴 것이니 `function` 바로 아래로 꺼냅니다.
+  루트 `util` 함수가 다른 루트 `util` 함수를 가져오는 것도 사슬이 아닙니다.
+  둘 다 공개 진입점이고, 가져오는 줄에서 어느 종류 폴더의 무엇인지 그대로 읽힙니다.
 
-**공용 승격은 그 함수가 누구 것인지로 판정합니다.**
-`shared/util.ts`의 `util.*`는 프로젝트 전반이 쓰는 함수를 담습니다.
+**루트 `util`은 프로젝트가 소유자인 함수 폴더입니다.**
+파일 하나에 함수 하나, 전용 보조는 자기 이름 폴더라는 규칙은 소유자 아래와 같습니다.
+다른 점은 폴더 한 겹입니다.
+함수가 많아 종류 폴더로 묶습니다.
+
+- 종류는 함수가 받는 값의 타입입니다.
+  `date`, `money`, `string`, `array`, `dom`, `url`이 그 이름입니다.
+- 도메인 타입도 값의 타입입니다.
+  `Spread`를 받는 함수는 `util/spread/`에 둡니다.
+- 화면이나 기능 이름으로는 짓지 않습니다.
+  받는 값의 타입으로 종류를 짓지 못하면 그 함수는 `util`이 아니라 소유자 함수입니다.
+- 소유자 아래 `function` 폴더에는 종류 폴더를 두지 않습니다.
+  함수가 몇 개라 파일 목록으로 충분합니다.
+
+**루트 승격은 그 함수가 누구 것인지로 판정합니다.**
 
 가르는 법은 소유자를 지워 보는 것입니다.
 소유자를 지웠을 때 함수도 사라지면 그 소유자 것입니다.
@@ -1593,13 +1613,13 @@ page/report/function/to-sales-overview/
 - 소유자와 함께 사라지면 그 소유자 아래에 둡니다.
   profile 저장 화면이 없어지면 `toProfileSaveRequest`가 조립할 요청도 없습니다.
 - 소유자를 지워도 남으면 지금 한 곳만 써도 올립니다.
-  `toDisplayDate`는 소유자가 하나든 셋이든 `util`에 둘 함수입니다.
+  `toDisplayDate`는 소유자가 하나든 셋이든 `util/date/`에 둘 함수입니다.
 
 두 소유자가 같은 함수를 써야 하면 셋 중 하나로 해소합니다.
 
 1. 표시까지 같으면 `widget` 컴포넌트가 소유합니다.
 2. 계산만 같으면 각 소유자가 각자 갖습니다.
-3. 프로젝트 전반의 계산이면 `util`로 올립니다.
+3. 프로젝트 전반의 계산이면 루트 `util`로 올립니다.
 
 1번은 함수를 공유하는 것이 아니라 표시를 공유하는 것입니다.
 어느 레이어인지는 프레임워크 컨벤션의 레이어 규칙이 판정합니다.
@@ -1648,20 +1668,17 @@ export const toProfileSaveRequest = (
 };
 ```
 
-**Incorrect (소유자와 함께 사라질 함수를 전역 `util`로 올림):**
+**Incorrect (소유자와 함께 사라질 함수를 루트 `util`로 올림):**
 
 ```ts
-// shared/util.ts
-export const util = {
-	profile: {
-		/**
-		 * 서버가 앞뒤 공백이 붙은 displayName을 거부한다
-		 */
-		toProfileSaveRequest: (values: ProfileFormValues) => {
-			return {body: {displayName: values.displayName.trim()}};
-		},
-	},
-} as const;
+// util/profile/to-profile-save-request.ts
+// profile은 값의 종류가 아니라 화면 이름이다. 화면이 없어지면 이 요청도 없다
+/**
+ * 서버가 앞뒤 공백이 붙은 displayName을 거부한다
+ */
+export const toProfileSaveRequest = (values: ProfileFormValues) => {
+	return {body: {displayName: values.displayName.trim()}};
+};
 ```
 
 **Correct (소유자 아래 대표 함수 하나당 파일 하나):**
@@ -1706,29 +1723,36 @@ page/report/function/
 └── to-sales-filter-request.ts
 ```
 
-**Correct (소유자를 지워도 남는 함수는 도메인 계약을 받아도 올림):**
+**Correct (소유자를 지워도 남는 함수는 종류 폴더에 파일 하나로 올림):**
+
+```txt
+util/
+├── date/
+│   ├── to-display-date.ts
+│   └── to-display-date.test.ts
+└── money/
+    └── to-signed-amount.ts
+```
 
 ```ts
-// shared/util.ts
-export const util = {
-	date: {
-		/**
-		 * ko-KR로 고정한다. 사용자 로케일을 따라가면 목록 정렬 기준과 어긋난다
-		 */
-		toDisplayDate: (value: string): string => {
-			return new Date(value).toLocaleDateString("ko-KR");
-		},
-	},
-	money: {
-		/**
-		 * 금액 표시는 화면마다 다르지 않다. 소수 두 자리와 부호를 고정한다
-		 */
-		toSignedAmount: (amount: Amount): string => {
-			const sign = amount.value < 0 ? "-" : "+";
-			return `${sign}$${Math.abs(amount.value).toFixed(2)}`;
-		},
-	},
-} as const;
+// util/date/to-display-date.ts
+/**
+ * ko-KR로 고정한다. 사용자 로케일을 따라가면 목록 정렬 기준과 어긋난다
+ */
+export const toDisplayDate = (value: string): string => {
+	return new Date(value).toLocaleDateString("ko-KR");
+};
+```
+
+```ts
+// util/money/to-signed-amount.ts
+/**
+ * 금액 표시는 화면마다 다르지 않다. 소수 두 자리와 부호를 고정한다
+ */
+export const toSignedAmount = (amount: Amount): string => {
+	const sign = amount.value < 0 ? "-" : "+";
+	return `${sign}$${Math.abs(amount.value).toFixed(2)}`;
+};
 ```
 
 ### 3.5 Avoid Imperative Assembly in Wide Scopes
@@ -1818,7 +1842,8 @@ const visibleTabs = [
 - 부정이 겹치면 이름으로 뒤집습니다.
   `!row.deletedAt && !row.archivedAt`보다 `isVisible`이 한 번에 읽힙니다.
 - 표현식에 리터럴이 보이면 변수로 뺄 자리가 아니라 그 리터럴을 선언할 자리입니다.
-  `types-replace-enum-with-as-const-objects`와 `naming-centralize-shared-config-namespaces`가 그 자리를 정합니다.
+  `types-replace-enum-with-as-const-objects`와
+  `naming-place-project-constants-in-the-root-constant-folder` 규칙이 그 자리를 정합니다.
 
 **횟수는 기준이 아닙니다.**
 몇 번 쓰이는지는 파일 전체를 봐야 알고, 쓰는 자리를 하나 더하면 어제 맞던 판정이 오늘 뒤집힙니다.
@@ -2012,7 +2037,7 @@ export const assertLoggedIn = (session: Session): void => {
 
 **Impact: HIGH**
 
-값을 다루는 관용구를 한 가지로 고정합니다. 넘겨받은 배열은 제자리에서 바꾸지 않고, 반복되는 조회는 `Set`과 `Map`으로 모읍니다. 객체에서 값을 꺼낼 때는 구조분해로 끊지 않고 체인으로 읽어 출처를 남깁니다. 한 곳에서 쓸 값은 조회표로 우회하지 않고 사용처에서 직접 고릅니다. 뜻이 있는 숫자는 쓰는 자리에 적지 않고 설정에 선언합니다.
+값을 다루는 관용구를 한 가지로 고정합니다. 넘겨받은 배열은 제자리에서 바꾸지 않고, 반복되는 조회는 `Set`과 `Map`으로 모읍니다. 객체에서 값을 꺼낼 때는 구조분해로 끊지 않고 체인으로 읽어 출처를 남깁니다. 한 곳에서 쓸 값은 조회표로 우회하지 않고 사용처에서 직접 고릅니다. 뜻이 있는 숫자는 쓰는 자리에 적지 않고 상수로 선언합니다.
 
 ### 4.1 Prefer Immutable Array Sorting
 
@@ -2146,8 +2171,7 @@ const toInvoiceLine = ({product, quantity}: InvoiceLineInput): InvoiceLine => {
 **Incorrect (별칭 `const`로 끊어 이름만 남김):**
 
 ```ts
-const pricing = config.pricing;
-const currency = pricing.default_currency;
+const currency = pricing_default_currency;
 
 const toInvoiceTotal = (lines: InvoiceLine[]): InvoiceTotal => {
 	return {
@@ -2179,7 +2203,7 @@ const toInvoiceLine = (input: InvoiceLineInput): InvoiceLine => {
 
 const toInvoiceTotal = (lines: InvoiceLine[]): InvoiceTotal => {
 	return {
-		currency: config.pricing.default_currency,
+		currency: pricing_default_currency,
 		amount: lines.reduce((sum, line) => sum + line.amount, 0),
 	};
 };
@@ -2216,20 +2240,20 @@ const toOverdueLines = (invoice: Invoice, today: Date): InvoiceLine[] => {
 
 **Applies when:** 비교, 계산, 호출 인자에 숫자 리터럴을 새로 적을 때. 제외: 관용값이나 배열 인덱스처럼 뜻이 없는 숫자를 쓰는 경우.
 
-**Review with:** `absence-expose-optional-values-instead-of-silent-fallbacks`, `naming-centralize-shared-config-namespaces`
+**Review with:** `absence-expose-optional-values-instead-of-silent-fallbacks`, `naming-place-project-constants-in-the-root-constant-folder`
 
 **Impact: MEDIUM (숫자가 무엇을 뜻하는지 이름이 말하고 바꿀 때 고칠 자리가 한 곳입니다)**
 
-뜻이 있는 숫자는 쓰는 자리에 적지 않고 설정에 선언한 이름을 가리킵니다.
-`attempts > 42`가 아니라 `attempts > config.retry.max_attempts`입니다.
+뜻이 있는 숫자는 쓰는 자리에 적지 않고 상수로 선언한 이름을 가리킵니다.
+`attempts > 42`가 아니라 `attempts > retry_max_attempts`입니다.
 
-어디에 선언할지는 `naming-centralize-shared-config-namespaces`가 정합니다.
-두 소유자 이상이 쓰면 `shared/config.ts`, 하나만 쓰면 그 소유자의 `config` 폴더입니다.
+어디에 선언할지는 `naming-place-project-constants-in-the-root-constant-folder` 규칙이 정합니다.
+소유자를 지워도 남으면 루트 `constant` 폴더, 소유자와 함께 사라지면 그 소유자의 `constant` 폴더입니다.
 
 **같은 파일에 지역 `const`로 옮기는 것으로는 끝나지 않습니다.**
 `functions-name-a-value-only-for-recompute-or-judgment`가 지역 변수를 만들 자리를 따로 정하고,
 숫자를 옮기는 것은 그 둘 중 어디에도 없습니다.
-갈 곳은 지역 변수가 아니라 설정입니다.
+갈 곳은 지역 변수가 아니라 `constant` 폴더입니다.
 
 **뜻이 없는 숫자는 그대로 적습니다.**
 아래는 이름을 붙여도 읽는 사람이 얻는 것이 없습니다.
@@ -2239,21 +2263,21 @@ const toOverdueLines = (invoice: Invoice, today: Date): InvoiceLine[] => {
 | 관용값 | `0`, `1`, `2`, `10`, `24`, `60` |
 | 배열 인덱스 | `rows[0]`, `parts[1]` |
 | 선언의 초기값 | `let count = 0` |
-| 설정 객체 자신의 값 | `{max_attempts: 42}` |
+| 상수 선언 자신의 값 | `export const retry_max_attempts = 42` |
 | 기본 매개변수 | `(limit = 42) => …` |
 
 `??`·`||` 오른쪽은 이 규칙이 아니라
 `absence-expose-optional-values-instead-of-silent-fallbacks`가 봅니다.
 없는 값을 다루는 자리라 판정이 다릅니다.
 
-**설정은 객체로 둡니다.**
+**여러 숫자가 한 뜻을 이루면 배열이 아니라 객체로 둡니다.**
 `{first: 0x1100, last: 0x115f}`처럼 키를 붙이면 그 값은 무시되지만
 `[0x1100, 0x115f]`처럼 배열에 담으면 자리마다 걸립니다.
-숫자 여러 개가 한 뜻을 이루는 표도 각 칸에 이름을 주라는 뜻입니다.
+숫자 여러 개가 한 뜻을 이루는 조회표도 각 칸에 이름을 주라는 뜻입니다.
 
 `tooling-configure-biome-to-enforce-these-rules` 규칙이 `style/noMagicNumbers`로 이 선을 강제합니다.
 그 규칙은 테스트 파일에서만 꺼집니다.
-기대값은 리터럴 자체가 계약이라 설정으로 빼면 검증할 것이 남지 않습니다.
+기대값은 리터럴 자체가 계약이라 상수로 빼면 검증할 것이 남지 않습니다.
 
 **Incorrect (뜻이 있는 숫자를 쓰는 자리에 적음):**
 
@@ -2281,36 +2305,34 @@ const isOverRetryLimit = (attempts: number): boolean => {
 };
 ```
 
-**Correct (설정에 선언하고 이름을 가리킴):**
+**Correct (상수로 선언하고 이름을 가리킴):**
 
 ```ts
-// shared/config.ts
+// constant/retry.ts
 /**
- * 환경마다 달라지는 공용 설정
+ * 이 횟수를 넘으면 사용자에게 실패를 보여 준다
  */
-export const config = {
-	retry: {
-		/**
-		 * 이 횟수를 넘으면 사용자에게 실패를 보여 준다
-		 */
-		max_attempts: 42,
-	},
-	preview: {
-		/**
-		 * 미리보기에 그릴 행 수. 서버가 한 번에 주는 최대치와 맞춘다
-		 */
-		row_count: 37,
-	},
-} as const;
+export const retry_max_attempts = 42;
 ```
 
 ```ts
+// constant/preview.ts
+/**
+ * 미리보기에 그릴 행 수. 서버가 한 번에 주는 최대치와 맞춘다
+ */
+export const preview_row_count = 37;
+```
+
+```ts
+import {preview_row_count} from "@/constant/preview";
+import {retry_max_attempts} from "@/constant/retry";
+
 const isOverRetryLimit = (attempts: number): boolean => {
-	return attempts > config.retry.max_attempts;
+	return attempts > retry_max_attempts;
 };
 
 const toPreviewRows = (rows: Row[]): Row[] => {
-	return rows.slice(0, config.preview.row_count);
+	return rows.slice(0, preview_row_count);
 };
 ```
 
@@ -2383,7 +2405,7 @@ const order_status_by_api_code = {
 
 **Applies when:** 선택 값을 읽거나 정규화하거나 넘기는 방식을 바꿀 때. `??`, `||`, 기본값, 빈 값 대체 분기를 추가·변경할 때.
 
-**Review with:** `naming-centralize-shared-config-namespaces`, `naming-place-owner-config-in-the-owner-config-folder`
+**Review with:** `naming-place-owner-constants-in-the-owner-constant-folder`, `naming-place-project-constants-in-the-root-constant-folder`
 
 **Impact: HIGH (그 자리에서 지어낸 값으로 덮지 않아 빠진 데이터가 드러납니다)**
 
@@ -2392,21 +2414,21 @@ const order_status_by_api_code = {
 | 형태 | 판정 |
 | --- | --- |
 | `?? "help@example.com"`, `?? 0`, `?? []`, `\|\| "-"` 같은 리터럴 | 위반 |
-| `?? config.pagination.default_page_size`처럼 설정에 선언된 이름 | 통과 |
+| `?? pagination_default_page_size`처럼 상수로 선언된 이름 | 통과 |
 | 같은 파일 지역 `const`로 리터럴만 옮긴 것. `const fallback = "-";` | 위반. 자리만 바꾼 것입니다 |
 | 선언된 이름 둘을 합성한 결과에 이름을 붙인 것 | 통과. 리터럴이 없습니다 |
 | 기본 매개변수나 구조분해 기본값에 **리터럴**을 적은 것. `(size = 10) =>`, `{size = 10}` | 위반 |
-| 기본 매개변수가 선언된 이름을 가리키는 것. `(size = config.pagination.default_page_size) =>` | 통과 |
+| 기본 매개변수가 선언된 이름을 가리키는 것. `(size = pagination_default_page_size) =>` | 통과 |
 | 삼항 `value ? value : "-"`, `String(value ?? "")` | 위반 |
 
 숫자 리터럴을 쓰는 자리에 적지 않는 일반 규범은 `values-declare-meaningful-numbers`가 정합니다.
 여기서는 없는 값을 덮는 자리만 봅니다.
 
 기본값이 정말 필요하면 그 기본값에 이름을 붙여 선언하고 그 이름을 가리킵니다.
-여러 소유자가 쓰면 `naming-centralize-shared-config-namespaces`,
-한 소유자만 쓰면 `naming-place-owner-config-in-the-owner-config-folder`가 자리를 정합니다.
+소유자를 지워도 남으면 `naming-place-project-constants-in-the-root-constant-folder` 규칙이,
+소유자와 함께 사라지면 `naming-place-owner-constants-in-the-owner-constant-folder` 규칙이 자리를 정합니다.
 같은 파일 위쪽에 `const supportEmailFallback = "help@example.com";`을 두는 것으로는 통과하지 못합니다.
-설정에 선언된 이름이어야 합니다.
+상수로 선언된 이름이어야 합니다.
 
 이유 주석으로 이 규칙을 통과하지는 못합니다.
 주석은 리터럴을 선언된 이름으로 바꾸지 않습니다.
@@ -2418,18 +2440,18 @@ const order_status_by_api_code = {
    `(variant ?? "default") === "compact"`도 `variant === "compact"`로 쓰면 끝납니다.
    선택 값을 그대로 비교하면 기본값이 아예 필요 없는 경우가 가장 많습니다.
 2. **필요하면 값이 들어오는 경계에서 한 번만 해소합니다.**
-   라우트 search 스키마의 `.default(config.pagination.default_page_size)`, 응답 매핑, 쿼리의 `select`가 그 자리입니다.
+   라우트 search 스키마의 `.default(pagination_default_page_size)`, 응답 매핑, 쿼리의 `select`가 그 자리입니다.
    기본값이 선언 안에 들어가므로 그 선언이 곧 출처가 됩니다.
    아래쪽 코드에서는 그 값이 더는 선택 값이 아니어서 `??`가 나올 일이 없습니다.
 3. **경계에서 못 하면 쓰는 자리에 그대로 적습니다.**
-   `fetchProducts({pageSize: query.pageSize ?? config.pagination.default_page_size})`처럼 씁니다.
+   `fetchProducts({pageSize: query.pageSize ?? pagination_default_page_size})`처럼 씁니다.
 4. **이름을 붙인다면 파생값임이 드러나는 이름으로 씁니다.**
    `pageSize`가 아니라 `effectivePageSize`입니다.
    붙일지 말지는 `functions-name-a-value-only-for-recompute-or-judgment`가 정하고,
    횟수가 아니라 그 표현식이 무엇을 고른 값인지가 기준입니다.
 
 **`??` 합성은 별칭이 아닙니다.**
-`naming-preserve-config-origin-with-chained-access`가 막는 것은 같은 값에 새 이름만 붙이는 별칭입니다.
+`values-read-objects-through-chains`가 막는 것은 같은 값에 새 이름만 붙이는 별칭입니다.
 `a ?? b`는 출처 둘을 놓고 하나를 고르는 계산이고, 그 결과는 어느 쪽에서 왔는지가 실행할 때 정해지는 파생값입니다.
 그래서 이름을 붙일지는 별칭 규칙이 아니라 `functions-name-a-value-only-for-recompute-or-judgment`가 판정합니다.
 
@@ -2468,20 +2490,20 @@ const productSearchSchema = z.object({
 	/**
 	 * 한 번에 불러올 개수
 	 */
-	pageSize: z.number().default(config.pagination.default_page_size),
+	pageSize: z.number().default(pagination_default_page_size),
 });
 ```
 
 **Correct (경계에서 못 하면 쓰는 자리에 그대로 적음):**
 
 ```ts
-fetchProducts({pageSize: query.pageSize ?? config.pagination.default_page_size});
+fetchProducts({pageSize: query.pageSize ?? pagination_default_page_size});
 ```
 
 **Correct (이름을 붙인다면 파생값임이 드러나는 이름):**
 
 ```ts
-const effectivePageSize = query.pageSize ?? config.pagination.default_page_size;
+const effectivePageSize = query.pageSize ?? pagination_default_page_size;
 
 fetchProducts({pageSize: effectivePageSize});
 setVisibleRowCount(effectivePageSize);
@@ -2786,7 +2808,7 @@ export const saveProduct = async (product: Product): Promise<void> => {
 | 외부 패키지와 그 제약 | 어떤 라이브러리의 어떤 API가 무엇을 요구하는지 |
 | 측정 결과 | 무엇을 재서 얼마가 나왔는지 |
 | 제품 명세나 티켓 | 결정이 적힌 곳 |
-| 설정 키 | `config.*` 경로 |
+| 상수 | `constant` 폴더에 선언된 이름 |
 
 "성능을 위해", "안전하게", "필요해서"처럼 다시 확인할 수 없는 말은 근거가 아닙니다.
 그런 주석은 예외 조건을 채우지 못합니다.
@@ -2883,6 +2905,8 @@ const filteredRows = useMemo(() => rows.filter((row) => matchRow(row, deferredKe
   `let`을 `const`로 바꿔 주기만 하고 `push` 누적은 그대로 남습니다.
 - `typescript/types-mark-unused-parameters-with-underscore` 중 **매개변수를 아예 생략한 경우**는 기계가 못 봅니다.
   `noUnusedFunctionParameters`는 남겨 둔 매개변수만 봅니다.
+- `import.meta.env`와 `process.env`를 `config/env.ts` 밖에서 읽는 것을 막는 `biome` 규칙은 없습니다.
+  `typescript/naming-read-environment-values-through-config-env`는 리뷰가 보거나 CI가 문자열 검색으로 잡습니다.
 
 **테스트 파일에서는 `noMagicNumbers`를 끕니다.**
 `assert.equal(rules.length, 111)`의 `111`은 설정으로 뺄 값이 아니라 그 테스트가 고정하는 계약입니다.

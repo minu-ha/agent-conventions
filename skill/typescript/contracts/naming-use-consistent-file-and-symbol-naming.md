@@ -22,9 +22,21 @@
 
 - `retry_policy.max_attempts`는 불변 설정과 그 상수 키입니다.
 - `product_status.waiting_review`는 값 집합과 그 상수 키입니다.
-- `fetchProducts({pageSize: config.pagination.default_page_size})`의 `pageSize`는
-  요청 계약 필드라 `camelCase`이고, 설정 키인 `default_page_size`만 `snake_case`입니다.
+- `fetchProducts({pageSize: pagination_default_page_size})`의 `pageSize`는
+  요청 계약 필드라 `camelCase`이고, 상수인 `pagination_default_page_size`만 `snake_case`입니다.
 - `productSearchSchema`는 실행 중 재할당하지 않아도 스키마 역할이므로 `camelCase`입니다.
+
+**종류는 이름이 말합니다.**
+함수는 동사가, 상수는 `snake_case`와 주제 접두사가, 컴포넌트는 레이어 접두사가 종류를 말합니다.
+`formatUsd`, `api_base_path`, `PgDetail`은 폴더를 보지 않아도 무엇인지 읽힙니다.
+그래서 한 단어 상수는 만들지 않습니다.
+`api`는 밑줄이 없어 상수인지 변수인지 보이지 않고, `api_base_path`는 보입니다.
+
+**파일명은 안에 있는 이름이 공유하는 부분입니다.**
+함수 파일은 내보낸 이름이 하나라 파일명이 곧 함수 이름입니다.
+`format-usd.ts`가 `formatUsd`를 내보냅니다.
+상수 파일은 이름이 공유하는 첫 마디가 파일명입니다.
+`constant/api.ts`가 `api_base_path`와 `api_request_timeout_ms`를 내보냅니다.
 
 **예외는 밖으로 나가는 키뿐입니다.**
 API 요청 본문, 라이브러리 인자, DOM 속성, 환경 변수처럼 받는 쪽이 이름을 정하는 자리는 받는 쪽 표기를 그대로 씁니다.
@@ -36,4 +48,4 @@ API 요청 본문, 라이브러리 인자, DOM 속성, 환경 변수처럼 받�
 
 폴더명은 프레임워크가 강제하는 이름만 예외로 둡니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/02-04-naming-use-consistent-file-and-symbol-naming.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/02-03-naming-use-consistent-file-and-symbol-naming.md)을 읽습니다.

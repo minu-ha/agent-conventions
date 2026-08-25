@@ -18,17 +18,21 @@ tags: naming, imports
 
 | 경로 | 판정 |
 | --- | --- |
-| `@/ui`, `@/widget`, `@/shared`, `@/service`, `@/store`, `@/asset` | 허용 |
+| `@/ui`, `@/widget`, `@/constant`, `@/config`, `@/util`, `@/type`, `@/hook`, `@/service`, `@/store`, `@/asset` | 허용 |
 | `@/page/...` 등 화면 내부 | 금지 |
 
 레이어 루트가 담는 것은 다음과 같습니다.
 `ui`와 `widget`의 경계는 프레임워크 컨벤션의 레이어 규칙이 정합니다.
 
-- `shared`는 프로젝트 전반이 쓰는 설정과 함수를 담습니다.
+- `constant`는 프로젝트 전반이 쓰는 상수를, `config`는 환경마다 달라지는 값을 담습니다.
+- `util`은 프로젝트 전반이 쓰는 함수를 값의 종류 폴더로 묶어 담습니다.
+- `type`은 프로젝트 전반이 쓰는 계약을, `hook`은 여러 소유자가 쓰는 훅을 담습니다.
 - `service`는 서버 통신 클라이언트를 담습니다.
 - `store`는 여러 화면이 함께 읽는 상태를 담습니다.
   상태 관리 라이브러리를 쓰든 컨텍스트를 쓰든 파일명은 `use-<name>-store.ts`입니다.
 - `asset`은 아이콘 같은 정적 자원을 담습니다.
+
+루트는 프로젝트가 소유자인 자리라 `constant`·`util`·`type`·`hook`은 소유자 아래 역할 폴더와 같은 규칙을 따릅니다.
 
 - 첫 마디가 레이어 루트면 그 아래 깊이는 제한하지 않습니다.
   `@/widget/chart-card/wg-chart-card`는 허용입니다.

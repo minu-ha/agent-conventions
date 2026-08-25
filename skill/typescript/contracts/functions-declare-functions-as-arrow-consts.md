@@ -27,10 +27,10 @@
 `biome`의 `useConsistentArrowReturn`은 이 형태를 인라인 콜백과 커링에까지 강제해서 켜지 않습니다.
 `tooling-configure-biome-to-enforce-these-rules` 규칙이 그 사실과 이유를 적어 둡니다.
 
-**네임스페이스 객체의 멤버도 화살표 프로퍼티로 씁니다.**
-`toIsoString(value) { … }` 같은 메서드 축약형은 쓰지 않습니다.
+**객체 프로퍼티에 담는 함수도 화살표로 씁니다.**
+`text(value) { … }` 같은 메서드 축약형은 쓰지 않습니다.
 축약형은 `this`가 그 객체에 묶입니다.
-`const toIsoString = util.date.toIsoString;`처럼 떼어 내면 `this`가 달라져 동작이 바뀝니다.
+`const formatText = cell_formatter_by_value_type.text;`처럼 떼어 내면 `this`가 달라져 동작이 바뀝니다.
 화살표 프로퍼티에는 `this`가 없어 떼어 내도 동작이 같습니다.
 
 세 자리는 예외로 둡니다.
