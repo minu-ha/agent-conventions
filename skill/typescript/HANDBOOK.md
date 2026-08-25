@@ -789,7 +789,7 @@ export const chart_axis_tick_count = 6;
 | 폴더명 | `kebab-case` 단수 |
 | 타입, 인터페이스, 컴포넌트 | `PascalCase` |
 | 모듈 스코프의 불변 데이터 상수, 상수 집합 | `snake_case` |
-| 불변 설정과 상수 집합 객체가 소유한 상수 키 | `snake_case` |
+| 불변 데이터 상수와 상수 집합 객체가 소유한 상수 키 | `snake_case` |
 | 그 외 변수, 함수, 객체 키, 스키마 키, 타입 필드 | `camelCase` |
 
 **`const` 선언을 전부 상수로 보지 않습니다.**
@@ -797,11 +797,11 @@ export const chart_axis_tick_count = 6;
 `const`로 선언해도 각 역할의 표기를 유지합니다.
 
 여기서 불변 데이터 상수는 모듈 스코프에 한 번 선언해 실행 중 같은 의미로 쓰는
-리터럴, 설정, 값 집합, 조회표입니다.
+리터럴, 기본값, 값 집합, 조회표입니다.
 객체와 배열은 `as const`나 읽기 전용 계약을 적용하고 변경하지 않습니다.
-불변 설정과 상수 집합의 하위 객체와 키도 같은 `snake_case`를 사용합니다.
+불변 데이터 상수와 상수 집합의 하위 객체와 키도 같은 `snake_case`를 사용합니다.
 
-- `retry_policy.max_attempts`는 불변 설정과 그 상수 키입니다.
+- `retry_policy.max_attempts`는 불변 데이터 상수와 그 상수 키입니다.
 - `product_status.waiting_review`는 값 집합과 그 상수 키입니다.
 - `fetchProducts({pageSize: pagination_default_page_size})`의 `pageSize`는
   요청 계약 필드라 `camelCase`이고, 상수인 `pagination_default_page_size`만 `snake_case`입니다.
@@ -1450,29 +1450,6 @@ export const getNextIteration = (previous: number, iterationCount: number): numb
 };
 ```
 
-**Incorrect (네임스페이스 멤버 하나 때문에 변환 함수를 쪼갬):**
-
-```ts
-const toLabelText = (label: Label) => {
-	return label.name.trim() || label.code;
-};
-
-const toProductView = (record: RecordItem): ProductView => {
-	return {
-		id: record.id,
-		labels: record.labels.map(toLabelText),
-	};
-};
-
-export const api = {
-	record: {
-		toProductView: (record: RecordItem): ProductView => {
-			return toProductView(record);
-		},
-	},
-};
-```
-
 **Incorrect (전용 보조가 딸린 단계를 한 파일에 계속 쌓음):**
 
 ```txt
@@ -1494,18 +1471,18 @@ const handleNextClick = () => {
 };
 ```
 
-**Correct (단일 소유자 네임스페이스의 단계는 멤버 본문에 둠):**
+**Correct (`.map()` 콜백 하나에만 쓰이는 변환은 그 자리에 둠):**
 
 ```ts
-export const api = {
-	record: {
-		toProductView: (record: RecordItem): ProductView => {
-			return {
-				id: record.id,
-				labels: record.labels.map((label) => label.name.trim() || label.code),
-			};
-		},
-	},
+// page/product/function/to-product-view.ts
+/**
+ * product 표시 모델 조립. 라벨 이름이 비면 코드를 보여 준다
+ */
+export const toProductView = (record: RecordItem): ProductView => {
+	return {
+		id: record.id,
+		labels: record.labels.map((label) => label.name.trim() || label.code),
+	};
 };
 ```
 
@@ -2885,7 +2862,7 @@ const filteredRows = useMemo(() => rows.filter((row) => matchRow(row, deferredKe
 
 - 모듈 스코프 `const`와 객체 리터럴 키에는 `snake_case`를 허용합니다.
   `biome`은 불변 데이터 상수와 함수, 스키마, 요청 객체를 구분하지 못하고,
-  어떤 객체 키가 불변 설정이나 상수 집합에 속하는지도 구분하지 못합니다.
+  어떤 객체 키가 불변 데이터 상수나 상수 집합에 속하는지도 구분하지 못합니다.
   `snake_case`를 쓸 자리는 `naming-use-consistent-file-and-symbol-naming` 규칙에 따라 리뷰가 판정합니다.
   `PascalCase`는 합성 컴포넌트의 `{Root, Header, Footer}` 때문에 `objectLiteralProperty`에만 남깁니다.
   `typescript/functions-declare-functions-as-arrow-consts` 때문에 이름 붙인 함수도 `const` 항목에 들어가는데,

@@ -33,7 +33,7 @@ tags: tooling
 접근 가능한 이름을 실제로 붙였는지는 기계가 못 보고 리뷰가 봅니다.
 
 `typescript/tooling-configure-biome-to-enforce-these-rules`가 세운 `noRestrictedImports`에 패턴 하나를 더합니다.
-`../**`를 막고 `function`, `type`, `config`, `hook` 폴더만 부정 패턴으로 되돌리는 항목입니다.
+`../**`를 막고 `function`, `type`, `constant`, `hook` 폴더만 부정 패턴으로 되돌리는 항목입니다.
 되돌리는 넷은 `ownership-keep-component-imports-flowing-downward`가 예외로 두는 역할 폴더입니다.
 `@/page/**` 패턴과 같은 배열에 나란히 두면 절대경로와 상대경로 양쪽이 한 규칙으로 막힙니다.
 
@@ -84,7 +84,7 @@ tags: tooling
 						"patterns": [
 							{"group": ["@/page/**"], "message": "화면 내부는 절대경로로 가져오지 않습니다."},
 							{
-								"group": ["../**", "!../**/function/**", "!../**/type/**", "!../**/config/**", "!../**/hook/**"],
+								"group": ["../**", "!../**/function/**", "!../**/type/**", "!../**/constant/**", "!../**/hook/**"],
 								"message": "컴포넌트는 `../`로 가져오지 않습니다."
 							}
 						]

@@ -66,29 +66,6 @@ export const getNextIteration = (previous: number, iterationCount: number): numb
 };
 ```
 
-**Incorrect (네임스페이스 멤버 하나 때문에 변환 함수를 쪼갬):**
-
-```ts
-const toLabelText = (label: Label) => {
-	return label.name.trim() || label.code;
-};
-
-const toProductView = (record: RecordItem): ProductView => {
-	return {
-		id: record.id,
-		labels: record.labels.map(toLabelText),
-	};
-};
-
-export const api = {
-	record: {
-		toProductView: (record: RecordItem): ProductView => {
-			return toProductView(record);
-		},
-	},
-};
-```
-
 **Incorrect (전용 보조가 딸린 단계를 한 파일에 계속 쌓음):**
 
 ```txt
@@ -110,18 +87,18 @@ const handleNextClick = () => {
 };
 ```
 
-**Correct (단일 소유자 네임스페이스의 단계는 멤버 본문에 둠):**
+**Correct (`.map()` 콜백 하나에만 쓰이는 변환은 그 자리에 둠):**
 
 ```ts
-export const api = {
-	record: {
-		toProductView: (record: RecordItem): ProductView => {
-			return {
-				id: record.id,
-				labels: record.labels.map((label) => label.name.trim() || label.code),
-			};
-		},
-	},
+// page/product/function/to-product-view.ts
+/**
+ * product 표시 모델 조립. 라벨 이름이 비면 코드를 보여 준다
+ */
+export const toProductView = (record: RecordItem): ProductView => {
+	return {
+		id: record.id,
+		labels: record.labels.map((label) => label.name.trim() || label.code),
+	};
 };
 ```
 

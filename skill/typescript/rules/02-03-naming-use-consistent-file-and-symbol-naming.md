@@ -20,7 +20,7 @@ tags: naming, constants
 | 폴더명 | `kebab-case` 단수 |
 | 타입, 인터페이스, 컴포넌트 | `PascalCase` |
 | 모듈 스코프의 불변 데이터 상수, 상수 집합 | `snake_case` |
-| 불변 설정과 상수 집합 객체가 소유한 상수 키 | `snake_case` |
+| 불변 데이터 상수와 상수 집합 객체가 소유한 상수 키 | `snake_case` |
 | 그 외 변수, 함수, 객체 키, 스키마 키, 타입 필드 | `camelCase` |
 
 **`const` 선언을 전부 상수로 보지 않습니다.**
@@ -28,11 +28,11 @@ tags: naming, constants
 `const`로 선언해도 각 역할의 표기를 유지합니다.
 
 여기서 불변 데이터 상수는 모듈 스코프에 한 번 선언해 실행 중 같은 의미로 쓰는
-리터럴, 설정, 값 집합, 조회표입니다.
+리터럴, 기본값, 값 집합, 조회표입니다.
 객체와 배열은 `as const`나 읽기 전용 계약을 적용하고 변경하지 않습니다.
-불변 설정과 상수 집합의 하위 객체와 키도 같은 `snake_case`를 사용합니다.
+불변 데이터 상수와 상수 집합의 하위 객체와 키도 같은 `snake_case`를 사용합니다.
 
-- `retry_policy.max_attempts`는 불변 설정과 그 상수 키입니다.
+- `retry_policy.max_attempts`는 불변 데이터 상수와 그 상수 키입니다.
 - `product_status.waiting_review`는 값 집합과 그 상수 키입니다.
 - `fetchProducts({pageSize: pagination_default_page_size})`의 `pageSize`는
   요청 계약 필드라 `camelCase`이고, 상수인 `pagination_default_page_size`만 `snake_case`입니다.
