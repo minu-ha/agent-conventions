@@ -105,10 +105,10 @@
 		},
 		{
 			"id": "RTE03-route-support-extraction",
-			"prompt": "move one real four-argument multi-line payload boundary out of src/page/products/pg-products.tsx into src/page/products/function/to-product-save-request.ts; do not create a hook, generic utils file, or helper soup.",
+			"prompt": "move one real four-argument multi-line payload boundary out of src/page/products/pg-products.tsx into src/page/products/_function/to-product-save-request.ts; do not create a hook, generic utils file, or helper soup.",
 			"files": [
 				"src/page/products/pg-products.tsx",
-				"src/page/products/function/to-product-save-request.ts"
+				"src/page/products/_function/to-product-save-request.ts"
 			],
 			"expectedSkills": [
 				"react",
@@ -490,11 +490,11 @@
 		},
 		{
 			"id": "RTE17-chart-lifecycle-ownership",
-			"prompt": "the ECharts init, resize listener, and dispose currently sit in src/component/widget/chart/hook/use-chart-instance.ts only to shorten the component; fold that lifecycle back into the owning chart root and leave the domain option builder in function/.",
+			"prompt": "the ECharts init, resize listener, and dispose currently sit in src/component/widget/chart/_hook/use-chart-instance.ts only to shorten the component; fold that lifecycle back into the owning chart root and leave the domain option builder in function/.",
 			"files": [
 				"src/component/widget/chart/component/wg-chart-root.tsx",
-				"src/component/widget/chart/hook/use-chart-instance.ts",
-				"src/component/widget/chart/function/to-chart-option.ts"
+				"src/component/widget/chart/_hook/use-chart-instance.ts",
+				"src/component/widget/chart/_function/to-chart-option.ts"
 			],
 			"expectedSkills": [
 				"react",

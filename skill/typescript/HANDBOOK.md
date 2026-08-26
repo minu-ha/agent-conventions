@@ -28,7 +28,7 @@
     - 1.7 [Choose Interface for Object Contracts and Type for Type Composition](#17-choose-interface-for-object-contracts-and-type-for-type-composition)
 2. [Naming and Module Boundaries](#2-naming-and-module-boundaries) — **CRITICAL**
     - 2.1 [Place Project-wide Constants in the Root `constant` Folder](#21-place-project-wide-constants-in-the-root-constant-folder)
-    - 2.2 [Place Owner-only Constants in the Owner `constant` Folder](#22-place-owner-only-constants-in-the-owner-constant-folder)
+    - 2.2 [Place Owner-only Constants in the Owner `_constant` Folder](#22-place-owner-only-constants-in-the-owner-constant-folder)
     - 2.3 [Use Role-Based File, Symbol, and Constant Naming](#23-use-role-based-file-symbol-and-constant-naming)
     - 2.4 [Use Direct Imports and Dedicated Public Entry Points](#24-use-direct-imports-and-dedicated-public-entry-points)
     - 2.5 [Restrict Absolute Aliases to Layer Roots](#25-restrict-absolute-aliases-to-layer-roots)
@@ -638,7 +638,7 @@ type MutableRow = Omit<Row, "children"> & {
 | 값 | 자리 | 이름 |
 | --- | --- | --- |
 | 프로젝트 전반의 값 | `constant/<주제>.ts` | `<주제>_<이름>` |
-| 한 소유자의 값 | `<owner>/constant/<주제>.ts` | `<주제>_<이름>` |
+| 한 소유자의 값 | `<owner>/_constant/<주제>.ts` | `<주제>_<이름>` |
 
 가르는 법은 소유자를 지워 보는 것입니다.
 소유자를 지웠을 때 값도 사라지면 그 소유자 것입니다.
@@ -720,7 +720,7 @@ const productClient = createClient({timeoutMs: api_request_timeout_ms});
 const productQuery = useProductQuery({client: productClient, pageSize: pagination_default_page_size});
 ```
 
-### 2.2 Place Owner-only Constants in the Owner `constant` Folder
+### 2.2 Place Owner-only Constants in the Owner `_constant` Folder
 
 **Rule:** `T02-02` · `naming-place-owner-constants-in-the-owner-constant-folder`
 
@@ -733,19 +733,19 @@ const productQuery = useProductQuery({client: productClient, pageSize: paginatio
 **Impact: MEDIUM-HIGH (한 소유자의 상수가 루트 폴더를 넓히지 않고 소유자 이름을 되풀이하지 않습니다)**
 
 한 소유자의 상수는 루트로 올리지 않습니다.
-그 소유자 아래 `constant` 폴더에 둡니다.
+그 소유자 아래 `_constant` 폴더에 둡니다.
 루트와 소유자 중 어디에 두는지 가르는 표와 파일·이름의 모양은
 `naming-place-project-constants-in-the-root-constant-folder` 규칙에 있습니다.
 여기서는 소유자 아래에서만 다른 것을 봅니다.
 
 - 파일은 `constant/<주제>.ts`이고 상수는 `<주제>_`로 시작합니다.
   소유자 이름은 폴더가 이미 말하므로 접두사로 되풀이하지 않습니다.
-  `page/detail/constant/legend.ts`의 상수는 `legend_hit_tolerance_px`입니다.
+  `page/detail/_constant/legend.ts`의 상수는 `legend_hit_tolerance_px`입니다.
   `detail_legend_hit_tolerance_px`처럼 소유자 이름을 앞에 붙이지 않습니다.
-- 파서 묶음이나 스키마처럼 함수를 담은 계약도 같은 `constant` 폴더에 둡니다.
+- 파서 묶음이나 스키마처럼 함수를 담은 계약도 같은 `_constant` 폴더에 둡니다.
   파일은 계약마다 나누고, 이름은 그 계약을 정한 규칙과 `naming-use-consistent-file-and-symbol-naming`이 정합니다.
 - 소유자 아래에 `config`, `constants`, `common` 폴더는 만들지 않습니다.
-- 파일이 하나뿐인 `constant` 폴더도 그대로 둡니다.
+- 파일이 하나뿐인 `_constant` 폴더도 그대로 둡니다.
 - 그 소유자를 지워도 남을 값이면 루트 규칙을 따라 올립니다.
 
 **Incorrect (한 소유자의 상수를 루트로 올림):**
@@ -759,7 +759,7 @@ export const chart_axis_tick_count = 6;
 **Incorrect (소유자 이름을 되풀이하고 객체 하나에 모음):**
 
 ```ts
-// page/product-detail/constant/product-detail.ts
+// page/product-detail/_constant/product-detail.ts
 export const product_detail_config = {
 	chart_axis_tick_count: 6,
 } as const;
@@ -768,7 +768,7 @@ export const product_detail_config = {
 **Correct (소유자 아래 주제 파일에 둠):**
 
 ```ts
-// page/product-detail/constant/chart.ts
+// page/product-detail/_constant/chart.ts
 /**
  * product 상세 차트의 축 눈금 수. 표시 폭이 좁아 여섯을 넘기면 라벨이 겹친다
  */
@@ -950,7 +950,7 @@ import type {UserProfile} from "@/type/user-profile";
 import {pagination_default_page_size} from "@/constant/pagination";
 import {toDisplayDate} from "@/util/date/to-display-date";
 import {WgChartCard} from "@/component/widget/chart-card/wg-chart-card";
-import {toUserSaveRequest} from "./function/to-user-save-request";
+import {toUserSaveRequest} from "./_function/to-user-save-request";
 ```
 
 **Correct (도구가 계약으로 요구하는 파일만 `default`):**
@@ -1111,7 +1111,7 @@ const productClient = createClient({baseUrl: env_api_base_url});
 맞는 기존 계약이나 추론되는 익명 결과가 있으면 그대로 씁니다.
 
 소유자 폴더가 이미 말하는 도메인은 타입 이름에 반복하지 않습니다.
-`sales-report/type/` 안에서는 `SalesReportSnapshot`이 아니라 `ReportSnapshot`처럼 남은 문맥만 이름에 둡니다.
+`sales-report/_type/` 안에서는 `SalesReportSnapshot`이 아니라 `ReportSnapshot`처럼 남은 문맥만 이름에 둡니다.
 소유자 밖으로 내보내 문맥이 사라지거나 다른 타입과 충돌할 때만 필요한 도메인 접두를 유지합니다.
 
 타입 파일도 실제 명사로 짓습니다.
@@ -1447,7 +1447,7 @@ const toRequestUrl = (target: ApiRequestTarget): URL => {
 **Incorrect (한 번만 쓰는 한 줄 계산을 파일로 분리):**
 
 ```ts
-// page/profile/function/get-next-iteration.ts
+// page/profile/_function/get-next-iteration.ts
 export const getNextIteration = (previous: number, iterationCount: number): number => {
 	return (previous + 1) % iterationCount;
 };
@@ -1456,7 +1456,7 @@ export const getNextIteration = (previous: number, iterationCount: number): numb
 **Incorrect (전용 보조가 딸린 단계를 한 파일에 계속 쌓음):**
 
 ```txt
-page/report/function/to-sales-overview.ts
+page/report/_function/to-sales-overview.ts
   toSalesOverview          내보낸 함수
   toSummaryBand            내보낸 함수만 부름. 전용 보조 없음
   toTrendChart             내보낸 함수만 부름. 전용 보조 셋이 딸림
@@ -1477,7 +1477,7 @@ const handleNextClick = () => {
 **Correct (`.map()` 콜백 하나에만 쓰이는 변환은 그 자리에 둠):**
 
 ```ts
-// page/product/function/to-product-view.ts
+// page/product/_function/to-product-view.ts
 /**
  * product 표시 모델 조립. 라벨 이름이 비면 코드를 보여 준다
  */
@@ -1492,7 +1492,7 @@ export const toProductView = (record: RecordItem): ProductView => {
 **Correct (서로 다른 파일 둘이 이미 부르는 순수 함수를 뺌):**
 
 ```ts
-// page/profile/function/to-profile-save-request.ts
+// page/profile/_function/to-profile-save-request.ts
 /**
  * profile 저장 payload 조립. 서버가 앞뒤 공백이 붙은 displayName을 거부한다
  */
@@ -1505,13 +1505,13 @@ export const toProfileSaveRequest = (formValues: ProfileFormValues) => {
 
 ```tsx
 // page/profile/pg-profile-form.tsx와 page/profile/pg-profile-drawer.tsx가 함께 부른다
-import { toProfileSaveRequest } from "./function/to-profile-save-request";
+import { toProfileSaveRequest } from "./_function/to-profile-save-request";
 ```
 
 **Correct (`.tsx` 안의 순수 조립 함수는 사용처가 하나여도 형제 `.ts`로 냄):**
 
 ```ts
-// page/products/function/to-product-save-request.ts
+// page/products/_function/to-product-save-request.ts
 /**
  * product 저장 요청 조립. 업로드가 끝난 첨부만 넘겨야 attachmentIds가 채워진다
  */
@@ -1526,13 +1526,13 @@ export const toProductSaveRequest = (formValues: ProductFormValues) => {
 
 ```tsx
 // page/products/pg-products.tsx 하나만 부르지만 훅도 JSX도 쓰지 않는 계산이다
-import { toProductSaveRequest } from "./function/to-product-save-request";
+import { toProductSaveRequest } from "./_function/to-product-save-request";
 ```
 
 **Correct (전용 보조가 딸린 단계만 자기 파일로 나감):**
 
 ```txt
-page/report/function/to-sales-overview/
+page/report/_function/to-sales-overview/
 ├── to-sales-overview.ts   내보낸 함수와 toSummaryBand가 남음
 └── to-trend-chart.ts      전용 보조 셋을 비공개로 품음
 ```
@@ -1567,7 +1567,7 @@ page/report/function/to-sales-overview/
 - 자기 폴더 밖에서는 내보낸 함수가 내보낸 함수를 타고 가는 사슬을 만들지 않습니다.
   대표 함수가 자기 폴더 안 파일을 부르는 것은 사슬이 아니라 그 함수의 내부입니다.
   자기 폴더 안 파일을 가져오는 것은 그 대표 함수뿐이고,
-  다른 파일도 부르게 되면 재사용이 생긴 것이니 `function` 바로 아래로 꺼냅니다.
+  다른 파일도 부르게 되면 재사용이 생긴 것이니 `_function` 바로 아래로 꺼냅니다.
   루트 `util` 함수가 다른 루트 `util` 함수를 가져오는 것도 사슬이 아닙니다.
   둘 다 공개 진입점이고, 가져오는 줄에서 어느 종류 폴더의 무엇인지 그대로 읽힙니다.
 
@@ -1582,7 +1582,7 @@ page/report/function/to-sales-overview/
   `Spread`를 받는 함수는 `util/spread/`에 둡니다.
 - 화면이나 기능 이름으로는 짓지 않습니다.
   받는 값의 타입으로 종류를 짓지 못하면 그 함수는 `util`이 아니라 소유자 함수입니다.
-- 소유자 아래 `function` 폴더에는 종류 폴더를 두지 않습니다.
+- 소유자 아래 `_function` 폴더에는 종류 폴더를 두지 않습니다.
   함수가 몇 개라 파일 목록으로 충분합니다.
 
 **루트 승격은 그 함수가 누구 것인지로 판정합니다.**
@@ -1664,7 +1664,7 @@ export const toProfileSaveRequest = (values: ProfileFormValues) => {
 **Correct (소유자 아래 대표 함수 하나당 파일 하나):**
 
 ```ts
-// page/product-form/function/to-product-save-request.ts
+// page/product-form/_function/to-product-save-request.ts
 /**
  * product 저장 요청 조립. 서버가 앞뒤 공백이 붙은 title을 거부한다
  */
@@ -1676,7 +1676,7 @@ export const toProductSaveRequest = (values: ProductFormValues) => {
 **Correct (내보낸 함수가 맨 위, 불리는 쪽이 호출자 아래로 이어짐):**
 
 ```ts
-// page/report/function/to-summary-rows.ts
+// page/report/_function/to-summary-rows.ts
 /**
  * 요약 표가 그리는 행 목록. 이름이 비면 코드로 표시한다
  */
@@ -1696,7 +1696,7 @@ const toSummaryLabel = (item: SalesSummaryItem): string => {
 **Correct (전용 보조가 나간 대표 함수는 자기 이름 폴더를 가짐):**
 
 ```txt
-page/report/function/
+page/report/_function/
 ├── to-sales-overview/
 │   ├── to-sales-overview.ts   대표 함수. 자기 폴더 안 파일을 조립
 │   └── to-trend-chart.ts      이 폴더 밖에서는 가져오지 않음
@@ -1945,7 +1945,7 @@ const submitDraft = async (draft: Draft) => {
 - 입력은 시그니처가 말하므로 이름에 반복하지 않습니다.
   `mapResponseToModel`처럼 입력과 막연한 접미사를 함께 적지 않습니다.
 - 소유자 경로가 이미 말하는 도메인을 되풀이하지 않습니다.
-  `sales-trend-panel/function/` 안에서는 `toSalesTrendComparisonWindows`보다
+  `sales-trend-panel/_function/` 안에서는 `toSalesTrendComparisonWindows`보다
   `toComparisonWindows`가 적절합니다.
 - 반환 타입 이름을 그대로 옮기기보다 호출자가 쓰는 결과 개념을 적습니다.
   `toReportViewModel`보다 `toReportRows`가 구체적입니다.
@@ -2228,7 +2228,7 @@ const toOverdueLines = (invoice: Invoice, today: Date): InvoiceLine[] => {
 `attempts > 42`가 아니라 `attempts > retry_max_attempts`입니다.
 
 어디에 선언할지는 `naming-place-project-constants-in-the-root-constant-folder` 규칙이 정합니다.
-소유자를 지워도 남으면 루트 `constant` 폴더, 소유자와 함께 사라지면 그 소유자의 `constant` 폴더입니다.
+소유자를 지워도 남으면 루트 `constant` 폴더, 소유자와 함께 사라지면 그 소유자의 `_constant` 폴더입니다.
 
 **같은 파일에 지역 `const`로 옮기는 것으로는 끝나지 않습니다.**
 `functions-name-a-value-only-for-recompute-or-judgment`가 지역 변수를 만들 자리를 따로 정하고,

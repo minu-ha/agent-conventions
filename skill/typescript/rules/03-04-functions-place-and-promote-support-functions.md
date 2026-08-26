@@ -35,7 +35,7 @@ tags: functions, boundaries
 - 자기 폴더 밖에서는 내보낸 함수가 내보낸 함수를 타고 가는 사슬을 만들지 않습니다.
   대표 함수가 자기 폴더 안 파일을 부르는 것은 사슬이 아니라 그 함수의 내부입니다.
   자기 폴더 안 파일을 가져오는 것은 그 대표 함수뿐이고,
-  다른 파일도 부르게 되면 재사용이 생긴 것이니 `function` 바로 아래로 꺼냅니다.
+  다른 파일도 부르게 되면 재사용이 생긴 것이니 `_function` 바로 아래로 꺼냅니다.
   루트 `util` 함수가 다른 루트 `util` 함수를 가져오는 것도 사슬이 아닙니다.
   둘 다 공개 진입점이고, 가져오는 줄에서 어느 종류 폴더의 무엇인지 그대로 읽힙니다.
 
@@ -50,7 +50,7 @@ tags: functions, boundaries
   `Spread`를 받는 함수는 `util/spread/`에 둡니다.
 - 화면이나 기능 이름으로는 짓지 않습니다.
   받는 값의 타입으로 종류를 짓지 못하면 그 함수는 `util`이 아니라 소유자 함수입니다.
-- 소유자 아래 `function` 폴더에는 종류 폴더를 두지 않습니다.
+- 소유자 아래 `_function` 폴더에는 종류 폴더를 두지 않습니다.
   함수가 몇 개라 파일 목록으로 충분합니다.
 
 **루트 승격은 그 함수가 누구 것인지로 판정합니다.**
@@ -132,7 +132,7 @@ export const toProfileSaveRequest = (values: ProfileFormValues) => {
 **Correct (소유자 아래 대표 함수 하나당 파일 하나):**
 
 ```ts
-// page/product-form/function/to-product-save-request.ts
+// page/product-form/_function/to-product-save-request.ts
 /**
  * product 저장 요청 조립. 서버가 앞뒤 공백이 붙은 title을 거부한다
  */
@@ -144,7 +144,7 @@ export const toProductSaveRequest = (values: ProductFormValues) => {
 **Correct (내보낸 함수가 맨 위, 불리는 쪽이 호출자 아래로 이어짐):**
 
 ```ts
-// page/report/function/to-summary-rows.ts
+// page/report/_function/to-summary-rows.ts
 /**
  * 요약 표가 그리는 행 목록. 이름이 비면 코드로 표시한다
  */
@@ -164,7 +164,7 @@ const toSummaryLabel = (item: SalesSummaryItem): string => {
 **Correct (전용 보조가 나간 대표 함수는 자기 이름 폴더를 가짐):**
 
 ```txt
-page/report/function/
+page/report/_function/
 ├── to-sales-overview/
 │   ├── to-sales-overview.ts   대표 함수. 자기 폴더 안 파일을 조립
 │   └── to-trend-chart.ts      이 폴더 밖에서는 가져오지 않음

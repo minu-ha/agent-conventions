@@ -6,7 +6,7 @@
 `attempts > 42`가 아니라 `attempts > retry_max_attempts`입니다.
 
 어디에 선언할지는 `naming-place-project-constants-in-the-root-constant-folder` 규칙이 정합니다.
-소유자를 지워도 남으면 루트 `constant` 폴더, 소유자와 함께 사라지면 그 소유자의 `constant` 폴더입니다.
+소유자를 지워도 남으면 루트 `constant` 폴더, 소유자와 함께 사라지면 그 소유자의 `_constant` 폴더입니다.
 
 **같은 파일에 지역 `const`로 옮기는 것으로는 끝나지 않습니다.**
 `functions-name-a-value-only-for-recompute-or-judgment`가 지역 변수를 만들 자리를 따로 정하고,

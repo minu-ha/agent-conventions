@@ -4,7 +4,7 @@ titleKo: 추출한 파일은 소유자 아래 역할 폴더에 둡니다
 impact: MEDIUM-HIGH
 impactDescription: 빼낸 파일이 소유자를 따라가 예상한 자리에 놓입니다
 appliesWhen:
-  - 소유자 아래 `constant`·`function`·`hook`·`type` 폴더나 하위 소유자 폴더를 만들거나 옮길 때
+  - 소유자 아래 `_constant`·`_function`·`_hook`·`_type` 폴더나 하위 소유자 폴더를 만들거나 옮길 때
   - 추출한 컴포넌트·함수·타입의 배치 위치를 정할 때
   - 제외: 기존 파일 내부 구현만 바꾸는 경우
 reviewWith: >-
@@ -24,13 +24,14 @@ tags: ownership
 
 소유자 폴더 안에서 파일을 역할별로 나누어 담는 폴더가 역할 폴더입니다.
 역할 폴더는 다음 넷뿐이고 새 역할 폴더를 만들지 않습니다.
+이름 앞의 `_`는 하위 소유자 폴더와 섞이지 않게 정렬을 앞으로 당기는 표식입니다.
 
 | 폴더 | 담는 것 |
 | --- | --- |
-| `constant` | 입력을 받지 않는 상수, 기본값, 기준값, 파서 묶음 같은 선언형 계약 |
-| `function` | 이름 붙여 내보낸 도메인 계산 |
-| `hook` | 실제 상태·이펙트·컨텍스트를 소유한 커스텀 훅 |
-| `type` | 여러 파일이 공유하는 계약 |
+| `_constant` | 입력을 받지 않는 상수, 기본값, 기준값, 파서 묶음 같은 선언형 계약 |
+| `_function` | 이름 붙여 내보낸 도메인 계산 |
+| `_hook` | 실제 상태·이펙트·컨텍스트를 소유한 커스텀 훅 |
+| `_type` | 여러 파일이 공유하는 계약 |
 
 하위 컴포넌트는 역할 폴더에 넣지 않고 소유자 폴더에 파일로 둡니다.
 그 하위 컴포넌트가 자기만 쓰는 파일을 갖게 되면 그때 소유자가 되어 자기 이름의 폴더로 바뀝니다.
@@ -42,6 +43,7 @@ tags: ownership
 
 소유자 아래에는 `component`, `util`, `helper`, `config`, `constants`, `common`, `shared` 같은 폴더를 만들지 않습니다.
 루트의 `constant`·`type`·`hook`은 프로젝트가 소유자인 자리라 같은 역할 폴더 규칙을 따릅니다.
+다만 루트는 소유자 아래가 아니라 레이어 루트라 이름에 `_`를 붙이지 않습니다.
 루트에만 있는 `util`과 `config`는 `typescript/functions-place-and-promote-support-functions`와
 `typescript/naming-read-environment-values-through-config-env`가 정합니다.
 폴더 이름은 단수로 쓰고 프레임워크가 강제하는 이름만 예외로 둡니다.
@@ -53,9 +55,9 @@ tags: ownership
 - 파일이 하나뿐인 역할 폴더도 그대로 둡니다.
   형제 `.ts` 하나로 대신하지 않습니다.
 - 함수도 같습니다.
-  전용 보조 파일을 거느린 함수만 `function` 아래 자기 이름 폴더를 갖습니다.
+  전용 보조 파일을 거느린 함수만 `_function` 아래 자기 이름 폴더를 갖습니다.
   언제 거느리는지는 `typescript/functions-extract-helpers-only-when-the-boundary-is-real`이 정합니다.
-- 프롭스는 해당 TSX에 두고 여러 파일이 공유하는 계약만 `type`으로 옮깁니다.
+- 프롭스는 해당 TSX에 두고 여러 파일이 공유하는 계약만 `_type`으로 옮깁니다.
 - 파일명과 심볼의 레이어 접두사는 `ownership-prefix-layer-names-on-files-and-symbols`가 정합니다.
 - 하위 소유자 안에서 다시 소유자가 생기면 위로 올려 하위 소유자의 형제로 두거나 `widget`으로 나갈 대상인지 봅니다.
 - 호출 계층은 폴더 깊이가 아니라 진입 파일의 조립이 드러냅니다.
@@ -71,10 +73,10 @@ tags: ownership
 component/ui/button/
 ├── ui-button.tsx
 ├── ui-button.css
-├── constant/
-├── function/
-├── hook/
-└── type/
+├── _constant/
+├── _function/
+├── _hook/
+└── _type/
 ```
 
 **Incorrect (범용 이름 폴더와 복수형을 섞어 씀):**
@@ -97,7 +99,7 @@ page/detail/
     ├── pg-sales-trend-panel.tsx
     └── detection/
         ├── pg-detection.tsx
-        └── function/
+        └── _function/
             └── to-detection-rows.ts
 ```
 
@@ -109,18 +111,18 @@ page/detail/
 ├── pg-detail.css
 ├── pg-summary-band.tsx            자기만 쓰는 파일이 없어 파일로 둠
 ├── pg-summary-band.css
-├── function/
+├── _function/
 │   ├── to-product-summary.ts
 │   └── to-sales-chart/
 │       ├── to-sales-chart.ts
 │       └── to-chart-window.ts
-├── type/
+├── _type/
 │   └── detail-view-model.ts
 └── sales-trend-panel/             자기만 쓰는 파일이 있어 하위 소유자 폴더가 됨
     ├── pg-sales-trend-panel.tsx
     ├── pg-sales-trend-panel.css
     ├── pg-detection-section.tsx
-    └── function/
+    └── _function/
         └── to-chart-viewport.ts
 ```
 

@@ -4,10 +4,10 @@ titleKo: 컴포넌트는 위에서 아래로만 가져옵니다
 impact: CRITICAL
 impactDescription: 비공개 컴포넌트를 형제나 위쪽에서 되짚어 소유 관계가 무너지지 않습니다
 appliesWhen:
-  - 소유자 폴더 안의 컴포넌트 파일을 다른 파일에서 가져올 때
+  - 소유자 폴더 안의 컴포넌트 파일을 가져올 때
   - `../`나 `@/page` 경로로 컴포넌트를 가져오려 할 때
   - 여러 자식이 같은 컴포넌트를 써야 해서 배치를 다시 정할 때
-  - 제외: `function`·`type`·`constant`·`hook` 파일을 가져오는 경우
+  - 제외: `_function`·`_type`·`_constant`·`_hook` 파일을 가져오는 경우
 requiresSelected: typescript/naming-restrict-absolute-aliases-to-layer-roots
 reviewWith: ownership-layer-component-boundaries
 tags: ownership
@@ -38,8 +38,9 @@ tags: ownership
 3. 짧은 조각이면 그대로 중복해서 씁니다.
 
 세 자식 이상이 같은 것을 써야 하는데 올릴 수도 없으면 자식 분리가 잘못됐다는 신호입니다.
-`function`, `type`, `constant`, `hook`은 렌더 트리를 만들지 않아 소유자 안에서 공유하고 이 방향 제약을 받지 않습니다.
-`hook`이 예외인 근거는 `ownership-keep-lifecycle-in-the-owning-component`에 있습니다.
+`_function`, `_type`, `_constant`, `_hook`은 렌더 트리를 만들지 않습니다.
+그래서 소유자 안에서 공유하고 이 방향 제약을 받지 않습니다.
+`_hook`이 예외인 근거는 `ownership-keep-lifecycle-in-the-owning-component`에 있습니다.
 여러 소유자가 함께 부르는 생명주기만 훅으로 올리라고 정하는데,
 올린 훅을 자식이 가져오지 못하면 그 규칙이 성립하지 않습니다.
 

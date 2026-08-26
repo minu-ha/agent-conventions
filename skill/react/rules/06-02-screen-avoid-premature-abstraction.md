@@ -37,7 +37,7 @@ tags: screen
 **Incorrect (사용처가 한 화면뿐인데 공용 훅으로 먼저 빼냄):**
 
 ```ts
-// hook/use-product-filter-form.ts
+// _hook/use-product-filter-form.ts
 export const useProductFilterForm = () => {
 	const [keyword, setKeyword] = useState("");
 	const [categoryId, setCategoryId] = useState<string>();

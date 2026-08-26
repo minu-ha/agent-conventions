@@ -41,10 +41,10 @@ export const useMediaUploadPayload = (files: UploadFile[]) => {
 };
 ```
 
-**Correct (순수 계산은 소유자의 `function` 폴더에 일반 함수로 둠):**
+**Correct (순수 계산은 소유자의 `_function` 폴더에 일반 함수로 둠):**
 
 ```ts
-// page/products/function/to-media-upload-request.ts
+// page/products/_function/to-media-upload-request.ts
 /**
  * 업로드 파일 목록으로 저장 요청을 조립
  */
@@ -57,7 +57,7 @@ export const toMediaUploadRequest = (files: UploadFile[]) => {
 
 ```tsx
 // page/products/pg-media-upload-panel.tsx
-import { toMediaUploadRequest } from "../function/to-media-upload-request";
+import { toMediaUploadRequest } from "../_function/to-media-upload-request";
 
 const PgMediaUploadPanel = (props: PgMediaUploadPanelProps) => {
 	/**

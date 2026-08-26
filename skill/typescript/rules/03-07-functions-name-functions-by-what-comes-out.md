@@ -38,7 +38,7 @@ tags: functions, naming
 - 입력은 시그니처가 말하므로 이름에 반복하지 않습니다.
   `mapResponseToModel`처럼 입력과 막연한 접미사를 함께 적지 않습니다.
 - 소유자 경로가 이미 말하는 도메인을 되풀이하지 않습니다.
-  `sales-trend-panel/function/` 안에서는 `toSalesTrendComparisonWindows`보다
+  `sales-trend-panel/_function/` 안에서는 `toSalesTrendComparisonWindows`보다
   `toComparisonWindows`가 적절합니다.
 - 반환 타입 이름을 그대로 옮기기보다 호출자가 쓰는 결과 개념을 적습니다.
   `toReportViewModel`보다 `toReportRows`가 구체적입니다.

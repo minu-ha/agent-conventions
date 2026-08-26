@@ -45,7 +45,7 @@ tags: naming, types, ownership
 맞는 기존 계약이나 추론되는 익명 결과가 있으면 그대로 씁니다.
 
 소유자 폴더가 이미 말하는 도메인은 타입 이름에 반복하지 않습니다.
-`sales-report/type/` 안에서는 `SalesReportSnapshot`이 아니라 `ReportSnapshot`처럼 남은 문맥만 이름에 둡니다.
+`sales-report/_type/` 안에서는 `SalesReportSnapshot`이 아니라 `ReportSnapshot`처럼 남은 문맥만 이름에 둡니다.
 소유자 밖으로 내보내 문맥이 사라지거나 다른 타입과 충돌할 때만 필요한 도메인 접두를 유지합니다.
 
 타입 파일도 실제 명사로 짓습니다.

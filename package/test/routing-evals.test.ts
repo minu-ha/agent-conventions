@@ -561,12 +561,12 @@ const reactRuleRouting = {
 	},
 	"ownership-place-owner-files-in-role-folders": {
 		appliesWhen:
-			"소유자 아래 `constant`·`function`·`hook`·`type` 폴더나 하위 소유자 폴더를 만들거나 옮길 때. 추출한 컴포넌트·함수·타입의 배치 위치를 정할 때. 제외: 기존 파일 내부 구현만 바꾸는 경우.",
+			"소유자 아래 `_constant`·`_function`·`_hook`·`_type` 폴더나 하위 소유자 폴더를 만들거나 옮길 때. 추출한 컴포넌트·함수·타입의 배치 위치를 정할 때. 제외: 기존 파일 내부 구현만 바꾸는 경우.",
 		reviewWith: ["ownership-keep-component-imports-flowing-downward", "css/ownership-choose-scope-prefix-by-owner-layer"],
 	},
 	"ownership-keep-component-imports-flowing-downward": {
 		appliesWhen:
-			"소유자 폴더 안의 컴포넌트 파일을 다른 파일에서 가져올 때. `../`나 `@/page` 경로로 컴포넌트를 가져오려 할 때. 여러 자식이 같은 컴포넌트를 써야 해서 배치를 다시 정할 때. 제외: `function`·`type`·`constant`·`hook` 파일을 가져오는 경우.",
+			"소유자 폴더 안의 컴포넌트 파일을 가져올 때. `../`나 `@/page` 경로로 컴포넌트를 가져오려 할 때. 여러 자식이 같은 컴포넌트를 써야 해서 배치를 다시 정할 때. 제외: `_function`·`_type`·`_constant`·`_hook` 파일을 가져오는 경우.",
 		reviewWith: ["ownership-layer-component-boundaries"],
 	},
 	"ownership-prefer-plain-ts-for-local-react-helpers": {
@@ -1099,8 +1099,8 @@ const reactScenarioStages = {
 	"RTE03-route-support-extraction": {
 		initial: {
 			prompt:
-				"move one real four-argument multi-line payload boundary out of src/page/products/pg-products.tsx into src/page/products/function/to-product-save-request.ts; do not create a hook, generic utils file, or helper soup.",
-			files: ["src/page/products/pg-products.tsx", "src/page/products/function/to-product-save-request.ts"],
+				"move one real four-argument multi-line payload boundary out of src/page/products/pg-products.tsx into src/page/products/_function/to-product-save-request.ts; do not create a hook, generic utils file, or helper soup.",
+			files: ["src/page/products/pg-products.tsx", "src/page/products/_function/to-product-save-request.ts"],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
 				react: [
@@ -1443,11 +1443,11 @@ const reactScenarioStages = {
 	"RTE17-chart-lifecycle-ownership": {
 		initial: {
 			prompt:
-				"the ECharts init, resize listener, and dispose currently sit in src/component/widget/chart/hook/use-chart-instance.ts only to shorten the component; fold that lifecycle back into the owning chart root and leave the domain option builder in function/.",
+				"the ECharts init, resize listener, and dispose currently sit in src/component/widget/chart/_hook/use-chart-instance.ts only to shorten the component; fold that lifecycle back into the owning chart root and leave the domain option builder in function/.",
 			files: [
 				"src/component/widget/chart/component/wg-chart-root.tsx",
-				"src/component/widget/chart/hook/use-chart-instance.ts",
-				"src/component/widget/chart/function/to-chart-option.ts",
+				"src/component/widget/chart/_hook/use-chart-instance.ts",
+				"src/component/widget/chart/_function/to-chart-option.ts",
 			],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {

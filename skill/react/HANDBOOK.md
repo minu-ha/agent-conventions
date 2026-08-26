@@ -274,7 +274,7 @@ export const PgSalesTrendPanel = (props: PgSalesTrendPanelProps) => {
 
 **Rule:** `R01-03` · `ownership-place-owner-files-in-role-folders`
 
-**Applies when:** 소유자 아래 `constant`·`function`·`hook`·`type` 폴더나 하위 소유자 폴더를 만들거나 옮길 때. 추출한 컴포넌트·함수·타입의 배치 위치를 정할 때. 제외: 기존 파일 내부 구현만 바꾸는 경우.
+**Applies when:** 소유자 아래 `_constant`·`_function`·`_hook`·`_type` 폴더나 하위 소유자 폴더를 만들거나 옮길 때. 추출한 컴포넌트·함수·타입의 배치 위치를 정할 때. 제외: 기존 파일 내부 구현만 바꾸는 경우.
 
 **Review with:** `css/ownership-choose-scope-prefix-by-owner-layer`, `ownership-keep-component-imports-flowing-downward`
 
@@ -288,13 +288,14 @@ export const PgSalesTrendPanel = (props: PgSalesTrendPanelProps) => {
 
 소유자 폴더 안에서 파일을 역할별로 나누어 담는 폴더가 역할 폴더입니다.
 역할 폴더는 다음 넷뿐이고 새 역할 폴더를 만들지 않습니다.
+이름 앞의 `_`는 하위 소유자 폴더와 섞이지 않게 정렬을 앞으로 당기는 표식입니다.
 
 | 폴더 | 담는 것 |
 | --- | --- |
-| `constant` | 입력을 받지 않는 상수, 기본값, 기준값, 파서 묶음 같은 선언형 계약 |
-| `function` | 이름 붙여 내보낸 도메인 계산 |
-| `hook` | 실제 상태·이펙트·컨텍스트를 소유한 커스텀 훅 |
-| `type` | 여러 파일이 공유하는 계약 |
+| `_constant` | 입력을 받지 않는 상수, 기본값, 기준값, 파서 묶음 같은 선언형 계약 |
+| `_function` | 이름 붙여 내보낸 도메인 계산 |
+| `_hook` | 실제 상태·이펙트·컨텍스트를 소유한 커스텀 훅 |
+| `_type` | 여러 파일이 공유하는 계약 |
 
 하위 컴포넌트는 역할 폴더에 넣지 않고 소유자 폴더에 파일로 둡니다.
 그 하위 컴포넌트가 자기만 쓰는 파일을 갖게 되면 그때 소유자가 되어 자기 이름의 폴더로 바뀝니다.
@@ -306,6 +307,7 @@ export const PgSalesTrendPanel = (props: PgSalesTrendPanelProps) => {
 
 소유자 아래에는 `component`, `util`, `helper`, `config`, `constants`, `common`, `shared` 같은 폴더를 만들지 않습니다.
 루트의 `constant`·`type`·`hook`은 프로젝트가 소유자인 자리라 같은 역할 폴더 규칙을 따릅니다.
+다만 루트는 소유자 아래가 아니라 레이어 루트라 이름에 `_`를 붙이지 않습니다.
 루트에만 있는 `util`과 `config`는 `typescript/functions-place-and-promote-support-functions`와
 `typescript/naming-read-environment-values-through-config-env`가 정합니다.
 폴더 이름은 단수로 쓰고 프레임워크가 강제하는 이름만 예외로 둡니다.
@@ -317,9 +319,9 @@ export const PgSalesTrendPanel = (props: PgSalesTrendPanelProps) => {
 - 파일이 하나뿐인 역할 폴더도 그대로 둡니다.
   형제 `.ts` 하나로 대신하지 않습니다.
 - 함수도 같습니다.
-  전용 보조 파일을 거느린 함수만 `function` 아래 자기 이름 폴더를 갖습니다.
+  전용 보조 파일을 거느린 함수만 `_function` 아래 자기 이름 폴더를 갖습니다.
   언제 거느리는지는 `typescript/functions-extract-helpers-only-when-the-boundary-is-real`이 정합니다.
-- 프롭스는 해당 TSX에 두고 여러 파일이 공유하는 계약만 `type`으로 옮깁니다.
+- 프롭스는 해당 TSX에 두고 여러 파일이 공유하는 계약만 `_type`으로 옮깁니다.
 - 파일명과 심볼의 레이어 접두사는 `ownership-prefix-layer-names-on-files-and-symbols`가 정합니다.
 - 하위 소유자 안에서 다시 소유자가 생기면 위로 올려 하위 소유자의 형제로 두거나 `widget`으로 나갈 대상인지 봅니다.
 - 호출 계층은 폴더 깊이가 아니라 진입 파일의 조립이 드러냅니다.
@@ -335,10 +337,10 @@ export const PgSalesTrendPanel = (props: PgSalesTrendPanelProps) => {
 component/ui/button/
 ├── ui-button.tsx
 ├── ui-button.css
-├── constant/
-├── function/
-├── hook/
-└── type/
+├── _constant/
+├── _function/
+├── _hook/
+└── _type/
 ```
 
 **Incorrect (범용 이름 폴더와 복수형을 섞어 씀):**
@@ -361,7 +363,7 @@ page/detail/
     ├── pg-sales-trend-panel.tsx
     └── detection/
         ├── pg-detection.tsx
-        └── function/
+        └── _function/
             └── to-detection-rows.ts
 ```
 
@@ -373,18 +375,18 @@ page/detail/
 ├── pg-detail.css
 ├── pg-summary-band.tsx            자기만 쓰는 파일이 없어 파일로 둠
 ├── pg-summary-band.css
-├── function/
+├── _function/
 │   ├── to-product-summary.ts
 │   └── to-sales-chart/
 │       ├── to-sales-chart.ts
 │       └── to-chart-window.ts
-├── type/
+├── _type/
 │   └── detail-view-model.ts
 └── sales-trend-panel/             자기만 쓰는 파일이 있어 하위 소유자 폴더가 됨
     ├── pg-sales-trend-panel.tsx
     ├── pg-sales-trend-panel.css
     ├── pg-detection-section.tsx
-    └── function/
+    └── _function/
         └── to-chart-viewport.ts
 ```
 
@@ -400,7 +402,7 @@ component/ui/button/
 
 **Rule:** `R01-04` · `ownership-keep-component-imports-flowing-downward`
 
-**Applies when:** 소유자 폴더 안의 컴포넌트 파일을 다른 파일에서 가져올 때. `../`나 `@/page` 경로로 컴포넌트를 가져오려 할 때. 여러 자식이 같은 컴포넌트를 써야 해서 배치를 다시 정할 때. 제외: `function`·`type`·`constant`·`hook` 파일을 가져오는 경우.
+**Applies when:** 소유자 폴더 안의 컴포넌트 파일을 가져올 때. `../`나 `@/page` 경로로 컴포넌트를 가져오려 할 때. 여러 자식이 같은 컴포넌트를 써야 해서 배치를 다시 정할 때. 제외: `_function`·`_type`·`_constant`·`_hook` 파일을 가져오는 경우.
 
 **Requires selected:** `typescript/naming-restrict-absolute-aliases-to-layer-roots` · 함께 적용
 
@@ -429,8 +431,9 @@ component/ui/button/
 3. 짧은 조각이면 그대로 중복해서 씁니다.
 
 세 자식 이상이 같은 것을 써야 하는데 올릴 수도 없으면 자식 분리가 잘못됐다는 신호입니다.
-`function`, `type`, `constant`, `hook`은 렌더 트리를 만들지 않아 소유자 안에서 공유하고 이 방향 제약을 받지 않습니다.
-`hook`이 예외인 근거는 `ownership-keep-lifecycle-in-the-owning-component`에 있습니다.
+`_function`, `_type`, `_constant`, `_hook`은 렌더 트리를 만들지 않습니다.
+그래서 소유자 안에서 공유하고 이 방향 제약을 받지 않습니다.
+`_hook`이 예외인 근거는 `ownership-keep-lifecycle-in-the-owning-component`에 있습니다.
 여러 소유자가 함께 부르는 생명주기만 훅으로 올리라고 정하는데,
 올린 훅을 자식이 가져오지 못하면 그 규칙이 성립하지 않습니다.
 
@@ -514,10 +517,10 @@ export const useMediaUploadPayload = (files: UploadFile[]) => {
 };
 ```
 
-**Correct (순수 계산은 소유자의 `function` 폴더에 일반 함수로 둠):**
+**Correct (순수 계산은 소유자의 `_function` 폴더에 일반 함수로 둠):**
 
 ```ts
-// page/products/function/to-media-upload-request.ts
+// page/products/_function/to-media-upload-request.ts
 /**
  * 업로드 파일 목록으로 저장 요청을 조립
  */
@@ -530,7 +533,7 @@ export const toMediaUploadRequest = (files: UploadFile[]) => {
 
 ```tsx
 // page/products/pg-media-upload-panel.tsx
-import { toMediaUploadRequest } from "../function/to-media-upload-request";
+import { toMediaUploadRequest } from "../_function/to-media-upload-request";
 
 const PgMediaUploadPanel = (props: PgMediaUploadPanelProps) => {
 	/**
@@ -561,7 +564,7 @@ const PgMediaUploadPanel = (props: PgMediaUploadPanelProps) => {
 - 줄 수 감소는 추출 근거가 아닙니다.
   읽는 사람이 파일을 왕복하게 만들 뿐입니다.
 - 여러 소유자가 같은 생명주기 계약을 실제로 호출할 때만 훅으로 올립니다.
-- 파일이 길면 생명주기를 옮기기보다 도메인 계산을 `function`으로 분리합니다.
+- 파일이 길면 생명주기를 옮기기보다 도메인 계산을 `_function`으로 분리합니다.
 
 `ownership-prefer-plain-ts-for-local-react-helpers`는 순수 계산을 훅으로 포장하는 것을 막고,
 이 규칙은 반대로 실제 생명주기가 있어도 분량 때문에 훅으로 옮기는 것을 막습니다.
@@ -2802,7 +2805,7 @@ return (
 **Incorrect (사용처가 한 화면뿐인데 공용 훅으로 먼저 빼냄):**
 
 ```ts
-// hook/use-product-filter-form.ts
+// _hook/use-product-filter-form.ts
 export const useProductFilterForm = () => {
 	const [keyword, setKeyword] = useState("");
 	const [categoryId, setCategoryId] = useState<string>();
@@ -3697,7 +3700,7 @@ useEffect(() => {
 | 파싱을 거친 값과 그 갱신 함수 | `urlParams` · `setUrlParams` |
 | 플랫폼 `URLSearchParams` 객체 | `searchParams` |
 
-- 파서 묶음은 화면이 주소에 올린 상태의 계약이므로 소유자 `constant` 폴더에 둡니다.
+- 파서 묶음은 화면이 주소에 올린 상태의 계약이므로 소유자 `_constant` 폴더에 둡니다.
   자리는 `typescript/naming-place-owner-constants-in-the-owner-constant-folder`가,
   파일과 심볼 표기는 `typescript/naming-use-consistent-file-and-symbol-naming`이 정합니다.
 - `searchParams`는 플랫폼 객체를 그대로 쥔 자리에만 씁니다.
@@ -3709,7 +3712,7 @@ useEffect(() => {
 **Incorrect (세 자리가 이름으로 구분되지 않음):**
 
 ```ts
-// page/product-list/constant/product-list-search.ts
+// page/product-list/_constant/product-list-search.ts
 export const productListSearch = {
 	page: parsePage,
 	keyword: parseKeyword,
@@ -3721,10 +3724,10 @@ const [searchParams, setSearchParams] = useUrlParams(productListSearch);
 const query = searchParams.keyword;
 ```
 
-**Correct (파서 묶음은 `<범위>UrlParsers`로 소유자 `constant` 폴더에 둠):**
+**Correct (파서 묶음은 `<범위>UrlParsers`로 소유자 `_constant` 폴더에 둠):**
 
 ```ts
-// page/product-list/constant/product-list-url-parsers.ts
+// page/product-list/_constant/product-list-url-parsers.ts
 /**
  * product 목록 화면이 주소에 올린 상태의 파서 묶음
  */
@@ -4383,7 +4386,7 @@ JSX 자식 자리에는 `//`를 쓸 수 없습니다.
 
 `typescript/tooling-configure-biome-to-enforce-these-rules`가 세운 `noRestrictedImports`에 패턴 하나를 더합니다.
 `../<파일>`과 `../../**`를 막아 `../`가 형제 소유자 폴더 한 겹만 넘게 하고,
-`function`, `type`, `constant`, `hook` 폴더만 부정 패턴으로 되돌리는 항목입니다.
+`_function`, `_type`, `_constant`, `_hook` 폴더만 부정 패턴으로 되돌리는 항목입니다.
 되돌리는 넷은 `ownership-keep-component-imports-flowing-downward`가 예외로 두는 역할 폴더입니다.
 `@/page/**` 패턴과 같은 배열에 나란히 두면 절대경로와 상대경로 양쪽이 한 규칙으로 막힙니다.
 
@@ -4435,7 +4438,7 @@ JSX 자식 자리에는 `//`를 쓸 수 없습니다.
 						"patterns": [
 							{"group": ["@/page/**"], "message": "화면 내부는 절대경로로 가져오지 않습니다."},
 							{
-								"group": ["../*", "../../**", "!../**/function/**", "!../**/type/**", "!../**/constant/**", "!../**/hook/**"],
+								"group": ["../*", "../../**", "!../**/_function/**", "!../**/_type/**", "!../**/_constant/**", "!../**/_hook/**"],
 								"message": "`../`는 형제 소유자의 진입 파일에만 닿습니다."
 							}
 						]

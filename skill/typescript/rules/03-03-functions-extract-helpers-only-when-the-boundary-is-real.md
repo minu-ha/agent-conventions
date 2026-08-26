@@ -60,7 +60,7 @@ tags: functions, boundaries
 **Incorrect (한 번만 쓰는 한 줄 계산을 파일로 분리):**
 
 ```ts
-// page/profile/function/get-next-iteration.ts
+// page/profile/_function/get-next-iteration.ts
 export const getNextIteration = (previous: number, iterationCount: number): number => {
 	return (previous + 1) % iterationCount;
 };
@@ -69,7 +69,7 @@ export const getNextIteration = (previous: number, iterationCount: number): numb
 **Incorrect (전용 보조가 딸린 단계를 한 파일에 계속 쌓음):**
 
 ```txt
-page/report/function/to-sales-overview.ts
+page/report/_function/to-sales-overview.ts
   toSalesOverview          내보낸 함수
   toSummaryBand            내보낸 함수만 부름. 전용 보조 없음
   toTrendChart             내보낸 함수만 부름. 전용 보조 셋이 딸림
@@ -90,7 +90,7 @@ const handleNextClick = () => {
 **Correct (`.map()` 콜백 하나에만 쓰이는 변환은 그 자리에 둠):**
 
 ```ts
-// page/product/function/to-product-view.ts
+// page/product/_function/to-product-view.ts
 /**
  * product 표시 모델 조립. 라벨 이름이 비면 코드를 보여 준다
  */
@@ -105,7 +105,7 @@ export const toProductView = (record: RecordItem): ProductView => {
 **Correct (서로 다른 파일 둘이 이미 부르는 순수 함수를 뺌):**
 
 ```ts
-// page/profile/function/to-profile-save-request.ts
+// page/profile/_function/to-profile-save-request.ts
 /**
  * profile 저장 payload 조립. 서버가 앞뒤 공백이 붙은 displayName을 거부한다
  */
@@ -118,13 +118,13 @@ export const toProfileSaveRequest = (formValues: ProfileFormValues) => {
 
 ```tsx
 // page/profile/pg-profile-form.tsx와 page/profile/pg-profile-drawer.tsx가 함께 부른다
-import { toProfileSaveRequest } from "./function/to-profile-save-request";
+import { toProfileSaveRequest } from "./_function/to-profile-save-request";
 ```
 
 **Correct (`.tsx` 안의 순수 조립 함수는 사용처가 하나여도 형제 `.ts`로 냄):**
 
 ```ts
-// page/products/function/to-product-save-request.ts
+// page/products/_function/to-product-save-request.ts
 /**
  * product 저장 요청 조립. 업로드가 끝난 첨부만 넘겨야 attachmentIds가 채워진다
  */
@@ -139,13 +139,13 @@ export const toProductSaveRequest = (formValues: ProductFormValues) => {
 
 ```tsx
 // page/products/pg-products.tsx 하나만 부르지만 훅도 JSX도 쓰지 않는 계산이다
-import { toProductSaveRequest } from "./function/to-product-save-request";
+import { toProductSaveRequest } from "./_function/to-product-save-request";
 ```
 
 **Correct (전용 보조가 딸린 단계만 자기 파일로 나감):**
 
 ```txt
-page/report/function/to-sales-overview/
+page/report/_function/to-sales-overview/
 ├── to-sales-overview.ts   내보낸 함수와 toSummaryBand가 남음
 └── to-trend-chart.ts      전용 보조 셋을 비공개로 품음
 ```

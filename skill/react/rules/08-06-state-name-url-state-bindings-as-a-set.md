@@ -25,7 +25,7 @@ tags: state, naming, url
 | 파싱을 거친 값과 그 갱신 함수 | `urlParams` · `setUrlParams` |
 | 플랫폼 `URLSearchParams` 객체 | `searchParams` |
 
-- 파서 묶음은 화면이 주소에 올린 상태의 계약이므로 소유자 `constant` 폴더에 둡니다.
+- 파서 묶음은 화면이 주소에 올린 상태의 계약이므로 소유자 `_constant` 폴더에 둡니다.
   자리는 `typescript/naming-place-owner-constants-in-the-owner-constant-folder`가,
   파일과 심볼 표기는 `typescript/naming-use-consistent-file-and-symbol-naming`이 정합니다.
 - `searchParams`는 플랫폼 객체를 그대로 쥔 자리에만 씁니다.
@@ -37,7 +37,7 @@ tags: state, naming, url
 **Incorrect (세 자리가 이름으로 구분되지 않음):**
 
 ```ts
-// page/product-list/constant/product-list-search.ts
+// page/product-list/_constant/product-list-search.ts
 export const productListSearch = {
 	page: parsePage,
 	keyword: parseKeyword,
@@ -49,10 +49,10 @@ const [searchParams, setSearchParams] = useUrlParams(productListSearch);
 const query = searchParams.keyword;
 ```
 
-**Correct (파서 묶음은 `<범위>UrlParsers`로 소유자 `constant` 폴더에 둠):**
+**Correct (파서 묶음은 `<범위>UrlParsers`로 소유자 `_constant` 폴더에 둠):**
 
 ```ts
-// page/product-list/constant/product-list-url-parsers.ts
+// page/product-list/_constant/product-list-url-parsers.ts
 /**
  * product 목록 화면이 주소에 올린 상태의 파서 묶음
  */
