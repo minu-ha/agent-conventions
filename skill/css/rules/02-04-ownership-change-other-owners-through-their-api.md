@@ -71,7 +71,7 @@ tags: ownership, api, promotion
 ```
 
 ```css
-/* widget/chart-card/wg-chart-card.css */
+/* component/widget/chart-card/wg-chart-card.css */
 .wg_chartCard__caption--muted {
 	color: #8c8c8c;
 }
@@ -81,8 +81,8 @@ tags: ownership, api, promotion
 
 ```txt
 before
-  widget/chart-card/wg-chart-card.tsx      detail 화면의 뷰모델 타입을 받음
-  widget/chart-card/wg-chart-card.css      pg_detail 만 내부를 override 하고 있었음
+  component/widget/chart-card/wg-chart-card.tsx      detail 화면의 뷰모델 타입을 받음
+  component/widget/chart-card/wg-chart-card.css      pg_detail 만 내부를 override 하고 있었음
 
 after
   page/detail/component/pg-chart-card.tsx

@@ -61,7 +61,7 @@ export const PgProducts = () => {
 **Correct (화면 층 경계가 받고 셸은 살아남음):**
 
 ```tsx
-// widget/app-shell/wg-app-shell.tsx
+// component/widget/app-shell/wg-app-shell.tsx
 export const WgAppShell = (props: WgAppShellProps) => {
 	return (
 		<div className={clsx("wg_appShell__root")}>

@@ -930,7 +930,7 @@ import {pagination_default_page_size, toDisplayDate, UserProfile} from "./index"
 **Incorrect (`default`로 내보내 사용처마다 다른 이름이 생김):**
 
 ```tsx
-// ui/tabs/ui-tabs.tsx
+// component/ui/tabs/ui-tabs.tsx
 const UiTabs = (props: UiTabsProps) => {
 	return <div role="tablist">{props.children}</div>;
 };
@@ -940,7 +940,7 @@ export default UiTabs;
 
 ```tsx
 // 사용처가 이름을 지어서 같은 컴포넌트가 파일마다 다른 이름으로 불린다
-import Tabs from "@/ui/tabs/ui-tabs";
+import Tabs from "@/component/ui/tabs/ui-tabs";
 ```
 
 **Correct (직접 가져오기와 공개 진입점을 구분):**
@@ -949,7 +949,7 @@ import Tabs from "@/ui/tabs/ui-tabs";
 import type {UserProfile} from "@/type/user-profile";
 import {pagination_default_page_size} from "@/constant/pagination";
 import {toDisplayDate} from "@/util/date/to-display-date";
-import {WgChartCard} from "@/widget/chart-card/wg-chart-card";
+import {WgChartCard} from "@/component/widget/chart-card/wg-chart-card";
 import {toUserSaveRequest} from "./function/to-user-save-request";
 ```
 
@@ -974,12 +974,13 @@ export default defineConfig({plugins: [react()]});
 
 | 경로 | 판정 |
 | --- | --- |
-| `@/ui`, `@/widget`, `@/constant`, `@/config`, `@/util`, `@/type`, `@/hook`, `@/service`, `@/store`, `@/asset` | 허용 |
+| `@/component`, `@/constant`, `@/config`, `@/util`, `@/type`, `@/hook`, `@/service`, `@/store`, `@/asset` | 허용 |
 | `@/page/...` 등 화면 내부 | 금지 |
 
 레이어 루트가 담는 것은 다음과 같습니다.
-`ui`와 `widget`의 경계는 프레임워크 컨벤션의 레이어 규칙이 정합니다.
 
+- `component`는 `component/ui`와 `component/widget` 두 컴포넌트 레이어를 담습니다.
+  `ui`와 `widget`의 경계는 프레임워크 컨벤션의 레이어 규칙이 정합니다.
 - `constant`는 프로젝트 전반이 쓰는 상수를, `config`는 환경마다 달라지는 값을 담습니다.
 - `util`은 프로젝트 전반이 쓰는 함수를 값의 종류 폴더로 묶어 담습니다.
 - `type`은 프로젝트 전반이 쓰는 계약을, `hook`은 여러 소유자가 쓰는 훅을 담습니다.
@@ -991,7 +992,7 @@ export default defineConfig({plugins: [react()]});
 루트는 프로젝트가 소유자인 자리라 `constant`·`util`·`type`·`hook`은 소유자 아래 역할 폴더와 같은 규칙을 따릅니다.
 
 - 첫 마디가 레이어 루트면 그 아래 깊이는 제한하지 않습니다.
-  `@/widget/chart-card/wg-chart-card`는 허용입니다.
+  `@/component/widget/chart-card/wg-chart-card`는 허용입니다.
 - 화면이나 소유자 내부 모듈은 절대경로로 열지 않고 `./`로만 접근합니다.
 - 소유자 밖에서 필요해지면 경로를 뚫는 대신 전역 레이어로 올립니다.
 
@@ -1004,7 +1005,7 @@ import {SalesChartCard} from "@/page/detail/component/sales-trend-panel/componen
 **Correct (레이어 루트로 시작하는 별칭과 소유자 안 상대경로):**
 
 ```ts
-import {WgChartCard} from "@/widget/chart-card/wg-chart-card";
+import {WgChartCard} from "@/component/widget/chart-card/wg-chart-card";
 import {SalesChartCard} from "./component/sales-chart-card";
 ```
 

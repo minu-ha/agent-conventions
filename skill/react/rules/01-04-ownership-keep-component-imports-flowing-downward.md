@@ -54,7 +54,7 @@ import { PgSalesChartCard } from "@/page/detail/component/sales-trend-panel/comp
 
 ```tsx
 // page/detail/component/sales-trend-panel/pg-sales-trend-panel.tsx
-import { UiSectionHeading } from "@/ui/section-heading/ui-section-heading";
+import { UiSectionHeading } from "@/component/ui/section-heading/ui-section-heading";
 
 import { PgDetectionSection } from "./component/pg-detection-section";
 import { PgSummaryBand } from "./component/pg-summary-band";
@@ -73,5 +73,5 @@ export const PgSalesTrendPanel = (props: PgSalesTrendPanelProps) => {
 
 ```tsx
 // page/detail/component/sales-trend-panel/component/pg-detection-section.tsx
-import { WgLegendPanel } from "@/widget/legend-panel/wg-legend-panel";
+import { WgLegendPanel } from "@/component/widget/legend-panel/wg-legend-panel";
 ```

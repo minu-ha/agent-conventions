@@ -58,7 +58,7 @@ tags: ownership
 **Incorrect (단순 컴포넌트에 역할 폴더를 미리 다 만듦):**
 
 ```txt
-ui/button/
+component/ui/button/
 ├── ui-button.tsx
 ├── ui-button.css
 ├── component/
@@ -105,7 +105,7 @@ page/detail/
 **Correct (지원 코드가 없으면 폴더 없이 파일만 둠):**
 
 ```txt
-ui/button/
+component/ui/button/
 ├── ui-button.tsx
 └── ui-button.css
 ```

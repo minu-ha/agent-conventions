@@ -68,7 +68,7 @@ const handleRowSelectToggle =
 **Correct (래퍼가 노출한 계약을 참조):**
 
 ```ts
-import type { UiButtonProps } from "@/ui/ui-button";
+import type { UiButtonProps } from "@/component/ui/ui-button";
 
 /**
  * 저장 버튼 클릭 기본 동작 차단

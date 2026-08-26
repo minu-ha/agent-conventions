@@ -16,7 +16,7 @@ tags: ownership, scope, prefix
 **Impact: MEDIUM-HIGH (접두사를 소유 레이어로 정하면 이름만 보고 어느 레이어 것인지 압니다)**
 
 범위 접두사는 그 CSS 파일 소유자가 속한 **레이어**를 말합니다.
-레이어는 파일이 `src/page`, `src/widget`, `src/ui` 중 어디 아래 있는지로 이미 정해져 있으니
+레이어는 파일이 `src/page`, `src/component/widget`, `src/component/ui` 중 어디 아래 있는지로 이미 정해져 있으니
 접두사는 그 최상위 폴더를 따릅니다.
 폴더 깊이는 보지 않습니다.
 
@@ -29,7 +29,7 @@ tags: ownership, scope, prefix
 `pg_`는 화면 뼈대와 그 아래 컴포넌트를 함께 덮습니다.
 뼈대는 식별자가 라우트 이름과 같아서 접두사를 따로 나누지 않아도 컴포넌트와 구분됩니다.
 
-- 위젯 내부 부품이 `component` 폴더에 있어도 최상위 폴더가 `src/widget`이라 `wg_`입니다.
+- 위젯 내부 부품이 소유자의 `component` 역할 폴더에 있어도 최상위가 `src/component/widget`이라 `wg_`입니다.
 - 사용 횟수는 레이어를 가르지 않습니다.
   재사용을 예상해서 미리 `wg_`로 올리지도, 한 화면만 쓴다고 `pg_`로 내리지도 않습니다.
 - 소유자의 레이어가 바뀌면 접두사도 함께 옮깁니다.
@@ -39,7 +39,7 @@ tags: ownership, scope, prefix
 **Incorrect (최상위 폴더 대신 하위 폴더를 보고 `widget` 부품을 화면 범위로 내림):**
 
 ```txt
-widget/chart/component/wg-chart-header.css
+component/widget/chart/component/wg-chart-header.css
   pg_chartHeader__root
 ```
 
@@ -59,9 +59,9 @@ page/detail/pg-detail.css
 page/detail/component/pg-sales-trend-panel.css
   pg_salesTrendPanel__root
 
-widget/chart/component/wg-chart-header.css
+component/widget/chart/component/wg-chart-header.css
   wg_chartHeader__root
 
-ui/button/ui-button.css
+component/ui/button/ui-button.css
   ui_button__root
 ```

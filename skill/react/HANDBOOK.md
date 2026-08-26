@@ -146,7 +146,7 @@
 **Incorrect (공용 레이어에 화면 전용 로직이 섞임):**
 
 ```tsx
-// ui/button/ui-delete-product-button.tsx
+// component/ui/button/ui-delete-product-button.tsx
 const UiDeleteProductButton = () => {
 	const navigate = useNavigate();
 
@@ -167,7 +167,7 @@ export const PgSalesLegendGlyph = (props: PgSalesLegendGlyphProps) => {
 **Incorrect (도메인을 모르는 조합을 조립 규모만 보고 `widget`에 둠):**
 
 ```tsx
-// widget/line-chart/wg-line-chart.tsx
+// component/widget/line-chart/wg-line-chart.tsx
 // 프롭스가 좌표 배열만 받고 도메인 타입을 모른다. ui 부품을 조립했다는 이유로 widget에 있다.
 export const WgLineChart = (props: WgLineChartProps) => {
 	return <svg className={clsx("wg_lineChart__root")}>{/* ... */}</svg>;
@@ -177,7 +177,7 @@ export const WgLineChart = (props: WgLineChartProps) => {
 **Correct (화면 타입도 훅도 쓰지 않는 도메인 부품은 `widget`으로 올림):**
 
 ```tsx
-// widget/sales-legend-glyph/wg-sales-legend-glyph.tsx
+// component/widget/sales-legend-glyph/wg-sales-legend-glyph.tsx
 export const WgSalesLegendGlyph = (props: WgSalesLegendGlyphProps) => {
 	return <svg className={clsx("wg_salesLegendGlyph__root")}>{/* ... */}</svg>;
 };
@@ -186,14 +186,14 @@ export const WgSalesLegendGlyph = (props: WgSalesLegendGlyphProps) => {
 **Correct (도메인을 모르는 조합은 `ui`로 내리고 도메인을 아는 조합만 `widget`에 남김):**
 
 ```tsx
-// ui/line-chart/ui-line-chart.tsx
+// component/ui/line-chart/ui-line-chart.tsx
 export const UiLineChart = (props: UiLineChartProps) => {
 	return <svg className={clsx("ui_lineChart__root")}>{/* ... */}</svg>;
 };
 ```
 
 ```tsx
-// widget/sales-window-chart/wg-sales-window-chart.tsx
+// component/widget/sales-window-chart/wg-sales-window-chart.tsx
 export const WgSalesWindowChart = (props: WgSalesWindowChartProps) => {
 	return <UiLineChart points={toChartPoints(props.readings)} />;
 };
@@ -239,7 +239,7 @@ const PgDeleteProductButton = () => {
 - 폴더에는 붙이지 않습니다.
   상위 폴더 이름이 이미 레이어를 가리킵니다.
 - 접두사가 말하는 부분을 이름에서 되풀이하지 않습니다.
-  `ui/button/ui-button.tsx`이고 `ui-button-button.tsx`가 아닙니다.
+  `component/ui/button/ui-button.tsx`이고 `ui-button-button.tsx`가 아닙니다.
 - 어느 레이어인지는 `ownership-layer-component-boundaries`가 먼저 판정합니다.
   이 규칙은 그 결과를 이름에 적는 것만 봅니다.
 
@@ -255,7 +255,7 @@ export const SalesTrendPanel = (props: SalesTrendPanelProps) => {
 **Incorrect (폴더에도 접두사를 붙이고 이름에서 되풀이함):**
 
 ```tsx
-// ui/ui-button/ui-button-button.tsx
+// component/ui/ui-button/ui-button-button.tsx
 export const UiButtonButton = (props: UiButtonButtonProps) => {
 	return <button />;
 };
@@ -322,7 +322,7 @@ export const PgSalesTrendPanel = (props: PgSalesTrendPanelProps) => {
 **Incorrect (단순 컴포넌트에 역할 폴더를 미리 다 만듦):**
 
 ```txt
-ui/button/
+component/ui/button/
 ├── ui-button.tsx
 ├── ui-button.css
 ├── component/
@@ -369,7 +369,7 @@ page/detail/
 **Correct (지원 코드가 없으면 폴더 없이 파일만 둠):**
 
 ```txt
-ui/button/
+component/ui/button/
 ├── ui-button.tsx
 └── ui-button.css
 ```
@@ -423,7 +423,7 @@ import { PgSalesChartCard } from "@/page/detail/component/sales-trend-panel/comp
 
 ```tsx
 // page/detail/component/sales-trend-panel/pg-sales-trend-panel.tsx
-import { UiSectionHeading } from "@/ui/section-heading/ui-section-heading";
+import { UiSectionHeading } from "@/component/ui/section-heading/ui-section-heading";
 
 import { PgDetectionSection } from "./component/pg-detection-section";
 import { PgSummaryBand } from "./component/pg-summary-band";
@@ -442,7 +442,7 @@ export const PgSalesTrendPanel = (props: PgSalesTrendPanelProps) => {
 
 ```tsx
 // page/detail/component/sales-trend-panel/component/pg-detection-section.tsx
-import { WgLegendPanel } from "@/widget/legend-panel/wg-legend-panel";
+import { WgLegendPanel } from "@/component/widget/legend-panel/wg-legend-panel";
 ```
 
 ### 1.5 Do Not Create Screen-local Custom Hooks for Pure Logic
@@ -557,7 +557,7 @@ export const useChartInstance = (containerRef: RefObject<HTMLDivElement | null>)
 ```
 
 ```tsx
-// widget/chart/component/chart-root/wg-chart-root.tsx
+// component/widget/chart/component/chart-root/wg-chart-root.tsx
 export const WgChartRoot = (props: WgChartRootProps) => {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const chart = useChartInstance(containerRef);
@@ -576,7 +576,7 @@ export const WgChartRoot = (props: WgChartRootProps) => {
 **Correct (생명주기를 소유 컴포넌트가 직접 가짐):**
 
 ```tsx
-// widget/chart/component/chart-root/wg-chart-root.tsx
+// component/widget/chart/component/chart-root/wg-chart-root.tsx
 export const WgChartRoot = (props: WgChartRootProps) => {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const [chart, setChart] = useState<EChartsType | null>(null);
@@ -1100,7 +1100,7 @@ const handleRowSelectToggle =
 **Correct (래퍼가 노출한 계약을 참조):**
 
 ```ts
-import type { UiButtonProps } from "@/ui/ui-button";
+import type { UiButtonProps } from "@/component/ui/ui-button";
 
 /**
  * 저장 버튼 클릭 기본 동작 차단
@@ -3277,7 +3277,7 @@ export const PgProducts = () => {
 **Correct (화면 층 경계가 받고 셸은 살아남음):**
 
 ```tsx
-// widget/app-shell/wg-app-shell.tsx
+// component/widget/app-shell/wg-app-shell.tsx
 export const WgAppShell = (props: WgAppShellProps) => {
 	return (
 		<div className={clsx("wg_appShell__root")}>

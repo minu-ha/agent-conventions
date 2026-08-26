@@ -50,7 +50,7 @@ tags: ownership, widget, naming
 **Incorrect (공용 레이어에 화면 전용 로직이 섞임):**
 
 ```tsx
-// ui/button/ui-delete-product-button.tsx
+// component/ui/button/ui-delete-product-button.tsx
 const UiDeleteProductButton = () => {
 	const navigate = useNavigate();
 
@@ -71,7 +71,7 @@ export const PgSalesLegendGlyph = (props: PgSalesLegendGlyphProps) => {
 **Incorrect (도메인을 모르는 조합을 조립 규모만 보고 `widget`에 둠):**
 
 ```tsx
-// widget/line-chart/wg-line-chart.tsx
+// component/widget/line-chart/wg-line-chart.tsx
 // 프롭스가 좌표 배열만 받고 도메인 타입을 모른다. ui 부품을 조립했다는 이유로 widget에 있다.
 export const WgLineChart = (props: WgLineChartProps) => {
 	return <svg className={clsx("wg_lineChart__root")}>{/* ... */}</svg>;
@@ -81,7 +81,7 @@ export const WgLineChart = (props: WgLineChartProps) => {
 **Correct (화면 타입도 훅도 쓰지 않는 도메인 부품은 `widget`으로 올림):**
 
 ```tsx
-// widget/sales-legend-glyph/wg-sales-legend-glyph.tsx
+// component/widget/sales-legend-glyph/wg-sales-legend-glyph.tsx
 export const WgSalesLegendGlyph = (props: WgSalesLegendGlyphProps) => {
 	return <svg className={clsx("wg_salesLegendGlyph__root")}>{/* ... */}</svg>;
 };
@@ -90,14 +90,14 @@ export const WgSalesLegendGlyph = (props: WgSalesLegendGlyphProps) => {
 **Correct (도메인을 모르는 조합은 `ui`로 내리고 도메인을 아는 조합만 `widget`에 남김):**
 
 ```tsx
-// ui/line-chart/ui-line-chart.tsx
+// component/ui/line-chart/ui-line-chart.tsx
 export const UiLineChart = (props: UiLineChartProps) => {
 	return <svg className={clsx("ui_lineChart__root")}>{/* ... */}</svg>;
 };
 ```
 
 ```tsx
-// widget/sales-window-chart/wg-sales-window-chart.tsx
+// component/widget/sales-window-chart/wg-sales-window-chart.tsx
 export const WgSalesWindowChart = (props: WgSalesWindowChartProps) => {
 	return <UiLineChart points={toChartPoints(props.readings)} />;
 };

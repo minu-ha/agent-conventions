@@ -330,7 +330,7 @@ pg_dashboardIndex__header
 **Impact: MEDIUM-HIGH (접두사를 소유 레이어로 정하면 이름만 보고 어느 레이어 것인지 압니다)**
 
 범위 접두사는 그 CSS 파일 소유자가 속한 **레이어**를 말합니다.
-레이어는 파일이 `src/page`, `src/widget`, `src/ui` 중 어디 아래 있는지로 이미 정해져 있으니
+레이어는 파일이 `src/page`, `src/component/widget`, `src/component/ui` 중 어디 아래 있는지로 이미 정해져 있으니
 접두사는 그 최상위 폴더를 따릅니다.
 폴더 깊이는 보지 않습니다.
 
@@ -343,7 +343,7 @@ pg_dashboardIndex__header
 `pg_`는 화면 뼈대와 그 아래 컴포넌트를 함께 덮습니다.
 뼈대는 식별자가 라우트 이름과 같아서 접두사를 따로 나누지 않아도 컴포넌트와 구분됩니다.
 
-- 위젯 내부 부품이 `component` 폴더에 있어도 최상위 폴더가 `src/widget`이라 `wg_`입니다.
+- 위젯 내부 부품이 소유자의 `component` 역할 폴더에 있어도 최상위가 `src/component/widget`이라 `wg_`입니다.
 - 사용 횟수는 레이어를 가르지 않습니다.
   재사용을 예상해서 미리 `wg_`로 올리지도, 한 화면만 쓴다고 `pg_`로 내리지도 않습니다.
 - 소유자의 레이어가 바뀌면 접두사도 함께 옮깁니다.
@@ -353,7 +353,7 @@ pg_dashboardIndex__header
 **Incorrect (최상위 폴더 대신 하위 폴더를 보고 `widget` 부품을 화면 범위로 내림):**
 
 ```txt
-widget/chart/component/wg-chart-header.css
+component/widget/chart/component/wg-chart-header.css
   pg_chartHeader__root
 ```
 
@@ -373,10 +373,10 @@ page/detail/pg-detail.css
 page/detail/component/pg-sales-trend-panel.css
   pg_salesTrendPanel__root
 
-widget/chart/component/wg-chart-header.css
+component/widget/chart/component/wg-chart-header.css
   wg_chartHeader__root
 
-ui/button/ui-button.css
+component/ui/button/ui-button.css
   ui_button__root
 ```
 
@@ -558,7 +558,7 @@ ui/button/ui-button.css
 ```
 
 ```css
-/* widget/chart-card/wg-chart-card.css */
+/* component/widget/chart-card/wg-chart-card.css */
 .wg_chartCard__caption--muted {
 	color: #8c8c8c;
 }
@@ -568,8 +568,8 @@ ui/button/ui-button.css
 
 ```txt
 before
-  widget/chart-card/wg-chart-card.tsx      detail 화면의 뷰모델 타입을 받음
-  widget/chart-card/wg-chart-card.css      pg_detail 만 내부를 override 하고 있었음
+  component/widget/chart-card/wg-chart-card.tsx      detail 화면의 뷰모델 타입을 받음
+  component/widget/chart-card/wg-chart-card.css      pg_detail 만 내부를 override 하고 있었음
 
 after
   page/detail/component/pg-chart-card.tsx
@@ -2926,14 +2926,14 @@ export default {
 			},
 		},
 		{
-			files: ["src/widget/**/*.css"],
+			files: ["src/component/widget/**/*.css"],
 			rules: {
 				"selector-class-pattern": ownClassPattern("wg"),
 				"selector-disallowed-list": disallowed([/^\.(pg|ui)_/]),
 			},
 		},
 		{
-			files: ["src/ui/**/*.css"],
+			files: ["src/component/ui/**/*.css"],
 			rules: {
 				"selector-class-pattern": ownClassPattern("ui"),
 				"selector-disallowed-list": disallowed([/^\.(pg|wg)_/]),

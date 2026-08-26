@@ -41,7 +41,7 @@ import {pagination_default_page_size, toDisplayDate, UserProfile} from "./index"
 **Incorrect (`default`로 내보내 사용처마다 다른 이름이 생김):**
 
 ```tsx
-// ui/tabs/ui-tabs.tsx
+// component/ui/tabs/ui-tabs.tsx
 const UiTabs = (props: UiTabsProps) => {
 	return <div role="tablist">{props.children}</div>;
 };
@@ -51,7 +51,7 @@ export default UiTabs;
 
 ```tsx
 // 사용처가 이름을 지어서 같은 컴포넌트가 파일마다 다른 이름으로 불린다
-import Tabs from "@/ui/tabs/ui-tabs";
+import Tabs from "@/component/ui/tabs/ui-tabs";
 ```
 
 **Correct (직접 가져오기와 공개 진입점을 구분):**
@@ -60,7 +60,7 @@ import Tabs from "@/ui/tabs/ui-tabs";
 import type {UserProfile} from "@/type/user-profile";
 import {pagination_default_page_size} from "@/constant/pagination";
 import {toDisplayDate} from "@/util/date/to-display-date";
-import {WgChartCard} from "@/widget/chart-card/wg-chart-card";
+import {WgChartCard} from "@/component/widget/chart-card/wg-chart-card";
 import {toUserSaveRequest} from "./function/to-user-save-request";
 ```
 

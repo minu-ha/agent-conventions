@@ -1009,8 +1009,8 @@ const reactScenarioStages = {
 	"RTE01-import-contract-cleanup": {
 		initial: {
 			prompt:
-				"rename UserCard.tsx to user-card.tsx, remove index.ts barrel, replace React.MouseEvent and a duplicate API view type with existing contracts in src/ui/user-card/ui-user-card.tsx and src/ui/index.ts.",
-			files: ["src/ui/user-card/ui-user-card.tsx", "src/ui/index.ts"],
+				"rename UserCard.tsx to user-card.tsx, remove index.ts barrel, replace React.MouseEvent and a duplicate API view type with existing contracts in src/component/ui/user-card/ui-user-card.tsx and src/component/ui/index.ts.",
+			files: ["src/component/ui/user-card/ui-user-card.tsx", "src/component/ui/index.ts"],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
 				react: [
@@ -1036,7 +1036,7 @@ const reactScenarioStages = {
 		initial: {
 			prompt:
 				"move a route-only tree renderer from shared UI to src/page/products/component/pg-product-tree.tsx and rename it as owner-private; carry its existing className and style import through unchanged and make no styling change.",
-			files: ["src/ui/product-tree/ui-product-tree.tsx", "src/page/products/component/pg-product-tree.tsx"],
+			files: ["src/component/ui/product-tree/ui-product-tree.tsx", "src/page/products/component/pg-product-tree.tsx"],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
 				react: [
@@ -1060,7 +1060,7 @@ const reactScenarioStages = {
 			evidence:
 				"in a project without a CSS Modules standard, add directly imported src/page/products/component/pg-product-tree.css, create owner-unique pg_* role-named classes, and compose the changed className contract with the existing direct clsx import; final skills add CSS with no additional React rule.",
 			files: [
-				"src/ui/product-tree/ui-product-tree.tsx",
+				"src/component/ui/product-tree/ui-product-tree.tsx",
 				"src/page/products/component/pg-product-tree.tsx",
 				"src/page/products/component/pg-product-tree.css",
 			],
@@ -1152,7 +1152,7 @@ const reactScenarioStages = {
 		initial: {
 			prompt:
 				"replace compact/edit/search/focus booleans and static render props on wg-product-toolbar.tsx with stateless compound parts plus repeated explicit variants, give the icon-only buttons accessible names, and document public parts.",
-			files: ["src/widget/product-toolbar/wg-product-toolbar.tsx"],
+			files: ["src/component/widget/product-toolbar/wg-product-toolbar.tsx"],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
 				react: [
@@ -1180,7 +1180,7 @@ const reactScenarioStages = {
 		initial: {
 			prompt:
 				"hoist an existing nested forwardRef search input that resets focus to module scope, convert it to a React 19 ref prop, and narrow UiSearchCardProps so it extends HTMLAttributes and opens only the library props in use in ui-search-card.tsx.",
-			files: ["src/ui/search-card/ui-search-card.tsx"],
+			files: ["src/component/ui/search-card/ui-search-card.tsx"],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
 				react: [
@@ -1443,11 +1443,11 @@ const reactScenarioStages = {
 	"RTE17-chart-lifecycle-ownership": {
 		initial: {
 			prompt:
-				"the ECharts init, resize listener, and dispose currently sit in src/widget/chart/hook/use-chart-instance.ts only to shorten the component; fold that lifecycle back into the owning chart root and leave the domain option builder in function/.",
+				"the ECharts init, resize listener, and dispose currently sit in src/component/widget/chart/hook/use-chart-instance.ts only to shorten the component; fold that lifecycle back into the owning chart root and leave the domain option builder in function/.",
 			files: [
-				"src/widget/chart/component/wg-chart-root.tsx",
-				"src/widget/chart/hook/use-chart-instance.ts",
-				"src/widget/chart/function/to-chart-option.ts",
+				"src/component/widget/chart/component/wg-chart-root.tsx",
+				"src/component/widget/chart/hook/use-chart-instance.ts",
+				"src/component/widget/chart/function/to-chart-option.ts",
 			],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
@@ -1633,7 +1633,7 @@ const cssScenarioStages = {
 		initial: {
 			prompt:
 				"narrow UiButtonProps so it extends HTMLAttributes and opens only the library props we use, expose it documented, read props through the props object in ui-button.tsx, and pass an existing layout class from order-actions.tsx; add no internal selector or new class.",
-			files: ["src/ui/button/ui-button.tsx", "src/page/order-index/component/pg-order-actions.tsx"],
+			files: ["src/component/ui/button/ui-button.tsx", "src/page/order-index/component/pg-order-actions.tsx"],
 			expectedSkills: ["react", "typescript", "css"],
 			expectedSelected: {
 				react: [
@@ -1658,7 +1658,7 @@ const cssScenarioStages = {
 		initial: {
 			prompt:
 				"a wrapper div with an inline style margin was added around UiCollapse only for spacing; remove both by adding a className contract to the component.",
-			files: ["src/ui/collapse/ui-collapse.tsx", "src/page/post-index/component/pg-post-filter-dialog.tsx"],
+			files: ["src/component/ui/collapse/ui-collapse.tsx", "src/page/post-index/component/pg-post-filter-dialog.tsx"],
 			expectedSkills: ["css"],
 			expectedSelected: {
 				css: [
@@ -1674,7 +1674,7 @@ const cssScenarioStages = {
 		initial: {
 			prompt:
 				"move top-level .wg_productDetail__prose h2 and > :first-child into the existing owner block; the body comes from dangerouslySetInnerHTML so classes cannot be added.",
-			files: ["src/widget/product-detail/wg-product-detail.css"],
+			files: ["src/component/widget/product-detail/wg-product-detail.css"],
 			expectedSkills: ["css"],
 			expectedSelected: {css: ["selector-limit-nesting-block-depth", "selector-use-classes-instead-of-element-selectors"]},
 		},
@@ -1683,7 +1683,7 @@ const cssScenarioStages = {
 		initial: {
 			prompt:
 				"move top-level hover/focus/disabled into the same class block's &: nesting and preserve the focus ring; no app modifier or value is added.",
-			files: ["src/ui/button/ui-button.css"],
+			files: ["src/component/ui/button/ui-button.css"],
 			expectedSkills: ["css"],
 			expectedSelected: {
 				css: [
@@ -1699,7 +1699,7 @@ const cssScenarioStages = {
 		initial: {
 			prompt:
 				"scope a global .ant-tree selector under the existing .ui_themePreview owner root with one descendant level, and replace repeated color/spacing/radius with optional CSS variables and fallbacks; keep the file and owner name unchanged; also namespace the shared fade keyframes and add the global reduced-motion block.",
-			files: ["src/ui/theme-preview/ui-theme-preview.css"],
+			files: ["src/component/ui/theme-preview/ui-theme-preview.css"],
 			expectedSkills: ["css"],
 			expectedSelected: {
 				css: [
@@ -1735,7 +1735,7 @@ const cssScenarioStages = {
 		initial: {
 			prompt:
 				"the product grid counts its columns with four @media steps and ui-button.css sets its own width at three breakpoints; make the grid and the button size themselves without breakpoints.",
-			files: ["src/page/products/pg-products.css", "src/ui/button/ui-button.css"],
+			files: ["src/page/products/pg-products.css", "src/component/ui/button/ui-button.css"],
 			expectedSkills: ["css"],
 			expectedSelected: {css: ["layout-keep-layout-intent-explicit", "layout-reach-for-intrinsic-sizing-before-breakpoints"]},
 		},
@@ -1768,7 +1768,7 @@ const cssScenarioStages = {
 		initial: {
 			prompt:
 				"the detail page styles .wg_chartCard__caption from pg-detail.css; move the change so the page no longer declares widget classes.",
-			files: ["src/page/detail/pg-detail.css", "src/widget/chart-card/wg-chart-card.css"],
+			files: ["src/page/detail/pg-detail.css", "src/component/widget/chart-card/wg-chart-card.css"],
 			expectedSkills: ["css"],
 			expectedSelected: {
 				css: ["ownership-use-foreign-classes-only-under-your-own-root", "ownership-change-other-owners-through-their-api"],

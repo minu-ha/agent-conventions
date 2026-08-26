@@ -4,10 +4,10 @@
 	"scenarios": [
 		{
 			"id": "RTE01-import-contract-cleanup",
-			"prompt": "rename UserCard.tsx to user-card.tsx, remove index.ts barrel, replace React.MouseEvent and a duplicate API view type with existing contracts in src/ui/user-card/ui-user-card.tsx and src/ui/index.ts.",
+			"prompt": "rename UserCard.tsx to user-card.tsx, remove index.ts barrel, replace React.MouseEvent and a duplicate API view type with existing contracts in src/component/ui/user-card/ui-user-card.tsx and src/component/ui/index.ts.",
 			"files": [
-				"src/ui/user-card/ui-user-card.tsx",
-				"src/ui/index.ts"
+				"src/component/ui/user-card/ui-user-card.tsx",
+				"src/component/ui/index.ts"
 			],
 			"expectedSkills": [
 				"react",
@@ -36,7 +36,7 @@
 			"id": "RTE02-owner-placement-css-drift",
 			"prompt": "move a route-only tree renderer from shared UI to src/page/products/component/pg-product-tree.tsx and rename it as owner-private; carry its existing className and style import through unchanged and make no styling change.",
 			"files": [
-				"src/ui/product-tree/ui-product-tree.tsx",
+				"src/component/ui/product-tree/ui-product-tree.tsx",
 				"src/page/products/component/pg-product-tree.tsx"
 			],
 			"expectedSkills": [
@@ -63,7 +63,7 @@
 			"scopeDrift": {
 				"evidence": "in a project without a CSS Modules standard, add directly imported src/page/products/component/pg-product-tree.css, create owner-unique pg_* role-named classes, and compose the changed className contract with the existing direct clsx import; final skills add CSS with no additional React rule.",
 				"files": [
-					"src/ui/product-tree/ui-product-tree.tsx",
+					"src/component/ui/product-tree/ui-product-tree.tsx",
 					"src/page/products/component/pg-product-tree.tsx",
 					"src/page/products/component/pg-product-tree.css"
 				],
@@ -164,7 +164,7 @@
 			"id": "RTE05-toolbar-composition",
 			"prompt": "replace compact/edit/search/focus booleans and static render props on wg-product-toolbar.tsx with stateless compound parts plus repeated explicit variants, give the icon-only buttons accessible names, and document public parts.",
 			"files": [
-				"src/widget/product-toolbar/wg-product-toolbar.tsx"
+				"src/component/widget/product-toolbar/wg-product-toolbar.tsx"
 			],
 			"expectedSkills": [
 				"react",
@@ -195,7 +195,7 @@
 			"id": "RTE06-nested-forwardref",
 			"prompt": "hoist an existing nested forwardRef search input that resets focus to module scope, convert it to a React 19 ref prop, and narrow UiSearchCardProps so it extends HTMLAttributes and opens only the library props in use in ui-search-card.tsx.",
 			"files": [
-				"src/ui/search-card/ui-search-card.tsx"
+				"src/component/ui/search-card/ui-search-card.tsx"
 			],
 			"expectedSkills": [
 				"react",
@@ -490,11 +490,11 @@
 		},
 		{
 			"id": "RTE17-chart-lifecycle-ownership",
-			"prompt": "the ECharts init, resize listener, and dispose currently sit in src/widget/chart/hook/use-chart-instance.ts only to shorten the component; fold that lifecycle back into the owning chart root and leave the domain option builder in function/.",
+			"prompt": "the ECharts init, resize listener, and dispose currently sit in src/component/widget/chart/hook/use-chart-instance.ts only to shorten the component; fold that lifecycle back into the owning chart root and leave the domain option builder in function/.",
 			"files": [
-				"src/widget/chart/component/wg-chart-root.tsx",
-				"src/widget/chart/hook/use-chart-instance.ts",
-				"src/widget/chart/function/to-chart-option.ts"
+				"src/component/widget/chart/component/wg-chart-root.tsx",
+				"src/component/widget/chart/hook/use-chart-instance.ts",
+				"src/component/widget/chart/function/to-chart-option.ts"
 			],
 			"expectedSkills": [
 				"react",

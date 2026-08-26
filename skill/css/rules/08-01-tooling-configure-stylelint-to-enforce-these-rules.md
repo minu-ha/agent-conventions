@@ -140,14 +140,14 @@ export default {
 			},
 		},
 		{
-			files: ["src/widget/**/*.css"],
+			files: ["src/component/widget/**/*.css"],
 			rules: {
 				"selector-class-pattern": ownClassPattern("wg"),
 				"selector-disallowed-list": disallowed([/^\.(pg|ui)_/]),
 			},
 		},
 		{
-			files: ["src/ui/**/*.css"],
+			files: ["src/component/ui/**/*.css"],
 			rules: {
 				"selector-class-pattern": ownClassPattern("ui"),
 				"selector-disallowed-list": disallowed([/^\.(pg|wg)_/]),

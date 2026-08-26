@@ -192,7 +192,7 @@
 			"id": "css-ui-wrapper-root-prop-contract",
 			"prompt": "narrow UiButtonProps so it extends HTMLAttributes and opens only the library props we use, expose it documented, read props through the props object in ui-button.tsx, and pass an existing layout class from order-actions.tsx; add no internal selector or new class.",
 			"files": [
-				"src/ui/button/ui-button.tsx",
+				"src/component/ui/button/ui-button.tsx",
 				"src/page/order-index/component/pg-order-actions.tsx"
 			],
 			"expectedSkills": [
@@ -225,7 +225,7 @@
 			"id": "css-wrapper-element-for-spacing",
 			"prompt": "a wrapper div with an inline style margin was added around UiCollapse only for spacing; remove both by adding a className contract to the component.",
 			"files": [
-				"src/ui/collapse/ui-collapse.tsx",
+				"src/component/ui/collapse/ui-collapse.tsx",
 				"src/page/post-index/component/pg-post-filter-dialog.tsx"
 			],
 			"expectedSkills": [
@@ -244,7 +244,7 @@
 			"id": "css-rich-text-owner-block",
 			"prompt": "move top-level .wg_productDetail__prose h2 and > :first-child into the existing owner block; the body comes from dangerouslySetInnerHTML so classes cannot be added.",
 			"files": [
-				"src/widget/product-detail/wg-product-detail.css"
+				"src/component/widget/product-detail/wg-product-detail.css"
 			],
 			"expectedSkills": [
 				"css"
@@ -260,7 +260,7 @@
 			"id": "css-dom-interaction-states",
 			"prompt": "move top-level hover/focus/disabled into the same class block's &: nesting and preserve the focus ring; no app modifier or value is added.",
 			"files": [
-				"src/ui/button/ui-button.css"
+				"src/component/ui/button/ui-button.css"
 			],
 			"expectedSkills": [
 				"css"
@@ -278,7 +278,7 @@
 			"id": "css-repeated-values-and-optional-token",
 			"prompt": "scope a global .ant-tree selector under the existing .ui_themePreview owner root with one descendant level, and replace repeated color/spacing/radius with optional CSS variables and fallbacks; keep the file and owner name unchanged; also namespace the shared fade keyframes and add the global reduced-motion block.",
 			"files": [
-				"src/ui/theme-preview/ui-theme-preview.css"
+				"src/component/ui/theme-preview/ui-theme-preview.css"
 			],
 			"expectedSkills": [
 				"css"
@@ -331,7 +331,7 @@
 			"prompt": "the product grid counts its columns with four @media steps and ui-button.css sets its own width at three breakpoints; make the grid and the button size themselves without breakpoints.",
 			"files": [
 				"src/page/products/pg-products.css",
-				"src/ui/button/ui-button.css"
+				"src/component/ui/button/ui-button.css"
 			],
 			"expectedSkills": [
 				"css"
@@ -382,7 +382,7 @@
 			"prompt": "the detail page styles .wg_chartCard__caption from pg-detail.css; move the change so the page no longer declares widget classes.",
 			"files": [
 				"src/page/detail/pg-detail.css",
-				"src/widget/chart-card/wg-chart-card.css"
+				"src/component/widget/chart-card/wg-chart-card.css"
 			],
 			"expectedSkills": [
 				"css"
