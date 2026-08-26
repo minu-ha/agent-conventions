@@ -1035,8 +1035,8 @@ const reactScenarioStages = {
 	"RTE02-owner-placement-css-drift": {
 		initial: {
 			prompt:
-				"move a route-only tree renderer from shared UI to src/page/products/component/pg-product-tree.tsx and rename it as owner-private; carry its existing className and style import through unchanged and make no styling change.",
-			files: ["src/component/ui/product-tree/ui-product-tree.tsx", "src/page/products/component/pg-product-tree.tsx"],
+				"move a route-only tree renderer from shared UI to src/page/products/_pg-product-tree.tsx and rename it as owner-private; carry its existing className and style import through unchanged and make no styling change.",
+			files: ["src/component/ui/product-tree/ui-product-tree.tsx", "src/page/products/_pg-product-tree.tsx"],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
 				react: [
@@ -1058,11 +1058,11 @@ const reactScenarioStages = {
 		},
 		scopeDrift: {
 			evidence:
-				"in a project without a CSS Modules standard, add directly imported src/page/products/component/pg-product-tree.css, create owner-unique pg_* role-named classes, and compose the changed className contract with the existing direct clsx import; final skills add CSS with no additional React rule.",
+				"in a project without a CSS Modules standard, add directly imported src/page/products/_pg-product-tree.css, create owner-unique pg_* role-named classes, and compose the changed className contract with the existing direct clsx import; final skills add CSS with no additional React rule.",
 			files: [
 				"src/component/ui/product-tree/ui-product-tree.tsx",
-				"src/page/products/component/pg-product-tree.tsx",
-				"src/page/products/component/pg-product-tree.css",
+				"src/page/products/_pg-product-tree.tsx",
+				"src/page/products/_pg-product-tree.css",
 			],
 			expectedSkills: ["react", "typescript", "css"],
 			expectedSelected: {
@@ -1236,7 +1236,7 @@ const reactScenarioStages = {
 		initial: {
 			prompt:
 				'extract only the tree section that owns local search and expanded state plus a tree adapter into the owner component folder, implement a named selection handler from ProductTreeSectionProps["onCategorySelect"], mark the remaining page sections in JSX, and keep search params, navigation, page query, and mutation in the page product.',
-			files: ["src/page/products/pg-products.tsx", "src/page/products/component/pg-product-tree-section.tsx"],
+			files: ["src/page/products/pg-products.tsx", "src/page/products/_pg-product-tree-section.tsx"],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
 				react: [
@@ -1350,7 +1350,7 @@ const reactScenarioStages = {
 		initial: {
 			prompt:
 				"for a 50k-row search, directly import newly used React hooks, use lazy initialization, urgent input plus deferred result, a non-urgent category transition, and only evidence-backed memoization; update the constraint comment.",
-			files: ["src/page/products/component/pg-product-search.tsx"],
+			files: ["src/page/products/_pg-product-search.tsx"],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
 				react: [
@@ -1375,7 +1375,7 @@ const reactScenarioStages = {
 		initial: {
 			prompt:
 				"directly import useEffectEvent, replace only a socket subscription latest-callback ref-sync hack with a named handleMessage = useEffectEvent(...), and update subscription lifecycle JSDoc; do not change click or submit actions.",
-			files: ["src/page/products/component/pg-product-socket.tsx"],
+			files: ["src/page/products/_pg-product-socket.tsx"],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
 				react: [
@@ -1426,8 +1426,8 @@ const reactScenarioStages = {
 				"two sibling files under src/page/detail/sales-trend-panel/ import each other's legend row through ../; make the panel own the shared legend row and pass it down as an element prop, and remove the sibling and @/page component imports.",
 			files: [
 				"src/page/detail/sales-trend-panel/pg-sales-trend-panel.tsx",
-				"src/page/detail/sales-trend-panel/pg-detection-section.tsx",
-				"src/page/detail/sales-trend-panel/pg-summary-band.tsx",
+				"src/page/detail/sales-trend-panel/_pg-detection-section.tsx",
+				"src/page/detail/sales-trend-panel/_pg-summary-band.tsx",
 			],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
@@ -1445,7 +1445,7 @@ const reactScenarioStages = {
 			prompt:
 				"the ECharts init, resize listener, and dispose currently sit in src/component/widget/chart/_hook/use-chart-instance.ts only to shorten the component; fold that lifecycle back into the owning chart root and leave the domain option builder in function/.",
 			files: [
-				"src/component/widget/chart/component/wg-chart-root.tsx",
+				"src/component/widget/chart/chart-root/wg-chart-root.tsx",
 				"src/component/widget/chart/_hook/use-chart-instance.ts",
 				"src/component/widget/chart/_function/to-chart-option.ts",
 			],
@@ -1532,7 +1532,7 @@ const cssScenarioStages = {
 		initial: {
 			prompt:
 				"pg-post-index.css holds both the page shell and the filter dialog; move the dialog styles into the component own CSS file and give that file its own slug.",
-			files: ["src/page/post-index/pg-post-index.css", "src/page/post-index/component/pg-post-filter-dialog.css"],
+			files: ["src/page/post-index/pg-post-index.css", "src/page/post-index/_pg-post-filter-dialog.css"],
 			expectedSkills: ["css"],
 			expectedSelected: {css: ["ownership-give-each-file-one-scope-slug", "ownership-choose-scope-prefix-by-owner-layer"]},
 		},
@@ -1580,7 +1580,7 @@ const cssScenarioStages = {
 		initial: {
 			prompt:
 				"pick the metricValue modifier from the four-value tone in pg-sales-trend-panel.tsx where the stylesheet defines --positive and --negative only; keep the existing clsx import and stylesheet.",
-			files: ["src/page/detail/component/sales-trend-panel/pg-sales-trend-panel.tsx"],
+			files: ["src/page/detail/sales-trend-panel/pg-sales-trend-panel.tsx"],
 			expectedSkills: ["react", "typescript", "css"],
 			expectedSelected: {
 				react: [],
@@ -1597,7 +1597,7 @@ const cssScenarioStages = {
 		initial: {
 			prompt:
 				"add a direct clsx import and style UiCollapse Ant DOM from a new owned wrapper with the shortest chain in post-filter-dialog.tsx and post-filter-dialog.css; keep the existing hard-coded wrapper color.",
-			files: ["src/page/post-index/component/pg-post-filter-dialog.tsx", "src/page/post-index/component/pg-post-filter-dialog.css"],
+			files: ["src/page/post-index/_pg-post-filter-dialog.tsx", "src/page/post-index/_pg-post-filter-dialog.css"],
 			expectedSkills: ["react", "typescript", "css"],
 			expectedSelected: {
 				react: [],
@@ -1613,7 +1613,7 @@ const cssScenarioStages = {
 		},
 		scopeDrift: {
 			evidence: "replace the hard-coded wrapper color with an optional CSS variable and provide its fallback.",
-			files: ["src/page/post-index/component/pg-post-filter-dialog.tsx", "src/page/post-index/component/pg-post-filter-dialog.css"],
+			files: ["src/page/post-index/_pg-post-filter-dialog.tsx", "src/page/post-index/_pg-post-filter-dialog.css"],
 			expectedSkills: ["react", "typescript", "css"],
 			expectedSelected: {
 				react: [],
@@ -1633,7 +1633,7 @@ const cssScenarioStages = {
 		initial: {
 			prompt:
 				"narrow UiButtonProps so it extends HTMLAttributes and opens only the library props we use, expose it documented, read props through the props object in ui-button.tsx, and pass an existing layout class from order-actions.tsx; add no internal selector or new class.",
-			files: ["src/component/ui/button/ui-button.tsx", "src/page/order-index/component/pg-order-actions.tsx"],
+			files: ["src/component/ui/button/ui-button.tsx", "src/page/order-index/_pg-order-actions.tsx"],
 			expectedSkills: ["react", "typescript", "css"],
 			expectedSelected: {
 				react: [
@@ -1658,7 +1658,7 @@ const cssScenarioStages = {
 		initial: {
 			prompt:
 				"a wrapper div with an inline style margin was added around UiCollapse only for spacing; remove both by adding a className contract to the component.",
-			files: ["src/component/ui/collapse/ui-collapse.tsx", "src/page/post-index/component/pg-post-filter-dialog.tsx"],
+			files: ["src/component/ui/collapse/ui-collapse.tsx", "src/page/post-index/_pg-post-filter-dialog.tsx"],
 			expectedSkills: ["css"],
 			expectedSelected: {
 				css: [
@@ -1717,7 +1717,7 @@ const cssScenarioStages = {
 		initial: {
 			prompt:
 				"split the shared .pg_salesPanel__glyph--* comma group so each modifier block declares its own width and height; do not introduce local custom properties.",
-			files: ["src/page/detail/component/sales-trend-panel/pg-sales-trend-panel.css"],
+			files: ["src/page/detail/sales-trend-panel/pg-sales-trend-panel.css"],
 			expectedSkills: ["css"],
 			expectedSelected: {css: ["selector-do-not-group-classes-with-commas", "values-tokenize-repeated-visual-values"]},
 		},
@@ -1779,7 +1779,7 @@ const cssScenarioStages = {
 		initial: {
 			prompt:
 				"remove the :not(--checked) ancestor condition that drives the descendant checkbox preview; keep the hover and focus feedback.",
-			files: ["src/page/detail/component/sales-trend-panel/pg-sales-trend-panel.css"],
+			files: ["src/page/detail/sales-trend-panel/pg-sales-trend-panel.css"],
 			expectedSkills: ["css"],
 			expectedSelected: {
 				css: [

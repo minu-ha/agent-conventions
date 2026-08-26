@@ -56,7 +56,7 @@ export const toMediaUploadRequest = (files: UploadFile[]) => {
 **Correct (훅 없이 컴포넌트 핸들러가 그 함수를 직접 부름):**
 
 ```tsx
-// page/products/pg-media-upload-panel.tsx
+// page/products/_pg-media-upload-panel.tsx
 import { toMediaUploadRequest } from "../_function/to-media-upload-request";
 
 const PgMediaUploadPanel = (props: PgMediaUploadPanelProps) => {

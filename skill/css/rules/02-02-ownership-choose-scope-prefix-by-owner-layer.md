@@ -39,14 +39,14 @@ tags: ownership, scope, prefix
 **Incorrect (최상위 폴더 대신 하위 폴더를 보고 `widget` 부품을 화면 범위로 내림):**
 
 ```txt
-component/widget/chart/wg-chart-header.css
+component/widget/chart/_wg-chart-header.css
   pg_chartHeader__root
 ```
 
 **Incorrect (`src/page` 아래 파일에 재사용 예상으로 `wg_`를 붙임):**
 
 ```txt
-page/detail/pg-sales-trend-panel.css
+page/detail/_pg-sales-trend-panel.css
   wg_salesTrendPanel__root
 ```
 
@@ -56,10 +56,10 @@ page/detail/pg-sales-trend-panel.css
 page/detail/pg-detail.css
   pg_detail__root
 
-page/detail/pg-sales-trend-panel.css
+page/detail/_pg-sales-trend-panel.css
   pg_salesTrendPanel__root
 
-component/widget/chart/wg-chart-header.css
+component/widget/chart/_wg-chart-header.css
   wg_chartHeader__root
 
 component/ui/button/ui-button.css

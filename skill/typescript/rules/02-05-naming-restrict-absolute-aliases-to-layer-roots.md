@@ -45,12 +45,12 @@ tags: naming, imports
 **Incorrect (화면 내부 모듈을 절대경로로 가져옴):**
 
 ```ts
-import {SalesChartCard} from "@/page/detail/sales-trend-panel/sales-chart-card";
+import {SalesChartCard} from "@/page/detail/sales-trend-panel/_pg-sales-chart-card";
 ```
 
 **Correct (레이어 루트로 시작하는 별칭과 소유자 안 상대경로):**
 
 ```ts
 import {WgChartCard} from "@/component/widget/chart-card/wg-chart-card";
-import {SalesChartCard} from "./sales-chart-card";
+import {SalesChartCard} from "./_pg-sales-chart-card";
 ```

@@ -52,7 +52,7 @@
 			"prompt": "pg-post-index.css holds both the page shell and the filter dialog; move the dialog styles into the component own CSS file and give that file its own slug.",
 			"files": [
 				"src/page/post-index/pg-post-index.css",
-				"src/page/post-index/component/pg-post-filter-dialog.css"
+				"src/page/post-index/_pg-post-filter-dialog.css"
 			],
 			"expectedSkills": [
 				"css"
@@ -119,7 +119,7 @@
 			"id": "css-value-driven-modifier",
 			"prompt": "pick the metricValue modifier from the four-value tone in pg-sales-trend-panel.tsx where the stylesheet defines --positive and --negative only; keep the existing clsx import and stylesheet.",
 			"files": [
-				"src/page/detail/component/sales-trend-panel/pg-sales-trend-panel.tsx"
+				"src/page/detail/sales-trend-panel/pg-sales-trend-panel.tsx"
 			],
 			"expectedSkills": [
 				"react",
@@ -140,8 +140,8 @@
 			"id": "css-ui-wrapper-third-party-dom",
 			"prompt": "add a direct clsx import and style UiCollapse Ant DOM from a new owned wrapper with the shortest chain in post-filter-dialog.tsx and post-filter-dialog.css; keep the existing hard-coded wrapper color.",
 			"files": [
-				"src/page/post-index/component/pg-post-filter-dialog.tsx",
-				"src/page/post-index/component/pg-post-filter-dialog.css"
+				"src/page/post-index/_pg-post-filter-dialog.tsx",
+				"src/page/post-index/_pg-post-filter-dialog.css"
 			],
 			"expectedSkills": [
 				"react",
@@ -164,8 +164,8 @@
 			"scopeDrift": {
 				"evidence": "replace the hard-coded wrapper color with an optional CSS variable and provide its fallback.",
 				"files": [
-					"src/page/post-index/component/pg-post-filter-dialog.tsx",
-					"src/page/post-index/component/pg-post-filter-dialog.css"
+					"src/page/post-index/_pg-post-filter-dialog.tsx",
+					"src/page/post-index/_pg-post-filter-dialog.css"
 				],
 				"expectedSkills": [
 					"react",
@@ -193,7 +193,7 @@
 			"prompt": "narrow UiButtonProps so it extends HTMLAttributes and opens only the library props we use, expose it documented, read props through the props object in ui-button.tsx, and pass an existing layout class from order-actions.tsx; add no internal selector or new class.",
 			"files": [
 				"src/component/ui/button/ui-button.tsx",
-				"src/page/order-index/component/pg-order-actions.tsx"
+				"src/page/order-index/_pg-order-actions.tsx"
 			],
 			"expectedSkills": [
 				"react",
@@ -226,7 +226,7 @@
 			"prompt": "a wrapper div with an inline style margin was added around UiCollapse only for spacing; remove both by adding a className contract to the component.",
 			"files": [
 				"src/component/ui/collapse/ui-collapse.tsx",
-				"src/page/post-index/component/pg-post-filter-dialog.tsx"
+				"src/page/post-index/_pg-post-filter-dialog.tsx"
 			],
 			"expectedSkills": [
 				"css"
@@ -298,7 +298,7 @@
 			"id": "css-shared-declaration-group",
 			"prompt": "split the shared .pg_salesPanel__glyph--* comma group so each modifier block declares its own width and height; do not introduce local custom properties.",
 			"files": [
-				"src/page/detail/component/sales-trend-panel/pg-sales-trend-panel.css"
+				"src/page/detail/sales-trend-panel/pg-sales-trend-panel.css"
 			],
 			"expectedSkills": [
 				"css"
@@ -398,7 +398,7 @@
 			"id": "css-negated-domain-state",
 			"prompt": "remove the :not(--checked) ancestor condition that drives the descendant checkbox preview; keep the hover and focus feedback.",
 			"files": [
-				"src/page/detail/component/sales-trend-panel/pg-sales-trend-panel.css"
+				"src/page/detail/sales-trend-panel/pg-sales-trend-panel.css"
 			],
 			"expectedSkills": [
 				"css"

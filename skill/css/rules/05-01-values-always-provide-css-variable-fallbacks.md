@@ -71,7 +71,7 @@ tags: variables, fallbacks, tokens
 ```
 
 ```css
-/* src/page/post-index/pg-post-filter-dialog.css */
+/* src/page/post-index/_pg-post-filter-dialog.css */
 .pg_postFilterDialog__panel {
 	gap: var(--app-space-3);
 	color: var(--app-color-text-primary);

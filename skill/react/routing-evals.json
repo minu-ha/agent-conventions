@@ -34,10 +34,10 @@
 		},
 		{
 			"id": "RTE02-owner-placement-css-drift",
-			"prompt": "move a route-only tree renderer from shared UI to src/page/products/component/pg-product-tree.tsx and rename it as owner-private; carry its existing className and style import through unchanged and make no styling change.",
+			"prompt": "move a route-only tree renderer from shared UI to src/page/products/_pg-product-tree.tsx and rename it as owner-private; carry its existing className and style import through unchanged and make no styling change.",
 			"files": [
 				"src/component/ui/product-tree/ui-product-tree.tsx",
-				"src/page/products/component/pg-product-tree.tsx"
+				"src/page/products/_pg-product-tree.tsx"
 			],
 			"expectedSkills": [
 				"react",
@@ -61,11 +61,11 @@
 				]
 			},
 			"scopeDrift": {
-				"evidence": "in a project without a CSS Modules standard, add directly imported src/page/products/component/pg-product-tree.css, create owner-unique pg_* role-named classes, and compose the changed className contract with the existing direct clsx import; final skills add CSS with no additional React rule.",
+				"evidence": "in a project without a CSS Modules standard, add directly imported src/page/products/_pg-product-tree.css, create owner-unique pg_* role-named classes, and compose the changed className contract with the existing direct clsx import; final skills add CSS with no additional React rule.",
 				"files": [
 					"src/component/ui/product-tree/ui-product-tree.tsx",
-					"src/page/products/component/pg-product-tree.tsx",
-					"src/page/products/component/pg-product-tree.css"
+					"src/page/products/_pg-product-tree.tsx",
+					"src/page/products/_pg-product-tree.css"
 				],
 				"expectedSkills": [
 					"react",
@@ -258,7 +258,7 @@
 			"prompt": "extract only the tree section that owns local search and expanded state plus a tree adapter into the owner component folder, implement a named selection handler from ProductTreeSectionProps[\"onCategorySelect\"], mark the remaining page sections in JSX, and keep search params, navigation, page query, and mutation in the page product.",
 			"files": [
 				"src/page/products/pg-products.tsx",
-				"src/page/products/component/pg-product-tree-section.tsx"
+				"src/page/products/_pg-product-tree-section.tsx"
 			],
 			"expectedSkills": [
 				"react",
@@ -385,7 +385,7 @@
 			"id": "RTE13-heavy-search",
 			"prompt": "for a 50k-row search, directly import newly used React hooks, use lazy initialization, urgent input plus deferred result, a non-urgent category transition, and only evidence-backed memoization; update the constraint comment.",
 			"files": [
-				"src/page/products/component/pg-product-search.tsx"
+				"src/page/products/_pg-product-search.tsx"
 			],
 			"expectedSkills": [
 				"react",
@@ -413,7 +413,7 @@
 			"id": "RTE14-subscription-effectevent",
 			"prompt": "directly import useEffectEvent, replace only a socket subscription latest-callback ref-sync hack with a named handleMessage = useEffectEvent(...), and update subscription lifecycle JSDoc; do not change click or submit actions.",
 			"files": [
-				"src/page/products/component/pg-product-socket.tsx"
+				"src/page/products/_pg-product-socket.tsx"
 			],
 			"expectedSkills": [
 				"react",
@@ -469,8 +469,8 @@
 			"prompt": "two sibling files under src/page/detail/sales-trend-panel/ import each other's legend row through ../; make the panel own the shared legend row and pass it down as an element prop, and remove the sibling and @/page component imports.",
 			"files": [
 				"src/page/detail/sales-trend-panel/pg-sales-trend-panel.tsx",
-				"src/page/detail/sales-trend-panel/pg-detection-section.tsx",
-				"src/page/detail/sales-trend-panel/pg-summary-band.tsx"
+				"src/page/detail/sales-trend-panel/_pg-detection-section.tsx",
+				"src/page/detail/sales-trend-panel/_pg-summary-band.tsx"
 			],
 			"expectedSkills": [
 				"react",
@@ -492,7 +492,7 @@
 			"id": "RTE17-chart-lifecycle-ownership",
 			"prompt": "the ECharts init, resize listener, and dispose currently sit in src/component/widget/chart/_hook/use-chart-instance.ts only to shorten the component; fold that lifecycle back into the owning chart root and leave the domain option builder in function/.",
 			"files": [
-				"src/component/widget/chart/component/wg-chart-root.tsx",
+				"src/component/widget/chart/chart-root/wg-chart-root.tsx",
 				"src/component/widget/chart/_hook/use-chart-instance.ts",
 				"src/component/widget/chart/_function/to-chart-option.ts"
 			],

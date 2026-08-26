@@ -28,6 +28,8 @@ tags: ownership
   `../<파일>`과 `../../`는 쓰지 않습니다.
 - 진입 파일이 아닌 컴포넌트 파일은 소유자 안의 컴포넌트를 가져오지 않습니다.
   자기만 쓰는 파일이 생기면 그 컴포넌트는 폴더를 갖고 진입 파일이 됩니다.
+- 진입 파일이 아닌 컴포넌트 파일은 이름이 `_`로 시작합니다.
+  그래서 `../`나 절대경로 뒤에 `_` 파일이 오면 이 규칙 위반입니다.
 - `ui`와 `widget` 레이어의 컴포넌트는 어느 파일에서든 가져옵니다.
   절대경로 별칭의 허용 범위는 `typescript/naming-restrict-absolute-aliases-to-layer-roots`가 정합니다.
 
@@ -47,22 +49,22 @@ tags: ownership
 **Incorrect (진입 파일이 아닌 파일이 형제와 부모 폴더의 파일을 가져와 소유 관계가 사라짐):**
 
 ```tsx
-// page/detail/sales-trend-panel/pg-detection-section.tsx
-import { PgLegendRow } from "./pg-legend-row";
-import { PgSectionHeading } from "../pg-section-heading";
+// page/detail/sales-trend-panel/_pg-detection-section.tsx
+import { PgLegendRow } from "./_pg-legend-row";
+import { PgSectionHeading } from "../_pg-section-heading";
 ```
 
 **Incorrect (진입 파일이 아닌 파일이 형제 소유자의 진입 파일을 가져옴):**
 
 ```tsx
-// page/detail/sales-trend-panel/pg-detection-section.tsx
+// page/detail/sales-trend-panel/_pg-detection-section.tsx
 import { PgSummaryBand } from "../summary-band/pg-summary-band";
 ```
 
 **Incorrect (절대경로로 다른 화면 내부를 가져옴):**
 
 ```tsx
-import { PgSalesChartCard } from "@/page/detail/sales-trend-panel/pg-sales-chart-card";
+import { PgSalesChartCard } from "@/page/detail/sales-trend-panel/_pg-sales-chart-card";
 ```
 
 **Correct (진입 파일이 자기 파일과 형제 소유자의 진입 파일을 조립해서 내려보냄):**
@@ -72,7 +74,7 @@ import { PgSalesChartCard } from "@/page/detail/sales-trend-panel/pg-sales-chart
 import { UiSectionHeading } from "@/component/ui/section-heading/ui-section-heading";
 
 import { PgSummaryBand } from "../summary-band/pg-summary-band";
-import { PgDetectionSection } from "./pg-detection-section";
+import { PgDetectionSection } from "./_pg-detection-section";
 
 export const PgSalesTrendPanel = (props: PgSalesTrendPanelProps) => {
 	return (
@@ -87,6 +89,6 @@ export const PgSalesTrendPanel = (props: PgSalesTrendPanelProps) => {
 **Correct (맥락 독립 컴포넌트는 전역 레이어에서 가져옴):**
 
 ```tsx
-// page/detail/sales-trend-panel/pg-detection-section.tsx
+// page/detail/sales-trend-panel/_pg-detection-section.tsx
 import { WgLegendPanel } from "@/component/widget/legend-panel/wg-legend-panel";
 ```

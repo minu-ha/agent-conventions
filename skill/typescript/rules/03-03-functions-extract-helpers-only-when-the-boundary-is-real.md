@@ -117,7 +117,7 @@ export const toProfileSaveRequest = (formValues: ProfileFormValues) => {
 ```
 
 ```tsx
-// page/profile/pg-profile-form.tsx와 page/profile/pg-profile-drawer.tsx가 함께 부른다
+// page/profile/_pg-profile-form.tsx와 page/profile/_pg-profile-drawer.tsx가 함께 부른다
 import { toProfileSaveRequest } from "./_function/to-profile-save-request";
 ```
 

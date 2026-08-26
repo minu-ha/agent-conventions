@@ -146,7 +146,7 @@
 **Incorrect (공용 레이어에 화면 전용 로직이 섞임):**
 
 ```tsx
-// component/ui/button/ui-delete-product-button.tsx
+// component/ui/button/_ui-delete-product-button.tsx
 const UiDeleteProductButton = () => {
 	const navigate = useNavigate();
 
@@ -157,7 +157,7 @@ const UiDeleteProductButton = () => {
 **Incorrect (화면 타입도 안 쓰고 훅도 안 부르는 부품을 사용 횟수만 보고 화면에 남김):**
 
 ```tsx
-// page/detail/pg-sales-legend-glyph.tsx
+// page/detail/_pg-sales-legend-glyph.tsx
 // 프롭스가 도메인 타입 하나만 받고 훅도 부르지 않는다. 이 화면에서만 쓴다는 이유로 남아 있다.
 export const PgSalesLegendGlyph = (props: PgSalesLegendGlyphProps) => {
 	return <svg className={clsx("pg_salesLegendGlyph__root")}>{/* ... */}</svg>;
@@ -202,7 +202,7 @@ export const WgSalesWindowChart = (props: WgSalesWindowChartProps) => {
 **Correct (라우터 훅을 부르는 코드는 화면 레이어에 남김):**
 
 ```tsx
-// page/products/pg-delete-product-button.tsx
+// page/products/_pg-delete-product-button.tsx
 const PgDeleteProductButton = () => {
 	const navigate = useNavigate();
 
@@ -238,6 +238,9 @@ const PgDeleteProductButton = () => {
 
 - 폴더에는 붙이지 않습니다.
   상위 폴더 이름이 이미 레이어를 가리킵니다.
+- 진입 파일이 아닌 컴포넌트 파일은 접두사 앞에 `_`를 붙입니다.
+  `_pg-detail-unit-toggle.tsx`처럼 쓰고 동반 `.css`도 같은 이름이며, 심볼에는 붙이지 않습니다.
+  어느 파일이 진입 파일인지는 `ownership-place-owner-files-in-role-folders`가 정합니다.
 - 접두사가 말하는 부분을 이름에서 되풀이하지 않습니다.
   `component/ui/button/ui-button.tsx`이고 `ui-button-button.tsx`가 아닙니다.
 - 어느 레이어인지는 `ownership-layer-component-boundaries`가 먼저 판정합니다.
@@ -264,7 +267,7 @@ export const UiButtonButton = (props: UiButtonButtonProps) => {
 **Correct (파일과 심볼에만 붙이고 폴더에는 붙이지 않음):**
 
 ```tsx
-// page/detail/pg-sales-trend-panel.tsx
+// page/detail/_pg-sales-trend-panel.tsx
 export const PgSalesTrendPanel = (props: PgSalesTrendPanelProps) => {
 	return <section className={clsx("pg_salesTrendPanel__root")}>{/* ... */}</section>;
 };
@@ -285,10 +288,12 @@ export const PgSalesTrendPanel = (props: PgSalesTrendPanelProps) => {
 소유자는 자기 이름의 폴더를 갖고, 추출한 파일은 그 폴더 아래에 둡니다.
 소유자 이름이 폴더 이름이므로 위치만 보고 소유자를 알 수 있습니다.
 폴더와 같은 이름의 파일이 그 소유자의 진입 파일입니다.
+진입 파일이 아닌 컴포넌트 파일은 이름 앞에 `_`를 붙이고 동반 `.css`도 같은 이름입니다.
+소유자 폴더 안에서 `_`가 없는 이름은 진입 파일과 하위 소유자 폴더뿐입니다.
 
 소유자 폴더 안에서 파일을 역할별로 나누어 담는 폴더가 역할 폴더입니다.
 역할 폴더는 다음 넷뿐이고 새 역할 폴더를 만들지 않습니다.
-이름 앞의 `_`는 하위 소유자 폴더와 섞이지 않게 정렬을 앞으로 당기는 표식입니다.
+이름 앞의 `_`는 이 소유자 안에서만 쓰는 것이라는 표식이고, 정렬도 하위 소유자 폴더 앞으로 당깁니다.
 
 | 폴더 | 담는 것 |
 | --- | --- |
@@ -373,8 +378,8 @@ page/detail/
 page/detail/
 ├── pg-detail.tsx
 ├── pg-detail.css
-├── pg-summary-band.tsx            자기만 쓰는 파일이 없어 파일로 둠
-├── pg-summary-band.css
+├── _pg-summary-band.tsx           자기만 쓰는 파일이 없어 파일로 둠
+├── _pg-summary-band.css
 ├── _function/
 │   ├── to-product-summary.ts
 │   └── to-sales-chart/
@@ -385,7 +390,7 @@ page/detail/
 └── sales-trend-panel/             자기만 쓰는 파일이 있어 하위 소유자 폴더가 됨
     ├── pg-sales-trend-panel.tsx
     ├── pg-sales-trend-panel.css
-    ├── pg-detection-section.tsx
+    ├── _pg-detection-section.tsx
     └── _function/
         └── to-chart-viewport.ts
 ```
@@ -421,6 +426,8 @@ component/ui/button/
   `../<파일>`과 `../../`는 쓰지 않습니다.
 - 진입 파일이 아닌 컴포넌트 파일은 소유자 안의 컴포넌트를 가져오지 않습니다.
   자기만 쓰는 파일이 생기면 그 컴포넌트는 폴더를 갖고 진입 파일이 됩니다.
+- 진입 파일이 아닌 컴포넌트 파일은 이름이 `_`로 시작합니다.
+  그래서 `../`나 절대경로 뒤에 `_` 파일이 오면 이 규칙 위반입니다.
 - `ui`와 `widget` 레이어의 컴포넌트는 어느 파일에서든 가져옵니다.
   절대경로 별칭의 허용 범위는 `typescript/naming-restrict-absolute-aliases-to-layer-roots`가 정합니다.
 
@@ -440,22 +447,22 @@ component/ui/button/
 **Incorrect (진입 파일이 아닌 파일이 형제와 부모 폴더의 파일을 가져와 소유 관계가 사라짐):**
 
 ```tsx
-// page/detail/sales-trend-panel/pg-detection-section.tsx
-import { PgLegendRow } from "./pg-legend-row";
-import { PgSectionHeading } from "../pg-section-heading";
+// page/detail/sales-trend-panel/_pg-detection-section.tsx
+import { PgLegendRow } from "./_pg-legend-row";
+import { PgSectionHeading } from "../_pg-section-heading";
 ```
 
 **Incorrect (진입 파일이 아닌 파일이 형제 소유자의 진입 파일을 가져옴):**
 
 ```tsx
-// page/detail/sales-trend-panel/pg-detection-section.tsx
+// page/detail/sales-trend-panel/_pg-detection-section.tsx
 import { PgSummaryBand } from "../summary-band/pg-summary-band";
 ```
 
 **Incorrect (절대경로로 다른 화면 내부를 가져옴):**
 
 ```tsx
-import { PgSalesChartCard } from "@/page/detail/sales-trend-panel/pg-sales-chart-card";
+import { PgSalesChartCard } from "@/page/detail/sales-trend-panel/_pg-sales-chart-card";
 ```
 
 **Correct (진입 파일이 자기 파일과 형제 소유자의 진입 파일을 조립해서 내려보냄):**
@@ -465,7 +472,7 @@ import { PgSalesChartCard } from "@/page/detail/sales-trend-panel/pg-sales-chart
 import { UiSectionHeading } from "@/component/ui/section-heading/ui-section-heading";
 
 import { PgSummaryBand } from "../summary-band/pg-summary-band";
-import { PgDetectionSection } from "./pg-detection-section";
+import { PgDetectionSection } from "./_pg-detection-section";
 
 export const PgSalesTrendPanel = (props: PgSalesTrendPanelProps) => {
 	return (
@@ -480,7 +487,7 @@ export const PgSalesTrendPanel = (props: PgSalesTrendPanelProps) => {
 **Correct (맥락 독립 컴포넌트는 전역 레이어에서 가져옴):**
 
 ```tsx
-// page/detail/sales-trend-panel/pg-detection-section.tsx
+// page/detail/sales-trend-panel/_pg-detection-section.tsx
 import { WgLegendPanel } from "@/component/widget/legend-panel/wg-legend-panel";
 ```
 
@@ -532,7 +539,7 @@ export const toMediaUploadRequest = (files: UploadFile[]) => {
 **Correct (훅 없이 컴포넌트 핸들러가 그 함수를 직접 부름):**
 
 ```tsx
-// page/products/pg-media-upload-panel.tsx
+// page/products/_pg-media-upload-panel.tsx
 import { toMediaUploadRequest } from "../_function/to-media-upload-request";
 
 const PgMediaUploadPanel = (props: PgMediaUploadPanelProps) => {
@@ -4376,6 +4383,7 @@ JSX 자식 자리에는 `//`를 쓸 수 없습니다.
 | `correctness/useJsxKeyInIterable` | `react/composition-name-fragments-explicitly`의 `key` |
 | `a11y/*` 묶음 | `react/a11y-give-interactive-elements-an-accessible-name`의 일부 |
 | `style/noRestrictedImports`의 `../` 패턴 | `react/ownership-keep-component-imports-flowing-downward`의 `../` 범위 |
+| `style/noRestrictedImports`의 `_*` 패턴 | `react/ownership-keep-component-imports-flowing-downward`의 진입 파일 한정 |
 
 `noNestedComponentDefinitions`는 도메인의 `recommended`에 없어 따로 켭니다.
 `react/composition-do-not-define-components-inside-components`와 판정 대상이 같아 이 규칙을 통째로 기계에 넘깁니다.
@@ -4384,19 +4392,21 @@ JSX 자식 자리에는 `//`를 쓸 수 없습니다.
 `useButtonType`, `useAltText`, `useValidAnchor`, `useKeyWithClickEvents`, `useSemanticElements`가 그것입니다.
 접근 가능한 이름을 실제로 붙였는지는 기계가 못 보고 리뷰가 봅니다.
 
-`typescript/tooling-configure-biome-to-enforce-these-rules`가 세운 `noRestrictedImports`에 패턴 하나를 더합니다.
-`../<파일>`과 `../../**`를 막아 `../`가 형제 소유자 폴더 한 겹만 넘게 하고,
+`typescript/tooling-configure-biome-to-enforce-these-rules`가 세운 `noRestrictedImports`에 패턴 둘을 더합니다.
+하나는 `../<파일>`과 `../../**`를 막아 `../`가 형제 소유자 폴더 한 겹만 넘게 하고,
 `_function`, `_type`, `_constant`, `_hook` 폴더만 부정 패턴으로 되돌리는 항목입니다.
 되돌리는 넷은 `ownership-keep-component-imports-flowing-downward`가 예외로 두는 역할 폴더입니다.
+다른 하나는 `../**/_*`와 `@/**/_*`로, `_`로 시작하는 파일을 소유자 밖에서 가져오는 줄을 막습니다.
+`_`로 시작하는 컴포넌트 파일은 진입 파일이 아니므로 그 줄은 언제나 위반입니다.
 `@/page/**` 패턴과 같은 배열에 나란히 두면 절대경로와 상대경로 양쪽이 한 규칙으로 막힙니다.
 
 기계가 끝까지 못 가는 자리가 있습니다.
 아래 항목은 리뷰가 봅니다.
 
-- 형제 가져오기는 어떤 설정으로도 못 잡습니다.
-  `./pg-summary-band`는 소유자가 쓰는 정당한 경로와 문자열이 같습니다.
-  `../summary-band/pg-summary-band`가 진입 파일인지, 가져오는 쪽이 진입 파일인지도 기계는 모릅니다.
-  `ownership-keep-component-imports-flowing-downward`의 진입 파일 조건은 리뷰가 봅니다.
+- 같은 폴더 안의 형제 가져오기는 어떤 설정으로도 못 잡습니다.
+  `./_pg-summary-band`는 진입 파일이 쓰는 정당한 경로와 문자열이 같습니다.
+  가져오는 쪽이 진입 파일인지도 기계는 모릅니다.
+  `ownership-keep-component-imports-flowing-downward`의 가져오는 쪽 조건은 리뷰가 봅니다.
 - `useExhaustiveDependencies`는 의존성 배열이 빠졌는지만 봅니다.
   그 콜백을 `useEffectEvent`로 감싸야 하는지는 리뷰가 봅니다.
 - `useJsxKeyInIterable`은 `key`가 있는지만 봅니다.
@@ -4440,7 +4450,8 @@ JSX 자식 자리에는 `//`를 쓸 수 없습니다.
 							{
 								"group": ["../*", "../../**", "!../**/_function/**", "!../**/_type/**", "!../**/_constant/**", "!../**/_hook/**"],
 								"message": "`../`는 형제 소유자의 진입 파일에만 닿습니다."
-							}
+							},
+							{"group": ["../**/_*", "@/**/_*"], "message": "진입 파일이 아닌 컴포넌트는 소유자 밖에서 가져오지 않습니다."}
 						]
 					}
 				}

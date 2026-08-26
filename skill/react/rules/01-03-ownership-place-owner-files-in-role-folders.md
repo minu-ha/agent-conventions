@@ -21,10 +21,12 @@ tags: ownership
 소유자는 자기 이름의 폴더를 갖고, 추출한 파일은 그 폴더 아래에 둡니다.
 소유자 이름이 폴더 이름이므로 위치만 보고 소유자를 알 수 있습니다.
 폴더와 같은 이름의 파일이 그 소유자의 진입 파일입니다.
+진입 파일이 아닌 컴포넌트 파일은 이름 앞에 `_`를 붙이고 동반 `.css`도 같은 이름입니다.
+소유자 폴더 안에서 `_`가 없는 이름은 진입 파일과 하위 소유자 폴더뿐입니다.
 
 소유자 폴더 안에서 파일을 역할별로 나누어 담는 폴더가 역할 폴더입니다.
 역할 폴더는 다음 넷뿐이고 새 역할 폴더를 만들지 않습니다.
-이름 앞의 `_`는 하위 소유자 폴더와 섞이지 않게 정렬을 앞으로 당기는 표식입니다.
+이름 앞의 `_`는 이 소유자 안에서만 쓰는 것이라는 표식이고, 정렬도 하위 소유자 폴더 앞으로 당깁니다.
 
 | 폴더 | 담는 것 |
 | --- | --- |
@@ -109,8 +111,8 @@ page/detail/
 page/detail/
 ├── pg-detail.tsx
 ├── pg-detail.css
-├── pg-summary-band.tsx            자기만 쓰는 파일이 없어 파일로 둠
-├── pg-summary-band.css
+├── _pg-summary-band.tsx           자기만 쓰는 파일이 없어 파일로 둠
+├── _pg-summary-band.css
 ├── _function/
 │   ├── to-product-summary.ts
 │   └── to-sales-chart/
@@ -121,7 +123,7 @@ page/detail/
 └── sales-trend-panel/             자기만 쓰는 파일이 있어 하위 소유자 폴더가 됨
     ├── pg-sales-trend-panel.tsx
     ├── pg-sales-trend-panel.css
-    ├── pg-detection-section.tsx
+    ├── _pg-detection-section.tsx
     └── _function/
         └── to-chart-viewport.ts
 ```
