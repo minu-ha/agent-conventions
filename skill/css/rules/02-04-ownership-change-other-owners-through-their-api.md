@@ -85,6 +85,6 @@ before
   component/widget/chart-card/wg-chart-card.css      pg_detail 만 내부를 override 하고 있었음
 
 after
-  page/detail/component/pg-chart-card.tsx
-  page/detail/component/pg-chart-card.css  pg_chartCard__* 로 owner 하나
+  page/detail/pg-chart-card.tsx
+  page/detail/pg-chart-card.css  pg_chartCard__* 로 owner 하나
 ```

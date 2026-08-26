@@ -33,7 +33,7 @@ tags: ownership, naming
 **Incorrect (화면 컴포넌트에만 접두사를 빼먹음):**
 
 ```tsx
-// page/detail/component/sales-trend-panel.tsx
+// page/detail/sales-trend-panel.tsx
 export const SalesTrendPanel = (props: SalesTrendPanelProps) => {
 	return <section className={clsx("pg_salesTrendPanel__root")}>{/* ... */}</section>;
 };
@@ -51,7 +51,7 @@ export const UiButtonButton = (props: UiButtonButtonProps) => {
 **Correct (파일과 심볼에만 붙이고 폴더에는 붙이지 않음):**
 
 ```tsx
-// page/detail/component/pg-sales-trend-panel.tsx
+// page/detail/pg-sales-trend-panel.tsx
 export const PgSalesTrendPanel = (props: PgSalesTrendPanelProps) => {
 	return <section className={clsx("pg_salesTrendPanel__root")}>{/* ... */}</section>;
 };

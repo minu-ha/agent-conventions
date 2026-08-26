@@ -39,16 +39,18 @@ tags: naming, imports
   `@/component/widget/chart-card/wg-chart-card`는 허용입니다.
 - 화면이나 소유자 내부 모듈은 절대경로로 열지 않고 `./`로만 접근합니다.
 - 소유자 밖에서 필요해지면 경로를 뚫는 대신 전역 레이어로 올립니다.
+- 라우터 설정이 라우트 진입 파일을 등록하는 줄만 `@/page/<route>/<진입 파일>`을 씁니다.
+  그 줄에는 `docs-justify-convention-exceptions-with-a-reason-comment`가 정한 이유 주석을 둡니다.
 
 **Incorrect (화면 내부 모듈을 절대경로로 가져옴):**
 
 ```ts
-import {SalesChartCard} from "@/page/detail/component/sales-trend-panel/component/sales-chart-card";
+import {SalesChartCard} from "@/page/detail/sales-trend-panel/sales-chart-card";
 ```
 
 **Correct (레이어 루트로 시작하는 별칭과 소유자 안 상대경로):**
 
 ```ts
 import {WgChartCard} from "@/component/widget/chart-card/wg-chart-card";
-import {SalesChartCard} from "./component/sales-chart-card";
+import {SalesChartCard} from "./sales-chart-card";
 ```

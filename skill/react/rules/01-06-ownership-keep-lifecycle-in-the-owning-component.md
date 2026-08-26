@@ -54,7 +54,7 @@ export const useChartInstance = (containerRef: RefObject<HTMLDivElement | null>)
 ```
 
 ```tsx
-// component/widget/chart/component/chart-root/wg-chart-root.tsx
+// component/widget/chart/chart-root/wg-chart-root.tsx
 export const WgChartRoot = (props: WgChartRootProps) => {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const chart = useChartInstance(containerRef);
@@ -73,7 +73,7 @@ export const WgChartRoot = (props: WgChartRootProps) => {
 **Correct (생명주기를 소유 컴포넌트가 직접 가짐):**
 
 ```tsx
-// component/widget/chart/component/chart-root/wg-chart-root.tsx
+// component/widget/chart/chart-root/wg-chart-root.tsx
 export const WgChartRoot = (props: WgChartRootProps) => {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const [chart, setChart] = useState<EChartsType | null>(null);

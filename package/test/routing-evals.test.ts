@@ -561,12 +561,12 @@ const reactRuleRouting = {
 	},
 	"ownership-place-owner-files-in-role-folders": {
 		appliesWhen:
-			"소유자 아래 `component`·`constant`·`function`·`hook`·`type` 폴더를 만들거나 옮길 때. 추출한 컴포넌트·함수·타입의 배치 위치를 정할 때. 제외: 기존 파일 내부 구현만 바꾸는 경우.",
+			"소유자 아래 `constant`·`function`·`hook`·`type` 폴더나 하위 소유자 폴더를 만들거나 옮길 때. 추출한 컴포넌트·함수·타입의 배치 위치를 정할 때. 제외: 기존 파일 내부 구현만 바꾸는 경우.",
 		reviewWith: ["ownership-keep-component-imports-flowing-downward", "css/ownership-choose-scope-prefix-by-owner-layer"],
 	},
 	"ownership-keep-component-imports-flowing-downward": {
 		appliesWhen:
-			"`component` 폴더 안의 파일을 다른 파일에서 가져올 때. `../`나 `@/page` 경로로 컴포넌트를 가져오려 할 때. 여러 자식이 같은 컴포넌트를 써야 해서 배치를 다시 정할 때. 제외: `function`·`type`·`constant`·`hook` 파일을 가져오는 경우.",
+			"소유자 폴더 안의 컴포넌트 파일을 다른 파일에서 가져올 때. `../`나 `@/page` 경로로 컴포넌트를 가져오려 할 때. 여러 자식이 같은 컴포넌트를 써야 해서 배치를 다시 정할 때. 제외: `function`·`type`·`constant`·`hook` 파일을 가져오는 경우.",
 		reviewWith: ["ownership-layer-component-boundaries"],
 	},
 	"ownership-prefer-plain-ts-for-local-react-helpers": {
@@ -1423,11 +1423,11 @@ const reactScenarioStages = {
 	"RTE16-private-component-import-direction": {
 		initial: {
 			prompt:
-				"two sibling files under src/page/detail/component/sales-trend-panel/component/ import each other's legend row through ../; make the panel own the shared legend row and pass it down as an element prop, and remove the sibling and @/page component imports.",
+				"two sibling files under src/page/detail/sales-trend-panel/ import each other's legend row through ../; make the panel own the shared legend row and pass it down as an element prop, and remove the sibling and @/page component imports.",
 			files: [
-				"src/page/detail/component/sales-trend-panel/pg-sales-trend-panel.tsx",
-				"src/page/detail/component/sales-trend-panel/component/pg-detection-section.tsx",
-				"src/page/detail/component/sales-trend-panel/component/pg-summary-band.tsx",
+				"src/page/detail/sales-trend-panel/pg-sales-trend-panel.tsx",
+				"src/page/detail/sales-trend-panel/pg-detection-section.tsx",
+				"src/page/detail/sales-trend-panel/pg-summary-band.tsx",
 			],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {

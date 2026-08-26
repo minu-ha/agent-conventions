@@ -343,7 +343,7 @@ pg_dashboardIndex__header
 `pg_`는 화면 뼈대와 그 아래 컴포넌트를 함께 덮습니다.
 뼈대는 식별자가 라우트 이름과 같아서 접두사를 따로 나누지 않아도 컴포넌트와 구분됩니다.
 
-- 위젯 내부 부품이 소유자의 `component` 역할 폴더에 있어도 최상위가 `src/component/widget`이라 `wg_`입니다.
+- 위젯 내부 부품이 소유자 폴더 안에 있어도 최상위가 `src/component/widget`이라 `wg_`입니다.
 - 사용 횟수는 레이어를 가르지 않습니다.
   재사용을 예상해서 미리 `wg_`로 올리지도, 한 화면만 쓴다고 `pg_`로 내리지도 않습니다.
 - 소유자의 레이어가 바뀌면 접두사도 함께 옮깁니다.
@@ -353,14 +353,14 @@ pg_dashboardIndex__header
 **Incorrect (최상위 폴더 대신 하위 폴더를 보고 `widget` 부품을 화면 범위로 내림):**
 
 ```txt
-component/widget/chart/component/wg-chart-header.css
+component/widget/chart/wg-chart-header.css
   pg_chartHeader__root
 ```
 
 **Incorrect (`src/page` 아래 파일에 재사용 예상으로 `wg_`를 붙임):**
 
 ```txt
-page/detail/component/pg-sales-trend-panel.css
+page/detail/pg-sales-trend-panel.css
   wg_salesTrendPanel__root
 ```
 
@@ -370,10 +370,10 @@ page/detail/component/pg-sales-trend-panel.css
 page/detail/pg-detail.css
   pg_detail__root
 
-page/detail/component/pg-sales-trend-panel.css
+page/detail/pg-sales-trend-panel.css
   pg_salesTrendPanel__root
 
-component/widget/chart/component/wg-chart-header.css
+component/widget/chart/wg-chart-header.css
   wg_chartHeader__root
 
 component/ui/button/ui-button.css
@@ -572,8 +572,8 @@ before
   component/widget/chart-card/wg-chart-card.css      pg_detail 만 내부를 override 하고 있었음
 
 after
-  page/detail/component/pg-chart-card.tsx
-  page/detail/component/pg-chart-card.css  pg_chartCard__* 로 owner 하나
+  page/detail/pg-chart-card.tsx
+  page/detail/pg-chart-card.css  pg_chartCard__* 로 owner 하나
 ```
 
 ## 3. Class Composition in TSX
@@ -1932,7 +1932,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 ```
 
 ```css
-/* src/page/post-index/component/pg-post-filter-dialog.css */
+/* src/page/post-index/pg-post-filter-dialog.css */
 .pg_postFilterDialog__panel {
 	gap: var(--app-space-3);
 	color: var(--app-color-text-primary);

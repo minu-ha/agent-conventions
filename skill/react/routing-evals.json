@@ -466,11 +466,11 @@
 		},
 		{
 			"id": "RTE16-private-component-import-direction",
-			"prompt": "two sibling files under src/page/detail/component/sales-trend-panel/component/ import each other's legend row through ../; make the panel own the shared legend row and pass it down as an element prop, and remove the sibling and @/page component imports.",
+			"prompt": "two sibling files under src/page/detail/sales-trend-panel/ import each other's legend row through ../; make the panel own the shared legend row and pass it down as an element prop, and remove the sibling and @/page component imports.",
 			"files": [
-				"src/page/detail/component/sales-trend-panel/pg-sales-trend-panel.tsx",
-				"src/page/detail/component/sales-trend-panel/component/pg-detection-section.tsx",
-				"src/page/detail/component/sales-trend-panel/component/pg-summary-band.tsx"
+				"src/page/detail/sales-trend-panel/pg-sales-trend-panel.tsx",
+				"src/page/detail/sales-trend-panel/pg-detection-section.tsx",
+				"src/page/detail/sales-trend-panel/pg-summary-band.tsx"
 			],
 			"expectedSkills": [
 				"react",

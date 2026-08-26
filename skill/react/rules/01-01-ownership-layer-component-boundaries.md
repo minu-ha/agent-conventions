@@ -61,7 +61,7 @@ const UiDeleteProductButton = () => {
 **Incorrect (화면 타입도 안 쓰고 훅도 안 부르는 부품을 사용 횟수만 보고 화면에 남김):**
 
 ```tsx
-// page/detail/component/pg-sales-legend-glyph.tsx
+// page/detail/pg-sales-legend-glyph.tsx
 // 프롭스가 도메인 타입 하나만 받고 훅도 부르지 않는다. 이 화면에서만 쓴다는 이유로 남아 있다.
 export const PgSalesLegendGlyph = (props: PgSalesLegendGlyphProps) => {
 	return <svg className={clsx("pg_salesLegendGlyph__root")}>{/* ... */}</svg>;
@@ -106,7 +106,7 @@ export const WgSalesWindowChart = (props: WgSalesWindowChartProps) => {
 **Correct (라우터 훅을 부르는 코드는 화면 레이어에 남김):**
 
 ```tsx
-// page/products/component/pg-delete-product-button.tsx
+// page/products/pg-delete-product-button.tsx
 const PgDeleteProductButton = () => {
 	const navigate = useNavigate();
 

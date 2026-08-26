@@ -157,7 +157,7 @@ const UiDeleteProductButton = () => {
 **Incorrect (화면 타입도 안 쓰고 훅도 안 부르는 부품을 사용 횟수만 보고 화면에 남김):**
 
 ```tsx
-// page/detail/component/pg-sales-legend-glyph.tsx
+// page/detail/pg-sales-legend-glyph.tsx
 // 프롭스가 도메인 타입 하나만 받고 훅도 부르지 않는다. 이 화면에서만 쓴다는 이유로 남아 있다.
 export const PgSalesLegendGlyph = (props: PgSalesLegendGlyphProps) => {
 	return <svg className={clsx("pg_salesLegendGlyph__root")}>{/* ... */}</svg>;
@@ -202,7 +202,7 @@ export const WgSalesWindowChart = (props: WgSalesWindowChartProps) => {
 **Correct (라우터 훅을 부르는 코드는 화면 레이어에 남김):**
 
 ```tsx
-// page/products/component/pg-delete-product-button.tsx
+// page/products/pg-delete-product-button.tsx
 const PgDeleteProductButton = () => {
 	const navigate = useNavigate();
 
@@ -246,7 +246,7 @@ const PgDeleteProductButton = () => {
 **Incorrect (화면 컴포넌트에만 접두사를 빼먹음):**
 
 ```tsx
-// page/detail/component/sales-trend-panel.tsx
+// page/detail/sales-trend-panel.tsx
 export const SalesTrendPanel = (props: SalesTrendPanelProps) => {
 	return <section className={clsx("pg_salesTrendPanel__root")}>{/* ... */}</section>;
 };
@@ -264,7 +264,7 @@ export const UiButtonButton = (props: UiButtonButtonProps) => {
 **Correct (파일과 심볼에만 붙이고 폴더에는 붙이지 않음):**
 
 ```tsx
-// page/detail/component/pg-sales-trend-panel.tsx
+// page/detail/pg-sales-trend-panel.tsx
 export const PgSalesTrendPanel = (props: PgSalesTrendPanelProps) => {
 	return <section className={clsx("pg_salesTrendPanel__root")}>{/* ... */}</section>;
 };
@@ -274,26 +274,37 @@ export const PgSalesTrendPanel = (props: PgSalesTrendPanelProps) => {
 
 **Rule:** `R01-03` · `ownership-place-owner-files-in-role-folders`
 
-**Applies when:** 소유자 아래 `component`·`constant`·`function`·`hook`·`type` 폴더를 만들거나 옮길 때. 추출한 컴포넌트·함수·타입의 배치 위치를 정할 때. 제외: 기존 파일 내부 구현만 바꾸는 경우.
+**Applies when:** 소유자 아래 `constant`·`function`·`hook`·`type` 폴더나 하위 소유자 폴더를 만들거나 옮길 때. 추출한 컴포넌트·함수·타입의 배치 위치를 정할 때. 제외: 기존 파일 내부 구현만 바꾸는 경우.
 
 **Review with:** `css/ownership-choose-scope-prefix-by-owner-layer`, `ownership-keep-component-imports-flowing-downward`
 
 **Impact: MEDIUM-HIGH (빼낸 파일이 소유자를 따라가 예상한 자리에 놓입니다)**
 
-라우트와 복잡한 컴포넌트가 소유자이고, 추출한 파일은 그 소유자 아래 역할 폴더에 둡니다.
+라우트는 늘 소유자입니다.
+컴포넌트는 자기만 쓰는 파일을 가질 때 소유자입니다.
+소유자는 자기 이름의 폴더를 갖고, 추출한 파일은 그 폴더 아래에 둡니다.
 소유자 이름이 폴더 이름이므로 위치만 보고 소유자를 알 수 있습니다.
+폴더와 같은 이름의 파일이 그 소유자의 진입 파일입니다.
 
-역할 폴더는 다음 다섯 개뿐이고 새 역할 폴더를 만들지 않습니다.
+소유자 폴더 안에서 파일을 역할별로 나누어 담는 폴더가 역할 폴더입니다.
+역할 폴더는 다음 넷뿐이고 새 역할 폴더를 만들지 않습니다.
 
 | 폴더 | 담는 것 |
 | --- | --- |
-| `component` | 이 소유자만 쓰는 하위 컴포넌트 |
 | `constant` | 입력을 받지 않는 상수, 기본값, 기준값, 파서 묶음 같은 선언형 계약 |
 | `function` | 이름 붙여 내보낸 도메인 계산 |
 | `hook` | 실제 상태·이펙트·컨텍스트를 소유한 커스텀 훅 |
 | `type` | 여러 파일이 공유하는 계약 |
 
-소유자 아래에는 `util`, `helper`, `config`, `constants`, `common`, `shared` 같은 폴더를 만들지 않습니다.
+하위 컴포넌트는 역할 폴더에 넣지 않고 소유자 폴더에 파일로 둡니다.
+그 하위 컴포넌트가 자기만 쓰는 파일을 갖게 되면 그때 소유자가 되어 자기 이름의 폴더로 바뀝니다.
+가진 파일이 하위 컴포넌트 하나뿐이어도 같습니다.
+이렇게 소유자 안에 생긴 소유자가 하위 소유자입니다.
+하위 소유자는 한 겹까지입니다.
+하위 소유자 안에 다시 소유자를 두지 않습니다.
+그래서 소유자 폴더 안에서 역할 폴더 넷이 아닌 폴더는 전부 하위 소유자입니다.
+
+소유자 아래에는 `component`, `util`, `helper`, `config`, `constants`, `common`, `shared` 같은 폴더를 만들지 않습니다.
 루트의 `constant`·`type`·`hook`은 프로젝트가 소유자인 자리라 같은 역할 폴더 규칙을 따릅니다.
 루트에만 있는 `util`과 `config`는 `typescript/functions-place-and-promote-support-functions`와
 `typescript/naming-read-environment-values-through-config-env`가 정합니다.
@@ -305,13 +316,12 @@ export const PgSalesTrendPanel = (props: PgSalesTrendPanelProps) => {
   빈 폴더를 미리 만들어 두지 않습니다.
 - 파일이 하나뿐인 역할 폴더도 그대로 둡니다.
   형제 `.ts` 하나로 대신하지 않습니다.
-- 자기 역할 폴더가 필요한 컴포넌트만 자기 폴더를 갖고, 더 나뉘지 않는 것은 `component` 아래 파일로 둡니다.
 - 함수도 같습니다.
   전용 보조 파일을 거느린 함수만 `function` 아래 자기 이름 폴더를 갖습니다.
   언제 거느리는지는 `typescript/functions-extract-helpers-only-when-the-boundary-is-real`이 정합니다.
 - 프롭스는 해당 TSX에 두고 여러 파일이 공유하는 계약만 `type`으로 옮깁니다.
 - 파일명과 심볼의 레이어 접두사는 `ownership-prefix-layer-names-on-files-and-symbols`가 정합니다.
-- 소유자 중첩이 3단계에 닿으면 분리가 맞는지 `widget`으로 나갈 대상인지 다시 봅니다.
+- 하위 소유자 안에서 다시 소유자가 생기면 위로 올려 하위 소유자의 형제로 두거나 `widget`으로 나갈 대상인지 봅니다.
 - 호출 계층은 폴더 깊이가 아니라 진입 파일의 조립이 드러냅니다.
   어느 컴포넌트가 이것을 쓰는지 폴더 경로로 표현하려고 중첩을 늘리지 않습니다.
 
@@ -325,7 +335,6 @@ export const PgSalesTrendPanel = (props: PgSalesTrendPanelProps) => {
 component/ui/button/
 ├── ui-button.tsx
 ├── ui-button.css
-├── component/
 ├── constant/
 ├── function/
 ├── hook/
@@ -343,12 +352,27 @@ page/detail/
 └── helpers/
 ```
 
-**Correct (필요한 역할 폴더만 만들고 나머지는 파일로 둠):**
+**Incorrect (하위 소유자 안에 소유자를 다시 둠):**
+
+```txt
+page/detail/
+├── pg-detail.tsx
+└── sales-trend-panel/
+    ├── pg-sales-trend-panel.tsx
+    └── detection/
+        ├── pg-detection.tsx
+        └── function/
+            └── to-detection-rows.ts
+```
+
+**Correct (필요한 역할 폴더만 만들고 하위 컴포넌트는 파일로 둠):**
 
 ```txt
 page/detail/
 ├── pg-detail.tsx
 ├── pg-detail.css
+├── pg-summary-band.tsx            자기만 쓰는 파일이 없어 파일로 둠
+├── pg-summary-band.css
 ├── function/
 │   ├── to-product-summary.ts
 │   └── to-sales-chart/
@@ -356,14 +380,12 @@ page/detail/
 │       └── to-chart-window.ts
 ├── type/
 │   └── detail-view-model.ts
-└── component/
-    ├── pg-summary-band.tsx
-    ├── pg-summary-band.css
-    └── sales-trend-panel/
-        ├── pg-sales-trend-panel.tsx
-        ├── pg-sales-trend-panel.css
-        └── function/
-            └── to-chart-viewport.ts
+└── sales-trend-panel/             자기만 쓰는 파일이 있어 하위 소유자 폴더가 됨
+    ├── pg-sales-trend-panel.tsx
+    ├── pg-sales-trend-panel.css
+    ├── pg-detection-section.tsx
+    └── function/
+        └── to-chart-viewport.ts
 ```
 
 **Correct (지원 코드가 없으면 폴더 없이 파일만 둠):**
@@ -378,7 +400,7 @@ component/ui/button/
 
 **Rule:** `R01-04` · `ownership-keep-component-imports-flowing-downward`
 
-**Applies when:** `component` 폴더 안의 파일을 다른 파일에서 가져올 때. `../`나 `@/page` 경로로 컴포넌트를 가져오려 할 때. 여러 자식이 같은 컴포넌트를 써야 해서 배치를 다시 정할 때. 제외: `function`·`type`·`constant`·`hook` 파일을 가져오는 경우.
+**Applies when:** 소유자 폴더 안의 컴포넌트 파일을 다른 파일에서 가져올 때. `../`나 `@/page` 경로로 컴포넌트를 가져오려 할 때. 여러 자식이 같은 컴포넌트를 써야 해서 배치를 다시 정할 때. 제외: `function`·`type`·`constant`·`hook` 파일을 가져오는 경우.
 
 **Requires selected:** `typescript/naming-restrict-absolute-aliases-to-layer-roots` · 함께 적용
 
@@ -387,11 +409,18 @@ component/ui/button/
 **Impact: CRITICAL (비공개 컴포넌트를 형제나 위쪽에서 되짚어 소유 관계가 무너지지 않습니다)**
 
 컴포넌트 가져오기는 소유 관계를 따라 아래로만 흐릅니다.
+소유자, 진입 파일, 하위 소유자가 무엇인지는 `ownership-place-owner-files-in-role-folders`가 정합니다.
+같은 폴더에 나란히 있는 소유자끼리를 형제 소유자라고 부릅니다.
 
-- `component` 폴더 안의 파일은 그 폴더의 소유자만 가져옵니다.
-- 형제끼리는 가져오지 않습니다.
-- `../`로 컴포넌트를 가져오지 않습니다.
-- 절대경로 별칭의 허용 범위는 `typescript/naming-restrict-absolute-aliases-to-layer-roots`가 정합니다.
+- 소유자 안의 컴포넌트를 가져오는 것은 진입 파일뿐입니다.
+- 진입 파일은 자기 폴더의 컴포넌트 파일과 하위 소유자의 진입 파일을 `./`로 가져옵니다.
+- 진입 파일은 형제 소유자의 진입 파일을 `../<소유자>/<진입 파일>`로 가져옵니다.
+  `../`는 한 번만 쓰고 형제 소유자의 진입 파일에만 닿습니다.
+  `../<파일>`과 `../../`는 쓰지 않습니다.
+- 진입 파일이 아닌 컴포넌트 파일은 소유자 안의 컴포넌트를 가져오지 않습니다.
+  자기만 쓰는 파일이 생기면 그 컴포넌트는 폴더를 갖고 진입 파일이 됩니다.
+- `ui`와 `widget` 레이어의 컴포넌트는 어느 파일에서든 가져옵니다.
+  절대경로 별칭의 허용 범위는 `typescript/naming-restrict-absolute-aliases-to-layer-roots`가 정합니다.
 
 여러 자식이 같은 컴포넌트를 써야 하면 셋 중 하나로 해소합니다.
 
@@ -405,28 +434,35 @@ component/ui/button/
 여러 소유자가 함께 부르는 생명주기만 훅으로 올리라고 정하는데,
 올린 훅을 자식이 가져오지 못하면 그 규칙이 성립하지 않습니다.
 
-**Incorrect (형제 컴포넌트를 직접 가져와 소유 관계가 사라짐):**
+**Incorrect (진입 파일이 아닌 파일이 형제와 부모 폴더의 파일을 가져와 소유 관계가 사라짐):**
 
 ```tsx
-// page/detail/component/sales-trend-panel/component/pg-detection-section.tsx
+// page/detail/sales-trend-panel/pg-detection-section.tsx
 import { PgLegendRow } from "./pg-legend-row";
-import { SectionHeading } from "../../section-heading/section-heading";
+import { PgSectionHeading } from "../pg-section-heading";
+```
+
+**Incorrect (진입 파일이 아닌 파일이 형제 소유자의 진입 파일을 가져옴):**
+
+```tsx
+// page/detail/sales-trend-panel/pg-detection-section.tsx
+import { PgSummaryBand } from "../summary-band/pg-summary-band";
 ```
 
 **Incorrect (절대경로로 다른 화면 내부를 가져옴):**
 
 ```tsx
-import { PgSalesChartCard } from "@/page/detail/component/sales-trend-panel/component/pg-sales-chart-card";
+import { PgSalesChartCard } from "@/page/detail/sales-trend-panel/pg-sales-chart-card";
 ```
 
-**Correct (부모가 조립해서 내려보냄):**
+**Correct (진입 파일이 자기 파일과 형제 소유자의 진입 파일을 조립해서 내려보냄):**
 
 ```tsx
-// page/detail/component/sales-trend-panel/pg-sales-trend-panel.tsx
+// page/detail/sales-trend-panel/pg-sales-trend-panel.tsx
 import { UiSectionHeading } from "@/component/ui/section-heading/ui-section-heading";
 
-import { PgDetectionSection } from "./component/pg-detection-section";
-import { PgSummaryBand } from "./component/pg-summary-band";
+import { PgSummaryBand } from "../summary-band/pg-summary-band";
+import { PgDetectionSection } from "./pg-detection-section";
 
 export const PgSalesTrendPanel = (props: PgSalesTrendPanelProps) => {
 	return (
@@ -441,7 +477,7 @@ export const PgSalesTrendPanel = (props: PgSalesTrendPanelProps) => {
 **Correct (맥락 독립 컴포넌트는 전역 레이어에서 가져옴):**
 
 ```tsx
-// page/detail/component/sales-trend-panel/component/pg-detection-section.tsx
+// page/detail/sales-trend-panel/pg-detection-section.tsx
 import { WgLegendPanel } from "@/component/widget/legend-panel/wg-legend-panel";
 ```
 
@@ -493,7 +529,7 @@ export const toMediaUploadRequest = (files: UploadFile[]) => {
 **Correct (훅 없이 컴포넌트 핸들러가 그 함수를 직접 부름):**
 
 ```tsx
-// page/products/component/pg-media-upload-panel.tsx
+// page/products/pg-media-upload-panel.tsx
 import { toMediaUploadRequest } from "../function/to-media-upload-request";
 
 const PgMediaUploadPanel = (props: PgMediaUploadPanelProps) => {
@@ -557,7 +593,7 @@ export const useChartInstance = (containerRef: RefObject<HTMLDivElement | null>)
 ```
 
 ```tsx
-// component/widget/chart/component/chart-root/wg-chart-root.tsx
+// component/widget/chart/chart-root/wg-chart-root.tsx
 export const WgChartRoot = (props: WgChartRootProps) => {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const chart = useChartInstance(containerRef);
@@ -576,7 +612,7 @@ export const WgChartRoot = (props: WgChartRootProps) => {
 **Correct (생명주기를 소유 컴포넌트가 직접 가짐):**
 
 ```tsx
-// component/widget/chart/component/chart-root/wg-chart-root.tsx
+// component/widget/chart/chart-root/wg-chart-root.tsx
 export const WgChartRoot = (props: WgChartRootProps) => {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const [chart, setChart] = useState<EChartsType | null>(null);
@@ -4336,7 +4372,7 @@ JSX 자식 자리에는 `//`를 쓸 수 없습니다.
 | `correctness/useExhaustiveDependencies` | `react/state-use-effectevent-for-non-reactive-effect-callbacks`의 의존성 |
 | `correctness/useJsxKeyInIterable` | `react/composition-name-fragments-explicitly`의 `key` |
 | `a11y/*` 묶음 | `react/a11y-give-interactive-elements-an-accessible-name`의 일부 |
-| `style/noRestrictedImports`의 `../` 패턴 | `react/ownership-keep-component-imports-flowing-downward`의 `../` 금지 |
+| `style/noRestrictedImports`의 `../` 패턴 | `react/ownership-keep-component-imports-flowing-downward`의 `../` 범위 |
 
 `noNestedComponentDefinitions`는 도메인의 `recommended`에 없어 따로 켭니다.
 `react/composition-do-not-define-components-inside-components`와 판정 대상이 같아 이 규칙을 통째로 기계에 넘깁니다.
@@ -4346,7 +4382,8 @@ JSX 자식 자리에는 `//`를 쓸 수 없습니다.
 접근 가능한 이름을 실제로 붙였는지는 기계가 못 보고 리뷰가 봅니다.
 
 `typescript/tooling-configure-biome-to-enforce-these-rules`가 세운 `noRestrictedImports`에 패턴 하나를 더합니다.
-`../**`를 막고 `function`, `type`, `constant`, `hook` 폴더만 부정 패턴으로 되돌리는 항목입니다.
+`../<파일>`과 `../../**`를 막아 `../`가 형제 소유자 폴더 한 겹만 넘게 하고,
+`function`, `type`, `constant`, `hook` 폴더만 부정 패턴으로 되돌리는 항목입니다.
 되돌리는 넷은 `ownership-keep-component-imports-flowing-downward`가 예외로 두는 역할 폴더입니다.
 `@/page/**` 패턴과 같은 배열에 나란히 두면 절대경로와 상대경로 양쪽이 한 규칙으로 막힙니다.
 
@@ -4355,7 +4392,8 @@ JSX 자식 자리에는 `//`를 쓸 수 없습니다.
 
 - 형제 가져오기는 어떤 설정으로도 못 잡습니다.
   `./pg-summary-band`는 소유자가 쓰는 정당한 경로와 문자열이 같습니다.
-  `ownership-keep-component-imports-flowing-downward`의 형제 금지는 리뷰가 봅니다.
+  `../summary-band/pg-summary-band`가 진입 파일인지, 가져오는 쪽이 진입 파일인지도 기계는 모릅니다.
+  `ownership-keep-component-imports-flowing-downward`의 진입 파일 조건은 리뷰가 봅니다.
 - `useExhaustiveDependencies`는 의존성 배열이 빠졌는지만 봅니다.
   그 콜백을 `useEffectEvent`로 감싸야 하는지는 리뷰가 봅니다.
 - `useJsxKeyInIterable`은 `key`가 있는지만 봅니다.
@@ -4397,8 +4435,8 @@ JSX 자식 자리에는 `//`를 쓸 수 없습니다.
 						"patterns": [
 							{"group": ["@/page/**"], "message": "화면 내부는 절대경로로 가져오지 않습니다."},
 							{
-								"group": ["../**", "!../**/function/**", "!../**/type/**", "!../**/constant/**", "!../**/hook/**"],
-								"message": "컴포넌트는 `../`로 가져오지 않습니다."
+								"group": ["../*", "../../**", "!../**/function/**", "!../**/type/**", "!../**/constant/**", "!../**/hook/**"],
+								"message": "`../`는 형제 소유자의 진입 파일에만 닿습니다."
 							}
 						]
 					}

@@ -23,7 +23,7 @@ tags: tooling
 | `correctness/useExhaustiveDependencies` | `react/state-use-effectevent-for-non-reactive-effect-callbacks`의 의존성 |
 | `correctness/useJsxKeyInIterable` | `react/composition-name-fragments-explicitly`의 `key` |
 | `a11y/*` 묶음 | `react/a11y-give-interactive-elements-an-accessible-name`의 일부 |
-| `style/noRestrictedImports`의 `../` 패턴 | `react/ownership-keep-component-imports-flowing-downward`의 `../` 금지 |
+| `style/noRestrictedImports`의 `../` 패턴 | `react/ownership-keep-component-imports-flowing-downward`의 `../` 범위 |
 
 `noNestedComponentDefinitions`는 도메인의 `recommended`에 없어 따로 켭니다.
 `react/composition-do-not-define-components-inside-components`와 판정 대상이 같아 이 규칙을 통째로 기계에 넘깁니다.
@@ -33,7 +33,8 @@ tags: tooling
 접근 가능한 이름을 실제로 붙였는지는 기계가 못 보고 리뷰가 봅니다.
 
 `typescript/tooling-configure-biome-to-enforce-these-rules`가 세운 `noRestrictedImports`에 패턴 하나를 더합니다.
-`../**`를 막고 `function`, `type`, `constant`, `hook` 폴더만 부정 패턴으로 되돌리는 항목입니다.
+`../<파일>`과 `../../**`를 막아 `../`가 형제 소유자 폴더 한 겹만 넘게 하고,
+`function`, `type`, `constant`, `hook` 폴더만 부정 패턴으로 되돌리는 항목입니다.
 되돌리는 넷은 `ownership-keep-component-imports-flowing-downward`가 예외로 두는 역할 폴더입니다.
 `@/page/**` 패턴과 같은 배열에 나란히 두면 절대경로와 상대경로 양쪽이 한 규칙으로 막힙니다.
 
@@ -42,7 +43,8 @@ tags: tooling
 
 - 형제 가져오기는 어떤 설정으로도 못 잡습니다.
   `./pg-summary-band`는 소유자가 쓰는 정당한 경로와 문자열이 같습니다.
-  `ownership-keep-component-imports-flowing-downward`의 형제 금지는 리뷰가 봅니다.
+  `../summary-band/pg-summary-band`가 진입 파일인지, 가져오는 쪽이 진입 파일인지도 기계는 모릅니다.
+  `ownership-keep-component-imports-flowing-downward`의 진입 파일 조건은 리뷰가 봅니다.
 - `useExhaustiveDependencies`는 의존성 배열이 빠졌는지만 봅니다.
   그 콜백을 `useEffectEvent`로 감싸야 하는지는 리뷰가 봅니다.
 - `useJsxKeyInIterable`은 `key`가 있는지만 봅니다.
@@ -84,8 +86,8 @@ tags: tooling
 						"patterns": [
 							{"group": ["@/page/**"], "message": "화면 내부는 절대경로로 가져오지 않습니다."},
 							{
-								"group": ["../**", "!../**/function/**", "!../**/type/**", "!../**/constant/**", "!../**/hook/**"],
-								"message": "컴포넌트는 `../`로 가져오지 않습니다."
+								"group": ["../*", "../../**", "!../**/function/**", "!../**/type/**", "!../**/constant/**", "!../**/hook/**"],
+								"message": "`../`는 형제 소유자의 진입 파일에만 닿습니다."
 							}
 						]
 					}
