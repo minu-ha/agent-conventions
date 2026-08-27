@@ -24,21 +24,24 @@ tags: values, motion
 | `animation` 지속 시간, 이징 | 토큰 — `var(--app-motion-duration-fast)` |
 
 지속 시간과 이징은 값을 직접 적지 않고 토큰만 씁니다.
-한 파일에서 한 번만 써도 토큰입니다. `values-tokenize-repeated-visual-values` 규칙이 그 예외를 정합니다.
+한 파일에서 한 번만 써도 토큰입니다.
+`values-tokenize-repeated-visual-values` 규칙이 그 예외를 정합니다.
 
 소유자 접두사는 클래스와 똑같이 적습니다.
 `naming-use-scope-slug-element-modifier-syntax` 규칙의 `<범위>_<식별자>`를 그대로 쓰고 뒤에 동작을 붙입니다.
-`stylelint-config-standard`의 기본 패턴은 kebab-case만 받으므로
-`tooling-configure-stylelint-to-enforce-these-rules` 규칙이 `keyframes-name-pattern`을 다시 정합니다.
+`stylelint-config-standard`의 기본 패턴은 kebab-case만 받습니다.
+그래서 `tooling-configure-stylelint-to-enforce-these-rules` 규칙이 `keyframes-name-pattern`을 다시 정합니다.
 
 **움직임을 줄여 달라고 한 사용자에게는 움직이지 않습니다.**
 파일마다 따로 처리하지 않고 전역 스타일시트에 한 번 선언합니다.
 어지럼증이나 전정 장애가 있는 사용자에게 움직임은 접근성 문제입니다.
 
 - 전역 블록에서 `animation`과 `transition`을 함께 멈춥니다.
-  위치가 바뀌는 것만 골라 끄지 않습니다. 전역 차단이 접근성 기본값입니다.
+  위치가 바뀌는 것만 골라 끄지 않습니다.
+  전역 차단이 접근성 기본값입니다.
   색이나 투명도 전환을 살려야 하면 그 클래스를 전역 블록에 예외로 적습니다.
-  컴포넌트 파일에서는 되살릴 수 없습니다. `!important`를 쓸 수 있는 자리가 전역 스타일시트뿐입니다.
+  컴포넌트 파일에서는 되살릴 수 없습니다.
+  `!important`를 쓸 수 있는 자리가 전역 스타일시트뿐입니다.
 - 지속 시간을 `0`으로 만들지 않고 `0.01ms`로 둡니다.
   `0`이면 `transitionend`가 오지 않아 그 이벤트를 기다리는 코드가 멈춥니다.
 - 애니메이션으로 바꾸는 속성은 `transform`과 `opacity`로 둡니다.

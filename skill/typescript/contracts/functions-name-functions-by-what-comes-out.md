@@ -19,8 +19,7 @@
 | `load<대상>`·`fetch<대상>` | 비동기 I/O를 수행하거나 여러 요청을 조율할 때 | `loadPatternSearchExport` |
 | `is`·`has`·`can`·`should` | 참이나 거짓으로 질문에 답할 때 | `shouldShowSummary` |
 
-`resolve`는 여러 후보 중 답을 정할 때, `normalize`는 같은 개념의 표현을
-허용 범위에 맞출 때만 씁니다. 단지 계산 과정이 복잡하다는 이유로 붙이지 않습니다.
+`resolve`와 `normalize`는 계산 과정이 복잡하다는 이유만으로 붙이지 않습니다.
 
 **이름에는 출력 역할만 남깁니다.**
 

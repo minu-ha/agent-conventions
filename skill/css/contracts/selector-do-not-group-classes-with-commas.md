@@ -18,9 +18,9 @@
 
 `@media`나 `@supports` 안에서 같은 클래스를 다시 선언하는 것은 이 규칙의 대상이 아닙니다.
 
-`no-duplicate-selectors`의 `disallowInList` 옵션이 목록에 든 선택자를 아래에서 단독으로 다시 여는 형태를 잡습니다.
-아래 첫 Incorrect 예시가 그 경우입니다.
-다만 쉼표 묶음 자체는 막지 않습니다.
-중복 없이 묶기만 한 형태는 리뷰가 봅니다.
+| 형태 | 잡는 곳 |
+| --- | --- |
+| 목록에 든 선택자를 아래에서 단독으로 다시 엶 | `no-duplicate-selectors`의 `disallowInList` 옵션. 아래 첫 Incorrect 예시가 그 경우입니다 |
+| 중복 없이 묶기만 함 | 리뷰. 쉼표 묶음 자체는 막지 않습니다 |
 
 > 예시·예외가 필요하면 [full rule](../rules/04-03-selector-do-not-group-classes-with-commas.md)을 읽습니다.

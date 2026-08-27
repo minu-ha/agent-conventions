@@ -16,12 +16,15 @@
 | `--app-z-index-popper` | `300` | 툴팁, 드롭다운, 알림 |
 
 새 층이 필요해 보이면 먼저 넷 중 하나에 들어가는지 봅니다.
-넷 다 아니면 토큰 파일에 층을 추가합니다. 값 간격은 100을 유지합니다.
+넷 다 아니면 토큰 파일에 층을 추가하고 값 간격은 100을 유지합니다.
 
 **층 순서는 같은 쌓임 맥락 안에서만 성립합니다.**
-조상에 `transform`, `filter`, `will-change`, `backdrop-filter`가 있거나 `opacity`가 1 미만이거나
-`contain`이 `layout`, `paint`, `content`, `strict` 중 하나면 새 쌓임 맥락이 생기고,
-그 안의 `popper`가 바깥의 `sticky`에 집니다.
+조상이 아래 중 하나면 새 쌓임 맥락이 생기고, 그 안의 `popper`가 바깥의 `sticky`에 집니다.
+
+- `transform`, `filter`, `will-change`, `backdrop-filter`가 있음
+- `opacity`가 1 미만
+- `contain`이 `layout`, `paint`, `content`, `strict` 중 하나
+
 겹쳐 뜨는 요소가 가려지면 `z-index` 값을 올리기 전에 조상부터 확인합니다.
 
 - `position`이 `static`이면 `z-index`가 적용되지 않고 `relative`부터 적용됩니다.

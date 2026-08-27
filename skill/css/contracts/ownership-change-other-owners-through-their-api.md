@@ -10,19 +10,17 @@
 | 내부 모습이 사용처 하나에서만 다름 | 그 소유자가 `variant` 프롭으로 수정자를 노출 | 소유자 TSX와 소유자 CSS, 사용처 TSX |
 | 레이어 판정이 화면 소유로 나옴 | 화면 폴더 안으로 내림 | 파일 위치와 접두사 |
 
-세 행에 안 맞으면 `ownership-use-foreign-classes-only-under-your-own-root` 규칙에 따라
-내 최상위 블록 안에서 겨냥합니다.
+세 행에 안 맞으면 내 최상위 블록 안에서 겨냥합니다.
+그 방법은 `ownership-use-foreign-classes-only-under-your-own-root` 규칙이 정합니다.
 **막다른 길이 아니라 마지막 선택지입니다.**
 
 셋째 행을 흔히 놓칩니다.
 내리는 기준은 사용 횟수가 아니라 레이어 판정입니다.
 컴포넌트가 어느 레이어 것인지는 활성화된 프레임워크 규약이 판단합니다.
-내릴 때 프롭을 열지 않습니다.
-파일만 옮깁니다.
+내릴 때 프롭을 열지 않고 파일만 옮깁니다.
 
 `className`이 최상위까지만 닿는 것은 제약이 아니라 경계입니다.
-컴포넌트가 무엇을 노출하는지, 내부 노드로 가는 클래스 프롭을 왜 열지 않는지는
-`composition-inject-classes-only-at-the-entry-point` 규칙이 정합니다.
+컴포넌트가 무엇을 노출하는지는 `composition-inject-classes-only-at-the-entry-point` 규칙이 정합니다.
 여기서는 사용처가 세 가지 가운데 무엇을 고를지만 봅니다.
 
 > 예시·예외가 필요하면 [full rule](../rules/02-04-ownership-change-other-owners-through-their-api.md)을 읽습니다.

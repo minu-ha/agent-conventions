@@ -15,10 +15,12 @@ tags: data, state, naming
 
 **Impact: MEDIUM (생성된 API 훅과 지역 바인딩을 훑고 되짚기 쉬워집니다)**
 
-Kubb가 생성한 단일 API 훅의 지역 바인딩은 `use`와 요청 종류만 나타내는 앞부분을
-`response` 또는 `mutation`으로 바꾸고 나머지 이름을 유지합니다.
-여러 쿼리를 합친 바인딩은 `response` 뒤에 결과 이름을 쓰고
-`useSuspenseQueries`를 사용하면 끝에 `Suspense`를 유지합니다.
+쿼리와 뮤테이션의 지역 바인딩 이름은 생성된 훅 이름에서 만듭니다.
+
+| 바인딩 | 이름 |
+| --- | --- |
+| Kubb가 생성한 단일 API 훅 | `use`와 요청 종류만 나타내는 앞부분을 `response` 또는 `mutation`으로 바꾸고 나머지 이름을 유지합니다 |
+| 여러 쿼리를 합친 바인딩 | `response` 뒤에 결과 이름을 씁니다. `useSuspenseQueries`를 사용하면 끝에 `Suspense`를 유지합니다 |
 
 **Incorrect (쿼리와 뮤테이션 바인딩 이름이 제각각임):**
 

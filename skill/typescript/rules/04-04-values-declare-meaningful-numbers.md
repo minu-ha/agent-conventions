@@ -23,9 +23,8 @@ tags: values, config
 소유자를 지워도 남으면 루트 `constant` 폴더, 소유자와 함께 사라지면 그 소유자의 `_constant` 폴더입니다.
 
 **같은 파일에 지역 `const`로 옮기는 것으로는 끝나지 않습니다.**
-`functions-name-a-value-only-for-recompute-or-judgment`가 지역 변수를 만들 자리를 따로 정하고,
-숫자를 옮기는 것은 그 둘 중 어디에도 없습니다.
-갈 곳은 지역 변수가 아니라 `constant` 폴더입니다.
+지역 변수를 만들 이유 둘은 `functions-name-a-value-only-for-recompute-or-judgment`가 정합니다.
+숫자를 옮기는 것은 그 둘 중 어디에도 없어, 갈 곳은 지역 변수가 아니라 `constant` 폴더입니다.
 
 **뜻이 없는 숫자는 그대로 적습니다.**
 아래는 이름을 붙여도 읽는 사람이 얻는 것이 없습니다.
@@ -38,12 +37,11 @@ tags: values, config
 | 상수 선언 자신의 값 | `export const retry_max_attempts = 42` |
 | 기본 매개변수 | `(limit = 42) => …` |
 
-`??`·`||` 오른쪽은 이 규칙이 아니라
-`absence-expose-optional-values-instead-of-silent-fallbacks`가 봅니다.
+`??`·`||` 오른쪽은 이 규칙이 아니라 `absence-expose-optional-values-instead-of-silent-fallbacks`가 봅니다.
 없는 값을 다루는 자리라 판정이 다릅니다.
 
 **여러 숫자가 한 뜻을 이루면 배열이 아니라 객체로 둡니다.**
-`{first: 0x1100, last: 0x115f}`처럼 키를 붙이면 그 값은 무시되지만
+`{first: 0x1100, last: 0x115f}`처럼 키를 붙이면 그 값은 무시됩니다.
 `[0x1100, 0x115f]`처럼 배열에 담으면 자리마다 걸립니다.
 숫자 여러 개가 한 뜻을 이루는 조회표도 각 칸에 이름을 주라는 뜻입니다.
 

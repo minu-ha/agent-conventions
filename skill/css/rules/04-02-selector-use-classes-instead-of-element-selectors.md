@@ -32,10 +32,13 @@ TSX에서 그 지점이 보이므로 "이 마크업을 우리가 쓰는가"를 �
 - `:first-child` 같은 구조 선택자도 같습니다.
   우리가 렌더하면 클래스를 붙입니다.
 
-`selector-disallowed-list` 규칙이 중첩 안 요소 선택자를 막습니다.
-그래서 이 예외를 쓸 때는 `stylelint-disable-next-line` 주석이 필요합니다.
-예외가 한 선택자를 넘으면 그 블록을 `stylelint-disable`과 `stylelint-enable` 주석 쌍으로 감쌉니다.
-예외 블록에는 요소 선택자가 여럿이라 한 줄짜리 주석으로는 덮지 못합니다.
+`selector-disallowed-list` 규칙이 중첩 안 요소 선택자를 막으므로 이 예외에는 주석이 필요합니다.
+
+| 예외 선택자 | 주석 |
+| --- | --- |
+| 하나 | `stylelint-disable-next-line` |
+| 둘 이상 | 블록을 `stylelint-disable`과 `stylelint-enable` 주석 쌍으로 감쌉니다 |
+
 드문 경우이므로 그 주석이 곧 "여기는 우리가 쓰지 않는 마크업"이라는 표시가 됩니다.
 
 **Incorrect (우리가 렌더하는 마크업을 요소 선택자로 겨냥함):**

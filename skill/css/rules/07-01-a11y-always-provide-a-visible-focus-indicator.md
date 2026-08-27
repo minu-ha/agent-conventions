@@ -20,8 +20,7 @@ tags: accessibility, focus, interaction
 - `:focus`보다 `:focus-visible`을 씁니다.
   포인터 클릭에는 링이 안 나오고 키보드 이동에는 나옵니다.
 - 색만 바꾸는 것으로 끝내지 않습니다.
-  `outline`, `box-shadow` 링, `border` 두께처럼
-  형태가 바뀌는 신호를 함께 씁니다.
+  `outline`, `box-shadow` 링, `border` 두께처럼 형태가 바뀌는 신호를 함께 씁니다.
   색만 쓰면 색각 이상에서 구분되지 않습니다.
 - 링과 그 배경의 대비가 3:1 이상이고 두께가 2px 이상입니다.
   WCAG 2.2 SC 1.4.11(AA)과 2.4.13(AAA)이 정한 값입니다.

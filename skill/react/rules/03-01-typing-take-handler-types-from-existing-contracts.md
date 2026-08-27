@@ -15,8 +15,7 @@ tags: typing, handlers, props
 
 **Impact: MEDIUM-HIGH (같은 시그니처를 손으로 다시 적지 않아 계약이 어긋나지 않습니다)**
 
-타입을 어디에 붙일지는 `typescript/types-prefer-function-variable-types-over-parameter-annotations`가
-정합니다.
+타입을 어디에 붙일지는 `typescript/types-prefer-function-variable-types-over-parameter-annotations`가 정합니다.
 여기서는 그 규칙이 다루지 않는 리액트 두 자리만 봅니다.
 
 **커링 팩토리가 돌려주는 함수에도 타입을 적습니다.**

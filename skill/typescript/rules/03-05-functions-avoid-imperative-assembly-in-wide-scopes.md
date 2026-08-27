@@ -15,11 +15,14 @@ tags: functions
 
 모듈 최상위나 함수 본문 전체를 덮는 스코프에서 `let` 재할당, 배열 `push`, 조건부 누적으로 값을 쌓지 않습니다.
 `if`나 `for` 블록 안에서만 사는 누적은 대상이 아닙니다.
-쓰는 자리가 좁은 스코프 하나면 그 안에서 바로 계산합니다.
-조건이 둘 이상이면 삼항을 겹치지 않고 조건부 스프레드나 `filter`로 한 번에 조립합니다.
-분기와 보정이 얽혀 좁은 스코프에 담기지 않으면 떼어 낼지를 다시 봅니다.
-그 판정은 `functions-extract-helpers-only-when-the-boundary-is-real`이 합니다.
-떼어 낸 함수의 이름은 `functions-name-functions-by-what-comes-out`이 정하고,
+
+| 상황 | 조립하는 법 |
+| --- | --- |
+| 쓰는 자리가 좁은 스코프 하나 | 그 안에서 바로 계산합니다 |
+| 조건이 둘 이상 | 삼항을 겹치지 않고 조건부 스프레드나 `filter`로 한 번에 조립합니다 |
+| 분기와 보정이 얽혀 좁은 스코프에 담기지 않음 | 떼어 낼지를 `functions-extract-helpers-only-when-the-boundary-is-real`이 판정합니다 |
+
+떼어 낸 함수의 이름은 `functions-name-functions-by-what-comes-out`이 정합니다.
 중간값에 이름을 붙일지는 `functions-name-a-value-only-for-recompute-or-judgment`가 정합니다.
 
 **Incorrect (넓은 스코프에서 명령형으로 누적 조립):**

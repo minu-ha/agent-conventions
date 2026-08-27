@@ -20,8 +20,6 @@
 기본값이 정말 필요하면 그 기본값에 이름을 붙여 선언하고 그 이름을 가리킵니다.
 소유자를 지워도 남으면 `naming-place-project-constants-in-the-root-constant-folder` 규칙이,
 소유자와 함께 사라지면 `naming-place-owner-constants-in-the-owner-constant-folder` 규칙이 자리를 정합니다.
-같은 파일 위쪽에 `const supportEmailFallback = "help@example.com";`을 두는 것으로는 통과하지 못합니다.
-상수로 선언된 이름이어야 합니다.
 
 이유 주석으로 이 규칙을 통과하지는 못합니다.
 주석은 리터럴을 선언된 이름으로 바꾸지 않습니다.
