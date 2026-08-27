@@ -11,7 +11,7 @@
 | `style/noEnum` | `typescript/types-replace-enum-with-as-const-objects` |
 | `style/useImportType` | `typescript/naming-use-direct-imports-and-public-entry-points` |
 | `style/noDefaultExport` | `typescript/naming-use-direct-imports-and-public-entry-points`의 이름 붙인 내보내기 |
-| `style/noRestrictedImports`의 경로 패턴 | `typescript/naming-import-by-absolute-path`의 상대경로 금지 |
+| `style/noRestrictedImports`의 경로 패턴 | `typescript/naming-import-by-absolute-path`의 상대경로 금지. 심볼 없는 줄은 `./*.css`로 근사합니다 |
 | `style/useNamingConvention` | `typescript/naming-use-consistent-file-and-symbol-naming`의 심볼 표기 |
 | `style/useFilenamingConvention` | `typescript/naming-use-consistent-file-and-symbol-naming`의 파일명 |
 | `style/noParameterAssign` | `typescript/functions-avoid-imperative-assembly-in-wide-scopes` |

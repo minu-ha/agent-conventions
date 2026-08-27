@@ -86,7 +86,7 @@ tags: tooling
 				"noRestrictedImports": {
 					"level": "error",
 					"options": {
-						"patterns": [{"group": ["../**", "./**", "!./*.css"], "message": "가져오기는 절대경로로 씁니다. 동반 css만 ./ 입니다."}]
+						"patterns": [{"group": ["../**", "./**", "!./*.css"], "message": "가져오기는 절대경로로 씁니다. 심볼 없이 파일만 불러오는 줄만 같은 폴더를 ./ 로 씁니다."}]
 					}
 				}
 			}
@@ -104,7 +104,7 @@ tags: tooling
 								"patterns": [
 									{
 										"group": ["../**", "./**", "!./*.css"],
-										"message": "가져오기는 절대경로로 씁니다. 동반 css만 ./ 입니다."
+										"message": "가져오기는 절대경로로 씁니다. 심볼 없이 파일만 불러오는 줄만 같은 폴더를 ./ 로 씁니다."
 									},
 									{
 										"group": ["@/component/widget/**", "@/page/**"],
@@ -128,7 +128,7 @@ tags: tooling
 								"patterns": [
 									{
 										"group": ["../**", "./**", "!./*.css"],
-										"message": "가져오기는 절대경로로 씁니다. 동반 css만 ./ 입니다."
+										"message": "가져오기는 절대경로로 씁니다. 심볼 없이 파일만 불러오는 줄만 같은 폴더를 ./ 로 씁니다."
 									},
 									{"group": ["@/page/**"], "message": "`widget`은 `page`를 가져오지 않습니다."}
 								]
@@ -149,7 +149,7 @@ tags: tooling
 								"patterns": [
 									{
 										"group": ["../**", "./**", "!./*.css"],
-										"message": "가져오기는 절대경로로 씁니다. 동반 css만 ./ 입니다."
+										"message": "가져오기는 절대경로로 씁니다. 심볼 없이 파일만 불러오는 줄만 같은 폴더를 ./ 로 씁니다."
 									},
 									{"group": ["@/page/**", "!@/page/detail/**"], "message": "다른 라우트 안의 것은 가져오지 않습니다."}
 								]

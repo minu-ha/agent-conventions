@@ -17,28 +17,42 @@ tags: ownership
 
 **Impact: CRITICAL (비공개 컴포넌트를 형제나 위쪽에서 되짚어 소유 관계가 무너지지 않습니다)**
 
-컴포넌트 가져오기는 소유 관계를 따라 아래로만 흐릅니다.
-소유자, 진입 파일, 하위 소유자가 무엇인지는 `ownership-place-owner-files-in-role-folders`가 정합니다.
-같은 폴더에 나란히 있는 소유자끼리를 형제 소유자라고 부릅니다.
+가져오기는 레이어와 소유 관계를 따라 아래로만 흐릅니다.
 경로는 전부 `@/`라 모양이 방향을 말하지 않습니다.
 그래서 가져올 수 있는지는 가져오는 파일이 어디 있는지로 판정합니다.
+소유자, 진입 파일, 하위 소유자, 역할 폴더가 무엇인지는 `ownership-place-owner-files-in-role-folders`가 정합니다.
 
-| 대상 | 가져올 수 있는 파일 |
+먼저 레이어 방향입니다.
+루트 레이어는 `util`·`constant`·`type`·`hook`·`store`·`service`·`config`·`asset`입니다.
+
+| 가져오는 쪽 | 가져올 수 있는 레이어 |
 | --- | --- |
-| `_`로 시작하는 컴포넌트 파일 | 같은 폴더의 파일 |
-| 하위 소유자의 진입 파일 | 그 하위 소유자를 담은 소유자 폴더 아래의 파일 |
+| 루트 레이어 | 루트 레이어 |
+| `component/ui` | 루트 레이어 |
+| `component/widget` | 루트 레이어, `ui` |
+| `page` | 루트 레이어, `ui`, `widget` |
+| 라우터와 앱 진입 파일 | 전부 |
+
+그 안에서 소유자 경계입니다.
+
+| 가져오려는 대상 | 가져올 수 있는 파일 |
+| --- | --- |
+| `ui`·`widget`의 진입 파일 | 어느 파일이든 |
 | 라우트 진입 파일 `page/<route>/pg-<route>` | 라우터 |
 | 다른 라우트 안의 파일 | 없음 |
-| `ui`·`widget`의 진입 파일 | 어느 파일이든 |
-| `_function`·`_type`·`_constant`·`_hook`의 파일 | 레이어 방향과 라우트 경계만 지키면 어느 파일이든 |
+| 하위 소유자의 진입 파일 | 그 하위 소유자를 담은 소유자 폴더 아래의 파일 |
+| `_`로 시작하는 컴포넌트 파일 | 같은 폴더의 파일 |
+| `_function`·`_type`·`_constant`·`_hook`의 파일 | 어느 파일이든 |
 
-- 레이어 방향은 `ui`, `widget`, `page` 순서입니다.
-  `ui`는 `widget`과 `page`를, `widget`은 `page`를 가져오지 않습니다.
-- 진입 파일이 아닌 컴포넌트 파일은 이름이 `_`로 시작합니다.
-  그래서 다른 폴더에서 `_` 컴포넌트 파일을 가져오는 줄은 언제나 위반입니다.
-- 형제 소유자의 진입 파일은 가져오지만 형제 안의 `_` 파일은 가져오지 않습니다.
-- 타입만 가져오는 것은 이 제약을 받지 않습니다.
-  `_` 컴포넌트 파일의 프롭스 타입도 어디서든 `import type`으로 가져옵니다.
+- 타입만 가져오는 줄은 `_` 컴포넌트 파일 제약을 받지 않습니다.
+  프롭스 타입은 어디서든 `import type`으로 가져옵니다.
+- 역할 폴더의 파일은 소유자의 공개 면입니다.
+  밖에서 가져다 쓴다고 루트로 옮기지 않습니다.
+  자리는 `typescript/naming-place-project-constants-in-the-root-constant-folder`와
+  `typescript/functions-place-and-promote-support-functions`가 정합니다.
+- 함수의 자기 이름 폴더 안에 있는 보조 파일만은 그 대표 함수가 가져옵니다.
+- `_hook`이 공개인 근거는 `ownership-keep-lifecycle-in-the-owning-component`에 있습니다.
+  여러 소유자가 함께 부르는 생명주기만 훅으로 올리라고 정하는데, 올린 훅을 자식이 가져오지 못하면 성립하지 않습니다.
 
 여러 자식이 같은 컴포넌트를 써야 하면 셋 중 하나로 해소합니다.
 
@@ -47,15 +61,6 @@ tags: ownership
 3. 짧은 조각이면 그대로 중복해서 씁니다.
 
 세 자식 이상이 같은 것을 써야 하는데 올릴 수도 없으면 자식 분리가 잘못됐다는 신호입니다.
-`_function`, `_type`, `_constant`, `_hook`은 렌더 트리를 만들지 않습니다.
-그래서 소유자의 공개 면으로 두고 이 방향 제약을 받지 않습니다.
-소유자 밖에서 가져다 쓴다고 그 파일을 루트로 옮기지도 않습니다.
-자리는 그 값이 누구 것인지로 정하고, 그 판정은 `typescript/naming-place-project-constants-in-the-root-constant-folder`와
-`typescript/functions-place-and-promote-support-functions`가 합니다.
-함수의 자기 이름 폴더 안 파일만은 그 대표 함수가 가져옵니다.
-`_hook`이 예외인 근거는 `ownership-keep-lifecycle-in-the-owning-component`에 있습니다.
-여러 소유자가 함께 부르는 생명주기만 훅으로 올리라고 정하는데,
-올린 훅을 자식이 가져오지 못하면 그 규칙이 성립하지 않습니다.
 
 **Incorrect (다른 폴더의 `_` 컴포넌트 파일을 가져옴):**
 
