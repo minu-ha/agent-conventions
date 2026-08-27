@@ -94,7 +94,7 @@ const typescriptRuleUniverse = [
 	"naming-place-owner-constants-in-the-owner-constant-folder",
 	"naming-use-consistent-file-and-symbol-naming",
 	"naming-use-direct-imports-and-public-entry-points",
-	"naming-restrict-absolute-aliases-to-layer-roots",
+	"naming-use-absolute-paths-beyond-the-folder",
 	"naming-read-environment-values-through-config-env",
 	"naming-name-types-by-role-and-lifetime",
 	"functions-declare-functions-as-arrow-consts",
@@ -266,10 +266,10 @@ const typescriptRuleRouting = {
 	"naming-use-direct-imports-and-public-entry-points": {
 		appliesWhen:
 			"가져오기, 내보내기, `index.ts` 배럴, 공개 진입점, 소유자 보조 모듈의 경계를 추가·변경할 때. 같은 경로에서 값과 타입 중 무엇을 가져올지 추가·삭제·전환할 때.",
-		reviewWith: ["naming-restrict-absolute-aliases-to-layer-roots"],
+		reviewWith: ["naming-use-absolute-paths-beyond-the-folder"],
 	},
-	"naming-restrict-absolute-aliases-to-layer-roots": {
-		appliesWhen: "절대경로 별칭으로 다른 모듈을 가져올 때. 별칭이 가리키는 경로 깊이를 바꿀 때.",
+	"naming-use-absolute-paths-beyond-the-folder": {
+		appliesWhen: "다른 폴더의 모듈을 가져올 때. `../`로 시작하는 경로를 쓰거나 별칭 경로를 상대경로로 바꾸려 할 때.",
 		reviewWith: ["naming-use-direct-imports-and-public-entry-points"],
 	},
 	"naming-read-environment-values-through-config-env": {
@@ -566,7 +566,7 @@ const reactRuleRouting = {
 	},
 	"ownership-keep-component-imports-flowing-downward": {
 		appliesWhen:
-			"소유자 폴더 안의 컴포넌트 파일을 가져올 때. `../`나 `@/page` 경로로 컴포넌트를 가져오려 할 때. 여러 자식이 같은 컴포넌트를 써야 해서 배치를 다시 정할 때. 제외: `_function`·`_type`·`_constant`·`_hook` 파일을 가져오는 경우.",
+			"소유자 폴더 안의 컴포넌트 파일을 가져올 때. 다른 소유자나 다른 라우트의 파일을 가져오려 할 때. 여러 자식이 같은 컴포넌트를 써야 해서 배치를 다시 정할 때. 제외: 같은 소유자 안에서 `_function`·`_type`·`_constant`·`_hook` 파일을 가져오는 경우.",
 		reviewWith: ["ownership-layer-component-boundaries"],
 	},
 	"ownership-prefer-plain-ts-for-local-react-helpers": {
@@ -826,7 +826,7 @@ const reactRuleRouting = {
  */
 const mandatoryRuleRouting = {
 	react: {
-		"ownership-keep-component-imports-flowing-downward": ["typescript/naming-restrict-absolute-aliases-to-layer-roots"],
+		"ownership-keep-component-imports-flowing-downward": ["typescript/naming-use-absolute-paths-beyond-the-folder"],
 		"data-name-query-and-mutation-bindings-consistently": [
 			"typescript/naming-use-consistent-file-and-symbol-naming",
 			"docs-require-jsdoc-on-key-declarations",
@@ -869,7 +869,7 @@ const typescriptSelections = {
 		"naming-place-owner-constants-in-the-owner-constant-folder",
 		"naming-use-consistent-file-and-symbol-naming",
 		"naming-use-direct-imports-and-public-entry-points",
-		"naming-restrict-absolute-aliases-to-layer-roots",
+		"naming-use-absolute-paths-beyond-the-folder",
 		"naming-read-environment-values-through-config-env",
 		"values-declare-meaningful-numbers",
 	],
@@ -1436,7 +1436,7 @@ const reactScenarioStages = {
 					"ownership-keep-component-imports-flowing-downward",
 					"strategy-prefer-children-over-render-props",
 				],
-				typescript: ["naming-use-direct-imports-and-public-entry-points", "naming-restrict-absolute-aliases-to-layer-roots"],
+				typescript: ["naming-use-direct-imports-and-public-entry-points", "naming-use-absolute-paths-beyond-the-folder"],
 			},
 		},
 	},
@@ -2868,7 +2868,7 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 	);
 	assert.match(typescriptContracts[0], /경로가 같아도 값과 타입 중 무엇을 가져오는지가 바뀌면/i);
 	assert.match(
-		await readFile(path.join(realSkillRootDir, "typescript", "contracts", "naming-restrict-absolute-aliases-to-layer-roots.md"), "utf8"),
+		await readFile(path.join(realSkillRootDir, "react", "contracts", "ownership-keep-component-imports-flowing-downward.md"), "utf8"),
 		/CRITICAL rule[\s\S]*full rule/i,
 	);
 	assertMentions(typescriptContracts[2], [/커링한 핸들러/i, /마지막 콜백/i], "typescriptContracts");

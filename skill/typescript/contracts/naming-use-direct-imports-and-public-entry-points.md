@@ -15,7 +15,7 @@
 도구가 그 파일의 계약으로 `default`를 요구할 때만 씁니다.
 `vite.config.ts` 같은 설정 진입점이 그 자리입니다.
 
-절대경로 별칭으로 어디까지 열지는 `naming-restrict-absolute-aliases-to-layer-roots` 규칙이 정합니다.
+경로를 `./`로 쓸지 `@/`로 쓸지는 `naming-use-absolute-paths-beyond-the-folder` 규칙이 정합니다.
 
 경로가 같아도 값과 타입 중 무엇을 가져오는지가 바뀌면
 가져오기 계약이 바뀐 것이라 이 규칙을 적용합니다.

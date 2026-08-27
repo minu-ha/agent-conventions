@@ -484,7 +484,7 @@
 				],
 				"typescript": [
 					"naming-use-direct-imports-and-public-entry-points",
-					"naming-restrict-absolute-aliases-to-layer-roots"
+					"naming-use-absolute-paths-beyond-the-folder"
 				]
 			}
 		},

@@ -23,8 +23,8 @@ tags: tooling
 | `correctness/useExhaustiveDependencies` | `react/state-use-effectevent-for-non-reactive-effect-callbacks`의 의존성 |
 | `correctness/useJsxKeyInIterable` | `react/composition-name-fragments-explicitly`의 `key` |
 | `a11y/*` 묶음 | `react/a11y-give-interactive-elements-an-accessible-name`의 일부 |
-| `style/noRestrictedImports`의 `../` 패턴 | `react/ownership-keep-component-imports-flowing-downward`의 `../` 범위 |
-| `style/noRestrictedImports`의 `_*` 패턴 | `react/ownership-keep-component-imports-flowing-downward`의 진입 파일 한정 |
+| `style/noRestrictedImports`의 레이어 `overrides` | `react/ownership-keep-component-imports-flowing-downward`의 레이어 방향 |
+| `style/noRestrictedImports`의 라우트 `overrides` | `react/ownership-keep-component-imports-flowing-downward`의 라우트 경계 |
 
 `noNestedComponentDefinitions`는 도메인의 `recommended`에 없어 따로 켭니다.
 `react/composition-do-not-define-components-inside-components`와 판정 대상이 같아 이 규칙을 통째로 기계에 넘깁니다.
@@ -33,21 +33,21 @@ tags: tooling
 `useButtonType`, `useAltText`, `useValidAnchor`, `useKeyWithClickEvents`, `useSemanticElements`가 그것입니다.
 접근 가능한 이름을 실제로 붙였는지는 기계가 못 보고 리뷰가 봅니다.
 
-`typescript/tooling-configure-biome-to-enforce-these-rules`가 세운 `noRestrictedImports`에 패턴 둘을 더합니다.
-하나는 `../<파일>`과 `../../**`를 막아 `../`가 형제 소유자 폴더 한 겹만 넘게 하고,
-`_function`, `_type`, `_constant`, `_hook` 폴더만 부정 패턴으로 되돌리는 항목입니다.
-되돌리는 넷은 `ownership-keep-component-imports-flowing-downward`가 예외로 두는 역할 폴더입니다.
-다른 하나는 `../**/_*`와 `@/**/_*`로, `_`로 시작하는 파일을 소유자 밖에서 가져오는 줄을 막습니다.
-`_`로 시작하는 컴포넌트 파일은 진입 파일이 아니므로 그 줄은 언제나 위반입니다.
-`@/page/**` 패턴과 같은 배열에 나란히 두면 절대경로와 상대경로 양쪽이 한 규칙으로 막힙니다.
+`typescript/tooling-configure-biome-to-enforce-these-rules`가 세운 `noRestrictedImports`에 `overrides` 둘을 더합니다.
+하나는 레이어 방향입니다.
+`component/ui/**`에는 `@/component/widget/**`과 `@/page/**`를, `component/widget/**`에는 `@/page/**`를 막습니다.
+다른 하나는 라우트 경계입니다.
+`page/<route>/**`마다 `@/page/**`를 막고 `!@/page/<route>/**`로 자기 라우트만 되살리는 항목을 둡니다.
+라우트가 늘면 항목도 늡니다.
+`overrides`는 규칙 옵션을 통째로 바꾸므로 기본 설정의 `../**` 패턴을 항목마다 함께 적습니다.
 
 기계가 끝까지 못 가는 자리가 있습니다.
 아래 항목은 리뷰가 봅니다.
 
-- 같은 폴더 안의 형제 가져오기는 어떤 설정으로도 못 잡습니다.
-  `./_pg-summary-band`는 진입 파일이 쓰는 정당한 경로와 문자열이 같습니다.
-  가져오는 쪽이 진입 파일인지도 기계는 모릅니다.
-  `ownership-keep-component-imports-flowing-downward`의 가져오는 쪽 조건은 리뷰가 봅니다.
+- 소유자 경계는 어떤 패턴으로도 못 잡습니다.
+  `@/page/detail/_pg-summary-band`는 `page/detail` 안에서 가져오는 정당한 줄과 밖에서 가져오는 위반이 문자열이 같습니다.
+  가져오는 파일의 위치를 함께 봐야 해서 `biome`의 몫이 아닙니다.
+  위치를 비교하는 `eslint` 규칙을 쓰거나 리뷰가 봅니다.
 - `useExhaustiveDependencies`는 의존성 배열이 빠졌는지만 봅니다.
   그 콜백을 `useEffectEvent`로 감싸야 하는지는 리뷰가 봅니다.
 - `useJsxKeyInIterable`은 `key`가 있는지만 봅니다.
@@ -72,7 +72,7 @@ tags: tooling
 }
 ```
 
-**Correct (도메인을 켜고 `all`에만 있는 항목과 `../` 패턴을 따로 적음):**
+**Correct (도메인을 켜고 `all`에만 있는 항목과 레이어·라우트 `overrides`를 적음):**
 
 ```json
 {
@@ -85,19 +85,69 @@ tags: tooling
 			"style": {
 				"noRestrictedImports": {
 					"level": "error",
-					"options": {
-						"patterns": [
-							{"group": ["@/page/**"], "message": "화면 내부는 절대경로로 가져오지 않습니다."},
-							{
-								"group": ["../*", "../../**", "!../**/_function/**", "!../**/_type/**", "!../**/_constant/**", "!../**/_hook/**"],
-								"message": "`../`는 형제 소유자의 진입 파일에만 닿습니다."
-							},
-							{"group": ["../**/_*", "@/**/_*"], "message": "진입 파일이 아닌 컴포넌트는 소유자 밖에서 가져오지 않습니다."}
-						]
+					"options": {"patterns": [{"group": ["../**"], "message": "폴더 밖은 절대경로로 가져옵니다."}]}
+				}
+			}
+		}
+	},
+	"overrides": [
+		{
+			"includes": ["src/component/ui/**"],
+			"linter": {
+				"rules": {
+					"style": {
+						"noRestrictedImports": {
+							"level": "error",
+							"options": {
+								"patterns": [
+									{"group": ["../**"], "message": "폴더 밖은 절대경로로 가져옵니다."},
+									{
+										"group": ["@/component/widget/**", "@/page/**"],
+										"message": "`ui`는 `widget`과 `page`를 가져오지 않습니다."
+									}
+								]
+							}
+						}
+					}
+				}
+			}
+		},
+		{
+			"includes": ["src/component/widget/**"],
+			"linter": {
+				"rules": {
+					"style": {
+						"noRestrictedImports": {
+							"level": "error",
+							"options": {
+								"patterns": [
+									{"group": ["../**"], "message": "폴더 밖은 절대경로로 가져옵니다."},
+									{"group": ["@/page/**"], "message": "`widget`은 `page`를 가져오지 않습니다."}
+								]
+							}
+						}
+					}
+				}
+			}
+		},
+		{
+			"includes": ["src/page/detail/**"],
+			"linter": {
+				"rules": {
+					"style": {
+						"noRestrictedImports": {
+							"level": "error",
+							"options": {
+								"patterns": [
+									{"group": ["../**"], "message": "폴더 밖은 절대경로로 가져옵니다."},
+									{"group": ["@/page/**", "!@/page/detail/**"], "message": "다른 라우트 안의 것은 가져오지 않습니다."}
+								]
+							}
+						}
 					}
 				}
 			}
 		}
-	}
+	]
 }
 ```

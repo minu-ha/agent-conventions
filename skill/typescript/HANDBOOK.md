@@ -31,7 +31,7 @@
     - 2.2 [Place Owner-only Constants in the Owner `_constant` Folder](#22-place-owner-only-constants-in-the-owner-constant-folder)
     - 2.3 [Use Role-Based File, Symbol, and Constant Naming](#23-use-role-based-file-symbol-and-constant-naming)
     - 2.4 [Use Direct Imports and Dedicated Public Entry Points](#24-use-direct-imports-and-dedicated-public-entry-points)
-    - 2.5 [Restrict Absolute Aliases to Layer Roots](#25-restrict-absolute-aliases-to-layer-roots)
+    - 2.5 [Use Absolute Paths Beyond the Folder](#25-use-absolute-paths-beyond-the-folder)
     - 2.6 [Read Environment Values Through `config/env.ts`](#26-read-environment-values-through-config-env-ts)
     - 2.7 [Name Types by Role and Lifetime](#27-name-types-by-role-and-lifetime)
 3. [Functions and Helper Boundaries](#3-functions-and-helper-boundaries) — **MEDIUM-HIGH**
@@ -621,7 +621,7 @@ type MutableRow = Omit<Row, "children"> & {
 
 **Impact: CRITICAL**
 
-식별자, 가져오기, 공개 진입점, 절대경로 별칭 범위, 상수 위치가 소유자와 출처를 바로 드러내야 합니다. 타입 이름은 값의 역할과 수명을 드러내고 소유자 경로가 이미 말하는 문맥을 반복하지 않습니다. 여기서 **소유자**는 자기 폴더가 있는 모듈 하나입니다. 그 폴더 안 파일은 그 소유자만 씁니다.
+식별자, 가져오기, 공개 진입점, 경로 모양, 상수 위치가 소유자와 출처를 바로 드러내야 합니다. 타입 이름은 값의 역할과 수명을 드러내고 소유자 경로가 이미 말하는 문맥을 반복하지 않습니다. 여기서 **소유자**는 자기 폴더가 있는 모듈 하나입니다. 그 폴더 안 파일은 그 소유자만 씁니다.
 
 ### 2.1 Place Project-wide Constants in the Root `constant` Folder
 
@@ -899,7 +899,7 @@ const toProductSaveBody = (values: ProductFormValues) => {
 
 **Applies when:** 가져오기, 내보내기, `index.ts` 배럴, 공개 진입점, 소유자 보조 모듈의 경계를 추가·변경할 때. 같은 경로에서 값과 타입 중 무엇을 가져올지 추가·삭제·전환할 때.
 
-**Review with:** `naming-restrict-absolute-aliases-to-layer-roots`
+**Review with:** `naming-use-absolute-paths-beyond-the-folder`
 
 **Impact: MEDIUM-HIGH (배럴이나 모호한 재노출 계층에 기대지 않고 무엇을 어디서 가져오는지 드러냅니다)**
 
@@ -916,7 +916,7 @@ const toProductSaveBody = (values: ProductFormValues) => {
 도구가 그 파일의 계약으로 `default`를 요구할 때만 씁니다.
 `vite.config.ts` 같은 설정 진입점이 그 자리입니다.
 
-절대경로 별칭으로 어디까지 열지는 `naming-restrict-absolute-aliases-to-layer-roots` 규칙이 정합니다.
+경로를 `./`로 쓸지 `@/`로 쓸지는 `naming-use-absolute-paths-beyond-the-folder` 규칙이 정합니다.
 
 경로가 같아도 값과 타입 중 무엇을 가져오는지가 바뀌면
 가져오기 계약이 바뀐 것이라 이 규칙을 적용합니다.
@@ -960,27 +960,40 @@ import {toUserSaveRequest} from "./_function/to-user-save-request";
 export default defineConfig({plugins: [react()]});
 ```
 
-### 2.5 Restrict Absolute Aliases to Layer Roots
+### 2.5 Use Absolute Paths Beyond the Folder
 
-**Rule:** `T02-05` · `naming-restrict-absolute-aliases-to-layer-roots`
+**Rule:** `T02-05` · `naming-use-absolute-paths-beyond-the-folder`
 
-**Applies when:** 절대경로 별칭으로 다른 모듈을 가져올 때. 별칭이 가리키는 경로 깊이를 바꿀 때.
+**Applies when:** 다른 폴더의 모듈을 가져올 때. `../`로 시작하는 경로를 쓰거나 별칭 경로를 상대경로로 바꾸려 할 때.
 
 **Review with:** `naming-use-direct-imports-and-public-entry-points`
 
-**Impact: CRITICAL (소유자 내부 모듈이 밖에서 직접 열리지 않아 경계가 남습니다)**
+**Impact: MEDIUM-HIGH (경로 모양이 하나라 가져오는 줄만 보고 어디의 무엇인지 읽히고, 경계는 위치로 판정합니다)**
 
-절대경로 별칭의 첫 마디는 전역 레이어 루트여야 합니다.
+가져오기 경로는 두 모양뿐입니다.
 
-| 경로 | 판정 |
+| 대상 | 경로 |
 | --- | --- |
-| `@/component`, `@/constant`, `@/config`, `@/util`, `@/type`, `@/hook`, `@/service`, `@/store`, `@/asset` | 허용 |
-| `@/page/...` 등 화면 내부 | 금지 |
+| 같은 폴더의 파일 | `./<파일>` |
+| 그 밖의 모든 파일 | `@/<src 아래 전체 경로>` |
 
-레이어 루트가 담는 것은 다음과 같습니다.
+`../`는 쓰지 않습니다.
+같은 폴더 밖이면 한 겹 위든 다른 레이어든 `@/`로 시작합니다.
+편집기의 자동 가져오기가 만드는 모양이 그대로 규칙이라 손으로 고칠 일이 없습니다.
+같은 폴더를 `./`로 두는 것은 폴더를 옮기거나 이름을 바꿔도 그 안의 가져오기가 그대로 남기 때문입니다.
+
+경로 모양은 경계를 말하지 않습니다.
+`@/page/detail/_function/to-summary`는 `page/detail` 안에서 가져오면 정상이고 `page/index`에서 가져오면 위반이지만
+문자열은 같습니다.
+그래서 무엇을 어디서 가져올 수 있는지는 가져오는 파일의 위치로 판정합니다.
+컴포넌트와 소유자 안 파일의 경계는 프레임워크 컨벤션의 가져오기 방향 규칙이 정합니다.
+
+`src` 바로 아래에 있는 레이어 루트는 다음과 같습니다.
 
 - `component`는 `component/ui`와 `component/widget` 두 컴포넌트 레이어를 담습니다.
   `ui`와 `widget`의 경계는 프레임워크 컨벤션의 레이어 규칙이 정합니다.
+- `page`는 라우트 폴더를 담습니다.
+  라우트 안의 것은 그 라우트 안에서만 가져오고, 라우트 진입 파일은 라우터만 가져옵니다.
 - `constant`는 프로젝트 전반이 쓰는 상수를, `config`는 환경마다 달라지는 값을 담습니다.
 - `util`은 프로젝트 전반이 쓰는 함수를 값의 종류 폴더로 묶어 담습니다.
 - `type`은 프로젝트 전반이 쓰는 계약을, `hook`은 여러 소유자가 쓰는 훅을 담습니다.
@@ -991,24 +1004,34 @@ export default defineConfig({plugins: [react()]});
 
 루트는 프로젝트가 소유자인 자리라 `constant`·`util`·`type`·`hook`은 소유자 아래 역할 폴더와 같은 규칙을 따릅니다.
 
-- 첫 마디가 레이어 루트면 그 아래 깊이는 제한하지 않습니다.
-  `@/component/widget/chart-card/wg-chart-card`는 허용입니다.
-- 화면이나 소유자 내부 모듈은 절대경로로 열지 않고 `./`로만 접근합니다.
-- 소유자 밖에서 필요해지면 경로를 뚫는 대신 전역 레이어로 올립니다.
-- 라우터 설정이 라우트 진입 파일을 등록하는 줄만 `@/page/<route>/<진입 파일>`을 씁니다.
-  그 줄에는 `docs-justify-convention-exceptions-with-a-reason-comment`가 정한 이유 주석을 둡니다.
+어디에 두는지는 쓰는 곳으로 정하지 않습니다.
+소유자 밖에서 가져다 쓴다고 루트로 올리지 않고, 값이 누구 것인지로 정한 자리에 그대로 둡니다.
+그 판정은 `naming-place-project-constants-in-the-root-constant-folder`와
+`functions-place-and-promote-support-functions`가 합니다.
 
-**Incorrect (화면 내부 모듈을 절대경로로 가져옴):**
+**Incorrect (한 겹 위를 `../`로 가져옴):**
 
 ```ts
-import {SalesChartCard} from "@/page/detail/sales-trend-panel/_pg-sales-chart-card";
+// page/detail/sales-trend-panel/pg-sales-trend-panel.tsx
+import {toSummary} from "../_function/to-summary";
+import {PgSummaryBand} from "../summary-band/pg-summary-band";
 ```
 
-**Correct (레이어 루트로 시작하는 별칭과 소유자 안 상대경로):**
+**Incorrect (같은 폴더의 파일을 절대경로로 가져옴):**
 
 ```ts
+// page/detail/sales-trend-panel/pg-sales-trend-panel.tsx
+import {PgDetectionSection} from "@/page/detail/sales-trend-panel/_pg-detection-section";
+```
+
+**Correct (같은 폴더는 `./`, 그 밖은 `@/`):**
+
+```ts
+// page/detail/sales-trend-panel/pg-sales-trend-panel.tsx
+import {PgDetectionSection} from "./_pg-detection-section";
 import {WgChartCard} from "@/component/widget/chart-card/wg-chart-card";
-import {SalesChartCard} from "./_pg-sales-chart-card";
+import {toSummary} from "@/page/detail/_function/to-summary";
+import {PgSummaryBand} from "@/page/detail/summary-band/pg-summary-band";
 ```
 
 ### 2.6 Read Environment Values Through `config/env.ts`
@@ -2841,7 +2864,7 @@ const filteredRows = useMemo(() => rows.filter((row) => matchRow(row, deferredKe
 | `style/noEnum` | `typescript/types-replace-enum-with-as-const-objects` |
 | `style/useImportType` | `typescript/naming-use-direct-imports-and-public-entry-points` |
 | `style/noDefaultExport` | `typescript/naming-use-direct-imports-and-public-entry-points`의 이름 붙인 내보내기 |
-| `style/noRestrictedImports` | `typescript/naming-restrict-absolute-aliases-to-layer-roots`의 경로 표 |
+| `style/noRestrictedImports`의 `../**` | `typescript/naming-use-absolute-paths-beyond-the-folder`의 `../` 금지 |
 | `style/useNamingConvention` | `typescript/naming-use-consistent-file-and-symbol-naming`의 심볼 표기 |
 | `style/useFilenamingConvention` | `typescript/naming-use-consistent-file-and-symbol-naming`의 파일명 |
 | `style/noParameterAssign` | `typescript/functions-avoid-imperative-assembly-in-wide-scopes` |
@@ -2885,6 +2908,8 @@ const filteredRows = useMemo(() => rows.filter((row) => matchRow(row, deferredKe
   `let`을 `const`로 바꿔 주기만 하고 `push` 누적은 그대로 남습니다.
 - `typescript/types-mark-unused-parameters-with-underscore` 중 **매개변수를 아예 생략한 경우**는 기계가 못 봅니다.
   `noUnusedFunctionParameters`는 남겨 둔 매개변수만 봅니다.
+- 같은 폴더의 파일을 `@/`로 가져오는 것은 패턴이 못 봅니다.
+  `typescript/naming-use-absolute-paths-beyond-the-folder`의 `./` 쪽은 리뷰가 봅니다.
 - `import.meta.env`와 `process.env`를 `config/env.ts` 밖에서 읽는 것을 막는 `biome` 규칙은 없습니다.
   `typescript/naming-read-environment-values-through-config-env`는 리뷰가 보거나 CI가 문자열 검색으로 잡습니다.
 
@@ -2944,7 +2969,7 @@ const filteredRows = useMemo(() => rows.filter((row) => matchRow(row, deferredKe
 				"noRestrictedImports": {
 					"level": "error",
 					"options": {
-						"patterns": [{"group": ["@/page/**"], "message": "화면 내부는 절대경로로 가져오지 않습니다."}]
+						"patterns": [{"group": ["../**"], "message": "폴더 밖은 절대경로로 가져옵니다."}]
 					}
 				},
 				"useNamingConvention": {

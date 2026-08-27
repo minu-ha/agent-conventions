@@ -11,7 +11,7 @@
 | `style/noEnum` | `typescript/types-replace-enum-with-as-const-objects` |
 | `style/useImportType` | `typescript/naming-use-direct-imports-and-public-entry-points` |
 | `style/noDefaultExport` | `typescript/naming-use-direct-imports-and-public-entry-points`의 이름 붙인 내보내기 |
-| `style/noRestrictedImports` | `typescript/naming-restrict-absolute-aliases-to-layer-roots`의 경로 표 |
+| `style/noRestrictedImports`의 `../**` | `typescript/naming-use-absolute-paths-beyond-the-folder`의 `../` 금지 |
 | `style/useNamingConvention` | `typescript/naming-use-consistent-file-and-symbol-naming`의 심볼 표기 |
 | `style/useFilenamingConvention` | `typescript/naming-use-consistent-file-and-symbol-naming`의 파일명 |
 | `style/noParameterAssign` | `typescript/functions-avoid-imperative-assembly-in-wide-scopes` |
@@ -55,6 +55,8 @@
   `let`을 `const`로 바꿔 주기만 하고 `push` 누적은 그대로 남습니다.
 - `typescript/types-mark-unused-parameters-with-underscore` 중 **매개변수를 아예 생략한 경우**는 기계가 못 봅니다.
   `noUnusedFunctionParameters`는 남겨 둔 매개변수만 봅니다.
+- 같은 폴더의 파일을 `@/`로 가져오는 것은 패턴이 못 봅니다.
+  `typescript/naming-use-absolute-paths-beyond-the-folder`의 `./` 쪽은 리뷰가 봅니다.
 - `import.meta.env`와 `process.env`를 `config/env.ts` 밖에서 읽는 것을 막는 `biome` 규칙은 없습니다.
   `typescript/naming-read-environment-values-through-config-env`는 리뷰가 보거나 CI가 문자열 검색으로 잡습니다.
 
