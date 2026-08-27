@@ -8,7 +8,7 @@ appliesWhen:
   - 다른 소유자나 다른 라우트의 파일을 가져오려 할 때
   - 여러 자식이 같은 컴포넌트를 써야 해서 배치를 다시 정할 때
   - 제외: 같은 소유자 안에서 `_function`·`_type`·`_constant`·`_hook` 파일을 가져오는 경우
-requiresSelected: typescript/naming-use-absolute-paths-beyond-the-folder
+requiresSelected: typescript/naming-import-by-absolute-path
 reviewWith: ownership-layer-component-boundaries
 tags: ownership
 ---
@@ -20,7 +20,7 @@ tags: ownership
 컴포넌트 가져오기는 소유 관계를 따라 아래로만 흐릅니다.
 소유자, 진입 파일, 하위 소유자가 무엇인지는 `ownership-place-owner-files-in-role-folders`가 정합니다.
 같은 폴더에 나란히 있는 소유자끼리를 형제 소유자라고 부릅니다.
-경로는 같은 폴더면 `./`, 아니면 `@/`라 모양이 방향을 말하지 않습니다.
+경로는 전부 `@/`라 모양이 방향을 말하지 않습니다.
 그래서 가져올 수 있는지는 가져오는 파일이 어디 있는지로 판정합니다.
 
 | 대상 | 가져올 수 있는 파일 |
@@ -83,8 +83,8 @@ import { WgLegendPanel } from "@/component/widget/legend-panel/wg-legend-panel";
 
 ```tsx
 // page/detail/sales-trend-panel/pg-sales-trend-panel.tsx
-import { PgDetectionSection } from "./_pg-detection-section";
 import { UiSectionHeading } from "@/component/ui/section-heading/ui-section-heading";
+import { PgDetectionSection } from "@/page/detail/sales-trend-panel/_pg-detection-section";
 import { PgSummaryBand } from "@/page/detail/summary-band/pg-summary-band";
 
 export const PgSalesTrendPanel = (props: PgSalesTrendPanelProps) => {

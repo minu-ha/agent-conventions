@@ -2,6 +2,6 @@
 
 **Impact: CRITICAL**
 
-**Requires selected:** `typescript/naming-use-absolute-paths-beyond-the-folder` · 함께 적용
+**Requires selected:** `typescript/naming-import-by-absolute-path` · 함께 적용
 
 > CRITICAL rule: must read the [full rule](../rules/01-04-ownership-keep-component-imports-flowing-downward.md) before implementation or review.

@@ -1,30 +1,18 @@
----
-title: Use Absolute Paths Beyond the Folder
-titleKo: 폴더 밖은 절대경로로, 같은 폴더만 `./`로 가져옵니다
-impact: MEDIUM-HIGH
-impactDescription: 경로 모양이 하나라 가져오는 줄만 보고 어디의 무엇인지 읽히고, 경계는 위치로 판정합니다
-appliesWhen:
-  - 다른 폴더의 모듈을 가져올 때
-  - `../`로 시작하는 경로를 쓰거나 별칭 경로를 상대경로로 바꾸려 할 때
-reviewWith: naming-use-direct-imports-and-public-entry-points
-tags: naming, imports
----
-
-## Use Absolute Paths Beyond the Folder
+# Import by Absolute Path
 
 **Impact: MEDIUM-HIGH (경로 모양이 하나라 가져오는 줄만 보고 어디의 무엇인지 읽히고, 경계는 위치로 판정합니다)**
 
 가져오기 경로는 두 모양뿐입니다.
 
-| 대상 | 경로 |
+| 줄 | 경로 |
 | --- | --- |
-| 같은 폴더의 파일 | `./<파일>` |
-| 그 밖의 모든 파일 | `@/<src 아래 전체 경로>` |
+| 심볼을 가져오는 줄 | `@/<src 아래 전체 경로>` |
+| 동반 `.css`를 실행하는 줄 | `./<파일>.css` |
 
-`../`는 쓰지 않습니다.
-같은 폴더 밖이면 한 겹 위든 다른 레이어든 `@/`로 시작합니다.
+`../`는 쓰지 않고, 같은 폴더의 파일도 `./`가 아니라 `@/`로 가져옵니다.
 편집기의 자동 가져오기가 만드는 모양이 그대로 규칙이라 손으로 고칠 일이 없습니다.
-같은 폴더를 `./`로 두는 것은 폴더를 옮기거나 이름을 바꿔도 그 안의 가져오기가 그대로 남기 때문입니다.
+폴더를 옮기거나 이름을 바꾸면 편집기의 이름 바꾸기가 경로를 따라 고칩니다.
+`.css`는 자동 가져오기가 없고 늘 같은 폴더의 동반 파일이라 `./`로 둡니다.
 
 경로 모양은 경계를 말하지 않습니다.
 `@/page/detail/_function/to-summary`는 `page/detail` 안에서 가져오면 정상이고 `page/index`에서 가져오면 위반이지만
@@ -53,27 +41,4 @@ tags: naming, imports
 그 판정은 `naming-place-project-constants-in-the-root-constant-folder`와
 `functions-place-and-promote-support-functions`가 합니다.
 
-**Incorrect (한 겹 위를 `../`로 가져옴):**
-
-```ts
-// page/detail/sales-trend-panel/pg-sales-trend-panel.tsx
-import {toSummary} from "../_function/to-summary";
-import {PgSummaryBand} from "../summary-band/pg-summary-band";
-```
-
-**Incorrect (같은 폴더의 파일을 절대경로로 가져옴):**
-
-```ts
-// page/detail/sales-trend-panel/pg-sales-trend-panel.tsx
-import {PgDetectionSection} from "@/page/detail/sales-trend-panel/_pg-detection-section";
-```
-
-**Correct (같은 폴더는 `./`, 그 밖은 `@/`):**
-
-```ts
-// page/detail/sales-trend-panel/pg-sales-trend-panel.tsx
-import {PgDetectionSection} from "./_pg-detection-section";
-import {WgChartCard} from "@/component/widget/chart-card/wg-chart-card";
-import {toSummary} from "@/page/detail/_function/to-summary";
-import {PgSummaryBand} from "@/page/detail/summary-band/pg-summary-band";
-```
+> 예시·예외가 필요하면 [full rule](../rules/02-05-naming-import-by-absolute-path.md)을 읽습니다.

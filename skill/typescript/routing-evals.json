@@ -18,7 +18,7 @@
 					"naming-place-owner-constants-in-the-owner-constant-folder",
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
-					"naming-use-absolute-paths-beyond-the-folder",
+					"naming-import-by-absolute-path",
 					"naming-read-environment-values-through-config-env",
 					"values-declare-meaningful-numbers"
 				]

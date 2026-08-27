@@ -94,7 +94,7 @@ const typescriptRuleUniverse = [
 	"naming-place-owner-constants-in-the-owner-constant-folder",
 	"naming-use-consistent-file-and-symbol-naming",
 	"naming-use-direct-imports-and-public-entry-points",
-	"naming-use-absolute-paths-beyond-the-folder",
+	"naming-import-by-absolute-path",
 	"naming-read-environment-values-through-config-env",
 	"naming-name-types-by-role-and-lifetime",
 	"functions-declare-functions-as-arrow-consts",
@@ -266,10 +266,10 @@ const typescriptRuleRouting = {
 	"naming-use-direct-imports-and-public-entry-points": {
 		appliesWhen:
 			"가져오기, 내보내기, `index.ts` 배럴, 공개 진입점, 소유자 보조 모듈의 경계를 추가·변경할 때. 같은 경로에서 값과 타입 중 무엇을 가져올지 추가·삭제·전환할 때.",
-		reviewWith: ["naming-use-absolute-paths-beyond-the-folder"],
+		reviewWith: ["naming-import-by-absolute-path"],
 	},
-	"naming-use-absolute-paths-beyond-the-folder": {
-		appliesWhen: "다른 폴더의 모듈을 가져올 때. `../`로 시작하는 경로를 쓰거나 별칭 경로를 상대경로로 바꾸려 할 때.",
+	"naming-import-by-absolute-path": {
+		appliesWhen: "다른 모듈을 가져오는 경로를 쓸 때. `./`나 `../`로 시작하는 경로를 쓰거나 별칭 경로를 상대경로로 바꾸려 할 때.",
 		reviewWith: ["naming-use-direct-imports-and-public-entry-points"],
 	},
 	"naming-read-environment-values-through-config-env": {
@@ -826,7 +826,7 @@ const reactRuleRouting = {
  */
 const mandatoryRuleRouting = {
 	react: {
-		"ownership-keep-component-imports-flowing-downward": ["typescript/naming-use-absolute-paths-beyond-the-folder"],
+		"ownership-keep-component-imports-flowing-downward": ["typescript/naming-import-by-absolute-path"],
 		"data-name-query-and-mutation-bindings-consistently": [
 			"typescript/naming-use-consistent-file-and-symbol-naming",
 			"docs-require-jsdoc-on-key-declarations",
@@ -869,7 +869,7 @@ const typescriptSelections = {
 		"naming-place-owner-constants-in-the-owner-constant-folder",
 		"naming-use-consistent-file-and-symbol-naming",
 		"naming-use-direct-imports-and-public-entry-points",
-		"naming-use-absolute-paths-beyond-the-folder",
+		"naming-import-by-absolute-path",
 		"naming-read-environment-values-through-config-env",
 		"values-declare-meaningful-numbers",
 	],
@@ -1436,7 +1436,7 @@ const reactScenarioStages = {
 					"ownership-keep-component-imports-flowing-downward",
 					"strategy-prefer-children-over-render-props",
 				],
-				typescript: ["naming-use-direct-imports-and-public-entry-points", "naming-use-absolute-paths-beyond-the-folder"],
+				typescript: ["naming-use-direct-imports-and-public-entry-points", "naming-import-by-absolute-path"],
 			},
 		},
 	},

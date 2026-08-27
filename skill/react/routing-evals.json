@@ -484,7 +484,7 @@
 				],
 				"typescript": [
 					"naming-use-direct-imports-and-public-entry-points",
-					"naming-use-absolute-paths-beyond-the-folder"
+					"naming-import-by-absolute-path"
 				]
 			}
 		},

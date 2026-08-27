@@ -39,7 +39,7 @@ tags: tooling
 다른 하나는 라우트 경계입니다.
 `page/<route>/**`마다 `@/page/**`를 막고 `!@/page/<route>/**`로 자기 라우트만 되살리는 항목을 둡니다.
 라우트가 늘면 항목도 늡니다.
-`overrides`는 규칙 옵션을 통째로 바꾸므로 기본 설정의 `../**` 패턴을 항목마다 함께 적습니다.
+`overrides`는 규칙 옵션을 통째로 바꾸므로 기본 설정의 경로 패턴을 항목마다 함께 적습니다.
 
 기계가 끝까지 못 가는 자리가 있습니다.
 아래 항목은 리뷰가 봅니다.
@@ -85,7 +85,9 @@ tags: tooling
 			"style": {
 				"noRestrictedImports": {
 					"level": "error",
-					"options": {"patterns": [{"group": ["../**"], "message": "폴더 밖은 절대경로로 가져옵니다."}]}
+					"options": {
+						"patterns": [{"group": ["../**", "./**", "!./*.css"], "message": "가져오기는 절대경로로 씁니다. 동반 css만 ./ 입니다."}]
+					}
 				}
 			}
 		}
@@ -100,7 +102,10 @@ tags: tooling
 							"level": "error",
 							"options": {
 								"patterns": [
-									{"group": ["../**"], "message": "폴더 밖은 절대경로로 가져옵니다."},
+									{
+										"group": ["../**", "./**", "!./*.css"],
+										"message": "가져오기는 절대경로로 씁니다. 동반 css만 ./ 입니다."
+									},
 									{
 										"group": ["@/component/widget/**", "@/page/**"],
 										"message": "`ui`는 `widget`과 `page`를 가져오지 않습니다."
@@ -121,7 +126,10 @@ tags: tooling
 							"level": "error",
 							"options": {
 								"patterns": [
-									{"group": ["../**"], "message": "폴더 밖은 절대경로로 가져옵니다."},
+									{
+										"group": ["../**", "./**", "!./*.css"],
+										"message": "가져오기는 절대경로로 씁니다. 동반 css만 ./ 입니다."
+									},
 									{"group": ["@/page/**"], "message": "`widget`은 `page`를 가져오지 않습니다."}
 								]
 							}
@@ -139,7 +147,10 @@ tags: tooling
 							"level": "error",
 							"options": {
 								"patterns": [
-									{"group": ["../**"], "message": "폴더 밖은 절대경로로 가져옵니다."},
+									{
+										"group": ["../**", "./**", "!./*.css"],
+										"message": "가져오기는 절대경로로 씁니다. 동반 css만 ./ 입니다."
+									},
 									{"group": ["@/page/**", "!@/page/detail/**"], "message": "다른 라우트 안의 것은 가져오지 않습니다."}
 								]
 							}

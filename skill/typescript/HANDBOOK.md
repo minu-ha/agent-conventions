@@ -31,7 +31,7 @@
     - 2.2 [Place Owner-only Constants in the Owner `_constant` Folder](#22-place-owner-only-constants-in-the-owner-constant-folder)
     - 2.3 [Use Role-Based File, Symbol, and Constant Naming](#23-use-role-based-file-symbol-and-constant-naming)
     - 2.4 [Use Direct Imports and Dedicated Public Entry Points](#24-use-direct-imports-and-dedicated-public-entry-points)
-    - 2.5 [Use Absolute Paths Beyond the Folder](#25-use-absolute-paths-beyond-the-folder)
+    - 2.5 [Import by Absolute Path](#25-import-by-absolute-path)
     - 2.6 [Read Environment Values Through `config/env.ts`](#26-read-environment-values-through-config-env-ts)
     - 2.7 [Name Types by Role and Lifetime](#27-name-types-by-role-and-lifetime)
 3. [Functions and Helper Boundaries](#3-functions-and-helper-boundaries) — **MEDIUM-HIGH**
@@ -899,7 +899,7 @@ const toProductSaveBody = (values: ProductFormValues) => {
 
 **Applies when:** 가져오기, 내보내기, `index.ts` 배럴, 공개 진입점, 소유자 보조 모듈의 경계를 추가·변경할 때. 같은 경로에서 값과 타입 중 무엇을 가져올지 추가·삭제·전환할 때.
 
-**Review with:** `naming-use-absolute-paths-beyond-the-folder`
+**Review with:** `naming-import-by-absolute-path`
 
 **Impact: MEDIUM-HIGH (배럴이나 모호한 재노출 계층에 기대지 않고 무엇을 어디서 가져오는지 드러냅니다)**
 
@@ -916,7 +916,7 @@ const toProductSaveBody = (values: ProductFormValues) => {
 도구가 그 파일의 계약으로 `default`를 요구할 때만 씁니다.
 `vite.config.ts` 같은 설정 진입점이 그 자리입니다.
 
-경로를 `./`로 쓸지 `@/`로 쓸지는 `naming-use-absolute-paths-beyond-the-folder` 규칙이 정합니다.
+경로 모양은 `naming-import-by-absolute-path` 규칙이 정합니다.
 
 경로가 같아도 값과 타입 중 무엇을 가져오는지가 바뀌면
 가져오기 계약이 바뀐 것이라 이 규칙을 적용합니다.
@@ -960,11 +960,11 @@ import {toUserSaveRequest} from "./_function/to-user-save-request";
 export default defineConfig({plugins: [react()]});
 ```
 
-### 2.5 Use Absolute Paths Beyond the Folder
+### 2.5 Import by Absolute Path
 
-**Rule:** `T02-05` · `naming-use-absolute-paths-beyond-the-folder`
+**Rule:** `T02-05` · `naming-import-by-absolute-path`
 
-**Applies when:** 다른 폴더의 모듈을 가져올 때. `../`로 시작하는 경로를 쓰거나 별칭 경로를 상대경로로 바꾸려 할 때.
+**Applies when:** 다른 모듈을 가져오는 경로를 쓸 때. `./`나 `../`로 시작하는 경로를 쓰거나 별칭 경로를 상대경로로 바꾸려 할 때.
 
 **Review with:** `naming-use-direct-imports-and-public-entry-points`
 
@@ -972,15 +972,15 @@ export default defineConfig({plugins: [react()]});
 
 가져오기 경로는 두 모양뿐입니다.
 
-| 대상 | 경로 |
+| 줄 | 경로 |
 | --- | --- |
-| 같은 폴더의 파일 | `./<파일>` |
-| 그 밖의 모든 파일 | `@/<src 아래 전체 경로>` |
+| 심볼을 가져오는 줄 | `@/<src 아래 전체 경로>` |
+| 동반 `.css`를 실행하는 줄 | `./<파일>.css` |
 
-`../`는 쓰지 않습니다.
-같은 폴더 밖이면 한 겹 위든 다른 레이어든 `@/`로 시작합니다.
+`../`는 쓰지 않고, 같은 폴더의 파일도 `./`가 아니라 `@/`로 가져옵니다.
 편집기의 자동 가져오기가 만드는 모양이 그대로 규칙이라 손으로 고칠 일이 없습니다.
-같은 폴더를 `./`로 두는 것은 폴더를 옮기거나 이름을 바꿔도 그 안의 가져오기가 그대로 남기 때문입니다.
+폴더를 옮기거나 이름을 바꾸면 편집기의 이름 바꾸기가 경로를 따라 고칩니다.
+`.css`는 자동 가져오기가 없고 늘 같은 폴더의 동반 파일이라 `./`로 둡니다.
 
 경로 모양은 경계를 말하지 않습니다.
 `@/page/detail/_function/to-summary`는 `page/detail` 안에서 가져오면 정상이고 `page/index`에서 가져오면 위반이지만
@@ -1009,29 +1009,24 @@ export default defineConfig({plugins: [react()]});
 그 판정은 `naming-place-project-constants-in-the-root-constant-folder`와
 `functions-place-and-promote-support-functions`가 합니다.
 
-**Incorrect (한 겹 위를 `../`로 가져옴):**
-
-```ts
-// page/detail/sales-trend-panel/pg-sales-trend-panel.tsx
-import {toSummary} from "../_function/to-summary";
-import {PgSummaryBand} from "../summary-band/pg-summary-band";
-```
-
-**Incorrect (같은 폴더의 파일을 절대경로로 가져옴):**
-
-```ts
-// page/detail/sales-trend-panel/pg-sales-trend-panel.tsx
-import {PgDetectionSection} from "@/page/detail/sales-trend-panel/_pg-detection-section";
-```
-
-**Correct (같은 폴더는 `./`, 그 밖은 `@/`):**
+**Incorrect (상대경로로 가져옴):**
 
 ```ts
 // page/detail/sales-trend-panel/pg-sales-trend-panel.tsx
 import {PgDetectionSection} from "./_pg-detection-section";
+import {toSummary} from "../_function/to-summary";
+```
+
+**Correct (심볼은 `@/`, 동반 CSS만 `./`):**
+
+```ts
+// page/detail/sales-trend-panel/pg-sales-trend-panel.tsx
 import {WgChartCard} from "@/component/widget/chart-card/wg-chart-card";
 import {toSummary} from "@/page/detail/_function/to-summary";
+import {PgDetectionSection} from "@/page/detail/sales-trend-panel/_pg-detection-section";
 import {PgSummaryBand} from "@/page/detail/summary-band/pg-summary-band";
+
+import "./pg-sales-trend-panel.css";
 ```
 
 ### 2.6 Read Environment Values Through `config/env.ts`
@@ -2864,7 +2859,7 @@ const filteredRows = useMemo(() => rows.filter((row) => matchRow(row, deferredKe
 | `style/noEnum` | `typescript/types-replace-enum-with-as-const-objects` |
 | `style/useImportType` | `typescript/naming-use-direct-imports-and-public-entry-points` |
 | `style/noDefaultExport` | `typescript/naming-use-direct-imports-and-public-entry-points`의 이름 붙인 내보내기 |
-| `style/noRestrictedImports`의 `../**` | `typescript/naming-use-absolute-paths-beyond-the-folder`의 `../` 금지 |
+| `style/noRestrictedImports`의 경로 패턴 | `typescript/naming-import-by-absolute-path`의 상대경로 금지 |
 | `style/useNamingConvention` | `typescript/naming-use-consistent-file-and-symbol-naming`의 심볼 표기 |
 | `style/useFilenamingConvention` | `typescript/naming-use-consistent-file-and-symbol-naming`의 파일명 |
 | `style/noParameterAssign` | `typescript/functions-avoid-imperative-assembly-in-wide-scopes` |
@@ -2908,8 +2903,6 @@ const filteredRows = useMemo(() => rows.filter((row) => matchRow(row, deferredKe
   `let`을 `const`로 바꿔 주기만 하고 `push` 누적은 그대로 남습니다.
 - `typescript/types-mark-unused-parameters-with-underscore` 중 **매개변수를 아예 생략한 경우**는 기계가 못 봅니다.
   `noUnusedFunctionParameters`는 남겨 둔 매개변수만 봅니다.
-- 같은 폴더의 파일을 `@/`로 가져오는 것은 패턴이 못 봅니다.
-  `typescript/naming-use-absolute-paths-beyond-the-folder`의 `./` 쪽은 리뷰가 봅니다.
 - `import.meta.env`와 `process.env`를 `config/env.ts` 밖에서 읽는 것을 막는 `biome` 규칙은 없습니다.
   `typescript/naming-read-environment-values-through-config-env`는 리뷰가 보거나 CI가 문자열 검색으로 잡습니다.
 
@@ -2969,7 +2962,9 @@ const filteredRows = useMemo(() => rows.filter((row) => matchRow(row, deferredKe
 				"noRestrictedImports": {
 					"level": "error",
 					"options": {
-						"patterns": [{"group": ["../**"], "message": "폴더 밖은 절대경로로 가져옵니다."}]
+						"patterns": [
+								{"group": ["../**", "./**", "!./*.css"], "message": "가져오기는 절대경로로 씁니다. 동반 css만 ./ 입니다."}
+							]
 					}
 				},
 				"useNamingConvention": {

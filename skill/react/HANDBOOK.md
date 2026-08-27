@@ -413,7 +413,7 @@ component/ui/button/
 
 **Applies when:** 소유자 폴더 안의 컴포넌트 파일을 가져올 때. 다른 소유자나 다른 라우트의 파일을 가져오려 할 때. 여러 자식이 같은 컴포넌트를 써야 해서 배치를 다시 정할 때. 제외: 같은 소유자 안에서 `_function`·`_type`·`_constant`·`_hook` 파일을 가져오는 경우.
 
-**Requires selected:** `typescript/naming-use-absolute-paths-beyond-the-folder` · 함께 적용
+**Requires selected:** `typescript/naming-import-by-absolute-path` · 함께 적용
 
 **Review with:** `ownership-layer-component-boundaries`
 
@@ -422,7 +422,7 @@ component/ui/button/
 컴포넌트 가져오기는 소유 관계를 따라 아래로만 흐릅니다.
 소유자, 진입 파일, 하위 소유자가 무엇인지는 `ownership-place-owner-files-in-role-folders`가 정합니다.
 같은 폴더에 나란히 있는 소유자끼리를 형제 소유자라고 부릅니다.
-경로는 같은 폴더면 `./`, 아니면 `@/`라 모양이 방향을 말하지 않습니다.
+경로는 전부 `@/`라 모양이 방향을 말하지 않습니다.
 그래서 가져올 수 있는지는 가져오는 파일이 어디 있는지로 판정합니다.
 
 | 대상 | 가져올 수 있는 파일 |
@@ -485,8 +485,8 @@ import { WgLegendPanel } from "@/component/widget/legend-panel/wg-legend-panel";
 
 ```tsx
 // page/detail/sales-trend-panel/pg-sales-trend-panel.tsx
-import { PgDetectionSection } from "./_pg-detection-section";
 import { UiSectionHeading } from "@/component/ui/section-heading/ui-section-heading";
+import { PgDetectionSection } from "@/page/detail/sales-trend-panel/_pg-detection-section";
 import { PgSummaryBand } from "@/page/detail/summary-band/pg-summary-band";
 
 export const PgSalesTrendPanel = (props: PgSalesTrendPanelProps) => {
@@ -4414,7 +4414,7 @@ JSX 자식 자리에는 `//`를 쓸 수 없습니다.
 다른 하나는 라우트 경계입니다.
 `page/<route>/**`마다 `@/page/**`를 막고 `!@/page/<route>/**`로 자기 라우트만 되살리는 항목을 둡니다.
 라우트가 늘면 항목도 늡니다.
-`overrides`는 규칙 옵션을 통째로 바꾸므로 기본 설정의 `../**` 패턴을 항목마다 함께 적습니다.
+`overrides`는 규칙 옵션을 통째로 바꾸므로 기본 설정의 경로 패턴을 항목마다 함께 적습니다.
 
 기계가 끝까지 못 가는 자리가 있습니다.
 아래 항목은 리뷰가 봅니다.
@@ -4460,7 +4460,9 @@ JSX 자식 자리에는 `//`를 쓸 수 없습니다.
 			"style": {
 				"noRestrictedImports": {
 					"level": "error",
-					"options": {"patterns": [{"group": ["../**"], "message": "폴더 밖은 절대경로로 가져옵니다."}]}
+					"options": {
+						"patterns": [{"group": ["../**", "./**", "!./*.css"], "message": "가져오기는 절대경로로 씁니다. 동반 css만 ./ 입니다."}]
+					}
 				}
 			}
 		}
@@ -4475,7 +4477,10 @@ JSX 자식 자리에는 `//`를 쓸 수 없습니다.
 							"level": "error",
 							"options": {
 								"patterns": [
-									{"group": ["../**"], "message": "폴더 밖은 절대경로로 가져옵니다."},
+									{
+										"group": ["../**", "./**", "!./*.css"],
+										"message": "가져오기는 절대경로로 씁니다. 동반 css만 ./ 입니다."
+									},
 									{
 										"group": ["@/component/widget/**", "@/page/**"],
 										"message": "`ui`는 `widget`과 `page`를 가져오지 않습니다."
@@ -4496,7 +4501,10 @@ JSX 자식 자리에는 `//`를 쓸 수 없습니다.
 							"level": "error",
 							"options": {
 								"patterns": [
-									{"group": ["../**"], "message": "폴더 밖은 절대경로로 가져옵니다."},
+									{
+										"group": ["../**", "./**", "!./*.css"],
+										"message": "가져오기는 절대경로로 씁니다. 동반 css만 ./ 입니다."
+									},
 									{"group": ["@/page/**"], "message": "`widget`은 `page`를 가져오지 않습니다."}
 								]
 							}
@@ -4514,7 +4522,10 @@ JSX 자식 자리에는 `//`를 쓸 수 없습니다.
 							"level": "error",
 							"options": {
 								"patterns": [
-									{"group": ["../**"], "message": "폴더 밖은 절대경로로 가져옵니다."},
+									{
+										"group": ["../**", "./**", "!./*.css"],
+										"message": "가져오기는 절대경로로 씁니다. 동반 css만 ./ 입니다."
+									},
 									{"group": ["@/page/**", "!@/page/detail/**"], "message": "다른 라우트 안의 것은 가져오지 않습니다."}
 								]
 							}

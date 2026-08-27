@@ -6,7 +6,7 @@ impactDescription: 배럴이나 모호한 재노출 계층에 기대지 않고 �
 appliesWhen:
   - 가져오기, 내보내기, `index.ts` 배럴, 공개 진입점, 소유자 보조 모듈의 경계를 추가·변경할 때
   - 같은 경로에서 값과 타입 중 무엇을 가져올지 추가·삭제·전환할 때
-reviewWith: naming-use-absolute-paths-beyond-the-folder
+reviewWith: naming-import-by-absolute-path
 tags: naming
 ---
 
@@ -27,7 +27,7 @@ tags: naming
 도구가 그 파일의 계약으로 `default`를 요구할 때만 씁니다.
 `vite.config.ts` 같은 설정 진입점이 그 자리입니다.
 
-경로를 `./`로 쓸지 `@/`로 쓸지는 `naming-use-absolute-paths-beyond-the-folder` 규칙이 정합니다.
+경로 모양은 `naming-import-by-absolute-path` 규칙이 정합니다.
 
 경로가 같아도 값과 타입 중 무엇을 가져오는지가 바뀌면
 가져오기 계약이 바뀐 것이라 이 규칙을 적용합니다.
