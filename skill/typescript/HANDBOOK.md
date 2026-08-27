@@ -941,7 +941,7 @@ import type {UserProfile} from "@/type/user-profile";
 import {pagination_default_page_size} from "@/constant/pagination";
 import {toDisplayDate} from "@/util/date/to-display-date";
 import {WgChartCard} from "@/component/widget/chart-card/wg-chart-card";
-import {toUserSaveRequest} from "./_function/to-user-save-request";
+import {toUserSaveRequest} from "@/page/users/_function/to-user-save-request";
 ```
 
 **Correct (도구가 계약으로 요구하는 파일만 `default`):**
@@ -1504,7 +1504,7 @@ export const toProfileSaveRequest = (formValues: ProfileFormValues) => {
 
 ```tsx
 // page/profile/_pg-profile-form.tsx와 page/profile/_pg-profile-drawer.tsx가 함께 부른다
-import { toProfileSaveRequest } from "./_function/to-profile-save-request";
+import { toProfileSaveRequest } from "@/page/profile/_function/to-profile-save-request";
 ```
 
 **Correct (`.tsx` 안의 순수 조립 함수는 사용처가 하나여도 형제 `.ts`로 냄):**
@@ -1525,7 +1525,7 @@ export const toProductSaveRequest = (formValues: ProductFormValues) => {
 
 ```tsx
 // page/products/pg-products.tsx 하나만 부르지만 훅도 JSX도 쓰지 않는 계산이다
-import { toProductSaveRequest } from "./_function/to-product-save-request";
+import { toProductSaveRequest } from "@/page/products/_function/to-product-save-request";
 ```
 
 **Correct (전용 보조가 딸린 단계만 자기 파일로 나감):**

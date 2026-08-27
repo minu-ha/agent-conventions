@@ -52,7 +52,7 @@ tags: ownership, widget, naming
 const UiDeleteProductButton = () => {
 	const navigate = useNavigate();
 
-	return <button onClick={() => void navigate({ to: "/products" })}>삭제</button>;
+	return <button onClick={() => void navigate("/products")}>삭제</button>;
 };
 ```
 
@@ -112,7 +112,7 @@ const PgDeleteProductButton = () => {
 	 * 삭제 후 목록으로 이동
 	 */
 	const handleDeleteButtonClick: MouseEventHandler<HTMLButtonElement> = () => {
-		void navigate({ to: "/products" });
+		void navigate("/products");
 	};
 
 	return <UiButton onClick={handleDeleteButtonClick}>삭제</UiButton>;

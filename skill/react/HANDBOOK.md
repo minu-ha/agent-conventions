@@ -148,7 +148,7 @@
 const UiDeleteProductButton = () => {
 	const navigate = useNavigate();
 
-	return <button onClick={() => void navigate({ to: "/products" })}>삭제</button>;
+	return <button onClick={() => void navigate("/products")}>삭제</button>;
 };
 ```
 
@@ -208,7 +208,7 @@ const PgDeleteProductButton = () => {
 	 * 삭제 후 목록으로 이동
 	 */
 	const handleDeleteButtonClick: MouseEventHandler<HTMLButtonElement> = () => {
-		void navigate({ to: "/products" });
+		void navigate("/products");
 	};
 
 	return <UiButton onClick={handleDeleteButtonClick}>삭제</UiButton>;
@@ -549,7 +549,7 @@ export const toMediaUploadRequest = (files: UploadFile[]) => {
 
 ```tsx
 // page/products/_pg-media-upload-panel.tsx
-import { toMediaUploadRequest } from "../_function/to-media-upload-request";
+import { toMediaUploadRequest } from "@/page/products/_function/to-media-upload-request";
 
 const PgMediaUploadPanel = (props: PgMediaUploadPanelProps) => {
 	/**
@@ -946,7 +946,7 @@ useEffect(() => {
 ```tsx
 const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
 	await mutationProductSave.mutateAsync({data: toProductSaveRequest(formValues)});
-	void navigate({to: "/products"});
+	void navigate("/products");
 };
 ```
 
@@ -961,8 +961,8 @@ const queryClient = useQueryClient();
 const mutationProductSave = useProductSave({
 	mutation: {
 		onSuccess: () => {
-			void queryClient.invalidateQueries({queryKey: productListQueryKey()});
-			void navigate({to: "/products"});
+			void queryClient.invalidateQueries({queryKey: query_key_scope_product_list});
+			void navigate("/products");
 		},
 		onError: (error) => {
 			setSubmitErrorMessage(toSubmitErrorMessage(error));
@@ -1006,7 +1006,7 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = async (_even
 			data: toProductSaveRequest(formValues, uploaded.attachmentIds),
 		});
 
-		void navigate({to: "/products"});
+		void navigate("/products");
 	} catch (error) {
 		setSubmitErrorMessage(toSubmitErrorMessage(error));
 	}
@@ -1129,9 +1129,9 @@ const handleRowSelectToggle = (rowId: string) => (event) => {
 **Incorrect (래퍼를 쓰면서 라이브러리 원본 프롭스를 참조):**
 
 ```ts
-import type { LibButtonProps } from "@ui-lib/core";
+import type { ButtonProps } from "@mui/material";
 
-const handleSubmitClick: LibButtonProps["onClick"] = (event) => {
+const handleSubmitClick: ButtonProps["onClick"] = (event) => {
 	event.preventDefault();
 };
 ```
@@ -1178,7 +1178,7 @@ const handleSubmitClick: UiButtonProps["onClick"] = (event) => {
 라이브러리 컴포넌트는 화면에서 직접 쓰지 않고 `Ui*` 래퍼를 거칩니다.
 래퍼가 있어야 라이브러리를 올리거나 바꿀 때 한 파일만 고칩니다.
 
-**`export type UiXProps = LibXProps`로 두지 않습니다.**
+**`export type UiButtonProps = ButtonProps`로 두지 않습니다.**
 라이브러리 표면이 통째로 열려서 그 라이브러리의 스타일 창구까지 화면이 쓸 수 있게 됩니다.
 `css/composition-inject-classes-only-at-the-entry-point`가 정한 스타일 창구가 그 자리에서 뚫립니다.
 
@@ -1187,7 +1187,7 @@ DOM 표면은 아래 세 단계 표가 맡습니다.
 
 | 프롭 | 어떻게 |
 | --- | --- |
-| 라이브러리에 **이미 있는** 표시 프롭 (`color`, `padding`, `size`) | `LibXProps["color"]` 인덱스 접근으로 하나씩 |
+| 라이브러리에 **이미 있는** 표시 프롭 (`color`, `padding`, `size`) | `ButtonProps["color"]` 인덱스 접근으로 하나씩 |
 | 우리가 **새로 만든** 자기 프롭 (`icon`, `label`, `helperText`) | 우리가 타입을 적습니다 |
 | 라이브러리 스타일 창구 (테마 스타일 프롭, 클래스 맵, 렌더 태그 교체) | 선언하지 않습니다 |
 
@@ -1236,10 +1236,10 @@ DOM 표면은 리액트가 속성을 더하면 래퍼도 따라 받아야 하는
 **Incorrect (라이브러리 타입을 그대로 내보냄):**
 
 ```tsx
-export type UiButtonProps = LibButtonProps;
+export type UiButtonProps = ButtonProps;
 
 export const UiButton = (props: UiButtonProps) => {
-	return <LibButton {...props} />;
+	return <Button {...props} />;
 };
 ```
 
@@ -1250,8 +1250,8 @@ export const UiButton = (props: UiButtonProps) => {
 export interface UiButtonProps {
 	className?: string;
 	children?: ReactNode;
-	color?: LibButtonProps["color"];
-	disabled?: LibButtonProps["disabled"];
+	color?: ButtonProps["color"];
+	disabled?: ButtonProps["disabled"];
 	onClick?: MouseEventHandler<HTMLButtonElement>;
 }
 ```
@@ -1259,8 +1259,8 @@ export interface UiButtonProps {
 **Correct (1단계 — 그냥 통과하는 래퍼):**
 
 ```tsx
-import { LibTableCell } from "@ui-lib/core";
-import type { LibTableCellProps } from "@ui-lib/core";
+import { TableCell } from "@mui/material";
+import type { TableCellProps } from "@mui/material";
 import { clsx } from "clsx";
 import type { HTMLAttributes } from "react";
 
@@ -1273,16 +1273,16 @@ export interface UiTableCellProps extends HTMLAttributes<HTMLTableCellElement> {
 	/**
 	 * 내용 가로 정렬
 	 */
-	align?: LibTableCellProps["align"];
+	align?: TableCellProps["align"];
 	/**
 	 * 셀 여백
 	 */
-	padding?: LibTableCellProps["padding"];
+	padding?: TableCellProps["padding"];
 }
 
 export const UiTableCell = (props: UiTableCellProps) => {
 	return (
-		<LibTableCell {...props} className={clsx("ui_tableCell__root", props.className)} />
+		<TableCell {...props} className={clsx("ui_tableCell__root", props.className)} />
 	);
 };
 ```
@@ -1290,8 +1290,8 @@ export const UiTableCell = (props: UiTableCellProps) => {
 **Correct (2단계 — 부딪히는 이름만 빼고 다시 엶):**
 
 ```tsx
-import { LibButton } from "@ui-lib/core";
-import type { LibButtonProps } from "@ui-lib/core";
+import { Button } from "@mui/material";
+import type { ButtonProps } from "@mui/material";
 import { clsx } from "clsx";
 import type { HTMLAttributes } from "react";
 
@@ -1304,12 +1304,12 @@ export interface UiButtonProps extends Omit<HTMLAttributes<HTMLButtonElement>, "
 	/**
 	 * 강조 단계
 	 */
-	color?: LibButtonProps["color"];
+	color?: ButtonProps["color"];
 }
 
 export const UiButton = (props: UiButtonProps) => {
 	return (
-		<LibButton {...props} className={clsx("ui_button__root", props.className)} />
+		<Button {...props} className={clsx("ui_button__root", props.className)} />
 	);
 };
 ```
@@ -1317,8 +1317,8 @@ export const UiButton = (props: UiButtonProps) => {
 **Correct (3단계 — 요소 타입이 어긋나 필요한 프롭만 선언):**
 
 ```tsx
-import { LibTextField } from "@ui-lib/core";
-import type { LibTextFieldProps } from "@ui-lib/core";
+import { TextField } from "@mui/material";
+import type { TextFieldProps } from "@mui/material";
 import { clsx } from "clsx";
 import type { ChangeEventHandler } from "react";
 
@@ -1347,12 +1347,12 @@ export interface UiTextFieldProps {
 	/**
 	 * 오류 표시 여부
 	 */
-	error?: LibTextFieldProps["error"];
+	error?: TextFieldProps["error"];
 }
 
 export const UiTextField = (props: UiTextFieldProps) => {
 	return (
-		<LibTextField
+		<TextField
 			className={clsx("ui_textField__root", props.className)}
 			id={props.id}
 			value={props.value}
@@ -1412,10 +1412,10 @@ export interface UiIconButtonProps extends HTMLAttributes<HTMLButtonElement> {
 
 // icon이 <button icon="…"> 으로 내려간다. 컴파일은 통과한다
 export const UiIconButton = (props: UiIconButtonProps) => (
-	<LibButton {...props}>
+	<Button {...props}>
 		{props.icon}
 		{props.children}
-	</LibButton>
+	</Button>
 );
 ```
 
@@ -1444,7 +1444,7 @@ export interface UiIconButtonProps {
 	/**
 	 * 비활성 여부
 	 */
-	disabled?: LibButtonProps["disabled"];
+	disabled?: ButtonProps["disabled"];
 	/**
 	 * 눌렀을 때
 	 */
@@ -1453,14 +1453,14 @@ export interface UiIconButtonProps {
 
 export const UiIconButton = (props: UiIconButtonProps) => {
 	return (
-		<LibButton
+		<Button
 			className={clsx("ui_iconButton__root", props.className)}
 			aria-label={props.label}
 			disabled={props.disabled}
 			onClick={props.onClick}
 		>
 			{props.icon}
-		</LibButton>
+		</Button>
 	);
 };
 ```
@@ -1504,7 +1504,7 @@ export const UiField = (props: UiFieldProps) => {
 			<label className={clsx("ui_field__label")} htmlFor={props.inputId}>
 				{props.label}
 			</label>
-			<LibTextField id={props.inputId} value={props.value} onChange={props.onChange} />
+			<TextField id={props.inputId} value={props.value} onChange={props.onChange} />
 			{props.helperText && <span className={clsx("ui_field__helper")}>{props.helperText}</span>}
 		</div>
 	);
@@ -1523,12 +1523,12 @@ export interface UiTableRowProps extends HTMLAttributes<HTMLTableRowElement> {
 	/**
 	 * 선택된 줄로 표시할지
 	 */
-	selected?: LibTableRowProps["selected"];
+	selected?: TableRowProps["selected"];
 }
 
 export const UiTableRow = (props: UiTableRowProps) => {
 	return (
-		<LibTableRow {...props} className={clsx("ui_tableRow__root", props.className)} />
+		<TableRow {...props} className={clsx("ui_tableRow__root", props.className)} />
 	);
 };
 ```
@@ -2154,7 +2154,7 @@ JSX에는 이름 붙인 핸들러 참조만 넘깁니다.
 		}
 
 		await mutationProductRemove.mutateAsync({ params: { productId: selectedProduct.id } });
-		void navigate({ to: "/products" });
+		void navigate("/products");
 	}}
 >
 	삭제
@@ -2175,7 +2175,7 @@ const handleRemoveProductButtonClick: MouseEventHandler<HTMLButtonElement> = asy
 	}
 
 	await mutationProductRemove.mutateAsync({ params: { productId: selectedProduct.id } });
-	void navigate({ to: "/products" });
+	void navigate("/products");
 };
 
 <UiButton onClick={handleRemoveProductButtonClick}>삭제</UiButton>;
@@ -2783,14 +2783,13 @@ export const PgProducts = () => {
 ```tsx
 // page/products/_pg-product-list-section.tsx
 const PgProductListSection = () => {
-	const navigate = useNavigate();
-	const search = Route.useSearch();
+	const [urlParams, setUrlParams] = useQueryStates(productUrlParsers);
 
 	/**
-	 * 표에 그릴 product를 route search의 page로 읽는다
+	 * 표에 그릴 product를 URL의 page로 읽는다
 	 */
 	const responseProductListSuspense = useProductListSuspense(
-		{page: search.page},
+		{page: urlParams.page},
 		{query: {select: (response) => ({products: response.data.list})}},
 	);
 
@@ -2800,7 +2799,7 @@ const PgProductListSection = () => {
 	const mutationProductSave = useProductSave({
 		mutation: {
 			onSuccess: () => {
-				void navigate({to: "/products", search: {...search, page: 1}});
+				void setUrlParams({page: 1});
 			},
 		},
 	});
@@ -2992,8 +2991,7 @@ export const PgProducts = () => {
 ```tsx
 // page/products/_pg-product-tree-section.tsx
 const PgProductTreeSection = () => {
-	const navigate = useNavigate();
-	const search = Route.useSearch();
+	const [urlParams, setUrlParams] = useQueryStates(productUrlParsers);
 	const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
 	const [treeSearchKeyword, setTreeSearchKeyword] = useState("");
 
@@ -3007,7 +3005,7 @@ const PgProductTreeSection = () => {
 	const filteredCategoryNodes = filterCategoryNodes(responseProductTreeSuspense.data.categoryNodes, treeSearchKeyword);
 
 	/**
-	 * 검색어는 이 섹션 안에만 두고 route search로 올리지 않는다
+	 * 검색어는 이 섹션 안에만 두고 URL로 올리지 않는다
 	 */
 	const handleTreeSearchKeywordChange: UiInputProps["onChange"] = (event) => {
 		setTreeSearchKeyword(event.target.value);
@@ -3021,7 +3019,7 @@ const PgProductTreeSection = () => {
 	};
 
 	/**
-	 * 고른 분류를 route search에 적어 두어 새로 고침해도 같은 화면이 열리게 한다
+	 * 고른 분류를 URL에 적어 두어 새로 고침해도 같은 화면이 열리게 한다
 	 */
 	const handleTreeSelect: UiTreeProps["onSelect"] = (keys, _info) => {
 		const selectedKey = keys[0];
@@ -3029,10 +3027,7 @@ const PgProductTreeSection = () => {
 			return;
 		}
 
-		void navigate({
-			to: "/products",
-			search: {page: search.page, size: search.size, categoryId: selectedKey.replace("category:", "")},
-		});
+		void setUrlParams({categoryId: selectedKey.replace("category:", "")});
 	};
 
 	return (
@@ -3043,7 +3038,7 @@ const PgProductTreeSection = () => {
 				<UiTree
 					treeData={filteredCategoryNodes.map(toTreeData)}
 					expandedKeys={expandedKeys}
-					selectedKeys={search.categoryId ? [`category:${search.categoryId}`] : []}
+					selectedKeys={urlParams.categoryId ? [`category:${urlParams.categoryId}`] : []}
 					onExpand={handleTreeExpand}
 					onSelect={handleTreeSelect}
 				/>
@@ -3930,7 +3925,7 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => 
 const mutationProductCreate = useProductCreate({
 	mutation: {
 		onSuccess: () => {
-			void navigate({to: "/products"});
+			void navigate("/products");
 		},
 	},
 });

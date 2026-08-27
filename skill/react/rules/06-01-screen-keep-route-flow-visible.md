@@ -76,14 +76,13 @@ export const PgProducts = () => {
 ```tsx
 // page/products/_pg-product-list-section.tsx
 const PgProductListSection = () => {
-	const navigate = useNavigate();
-	const search = Route.useSearch();
+	const [urlParams, setUrlParams] = useQueryStates(productUrlParsers);
 
 	/**
-	 * 표에 그릴 product를 route search의 page로 읽는다
+	 * 표에 그릴 product를 URL의 page로 읽는다
 	 */
 	const responseProductListSuspense = useProductListSuspense(
-		{page: search.page},
+		{page: urlParams.page},
 		{query: {select: (response) => ({products: response.data.list})}},
 	);
 
@@ -93,7 +92,7 @@ const PgProductListSection = () => {
 	const mutationProductSave = useProductSave({
 		mutation: {
 			onSuccess: () => {
-				void navigate({to: "/products", search: {...search, page: 1}});
+				void setUrlParams({page: 1});
 			},
 		},
 	});

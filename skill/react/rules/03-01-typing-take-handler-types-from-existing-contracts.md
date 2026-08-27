@@ -41,9 +41,9 @@ const handleRowSelectToggle = (rowId: string) => (event) => {
 **Incorrect (래퍼를 쓰면서 라이브러리 원본 프롭스를 참조):**
 
 ```ts
-import type { LibButtonProps } from "@ui-lib/core";
+import type { ButtonProps } from "@mui/material";
 
-const handleSubmitClick: LibButtonProps["onClick"] = (event) => {
+const handleSubmitClick: ButtonProps["onClick"] = (event) => {
 	event.preventDefault();
 };
 ```

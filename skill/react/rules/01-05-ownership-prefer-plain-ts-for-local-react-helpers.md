@@ -56,7 +56,7 @@ export const toMediaUploadRequest = (files: UploadFile[]) => {
 
 ```tsx
 // page/products/_pg-media-upload-panel.tsx
-import { toMediaUploadRequest } from "../_function/to-media-upload-request";
+import { toMediaUploadRequest } from "@/page/products/_function/to-media-upload-request";
 
 const PgMediaUploadPanel = (props: PgMediaUploadPanelProps) => {
 	/**

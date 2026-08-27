@@ -34,7 +34,7 @@ JSX에는 이름 붙인 핸들러 참조만 넘깁니다.
 		}
 
 		await mutationProductRemove.mutateAsync({ params: { productId: selectedProduct.id } });
-		void navigate({ to: "/products" });
+		void navigate("/products");
 	}}
 >
 	삭제
@@ -55,7 +55,7 @@ const handleRemoveProductButtonClick: MouseEventHandler<HTMLButtonElement> = asy
 	}
 
 	await mutationProductRemove.mutateAsync({ params: { productId: selectedProduct.id } });
-	void navigate({ to: "/products" });
+	void navigate("/products");
 };
 
 <UiButton onClick={handleRemoveProductButtonClick}>삭제</UiButton>;

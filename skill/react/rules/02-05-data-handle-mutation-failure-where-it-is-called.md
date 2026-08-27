@@ -48,7 +48,7 @@ tags: data, mutation, errors
 ```tsx
 const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
 	await mutationProductSave.mutateAsync({data: toProductSaveRequest(formValues)});
-	void navigate({to: "/products"});
+	void navigate("/products");
 };
 ```
 
@@ -63,8 +63,8 @@ const queryClient = useQueryClient();
 const mutationProductSave = useProductSave({
 	mutation: {
 		onSuccess: () => {
-			void queryClient.invalidateQueries({queryKey: productListQueryKey()});
-			void navigate({to: "/products"});
+			void queryClient.invalidateQueries({queryKey: query_key_scope_product_list});
+			void navigate("/products");
 		},
 		onError: (error) => {
 			setSubmitErrorMessage(toSubmitErrorMessage(error));
@@ -108,7 +108,7 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = async (_even
 			data: toProductSaveRequest(formValues, uploaded.attachmentIds),
 		});
 
-		void navigate({to: "/products"});
+		void navigate("/products");
 	} catch (error) {
 		setSubmitErrorMessage(toSubmitErrorMessage(error));
 	}

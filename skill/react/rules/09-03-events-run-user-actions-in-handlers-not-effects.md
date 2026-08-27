@@ -44,7 +44,7 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => 
 const mutationProductCreate = useProductCreate({
 	mutation: {
 		onSuccess: () => {
-			void navigate({to: "/products"});
+			void navigate("/products");
 		},
 	},
 });

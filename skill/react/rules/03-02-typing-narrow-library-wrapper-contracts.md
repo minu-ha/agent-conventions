@@ -20,7 +20,7 @@ tags: typing, wrapper, contracts
 라이브러리 컴포넌트는 화면에서 직접 쓰지 않고 `Ui*` 래퍼를 거칩니다.
 래퍼가 있어야 라이브러리를 올리거나 바꿀 때 한 파일만 고칩니다.
 
-**`export type UiXProps = LibXProps`로 두지 않습니다.**
+**`export type UiButtonProps = ButtonProps`로 두지 않습니다.**
 라이브러리 표면이 통째로 열려서 그 라이브러리의 스타일 창구까지 화면이 쓸 수 있게 됩니다.
 `css/composition-inject-classes-only-at-the-entry-point`가 정한 스타일 창구가 그 자리에서 뚫립니다.
 
@@ -29,7 +29,7 @@ DOM 표면은 아래 세 단계 표가 맡습니다.
 
 | 프롭 | 어떻게 |
 | --- | --- |
-| 라이브러리에 **이미 있는** 표시 프롭 (`color`, `padding`, `size`) | `LibXProps["color"]` 인덱스 접근으로 하나씩 |
+| 라이브러리에 **이미 있는** 표시 프롭 (`color`, `padding`, `size`) | `ButtonProps["color"]` 인덱스 접근으로 하나씩 |
 | 우리가 **새로 만든** 자기 프롭 (`icon`, `label`, `helperText`) | 우리가 타입을 적습니다 |
 | 라이브러리 스타일 창구 (테마 스타일 프롭, 클래스 맵, 렌더 태그 교체) | 선언하지 않습니다 |
 
@@ -78,10 +78,10 @@ DOM 표면은 리액트가 속성을 더하면 래퍼도 따라 받아야 하는
 **Incorrect (라이브러리 타입을 그대로 내보냄):**
 
 ```tsx
-export type UiButtonProps = LibButtonProps;
+export type UiButtonProps = ButtonProps;
 
 export const UiButton = (props: UiButtonProps) => {
-	return <LibButton {...props} />;
+	return <Button {...props} />;
 };
 ```
 
@@ -92,8 +92,8 @@ export const UiButton = (props: UiButtonProps) => {
 export interface UiButtonProps {
 	className?: string;
 	children?: ReactNode;
-	color?: LibButtonProps["color"];
-	disabled?: LibButtonProps["disabled"];
+	color?: ButtonProps["color"];
+	disabled?: ButtonProps["disabled"];
 	onClick?: MouseEventHandler<HTMLButtonElement>;
 }
 ```
@@ -101,8 +101,8 @@ export interface UiButtonProps {
 **Correct (1단계 — 그냥 통과하는 래퍼):**
 
 ```tsx
-import { LibTableCell } from "@ui-lib/core";
-import type { LibTableCellProps } from "@ui-lib/core";
+import { TableCell } from "@mui/material";
+import type { TableCellProps } from "@mui/material";
 import { clsx } from "clsx";
 import type { HTMLAttributes } from "react";
 
@@ -115,16 +115,16 @@ export interface UiTableCellProps extends HTMLAttributes<HTMLTableCellElement> {
 	/**
 	 * 내용 가로 정렬
 	 */
-	align?: LibTableCellProps["align"];
+	align?: TableCellProps["align"];
 	/**
 	 * 셀 여백
 	 */
-	padding?: LibTableCellProps["padding"];
+	padding?: TableCellProps["padding"];
 }
 
 export const UiTableCell = (props: UiTableCellProps) => {
 	return (
-		<LibTableCell {...props} className={clsx("ui_tableCell__root", props.className)} />
+		<TableCell {...props} className={clsx("ui_tableCell__root", props.className)} />
 	);
 };
 ```
@@ -132,8 +132,8 @@ export const UiTableCell = (props: UiTableCellProps) => {
 **Correct (2단계 — 부딪히는 이름만 빼고 다시 엶):**
 
 ```tsx
-import { LibButton } from "@ui-lib/core";
-import type { LibButtonProps } from "@ui-lib/core";
+import { Button } from "@mui/material";
+import type { ButtonProps } from "@mui/material";
 import { clsx } from "clsx";
 import type { HTMLAttributes } from "react";
 
@@ -146,12 +146,12 @@ export interface UiButtonProps extends Omit<HTMLAttributes<HTMLButtonElement>, "
 	/**
 	 * 강조 단계
 	 */
-	color?: LibButtonProps["color"];
+	color?: ButtonProps["color"];
 }
 
 export const UiButton = (props: UiButtonProps) => {
 	return (
-		<LibButton {...props} className={clsx("ui_button__root", props.className)} />
+		<Button {...props} className={clsx("ui_button__root", props.className)} />
 	);
 };
 ```
@@ -159,8 +159,8 @@ export const UiButton = (props: UiButtonProps) => {
 **Correct (3단계 — 요소 타입이 어긋나 필요한 프롭만 선언):**
 
 ```tsx
-import { LibTextField } from "@ui-lib/core";
-import type { LibTextFieldProps } from "@ui-lib/core";
+import { TextField } from "@mui/material";
+import type { TextFieldProps } from "@mui/material";
 import { clsx } from "clsx";
 import type { ChangeEventHandler } from "react";
 
@@ -189,12 +189,12 @@ export interface UiTextFieldProps {
 	/**
 	 * 오류 표시 여부
 	 */
-	error?: LibTextFieldProps["error"];
+	error?: TextFieldProps["error"];
 }
 
 export const UiTextField = (props: UiTextFieldProps) => {
 	return (
-		<LibTextField
+		<TextField
 			className={clsx("ui_textField__root", props.className)}
 			id={props.id}
 			value={props.value}

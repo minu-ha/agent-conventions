@@ -56,8 +56,7 @@ export const PgProducts = () => {
 ```tsx
 // page/products/_pg-product-tree-section.tsx
 const PgProductTreeSection = () => {
-	const navigate = useNavigate();
-	const search = Route.useSearch();
+	const [urlParams, setUrlParams] = useQueryStates(productUrlParsers);
 	const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
 	const [treeSearchKeyword, setTreeSearchKeyword] = useState("");
 
@@ -71,7 +70,7 @@ const PgProductTreeSection = () => {
 	const filteredCategoryNodes = filterCategoryNodes(responseProductTreeSuspense.data.categoryNodes, treeSearchKeyword);
 
 	/**
-	 * 검색어는 이 섹션 안에만 두고 route search로 올리지 않는다
+	 * 검색어는 이 섹션 안에만 두고 URL로 올리지 않는다
 	 */
 	const handleTreeSearchKeywordChange: UiInputProps["onChange"] = (event) => {
 		setTreeSearchKeyword(event.target.value);
@@ -85,7 +84,7 @@ const PgProductTreeSection = () => {
 	};
 
 	/**
-	 * 고른 분류를 route search에 적어 두어 새로 고침해도 같은 화면이 열리게 한다
+	 * 고른 분류를 URL에 적어 두어 새로 고침해도 같은 화면이 열리게 한다
 	 */
 	const handleTreeSelect: UiTreeProps["onSelect"] = (keys, _info) => {
 		const selectedKey = keys[0];
@@ -93,10 +92,7 @@ const PgProductTreeSection = () => {
 			return;
 		}
 
-		void navigate({
-			to: "/products",
-			search: {page: search.page, size: search.size, categoryId: selectedKey.replace("category:", "")},
-		});
+		void setUrlParams({categoryId: selectedKey.replace("category:", "")});
 	};
 
 	return (
@@ -107,7 +103,7 @@ const PgProductTreeSection = () => {
 				<UiTree
 					treeData={filteredCategoryNodes.map(toTreeData)}
 					expandedKeys={expandedKeys}
-					selectedKeys={search.categoryId ? [`category:${search.categoryId}`] : []}
+					selectedKeys={urlParams.categoryId ? [`category:${urlParams.categoryId}`] : []}
 					onExpand={handleTreeExpand}
 					onSelect={handleTreeSelect}
 				/>

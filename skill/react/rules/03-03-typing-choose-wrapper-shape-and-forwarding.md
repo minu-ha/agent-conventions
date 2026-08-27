@@ -52,10 +52,10 @@ export interface UiIconButtonProps extends HTMLAttributes<HTMLButtonElement> {
 
 // icon이 <button icon="…"> 으로 내려간다. 컴파일은 통과한다
 export const UiIconButton = (props: UiIconButtonProps) => (
-	<LibButton {...props}>
+	<Button {...props}>
 		{props.icon}
 		{props.children}
-	</LibButton>
+	</Button>
 );
 ```
 
@@ -84,7 +84,7 @@ export interface UiIconButtonProps {
 	/**
 	 * 비활성 여부
 	 */
-	disabled?: LibButtonProps["disabled"];
+	disabled?: ButtonProps["disabled"];
 	/**
 	 * 눌렀을 때
 	 */
@@ -93,14 +93,14 @@ export interface UiIconButtonProps {
 
 export const UiIconButton = (props: UiIconButtonProps) => {
 	return (
-		<LibButton
+		<Button
 			className={clsx("ui_iconButton__root", props.className)}
 			aria-label={props.label}
 			disabled={props.disabled}
 			onClick={props.onClick}
 		>
 			{props.icon}
-		</LibButton>
+		</Button>
 	);
 };
 ```
@@ -144,7 +144,7 @@ export const UiField = (props: UiFieldProps) => {
 			<label className={clsx("ui_field__label")} htmlFor={props.inputId}>
 				{props.label}
 			</label>
-			<LibTextField id={props.inputId} value={props.value} onChange={props.onChange} />
+			<TextField id={props.inputId} value={props.value} onChange={props.onChange} />
 			{props.helperText && <span className={clsx("ui_field__helper")}>{props.helperText}</span>}
 		</div>
 	);
@@ -163,12 +163,12 @@ export interface UiTableRowProps extends HTMLAttributes<HTMLTableRowElement> {
 	/**
 	 * 선택된 줄로 표시할지
 	 */
-	selected?: LibTableRowProps["selected"];
+	selected?: TableRowProps["selected"];
 }
 
 export const UiTableRow = (props: UiTableRowProps) => {
 	return (
-		<LibTableRow {...props} className={clsx("ui_tableRow__root", props.className)} />
+		<TableRow {...props} className={clsx("ui_tableRow__root", props.className)} />
 	);
 };
 ```
