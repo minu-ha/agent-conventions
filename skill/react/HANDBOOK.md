@@ -2724,14 +2724,26 @@ export const PgOrderToolbar = () => {
 
 **Impact: MEDIUM-HIGH (진입 파일만 봐도 화면 흐름을 따라갈 수 있습니다)**
 
-라우트 진입이 소유하는 것은 다음 다섯입니다.
+라우트 진입이 소유하는 것은 다음 셋입니다.
 다른 규칙이 이 목록을 가리킬 때는 여기가 정본입니다.
 
-- search 파라미터와 화면 이동
-- 화면 단위 쿼리와 뮤테이션, 그 무효화
+- 섹션 렌더 조립과 섹션마다의 `Suspense` 경계
 - 화면 전체 이펙트
-- 여러 섹션에 걸친 파생값
-- 섹션 렌더 조립
+- 라우트 사이의 이동
+
+쿼리·뮤테이션·URL 상태는 라우트 진입의 것이 아닙니다.
+
+| 값 | 읽는 곳 |
+| --- | --- |
+| 서버 응답 | 그 데이터를 그리는 컴포넌트가 같은 key 로 직접 부릅니다 |
+| 뮤테이션 | 그 동작을 일으키는 컴포넌트가 갖습니다 |
+| 라우트 params, search 파라미터 | `useParams`와 URL 파서 묶음을 쓰는 자리에서 읽고 씁니다 |
+| 여러 응답을 합친 파생값 | 소유자 `_hook`이 `combine`으로 갖고, 섹션이 그 훅을 부릅니다 |
+
+같은 데이터가 여러 섹션에 필요해도 프롭으로 내리지 않습니다.
+`@tanstack/react-query`는 key 가 같으면 요청을 한 번만 보내고 구독자 모두에게 같은 데이터를 줍니다.
+어느 섹션이 어떤 데이터를 쓰는지는 그 섹션 파일의 쿼리 호출이 말합니다.
+부모가 먼저 멈춰 자식의 요청이 뒤로 밀리면 부모가 같은 key 를 `usePrefetchQuery`로 먼저 띄웁니다.
 
 비동기, 상태, 상호작용 경계가 있는 섹션을 분리해도 이 흐름 제어 자체는 라우트 진입에 남깁니다.
 
@@ -2753,47 +2765,55 @@ return (
 );
 ```
 
-**Correct (라우트 진입에서 흐름이 보이고, 실제 경계가 있는 섹션만 분리):**
+**Correct (라우트 진입은 조립과 경계만 갖고, 섹션이 자기 데이터를 자기 key 로 읽음):**
 
 ```tsx
-const navigate = useNavigate();
-const search = Route.useSearch();
-
-/**
- * 표에 그릴 product를 route search의 page로 읽는다
- */
-const responseProductListSuspense = useProductListSuspense(
-	{page: search.page},
-	{query: {select: (response) => ({products: response.data.list})}},
-);
-
-/**
- * 저장에 성공하면 첫 페이지로 돌려 새로 저장한 product가 목록 맨 앞에 오게 한다
- */
-const mutationProductSave = useProductSave({
-	mutation: {
-		onSuccess: () => {
-			void navigate({to: "/products", search: {...search, page: 1}});
-		},
-	},
-});
-
-/**
- * 폼 값을 전송 형태로 바꿔 저장만 부르고, 저장 뒤 흐름은 mutation 콜백이 이어 간다
- */
-const handleProductSave: PgProductListSectionProps["onSubmit"] = () => {
-	mutationProductSave.mutate({data: toProductSaveRequest(formValues)});
+export const PgProducts = () => {
+	return (
+		<Fragment>
+			<PgProductFilterSection />
+			<Suspense fallback={<UiLoadingFallback ariaLabel="product 목록을 불러오는 중" />}>
+				<PgProductListSection />
+			</Suspense>
+		</Fragment>
+	);
 };
+```
 
-return (
-	<Fragment>
-		<PgProductFilterSection />
-		<PgProductListSection
-			products={responseProductListSuspense.data.products}
-			onSubmit={handleProductSave}
-		/>
-	</Fragment>
-);
+```tsx
+// page/products/_pg-product-list-section.tsx
+const PgProductListSection = () => {
+	const navigate = useNavigate();
+	const search = Route.useSearch();
+
+	/**
+	 * 표에 그릴 product를 route search의 page로 읽는다
+	 */
+	const responseProductListSuspense = useProductListSuspense(
+		{page: search.page},
+		{query: {select: (response) => ({products: response.data.list})}},
+	);
+
+	/**
+	 * 저장에 성공하면 첫 페이지로 돌려 새로 저장한 product가 목록 맨 앞에 오게 한다
+	 */
+	const mutationProductSave = useProductSave({
+		mutation: {
+			onSuccess: () => {
+				void navigate({to: "/products", search: {...search, page: 1}});
+			},
+		},
+	});
+
+	/**
+	 * 폼 값을 전송 형태로 바꿔 저장만 부르고, 저장 뒤 흐름은 mutation 콜백이 이어 간다
+	 */
+	const handleProductSave: UiFormProps["onSubmit"] = () => {
+		mutationProductSave.mutate({data: toProductSaveRequest(formValues)});
+	};
+
+	return <UiTable rows={responseProductListSuspense.data.products} onSubmit={handleProductSave} />;
+};
 ```
 
 ### 6.2 Avoid Premature Abstraction in Screen Code
@@ -2945,56 +2965,46 @@ export const PgProductTable = (props: PgProductTableProps) => {
 지역 섹션 파일을 어느 폴더에 두는지는 `ownership-place-owner-files-in-role-folders`가 정합니다.
 진입 파일의 JSX에 나타나지 않는 섹션이 다른 섹션 파일 안에서 렌더되면 과하게 쪼갠 것입니다.
 
-**Incorrect (레이아웃 래퍼가 화면 단위 쿼리까지 삼켜 라우트 흐름이 안 보임):**
+**Incorrect (감싸기만 하는 래퍼를 섹션으로 뗌):**
 
 ```tsx
-const PgProductSidebarPanel = () => {
-	const responseProductTreeSuspense = useProductTreeSuspense();
-
-	return (
-		<section className={clsx("pg_products__sidebar")}>
-			<UiTree treeData={responseProductTreeSuspense.data.nodes} />
-		</section>
-	);
+const PgProductSidebarPanel = (props: PgProductSidebarPanelProps) => {
+	return <section className={clsx("pg_products__sidebar")}>{props.children}</section>;
 };
 
-const PgProductDetailPanel = () => {
-	const responseProductListSuspense = useProductListSuspense();
-
-	return (
-		<section className={clsx("pg_products__detail")}>
-			<UiTable dataSource={responseProductListSuspense.data.list} />
-		</section>
-	);
-};
-
-export const PgProducts = () => {
-	return (
-		<div className={clsx("pg_products__layout")}>
-			<PgProductSidebarPanel />
-			<PgProductDetailPanel />
-		</div>
-	);
+const PgProductDetailPanel = (props: PgProductDetailPanelProps) => {
+	return <section className={clsx("pg_products__detail")}>{props.children}</section>;
 };
 ```
 
-**Correct (지역 상태와 상호작용을 직접 가진 섹션만 화면 지역 컴포넌트로 추출):**
+**Incorrect (라우트 진입이 대신 읽어 프롭으로 내림):**
 
 ```tsx
-interface PgProductTreeSectionProps {
-	categoryNodes: ProductCategoryNode[];
-	selectedCategoryId?: string;
-	onCategorySelect: (categoryId: string) => void;
-}
+export const PgProducts = () => {
+	const responseProductTreeSuspense = useProductTreeSuspense();
 
-const PgProductTreeSection = (props: PgProductTreeSectionProps) => {
+	return <PgProductTreeSection categoryNodes={responseProductTreeSuspense.data.nodes} />;
+};
+```
+
+**Correct (자기 데이터·상태·상호작용을 직접 가진 섹션만 추출하고, 데이터는 섹션이 자기 key 로 읽음):**
+
+```tsx
+// page/products/_pg-product-tree-section.tsx
+const PgProductTreeSection = () => {
+	const navigate = useNavigate();
+	const search = Route.useSearch();
 	const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
 	const [treeSearchKeyword, setTreeSearchKeyword] = useState("");
 
-	const filteredCategoryNodes = filterCategoryNodes(
-		props.categoryNodes,
-		treeSearchKeyword,
+	/**
+	 * 사이드바가 그릴 분류 노드만 남긴다. 트리 펼침 상태는 이 섹션이 따로 들고 있다
+	 */
+	const responseProductTreeSuspense = useProductTreeSuspense(
+		{},
+		{query: {select: (response) => ({categoryNodes: response.data.nodes})}},
 	);
+	const filteredCategoryNodes = filterCategoryNodes(responseProductTreeSuspense.data.categoryNodes, treeSearchKeyword);
 
 	/**
 	 * 검색어는 이 섹션 안에만 두고 route search로 올리지 않는다
@@ -3011,7 +3021,7 @@ const PgProductTreeSection = (props: PgProductTreeSectionProps) => {
 	};
 
 	/**
-	 * tree가 넘긴 key에서 접두사를 떼어 route search가 받는 categoryId로 만든다
+	 * 고른 분류를 route search에 적어 두어 새로 고침해도 같은 화면이 열리게 한다
 	 */
 	const handleTreeSelect: UiTreeProps["onSelect"] = (keys, _info) => {
 		const selectedKey = keys[0];
@@ -3019,7 +3029,10 @@ const PgProductTreeSection = (props: PgProductTreeSectionProps) => {
 			return;
 		}
 
-		props.onCategorySelect(selectedKey.replace("category:", ""));
+		void navigate({
+			to: "/products",
+			search: {page: search.page, size: search.size, categoryId: selectedKey.replace("category:", "")},
+		});
 	};
 
 	return (
@@ -3030,7 +3043,7 @@ const PgProductTreeSection = (props: PgProductTreeSectionProps) => {
 				<UiTree
 					treeData={filteredCategoryNodes.map(toTreeData)}
 					expandedKeys={expandedKeys}
-					selectedKeys={props.selectedCategoryId ? [`category:${props.selectedCategoryId}`] : []}
+					selectedKeys={search.categoryId ? [`category:${search.categoryId}`] : []}
 					onExpand={handleTreeExpand}
 					onSelect={handleTreeSelect}
 				/>
@@ -3042,49 +3055,18 @@ const PgProductTreeSection = (props: PgProductTreeSectionProps) => {
 };
 ```
 
-**Correct (라우트 진입이 흐름 제어를 계속 소유):**
+**Correct (라우트 진입은 섹션 조립과 경계만 가짐):**
 
 ```tsx
 export const PgProducts = () => {
-	const navigate = useNavigate();
-	const search = Route.useSearch();
-
-	/**
-	 * 사이드바가 그릴 분류 노드만 남긴다. 트리 펼침 상태는 섹션이 따로 들고 있다
-	 */
-	const responseProductTreeSuspense = useProductTreeSuspense(
-		{},
-		{query: {select: (response) => ({categoryNodes: response.data.nodes})}},
-	);
-
-	/**
-	 * 표가 쓰는 필드 이름으로 목록을 바꿔서 표가 응답 구조를 모르게 한다
-	 */
-	const responseProductListSuspense = useProductListSuspense(
-		{},
-		{query: {select: (response) => ({products: response.data.list})}},
-	);
-
-	/**
-	 * 고른 분류를 route search에 적어 두어 새로 고침해도 같은 화면이 열리게 한다
-	 */
-	const handleCategorySelect: PgProductTreeSectionProps["onCategorySelect"] = (categoryId) => {
-		void navigate({
-			to: "/products",
-			search: {page: search.page, size: search.size, categoryId},
-		});
-	};
-
 	return (
 		<div className={clsx("pg_products__layout")}>
-			<PgProductTreeSection
-				categoryNodes={responseProductTreeSuspense.data.categoryNodes}
-				selectedCategoryId={search.categoryId}
-				onCategorySelect={handleCategorySelect}
-			/>
-			<PgProductTableSection
-				products={responseProductListSuspense.data.products}
-			/>
+			<Suspense fallback={<UiLoadingFallback ariaLabel="분류를 불러오는 중" />}>
+				<PgProductTreeSection />
+			</Suspense>
+			<Suspense fallback={<UiLoadingFallback ariaLabel="product 목록을 불러오는 중" />}>
+				<PgProductTableSection />
+			</Suspense>
 		</div>
 	);
 };
@@ -3458,6 +3440,10 @@ return <UiSelectedCountBadge count={selectedIds.length} />;
 `useState`가 아니라 search 파라미터가 소유합니다.
 열림과 닫힘, 마우스 올림, 입력 중인 임시 값은 주소에 올리지 않습니다.
 search 파라미터를 `useState`로 복제해 출처를 둘로 만들지 않습니다.
+
+서버 상태와 search 파라미터는 쓰는 컴포넌트가 같은 key 로 직접 읽습니다.
+부모가 읽어 프롭으로 내리면 같은 값이 cache 와 프롭 두 길로 흘러 출처가 흐려집니다.
+누가 무엇을 읽는지는 `screen-keep-route-flow-visible`이 정합니다.
 
 `Context`는 전역 상태 도구가 아니라 **한 컴포넌트 묶음 안에서 프롭 전달을 줄이는 수단**입니다.
 합성 컴포넌트가 부품끼리 상태를 나눠 쓸 때, 작은 컴포넌트 묶음이 두세 단계 아래로 값을 내릴 때 씁니다.

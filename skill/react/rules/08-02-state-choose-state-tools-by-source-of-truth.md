@@ -33,6 +33,10 @@ tags: state, react-query, zustand
 열림과 닫힘, 마우스 올림, 입력 중인 임시 값은 주소에 올리지 않습니다.
 search 파라미터를 `useState`로 복제해 출처를 둘로 만들지 않습니다.
 
+서버 상태와 search 파라미터는 쓰는 컴포넌트가 같은 key 로 직접 읽습니다.
+부모가 읽어 프롭으로 내리면 같은 값이 cache 와 프롭 두 길로 흘러 출처가 흐려집니다.
+누가 무엇을 읽는지는 `screen-keep-route-flow-visible`이 정합니다.
+
 `Context`는 전역 상태 도구가 아니라 **한 컴포넌트 묶음 안에서 프롭 전달을 줄이는 수단**입니다.
 합성 컴포넌트가 부품끼리 상태를 나눠 쓸 때, 작은 컴포넌트 묶음이 두세 단계 아래로 값을 내릴 때 씁니다.
 `strategy-choose-single-composition-compound-and-variants`가 상태가 있는 합성으로 확장하라고 할 때
