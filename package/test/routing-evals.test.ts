@@ -100,7 +100,9 @@ const typescriptRuleUniverse = [
 	"functions-declare-functions-as-arrow-consts",
 	"functions-use-named-object-params-for-complex-signatures",
 	"functions-extract-helpers-only-when-the-boundary-is-real",
-	"functions-place-and-promote-support-functions",
+	"functions-give-each-function-its-own-file",
+	"functions-order-declarations-top-down",
+	"functions-promote-shared-functions-to-root-util",
 	"functions-avoid-imperative-assembly-in-wide-scopes",
 	"functions-name-a-value-only-for-recompute-or-judgment",
 	"functions-name-functions-by-what-comes-out",
@@ -109,7 +111,8 @@ const typescriptRuleUniverse = [
 	"values-read-objects-through-chains",
 	"values-declare-meaningful-numbers",
 	"values-avoid-lookup-tables-for-simple-choices",
-	"values-use-es-toolkit-and-dayjs-first",
+	"values-use-es-toolkit-for-value-helpers",
+	"values-handle-dates-with-dayjs",
 	"absence-expose-optional-values-instead-of-silent-fallbacks",
 	"docs-keep-body-comments-for-intent-and-steps",
 	"docs-require-header-jsdoc-on-key-declarations",
@@ -298,12 +301,22 @@ const typescriptRuleRouting = {
 	"functions-extract-helpers-only-when-the-boundary-is-real": {
 		appliesWhen:
 			"보조 함수를 빼내거나 옮기거나 내보내거나 공유할 때. 범용 보조 파일, 소유자 하나만 쓰는 변환 함수, 자잘한 정리 단계의 경계를 바꿀 때.",
-		reviewWith: ["functions-place-and-promote-support-functions", "docs-require-header-jsdoc-on-key-declarations"],
+		reviewWith: ["functions-give-each-function-its-own-file", "docs-require-header-jsdoc-on-key-declarations"],
 	},
-	"functions-place-and-promote-support-functions": {
+	"functions-give-each-function-its-own-file": {
 		appliesWhen:
-			"보조 함수를 어느 파일이나 폴더에 둘지 정할 때. 파일 안에서 내보낸 함수와 비공개 보조의 선언 순서를 정할 때. 루트 `util` 폴더로 파일을 옮기거나 종류 폴더를 새로 만들 때.",
+			"떼어 낸 보조 함수를 어느 파일이나 폴더에 둘지 정할 때. `helper.ts`, `helpers.ts`, `utils.ts` 같은 파일을 만들거나 거기에 함수를 더할 때. 내보낸 함수가 다른 내보낸 함수를 부르게 될 때.",
+		reviewWith: ["functions-promote-shared-functions-to-root-util", "functions-order-declarations-top-down"],
+	},
+	"functions-order-declarations-top-down": {
+		appliesWhen:
+			"`.ts` 파일에 선언을 추가하거나 선언 자리를 옮길 때. 비공개 보조를 내보낸 함수보다 위에 두려 할 때. 제외: 리액트 컴포넌트 본문 안 선언 자리를 바꾸는 경우.",
 		reviewWith: [],
+	},
+	"functions-promote-shared-functions-to-root-util": {
+		appliesWhen:
+			"함수를 루트 `util` 폴더로 옮기거나 종류 폴더를 새로 만들 때. 두 소유자가 같은 함수를 쓰게 될 때. 제외: 소유자 안에서 파일 자리만 바꾸는 경우.",
+		reviewWith: ["functions-give-each-function-its-own-file"],
 	},
 	"functions-avoid-imperative-assembly-in-wide-scopes": {
 		appliesWhen: "모듈 최상위나 함수 본문 전체를 덮는 스코프에서 `let` 재할당, 배열 `push`, 조건부 누적으로 값을 만들 때.",
@@ -320,7 +333,7 @@ const typescriptRuleRouting = {
 	},
 	"values-prefer-immutable-array-sorting": {
 		appliesWhen: "프롭스, 상태, 매개변수, 모듈 상수에서 온 배열을 정렬할 때. 기존 `.sort()` 호출을 추가·변경할 때.",
-		reviewWith: ["values-use-es-toolkit-and-dayjs-first"],
+		reviewWith: ["values-use-es-toolkit-for-value-helpers"],
 	},
 	"values-use-set-and-map-for-repeated-lookups": {
 		appliesWhen:
@@ -344,10 +357,15 @@ const typescriptRuleRouting = {
 			"상태나 `variant`에 따라 쓸 값 하나를 고르는 객체·Map을 추가·변경할 때. 조회표의 키로 프롭이나 상태를 읽어 값을 넘기는 코드를 추가·변경할 때.",
 		reviewWith: [],
 	},
-	"values-use-es-toolkit-and-dayjs-first": {
+	"values-use-es-toolkit-for-value-helpers": {
 		appliesWhen:
-			"배열, 객체, 문자열, 날짜를 다루는 보조 코드를 추가·변경할 때. `reduce`, `Object.entries`, `Array.from`, 정규식, `new Date` 산술로 값을 다시 짜는 코드를 쓸 때. 제외: 표준 메서드 하나로 끝나는 경우.",
-		reviewWith: ["values-prefer-immutable-array-sorting", "functions-extract-helpers-only-when-the-boundary-is-real"],
+			"배열, 객체, 문자열, 숫자를 다루는 보조 코드를 추가·변경할 때. `reduce`, `Object.entries`, `Array.from`, 정규식으로 값을 다시 짜는 코드를 쓸 때. 제외: 표준 메서드 하나로 끝나는 경우.",
+		reviewWith: ["values-prefer-immutable-array-sorting", "values-handle-dates-with-dayjs"],
+	},
+	"values-handle-dates-with-dayjs": {
+		appliesWhen:
+			"날짜를 파싱하거나 형식을 맞추거나 더하고 뺄 때. `new Date`, `getTime()`, `setDate()`, `toLocaleDateString()`을 쓸 때. 제외: 서버가 준 시각 문자열을 파싱 없이 그대로 보여주는 경우.",
+		reviewWith: ["values-use-es-toolkit-for-value-helpers", "naming-place-project-constants-in-the-root-constant-folder"],
 	},
 	"absence-expose-optional-values-instead-of-silent-fallbacks": {
 		appliesWhen: "선택 값을 읽거나 정규화하거나 넘기는 방식을 바꿀 때. `??`, `||`, 기본값, 빈 값 대체 분기를 추가·변경할 때.",
@@ -855,7 +873,7 @@ const mandatoryRuleRouting = {
 		],
 		"types-replace-enum-with-as-const-objects": ["naming-use-consistent-file-and-symbol-naming", "types-document-custom-types-and-shapes"],
 		"naming-place-owner-constants-in-the-owner-constant-folder": ["naming-use-consistent-file-and-symbol-naming"],
-		"functions-place-and-promote-support-functions": ["functions-extract-helpers-only-when-the-boundary-is-real"],
+		"functions-give-each-function-its-own-file": ["functions-extract-helpers-only-when-the-boundary-is-real"],
 		"values-avoid-lookup-tables-for-simple-choices": ["docs-justify-convention-exceptions-with-a-reason-comment"],
 		"docs-require-header-jsdoc-on-key-declarations": [
 			"docs-write-concise-korean-comments-about-purpose-and-constraints",
@@ -911,11 +929,16 @@ const typescriptSelections = {
 	"helper-boundary-scope-drift": [
 		"naming-use-consistent-file-and-symbol-naming",
 		"functions-extract-helpers-only-when-the-boundary-is-real",
-		"functions-place-and-promote-support-functions",
+		"functions-give-each-function-its-own-file",
+		"functions-order-declarations-top-down",
 		"functions-name-functions-by-what-comes-out",
 	],
 	"shared-collection-lookups-and-sort": ["values-prefer-immutable-array-sorting", "values-use-set-and-map-for-repeated-lookups"],
-	"hand-rolled-collection-helpers": ["naming-use-direct-imports-and-public-entry-points", "values-use-es-toolkit-and-dayjs-first"],
+	"hand-rolled-collection-helpers": [
+		"naming-use-direct-imports-and-public-entry-points",
+		"values-use-es-toolkit-for-value-helpers",
+		"values-handle-dates-with-dayjs",
+	],
 	"local-value-lookup": [
 		"naming-use-consistent-file-and-symbol-naming",
 		"values-avoid-lookup-tables-for-simple-choices",
@@ -975,7 +998,8 @@ const typescriptScenarioEvidence = {
 		files: ["src/report/report-panel.ts"],
 	},
 	"helper-boundary-scope-drift": {
-		prompt: "inline a single-owner `mapProfileRow` sub-step into `profile-api.ts` and rename the remaining exported builder by its result.",
+		prompt:
+			"inline a single-owner `mapProfileRow` sub-step into `profile-api.ts`, place it below the exported builder, and rename that builder by its result.",
 		files: ["src/profile/profile-api.ts"],
 	},
 	"shared-collection-lookups-and-sort": {
@@ -2004,7 +2028,7 @@ test("TypeScript progressive metadata matches Appendix A exactly", async () => {
 
 	assert.equal(document.metadata.progressiveDisclosure, true);
 	assert.deepEqual(document.metadata.companions ?? [], []);
-	assert.equal(document.rules.length, 34);
+	assert.equal(document.rules.length, 37);
 	assert.deepEqual(
 		Object.fromEntries(document.rules.map((rule) => [getRuleId(rule), {appliesWhen: rule.appliesWhen, reviewWith: rule.reviewWith}])),
 		typescriptRuleRouting,
@@ -2128,7 +2152,7 @@ test("TypeScript routing manifest is an exact twelve-scenario partition with ful
 	assert.ok(driftScenario?.scopeDrift);
 	assert.equal(
 		driftScenario.scopeDrift.evidence,
-		"the same normalization becomes necessary for a second owner, so move the existing named function to `profile-support.ts`, export it, directly import it from `bulk-profile.ts`, and add concise Korean header doc comments.",
+		"the same normalization becomes necessary for a second owner, so decide whether it stays with an owner or moves to the root `util` folder, move the existing named function to `profile-support.ts`, export it, directly import it from `bulk-profile.ts`, and add concise Korean header doc comments.",
 	);
 	assert.deepEqual(driftScenario.scopeDrift.files, [
 		"src/profile/profile-api.ts",
@@ -2139,7 +2163,9 @@ test("TypeScript routing manifest is an exact twelve-scenario partition with ful
 		"naming-use-consistent-file-and-symbol-naming",
 		"naming-use-direct-imports-and-public-entry-points",
 		"functions-extract-helpers-only-when-the-boundary-is-real",
-		"functions-place-and-promote-support-functions",
+		"functions-give-each-function-its-own-file",
+		"functions-order-declarations-top-down",
+		"functions-promote-shared-functions-to-root-util",
 		"functions-name-functions-by-what-comes-out",
 		"docs-require-header-jsdoc-on-key-declarations",
 		"docs-write-concise-korean-comments-about-purpose-and-constraints",
@@ -2156,7 +2182,7 @@ test("TypeScript generated index is complete and within the deterministic byte b
 	const expectedIds = document.rules.map((rule) => getRuleId(rule)).sort();
 
 	assert.deepEqual(ids, expectedIds);
-	assert.equal(ids.length, 34);
+	assert.equal(ids.length, 37);
 
 	for (const entry of entries) {
 		assert.equal(entry.fileName, `${entry.id}.md`);

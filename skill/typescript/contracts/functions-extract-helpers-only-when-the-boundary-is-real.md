@@ -41,6 +41,6 @@
 - `.map()` 콜백 하나에만 쓰이는 변환
 - 선택 값 보정, 라벨 기본값 같은 자잘한 정리 단계
 
-뺀 다음 어디 두고 언제 공용으로 올릴지는 `functions-place-and-promote-support-functions`가 정합니다.
+뺀 다음 어디 두고 언제 공용으로 올릴지는 `functions-give-each-function-its-own-file`가 정합니다.
 
 > 예시·예외가 필요하면 [full rule](../rules/03-03-functions-extract-helpers-only-when-the-boundary-is-real.md)을 읽습니다.

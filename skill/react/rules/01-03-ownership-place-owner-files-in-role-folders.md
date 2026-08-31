@@ -57,7 +57,7 @@ tags: ownership
 - 폴더 이름은 단수로 쓰고 프레임워크가 강제하는 이름만 예외로 둡니다.
 - 루트의 `constant`·`type`·`hook`은 프로젝트가 소유자인 자리라 같은 역할 폴더 규칙을 따릅니다.
   다만 레이어 루트라 `_`를 붙이지 않습니다.
-  루트에만 있는 `util`과 `config`는 `typescript/functions-place-and-promote-support-functions`와
+  루트에만 있는 `util`과 `config`는 `typescript/functions-promote-shared-functions-to-root-util`과
   `typescript/naming-read-environment-values-through-config-env`가 정합니다.
 
 무엇을 추출할지는 이 규칙이 정하지 않습니다.

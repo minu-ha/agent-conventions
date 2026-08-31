@@ -6,7 +6,7 @@ impactDescription: 프롭스, 상태, 모듈 상수에서 온 배열을 정렬�
 appliesWhen:
   - 프롭스, 상태, 매개변수, 모듈 상수에서 온 배열을 정렬할 때
   - 기존 `.sort()` 호출을 추가·변경할 때
-reviewWith: values-use-es-toolkit-and-dayjs-first
+reviewWith: values-use-es-toolkit-for-value-helpers
 tags: functions, arrays, immutability
 ---
 

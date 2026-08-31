@@ -14,4 +14,4 @@
 떼어 낸 함수의 이름은 `functions-name-functions-by-what-comes-out`이 정합니다.
 중간값에 이름을 붙일지는 `functions-name-a-value-only-for-recompute-or-judgment`가 정합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/03-05-functions-avoid-imperative-assembly-in-wide-scopes.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/03-07-functions-avoid-imperative-assembly-in-wide-scopes.md)을 읽습니다.

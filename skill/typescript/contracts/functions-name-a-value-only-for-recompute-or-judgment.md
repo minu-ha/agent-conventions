@@ -46,4 +46,4 @@
 `let` 재할당과 배열 `push` 누적은 `functions-avoid-imperative-assembly-in-wide-scopes`가 봅니다.
 객체 필드를 그대로 읽는 것은 계산이 아니라 `values-read-objects-through-chains`가 봅니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/03-06-functions-name-a-value-only-for-recompute-or-judgment.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/03-08-functions-name-a-value-only-for-recompute-or-judgment.md)을 읽습니다.

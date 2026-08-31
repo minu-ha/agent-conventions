@@ -35,7 +35,7 @@ tags: functions
 
 **목록을 만들려고 `Set`을 쓰는 것은 이 규칙이 아닙니다.**
 `[...new Set(values)]`는 `uniq`, `filter((value) => !set.has(value))`는 `difference`나 `without`입니다.
-`values-use-es-toolkit-and-dayjs-first`가 그 자리를 봅니다.
+`values-use-es-toolkit-for-value-helpers`가 그 자리를 봅니다.
 `Set`은 만든 뒤에 `has`를 여러 번 부를 때만 남깁니다.
 
 `es-toolkit`의 `keyBy`가 돌려주는 평범한 객체도 조회 자체는 한 번에 합니다.

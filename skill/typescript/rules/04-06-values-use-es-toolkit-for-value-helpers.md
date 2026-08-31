@@ -1,26 +1,25 @@
 ---
-title: Use es-toolkit and dayjs First
-titleKo: 직접 만들지 않고 `es-toolkit`과 `dayjs`를 씁니다
+title: Use es-toolkit for Value Helpers
+titleKo: 값을 다루는 보조는 직접 만들지 않고 `es-toolkit`을 씁니다
 impact: MEDIUM-HIGH
-impactDescription: 중복 제거, 표기 변환, 날짜 계산을 파일마다 다르게 만들지 않고 검증된 구현 하나로 모읍니다
+impactDescription: 중복 제거와 표기 변환을 파일마다 다르게 만들지 않고 검증된 구현 하나로 모읍니다
 appliesWhen:
-  - 배열, 객체, 문자열, 날짜를 다루는 보조 코드를 추가·변경할 때
-  - `reduce`, `Object.entries`, `Array.from`, 정규식, `new Date` 산술로 값을 다시 짜는 코드를 쓸 때
+  - 배열, 객체, 문자열, 숫자를 다루는 보조 코드를 추가·변경할 때
+  - `reduce`, `Object.entries`, `Array.from`, 정규식으로 값을 다시 짜는 코드를 쓸 때
   - 제외: 표준 메서드 하나로 끝나는 경우
-reviewWith: values-prefer-immutable-array-sorting, functions-extract-helpers-only-when-the-boundary-is-real
-tags: values, es-toolkit, dayjs
+reviewWith: values-prefer-immutable-array-sorting, values-handle-dates-with-dayjs
+tags: values, es-toolkit
 ---
 
-## Use es-toolkit and dayjs First
+## Use es-toolkit for Value Helpers
 
-**Impact: MEDIUM-HIGH (중복 제거, 표기 변환, 날짜 계산을 파일마다 다르게 만들지 않고 검증된 구현 하나로 모읍니다)**
+**Impact: MEDIUM-HIGH (중복 제거와 표기 변환을 파일마다 다르게 만들지 않고 검증된 구현 하나로 모읍니다)**
 
 값을 다루는 보조 함수는 `es-toolkit`에서 먼저 찾습니다.
-날짜는 `dayjs`로 다룹니다.
-둘 다 `clsx`와 같은 자리입니다.
+`clsx`와 같은 자리입니다.
 쓸지 말지 고르는 라이브러리가 아니라 기본값입니다.
 
-직접 쓴 구현은 빈 배열, 중복 키, 월말 같은 경계에서 저마다 다르게 틀립니다.
+직접 쓴 구현은 빈 배열, 중복 키, 한 글자 문자열 같은 경계에서 저마다 다르게 틀립니다.
 `Math.min(...values)`처럼 배열을 인자로 펼치는 관용구는 목록이 길어지면 호출 인자 한계에 걸립니다.
 같은 일을 하는 코드가 파일마다 조금씩 다른 모양으로 남는 것이 더 큰 비용입니다.
 
@@ -37,10 +36,10 @@ tags: values, es-toolkit, dayjs
 | 숫자 | 집계, 범위 제한, 최댓값과 최솟값 | `sum`, `sumBy`, `mean`, `clamp`, `maxBy`, `minBy` |
 | 판정 | 빈 값과 형 검사 | `isNil`, `isNotNil`, `isEmptyObject`, `isPlainObject` |
 | 비동기 | 지연, 시간 제한, 재시도 | `delay`, `withTimeout`, `retry` |
-| 날짜 | 파싱, 형식, 더하기와 빼기, 비교 | `dayjs` |
 
 표에 없어도 `es-toolkit` 문서에 같은 뜻의 함수가 있으면 그 함수를 씁니다.
-`lodash`와 `moment`는 새로 들이지 않습니다.
+`lodash`는 새로 들이지 않습니다.
+날짜는 `values-handle-dates-with-dayjs`가 봅니다.
 
 **표준 메서드 하나로 끝나는 것은 그대로 둡니다.**
 `map`, `filter`, `find`, `flat`, `at`, `Object.keys`를 감싸지 않습니다.
@@ -61,10 +60,6 @@ tags: values, es-toolkit, dayjs
 `minBy`와 `maxBy`는 빈 배열에서 `undefined`를 돌려줍니다.
 `length === 0`을 먼저 보고 다시 `Math.min`을 부르지 않고, 결과가 `undefined`인지만 봅니다.
 값을 뽑으려고 만들던 중간 `map` 배열도 같이 사라집니다.
-
-**서버가 준 시각 문자열을 그대로 보여줄 때는 `dayjs`로 파싱하지 않습니다.**
-파싱하면 타임존 변환이 붙어 표시 시각이 밀립니다.
-문자열을 자르는 것이 표시 규칙일 때는 자르는 코드를 그대로 둡니다.
 
 **반복 조회는 `Set`과 `Map`이 맡습니다.**
 `groupBy`와 `keyBy`는 목록을 다시 짜는 함수입니다.
@@ -92,11 +87,10 @@ const productsByCategory = products.reduce<Record<string, Product[]>>((grouped, 
 const draftFilter = JSON.parse(JSON.stringify(savedFilter)) as ProductFilter;
 ```
 
-**Incorrect (정규식으로 표기를 바꾸고 밀리초로 날짜를 계산함):**
+**Incorrect (정규식으로 표기를 바꿈):**
 
 ```ts
 const searchKey = rawKey.replace(/([A-Z])/g, "_$1").toLowerCase();
-const expiresAt = new Date(issuedAt.getTime() + 7 * 24 * 60 * 60 * 1000);
 ```
 
 **Incorrect (`Array.from`에 쓰지 않는 첫 인자를 두고 길이만큼 돎):**
@@ -146,15 +140,6 @@ const toChartBounds = (points: readonly ChartPoint[]) => {
 
 	return {min: lowestPoint.y, max: highestPoint.y};
 };
-```
-
-**Correct (날짜 계산과 형식은 `dayjs`):**
-
-```ts
-import dayjs from "dayjs";
-
-const expiresAt = dayjs(issuedAt).add(7, "day");
-const expiresLabel = expiresAt.format(date_format);
 ```
 
 **Correct (표준 메서드 하나로 끝나면 감싸지 않음):**

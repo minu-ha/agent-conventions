@@ -38,17 +38,20 @@
     - 3.1 [Declare Functions as Arrow Consts](#31-declare-functions-as-arrow-consts)
     - 3.2 [Use Named Object Params for Complex Signatures](#32-use-named-object-params-for-complex-signatures)
     - 3.3 [Extract Support Functions Only When the Boundary Is Real](#33-extract-support-functions-only-when-the-boundary-is-real)
-    - 3.4 [Place and Promote Support Functions Deliberately](#34-place-and-promote-support-functions-deliberately)
-    - 3.5 [Avoid Imperative Assembly in Wide Scopes](#35-avoid-imperative-assembly-in-wide-scopes)
-    - 3.6 [Name a Value Only to Prevent Recompute or Explain a Judgment](#36-name-a-value-only-to-prevent-recompute-or-explain-a-judgment)
-    - 3.7 [Name Functions by What Comes Out](#37-name-functions-by-what-comes-out)
+    - 3.4 [Give Each Support Function Its Own File](#34-give-each-support-function-its-own-file)
+    - 3.5 [Order Declarations Top Down](#35-order-declarations-top-down)
+    - 3.6 [Promote Owner-Free Functions to the Root util Folder](#36-promote-owner-free-functions-to-the-root-util-folder)
+    - 3.7 [Avoid Imperative Assembly in Wide Scopes](#37-avoid-imperative-assembly-in-wide-scopes)
+    - 3.8 [Name a Value Only to Prevent Recompute or Explain a Judgment](#38-name-a-value-only-to-prevent-recompute-or-explain-a-judgment)
+    - 3.9 [Name Functions by What Comes Out](#39-name-functions-by-what-comes-out)
 4. [Values and Data Structures](#4-values-and-data-structures) — **HIGH**
     - 4.1 [Prefer Immutable Array Sorting](#41-prefer-immutable-array-sorting)
     - 4.2 [Use Set and Map for Repeated Lookups](#42-use-set-and-map-for-repeated-lookups)
     - 4.3 [Read Object Fields Through Chains, Not Destructuring](#43-read-object-fields-through-chains-not-destructuring)
     - 4.4 [Declare Meaningful Numbers Instead of Writing Them Inline](#44-declare-meaningful-numbers-instead-of-writing-them-inline)
     - 4.5 [Avoid Lookup Tables for Simple Value Choices](#45-avoid-lookup-tables-for-simple-value-choices)
-    - 4.6 [Use es-toolkit and dayjs First](#46-use-es-toolkit-and-dayjs-first)
+    - 4.6 [Use es-toolkit for Value Helpers](#46-use-es-toolkit-for-value-helpers)
+    - 4.7 [Handle Dates With dayjs](#47-handle-dates-with-dayjs)
 5. [Absence and Fallback Handling](#5-absence-and-fallback-handling) — **HIGH**
     - 5.1 [Expose Optional Values Instead of Silent Fallbacks](#51-expose-optional-values-instead-of-silent-fallbacks)
 6. [JSDoc and Comment Conventions](#6-jsdoc-and-comment-conventions) — **MEDIUM**
@@ -977,7 +980,7 @@ export default defineConfig({plugins: [react()]});
 - 어디에 두는지는 쓰는 곳으로 정하지 않습니다.
   소유자 밖에서 가져다 쓴다고 루트로 올리지 않습니다.
   자리는 `naming-place-project-constants-in-the-root-constant-folder`와
-  `functions-place-and-promote-support-functions`가 정합니다.
+  `functions-give-each-function-its-own-file`가 정합니다.
 
 `src` 바로 아래에 있는 레이어 루트입니다.
 
@@ -1399,7 +1402,7 @@ const toRequestUrl = (target: ApiRequestTarget): URL => {
 
 **Applies when:** 보조 함수를 빼내거나 옮기거나 내보내거나 공유할 때. 범용 보조 파일, 소유자 하나만 쓰는 변환 함수, 자잘한 정리 단계의 경계를 바꿀 때.
 
-**Review with:** `docs-require-header-jsdoc-on-key-declarations`, `functions-place-and-promote-support-functions`
+**Review with:** `docs-require-header-jsdoc-on-key-declarations`, `functions-give-each-function-its-own-file`
 
 **Impact: MEDIUM (흐름을 읽으려고 파일을 왕복하게 만드는 조각내기를 막습니다)**
 
@@ -1442,7 +1445,7 @@ const toRequestUrl = (target: ApiRequestTarget): URL => {
 - `.map()` 콜백 하나에만 쓰이는 변환
 - 선택 값 보정, 라벨 기본값 같은 자잘한 정리 단계
 
-뺀 다음 어디 두고 언제 공용으로 올릴지는 `functions-place-and-promote-support-functions`가 정합니다.
+뺀 다음 어디 두고 언제 공용으로 올릴지는 `functions-give-each-function-its-own-file`가 정합니다.
 
 **Incorrect (한 번만 쓰는 한 줄 계산을 파일로 분리):**
 
@@ -1537,37 +1540,31 @@ page/report/_function/to-sales-overview/
 └── to-trend-chart.ts      전용 보조 셋을 비공개로 품음
 ```
 
-### 3.4 Place and Promote Support Functions Deliberately
+### 3.4 Give Each Support Function Its Own File
 
-**Rule:** `T03-04` · `functions-place-and-promote-support-functions`
+**Rule:** `T03-04` · `functions-give-each-function-its-own-file`
 
-**Applies when:** 보조 함수를 어느 파일이나 폴더에 둘지 정할 때. 파일 안에서 내보낸 함수와 비공개 보조의 선언 순서를 정할 때. 루트 `util` 폴더로 파일을 옮기거나 종류 폴더를 새로 만들 때.
+**Applies when:** 떼어 낸 보조 함수를 어느 파일이나 폴더에 둘지 정할 때. `helper.ts`, `helpers.ts`, `utils.ts` 같은 파일을 만들거나 거기에 함수를 더할 때. 내보낸 함수가 다른 내보낸 함수를 부르게 될 때.
 
 **Requires selected:** `functions-extract-helpers-only-when-the-boundary-is-real` · 함께 적용
 
-**Impact: MEDIUM-HIGH (잡동사니 파일이 생기지 않고 루트 `util`에 한 소유자의 함수가 섞이지 않습니다)**
+**Review with:** `functions-order-declarations-top-down`, `functions-promote-shared-functions-to-root-util`
+
+**Impact: MEDIUM-HIGH (잡동사니 파일이 생기지 않고 내보낸 함수끼리 사슬을 이루지 않습니다)**
 
 떼어 낼지는 `functions-extract-helpers-only-when-the-boundary-is-real`이 먼저 판정합니다.
-이 규칙은 그 결과를 어디 두고 언제 올릴지만 봅니다.
+이 규칙은 그 결과를 어느 파일에 둘지만 봅니다.
+루트 `util`로 올릴지는 `functions-promote-shared-functions-to-root-util`이 정합니다.
 
 - 소유자 아래에 `helper.ts`, `helpers.ts`, `utils.ts` 같은 잡동사니 파일을 만들지 않습니다.
   어느 폴더에 둘지는 프레임워크 컨벤션의 역할 폴더 규칙이 정합니다.
 - 내보낸 대표 함수 하나당 파일 하나이고, 파일명은 그 함수 이름입니다.
-  전용 보조가 파일로 나가면 대표 함수는 자기 이름 폴더를 갖고, 나간 파일은 그 안에 둡니다.
-  루트 `util`도 같습니다.
 - 호출 깊이는 파일마다 내보낸 함수 하나, 그 파일 안 비공개 함수까지 두 단계로 끝냅니다.
-  단계가 더 필요하면 먼저 같은 파일의 비공개 함수로 두고,
-  파일로 나갈지는 `functions-extract-helpers-only-when-the-boundary-is-real`의 사유가 정합니다.
+  단계가 더 필요하면 먼저 같은 파일의 비공개 함수로 둡니다.
 
-**파일 안 선언 순서는 위에서 아래로 읽히는 방향입니다.**
-
-1. import
-2. 내보낸 계약 타입
-3. 내보낸 대표 함수
-4. 비공개 보조. 부르는 쪽을 위에, 불리는 쪽을 아래에 둡니다
-
-함수 본문 속 참조는 호출 시점에 해석되므로 불리는 쪽이 아래 있어도 됩니다.
-모듈을 불러올 때 값이 계산되는 선언만 순서를 타고, 자기가 부르는 선언 뒤에 둡니다.
+**전용 보조가 파일로 나가면 대표 함수는 자기 이름 폴더를 갖습니다.**
+나간 파일은 그 폴더 안에 둡니다.
+루트 `util`도 같습니다.
 
 **내보낸 함수가 내보낸 함수를 타고 가는 사슬은 자기 폴더 밖에서 만들지 않습니다.**
 
@@ -1576,43 +1573,6 @@ page/report/_function/to-sales-overview/
 | 대표 함수가 자기 폴더 안 파일을 부름 | 사슬이 아니라 그 함수의 내부입니다. 자기 폴더 안 파일을 가져오는 것은 그 대표 함수뿐입니다 |
 | 다른 파일도 그 폴더 안 파일을 부르게 됨 | 재사용이 생긴 것이니 `_function` 바로 아래로 꺼냅니다 |
 | 루트 `util` 함수가 다른 루트 `util` 함수를 가져옴 | 사슬이 아닙니다. 둘 다 공개 진입점이고, 가져오는 줄에서 어느 종류 폴더의 무엇인지 그대로 읽힙니다 |
-
-**루트 `util`은 프로젝트가 소유자인 함수 폴더입니다.**
-파일 하나에 함수 하나, 전용 보조는 자기 이름 폴더라는 규칙은 소유자 아래와 같습니다.
-다른 점은 폴더 한 겹입니다.
-함수가 많아 종류 폴더로 묶습니다.
-
-- 종류는 함수가 받는 값의 타입입니다.
-  `date`, `money`, `string`, `array`, `dom`, `url`이 그 이름입니다.
-- 도메인 타입도 값의 타입입니다.
-  `Spread`를 받는 함수는 `util/spread/`에 둡니다.
-- 화면이나 기능 이름으로는 짓지 않습니다.
-  받는 값의 타입으로 종류를 짓지 못하면 그 함수는 `util`이 아니라 소유자 함수입니다.
-- 소유자 아래 `_function` 폴더에는 종류 폴더를 두지 않습니다.
-  함수가 몇 개라 파일 목록으로 충분합니다.
-
-**루트 승격은 그 함수가 누구 것인지로 판정합니다.**
-
-가르는 법은 소유자를 지워 보는 것입니다.
-소유자를 지웠을 때 함수도 사라지면 그 소유자 것입니다.
-
-- 소유자와 함께 사라지면 그 소유자 아래에 둡니다.
-  profile 저장 화면이 없어지면 `toProfileSaveRequest`가 조립할 요청도 없습니다.
-- 소유자를 지워도 남으면 지금 한 곳만 써도 올립니다.
-  `toDisplayDate`는 소유자가 하나든 셋이든 `util/date/`에 둘 함수입니다.
-
-두 소유자가 같은 함수를 써야 하면 셋 중 하나로 해소합니다.
-
-1. 표시까지 같으면 `widget` 컴포넌트가 소유합니다.
-2. 계산만 같으면 각 소유자가 각자 갖습니다.
-3. 프로젝트 전반의 계산이면 루트 `util`로 올립니다.
-
-1번은 함수를 공유하는 것이 아니라 표시를 공유하는 것입니다.
-어느 레이어인지는 프레임워크 컨벤션의 레이어 규칙이 판정합니다.
-
-쓰는 곳이 늘거나 줄어도 자리는 그대로입니다.
-개수로 판정하면 쓰임이 변할 때마다 함수가 자리를 옮겨 다닙니다.
-나중에 쓸 것 같아서 함수를 미리 만들지도 않습니다.
 
 **Incorrect (잡동사니 파일과 내보낸 함수 세 단계 사슬):**
 
@@ -1654,19 +1614,6 @@ export const toProfileSaveRequest = (
 };
 ```
 
-**Incorrect (소유자와 함께 사라질 함수를 루트 `util`로 올림):**
-
-```ts
-// util/profile/to-profile-save-request.ts
-// profile은 값의 종류가 아니라 화면 이름이다. 화면이 없어지면 이 요청도 없다
-/**
- * 서버가 앞뒤 공백이 붙은 displayName을 거부한다
- */
-export const toProfileSaveRequest = (values: ProfileFormValues) => {
-	return {body: {displayName: values.displayName.trim()}};
-};
-```
-
 **Correct (소유자 아래 대표 함수 하나당 파일 하나):**
 
 ```ts
@@ -1677,6 +1624,68 @@ export const toProfileSaveRequest = (values: ProfileFormValues) => {
 export const toProductSaveRequest = (values: ProductFormValues) => {
 	return {body: {title: values.title.trim()}};
 };
+```
+
+**Correct (전용 보조가 나간 대표 함수는 자기 이름 폴더를 가짐):**
+
+```txt
+page/report/_function/
+├── to-sales-overview/
+│   ├── to-sales-overview.ts   대표 함수. 자기 폴더 안 파일을 조립
+│   └── to-trend-chart.ts      이 폴더 밖에서는 가져오지 않음
+└── to-sales-filter-request.ts
+```
+
+### 3.5 Order Declarations Top Down
+
+**Rule:** `T03-05` · `functions-order-declarations-top-down`
+
+**Applies when:** `.ts` 파일에 선언을 추가하거나 선언 자리를 옮길 때. 비공개 보조를 내보낸 함수보다 위에 두려 할 때. 제외: 리액트 컴포넌트 본문 안 선언 자리를 바꾸는 경우.
+
+**Impact: MEDIUM (파일을 열면 내보낸 함수가 먼저 보이고 부르는 쪽에서 불리는 쪽으로 이어집니다)**
+
+파일을 여는 사람은 그 파일이 무엇을 내보내는지부터 찾습니다.
+그래서 내보낸 것을 위에 두고, 그것이 부르는 순서대로 아래로 이어 놓습니다.
+
+1. `import`
+2. 내보낸 계약 타입
+3. 내보낸 대표 함수
+4. 비공개 보조. 부르는 쪽을 위에, 불리는 쪽을 아래에 둡니다
+
+함수 본문 속 참조는 호출 시점에 해석되므로 불리는 쪽이 아래 있어도 됩니다.
+모듈을 불러올 때 값이 계산되는 선언만 순서를 탑니다.
+그런 선언은 자기가 부르는 선언 뒤에 둡니다.
+
+컴포넌트 본문 안에서 훅, 핸들러, 이펙트를 어떤 순서로 둘지는 프레임워크 컨벤션이 정합니다.
+
+**Incorrect (비공개 보조가 내보낸 함수보다 위에 있어 파일을 끝까지 읽어야 함):**
+
+```ts
+const toSummaryLabel = (item: SalesSummaryItem): string => {
+	return item.name.trim() || item.code;
+};
+
+const toSummaryRow = (item: SalesSummaryItem): SummaryRow => {
+	return {id: item.id, label: toSummaryLabel(item)};
+};
+
+/**
+ * 요약 표가 그리는 행 목록. 이름이 비면 코드로 표시한다
+ */
+export const toSummaryRows = (response: SalesSummaryResponse): SummaryRow[] => {
+	return response.items.map(toSummaryRow);
+};
+```
+
+**Correct (파일을 열었을 때 읽히는 차례):**
+
+```txt
+to-summary-rows.ts
+├ import
+├ export interface SummaryRow     내보낸 계약 타입
+├ export const toSummaryRows      내보낸 대표 함수
+├ const toSummaryRow              대표 함수가 부르는 쪽
+└ const toSummaryLabel            그 아래가 부르는 쪽
 ```
 
 **Correct (내보낸 함수가 맨 위, 불리는 쪽이 호출자 아래로 이어짐):**
@@ -1699,14 +1708,87 @@ const toSummaryLabel = (item: SalesSummaryItem): string => {
 };
 ```
 
-**Correct (전용 보조가 나간 대표 함수는 자기 이름 폴더를 가짐):**
+**Correct (모듈을 불러올 때 계산되는 선언은 자기가 부르는 선언 뒤에):**
+
+```ts
+export const toCycleOffsets = (): number[] => {
+	return cycle_offsets;
+};
+
+const toOffsetTable = (): number[] => {
+	return [0, 31, 59];
+};
+
+const cycle_offsets = toOffsetTable();
+```
+
+### 3.6 Promote Owner-Free Functions to the Root util Folder
+
+**Rule:** `T03-06` · `functions-promote-shared-functions-to-root-util`
+
+**Applies when:** 함수를 루트 `util` 폴더로 옮기거나 종류 폴더를 새로 만들 때. 두 소유자가 같은 함수를 쓰게 될 때. 제외: 소유자 안에서 파일 자리만 바꾸는 경우.
+
+**Review with:** `functions-give-each-function-its-own-file`
+
+**Impact: MEDIUM-HIGH (루트 `util`에 한 소유자의 함수가 섞이지 않고 쓰는 곳 수에 따라 자리가 흔들리지 않습니다)**
+
+승격은 쓰는 곳이 몇 개인지가 아니라 그 함수가 누구 것인지로 판정합니다.
+가르는 법은 소유자를 지워 보는 것입니다.
+
+- 소유자와 함께 사라지면 그 소유자 아래에 둡니다.
+  profile 저장 화면이 없어지면 `toProfileSaveRequest`가 조립할 요청도 없습니다.
+- 소유자를 지워도 남으면 지금 한 곳만 써도 올립니다.
+  `toDisplayDate`는 소유자가 하나든 셋이든 `util/date/`에 둘 함수입니다.
+
+쓰는 곳이 늘거나 줄어도 자리는 그대로입니다.
+개수로 판정하면 쓰임이 변할 때마다 함수가 자리를 옮겨 다닙니다.
+나중에 쓸 것 같아서 함수를 미리 만들지도 않습니다.
+
+**루트 `util`은 프로젝트가 소유자인 함수 폴더입니다.**
+파일 하나에 함수 하나, 전용 보조는 자기 이름 폴더라는 규칙은 소유자 아래와 같습니다.
+다른 점은 폴더 한 겹입니다.
+함수가 많아 종류 폴더로 묶습니다.
+
+| 종류 폴더 | 기준 |
+| --- | --- |
+| `date`, `money`, `string`, `array`, `dom`, `url` | 함수가 **받는 값의 타입**입니다 |
+| `spread` 같은 도메인 이름 | 도메인 타입도 값의 타입입니다. `Spread`를 받는 함수는 `util/spread/`입니다 |
+| 화면이나 기능 이름 | 짓지 않습니다. 종류를 못 지으면 그 함수는 `util`이 아니라 소유자 함수입니다 |
+| 소유자 아래 `_function` | 종류 폴더를 두지 않습니다. 함수가 몇 개라 파일 목록으로 충분합니다 |
+
+**두 소유자가 같은 함수를 써야 하면 셋 중 하나로 해소합니다.**
+
+1. 표시까지 같으면 `widget` 컴포넌트가 소유합니다.
+2. 계산만 같으면 각 소유자가 각자 갖습니다.
+3. 프로젝트 전반의 계산이면 루트 `util`로 올립니다.
+
+1번은 함수를 공유하는 것이 아니라 표시를 공유하는 것입니다.
+어느 레이어인지는 프레임워크 컨벤션의 레이어 규칙이 판정합니다.
+
+**Incorrect (소유자와 함께 사라질 함수를 루트 `util`로 올림):**
+
+```ts
+// util/profile/to-profile-save-request.ts
+// profile은 값의 종류가 아니라 화면 이름이다. 화면이 없어지면 이 요청도 없다
+/**
+ * 서버가 앞뒤 공백이 붙은 displayName을 거부한다
+ */
+export const toProfileSaveRequest = (values: ProfileFormValues) => {
+	return {body: {displayName: values.displayName.trim()}};
+};
+```
+
+**Correct (승격 판정 흐름):**
 
 ```txt
-page/report/_function/
-├── to-sales-overview/
-│   ├── to-sales-overview.ts   대표 함수. 자기 폴더 안 파일을 조립
-│   └── to-trend-chart.ts      이 폴더 밖에서는 가져오지 않음
-└── to-sales-filter-request.ts
+이 함수는 누구 것인가?
+│
+└ 소유자를 지워 본다
+   │
+   ├ 함수도 같이 사라짐 ──→ 그 소유자 아래에 둔다
+   └ 함수는 그대로 남음 ──→ util/<받는 값의 종류>/ 로 올린다
+      │
+      └ 종류 이름을 못 짓겠음 → util 이 아니다. 소유자 아래로 되돌린다
 ```
 
 **Correct (소유자를 지워도 남는 함수는 종류 폴더에 파일 하나로 올림):**
@@ -1726,7 +1808,7 @@ util/
  * 형식을 고정한다. 사용자 로케일을 따라가면 목록 정렬 기준과 어긋난다
  */
 export const toDisplayDate = (value: string): string => {
-	return dayjs(value).format("YYYY.MM.DD");
+	return dayjs(value).format(date_format);
 };
 ```
 
@@ -1741,9 +1823,9 @@ export const toSignedAmount = (amount: Amount): string => {
 };
 ```
 
-### 3.5 Avoid Imperative Assembly in Wide Scopes
+### 3.7 Avoid Imperative Assembly in Wide Scopes
 
-**Rule:** `T03-05` · `functions-avoid-imperative-assembly-in-wide-scopes`
+**Rule:** `T03-07` · `functions-avoid-imperative-assembly-in-wide-scopes`
 
 **Applies when:** 모듈 최상위나 함수 본문 전체를 덮는 스코프에서 `let` 재할당, 배열 `push`, 조건부 누적으로 값을 만들 때.
 
@@ -1791,9 +1873,9 @@ const visibleTabs = [
 	.map((tab) => tab.id);
 ```
 
-### 3.6 Name a Value Only to Prevent Recompute or Explain a Judgment
+### 3.8 Name a Value Only to Prevent Recompute or Explain a Judgment
 
-**Rule:** `T03-06` · `functions-name-a-value-only-for-recompute-or-judgment`
+**Rule:** `T03-08` · `functions-name-a-value-only-for-recompute-or-judgment`
 
 **Applies when:** 순수 계산의 결과를 지역 변수\(`const`\)로 받는 줄을 추가·삭제할 때. 표현식을 쓰는 자리에 그대로 적을지 변수로 뺄지 정할 때.
 
@@ -1921,9 +2003,9 @@ const submitDraft = async (draft: Draft) => {
 };
 ```
 
-### 3.7 Name Functions by What Comes Out
+### 3.9 Name Functions by What Comes Out
 
-**Rule:** `T03-07` · `functions-name-functions-by-what-comes-out`
+**Rule:** `T03-09` · `functions-name-functions-by-what-comes-out`
 
 **Applies when:** 이름을 붙인 함수를 새로 만들거나 이름을 바꿀 때. 제외: 생성기·프레임워크·외부 계약이 정한 이름을 그대로 쓰는 경우.
 
@@ -2033,7 +2115,7 @@ export const assertLoggedIn = (session: Session): void => {
 
 **Applies when:** 프롭스, 상태, 매개변수, 모듈 상수에서 온 배열을 정렬할 때. 기존 `.sort()` 호출을 추가·변경할 때.
 
-**Review with:** `values-use-es-toolkit-and-dayjs-first`
+**Review with:** `values-use-es-toolkit-for-value-helpers`
 
 **Impact: HIGH (프롭스, 상태, 모듈 상수에서 온 배열을 정렬할 때 원본이 바뀌는 버그를 피합니다)**
 
@@ -2113,7 +2195,7 @@ const toSortedUsers = (users: User[]): User[] => {
 
 **목록을 만들려고 `Set`을 쓰는 것은 이 규칙이 아닙니다.**
 `[...new Set(values)]`는 `uniq`, `filter((value) => !set.has(value))`는 `difference`나 `without`입니다.
-`values-use-es-toolkit-and-dayjs-first`가 그 자리를 봅니다.
+`values-use-es-toolkit-for-value-helpers`가 그 자리를 봅니다.
 `Set`은 만든 뒤에 `has`를 여러 번 부를 때만 남깁니다.
 
 `es-toolkit`의 `keyBy`가 돌려주는 평범한 객체도 조회 자체는 한 번에 합니다.
@@ -2425,22 +2507,21 @@ const order_status_by_api_code = {
 } as const satisfies Record<OrderStatusCode, OrderStatus>;
 ```
 
-### 4.6 Use es-toolkit and dayjs First
+### 4.6 Use es-toolkit for Value Helpers
 
-**Rule:** `T04-06` · `values-use-es-toolkit-and-dayjs-first`
+**Rule:** `T04-06` · `values-use-es-toolkit-for-value-helpers`
 
-**Applies when:** 배열, 객체, 문자열, 날짜를 다루는 보조 코드를 추가·변경할 때. `reduce`, `Object.entries`, `Array.from`, 정규식, `new Date` 산술로 값을 다시 짜는 코드를 쓸 때. 제외: 표준 메서드 하나로 끝나는 경우.
+**Applies when:** 배열, 객체, 문자열, 숫자를 다루는 보조 코드를 추가·변경할 때. `reduce`, `Object.entries`, `Array.from`, 정규식으로 값을 다시 짜는 코드를 쓸 때. 제외: 표준 메서드 하나로 끝나는 경우.
 
-**Review with:** `functions-extract-helpers-only-when-the-boundary-is-real`, `values-prefer-immutable-array-sorting`
+**Review with:** `values-handle-dates-with-dayjs`, `values-prefer-immutable-array-sorting`
 
-**Impact: MEDIUM-HIGH (중복 제거, 표기 변환, 날짜 계산을 파일마다 다르게 만들지 않고 검증된 구현 하나로 모읍니다)**
+**Impact: MEDIUM-HIGH (중복 제거와 표기 변환을 파일마다 다르게 만들지 않고 검증된 구현 하나로 모읍니다)**
 
 값을 다루는 보조 함수는 `es-toolkit`에서 먼저 찾습니다.
-날짜는 `dayjs`로 다룹니다.
-둘 다 `clsx`와 같은 자리입니다.
+`clsx`와 같은 자리입니다.
 쓸지 말지 고르는 라이브러리가 아니라 기본값입니다.
 
-직접 쓴 구현은 빈 배열, 중복 키, 월말 같은 경계에서 저마다 다르게 틀립니다.
+직접 쓴 구현은 빈 배열, 중복 키, 한 글자 문자열 같은 경계에서 저마다 다르게 틀립니다.
 `Math.min(...values)`처럼 배열을 인자로 펼치는 관용구는 목록이 길어지면 호출 인자 한계에 걸립니다.
 같은 일을 하는 코드가 파일마다 조금씩 다른 모양으로 남는 것이 더 큰 비용입니다.
 
@@ -2457,10 +2538,10 @@ const order_status_by_api_code = {
 | 숫자 | 집계, 범위 제한, 최댓값과 최솟값 | `sum`, `sumBy`, `mean`, `clamp`, `maxBy`, `minBy` |
 | 판정 | 빈 값과 형 검사 | `isNil`, `isNotNil`, `isEmptyObject`, `isPlainObject` |
 | 비동기 | 지연, 시간 제한, 재시도 | `delay`, `withTimeout`, `retry` |
-| 날짜 | 파싱, 형식, 더하기와 빼기, 비교 | `dayjs` |
 
 표에 없어도 `es-toolkit` 문서에 같은 뜻의 함수가 있으면 그 함수를 씁니다.
-`lodash`와 `moment`는 새로 들이지 않습니다.
+`lodash`는 새로 들이지 않습니다.
+날짜는 `values-handle-dates-with-dayjs`가 봅니다.
 
 **표준 메서드 하나로 끝나는 것은 그대로 둡니다.**
 `map`, `filter`, `find`, `flat`, `at`, `Object.keys`를 감싸지 않습니다.
@@ -2481,10 +2562,6 @@ const order_status_by_api_code = {
 `minBy`와 `maxBy`는 빈 배열에서 `undefined`를 돌려줍니다.
 `length === 0`을 먼저 보고 다시 `Math.min`을 부르지 않고, 결과가 `undefined`인지만 봅니다.
 값을 뽑으려고 만들던 중간 `map` 배열도 같이 사라집니다.
-
-**서버가 준 시각 문자열을 그대로 보여줄 때는 `dayjs`로 파싱하지 않습니다.**
-파싱하면 타임존 변환이 붙어 표시 시각이 밀립니다.
-문자열을 자르는 것이 표시 규칙일 때는 자르는 코드를 그대로 둡니다.
 
 **반복 조회는 `Set`과 `Map`이 맡습니다.**
 `groupBy`와 `keyBy`는 목록을 다시 짜는 함수입니다.
@@ -2512,11 +2589,10 @@ const productsByCategory = products.reduce<Record<string, Product[]>>((grouped, 
 const draftFilter = JSON.parse(JSON.stringify(savedFilter)) as ProductFilter;
 ```
 
-**Incorrect (정규식으로 표기를 바꾸고 밀리초로 날짜를 계산함):**
+**Incorrect (정규식으로 표기를 바꿈):**
 
 ```ts
 const searchKey = rawKey.replace(/([A-Z])/g, "_$1").toLowerCase();
-const expiresAt = new Date(issuedAt.getTime() + 7 * 24 * 60 * 60 * 1000);
 ```
 
 **Incorrect (`Array.from`에 쓰지 않는 첫 인자를 두고 길이만큼 돎):**
@@ -2568,20 +2644,107 @@ const toChartBounds = (points: readonly ChartPoint[]) => {
 };
 ```
 
-**Correct (날짜 계산과 형식은 `dayjs`):**
-
-```ts
-import dayjs from "dayjs";
-
-const expiresAt = dayjs(issuedAt).add(7, "day");
-const expiresLabel = expiresAt.format(date_format);
-```
-
 **Correct (표준 메서드 하나로 끝나면 감싸지 않음):**
 
 ```ts
 const activeProducts = products.filter((product) => product.isActive);
 const trimmedKeyword = keyword.trim();
+```
+
+### 4.7 Handle Dates With dayjs
+
+**Rule:** `T04-07` · `values-handle-dates-with-dayjs`
+
+**Applies when:** 날짜를 파싱하거나 형식을 맞추거나 더하고 뺄 때. `new Date`, `getTime()`, `setDate()`, `toLocaleDateString()`을 쓸 때. 제외: 서버가 준 시각 문자열을 파싱 없이 그대로 보여주는 경우.
+
+**Review with:** `naming-place-project-constants-in-the-root-constant-folder`, `values-use-es-toolkit-for-value-helpers`
+
+**Impact: MEDIUM-HIGH (월말과 서머타임에서 어긋나는 날짜 산술을 없애고 표시 형식을 한 상수로 모읍니다)**
+
+날짜는 `dayjs`로 다룹니다.
+`es-toolkit`이나 `clsx`와 같은 자리입니다.
+쓸지 말지 고르는 라이브러리가 아니라 기본값입니다.
+`moment`는 새로 들이지 않습니다.
+
+밀리초를 더하는 산술은 월말과 서머타임에서 틀립니다.
+`getTime() + 7 * 24 * 60 * 60 * 1000`은 하루가 23시간이거나 25시간인 날을 모릅니다.
+
+| 손으로 쓰던 것 | `dayjs` |
+| --- | --- |
+| `new Date(text)` 파싱과 유효성 검사 | `dayjs(text)`와 라운드트립 비교 |
+| `getTime()` 밀리초 더하기, `setDate()` | `add()`, `subtract()` |
+| `toLocaleDateString()`, 자릿수 채워 이어 붙이기 | `format()` |
+| `getTime()` 대소 비교 | `isBefore()`, `isAfter()`, `isSame()` |
+
+**형식 문자열은 상수로 둡니다.**
+`format("YYYY.MM.DD")`를 파일마다 적으면 화면끼리 표기가 갈립니다.
+자리는 `naming-place-project-constants-in-the-root-constant-folder`가 정합니다.
+
+**형식은 맞지만 없는 날짜는 라운드트립으로 거릅니다.**
+`dayjs("2026-02-30")`은 실패하지 않고 3월 2일로 넘어갑니다.
+되돌린 문자열이 원래 문자열과 같은지 보아야 걸립니다.
+
+**서버가 준 시각 문자열을 그대로 보여줄 때는 파싱하지 않습니다.**
+파싱하면 타임존 변환이 붙어 표시 시각이 밀립니다.
+문자열을 자르는 것이 표시 규칙이면 자르는 코드를 그대로 둡니다.
+
+**Incorrect (밀리초를 더하고 자릿수를 손으로 채움):**
+
+```ts
+const expiresAt = new Date(issuedAt.getTime() + 7 * 24 * 60 * 60 * 1000);
+const expiresLabel = `${expiresAt.getFullYear()}.${toPaddedDatePart(expiresAt.getMonth() + 1)}`;
+```
+
+**Incorrect (형식만 보고 없는 날짜를 통과시킴):**
+
+```ts
+const isValidDateText = /^\d{4}-\d{2}-\d{2}$/.test(dateText);
+```
+
+**Correct (날짜를 다루는 갈림길):**
+
+```txt
+날짜 문자열이 들어왔다
+│
+├ 서버가 준 시각을 그대로 보여주기만 함 ─→ 파싱하지 않는다. 문자열을 자른다
+└ 계산하거나 형식을 바꿔야 함
+   │
+   ├ 형식만 바꿈 ──────→ dayjs(value).format(date_format)
+   ├ 더하거나 뺌 ──────→ dayjs(value).add(7, "day")
+   └ 값이 유효한지 봄 ─→ format 한 결과가 원래 문자열과 같은지 본다
+```
+
+**Correct (더하기와 형식은 `dayjs`, 형식 문자열은 상수):**
+
+```ts
+import dayjs from "dayjs";
+
+import {date_format} from "@/constant/date";
+
+const expiresAt = dayjs(issuedAt).add(7, "day");
+const expiresLabel = expiresAt.format(date_format);
+```
+
+**Correct (라운드트립으로 없는 날짜를 거름):**
+
+```ts
+import dayjs from "dayjs";
+
+import {date_format} from "@/constant/date";
+
+/**
+ * 형식은 맞지만 존재하지 않는 2026-02-30 같은 날짜를 거른다
+ */
+export const parseEntryDateText = (dateText: string): string | undefined => {
+	return dayjs(dateText).format(date_format) === dateText ? dateText : undefined;
+};
+```
+
+**Correct (서버 시각 문자열은 파싱하지 않고 자름):**
+
+```ts
+// 서버가 이미 표시 타임존으로 준 문자열이다. dayjs 로 파싱하면 변환이 붙어 시각이 밀린다
+const compactDateTime = responseDateTime.slice(0, 16).replace("T", " ");
 ```
 
 ## 5. Absence and Fallback Handling

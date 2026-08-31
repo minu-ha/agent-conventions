@@ -6,7 +6,7 @@ impactDescription: 흐름을 읽으려고 파일을 왕복하게 만드는 조�
 appliesWhen:
   - 보조 함수를 빼내거나 옮기거나 내보내거나 공유할 때
   - 범용 보조 파일, 소유자 하나만 쓰는 변환 함수, 자잘한 정리 단계의 경계를 바꿀 때
-reviewWith: functions-place-and-promote-support-functions, docs-require-header-jsdoc-on-key-declarations
+reviewWith: functions-give-each-function-its-own-file, docs-require-header-jsdoc-on-key-declarations
 tags: functions, boundaries
 ---
 
@@ -53,7 +53,7 @@ tags: functions, boundaries
 - `.map()` 콜백 하나에만 쓰이는 변환
 - 선택 값 보정, 라벨 기본값 같은 자잘한 정리 단계
 
-뺀 다음 어디 두고 언제 공용으로 올릴지는 `functions-place-and-promote-support-functions`가 정합니다.
+뺀 다음 어디 두고 언제 공용으로 올릴지는 `functions-give-each-function-its-own-file`가 정합니다.
 
 **Incorrect (한 번만 쓰는 한 줄 계산을 파일로 분리):**
 

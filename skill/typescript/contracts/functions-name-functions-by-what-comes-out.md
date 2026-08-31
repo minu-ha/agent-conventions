@@ -58,4 +58,4 @@
 `new Promise((resolve, reject) => …)`의 매개변수와 생성된 API의 `fetch` 함수처럼
 우리가 소유하지 않는 이름을 이 규칙에 맞추려고 바꾸거나 감싸지 않습니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/03-07-functions-name-functions-by-what-comes-out.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/03-09-functions-name-functions-by-what-comes-out.md)을 읽습니다.

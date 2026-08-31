@@ -1,7 +1,7 @@
 # TypeScript 컨벤션 Rule Index
 
 - Skill: `typescript`
-- Routing digest: `sha256:a80121f8041e8980a0c9bb28d666c83dc0bd5568452afd91bd29cecedae0ef65`
+- Routing digest: `sha256:afdd712d3b71312e2dd767481e2d115fbcc576ea17538c299137afb4bcd41187`
 
 ## Local Rules
 
@@ -21,17 +21,20 @@
 - T02-07 | naming-name-types-by-role-and-lifetime | 타입·인터페이스나 그 파일의 이름을 새로 만들거나 바꿀 때. 타입을 소유자 폴더 안과 밖 사이에서 옮기며 이름을 바꿀 때. 제외: 외부·생성된 계약 이름을 그대로 쓰는 경우. | reviewWith: naming-use-consistent-file-and-symbol-naming
 - T03-01 | functions-declare-functions-as-arrow-consts | 이름을 지어 선언하는 함수를 새로 만들거나 선언 형태나 본문 형태를 바꿀 때. 객체 프로퍼티에 함수를 담거나 그 형태를 바꿀 때. 제외: 인라인 콜백이거나 클래스 메서드, 제너레이터, 오버로드 선언인 경우. | reviewWith: functions-use-named-object-params-for-complex-signatures
 - T03-02 | functions-use-named-object-params-for-complex-signatures | 매개변수가 셋을 넘거나 같은 계열 인자를 받는 함수를 추가·변경할 때. 객체 매개변수의 필드를 읽는 방식을 바꿀 때. 제외: 리액트 함수 컴포넌트가 프롭스를 받는 방식만 바꾸는 경우. | reviewWith: types-reuse-existing-contracts-before-new-types, values-read-objects-through-chains
-- T03-03 | functions-extract-helpers-only-when-the-boundary-is-real | 보조 함수를 빼내거나 옮기거나 내보내거나 공유할 때. 범용 보조 파일, 소유자 하나만 쓰는 변환 함수, 자잘한 정리 단계의 경계를 바꿀 때. | reviewWith: docs-require-header-jsdoc-on-key-declarations, functions-place-and-promote-support-functions
-- T03-04 | functions-place-and-promote-support-functions | 보조 함수를 어느 파일이나 폴더에 둘지 정할 때. 파일 안에서 내보낸 함수와 비공개 보조의 선언 순서를 정할 때. 루트 \`util\` 폴더로 파일을 옮기거나 종류 폴더를 새로 만들 때.
-- T03-05 | functions-avoid-imperative-assembly-in-wide-scopes | 모듈 최상위나 함수 본문 전체를 덮는 스코프에서 \`let\` 재할당, 배열 \`push\`, 조건부 누적으로 값을 만들 때. | reviewWith: functions-extract-helpers-only-when-the-boundary-is-real
-- T03-06 | functions-name-a-value-only-for-recompute-or-judgment | 순수 계산의 결과를 지역 변수\(\`const\`\)로 받는 줄을 추가·삭제할 때. 표현식을 쓰는 자리에 그대로 적을지 변수로 뺄지 정할 때. | reviewWith: functions-avoid-imperative-assembly-in-wide-scopes, values-read-objects-through-chains
-- T03-07 | functions-name-functions-by-what-comes-out | 이름을 붙인 함수를 새로 만들거나 이름을 바꿀 때. 제외: 생성기·프레임워크·외부 계약이 정한 이름을 그대로 쓰는 경우.
-- T04-01 | values-prefer-immutable-array-sorting | 프롭스, 상태, 매개변수, 모듈 상수에서 온 배열을 정렬할 때. 기존 \`.sort\(\)\` 호출을 추가·변경할 때. | reviewWith: values-use-es-toolkit-and-dayjs-first
+- T03-03 | functions-extract-helpers-only-when-the-boundary-is-real | 보조 함수를 빼내거나 옮기거나 내보내거나 공유할 때. 범용 보조 파일, 소유자 하나만 쓰는 변환 함수, 자잘한 정리 단계의 경계를 바꿀 때. | reviewWith: docs-require-header-jsdoc-on-key-declarations, functions-give-each-function-its-own-file
+- T03-04 | functions-give-each-function-its-own-file | 떼어 낸 보조 함수를 어느 파일이나 폴더에 둘지 정할 때. \`helper.ts\`, \`helpers.ts\`, \`utils.ts\` 같은 파일을 만들거나 거기에 함수를 더할 때. 내보낸 함수가 다른 내보낸 함수를 부르게 될 때. | reviewWith: functions-order-declarations-top-down, functions-promote-shared-functions-to-root-util
+- T03-05 | functions-order-declarations-top-down | \`.ts\` 파일에 선언을 추가하거나 선언 자리를 옮길 때. 비공개 보조를 내보낸 함수보다 위에 두려 할 때. 제외: 리액트 컴포넌트 본문 안 선언 자리를 바꾸는 경우.
+- T03-06 | functions-promote-shared-functions-to-root-util | 함수를 루트 \`util\` 폴더로 옮기거나 종류 폴더를 새로 만들 때. 두 소유자가 같은 함수를 쓰게 될 때. 제외: 소유자 안에서 파일 자리만 바꾸는 경우. | reviewWith: functions-give-each-function-its-own-file
+- T03-07 | functions-avoid-imperative-assembly-in-wide-scopes | 모듈 최상위나 함수 본문 전체를 덮는 스코프에서 \`let\` 재할당, 배열 \`push\`, 조건부 누적으로 값을 만들 때. | reviewWith: functions-extract-helpers-only-when-the-boundary-is-real
+- T03-08 | functions-name-a-value-only-for-recompute-or-judgment | 순수 계산의 결과를 지역 변수\(\`const\`\)로 받는 줄을 추가·삭제할 때. 표현식을 쓰는 자리에 그대로 적을지 변수로 뺄지 정할 때. | reviewWith: functions-avoid-imperative-assembly-in-wide-scopes, values-read-objects-through-chains
+- T03-09 | functions-name-functions-by-what-comes-out | 이름을 붙인 함수를 새로 만들거나 이름을 바꿀 때. 제외: 생성기·프레임워크·외부 계약이 정한 이름을 그대로 쓰는 경우.
+- T04-01 | values-prefer-immutable-array-sorting | 프롭스, 상태, 매개변수, 모듈 상수에서 온 배열을 정렬할 때. 기존 \`.sort\(\)\` 호출을 추가·변경할 때. | reviewWith: values-use-es-toolkit-for-value-helpers
 - T04-02 | values-use-set-and-map-for-repeated-lookups | 같은 목록에 \`includes\`, \`find\`, 키 조회를 여러 번 하는 코드를 추가·변경할 때. 제외: 두 목록 모두 짧고 길이가 정해져 있는 경우.
 - T04-03 | values-read-objects-through-chains | 구조분해로 객체에서 값을 꺼내는 줄을 추가·변경할 때. 객체 필드를 별칭 \`const\`에 담아 그 이름으로 쓰려 할 때. 제외: 배열이나 튜플을 자리로 푸는 경우. | reviewWith: functions-name-a-value-only-for-recompute-or-judgment
 - T04-04 | values-declare-meaningful-numbers | 비교, 계산, 호출 인자에 숫자 리터럴을 새로 적을 때. 제외: 관용값이나 배열 인덱스처럼 뜻이 없는 숫자를 쓰는 경우. | reviewWith: absence-expose-optional-values-instead-of-silent-fallbacks, naming-place-project-constants-in-the-root-constant-folder
 - T04-05 | values-avoid-lookup-tables-for-simple-choices | 상태나 \`variant\`에 따라 쓸 값 하나를 고르는 객체·Map을 추가·변경할 때. 조회표의 키로 프롭이나 상태를 읽어 값을 넘기는 코드를 추가·변경할 때.
-- T04-06 | values-use-es-toolkit-and-dayjs-first | 배열, 객체, 문자열, 날짜를 다루는 보조 코드를 추가·변경할 때. \`reduce\`, \`Object.entries\`, \`Array.from\`, 정규식, \`new Date\` 산술로 값을 다시 짜는 코드를 쓸 때. 제외: 표준 메서드 하나로 끝나는 경우. | reviewWith: functions-extract-helpers-only-when-the-boundary-is-real, values-prefer-immutable-array-sorting
+- T04-06 | values-use-es-toolkit-for-value-helpers | 배열, 객체, 문자열, 숫자를 다루는 보조 코드를 추가·변경할 때. \`reduce\`, \`Object.entries\`, \`Array.from\`, 정규식으로 값을 다시 짜는 코드를 쓸 때. 제외: 표준 메서드 하나로 끝나는 경우. | reviewWith: values-handle-dates-with-dayjs, values-prefer-immutable-array-sorting
+- T04-07 | values-handle-dates-with-dayjs | 날짜를 파싱하거나 형식을 맞추거나 더하고 뺄 때. \`new Date\`, \`getTime\(\)\`, \`setDate\(\)\`, \`toLocaleDateString\(\)\`을 쓸 때. 제외: 서버가 준 시각 문자열을 파싱 없이 그대로 보여주는 경우. | reviewWith: naming-place-project-constants-in-the-root-constant-folder, values-use-es-toolkit-for-value-helpers
 - T05-01 | absence-expose-optional-values-instead-of-silent-fallbacks | 선택 값을 읽거나 정규화하거나 넘기는 방식을 바꿀 때. \`??\`, \`\|\|\`, 기본값, 빈 값 대체 분기를 추가·변경할 때. | reviewWith: naming-place-owner-constants-in-the-owner-constant-folder, naming-place-project-constants-in-the-root-constant-folder
 - T06-01 | docs-keep-body-comments-for-intent-and-steps | 함수 본문의 \`//\` 주석을 추가·수정·유지할 때. 도메인 규칙, 예외 방어, 외부 제약, 부수효과 순서, 긴 절차의 단계를 주석으로 설명할 때. | reviewWith: docs-justify-convention-exceptions-with-a-reason-comment, docs-write-concise-korean-comments-about-purpose-and-constraints
 - T06-02 | docs-require-header-jsdoc-on-key-declarations | 쿼리, 뮤테이션, 원격 함수, 커스텀 훅, 커스텀 타입, 스토어, 포매터 선언을 추가·변경할 때. 분기나 \`await\`, 또는 두 개 이상의 동작이 있는 핸들러와 이펙트를 추가·변경할 때. 다시 쓰거나 내보낸 보조 함수를 추가·변경할 때.

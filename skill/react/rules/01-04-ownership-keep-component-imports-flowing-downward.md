@@ -49,7 +49,7 @@ tags: ownership
 - 역할 폴더의 파일은 소유자의 공개 면입니다.
   밖에서 가져다 쓴다고 루트로 옮기지 않습니다.
   자리는 `typescript/naming-place-project-constants-in-the-root-constant-folder`와
-  `typescript/functions-place-and-promote-support-functions`가 정합니다.
+  `typescript/functions-promote-shared-functions-to-root-util`이 정합니다.
 - 함수의 자기 이름 폴더 안에 있는 보조 파일만은 그 대표 함수가 가져옵니다.
 - `_hook`이 공개인 근거는 `ownership-keep-lifecycle-in-the-owning-component`에 있습니다.
   여러 소유자가 함께 부르는 생명주기만 훅으로 올리라고 정하는데, 올린 훅을 자식이 가져오지 못하면 성립하지 않습니다.

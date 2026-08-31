@@ -102,7 +102,7 @@
 		},
 		{
 			"id": "helper-boundary-scope-drift",
-			"prompt": "inline a single-owner `mapProfileRow` sub-step into `profile-api.ts` and rename the remaining exported builder by its result.",
+			"prompt": "inline a single-owner `mapProfileRow` sub-step into `profile-api.ts`, place it below the exported builder, and rename that builder by its result.",
 			"files": [
 				"src/profile/profile-api.ts"
 			],
@@ -113,12 +113,13 @@
 				"typescript": [
 					"naming-use-consistent-file-and-symbol-naming",
 					"functions-extract-helpers-only-when-the-boundary-is-real",
-					"functions-place-and-promote-support-functions",
+					"functions-give-each-function-its-own-file",
+					"functions-order-declarations-top-down",
 					"functions-name-functions-by-what-comes-out"
 				]
 			},
 			"scopeDrift": {
-				"evidence": "the same normalization becomes necessary for a second owner, so move the existing named function to `profile-support.ts`, export it, directly import it from `bulk-profile.ts`, and add concise Korean header doc comments.",
+				"evidence": "the same normalization becomes necessary for a second owner, so decide whether it stays with an owner or moves to the root `util` folder, move the existing named function to `profile-support.ts`, export it, directly import it from `bulk-profile.ts`, and add concise Korean header doc comments.",
 				"files": [
 					"src/profile/profile-api.ts",
 					"src/profile/profile-support.ts",
@@ -132,7 +133,9 @@
 						"naming-use-consistent-file-and-symbol-naming",
 						"naming-use-direct-imports-and-public-entry-points",
 						"functions-extract-helpers-only-when-the-boundary-is-real",
-						"functions-place-and-promote-support-functions",
+						"functions-give-each-function-its-own-file",
+						"functions-order-declarations-top-down",
+						"functions-promote-shared-functions-to-root-util",
 						"functions-name-functions-by-what-comes-out",
 						"docs-require-header-jsdoc-on-key-declarations",
 						"docs-write-concise-korean-comments-about-purpose-and-constraints",
@@ -169,7 +172,8 @@
 			"expectedSelected": {
 				"typescript": [
 					"naming-use-direct-imports-and-public-entry-points",
-					"values-use-es-toolkit-and-dayjs-first"
+					"values-use-es-toolkit-for-value-helpers",
+					"values-handle-dates-with-dayjs"
 				]
 			}
 		},

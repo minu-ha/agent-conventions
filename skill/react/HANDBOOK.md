@@ -322,7 +322,7 @@ export const PgSalesTrendPanel = (props: PgSalesTrendPanelProps) => {
 - 폴더 이름은 단수로 쓰고 프레임워크가 강제하는 이름만 예외로 둡니다.
 - 루트의 `constant`·`type`·`hook`은 프로젝트가 소유자인 자리라 같은 역할 폴더 규칙을 따릅니다.
   다만 레이어 루트라 `_`를 붙이지 않습니다.
-  루트에만 있는 `util`과 `config`는 `typescript/functions-place-and-promote-support-functions`와
+  루트에만 있는 `util`과 `config`는 `typescript/functions-promote-shared-functions-to-root-util`과
   `typescript/naming-read-environment-values-through-config-env`가 정합니다.
 
 무엇을 추출할지는 이 규칙이 정하지 않습니다.
@@ -440,7 +440,7 @@ component/ui/button/
 - 역할 폴더의 파일은 소유자의 공개 면입니다.
   밖에서 가져다 쓴다고 루트로 옮기지 않습니다.
   자리는 `typescript/naming-place-project-constants-in-the-root-constant-folder`와
-  `typescript/functions-place-and-promote-support-functions`가 정합니다.
+  `typescript/functions-promote-shared-functions-to-root-util`이 정합니다.
 - 함수의 자기 이름 폴더 안에 있는 보조 파일만은 그 대표 함수가 가져옵니다.
 - `_hook`이 공개인 근거는 `ownership-keep-lifecycle-in-the-owning-component`에 있습니다.
   여러 소유자가 함께 부르는 생명주기만 훅으로 올리라고 정하는데, 올린 훅을 자식이 가져오지 못하면 성립하지 않습니다.
