@@ -191,10 +191,10 @@ util/
 ```ts
 // util/date/to-display-date.ts
 /**
- * ko-KR로 고정한다. 사용자 로케일을 따라가면 목록 정렬 기준과 어긋난다
+ * 형식을 고정한다. 사용자 로케일을 따라가면 목록 정렬 기준과 어긋난다
  */
 export const toDisplayDate = (value: string): string => {
-	return new Date(value).toLocaleDateString("ko-KR");
+	return dayjs(value).format("YYYY.MM.DD");
 };
 ```
 

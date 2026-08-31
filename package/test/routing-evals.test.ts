@@ -109,6 +109,7 @@ const typescriptRuleUniverse = [
 	"values-read-objects-through-chains",
 	"values-declare-meaningful-numbers",
 	"values-avoid-lookup-tables-for-simple-choices",
+	"values-use-es-toolkit-and-dayjs-first",
 	"absence-expose-optional-values-instead-of-silent-fallbacks",
 	"docs-keep-body-comments-for-intent-and-steps",
 	"docs-require-header-jsdoc-on-key-declarations",
@@ -319,10 +320,11 @@ const typescriptRuleRouting = {
 	},
 	"values-prefer-immutable-array-sorting": {
 		appliesWhen: "프롭스, 상태, 매개변수, 모듈 상수에서 온 배열을 정렬할 때. 기존 `.sort()` 호출을 추가·변경할 때.",
-		reviewWith: [],
+		reviewWith: ["values-use-es-toolkit-and-dayjs-first"],
 	},
 	"values-use-set-and-map-for-repeated-lookups": {
-		appliesWhen: "같은 목록에 `includes`, `find`, 키 조회를 여러 번 하는 코드를 추가·변경할 때.",
+		appliesWhen:
+			"같은 목록에 `includes`, `find`, 키 조회를 여러 번 하는 코드를 추가·변경할 때. 제외: 두 목록 모두 짧고 길이가 정해져 있는 경우.",
 		reviewWith: [],
 	},
 	"values-read-objects-through-chains": {
@@ -341,6 +343,11 @@ const typescriptRuleRouting = {
 		appliesWhen:
 			"상태나 `variant`에 따라 쓸 값 하나를 고르는 객체·Map을 추가·변경할 때. 조회표의 키로 프롭이나 상태를 읽어 값을 넘기는 코드를 추가·변경할 때.",
 		reviewWith: [],
+	},
+	"values-use-es-toolkit-and-dayjs-first": {
+		appliesWhen:
+			"배열, 객체, 문자열, 날짜를 다루는 보조 코드를 추가·변경할 때. `reduce`, `Object.entries`, 정규식, `new Date` 산술로 값을 다시 짜는 코드를 쓸 때. 제외: 표준 메서드 하나로 끝나는 경우.",
+		reviewWith: ["values-prefer-immutable-array-sorting", "functions-extract-helpers-only-when-the-boundary-is-real"],
 	},
 	"absence-expose-optional-values-instead-of-silent-fallbacks": {
 		appliesWhen: "선택 값을 읽거나 정규화하거나 넘기는 방식을 바꿀 때. `??`, `||`, 기본값, 빈 값 대체 분기를 추가·변경할 때.",
@@ -908,6 +915,7 @@ const typescriptSelections = {
 		"functions-name-functions-by-what-comes-out",
 	],
 	"shared-collection-lookups-and-sort": ["values-prefer-immutable-array-sorting", "values-use-set-and-map-for-repeated-lookups"],
+	"hand-rolled-collection-helpers": ["naming-use-direct-imports-and-public-entry-points", "values-use-es-toolkit-and-dayjs-first"],
 	"local-value-lookup": [
 		"naming-use-consistent-file-and-symbol-naming",
 		"values-avoid-lookup-tables-for-simple-choices",
@@ -974,6 +982,11 @@ const typescriptScenarioEvidence = {
 		prompt:
 			"replace repeated `includes` with an existing Set's `has` and replace shared-input `.sort()` with `.toSorted()`; declarations, imports, and docs stay unchanged.",
 		files: ["src/search/filter-products.ts"],
+	},
+	"hand-rolled-collection-helpers": {
+		prompt:
+			"replace an index-comparison de-duplication, a `reduce` grouping, and a `new Date` millisecond offset in `owner-summary.ts` with `uniq`, `groupBy`, and `dayjs`; exported names, types, and docs stay unchanged.",
+		files: ["src/owner/owner-summary.ts"],
 	},
 	"local-value-lookup": {
 		prompt:
@@ -1991,7 +2004,7 @@ test("TypeScript progressive metadata matches Appendix A exactly", async () => {
 
 	assert.equal(document.metadata.progressiveDisclosure, true);
 	assert.deepEqual(document.metadata.companions ?? [], []);
-	assert.equal(document.rules.length, 33);
+	assert.equal(document.rules.length, 34);
 	assert.deepEqual(
 		Object.fromEntries(document.rules.map((rule) => [getRuleId(rule), {appliesWhen: rule.appliesWhen, reviewWith: rule.reviewWith}])),
 		typescriptRuleRouting,
@@ -2081,7 +2094,7 @@ test("TypeScript routing manifest is an exact twelve-scenario partition with ful
 
 	assert.equal(manifest.version, 1);
 	assert.equal(manifest.skill, "typescript");
-	assert.equal(manifest.scenarios.length, 12);
+	assert.equal(manifest.scenarios.length, 13);
 	assert.deepEqual(
 		Object.fromEntries(manifest.scenarios.map((scenario) => [scenario.id, scenario.expectedSelected.typescript])),
 		typescriptSelections,
@@ -2143,7 +2156,7 @@ test("TypeScript generated index is complete and within the deterministic byte b
 	const expectedIds = document.rules.map((rule) => getRuleId(rule)).sort();
 
 	assert.deepEqual(ids, expectedIds);
-	assert.equal(ids.length, 33);
+	assert.equal(ids.length, 34);
 
 	for (const entry of entries) {
 		assert.equal(entry.fileName, `${entry.id}.md`);

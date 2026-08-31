@@ -158,6 +158,22 @@
 			}
 		},
 		{
+			"id": "hand-rolled-collection-helpers",
+			"prompt": "replace an index-comparison de-duplication, a `reduce` grouping, and a `new Date` millisecond offset in `owner-summary.ts` with `uniq`, `groupBy`, and `dayjs`; exported names, types, and docs stay unchanged.",
+			"files": [
+				"src/owner/owner-summary.ts"
+			],
+			"expectedSkills": [
+				"typescript"
+			],
+			"expectedSelected": {
+				"typescript": [
+					"naming-use-direct-imports-and-public-entry-points",
+					"values-use-es-toolkit-and-dayjs-first"
+				]
+			}
+		},
+		{
 			"id": "local-value-lookup",
 			"prompt": "replace a one-use toolbar variant lookup object with a conditional value at the call site; leave the prop contract, imports, and docs unchanged.",
 			"files": [
