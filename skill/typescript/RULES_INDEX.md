@@ -1,7 +1,7 @@
 # TypeScript 컨벤션 Rule Index
 
 - Skill: `typescript`
-- Routing digest: `sha256:b47de6d8a3d9576c70d75ba92faa6c81079e966d850722943b4353d37f7e3cb5`
+- Routing digest: `sha256:a80121f8041e8980a0c9bb28d666c83dc0bd5568452afd91bd29cecedae0ef65`
 
 ## Local Rules
 
@@ -31,7 +31,7 @@
 - T04-03 | values-read-objects-through-chains | 구조분해로 객체에서 값을 꺼내는 줄을 추가·변경할 때. 객체 필드를 별칭 \`const\`에 담아 그 이름으로 쓰려 할 때. 제외: 배열이나 튜플을 자리로 푸는 경우. | reviewWith: functions-name-a-value-only-for-recompute-or-judgment
 - T04-04 | values-declare-meaningful-numbers | 비교, 계산, 호출 인자에 숫자 리터럴을 새로 적을 때. 제외: 관용값이나 배열 인덱스처럼 뜻이 없는 숫자를 쓰는 경우. | reviewWith: absence-expose-optional-values-instead-of-silent-fallbacks, naming-place-project-constants-in-the-root-constant-folder
 - T04-05 | values-avoid-lookup-tables-for-simple-choices | 상태나 \`variant\`에 따라 쓸 값 하나를 고르는 객체·Map을 추가·변경할 때. 조회표의 키로 프롭이나 상태를 읽어 값을 넘기는 코드를 추가·변경할 때.
-- T04-06 | values-use-es-toolkit-and-dayjs-first | 배열, 객체, 문자열, 날짜를 다루는 보조 코드를 추가·변경할 때. \`reduce\`, \`Object.entries\`, 정규식, \`new Date\` 산술로 값을 다시 짜는 코드를 쓸 때. 제외: 표준 메서드 하나로 끝나는 경우. | reviewWith: functions-extract-helpers-only-when-the-boundary-is-real, values-prefer-immutable-array-sorting
+- T04-06 | values-use-es-toolkit-and-dayjs-first | 배열, 객체, 문자열, 날짜를 다루는 보조 코드를 추가·변경할 때. \`reduce\`, \`Object.entries\`, \`Array.from\`, 정규식, \`new Date\` 산술로 값을 다시 짜는 코드를 쓸 때. 제외: 표준 메서드 하나로 끝나는 경우. | reviewWith: functions-extract-helpers-only-when-the-boundary-is-real, values-prefer-immutable-array-sorting
 - T05-01 | absence-expose-optional-values-instead-of-silent-fallbacks | 선택 값을 읽거나 정규화하거나 넘기는 방식을 바꿀 때. \`??\`, \`\|\|\`, 기본값, 빈 값 대체 분기를 추가·변경할 때. | reviewWith: naming-place-owner-constants-in-the-owner-constant-folder, naming-place-project-constants-in-the-root-constant-folder
 - T06-01 | docs-keep-body-comments-for-intent-and-steps | 함수 본문의 \`//\` 주석을 추가·수정·유지할 때. 도메인 규칙, 예외 방어, 외부 제약, 부수효과 순서, 긴 절차의 단계를 주석으로 설명할 때. | reviewWith: docs-justify-convention-exceptions-with-a-reason-comment, docs-write-concise-korean-comments-about-purpose-and-constraints
 - T06-02 | docs-require-header-jsdoc-on-key-declarations | 쿼리, 뮤테이션, 원격 함수, 커스텀 훅, 커스텀 타입, 스토어, 포매터 선언을 추가·변경할 때. 분기나 \`await\`, 또는 두 개 이상의 동작이 있는 핸들러와 이펙트를 추가·변경할 때. 다시 쓰거나 내보낸 보조 함수를 추가·변경할 때.

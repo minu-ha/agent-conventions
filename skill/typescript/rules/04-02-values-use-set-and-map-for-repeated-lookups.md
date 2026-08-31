@@ -33,13 +33,17 @@ tags: functions
 **길이가 정해진 짧은 목록은 대상이 아닙니다.**
 상태 다섯 개를 적어 둔 상수에 `includes`를 한 번 부르는 쪽이 `Set`을 만드는 것보다 읽기 쉽습니다.
 
+**목록을 만들려고 `Set`을 쓰는 것은 이 규칙이 아닙니다.**
+`[...new Set(values)]`는 `uniq`, `filter((value) => !set.has(value))`는 `difference`나 `without`입니다.
+`values-use-es-toolkit-and-dayjs-first`가 그 자리를 봅니다.
+`Set`은 만든 뒤에 `has`를 여러 번 부를 때만 남깁니다.
+
 `es-toolkit`의 `keyBy`가 돌려주는 평범한 객체도 조회 자체는 한 번에 합니다.
 그래도 조회 자리에는 `Map`을 씁니다.
 평범한 객체는 `constructor`나 `toString` 같은 프로토타입 키에 걸립니다.
 `Record<string, T>`를 읽으면 없는 키도 `T`로 잡혀 빠진 값이 드러나지 않습니다.
 `map.get()`은 언제나 `T | undefined`라 없다는 사실이 타입에 남습니다.
 `groupBy`와 `keyBy`는 조회가 아니라 목록을 다시 짜는 자리에서 씁니다.
-그 자리는 `values-use-es-toolkit-and-dayjs-first`가 봅니다.
 
 **Incorrect (같은 배열을 반복 순회하며 포함 여부를 확인):**
 

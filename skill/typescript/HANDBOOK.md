@@ -2111,13 +2111,17 @@ const toSortedUsers = (users: User[]): User[] => {
 **길이가 정해진 짧은 목록은 대상이 아닙니다.**
 상태 다섯 개를 적어 둔 상수에 `includes`를 한 번 부르는 쪽이 `Set`을 만드는 것보다 읽기 쉽습니다.
 
+**목록을 만들려고 `Set`을 쓰는 것은 이 규칙이 아닙니다.**
+`[...new Set(values)]`는 `uniq`, `filter((value) => !set.has(value))`는 `difference`나 `without`입니다.
+`values-use-es-toolkit-and-dayjs-first`가 그 자리를 봅니다.
+`Set`은 만든 뒤에 `has`를 여러 번 부를 때만 남깁니다.
+
 `es-toolkit`의 `keyBy`가 돌려주는 평범한 객체도 조회 자체는 한 번에 합니다.
 그래도 조회 자리에는 `Map`을 씁니다.
 평범한 객체는 `constructor`나 `toString` 같은 프로토타입 키에 걸립니다.
 `Record<string, T>`를 읽으면 없는 키도 `T`로 잡혀 빠진 값이 드러나지 않습니다.
 `map.get()`은 언제나 `T | undefined`라 없다는 사실이 타입에 남습니다.
 `groupBy`와 `keyBy`는 조회가 아니라 목록을 다시 짜는 자리에서 씁니다.
-그 자리는 `values-use-es-toolkit-and-dayjs-first`가 봅니다.
 
 **Incorrect (같은 배열을 반복 순회하며 포함 여부를 확인):**
 
@@ -2425,7 +2429,7 @@ const order_status_by_api_code = {
 
 **Rule:** `T04-06` · `values-use-es-toolkit-and-dayjs-first`
 
-**Applies when:** 배열, 객체, 문자열, 날짜를 다루는 보조 코드를 추가·변경할 때. `reduce`, `Object.entries`, 정규식, `new Date` 산술로 값을 다시 짜는 코드를 쓸 때. 제외: 표준 메서드 하나로 끝나는 경우.
+**Applies when:** 배열, 객체, 문자열, 날짜를 다루는 보조 코드를 추가·변경할 때. `reduce`, `Object.entries`, `Array.from`, 정규식, `new Date` 산술로 값을 다시 짜는 코드를 쓸 때. 제외: 표준 메서드 하나로 끝나는 경우.
 
 **Review with:** `functions-extract-helpers-only-when-the-boundary-is-real`, `values-prefer-immutable-array-sorting`
 
@@ -2437,18 +2441,20 @@ const order_status_by_api_code = {
 쓸지 말지 고르는 라이브러리가 아니라 기본값입니다.
 
 직접 쓴 구현은 빈 배열, 중복 키, 월말 같은 경계에서 저마다 다르게 틀립니다.
+`Math.min(...values)`처럼 배열을 인자로 펼치는 관용구는 목록이 길어지면 호출 인자 한계에 걸립니다.
 같은 일을 하는 코드가 파일마다 조금씩 다른 모양으로 남는 것이 더 큰 비용입니다.
 
 | 갈래 | 손으로 쓰던 것 | 쓸 함수 |
 | --- | --- | --- |
 | 배열 | 중복 제거, 키로 묶기, 키로 색인 | `uniq`, `uniqBy`, `groupBy`, `keyBy` |
-| 배열 | 차집합, 교집합, 합집합 | `difference`, `intersection`, `union` |
+| 배열 | 차집합, 교집합, 합집합, 값 하나 빼기, 토글 | `difference`, `intersection`, `union`, `without`, `xor` |
 | 배열 | 정렬, 일정 크기로 자르기, 조건으로 가르기 | `sortBy`, `orderBy`, `chunk`, `partition` |
+| 배열 | 길이만큼 도는 자리 | `range` |
 | 객체 | 복사, 깊은 비교 | `clone`, `cloneDeep`, `isEqual` |
 | 객체 | 필드 골라내기, 빼기, 값만 바꾸기 | `pick`, `omit`, `mapValues` |
-| 문자열 | 표기 바꾸기 | `camelCase`, `snakeCase`, `kebabCase`, `pascalCase`, `capitalize` |
+| 문자열 | 표기 바꾸기, HTML escape | `camelCase`, `snakeCase`, `kebabCase`, `pascalCase`, `capitalize`, `escape` |
 | 함수 | 호출 빈도 조절, 한 번만, 결과 기억 | `debounce`, `throttle`, `once`, `memoize` |
-| 숫자 | 집계, 범위 제한, 연속 값 | `sum`, `sumBy`, `mean`, `clamp`, `round`, `range` |
+| 숫자 | 집계, 범위 제한, 최댓값과 최솟값 | `sum`, `sumBy`, `mean`, `clamp`, `maxBy`, `minBy` |
 | 판정 | 빈 값과 형 검사 | `isNil`, `isNotNil`, `isEmptyObject`, `isPlainObject` |
 | 비동기 | 지연, 시간 제한, 재시도 | `delay`, `withTimeout`, `retry` |
 | 날짜 | 파싱, 형식, 더하기와 빼기, 비교 | `dayjs` |
@@ -2457,17 +2463,38 @@ const order_status_by_api_code = {
 `lodash`와 `moment`는 새로 들이지 않습니다.
 
 **표준 메서드 하나로 끝나는 것은 그대로 둡니다.**
-`map`, `filter`, `find`, `flat`, `at`, `trim`, `padStart`, `Object.keys`를 감싸지 않습니다.
+`map`, `filter`, `find`, `flat`, `at`, `Object.keys`를 감싸지 않습니다.
+공백만 떼는 것도 표준 `value.trim()`입니다.
 `es-toolkit`은 표준 메서드가 없거나 여러 줄로 흩어질 때 씁니다.
+자를 문자를 지정하는 `trim(value, "_")`가 그 자리입니다.
+
+**이름이 같아도 뜻이 다르면 갈아타지 않습니다.**
+`es-toolkit`의 `compact`는 falsy를 모두 버리고, 프로젝트가 쓰던 `compact`는 `null`과 `undefined`만 버립니다.
+뜻이 다르면 프로젝트 래퍼를 남기고 안을 `es-toolkit`으로 채웁니다.
+이때 두 뜻의 차이를 고정하는 테스트를 함께 남깁니다.
+
+**갈아탈 때 어느 항목이 남는지 확인합니다.**
+`new Map(items.map(…)).values()`로 중복을 지우면 뒤에 온 항목이 남고, `uniqBy`는 앞에 온 항목이 남습니다.
+남길 쪽을 앞으로 옮기지 않으면 결과가 조용히 뒤집힙니다.
+
+**빈 목록 가드는 결과 가드로 합칩니다.**
+`minBy`와 `maxBy`는 빈 배열에서 `undefined`를 돌려줍니다.
+`length === 0`을 먼저 보고 다시 `Math.min`을 부르지 않고, 결과가 `undefined`인지만 봅니다.
+값을 뽑으려고 만들던 중간 `map` 배열도 같이 사라집니다.
+
+**서버가 준 시각 문자열을 그대로 보여줄 때는 `dayjs`로 파싱하지 않습니다.**
+파싱하면 타임존 변환이 붙어 표시 시각이 밀립니다.
+문자열을 자르는 것이 표시 규칙일 때는 자르는 코드를 그대로 둡니다.
 
 **반복 조회는 `Set`과 `Map`이 맡습니다.**
 `groupBy`와 `keyBy`는 목록을 다시 짜는 함수입니다.
 조회 자리를 `Map`으로 정리하는 것은 `values-use-set-and-map-for-repeated-lookups`가 봅니다.
 
-**Incorrect (중복 제거를 인덱스 비교로 직접 씀):**
+**Incorrect (중복 제거를 인덱스 비교와 `Set` 왕복으로 직접 씀):**
 
 ```ts
 const uniqueOwnerIds = ownerIds.filter((ownerId, index) => ownerIds.indexOf(ownerId) === index);
+const uniqueCategories = [...new Set(points.map((point) => point.x))];
 ```
 
 **Incorrect (`reduce`로 그룹 짓기를 다시 만듦):**
@@ -2492,15 +2519,53 @@ const searchKey = rawKey.replace(/([A-Z])/g, "_$1").toLowerCase();
 const expiresAt = new Date(issuedAt.getTime() + 7 * 24 * 60 * 60 * 1000);
 ```
 
+**Incorrect (`Array.from`에 쓰지 않는 첫 인자를 두고 길이만큼 돎):**
+
+```ts
+const tickTimes = Array.from({length: tick_count}, (_unused, tickIndex) => toTickTime(tickIndex));
+```
+
+**Incorrect (빈 목록을 먼저 가드하고 중간 배열을 만들어 양 끝을 읽음):**
+
+```ts
+const toChartBounds = (points: readonly ChartPoint[]) => {
+	const yValues = points.map((point) => point.y);
+
+	if (yValues.length === 0) {
+		return undefined;
+	}
+
+	return {min: Math.min(...yValues), max: Math.max(...yValues)};
+};
+```
+
 **Correct (`es-toolkit` 함수를 그대로 부름):**
 
 ```ts
-import {cloneDeep, groupBy, snakeCase, uniq} from "es-toolkit";
+import {cloneDeep, groupBy, range, snakeCase, uniq} from "es-toolkit";
 
 const uniqueOwnerIds = uniq(ownerIds);
 const productsByCategory = groupBy(products, (product) => product.category);
 const draftFilter = cloneDeep(savedFilter);
 const searchKey = snakeCase(rawKey);
+const tickTimes = range(tick_count).map((tickIndex) => toTickTime(tickIndex));
+```
+
+**Correct (빈 목록 판정을 `minBy`·`maxBy`의 결과로 합침):**
+
+```ts
+import {maxBy, minBy} from "es-toolkit";
+
+const toChartBounds = (points: readonly ChartPoint[]) => {
+	const lowestPoint = minBy(points, (point) => point.y);
+	const highestPoint = maxBy(points, (point) => point.y);
+
+	if (lowestPoint === undefined || highestPoint === undefined) {
+		return undefined;
+	}
+
+	return {min: lowestPoint.y, max: highestPoint.y};
+};
 ```
 
 **Correct (날짜 계산과 형식은 `dayjs`):**
@@ -2509,7 +2574,7 @@ const searchKey = snakeCase(rawKey);
 import dayjs from "dayjs";
 
 const expiresAt = dayjs(issuedAt).add(7, "day");
-const expiresLabel = expiresAt.format("YYYY.MM.DD");
+const expiresLabel = expiresAt.format(date_format);
 ```
 
 **Correct (표준 메서드 하나로 끝나면 감싸지 않음):**

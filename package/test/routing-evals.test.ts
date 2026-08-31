@@ -346,7 +346,7 @@ const typescriptRuleRouting = {
 	},
 	"values-use-es-toolkit-and-dayjs-first": {
 		appliesWhen:
-			"배열, 객체, 문자열, 날짜를 다루는 보조 코드를 추가·변경할 때. `reduce`, `Object.entries`, 정규식, `new Date` 산술로 값을 다시 짜는 코드를 쓸 때. 제외: 표준 메서드 하나로 끝나는 경우.",
+			"배열, 객체, 문자열, 날짜를 다루는 보조 코드를 추가·변경할 때. `reduce`, `Object.entries`, `Array.from`, 정규식, `new Date` 산술로 값을 다시 짜는 코드를 쓸 때. 제외: 표준 메서드 하나로 끝나는 경우.",
 		reviewWith: ["values-prefer-immutable-array-sorting", "functions-extract-helpers-only-when-the-boundary-is-real"],
 	},
 	"absence-expose-optional-values-instead-of-silent-fallbacks": {
