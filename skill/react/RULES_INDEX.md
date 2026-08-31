@@ -1,7 +1,7 @@
 # React 컨벤션 Rule Index
 
 - Skill: `react`
-- Routing digest: `sha256:5b0de6147c974db1fc91a6c71f882aea12255ca0a266cfd14bfb285bf7c8465e`
+- Routing digest: `sha256:3e12c7fdc2003b0d8ba3c7a3ab0c573340bf02658069e6768e709bda06169937`
 
 ## Direct Companions
 
@@ -23,8 +23,9 @@
 - R02-05 | data-handle-mutation-failure-where-it-is-called | 뮤테이션을 부르는 코드를 추가·변경할 때. \`mutate\`와 \`mutateAsync\` 사이를 오갈 때. | reviewWith: data-invalidate-queries-the-mutation-changed, events-run-user-actions-in-handlers-not-effects
 - R02-06 | data-invalidate-queries-the-mutation-changed | 뮤테이션 성공 뒤 서버 상태를 다시 맞추는 코드를 추가·변경할 때. 캐시를 직접 쓰거나 다시 불러오는 코드를 넣을 때. | reviewWith: data-handle-mutation-failure-where-it-is-called
 - R03-01 | typing-take-handler-types-from-existing-contracts | 커링 팩토리가 돌려주는 리액트 핸들러의 타입을 정할 때. \`Ui\*\` 래퍼 사용처에서 프롭스 타입을 참조할 때. 제외: \`query.select\` 같은 훅 옵션의 일회성 문맥 콜백인 경우.
-- R03-02 | typing-narrow-library-wrapper-contracts | 라이브러리 컴포넌트를 감싸는 \`Ui\*\` 래퍼의 프롭스 타입을 만들거나 바꿀 때. 래퍼에 프롭을 추가하거나 여는 범위를 넓힐 때. | reviewWith: css/composition-do-not-style-through-the-style-attribute, typescript/docs-justify-convention-exceptions-with-a-reason-comment, typing-choose-wrapper-shape-and-forwarding, typing-take-handler-types-from-existing-contracts
-- R03-03 | typing-choose-wrapper-shape-and-forwarding | 래퍼가 받은 프롭을 안쪽 컴포넌트나 요소로 넘기는 코드를 추가·변경할 때. 래퍼에 자기 프롭을 더하거나 안쪽 요소를 늘릴 때. | reviewWith: typescript/values-avoid-lookup-tables-for-simple-choices
+- R03-02 | typing-narrow-library-wrapper-contracts | 라이브러리 컴포넌트를 감싸는 \`Ui\*\` 래퍼의 프롭스 타입을 만들거나 바꿀 때. 래퍼에 프롭을 추가하거나 여는 범위를 넓힐 때. | reviewWith: typescript/docs-justify-convention-exceptions-with-a-reason-comment, typing-choose-wrapper-shape-and-forwarding, typing-open-dom-props-in-three-steps, typing-take-handler-types-from-existing-contracts
+- R03-03 | typing-open-dom-props-in-three-steps | 래퍼 프롭스가 \`HTMLAttributes\`를 \`extends\` 하거나 그 상속을 뗄 때. 라이브러리 프롭과 DOM 프롭의 이름이 부딪혀 컴파일이 막힐 때. 제외: DOM 프롭이 아닌 표시 프롭만 더하거나 빼는 경우. | reviewWith: css/composition-do-not-style-through-the-style-attribute, typescript/types-reuse-existing-contracts-before-new-types, typing-narrow-library-wrapper-contracts
+- R03-04 | typing-choose-wrapper-shape-and-forwarding | 래퍼가 받은 프롭을 안쪽 컴포넌트나 요소로 넘기는 코드를 추가·변경할 때. 래퍼에 자기 프롭을 더하거나 안쪽 요소를 늘릴 때. | reviewWith: typescript/values-avoid-lookup-tables-for-simple-choices
 - R04-01 | strategy-choose-single-composition-compound-and-variants | 내보낸 공용 컴포넌트에 슬롯, 공개 부품, 공용 컨텍스트나 동작을 추가할 때. 반복되는 기본 설정이나 모드 API를 추가할 때. 공용 컴포넌트의 조립 구조를 재설계할 때. | reviewWith: screen-avoid-premature-abstraction, strategy-avoid-boolean-prop-proliferation, strategy-expose-only-assembled-compound-parts, strategy-prefer-children-over-render-props
 - R04-02 | strategy-expose-only-assembled-compound-parts | 합성 컴포넌트의 공개 부품 목록에 부품을 넣거나 뺄 때. 상태 없는 합성에 상태를 넣으면서 공개 이름을 바꾸려 할 때. | reviewWith: css/composition-do-not-add-wrapper-elements-for-styling, strategy-choose-single-composition-compound-and-variants
 - R04-03 | strategy-avoid-boolean-prop-proliferation | \`ui\`나 \`widget\` 컴포넌트에 불리언 모드·표시 프롭을 추가할 때. 기존 불리언 프롭 조합과 JSX 분기가 늘어날 때. 제외: 라우트 진입 파일 안에서만 쓰는 일회성 분기인 경우. | reviewWith: strategy-expose-only-assembled-compound-parts

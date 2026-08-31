@@ -204,6 +204,7 @@
 			"expectedSelected": {
 				"react": [
 					"typing-narrow-library-wrapper-contracts",
+					"typing-open-dom-props-in-three-steps",
 					"typing-choose-wrapper-shape-and-forwarding",
 					"composition-read-props-without-destructuring",
 					"composition-do-not-define-components-inside-components",

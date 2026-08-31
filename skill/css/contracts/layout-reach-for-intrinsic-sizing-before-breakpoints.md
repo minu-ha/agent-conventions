@@ -27,4 +27,4 @@
 놓는 쪽에서 그 폭을 왜 고정하는지가 클래스명과 선언에서 읽혀야 합니다.
 `layout-keep-layout-intent-explicit` 규칙이 그 판정을 합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/06-03-layout-reach-for-intrinsic-sizing-before-breakpoints.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/06-04-layout-reach-for-intrinsic-sizing-before-breakpoints.md)을 읽습니다.

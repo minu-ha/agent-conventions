@@ -44,7 +44,8 @@
 3. [Typing and Contracts](#3-typing-and-contracts) — **CRITICAL**
     - 3.1 [Take React Handler and Wrapper Prop Types From Existing Contracts](#31-take-react-handler-and-wrapper-prop-types-from-existing-contracts)
     - 3.2 [Narrow the Contract a Library Wrapper Opens](#32-narrow-the-contract-a-library-wrapper-opens)
-    - 3.3 [Choose the Wrapper Shape and Forward Props Accordingly](#33-choose-the-wrapper-shape-and-forward-props-accordingly)
+    - 3.3 [Open DOM Props in Three Steps](#33-open-dom-props-in-three-steps)
+    - 3.4 [Choose the Wrapper Shape and Forward Props Accordingly](#34-choose-the-wrapper-shape-and-forward-props-accordingly)
 4. [Composition Strategy](#4-composition-strategy) — **MEDIUM-HIGH**
     - 4.1 [Choose Single Components, Compound Components, and Variants Deliberately](#41-choose-single-components-compound-components-and-variants-deliberately)
     - 4.2 [Expose Only Compound Parts the Consumer Assembles](#42-expose-only-compound-parts-the-consumer-assembles)
@@ -1171,7 +1172,7 @@ const handleSubmitClick: UiButtonProps["onClick"] = (event) => {
 
 **Applies when:** 라이브러리 컴포넌트를 감싸는 `Ui*` 래퍼의 프롭스 타입을 만들거나 바꿀 때. 래퍼에 프롭을 추가하거나 여는 범위를 넓힐 때.
 
-**Review with:** `css/composition-do-not-style-through-the-style-attribute`, `typescript/docs-justify-convention-exceptions-with-a-reason-comment`, `typing-choose-wrapper-shape-and-forwarding`, `typing-take-handler-types-from-existing-contracts`
+**Review with:** `typescript/docs-justify-convention-exceptions-with-a-reason-comment`, `typing-choose-wrapper-shape-and-forwarding`, `typing-open-dom-props-in-three-steps`, `typing-take-handler-types-from-existing-contracts`
 
 **Impact: CRITICAL (라이브러리의 스타일 우회로가 화면으로 새지 않고 교체할 때 래퍼 한 파일만 고칩니다)**
 
@@ -1183,7 +1184,7 @@ const handleSubmitClick: UiButtonProps["onClick"] = (event) => {
 `css/composition-inject-classes-only-at-the-entry-point`가 정한 스타일 창구가 그 자리에서 뚫립니다.
 
 DOM 프롭이 아닌 계약은 세 가지로 나눠 각각 다르게 씁니다.
-DOM 표면은 아래 세 단계 표가 맡습니다.
+DOM 표면 자체를 어떻게 열지는 `typing-open-dom-props-in-three-steps`가 정합니다.
 
 | 프롭 | 어떻게 |
 | --- | --- |
@@ -1195,6 +1196,68 @@ DOM 표면은 아래 세 단계 표가 맡습니다.
 `UiIconButtonProps`의 `icon`은 감싸는 컴포넌트가 모르므로 자기 프롭이고,
 `UiTableRowProps`의 `selected`는 감싸는 컴포넌트가 받으므로 자기 프롭이 아닙니다.
 인덱스 접근은 자기 프롭이 아닌 것, 곧 **이미 있는 프롭을 그대로 여는 자리**에만 씁니다.
+
+- 인덱스 접근은 상속 사슬을 따라갑니다.
+  바깥 타입 이름 하나만 쓰면 됩니다.
+- 값을 손으로 다시 적는 것은 일부러 좁힐 때만 합니다.
+  좁힌 이유를 적는 형식과 근거 기준은
+  `typescript/docs-justify-convention-exceptions-with-a-reason-comment`가 정합니다.
+- `ref`를 여는 기준은 `composition-open-ref-props-only-for-imperative-contracts`가 정합니다.
+- 프롭을 어떻게 넘기는지는 `typing-choose-wrapper-shape-and-forwarding`이 정합니다.
+
+**Incorrect (라이브러리 타입을 그대로 내보냄):**
+
+```tsx
+export type UiButtonProps = ButtonProps;
+
+export const UiButton = (props: UiButtonProps) => {
+	return <Button {...props} />;
+};
+```
+
+**Correct (이미 있는 프롭은 인덱스 접근으로 하나씩 엶):**
+
+```tsx
+import { TableCell } from "@mui/material";
+import type { TableCellProps } from "@mui/material";
+import { clsx } from "clsx";
+import type { HTMLAttributes } from "react";
+
+/**
+ * 표 셀에서 정렬과 여백만 여는 계약
+ *
+ * 라이브러리 셀의 나머지 표시 프롭은 표 소유자가 정하므로 열지 않는다.
+ */
+export interface UiTableCellProps extends HTMLAttributes<HTMLTableCellElement> {
+	/**
+	 * 내용 가로 정렬
+	 */
+	align?: TableCellProps["align"];
+	/**
+	 * 셀 여백
+	 */
+	padding?: TableCellProps["padding"];
+}
+
+export const UiTableCell = (props: UiTableCellProps) => {
+	return (
+		<TableCell {...props} className={clsx("ui_tableCell__root", props.className)} />
+	);
+};
+```
+
+### 3.3 Open DOM Props in Three Steps
+
+**Rule:** `R03-03` · `typing-open-dom-props-in-three-steps`
+
+**Applies when:** 래퍼 프롭스가 `HTMLAttributes`를 `extends` 하거나 그 상속을 뗄 때. 라이브러리 프롭과 DOM 프롭의 이름이 부딪혀 컴파일이 막힐 때. 제외: DOM 프롭이 아닌 표시 프롭만 더하거나 빼는 경우.
+
+**Review with:** `css/composition-do-not-style-through-the-style-attribute`, `typescript/types-reuse-existing-contracts-before-new-types`, `typing-narrow-library-wrapper-contracts`
+
+**Impact: HIGH (프롭 하나가 부딪혔다고 `id`·`role`·`aria-*`·이벤트까지 잃지 않습니다)**
+
+무엇을 열지는 `typing-narrow-library-wrapper-contracts`가 먼저 정합니다.
+이 규칙은 그중 DOM 표면을 어떤 형태로 열지만 봅니다.
 
 **DOM 표면을 여는 방법은 세 단계이고 위에서부터 되는 것을 씁니다.**
 어느 단계인지는 컴파일러가 알려 주므로 미리 고민하지 않습니다.
@@ -1216,32 +1279,16 @@ DOM 표면은 아래 세 단계 표가 맡습니다.
 `ChangeEventHandler<HTMLInputElement>` 같은 플랫폼 타입을 씁니다.
 `value`나 `onChange`처럼 DOM이 이미 정한 이름은 라이브러리 것이 아닙니다.
 
+
 여기 쓰는 `Omit`은 `typescript/types-reuse-existing-contracts-before-new-types`가 허용하는 자리입니다.
 DOM 표면은 리액트가 속성을 더하면 래퍼도 따라 받아야 하는 열린 집합이라
 뺄 이름만 적는 것이 맞습니다.
 남는 것을 손으로 적을 수도 없습니다.
 
-- 인덱스 접근은 상속 사슬을 따라갑니다.
-  바깥 타입 이름 하나만 쓰면 됩니다.
-- 값을 손으로 다시 적는 것은 일부러 좁힐 때만 합니다.
-  좁힌 이유를 적는 형식과 근거 기준은
-  `typescript/docs-justify-convention-exceptions-with-a-reason-comment`가 정합니다.
 - `aria-*`와 `data-*`는 하이픈이 들어 있어 TypeScript가 검사하지 않습니다.
   선언하지 않아도 넘어갑니다.
-- `ref`를 여는 기준은 `composition-open-ref-props-only-for-imperative-contracts`가 정합니다.
-- 프롭을 어떻게 넘기는지는 `typing-choose-wrapper-shape-and-forwarding`이 정합니다.
 - `HTMLAttributes`를 `extends` 하면 `style`도 같이 열립니다.
   인라인 `style`을 쓸지는 `css/composition-do-not-style-through-the-style-attribute`가 정합니다.
-
-**Incorrect (라이브러리 타입을 그대로 내보냄):**
-
-```tsx
-export type UiButtonProps = ButtonProps;
-
-export const UiButton = (props: UiButtonProps) => {
-	return <Button {...props} />;
-};
-```
 
 **Incorrect (프롭 하나가 부딪힌다고 DOM 표면을 통째로 포기함):**
 
@@ -1256,7 +1303,20 @@ export interface UiButtonProps {
 }
 ```
 
-**Correct (1단계 — 그냥 통과하는 래퍼):**
+**Correct (어느 단계인지 고르는 법):**
+
+```txt
+래퍼 프롭스에 DOM 표면을 연다
+│
+├ extends HTMLAttributes<T> 가 그냥 컴파일됨 ──→ 1단계. 그대로 둔다
+│
+├ 같은 이름 프롭의 값이 부딪혀 막힘 ──────────→ 2단계. 그 이름만 Omit 하고
+│                                               인덱스 접근으로 다시 연다
+│
+└ 감싸는 요소와 이벤트 대상 요소가 서로 다름 ─→ 3단계. extends 없이 필요한 것만
+```
+
+**Correct (1단계 — 부딪히는 이름이 없어 그대로 상속):**
 
 ```tsx
 import { TableCell } from "@mui/material";
@@ -1363,9 +1423,9 @@ export const UiTextField = (props: UiTextFieldProps) => {
 };
 ```
 
-### 3.3 Choose the Wrapper Shape and Forward Props Accordingly
+### 3.4 Choose the Wrapper Shape and Forward Props Accordingly
 
-**Rule:** `R03-03` · `typing-choose-wrapper-shape-and-forwarding`
+**Rule:** `R03-04` · `typing-choose-wrapper-shape-and-forwarding`
 
 **Applies when:** 래퍼가 받은 프롭을 안쪽 컴포넌트나 요소로 넘기는 코드를 추가·변경할 때. 래퍼에 자기 프롭을 더하거나 안쪽 요소를 늘릴 때.
 

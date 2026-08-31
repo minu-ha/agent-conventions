@@ -203,6 +203,7 @@
 			"expectedSelected": {
 				"react": [
 					"typing-narrow-library-wrapper-contracts",
+					"typing-open-dom-props-in-three-steps",
 					"typing-choose-wrapper-shape-and-forwarding",
 					"composition-read-props-without-destructuring",
 					"docs-require-jsdoc-on-key-declarations"
@@ -312,7 +313,7 @@
 		},
 		{
 			"id": "css-split-class-declaration",
-			"prompt": "the same .pg_catalogIndex__toolbar block is opened twice at the top level of one file, and a third override sits nested inside the class block as @media; fold the plain duplicate into one block and move the breakpoint override into a grouped @media at the bottom of the file.",
+			"prompt": "the same .pg_catalogIndex__toolbar block is opened twice at the top level of one file, and a third override sits nested inside the class block as @media (min-width: 1024px); fold the plain duplicate into one block and move the breakpoint override into a grouped desktop-first @media at the bottom of the file.",
 			"files": [
 				"src/page/catalog-index/pg-catalog-index.css"
 			],
@@ -322,7 +323,8 @@
 			"expectedSelected": {
 				"css": [
 					"selector-declare-each-class-in-one-block",
-					"layout-group-breakpoints-at-the-file-bottom"
+					"layout-group-breakpoints-at-the-file-bottom",
+					"layout-write-breakpoints-desktop-first"
 				]
 			}
 		},

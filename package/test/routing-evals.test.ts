@@ -151,6 +151,7 @@ const cssRuleUniverse = [
 	"values-declare-stacking-layers-as-tokens",
 	"values-switch-themes-by-changing-token-values",
 	"layout-group-breakpoints-at-the-file-bottom",
+	"layout-write-breakpoints-desktop-first",
 	"layout-keep-layout-intent-explicit",
 	"layout-reach-for-intrinsic-sizing-before-breakpoints",
 	"a11y-always-provide-a-visible-focus-indicator",
@@ -176,6 +177,7 @@ const reactRuleUniverse = [
 	"data-invalidate-queries-the-mutation-changed",
 	"typing-take-handler-types-from-existing-contracts",
 	"typing-narrow-library-wrapper-contracts",
+	"typing-open-dom-props-in-three-steps",
 	"typing-choose-wrapper-shape-and-forwarding",
 	"strategy-choose-single-composition-compound-and-variants",
 	"strategy-expose-only-assembled-compound-parts",
@@ -539,10 +541,16 @@ const cssRuleRouting = {
 	"layout-group-breakpoints-at-the-file-bottom": {
 		appliesWhen: "`@media` 브레이크포인트를 추가하거나 옮길 때. 화면 폭에 따라 값이 달라지는 선언을 넣을 때.",
 		reviewWith: [
+			"layout-write-breakpoints-desktop-first",
 			"layout-reach-for-intrinsic-sizing-before-breakpoints",
 			"selector-declare-each-class-in-one-block",
 			"values-switch-themes-by-changing-token-values",
 		],
+	},
+	"layout-write-breakpoints-desktop-first": {
+		appliesWhen:
+			"`@media` 조건을 쓰거나 브레이크포인트 숫자를 고를 때. `min-width`나 `max-width` 표기를 쓸 때. 제외: `prefers-color-scheme` 같은 폭이 아닌 조건을 쓰는 경우.",
+		reviewWith: ["layout-group-breakpoints-at-the-file-bottom", "tooling-configure-stylelint-to-enforce-these-rules"],
 	},
 	"layout-keep-layout-intent-explicit": {
 		appliesWhen:
@@ -643,10 +651,19 @@ const reactRuleRouting = {
 	"typing-narrow-library-wrapper-contracts": {
 		appliesWhen: "라이브러리 컴포넌트를 감싸는 `Ui*` 래퍼의 프롭스 타입을 만들거나 바꿀 때. 래퍼에 프롭을 추가하거나 여는 범위를 넓힐 때.",
 		reviewWith: [
+			"typing-open-dom-props-in-three-steps",
 			"typing-take-handler-types-from-existing-contracts",
 			"typing-choose-wrapper-shape-and-forwarding",
-			"css/composition-do-not-style-through-the-style-attribute",
 			"typescript/docs-justify-convention-exceptions-with-a-reason-comment",
+		],
+	},
+	"typing-open-dom-props-in-three-steps": {
+		appliesWhen:
+			"래퍼 프롭스가 `HTMLAttributes`를 `extends` 하거나 그 상속을 뗄 때. 라이브러리 프롭과 DOM 프롭의 이름이 부딪혀 컴파일이 막힐 때. 제외: DOM 프롭이 아닌 표시 프롭만 더하거나 빼는 경우.",
+		reviewWith: [
+			"typing-narrow-library-wrapper-contracts",
+			"css/composition-do-not-style-through-the-style-attribute",
+			"typescript/types-reuse-existing-contracts-before-new-types",
 		],
 	},
 	"typing-choose-wrapper-shape-and-forwarding": {
@@ -1222,6 +1239,7 @@ const reactScenarioStages = {
 			expectedSelected: {
 				react: [
 					"typing-narrow-library-wrapper-contracts",
+					"typing-open-dom-props-in-three-steps",
 					"typing-choose-wrapper-shape-and-forwarding",
 					"composition-read-props-without-destructuring",
 					"composition-do-not-define-components-inside-components",
@@ -1675,6 +1693,7 @@ const cssScenarioStages = {
 			expectedSelected: {
 				react: [
 					"typing-narrow-library-wrapper-contracts",
+					"typing-open-dom-props-in-three-steps",
 					"typing-choose-wrapper-shape-and-forwarding",
 					"composition-read-props-without-destructuring",
 					"docs-require-jsdoc-on-key-declarations",
@@ -1762,10 +1781,16 @@ const cssScenarioStages = {
 	"css-split-class-declaration": {
 		initial: {
 			prompt:
-				"the same .pg_catalogIndex__toolbar block is opened twice at the top level of one file, and a third override sits nested inside the class block as @media; fold the plain duplicate into one block and move the breakpoint override into a grouped @media at the bottom of the file.",
+				"the same .pg_catalogIndex__toolbar block is opened twice at the top level of one file, and a third override sits nested inside the class block as @media (min-width: 1024px); fold the plain duplicate into one block and move the breakpoint override into a grouped desktop-first @media at the bottom of the file.",
 			files: ["src/page/catalog-index/pg-catalog-index.css"],
 			expectedSkills: ["css"],
-			expectedSelected: {css: ["selector-declare-each-class-in-one-block", "layout-group-breakpoints-at-the-file-bottom"]},
+			expectedSelected: {
+				css: [
+					"selector-declare-each-class-in-one-block",
+					"layout-group-breakpoints-at-the-file-bottom",
+					"layout-write-breakpoints-desktop-first",
+				],
+			},
 		},
 	},
 	"css-responsive-grid-and-button-width": {
@@ -2365,7 +2390,7 @@ test("TypeScript SKILL.md is a compact router without receipt or audit machinery
 	assertMentions(extractSection(body, 1), ["React", "CSS", "companion"], "typescript 1절");
 });
 
-test("React progressive metadata and all 51 rule routes match Appendix B exactly", async () => {
+test("React progressive metadata and all 52 rule routes match Appendix B exactly", async () => {
 	const skillPaths = getSkillPaths("react", realSkillRootDir);
 	const document = await readSkillDocument(skillPaths);
 
@@ -2376,7 +2401,7 @@ test("React progressive metadata and all 51 rule routes match Appendix B exactly
 		{skill: "typescript", mode: "required"},
 		{skill: "css", mode: "conditional", appliesWhen: "class contract, stylesheet 또는 styling surface를 변경한다."},
 	]);
-	assert.equal(document.rules.length, 51);
+	assert.equal(document.rules.length, 52);
 	assert.deepEqual(
 		Object.fromEntries(document.rules.map((rule) => [getRuleId(rule), {appliesWhen: rule.appliesWhen, reviewWith: rule.reviewWith}])),
 		reactRuleRouting,
@@ -2529,7 +2554,7 @@ test("React generated index and handbook preserve canonical local rules and comp
 		entries.map((entry) => entry.id),
 		reactRuleUniverse,
 	);
-	assert.equal(entries.length, 51);
+	assert.equal(entries.length, 52);
 
 	for (const entry of entries) {
 		assert.equal(entry.fileName, `${entry.id}.md`);
@@ -2595,7 +2620,7 @@ test("CSS progressive metadata and rule routing match Appendix C exactly", async
 	assert.deepEqual(document.metadata.companions, [
 		{skill: "typescript", mode: "conditional", appliesWhen: "TS/TSX 클래스 계약, 래퍼 Props 또는 style import를 함께 변경한다."},
 	]);
-	assert.equal(document.rules.length, 33);
+	assert.equal(document.rules.length, 34);
 	assert.deepEqual(
 		Object.fromEntries(document.rules.map((rule) => [getRuleId(rule), {appliesWhen: rule.appliesWhen, reviewWith: rule.reviewWith}])),
 		cssRuleRouting,
@@ -3306,7 +3331,7 @@ test("CSS generated index is canonical, complete, body-preserving, and within it
 		entries.map((entry) => entry.id),
 		cssRuleUniverse,
 	);
-	assert.equal(entries.length, 33);
+	assert.equal(entries.length, 34);
 
 	for (const entry of entries) {
 		assert.equal(entry.fileName, `${entry.id}.md`);

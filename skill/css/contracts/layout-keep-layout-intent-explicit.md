@@ -15,4 +15,4 @@
 - 로딩 대체 화면은 실제 내용과 같은 컨테이너 클래스 안에 넣습니다.
   높이를 대체 화면에만 따로 적으면 실제 내용이 들어올 때 그 값이 남아 레이아웃이 튑니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/06-02-layout-keep-layout-intent-explicit.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/06-03-layout-keep-layout-intent-explicit.md)을 읽습니다.

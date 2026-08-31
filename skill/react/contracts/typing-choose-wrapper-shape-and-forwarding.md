@@ -32,4 +32,4 @@ JSX 스프레드는 초과 프롭을 검사하지 않아 **컴파일러가 잡�
 
 **Requires selected:** `typing-narrow-library-wrapper-contracts` · 함께 적용
 
-> 예시·예외가 필요하면 [full rule](../rules/03-03-typing-choose-wrapper-shape-and-forwarding.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/03-04-typing-choose-wrapper-shape-and-forwarding.md)을 읽습니다.

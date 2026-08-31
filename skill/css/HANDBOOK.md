@@ -60,8 +60,9 @@
     - 5.4 [Switch Themes by Changing Token Values](#54-switch-themes-by-changing-token-values)
 6. [Layout and Responsiveness](#6-layout-and-responsiveness) — **MEDIUM-HIGH**
     - 6.1 [Group Breakpoints at the Bottom of the File](#61-group-breakpoints-at-the-bottom-of-the-file)
-    - 6.2 [Keep Layout Intent Explicit](#62-keep-layout-intent-explicit)
-    - 6.3 [Reach for Intrinsic Sizing Before Breakpoints](#63-reach-for-intrinsic-sizing-before-breakpoints)
+    - 6.2 [Write Breakpoints Desktop First](#62-write-breakpoints-desktop-first)
+    - 6.3 [Keep Layout Intent Explicit](#63-keep-layout-intent-explicit)
+    - 6.4 [Reach for Intrinsic Sizing Before Breakpoints](#64-reach-for-intrinsic-sizing-before-breakpoints)
 7. [Accessibility and Motion](#7-accessibility-and-motion) — **CRITICAL**
     - 7.1 [Always Provide a Visible Focus Indicator](#71-always-provide-a-visible-focus-indicator)
     - 7.2 [Namespace Keyframes and Respect Reduced Motion](#72-namespace-keyframes-and-respect-reduced-motion)
@@ -2291,7 +2292,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 
 **Impact: MEDIUM-HIGH**
 
-배치 의도가 클래스명과 선언에서 바로 읽혀야 하고, 폭이 달라질 때 무엇이 바뀌는지가 한 자리에 모여야 합니다. 브레이크포인트를 적기 전에 내재적 크기 지정으로 되는지 보고, 남는 브레이크포인트는 파일 아래 한 곳에 데스크톱 퍼스트로 둡니다.
+배치 의도가 클래스명과 선언에서 바로 읽혀야 하고, 폭이 달라질 때 무엇이 바뀌는지가 한 자리에 모여야 합니다. 브레이크포인트를 적기 전에 내재적 크기 지정으로 되는지 봅니다. 남는 브레이크포인트는 파일 아래 한 곳에 모으고, 방향과 숫자는 데스크톱 퍼스트로 정한 세 값만 씁니다.
 
 ### 6.1 Group Breakpoints at the Bottom of the File
 
@@ -2299,7 +2300,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 
 **Applies when:** `@media` 브레이크포인트를 추가하거나 옮길 때. 화면 폭에 따라 값이 달라지는 선언을 넣을 때.
 
-**Review with:** `layout-reach-for-intrinsic-sizing-before-breakpoints`, `selector-declare-each-class-in-one-block`, `values-switch-themes-by-changing-token-values`
+**Review with:** `layout-reach-for-intrinsic-sizing-before-breakpoints`, `layout-write-breakpoints-desktop-first`, `selector-declare-each-class-in-one-block`, `values-switch-themes-by-changing-token-values`
 
 **Impact: MEDIUM-HIGH (한 브레이크포인트에서 무엇이 달라지는지 한 블록에서 읽히고 두 방향이 겹치지 않습니다)**
 
@@ -2317,33 +2318,8 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 그래도 이쪽을 고릅니다.
 브레이크포인트를 고치는 일은 클래스 하나가 아니라 그 폭에서 화면이 어떻게 보이는지를 고치는 일이기 때문입니다.
 
-**데스크톱 퍼스트로 씁니다.**
-기본 선언이 가장 넓은 화면 기준이고, 좁아질 때만 덮습니다.
-`(width >= ...)` 조건과 섞지 않습니다.
-두 방향을 섞으면 둘 다 맞는 구간에서 어느 쪽이 이기는지 매번 따져야 합니다.
-
-블록 순서는 넓은 쪽부터 좁은 쪽입니다.
-좁은 화면에서는 조건이 여러 개 동시에 맞고 마지막에 쓴 것이 이깁니다.
-
-조건은 범위 표기로 씁니다.
-`(width < 1024px)`로 쓰고 `(max-width: 1023.98px)`로 쓰지 않습니다.
-`max-width: 1024px`은 1024를 포함해서 `min-width: 1024px`과 겹치므로 소수 보정이 필요했습니다.
-범위 표기는 겹치지 않습니다.
-`tooling-configure-stylelint-to-enforce-these-rules` 규칙이 그 표기를 강제합니다.
-
-브레이크포인트 숫자는 아래 셋만 씁니다.
-이름은 경계가 아니라 그 아래 구간을 가리킵니다.
-기본 선언은 `1440px` 이상 기준입니다.
-
-| 조건 | 구간 이름 | 여기부터 좁아짐 |
-| --- | --- | --- |
-| `(width < 1440px)` | `~lg` | 좁은 데스크톱 |
-| `(width < 1024px)` | `~md` | 가로 태블릿, 좁은 노트북 |
-| `(width < 640px)` | `~sm` | 세로 태블릿 아래 |
-
-숫자를 토큰으로 빼지 않습니다.
-`@media`의 조건에는 `var()`를 쓸 수 없어서 토큰으로 만들어도 그 자리에서 못 씁니다.
-그래서 세 값을 규칙에 못 박고 그대로 적습니다.
+브레이크포인트를 어느 방향으로 쓰고 어떤 숫자를 고를지는
+`layout-write-breakpoints-desktop-first`가 정합니다.
 
 **같은 `@media` 블록이 파일 여러 개에 반복되면 그것을 소유할 자리를 하나 만듭니다.**
 파일마다 같은 블록을 복사하고 있다면 브레이크포인트 자리가 아니라 소유자가 없는 문제입니다.
@@ -2381,28 +2357,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
-**Incorrect (두 방향을 섞어 겹치는 구간을 만듦):**
-
-```css
-.pg_products__toolbar {
-	display: flex;
-	gap: 16px;
-}
-
-@media (width >= 1440px) {
-	.pg_products__toolbar {
-		gap: 24px;
-	}
-}
-
-@media (width < 1024px) {
-	.pg_products__toolbar {
-		gap: 8px;
-	}
-}
-```
-
-**Correct (가장 넓은 화면을 기본으로 두고 파일 아래에서 좁혀 감):**
+**Correct (선언은 위, 브레이크포인트는 파일 아래 한 곳):**
 
 ```css
 .pg_products__toolbar {
@@ -2449,9 +2404,117 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
-### 6.2 Keep Layout Intent Explicit
+### 6.2 Write Breakpoints Desktop First
 
-**Rule:** `C06-02` · `layout-keep-layout-intent-explicit`
+**Rule:** `C06-02` · `layout-write-breakpoints-desktop-first`
+
+**Applies when:** `@media` 조건을 쓰거나 브레이크포인트 숫자를 고를 때. `min-width`나 `max-width` 표기를 쓸 때. 제외: `prefers-color-scheme` 같은 폭이 아닌 조건을 쓰는 경우.
+
+**Review with:** `layout-group-breakpoints-at-the-file-bottom`, `tooling-configure-stylelint-to-enforce-these-rules`
+
+**Impact: MEDIUM-HIGH (두 방향이 겹치는 구간이 없고 프로젝트 전체가 같은 세 폭에서 꺾입니다)**
+
+기본 선언은 가장 넓은 화면 기준입니다.
+좁아질 때만 그 위를 덮습니다.
+`(width >= ...)` 조건과 섞지 않습니다.
+두 방향을 섞으면 둘 다 맞는 구간에서 어느 쪽이 이기는지 매번 따져야 합니다.
+
+블록 순서는 넓은 쪽부터 좁은 쪽입니다.
+좁은 화면에서는 조건이 여러 개 동시에 맞고 마지막에 쓴 것이 이깁니다.
+
+**조건은 범위 표기로 씁니다.**
+`(width < 1024px)`로 쓰고 `(max-width: 1023.98px)`로 쓰지 않습니다.
+`max-width: 1024px`은 1024를 포함해서 `min-width: 1024px`과 겹치므로 소수 보정이 필요했습니다.
+범위 표기는 겹치지 않습니다.
+`tooling-configure-stylelint-to-enforce-these-rules` 규칙이 그 표기를 강제합니다.
+
+**숫자는 아래 셋만 씁니다.**
+이름은 경계가 아니라 그 아래 구간을 가리킵니다.
+기본 선언은 `1440px` 이상 기준입니다.
+
+| 조건 | 구간 이름 | 여기부터 좁아짐 |
+| --- | --- | --- |
+| `(width < 1440px)` | `~lg` | 좁은 데스크톱 |
+| `(width < 1024px)` | `~md` | 가로 태블릿, 좁은 노트북 |
+| `(width < 640px)` | `~sm` | 세로 태블릿 아래 |
+
+숫자를 토큰으로 빼지 않습니다.
+`@media`의 조건에는 `var()`를 쓸 수 없어서 토큰으로 만들어도 그 자리에서 못 씁니다.
+그래서 세 값을 규칙에 못 박고 그대로 적습니다.
+
+어디에 적을지는 `layout-group-breakpoints-at-the-file-bottom`이 정합니다.
+
+**Incorrect (두 방향을 섞어 겹치는 구간을 만듦):**
+
+```css
+.pg_products__toolbar {
+	display: flex;
+	gap: 16px;
+}
+
+@media (width >= 1440px) {
+	.pg_products__toolbar {
+		gap: 24px;
+	}
+}
+
+@media (width < 1024px) {
+	.pg_products__toolbar {
+		gap: 8px;
+	}
+}
+```
+
+**Incorrect (`max-width` 소수 보정과 좁은 쪽부터 쓴 순서):**
+
+```css
+@media (max-width: 639.98px) {
+	.pg_products__toolbar {
+		gap: 4px;
+	}
+}
+
+@media (max-width: 1023.98px) {
+	.pg_products__toolbar {
+		gap: 8px;
+	}
+}
+```
+
+**Correct (구간을 읽는 법):**
+
+```txt
+        640px      1024px     1440px            넓어짐 →
+ ──~sm───│───~md────│───~lg────│─── 기본 선언 ───▶
+   세로     가로       좁은        가장 넓은 화면
+   태블릿   태블릿     데스크톱     기준으로 먼저 적는다
+   아래     좁은 노트북
+```
+
+**Correct (기본 선언이 가장 넓고 넓은 쪽부터 좁혀 감):**
+
+```css
+.pg_products__toolbar {
+	display: flex;
+	gap: 24px;
+}
+
+@media (width < 1440px) {
+	.pg_products__toolbar {
+		gap: 16px;
+	}
+}
+
+@media (width < 1024px) {
+	.pg_products__toolbar {
+		gap: 8px;
+	}
+}
+```
+
+### 6.3 Keep Layout Intent Explicit
+
+**Rule:** `C06-03` · `layout-keep-layout-intent-explicit`
 
 **Applies when:** `sticky`·`fixed`, `z-index`, 강제 `width`·`height`, 부모·자식 레이아웃 책임을 추가·변경할 때. 로딩 대체 화면의 컨테이너나 높이를 정할 때. 제외: 같은 요소를 기본과 수정자로 나누면서 기존 `display`·여백 선언을 값 그대로 옮기는 경우.
 
@@ -2501,9 +2564,9 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
-### 6.3 Reach for Intrinsic Sizing Before Breakpoints
+### 6.4 Reach for Intrinsic Sizing Before Breakpoints
 
-**Rule:** `C06-03` · `layout-reach-for-intrinsic-sizing-before-breakpoints`
+**Rule:** `C06-04` · `layout-reach-for-intrinsic-sizing-before-breakpoints`
 
 **Applies when:** `@media` 브레이크포인트를 새로 넣으려 할 때. 폭에 따라 줄바꿈, 열 개수, 크기가 달라져야 할 때.
 
