@@ -49,27 +49,27 @@ search 파라미터를 `useState`로 복제해 출처를 둘로 만들지 않습
   묶음 밖의 화면이나 레이아웃이 같은 값을 읽거나 바꾸면 옮길 때입니다.
   탭 `selectedId`처럼 파생이 아닌 공유 UI 상태도 이 기준으로 봅니다.
 
-**Incorrect (서버 상태를 로컬 상태로 복제):**
+**Incorrect (서버 상태를 로컬 상태로 복제합니다):**
 
 ```ts
 const responseUserGetItemSuspense = useUserGetItemSuspense();
 const [userName, setUserName] = useState(responseUserGetItemSuspense.data.name);
 ```
 
-**Incorrect (링크로 살아남아야 할 목록 필터를 `useState`가 소유):**
+**Incorrect (링크로 살아남아야 할 목록 필터를 `useState`가 소유합니다):**
 
 ```ts
 const [keyword, setKeyword] = useState("");
 const [page, setPage] = useState(1);
 ```
 
-**Correct (주소가 소유한 값은 search 파라미터로 읽고 씀):**
+**Correct (주소가 소유한 값은 search 파라미터로 읽고 씁니다):**
 
 ```ts
 const [urlParams, setUrlParams] = useQueryStates(productUrlParsers);
 ```
 
-**Correct (도구를 진짜 출처에 맞춤):**
+**Correct (도구를 진짜 출처에 맞춥니다):**
 
 ```ts
 const [isOpen, setIsOpen] = useState(false);
@@ -81,7 +81,7 @@ const themeStore = useThemeStore();
 const responseUserGetItemSuspense = useUserGetItemSuspense();
 ```
 
-**Correct (합성 컴포넌트 안에서 부품끼리 나눠 쓰는 상태는 `Context`로 내려보냄):**
+**Correct (합성 컴포넌트 안에서 부품끼리 나눠 쓰는 상태는 `Context`로 내려보냅니다):**
 
 ```tsx
 /**

@@ -28,7 +28,7 @@ tags: state, focus, accessibility
 포커스 표시 자체는 `a11y-always-provide-a-visible-focus-indicator` 규칙이 담당합니다.
 무엇을 수정자로 두고 무엇을 가상 클래스로 둘지는 `selector-use-pseudo-classes-for-dom-owned-states` 규칙이 정합니다.
 
-**Incorrect (상호작용 상태를 수정자 아래로 옮겨 적용 대상을 좁힘):**
+**Incorrect (상호작용 상태를 수정자 아래로 옮겨 적용 대상을 좁힙니다):**
 
 ```css
 .ui_button__root--active {
@@ -44,7 +44,7 @@ tags: state, focus, accessibility
 }
 ```
 
-**Correct (도메인 상태와 상호작용 상태를 분리하고 포커스를 보존):**
+**Correct (도메인 상태와 상호작용 상태를 분리하고 포커스를 보존합니다):**
 
 ```css
 .ui_button__root--active {

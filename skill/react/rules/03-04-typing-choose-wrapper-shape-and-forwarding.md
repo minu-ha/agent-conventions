@@ -43,7 +43,7 @@ JSX 스프레드는 초과 프롭을 검사하지 않아 **컴파일러가 잡�
 
 구조분해 기준은 `composition-read-props-without-destructuring`이 정합니다.
 
-**Incorrect (자기 프롭을 더해 놓고 스프레드로 넘김):**
+**Incorrect (자기 프롭을 더해 놓고 스프레드로 넘깁니다):**
 
 ```tsx
 export interface UiIconButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -59,7 +59,7 @@ export const UiIconButton = (props: UiIconButtonProps) => (
 );
 ```
 
-**Correct (안쪽 요소는 하나지만 자기 프롭이 있어 스프레드를 못 씀):**
+**Correct (안쪽 요소는 하나지만 자기 프롭이 있어 스프레드를 못 씁니다):**
 
 ```tsx
 /**
@@ -105,7 +105,7 @@ export const UiIconButton = (props: UiIconButtonProps) => {
 };
 ```
 
-**Correct (프롭이 서로 다른 요소로 갈라져 각각 이름으로 넘김):**
+**Correct (프롭이 서로 다른 요소로 갈라져 각각 이름으로 넘깁니다):**
 
 ```tsx
 /**
@@ -151,7 +151,7 @@ export const UiField = (props: UiFieldProps) => {
 };
 ```
 
-**Correct (셋을 모두 만족해 스프레드로 끝냄):**
+**Correct (셋을 모두 만족해 스프레드로 끝냅니다):**
 
 ```tsx
 /**

@@ -31,7 +31,7 @@ tags: accessibility, focus, interaction
 포커스 표시를 `--focused` 같은 앱 수정자로 대체하지 않습니다.
 키보드로 들어왔는지 포인터로 들어왔는지는 브라우저만 알 수 있어서 앱이 재현할 수 없습니다.
 
-**Incorrect (포커스 링을 제거하고 대체를 두지 않음):**
+**Incorrect (포커스 링을 제거하고 대체를 두지 않습니다):**
 
 ```css
 .ui_button__root {
@@ -41,7 +41,7 @@ tags: accessibility, focus, interaction
 }
 ```
 
-**Incorrect (색만 바꾸고 수정자 안에만 둠):**
+**Incorrect (색만 바꾸고 수정자 안에만 둡니다):**
 
 ```css
 .ui_button__root--active {
@@ -52,7 +52,7 @@ tags: accessibility, focus, interaction
 }
 ```
 
-**Correct (`:focus-visible`에 형태가 바뀌는 표시를 기본 블록에 둠):**
+**Correct (`:focus-visible`에 형태가 바뀌는 표시를 기본 블록에 둡니다):**
 
 ```css
 .ui_button__root {
@@ -65,7 +65,7 @@ tags: accessibility, focus, interaction
 }
 ```
 
-**Correct (`outline`을 덮어쓰면 링으로 대체함):**
+**Correct (`outline`을 덮어쓰면 링으로 대체합니다):**
 
 ```css
 .ui_input__field {

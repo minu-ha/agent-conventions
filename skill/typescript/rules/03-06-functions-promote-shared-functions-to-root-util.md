@@ -46,7 +46,7 @@ tags: functions, boundaries
 1번은 함수를 공유하는 것이 아니라 표시를 공유하는 것입니다.
 어느 레이어인지는 프레임워크 컨벤션의 레이어 규칙이 판정합니다.
 
-**Incorrect (소유자와 함께 사라질 함수를 루트 `util`로 올림):**
+**Incorrect (소유자와 함께 사라질 함수를 루트 `util`로 올립니다):**
 
 ```ts
 // util/profile/to-profile-save-request.ts
@@ -59,7 +59,7 @@ export const toProfileSaveRequest = (values: ProfileFormValues) => {
 };
 ```
 
-**Correct (승격 판정 흐름):**
+**Correct (승격 판정 흐름입니다):**
 
 ```txt
 이 함수는 누구 것인가?
@@ -72,7 +72,7 @@ export const toProfileSaveRequest = (values: ProfileFormValues) => {
       └ 종류 이름을 못 짓겠음 → util 이 아니다. 소유자 아래로 되돌린다
 ```
 
-**Correct (소유자를 지워도 남는 함수는 종류 폴더에 파일 하나로 올림):**
+**Correct (소유자를 지워도 남는 함수는 종류 폴더에 파일 하나로 올립니다):**
 
 ```txt
 util/

@@ -38,7 +38,7 @@ tags: docs, comments
 `docs-justify-convention-exceptions-with-a-reason-comment`가 따로 정합니다.
 이 규칙은 본문 안 어디에 어떤 형태로 다는지를 봅니다.
 
-**Incorrect (본문 안 지역 선언에 블록 주석을 씀):**
+**Incorrect (본문 안 지역 선언에 블록 주석을 씁니다):**
 
 ```ts
 const toMatchedProducts = (products: Product[], keyword: string) => {
@@ -51,7 +51,7 @@ const toMatchedProducts = (products: Product[], keyword: string) => {
 };
 ```
 
-**Correct (`//`로 제약과 단계를 표시):**
+**Correct (`//`로 제약과 단계를 적습니다):**
 
 ```ts
 const submitProductDraft = async (draft: ProductDraft) => {

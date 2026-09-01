@@ -30,7 +30,7 @@ CSS는 그 화면의 이름을 식별자에 그대로 적습니다.
 충돌이 실제로 생겼을 때만 최소한으로 덧붙입니다.
 미리 붙이면 깊이만큼 식별자가 자라서 충돌을 걱정하기 전에 읽기 어려워집니다.
 
-**Incorrect (화면 이름이 아닌 식별자):**
+**Incorrect (화면 이름이 아닌 식별자를 씁니다):**
 
 ```txt
 pg_shell__body    <- 역할 낱말이라 어느 화면인지 안 나옴
@@ -38,14 +38,14 @@ pg_doc__content   <- 라우트에 없는 줄임말
 pg_x__root        <- 되짚을 이름이 없음
 ```
 
-**Incorrect (충돌이 없는데도 부모 식별자를 미리 붙임):**
+**Incorrect (충돌이 없는데도 부모 식별자를 미리 붙입니다):**
 
 ```txt
 pg_detailSalesTrendPanelOverviewSection__root
 pg_detailSalesTrendPanelSummaryBand__root
 ```
 
-**Correct (뼈대는 화면 식별자, 컴포넌트는 자기 식별자):**
+**Correct (뼈대는 화면 식별자, 컴포넌트는 자기 식별자를 씁니다):**
 
 ```txt
 posts index page   -> pg_postsIndex__root
@@ -56,7 +56,7 @@ overview section   -> pg_overviewSection__root
 summary band       -> pg_summaryBand__root
 ```
 
-**Correct (같은 식별자가 실제로 두 화면에 생겼을 때만 구분):**
+**Correct (같은 식별자가 실제로 두 화면에 생겼을 때만 구분합니다):**
 
 ```txt
 pg_detailOverviewSection__root

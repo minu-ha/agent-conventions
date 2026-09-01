@@ -62,7 +62,7 @@ tags: ownership
 
 세 자식 이상이 같은 것을 써야 하는데 올릴 수도 없으면 자식 분리가 잘못됐다는 신호입니다.
 
-**Incorrect (다른 폴더의 `_` 컴포넌트 파일을 가져옴):**
+**Incorrect (다른 폴더의 `_` 컴포넌트 파일을 가져옵니다):**
 
 ```tsx
 // page/detail/sales-trend-panel/_pg-detection-section.tsx
@@ -70,21 +70,21 @@ import {PgSectionHeading} from "@/page/detail/_pg-section-heading";
 import {PgLegendRow} from "@/page/detail/summary-band/_pg-legend-row";
 ```
 
-**Incorrect (다른 라우트 안의 컴포넌트를 가져옴):**
+**Incorrect (다른 라우트 안의 컴포넌트를 가져옵니다):**
 
 ```tsx
 // page/index/pg-index.tsx
 import {PgSalesTrendPanel} from "@/page/detail/sales-trend-panel/pg-sales-trend-panel";
 ```
 
-**Incorrect (`ui`가 `widget`을 가져옴):**
+**Incorrect (`ui`가 `widget`을 가져옵니다):**
 
 ```tsx
 // component/ui/legend/ui-legend.tsx
 import {WgLegendPanel} from "@/component/widget/legend-panel/wg-legend-panel";
 ```
 
-**Correct (진입 파일이 자기 파일과 형제 소유자의 진입 파일을 조립해서 내려보냄):**
+**Correct (진입 파일이 자기 파일과 형제 소유자의 진입 파일을 조립해서 내려보냅니다):**
 
 ```tsx
 // page/detail/sales-trend-panel/pg-sales-trend-panel.tsx
@@ -102,7 +102,7 @@ export const PgSalesTrendPanel = (props: PgSalesTrendPanelProps) => {
 };
 ```
 
-**Correct (역할 폴더의 파일은 레이어 방향만 지키면 밖에서도 가져옴):**
+**Correct (역할 폴더의 파일은 레이어 방향만 지키면 밖에서도 가져옵니다):**
 
 ```ts
 // page/detail/sales-trend-panel/_function/to-chart-option.ts

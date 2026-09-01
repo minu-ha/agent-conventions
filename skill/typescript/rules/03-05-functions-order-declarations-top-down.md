@@ -29,7 +29,7 @@ tags: functions, ordering
 
 컴포넌트 본문 안에서 훅, 핸들러, 이펙트를 어떤 순서로 둘지는 프레임워크 컨벤션이 정합니다.
 
-**Incorrect (비공개 보조가 내보낸 함수보다 위에 있어 파일을 끝까지 읽어야 함):**
+**Incorrect (비공개 보조가 내보낸 함수보다 위에 있어 파일을 끝까지 읽어야 합니다):**
 
 ```ts
 const toSummaryLabel = (item: SalesSummaryItem): string => {
@@ -48,7 +48,7 @@ export const toSummaryRows = (response: SalesSummaryResponse): SummaryRow[] => {
 };
 ```
 
-**Correct (파일을 열었을 때 읽히는 차례):**
+**Correct (파일을 열었을 때 읽히는 차례입니다):**
 
 ```txt
 to-summary-rows.ts
@@ -59,7 +59,7 @@ to-summary-rows.ts
 └ const toSummaryLabel            그 아래가 부르는 쪽
 ```
 
-**Correct (내보낸 함수가 맨 위, 불리는 쪽이 호출자 아래로 이어짐):**
+**Correct (내보낸 함수가 맨 위, 불리는 쪽이 호출자 아래로 이어집니다):**
 
 ```ts
 // page/report/_function/to-summary-rows.ts
@@ -79,7 +79,7 @@ const toSummaryLabel = (item: SalesSummaryItem): string => {
 };
 ```
 
-**Correct (모듈을 불러올 때 계산되는 선언은 자기가 부르는 선언 뒤에):**
+**Correct (모듈을 불러올 때 계산되는 선언은 자기가 부르는 선언 뒤에 둡니다):**
 
 ```ts
 export const toCycleOffsets = (): number[] => {

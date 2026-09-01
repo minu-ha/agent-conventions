@@ -26,7 +26,7 @@ TSX에서 `className`은 `clsx()`로 조립합니다.
 
 클래스 이름 안에 값을 끼워 넣지 않는 것은 `composition-write-modifiers-as-conditions` 규칙이 정합니다.
 
-**Incorrect (문자열 연결로 클래스 조합을 숨김):**
+**Incorrect (문자열 연결로 클래스 조합을 숨깁니다):**
 
 ```tsx
 <button className={"pg_catalogIndex__listButton " + (isActive ? "pg_catalogIndex__listButton--active" : "")}>
@@ -34,7 +34,7 @@ TSX에서 `className`은 `clsx()`로 조립합니다.
 </button>
 ```
 
-**Correct (기본 클래스와 수정자를 `clsx()`로 조합):**
+**Correct (기본 클래스와 수정자를 `clsx()`로 조합합니다):**
 
 ```tsx
 <button

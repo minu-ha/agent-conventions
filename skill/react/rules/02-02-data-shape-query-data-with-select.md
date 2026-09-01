@@ -32,7 +32,7 @@ React Query의 구조 공유가 바뀌지 않은 부분의 참조를 유지합�
 별도 함수나 보조 모듈 경계가 없으면 `typescript/functions-extract-helpers-only-when-the-boundary-is-real`은
 적용하지 않습니다.
 
-**Incorrect (렌더에서 응답 원본 구조를 가공):**
+**Incorrect (렌더에서 응답 원본 구조를 가공합니다):**
 
 ```tsx
 <UiTable
@@ -43,7 +43,7 @@ React Query의 구조 공유가 바뀌지 않은 부분의 참조를 유지합�
 />;
 ```
 
-**Correct (통신 경계에서 화면이 쓸 모양으로 변환):**
+**Correct (통신 경계에서 화면이 쓸 모양으로 바꿉니다):**
 
 ```ts
 /**

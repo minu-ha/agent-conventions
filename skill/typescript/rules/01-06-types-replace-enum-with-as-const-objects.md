@@ -24,7 +24,7 @@ tags: types
 외부 패키지가 `enum`을 내보내고 그 값을 그대로 넘겨야 하면 그 `enum`을 씁니다.
 우리가 새로 선언하는 값 집합만 이 규칙 대상입니다.
 
-**Incorrect (`enum`을 직접 사용):**
+**Incorrect (`enum`을 직접 씁니다):**
 
 ```ts
 enum ProductStatus {
@@ -34,7 +34,7 @@ enum ProductStatus {
 }
 ```
 
-**Correct (객체 리터럴과 타입 추출을 조합):**
+**Correct (객체 리터럴과 타입 추출을 조합합니다):**
 
 ```ts
 /**

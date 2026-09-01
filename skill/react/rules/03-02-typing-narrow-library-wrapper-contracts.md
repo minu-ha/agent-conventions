@@ -46,7 +46,7 @@ DOM 표면 자체를 어떻게 열지는 `typing-open-dom-props-in-three-steps`�
 - `ref`를 여는 기준은 `composition-open-ref-props-only-for-imperative-contracts`가 정합니다.
 - 프롭을 어떻게 넘기는지는 `typing-choose-wrapper-shape-and-forwarding`이 정합니다.
 
-**Incorrect (라이브러리 타입을 그대로 내보냄):**
+**Incorrect (라이브러리 타입을 그대로 내보냅니다):**
 
 ```tsx
 export type UiTableCellProps = TableCellProps;
@@ -56,7 +56,7 @@ export const UiTableCell = (props: UiTableCellProps) => {
 };
 ```
 
-**Correct (이미 있는 프롭은 인덱스 접근으로 하나씩 엶):**
+**Correct (이미 있는 프롭은 인덱스 접근으로 하나씩 엽니다):**
 
 ```tsx
 import type {TableCellProps} from "@mui/material";

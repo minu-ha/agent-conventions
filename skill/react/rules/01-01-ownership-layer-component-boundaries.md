@@ -45,7 +45,7 @@ tags: ownership, widget, naming
 | 사용 횟수 | 한 화면에서만 쓰여도 위 `page` 판정에 해당하지 않으면 `page`가 아닙니다 | 쓰임이 변할 때마다 컴포넌트가 폴더를 옮겨 다닙니다 |
 | 조립 규모 | `ui` 부품 여럿을 조립해도 도메인을 모르면 `ui`입니다 | 도메인을 모르는 조합이 전부 `widget`에 쌓여 레이어 이름이 소유를 말하지 못합니다 |
 
-**Incorrect (공용 레이어에 화면 전용 로직이 섞임):**
+**Incorrect (공용 레이어에 화면 전용 로직이 섞입니다):**
 
 ```tsx
 // component/ui/delete-product-button/ui-delete-product-button.tsx
@@ -63,7 +63,7 @@ export const UiDeleteProductButton = () => {
 };
 ```
 
-**Incorrect (화면 타입도 안 쓰고 훅도 안 부르는 부품을 사용 횟수만 보고 화면에 남김):**
+**Incorrect (화면 타입도 안 쓰고 훅도 안 부르는 부품을 사용 횟수만 보고 화면에 남깁니다):**
 
 ```tsx
 // page/detail/_pg-sales-legend-glyph.tsx
@@ -73,7 +73,7 @@ export const PgSalesLegendGlyph = (props: PgSalesLegendGlyphProps) => {
 };
 ```
 
-**Incorrect (도메인을 모르는 조합을 조립 규모만 보고 `widget`에 둠):**
+**Incorrect (도메인을 모르는 조합을 조립 규모만 보고 `widget`에 둡니다):**
 
 ```tsx
 // component/widget/line-chart/wg-line-chart.tsx
@@ -83,7 +83,7 @@ export const WgLineChart = (props: WgLineChartProps) => {
 };
 ```
 
-**Correct (화면 타입도 훅도 쓰지 않는 도메인 부품은 `widget`으로 올림):**
+**Correct (화면 타입도 훅도 쓰지 않는 도메인 부품은 `widget`으로 올립니다):**
 
 ```tsx
 // component/widget/sales-legend-glyph/wg-sales-legend-glyph.tsx
@@ -92,7 +92,7 @@ export const WgSalesLegendGlyph = (props: WgSalesLegendGlyphProps) => {
 };
 ```
 
-**Correct (도메인을 모르는 조합은 `ui`로 내리고 도메인을 아는 조합만 `widget`에 남김):**
+**Correct (도메인을 모르는 조합은 `ui`로 내리고 도메인을 아는 조합만 `widget`에 남깁니다):**
 
 ```tsx
 // component/ui/line-chart/ui-line-chart.tsx
@@ -108,7 +108,7 @@ export const WgSalesWindowChart = (props: WgSalesWindowChartProps) => {
 };
 ```
 
-**Correct (라우터 훅을 부르는 코드는 화면 레이어에 남김):**
+**Correct (라우터 훅을 부르는 코드는 화면 레이어에 남깁니다):**
 
 ```tsx
 // page/products/_pg-delete-product-button.tsx

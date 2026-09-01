@@ -41,7 +41,7 @@ tags: variables, fallbacks, tokens
 
 요청에 없는 CSS 변수를 이 규칙 때문에 새로 만들지 않습니다.
 
-**Incorrect (공통 토큰에 대체값을 붙여 값을 두 곳으로 흩음):**
+**Incorrect (공통 토큰에 대체값을 붙여 값을 두 곳에 둡니다):**
 
 ```css
 .pg_postFilterDialog__panel {
@@ -50,7 +50,7 @@ tags: variables, fallbacks, tokens
 }
 ```
 
-**Incorrect (주입이 보장되지 않는 변수를 대체값 없이 씀):**
+**Incorrect (주입이 보장되지 않는 변수를 대체값 없이 씁니다):**
 
 ```css
 .pg_postFilterDialog__collapse {
@@ -60,7 +60,7 @@ tags: variables, fallbacks, tokens
 }
 ```
 
-**Correct (공통 토큰은 대체값 없이, 그 밖은 대체값과 함께):**
+**Correct (공통 토큰은 대체값 없이, 그 밖은 대체값과 함께 씁니다):**
 
 ```css
 /* src/style/token.css — 공통 토큰 목록의 단일 출처 */

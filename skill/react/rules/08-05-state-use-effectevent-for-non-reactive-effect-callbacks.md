@@ -33,7 +33,7 @@ tags: state, effects
   이펙트 안에서만 부르고 JSX 이벤트 프롭에 전달하지 않는 콜백입니다.
   그래서 `typing-take-handler-types-from-existing-contracts`의 리액트 핸들러 타입 규칙은 이 자리에 적용하지 않습니다.
 
-**Incorrect (최신 콜백을 위해 `ref`를 수동 동기화):**
+**Incorrect (최신 콜백을 위해 `ref`를 손으로 동기화합니다):**
 
 ```tsx
 const onMessageRef = useRef(onMessage);
@@ -51,7 +51,7 @@ useEffect(() => {
 }, [socket]);
 ```
 
-**Correct (non-reactive 콜백은 `useEffectEvent`로 분리):**
+**Correct (non-reactive 콜백은 `useEffectEvent`로 분리합니다):**
 
 ```tsx
 /**

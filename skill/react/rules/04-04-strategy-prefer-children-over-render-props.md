@@ -30,7 +30,7 @@ tags: strategy, composition, components
 
 한 번만 쓰는 익명 형태에 접미사를 붙이려고 새 타입을 만들지는 않습니다.
 
-**Incorrect (정적인 구조를 렌더 프롭으로 조립):**
+**Incorrect (정적인 구조를 렌더 프롭으로 조립합니다):**
 
 ```tsx
 export interface UiPanelProps {
@@ -49,7 +49,7 @@ export const UiPanel = (props: UiPanelProps) => {
 };
 ```
 
-**Correct (`children`과 네임스페이스 슬롯 부품으로 구조를 드러냄):**
+**Correct (`children`과 네임스페이스 슬롯 부품으로 구조를 드러냅니다):**
 
 ```tsx
 /**

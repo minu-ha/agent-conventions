@@ -32,13 +32,13 @@ tags: naming
 경로 모양은 `naming-import-by-absolute-path` 규칙이 정합니다.
 경로가 같아도 값과 타입 중 무엇을 가져오는지가 바뀌면 가져오기 계약이 바뀐 것이라 이 규칙을 적용합니다.
 
-**Incorrect (배럴과 섞인 가져오기로 경계를 흐림):**
+**Incorrect (배럴과 섞인 가져오기로 경계를 흐립니다):**
 
 ```ts
 import {pagination_default_page_size, toDisplayDate, UserProfile} from "./index";
 ```
 
-**Incorrect (`default`로 내보내 사용처마다 다른 이름이 생김):**
+**Incorrect (`default`로 내보내 사용처마다 다른 이름이 생깁니다):**
 
 ```tsx
 // component/ui/tabs/ui-tabs.tsx
@@ -54,7 +54,7 @@ export default UiTabs;
 import Tabs from "@/component/ui/tabs/ui-tabs";
 ```
 
-**Correct (필요한 파일에서 이름으로 바로 가져옴):**
+**Correct (필요한 파일에서 이름으로 바로 가져옵니다):**
 
 ```ts
 import type {UserProfile} from "@/type/user-profile";
@@ -64,7 +64,7 @@ import {WgChartCard} from "@/component/widget/chart-card/wg-chart-card";
 import {toUserSaveRequest} from "@/page/users/_function/to-user-save-request";
 ```
 
-**Correct (도구가 계약으로 요구하는 파일만 `default`):**
+**Correct (도구가 계약으로 요구하는 파일만 `default`로 내보냅니다):**
 
 ```ts
 // vite.config.ts

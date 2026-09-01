@@ -24,7 +24,7 @@ tags: functions, arrays, immutability
 비교 규칙을 키로 적을 수 없을 때만 `.toSorted()`를 씁니다.
 한국어 이름을 `localeCompare`로 비교하는 정렬이 여기 해당합니다.
 
-**Incorrect (매개변수로 받은 배열을 제자리에서 변경):**
+**Incorrect (매개변수로 받은 배열을 제자리에서 바꿉니다):**
 
 ```ts
 const toSortedUsers = (users: User[]): User[] => {
@@ -32,7 +32,7 @@ const toSortedUsers = (users: User[]): User[] => {
 };
 ```
 
-**Correct (키 기준 정렬은 `sortBy`):**
+**Correct (키 기준 정렬은 `sortBy`를 씁니다):**
 
 ```ts
 import {sortBy} from "es-toolkit";
@@ -42,7 +42,7 @@ const toSortedUsers = (users: User[]): User[] => {
 };
 ```
 
-**Correct (방향이 섞이면 `orderBy`):**
+**Correct (방향이 섞이면 `orderBy`를 씁니다):**
 
 ```ts
 import {orderBy} from "es-toolkit";
@@ -52,7 +52,7 @@ const toSortedProducts = (products: Product[]): Product[] => {
 };
 ```
 
-**Correct (비교 규칙을 키로 적을 수 없으면 `.toSorted()`):**
+**Correct (비교 규칙을 키로 적을 수 없으면 `.toSorted()`를 씁니다):**
 
 ```ts
 const toSortedUsers = (users: User[]): User[] => {

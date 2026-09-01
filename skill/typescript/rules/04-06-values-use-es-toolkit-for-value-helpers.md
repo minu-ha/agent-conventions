@@ -65,14 +65,14 @@ tags: values, es-toolkit
 `groupBy`와 `keyBy`는 목록을 다시 짜는 함수입니다.
 조회 자리를 `Map`으로 정리하는 것은 `values-use-set-and-map-for-repeated-lookups`가 봅니다.
 
-**Incorrect (중복 제거를 인덱스 비교와 `Set` 왕복으로 직접 씀):**
+**Incorrect (중복 제거를 인덱스 비교와 `Set` 왕복으로 직접 씁니다):**
 
 ```ts
 const uniqueOwnerIds = ownerIds.filter((ownerId, index) => ownerIds.indexOf(ownerId) === index);
 const uniqueCategories = [...new Set(points.map((point) => point.x))];
 ```
 
-**Incorrect (`reduce`로 그룹 짓기를 다시 만듦):**
+**Incorrect (`reduce`로 그룹 짓기를 다시 만듭니다):**
 
 ```ts
 const productsByCategory = products.reduce<Record<string, Product[]>>((grouped, product) => {
@@ -81,25 +81,25 @@ const productsByCategory = products.reduce<Record<string, Product[]>>((grouped, 
 }, {});
 ```
 
-**Incorrect (`JSON` 왕복으로 깊은 복사를 흉내 냄):**
+**Incorrect (`JSON` 왕복으로 깊은 복사를 흉내 냅니다):**
 
 ```ts
 const draftFilter = JSON.parse(JSON.stringify(savedFilter)) as ProductFilter;
 ```
 
-**Incorrect (정규식으로 표기를 바꿈):**
+**Incorrect (정규식으로 표기를 바꿉니다):**
 
 ```ts
 const searchKey = rawKey.replace(/([A-Z])/g, "_$1").toLowerCase();
 ```
 
-**Incorrect (`Array.from`에 쓰지 않는 첫 인자를 두고 길이만큼 돎):**
+**Incorrect (`Array.from`에 쓰지 않는 첫 인자를 두고 길이만큼 돌립니다):**
 
 ```ts
 const tickTimes = Array.from({length: tick_count}, (_unused, tickIndex) => toTickTime(tickIndex));
 ```
 
-**Incorrect (빈 목록을 먼저 가드하고 중간 배열을 만들어 양 끝을 읽음):**
+**Incorrect (빈 목록을 먼저 가드하고 중간 배열을 만들어 양 끝을 읽습니다):**
 
 ```ts
 const toChartBounds = (points: readonly ChartPoint[]) => {
@@ -113,7 +113,7 @@ const toChartBounds = (points: readonly ChartPoint[]) => {
 };
 ```
 
-**Correct (`es-toolkit` 함수를 그대로 부름):**
+**Correct (`es-toolkit` 함수를 그대로 부릅니다):**
 
 ```ts
 import {cloneDeep, groupBy, range, snakeCase, uniq} from "es-toolkit";
@@ -125,7 +125,7 @@ const searchKey = snakeCase(rawKey);
 const tickTimes = range(tick_count).map((tickIndex) => toTickTime(tickIndex));
 ```
 
-**Correct (빈 목록 판정을 `minBy`·`maxBy`의 결과로 합침):**
+**Correct (빈 목록 판정을 `minBy`·`maxBy`의 결과로 합칩니다):**
 
 ```ts
 import {maxBy, minBy} from "es-toolkit";
@@ -142,7 +142,7 @@ const toChartBounds = (points: readonly ChartPoint[]) => {
 };
 ```
 
-**Correct (표준 메서드 하나로 끝나면 감싸지 않음):**
+**Correct (표준 메서드 하나로 끝나면 감싸지 않습니다):**
 
 ```ts
 const activeProducts = products.filter((product) => product.isActive);

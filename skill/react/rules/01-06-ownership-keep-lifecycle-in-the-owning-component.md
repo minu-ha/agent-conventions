@@ -27,7 +27,7 @@ tags: ownership, hooks
 `ownership-prefer-plain-ts-for-local-react-helpers`는 순수 계산을 훅으로 포장하는 것을 막고,
 이 규칙은 반대로 실제 생명주기가 있어도 분량 때문에 훅으로 옮기는 것을 막습니다.
 
-**Incorrect (줄 수를 줄이려고 생명주기를 훅 뒤로 옮김):**
+**Incorrect (줄 수를 줄이려고 생명주기를 훅 뒤로 옮깁니다):**
 
 ```ts
 // component/widget/chart/chart-root/_hook/use-chart-instance.ts
@@ -70,7 +70,7 @@ export const WgChartRoot = (props: WgChartRootProps) => {
 };
 ```
 
-**Correct (생명주기를 소유 컴포넌트가 직접 가짐):**
+**Correct (생명주기를 소유 컴포넌트가 직접 가집니다):**
 
 ```tsx
 // component/widget/chart/chart-root/wg-chart-root.tsx

@@ -43,7 +43,7 @@ tags: data, mutation, errors
 실패했을 때 무엇을 보여 줄지는 이 규칙이 정하지 않습니다.
 제품마다 다르고 코드로 판정할 수 없습니다.
 
-**Incorrect (`await`만 하고 실패를 받지 않음):**
+**Incorrect (`await`만 하고 실패를 받지 않습니다):**
 
 ```tsx
 const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
@@ -52,7 +52,7 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = async (_even
 };
 ```
 
-**Correct (핸들러가 더 할 일이 없어 콜백으로 받음):**
+**Correct (핸들러가 더 할 일이 없어 콜백으로 받습니다):**
 
 ```tsx
 const queryClient = useQueryClient();
@@ -90,7 +90,7 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => 
 </UiButton>;
 ```
 
-**Correct (결과를 기다려 이어서 해야 해서 `try`/`catch`):**
+**Correct (결과를 기다려 이어서 해야 해서 `try`/`catch`를 씁니다):**
 
 ```tsx
 /**

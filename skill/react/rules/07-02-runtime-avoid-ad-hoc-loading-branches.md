@@ -33,7 +33,7 @@ tags: screen, loading, suspense
 값이 없을 수 있다는 사실을 기본값으로 덮는 문제는 이 규칙이 아니라
 `typescript/absence-expose-optional-values-instead-of-silent-fallbacks`가 판정합니다.
 
-**Incorrect (다시 불러오는 중에 화면 전체를 가림):**
+**Incorrect (다시 불러오는 중에 화면 전체를 가립니다):**
 
 ```tsx
 if (responseUserGetItemSuspense.isFetching) {
@@ -43,7 +43,7 @@ if (responseUserGetItemSuspense.isFetching) {
 return <UiUserName value={responseUserGetItemSuspense.data.name} />;
 ```
 
-**Correct (로딩과 갱신 상태는 보조 UI에만 사용):**
+**Correct (로딩과 갱신 상태는 보조 UI에만 씁니다):**
 
 ```tsx
 return (
@@ -55,7 +55,7 @@ return (
 );
 ```
 
-**Correct (가리지 않으면 외부 SDK가 잘못 초기화되어 이유를 남기고 가림):**
+**Correct (가리지 않으면 외부 SDK가 잘못 초기화되어 이유를 남기고 가립니다):**
 
 ```tsx
 // 결제 위젯은 마운트할 때 금액을 한 번만 읽는다. 다시 불러오는 중에 그리면 옛 금액으로 초기화된다

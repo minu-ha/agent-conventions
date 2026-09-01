@@ -31,7 +31,7 @@ tags: state, zustand
   선택자로 그 함수만 꺼내고, 값 의존성은 평소대로 적습니다.
   스토어 전체를 넣으면 `set`이 상태를 바꿀 때 참조가 달라져 이펙트가 다시 실행됩니다.
 
-**Incorrect (스토어 전체를 의존성에 넣어 갱신이 이펙트를 다시 돌리고 단일 화면용 값까지 복제):**
+**Incorrect (스토어 전체를 의존성에 넣어 갱신이 이펙트를 다시 돌리고 단일 화면용 값까지 복제합니다):**
 
 ```ts
 const accessStore = useAccessStore();
@@ -42,7 +42,7 @@ useEffect(() => {
 }, [accessStore, canEditRecord]);
 ```
 
-**Correct (화면은 스토어에 채워진 결과만 참조):**
+**Correct (화면은 스토어에 채워진 결과만 참조합니다):**
 
 ```ts
 const accessStore = useAccessStore();
@@ -52,7 +52,7 @@ if (accessStore.canEditRecord) {
 }
 ```
 
-**Correct (소유자가 분명한 한 경계에서만 채우고 의존성에는 `set` 함수만 넣음):**
+**Correct (소유자가 분명한 한 경계에서만 채우고 의존성에는 `set` 함수만 넣습니다):**
 
 ```ts
 /**

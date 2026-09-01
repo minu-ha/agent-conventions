@@ -29,7 +29,7 @@ tags: composition, props, origin
   `typescript/absence-expose-optional-values-instead-of-silent-fallbacks`를 따릅니다.
   프롭 값을 쓰는 자리에서 그대로 비교하면 기본값을 만들 필요가 없습니다.
 
-**Incorrect (시그니처에서 구조분해):**
+**Incorrect (시그니처에서 구조분해합니다):**
 
 ```tsx
 const WgUserCard = ({ label, onSave }: WgUserCardProps) => {
@@ -37,7 +37,7 @@ const WgUserCard = ({ label, onSave }: WgUserCardProps) => {
 };
 ```
 
-**Incorrect (본문 첫 줄에서 구조분해):**
+**Incorrect (본문 첫 줄에서 구조분해합니다):**
 
 ```tsx
 const WgUserCard = (props: WgUserCardProps) => {
@@ -46,7 +46,7 @@ const WgUserCard = (props: WgUserCardProps) => {
 };
 ```
 
-**Correct (`props`로 읽어 출처를 남김):**
+**Correct (`props`로 읽어 출처를 남깁니다):**
 
 ```tsx
 const WgUserCard = (props: WgUserCardProps) => {

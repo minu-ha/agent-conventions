@@ -39,7 +39,7 @@ tags: values, origin, destructuring
 - 체인이 깊어 읽기 어려우면 꺼내는 자리가 아니라 **그 형태를 만드는 자리**를 봅니다.
   받는 쪽에서 끊는 것으로는 깊이가 줄지 않고 출처만 사라집니다.
 
-**Incorrect (시그니처와 본문에서 구조분해해 출처가 사라짐):**
+**Incorrect (시그니처와 본문에서 구조분해해 출처가 사라집니다):**
 
 ```ts
 const toInvoiceLine = ({product, quantity}: InvoiceLineInput): InvoiceLine => {
@@ -52,7 +52,7 @@ const toInvoiceLine = ({product, quantity}: InvoiceLineInput): InvoiceLine => {
 };
 ```
 
-**Incorrect (별칭 `const`로 끊어 이름만 남김):**
+**Incorrect (별칭 `const`로 끊어 이름만 남깁니다):**
 
 ```ts
 const currency = pricing_default_currency;
@@ -65,7 +65,7 @@ const toInvoiceTotal = (lines: InvoiceLine[]): InvoiceTotal => {
 };
 ```
 
-**Incorrect (이름을 바꿔 꺼내 출처와 원래 이름이 함께 사라짐):**
+**Incorrect (이름을 바꿔 꺼내 출처와 원래 이름이 함께 사라집니다):**
 
 ```ts
 const {status: projectStatus, owner: projectOwner} = project;
@@ -75,7 +75,7 @@ if (projectStatus === "archived") {
 }
 ```
 
-**Correct (체인으로 읽어 출처가 쓰는 자리마다 남음):**
+**Correct (체인으로 읽어 출처가 쓰는 자리마다 남습니다):**
 
 ```ts
 const toInvoiceLine = (input: InvoiceLineInput): InvoiceLine => {
@@ -97,7 +97,7 @@ if (project.status === "archived") {
 }
 ```
 
-**Correct (배열과 튜플은 자리로 풀어도 됨):**
+**Correct (배열과 튜플은 자리로 풀어도 됩니다):**
 
 ```ts
 const [keyword, setKeyword] = useState("");
@@ -107,7 +107,7 @@ for (const [key, value] of Object.entries(target.searchParams)) {
 }
 ```
 
-**Correct (필드 읽기가 아니라 계산한 결과라 이름을 붙임):**
+**Correct (필드 읽기가 아니라 계산한 결과라 이름을 붙입니다):**
 
 ```ts
 const toOverdueLines = (invoice: Invoice): InvoiceLine[] => {

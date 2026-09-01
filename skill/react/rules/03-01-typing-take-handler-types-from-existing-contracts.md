@@ -29,7 +29,7 @@ JSX에 바로 쓴 화살표 함수에는 리액트가 타입을 붙여 주지만
 
 `query.select` 같은 훅 옵션의 일회성 문맥 콜백은 리액트 핸들러 구현이 아니므로 이 규칙 대상이 아닙니다.
 
-**Incorrect (팩토리 반환 타입을 적지 않아 이벤트가 암묵적 `any`가 됨):**
+**Incorrect (팩토리 반환 타입을 적지 않아 이벤트가 암묵적 `any`가 됩니다):**
 
 ```ts
 const handleRowSelectToggle = (rowId: string) => (event) => {
@@ -38,7 +38,7 @@ const handleRowSelectToggle = (rowId: string) => (event) => {
 };
 ```
 
-**Incorrect (래퍼를 쓰면서 라이브러리 원본 프롭스를 참조):**
+**Incorrect (래퍼를 쓰면서 라이브러리 원본 프롭스를 참조합니다):**
 
 ```ts
 import type {ButtonProps} from "@mui/material";
@@ -48,7 +48,7 @@ const handleSubmitClick: ButtonProps["onClick"] = (event) => {
 };
 ```
 
-**Correct (팩토리 반환 타입을 기존 별칭으로 고정):**
+**Correct (팩토리 반환 타입을 기존 별칭으로 고정합니다):**
 
 ```ts
 import type {MouseEventHandler} from "react";
@@ -64,7 +64,7 @@ const handleRowSelectToggle =
 	};
 ```
 
-**Correct (래퍼가 노출한 계약을 참조):**
+**Correct (래퍼가 노출한 계약을 참조합니다):**
 
 ```ts
 import type {UiButtonProps} from "@/component/ui/button/ui-button";

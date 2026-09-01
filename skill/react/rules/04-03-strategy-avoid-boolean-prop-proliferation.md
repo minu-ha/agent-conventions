@@ -32,7 +32,7 @@ tags: strategy, composition, props, variants, components
 `strategy-choose-single-composition-compound-and-variants`가 정합니다.
 본질은 불리언을 없애고 구조를 명시적으로 드러내는 데 있습니다.
 
-**Incorrect (불리언 프롭 조합으로 공용 컴포넌트가 비대해짐):**
+**Incorrect (불리언 프롭 조합으로 공용 컴포넌트가 비대해집니다):**
 
 ```tsx
 export interface WgProductToolbarProps {
@@ -55,7 +55,7 @@ export const WgProductToolbar = (props: WgProductToolbarProps) => {
 };
 ```
 
-**Correct (변형을 드러난 컴포넌트와 상태 없는 합성 컴포넌트로 분리):**
+**Correct (변형을 드러난 컴포넌트와 상태 없는 합성 컴포넌트로 분리합니다):**
 
 ```tsx
 /**

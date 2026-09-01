@@ -36,7 +36,7 @@ tags: naming, config
 - 비밀값은 클라이언트 번들에 들어가는 이름으로 읽지 않습니다.
   번들러가 노출하는 접두사가 붙은 값은 브라우저에서 그대로 보입니다.
 
-**Incorrect (쓰는 파일마다 직접 읽고 없을 때 리터럴로 덮음):**
+**Incorrect (쓰는 파일마다 직접 읽고 없을 때 리터럴로 덮습니다):**
 
 ```ts
 // service/product-client.ts
@@ -46,7 +46,7 @@ const baseUrl = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3000";
 const reportBaseUrl = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3000";
 ```
 
-**Correct (`config/env.ts`가 한 번 읽고 없으면 드러냄):**
+**Correct (`config/env.ts`가 한 번 읽고 없으면 드러냅니다):**
 
 ```ts
 // config/env.ts

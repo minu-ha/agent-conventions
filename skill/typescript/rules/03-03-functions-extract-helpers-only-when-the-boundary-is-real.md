@@ -56,7 +56,7 @@ tags: functions, boundaries
 뺀 다음 어디 둘지는 `functions-give-each-function-its-own-file`이 정하고,
 루트 `util`로 올릴지는 `functions-promote-shared-functions-to-root-util`이 정합니다.
 
-**Incorrect (한 번만 쓰는 한 줄 계산을 파일로 분리):**
+**Incorrect (한 번만 쓰는 한 줄 계산을 파일로 분리합니다):**
 
 ```ts
 // page/profile/_function/get-next-iteration.ts
@@ -65,7 +65,7 @@ export const getNextIteration = (previous: number, iterationCount: number): numb
 };
 ```
 
-**Incorrect (전용 보조가 딸린 단계를 한 파일에 계속 쌓음):**
+**Incorrect (전용 보조가 딸린 단계를 한 파일에 계속 쌓습니다):**
 
 ```txt
 page/report/_function/to-sales-overview.ts
@@ -77,7 +77,7 @@ page/report/_function/to-sales-overview.ts
   toTrendPoints            toTrendChart만 부름
 ```
 
-**Correct (작은 계산은 쓰는 자리에 그대로 둠):**
+**Correct (작은 계산은 쓰는 자리에 그대로 둡니다):**
 
 ```tsx
 // page/profile/pg-profile.tsx
@@ -86,7 +86,7 @@ const handleNextClick = () => {
 };
 ```
 
-**Correct (`.map()` 콜백 하나에만 쓰이는 변환은 그 자리에 둠):**
+**Correct (`.map()` 콜백 하나에만 쓰이는 변환은 그 자리에 둡니다):**
 
 ```ts
 // page/product/_function/to-product-view.ts
@@ -101,7 +101,7 @@ export const toProductView = (record: RecordItem): ProductView => {
 };
 ```
 
-**Correct (서로 다른 파일 둘이 이미 부르는 순수 함수를 뺌):**
+**Correct (서로 다른 파일 둘이 이미 부르는 순수 함수를 뺍니다):**
 
 ```ts
 // page/profile/_function/to-profile-save-request.ts
@@ -120,7 +120,7 @@ export const toProfileSaveRequest = (formValues: ProfileFormValues) => {
 import {toProfileSaveRequest} from "@/page/profile/_function/to-profile-save-request";
 ```
 
-**Correct (`.tsx` 안의 순수 조립 함수는 사용처가 하나여도 형제 `.ts`로 냄):**
+**Correct (`.tsx` 안의 순수 조립 함수는 사용처가 하나여도 형제 `.ts`로 냅니다):**
 
 ```ts
 // page/products/_function/to-product-save-request.ts
@@ -141,7 +141,7 @@ export const toProductSaveRequest = (formValues: ProductFormValues) => {
 import {toProductSaveRequest} from "@/page/products/_function/to-product-save-request";
 ```
 
-**Correct (전용 보조가 딸린 단계만 자기 파일로 나감):**
+**Correct (전용 보조가 딸린 단계만 자기 파일로 나갑니다):**
 
 ```txt
 page/report/_function/to-sales-overview/

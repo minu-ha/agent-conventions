@@ -29,7 +29,7 @@ tags: screen, routes
 지역 섹션 파일을 어느 폴더에 두는지는 `ownership-place-owner-files-in-role-folders`가 정합니다.
 진입 파일의 JSX에 나타나지 않는 섹션이 다른 섹션 파일 안에서 렌더되면 과하게 쪼갠 것입니다.
 
-**Incorrect (감싸기만 하는 래퍼를 섹션으로 뗌):**
+**Incorrect (감싸기만 하는 래퍼를 섹션으로 뗍니다):**
 
 ```tsx
 const PgProductSidebarPanel = (props: PgProductSidebarPanelProps) => {
@@ -41,7 +41,7 @@ const PgProductDetailPanel = (props: PgProductDetailPanelProps) => {
 };
 ```
 
-**Incorrect (라우트 진입이 대신 읽어 프롭으로 내림):**
+**Incorrect (라우트 진입이 대신 읽어 프롭으로 내립니다):**
 
 ```tsx
 export const PgProducts = () => {
@@ -51,7 +51,7 @@ export const PgProducts = () => {
 };
 ```
 
-**Correct (자기 데이터·상태·상호작용을 직접 가진 섹션만 추출하고, 데이터는 섹션이 자기 key 로 읽음):**
+**Correct (자기 데이터·상태·상호작용을 직접 가진 섹션만 추출하고, 데이터는 섹션이 자기 key 로 읽습니다):**
 
 ```tsx
 // page/products/_pg-product-tree-section.tsx
@@ -115,7 +115,7 @@ export const PgProductTreeSection = () => {
 };
 ```
 
-**Correct (라우트 진입은 섹션 조립과 경계만 가짐):**
+**Correct (라우트 진입은 섹션 조립과 경계만 가집니다):**
 
 ```tsx
 export const PgProducts = () => {

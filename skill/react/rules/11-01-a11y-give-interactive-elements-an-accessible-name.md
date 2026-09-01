@@ -37,7 +37,7 @@ tags: composition, accessibility
 
 포커스를 어디로 옮길지는 이 규칙이 정하지 않습니다.
 
-**Incorrect (누르는 `div`와 이름 없는 아이콘 버튼):**
+**Incorrect (누르는 `div`와 이름 없는 아이콘 버튼을 씁니다):**
 
 ```tsx
 <Fragment>
@@ -49,7 +49,7 @@ tags: composition, accessibility
 </Fragment>
 ```
 
-**Correct (`button`으로 만들고 이름을 붙임):**
+**Correct (`button`으로 만들고 이름을 붙입니다):**
 
 ```tsx
 <Fragment>

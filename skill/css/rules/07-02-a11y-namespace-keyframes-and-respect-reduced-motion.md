@@ -47,7 +47,7 @@ tags: values, motion
 - 애니메이션으로 바꾸는 속성은 `transform`과 `opacity`로 둡니다.
   `width`나 `top`을 애니메이션하면 매 프레임 레이아웃을 다시 계산합니다.
 
-**Incorrect (전역 이름을 겹치게 쓰고 시간을 직접 적음):**
+**Incorrect (전역 이름을 겹치게 쓰고 시간을 직접 적습니다):**
 
 ```css
 @keyframes fadeIn {
@@ -61,7 +61,7 @@ tags: values, motion
 }
 ```
 
-**Correct (소유자를 붙인 이름과 토큰):**
+**Correct (소유자를 붙인 이름과 토큰을 씁니다):**
 
 ```css
 @keyframes pg_products__fadeIn {
@@ -76,7 +76,7 @@ tags: values, motion
 }
 ```
 
-**Correct (전역 스타일시트에서 한 번 처리):**
+**Correct (전역 스타일시트에서 한 번 처리합니다):**
 
 ```css
 /* src/style/motion.css */

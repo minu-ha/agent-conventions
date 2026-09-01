@@ -29,7 +29,7 @@ tags: strategy, composition
 상태 없는 합성에 상태를 넣으면서 공개 이름을 어떻게 할지는
 `strategy-choose-single-composition-compound-and-variants`가 정합니다.
 
-**Incorrect (내부 구조를 전부 공개해 계약으로 굳힘):**
+**Incorrect (내부 구조를 전부 공개해 계약으로 굳힙니다):**
 
 ```tsx
 // 사용처가 끼워 넣을 자리가 없는 래퍼와 여백 보정용 DOM까지 이름이 붙어 나갔다
@@ -50,7 +50,7 @@ export const UiPanel = {
 } as const;
 ```
 
-**Correct (조립에 필요한 것만 공개):**
+**Correct (조립에 필요한 것만 공개합니다):**
 
 ```tsx
 // 단순 클래스 래퍼는 모듈 안에 남기고 여백 보정용 DOM은 만들지 않는다

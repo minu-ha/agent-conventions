@@ -30,7 +30,7 @@ tags: events, naming
   대상이 다르면 대상 이름을 넣습니다.
 - 추가 인자를 어떻게 넘길지는 `events-curry-extra-handler-arguments`가 정합니다.
 
-**Incorrect (구현에 `on*`을 쓰고 대상이 이름에 없어 같은 이름이 겹침):**
+**Incorrect (구현에 `on*`을 쓰고 대상이 이름에 없어 같은 이름이 겹칩니다):**
 
 ```ts
 import type {MouseEvent} from "react";
@@ -45,7 +45,7 @@ const onClick2 = (event: MouseEvent<HTMLButtonElement>) => {
 };
 ```
 
-**Correct (`handle` 접두사와 대상·이벤트가 드러나는 이름):**
+**Correct (`handle` 접두사와 대상·이벤트가 드러나는 이름을 씁니다):**
 
 ```ts
 import type {MouseEventHandler} from "react";

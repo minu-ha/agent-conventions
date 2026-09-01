@@ -31,7 +31,7 @@ tags: naming, constant
 - 파일이 하나뿐인 `_constant` 폴더도 그대로 둡니다.
 - 그 소유자를 지워도 남을 값이면 루트 규칙을 따라 올립니다.
 
-**Incorrect (한 소유자의 상수를 루트로 올림):**
+**Incorrect (한 소유자의 상수를 루트로 올립니다):**
 
 ```ts
 // constant/chart.ts
@@ -39,7 +39,7 @@ tags: naming, constant
 export const chart_axis_tick_count = 6;
 ```
 
-**Incorrect (소유자 이름을 되풀이하고 객체 하나에 모음):**
+**Incorrect (소유자 이름을 되풀이하고 객체 하나에 모읍니다):**
 
 ```ts
 // page/product-detail/_constant/product-detail.ts
@@ -48,7 +48,7 @@ export const product_detail_config = {
 } as const;
 ```
 
-**Correct (소유자 아래 주제 파일에 둠):**
+**Correct (소유자 아래 주제 파일에 둡니다):**
 
 ```ts
 // page/product-detail/_constant/chart.ts

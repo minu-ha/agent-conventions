@@ -35,7 +35,7 @@ tags: composition, props
   합성 공개 부품도 같은 순서입니다.
 - 문서 주석에 무엇을 쓸지는 `typescript/types-document-custom-types-and-shapes`가 정합니다.
 
-**Incorrect (파일 위쪽에 타입을 모으고 내보내지 않음):**
+**Incorrect (파일 위쪽에 타입을 모으고 내보내지 않습니다):**
 
 ```tsx
 interface UiBadgeProps {
@@ -57,7 +57,7 @@ export const UiChip = (props: UiChipProps) => {
 };
 ```
 
-**Incorrect (설명이 컴포넌트에 붙어 계약과 떨어짐):**
+**Incorrect (설명이 컴포넌트에 붙어 계약과 떨어집니다):**
 
 ```tsx
 export interface UiPanelHeaderProps {
@@ -72,7 +72,7 @@ export const UiPanelHeader = (props: UiPanelHeaderProps) => {
 };
 ```
 
-**Correct (각 컴포넌트 바로 위에 선언하고 내보냄):**
+**Correct (각 컴포넌트 바로 위에 선언하고 내보냅니다):**
 
 ```tsx
 /**
@@ -90,7 +90,7 @@ export const UiBadge = (props: UiBadgeProps) => {
 };
 ```
 
-**Correct (설명, 계약, 선언을 붙여 둠):**
+**Correct (설명, 계약, 선언을 붙여 둡니다):**
 
 ```tsx
 /**

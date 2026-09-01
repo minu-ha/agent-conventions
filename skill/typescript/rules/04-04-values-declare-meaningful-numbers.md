@@ -49,7 +49,7 @@ tags: values, config
 그 규칙은 테스트 파일에서만 꺼집니다.
 기대값은 리터럴 자체가 계약이라 상수로 빼면 검증할 것이 남지 않습니다.
 
-**Incorrect (뜻이 있는 숫자를 쓰는 자리에 적음):**
+**Incorrect (뜻이 있는 숫자를 쓰는 자리에 적습니다):**
 
 ```ts
 const isOverRetryLimit = (attempts: number): boolean => {
@@ -65,7 +65,7 @@ const toScheduledSave = (save: () => void): void => {
 };
 ```
 
-**Incorrect (지역 `const`로 자리만 옮김):**
+**Incorrect (지역 `const`로 자리만 옮깁니다):**
 
 ```ts
 const maxAttempts = 42;
@@ -75,7 +75,7 @@ const isOverRetryLimit = (attempts: number): boolean => {
 };
 ```
 
-**Correct (상수로 선언하고 이름을 가리킴):**
+**Correct (상수로 선언하고 이름을 가리킵니다):**
 
 ```ts
 // constant/retry.ts
@@ -106,7 +106,7 @@ const toPreviewRows = (rows: Row[]): Row[] => {
 };
 ```
 
-**Correct (뜻이 없는 숫자는 그대로):**
+**Correct (뜻이 없는 숫자는 그대로 둡니다):**
 
 ```ts
 const toFirstRow = (rows: Row[]): Row | undefined => {

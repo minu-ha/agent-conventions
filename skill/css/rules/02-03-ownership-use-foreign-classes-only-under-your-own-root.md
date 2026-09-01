@@ -47,7 +47,7 @@ tags: ownership, scope, third-party
 기계 검증은 `selector-disallowed-list`가 최상위에 홀로 둔 남의 클래스를 잡습니다.
 설정 전문은 `tooling-configure-stylelint-to-enforce-these-rules` 규칙이 정합니다.
 
-**Incorrect (최상위 블록 없이 라이브러리 클래스를 바로 씀):**
+**Incorrect (최상위 블록 없이 라이브러리 클래스를 바로 씁니다):**
 
 ```css
 .ant-tree-node-content-wrapper {
@@ -59,7 +59,7 @@ tags: ownership, scope, third-party
 }
 ```
 
-**Incorrect (최상위 블록 없이 다른 `scope_slug`의 클래스를 바로 씀):**
+**Incorrect (최상위 블록 없이 다른 `scope_slug`의 클래스를 바로 씁니다):**
 
 ```css
 /* page/detail/pg-detail.css */
@@ -72,7 +72,7 @@ tags: ownership, scope, third-party
 }
 ```
 
-**Incorrect (최상위 블록을 열지 않고 바깥에서 이어 씀):**
+**Incorrect (최상위 블록을 열지 않고 바깥에서 이어 씁니다):**
 
 ```css
 .pg_treePanel__root .ant-tree-title {
@@ -80,7 +80,7 @@ tags: ownership, scope, third-party
 }
 ```
 
-**Correct (내 최상위 블록 안에서 외부 라이브러리 DOM을 겨냥):**
+**Correct (내 최상위 블록 안에서 외부 라이브러리 DOM을 겨냥합니다):**
 
 ```css
 .pg_treePanel__root {
@@ -95,7 +95,7 @@ tags: ownership, scope, third-party
 }
 ```
 
-**Correct (다른 `scope_slug`의 클래스도 내 최상위 블록 안에서 겨냥):**
+**Correct (다른 `scope_slug`의 클래스도 내 최상위 블록 안에서 겨냥합니다):**
 
 ```css
 /* page/detail/pg-detail.css */
@@ -108,7 +108,7 @@ tags: ownership, scope, third-party
 }
 ```
 
-**Correct (중첩된 자손까지 적용되면 안 될 때 직계로 좁힘):**
+**Correct (중첩된 자손까지 적용되면 안 될 때 직계로 좁힙니다):**
 
 ```css
 .pg_treePanel__toolbar {

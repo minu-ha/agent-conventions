@@ -46,7 +46,7 @@ tags: values, theme
 **다크 모드를 지원하지 않기로 했으면 `prefers-color-scheme`을 아예 쓰지 않습니다.**
 일부 화면만 대응하면 같은 앱 안에서 화면마다 배경이 달라져 지원하지 않는 것보다 나쁩니다.
 
-**Incorrect (컴포넌트 파일에서 테마를 분기):**
+**Incorrect (컴포넌트 파일에서 테마를 분기합니다):**
 
 ```css
 /* src/page/products/pg-products.css */
@@ -59,7 +59,7 @@ tags: values, theme
 }
 ```
 
-**Incorrect (값으로 이름을 짓고 그림자를 직접 적음):**
+**Incorrect (값으로 이름을 짓고 그림자를 직접 적습니다):**
 
 ```css
 :root {
@@ -73,7 +73,7 @@ tags: values, theme
 }
 ```
 
-**Correct (토큰 파일 한 곳에서만 값을 바꿈):**
+**Correct (토큰 파일 한 곳에서만 값을 바꿉니다):**
 
 ```css
 /* src/style/token.css */
@@ -98,7 +98,7 @@ tags: values, theme
 }
 ```
 
-**Correct (사용자가 고른 테마가 시스템 설정을 이김):**
+**Correct (사용자가 고른 테마가 시스템 설정을 이깁니다):**
 
 ```css
 /* src/style/token.css — [data-theme] 가 명시도로 @media 블록을 이긴다 */
@@ -121,7 +121,7 @@ tags: values, theme
 }
 ```
 
-**Correct (컴포넌트는 토큰만 씀):**
+**Correct (컴포넌트는 토큰만 씁니다):**
 
 ```css
 /* src/page/products/pg-products.css */

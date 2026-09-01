@@ -36,7 +36,7 @@ tags: values, inline-style
 래퍼가 `HTMLAttributes`를 `extends`하면 `style`이 함께 열립니다.
 `Omit`으로 뺄 수는 있지만 DOM 표면을 열어 두려고 그대로 두므로 이 규칙을 리뷰가 봅니다.
 
-**Incorrect (인라인으로 꾸밈):**
+**Incorrect (인라인으로 꾸밉니다):**
 
 ```tsx
 <section className={clsx("pg_report__summary")} style={{ marginTop: 16, color: "#c00" }}>
@@ -44,7 +44,7 @@ tags: values, inline-style
 </section>
 ```
 
-**Correct (스타일시트에 두고 수정자로 가름):**
+**Correct (스타일시트에 두고 수정자로 가릅니다):**
 
 ```tsx
 <section className={clsx("pg_report__summary", isCritical && "pg_report__summary--critical")}>
@@ -62,7 +62,7 @@ tags: values, inline-style
 }
 ```
 
-**Correct (실행 중에만 아는 수치를 CSS 변수 하나로 넘김):**
+**Correct (실행 중에만 아는 수치를 CSS 변수 하나로 넘깁니다):**
 
 ```tsx
 <div

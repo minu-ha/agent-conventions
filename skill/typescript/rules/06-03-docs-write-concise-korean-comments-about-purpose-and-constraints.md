@@ -42,7 +42,7 @@ tags: docs, comments
 다만 주석 본문이 전부 영어이면 한국어 주석으로 인정하지 않습니다.
 헤더 주석이 영어뿐이면 필드 주석이 한국어여도 통과하지 못합니다.
 
-**Incorrect (영문이거나 선언 이름을 옮겨 적기만 함):**
+**Incorrect (영문이거나 선언 이름을 옮겨 적기만 합니다):**
 
 ```ts
 /**
@@ -67,7 +67,7 @@ export interface PgProductTreeProps {
 }
 ```
 
-**Incorrect (역할 태그로 선언의 성격을 다시 적음):**
+**Incorrect (역할 태그로 선언의 성격을 다시 적습니다):**
 
 ```ts
 /**
@@ -78,7 +78,7 @@ export const fetchProductList = async (): Promise<Product[]> => {
 };
 ```
 
-**Correct (이름에 없는 정보를 더함):**
+**Correct (이름에 없는 정보를 더합니다):**
 
 ```ts
 /**

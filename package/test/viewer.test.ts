@@ -97,6 +97,38 @@ test("parseRuleBody handles every rule in the repository", async () => {
 	assert.ok(blockCount > 300, `expected 300+ code blocks, found ${blockCount}`);
 });
 
+test("every example label is a 합쇼체 sentence", async () => {
+	// 라벨은 뷰어에서 예시 제목으로 선다. 명사 종결이 섞이면 목록이 뚝뚝 끊겨 읽힌다.
+	// 규범 산문과 같은 합쇼체로 고정한다.
+	const offenders: string[] = [];
+	let labelCount = 0;
+
+	for (const skillName of await listSkillNames()) {
+		if (!(await isBuildableSkill(skillName))) {
+			continue;
+		}
+
+		for (const rule of await readSkillRules(getSkillPaths(skillName))) {
+			for (const example of parseRuleBody(rule.body).examples) {
+				const label = example.label.trim();
+
+				if (!label) {
+					continue;
+				}
+
+				labelCount += 1;
+
+				if (!label.endsWith("니다")) {
+					offenders.push(`${skillName}/${rule.fileName}: ${label}`);
+				}
+			}
+		}
+	}
+
+	assert.deepEqual(offenders, [], "합쇼체로 끝나지 않는 예시 라벨");
+	assert.equal(labelCount, 408);
+});
+
 test("readSkillRules exposes titleKo and tolerates its absence", async () => {
 	const rules = await readSkillRules(getSkillPaths("react"));
 	const sample = rules.find((rule) => rule.fileName.endsWith("composition-named-handlers-over-inline.md"));

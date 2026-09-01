@@ -23,7 +23,7 @@ tags: state, effects
 여러 화면이 함께 쓰는 파생 판단을 스토어에 채우는 이펙트만 예외이고,
 그 판정은 `state-store-derived-authority`가 합니다.
 
-**Incorrect (파생값을 이펙트로 다시 상태에 동기화):**
+**Incorrect (파생값을 이펙트로 다시 상태에 동기화합니다):**
 
 ```ts
 const [selectedIds, setSelectedIds] = useState<string[]>([]);
@@ -34,7 +34,7 @@ useEffect(() => {
 }, [selectedIds]);
 ```
 
-**Correct (같은 `selectedIds`에서 렌더 중에 바로 계산):**
+**Correct (같은 `selectedIds`에서 렌더 중에 바로 계산합니다):**
 
 ```tsx
 const [selectedIds, setSelectedIds] = useState<string[]>([]);

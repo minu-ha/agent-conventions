@@ -48,7 +48,7 @@ tags: screen, routes, flow
 - 순수 타입, 전송 값 조립 함수, 기본 설정을 형제 `.ts` 파일로 옮기는 것
   `typescript/functions-extract-helpers-only-when-the-boundary-is-real`이 담당합니다.
 
-**Incorrect (흐름보다 분해 자체가 목적이 됨):**
+**Incorrect (흐름보다 분해 자체가 목적이 됩니다):**
 
 ```tsx
 return (
@@ -60,7 +60,7 @@ return (
 );
 ```
 
-**Correct (라우트 진입은 조립과 경계만 갖고, 섹션이 자기 데이터를 자기 key 로 읽음):**
+**Correct (라우트 진입은 조립과 경계만 갖고, 섹션이 자기 데이터를 자기 key 로 읽습니다):**
 
 ```tsx
 export const PgProducts = () => {

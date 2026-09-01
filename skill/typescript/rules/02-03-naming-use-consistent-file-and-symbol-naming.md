@@ -59,7 +59,7 @@ API 요청 본문, 라이브러리 인자, DOM 속성, 환경 변수처럼 받�
 
 폴더명은 프레임워크가 강제하는 이름만 예외로 둡니다.
 
-**Incorrect (역할과 맞지 않는 표기를 사용):**
+**Incorrect (역할과 맞지 않는 표기를 씁니다):**
 
 ```ts
 // userSettings.ts
@@ -73,7 +73,7 @@ const retryPolicy = {
 } as const;
 ```
 
-**Correct (파일명은 `kebab-case`, 스키마 키는 `camelCase`):**
+**Correct (파일명은 `kebab-case`, 스키마 키는 `camelCase`로 씁니다):**
 
 ```ts
 // user-settings.ts
@@ -88,7 +88,7 @@ const userProfileSchema = z.object({
 });
 ```
 
-**Correct (불변 데이터 상수와 값 집합은 이름과 상수 키를 모두 `snake_case`로 표기):**
+**Correct (불변 데이터 상수와 값 집합은 이름과 상수 키를 모두 `snake_case`로 적습니다):**
 
 ```ts
 // constant/pagination.ts
@@ -109,7 +109,7 @@ const product_status = {
 } as const;
 ```
 
-**Correct (밖으로 나가는 키만 받는 쪽 표기를 그대로 씀):**
+**Correct (밖으로 나가는 키만 받는 쪽 표기를 그대로 씁니다):**
 
 ```ts
 /**

@@ -69,7 +69,7 @@ tags: functions, naming
 `new Promise((resolve, reject) => …)`의 매개변수와 생성된 API의 `fetch` 함수처럼
 우리가 소유하지 않는 이름을 이 규칙에 맞추려고 바꾸거나 감싸지 않습니다.
 
-**Incorrect (입력·구현 동작·막연한 접미사를 이름에 씀):**
+**Incorrect (입력·구현 동작·막연한 접미사를 이름에 씁니다):**
 
 ```ts
 export const buildUserPayload = (formValues: UserFormValues) => { /* … */ };
@@ -77,7 +77,7 @@ export const mapResponseToModel = (response: UserResponse) => { /* … */ };
 export const processUserRows = (rows: UserRow[]) => { /* … */ };
 ```
 
-**Correct (출력 역할이나 효과를 이름에 씀):**
+**Correct (출력 역할이나 효과를 이름에 씁니다):**
 
 ```ts
 /**

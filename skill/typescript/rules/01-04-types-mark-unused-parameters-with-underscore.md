@@ -23,7 +23,7 @@ tags: types, callbacks, naming
 `MouseEventHandler`를 돌려주면서 이벤트 매개변수를 쓰지 않아도 `() =>`로 줄이지 않습니다.
 `(_event) =>`로 받아 계약을 남깁니다.
 
-**Incorrect (계약의 일부인 콜백 매개변수를 조용히 생략):**
+**Incorrect (계약의 일부인 콜백 매개변수를 조용히 생략합니다):**
 
 ```ts
 type LogSink = (message: string, level: "info" | "error") => void;
@@ -33,7 +33,7 @@ const noopLog: LogSink = () => {
 };
 ```
 
-**Correct (계약은 유지하고 쓰지 않는 매개변수만 `_`로 표시):**
+**Correct (계약은 유지하고 쓰지 않는 매개변수만 `_`로 표시합니다):**
 
 ```ts
 /**

@@ -32,7 +32,7 @@ tags: selector, cascade, maintainability
 
 기계 검증은 `no-duplicate-selectors`입니다.
 
-**Incorrect (같은 클래스를 파일 두 곳에서 열어 선언 순서에 의존함):**
+**Incorrect (같은 클래스를 파일 두 곳에서 열어 선언 순서에 의존합니다):**
 
 ```css
 .pg_catalogIndex__toolbar {
@@ -50,7 +50,7 @@ tags: selector, cascade, maintainability
 }
 ```
 
-**Correct (한 블록에 모으고 최종 값만 남김):**
+**Correct (한 블록에 모으고 최종 값만 남깁니다):**
 
 ```css
 .pg_catalogIndex__toolbar {
@@ -64,7 +64,7 @@ tags: selector, cascade, maintainability
 }
 ```
 
-**Correct (조건이 다르면 별개 블록으로 둠):**
+**Correct (조건이 다르면 별개 블록으로 둡니다):**
 
 ```css
 .pg_catalogIndex__toolbar {

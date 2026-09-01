@@ -47,7 +47,7 @@ tags: values, layering
 - 화면 밖으로 나가야 하는 것은 층을 올리지 말고 포털로 옮깁니다.
   그러면 조상의 쌓임 맥락에서 벗어납니다.
 
-**Incorrect (숫자를 직접 쓰고 경쟁으로 올림):**
+**Incorrect (숫자를 직접 쓰고 경쟁으로 올립니다):**
 
 ```css
 .pg_products__toolbar {
@@ -61,7 +61,7 @@ tags: values, layering
 }
 ```
 
-**Correct (층 토큰만 씀):**
+**Correct (층 토큰만 씁니다):**
 
 ```css
 /* src/style/token.css */

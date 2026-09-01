@@ -27,7 +27,7 @@ tags: components, wrappers, layout
 | 우리가 만든 컴포넌트 | `className`을 받도록 먼저 고칩니다 |
 | `className`을 받지 않는 외부 라이브러리 컴포넌트 | 감싸기가 마지막 수단으로 남는 유일한 경우입니다. 래퍼에 역할 이름을 붙이고 왜 감쌌는지 주석으로 남깁니다 |
 
-**Incorrect (래퍼 `div`로 최상위 스타일을 우회):**
+**Incorrect (래퍼 `div`로 최상위 스타일을 우회합니다):**
 
 ```tsx
 <div className={clsx("pg_postIndex__collapseWrap")}>
@@ -41,7 +41,7 @@ tags: components, wrappers, layout
 }
 ```
 
-**Incorrect (역할 없는 이름의 래퍼를 늘림):**
+**Incorrect (역할 없는 이름의 래퍼를 늘립니다):**
 
 ```tsx
 <div className={clsx("pg_postIndex__box")}>
@@ -51,7 +51,7 @@ tags: components, wrappers, layout
 </div>
 ```
 
-**Correct (우리 컴포넌트면 `className` 계약을 추가):**
+**Correct (우리 컴포넌트면 `className` 계약을 추가합니다):**
 
 ```tsx
 export interface UiCollapseProps {
@@ -76,7 +76,7 @@ export const UiCollapse = (props: UiCollapseProps) => {
 }
 ```
 
-**Correct (외부 라이브러리가 `className`을 받지 않으면 역할 이름을 붙여 감쌈):**
+**Correct (외부 라이브러리가 `className`을 받지 않으면 역할 이름을 붙여 감쌉니다):**
 
 ```tsx
 {/**

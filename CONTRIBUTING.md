@@ -65,6 +65,9 @@ skill/react/
 - `## 1. Ownership and Boundaries (ownership)` 섹션이면 파일명은 `ownership-*.md`.
 - 첫 `Incorrect` 뒤에는 `Incorrect` / `Correct` 라벨, 코드 펜스, 빈 줄만 온다.
   생성되는 `contracts/*.md`가 첫 `Incorrect` 앞부분만 뽑기 때문이다.
+- 라벨 괄호 안 문장은 규범 산문과 같은 합쇼체로 쓴다.
+  `conventions.html`에서 예시 제목으로 서는 자리라 명사 종결이 섞이면 목록이 끊겨 읽힌다.
+  `viewer.test.ts`가 408개 전부 `~니다`로 끝나는지 검사한다.
 - 모든 규칙은 최소 한 시나리오에서 걸려야 한다.
 - 문단은 문장 단위로 끊고 120칸을 넘기지 않는다. `docs/semantic-wrap.py`가 정리한다.
   한글은 두 칸으로 센다. `.editorconfig`의 `max_line_length`도 같은 값이다.

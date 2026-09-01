@@ -41,7 +41,7 @@ tags: tokens, variables, reuse
 선택자 쪽에서 같은 판단을 하는 규칙이 `selector-do-not-group-classes-with-commas`입니다.
 여러 클래스를 `,`로 묶어 공통 선언을 빼지 않고 각 클래스에 중복으로 씁니다.
 
-**Incorrect (한 파일 안 반복을 조상에 선언한 지역 변수로 감쌈):**
+**Incorrect (한 파일 안 반복을 조상에 선언한 지역 변수로 감쌉니다):**
 
 ```css
 .pg_catalogIndex__root {
@@ -57,7 +57,7 @@ tags: tokens, variables, reuse
 }
 ```
 
-**Incorrect (상태 전달을 위해 지역 변수를 만듦):**
+**Incorrect (상태를 전달하려고 지역 변수를 만듭니다):**
 
 ```css
 .pg_catalogIndex__rowBadge {
@@ -73,7 +73,7 @@ tags: tokens, variables, reuse
 }
 ```
 
-**Incorrect (여러 파일이 쓰는 값을 각 파일에 하드코딩):**
+**Incorrect (여러 파일이 쓰는 값을 각 파일에 하드코딩합니다):**
 
 ```css
 /* pg-catalog-index.css */
@@ -89,7 +89,7 @@ tags: tokens, variables, reuse
 }
 ```
 
-**Correct (여러 파일이 쓰는 값은 전역 공통 토큰으로):**
+**Correct (여러 파일이 쓰는 값은 전역 공통 토큰으로 둡니다):**
 
 ```css
 /* src/style/token.css */
@@ -105,7 +105,7 @@ tags: tokens, variables, reuse
 }
 ```
 
-**Correct (한 파일 안 반복은 값을 그대로 두고, 상태 전달은 결합자 하나로):**
+**Correct (한 파일 안 반복은 값을 그대로 두고, 상태 전달은 결합자 하나로 풉니다):**
 
 ```css
 .pg_catalogIndex__rowBadge {

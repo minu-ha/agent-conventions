@@ -33,7 +33,7 @@ JSX에서 조건에 따라 무엇을 그릴지는 형태 셋으로 나눕니다.
 `NaN`도 `NaN`으로 그려집니다.
 길이나 개수로 판단할 때는 비교식으로 바꿔 불리언을 만듭니다.
 
-**Incorrect (JSX 두 분기를 삼항 하나로 묶음):**
+**Incorrect (JSX 두 분기를 삼항 하나로 묶습니다):**
 
 ```tsx
 return (
@@ -43,13 +43,13 @@ return (
 );
 ```
 
-**Incorrect (`&&` 왼쪽에 숫자를 둬서 `0`이 그려짐):**
+**Incorrect (`&&` 왼쪽에 숫자를 둬서 `0`이 그려집니다):**
 
 ```tsx
 return <section>{selectedRows.length && <PgProductBulkActionBar />}</section>;
 ```
 
-**Correct (각 JSX 요소 앞에 표시 조건을 둠):**
+**Correct (각 JSX 요소 앞에 표시 조건을 둡니다):**
 
 ```tsx
 return (
@@ -60,13 +60,13 @@ return (
 );
 ```
 
-**Correct (한 분기는 `&&`, 왼쪽은 불리언):**
+**Correct (한 분기는 `&&`, 왼쪽은 불리언입니다):**
 
 ```tsx
 return <section>{selectedRows.length > 0 && <PgProductBulkActionBar selectedRows={selectedRows} />}</section>;
 ```
 
-**Correct (컴포넌트가 통째로 안 그리면 이른 반환):**
+**Correct (컴포넌트가 통째로 안 그리면 이른 반환을 씁니다):**
 
 ```tsx
 const PgProductPanel = (props: PgProductPanelProps) => {
@@ -78,7 +78,7 @@ const PgProductPanel = (props: PgProductPanelProps) => {
 };
 ```
 
-**Correct (프롭 값 하나는 삼항으로 고름):**
+**Correct (프롭 값 하나는 삼항으로 고릅니다):**
 
 ```tsx
 return <UiBadge tone={props.isSelected ? "accent" : "neutral"} />;
