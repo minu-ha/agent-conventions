@@ -17,7 +17,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 	--hair: #d8dee2; --soft: #e4e9ec; --edge: #c3ccd1; --hover: #e7ecef;
 	--accent: #55636b; --accent-dk: #35424a;
 	--bad: #a8392b; --good: #3f6f52; --tag-fg: #7d6a55;
-	--code-bg: #fff; --code-fg: #0f1416;
+	--code-bg: #f7f9fa; --code-fg: #0f1416;
 	--gut: #5c686e; --code-c: #3d4a51; --code-s: #1c5238; --code-k: #8f4025; --code-g: #5d4c39;
 	--dx-b: #46525a; --dx-a: #1b5896;
 	--sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
@@ -206,8 +206,8 @@ body {
    auto-fit 이라 main 이 좁아지면 브레이크포인트 없이 스스로 위아래로 떨어진다. */
 .exs { display: flex; flex-direction: column; gap: 18px; margin-top: 20px; }
 /* 짝 비교는 그룹과 다른 것이라 머리말을 코랄로 따로 세운다. 붉고 푸른 그룹 머리말과 갈린다. */
-.dx { display: flex; flex-direction: column; gap: 9px; }
-.dx-hd { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 10px; }
+.dx { display: flex; flex-direction: column; gap: 12px; }
+.dx-hd { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 10px; }
 .dx-tag { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: .12em; white-space: nowrap; color: var(--dx-a); }
 .dx-rule { height: 1px; background: color-mix(in srgb, var(--dx-a) 30%, transparent); }
 /* 짝 비교는 옳고 그름이 아니라 전후라서 붉고 푸른 축 대신 회색→파랑을 쓴다. */
@@ -290,7 +290,7 @@ body {
 /* ---------- code ---------- */
 /* 줄번호·마커·코드 3열. 거터 폭을 3em 으로 고정해 예시끼리 코드 시작이 맞는다. */
 /* 거터는 세 자리 줄번호가 안 접히게 잡는다. 3em 은 안쪽 여백을 빼면 두 자리도 못 담는다. */
-.cd { display: grid; grid-template-columns: 3.9em 16px minmax(0, 1fr); padding: 9px 12px 9px 0; font-family: var(--mono); font-size: 11px; line-height: 1.65; background: var(--code-bg); color: var(--code-fg); tab-size: 2; }
+.cd { display: grid; grid-template-columns: 3.9em 16px minmax(0, 1fr); padding: 15px 12px 15px 0; font-family: var(--mono); font-size: 11px; line-height: 1.65; background: var(--code-bg); color: var(--code-fg); tab-size: 2; }
 .cd i { display: block; font-style: normal; min-height: 1.65em; }
 .cd .n { padding: 0 9px 0 10px; text-align: right; white-space: nowrap; color: var(--gut); font-variant-numeric: tabular-nums; user-select: none; }
 .cd .m { text-align: center; font-weight: 700; color: transparent; user-select: none; border-right: 1px solid var(--soft); }
@@ -298,6 +298,7 @@ body {
 /* 좁은 폭에서 접으면 한 줄이 서너 줄이 되어 diff 대응이 무너진다. 가로로 민다. */
 .cd-wrap { overflow-x: auto; }
 .cd { min-width: 100%; width: max-content; }
+.cd-wrap { background: var(--code-bg); }
 .cd .n, .cd .m { position: sticky; z-index: 1; background: var(--code-bg); }
 .cd .n { left: 0; }
 .cd .m { left: 3.9em; }
@@ -306,11 +307,7 @@ body {
 .box-bad .cd .n.on, .box-bad .cd .m.on { color: var(--bad); background: color-mix(in srgb, var(--bad) 6%, var(--code-bg)); }
 .box-good .cd .on { background: color-mix(in srgb, var(--good) 6%, transparent); }
 .box-good .cd .n.on, .box-good .cd .m.on { color: var(--good); background: color-mix(in srgb, var(--good) 6%, var(--code-bg)); }
-/* 첫 줄이 경로 주석이면 코드에서 떼어 머리띠로 올린다. */
-.cd-p { display: flex; align-items: center; gap: 7px; padding: 4px 12px; font-family: var(--mono); font-size: 10px; letter-spacing: .01em; color: var(--muted); background: color-mix(in srgb, var(--ink) 3%, var(--code-bg)); border-bottom: 1px solid var(--soft); }
-.cd-p .ico { color: var(--faint); }
-.cd-p .p { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.cd + .cd, .cd + .cd-lb, .cd-p + .cd { border-top: 1px solid var(--soft); }
+.cd-wrap + .cd-wrap, .cd-wrap + .cd-lb { border-top: 1px solid var(--soft); }
 .cd-lb { font-family: var(--mono); font-size: 9.5px; letter-spacing: .06em; color: var(--faint); padding: 6px 14px 0; background: var(--code-bg); }
 
 pre.code { margin: 0; padding: 11px 13px; font-family: var(--mono); font-size: 11px; line-height: 1.75; background: color-mix(in srgb, var(--ink) 4%, var(--code-bg)); color: var(--code-fg); white-space: pre-wrap; overflow-wrap: anywhere; tab-size: 2; }
@@ -641,21 +638,6 @@ body:has(.dlg[open]) { overflow: hidden; }
 	};
 
 	// 블록이 여러 개면 박스 하나 안에서 "1 / 2 · lang" 구분선으로 잇는다.
-	// 첫 줄이 경로 주석이면 코드에서 떼어 머리띠로 올린다. 주석색에 묻히지 않는다.
-	const PATH_RE = /^\s*(?:\/\/|#)\s*(\S+\.(?:tsx?|jsx?|css|scss|json|html?|md|ya?ml))\s*$/;
-	const splitPath = (code) => {
-		const lines = code.split("\n");
-		const hit = PATH_RE.exec(lines[0] || "");
-
-		if (!hit) return {path: "", code: code};
-
-		let rest = lines.slice(1);
-
-		while (rest.length && !rest[0].trim()) rest = rest.slice(1);
-
-		return {path: hit[1], code: rest.join("\n")};
-	};
-
 	// 두 예시를 LCS 로 맞춰 좌우 같은 높이에 오도록 행 계획을 만든다.
 	// 짝이 맞은 줄은 마주 보게 두고, 지운 줄과 더한 줄은 같은 행에 세우며, 남는 쪽은 빈 칸으로 메운다.
 	// 닮지 않은 짝도 계획을 만든다. 통째로 다시 쓴 것이면 왼쪽 전부 삭제, 오른쪽 전부 추가가 사실이다.
@@ -732,7 +714,7 @@ body:has(.dlg[open]) { overflow: hidden; }
 					diff: true,
 					bad: e,
 					good: nx,
-					marks: diffPlan(splitPath(e.blocks[0].code).code.split("\n"), splitPath(nx.blocks[0].code).code.split("\n")),
+					marks: diffPlan(e.blocks[0].code.split("\n"), nx.blocks[0].code.split("\n")),
 					at: i,
 				});
 				i++;
@@ -752,9 +734,8 @@ body:has(.dlg[open]) { overflow: hidden; }
 	};
 
 	const codeHtml = (blocks, marks) => blocks.map((b, i) => {
-		const split = splitPath(b.code);
-		const rows = split.code.split("\n");
-		const painted = hl(split.code, b.lang).split("\n");
+		const rows = b.code.split("\n");
+		const painted = hl(b.code, b.lang).split("\n");
 		const plan = blocks.length === 1 && marks ? marks.rows : null;
 		const glyph = marks && marks.bad ? "\u2212" : "+";
 		const cells = (plan || rows.map((_unused, n) => ({i: n, changed: false}))).map((row) => {
@@ -768,7 +749,6 @@ body:has(.dlg[open]) { overflow: hidden; }
 		}).join("");
 
 		return (blocks.length > 1 ? '<div class="cd-lb">' + (i + 1) + " / " + blocks.length + "  \u00b7  " + esc(b.lang) + "</div>" : "") +
-			(split.path ? '<div class="cd-p"><span class="ico" aria-hidden="true">\u25c7</span><span class="p">' + esc(split.path) + "</span></div>" : "") +
 			'<div class="cd-wrap"><div class="cd">' + cells + "</div></div>";
 	}).join("");
 
@@ -837,17 +817,34 @@ body:has(.dlg[open]) { overflow: hidden; }
 			// 아니면 같은 종류가 이어지는 만큼 묶어 접이식 그룹으로 그린다.
 			const units = unitsOf(r);
 
-			const exsHtml = units.map((u) => {
-				if (!u.diff) return groupHtml(u.kind, u.samples, key, u.at);
+			// 이어지는 짝은 머리말 하나로 묶는다. DIFF 머리말이 짝마다 되풀이되면 목록이 시끄럽다.
+			const chunks = [];
 
-				const dkey = key + ":" + u.at;
-				const toggle = {key: dkey, open: (state.sample.get(dkey) || []).indexOf(0) >= 0};
+			for (const u of units) {
+				const last = chunks[chunks.length - 1];
 
-				return '<div class="dx"><div class="dx-hd"><span class="dx-tag"><span aria-hidden="true">\u21c4</span>' +
-					"<span>DIFF</span></span>" +
-					'<span class="dx-rule"></span></div>' +
-					'<div class="diff">' + boxHtml(u.bad, u.marks ? u.marks.left : null, "BEFORE", toggle) +
-					boxHtml(u.good, u.marks ? u.marks.right : null, "AFTER", toggle) + "</div></div>";
+				if (u.diff && last && last.diff) last.list.push(u);
+				else chunks.push({diff: u.diff, list: [u]});
+			}
+
+			const exsHtml = chunks.map((c) => {
+				if (!c.diff) return c.list.map((u) => groupHtml(u.kind, u.samples, key, u.at)).join("");
+
+				const n = c.list.length;
+				const keys = c.list.map((u) => key + ":" + u.at);
+				const allOpen = keys.every((k) => (state.sample.get(k) || []).indexOf(0) >= 0);
+				const head = '<div class="dx-hd"><span class="dx-tag"><span aria-hidden="true">\u21c4</span>' +
+					"<span>DIFF" + (n > 1 ? " \u00b7 " + n : "") + '</span></span><span class="sec-rule dx-rule"></span>' +
+					(n > 1 ? '<button class="gx-all" data-alldx="' + esc(keys.join("|")) + '">' + n + (allOpen ? "개 접기" : "개 열기") + "</button>" : "") +
+					"</div>";
+				const rows = c.list.map((u, i) => {
+					const toggle = {key: keys[i], open: (state.sample.get(keys[i]) || []).indexOf(0) >= 0};
+
+					return '<div class="diff">' + boxHtml(u.bad, u.marks ? u.marks.left : null, "BEFORE", toggle) +
+						boxHtml(u.good, u.marks ? u.marks.right : null, "AFTER", toggle) + "</div>";
+				}).join("");
+
+				return '<div class="dx">' + head + rows + "</div>";
 			}).join("");
 			// 두 목록이 무엇이 다른지 라벨만으로는 알 수 없어서 한 줄 설명을 붙인다.
 			const refs = [];
@@ -1006,7 +1003,7 @@ body:has(.dlg[open]) { overflow: hidden; }
 	});
 
 	document.addEventListener("click", (ev) => {
-		const t = ev.target.closest("[data-rule],[data-skill],[data-impact],[data-section],[data-tag],[data-when],[data-why],[data-goto],[data-close],[data-clear],[data-smp],[data-all],[data-allopen]");
+		const t = ev.target.closest("[data-rule],[data-skill],[data-impact],[data-section],[data-tag],[data-when],[data-why],[data-goto],[data-close],[data-clear],[data-smp],[data-all],[data-alldx],[data-allopen]");
 		if (!t) return;
 		// 다이얼로그가 열려 있으면 그 안의 아코디언도 같은 상태를 쓰므로 함께 다시 그린다.
 		const toggle = (set, key) => { set.has(key) ? set.delete(key) : set.add(key); render(); renderDialog(); };
@@ -1049,6 +1046,16 @@ body:has(.dlg[open]) { overflow: hidden; }
 			const cur = state.sample.get(skey) || [];
 
 			state.sample.set(skey, cur.indexOf(idx) >= 0 ? cur.filter((x) => x !== idx) : cur.concat([idx]));
+			render();
+			return renderDialog();
+		}
+
+		if (t.dataset.alldx) {
+			const keys = t.dataset.alldx.split("|");
+			const allOpen = keys.every((k) => (state.sample.get(k) || []).indexOf(0) >= 0);
+
+			for (const k of keys) state.sample.set(k, allOpen ? [] : [0]);
+
 			render();
 			return renderDialog();
 		}
