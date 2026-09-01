@@ -151,17 +151,12 @@ const collectRuleViolations = (rule: SkillRule): string[] => {
 		}
 	}
 
-	let sawCorrect = false;
-
-	// 라벨 괄호 설명은 검사하지 않는다. 실제 규칙 108개는 모두 갖췄고,
+	// 라벨 괄호 설명은 검사하지 않는다. 실제 규칙은 모두 갖췄고,
 	// 테스트 fixture 는 다른 검사를 확인하려고 라벨만 최소로 쓴다.
+	//
+	// Incorrect 를 앞에 모으라는 제약은 뺐다. 뷰어가 `Incorrect` 하나와 `Correct` 하나가
+	// 마주 볼 때만 좌우 diff 로 그리므로, 짝이 되는 것끼리 붙여 쓰는 편이 읽기에 낫다.
 	for (const example of parsed.examples) {
-		if (example.kind === "correct") {
-			sawCorrect = true;
-		} else if (sawCorrect) {
-			violations.push(`Incorrect 예시는 Correct 앞에 모은다: "${example.label}"`);
-		}
-
 		for (const block of example.blocks) {
 			if (tabIndentedFenceLanguages.has(block.lang)) {
 				const spaceIndented = block.code.split("\n").filter((line) => line.startsWith(" ") && !/^ \*/.test(line));

@@ -1686,7 +1686,18 @@ export const UiProfileDialog = (props: UiProfileDialogProps) => {
 
 **Correct (2단계 — 끼워 넣을 자리가 생기면 상태 없는 합성으로 엽니다):**
 
+```txt
+component/ui/profile-dialog/
+├── ui-profile-dialog.tsx              진입. 부품을 모아 내보냅니다
+├── _ui-profile-dialog-root.tsx
+├── _ui-profile-dialog-header.tsx
+├── _ui-profile-dialog-body.tsx
+└── _type/
+    └── profile-dialog-part.ts         세 부품이 나눠 쓰는 계약
+```
+
 ```tsx
+// component/ui/profile-dialog/_type/profile-dialog-part.ts
 /**
  * 대화상자 부품 셋이 나눠 쓰는 계약
  *
@@ -1698,18 +1709,24 @@ export interface UiProfileDialogPartProps {
 	 */
 	children: ReactNode;
 }
+```
 
-const UiProfileDialogRoot = (props: UiProfileDialogPartProps) => {
+```tsx
+// component/ui/profile-dialog/_ui-profile-dialog-root.tsx
+import {clsx} from "clsx";
+
+import type {UiProfileDialogPartProps} from "./_type/profile-dialog-part";
+
+export const UiProfileDialogRoot = (props: UiProfileDialogPartProps) => {
 	return <section className={clsx("ui_profileDialog__root")}>{props.children}</section>;
 };
+```
 
-const UiProfileDialogHeader = (props: UiProfileDialogPartProps) => {
-	return <header className={clsx("ui_profileDialog__header")}>{props.children}</header>;
-};
-
-const UiProfileDialogBody = (props: UiProfileDialogPartProps) => {
-	return <section className={clsx("ui_profileDialog__body")}>{props.children}</section>;
-};
+```tsx
+// component/ui/profile-dialog/ui-profile-dialog.tsx
+import {UiProfileDialogBody} from "./_ui-profile-dialog-body";
+import {UiProfileDialogHeader} from "./_ui-profile-dialog-header";
+import {UiProfileDialogRoot} from "./_ui-profile-dialog-root";
 
 export const UiProfileDialog = {
 	Root: UiProfileDialogRoot,
@@ -1720,10 +1737,41 @@ export const UiProfileDialog = {
 
 **Correct (3단계 — 부품이 같은 상태를 읽으면 공개 이름을 그대로 두고 컨텍스트만 더합니다):**
 
-```tsx
-const UiProfileDialogContext = createContext<UiProfileDialogContextValue | null>(null);
+```ts
+// component/ui/profile-dialog/_hook/use-profile-dialog.ts
+/**
+ * 대화상자 부품이 나눠 읽는 접힘 상태
+ */
+interface UiProfileDialogContextValue {
+	/**
+	 * 본문이 펼쳐져 있는지
+	 */
+	isBodyOpen: boolean;
+	/**
+	 * 헤더가 부르는 접기 토글
+	 */
+	toggleBody: () => void;
+}
 
-const UiProfileDialogRoot = (props: UiProfileDialogPartProps) => {
+export const UiProfileDialogContext = createContext<UiProfileDialogContextValue | null>(null);
+
+/**
+ * 부품이 컨텍스트를 읽는 창구. Root 밖에서 부르면 바로 막는다
+ */
+export const useUiProfileDialog = (): UiProfileDialogContextValue => {
+	const dialog = useContext(UiProfileDialogContext);
+
+	if (!dialog) {
+		throw new Error("UiProfileDialog.Root 안에서만 씁니다.");
+	}
+
+	return dialog;
+};
+```
+
+```tsx
+// component/ui/profile-dialog/_ui-profile-dialog-root.tsx
+export const UiProfileDialogRoot = (props: UiProfileDialogPartProps) => {
 	const [isBodyOpen, setIsBodyOpen] = useState(true);
 
 	/**
@@ -1734,13 +1782,16 @@ const UiProfileDialogRoot = (props: UiProfileDialogPartProps) => {
 	};
 
 	return (
-		<UiProfileDialogContext value={{ isBodyOpen, toggleBody }}>
+		<UiProfileDialogContext value={{isBodyOpen, toggleBody}}>
 			<section className={clsx("ui_profileDialog__root")}>{props.children}</section>
 		</UiProfileDialogContext>
 	);
 };
+```
 
-const UiProfileDialogHeader = (props: UiProfileDialogPartProps) => {
+```tsx
+// component/ui/profile-dialog/_ui-profile-dialog-header.tsx
+export const UiProfileDialogHeader = (props: UiProfileDialogPartProps) => {
 	const dialog = useUiProfileDialog();
 
 	/**
@@ -1758,17 +1809,10 @@ const UiProfileDialogHeader = (props: UiProfileDialogPartProps) => {
 		</header>
 	);
 };
+```
 
-const UiProfileDialogBody = (props: UiProfileDialogPartProps) => {
-	const dialog = useUiProfileDialog();
-
-	if (!dialog.isBodyOpen) {
-		return null;
-	}
-
-	return <section className={clsx("ui_profileDialog__body")}>{props.children}</section>;
-};
-
+```tsx
+// component/ui/profile-dialog/ui-profile-dialog.tsx
 // 상태가 늘었지만 사용처가 쓰는 이름은 2단계와 같다
 export const UiProfileDialog = {
 	Root: UiProfileDialogRoot,
