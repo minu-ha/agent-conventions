@@ -29,7 +29,7 @@ tags: functions
 그 판정은 `types-reuse-existing-contracts-before-new-types`가 합니다.
 이 규칙을 지키려고 `*Params`나 `*Args`를 새로 만들지 않습니다.
 
-**Incorrect (시그니처에서 바로 구조분해):**
+**Incorrect (시그니처에서 바로 구조분해합니다):**
 
 ```ts
 const toRequestUrl = ({baseUrl, resourcePath, searchParams}: ApiRequestTarget): URL => {
@@ -43,7 +43,7 @@ const toRequestUrl = ({baseUrl, resourcePath, searchParams}: ApiRequestTarget): 
 };
 ```
 
-**Incorrect (본문 첫 줄로 옮겼을 뿐 출처는 똑같이 지워짐):**
+**Incorrect (본문 첫 줄로 옮겼을 뿐 출처는 똑같이 지워집니다):**
 
 ```ts
 const toRequestUrl = (target: ApiRequestTarget): URL => {
@@ -58,7 +58,7 @@ const toRequestUrl = (target: ApiRequestTarget): URL => {
 };
 ```
 
-**Correct (객체 전체를 받고 체인으로 읽음):**
+**Correct (객체 전체를 받고 체인으로 읽습니다):**
 
 ```ts
 /**

@@ -165,6 +165,9 @@ body {
 .body { border-top: 1px solid var(--soft); padding: 18px 20px 22px; }
 .meta { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; font-family: var(--mono); font-size: 10.5px; color: var(--faint); }
 .meta-s { color: var(--faint); }
+.meta-all { margin-left: auto; min-height: 22px; padding: 0 8px; border-radius: 2px; font-family: var(--sans); font-size: 11px; white-space: nowrap; color: var(--muted); border: 1px solid var(--hair); }
+.meta-all:hover { color: var(--accent-dk); border-color: var(--accent); }
+.smp-s { margin-left: 7px; color: var(--edge); font-weight: 400; }
 
 /* 아코디언 두 개는 같은 형태다. 판단에 쓰는 글은 읽기 편한 폭으로 제한한다. */
 /* 규칙 본문의 구역 머리말은 모두 같은 뼈대다 — 글리프 + 라벨 + 남는 폭을 채우는 실선 (+ 동작 버튼).
@@ -208,10 +211,10 @@ body {
 /* 짝 비교는 옳고 그름이 아니라 전후라서 붉고 푸른 축 대신 회색→파랑을 쓴다. */
 .box-b { border-left: 3px solid color-mix(in srgb, var(--dx-b) 75%, transparent); }
 .box-a { border-left: 3px solid color-mix(in srgb, var(--dx-a) 75%, transparent); }
-.box-b > .box-hd { background: color-mix(in srgb, var(--dx-b) 8%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--dx-b) 22%, transparent); }
+.box-b > .box-hd { background: color-mix(in srgb, var(--dx-b) 5%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--dx-b) 18%, transparent); }
 .box-b > .box-hd-t:hover { background: color-mix(in srgb, var(--dx-b) 14%, transparent); }
 .box-b[data-open="1"] > .box-hd { background: color-mix(in srgb, var(--dx-b) 18%, transparent); border-bottom-color: color-mix(in srgb, var(--dx-b) 34%, transparent); }
-.box-a > .box-hd { background: color-mix(in srgb, var(--dx-a) 8%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--dx-a) 22%, transparent); }
+.box-a > .box-hd { background: color-mix(in srgb, var(--dx-a) 5%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--dx-a) 18%, transparent); }
 .box-a > .box-hd-t:hover { background: color-mix(in srgb, var(--dx-a) 14%, transparent); }
 .box-a[data-open="1"] > .box-hd { background: color-mix(in srgb, var(--dx-a) 18%, transparent); border-bottom-color: color-mix(in srgb, var(--dx-a) 34%, transparent); }
 .box-b .box-gl { color: var(--dx-b); }
@@ -219,9 +222,9 @@ body {
 .box-b .box-side { color: var(--dx-b); border: 1px solid color-mix(in srgb, var(--dx-b) 50%, transparent); }
 .box-a .box-side { color: var(--dx-a); border: 1px solid color-mix(in srgb, var(--dx-a) 50%, transparent); }
 .box-b .cd .on { background: color-mix(in srgb, var(--dx-b) 13%, transparent); }
-.box-b .cd .n.on, .box-b .cd .m.on { color: var(--dx-b); }
+.box-b .cd .n.on, .box-b .cd .m.on { color: var(--dx-b); background: color-mix(in srgb, var(--dx-b) 13%, var(--code-bg)); }
 .box-a .cd .on { background: color-mix(in srgb, var(--dx-a) 13%, transparent); }
-.box-a .cd .n.on, .box-a .cd .m.on { color: var(--dx-a); }
+.box-a .cd .n.on, .box-a .cd .m.on { color: var(--dx-a); background: color-mix(in srgb, var(--dx-a) 13%, var(--code-bg)); }
 /* 맞은편에만 줄이 있는 자리. 여기에 아무것도 없다는 것이 보여야 좌우 대응이 읽힌다. */
 .cd .pad { background: repeating-linear-gradient(135deg, transparent, transparent 4px, color-mix(in srgb, var(--ink) 5%, transparent) 4px, color-mix(in srgb, var(--ink) 5%, transparent) 8px); }
 .box-lead { display: inline-flex; align-items: center; gap: 6px; flex: 0 0 auto; }
@@ -242,8 +245,8 @@ body {
 .box-hd-t { grid-template-columns: auto minmax(0, 1fr) auto; width: 100%; text-align: left; }
 .box-body { display: none; }
 .box[data-open="1"] .box-body { display: block; }
-.box-bad > .box-hd { background: color-mix(in srgb, var(--bad) 5%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--bad) 16%, transparent); }
-.box-good > .box-hd { background: color-mix(in srgb, var(--good) 5%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--good) 16%, transparent); }
+.box-bad > .box-hd { background: color-mix(in srgb, var(--bad) 3%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--bad) 14%, transparent); }
+.box-good > .box-hd { background: color-mix(in srgb, var(--good) 3%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--good) 14%, transparent); }
 .box-gl { font-family: var(--mono); font-size: 12px; font-weight: 700; }
 .box-bad .box-gl { color: var(--bad); }
 .box-good .box-gl { color: var(--good); }
@@ -271,11 +274,11 @@ body {
 .smp-b { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: baseline; gap: 9px; width: 100%; text-align: left; padding: 9px 12px; }
 .smp-no { font-family: var(--mono); font-size: 10.5px; font-weight: 700; font-variant-numeric: tabular-nums; }
 .smp-car { font-size: 9px; }
-.box-bad .smp-b { background: color-mix(in srgb, var(--bad) 4%, transparent); }
+.box-bad .smp-b { background: color-mix(in srgb, var(--bad) 2.5%, transparent); }
 .box-bad .smp-b:hover { background: color-mix(in srgb, var(--bad) 9%, transparent); }
 .box-bad .smp[data-open="1"] .smp-b { background: color-mix(in srgb, var(--bad) 14%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--bad) 26%, transparent); }
 .box-bad .smp-no, .box-bad .smp-car { color: color-mix(in srgb, var(--bad) 80%, transparent); }
-.box-good .smp-b { background: color-mix(in srgb, var(--good) 4%, transparent); }
+.box-good .smp-b { background: color-mix(in srgb, var(--good) 2.5%, transparent); }
 .box-good .smp-b:hover { background: color-mix(in srgb, var(--good) 9%, transparent); }
 .box-good .smp[data-open="1"] .smp-b { background: color-mix(in srgb, var(--good) 14%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--good) 26%, transparent); }
 .box-good .smp-no, .box-good .smp-car { color: color-mix(in srgb, var(--good) 80%, transparent); }
@@ -289,12 +292,18 @@ body {
 .cd i { display: block; font-style: normal; min-height: 1.65em; }
 .cd .n { padding: 0 9px 0 10px; text-align: right; white-space: nowrap; color: var(--gut); font-variant-numeric: tabular-nums; user-select: none; }
 .cd .m { text-align: center; font-weight: 700; color: transparent; user-select: none; border-right: 1px solid var(--soft); }
-.cd .c { padding: 0 6px 0 12px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.cd .c { padding: 0 6px 0 12px; white-space: pre; }
+/* 좁은 폭에서 접으면 한 줄이 서너 줄이 되어 diff 대응이 무너진다. 가로로 민다. */
+.cd-wrap { overflow-x: auto; }
+.cd { min-width: 100%; width: max-content; }
+.cd .n, .cd .m { position: sticky; z-index: 1; background: var(--code-bg); }
+.cd .n { left: 0; }
+.cd .m { left: 3.9em; }
 /* 바뀐 줄만 옅게 칠하고 거터 숫자와 마커를 의미색으로 바꾼다. */
 .box-bad .cd .on { background: color-mix(in srgb, var(--bad) 6%, transparent); }
-.box-bad .cd .n.on, .box-bad .cd .m.on { color: var(--bad); }
+.box-bad .cd .n.on, .box-bad .cd .m.on { color: var(--bad); background: color-mix(in srgb, var(--bad) 6%, var(--code-bg)); }
 .box-good .cd .on { background: color-mix(in srgb, var(--good) 6%, transparent); }
-.box-good .cd .n.on, .box-good .cd .m.on { color: var(--good); }
+.box-good .cd .n.on, .box-good .cd .m.on { color: var(--good); background: color-mix(in srgb, var(--good) 6%, var(--code-bg)); }
 /* 첫 줄이 경로 주석이면 코드에서 떼어 머리띠로 올린다. */
 .cd-p { display: flex; align-items: center; gap: 7px; padding: 4px 12px; font-family: var(--mono); font-size: 10px; letter-spacing: .01em; color: var(--muted); background: color-mix(in srgb, var(--ink) 3%, var(--code-bg)); border-bottom: 1px solid var(--soft); }
 .cd-p .ico { color: var(--faint); }
@@ -329,9 +338,9 @@ pre.code { margin: 0; padding: 11px 13px; font-family: var(--mono); font-size: 1
 @media (max-width: 560px) { .ref { grid-template-columns: 4.6em 2.4em minmax(0, 1fr); gap: 10px; } .ref-go { display: none; } .ref-note { display: none; } }
 /* 본문 문장 안에 섞이는 참조 칩. 코드 조각이 아니라 규칙이라는 것을 보이게 한다. */
 /* 문장 안 참조는 상자가 아니라 링크다. 배경과 테두리를 두면 글줄이 끊겨 읽기를 막는다. */
-.ref-in { display: inline; padding: 0; border: 0; background: none; font: inherit; color: inherit; border-bottom: 1px solid color-mix(in srgb, var(--accent) 45%, transparent); }
-.ref-in:hover { color: var(--accent-dk); border-bottom-color: var(--accent); }
-.ref-in::after { content: "↗"; margin-left: .15em; font-size: .78em; color: var(--accent); vertical-align: .12em; }
+.ref-in { display: inline; padding: 0; border: 0; background: none; font: inherit; color: inherit; border-bottom: 1px solid color-mix(in srgb, var(--dx-a) 55%, transparent); }
+.ref-in:hover { color: var(--dx-a); border-bottom-color: var(--dx-a); }
+.ref-in::after { content: "↗"; margin-left: .15em; font-size: .78em; color: var(--dx-a); vertical-align: .12em; }
 
 .rtags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--hover); }
 .rtag { min-height: 22px; padding: 0 8px; border-radius: 999px; font-family: var(--mono); font-size: 10px; color: var(--muted); border: 1px solid var(--hair); }
@@ -647,7 +656,7 @@ body:has(.dlg[open]) { overflow: hidden; }
 
 	// 두 예시를 LCS 로 맞춰 좌우 같은 높이에 오도록 행 계획을 만든다.
 	// 짝이 맞은 줄은 마주 보게 두고, 지운 줄과 더한 줄은 같은 행에 세우며, 남는 쪽은 빈 칸으로 메운다.
-	// 0.45 아래면 서로 다른 코드라 줄을 맞춰 봐야 뜻이 없으므로 정렬을 포기한다.
+	// 닮지 않은 짝도 계획을 만든다. 통째로 다시 쓴 것이면 왼쪽 전부 삭제, 오른쪽 전부 추가가 사실이다.
 	const diffPlan = (a, b) => {
 		const n = a.length;
 		const m = b.length;
@@ -661,8 +670,6 @@ body:has(.dlg[open]) { overflow: hidden; }
 				dp[i][j] = a[i].trim() === b[j].trim() ? dp[i + 1][j + 1] + 1 : Math.max(dp[i + 1][j], dp[i][j + 1]);
 			}
 		}
-
-		if (dp[0][0] / Math.max(n, m) < 0.45) return null;
 
 		const left = [];
 		const right = [];
@@ -702,6 +709,43 @@ body:has(.dlg[open]) { overflow: hidden; }
 		return {left: left, right: right};
 	};
 
+	// 예시를 짝 비교 유닛과 그룹 유닛으로 나눈다. 렌더와 "전부 펼치기" 가 같은 결과를 봐야 한다.
+	const unitsOf = (r) => {
+		const units = [];
+
+		for (let i = 0; i < r.examples.length; i++) {
+			const e = r.examples[i];
+			const nx = r.examples[i + 1];
+
+			// 같은 언어의 코드 블록 하나끼리만 짝으로 세운다.
+			// tsx 예시와 txt 흐름도를 마주 놓으면 비교가 아니라 두 다른 글이 나란히 선다.
+			const pairable = e.kind === "incorrect" && nx && nx.kind === "correct" &&
+				e.blocks.length === 1 && nx.blocks.length === 1 && e.blocks[0].lang === nx.blocks[0].lang;
+
+			if (pairable) {
+				units.push({
+					diff: true,
+					bad: e,
+					good: nx,
+					marks: diffPlan(splitPath(e.blocks[0].code).code.split("\n"), splitPath(nx.blocks[0].code).code.split("\n")),
+					at: i,
+				});
+				i++;
+				continue;
+			}
+
+			const run = [];
+			const at = i;
+
+			while (i < r.examples.length && r.examples[i].kind === e.kind) { run.push(r.examples[i]); i++; }
+
+			i--;
+			units.push({diff: false, kind: e.kind, samples: run, at: at});
+		}
+
+		return units;
+	};
+
 	const codeHtml = (blocks, marks) => blocks.map((b, i) => {
 		const split = splitPath(b.code);
 		const rows = split.code.split("\n");
@@ -720,7 +764,7 @@ body:has(.dlg[open]) { overflow: hidden; }
 
 		return (blocks.length > 1 ? '<div class="cd-lb">' + (i + 1) + " / " + blocks.length + "  \u00b7  " + esc(b.lang) + "</div>" : "") +
 			(split.path ? '<div class="cd-p"><span class="ico" aria-hidden="true">\u25c7</span><span class="p">' + esc(split.path) + "</span></div>" : "") +
-			'<div class="cd">' + cells + "</div>";
+			'<div class="cd-wrap"><div class="cd">' + cells + "</div></div>";
 	}).join("");
 
 	const boxHtml = (e, marks, side, toggle) => {
@@ -760,7 +804,7 @@ body:has(.dlg[open]) { overflow: hidden; }
 
 			return '<div class="smp" data-open="' + (isOpen ? 1 : 0) + '">' +
 				'<button class="smp-b" data-smp="' + esc(skey) + '" data-i="' + i + '">' +
-				'<span class="smp-no">' + (i + 1) + "</span>" +
+				'<span class="smp-no">' + (i + 1) + '<span class="smp-s">\u00b7</span></span>' +
 				'<span class="box-note">' + (e.label ? inlineHi(e.label) : "") + "</span>" +
 				'<span class="smp-car" aria-hidden="true">' + (isOpen ? "\u25be" : "\u25b8") + "</span></button>" +
 				'<div class="smp-body">' + (isOpen ? codeHtml(e.blocks, null) : "") + "</div></div>";
@@ -778,37 +822,15 @@ body:has(.dlg[open]) { overflow: hidden; }
 		const whyOpen = state.why.has(key);
 		const sec = secOf(r);
 		const exCount = r.examples.reduce((t, e) => t + e.blocks.length, 0);
+		// 아코디언 둘과 예시 유닛이 모두 열려 있을 때만 "전부 접기" 로 뒤집는다.
+		const openTargets = unitsOf(r).map((u) => ({key: key + ":" + u.at, n: u.diff ? 1 : u.samples.length}));
+		const fullOpen = whenOpen && whyOpen && openTargets.every((t) => (state.sample.get(t.key) || []).length === t.n);
 
 		let body = "";
 		if (open) {
 			// Incorrect 바로 뒤에 Correct 가 오고 둘 다 코드 블록 하나이며 서로 닮았으면 좌우 diff 로,
 			// 아니면 같은 종류가 이어지는 만큼 묶어 접이식 그룹으로 그린다.
-			const units = [];
-
-			for (let i = 0; i < r.examples.length; i++) {
-				const e = r.examples[i];
-				const nx = r.examples[i + 1];
-				let marks = null;
-
-				const sideBySide = e.kind === "incorrect" && nx && nx.kind === "correct" && e.blocks.length === 1 && nx.blocks.length === 1;
-
-				if (sideBySide) {
-					// 줄 강조는 두 예시가 실제로 닮았을 때만 뜻이 있다.
-					// 다시 쓴 예시에 강조를 칠하면 전부 바뀐 줄이 되어 아무것도 못 가린다.
-					marks = diffPlan(splitPath(e.blocks[0].code).code.split("\n"), splitPath(nx.blocks[0].code).code.split("\n"));
-					units.push({diff: true, bad: e, good: nx, marks: marks, at: i});
-					i++;
-					continue;
-				}
-
-				const run = [];
-				const at = i;
-
-				while (i < r.examples.length && r.examples[i].kind === e.kind) { run.push(r.examples[i]); i++; }
-
-				i--;
-				units.push({diff: false, kind: e.kind, samples: run, at: at});
-			}
+			const units = unitsOf(r);
 
 			const exsHtml = units.map((u) => {
 				if (!u.diff) return groupHtml(u.kind, u.samples, key, u.at);
@@ -840,7 +862,8 @@ body:has(.dlg[open]) { overflow: hidden; }
 			body = '<div class="body">' +
 				'<div class="meta"><span>' + esc(r.id) + "</span>" +
 				(sec ? '<span class="meta-s">·</span><span>' + esc(secLabel(sec)) + "</span>" : "") +
-				'<span class="meta-s">·</span><span>예시 ' + exCount + "</span></div>" +
+				'<span class="meta-s">·</span><span>예시 ' + exCount + "</span>" +
+				'<button class="meta-all" data-allopen="' + esc(key) + '">' + (fullOpen ? "전부 접기" : "전부 펼치기") + "</button></div>" +
 				'<div class="accs">' +
 				(r.appliesWhen || r.appliesWhenBullets.length
 					? acc("when", "언제 적용할까요?", whenOpen, () => whenHtml(r))
@@ -978,7 +1001,7 @@ body:has(.dlg[open]) { overflow: hidden; }
 	});
 
 	document.addEventListener("click", (ev) => {
-		const t = ev.target.closest("[data-rule],[data-skill],[data-impact],[data-section],[data-tag],[data-when],[data-why],[data-goto],[data-close],[data-clear],[data-smp],[data-all]");
+		const t = ev.target.closest("[data-rule],[data-skill],[data-impact],[data-section],[data-tag],[data-when],[data-why],[data-goto],[data-close],[data-clear],[data-smp],[data-all],[data-allopen]");
 		if (!t) return;
 		// 다이얼로그가 열려 있으면 그 안의 아코디언도 같은 상태를 쓰므로 함께 다시 그린다.
 		const toggle = (set, key) => { set.has(key) ? set.delete(key) : set.add(key); render(); renderDialog(); };
@@ -989,6 +1012,30 @@ body:has(.dlg[open]) { overflow: hidden; }
 		if (t.dataset.tag) return toggle(state.tags, t.dataset.tag);
 		if (t.dataset.section) { state.section = state.section === t.dataset.section ? "" : t.dataset.section; return render(); }
 		if (t.dataset.when) return toggle(state.when, t.dataset.when);
+
+		// 카드 하나를 통째로 여닫는다. 아코디언 둘과 예시 유닛을 한 번에 맞춘다.
+		if (t.dataset.allopen) {
+			const k = t.dataset.allopen;
+			const rule = byKey.get(k);
+
+			if (!rule) return;
+
+			const targets = unitsOf(rule).map((u) => ({key: k + ":" + u.at, n: u.diff ? 1 : u.samples.length}));
+			const full = state.when.has(k) && state.why.has(k) && targets.every((x) => (state.sample.get(x.key) || []).length === x.n);
+
+			if (full) {
+				state.when.delete(k);
+				state.why.delete(k);
+				for (const x of targets) state.sample.set(x.key, []);
+			} else {
+				state.when.add(k);
+				state.why.add(k);
+				for (const x of targets) state.sample.set(x.key, Array.from({length: x.n}, (_unused, i) => i));
+			}
+
+			render();
+			return renderDialog();
+		}
 
 		// 예시 하나를 여닫는다. 카드 자체가 접히지 않도록 규칙 토글보다 먼저 가로챈다.
 		if (t.dataset.smp) {

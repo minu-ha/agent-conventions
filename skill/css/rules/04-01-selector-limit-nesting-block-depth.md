@@ -42,7 +42,7 @@ tags: selector, nesting, ampersand
 기계 검증은 `max-nesting-depth: 1`입니다.
 최상위가 0겹입니다.
 
-**Incorrect (중첩을 두 겹 이상 열어 실제 선택자를 숨김):**
+**Incorrect (중첩을 두 겹 이상 열어 실제 선택자를 숨깁니다):**
 
 ```css
 .pg_salesPanel__spreadButton {
@@ -56,7 +56,7 @@ tags: selector, nesting, ampersand
 }
 ```
 
-**Incorrect (다른 요소의 가상 요소를 `&`로 다시 엶):**
+**Incorrect (다른 요소의 가상 요소를 `&`로 다시 엽니다):**
 
 ```css
 .pg_salesPanel__spreadButton {
@@ -68,7 +68,7 @@ tags: selector, nesting, ampersand
 }
 ```
 
-**Correct (`&`는 한 번, 그다음 경로는 같은 줄에 이어 씀):**
+**Correct (`&`는 한 번, 그다음 경로는 같은 줄에 이어 씁니다):**
 
 ```css
 .pg_salesPanel__spreadBox {
@@ -94,7 +94,7 @@ tags: selector, nesting, ampersand
 }
 ```
 
-**Correct (외부 라이브러리 경로도 깊이와 무관하게 한 줄로 씀):**
+**Correct (외부 라이브러리 경로도 깊이와 무관하게 한 줄로 씁니다):**
 
 ```css
 .pg_orderTable__root {

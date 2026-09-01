@@ -22,14 +22,14 @@ tags: perf, state
 그래서 메모이제이션과 지연 렌더를 정한 두 규칙과 달리 측정한 근거를 요구하지 않습니다.
 초기값은 최초 렌더에서 한 번만 만들어지므로 이후 프롭스 변화를 따라가야 하는 값에는 쓰지 않습니다.
 
-**Incorrect (비싼 초기화가 렌더마다 다시 평가됨):**
+**Incorrect (비싼 초기화가 렌더마다 다시 평가됩니다):**
 
 ```tsx
 const [searchIndex] = useState(toSearchIndex(productList));
 const [draftFilter] = useState(JSON.parse(localStorage.getItem("product-filter") ?? "{}"));
 ```
 
-**Correct (비싼 초기화는 최초 렌더에서만 수행):**
+**Correct (비싼 초기화는 최초 렌더에서만 수행합니다):**
 
 ```tsx
 const [searchIndex] = useState(() => toSearchIndex(productList));

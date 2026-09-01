@@ -21,7 +21,7 @@ tags: naming, semantics, modifiers
 수정자를 붙일 자격이 있는지는 `composition-do-not-build-structural-variants-with-modifiers` 규칙이 정합니다.
 여기서는 붙이기로 정한 이름이 역할을 가리키는지만 봅니다.
 
-**Incorrect (역할 대신 구조나 치수에 기대는 이름):**
+**Incorrect (역할 대신 구조나 치수로 이름을 짓습니다):**
 
 ```txt
 ui_card__wrapper
@@ -29,7 +29,7 @@ ui_card__box
 ui_card__body--gap12
 ```
 
-**Correct (역할과 상태를 기준으로 이름을 붙임):**
+**Correct (역할과 상태를 기준으로 이름을 붙입니다):**
 
 ```txt
 ui_card__toolbar

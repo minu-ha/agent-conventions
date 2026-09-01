@@ -26,7 +26,7 @@ tags: composition, jsx
 `biome`의 `style/useFragmentSyntax`는 정반대를 강제하므로 켜지 않습니다.
 설정은 `typescript/tooling-configure-biome-to-enforce-these-rules`에 적혀 있습니다.
 
-**Incorrect (이름 없는 짧은 문법):**
+**Incorrect (이름 없는 짧은 문법을 씁니다):**
 
 ```tsx
 export const PgProductScreen = () => {
@@ -39,7 +39,7 @@ export const PgProductScreen = () => {
 };
 ```
 
-**Correct (`Fragment`를 그대로 씀):**
+**Correct (`Fragment`를 그대로 씁니다):**
 
 ```tsx
 import {Fragment} from "react";
@@ -54,7 +54,7 @@ export const PgProductScreen = () => {
 };
 ```
 
-**Correct (`key`가 필요해도 같은 형태를 유지):**
+**Correct (`key`가 필요해도 같은 형태를 씁니다):**
 
 ```tsx
 import {Fragment} from "react";

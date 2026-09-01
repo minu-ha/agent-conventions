@@ -89,7 +89,7 @@ tags: tooling
 `recommended`에 없어 따로 켜야 하는데, 켜지 않습니다.
 프레임워크 컨벤션이 `<Fragment>`를 쓰라고 정하기 때문입니다.
 
-**Incorrect (`recommended`만 켜고 컨벤션 항목을 리뷰에 맡김):**
+**Incorrect (`recommended`만 켜고 컨벤션 항목을 리뷰에 맡깁니다):**
 
 ```json
 {
@@ -100,7 +100,7 @@ tags: tooling
 }
 ```
 
-**Correct (컨벤션 항목을 설정으로 고정):**
+**Correct (컨벤션 항목을 설정으로 고정합니다):**
 
 ```json
 {

@@ -34,21 +34,21 @@ tags: docs, comments
 JSX 자식 자리에는 `//`가 없어 프레임워크 규칙이 정한 형태로 씁니다.
 어투와 내용은 `docs-write-concise-korean-comments-about-purpose-and-constraints`를 따릅니다.
 
-**Incorrect (확인할 수 없는 말로 예외를 정당화):**
+**Incorrect (확인할 수 없는 말로 예외를 정당화합니다):**
 
 ```ts
 // 성능을 위해 메모이제이션
 const columns = useMemo(() => toTableColumns(response.data.columns), [response.data.columns]);
 ```
 
-**Correct (외부 패키지의 제약을 가리킴):**
+**Correct (외부 패키지의 제약을 가리킵니다):**
 
 ```ts
 // ag-grid는 columnDefs 참조가 바뀌면 컬럼 상태를 초기화한다. 참조를 고정해야 한다.
 const columns = useMemo(() => toTableColumns(response.data.columns), [response.data.columns]);
 ```
 
-**Correct (측정 결과를 가리킴):**
+**Correct (측정 결과를 가리킵니다):**
 
 ```ts
 // 행 5,000개에서 매 렌더 필터링이 120ms로 측정됐다. 지연한 검색어에만 다시 계산한다.

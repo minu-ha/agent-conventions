@@ -56,7 +56,7 @@ DOM 표면은 리액트가 속성을 더하면 래퍼도 따라 받아야 하는
 - `HTMLAttributes`를 `extends` 하면 `style`도 같이 열립니다.
   인라인 `style`을 쓸지는 `css/composition-do-not-style-through-the-style-attribute`가 정합니다.
 
-**Incorrect (프롭 하나가 부딪힌다고 DOM 표면을 통째로 포기함):**
+**Incorrect (프롭 하나가 부딪힌다고 DOM 표면을 통째로 포기합니다):**
 
 ```tsx
 // id·role·tabIndex·aria-*·이벤트를 전부 잃고 다섯 개만 남았다
@@ -69,7 +69,7 @@ export interface UiButtonProps {
 }
 ```
 
-**Correct (어느 단계인지 고르는 법):**
+**Correct (어느 단계인지 이렇게 고릅니다):**
 
 ```txt
 래퍼 프롭스에 DOM 표면을 연다
@@ -82,7 +82,7 @@ export interface UiButtonProps {
 └ 감싸는 요소와 이벤트 대상 요소가 서로 다름 ─→ 3단계. extends 없이 필요한 것만
 ```
 
-**Correct (1단계 — 부딪히는 이름이 없어 그대로 상속):**
+**Correct (1단계 — 부딪히는 이름이 없어 그대로 상속합니다):**
 
 ```tsx
 import {TableCell} from "@mui/material";
@@ -113,7 +113,7 @@ export const UiTableCell = (props: UiTableCellProps) => {
 };
 ```
 
-**Correct (2단계 — 부딪히는 이름만 빼고 다시 엶):**
+**Correct (2단계 — 부딪히는 이름만 빼고 다시 엽니다):**
 
 ```tsx
 import {Button} from "@mui/material";
@@ -140,7 +140,7 @@ export const UiButton = (props: UiButtonProps) => {
 };
 ```
 
-**Correct (3단계 — 요소 타입이 어긋나 필요한 프롭만 선언):**
+**Correct (3단계 — 요소 타입이 어긋나 필요한 프롭만 선언합니다):**
 
 ```tsx
 import {TextField} from "@mui/material";

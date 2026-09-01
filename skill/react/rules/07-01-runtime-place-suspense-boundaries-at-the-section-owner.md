@@ -32,14 +32,14 @@ tags: screen, suspense, loading
 경계가 있으므로 화면 본문에는 로딩 분기가 남지 않습니다.
 그 판정은 `runtime-avoid-ad-hoc-loading-branches`가 합니다.
 
-**Incorrect (진입에 경계가 없어 화면 전체가 함께 멈춤):**
+**Incorrect (진입에 경계가 없어 화면 전체가 함께 멈춥니다):**
 
 ```tsx
 // 진입 파일: PgProductTreeSection이 Suspense 쿼리를 부르는데 감싸는 경계가 없다
 return <PgProductTreeSection />;
 ```
 
-**Correct (섹션 소유자가 경계와 대체 화면을 가짐):**
+**Correct (섹션 소유자가 경계와 대체 화면을 가집니다):**
 
 ```tsx
 // 진입 파일: 쿼리를 부르는 섹션을 경계로 감싼다

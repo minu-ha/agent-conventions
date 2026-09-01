@@ -32,7 +32,7 @@ tags: ownership, hooks, widget
 - 생명주기가 실제로 있어도 파일 분량을 줄이려는 추출은 허용하지 않습니다.
   그 판단은 `ownership-keep-lifecycle-in-the-owning-component`가 담당합니다.
 
-**Incorrect (로컬 계산을 습관적으로 훅으로 포장):**
+**Incorrect (로컬 계산을 습관적으로 훅으로 포장합니다):**
 
 ```ts
 export const useMediaUploadPayload = (files: UploadFile[]) => {
@@ -40,7 +40,7 @@ export const useMediaUploadPayload = (files: UploadFile[]) => {
 };
 ```
 
-**Correct (순수 계산은 소유자의 `_function` 폴더에 일반 함수로 둠):**
+**Correct (순수 계산은 소유자의 `_function` 폴더에 일반 함수로 둡니다):**
 
 ```ts
 // page/products/_function/to-media-upload-request.ts
@@ -52,7 +52,7 @@ export const toMediaUploadRequest = (files: UploadFile[]) => {
 };
 ```
 
-**Correct (훅 없이 컴포넌트 핸들러가 그 함수를 직접 부름):**
+**Correct (훅 없이 컴포넌트 핸들러가 그 함수를 직접 부릅니다):**
 
 ```tsx
 // page/products/_pg-media-upload-panel.tsx

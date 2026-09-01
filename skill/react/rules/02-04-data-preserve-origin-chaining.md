@@ -25,13 +25,13 @@ tags: data, state, origin
   받는 쪽에서 끊으면 깊이는 그대로고 출처만 사라집니다.
 - 프롭스는 `composition-read-props-without-destructuring`이 같은 말을 한 번 더 합니다.
 
-**Incorrect (구조분해로 출처가 흐려짐):**
+**Incorrect (구조분해로 출처가 흐려집니다):**
 
 ```ts
 const {products, selectedProduct} = responseProductListSuspense.data;
 ```
 
-**Correct (원본 체이닝으로 출처를 유지):**
+**Correct (원본 체이닝으로 출처를 지킵니다):**
 
 ```tsx
 <Fragment>
@@ -40,7 +40,7 @@ const {products, selectedProduct} = responseProductListSuspense.data;
 </Fragment>;
 ```
 
-**Correct (이펙트 안에서도 원본 이름 그대로):**
+**Correct (이펙트 안에서도 원본 이름 그대로 씁니다):**
 
 ```ts
 /**

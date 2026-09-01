@@ -75,7 +75,7 @@ tags: types
 원본 입력과 정규화한 값은 필드가 같아도 뜻이 달라 입력 형태를 따로 두는 것이 맞습니다.
 그때도 문서화 규칙만 걸리고 이 규칙은 걸리지 않습니다.
 
-**Incorrect (기존 계약과 동일한 구조를 다시 선언):**
+**Incorrect (기존 계약과 같은 구조를 다시 선언합니다):**
 
 ```ts
 // 이미 있는 계약
@@ -92,13 +92,13 @@ interface UserPreview {
 }
 ```
 
-**Incorrect (`Pick`으로 골라 필드 이름과 설명이 사라짐):**
+**Incorrect (`Pick`으로 골라 필드 이름과 설명이 사라집니다):**
 
 ```ts
 type UserPreview = Pick<UserRecord, "id" | "name">;
 ```
 
-**Correct (필드마다 출처를 인덱스 접근으로 가져옴):**
+**Correct (필드마다 출처를 인덱스 접근으로 가져옵니다):**
 
 ```ts
 /**
@@ -116,7 +116,7 @@ interface UserPreview {
 }
 ```
 
-**Correct (여러 계약에서 필드를 모으고 `?`, `readonly`를 직접 적음):**
+**Correct (여러 계약에서 필드를 모으고 `?`, `readonly`를 직접 적습니다):**
 
 ```ts
 /**

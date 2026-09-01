@@ -41,21 +41,21 @@ tags: modifiers, structure, naming
 두 번째 소유자가 같은 이름을 쓰게 되는 순간 수정자로 올립니다.
 그 전까지는 요소 클래스로 둡니다.
 
-**Incorrect (그 화면 하나를 고치려고 수정자를 붙임):**
+**Incorrect (그 화면 하나를 고치려고 수정자를 붙입니다):**
 
 ```tsx
 <div className={clsx("pg_catalogDetail__section", "pg_catalogDetail__section--compactTop")} />
 <div className={clsx("pg_catalogDetail__aside", "pg_catalogDetail__aside--marginLeft0")} />
 ```
 
-**Correct (한 곳만의 보정은 역할 이름이 있는 요소로 분리):**
+**Correct (한 곳만의 보정은 역할 이름이 있는 요소로 분리합니다):**
 
 ```tsx
 <div className={clsx("pg_catalogDetail__detailSection")} />
 <div className={clsx("pg_catalogDetail__flushAside")} />
 ```
 
-**Correct (상태와 반복되는 모양만 수정자로):**
+**Correct (상태와 반복되는 모양만 수정자로 씁니다):**
 
 ```tsx
 <div className={clsx("ui_table__root", isDense && "ui_table__root--dense")} />

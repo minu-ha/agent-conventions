@@ -48,7 +48,7 @@ tags: selector, responsive
 `prefers-color-scheme`은 토큰 파일에서 최상위 `@media`로 씁니다.
 `values-switch-themes-by-changing-token-values` 규칙이 그 자리를 정합니다.
 
-**Incorrect (클래스 블록 안에 중첩해서 브레이크포인트가 흩어짐):**
+**Incorrect (클래스 블록 안에 중첩해서 브레이크포인트가 흩어집니다):**
 
 ```css
 .pg_products__toolbar {
@@ -70,7 +70,7 @@ tags: selector, responsive
 }
 ```
 
-**Correct (선언은 위, 브레이크포인트는 파일 아래 한 곳):**
+**Correct (선언은 위, 브레이크포인트는 파일 아래 한 곳에 둡니다):**
 
 ```css
 .pg_products__toolbar {
@@ -100,7 +100,7 @@ tags: selector, responsive
 }
 ```
 
-**Correct (브레이크포인트 안에서 상태를 한 겹 더 씀):**
+**Correct (브레이크포인트 안에서 상태를 한 겹 더 씁니다):**
 
 ```css
 @media (width < 1024px) {

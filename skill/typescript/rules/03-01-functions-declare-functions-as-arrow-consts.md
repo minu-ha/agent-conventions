@@ -55,7 +55,7 @@ tags: functions, declarations
 | 제너레이터 | `function*` 없이 쓸 수 없습니다 |
 | 오버로드 선언 | `function` 시그니처를 겹쳐 쓰는 선언 문법은 `const`로 옮길 수 없습니다. 호출 시그니처를 모은 타입을 `const`에 붙일 수 있으면 그쪽을 씁니다 |
 
-**Incorrect (`function` 선언문과 화살표를 한 파일에서 섞음):**
+**Incorrect (`function` 선언문과 화살표를 한 파일에서 섞습니다):**
 
 ```ts
 export function toTrimmedTitle(rawTitle: string): string {
@@ -67,7 +67,7 @@ export const toProductSlug = (title: string): string => {
 };
 ```
 
-**Incorrect (`function` 선언문과 화살표를 한 파일에서 섞음):**
+**Incorrect (`function` 선언문과 화살표를 한 파일에서 섞습니다):**
 
 ```ts
 export const toProductLabel = (product: Product): string => {
@@ -79,7 +79,7 @@ function decorate(title: string): string {
 }
 ```
 
-**Incorrect (본문을 한 줄로 줄여 선언마다 형태가 갈림):**
+**Incorrect (본문을 한 줄로 줄여 선언마다 형태가 갈립니다):**
 
 ```ts
 const decorate = (title: string): string => `# ${title}`;
@@ -90,7 +90,7 @@ export const toProductBadge = (product: Product): ProductBadge => ({
 });
 ```
 
-**Incorrect (객체 프로퍼티의 함수를 메서드 축약형으로 씀):**
+**Incorrect (객체 프로퍼티의 함수를 메서드 축약형으로 씁니다):**
 
 ```ts
 export const cell_formatter_by_value_type = {
@@ -100,7 +100,7 @@ export const cell_formatter_by_value_type = {
 } as const;
 ```
 
-**Correct (모두 `const` 화살표에 블록 본문):**
+**Correct (모두 `const` 화살표에 블록 본문을 씁니다):**
 
 ```ts
 export const toTrimmedTitle = (rawTitle: string): string => {
@@ -123,7 +123,7 @@ const decorate = (title: string): string => {
 };
 ```
 
-**Correct (객체 프로퍼티의 함수는 화살표. 인라인 콜백은 한 줄):**
+**Correct (객체 프로퍼티의 함수는 화살표, 인라인 콜백은 한 줄로 씁니다):**
 
 ```ts
 export const cell_formatter_by_value_type = {
@@ -140,7 +140,7 @@ export const toProductIds = (products: Product[]): string[] => {
 };
 ```
 
-**Correct (클래스 메서드와 제너레이터는 그대로 둠):**
+**Correct (클래스 메서드와 제너레이터는 그대로 둡니다):**
 
 ```ts
 export class ProductCursor {

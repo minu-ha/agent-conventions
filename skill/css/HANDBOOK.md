@@ -94,7 +94,7 @@
 | 별도 합의가 없음 | 일반 CSS. `.module.css`를 새로 만들지 않고 클래스를 `styles.foo`처럼 객체 속성으로 참조하지 않습니다 |
 | CSS Modules가 공식 표준이고 그에 맞는 이름 규칙과 실행 규칙이 따로 있음 | 그 프로젝트 규칙이 이 기본값보다 앞섭니다 |
 
-**Incorrect (프로젝트 표준이 없는데도 CSS Modules를 기본처럼 사용):**
+**Incorrect (프로젝트 표준이 없는데도 CSS Modules를 기본처럼 씁니다):**
 
 ```tsx
 import styles from "./catalog-index.module.css";
@@ -114,7 +114,7 @@ import styles from "./catalog-index.module.css";
 }
 ```
 
-**Correct (기본은 일반 CSS와 전역에서 고유한 클래스 이름을 사용):**
+**Correct (기본으로 일반 CSS와 전역 고유 클래스 이름을 씁니다):**
 
 ```tsx
 import {clsx} from "clsx";
@@ -164,7 +164,7 @@ import "./pg-catalog-index.css";
 
 `selector-class-pattern`에 이 문법을 정규식으로 넣으면 기계가 검사합니다.
 
-**Incorrect (식별자, 요소, 수정자에 snake_case와 kebab-case가 섞임):**
+**Incorrect (식별자, 요소, 수정자에 snake_case와 kebab-case가 섞입니다):**
 
 ```txt
 ui_tag_list__root
@@ -176,7 +176,7 @@ pg_catalogDetail__main-content
 pg_catalogDetail__main--route_active
 ```
 
-**Correct (범위는 소문자로 쓰고 식별자, 요소, 수정자는 camelCase로 씀):**
+**Correct (범위는 소문자로 쓰고 식별자, 요소, 수정자는 camelCase로 씁니다):**
 
 ```txt
 ui_tagList__root
@@ -204,7 +204,7 @@ pg_catalogDetail__main--routeActive
 수정자를 붙일 자격이 있는지는 `composition-do-not-build-structural-variants-with-modifiers` 규칙이 정합니다.
 여기서는 붙이기로 정한 이름이 역할을 가리키는지만 봅니다.
 
-**Incorrect (역할 대신 구조나 치수에 기대는 이름):**
+**Incorrect (역할 대신 구조나 치수로 이름을 짓습니다):**
 
 ```txt
 ui_card__wrapper
@@ -212,7 +212,7 @@ ui_card__box
 ui_card__body--gap12
 ```
 
-**Correct (역할과 상태를 기준으로 이름을 붙임):**
+**Correct (역할과 상태를 기준으로 이름을 붙입니다):**
 
 ```txt
 ui_card__toolbar
@@ -245,7 +245,7 @@ CSS는 그 화면의 이름을 식별자에 그대로 적습니다.
 충돌이 실제로 생겼을 때만 최소한으로 덧붙입니다.
 미리 붙이면 깊이만큼 식별자가 자라서 충돌을 걱정하기 전에 읽기 어려워집니다.
 
-**Incorrect (화면 이름이 아닌 식별자):**
+**Incorrect (화면 이름이 아닌 식별자를 씁니다):**
 
 ```txt
 pg_shell__body    <- 역할 낱말이라 어느 화면인지 안 나옴
@@ -253,14 +253,14 @@ pg_doc__content   <- 라우트에 없는 줄임말
 pg_x__root        <- 되짚을 이름이 없음
 ```
 
-**Incorrect (충돌이 없는데도 부모 식별자를 미리 붙임):**
+**Incorrect (충돌이 없는데도 부모 식별자를 미리 붙입니다):**
 
 ```txt
 pg_detailSalesTrendPanelOverviewSection__root
 pg_detailSalesTrendPanelSummaryBand__root
 ```
 
-**Correct (뼈대는 화면 식별자, 컴포넌트는 자기 식별자):**
+**Correct (뼈대는 화면 식별자, 컴포넌트는 자기 식별자를 씁니다):**
 
 ```txt
 posts index page   -> pg_postsIndex__root
@@ -271,7 +271,7 @@ overview section   -> pg_overviewSection__root
 summary band       -> pg_summaryBand__root
 ```
 
-**Correct (같은 식별자가 실제로 두 화면에 생겼을 때만 구분):**
+**Correct (같은 식별자가 실제로 두 화면에 생겼을 때만 구분합니다):**
 
 ```txt
 pg_detailOverviewSection__root
@@ -301,7 +301,7 @@ CSS 파일마다 범위_식별자가 하나입니다.
 - 자기 CSS 파일이 있으면 자기 식별자를 만듭니다.
   부모 식별자를 계속 쓰려면 스타일도 부모 파일에 둡니다.
 
-**Incorrect (이미 다른 소유자가 쓰는 `scope_slug`를 재사용):**
+**Incorrect (이미 다른 소유자가 쓰는 `scope_slug`를 재사용합니다):**
 
 ```txt
 /* catalog/index route */
@@ -311,7 +311,7 @@ pg_catalogIndex__header
 pg_catalogIndex__toolbar
 ```
 
-**Correct (소유자가 다르면 별도 식별자를 부여):**
+**Correct (소유자가 다르면 별도 식별자를 부여합니다):**
 
 ```txt
 /* catalog/index route */
@@ -352,21 +352,21 @@ pg_dashboardIndex__header
 파일이 어느 최상위 폴더에 있어야 하는지는 활성화된 프레임워크 규약이 판단하고, 접두사는 그 폴더를 그대로 따릅니다.
 파일 이름의 `_` 표식도 그 규약이 정합니다.
 
-**Incorrect (최상위 폴더 대신 하위 폴더를 보고 `widget` 부품을 화면 범위로 내림):**
+**Incorrect (최상위 폴더 대신 하위 폴더를 보고 `widget` 부품을 화면 범위로 내립니다):**
 
 ```txt
 component/widget/chart/_wg-chart-header.css
   pg_chartHeader__root
 ```
 
-**Incorrect (`src/page` 아래 파일에 재사용 예상으로 `wg_`를 붙임):**
+**Incorrect (`src/page` 아래 파일에 재사용 예상으로 `wg_`를 붙입니다):**
 
 ```txt
 page/detail/_pg-sales-trend-panel.css
   wg_salesTrendPanel__root
 ```
 
-**Correct (소유 레이어대로 접두사를 붙임):**
+**Correct (소유 레이어대로 접두사를 붙입니다):**
 
 ```txt
 page/detail/pg-detail.css
@@ -423,7 +423,7 @@ component/ui/button/ui-button.css
 기계 검증은 `selector-disallowed-list`가 최상위에 홀로 둔 남의 클래스를 잡습니다.
 설정 전문은 `tooling-configure-stylelint-to-enforce-these-rules` 규칙이 정합니다.
 
-**Incorrect (최상위 블록 없이 라이브러리 클래스를 바로 씀):**
+**Incorrect (최상위 블록 없이 라이브러리 클래스를 바로 씁니다):**
 
 ```css
 .ant-tree-node-content-wrapper {
@@ -435,7 +435,7 @@ component/ui/button/ui-button.css
 }
 ```
 
-**Incorrect (최상위 블록 없이 다른 `scope_slug`의 클래스를 바로 씀):**
+**Incorrect (최상위 블록 없이 다른 `scope_slug`의 클래스를 바로 씁니다):**
 
 ```css
 /* page/detail/pg-detail.css */
@@ -448,7 +448,7 @@ component/ui/button/ui-button.css
 }
 ```
 
-**Incorrect (최상위 블록을 열지 않고 바깥에서 이어 씀):**
+**Incorrect (최상위 블록을 열지 않고 바깥에서 이어 씁니다):**
 
 ```css
 .pg_treePanel__root .ant-tree-title {
@@ -456,7 +456,7 @@ component/ui/button/ui-button.css
 }
 ```
 
-**Correct (내 최상위 블록 안에서 외부 라이브러리 DOM을 겨냥):**
+**Correct (내 최상위 블록 안에서 외부 라이브러리 DOM을 겨냥합니다):**
 
 ```css
 .pg_treePanel__root {
@@ -471,7 +471,7 @@ component/ui/button/ui-button.css
 }
 ```
 
-**Correct (다른 `scope_slug`의 클래스도 내 최상위 블록 안에서 겨냥):**
+**Correct (다른 `scope_slug`의 클래스도 내 최상위 블록 안에서 겨냥합니다):**
 
 ```css
 /* page/detail/pg-detail.css */
@@ -484,7 +484,7 @@ component/ui/button/ui-button.css
 }
 ```
 
-**Correct (중첩된 자손까지 적용되면 안 될 때 직계로 좁힘):**
+**Correct (중첩된 자손까지 적용되면 안 될 때 직계로 좁힙니다):**
 
 ```css
 .pg_treePanel__toolbar {
@@ -525,7 +525,7 @@ component/ui/button/ui-button.css
 컴포넌트가 무엇을 노출하는지는 `composition-inject-classes-only-at-the-entry-point` 규칙이 정합니다.
 여기서는 사용처가 세 가지 가운데 무엇을 고를지만 봅니다.
 
-**Incorrect (첫째 행으로 풀리는데도 마지막 선택지부터 씀):**
+**Incorrect (첫째 행으로 풀리는데도 마지막 선택지부터 씁니다):**
 
 ```css
 /* page/detail/pg-detail.css */
@@ -537,7 +537,7 @@ component/ui/button/ui-button.css
 }
 ```
 
-**Correct (최상위 배치는 사용처가 자기 클래스로 잡음):**
+**Correct (최상위 배치는 사용처가 자기 클래스로 잡습니다):**
 
 ```tsx
 <WgChartCard className={clsx("pg_detail__chartCard")} />
@@ -551,7 +551,7 @@ component/ui/button/ui-button.css
 }
 ```
 
-**Correct (여러 화면이 쓰는 모양은 소유자가 `variant` 프롭으로 노출함):**
+**Correct (여러 화면이 쓰는 모양은 소유자가 `variant` 프롭으로 노출합니다):**
 
 ```tsx
 <WgChartCard variant="muted" />
@@ -564,7 +564,7 @@ component/ui/button/ui-button.css
 }
 ```
 
-**Correct (레이어 판정이 화면 소유면 화면 안으로 내려 소유자를 하나로 만듦):**
+**Correct (레이어 판정이 화면 소유면 화면 안으로 내려 소유자를 하나로 만듭니다):**
 
 ```txt
 before
@@ -602,7 +602,7 @@ TSX에서 `className`은 `clsx()`로 조립합니다.
 
 클래스 이름 안에 값을 끼워 넣지 않는 것은 `composition-write-modifiers-as-conditions` 규칙이 정합니다.
 
-**Incorrect (문자열 연결로 클래스 조합을 숨김):**
+**Incorrect (문자열 연결로 클래스 조합을 숨깁니다):**
 
 ```tsx
 <button className={"pg_catalogIndex__listButton " + (isActive ? "pg_catalogIndex__listButton--active" : "")}>
@@ -610,7 +610,7 @@ TSX에서 `className`은 `clsx()`로 조립합니다.
 </button>
 ```
 
-**Correct (기본 클래스와 수정자를 `clsx()`로 조합):**
+**Correct (기본 클래스와 수정자를 `clsx()`로 조합합니다):**
 
 ```tsx
 <button
@@ -660,21 +660,21 @@ TSX에서 `className`은 `clsx()`로 조립합니다.
 두 번째 소유자가 같은 이름을 쓰게 되는 순간 수정자로 올립니다.
 그 전까지는 요소 클래스로 둡니다.
 
-**Incorrect (그 화면 하나를 고치려고 수정자를 붙임):**
+**Incorrect (그 화면 하나를 고치려고 수정자를 붙입니다):**
 
 ```tsx
 <div className={clsx("pg_catalogDetail__section", "pg_catalogDetail__section--compactTop")} />
 <div className={clsx("pg_catalogDetail__aside", "pg_catalogDetail__aside--marginLeft0")} />
 ```
 
-**Correct (한 곳만의 보정은 역할 이름이 있는 요소로 분리):**
+**Correct (한 곳만의 보정은 역할 이름이 있는 요소로 분리합니다):**
 
 ```tsx
 <div className={clsx("pg_catalogDetail__detailSection")} />
 <div className={clsx("pg_catalogDetail__flushAside")} />
 ```
 
-**Correct (상태와 반복되는 모양만 수정자로):**
+**Correct (상태와 반복되는 모양만 수정자로 씁니다):**
 
 ```tsx
 <div className={clsx("ui_table__root", isDense && "ui_table__root--dense")} />
@@ -698,13 +698,13 @@ TSX에서 `className`은 `clsx()`로 조립합니다.
 수정자가 상태를 표현할 자격이 있는지는
 `composition-do-not-build-structural-variants-with-modifiers` 규칙이 판정합니다.
 
-**Incorrect (상태 의미를 별도 클래스 역할처럼 합쳐 버림):**
+**Incorrect (상태 의미를 별도 클래스 역할처럼 합쳐 버립니다):**
 
 ```tsx
 <div className={clsx("pg_catalogIndex__listButtonActive")} />
 ```
 
-**Correct (기본 클래스와 상태 수정자를 분리):**
+**Correct (기본 클래스와 상태 수정자를 분리합니다):**
 
 ```tsx
 <div className={clsx("pg_catalogIndex__listButton", isActive && "pg_catalogIndex__listButton--active")} />
@@ -742,7 +742,7 @@ TSX에서 `className`은 `clsx()`로 조립합니다.
 사용처 쪽에서 무엇을 고를지는 `ownership-change-other-owners-through-their-api` 규칙이 정합니다.
 `className`을 받지 않는 컴포넌트는 `composition-do-not-add-wrapper-elements-for-styling` 규칙이 다룹니다.
 
-**Incorrect (내부 노드마다 클래스 프롭을 열어 창구를 늘림):**
+**Incorrect (내부 노드마다 클래스 프롭을 열어 창구를 늘립니다):**
 
 ```tsx
 export interface UiCollapseProps {
@@ -753,7 +753,7 @@ export interface UiCollapseProps {
 }
 ```
 
-**Incorrect (받은 `className`을 내부 노드로 넘김):**
+**Incorrect (받은 `className`을 내부 노드로 넘깁니다):**
 
 ```tsx
 export const UiCollapse = (props: UiCollapseProps) => {
@@ -768,7 +768,7 @@ export const UiCollapse = (props: UiCollapseProps) => {
 };
 ```
 
-**Correct (`className`은 최상위 클래스와 합치고, 변형은 필요한 노드마다 수정자로 붙임):**
+**Correct (`className`은 최상위 클래스와 합치고, 변형은 필요한 노드마다 수정자로 붙입니다):**
 
 ```tsx
 export interface UiCollapseProps {
@@ -806,7 +806,7 @@ export const UiCollapse = (props: UiCollapseProps) => {
 }
 ```
 
-**Correct (사용처는 최상위 스타일만 주고 내부 의도는 프롭으로 넘김):**
+**Correct (사용처는 최상위 스타일만 주고 내부 의도는 프롭으로 넘깁니다):**
 
 ```tsx
 <UiCollapse className={clsx("pg_postFilterDialog__collapse")} variant="compact" title="필터">
@@ -843,7 +843,7 @@ export const UiCollapse = (props: UiCollapseProps) => {
 | 우리가 만든 컴포넌트 | `className`을 받도록 먼저 고칩니다 |
 | `className`을 받지 않는 외부 라이브러리 컴포넌트 | 감싸기가 마지막 수단으로 남는 유일한 경우입니다. 래퍼에 역할 이름을 붙이고 왜 감쌌는지 주석으로 남깁니다 |
 
-**Incorrect (래퍼 `div`로 최상위 스타일을 우회):**
+**Incorrect (래퍼 `div`로 최상위 스타일을 우회합니다):**
 
 ```tsx
 <div className={clsx("pg_postIndex__collapseWrap")}>
@@ -857,7 +857,7 @@ export const UiCollapse = (props: UiCollapseProps) => {
 }
 ```
 
-**Incorrect (역할 없는 이름의 래퍼를 늘림):**
+**Incorrect (역할 없는 이름의 래퍼를 늘립니다):**
 
 ```tsx
 <div className={clsx("pg_postIndex__box")}>
@@ -867,7 +867,7 @@ export const UiCollapse = (props: UiCollapseProps) => {
 </div>
 ```
 
-**Correct (우리 컴포넌트면 `className` 계약을 추가):**
+**Correct (우리 컴포넌트면 `className` 계약을 추가합니다):**
 
 ```tsx
 export interface UiCollapseProps {
@@ -892,7 +892,7 @@ export const UiCollapse = (props: UiCollapseProps) => {
 }
 ```
 
-**Correct (외부 라이브러리가 `className`을 받지 않으면 역할 이름을 붙여 감쌈):**
+**Correct (외부 라이브러리가 `className`을 받지 않으면 역할 이름을 붙여 감쌉니다):**
 
 ```tsx
 {/**
@@ -940,7 +940,7 @@ export const UiCollapse = (props: UiCollapseProps) => {
 래퍼가 `HTMLAttributes`를 `extends`하면 `style`이 함께 열립니다.
 `Omit`으로 뺄 수는 있지만 DOM 표면을 열어 두려고 그대로 두므로 이 규칙을 리뷰가 봅니다.
 
-**Incorrect (인라인으로 꾸밈):**
+**Incorrect (인라인으로 꾸밉니다):**
 
 ```tsx
 <section className={clsx("pg_report__summary")} style={{ marginTop: 16, color: "#c00" }}>
@@ -948,7 +948,7 @@ export const UiCollapse = (props: UiCollapseProps) => {
 </section>
 ```
 
-**Correct (스타일시트에 두고 수정자로 가름):**
+**Correct (스타일시트에 두고 수정자로 가릅니다):**
 
 ```tsx
 <section className={clsx("pg_report__summary", isCritical && "pg_report__summary--critical")}>
@@ -966,7 +966,7 @@ export const UiCollapse = (props: UiCollapseProps) => {
 }
 ```
 
-**Correct (실행 중에만 아는 수치를 CSS 변수 하나로 넘김):**
+**Correct (실행 중에만 아는 수치를 CSS 변수 하나로 넘깁니다):**
 
 ```tsx
 <div
@@ -1017,7 +1017,7 @@ CSS에서 수정자를 지울 때 그 클래스를 쓰는 자리가 검색에 �
 수정자를 붙일 자격은 `composition-do-not-build-structural-variants-with-modifiers` 규칙이 정합니다.
 여기서는 붙이기로 정한 수정자를 어떤 형태로 적을지만 봅니다.
 
-**Incorrect (클래스 이름을 값으로 조립함):**
+**Incorrect (클래스 이름을 값으로 조립합니다):**
 
 ```tsx
 export const UiTooltip = (props: UiTooltipProps) => {
@@ -1029,7 +1029,7 @@ export const UiTooltip = (props: UiTooltipProps) => {
 };
 ```
 
-**Incorrect (수정자가 없는 값까지 조립해 CSS에 없는 클래스를 붙임):**
+**Incorrect (수정자가 없는 값까지 조립해 CSS에 없는 클래스를 붙입니다):**
 
 ```tsx
 type SalesTone = "positive" | "negative" | "neutral" | "unknown";
@@ -1047,7 +1047,7 @@ type SalesTone = "positive" | "negative" | "neutral" | "unknown";
 }
 ```
 
-**Incorrect (라이브러리가 정하는 값으로 수정자를 만듦):**
+**Incorrect (라이브러리가 정하는 값으로 수정자를 만듭니다):**
 
 ```tsx
 export interface UiButtonProps {
@@ -1060,7 +1060,7 @@ export const UiButton = (props: UiButtonProps) => {
 };
 ```
 
-**Correct (값마다 한 줄로 나열함):**
+**Correct (값마다 한 줄로 나열합니다):**
 
 ```tsx
 export interface UiTooltipProps {
@@ -1083,7 +1083,7 @@ export const UiTooltip = (props: UiTooltipProps) => {
 };
 ```
 
-**Correct (CSS에 수정자가 있는 두 값만 적고 나머지는 기본 모습을 씀):**
+**Correct (CSS에 수정자가 있는 두 값만 적고 나머지는 기본 모습을 씁니다):**
 
 ```tsx
 <span
@@ -1097,7 +1097,7 @@ export const UiTooltip = (props: UiTooltipProps) => {
 </span>;
 ```
 
-**Correct (라이브러리가 정하는 값은 수정자로 만들지 않고 그대로 넘김):**
+**Correct (라이브러리가 정하는 값은 수정자로 만들지 않고 그대로 넘깁니다):**
 
 ```tsx
 export const UiButton = (props: UiButtonProps) => {
@@ -1105,7 +1105,7 @@ export const UiButton = (props: UiButtonProps) => {
 };
 ```
 
-**Correct (같은 값이 요소 셋의 수정자를 정하면 요소마다 나열을 반복함):**
+**Correct (같은 값이 요소 셋의 수정자를 정하면 요소마다 나열을 반복합니다):**
 
 ```tsx
 export interface WgFlowNodeProps {
@@ -1189,7 +1189,7 @@ export const WgFlowNode = (props: WgFlowNodeProps) => {
 기계 검증은 `max-nesting-depth: 1`입니다.
 최상위가 0겹입니다.
 
-**Incorrect (중첩을 두 겹 이상 열어 실제 선택자를 숨김):**
+**Incorrect (중첩을 두 겹 이상 열어 실제 선택자를 숨깁니다):**
 
 ```css
 .pg_salesPanel__spreadButton {
@@ -1203,7 +1203,7 @@ export const WgFlowNode = (props: WgFlowNodeProps) => {
 }
 ```
 
-**Incorrect (다른 요소의 가상 요소를 `&`로 다시 엶):**
+**Incorrect (다른 요소의 가상 요소를 `&`로 다시 엽니다):**
 
 ```css
 .pg_salesPanel__spreadButton {
@@ -1215,7 +1215,7 @@ export const WgFlowNode = (props: WgFlowNodeProps) => {
 }
 ```
 
-**Correct (`&`는 한 번, 그다음 경로는 같은 줄에 이어 씀):**
+**Correct (`&`는 한 번, 그다음 경로는 같은 줄에 이어 씁니다):**
 
 ```css
 .pg_salesPanel__spreadBox {
@@ -1241,7 +1241,7 @@ export const WgFlowNode = (props: WgFlowNodeProps) => {
 }
 ```
 
-**Correct (외부 라이브러리 경로도 깊이와 무관하게 한 줄로 씀):**
+**Correct (외부 라이브러리 경로도 깊이와 무관하게 한 줄로 씁니다):**
 
 ```css
 .pg_orderTable__root {
@@ -1288,7 +1288,7 @@ TSX에서 그 지점이 보이므로 "이 마크업을 우리가 쓰는가"를 �
 
 드문 경우이므로 그 주석이 곧 "여기는 우리가 쓰지 않는 마크업"이라는 표시가 됩니다.
 
-**Incorrect (우리가 렌더하는 마크업을 요소 선택자로 겨냥함):**
+**Incorrect (우리가 렌더하는 마크업을 요소 선택자로 겨냥합니다):**
 
 ```css
 .pg_catalogIndex__toolbar {
@@ -1306,7 +1306,7 @@ TSX에서 그 지점이 보이므로 "이 마크업을 우리가 쓰는가"를 �
 }
 ```
 
-**Incorrect (요소 선택자를 최상위에 둠):**
+**Incorrect (요소 선택자를 최상위에 둡니다):**
 
 ```css
 .wg_productDetail__prose h2 {
@@ -1314,7 +1314,7 @@ TSX에서 그 지점이 보이므로 "이 마크업을 우리가 쓰는가"를 �
 }
 ```
 
-**Correct (우리가 렌더하면 클래스를 붙임):**
+**Correct (우리가 렌더하면 클래스를 붙입니다):**
 
 ```tsx
 <div className={clsx("pg_catalogIndex__toolbar")}>
@@ -1337,7 +1337,7 @@ TSX에서 그 지점이 보이므로 "이 마크업을 우리가 쓰는가"를 �
 }
 ```
 
-**Correct (마크업을 우리가 쓰지 않으면 래퍼 블록 안에서 요소 선택자를 씀):**
+**Correct (마크업을 우리가 쓰지 않으면 래퍼 블록 안에서 요소 선택자를 씁니다):**
 
 ```tsx
 <div
@@ -1397,7 +1397,7 @@ TSX에서 그 지점이 보이므로 "이 마크업을 우리가 쓰는가"를 �
 | 목록에 든 선택자를 아래에서 단독으로 다시 엶 | `no-duplicate-selectors`의 `disallowInList` 옵션. 아래 첫 Incorrect 예시가 그 경우입니다 |
 | 중복 없이 묶기만 함 | 리뷰. 쉼표 묶음 자체는 막지 않습니다 |
 
-**Incorrect (`,`로 공통 선언을 묶고 아래에서 일부만 다시 엶):**
+**Incorrect (`,`로 공통 선언을 묶고 아래에서 일부만 다시 엽니다):**
 
 ```css
 .pg_salesPanel__glyph--line,
@@ -1413,7 +1413,7 @@ TSX에서 그 지점이 보이므로 "이 마크업을 우리가 쓰는가"를 �
 }
 ```
 
-**Incorrect (한 대상의 진입 조건을 `,`로 나열):**
+**Incorrect (한 대상의 진입 조건을 `,`로 나열합니다):**
 
 ```css
 .pg_salesPanel__spreadButton {
@@ -1424,7 +1424,7 @@ TSX에서 그 지점이 보이므로 "이 마크업을 우리가 쓰는가"를 �
 }
 ```
 
-**Correct (각 클래스가 자기 선언을 전부 가짐):**
+**Correct (각 클래스가 자기 선언을 전부 가집니다):**
 
 ```css
 .pg_salesPanel__glyph--line {
@@ -1449,7 +1449,7 @@ TSX에서 그 지점이 보이므로 "이 마크업을 우리가 쓰는가"를 �
 }
 ```
 
-**Correct (진입 조건마다 블록을 따로 열고 선언을 그대로 씀):**
+**Correct (진입 조건마다 블록을 따로 열고 선언을 그대로 씁니다):**
 
 ```css
 .pg_salesPanel__spreadButton {
@@ -1491,7 +1491,7 @@ TSX에서 그 지점이 보이므로 "이 마크업을 우리가 쓰는가"를 �
 
 기계 검증은 `no-duplicate-selectors`입니다.
 
-**Incorrect (같은 클래스를 파일 두 곳에서 열어 선언 순서에 의존함):**
+**Incorrect (같은 클래스를 파일 두 곳에서 열어 선언 순서에 의존합니다):**
 
 ```css
 .pg_catalogIndex__toolbar {
@@ -1509,7 +1509,7 @@ TSX에서 그 지점이 보이므로 "이 마크업을 우리가 쓰는가"를 �
 }
 ```
 
-**Correct (한 블록에 모으고 최종 값만 남김):**
+**Correct (한 블록에 모으고 최종 값만 남깁니다):**
 
 ```css
 .pg_catalogIndex__toolbar {
@@ -1523,7 +1523,7 @@ TSX에서 그 지점이 보이므로 "이 마크업을 우리가 쓰는가"를 �
 }
 ```
 
-**Correct (조건이 다르면 별개 블록으로 둠):**
+**Correct (조건이 다르면 별개 블록으로 둡니다):**
 
 ```css
 .pg_catalogIndex__toolbar {
@@ -1569,7 +1569,7 @@ TSX에서 그 지점이 보이므로 "이 마크업을 우리가 쓰는가"를 �
 가상 클래스를 어디에 쓰는지는 `selector-nest-dom-state-in-the-owning-block` 규칙이 정합니다.
 `:not()`은 `selector-do-not-negate-with-not` 규칙이 막습니다.
 
-**Incorrect (앱이 아는 상태를 속성 선택자로 겨냥함):**
+**Incorrect (앱이 아는 상태를 속성 선택자로 겨냥합니다):**
 
 ```css
 .pg_assetIndex__card {
@@ -1585,7 +1585,7 @@ TSX에서 그 지점이 보이므로 "이 마크업을 우리가 쓰는가"를 �
 }
 ```
 
-**Incorrect (같은 상태를 속성과 수정자 두 표기로 씀):**
+**Incorrect (같은 상태를 속성과 수정자 두 표기로 씁니다):**
 
 ```css
 .pg_assetIndex__card--selected {
@@ -1597,7 +1597,7 @@ TSX에서 그 지점이 보이므로 "이 마크업을 우리가 쓰는가"를 �
 }
 ```
 
-**Correct (`aria-*`는 마크업에 두고 스타일은 수정자로 겨냥):**
+**Correct (`aria-*`는 마크업에 두고 스타일은 수정자로 겨냥합니다):**
 
 ```tsx
 <button
@@ -1657,7 +1657,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 | `selector-disallowed-list` | 최상위에 다시 연 상태 가상 클래스 |
 | `property-disallowed-list` | 지역 변수 선언 |
 
-**Incorrect (가상 클래스를 최상위 선택자로 다시 엶):**
+**Incorrect (가상 클래스를 최상위 선택자로 다시 엽니다):**
 
 ```css
 .wg_siteHeader__brandLink {
@@ -1673,7 +1673,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
-**Correct (상태를 같은 블록 안 `&:`로 접고 상태마다 블록을 따로 엶):**
+**Correct (상태를 같은 블록 안 `&:`로 접고 상태마다 블록을 따로 엽니다):**
 
 ```css
 .wg_siteHeader__brandLink {
@@ -1691,7 +1691,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
-**Correct (조상 상태가 자손을 바꾸면 같은 소유자 안에서 결합자 하나):**
+**Correct (조상 상태가 자손을 바꾸면 같은 소유자 안에서 결합자 하나만 씁니다):**
 
 ```css
 .wg_siteHeader__brandMark {
@@ -1736,7 +1736,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 
 무엇이 DOM 상태이고 무엇이 앱 상태인지는 `selector-use-pseudo-classes-for-dom-owned-states` 규칙이 정합니다.
 
-**Incorrect (조상 수정자로 자손 모습을 정해 부정 조건과 중첩이 따라옴):**
+**Incorrect (조상 수정자로 자손 모습을 정해 부정 조건과 중첩이 따라옵니다):**
 
 ```css
 .pg_salesPanel__spreadButton:not(.pg_salesPanel__spreadButton--checked) {
@@ -1751,7 +1751,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
-**Correct (각 요소의 수정자가 그 요소의 모습을 가짐):**
+**Correct (각 요소의 수정자가 그 요소의 모습을 가집니다):**
 
 ```css
 .pg_salesPanel__spreadBox {
@@ -1785,7 +1785,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
-**Correct (DOM 상태도 기본을 먼저 두고 그 상태만 덮음):**
+**Correct (DOM 상태도 기본을 먼저 두고 그 상태만 덮습니다):**
 
 ```css
 .pg_assetIndex__cardButton {
@@ -1821,7 +1821,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 포커스 표시 자체는 `a11y-always-provide-a-visible-focus-indicator` 규칙이 담당합니다.
 무엇을 수정자로 두고 무엇을 가상 클래스로 둘지는 `selector-use-pseudo-classes-for-dom-owned-states` 규칙이 정합니다.
 
-**Incorrect (상호작용 상태를 수정자 아래로 옮겨 적용 대상을 좁힘):**
+**Incorrect (상호작용 상태를 수정자 아래로 옮겨 적용 대상을 좁힙니다):**
 
 ```css
 .ui_button__root--active {
@@ -1837,7 +1837,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
-**Correct (도메인 상태와 상호작용 상태를 분리하고 포커스를 보존):**
+**Correct (도메인 상태와 상호작용 상태를 분리하고 포커스를 보존합니다):**
 
 ```css
 .ui_button__root--active {
@@ -1899,7 +1899,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 
 요청에 없는 CSS 변수를 이 규칙 때문에 새로 만들지 않습니다.
 
-**Incorrect (공통 토큰에 대체값을 붙여 값을 두 곳으로 흩음):**
+**Incorrect (공통 토큰에 대체값을 붙여 값을 두 곳에 둡니다):**
 
 ```css
 .pg_postFilterDialog__panel {
@@ -1908,7 +1908,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
-**Incorrect (주입이 보장되지 않는 변수를 대체값 없이 씀):**
+**Incorrect (주입이 보장되지 않는 변수를 대체값 없이 씁니다):**
 
 ```css
 .pg_postFilterDialog__collapse {
@@ -1918,7 +1918,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
-**Correct (공통 토큰은 대체값 없이, 그 밖은 대체값과 함께):**
+**Correct (공통 토큰은 대체값 없이, 그 밖은 대체값과 함께 씁니다):**
 
 ```css
 /* src/style/token.css — 공통 토큰 목록의 단일 출처 */
@@ -1979,7 +1979,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 선택자 쪽에서 같은 판단을 하는 규칙이 `selector-do-not-group-classes-with-commas`입니다.
 여러 클래스를 `,`로 묶어 공통 선언을 빼지 않고 각 클래스에 중복으로 씁니다.
 
-**Incorrect (한 파일 안 반복을 조상에 선언한 지역 변수로 감쌈):**
+**Incorrect (한 파일 안 반복을 조상에 선언한 지역 변수로 감쌉니다):**
 
 ```css
 .pg_catalogIndex__root {
@@ -1995,7 +1995,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
-**Incorrect (상태 전달을 위해 지역 변수를 만듦):**
+**Incorrect (상태를 전달하려고 지역 변수를 만듭니다):**
 
 ```css
 .pg_catalogIndex__rowBadge {
@@ -2011,7 +2011,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
-**Incorrect (여러 파일이 쓰는 값을 각 파일에 하드코딩):**
+**Incorrect (여러 파일이 쓰는 값을 각 파일에 하드코딩합니다):**
 
 ```css
 /* pg-catalog-index.css */
@@ -2027,7 +2027,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
-**Correct (여러 파일이 쓰는 값은 전역 공통 토큰으로):**
+**Correct (여러 파일이 쓰는 값은 전역 공통 토큰으로 둡니다):**
 
 ```css
 /* src/style/token.css */
@@ -2043,7 +2043,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
-**Correct (한 파일 안 반복은 값을 그대로 두고, 상태 전달은 결합자 하나로):**
+**Correct (한 파일 안 반복은 값을 그대로 두고, 상태 전달은 결합자 하나로 풉니다):**
 
 ```css
 .pg_catalogIndex__rowBadge {
@@ -2108,7 +2108,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 - 화면 밖으로 나가야 하는 것은 층을 올리지 말고 포털로 옮깁니다.
   그러면 조상의 쌓임 맥락에서 벗어납니다.
 
-**Incorrect (숫자를 직접 쓰고 경쟁으로 올림):**
+**Incorrect (숫자를 직접 쓰고 경쟁으로 올립니다):**
 
 ```css
 .pg_products__toolbar {
@@ -2122,7 +2122,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
-**Correct (층 토큰만 씀):**
+**Correct (층 토큰만 씁니다):**
 
 ```css
 /* src/style/token.css */
@@ -2188,7 +2188,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 **다크 모드를 지원하지 않기로 했으면 `prefers-color-scheme`을 아예 쓰지 않습니다.**
 일부 화면만 대응하면 같은 앱 안에서 화면마다 배경이 달라져 지원하지 않는 것보다 나쁩니다.
 
-**Incorrect (컴포넌트 파일에서 테마를 분기):**
+**Incorrect (컴포넌트 파일에서 테마를 분기합니다):**
 
 ```css
 /* src/page/products/pg-products.css */
@@ -2201,7 +2201,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
-**Incorrect (값으로 이름을 짓고 그림자를 직접 적음):**
+**Incorrect (값으로 이름을 짓고 그림자를 직접 적습니다):**
 
 ```css
 :root {
@@ -2215,7 +2215,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
-**Correct (토큰 파일 한 곳에서만 값을 바꿈):**
+**Correct (토큰 파일 한 곳에서만 값을 바꿉니다):**
 
 ```css
 /* src/style/token.css */
@@ -2240,7 +2240,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
-**Correct (사용자가 고른 테마가 시스템 설정을 이김):**
+**Correct (사용자가 고른 테마가 시스템 설정을 이깁니다):**
 
 ```css
 /* src/style/token.css — [data-theme] 가 명시도로 @media 블록을 이긴다 */
@@ -2263,7 +2263,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
-**Correct (컴포넌트는 토큰만 씀):**
+**Correct (컴포넌트는 토큰만 씁니다):**
 
 ```css
 /* src/page/products/pg-products.css */
@@ -2323,7 +2323,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 `prefers-color-scheme`은 토큰 파일에서 최상위 `@media`로 씁니다.
 `values-switch-themes-by-changing-token-values` 규칙이 그 자리를 정합니다.
 
-**Incorrect (클래스 블록 안에 중첩해서 브레이크포인트가 흩어짐):**
+**Incorrect (클래스 블록 안에 중첩해서 브레이크포인트가 흩어집니다):**
 
 ```css
 .pg_products__toolbar {
@@ -2345,7 +2345,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
-**Correct (선언은 위, 브레이크포인트는 파일 아래 한 곳):**
+**Correct (선언은 위, 브레이크포인트는 파일 아래 한 곳에 둡니다):**
 
 ```css
 .pg_products__toolbar {
@@ -2375,7 +2375,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
-**Correct (브레이크포인트 안에서 상태를 한 겹 더 씀):**
+**Correct (브레이크포인트 안에서 상태를 한 겹 더 씁니다):**
 
 ```css
 @media (width < 1024px) {
@@ -2429,7 +2429,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 
 어디에 적을지는 `layout-group-breakpoints-at-the-file-bottom`이 정합니다.
 
-**Incorrect (두 방향을 섞어 겹치는 구간을 만듦):**
+**Incorrect (두 방향을 섞어 겹치는 구간을 만듭니다):**
 
 ```css
 .pg_products__toolbar {
@@ -2450,7 +2450,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
-**Incorrect (`max-width` 소수 보정과 좁은 쪽부터 쓴 순서):**
+**Incorrect (`max-width`를 소수로 보정하고 좁은 쪽부터 씁니다):**
 
 ```css
 @media (max-width: 639.98px) {
@@ -2466,7 +2466,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
-**Correct (구간을 읽는 법):**
+**Correct (구간을 이렇게 읽습니다):**
 
 ```txt
         640px      1024px     1440px            넓어짐 →
@@ -2476,7 +2476,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
    아래     좁은 노트북
 ```
 
-**Correct (기본 선언이 가장 넓고 넓은 쪽부터 좁혀 감):**
+**Correct (기본 선언이 가장 넓고 넓은 쪽부터 좁혀 갑니다):**
 
 ```css
 .pg_products__layout {
@@ -2520,7 +2520,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 - 로딩 대체 화면은 실제 내용과 같은 컨테이너 클래스 안에 넣습니다.
   높이를 대체 화면에만 따로 적으면 실제 내용이 들어올 때 그 값이 남아 레이아웃이 튑니다.
 
-**Incorrect (레이아웃 강제가 많고 기준 설명이 없음):**
+**Incorrect (레이아웃 강제가 많고 기준 설명이 없습니다):**
 
 ```css
 .pg_dashboard__toolbar {
@@ -2532,7 +2532,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
-**Correct (기준 컨테이너와 의도를 드러냄):**
+**Correct (기준 컨테이너와 의도를 드러냅니다):**
 
 ```css
 .pg_dashboard__toolbar {
@@ -2584,7 +2584,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 놓는 쪽에서 그 폭을 왜 고정하는지가 클래스명과 선언에서 읽혀야 합니다.
 `layout-keep-layout-intent-explicit` 규칙이 그 판정을 합니다.
 
-**Incorrect (버튼이 자기 폭을 뷰포트로 정함):**
+**Incorrect (버튼이 자기 폭을 뷰포트로 정합니다):**
 
 ```css
 .ui_button__root {
@@ -2607,7 +2607,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
-**Incorrect (열 개수를 브레이크포인트로 셈):**
+**Incorrect (열 개수를 브레이크포인트로 셉니다):**
 
 ```css
 .pg_products__grid {
@@ -2635,7 +2635,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
-**Correct (버튼은 자기 모양만, 폭은 놓는 쪽이 정함):**
+**Correct (버튼은 자기 모양만, 폭은 놓는 쪽이 정합니다):**
 
 ```css
 /* ui-button.css — 폭 얘기가 없다 */
@@ -2663,7 +2663,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
-**Correct (열 개수는 자리가 정함):**
+**Correct (열 개수는 자리가 정합니다):**
 
 ```css
 .pg_products__grid {
@@ -2673,7 +2673,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
-**Correct (값이 매끄럽게 변하면 `clamp`):**
+**Correct (값이 매끄럽게 변하면 `clamp`를 씁니다):**
 
 ```css
 .pg_products__hero {
@@ -2715,7 +2715,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 포커스 표시를 `--focused` 같은 앱 수정자로 대체하지 않습니다.
 키보드로 들어왔는지 포인터로 들어왔는지는 브라우저만 알 수 있어서 앱이 재현할 수 없습니다.
 
-**Incorrect (포커스 링을 제거하고 대체를 두지 않음):**
+**Incorrect (포커스 링을 제거하고 대체를 두지 않습니다):**
 
 ```css
 .ui_button__root {
@@ -2725,7 +2725,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
-**Incorrect (색만 바꾸고 수정자 안에만 둠):**
+**Incorrect (색만 바꾸고 수정자 안에만 둡니다):**
 
 ```css
 .ui_button__root--active {
@@ -2736,7 +2736,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
-**Correct (`:focus-visible`에 형태가 바뀌는 표시를 기본 블록에 둠):**
+**Correct (`:focus-visible`에 형태가 바뀌는 표시를 기본 블록에 둡니다):**
 
 ```css
 .ui_button__root {
@@ -2749,7 +2749,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
-**Correct (`outline`을 덮어쓰면 링으로 대체함):**
+**Correct (`outline`을 덮어쓰면 링으로 대체합니다):**
 
 ```css
 .ui_input__field {
@@ -2806,7 +2806,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 - 애니메이션으로 바꾸는 속성은 `transform`과 `opacity`로 둡니다.
   `width`나 `top`을 애니메이션하면 매 프레임 레이아웃을 다시 계산합니다.
 
-**Incorrect (전역 이름을 겹치게 쓰고 시간을 직접 적음):**
+**Incorrect (전역 이름을 겹치게 쓰고 시간을 직접 적습니다):**
 
 ```css
 @keyframes fadeIn {
@@ -2820,7 +2820,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
-**Correct (소유자를 붙인 이름과 토큰):**
+**Correct (소유자를 붙인 이름과 토큰을 씁니다):**
 
 ```css
 @keyframes pg_products__fadeIn {
@@ -2835,7 +2835,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
-**Correct (전역 스타일시트에서 한 번 처리):**
+**Correct (전역 스타일시트에서 한 번 처리합니다):**
 
 ```css
 /* src/style/motion.css */
@@ -2905,7 +2905,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
   `:first-child`나 `:nth-child()`는 클래스에도 붙어서 형태로 구분할 수 없습니다.
 - 역할 이름, 승격 판단, 변형 노출, 포커스 대비도 리뷰가 담당합니다.
 
-**Incorrect (`stylelint-config-standard`의 기본 클래스 패턴을 그대로 씀):**
+**Incorrect (`stylelint-config-standard`의 기본 클래스 패턴을 그대로 씁니다):**
 
 ```js
 export default {
@@ -2913,7 +2913,7 @@ export default {
 };
 ```
 
-**Incorrect (결합자 개수로 깊이를 막으려 함):**
+**Incorrect (결합자 개수로 깊이를 막으려 합니다):**
 
 ```js
 export default {
@@ -2925,7 +2925,7 @@ export default {
 };
 ```
 
-**Correct (공통 규칙 + 디렉터리별 접두사 `overrides`):**
+**Correct (공통 규칙에 디렉터리별 접두사 `overrides`를 더합니다):**
 
 ```js
 /**
@@ -3031,7 +3031,7 @@ export default {
 };
 ```
 
-**Correct (기계가 못 잡는 항목은 리뷰 체크리스트로 남김):**
+**Correct (기계가 못 잡는 항목은 리뷰 체크리스트로 남깁니다):**
 
 ```md
 <!-- docs/css-review.md -->

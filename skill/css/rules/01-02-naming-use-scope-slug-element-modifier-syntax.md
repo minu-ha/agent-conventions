@@ -34,7 +34,7 @@ tags: naming, class-grammar, ownership
 
 `selector-class-pattern`에 이 문법을 정규식으로 넣으면 기계가 검사합니다.
 
-**Incorrect (식별자, 요소, 수정자에 snake_case와 kebab-case가 섞임):**
+**Incorrect (식별자, 요소, 수정자에 snake_case와 kebab-case가 섞입니다):**
 
 ```txt
 ui_tag_list__root
@@ -46,7 +46,7 @@ pg_catalogDetail__main-content
 pg_catalogDetail__main--route_active
 ```
 
-**Correct (범위는 소문자로 쓰고 식별자, 요소, 수정자는 camelCase로 씀):**
+**Correct (범위는 소문자로 쓰고 식별자, 요소, 수정자는 camelCase로 씁니다):**
 
 ```txt
 ui_tagList__root

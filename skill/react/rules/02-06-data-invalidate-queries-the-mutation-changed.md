@@ -36,7 +36,7 @@ tags: data, mutation
   `events-run-user-actions-in-handlers-not-effects`가 그것을 막습니다.
 - 어디서 부를지는 `data-handle-mutation-failure-where-it-is-called`가 정한 자리와 같습니다.
 
-**Incorrect (캐시를 손으로 조립하고 키를 문자열로 적음):**
+**Incorrect (캐시를 손으로 조립하고 키를 문자열로 적습니다):**
 
 ```tsx
 const mutationProductSave = useProductSave({
@@ -48,7 +48,7 @@ const mutationProductSave = useProductSave({
 });
 ```
 
-**Incorrect (그 훅만 다시 읽어 다른 화면이 옛 값을 유지):**
+**Incorrect (그 훅만 다시 읽어 다른 화면이 옛 값에 머무릅니다):**
 
 ```tsx
 const mutationProductSave = useProductSave({
@@ -60,7 +60,7 @@ const mutationProductSave = useProductSave({
 });
 ```
 
-**Correct (바뀐 데이터를 소유한 키를 무효화):**
+**Correct (바뀐 데이터를 소유한 키를 무효화합니다):**
 
 ```tsx
 const queryClient = useQueryClient();

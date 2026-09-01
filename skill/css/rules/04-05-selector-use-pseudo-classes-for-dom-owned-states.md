@@ -34,7 +34,7 @@ tags: pseudo-classes, state, interaction
 가상 클래스를 어디에 쓰는지는 `selector-nest-dom-state-in-the-owning-block` 규칙이 정합니다.
 `:not()`은 `selector-do-not-negate-with-not` 규칙이 막습니다.
 
-**Incorrect (앱이 아는 상태를 속성 선택자로 겨냥함):**
+**Incorrect (앱이 아는 상태를 속성 선택자로 겨냥합니다):**
 
 ```css
 .pg_assetIndex__card {
@@ -50,7 +50,7 @@ tags: pseudo-classes, state, interaction
 }
 ```
 
-**Incorrect (같은 상태를 속성과 수정자 두 표기로 씀):**
+**Incorrect (같은 상태를 속성과 수정자 두 표기로 씁니다):**
 
 ```css
 .pg_assetIndex__card--selected {
@@ -62,7 +62,7 @@ tags: pseudo-classes, state, interaction
 }
 ```
 
-**Correct (`aria-*`는 마크업에 두고 스타일은 수정자로 겨냥):**
+**Correct (`aria-*`는 마크업에 두고 스타일은 수정자로 겨냥합니다):**
 
 ```tsx
 <button

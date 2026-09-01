@@ -17,7 +17,7 @@ tags: events, handlers, effects
 액션 자체를 상태로 올린 뒤 `useEffect`가 나중에 실행하게 만들지 않습니다.
 그렇게 하면 무관한 의존성 변화에도 재실행되기 쉽고 흐름도 읽기 어려워집니다.
 
-**Incorrect (사용자 액션을 상태 + 이펙트로 모델링):**
+**Incorrect (사용자 액션을 상태 + 이펙트로 모델링합니다):**
 
 ```tsx
 const [shouldSubmit, setShouldSubmit] = useState(false);
@@ -35,7 +35,7 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => 
 };
 ```
 
-**Correct (사용자 액션은 핸들러 안에서 바로 수행):**
+**Correct (사용자 액션은 핸들러 안에서 바로 수행합니다):**
 
 ```tsx
 /**

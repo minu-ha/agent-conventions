@@ -18,7 +18,7 @@ tags: state, handlers
 한 이벤트 안에서 두 번 갱신하거나, `await` 뒤나 오래 사는 클로저 안에서 갱신하면 결과가 갈립니다.
 한 번만 부르는 갱신은 두 형태가 같은 결과를 내지만, 형태를 하나로 고정해 자리마다 다시 판단하지 않습니다.
 
-**Incorrect (현재 상태를 바깥 클로저에서 직접 읽음):**
+**Incorrect (현재 상태를 바깥 클로저에서 직접 읽습니다):**
 
 ```tsx
 // 한 이벤트에서 두 번 갱신한다. 둘 다 같은 렌더의 selectedUserIds를 읽어 첫 갱신이 지워진다
@@ -28,7 +28,7 @@ const handleSelectRange = (fromUserId: string, toUserId: string) => {
 };
 ```
 
-**Correct (함수형 업데이터로 항상 최신 상태를 기준으로 갱신):**
+**Correct (함수형 업데이터로 항상 최신 상태를 기준으로 갱신합니다):**
 
 ```tsx
 const handleSelectRange = (fromUserId: string, toUserId: string) => {

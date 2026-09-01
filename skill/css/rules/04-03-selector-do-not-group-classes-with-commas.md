@@ -36,7 +36,7 @@ tags: selector, duplication, maintainability
 | 목록에 든 선택자를 아래에서 단독으로 다시 엶 | `no-duplicate-selectors`의 `disallowInList` 옵션. 아래 첫 Incorrect 예시가 그 경우입니다 |
 | 중복 없이 묶기만 함 | 리뷰. 쉼표 묶음 자체는 막지 않습니다 |
 
-**Incorrect (`,`로 공통 선언을 묶고 아래에서 일부만 다시 엶):**
+**Incorrect (`,`로 공통 선언을 묶고 아래에서 일부만 다시 엽니다):**
 
 ```css
 .pg_salesPanel__glyph--line,
@@ -52,7 +52,7 @@ tags: selector, duplication, maintainability
 }
 ```
 
-**Incorrect (한 대상의 진입 조건을 `,`로 나열):**
+**Incorrect (한 대상의 진입 조건을 `,`로 나열합니다):**
 
 ```css
 .pg_salesPanel__spreadButton {
@@ -63,7 +63,7 @@ tags: selector, duplication, maintainability
 }
 ```
 
-**Correct (각 클래스가 자기 선언을 전부 가짐):**
+**Correct (각 클래스가 자기 선언을 전부 가집니다):**
 
 ```css
 .pg_salesPanel__glyph--line {
@@ -88,7 +88,7 @@ tags: selector, duplication, maintainability
 }
 ```
 
-**Correct (진입 조건마다 블록을 따로 열고 선언을 그대로 씀):**
+**Correct (진입 조건마다 블록을 따로 열고 선언을 그대로 씁니다):**
 
 ```css
 .pg_salesPanel__spreadButton {

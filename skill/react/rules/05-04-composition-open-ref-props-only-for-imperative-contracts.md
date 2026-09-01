@@ -30,7 +30,7 @@ tags: composition
   주석의 위치와 근거 기준은
   `typescript/docs-justify-convention-exceptions-with-a-reason-comment`가 정합니다.
 
-**Incorrect (`ref` 계약이 필요 없는 단순 화면 컴포넌트에도 습관적으로 `ref`를 노출):**
+**Incorrect (`ref` 계약이 필요 없는 단순 화면 컴포넌트에도 습관적으로 `ref`를 노출합니다):**
 
 ```tsx
 import type {Ref} from "react";
@@ -45,7 +45,7 @@ export const UiStatusBadge = (props: UiStatusBadgeProps) => {
 };
 ```
 
-**Correct (`ref`가 실제로 필요한 공개 API일 때만 리액트 19 방식으로 직접 받음):**
+**Correct (`ref`가 실제로 필요한 공개 API일 때만 리액트 19 방식으로 직접 받습니다):**
 
 ```tsx
 import type {ChangeEventHandler, Ref} from "react";
@@ -87,7 +87,7 @@ export const UiSearchInput = (props: UiSearchInputProps) => {
 };
 ```
 
-**Correct (`ref`가 실제 계약이 아닐 때는 일반 프롭만 유지):**
+**Correct (`ref`가 실제 계약이 아닐 때는 일반 프롭만 둡니다):**
 
 ```tsx
 /**

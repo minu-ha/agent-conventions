@@ -22,7 +22,7 @@ CSS 파일마다 범위_식별자가 하나입니다.
 - 자기 CSS 파일이 있으면 자기 식별자를 만듭니다.
   부모 식별자를 계속 쓰려면 스타일도 부모 파일에 둡니다.
 
-**Incorrect (이미 다른 소유자가 쓰는 `scope_slug`를 재사용):**
+**Incorrect (이미 다른 소유자가 쓰는 `scope_slug`를 재사용합니다):**
 
 ```txt
 /* catalog/index route */
@@ -32,7 +32,7 @@ pg_catalogIndex__header
 pg_catalogIndex__toolbar
 ```
 
-**Correct (소유자가 다르면 별도 식별자를 부여):**
+**Correct (소유자가 다르면 별도 식별자를 부여합니다):**
 
 ```txt
 /* catalog/index route */

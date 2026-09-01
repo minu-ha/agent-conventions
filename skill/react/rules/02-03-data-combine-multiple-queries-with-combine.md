@@ -37,7 +37,7 @@ tags: data, query
 React Query의 구조 공유가 합친 결과에서 바뀌지 않은 부분의 참조를 유지합니다.
 실측 병목일 때만 `perf-avoid-defensive-memoization`의 예외 기준을 따릅니다.
 
-**Incorrect (화면 본문에서 두 응답을 꺼내 합침):**
+**Incorrect (화면 본문에서 두 응답을 꺼내 합칩니다):**
 
 ```tsx
 const responseProductListSuspense = useProductListSuspense();
@@ -51,7 +51,7 @@ const rows = responseProductListSuspense.data.products.map((product) => ({
 }));
 ```
 
-**Correct (통신 경계에서 인라인 `combine`으로 합침):**
+**Correct (통신 경계에서 인라인 `combine`으로 합칩니다):**
 
 ```tsx
 export const PgProducts = () => {
@@ -74,7 +74,7 @@ export const PgProducts = () => {
 };
 ```
 
-**Correct (뒤 쿼리가 앞 결과를 받으면 `enabled`로 순서를 만듦):**
+**Correct (뒤 쿼리가 앞 결과를 받으면 `enabled`로 순서를 만듭니다):**
 
 ```tsx
 /**

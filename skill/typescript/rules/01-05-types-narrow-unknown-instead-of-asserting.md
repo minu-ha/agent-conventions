@@ -34,7 +34,7 @@ tags: types, safety
 `any`와 `!`는 `tooling-configure-biome-to-enforce-these-rules` 규칙이 기계로 막습니다.
 `as`와 `@ts-expect-error`는 리뷰가 봅니다.
 
-**Incorrect (검사를 끄고 넘어감):**
+**Incorrect (검사를 끄고 넘어갑니다):**
 
 ```ts
 const storedFilter = JSON.parse(localStorage.getItem("product-filter") as string) as ProductFilter;
@@ -45,7 +45,7 @@ const firstProduct = products.find((product) => product.isActive)!;
 chart.setOption(option);
 ```
 
-**Correct (앱 밖에서 온 값은 스키마 결과에서 타입을 얻음):**
+**Correct (앱 밖에서 온 값은 스키마 결과에서 타입을 얻습니다):**
 
 ```ts
 const storedValue = localStorage.getItem("product-filter");
@@ -57,7 +57,7 @@ if (storedValue === null) {
 const storedFilter = productFilterSchema.parse(JSON.parse(storedValue));
 ```
 
-**Correct (없을 수 있으면 그대로 드러냄):**
+**Correct (없을 수 있으면 그대로 드러냅니다):**
 
 ```ts
 const firstProduct = products.find((product) => product.isActive);
@@ -67,7 +67,7 @@ if (!firstProduct) {
 }
 ```
 
-**Correct (외부 패키지 타입이 실제와 달라 확인할 수 있는 이유를 남김):**
+**Correct (외부 패키지 타입이 실제와 달라 확인할 수 있는 이유를 남깁니다):**
 
 ```ts
 // package.json의 @mui/material 6.1은 TextField 의 slotProps 타입이 htmlInput 을 받지 못한다.

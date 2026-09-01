@@ -54,7 +54,7 @@ tags: tooling, stylelint, automation
   `:first-child`나 `:nth-child()`는 클래스에도 붙어서 형태로 구분할 수 없습니다.
 - 역할 이름, 승격 판단, 변형 노출, 포커스 대비도 리뷰가 담당합니다.
 
-**Incorrect (`stylelint-config-standard`의 기본 클래스 패턴을 그대로 씀):**
+**Incorrect (`stylelint-config-standard`의 기본 클래스 패턴을 그대로 씁니다):**
 
 ```js
 export default {
@@ -62,7 +62,7 @@ export default {
 };
 ```
 
-**Incorrect (결합자 개수로 깊이를 막으려 함):**
+**Incorrect (결합자 개수로 깊이를 막으려 합니다):**
 
 ```js
 export default {
@@ -74,7 +74,7 @@ export default {
 };
 ```
 
-**Correct (공통 규칙 + 디렉터리별 접두사 `overrides`):**
+**Correct (공통 규칙에 디렉터리별 접두사 `overrides`를 더합니다):**
 
 ```js
 /**
@@ -180,7 +180,7 @@ export default {
 };
 ```
 
-**Correct (기계가 못 잡는 항목은 리뷰 체크리스트로 남김):**
+**Correct (기계가 못 잡는 항목은 리뷰 체크리스트로 남깁니다):**
 
 ```md
 <!-- docs/css-review.md -->

@@ -43,20 +43,20 @@ tags: values, dayjs
 파싱하면 타임존 변환이 붙어 표시 시각이 밀립니다.
 문자열을 자르는 것이 표시 규칙이면 자르는 코드를 그대로 둡니다.
 
-**Incorrect (밀리초를 더하고 자릿수를 손으로 채움):**
+**Incorrect (밀리초를 더하고 자릿수를 손으로 채웁니다):**
 
 ```ts
 const expiresAt = new Date(issuedAt.getTime() + 7 * 24 * 60 * 60 * 1000);
 const expiresLabel = `${expiresAt.getFullYear()}.${toPaddedDatePart(expiresAt.getMonth() + 1)}`;
 ```
 
-**Incorrect (형식만 보고 없는 날짜를 통과시킴):**
+**Incorrect (형식만 보고 없는 날짜를 통과시킵니다):**
 
 ```ts
 const isValidDateText = /^\d{4}-\d{2}-\d{2}$/.test(dateText);
 ```
 
-**Correct (날짜를 다루는 갈림길):**
+**Correct (날짜를 다루는 갈림길입니다):**
 
 ```txt
 날짜 문자열이 들어왔다
@@ -69,7 +69,7 @@ const isValidDateText = /^\d{4}-\d{2}-\d{2}$/.test(dateText);
    └ 값이 유효한지 봄 ─→ format 한 결과가 원래 문자열과 같은지 본다
 ```
 
-**Correct (더하기와 형식은 `dayjs`, 형식 문자열은 상수):**
+**Correct (더하기와 형식은 `dayjs`, 형식 문자열은 상수로 둡니다):**
 
 ```ts
 import dayjs from "dayjs";
@@ -80,7 +80,7 @@ const expiresAt = dayjs(issuedAt).add(7, "day");
 const expiresLabel = expiresAt.format(date_format);
 ```
 
-**Correct (라운드트립으로 없는 날짜를 거름):**
+**Correct (라운드트립으로 없는 날짜를 거릅니다):**
 
 ```ts
 import dayjs from "dayjs";
@@ -95,7 +95,7 @@ export const parseEntryDateText = (dateText: string): string | undefined => {
 };
 ```
 
-**Correct (서버 시각 문자열은 파싱하지 않고 자름):**
+**Correct (서버 시각 문자열은 파싱하지 않고 자릅니다):**
 
 ```ts
 // 서버가 이미 표시 타임존으로 준 문자열이다. dayjs 로 파싱하면 변환이 붙어 시각이 밀린다

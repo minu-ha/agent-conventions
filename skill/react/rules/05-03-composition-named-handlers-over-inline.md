@@ -24,7 +24,7 @@ JSX에는 이름 붙인 핸들러 참조만 넘깁니다.
 추가 인자를 넘기려고 `onClick={() => handleX(id)}` 같은 인라인 래퍼를 쓰지 않습니다.
 그 자리는 `events-curry-extra-handler-arguments`가 커링으로 정합니다.
 
-**Incorrect (분기와 비동기를 JSX 안에 숨김):**
+**Incorrect (분기와 비동기를 JSX 안에 숨깁니다):**
 
 ```tsx
 <UiButton
@@ -41,7 +41,7 @@ JSX에는 이름 붙인 핸들러 참조만 넘깁니다.
 </UiButton>
 ```
 
-**Correct (로직을 명명된 핸들러로 노출):**
+**Correct (로직을 명명된 핸들러로 노출합니다):**
 
 ```tsx
 import type {MouseEventHandler} from "react";

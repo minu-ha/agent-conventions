@@ -45,14 +45,14 @@ tags: functions
 `map.get()`은 언제나 `T | undefined`라 없다는 사실이 타입에 남습니다.
 `groupBy`와 `keyBy`는 조회가 아니라 목록을 다시 짜는 자리에서 씁니다.
 
-**Incorrect (같은 배열을 반복 순회하며 포함 여부를 확인):**
+**Incorrect (같은 배열을 반복 순회하며 포함 여부를 확인합니다):**
 
 ```ts
 const visibleProducts = products.filter((product) => allowedProductIds.includes(product.id));
 const disabledProducts = archivedProducts.filter((product) => allowedProductIds.includes(product.id));
 ```
 
-**Correct (반복 조회는 `Set`으로 승격):**
+**Correct (반복 조회는 `Set`으로 승격합니다):**
 
 ```ts
 const allowedProductIdSet = new Set(allowedProductIds);
@@ -61,7 +61,7 @@ const visibleProducts = products.filter((product) => allowedProductIdSet.has(pro
 const disabledProducts = archivedProducts.filter((product) => allowedProductIdSet.has(product.id));
 ```
 
-**Correct (반복 키 조회는 `Map`으로 승격):**
+**Correct (반복 키 조회는 `Map`으로 승격합니다):**
 
 ```ts
 const userById = new Map(users.map((user) => [user.id, user]));
@@ -71,7 +71,7 @@ const reviewer = userById.get(reviewerId);
 const approver = userById.get(approverId);
 ```
 
-**Correct (길이가 정해진 짧은 목록은 `includes` 그대로):**
+**Correct (길이가 정해진 짧은 목록은 `includes`를 그대로 씁니다):**
 
 ```ts
 const isEditableStatus = editable_order_statuses.includes(order.status);

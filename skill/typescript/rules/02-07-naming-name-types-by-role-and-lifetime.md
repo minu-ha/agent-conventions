@@ -54,7 +54,7 @@ tags: naming, types, ownership
 직접 작성한 내부 계약에는 그런 접미사를 반대편 표식처럼 붙이지 않습니다.
 프레임워크 전용 `Props`, `Handle`, `Slot`, `Renderer`는 해당 프레임워크 규칙이 정합니다.
 
-**Incorrect (소유자와 막연한 화면 계약 접미사를 반복):**
+**Incorrect (소유자와 막연한 화면 계약 접미사를 반복합니다):**
 
 ```ts
 /**
@@ -74,7 +74,7 @@ interface SalesReportViewModel {
 const salesReportVM: SalesReportViewModel = response.data;
 ```
 
-**Correct (한 조회 시점에 고정된 값이라는 역할을 이름에 표시):**
+**Correct (한 조회 시점에 고정된 값이라는 역할을 이름에 표시합니다):**
 
 ```ts
 /**

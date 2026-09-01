@@ -39,7 +39,7 @@ tags: values, layout, responsive
 놓는 쪽에서 그 폭을 왜 고정하는지가 클래스명과 선언에서 읽혀야 합니다.
 `layout-keep-layout-intent-explicit` 규칙이 그 판정을 합니다.
 
-**Incorrect (버튼이 자기 폭을 뷰포트로 정함):**
+**Incorrect (버튼이 자기 폭을 뷰포트로 정합니다):**
 
 ```css
 .ui_button__root {
@@ -62,7 +62,7 @@ tags: values, layout, responsive
 }
 ```
 
-**Incorrect (열 개수를 브레이크포인트로 셈):**
+**Incorrect (열 개수를 브레이크포인트로 셉니다):**
 
 ```css
 .pg_products__grid {
@@ -90,7 +90,7 @@ tags: values, layout, responsive
 }
 ```
 
-**Correct (버튼은 자기 모양만, 폭은 놓는 쪽이 정함):**
+**Correct (버튼은 자기 모양만, 폭은 놓는 쪽이 정합니다):**
 
 ```css
 /* ui-button.css — 폭 얘기가 없다 */
@@ -118,7 +118,7 @@ tags: values, layout, responsive
 }
 ```
 
-**Correct (열 개수는 자리가 정함):**
+**Correct (열 개수는 자리가 정합니다):**
 
 ```css
 .pg_products__grid {
@@ -128,7 +128,7 @@ tags: values, layout, responsive
 }
 ```
 
-**Correct (값이 매끄럽게 변하면 `clamp`):**
+**Correct (값이 매끄럽게 변하면 `clamp`를 씁니다):**
 
 ```css
 .pg_products__hero {

@@ -62,7 +62,7 @@ tags: tooling
 - `style/useReactFunctionComponents`는 도메인 `all`에만 있습니다.
   기본 심각도가 `info`라 통과 여부를 가르지 못해 켜지 않습니다.
 
-**Incorrect (도메인을 켜지 않아 리액트 검사가 통째로 빠짐):**
+**Incorrect (도메인을 켜지 않아 리액트 검사가 통째로 빠집니다):**
 
 ```json
 {
@@ -73,7 +73,7 @@ tags: tooling
 }
 ```
 
-**Correct (도메인을 켜고 `all`에만 있는 항목과 레이어·라우트 `overrides`를 적음):**
+**Correct (도메인을 켜고 `all`에만 있는 항목과 레이어·라우트 `overrides`를 적습니다):**
 
 ```json
 {

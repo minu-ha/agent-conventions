@@ -51,7 +51,7 @@ tags: naming, constant
 그 자리는 `naming-read-environment-values-through-config-env` 규칙이 정합니다.
 색상과 간격 같은 디자인 토큰은 스타일시트의 CSS 변수가 단일 출처라 여기 두지 않습니다.
 
-**Incorrect (프로젝트 전반의 값을 쓰는 자리에서 선언):**
+**Incorrect (프로젝트 전반의 값을 쓰는 자리에서 선언합니다):**
 
 ```ts
 // page/products/pg-products.tsx
@@ -64,7 +64,7 @@ const default_page_size = 20;
 const request_timeout_ms = 20_000;
 ```
 
-**Incorrect (객체 하나에 모아 색인을 손으로 유지함):**
+**Incorrect (객체 하나에 모아 색인을 손으로 유지합니다):**
 
 ```ts
 // constant/config.ts
@@ -74,7 +74,7 @@ export const config = {
 } as const;
 ```
 
-**Correct (주제 파일에 상수를 하나씩 내보내고 쓰는 자리에서 이름으로 가져옴):**
+**Correct (주제 파일에 상수를 하나씩 내보내고 쓰는 자리에서 이름으로 가져옵니다):**
 
 ```ts
 // constant/api.ts

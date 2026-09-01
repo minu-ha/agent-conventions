@@ -32,7 +32,7 @@ tags: docs, handlers, effects
 | 규칙이 허용한 예외에 붙이는 근거 주석 | `typescript/docs-justify-convention-exceptions-with-a-reason-comment` |
 | 형식과 태그 | `typescript/docs-write-doc-comments-as-multiline-blocks` |
 
-**Incorrect (읽어도 의도가 안 보이는 경계 선언에 설명이 없음):**
+**Incorrect (읽어도 의도가 안 보이는 경계 선언에 설명이 없습니다):**
 
 ```ts
 const handleRemoveProductButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
@@ -48,7 +48,7 @@ useEffect(() => {
 }, [userData, resetForm]);
 ```
 
-**Correct (선언 의도를 바로 위에 여러 줄 블록으로 문서화):**
+**Correct (선언 의도를 바로 위에 여러 줄 블록으로 적습니다):**
 
 ```ts
 /**

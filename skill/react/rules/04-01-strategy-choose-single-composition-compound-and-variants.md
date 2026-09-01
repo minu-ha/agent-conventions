@@ -35,7 +35,7 @@ tags: strategy, composition, variants, components
 렌더 프롭을 쓸 자리인지는 `strategy-prefer-children-over-render-props`가 따로 판정합니다.
 무엇을 공개 부품으로 열지는 `strategy-expose-only-assembled-compound-parts`가 정합니다.
 
-**Incorrect (단일, 합성, 드러난 변형의 경계를 구분하지 않고 한 컴포넌트에 몰아넣음):**
+**Incorrect (단일, 합성, 드러난 변형의 경계를 구분하지 않고 한 컴포넌트에 몰아넣습니다):**
 
 ```tsx
 export interface UiProfileDialogProps {
@@ -61,7 +61,7 @@ export const UiProfileDialog = (props: UiProfileDialogProps) => {
 };
 ```
 
-**Correct (1단계 — 열 자리가 없으면 단일 컴포넌트로 유지):**
+**Correct (1단계 — 열 자리가 없으면 단일 컴포넌트로 둡니다):**
 
 ```tsx
 /**
@@ -92,7 +92,7 @@ export const UiProfileDialog = (props: UiProfileDialogProps) => {
 };
 ```
 
-**Correct (2단계 — 끼워 넣을 자리가 생기면 상태 없는 합성으로 엶):**
+**Correct (2단계 — 끼워 넣을 자리가 생기면 상태 없는 합성으로 엽니다):**
 
 ```tsx
 /**
@@ -126,7 +126,7 @@ export const UiProfileDialog = {
 } as const;
 ```
 
-**Correct (3단계 — 부품이 같은 상태를 읽으면 공개 이름을 그대로 두고 컨텍스트만 더함):**
+**Correct (3단계 — 부품이 같은 상태를 읽으면 공개 이름을 그대로 두고 컨텍스트만 더합니다):**
 
 ```tsx
 const UiProfileDialogContext = createContext<UiProfileDialogContextValue | null>(null);
@@ -185,7 +185,7 @@ export const UiProfileDialog = {
 } as const;
 ```
 
-**Correct (4단계 — 같은 조합이 반복되면 드러난 변형으로 감쌈):**
+**Correct (4단계 — 같은 조합이 반복되면 드러난 변형으로 감쌉니다):**
 
 ```tsx
 /**

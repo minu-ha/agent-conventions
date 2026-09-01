@@ -19,7 +19,7 @@ tags: composition, perf
 
 로컬에서 JSX 조각을 재사용하려면 독립 컴포넌트로 빼고 프롭스로 전달합니다.
 
-**Incorrect (렌더마다 새 컴포넌트 타입을 생성):**
+**Incorrect (렌더마다 새 컴포넌트 타입을 만듭니다):**
 
 ```tsx
 export const WgUserProfileCard = (props: WgUserProfileCardProps) => {
@@ -43,7 +43,7 @@ export const WgUserProfileCard = (props: WgUserProfileCardProps) => {
 };
 ```
 
-**Correct (컴포넌트를 바깥으로 분리하고 프롭스로 전달):**
+**Correct (컴포넌트를 바깥으로 분리하고 프롭스로 넘깁니다):**
 
 ```tsx
 /**

@@ -36,7 +36,7 @@ tags: screen
   대표 함수 자기 이름 폴더 안의 전용 보조는 `typescript/functions-give-each-function-its-own-file`이 정한 예외입니다
 - 이름이 그럴듯하다는 이유로 흐름을 파일 왕복 뒤에 숨기는 구조
 
-**Incorrect (사용처가 한 화면뿐인데 공용 훅으로 먼저 빼냄):**
+**Incorrect (사용처가 한 화면뿐인데 공용 훅으로 먼저 빼냅니다):**
 
 ```ts
 // _hook/use-product-filter-form.ts
@@ -57,7 +57,7 @@ export const PgProducts = () => {
 };
 ```
 
-**Incorrect (컴포넌트 하나만 쓰는 단계 보조 함수를 보조 모듈에 남김):**
+**Incorrect (컴포넌트 하나만 쓰는 단계 보조 함수를 보조 모듈에 남깁니다):**
 
 ```tsx
 const toEditHref = ({editHrefBase, row}: {editHrefBase: string; row: ProductRow}) =>
@@ -77,7 +77,7 @@ export const PgProductTable = (props: PgProductTableProps) => {
 };
 ```
 
-**Correct (두 화면이 같은 흐름을 부르게 된 뒤에 공용화):**
+**Correct (두 화면이 같은 흐름을 부르게 된 뒤에 공용화합니다):**
 
 ```ts
 /**
@@ -97,7 +97,7 @@ export const useProductEditor = () => {
 };
 ```
 
-**Correct (여러 보조 함수 대신 한 함수 안에서 단계별로 정리):**
+**Correct (여러 보조 함수 대신 한 함수 안에서 단계별로 정리합니다):**
 
 ```ts
 /**
@@ -113,7 +113,7 @@ export const toProductSaveRequest = (formValues: ProductFormValues) => {
 };
 ```
 
-**Correct (작은 쿼리 가공과 `href` 조립은 사용처에 둠):**
+**Correct (작은 쿼리 가공과 `href` 조립은 사용처에 둡니다):**
 
 ```tsx
 export const PgProductTable = (props: PgProductTableProps) => {

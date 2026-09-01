@@ -33,7 +33,7 @@ tags: selector, state, negation
 
 무엇이 DOM 상태이고 무엇이 앱 상태인지는 `selector-use-pseudo-classes-for-dom-owned-states` 규칙이 정합니다.
 
-**Incorrect (조상 수정자로 자손 모습을 정해 부정 조건과 중첩이 따라옴):**
+**Incorrect (조상 수정자로 자손 모습을 정해 부정 조건과 중첩이 따라옵니다):**
 
 ```css
 .pg_salesPanel__spreadButton:not(.pg_salesPanel__spreadButton--checked) {
@@ -48,7 +48,7 @@ tags: selector, state, negation
 }
 ```
 
-**Correct (각 요소의 수정자가 그 요소의 모습을 가짐):**
+**Correct (각 요소의 수정자가 그 요소의 모습을 가집니다):**
 
 ```css
 .pg_salesPanel__spreadBox {
@@ -82,7 +82,7 @@ tags: selector, state, negation
 }
 ```
 
-**Correct (DOM 상태도 기본을 먼저 두고 그 상태만 덮음):**
+**Correct (DOM 상태도 기본을 먼저 두고 그 상태만 덮습니다):**
 
 ```css
 .pg_assetIndex__cardButton {

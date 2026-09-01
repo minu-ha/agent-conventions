@@ -30,7 +30,7 @@ tags: screen, origin
 - 이름을 붙일지 말지는 `typescript/functions-name-a-value-only-for-recompute-or-judgment`가 정합니다.
   여기서는 이름을 붙인 값을 화면 어디에 두는지만 봅니다.
 
-**Incorrect (쓰는 자리에서 먼 화면 상단에 플래그와 표시값을 쌓음):**
+**Incorrect (쓰는 자리에서 먼 화면 상단에 플래그와 표시값을 쌓습니다):**
 
 ```tsx
 export const PgProductTableSection = () => {
@@ -58,7 +58,7 @@ export const PgProductTableSection = () => {
 };
 ```
 
-**Correct (선언을 그대로 두고 쓰는 자리에서 계산):**
+**Correct (선언을 그대로 두고 쓰는 자리에서 계산합니다):**
 
 ```tsx
 export const PgProductTableSection = () => {

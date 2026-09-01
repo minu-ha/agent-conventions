@@ -34,7 +34,7 @@ tags: composition, ordering
 - 파생 값은 구획이 아닙니다.
   `screen-keep-derived-values-close`대로 쓰는 자리에서 계산합니다.
 
-**Incorrect (이펙트가 아래 선언을 의존성으로 참조해 초기화 전에 접근함):**
+**Incorrect (이펙트가 아래 선언을 의존성으로 참조해 초기화 전에 접근합니다):**
 
 ```tsx
 export const PgOrderToolbar = () => {
@@ -49,7 +49,7 @@ export const PgOrderToolbar = () => {
 };
 ```
 
-**Incorrect (같은 종류가 흩어져 위아래를 오가며 읽음):**
+**Incorrect (같은 종류가 흩어져 위아래를 오가며 읽습니다):**
 
 ```tsx
 export const PgOrderToolbar = () => {
@@ -73,7 +73,7 @@ export const PgOrderToolbar = () => {
 };
 ```
 
-**Correct (네 구획이 순서대로 놓임):**
+**Correct (네 구획이 순서대로 놓입니다):**
 
 ```tsx
 export const PgOrderToolbar = () => {

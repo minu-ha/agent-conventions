@@ -28,7 +28,7 @@ tags: layout, comments, sticky
 - 로딩 대체 화면은 실제 내용과 같은 컨테이너 클래스 안에 넣습니다.
   높이를 대체 화면에만 따로 적으면 실제 내용이 들어올 때 그 값이 남아 레이아웃이 튑니다.
 
-**Incorrect (레이아웃 강제가 많고 기준 설명이 없음):**
+**Incorrect (레이아웃 강제가 많고 기준 설명이 없습니다):**
 
 ```css
 .pg_dashboard__toolbar {
@@ -40,7 +40,7 @@ tags: layout, comments, sticky
 }
 ```
 
-**Correct (기준 컨테이너와 의도를 드러냄):**
+**Correct (기준 컨테이너와 의도를 드러냅니다):**
 
 ```css
 .pg_dashboard__toolbar {

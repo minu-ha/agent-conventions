@@ -22,7 +22,7 @@ tags: naming, css-modules, ownership
 | 별도 합의가 없음 | 일반 CSS. `.module.css`를 새로 만들지 않고 클래스를 `styles.foo`처럼 객체 속성으로 참조하지 않습니다 |
 | CSS Modules가 공식 표준이고 그에 맞는 이름 규칙과 실행 규칙이 따로 있음 | 그 프로젝트 규칙이 이 기본값보다 앞섭니다 |
 
-**Incorrect (프로젝트 표준이 없는데도 CSS Modules를 기본처럼 사용):**
+**Incorrect (프로젝트 표준이 없는데도 CSS Modules를 기본처럼 씁니다):**
 
 ```tsx
 import styles from "./catalog-index.module.css";
@@ -42,7 +42,7 @@ import styles from "./catalog-index.module.css";
 }
 ```
 
-**Correct (기본은 일반 CSS와 전역에서 고유한 클래스 이름을 사용):**
+**Correct (기본으로 일반 CSS와 전역 고유 클래스 이름을 씁니다):**
 
 ```tsx
 import {clsx} from "clsx";

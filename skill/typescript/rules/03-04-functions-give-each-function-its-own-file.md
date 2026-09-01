@@ -36,7 +36,7 @@ tags: functions, boundaries
 | 다른 파일도 그 폴더 안 파일을 부르게 됨 | 재사용이 생긴 것이니 `_function` 바로 아래로 꺼냅니다 |
 | 루트 `util` 함수가 다른 루트 `util` 함수를 가져옴 | 사슬이 아닙니다. 둘 다 공개 진입점이고, 가져오는 줄에서 어느 종류 폴더의 무엇인지 그대로 읽힙니다 |
 
-**Incorrect (잡동사니 파일과 내보낸 함수 세 단계 사슬):**
+**Incorrect (잡동사니 파일에서 내보낸 함수가 세 단계로 이어집니다):**
 
 ```ts
 // utils.ts
@@ -53,7 +53,7 @@ export const toProductSaveRequest = (values: ProductFormValues) => {
 };
 ```
 
-**Incorrect (보조 모듈 안에서 내보낸 함수가 내보낸 함수를 타고 감):**
+**Incorrect (보조 모듈 안에서 내보낸 함수가 내보낸 함수를 타고 갑니다):**
 
 ```ts
 // profile-support.ts
@@ -76,7 +76,7 @@ export const toProfileSaveRequest = (
 };
 ```
 
-**Correct (소유자 아래 대표 함수 하나당 파일 하나):**
+**Correct (소유자 아래 대표 함수 하나에 파일 하나를 둡니다):**
 
 ```ts
 // page/product-form/_function/to-product-save-request.ts
@@ -88,7 +88,7 @@ export const toProductSaveRequest = (values: ProductFormValues) => {
 };
 ```
 
-**Correct (전용 보조가 나간 대표 함수는 자기 이름 폴더를 가짐):**
+**Correct (전용 보조가 나간 대표 함수는 자기 이름 폴더를 가집니다):**
 
 ```txt
 page/report/_function/

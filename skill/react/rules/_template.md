@@ -32,13 +32,13 @@ frontmatter 키와 appliesWhen 작성 기준은 CONTRIBUTING.md 3절 참고.
 이 주석은 새 규칙을 만든 뒤 지운다.
 -->
 
-**Incorrect (무엇이 문제인지):**
+**Incorrect (무엇이 문제인지 `~합니다` 로):**
 
 ```tsx
 // 나쁜 예시
 ```
 
-**Correct (무엇이 좋아졌는지):**
+**Correct (무엇이 좋아졌는지 `~합니다` 로):**
 
 ```tsx
 // 좋은 예시

@@ -34,7 +34,7 @@ tags: events, handlers
   `(id) => void` 계약이면 이름 붙인 핸들러를 그대로 넘깁니다.
 - `useEffectEvent`로 만든 함수에는 DOM 이벤트 매개변수나 커링을 덧붙이지 않습니다.
 
-**Incorrect (인라인 래퍼로 인자를 넘김):**
+**Incorrect (인라인 래퍼로 인자를 넘깁니다):**
 
 ```tsx
 const handleSelectionToggle = (id: string) => {
@@ -44,7 +44,7 @@ const handleSelectionToggle = (id: string) => {
 <li onClick={() => handleSelectionToggle(product.id)} />;
 ```
 
-**Incorrect (블록 본문에서 안쪽 핸들러에 이름을 붙이고 팩토리에 With 접미사를 붙임):**
+**Incorrect (블록 본문에서 안쪽 핸들러에 이름을 붙이고 팩토리에 With 접미사를 붙입니다):**
 
 ```tsx
 const handleListItemClickWithProductId = (productId: string): MouseEventHandler<HTMLLIElement> => {
@@ -56,7 +56,7 @@ const handleListItemClickWithProductId = (productId: string): MouseEventHandler<
 };
 ```
 
-**Correct (추가 인자는 바깥 함수, 이벤트는 안쪽 함수):**
+**Correct (추가 인자는 바깥 함수, 이벤트는 안쪽 함수입니다):**
 
 ```tsx
 import type {MouseEventHandler} from "react";

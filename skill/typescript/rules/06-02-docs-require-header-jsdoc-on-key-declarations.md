@@ -35,7 +35,7 @@ tags: docs, jsdoc, declarations, boundaries
 함께 선택되는 `docs-write-concise-korean-comments-about-purpose-and-constraints`는
 형식만 맞추는 절차가 아니라 실제 한국어 내용을 요구합니다.
 
-**Incorrect (주요 선언에 헤더 설명이 없음):**
+**Incorrect (주요 선언에 헤더 설명이 없습니다):**
 
 ```ts
 export const toSortedUserIds = (userIds: string[]): string[] => {
@@ -43,7 +43,7 @@ export const toSortedUserIds = (userIds: string[]): string[] => {
 };
 ```
 
-**Correct (여러 줄 블록에 설명만 작성):**
+**Correct (여러 줄 블록에 설명만 적습니다):**
 
 ```ts
 /**

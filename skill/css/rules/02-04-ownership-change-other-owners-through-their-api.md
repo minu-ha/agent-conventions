@@ -36,7 +36,7 @@ tags: ownership, api, promotion
 컴포넌트가 무엇을 노출하는지는 `composition-inject-classes-only-at-the-entry-point` 규칙이 정합니다.
 여기서는 사용처가 세 가지 가운데 무엇을 고를지만 봅니다.
 
-**Incorrect (첫째 행으로 풀리는데도 마지막 선택지부터 씀):**
+**Incorrect (첫째 행으로 풀리는데도 마지막 선택지부터 씁니다):**
 
 ```css
 /* page/detail/pg-detail.css */
@@ -48,7 +48,7 @@ tags: ownership, api, promotion
 }
 ```
 
-**Correct (최상위 배치는 사용처가 자기 클래스로 잡음):**
+**Correct (최상위 배치는 사용처가 자기 클래스로 잡습니다):**
 
 ```tsx
 <WgChartCard className={clsx("pg_detail__chartCard")} />
@@ -62,7 +62,7 @@ tags: ownership, api, promotion
 }
 ```
 
-**Correct (여러 화면이 쓰는 모양은 소유자가 `variant` 프롭으로 노출함):**
+**Correct (여러 화면이 쓰는 모양은 소유자가 `variant` 프롭으로 노출합니다):**
 
 ```tsx
 <WgChartCard variant="muted" />
@@ -75,7 +75,7 @@ tags: ownership, api, promotion
 }
 ```
 
-**Correct (레이어 판정이 화면 소유면 화면 안으로 내려 소유자를 하나로 만듦):**
+**Correct (레이어 판정이 화면 소유면 화면 안으로 내려 소유자를 하나로 만듭니다):**
 
 ```txt
 before

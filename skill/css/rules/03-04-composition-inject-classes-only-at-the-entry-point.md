@@ -39,7 +39,7 @@ tags: components, entry-point, class-props
 사용처 쪽에서 무엇을 고를지는 `ownership-change-other-owners-through-their-api` 규칙이 정합니다.
 `className`을 받지 않는 컴포넌트는 `composition-do-not-add-wrapper-elements-for-styling` 규칙이 다룹니다.
 
-**Incorrect (내부 노드마다 클래스 프롭을 열어 창구를 늘림):**
+**Incorrect (내부 노드마다 클래스 프롭을 열어 창구를 늘립니다):**
 
 ```tsx
 export interface UiCollapseProps {
@@ -50,7 +50,7 @@ export interface UiCollapseProps {
 }
 ```
 
-**Incorrect (받은 `className`을 내부 노드로 넘김):**
+**Incorrect (받은 `className`을 내부 노드로 넘깁니다):**
 
 ```tsx
 export const UiCollapse = (props: UiCollapseProps) => {
@@ -65,7 +65,7 @@ export const UiCollapse = (props: UiCollapseProps) => {
 };
 ```
 
-**Correct (`className`은 최상위 클래스와 합치고, 변형은 필요한 노드마다 수정자로 붙임):**
+**Correct (`className`은 최상위 클래스와 합치고, 변형은 필요한 노드마다 수정자로 붙입니다):**
 
 ```tsx
 export interface UiCollapseProps {
@@ -103,7 +103,7 @@ export const UiCollapse = (props: UiCollapseProps) => {
 }
 ```
 
-**Correct (사용처는 최상위 스타일만 주고 내부 의도는 프롭으로 넘김):**
+**Correct (사용처는 최상위 스타일만 주고 내부 의도는 프롭으로 넘깁니다):**
 
 ```tsx
 <UiCollapse className={clsx("pg_postFilterDialog__collapse")} variant="compact" title="필터">

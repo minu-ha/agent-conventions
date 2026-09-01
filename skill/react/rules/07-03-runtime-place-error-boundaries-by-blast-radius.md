@@ -45,7 +45,7 @@ tags: screen, errors
 다시 시도를 열려면 대체 화면에 그 버튼을 두고, `@tanstack/react-query`의 `QueryErrorResetBoundary`와 함께 씁니다.
 경계 안에서 상태를 되살릴 수 없으므로 다시 시도는 하위 트리를 새로 마운트합니다.
 
-**Incorrect (경계 없이 화면 본문에서 실패를 분기):**
+**Incorrect (경계 없이 화면 본문에서 실패를 분기합니다):**
 
 ```tsx
 export const PgProducts = () => {
@@ -59,7 +59,7 @@ export const PgProducts = () => {
 };
 ```
 
-**Correct (화면 층 경계가 받고 셸은 살아남음):**
+**Correct (화면 층 경계가 받고 셸은 살아남습니다):**
 
 ```tsx
 // component/widget/app-shell/wg-app-shell.tsx
@@ -90,7 +90,7 @@ export const PgProducts = () => {
 };
 ```
 
-**Correct (섹션이 따로 죽어도 나머지가 쓸모 있을 때만 섹션 층):**
+**Correct (섹션이 따로 죽어도 나머지가 쓸모 있을 때만 섹션 층에 둡니다):**
 
 ```tsx
 export const PgProducts = () => {

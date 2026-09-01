@@ -40,7 +40,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 | `selector-disallowed-list` | 최상위에 다시 연 상태 가상 클래스 |
 | `property-disallowed-list` | 지역 변수 선언 |
 
-**Incorrect (가상 클래스를 최상위 선택자로 다시 엶):**
+**Incorrect (가상 클래스를 최상위 선택자로 다시 엽니다):**
 
 ```css
 .wg_siteHeader__brandLink {
@@ -56,7 +56,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
-**Correct (상태를 같은 블록 안 `&:`로 접고 상태마다 블록을 따로 엶):**
+**Correct (상태를 같은 블록 안 `&:`로 접고 상태마다 블록을 따로 엽니다):**
 
 ```css
 .wg_siteHeader__brandLink {
@@ -74,7 +74,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
-**Correct (조상 상태가 자손을 바꾸면 같은 소유자 안에서 결합자 하나):**
+**Correct (조상 상태가 자손을 바꾸면 같은 소유자 안에서 결합자 하나만 씁니다):**
 
 ```css
 .wg_siteHeader__brandMark {

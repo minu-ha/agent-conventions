@@ -60,7 +60,7 @@ tags: functions, origin
 `let` 재할당과 배열 `push` 누적은 `functions-avoid-imperative-assembly-in-wide-scopes`가 봅니다.
 객체 필드를 그대로 읽는 것은 계산이 아니라 `values-read-objects-through-chains`가 봅니다.
 
-**Incorrect (돌려주기만 할 값을 변수로 뺌):**
+**Incorrect (돌려주기만 할 값을 변수로 뺍니다):**
 
 ```ts
 const toNextIteration = (iteration: number): number => {
@@ -76,7 +76,7 @@ const toRowLabel = (row: Row): string => {
 };
 ```
 
-**Incorrect (두 번 쓴다는 이유만으로 변수로 뺌):**
+**Incorrect (두 번 쓴다는 이유만으로 변수로 뺍니다):**
 
 ```ts
 const toRowClassNames = (row: Row): string[] => {
@@ -89,7 +89,7 @@ const toRowClassNames = (row: Row): string[] => {
 };
 ```
 
-**Correct (항이 하나라 두 번 적어도 그 자리에 그대로 씀):**
+**Correct (항이 하나라 두 번 적어도 그 자리에 그대로 씁니다):**
 
 ```ts
 const toRowClassNames = (row: Row): string[] => {
@@ -100,7 +100,7 @@ const toRowClassNames = (row: Row): string[] => {
 };
 ```
 
-**Correct (한 번만 써도 합성 판정이라 변수로 뺌):**
+**Correct (한 번만 써도 합성 판정이라 변수로 뺍니다):**
 
 ```ts
 const toRowAction = (row: Row): RowAction => {
@@ -110,7 +110,7 @@ const toRowAction = (row: Row): RowAction => {
 };
 ```
 
-**Correct (콜백 밖으로 빼 행마다 다시 계산하지 않음):**
+**Correct (콜백 밖으로 빼 행마다 다시 계산하지 않습니다):**
 
 ```ts
 const toVisibleRows = (rows: Row[], keyword: string): Row[] => {
@@ -121,7 +121,7 @@ const toVisibleRows = (rows: Row[], keyword: string): Row[] => {
 };
 ```
 
-**Correct (바깥과 주고받는 호출이라 변수로 뺌):**
+**Correct (바깥과 주고받는 호출이라 변수로 뺍니다):**
 
 ```ts
 /**

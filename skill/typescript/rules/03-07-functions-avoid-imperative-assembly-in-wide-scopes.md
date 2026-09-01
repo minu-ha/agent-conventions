@@ -25,7 +25,7 @@ tags: functions
 떼어 낸 함수의 이름은 `functions-name-functions-by-what-comes-out`이 정합니다.
 중간값에 이름을 붙일지는 `functions-name-a-value-only-for-recompute-or-judgment`가 정합니다.
 
-**Incorrect (넓은 스코프에서 명령형으로 누적 조립):**
+**Incorrect (넓은 스코프에서 명령형으로 조립을 쌓습니다):**
 
 ```ts
 let visibleTabs = ["overview"];
@@ -35,13 +35,13 @@ if (canManageItems) {
 }
 ```
 
-**Correct (조건부 스프레드로 한 번에 계산):**
+**Correct (조건부 스프레드로 한 번에 계산합니다):**
 
 ```ts
 const visibleTabs = ["overview", ...(canManageItems ? ["items"] : [])];
 ```
 
-**Correct (조건이 셋 이상이면 표로 두고 걸러 냄):**
+**Correct (조건이 셋 이상이면 표로 두고 걸러 냅니다):**
 
 ```ts
 const visibleTabs = [

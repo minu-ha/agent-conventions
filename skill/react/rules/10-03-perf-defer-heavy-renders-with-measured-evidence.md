@@ -44,7 +44,7 @@ tags: perf, state
 - 지연 값 기준 재계산에 `useMemo`를 함께 쓰는 것은 `perf-avoid-defensive-memoization`의 허용 사유에 듭니다.
   그때도 측정한 근거를 주석으로 남깁니다.
 
-**Incorrect (행 20개 목록을 다시 그리는 갱신까지 전환으로 감쌈):**
+**Incorrect (행 20개 목록을 다시 그리는 갱신까지 전환으로 감쌉니다):**
 
 ```tsx
 const [selectedTagId, setSelectedTagId] = useState("all");
@@ -59,14 +59,14 @@ const handleTagClick = (nextTagId: string) => {
 return <UiTagRows rows={tagRows} selectedTagId={selectedTagId} />;
 ```
 
-**Incorrect (입력과 무거운 파생 렌더를 같은 값에 묶음):**
+**Incorrect (입력과 무거운 파생 렌더를 같은 값에 묶습니다):**
 
 ```tsx
 const [keyword, setKeyword] = useState("");
 const filteredRows = rows.filter((row) => fuzzyMatchRow(row, keyword));
 ```
 
-**Correct (측정 근거가 있는 갱신만 전환으로 감싸고 행 20개 목록은 그대로 둠):**
+**Correct (측정 근거가 있는 갱신만 전환으로 감싸고 행 20개 목록은 그대로 둡니다):**
 
 ```tsx
 const handleTagClick = (nextTagId: string) => {
@@ -81,7 +81,7 @@ const handleStatusFilterChange = (nextStatus: ProductStatusFilter) => {
 };
 ```
 
-**Correct (입력은 즉시 반응하고 무거운 파생 계산만 늦춤):**
+**Correct (입력은 즉시 반응하고 무거운 파생 계산만 늦춥니다):**
 
 ```tsx
 const [keyword, setKeyword] = useState("");

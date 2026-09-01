@@ -33,7 +33,7 @@ tags: ownership, naming
 - 어느 레이어인지는 `ownership-layer-component-boundaries`가 먼저 판정합니다.
   이 규칙은 그 결과를 이름에 적는 것만 봅니다.
 
-**Incorrect (화면 컴포넌트에만 접두사를 빼먹음):**
+**Incorrect (화면 컴포넌트에만 접두사를 빼먹습니다):**
 
 ```tsx
 // page/detail/sales-trend-panel.tsx
@@ -42,7 +42,7 @@ export const SalesTrendPanel = (props: SalesTrendPanelProps) => {
 };
 ```
 
-**Incorrect (폴더에도 접두사를 붙이고 이름에서 되풀이함):**
+**Incorrect (폴더에도 접두사를 붙이고 이름에서 되풀이합니다):**
 
 ```tsx
 // component/ui/ui-button/ui-button-button.tsx
@@ -51,7 +51,7 @@ export const UiButtonButton = (props: UiButtonButtonProps) => {
 };
 ```
 
-**Correct (파일과 심볼에만 붙이고 폴더에는 붙이지 않음):**
+**Correct (파일과 심볼에만 붙이고 폴더에는 붙이지 않습니다):**
 
 ```tsx
 // page/detail/_pg-sales-trend-panel.tsx

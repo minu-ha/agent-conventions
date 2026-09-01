@@ -60,7 +60,7 @@ tags: ownership
   루트에만 있는 `util`과 `config`는 `typescript/functions-promote-shared-functions-to-root-util`과
   `typescript/naming-read-environment-values-through-config-env`가 정합니다.
 
-**Incorrect (단순 컴포넌트에 역할 폴더를 미리 다 만듦):**
+**Incorrect (단순 컴포넌트에 역할 폴더를 미리 다 만듭니다):**
 
 ```txt
 component/ui/button/
@@ -72,7 +72,7 @@ component/ui/button/
 └── _type/
 ```
 
-**Incorrect (범용 이름 폴더와 복수형을 섞어 씀):**
+**Incorrect (범용 이름 폴더와 복수형을 섞어 씁니다):**
 
 ```txt
 page/detail/
@@ -83,7 +83,7 @@ page/detail/
 └── helpers/
 ```
 
-**Incorrect (하위 소유자 안에 소유자를 다시 둠):**
+**Incorrect (하위 소유자 안에 소유자를 다시 둡니다):**
 
 ```txt
 page/detail/
@@ -96,7 +96,7 @@ page/detail/
             └── to-detection-rows.ts
 ```
 
-**Correct (필요한 역할 폴더만 만들고 하위 컴포넌트는 파일로 둠):**
+**Correct (필요한 역할 폴더만 만들고 하위 컴포넌트는 파일로 둡니다):**
 
 ```txt
 page/detail/
@@ -119,7 +119,7 @@ page/detail/
         └── to-chart-viewport.ts
 ```
 
-**Correct (지원 코드가 없으면 폴더 없이 파일만 둠):**
+**Correct (지원 코드가 없으면 폴더 없이 파일만 둡니다):**
 
 ```txt
 component/ui/button/

@@ -60,7 +60,7 @@ tags: absence
 `a ?? b`는 출처 둘을 놓고 하나를 고르는 계산이고, 그 결과는 어느 쪽에서 왔는지가 실행할 때 정해지는 파생값입니다.
 그래서 이름을 붙일지는 별칭 규칙이 아니라 `functions-name-a-value-only-for-recompute-or-judgment`가 판정합니다.
 
-**Incorrect (`??`와 `||` 오른쪽에 리터럴을 적음):**
+**Incorrect (`??`와 `||` 오른쪽에 리터럴을 적습니다):**
 
 ```ts
 const supportEmail = settings.supportEmail ?? "help@example.com";
@@ -68,7 +68,7 @@ const productRows = response.data.rows ?? [];
 const isCompact = (variant ?? "default") === "compact";
 ```
 
-**Correct (없을 수 있다는 사실을 그대로 드러냄):**
+**Correct (없을 수 있다는 사실을 그대로 드러냅니다):**
 
 ```ts
 if (!settings.supportEmail) {
@@ -78,14 +78,14 @@ if (!settings.supportEmail) {
 sendInvite({from: settings.supportEmail});
 ```
 
-**Correct (그대로 비교하면 기본값이 필요 없음):**
+**Correct (그대로 비교하면 기본값이 필요 없습니다):**
 
 ```ts
 const isCompact = variant === "compact";
 const productIds = response.data.rows?.map((row) => row.id);
 ```
 
-**Correct (값이 들어오는 경계에서 한 번 해소해 아래쪽에는 선택 값이 오지 않음):**
+**Correct (값이 들어오는 경계에서 한 번 해소해 아래쪽에는 선택 값이 오지 않습니다):**
 
 ```ts
 /**
@@ -99,13 +99,13 @@ const productSearchSchema = z.object({
 });
 ```
 
-**Correct (경계에서 못 하면 쓰는 자리에 그대로 적음):**
+**Correct (경계에서 못 하면 쓰는 자리에 그대로 적습니다):**
 
 ```ts
 fetchProducts({pageSize: query.pageSize ?? pagination_default_page_size});
 ```
 
-**Correct (이름을 붙인다면 파생값임이 드러나는 이름):**
+**Correct (이름을 붙인다면 파생값임이 드러나게 짓습니다):**
 
 ```ts
 const effectivePageSize = query.pageSize ?? pagination_default_page_size;

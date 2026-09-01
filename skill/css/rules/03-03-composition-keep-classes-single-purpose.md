@@ -23,13 +23,13 @@ tags: composition, modifiers, responsibility
 수정자가 상태를 표현할 자격이 있는지는
 `composition-do-not-build-structural-variants-with-modifiers` 규칙이 판정합니다.
 
-**Incorrect (상태 의미를 별도 클래스 역할처럼 합쳐 버림):**
+**Incorrect (상태 의미를 별도 클래스 역할처럼 합쳐 버립니다):**
 
 ```tsx
 <div className={clsx("pg_catalogIndex__listButtonActive")} />
 ```
 
-**Correct (기본 클래스와 상태 수정자를 분리):**
+**Correct (기본 클래스와 상태 수정자를 분리합니다):**
 
 ```tsx
 <div className={clsx("pg_catalogIndex__listButton", isActive && "pg_catalogIndex__listButton--active")} />

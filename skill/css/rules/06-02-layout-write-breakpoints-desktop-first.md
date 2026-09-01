@@ -45,7 +45,7 @@ tags: selector, responsive
 
 어디에 적을지는 `layout-group-breakpoints-at-the-file-bottom`이 정합니다.
 
-**Incorrect (두 방향을 섞어 겹치는 구간을 만듦):**
+**Incorrect (두 방향을 섞어 겹치는 구간을 만듭니다):**
 
 ```css
 .pg_products__toolbar {
@@ -66,7 +66,7 @@ tags: selector, responsive
 }
 ```
 
-**Incorrect (`max-width` 소수 보정과 좁은 쪽부터 쓴 순서):**
+**Incorrect (`max-width`를 소수로 보정하고 좁은 쪽부터 씁니다):**
 
 ```css
 @media (max-width: 639.98px) {
@@ -82,7 +82,7 @@ tags: selector, responsive
 }
 ```
 
-**Correct (구간을 읽는 법):**
+**Correct (구간을 이렇게 읽습니다):**
 
 ```txt
         640px      1024px     1440px            넓어짐 →
@@ -92,7 +92,7 @@ tags: selector, responsive
    아래     좁은 노트북
 ```
 
-**Correct (기본 선언이 가장 넓고 넓은 쪽부터 좁혀 감):**
+**Correct (기본 선언이 가장 넓고 넓은 쪽부터 좁혀 갑니다):**
 
 ```css
 .pg_products__layout {
