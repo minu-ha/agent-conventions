@@ -13,7 +13,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 	--coral: #cc785c; --coral-dk: #a9583e;
 	--bad: #a8392b; --good: #3f6f52; --tag-fg: #7d6a55;
 	--code-bg: #fff; --code-fg: #0f1416;
-	--gut: #8d989e; --code-c: #55656d; --code-s: #245c40; --code-k: #9c4a2e; --code-g: #6d5a45;
+	--gut: #5c686e; --code-c: #3d4a51; --code-s: #1c5238; --code-k: #8f4025; --code-g: #5d4c39;
 	--sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
 	--mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
@@ -27,7 +27,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 		--coral: #d98a6c; --coral-dk: #e0a184;
 		--bad: #dd8a7d; --good: #6bb890; --tag-fg: #b39a7c;
 		--code-bg: #12171a; --code-fg: #eef3f5;
-		--gut: #6d7a81; --code-c: #93a1a8; --code-s: #86c9a3; --code-k: #eda183; --code-g: #cbb08c;
+		--gut: #93a0a7; --code-c: #b3c0c6; --code-s: #94d6ae; --code-k: #f3ad90; --code-g: #d8bd99;
 	}
 }
 
@@ -38,7 +38,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 	--coral: #d98a6c; --coral-dk: #e0a184;
 	--bad: #dd8a7d; --good: #6bb890; --tag-fg: #b39a7c;
 	--code-bg: #12171a; --code-fg: #eef3f5;
-	--gut: #6d7a81; --code-c: #93a1a8; --code-s: #86c9a3; --code-k: #eda183; --code-g: #cbb08c;
+	--gut: #93a0a7; --code-c: #b3c0c6; --code-s: #94d6ae; --code-k: #f3ad90; --code-g: #d8bd99;
 }
 
 body {
@@ -170,24 +170,33 @@ body {
 .acc-body p { margin: 0 0 .75em; }
 .acc-body p:last-child { margin-bottom: 0; }
 .acc-body .lead { margin: 0 0 .9em; padding-left: 11px; border-left: 2px solid color-mix(in srgb, var(--coral) 55%, transparent); color: var(--ink); font-weight: 500; line-height: 1.7; }
-.acc-body ul { margin: 0 0 .95em; padding-left: 1.15em; list-style: none; display: flex; flex-direction: column; gap: .45em; }
+.acc-body ul { margin: 0 0 .95em; padding-left: 1.5em; list-style: none; display: flex; flex-direction: column; gap: .45em; }
 .acc-body ul:last-child { margin-bottom: 0; }
 /* li 를 grid 로 두면 텍스트 런과 인라인 code 칩이 각각 그리드 아이템이 되어 한 글자씩 세로로 쌓인다.
    표식은 흐름 밖으로 빼고 걸이 들여쓰기로 둘째 줄을 맞춘다. */
 .acc-body li { position: relative; }
-.acc-body li::before { content: "—"; position: absolute; left: -1.15em; color: var(--coral); font-size: .8em; }
+.acc-body li::before { content: "*"; position: absolute; left: -1.35em; top: .12em; color: var(--coral); font-size: 1em; font-weight: 700; }
 .acc-body code { font-family: var(--mono); font-size: .88em; background: var(--hover); border: 1px solid var(--soft); border-radius: 3px; padding: 0 .25em; }
 .acc-body strong { color: var(--ink); font-weight: 600; }
 .acc-body .tw { overflow-x: auto; margin: 0 0 .8em; }
-.acc-body table { border-collapse: collapse; font-size: 12.5px; width: 100%; table-layout: auto; }
-.acc-body th { padding: 0 16px 7px 0; text-align: left; vertical-align: bottom; font-family: var(--mono); font-size: 10px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--edge); }
-.acc-body td { padding: 9px 16px 9px 0; text-align: left; vertical-align: top; line-height: 1.6; border-bottom: 1px solid var(--hover); }
+.acc-body table { border-collapse: collapse; font-size: 12.5px; width: 100%; table-layout: auto; border: 1px solid var(--hair); }
+.acc-body th { padding: 7px 11px; text-align: left; vertical-align: bottom; font-family: var(--mono); font-size: 10px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); background: var(--hover); border: 1px solid var(--hair); border-bottom-color: var(--edge); }
+.acc-body td { padding: 8px 11px; text-align: left; vertical-align: top; line-height: 1.6; border: 1px solid var(--hair); }
 .acc-body pre.code { border: 1px solid var(--soft); border-radius: 2px; margin: .2em 0 1em; }
 
 /* ---------- examples ---------- */
 /* Incorrect 바로 뒤에 Correct 가 오고 둘 다 코드 블록 하나면 좌우로 놓는다.
    auto-fit 이라 main 이 좁아지면 브레이크포인트 없이 스스로 위아래로 떨어진다. */
 .exs { display: flex; flex-direction: column; gap: 18px; margin-top: 16px; }
+/* 짝 비교는 그룹과 다른 것이라 머리말을 코랄로 따로 세운다. 붉고 푸른 그룹 머리말과 갈린다. */
+.dx { display: flex; flex-direction: column; gap: 9px; }
+.dx-hd { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 10px; }
+.dx-tag { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: .12em; white-space: nowrap; color: var(--coral-dk); }
+.dx-rule { height: 1px; background: color-mix(in srgb, var(--coral) 30%, transparent); }
+.box-lead { display: inline-flex; align-items: center; gap: 6px; flex: 0 0 auto; }
+.box-side { font-family: var(--mono); font-size: 9.5px; font-weight: 500; letter-spacing: .06em; padding: 1px 5px; border-radius: 2px; white-space: nowrap; }
+.box-bad .box-side { color: var(--bad); border: 1px solid color-mix(in srgb, var(--bad) 35%, transparent); }
+.box-good .box-side { color: var(--good); border: 1px solid color-mix(in srgb, var(--good) 35%, transparent); }
 .diff { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(330px, 100%), 1fr)); gap: 14px; }
 
 /* 테두리 전체에 의미색을 두르면 잉크가 많다. 좌측 2px 만 의미색으로 세운다. */
@@ -198,8 +207,10 @@ body {
 .box-bad > .box-hd { background: color-mix(in srgb, var(--bad) 5%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--bad) 16%, transparent); }
 .box-good > .box-hd { background: color-mix(in srgb, var(--good) 5%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--good) 16%, transparent); }
 .box-gl { font-family: var(--mono); font-size: 12px; font-weight: 700; }
-.box-bad .box-gl, .box-bad .box-note { color: var(--bad); }
-.box-good .box-gl, .box-good .box-note { color: var(--good); }
+.box-bad .box-gl { color: var(--bad); }
+.box-good .box-gl { color: var(--good); }
+/* 종류는 글리프·좌측 띠·머리 배경이 이미 말한다. 제목은 본문 색으로 읽히게 둔다. */
+.box-note { color: var(--ink); }
 /* 라벨은 그 예시가 무엇인지 말해 주는 유일한 문장이다. 잘라내지 않고 줄바꿈한다. */
 .box-note { min-width: 0; font-size: 13px; font-weight: 600; line-height: 1.5; word-break: keep-all; text-wrap: pretty; }
 .box-langs { font-family: var(--mono); font-size: 10px; color: var(--faint); }
@@ -234,7 +245,7 @@ body {
 /* ---------- code ---------- */
 /* 줄번호·마커·코드 3열. 거터 폭을 3em 으로 고정해 예시끼리 코드 시작이 맞는다. */
 /* 거터는 세 자리 줄번호가 안 접히게 잡는다. 3em 은 안쪽 여백을 빼면 두 자리도 못 담는다. */
-.cd { display: grid; grid-template-columns: 3.7em 16px minmax(0, 1fr); padding: 9px 12px 9px 0; font-family: var(--mono); font-size: 11.5px; line-height: 1.65; background: var(--code-bg); color: var(--code-fg); tab-size: 2; }
+.cd { display: grid; grid-template-columns: 3.9em 16px minmax(0, 1fr); padding: 9px 12px 9px 0; font-family: var(--mono); font-size: 11px; line-height: 1.65; background: var(--code-bg); color: var(--code-fg); tab-size: 2; }
 .cd i { display: block; font-style: normal; min-height: 1.65em; }
 .cd .n { padding: 0 9px 0 10px; text-align: right; white-space: nowrap; color: var(--gut); font-variant-numeric: tabular-nums; user-select: none; }
 .cd .m { text-align: center; font-weight: 700; color: transparent; user-select: none; border-right: 1px solid var(--soft); }
@@ -251,7 +262,7 @@ body {
 .cd + .cd, .cd + .cd-lb, .cd-p + .cd { border-top: 1px solid var(--soft); }
 .cd-lb { font-family: var(--mono); font-size: 9.5px; letter-spacing: .06em; color: var(--faint); padding: 6px 14px 0; background: var(--code-bg); }
 
-pre.code { margin: 0; padding: 11px 13px; font-family: var(--mono); font-size: 11.5px; line-height: 1.75; background: color-mix(in srgb, var(--ink) 4%, var(--code-bg)); color: var(--code-fg); white-space: pre-wrap; overflow-wrap: anywhere; tab-size: 2; }
+pre.code { margin: 0; padding: 11px 13px; font-family: var(--mono); font-size: 11px; line-height: 1.75; background: color-mix(in srgb, var(--ink) 4%, var(--code-bg)); color: var(--code-fg); white-space: pre-wrap; overflow-wrap: anywhere; tab-size: 2; }
 .c { color: var(--code-c); }
 .s { color: var(--code-s); }
 .k { color: var(--code-k); font-weight: 600; }
@@ -641,14 +652,15 @@ const viewerClientScript = `(() => {
 			'<div class="cd">' + cells + "</div>";
 	}).join("");
 
-	const boxHtml = (e, marks) => {
+	const boxHtml = (e, marks, side) => {
 		if (!e) return "";
 
 		const bad = e.kind === "incorrect";
 		const langs = [...new Set(e.blocks.map((b) => b.lang))].join(" \\u00b7 ");
 
 		return '<div class="box ' + (bad ? "box-bad" : "box-good") + '"><div class="box-hd">' +
-			'<span class="box-gl" aria-hidden="true">' + (bad ? "\\u2212" : "+") + "</span>" +
+			'<span class="box-lead"><span class="box-gl" aria-hidden="true">' + (bad ? "\\u2212" : "+") + "</span>" +
+			(side ? '<span class="box-side">' + side + "</span>" : "") + "</span>" +
 			'<span class="box-note">' + (e.label ? inlineHi(e.label) : (bad ? "INCORRECT" : "CORRECT")) + "</span>" +
 			"</div>" + codeHtml(e.blocks, marks ? {mask: marks, bad: bad} : null) + "</div>";
 	};
@@ -723,7 +735,11 @@ const viewerClientScript = `(() => {
 			}
 
 			const exsHtml = units.map((u) => u.diff
-				? '<div class="diff">' + boxHtml(u.bad, u.marks ? u.marks.am : null) + boxHtml(u.good, u.marks ? u.marks.bm : null) + "</div>"
+				? '<div class="dx"><div class="dx-hd"><span class="dx-tag"><span aria-hidden="true">\\u21c4</span>' +
+					"<span>같은 코드 \\u00b7 고치기 전 \\u2192 후</span></span>" +
+					'<span class="dx-rule"></span></div>' +
+					'<div class="diff">' + boxHtml(u.bad, u.marks ? u.marks.am : null, "BEFORE") +
+					boxHtml(u.good, u.marks ? u.marks.bm : null, "AFTER") + "</div></div>"
 				: groupHtml(u.kind, u.samples, key, u.at)).join("");
 			// 두 목록이 무엇이 다른지 라벨만으로는 알 수 없어서 한 줄 설명을 붙인다.
 			const refs = [];
