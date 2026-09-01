@@ -100,7 +100,7 @@ const toRowLabel = (row: Row): string => {
 };
 ```
 
-**Correct (돌려주기만 할 값은 돌려주는 자리에 그대로 적습니다):**
+**Correct (이름을 붙이지 않고 그대로 돌려줍니다):**
 
 ```ts
 const toNextIteration = (iteration: number): number => {
