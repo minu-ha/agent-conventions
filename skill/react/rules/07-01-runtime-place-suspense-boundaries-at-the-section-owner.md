@@ -48,9 +48,7 @@ return (
 		<PgProductTreeSection />
 	</Suspense>
 );
-```
 
-```tsx
 // 섹션: 자기 자신을 감쌀 수 없으므로 경계 없이 쿼리만 부른다
 export const PgProductTreeSection = () => {
 	/**

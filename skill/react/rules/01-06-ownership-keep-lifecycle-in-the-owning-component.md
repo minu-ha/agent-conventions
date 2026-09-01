@@ -29,32 +29,9 @@ tags: ownership, hooks
 
 **Incorrect (줄 수를 줄이려고 생명주기를 훅 뒤로 옮깁니다):**
 
-```ts
-// component/widget/chart/chart-root/_hook/use-chart-instance.ts
-export const useChartInstance = (containerRef: RefObject<HTMLDivElement | null>) => {
-	const [chart, setChart] = useState<EChartsType | null>(null);
-
-	useEffect(() => {
-		const instance = init(containerRef.current);
-		const handleResize = () => {
-			instance.resize();
-		};
-
-		window.addEventListener("resize", handleResize);
-		setChart(instance);
-
-		return () => {
-			window.removeEventListener("resize", handleResize);
-			instance.dispose();
-		};
-	}, [containerRef]);
-
-	return chart;
-};
-```
-
 ```tsx
 // component/widget/chart/chart-root/wg-chart-root.tsx
+// 생성·resize·정리가 _hook/use-chart-instance.ts로 빠져 이 파일에서는 실행 흐름이 보이지 않는다
 export const WgChartRoot = (props: WgChartRootProps) => {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const chart = useChartInstance(containerRef);

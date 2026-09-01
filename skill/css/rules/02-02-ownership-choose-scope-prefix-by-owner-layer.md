@@ -36,18 +36,14 @@ tags: ownership, scope, prefix
 파일이 어느 최상위 폴더에 있어야 하는지는 활성화된 프레임워크 규약이 판단하고, 접두사는 그 폴더를 그대로 따릅니다.
 파일 이름의 `_` 표식도 그 규약이 정합니다.
 
-**Incorrect (최상위 폴더 대신 하위 폴더를 보고 `widget` 부품을 화면 범위로 내립니다):**
-
-```txt
-component/widget/chart/_wg-chart-header.css
-  pg_chartHeader__root
-```
-
-**Incorrect (`src/page` 아래 파일에 재사용 예상으로 `wg_`를 붙입니다):**
+**Incorrect (최상위 폴더 대신 하위 폴더와 재사용 예상을 보고 접두사를 고릅니다):**
 
 ```txt
 page/detail/_pg-sales-trend-panel.css
   wg_salesTrendPanel__root
+
+component/widget/chart/_wg-chart-header.css
+  pg_chartHeader__root
 ```
 
 **Correct (소유 레이어대로 접두사를 붙입니다):**

@@ -12,7 +12,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 	--hair: #d8dee2; --soft: #e4e9ec; --edge: #c3ccd1; --hover: #e7ecef;
 	--accent: #55636b; --accent-dk: #35424a;
 	--bad: #a8392b; --good: #3f6f52; --tag-fg: #7d6a55;
-	--code-bg: #f7f9fa; --code-fg: #0f1416;
+	--code-bg: #f8f8f8; --code-fg: #0f1416;
 	--gut: #5c686e; --code-c: #3d4a51; --code-s: #1c5238; --code-k: #8f4025; --code-g: #5d4c39;
 	--dx-b: #46525a; --dx-a: #1b5896;
 	--sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;

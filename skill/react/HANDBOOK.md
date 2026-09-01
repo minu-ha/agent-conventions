@@ -214,9 +214,7 @@ export const WgLineChart = (props: WgLineChartProps) => {
 export const UiLineChart = (props: UiLineChartProps) => {
 	return <svg className={clsx("ui_lineChart__root")}>{/* ... */}</svg>;
 };
-```
 
-```tsx
 // component/widget/sales-window-chart/wg-sales-window-chart.tsx
 export const WgSalesWindowChart = (props: WgSalesWindowChartProps) => {
 	return <UiLineChart points={toChartPoints(props.readings)} />;
@@ -362,7 +360,7 @@ component/ui/button/
 └── ui-button.css
 ```
 
-**Incorrect (범용 이름 폴더와 복수형을 섞어 씁니다):**
+**Incorrect (범용 이름 폴더를 섞어 쓰고 하위 소유자 안에 소유자를 다시 둡니다):**
 
 ```txt
 page/detail/
@@ -370,14 +368,7 @@ page/detail/
 ├── components/
 ├── constants/
 ├── utils/
-└── helpers/
-```
-
-**Incorrect (하위 소유자 안에 소유자를 다시 둡니다):**
-
-```txt
-page/detail/
-├── pg-detail.tsx
+├── helpers/
 └── sales-trend-panel/
     ├── pg-sales-trend-panel.tsx
     └── detection/
@@ -540,31 +531,42 @@ import {chart_series_line} from "@/component/ui/chart/_constant/series";
 
 **Incorrect (로컬 계산을 습관적으로 훅으로 포장합니다):**
 
-```ts
+```tsx
+// page/products/_hook/use-media-upload-payload.ts
 export const useMediaUploadPayload = (files: UploadFile[]) => {
-	return files.map((file) => ({ uid: file.uid }));
+	return files.map((file) => ({uid: file.uid}));
+};
+
+// page/products/_pg-media-upload-panel.tsx
+export const PgMediaUploadPanel = (props: PgMediaUploadPanelProps) => {
+	const mediaUploadPayload = useMediaUploadPayload(props.files);
+
+	/**
+	 * 업로드를 확정할 때 이미 만들어 둔 값을 보냄
+	 */
+	const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = () => {
+		void saveMedia(mediaUploadPayload);
+	};
+
+	return <UiButton onClick={handleSaveButtonClick}>저장</UiButton>;
 };
 ```
 
-**Correct (순수 계산은 소유자의 `_function` 폴더에 일반 함수로 둡니다):**
+**Correct (순수 계산은 소유자의 `_function` 폴더에 두고 핸들러가 직접 부릅니다):**
 
-```ts
+```tsx
 // page/products/_function/to-media-upload-request.ts
 /**
  * 업로드 파일 목록으로 저장 요청을 조립
  */
 export const toMediaUploadRequest = (files: UploadFile[]) => {
-	return files.map((file) => ({ uid: file.uid }));
+	return files.map((file) => ({uid: file.uid}));
 };
-```
 
-**Correct (훅 없이 컴포넌트 핸들러가 그 함수를 직접 부릅니다):**
-
-```tsx
 // page/products/_pg-media-upload-panel.tsx
 import {toMediaUploadRequest} from "@/page/products/_function/to-media-upload-request";
 
-const PgMediaUploadPanel = (props: PgMediaUploadPanelProps) => {
+export const PgMediaUploadPanel = (props: PgMediaUploadPanelProps) => {
 	/**
 	 * 업로드를 확정할 때만 정규화해서 보냄. 렌더 중에는 계산하지 않는다
 	 */
@@ -600,32 +602,9 @@ const PgMediaUploadPanel = (props: PgMediaUploadPanelProps) => {
 
 **Incorrect (줄 수를 줄이려고 생명주기를 훅 뒤로 옮깁니다):**
 
-```ts
-// component/widget/chart/chart-root/_hook/use-chart-instance.ts
-export const useChartInstance = (containerRef: RefObject<HTMLDivElement | null>) => {
-	const [chart, setChart] = useState<EChartsType | null>(null);
-
-	useEffect(() => {
-		const instance = init(containerRef.current);
-		const handleResize = () => {
-			instance.resize();
-		};
-
-		window.addEventListener("resize", handleResize);
-		setChart(instance);
-
-		return () => {
-			window.removeEventListener("resize", handleResize);
-			instance.dispose();
-		};
-	}, [containerRef]);
-
-	return chart;
-};
-```
-
 ```tsx
 // component/widget/chart/chart-root/wg-chart-root.tsx
+// 생성·resize·정리가 _hook/use-chart-instance.ts로 빠져 이 파일에서는 실행 흐름이 보이지 않는다
 export const WgChartRoot = (props: WgChartRootProps) => {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const chart = useChartInstance(containerRef);
@@ -2471,33 +2450,47 @@ return (
 );
 ```
 
-**Correct (되돌릴 때 살려야 할 상태가 하위 트리에 있는 자리에만 씁니다):**
+**Correct (마운트 의미가 있으면 조건부 렌더링을 둡니다):**
 
 ```tsx
+// 편집을 취소하면 폼이 해제돼서 다시 들어갈 때 빈 입력으로 시작한다
+return (
+	<Fragment>
+		{isEditing && <PgProductEditorForm />}
+		{!isEditing && <PgProductPreviewPane />}
+	</Fragment>
+);
+```
+
+**Incorrect (되돌릴 때 살려야 할 상태를 조건부 렌더링으로 날립니다):**
+
+```tsx
+// 사이드바: 접어 둔 노드와 스크롤 위치를 자기 상태로 갖는다
 const PgProductSidebar = () => {
-	// 접어 둔 노드와 스크롤 위치가 사이드바 안에 있다. 닫았다 열면 그대로 있어야 한다
 	const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
 
 	return <UiTree expandedKeys={expandedKeys} onExpand={setExpandedKeys} />;
 };
+
+// 사이드바를 소유한 화면: 닫으면 해제돼서 접어 둔 노드와 스크롤 위치가 사라진다
+return isSidebarOpen && <PgProductSidebar />;
 ```
 
+**Correct (되돌릴 때 살려야 할 상태가 하위 트리에 있는 자리에만 씁니다):**
+
 ```tsx
+// 사이드바: 접어 둔 노드와 스크롤 위치를 자기 상태로 갖는다
+const PgProductSidebar = () => {
+	const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
+
+	return <UiTree expandedKeys={expandedKeys} onExpand={setExpandedKeys} />;
+};
+
+// 사이드바를 소유한 화면: 닫아도 마운트를 유지해 그 상태를 그대로 살린다
 return (
 	<Activity mode={isSidebarOpen ? "visible" : "hidden"}>
 		<PgProductSidebar />
 	</Activity>
-);
-```
-
-**Correct (마운트 의미가 있으면 조건부 렌더링을 둡니다):**
-
-```tsx
-return (
-	<Fragment>
-		{hasItems && <PgProductList />}
-		{!hasItems && <PgProductEmptyState />}
-	</Fragment>
 );
 ```
 
@@ -2655,6 +2648,19 @@ export const PgProductScreen = () => {
 };
 ```
 
+**Incorrect (목록에서도 짧은 문법을 써서 `key`를 붙일 자리가 없습니다):**
+
+```tsx
+export const PgProductRows = (props: PgProductRowsProps) => {
+	return props.products.map((product) => (
+		<>
+			<PgProductRow product={product} />
+			<PgProductRowDivider />
+		</>
+	));
+};
+```
+
 **Correct (`key`가 필요해도 같은 형태를 씁니다):**
 
 ```tsx
@@ -2731,6 +2737,14 @@ return <section>{selectedRows.length && <PgProductBulkActionBar />}</section>;
 return <section>{selectedRows.length > 0 && <PgProductBulkActionBar selectedRows={selectedRows} />}</section>;
 ```
 
+**Incorrect (컴포넌트가 통째로 안 그리는 자리에 `&&`를 씁니다):**
+
+```tsx
+const PgProductPanel = (props: PgProductPanelProps) => {
+	return props.isVisible && <section className={clsx("pg_productPanel__root")}>{props.children}</section>;
+};
+```
+
 **Correct (컴포넌트가 통째로 안 그리면 이른 반환을 씁니다):**
 
 ```tsx
@@ -2779,7 +2793,7 @@ return <UiBadge tone={props.isSelected ? "accent" : "neutral"} />;
 - 파생 값은 구획이 아닙니다.
   `screen-keep-derived-values-close`대로 쓰는 자리에서 계산합니다.
 
-**Incorrect (이펙트가 아래 선언을 의존성으로 참조해 초기화 전에 접근합니다):**
+**Incorrect (같은 종류가 흩어지고 이펙트가 아래 선언을 의존성으로 참조합니다):**
 
 ```tsx
 export const PgOrderToolbar = () => {
@@ -2790,25 +2804,11 @@ export const PgOrderToolbar = () => {
 
 	const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
-	return <section className={clsx("pg_orderToolbar__root")}>{/* ... */}</section>;
-};
-```
-
-**Incorrect (같은 종류가 흩어져 위아래를 오가며 읽습니다):**
-
-```tsx
-export const PgOrderToolbar = () => {
-	const [selectedIds, setSelectedIds] = useState<string[]>([]);
-
 	const handleClearButtonClick: MouseEventHandler<HTMLButtonElement> = () => {
 		setSelectedIds([]);
 	};
 
 	const [isPanelOpen, setIsPanelOpen] = useState(false);
-
-	useEffect(() => {
-		document.title = `주문 ${selectedIds.length}건 선택`;
-	}, [selectedIds]);
 
 	const handlePanelOpenButtonClick: MouseEventHandler<HTMLButtonElement> = () => {
 		setIsPanelOpen(true);
@@ -2903,18 +2903,22 @@ export const PgOrderToolbar = () => {
 **Incorrect (흐름보다 분해 자체가 목적이 됩니다):**
 
 ```tsx
-return (
-	<PgProductShell>
-		<PgProductHeaderSection />
-		<PgProductContentSection />
-		<PgProductFooterSection />
-	</PgProductShell>
-);
+// page/products/pg-products.tsx
+export const PgProducts = () => {
+	return (
+		<PgProductShell>
+			<PgProductHeaderSection />
+			<PgProductContentSection />
+			<PgProductFooterSection />
+		</PgProductShell>
+	);
+};
 ```
 
 **Correct (라우트 진입은 조립과 경계만 갖고, 섹션이 자기 데이터를 자기 key 로 읽습니다):**
 
 ```tsx
+// page/products/pg-products.tsx
 export const PgProducts = () => {
 	return (
 		<Fragment>
@@ -2925,9 +2929,7 @@ export const PgProducts = () => {
 		</Fragment>
 	);
 };
-```
 
-```tsx
 // page/products/_pg-product-list-section.tsx
 export const PgProductListSection = () => {
 	const [urlParams, setUrlParams] = useQueryStates(productUrlParsers);
@@ -3344,9 +3346,7 @@ return (
 		<PgProductTreeSection />
 	</Suspense>
 );
-```
 
-```tsx
 // 섹션: 자기 자신을 감쌀 수 없으므로 경계 없이 쿼리만 부른다
 export const PgProductTreeSection = () => {
 	/**
@@ -3713,7 +3713,7 @@ export const UiTabsRoot = (props: UiTabsRootProps) => {
   선택자로 그 함수만 꺼내고, 값 의존성은 평소대로 적습니다.
   스토어 전체를 넣으면 `set`이 상태를 바꿀 때 참조가 달라져 이펙트가 다시 실행됩니다.
 
-**Incorrect (스토어 전체를 의존성에 넣어 갱신이 이펙트를 다시 돌리고 단일 화면용 값까지 복제합니다):**
+**Incorrect (화면이 도메인 판별을 직접 해서 스토어로 밀어 넣습니다):**
 
 ```ts
 const accessStore = useAccessStore();
@@ -3732,6 +3732,19 @@ const accessStore = useAccessStore();
 if (accessStore.canEditRecord) {
 	// ...
 }
+```
+
+**Incorrect (채우는 이펙트가 스토어 전체를 의존성에 넣어 `set`마다 다시 돕니다):**
+
+```ts
+const accessStore = useAccessStore();
+
+/**
+ * bootstrap capability 응답을 access store에 동기화
+ */
+useEffect(() => {
+	accessStore.setCapabilities(responseAccessBootstrapSuspense.data.capabilities);
+}, [accessStore, responseAccessBootstrapSuspense.data]);
 ```
 
 **Correct (소유자가 분명한 한 경계에서만 채우고 의존성에는 `set` 함수만 넣습니다):**
@@ -4026,6 +4039,12 @@ const handleSelectionToggle = (id: string) => {
 <li onClick={() => handleSelectionToggle(product.id)} />;
 ```
 
+**Correct (JSX에는 팩토리 호출만 두고 감싸는 화살표를 만들지 않습니다):**
+
+```tsx
+<li onClick={handleListItemClick(product.id)} />;
+```
+
 **Incorrect (블록 본문에서 안쪽 핸들러에 이름을 붙이고 팩토리에 With 접미사를 붙입니다):**
 
 ```tsx
@@ -4051,10 +4070,6 @@ const handleListItemClick =
 	(_event) => {
 		toggleSelection(productId);
 	};
-```
-
-```tsx
-<li onClick={handleListItemClick(product.id)} />;
 ```
 
 ### 9.3 Run User Actions in Handlers, Not Effects
@@ -4505,6 +4520,15 @@ JSX 자식 자리에는 `//`를 쓸 수 없습니다.
 	 */}
 	<PgProductSearchSection />
 	<PgProductTable rows={rows} />
+</div>;
+```
+
+**Incorrect (예외 이유를 한 줄로 접습니다):**
+
+```tsx
+{/* LegacyDatePicker는 className을 받지 않아 배치용 래퍼가 필요하다 */}
+<div className={clsx("pg_products__datePicker")}>
+	<LegacyDatePicker value={value} onChange={handleChange} />
 </div>;
 ```
 

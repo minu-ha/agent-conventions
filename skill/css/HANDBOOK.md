@@ -352,18 +352,14 @@ pg_dashboardIndex__header
 파일이 어느 최상위 폴더에 있어야 하는지는 활성화된 프레임워크 규약이 판단하고, 접두사는 그 폴더를 그대로 따릅니다.
 파일 이름의 `_` 표식도 그 규약이 정합니다.
 
-**Incorrect (최상위 폴더 대신 하위 폴더를 보고 `widget` 부품을 화면 범위로 내립니다):**
-
-```txt
-component/widget/chart/_wg-chart-header.css
-  pg_chartHeader__root
-```
-
-**Incorrect (`src/page` 아래 파일에 재사용 예상으로 `wg_`를 붙입니다):**
+**Incorrect (최상위 폴더 대신 하위 폴더와 재사용 예상을 보고 접두사를 고릅니다):**
 
 ```txt
 page/detail/_pg-sales-trend-panel.css
   wg_salesTrendPanel__root
+
+component/widget/chart/_wg-chart-header.css
+  pg_chartHeader__root
 ```
 
 **Correct (소유 레이어대로 접두사를 붙입니다):**
@@ -860,16 +856,6 @@ export const UiCollapse = (props: UiCollapseProps) => {
 }
 ```
 
-**Incorrect (역할 없는 이름의 래퍼를 늘립니다):**
-
-```tsx
-<div className={clsx("pg_postIndex__box")}>
-	<div className={clsx("pg_postIndex__inner")}>
-		<LegacyDatePicker value={value} onChange={handleChange} />
-	</div>
-</div>
-```
-
 **Correct (우리 컴포넌트면 `className` 계약을 추가합니다):**
 
 ```tsx
@@ -895,6 +881,16 @@ export const UiCollapse = (props: UiCollapseProps) => {
 }
 ```
 
+**Incorrect (역할 없는 이름의 래퍼를 늘립니다):**
+
+```tsx
+<div className={clsx("pg_postIndex__box")}>
+	<div className={clsx("pg_postIndex__inner")}>
+		<LegacyDatePicker value={value} onChange={handleChange} />
+	</div>
+</div>
+```
+
 **Correct (외부 라이브러리가 `className`을 받지 않으면 역할 이름을 붙여 감쌉니다):**
 
 ```tsx
@@ -904,13 +900,6 @@ export const UiCollapse = (props: UiCollapseProps) => {
 <div className={clsx("pg_postIndex__dateField")}>
 	<LegacyDatePicker value={value} onChange={handleChange} />
 </div>
-```
-
-```css
-.pg_postIndex__dateField {
-	flex: 1;
-	min-width: 0;
-}
 ```
 
 ### 3.6 Do Not Style Through the `style` Attribute
@@ -1941,6 +1930,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 **Incorrect (공통 토큰에 대체값을 붙여 값을 두 곳에 둡니다):**
 
 ```css
+/* src/page/post-index/_pg-post-filter-dialog.css */
 .pg_postFilterDialog__panel {
 	gap: var(--app-space-3, 12px);
 	color: var(--app-color-text-primary, #212529);
@@ -1955,9 +1945,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 	--app-space-3: 12px;
 	--app-color-text-primary: #212529;
 }
-```
 
-```css
 /* src/page/post-index/_pg-post-filter-dialog.css */
 .pg_postFilterDialog__panel {
 	gap: var(--app-space-3);
@@ -2087,9 +2075,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 .pg_catalogIndex__row {
 	background: #f5f5f5;
 }
-```
 
-```css
 /* pg-catalog-detail.css */
 .pg_catalogDetail__row {
 	background: #f5f5f5;
@@ -2103,16 +2089,12 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 :root {
 	--app-color-fill-muted: #f5f5f5;
 }
-```
 
-```css
 /* pg-catalog-index.css */
 .pg_catalogIndex__row {
 	background: var(--app-color-fill-muted);
 }
-```
 
-```css
 /* pg-catalog-detail.css */
 .pg_catalogDetail__row {
 	background: var(--app-color-fill-muted);
@@ -2165,11 +2147,13 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 **Incorrect (숫자를 직접 쓰고 경쟁으로 올립니다):**
 
 ```css
+/* src/page/products/pg-products.css */
 .pg_products__toolbar {
 	position: sticky;
 	z-index: 10;
 }
 
+/* src/component/widget/product-filter/wg-product-filter.css */
 .wg_productFilter__dropdown {
 	position: absolute;
 	z-index: 11;
@@ -2186,15 +2170,15 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 	--app-z-index-overlay: 200;
 	--app-z-index-popper: 300;
 }
-```
 
-```css
+/* src/page/products/pg-products.css */
 .pg_products__toolbar {
 	/* 조상에 transform이 없어야 이 층이 유지된다 */
 	position: sticky;
 	z-index: var(--app-z-index-sticky);
 }
 
+/* src/component/widget/product-filter/wg-product-filter.css */
 .wg_productFilter__dropdown {
 	position: absolute;
 	z-index: var(--app-z-index-popper);
@@ -2281,7 +2265,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
-**Correct (토큰 파일 한 곳에서만 값을 바꿉니다):**
+**Correct (토큰 파일 한 곳에서만 값을 바꾸고 사용자가 고른 테마가 시스템 설정을 이깁니다):**
 
 ```css
 /* src/style/token.css */
@@ -2304,12 +2288,8 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 		--app-shadow-panel: 0 1px 3px rgb(0 0 0 / 60%);
 	}
 }
-```
 
-**Correct (사용자가 고른 테마가 시스템 설정을 이깁니다):**
-
-```css
-/* src/style/token.css — [data-theme] 가 명시도로 @media 블록을 이긴다 */
+/* [data-theme] 는 명시도로 위 @media 블록을 이긴다 */
 :root[data-theme="light"] {
 	color-scheme: light;
 
@@ -2399,7 +2379,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
-**Correct (선언은 위, 브레이크포인트는 파일 아래 한 곳에 둡니다):**
+**Correct (선언은 위, 브레이크포인트는 파일 아래 한 곳에 모으고 그 안에서 상태를 한 겹 더 씁니다):**
 
 ```css
 .pg_products__toolbar {
@@ -2417,16 +2397,6 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 		flex-direction: column;
 	}
 
-	.pg_products__layout {
-		grid-template-columns: 1fr;
-	}
-}
-```
-
-**Correct (브레이크포인트 안에서 상태를 한 겹 더 씁니다):**
-
-```css
-@media (width < 1024px) {
 	.pg_products__layout {
 		grid-template-columns: 1fr;
 

@@ -34,7 +34,7 @@ tags: composition, ordering
 - 파생 값은 구획이 아닙니다.
   `screen-keep-derived-values-close`대로 쓰는 자리에서 계산합니다.
 
-**Incorrect (이펙트가 아래 선언을 의존성으로 참조해 초기화 전에 접근합니다):**
+**Incorrect (같은 종류가 흩어지고 이펙트가 아래 선언을 의존성으로 참조합니다):**
 
 ```tsx
 export const PgOrderToolbar = () => {
@@ -45,25 +45,11 @@ export const PgOrderToolbar = () => {
 
 	const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
-	return <section className={clsx("pg_orderToolbar__root")}>{/* ... */}</section>;
-};
-```
-
-**Incorrect (같은 종류가 흩어져 위아래를 오가며 읽습니다):**
-
-```tsx
-export const PgOrderToolbar = () => {
-	const [selectedIds, setSelectedIds] = useState<string[]>([]);
-
 	const handleClearButtonClick: MouseEventHandler<HTMLButtonElement> = () => {
 		setSelectedIds([]);
 	};
 
 	const [isPanelOpen, setIsPanelOpen] = useState(false);
-
-	useEffect(() => {
-		document.title = `주문 ${selectedIds.length}건 선택`;
-	}, [selectedIds]);
 
 	const handlePanelOpenButtonClick: MouseEventHandler<HTMLButtonElement> = () => {
 		setIsPanelOpen(true);

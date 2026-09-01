@@ -48,6 +48,13 @@ const columns = useMemo(() => toTableColumns(response.data.columns), [response.d
 const columns = useMemo(() => toTableColumns(response.data.columns), [response.data.columns]);
 ```
 
+**Incorrect (막연한 말이라 무엇을 재서 넣었는지 알 수 없습니다):**
+
+```ts
+// 안전하게 다시 계산하지 않도록
+const filteredRows = useMemo(() => rows.filter((row) => matchRow(row, deferredKeyword)), [deferredKeyword, rows]);
+```
+
 **Correct (측정 결과를 가리킵니다):**
 
 ```ts

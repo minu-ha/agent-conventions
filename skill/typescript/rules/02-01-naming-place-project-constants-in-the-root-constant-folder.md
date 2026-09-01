@@ -56,12 +56,31 @@ tags: naming, constant
 ```ts
 // page/products/pg-products.tsx
 const default_page_size = 20;
-```
+const request_timeout_ms = 20_000;
 
-```ts
+const productClient = createClient({timeoutMs: request_timeout_ms});
+const productQuery = useProductQuery({client: productClient, pageSize: default_page_size});
+
 // page/billing/pg-billing.tsx
 const default_page_size = 20;
-const request_timeout_ms = 20_000;
+
+const invoiceQuery = useInvoiceQuery({pageSize: default_page_size});
+```
+
+**Correct (루트 `constant` 폴더에 둔 이름을 쓰는 자리에서 가져옵니다):**
+
+```ts
+// page/products/pg-products.tsx
+import {api_request_timeout_ms} from "@/constant/api";
+import {pagination_default_page_size} from "@/constant/pagination";
+
+const productClient = createClient({timeoutMs: api_request_timeout_ms});
+const productQuery = useProductQuery({client: productClient, pageSize: pagination_default_page_size});
+
+// page/billing/pg-billing.tsx
+import {pagination_default_page_size} from "@/constant/pagination";
+
+const invoiceQuery = useInvoiceQuery({pageSize: pagination_default_page_size});
 ```
 
 **Incorrect (객체 하나에 모아 색인을 손으로 유지합니다):**
@@ -74,7 +93,7 @@ export const config = {
 } as const;
 ```
 
-**Correct (주제 파일에 상수를 하나씩 내보내고 쓰는 자리에서 이름으로 가져옵니다):**
+**Correct (주제 파일에 상수를 하나씩 이름 붙여 내보냅니다):**
 
 ```ts
 // constant/api.ts
@@ -82,21 +101,10 @@ export const config = {
  * 요청 하나를 기다리는 최대 시간. 게이트웨이가 30초에 끊어 그보다 먼저 실패를 알린다
  */
 export const api_request_timeout_ms = 20_000;
-```
 
-```ts
 // constant/pagination.ts
 /**
  * 목록 화면이 처음 불러오는 개수
  */
 export const pagination_default_page_size = 20;
-```
-
-```ts
-// page/products/pg-products.tsx
-import {api_request_timeout_ms} from "@/constant/api";
-import {pagination_default_page_size} from "@/constant/pagination";
-
-const productClient = createClient({timeoutMs: api_request_timeout_ms});
-const productQuery = useProductQuery({client: productClient, pageSize: pagination_default_page_size});
 ```

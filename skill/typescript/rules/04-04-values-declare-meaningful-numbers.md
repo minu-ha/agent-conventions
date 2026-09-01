@@ -49,11 +49,14 @@ tags: values, config
 그 규칙은 테스트 파일에서만 꺼집니다.
 기대값은 리터럴 자체가 계약이라 상수로 빼면 검증할 것이 남지 않습니다.
 
-**Incorrect (뜻이 있는 숫자를 쓰는 자리에 적습니다):**
+**Incorrect (뜻이 있는 숫자를 쓰는 자리에 적거나 지역 `const`로 자리만 옮깁니다):**
 
 ```ts
+// page/products/pg-products.tsx
+const maxAttempts = 42;
+
 const isOverRetryLimit = (attempts: number): boolean => {
-	return attempts > 42;
+	return attempts > maxAttempts;
 };
 
 const toPreviewRows = (rows: Row[]): Row[] => {
@@ -61,17 +64,7 @@ const toPreviewRows = (rows: Row[]): Row[] => {
 };
 ```
 
-**Incorrect (지역 `const`로 자리만 옮깁니다):**
-
-```ts
-const maxAttempts = 42;
-
-const isOverRetryLimit = (attempts: number): boolean => {
-	return attempts > maxAttempts;
-};
-```
-
-**Correct (상수로 선언하고 이름을 가리킵니다):**
+**Correct (`constant` 폴더에 선언하고 쓰는 자리에서 이름을 가리킵니다):**
 
 ```ts
 // constant/retry.ts
@@ -79,17 +72,14 @@ const isOverRetryLimit = (attempts: number): boolean => {
  * 이 횟수를 넘으면 사용자에게 실패를 보여 준다
  */
 export const retry_max_attempts = 42;
-```
 
-```ts
 // constant/preview.ts
 /**
  * 미리보기에 그릴 행 수. 서버가 한 번에 주는 최대치와 맞춘다
  */
 export const preview_row_count = 37;
-```
 
-```ts
+// page/products/pg-products.tsx
 import {preview_row_count} from "@/constant/preview";
 import {retry_max_attempts} from "@/constant/retry";
 
@@ -102,9 +92,29 @@ const toPreviewRows = (rows: Row[]): Row[] => {
 };
 ```
 
+**Incorrect (뜻이 없는 숫자에까지 이름을 붙입니다):**
+
+```ts
+// constant/table.ts
+export const table_first_row_index = 0;
+export const table_page_step = 1;
+
+// page/products/pg-products.tsx
+import {table_first_row_index, table_page_step} from "@/constant/table";
+
+const toFirstRow = (rows: Row[]): Row | undefined => {
+	return rows[table_first_row_index];
+};
+
+const toNextPage = (page: number): number => {
+	return page + table_page_step;
+};
+```
+
 **Correct (뜻이 없는 숫자는 그대로 둡니다):**
 
 ```ts
+// page/products/pg-products.tsx
 const toFirstRow = (rows: Row[]): Row | undefined => {
 	return rows[0];
 };

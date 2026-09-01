@@ -41,6 +41,18 @@ if (canManageItems) {
 const visibleTabs = ["overview", ...(canManageItems ? ["items"] : [])];
 ```
 
+**Incorrect (조건이 셋이 되자 삼항을 겹칩니다):**
+
+```ts
+const visibleTabs = canManageItems
+	? canInviteMembers
+		? ["overview", "items", "members"]
+		: ["overview", "items"]
+	: canInviteMembers
+		? ["overview", "members"]
+		: ["overview"];
+```
+
 **Correct (조건이 셋 이상이면 표로 두고 걸러 냅니다):**
 
 ```ts

@@ -51,18 +51,22 @@ tags: screen, routes, flow
 **Incorrect (흐름보다 분해 자체가 목적이 됩니다):**
 
 ```tsx
-return (
-	<PgProductShell>
-		<PgProductHeaderSection />
-		<PgProductContentSection />
-		<PgProductFooterSection />
-	</PgProductShell>
-);
+// page/products/pg-products.tsx
+export const PgProducts = () => {
+	return (
+		<PgProductShell>
+			<PgProductHeaderSection />
+			<PgProductContentSection />
+			<PgProductFooterSection />
+		</PgProductShell>
+	);
+};
 ```
 
 **Correct (라우트 진입은 조립과 경계만 갖고, 섹션이 자기 데이터를 자기 key 로 읽습니다):**
 
 ```tsx
+// page/products/pg-products.tsx
 export const PgProducts = () => {
 	return (
 		<Fragment>
@@ -73,9 +77,7 @@ export const PgProducts = () => {
 		</Fragment>
 	);
 };
-```
 
-```tsx
 // page/products/_pg-product-list-section.tsx
 export const PgProductListSection = () => {
 	const [urlParams, setUrlParams] = useQueryStates(productUrlParsers);

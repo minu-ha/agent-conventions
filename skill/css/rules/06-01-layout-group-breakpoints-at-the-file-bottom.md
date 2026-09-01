@@ -70,7 +70,7 @@ tags: selector, responsive
 }
 ```
 
-**Correct (선언은 위, 브레이크포인트는 파일 아래 한 곳에 둡니다):**
+**Correct (선언은 위, 브레이크포인트는 파일 아래 한 곳에 모으고 그 안에서 상태를 한 겹 더 씁니다):**
 
 ```css
 .pg_products__toolbar {
@@ -88,16 +88,6 @@ tags: selector, responsive
 		flex-direction: column;
 	}
 
-	.pg_products__layout {
-		grid-template-columns: 1fr;
-	}
-}
-```
-
-**Correct (브레이크포인트 안에서 상태를 한 겹 더 씁니다):**
-
-```css
-@media (width < 1024px) {
 	.pg_products__layout {
 		grid-template-columns: 1fr;
 

@@ -106,9 +106,7 @@ tags: tokens, variables, reuse
 .pg_catalogIndex__row {
 	background: #f5f5f5;
 }
-```
 
-```css
 /* pg-catalog-detail.css */
 .pg_catalogDetail__row {
 	background: #f5f5f5;
@@ -122,16 +120,12 @@ tags: tokens, variables, reuse
 :root {
 	--app-color-fill-muted: #f5f5f5;
 }
-```
 
-```css
 /* pg-catalog-index.css */
 .pg_catalogIndex__row {
 	background: var(--app-color-fill-muted);
 }
-```
 
-```css
 /* pg-catalog-detail.css */
 .pg_catalogDetail__row {
 	background: var(--app-color-fill-muted);

@@ -50,11 +50,13 @@ tags: values, layering
 **Incorrect (숫자를 직접 쓰고 경쟁으로 올립니다):**
 
 ```css
+/* src/page/products/pg-products.css */
 .pg_products__toolbar {
 	position: sticky;
 	z-index: 10;
 }
 
+/* src/component/widget/product-filter/wg-product-filter.css */
 .wg_productFilter__dropdown {
 	position: absolute;
 	z-index: 11;
@@ -71,15 +73,15 @@ tags: values, layering
 	--app-z-index-overlay: 200;
 	--app-z-index-popper: 300;
 }
-```
 
-```css
+/* src/page/products/pg-products.css */
 .pg_products__toolbar {
 	/* 조상에 transform이 없어야 이 층이 유지된다 */
 	position: sticky;
 	z-index: var(--app-z-index-sticky);
 }
 
+/* src/component/widget/product-filter/wg-product-filter.css */
 .wg_productFilter__dropdown {
 	position: absolute;
 	z-index: var(--app-z-index-popper);
