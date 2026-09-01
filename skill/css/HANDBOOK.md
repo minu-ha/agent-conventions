@@ -253,15 +253,12 @@ pg_doc__content   <- 라우트에 없는 줄임말
 pg_x__root        <- 되짚을 이름이 없음
 ```
 
-**Correct (뼈대는 화면 식별자, 컴포넌트는 자기 식별자를 씁니다):**
+**Correct (뼈대에는 라우트 세그먼트를 그대로 씁니다):**
 
 ```txt
-posts index page   -> pg_postsIndex__root
-posts detail page  -> pg_postsDetail__body
-document shell     -> pg_document__body
-
-overview section   -> pg_overviewSection__root
-summary band       -> pg_summaryBand__root
+pg_postsIndex__root    <- posts index 화면
+pg_postsDetail__body   <- posts/[id] 화면
+pg_document__body      <- document 화면
 ```
 
 **Incorrect (충돌이 없는데도 부모 식별자를 미리 붙입니다):**
@@ -271,7 +268,21 @@ pg_detailSalesTrendPanelOverviewSection__root
 pg_detailSalesTrendPanelSummaryBand__root
 ```
 
-**Correct (같은 식별자가 실제로 두 화면에 생겼을 때만 구분합니다):**
+**Correct (화면 안의 컴포넌트는 자기 식별자만 씁니다):**
+
+```txt
+pg_overviewSection__root
+pg_summaryBand__root
+```
+
+**Incorrect (충돌이 생기자 부모 사슬을 통째로 붙입니다):**
+
+```txt
+pg_detailSalesTrendPanelOverviewSection__root
+pg_indexSalesTrendPanelOverviewSection__root
+```
+
+**Correct (충돌한 화면 이름만 최소로 덧붙입니다):**
 
 ```txt
 pg_detailOverviewSection__root
@@ -1308,14 +1319,6 @@ TSX에서 그 지점이 보이므로 "이 마크업을 우리가 쓰는가"를 �
 }
 ```
 
-**Incorrect (요소 선택자를 최상위에 둡니다):**
-
-```css
-.wg_productDetail__prose h2 {
-	margin: 24px 0 12px;
-}
-```
-
 **Correct (우리가 렌더하면 클래스를 붙입니다):**
 
 ```tsx
@@ -1337,6 +1340,14 @@ TSX에서 그 지점이 보이므로 "이 마크업을 우리가 쓰는가"를 �
 
 .pg_catalogIndex__toolbarButton {
 	height: 32px;
+}
+```
+
+**Incorrect (요소 선택자를 최상위에 둡니다):**
+
+```css
+.wg_productDetail__prose h2 {
+	margin: 24px 0 12px;
 }
 ```
 
@@ -1572,40 +1583,39 @@ TSX에서 그 지점이 보이므로 "이 마크업을 우리가 쓰는가"를 �
 가상 클래스를 어디에 쓰는지는 `selector-nest-dom-state-in-the-owning-block` 규칙이 정합니다.
 `:not()`은 `selector-do-not-negate-with-not` 규칙이 막습니다.
 
-**Incorrect (앱이 아는 상태를 속성 선택자로 겨냥합니다):**
-
-```css
-.pg_assetIndex__card {
-	&[aria-pressed="true"] {
-		border-color: #1677ff;
-	}
-}
-
-.pg_assetIndex__row {
-	&[data-pg-expanded="true"] {
-		background: #f5f5f5;
-	}
-}
-```
-
-**Incorrect (같은 상태를 속성과 수정자 두 표기로 씁니다):**
-
-```css
-.pg_assetIndex__card--selected {
-	border-color: #1677ff;
-}
-
-.pg_assetIndex__card[aria-pressed="true"] {
-	box-shadow: 0 0 0 1px #1677ff;
-}
-```
-
-**Correct (`aria-*`는 마크업에 두고 스타일은 수정자로 겨냥합니다):**
+**Incorrect (앱 상태를 속성으로 겨냥하고 DOM 상태를 수정자로 만듭니다):**
 
 ```tsx
 <button
 	type="button"
 	aria-pressed={isSelected}
+	className={clsx("pg_assetIndex__card", isDisabled && "pg_assetIndex__card--disabled")}
+>
+	{asset.name}
+</button>
+```
+
+```css
+.pg_assetIndex__card {
+	border: 1px solid #d9d9d9;
+
+	&[aria-pressed="true"] {
+		border-color: #1677ff;
+	}
+}
+
+.pg_assetIndex__card--disabled {
+	opacity: 0.5;
+}
+```
+
+**Correct (`aria-*`는 마크업에 두고 앱 상태는 수정자로, DOM 상태는 가상 클래스로 씁니다):**
+
+```tsx
+<button
+	type="button"
+	aria-pressed={isSelected}
+	disabled={isDisabled}
 	className={clsx("pg_assetIndex__card", isSelected && "pg_assetIndex__card--selected")}
 >
 	{asset.name}
@@ -1623,6 +1633,45 @@ TSX에서 그 지점이 보이므로 "이 마크업을 우리가 쓰는가"를 �
 
 .pg_assetIndex__card--selected {
 	border-color: #1677ff;
+}
+```
+
+**Incorrect (앱이 정하는 상태를 `data-*` 속성으로 겨냥합니다):**
+
+```css
+.pg_assetIndex__row {
+	&[data-pg-expanded="true"] {
+		background: #f5f5f5;
+	}
+}
+```
+
+**Correct (앱이 정하는 상태는 수정자 클래스로 씁니다):**
+
+```css
+.pg_assetIndex__row--expanded {
+	background: #f5f5f5;
+}
+```
+
+**Incorrect (같은 상태를 속성과 수정자 두 표기로 씁니다):**
+
+```css
+.pg_assetIndex__card--selected {
+	border-color: #1677ff;
+}
+
+.pg_assetIndex__card[aria-pressed="true"] {
+	box-shadow: 0 0 0 1px #1677ff;
+}
+```
+
+**Correct (두 표기를 수정자 하나로 모읍니다):**
+
+```css
+.pg_assetIndex__card--selected {
+	border-color: #1677ff;
+	box-shadow: 0 0 0 1px #1677ff;
 }
 ```
 
@@ -1865,22 +1914,21 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
-**Correct (도메인 상태와 상호작용 상태를 분리하고 포커스를 보존합니다):**
+**Correct (상호작용 상태를 조건 없는 기본 블록으로 되돌립니다):**
 
 ```css
-.ui_button__root--active {
-	background: var(--app-color-accent);
+.ui_button__root {
+	&:hover {
+		background: var(--app-color-accent-strong);
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--app-color-focus);
+	}
 }
 
-.ui_button__root {
-	&:focus-visible {
-		outline: 2px solid var(--app-color-accent);
-		outline-offset: 2px;
-	}
-
-	&:disabled {
-		cursor: not-allowed;
-	}
+.ui_button__root--active {
+	background: var(--app-color-accent);
 }
 ```
 
@@ -2254,11 +2302,13 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 **Incorrect (값으로 이름을 짓고 그림자를 직접 적습니다):**
 
 ```css
+/* src/style/token.css */
 :root {
 	--app-color-white: #fff;
 	--app-color-gray-100: #f1f3f5;
 }
 
+/* src/page/products/pg-products.css */
 .pg_products__panel {
 	background-color: var(--app-color-white);
 	box-shadow: 0 1px 3px rgb(0 0 0 / 12%);
@@ -2450,51 +2500,25 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 **Incorrect (두 방향을 섞어 겹치는 구간을 만듭니다):**
 
 ```css
-.pg_products__toolbar {
-	display: flex;
-	gap: 16px;
+.pg_products__layout {
+	display: grid;
+	grid-template-columns: 220px 1fr;
 }
 
 @media (width >= 1440px) {
-	.pg_products__toolbar {
-		gap: 24px;
+	.pg_products__layout {
+		grid-template-columns: 280px 1fr;
 	}
 }
 
 @media (width < 1024px) {
-	.pg_products__toolbar {
-		gap: 8px;
+	.pg_products__layout {
+		grid-template-columns: 1fr;
 	}
 }
 ```
 
-**Incorrect (`max-width`를 소수로 보정하고 좁은 쪽부터 씁니다):**
-
-```css
-@media (max-width: 639.98px) {
-	.pg_products__toolbar {
-		gap: 4px;
-	}
-}
-
-@media (max-width: 1023.98px) {
-	.pg_products__toolbar {
-		gap: 8px;
-	}
-}
-```
-
-**Correct (구간을 이렇게 읽습니다):**
-
-```txt
-        640px      1024px     1440px            넓어짐 →
- ──~sm───│───~md────│───~lg────│─── 기본 선언 ───▶
-   세로     가로       좁은        가장 넓은 화면
-   태블릿   태블릿     데스크톱     기준으로 먼저 적는다
-   아래     좁은 노트북
-```
-
-**Correct (기본 선언이 가장 넓고 넓은 쪽부터 좁혀 갑니다):**
+**Correct (기본 선언이 가장 넓고 좁아질 때만 덮습니다):**
 
 ```css
 .pg_products__layout {
@@ -2511,6 +2535,38 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 @media (width < 1024px) {
 	.pg_products__layout {
 		grid-template-columns: 1fr;
+	}
+}
+```
+
+**Incorrect (`max-width`를 소수로 보정하고 좁은 쪽부터 씁니다):**
+
+```css
+@media (max-width: 639.98px) {
+	.pg_products__layout {
+		padding: 12px;
+	}
+}
+
+@media (max-width: 1023.98px) {
+	.pg_products__layout {
+		padding: 20px;
+	}
+}
+```
+
+**Correct (범위 표기로 적고 넓은 쪽부터 좁혀 갑니다):**
+
+```css
+@media (width < 1024px) {
+	.pg_products__layout {
+		padding: 20px;
+	}
+}
+
+@media (width < 640px) {
+	.pg_products__layout {
+		padding: 12px;
 	}
 }
 ```
@@ -2907,6 +2963,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 | `keyframes-name-pattern` | `css/a11y-namespace-keyframes-and-respect-reduced-motion` |
 | `no-duplicate-selectors` | `css/selector-declare-each-class-in-one-block`, `css/selector-do-not-group-classes-with-commas`의 단독 재선언 |
 | `property-disallowed-list` | `css/values-tokenize-repeated-visual-values` |
+| `custom-property-pattern` | `css/values-tokenize-repeated-visual-values`의 토큰 이름. 토큰을 선언하는 파일에만 켭니다 |
 | `selector-attribute-name-disallowed-list` | `css/selector-use-pseudo-classes-for-dom-owned-states` |
 | `selector-max-id` | `css/naming-use-scope-slug-element-modifier-syntax` — 겨냥은 클래스로만 합니다 |
 | `selector-pseudo-class-disallowed-list` | `css/selector-do-not-negate-with-not` |

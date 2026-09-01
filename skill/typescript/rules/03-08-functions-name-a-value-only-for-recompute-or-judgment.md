@@ -100,6 +100,28 @@ const toRowLabel = (row: Row): string => {
 };
 ```
 
+**Correct (돌려주기만 할 값은 돌려주는 자리에 그대로 적습니다):**
+
+```ts
+const toNextIteration = (iteration: number): number => {
+	return iteration + 1;
+};
+
+const toRowLabel = (row: Row): string => {
+	return `${row.title} (${row.id})`;
+};
+```
+
+**Incorrect (세 항을 엮은 판정을 쓰는 자리에 그대로 늘어놓습니다):**
+
+```ts
+const toRowAction = (row: Row): RowAction => {
+	return row.status === product_status.draft && !row.lockedAt && row.ownerId === session.userId
+		? rowAction.edit
+		: rowAction.view;
+};
+```
+
 **Correct (한 번만 써도 합성 판정이라 변수로 뺍니다):**
 
 ```ts
@@ -107,6 +129,14 @@ const toRowAction = (row: Row): RowAction => {
 	const isEditable = row.status === product_status.draft && !row.lockedAt && row.ownerId === session.userId;
 
 	return isEditable ? rowAction.edit : rowAction.view;
+};
+```
+
+**Incorrect (콜백 안에 두어 행마다 다시 계산합니다):**
+
+```ts
+const toVisibleRows = (rows: Row[], keyword: string): Row[] => {
+	return rows.filter((row) => row.title.toLowerCase().includes(keyword.trim().toLowerCase()));
 };
 ```
 
@@ -118,6 +148,19 @@ const toVisibleRows = (rows: Row[], keyword: string): Row[] => {
 	const lowerKeyword = keyword.trim().toLowerCase();
 
 	return rows.filter((row) => row.title.toLowerCase().includes(lowerKeyword));
+};
+```
+
+**Incorrect (변수를 없애느라 저장과 캐시 비우기 순서가 뒤집힙니다):**
+
+```ts
+/**
+ * 초안을 저장한 뒤 목록 캐시를 비운다
+ */
+const submitDraft = async (draft: Draft) => {
+	await queryClient.invalidateQueries({queryKey: ["records"]});
+
+	return await saveRecord(draft);
 };
 ```
 

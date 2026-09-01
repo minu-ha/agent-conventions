@@ -108,3 +108,14 @@ export const fetchProductList = async (): Promise<Product[]> => {
 	return await client.get("/products");
 };
 ```
+
+**Correct (태그를 지우고 헤더 첫 줄이 하는 일을 말합니다):**
+
+```ts
+/**
+ * product 목록. 조회 실패는 호출부가 처리한다
+ */
+export const fetchProductList = async (): Promise<Product[]> => {
+	return await client.get("/products");
+};
+```

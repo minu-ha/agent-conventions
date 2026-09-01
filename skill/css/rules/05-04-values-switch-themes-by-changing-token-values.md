@@ -74,11 +74,13 @@ tags: values, theme
 **Incorrect (값으로 이름을 짓고 그림자를 직접 적습니다):**
 
 ```css
+/* src/style/token.css */
 :root {
 	--app-color-white: #fff;
 	--app-color-gray-100: #f1f3f5;
 }
 
+/* src/page/products/pg-products.css */
 .pg_products__panel {
 	background-color: var(--app-color-white);
 	box-shadow: 0 1px 3px rgb(0 0 0 / 12%);

@@ -821,13 +821,24 @@ export const chart_axis_tick_count = 6;
 export const chart_axis_tick_count = 6;
 ```
 
-**Incorrect (소유자 이름을 되풀이하고 객체 하나에 모읍니다):**
+**Incorrect (파일명에 소유자 이름을 되풀이하고 주제를 객체 하나에 모읍니다):**
 
 ```ts
 // page/product-detail/_constant/product-detail.ts
 export const product_detail_config = {
 	chart_axis_tick_count: 6,
+	table_page_size: 20,
 } as const;
+```
+
+**Correct (주제마다 파일을 나누고 상수를 평평하게 내보냅니다):**
+
+```ts
+// page/product-detail/_constant/chart.ts
+export const chart_axis_tick_count = 6;
+
+// page/product-detail/_constant/table.ts
+export const table_page_size = 20;
 ```
 
 ### 2.3 Use Role-Based File, Symbol, and Constant Naming
@@ -1441,6 +1452,21 @@ const toRequestUrl = ({baseUrl, resourcePath, searchParams}: ApiRequestTarget): 
 };
 ```
 
+**Incorrect (본문 첫 줄로 옮겼을 뿐 출처는 똑같이 지워집니다):**
+
+```ts
+const toRequestUrl = (target: ApiRequestTarget): URL => {
+	const {baseUrl, resourcePath, searchParams} = target;
+	const requestUrl = new URL(resourcePath, baseUrl);
+
+	for (const [key, value] of Object.entries(searchParams)) {
+		requestUrl.searchParams.set(key, value);
+	}
+
+	return requestUrl;
+};
+```
+
 **Correct (객체 전체를 받고 체인으로 읽습니다):**
 
 ```ts
@@ -1453,21 +1479,6 @@ const toRequestUrl = (target: ApiRequestTarget): URL => {
 	const requestUrl = new URL(target.resourcePath, target.baseUrl);
 
 	for (const [key, value] of Object.entries(target.searchParams)) {
-		requestUrl.searchParams.set(key, value);
-	}
-
-	return requestUrl;
-};
-```
-
-**Incorrect (본문 첫 줄로 옮겼을 뿐 출처는 똑같이 지워집니다):**
-
-```ts
-const toRequestUrl = (target: ApiRequestTarget): URL => {
-	const {baseUrl, resourcePath, searchParams} = target;
-	const requestUrl = new URL(resourcePath, baseUrl);
-
-	for (const [key, value] of Object.entries(searchParams)) {
 		requestUrl.searchParams.set(key, value);
 	}
 
@@ -1684,23 +1695,17 @@ export const toProductSaveRequest = (values: ProductFormValues) => {
 **Incorrect (보조 모듈 안에서 내보낸 함수가 내보낸 함수를 타고 갑니다):**
 
 ```ts
-// profile-support.ts
-export const toProfileValues = (formValues: ProfileFormValues) => {
+// report-support.ts
+export const toTrendChart = (readings: SalesReading[]) => {
 	// ...
 };
 
-export const toAvatarRequests = (files: UploadFile[]) => {
+export const toSalesFilterRequest = (filter: SalesFilter) => {
 	// ...
 };
 
-export const toProfileSaveRequest = (
-	formValues: ProfileFormValues,
-	files: UploadFile[],
-) => {
-	return {
-		...toProfileValues(formValues),
-		avatarRequests: toAvatarRequests(files),
-	};
+export const toSalesOverview = (readings: SalesReading[]) => {
+	return {chart: toTrendChart(readings)};
 };
 ```
 
@@ -2086,6 +2091,28 @@ const toRowLabel = (row: Row): string => {
 };
 ```
 
+**Correct (돌려주기만 할 값은 돌려주는 자리에 그대로 적습니다):**
+
+```ts
+const toNextIteration = (iteration: number): number => {
+	return iteration + 1;
+};
+
+const toRowLabel = (row: Row): string => {
+	return `${row.title} (${row.id})`;
+};
+```
+
+**Incorrect (세 항을 엮은 판정을 쓰는 자리에 그대로 늘어놓습니다):**
+
+```ts
+const toRowAction = (row: Row): RowAction => {
+	return row.status === product_status.draft && !row.lockedAt && row.ownerId === session.userId
+		? rowAction.edit
+		: rowAction.view;
+};
+```
+
 **Correct (한 번만 써도 합성 판정이라 변수로 뺍니다):**
 
 ```ts
@@ -2093,6 +2120,14 @@ const toRowAction = (row: Row): RowAction => {
 	const isEditable = row.status === product_status.draft && !row.lockedAt && row.ownerId === session.userId;
 
 	return isEditable ? rowAction.edit : rowAction.view;
+};
+```
+
+**Incorrect (콜백 안에 두어 행마다 다시 계산합니다):**
+
+```ts
+const toVisibleRows = (rows: Row[], keyword: string): Row[] => {
+	return rows.filter((row) => row.title.toLowerCase().includes(keyword.trim().toLowerCase()));
 };
 ```
 
@@ -2104,6 +2139,19 @@ const toVisibleRows = (rows: Row[], keyword: string): Row[] => {
 	const lowerKeyword = keyword.trim().toLowerCase();
 
 	return rows.filter((row) => row.title.toLowerCase().includes(lowerKeyword));
+};
+```
+
+**Incorrect (변수를 없애느라 저장과 캐시 비우기 순서가 뒤집힙니다):**
+
+```ts
+/**
+ * 초안을 저장한 뒤 목록 캐시를 비운다
+ */
+const submitDraft = async (draft: Draft) => {
+	await queryClient.invalidateQueries({queryKey: ["records"]});
+
+	return await saveRecord(draft);
 };
 ```
 
@@ -3234,6 +3282,17 @@ export const fetchProductList = async (): Promise<Product[]> => {
 };
 ```
 
+**Correct (태그를 지우고 헤더 첫 줄이 하는 일을 말합니다):**
+
+```ts
+/**
+ * product 목록. 조회 실패는 호출부가 처리한다
+ */
+export const fetchProductList = async (): Promise<Product[]> => {
+	return await client.get("/products");
+};
+```
+
 ### 6.4 Write Doc Comments as Multiline Blocks
 
 **Rule:** `T06-04` · `docs-write-doc-comments-as-multiline-blocks`
@@ -3452,7 +3511,7 @@ const filteredRows = useMemo(() => rows.filter((row) => matchRow(row, deferredKe
 		"rules": {
 			"preset": "recommended",
 			"complexity": {"useMaxParams": {"level": "error", "options": {"max": 3}}},
-			"correctness": {"noUnusedFunctionParameters": "error", "useSingleJsDocAsterisk": "error"},
+			"correctness": {"noUnusedFunctionParameters": "error"},
 			"suspicious": {"noExplicitAny": "error"},
 			"performance": {"noNamespaceImport": "error", "noBarrelFile": "error", "noReExportAll": "error"},
 			"style": {

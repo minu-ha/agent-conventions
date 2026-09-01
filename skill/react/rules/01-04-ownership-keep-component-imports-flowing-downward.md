@@ -95,11 +95,38 @@ export const PgSalesTrendPanel = (props: PgSalesTrendPanelProps) => {
 import {PgSalesTrendPanel} from "@/page/detail/sales-trend-panel/pg-sales-trend-panel";
 ```
 
+**Correct (두 라우트가 같이 쓰면 화면을 모르는 자리로 올려 각자 가져옵니다):**
+
+```tsx
+// component/widget/sales-trend-panel/wg-sales-trend-panel.tsx
+export const WgSalesTrendPanel = (props: WgSalesTrendPanelProps) => {
+	return <section className={clsx("wg_salesTrendPanel__root")}>{/* ... */}</section>;
+};
+
+// page/index/pg-index.tsx
+import {WgSalesTrendPanel} from "@/component/widget/sales-trend-panel/wg-sales-trend-panel";
+```
+
 **Incorrect (`ui`가 `widget`을 가져옵니다):**
 
 ```tsx
 // component/ui/legend/ui-legend.tsx
 import {WgLegendPanel} from "@/component/widget/legend-panel/wg-legend-panel";
+```
+
+**Correct (방향을 뒤집어 `widget`이 `ui`를 가져옵니다):**
+
+```tsx
+// component/widget/legend-panel/wg-legend-panel.tsx
+import {UiLegend} from "@/component/ui/legend/ui-legend";
+```
+
+**Incorrect (밖에서 가져다 쓴다고 역할 폴더 파일을 루트로 올립니다):**
+
+```ts
+// util/chart/to-chart-option.ts
+import type {ChartSeries} from "@/component/ui/chart/_type/chart-series";
+import {chart_series_line} from "@/component/ui/chart/_constant/series";
 ```
 
 **Correct (역할 폴더의 파일은 레이어 방향만 지키면 밖에서도 가져옵니다):**
