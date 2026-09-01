@@ -43,12 +43,6 @@ return (
 );
 ```
 
-**Incorrect (`&&` 왼쪽에 숫자를 둬서 `0`이 그려집니다):**
-
-```tsx
-return <section>{selectedRows.length && <PgProductBulkActionBar />}</section>;
-```
-
 **Correct (각 JSX 요소 앞에 표시 조건을 둡니다):**
 
 ```tsx
@@ -58,6 +52,12 @@ return (
 		{props.view === "table" && <PgTable />}
 	</section>
 );
+```
+
+**Incorrect (`&&` 왼쪽에 숫자를 둬서 `0`이 그려집니다):**
+
+```tsx
+return <section>{selectedRows.length && <PgProductBulkActionBar />}</section>;
 ```
 
 **Correct (한 분기는 `&&`, 왼쪽은 불리언입니다):**

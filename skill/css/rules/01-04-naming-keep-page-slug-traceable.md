@@ -38,13 +38,6 @@ pg_doc__content   <- 라우트에 없는 줄임말
 pg_x__root        <- 되짚을 이름이 없음
 ```
 
-**Incorrect (충돌이 없는데도 부모 식별자를 미리 붙입니다):**
-
-```txt
-pg_detailSalesTrendPanelOverviewSection__root
-pg_detailSalesTrendPanelSummaryBand__root
-```
-
 **Correct (뼈대는 화면 식별자, 컴포넌트는 자기 식별자를 씁니다):**
 
 ```txt
@@ -54,6 +47,13 @@ document shell     -> pg_document__body
 
 overview section   -> pg_overviewSection__root
 summary band       -> pg_summaryBand__root
+```
+
+**Incorrect (충돌이 없는데도 부모 식별자를 미리 붙입니다):**
+
+```txt
+pg_detailSalesTrendPanelOverviewSection__root
+pg_detailSalesTrendPanelSummaryBand__root
 ```
 
 **Correct (같은 식별자가 실제로 두 화면에 생겼을 때만 구분합니다):**

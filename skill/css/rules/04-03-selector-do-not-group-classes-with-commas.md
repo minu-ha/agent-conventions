@@ -52,17 +52,6 @@ tags: selector, duplication, maintainability
 }
 ```
 
-**Incorrect (한 대상의 진입 조건을 `,`로 나열합니다):**
-
-```css
-.pg_salesPanel__spreadButton {
-	&:hover .pg_salesPanel__spreadBox,
-	&.Mui-focusVisible .pg_salesPanel__spreadBox {
-		border-color: #9fadc7;
-	}
-}
-```
-
 **Correct (각 클래스가 자기 선언을 전부 가집니다):**
 
 ```css
@@ -85,6 +74,17 @@ tags: selector, duplication, maintainability
 	width: 24px;
 	height: 24px;
 	background: rgb(140 152 160 / 12%);
+}
+```
+
+**Incorrect (한 대상의 진입 조건을 `,`로 나열합니다):**
+
+```css
+.pg_salesPanel__spreadButton {
+	&:hover .pg_salesPanel__spreadBox,
+	&.Mui-focusVisible .pg_salesPanel__spreadBox {
+		border-color: #9fadc7;
+	}
 }
 ```
 

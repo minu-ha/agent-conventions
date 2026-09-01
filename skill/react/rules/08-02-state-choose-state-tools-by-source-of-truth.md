@@ -56,6 +56,18 @@ const responseUserGetItemSuspense = useUserGetItemSuspense();
 const [userName, setUserName] = useState(responseUserGetItemSuspense.data.name);
 ```
 
+**Correct (도구를 진짜 출처에 맞춥니다):**
+
+```ts
+const [isOpen, setIsOpen] = useState(false);
+const themeStore = useThemeStore();
+
+/**
+ * 사용자 상세 조회 API
+ */
+const responseUserGetItemSuspense = useUserGetItemSuspense();
+```
+
 **Incorrect (링크로 살아남아야 할 목록 필터를 `useState`가 소유합니다):**
 
 ```ts
@@ -67,18 +79,6 @@ const [page, setPage] = useState(1);
 
 ```ts
 const [urlParams, setUrlParams] = useQueryStates(productUrlParsers);
-```
-
-**Correct (도구를 진짜 출처에 맞춥니다):**
-
-```ts
-const [isOpen, setIsOpen] = useState(false);
-const themeStore = useThemeStore();
-
-/**
- * 사용자 상세 조회 API
- */
-const responseUserGetItemSuspense = useUserGetItemSuspense();
 ```
 
 **Correct (합성 컴포넌트 안에서 부품끼리 나눠 쓰는 상태는 `Context`로 내려보냅니다):**

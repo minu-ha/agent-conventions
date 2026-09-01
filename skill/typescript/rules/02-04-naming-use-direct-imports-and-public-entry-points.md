@@ -38,6 +38,16 @@ tags: naming
 import {pagination_default_page_size, toDisplayDate, UserProfile} from "./index";
 ```
 
+**Correct (필요한 파일에서 이름으로 바로 가져옵니다):**
+
+```ts
+import type {UserProfile} from "@/type/user-profile";
+import {pagination_default_page_size} from "@/constant/pagination";
+import {toDisplayDate} from "@/util/date/to-display-date";
+import {WgChartCard} from "@/component/widget/chart-card/wg-chart-card";
+import {toUserSaveRequest} from "@/page/users/_function/to-user-save-request";
+```
+
 **Incorrect (`default`로 내보내 사용처마다 다른 이름이 생깁니다):**
 
 ```tsx
@@ -52,16 +62,6 @@ export default UiTabs;
 ```tsx
 // 사용처가 이름을 지어서 같은 컴포넌트가 파일마다 다른 이름으로 불린다
 import Tabs from "@/component/ui/tabs/ui-tabs";
-```
-
-**Correct (필요한 파일에서 이름으로 바로 가져옵니다):**
-
-```ts
-import type {UserProfile} from "@/type/user-profile";
-import {pagination_default_page_size} from "@/constant/pagination";
-import {toDisplayDate} from "@/util/date/to-display-date";
-import {WgChartCard} from "@/component/widget/chart-card/wg-chart-card";
-import {toUserSaveRequest} from "@/page/users/_function/to-user-save-request";
 ```
 
 **Correct (도구가 계약으로 요구하는 파일만 `default`로 내보냅니다):**

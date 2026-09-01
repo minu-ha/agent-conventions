@@ -72,6 +72,14 @@ component/ui/button/
 └── _type/
 ```
 
+**Correct (지원 코드가 없으면 폴더 없이 파일만 둡니다):**
+
+```txt
+component/ui/button/
+├── ui-button.tsx
+└── ui-button.css
+```
+
 **Incorrect (범용 이름 폴더와 복수형을 섞어 씁니다):**
 
 ```txt
@@ -117,12 +125,4 @@ page/detail/
     ├── _pg-detection-section.tsx
     └── _function/
         └── to-chart-viewport.ts
-```
-
-**Correct (지원 코드가 없으면 폴더 없이 파일만 둡니다):**
-
-```txt
-component/ui/button/
-├── ui-button.tsx
-└── ui-button.css
 ```

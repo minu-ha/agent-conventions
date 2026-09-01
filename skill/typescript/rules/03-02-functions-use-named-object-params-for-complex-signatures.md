@@ -43,21 +43,6 @@ const toRequestUrl = ({baseUrl, resourcePath, searchParams}: ApiRequestTarget): 
 };
 ```
 
-**Incorrect (본문 첫 줄로 옮겼을 뿐 출처는 똑같이 지워집니다):**
-
-```ts
-const toRequestUrl = (target: ApiRequestTarget): URL => {
-	const {baseUrl, resourcePath, searchParams} = target;
-	const requestUrl = new URL(resourcePath, baseUrl);
-
-	for (const [key, value] of Object.entries(searchParams)) {
-		requestUrl.searchParams.set(key, value);
-	}
-
-	return requestUrl;
-};
-```
-
 **Correct (객체 전체를 받고 체인으로 읽습니다):**
 
 ```ts
@@ -70,6 +55,21 @@ const toRequestUrl = (target: ApiRequestTarget): URL => {
 	const requestUrl = new URL(target.resourcePath, target.baseUrl);
 
 	for (const [key, value] of Object.entries(target.searchParams)) {
+		requestUrl.searchParams.set(key, value);
+	}
+
+	return requestUrl;
+};
+```
+
+**Incorrect (본문 첫 줄로 옮겼을 뿐 출처는 똑같이 지워집니다):**
+
+```ts
+const toRequestUrl = (target: ApiRequestTarget): URL => {
+	const {baseUrl, resourcePath, searchParams} = target;
+	const requestUrl = new URL(resourcePath, baseUrl);
+
+	for (const [key, value] of Object.entries(searchParams)) {
 		requestUrl.searchParams.set(key, value);
 	}
 

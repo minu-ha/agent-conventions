@@ -130,8 +130,8 @@ tags: tooling
 					"level": "error",
 					"options": {
 						"patterns": [
-								{"group": ["../**", "./**", "!./*.css"], "message": "가져오기는 절대경로로 씁니다. 심볼 없이 파일만 불러오는 줄만 같은 폴더를 ./ 로 씁니다."}
-							]
+							{"group": ["../**", "./**", "!./*.css"], "message": "가져오기는 절대경로로 씁니다. 심볼 없이 파일만 불러오는 줄만 같은 폴더를 ./ 로 씁니다."}
+						]
 					}
 				},
 				"useNamingConvention": {

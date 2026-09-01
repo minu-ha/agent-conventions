@@ -67,17 +67,6 @@ export interface PgProductTreeProps {
 }
 ```
 
-**Incorrect (역할 태그로 선언의 성격을 다시 적습니다):**
-
-```ts
-/**
- * @api product 목록. 조회 실패는 호출부가 처리한다
- */
-export const fetchProductList = async (): Promise<Product[]> => {
-	return await client.get("/products");
-};
-```
-
 **Correct (이름에 없는 정보를 더합니다):**
 
 ```ts
@@ -107,4 +96,15 @@ export interface PgProductTreeProps {
 	 */
 	categoryNodes: ProductCategoryNode[];
 }
+```
+
+**Incorrect (역할 태그로 선언의 성격을 다시 적습니다):**
+
+```ts
+/**
+ * @api product 목록. 조회 실패는 호출부가 처리한다
+ */
+export const fetchProductList = async (): Promise<Product[]> => {
+	return await client.get("/products");
+};
 ```

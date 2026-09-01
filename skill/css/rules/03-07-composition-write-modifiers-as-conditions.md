@@ -44,43 +44,17 @@ CSS에서 수정자를 지울 때 그 클래스를 쓰는 자리가 검색에 �
 **Incorrect (클래스 이름을 값으로 조립합니다):**
 
 ```tsx
+export interface UiTooltipProps {
+	variant?: "fit" | "plain";
+	children: ReactNode;
+}
+
 export const UiTooltip = (props: UiTooltipProps) => {
 	return (
 		<div className={clsx("ui_tooltip__body", props.variant && `ui_tooltip__body--${props.variant}`)}>
 			{props.children}
 		</div>
 	);
-};
-```
-
-**Incorrect (수정자가 없는 값까지 조립해 CSS에 없는 클래스를 붙입니다):**
-
-```tsx
-type SalesTone = "positive" | "negative" | "neutral" | "unknown";
-
-<span className={clsx("pg_salesPanel__metricValue", `pg_salesPanel__metricValue--${tone}`)}>{amount}</span>;
-```
-
-```css
-.pg_salesPanel__metricValue--positive {
-	color: var(--app-color-rise, #d32f2f);
-}
-
-.pg_salesPanel__metricValue--negative {
-	color: var(--app-color-fall, #1976d2);
-}
-```
-
-**Incorrect (라이브러리가 정하는 값으로 수정자를 만듭니다):**
-
-```tsx
-export interface UiButtonProps {
-	variant?: ButtonProps["variant"];
-	className?: string;
-}
-
-export const UiButton = (props: UiButtonProps) => {
-	return <Button className={clsx("ui_button__root", `ui_button__root--${props.variant}`, props.className)} />;
 };
 ```
 
@@ -107,6 +81,24 @@ export const UiTooltip = (props: UiTooltipProps) => {
 };
 ```
 
+**Incorrect (수정자가 없는 값까지 조립해 CSS에 없는 클래스를 붙입니다):**
+
+```tsx
+type SalesTone = "positive" | "negative" | "neutral" | "unknown";
+
+<span className={clsx("pg_salesPanel__metricValue", `pg_salesPanel__metricValue--${tone}`)}>{amount}</span>;
+```
+
+```css
+.pg_salesPanel__metricValue--positive {
+	color: var(--app-color-rise, #d32f2f);
+}
+
+.pg_salesPanel__metricValue--negative {
+	color: var(--app-color-fall, #1976d2);
+}
+```
+
 **Correct (CSS에 수정자가 있는 두 값만 적고 나머지는 기본 모습을 씁니다):**
 
 ```tsx
@@ -119,14 +111,6 @@ export const UiTooltip = (props: UiTooltipProps) => {
 >
 	{amount}
 </span>;
-```
-
-**Correct (라이브러리가 정하는 값은 수정자로 만들지 않고 그대로 넘깁니다):**
-
-```tsx
-export const UiButton = (props: UiButtonProps) => {
-	return <Button className={clsx("ui_button__root", props.className)} variant={props.variant} />;
-};
 ```
 
 **Correct (같은 값이 요소 셋의 수정자를 정하면 요소마다 나열을 반복합니다):**
@@ -167,5 +151,31 @@ export const WgFlowNode = (props: WgFlowNodeProps) => {
 			</p>
 		</div>
 	);
+};
+```
+
+**Incorrect (라이브러리가 정하는 값으로 수정자를 만듭니다):**
+
+```tsx
+export interface UiButtonProps {
+	variant?: ButtonProps["variant"];
+	className?: string;
+}
+
+export const UiButton = (props: UiButtonProps) => {
+	return <Button className={clsx("ui_button__root", `ui_button__root--${props.variant}`, props.className)} />;
+};
+```
+
+**Correct (라이브러리가 정하는 값은 수정자로 만들지 않고 그대로 넘깁니다):**
+
+```tsx
+export interface UiButtonProps {
+	variant?: ButtonProps["variant"];
+	className?: string;
+}
+
+export const UiButton = (props: UiButtonProps) => {
+	return <Button className={clsx("ui_button__root", props.className)} variant={props.variant} />;
 };
 ```

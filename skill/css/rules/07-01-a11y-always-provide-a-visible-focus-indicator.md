@@ -35,19 +35,10 @@ tags: accessibility, focus, interaction
 
 ```css
 .ui_button__root {
+	border: 1px solid #d9d9d9;
+
 	&:focus {
 		outline: none;
-	}
-}
-```
-
-**Incorrect (색만 바꾸고 수정자 안에만 둡니다):**
-
-```css
-.ui_button__root--active {
-	&:focus-visible {
-		outline: none;
-		color: #1677ff;
 	}
 }
 ```
@@ -61,6 +52,17 @@ tags: accessibility, focus, interaction
 	&:focus-visible {
 		outline: 2px solid #1677ff;
 		outline-offset: 2px;
+	}
+}
+```
+
+**Incorrect (색만 바꾸고 수정자 안에만 둡니다):**
+
+```css
+.ui_input__field--invalid {
+	&:focus-visible {
+		outline: none;
+		color: #1677ff;
 	}
 }
 ```

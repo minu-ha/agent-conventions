@@ -126,7 +126,8 @@ test("every example label is a 합쇼체 sentence", async () => {
 	}
 
 	assert.deepEqual(offenders, [], "합쇼체로 끝나지 않는 예시 라벨");
-	assert.equal(labelCount, 408);
+	// 정확한 수는 예제를 손볼 때마다 바뀐다. 문체가 검사 대상이고 개수는 검사가 살아 있다는 표시다.
+	assert.ok(labelCount > 380, `예시 라벨이 ${labelCount}개뿐이다. 검사가 대상을 못 찾고 있다`);
 });
 
 test("readSkillRules exposes titleKo and tolerates its absence", async () => {

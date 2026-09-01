@@ -53,13 +53,31 @@ export const UiDeleteProductButton = () => {
 	const navigate = useNavigate();
 
 	/**
-	 * 삭제 후 목록 화면으로 돌아간다
+	 * 삭제 후 목록으로 이동
 	 */
-	const handleDeleteButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => {
+	const handleDeleteButtonClick: MouseEventHandler<HTMLButtonElement> = () => {
 		void navigate("/products");
 	};
 
 	return <button onClick={handleDeleteButtonClick}>삭제</button>;
+};
+```
+
+**Correct (라우터 훅을 부르는 코드는 화면 레이어에 남깁니다):**
+
+```tsx
+// page/products/_pg-delete-product-button.tsx
+export const PgDeleteProductButton = () => {
+	const navigate = useNavigate();
+
+	/**
+	 * 삭제 후 목록으로 이동
+	 */
+	const handleDeleteButtonClick: MouseEventHandler<HTMLButtonElement> = () => {
+		void navigate("/products");
+	};
+
+	return <UiButton onClick={handleDeleteButtonClick}>삭제</UiButton>;
 };
 ```
 
@@ -73,6 +91,15 @@ export const PgSalesLegendGlyph = (props: PgSalesLegendGlyphProps) => {
 };
 ```
 
+**Correct (화면 타입도 훅도 쓰지 않는 도메인 부품은 `widget`으로 올립니다):**
+
+```tsx
+// component/widget/sales-legend-glyph/wg-sales-legend-glyph.tsx
+export const WgSalesLegendGlyph = (props: WgSalesLegendGlyphProps) => {
+	return <svg className={clsx("wg_salesLegendGlyph__root")}>{/* ... */}</svg>;
+};
+```
+
 **Incorrect (도메인을 모르는 조합을 조립 규모만 보고 `widget`에 둡니다):**
 
 ```tsx
@@ -80,15 +107,6 @@ export const PgSalesLegendGlyph = (props: PgSalesLegendGlyphProps) => {
 // 프롭스가 좌표 배열만 받고 도메인 타입을 모른다. ui 부품을 조립했다는 이유로 widget에 있다.
 export const WgLineChart = (props: WgLineChartProps) => {
 	return <svg className={clsx("wg_lineChart__root")}>{/* ... */}</svg>;
-};
-```
-
-**Correct (화면 타입도 훅도 쓰지 않는 도메인 부품은 `widget`으로 올립니다):**
-
-```tsx
-// component/widget/sales-legend-glyph/wg-sales-legend-glyph.tsx
-export const WgSalesLegendGlyph = (props: WgSalesLegendGlyphProps) => {
-	return <svg className={clsx("wg_salesLegendGlyph__root")}>{/* ... */}</svg>;
 };
 ```
 
@@ -105,23 +123,5 @@ export const UiLineChart = (props: UiLineChartProps) => {
 // component/widget/sales-window-chart/wg-sales-window-chart.tsx
 export const WgSalesWindowChart = (props: WgSalesWindowChartProps) => {
 	return <UiLineChart points={toChartPoints(props.readings)} />;
-};
-```
-
-**Correct (라우터 훅을 부르는 코드는 화면 레이어에 남깁니다):**
-
-```tsx
-// page/products/_pg-delete-product-button.tsx
-const PgDeleteProductButton = () => {
-	const navigate = useNavigate();
-
-	/**
-	 * 삭제 후 목록으로 이동
-	 */
-	const handleDeleteButtonClick: MouseEventHandler<HTMLButtonElement> = () => {
-		void navigate("/products");
-	};
-
-	return <UiButton onClick={handleDeleteButtonClick}>삭제</UiButton>;
 };
 ```

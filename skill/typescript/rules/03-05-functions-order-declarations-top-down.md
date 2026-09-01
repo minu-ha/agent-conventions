@@ -32,6 +32,7 @@ tags: functions, ordering
 **Incorrect (비공개 보조가 내보낸 함수보다 위에 있어 파일을 끝까지 읽어야 합니다):**
 
 ```ts
+// page/report/_function/to-summary-rows.ts
 const toSummaryLabel = (item: SalesSummaryItem): string => {
 	return item.name.trim() || item.code;
 };

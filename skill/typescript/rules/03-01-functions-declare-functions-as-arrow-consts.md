@@ -67,7 +67,7 @@ export const toProductSlug = (title: string): string => {
 };
 ```
 
-**Incorrect (`function` 선언문과 화살표를 한 파일에서 섞습니다):**
+**Incorrect (내보낸 화살표 아래 비공개 보조를 `function` 선언문으로 씁니다):**
 
 ```ts
 export const toProductLabel = (product: Product): string => {

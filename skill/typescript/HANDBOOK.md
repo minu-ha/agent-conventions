@@ -753,15 +753,6 @@ const productQuery = useProductQuery({client: productClient, pageSize: paginatio
 export const chart_axis_tick_count = 6;
 ```
 
-**Incorrect (소유자 이름을 되풀이하고 객체 하나에 모읍니다):**
-
-```ts
-// page/product-detail/_constant/product-detail.ts
-export const product_detail_config = {
-	chart_axis_tick_count: 6,
-} as const;
-```
-
 **Correct (소유자 아래 주제 파일에 둡니다):**
 
 ```ts
@@ -770,6 +761,15 @@ export const product_detail_config = {
  * product 상세 차트의 축 눈금 수. 표시 폭이 좁아 여섯을 넘기면 라벨이 겹친다
  */
 export const chart_axis_tick_count = 6;
+```
+
+**Incorrect (소유자 이름을 되풀이하고 객체 하나에 모읍니다):**
+
+```ts
+// page/product-detail/_constant/product-detail.ts
+export const product_detail_config = {
+	chart_axis_tick_count: 6,
+} as const;
 ```
 
 ### 2.3 Use Role-Based File, Symbol, and Constant Naming
@@ -923,6 +923,16 @@ const toProductSaveBody = (values: ProductFormValues) => {
 import {pagination_default_page_size, toDisplayDate, UserProfile} from "./index";
 ```
 
+**Correct (필요한 파일에서 이름으로 바로 가져옵니다):**
+
+```ts
+import type {UserProfile} from "@/type/user-profile";
+import {pagination_default_page_size} from "@/constant/pagination";
+import {toDisplayDate} from "@/util/date/to-display-date";
+import {WgChartCard} from "@/component/widget/chart-card/wg-chart-card";
+import {toUserSaveRequest} from "@/page/users/_function/to-user-save-request";
+```
+
 **Incorrect (`default`로 내보내 사용처마다 다른 이름이 생깁니다):**
 
 ```tsx
@@ -937,16 +947,6 @@ export default UiTabs;
 ```tsx
 // 사용처가 이름을 지어서 같은 컴포넌트가 파일마다 다른 이름으로 불린다
 import Tabs from "@/component/ui/tabs/ui-tabs";
-```
-
-**Correct (필요한 파일에서 이름으로 바로 가져옵니다):**
-
-```ts
-import type {UserProfile} from "@/type/user-profile";
-import {pagination_default_page_size} from "@/constant/pagination";
-import {toDisplayDate} from "@/util/date/to-display-date";
-import {WgChartCard} from "@/component/widget/chart-card/wg-chart-card";
-import {toUserSaveRequest} from "@/page/users/_function/to-user-save-request";
 ```
 
 **Correct (도구가 계약으로 요구하는 파일만 `default`로 내보냅니다):**
@@ -1237,7 +1237,7 @@ export const toProductSlug = (title: string): string => {
 };
 ```
 
-**Incorrect (`function` 선언문과 화살표를 한 파일에서 섞습니다):**
+**Incorrect (내보낸 화살표 아래 비공개 보조를 `function` 선언문으로 씁니다):**
 
 ```ts
 export const toProductLabel = (product: Product): string => {
@@ -1364,21 +1364,6 @@ const toRequestUrl = ({baseUrl, resourcePath, searchParams}: ApiRequestTarget): 
 };
 ```
 
-**Incorrect (본문 첫 줄로 옮겼을 뿐 출처는 똑같이 지워집니다):**
-
-```ts
-const toRequestUrl = (target: ApiRequestTarget): URL => {
-	const {baseUrl, resourcePath, searchParams} = target;
-	const requestUrl = new URL(resourcePath, baseUrl);
-
-	for (const [key, value] of Object.entries(searchParams)) {
-		requestUrl.searchParams.set(key, value);
-	}
-
-	return requestUrl;
-};
-```
-
 **Correct (객체 전체를 받고 체인으로 읽습니다):**
 
 ```ts
@@ -1391,6 +1376,21 @@ const toRequestUrl = (target: ApiRequestTarget): URL => {
 	const requestUrl = new URL(target.resourcePath, target.baseUrl);
 
 	for (const [key, value] of Object.entries(target.searchParams)) {
+		requestUrl.searchParams.set(key, value);
+	}
+
+	return requestUrl;
+};
+```
+
+**Incorrect (본문 첫 줄로 옮겼을 뿐 출처는 똑같이 지워집니다):**
+
+```ts
+const toRequestUrl = (target: ApiRequestTarget): URL => {
+	const {baseUrl, resourcePath, searchParams} = target;
+	const requestUrl = new URL(resourcePath, baseUrl);
+
+	for (const [key, value] of Object.entries(searchParams)) {
 		requestUrl.searchParams.set(key, value);
 	}
 
@@ -1459,18 +1459,6 @@ export const getNextIteration = (previous: number, iterationCount: number): numb
 };
 ```
 
-**Incorrect (전용 보조가 딸린 단계를 한 파일에 계속 쌓습니다):**
-
-```txt
-page/report/_function/to-sales-overview.ts
-  toSalesOverview          내보낸 함수
-  toSummaryBand            내보낸 함수만 부름. 전용 보조 없음
-  toTrendChart             내보낸 함수만 부름. 전용 보조 셋이 딸림
-  toTrendBasePoints        toTrendChart만 부름
-  toTrendBaseLabel         toTrendChart만 부름
-  toTrendPoints            toTrendChart만 부름
-```
-
 **Correct (작은 계산은 쓰는 자리에 그대로 둡니다):**
 
 ```tsx
@@ -1535,6 +1523,18 @@ export const toProductSaveRequest = (formValues: ProductFormValues) => {
 import {toProductSaveRequest} from "@/page/products/_function/to-product-save-request";
 ```
 
+**Incorrect (전용 보조가 딸린 단계를 한 파일에 계속 쌓습니다):**
+
+```txt
+page/report/_function/to-sales-overview.ts
+  toSalesOverview          내보낸 함수
+  toSummaryBand            내보낸 함수만 부름. 전용 보조 없음
+  toTrendChart             내보낸 함수만 부름. 전용 보조 셋이 딸림
+  toTrendBasePoints        toTrendChart만 부름
+  toTrendBaseLabel         toTrendChart만 부름
+  toTrendPoints            toTrendChart만 부름
+```
+
 **Correct (전용 보조가 딸린 단계만 자기 파일로 나갑니다):**
 
 ```txt
@@ -1592,6 +1592,18 @@ export const toProductSaveRequest = (values: ProductFormValues) => {
 };
 ```
 
+**Correct (소유자 아래 대표 함수 하나에 파일 하나를 둡니다):**
+
+```ts
+// page/product-form/_function/to-product-save-request.ts
+/**
+ * product 저장 요청 조립. 서버가 앞뒤 공백이 붙은 title을 거부한다
+ */
+export const toProductSaveRequest = (values: ProductFormValues) => {
+	return {body: {title: values.title.trim()}};
+};
+```
+
 **Incorrect (보조 모듈 안에서 내보낸 함수가 내보낸 함수를 타고 갑니다):**
 
 ```ts
@@ -1612,18 +1624,6 @@ export const toProfileSaveRequest = (
 		...toProfileValues(formValues),
 		avatarRequests: toAvatarRequests(files),
 	};
-};
-```
-
-**Correct (소유자 아래 대표 함수 하나에 파일 하나를 둡니다):**
-
-```ts
-// page/product-form/_function/to-product-save-request.ts
-/**
- * product 저장 요청 조립. 서버가 앞뒤 공백이 붙은 title을 거부한다
- */
-export const toProductSaveRequest = (values: ProductFormValues) => {
-	return {body: {title: values.title.trim()}};
 };
 ```
 
@@ -1663,6 +1663,7 @@ page/report/_function/
 **Incorrect (비공개 보조가 내보낸 함수보다 위에 있어 파일을 끝까지 읽어야 합니다):**
 
 ```ts
+// page/report/_function/to-summary-rows.ts
 const toSummaryLabel = (item: SalesSummaryItem): string => {
 	return item.name.trim() || item.code;
 };
@@ -1928,22 +1929,6 @@ const visibleTabs = [
 `let` 재할당과 배열 `push` 누적은 `functions-avoid-imperative-assembly-in-wide-scopes`가 봅니다.
 객체 필드를 그대로 읽는 것은 계산이 아니라 `values-read-objects-through-chains`가 봅니다.
 
-**Incorrect (돌려주기만 할 값을 변수로 뺍니다):**
-
-```ts
-const toNextIteration = (iteration: number): number => {
-	const nextIteration = iteration + 1;
-
-	return nextIteration;
-};
-
-const toRowLabel = (row: Row): string => {
-	const rowLabel = `${row.title} (${row.id})`;
-
-	return rowLabel;
-};
-```
-
 **Incorrect (두 번 쓴다는 이유만으로 변수로 뺍니다):**
 
 ```ts
@@ -1965,6 +1950,22 @@ const toRowClassNames = (row: Row): string[] => {
 		row.dueDate < today ? "ui_row__root--overdue" : "ui_row__root",
 		row.dueDate < today ? "ui_row__badge--overdue" : "ui_row__badge",
 	];
+};
+```
+
+**Incorrect (돌려주기만 할 값을 변수로 뺍니다):**
+
+```ts
+const toNextIteration = (iteration: number): number => {
+	const nextIteration = iteration + 1;
+
+	return nextIteration;
+};
+
+const toRowLabel = (row: Row): string => {
+	const rowLabel = `${row.title} (${row.id})`;
+
+	return rowLabel;
 };
 ```
 
@@ -2697,6 +2698,17 @@ const expiresAt = new Date(issuedAt.getTime() + 7 * 24 * 60 * 60 * 1000);
 const expiresLabel = `${expiresAt.getFullYear()}.${toPaddedDatePart(expiresAt.getMonth() + 1)}`;
 ```
 
+**Correct (더하기와 형식은 `dayjs`, 형식 문자열은 상수로 둡니다):**
+
+```ts
+import dayjs from "dayjs";
+
+import {date_format} from "@/constant/date";
+
+const expiresAt = dayjs(issuedAt).add(7, "day");
+const expiresLabel = expiresAt.format(date_format);
+```
+
 **Incorrect (형식만 보고 없는 날짜를 통과시킵니다):**
 
 ```ts
@@ -2714,17 +2726,6 @@ const isValidDateText = /^\d{4}-\d{2}-\d{2}$/.test(dateText);
    ├ 형식만 바꿈 ──────→ dayjs(value).format(date_format)
    ├ 더하거나 뺌 ──────→ dayjs(value).add(7, "day")
    └ 값이 유효한지 봄 ─→ format 한 결과가 원래 문자열과 같은지 본다
-```
-
-**Correct (더하기와 형식은 `dayjs`, 형식 문자열은 상수로 둡니다):**
-
-```ts
-import dayjs from "dayjs";
-
-import {date_format} from "@/constant/date";
-
-const expiresAt = dayjs(issuedAt).add(7, "day");
-const expiresLabel = expiresAt.format(date_format);
 ```
 
 **Correct (라운드트립으로 없는 날짜를 거릅니다):**
@@ -2901,7 +2902,7 @@ setVisibleRowCount(effectivePageSize);
 `docs-justify-convention-exceptions-with-a-reason-comment`가 따로 정합니다.
 이 규칙은 본문 안 어디에 어떤 형태로 다는지를 봅니다.
 
-**Incorrect (본문 안 지역 선언에 블록 주석을 씁니다):**
+**Incorrect (지역 선언에 코드를 옮겨 적은 블록 주석을 답니다):**
 
 ```ts
 const toMatchedProducts = (products: Product[], keyword: string) => {
@@ -2911,6 +2912,33 @@ const toMatchedProducts = (products: Product[], keyword: string) => {
 	const lowerKeyword = keyword.trim().toLowerCase();
 
 	return products.filter((product) => product.title.toLowerCase().includes(lowerKeyword));
+};
+```
+
+**Correct (선언 이름이 이미 말하는 주석은 지웁니다):**
+
+```ts
+const toMatchedProducts = (products: Product[], keyword: string) => {
+	const lowerKeyword = keyword.trim().toLowerCase();
+
+	return products.filter((product) => product.title.toLowerCase().includes(lowerKeyword));
+};
+```
+
+**Incorrect (지켜야 할 순서와 제약을 주석 없이 코드에만 둡니다):**
+
+```ts
+const submitProductDraft = async (draft: ProductDraft) => {
+	if (!draft.title.trim()) {
+		return;
+	}
+
+	const uploadedAttachments = await uploadAttachments(draft.attachments);
+	const savedProduct = await saveProduct({title: draft.title, attachments: uploadedAttachments});
+
+	await queryClient.invalidateQueries({queryKey: ["products"]});
+
+	return savedProduct;
 };
 ```
 
@@ -3050,17 +3078,6 @@ export interface PgProductTreeProps {
 }
 ```
 
-**Incorrect (역할 태그로 선언의 성격을 다시 적습니다):**
-
-```ts
-/**
- * @api product 목록. 조회 실패는 호출부가 처리한다
- */
-export const fetchProductList = async (): Promise<Product[]> => {
-	return await client.get("/products");
-};
-```
-
 **Correct (이름에 없는 정보를 더합니다):**
 
 ```ts
@@ -3090,6 +3107,17 @@ export interface PgProductTreeProps {
 	 */
 	categoryNodes: ProductCategoryNode[];
 }
+```
+
+**Incorrect (역할 태그로 선언의 성격을 다시 적습니다):**
+
+```ts
+/**
+ * @api product 목록. 조회 실패는 호출부가 처리한다
+ */
+export const fetchProductList = async (): Promise<Product[]> => {
+	return await client.get("/products");
+};
 ```
 
 ### 6.4 Write Doc Comments as Multiline Blocks
@@ -3324,8 +3352,8 @@ const filteredRows = useMemo(() => rows.filter((row) => matchRow(row, deferredKe
 					"level": "error",
 					"options": {
 						"patterns": [
-								{"group": ["../**", "./**", "!./*.css"], "message": "가져오기는 절대경로로 씁니다. 심볼 없이 파일만 불러오는 줄만 같은 폴더를 ./ 로 씁니다."}
-							]
+							{"group": ["../**", "./**", "!./*.css"], "message": "가져오기는 절대경로로 씁니다. 심볼 없이 파일만 불러오는 줄만 같은 폴더를 ./ 로 씁니다."}
+						]
 					}
 				},
 				"useNamingConvention": {

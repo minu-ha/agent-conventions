@@ -53,6 +53,18 @@ export const toProductSaveRequest = (values: ProductFormValues) => {
 };
 ```
 
+**Correct (소유자 아래 대표 함수 하나에 파일 하나를 둡니다):**
+
+```ts
+// page/product-form/_function/to-product-save-request.ts
+/**
+ * product 저장 요청 조립. 서버가 앞뒤 공백이 붙은 title을 거부한다
+ */
+export const toProductSaveRequest = (values: ProductFormValues) => {
+	return {body: {title: values.title.trim()}};
+};
+```
+
 **Incorrect (보조 모듈 안에서 내보낸 함수가 내보낸 함수를 타고 갑니다):**
 
 ```ts
@@ -73,18 +85,6 @@ export const toProfileSaveRequest = (
 		...toProfileValues(formValues),
 		avatarRequests: toAvatarRequests(files),
 	};
-};
-```
-
-**Correct (소유자 아래 대표 함수 하나에 파일 하나를 둡니다):**
-
-```ts
-// page/product-form/_function/to-product-save-request.ts
-/**
- * product 저장 요청 조립. 서버가 앞뒤 공백이 붙은 title을 거부한다
- */
-export const toProductSaveRequest = (values: ProductFormValues) => {
-	return {body: {title: values.title.trim()}};
 };
 ```
 
