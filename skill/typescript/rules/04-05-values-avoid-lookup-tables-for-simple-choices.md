@@ -38,6 +38,16 @@ const chart_toolbar_variant_by_card_variant = {
 <UiChart.Toolbar variant={props.variant === "fill" ? "default" : props.variant} />;
 ```
 
+**Incorrect (계약 조회표를 근거 없이 둡니다):**
+
+```ts
+const order_status_by_api_code = {
+	P: "pending",
+	C: "completed",
+	D: "cancelled",
+} as const satisfies Record<OrderStatusCode, OrderStatus>;
+```
+
 **Correct (외부 코드와 화면 상태의 대응 관계가 계약이면 이유를 남기고 조회표를 둡니다):**
 
 ```ts

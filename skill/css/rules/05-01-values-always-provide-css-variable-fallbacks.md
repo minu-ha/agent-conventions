@@ -44,6 +44,7 @@ tags: variables, fallbacks, tokens
 **Incorrect (공통 토큰에 대체값을 붙여 값을 두 곳에 둡니다):**
 
 ```css
+/* src/page/post-index/_pg-post-filter-dialog.css */
 .pg_postFilterDialog__panel {
 	gap: var(--app-space-3, 12px);
 	color: var(--app-color-text-primary, #212529);
@@ -58,9 +59,7 @@ tags: variables, fallbacks, tokens
 	--app-space-3: 12px;
 	--app-color-text-primary: #212529;
 }
-```
 
-```css
 /* src/page/post-index/_pg-post-filter-dialog.css */
 .pg_postFilterDialog__panel {
 	gap: var(--app-space-3);

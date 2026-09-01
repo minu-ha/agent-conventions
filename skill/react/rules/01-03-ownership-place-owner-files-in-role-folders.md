@@ -80,7 +80,7 @@ component/ui/button/
 └── ui-button.css
 ```
 
-**Incorrect (범용 이름 폴더와 복수형을 섞어 씁니다):**
+**Incorrect (범용 이름 폴더를 섞어 쓰고 하위 소유자 안에 소유자를 다시 둡니다):**
 
 ```txt
 page/detail/
@@ -88,14 +88,7 @@ page/detail/
 ├── components/
 ├── constants/
 ├── utils/
-└── helpers/
-```
-
-**Incorrect (하위 소유자 안에 소유자를 다시 둡니다):**
-
-```txt
-page/detail/
-├── pg-detail.tsx
+├── helpers/
 └── sales-trend-panel/
     ├── pg-sales-trend-panel.tsx
     └── detection/

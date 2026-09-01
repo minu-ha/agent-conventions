@@ -57,6 +57,15 @@ JSX 자식 자리에는 `//`를 쓸 수 없습니다.
 </div>;
 ```
 
+**Incorrect (예외 이유를 한 줄로 접습니다):**
+
+```tsx
+{/* LegacyDatePicker는 className을 받지 않아 배치용 래퍼가 필요하다 */}
+<div className={clsx("pg_products__datePicker")}>
+	<LegacyDatePicker value={value} onChange={handleChange} />
+</div>;
+```
+
 **Correct (예외 이유도 같은 블록 형태로 적습니다):**
 
 ```tsx

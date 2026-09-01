@@ -54,6 +54,19 @@ export const PgProductScreen = () => {
 };
 ```
 
+**Incorrect (목록에서도 짧은 문법을 써서 `key`를 붙일 자리가 없습니다):**
+
+```tsx
+export const PgProductRows = (props: PgProductRowsProps) => {
+	return props.products.map((product) => (
+		<>
+			<PgProductRow product={product} />
+			<PgProductRowDivider />
+		</>
+	));
+};
+```
+
 **Correct (`key`가 필요해도 같은 형태를 씁니다):**
 
 ```tsx

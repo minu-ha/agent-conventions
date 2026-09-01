@@ -117,9 +117,7 @@ export const WgLineChart = (props: WgLineChartProps) => {
 export const UiLineChart = (props: UiLineChartProps) => {
 	return <svg className={clsx("ui_lineChart__root")}>{/* ... */}</svg>;
 };
-```
 
-```tsx
 // component/widget/sales-window-chart/wg-sales-window-chart.tsx
 export const WgSalesWindowChart = (props: WgSalesWindowChartProps) => {
 	return <UiLineChart points={toChartPoints(props.readings)} />;

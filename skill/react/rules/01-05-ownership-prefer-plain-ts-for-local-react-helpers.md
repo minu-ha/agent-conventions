@@ -34,31 +34,42 @@ tags: ownership, hooks, widget
 
 **Incorrect (로컬 계산을 습관적으로 훅으로 포장합니다):**
 
-```ts
+```tsx
+// page/products/_hook/use-media-upload-payload.ts
 export const useMediaUploadPayload = (files: UploadFile[]) => {
-	return files.map((file) => ({ uid: file.uid }));
+	return files.map((file) => ({uid: file.uid}));
+};
+
+// page/products/_pg-media-upload-panel.tsx
+export const PgMediaUploadPanel = (props: PgMediaUploadPanelProps) => {
+	const mediaUploadPayload = useMediaUploadPayload(props.files);
+
+	/**
+	 * 업로드를 확정할 때 이미 만들어 둔 값을 보냄
+	 */
+	const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = () => {
+		void saveMedia(mediaUploadPayload);
+	};
+
+	return <UiButton onClick={handleSaveButtonClick}>저장</UiButton>;
 };
 ```
 
-**Correct (순수 계산은 소유자의 `_function` 폴더에 일반 함수로 둡니다):**
+**Correct (순수 계산은 소유자의 `_function` 폴더에 두고 핸들러가 직접 부릅니다):**
 
-```ts
+```tsx
 // page/products/_function/to-media-upload-request.ts
 /**
  * 업로드 파일 목록으로 저장 요청을 조립
  */
 export const toMediaUploadRequest = (files: UploadFile[]) => {
-	return files.map((file) => ({ uid: file.uid }));
+	return files.map((file) => ({uid: file.uid}));
 };
-```
 
-**Correct (훅 없이 컴포넌트 핸들러가 그 함수를 직접 부릅니다):**
-
-```tsx
 // page/products/_pg-media-upload-panel.tsx
 import {toMediaUploadRequest} from "@/page/products/_function/to-media-upload-request";
 
-const PgMediaUploadPanel = (props: PgMediaUploadPanelProps) => {
+export const PgMediaUploadPanel = (props: PgMediaUploadPanelProps) => {
 	/**
 	 * 업로드를 확정할 때만 정규화해서 보냄. 렌더 중에는 계산하지 않는다
 	 */

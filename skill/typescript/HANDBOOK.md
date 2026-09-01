@@ -722,12 +722,31 @@ type MutableRow = Omit<Row, "children"> & {
 ```ts
 // page/products/pg-products.tsx
 const default_page_size = 20;
-```
+const request_timeout_ms = 20_000;
 
-```ts
+const productClient = createClient({timeoutMs: request_timeout_ms});
+const productQuery = useProductQuery({client: productClient, pageSize: default_page_size});
+
 // page/billing/pg-billing.tsx
 const default_page_size = 20;
-const request_timeout_ms = 20_000;
+
+const invoiceQuery = useInvoiceQuery({pageSize: default_page_size});
+```
+
+**Correct (루트 `constant` 폴더에 둔 이름을 쓰는 자리에서 가져옵니다):**
+
+```ts
+// page/products/pg-products.tsx
+import {api_request_timeout_ms} from "@/constant/api";
+import {pagination_default_page_size} from "@/constant/pagination";
+
+const productClient = createClient({timeoutMs: api_request_timeout_ms});
+const productQuery = useProductQuery({client: productClient, pageSize: pagination_default_page_size});
+
+// page/billing/pg-billing.tsx
+import {pagination_default_page_size} from "@/constant/pagination";
+
+const invoiceQuery = useInvoiceQuery({pageSize: pagination_default_page_size});
 ```
 
 **Incorrect (객체 하나에 모아 색인을 손으로 유지합니다):**
@@ -740,7 +759,7 @@ export const config = {
 } as const;
 ```
 
-**Correct (주제 파일에 상수를 하나씩 내보내고 쓰는 자리에서 이름으로 가져옵니다):**
+**Correct (주제 파일에 상수를 하나씩 이름 붙여 내보냅니다):**
 
 ```ts
 // constant/api.ts
@@ -748,23 +767,12 @@ export const config = {
  * 요청 하나를 기다리는 최대 시간. 게이트웨이가 30초에 끊어 그보다 먼저 실패를 알린다
  */
 export const api_request_timeout_ms = 20_000;
-```
 
-```ts
 // constant/pagination.ts
 /**
  * 목록 화면이 처음 불러오는 개수
  */
 export const pagination_default_page_size = 20;
-```
-
-```ts
-// page/products/pg-products.tsx
-import {api_request_timeout_ms} from "@/constant/api";
-import {pagination_default_page_size} from "@/constant/pagination";
-
-const productClient = createClient({timeoutMs: api_request_timeout_ms});
-const productQuery = useProductQuery({client: productClient, pageSize: pagination_default_page_size});
 ```
 
 ### 2.2 Place Owner-only Constants in the Owner `_constant` Folder
@@ -900,23 +908,21 @@ const userProfileSchema = z.object({
 });
 ```
 
-**Incorrect (불변 데이터 상수와 그 키를 `camelCase`로 적습니다):**
+**Incorrect (불변 데이터 상수와 값 집합의 이름과 키를 `camelCase`로 적습니다):**
 
 ```ts
 const retryPolicy = {
 	maxAttempts: 3,
 } as const;
+
+const productStatus = {
+	draft: "draft",
+	waitingReview: "waiting_review",
+	published: "published",
+} as const;
 ```
 
 **Correct (불변 데이터 상수와 값 집합은 이름과 상수 키를 모두 `snake_case`로 적습니다):**
-
-```ts
-// constant/pagination.ts
-/**
- * 목록 화면이 처음 불러오는 개수
- */
-export const pagination_default_page_size = 20;
-```
 
 ```ts
 /**
@@ -925,9 +931,7 @@ export const pagination_default_page_size = 20;
 const retry_policy = {
 	max_attempts: 3,
 } as const;
-```
 
-```ts
 /**
  * product 게시 상태 값 집합
  */
@@ -1019,18 +1023,22 @@ const UiTabs = (props: UiTabsProps) => {
 };
 
 export default UiTabs;
-```
 
-```tsx
+// page/settings/pg-settings.tsx
 // 사용처가 이름을 지어서 같은 컴포넌트가 파일마다 다른 이름으로 불린다
 import Tabs from "@/component/ui/tabs/ui-tabs";
 ```
 
-**Correct (도구가 계약으로 요구하는 파일만 `default`로 내보냅니다):**
+**Correct (선언 앞에 `export`를 붙여 사용처가 그 이름으로 가져옵니다):**
 
-```ts
-// vite.config.ts
-export default defineConfig({plugins: [react()]});
+```tsx
+// component/ui/tabs/ui-tabs.tsx
+export const UiTabs = (props: UiTabsProps) => {
+	return <div role="tablist">{props.children}</div>;
+};
+
+// page/settings/pg-settings.tsx
+import {UiTabs} from "@/component/ui/tabs/ui-tabs";
 ```
 
 ### 2.5 Import by Absolute Path
@@ -1300,7 +1308,7 @@ const reportSnapshot: ReportSnapshot = response.data;
 | 제너레이터 | `function*` 없이 쓸 수 없습니다 |
 | 오버로드 선언 | `function` 시그니처를 겹쳐 쓰는 선언 문법은 `const`로 옮길 수 없습니다. 호출 시그니처를 모은 타입을 `const`에 붙일 수 있으면 그쪽을 씁니다 |
 
-**Incorrect (`function` 선언문과 화살표를 한 파일에서 섞습니다):**
+**Incorrect (`function` 선언문과 한 줄 본문이 한 파일에 섞입니다):**
 
 ```ts
 export function toTrimmedTitle(rawTitle: string): string {
@@ -1310,11 +1318,12 @@ export function toTrimmedTitle(rawTitle: string): string {
 export const toProductSlug = (title: string): string => {
 	return toTrimmedTitle(title).toLowerCase();
 };
-```
 
-**Incorrect (내보낸 화살표 아래 비공개 보조를 `function` 선언문으로 씁니다):**
+export const toProductBadge = (product: Product): ProductBadge => ({
+	label: decorate(product.title),
+	tone: product.published ? "solid" : "muted",
+});
 
-```ts
 export const toProductLabel = (product: Product): string => {
 	return decorate(product.title);
 };
@@ -1322,27 +1331,6 @@ export const toProductLabel = (product: Product): string => {
 function decorate(title: string): string {
 	return `# ${title}`;
 }
-```
-
-**Incorrect (본문을 한 줄로 줄여 선언마다 형태가 갈립니다):**
-
-```ts
-const decorate = (title: string): string => `# ${title}`;
-
-export const toProductBadge = (product: Product): ProductBadge => ({
-	label: decorate(product.title),
-	tone: product.published ? "solid" : "muted",
-});
-```
-
-**Incorrect (객체 프로퍼티의 함수를 메서드 축약형으로 씁니다):**
-
-```ts
-export const cell_formatter_by_value_type = {
-	text(value: string): string {
-		return value.trim();
-	},
-} as const;
 ```
 
 **Correct (모두 `const` 화살표에 블록 본문을 씁니다):**
@@ -1370,6 +1358,16 @@ export const toProductLabel = (product: Product): string => {
 const decorate = (title: string): string => {
 	return `# ${title}`;
 };
+```
+
+**Incorrect (객체 프로퍼티의 함수를 메서드 축약형으로 씁니다):**
+
+```ts
+export const cell_formatter_by_value_type = {
+	text(value: string): string {
+		return value.trim();
+	},
+} as const;
 ```
 
 **Correct (객체 프로퍼티의 함수는 화살표, 인라인 콜백은 한 줄로 씁니다):**
@@ -1860,6 +1858,31 @@ export const toProfileSaveRequest = (values: ProfileFormValues) => {
 };
 ```
 
+**Correct (소유자와 함께 사라질 함수는 그 소유자의 `_function` 폴더에 둡니다):**
+
+```ts
+// page/profile/_function/to-profile-save-request.ts
+/**
+ * 서버가 앞뒤 공백이 붙은 displayName을 거부한다
+ */
+export const toProfileSaveRequest = (values: ProfileFormValues) => {
+	return {body: {displayName: values.displayName.trim()}};
+};
+```
+
+**Incorrect (소유자를 지워도 남을 함수를 쓰는 곳이 하나라고 소유자 아래 둡니다):**
+
+```ts
+// page/orders/_function/to-display-date.ts
+// 날짜 표시는 orders 화면을 지워도 남는다. 지금 이 화면만 쓴다는 이유로 여기 있다
+/**
+ * 형식을 고정한다. 사용자 로케일을 따라가면 목록 정렬 기준과 어긋난다
+ */
+export const toDisplayDate = (value: string): string => {
+	return dayjs(value).format(date_format);
+};
+```
+
 **Correct (승격 판정 흐름입니다):**
 
 ```txt
@@ -1941,6 +1964,18 @@ if (canManageItems) {
 
 ```ts
 const visibleTabs = ["overview", ...(canManageItems ? ["items"] : [])];
+```
+
+**Incorrect (조건이 셋이 되자 삼항을 겹칩니다):**
+
+```ts
+const visibleTabs = canManageItems
+	? canInviteMembers
+		? ["overview", "items", "members"]
+		: ["overview", "items"]
+	: canInviteMembers
+		? ["overview", "members"]
+		: ["overview"];
 ```
 
 **Correct (조건이 셋 이상이면 표로 두고 걸러 냅니다):**
@@ -2477,11 +2512,14 @@ const toOverdueLines = (invoice: Invoice): InvoiceLine[] => {
 그 규칙은 테스트 파일에서만 꺼집니다.
 기대값은 리터럴 자체가 계약이라 상수로 빼면 검증할 것이 남지 않습니다.
 
-**Incorrect (뜻이 있는 숫자를 쓰는 자리에 적습니다):**
+**Incorrect (뜻이 있는 숫자를 쓰는 자리에 적거나 지역 `const`로 자리만 옮깁니다):**
 
 ```ts
+// page/products/pg-products.tsx
+const maxAttempts = 42;
+
 const isOverRetryLimit = (attempts: number): boolean => {
-	return attempts > 42;
+	return attempts > maxAttempts;
 };
 
 const toPreviewRows = (rows: Row[]): Row[] => {
@@ -2489,17 +2527,7 @@ const toPreviewRows = (rows: Row[]): Row[] => {
 };
 ```
 
-**Incorrect (지역 `const`로 자리만 옮깁니다):**
-
-```ts
-const maxAttempts = 42;
-
-const isOverRetryLimit = (attempts: number): boolean => {
-	return attempts > maxAttempts;
-};
-```
-
-**Correct (상수로 선언하고 이름을 가리킵니다):**
+**Correct (`constant` 폴더에 선언하고 쓰는 자리에서 이름을 가리킵니다):**
 
 ```ts
 // constant/retry.ts
@@ -2507,17 +2535,14 @@ const isOverRetryLimit = (attempts: number): boolean => {
  * 이 횟수를 넘으면 사용자에게 실패를 보여 준다
  */
 export const retry_max_attempts = 42;
-```
 
-```ts
 // constant/preview.ts
 /**
  * 미리보기에 그릴 행 수. 서버가 한 번에 주는 최대치와 맞춘다
  */
 export const preview_row_count = 37;
-```
 
-```ts
+// page/products/pg-products.tsx
 import {preview_row_count} from "@/constant/preview";
 import {retry_max_attempts} from "@/constant/retry";
 
@@ -2530,9 +2555,29 @@ const toPreviewRows = (rows: Row[]): Row[] => {
 };
 ```
 
+**Incorrect (뜻이 없는 숫자에까지 이름을 붙입니다):**
+
+```ts
+// constant/table.ts
+export const table_first_row_index = 0;
+export const table_page_step = 1;
+
+// page/products/pg-products.tsx
+import {table_first_row_index, table_page_step} from "@/constant/table";
+
+const toFirstRow = (rows: Row[]): Row | undefined => {
+	return rows[table_first_row_index];
+};
+
+const toNextPage = (page: number): number => {
+	return page + table_page_step;
+};
+```
+
 **Correct (뜻이 없는 숫자는 그대로 둡니다):**
 
 ```ts
+// page/products/pg-products.tsx
 const toFirstRow = (rows: Row[]): Row | undefined => {
 	return rows[0];
 };
@@ -2574,6 +2619,16 @@ const chart_toolbar_variant_by_card_variant = {
 
 ```tsx
 <UiChart.Toolbar variant={props.variant === "fill" ? "default" : props.variant} />;
+```
+
+**Incorrect (계약 조회표를 근거 없이 둡니다):**
+
+```ts
+const order_status_by_api_code = {
+	P: "pending",
+	C: "completed",
+	D: "cancelled",
+} as const satisfies Record<OrderStatusCode, OrderStatus>;
 ```
 
 **Correct (외부 코드와 화면 상태의 대응 관계가 계약이면 이유를 남기고 조회표를 둡니다):**
@@ -2647,38 +2702,31 @@ const order_status_by_api_code = {
 `groupBy`와 `keyBy`는 목록을 다시 짜는 함수입니다.
 조회 자리를 `Map`으로 정리하는 것은 `values-use-set-and-map-for-repeated-lookups`가 봅니다.
 
-**Incorrect (중복 제거를 인덱스 비교와 `Set` 왕복으로 직접 씁니다):**
+**Incorrect (`es-toolkit`에 있는 함수를 손으로 다시 씁니다):**
 
 ```ts
 const uniqueOwnerIds = ownerIds.filter((ownerId, index) => ownerIds.indexOf(ownerId) === index);
 const uniqueCategories = [...new Set(points.map((point) => point.x))];
-```
-
-**Incorrect (`reduce`로 그룹 짓기를 다시 만듭니다):**
-
-```ts
 const productsByCategory = products.reduce<Record<string, Product[]>>((grouped, product) => {
 	grouped[product.category] = [...(grouped[product.category] ?? []), product];
 	return grouped;
 }, {});
-```
-
-**Incorrect (`JSON` 왕복으로 깊은 복사를 흉내 냅니다):**
-
-```ts
 const draftFilter = JSON.parse(JSON.stringify(savedFilter)) as ProductFilter;
-```
-
-**Incorrect (정규식으로 표기를 바꿉니다):**
-
-```ts
 const searchKey = rawKey.replace(/([A-Z])/g, "_$1").toLowerCase();
+const tickTimes = Array.from({length: tick_count}, (_unused, tickIndex) => toTickTime(tickIndex));
 ```
 
-**Incorrect (`Array.from`에 쓰지 않는 첫 인자를 두고 길이만큼 돌립니다):**
+**Correct (`es-toolkit` 함수를 그대로 부릅니다):**
 
 ```ts
-const tickTimes = Array.from({length: tick_count}, (_unused, tickIndex) => toTickTime(tickIndex));
+import {cloneDeep, groupBy, range, snakeCase, uniq} from "es-toolkit";
+
+const uniqueOwnerIds = uniq(ownerIds);
+const uniqueCategories = uniq(points.map((point) => point.x));
+const productsByCategory = groupBy(products, (product) => product.category);
+const draftFilter = cloneDeep(savedFilter);
+const searchKey = snakeCase(rawKey);
+const tickTimes = range(tick_count).map((tickIndex) => toTickTime(tickIndex));
 ```
 
 **Incorrect (빈 목록을 먼저 가드하고 중간 배열을 만들어 양 끝을 읽습니다):**
@@ -2693,19 +2741,6 @@ const toChartBounds = (points: readonly ChartPoint[]) => {
 
 	return {min: Math.min(...yValues), max: Math.max(...yValues)};
 };
-```
-
-**Correct (`es-toolkit` 함수를 그대로 부릅니다):**
-
-```ts
-import {cloneDeep, groupBy, range, snakeCase, uniq} from "es-toolkit";
-
-const uniqueOwnerIds = uniq(ownerIds);
-const uniqueCategories = uniq(points.map((point) => point.x));
-const productsByCategory = groupBy(products, (product) => product.category);
-const draftFilter = cloneDeep(savedFilter);
-const searchKey = snakeCase(rawKey);
-const tickTimes = range(tick_count).map((tickIndex) => toTickTime(tickIndex));
 ```
 
 **Correct (빈 목록 판정을 `minBy`·`maxBy`의 결과로 합칩니다):**
@@ -3291,6 +3326,13 @@ const columns = useMemo(() => toTableColumns(response.data.columns), [response.d
 ```ts
 // ag-grid는 columnDefs 참조가 바뀌면 컬럼 상태를 초기화한다. 참조를 고정해야 한다.
 const columns = useMemo(() => toTableColumns(response.data.columns), [response.data.columns]);
+```
+
+**Incorrect (막연한 말이라 무엇을 재서 넣었는지 알 수 없습니다):**
+
+```ts
+// 안전하게 다시 계산하지 않도록
+const filteredRows = useMemo(() => rows.filter((row) => matchRow(row, deferredKeyword)), [deferredKeyword, rows]);
 ```
 
 **Correct (측정 결과를 가리킵니다):**

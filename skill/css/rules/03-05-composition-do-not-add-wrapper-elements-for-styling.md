@@ -41,16 +41,6 @@ tags: components, wrappers, layout
 }
 ```
 
-**Incorrect (역할 없는 이름의 래퍼를 늘립니다):**
-
-```tsx
-<div className={clsx("pg_postIndex__box")}>
-	<div className={clsx("pg_postIndex__inner")}>
-		<LegacyDatePicker value={value} onChange={handleChange} />
-	</div>
-</div>
-```
-
 **Correct (우리 컴포넌트면 `className` 계약을 추가합니다):**
 
 ```tsx
@@ -76,6 +66,16 @@ export const UiCollapse = (props: UiCollapseProps) => {
 }
 ```
 
+**Incorrect (역할 없는 이름의 래퍼를 늘립니다):**
+
+```tsx
+<div className={clsx("pg_postIndex__box")}>
+	<div className={clsx("pg_postIndex__inner")}>
+		<LegacyDatePicker value={value} onChange={handleChange} />
+	</div>
+</div>
+```
+
 **Correct (외부 라이브러리가 `className`을 받지 않으면 역할 이름을 붙여 감쌉니다):**
 
 ```tsx
@@ -85,11 +85,4 @@ export const UiCollapse = (props: UiCollapseProps) => {
 <div className={clsx("pg_postIndex__dateField")}>
 	<LegacyDatePicker value={value} onChange={handleChange} />
 </div>
-```
-
-```css
-.pg_postIndex__dateField {
-	flex: 1;
-	min-width: 0;
-}
 ```

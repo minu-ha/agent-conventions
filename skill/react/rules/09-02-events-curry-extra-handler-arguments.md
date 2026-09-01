@@ -44,6 +44,12 @@ const handleSelectionToggle = (id: string) => {
 <li onClick={() => handleSelectionToggle(product.id)} />;
 ```
 
+**Correct (JSX에는 팩토리 호출만 두고 감싸는 화살표를 만들지 않습니다):**
+
+```tsx
+<li onClick={handleListItemClick(product.id)} />;
+```
+
 **Incorrect (블록 본문에서 안쪽 핸들러에 이름을 붙이고 팩토리에 With 접미사를 붙입니다):**
 
 ```tsx
@@ -69,8 +75,4 @@ const handleListItemClick =
 	(_event) => {
 		toggleSelection(productId);
 	};
-```
-
-```tsx
-<li onClick={handleListItemClick(product.id)} />;
 ```

@@ -84,23 +84,21 @@ const userProfileSchema = z.object({
 });
 ```
 
-**Incorrect (불변 데이터 상수와 그 키를 `camelCase`로 적습니다):**
+**Incorrect (불변 데이터 상수와 값 집합의 이름과 키를 `camelCase`로 적습니다):**
 
 ```ts
 const retryPolicy = {
 	maxAttempts: 3,
 } as const;
+
+const productStatus = {
+	draft: "draft",
+	waitingReview: "waiting_review",
+	published: "published",
+} as const;
 ```
 
 **Correct (불변 데이터 상수와 값 집합은 이름과 상수 키를 모두 `snake_case`로 적습니다):**
-
-```ts
-// constant/pagination.ts
-/**
- * 목록 화면이 처음 불러오는 개수
- */
-export const pagination_default_page_size = 20;
-```
 
 ```ts
 /**
@@ -109,9 +107,7 @@ export const pagination_default_page_size = 20;
 const retry_policy = {
 	max_attempts: 3,
 } as const;
-```
 
-```ts
 /**
  * product 게시 상태 값 집합
  */

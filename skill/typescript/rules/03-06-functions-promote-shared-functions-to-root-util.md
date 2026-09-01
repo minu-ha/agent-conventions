@@ -59,6 +59,31 @@ export const toProfileSaveRequest = (values: ProfileFormValues) => {
 };
 ```
 
+**Correct (소유자와 함께 사라질 함수는 그 소유자의 `_function` 폴더에 둡니다):**
+
+```ts
+// page/profile/_function/to-profile-save-request.ts
+/**
+ * 서버가 앞뒤 공백이 붙은 displayName을 거부한다
+ */
+export const toProfileSaveRequest = (values: ProfileFormValues) => {
+	return {body: {displayName: values.displayName.trim()}};
+};
+```
+
+**Incorrect (소유자를 지워도 남을 함수를 쓰는 곳이 하나라고 소유자 아래 둡니다):**
+
+```ts
+// page/orders/_function/to-display-date.ts
+// 날짜 표시는 orders 화면을 지워도 남는다. 지금 이 화면만 쓴다는 이유로 여기 있다
+/**
+ * 형식을 고정한다. 사용자 로케일을 따라가면 목록 정렬 기준과 어긋난다
+ */
+export const toDisplayDate = (value: string): string => {
+	return dayjs(value).format(date_format);
+};
+```
+
 **Correct (승격 판정 흐름입니다):**
 
 ```txt

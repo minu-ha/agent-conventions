@@ -85,7 +85,7 @@ tags: values, theme
 }
 ```
 
-**Correct (토큰 파일 한 곳에서만 값을 바꿉니다):**
+**Correct (토큰 파일 한 곳에서만 값을 바꾸고 사용자가 고른 테마가 시스템 설정을 이깁니다):**
 
 ```css
 /* src/style/token.css */
@@ -108,12 +108,8 @@ tags: values, theme
 		--app-shadow-panel: 0 1px 3px rgb(0 0 0 / 60%);
 	}
 }
-```
 
-**Correct (사용자가 고른 테마가 시스템 설정을 이깁니다):**
-
-```css
-/* src/style/token.css — [data-theme] 가 명시도로 @media 블록을 이긴다 */
+/* [data-theme] 는 명시도로 위 @media 블록을 이긴다 */
 :root[data-theme="light"] {
 	color-scheme: light;
 

@@ -57,16 +57,20 @@ const UiTabs = (props: UiTabsProps) => {
 };
 
 export default UiTabs;
-```
 
-```tsx
+// page/settings/pg-settings.tsx
 // 사용처가 이름을 지어서 같은 컴포넌트가 파일마다 다른 이름으로 불린다
 import Tabs from "@/component/ui/tabs/ui-tabs";
 ```
 
-**Correct (도구가 계약으로 요구하는 파일만 `default`로 내보냅니다):**
+**Correct (선언 앞에 `export`를 붙여 사용처가 그 이름으로 가져옵니다):**
 
-```ts
-// vite.config.ts
-export default defineConfig({plugins: [react()]});
+```tsx
+// component/ui/tabs/ui-tabs.tsx
+export const UiTabs = (props: UiTabsProps) => {
+	return <div role="tablist">{props.children}</div>;
+};
+
+// page/settings/pg-settings.tsx
+import {UiTabs} from "@/component/ui/tabs/ui-tabs";
 ```

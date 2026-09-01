@@ -53,32 +53,46 @@ return (
 );
 ```
 
-**Correct (되돌릴 때 살려야 할 상태가 하위 트리에 있는 자리에만 씁니다):**
+**Correct (마운트 의미가 있으면 조건부 렌더링을 둡니다):**
 
 ```tsx
+// 편집을 취소하면 폼이 해제돼서 다시 들어갈 때 빈 입력으로 시작한다
+return (
+	<Fragment>
+		{isEditing && <PgProductEditorForm />}
+		{!isEditing && <PgProductPreviewPane />}
+	</Fragment>
+);
+```
+
+**Incorrect (되돌릴 때 살려야 할 상태를 조건부 렌더링으로 날립니다):**
+
+```tsx
+// 사이드바: 접어 둔 노드와 스크롤 위치를 자기 상태로 갖는다
 const PgProductSidebar = () => {
-	// 접어 둔 노드와 스크롤 위치가 사이드바 안에 있다. 닫았다 열면 그대로 있어야 한다
 	const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
 
 	return <UiTree expandedKeys={expandedKeys} onExpand={setExpandedKeys} />;
 };
+
+// 사이드바를 소유한 화면: 닫으면 해제돼서 접어 둔 노드와 스크롤 위치가 사라진다
+return isSidebarOpen && <PgProductSidebar />;
 ```
 
+**Correct (되돌릴 때 살려야 할 상태가 하위 트리에 있는 자리에만 씁니다):**
+
 ```tsx
+// 사이드바: 접어 둔 노드와 스크롤 위치를 자기 상태로 갖는다
+const PgProductSidebar = () => {
+	const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
+
+	return <UiTree expandedKeys={expandedKeys} onExpand={setExpandedKeys} />;
+};
+
+// 사이드바를 소유한 화면: 닫아도 마운트를 유지해 그 상태를 그대로 살린다
 return (
 	<Activity mode={isSidebarOpen ? "visible" : "hidden"}>
 		<PgProductSidebar />
 	</Activity>
-);
-```
-
-**Correct (마운트 의미가 있으면 조건부 렌더링을 둡니다):**
-
-```tsx
-return (
-	<Fragment>
-		{hasItems && <PgProductList />}
-		{!hasItems && <PgProductEmptyState />}
-	</Fragment>
 );
 ```

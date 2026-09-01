@@ -66,6 +66,14 @@ return <section>{selectedRows.length && <PgProductBulkActionBar />}</section>;
 return <section>{selectedRows.length > 0 && <PgProductBulkActionBar selectedRows={selectedRows} />}</section>;
 ```
 
+**Incorrect (컴포넌트가 통째로 안 그리는 자리에 `&&`를 씁니다):**
+
+```tsx
+const PgProductPanel = (props: PgProductPanelProps) => {
+	return props.isVisible && <section className={clsx("pg_productPanel__root")}>{props.children}</section>;
+};
+```
+
 **Correct (컴포넌트가 통째로 안 그리면 이른 반환을 씁니다):**
 
 ```tsx
