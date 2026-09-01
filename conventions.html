@@ -234,9 +234,19 @@ body {
 .box-bad .box-side { color: var(--bad); border: 1px solid color-mix(in srgb, var(--bad) 35%, transparent); }
 .box-good .box-side { color: var(--good); border: 1px solid color-mix(in srgb, var(--good) 35%, transparent); }
 .diff { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(330px, 100%), 1fr)); gap: 14px; }
+/* 한쪽 코드가 길어 잘릴 때 그 행만 폭을 몰아 준다. 여닫기와는 별개다. */
+@media (min-width: 1000px) {
+	.diff[data-w="b"] { grid-template-columns: minmax(0, 2.4fr) minmax(0, 1fr); }
+	.diff[data-w="a"] { grid-template-columns: minmax(0, 1fr) minmax(0, 2.4fr); }
+}
+.box-w { position: absolute; top: 6px; right: 8px; z-index: 1; font-family: var(--mono); font-size: 9.5px; letter-spacing: .04em; padding: 2px 6px; border-radius: 2px; border: 1px solid var(--hair); background: var(--card); color: var(--muted); cursor: pointer; }
+.box-w:hover { border-color: currentColor; }
+.box-b .box-w { color: var(--dx-b); }
+.box-a .box-w { color: var(--dx-a); }
+.box-b > .box-hd-t, .box-a > .box-hd-t { padding-right: 78px; }
 
 /* 테두리 전체에 의미색을 두르면 잉크가 많다. 좌측 2px 만 의미색으로 세운다. */
-.box { min-width: 0; border: 1px solid var(--hair); border-radius: 2px; overflow: hidden; }
+.box { position: relative; min-width: 0; border: 1px solid var(--hair); border-radius: 2px; overflow: hidden; }
 .box-bad { background: color-mix(in srgb, var(--bad) 3%, var(--card)); }
 .box-good { background: color-mix(in srgb, var(--good) 3%, var(--card)); }
 .box-b { background: color-mix(in srgb, var(--dx-b) 4%, var(--card)); }
@@ -452,7 +462,7 @@ body:has(.dlg[open]) { overflow: hidden; }
 	const secLabel = (s) => s.titleKo || s.title;
 
 	// skill 은 단일 선택. section 은 skill 마다 같은 prefix 를 쓸 수 있어 "skill/prefix" 로 잡는다.
-	const state = {q: "", skill: "", impact: new Set(), section: "", tags: new Set(), open: new Set(), when: new Set(), why: new Set(), sample: new Map()};
+	const state = {q: "", skill: "", impact: new Set(), section: "", tags: new Set(), open: new Set(), when: new Set(), why: new Set(), sample: new Map(), wide: new Map()};
 
 	const remember = () => { try { localStorage.setItem("viewer-skill", state.skill); } catch (e) {} };
 
@@ -752,7 +762,7 @@ body:has(.dlg[open]) { overflow: hidden; }
 			'<div class="cd-wrap"><div class="cd">' + cells + "</div></div>";
 	}).join("");
 
-	const boxHtml = (e, marks, side, toggle) => {
+	const boxHtml = (e, marks, side, toggle, wide) => {
 		if (!e) return "";
 
 		const bad = e.kind === "incorrect";
@@ -768,7 +778,13 @@ body:has(.dlg[open]) { overflow: hidden; }
 			? '<button class="box-hd box-hd-t" data-smp="' + esc(toggle.key) + '" data-i="0">' + inner + "</button>"
 			: '<div class="box-hd">' + inner + "</div>";
 
-		return '<div class="box ' + tone + '" data-open="' + (open ? 1 : 0) + '">' + head +
+		// 폭 버튼은 코드가 보일 때만 뜻이 있다. 접혀 있으면 붙이지 않는다.
+		const wideBtn = wide && open
+			? '<button class="box-w" data-wide="' + esc(wide.key + "|" + wide.side) + '">' +
+				(wide.cur === wide.side ? "⇤ 되돌리기" : "⇥ 넓게") + "</button>"
+			: "";
+
+		return '<div class="box ' + tone + '" data-open="' + (open ? 1 : 0) + '">' + head + wideBtn +
 			'<div class="box-body">' + (open ? codeHtml(e.blocks, marks ? {rows: marks, bad: bad} : null) : "") + "</div></div>";
 	};
 
@@ -839,9 +855,11 @@ body:has(.dlg[open]) { overflow: hidden; }
 					"</div>";
 				const rows = c.list.map((u, i) => {
 					const toggle = {key: keys[i], open: (state.sample.get(keys[i]) || []).indexOf(0) >= 0};
+					const w = state.wide.get(keys[i]) || "";
 
-					return '<div class="diff">' + boxHtml(u.bad, u.marks ? u.marks.left : null, "BEFORE", toggle) +
-						boxHtml(u.good, u.marks ? u.marks.right : null, "AFTER", toggle) + "</div>";
+					return '<div class="diff" data-w="' + w + '">' +
+						boxHtml(u.bad, u.marks ? u.marks.left : null, "BEFORE", toggle, {key: keys[i], side: "b", cur: w}) +
+						boxHtml(u.good, u.marks ? u.marks.right : null, "AFTER", toggle, {key: keys[i], side: "a", cur: w}) + "</div>";
 				}).join("");
 
 				return '<div class="dx">' + head + rows + "</div>";
@@ -1003,7 +1021,7 @@ body:has(.dlg[open]) { overflow: hidden; }
 	});
 
 	document.addEventListener("click", (ev) => {
-		const t = ev.target.closest("[data-rule],[data-skill],[data-impact],[data-section],[data-tag],[data-when],[data-why],[data-goto],[data-close],[data-clear],[data-smp],[data-all],[data-alldx],[data-allopen]");
+		const t = ev.target.closest("[data-rule],[data-skill],[data-impact],[data-section],[data-tag],[data-when],[data-why],[data-goto],[data-close],[data-clear],[data-smp],[data-all],[data-alldx],[data-allopen],[data-wide]");
 		if (!t) return;
 		// 다이얼로그가 열려 있으면 그 안의 아코디언도 같은 상태를 쓰므로 함께 다시 그린다.
 		const toggle = (set, key) => { set.has(key) ? set.delete(key) : set.add(key); render(); renderDialog(); };
@@ -1035,6 +1053,15 @@ body:has(.dlg[open]) { overflow: hidden; }
 				for (const x of targets) state.sample.set(x.key, Array.from({length: x.n}, (_unused, i) => i));
 			}
 
+			render();
+			return renderDialog();
+		}
+
+		// 그 행만 폭을 몰아 준다. 같은 쪽을 다시 누르면 균등으로 돌아간다.
+		if (t.dataset.wide) {
+			const parts = t.dataset.wide.split("|");
+
+			state.wide.set(parts[0], state.wide.get(parts[0]) === parts[1] ? "" : parts[1]);
 			render();
 			return renderDialog();
 		}
