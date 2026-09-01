@@ -10,7 +10,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 	--page: #eef1f3; --card: #fff;
 	--ink: #14191c; --ink2: #47535a; --muted: #5f6b71; --faint: #6b767c;
 	--hair: #d8dee2; --soft: #e4e9ec; --edge: #c3ccd1; --hover: #e7ecef;
-	--coral: #cc785c; --coral-dk: #a9583e;
+	--accent: #55636b; --accent-dk: #35424a;
 	--bad: #a8392b; --good: #3f6f52; --tag-fg: #7d6a55;
 	--code-bg: #fff; --code-fg: #0f1416;
 	--gut: #5c686e; --code-c: #3d4a51; --code-s: #1c5238; --code-k: #8f4025; --code-g: #5d4c39;
@@ -25,7 +25,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 		--page: #101416; --card: #171c1f;
 		--ink: #e6ebed; --ink2: #b3bec3; --muted: #8b979d; --faint: #87939a;
 		--hair: #262d31; --soft: #222a2e; --edge: #3a444a; --hover: #1e2528;
-		--coral: #d98a6c; --coral-dk: #e0a184;
+		--accent: #a3b2ba; --accent-dk: #c6d3da;
 		--bad: #dd8a7d; --good: #6bb890; --tag-fg: #b39a7c;
 		--code-bg: #12171a; --code-fg: #eef3f5;
 		--gut: #93a0a7; --code-c: #b3c0c6; --code-s: #94d6ae; --code-k: #f3ad90; --code-g: #d8bd99;
@@ -37,7 +37,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 	--page: #101416; --card: #171c1f;
 	--ink: #e6ebed; --ink2: #b3bec3; --muted: #8b979d; --faint: #87939a;
 	--hair: #262d31; --soft: #222a2e; --edge: #3a444a; --hover: #1e2528;
-	--coral: #d98a6c; --coral-dk: #e0a184;
+	--accent: #a3b2ba; --accent-dk: #c6d3da;
 	--bad: #dd8a7d; --good: #6bb890; --tag-fg: #b39a7c;
 	--code-bg: #12171a; --code-fg: #eef3f5;
 	--gut: #93a0a7; --code-c: #b3c0c6; --code-s: #94d6ae; --code-k: #f3ad90; --code-g: #d8bd99;
@@ -49,13 +49,13 @@ body {
 	font-family: var(--sans); font-size: 14px; line-height: 1.6;
 	-webkit-font-smoothing: antialiased;
 }
-:focus-visible { outline: 2px solid var(--coral); outline-offset: 2px; border-radius: 2px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
 
 /* ---------- header ---------- */
 .hd { position: sticky; top: 0; z-index: 40; background: color-mix(in srgb, var(--page) 94%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--hair); }
 .hd-in { max-width: 1320px; margin: 0 auto; padding: 0 28px; min-height: 64px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
 .rail-t { display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; margin-right: 2px; border-radius: 2px; font-size: 12px; color: var(--ink2); border: 1px solid var(--hair); }
-.rail-t:hover { border-color: var(--coral); color: var(--coral); }
+.rail-t:hover { border-color: var(--accent); color: var(--accent); }
 .brand { display: flex; align-items: center; gap: 9px; flex: 0 0 auto; }
 .brand-nm { font-size: 15px; font-weight: 600; letter-spacing: -.01em; }
 .brand-sub { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: .04em; padding-left: 4px; }
@@ -69,7 +69,7 @@ body {
 	background: var(--card); border: 1px solid var(--hair); border-radius: 2px;
 }
 .sr-in::placeholder { color: var(--faint); }
-.sr-in:focus { border-color: var(--coral); outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--coral) 18%, transparent); }
+.sr-in:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent); }
 
 .hd-r { flex: 0 0 auto; display: flex; align-items: center; gap: 14px; }
 .cnt { font-family: var(--mono); font-size: 11.5px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
@@ -95,7 +95,7 @@ body {
 .grp-lb { font-family: var(--mono); font-size: 10.5px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--ink2); }
 .grp-note { font-family: var(--mono); font-size: 10px; color: var(--faint); white-space: nowrap; }
 .grp-clear { font-family: var(--mono); font-size: 10.5px; color: var(--faint); }
-.grp-clear:hover { color: var(--coral-dk); }
+.grp-clear:hover { color: var(--accent-dk); }
 
 .col { display: flex; flex-direction: column; gap: 1px; }
 
@@ -105,8 +105,8 @@ body {
 	font-size: 12.5px; color: var(--ink2);
 }
 .ch:hover { background: var(--hover); }
-.ch[aria-pressed="true"] { background: var(--coral); color: #fff; }
-.ch[aria-pressed="true"]:hover { background: var(--coral-dk); }
+.ch[aria-pressed="true"] { background: var(--accent); color: #fff; }
+.ch[aria-pressed="true"]:hover { background: var(--accent-dk); }
 .ch-skill { grid-template-columns: minmax(0, 1fr) auto; font-family: var(--mono); font-size: 12px; }
 .ch-imp { grid-template-columns: 10px minmax(0, 1fr) auto; font-family: var(--mono); font-size: 11px; letter-spacing: .02em; }
 .ch-sec { grid-template-columns: 2.6em minmax(0, 1fr) auto; align-items: baseline; gap: 6px; padding: 5px 8px; }
@@ -119,13 +119,13 @@ body {
 .comp { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--hair); }
 .comp:empty { display: none; }
 .comp-lb { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--faint); width: 100%; }
-.comp-ch { font-family: var(--mono); font-size: 10.5px; min-height: 22px; padding: 0 7px; color: var(--coral-dk); background: color-mix(in srgb, var(--coral) 7%, transparent); border: 1px solid color-mix(in srgb, var(--coral) 28%, transparent); border-radius: 2px; }
-.comp-ch:hover { background: color-mix(in srgb, var(--coral) 14%, transparent); }
+.comp-ch { font-family: var(--mono); font-size: 10.5px; min-height: 22px; padding: 0 7px; color: var(--accent-dk); background: color-mix(in srgb, var(--accent) 7%, transparent); border: 1px solid color-mix(in srgb, var(--accent) 28%, transparent); border-radius: 2px; }
+.comp-ch:hover { background: color-mix(in srgb, var(--accent) 14%, transparent); }
 
 .tagwrap { display: flex; flex-wrap: wrap; gap: 4px; }
 .tg { display: inline-flex; align-items: center; gap: 5px; min-height: 24px; padding: 0 8px; border-radius: 999px; font-family: var(--mono); font-size: 10.5px; color: var(--muted); border: 1px solid var(--hair); }
-.tg:hover { color: var(--coral-dk); border-color: color-mix(in srgb, var(--coral) 45%, transparent); }
-.tg[aria-pressed="true"] { background: var(--coral); border-color: var(--coral); color: #fff; }
+.tg:hover { color: var(--accent-dk); border-color: color-mix(in srgb, var(--accent) 45%, transparent); }
+.tg[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
 .tg-n { font-variant-numeric: tabular-nums; opacity: .6; }
 
 /* ---------- rule cards ---------- */
@@ -135,14 +135,14 @@ body {
 .row { position: relative; background: var(--card); border: 1px solid var(--hair); border-radius: 3px; overflow: hidden; }
 .row[data-open="1"] { border-color: var(--edge); }
 .row-stripe { position: absolute; left: 0; top: 0; bottom: 0; width: 3px; }
-.row[data-imp="CRITICAL"] .row-stripe { background: var(--coral); }
-.row[data-imp="HIGH"] .row-stripe { background: color-mix(in srgb, var(--coral) 55%, transparent); }
-.row[data-imp="MEDIUM-HIGH"] .row-stripe { background: color-mix(in srgb, var(--coral) 25%, transparent); }
+.row[data-imp="CRITICAL"] .row-stripe { background: var(--accent); }
+.row[data-imp="HIGH"] .row-stripe { background: color-mix(in srgb, var(--accent) 55%, transparent); }
+.row[data-imp="MEDIUM-HIGH"] .row-stripe { background: color-mix(in srgb, var(--accent) 25%, transparent); }
 
 .row-hd { display: grid; grid-template-columns: 58px minmax(0, 1fr) auto; align-items: center; gap: 16px; width: 100%; text-align: left; padding: 14px 18px 14px 20px; }
 .row-hd:hover { background: color-mix(in srgb, var(--ink) 6%, var(--card)); }
 @media (max-width: 560px) { .row-hd { grid-template-columns: 44px minmax(0, 1fr); row-gap: 8px; } .row-meta { grid-column: 2; } }
-.row-no { font-family: var(--mono); font-size: 12px; font-weight: 500; color: var(--coral-dk); font-variant-numeric: tabular-nums; }
+.row-no { font-family: var(--mono); font-size: 12px; font-weight: 500; color: var(--accent-dk); font-variant-numeric: tabular-nums; }
 .row-ti { min-width: 0; font-size: 14.5px; font-weight: 600; letter-spacing: -.01em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 /* 제목 안 식별자도 본문 코드와 같은 배경을 줘서 영어 낱말이 아니라 코드로 읽히게 한다. */
 .row-ti code, .ref-ti code { font-family: var(--mono); font-size: .86em; font-weight: 500; background: var(--hover); border: 1px solid var(--soft); border-radius: 3px; padding: 0 .28em; }
@@ -151,9 +151,9 @@ body {
 .car { color: var(--muted); font-size: 11px; width: 12px; text-align: center; }
 
 .imp { display: inline-flex; align-items: center; gap: 5px; min-height: 22px; padding: 0 8px; border-radius: 999px; font-family: var(--mono); font-size: 10px; font-weight: 500; letter-spacing: .06em; white-space: nowrap; border: 1px solid transparent; }
-.imp-CRITICAL { background: var(--coral); color: #fff; border-color: var(--coral); }
-.imp-HIGH { background: color-mix(in srgb, var(--coral) 14%, transparent); color: var(--coral-dk); }
-.imp-MEDIUM-HIGH { color: var(--coral-dk); border-color: color-mix(in srgb, var(--coral) 50%, transparent); }
+.imp-CRITICAL { background: var(--accent); color: #fff; border-color: var(--accent); }
+.imp-HIGH { background: color-mix(in srgb, var(--accent) 14%, transparent); color: var(--accent-dk); }
+.imp-MEDIUM-HIGH { color: var(--accent-dk); border-color: color-mix(in srgb, var(--accent) 50%, transparent); }
 .imp-MEDIUM { color: var(--muted); border-color: var(--hair); }
 .imp-LOW { color: var(--faint); border-color: var(--soft); }
 
@@ -162,23 +162,26 @@ body {
 .meta-s { color: var(--faint); }
 
 /* 아코디언 두 개는 같은 형태다. 판단에 쓰는 글은 읽기 편한 폭으로 제한한다. */
-.accs { display: flex; flex-direction: column; margin-top: 16px; border-top: 1px dashed var(--hair); }
+/* 규칙 본문의 구역 머리말은 모두 같은 뼈대다 — 글리프 + 라벨 + 남는 폭을 채우는 실선 (+ 동작 버튼).
+   acc-btn(질문), gx-hd(예시), dx-hd(짝 비교), ref-hd(참조) 넷이 이 형태를 공유한다. */
+.accs { display: flex; flex-direction: column; gap: 2px; margin-top: 16px; }
 .accs:empty { display: none; }
-.acc { border-bottom: 1px dashed var(--hair); }
-.acc-btn { display: flex; align-items: center; gap: 8px; width: 100%; text-align: left; padding: 11px 2px; font-size: 13px; font-weight: 500; color: var(--coral-dk); }
-.acc-btn:hover { color: var(--coral); }
-.acc-car { font-size: 9px; width: 8px; flex: 0 0 auto; }
+.acc-btn { display: grid; grid-template-columns: auto auto minmax(0, 1fr); align-items: center; gap: 10px; width: 100%; text-align: left; padding: 9px 0; font-size: 13px; font-weight: 500; color: var(--ink); }
+.acc-btn:hover { color: var(--accent-dk); }
+.acc-btn:hover .sec-rule { background: color-mix(in srgb, var(--accent) 34%, transparent); }
+.acc-car { font-size: 9px; color: var(--accent); }
+.sec-rule { height: 1px; background: color-mix(in srgb, var(--accent) 18%, transparent); }
 .acc-body { display: none; padding: 0 2px 18px 22px; color: var(--ink2); font-size: 13.5px; line-height: 1.8; }
 .acc[data-open="1"] .acc-body { display: block; }
 .acc-body p { margin: 0 0 .75em; }
 .acc-body p:last-child { margin-bottom: 0; }
-.acc-body .lead { margin: 0 0 .9em; padding-left: 11px; border-left: 2px solid color-mix(in srgb, var(--coral) 55%, transparent); color: var(--ink); font-weight: 500; line-height: 1.7; }
+.acc-body .lead { margin: 0 0 .9em; padding-left: 11px; border-left: 2px solid color-mix(in srgb, var(--accent) 55%, transparent); color: var(--ink); font-weight: 500; line-height: 1.7; }
 .acc-body ul { margin: 0 0 .95em; padding-left: 1.5em; list-style: none; display: flex; flex-direction: column; gap: .45em; }
 .acc-body ul:last-child { margin-bottom: 0; }
 /* li 를 grid 로 두면 텍스트 런과 인라인 code 칩이 각각 그리드 아이템이 되어 한 글자씩 세로로 쌓인다.
    표식은 흐름 밖으로 빼고 걸이 들여쓰기로 둘째 줄을 맞춘다. */
 .acc-body li { position: relative; }
-.acc-body li::before { content: "*"; position: absolute; left: -1.35em; top: .12em; color: var(--coral); font-size: 1em; font-weight: 700; }
+.acc-body li::before { content: "*"; position: absolute; left: -1.35em; top: .12em; color: var(--accent); font-size: 1em; font-weight: 700; }
 .acc-body code { font-family: var(--mono); font-size: .88em; background: var(--hover); border: 1px solid var(--soft); border-radius: 3px; padding: 0 .25em; }
 .acc-body strong { color: var(--ink); font-weight: 600; }
 .acc-body .tw { overflow-x: auto; margin: 0 0 .8em; }
@@ -214,6 +217,8 @@ body {
 .box-b .cd .n.on, .box-b .cd .m.on { color: var(--dx-b); }
 .box-a .cd .on { background: color-mix(in srgb, var(--dx-a) 13%, transparent); }
 .box-a .cd .n.on, .box-a .cd .m.on { color: var(--dx-a); }
+/* 맞은편에만 줄이 있는 자리. 여기에 아무것도 없다는 것이 보여야 좌우 대응이 읽힌다. */
+.cd .pad { background: repeating-linear-gradient(135deg, transparent, transparent 4px, color-mix(in srgb, var(--ink) 5%, transparent) 4px, color-mix(in srgb, var(--ink) 5%, transparent) 8px); }
 .box-lead { display: inline-flex; align-items: center; gap: 6px; flex: 0 0 auto; }
 .box-side { font-family: var(--mono); font-size: 9.5px; font-weight: 500; letter-spacing: .06em; padding: 1px 5px; border-radius: 2px; white-space: nowrap; }
 .box-bad .box-side { color: var(--bad); border: 1px solid color-mix(in srgb, var(--bad) 35%, transparent); }
@@ -301,34 +306,34 @@ pre.code { margin: 0; padding: 11px 13px; font-family: var(--mono); font-size: 1
 
 /* 참조는 칩이 아니라 목록으로 둔다. 문장 안 참조와 모양이 같으면 둘을 구분할 수 없다. */
 .refs { display: flex; flex-direction: column; gap: 14px; margin-top: 18px; }
-.ref-hd { display: flex; align-items: baseline; gap: 8px; padding-bottom: 8px; }
-.ref-lb { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink2); }
-.ref-n { font-family: var(--mono); font-size: 10px; color: var(--faint); font-variant-numeric: tabular-nums; }
-.ref-note { min-width: 0; font-size: 11.5px; color: var(--faint); }
+.ref-hd { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 10px; padding-bottom: 8px; }
+.ref-lb { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: .12em; white-space: nowrap; color: var(--accent-dk); }
+.ref-note { font-size: 11px; color: var(--faint); white-space: nowrap; }
 .ref-list { border: 1px solid var(--hair); border-radius: 2px; overflow: hidden; }
 .ref { display: grid; grid-template-columns: 4.4em 2.4em minmax(0, 1fr) 1em; align-items: center; gap: 10px; width: 100%; min-height: 30px; padding: 5px 11px; text-align: left; border-top: 1px solid var(--soft); }
 .ref:first-child { border-top: none; }
 .ref:hover { background: var(--hover); }
 .ref-sk { font-family: var(--mono); font-size: 9px; letter-spacing: .06em; text-transform: uppercase; color: var(--faint); }
-.ref-no { font-family: var(--mono); font-size: 11px; color: var(--coral); font-variant-numeric: tabular-nums; }
+.ref-no { font-family: var(--mono); font-size: 11px; color: var(--accent); font-variant-numeric: tabular-nums; }
 .ref-ti { min-width: 0; font-size: 12.5px; color: var(--ink2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ref-go { font-size: 11px; color: var(--faint); text-align: right; }
-.ref:hover .ref-go { color: var(--coral); }
+.ref:hover .ref-go { color: var(--accent); }
 .ref[disabled] { cursor: default; }
 .ref[disabled]:hover { background: none; }
 .ref[disabled] .ref-sk, .ref[disabled] .ref-ti { color: var(--faint); }
 @media (max-width: 560px) { .ref { grid-template-columns: 4.6em 2.4em minmax(0, 1fr); gap: 10px; } .ref-go { display: none; } .ref-note { display: none; } }
 /* 본문 문장 안에 섞이는 참조 칩. 코드 조각이 아니라 규칙이라는 것을 보이게 한다. */
-.ref-in { display: inline; padding: 0 5px; border-radius: 2px; font-family: var(--sans); font-size: .95em; line-height: inherit; color: var(--coral-dk); background: color-mix(in srgb, var(--coral) 7%, transparent); border: 1px solid color-mix(in srgb, var(--coral) 28%, transparent); }
-.ref-in:hover { background: color-mix(in srgb, var(--coral) 16%, transparent); }
-.ref-in::after { content: " \u2197"; font-size: .8em; color: var(--coral); }
+/* 문장 안 참조는 상자가 아니라 링크다. 배경과 테두리를 두면 글줄이 끊겨 읽기를 막는다. */
+.ref-in { display: inline; padding: 0; border: 0; background: none; font: inherit; color: inherit; border-bottom: 1px solid color-mix(in srgb, var(--accent) 45%, transparent); }
+.ref-in:hover { color: var(--accent-dk); border-bottom-color: var(--accent); }
+.ref-in::after { content: "\u2197"; margin-left: .15em; font-size: .78em; color: var(--accent); vertical-align: .12em; }
 
 .rtags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--hover); }
 .rtag { min-height: 22px; padding: 0 8px; border-radius: 999px; font-family: var(--mono); font-size: 10px; color: var(--muted); border: 1px solid var(--hair); }
-.rtag:hover { color: var(--coral-dk); border-color: color-mix(in srgb, var(--coral) 45%, transparent); }
+.rtag:hover { color: var(--accent-dk); border-color: color-mix(in srgb, var(--accent) 45%, transparent); }
 
 .empty { padding: 72px 24px; text-align: center; border: 1px dashed var(--hair); border-radius: 3px; color: var(--muted); font-size: 13.5px; }
-mark { background: color-mix(in srgb, var(--coral) 30%, transparent); color: inherit; border-radius: 2px; }
+mark { background: color-mix(in srgb, var(--accent) 30%, transparent); color: inherit; border-radius: 2px; }
 
 /* 적용 조건 불렛. 제외 조건은 라벨 칩과 낮은 대비로 본 조건과 갈라 읽힌다. */
 .acc-body li.li-x { color: var(--muted); }
@@ -414,9 +419,9 @@ const viewerClientScript = `(() => {
 	const RULES = DATA.rules;
 	const IMPACTS = ["CRITICAL", "HIGH", "MEDIUM-HIGH", "MEDIUM", "LOW"];
 	const DOT = {
-		CRITICAL: "var(--coral)",
-		HIGH: "color-mix(in srgb, var(--coral) 75%, transparent)",
-		"MEDIUM-HIGH": "color-mix(in srgb, var(--coral) 40%, transparent)",
+		CRITICAL: "var(--accent)",
+		HIGH: "color-mix(in srgb, var(--accent) 75%, transparent)",
+		"MEDIUM-HIGH": "color-mix(in srgb, var(--accent) 40%, transparent)",
 		MEDIUM: "var(--edge)",
 		LOW: "var(--soft)",
 	};
@@ -632,9 +637,10 @@ const viewerClientScript = `(() => {
 		return {path: hit[1], code: rest.join("\\n")};
 	};
 
-	// 두 예시가 얼마나 닮았는지 LCS 로 재고, 짝이 안 맞은 줄만 바뀐 줄로 표시한다.
-	// 0.45 아래면 서로 다른 코드라 나란히 놓아도 비교가 안 되므로 diff 를 포기한다.
-	const diffMarks = (a, b) => {
+	// 두 예시를 LCS 로 맞춰 좌우 같은 높이에 오도록 행 계획을 만든다.
+	// 짝이 맞은 줄은 마주 보게 두고, 지운 줄과 더한 줄은 같은 행에 세우며, 남는 쪽은 빈 칸으로 메운다.
+	// 0.45 아래면 서로 다른 코드라 줄을 맞춰 봐야 뜻이 없으므로 정렬을 포기한다.
+	const diffPlan = (a, b) => {
 		const n = a.length;
 		const m = b.length;
 
@@ -650,31 +656,58 @@ const viewerClientScript = `(() => {
 
 		if (dp[0][0] / Math.max(n, m) < 0.45) return null;
 
-		const am = new Array(n).fill(true);
-		const bm = new Array(m).fill(true);
+		const left = [];
+		const right = [];
+		let del = [];
+		let add = [];
+		// 모아 둔 삭제·추가 묶음을 같은 행에 마주 세운다. 길이가 다르면 짧은 쪽이 빈 칸이다.
+		const flush = () => {
+			for (let k = 0; k < Math.max(del.length, add.length); k++) {
+				left.push(k < del.length ? {i: del[k], changed: true} : null);
+				right.push(k < add.length ? {i: add[k], changed: true} : null);
+			}
+
+			del = [];
+			add = [];
+		};
 		let i = 0;
 		let j = 0;
 
-		while (i < n && j < m) {
-			if (a[i].trim() === b[j].trim()) { am[i] = false; bm[j] = false; i++; j++; }
-			else if (dp[i + 1][j] >= dp[i][j + 1]) i++;
-			else j++;
+		while (i < n || j < m) {
+			if (i < n && j < m && a[i].trim() === b[j].trim()) {
+				flush();
+				left.push({i: i, changed: false});
+				right.push({i: j, changed: false});
+				i++;
+				j++;
+			} else if (j >= m || (i < n && dp[i + 1][j] >= dp[i][j + 1])) {
+				del.push(i);
+				i++;
+			} else {
+				add.push(j);
+				j++;
+			}
 		}
 
-		return {am: am, bm: bm};
+		flush();
+
+		return {left: left, right: right};
 	};
 
 	const codeHtml = (blocks, marks) => blocks.map((b, i) => {
 		const split = splitPath(b.code);
 		const rows = split.code.split("\\n");
 		const painted = hl(split.code, b.lang).split("\\n");
-		const mask = blocks.length === 1 && marks ? marks : null;
-		const glyph = mask ? (marks.bad ? "\\u2212" : "+") : "";
-		const cells = rows.map((_, n) => {
-			const on = mask && mask.mask[n] ? " on" : "";
+		const plan = blocks.length === 1 && marks ? marks.rows : null;
+		const glyph = marks && marks.bad ? "\\u2212" : "+";
+		const cells = (plan || rows.map((_unused, n) => ({i: n, changed: false}))).map((row) => {
+			// 맞은편에만 줄이 있는 자리는 빈 칸으로 높이를 맞춰 좌우 행이 어긋나지 않게 한다.
+			if (!row) return '<i class="n pad"></i><i class="m pad"></i><i class="c pad">\\u200b</i>';
 
-			return '<i class="n' + on + '">' + (n + 1) + '</i><i class="m' + on + '">' + (on ? glyph : "\\u00a0") + '</i>' +
-				'<i class="c' + on + '">' + (painted[n] || "\\u200b") + "</i>";
+			const on = row.changed ? " on" : "";
+
+			return '<i class="n' + on + '">' + (row.i + 1) + '</i><i class="m' + on + '">' + (row.changed ? glyph : "\\u00a0") + '</i>' +
+				'<i class="c' + on + '">' + (painted[row.i] || "\\u200b") + "</i>";
 		}).join("");
 
 		return (blocks.length > 1 ? '<div class="cd-lb">' + (i + 1) + " / " + blocks.length + "  \\u00b7  " + esc(b.lang) + "</div>" : "") +
@@ -699,7 +732,7 @@ const viewerClientScript = `(() => {
 			: '<div class="box-hd">' + inner + "</div>";
 
 		return '<div class="box ' + tone + '" data-open="' + (open ? 1 : 0) + '">' + head +
-			'<div class="box-body">' + (open ? codeHtml(e.blocks, marks ? {mask: marks, bad: bad} : null) : "") + "</div></div>";
+			'<div class="box-body">' + (open ? codeHtml(e.blocks, marks ? {rows: marks, bad: bad} : null) : "") + "</div></div>";
 	};
 
 	// 같은 종류가 이어지면 한 상자에 넣고 기본으로 접는다. 제목은 늘 보이고 코드만 감춘다.
@@ -754,7 +787,7 @@ const viewerClientScript = `(() => {
 				if (sideBySide) {
 					// 줄 강조는 두 예시가 실제로 닮았을 때만 뜻이 있다.
 					// 다시 쓴 예시에 강조를 칠하면 전부 바뀐 줄이 되어 아무것도 못 가린다.
-					marks = diffMarks(splitPath(e.blocks[0].code).code.split("\\n"), splitPath(nx.blocks[0].code).code.split("\\n"));
+					marks = diffPlan(splitPath(e.blocks[0].code).code.split("\\n"), splitPath(nx.blocks[0].code).code.split("\\n"));
 					units.push({diff: true, bad: e, good: nx, marks: marks, at: i});
 					i++;
 					continue;
@@ -778,20 +811,20 @@ const viewerClientScript = `(() => {
 				return '<div class="dx"><div class="dx-hd"><span class="dx-tag"><span aria-hidden="true">\\u21c4</span>' +
 					"<span>DIFF</span></span>" +
 					'<span class="dx-rule"></span></div>' +
-					'<div class="diff">' + boxHtml(u.bad, u.marks ? u.marks.am : null, "BEFORE", toggle) +
-					boxHtml(u.good, u.marks ? u.marks.bm : null, "AFTER", toggle) + "</div></div>";
+					'<div class="diff">' + boxHtml(u.bad, u.marks ? u.marks.left : null, "BEFORE", toggle) +
+					boxHtml(u.good, u.marks ? u.marks.right : null, "AFTER", toggle) + "</div></div>";
 			}).join("");
 			// 두 목록이 무엇이 다른지 라벨만으로는 알 수 없어서 한 줄 설명을 붙인다.
 			const refs = [];
-			if (r.requiresSelected.length) refs.push(["함께 적용", "이 규칙이 걸리면 반드시 같이 적용합니다", r.requiresSelected]);
-			if (r.reviewWith.length) refs.push(["함께 검토", "같이 적용하진 않고 다시 판단해 봅니다", r.reviewWith]);
+			if (r.requiresSelected.length) refs.push(["\\u2295", "REQUIRED", "반드시 같이 적용합니다", r.requiresSelected]);
+			if (r.reviewWith.length) refs.push(["\\u25c7", "REVIEW", "같이 적용하진 않고 다시 판단해 봅니다", r.reviewWith]);
 
 			// 아코디언 두 개는 같은 형태로 둔다. 둘 다 접힌 상태로 시작해 코드가 먼저 읽힌다.
 			const acc = (attr, label, open, inner) =>
 				'<div class="acc" data-open="' + (open ? 1 : 0) + '">' +
 				'<button class="acc-btn" data-' + attr + '="' + esc(key) + '">' +
 				'<span class="acc-car" aria-hidden="true">' + (open ? "\\u25be" : "\\u25b8") + "</span>" +
-				"<span>" + label + "</span></button>" +
+				"<span>" + label + '</span><span class="sec-rule"></span></button>' +
 				'<div class="acc-body">' + (open ? inner() : "") + "</div></div>";
 
 			// 순서: 언제 → 왜 → 코드 → 함께 → 태그.
@@ -811,9 +844,10 @@ const viewerClientScript = `(() => {
 				"</div>" +
 				'<div class="exs">' + exsHtml + "</div>" +
 				(refs.length ? '<div class="refs">' + refs.map((g) => "<div>" +
-					'<div class="ref-hd"><span class="ref-lb">' + g[0] + '</span><span class="ref-n">' + g[2].length + "</span>" +
-					'<span class="ref-note">' + g[1] + "</span></div>" +
-					'<div class="ref-list">' + g[2].map((t) => refHtml(t, r.skill)).join("") + "</div></div>").join("") + "</div>" : "") +
+					'<div class="ref-hd"><span class="ref-lb"><span aria-hidden="true">' + g[0] + "</span>" +
+					"<span>" + g[1] + " \\u00b7 " + g[3].length + '</span></span><span class="sec-rule"></span>' +
+					'<span class="ref-note">' + g[2] + "</span></div>" +
+					'<div class="ref-list">' + g[3].map((t) => refHtml(t, r.skill)).join("") + "</div></div>").join("") + "</div>" : "") +
 				'<div class="rtags">' + r.tags.map((t) => '<button class="rtag" data-tag="' + esc(t) + '">#' + esc(t) + "</button>").join("") + "</div>" +
 				"</div>";
 		}

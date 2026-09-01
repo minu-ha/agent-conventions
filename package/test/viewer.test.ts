@@ -316,6 +316,28 @@ test("viewer layout cannot overflow: grids shrink and code wraps", () => {
 	assert.match(html, /pre\.code\s*\{[^}]*overflow-wrap:\s*anywhere/);
 });
 
+test("viewer template literals stay closed: CSS and script comments must not contain backticks", async () => {
+	// viewerStyles·viewerClientScript 는 백틱 템플릿 리터럴이다. 주석에 백틱을 하나 쓰면
+	// 리터럴이 그 자리에서 끊겨 빌드가 깨진다. 세 번 겪어서 기계로 막는다.
+	const source = await readFile(new URL("../src/viewer-template.ts", import.meta.url), "utf8");
+
+	for (const [name, open, close] of [
+		["viewerStyles", "const viewerStyles = `", "`;"],
+		["viewerBodyMarkup", "const viewerBodyMarkup = `", "`;"],
+		["viewerClientScript", "const viewerClientScript = `", "`;"],
+	] as const) {
+		const start = source.indexOf(open);
+
+		assert.notEqual(start, -1, `${name} 선언을 찾지 못했다`);
+
+		const body = source.slice(start + open.length, source.indexOf(close, start + open.length));
+
+		// escape 한 백틱은 리터럴 안에서 정상이다. 앞에 backslash 가 없는 것만 잡는다.
+		assert.equal(/\/\*(?:[^*]|\*(?!\/))*?(?<!\\)`/.test(body), false, `${name}: 블록 주석 안에 escape 하지 않은 백틱이 있다`);
+		assert.equal(/\/\/[^\n]*?(?<!\\)`/.test(body), false, `${name}: 줄 주석 안에 escape 하지 않은 백틱이 있다`);
+	}
+});
+
 test("viewer styles define both themes and respect reduced motion", () => {
 	const html = renderViewerHtml();
 
