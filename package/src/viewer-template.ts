@@ -53,7 +53,7 @@ body {
 
 /* ---------- header ---------- */
 .hd { position: sticky; top: 0; z-index: 40; background: color-mix(in srgb, var(--page) 94%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--hair); }
-.hd-in { max-width: 1320px; margin: 0 auto; padding: 0 28px; min-height: 64px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+.hd-in { max-width: 1440px; margin: 0 auto; padding: 0 28px; min-height: 64px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
 .rail-t { display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; margin-right: 2px; border-radius: 2px; font-size: 12px; color: var(--ink2); border: 1px solid var(--hair); }
 .rail-t:hover { border-color: var(--accent); color: var(--accent); }
 .brand { display: flex; align-items: center; gap: 9px; flex: 0 0 auto; }
@@ -77,8 +77,8 @@ body {
 .btn:hover { border-color: var(--edge); color: var(--ink); }
 
 /* ---------- shell ---------- */
-.wrap { max-width: 1320px; margin: 0 auto; padding: 0 28px; }
-.pane { display: grid; grid-template-columns: 244px minmax(0, 1fr); gap: 40px; padding: 28px 0 96px; align-items: start; }
+.wrap { max-width: 1440px; margin: 0 auto; padding: 0 28px; }
+.pane { display: grid; grid-template-columns: 216px minmax(0, 1fr); gap: 36px; padding: 28px 0 96px; align-items: start; }
 /* 좁은 노트북에서 본문이 계속 눌리므로 레일을 접을 수 있게 둔다. */
 .pane[data-rail="0"] { grid-template-columns: minmax(0, 1fr); }
 .pane[data-rail="0"] .rail { display: none; }
@@ -383,7 +383,7 @@ const viewerBodyMarkup = `<header class="hd">
 		</div>
 		<div class="hd-r">
 			<span class="cnt" id="count"></span>
-			<button class="btn" id="expand">전체 펼침</button>
+			<button class="btn" id="expand">규칙 전체 펼치기</button>
 			<button class="btn" id="theme" aria-label="라이트·다크 전환">테마</button>
 		</div>
 	</div>
@@ -701,7 +701,7 @@ const viewerClientScript = `(() => {
 		return {left: left, right: right};
 	};
 
-	// 예시를 짝 비교 유닛과 그룹 유닛으로 나눈다. 렌더와 "전부 펼치기" 가 같은 결과를 봐야 한다.
+	// 예시를 짝 비교 유닛과 그룹 유닛으로 나눈다. 렌더와 "이 규칙 펼치기" 가 같은 결과를 봐야 한다.
 	const unitsOf = (r) => {
 		const units = [];
 
@@ -789,7 +789,7 @@ const viewerClientScript = `(() => {
 		const cls = bad ? "gx-bad" : "gx-good";
 		const head = '<div class="gx-hd"><span class="gx-tag"><span aria-hidden="true">' + (bad ? "\\u2715" : "\\u2713") + "</span>" +
 				"<span>" + (bad ? "INCORRECT" : "CORRECT") + " \\u00b7 " + n + '</span></span><span class="gx-rule"></span>' +
-				(n > 1 ? '<button class="gx-all" data-all="' + esc(skey) + '" data-n="' + n + '">' + (allOpen ? "모두 접기" : "모두 펼치기") + "</button>" : "") +
+				(n > 1 ? '<button class="gx-all" data-all="' + esc(skey) + '" data-n="' + n + '">' + n + (allOpen ? "개 접기" : "개 열기") + "</button>" : "") +
 			"</div>";
 		const rows = samples.map((e, i) => {
 			const isOpen = openIdx.indexOf(i) >= 0;
@@ -814,7 +814,7 @@ const viewerClientScript = `(() => {
 		const whyOpen = state.why.has(key);
 		const sec = secOf(r);
 		const exCount = r.examples.reduce((t, e) => t + e.blocks.length, 0);
-		// 아코디언 둘과 예시 유닛이 모두 열려 있을 때만 "전부 접기" 로 뒤집는다.
+		// 아코디언 둘과 예시 유닛이 모두 열려 있을 때만 "이 규칙 접기" 로 뒤집는다.
 		const openTargets = unitsOf(r).map((u) => ({key: key + ":" + u.at, n: u.diff ? 1 : u.samples.length}));
 		const fullOpen = whenOpen && whyOpen && openTargets.every((t) => (state.sample.get(t.key) || []).length === t.n);
 
@@ -855,7 +855,7 @@ const viewerClientScript = `(() => {
 				'<div class="meta"><span>' + esc(r.id) + "</span>" +
 				(sec ? '<span class="meta-s">·</span><span>' + esc(secLabel(sec)) + "</span>" : "") +
 				'<span class="meta-s">·</span><span>예시 ' + exCount + "</span>" +
-				'<button class="meta-all" data-allopen="' + esc(key) + '">' + (fullOpen ? "전부 접기" : "전부 펼치기") + "</button></div>" +
+				'<button class="meta-all" data-allopen="' + esc(key) + '">' + (fullOpen ? "이 규칙 접기" : "이 규칙 펼치기") + "</button></div>" +
 				'<div class="accs">' +
 				(r.appliesWhen || r.appliesWhenBullets.length
 					? acc("when", "언제 적용할까요?", whenOpen, () => whenHtml(r))
@@ -937,7 +937,7 @@ const viewerClientScript = `(() => {
 		const codeTotal = hits.reduce((n, r) => n + r.examples.reduce((m, e) => m + e.blocks.length, 0), 0);
 		document.getElementById("count").textContent = hits.length + " / " + scopeTotal + " 규칙" + (hits.length ? "  ·  코드 " + codeTotal : "");
 		const allOpen = hits.length > 0 && hits.every((r) => state.open.has(keyOf(r)));
-		document.getElementById("expand").textContent = allOpen ? "전체 접기" : "전체 펼침";
+		document.getElementById("expand").textContent = allOpen ? "규칙 전체 접기" : "규칙 전체 펼치기";
 		renderRail();
 	}
 
