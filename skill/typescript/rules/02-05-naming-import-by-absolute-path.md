@@ -29,9 +29,9 @@ tags: naming, imports
 - 어디에 두는지는 쓰는 곳으로 정하지 않습니다.
   소유자 밖에서 가져다 쓴다고 루트로 올리지 않습니다.
   자리는 `naming-place-project-constants-in-the-root-constant-folder`와
-  `functions-give-each-function-its-own-file`가 정합니다.
+  `functions-give-each-function-its-own-file`이 정합니다.
 
-`src` 바로 아래에 있는 레이어 루트입니다.
+아래는 `src` 바로 아래에 두는 레이어 루트입니다.
 
 | 루트 | 담는 것 |
 | --- | --- |

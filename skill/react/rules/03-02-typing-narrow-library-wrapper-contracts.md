@@ -34,8 +34,8 @@ DOM 표면 자체를 어떻게 열지는 `typing-open-dom-props-in-three-steps`�
 | 라이브러리 스타일 창구 (테마 스타일 프롭, 클래스 맵, 렌더 태그 교체) | 선언하지 않습니다 |
 
 **자기 프롭**은 안쪽 컴포넌트가 받지 않는 프롭입니다.
-`UiIconButtonProps`의 `icon`은 감싸는 컴포넌트가 모르므로 자기 프롭이고,
-`UiTableRowProps`의 `selected`는 감싸는 컴포넌트가 받으므로 자기 프롭이 아닙니다.
+`UiIconButtonProps`의 `icon`은 안쪽 컴포넌트가 모르므로 자기 프롭이고,
+`UiTableRowProps`의 `selected`는 안쪽 컴포넌트가 받으므로 자기 프롭이 아닙니다.
 인덱스 접근은 자기 프롭이 아닌 것, 곧 **이미 있는 프롭을 그대로 여는 자리**에만 씁니다.
 
 - 인덱스 접근은 상속 사슬을 따라갑니다.
@@ -49,27 +49,24 @@ DOM 표면 자체를 어떻게 열지는 `typing-open-dom-props-in-three-steps`�
 **Incorrect (라이브러리 타입을 그대로 내보냄):**
 
 ```tsx
-export type UiButtonProps = ButtonProps;
+export type UiTableCellProps = TableCellProps;
 
-export const UiButton = (props: UiButtonProps) => {
-	return <Button {...props} />;
+export const UiTableCell = (props: UiTableCellProps) => {
+	return <TableCell {...props} />;
 };
 ```
 
 **Correct (이미 있는 프롭은 인덱스 접근으로 하나씩 엶):**
 
 ```tsx
-import { TableCell } from "@mui/material";
-import type { TableCellProps } from "@mui/material";
-import { clsx } from "clsx";
-import type { HTMLAttributes } from "react";
+import type {TableCellProps} from "@mui/material";
 
 /**
  * 표 셀에서 정렬과 여백만 여는 계약
  *
  * 라이브러리 셀의 나머지 표시 프롭은 표 소유자가 정하므로 열지 않는다.
  */
-export interface UiTableCellProps extends HTMLAttributes<HTMLTableCellElement> {
+export interface UiTableCellProps {
 	/**
 	 * 내용 가로 정렬
 	 */
@@ -79,10 +76,4 @@ export interface UiTableCellProps extends HTMLAttributes<HTMLTableCellElement> {
 	 */
 	padding?: TableCellProps["padding"];
 }
-
-export const UiTableCell = (props: UiTableCellProps) => {
-	return (
-		<TableCell {...props} className={clsx("ui_tableCell__root", props.className)} />
-	);
-};
 ```

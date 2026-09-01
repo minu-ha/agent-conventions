@@ -16,6 +16,7 @@ tags: state, react-query, zustand
 **Impact: HIGH (로컬 UI 상태, 전역 상태, 서버 상태가 서로 섞이지 않습니다)**
 
 상태 도구는 값의 수명과 소유자를 기준으로 고릅니다.
+표는 아래에서부터 읽어 처음 걸리는 줄이 그 값의 소유자입니다.
 
 | 상태의 소유자 | 기본 도구 |
 | --- | --- |
@@ -23,7 +24,7 @@ tags: state, react-query, zustand
 | 한 컴포넌트 묶음 안에서 공유하는 UI | `useState` + `Context` |
 | 전역 클라이언트 | `Zustand` |
 | 서버 | `@tanstack/react-query` |
-| 링크를 공유해도 같은 화면이 열려야 하는 값 | 라우트 search 파라미터 |
+| 링크를 공유해도 같은 화면이 열려야 하는 값 | 라우트 search 파라미터(`nuqs`의 `useQueryStates`) |
 
 이 기준으로 고르면 화면 파일이 더 읽기 쉬워지고 중복 동기화가 줄어듭니다.
 
@@ -48,14 +49,24 @@ search 파라미터를 `useState`로 복제해 출처를 둘로 만들지 않습
   묶음 밖의 화면이나 레이아웃이 같은 값을 읽거나 바꾸면 옮길 때입니다.
   탭 `selectedId`처럼 파생이 아닌 공유 UI 상태도 이 기준으로 봅니다.
 
-프로젝트가 이미 다른 전역 스토어나 서버 상태 도구를 표준으로 쓴다면 그것을 유지합니다.
-`Zustand`나 `react-query`를 새로 들여오지 말고 진짜 출처 원칙만 지킵니다.
-
 **Incorrect (서버 상태를 로컬 상태로 복제):**
 
 ```ts
 const responseUserGetItemSuspense = useUserGetItemSuspense();
 const [userName, setUserName] = useState(responseUserGetItemSuspense.data.name);
+```
+
+**Incorrect (링크로 살아남아야 할 목록 필터를 `useState`가 소유):**
+
+```ts
+const [keyword, setKeyword] = useState("");
+const [page, setPage] = useState(1);
+```
+
+**Correct (주소가 소유한 값은 search 파라미터로 읽고 씀):**
+
+```ts
+const [urlParams, setUrlParams] = useQueryStates(productUrlParsers);
 ```
 
 **Correct (도구를 진짜 출처에 맞춤):**

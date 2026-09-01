@@ -34,21 +34,25 @@ tags: tooling
 | `style/noNestedTernary` | `typescript/functions-avoid-imperative-assembly-in-wide-scopes`의 삼항 겹치기 |
 | `style/useAsConstAssertion` | `typescript/types-replace-enum-with-as-const-objects` |
 | `style/noMagicNumbers` | `typescript/values-declare-meaningful-numbers` |
-| `correctness/useSingleJsDocAsterisk` | `typescript/docs-write-doc-comments-as-multiline-blocks` |
 | `suspicious/noExplicitAny` | `typescript/types-narrow-unknown-instead-of-asserting` |
 | `style/noNonNullAssertion` | `typescript/types-narrow-unknown-instead-of-asserting` |
 
-`style/useConst`는 `biome` 2.5.7의 `recommended`에 이미 있어 설정에 다시 적어도 동작이 달라지지 않습니다.
+`style/useConst`·`style/useImportType`·`style/noNonNullAssertion`·
+`correctness/noUnusedFunctionParameters`·`suspicious/noExplicitAny`는
+`biome` 2.5.7의 `recommended`에 이미 있어 설정에 다시 적어도 동작이 달라지지 않습니다.
 어느 컨벤션을 대신하는지 보이게 하려고 표와 설정에 남겨 둡니다.
 
 기계가 끝까지 못 가는 자리가 있습니다.
 아래 항목은 리뷰가 봅니다.
 
+- 한 줄 `/** … */` 블록을 막는 `biome` 규칙은 없습니다.
+  `typescript/docs-write-doc-comments-as-multiline-blocks`는 리뷰가 봅니다.
+
 - 모듈 스코프 `const`와 객체 리터럴 키에는 `snake_case`를 허용합니다.
   `biome`은 불변 데이터 상수와 함수, 스키마, 요청 객체를 구분하지 못하고,
   어떤 객체 키가 불변 데이터 상수나 상수 집합에 속하는지도 구분하지 못합니다.
-  `snake_case`를 쓸 자리는 `naming-use-consistent-file-and-symbol-naming` 규칙에 따라 리뷰가 판정합니다.
-  `PascalCase`는 합성 컴포넌트의 `{Root, Header, Footer}` 때문에 `objectLiteralProperty`에만 남깁니다.
+  `snake_case`를 쓸 자리는 `typescript/naming-use-consistent-file-and-symbol-naming` 규칙에 따라 리뷰가 판정합니다.
+  합성 컴포넌트의 `{Root, Header, Footer}` 때문에 `objectLiteralProperty`에 `PascalCase`를 남깁니다.
   `typescript/functions-declare-functions-as-arrow-consts` 때문에 이름 붙인 함수도 `const` 항목에 들어가는데,
   그 항목은 컴포넌트 이름 때문에 `PascalCase`도 열려 있어 함수 이름의 `camelCase`는 리뷰가 봅니다.
 - 이름 붙인 함수의 본문을 `{}` 블록으로 고정하는 것은 `biome` 2.5.7이 반만 합니다.
@@ -70,7 +74,7 @@ tags: tooling
   `typescript/naming-read-environment-values-through-config-env`는 리뷰가 보거나 CI가 문자열 검색으로 잡습니다.
 
 **테스트 파일에서는 `noMagicNumbers`를 끕니다.**
-`assert.equal(rules.length, 111)`의 `111`은 설정으로 뺄 값이 아니라 그 테스트가 고정하는 계약입니다.
+`assert.equal(rules.length, 123)`의 `123`은 설정으로 뺄 값이 아니라 그 테스트가 고정하는 계약입니다.
 설정에서 읽어 오면 설정과 설정을 비교하는 셈이라 테스트가 아무것도 검증하지 않게 됩니다.
 소스가 이미 이름을 붙여 둔 값은 테스트도 그 이름을 가져다 씁니다.
 끄는 것은 리터럴을 그대로 적어야 하는 기대값뿐입니다.

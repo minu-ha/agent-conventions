@@ -30,7 +30,7 @@ tags: ownership, widget, naming
 
 - 프롭스 타입이 그 화면의 응답·뷰모델 타입이나 라우트 search 파라미터를 참조합니다.
 - 쿼리, 뮤테이션, 라우터 훅, 화면 스토어를 직접 부릅니다.
-- `Suspense`, 폼 프로바이더, 모달을 직접 소유합니다.
+- `Suspense` 경계나 폼 프로바이더를 직접 알거나, 모달을 여는 조건을 자기가 압니다.
 
 **`page`가 아니면 도메인 지식으로 갈립니다.**
 
@@ -48,11 +48,18 @@ tags: ownership, widget, naming
 **Incorrect (공용 레이어에 화면 전용 로직이 섞임):**
 
 ```tsx
-// component/ui/button/_ui-delete-product-button.tsx
-const UiDeleteProductButton = () => {
+// component/ui/delete-product-button/ui-delete-product-button.tsx
+export const UiDeleteProductButton = () => {
 	const navigate = useNavigate();
 
-	return <button onClick={() => void navigate("/products")}>삭제</button>;
+	/**
+	 * 삭제 후 목록 화면으로 돌아간다
+	 */
+	const handleDeleteButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => {
+		void navigate("/products");
+	};
+
+	return <button onClick={handleDeleteButtonClick}>삭제</button>;
 };
 ```
 

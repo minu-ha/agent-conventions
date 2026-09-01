@@ -24,7 +24,7 @@ tags: typing, wrapper, contracts
 | --- | --- |
 | 안쪽 요소가 하나임 | 반환하는 JSX에 요소가 하나입니다 |
 | **자기 프롭**이 하나도 없음 | 선언한 프롭을 안쪽 컴포넌트가 전부 받습니다 |
-| DOM 표면을 `extends`로 열 수 있음 | `typing-narrow-library-wrapper-contracts`의 1·2단계입니다 |
+| DOM 표면을 `extends`로 열 수 있음 | `typing-open-dom-props-in-three-steps`의 1·2단계입니다 |
 
 **자기 프롭**이 무엇인지는 `typing-narrow-library-wrapper-contracts`가 정합니다.
 
@@ -46,7 +46,7 @@ JSX 스프레드는 초과 프롭을 검사하지 않아 **컴파일러가 잡�
 **Incorrect (자기 프롭을 더해 놓고 스프레드로 넘김):**
 
 ```tsx
-export interface UiIconButtonProps extends HTMLAttributes<HTMLButtonElement> {
+export interface UiIconButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 	icon: ReactNode;
 }
 

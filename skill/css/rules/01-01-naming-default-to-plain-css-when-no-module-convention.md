@@ -45,7 +45,7 @@ import styles from "./catalog-index.module.css";
 **Correct (기본은 일반 CSS와 전역에서 고유한 클래스 이름을 사용):**
 
 ```tsx
-import { clsx } from "clsx";
+import {clsx} from "clsx";
 import "./pg-catalog-index.css";
 
 <section className={clsx("pg_catalogIndex__hero")}>

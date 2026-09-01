@@ -95,20 +95,20 @@ tags: selector, responsive
 **Correct (기본 선언이 가장 넓고 넓은 쪽부터 좁혀 감):**
 
 ```css
-.pg_products__toolbar {
-	display: flex;
-	gap: 24px;
+.pg_products__layout {
+	display: grid;
+	grid-template-columns: 280px 1fr;
 }
 
 @media (width < 1440px) {
-	.pg_products__toolbar {
-		gap: 16px;
+	.pg_products__layout {
+		grid-template-columns: 220px 1fr;
 	}
 }
 
 @media (width < 1024px) {
-	.pg_products__toolbar {
-		gap: 8px;
+	.pg_products__layout {
+		grid-template-columns: 1fr;
 	}
 }
 ```

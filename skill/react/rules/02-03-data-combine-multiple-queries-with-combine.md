@@ -35,7 +35,7 @@ tags: data, query
 **`combine`도 인라인으로 적습니다.**
 다시 실행된다는 이유만으로 `useCallback`이나 `useMemo`로 감싸지 않습니다.
 React Query의 구조 공유가 합친 결과에서 바뀌지 않은 부분의 참조를 유지합니다.
-실측 병목의 예외 기준은 `data-shape-query-data-with-select`가 정합니다.
+실측 병목일 때만 `perf-avoid-defensive-memoization`의 예외 기준을 따릅니다.
 
 **Incorrect (화면 본문에서 두 응답을 꺼내 합침):**
 
@@ -78,9 +78,9 @@ export const PgProducts = () => {
 
 ```tsx
 /**
- * route search가 가리키는 product를 읽는다. 아래 배송 이력의 입력이 된다
+ * URL 상태가 가리키는 product를 읽는다. 아래 배송 이력의 입력이 된다
  */
-const responseProductGetItemSuspense = useProductGetItemSuspense({productId: search.productId});
+const responseProductGetItemSuspense = useProductGetItemSuspense({productId: urlParams.productId});
 
 /**
  * 배송 이력은 주문이 붙은 product에만 있어서 orderId를 받은 뒤에만 부른다

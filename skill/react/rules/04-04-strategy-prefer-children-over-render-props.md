@@ -57,22 +57,22 @@ export const UiPanel = (props: UiPanelProps) => {
  *
  * 세 부품 모두 받는 것이 `children` 하나뿐이라 형태를 하나로 둔다.
  */
-export interface UiPanelProps {
+export interface UiPanelPartProps {
 	/**
 	 * 그 부품 자리에 사용처가 넣을 내용
 	 */
 	children: ReactNode;
 }
 
-const UiPanelRoot = (props: UiPanelProps) => {
+const UiPanelRoot = (props: UiPanelPartProps) => {
 	return <section className={clsx("ui_panel__root")}>{props.children}</section>;
 };
 
-const UiPanelHeader = (props: UiPanelProps) => {
+const UiPanelHeader = (props: UiPanelPartProps) => {
 	return <header className={clsx("ui_panel__header")}>{props.children}</header>;
 };
 
-const UiPanelFooter = (props: UiPanelProps) => {
+const UiPanelFooter = (props: UiPanelPartProps) => {
 	return <footer className={clsx("ui_panel__footer")}>{props.children}</footer>;
 };
 

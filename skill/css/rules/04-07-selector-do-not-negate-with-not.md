@@ -62,7 +62,7 @@ tags: selector, state, negation
 	}
 }
 
-.pg_salesPanel__spreadBox--checked {
+.pg_salesPanel__spreadBox--selected {
 	&::before {
 		border-color: #9fadc7;
 		background: #9fadc7;

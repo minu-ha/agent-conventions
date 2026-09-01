@@ -5,7 +5,7 @@ impact: MEDIUM
 impactDescription: 목록이 길어질수록 곱으로 늘어나는 비교를 한 번 만든 조회로 바꿉니다
 appliesWhen:
   - 같은 목록에 `includes`, `find`, 키 조회를 여러 번 하는 코드를 추가·변경할 때
-  - 제외: 두 목록 모두 짧고 길이가 정해져 있는 경우
+  - 제외: 조회하는 목록이 짧고 길이가 정해져 있는 경우
 tags: functions
 ---
 

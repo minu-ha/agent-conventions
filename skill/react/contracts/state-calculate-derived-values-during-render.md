@@ -8,4 +8,7 @@
 파생값은 렌더 중에 만들고 쓰는 자리 가까이에 둡니다.
 배치 기준은 `screen-keep-derived-values-close`가 함께 정합니다.
 
+여러 화면이 함께 쓰는 파생 판단을 스토어에 채우는 이펙트만 예외이고,
+그 판정은 `state-store-derived-authority`가 합니다.
+
 > 예시·예외가 필요하면 [full rule](../rules/08-01-state-calculate-derived-values-during-render.md)을 읽습니다.

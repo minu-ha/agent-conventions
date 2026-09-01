@@ -79,7 +79,7 @@ tags: values, motion
 **Correct (전역 스타일시트에서 한 번 처리):**
 
 ```css
-/* style/motion.css */
+/* src/style/motion.css */
 @media (prefers-reduced-motion: reduce) {
 	*,
 	*::before,

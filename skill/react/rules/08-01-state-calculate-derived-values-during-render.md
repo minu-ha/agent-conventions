@@ -6,7 +6,7 @@ impactDescription: 지금 입력으로 구할 수 있는 값을 상태로 두고
 appliesWhen:
   - 현재 프롭스, 상태, search 파라미터, 응답에서 계산 가능한 값을 별도 상태와 이펙트로 동기화할 때
   - 파생값 동기화 이펙트를 제거할 때
-reviewWith: screen-keep-derived-values-close
+reviewWith: screen-keep-derived-values-close, state-store-derived-authority
 tags: state, effects
 ---
 
@@ -19,6 +19,9 @@ tags: state, effects
 
 파생값은 렌더 중에 만들고 쓰는 자리 가까이에 둡니다.
 배치 기준은 `screen-keep-derived-values-close`가 함께 정합니다.
+
+여러 화면이 함께 쓰는 파생 판단을 스토어에 채우는 이펙트만 예외이고,
+그 판정은 `state-store-derived-authority`가 합니다.
 
 **Incorrect (파생값을 이펙트로 다시 상태에 동기화):**
 

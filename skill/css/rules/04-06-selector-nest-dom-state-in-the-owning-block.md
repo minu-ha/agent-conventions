@@ -56,22 +56,6 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
-**Incorrect (조상 상태를 지역 변수로 자손에 전달함):**
-
-```css
-.wg_siteHeader__brandMark {
-	transform: rotate(var(--wg-header-mark-tilt));
-}
-
-.wg_siteHeader__brandLink {
-	--wg-header-mark-tilt: 0deg;
-
-	&:hover {
-		--wg-header-mark-tilt: -2deg;
-	}
-}
-```
-
 **Correct (상태를 같은 블록 안 `&:`로 접고 상태마다 블록을 따로 엶):**
 
 ```css

@@ -44,7 +44,7 @@ JSX에는 이름 붙인 핸들러 참조만 넘깁니다.
 **Correct (로직을 명명된 핸들러로 노출):**
 
 ```tsx
-import type { MouseEventHandler } from "react";
+import type {MouseEventHandler} from "react";
 
 /**
  * 선택된 product 삭제와 다음 화면 이동 처리

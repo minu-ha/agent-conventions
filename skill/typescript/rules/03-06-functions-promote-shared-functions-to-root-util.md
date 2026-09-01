@@ -7,7 +7,6 @@ appliesWhen:
   - 함수를 루트 `util` 폴더로 옮기거나 종류 폴더를 새로 만들 때
   - 두 소유자가 같은 함수를 쓰게 될 때
   - 제외: 소유자 안에서 파일 자리만 바꾸는 경우
-reviewWith: functions-give-each-function-its-own-file
 tags: functions, boundaries
 ---
 
@@ -25,7 +24,6 @@ tags: functions, boundaries
 
 쓰는 곳이 늘거나 줄어도 자리는 그대로입니다.
 개수로 판정하면 쓰임이 변할 때마다 함수가 자리를 옮겨 다닙니다.
-나중에 쓸 것 같아서 함수를 미리 만들지도 않습니다.
 
 **루트 `util`은 프로젝트가 소유자인 함수 폴더입니다.**
 파일 하나에 함수 하나, 전용 보조는 자기 이름 폴더라는 규칙은 소유자 아래와 같습니다.

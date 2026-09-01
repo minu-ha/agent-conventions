@@ -37,6 +37,7 @@ tags: values, dayjs
 **형식은 맞지만 없는 날짜는 라운드트립으로 거릅니다.**
 `dayjs("2026-02-30")`은 실패하지 않고 3월 2일로 넘어갑니다.
 되돌린 문자열이 원래 문자열과 같은지 보아야 걸립니다.
+이때 쓰는 형식은 입력이 들어온 형식이고, 화면 표시 형식과 같은 상수를 쓰지 않습니다.
 
 **서버가 준 시각 문자열을 그대로 보여줄 때는 파싱하지 않습니다.**
 파싱하면 타임존 변환이 붙어 표시 시각이 밀립니다.
@@ -84,13 +85,13 @@ const expiresLabel = expiresAt.format(date_format);
 ```ts
 import dayjs from "dayjs";
 
-import {date_format} from "@/constant/date";
+import {date_input_format} from "@/constant/date";
 
 /**
  * 형식은 맞지만 존재하지 않는 2026-02-30 같은 날짜를 거른다
  */
 export const parseEntryDateText = (dateText: string): string | undefined => {
-	return dayjs(dateText).format(date_format) === dateText ? dateText : undefined;
+	return dayjs(dateText).format(date_input_format) === dateText ? dateText : undefined;
 };
 ```
 

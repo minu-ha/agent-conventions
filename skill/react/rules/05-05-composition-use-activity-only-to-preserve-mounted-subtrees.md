@@ -75,5 +75,10 @@ return (
 **Correct (마운트 의미가 있으면 조건부 렌더링을 유지):**
 
 ```tsx
-return hasItems ? <PgProductList /> : <PgProductEmptyState />;
+return (
+	<Fragment>
+		{hasItems && <PgProductList />}
+		{!hasItems && <PgProductEmptyState />}
+	</Fragment>
+);
 ```

@@ -20,9 +20,11 @@ tags: screen, routes, flow
 라우트 진입이 소유하는 것은 다음 셋입니다.
 다른 규칙이 이 목록을 가리킬 때는 여기가 정본입니다.
 
-- 섹션 렌더 조립과 섹션마다의 `Suspense` 경계
+- 섹션 렌더 조립과 `Suspense` 경계.
+  몇 겹으로 나눌지는 `runtime-place-suspense-boundaries-at-the-section-owner`가 정합니다
 - 화면 전체 이펙트
-- 라우트 사이의 이동
+- 라우트 사이의 이동 흐름 결정.
+  `useNavigate` 호출 자체는 그 동작을 일으키는 컴포넌트가 갖습니다
 
 쿼리·뮤테이션·URL 상태는 라우트 진입의 것이 아닙니다.
 
@@ -75,7 +77,7 @@ export const PgProducts = () => {
 
 ```tsx
 // page/products/_pg-product-list-section.tsx
-const PgProductListSection = () => {
+export const PgProductListSection = () => {
 	const [urlParams, setUrlParams] = useQueryStates(productUrlParsers);
 
 	/**
@@ -100,10 +102,10 @@ const PgProductListSection = () => {
 	/**
 	 * 폼 값을 전송 형태로 바꿔 저장만 부르고, 저장 뒤 흐름은 mutation 콜백이 이어 간다
 	 */
-	const handleProductSave: UiFormProps["onSubmit"] = () => {
+	const handleProductSave: UiTableProps["onSave"] = () => {
 		mutationProductSave.mutate({data: toProductSaveRequest(formValues)});
 	};
 
-	return <UiTable rows={responseProductListSuspense.data.products} onSubmit={handleProductSave} />;
+	return <UiTable dataSource={responseProductListSuspense.data.products} onSave={handleProductSave} />;
 };
 ```

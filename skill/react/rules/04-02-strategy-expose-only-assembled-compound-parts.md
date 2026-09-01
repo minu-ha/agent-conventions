@@ -5,7 +5,6 @@ impact: MEDIUM-HIGH
 impactDescription: 내부 구조가 공개 계약이 되지 않아 나중에 바꿀 수 있습니다
 appliesWhen:
   - 합성 컴포넌트의 공개 부품 목록에 부품을 넣거나 뺄 때
-  - 상태 없는 합성에 상태를 넣으면서 공개 이름을 바꾸려 할 때
 reviewWith: >-
   strategy-choose-single-composition-compound-and-variants,
   css/composition-do-not-add-wrapper-elements-for-styling
@@ -26,7 +25,6 @@ tags: strategy, composition
 
 - 단순 `className` 래퍼
 - 여백 보정용 DOM. `css/composition-do-not-add-wrapper-elements-for-styling`이 애초에 만들지 말라고 합니다.
-- 내부 레이아웃 보조 함수
 
 상태 없는 합성에 상태를 넣으면서 공개 이름을 어떻게 할지는
 `strategy-choose-single-composition-compound-and-variants`가 정합니다.

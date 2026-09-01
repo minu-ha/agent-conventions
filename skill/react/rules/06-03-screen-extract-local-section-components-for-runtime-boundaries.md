@@ -18,7 +18,7 @@ tags: screen, routes
 
 떼어 낼 수 있는 경우는 그 섹션이 다음 중 하나를 직접 가질 때입니다.
 
-- 비동기: `Suspense`, 스켈레톤, 로딩, 오류, 비었을 때 상태
+- 비동기: `Suspense`, 스켈레톤, 로딩, 오류, 빈 상태
 - 상태, 프로바이더: 지역 상태, 이펙트 동기화, 폼 프로바이더, 컨텍스트, 범위를 좁힌 스토어
 - 상호작용: 팝오버, 모달, 선택, 인라인 편집, 드래그, 펼치는 트리
 - 라이브러리, 성능: 외부 위젯의 생명주기를 소유하는 어댑터, 가상 스크롤, 전환, 지연 값
@@ -55,7 +55,7 @@ export const PgProducts = () => {
 
 ```tsx
 // page/products/_pg-product-tree-section.tsx
-const PgProductTreeSection = () => {
+export const PgProductTreeSection = () => {
 	const [urlParams, setUrlParams] = useQueryStates(productUrlParsers);
 	const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
 	const [treeSearchKeyword, setTreeSearchKeyword] = useState("");

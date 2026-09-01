@@ -53,6 +53,8 @@ body {
 /* ---------- header ---------- */
 .hd { position: sticky; top: 0; z-index: 40; background: color-mix(in srgb, var(--page) 94%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--hair); }
 .hd-in { max-width: 1320px; margin: 0 auto; padding: 0 28px; min-height: 64px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+.rail-t { display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; margin-right: 2px; border-radius: 2px; font-size: 12px; color: var(--ink2); border: 1px solid var(--hair); }
+.rail-t:hover { border-color: var(--coral); color: var(--coral); }
 .brand { display: flex; align-items: center; gap: 9px; flex: 0 0 auto; }
 .brand-nm { font-size: 15px; font-weight: 600; letter-spacing: -.01em; }
 .brand-sub { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: .04em; padding-left: 4px; }
@@ -61,8 +63,8 @@ body {
 .sr-box { position: relative; width: 100%; max-width: 460px; }
 .sr-ico { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 12px; pointer-events: none; }
 .sr-in {
-	width: 100%; height: 34px; padding: 0 12px 0 30px;
-	font-family: var(--mono); font-size: 12.5px; color: var(--ink);
+	width: 100%; height: 40px; padding: 0 12px 0 32px;
+	font-family: inherit; font-size: 13.5px; color: var(--ink);
 	background: var(--card); border: 1px solid var(--hair); border-radius: 2px;
 }
 .sr-in::placeholder { color: var(--faint); }
@@ -76,6 +78,9 @@ body {
 /* ---------- shell ---------- */
 .wrap { max-width: 1320px; margin: 0 auto; padding: 0 28px; }
 .pane { display: grid; grid-template-columns: 244px minmax(0, 1fr); gap: 40px; padding: 28px 0 96px; align-items: start; }
+/* 좁은 노트북에서 본문이 계속 눌리므로 레일을 접을 수 있게 둔다. */
+.pane[data-rail="0"] { grid-template-columns: minmax(0, 1fr); }
+.pane[data-rail="0"] .rail { display: none; }
 /* minmax(0,…): 1fr 이면 main 이 콘텐츠 min-width 아래로 줄지 못해 페이지가 가로로 늘어난다. */
 @media (max-width: 940px) { .pane { grid-template-columns: minmax(0, 1fr); gap: 24px; } }
 .pane > main { min-width: 0; }
@@ -134,7 +139,7 @@ body {
 .row[data-imp="MEDIUM-HIGH"] .row-stripe { background: color-mix(in srgb, var(--coral) 25%, transparent); }
 
 .row-hd { display: grid; grid-template-columns: 58px minmax(0, 1fr) auto; align-items: center; gap: 16px; width: 100%; text-align: left; padding: 14px 18px 14px 20px; }
-.row-hd:hover { background: var(--hover); }
+.row-hd:hover { background: color-mix(in srgb, var(--ink) 6%, var(--card)); }
 @media (max-width: 560px) { .row-hd { grid-template-columns: 44px minmax(0, 1fr); row-gap: 8px; } .row-meta { grid-column: 2; } }
 .row-no { font-family: var(--mono); font-size: 12px; font-weight: 500; color: var(--coral-dk); font-variant-numeric: tabular-nums; }
 .row-ti { min-width: 0; font-size: 14.5px; font-weight: 600; letter-spacing: -.01em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -162,54 +167,94 @@ body {
 .acc-btn { display: flex; align-items: center; gap: 8px; width: 100%; text-align: left; padding: 11px 2px; font-size: 13px; font-weight: 500; color: var(--coral-dk); }
 .acc-btn:hover { color: var(--coral); }
 .acc-car { font-size: 9px; width: 8px; flex: 0 0 auto; }
-.acc-body { display: none; padding: 0 2px 14px 18px; color: var(--ink2); font-size: 13.5px; line-height: 1.75; }
+.acc-body { display: none; padding: 0 2px 18px 22px; color: var(--ink2); font-size: 13.5px; line-height: 1.8; }
 .acc[data-open="1"] .acc-body { display: block; }
 .acc-body p { margin: 0 0 .75em; }
 .acc-body p:last-child { margin-bottom: 0; }
-.acc-body .lead { color: var(--ink); font-weight: 500; }
-.acc-body ul { margin: 0 0 .75em; padding-left: 1.1em; list-style: none; }
+.acc-body .lead { margin: 0 0 .9em; padding-left: 11px; border-left: 2px solid color-mix(in srgb, var(--coral) 55%, transparent); color: var(--ink); font-weight: 500; line-height: 1.7; }
+.acc-body ul { margin: 0 0 .95em; padding: 0; list-style: none; display: flex; flex-direction: column; gap: .45em; }
 .acc-body ul:last-child { margin-bottom: 0; }
-.acc-body li { position: relative; margin: 0 0 .35em; }
-.acc-body li::before { content: "·"; position: absolute; left: -.9em; color: var(--coral); font-weight: 700; }
+/* 표식과 본문을 격자로 맞춰야 두 줄 넘는 항목의 둘째 줄이 표식 아래로 들어가지 않는다. */
+.acc-body li { display: grid; grid-template-columns: .9em minmax(0, 1fr); align-items: baseline; gap: .35em; }
+.acc-body li::before { content: "—"; color: var(--coral); font-size: .8em; }
 .acc-body code { font-family: var(--mono); font-size: .88em; background: var(--hover); border: 1px solid var(--soft); border-radius: 3px; padding: 0 .25em; }
 .acc-body strong { color: var(--ink); font-weight: 600; }
 .acc-body .tw { overflow-x: auto; margin: 0 0 .8em; }
-.acc-body table { border-collapse: collapse; font-size: 12.5px; min-width: 100%; }
-.acc-body th, .acc-body td { border: 1px solid var(--hair); padding: 6px 10px; text-align: left; vertical-align: top; }
-.acc-body th { background: var(--hover); font-family: var(--mono); font-size: 10.5px; font-weight: 500; }
-.acc-body pre.code { border: 1px solid var(--soft); border-radius: 2px; margin: 0 0 .8em; }
+.acc-body table { border-collapse: collapse; font-size: 12.5px; width: 100%; table-layout: auto; }
+.acc-body th { padding: 0 16px 7px 0; text-align: left; vertical-align: bottom; font-family: var(--mono); font-size: 10px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--edge); }
+.acc-body td { padding: 9px 16px 9px 0; text-align: left; vertical-align: top; line-height: 1.6; border-bottom: 1px solid var(--hover); }
+.acc-body pre.code { border: 1px solid var(--soft); border-radius: 2px; margin: .2em 0 1em; }
 
-.pairs { display: flex; flex-direction: column; gap: 18px; margin-top: 16px; }
-.pair { display: flex; flex-direction: column; gap: 12px; }
-.box { display: flex; flex-direction: column; min-width: 0; border-radius: 2px; overflow: hidden; }
-/* 채도를 올려 두 박스가 한눈에 갈린다. 헤더 띠를 본문보다 진하게 둔다. */
-.box-bad { border: 1px solid color-mix(in srgb, var(--bad) 42%, transparent); }
-.box-good { border: 1px solid color-mix(in srgb, var(--good) 42%, transparent); }
-.box-hd { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 32px; padding: 4px 12px; }
-.box-bad .box-hd { background: color-mix(in srgb, var(--bad) 13%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--bad) 30%, transparent); }
-.box-good .box-hd { background: color-mix(in srgb, var(--good) 13%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--good) 30%, transparent); }
-.box-l { display: flex; align-items: center; gap: 6px; min-width: 0; font-family: var(--mono); font-size: 10.5px; font-weight: 700; letter-spacing: .06em; }
-.box-bad .box-l { color: var(--bad); }
-.box-good .box-l { color: var(--good); }
-.box-note { font-weight: 400; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; letter-spacing: 0; }
-.box-langs { font-family: var(--mono); font-size: 10px; color: var(--faint); flex: 0 0 auto; }
+/* ---------- examples ---------- */
+/* Incorrect 바로 뒤에 Correct 가 오고 둘 다 코드 블록 하나면 좌우로 놓는다.
+   auto-fit 이라 main 이 좁아지면 브레이크포인트 없이 스스로 위아래로 떨어진다. */
+.exs { display: flex; flex-direction: column; gap: 18px; margin-top: 16px; }
+.diff { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(330px, 100%), 1fr)); gap: 14px; }
 
-/* 코드는 가로 스크롤 대신 줄바꿈한다. 좁은 폭에서도 잘리지 않는다. */
-pre.code {
-	margin: 0; padding: 12px 14px; font-family: var(--mono); font-size: 12px; line-height: 1.7;
-	background: var(--code-bg); color: var(--code-fg);
-	white-space: pre-wrap; overflow-wrap: anywhere; word-break: break-word; tab-size: 2;
-}
-/* 카드와 같은 흰색이면 코드 영역이 글과 구분되지 않는다. 의미색을 옅게 섞어 대비를 준다. */
-.box-bad pre.code, .box-bad .code-lb { background: color-mix(in srgb, var(--bad) 7%, var(--code-bg)); }
-.box-good pre.code, .box-good .code-lb { background: color-mix(in srgb, var(--good) 7%, var(--code-bg)); }
-.acc-body pre.code { background: color-mix(in srgb, var(--ink) 4%, var(--code-bg)); }
-pre.code + pre.code, .code-lb + pre.code { border-top: 1px solid var(--soft); }
-.code-lb { font-family: var(--mono); font-size: 9.5px; letter-spacing: .06em; color: var(--faint); padding: 6px 14px 0; background: var(--code-bg); }
-pre.code + .code-lb { border-top: 1px solid var(--soft); }
-.c { color: var(--faint); font-style: italic; }
+/* 테두리 전체에 의미색을 두르면 잉크가 많다. 좌측 2px 만 의미색으로 세운다. */
+.box { min-width: 0; background: var(--card); border: 1px solid var(--hair); border-radius: 2px; overflow: hidden; }
+.box-bad { border-left: 2px solid color-mix(in srgb, var(--bad) 55%, transparent); }
+.box-good { border-left: 2px solid color-mix(in srgb, var(--good) 55%, transparent); }
+.box-hd { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: baseline; gap: 9px; padding: 8px 12px; }
+.box-bad > .box-hd { background: color-mix(in srgb, var(--bad) 5%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--bad) 16%, transparent); }
+.box-good > .box-hd { background: color-mix(in srgb, var(--good) 5%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--good) 16%, transparent); }
+.box-gl { font-family: var(--mono); font-size: 12px; font-weight: 700; }
+.box-bad .box-gl, .box-bad .box-note { color: var(--bad); }
+.box-good .box-gl, .box-good .box-note { color: var(--good); }
+/* 라벨은 그 예시가 무엇인지 말해 주는 유일한 문장이다. 잘라내지 않고 줄바꿈한다. */
+.box-note { min-width: 0; font-size: 13px; font-weight: 600; line-height: 1.5; word-break: keep-all; text-wrap: pretty; }
+.box-langs { font-family: var(--mono); font-size: 10px; color: var(--faint); }
+
+/* 같은 종류가 연속이면 한 상자로 묶고 기본으로 접는다. 예시 여섯 개가 코드 벽이 되지 않는다. */
+.gx { display: flex; flex-direction: column; gap: 9px; }
+.gx-hd { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 10px; }
+.gx-tag { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: .12em; white-space: nowrap; }
+.gx-rule { height: 1px; }
+.gx-all { min-height: 22px; padding: 0 8px; border-radius: 2px; font-size: 11px; white-space: nowrap; color: var(--muted); border: 1px solid var(--hair); }
+.gx-bad .gx-tag { color: var(--bad); }
+.gx-bad .gx-rule { background: color-mix(in srgb, var(--bad) 22%, transparent); }
+.gx-bad .gx-all:hover { color: var(--bad); border-color: color-mix(in srgb, var(--bad) 55%, transparent); }
+.gx-good .gx-tag { color: var(--good); }
+.gx-good .gx-rule { background: color-mix(in srgb, var(--good) 22%, transparent); }
+.gx-good .gx-all:hover { color: var(--good); border-color: color-mix(in srgb, var(--good) 55%, transparent); }
+
+.smp { min-width: 0; border-top: 1px solid var(--soft); }
+.smp:first-child { border-top: none; }
+.smp-b { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: baseline; gap: 9px; width: 100%; text-align: left; padding: 9px 12px; }
+.smp-no { font-family: var(--mono); font-size: 10.5px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.smp-car { font-size: 9px; }
+.box-bad .smp-b:hover, .box-bad .smp[data-open="1"] .smp-b { background: color-mix(in srgb, var(--bad) 5%, transparent); }
+.box-bad .smp[data-open="1"] .smp-b { border-bottom: 1px solid color-mix(in srgb, var(--bad) 22%, transparent); }
+.box-bad .smp-no, .box-bad .smp-car { color: color-mix(in srgb, var(--bad) 80%, transparent); }
+.box-good .smp-b:hover, .box-good .smp[data-open="1"] .smp-b { background: color-mix(in srgb, var(--good) 5%, transparent); }
+.box-good .smp[data-open="1"] .smp-b { border-bottom: 1px solid color-mix(in srgb, var(--good) 22%, transparent); }
+.box-good .smp-no, .box-good .smp-car { color: color-mix(in srgb, var(--good) 80%, transparent); }
+.smp-body { display: none; }
+.smp[data-open="1"] .smp-body { display: block; }
+
+/* ---------- code ---------- */
+/* 줄번호·마커·코드 3열. 거터 폭을 3em 으로 고정해 예시끼리 코드 시작이 맞는다. */
+.cd { display: grid; grid-template-columns: 3em 16px minmax(0, 1fr); padding: 9px 12px 9px 0; font-family: var(--mono); font-size: 12px; line-height: 1.65; background: var(--code-bg); color: var(--code-fg); tab-size: 2; }
+.cd i { display: block; font-style: normal; min-height: 1.65em; }
+.cd .n { padding: 0 10px 0 12px; text-align: right; color: var(--faint); font-variant-numeric: tabular-nums; user-select: none; }
+.cd .m { text-align: center; font-weight: 700; color: transparent; user-select: none; border-right: 1px solid var(--soft); }
+.cd .c { padding: 0 6px 0 12px; white-space: pre-wrap; overflow-wrap: anywhere; }
+/* 바뀐 줄만 옅게 칠하고 거터 숫자와 마커를 의미색으로 바꾼다. */
+.box-bad .cd .on { background: color-mix(in srgb, var(--bad) 6%, transparent); }
+.box-bad .cd .n.on, .box-bad .cd .m.on { color: var(--bad); }
+.box-good .cd .on { background: color-mix(in srgb, var(--good) 6%, transparent); }
+.box-good .cd .n.on, .box-good .cd .m.on { color: var(--good); }
+/* 첫 줄이 경로 주석이면 코드에서 떼어 머리띠로 올린다. */
+.cd-p { display: flex; align-items: center; gap: 7px; padding: 4px 12px; font-family: var(--mono); font-size: 10px; letter-spacing: .01em; color: var(--muted); background: color-mix(in srgb, var(--ink) 3%, var(--code-bg)); border-bottom: 1px solid var(--soft); }
+.cd-p .ico { color: var(--faint); }
+.cd-p .p { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cd + .cd, .cd + .cd-lb, .cd-p + .cd { border-top: 1px solid var(--soft); }
+.cd-lb { font-family: var(--mono); font-size: 9.5px; letter-spacing: .06em; color: var(--faint); padding: 6px 14px 0; background: var(--code-bg); }
+
+pre.code { margin: 0; padding: 11px 13px; font-family: var(--mono); font-size: 12px; line-height: 1.75; background: color-mix(in srgb, var(--ink) 4%, var(--code-bg)); color: var(--code-fg); white-space: pre-wrap; overflow-wrap: anywhere; tab-size: 2; }
+.c { color: var(--faint); }
 .s { color: var(--good); }
-.k { color: var(--coral-dk); font-weight: 500; }
+.k { color: var(--coral-dk); font-weight: 600; }
 .g { color: var(--tag-fg); }
 
 
@@ -245,9 +290,9 @@ pre.code + .code-lb { border-top: 1px solid var(--soft); }
 mark { background: color-mix(in srgb, var(--coral) 30%, transparent); color: inherit; border-radius: 2px; }
 
 /* 적용 조건 불렛. 제외 조건은 라벨 칩과 낮은 대비로 본 조건과 갈라 읽힌다. */
-.acc-body li.li-x { color: var(--muted); }
-.acc-body li.li-x::before { color: var(--faint); }
-.x-lb { display: inline-block; font-family: var(--mono); font-size: 10px; font-weight: 500; letter-spacing: .06em; color: var(--faint); border: 1px solid var(--hair); border-radius: 999px; padding: 0 7px; margin-right: 7px; vertical-align: 1px; }
+.acc-body li.li-x { color: var(--muted); grid-template-columns: auto minmax(0, 1fr); }
+.acc-body li.li-x::before { content: none; }
+.x-lb { font-family: var(--mono); font-size: 9.5px; letter-spacing: .06em; color: var(--faint); border: 1px solid var(--hair); border-radius: 2px; padding: 1px 5px; white-space: nowrap; }
 
 /* ---------- rule dialog ---------- */
 /* 참조 칩은 목록을 이동하는 대신 이 다이얼로그로 미리 보여준다. 보던 섹션을 잃지 않는다. */
@@ -272,6 +317,7 @@ body:has(.dlg[open]) { overflow: hidden; }
 <header class="hd">
 	<div class="hd-in">
 		<div class="brand">
+			<button class="rail-t" id="rail" aria-label="필터 패널 접기">◧</button>
 			<span class="brand-nm">팀 컨벤션</span>
 			<span class="brand-sub">HANDBOOK</span>
 		</div>
@@ -290,7 +336,7 @@ body:has(.dlg[open]) { overflow: hidden; }
 	</div>
 </header>
 <div class="wrap">
-	<div class="pane">
+	<div class="pane" id="pane" data-rail="1">
 		<aside class="rail">
 			<div>
 				<div class="grp-hd"><span class="grp-lb">Skill</span><span class="grp-note">단일 선택</span></div>
@@ -347,9 +393,28 @@ body:has(.dlg[open]) { overflow: hidden; }
 	const secLabel = (s) => s.titleKo || s.title;
 
 	// skill 은 단일 선택. section 은 skill 마다 같은 prefix 를 쓸 수 있어 "skill/prefix" 로 잡는다.
-	const state = {q: "", skill: "", impact: new Set(), section: "", tags: new Set(), open: new Set(), when: new Set(), why: new Set()};
+	const state = {q: "", skill: "", impact: new Set(), section: "", tags: new Set(), open: new Set(), when: new Set(), why: new Set(), sample: new Map()};
 
 	const remember = () => { try { localStorage.setItem("viewer-skill", state.skill); } catch (e) {} };
+
+	// 레일 접힘. 좁은 화면에서 본문 폭을 되찾는 유일한 수단이라 새로고침해도 남는다.
+	const pane = document.getElementById("pane");
+	const railBtn = document.getElementById("rail");
+	const paintRail = (open) => {
+		pane.dataset.rail = open ? "1" : "0";
+		railBtn.textContent = open ? "\u25e7" : "\u25e8";
+		railBtn.setAttribute("aria-label", open ? "필터 패널 접기" : "필터 패널 펼치기");
+	};
+	let railOpen = true;
+
+	try { railOpen = localStorage.getItem("viewer-rail") !== "0"; } catch (e) {}
+
+	paintRail(railOpen);
+	railBtn.addEventListener("click", () => {
+		railOpen = !railOpen;
+		paintRail(railOpen);
+		try { localStorage.setItem("viewer-rail", railOpen ? "1" : "0"); } catch (e) {}
+	});
 	try { state.skill = localStorage.getItem("viewer-skill") || ""; } catch (e) {}
 	if (!DATA.skills.some((s) => s.name === state.skill)) {
 		state.skill = DATA.skills.some((s) => s.name === "react") ? "react" : (DATA.skills[0] ? DATA.skills[0].name : "");
@@ -514,19 +579,110 @@ body:has(.dlg[open]) { overflow: hidden; }
 	};
 
 	// 블록이 여러 개면 박스 하나 안에서 "1 / 2 · lang" 구분선으로 잇는다.
-	const codeHtml = (blocks) => blocks.map((b, i) =>
-		(blocks.length > 1 ? '<div class="code-lb">' + (i + 1) + " / " + blocks.length + "  ·  " + esc(b.lang) + "</div>" : "") +
-		'<pre class="code">' + hl(b.code, b.lang) + "</pre>").join("");
+	// 첫 줄이 경로 주석이면 코드에서 떼어 머리띠로 올린다. 주석색에 묻히지 않는다.
+	const PATH_RE = /^\s*(?:\/\/|#)\s*(\S+\.(?:tsx?|jsx?|css|scss|json|html?|md|ya?ml))\s*$/;
+	const splitPath = (code) => {
+		const lines = code.split("\n");
+		const hit = PATH_RE.exec(lines[0] || "");
 
-	const boxHtml = (e) => {
+		if (!hit) return {path: "", code: code};
+
+		let rest = lines.slice(1);
+
+		while (rest.length && !rest[0].trim()) rest = rest.slice(1);
+
+		return {path: hit[1], code: rest.join("\n")};
+	};
+
+	// 두 예시가 얼마나 닮았는지 LCS 로 재고, 짝이 안 맞은 줄만 바뀐 줄로 표시한다.
+	// 0.45 아래면 서로 다른 코드라 나란히 놓아도 비교가 안 되므로 diff 를 포기한다.
+	const diffMarks = (a, b) => {
+		const n = a.length;
+		const m = b.length;
+
+		if (!n || !m) return null;
+
+		const dp = Array.from({length: n + 1}, () => new Array(m + 1).fill(0));
+
+		for (let i = n - 1; i >= 0; i--) {
+			for (let j = m - 1; j >= 0; j--) {
+				dp[i][j] = a[i].trim() === b[j].trim() ? dp[i + 1][j + 1] + 1 : Math.max(dp[i + 1][j], dp[i][j + 1]);
+			}
+		}
+
+		if (dp[0][0] / Math.max(n, m) < 0.45) return null;
+
+		const am = new Array(n).fill(true);
+		const bm = new Array(m).fill(true);
+		let i = 0;
+		let j = 0;
+
+		while (i < n && j < m) {
+			if (a[i].trim() === b[j].trim()) { am[i] = false; bm[j] = false; i++; j++; }
+			else if (dp[i + 1][j] >= dp[i][j + 1]) i++;
+			else j++;
+		}
+
+		return {am: am, bm: bm};
+	};
+
+	const codeHtml = (blocks, marks) => blocks.map((b, i) => {
+		const split = splitPath(b.code);
+		const rows = split.code.split("\n");
+		const painted = hl(split.code, b.lang).split("\n");
+		const mask = blocks.length === 1 && marks ? marks : null;
+		const glyph = mask ? (marks.bad ? "\u2212" : "+") : "";
+		const cells = rows.map((_, n) => {
+			const on = mask && mask.mask[n] ? " on" : "";
+
+			return '<i class="n' + on + '">' + (n + 1) + '</i><i class="m' + on + '">' + (on ? glyph : "\u00a0") + '</i>' +
+				'<i class="c' + on + '">' + (painted[n] || "\u200b") + "</i>";
+		}).join("");
+
+		return (blocks.length > 1 ? '<div class="cd-lb">' + (i + 1) + " / " + blocks.length + "  \u00b7  " + esc(b.lang) + "</div>" : "") +
+			(split.path ? '<div class="cd-p"><span class="ico" aria-hidden="true">\u25c7</span><span class="p">' + esc(split.path) + "</span></div>" : "") +
+			'<div class="cd">' + cells + "</div>";
+	}).join("");
+
+	const boxHtml = (e, marks) => {
 		if (!e) return "";
+
 		const bad = e.kind === "incorrect";
-		const langs = [...new Set(e.blocks.map((b) => b.lang))].join(" · ");
+		const langs = [...new Set(e.blocks.map((b) => b.lang))].join(" \u00b7 ");
+
 		return '<div class="box ' + (bad ? "box-bad" : "box-good") + '"><div class="box-hd">' +
-			'<span class="box-l"><span aria-hidden="true">' + (bad ? "\u2715" : "\u2713") + "</span>" +
-			"<span>" + (bad ? "INCORRECT" : "CORRECT") + "</span>" +
-			(e.label ? '<span class="box-note">' + esc(e.label) + "</span>" : "") + "</span>" +
-			'<span class="box-langs">' + esc(langs) + "</span></div>" + codeHtml(e.blocks) + "</div>";
+			'<span class="box-gl" aria-hidden="true">' + (bad ? "\u2212" : "+") + "</span>" +
+			'<span class="box-note">' + (e.label ? inlineHi(e.label) : (bad ? "INCORRECT" : "CORRECT")) + "</span>" +
+			"</div>" + codeHtml(e.blocks, marks ? {mask: marks, bad: bad} : null) + "</div>";
+	};
+
+	// 같은 종류가 이어지면 한 상자에 넣고 기본으로 접는다. 제목은 늘 보이고 코드만 감춘다.
+	const groupHtml = (kind, samples, key, index) => {
+		const bad = kind === "incorrect";
+		const n = samples.length;
+		const skey = key + ":" + index;
+		const stored = state.sample.get(skey);
+		const openIdx = stored === undefined ? (n === 1 ? [0] : []) : stored;
+		const allOpen = n > 0 && samples.every((_, i) => openIdx.indexOf(i) >= 0);
+		const cls = bad ? "gx-bad" : "gx-good";
+		const head = n > 1
+			? '<div class="gx-hd"><span class="gx-tag"><span aria-hidden="true">' + (bad ? "\u2715" : "\u2713") + "</span>" +
+				"<span>" + (bad ? "INCORRECT" : "CORRECT") + " \u00b7 " + n + '</span></span><span class="gx-rule"></span>' +
+				'<button class="gx-all" data-all="' + esc(skey) + '" data-n="' + n + '">' + (allOpen ? "모두 접기" : "모두 펼치기") + "</button></div>"
+			: "";
+		const rows = samples.map((e, i) => {
+			const isOpen = openIdx.indexOf(i) >= 0;
+
+			return '<div class="smp" data-open="' + (isOpen ? 1 : 0) + '">' +
+				'<button class="smp-b" data-smp="' + esc(skey) + '" data-i="' + i + '">' +
+				'<span class="smp-no">' + (n > 1 ? i + 1 : (bad ? "\u2715" : "\u2713")) + "</span>" +
+				'<span class="box-note">' + (e.label ? inlineHi(e.label) : "") + "</span>" +
+				'<span class="smp-car" aria-hidden="true">' + (isOpen ? "\u25be" : "\u25b8") + "</span></button>" +
+				'<div class="smp-body">' + (isOpen ? codeHtml(e.blocks, null) : "") + "</div></div>";
+		}).join("");
+
+		return '<div class="gx ' + cls + '">' + head +
+			'<div class="box ' + (bad ? "box-bad" : "box-good") + '">' + rows + "</div></div>";
 	};
 
 	// dlg 모드는 참조 미리 보기 다이얼로그 전용이다. 항상 펼치고, 목록과 id 가 겹치지 않게 둔다.
@@ -540,13 +696,38 @@ body:has(.dlg[open]) { overflow: hidden; }
 
 		let body = "";
 		if (open) {
-			const pairs = [];
+			// Incorrect 바로 뒤에 Correct 가 오고 둘 다 코드 블록 하나이며 서로 닮았으면 좌우 diff 로,
+			// 아니면 같은 종류가 이어지는 만큼 묶어 접이식 그룹으로 그린다.
+			const units = [];
+
 			for (let i = 0; i < r.examples.length; i++) {
 				const e = r.examples[i];
 				const nx = r.examples[i + 1];
-				if (e.kind === "incorrect" && nx && nx.kind === "correct") { pairs.push([e, nx]); i++; }
-				else pairs.push([e]);
+				let marks = null;
+
+				const sideBySide = e.kind === "incorrect" && nx && nx.kind === "correct" && e.blocks.length === 1 && nx.blocks.length === 1;
+
+				if (sideBySide) {
+					// 줄 강조는 두 예시가 실제로 닮았을 때만 뜻이 있다.
+					// 다시 쓴 예시에 강조를 칠하면 전부 바뀐 줄이 되어 아무것도 못 가린다.
+					marks = diffMarks(splitPath(e.blocks[0].code).code.split("\n"), splitPath(nx.blocks[0].code).code.split("\n"));
+					units.push({diff: true, bad: e, good: nx, marks: marks, at: i});
+					i++;
+					continue;
+				}
+
+				const run = [];
+				const at = i;
+
+				while (i < r.examples.length && r.examples[i].kind === e.kind) { run.push(r.examples[i]); i++; }
+
+				i--;
+				units.push({diff: false, kind: e.kind, samples: run, at: at});
 			}
+
+			const exsHtml = units.map((u) => u.diff
+				? '<div class="diff">' + boxHtml(u.bad, u.marks ? u.marks.am : null) + boxHtml(u.good, u.marks ? u.marks.bm : null) + "</div>"
+				: groupHtml(u.kind, u.samples, key, u.at)).join("");
 			// 두 목록이 무엇이 다른지 라벨만으로는 알 수 없어서 한 줄 설명을 붙인다.
 			const refs = [];
 			if (r.requiresSelected.length) refs.push(["함께 적용", "이 규칙이 걸리면 반드시 같이 적용합니다", r.requiresSelected]);
@@ -566,9 +747,7 @@ body:has(.dlg[open]) { overflow: hidden; }
 				'<div class="meta"><span>' + esc(r.id) + "</span>" +
 				(sec ? '<span class="meta-s">·</span><span>' + esc(secLabel(sec)) + "</span>" : "") +
 				'<span class="meta-s">·</span><span>예시 ' + exCount + "</span></div>" +
-				'<div class="pairs">' + pairs.map((p) => '<div class="pair">' +
-					boxHtml(p.find((e) => e.kind === "incorrect")) +
-					boxHtml(p.find((e) => e.kind !== "incorrect")) + "</div>").join("") + "</div>" +
+				'<div class="exs">' + exsHtml + "</div>" +
 				'<div class="accs">' +
 				(r.appliesWhen || r.appliesWhenBullets.length
 					? acc("when", "언제 적용할까요?", whenOpen, () => whenHtml(r))
@@ -704,7 +883,7 @@ body:has(.dlg[open]) { overflow: hidden; }
 	});
 
 	document.addEventListener("click", (ev) => {
-		const t = ev.target.closest("[data-rule],[data-skill],[data-impact],[data-section],[data-tag],[data-when],[data-why],[data-goto],[data-close],[data-clear]");
+		const t = ev.target.closest("[data-rule],[data-skill],[data-impact],[data-section],[data-tag],[data-when],[data-why],[data-goto],[data-close],[data-clear],[data-smp],[data-all]");
 		if (!t) return;
 		// 다이얼로그가 열려 있으면 그 안의 아코디언도 같은 상태를 쓰므로 함께 다시 그린다.
 		const toggle = (set, key) => { set.has(key) ? set.delete(key) : set.add(key); render(); renderDialog(); };
@@ -715,6 +894,28 @@ body:has(.dlg[open]) { overflow: hidden; }
 		if (t.dataset.tag) return toggle(state.tags, t.dataset.tag);
 		if (t.dataset.section) { state.section = state.section === t.dataset.section ? "" : t.dataset.section; return render(); }
 		if (t.dataset.when) return toggle(state.when, t.dataset.when);
+
+		// 예시 하나를 여닫는다. 카드 자체가 접히지 않도록 규칙 토글보다 먼저 가로챈다.
+		if (t.dataset.smp) {
+			const skey = t.dataset.smp;
+			const idx = Number(t.dataset.i);
+			const cur = state.sample.get(skey) || [];
+
+			state.sample.set(skey, cur.indexOf(idx) >= 0 ? cur.filter((x) => x !== idx) : cur.concat([idx]));
+			render();
+			return renderDialog();
+		}
+
+		if (t.dataset.all) {
+			const skey = t.dataset.all;
+			const total = Number(t.dataset.n);
+			const cur = state.sample.get(skey) || [];
+
+			state.sample.set(skey, cur.length === total ? [] : Array.from({length: total}, (_unused, i) => i));
+			render();
+			return renderDialog();
+		}
+
 		if (t.dataset.why) return toggle(state.why, t.dataset.why);
 		if (t.dataset.close) return dlg.close();
 

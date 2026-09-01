@@ -38,8 +38,8 @@ tags: functions, boundaries
 
 사유가 아닌 것:
 
-- **같은 파일 안에서 몇 번 불리는지.** 이 규칙은 파일 경계만 봅니다.
-  같은 파일 안에서 비공개 함수로 단계를 나누는 것은 대상이 아니고, 같은 계산을 두세 번 적어도 괜찮습니다.
+- **같은 파일 안에서 몇 번 불리는지.** 부르는 횟수는 세지 않습니다.
+  같은 계산을 두세 번 적어도 괜찮습니다. 세는 것은 전용 보조가 몇 개 딸렸는지뿐입니다.
   파일을 하나 더 여는 쪽이 더 비쌉니다.
 - **"나중에 또 쓸 것 같아서".** 그때 가서 뺍니다.
 
@@ -53,7 +53,8 @@ tags: functions, boundaries
 - `.map()` 콜백 하나에만 쓰이는 변환
 - 선택 값 보정, 라벨 기본값 같은 자잘한 정리 단계
 
-뺀 다음 어디 두고 언제 공용으로 올릴지는 `functions-give-each-function-its-own-file`가 정합니다.
+뺀 다음 어디 둘지는 `functions-give-each-function-its-own-file`이 정하고,
+루트 `util`로 올릴지는 `functions-promote-shared-functions-to-root-util`이 정합니다.
 
 **Incorrect (한 번만 쓰는 한 줄 계산을 파일로 분리):**
 
@@ -116,7 +117,7 @@ export const toProfileSaveRequest = (formValues: ProfileFormValues) => {
 
 ```tsx
 // page/profile/_pg-profile-form.tsx와 page/profile/_pg-profile-drawer.tsx가 함께 부른다
-import { toProfileSaveRequest } from "@/page/profile/_function/to-profile-save-request";
+import {toProfileSaveRequest} from "@/page/profile/_function/to-profile-save-request";
 ```
 
 **Correct (`.tsx` 안의 순수 조립 함수는 사용처가 하나여도 형제 `.ts`로 냄):**
@@ -137,7 +138,7 @@ export const toProductSaveRequest = (formValues: ProductFormValues) => {
 
 ```tsx
 // page/products/pg-products.tsx 하나만 부르지만 훅도 JSX도 쓰지 않는 계산이다
-import { toProductSaveRequest } from "@/page/products/_function/to-product-save-request";
+import {toProductSaveRequest} from "@/page/products/_function/to-product-save-request";
 ```
 
 **Correct (전용 보조가 딸린 단계만 자기 파일로 나감):**

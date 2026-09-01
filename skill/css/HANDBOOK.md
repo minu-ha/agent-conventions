@@ -117,7 +117,7 @@ import styles from "./catalog-index.module.css";
 **Correct (기본은 일반 CSS와 전역에서 고유한 클래스 이름을 사용):**
 
 ```tsx
-import { clsx } from "clsx";
+import {clsx} from "clsx";
 import "./pg-catalog-index.css";
 
 <section className={clsx("pg_catalogIndex__hero")}>
@@ -154,7 +154,7 @@ import "./pg-catalog-index.css";
 | `scope` | 범위 | `pg`, `wg`, `ui` 중 하나. 소문자로 씁니다 |
 | `slug` | 식별자 | 그 CSS 파일 소유자의 이름. camelCase |
 | `element` | 요소 | 소유자 안의 UI 역할. `listButton`, `emptyState` |
-| `modifier` | 수정자 | 상태나 반복되는 모양. `routeActive`, `selected` |
+| `modifier` | 수정자 | 클래스 뒤에 `--`로 붙는 자리. 무엇을 담을 자격이 있는지는 `composition-do-not-build-structural-variants-with-modifiers`가 정합니다 |
 
 수정자와 변형은 다릅니다.
 수정자는 클래스 뒤에 붙는 `--이름`이고, 변형은 컴포넌트가 받는 `variant` 프롭입니다.
@@ -164,7 +164,7 @@ import "./pg-catalog-index.css";
 
 `selector-class-pattern`에 이 문법을 정규식으로 넣으면 기계가 검사합니다.
 
-**Incorrect (식별자와 요소에 snake_case와 kebab-case가 섞임):**
+**Incorrect (식별자, 요소, 수정자에 snake_case와 kebab-case가 섞임):**
 
 ```txt
 ui_tag_list__root
@@ -197,9 +197,9 @@ pg_catalogDetail__main--routeActive
 **Impact: MEDIUM (이름이 모호하거나 치수를 가리키면 클래스가 어느 부위인지 알 수 없습니다)**
 
 요소와 수정자 이름은 구조나 치수가 아니라 UI 역할을 드러냅니다.
-`container`, `wrapper`, `box`처럼 뭉뚱그린 낱말을 홀로 쓰지 않습니다.
+`container`, `wrapper`, `box`처럼 뭉뚱그린 낱말은 합성어로도 쓰지 않습니다.
 `gap12`처럼 숫자에 뜻을 담지도 않습니다.
-그 자리가 무슨 일을 하는지, 어떤 상태인지가 이름에서 읽히게 씁니다.
+요소는 그 자리가 무슨 일을 하는지, 수정자는 어떤 상태인지가 이름에서 읽히게 씁니다.
 
 수정자를 붙일 자격이 있는지는 `composition-do-not-build-structural-variants-with-modifiers` 규칙이 정합니다.
 여기서는 붙이기로 정한 이름이 역할을 가리키는지만 봅니다.
@@ -240,7 +240,6 @@ CSS는 그 화면의 이름을 식별자에 그대로 적습니다.
 
 라우트 경로나 폴더 이름에 없는 줄임말은 쓰지 않습니다.
 `pg_prd__root`가 아니라 `pg_products__root`입니다.
-`wg_*`·`ui_*`는 각자의 식별자 규칙을 따릅니다.
 
 부모 식별자를 미리 붙이지 않습니다.
 충돌이 실제로 생겼을 때만 최소한으로 덧붙입니다.
@@ -289,7 +288,7 @@ pg_indexOverviewSection__root
 
 **Rule:** `C02-01` · `ownership-give-each-file-one-scope-slug`
 
-**Applies when:** 새 `scope_slug`를 만들거나 기존 식별자를 복사·이름 변경할 때. 서로 다른 컴포넌트가 같은 식별자를 쓸 가능성이 있을 때.
+**Applies when:** 새 `scope_slug`를 만들거나 기존 식별자를 복사·이름 변경할 때. 하위 컴포넌트에 CSS 파일을 새로 만들면서 부모 식별자를 그대로 쓸 때.
 
 **Impact: CRITICAL (여러 컴포넌트가 같은 네임스페이스를 나눠 쓰면 전역에서 충돌합니다)**
 
@@ -350,7 +349,8 @@ pg_dashboardIndex__header
   재사용을 예상해서 미리 `wg_`로 올리지도, 한 화면만 쓴다고 `pg_`로 내리지도 않습니다.
 - 소유자의 레이어가 바뀌면 접두사도 함께 옮깁니다.
 
-컴포넌트가 어느 레이어 것인지는 활성화된 프레임워크 규약이 판단합니다.
+파일이 어느 최상위 폴더에 있어야 하는지는 활성화된 프레임워크 규약이 판단하고, 접두사는 그 폴더를 그대로 따릅니다.
+파일 이름의 `_` 표식도 그 규약이 정합니다.
 
 **Incorrect (최상위 폴더 대신 하위 폴더를 보고 `widget` 부품을 화면 범위로 내림):**
 
@@ -407,7 +407,7 @@ component/ui/button/ui-button.css
 | `.pg_detail__root { & .wg_chartCard__caption { } }` | 씁니다 |
 | `.pg_treePanel__toolbar:hover .pg_treePanel__title { }` | 내 클래스끼리라 대상이 아닙니다 |
 
-판정은 **선택자가 내 식별자로 시작하는지**입니다.
+판정은 **남의 클래스가 내 최상위 블록 안에서 `&`로 열렸는지**입니다.
 소유 관계를 따로 조사하지 않습니다.
 `.pg_treePanel__root .ant-tree-title`처럼 바깥에서 이어 쓰지도 않습니다.
 최상위 블록을 열고 그 안에서 `&`로 씁니다.
@@ -508,9 +508,9 @@ component/ui/button/ui-button.css
 
 | 상황 | 방법 | 바꾸는 곳 |
 | --- | --- | --- |
-| 최상위 배치만 다름 | 사용처가 `className`을 넘기고 자기 클래스로 스타일을 줌 | 사용처 TSX와 사용처 CSS |
-| 내부 모습이 사용처 하나에서만 다름 | 그 소유자가 `variant` 프롭으로 수정자를 노출 | 소유자 TSX와 소유자 CSS, 사용처 TSX |
-| 레이어 판정이 화면 소유로 나옴 | 화면 폴더 안으로 내림 | 파일 위치와 접두사 |
+| 최상위 배치만 다름 | 사용처가 `className`을 넘기고 자기 클래스로 스타일을 줍니다 | 사용처 TSX와 사용처 CSS |
+| 내부 모습이 여러 사용처에서 같게 반복됨 | 그 소유자가 `variant` 프롭으로 수정자를 노출합니다 | 소유자 TSX와 소유자 CSS, 사용처 TSX |
+| 레이어 판정이 화면 소유로 나옴 | 화면 폴더 안으로 내립니다 | 파일 위치와 접두사 |
 
 세 행에 안 맞으면 내 최상위 블록 안에서 겨냥합니다.
 그 방법은 `ownership-use-foreign-classes-only-under-your-own-root` 규칙이 정합니다.
@@ -569,18 +569,18 @@ component/ui/button/ui-button.css
 ```txt
 before
   component/widget/chart-card/wg-chart-card.tsx      detail 화면의 뷰모델 타입을 받음
-  component/widget/chart-card/wg-chart-card.css      pg_detail 만 내부를 override 하고 있었음
+  component/widget/chart-card/wg-chart-card.css      pg_detail 만 내부를 덮어쓰고 있었음
 
 after
   page/detail/_pg-chart-card.tsx
-  page/detail/_pg-chart-card.css  pg_chartCard__* 로 owner 하나
+  page/detail/_pg-chart-card.css  pg_chartCard__* 로 소유자 하나
 ```
 
 ## 3. Class Composition in TSX
 
 **Impact: HIGH**
 
-TSX 클래스 조합과 래퍼 소유 규칙은 스타일링 경계를 분명하게 유지하고, UI 래퍼가 통제되지 않은 스타일 연결 지점을 노출하는 것을 막습니다. 한 클래스가 무엇까지 담당하는지, 수정자로 표현할 자격이 있는 모양은 무엇인지도 여기서 정합니다. 시각 결정을 인라인 `style`이 아니라 클래스로 넘기는 판정도 여기서 합니다.
+TSX 클래스 조합과 래퍼 소유 규칙은 스타일링 경계를 분명하게 유지하고, UI 래퍼가 통제되지 않은 스타일 연결 지점을 노출하는 것을 막습니다. 한 클래스가 무엇까지 담당하는지, 수정자로 표현할 자격이 있는 모양은 무엇인지, 시각 결정을 인라인 `style`이 아니라 클래스로 넘길지도 이 섹션이 정합니다.
 
 ### 3.1 Compose Classes With `clsx()`
 
@@ -593,11 +593,11 @@ TSX 클래스 조합과 래퍼 소유 규칙은 스타일링 경계를 분명하
 **Impact: LOW (기본 클래스와 상태 수정자를 섞어도 TSX 조립이 한눈에 읽힙니다)**
 
 TSX에서 `className`은 `clsx()`로 조립합니다.
+인자는 자기 기본 클래스, 수정자, 받은 `className` 순서로 적습니다.
 `+`나 `join()`으로 클래스 목록을 이어 붙이지 않습니다.
 삼항 연산자로 클래스를 고르지도 않습니다.
 
 클래스가 하나일 때도 `clsx()`를 씁니다.
-수정자가 하나 붙을 때 문자열 연결로 되돌아가지 않습니다.
 `className` 형태가 파일마다 갈리지 않으므로 검색하고 리뷰할 때 한 패턴만 찾습니다.
 
 클래스 이름 안에 값을 끼워 넣지 않는 것은 `composition-write-modifiers-as-conditions` 규칙이 정합니다.
@@ -647,14 +647,15 @@ TSX에서 `className`은 `clsx()`로 조립합니다.
 `--compactTop`, `--marginLeft0`, `--alignRight`처럼 그 화면 하나를 고치려고 붙이는 이름이 여기 해당합니다.
 그런 보정은 수정자가 아니라 **역할 이름이 있는 별도 요소 클래스**로 풉니다.
 
-갈리는 기준은 하나입니다.
+반복되는 모양인지는 아래 기준으로 가릅니다.
+앱이 켜고 끄는 상태는 이 기준을 보지 않고 언제나 수정자입니다.
 
 > 이 수정자 이름이 지금 저장소에서 두 개 이상의 `scope_slug`에 이미 있는가?
 
 | 답 | 판정 |
 | --- | --- |
-| 있다 | 반복되는 모양이라 수정자로 허용합니다 |
-| 없다 | 그 자리의 여백과 배치 사정을 담은 이름이라 요소 클래스로 둡니다 |
+| 있음 | 반복되는 모양이라 수정자로 허용합니다 |
+| 없음 | 그 한 곳의 사정이라 역할 이름을 새로 지어 요소 클래스로 둡니다 |
 
 두 번째 소유자가 같은 이름을 쓰게 되는 순간 수정자로 올립니다.
 그 전까지는 요소 클래스로 둡니다.
@@ -684,7 +685,7 @@ TSX에서 `className`은 `clsx()`로 조립합니다.
 
 **Rule:** `C03-03` · `composition-keep-classes-single-purpose`
 
-**Applies when:** 한 클래스 이름에 기본 스타일과 상태를 함께 넣을 때. 제외: 처음부터 기본 클래스와 수정자를 나눠 만드는 경우. 제외: 책임이 그대로인 이름 변경만 하는 경우.
+**Applies when:** 상태를 나타내는 낱말이 들어간 요소 클래스 이름을 추가·변경할 때. 제외: 처음부터 기본 클래스와 수정자를 나눠 만드는 경우. 제외: 책임이 그대로인 이름 변경만 하는 경우.
 
 **Impact: MEDIUM-HIGH (클래스 하나가 기본 스타일과 상태 의미를 함께 담으면 상태를 끌 방법이 없습니다)**
 
@@ -715,7 +716,7 @@ TSX에서 `className`은 `clsx()`로 조립합니다.
 
 **Applies when:** 우리가 만든 컴포넌트에 `className`이나 클래스 관련 프롭을 추가할 때. 그 컴포넌트 내부 노드의 모양을 화면마다 다르게 해야 할 때. 제외: 기존 CSS 최상위 블록 아래 외부 라이브러리 선택자만 고치는 경우.
 
-**Review with:** `ownership-change-other-owners-through-their-api`, `ownership-use-foreign-classes-only-under-your-own-root`
+**Review with:** `composition-do-not-add-wrapper-elements-for-styling`, `ownership-change-other-owners-through-their-api`, `ownership-use-foreign-classes-only-under-your-own-root`
 
 **Impact: MEDIUM-HIGH (내부 노드마다 창구를 열면 사용처가 그 컴포넌트 구조에 얽매입니다)**
 
@@ -937,7 +938,7 @@ export const UiCollapse = (props: UiCollapseProps) => {
 변수가 없을 때를 대비한 대체값은 `values-always-provide-css-variable-fallbacks` 규칙이 정합니다.
 
 래퍼가 `HTMLAttributes`를 `extends`하면 `style`이 함께 열립니다.
-타입에서 막을 방법이 없으므로 이 규칙을 리뷰가 봅니다.
+`Omit`으로 뺄 수는 있지만 DOM 표면을 열어 두려고 그대로 두므로 이 규칙을 리뷰가 봅니다.
 
 **Incorrect (인라인으로 꾸밈):**
 
@@ -1149,7 +1150,7 @@ export const WgFlowNode = (props: WgFlowNodeProps) => {
 
 **Impact: HIGH**
 
-겨냥 대상이 코드에 그대로 쓰여 있고 한 클래스의 선언이 한 블록에 모여 있어야, 스타일을 고칠 때 읽을 선택자와 볼 블록이 각각 하나로 정해집니다. 브라우저가 주는 DOM 상태는 가상 클래스로, 앱이 정하는 상태는 수정자로 갈라 그 요소 블록 안에 둡니다.
+겨냥 대상이 코드에 그대로 쓰여 있고 한 클래스의 선언이 한 블록에 모여 있어야, 스타일을 고칠 때 읽을 선택자와 볼 블록이 각각 하나로 정해집니다. 브라우저가 주는 DOM 상태는 그 요소 블록 안 가상 클래스로 쓰고, 앱이 정하는 상태는 수정자 클래스에 따로 씁니다.
 
 ### 4.1 Limit Nesting to One Level and Write the Rest Inline
 
@@ -1166,6 +1167,8 @@ export const WgFlowNode = (props: WgFlowNodeProps) => {
 
 > 중첩은 항상 한 겹이고, `&`도 한 선택자에 한 번입니다.
 
+`@media`·`@supports` 같은 at-rule 블록은 겹으로 세지 않습니다.
+
 `&`는 **그 블록이 소유한 요소 하나**를 가리킵니다.
 그 요소에 조건이나 가상 요소를 붙일 때만 `&`를 씁니다.
 다른 요소로 내려가면 `&`를 다시 열지 않고 같은 선택자 줄에 이어 씁니다.
@@ -1177,7 +1180,6 @@ export const WgFlowNode = (props: WgFlowNodeProps) => {
 
 그래서 `&`를 어디에 쓸지 고르지 않습니다.
 **어느 요소를 가리키느냐가 정합니다.**
-"어떤 때는 중첩, 어떤 때는 한 줄"이 아니라 한 겹까지가 중첩이고 그다음은 늘 한 줄입니다.
 
 중첩을 두 겹 이상 열면 실제 선택자가 숨습니다.
 `.pg_a { & .pg_b { & .pg_c { } } }`에 쓰인 선택자는 `& .pg_c`뿐입니다.
@@ -1277,7 +1279,7 @@ TSX에서 그 지점이 보이므로 "이 마크업을 우리가 쓰는가"를 �
 - `:first-child` 같은 구조 선택자도 같습니다.
   우리가 렌더하면 클래스를 붙입니다.
 
-`selector-disallowed-list` 규칙이 중첩 안 요소 선택자를 막으므로 이 예외에는 주석이 필요합니다.
+`selector-disallowed-list` 규칙이 `&` 바로 뒤 요소 선택자를 막으므로 이 예외에는 주석이 필요합니다.
 
 | 예외 선택자 | 주석 |
 | --- | --- |
@@ -1547,12 +1549,12 @@ TSX에서 그 지점이 보이므로 "이 마크업을 우리가 쓰는가"를 �
 
 **Impact: HIGH (브라우저가 주는 상호작용 상태와 앱이 정하는 상태 수정자를 나눕니다)**
 
-브라우저와 DOM이 직접 부여하는 상태는 같은 클래스 블록 안 `&:`로 표현합니다.
+브라우저와 DOM이 직접 부여하는 상태는 가상 클래스로 표현합니다.
 화면이나 도메인이 정하는 상태는 수정자 클래스로 떼어 냅니다.
 
 | 소유 | 상태 | 표현 |
 | --- | --- | --- |
-| DOM | `:hover`, `:visited`, `:focus-visible`, `:disabled`, `:checked` | 같은 블록 안 `&:` |
+| DOM | `:hover`, `:visited`, `:focus-visible`, `:disabled`, `:checked` | 가상 클래스 |
 | 앱 | `selected`, `active`, `error`, `expanded`, `current` | `--수정자` 클래스 |
 | DOM | `--disabled`, `--checked` 수정자 | 만들지 않습니다. 브라우저가 부여한 상태를 앱이 다시 적는 것입니다 |
 
@@ -1671,22 +1673,6 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
-**Incorrect (조상 상태를 지역 변수로 자손에 전달함):**
-
-```css
-.wg_siteHeader__brandMark {
-	transform: rotate(var(--wg-header-mark-tilt));
-}
-
-.wg_siteHeader__brandLink {
-	--wg-header-mark-tilt: 0deg;
-
-	&:hover {
-		--wg-header-mark-tilt: -2deg;
-	}
-}
-```
-
 **Correct (상태를 같은 블록 안 `&:`로 접고 상태마다 블록을 따로 엶):**
 
 ```css
@@ -1779,7 +1765,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 	}
 }
 
-.pg_salesPanel__spreadBox--checked {
+.pg_salesPanel__spreadBox--selected {
 	&::before {
 		border-color: #9fadc7;
 		background: #9fadc7;
@@ -1817,7 +1803,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 
 **Applies when:** 앱 상태 수정자와 `:hover`, `:focus-visible`, `:disabled` 같은 DOM 상호작용 상태를 추가·변경할 때. 포커스 링을 수정할 때.
 
-**Review with:** `composition-do-not-build-structural-variants-with-modifiers`
+**Review with:** `a11y-always-provide-a-visible-focus-indicator`, `composition-do-not-build-structural-variants-with-modifiers`
 
 **Impact: HIGH (앱 상태와 `:hover`, 포커스 동작을 섞지 않아 읽기 쉽고 접근성도 지킵니다)**
 
@@ -1826,7 +1812,6 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 | 상태 | 자리 |
 | --- | --- |
 | 도메인 상태와 무관한 `:hover`, `:focus-visible`, `:disabled` | 조건 없는 기본 블록. 수정자 아래로 옮겨 적용 대상을 좁히지 않습니다 |
-| `active`, `selected`, `error`처럼 앱이 정하는 모습 | 수정자 블록 |
 
 수정자가 켜진 경우에만 상호작용이 달라져야 한다는 제품 요구가 있을 때만 예외를 적습니다.
 
@@ -1836,17 +1821,19 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 포커스 표시 자체는 `a11y-always-provide-a-visible-focus-indicator` 규칙이 담당합니다.
 무엇을 수정자로 두고 무엇을 가상 클래스로 둘지는 `selector-use-pseudo-classes-for-dom-owned-states` 규칙이 정합니다.
 
-**Incorrect (포커스 스타일을 제거하거나 상태 경계를 섞음):**
+**Incorrect (상호작용 상태를 수정자 아래로 옮겨 적용 대상을 좁힘):**
 
 ```css
-.ui_button__root {
-	&:focus {
-		outline: none;
-	}
-}
-
-.ui_button__root--hover {
+.ui_button__root--active {
 	background: var(--app-color-accent);
+
+	&:hover {
+		background: var(--app-color-accent-strong);
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--app-color-focus);
+	}
 }
 ```
 
@@ -1873,7 +1860,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 
 **Impact: HIGH**
 
-여러 파일이 함께 쓰는 값은 전역 토큰 한 곳에서 정하고, 쓰는 자리에서는 그 이름만 가리킵니다. 대체값, `z-index` 층, 테마 전환이 모두 토큰 값을 바꾸는 일로 끝나야 색이나 층을 하나 더할 때 파일 여러 개를 열지 않습니다.
+여러 파일이 함께 쓰는 값은 전역 토큰 한 곳에서 정하고, 쓰는 자리에서는 그 이름만 가리킵니다. `z-index` 층과 테마 전환이 모두 토큰 값을 바꾸는 일로 끝나야 색이나 층을 하나 더할 때 파일 여러 개를 열지 않습니다.
 
 ### 5.1 Declare Core Tokens Once and Fall Back Everywhere Else
 
@@ -1903,12 +1890,12 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 대체값은 **변수가 선언되지 않았을 때만** 쓰입니다.
 선언은 있는데 그 속성에 맞지 않는 값이면 대체값이 아니라 위와 같은 결과가 됩니다.
 
-공통 토큰에 대체값을 붙이지 않는 이유는 `values-tokenize-repeated-visual-values` 규칙과 충돌하기 때문입니다.
 `var(--app-space-3, 12px)`가 100곳에 있으면 `12px`을 100곳에 하드코딩한 것과 같아서 토큰화의 목적이 사라집니다.
 값을 한 곳에서 바꾸려면 그 한 곳이 유일해야 합니다.
 
 대체값이 필요한 곳은 프로젝트가 직접 주입하지 않는 경계입니다.
 외부 라이브러리 래퍼 내부, 켜고 끄는 테마, 임시 오버레이, 조건부로만 주입되는 변수가 여기 해당합니다.
+그 변수를 두 곳 이상에서 쓰면 대체값을 우리 토큰에 한 번만 적고 사용처는 그 토큰을 가리킵니다.
 
 요청에 없는 CSS 변수를 이 규칙 때문에 새로 만들지 않습니다.
 
@@ -1926,7 +1913,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 ```css
 .pg_postFilterDialog__collapse {
 	& .ant-collapse-item {
-		border-radius: var(--mk-size-radius-card);
+		border-radius: var(--ant-border-radius-lg, 10px);
 	}
 }
 ```
@@ -1976,7 +1963,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 한 파일에서 한 번만 써도 토큰입니다.
 쌓임 순서와 움직임 리듬이 앱 전체에서 하나여야 하기 때문입니다.
 층 목록은 `values-declare-stacking-layers-as-tokens` 규칙이 정합니다.
-시간과 이징 토큰은 `a11y-namespace-keyframes-and-respect-reduced-motion` 규칙이 정합니다.
+시간과 이징도 한 파일에서 한 번만 써도 토큰입니다.
 
 **지역 변수는 만들지 않습니다.**
 공통 토큰 목록에 없는 변수는 대체값이 필요해서 값이 결국 사용처에 남습니다.
@@ -2138,7 +2125,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 **Correct (층 토큰만 씀):**
 
 ```css
-/* style/token.css */
+/* src/style/token.css */
 :root {
 	--app-z-index-base: 0;
 	--app-z-index-sticky: 100;
@@ -2313,9 +2300,9 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 
 **대가가 있습니다.**
 한 클래스의 선언이 기본 블록과 브레이크포인트 블록 두 곳에 있습니다.
-`selector-declare-each-class-in-one-block` 규칙이 `@media` 안의 재선언을 예외로 두는 이유가 이것입니다.
-여기서 그 예외의 자리를 못 박습니다.
-그래도 이쪽을 고릅니다.
+`selector-declare-each-class-in-one-block` 규칙이 `@media` 안의 재선언을 예외로 두는 이유가 그 대가입니다.
+그 예외를 어디에 두는지는 이 규칙이 못 박습니다.
+대가를 치르고도 모아 두는 쪽을 고릅니다.
 브레이크포인트를 고치는 일은 클래스 하나가 아니라 그 폭에서 화면이 어떻게 보이는지를 고치는 일이기 때문입니다.
 
 브레이크포인트를 어느 방향으로 쓰고 어떤 숫자를 고를지는
@@ -2344,15 +2331,16 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 	gap: 24px;
 
 	@media (width < 1024px) {
-		gap: 8px;
+		flex-direction: column;
 	}
 }
 
-.pg_products__panel {
-	padding: 24px;
+.pg_products__layout {
+	display: grid;
+	grid-template-columns: 280px 1fr;
 
 	@media (width < 1024px) {
-		padding: 12px;
+		grid-template-columns: 1fr;
 	}
 }
 ```
@@ -2362,30 +2350,27 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 ```css
 .pg_products__toolbar {
 	display: flex;
-	gap: 24px;
+	gap: clamp(8px, 2vw, 24px);
 }
 
-.pg_products__panel {
-	padding: 24px;
+.pg_products__layout {
+	display: grid;
+	grid-template-columns: 280px 1fr;
 }
 
 @media (width < 1440px) {
-	.pg_products__toolbar {
-		gap: 16px;
-	}
-
-	.pg_products__panel {
-		padding: 20px;
+	.pg_products__layout {
+		grid-template-columns: 220px 1fr;
 	}
 }
 
 @media (width < 1024px) {
 	.pg_products__toolbar {
-		gap: 8px;
+		flex-direction: column;
 	}
 
-	.pg_products__panel {
-		padding: 12px;
+	.pg_products__layout {
+		grid-template-columns: 1fr;
 	}
 }
 ```
@@ -2394,8 +2379,8 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 
 ```css
 @media (width < 1024px) {
-	.pg_products__panel {
-		padding: 12px;
+	.pg_products__layout {
+		grid-template-columns: 1fr;
 
 		&:hover {
 			background-color: var(--app-color-surface-hover);
@@ -2494,20 +2479,20 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 **Correct (기본 선언이 가장 넓고 넓은 쪽부터 좁혀 감):**
 
 ```css
-.pg_products__toolbar {
-	display: flex;
-	gap: 24px;
+.pg_products__layout {
+	display: grid;
+	grid-template-columns: 280px 1fr;
 }
 
 @media (width < 1440px) {
-	.pg_products__toolbar {
-		gap: 16px;
+	.pg_products__layout {
+		grid-template-columns: 220px 1fr;
 	}
 }
 
 @media (width < 1024px) {
-	.pg_products__toolbar {
-		gap: 8px;
+	.pg_products__layout {
+		grid-template-columns: 1fr;
 	}
 }
 ```
@@ -2853,7 +2838,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 **Correct (전역 스타일시트에서 한 번 처리):**
 
 ```css
-/* style/motion.css */
+/* src/style/motion.css */
 @media (prefers-reduced-motion: reduce) {
 	*,
 	*::before,
@@ -2893,9 +2878,10 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 | `no-duplicate-selectors` | `css/selector-declare-each-class-in-one-block`, `css/selector-do-not-group-classes-with-commas`의 단독 재선언 |
 | `property-disallowed-list` | `css/values-tokenize-repeated-visual-values` |
 | `selector-attribute-name-disallowed-list` | `css/selector-use-pseudo-classes-for-dom-owned-states` |
+| `selector-max-id` | `css/naming-use-scope-slug-element-modifier-syntax` — 겨냥은 클래스로만 합니다 |
 | `selector-pseudo-class-disallowed-list` | `css/selector-do-not-negate-with-not` |
 | `declaration-no-important` | `css/a11y-namespace-keyframes-and-respect-reduced-motion`의 전역 처리만 예외입니다 |
-| `media-feature-range-notation` | `css/layout-group-breakpoints-at-the-file-bottom`의 범위 표기. `stylelint-config-standard`에서 옵니다 |
+| `media-feature-range-notation` | `css/layout-write-breakpoints-desktop-first`의 범위 표기. `stylelint-config-standard`에서 옵니다 |
 | `no-descending-specificity` | 자손 기본 블록을 조상 규칙보다 앞에 두게 합니다. `stylelint-config-standard`에서 옵니다 |
 
 접두사가 디렉터리마다 달라서 `selector-class-pattern`과 `selector-disallowed-list`는 `overrides`로 나눕니다.
@@ -2913,7 +2899,8 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
   `ownMarkupPatterns`의 요소 선택자 항목이 `&`로 시작하는 형태만 보고, `selector-max-type`은 넣지 않았습니다.
 - 클래스 블록 안에 중첩한 `@media`도 못 잡습니다.
   `at-rule`이 최상위에 있어야 한다고 요구하는 규칙이 없습니다.
-  브레이크포인트 배치와 데스크톱 퍼스트 방향은 `css/layout-group-breakpoints-at-the-file-bottom` 규칙을 리뷰가 봅니다.
+  브레이크포인트 배치는 `css/layout-group-breakpoints-at-the-file-bottom`,
+  데스크톱 퍼스트 방향은 `css/layout-write-breakpoints-desktop-first` 규칙을 리뷰가 봅니다.
 - 구조 선택자로 우리 마크업을 겨냥한 것도 못 잡습니다.
   `:first-child`나 `:nth-child()`는 클래스에도 붙어서 형태로 구분할 수 없습니다.
 - 역할 이름, 승격 판단, 변형 노출, 포커스 대비도 리뷰가 담당합니다.
@@ -3056,6 +3043,9 @@ export default {
 - 중복 없는 쉼표 묶음으로 공통 선언을 공유하지 않았는가
 - 브레이크포인트가 파일 아래 한 곳에 모여 있고 데스크톱 퍼스트 한 방향인가
 - 구조 선택자로 우리 마크업을 겨냥하지 않았는가
+- 시각 결정을 `style` 속성으로 넘기지 않았는가
+- 컴포넌트 CSS에 `prefers-color-scheme`이나 `[data-theme]`가 없는가
+- 공통 토큰에 대체값을 붙이지 않았는가
 ```
 
 ## 참고 자료

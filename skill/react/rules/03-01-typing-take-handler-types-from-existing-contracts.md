@@ -41,7 +41,7 @@ const handleRowSelectToggle = (rowId: string) => (event) => {
 **Incorrect (래퍼를 쓰면서 라이브러리 원본 프롭스를 참조):**
 
 ```ts
-import type { ButtonProps } from "@mui/material";
+import type {ButtonProps} from "@mui/material";
 
 const handleSubmitClick: ButtonProps["onClick"] = (event) => {
 	event.preventDefault();
@@ -51,7 +51,7 @@ const handleSubmitClick: ButtonProps["onClick"] = (event) => {
 **Correct (팩토리 반환 타입을 기존 별칭으로 고정):**
 
 ```ts
-import type { MouseEventHandler } from "react";
+import type {MouseEventHandler} from "react";
 
 /**
  * 행 id를 커링으로 고정해 목록 JSX에 인라인 래퍼를 두지 않게 한다
@@ -67,7 +67,7 @@ const handleRowSelectToggle =
 **Correct (래퍼가 노출한 계약을 참조):**
 
 ```ts
-import type { UiButtonProps } from "@/component/ui/ui-button";
+import type {UiButtonProps} from "@/component/ui/button/ui-button";
 
 /**
  * 저장 버튼 클릭 기본 동작 차단

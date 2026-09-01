@@ -42,7 +42,7 @@ export const PgProductScreen = () => {
 **Correct (`Fragment`를 그대로 씀):**
 
 ```tsx
-import { Fragment } from "react";
+import {Fragment} from "react";
 
 export const PgProductScreen = () => {
 	return (
@@ -57,7 +57,7 @@ export const PgProductScreen = () => {
 **Correct (`key`가 필요해도 같은 형태를 유지):**
 
 ```tsx
-import { Fragment } from "react";
+import {Fragment} from "react";
 
 export const PgProductRows = (props: PgProductRowsProps) => {
 	return props.products.map((product) => (

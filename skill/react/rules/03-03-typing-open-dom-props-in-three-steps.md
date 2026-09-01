@@ -25,9 +25,14 @@ tags: typing, wrapper, dom
 
 | 단계 | 언제 | 형태 |
 | --- | --- | --- |
-| 1 | 그냥 컴파일됨 | `extends HTMLAttributes<T>` |
-| 2 | 라이브러리가 같은 이름 프롭의 **값을 좁혀** 부딪힘 | `extends Omit<HTMLAttributes<T>, "color">`로 빼고 그 프롭을 인덱스 접근으로 다시 엽니다 |
+| 1 | 그냥 컴파일됨 | `extends <요소>HTMLAttributes<T>` |
+| 2 | 라이브러리가 같은 이름 프롭의 **값을 좁혀** 부딪힘 | `extends Omit<<요소>HTMLAttributes<T>, "color">`로 빼고 그 프롭을 인덱스 접근으로 다시 엽니다 |
 | 3 | 감싸는 요소와 이벤트 대상 요소가 **서로 다름** | `extends`를 쓰지 않고 필요한 프롭만 선언합니다 |
+
+여는 타입은 그 요소 전용 인터페이스입니다.
+버튼은 `ButtonHTMLAttributes`, 입력은 `InputHTMLAttributes`, 셀은 `TdHTMLAttributes`입니다.
+`HTMLAttributes`만 쓰면 `disabled`·`type`·`colSpan`처럼 그 요소에만 있는 속성을 잃습니다.
+요소 전용 인터페이스가 없는 `tr` 같은 자리만 `HTMLAttributes`를 그대로 씁니다.
 
 2단계가 필요한 이유는 `HTMLAttributes`에 `color`, `title`, `onChange`, `defaultValue`가 이미 있어서입니다.
 라이브러리가 그중 하나를 자기 값 집합으로 좁혀 두면 `extends`가 막힙니다.
@@ -69,7 +74,7 @@ export interface UiButtonProps {
 ```txt
 래퍼 프롭스에 DOM 표면을 연다
 │
-├ extends HTMLAttributes<T> 가 그냥 컴파일됨 ──→ 1단계. 그대로 둔다
+├ extends <요소>HTMLAttributes<T> 가 컴파일됨 ──→ 1단계. 그대로 둔다
 │
 ├ 같은 이름 프롭의 값이 부딪혀 막힘 ──────────→ 2단계. 그 이름만 Omit 하고
 │                                               인덱스 접근으로 다시 연다
@@ -80,17 +85,17 @@ export interface UiButtonProps {
 **Correct (1단계 — 부딪히는 이름이 없어 그대로 상속):**
 
 ```tsx
-import { TableCell } from "@mui/material";
-import type { TableCellProps } from "@mui/material";
-import { clsx } from "clsx";
-import type { HTMLAttributes } from "react";
+import {TableCell} from "@mui/material";
+import type {TableCellProps} from "@mui/material";
+import {clsx} from "clsx";
+import type {TdHTMLAttributes} from "react";
 
 /**
  * 표 셀에서 정렬과 여백만 여는 계약
  *
  * 라이브러리 셀의 나머지 표시 프롭은 표 소유자가 정하므로 열지 않는다.
  */
-export interface UiTableCellProps extends HTMLAttributes<HTMLTableCellElement> {
+export interface UiTableCellProps extends TdHTMLAttributes<HTMLTableCellElement> {
 	/**
 	 * 내용 가로 정렬
 	 */
@@ -111,17 +116,17 @@ export const UiTableCell = (props: UiTableCellProps) => {
 **Correct (2단계 — 부딪히는 이름만 빼고 다시 엶):**
 
 ```tsx
-import { Button } from "@mui/material";
-import type { ButtonProps } from "@mui/material";
-import { clsx } from "clsx";
-import type { HTMLAttributes } from "react";
+import {Button} from "@mui/material";
+import type {ButtonProps} from "@mui/material";
+import {clsx} from "clsx";
+import type {ButtonHTMLAttributes} from "react";
 
 /**
  * 라이브러리 버튼에 우리 클래스 창구만 더한 계약
  *
  * 라이브러리가 `color`를 자기 값 집합으로 좁혀 두어 그 이름만 빼고 다시 연다.
  */
-export interface UiButtonProps extends Omit<HTMLAttributes<HTMLButtonElement>, "color"> {
+export interface UiButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "color"> {
 	/**
 	 * 강조 단계
 	 */
@@ -138,15 +143,15 @@ export const UiButton = (props: UiButtonProps) => {
 **Correct (3단계 — 요소 타입이 어긋나 필요한 프롭만 선언):**
 
 ```tsx
-import { TextField } from "@mui/material";
-import type { TextFieldProps } from "@mui/material";
-import { clsx } from "clsx";
-import type { ChangeEventHandler } from "react";
+import {TextField} from "@mui/material";
+import type {TextFieldProps} from "@mui/material";
+import {clsx} from "clsx";
+import type {ChangeEventHandler} from "react";
 
 /**
  * 라벨 없이 값만 받는 한 줄 입력 계약
  *
- * 겉은 `div`인데 이벤트는 안쪽 `input`이 받아 `HTMLAttributes`를 그대로 못 쓴다.
+ * 겉은 `div`인데 이벤트는 안쪽 `input`이 받아 요소 전용 인터페이스를 그대로 못 쓴다.
  */
 export interface UiTextFieldProps {
 	/**

@@ -14,12 +14,12 @@ tags: pseudo-classes, state, interaction
 
 **Impact: HIGH (브라우저가 주는 상호작용 상태와 앱이 정하는 상태 수정자를 나눕니다)**
 
-브라우저와 DOM이 직접 부여하는 상태는 같은 클래스 블록 안 `&:`로 표현합니다.
+브라우저와 DOM이 직접 부여하는 상태는 가상 클래스로 표현합니다.
 화면이나 도메인이 정하는 상태는 수정자 클래스로 떼어 냅니다.
 
 | 소유 | 상태 | 표현 |
 | --- | --- | --- |
-| DOM | `:hover`, `:visited`, `:focus-visible`, `:disabled`, `:checked` | 같은 블록 안 `&:` |
+| DOM | `:hover`, `:visited`, `:focus-visible`, `:disabled`, `:checked` | 가상 클래스 |
 | 앱 | `selected`, `active`, `error`, `expanded`, `current` | `--수정자` 클래스 |
 | DOM | `--disabled`, `--checked` 수정자 | 만들지 않습니다. 브라우저가 부여한 상태를 앱이 다시 적는 것입니다 |
 

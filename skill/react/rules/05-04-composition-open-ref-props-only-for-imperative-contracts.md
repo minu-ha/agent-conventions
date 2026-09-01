@@ -23,7 +23,7 @@ tags: composition
 - 지금 쓰는 사용처가 없으면 열지 않습니다.
   나중에 필요해지면 그때 엽니다.
 - 열 때는 `ref`를 일반 프롭처럼 직접 받습니다.
-  감싸는 래퍼를 새로 만들지 않습니다.
+  `forwardRef`로 감싸지 않습니다.
 - `useImperativeHandle`로 명령 메서드 묶음을 노출할 때만 계약을 `<Owner>Handle`로 짓습니다.
   DOM 요소를 그대로 가리키는 `ref`에는 `Handle` 타입을 만들지 않습니다.
 - 외부 패키지 타입 제약 때문에 래퍼가 필요하면 그 이유를 주석으로 남깁니다.
@@ -33,7 +33,7 @@ tags: composition
 **Incorrect (`ref` 계약이 필요 없는 단순 화면 컴포넌트에도 습관적으로 `ref`를 노출):**
 
 ```tsx
-import type { Ref } from "react";
+import type {Ref} from "react";
 
 export interface UiStatusBadgeProps {
 	ref?: Ref<HTMLSpanElement>;
@@ -48,7 +48,7 @@ export const UiStatusBadge = (props: UiStatusBadgeProps) => {
 **Correct (`ref`가 실제로 필요한 공개 API일 때만 리액트 19 방식으로 직접 받음):**
 
 ```tsx
-import type { ChangeEventHandler, Ref } from "react";
+import type {ChangeEventHandler, Ref} from "react";
 
 /**
  * 검색 입력 계약

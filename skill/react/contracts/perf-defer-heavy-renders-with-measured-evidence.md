@@ -5,7 +5,7 @@
 렌더를 미루는 도구는 `startTransition`, `useTransition`, `useDeferredValue`입니다.
 **먼저 미룰 만큼 무거운지 확인합니다.**
 
-`perf-avoid-defensive-memoization`이 메모이제이션에 요구하는 것과 같은 근거가 필요합니다.
+`perf-avoid-defensive-memoization`이 허용하는 세 사유 중 측정한 병목 하나만 여기서 근거가 됩니다.
 목록이 몇 줄인지, 어느 조작이 몇 밀리초 걸렸는지 확인한 뒤에 씁니다.
 "목록이 커질 것 같아서"는 근거가 아닙니다.
 

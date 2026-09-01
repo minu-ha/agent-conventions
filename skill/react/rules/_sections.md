@@ -42,7 +42,8 @@
 ## 6. Screen File Discipline (screen)
 **TitleKo:** 화면 파일 규율
 **Impact:** MEDIUM-HIGH
-**Description:** 라우트 진입은 화면 흐름을 분명하게 보여 줘야 하고, 떼어 내는 것은 자기 상태나 비동기를 직접 가진 섹션뿐입니다.
+**Description:** 라우트 진입은 화면 흐름을 분명하게 보여 줘야 하고,
+  떼어 내는 것은 자기 상태나 비동기를 직접 가진 섹션뿐입니다.
   파생값은 쓰는 자리에서 계산하고, 짐작으로 미리 빼내지 않습니다.
 
 ## 7. Runtime Boundaries (runtime)
@@ -57,13 +58,13 @@
 **Description:** 상태는 값의 수명과 소유자에 맞는 도구로 고르고, 파생값은 저장하지 않고 렌더에서 계산해야 합니다.
   여러 화면이 함께 쓰는 판단만 전역 스토어로 올리고, 이전 상태에 기대는 갱신은 함수형으로 씁니다.
   이펙트 콜백은 반응성이 필요한 값만 의존성으로 받아야 합니다.
+  주소가 소유한 상태는 바인딩 이름을 한 벌로 고정해 서버 응답과 구분합니다.
 
 ## 9. Events and Interaction Flow (events)
 **TitleKo:** 이벤트와 상호작용 흐름
 **Impact:** HIGH
 **Description:** 이벤트 핸들러는 이름이 예측 가능하고 추가 인자를 커링으로 넘겨야 하며, 사용자 액션은 이펙트가
   아니라 핸들러에서 실행해야 합니다.
-  핸들러 흐름은 재사용 근거가 생길 때까지 그 자리에 둡니다.
 
 ## 10. Render Performance (perf)
 **TitleKo:** 렌더 성능
@@ -80,7 +81,7 @@
 ## 12. Documentation and Comments (docs)
 **TitleKo:** 문서화와 주석
 **Impact:** MEDIUM
-**Description:** 문서 주석의 형식과 태그, 그리고 어느 선언에 붙일지의 기본 목록은 동반 스킬인
+**Description:** 문서 주석의 형식과 태그, 그리고 어느 선언에 붙일지는 동반 스킬인
   `convention-typescript`가 정합니다.
   여기서는 그 목록에 리액트만 아는 대상을 더하고, `//`를 쓸 수 없는 JSX 자식 자리의 주석 형태를 정합니다.
 

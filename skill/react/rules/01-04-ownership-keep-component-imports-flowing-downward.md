@@ -37,12 +37,13 @@ tags: ownership
 
 | 가져오려는 대상 | 가져올 수 있는 파일 |
 | --- | --- |
-| `ui`·`widget`의 진입 파일 | 어느 파일이든 |
+| `ui`·`widget`의 진입 파일 | 레이어 방향을 지키는 파일이면 어느 것이든 |
 | 라우트 진입 파일 `page/<route>/pg-<route>` | 라우터 |
 | 다른 라우트 안의 파일 | 없음 |
 | 하위 소유자의 진입 파일 | 그 하위 소유자를 담은 소유자 폴더 아래의 파일 |
 | `_`로 시작하는 컴포넌트 파일 | 같은 폴더의 파일 |
-| `_function`·`_type`·`_constant`·`_hook`의 파일 | 어느 파일이든 |
+| `_function`·`_type`·`_constant`·`_hook`의 파일 | 레이어 방향을 지키는 파일이면 어느 것이든 |
+| `_function/<함수명>/`의 보조 파일 | 같은 폴더의 대표 함수 |
 
 - 타입만 가져오는 줄은 `_` 컴포넌트 파일 제약을 받지 않습니다.
   프롭스 타입은 어디서든 `import type`으로 가져옵니다.
@@ -50,7 +51,6 @@ tags: ownership
   밖에서 가져다 쓴다고 루트로 옮기지 않습니다.
   자리는 `typescript/naming-place-project-constants-in-the-root-constant-folder`와
   `typescript/functions-promote-shared-functions-to-root-util`이 정합니다.
-- 함수의 자기 이름 폴더 안에 있는 보조 파일만은 그 대표 함수가 가져옵니다.
 - `_hook`이 공개인 근거는 `ownership-keep-lifecycle-in-the-owning-component`에 있습니다.
   여러 소유자가 함께 부르는 생명주기만 훅으로 올리라고 정하는데, 올린 훅을 자식이 가져오지 못하면 성립하지 않습니다.
 
@@ -66,31 +66,31 @@ tags: ownership
 
 ```tsx
 // page/detail/sales-trend-panel/_pg-detection-section.tsx
-import { PgSectionHeading } from "@/page/detail/_pg-section-heading";
-import { PgLegendRow } from "@/page/detail/summary-band/_pg-legend-row";
+import {PgSectionHeading} from "@/page/detail/_pg-section-heading";
+import {PgLegendRow} from "@/page/detail/summary-band/_pg-legend-row";
 ```
 
 **Incorrect (다른 라우트 안의 컴포넌트를 가져옴):**
 
 ```tsx
 // page/index/pg-index.tsx
-import { PgSalesTrendPanel } from "@/page/detail/sales-trend-panel/pg-sales-trend-panel";
+import {PgSalesTrendPanel} from "@/page/detail/sales-trend-panel/pg-sales-trend-panel";
 ```
 
 **Incorrect (`ui`가 `widget`을 가져옴):**
 
 ```tsx
 // component/ui/legend/ui-legend.tsx
-import { WgLegendPanel } from "@/component/widget/legend-panel/wg-legend-panel";
+import {WgLegendPanel} from "@/component/widget/legend-panel/wg-legend-panel";
 ```
 
 **Correct (진입 파일이 자기 파일과 형제 소유자의 진입 파일을 조립해서 내려보냄):**
 
 ```tsx
 // page/detail/sales-trend-panel/pg-sales-trend-panel.tsx
-import { UiSectionHeading } from "@/component/ui/section-heading/ui-section-heading";
-import { PgDetectionSection } from "@/page/detail/sales-trend-panel/_pg-detection-section";
-import { PgSummaryBand } from "@/page/detail/summary-band/pg-summary-band";
+import {UiSectionHeading} from "@/component/ui/section-heading/ui-section-heading";
+import {PgDetectionSection} from "@/page/detail/sales-trend-panel/_pg-detection-section";
+import {PgSummaryBand} from "@/page/detail/summary-band/pg-summary-band";
 
 export const PgSalesTrendPanel = (props: PgSalesTrendPanelProps) => {
 	return (
@@ -106,6 +106,6 @@ export const PgSalesTrendPanel = (props: PgSalesTrendPanelProps) => {
 
 ```ts
 // page/detail/sales-trend-panel/_function/to-chart-option.ts
-import type { ChartSeries } from "@/component/ui/chart/_type/chart-series";
-import { chart_series_line } from "@/component/ui/chart/_constant/series";
+import type {ChartSeries} from "@/component/ui/chart/_type/chart-series";
+import {chart_series_line} from "@/component/ui/chart/_constant/series";
 ```

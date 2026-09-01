@@ -35,15 +35,15 @@ tags: values, config
 | 배열 인덱스 | `rows[0]`, `parts[1]` |
 | 선언의 초기값 | `let count = 0` |
 | 상수 선언 자신의 값 | `export const retry_max_attempts = 42` |
-| 기본 매개변수 | `(limit = 42) => …` |
 
-`??`·`||` 오른쪽은 이 규칙이 아니라 `absence-expose-optional-values-instead-of-silent-fallbacks`가 봅니다.
+`??`·`||` 오른쪽과 기본 매개변수는 이 규칙이 아니라
+`absence-expose-optional-values-instead-of-silent-fallbacks`가 봅니다.
 없는 값을 다루는 자리라 판정이 다릅니다.
 
 **여러 숫자가 한 뜻을 이루면 배열이 아니라 객체로 둡니다.**
-`{first: 0x1100, last: 0x115f}`처럼 키를 붙이면 그 값은 무시됩니다.
-`[0x1100, 0x115f]`처럼 배열에 담으면 자리마다 걸립니다.
-숫자 여러 개가 한 뜻을 이루는 조회표도 각 칸에 이름을 주라는 뜻입니다.
+`{first: 0x1100, last: 0x115f}`처럼 키를 붙이면 숫자마다 이름이 생깁니다.
+`[0x1100, 0x115f]`처럼 배열에 담으면 자리 번호로만 읽어야 합니다.
+조회표를 둘지 자체는 `values-avoid-lookup-tables-for-simple-choices`가 정하고, 두기로 했으면 각 칸에 이름을 붙입니다.
 
 `tooling-configure-biome-to-enforce-these-rules` 규칙이 `style/noMagicNumbers`로 이 선을 강제합니다.
 그 규칙은 테스트 파일에서만 꺼집니다.

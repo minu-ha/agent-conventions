@@ -6,7 +6,8 @@ impactDescription: 선언과 본문 형태가 하나로 고정되어 호이스�
 appliesWhen:
   - 이름을 지어 선언하는 함수를 새로 만들거나 선언 형태나 본문 형태를 바꿀 때
   - 객체 프로퍼티에 함수를 담거나 그 형태를 바꿀 때
-  - 제외: 인라인 콜백이거나 클래스 메서드, 제너레이터, 오버로드 선언인 경우
+  - 제외: 인라인 콜백이나 커링의 바깥 화살표인 경우
+  - 제외: 클래스 메서드, 제너레이터, 오버로드 선언인 경우
 reviewWith: functions-use-named-object-params-for-complex-signatures
 tags: functions, declarations
 ---
@@ -19,8 +20,8 @@ tags: functions, declarations
 `function` 선언문은 쓰지 않습니다.
 
 - 한 파일 안에서 두 형태를 섞으면 어느 것이 공개 계약인지 형태로 구분할 수 없습니다.
-- `function` 선언문은 호이스팅되므로 선언보다 위에서 호출해도 동작합니다.
-  그러면 읽는 순서와 실행 순서가 달라집니다.
+- `function` 선언문은 모듈을 불러오는 시점에도 선언보다 위에서 부를 수 있습니다.
+  `const`는 그 자리에서 멈춰 순서가 어긋난 것을 바로 알려 줍니다.
 
 **본문은 `{}` 블록으로 열고 `return`을 적습니다.**
 한 줄로 줄여 쓰지 않습니다.
@@ -66,7 +67,7 @@ export const toProductSlug = (title: string): string => {
 };
 ```
 
-**Incorrect (쓰는 곳이 선언보다 위에 와서 읽는 순서가 어긋남):**
+**Incorrect (`function` 선언문과 화살표를 한 파일에서 섞음):**
 
 ```ts
 export const toProductLabel = (product: Product): string => {
@@ -99,13 +100,9 @@ export const cell_formatter_by_value_type = {
 } as const;
 ```
 
-**Correct (모두 `const` 화살표에 블록 본문. 쓰기 전에 선언):**
+**Correct (모두 `const` 화살표에 블록 본문):**
 
 ```ts
-const decorate = (title: string): string => {
-	return `# ${title}`;
-};
-
 export const toTrimmedTitle = (rawTitle: string): string => {
 	return rawTitle.trim().replace(/\s+/g, " ");
 };
@@ -119,6 +116,10 @@ export const toProductBadge = (product: Product): ProductBadge => {
 		label: decorate(product.title),
 		tone: product.published ? "solid" : "muted",
 	};
+};
+
+const decorate = (title: string): string => {
+	return `# ${title}`;
 };
 ```
 

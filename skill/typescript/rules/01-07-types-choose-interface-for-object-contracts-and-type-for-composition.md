@@ -23,12 +23,12 @@ tags: types, interface, type
 | 독립된 객체 필드 계약 | `interface` |
 | literal union, primitive·tuple 별칭 | `type` |
 | 함수 시그니처 | `type` |
-| mapped·conditional type, indexed access | `type` |
+| mapped·conditional type, 필드가 없는 인덱스 접근 별칭 | `type` |
 | `Omit`·`Record` 같은 계산과 교차 조합 | `type` |
-| union의 한 갈래이거나 타입 관계가 핵심인 객체 | `type` |
+| 다른 타입과의 union·교차에만 등장하고 단독으로는 쓰지 않는 객체 | `type` |
 
 객체 형태라는 이유만으로 모두 `interface`로 바꾸지는 않습니다.
-`Draft`, `State` 같은 이름도 선언 형식을 정하지 않습니다.
+`Draft`, `State` 같은 역할어가 붙었다는 이유로 선언 형식을 고르지 않습니다.
 같은 역할 이름이라도 독립된 필드 계약이면 `interface`, 타입 계산 결과면 `type`입니다.
 
 선언 형식을 맞추려고 새 별칭을 만들지 않습니다.

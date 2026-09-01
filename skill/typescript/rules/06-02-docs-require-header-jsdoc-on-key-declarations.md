@@ -4,8 +4,8 @@ titleKo: 경계가 되는 선언에는 JSDoc 헤더를 붙입니다
 impact: MEDIUM
 impactDescription: 구현을 읽기 전에 중요한 경계를 찾고 설명할 수 있습니다
 appliesWhen:
-  - 쿼리, 뮤테이션, 원격 함수, 커스텀 훅, 커스텀 타입, 스토어, 포매터 선언을 추가·변경할 때
-  - 분기나 `await`, 또는 두 개 이상의 동작이 있는 핸들러와 이펙트를 추가·변경할 때
+  - 쿼리, 뮤테이션, 원격 함수, 커스텀 훅, 스토어, 포매터 선언을 추가·변경할 때
+  - 분기나 `await`나 두 개 이상의 동작이 있는 핸들러와 이펙트를 추가·변경할 때
   - 다시 쓰거나 내보낸 보조 함수를 추가·변경할 때
 requiresSelected: >-
   docs-write-concise-korean-comments-about-purpose-and-constraints,
