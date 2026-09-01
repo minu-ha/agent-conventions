@@ -305,8 +305,13 @@ test("viewer layout cannot overflow: grids shrink and code wraps", () => {
 	assert.match(html, /\.pane\s*\{[^}]*minmax\(0,\s*1fr\)/);
 	assert.match(html, /\.pane\s*>\s*main\s*\{[^}]*min-width:\s*0/);
 	assert.match(html, /\.row-hd\s*\{[^}]*minmax\(0,\s*1fr\)/);
-	// Incorrect/Correct 는 세로로 쌓이고 코드는 가로 스크롤 대신 줄바꿈한다
-	assert.match(html, /\.pair\s*\{[^}]*flex-direction:\s*column/);
+	// Incorrect/Correct 는 나란히 놓되 좁아지면 한 열로 떨어진다.
+	// minmax(330px, …) 만 쓰면 컨테이너가 330px 아래일 때 한 열이 그대로 넘치므로 min() 으로 막는다.
+	assert.match(html, /\.diff\s*\{[^}]*repeat\(auto-fit, minmax\(min\(330px, 100%\), 1fr\)\)/);
+	// 코드는 가로 스크롤 대신 줄바꿈한다. 거터 격자와 산문 코드 블록 둘 다 해당한다.
+	assert.match(html, /\.cd\s*\{[^}]*minmax\(0, 1fr\)/);
+	assert.match(html, /\.cd \.c\s*\{[^}]*white-space:\s*pre-wrap/);
+	assert.match(html, /\.cd \.c\s*\{[^}]*overflow-wrap:\s*anywhere/);
 	assert.match(html, /pre\.code\s*\{[^}]*white-space:\s*pre-wrap/);
 	assert.match(html, /pre\.code\s*\{[^}]*overflow-wrap:\s*anywhere/);
 });
