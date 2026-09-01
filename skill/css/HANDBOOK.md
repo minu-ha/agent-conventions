@@ -865,7 +865,7 @@ export const UiCollapse = (props: UiCollapseProps) => {
 ```tsx
 <div className={clsx("pg_postIndex__box")}>
 	<div className={clsx("pg_postIndex__inner")}>
-		<UiSearchInput />
+		<LegacyDatePicker value={value} onChange={handleChange} />
 	</div>
 </div>
 ```
@@ -1343,6 +1343,7 @@ TSX에서 그 지점이 보이므로 "이 마크업을 우리가 쓰는가"를 �
 ```css
 .pg_catalogIndex__toolbarField {
 	flex: 1;
+	margin-inline-start: 0;
 }
 
 .pg_catalogIndex__toolbarButton {
@@ -1682,6 +1683,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 
 .wg_siteHeader__brandLink:focus-visible {
+	color: #0958d9;
 	outline: 2px solid #1677ff;
 }
 ```
@@ -1699,8 +1701,23 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 	&:focus-visible {
 		color: #0958d9;
 		outline: 2px solid #1677ff;
-		outline-offset: 2px;
 	}
+}
+```
+
+**Incorrect (조상이 hover일 때 바뀌는 모습을 자손 블록의 `&:hover`로 씁니다):**
+
+```css
+.wg_siteHeader__brandMark {
+	transform: rotate(0deg);
+
+	&:hover {
+		transform: rotate(-2deg);
+	}
+}
+
+.wg_siteHeader__brandLink {
+	color: #1677ff;
 }
 ```
 
@@ -1790,10 +1807,19 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 		border-color: #9fadc7;
 		box-shadow: 0 0 0 2px rgb(159 173 199 / 20%);
 	}
+}
+```
 
-	&.Mui-focusVisible .pg_salesPanel__spreadBox::before {
-		border-color: #9fadc7;
-		box-shadow: 0 0 0 2px rgb(159 173 199 / 20%);
+**Incorrect (DOM 상태를 `:not()`으로 뒤집어 기본 모습을 상태 블록에 넣습니다):**
+
+```css
+.pg_assetIndex__cardButton {
+	&:not(:disabled) {
+		cursor: pointer;
+	}
+
+	&:disabled {
+		cursor: default;
 	}
 }
 ```
@@ -1921,17 +1947,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
-**Incorrect (주입이 보장되지 않는 변수를 대체값 없이 씁니다):**
-
-```css
-.pg_postFilterDialog__collapse {
-	& .ant-collapse-item {
-		border-radius: var(--ant-border-radius-lg);
-	}
-}
-```
-
-**Correct (공통 토큰은 대체값 없이, 그 밖은 대체값과 함께 씁니다):**
+**Correct (공통 토큰 목록에 있는 변수는 대체값 없이 씁니다):**
 
 ```css
 /* src/style/token.css — 공통 토큰 목록의 단일 출처 */
@@ -1947,7 +1963,21 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 	gap: var(--app-space-3);
 	color: var(--app-color-text-primary);
 }
+```
 
+**Incorrect (주입이 보장되지 않는 변수를 대체값 없이 씁니다):**
+
+```css
+.pg_postFilterDialog__collapse {
+	& .ant-collapse-item {
+		border-radius: var(--ant-border-radius-lg);
+	}
+}
+```
+
+**Correct (목록에 없는 변수에는 대체값을 붙입니다):**
+
+```css
 .pg_postFilterDialog__collapse {
 	& .ant-collapse-item {
 		border-radius: var(--ant-border-radius-lg, 10px);
@@ -2008,6 +2038,18 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
+**Correct (한 파일 안 반복은 값을 그대로 둡니다):**
+
+```css
+.pg_catalogIndex__toolbar {
+	gap: 12px;
+}
+
+.pg_catalogIndex__footer {
+	gap: 12px;
+}
+```
+
 **Incorrect (상태를 전달하려고 지역 변수를 만듭니다):**
 
 ```css
@@ -2020,6 +2062,20 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 
 	&:hover {
 		--pg-catalog-row-accent: #1677ff;
+	}
+}
+```
+
+**Correct (상태 전달은 지역 변수 없이 결합자 하나로 풉니다):**
+
+```css
+.pg_catalogIndex__rowBadge {
+	border: 1px solid transparent;
+}
+
+.pg_catalogIndex__row {
+	&:hover .pg_catalogIndex__rowBadge {
+		border-color: #1677ff;
 	}
 }
 ```
@@ -2046,35 +2102,20 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 /* src/style/token.css */
 :root {
 	--app-color-fill-muted: #f5f5f5;
-	--app-space-3: 12px;
 }
 ```
 
 ```css
+/* pg-catalog-index.css */
 .pg_catalogIndex__row {
 	background: var(--app-color-fill-muted);
 }
 ```
 
-**Correct (한 파일 안 반복은 값을 그대로 두고, 상태 전달은 결합자 하나로 풉니다):**
-
 ```css
-.pg_catalogIndex__rowBadge {
-	border: 1px solid transparent;
-}
-
-.pg_catalogIndex__toolbar {
-	gap: 12px;
-}
-
-.pg_catalogIndex__footer {
-	gap: 12px;
-}
-
-.pg_catalogIndex__row {
-	&:hover .pg_catalogIndex__rowBadge {
-		border-color: #1677ff;
-	}
+/* pg-catalog-detail.css */
+.pg_catalogDetail__row {
+	background: var(--app-color-fill-muted);
 }
 ```
 
@@ -2363,18 +2404,12 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 ```css
 .pg_products__toolbar {
 	display: flex;
-	gap: clamp(8px, 2vw, 24px);
+	gap: 24px;
 }
 
 .pg_products__layout {
 	display: grid;
 	grid-template-columns: 280px 1fr;
-}
-
-@media (width < 1440px) {
-	.pg_products__layout {
-		grid-template-columns: 220px 1fr;
-	}
 }
 
 @media (width < 1024px) {
@@ -2841,12 +2876,22 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 @keyframes pg_products__fadeIn {
 	from {
 		opacity: 0;
-		transform: translateY(4px);
 	}
 }
 
 .pg_products__panel {
 	animation: pg_products__fadeIn var(--app-motion-duration-fast) var(--app-motion-easing-out);
+}
+```
+
+**Incorrect (컴포넌트 파일마다 따로 끄고 지속 시간을 `0`으로 둡니다):**
+
+```css
+/* src/page/products/pg-products.css */
+@media (prefers-reduced-motion: reduce) {
+	.pg_products__panel {
+		animation-duration: 0;
+	}
 }
 ```
 

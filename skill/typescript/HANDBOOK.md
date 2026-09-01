@@ -180,6 +180,28 @@ interface UserPreview {
 }
 ```
 
+**Incorrect (인덱스 접근으로 옮기면서 `?`와 `readonly`를 흘립니다):**
+
+```ts
+/**
+ * product 목록 한 행의 표시 계약
+ */
+interface ProductListRow {
+	/**
+	 * product 식별자
+	 */
+	id: ProductRecord["id"];
+	/**
+	 * 소속 분류 이름
+	 */
+	categoryName: CategoryRecord["name"];
+	/**
+	 * 마지막 수정자 이름
+	 */
+	ownerName: UserRecord["name"];
+}
+```
+
 **Correct (여러 계약에서 필드를 모으고 `?`, `readonly`를 직접 적습니다):**
 
 ```ts
@@ -274,6 +296,26 @@ const toStateLabel: UserFormatters["toStateLabel"] = (state) => {
 	return JSON.stringify(state);
 };
 ```
+
+**Incorrect (같은 시그니처를 쓰는 구현마다 매개변수와 반환 타입을 다시 적습니다):**
+
+```ts
+/**
+ * 앞뒤 공백을 걷어낸 request 문자열
+ */
+const toRequest = (request: string): string => {
+	return request.trim();
+};
+
+/**
+ * 검색어로 쓸 수 있게 공백을 한 칸으로 줄인 request 문자열
+ */
+const toSearchRequest = (request: string): string => {
+	return request.replaceAll(/\s+/g, " ").trim();
+};
+```
+
+**Correct (같은 시그니처를 쓰는 구현이 둘 이상이면 함수 타입 별칭을 선언합니다):**
 
 ```ts
 /**
@@ -444,15 +486,10 @@ const noopLog: LogSink = (_message, _level) => {};
 `any`와 `!`는 `tooling-configure-biome-to-enforce-these-rules` 규칙이 기계로 막습니다.
 `as`와 `@ts-expect-error`는 리뷰가 봅니다.
 
-**Incorrect (검사를 끄고 넘어갑니다):**
+**Incorrect (앱 밖에서 온 값을 단언으로 통과시킵니다):**
 
 ```ts
 const storedFilter = JSON.parse(localStorage.getItem("product-filter") as string) as ProductFilter;
-
-const firstProduct = products.find((product) => product.isActive)!;
-
-// @ts-expect-error 타입이 이상하다
-chart.setOption(option);
 ```
 
 **Correct (앱 밖에서 온 값은 스키마 결과에서 타입을 얻습니다):**
@@ -467,6 +504,12 @@ if (storedValue === null) {
 const storedFilter = productFilterSchema.parse(JSON.parse(storedValue));
 ```
 
+**Incorrect (`!`로 없을 수 있다는 사실을 지웁니다):**
+
+```ts
+const firstProduct = products.find((product) => product.isActive)!;
+```
+
 **Correct (없을 수 있으면 그대로 드러냅니다):**
 
 ```ts
@@ -475,6 +518,13 @@ const firstProduct = products.find((product) => product.isActive);
 if (!firstProduct) {
 	throw new NoActiveProductError();
 }
+```
+
+**Incorrect (다시 확인할 수 없는 이유로 검사를 끕니다):**
+
+```ts
+// @ts-expect-error 타입이 이상하다
+renderTextField(fieldProps);
 ```
 
 **Correct (외부 패키지 타입이 실제와 달라 확인할 수 있는 이유를 남깁니다):**
@@ -833,10 +883,6 @@ API 요청 본문, 라이브러리 인자, DOM 속성, 환경 변수처럼 받�
 const User_ProfileSchema = z.object({
 	repo_path: z.string(),
 });
-
-const retryPolicy = {
-	maxAttempts: 3,
-} as const;
 ```
 
 **Correct (파일명은 `kebab-case`, 스키마 키는 `camelCase`로 씁니다):**
@@ -854,6 +900,14 @@ const userProfileSchema = z.object({
 });
 ```
 
+**Incorrect (불변 데이터 상수와 그 키를 `camelCase`로 적습니다):**
+
+```ts
+const retryPolicy = {
+	maxAttempts: 3,
+} as const;
+```
+
 **Correct (불변 데이터 상수와 값 집합은 이름과 상수 키를 모두 `snake_case`로 적습니다):**
 
 ```ts
@@ -866,6 +920,15 @@ export const pagination_default_page_size = 20;
 
 ```ts
 /**
+ * 요청 재시도 정책. 하위 키도 상수 키다
+ */
+const retry_policy = {
+	max_attempts: 3,
+} as const;
+```
+
+```ts
+/**
  * product 게시 상태 값 집합
  */
 const product_status = {
@@ -873,6 +936,20 @@ const product_status = {
 	waiting_review: "waiting_review",
 	published: "published",
 } as const;
+```
+
+**Incorrect (밖으로 나가는 키를 우리 표기로 바꿉니다):**
+
+```ts
+/**
+ * product 저장 요청 조립
+ */
+const toProductSaveBody = (values: ProductFormValues) => {
+	return {
+		productId: values.productId,
+		displayName: values.displayName.trim(),
+	};
+};
 ```
 
 **Correct (밖으로 나가는 키만 받는 쪽 표기를 그대로 씁니다):**
@@ -1072,9 +1149,7 @@ if (!import.meta.env.VITE_API_BASE_URL) {
  * API 서버 주소. 배포 환경마다 다르다
  */
 export const env_api_base_url = import.meta.env.VITE_API_BASE_URL;
-```
 
-```ts
 // service/product-client.ts
 import {env_api_base_url} from "@/config/env";
 
@@ -1286,6 +1361,10 @@ export const toProductBadge = (product: Product): ProductBadge => {
 		label: decorate(product.title),
 		tone: product.published ? "solid" : "muted",
 	};
+};
+
+export const toProductLabel = (product: Product): string => {
+	return decorate(product.title);
 };
 
 const decorate = (title: string): string => {
@@ -1680,17 +1759,6 @@ export const toSummaryRows = (response: SalesSummaryResponse): SummaryRow[] => {
 };
 ```
 
-**Correct (파일을 열었을 때 읽히는 차례입니다):**
-
-```txt
-to-summary-rows.ts
-├ import
-├ export interface SummaryRow     내보낸 계약 타입
-├ export const toSummaryRows      내보낸 대표 함수
-├ const toSummaryRow              대표 함수가 부르는 쪽
-└ const toSummaryLabel            그 아래가 부르는 쪽
-```
-
 **Correct (내보낸 함수가 맨 위, 불리는 쪽이 호출자 아래로 이어집니다):**
 
 ```ts
@@ -1708,6 +1776,20 @@ const toSummaryRow = (item: SalesSummaryItem): SummaryRow => {
 
 const toSummaryLabel = (item: SalesSummaryItem): string => {
 	return item.name.trim() || item.code;
+};
+```
+
+**Incorrect (모듈을 불러올 때 계산되는 선언이 자기가 부르는 선언보다 위에 있습니다):**
+
+```ts
+export const toCycleOffsets = (): number[] => {
+	return cycle_offsets;
+};
+
+const cycle_offsets = toOffsetTable();
+
+const toOffsetTable = (): number[] => {
+	return [0, 31, 59];
 };
 ```
 
@@ -2405,10 +2487,6 @@ const isOverRetryLimit = (attempts: number): boolean => {
 const toPreviewRows = (rows: Row[]): Row[] => {
 	return rows.slice(0, 37);
 };
-
-const toScheduledSave = (save: () => void): void => {
-	setTimeout(save, 300);
-};
 ```
 
 **Incorrect (지역 `const`로 자리만 옮깁니다):**
@@ -2623,6 +2701,7 @@ const toChartBounds = (points: readonly ChartPoint[]) => {
 import {cloneDeep, groupBy, range, snakeCase, uniq} from "es-toolkit";
 
 const uniqueOwnerIds = uniq(ownerIds);
+const uniqueCategories = uniq(points.map((point) => point.x));
 const productsByCategory = groupBy(products, (product) => product.category);
 const draftFilter = cloneDeep(savedFilter);
 const searchKey = snakeCase(rawKey);

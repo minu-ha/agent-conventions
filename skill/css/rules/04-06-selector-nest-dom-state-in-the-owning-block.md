@@ -52,6 +52,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 
 .wg_siteHeader__brandLink:focus-visible {
+	color: #0958d9;
 	outline: 2px solid #1677ff;
 }
 ```
@@ -69,8 +70,23 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 	&:focus-visible {
 		color: #0958d9;
 		outline: 2px solid #1677ff;
-		outline-offset: 2px;
 	}
+}
+```
+
+**Incorrect (조상이 hover일 때 바뀌는 모습을 자손 블록의 `&:hover`로 씁니다):**
+
+```css
+.wg_siteHeader__brandMark {
+	transform: rotate(0deg);
+
+	&:hover {
+		transform: rotate(-2deg);
+	}
+}
+
+.wg_siteHeader__brandLink {
+	color: #1677ff;
 }
 ```
 

@@ -34,7 +34,7 @@ tags: state, naming, url
   그 자리는 `data-name-query-and-mutation-bindings-consistently`가 정합니다.
 - 값을 주소에 올릴지 자체는 `state-choose-state-tools-by-source-of-truth`가 정합니다.
 
-**Incorrect (세 자리가 이름으로 구분되지 않습니다):**
+**Incorrect (파서 묶음 이름이 어느 자리인지 말하지 않습니다):**
 
 ```ts
 // page/products/_constant/product-search.ts
@@ -42,11 +42,6 @@ export const productSearch = {
 	page: parseAsInteger.withDefault(1),
 	keyword: parseAsString.withDefault(""),
 };
-```
-
-```tsx
-const [searchParams, setSearchParams] = useQueryStates(productSearch);
-const query = searchParams.keyword;
 ```
 
 **Correct (파서 묶음은 `<범위>UrlParsers`로 소유자 `_constant` 폴더에 둡니다):**
@@ -60,6 +55,14 @@ export const productUrlParsers = {
 	page: parseAsInteger.withDefault(1),
 	keyword: parseAsString.withDefault(""),
 };
+```
+
+**Incorrect (파싱을 거친 값이 플랫폼 객체 이름을 쓰고 서버 요청용 `query`까지 끌어옵니다):**
+
+```tsx
+const [searchParams, setSearchParams] = useQueryStates(productUrlParsers);
+
+const query = searchParams.keyword;
 ```
 
 **Correct (파싱을 거친 값은 `urlParams`, 플랫폼 객체만 `searchParams`입니다):**

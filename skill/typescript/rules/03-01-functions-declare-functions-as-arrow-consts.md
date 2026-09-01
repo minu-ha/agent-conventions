@@ -118,6 +118,10 @@ export const toProductBadge = (product: Product): ProductBadge => {
 	};
 };
 
+export const toProductLabel = (product: Product): string => {
+	return decorate(product.title);
+};
+
 const decorate = (title: string): string => {
 	return `# ${title}`;
 };

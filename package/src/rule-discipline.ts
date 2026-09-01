@@ -82,6 +82,11 @@ const objectLiteralMethod = /^\t+[a-z]\w*\([^)]*\)\s*(?::\s*[^{]+?)?\s*\{\s*$/;
 const emptyVerbDeclaration = /^\s*(?:export\s+)?const\s+(build|create|make|process|manage|do|perform|execute|filter)[A-Z]/;
 
 /**
+ * 상대경로 가져오기. 예제가 규범을 어기는 것을 막는다.
+ */
+const relativeImport = /^\s*import\s[^"']*["']\.\.?\//;
+
+/**
  * 선언 좌변의 객체 구조분해. `const [a, b] =` 같은 배열·튜플은 잡지 않는다.
  */
 const objectDestructuringDeclaration = /^\s*(?:const|let|var)\s*\{/;
@@ -208,6 +213,11 @@ const collectRuleViolations = (rule: SkillRule): string[] => {
 
 				if (line.includes("(props: {")) {
 					violations.push(`Correct 예제의 프롭스 타입은 컴포넌트 위에 선언한다: "${line.trim()}"`);
+				}
+
+				// 스타일시트는 상대경로가 규범이다. `naming-import-by-absolute-path` 도 `.css` 만 예외로 둔다.
+				if (relativeImport.test(line) && !line.includes(".css")) {
+					violations.push(`Correct 예제의 가져오기는 절대경로다: "${line.trim()}"`);
 				}
 			}
 		}

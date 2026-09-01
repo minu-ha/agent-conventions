@@ -123,7 +123,7 @@ export interface UiProfileDialogPartProps {
 // component/ui/profile-dialog/_ui-profile-dialog-root.tsx
 import {clsx} from "clsx";
 
-import type {UiProfileDialogPartProps} from "./_type/profile-dialog-part";
+import type {UiProfileDialogPartProps} from "@/component/ui/profile-dialog/_type/profile-dialog-part";
 
 export const UiProfileDialogRoot = (props: UiProfileDialogPartProps) => {
 	return <section className={clsx("ui_profileDialog__root")}>{props.children}</section>;
@@ -132,9 +132,9 @@ export const UiProfileDialogRoot = (props: UiProfileDialogPartProps) => {
 
 ```tsx
 // component/ui/profile-dialog/ui-profile-dialog.tsx
-import {UiProfileDialogBody} from "./_ui-profile-dialog-body";
-import {UiProfileDialogHeader} from "./_ui-profile-dialog-header";
-import {UiProfileDialogRoot} from "./_ui-profile-dialog-root";
+import {UiProfileDialogBody} from "@/component/ui/profile-dialog/_ui-profile-dialog-body";
+import {UiProfileDialogHeader} from "@/component/ui/profile-dialog/_ui-profile-dialog-header";
+import {UiProfileDialogRoot} from "@/component/ui/profile-dialog/_ui-profile-dialog-root";
 
 export const UiProfileDialog = {
 	Root: UiProfileDialogRoot,

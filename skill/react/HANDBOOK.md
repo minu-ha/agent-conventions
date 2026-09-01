@@ -261,6 +261,15 @@ export const SalesTrendPanel = (props: SalesTrendPanelProps) => {
 };
 ```
 
+**Correct (진입 파일이 아닌 컴포넌트라 `_`를 앞에 붙이고 심볼에도 접두사를 답니다):**
+
+```tsx
+// page/detail/_pg-sales-trend-panel.tsx
+export const PgSalesTrendPanel = (props: PgSalesTrendPanelProps) => {
+	return <section className={clsx("pg_salesTrendPanel__root")}>{/* ... */}</section>;
+};
+```
+
 **Incorrect (폴더에도 접두사를 붙이고 이름에서 되풀이합니다):**
 
 ```tsx
@@ -270,12 +279,12 @@ export const UiButtonButton = (props: UiButtonButtonProps) => {
 };
 ```
 
-**Correct (파일과 심볼에만 붙이고 폴더에는 붙이지 않습니다):**
+**Correct (폴더에는 붙이지 않고 접두사가 말한 부분을 이름에서 되풀이하지 않습니다):**
 
 ```tsx
-// page/detail/_pg-sales-trend-panel.tsx
-export const PgSalesTrendPanel = (props: PgSalesTrendPanelProps) => {
-	return <section className={clsx("pg_salesTrendPanel__root")}>{/* ... */}</section>;
+// component/ui/button/ui-button.tsx
+export const UiButton = (props: UiButtonProps) => {
+	return <button />;
 };
 ```
 
@@ -751,6 +760,8 @@ React Query의 구조 공유가 바뀌지 않은 부분의 참조를 유지합�
 **Incorrect (렌더에서 응답 원본 구조를 가공합니다):**
 
 ```tsx
+const responseProductListSuspense = useProductListSuspense();
+
 <UiTable
 	dataSource={responseProductListSuspense.data.list.map((product) => ({
 		id: product.id,
@@ -761,14 +772,22 @@ React Query의 구조 공유가 바뀌지 않은 부분의 참조를 유지합�
 
 **Correct (통신 경계에서 화면이 쓸 모양으로 바꿉니다):**
 
-```ts
+```tsx
 /**
  * 표가 그대로 쓰는 필드 이름으로 목록을 바꿔서 화면이 응답 구조를 모르게 한다
  */
 const responseProductListSuspense = useProductListSuspense(
 	{},
-	{query: {select: (response) => ({items: response.data.list})}},
+	{
+		query: {
+			select: (response) => ({
+				items: response.data.list.map((product) => ({id: product.id, label: product.title})),
+			}),
+		},
+	},
 );
+
+<UiTable dataSource={responseProductListSuspense.data.items} />;
 ```
 
 ### 2.3 Combine Multiple Queries With `combine`
@@ -881,8 +900,13 @@ const responseShipmentList = useShipmentList(
 
 **Incorrect (구조분해로 출처가 흐려집니다):**
 
-```ts
+```tsx
 const {products, selectedProduct} = responseProductListSuspense.data;
+
+<Fragment>
+	<UiList dataSource={products} />
+	<UiTable dataSource={selectedProduct.fields} />
+</Fragment>;
 ```
 
 **Correct (원본 체이닝으로 출처를 지킵니다):**
@@ -892,6 +916,20 @@ const {products, selectedProduct} = responseProductListSuspense.data;
 	<UiList dataSource={responseProductListSuspense.data.products} />
 	<UiTable dataSource={responseProductListSuspense.data.selectedProduct.fields} />
 </Fragment>;
+```
+
+**Incorrect (이펙트 의존성에까지 구조분해한 이름이 올라 출처가 사라집니다):**
+
+```ts
+const {products} = responseProductSearchSuspense.data;
+
+useEffect(() => {
+	if (products.length > 0) {
+		return;
+	}
+
+	reportEmptySearch(urlParams.keyword);
+}, [products, urlParams.keyword]);
 ```
 
 **Correct (이펙트 안에서도 원본 이름 그대로 씁니다):**
@@ -1715,7 +1753,7 @@ export interface UiProfileDialogPartProps {
 // component/ui/profile-dialog/_ui-profile-dialog-root.tsx
 import {clsx} from "clsx";
 
-import type {UiProfileDialogPartProps} from "./_type/profile-dialog-part";
+import type {UiProfileDialogPartProps} from "@/component/ui/profile-dialog/_type/profile-dialog-part";
 
 export const UiProfileDialogRoot = (props: UiProfileDialogPartProps) => {
 	return <section className={clsx("ui_profileDialog__root")}>{props.children}</section>;
@@ -1724,9 +1762,9 @@ export const UiProfileDialogRoot = (props: UiProfileDialogPartProps) => {
 
 ```tsx
 // component/ui/profile-dialog/ui-profile-dialog.tsx
-import {UiProfileDialogBody} from "./_ui-profile-dialog-body";
-import {UiProfileDialogHeader} from "./_ui-profile-dialog-header";
-import {UiProfileDialogRoot} from "./_ui-profile-dialog-root";
+import {UiProfileDialogBody} from "@/component/ui/profile-dialog/_ui-profile-dialog-body";
+import {UiProfileDialogHeader} from "@/component/ui/profile-dialog/_ui-profile-dialog-header";
+import {UiProfileDialogRoot} from "@/component/ui/profile-dialog/_ui-profile-dialog-root";
 
 export const UiProfileDialog = {
 	Root: UiProfileDialogRoot,
@@ -3839,7 +3877,7 @@ useEffect(() => {
   그 자리는 `data-name-query-and-mutation-bindings-consistently`가 정합니다.
 - 값을 주소에 올릴지 자체는 `state-choose-state-tools-by-source-of-truth`가 정합니다.
 
-**Incorrect (세 자리가 이름으로 구분되지 않습니다):**
+**Incorrect (파서 묶음 이름이 어느 자리인지 말하지 않습니다):**
 
 ```ts
 // page/products/_constant/product-search.ts
@@ -3847,11 +3885,6 @@ export const productSearch = {
 	page: parseAsInteger.withDefault(1),
 	keyword: parseAsString.withDefault(""),
 };
-```
-
-```tsx
-const [searchParams, setSearchParams] = useQueryStates(productSearch);
-const query = searchParams.keyword;
 ```
 
 **Correct (파서 묶음은 `<범위>UrlParsers`로 소유자 `_constant` 폴더에 둡니다):**
@@ -3865,6 +3898,14 @@ export const productUrlParsers = {
 	page: parseAsInteger.withDefault(1),
 	keyword: parseAsString.withDefault(""),
 };
+```
+
+**Incorrect (파싱을 거친 값이 플랫폼 객체 이름을 쓰고 서버 요청용 `query`까지 끌어옵니다):**
+
+```tsx
+const [searchParams, setSearchParams] = useQueryStates(productUrlParsers);
+
+const query = searchParams.keyword;
 ```
 
 **Correct (파싱을 거친 값은 `urlParams`, 플랫폼 객체만 `searchParams`입니다):**

@@ -46,7 +46,7 @@ tags: components, wrappers, layout
 ```tsx
 <div className={clsx("pg_postIndex__box")}>
 	<div className={clsx("pg_postIndex__inner")}>
-		<UiSearchInput />
+		<LegacyDatePicker value={value} onChange={handleChange} />
 	</div>
 </div>
 ```

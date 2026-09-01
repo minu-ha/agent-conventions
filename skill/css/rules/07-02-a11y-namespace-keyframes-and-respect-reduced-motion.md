@@ -67,12 +67,22 @@ tags: values, motion
 @keyframes pg_products__fadeIn {
 	from {
 		opacity: 0;
-		transform: translateY(4px);
 	}
 }
 
 .pg_products__panel {
 	animation: pg_products__fadeIn var(--app-motion-duration-fast) var(--app-motion-easing-out);
+}
+```
+
+**Incorrect (컴포넌트 파일마다 따로 끄고 지속 시간을 `0`으로 둡니다):**
+
+```css
+/* src/page/products/pg-products.css */
+@media (prefers-reduced-motion: reduce) {
+	.pg_products__panel {
+		animation-duration: 0;
+	}
 }
 ```
 

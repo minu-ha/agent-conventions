@@ -35,6 +35,8 @@ React Query의 구조 공유가 바뀌지 않은 부분의 참조를 유지합�
 **Incorrect (렌더에서 응답 원본 구조를 가공합니다):**
 
 ```tsx
+const responseProductListSuspense = useProductListSuspense();
+
 <UiTable
 	dataSource={responseProductListSuspense.data.list.map((product) => ({
 		id: product.id,
@@ -45,12 +47,20 @@ React Query의 구조 공유가 바뀌지 않은 부분의 참조를 유지합�
 
 **Correct (통신 경계에서 화면이 쓸 모양으로 바꿉니다):**
 
-```ts
+```tsx
 /**
  * 표가 그대로 쓰는 필드 이름으로 목록을 바꿔서 화면이 응답 구조를 모르게 한다
  */
 const responseProductListSuspense = useProductListSuspense(
 	{},
-	{query: {select: (response) => ({items: response.data.list})}},
+	{
+		query: {
+			select: (response) => ({
+				items: response.data.list.map((product) => ({id: product.id, label: product.title})),
+			}),
+		},
+	},
 );
+
+<UiTable dataSource={responseProductListSuspense.data.items} />;
 ```

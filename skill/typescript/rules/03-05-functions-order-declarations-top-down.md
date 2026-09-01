@@ -49,17 +49,6 @@ export const toSummaryRows = (response: SalesSummaryResponse): SummaryRow[] => {
 };
 ```
 
-**Correct (파일을 열었을 때 읽히는 차례입니다):**
-
-```txt
-to-summary-rows.ts
-├ import
-├ export interface SummaryRow     내보낸 계약 타입
-├ export const toSummaryRows      내보낸 대표 함수
-├ const toSummaryRow              대표 함수가 부르는 쪽
-└ const toSummaryLabel            그 아래가 부르는 쪽
-```
-
 **Correct (내보낸 함수가 맨 위, 불리는 쪽이 호출자 아래로 이어집니다):**
 
 ```ts
@@ -77,6 +66,20 @@ const toSummaryRow = (item: SalesSummaryItem): SummaryRow => {
 
 const toSummaryLabel = (item: SalesSummaryItem): string => {
 	return item.name.trim() || item.code;
+};
+```
+
+**Incorrect (모듈을 불러올 때 계산되는 선언이 자기가 부르는 선언보다 위에 있습니다):**
+
+```ts
+export const toCycleOffsets = (): number[] => {
+	return cycle_offsets;
+};
+
+const cycle_offsets = toOffsetTable();
+
+const toOffsetTable = (): number[] => {
+	return [0, 31, 59];
 };
 ```
 

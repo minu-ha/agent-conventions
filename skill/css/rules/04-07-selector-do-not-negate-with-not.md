@@ -74,10 +74,19 @@ tags: selector, state, negation
 		border-color: #9fadc7;
 		box-shadow: 0 0 0 2px rgb(159 173 199 / 20%);
 	}
+}
+```
 
-	&.Mui-focusVisible .pg_salesPanel__spreadBox::before {
-		border-color: #9fadc7;
-		box-shadow: 0 0 0 2px rgb(159 173 199 / 20%);
+**Incorrect (DOM 상태를 `:not()`으로 뒤집어 기본 모습을 상태 블록에 넣습니다):**
+
+```css
+.pg_assetIndex__cardButton {
+	&:not(:disabled) {
+		cursor: pointer;
+	}
+
+	&:disabled {
+		cursor: default;
 	}
 }
 ```
