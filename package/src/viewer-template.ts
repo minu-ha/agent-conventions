@@ -171,10 +171,10 @@ body {
    acc-btn(질문), gx-hd(예시), dx-hd(짝 비교), ref-hd(참조) 넷이 이 형태를 공유한다. */
 .accs { display: flex; flex-direction: column; gap: 2px; margin-top: 16px; }
 .accs:empty { display: none; }
-.acc-btn { display: grid; grid-template-columns: auto auto minmax(0, 1fr); align-items: center; gap: 10px; width: 100%; text-align: left; padding: 9px 0; font-size: 13px; font-weight: 500; color: var(--ink); }
+.acc-btn { display: grid; grid-template-columns: auto auto minmax(0, 1fr); align-items: center; gap: 10px; width: 100%; text-align: left; padding: 11px 0; font-size: 13.5px; font-weight: 500; color: var(--ink); }
 .acc-btn:hover { color: var(--accent-dk); }
 .acc-btn:hover .sec-rule { background: color-mix(in srgb, var(--accent) 34%, transparent); }
-.acc-car { font-size: 9px; color: var(--accent); }
+.acc-car { font-size: 10px; color: var(--accent); }
 .sec-rule { height: 1px; background: color-mix(in srgb, var(--accent) 18%, transparent); }
 .acc-body { display: none; padding: 0 2px 18px 22px; color: var(--ink2); font-size: 13.5px; line-height: 1.8; }
 .acc[data-open="1"] .acc-body { display: block; }
@@ -209,10 +209,10 @@ body {
 .box-b { border-left: 3px solid color-mix(in srgb, var(--dx-b) 75%, transparent); }
 .box-a { border-left: 3px solid color-mix(in srgb, var(--dx-a) 75%, transparent); }
 .box-b > .box-hd { background: color-mix(in srgb, var(--dx-b) 5%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--dx-b) 18%, transparent); }
-.box-b > .box-hd-t:hover { background: color-mix(in srgb, var(--dx-b) 14%, transparent); }
+.box-b .box-hd-t:hover { background: color-mix(in srgb, var(--dx-b) 14%, transparent); }
 .box-b[data-open="1"] > .box-hd { background: color-mix(in srgb, var(--dx-b) 18%, transparent); border-bottom-color: color-mix(in srgb, var(--dx-b) 34%, transparent); }
 .box-a > .box-hd { background: color-mix(in srgb, var(--dx-a) 5%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--dx-a) 18%, transparent); }
-.box-a > .box-hd-t:hover { background: color-mix(in srgb, var(--dx-a) 14%, transparent); }
+.box-a .box-hd-t:hover { background: color-mix(in srgb, var(--dx-a) 14%, transparent); }
 .box-a[data-open="1"] > .box-hd { background: color-mix(in srgb, var(--dx-a) 18%, transparent); border-bottom-color: color-mix(in srgb, var(--dx-a) 34%, transparent); }
 .box-b .box-gl { color: var(--dx-b); }
 .box-a .box-gl { color: var(--dx-a); }
@@ -228,28 +228,30 @@ body {
 .box-side { font-family: var(--mono); font-size: 9.5px; font-weight: 500; letter-spacing: .06em; padding: 1px 5px; border-radius: 2px; white-space: nowrap; }
 .box-bad .box-side { color: var(--bad); border: 1px solid color-mix(in srgb, var(--bad) 35%, transparent); }
 .box-good .box-side { color: var(--good); border: 1px solid color-mix(in srgb, var(--good) 35%, transparent); }
-.diff { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(330px, 100%), 1fr)); gap: 14px; }
+.diff { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(330px, 100%), 1fr)); align-items: start; gap: 14px; }
 /* 한쪽 코드가 길어 잘릴 때 그 행만 폭을 몰아 준다. 여닫기와는 별개다. */
 @media (min-width: 1000px) {
 	.diff[data-w="b"] { grid-template-columns: minmax(0, 2.4fr) minmax(0, 1fr); }
 	.diff[data-w="a"] { grid-template-columns: minmax(0, 1fr) minmax(0, 2.4fr); }
 }
-.box-w { position: absolute; top: 6px; right: 8px; z-index: 1; font-family: var(--mono); font-size: 9.5px; letter-spacing: .04em; padding: 2px 6px; border-radius: 2px; border: 1px solid var(--hair); background: var(--card); color: var(--muted); cursor: pointer; }
-.box-w:hover { border-color: currentColor; }
+.box-w { flex: 0 0 auto; margin: 9px 10px 9px 2px; display: inline-flex; align-items: center; justify-content: center; width: 31px; height: 21px; border: 1px solid color-mix(in srgb, currentColor 26%, transparent); border-radius: 3px; background: color-mix(in srgb, var(--card) 70%, transparent); cursor: pointer; }
+.box-w:hover { border-color: currentColor; background: color-mix(in srgb, currentColor 12%, transparent); }
+.box-w svg { display: block; }
 .box-b .box-w { color: var(--dx-b); }
 .box-a .box-w { color: var(--dx-a); }
-.box-b > .box-hd-t, .box-a > .box-hd-t { padding-right: 78px; }
 
 /* 테두리 전체에 의미색을 두르면 잉크가 많다. 좌측 2px 만 의미색으로 세운다. */
-.box { position: relative; min-width: 0; border: 1px solid var(--hair); border-radius: 2px; overflow: hidden; }
+.box { min-width: 0; border: 1px solid var(--hair); border-radius: 2px; overflow: hidden; }
 .box-bad { background: color-mix(in srgb, var(--bad) 3%, var(--card)); }
 .box-good { background: color-mix(in srgb, var(--good) 3%, var(--card)); }
 .box-b { background: color-mix(in srgb, var(--dx-b) 4%, var(--card)); }
 .box-a { background: color-mix(in srgb, var(--dx-a) 4%, var(--card)); }
 .box-bad { border-left: 2px solid color-mix(in srgb, var(--bad) 55%, transparent); }
 .box-good { border-left: 2px solid color-mix(in srgb, var(--good) 55%, transparent); }
-.box-hd { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: baseline; gap: 9px; padding: 8px 12px; }
-.box-hd-t { grid-template-columns: auto minmax(0, 1fr) auto; width: 100%; text-align: left; }
+.box-hd { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: baseline; gap: 10px; padding: 11px 13px; }
+/* diff 머리는 여닫기 버튼과 폭 버튼을 나란히 담는다. 여백은 안쪽 버튼이 갖는다. */
+.box-hd-r { display: flex; align-items: flex-start; padding: 0; }
+.box-hd-t { flex: 1 1 auto; min-width: 0; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: baseline; gap: 10px; text-align: left; padding: 11px 8px 11px 13px; }
 .box-body { display: none; }
 .box[data-open="1"] .box-body { display: block; }
 .box-bad > .box-hd { background: color-mix(in srgb, var(--bad) 3%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--bad) 14%, transparent); }
@@ -260,7 +262,7 @@ body {
 /* 종류는 글리프·좌측 띠·머리 배경이 이미 말한다. 제목은 본문 색으로 읽히게 둔다. */
 .box-note { color: var(--ink2); }
 /* 라벨은 그 예시가 무엇인지 말해 주는 유일한 문장이다. 잘라내지 않고 줄바꿈한다. */
-.box-note { min-width: 0; font-size: 12.5px; font-weight: 500; line-height: 1.5; word-break: keep-all; text-wrap: pretty; }
+.box-note { min-width: 0; font-size: 13px; font-weight: 500; line-height: 1.55; word-break: keep-all; text-wrap: pretty; }
 .box-langs { font-family: var(--mono); font-size: 10px; color: var(--faint); }
 
 /* 같은 종류가 연속이면 한 상자로 묶고 기본으로 접는다. 예시 여섯 개가 코드 벽이 되지 않는다. */
@@ -278,9 +280,9 @@ body {
 
 .smp { min-width: 0; border-top: 1px solid var(--soft); }
 .smp:first-child { border-top: none; }
-.smp-b { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: baseline; gap: 9px; width: 100%; text-align: left; padding: 9px 12px; }
+.smp-b { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: baseline; gap: 10px; width: 100%; text-align: left; padding: 11px 13px; }
 .smp-no { font-family: var(--mono); font-size: 10.5px; font-weight: 700; font-variant-numeric: tabular-nums; }
-.smp-car { font-size: 9px; }
+.smp-car { font-size: 10px; }
 .box-bad .smp-b { background: color-mix(in srgb, var(--bad) 2.5%, transparent); }
 .box-bad .smp-b:hover { background: color-mix(in srgb, var(--bad) 9%, transparent); }
 .box-bad .smp[data-open="1"] .smp-b { background: color-mix(in srgb, var(--bad) 14%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--bad) 26%, transparent); }
@@ -754,6 +756,16 @@ const viewerClientScript = `(() => {
 			'<div class="cd-wrap"><div class="cd">' + cells + "</div></div>";
 	}).join("");
 
+	// 두 칸의 지금 비율을 그대로 그린다. 왼쪽이 BEFORE, 오른쪽이 AFTER 이고 내 칸을 채운다.
+	const wideIcon = (mine, cur) => {
+		const pair = cur === "" ? [6.4, 6.4] : (cur === "b" ? [9.4, 3.4] : [3.4, 9.4]);
+		const rect = (x, w, on) => '<rect x="' + x + '" y="1" width="' + w + '" height="9" rx="1" ' +
+			(on ? 'fill="currentColor"' : 'fill="none" stroke="currentColor" stroke-width="1.1"') + "/>";
+
+		return '<svg width="17" height="12" viewBox="0 0 16 11" aria-hidden="true">' +
+			rect(0.7, pair[0], mine === "b") + rect(15.3 - pair[1], pair[1], mine === "a") + "</svg>";
+	};
+
 	const boxHtml = (e, marks, side, toggle, wide) => {
 		if (!e) return "";
 
@@ -767,16 +779,19 @@ const viewerClientScript = `(() => {
 			'<span class="box-note">' + (e.label ? inlineHi(e.label) : (bad ? "INCORRECT" : "CORRECT")) + "</span>" +
 			(toggle ? '<span class="smp-car" aria-hidden="true">' + (open ? "\\u25be" : "\\u25b8") + "</span>" : "");
 		const head = toggle
-			? '<button class="box-hd box-hd-t" data-smp="' + esc(toggle.key) + '" data-i="0">' + inner + "</button>"
+			? '<button class="' + (wide && open ? "box-hd-t" : "box-hd box-hd-t") + '" data-smp="' +
+				esc(toggle.key) + '" data-i="0">' + inner + "</button>"
 			: '<div class="box-hd">' + inner + "</div>";
 
 		// 폭 버튼은 코드가 보일 때만 뜻이 있다. 접혀 있으면 붙이지 않는다.
 		const wideBtn = wide && open
-			? '<button class="box-w" data-wide="' + esc(wide.key + "|" + wide.side) + '">' +
-				(wide.cur === wide.side ? "\u21e4 되돌리기" : "\u21e5 넓게") + "</button>"
+			? '<button class="box-w" data-wide="' + esc(wide.key + "|" + wide.side) + '" title="' +
+				(wide.cur === wide.side ? "폭을 균등으로 되돌립니다" : "이 쪽을 넓게 봅니다") + '">' +
+				wideIcon(wide.side, wide.cur) + "</button>"
 			: "";
 
-		return '<div class="box ' + tone + '" data-open="' + (open ? 1 : 0) + '">' + head + wideBtn +
+		return '<div class="box ' + tone + '" data-open="' + (open ? 1 : 0) + '">' +
+			(wideBtn ? '<div class="box-hd box-hd-r">' + head + wideBtn + "</div>" : head) +
 			'<div class="box-body">' + (open ? codeHtml(e.blocks, marks ? {rows: marks, bad: bad} : null) : "") + "</div></div>";
 	};
 
