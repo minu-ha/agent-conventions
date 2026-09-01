@@ -49,11 +49,22 @@ export const chart_axis_tick_count = 6;
 export const chart_axis_tick_count = 6;
 ```
 
-**Incorrect (소유자 이름을 되풀이하고 객체 하나에 모읍니다):**
+**Incorrect (파일명에 소유자 이름을 되풀이하고 주제를 객체 하나에 모읍니다):**
 
 ```ts
 // page/product-detail/_constant/product-detail.ts
 export const product_detail_config = {
 	chart_axis_tick_count: 6,
+	table_page_size: 20,
 } as const;
+```
+
+**Correct (주제마다 파일을 나누고 상수를 평평하게 내보냅니다):**
+
+```ts
+// page/product-detail/_constant/chart.ts
+export const chart_axis_tick_count = 6;
+
+// page/product-detail/_constant/table.ts
+export const table_page_size = 20;
 ```

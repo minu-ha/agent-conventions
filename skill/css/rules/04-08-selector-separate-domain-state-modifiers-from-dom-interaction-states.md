@@ -44,21 +44,20 @@ tags: state, focus, accessibility
 }
 ```
 
-**Correct (도메인 상태와 상호작용 상태를 분리하고 포커스를 보존합니다):**
+**Correct (상호작용 상태를 조건 없는 기본 블록으로 되돌립니다):**
 
 ```css
-.ui_button__root--active {
-	background: var(--app-color-accent);
+.ui_button__root {
+	&:hover {
+		background: var(--app-color-accent-strong);
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--app-color-focus);
+	}
 }
 
-.ui_button__root {
-	&:focus-visible {
-		outline: 2px solid var(--app-color-accent);
-		outline-offset: 2px;
-	}
-
-	&:disabled {
-		cursor: not-allowed;
-	}
+.ui_button__root--active {
+	background: var(--app-color-accent);
 }
 ```

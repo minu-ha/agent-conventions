@@ -73,20 +73,3 @@ export const PgProducts = () => {
 	return <UiTable dataSource={responseProductRowsSuspense.rows} />;
 };
 ```
-
-**Correct (뒤 쿼리가 앞 결과를 받으면 `enabled`로 순서를 만듭니다):**
-
-```tsx
-/**
- * URL 상태가 가리키는 product를 읽는다. 아래 배송 이력의 입력이 된다
- */
-const responseProductGetItemSuspense = useProductGetItemSuspense({productId: urlParams.productId});
-
-/**
- * 배송 이력은 주문이 붙은 product에만 있어서 orderId를 받은 뒤에만 부른다
- */
-const responseShipmentList = useShipmentList(
-	{orderId: responseProductGetItemSuspense.data.orderId},
-	{query: {enabled: Boolean(responseProductGetItemSuspense.data.orderId)}},
-);
-```

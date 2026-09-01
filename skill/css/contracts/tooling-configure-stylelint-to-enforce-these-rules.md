@@ -12,6 +12,7 @@
 | `keyframes-name-pattern` | `css/a11y-namespace-keyframes-and-respect-reduced-motion` |
 | `no-duplicate-selectors` | `css/selector-declare-each-class-in-one-block`, `css/selector-do-not-group-classes-with-commas`의 단독 재선언 |
 | `property-disallowed-list` | `css/values-tokenize-repeated-visual-values` |
+| `custom-property-pattern` | `css/values-tokenize-repeated-visual-values`의 토큰 이름. 토큰을 선언하는 파일에만 켭니다 |
 | `selector-attribute-name-disallowed-list` | `css/selector-use-pseudo-classes-for-dom-owned-states` |
 | `selector-max-id` | `css/naming-use-scope-slug-element-modifier-syntax` — 겨냥은 클래스로만 합니다 |
 | `selector-pseudo-class-disallowed-list` | `css/selector-do-not-negate-with-not` |

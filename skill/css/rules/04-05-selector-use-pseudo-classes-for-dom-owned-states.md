@@ -34,40 +34,39 @@ tags: pseudo-classes, state, interaction
 가상 클래스를 어디에 쓰는지는 `selector-nest-dom-state-in-the-owning-block` 규칙이 정합니다.
 `:not()`은 `selector-do-not-negate-with-not` 규칙이 막습니다.
 
-**Incorrect (앱이 아는 상태를 속성 선택자로 겨냥합니다):**
-
-```css
-.pg_assetIndex__card {
-	&[aria-pressed="true"] {
-		border-color: #1677ff;
-	}
-}
-
-.pg_assetIndex__row {
-	&[data-pg-expanded="true"] {
-		background: #f5f5f5;
-	}
-}
-```
-
-**Incorrect (같은 상태를 속성과 수정자 두 표기로 씁니다):**
-
-```css
-.pg_assetIndex__card--selected {
-	border-color: #1677ff;
-}
-
-.pg_assetIndex__card[aria-pressed="true"] {
-	box-shadow: 0 0 0 1px #1677ff;
-}
-```
-
-**Correct (`aria-*`는 마크업에 두고 스타일은 수정자로 겨냥합니다):**
+**Incorrect (앱 상태를 속성으로 겨냥하고 DOM 상태를 수정자로 만듭니다):**
 
 ```tsx
 <button
 	type="button"
 	aria-pressed={isSelected}
+	className={clsx("pg_assetIndex__card", isDisabled && "pg_assetIndex__card--disabled")}
+>
+	{asset.name}
+</button>
+```
+
+```css
+.pg_assetIndex__card {
+	border: 1px solid #d9d9d9;
+
+	&[aria-pressed="true"] {
+		border-color: #1677ff;
+	}
+}
+
+.pg_assetIndex__card--disabled {
+	opacity: 0.5;
+}
+```
+
+**Correct (`aria-*`는 마크업에 두고 앱 상태는 수정자로, DOM 상태는 가상 클래스로 씁니다):**
+
+```tsx
+<button
+	type="button"
+	aria-pressed={isSelected}
+	disabled={isDisabled}
 	className={clsx("pg_assetIndex__card", isSelected && "pg_assetIndex__card--selected")}
 >
 	{asset.name}
@@ -85,5 +84,44 @@ tags: pseudo-classes, state, interaction
 
 .pg_assetIndex__card--selected {
 	border-color: #1677ff;
+}
+```
+
+**Incorrect (앱이 정하는 상태를 `data-*` 속성으로 겨냥합니다):**
+
+```css
+.pg_assetIndex__row {
+	&[data-pg-expanded="true"] {
+		background: #f5f5f5;
+	}
+}
+```
+
+**Correct (앱이 정하는 상태는 수정자 클래스로 씁니다):**
+
+```css
+.pg_assetIndex__row--expanded {
+	background: #f5f5f5;
+}
+```
+
+**Incorrect (같은 상태를 속성과 수정자 두 표기로 씁니다):**
+
+```css
+.pg_assetIndex__card--selected {
+	border-color: #1677ff;
+}
+
+.pg_assetIndex__card[aria-pressed="true"] {
+	box-shadow: 0 0 0 1px #1677ff;
+}
+```
+
+**Correct (두 표기를 수정자 하나로 모읍니다):**
+
+```css
+.pg_assetIndex__card--selected {
+	border-color: #1677ff;
+	box-shadow: 0 0 0 1px #1677ff;
 }
 ```

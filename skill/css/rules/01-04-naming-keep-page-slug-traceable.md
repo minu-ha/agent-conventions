@@ -38,15 +38,12 @@ pg_doc__content   <- 라우트에 없는 줄임말
 pg_x__root        <- 되짚을 이름이 없음
 ```
 
-**Correct (뼈대는 화면 식별자, 컴포넌트는 자기 식별자를 씁니다):**
+**Correct (뼈대에는 라우트 세그먼트를 그대로 씁니다):**
 
 ```txt
-posts index page   -> pg_postsIndex__root
-posts detail page  -> pg_postsDetail__body
-document shell     -> pg_document__body
-
-overview section   -> pg_overviewSection__root
-summary band       -> pg_summaryBand__root
+pg_postsIndex__root    <- posts index 화면
+pg_postsDetail__body   <- posts/[id] 화면
+pg_document__body      <- document 화면
 ```
 
 **Incorrect (충돌이 없는데도 부모 식별자를 미리 붙입니다):**
@@ -56,7 +53,21 @@ pg_detailSalesTrendPanelOverviewSection__root
 pg_detailSalesTrendPanelSummaryBand__root
 ```
 
-**Correct (같은 식별자가 실제로 두 화면에 생겼을 때만 구분합니다):**
+**Correct (화면 안의 컴포넌트는 자기 식별자만 씁니다):**
+
+```txt
+pg_overviewSection__root
+pg_summaryBand__root
+```
+
+**Incorrect (충돌이 생기자 부모 사슬을 통째로 붙입니다):**
+
+```txt
+pg_detailSalesTrendPanelOverviewSection__root
+pg_indexSalesTrendPanelOverviewSection__root
+```
+
+**Correct (충돌한 화면 이름만 최소로 덧붙입니다):**
 
 ```txt
 pg_detailOverviewSection__root

@@ -48,51 +48,25 @@ tags: selector, responsive
 **Incorrect (두 방향을 섞어 겹치는 구간을 만듭니다):**
 
 ```css
-.pg_products__toolbar {
-	display: flex;
-	gap: 16px;
+.pg_products__layout {
+	display: grid;
+	grid-template-columns: 220px 1fr;
 }
 
 @media (width >= 1440px) {
-	.pg_products__toolbar {
-		gap: 24px;
+	.pg_products__layout {
+		grid-template-columns: 280px 1fr;
 	}
 }
 
 @media (width < 1024px) {
-	.pg_products__toolbar {
-		gap: 8px;
+	.pg_products__layout {
+		grid-template-columns: 1fr;
 	}
 }
 ```
 
-**Incorrect (`max-width`를 소수로 보정하고 좁은 쪽부터 씁니다):**
-
-```css
-@media (max-width: 639.98px) {
-	.pg_products__toolbar {
-		gap: 4px;
-	}
-}
-
-@media (max-width: 1023.98px) {
-	.pg_products__toolbar {
-		gap: 8px;
-	}
-}
-```
-
-**Correct (구간을 이렇게 읽습니다):**
-
-```txt
-        640px      1024px     1440px            넓어짐 →
- ──~sm───│───~md────│───~lg────│─── 기본 선언 ───▶
-   세로     가로       좁은        가장 넓은 화면
-   태블릿   태블릿     데스크톱     기준으로 먼저 적는다
-   아래     좁은 노트북
-```
-
-**Correct (기본 선언이 가장 넓고 넓은 쪽부터 좁혀 갑니다):**
+**Correct (기본 선언이 가장 넓고 좁아질 때만 덮습니다):**
 
 ```css
 .pg_products__layout {
@@ -109,6 +83,38 @@ tags: selector, responsive
 @media (width < 1024px) {
 	.pg_products__layout {
 		grid-template-columns: 1fr;
+	}
+}
+```
+
+**Incorrect (`max-width`를 소수로 보정하고 좁은 쪽부터 씁니다):**
+
+```css
+@media (max-width: 639.98px) {
+	.pg_products__layout {
+		padding: 12px;
+	}
+}
+
+@media (max-width: 1023.98px) {
+	.pg_products__layout {
+		padding: 20px;
+	}
+}
+```
+
+**Correct (범위 표기로 적고 넓은 쪽부터 좁혀 갑니다):**
+
+```css
+@media (width < 1024px) {
+	.pg_products__layout {
+		padding: 20px;
+	}
+}
+
+@media (width < 640px) {
+	.pg_products__layout {
+		padding: 12px;
 	}
 }
 ```

@@ -68,23 +68,17 @@ export const toProductSaveRequest = (values: ProductFormValues) => {
 **Incorrect (보조 모듈 안에서 내보낸 함수가 내보낸 함수를 타고 갑니다):**
 
 ```ts
-// profile-support.ts
-export const toProfileValues = (formValues: ProfileFormValues) => {
+// report-support.ts
+export const toTrendChart = (readings: SalesReading[]) => {
 	// ...
 };
 
-export const toAvatarRequests = (files: UploadFile[]) => {
+export const toSalesFilterRequest = (filter: SalesFilter) => {
 	// ...
 };
 
-export const toProfileSaveRequest = (
-	formValues: ProfileFormValues,
-	files: UploadFile[],
-) => {
-	return {
-		...toProfileValues(formValues),
-		avatarRequests: toAvatarRequests(files),
-	};
+export const toSalesOverview = (readings: SalesReading[]) => {
+	return {chart: toTrendChart(readings)};
 };
 ```
 

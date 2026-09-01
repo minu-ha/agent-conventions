@@ -37,11 +37,7 @@ tags: events, handlers
 **Incorrect (인라인 래퍼로 인자를 넘깁니다):**
 
 ```tsx
-const handleSelectionToggle = (id: string) => {
-	toggleSelection(id);
-};
-
-<li onClick={() => handleSelectionToggle(product.id)} />;
+<li onClick={() => handleListItemClick(product.id)} />;
 ```
 
 **Correct (JSX에는 팩토리 호출만 두고 감싸는 화살표를 만들지 않습니다):**

@@ -109,7 +109,7 @@ tags: tooling
 		"rules": {
 			"preset": "recommended",
 			"complexity": {"useMaxParams": {"level": "error", "options": {"max": 3}}},
-			"correctness": {"noUnusedFunctionParameters": "error", "useSingleJsDocAsterisk": "error"},
+			"correctness": {"noUnusedFunctionParameters": "error"},
 			"suspicious": {"noExplicitAny": "error"},
 			"performance": {"noNamespaceImport": "error", "noBarrelFile": "error", "noReExportAll": "error"},
 			"style": {
