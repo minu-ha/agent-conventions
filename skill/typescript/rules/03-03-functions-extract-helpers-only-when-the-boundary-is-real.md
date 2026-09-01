@@ -65,18 +65,6 @@ export const getNextIteration = (previous: number, iterationCount: number): numb
 };
 ```
 
-**Incorrect (전용 보조가 딸린 단계를 한 파일에 계속 쌓습니다):**
-
-```txt
-page/report/_function/to-sales-overview.ts
-  toSalesOverview          내보낸 함수
-  toSummaryBand            내보낸 함수만 부름. 전용 보조 없음
-  toTrendChart             내보낸 함수만 부름. 전용 보조 셋이 딸림
-  toTrendBasePoints        toTrendChart만 부름
-  toTrendBaseLabel         toTrendChart만 부름
-  toTrendPoints            toTrendChart만 부름
-```
-
 **Correct (작은 계산은 쓰는 자리에 그대로 둡니다):**
 
 ```tsx
@@ -139,6 +127,18 @@ export const toProductSaveRequest = (formValues: ProductFormValues) => {
 ```tsx
 // page/products/pg-products.tsx 하나만 부르지만 훅도 JSX도 쓰지 않는 계산이다
 import {toProductSaveRequest} from "@/page/products/_function/to-product-save-request";
+```
+
+**Incorrect (전용 보조가 딸린 단계를 한 파일에 계속 쌓습니다):**
+
+```txt
+page/report/_function/to-sales-overview.ts
+  toSalesOverview          내보낸 함수
+  toSummaryBand            내보낸 함수만 부름. 전용 보조 없음
+  toTrendChart             내보낸 함수만 부름. 전용 보조 셋이 딸림
+  toTrendBasePoints        toTrendChart만 부름
+  toTrendBaseLabel         toTrendChart만 부름
+  toTrendPoints            toTrendChart만 부름
 ```
 
 **Correct (전용 보조가 딸린 단계만 자기 파일로 나갑니다):**

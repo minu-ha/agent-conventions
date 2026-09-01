@@ -57,21 +57,6 @@ export const UiChip = (props: UiChipProps) => {
 };
 ```
 
-**Incorrect (설명이 컴포넌트에 붙어 계약과 떨어집니다):**
-
-```tsx
-export interface UiPanelHeaderProps {
-	children: ReactNode;
-}
-
-/**
- * 패널 헤더 부품
- */
-export const UiPanelHeader = (props: UiPanelHeaderProps) => {
-	return <header className={clsx("ui_panel__header")}>{props.children}</header>;
-};
-```
-
 **Correct (각 컴포넌트 바로 위에 선언하고 내보냅니다):**
 
 ```tsx
@@ -87,6 +72,21 @@ export interface UiBadgeProps {
 
 export const UiBadge = (props: UiBadgeProps) => {
 	return <span className={clsx("ui_badge__root")}>{props.label}</span>;
+};
+```
+
+**Incorrect (설명이 컴포넌트에 붙어 계약과 떨어집니다):**
+
+```tsx
+export interface UiPanelHeaderProps {
+	children: ReactNode;
+}
+
+/**
+ * 패널 헤더 부품
+ */
+export const UiPanelHeader = (props: UiPanelHeaderProps) => {
+	return <header className={clsx("ui_panel__header")}>{props.children}</header>;
 };
 ```
 

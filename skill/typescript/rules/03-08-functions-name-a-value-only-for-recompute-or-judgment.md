@@ -60,22 +60,6 @@ tags: functions, origin
 `let` 재할당과 배열 `push` 누적은 `functions-avoid-imperative-assembly-in-wide-scopes`가 봅니다.
 객체 필드를 그대로 읽는 것은 계산이 아니라 `values-read-objects-through-chains`가 봅니다.
 
-**Incorrect (돌려주기만 할 값을 변수로 뺍니다):**
-
-```ts
-const toNextIteration = (iteration: number): number => {
-	const nextIteration = iteration + 1;
-
-	return nextIteration;
-};
-
-const toRowLabel = (row: Row): string => {
-	const rowLabel = `${row.title} (${row.id})`;
-
-	return rowLabel;
-};
-```
-
 **Incorrect (두 번 쓴다는 이유만으로 변수로 뺍니다):**
 
 ```ts
@@ -97,6 +81,22 @@ const toRowClassNames = (row: Row): string[] => {
 		row.dueDate < today ? "ui_row__root--overdue" : "ui_row__root",
 		row.dueDate < today ? "ui_row__badge--overdue" : "ui_row__badge",
 	];
+};
+```
+
+**Incorrect (돌려주기만 할 값을 변수로 뺍니다):**
+
+```ts
+const toNextIteration = (iteration: number): number => {
+	const nextIteration = iteration + 1;
+
+	return nextIteration;
+};
+
+const toRowLabel = (row: Row): string => {
+	const rowLabel = `${row.title} (${row.id})`;
+
+	return rowLabel;
 };
 ```
 

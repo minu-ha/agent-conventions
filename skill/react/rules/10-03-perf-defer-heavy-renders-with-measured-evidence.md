@@ -59,13 +59,6 @@ const handleTagClick = (nextTagId: string) => {
 return <UiTagRows rows={tagRows} selectedTagId={selectedTagId} />;
 ```
 
-**Incorrect (입력과 무거운 파생 렌더를 같은 값에 묶습니다):**
-
-```tsx
-const [keyword, setKeyword] = useState("");
-const filteredRows = rows.filter((row) => fuzzyMatchRow(row, keyword));
-```
-
 **Correct (측정 근거가 있는 갱신만 전환으로 감싸고 행 20개 목록은 그대로 둡니다):**
 
 ```tsx
@@ -79,6 +72,13 @@ const handleStatusFilterChange = (nextStatus: ProductStatusFilter) => {
 		setStatusFilter(nextStatus);
 	});
 };
+```
+
+**Incorrect (입력과 무거운 파생 렌더를 같은 값에 묶습니다):**
+
+```tsx
+const [keyword, setKeyword] = useState("");
+const filteredRows = rows.filter((row) => fuzzyMatchRow(row, keyword));
 ```
 
 **Correct (입력은 즉시 반응하고 무거운 파생 계산만 늦춥니다):**

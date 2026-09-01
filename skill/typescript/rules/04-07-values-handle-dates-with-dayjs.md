@@ -50,6 +50,17 @@ const expiresAt = new Date(issuedAt.getTime() + 7 * 24 * 60 * 60 * 1000);
 const expiresLabel = `${expiresAt.getFullYear()}.${toPaddedDatePart(expiresAt.getMonth() + 1)}`;
 ```
 
+**Correct (더하기와 형식은 `dayjs`, 형식 문자열은 상수로 둡니다):**
+
+```ts
+import dayjs from "dayjs";
+
+import {date_format} from "@/constant/date";
+
+const expiresAt = dayjs(issuedAt).add(7, "day");
+const expiresLabel = expiresAt.format(date_format);
+```
+
 **Incorrect (형식만 보고 없는 날짜를 통과시킵니다):**
 
 ```ts
@@ -67,17 +78,6 @@ const isValidDateText = /^\d{4}-\d{2}-\d{2}$/.test(dateText);
    ├ 형식만 바꿈 ──────→ dayjs(value).format(date_format)
    ├ 더하거나 뺌 ──────→ dayjs(value).add(7, "day")
    └ 값이 유효한지 봄 ─→ format 한 결과가 원래 문자열과 같은지 본다
-```
-
-**Correct (더하기와 형식은 `dayjs`, 형식 문자열은 상수로 둡니다):**
-
-```ts
-import dayjs from "dayjs";
-
-import {date_format} from "@/constant/date";
-
-const expiresAt = dayjs(issuedAt).add(7, "day");
-const expiresLabel = expiresAt.format(date_format);
 ```
 
 **Correct (라운드트립으로 없는 날짜를 거릅니다):**

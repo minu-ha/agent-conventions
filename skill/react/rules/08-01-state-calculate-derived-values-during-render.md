@@ -25,7 +25,7 @@ tags: state, effects
 
 **Incorrect (파생값을 이펙트로 다시 상태에 동기화합니다):**
 
-```ts
+```tsx
 const [selectedIds, setSelectedIds] = useState<string[]>([]);
 const [selectedCount, setSelectedCount] = useState(0);
 

@@ -38,16 +38,6 @@ const handleRowSelectToggle = (rowId: string) => (event) => {
 };
 ```
 
-**Incorrect (래퍼를 쓰면서 라이브러리 원본 프롭스를 참조합니다):**
-
-```ts
-import type {ButtonProps} from "@mui/material";
-
-const handleSubmitClick: ButtonProps["onClick"] = (event) => {
-	event.preventDefault();
-};
-```
-
 **Correct (팩토리 반환 타입을 기존 별칭으로 고정합니다):**
 
 ```ts
@@ -62,6 +52,16 @@ const handleRowSelectToggle =
 		event.preventDefault();
 		toggleSelection(rowId);
 	};
+```
+
+**Incorrect (래퍼를 쓰면서 라이브러리 원본 프롭스를 참조합니다):**
+
+```ts
+import type {ButtonProps} from "@mui/material";
+
+const handleSubmitClick: ButtonProps["onClick"] = (event) => {
+	event.preventDefault();
+};
 ```
 
 **Correct (래퍼가 노출한 계약을 참조합니다):**

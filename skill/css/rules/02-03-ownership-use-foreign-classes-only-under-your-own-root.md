@@ -54,28 +54,7 @@ tags: ownership, scope, third-party
 	border-radius: 4px;
 }
 
-.ant-btn-icon {
-	color: #8c8c8c;
-}
-```
-
-**Incorrect (최상위 블록 없이 다른 `scope_slug`의 클래스를 바로 씁니다):**
-
-```css
-/* page/detail/pg-detail.css */
-.wg_chartCard__caption {
-	color: #8c8c8c;
-}
-
-.ui_card__title {
-	font-size: 13px;
-}
-```
-
-**Incorrect (최상위 블록을 열지 않고 바깥에서 이어 씁니다):**
-
-```css
-.pg_treePanel__root .ant-tree-title {
+.ant-tree-title {
 	color: #8c8c8c;
 }
 ```
@@ -85,13 +64,25 @@ tags: ownership, scope, third-party
 ```css
 .pg_treePanel__root {
 	& .ant-tree-node-content-wrapper {
-		display: inline-flex;
 		border-radius: 4px;
 	}
 
 	& .ant-tree-title {
 		color: #8c8c8c;
 	}
+}
+```
+
+**Incorrect (최상위 블록 없이 다른 `scope_slug`의 클래스를 바로 씁니다):**
+
+```css
+/* page/detail/pg-detail.css */
+.wg_chartCard__caption {
+	letter-spacing: 0.02em;
+}
+
+.ui_card__title {
+	font-size: 13px;
 }
 ```
 
@@ -105,10 +96,22 @@ tags: ownership, scope, third-party
 	& .wg_chartCard__caption {
 		letter-spacing: 0.02em;
 	}
+
+	& .ui_card__title {
+		font-size: 13px;
+	}
 }
 ```
 
-**Correct (중첩된 자손까지 적용되면 안 될 때 직계로 좁힙니다):**
+**Incorrect (최상위 블록을 열지 않고 바깥에서 이어 씁니다):**
+
+```css
+.pg_treePanel__toolbar > .ant-btn > .ant-btn-icon {
+	color: #8c8c8c;
+}
+```
+
+**Correct (내 최상위 블록 안에서 열고, 중첩된 자손을 피하려면 직계로 좁힙니다):**
 
 ```css
 .pg_treePanel__toolbar {

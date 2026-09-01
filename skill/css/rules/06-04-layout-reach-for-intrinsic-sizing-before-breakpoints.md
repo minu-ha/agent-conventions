@@ -39,29 +39,6 @@ tags: values, layout, responsive
 놓는 쪽에서 그 폭을 왜 고정하는지가 클래스명과 선언에서 읽혀야 합니다.
 `layout-keep-layout-intent-explicit` 규칙이 그 판정을 합니다.
 
-**Incorrect (버튼이 자기 폭을 뷰포트로 정합니다):**
-
-```css
-.ui_button__root {
-	display: inline-flex;
-	min-height: 40px;
-	padding: 0 var(--app-space-4);
-	width: 300px;
-}
-
-@media (width < 1024px) {
-	.ui_button__root {
-		width: 200px;
-	}
-}
-
-@media (width < 640px) {
-	.ui_button__root {
-		width: 100%;
-	}
-}
-```
-
 **Incorrect (열 개수를 브레이크포인트로 셉니다):**
 
 ```css
@@ -86,6 +63,39 @@ tags: values, layout, responsive
 @media (width < 640px) {
 	.pg_products__grid {
 		grid-template-columns: 1fr;
+	}
+}
+```
+
+**Correct (열 개수는 자리가 정합니다):**
+
+```css
+.pg_products__grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+	gap: 16px;
+}
+```
+
+**Incorrect (버튼이 자기 폭을 뷰포트로 정합니다):**
+
+```css
+.ui_button__root {
+	display: inline-flex;
+	min-height: 40px;
+	padding: 0 var(--app-space-4);
+	width: 300px;
+}
+
+@media (width < 1024px) {
+	.ui_button__root {
+		width: 200px;
+	}
+}
+
+@media (width < 640px) {
+	.ui_button__root {
+		width: 100%;
 	}
 }
 ```
@@ -115,16 +125,6 @@ tags: values, layout, responsive
 .ui_formFooter__action {
 	flex: 1 1 200px;
 	max-width: 300px;
-}
-```
-
-**Correct (열 개수는 자리가 정합니다):**
-
-```css
-.pg_products__grid {
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-	gap: 16px;
 }
 ```
 

@@ -150,13 +150,31 @@ export const UiDeleteProductButton = () => {
 	const navigate = useNavigate();
 
 	/**
-	 * 삭제 후 목록 화면으로 돌아간다
+	 * 삭제 후 목록으로 이동
 	 */
-	const handleDeleteButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => {
+	const handleDeleteButtonClick: MouseEventHandler<HTMLButtonElement> = () => {
 		void navigate("/products");
 	};
 
 	return <button onClick={handleDeleteButtonClick}>삭제</button>;
+};
+```
+
+**Correct (라우터 훅을 부르는 코드는 화면 레이어에 남깁니다):**
+
+```tsx
+// page/products/_pg-delete-product-button.tsx
+export const PgDeleteProductButton = () => {
+	const navigate = useNavigate();
+
+	/**
+	 * 삭제 후 목록으로 이동
+	 */
+	const handleDeleteButtonClick: MouseEventHandler<HTMLButtonElement> = () => {
+		void navigate("/products");
+	};
+
+	return <UiButton onClick={handleDeleteButtonClick}>삭제</UiButton>;
 };
 ```
 
@@ -170,6 +188,15 @@ export const PgSalesLegendGlyph = (props: PgSalesLegendGlyphProps) => {
 };
 ```
 
+**Correct (화면 타입도 훅도 쓰지 않는 도메인 부품은 `widget`으로 올립니다):**
+
+```tsx
+// component/widget/sales-legend-glyph/wg-sales-legend-glyph.tsx
+export const WgSalesLegendGlyph = (props: WgSalesLegendGlyphProps) => {
+	return <svg className={clsx("wg_salesLegendGlyph__root")}>{/* ... */}</svg>;
+};
+```
+
 **Incorrect (도메인을 모르는 조합을 조립 규모만 보고 `widget`에 둡니다):**
 
 ```tsx
@@ -177,15 +204,6 @@ export const PgSalesLegendGlyph = (props: PgSalesLegendGlyphProps) => {
 // 프롭스가 좌표 배열만 받고 도메인 타입을 모른다. ui 부품을 조립했다는 이유로 widget에 있다.
 export const WgLineChart = (props: WgLineChartProps) => {
 	return <svg className={clsx("wg_lineChart__root")}>{/* ... */}</svg>;
-};
-```
-
-**Correct (화면 타입도 훅도 쓰지 않는 도메인 부품은 `widget`으로 올립니다):**
-
-```tsx
-// component/widget/sales-legend-glyph/wg-sales-legend-glyph.tsx
-export const WgSalesLegendGlyph = (props: WgSalesLegendGlyphProps) => {
-	return <svg className={clsx("wg_salesLegendGlyph__root")}>{/* ... */}</svg>;
 };
 ```
 
@@ -202,24 +220,6 @@ export const UiLineChart = (props: UiLineChartProps) => {
 // component/widget/sales-window-chart/wg-sales-window-chart.tsx
 export const WgSalesWindowChart = (props: WgSalesWindowChartProps) => {
 	return <UiLineChart points={toChartPoints(props.readings)} />;
-};
-```
-
-**Correct (라우터 훅을 부르는 코드는 화면 레이어에 남깁니다):**
-
-```tsx
-// page/products/_pg-delete-product-button.tsx
-const PgDeleteProductButton = () => {
-	const navigate = useNavigate();
-
-	/**
-	 * 삭제 후 목록으로 이동
-	 */
-	const handleDeleteButtonClick: MouseEventHandler<HTMLButtonElement> = () => {
-		void navigate("/products");
-	};
-
-	return <UiButton onClick={handleDeleteButtonClick}>삭제</UiButton>;
 };
 ```
 
@@ -345,6 +345,14 @@ component/ui/button/
 └── _type/
 ```
 
+**Correct (지원 코드가 없으면 폴더 없이 파일만 둡니다):**
+
+```txt
+component/ui/button/
+├── ui-button.tsx
+└── ui-button.css
+```
+
 **Incorrect (범용 이름 폴더와 복수형을 섞어 씁니다):**
 
 ```txt
@@ -390,14 +398,6 @@ page/detail/
     ├── _pg-detection-section.tsx
     └── _function/
         └── to-chart-viewport.ts
-```
-
-**Correct (지원 코드가 없으면 폴더 없이 파일만 둡니다):**
-
-```txt
-component/ui/button/
-├── ui-button.tsx
-└── ui-button.css
 ```
 
 ### 1.4 Keep Component Imports Flowing Downward
@@ -465,20 +465,6 @@ import {PgSectionHeading} from "@/page/detail/_pg-section-heading";
 import {PgLegendRow} from "@/page/detail/summary-band/_pg-legend-row";
 ```
 
-**Incorrect (다른 라우트 안의 컴포넌트를 가져옵니다):**
-
-```tsx
-// page/index/pg-index.tsx
-import {PgSalesTrendPanel} from "@/page/detail/sales-trend-panel/pg-sales-trend-panel";
-```
-
-**Incorrect (`ui`가 `widget`을 가져옵니다):**
-
-```tsx
-// component/ui/legend/ui-legend.tsx
-import {WgLegendPanel} from "@/component/widget/legend-panel/wg-legend-panel";
-```
-
 **Correct (진입 파일이 자기 파일과 형제 소유자의 진입 파일을 조립해서 내려보냅니다):**
 
 ```tsx
@@ -495,6 +481,20 @@ export const PgSalesTrendPanel = (props: PgSalesTrendPanelProps) => {
 		</section>
 	);
 };
+```
+
+**Incorrect (다른 라우트 안의 컴포넌트를 가져옵니다):**
+
+```tsx
+// page/index/pg-index.tsx
+import {PgSalesTrendPanel} from "@/page/detail/sales-trend-panel/pg-sales-trend-panel";
+```
+
+**Incorrect (`ui`가 `widget`을 가져옵니다):**
+
+```tsx
+// component/ui/legend/ui-legend.tsx
+import {WgLegendPanel} from "@/component/widget/legend-panel/wg-legend-panel";
 ```
 
 **Correct (역할 폴더의 파일은 레이어 방향만 지키면 밖에서도 가져옵니다):**
@@ -1131,16 +1131,6 @@ const handleRowSelectToggle = (rowId: string) => (event) => {
 };
 ```
 
-**Incorrect (래퍼를 쓰면서 라이브러리 원본 프롭스를 참조합니다):**
-
-```ts
-import type {ButtonProps} from "@mui/material";
-
-const handleSubmitClick: ButtonProps["onClick"] = (event) => {
-	event.preventDefault();
-};
-```
-
 **Correct (팩토리 반환 타입을 기존 별칭으로 고정합니다):**
 
 ```ts
@@ -1155,6 +1145,16 @@ const handleRowSelectToggle =
 		event.preventDefault();
 		toggleSelection(rowId);
 	};
+```
+
+**Incorrect (래퍼를 쓰면서 라이브러리 원본 프롭스를 참조합니다):**
+
+```ts
+import type {ButtonProps} from "@mui/material";
+
+const handleSubmitClick: ButtonProps["onClick"] = (event) => {
+	event.preventDefault();
+};
 ```
 
 **Correct (래퍼가 노출한 계약을 참조합니다):**
@@ -1686,7 +1686,18 @@ export const UiProfileDialog = (props: UiProfileDialogProps) => {
 
 **Correct (2단계 — 끼워 넣을 자리가 생기면 상태 없는 합성으로 엽니다):**
 
+```txt
+component/ui/profile-dialog/
+├── ui-profile-dialog.tsx              진입. 부품을 모아 내보냅니다
+├── _ui-profile-dialog-root.tsx
+├── _ui-profile-dialog-header.tsx
+├── _ui-profile-dialog-body.tsx
+└── _type/
+    └── profile-dialog-part.ts         세 부품이 나눠 쓰는 계약
+```
+
 ```tsx
+// component/ui/profile-dialog/_type/profile-dialog-part.ts
 /**
  * 대화상자 부품 셋이 나눠 쓰는 계약
  *
@@ -1698,18 +1709,24 @@ export interface UiProfileDialogPartProps {
 	 */
 	children: ReactNode;
 }
+```
 
-const UiProfileDialogRoot = (props: UiProfileDialogPartProps) => {
+```tsx
+// component/ui/profile-dialog/_ui-profile-dialog-root.tsx
+import {clsx} from "clsx";
+
+import type {UiProfileDialogPartProps} from "./_type/profile-dialog-part";
+
+export const UiProfileDialogRoot = (props: UiProfileDialogPartProps) => {
 	return <section className={clsx("ui_profileDialog__root")}>{props.children}</section>;
 };
+```
 
-const UiProfileDialogHeader = (props: UiProfileDialogPartProps) => {
-	return <header className={clsx("ui_profileDialog__header")}>{props.children}</header>;
-};
-
-const UiProfileDialogBody = (props: UiProfileDialogPartProps) => {
-	return <section className={clsx("ui_profileDialog__body")}>{props.children}</section>;
-};
+```tsx
+// component/ui/profile-dialog/ui-profile-dialog.tsx
+import {UiProfileDialogBody} from "./_ui-profile-dialog-body";
+import {UiProfileDialogHeader} from "./_ui-profile-dialog-header";
+import {UiProfileDialogRoot} from "./_ui-profile-dialog-root";
 
 export const UiProfileDialog = {
 	Root: UiProfileDialogRoot,
@@ -1720,10 +1737,41 @@ export const UiProfileDialog = {
 
 **Correct (3단계 — 부품이 같은 상태를 읽으면 공개 이름을 그대로 두고 컨텍스트만 더합니다):**
 
-```tsx
-const UiProfileDialogContext = createContext<UiProfileDialogContextValue | null>(null);
+```ts
+// component/ui/profile-dialog/_hook/use-profile-dialog.ts
+/**
+ * 대화상자 부품이 나눠 읽는 접힘 상태
+ */
+interface UiProfileDialogContextValue {
+	/**
+	 * 본문이 펼쳐져 있는지
+	 */
+	isBodyOpen: boolean;
+	/**
+	 * 헤더가 부르는 접기 토글
+	 */
+	toggleBody: () => void;
+}
 
-const UiProfileDialogRoot = (props: UiProfileDialogPartProps) => {
+export const UiProfileDialogContext = createContext<UiProfileDialogContextValue | null>(null);
+
+/**
+ * 부품이 컨텍스트를 읽는 창구. Root 밖에서 부르면 바로 막는다
+ */
+export const useUiProfileDialog = (): UiProfileDialogContextValue => {
+	const dialog = useContext(UiProfileDialogContext);
+
+	if (!dialog) {
+		throw new Error("UiProfileDialog.Root 안에서만 씁니다.");
+	}
+
+	return dialog;
+};
+```
+
+```tsx
+// component/ui/profile-dialog/_ui-profile-dialog-root.tsx
+export const UiProfileDialogRoot = (props: UiProfileDialogPartProps) => {
 	const [isBodyOpen, setIsBodyOpen] = useState(true);
 
 	/**
@@ -1734,13 +1782,16 @@ const UiProfileDialogRoot = (props: UiProfileDialogPartProps) => {
 	};
 
 	return (
-		<UiProfileDialogContext value={{ isBodyOpen, toggleBody }}>
+		<UiProfileDialogContext value={{isBodyOpen, toggleBody}}>
 			<section className={clsx("ui_profileDialog__root")}>{props.children}</section>
 		</UiProfileDialogContext>
 	);
 };
+```
 
-const UiProfileDialogHeader = (props: UiProfileDialogPartProps) => {
+```tsx
+// component/ui/profile-dialog/_ui-profile-dialog-header.tsx
+export const UiProfileDialogHeader = (props: UiProfileDialogPartProps) => {
 	const dialog = useUiProfileDialog();
 
 	/**
@@ -1758,17 +1809,10 @@ const UiProfileDialogHeader = (props: UiProfileDialogPartProps) => {
 		</header>
 	);
 };
+```
 
-const UiProfileDialogBody = (props: UiProfileDialogPartProps) => {
-	const dialog = useUiProfileDialog();
-
-	if (!dialog.isBodyOpen) {
-		return null;
-	}
-
-	return <section className={clsx("ui_profileDialog__body")}>{props.children}</section>;
-};
-
+```tsx
+// component/ui/profile-dialog/ui-profile-dialog.tsx
 // 상태가 늘었지만 사용처가 쓰는 이름은 2단계와 같다
 export const UiProfileDialog = {
 	Root: UiProfileDialogRoot,
@@ -2471,21 +2515,6 @@ export const UiChip = (props: UiChipProps) => {
 };
 ```
 
-**Incorrect (설명이 컴포넌트에 붙어 계약과 떨어집니다):**
-
-```tsx
-export interface UiPanelHeaderProps {
-	children: ReactNode;
-}
-
-/**
- * 패널 헤더 부품
- */
-export const UiPanelHeader = (props: UiPanelHeaderProps) => {
-	return <header className={clsx("ui_panel__header")}>{props.children}</header>;
-};
-```
-
 **Correct (각 컴포넌트 바로 위에 선언하고 내보냅니다):**
 
 ```tsx
@@ -2501,6 +2530,21 @@ export interface UiBadgeProps {
 
 export const UiBadge = (props: UiBadgeProps) => {
 	return <span className={clsx("ui_badge__root")}>{props.label}</span>;
+};
+```
+
+**Incorrect (설명이 컴포넌트에 붙어 계약과 떨어집니다):**
+
+```tsx
+export interface UiPanelHeaderProps {
+	children: ReactNode;
+}
+
+/**
+ * 패널 헤더 부품
+ */
+export const UiPanelHeader = (props: UiPanelHeaderProps) => {
+	return <header className={clsx("ui_panel__header")}>{props.children}</header>;
 };
 ```
 
@@ -2626,12 +2670,6 @@ return (
 );
 ```
 
-**Incorrect (`&&` 왼쪽에 숫자를 둬서 `0`이 그려집니다):**
-
-```tsx
-return <section>{selectedRows.length && <PgProductBulkActionBar />}</section>;
-```
-
 **Correct (각 JSX 요소 앞에 표시 조건을 둡니다):**
 
 ```tsx
@@ -2641,6 +2679,12 @@ return (
 		{props.view === "table" && <PgTable />}
 	</section>
 );
+```
+
+**Incorrect (`&&` 왼쪽에 숫자를 둬서 `0`이 그려집니다):**
+
+```tsx
+return <section>{selectedRows.length && <PgProductBulkActionBar />}</section>;
 ```
 
 **Correct (한 분기는 `&&`, 왼쪽은 불리언입니다):**
@@ -2931,26 +2975,6 @@ export const PgProducts = () => {
 };
 ```
 
-**Incorrect (컴포넌트 하나만 쓰는 단계 보조 함수를 보조 모듈에 남깁니다):**
-
-```tsx
-const toEditHref = ({editHrefBase, row}: {editHrefBase: string; row: ProductRow}) =>
-	`${editHrefBase}${row.id}/`;
-
-const toProductRows = (response: ProductListResponse) =>
-	response.data.map((product) => ({id: product.id, title: product.title}));
-
-export const PgProductTable = (props: PgProductTableProps) => {
-	const responseProductListSuspense = useProductListSuspense({}, {query: {select: toProductRows}});
-
-	return responseProductListSuspense.data.map((row) => (
-		<a href={toEditHref({editHrefBase: props.editHrefBase, row})} key={row.id}>
-			{row.title}
-		</a>
-	));
-};
-```
-
 **Correct (두 화면이 같은 흐름을 부르게 된 뒤에 공용화합니다):**
 
 ```ts
@@ -2984,6 +3008,26 @@ export const toProductSaveRequest = (formValues: ProductFormValues) => {
 
 	// 2. API가 받는 payload 형태로 조립한다
 	return {categoryId: formValues.categoryId, description, title};
+};
+```
+
+**Incorrect (컴포넌트 하나만 쓰는 단계 보조 함수를 보조 모듈에 남깁니다):**
+
+```tsx
+const toEditHref = ({editHrefBase, row}: {editHrefBase: string; row: ProductRow}) =>
+	`${editHrefBase}${row.id}/`;
+
+const toProductRows = (response: ProductListResponse) =>
+	response.data.map((product) => ({id: product.id, title: product.title}));
+
+export const PgProductTable = (props: PgProductTableProps) => {
+	const responseProductListSuspense = useProductListSuspense({}, {query: {select: toProductRows}});
+
+	return responseProductListSuspense.data.map((row) => (
+		<a href={toEditHref({editHrefBase: props.editHrefBase, row})} key={row.id}>
+			{row.title}
+		</a>
+	));
 };
 ```
 
@@ -3040,16 +3084,6 @@ const PgProductSidebarPanel = (props: PgProductSidebarPanelProps) => {
 
 const PgProductDetailPanel = (props: PgProductDetailPanelProps) => {
 	return <section className={clsx("pg_products__detail")}>{props.children}</section>;
-};
-```
-
-**Incorrect (라우트 진입이 대신 읽어 프롭으로 내립니다):**
-
-```tsx
-export const PgProducts = () => {
-	const responseProductTreeSuspense = useProductTreeSuspense();
-
-	return <PgProductTreeSection categoryNodes={responseProductTreeSuspense.data.nodes} />;
 };
 ```
 
@@ -3114,6 +3148,16 @@ export const PgProductTreeSection = () => {
 			)}
 		</section>
 	);
+};
+```
+
+**Incorrect (라우트 진입이 대신 읽어 프롭으로 내립니다):**
+
+```tsx
+export const PgProducts = () => {
+	const responseProductTreeSuspense = useProductTreeSuspense();
+
+	return <PgProductTreeSection categoryNodes={responseProductTreeSuspense.data.nodes} />;
 };
 ```
 
@@ -3471,7 +3515,7 @@ export const PgProducts = () => {
 
 **Incorrect (파생값을 이펙트로 다시 상태에 동기화합니다):**
 
-```ts
+```tsx
 const [selectedIds, setSelectedIds] = useState<string[]>([]);
 const [selectedCount, setSelectedCount] = useState(0);
 
@@ -3539,6 +3583,18 @@ const responseUserGetItemSuspense = useUserGetItemSuspense();
 const [userName, setUserName] = useState(responseUserGetItemSuspense.data.name);
 ```
 
+**Correct (도구를 진짜 출처에 맞춥니다):**
+
+```ts
+const [isOpen, setIsOpen] = useState(false);
+const themeStore = useThemeStore();
+
+/**
+ * 사용자 상세 조회 API
+ */
+const responseUserGetItemSuspense = useUserGetItemSuspense();
+```
+
 **Incorrect (링크로 살아남아야 할 목록 필터를 `useState`가 소유합니다):**
 
 ```ts
@@ -3550,18 +3606,6 @@ const [page, setPage] = useState(1);
 
 ```ts
 const [urlParams, setUrlParams] = useQueryStates(productUrlParsers);
-```
-
-**Correct (도구를 진짜 출처에 맞춥니다):**
-
-```ts
-const [isOpen, setIsOpen] = useState(false);
-const themeStore = useThemeStore();
-
-/**
- * 사용자 상세 조회 API
- */
-const responseUserGetItemSuspense = useUserGetItemSuspense();
 ```
 
 **Correct (합성 컴포넌트 안에서 부품끼리 나눠 쓰는 상태는 `Context`로 내려보냅니다):**
@@ -4178,13 +4222,6 @@ const handleTagClick = (nextTagId: string) => {
 return <UiTagRows rows={tagRows} selectedTagId={selectedTagId} />;
 ```
 
-**Incorrect (입력과 무거운 파생 렌더를 같은 값에 묶습니다):**
-
-```tsx
-const [keyword, setKeyword] = useState("");
-const filteredRows = rows.filter((row) => fuzzyMatchRow(row, keyword));
-```
-
 **Correct (측정 근거가 있는 갱신만 전환으로 감싸고 행 20개 목록은 그대로 둡니다):**
 
 ```tsx
@@ -4198,6 +4235,13 @@ const handleStatusFilterChange = (nextStatus: ProductStatusFilter) => {
 		setStatusFilter(nextStatus);
 	});
 };
+```
+
+**Incorrect (입력과 무거운 파생 렌더를 같은 값에 묶습니다):**
+
+```tsx
+const [keyword, setKeyword] = useState("");
+const filteredRows = rows.filter((row) => fuzzyMatchRow(row, keyword));
 ```
 
 **Correct (입력은 즉시 반응하고 무거운 파생 계산만 늦춥니다):**

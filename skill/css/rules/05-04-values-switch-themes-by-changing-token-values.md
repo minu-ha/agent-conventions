@@ -59,6 +59,18 @@ tags: values, theme
 }
 ```
 
+**Correct (컴포넌트는 토큰만 씁니다):**
+
+```css
+/* src/page/products/pg-products.css */
+.pg_products__panel {
+	background-color: var(--app-color-surface);
+	color: var(--app-color-text-primary);
+	border: 1px solid var(--app-color-border);
+	box-shadow: var(--app-shadow-panel);
+}
+```
+
 **Incorrect (값으로 이름을 짓고 그림자를 직접 적습니다):**
 
 ```css
@@ -118,17 +130,5 @@ tags: values, theme
 	--app-color-text-primary: #e9ecef;
 	--app-color-border: #3a3f44;
 	--app-shadow-panel: 0 1px 3px rgb(0 0 0 / 60%);
-}
-```
-
-**Correct (컴포넌트는 토큰만 씁니다):**
-
-```css
-/* src/page/products/pg-products.css */
-.pg_products__panel {
-	background-color: var(--app-color-surface);
-	color: var(--app-color-text-primary);
-	border: 1px solid var(--app-color-border);
-	box-shadow: var(--app-shadow-panel);
 }
 ```

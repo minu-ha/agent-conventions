@@ -146,6 +146,8 @@ body {
 .row-ti { min-width: 0; font-size: 14.5px; font-weight: 600; letter-spacing: -.01em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 /* 제목 안 식별자도 본문 코드와 같은 배경을 줘서 영어 낱말이 아니라 코드로 읽히게 한다. */
 .row-ti code, .ref-ti code { font-family: var(--mono); font-size: .86em; font-weight: 500; background: var(--hover); border: 1px solid var(--soft); border-radius: 3px; padding: 0 .28em; }
+/* 예시 제목 안 식별자도 칩으로 그린다. 상자 색과 다투지 않게 중립 회색으로 둔다. */
+.box-note code { font-family: var(--mono); font-size: .88em; font-weight: 500; color: var(--ink); background: color-mix(in srgb, var(--ink) 7%, var(--card)); border: 1px solid color-mix(in srgb, var(--ink) 13%, transparent); border-radius: 3px; padding: 0 .26em; }
 .row[data-open="1"] .row-ti { white-space: normal; }
 .row-meta { display: flex; align-items: center; gap: 10px; flex: 0 0 auto; }
 .car { color: var(--muted); font-size: 11px; width: 12px; text-align: center; }
@@ -709,9 +711,12 @@ const viewerClientScript = `(() => {
 			const e = r.examples[i];
 			const nx = r.examples[i + 1];
 
-			// 같은 언어의 코드 블록 하나끼리만 짝으로 세운다.
-			// tsx 예시와 txt 흐름도를 마주 놓으면 비교가 아니라 두 다른 글이 나란히 선다.
-			const pairable = e.kind === "incorrect" && nx && nx.kind === "correct" &&
+			// 짝은 Incorrect 하나가 Correct 하나를 마주 볼 때만 성립한다.
+			// 어느 한쪽에 형제가 있으면 짝이 아니라 묶음이다 — 골라 쓰는 대안이거나 이어지는 단계다.
+			// 같은 언어여야 한다. tsx 예시와 txt 흐름도를 마주 놓으면 비교가 아니라 두 다른 글이 나란히 선다.
+			const alone = (i === 0 || r.examples[i - 1].kind !== "incorrect") &&
+				(i + 2 >= r.examples.length || r.examples[i + 2].kind !== "correct");
+			const pairable = alone && e.kind === "incorrect" && nx && nx.kind === "correct" &&
 				e.blocks.length === 1 && nx.blocks.length === 1 && e.blocks[0].lang === nx.blocks[0].lang;
 
 			if (pairable) {

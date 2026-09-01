@@ -41,16 +41,6 @@ const PgProductDetailPanel = (props: PgProductDetailPanelProps) => {
 };
 ```
 
-**Incorrect (라우트 진입이 대신 읽어 프롭으로 내립니다):**
-
-```tsx
-export const PgProducts = () => {
-	const responseProductTreeSuspense = useProductTreeSuspense();
-
-	return <PgProductTreeSection categoryNodes={responseProductTreeSuspense.data.nodes} />;
-};
-```
-
 **Correct (자기 데이터·상태·상호작용을 직접 가진 섹션만 추출하고, 데이터는 섹션이 자기 key 로 읽습니다):**
 
 ```tsx
@@ -112,6 +102,16 @@ export const PgProductTreeSection = () => {
 			)}
 		</section>
 	);
+};
+```
+
+**Incorrect (라우트 진입이 대신 읽어 프롭으로 내립니다):**
+
+```tsx
+export const PgProducts = () => {
+	const responseProductTreeSuspense = useProductTreeSuspense();
+
+	return <PgProductTreeSection categoryNodes={responseProductTreeSuspense.data.nodes} />;
 };
 ```
 

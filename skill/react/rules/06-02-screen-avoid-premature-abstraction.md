@@ -57,26 +57,6 @@ export const PgProducts = () => {
 };
 ```
 
-**Incorrect (컴포넌트 하나만 쓰는 단계 보조 함수를 보조 모듈에 남깁니다):**
-
-```tsx
-const toEditHref = ({editHrefBase, row}: {editHrefBase: string; row: ProductRow}) =>
-	`${editHrefBase}${row.id}/`;
-
-const toProductRows = (response: ProductListResponse) =>
-	response.data.map((product) => ({id: product.id, title: product.title}));
-
-export const PgProductTable = (props: PgProductTableProps) => {
-	const responseProductListSuspense = useProductListSuspense({}, {query: {select: toProductRows}});
-
-	return responseProductListSuspense.data.map((row) => (
-		<a href={toEditHref({editHrefBase: props.editHrefBase, row})} key={row.id}>
-			{row.title}
-		</a>
-	));
-};
-```
-
 **Correct (두 화면이 같은 흐름을 부르게 된 뒤에 공용화합니다):**
 
 ```ts
@@ -110,6 +90,26 @@ export const toProductSaveRequest = (formValues: ProductFormValues) => {
 
 	// 2. API가 받는 payload 형태로 조립한다
 	return {categoryId: formValues.categoryId, description, title};
+};
+```
+
+**Incorrect (컴포넌트 하나만 쓰는 단계 보조 함수를 보조 모듈에 남깁니다):**
+
+```tsx
+const toEditHref = ({editHrefBase, row}: {editHrefBase: string; row: ProductRow}) =>
+	`${editHrefBase}${row.id}/`;
+
+const toProductRows = (response: ProductListResponse) =>
+	response.data.map((product) => ({id: product.id, title: product.title}));
+
+export const PgProductTable = (props: PgProductTableProps) => {
+	const responseProductListSuspense = useProductListSuspense({}, {query: {select: toProductRows}});
+
+	return responseProductListSuspense.data.map((row) => (
+		<a href={toEditHref({editHrefBase: props.editHrefBase, row})} key={row.id}>
+			{row.title}
+		</a>
+	));
 };
 ```
 

@@ -70,20 +70,6 @@ import {PgSectionHeading} from "@/page/detail/_pg-section-heading";
 import {PgLegendRow} from "@/page/detail/summary-band/_pg-legend-row";
 ```
 
-**Incorrect (다른 라우트 안의 컴포넌트를 가져옵니다):**
-
-```tsx
-// page/index/pg-index.tsx
-import {PgSalesTrendPanel} from "@/page/detail/sales-trend-panel/pg-sales-trend-panel";
-```
-
-**Incorrect (`ui`가 `widget`을 가져옵니다):**
-
-```tsx
-// component/ui/legend/ui-legend.tsx
-import {WgLegendPanel} from "@/component/widget/legend-panel/wg-legend-panel";
-```
-
 **Correct (진입 파일이 자기 파일과 형제 소유자의 진입 파일을 조립해서 내려보냅니다):**
 
 ```tsx
@@ -100,6 +86,20 @@ export const PgSalesTrendPanel = (props: PgSalesTrendPanelProps) => {
 		</section>
 	);
 };
+```
+
+**Incorrect (다른 라우트 안의 컴포넌트를 가져옵니다):**
+
+```tsx
+// page/index/pg-index.tsx
+import {PgSalesTrendPanel} from "@/page/detail/sales-trend-panel/pg-sales-trend-panel";
+```
+
+**Incorrect (`ui`가 `widget`을 가져옵니다):**
+
+```tsx
+// component/ui/legend/ui-legend.tsx
+import {WgLegendPanel} from "@/component/widget/legend-panel/wg-legend-panel";
 ```
 
 **Correct (역할 폴더의 파일은 레이어 방향만 지키면 밖에서도 가져옵니다):**

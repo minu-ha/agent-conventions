@@ -38,7 +38,7 @@ tags: docs, comments
 `docs-justify-convention-exceptions-with-a-reason-comment`가 따로 정합니다.
 이 규칙은 본문 안 어디에 어떤 형태로 다는지를 봅니다.
 
-**Incorrect (본문 안 지역 선언에 블록 주석을 씁니다):**
+**Incorrect (지역 선언에 코드를 옮겨 적은 블록 주석을 답니다):**
 
 ```ts
 const toMatchedProducts = (products: Product[], keyword: string) => {
@@ -48,6 +48,33 @@ const toMatchedProducts = (products: Product[], keyword: string) => {
 	const lowerKeyword = keyword.trim().toLowerCase();
 
 	return products.filter((product) => product.title.toLowerCase().includes(lowerKeyword));
+};
+```
+
+**Correct (선언 이름이 이미 말하는 주석은 지웁니다):**
+
+```ts
+const toMatchedProducts = (products: Product[], keyword: string) => {
+	const lowerKeyword = keyword.trim().toLowerCase();
+
+	return products.filter((product) => product.title.toLowerCase().includes(lowerKeyword));
+};
+```
+
+**Incorrect (지켜야 할 순서와 제약을 주석 없이 코드에만 둡니다):**
+
+```ts
+const submitProductDraft = async (draft: ProductDraft) => {
+	if (!draft.title.trim()) {
+		return;
+	}
+
+	const uploadedAttachments = await uploadAttachments(draft.attachments);
+	const savedProduct = await saveProduct({title: draft.title, attachments: uploadedAttachments});
+
+	await queryClient.invalidateQueries({queryKey: ["products"]});
+
+	return savedProduct;
 };
 ```
 

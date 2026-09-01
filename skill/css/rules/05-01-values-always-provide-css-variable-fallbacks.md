@@ -55,7 +55,7 @@ tags: variables, fallbacks, tokens
 ```css
 .pg_postFilterDialog__collapse {
 	& .ant-collapse-item {
-		border-radius: var(--ant-border-radius-lg, 10px);
+		border-radius: var(--ant-border-radius-lg);
 	}
 }
 ```
@@ -79,7 +79,7 @@ tags: variables, fallbacks, tokens
 
 .pg_postFilterDialog__collapse {
 	& .ant-collapse-item {
-		border-radius: var(--mk-size-radius-card, 10px);
+		border-radius: var(--ant-border-radius-lg, 10px);
 	}
 }
 ```

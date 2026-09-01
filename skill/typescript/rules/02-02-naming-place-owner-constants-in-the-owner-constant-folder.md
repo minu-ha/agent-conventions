@@ -39,15 +39,6 @@ tags: naming, constant
 export const chart_axis_tick_count = 6;
 ```
 
-**Incorrect (소유자 이름을 되풀이하고 객체 하나에 모읍니다):**
-
-```ts
-// page/product-detail/_constant/product-detail.ts
-export const product_detail_config = {
-	chart_axis_tick_count: 6,
-} as const;
-```
-
 **Correct (소유자 아래 주제 파일에 둡니다):**
 
 ```ts
@@ -56,4 +47,13 @@ export const product_detail_config = {
  * product 상세 차트의 축 눈금 수. 표시 폭이 좁아 여섯을 넘기면 라벨이 겹친다
  */
 export const chart_axis_tick_count = 6;
+```
+
+**Incorrect (소유자 이름을 되풀이하고 객체 하나에 모읍니다):**
+
+```ts
+// page/product-detail/_constant/product-detail.ts
+export const product_detail_config = {
+	chart_axis_tick_count: 6,
+} as const;
 ```

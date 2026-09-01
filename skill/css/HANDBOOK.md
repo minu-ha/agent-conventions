@@ -253,13 +253,6 @@ pg_doc__content   <- 라우트에 없는 줄임말
 pg_x__root        <- 되짚을 이름이 없음
 ```
 
-**Incorrect (충돌이 없는데도 부모 식별자를 미리 붙입니다):**
-
-```txt
-pg_detailSalesTrendPanelOverviewSection__root
-pg_detailSalesTrendPanelSummaryBand__root
-```
-
 **Correct (뼈대는 화면 식별자, 컴포넌트는 자기 식별자를 씁니다):**
 
 ```txt
@@ -269,6 +262,13 @@ document shell     -> pg_document__body
 
 overview section   -> pg_overviewSection__root
 summary band       -> pg_summaryBand__root
+```
+
+**Incorrect (충돌이 없는데도 부모 식별자를 미리 붙입니다):**
+
+```txt
+pg_detailSalesTrendPanelOverviewSection__root
+pg_detailSalesTrendPanelSummaryBand__root
 ```
 
 **Correct (같은 식별자가 실제로 두 화면에 생겼을 때만 구분합니다):**
@@ -430,28 +430,7 @@ component/ui/button/ui-button.css
 	border-radius: 4px;
 }
 
-.ant-btn-icon {
-	color: #8c8c8c;
-}
-```
-
-**Incorrect (최상위 블록 없이 다른 `scope_slug`의 클래스를 바로 씁니다):**
-
-```css
-/* page/detail/pg-detail.css */
-.wg_chartCard__caption {
-	color: #8c8c8c;
-}
-
-.ui_card__title {
-	font-size: 13px;
-}
-```
-
-**Incorrect (최상위 블록을 열지 않고 바깥에서 이어 씁니다):**
-
-```css
-.pg_treePanel__root .ant-tree-title {
+.ant-tree-title {
 	color: #8c8c8c;
 }
 ```
@@ -461,13 +440,25 @@ component/ui/button/ui-button.css
 ```css
 .pg_treePanel__root {
 	& .ant-tree-node-content-wrapper {
-		display: inline-flex;
 		border-radius: 4px;
 	}
 
 	& .ant-tree-title {
 		color: #8c8c8c;
 	}
+}
+```
+
+**Incorrect (최상위 블록 없이 다른 `scope_slug`의 클래스를 바로 씁니다):**
+
+```css
+/* page/detail/pg-detail.css */
+.wg_chartCard__caption {
+	letter-spacing: 0.02em;
+}
+
+.ui_card__title {
+	font-size: 13px;
 }
 ```
 
@@ -481,10 +472,22 @@ component/ui/button/ui-button.css
 	& .wg_chartCard__caption {
 		letter-spacing: 0.02em;
 	}
+
+	& .ui_card__title {
+		font-size: 13px;
+	}
 }
 ```
 
-**Correct (중첩된 자손까지 적용되면 안 될 때 직계로 좁힙니다):**
+**Incorrect (최상위 블록을 열지 않고 바깥에서 이어 씁니다):**
+
+```css
+.pg_treePanel__toolbar > .ant-btn > .ant-btn-icon {
+	color: #8c8c8c;
+}
+```
+
+**Correct (내 최상위 블록 안에서 열고, 중첩된 자손을 피하려면 직계로 좁힙니다):**
 
 ```css
 .pg_treePanel__toolbar {
@@ -1020,43 +1023,17 @@ CSS에서 수정자를 지울 때 그 클래스를 쓰는 자리가 검색에 �
 **Incorrect (클래스 이름을 값으로 조립합니다):**
 
 ```tsx
+export interface UiTooltipProps {
+	variant?: "fit" | "plain";
+	children: ReactNode;
+}
+
 export const UiTooltip = (props: UiTooltipProps) => {
 	return (
 		<div className={clsx("ui_tooltip__body", props.variant && `ui_tooltip__body--${props.variant}`)}>
 			{props.children}
 		</div>
 	);
-};
-```
-
-**Incorrect (수정자가 없는 값까지 조립해 CSS에 없는 클래스를 붙입니다):**
-
-```tsx
-type SalesTone = "positive" | "negative" | "neutral" | "unknown";
-
-<span className={clsx("pg_salesPanel__metricValue", `pg_salesPanel__metricValue--${tone}`)}>{amount}</span>;
-```
-
-```css
-.pg_salesPanel__metricValue--positive {
-	color: var(--app-color-rise, #d32f2f);
-}
-
-.pg_salesPanel__metricValue--negative {
-	color: var(--app-color-fall, #1976d2);
-}
-```
-
-**Incorrect (라이브러리가 정하는 값으로 수정자를 만듭니다):**
-
-```tsx
-export interface UiButtonProps {
-	variant?: ButtonProps["variant"];
-	className?: string;
-}
-
-export const UiButton = (props: UiButtonProps) => {
-	return <Button className={clsx("ui_button__root", `ui_button__root--${props.variant}`, props.className)} />;
 };
 ```
 
@@ -1083,6 +1060,24 @@ export const UiTooltip = (props: UiTooltipProps) => {
 };
 ```
 
+**Incorrect (수정자가 없는 값까지 조립해 CSS에 없는 클래스를 붙입니다):**
+
+```tsx
+type SalesTone = "positive" | "negative" | "neutral" | "unknown";
+
+<span className={clsx("pg_salesPanel__metricValue", `pg_salesPanel__metricValue--${tone}`)}>{amount}</span>;
+```
+
+```css
+.pg_salesPanel__metricValue--positive {
+	color: var(--app-color-rise, #d32f2f);
+}
+
+.pg_salesPanel__metricValue--negative {
+	color: var(--app-color-fall, #1976d2);
+}
+```
+
 **Correct (CSS에 수정자가 있는 두 값만 적고 나머지는 기본 모습을 씁니다):**
 
 ```tsx
@@ -1095,14 +1090,6 @@ export const UiTooltip = (props: UiTooltipProps) => {
 >
 	{amount}
 </span>;
-```
-
-**Correct (라이브러리가 정하는 값은 수정자로 만들지 않고 그대로 넘깁니다):**
-
-```tsx
-export const UiButton = (props: UiButtonProps) => {
-	return <Button className={clsx("ui_button__root", props.className)} variant={props.variant} />;
-};
 ```
 
 **Correct (같은 값이 요소 셋의 수정자를 정하면 요소마다 나열을 반복합니다):**
@@ -1143,6 +1130,32 @@ export const WgFlowNode = (props: WgFlowNodeProps) => {
 			</p>
 		</div>
 	);
+};
+```
+
+**Incorrect (라이브러리가 정하는 값으로 수정자를 만듭니다):**
+
+```tsx
+export interface UiButtonProps {
+	variant?: ButtonProps["variant"];
+	className?: string;
+}
+
+export const UiButton = (props: UiButtonProps) => {
+	return <Button className={clsx("ui_button__root", `ui_button__root--${props.variant}`, props.className)} />;
+};
+```
+
+**Correct (라이브러리가 정하는 값은 수정자로 만들지 않고 그대로 넘깁니다):**
+
+```tsx
+export interface UiButtonProps {
+	variant?: ButtonProps["variant"];
+	className?: string;
+}
+
+export const UiButton = (props: UiButtonProps) => {
+	return <Button className={clsx("ui_button__root", props.className)} variant={props.variant} />;
 };
 ```
 
@@ -1413,17 +1426,6 @@ TSX에서 그 지점이 보이므로 "이 마크업을 우리가 쓰는가"를 �
 }
 ```
 
-**Incorrect (한 대상의 진입 조건을 `,`로 나열합니다):**
-
-```css
-.pg_salesPanel__spreadButton {
-	&:hover .pg_salesPanel__spreadBox,
-	&.Mui-focusVisible .pg_salesPanel__spreadBox {
-		border-color: #9fadc7;
-	}
-}
-```
-
 **Correct (각 클래스가 자기 선언을 전부 가집니다):**
 
 ```css
@@ -1446,6 +1448,17 @@ TSX에서 그 지점이 보이므로 "이 마크업을 우리가 쓰는가"를 �
 	width: 24px;
 	height: 24px;
 	background: rgb(140 152 160 / 12%);
+}
+```
+
+**Incorrect (한 대상의 진입 조건을 `,`로 나열합니다):**
+
+```css
+.pg_salesPanel__spreadButton {
+	&:hover .pg_salesPanel__spreadBox,
+	&.Mui-focusVisible .pg_salesPanel__spreadBox {
+		border-color: #9fadc7;
+	}
 }
 ```
 
@@ -1913,7 +1926,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 ```css
 .pg_postFilterDialog__collapse {
 	& .ant-collapse-item {
-		border-radius: var(--ant-border-radius-lg, 10px);
+		border-radius: var(--ant-border-radius-lg);
 	}
 }
 ```
@@ -1937,7 +1950,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 
 .pg_postFilterDialog__collapse {
 	& .ant-collapse-item {
-		border-radius: var(--mk-size-radius-card, 10px);
+		border-radius: var(--ant-border-radius-lg, 10px);
 	}
 }
 ```
@@ -2201,6 +2214,18 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
+**Correct (컴포넌트는 토큰만 씁니다):**
+
+```css
+/* src/page/products/pg-products.css */
+.pg_products__panel {
+	background-color: var(--app-color-surface);
+	color: var(--app-color-text-primary);
+	border: 1px solid var(--app-color-border);
+	box-shadow: var(--app-shadow-panel);
+}
+```
+
 **Incorrect (값으로 이름을 짓고 그림자를 직접 적습니다):**
 
 ```css
@@ -2260,18 +2285,6 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 	--app-color-text-primary: #e9ecef;
 	--app-color-border: #3a3f44;
 	--app-shadow-panel: 0 1px 3px rgb(0 0 0 / 60%);
-}
-```
-
-**Correct (컴포넌트는 토큰만 씁니다):**
-
-```css
-/* src/page/products/pg-products.css */
-.pg_products__panel {
-	background-color: var(--app-color-surface);
-	color: var(--app-color-text-primary);
-	border: 1px solid var(--app-color-border);
-	box-shadow: var(--app-shadow-panel);
 }
 ```
 
@@ -2584,29 +2597,6 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 놓는 쪽에서 그 폭을 왜 고정하는지가 클래스명과 선언에서 읽혀야 합니다.
 `layout-keep-layout-intent-explicit` 규칙이 그 판정을 합니다.
 
-**Incorrect (버튼이 자기 폭을 뷰포트로 정합니다):**
-
-```css
-.ui_button__root {
-	display: inline-flex;
-	min-height: 40px;
-	padding: 0 var(--app-space-4);
-	width: 300px;
-}
-
-@media (width < 1024px) {
-	.ui_button__root {
-		width: 200px;
-	}
-}
-
-@media (width < 640px) {
-	.ui_button__root {
-		width: 100%;
-	}
-}
-```
-
 **Incorrect (열 개수를 브레이크포인트로 셉니다):**
 
 ```css
@@ -2631,6 +2621,39 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 @media (width < 640px) {
 	.pg_products__grid {
 		grid-template-columns: 1fr;
+	}
+}
+```
+
+**Correct (열 개수는 자리가 정합니다):**
+
+```css
+.pg_products__grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+	gap: 16px;
+}
+```
+
+**Incorrect (버튼이 자기 폭을 뷰포트로 정합니다):**
+
+```css
+.ui_button__root {
+	display: inline-flex;
+	min-height: 40px;
+	padding: 0 var(--app-space-4);
+	width: 300px;
+}
+
+@media (width < 1024px) {
+	.ui_button__root {
+		width: 200px;
+	}
+}
+
+@media (width < 640px) {
+	.ui_button__root {
+		width: 100%;
 	}
 }
 ```
@@ -2660,16 +2683,6 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 .ui_formFooter__action {
 	flex: 1 1 200px;
 	max-width: 300px;
-}
-```
-
-**Correct (열 개수는 자리가 정합니다):**
-
-```css
-.pg_products__grid {
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-	gap: 16px;
 }
 ```
 
@@ -2719,19 +2732,10 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 
 ```css
 .ui_button__root {
+	border: 1px solid #d9d9d9;
+
 	&:focus {
 		outline: none;
-	}
-}
-```
-
-**Incorrect (색만 바꾸고 수정자 안에만 둡니다):**
-
-```css
-.ui_button__root--active {
-	&:focus-visible {
-		outline: none;
-		color: #1677ff;
 	}
 }
 ```
@@ -2745,6 +2749,17 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 	&:focus-visible {
 		outline: 2px solid #1677ff;
 		outline-offset: 2px;
+	}
+}
+```
+
+**Incorrect (색만 바꾸고 수정자 안에만 둡니다):**
+
+```css
+.ui_input__field--invalid {
+	&:focus-visible {
+		outline: none;
+		color: #1677ff;
 	}
 }
 ```
