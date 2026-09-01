@@ -12,7 +12,8 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 	--hair: #d8dee2; --soft: #e4e9ec; --edge: #c3ccd1; --hover: #e7ecef;
 	--coral: #cc785c; --coral-dk: #a9583e;
 	--bad: #a8392b; --good: #3f6f52; --tag-fg: #7d6a55;
-	--code-bg: #fff; --code-fg: #14191c;
+	--code-bg: #fff; --code-fg: #0f1416;
+	--gut: #8d989e; --code-c: #55656d; --code-s: #245c40; --code-k: #9c4a2e; --code-g: #6d5a45;
 	--sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
 	--mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
@@ -25,7 +26,8 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 		--hair: #262d31; --soft: #222a2e; --edge: #3a444a; --hover: #1e2528;
 		--coral: #d98a6c; --coral-dk: #e0a184;
 		--bad: #dd8a7d; --good: #6bb890; --tag-fg: #b39a7c;
-		--code-bg: #12171a; --code-fg: #e4eaec;
+		--code-bg: #12171a; --code-fg: #eef3f5;
+		--gut: #6d7a81; --code-c: #93a1a8; --code-s: #86c9a3; --code-k: #eda183; --code-g: #cbb08c;
 	}
 }
 
@@ -35,7 +37,8 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 	--hair: #262d31; --soft: #222a2e; --edge: #3a444a; --hover: #1e2528;
 	--coral: #d98a6c; --coral-dk: #e0a184;
 	--bad: #dd8a7d; --good: #6bb890; --tag-fg: #b39a7c;
-	--code-bg: #12171a; --code-fg: #e4eaec;
+	--code-bg: #12171a; --code-fg: #eef3f5;
+	--gut: #6d7a81; --code-c: #93a1a8; --code-s: #86c9a3; --code-k: #eda183; --code-g: #cbb08c;
 }
 
 body {
@@ -167,11 +170,12 @@ body {
 .acc-body p { margin: 0 0 .75em; }
 .acc-body p:last-child { margin-bottom: 0; }
 .acc-body .lead { margin: 0 0 .9em; padding-left: 11px; border-left: 2px solid color-mix(in srgb, var(--coral) 55%, transparent); color: var(--ink); font-weight: 500; line-height: 1.7; }
-.acc-body ul { margin: 0 0 .95em; padding: 0; list-style: none; display: flex; flex-direction: column; gap: .45em; }
+.acc-body ul { margin: 0 0 .95em; padding-left: 1.15em; list-style: none; display: flex; flex-direction: column; gap: .45em; }
 .acc-body ul:last-child { margin-bottom: 0; }
-/* 표식과 본문을 격자로 맞춰야 두 줄 넘는 항목의 둘째 줄이 표식 아래로 들어가지 않는다. */
-.acc-body li { display: grid; grid-template-columns: .9em minmax(0, 1fr); align-items: baseline; gap: .35em; }
-.acc-body li::before { content: "—"; color: var(--coral); font-size: .8em; }
+/* li 를 grid 로 두면 텍스트 런과 인라인 code 칩이 각각 그리드 아이템이 되어 한 글자씩 세로로 쌓인다.
+   표식은 흐름 밖으로 빼고 걸이 들여쓰기로 둘째 줄을 맞춘다. */
+.acc-body li { position: relative; }
+.acc-body li::before { content: "—"; position: absolute; left: -1.15em; color: var(--coral); font-size: .8em; }
 .acc-body code { font-family: var(--mono); font-size: .88em; background: var(--hover); border: 1px solid var(--soft); border-radius: 3px; padding: 0 .25em; }
 .acc-body strong { color: var(--ink); font-weight: 600; }
 .acc-body .tw { overflow-x: auto; margin: 0 0 .8em; }
@@ -229,9 +233,10 @@ body {
 
 /* ---------- code ---------- */
 /* 줄번호·마커·코드 3열. 거터 폭을 3em 으로 고정해 예시끼리 코드 시작이 맞는다. */
-.cd { display: grid; grid-template-columns: 3em 16px minmax(0, 1fr); padding: 9px 12px 9px 0; font-family: var(--mono); font-size: 12px; line-height: 1.65; background: var(--code-bg); color: var(--code-fg); tab-size: 2; }
+/* 거터는 세 자리 줄번호가 안 접히게 잡는다. 3em 은 안쪽 여백을 빼면 두 자리도 못 담는다. */
+.cd { display: grid; grid-template-columns: 3.7em 16px minmax(0, 1fr); padding: 9px 12px 9px 0; font-family: var(--mono); font-size: 11.5px; line-height: 1.65; background: var(--code-bg); color: var(--code-fg); tab-size: 2; }
 .cd i { display: block; font-style: normal; min-height: 1.65em; }
-.cd .n { padding: 0 10px 0 12px; text-align: right; color: var(--faint); font-variant-numeric: tabular-nums; user-select: none; }
+.cd .n { padding: 0 9px 0 10px; text-align: right; white-space: nowrap; color: var(--gut); font-variant-numeric: tabular-nums; user-select: none; }
 .cd .m { text-align: center; font-weight: 700; color: transparent; user-select: none; border-right: 1px solid var(--soft); }
 .cd .c { padding: 0 6px 0 12px; white-space: pre-wrap; overflow-wrap: anywhere; }
 /* 바뀐 줄만 옅게 칠하고 거터 숫자와 마커를 의미색으로 바꾼다. */
@@ -246,11 +251,11 @@ body {
 .cd + .cd, .cd + .cd-lb, .cd-p + .cd { border-top: 1px solid var(--soft); }
 .cd-lb { font-family: var(--mono); font-size: 9.5px; letter-spacing: .06em; color: var(--faint); padding: 6px 14px 0; background: var(--code-bg); }
 
-pre.code { margin: 0; padding: 11px 13px; font-family: var(--mono); font-size: 12px; line-height: 1.75; background: color-mix(in srgb, var(--ink) 4%, var(--code-bg)); color: var(--code-fg); white-space: pre-wrap; overflow-wrap: anywhere; tab-size: 2; }
-.c { color: var(--faint); }
-.s { color: var(--good); }
-.k { color: var(--coral-dk); font-weight: 600; }
-.g { color: var(--tag-fg); }
+pre.code { margin: 0; padding: 11px 13px; font-family: var(--mono); font-size: 11.5px; line-height: 1.75; background: color-mix(in srgb, var(--ink) 4%, var(--code-bg)); color: var(--code-fg); white-space: pre-wrap; overflow-wrap: anywhere; tab-size: 2; }
+.c { color: var(--code-c); }
+.s { color: var(--code-s); }
+.k { color: var(--code-k); font-weight: 600; }
+.g { color: var(--code-g); }
 
 
 /* 참조는 칩이 아니라 목록으로 둔다. 문장 안 참조와 모양이 같으면 둘을 구분할 수 없다. */
@@ -285,7 +290,7 @@ pre.code { margin: 0; padding: 11px 13px; font-family: var(--mono); font-size: 1
 mark { background: color-mix(in srgb, var(--coral) 30%, transparent); color: inherit; border-radius: 2px; }
 
 /* 적용 조건 불렛. 제외 조건은 라벨 칩과 낮은 대비로 본 조건과 갈라 읽힌다. */
-.acc-body li.li-x { color: var(--muted); grid-template-columns: auto minmax(0, 1fr); }
+.acc-body li.li-x { color: var(--muted); }
 .acc-body li.li-x::before { content: none; }
 .x-lb { font-family: var(--mono); font-size: 9.5px; letter-spacing: .06em; color: var(--faint); border: 1px solid var(--hair); border-radius: 2px; padding: 1px 5px; white-space: nowrap; }
 
