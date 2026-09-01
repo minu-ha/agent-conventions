@@ -19,7 +19,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 	--bad: #a8392b; --good: #3f6f52; --tag-fg: #7d6a55;
 	--code-bg: #fff; --code-fg: #0f1416;
 	--gut: #5c686e; --code-c: #3d4a51; --code-s: #1c5238; --code-k: #8f4025; --code-g: #5d4c39;
-	--dx-b: #5f6b71; --dx-a: #2b6cb0;
+	--dx-b: #46525a; --dx-a: #1b5896;
 	--sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
 	--mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
@@ -34,7 +34,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 		--bad: #dd8a7d; --good: #6bb890; --tag-fg: #b39a7c;
 		--code-bg: #12171a; --code-fg: #eef3f5;
 		--gut: #93a0a7; --code-c: #b3c0c6; --code-s: #94d6ae; --code-k: #f3ad90; --code-g: #d8bd99;
-		--dx-b: #9aa7ad; --dx-a: #7cb3e8;
+		--dx-b: #aab7bd; --dx-a: #8dc2f2;
 	}
 }
 
@@ -46,7 +46,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 	--bad: #dd8a7d; --good: #6bb890; --tag-fg: #b39a7c;
 	--code-bg: #12171a; --code-fg: #eef3f5;
 	--gut: #93a0a7; --code-c: #b3c0c6; --code-s: #94d6ae; --code-k: #f3ad90; --code-g: #d8bd99;
-	--dx-b: #9aa7ad; --dx-a: #7cb3e8;
+	--dx-b: #aab7bd; --dx-a: #8dc2f2;
 }
 
 body {
@@ -203,17 +203,17 @@ body {
 .dx-tag { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: .12em; white-space: nowrap; color: var(--dx-a); }
 .dx-rule { height: 1px; background: color-mix(in srgb, var(--dx-a) 30%, transparent); }
 /* 짝 비교는 옳고 그름이 아니라 전후라서 붉고 푸른 축 대신 회색→파랑을 쓴다. */
-.box-b { border-left: 2px solid color-mix(in srgb, var(--dx-b) 60%, transparent); }
-.box-a { border-left: 2px solid color-mix(in srgb, var(--dx-a) 60%, transparent); }
-.box-b > .box-hd { background: color-mix(in srgb, var(--dx-b) 6%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--dx-b) 20%, transparent); }
-.box-a > .box-hd { background: color-mix(in srgb, var(--dx-a) 6%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--dx-a) 20%, transparent); }
+.box-b { border-left: 3px solid color-mix(in srgb, var(--dx-b) 75%, transparent); }
+.box-a { border-left: 3px solid color-mix(in srgb, var(--dx-a) 75%, transparent); }
+.box-b > .box-hd { background: color-mix(in srgb, var(--dx-b) 10%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--dx-b) 28%, transparent); }
+.box-a > .box-hd { background: color-mix(in srgb, var(--dx-a) 10%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--dx-a) 28%, transparent); }
 .box-b .box-gl { color: var(--dx-b); }
 .box-a .box-gl { color: var(--dx-a); }
-.box-b .box-side { color: var(--dx-b); border: 1px solid color-mix(in srgb, var(--dx-b) 40%, transparent); }
-.box-a .box-side { color: var(--dx-a); border: 1px solid color-mix(in srgb, var(--dx-a) 40%, transparent); }
-.box-b .cd .on { background: color-mix(in srgb, var(--dx-b) 9%, transparent); }
+.box-b .box-side { color: var(--dx-b); border: 1px solid color-mix(in srgb, var(--dx-b) 50%, transparent); }
+.box-a .box-side { color: var(--dx-a); border: 1px solid color-mix(in srgb, var(--dx-a) 50%, transparent); }
+.box-b .cd .on { background: color-mix(in srgb, var(--dx-b) 13%, transparent); }
 .box-b .cd .n.on, .box-b .cd .m.on { color: var(--dx-b); }
-.box-a .cd .on { background: color-mix(in srgb, var(--dx-a) 9%, transparent); }
+.box-a .cd .on { background: color-mix(in srgb, var(--dx-a) 13%, transparent); }
 .box-a .cd .n.on, .box-a .cd .m.on { color: var(--dx-a); }
 .box-lead { display: inline-flex; align-items: center; gap: 6px; flex: 0 0 auto; }
 .box-side { font-family: var(--mono); font-size: 9.5px; font-weight: 500; letter-spacing: .06em; padding: 1px 5px; border-radius: 2px; white-space: nowrap; }
@@ -699,11 +699,10 @@ body:has(.dlg[open]) { overflow: hidden; }
 		const openIdx = state.sample.get(skey) || [];
 		const allOpen = n > 0 && samples.every((_, i) => openIdx.indexOf(i) >= 0);
 		const cls = bad ? "gx-bad" : "gx-good";
-		const head = n > 1
-			? '<div class="gx-hd"><span class="gx-tag"><span aria-hidden="true">' + (bad ? "\u2715" : "\u2713") + "</span>" +
+		const head = '<div class="gx-hd"><span class="gx-tag"><span aria-hidden="true">' + (bad ? "\u2715" : "\u2713") + "</span>" +
 				"<span>" + (bad ? "INCORRECT" : "CORRECT") + " \u00b7 " + n + '</span></span><span class="gx-rule"></span>' +
-				'<button class="gx-all" data-all="' + esc(skey) + '" data-n="' + n + '">' + (allOpen ? "모두 접기" : "모두 펼치기") + "</button></div>"
-			: "";
+				(n > 1 ? '<button class="gx-all" data-all="' + esc(skey) + '" data-n="' + n + '">' + (allOpen ? "모두 접기" : "모두 펼치기") + "</button>" : "") +
+			"</div>";
 		const rows = samples.map((e, i) => {
 			const isOpen = openIdx.indexOf(i) >= 0;
 
@@ -761,7 +760,7 @@ body:has(.dlg[open]) { overflow: hidden; }
 
 			const exsHtml = units.map((u) => u.diff
 				? '<div class="dx"><div class="dx-hd"><span class="dx-tag"><span aria-hidden="true">\u21c4</span>' +
-					"<span>같은 코드 \u00b7 고치기 전 \u2192 후</span></span>" +
+					"<span>DIFF</span></span>" +
 					'<span class="dx-rule"></span></div>' +
 					'<div class="diff">' + boxHtml(u.bad, u.marks ? u.marks.am : null, "BEFORE") +
 					boxHtml(u.good, u.marks ? u.marks.bm : null, "AFTER") + "</div></div>"
