@@ -222,6 +222,8 @@ body {
 .box-b .cd .n.on, .box-b .cd .m.on { color: var(--dx-b); }
 .box-a .cd .on { background: color-mix(in srgb, var(--dx-a) 13%, transparent); }
 .box-a .cd .n.on, .box-a .cd .m.on { color: var(--dx-a); }
+/* 맞은편에만 줄이 있는 자리. 여기에 아무것도 없다는 것이 보여야 좌우 대응이 읽힌다. */
+.cd .pad { background: repeating-linear-gradient(135deg, transparent, transparent 4px, color-mix(in srgb, var(--ink) 5%, transparent) 4px, color-mix(in srgb, var(--ink) 5%, transparent) 8px); }
 .box-lead { display: inline-flex; align-items: center; gap: 6px; flex: 0 0 auto; }
 .box-side { font-family: var(--mono); font-size: 9.5px; font-weight: 500; letter-spacing: .06em; padding: 1px 5px; border-radius: 2px; white-space: nowrap; }
 .box-bad .box-side { color: var(--bad); border: 1px solid color-mix(in srgb, var(--bad) 35%, transparent); }
@@ -643,9 +645,10 @@ body:has(.dlg[open]) { overflow: hidden; }
 		return {path: hit[1], code: rest.join("\n")};
 	};
 
-	// 두 예시가 얼마나 닮았는지 LCS 로 재고, 짝이 안 맞은 줄만 바뀐 줄로 표시한다.
-	// 0.45 아래면 서로 다른 코드라 나란히 놓아도 비교가 안 되므로 diff 를 포기한다.
-	const diffMarks = (a, b) => {
+	// 두 예시를 LCS 로 맞춰 좌우 같은 높이에 오도록 행 계획을 만든다.
+	// 짝이 맞은 줄은 마주 보게 두고, 지운 줄과 더한 줄은 같은 행에 세우며, 남는 쪽은 빈 칸으로 메운다.
+	// 0.45 아래면 서로 다른 코드라 줄을 맞춰 봐야 뜻이 없으므로 정렬을 포기한다.
+	const diffPlan = (a, b) => {
 		const n = a.length;
 		const m = b.length;
 
@@ -661,31 +664,58 @@ body:has(.dlg[open]) { overflow: hidden; }
 
 		if (dp[0][0] / Math.max(n, m) < 0.45) return null;
 
-		const am = new Array(n).fill(true);
-		const bm = new Array(m).fill(true);
+		const left = [];
+		const right = [];
+		let del = [];
+		let add = [];
+		// 모아 둔 삭제·추가 묶음을 같은 행에 마주 세운다. 길이가 다르면 짧은 쪽이 빈 칸이다.
+		const flush = () => {
+			for (let k = 0; k < Math.max(del.length, add.length); k++) {
+				left.push(k < del.length ? {i: del[k], changed: true} : null);
+				right.push(k < add.length ? {i: add[k], changed: true} : null);
+			}
+
+			del = [];
+			add = [];
+		};
 		let i = 0;
 		let j = 0;
 
-		while (i < n && j < m) {
-			if (a[i].trim() === b[j].trim()) { am[i] = false; bm[j] = false; i++; j++; }
-			else if (dp[i + 1][j] >= dp[i][j + 1]) i++;
-			else j++;
+		while (i < n || j < m) {
+			if (i < n && j < m && a[i].trim() === b[j].trim()) {
+				flush();
+				left.push({i: i, changed: false});
+				right.push({i: j, changed: false});
+				i++;
+				j++;
+			} else if (j >= m || (i < n && dp[i + 1][j] >= dp[i][j + 1])) {
+				del.push(i);
+				i++;
+			} else {
+				add.push(j);
+				j++;
+			}
 		}
 
-		return {am: am, bm: bm};
+		flush();
+
+		return {left: left, right: right};
 	};
 
 	const codeHtml = (blocks, marks) => blocks.map((b, i) => {
 		const split = splitPath(b.code);
 		const rows = split.code.split("\n");
 		const painted = hl(split.code, b.lang).split("\n");
-		const mask = blocks.length === 1 && marks ? marks : null;
-		const glyph = mask ? (marks.bad ? "\u2212" : "+") : "";
-		const cells = rows.map((_, n) => {
-			const on = mask && mask.mask[n] ? " on" : "";
+		const plan = blocks.length === 1 && marks ? marks.rows : null;
+		const glyph = marks && marks.bad ? "\u2212" : "+";
+		const cells = (plan || rows.map((_unused, n) => ({i: n, changed: false}))).map((row) => {
+			// 맞은편에만 줄이 있는 자리는 빈 칸으로 높이를 맞춰 좌우 행이 어긋나지 않게 한다.
+			if (!row) return '<i class="n pad"></i><i class="m pad"></i><i class="c pad">\u200b</i>';
 
-			return '<i class="n' + on + '">' + (n + 1) + '</i><i class="m' + on + '">' + (on ? glyph : "\u00a0") + '</i>' +
-				'<i class="c' + on + '">' + (painted[n] || "\u200b") + "</i>";
+			const on = row.changed ? " on" : "";
+
+			return '<i class="n' + on + '">' + (row.i + 1) + '</i><i class="m' + on + '">' + (row.changed ? glyph : "\u00a0") + '</i>' +
+				'<i class="c' + on + '">' + (painted[row.i] || "\u200b") + "</i>";
 		}).join("");
 
 		return (blocks.length > 1 ? '<div class="cd-lb">' + (i + 1) + " / " + blocks.length + "  \u00b7  " + esc(b.lang) + "</div>" : "") +
@@ -710,7 +740,7 @@ body:has(.dlg[open]) { overflow: hidden; }
 			: '<div class="box-hd">' + inner + "</div>";
 
 		return '<div class="box ' + tone + '" data-open="' + (open ? 1 : 0) + '">' + head +
-			'<div class="box-body">' + (open ? codeHtml(e.blocks, marks ? {mask: marks, bad: bad} : null) : "") + "</div></div>";
+			'<div class="box-body">' + (open ? codeHtml(e.blocks, marks ? {rows: marks, bad: bad} : null) : "") + "</div></div>";
 	};
 
 	// 같은 종류가 이어지면 한 상자에 넣고 기본으로 접는다. 제목은 늘 보이고 코드만 감춘다.
@@ -765,7 +795,7 @@ body:has(.dlg[open]) { overflow: hidden; }
 				if (sideBySide) {
 					// 줄 강조는 두 예시가 실제로 닮았을 때만 뜻이 있다.
 					// 다시 쓴 예시에 강조를 칠하면 전부 바뀐 줄이 되어 아무것도 못 가린다.
-					marks = diffMarks(splitPath(e.blocks[0].code).code.split("\n"), splitPath(nx.blocks[0].code).code.split("\n"));
+					marks = diffPlan(splitPath(e.blocks[0].code).code.split("\n"), splitPath(nx.blocks[0].code).code.split("\n"));
 					units.push({diff: true, bad: e, good: nx, marks: marks, at: i});
 					i++;
 					continue;
@@ -789,8 +819,8 @@ body:has(.dlg[open]) { overflow: hidden; }
 				return '<div class="dx"><div class="dx-hd"><span class="dx-tag"><span aria-hidden="true">\u21c4</span>' +
 					"<span>DIFF</span></span>" +
 					'<span class="dx-rule"></span></div>' +
-					'<div class="diff">' + boxHtml(u.bad, u.marks ? u.marks.am : null, "BEFORE", toggle) +
-					boxHtml(u.good, u.marks ? u.marks.bm : null, "AFTER", toggle) + "</div></div>";
+					'<div class="diff">' + boxHtml(u.bad, u.marks ? u.marks.left : null, "BEFORE", toggle) +
+					boxHtml(u.good, u.marks ? u.marks.right : null, "AFTER", toggle) + "</div></div>";
 			}).join("");
 			// 두 목록이 무엇이 다른지 라벨만으로는 알 수 없어서 한 줄 설명을 붙인다.
 			const refs = [];
