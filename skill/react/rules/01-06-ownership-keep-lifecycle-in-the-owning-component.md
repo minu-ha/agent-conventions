@@ -30,7 +30,7 @@ tags: ownership, hooks
 **Incorrect (줄 수를 줄이려고 생명주기를 훅 뒤로 옮김):**
 
 ```ts
-// component/chart-root/use-chart-instance.ts
+// component/widget/chart/chart-root/_hook/use-chart-instance.ts
 export const useChartInstance = (containerRef: RefObject<HTMLDivElement | null>) => {
 	const [chart, setChart] = useState<EChartsType | null>(null);
 
@@ -82,7 +82,9 @@ export const WgChartRoot = (props: WgChartRootProps) => {
 	 * container mount 시 chart instance를 만들고 resize·dispose까지 소유
 	 */
 	useEffect(() => {
-		if (!containerRef.current) return;
+		if (!containerRef.current) {
+			return;
+		}
 
 		const instance = init(containerRef.current);
 		const handleResize = () => {

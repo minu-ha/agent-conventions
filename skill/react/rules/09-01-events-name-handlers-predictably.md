@@ -16,10 +16,12 @@ tags: events, naming
 
 이벤트 핸들러는 `handle` 접두사와 역할명을 씁니다.
 
+위에서부터 읽어 처음 걸리는 줄이 그 핸들러의 이름입니다.
+
 | 상황 | 이름 |
 | --- | --- |
-| DOM 이벤트 | `handle + Target + Event` |
-| 그 동작을 일으키는 요소가 컴포넌트에 하나뿐일 때 | `handle + DomainAction` |
+| DOM 이벤트 객체를 받음 | `handle + Target + Event` |
+| 이벤트 객체를 받지 않는 도메인 콜백 | `handle + DomainAction` |
 
 - `on*`은 프롭 이름입니다.
   구현에는 쓰지 않습니다.

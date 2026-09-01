@@ -70,7 +70,7 @@ if (!firstProduct) {
 **Correct (외부 패키지 타입이 실제와 달라 확인할 수 있는 이유를 남김):**
 
 ```ts
-// package.json의 echarts 5.5는 setOption 타입이 series 배열을 받지 못한다.
-// echarts/types/dist/shared.d.ts의 SeriesOption 선언과 런타임 동작이 다르다.
-chart.setOption(option as EChartsOption);
+// package.json의 @mui/material 6.1은 TextField 의 slotProps 타입이 htmlInput 을 받지 못한다.
+// @mui/material/TextField/TextField.d.ts 선언과 런타임 동작이 다르다.
+renderTextField(fieldProps as TextFieldProps);
 ```

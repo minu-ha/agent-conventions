@@ -23,13 +23,14 @@
 화면 본문에 실패 분기를 남기지 않는 판정은 `runtime-avoid-ad-hoc-loading-branches`가 로딩과 함께 봅니다.
 
 **경계가 못 잡는 것이 있습니다.**
-이벤트 핸들러와 비동기 콜백에서 난 오류는 렌더 중에 난 것이 아니어서 경계를 그냥 지나칩니다.
+이벤트 핸들러와 비동기 콜백에서 난 오류는 경계를 그냥 지나칩니다.
 사용자 액션의 실패는 `data-handle-mutation-failure-where-it-is-called`가 정합니다.
 
-라우터가 화면 층 경계를 얹는 API를 제공하면 그것을 쓰고, 없으면 라우트 진입 컴포넌트를 직접 감쌉니다.
+화면 층 경계는 `react-router`의 라우트 `ErrorBoundary`로 얹습니다.
+라우트 밖에서 감싸야 하면 진입 컴포넌트를 직접 감쌉니다.
 어느 쪽이든 경계를 어느 층에 두는지는 위 표가 정합니다.
 
-다시 시도를 열려면 대체 화면에 그 버튼을 두고, React Query의 `QueryErrorResetBoundary`와 함께 씁니다.
+다시 시도를 열려면 대체 화면에 그 버튼을 두고, `@tanstack/react-query`의 `QueryErrorResetBoundary`와 함께 씁니다.
 경계 안에서 상태를 되살릴 수 없으므로 다시 시도는 하위 트리를 새로 마운트합니다.
 
 **Requires selected:** `runtime-place-suspense-boundaries-at-the-section-owner` · 함께 적용

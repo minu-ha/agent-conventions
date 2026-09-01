@@ -19,7 +19,7 @@ tags: ownership
 | 낱말 | 뜻 |
 | --- | --- |
 | 소유자 | 자기만 쓰는 파일을 가진 컴포넌트. 자기 이름의 폴더를 갖고, 라우트는 늘 소유자입니다 |
-| 진입 파일 | 폴더와 같은 이름의 파일. 라우트가 여럿이면 첫 진입은 `pg-<folder>`, 나머지는 `pg-<folder>-<변형>`입니다 |
+| 진입 파일 | 레이어 접두사를 뺀 이름이 폴더와 같은 파일. 한 폴더에 라우트가 여럿이면 첫 진입은 `pg-<folder>`, 나머지는 `pg-<folder>-<변형>`입니다 |
 | `_` 컴포넌트 파일 | 진입 파일이 아닌 컴포넌트 파일. 동반 `.css`도 같은 이름이고, 같은 폴더에서만 가져옵니다 |
 | 역할 폴더 | `_constant`·`_function`·`_hook`·`_type`. 이 넷뿐이고 새로 만들지 않습니다 |
 | 하위 소유자 | 소유자 폴더 안의 소유자. 한 겹까지이고, 역할 폴더 넷이 아닌 폴더는 전부 하위 소유자입니다 |
@@ -49,7 +49,7 @@ tags: ownership
 - 프롭스는 해당 TSX에 두고, 여러 파일이 공유하는 계약만 `_type`으로 옮깁니다.
 - 파일명과 심볼의 레이어 접두사는 `ownership-prefix-layer-names-on-files-and-symbols`가 정합니다.
 - 호출 계층은 폴더 깊이가 아니라 진입 파일의 조립이 드러냅니다.
-  어느 컴포넌트가 이것을 쓰는지 폴더 경로로 표현하려고 중첩을 늘리지 않습니다.
+  어느 컴포넌트가 그 파일을 쓰는지 폴더 경로로 표현하려고 중첩을 늘리지 않습니다.
 
 폴더 이름입니다.
 
@@ -59,10 +59,6 @@ tags: ownership
   다만 레이어 루트라 `_`를 붙이지 않습니다.
   루트에만 있는 `util`과 `config`는 `typescript/functions-promote-shared-functions-to-root-util`과
   `typescript/naming-read-environment-values-through-config-env`가 정합니다.
-
-무엇을 추출할지는 이 규칙이 정하지 않습니다.
-`typescript/functions-extract-helpers-only-when-the-boundary-is-real`이 추출 여부를 먼저 판정하고,
-이 규칙은 그 결과의 위치만 정합니다.
 
 **Incorrect (단순 컴포넌트에 역할 폴더를 미리 다 만듦):**
 

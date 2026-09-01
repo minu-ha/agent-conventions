@@ -19,7 +19,8 @@
 `react/composition-do-not-define-components-inside-components`와 판정 대상이 같아 이 규칙을 통째로 기계에 넘깁니다.
 
 `a11y` 묶음은 도메인이 아니라 `preset: "recommended"`가 이미 켭니다.
-`useButtonType`, `useAltText`, `useValidAnchor`, `useKeyWithClickEvents`, `useSemanticElements`가 그것입니다.
+`useButtonType`, `useAltText`, `useValidAnchor`, `useKeyWithClickEvents`, `useSemanticElements`,
+`noStaticElementInteractions`, `useFocusableInteractive`가 그것입니다.
 접근 가능한 이름을 실제로 붙였는지는 기계가 못 보고 리뷰가 봅니다.
 
 `typescript/tooling-configure-biome-to-enforce-these-rules`가 세운 `noRestrictedImports`에 `overrides` 둘을 더합니다.
@@ -47,7 +48,7 @@
 - `style/useFragmentSyntax`는 조각을 `<>`로 바꾸라고 합니다.
   `recommended`에 없어 따로 켜야 하는데, 켜지 않습니다.
   `react/composition-name-fragments-explicitly`가 `Fragment`를 쓰라고 정하기 때문입니다.
-- `nursery/useReactFunctionComponents`는 도메인 `all`에만 있습니다.
-  `nursery`는 규칙이 바뀔 수 있어 켜지 않습니다.
+- `style/useReactFunctionComponents`는 도메인 `all`에만 있습니다.
+  기본 심각도가 `info`라 통과 여부를 가르지 못해 켜지 않습니다.
 
 > 예시·예외가 필요하면 [full rule](../rules/13-01-tooling-enable-the-biome-react-domain.md)을 읽습니다.

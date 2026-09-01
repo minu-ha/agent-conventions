@@ -64,7 +64,7 @@ tags: values, layering
 **Correct (층 토큰만 씀):**
 
 ```css
-/* style/token.css */
+/* src/style/token.css */
 :root {
 	--app-z-index-base: 0;
 	--app-z-index-sticky: 100;

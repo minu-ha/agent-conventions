@@ -20,7 +20,6 @@ tags: data, state, origin
 
 - 스코프가 넓든 좁든 같습니다.
   핸들러 안이든 이펙트 안이든 `responseProductSearchSuspense.data.products`로 읽습니다.
-  `좁은 스코프`는 코드를 보고 판정할 수 없는 기준이라 예외로 두지 않습니다.
 - 쿼리 결과를 화면에서 다시 빚고 싶으면 끊지 말고 `data-shape-query-data-with-select`가 정한
   `query.select`에서 형태를 잡습니다.
   받는 쪽에서 끊으면 깊이는 그대로고 출처만 사라집니다.
@@ -52,6 +51,6 @@ useEffect(() => {
 		return;
 	}
 
-	reportEmptySearch(search.keyword);
-}, [responseProductSearchSuspense.data, search.keyword]);
+	reportEmptySearch(urlParams.keyword);
+}, [responseProductSearchSuspense.data, urlParams.keyword]);
 ```

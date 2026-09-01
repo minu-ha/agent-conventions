@@ -115,8 +115,8 @@ titleKo: JSX 안 로직은 이름 붙인 핸들러로 뺍니다
 한국어 문장은 `humanizer`, `grammar-checker`, `style-guide` 스킬로 다듬는다.
 `.agents/skills/`에 복사해 두었고, 없으면 `npx skills add daleseo/korean-skills`로 설치한다.
 어미나 문체를 이 문서에서 규정하지 않는다. 세 스킬의 판정을 따른다.
-다만 자리는 갈라 둔다 — `rules/*.md`와 `_sections.md`는 규범 산문이라 합쇼체,
-코드 펜스 안 주석과 `SKILL.md`·`AGENTS.md`·이 문서는 절차 지시라 한다체다.
+다만 자리는 갈라 둔다 — `rules/*.md`·`_sections.md`·`metadata.json`의 `abstract`는 규범 산문이라 합쇼체,
+코드 펜스 안 주석과 `SKILL.md`·`AGENTS.md`·`AGENTS.template.md`·`README.md`·이 문서는 절차 지시라 한다체다.
 지금 이 선을 어기는 파일이 하나도 없다.
 `appliesWhen`의 `~할 때` · `~경우`만 예외다. 그건 문체가 아니라 라우팅 문장을 만드는 규칙이라
 `validate`가 강제한다.
@@ -147,7 +147,7 @@ titleKo: JSX 안 로직은 이름 붙인 핸들러로 뺍니다
 appliesWhen: 핸들러를 명명해서 써야 한다.
 
 # 좋음 — 언제 읽어야 하는지
-appliesWhen: TSX event prop 의 인라인 callback 에 분기, 비동기 호출 또는 여러 동작을 추가·수정할 때
+appliesWhen: TSX event prop의 인라인 callback에 분기, 비동기 호출 또는 여러 동작을 추가·수정할 때
 ```
 
 ### 3.2 requiresSelected와 reviewWith
@@ -183,7 +183,7 @@ appliesWhen: TSX event prop 의 인라인 callback 에 분기, 비동기 호출 
 3. 코드에 문자열로 있는 것은 그대로 (`z-index`, `@media`, `useMemo`)
 
 저장소가 지어낸 말은 쓰지 않는다. 밖 어디에도 없어서 그 낱말로는 규칙을 못 찾는다.
-`rule-discipline.ts`의 `bannedTerms`가 이미 걸러 낸 것들을 막고, 새로 발견하면 거기 추가한다.
+`rule-discipline.ts`의 `bannedTerms`가 이미 걸러 낸 말을 막고, 새로 발견하면 거기 추가한다.
 
 한 개념은 저장소 전체에서 한 이름으로 부른다.
 같은 것을 `지역 변수`와 `지역 사용자 정의 속성`으로 나눠 부르면 규칙끼리 참조할 때 같은 것인지 확신할 수 없다.
@@ -228,12 +228,15 @@ npm --prefix package run test
 `skill/<name>` 안에서 작업하면 `--prefix ../../package`로 바꾼다.
 자세한 script 설명은 [package/README.md](./package/README.md).
 
+---
+
 ## 6. 함께 갱신할 문서
 
 | 변경 | 갱신 대상 |
 | --- | --- |
 | skill 추가·제거 | [README.md](./README.md) 의 skill 표, [AGENTS.md](./AGENTS.md) 의 목록 |
 | 로딩·companion 계약 변경 | [AGENTS.md](./AGENTS.md) |
-| 구조 자체 변경 | [overview.html](./overview.html). 생성기는 `docs/overview-flowcharts.py` |
+| 문서 인벤토리·명령 변경 | [package/README.md](./package/README.md) |
+| 구조 자체 변경 | [overview.html](./overview.html). 생성기는 `docs/overview-build.py`이고 플로차트 SVG는 `docs/overview-flowcharts.py` |
 
 이 저장소에서 AI 에이전트로 작업할 때의 규칙은 [AGENTS.md](./AGENTS.md).

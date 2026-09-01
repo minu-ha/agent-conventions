@@ -5,7 +5,7 @@ impact: CRITICAL
 impactDescription: 여러 컴포넌트가 같은 네임스페이스를 나눠 쓰면 전역에서 충돌합니다
 appliesWhen:
   - 새 `scope_slug`를 만들거나 기존 식별자를 복사·이름 변경할 때
-  - 서로 다른 컴포넌트가 같은 식별자를 쓸 가능성이 있을 때
+  - 하위 컴포넌트에 CSS 파일을 새로 만들면서 부모 식별자를 그대로 쓸 때
 tags: namespace, ownership, uniqueness
 ---
 

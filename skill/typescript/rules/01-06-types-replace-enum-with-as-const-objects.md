@@ -7,7 +7,7 @@ appliesWhen:
   - `enum`이나 타입과 실행 양쪽에서 함께 쓰는 값 집합을 추가·변경할 때
   - 제외: 외부 패키지가 내보낸 `enum` 값을 그대로 읽어 쓰는 경우
 requiresSelected: naming-use-consistent-file-and-symbol-naming, types-document-custom-types-and-shapes
-tags: functions
+tags: types
 ---
 
 ## Replace `enum` With `as const` Objects
@@ -42,7 +42,6 @@ enum ProductStatus {
  */
 const product_status = {
 	pending: "pending",
-	waiting_review: "waiting_review",
 	passed: "passed",
 	failed: "failed",
 } as const;

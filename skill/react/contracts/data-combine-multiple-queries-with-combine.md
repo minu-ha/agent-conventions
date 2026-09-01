@@ -23,6 +23,6 @@
 **`combine`도 인라인으로 적습니다.**
 다시 실행된다는 이유만으로 `useCallback`이나 `useMemo`로 감싸지 않습니다.
 React Query의 구조 공유가 합친 결과에서 바뀌지 않은 부분의 참조를 유지합니다.
-실측 병목의 예외 기준은 `data-shape-query-data-with-select`가 정합니다.
+실측 병목일 때만 `perf-avoid-defensive-memoization`의 예외 기준을 따릅니다.
 
 > 예시·예외가 필요하면 [full rule](../rules/02-03-data-combine-multiple-queries-with-combine.md)을 읽습니다.

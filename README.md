@@ -38,7 +38,7 @@ mkdir -p ~/.agents/skills
 ln -s /absolute/path/to/agent-conventions/skill ~/.agents/skills/conventions
 ```
 
-기존 링크가 있으면 백업 후 교체. 에이전트 재시작 필요.
+기존 링크가 있으면 백업하고 교체한다. 그다음 에이전트를 재시작한다.
 
 ```bash
 mv ~/.agents/skills/conventions ~/.agents/skills/conventions.backup
@@ -52,8 +52,8 @@ ln -s /absolute/path/to/agent-conventions/skill ~/.agents/skills/conventions
 새 프로젝트면 [AGENTS.template.md](./AGENTS.template.md) 를 복사해서 시작.
 이미 `AGENTS.md`가 있으면 컨벤션 항목에 skill 이름만 추가.
 
-skill 하나만 적지 말 것.
-`convention-react` + `convention-typescript` + `convention-css`처럼 companion까지 적는다.
+프로젝트에는 owner skill만 적는다.
+`convention-react` 하나면 `convention-typescript`와 `convention-css`는 `metadata.json` 선언대로 따라 켜진다.
 
 ### 1.3 담당 영역 핸드북
 
@@ -79,7 +79,7 @@ skill 하나만 적지 말 것.
 핸드북마다 번호 목차와 Impact 등급이 있다. `CRITICAL`부터 본다.
 규칙마다 Incorrect / Correct 예시가 붙어 있다.
 
-특정 규칙만 다시 찾을 때는 `RULES_INDEX.md`가 빠르다. 규칙당 한 줄.
+특정 규칙만 다시 찾을 때는 `conventions.html`의 검색이 빠르다.
 
 ### 1.4 동작 확인
 
@@ -153,7 +153,7 @@ progressive skill 셋은 규칙 전체를 안 읽는다. 단계마다 좁힌다.
 
 `HANDBOOK.md`는 이 경로 밖이다. 사람이 통독할 때 쓰고,
 에이전트는 명시적 요청이 있을 때만 읽는다.
-세 skill 이 모두 progressive 라 통째로 읽는 경로는 없다.
+세 skill이 모두 progressive라 자동으로 통째로 읽는 단계는 없다.
 
 측정 결과와 근거는 [docs/progressive-loading.html](./docs/progressive-loading.html).
 
@@ -174,15 +174,13 @@ progressive skill 셋은 규칙 전체를 안 읽는다. 단계마다 좁힌다.
 
 절차는 [CONTRIBUTING.md](./CONTRIBUTING.md). 착수 전 알 것 넷.
 
-1. 정본은 `rules/*.md`. `HANDBOOK.md` · `RULES_INDEX.md` · `contracts/*.md`는 생성물.
+1. 정본은 `rules/*.md`. `HANDBOOK.md` · `RULES_INDEX.md` · `contracts/*.md` ·
+   `conventions.html` · `conventions-data.js`는 생성물.
 2. 규범은 첫 `Incorrect` 앞에서 끝낸다. 생성기가 그 앞부분만 계약으로 뽑는다.
 3. `appliesWhen` 한 줄이 라우팅을 결정한다. 규칙의 결론이 아니라 관찰 가능한 변경 조건.
-4. 고친 뒤 `npm --prefix package run dev:<skill>` → `check:generated`.
+4. 고친 뒤 `npm --prefix package run dev:<skill>` → `viewer` → `check:generated:all` → `check:viewer`.
 
 이 저장소에서 AI 에이전트로 작업하면 [AGENTS.md](./AGENTS.md) 가 작업 규칙.
 
 버전은 `SKILL.md`의 `name` 변경이 breaking, skill 추가와 호환 확장이 minor,
 문구 수정이 patch.
-
-[reference/agent-skills-main/](./reference/agent-skills-main/README.md) 은 비교용 외부
-레퍼런스. 정본 아님.

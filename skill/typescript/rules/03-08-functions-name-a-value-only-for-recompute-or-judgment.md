@@ -27,7 +27,9 @@ tags: functions, origin
 | `await`나 `yield`가 붙은 값 | 실행 순서가 뜻을 갖습니다 |
 | 바깥과 주고받는 호출 (`init()`, `localStorage.getItem()`) | 옮기면 부르는 시점이 달라집니다 |
 | 훅 호출과 `useState` 반환 | 부르는 자리와 횟수가 정해져 있습니다 |
-| 함수 값 | 이름이 곧 계약이고 선언 형태는 `functions-declare-functions-as-arrow-consts`가 정합니다 |
+
+함수 값은 계산 결과가 아니라 계약이라 이 규칙 대상이 아닙니다.
+선언 형태는 `functions-declare-functions-as-arrow-consts`가 정합니다.
 
 **코드에 한 번 적힌 것과 실행에서 한 번인 것은 다릅니다.**
 `.map()`이나 `.filter()` 콜백 안, 반복문 안으로 옮기면 원소 수만큼 다시 계산합니다.

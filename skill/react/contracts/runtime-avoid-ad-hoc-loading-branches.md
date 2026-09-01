@@ -1,4 +1,4 @@
-# Avoid Ad-hoc Loading Branches in Screen Bodies
+# Avoid Ad-hoc Loading and Failure Branches in Screen Bodies
 
 **Impact: HIGH (초기 로딩과 실패는 경계가 맡고 화면 본문에는 데이터가 있는 경로만 남습니다)**
 

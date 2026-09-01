@@ -26,8 +26,8 @@
 6. [Guardrails](#6-guardrails) — 금지 사항
 
 사람용 문서는 [README.md](./README.md) 와 [CONTRIBUTING.md](./CONTRIBUTING.md).
+규칙 산문의 문체·낱말·`appliesWhen` 형태는 [CONTRIBUTING.md](./CONTRIBUTING.md) 3절을 따른다. `validate` 가 막는다.
 build tooling은 [package/](./package/README.md).
-[reference/](./reference/agent-skills-main/README.md) 는 비교용. 정본 아님.
 
 ---
 
@@ -55,7 +55,7 @@ progressive는 `SKILL.md` → `RULES_INDEX.md` → 걸린 `contracts/*.md`로 �
 
 `metadata.json.companions`가 `required`와 `conditional` 활성화를 선언한다.
 계층은 이 선언이 정한다. 나를 companion으로 켜는 skill이 위 계층이고,
-`typescript`는 아무도 켜지 않으므로 가장 아래다. 아래에서 위를 가리키지 않는다.
+`typescript`는 아무 skill도 켜지 않으므로 가장 아래다. 아래에서 위를 가리키지 않는다.
 
 ---
 
@@ -114,6 +114,8 @@ npm --prefix package run validate -- --all
 npm --prefix package run build -- --all
 npm --prefix package run check:generated:all
 npm --prefix package run check:handbooks:all
+npm --prefix package run viewer               # conventions.html 재생성
+npm --prefix package run check:viewer
 npm --prefix package run test
 ```
 
@@ -127,6 +129,6 @@ buildable skill: `css` `react` `typescript`
 2. generic TypeScript 규칙은 `typescript` companion으로 보낸다. framework skill에는 overlay만 둔다.
 3. progressive 진입점은 router와 인덱스다. full handbook은 명시적 요청일 때만 읽는다.
 4. `reviewWith`는 자동으로 적용하지 않는다. 역방향으로 추론하지 않는다.
-5. skill마다 구조가 다르다. 수정 전에 실제 디렉터리를 확인한다.
-6. `reference/agent-skills-main` 문장을 그대로 옮기지 않는다. 이 저장소 구조에 맞게 다시 쓴다.
+5. 수정 전에 실제 디렉터리를 확인한다. 문서에 적힌 구조를 기억으로 대신하지 않는다.
+6. 외부 레퍼런스 문장을 그대로 옮기지 않는다. 이 저장소 구조에 맞게 다시 쓴다.
 7. 루트 문서 갱신 시 현재 지원 skill 목록을 실제 상태로 기록한다.

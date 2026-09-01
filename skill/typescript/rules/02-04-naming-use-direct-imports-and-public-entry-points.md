@@ -15,7 +15,8 @@ tags: naming
 **Impact: MEDIUM-HIGH (배럴이나 모호한 재노출 계층에 기대지 않고 무엇을 어디서 가져오는지 드러냅니다)**
 
 `index.ts`로 묶어 다시 내보내는 배럴을 만들지 않고, 필요한 파일에서 바로 가져옵니다.
-내보내기는 이름 붙인 내보내기만 씁니다.
+내보내기는 선언 앞에 `export`를 붙인 이름 붙인 내보내기만 씁니다.
+파일 끝에 `export {…}` 목록을 따로 두지 않습니다.
 
 | 형태 | 판정 |
 | --- | --- |
@@ -53,7 +54,7 @@ export default UiTabs;
 import Tabs from "@/component/ui/tabs/ui-tabs";
 ```
 
-**Correct (직접 가져오기와 공개 진입점을 구분):**
+**Correct (필요한 파일에서 이름으로 바로 가져옴):**
 
 ```ts
 import type {UserProfile} from "@/type/user-profile";

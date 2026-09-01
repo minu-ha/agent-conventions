@@ -2,9 +2,6 @@
 
 **Impact: MEDIUM (리액트에만 있는 경계 선언을 동반 스킬 목록에 더해 빠뜨리지 않습니다)**
 
-문서 주석은 경계를 설명할 때만 붙입니다.
-코드만 봐도 아는 지역 변수에는 강제하지 않습니다.
-
 필수 대상은 `typescript/docs-require-header-jsdoc-on-key-declarations`가 정한 목록에 다음 셋을 더한 것입니다.
 
 - 합성 컴포넌트의 공개 부품

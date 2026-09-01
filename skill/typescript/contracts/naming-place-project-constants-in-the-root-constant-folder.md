@@ -13,7 +13,7 @@
 소유자를 지웠을 때 값도 사라지면 그 소유자 것입니다.
 `chart_axis_tick_count`는 화면과 함께 사라집니다.
 `api_request_timeout_ms`는 화면을 지워도 서버 통신에 남습니다.
-루트는 프로젝트가 소유자인 자리라 위 표의 두 행이 같은 모양입니다.
+루트는 프로젝트가 소유자인 자리라 두 행의 이름 규칙이 같습니다.
 한 소유자의 값을 두는 법은 `naming-place-owner-constants-in-the-owner-constant-folder` 규칙이 정합니다.
 
 쓰는 곳이 늘거나 줄어도 자리는 그대로입니다.
@@ -21,7 +21,7 @@
 
 **파일은 주제 하나이고, 상수는 그 주제로 시작합니다.**
 
-- 파일명은 안에 있는 상수 이름이 공유하는 첫 마디입니다.
+- 파일명과 상수 이름의 모양은 `naming-use-consistent-file-and-symbol-naming` 규칙이 정합니다.
   `constant/api.ts`에는 `api_base_path`와 `api_request_timeout_ms`만 있습니다.
 - 상수는 모듈 스코프에 하나씩 이름 붙여 내보냅니다.
   `config`나 `api_config` 같은 객체 하나에 모으지 않습니다.

@@ -8,7 +8,8 @@ appliesWhen:
   - 그 컴포넌트 내부 노드의 모양을 화면마다 다르게 해야 할 때
   - 제외: 기존 CSS 최상위 블록 아래 외부 라이브러리 선택자만 고치는 경우
 reviewWith: >-
-  ownership-use-foreign-classes-only-under-your-own-root, ownership-change-other-owners-through-their-api
+  ownership-use-foreign-classes-only-under-your-own-root, ownership-change-other-owners-through-their-api,
+  composition-do-not-add-wrapper-elements-for-styling
 tags: components, entry-point, class-props
 ---
 

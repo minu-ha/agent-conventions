@@ -6,7 +6,7 @@ impactDescription: 앱 상태와 `:hover`, 포커스 동작을 섞지 않아 읽
 appliesWhen:
   - 앱 상태 수정자와 `:hover`, `:focus-visible`, `:disabled` 같은 DOM 상호작용 상태를 추가·변경할 때
   - 포커스 링을 수정할 때
-reviewWith: composition-do-not-build-structural-variants-with-modifiers
+reviewWith: composition-do-not-build-structural-variants-with-modifiers, a11y-always-provide-a-visible-focus-indicator
 tags: state, focus, accessibility
 ---
 
@@ -19,7 +19,6 @@ tags: state, focus, accessibility
 | 상태 | 자리 |
 | --- | --- |
 | 도메인 상태와 무관한 `:hover`, `:focus-visible`, `:disabled` | 조건 없는 기본 블록. 수정자 아래로 옮겨 적용 대상을 좁히지 않습니다 |
-| `active`, `selected`, `error`처럼 앱이 정하는 모습 | 수정자 블록 |
 
 수정자가 켜진 경우에만 상호작용이 달라져야 한다는 제품 요구가 있을 때만 예외를 적습니다.
 
@@ -29,17 +28,19 @@ tags: state, focus, accessibility
 포커스 표시 자체는 `a11y-always-provide-a-visible-focus-indicator` 규칙이 담당합니다.
 무엇을 수정자로 두고 무엇을 가상 클래스로 둘지는 `selector-use-pseudo-classes-for-dom-owned-states` 규칙이 정합니다.
 
-**Incorrect (포커스 스타일을 제거하거나 상태 경계를 섞음):**
+**Incorrect (상호작용 상태를 수정자 아래로 옮겨 적용 대상을 좁힘):**
 
 ```css
-.ui_button__root {
-	&:focus {
-		outline: none;
-	}
-}
-
-.ui_button__root--hover {
+.ui_button__root--active {
 	background: var(--app-color-accent);
+
+	&:hover {
+		background: var(--app-color-accent-strong);
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--app-color-focus);
+	}
 }
 ```
 

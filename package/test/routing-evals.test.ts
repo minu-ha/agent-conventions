@@ -292,7 +292,7 @@ const typescriptRuleRouting = {
 	},
 	"functions-declare-functions-as-arrow-consts": {
 		appliesWhen:
-			"이름을 지어 선언하는 함수를 새로 만들거나 선언 형태나 본문 형태를 바꿀 때. 객체 프로퍼티에 함수를 담거나 그 형태를 바꿀 때. 제외: 인라인 콜백이거나 클래스 메서드, 제너레이터, 오버로드 선언인 경우.",
+			"이름을 지어 선언하는 함수를 새로 만들거나 선언 형태나 본문 형태를 바꿀 때. 객체 프로퍼티에 함수를 담거나 그 형태를 바꿀 때. 제외: 인라인 콜백이나 커링의 바깥 화살표인 경우. 제외: 클래스 메서드, 제너레이터, 오버로드 선언인 경우.",
 		reviewWith: ["functions-use-named-object-params-for-complex-signatures"],
 	},
 	"functions-use-named-object-params-for-complex-signatures": {
@@ -318,7 +318,7 @@ const typescriptRuleRouting = {
 	"functions-promote-shared-functions-to-root-util": {
 		appliesWhen:
 			"함수를 루트 `util` 폴더로 옮기거나 종류 폴더를 새로 만들 때. 두 소유자가 같은 함수를 쓰게 될 때. 제외: 소유자 안에서 파일 자리만 바꾸는 경우.",
-		reviewWith: ["functions-give-each-function-its-own-file"],
+		reviewWith: [],
 	},
 	"functions-avoid-imperative-assembly-in-wide-scopes": {
 		appliesWhen: "모듈 최상위나 함수 본문 전체를 덮는 스코프에서 `let` 재할당, 배열 `push`, 조건부 누적으로 값을 만들 때.",
@@ -339,7 +339,7 @@ const typescriptRuleRouting = {
 	},
 	"values-use-set-and-map-for-repeated-lookups": {
 		appliesWhen:
-			"같은 목록에 `includes`, `find`, 키 조회를 여러 번 하는 코드를 추가·변경할 때. 제외: 두 목록 모두 짧고 길이가 정해져 있는 경우.",
+			"같은 목록에 `includes`, `find`, 키 조회를 여러 번 하는 코드를 추가·변경할 때. 제외: 조회하는 목록이 짧고 길이가 정해져 있는 경우.",
 		reviewWith: [],
 	},
 	"values-read-objects-through-chains": {
@@ -383,7 +383,7 @@ const typescriptRuleRouting = {
 	},
 	"docs-require-header-jsdoc-on-key-declarations": {
 		appliesWhen:
-			"쿼리, 뮤테이션, 원격 함수, 커스텀 훅, 커스텀 타입, 스토어, 포매터 선언을 추가·변경할 때. 분기나 `await`, 또는 두 개 이상의 동작이 있는 핸들러와 이펙트를 추가·변경할 때. 다시 쓰거나 내보낸 보조 함수를 추가·변경할 때.",
+			"쿼리, 뮤테이션, 원격 함수, 커스텀 훅, 스토어, 포매터 선언을 추가·변경할 때. 분기나 `await`나 두 개 이상의 동작이 있는 핸들러와 이펙트를 추가·변경할 때. 다시 쓰거나 내보낸 보조 함수를 추가·변경할 때.",
 		reviewWith: [],
 	},
 	"docs-write-concise-korean-comments-about-purpose-and-constraints": {
@@ -429,7 +429,7 @@ const cssRuleRouting = {
 		reviewWith: [],
 	},
 	"ownership-give-each-file-one-scope-slug": {
-		appliesWhen: "새 `scope_slug`를 만들거나 기존 식별자를 복사·이름 변경할 때. 서로 다른 컴포넌트가 같은 식별자를 쓸 가능성이 있을 때.",
+		appliesWhen: "새 `scope_slug`를 만들거나 기존 식별자를 복사·이름 변경할 때. 하위 컴포넌트에 CSS 파일을 새로 만들면서 부모 식별자를 그대로 쓸 때.",
 		reviewWith: [],
 	},
 	"ownership-choose-scope-prefix-by-owner-layer": {
@@ -458,13 +458,17 @@ const cssRuleRouting = {
 	},
 	"composition-keep-classes-single-purpose": {
 		appliesWhen:
-			"한 클래스 이름에 기본 스타일과 상태를 함께 넣을 때. 제외: 처음부터 기본 클래스와 수정자를 나눠 만드는 경우. 제외: 책임이 그대로인 이름 변경만 하는 경우.",
+			"상태를 나타내는 낱말이 들어간 요소 클래스 이름을 추가·변경할 때. 제외: 처음부터 기본 클래스와 수정자를 나눠 만드는 경우. 제외: 책임이 그대로인 이름 변경만 하는 경우.",
 		reviewWith: [],
 	},
 	"composition-inject-classes-only-at-the-entry-point": {
 		appliesWhen:
 			"우리가 만든 컴포넌트에 `className`이나 클래스 관련 프롭을 추가할 때. 그 컴포넌트 내부 노드의 모양을 화면마다 다르게 해야 할 때. 제외: 기존 CSS 최상위 블록 아래 외부 라이브러리 선택자만 고치는 경우.",
-		reviewWith: ["ownership-use-foreign-classes-only-under-your-own-root", "ownership-change-other-owners-through-their-api"],
+		reviewWith: [
+			"ownership-use-foreign-classes-only-under-your-own-root",
+			"ownership-change-other-owners-through-their-api",
+			"composition-do-not-add-wrapper-elements-for-styling",
+		],
 	},
 	"composition-do-not-add-wrapper-elements-for-styling": {
 		appliesWhen: "스타일을 주려고 `div`나 `span`을 새로 감쌀 때. `className`을 받지 않는 컴포넌트에 여백이나 크기를 줘야 할 때.",
@@ -519,7 +523,7 @@ const cssRuleRouting = {
 	},
 	"selector-separate-domain-state-modifiers-from-dom-interaction-states": {
 		appliesWhen: "앱 상태 수정자와 `:hover`, `:focus-visible`, `:disabled` 같은 DOM 상호작용 상태를 추가·변경할 때. 포커스 링을 수정할 때.",
-		reviewWith: ["composition-do-not-build-structural-variants-with-modifiers"],
+		reviewWith: ["composition-do-not-build-structural-variants-with-modifiers", "a11y-always-provide-a-visible-focus-indicator"],
 	},
 	"values-always-provide-css-variable-fallbacks": {
 		appliesWhen: "`var(--*)`를 새로 쓰거나 변수 이름이나 대체값을 바꿀 때. 공통 토큰 목록에 항목을 넣거나 뺄 때.",
@@ -681,7 +685,7 @@ const reactRuleRouting = {
 		],
 	},
 	"strategy-expose-only-assembled-compound-parts": {
-		appliesWhen: "합성 컴포넌트의 공개 부품 목록에 부품을 넣거나 뺄 때. 상태 없는 합성에 상태를 넣으면서 공개 이름을 바꾸려 할 때.",
+		appliesWhen: "합성 컴포넌트의 공개 부품 목록에 부품을 넣거나 뺄 때.",
 		reviewWith: ["strategy-choose-single-composition-compound-and-variants", "css/composition-do-not-add-wrapper-elements-for-styling"],
 	},
 	"strategy-avoid-boolean-prop-proliferation": {
@@ -781,7 +785,7 @@ const reactRuleRouting = {
 	"state-calculate-derived-values-during-render": {
 		appliesWhen:
 			"현재 프롭스, 상태, search 파라미터, 응답에서 계산 가능한 값을 별도 상태와 이펙트로 동기화할 때. 파생값 동기화 이펙트를 제거할 때.",
-		reviewWith: ["screen-keep-derived-values-close"],
+		reviewWith: ["screen-keep-derived-values-close", "state-store-derived-authority"],
 	},
 	"state-choose-state-tools-by-source-of-truth": {
 		appliesWhen:
@@ -840,7 +844,7 @@ const reactRuleRouting = {
 		reviewWith: ["perf-avoid-defensive-memoization"],
 	},
 	"a11y-give-interactive-elements-an-accessible-name": {
-		appliesWhen: "클릭이나 입력을 받는 요소를 새로 만들 때. 글자 없이 아이콘만 있는 버튼을 추가할 때.",
+		appliesWhen: "클릭이나 입력을 받는 요소를 추가·변경할 때. 글자 없이 아이콘만 있는 버튼을 추가할 때.",
 		reviewWith: [],
 	},
 	"docs-require-jsdoc-on-key-declarations": {
@@ -2640,7 +2644,7 @@ test("CSS progressive metadata and rule routing match Appendix C exactly", async
 		"wrapperStylingRule",
 	);
 	const singlePurposeRule = await readRuleSource("css", "composition-keep-classes-single-purpose");
-	assertMentions(readAppliesWhen(singlePurposeRule), ["기본 스타일과 상태를 함께", "기본 클래스와 수정자를 나눠"], "singlePurposeRule");
+	assertMentions(readAppliesWhen(singlePurposeRule), ["상태를 나타내는 낱말", "기본 클래스와 수정자를 나눠"], "singlePurposeRule");
 	const layoutIntentRule = await readRuleSource("css", "layout-keep-layout-intent-explicit");
 	assertMentions(readAppliesWhen(layoutIntentRule), ["기본과 수정자로 나누면서", "`display`·여백", "값 그대로"], "layoutIntentRule");
 	const fallbackRule = await readRuleSource("css", "values-always-provide-css-variable-fallbacks");
@@ -3212,7 +3216,7 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	const foreignRoot = await readRule("css", "ownership-use-foreign-classes-only-under-your-own-root");
 	assertMentions(
 		foreignRoot,
-		[/내 최상위 클래스 블록 안에서만/, /블록 바깥에 홀로 두지 않습니다/, /선택자가 내 식별자로 시작하는지/],
+		[/내 최상위 클래스 블록 안에서만/, /블록 바깥에 홀로 두지 않습니다/, /내 최상위 블록 안에서 `&`로 열렸는지/],
 		"foreignRoot",
 	);
 	assertMentions(

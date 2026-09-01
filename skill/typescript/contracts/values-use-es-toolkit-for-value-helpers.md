@@ -26,7 +26,7 @@
 
 표에 없어도 `es-toolkit` 문서에 같은 뜻의 함수가 있으면 그 함수를 씁니다.
 `lodash`는 새로 들이지 않습니다.
-날짜는 `values-handle-dates-with-dayjs`가 봅니다.
+날짜는 `values-handle-dates-with-dayjs`가 보고, 정렬은 `values-prefer-immutable-array-sorting`이 봅니다.
 
 **표준 메서드 하나로 끝나는 것은 그대로 둡니다.**
 `map`, `filter`, `find`, `flat`, `at`, `Object.keys`를 감싸지 않습니다.

@@ -27,9 +27,7 @@ tags: composition, props, origin
   스프레드를 쓸 조건은 `typing-choose-wrapper-shape-and-forwarding`이 정합니다.
 - 선택 프롭에 기본값이 필요하면
   `typescript/absence-expose-optional-values-instead-of-silent-fallbacks`를 따릅니다.
-  프롭 값을 그대로 비교해서 쓰면 기본값 자체가 필요 없는 경우가 많습니다.
-- 쿼리 결과는 `data-preserve-origin-chaining`, 계산한 값은 `screen-keep-derived-values-close`가
-  같은 원본에 대해 각각 더 볼 것을 정합니다.
+  프롭 값을 쓰는 자리에서 그대로 비교하면 기본값을 만들 필요가 없습니다.
 
 **Incorrect (시그니처에서 구조분해):**
 

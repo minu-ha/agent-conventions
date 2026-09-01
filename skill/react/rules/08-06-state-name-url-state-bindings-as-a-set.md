@@ -37,35 +37,35 @@ tags: state, naming, url
 **Incorrect (세 자리가 이름으로 구분되지 않음):**
 
 ```ts
-// page/product-list/_constant/product-list-search.ts
-export const productListSearch = {
-	page: parsePage,
-	keyword: parseKeyword,
+// page/products/_constant/product-search.ts
+export const productSearch = {
+	page: parseAsInteger.withDefault(1),
+	keyword: parseAsString.withDefault(""),
 };
 ```
 
 ```tsx
-const [searchParams, setSearchParams] = useUrlParams(productListSearch);
+const [searchParams, setSearchParams] = useQueryStates(productSearch);
 const query = searchParams.keyword;
 ```
 
 **Correct (파서 묶음은 `<범위>UrlParsers`로 소유자 `_constant` 폴더에 둠):**
 
 ```ts
-// page/product-list/_constant/product-list-url-parsers.ts
+// page/products/_constant/product-url-parsers.ts
 /**
  * product 목록 화면이 주소에 올린 상태의 파서 묶음
  */
-export const productListUrlParsers = {
-	page: parsePage,
-	keyword: parseKeyword,
+export const productUrlParsers = {
+	page: parseAsInteger.withDefault(1),
+	keyword: parseAsString.withDefault(""),
 };
 ```
 
 **Correct (파싱을 거친 값은 `urlParams`, 플랫폼 객체만 `searchParams`):**
 
 ```tsx
-const [urlParams, setUrlParams] = useUrlParams(productListUrlParsers);
+const [urlParams, setUrlParams] = useQueryStates(productUrlParsers);
 
 /**
  * 공유 링크에 실을 search 파라미터를 플랫폼 객체로 조립한다

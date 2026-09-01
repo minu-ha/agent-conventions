@@ -9,7 +9,8 @@
 `constant` 폴더와 `config` 폴더는 값이 바뀌는 때가 다릅니다.
 `constant`의 값은 코드와 함께 바뀌고, `config`의 값은 배포마다 바뀝니다.
 배포 환경은 프로젝트 단위라 `config` 폴더는 루트에만 있고 소유자 아래에는 만들지 않습니다.
-기능 플래그도 배포마다 바뀌는 값이라 `config/feature.ts`에 `feature_` 상수로 둡니다.
+기능 플래그도 배포마다 바뀌는 값이라 `config/env.ts`가 읽은 `env_` 상수에서 파생해
+`config/feature.ts`에 `feature_` 상수로 둡니다.
 상수 파일과 이름의 모양은 `naming-place-project-constants-in-the-root-constant-folder` 규칙과 같습니다.
 
 환경 값이라 여기서 더 요구하는 것은 셋입니다.

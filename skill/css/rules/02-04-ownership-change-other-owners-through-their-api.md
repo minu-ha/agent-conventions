@@ -19,9 +19,9 @@ tags: ownership, api, promotion
 
 | 상황 | 방법 | 바꾸는 곳 |
 | --- | --- | --- |
-| 최상위 배치만 다름 | 사용처가 `className`을 넘기고 자기 클래스로 스타일을 줌 | 사용처 TSX와 사용처 CSS |
-| 내부 모습이 사용처 하나에서만 다름 | 그 소유자가 `variant` 프롭으로 수정자를 노출 | 소유자 TSX와 소유자 CSS, 사용처 TSX |
-| 레이어 판정이 화면 소유로 나옴 | 화면 폴더 안으로 내림 | 파일 위치와 접두사 |
+| 최상위 배치만 다름 | 사용처가 `className`을 넘기고 자기 클래스로 스타일을 줍니다 | 사용처 TSX와 사용처 CSS |
+| 내부 모습이 여러 사용처에서 같게 반복됨 | 그 소유자가 `variant` 프롭으로 수정자를 노출합니다 | 소유자 TSX와 소유자 CSS, 사용처 TSX |
+| 레이어 판정이 화면 소유로 나옴 | 화면 폴더 안으로 내립니다 | 파일 위치와 접두사 |
 
 세 행에 안 맞으면 내 최상위 블록 안에서 겨냥합니다.
 그 방법은 `ownership-use-foreign-classes-only-under-your-own-root` 규칙이 정합니다.
@@ -80,9 +80,9 @@ tags: ownership, api, promotion
 ```txt
 before
   component/widget/chart-card/wg-chart-card.tsx      detail 화면의 뷰모델 타입을 받음
-  component/widget/chart-card/wg-chart-card.css      pg_detail 만 내부를 override 하고 있었음
+  component/widget/chart-card/wg-chart-card.css      pg_detail 만 내부를 덮어쓰고 있었음
 
 after
   page/detail/_pg-chart-card.tsx
-  page/detail/_pg-chart-card.css  pg_chartCard__* 로 owner 하나
+  page/detail/_pg-chart-card.css  pg_chartCard__* 로 소유자 하나
 ```

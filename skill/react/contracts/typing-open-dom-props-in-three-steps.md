@@ -10,9 +10,14 @@
 
 | 단계 | 언제 | 형태 |
 | --- | --- | --- |
-| 1 | 그냥 컴파일됨 | `extends HTMLAttributes<T>` |
-| 2 | 라이브러리가 같은 이름 프롭의 **값을 좁혀** 부딪힘 | `extends Omit<HTMLAttributes<T>, "color">`로 빼고 그 프롭을 인덱스 접근으로 다시 엽니다 |
+| 1 | 그냥 컴파일됨 | `extends <요소>HTMLAttributes<T>` |
+| 2 | 라이브러리가 같은 이름 프롭의 **값을 좁혀** 부딪힘 | `extends Omit<<요소>HTMLAttributes<T>, "color">`로 빼고 그 프롭을 인덱스 접근으로 다시 엽니다 |
 | 3 | 감싸는 요소와 이벤트 대상 요소가 **서로 다름** | `extends`를 쓰지 않고 필요한 프롭만 선언합니다 |
+
+여는 타입은 그 요소 전용 인터페이스입니다.
+버튼은 `ButtonHTMLAttributes`, 입력은 `InputHTMLAttributes`, 셀은 `TdHTMLAttributes`입니다.
+`HTMLAttributes`만 쓰면 `disabled`·`type`·`colSpan`처럼 그 요소에만 있는 속성을 잃습니다.
+요소 전용 인터페이스가 없는 `tr` 같은 자리만 `HTMLAttributes`를 그대로 씁니다.
 
 2단계가 필요한 이유는 `HTMLAttributes`에 `color`, `title`, `onChange`, `defaultValue`가 이미 있어서입니다.
 라이브러리가 그중 하나를 자기 값 집합으로 좁혀 두면 `extends`가 막힙니다.

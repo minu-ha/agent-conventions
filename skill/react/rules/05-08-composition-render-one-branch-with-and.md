@@ -24,8 +24,8 @@ JSX에서 조건에 따라 무엇을 그릴지는 형태 셋으로 나눕니다.
 - 참일 때 그릴 요소와 거짓일 때 그릴 요소를 삼항 하나로 묶지 않습니다.
   각 요소의 표시 조건이 바로 앞에 남아야 합니다.
 - 두 조건은 같은 판별값을 기준으로 서로 겹치지 않게 적습니다.
-- 분기가 셋 이상이면 조건을 이름 붙인 값으로 꺼내거나 섹션 컴포넌트로 나눕니다.
-  어느 쪽인지는 `screen-extract-local-section-components-for-runtime-boundaries`가 정합니다.
+- 분기가 셋 이상이면 섹션 컴포넌트로 나눕니다.
+  그 경계는 `screen-extract-local-section-components-for-runtime-boundaries`가 정합니다.
 - 숨긴 하위 트리의 상태를 살려야 하면 `composition-use-activity-only-to-preserve-mounted-subtrees`를 봅니다.
 
 **`&&` 왼쪽에 숫자를 두지 않습니다.**

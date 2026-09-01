@@ -21,7 +21,7 @@ tags: naming, constant
 `naming-place-project-constants-in-the-root-constant-folder` 규칙에 있습니다.
 여기서는 소유자 아래에서만 다른 것을 봅니다.
 
-- 파일은 `constant/<주제>.ts`이고 상수는 `<주제>_`로 시작합니다.
+- 파일은 `_constant/<주제>.ts`이고 상수는 `<주제>_`로 시작합니다.
   소유자 이름은 폴더가 이미 말하므로 접두사로 되풀이하지 않습니다.
   `page/detail/_constant/legend.ts`의 상수는 `legend_hit_tolerance_px`입니다.
   `detail_legend_hit_tolerance_px`처럼 소유자 이름을 앞에 붙이지 않습니다.
