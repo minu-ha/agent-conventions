@@ -67,10 +67,6 @@ API 요청 본문, 라이브러리 인자, DOM 속성, 환경 변수처럼 받�
 const User_ProfileSchema = z.object({
 	repo_path: z.string(),
 });
-
-const retryPolicy = {
-	maxAttempts: 3,
-} as const;
 ```
 
 **Correct (파일명은 `kebab-case`, 스키마 키는 `camelCase`로 씁니다):**
@@ -88,6 +84,14 @@ const userProfileSchema = z.object({
 });
 ```
 
+**Incorrect (불변 데이터 상수와 그 키를 `camelCase`로 적습니다):**
+
+```ts
+const retryPolicy = {
+	maxAttempts: 3,
+} as const;
+```
+
 **Correct (불변 데이터 상수와 값 집합은 이름과 상수 키를 모두 `snake_case`로 적습니다):**
 
 ```ts
@@ -100,6 +104,15 @@ export const pagination_default_page_size = 20;
 
 ```ts
 /**
+ * 요청 재시도 정책. 하위 키도 상수 키다
+ */
+const retry_policy = {
+	max_attempts: 3,
+} as const;
+```
+
+```ts
+/**
  * product 게시 상태 값 집합
  */
 const product_status = {
@@ -107,6 +120,20 @@ const product_status = {
 	waiting_review: "waiting_review",
 	published: "published",
 } as const;
+```
+
+**Incorrect (밖으로 나가는 키를 우리 표기로 바꿉니다):**
+
+```ts
+/**
+ * product 저장 요청 조립
+ */
+const toProductSaveBody = (values: ProductFormValues) => {
+	return {
+		productId: values.productId,
+		displayName: values.displayName.trim(),
+	};
+};
 ```
 
 **Correct (밖으로 나가는 키만 받는 쪽 표기를 그대로 씁니다):**

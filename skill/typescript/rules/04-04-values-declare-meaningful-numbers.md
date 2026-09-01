@@ -59,10 +59,6 @@ const isOverRetryLimit = (attempts: number): boolean => {
 const toPreviewRows = (rows: Row[]): Row[] => {
 	return rows.slice(0, 37);
 };
-
-const toScheduledSave = (save: () => void): void => {
-	setTimeout(save, 300);
-};
 ```
 
 **Incorrect (지역 `const`로 자리만 옮깁니다):**

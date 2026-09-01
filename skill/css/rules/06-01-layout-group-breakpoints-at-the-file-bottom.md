@@ -75,18 +75,12 @@ tags: selector, responsive
 ```css
 .pg_products__toolbar {
 	display: flex;
-	gap: clamp(8px, 2vw, 24px);
+	gap: 24px;
 }
 
 .pg_products__layout {
 	display: grid;
 	grid-template-columns: 280px 1fr;
-}
-
-@media (width < 1440px) {
-	.pg_products__layout {
-		grid-template-columns: 220px 1fr;
-	}
 }
 
 @media (width < 1024px) {

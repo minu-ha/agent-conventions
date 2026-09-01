@@ -116,6 +116,28 @@ interface UserPreview {
 }
 ```
 
+**Incorrect (인덱스 접근으로 옮기면서 `?`와 `readonly`를 흘립니다):**
+
+```ts
+/**
+ * product 목록 한 행의 표시 계약
+ */
+interface ProductListRow {
+	/**
+	 * product 식별자
+	 */
+	id: ProductRecord["id"];
+	/**
+	 * 소속 분류 이름
+	 */
+	categoryName: CategoryRecord["name"];
+	/**
+	 * 마지막 수정자 이름
+	 */
+	ownerName: UserRecord["name"];
+}
+```
+
 **Correct (여러 계약에서 필드를 모으고 `?`, `readonly`를 직접 적습니다):**
 
 ```ts

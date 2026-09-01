@@ -27,8 +27,13 @@ tags: data, state, origin
 
 **Incorrect (구조분해로 출처가 흐려집니다):**
 
-```ts
+```tsx
 const {products, selectedProduct} = responseProductListSuspense.data;
+
+<Fragment>
+	<UiList dataSource={products} />
+	<UiTable dataSource={selectedProduct.fields} />
+</Fragment>;
 ```
 
 **Correct (원본 체이닝으로 출처를 지킵니다):**
@@ -38,6 +43,20 @@ const {products, selectedProduct} = responseProductListSuspense.data;
 	<UiList dataSource={responseProductListSuspense.data.products} />
 	<UiTable dataSource={responseProductListSuspense.data.selectedProduct.fields} />
 </Fragment>;
+```
+
+**Incorrect (이펙트 의존성에까지 구조분해한 이름이 올라 출처가 사라집니다):**
+
+```ts
+const {products} = responseProductSearchSuspense.data;
+
+useEffect(() => {
+	if (products.length > 0) {
+		return;
+	}
+
+	reportEmptySearch(urlParams.keyword);
+}, [products, urlParams.keyword]);
 ```
 
 **Correct (이펙트 안에서도 원본 이름 그대로 씁니다):**

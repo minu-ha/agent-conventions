@@ -78,6 +78,26 @@ const toStateLabel: UserFormatters["toStateLabel"] = (state) => {
 };
 ```
 
+**Incorrect (같은 시그니처를 쓰는 구현마다 매개변수와 반환 타입을 다시 적습니다):**
+
+```ts
+/**
+ * 앞뒤 공백을 걷어낸 request 문자열
+ */
+const toRequest = (request: string): string => {
+	return request.trim();
+};
+
+/**
+ * 검색어로 쓸 수 있게 공백을 한 칸으로 줄인 request 문자열
+ */
+const toSearchRequest = (request: string): string => {
+	return request.replaceAll(/\s+/g, " ").trim();
+};
+```
+
+**Correct (같은 시그니처를 쓰는 구현이 둘 이상이면 함수 타입 별칭을 선언합니다):**
+
 ```ts
 /**
  * request 변환 계약

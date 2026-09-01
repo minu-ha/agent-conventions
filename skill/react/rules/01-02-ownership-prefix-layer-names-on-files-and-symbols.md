@@ -42,6 +42,15 @@ export const SalesTrendPanel = (props: SalesTrendPanelProps) => {
 };
 ```
 
+**Correct (진입 파일이 아닌 컴포넌트라 `_`를 앞에 붙이고 심볼에도 접두사를 답니다):**
+
+```tsx
+// page/detail/_pg-sales-trend-panel.tsx
+export const PgSalesTrendPanel = (props: PgSalesTrendPanelProps) => {
+	return <section className={clsx("pg_salesTrendPanel__root")}>{/* ... */}</section>;
+};
+```
+
 **Incorrect (폴더에도 접두사를 붙이고 이름에서 되풀이합니다):**
 
 ```tsx
@@ -51,11 +60,11 @@ export const UiButtonButton = (props: UiButtonButtonProps) => {
 };
 ```
 
-**Correct (파일과 심볼에만 붙이고 폴더에는 붙이지 않습니다):**
+**Correct (폴더에는 붙이지 않고 접두사가 말한 부분을 이름에서 되풀이하지 않습니다):**
 
 ```tsx
-// page/detail/_pg-sales-trend-panel.tsx
-export const PgSalesTrendPanel = (props: PgSalesTrendPanelProps) => {
-	return <section className={clsx("pg_salesTrendPanel__root")}>{/* ... */}</section>;
+// component/ui/button/ui-button.tsx
+export const UiButton = (props: UiButtonProps) => {
+	return <button />;
 };
 ```

@@ -57,6 +57,18 @@ tags: tokens, variables, reuse
 }
 ```
 
+**Correct (한 파일 안 반복은 값을 그대로 둡니다):**
+
+```css
+.pg_catalogIndex__toolbar {
+	gap: 12px;
+}
+
+.pg_catalogIndex__footer {
+	gap: 12px;
+}
+```
+
 **Incorrect (상태를 전달하려고 지역 변수를 만듭니다):**
 
 ```css
@@ -69,6 +81,20 @@ tags: tokens, variables, reuse
 
 	&:hover {
 		--pg-catalog-row-accent: #1677ff;
+	}
+}
+```
+
+**Correct (상태 전달은 지역 변수 없이 결합자 하나로 풉니다):**
+
+```css
+.pg_catalogIndex__rowBadge {
+	border: 1px solid transparent;
+}
+
+.pg_catalogIndex__row {
+	&:hover .pg_catalogIndex__rowBadge {
+		border-color: #1677ff;
 	}
 }
 ```
@@ -95,34 +121,19 @@ tags: tokens, variables, reuse
 /* src/style/token.css */
 :root {
 	--app-color-fill-muted: #f5f5f5;
-	--app-space-3: 12px;
 }
 ```
 
 ```css
+/* pg-catalog-index.css */
 .pg_catalogIndex__row {
 	background: var(--app-color-fill-muted);
 }
 ```
 
-**Correct (한 파일 안 반복은 값을 그대로 두고, 상태 전달은 결합자 하나로 풉니다):**
-
 ```css
-.pg_catalogIndex__rowBadge {
-	border: 1px solid transparent;
-}
-
-.pg_catalogIndex__toolbar {
-	gap: 12px;
-}
-
-.pg_catalogIndex__footer {
-	gap: 12px;
-}
-
-.pg_catalogIndex__row {
-	&:hover .pg_catalogIndex__rowBadge {
-		border-color: #1677ff;
-	}
+/* pg-catalog-detail.css */
+.pg_catalogDetail__row {
+	background: var(--app-color-fill-muted);
 }
 ```

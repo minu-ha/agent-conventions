@@ -83,6 +83,7 @@ TSX에서 그 지점이 보이므로 "이 마크업을 우리가 쓰는가"를 �
 ```css
 .pg_catalogIndex__toolbarField {
 	flex: 1;
+	margin-inline-start: 0;
 }
 
 .pg_catalogIndex__toolbarButton {

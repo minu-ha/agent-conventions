@@ -50,17 +50,7 @@ tags: variables, fallbacks, tokens
 }
 ```
 
-**Incorrect (주입이 보장되지 않는 변수를 대체값 없이 씁니다):**
-
-```css
-.pg_postFilterDialog__collapse {
-	& .ant-collapse-item {
-		border-radius: var(--ant-border-radius-lg);
-	}
-}
-```
-
-**Correct (공통 토큰은 대체값 없이, 그 밖은 대체값과 함께 씁니다):**
+**Correct (공통 토큰 목록에 있는 변수는 대체값 없이 씁니다):**
 
 ```css
 /* src/style/token.css — 공통 토큰 목록의 단일 출처 */
@@ -76,7 +66,21 @@ tags: variables, fallbacks, tokens
 	gap: var(--app-space-3);
 	color: var(--app-color-text-primary);
 }
+```
 
+**Incorrect (주입이 보장되지 않는 변수를 대체값 없이 씁니다):**
+
+```css
+.pg_postFilterDialog__collapse {
+	& .ant-collapse-item {
+		border-radius: var(--ant-border-radius-lg);
+	}
+}
+```
+
+**Correct (목록에 없는 변수에는 대체값을 붙입니다):**
+
+```css
 .pg_postFilterDialog__collapse {
 	& .ant-collapse-item {
 		border-radius: var(--ant-border-radius-lg, 10px);
