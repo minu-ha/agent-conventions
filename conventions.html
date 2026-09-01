@@ -19,6 +19,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 	--bad: #a8392b; --good: #3f6f52; --tag-fg: #7d6a55;
 	--code-bg: #fff; --code-fg: #0f1416;
 	--gut: #5c686e; --code-c: #3d4a51; --code-s: #1c5238; --code-k: #8f4025; --code-g: #5d4c39;
+	--dx-b: #5f6b71; --dx-a: #2b6cb0;
 	--sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
 	--mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
@@ -33,6 +34,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 		--bad: #dd8a7d; --good: #6bb890; --tag-fg: #b39a7c;
 		--code-bg: #12171a; --code-fg: #eef3f5;
 		--gut: #93a0a7; --code-c: #b3c0c6; --code-s: #94d6ae; --code-k: #f3ad90; --code-g: #d8bd99;
+		--dx-b: #9aa7ad; --dx-a: #7cb3e8;
 	}
 }
 
@@ -44,6 +46,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 	--bad: #dd8a7d; --good: #6bb890; --tag-fg: #b39a7c;
 	--code-bg: #12171a; --code-fg: #eef3f5;
 	--gut: #93a0a7; --code-c: #b3c0c6; --code-s: #94d6ae; --code-k: #f3ad90; --code-g: #d8bd99;
+	--dx-b: #9aa7ad; --dx-a: #7cb3e8;
 }
 
 body {
@@ -185,19 +188,33 @@ body {
 .acc-body strong { color: var(--ink); font-weight: 600; }
 .acc-body .tw { overflow-x: auto; margin: 0 0 .8em; }
 .acc-body table { border-collapse: collapse; font-size: 12.5px; width: 100%; table-layout: auto; border: 1px solid var(--hair); }
-.acc-body th { padding: 7px 11px; text-align: left; vertical-align: bottom; font-family: var(--mono); font-size: 10px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); background: var(--hover); border: 1px solid var(--hair); border-bottom-color: var(--edge); }
+/* 한글 헤더를 mono + 자간으로 그리면 넓어져 두 줄로 접힌다. 본문 폰트로 쓰고 접힘을 막는다. */
+.acc-body th { padding: 7px 11px; text-align: left; vertical-align: middle; white-space: nowrap; font-size: 11px; font-weight: 600; color: var(--muted); background: var(--hover); border: 1px solid var(--hair); border-bottom-color: var(--edge); }
 .acc-body td { padding: 8px 11px; text-align: left; vertical-align: top; line-height: 1.6; border: 1px solid var(--hair); }
 .acc-body pre.code { border: 1px solid var(--soft); border-radius: 2px; margin: .2em 0 1em; }
 
 /* ---------- examples ---------- */
 /* Incorrect 바로 뒤에 Correct 가 오고 둘 다 코드 블록 하나면 좌우로 놓는다.
    auto-fit 이라 main 이 좁아지면 브레이크포인트 없이 스스로 위아래로 떨어진다. */
-.exs { display: flex; flex-direction: column; gap: 18px; margin-top: 16px; }
+.exs { display: flex; flex-direction: column; gap: 18px; margin-top: 20px; }
 /* 짝 비교는 그룹과 다른 것이라 머리말을 코랄로 따로 세운다. 붉고 푸른 그룹 머리말과 갈린다. */
 .dx { display: flex; flex-direction: column; gap: 9px; }
 .dx-hd { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 10px; }
-.dx-tag { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: .12em; white-space: nowrap; color: var(--coral-dk); }
-.dx-rule { height: 1px; background: color-mix(in srgb, var(--coral) 30%, transparent); }
+.dx-tag { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: .12em; white-space: nowrap; color: var(--dx-a); }
+.dx-rule { height: 1px; background: color-mix(in srgb, var(--dx-a) 30%, transparent); }
+/* 짝 비교는 옳고 그름이 아니라 전후라서 붉고 푸른 축 대신 회색→파랑을 쓴다. */
+.box-b { border-left: 2px solid color-mix(in srgb, var(--dx-b) 60%, transparent); }
+.box-a { border-left: 2px solid color-mix(in srgb, var(--dx-a) 60%, transparent); }
+.box-b > .box-hd { background: color-mix(in srgb, var(--dx-b) 6%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--dx-b) 20%, transparent); }
+.box-a > .box-hd { background: color-mix(in srgb, var(--dx-a) 6%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--dx-a) 20%, transparent); }
+.box-b .box-gl { color: var(--dx-b); }
+.box-a .box-gl { color: var(--dx-a); }
+.box-b .box-side { color: var(--dx-b); border: 1px solid color-mix(in srgb, var(--dx-b) 40%, transparent); }
+.box-a .box-side { color: var(--dx-a); border: 1px solid color-mix(in srgb, var(--dx-a) 40%, transparent); }
+.box-b .cd .on { background: color-mix(in srgb, var(--dx-b) 9%, transparent); }
+.box-b .cd .n.on, .box-b .cd .m.on { color: var(--dx-b); }
+.box-a .cd .on { background: color-mix(in srgb, var(--dx-a) 9%, transparent); }
+.box-a .cd .n.on, .box-a .cd .m.on { color: var(--dx-a); }
 .box-lead { display: inline-flex; align-items: center; gap: 6px; flex: 0 0 auto; }
 .box-side { font-family: var(--mono); font-size: 9.5px; font-weight: 500; letter-spacing: .06em; padding: 1px 5px; border-radius: 2px; white-space: nowrap; }
 .box-bad .box-side { color: var(--bad); border: 1px solid color-mix(in srgb, var(--bad) 35%, transparent); }
@@ -215,9 +232,9 @@ body {
 .box-bad .box-gl { color: var(--bad); }
 .box-good .box-gl { color: var(--good); }
 /* 종류는 글리프·좌측 띠·머리 배경이 이미 말한다. 제목은 본문 색으로 읽히게 둔다. */
-.box-note { color: var(--ink); }
+.box-note { color: var(--ink2); }
 /* 라벨은 그 예시가 무엇인지 말해 주는 유일한 문장이다. 잘라내지 않고 줄바꿈한다. */
-.box-note { min-width: 0; font-size: 13px; font-weight: 600; line-height: 1.5; word-break: keep-all; text-wrap: pretty; }
+.box-note { min-width: 0; font-size: 12.5px; font-weight: 500; line-height: 1.5; word-break: keep-all; text-wrap: pretty; }
 .box-langs { font-family: var(--mono); font-size: 10px; color: var(--faint); }
 
 /* 같은 종류가 연속이면 한 상자로 묶고 기본으로 접는다. 예시 여섯 개가 코드 벽이 되지 않는다. */
@@ -275,19 +292,19 @@ pre.code { margin: 0; padding: 11px 13px; font-family: var(--mono); font-size: 1
 
 
 /* 참조는 칩이 아니라 목록으로 둔다. 문장 안 참조와 모양이 같으면 둘을 구분할 수 없다. */
-.refs { display: flex; flex-direction: column; gap: 20px; margin-top: 20px; }
+.refs { display: flex; flex-direction: column; gap: 14px; margin-top: 18px; }
 .ref-hd { display: flex; align-items: baseline; gap: 8px; padding-bottom: 8px; }
 .ref-lb { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink2); }
 .ref-n { font-family: var(--mono); font-size: 10px; color: var(--faint); font-variant-numeric: tabular-nums; }
 .ref-note { min-width: 0; font-size: 11.5px; color: var(--faint); }
-.ref-list { border: 1px solid var(--hair); border-radius: 6px; overflow: hidden; }
-.ref { display: grid; grid-template-columns: 6.4em 2.6em minmax(0, 1fr) 1.1em; align-items: center; gap: 14px; width: 100%; min-height: 42px; padding: 8px 14px; text-align: left; border-top: 1px solid var(--soft); }
+.ref-list { border: 1px solid var(--hair); border-radius: 2px; overflow: hidden; }
+.ref { display: grid; grid-template-columns: 4.4em 2.4em minmax(0, 1fr) 1em; align-items: center; gap: 10px; width: 100%; min-height: 30px; padding: 5px 11px; text-align: left; border-top: 1px solid var(--soft); }
 .ref:first-child { border-top: none; }
 .ref:hover { background: var(--hover); }
-.ref-sk { font-family: var(--mono); font-size: 9.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--coral-dk); }
-.ref-no { font-family: var(--mono); font-size: 12px; color: var(--coral); font-variant-numeric: tabular-nums; }
-.ref-ti { min-width: 0; font-size: 13px; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.ref-go { font-size: 12px; color: var(--faint); text-align: right; }
+.ref-sk { font-family: var(--mono); font-size: 9px; letter-spacing: .06em; text-transform: uppercase; color: var(--faint); }
+.ref-no { font-family: var(--mono); font-size: 11px; color: var(--coral); font-variant-numeric: tabular-nums; }
+.ref-ti { min-width: 0; font-size: 12.5px; color: var(--ink2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ref-go { font-size: 11px; color: var(--faint); text-align: right; }
 .ref:hover .ref-go { color: var(--coral); }
 .ref[disabled] { cursor: default; }
 .ref[disabled]:hover { background: none; }
@@ -664,9 +681,10 @@ body:has(.dlg[open]) { overflow: hidden; }
 		if (!e) return "";
 
 		const bad = e.kind === "incorrect";
-		const langs = [...new Set(e.blocks.map((b) => b.lang))].join(" \u00b7 ");
+		// side 가 있으면 짝 비교다. 옳고 그름이 아니라 전후를 보이므로 색 계열을 바꾼다.
+		const tone = side ? (bad ? "box-b" : "box-a") : (bad ? "box-bad" : "box-good");
 
-		return '<div class="box ' + (bad ? "box-bad" : "box-good") + '"><div class="box-hd">' +
+		return '<div class="box ' + tone + '"><div class="box-hd">' +
 			'<span class="box-lead"><span class="box-gl" aria-hidden="true">' + (bad ? "\u2212" : "+") + "</span>" +
 			(side ? '<span class="box-side">' + side + "</span>" : "") + "</span>" +
 			'<span class="box-note">' + (e.label ? inlineHi(e.label) : (bad ? "INCORRECT" : "CORRECT")) + "</span>" +
@@ -678,8 +696,7 @@ body:has(.dlg[open]) { overflow: hidden; }
 		const bad = kind === "incorrect";
 		const n = samples.length;
 		const skey = key + ":" + index;
-		const stored = state.sample.get(skey);
-		const openIdx = stored === undefined ? (n === 1 ? [0] : []) : stored;
+		const openIdx = state.sample.get(skey) || [];
 		const allOpen = n > 0 && samples.every((_, i) => openIdx.indexOf(i) >= 0);
 		const cls = bad ? "gx-bad" : "gx-good";
 		const head = n > 1
@@ -692,7 +709,7 @@ body:has(.dlg[open]) { overflow: hidden; }
 
 			return '<div class="smp" data-open="' + (isOpen ? 1 : 0) + '">' +
 				'<button class="smp-b" data-smp="' + esc(skey) + '" data-i="' + i + '">' +
-				'<span class="smp-no">' + (n > 1 ? i + 1 : (bad ? "\u2715" : "\u2713")) + "</span>" +
+				'<span class="smp-no">' + (i + 1) + "</span>" +
 				'<span class="box-note">' + (e.label ? inlineHi(e.label) : "") + "</span>" +
 				'<span class="smp-car" aria-hidden="true">' + (isOpen ? "\u25be" : "\u25b8") + "</span></button>" +
 				'<div class="smp-body">' + (isOpen ? codeHtml(e.blocks, null) : "") + "</div></div>";
@@ -762,13 +779,12 @@ body:has(.dlg[open]) { overflow: hidden; }
 				"<span>" + label + "</span></button>" +
 				'<div class="acc-body">' + (open ? inner() : "") + "</div></div>";
 
-			// 순서: 코드 → 언제 → 왜 → 함께 → 태그.
-			// 규칙을 펼치는 이유는 "어떻게 고치나" 이므로 코드가 먼저 온다.
+			// 순서: 언제 → 왜 → 코드 → 함께 → 태그.
+			// 무엇을 고칠지 판정한 다음에 어떻게 고치는지를 본다.
 			body = '<div class="body">' +
 				'<div class="meta"><span>' + esc(r.id) + "</span>" +
 				(sec ? '<span class="meta-s">·</span><span>' + esc(secLabel(sec)) + "</span>" : "") +
 				'<span class="meta-s">·</span><span>예시 ' + exCount + "</span></div>" +
-				'<div class="exs">' + exsHtml + "</div>" +
 				'<div class="accs">' +
 				(r.appliesWhen || r.appliesWhenBullets.length
 					? acc("when", "언제 적용할까요?", whenOpen, () => whenHtml(r))
@@ -778,6 +794,7 @@ body:has(.dlg[open]) { overflow: hidden; }
 						(r.impactDescription ? '<p class="lead">' + esc(r.impactDescription) + "</p>" : "") + renderProse(r.prose, r.skill))
 					: "") +
 				"</div>" +
+				'<div class="exs">' + exsHtml + "</div>" +
 				(refs.length ? '<div class="refs">' + refs.map((g) => "<div>" +
 					'<div class="ref-hd"><span class="ref-lb">' + g[0] + '</span><span class="ref-n">' + g[2].length + "</span>" +
 					'<span class="ref-note">' + g[1] + "</span></div>" +
