@@ -200,8 +200,12 @@ body {
 /* 짝 비교는 옳고 그름이 아니라 전후라서 붉고 푸른 축 대신 회색→파랑을 쓴다. */
 .box-b { border-left: 3px solid color-mix(in srgb, var(--dx-b) 75%, transparent); }
 .box-a { border-left: 3px solid color-mix(in srgb, var(--dx-a) 75%, transparent); }
-.box-b > .box-hd { background: color-mix(in srgb, var(--dx-b) 10%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--dx-b) 28%, transparent); }
-.box-a > .box-hd { background: color-mix(in srgb, var(--dx-a) 10%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--dx-a) 28%, transparent); }
+.box-b > .box-hd { background: color-mix(in srgb, var(--dx-b) 8%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--dx-b) 22%, transparent); }
+.box-b > .box-hd-t:hover { background: color-mix(in srgb, var(--dx-b) 14%, transparent); }
+.box-b[data-open="1"] > .box-hd { background: color-mix(in srgb, var(--dx-b) 18%, transparent); border-bottom-color: color-mix(in srgb, var(--dx-b) 34%, transparent); }
+.box-a > .box-hd { background: color-mix(in srgb, var(--dx-a) 8%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--dx-a) 22%, transparent); }
+.box-a > .box-hd-t:hover { background: color-mix(in srgb, var(--dx-a) 14%, transparent); }
+.box-a[data-open="1"] > .box-hd { background: color-mix(in srgb, var(--dx-a) 18%, transparent); border-bottom-color: color-mix(in srgb, var(--dx-a) 34%, transparent); }
 .box-b .box-gl { color: var(--dx-b); }
 .box-a .box-gl { color: var(--dx-a); }
 .box-b .box-side { color: var(--dx-b); border: 1px solid color-mix(in srgb, var(--dx-b) 50%, transparent); }
@@ -217,10 +221,17 @@ body {
 .diff { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(330px, 100%), 1fr)); gap: 14px; }
 
 /* 테두리 전체에 의미색을 두르면 잉크가 많다. 좌측 2px 만 의미색으로 세운다. */
-.box { min-width: 0; background: var(--card); border: 1px solid var(--hair); border-radius: 2px; overflow: hidden; }
+.box { min-width: 0; border: 1px solid var(--hair); border-radius: 2px; overflow: hidden; }
+.box-bad { background: color-mix(in srgb, var(--bad) 3%, var(--card)); }
+.box-good { background: color-mix(in srgb, var(--good) 3%, var(--card)); }
+.box-b { background: color-mix(in srgb, var(--dx-b) 4%, var(--card)); }
+.box-a { background: color-mix(in srgb, var(--dx-a) 4%, var(--card)); }
 .box-bad { border-left: 2px solid color-mix(in srgb, var(--bad) 55%, transparent); }
 .box-good { border-left: 2px solid color-mix(in srgb, var(--good) 55%, transparent); }
 .box-hd { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: baseline; gap: 9px; padding: 8px 12px; }
+.box-hd-t { grid-template-columns: auto minmax(0, 1fr) auto; width: 100%; text-align: left; }
+.box-body { display: none; }
+.box[data-open="1"] .box-body { display: block; }
 .box-bad > .box-hd { background: color-mix(in srgb, var(--bad) 5%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--bad) 16%, transparent); }
 .box-good > .box-hd { background: color-mix(in srgb, var(--good) 5%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--good) 16%, transparent); }
 .box-gl { font-family: var(--mono); font-size: 12px; font-weight: 700; }
@@ -250,11 +261,13 @@ body {
 .smp-b { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: baseline; gap: 9px; width: 100%; text-align: left; padding: 9px 12px; }
 .smp-no { font-family: var(--mono); font-size: 10.5px; font-weight: 700; font-variant-numeric: tabular-nums; }
 .smp-car { font-size: 9px; }
-.box-bad .smp-b:hover, .box-bad .smp[data-open="1"] .smp-b { background: color-mix(in srgb, var(--bad) 5%, transparent); }
-.box-bad .smp[data-open="1"] .smp-b { border-bottom: 1px solid color-mix(in srgb, var(--bad) 22%, transparent); }
+.box-bad .smp-b { background: color-mix(in srgb, var(--bad) 4%, transparent); }
+.box-bad .smp-b:hover { background: color-mix(in srgb, var(--bad) 9%, transparent); }
+.box-bad .smp[data-open="1"] .smp-b { background: color-mix(in srgb, var(--bad) 14%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--bad) 26%, transparent); }
 .box-bad .smp-no, .box-bad .smp-car { color: color-mix(in srgb, var(--bad) 80%, transparent); }
-.box-good .smp-b:hover, .box-good .smp[data-open="1"] .smp-b { background: color-mix(in srgb, var(--good) 5%, transparent); }
-.box-good .smp[data-open="1"] .smp-b { border-bottom: 1px solid color-mix(in srgb, var(--good) 22%, transparent); }
+.box-good .smp-b { background: color-mix(in srgb, var(--good) 4%, transparent); }
+.box-good .smp-b:hover { background: color-mix(in srgb, var(--good) 9%, transparent); }
+.box-good .smp[data-open="1"] .smp-b { background: color-mix(in srgb, var(--good) 14%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--good) 26%, transparent); }
 .box-good .smp-no, .box-good .smp-car { color: color-mix(in srgb, var(--good) 80%, transparent); }
 .smp-body { display: none; }
 .smp[data-open="1"] .smp-body { display: block; }
@@ -669,18 +682,24 @@ const viewerClientScript = `(() => {
 			'<div class="cd">' + cells + "</div>";
 	}).join("");
 
-	const boxHtml = (e, marks, side) => {
+	const boxHtml = (e, marks, side, toggle) => {
 		if (!e) return "";
 
 		const bad = e.kind === "incorrect";
 		// side 가 있으면 짝 비교다. 옳고 그름이 아니라 전후를 보이므로 색 계열을 바꾼다.
 		const tone = side ? (bad ? "box-b" : "box-a") : (bad ? "box-bad" : "box-good");
-
-		return '<div class="box ' + tone + '"><div class="box-hd">' +
-			'<span class="box-lead"><span class="box-gl" aria-hidden="true">' + (bad ? "\\u2212" : "+") + "</span>" +
+		// 두 상자가 같은 상태 키를 쓰므로 어느 쪽 머리를 눌러도 함께 열리고 닫힌다.
+		const open = toggle ? toggle.open : true;
+		const inner = '<span class="box-lead"><span class="box-gl" aria-hidden="true">' + (bad ? "\\u2212" : "+") + "</span>" +
 			(side ? '<span class="box-side">' + side + "</span>" : "") + "</span>" +
 			'<span class="box-note">' + (e.label ? inlineHi(e.label) : (bad ? "INCORRECT" : "CORRECT")) + "</span>" +
-			"</div>" + codeHtml(e.blocks, marks ? {mask: marks, bad: bad} : null) + "</div>";
+			(toggle ? '<span class="smp-car" aria-hidden="true">' + (open ? "\\u25be" : "\\u25b8") + "</span>" : "");
+		const head = toggle
+			? '<button class="box-hd box-hd-t" data-smp="' + esc(toggle.key) + '" data-i="0">' + inner + "</button>"
+			: '<div class="box-hd">' + inner + "</div>";
+
+		return '<div class="box ' + tone + '" data-open="' + (open ? 1 : 0) + '">' + head +
+			'<div class="box-body">' + (open ? codeHtml(e.blocks, marks ? {mask: marks, bad: bad} : null) : "") + "</div></div>";
 	};
 
 	// 같은 종류가 이어지면 한 상자에 넣고 기본으로 접는다. 제목은 늘 보이고 코드만 감춘다.
@@ -750,13 +769,18 @@ const viewerClientScript = `(() => {
 				units.push({diff: false, kind: e.kind, samples: run, at: at});
 			}
 
-			const exsHtml = units.map((u) => u.diff
-				? '<div class="dx"><div class="dx-hd"><span class="dx-tag"><span aria-hidden="true">\\u21c4</span>' +
+			const exsHtml = units.map((u) => {
+				if (!u.diff) return groupHtml(u.kind, u.samples, key, u.at);
+
+				const dkey = key + ":" + u.at;
+				const toggle = {key: dkey, open: (state.sample.get(dkey) || []).indexOf(0) >= 0};
+
+				return '<div class="dx"><div class="dx-hd"><span class="dx-tag"><span aria-hidden="true">\\u21c4</span>' +
 					"<span>DIFF</span></span>" +
 					'<span class="dx-rule"></span></div>' +
-					'<div class="diff">' + boxHtml(u.bad, u.marks ? u.marks.am : null, "BEFORE") +
-					boxHtml(u.good, u.marks ? u.marks.bm : null, "AFTER") + "</div></div>"
-				: groupHtml(u.kind, u.samples, key, u.at)).join("");
+					'<div class="diff">' + boxHtml(u.bad, u.marks ? u.marks.am : null, "BEFORE", toggle) +
+					boxHtml(u.good, u.marks ? u.marks.bm : null, "AFTER", toggle) + "</div></div>";
+			}).join("");
 			// 두 목록이 무엇이 다른지 라벨만으로는 알 수 없어서 한 줄 설명을 붙인다.
 			const refs = [];
 			if (r.requiresSelected.length) refs.push(["함께 적용", "이 규칙이 걸리면 반드시 같이 적용합니다", r.requiresSelected]);
