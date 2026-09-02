@@ -229,7 +229,7 @@ body {
 .box-a .cd .on { background: color-mix(in srgb, var(--dx-a) 13%, transparent); }
 .box-a .cd .n.on, .box-a .cd .m.on { color: var(--dx-a); background: color-mix(in srgb, var(--dx-a) 13%, var(--code-bg)); }
 /* 맞은편에만 줄이 있는 자리. 여기에 아무것도 없다는 것이 보여야 좌우 대응이 읽힌다. */
-.cd .pad { background: repeating-linear-gradient(135deg, transparent, transparent 4px, color-mix(in srgb, var(--ink) 5%, transparent) 4px, color-mix(in srgb, var(--ink) 5%, transparent) 8px); }
+.cd i.pad { background: repeating-linear-gradient(135deg, transparent, transparent 4px, color-mix(in srgb, var(--ink) 5%, transparent) 4px, color-mix(in srgb, var(--ink) 5%, transparent) 8px); }
 .box-lead { display: inline-flex; align-items: center; gap: 6px; flex: 0 0 auto; }
 .box-side { font-family: var(--mono); font-size: 9.5px; font-weight: 500; letter-spacing: .06em; padding: 1px 5px; border-radius: 2px; white-space: nowrap; }
 .box-bad .box-side { color: var(--bad); border: 1px solid color-mix(in srgb, var(--bad) 35%, transparent); }
@@ -309,11 +309,14 @@ body {
 /* ---------- code ---------- */
 /* 줄번호·마커·코드 3열. 거터 폭을 3em 으로 고정해 예시끼리 코드 시작이 맞는다. */
 /* 거터는 세 자리 줄번호가 안 접히게 잡는다. 3em 은 안쪽 여백을 빼면 두 자리도 못 담는다. */
-.cd { display: grid; grid-template-columns: 3.9em 16px minmax(0, 1fr); padding: 15px 12px 15px 0; font-family: var(--mono); font-size: 11px; line-height: 1.65; background: var(--code-bg); color: var(--code-fg); tab-size: 2; }
+.cd { display: grid; grid-template-columns: 3.9em 16px minmax(0, 1fr); font-family: var(--mono); font-size: 11px; line-height: 1.65; background: var(--code-bg); color: var(--code-fg); tab-size: 2; }
 .cd i { display: block; font-style: normal; min-height: 1.65em; }
 .cd .n { padding: 0 9px 0 10px; text-align: right; white-space: nowrap; color: var(--gut); font-variant-numeric: tabular-nums; user-select: none; }
 .cd .m { text-align: center; font-weight: 700; color: transparent; user-select: none; border-right: 1px solid var(--soft); }
-.cd .c { padding: 0 6px 0 12px; white-space: pre; }
+.cd .c { padding: 0 18px 0 12px; white-space: pre; }
+/* 위아래 숨은 여백은 첫 줄과 끝 줄이 갖는다. 빈 칸이면 빗금이 그 여백까지 채운다. */
+.cd .rt { padding-top: 15px; }
+.cd .rb { padding-bottom: 15px; }
 /* 좁은 폭에서 접으면 한 줄이 서너 줄이 되어 diff 대응이 무너진다. 가로로 민다. */
 .cd-wrap { overflow-x: auto; }
 .cd { min-width: 100%; width: max-content; }
@@ -757,14 +760,19 @@ body:has(.dlg[open]) { overflow: hidden; }
 		const painted = hl(b.code, b.lang).split("\n");
 		const plan = blocks.length === 1 && marks ? marks.rows : null;
 		const glyph = marks && marks.bad ? "\u2212" : "+";
-		const cells = (plan || rows.map((_unused, n) => ({i: n, changed: false}))).map((row) => {
+		const plan2 = plan || rows.map((_unused, n) => ({i: n, changed: false}));
+		const cells = plan2.map((row, n) => {
+			// 첫 줄과 끝 줄이 코드 블록의 위아래 여백을 갖는다.
+			const edge = (n === 0 ? " rt" : "") + (n === plan2.length - 1 ? " rb" : "");
+
 			// 맞은편에만 줄이 있는 자리는 빈 칸으로 높이를 맞춰 좌우 행이 어긋나지 않게 한다.
-			if (!row) return '<i class="n pad"></i><i class="m pad"></i><i class="c pad">\u200b</i>';
+			if (!row) return '<i class="n pad' + edge + '"></i><i class="m pad' + edge + '"></i><i class="c pad' + edge + '">\u200b</i>';
 
 			const on = row.changed ? " on" : "";
 
-			return '<i class="n' + on + '">' + (row.i + 1) + '</i><i class="m' + on + '">' + (row.changed ? glyph : "\u00a0") + '</i>' +
-				'<i class="c' + on + '">' + (painted[row.i] || "\u200b") + "</i>";
+			return '<i class="n' + on + edge + '">' + (row.i + 1) + '</i><i class="m' + on + edge + '">' +
+				(row.changed ? glyph : "\u00a0") + '</i>' +
+				'<i class="c' + on + edge + '">' + (painted[row.i] || "\u200b") + "</i>";
 		}).join("");
 
 		return (blocks.length > 1 ? '<div class="cd-lb">' + (i + 1) + " / " + blocks.length + "  \u00b7  " + esc(b.lang) + "</div>" : "") +
