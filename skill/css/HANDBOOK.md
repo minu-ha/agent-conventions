@@ -853,6 +853,26 @@ export const UiCollapse = (props: UiCollapseProps) => {
 | 우리가 만든 컴포넌트 | `className`을 받도록 먼저 고칩니다 |
 | `className`을 받지 않는 외부 라이브러리 컴포넌트 | 감싸기가 마지막 수단으로 남는 유일한 경우입니다. 래퍼에 역할 이름을 붙이고 왜 감쌌는지 주석으로 남깁니다 |
 
+**Incorrect (역할 없는 이름의 래퍼를 늘립니다):**
+
+```tsx
+<div className={clsx("pg_postIndex__box")}>
+	<div className={clsx("pg_postIndex__inner")}>
+		<LegacyDatePicker value={value} onChange={handleChange} />
+	</div>
+</div>
+```
+
+**Correct (외부 라이브러리가 `className`을 받지 않으면 역할 이름을 붙여 감쌉니다):**
+
+```tsx
+{/**
+ * LegacyDatePicker는 className을 받지 않아 배치용 래퍼가 필요하다
+ */}
+<div className={clsx("pg_postIndex__dateField")}>
+	<LegacyDatePicker value={value} onChange={handleChange} />
+</div>
+```
 **Incorrect (래퍼 `div`로 최상위 스타일을 우회합니다):**
 
 ```tsx
@@ -890,27 +910,6 @@ export const UiCollapse = (props: UiCollapseProps) => {
 .pg_postIndex__collapse {
 	margin-block-end: 16px;
 }
-```
-
-**Incorrect (역할 없는 이름의 래퍼를 늘립니다):**
-
-```tsx
-<div className={clsx("pg_postIndex__box")}>
-	<div className={clsx("pg_postIndex__inner")}>
-		<LegacyDatePicker value={value} onChange={handleChange} />
-	</div>
-</div>
-```
-
-**Correct (외부 라이브러리가 `className`을 받지 않으면 역할 이름을 붙여 감쌉니다):**
-
-```tsx
-{/**
- * LegacyDatePicker는 className을 받지 않아 배치용 래퍼가 필요하다
- */}
-<div className={clsx("pg_postIndex__dateField")}>
-	<LegacyDatePicker value={value} onChange={handleChange} />
-</div>
 ```
 
 ### 3.6 Do Not Style Through the `style` Attribute
@@ -1060,6 +1059,31 @@ export const UiTooltip = (props: UiTooltipProps) => {
 };
 ```
 
+**Incorrect (라이브러리가 정하는 값으로 수정자를 만듭니다):**
+
+```tsx
+export interface UiButtonProps {
+	variant?: ButtonProps["variant"];
+	className?: string;
+}
+
+export const UiButton = (props: UiButtonProps) => {
+	return <Button className={clsx("ui_button__root", `ui_button__root--${props.variant}`, props.className)} />;
+};
+```
+
+**Correct (라이브러리가 정하는 값은 수정자로 만들지 않고 그대로 넘깁니다):**
+
+```tsx
+export interface UiButtonProps {
+	variant?: ButtonProps["variant"];
+	className?: string;
+}
+
+export const UiButton = (props: UiButtonProps) => {
+	return <Button className={clsx("ui_button__root", props.className)} variant={props.variant} />;
+};
+```
 **Incorrect (수정자가 없는 값까지 조립해 CSS에 없는 클래스를 붙입니다):**
 
 ```tsx
@@ -1130,32 +1154,6 @@ export const WgFlowNode = (props: WgFlowNodeProps) => {
 			</p>
 		</div>
 	);
-};
-```
-
-**Incorrect (라이브러리가 정하는 값으로 수정자를 만듭니다):**
-
-```tsx
-export interface UiButtonProps {
-	variant?: ButtonProps["variant"];
-	className?: string;
-}
-
-export const UiButton = (props: UiButtonProps) => {
-	return <Button className={clsx("ui_button__root", `ui_button__root--${props.variant}`, props.className)} />;
-};
-```
-
-**Correct (라이브러리가 정하는 값은 수정자로 만들지 않고 그대로 넘깁니다):**
-
-```tsx
-export interface UiButtonProps {
-	variant?: ButtonProps["variant"];
-	className?: string;
-}
-
-export const UiButton = (props: UiButtonProps) => {
-	return <Button className={clsx("ui_button__root", props.className)} variant={props.variant} />;
 };
 ```
 
@@ -1319,6 +1317,14 @@ TSX에서 그 지점이 보이므로 "이 마크업을 우리가 쓰는가"를 �
 }
 ```
 
+**Incorrect (요소 선택자를 최상위에 둡니다):**
+
+```css
+.wg_productDetail__prose h2 {
+	margin: 24px 0 12px;
+}
+```
+
 **Correct (우리가 렌더하면 클래스를 붙입니다):**
 
 ```tsx
@@ -1340,14 +1346,6 @@ TSX에서 그 지점이 보이므로 "이 마크업을 우리가 쓰는가"를 �
 
 .pg_catalogIndex__toolbarButton {
 	height: 32px;
-}
-```
-
-**Incorrect (요소 선택자를 최상위에 둡니다):**
-
-```css
-.wg_productDetail__prose h2 {
-	margin: 24px 0 12px;
 }
 ```
 
@@ -1583,6 +1581,44 @@ TSX에서 그 지점이 보이므로 "이 마크업을 우리가 쓰는가"를 �
 가상 클래스를 어디에 쓰는지는 `selector-nest-dom-state-in-the-owning-block` 규칙이 정합니다.
 `:not()`은 `selector-do-not-negate-with-not` 규칙이 막습니다.
 
+**Incorrect (앱이 정하는 상태를 `data-*` 속성으로 겨냥합니다):**
+
+```css
+.pg_assetIndex__row {
+	&[data-pg-expanded="true"] {
+		background: #f5f5f5;
+	}
+}
+```
+
+**Correct (앱이 정하는 상태는 수정자 클래스로 씁니다):**
+
+```css
+.pg_assetIndex__row--expanded {
+	background: #f5f5f5;
+}
+```
+
+**Incorrect (같은 상태를 속성과 수정자 두 표기로 씁니다):**
+
+```css
+.pg_assetIndex__card--selected {
+	border-color: #1677ff;
+}
+
+.pg_assetIndex__card[aria-pressed="true"] {
+	box-shadow: 0 0 0 1px #1677ff;
+}
+```
+
+**Correct (두 표기를 수정자 하나로 모읍니다):**
+
+```css
+.pg_assetIndex__card--selected {
+	border-color: #1677ff;
+	box-shadow: 0 0 0 1px #1677ff;
+}
+```
 **Incorrect (앱 상태를 속성으로 겨냥하고 DOM 상태를 수정자로 만듭니다):**
 
 ```tsx
@@ -1633,45 +1669,6 @@ TSX에서 그 지점이 보이므로 "이 마크업을 우리가 쓰는가"를 �
 
 .pg_assetIndex__card--selected {
 	border-color: #1677ff;
-}
-```
-
-**Incorrect (앱이 정하는 상태를 `data-*` 속성으로 겨냥합니다):**
-
-```css
-.pg_assetIndex__row {
-	&[data-pg-expanded="true"] {
-		background: #f5f5f5;
-	}
-}
-```
-
-**Correct (앱이 정하는 상태는 수정자 클래스로 씁니다):**
-
-```css
-.pg_assetIndex__row--expanded {
-	background: #f5f5f5;
-}
-```
-
-**Incorrect (같은 상태를 속성과 수정자 두 표기로 씁니다):**
-
-```css
-.pg_assetIndex__card--selected {
-	border-color: #1677ff;
-}
-
-.pg_assetIndex__card[aria-pressed="true"] {
-	box-shadow: 0 0 0 1px #1677ff;
-}
-```
-
-**Correct (두 표기를 수정자 하나로 모읍니다):**
-
-```css
-.pg_assetIndex__card--selected {
-	border-color: #1677ff;
-	box-shadow: 0 0 0 1px #1677ff;
 }
 ```
 

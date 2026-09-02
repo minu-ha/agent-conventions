@@ -56,6 +56,25 @@ tags: functions, boundaries
 뺀 다음 어디 둘지는 `functions-give-each-function-its-own-file`이 정하고,
 루트 `util`로 올릴지는 `functions-promote-shared-functions-to-root-util`이 정합니다.
 
+**Incorrect (전용 보조가 딸린 단계를 한 파일에 계속 쌓습니다):**
+
+```txt
+page/report/_function/to-sales-overview.ts
+  toSalesOverview          내보낸 함수
+  toSummaryBand            내보낸 함수만 부름. 전용 보조 없음
+  toTrendChart             내보낸 함수만 부름. 전용 보조 셋이 딸림
+  toTrendBasePoints        toTrendChart만 부름
+  toTrendBaseLabel         toTrendChart만 부름
+  toTrendPoints            toTrendChart만 부름
+```
+
+**Correct (전용 보조가 딸린 단계만 자기 파일로 나갑니다):**
+
+```txt
+page/report/_function/to-sales-overview/
+├── to-sales-overview.ts   내보낸 함수와 toSummaryBand가 남음
+└── to-trend-chart.ts      전용 보조 셋을 비공개로 품음
+```
 **Incorrect (한 번만 쓰는 한 줄 계산을 파일로 분리합니다):**
 
 ```ts
@@ -129,22 +148,3 @@ export const toProductSaveRequest = (formValues: ProductFormValues) => {
 import {toProductSaveRequest} from "@/page/products/_function/to-product-save-request";
 ```
 
-**Incorrect (전용 보조가 딸린 단계를 한 파일에 계속 쌓습니다):**
-
-```txt
-page/report/_function/to-sales-overview.ts
-  toSalesOverview          내보낸 함수
-  toSummaryBand            내보낸 함수만 부름. 전용 보조 없음
-  toTrendChart             내보낸 함수만 부름. 전용 보조 셋이 딸림
-  toTrendBasePoints        toTrendChart만 부름
-  toTrendBaseLabel         toTrendChart만 부름
-  toTrendPoints            toTrendChart만 부름
-```
-
-**Correct (전용 보조가 딸린 단계만 자기 파일로 나갑니다):**
-
-```txt
-page/report/_function/to-sales-overview/
-├── to-sales-overview.ts   내보낸 함수와 toSummaryBand가 남음
-└── to-trend-chart.ts      전용 보조 셋을 비공개로 품음
-```

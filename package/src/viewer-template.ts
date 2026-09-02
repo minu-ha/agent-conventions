@@ -220,10 +220,10 @@ body {
 .box-a .box-gl { color: var(--dx-a); }
 .box-b .box-side { color: var(--dx-b); border: 1px solid color-mix(in srgb, var(--dx-b) 50%, transparent); }
 .box-a .box-side { color: var(--dx-a); border: 1px solid color-mix(in srgb, var(--dx-a) 50%, transparent); }
-.box-b .cd .on { background: color-mix(in srgb, var(--dx-b) 13%, transparent); }
-.box-b .cd .n.on, .box-b .cd .m.on { color: var(--dx-b); background: color-mix(in srgb, var(--dx-b) 13%, var(--code-bg)); }
-.box-a .cd .on { background: color-mix(in srgb, var(--dx-a) 13%, transparent); }
-.box-a .cd .n.on, .box-a .cd .m.on { color: var(--dx-a); background: color-mix(in srgb, var(--dx-a) 13%, var(--code-bg)); }
+.box-b .cd .on { background: color-mix(in srgb, var(--dx-b) 9%, transparent); }
+.box-b .cd .n.on, .box-b .cd .m.on { color: var(--dx-b); background: color-mix(in srgb, var(--dx-b) 9%, var(--code-bg)); }
+.box-a .cd .on { background: color-mix(in srgb, var(--dx-a) 9%, transparent); }
+.box-a .cd .n.on, .box-a .cd .m.on { color: var(--dx-a); background: color-mix(in srgb, var(--dx-a) 9%, var(--code-bg)); }
 /* 맞은편에만 줄이 있는 자리. 여기에 아무것도 없다는 것이 보여야 좌우 대응이 읽힌다. */
 .cd .pad { background: repeating-linear-gradient(135deg, transparent, transparent 4px, color-mix(in srgb, var(--ink) 5%, transparent) 4px, color-mix(in srgb, var(--ink) 5%, transparent) 8px); }
 .box-lead { display: inline-flex; align-items: center; gap: 6px; flex: 0 0 auto; }
@@ -291,9 +291,9 @@ body {
 /* 라벨은 그 예시가 무엇인지 말해 주는 유일한 문장이다. 잘라내지 않고 줄바꿈한다. */
 .box-note { min-width: 0; font-size: 13px; font-weight: 500; line-height: 1.55; word-break: keep-all; text-wrap: pretty; }
 .box-langs { font-family: var(--mono); font-size: 10px; color: var(--faint); }
-/* 잡이를 끝으로 몰면 제목이 한 낱말씩 접혀 머리가 높아진다. 두 줄에서 끊는다. */
+/* 잡이를 끌 때 제목이 접히면 머리 높이가 따라 흔들린다. 한 줄로 두고 말줄임한다. */
 .diff .box-hd-t { overflow: hidden; }
-.diff .box-note { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
+.diff .box-note { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 /* 같은 종류가 연속이면 한 상자로 묶고 기본으로 접는다. 예시 여섯 개가 코드 벽이 되지 않는다. */
 .gx { display: flex; flex-direction: column; gap: 9px; }
@@ -369,13 +369,14 @@ pre.code { margin: 0; padding: 11px 13px; font-family: var(--mono); font-size: 1
 .ref-hd { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 10px; padding-bottom: 8px; }
 .ref-lb { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: .12em; white-space: nowrap; color: var(--accent-dk); }
 .ref-note { font-size: 11px; color: var(--faint); white-space: nowrap; }
-.ref-list { border: 1px solid var(--hair); border-radius: 2px; overflow: hidden; }
-.ref { display: grid; grid-template-columns: 4.4em 2.4em minmax(0, 1fr) 1em; align-items: center; gap: 10px; width: 100%; min-height: 30px; padding: 5px 11px; text-align: left; border-top: 1px solid var(--soft); }
+/* 예시 상자와 같은 틀·같은 줄 높이로 둔다. 폭이 같은데 줄만 얇으면 눈에 걸린다. */
+.ref-list { border: 1px solid var(--hair); border-radius: 3px; background: var(--card); overflow: hidden; }
+.ref { display: grid; grid-template-columns: 4.4em 2.4em minmax(0, 1fr) 1em; align-items: center; gap: 10px; width: 100%; min-height: 42px; padding: 10px 13px; text-align: left; border-top: 1px solid var(--soft); }
 .ref:first-child { border-top: none; }
 .ref:hover { background: var(--hover); }
 .ref-sk { font-family: var(--mono); font-size: 9px; letter-spacing: .06em; text-transform: uppercase; color: var(--faint); }
 .ref-no { font-family: var(--mono); font-size: 11px; color: var(--accent); font-variant-numeric: tabular-nums; }
-.ref-ti { min-width: 0; font-size: 12.5px; color: var(--ink2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ref-ti { min-width: 0; font-size: 13px; color: var(--ink2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ref-go { font-size: 11px; color: var(--faint); text-align: right; }
 .ref:hover .ref-go { color: var(--accent); }
 .ref[disabled] { cursor: default; }
@@ -1066,7 +1067,19 @@ const viewerClientScript = `(() => {
 
 	function openDialog(key) {
 		if (!byKey.has(key)) return;
+
+		const rule = byKey.get(key);
+
+		// 참조를 여는 것은 그 규칙을 읽으러 온 것이다. 접어 두면 한 번 더 눌러야 한다.
 		dlgKey = key;
+		state.when.add(key);
+		state.why.add(key);
+
+		for (const u of unitsOf(rule)) {
+			state.sample.set(key + ":" + u.at, u.diff ? [0] : Array.from({length: u.samples.length}, (_unused, i) => i));
+		}
+
+		render();
 		renderDialog();
 		if (!dlg.open) dlg.showModal();
 		const scroller = dlg.querySelector(".dlg-scroll");
