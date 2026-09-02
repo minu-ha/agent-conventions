@@ -338,9 +338,10 @@ test("viewer layout cannot overflow: grids shrink and code wraps", () => {
 	assert.match(html, /\.pane\s*\{[^}]*minmax\(0,\s*1fr\)/);
 	assert.match(html, /\.pane\s*>\s*main\s*\{[^}]*min-width:\s*0/);
 	assert.match(html, /\.row-hd\s*\{[^}]*minmax\(0,\s*1fr\)/);
-	// Incorrect/Correct 는 나란히 놓되 좁아지면 한 열로 떨어진다.
-	// minmax(330px, …) 만 쓰면 컨테이너가 330px 아래일 때 한 열이 그대로 넘치므로 min() 으로 막는다.
-	assert.match(html, /\.diff\s*\{[^}]*repeat\(auto-fit, minmax\(min\(330px, 100%\), 1fr\)\)/);
+	// BEFORE/AFTER 는 기본이 한 열이고, 1000px 이상에서만 가운데 잡이를 낀 세 칸으로 선다.
+	// 좁은 폭에서 세 칸을 유지하면 잡이가 끌 것도 없이 자리만 먹고 코드가 넘친다.
+	assert.match(html, /\.diff\s*\{[^}]*grid-template-columns:\s*minmax\(0, 1fr\)/);
+	assert.match(html, /@media \(min-width: 1000px\) \{[^}]*minmax\(0, var\(--split, 50%\)\) 11px minmax\(0, 1fr\)/);
 	// 예시 코드는 접지 않고 가로로 민다. 접으면 한 줄이 서너 줄이 되어 diff 대응이 무너진다.
 	// 대신 스크롤을 컨테이너 안에 가둬야 페이지가 통째로 밀리지 않는다.
 	assert.match(html, /\.cd\s*\{[^}]*minmax\(0, 1fr\)/);
