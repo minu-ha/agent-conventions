@@ -179,7 +179,8 @@ body {
 .acc-btn { display: grid; grid-template-columns: auto auto minmax(0, 1fr); align-items: center; gap: 10px; width: 100%; text-align: left; padding: 11px 0; font-size: 13.5px; font-weight: 500; color: var(--ink); }
 .acc-btn:hover { color: var(--accent-dk); }
 .acc-btn:hover .sec-rule { background: color-mix(in srgb, var(--accent) 34%, transparent); }
-.acc-car { font-size: 10px; color: var(--accent); }
+.acc-car { display: inline-flex; color: var(--accent); }
+.acc-car svg { display: block; }
 .sec-rule { height: 1px; background: color-mix(in srgb, var(--accent) 18%, transparent); }
 .acc-body { display: none; padding: 0 2px 18px 22px; color: var(--ink2); font-size: 13.5px; line-height: 1.8; }
 .acc[data-open="1"] .acc-body { display: block; }
@@ -236,16 +237,17 @@ body {
 .diff { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(330px, 100%), 1fr)); align-items: start; gap: 14px; }
 /* 한쪽 코드가 길어 잘릴 때 그 행만 폭을 몰아 준다. 여닫기와는 별개다. */
 @media (min-width: 1000px) {
-	.diff[data-w="b"] { grid-template-columns: minmax(0, 3fr) minmax(0, 1fr); }
-	.diff[data-w="a"] { grid-template-columns: minmax(0, 1fr) minmax(0, 3fr); }
+	.diff[data-w="b"] { grid-template-columns: minmax(0, 1fr) 168px; }
+	.diff[data-w="a"] { grid-template-columns: 168px minmax(0, 1fr); }
 }
-/* 좁힌 쪽은 라벨을 접는다. 어느 쪽인지는 BEFORE·AFTER 표가 이미 말한다. */
+/* 좁힌 쪽은 라벨도 코드도 접고 BEFORE·AFTER 표만 남는다. */
 .box-min .box-hd-t { padding-right: 4px; }
+.box-min > .box-hd { border-bottom: none; }
 /* 머리 오른쪽 끝은 여닫기, 그 왼쪽이 폭. 둘 다 같은 칸 모양이라 나란히 읽힌다. */
 .box-btn { flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 34px; border-left: 1px solid color-mix(in srgb, currentColor 16%, transparent); cursor: pointer; }
 .box-btn:hover { background: color-mix(in srgb, currentColor 13%, transparent); }
 .box-w svg { display: block; }
-.box-car { font-size: 11px; }
+.box-btn svg { display: block; }
 .box-b .box-btn { color: var(--dx-b); }
 .box-a .box-btn { color: var(--dx-a); }
 
@@ -291,7 +293,8 @@ body {
 .smp:first-child { border-top: none; }
 .smp-b { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: baseline; gap: 10px; width: 100%; text-align: left; padding: 11px 13px; }
 .smp-no { font-family: var(--mono); font-size: 10.5px; font-weight: 700; font-variant-numeric: tabular-nums; }
-.smp-car { font-size: 10px; }
+.smp-car { display: inline-flex; align-self: center; }
+.smp-car svg { display: block; }
 .box-bad .smp-b { background: color-mix(in srgb, var(--bad) 2.5%, transparent); }
 .box-bad .smp-b:hover { background: color-mix(in srgb, var(--bad) 9%, transparent); }
 .box-bad .smp[data-open="1"] .smp-b { background: color-mix(in srgb, var(--bad) 14%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--bad) 26%, transparent); }
@@ -768,6 +771,11 @@ body:has(.dlg[open]) { overflow: hidden; }
 			'<div class="cd-wrap"><div class="cd">' + cells + "</div></div>";
 	}).join("");
 
+	// 글리프는 크기를 키워도 흐리다. 굵기를 정할 수 있는 선으로 그린다.
+	const caretIcon = (open) => '<svg width="11" height="11" viewBox="0 0 11 11" aria-hidden="true"><path d="' +
+		(open ? "M2.5 4.3 5.5 7.3 8.5 4.3" : "M4.3 2.5 7.3 5.5 4.3 8.5") +
+		'" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
 	// 두 칸의 지금 비율을 그대로 그린다. 왼쪽이 BEFORE, 오른쪽이 AFTER 이고 내 칸을 채운다.
 	const wideIcon = (mine, cur) => {
 		const pair = cur === "" ? [6.4, 6.4] : (cur === "b" ? [9.4, 3.4] : [3.4, 9.4]);
@@ -792,7 +800,8 @@ body:has(.dlg[open]) { overflow: hidden; }
 			(side ? '<span class="box-side">' + side + "</span>" : "") + "</span>" +
 			(min ? "" : '<span class="box-note">' + (e.label ? inlineHi(e.label) : (bad ? "INCORRECT" : "CORRECT")) + "</span>");
 
-		const body = '<div class="box-body">' +
+		// 좁힌 쪽은 코드까지 접는다. 넓힌 쪽 하나만 읽으라는 뜻이므로 여닫기 칸도 두지 않는다.
+		const body = min ? "" : '<div class="box-body">' +
 			(open ? codeHtml(e.blocks, marks ? {rows: marks, bad: bad} : null) : "") + "</div>";
 
 		if (!toggle) return '<div class="box ' + tone + '"><div class="box-hd">' + inner + "</div>" + body + "</div>";
@@ -803,8 +812,8 @@ body:has(.dlg[open]) { overflow: hidden; }
 				(wide.cur === wide.side ? "폭을 균등으로 되돌립니다" : "이 쪽을 넓게 봅니다") + '">' +
 				wideIcon(wide.side, wide.cur) + "</button>"
 			: "";
-		const car = '<button class="box-btn box-car" data-smp="' + esc(toggle.key) + '" data-i="0" aria-label="' +
-			(open ? "접기" : "펼치기") + '"><span aria-hidden="true">' + (open ? "\u25be" : "\u25b8") + "</span></button>";
+		const car = min ? "" : '<button class="box-btn box-car" data-smp="' + esc(toggle.key) +
+			'" data-i="0" aria-label="' + (open ? "접기" : "펼치기") + '">' + caretIcon(open) + "</button>";
 
 		return '<div class="box ' + tone + (min ? " box-min" : "") + '" data-open="' + (open ? 1 : 0) + '">' +
 			'<div class="box-hd box-hd-r">' +
@@ -831,7 +840,7 @@ body:has(.dlg[open]) { overflow: hidden; }
 				'<button class="smp-b" data-smp="' + esc(skey) + '" data-i="' + i + '">' +
 				'<span class="smp-no">' + (i + 1) + '<span class="smp-s">\u00b7</span></span>' +
 				'<span class="box-note">' + (e.label ? inlineHi(e.label) : "") + "</span>" +
-				'<span class="smp-car" aria-hidden="true">' + (isOpen ? "\u25be" : "\u25b8") + "</span></button>" +
+				'<span class="smp-car">' + caretIcon(isOpen) + "</span></button>" +
 				'<div class="smp-body">' + (isOpen ? codeHtml(e.blocks, null) : "") + "</div></div>";
 		}).join("");
 
@@ -897,7 +906,7 @@ body:has(.dlg[open]) { overflow: hidden; }
 			const acc = (attr, label, open, inner) =>
 				'<div class="acc" data-open="' + (open ? 1 : 0) + '">' +
 				'<button class="acc-btn" data-' + attr + '="' + esc(key) + '">' +
-				'<span class="acc-car" aria-hidden="true">' + (open ? "\u25be" : "\u25b8") + "</span>" +
+				'<span class="acc-car">' + caretIcon(open) + "</span>" +
 				"<span>" + label + '</span><span class="sec-rule"></span></button>' +
 				'<div class="acc-body">' + (open ? inner() : "") + "</div></div>";
 
