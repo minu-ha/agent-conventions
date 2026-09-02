@@ -150,7 +150,8 @@ body {
 .box-note code { font-family: var(--mono); font-size: .88em; font-weight: 500; color: var(--ink); background: color-mix(in srgb, var(--ink) 7%, var(--card)); border: 1px solid color-mix(in srgb, var(--ink) 13%, transparent); border-radius: 3px; padding: 0 .26em; }
 .row[data-open="1"] .row-ti { white-space: normal; }
 .row-meta { display: flex; align-items: center; gap: 10px; flex: 0 0 auto; }
-.car { color: var(--muted); font-size: 11px; width: 12px; text-align: center; }
+.car { display: inline-flex; align-items: center; color: var(--muted); }
+.car svg { display: block; }
 
 .imp { display: inline-flex; align-items: center; gap: 5px; min-height: 22px; padding: 0 8px; border-radius: 999px; font-family: var(--mono); font-size: 10px; font-weight: 500; letter-spacing: .06em; white-space: nowrap; border: 1px solid transparent; }
 .imp-CRITICAL { background: var(--accent); color: #fff; border-color: var(--accent); }
@@ -271,13 +272,18 @@ body {
 .box-good { border-left: 2px solid color-mix(in srgb, var(--good) 55%, transparent); }
 .box-hd { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: baseline; gap: 10px; padding: 11px 13px; }
 /* diff 머리는 여닫기 버튼과 폭 버튼을 나란히 담는다. 여백은 안쪽 버튼이 갖는다. */
-.box-hd-r { display: flex; align-items: stretch; padding: 0; }
+/* gap 은 .box-hd 에서 물려받는다. 칸 사이가 벌어지면 hover 가 그 틈에서 끊긴다. */
+.box-hd-r { display: flex; align-items: stretch; gap: 0; padding: 0; }
 .box-hd-t { flex: 1 1 auto; min-width: 0; display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: baseline; gap: 10px; text-align: left; padding: 11px 12px 11px 13px; }
 .box-body { display: none; }
 .box[data-open="1"] .box-body { display: block; }
 .box-bad > .box-hd { background: color-mix(in srgb, var(--bad) 3%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--bad) 14%, transparent); }
 .box-good > .box-hd { background: color-mix(in srgb, var(--good) 3%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--good) 14%, transparent); }
 .box-gl { font-family: var(--mono); font-size: 12px; font-weight: 700; }
+/* 짝 비교에서는 부호를 네모에 넣어 어느 쪽인지 한눈에 갈린다. */
+.box-b .box-gl, .box-a .box-gl { display: inline-flex; align-items: center; justify-content: center; width: 19px; height: 19px; border-radius: 3px; font-size: 11px; }
+.box-b .box-gl { border: 1px solid color-mix(in srgb, var(--dx-b) 45%, transparent); }
+.box-a .box-gl { border: 1px solid color-mix(in srgb, var(--dx-a) 45%, transparent); }
 .box-bad .box-gl { color: var(--bad); }
 .box-good .box-gl { color: var(--good); }
 /* 종류는 글리프·좌측 띠·머리 배경이 이미 말한다. 제목은 본문 색으로 읽히게 둔다. */
@@ -350,10 +356,12 @@ body {
 .cd-lb { font-family: var(--mono); font-size: 9.5px; letter-spacing: .06em; color: var(--faint); padding: 6px 14px 0; background: var(--code-bg); }
 
 pre.code { margin: 0; padding: 11px 13px; font-family: var(--mono); font-size: 11px; line-height: 1.75; background: color-mix(in srgb, var(--ink) 4%, var(--code-bg)); color: var(--code-fg); white-space: pre-wrap; overflow-wrap: anywhere; tab-size: 2; }
-.c { color: var(--code-c); }
-.s { color: var(--code-s); }
-.k { color: var(--code-k); font-weight: 600; }
-.g { color: var(--code-g); }
+/* 강조 토큰은 hl 접두사를 붙인다. .c 로 두면 코드 셀 .cd .c 와 부딪혀
+   주석마다 셀 여백이 한 번 더 붙고 코드가 통째로 주석 색으로 칠해진다. */
+.hc { color: var(--code-c); }
+.hs { color: var(--code-s); }
+.hk { color: var(--code-k); font-weight: 600; }
+.hg { color: var(--code-g); }
 
 
 /* 참조는 칩이 아니라 목록으로 둔다. 문장 안 참조와 모양이 같으면 둘을 구분할 수 없다. */
@@ -525,13 +533,13 @@ const viewerClientScript = `(() => {
 		// 공백+숫자를 쓰면 \`arr.length > 0 ?\` 의 " 0 " 과 충돌해 코드가 깨진다.
 		const park = (t) => "\\u0000" + (hold.push(t) - 1) + "\\u0000";
 		const wrap = (cls, m) => park('<span class="' + cls + '">' + m + "</span>");
-		s = s.replace(/\\/\\/[^\\n]*/g, (m) => wrap("c", m));
-		s = s.replace(/\\/\\*[\\s\\S]*?\\*\\//g, (m) => wrap("c", m));
-		s = s.replace(/(&#39;|'|"|\`)(?:\\\\.|(?!\\1)[\\s\\S])*?\\1/g, (m) => wrap("s", m));
+		s = s.replace(/\\/\\/[^\\n]*/g, (m) => wrap("hc", m));
+		s = s.replace(/\\/\\*[\\s\\S]*?\\*\\//g, (m) => wrap("hc", m));
+		s = s.replace(/(&#39;|'|"|\`)(?:\\\\.|(?!\\1)[\\s\\S])*?\\1/g, (m) => wrap("hs", m));
 		if (lang === "tsx") {
-			s = s.replace(/&lt;\\/?([A-Za-z][\\w.-]*)/g, (m, n) => m.replace(n, '<span class="g">' + n + "</span>"));
+			s = s.replace(/&lt;\\/?([A-Za-z][\\w.-]*)/g, (m, n) => m.replace(n, '<span class="hg">' + n + "</span>"));
 		}
-		s = s.replace(KW, '<span class="k">$&</span>');
+		s = s.replace(KW, '<span class="hk">$&</span>');
 		return s.replace(/\\u0000(\\d+)\\u0000/g, (_, i) => hold[+i]);
 	}
 
@@ -824,8 +832,10 @@ const viewerClientScript = `(() => {
 		// 감춘 쪽은 칸째 그리지 않는다. 되돌리는 단추는 남은 쪽 머리가 갖는다.
 		if (wide && wide.hide === wide.side) return "";
 
-		const inner = '<span class="box-lead"><span class="box-gl" aria-hidden="true">' + (bad ? "\\u2212" : "+") + "</span>" +
-			(side ? '<span class="box-side">' + side + "</span>" : "") + "</span>" +
+		// 어느 쪽인지는 부호·색·자리가 이미 말한다. 글자표를 빼 제목이 한 줄에 들어간다.
+		const inner = '<span class="box-lead"><span class="box-gl"' + (side ? ' title="' + side + '"' : "") +
+			'>' + (bad ? "\\u2212" : "+") + "</span>" +
+			"</span>" +
 			'<span class="box-note">' + (e.label ? inlineHi(e.label) : (bad ? "INCORRECT" : "CORRECT")) + "</span>";
 
 		const body = '<div class="box-body">' +
@@ -976,7 +986,7 @@ const viewerClientScript = `(() => {
 				'<span class="row-no" title="' + esc(skillTag(r.skill)) + " HANDBOOK " + r.number + '">' + r.number + "</span>" +
 				'<span class="row-ti">' + titleHtml(r) + "</span>" +
 				'<span class="row-meta"><span class="imp imp-' + r.impact + '">' + r.impact + "</span>" +
-				'<span class="car" aria-hidden="true">' + (open ? "\\u25be" : "\\u25b8") + "</span></span></button>";
+				'<span class="car">' + caretIcon(open) + "</span></span></button>";
 
 		return '<article class="row" data-imp="' + r.impact + '" data-open="' + (open ? 1 : 0) + '"' +
 			(dlg ? "" : ' id="' + domIdOf(r) + '"') + ">" +
