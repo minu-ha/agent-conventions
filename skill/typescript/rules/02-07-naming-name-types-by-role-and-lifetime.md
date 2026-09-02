@@ -77,6 +77,7 @@ const salesReportVM: SalesReportViewModel = response.data;
 **Correct (한 조회 시점에 고정된 값이라는 역할을 이름에 표시합니다):**
 
 ```ts
+// page/sales-report/_type/report-snapshot.ts: 폴더가 이미 sales-report 를 말한다
 /**
  * 한 조회 시점의 보고서 목록과 조건
  */

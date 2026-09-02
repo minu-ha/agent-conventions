@@ -86,13 +86,16 @@ const toOffsetTable = (): number[] => {
 **Correct (모듈을 불러올 때 계산되는 선언은 자기가 부르는 선언 뒤에 둡니다):**
 
 ```ts
-export const toCycleOffsets = (): number[] => {
-	return cycle_offsets;
+/**
+ * 지원하는 로케일인지 판정
+ */
+export const isSupportedLocale = (locale: string): boolean => {
+	return supported_locale_set.has(locale);
 };
 
-const toOffsetTable = (): number[] => {
-	return [0, 31, 59];
+const toSupportedLocaleSet = (): Set<string> => {
+	return new Set(Object.keys(locale_label));
 };
 
-const cycle_offsets = toOffsetTable();
+const supported_locale_set = toSupportedLocaleSet();
 ```

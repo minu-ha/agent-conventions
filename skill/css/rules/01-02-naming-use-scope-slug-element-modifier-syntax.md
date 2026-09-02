@@ -23,8 +23,8 @@ tags: naming, class-grammar, ownership
 | --- | --- | --- |
 | `scope` | 범위 | `pg`, `wg`, `ui` 중 하나. 소문자로 씁니다 |
 | `slug` | 식별자 | 그 CSS 파일 소유자의 이름. camelCase |
-| `element` | 요소 | 소유자 안의 UI 역할. `listButton`, `emptyState` |
-| `modifier` | 수정자 | 클래스 뒤에 `--`로 붙는 자리. 무엇을 담을 자격이 있는지는 `composition-do-not-build-structural-variants-with-modifiers`가 정합니다 |
+| `element` | 요소 | 소유자 안의 UI 역할. camelCase. `listButton`, `emptyState` |
+| `modifier` | 수정자 | 클래스 뒤에 `--`로 붙는 자리. camelCase. 무엇을 담을 자격이 있는지는 `composition-do-not-build-structural-variants-with-modifiers`가 정합니다 |
 
 수정자와 변형은 다릅니다.
 수정자는 클래스 뒤에 붙는 `--이름`이고, 변형은 컴포넌트가 받는 `variant` 프롭입니다.
@@ -37,6 +37,7 @@ tags: naming, class-grammar, ownership
 **Incorrect (식별자, 요소, 수정자에 snake_case와 kebab-case가 섞입니다):**
 
 ```txt
+ui_uiButton__root
 ui_tag_list__root
 ui_tagList__list-item
 wg_site_header__root

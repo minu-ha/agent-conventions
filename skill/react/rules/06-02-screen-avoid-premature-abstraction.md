@@ -75,6 +75,7 @@ export const PgProductTable = (props: PgProductTableProps) => {
 	));
 };
 ```
+
 **Incorrect (사용처가 한 화면뿐인데 공용 훅으로 먼저 빼냅니다):**
 
 ```ts
@@ -96,6 +97,18 @@ export const PgProducts = () => {
 };
 ```
 
+**Correct (한 화면만 쓰는 동안은 화면 안에 그대로 둡니다):**
+
+```tsx
+// page/products/pg-products.tsx
+export const PgProducts = () => {
+	const [keyword, setKeyword] = useState("");
+	const [categoryId, setCategoryId] = useState<string>();
+
+	return <PgProductFilterSection keyword={keyword} />;
+};
+```
+
 **Correct (두 화면이 같은 흐름을 부르게 된 뒤에 공용화합니다):**
 
 ```ts
@@ -105,14 +118,20 @@ export const PgProducts = () => {
  */
 export const useProductEditor = () => {
 	const form = useForm<ProductEditorFormValues>();
-
-	/**
-	 * 저장 실패 문구를 이 훅이 함께 들고 있어야 해서 여기서 부른다
-	 */
-	const mutationProductSave = useProductSave();
 	const [submitErrorMessage, setSubmitErrorMessage] = useState<string | null>(null);
 
-	return {form, mutationProductSave, setSubmitErrorMessage, submitErrorMessage};
+	/**
+	 * 저장 실패 문구를 이 훅이 함께 들고 있어야 해서 여기서 받는다
+	 */
+	const mutationProductSave = useProductSave({
+		mutation: {
+			onError: (error) => {
+				setSubmitErrorMessage(toSubmitErrorMessage(error));
+			},
+		},
+	});
+
+	return {form, mutationProductSave, submitErrorMessage};
 };
 ```
 

@@ -18,7 +18,7 @@ tags: screen, loading, suspense
 **Impact: HIGH (초기 로딩과 실패는 경계가 맡고 화면 본문에는 데이터가 있는 경로만 남습니다)**
 
 `Suspense` 쿼리를 쓰는 화면은 본문에서 초기 로딩을 다시 분기하지 않습니다.
-막는 로딩은 `Suspense` 경계나 상위 레이아웃이 이미 처리합니다.
+화면 전체를 가리는 초기 로딩은 `Suspense` 경계나 상위 레이아웃이 이미 처리합니다.
 
 | 플래그 | 판정 |
 | --- | --- |
@@ -27,11 +27,27 @@ tags: screen, loading, suspense
 | 쿼리의 `isError` | 본문에서 다시 분기하지 않습니다. 받을 자리는 `runtime-place-error-boundaries-by-blast-radius`가 정합니다 |
 | 뮤테이션의 `isPending` | 씁니다. 버튼 비활성화, 저장 중 배지가 그런 예입니다 |
 
-가리는 분기는 가리지 않으면 외부 SDK나 폼이 잘못된 값으로 초기화되는 경우에만 씁니다.
+화면을 가리는 분기는, 가리지 않을 때 외부 SDK나 폼이 잘못된 값으로 초기화되는 경우에만 씁니다.
 그때 `typescript/docs-justify-convention-exceptions-with-a-reason-comment`를 따라 이유를 남깁니다.
 
 값이 없을 수 있다는 사실을 기본값으로 덮는 문제는 이 규칙이 아니라
 `typescript/absence-expose-optional-values-instead-of-silent-fallbacks`가 판정합니다.
+
+**Incorrect (`Suspense` 쿼리의 `isPending`을 다시 분기합니다. 타입이 `false`라 죽은 코드입니다):**
+
+```tsx
+if (responseUserGetItemSuspense.isPending) {
+	return <UiSpinner />;
+}
+
+return <UiUserName value={responseUserGetItemSuspense.data.name} />;
+```
+
+**Correct (초기 로딩은 경계가 받으므로 본문은 데이터가 있는 경로만 그립니다):**
+
+```tsx
+return <UiUserName value={responseUserGetItemSuspense.data.name} />;
+```
 
 **Incorrect (다시 불러오는 중에 화면 전체를 가립니다):**
 
@@ -43,19 +59,18 @@ if (responseUserGetItemSuspense.isFetching) {
 return <UiUserName value={responseUserGetItemSuspense.data.name} />;
 ```
 
-**Correct (로딩과 갱신 상태는 보조 UI에만 씁니다):**
+**Correct (갱신 상태는 이미 그려진 화면을 보조하는 표시에만 씁니다):**
 
 ```tsx
 return (
 	<Fragment>
 		<UiUserName value={responseUserGetItemSuspense.data.name} />
-		<UiButton disabled={mutationUserSave.isPending}>저장</UiButton>
 		{responseUserGetItemSuspense.isFetching && <UiRefreshIndicator />}
 	</Fragment>
 );
 ```
 
-**Correct (가리지 않으면 외부 SDK가 잘못 초기화되어 이유를 남기고 가립니다):**
+**Correct (외부 SDK가 잘못 초기화되므로 이유 주석을 남기고 로딩 동안 가립니다):**
 
 ```tsx
 // 결제 위젯은 마운트할 때 금액을 한 번만 읽는다. 다시 불러오는 중에 그리면 옛 금액으로 초기화된다

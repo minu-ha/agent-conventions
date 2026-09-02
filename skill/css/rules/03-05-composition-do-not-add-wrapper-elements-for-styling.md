@@ -27,26 +27,6 @@ tags: components, wrappers, layout
 | 우리가 만든 컴포넌트 | `className`을 받도록 먼저 고칩니다 |
 | `className`을 받지 않는 외부 라이브러리 컴포넌트 | 감싸기가 마지막 수단으로 남는 유일한 경우입니다. 래퍼에 역할 이름을 붙이고 왜 감쌌는지 주석으로 남깁니다 |
 
-**Incorrect (역할 없는 이름의 래퍼를 늘립니다):**
-
-```tsx
-<div className={clsx("pg_postIndex__box")}>
-	<div className={clsx("pg_postIndex__inner")}>
-		<LegacyDatePicker value={value} onChange={handleChange} />
-	</div>
-</div>
-```
-
-**Correct (외부 라이브러리가 `className`을 받지 않으면 역할 이름을 붙여 감쌉니다):**
-
-```tsx
-{/**
- * LegacyDatePicker는 className을 받지 않아 배치용 래퍼가 필요하다
- */}
-<div className={clsx("pg_postIndex__dateField")}>
-	<LegacyDatePicker value={value} onChange={handleChange} />
-</div>
-```
 **Incorrect (래퍼 `div`로 최상위 스타일을 우회합니다):**
 
 ```tsx
@@ -67,17 +47,39 @@ tags: components, wrappers, layout
 export interface UiCollapseProps {
 	className?: string;
 	items: UiCollapseItem[];
+	children: ReactNode;
 }
 
 export const UiCollapse = (props: UiCollapseProps) => {
 	return (
-		<div className={clsx("ui_collapse__root", props.className)}>{/* … */}</div>
+		<div className={clsx("ui_collapse__root", props.className)}>{props.children}</div>
 	);
 };
 ```
 
 ```tsx
 <UiCollapse className={clsx("pg_postIndex__collapse")} items={items} />
+```
+
+**Incorrect (역할 없는 이름의 래퍼를 늘립니다):**
+
+```tsx
+<div className={clsx("pg_postIndex__box")}>
+	<div className={clsx("pg_postIndex__inner")}>
+		<LegacyDatePicker value={value} onChange={handleChange} />
+	</div>
+</div>
+```
+
+**Correct (외부 라이브러리가 `className`을 받지 않으면 역할 이름을 붙여 감쌉니다):**
+
+```tsx
+{/**
+ * LegacyDatePicker는 className을 받지 않아 배치용 래퍼가 필요하다
+ */}
+<div className={clsx("pg_postIndex__dateField")}>
+	<LegacyDatePicker value={value} onChange={handleChange} />
+</div>
 ```
 
 ```css

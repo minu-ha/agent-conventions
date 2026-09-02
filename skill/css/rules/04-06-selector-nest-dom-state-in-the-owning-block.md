@@ -89,6 +89,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 .wg_siteHeader__brandMark {
 	transform: rotate(0deg);
 
+	/* 링크 전체에 hover 하면 로고가 기울어야 하는데 로고 자기 위에서만 걸린다 */
 	&:hover {
 		transform: rotate(-2deg);
 	}

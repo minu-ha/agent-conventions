@@ -31,6 +31,7 @@ tags: docs, comments
 그런 주석은 예외 조건을 채우지 못합니다.
 
 주석은 예외가 일어나는 줄 바로 위에 `//`로 씁니다.
+헤더 문서 주석이 있는 선언의 예외 이유는 그 헤더 블록 안에 적습니다.
 JSX 자식 자리에는 `//`가 없어 프레임워크 규칙이 정한 형태로 씁니다.
 어투와 내용은 `docs-write-concise-korean-comments-about-purpose-and-constraints`를 따릅니다.
 
@@ -38,14 +39,14 @@ JSX 자식 자리에는 `//`가 없어 프레임워크 규칙이 정한 형태�
 
 ```ts
 // 성능을 위해 메모이제이션
-const columns = useMemo(() => toTableColumns(response.data.columns), [response.data.columns]);
+const columns = useMemo(() => toTableColumns(responseTableColumnsSuspense.data.columns), [responseTableColumnsSuspense.data.columns]);
 ```
 
 **Correct (외부 패키지의 제약을 가리킵니다):**
 
 ```ts
-// ag-grid는 columnDefs 참조가 바뀌면 컬럼 상태를 초기화한다. 참조를 고정해야 한다.
-const columns = useMemo(() => toTableColumns(response.data.columns), [response.data.columns]);
+// 외부 표 라이브러리는 columns 참조가 바뀌면 컬럼 상태를 초기화한다. 참조를 고정해야 한다.
+const columns = useMemo(() => toTableColumns(responseTableColumnsSuspense.data.columns), [responseTableColumnsSuspense.data.columns]);
 ```
 
 **Incorrect (막연한 말이라 무엇을 재서 넣었는지 알 수 없습니다):**

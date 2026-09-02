@@ -21,7 +21,7 @@ tags: composition, jsx
 - 목록에서 `key`가 필요해지면 어차피 `<Fragment key={…}>`로 바꿔야 합니다.
   한 형태로 끝냅니다.
 - 가져오기는 `typescript/naming-use-direct-imports-and-public-entry-points`를 따라
-  `import { Fragment } from "react";`로 적습니다.
+  `import {Fragment} from "react";`로 적습니다.
 
 `biome`의 `style/useFragmentSyntax`는 정반대를 강제하므로 켜지 않습니다.
 설정은 `typescript/tooling-configure-biome-to-enforce-these-rules`에 적혀 있습니다.

@@ -39,7 +39,7 @@ tags: docs, jsdoc, declarations, boundaries
 
 ```ts
 export const toSortedUserIds = (userIds: string[]): string[] => {
-	return Array.from(new Set(userIds)).sort();
+	return uniq(userIds).toSorted();
 };
 ```
 
@@ -50,7 +50,7 @@ export const toSortedUserIds = (userIds: string[]): string[] => {
  * 중복 제거 후 사용자 ID 정렬
  */
 export const toSortedUserIds = (userIds: string[]): string[] => {
-	return Array.from(new Set(userIds)).sort();
+	return uniq(userIds).toSorted();
 };
 
 /**

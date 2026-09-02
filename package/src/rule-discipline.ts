@@ -97,6 +97,52 @@ const objectDestructuringDeclaration = /^\s*(?:const|let|var)\s*\{/;
 const objectDestructuringParameter = /=\s*(?:async\s*)?\(\s*\{[^}]*\}\s*(?::|\))/;
 
 /**
+ * 누르는 요소가 아닌 태그에 `onClick`을 단 것. `a11y-give-interactive-elements-an-accessible-name`이 `button`을 요구한다.
+ */
+const nonButtonClick = /<(?:li|div|span|td|tr|section|article)\b[^>]*\bonClick=/;
+
+/**
+ * `??`·`||` 오른쪽의 리터럴. `absence-expose-optional-values-instead-of-silent-fallbacks`가 선언된 이름만 허용한다.
+ */
+const literalFallback = /(?:\?\?|\|\|)\s*(?:"[^"]*"|'[^']*'|\d+(?:\.\d+)?|\[\]|\{\})/;
+
+/**
+ * 손으로 쓴 값 보조. `values-use-es-toolkit-for-value-helpers`·`values-prefer-immutable-array-sorting`이 es-toolkit 을 요구한다.
+ * `.toSorted(`는 키로 못 적는 비교에 허용되므로 `.sort(`만 잡는다.
+ */
+const handRolledValueHelper = /(?<!to)\.sort\(|\.reduce\(|Array\.from\(new Set|\[\.\.\.new Set/;
+
+/**
+ * 한 줄 JSX 주석. `docs-write-jsx-comments-as-multiline-blocks`가 블록만 허용한다.
+ */
+const singleLineJsxComment = /\{\/\*[^*]/;
+
+/**
+ * 헤더 JSDoc 이 필요한 내보낸 화살표 함수 선언.
+ */
+const exportedArrowDeclaration = /^export const [a-z]\w*(?::\s*[^=]+?)?\s*=\s*(?:async\s*)?\(/;
+
+/**
+ * JSX 요소 둘을 고르는 삼항. `composition-render-one-branch-with-and`가 `&&` 두 줄을 요구한다.
+ */
+const jsxBranchTernary = /\?\s*\(\n[\s\S]*?\n\s*\)\s*:\s*\(/;
+
+/**
+ * 공통 토큰에 붙인 대체값. `values-fall-back-only-outside-core-tokens`가 `--app-*`에는 대체값을 금지한다.
+ */
+const coreTokenFallback = /var\(--app-[a-z0-9-]+\s*,/;
+
+/**
+ * 예제 스택 밖 라이브러리 이름. 허용 스택은 react-router·nuqs·react-query·zustand·@mui·es-toolkit·dayjs·clsx·zod 다.
+ */
+const foreignStackTerms = ["ag-grid", "echarts", "EChartsType", "antd", "Kubb", "dataSource=", "treeData=", "UploadFile"];
+
+/**
+ * 백틱 없는 라틴 낱말 뒤에 띄어 쓴 조사. 조사는 붙여 쓴다(맞춤법 제41항).
+ */
+const spacedJosaAfterLatin = /(?<![`\w/-])[A-Za-z][A-Za-z0-9_-]+ (?:로|가|를|은|는|이|와|과|의|에|도|만)(?=[\s,.)])/;
+
+/**
  * 터미널에서 두 칸을 차지하는 코드포인트 구간. 각 경계가 아니라 표 전체가 하나의 뜻이다.
  * 출처는 Unicode East Asian Width 의 Wide·Fullwidth 구간이다.
  */
@@ -171,6 +217,18 @@ const collectRuleViolations = (rule: SkillRule): string[] => {
 				}
 			}
 
+			if (example.kind === "correct" && block.lang === "css") {
+				if (coreTokenFallback.test(block.code)) {
+					violations.push("Correct 예제는 공통 토큰 `--app-*`에 대체값을 두지 않는다");
+				}
+
+				const mediaIndex = block.code.indexOf("@media");
+
+				if (mediaIndex >= 0 && block.code.slice(mediaIndex).includes("&:hover")) {
+					violations.push("Correct 예제의 `&:hover`는 `@media` 안이 아니라 기본 블록에 둔다");
+				}
+			}
+
 			if (example.kind !== "correct" || (block.lang !== "ts" && block.lang !== "tsx")) {
 				continue;
 			}
@@ -178,7 +236,37 @@ const collectRuleViolations = (rule: SkillRule): string[] => {
 			// 클래스 메서드는 축약형이 규범이라, 클래스가 든 펜스에서는 축약형 검사를 끈다
 			const hasClass = /^\s*(?:export\s+)?(?:abstract\s+)?class\s/m.test(block.code);
 
-			for (const line of block.code.split("\n")) {
+			if (block.code.includes("mutateAsync") && !/\btry\s*\{/.test(block.code)) {
+				violations.push("Correct 예제의 `mutateAsync`는 `try`/`catch`와 함께 쓴다");
+			}
+
+			if (jsxBranchTernary.test(block.code)) {
+				violations.push("Correct 예제는 JSX 요소 둘을 삼항으로 고르지 않고 `&&` 두 줄로 적는다");
+			}
+
+			const lines = block.code.split("\n");
+
+			for (const [index, line] of lines.entries()) {
+				if (nonButtonClick.test(line)) {
+					violations.push(`Correct 예제에서 누르는 요소는 button 이다: "${line.trim()}"`);
+				}
+
+				if (literalFallback.test(line)) {
+					violations.push(`Correct 예제의 \`??\`·\`||\` 오른쪽은 선언된 이름이다: "${line.trim()}"`);
+				}
+
+				if (handRolledValueHelper.test(line)) {
+					violations.push(`Correct 예제의 값 보조는 es-toolkit(sortBy·sumBy·uniq)이다: "${line.trim()}"`);
+				}
+
+				if (block.lang === "tsx" && singleLineJsxComment.test(line)) {
+					violations.push(`Correct 예제의 JSX 주석은 여러 줄 블록이다: "${line.trim()}"`);
+				}
+
+				if (exportedArrowDeclaration.test(line) && !(lines[index - 1] ?? "").trim().endsWith("*/")) {
+					violations.push(`Correct 예제의 내보낸 함수는 헤더 JSDoc 을 단다: "${line.trim()}"`);
+				}
+
 				if (/\/\*\*.*\*\//.test(line)) {
 					violations.push(`Correct 예제의 문서 주석은 여러 줄 블록이다: "${line.trim()}"`);
 				}
@@ -226,6 +314,18 @@ const collectRuleViolations = (rule: SkillRule): string[] => {
 	for (const [banned, replacement] of bannedTerms) {
 		if (searchableText(rule).includes(banned)) {
 			violations.push(`"${banned}"은 이 저장소만 쓰는 말이다. "${replacement}"로 쓴다`);
+		}
+	}
+
+	for (const term of foreignStackTerms) {
+		if (rule.body.includes(term)) {
+			violations.push(`"${term}"은 예제 스택 밖 이름이다. @mui·react-query·es-toolkit 어휘로 바꾼다`);
+		}
+	}
+
+	for (const node of parsed.prose) {
+		if (node.type === "line" && spacedJosaAfterLatin.test(node.text)) {
+			violations.push(`조사는 붙여 쓴다: "${node.text.slice(0, violationExcerptLength)}…"`);
 		}
 	}
 

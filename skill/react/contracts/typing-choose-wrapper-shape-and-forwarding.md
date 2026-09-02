@@ -19,6 +19,10 @@
 `icon`이 `<button icon="…">`이 되어 리액트가 경고합니다.
 JSX 스프레드는 초과 프롭을 검사하지 않아 **컴파일러가 잡아 주지 않습니다.** 리뷰가 봐야 합니다.
 
+자기 프롭이 있는 래퍼는 `extends`로 DOM 표면을 통째로 열지 않습니다.
+`typing-open-dom-props-in-three-steps`의 3단계처럼 넘길 DOM 프롭만 선언하고 전부 이름으로 넘깁니다.
+선언한 프롭 목록이 곧 열어 둔 표면입니다.
+
 라이브러리 API가 커서 프롭이 서른 개로 늘어날 것 같으면 만능 래퍼를 만들지 않습니다.
 우리 어휘로 계약을 다시 쓰고 라이브러리 어휘는 본문 안에서만 씁니다.
 그래도 줄지 않으면 `strategy-choose-single-composition-compound-and-variants`를 따라

@@ -34,5 +34,5 @@ ui_card__body--gap12
 ```txt
 ui_card__toolbar
 ui_card__body
-ui_card__body--active
+ui_card__body--dense
 ```

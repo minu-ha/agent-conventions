@@ -28,34 +28,32 @@ JSX에는 이름 붙인 핸들러 참조만 넘깁니다.
 
 ```tsx
 <UiButton
-	onClick={async () => {
+	onClick={() => {
 		if (!selectedProduct) {
 			return;
 		}
 
-		await mutationProductRemove.mutateAsync({ params: { productId: selectedProduct.id } });
-		void navigate("/products");
+		mutationProductRemove.mutate({params: {productId: selectedProduct.id}});
 	}}
 >
 	삭제
 </UiButton>
 ```
 
-**Correct (로직을 명명된 핸들러로 노출합니다):**
+**Correct (로직을 이름 붙인 핸들러로 뺍니다):**
 
 ```tsx
 import type {MouseEventHandler} from "react";
 
 /**
- * 선택된 product 삭제와 다음 화면 이동 처리
+ * 선택된 product 를 지운다. 성공 뒤 이동은 mutation 콜백이 이어 간다
  */
-const handleRemoveProductButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
+const handleRemoveProductButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => {
 	if (!selectedProduct) {
 		return;
 	}
 
-	await mutationProductRemove.mutateAsync({ params: { productId: selectedProduct.id } });
-	void navigate("/products");
+	mutationProductRemove.mutate({params: {productId: selectedProduct.id}});
 };
 
 <UiButton onClick={handleRemoveProductButtonClick}>삭제</UiButton>;

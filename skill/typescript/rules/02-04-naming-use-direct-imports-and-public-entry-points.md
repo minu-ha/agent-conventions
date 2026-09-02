@@ -44,8 +44,6 @@ import {pagination_default_page_size, toDisplayDate, UserProfile} from "./index"
 import type {UserProfile} from "@/type/user-profile";
 import {pagination_default_page_size} from "@/constant/pagination";
 import {toDisplayDate} from "@/util/date/to-display-date";
-import {WgChartCard} from "@/component/widget/chart-card/wg-chart-card";
-import {toUserSaveRequest} from "@/page/users/_function/to-user-save-request";
 ```
 
 **Incorrect (`default`로 내보내 사용처마다 다른 이름이 생깁니다):**

@@ -21,8 +21,11 @@
 **층 순서는 같은 쌓임 맥락 안에서만 성립합니다.**
 조상이 아래 중 하나면 새 쌓임 맥락이 생기고, 그 안의 `popper`가 바깥의 `sticky`에 집니다.
 
-- `transform`, `filter`, `will-change`, `backdrop-filter`가 있음
+- `position`이 `fixed` 또는 `sticky`
+- `transform`, `filter`, `backdrop-filter`가 있음
+- `will-change`에 위 속성 중 하나를 적음
 - `opacity`가 1 미만
+- `isolation: isolate`
 - `contain`이 `layout`, `paint`, `content`, `strict` 중 하나
 
 겹쳐 뜨는 요소가 가려지면 `z-index` 값을 올리기 전에 조상부터 확인합니다.

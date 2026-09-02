@@ -69,7 +69,7 @@ export default {
 export default {
 	extends: ["stylelint-config-standard"],
 	rules: {
-		// 중첩으로 우회되고 .ant-table-thead > tr > th를 잡아 예외 주석만 늘어난다
+		// .ant-table-thead > tr > th 같은 라이브러리 DOM 을 잡아 예외 주석만 늘어난다
 		"selector-max-combinators": 1,
 	},
 };

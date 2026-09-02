@@ -31,8 +31,8 @@ tags: data, state, origin
 const {products, selectedProduct} = responseProductListSuspense.data;
 
 <Fragment>
-	<UiList dataSource={products} />
-	<UiTable dataSource={selectedProduct.fields} />
+	<UiList rows={products} />
+	<UiTable rows={selectedProduct.fields} />
 </Fragment>;
 ```
 
@@ -40,8 +40,8 @@ const {products, selectedProduct} = responseProductListSuspense.data;
 
 ```tsx
 <Fragment>
-	<UiList dataSource={responseProductListSuspense.data.products} />
-	<UiTable dataSource={responseProductListSuspense.data.selectedProduct.fields} />
+	<UiList rows={responseProductListSuspense.data.products} />
+	<UiTable rows={responseProductListSuspense.data.selectedProduct.fields} />
 </Fragment>;
 ```
 

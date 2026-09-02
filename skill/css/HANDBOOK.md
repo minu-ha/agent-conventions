@@ -153,8 +153,8 @@ import "./pg-catalog-index.css";
 | --- | --- | --- |
 | `scope` | 범위 | `pg`, `wg`, `ui` 중 하나. 소문자로 씁니다 |
 | `slug` | 식별자 | 그 CSS 파일 소유자의 이름. camelCase |
-| `element` | 요소 | 소유자 안의 UI 역할. `listButton`, `emptyState` |
-| `modifier` | 수정자 | 클래스 뒤에 `--`로 붙는 자리. 무엇을 담을 자격이 있는지는 `composition-do-not-build-structural-variants-with-modifiers`가 정합니다 |
+| `element` | 요소 | 소유자 안의 UI 역할. camelCase. `listButton`, `emptyState` |
+| `modifier` | 수정자 | 클래스 뒤에 `--`로 붙는 자리. camelCase. 무엇을 담을 자격이 있는지는 `composition-do-not-build-structural-variants-with-modifiers`가 정합니다 |
 
 수정자와 변형은 다릅니다.
 수정자는 클래스 뒤에 붙는 `--이름`이고, 변형은 컴포넌트가 받는 `variant` 프롭입니다.
@@ -167,6 +167,7 @@ import "./pg-catalog-index.css";
 **Incorrect (식별자, 요소, 수정자에 snake_case와 kebab-case가 섞입니다):**
 
 ```txt
+ui_uiButton__root
 ui_tag_list__root
 ui_tagList__list-item
 wg_site_header__root
@@ -217,7 +218,7 @@ ui_card__body--gap12
 ```txt
 ui_card__toolbar
 ui_card__body
-ui_card__body--active
+ui_card__body--dense
 ```
 
 ### 1.4 Keep Page Slugs Traceable to Their Screen
@@ -319,7 +320,7 @@ CSS 파일마다 범위_식별자가 하나입니다.
 pg_catalogIndex__header
 
 /* dashboard/index route */
-pg_catalogIndex__toolbar
+pg_catalogIndex__header
 ```
 
 **Correct (소유자가 다르면 별도 식별자를 부여합니다):**
@@ -330,6 +331,20 @@ pg_catalogIndex__header
 
 /* dashboard/index route */
 pg_dashboardIndex__header
+```
+
+**Incorrect (하위 컴포넌트의 CSS 파일이 부모 식별자를 그대로 씁니다):**
+
+```txt
+/* page/detail/_pg-chart-card.css */
+pg_detail__chartCard
+```
+
+**Correct (자기 CSS 파일을 가진 컴포넌트는 자기 식별자를 씁니다):**
+
+```txt
+/* page/detail/_pg-chart-card.css */
+pg_chartCard__root
 ```
 
 ### 2.2 Choose the Scope Prefix by Owner Layer
@@ -363,7 +378,7 @@ pg_dashboardIndex__header
 파일이 어느 최상위 폴더에 있어야 하는지는 활성화된 프레임워크 규약이 판단하고, 접두사는 그 폴더를 그대로 따릅니다.
 파일 이름의 `_` 표식도 그 규약이 정합니다.
 
-**Incorrect (최상위 폴더 대신 하위 폴더와 재사용 예상을 보고 접두사를 고릅니다):**
+**Incorrect (최상위 폴더 대신 사용 횟수와 재사용 예상을 보고 접두사를 고릅니다):**
 
 ```txt
 page/detail/_pg-sales-trend-panel.css
@@ -412,7 +427,7 @@ component/ui/button/ui-button.css
 | `.wg_chartCard__caption { }` | 안 씁니다. 그 위젯을 쓰는 화면 전체에 적용됩니다 |
 | `.pg_treePanel__root { & .ant-tree-title { } }` | 씁니다. 그 인스턴스에만 적용됩니다 |
 | `.pg_detail__root { & .wg_chartCard__caption { } }` | 씁니다 |
-| `.pg_treePanel__toolbar:hover .pg_treePanel__title { }` | 내 클래스끼리라 대상이 아닙니다 |
+| `.pg_treePanel__toolbar .pg_treePanel__title { }` | 내 클래스끼리라 대상이 아닙니다 |
 
 판정은 **남의 클래스가 내 최상위 블록 안에서 `&`로 열렸는지**입니다.
 소유 관계를 따로 조사하지 않습니다.
@@ -494,7 +509,7 @@ component/ui/button/ui-button.css
 }
 ```
 
-**Correct (내 최상위 블록 안에서 열고, 중첩된 자손을 피하려면 직계로 좁힙니다):**
+**Correct (내 최상위 블록 안에서 엽니다. `composition-inject-classes-only-at-the-entry-point`의 세 행이 안 맞을 때만입니다):**
 
 ```css
 .pg_treePanel__toolbar {
@@ -656,6 +671,7 @@ TSX에서 `className`은 `clsx()`로 조립합니다.
 한 곳에서만 필요한 여백이나 배치 보정에는 쓰지 않습니다.
 `--compactTop`, `--marginLeft0`, `--alignRight`처럼 그 화면 하나를 고치려고 붙이는 이름이 여기 해당합니다.
 그런 보정은 수정자가 아니라 **역할 이름이 있는 별도 요소 클래스**로 풉니다.
+보정이 필요한 요소에는 기본 요소 클래스 대신 그 역할 이름의 요소 클래스를 씁니다.
 
 반복되는 모양인지는 아래 기준으로 가릅니다.
 앱이 켜고 끄는 상태는 이 기준을 보지 않고 언제나 수정자입니다.
@@ -669,6 +685,7 @@ TSX에서 `className`은 `clsx()`로 조립합니다.
 
 두 번째 소유자가 같은 이름을 쓰게 되는 순간 수정자로 올립니다.
 그 전까지는 요소 클래스로 둡니다.
+`variant` 프롭이 고르는 수정자는 사용처가 둘 이상이면 `scope_slug` 수를 보지 않고 수정자로 둡니다.
 
 **Incorrect (그 화면 하나를 고치려고 수정자를 붙입니다):**
 
@@ -680,8 +697,8 @@ TSX에서 `className`은 `clsx()`로 조립합니다.
 **Correct (한 곳만의 보정은 역할 이름이 있는 요소로 분리합니다):**
 
 ```tsx
-<div className={clsx("pg_catalogDetail__detailSection")} />
-<div className={clsx("pg_catalogDetail__flushAside")} />
+<div className={clsx("pg_catalogDetail__specSection")} />
+<div className={clsx("pg_catalogDetail__metaAside")} />
 ```
 
 **Correct (상태와 반복되는 모양만 수정자로 씁니다):**
@@ -792,11 +809,11 @@ export const UiCollapse = (props: UiCollapseProps) => {
 	const isCompact = props.variant === "compact";
 
 	return (
-		<div className={clsx("ui_collapse__root", isCompact && "ui_collapse__root--compact", props.className)}>
+		<div className={clsx("ui_collapse__root", props.className)}>
 			<button className={clsx("ui_collapse__header", isCompact && "ui_collapse__header--compact")} type="button">
 				<span className={clsx("ui_collapse__title", isCompact && "ui_collapse__title--compact")}>{props.title}</span>
 			</button>
-			<div className={clsx("ui_collapse__content", isCompact && "ui_collapse__content--compact")}>{props.children}</div>
+			<div className={clsx("ui_collapse__content")}>{props.children}</div>
 		</div>
 	);
 };
@@ -853,26 +870,6 @@ export const UiCollapse = (props: UiCollapseProps) => {
 | 우리가 만든 컴포넌트 | `className`을 받도록 먼저 고칩니다 |
 | `className`을 받지 않는 외부 라이브러리 컴포넌트 | 감싸기가 마지막 수단으로 남는 유일한 경우입니다. 래퍼에 역할 이름을 붙이고 왜 감쌌는지 주석으로 남깁니다 |
 
-**Incorrect (역할 없는 이름의 래퍼를 늘립니다):**
-
-```tsx
-<div className={clsx("pg_postIndex__box")}>
-	<div className={clsx("pg_postIndex__inner")}>
-		<LegacyDatePicker value={value} onChange={handleChange} />
-	</div>
-</div>
-```
-
-**Correct (외부 라이브러리가 `className`을 받지 않으면 역할 이름을 붙여 감쌉니다):**
-
-```tsx
-{/**
- * LegacyDatePicker는 className을 받지 않아 배치용 래퍼가 필요하다
- */}
-<div className={clsx("pg_postIndex__dateField")}>
-	<LegacyDatePicker value={value} onChange={handleChange} />
-</div>
-```
 **Incorrect (래퍼 `div`로 최상위 스타일을 우회합니다):**
 
 ```tsx
@@ -893,17 +890,39 @@ export const UiCollapse = (props: UiCollapseProps) => {
 export interface UiCollapseProps {
 	className?: string;
 	items: UiCollapseItem[];
+	children: ReactNode;
 }
 
 export const UiCollapse = (props: UiCollapseProps) => {
 	return (
-		<div className={clsx("ui_collapse__root", props.className)}>{/* … */}</div>
+		<div className={clsx("ui_collapse__root", props.className)}>{props.children}</div>
 	);
 };
 ```
 
 ```tsx
 <UiCollapse className={clsx("pg_postIndex__collapse")} items={items} />
+```
+
+**Incorrect (역할 없는 이름의 래퍼를 늘립니다):**
+
+```tsx
+<div className={clsx("pg_postIndex__box")}>
+	<div className={clsx("pg_postIndex__inner")}>
+		<LegacyDatePicker value={value} onChange={handleChange} />
+	</div>
+</div>
+```
+
+**Correct (외부 라이브러리가 `className`을 받지 않으면 역할 이름을 붙여 감쌉니다):**
+
+```tsx
+{/**
+ * LegacyDatePicker는 className을 받지 않아 배치용 래퍼가 필요하다
+ */}
+<div className={clsx("pg_postIndex__dateField")}>
+	<LegacyDatePicker value={value} onChange={handleChange} />
+</div>
 ```
 
 ```css
@@ -945,7 +964,7 @@ export const UiCollapse = (props: UiCollapseProps) => {
 **Incorrect (인라인으로 꾸밉니다):**
 
 ```tsx
-<section className={clsx("pg_report__summary")} style={{ marginTop: 16, color: "#c00" }}>
+<section className={clsx("pg_report__summary")} style={{marginTop: 16, color: isCritical ? "#c00" : undefined}}>
 	{summary}
 </section>
 ```
@@ -1094,11 +1113,11 @@ type SalesTone = "positive" | "negative" | "neutral" | "unknown";
 
 ```css
 .pg_salesPanel__metricValue--positive {
-	color: var(--app-color-rise, #d32f2f);
+	color: var(--app-color-rise);
 }
 
 .pg_salesPanel__metricValue--negative {
-	color: var(--app-color-fall, #1976d2);
+	color: var(--app-color-fall);
 }
 ```
 
@@ -1183,6 +1202,8 @@ export const WgFlowNode = (props: WgFlowNodeProps) => {
 `&`는 **그 블록이 소유한 요소 하나**를 가리킵니다.
 그 요소에 조건이나 가상 요소를 붙일 때만 `&`를 씁니다.
 다른 요소로 내려가면 `&`를 다시 열지 않고 같은 선택자 줄에 이어 씁니다.
+블록 안 선택자는 항상 `&`로 시작합니다.
+`&` 없이 시작하면 자손 선택자 하나가 새 겹처럼 읽혀 기계 검사 결과가 표기에 따라 갈립니다.
 
 | 선택자 | `::before`의 소유자 | 판정 |
 | --- | --- | --- |
@@ -1231,19 +1252,13 @@ export const WgFlowNode = (props: WgFlowNodeProps) => {
 ```css
 .pg_salesPanel__spreadBox {
 	&::before {
-		content: '';
-		width: 18px;
-		height: 18px;
 		border: 2px solid #ced4da;
-		background: #fff;
 	}
 }
 
 .pg_salesPanel__spreadButton {
 	&.MuiButtonBase-root {
 		display: inline-flex;
-		align-items: center;
-		gap: 4px;
 	}
 
 	&:hover .pg_salesPanel__spreadBox::before {
@@ -1320,7 +1335,8 @@ TSX에서 그 지점이 보이므로 "이 마크업을 우리가 쓰는가"를 �
 **Incorrect (요소 선택자를 최상위에 둡니다):**
 
 ```css
-.wg_productDetail__prose h2 {
+/* 블록 밖에 홀로 둔 요소 선택자. 이 화면의 모든 h2 에 걸린다 */
+h2 {
 	margin: 24px 0 12px;
 }
 ```
@@ -1754,6 +1770,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 .wg_siteHeader__brandMark {
 	transform: rotate(0deg);
 
+	/* 링크 전체에 hover 하면 로고가 기울어야 하는데 로고 자기 위에서만 걸린다 */
 	&:hover {
 		transform: rotate(-2deg);
 	}
@@ -1827,7 +1844,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 선택자에 `:not()`을 쓰지 않습니다.
 그 상태가 아닐 때의 모습은 기본 블록에 두고, 그 상태일 때의 모습만 상태 블록에 둡니다.
 
-`:not()`이 나오는 원인은 하나입니다.
+`:not()`이 나오는 원인은 "아닐 때"를 조건으로 적으려 한 것입니다.
 
 > 조상의 수정자로 자손의 모습을 정하려 한 것입니다.
 
@@ -1863,19 +1880,13 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 ```css
 .pg_salesPanel__spreadBox {
 	&::before {
-		content: '';
-		width: 18px;
-		height: 18px;
 		border: 2px solid #ced4da;
-		border-radius: 4px;
-		background: #fff;
 	}
 }
 
 .pg_salesPanel__spreadBox--selected {
 	&::before {
 		border-color: #9fadc7;
-		background: #9fadc7;
 	}
 }
 
@@ -2017,13 +2028,13 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 | 반복 범위 | 처리 |
 | --- | --- |
 | 여러 파일 | 전역 공통 토큰을 씁니다. 이름이 없으면 토큰 파일에 만들고 그 이름을 씁니다 |
-| 한 파일 안 | 값을 그대로 둡니다 |
+| 한 파일 안 | 값을 그대로 둡니다. 테마를 켠 프로젝트의 색과 그림자는 예외로 `values-switch-themes-by-changing-token-values`가 정합니다 |
 
 `z-index` 층과 움직임 지속 시간, 이징은 예외입니다.
 한 파일에서 한 번만 써도 토큰입니다.
 쌓임 순서와 움직임 리듬이 앱 전체에서 하나여야 하기 때문입니다.
 층 목록은 `values-declare-stacking-layers-as-tokens` 규칙이 정합니다.
-시간과 이징도 한 파일에서 한 번만 써도 토큰입니다.
+새 토큰의 이름은 `values-name-tokens-by-purpose`가 정합니다.
 
 **지역 변수는 만들지 않습니다.**
 공통 토큰 목록에 없는 변수는 대체값이 필요해서 값이 결국 사용처에 남습니다.
@@ -2159,8 +2170,11 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 **층 순서는 같은 쌓임 맥락 안에서만 성립합니다.**
 조상이 아래 중 하나면 새 쌓임 맥락이 생기고, 그 안의 `popper`가 바깥의 `sticky`에 집니다.
 
-- `transform`, `filter`, `will-change`, `backdrop-filter`가 있음
+- `position`이 `fixed` 또는 `sticky`
+- `transform`, `filter`, `backdrop-filter`가 있음
+- `will-change`에 위 속성 중 하나를 적음
 - `opacity`가 1 미만
+- `isolation: isolate`
 - `contain`이 `layout`, `paint`, `content`, `strict` 중 하나
 
 겹쳐 뜨는 요소가 가려지면 `z-index` 값을 올리기 전에 조상부터 확인합니다.
@@ -2202,7 +2216,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 
 /* src/page/products/pg-products.css */
 .pg_products__toolbar {
-	/* 조상에 transform이 없어야 이 층이 유지된다 */
+	/* 조상에 transform이 없어야 이 층이 유지된다. sticky 자체가 새 쌓임 맥락이라 안의 드롭다운은 포털로 밖에 그린다 */
 	position: sticky;
 	z-index: var(--app-z-index-sticky);
 }
@@ -2414,7 +2428,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 
 **Review with:** `layout-reach-for-intrinsic-sizing-before-breakpoints`, `layout-write-breakpoints-desktop-first`, `selector-declare-each-class-in-one-block`, `values-switch-themes-by-changing-token-values`
 
-**Impact: MEDIUM-HIGH (한 브레이크포인트에서 무엇이 달라지는지 한 블록에서 읽히고 두 방향이 겹치지 않습니다)**
+**Impact: MEDIUM-HIGH (한 브레이크포인트에서 무엇이 달라지는지 한 블록에서 읽힙니다)**
 
 브레이크포인트 재선언은 파일 맨 아래 `@media` 블록에 모읍니다.
 클래스 블록 안에 `@media`를 중첩하지 않습니다.
@@ -2490,10 +2504,35 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 
 	.pg_products__layout {
 		grid-template-columns: 1fr;
+	}
+}
+```
 
-		&:hover {
-			background-color: var(--app-color-surface-hover);
-		}
+**Incorrect (같은 `@media` 블록을 파일마다 복사합니다):**
+
+```css
+/* src/page/products/pg-products.css */
+@media (width < 1024px) {
+	.pg_products__filterBar {
+		flex-direction: column;
+	}
+}
+
+/* src/page/orders/pg-orders.css */
+@media (width < 1024px) {
+	.pg_orders__filterBar {
+		flex-direction: column;
+	}
+}
+```
+
+**Correct (반복되는 배치를 컴포넌트 하나로 만들고 브레이크포인트는 그 파일에만 둡니다):**
+
+```css
+/* src/component/ui/filter-bar/ui-filter-bar.css */
+@media (width < 1024px) {
+	.ui_filterBar__root {
+		flex-direction: column;
 	}
 }
 ```
@@ -2616,7 +2655,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 
 **Rule:** `C06-03` · `layout-keep-layout-intent-explicit`
 
-**Applies when:** `sticky`·`fixed`, `z-index`, 강제 `width`·`height`, 부모·자식 레이아웃 책임을 추가·변경할 때. 로딩 대체 화면의 컨테이너나 높이를 정할 때. 제외: 같은 요소를 기본과 수정자로 나누면서 기존 `display`·여백 선언을 값 그대로 옮기는 경우.
+**Applies when:** `sticky`·`fixed`, `z-index`, 부모·자식 레이아웃 책임을 추가·변경할 때. 로딩 대체 화면의 컨테이너나 높이를 정할 때. 제외: 같은 요소를 기본과 수정자로 나누면서 기존 `display`·여백 선언을 값 그대로 옮기는 경우.
 
 **Review with:** `values-declare-stacking-layers-as-tokens`
 
@@ -2631,19 +2670,17 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 - `sticky`나 `fixed`를 쓸 때는 기준 컨테이너를 주석 한 줄로 남깁니다.
   어느 조상이 스크롤 컨테이너인지는 선언에 안 보입니다.
   `fixed`는 `transform`이 걸린 조상 아래에서 뷰포트 기준을 잃습니다.
-  `sticky`는 스크롤 조상이 `overflow: visible`이면 아무 일도 하지 않습니다.
+  `sticky`는 사이 조상에 `overflow: hidden`이나 `auto`가 있으면 그 조상이 기준이 되어 뷰포트에 붙지 않습니다.
 - 로딩 대체 화면은 실제 내용과 같은 컨테이너 클래스 안에 넣습니다.
   높이를 대체 화면에만 따로 적으면 실제 내용이 들어올 때 그 값이 남아 레이아웃이 튑니다.
 
-**Incorrect (레이아웃 강제가 많고 기준 설명이 없습니다):**
+**Incorrect (층 숫자를 직접 적고 기준 컨테이너 설명이 없습니다):**
 
 ```css
 .pg_dashboard__toolbar {
 	position: sticky;
 	top: 0;
 	z-index: 9999;
-	width: 100%;
-	height: 48px;
 }
 ```
 
@@ -2661,6 +2698,31 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 	display: grid;
 	min-height: 0;
 	overflow-y: auto;
+}
+```
+
+**Incorrect (로딩 대체 화면에만 높이를 따로 적습니다):**
+
+```css
+.pg_dashboard__chartSkeleton {
+	height: 320px;
+}
+```
+
+**Correct (대체 화면을 실제 내용과 같은 컨테이너 클래스 안에 넣습니다):**
+
+```tsx
+<div className={clsx("pg_dashboard__chart")}>
+	<Suspense fallback={<UiChartSkeleton />}>
+		<PgDashboardChartSection />
+	</Suspense>
+</div>
+```
+
+```css
+.pg_dashboard__chart {
+	/* 로딩 중과 실제 차트가 같은 높이를 갖는다 */
+	min-height: 320px;
 }
 ```
 
@@ -2817,7 +2879,8 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 `outline: none`을 쓰면 대체 스타일을 반드시 함께 제공합니다.
 
 - `:focus`보다 `:focus-visible`을 씁니다.
-  포인터 클릭에는 링이 안 나오고 키보드 이동에는 나옵니다.
+  버튼은 포인터 클릭에 링이 안 나오고 키보드 이동에만 나옵니다.
+  텍스트 입력은 어떻게 들어와도 나옵니다.
 - 색만 바꾸는 것으로 끝내지 않습니다.
   `outline`, `box-shadow` 링, `border` 두께처럼 형태가 바뀌는 신호를 함께 씁니다.
   색만 쓰면 색각 이상에서 구분되지 않습니다.
@@ -2957,7 +3020,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 /* src/page/products/pg-products.css */
 @media (prefers-reduced-motion: reduce) {
 	.pg_products__panel {
-		animation-duration: 0;
+		animation-duration: 0s;
 	}
 }
 ```
@@ -3047,7 +3110,7 @@ export default {
 export default {
 	extends: ["stylelint-config-standard"],
 	rules: {
-		// 중첩으로 우회되고 .ant-table-thead > tr > th를 잡아 예외 주석만 늘어난다
+		// .ant-table-thead > tr > th 같은 라이브러리 DOM 을 잡아 예외 주석만 늘어난다
 		"selector-max-combinators": 1,
 	},
 };

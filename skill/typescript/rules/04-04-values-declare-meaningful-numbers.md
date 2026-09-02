@@ -71,13 +71,13 @@ const toPreviewRows = (rows: Row[]): Row[] => {
 /**
  * 이 횟수를 넘으면 사용자에게 실패를 보여 준다
  */
-export const retry_max_attempts = 42;
+export const retry_max_attempts = 3;
 
 // constant/preview.ts
 /**
  * 미리보기에 그릴 행 수. 서버가 한 번에 주는 최대치와 맞춘다
  */
-export const preview_row_count = 37;
+export const preview_row_count = 20;
 
 // page/products/pg-products.tsx
 import {preview_row_count} from "@/constant/preview";

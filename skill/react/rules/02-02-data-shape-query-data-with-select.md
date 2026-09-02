@@ -38,7 +38,7 @@ React Query의 구조 공유가 바뀌지 않은 부분의 참조를 유지합�
 const responseProductListSuspense = useProductListSuspense();
 
 <UiTable
-	dataSource={responseProductListSuspense.data.list.map((product) => ({
+	rows={responseProductListSuspense.data.list.map((product) => ({
 		id: product.id,
 		label: product.title,
 	}))}
@@ -62,5 +62,5 @@ const responseProductListSuspense = useProductListSuspense(
 	},
 );
 
-<UiTable dataSource={responseProductListSuspense.data.items} />;
+<UiTable rows={responseProductListSuspense.data.items} />;
 ```

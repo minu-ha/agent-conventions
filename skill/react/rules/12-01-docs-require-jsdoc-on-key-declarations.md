@@ -35,52 +35,29 @@ tags: docs, handlers, effects
 **Incorrect (읽어도 의도가 안 보이는 경계 선언에 설명이 없습니다):**
 
 ```ts
-const handleRemoveProductButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
-	if (!selectedProduct) {
-		return;
-	}
-
-	await mutationProductRemove.mutateAsync({ params: { productId: selectedProduct.id } });
+const handleBackButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => {
+	void navigate("/products");
 };
 
 useEffect(() => {
-	resetForm(userData);
-}, [userData, resetForm]);
+	return subscribeToProductChanges(watchedProductIds);
+}, [watchedProductIds]);
 ```
 
 **Correct (선언 의도를 바로 위에 여러 줄 블록으로 적습니다):**
 
 ```ts
 /**
- * product 삭제 API
+ * 저장하지 않고 목록으로 돌아간다. 입력 중인 값은 버린다
  */
-const mutationProductRemove = useProductRemove();
-
-/**
- * 선택된 product 삭제와 다음 화면 이동 처리
- */
-const handleRemoveProductButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
-	if (!selectedProduct) {
-		return;
-	}
-
-	await mutationProductRemove.mutateAsync({params: {productId: selectedProduct.id}});
+const handleBackButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => {
 	void navigate("/products");
 };
 
 /**
- * 사용자 데이터 변경 시 폼 상태 동기화
+ * 표에 보이는 product 의 변경 알림을 구독한다. 목록이 바뀌면 다시 구독한다
  */
 useEffect(() => {
-	resetForm(userData);
-}, [userData, resetForm]);
-
-/**
- * product 저장 요청 payload 생성
- */
-export const toProductSaveRequest = (formValues: ProductFormValues) => {
-	return {
-		title: formValues.title.trim(),
-	};
-};
+	return subscribeToProductChanges(watchedProductIds);
+}, [watchedProductIds]);
 ```

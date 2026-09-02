@@ -41,14 +41,13 @@ const PgProductDetailPanel = (props: PgProductDetailPanelProps) => {
 };
 ```
 
-**Correct (자기 데이터·상태·상호작용을 직접 가진 섹션만 추출하고, 데이터는 섹션이 자기 key 로 읽습니다):**
+**Correct (자기 데이터·상태·상호작용을 직접 가진 섹션만 추출하고, 데이터는 섹션이 자기 `key`로 읽습니다):**
 
 ```tsx
 // page/products/_pg-product-tree-section.tsx
 export const PgProductTreeSection = () => {
 	const [urlParams, setUrlParams] = useQueryStates(productUrlParsers);
 	const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
-	const [treeSearchKeyword, setTreeSearchKeyword] = useState("");
 
 	/**
 	 * 사이드바가 그릴 분류 노드만 남긴다. 트리 펼침 상태는 이 섹션이 따로 들고 있다
@@ -57,14 +56,6 @@ export const PgProductTreeSection = () => {
 		{},
 		{query: {select: (response) => ({categoryNodes: response.data.nodes})}},
 	);
-	const filteredCategoryNodes = filterCategoryNodes(responseProductTreeSuspense.data.categoryNodes, treeSearchKeyword);
-
-	/**
-	 * 검색어는 이 섹션 안에만 두고 URL로 올리지 않는다
-	 */
-	const handleTreeSearchKeywordChange: UiInputProps["onChange"] = (event) => {
-		setTreeSearchKeyword(event.target.value);
-	};
 
 	/**
 	 * UiTree가 넘기는 key 타입이 넓어서 문자열로 좁혀 담는다
@@ -76,58 +67,29 @@ export const PgProductTreeSection = () => {
 	/**
 	 * 고른 분류를 URL에 적어 두어 새로 고침해도 같은 화면이 열리게 한다
 	 */
-	const handleTreeSelect: UiTreeProps["onSelect"] = (keys, _info) => {
+	const handleTreeSelect: UiTreeProps["onSelect"] = (keys) => {
 		const selectedKey = keys[0];
-		if (typeof selectedKey !== "string" || !selectedKey.startsWith("category:")) {
+
+		if (selectedKey === undefined) {
 			return;
 		}
 
-		void setUrlParams({categoryId: selectedKey.replace("category:", "")});
+		void setUrlParams({categoryId: String(selectedKey)});
 	};
 
 	return (
 		<section className={clsx("pg_products__sidebar")}>
-			<UiInput value={treeSearchKeyword} onChange={handleTreeSearchKeywordChange} />
-
-			{filteredCategoryNodes.length > 0 ? (
+			{responseProductTreeSuspense.data.categoryNodes.length > 0 && (
 				<UiTree
-					treeData={filteredCategoryNodes.map(toTreeData)}
+					items={responseProductTreeSuspense.data.categoryNodes.map(toTreeData)}
 					expandedKeys={expandedKeys}
-					selectedKeys={urlParams.categoryId ? [`category:${urlParams.categoryId}`] : []}
+					selectedKeys={urlParams.categoryId ? [urlParams.categoryId] : []}
 					onExpand={handleTreeExpand}
 					onSelect={handleTreeSelect}
 				/>
-			) : (
-				<UiEmpty description="검색 결과가 없습니다" />
 			)}
+			{responseProductTreeSuspense.data.categoryNodes.length === 0 && <UiEmpty description="분류가 없습니다" />}
 		</section>
-	);
-};
-```
-
-**Incorrect (라우트 진입이 대신 읽어 프롭으로 내립니다):**
-
-```tsx
-export const PgProducts = () => {
-	const responseProductTreeSuspense = useProductTreeSuspense();
-
-	return <PgProductTreeSection categoryNodes={responseProductTreeSuspense.data.nodes} />;
-};
-```
-
-**Correct (라우트 진입은 섹션 조립과 경계만 가집니다):**
-
-```tsx
-export const PgProducts = () => {
-	return (
-		<div className={clsx("pg_products__layout")}>
-			<Suspense fallback={<UiLoadingFallback ariaLabel="분류를 불러오는 중" />}>
-				<PgProductTreeSection />
-			</Suspense>
-			<Suspense fallback={<UiLoadingFallback ariaLabel="product 목록을 불러오는 중" />}>
-				<PgProductTableSection />
-			</Suspense>
-		</div>
 	);
 };
 ```

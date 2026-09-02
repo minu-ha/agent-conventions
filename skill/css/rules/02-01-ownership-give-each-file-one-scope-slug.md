@@ -29,7 +29,7 @@ CSS 파일마다 범위_식별자가 하나입니다.
 pg_catalogIndex__header
 
 /* dashboard/index route */
-pg_catalogIndex__toolbar
+pg_catalogIndex__header
 ```
 
 **Correct (소유자가 다르면 별도 식별자를 부여합니다):**
@@ -40,4 +40,18 @@ pg_catalogIndex__header
 
 /* dashboard/index route */
 pg_dashboardIndex__header
+```
+
+**Incorrect (하위 컴포넌트의 CSS 파일이 부모 식별자를 그대로 씁니다):**
+
+```txt
+/* page/detail/_pg-chart-card.css */
+pg_detail__chartCard
+```
+
+**Correct (자기 CSS 파일을 가진 컴포넌트는 자기 식별자를 씁니다):**
+
+```txt
+/* page/detail/_pg-chart-card.css */
+pg_chartCard__root
 ```

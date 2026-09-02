@@ -94,3 +94,42 @@ const filteredRows = useMemo(() => {
 
 return <PgProductRows rows={filteredRows} />;
 ```
+
+**Correct (진행 표시가 필요하면 `useTransition`의 `isPending`을 씁니다):**
+
+```tsx
+const [isPending, startTransition] = useTransition();
+
+const handleStatusFilterChange = (nextStatus: ProductStatusFilter) => {
+	// 행 12,000개에서 필터 전환에 320ms가 걸려 클릭이 밀렸다.
+	startTransition(() => {
+		setStatusFilter(nextStatus);
+	});
+};
+
+return <UiFilterBar isBusy={isPending} onStatusChange={handleStatusFilterChange} />;
+```
+
+**Correct (`await` 뒤의 상태 갱신은 다시 `startTransition`으로 감쌉니다):**
+
+```tsx
+const handleStatusFilterChange = (nextStatus: ProductStatusFilter) => {
+	startTransition(async () => {
+		const nextRows = await fetchFilteredRows(nextStatus);
+
+		// await 뒤에는 전환 범위가 끊겨 다시 감싸야 급하지 않은 갱신으로 남는다
+		startTransition(() => {
+			setRows(nextRows);
+		});
+	});
+};
+```
+
+**Correct (지연 값을 받는 무거운 하위 트리는 `memo`로 감쌉니다):**
+
+```tsx
+// 행 12,000개 표. 부모가 입력값으로 다시 렌더할 때 이 트리까지 따라 그리지 않도록 memo 로 감싼다
+export const PgProductRows = memo((props: PgProductRowsProps) => {
+	return <UiTable rows={props.rows} />;
+});
+```

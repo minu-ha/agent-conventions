@@ -55,15 +55,12 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = async (_even
 **Correct (핸들러가 더 할 일이 없어 콜백으로 받습니다):**
 
 ```tsx
-const queryClient = useQueryClient();
-
 /**
- * 저장에 성공하면 목록을 다시 읽고 목록 화면으로 돌아간다. 실패 문구는 폼 위에 남긴다
+ * 저장에 성공하면 목록 화면으로 돌아간다. 실패 문구는 폼 위에 남긴다
  */
 const mutationProductSave = useProductSave({
 	mutation: {
 		onSuccess: () => {
-			void queryClient.invalidateQueries({queryKey: productListQueryKey()});
 			void navigate("/products");
 		},
 		onError: (error) => {
@@ -72,6 +69,14 @@ const mutationProductSave = useProductSave({
 	},
 });
 
+const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => {
+	mutationProductSave.mutate({data: toProductSaveRequest(formValues)});
+};
+```
+
+**Correct (겹쳐 들어온 저장은 버튼과 핸들러 첫 줄에서 막습니다):**
+
+```tsx
 /**
  * 버튼 disabled와 별개로 겹쳐 들어온 저장을 한 번 더 막는다
  */
@@ -82,9 +87,7 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => 
 
 	mutationProductSave.mutate({data: toProductSaveRequest(formValues)});
 };
-```
 
-```tsx
 <UiButton disabled={mutationProductSave.isPending} onClick={handleSaveButtonClick}>
 	저장
 </UiButton>;
@@ -97,10 +100,6 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => 
  * 첨부를 먼저 올린 뒤 그 식별자로 product를 저장한다
  */
 const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
-	if (mutationAttachmentUpload.isPending) {
-		return;
-	}
-
 	try {
 		const uploaded = await mutationAttachmentUpload.mutateAsync({files: draftFiles});
 

@@ -12,7 +12,8 @@
   같은 형태를 부품마다 다시 선언하면 `typescript/types-reuse-existing-contracts-before-new-types`가 걸립니다.
 - 사용처가 이 계약을 참조할 수 있어야 하므로 `export`합니다.
   같은 파일 안에서만 쓰는 화면 지역 컴포넌트의 프롭스는 `export`하지 않습니다.
-- 합성 부품 여럿이 하나를 나눠 쓰는 프롭스 `interface`는 첫 부품 위에 둡니다.
+- 합성 부품 여럿이 하나를 나눠 쓰는 프롭스 `interface`는 부품이 한 파일에 있으면 첫 부품 위에 둡니다.
+  부품이 파일로 갈리면 소유자 `_type` 폴더에 둡니다.
 - 프롭스 타입은 파일 위쪽에 모으지 않습니다.
   컴포넌트가 여러 개면 각자 위에 둡니다.
   컴포넌트가 아닌 함수의 객체 매개변수 타입은
@@ -20,6 +21,7 @@
 - 설명, `interface`, 컴포넌트 순서로 붙여 둡니다.
   컴포넌트가 무엇인지 설명하는 문서 주석은 컴포넌트가 아니라 `interface` 위에 둡니다.
   합성 공개 부품도 같은 순서입니다.
+  공유 `interface`를 쓰는 부품은 부품마다 다른 설명을 컴포넌트 위에 둡니다.
 - 문서 주석에 무엇을 쓸지는 `typescript/types-document-custom-types-and-shapes`가 정합니다.
 
 > 예시·예외가 필요하면 [full rule](../rules/05-06-composition-declare-props-interface-above-the-component.md)을 읽습니다.

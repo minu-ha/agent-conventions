@@ -29,7 +29,7 @@ tags: ownership, scope, third-party
 | `.wg_chartCard__caption { }` | 안 씁니다. 그 위젯을 쓰는 화면 전체에 적용됩니다 |
 | `.pg_treePanel__root { & .ant-tree-title { } }` | 씁니다. 그 인스턴스에만 적용됩니다 |
 | `.pg_detail__root { & .wg_chartCard__caption { } }` | 씁니다 |
-| `.pg_treePanel__toolbar:hover .pg_treePanel__title { }` | 내 클래스끼리라 대상이 아닙니다 |
+| `.pg_treePanel__toolbar .pg_treePanel__title { }` | 내 클래스끼리라 대상이 아닙니다 |
 
 판정은 **남의 클래스가 내 최상위 블록 안에서 `&`로 열렸는지**입니다.
 소유 관계를 따로 조사하지 않습니다.
@@ -111,7 +111,7 @@ tags: ownership, scope, third-party
 }
 ```
 
-**Correct (내 최상위 블록 안에서 열고, 중첩된 자손을 피하려면 직계로 좁힙니다):**
+**Correct (내 최상위 블록 안에서 엽니다. `composition-inject-classes-only-at-the-entry-point`의 세 행이 안 맞을 때만입니다):**
 
 ```css
 .pg_treePanel__toolbar {

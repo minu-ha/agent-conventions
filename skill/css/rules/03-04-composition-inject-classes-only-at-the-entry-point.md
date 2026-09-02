@@ -79,11 +79,11 @@ export const UiCollapse = (props: UiCollapseProps) => {
 	const isCompact = props.variant === "compact";
 
 	return (
-		<div className={clsx("ui_collapse__root", isCompact && "ui_collapse__root--compact", props.className)}>
+		<div className={clsx("ui_collapse__root", props.className)}>
 			<button className={clsx("ui_collapse__header", isCompact && "ui_collapse__header--compact")} type="button">
 				<span className={clsx("ui_collapse__title", isCompact && "ui_collapse__title--compact")}>{props.title}</span>
 			</button>
-			<div className={clsx("ui_collapse__content", isCompact && "ui_collapse__content--compact")}>{props.children}</div>
+			<div className={clsx("ui_collapse__content")}>{props.children}</div>
 		</div>
 	);
 };

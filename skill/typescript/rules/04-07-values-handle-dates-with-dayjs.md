@@ -57,7 +57,7 @@ import dayjs from "dayjs";
 
 import {date_format} from "@/constant/date";
 
-const expiresAt = dayjs(issuedAt).add(7, "day");
+const expiresAt = dayjs(issuedAt).add(token_expiry_days, "day");
 const expiresLabel = expiresAt.format(date_format);
 ```
 
@@ -76,7 +76,7 @@ const isValidDateText = /^\d{4}-\d{2}-\d{2}$/.test(dateText);
 └ 계산하거나 형식을 바꿔야 함
    │
    ├ 형식만 바꿈 ──────→ dayjs(value).format(date_format)
-   ├ 더하거나 뺌 ──────→ dayjs(value).add(7, "day")
+   ├ 더하거나 뺌 ──────→ dayjs(value).add(token_expiry_days, "day")
    └ 값이 유효한지 봄 ─→ format 한 결과가 원래 문자열과 같은지 본다
 ```
 

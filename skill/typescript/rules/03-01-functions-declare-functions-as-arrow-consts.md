@@ -62,15 +62,24 @@ export function toTrimmedTitle(rawTitle: string): string {
 	return rawTitle.trim().replace(/\s+/g, " ");
 }
 
+/**
+ * URL에 쓰는 product 식별 문자열
+ */
 export const toProductSlug = (title: string): string => {
 	return toTrimmedTitle(title).toLowerCase();
 };
 
+/**
+ * 상태에 맞는 배지
+ */
 export const toProductBadge = (product: Product): ProductBadge => ({
 	label: decorate(product.title),
 	tone: product.published ? "solid" : "muted",
 });
 
+/**
+ * 목록에 표시할 이름
+ */
 export const toProductLabel = (product: Product): string => {
 	return decorate(product.title);
 };
@@ -83,14 +92,23 @@ function decorate(title: string): string {
 **Correct (모두 `const` 화살표에 블록 본문을 씁니다):**
 
 ```ts
+/**
+ * 앞뒤 공백을 지운 제목
+ */
 export const toTrimmedTitle = (rawTitle: string): string => {
 	return rawTitle.trim().replace(/\s+/g, " ");
 };
 
+/**
+ * URL에 쓰는 product 식별 문자열
+ */
 export const toProductSlug = (title: string): string => {
 	return toTrimmedTitle(title).toLowerCase();
 };
 
+/**
+ * 상태에 맞는 배지
+ */
 export const toProductBadge = (product: Product): ProductBadge => {
 	return {
 		label: decorate(product.title),
@@ -98,6 +116,9 @@ export const toProductBadge = (product: Product): ProductBadge => {
 	};
 };
 
+/**
+ * 목록에 표시할 이름
+ */
 export const toProductLabel = (product: Product): string => {
 	return decorate(product.title);
 };
@@ -129,6 +150,9 @@ export const cell_formatter_by_value_type = {
 	},
 } as const;
 
+/**
+ * product 식별자 목록
+ */
 export const toProductIds = (products: Product[]): string[] => {
 	return products.map((product) => product.id);
 };

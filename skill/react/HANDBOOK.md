@@ -156,7 +156,7 @@ export const UiDeleteProductButton = () => {
 		void navigate("/products");
 	};
 
-	return <button onClick={handleDeleteButtonClick}>삭제</button>;
+	return <UiButton onClick={handleDeleteButtonClick}>삭제</UiButton>;
 };
 ```
 
@@ -184,7 +184,7 @@ export const PgDeleteProductButton = () => {
 // page/detail/_pg-sales-legend-glyph.tsx
 // 프롭스가 도메인 타입 하나만 받고 훅도 부르지 않는다. 이 화면에서만 쓴다는 이유로 남아 있다.
 export const PgSalesLegendGlyph = (props: PgSalesLegendGlyphProps) => {
-	return <svg className={clsx("pg_salesLegendGlyph__root")}>{/* ... */}</svg>;
+	return <svg className={clsx("pg_salesLegendGlyph__root")}>{props.children}</svg>;
 };
 ```
 
@@ -193,7 +193,7 @@ export const PgSalesLegendGlyph = (props: PgSalesLegendGlyphProps) => {
 ```tsx
 // component/widget/sales-legend-glyph/wg-sales-legend-glyph.tsx
 export const WgSalesLegendGlyph = (props: WgSalesLegendGlyphProps) => {
-	return <svg className={clsx("wg_salesLegendGlyph__root")}>{/* ... */}</svg>;
+	return <svg className={clsx("wg_salesLegendGlyph__root")}>{props.children}</svg>;
 };
 ```
 
@@ -203,7 +203,7 @@ export const WgSalesLegendGlyph = (props: WgSalesLegendGlyphProps) => {
 // component/widget/line-chart/wg-line-chart.tsx
 // 프롭스가 좌표 배열만 받고 도메인 타입을 모른다. ui 부품을 조립했다는 이유로 widget에 있다.
 export const WgLineChart = (props: WgLineChartProps) => {
-	return <svg className={clsx("wg_lineChart__root")}>{/* ... */}</svg>;
+	return <svg className={clsx("wg_lineChart__root")}>{props.children}</svg>;
 };
 ```
 
@@ -212,7 +212,7 @@ export const WgLineChart = (props: WgLineChartProps) => {
 ```tsx
 // component/ui/line-chart/ui-line-chart.tsx
 export const UiLineChart = (props: UiLineChartProps) => {
-	return <svg className={clsx("ui_lineChart__root")}>{/* ... */}</svg>;
+	return <svg className={clsx("ui_lineChart__root")}>{props.children}</svg>;
 };
 
 // component/widget/sales-window-chart/wg-sales-window-chart.tsx
@@ -243,7 +243,7 @@ export const WgSalesWindowChart = (props: WgSalesWindowChartProps) => {
 - 폴더에는 붙이지 않습니다.
   상위 폴더 이름이 이미 레이어를 가리킵니다.
 - 진입 파일이 아닌 컴포넌트 파일은 접두사 앞에 `_`를 붙입니다.
-  `_pg-detail-unit-toggle.tsx`처럼 쓰고 동반 `.css`도 같은 이름이며, 심볼에는 붙이지 않습니다.
+  `_pg-unit-toggle.tsx`처럼 쓰고 동반 `.css`도 같은 이름이며, 심볼에는 붙이지 않습니다.
   어느 파일이 진입 파일인지는 `ownership-place-owner-files-in-role-folders`가 정합니다.
 - 접두사가 말하는 부분을 이름에서 되풀이하지 않습니다.
   `component/ui/button/ui-button.tsx`이고 `ui-button-button.tsx`가 아닙니다.
@@ -255,7 +255,7 @@ export const WgSalesWindowChart = (props: WgSalesWindowChartProps) => {
 ```tsx
 // page/detail/sales-trend-panel.tsx
 export const SalesTrendPanel = (props: SalesTrendPanelProps) => {
-	return <section className={clsx("pg_salesTrendPanel__root")}>{/* ... */}</section>;
+	return <section className={clsx("pg_salesTrendPanel__root")}>{props.children}</section>;
 };
 ```
 
@@ -264,7 +264,7 @@ export const SalesTrendPanel = (props: SalesTrendPanelProps) => {
 ```tsx
 // page/detail/_pg-sales-trend-panel.tsx
 export const PgSalesTrendPanel = (props: PgSalesTrendPanelProps) => {
-	return <section className={clsx("pg_salesTrendPanel__root")}>{/* ... */}</section>;
+	return <section className={clsx("pg_salesTrendPanel__root")}>{props.children}</section>;
 };
 ```
 
@@ -437,7 +437,7 @@ page/detail/
 | 다른 라우트 안의 파일 | 없음 |
 | 하위 소유자의 진입 파일 | 그 하위 소유자를 담은 소유자 폴더 아래의 파일 |
 | `_`로 시작하는 컴포넌트 파일 | 같은 폴더의 파일 |
-| `_function`·`_type`·`_constant`·`_hook`의 파일 | 레이어 방향을 지키는 파일이면 어느 것이든 |
+| `_function`·`_type`·`_constant`·`_hook`의 파일 | 레이어 방향을 지키는 파일이면 어느 것이든. 다른 라우트의 역할 폴더는 제외합니다 |
 | `_function/<함수명>/`의 보조 파일 | 같은 폴더의 대표 함수 |
 
 - 타입만 가져오는 줄은 `_` 컴포넌트 파일 제약을 받지 않습니다.
@@ -460,25 +460,24 @@ page/detail/
 **Incorrect (다른 폴더의 `_` 컴포넌트 파일을 가져옵니다):**
 
 ```tsx
-// page/detail/sales-trend-panel/_pg-detection-section.tsx
+// page/detail/sales-trend-panel/pg-sales-trend-panel.tsx
 import {PgSectionHeading} from "@/page/detail/_pg-section-heading";
-import {PgLegendRow} from "@/page/detail/summary-band/_pg-legend-row";
 ```
 
-**Correct (진입 파일이 자기 파일과 형제 소유자의 진입 파일을 조립해서 내려보냅니다):**
+**Correct (`_` 파일과 같은 폴더에 있는 진입 파일이 조립해서 프롭으로 내려보냅니다):**
 
 ```tsx
-// page/detail/sales-trend-panel/pg-sales-trend-panel.tsx
-import {UiSectionHeading} from "@/component/ui/section-heading/ui-section-heading";
-import {PgDetectionSection} from "@/page/detail/sales-trend-panel/_pg-detection-section";
+// page/detail/pg-detail.tsx
+import {PgSectionHeading} from "@/page/detail/_pg-section-heading";
+import {PgSalesTrendPanel} from "@/page/detail/sales-trend-panel/pg-sales-trend-panel";
 import {PgSummaryBand} from "@/page/detail/summary-band/pg-summary-band";
 
-export const PgSalesTrendPanel = (props: PgSalesTrendPanelProps) => {
+export const PgDetail = () => {
 	return (
-		<section className={clsx("pg_salesTrendPanel__root")}>
-			<PgDetectionSection heading={<UiSectionHeading title="매출 추이" />} legendItems={props.legendItems} />
-			<PgSummaryBand heading={<UiSectionHeading title="요약" />} />
-		</section>
+		<main className={clsx("pg_detail__root")}>
+			<PgSalesTrendPanel heading={<PgSectionHeading title="매출 추이" />} />
+			<PgSummaryBand heading={<PgSectionHeading title="요약" />} />
+		</main>
 	);
 };
 ```
@@ -495,7 +494,7 @@ import {PgSalesTrendPanel} from "@/page/detail/sales-trend-panel/pg-sales-trend-
 ```tsx
 // component/widget/sales-trend-panel/wg-sales-trend-panel.tsx
 export const WgSalesTrendPanel = (props: WgSalesTrendPanelProps) => {
-	return <section className={clsx("wg_salesTrendPanel__root")}>{/* ... */}</section>;
+	return <section className={clsx("wg_salesTrendPanel__root")}>{props.children}</section>;
 };
 
 // page/index/pg-index.tsx
@@ -519,9 +518,17 @@ import {UiLegend} from "@/component/ui/legend/ui-legend";
 **Incorrect (밖에서 가져다 쓴다고 역할 폴더 파일을 루트로 올립니다):**
 
 ```ts
-// util/chart/to-chart-option.ts
-import type {ChartSeries} from "@/component/ui/chart/_type/chart-series";
-import {chart_series_line} from "@/component/ui/chart/_constant/series";
+// type/chart-series.ts
+// component/ui/chart/_type 에 있던 것을 page 에서도 쓴다고 루트로 옮겼다
+export interface ChartSeries {
+	/**
+	 * 선 하나가 그리는 좌표
+	 */
+	points: ChartPoint[];
+}
+
+// page/detail/sales-trend-panel/_function/to-chart-option.ts
+import type {ChartSeries} from "@/type/chart-series";
 ```
 
 **Correct (역할 폴더의 파일은 레이어 방향만 지키면 밖에서도 가져옵니다):**
@@ -562,8 +569,8 @@ import {chart_series_line} from "@/component/ui/chart/_constant/series";
 
 ```tsx
 // page/products/_hook/use-media-upload-payload.ts
-export const useMediaUploadPayload = (files: UploadFile[]) => {
-	return files.map((file) => ({uid: file.uid}));
+export const useMediaUploadPayload = (files: File[]) => {
+	return files.map((file) => ({name: file.name, size: file.size}));
 };
 
 // page/products/_pg-media-upload-panel.tsx
@@ -574,7 +581,7 @@ export const PgMediaUploadPanel = (props: PgMediaUploadPanelProps) => {
 	 * 업로드를 확정할 때 이미 만들어 둔 값을 보냄
 	 */
 	const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = () => {
-		void saveMedia(mediaUploadPayload);
+		mutationMediaSave.mutate({data: mediaUploadPayload});
 	};
 
 	return <UiButton onClick={handleSaveButtonClick}>저장</UiButton>;
@@ -584,23 +591,23 @@ export const PgMediaUploadPanel = (props: PgMediaUploadPanelProps) => {
 **Correct (순수 계산은 소유자의 `_function` 폴더에 두고 핸들러가 직접 부릅니다):**
 
 ```tsx
-// page/products/_function/to-media-upload-request.ts
+// page/products/_function/to-media-upload-payload.ts
 /**
- * 업로드 파일 목록으로 저장 요청을 조립
+ * 업로드 파일 목록으로 저장 요청 본문을 조립
  */
-export const toMediaUploadRequest = (files: UploadFile[]) => {
-	return files.map((file) => ({uid: file.uid}));
+export const toMediaUploadPayload = (files: File[]) => {
+	return files.map((file) => ({name: file.name, size: file.size}));
 };
 
 // page/products/_pg-media-upload-panel.tsx
-import {toMediaUploadRequest} from "@/page/products/_function/to-media-upload-request";
+import {toMediaUploadPayload} from "@/page/products/_function/to-media-upload-payload";
 
 export const PgMediaUploadPanel = (props: PgMediaUploadPanelProps) => {
 	/**
 	 * 업로드를 확정할 때만 정규화해서 보냄. 렌더 중에는 계산하지 않는다
 	 */
 	const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = () => {
-		void saveMedia(toMediaUploadRequest(props.files));
+		mutationMediaSave.mutate({data: toMediaUploadPayload(props.files)});
 	};
 
 	return <UiButton onClick={handleSaveButtonClick}>저장</UiButton>;
@@ -655,7 +662,7 @@ export const WgChartRoot = (props: WgChartRootProps) => {
 // component/widget/chart/chart-root/wg-chart-root.tsx
 export const WgChartRoot = (props: WgChartRootProps) => {
 	const containerRef = useRef<HTMLDivElement>(null);
-	const [chart, setChart] = useState<EChartsType | null>(null);
+	const [chart, setChart] = useState<ChartInstance | null>(null);
 
 	/**
 	 * container mount 시 chart instance를 만들고 resize·dispose까지 소유
@@ -665,7 +672,8 @@ export const WgChartRoot = (props: WgChartRootProps) => {
 			return;
 		}
 
-		const instance = init(containerRef.current);
+		// 외부 차트 라이브러리 인스턴스. 만든 컴포넌트가 resize 와 dispose 까지 책임진다
+		const instance = mountChart(containerRef.current);
 		const handleResize = () => {
 			instance.resize();
 		};
@@ -771,7 +779,7 @@ React Query의 구조 공유가 바뀌지 않은 부분의 참조를 유지합�
 const responseProductListSuspense = useProductListSuspense();
 
 <UiTable
-	dataSource={responseProductListSuspense.data.list.map((product) => ({
+	rows={responseProductListSuspense.data.list.map((product) => ({
 		id: product.id,
 		label: product.title,
 	}))}
@@ -795,7 +803,7 @@ const responseProductListSuspense = useProductListSuspense(
 	},
 );
 
-<UiTable dataSource={responseProductListSuspense.data.items} />;
+<UiTable rows={responseProductListSuspense.data.items} />;
 ```
 
 ### 2.3 Combine Multiple Queries With `combine`
@@ -899,8 +907,8 @@ export const PgProductTableSection = () => {
 const {products, selectedProduct} = responseProductListSuspense.data;
 
 <Fragment>
-	<UiList dataSource={products} />
-	<UiTable dataSource={selectedProduct.fields} />
+	<UiList rows={products} />
+	<UiTable rows={selectedProduct.fields} />
 </Fragment>;
 ```
 
@@ -908,8 +916,8 @@ const {products, selectedProduct} = responseProductListSuspense.data;
 
 ```tsx
 <Fragment>
-	<UiList dataSource={responseProductListSuspense.data.products} />
-	<UiTable dataSource={responseProductListSuspense.data.selectedProduct.fields} />
+	<UiList rows={responseProductListSuspense.data.products} />
+	<UiTable rows={responseProductListSuspense.data.selectedProduct.fields} />
 </Fragment>;
 ```
 
@@ -991,15 +999,12 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = async (_even
 **Correct (핸들러가 더 할 일이 없어 콜백으로 받습니다):**
 
 ```tsx
-const queryClient = useQueryClient();
-
 /**
- * 저장에 성공하면 목록을 다시 읽고 목록 화면으로 돌아간다. 실패 문구는 폼 위에 남긴다
+ * 저장에 성공하면 목록 화면으로 돌아간다. 실패 문구는 폼 위에 남긴다
  */
 const mutationProductSave = useProductSave({
 	mutation: {
 		onSuccess: () => {
-			void queryClient.invalidateQueries({queryKey: productListQueryKey()});
 			void navigate("/products");
 		},
 		onError: (error) => {
@@ -1008,6 +1013,14 @@ const mutationProductSave = useProductSave({
 	},
 });
 
+const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => {
+	mutationProductSave.mutate({data: toProductSaveRequest(formValues)});
+};
+```
+
+**Correct (겹쳐 들어온 저장은 버튼과 핸들러 첫 줄에서 막습니다):**
+
+```tsx
 /**
  * 버튼 disabled와 별개로 겹쳐 들어온 저장을 한 번 더 막는다
  */
@@ -1018,9 +1031,7 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => 
 
 	mutationProductSave.mutate({data: toProductSaveRequest(formValues)});
 };
-```
 
-```tsx
 <UiButton disabled={mutationProductSave.isPending} onClick={handleSaveButtonClick}>
 	저장
 </UiButton>;
@@ -1033,10 +1044,6 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => 
  * 첨부를 먼저 올린 뒤 그 식별자로 product를 저장한다
  */
 const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
-	if (mutationAttachmentUpload.isPending) {
-		return;
-	}
-
 	try {
 		const uploaded = await mutationAttachmentUpload.mutateAsync({files: draftFiles});
 
@@ -1173,7 +1180,7 @@ import type {MouseEventHandler} from "react";
  * 행 id를 커링으로 고정해 목록 JSX에 인라인 래퍼를 두지 않게 한다
  */
 const handleRowSelectToggle =
-	(rowId: string): MouseEventHandler<HTMLLIElement> =>
+	(rowId: string): MouseEventHandler<HTMLButtonElement> =>
 	(event) => {
 		event.preventDefault();
 		toggleSelection(rowId);
@@ -1252,9 +1259,10 @@ export const UiTableCell = (props: UiTableCellProps) => {
 };
 ```
 
-**Correct (이미 있는 프롭은 인덱스 접근으로 하나씩 엽니다):**
+**Correct (이미 있는 프롭은 인덱스 접근으로 하나씩 열고 DOM 표면은 `typing-open-dom-props-in-three-steps`가 정합니다):**
 
 ```tsx
+import type {TdHTMLAttributes} from "react";
 import type {TableCellProps} from "@mui/material";
 
 /**
@@ -1262,7 +1270,7 @@ import type {TableCellProps} from "@mui/material";
  *
  * 라이브러리 셀의 나머지 표시 프롭은 표 소유자가 정하므로 열지 않는다.
  */
-export interface UiTableCellProps {
+export interface UiTableCellProps extends TdHTMLAttributes<HTMLTableCellElement> {
 	/**
 	 * 내용 가로 정렬
 	 */
@@ -1272,6 +1280,10 @@ export interface UiTableCellProps {
 	 */
 	padding?: TableCellProps["padding"];
 }
+
+export const UiTableCell = (props: UiTableCellProps) => {
+	return <TableCell {...props} />;
+};
 ```
 
 ### 3.3 Open DOM Props in Three Steps
@@ -1300,6 +1312,10 @@ export interface UiTableCellProps {
 버튼은 `ButtonHTMLAttributes`, 입력은 `InputHTMLAttributes`, 셀은 `TdHTMLAttributes`입니다.
 `HTMLAttributes`만 쓰면 `disabled`·`type`·`colSpan`처럼 그 요소에만 있는 속성을 잃습니다.
 요소 전용 인터페이스가 없는 `tr` 같은 자리만 `HTMLAttributes`를 그대로 씁니다.
+
+1·2단계 `extends`는 `{...props}`로 통째로 넘기는 래퍼의 형태입니다.
+자기 프롭이 있어 이름으로 하나씩 넘기는 래퍼는 3단계처럼 넘길 DOM 프롭만 선언합니다.
+그 판정은 `typing-choose-wrapper-shape-and-forwarding`이 정합니다.
 
 2단계가 필요한 이유는 `HTMLAttributes`에 `color`, `title`, `onChange`, `defaultValue`가 이미 있어서입니다.
 라이브러리가 그중 하나를 자기 값 집합으로 좁혀 두면 `extends`가 막힙니다.
@@ -1485,6 +1501,10 @@ export const UiTextField = (props: UiTextFieldProps) => {
 `icon`이 `<button icon="…">`이 되어 리액트가 경고합니다.
 JSX 스프레드는 초과 프롭을 검사하지 않아 **컴파일러가 잡아 주지 않습니다.** 리뷰가 봐야 합니다.
 
+자기 프롭이 있는 래퍼는 `extends`로 DOM 표면을 통째로 열지 않습니다.
+`typing-open-dom-props-in-three-steps`의 3단계처럼 넘길 DOM 프롭만 선언하고 전부 이름으로 넘깁니다.
+선언한 프롭 목록이 곧 열어 둔 표면입니다.
+
 라이브러리 API가 커서 프롭이 서른 개로 늘어날 것 같으면 만능 래퍼를 만들지 않습니다.
 우리 어휘로 계약을 다시 쓰고 라이브러리 어휘는 본문 안에서만 씁니다.
 그래도 줄지 않으면 `strategy-choose-single-composition-compound-and-variants`를 따라
@@ -1504,12 +1524,14 @@ export interface UiIconButtonProps extends ButtonHTMLAttributes<HTMLButtonElemen
 }
 
 // icon이 <button icon="…"> 으로 내려간다. 컴파일은 통과한다
-export const UiIconButton = (props: UiIconButtonProps) => (
-	<Button {...props}>
-		{props.icon}
-		{props.children}
-	</Button>
-);
+export const UiIconButton = (props: UiIconButtonProps) => {
+	return (
+		<Button {...props}>
+			{props.icon}
+			{props.children}
+		</Button>
+	);
+};
 ```
 
 **Correct (안쪽 요소는 하나지만 자기 프롭이 있어 스프레드를 못 씁니다):**
@@ -1663,7 +1685,7 @@ export const UiTableRow = (props: UiTableRowProps) => {
 **Incorrect (단일, 합성, 드러난 변형의 경계를 구분하지 않고 한 컴포넌트에 몰아넣습니다):**
 
 ```tsx
-export interface UiProfileDialogProps {
+export interface WgProfileDialogProps {
 	isCompact?: boolean;
 	showActivity?: boolean;
 	showFocus?: boolean;
@@ -1671,15 +1693,15 @@ export interface UiProfileDialogProps {
 	renderFooter?: () => ReactNode;
 }
 
-export const UiProfileDialog = (props: UiProfileDialogProps) => {
+export const WgProfileDialog = (props: WgProfileDialogProps) => {
 	return (
 		<section className={props.isCompact ? "dialog dialog--compact" : "dialog"}>
 			<header>
 				<h3>{props.dialogTitle}</h3>
 			</header>
-			<UiProfileSummary />
-			{props.showActivity && <UiProfileActivityPanel />}
-			{props.showFocus && <UiProfileFocusPanel />}
+			<WgProfileSummary />
+			{props.showActivity && <WgProfileActivityPanel />}
+			{props.showFocus && <WgProfileFocusPanel />}
 			<footer>{props.renderFooter?.()}</footer>
 		</section>
 	);
@@ -1694,7 +1716,7 @@ export const UiProfileDialog = (props: UiProfileDialogProps) => {
  *
  * 사용처가 끼워 넣을 자리가 없어 부품으로 쪼개지 않는다.
  */
-export interface UiProfileDialogProps {
+export interface WgProfileDialogProps {
 	/**
 	 * 헤더에 그릴 제목
 	 */
@@ -1705,13 +1727,13 @@ export interface UiProfileDialogProps {
 	profile: Profile;
 }
 
-export const UiProfileDialog = (props: UiProfileDialogProps) => {
+export const WgProfileDialog = (props: WgProfileDialogProps) => {
 	return (
-		<section className={clsx("ui_profileDialog__root")}>
-			<header className={clsx("ui_profileDialog__header")}>
+		<section className={clsx("wg_profileDialog__root")}>
+			<header className={clsx("wg_profileDialog__header")}>
 				<h3>{props.title}</h3>
 			</header>
-			<UiProfileSummary profile={props.profile} />
+			<WgProfileSummary profile={props.profile} />
 		</section>
 	);
 };
@@ -1720,23 +1742,23 @@ export const UiProfileDialog = (props: UiProfileDialogProps) => {
 **Correct (2단계 — 끼워 넣을 자리가 생기면 상태 없는 합성으로 엽니다):**
 
 ```txt
-component/ui/profile-dialog/
-├── ui-profile-dialog.tsx              진입. 부품을 모아 내보냅니다
-├── _ui-profile-dialog-root.tsx
-├── _ui-profile-dialog-header.tsx
-├── _ui-profile-dialog-body.tsx
+component/widget/profile-dialog/
+├── wg-profile-dialog.tsx              진입. 부품을 모아 내보냅니다
+├── _wg-profile-dialog-root.tsx
+├── _wg-profile-dialog-header.tsx
+├── _wg-profile-dialog-body.tsx
 └── _type/
     └── profile-dialog-part.ts         세 부품이 나눠 쓰는 계약
 ```
 
 ```tsx
-// component/ui/profile-dialog/_type/profile-dialog-part.ts
+// component/widget/profile-dialog/_type/profile-dialog-part.ts
 /**
  * 대화상자 부품 셋이 나눠 쓰는 계약
  *
  * 세 부품 모두 받는 것이 `children` 하나뿐이라 형태를 하나로 둔다.
  */
-export interface UiProfileDialogPartProps {
+export interface WgProfileDialogPartProps {
 	/**
 	 * 그 부품 자리에 사용처가 넣을 내용
 	 */
@@ -1745,37 +1767,40 @@ export interface UiProfileDialogPartProps {
 ```
 
 ```tsx
-// component/ui/profile-dialog/_ui-profile-dialog-root.tsx
+// component/widget/profile-dialog/_wg-profile-dialog-root.tsx
 import {clsx} from "clsx";
 
-import type {UiProfileDialogPartProps} from "@/component/ui/profile-dialog/_type/profile-dialog-part";
+import type {WgProfileDialogPartProps} from "@/component/widget/profile-dialog/_type/profile-dialog-part";
 
-export const UiProfileDialogRoot = (props: UiProfileDialogPartProps) => {
-	return <section className={clsx("ui_profileDialog__root")}>{props.children}</section>;
+/**
+ * 대화상자 틀. 나머지 부품은 이 안에서만 그린다
+ */
+export const WgProfileDialogRoot = (props: WgProfileDialogPartProps) => {
+	return <section className={clsx("wg_profileDialog__root")}>{props.children}</section>;
 };
 ```
 
 ```tsx
-// component/ui/profile-dialog/ui-profile-dialog.tsx
-import {UiProfileDialogBody} from "@/component/ui/profile-dialog/_ui-profile-dialog-body";
-import {UiProfileDialogHeader} from "@/component/ui/profile-dialog/_ui-profile-dialog-header";
-import {UiProfileDialogRoot} from "@/component/ui/profile-dialog/_ui-profile-dialog-root";
+// component/widget/profile-dialog/wg-profile-dialog.tsx
+import {WgProfileDialogBody} from "@/component/widget/profile-dialog/_wg-profile-dialog-body";
+import {WgProfileDialogHeader} from "@/component/widget/profile-dialog/_wg-profile-dialog-header";
+import {WgProfileDialogRoot} from "@/component/widget/profile-dialog/_wg-profile-dialog-root";
 
-export const UiProfileDialog = {
-	Root: UiProfileDialogRoot,
-	Header: UiProfileDialogHeader,
-	Body: UiProfileDialogBody,
+export const WgProfileDialog = {
+	Root: WgProfileDialogRoot,
+	Header: WgProfileDialogHeader,
+	Body: WgProfileDialogBody,
 } as const;
 ```
 
 **Correct (3단계 — 부품이 같은 상태를 읽으면 공개 이름을 그대로 두고 컨텍스트만 더합니다):**
 
 ```ts
-// component/ui/profile-dialog/_hook/use-profile-dialog.ts
+// component/widget/profile-dialog/_hook/use-profile-dialog.ts
 /**
  * 대화상자 부품이 나눠 읽는 접힘 상태
  */
-interface UiProfileDialogContextValue {
+interface WgProfileDialogContextValue {
 	/**
 	 * 본문이 펼쳐져 있는지
 	 */
@@ -1786,25 +1811,15 @@ interface UiProfileDialogContextValue {
 	toggleBody: () => void;
 }
 
-export const UiProfileDialogContext = createContext<UiProfileDialogContextValue | null>(null);
-
-/**
- * 부품이 컨텍스트를 읽는 창구. Root 밖에서 부르면 바로 막는다
- */
-export const useUiProfileDialog = (): UiProfileDialogContextValue => {
-	const dialog = useContext(UiProfileDialogContext);
-
-	if (!dialog) {
-		throw new Error("UiProfileDialog.Root 안에서만 씁니다.");
-	}
-
-	return dialog;
-};
+export const WgProfileDialogContext = createContext<WgProfileDialogContextValue | null>(null);
 ```
 
 ```tsx
-// component/ui/profile-dialog/_ui-profile-dialog-root.tsx
-export const UiProfileDialogRoot = (props: UiProfileDialogPartProps) => {
+// component/widget/profile-dialog/_wg-profile-dialog-root.tsx
+/**
+ * 대화상자 틀. 접힘 상태를 소유해 부품에 컨텍스트로 내린다
+ */
+export const WgProfileDialogRoot = (props: WgProfileDialogPartProps) => {
 	const [isBodyOpen, setIsBodyOpen] = useState(true);
 
 	/**
@@ -1814,44 +1829,13 @@ export const UiProfileDialogRoot = (props: UiProfileDialogPartProps) => {
 		setIsBodyOpen((previous) => !previous);
 	};
 
+	// Header 는 useContext(WgProfileDialogContext) 로 읽어 toggleBody 를 부른다. 공개 이름은 2단계와 같다
 	return (
-		<UiProfileDialogContext value={{isBodyOpen, toggleBody}}>
-			<section className={clsx("ui_profileDialog__root")}>{props.children}</section>
-		</UiProfileDialogContext>
+		<WgProfileDialogContext value={{isBodyOpen, toggleBody}}>
+			<section className={clsx("wg_profileDialog__root")}>{props.children}</section>
+		</WgProfileDialogContext>
 	);
 };
-```
-
-```tsx
-// component/ui/profile-dialog/_ui-profile-dialog-header.tsx
-export const UiProfileDialogHeader = (props: UiProfileDialogPartProps) => {
-	const dialog = useUiProfileDialog();
-
-	/**
-	 * 헤더를 누르면 본문을 접거나 펼친다
-	 */
-	const handleHeaderClick: MouseEventHandler<HTMLButtonElement> = () => {
-		dialog.toggleBody();
-	};
-
-	return (
-		<header className={clsx("ui_profileDialog__header")}>
-			<button type="button" onClick={handleHeaderClick}>
-				{props.children}
-			</button>
-		</header>
-	);
-};
-```
-
-```tsx
-// component/ui/profile-dialog/ui-profile-dialog.tsx
-// 상태가 늘었지만 사용처가 쓰는 이름은 2단계와 같다
-export const UiProfileDialog = {
-	Root: UiProfileDialogRoot,
-	Header: UiProfileDialogHeader,
-	Body: UiProfileDialogBody,
-} as const;
 ```
 
 **Correct (4단계 — 같은 조합이 반복되면 드러난 변형으로 감쌉니다):**
@@ -1862,21 +1846,21 @@ export const UiProfileDialog = {
  *
  * 세 화면이 같은 조합을 쓰고 있어 조립을 한 이름 뒤로 고정한다.
  */
-export interface UiReadOnlyProfileDialogProps {
+export interface WgReadOnlyProfileDialogProps {
 	/**
 	 * 요약 영역에 그릴 프로필
 	 */
 	profile: Profile;
 }
 
-export const UiReadOnlyProfileDialog = (props: UiReadOnlyProfileDialogProps) => {
+export const WgReadOnlyProfileDialog = (props: WgReadOnlyProfileDialogProps) => {
 	return (
-		<UiProfileDialog.Root>
-			<UiProfileDialog.Header>프로필 보기</UiProfileDialog.Header>
-			<UiProfileDialog.Body>
-				<UiProfileSummary profile={props.profile} />
-			</UiProfileDialog.Body>
-		</UiProfileDialog.Root>
+		<WgProfileDialog.Root>
+			<WgProfileDialog.Header>프로필 보기</WgProfileDialog.Header>
+			<WgProfileDialog.Body>
+				<WgProfileSummary profile={props.profile} />
+			</WgProfileDialog.Body>
+		</WgProfileDialog.Root>
 	);
 };
 ```
@@ -2089,14 +2073,23 @@ export interface UiPanelPartProps {
 	children: ReactNode;
 }
 
+/**
+ * 패널 틀
+ */
 const UiPanelRoot = (props: UiPanelPartProps) => {
 	return <section className={clsx("ui_panel__root")}>{props.children}</section>;
 };
 
+/**
+ * 패널 위쪽 제목 자리
+ */
 const UiPanelHeader = (props: UiPanelPartProps) => {
 	return <header className={clsx("ui_panel__header")}>{props.children}</header>;
 };
 
+/**
+ * 패널 아래쪽 동작 자리
+ */
 const UiPanelFooter = (props: UiPanelPartProps) => {
 	return <footer className={clsx("ui_panel__footer")}>{props.children}</footer>;
 };
@@ -2284,34 +2277,32 @@ JSX에는 이름 붙인 핸들러 참조만 넘깁니다.
 
 ```tsx
 <UiButton
-	onClick={async () => {
+	onClick={() => {
 		if (!selectedProduct) {
 			return;
 		}
 
-		await mutationProductRemove.mutateAsync({ params: { productId: selectedProduct.id } });
-		void navigate("/products");
+		mutationProductRemove.mutate({params: {productId: selectedProduct.id}});
 	}}
 >
 	삭제
 </UiButton>
 ```
 
-**Correct (로직을 명명된 핸들러로 노출합니다):**
+**Correct (로직을 이름 붙인 핸들러로 뺍니다):**
 
 ```tsx
 import type {MouseEventHandler} from "react";
 
 /**
- * 선택된 product 삭제와 다음 화면 이동 처리
+ * 선택된 product 를 지운다. 성공 뒤 이동은 mutation 콜백이 이어 간다
  */
-const handleRemoveProductButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
+const handleRemoveProductButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => {
 	if (!selectedProduct) {
 		return;
 	}
 
-	await mutationProductRemove.mutateAsync({ params: { productId: selectedProduct.id } });
-	void navigate("/products");
+	mutationProductRemove.mutate({params: {productId: selectedProduct.id}});
 };
 
 <UiButton onClick={handleRemoveProductButtonClick}>삭제</UiButton>;
@@ -2414,6 +2405,40 @@ export interface UiStatusBadgeProps {
 
 export const UiStatusBadge = (props: UiStatusBadgeProps) => {
 	return <span>{props.label}</span>;
+};
+```
+
+**Correct (명령 메서드 묶음을 노출할 때만 `useImperativeHandle`과 `<Owner>Handle` 계약을 만듭니다):**
+
+```tsx
+/**
+ * 검색 입력이 밖에 여는 명령. 결과 목록이 포커스와 선택을 되돌릴 때 부른다
+ */
+export interface UiSearchInputHandle {
+	/**
+	 * 입력에 포커스를 두고 글자를 전부 선택한다
+	 */
+	focusAndSelect: () => void;
+}
+
+export interface UiSearchInputProps {
+	/**
+	 * 명령 계약. 사용처가 포커스를 되돌릴 때만 넘긴다
+	 */
+	ref?: Ref<UiSearchInputHandle>;
+}
+
+export const UiSearchInput = (props: UiSearchInputProps) => {
+	const inputRef = useRef<HTMLInputElement>(null);
+
+	useImperativeHandle(props.ref, () => ({
+		focusAndSelect: () => {
+			inputRef.current?.focus();
+			inputRef.current?.select();
+		},
+	}));
+
+	return <input ref={inputRef} className={clsx("ui_searchInput__root")} aria-label="검색어" />;
 };
 ```
 
@@ -2530,7 +2555,8 @@ return (
   같은 형태를 부품마다 다시 선언하면 `typescript/types-reuse-existing-contracts-before-new-types`가 걸립니다.
 - 사용처가 이 계약을 참조할 수 있어야 하므로 `export`합니다.
   같은 파일 안에서만 쓰는 화면 지역 컴포넌트의 프롭스는 `export`하지 않습니다.
-- 합성 부품 여럿이 하나를 나눠 쓰는 프롭스 `interface`는 첫 부품 위에 둡니다.
+- 합성 부품 여럿이 하나를 나눠 쓰는 프롭스 `interface`는 부품이 한 파일에 있으면 첫 부품 위에 둡니다.
+  부품이 파일로 갈리면 소유자 `_type` 폴더에 둡니다.
 - 프롭스 타입은 파일 위쪽에 모으지 않습니다.
   컴포넌트가 여러 개면 각자 위에 둡니다.
   컴포넌트가 아닌 함수의 객체 매개변수 타입은
@@ -2538,6 +2564,7 @@ return (
 - 설명, `interface`, 컴포넌트 순서로 붙여 둡니다.
   컴포넌트가 무엇인지 설명하는 문서 주석은 컴포넌트가 아니라 `interface` 위에 둡니다.
   합성 공개 부품도 같은 순서입니다.
+  공유 `interface`를 쓰는 부품은 부품마다 다른 설명을 컴포넌트 위에 둡니다.
 - 문서 주석에 무엇을 쓸지는 `typescript/types-document-custom-types-and-shapes`가 정합니다.
 
 **Incorrect (파일 위쪽에 타입을 모으고 내보내지 않습니다):**
@@ -2550,8 +2577,6 @@ interface UiBadgeProps {
 interface UiChipProps {
 	label: string;
 }
-
-const helperText = "…";
 
 export const UiBadge = (props: UiBadgeProps) => {
 	return <span className={clsx("ui_badge__root")}>{props.label}</span>;
@@ -2577,6 +2602,20 @@ export interface UiBadgeProps {
 
 export const UiBadge = (props: UiBadgeProps) => {
 	return <span className={clsx("ui_badge__root")}>{props.label}</span>;
+};
+
+/**
+ * 선택 칩 계약
+ */
+export interface UiChipProps {
+	/**
+	 * 칩에 표시할 문구
+	 */
+	label: string;
+}
+
+export const UiChip = (props: UiChipProps) => {
+	return <span className={clsx("ui_chip__root")}>{props.label}</span>;
 };
 ```
 
@@ -2631,7 +2670,7 @@ export const UiPanelHeader = (props: UiPanelHeaderProps) => {
 - 목록에서 `key`가 필요해지면 어차피 `<Fragment key={…}>`로 바꿔야 합니다.
   한 형태로 끝냅니다.
 - 가져오기는 `typescript/naming-use-direct-imports-and-public-entry-points`를 따라
-  `import { Fragment } from "react";`로 적습니다.
+  `import {Fragment} from "react";`로 적습니다.
 
 `biome`의 `style/useFragmentSyntax`는 정반대를 강제하므로 켜지 않습니다.
 설정은 `typescript/tooling-configure-biome-to-enforce-these-rules`에 적혀 있습니다.
@@ -2828,7 +2867,7 @@ export const PgOrderToolbar = () => {
 		setIsPanelOpen(true);
 	};
 
-	return <section className={clsx("pg_orderToolbar__root")}>{/* ... */}</section>;
+	return <section className={clsx("pg_orderToolbar__root")}>{props.children}</section>;
 };
 ```
 
@@ -2896,15 +2935,15 @@ export const PgOrderToolbar = () => {
 
 | 값 | 읽는 곳 |
 | --- | --- |
-| 서버 응답 | 그 데이터를 그리는 컴포넌트가 같은 key 로 직접 부릅니다 |
+| 서버 응답 | 그 데이터를 그리는 컴포넌트가 같은 `key`로 직접 부릅니다 |
 | 뮤테이션 | 그 동작을 일으키는 컴포넌트가 갖습니다 |
 | 라우트 params, search 파라미터 | `useParams`와 URL 파서 묶음을 쓰는 자리에서 읽고 씁니다 |
 | 여러 응답을 합친 파생값 | 그 값을 그리는 섹션이 `combine`을 인라인으로 갖습니다 |
 
 같은 데이터가 여러 섹션에 필요해도 프롭으로 내리지 않습니다.
-`@tanstack/react-query`는 key 가 같으면 요청을 한 번만 보내고 구독자 모두에게 같은 데이터를 줍니다.
+`@tanstack/react-query`는 `key`가 같으면 요청을 한 번만 보내고 구독자 모두에게 같은 데이터를 줍니다.
 어느 섹션이 어떤 데이터를 쓰는지는 그 섹션 파일의 쿼리 호출이 말합니다.
-부모가 먼저 멈춰 자식의 요청이 뒤로 밀리면 부모가 같은 key 를 `usePrefetchQuery`로 먼저 띄웁니다.
+부모가 먼저 멈춰 자식의 요청이 뒤로 밀리면 부모가 같은 `key`를 `usePrefetchQuery`로 먼저 띄웁니다.
 
 비동기, 상태, 상호작용 경계가 있는 섹션을 분리해도 이 흐름 제어 자체는 라우트 진입에 남깁니다.
 
@@ -2914,17 +2953,19 @@ export const PgOrderToolbar = () => {
 - 순수 타입, 전송 값 조립 함수, 기본 설정을 형제 `.ts` 파일로 옮기는 것
   `typescript/functions-extract-helpers-only-when-the-boundary-is-real`이 담당합니다.
 
-**Incorrect (흐름보다 분해 자체가 목적이 됩니다):**
+**Incorrect (라우트 진입이 쿼리를 대신 읽어 프롭으로 내립니다):**
 
 ```tsx
 // page/products/pg-products.tsx
 export const PgProducts = () => {
+	const [urlParams] = useQueryStates(productUrlParsers);
+	const responseProductListSuspense = useProductListSuspense({page: urlParams.page});
+
 	return (
-		<PgProductShell>
-			<PgProductHeaderSection />
-			<PgProductContentSection />
-			<PgProductFooterSection />
-		</PgProductShell>
+		<Fragment>
+			<PgProductFilterSection />
+			<PgProductListSection products={responseProductListSuspense.data.list} />
+		</Fragment>
 	);
 };
 ```
@@ -2956,12 +2997,15 @@ export const PgProductListSection = () => {
 		{query: {select: (response) => ({products: response.data.list})}},
 	);
 
+	const queryClient = useQueryClient();
+
 	/**
-	 * 저장에 성공하면 첫 페이지로 돌려 새로 저장한 product가 목록 맨 앞에 오게 한다
+	 * 저장에 성공하면 목록을 다시 읽고 첫 페이지로 돌려 새 product가 맨 앞에 오게 한다
 	 */
 	const mutationProductSave = useProductSave({
 		mutation: {
 			onSuccess: () => {
+				void queryClient.invalidateQueries({queryKey: productListQueryKey()});
 				void setUrlParams({page: 1});
 			},
 		},
@@ -2974,7 +3018,7 @@ export const PgProductListSection = () => {
 		mutationProductSave.mutate({data: toProductSaveRequest(formValues)});
 	};
 
-	return <UiTable dataSource={responseProductListSuspense.data.products} onSave={handleProductSave} />;
+	return <UiTable rows={responseProductListSuspense.data.products} onSave={handleProductSave} />;
 };
 ```
 
@@ -3047,6 +3091,7 @@ export const PgProductTable = (props: PgProductTableProps) => {
 	));
 };
 ```
+
 **Incorrect (사용처가 한 화면뿐인데 공용 훅으로 먼저 빼냅니다):**
 
 ```ts
@@ -3068,6 +3113,18 @@ export const PgProducts = () => {
 };
 ```
 
+**Correct (한 화면만 쓰는 동안은 화면 안에 그대로 둡니다):**
+
+```tsx
+// page/products/pg-products.tsx
+export const PgProducts = () => {
+	const [keyword, setKeyword] = useState("");
+	const [categoryId, setCategoryId] = useState<string>();
+
+	return <PgProductFilterSection keyword={keyword} />;
+};
+```
+
 **Correct (두 화면이 같은 흐름을 부르게 된 뒤에 공용화합니다):**
 
 ```ts
@@ -3077,14 +3134,20 @@ export const PgProducts = () => {
  */
 export const useProductEditor = () => {
 	const form = useForm<ProductEditorFormValues>();
-
-	/**
-	 * 저장 실패 문구를 이 훅이 함께 들고 있어야 해서 여기서 부른다
-	 */
-	const mutationProductSave = useProductSave();
 	const [submitErrorMessage, setSubmitErrorMessage] = useState<string | null>(null);
 
-	return {form, mutationProductSave, setSubmitErrorMessage, submitErrorMessage};
+	/**
+	 * 저장 실패 문구를 이 훅이 함께 들고 있어야 해서 여기서 받는다
+	 */
+	const mutationProductSave = useProductSave({
+		mutation: {
+			onError: (error) => {
+				setSubmitErrorMessage(toSubmitErrorMessage(error));
+			},
+		},
+	});
+
+	return {form, mutationProductSave, submitErrorMessage};
 };
 ```
 
@@ -3140,14 +3203,13 @@ const PgProductDetailPanel = (props: PgProductDetailPanelProps) => {
 };
 ```
 
-**Correct (자기 데이터·상태·상호작용을 직접 가진 섹션만 추출하고, 데이터는 섹션이 자기 key 로 읽습니다):**
+**Correct (자기 데이터·상태·상호작용을 직접 가진 섹션만 추출하고, 데이터는 섹션이 자기 `key`로 읽습니다):**
 
 ```tsx
 // page/products/_pg-product-tree-section.tsx
 export const PgProductTreeSection = () => {
 	const [urlParams, setUrlParams] = useQueryStates(productUrlParsers);
 	const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
-	const [treeSearchKeyword, setTreeSearchKeyword] = useState("");
 
 	/**
 	 * 사이드바가 그릴 분류 노드만 남긴다. 트리 펼침 상태는 이 섹션이 따로 들고 있다
@@ -3156,14 +3218,6 @@ export const PgProductTreeSection = () => {
 		{},
 		{query: {select: (response) => ({categoryNodes: response.data.nodes})}},
 	);
-	const filteredCategoryNodes = filterCategoryNodes(responseProductTreeSuspense.data.categoryNodes, treeSearchKeyword);
-
-	/**
-	 * 검색어는 이 섹션 안에만 두고 URL로 올리지 않는다
-	 */
-	const handleTreeSearchKeywordChange: UiInputProps["onChange"] = (event) => {
-		setTreeSearchKeyword(event.target.value);
-	};
 
 	/**
 	 * UiTree가 넘기는 key 타입이 넓어서 문자열로 좁혀 담는다
@@ -3175,58 +3229,29 @@ export const PgProductTreeSection = () => {
 	/**
 	 * 고른 분류를 URL에 적어 두어 새로 고침해도 같은 화면이 열리게 한다
 	 */
-	const handleTreeSelect: UiTreeProps["onSelect"] = (keys, _info) => {
+	const handleTreeSelect: UiTreeProps["onSelect"] = (keys) => {
 		const selectedKey = keys[0];
-		if (typeof selectedKey !== "string" || !selectedKey.startsWith("category:")) {
+
+		if (selectedKey === undefined) {
 			return;
 		}
 
-		void setUrlParams({categoryId: selectedKey.replace("category:", "")});
+		void setUrlParams({categoryId: String(selectedKey)});
 	};
 
 	return (
 		<section className={clsx("pg_products__sidebar")}>
-			<UiInput value={treeSearchKeyword} onChange={handleTreeSearchKeywordChange} />
-
-			{filteredCategoryNodes.length > 0 ? (
+			{responseProductTreeSuspense.data.categoryNodes.length > 0 && (
 				<UiTree
-					treeData={filteredCategoryNodes.map(toTreeData)}
+					items={responseProductTreeSuspense.data.categoryNodes.map(toTreeData)}
 					expandedKeys={expandedKeys}
-					selectedKeys={urlParams.categoryId ? [`category:${urlParams.categoryId}`] : []}
+					selectedKeys={urlParams.categoryId ? [urlParams.categoryId] : []}
 					onExpand={handleTreeExpand}
 					onSelect={handleTreeSelect}
 				/>
-			) : (
-				<UiEmpty description="검색 결과가 없습니다" />
 			)}
+			{responseProductTreeSuspense.data.categoryNodes.length === 0 && <UiEmpty description="분류가 없습니다" />}
 		</section>
-	);
-};
-```
-
-**Incorrect (라우트 진입이 대신 읽어 프롭으로 내립니다):**
-
-```tsx
-export const PgProducts = () => {
-	const responseProductTreeSuspense = useProductTreeSuspense();
-
-	return <PgProductTreeSection categoryNodes={responseProductTreeSuspense.data.nodes} />;
-};
-```
-
-**Correct (라우트 진입은 섹션 조립과 경계만 가집니다):**
-
-```tsx
-export const PgProducts = () => {
-	return (
-		<div className={clsx("pg_products__layout")}>
-			<Suspense fallback={<UiLoadingFallback ariaLabel="분류를 불러오는 중" />}>
-				<PgProductTreeSection />
-			</Suspense>
-			<Suspense fallback={<UiLoadingFallback ariaLabel="product 목록을 불러오는 중" />}>
-				<PgProductTableSection />
-			</Suspense>
-		</div>
 	);
 };
 ```
@@ -3277,7 +3302,7 @@ export const PgProductTableSection = () => {
 
 	return (
 		<Fragment>
-			<UiTable dataSource={responseProductListSuspense.data.products} onRowSelect={handleTableRowSelect} />
+			<UiTable rows={responseProductListSuspense.data.products} onRowSelect={handleTableRowSelect} />
 
 			{hasSelectedRows && <PgProductBulkActionBar label={bulkActionLabel} />}
 		</Fragment>
@@ -3301,7 +3326,7 @@ export const PgProductTableSection = () => {
 
 	return (
 		<Fragment>
-			<UiTable dataSource={responseProductListSuspense.data.products} onRowSelect={handleTableRowSelect} />
+			<UiTable rows={responseProductListSuspense.data.products} onRowSelect={handleTableRowSelect} />
 
 			{selectedRows.length > 0 && (
 				<PgProductBulkActionBar label={`${selectedRows.length}건 삭제`} />
@@ -3367,7 +3392,31 @@ export const PgProductTreeSection = () => {
 	 */
 	const responseProductTreeSuspense = useProductTreeSuspense();
 
-	return <UiTree treeData={responseProductTreeSuspense.data.categoryNodes} />;
+	return <UiTree items={responseProductTreeSuspense.data.categoryNodes} />;
+};
+```
+
+**Correct (라우트 진입이 직접 쿼리를 부르면 진입을 감싸는 레이아웃이 경계를 가집니다):**
+
+```tsx
+// page/products/pg-products.tsx: 섹션이 따로 없어 진입이 쿼리를 부른다. 경계는 이 진입을 그리는 셸이 갖는다
+export const PgProducts = () => {
+	const responseProductListSuspense = useProductListSuspense();
+
+	return <UiTable rows={responseProductListSuspense.data.products} />;
+};
+```
+
+**Incorrect (한 화면에 경계를 여러 겹 쌓습니다):**
+
+```tsx
+// 진입 파일이 이미 경계를 갖는데 섹션 안에서 같은 쿼리를 다시 감싼다
+export const PgProductTreeSection = () => {
+	return (
+		<Suspense fallback={<PgProductTreeSkeleton />}>
+			<PgProductTreeInner />
+		</Suspense>
+	);
 };
 ```
 
@@ -3382,7 +3431,7 @@ export const PgProductTreeSection = () => {
 **Impact: HIGH (초기 로딩과 실패는 경계가 맡고 화면 본문에는 데이터가 있는 경로만 남습니다)**
 
 `Suspense` 쿼리를 쓰는 화면은 본문에서 초기 로딩을 다시 분기하지 않습니다.
-막는 로딩은 `Suspense` 경계나 상위 레이아웃이 이미 처리합니다.
+화면 전체를 가리는 초기 로딩은 `Suspense` 경계나 상위 레이아웃이 이미 처리합니다.
 
 | 플래그 | 판정 |
 | --- | --- |
@@ -3391,11 +3440,27 @@ export const PgProductTreeSection = () => {
 | 쿼리의 `isError` | 본문에서 다시 분기하지 않습니다. 받을 자리는 `runtime-place-error-boundaries-by-blast-radius`가 정합니다 |
 | 뮤테이션의 `isPending` | 씁니다. 버튼 비활성화, 저장 중 배지가 그런 예입니다 |
 
-가리는 분기는 가리지 않으면 외부 SDK나 폼이 잘못된 값으로 초기화되는 경우에만 씁니다.
+화면을 가리는 분기는, 가리지 않을 때 외부 SDK나 폼이 잘못된 값으로 초기화되는 경우에만 씁니다.
 그때 `typescript/docs-justify-convention-exceptions-with-a-reason-comment`를 따라 이유를 남깁니다.
 
 값이 없을 수 있다는 사실을 기본값으로 덮는 문제는 이 규칙이 아니라
 `typescript/absence-expose-optional-values-instead-of-silent-fallbacks`가 판정합니다.
+
+**Incorrect (`Suspense` 쿼리의 `isPending`을 다시 분기합니다. 타입이 `false`라 죽은 코드입니다):**
+
+```tsx
+if (responseUserGetItemSuspense.isPending) {
+	return <UiSpinner />;
+}
+
+return <UiUserName value={responseUserGetItemSuspense.data.name} />;
+```
+
+**Correct (초기 로딩은 경계가 받으므로 본문은 데이터가 있는 경로만 그립니다):**
+
+```tsx
+return <UiUserName value={responseUserGetItemSuspense.data.name} />;
+```
 
 **Incorrect (다시 불러오는 중에 화면 전체를 가립니다):**
 
@@ -3407,19 +3472,18 @@ if (responseUserGetItemSuspense.isFetching) {
 return <UiUserName value={responseUserGetItemSuspense.data.name} />;
 ```
 
-**Correct (로딩과 갱신 상태는 보조 UI에만 씁니다):**
+**Correct (갱신 상태는 이미 그려진 화면을 보조하는 표시에만 씁니다):**
 
 ```tsx
 return (
 	<Fragment>
 		<UiUserName value={responseUserGetItemSuspense.data.name} />
-		<UiButton disabled={mutationUserSave.isPending}>저장</UiButton>
 		{responseUserGetItemSuspense.isFetching && <UiRefreshIndicator />}
 	</Fragment>
 );
 ```
 
-**Correct (가리지 않으면 외부 SDK가 잘못 초기화되어 이유를 남기고 가립니다):**
+**Correct (외부 SDK가 잘못 초기화되므로 이유 주석을 남기고 로딩 동안 가립니다):**
 
 ```tsx
 // 결제 위젯은 마운트할 때 금액을 한 번만 읽는다. 다시 불러오는 중에 그리면 옛 금액으로 초기화된다
@@ -3464,11 +3528,14 @@ return <PgPaymentWidgetSection amount={responseOrderAmountSuspense.data.confirme
 이벤트 핸들러와 비동기 콜백에서 난 오류는 경계를 그냥 지나칩니다.
 사용자 액션의 실패는 `data-handle-mutation-failure-where-it-is-called`가 정합니다.
 
-화면 층 경계는 `react-router`의 라우트 `ErrorBoundary`로 얹습니다.
-라우트 밖에서 감싸야 하면 진입 컴포넌트를 직접 감쌉니다.
+오류 경계 컴포넌트는 `ui`에 하나 둔 `UiErrorBoundary`입니다.
+리액트는 클래스 컴포넌트로만 경계를 만들 수 있어 그 클래스를 이 래퍼 하나에 가둡니다.
+화면 층은 `react-router` 라우트 설정의 `errorElement`로 얹습니다.
+라우트 밖에서 감싸야 하면 `UiErrorBoundary`로 진입을 감쌉니다.
 어느 쪽이든 경계를 어느 층에 두는지는 위 표가 정합니다.
 
-다시 시도를 열려면 대체 화면에 그 버튼을 두고, `@tanstack/react-query`의 `QueryErrorResetBoundary`와 함께 씁니다.
+다시 시도를 열려면 대체 화면에 그 버튼을 둡니다.
+그 버튼은 `@tanstack/react-query`의 `useQueryErrorResetBoundary`가 주는 `reset`을 함께 부릅니다.
 경계 안에서 상태를 되살릴 수 없으므로 다시 시도는 하위 트리를 새로 마운트합니다.
 
 **Incorrect (경계 없이 화면 본문에서 실패를 분기합니다):**
@@ -3481,7 +3548,7 @@ export const PgProducts = () => {
 		return <UiErrorState />;
 	}
 
-	return <UiTable dataSource={responseProductListSuspense.data.products} />;
+	return <UiTable rows={responseProductListSuspense.data.products} />;
 };
 ```
 
@@ -3495,9 +3562,9 @@ export const WgAppShell = (props: WgAppShellProps) => {
 			<WgAppNavigation />
 
 			<main className={clsx("wg_appShell__main")}>
-				<ErrorBoundary fallback={<UiScreenErrorState />}>
+				<UiErrorBoundary fallback={<UiScreenErrorState />}>
 					<Suspense fallback={<UiScreenSkeleton />}>{props.children}</Suspense>
-				</ErrorBoundary>
+				</UiErrorBoundary>
 			</main>
 		</div>
 	);
@@ -3512,7 +3579,7 @@ export const PgProducts = () => {
 	 */
 	const responseProductListSuspense = useProductListSuspense();
 
-	return <UiTable dataSource={responseProductListSuspense.data.products} />;
+	return <UiTable rows={responseProductListSuspense.data.products} />;
 };
 ```
 
@@ -3527,14 +3594,33 @@ export const PgProducts = () => {
 			{/**
 			 * 추천 목록이 실패해도 본문 표는 그대로 쓸 수 있다
 			 */}
-			<ErrorBoundary fallback={<UiInlineErrorState />}>
+			<UiErrorBoundary fallback={<UiInlineErrorState />}>
 				<Suspense fallback={<UiRecommendationSkeleton />}>
 					<PgProductRecommendationSection />
 				</Suspense>
-			</ErrorBoundary>
+			</UiErrorBoundary>
 
 			<PgProductTableSection />
 		</div>
+	);
+};
+```
+
+**Correct (다시 시도는 쿼리 오류 상태를 되돌리고 하위 트리를 새로 마운트합니다):**
+
+```tsx
+export const PgProductRecommendationBoundary = () => {
+	const queryErrorResetBoundary = useQueryErrorResetBoundary();
+
+	return (
+		<UiErrorBoundary
+			onReset={queryErrorResetBoundary.reset}
+			fallback={<UiInlineErrorState retryLabel="다시 불러오기" />}
+		>
+			<Suspense fallback={<UiRecommendationSkeleton />}>
+				<PgProductRecommendationSection />
+			</Suspense>
+		</UiErrorBoundary>
 	);
 };
 ```
@@ -3612,8 +3698,8 @@ return <UiSelectedCountBadge count={selectedIds.length} />;
 열림과 닫힘, 마우스 올림, 입력 중인 임시 값은 주소에 올리지 않습니다.
 search 파라미터를 `useState`로 복제해 출처를 둘로 만들지 않습니다.
 
-서버 상태와 search 파라미터는 쓰는 컴포넌트가 같은 key 로 직접 읽습니다.
-부모가 읽어 프롭으로 내리면 같은 값이 cache 와 프롭 두 길로 흘러 출처가 흐려집니다.
+서버 상태와 search 파라미터는 쓰는 컴포넌트가 같은 `key`로 직접 읽습니다.
+부모가 읽어 프롭으로 내리면 같은 값이 캐시와 프롭 두 길로 흘러 출처가 흐려집니다.
 누가 무엇을 읽는지는 `screen-keep-route-flow-visible`이 정합니다.
 
 `Context`는 전역 상태 도구가 아니라 **한 컴포넌트 묶음 안에서 프롭 전달을 줄이는 수단**입니다.
@@ -3633,6 +3719,9 @@ search 파라미터를 `useState`로 복제해 출처를 둘로 만들지 않습
 const [isOpen, setIsOpen] = useState(false);
 const [theme, setTheme] = useState<Theme>("light");
 
+/**
+ * 사용자 상세 조회 API
+ */
 const responseUserGetItemSuspense = useUserGetItemSuspense();
 const [userName, setUserName] = useState(responseUserGetItemSuspense.data.name);
 ```
@@ -3660,6 +3749,19 @@ const [page, setPage] = useState(1);
 
 ```ts
 const [urlParams, setUrlParams] = useQueryStates(productUrlParsers);
+```
+
+**Incorrect (묶음 밖의 화면이 읽는 값을 `Context`로 앱 루트까지 올려 전역 스토어처럼 씁니다):**
+
+```tsx
+// 테마는 레이아웃과 모든 화면이 읽는데 Context 를 루트에 두고 화면마다 Provider 를 찾아 올라간다
+const ThemeContext = createContext<Theme>("light");
+```
+
+**Correct (묶음 밖에서도 읽는 값은 전역 스토어가 소유합니다):**
+
+```ts
+const themeStore = useThemeStore();
 ```
 
 **Correct (합성 컴포넌트 안에서 부품끼리 나눠 쓰는 상태는 `Context`로 내려보냅니다):**
@@ -3753,27 +3855,30 @@ if (accessStore.canEditRecord) {
 **Incorrect (채우는 이펙트가 스토어 전체를 의존성에 넣어 `set`마다 다시 돕니다):**
 
 ```ts
+// page/_layout/pg-app-layout.tsx
 const accessStore = useAccessStore();
 
 /**
- * bootstrap capability 응답을 access store에 동기화
+ * 부트스트랩 응답의 권한 목록으로 수정 가능 여부를 채운다
  */
 useEffect(() => {
-	accessStore.setCapabilities(responseAccessBootstrapSuspense.data.capabilities);
+	accessStore.setCanEditRecord(responseAccessBootstrapSuspense.data.capabilities.includes("record:edit"));
 }, [accessStore, responseAccessBootstrapSuspense.data]);
 ```
 
-**Correct (소유자가 분명한 한 경계에서만 채우고 의존성에는 `set` 함수만 넣습니다):**
+**Correct (부트스트랩 경계 한 곳에서만 채우고 의존성에는 `set` 함수만 넣습니다):**
 
 ```ts
-/**
- * bootstrap capability 응답을 access store에 동기화
- */
-const setCapabilities = useAccessStore((state) => state.setCapabilities);
+// page/_layout/pg-app-layout.tsx
+const setCanEditRecord = useAccessStore((state) => state.setCanEditRecord);
 
+/**
+ * 부트스트랩 응답의 권한 목록으로 수정 가능 여부를 채운다. 여러 화면과 라우트 가드가 이 결과를 읽는다
+ */
 useEffect(() => {
-	setCapabilities(responseAccessBootstrapSuspense.data.capabilities);
-}, [setCapabilities, responseAccessBootstrapSuspense.data]);
+	// state-calculate-derived-values-during-render 예외: 화면 여럿이 같은 판단을 읽어 경계에서 한 번 채운다
+	setCanEditRecord(responseAccessBootstrapSuspense.data.capabilities.includes("record:edit"));
+}, [setCanEditRecord, responseAccessBootstrapSuspense.data]);
 ```
 
 ### 8.4 Use Functional setState Updates When Based on Previous State
@@ -3789,24 +3894,31 @@ useEffect(() => {
 한 이벤트 안에서 두 번 갱신하거나, `await` 뒤나 오래 사는 클로저 안에서 갱신하면 결과가 갈립니다.
 한 번만 부르는 갱신은 두 형태가 같은 결과를 내지만, 형태를 하나로 고정해 자리마다 다시 판단하지 않습니다.
 
-**Incorrect (현재 상태를 바깥 클로저에서 직접 읽습니다):**
+**Incorrect (오래 사는 콜백이 등록 시점의 상태를 붙잡습니다):**
 
 ```tsx
-// 한 이벤트에서 두 번 갱신한다. 둘 다 같은 렌더의 selectedUserIds를 읽어 첫 갱신이 지워진다
-const handleSelectRange = (fromUserId: string, toUserId: string) => {
-	setSelectedUserIds([...selectedUserIds, fromUserId]);
-	setSelectedUserIds([...selectedUserIds, toUserId]);
-};
+/**
+ * 새 참여자가 들어오면 선택 목록에 더한다
+ */
+useEffect(() => {
+	// 콜백은 등록 시점의 selectedUserIds 를 붙잡는다. 나중에 도착한 참여자가 옛 목록에 더해져 그사이 고른 항목이 지워진다
+	return subscribeToUserJoined((joinedUserId) => {
+		setSelectedUserIds([...selectedUserIds, joinedUserId]);
+	});
+}, []);
 ```
 
 **Correct (함수형 업데이터로 항상 최신 상태를 기준으로 갱신합니다):**
 
 ```tsx
-const handleSelectRange = (fromUserId: string, toUserId: string) => {
-	// 두 번째 갱신이 첫 갱신 결과를 받아야 해서 함수형 업데이터를 쓴다
-	setSelectedUserIds((currentUserIds) => [...currentUserIds, fromUserId]);
-	setSelectedUserIds((currentUserIds) => [...currentUserIds, toUserId]);
-};
+/**
+ * 새 참여자가 들어오면 선택 목록에 더한다
+ */
+useEffect(() => {
+	return subscribeToUserJoined((joinedUserId) => {
+		setSelectedUserIds((currentUserIds) => [...currentUserIds, joinedUserId]);
+	});
+}, []);
 ```
 
 ### 8.5 Use useEffectEvent for Non-reactive Effect Callbacks
@@ -3911,8 +4023,8 @@ useEffect(() => {
 ```ts
 // page/products/_constant/product-search.ts
 export const productSearch = {
-	page: parseAsInteger.withDefault(1),
-	keyword: parseAsString.withDefault(""),
+	page: parseAsInteger.withDefault(pagination_default_page),
+	keyword: parseAsString,
 };
 ```
 
@@ -3924,8 +4036,8 @@ export const productSearch = {
  * product 목록 화면이 주소에 올린 상태의 파서 묶음
  */
 export const productUrlParsers = {
-	page: parseAsInteger.withDefault(1),
-	keyword: parseAsString.withDefault(""),
+	page: parseAsInteger.withDefault(pagination_default_page),
+	keyword: parseAsString,
 };
 ```
 
@@ -3933,19 +4045,25 @@ export const productUrlParsers = {
 
 ```tsx
 const [searchParams, setSearchParams] = useQueryStates(productUrlParsers);
-
 const query = searchParams.keyword;
+
+<UiSearchInput value={query} />;
 ```
 
-**Correct (파싱을 거친 값은 `urlParams`, 플랫폼 객체만 `searchParams`입니다):**
+**Correct (파싱을 거친 값은 `urlParams`이고 별칭 없이 체인으로 읽습니다):**
 
 ```tsx
 const [urlParams, setUrlParams] = useQueryStates(productUrlParsers);
 
-/**
- * 공유 링크에 실을 search 파라미터를 플랫폼 객체로 조립한다
- */
-const searchParams = new URLSearchParams({page: String(urlParams.page)});
+<UiSearchInput value={urlParams.keyword} />;
+```
+
+**Correct (플랫폼 `URLSearchParams` 객체만 `searchParams`입니다):**
+
+```tsx
+const [searchParams] = useSearchParams();
+
+<UiShareLinkButton href={`/products?${searchParams.toString()}`} />;
 ```
 
 ## 9. Events and Interaction Flow
@@ -3983,14 +4101,20 @@ const searchParams = new URLSearchParams({page: String(urlParams.page)});
 **Incorrect (구현에 `on*`을 쓰고 대상이 이름에 없어 같은 이름이 겹칩니다):**
 
 ```ts
-import type {MouseEvent} from "react";
+import type {MouseEventHandler} from "react";
 
 // 목록 항목과 저장 버튼 둘 다 클릭을 받는데 이름에 대상이 없어 뒤에 번호가 붙었다
-const onClick = (event: MouseEvent<HTMLLIElement>) => {
+/**
+ * 이미 고른 항목을 다시 누르면 선택을 해제한다
+ */
+const onClick: MouseEventHandler<HTMLButtonElement> = (_event) => {
 	toggleSelection();
 };
 
-const onClick2 = (event: MouseEvent<HTMLButtonElement>) => {
+/**
+ * 폼 기본 제출을 막는다. 저장은 mutation 콜백이 이어서 한다
+ */
+const onClick2: MouseEventHandler<HTMLButtonElement> = (event) => {
 	event.preventDefault();
 };
 ```
@@ -4003,7 +4127,7 @@ import type {MouseEventHandler} from "react";
 /**
  * 이미 고른 항목을 다시 누르면 선택을 해제한다
  */
-const handleListItemClick: MouseEventHandler<HTMLLIElement> = (_event) => {
+const handleListItemClick: MouseEventHandler<HTMLButtonElement> = (_event) => {
 	toggleSelection();
 };
 
@@ -4048,20 +4172,20 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (event) => {
 **Incorrect (인라인 래퍼로 인자를 넘깁니다):**
 
 ```tsx
-<li onClick={() => handleListItemClick(product.id)} />;
+<UiButton onClick={() => handleListItemClick(product.id)}>{product.name}</UiButton>;
 ```
 
 **Correct (JSX에는 팩토리 호출만 두고 감싸는 화살표를 만들지 않습니다):**
 
 ```tsx
-<li onClick={handleListItemClick(product.id)} />;
+<UiButton onClick={handleListItemClick(product.id)}>{product.name}</UiButton>;
 ```
 
 **Incorrect (블록 본문에서 안쪽 핸들러에 이름을 붙이고 팩토리에 With 접미사를 붙입니다):**
 
 ```tsx
-const handleListItemClickWithProductId = (productId: string): MouseEventHandler<HTMLLIElement> => {
-	const handleListItemClick: MouseEventHandler<HTMLLIElement> = (_event) => {
+const handleListItemClickWithProductId = (productId: string): MouseEventHandler<HTMLButtonElement> => {
+	const handleListItemClick: MouseEventHandler<HTMLButtonElement> = (_event) => {
 		toggleSelection(productId);
 	};
 
@@ -4078,7 +4202,7 @@ import type {MouseEventHandler} from "react";
  * 클릭한 항목을 이벤트 대신 팩토리 인자로 받아 어느 product인지 알아낸다
  */
 const handleListItemClick =
-	(productId: string): MouseEventHandler<HTMLLIElement> =>
+	(productId: string): MouseEventHandler<HTMLButtonElement> =>
 	(_event) => {
 		toggleSelection(productId);
 	};
@@ -4099,6 +4223,17 @@ const handleListItemClick =
 **Incorrect (사용자 액션을 상태 + 이펙트로 모델링합니다):**
 
 ```tsx
+/**
+ * 생성에 성공하면 목록으로 돌아간다
+ */
+const mutationProductCreate = useProductCreate({
+	mutation: {
+		onSuccess: () => {
+			void navigate("/products");
+		},
+	},
+});
+
 const [shouldSubmit, setShouldSubmit] = useState(false);
 
 useEffect(() => {
@@ -4118,7 +4253,7 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => 
 
 ```tsx
 /**
- * 생성에 성공하면 목록으로 돌아간다. 이 흐름은 화면 이동까지 한 번에 끝난다
+ * 생성에 성공하면 목록으로 돌아간다
  */
 const mutationProductCreate = useProductCreate({
 	mutation: {
@@ -4170,23 +4305,23 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => 
 "컴파일러가 없으니 다 감싼다"는 이유는 이 셋에 없습니다.
 자리마다 위 셋 중 하나가 있어야 합니다.
 
-**Incorrect (단순 가공을 관성적으로 메모이제이션합니다):**
+**Incorrect (단순 가공을 습관적으로 메모이제이션합니다):**
 
 ```ts
-const columns = useMemo(() => toTableColumns(response.data.columns), [response.data.columns]);
+const columns = useMemo(() => toTableColumns(responseTableColumnsSuspense.data.columns), [responseTableColumnsSuspense.data.columns]);
 ```
 
 **Correct (근거가 없으면 감싸지 않고 그대로 계산합니다):**
 
 ```ts
-const columns = toTableColumns(response.data.columns);
+const columns = toTableColumns(responseTableColumnsSuspense.data.columns);
 ```
 
 **Correct (외부 패키지 제약을 가리키는 근거를 적고 씁니다):**
 
 ```ts
-// ag-grid는 columnDefs 참조가 바뀌면 컬럼 폭·정렬 상태를 초기화한다. 참조를 고정해야 한다.
-const columns = useMemo(() => toTableColumns(response.data.columns), [response.data.columns]);
+// 외부 표 라이브러리는 columns 참조가 바뀌면 컬럼 폭·정렬 상태를 초기화한다. 참조를 고정해야 한다.
+const columns = useMemo(() => toTableColumns(responseTableColumnsSuspense.data.columns), [responseTableColumnsSuspense.data.columns]);
 ```
 
 **Correct (이펙트 의존성이라 참조를 고정합니다):**
@@ -4198,6 +4333,9 @@ const watchedProductIds = useMemo(
 	[responseProductListSuspense.data.products],
 );
 
+/**
+ * 표에 보이는 product 의 변경 알림을 구독한다
+ */
 useEffect(() => {
 	return subscribeToProductChanges(watchedProductIds);
 }, [watchedProductIds]);
@@ -4224,15 +4362,15 @@ useEffect(() => {
 **Incorrect (비싼 초기화가 렌더마다 다시 평가됩니다):**
 
 ```tsx
-const [searchIndex] = useState(toSearchIndex(productList));
-const [draftFilter] = useState(JSON.parse(localStorage.getItem("product-filter") ?? "{}"));
+const [searchIndex] = useState(toSearchIndex(product_catalog));
+const [draftFilter] = useState(parseStoredProductFilter(localStorage.getItem("product-filter")));
 ```
 
 **Correct (비싼 초기화는 최초 렌더에서만 수행합니다):**
 
 ```tsx
-const [searchIndex] = useState(() => toSearchIndex(productList));
-const [draftFilter] = useState(() => JSON.parse(localStorage.getItem("product-filter") ?? "{}"));
+const [searchIndex] = useState(() => toSearchIndex(product_catalog));
+const [draftFilter] = useState(() => parseStoredProductFilter(localStorage.getItem("product-filter")));
 ```
 
 ### 10.3 Defer Heavy Renders Only With Measured Evidence
@@ -4326,6 +4464,45 @@ const filteredRows = useMemo(() => {
 return <PgProductRows rows={filteredRows} />;
 ```
 
+**Correct (진행 표시가 필요하면 `useTransition`의 `isPending`을 씁니다):**
+
+```tsx
+const [isPending, startTransition] = useTransition();
+
+const handleStatusFilterChange = (nextStatus: ProductStatusFilter) => {
+	// 행 12,000개에서 필터 전환에 320ms가 걸려 클릭이 밀렸다.
+	startTransition(() => {
+		setStatusFilter(nextStatus);
+	});
+};
+
+return <UiFilterBar isBusy={isPending} onStatusChange={handleStatusFilterChange} />;
+```
+
+**Correct (`await` 뒤의 상태 갱신은 다시 `startTransition`으로 감쌉니다):**
+
+```tsx
+const handleStatusFilterChange = (nextStatus: ProductStatusFilter) => {
+	startTransition(async () => {
+		const nextRows = await fetchFilteredRows(nextStatus);
+
+		// await 뒤에는 전환 범위가 끊겨 다시 감싸야 급하지 않은 갱신으로 남는다
+		startTransition(() => {
+			setRows(nextRows);
+		});
+	});
+};
+```
+
+**Correct (지연 값을 받는 무거운 하위 트리는 `memo`로 감쌉니다):**
+
+```tsx
+// 행 12,000개 표. 부모가 입력값으로 다시 렌더할 때 이 트리까지 따라 그리지 않도록 memo 로 감싼다
+export const PgProductRows = memo((props: PgProductRowsProps) => {
+	return <UiTable rows={props.rows} />;
+});
+```
+
 ## 11. Accessibility
 
 **Impact: HIGH**
@@ -4359,7 +4536,7 @@ return <PgProductRows rows={filteredRows} />;
 `css/selector-use-pseudo-classes-for-dom-owned-states`가 그 자리를 정합니다.
 
 이 이름은 테스트가 요소를 찾는 근거이기도 합니다.
-`getByRole`이나 `getByLabel`로 요소를 찾으려면 이름이 있어야 합니다.
+`getByRole`이나 `getByLabelText`로 요소를 찾으려면 이름이 있어야 합니다.
 이름이 없으면 테스트가 클래스나 DOM 순서를 붙잡게 되고, 그건 마크업을 고칠 때마다 깨집니다.
 
 포커스를 어디로 옮길지는 이 규칙이 정하지 않습니다.
@@ -4434,54 +4611,31 @@ return <PgProductRows rows={filteredRows} />;
 **Incorrect (읽어도 의도가 안 보이는 경계 선언에 설명이 없습니다):**
 
 ```ts
-const handleRemoveProductButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
-	if (!selectedProduct) {
-		return;
-	}
-
-	await mutationProductRemove.mutateAsync({ params: { productId: selectedProduct.id } });
+const handleBackButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => {
+	void navigate("/products");
 };
 
 useEffect(() => {
-	resetForm(userData);
-}, [userData, resetForm]);
+	return subscribeToProductChanges(watchedProductIds);
+}, [watchedProductIds]);
 ```
 
 **Correct (선언 의도를 바로 위에 여러 줄 블록으로 적습니다):**
 
 ```ts
 /**
- * product 삭제 API
+ * 저장하지 않고 목록으로 돌아간다. 입력 중인 값은 버린다
  */
-const mutationProductRemove = useProductRemove();
-
-/**
- * 선택된 product 삭제와 다음 화면 이동 처리
- */
-const handleRemoveProductButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
-	if (!selectedProduct) {
-		return;
-	}
-
-	await mutationProductRemove.mutateAsync({params: {productId: selectedProduct.id}});
+const handleBackButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => {
 	void navigate("/products");
 };
 
 /**
- * 사용자 데이터 변경 시 폼 상태 동기화
+ * 표에 보이는 product 의 변경 알림을 구독한다. 목록이 바뀌면 다시 구독한다
  */
 useEffect(() => {
-	resetForm(userData);
-}, [userData, resetForm]);
-
-/**
- * product 저장 요청 payload 생성
- */
-export const toProductSaveRequest = (formValues: ProductFormValues) => {
-	return {
-		title: formValues.title.trim(),
-	};
-};
+	return subscribeToProductChanges(watchedProductIds);
+}, [watchedProductIds]);
 ```
 
 ### 12.2 Write JSX Comments as Multiline Blocks
@@ -4592,9 +4746,9 @@ JSX 자식 자리에는 `//`를 쓸 수 없습니다.
 
 `typescript/tooling-configure-biome-to-enforce-these-rules`가 세운 `noRestrictedImports`에 `overrides` 둘을 더합니다.
 하나는 레이어 방향입니다.
-`component/ui/**`에는 `@/component/widget/**`과 `@/page/**`를, `component/widget/**`에는 `@/page/**`를 막습니다.
+`src/component/ui/**`에는 `@/component/widget/**`과 `@/page/**`를, `src/component/widget/**`에는 `@/page/**`를 막습니다.
 다른 하나는 라우트 경계입니다.
-`page/<route>/**`마다 `@/page/**`를 막고 `!@/page/<route>/**`로 자기 라우트만 되살리는 항목을 둡니다.
+`src/page/<route>/**`마다 `@/page/**`를 막고 `!@/page/<route>/**`로 자기 라우트만 되살리는 항목을 둡니다.
 라우트가 늘면 항목도 늡니다.
 `overrides`는 규칙 옵션을 통째로 바꾸므로 기본 설정의 경로 패턴을 항목마다 함께 적습니다.
 

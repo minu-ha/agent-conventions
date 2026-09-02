@@ -53,7 +53,7 @@ export const WgChartRoot = (props: WgChartRootProps) => {
 // component/widget/chart/chart-root/wg-chart-root.tsx
 export const WgChartRoot = (props: WgChartRootProps) => {
 	const containerRef = useRef<HTMLDivElement>(null);
-	const [chart, setChart] = useState<EChartsType | null>(null);
+	const [chart, setChart] = useState<ChartInstance | null>(null);
 
 	/**
 	 * container mount 시 chart instance를 만들고 resize·dispose까지 소유
@@ -63,7 +63,8 @@ export const WgChartRoot = (props: WgChartRootProps) => {
 			return;
 		}
 
-		const instance = init(containerRef.current);
+		// 외부 차트 라이브러리 인스턴스. 만든 컴포넌트가 resize 와 dispose 까지 책임진다
+		const instance = mountChart(containerRef.current);
 		const handleResize = () => {
 			instance.resize();
 		};

@@ -152,7 +152,7 @@ tags: tooling
 	},
 	"overrides": [
 		{
-			"includes": ["test/**/*.ts"],
+			"includes": ["**/*.test.ts"],
 			"linter": {"rules": {"style": {"noMagicNumbers": "off"}}}
 		},
 		{

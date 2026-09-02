@@ -96,7 +96,7 @@ const handleNextClick = () => {
 **Correct (`.map()` 콜백 하나에만 쓰이는 변환은 그 자리에 둡니다):**
 
 ```ts
-// page/product/_function/to-product-view.ts
+// page/product/_function/to-product-view.ts: 목록과 상세 두 파일이 부른다
 /**
  * product 표시 모델 조립. 라벨 이름이 비면 코드를 보여 준다
  */

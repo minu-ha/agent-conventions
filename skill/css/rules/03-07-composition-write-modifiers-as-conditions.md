@@ -116,11 +116,11 @@ type SalesTone = "positive" | "negative" | "neutral" | "unknown";
 
 ```css
 .pg_salesPanel__metricValue--positive {
-	color: var(--app-color-rise, #d32f2f);
+	color: var(--app-color-rise);
 }
 
 .pg_salesPanel__metricValue--negative {
-	color: var(--app-color-fall, #1976d2);
+	color: var(--app-color-fall);
 }
 ```
 

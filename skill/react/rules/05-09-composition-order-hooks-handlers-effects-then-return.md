@@ -55,7 +55,7 @@ export const PgOrderToolbar = () => {
 		setIsPanelOpen(true);
 	};
 
-	return <section className={clsx("pg_orderToolbar__root")}>{/* ... */}</section>;
+	return <section className={clsx("pg_orderToolbar__root")}>{props.children}</section>;
 };
 ```
 

@@ -34,6 +34,10 @@ tags: typing, wrapper, dom
 `HTMLAttributes`만 쓰면 `disabled`·`type`·`colSpan`처럼 그 요소에만 있는 속성을 잃습니다.
 요소 전용 인터페이스가 없는 `tr` 같은 자리만 `HTMLAttributes`를 그대로 씁니다.
 
+1·2단계 `extends`는 `{...props}`로 통째로 넘기는 래퍼의 형태입니다.
+자기 프롭이 있어 이름으로 하나씩 넘기는 래퍼는 3단계처럼 넘길 DOM 프롭만 선언합니다.
+그 판정은 `typing-choose-wrapper-shape-and-forwarding`이 정합니다.
+
 2단계가 필요한 이유는 `HTMLAttributes`에 `color`, `title`, `onChange`, `defaultValue`가 이미 있어서입니다.
 라이브러리가 그중 하나를 자기 값 집합으로 좁혀 두면 `extends`가 막힙니다.
 그때는 **부딪히는 이름만 빼면 되지, 나머지 DOM 표면을 포기하지 않습니다.**

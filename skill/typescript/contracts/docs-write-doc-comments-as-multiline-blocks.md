@@ -7,7 +7,7 @@
 
 - `/** 한 줄 */` 형태는 쓰지 않습니다.
 - 선언이 무엇인지 설명할 때는 `//`를 쓰지 않습니다.
-  그 형식은 `docs-justify-convention-exceptions-with-a-reason-comment`가 정합니다.
+  `//`는 `docs-justify-convention-exceptions-with-a-reason-comment`가 정한 예외 이유 주석 자리입니다.
 - 어느 선언에 붙일지는 `docs-require-header-jsdoc-on-key-declarations`가 정합니다.
 - 어떤 태그를 붙일지는 `docs-write-concise-korean-comments-about-purpose-and-constraints`가 정합니다.
 

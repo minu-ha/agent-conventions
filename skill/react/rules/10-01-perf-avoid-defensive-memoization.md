@@ -33,23 +33,23 @@ tags: perf, state
 "컴파일러가 없으니 다 감싼다"는 이유는 이 셋에 없습니다.
 자리마다 위 셋 중 하나가 있어야 합니다.
 
-**Incorrect (단순 가공을 관성적으로 메모이제이션합니다):**
+**Incorrect (단순 가공을 습관적으로 메모이제이션합니다):**
 
 ```ts
-const columns = useMemo(() => toTableColumns(response.data.columns), [response.data.columns]);
+const columns = useMemo(() => toTableColumns(responseTableColumnsSuspense.data.columns), [responseTableColumnsSuspense.data.columns]);
 ```
 
 **Correct (근거가 없으면 감싸지 않고 그대로 계산합니다):**
 
 ```ts
-const columns = toTableColumns(response.data.columns);
+const columns = toTableColumns(responseTableColumnsSuspense.data.columns);
 ```
 
 **Correct (외부 패키지 제약을 가리키는 근거를 적고 씁니다):**
 
 ```ts
-// ag-grid는 columnDefs 참조가 바뀌면 컬럼 폭·정렬 상태를 초기화한다. 참조를 고정해야 한다.
-const columns = useMemo(() => toTableColumns(response.data.columns), [response.data.columns]);
+// 외부 표 라이브러리는 columns 참조가 바뀌면 컬럼 폭·정렬 상태를 초기화한다. 참조를 고정해야 한다.
+const columns = useMemo(() => toTableColumns(responseTableColumnsSuspense.data.columns), [responseTableColumnsSuspense.data.columns]);
 ```
 
 **Correct (이펙트 의존성이라 참조를 고정합니다):**
@@ -61,6 +61,9 @@ const watchedProductIds = useMemo(
 	[responseProductListSuspense.data.products],
 );
 
+/**
+ * 표에 보이는 product 의 변경 알림을 구독한다
+ */
 useEffect(() => {
 	return subscribeToProductChanges(watchedProductIds);
 }, [watchedProductIds]);

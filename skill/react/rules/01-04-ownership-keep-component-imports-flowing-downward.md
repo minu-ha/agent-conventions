@@ -42,7 +42,7 @@ tags: ownership
 | 다른 라우트 안의 파일 | 없음 |
 | 하위 소유자의 진입 파일 | 그 하위 소유자를 담은 소유자 폴더 아래의 파일 |
 | `_`로 시작하는 컴포넌트 파일 | 같은 폴더의 파일 |
-| `_function`·`_type`·`_constant`·`_hook`의 파일 | 레이어 방향을 지키는 파일이면 어느 것이든 |
+| `_function`·`_type`·`_constant`·`_hook`의 파일 | 레이어 방향을 지키는 파일이면 어느 것이든. 다른 라우트의 역할 폴더는 제외합니다 |
 | `_function/<함수명>/`의 보조 파일 | 같은 폴더의 대표 함수 |
 
 - 타입만 가져오는 줄은 `_` 컴포넌트 파일 제약을 받지 않습니다.
@@ -65,25 +65,24 @@ tags: ownership
 **Incorrect (다른 폴더의 `_` 컴포넌트 파일을 가져옵니다):**
 
 ```tsx
-// page/detail/sales-trend-panel/_pg-detection-section.tsx
+// page/detail/sales-trend-panel/pg-sales-trend-panel.tsx
 import {PgSectionHeading} from "@/page/detail/_pg-section-heading";
-import {PgLegendRow} from "@/page/detail/summary-band/_pg-legend-row";
 ```
 
-**Correct (진입 파일이 자기 파일과 형제 소유자의 진입 파일을 조립해서 내려보냅니다):**
+**Correct (`_` 파일과 같은 폴더에 있는 진입 파일이 조립해서 프롭으로 내려보냅니다):**
 
 ```tsx
-// page/detail/sales-trend-panel/pg-sales-trend-panel.tsx
-import {UiSectionHeading} from "@/component/ui/section-heading/ui-section-heading";
-import {PgDetectionSection} from "@/page/detail/sales-trend-panel/_pg-detection-section";
+// page/detail/pg-detail.tsx
+import {PgSectionHeading} from "@/page/detail/_pg-section-heading";
+import {PgSalesTrendPanel} from "@/page/detail/sales-trend-panel/pg-sales-trend-panel";
 import {PgSummaryBand} from "@/page/detail/summary-band/pg-summary-band";
 
-export const PgSalesTrendPanel = (props: PgSalesTrendPanelProps) => {
+export const PgDetail = () => {
 	return (
-		<section className={clsx("pg_salesTrendPanel__root")}>
-			<PgDetectionSection heading={<UiSectionHeading title="매출 추이" />} legendItems={props.legendItems} />
-			<PgSummaryBand heading={<UiSectionHeading title="요약" />} />
-		</section>
+		<main className={clsx("pg_detail__root")}>
+			<PgSalesTrendPanel heading={<PgSectionHeading title="매출 추이" />} />
+			<PgSummaryBand heading={<PgSectionHeading title="요약" />} />
+		</main>
 	);
 };
 ```
@@ -100,7 +99,7 @@ import {PgSalesTrendPanel} from "@/page/detail/sales-trend-panel/pg-sales-trend-
 ```tsx
 // component/widget/sales-trend-panel/wg-sales-trend-panel.tsx
 export const WgSalesTrendPanel = (props: WgSalesTrendPanelProps) => {
-	return <section className={clsx("wg_salesTrendPanel__root")}>{/* ... */}</section>;
+	return <section className={clsx("wg_salesTrendPanel__root")}>{props.children}</section>;
 };
 
 // page/index/pg-index.tsx
@@ -124,9 +123,17 @@ import {UiLegend} from "@/component/ui/legend/ui-legend";
 **Incorrect (밖에서 가져다 쓴다고 역할 폴더 파일을 루트로 올립니다):**
 
 ```ts
-// util/chart/to-chart-option.ts
-import type {ChartSeries} from "@/component/ui/chart/_type/chart-series";
-import {chart_series_line} from "@/component/ui/chart/_constant/series";
+// type/chart-series.ts
+// component/ui/chart/_type 에 있던 것을 page 에서도 쓴다고 루트로 옮겼다
+export interface ChartSeries {
+	/**
+	 * 선 하나가 그리는 좌표
+	 */
+	points: ChartPoint[];
+}
+
+// page/detail/sales-trend-panel/_function/to-chart-option.ts
+import type {ChartSeries} from "@/type/chart-series";
 ```
 
 **Correct (역할 폴더의 파일은 레이어 방향만 지키면 밖에서도 가져옵니다):**

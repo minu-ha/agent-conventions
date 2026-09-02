@@ -34,8 +34,8 @@ tags: state, react-query, zustand
 열림과 닫힘, 마우스 올림, 입력 중인 임시 값은 주소에 올리지 않습니다.
 search 파라미터를 `useState`로 복제해 출처를 둘로 만들지 않습니다.
 
-서버 상태와 search 파라미터는 쓰는 컴포넌트가 같은 key 로 직접 읽습니다.
-부모가 읽어 프롭으로 내리면 같은 값이 cache 와 프롭 두 길로 흘러 출처가 흐려집니다.
+서버 상태와 search 파라미터는 쓰는 컴포넌트가 같은 `key`로 직접 읽습니다.
+부모가 읽어 프롭으로 내리면 같은 값이 캐시와 프롭 두 길로 흘러 출처가 흐려집니다.
 누가 무엇을 읽는지는 `screen-keep-route-flow-visible`이 정합니다.
 
 `Context`는 전역 상태 도구가 아니라 **한 컴포넌트 묶음 안에서 프롭 전달을 줄이는 수단**입니다.
@@ -55,6 +55,9 @@ search 파라미터를 `useState`로 복제해 출처를 둘로 만들지 않습
 const [isOpen, setIsOpen] = useState(false);
 const [theme, setTheme] = useState<Theme>("light");
 
+/**
+ * 사용자 상세 조회 API
+ */
 const responseUserGetItemSuspense = useUserGetItemSuspense();
 const [userName, setUserName] = useState(responseUserGetItemSuspense.data.name);
 ```
@@ -82,6 +85,19 @@ const [page, setPage] = useState(1);
 
 ```ts
 const [urlParams, setUrlParams] = useQueryStates(productUrlParsers);
+```
+
+**Incorrect (묶음 밖의 화면이 읽는 값을 `Context`로 앱 루트까지 올려 전역 스토어처럼 씁니다):**
+
+```tsx
+// 테마는 레이아웃과 모든 화면이 읽는데 Context 를 루트에 두고 화면마다 Provider 를 찾아 올라간다
+const ThemeContext = createContext<Theme>("light");
+```
+
+**Correct (묶음 밖에서도 읽는 값은 전역 스토어가 소유합니다):**
+
+```ts
+const themeStore = useThemeStore();
 ```
 
 **Correct (합성 컴포넌트 안에서 부품끼리 나눠 쓰는 상태는 `Context`로 내려보냅니다):**

@@ -39,8 +39,8 @@ tags: state, naming, url
 ```ts
 // page/products/_constant/product-search.ts
 export const productSearch = {
-	page: parseAsInteger.withDefault(1),
-	keyword: parseAsString.withDefault(""),
+	page: parseAsInteger.withDefault(pagination_default_page),
+	keyword: parseAsString,
 };
 ```
 
@@ -52,8 +52,8 @@ export const productSearch = {
  * product 목록 화면이 주소에 올린 상태의 파서 묶음
  */
 export const productUrlParsers = {
-	page: parseAsInteger.withDefault(1),
-	keyword: parseAsString.withDefault(""),
+	page: parseAsInteger.withDefault(pagination_default_page),
+	keyword: parseAsString,
 };
 ```
 
@@ -61,17 +61,23 @@ export const productUrlParsers = {
 
 ```tsx
 const [searchParams, setSearchParams] = useQueryStates(productUrlParsers);
-
 const query = searchParams.keyword;
+
+<UiSearchInput value={query} />;
 ```
 
-**Correct (파싱을 거친 값은 `urlParams`, 플랫폼 객체만 `searchParams`입니다):**
+**Correct (파싱을 거친 값은 `urlParams`이고 별칭 없이 체인으로 읽습니다):**
 
 ```tsx
 const [urlParams, setUrlParams] = useQueryStates(productUrlParsers);
 
-/**
- * 공유 링크에 실을 search 파라미터를 플랫폼 객체로 조립한다
- */
-const searchParams = new URLSearchParams({page: String(urlParams.page)});
+<UiSearchInput value={urlParams.keyword} />;
+```
+
+**Correct (플랫폼 `URLSearchParams` 객체만 `searchParams`입니다):**
+
+```tsx
+const [searchParams] = useSearchParams();
+
+<UiShareLinkButton href={`/products?${searchParams.toString()}`} />;
 ```

@@ -117,8 +117,8 @@ const toRowLabel = (row: Row): string => {
 ```ts
 const toRowAction = (row: Row): RowAction => {
 	return row.status === product_status.draft && !row.lockedAt && row.ownerId === session.userId
-		? rowAction.edit
-		: rowAction.view;
+		? row_action.edit
+		: row_action.view;
 };
 ```
 
@@ -128,7 +128,7 @@ const toRowAction = (row: Row): RowAction => {
 const toRowAction = (row: Row): RowAction => {
 	const isEditable = row.status === product_status.draft && !row.lockedAt && row.ownerId === session.userId;
 
-	return isEditable ? rowAction.edit : rowAction.view;
+	return isEditable ? row_action.edit : row_action.view;
 };
 ```
 

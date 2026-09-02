@@ -27,6 +27,7 @@ tags: modifiers, structure, naming
 한 곳에서만 필요한 여백이나 배치 보정에는 쓰지 않습니다.
 `--compactTop`, `--marginLeft0`, `--alignRight`처럼 그 화면 하나를 고치려고 붙이는 이름이 여기 해당합니다.
 그런 보정은 수정자가 아니라 **역할 이름이 있는 별도 요소 클래스**로 풉니다.
+보정이 필요한 요소에는 기본 요소 클래스 대신 그 역할 이름의 요소 클래스를 씁니다.
 
 반복되는 모양인지는 아래 기준으로 가릅니다.
 앱이 켜고 끄는 상태는 이 기준을 보지 않고 언제나 수정자입니다.
@@ -40,6 +41,7 @@ tags: modifiers, structure, naming
 
 두 번째 소유자가 같은 이름을 쓰게 되는 순간 수정자로 올립니다.
 그 전까지는 요소 클래스로 둡니다.
+`variant` 프롭이 고르는 수정자는 사용처가 둘 이상이면 `scope_slug` 수를 보지 않고 수정자로 둡니다.
 
 **Incorrect (그 화면 하나를 고치려고 수정자를 붙입니다):**
 
@@ -51,8 +53,8 @@ tags: modifiers, structure, naming
 **Correct (한 곳만의 보정은 역할 이름이 있는 요소로 분리합니다):**
 
 ```tsx
-<div className={clsx("pg_catalogDetail__detailSection")} />
-<div className={clsx("pg_catalogDetail__flushAside")} />
+<div className={clsx("pg_catalogDetail__specSection")} />
+<div className={clsx("pg_catalogDetail__metaAside")} />
 ```
 
 **Correct (상태와 반복되는 모양만 수정자로 씁니다):**

@@ -45,11 +45,8 @@ const storedFilter = JSON.parse(localStorage.getItem("product-filter") as string
 ```ts
 const storedValue = localStorage.getItem("product-filter");
 
-if (storedValue === null) {
-	throw new MissingStoredFilterError("product-filter");
-}
-
-const storedFilter = productFilterSchema.parse(JSON.parse(storedValue));
+// 처음 방문이면 저장된 필터가 없다. 없다는 사실을 그대로 둔다
+const storedFilter = storedValue === null ? undefined : productFilterSchema.parse(JSON.parse(storedValue));
 ```
 
 **Incorrect (`!`로 없을 수 있다는 사실을 지웁니다):**

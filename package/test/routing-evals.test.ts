@@ -282,7 +282,8 @@ const typescriptRuleRouting = {
 		reviewWith: ["naming-import-by-absolute-path"],
 	},
 	"naming-import-by-absolute-path": {
-		appliesWhen: "다른 모듈을 가져오는 경로를 쓸 때. `./`나 `../`로 시작하는 경로를 쓰거나 별칭 경로를 상대경로로 바꾸려 할 때.",
+		appliesWhen:
+			"다른 모듈을 가져오는 경로를 쓸 때. `./`나 `../`로 시작하는 경로를 쓰거나 별칭 경로를 상대경로로 바꾸려 할 때. `src` 바로 아래 레이어 루트 폴더나 `store` 파일을 새로 만들 때.",
 		reviewWith: ["naming-use-direct-imports-and-public-entry-points"],
 	},
 	"naming-read-environment-values-through-config-env": {
@@ -581,7 +582,7 @@ const cssRuleRouting = {
 	},
 	"layout-keep-layout-intent-explicit": {
 		appliesWhen:
-			"`sticky`·`fixed`, `z-index`, 강제 `width`·`height`, 부모·자식 레이아웃 책임을 추가·변경할 때. 로딩 대체 화면의 컨테이너나 높이를 정할 때. 제외: 같은 요소를 기본과 수정자로 나누면서 기존 `display`·여백 선언을 값 그대로 옮기는 경우.",
+			"`sticky`·`fixed`, `z-index`, 부모·자식 레이아웃 책임을 추가·변경할 때. 로딩 대체 화면의 컨테이너나 높이를 정할 때. 제외: 같은 요소를 기본과 수정자로 나누면서 기존 `display`·여백 선언을 값 그대로 옮기는 경우.",
 		reviewWith: ["values-declare-stacking-layers-as-tokens"],
 	},
 	"layout-reach-for-intrinsic-sizing-before-breakpoints": {

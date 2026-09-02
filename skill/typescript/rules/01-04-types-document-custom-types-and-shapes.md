@@ -82,3 +82,15 @@ const publishResultSchema = z.object({
 	documentId: z.string(),
 });
 ```
+
+**Correct (객체형 상수는 헤더만 달고 키에는 달지 않습니다):**
+
+```ts
+/**
+ * product 상태 코드. 서버 enum 과 같은 값이다
+ */
+export const product_status = {
+	draft: "draft",
+	published: "published",
+} as const;
+```

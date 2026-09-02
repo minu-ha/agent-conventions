@@ -56,9 +56,10 @@ export const UiTableCell = (props: UiTableCellProps) => {
 };
 ```
 
-**Correct (이미 있는 프롭은 인덱스 접근으로 하나씩 엽니다):**
+**Correct (이미 있는 프롭은 인덱스 접근으로 하나씩 열고 DOM 표면은 `typing-open-dom-props-in-three-steps`가 정합니다):**
 
 ```tsx
+import type {TdHTMLAttributes} from "react";
 import type {TableCellProps} from "@mui/material";
 
 /**
@@ -66,7 +67,7 @@ import type {TableCellProps} from "@mui/material";
  *
  * 라이브러리 셀의 나머지 표시 프롭은 표 소유자가 정하므로 열지 않는다.
  */
-export interface UiTableCellProps {
+export interface UiTableCellProps extends TdHTMLAttributes<HTMLTableCellElement> {
 	/**
 	 * 내용 가로 정렬
 	 */
@@ -76,4 +77,8 @@ export interface UiTableCellProps {
 	 */
 	padding?: TableCellProps["padding"];
 }
+
+export const UiTableCell = (props: UiTableCellProps) => {
+	return <TableCell {...props} />;
+};
 ```

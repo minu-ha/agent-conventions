@@ -26,10 +26,13 @@ tags: types, callbacks, naming
 **Incorrect (계약의 일부인 콜백 매개변수를 조용히 생략합니다):**
 
 ```ts
+/**
+ * 로그 sink 콜백 계약
+ */
 type LogSink = (message: string, level: "info" | "error") => void;
 
 const noopLog: LogSink = () => {
-	// no-op sink
+	// 아무 일도 하지 않는 sink
 };
 ```
 

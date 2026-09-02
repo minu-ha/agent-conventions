@@ -55,25 +55,28 @@ if (accessStore.canEditRecord) {
 **Incorrect (채우는 이펙트가 스토어 전체를 의존성에 넣어 `set`마다 다시 돕니다):**
 
 ```ts
+// page/_layout/pg-app-layout.tsx
 const accessStore = useAccessStore();
 
 /**
- * bootstrap capability 응답을 access store에 동기화
+ * 부트스트랩 응답의 권한 목록으로 수정 가능 여부를 채운다
  */
 useEffect(() => {
-	accessStore.setCapabilities(responseAccessBootstrapSuspense.data.capabilities);
+	accessStore.setCanEditRecord(responseAccessBootstrapSuspense.data.capabilities.includes("record:edit"));
 }, [accessStore, responseAccessBootstrapSuspense.data]);
 ```
 
-**Correct (소유자가 분명한 한 경계에서만 채우고 의존성에는 `set` 함수만 넣습니다):**
+**Correct (부트스트랩 경계 한 곳에서만 채우고 의존성에는 `set` 함수만 넣습니다):**
 
 ```ts
-/**
- * bootstrap capability 응답을 access store에 동기화
- */
-const setCapabilities = useAccessStore((state) => state.setCapabilities);
+// page/_layout/pg-app-layout.tsx
+const setCanEditRecord = useAccessStore((state) => state.setCanEditRecord);
 
+/**
+ * 부트스트랩 응답의 권한 목록으로 수정 가능 여부를 채운다. 여러 화면과 라우트 가드가 이 결과를 읽는다
+ */
 useEffect(() => {
-	setCapabilities(responseAccessBootstrapSuspense.data.capabilities);
-}, [setCapabilities, responseAccessBootstrapSuspense.data]);
+	// state-calculate-derived-values-during-render 예외: 화면 여럿이 같은 판단을 읽어 경계에서 한 번 채운다
+	setCanEditRecord(responseAccessBootstrapSuspense.data.capabilities.includes("record:edit"));
+}, [setCanEditRecord, responseAccessBootstrapSuspense.data]);
 ```

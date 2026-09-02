@@ -38,7 +38,7 @@ tags: strategy, composition, variants, components
 **Incorrect (단일, 합성, 드러난 변형의 경계를 구분하지 않고 한 컴포넌트에 몰아넣습니다):**
 
 ```tsx
-export interface UiProfileDialogProps {
+export interface WgProfileDialogProps {
 	isCompact?: boolean;
 	showActivity?: boolean;
 	showFocus?: boolean;
@@ -46,15 +46,15 @@ export interface UiProfileDialogProps {
 	renderFooter?: () => ReactNode;
 }
 
-export const UiProfileDialog = (props: UiProfileDialogProps) => {
+export const WgProfileDialog = (props: WgProfileDialogProps) => {
 	return (
 		<section className={props.isCompact ? "dialog dialog--compact" : "dialog"}>
 			<header>
 				<h3>{props.dialogTitle}</h3>
 			</header>
-			<UiProfileSummary />
-			{props.showActivity && <UiProfileActivityPanel />}
-			{props.showFocus && <UiProfileFocusPanel />}
+			<WgProfileSummary />
+			{props.showActivity && <WgProfileActivityPanel />}
+			{props.showFocus && <WgProfileFocusPanel />}
 			<footer>{props.renderFooter?.()}</footer>
 		</section>
 	);
@@ -69,7 +69,7 @@ export const UiProfileDialog = (props: UiProfileDialogProps) => {
  *
  * 사용처가 끼워 넣을 자리가 없어 부품으로 쪼개지 않는다.
  */
-export interface UiProfileDialogProps {
+export interface WgProfileDialogProps {
 	/**
 	 * 헤더에 그릴 제목
 	 */
@@ -80,13 +80,13 @@ export interface UiProfileDialogProps {
 	profile: Profile;
 }
 
-export const UiProfileDialog = (props: UiProfileDialogProps) => {
+export const WgProfileDialog = (props: WgProfileDialogProps) => {
 	return (
-		<section className={clsx("ui_profileDialog__root")}>
-			<header className={clsx("ui_profileDialog__header")}>
+		<section className={clsx("wg_profileDialog__root")}>
+			<header className={clsx("wg_profileDialog__header")}>
 				<h3>{props.title}</h3>
 			</header>
-			<UiProfileSummary profile={props.profile} />
+			<WgProfileSummary profile={props.profile} />
 		</section>
 	);
 };
@@ -95,23 +95,23 @@ export const UiProfileDialog = (props: UiProfileDialogProps) => {
 **Correct (2단계 — 끼워 넣을 자리가 생기면 상태 없는 합성으로 엽니다):**
 
 ```txt
-component/ui/profile-dialog/
-├── ui-profile-dialog.tsx              진입. 부품을 모아 내보냅니다
-├── _ui-profile-dialog-root.tsx
-├── _ui-profile-dialog-header.tsx
-├── _ui-profile-dialog-body.tsx
+component/widget/profile-dialog/
+├── wg-profile-dialog.tsx              진입. 부품을 모아 내보냅니다
+├── _wg-profile-dialog-root.tsx
+├── _wg-profile-dialog-header.tsx
+├── _wg-profile-dialog-body.tsx
 └── _type/
     └── profile-dialog-part.ts         세 부품이 나눠 쓰는 계약
 ```
 
 ```tsx
-// component/ui/profile-dialog/_type/profile-dialog-part.ts
+// component/widget/profile-dialog/_type/profile-dialog-part.ts
 /**
  * 대화상자 부품 셋이 나눠 쓰는 계약
  *
  * 세 부품 모두 받는 것이 `children` 하나뿐이라 형태를 하나로 둔다.
  */
-export interface UiProfileDialogPartProps {
+export interface WgProfileDialogPartProps {
 	/**
 	 * 그 부품 자리에 사용처가 넣을 내용
 	 */
@@ -120,37 +120,40 @@ export interface UiProfileDialogPartProps {
 ```
 
 ```tsx
-// component/ui/profile-dialog/_ui-profile-dialog-root.tsx
+// component/widget/profile-dialog/_wg-profile-dialog-root.tsx
 import {clsx} from "clsx";
 
-import type {UiProfileDialogPartProps} from "@/component/ui/profile-dialog/_type/profile-dialog-part";
+import type {WgProfileDialogPartProps} from "@/component/widget/profile-dialog/_type/profile-dialog-part";
 
-export const UiProfileDialogRoot = (props: UiProfileDialogPartProps) => {
-	return <section className={clsx("ui_profileDialog__root")}>{props.children}</section>;
+/**
+ * 대화상자 틀. 나머지 부품은 이 안에서만 그린다
+ */
+export const WgProfileDialogRoot = (props: WgProfileDialogPartProps) => {
+	return <section className={clsx("wg_profileDialog__root")}>{props.children}</section>;
 };
 ```
 
 ```tsx
-// component/ui/profile-dialog/ui-profile-dialog.tsx
-import {UiProfileDialogBody} from "@/component/ui/profile-dialog/_ui-profile-dialog-body";
-import {UiProfileDialogHeader} from "@/component/ui/profile-dialog/_ui-profile-dialog-header";
-import {UiProfileDialogRoot} from "@/component/ui/profile-dialog/_ui-profile-dialog-root";
+// component/widget/profile-dialog/wg-profile-dialog.tsx
+import {WgProfileDialogBody} from "@/component/widget/profile-dialog/_wg-profile-dialog-body";
+import {WgProfileDialogHeader} from "@/component/widget/profile-dialog/_wg-profile-dialog-header";
+import {WgProfileDialogRoot} from "@/component/widget/profile-dialog/_wg-profile-dialog-root";
 
-export const UiProfileDialog = {
-	Root: UiProfileDialogRoot,
-	Header: UiProfileDialogHeader,
-	Body: UiProfileDialogBody,
+export const WgProfileDialog = {
+	Root: WgProfileDialogRoot,
+	Header: WgProfileDialogHeader,
+	Body: WgProfileDialogBody,
 } as const;
 ```
 
 **Correct (3단계 — 부품이 같은 상태를 읽으면 공개 이름을 그대로 두고 컨텍스트만 더합니다):**
 
 ```ts
-// component/ui/profile-dialog/_hook/use-profile-dialog.ts
+// component/widget/profile-dialog/_hook/use-profile-dialog.ts
 /**
  * 대화상자 부품이 나눠 읽는 접힘 상태
  */
-interface UiProfileDialogContextValue {
+interface WgProfileDialogContextValue {
 	/**
 	 * 본문이 펼쳐져 있는지
 	 */
@@ -161,25 +164,15 @@ interface UiProfileDialogContextValue {
 	toggleBody: () => void;
 }
 
-export const UiProfileDialogContext = createContext<UiProfileDialogContextValue | null>(null);
-
-/**
- * 부품이 컨텍스트를 읽는 창구. Root 밖에서 부르면 바로 막는다
- */
-export const useUiProfileDialog = (): UiProfileDialogContextValue => {
-	const dialog = useContext(UiProfileDialogContext);
-
-	if (!dialog) {
-		throw new Error("UiProfileDialog.Root 안에서만 씁니다.");
-	}
-
-	return dialog;
-};
+export const WgProfileDialogContext = createContext<WgProfileDialogContextValue | null>(null);
 ```
 
 ```tsx
-// component/ui/profile-dialog/_ui-profile-dialog-root.tsx
-export const UiProfileDialogRoot = (props: UiProfileDialogPartProps) => {
+// component/widget/profile-dialog/_wg-profile-dialog-root.tsx
+/**
+ * 대화상자 틀. 접힘 상태를 소유해 부품에 컨텍스트로 내린다
+ */
+export const WgProfileDialogRoot = (props: WgProfileDialogPartProps) => {
 	const [isBodyOpen, setIsBodyOpen] = useState(true);
 
 	/**
@@ -189,44 +182,13 @@ export const UiProfileDialogRoot = (props: UiProfileDialogPartProps) => {
 		setIsBodyOpen((previous) => !previous);
 	};
 
+	// Header 는 useContext(WgProfileDialogContext) 로 읽어 toggleBody 를 부른다. 공개 이름은 2단계와 같다
 	return (
-		<UiProfileDialogContext value={{isBodyOpen, toggleBody}}>
-			<section className={clsx("ui_profileDialog__root")}>{props.children}</section>
-		</UiProfileDialogContext>
+		<WgProfileDialogContext value={{isBodyOpen, toggleBody}}>
+			<section className={clsx("wg_profileDialog__root")}>{props.children}</section>
+		</WgProfileDialogContext>
 	);
 };
-```
-
-```tsx
-// component/ui/profile-dialog/_ui-profile-dialog-header.tsx
-export const UiProfileDialogHeader = (props: UiProfileDialogPartProps) => {
-	const dialog = useUiProfileDialog();
-
-	/**
-	 * 헤더를 누르면 본문을 접거나 펼친다
-	 */
-	const handleHeaderClick: MouseEventHandler<HTMLButtonElement> = () => {
-		dialog.toggleBody();
-	};
-
-	return (
-		<header className={clsx("ui_profileDialog__header")}>
-			<button type="button" onClick={handleHeaderClick}>
-				{props.children}
-			</button>
-		</header>
-	);
-};
-```
-
-```tsx
-// component/ui/profile-dialog/ui-profile-dialog.tsx
-// 상태가 늘었지만 사용처가 쓰는 이름은 2단계와 같다
-export const UiProfileDialog = {
-	Root: UiProfileDialogRoot,
-	Header: UiProfileDialogHeader,
-	Body: UiProfileDialogBody,
-} as const;
 ```
 
 **Correct (4단계 — 같은 조합이 반복되면 드러난 변형으로 감쌉니다):**
@@ -237,21 +199,21 @@ export const UiProfileDialog = {
  *
  * 세 화면이 같은 조합을 쓰고 있어 조립을 한 이름 뒤로 고정한다.
  */
-export interface UiReadOnlyProfileDialogProps {
+export interface WgReadOnlyProfileDialogProps {
 	/**
 	 * 요약 영역에 그릴 프로필
 	 */
 	profile: Profile;
 }
 
-export const UiReadOnlyProfileDialog = (props: UiReadOnlyProfileDialogProps) => {
+export const WgReadOnlyProfileDialog = (props: WgReadOnlyProfileDialogProps) => {
 	return (
-		<UiProfileDialog.Root>
-			<UiProfileDialog.Header>프로필 보기</UiProfileDialog.Header>
-			<UiProfileDialog.Body>
-				<UiProfileSummary profile={props.profile} />
-			</UiProfileDialog.Body>
-		</UiProfileDialog.Root>
+		<WgProfileDialog.Root>
+			<WgProfileDialog.Header>프로필 보기</WgProfileDialog.Header>
+			<WgProfileDialog.Body>
+				<WgProfileSummary profile={props.profile} />
+			</WgProfileDialog.Body>
+		</WgProfileDialog.Root>
 	);
 };
 ```

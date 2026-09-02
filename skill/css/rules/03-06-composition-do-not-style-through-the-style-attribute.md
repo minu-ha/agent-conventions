@@ -39,7 +39,7 @@ tags: values, inline-style
 **Incorrect (인라인으로 꾸밉니다):**
 
 ```tsx
-<section className={clsx("pg_report__summary")} style={{ marginTop: 16, color: "#c00" }}>
+<section className={clsx("pg_report__summary")} style={{marginTop: 16, color: isCritical ? "#c00" : undefined}}>
 	{summary}
 </section>
 ```

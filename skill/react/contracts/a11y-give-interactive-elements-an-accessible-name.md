@@ -21,7 +21,7 @@
 `css/selector-use-pseudo-classes-for-dom-owned-states`가 그 자리를 정합니다.
 
 이 이름은 테스트가 요소를 찾는 근거이기도 합니다.
-`getByRole`이나 `getByLabel`로 요소를 찾으려면 이름이 있어야 합니다.
+`getByRole`이나 `getByLabelText`로 요소를 찾으려면 이름이 있어야 합니다.
 이름이 없으면 테스트가 클래스나 DOM 순서를 붙잡게 되고, 그건 마크업을 고칠 때마다 깨집니다.
 
 포커스를 어디로 옮길지는 이 규칙이 정하지 않습니다.

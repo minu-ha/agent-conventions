@@ -59,7 +59,7 @@ export const UiDeleteProductButton = () => {
 		void navigate("/products");
 	};
 
-	return <button onClick={handleDeleteButtonClick}>삭제</button>;
+	return <UiButton onClick={handleDeleteButtonClick}>삭제</UiButton>;
 };
 ```
 
@@ -87,7 +87,7 @@ export const PgDeleteProductButton = () => {
 // page/detail/_pg-sales-legend-glyph.tsx
 // 프롭스가 도메인 타입 하나만 받고 훅도 부르지 않는다. 이 화면에서만 쓴다는 이유로 남아 있다.
 export const PgSalesLegendGlyph = (props: PgSalesLegendGlyphProps) => {
-	return <svg className={clsx("pg_salesLegendGlyph__root")}>{/* ... */}</svg>;
+	return <svg className={clsx("pg_salesLegendGlyph__root")}>{props.children}</svg>;
 };
 ```
 
@@ -96,7 +96,7 @@ export const PgSalesLegendGlyph = (props: PgSalesLegendGlyphProps) => {
 ```tsx
 // component/widget/sales-legend-glyph/wg-sales-legend-glyph.tsx
 export const WgSalesLegendGlyph = (props: WgSalesLegendGlyphProps) => {
-	return <svg className={clsx("wg_salesLegendGlyph__root")}>{/* ... */}</svg>;
+	return <svg className={clsx("wg_salesLegendGlyph__root")}>{props.children}</svg>;
 };
 ```
 
@@ -106,7 +106,7 @@ export const WgSalesLegendGlyph = (props: WgSalesLegendGlyphProps) => {
 // component/widget/line-chart/wg-line-chart.tsx
 // 프롭스가 좌표 배열만 받고 도메인 타입을 모른다. ui 부품을 조립했다는 이유로 widget에 있다.
 export const WgLineChart = (props: WgLineChartProps) => {
-	return <svg className={clsx("wg_lineChart__root")}>{/* ... */}</svg>;
+	return <svg className={clsx("wg_lineChart__root")}>{props.children}</svg>;
 };
 ```
 
@@ -115,7 +115,7 @@ export const WgLineChart = (props: WgLineChartProps) => {
 ```tsx
 // component/ui/line-chart/ui-line-chart.tsx
 export const UiLineChart = (props: UiLineChartProps) => {
-	return <svg className={clsx("ui_lineChart__root")}>{/* ... */}</svg>;
+	return <svg className={clsx("ui_lineChart__root")}>{props.children}</svg>;
 };
 
 // component/widget/sales-window-chart/wg-sales-window-chart.tsx

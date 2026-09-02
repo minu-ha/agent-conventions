@@ -121,6 +121,7 @@ const product_status = {
 **Incorrect (밖으로 나가는 키를 우리 표기로 바꿉니다):**
 
 ```ts
+// 서버 계약은 {product_id, display_name} 인데 우리 표기로 바꿔 보낸다
 /**
  * product 저장 요청 조립
  */

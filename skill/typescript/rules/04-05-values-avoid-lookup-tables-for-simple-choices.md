@@ -51,7 +51,9 @@ const order_status_by_api_code = {
 **Correct (외부 코드와 화면 상태의 대응 관계가 계약이면 이유를 남기고 조회표를 둡니다):**
 
 ```ts
-// GET /orders의 P·C·D 코드를 화면의 주문 상태 어휘로 바꾸는 API 경계 계약이다.
+/**
+ * GET /orders의 P·C·D 코드를 화면의 주문 상태 어휘로 바꾸는 API 경계 계약이다
+ */
 const order_status_by_api_code = {
 	P: "pending",
 	C: "completed",

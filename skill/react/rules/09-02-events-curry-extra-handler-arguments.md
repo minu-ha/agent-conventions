@@ -37,20 +37,20 @@ tags: events, handlers
 **Incorrect (인라인 래퍼로 인자를 넘깁니다):**
 
 ```tsx
-<li onClick={() => handleListItemClick(product.id)} />;
+<UiButton onClick={() => handleListItemClick(product.id)}>{product.name}</UiButton>;
 ```
 
 **Correct (JSX에는 팩토리 호출만 두고 감싸는 화살표를 만들지 않습니다):**
 
 ```tsx
-<li onClick={handleListItemClick(product.id)} />;
+<UiButton onClick={handleListItemClick(product.id)}>{product.name}</UiButton>;
 ```
 
 **Incorrect (블록 본문에서 안쪽 핸들러에 이름을 붙이고 팩토리에 With 접미사를 붙입니다):**
 
 ```tsx
-const handleListItemClickWithProductId = (productId: string): MouseEventHandler<HTMLLIElement> => {
-	const handleListItemClick: MouseEventHandler<HTMLLIElement> = (_event) => {
+const handleListItemClickWithProductId = (productId: string): MouseEventHandler<HTMLButtonElement> => {
+	const handleListItemClick: MouseEventHandler<HTMLButtonElement> = (_event) => {
 		toggleSelection(productId);
 	};
 
@@ -67,7 +67,7 @@ import type {MouseEventHandler} from "react";
  * 클릭한 항목을 이벤트 대신 팩토리 인자로 받아 어느 product인지 알아낸다
  */
 const handleListItemClick =
-	(productId: string): MouseEventHandler<HTMLLIElement> =>
+	(productId: string): MouseEventHandler<HTMLButtonElement> =>
 	(_event) => {
 		toggleSelection(productId);
 	};

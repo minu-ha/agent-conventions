@@ -17,7 +17,7 @@ tags: selector, state, negation
 선택자에 `:not()`을 쓰지 않습니다.
 그 상태가 아닐 때의 모습은 기본 블록에 두고, 그 상태일 때의 모습만 상태 블록에 둡니다.
 
-`:not()`이 나오는 원인은 하나입니다.
+`:not()`이 나오는 원인은 "아닐 때"를 조건으로 적으려 한 것입니다.
 
 > 조상의 수정자로 자손의 모습을 정하려 한 것입니다.
 
@@ -53,19 +53,13 @@ tags: selector, state, negation
 ```css
 .pg_salesPanel__spreadBox {
 	&::before {
-		content: '';
-		width: 18px;
-		height: 18px;
 		border: 2px solid #ced4da;
-		border-radius: 4px;
-		background: #fff;
 	}
 }
 
 .pg_salesPanel__spreadBox--selected {
 	&::before {
 		border-color: #9fadc7;
-		background: #9fadc7;
 	}
 }
 

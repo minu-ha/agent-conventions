@@ -29,50 +29,44 @@ tags: functions
 그 판정은 `types-reuse-existing-contracts-before-new-types`가 합니다.
 이 규칙을 지키려고 `*Params`나 `*Args`를 새로 만들지 않습니다.
 
-**Incorrect (시그니처에서 바로 구조분해합니다):**
+**Incorrect (위치 인자가 넷이라 호출부에서 순서를 외워야 합니다):**
 
 ```ts
-const toRequestUrl = ({baseUrl, resourcePath, searchParams}: ApiRequestTarget): URL => {
-	const requestUrl = new URL(resourcePath, baseUrl);
-
-	for (const [key, value] of Object.entries(searchParams)) {
-		requestUrl.searchParams.set(key, value);
-	}
-
-	return requestUrl;
+const fetchProductPage = (baseUrl: string, page: number, pageSize: number, keyword?: string): Promise<ProductPage> => {
+	/* … */
 };
+
+fetchProductPage(api_base_url, urlParams.page, pagination_default_page_size, undefined);
 ```
 
-**Incorrect (본문 첫 줄로 옮겼을 뿐 출처는 똑같이 지워집니다):**
-
-```ts
-const toRequestUrl = (target: ApiRequestTarget): URL => {
-	const {baseUrl, resourcePath, searchParams} = target;
-	const requestUrl = new URL(resourcePath, baseUrl);
-
-	for (const [key, value] of Object.entries(searchParams)) {
-		requestUrl.searchParams.set(key, value);
-	}
-
-	return requestUrl;
-};
-```
-
-**Correct (객체 전체를 받고 체인으로 읽습니다):**
+**Correct (매개변수를 객체로 묶고 그 타입을 파일 위쪽에 이름 붙여 선언합니다):**
 
 ```ts
 /**
- * 요청 URL 조립. searchParams는 set으로 넣어 baseUrl에 있던 같은 키를 덮는다.
- *
- * 입력 계약은 type/api-request-target.ts의 ApiRequestTarget을 그대로 쓴다
+ * product 목록 한 페이지 요청 조건
  */
-const toRequestUrl = (target: ApiRequestTarget): URL => {
-	const requestUrl = new URL(target.resourcePath, target.baseUrl);
+interface ProductPageRequest {
+	/**
+	 * 요청 기준 주소
+	 */
+	baseUrl: string;
+	/**
+	 * 1부터 세는 페이지 번호
+	 */
+	page: number;
+	/**
+	 * 한 페이지에 담을 개수
+	 */
+	pageSize: number;
+	/**
+	 * 검색어. 비우면 전체 목록이다
+	 */
+	keyword?: string;
+}
 
-	for (const [key, value] of Object.entries(target.searchParams)) {
-		requestUrl.searchParams.set(key, value);
-	}
-
-	return requestUrl;
+const fetchProductPage = (request: ProductPageRequest): Promise<ProductPage> => {
+	/* … */
 };
+
+fetchProductPage({baseUrl: api_base_url, page: urlParams.page, pageSize: pagination_default_page_size});
 ```

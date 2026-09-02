@@ -81,7 +81,7 @@ tags: values, motion
 /* src/page/products/pg-products.css */
 @media (prefers-reduced-motion: reduce) {
 	.pg_products__panel {
-		animation-duration: 0;
+		animation-duration: 0s;
 	}
 }
 ```

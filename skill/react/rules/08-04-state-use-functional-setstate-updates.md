@@ -18,22 +18,29 @@ tags: state, handlers
 한 이벤트 안에서 두 번 갱신하거나, `await` 뒤나 오래 사는 클로저 안에서 갱신하면 결과가 갈립니다.
 한 번만 부르는 갱신은 두 형태가 같은 결과를 내지만, 형태를 하나로 고정해 자리마다 다시 판단하지 않습니다.
 
-**Incorrect (현재 상태를 바깥 클로저에서 직접 읽습니다):**
+**Incorrect (오래 사는 콜백이 등록 시점의 상태를 붙잡습니다):**
 
 ```tsx
-// 한 이벤트에서 두 번 갱신한다. 둘 다 같은 렌더의 selectedUserIds를 읽어 첫 갱신이 지워진다
-const handleSelectRange = (fromUserId: string, toUserId: string) => {
-	setSelectedUserIds([...selectedUserIds, fromUserId]);
-	setSelectedUserIds([...selectedUserIds, toUserId]);
-};
+/**
+ * 새 참여자가 들어오면 선택 목록에 더한다
+ */
+useEffect(() => {
+	// 콜백은 등록 시점의 selectedUserIds 를 붙잡는다. 나중에 도착한 참여자가 옛 목록에 더해져 그사이 고른 항목이 지워진다
+	return subscribeToUserJoined((joinedUserId) => {
+		setSelectedUserIds([...selectedUserIds, joinedUserId]);
+	});
+}, []);
 ```
 
 **Correct (함수형 업데이터로 항상 최신 상태를 기준으로 갱신합니다):**
 
 ```tsx
-const handleSelectRange = (fromUserId: string, toUserId: string) => {
-	// 두 번째 갱신이 첫 갱신 결과를 받아야 해서 함수형 업데이터를 쓴다
-	setSelectedUserIds((currentUserIds) => [...currentUserIds, fromUserId]);
-	setSelectedUserIds((currentUserIds) => [...currentUserIds, toUserId]);
-};
+/**
+ * 새 참여자가 들어오면 선택 목록에 더한다
+ */
+useEffect(() => {
+	return subscribeToUserJoined((joinedUserId) => {
+		setSelectedUserIds((currentUserIds) => [...currentUserIds, joinedUserId]);
+	});
+}, []);
 ```

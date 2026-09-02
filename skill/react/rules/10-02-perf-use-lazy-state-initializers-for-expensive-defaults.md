@@ -25,13 +25,13 @@ tags: perf, state
 **Incorrect (비싼 초기화가 렌더마다 다시 평가됩니다):**
 
 ```tsx
-const [searchIndex] = useState(toSearchIndex(productList));
-const [draftFilter] = useState(JSON.parse(localStorage.getItem("product-filter") ?? "{}"));
+const [searchIndex] = useState(toSearchIndex(product_catalog));
+const [draftFilter] = useState(parseStoredProductFilter(localStorage.getItem("product-filter")));
 ```
 
 **Correct (비싼 초기화는 최초 렌더에서만 수행합니다):**
 
 ```tsx
-const [searchIndex] = useState(() => toSearchIndex(productList));
-const [draftFilter] = useState(() => JSON.parse(localStorage.getItem("product-filter") ?? "{}"));
+const [searchIndex] = useState(() => toSearchIndex(product_catalog));
+const [draftFilter] = useState(() => parseStoredProductFilter(localStorage.getItem("product-filter")));
 ```

@@ -2,7 +2,7 @@
 title: Group Breakpoints at the Bottom of the File
 titleKo: `@media` 브레이크포인트는 파일 아래 한 곳에 모읍니다
 impact: MEDIUM-HIGH
-impactDescription: 한 브레이크포인트에서 무엇이 달라지는지 한 블록에서 읽히고 두 방향이 겹치지 않습니다
+impactDescription: 한 브레이크포인트에서 무엇이 달라지는지 한 블록에서 읽힙니다
 appliesWhen:
   - `@media` 브레이크포인트를 추가하거나 옮길 때
   - 화면 폭에 따라 값이 달라지는 선언을 넣을 때
@@ -14,7 +14,7 @@ tags: selector, responsive
 
 ## Group Breakpoints at the Bottom of the File
 
-**Impact: MEDIUM-HIGH (한 브레이크포인트에서 무엇이 달라지는지 한 블록에서 읽히고 두 방향이 겹치지 않습니다)**
+**Impact: MEDIUM-HIGH (한 브레이크포인트에서 무엇이 달라지는지 한 블록에서 읽힙니다)**
 
 브레이크포인트 재선언은 파일 맨 아래 `@media` 블록에 모읍니다.
 클래스 블록 안에 `@media`를 중첩하지 않습니다.
@@ -90,10 +90,35 @@ tags: selector, responsive
 
 	.pg_products__layout {
 		grid-template-columns: 1fr;
+	}
+}
+```
 
-		&:hover {
-			background-color: var(--app-color-surface-hover);
-		}
+**Incorrect (같은 `@media` 블록을 파일마다 복사합니다):**
+
+```css
+/* src/page/products/pg-products.css */
+@media (width < 1024px) {
+	.pg_products__filterBar {
+		flex-direction: column;
+	}
+}
+
+/* src/page/orders/pg-orders.css */
+@media (width < 1024px) {
+	.pg_orders__filterBar {
+		flex-direction: column;
+	}
+}
+```
+
+**Correct (반복되는 배치를 컴포넌트 하나로 만들고 브레이크포인트는 그 파일에만 둡니다):**
+
+```css
+/* src/component/ui/filter-bar/ui-filter-bar.css */
+@media (width < 1024px) {
+	.ui_filterBar__root {
+		flex-direction: column;
 	}
 }
 ```

@@ -25,9 +25,9 @@
 
 `typescript/tooling-configure-biome-to-enforce-these-rules`가 세운 `noRestrictedImports`에 `overrides` 둘을 더합니다.
 하나는 레이어 방향입니다.
-`component/ui/**`에는 `@/component/widget/**`과 `@/page/**`를, `component/widget/**`에는 `@/page/**`를 막습니다.
+`src/component/ui/**`에는 `@/component/widget/**`과 `@/page/**`를, `src/component/widget/**`에는 `@/page/**`를 막습니다.
 다른 하나는 라우트 경계입니다.
-`page/<route>/**`마다 `@/page/**`를 막고 `!@/page/<route>/**`로 자기 라우트만 되살리는 항목을 둡니다.
+`src/page/<route>/**`마다 `@/page/**`를 막고 `!@/page/<route>/**`로 자기 라우트만 되살리는 항목을 둡니다.
 라우트가 늘면 항목도 늡니다.
 `overrides`는 규칙 옵션을 통째로 바꾸므로 기본 설정의 경로 패턴을 항목마다 함께 적습니다.
 

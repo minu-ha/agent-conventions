@@ -38,11 +38,14 @@ tags: screen, errors
 이벤트 핸들러와 비동기 콜백에서 난 오류는 경계를 그냥 지나칩니다.
 사용자 액션의 실패는 `data-handle-mutation-failure-where-it-is-called`가 정합니다.
 
-화면 층 경계는 `react-router`의 라우트 `ErrorBoundary`로 얹습니다.
-라우트 밖에서 감싸야 하면 진입 컴포넌트를 직접 감쌉니다.
+오류 경계 컴포넌트는 `ui`에 하나 둔 `UiErrorBoundary`입니다.
+리액트는 클래스 컴포넌트로만 경계를 만들 수 있어 그 클래스를 이 래퍼 하나에 가둡니다.
+화면 층은 `react-router` 라우트 설정의 `errorElement`로 얹습니다.
+라우트 밖에서 감싸야 하면 `UiErrorBoundary`로 진입을 감쌉니다.
 어느 쪽이든 경계를 어느 층에 두는지는 위 표가 정합니다.
 
-다시 시도를 열려면 대체 화면에 그 버튼을 두고, `@tanstack/react-query`의 `QueryErrorResetBoundary`와 함께 씁니다.
+다시 시도를 열려면 대체 화면에 그 버튼을 둡니다.
+그 버튼은 `@tanstack/react-query`의 `useQueryErrorResetBoundary`가 주는 `reset`을 함께 부릅니다.
 경계 안에서 상태를 되살릴 수 없으므로 다시 시도는 하위 트리를 새로 마운트합니다.
 
 **Incorrect (경계 없이 화면 본문에서 실패를 분기합니다):**
@@ -55,7 +58,7 @@ export const PgProducts = () => {
 		return <UiErrorState />;
 	}
 
-	return <UiTable dataSource={responseProductListSuspense.data.products} />;
+	return <UiTable rows={responseProductListSuspense.data.products} />;
 };
 ```
 
@@ -69,9 +72,9 @@ export const WgAppShell = (props: WgAppShellProps) => {
 			<WgAppNavigation />
 
 			<main className={clsx("wg_appShell__main")}>
-				<ErrorBoundary fallback={<UiScreenErrorState />}>
+				<UiErrorBoundary fallback={<UiScreenErrorState />}>
 					<Suspense fallback={<UiScreenSkeleton />}>{props.children}</Suspense>
-				</ErrorBoundary>
+				</UiErrorBoundary>
 			</main>
 		</div>
 	);
@@ -86,7 +89,7 @@ export const PgProducts = () => {
 	 */
 	const responseProductListSuspense = useProductListSuspense();
 
-	return <UiTable dataSource={responseProductListSuspense.data.products} />;
+	return <UiTable rows={responseProductListSuspense.data.products} />;
 };
 ```
 
@@ -101,14 +104,33 @@ export const PgProducts = () => {
 			{/**
 			 * 추천 목록이 실패해도 본문 표는 그대로 쓸 수 있다
 			 */}
-			<ErrorBoundary fallback={<UiInlineErrorState />}>
+			<UiErrorBoundary fallback={<UiInlineErrorState />}>
 				<Suspense fallback={<UiRecommendationSkeleton />}>
 					<PgProductRecommendationSection />
 				</Suspense>
-			</ErrorBoundary>
+			</UiErrorBoundary>
 
 			<PgProductTableSection />
 		</div>
+	);
+};
+```
+
+**Correct (다시 시도는 쿼리 오류 상태를 되돌리고 하위 트리를 새로 마운트합니다):**
+
+```tsx
+export const PgProductRecommendationBoundary = () => {
+	const queryErrorResetBoundary = useQueryErrorResetBoundary();
+
+	return (
+		<UiErrorBoundary
+			onReset={queryErrorResetBoundary.reset}
+			fallback={<UiInlineErrorState retryLabel="다시 불러오기" />}
+		>
+			<Suspense fallback={<UiRecommendationSkeleton />}>
+				<PgProductRecommendationSection />
+			</Suspense>
+		</UiErrorBoundary>
 	);
 };
 ```

@@ -315,11 +315,23 @@ type ExportRequestBody = Omit<GeneratedExportRequest, "requestedAt">;
 
 ```ts
 // 이미 있는 계약
+/**
+ * 사용자 화면 표시 문자열 계약
+ */
 interface UserFormatters {
+	/**
+	 * 상태 객체를 화면 문자열로
+	 */
 	toStateLabel: (state: Record<string, unknown>) => string;
+	/**
+	 * 권한 코드를 화면 문자열로
+	 */
 	toRoleLabel: (role: string) => string;
 }
 
+/**
+ * 상태 객체를 화면 문자열로 바꾼다
+ */
 const toStateLabel = (state: Record<string, unknown>): string => {
 	return JSON.stringify(state);
 };
@@ -468,6 +480,18 @@ const publishResultSchema = z.object({
 });
 ```
 
+**Correct (객체형 상수는 헤더만 달고 키에는 달지 않습니다):**
+
+```ts
+/**
+ * product 상태 코드. 서버 enum 과 같은 값이다
+ */
+export const product_status = {
+	draft: "draft",
+	published: "published",
+} as const;
+```
+
 ### 1.5 Mark Unused Parameters With an Underscore Prefix
 
 **Rule:** `T01-05` · `types-mark-unused-parameters-with-underscore`
@@ -489,10 +513,13 @@ const publishResultSchema = z.object({
 **Incorrect (계약의 일부인 콜백 매개변수를 조용히 생략합니다):**
 
 ```ts
+/**
+ * 로그 sink 콜백 계약
+ */
 type LogSink = (message: string, level: "info" | "error") => void;
 
 const noopLog: LogSink = () => {
-	// no-op sink
+	// 아무 일도 하지 않는 sink
 };
 ```
 
@@ -551,11 +578,8 @@ const storedFilter = JSON.parse(localStorage.getItem("product-filter") as string
 ```ts
 const storedValue = localStorage.getItem("product-filter");
 
-if (storedValue === null) {
-	throw new MissingStoredFilterError("product-filter");
-}
-
-const storedFilter = productFilterSchema.parse(JSON.parse(storedValue));
+// 처음 방문이면 저장된 필터가 없다. 없다는 사실을 그대로 둔다
+const storedFilter = storedValue === null ? undefined : productFilterSchema.parse(JSON.parse(storedValue));
 ```
 
 **Incorrect (`!`로 없을 수 있다는 사실을 지웁니다):**
@@ -1010,6 +1034,7 @@ const product_status = {
 **Incorrect (밖으로 나가는 키를 우리 표기로 바꿉니다):**
 
 ```ts
+// 서버 계약은 {product_id, display_name} 인데 우리 표기로 바꿔 보낸다
 /**
  * product 저장 요청 조립
  */
@@ -1075,8 +1100,6 @@ import {pagination_default_page_size, toDisplayDate, UserProfile} from "./index"
 import type {UserProfile} from "@/type/user-profile";
 import {pagination_default_page_size} from "@/constant/pagination";
 import {toDisplayDate} from "@/util/date/to-display-date";
-import {WgChartCard} from "@/component/widget/chart-card/wg-chart-card";
-import {toUserSaveRequest} from "@/page/users/_function/to-user-save-request";
 ```
 
 **Incorrect (`default`로 내보내 사용처마다 다른 이름이 생깁니다):**
@@ -1110,7 +1133,7 @@ import {UiTabs} from "@/component/ui/tabs/ui-tabs";
 
 **Rule:** `T02-05` · `naming-import-by-absolute-path`
 
-**Applies when:** 다른 모듈을 가져오는 경로를 쓸 때. `./`나 `../`로 시작하는 경로를 쓰거나 별칭 경로를 상대경로로 바꾸려 할 때.
+**Applies when:** 다른 모듈을 가져오는 경로를 쓸 때. `./`나 `../`로 시작하는 경로를 쓰거나 별칭 경로를 상대경로로 바꾸려 할 때. `src` 바로 아래 레이어 루트 폴더나 `store` 파일을 새로 만들 때.
 
 **Review with:** `naming-use-direct-imports-and-public-entry-points`
 
@@ -1162,10 +1185,8 @@ import {toSummary} from "../_function/to-summary";
 
 ```ts
 // page/detail/sales-trend-panel/pg-sales-trend-panel.tsx
-import {WgChartCard} from "@/component/widget/chart-card/wg-chart-card";
 import {toSummary} from "@/page/detail/_function/to-summary";
 import {PgDetectionSection} from "@/page/detail/sales-trend-panel/_pg-detection-section";
-import {PgSummaryBand} from "@/page/detail/summary-band/pg-summary-band";
 
 import "./pg-sales-trend-panel.css";
 ```
@@ -1301,6 +1322,7 @@ const salesReportVM: SalesReportViewModel = response.data;
 **Correct (한 조회 시점에 고정된 값이라는 역할을 이름에 표시합니다):**
 
 ```ts
+// page/sales-report/_type/report-snapshot.ts: 폴더가 이미 sales-report 를 말한다
 /**
  * 한 조회 시점의 보고서 목록과 조건
  */
@@ -1380,15 +1402,24 @@ export function toTrimmedTitle(rawTitle: string): string {
 	return rawTitle.trim().replace(/\s+/g, " ");
 }
 
+/**
+ * URL에 쓰는 product 식별 문자열
+ */
 export const toProductSlug = (title: string): string => {
 	return toTrimmedTitle(title).toLowerCase();
 };
 
+/**
+ * 상태에 맞는 배지
+ */
 export const toProductBadge = (product: Product): ProductBadge => ({
 	label: decorate(product.title),
 	tone: product.published ? "solid" : "muted",
 });
 
+/**
+ * 목록에 표시할 이름
+ */
 export const toProductLabel = (product: Product): string => {
 	return decorate(product.title);
 };
@@ -1401,14 +1432,23 @@ function decorate(title: string): string {
 **Correct (모두 `const` 화살표에 블록 본문을 씁니다):**
 
 ```ts
+/**
+ * 앞뒤 공백을 지운 제목
+ */
 export const toTrimmedTitle = (rawTitle: string): string => {
 	return rawTitle.trim().replace(/\s+/g, " ");
 };
 
+/**
+ * URL에 쓰는 product 식별 문자열
+ */
 export const toProductSlug = (title: string): string => {
 	return toTrimmedTitle(title).toLowerCase();
 };
 
+/**
+ * 상태에 맞는 배지
+ */
 export const toProductBadge = (product: Product): ProductBadge => {
 	return {
 		label: decorate(product.title),
@@ -1416,6 +1456,9 @@ export const toProductBadge = (product: Product): ProductBadge => {
 	};
 };
 
+/**
+ * 목록에 표시할 이름
+ */
 export const toProductLabel = (product: Product): string => {
 	return decorate(product.title);
 };
@@ -1447,6 +1490,9 @@ export const cell_formatter_by_value_type = {
 	},
 } as const;
 
+/**
+ * product 식별자 목록
+ */
 export const toProductIds = (products: Product[]): string[] => {
 	return products.map((product) => product.id);
 };
@@ -1492,52 +1538,46 @@ export class ProductCursor {
 그 판정은 `types-reuse-existing-contracts-before-new-types`가 합니다.
 이 규칙을 지키려고 `*Params`나 `*Args`를 새로 만들지 않습니다.
 
-**Incorrect (시그니처에서 바로 구조분해합니다):**
+**Incorrect (위치 인자가 넷이라 호출부에서 순서를 외워야 합니다):**
 
 ```ts
-const toRequestUrl = ({baseUrl, resourcePath, searchParams}: ApiRequestTarget): URL => {
-	const requestUrl = new URL(resourcePath, baseUrl);
-
-	for (const [key, value] of Object.entries(searchParams)) {
-		requestUrl.searchParams.set(key, value);
-	}
-
-	return requestUrl;
+const fetchProductPage = (baseUrl: string, page: number, pageSize: number, keyword?: string): Promise<ProductPage> => {
+	/* … */
 };
+
+fetchProductPage(api_base_url, urlParams.page, pagination_default_page_size, undefined);
 ```
 
-**Incorrect (본문 첫 줄로 옮겼을 뿐 출처는 똑같이 지워집니다):**
-
-```ts
-const toRequestUrl = (target: ApiRequestTarget): URL => {
-	const {baseUrl, resourcePath, searchParams} = target;
-	const requestUrl = new URL(resourcePath, baseUrl);
-
-	for (const [key, value] of Object.entries(searchParams)) {
-		requestUrl.searchParams.set(key, value);
-	}
-
-	return requestUrl;
-};
-```
-
-**Correct (객체 전체를 받고 체인으로 읽습니다):**
+**Correct (매개변수를 객체로 묶고 그 타입을 파일 위쪽에 이름 붙여 선언합니다):**
 
 ```ts
 /**
- * 요청 URL 조립. searchParams는 set으로 넣어 baseUrl에 있던 같은 키를 덮는다.
- *
- * 입력 계약은 type/api-request-target.ts의 ApiRequestTarget을 그대로 쓴다
+ * product 목록 한 페이지 요청 조건
  */
-const toRequestUrl = (target: ApiRequestTarget): URL => {
-	const requestUrl = new URL(target.resourcePath, target.baseUrl);
+interface ProductPageRequest {
+	/**
+	 * 요청 기준 주소
+	 */
+	baseUrl: string;
+	/**
+	 * 1부터 세는 페이지 번호
+	 */
+	page: number;
+	/**
+	 * 한 페이지에 담을 개수
+	 */
+	pageSize: number;
+	/**
+	 * 검색어. 비우면 전체 목록이다
+	 */
+	keyword?: string;
+}
 
-	for (const [key, value] of Object.entries(target.searchParams)) {
-		requestUrl.searchParams.set(key, value);
-	}
-
-	return requestUrl;
+const fetchProductPage = (request: ProductPageRequest): Promise<ProductPage> => {
+	/* … */
 };
+
+fetchProductPage({baseUrl: api_base_url, page: urlParams.page, pageSize: pagination_default_page_size});
 ```
 
 ### 3.3 Extract Support Functions Only When the Boundary Is Real
@@ -1632,7 +1672,7 @@ const handleNextClick = () => {
 **Correct (`.map()` 콜백 하나에만 쓰이는 변환은 그 자리에 둡니다):**
 
 ```ts
-// page/product/_function/to-product-view.ts
+// page/product/_function/to-product-view.ts: 목록과 상세 두 파일이 부른다
 /**
  * product 표시 모델 조립. 라벨 이름이 비면 코드를 보여 준다
  */
@@ -1852,15 +1892,18 @@ const toOffsetTable = (): number[] => {
 **Correct (모듈을 불러올 때 계산되는 선언은 자기가 부르는 선언 뒤에 둡니다):**
 
 ```ts
-export const toCycleOffsets = (): number[] => {
-	return cycle_offsets;
+/**
+ * 지원하는 로케일인지 판정
+ */
+export const isSupportedLocale = (locale: string): boolean => {
+	return supported_locale_set.has(locale);
 };
 
-const toOffsetTable = (): number[] => {
-	return [0, 31, 59];
+const toSupportedLocaleSet = (): Set<string> => {
+	return new Set(Object.keys(locale_label));
 };
 
-const cycle_offsets = toOffsetTable();
+const supported_locale_set = toSupportedLocaleSet();
 ```
 
 ### 3.6 Promote Owner-Free Functions to the Root util Folder
@@ -1981,8 +2024,7 @@ export const toDisplayDate = (value: string): string => {
  * 금액 표시는 화면마다 다르지 않다. 소수 두 자리와 부호를 고정한다
  */
 export const toSignedAmount = (amount: Amount): string => {
-	const sign = amount.value < 0 ? "-" : "+";
-	return `${sign}$${Math.abs(amount.value).toFixed(2)}`;
+	return `${amount.value < 0 ? "-" : "+"}$${Math.abs(amount.value).toFixed(2)}`;
 };
 ```
 
@@ -2161,8 +2203,8 @@ const toRowLabel = (row: Row): string => {
 ```ts
 const toRowAction = (row: Row): RowAction => {
 	return row.status === product_status.draft && !row.lockedAt && row.ownerId === session.userId
-		? rowAction.edit
-		: rowAction.view;
+		? row_action.edit
+		: row_action.view;
 };
 ```
 
@@ -2172,7 +2214,7 @@ const toRowAction = (row: Row): RowAction => {
 const toRowAction = (row: Row): RowAction => {
 	const isEditable = row.status === product_status.draft && !row.lockedAt && row.ownerId === session.userId;
 
-	return isEditable ? rowAction.edit : rowAction.view;
+	return isEditable ? row_action.edit : row_action.view;
 };
 ```
 
@@ -2243,9 +2285,8 @@ const submitDraft = async (draft: Draft) => {
 | `normalize<대상>` | 같은 개념의 값을 허용 범위나 기본 표현에 맞출 때 | `normalizePageSize` |
 | `parse<대상>` | 문자열·`unknown`을 검증하며 타입이 보장된 값으로 읽을 때 | `parseSearchParams` |
 | `format<대상>` | 값을 사람이 읽는 문자열로 표시할 때 | `formatCandidateDayCount` |
-| `compare<대상>` | 두 값을 비교해 정렬 순서를 돌려줄 때 | `compareIndexedDriver` |
-| `sort<대상>` | 정렬한 목록을 돌려줄 때 | `sortProductsByUpdatedAt` |
-| `load<대상>`·`fetch<대상>` | 비동기 I/O를 수행하거나 여러 요청을 조율할 때 | `loadPatternSearchExport` |
+| `compare<대상>` | 두 값을 비교해 정렬 순서를 돌려줄 때 | `compareProductsByPrice` |
+| `load<대상>`·`fetch<대상>` | 비동기 I/O를 수행하거나 여러 요청을 조율할 때 | `loadProductExport` |
 | `is`·`has`·`can`·`should` | 참이나 거짓으로 질문에 답할 때 | `shouldShowSummary` |
 
 `resolve`와 `normalize`는 계산 과정이 복잡하다는 이유만으로 붙이지 않습니다.
@@ -2304,10 +2345,19 @@ export const processUserRows = (rows: UserRow[]) => { /* … */ };
 export const toUserSaveRequest = (formValues: UserFormValues) => { /* … */ };
 
 /**
+ * 응답 한 건을 표 행으로 바꾼다
+ */
+export const toUserRows = (response: UserResponse) => { /* … */ };
+
+/**
  * 비활성 사용자를 제외한 목록
  */
 export const toActiveUsers = (rows: UserRow[]) => { /* … */ };
+```
 
+**Correct (값 대신 효과를 내는 함수는 그 효과와 판정으로 이름 짓습니다):**
+
+```ts
 /**
  * 관리자 권한 판정. 역할 목록이 비어 있으면 조회 전 상태로 보고 false를 돌려준다
  */
@@ -2512,7 +2562,7 @@ const currency = pricing_default_currency;
 const toInvoiceTotal = (lines: InvoiceLine[]): InvoiceTotal => {
 	return {
 		currency,
-		amount: lines.reduce((sum, line) => sum + line.amount, 0),
+		amount: sumBy(lines, (line) => line.amount),
 	};
 };
 ```
@@ -2540,7 +2590,7 @@ const toInvoiceLine = (input: InvoiceLineInput): InvoiceLine => {
 const toInvoiceTotal = (lines: InvoiceLine[]): InvoiceTotal => {
 	return {
 		currency: pricing_default_currency,
-		amount: lines.reduce((sum, line) => sum + line.amount, 0),
+		amount: sumBy(lines, (line) => line.amount),
 	};
 };
 
@@ -2635,13 +2685,13 @@ const toPreviewRows = (rows: Row[]): Row[] => {
 /**
  * 이 횟수를 넘으면 사용자에게 실패를 보여 준다
  */
-export const retry_max_attempts = 42;
+export const retry_max_attempts = 3;
 
 // constant/preview.ts
 /**
  * 미리보기에 그릴 행 수. 서버가 한 번에 주는 최대치와 맞춘다
  */
-export const preview_row_count = 37;
+export const preview_row_count = 20;
 
 // page/products/pg-products.tsx
 import {preview_row_count} from "@/constant/preview";
@@ -2735,7 +2785,9 @@ const order_status_by_api_code = {
 **Correct (외부 코드와 화면 상태의 대응 관계가 계약이면 이유를 남기고 조회표를 둡니다):**
 
 ```ts
-// GET /orders의 P·C·D 코드를 화면의 주문 상태 어휘로 바꾸는 API 경계 계약이다.
+/**
+ * GET /orders의 P·C·D 코드를 화면의 주문 상태 어휘로 바꾸는 API 경계 계약이다
+ */
 const order_status_by_api_code = {
 	P: "pending",
 	C: "completed",
@@ -2920,7 +2972,7 @@ import dayjs from "dayjs";
 
 import {date_format} from "@/constant/date";
 
-const expiresAt = dayjs(issuedAt).add(7, "day");
+const expiresAt = dayjs(issuedAt).add(token_expiry_days, "day");
 const expiresLabel = expiresAt.format(date_format);
 ```
 
@@ -2939,7 +2991,7 @@ const isValidDateText = /^\d{4}-\d{2}-\d{2}$/.test(dateText);
 └ 계산하거나 형식을 바꿔야 함
    │
    ├ 형식만 바꿈 ──────→ dayjs(value).format(date_format)
-   ├ 더하거나 뺌 ──────→ dayjs(value).add(7, "day")
+   ├ 더하거나 뺌 ──────→ dayjs(value).add(token_expiry_days, "day")
    └ 값이 유효한지 봄 ─→ format 한 결과가 원래 문자열과 같은지 본다
 ```
 
@@ -3144,13 +3196,11 @@ setVisibleRowCount(effectivePageSize);
 `docs-justify-convention-exceptions-with-a-reason-comment`가 따로 정합니다.
 이 규칙은 본문 안 어디에 어떤 형태로 다는지를 봅니다.
 
-**Incorrect (지역 선언에 코드를 옮겨 적은 블록 주석을 답니다):**
+**Incorrect (지역 선언에 코드를 옮겨 적은 주석을 답니다):**
 
 ```ts
 const toMatchedProducts = (products: Product[], keyword: string) => {
-	/**
-	 * keyword를 소문자로 바꾼다.
-	 */
+	// keyword를 소문자로 바꾼다.
 	const lowerKeyword = keyword.trim().toLowerCase();
 
 	return products.filter((product) => product.title.toLowerCase().includes(lowerKeyword));
@@ -3238,7 +3288,7 @@ const submitProductDraft = async (draft: ProductDraft) => {
 
 ```ts
 export const toSortedUserIds = (userIds: string[]): string[] => {
-	return Array.from(new Set(userIds)).sort();
+	return uniq(userIds).toSorted();
 };
 ```
 
@@ -3249,7 +3299,7 @@ export const toSortedUserIds = (userIds: string[]): string[] => {
  * 중복 제거 후 사용자 ID 정렬
  */
 export const toSortedUserIds = (userIds: string[]): string[] => {
-	return Array.from(new Set(userIds)).sort();
+	return uniq(userIds).toSorted();
 };
 
 /**
@@ -3301,15 +3351,15 @@ const responseProductList = useProductList();
 /**
  * This function sorts rule refs and returns the result.
  */
-export const sortRuleRefs = (refs: RuleRef[]): RuleRef[] => {
-	return Array.from(new Set(refs)).sort();
+export const toSortedRuleRefs = (refs: RuleRef[]): RuleRef[] => {
+	return uniq(refs).toSorted();
 };
 
 /**
  * 규칙 참조를 정렬하는 함수
  */
-export const sortRuleRefs = (refs: RuleRef[]): RuleRef[] => {
-	return Array.from(new Set(refs)).sort();
+export const toSortedRuleRefs = (refs: RuleRef[]): RuleRef[] => {
+	return uniq(refs).toSorted();
 };
 
 /**
@@ -3326,8 +3376,8 @@ export interface PgProductTreeProps {
 /**
  * 중복을 제거한 뒤 정렬한다. 호출부가 목록을 다시 정렬하지 않아도 되게 하려는 것이다.
  */
-export const sortRuleRefs = (refs: RuleRef[]): RuleRef[] => {
-	return Array.from(new Set(refs)).sort();
+export const toSortedRuleRefs = (refs: RuleRef[]): RuleRef[] => {
+	return uniq(refs).toSorted();
 };
 
 /**
@@ -3336,8 +3386,8 @@ export const sortRuleRefs = (refs: RuleRef[]): RuleRef[] => {
  * 서버가 같은 updatedAt 인 항목의 순서를 보장하지 않아
  * 목록이 새로고침할 때마다 흔들리는 문제가 있었다.
  */
-export const sortProductsByUpdatedAt = (products: Product[]): Product[] => {
-	return [...products].sort((left, right) => right.updatedAt.localeCompare(left.updatedAt));
+export const toProductsNewestFirst = (products: Product[]): Product[] => {
+	return orderBy(products, ["updatedAt"], ["desc"]);
 };
 
 /**
@@ -3388,7 +3438,7 @@ export const fetchProductList = async (): Promise<Product[]> => {
 
 - `/** 한 줄 */` 형태는 쓰지 않습니다.
 - 선언이 무엇인지 설명할 때는 `//`를 쓰지 않습니다.
-  그 형식은 `docs-justify-convention-exceptions-with-a-reason-comment`가 정합니다.
+  `//`는 `docs-justify-convention-exceptions-with-a-reason-comment`가 정한 예외 이유 주석 자리입니다.
 - 어느 선언에 붙일지는 `docs-require-header-jsdoc-on-key-declarations`가 정합니다.
 - 어떤 태그를 붙일지는 `docs-write-concise-korean-comments-about-purpose-and-constraints`가 정합니다.
 
@@ -3450,6 +3500,7 @@ export const saveProduct = async (product: Product): Promise<void> => {
 그런 주석은 예외 조건을 채우지 못합니다.
 
 주석은 예외가 일어나는 줄 바로 위에 `//`로 씁니다.
+헤더 문서 주석이 있는 선언의 예외 이유는 그 헤더 블록 안에 적습니다.
 JSX 자식 자리에는 `//`가 없어 프레임워크 규칙이 정한 형태로 씁니다.
 어투와 내용은 `docs-write-concise-korean-comments-about-purpose-and-constraints`를 따릅니다.
 
@@ -3457,14 +3508,14 @@ JSX 자식 자리에는 `//`가 없어 프레임워크 규칙이 정한 형태�
 
 ```ts
 // 성능을 위해 메모이제이션
-const columns = useMemo(() => toTableColumns(response.data.columns), [response.data.columns]);
+const columns = useMemo(() => toTableColumns(responseTableColumnsSuspense.data.columns), [responseTableColumnsSuspense.data.columns]);
 ```
 
 **Correct (외부 패키지의 제약을 가리킵니다):**
 
 ```ts
-// ag-grid는 columnDefs 참조가 바뀌면 컬럼 상태를 초기화한다. 참조를 고정해야 한다.
-const columns = useMemo(() => toTableColumns(response.data.columns), [response.data.columns]);
+// 외부 표 라이브러리는 columns 참조가 바뀌면 컬럼 상태를 초기화한다. 참조를 고정해야 한다.
+const columns = useMemo(() => toTableColumns(responseTableColumnsSuspense.data.columns), [responseTableColumnsSuspense.data.columns]);
 ```
 
 **Incorrect (막연한 말이라 무엇을 재서 넣었는지 알 수 없습니다):**
@@ -3634,7 +3685,7 @@ const filteredRows = useMemo(() => rows.filter((row) => matchRow(row, deferredKe
 	},
 	"overrides": [
 		{
-			"includes": ["test/**/*.ts"],
+			"includes": ["**/*.test.ts"],
 			"linter": {"rules": {"style": {"noMagicNumbers": "off"}}}
 		},
 		{

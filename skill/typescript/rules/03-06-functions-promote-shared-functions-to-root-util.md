@@ -124,7 +124,6 @@ export const toDisplayDate = (value: string): string => {
  * 금액 표시는 화면마다 다르지 않다. 소수 두 자리와 부호를 고정한다
  */
 export const toSignedAmount = (amount: Amount): string => {
-	const sign = amount.value < 0 ? "-" : "+";
-	return `${sign}$${Math.abs(amount.value).toFixed(2)}`;
+	return `${amount.value < 0 ? "-" : "+"}$${Math.abs(amount.value).toFixed(2)}`;
 };
 ```

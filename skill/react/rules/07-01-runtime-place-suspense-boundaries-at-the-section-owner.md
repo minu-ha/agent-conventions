@@ -56,6 +56,30 @@ export const PgProductTreeSection = () => {
 	 */
 	const responseProductTreeSuspense = useProductTreeSuspense();
 
-	return <UiTree treeData={responseProductTreeSuspense.data.categoryNodes} />;
+	return <UiTree items={responseProductTreeSuspense.data.categoryNodes} />;
+};
+```
+
+**Correct (라우트 진입이 직접 쿼리를 부르면 진입을 감싸는 레이아웃이 경계를 가집니다):**
+
+```tsx
+// page/products/pg-products.tsx: 섹션이 따로 없어 진입이 쿼리를 부른다. 경계는 이 진입을 그리는 셸이 갖는다
+export const PgProducts = () => {
+	const responseProductListSuspense = useProductListSuspense();
+
+	return <UiTable rows={responseProductListSuspense.data.products} />;
+};
+```
+
+**Incorrect (한 화면에 경계를 여러 겹 쌓습니다):**
+
+```tsx
+// 진입 파일이 이미 경계를 갖는데 섹션 안에서 같은 쿼리를 다시 감싼다
+export const PgProductTreeSection = () => {
+	return (
+		<Suspense fallback={<PgProductTreeSkeleton />}>
+			<PgProductTreeInner />
+		</Suspense>
+	);
 };
 ```

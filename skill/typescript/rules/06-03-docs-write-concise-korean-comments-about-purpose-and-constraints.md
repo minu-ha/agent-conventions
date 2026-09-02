@@ -48,15 +48,15 @@ tags: docs, comments
 /**
  * This function sorts rule refs and returns the result.
  */
-export const sortRuleRefs = (refs: RuleRef[]): RuleRef[] => {
-	return Array.from(new Set(refs)).sort();
+export const toSortedRuleRefs = (refs: RuleRef[]): RuleRef[] => {
+	return uniq(refs).toSorted();
 };
 
 /**
  * 규칙 참조를 정렬하는 함수
  */
-export const sortRuleRefs = (refs: RuleRef[]): RuleRef[] => {
-	return Array.from(new Set(refs)).sort();
+export const toSortedRuleRefs = (refs: RuleRef[]): RuleRef[] => {
+	return uniq(refs).toSorted();
 };
 
 /**
@@ -73,8 +73,8 @@ export interface PgProductTreeProps {
 /**
  * 중복을 제거한 뒤 정렬한다. 호출부가 목록을 다시 정렬하지 않아도 되게 하려는 것이다.
  */
-export const sortRuleRefs = (refs: RuleRef[]): RuleRef[] => {
-	return Array.from(new Set(refs)).sort();
+export const toSortedRuleRefs = (refs: RuleRef[]): RuleRef[] => {
+	return uniq(refs).toSorted();
 };
 
 /**
@@ -83,8 +83,8 @@ export const sortRuleRefs = (refs: RuleRef[]): RuleRef[] => {
  * 서버가 같은 updatedAt 인 항목의 순서를 보장하지 않아
  * 목록이 새로고침할 때마다 흔들리는 문제가 있었다.
  */
-export const sortProductsByUpdatedAt = (products: Product[]): Product[] => {
-	return [...products].sort((left, right) => right.updatedAt.localeCompare(left.updatedAt));
+export const toProductsNewestFirst = (products: Product[]): Product[] => {
+	return orderBy(products, ["updatedAt"], ["desc"]);
 };
 
 /**

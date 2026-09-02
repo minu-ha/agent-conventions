@@ -1,7 +1,7 @@
 # TypeScript 컨벤션 Rule Index
 
 - Skill: `typescript`
-- Routing digest: `sha256:29766147a2d399f7fd3bd1078baf41e82f73c4978f9799fb48493e283d0c39b7`
+- Routing digest: `sha256:b6c435a7183915f52178cba44a624ed7369d21bcf04d8d42ca53edba3a03d36b`
 
 ## Local Rules
 
@@ -17,7 +17,7 @@
 - T02-02 | naming-place-owner-constants-in-the-owner-constant-folder | 한 소유자의 상수나 선언형 계약을 추가하거나 옮길 때. 루트 상수와 소유자 전용 상수 사이에서 위치를 바꿀 때. | reviewWith: naming-place-project-constants-in-the-root-constant-folder
 - T02-03 | naming-use-consistent-file-and-symbol-naming | TypeScript 파일, 폴더, 변수, 함수, 타입, 객체·스키마 키의 이름을 새로 만들거나 바꿀 때. 밖으로 나가는 키를 받는 쪽 표기로 적을지 판단할 때. 제외: 별칭 없이 외부 패키지에서 그대로 가져오는 경우.
 - T02-04 | naming-use-direct-imports-and-public-entry-points | 가져오기, 내보내기, \`index.ts\` 배럴, 공개 진입점, 소유자 보조 모듈의 경계를 추가·변경할 때. 같은 경로에서 값과 타입 중 무엇을 가져올지 추가·삭제·전환할 때. | reviewWith: naming-import-by-absolute-path
-- T02-05 | naming-import-by-absolute-path | 다른 모듈을 가져오는 경로를 쓸 때. \`./\`나 \`../\`로 시작하는 경로를 쓰거나 별칭 경로를 상대경로로 바꾸려 할 때. | reviewWith: naming-use-direct-imports-and-public-entry-points
+- T02-05 | naming-import-by-absolute-path | 다른 모듈을 가져오는 경로를 쓸 때. \`./\`나 \`../\`로 시작하는 경로를 쓰거나 별칭 경로를 상대경로로 바꾸려 할 때. \`src\` 바로 아래 레이어 루트 폴더나 \`store\` 파일을 새로 만들 때. | reviewWith: naming-use-direct-imports-and-public-entry-points
 - T02-06 | naming-read-environment-values-through-config-env | \`import.meta.env\`나 \`process.env\`를 읽는 코드를 추가·이동할 때. 환경마다 달라지는 값이나 기능 플래그를 새로 들여올 때. | reviewWith: absence-expose-optional-values-instead-of-silent-fallbacks, naming-place-project-constants-in-the-root-constant-folder
 - T02-07 | naming-name-types-by-role-and-lifetime | 타입·인터페이스나 그 파일의 이름을 새로 만들거나 바꿀 때. 타입을 소유자 폴더 안과 밖 사이에서 옮기며 이름을 바꿀 때. 제외: 외부·생성된 계약 이름을 그대로 쓰는 경우. | reviewWith: naming-use-consistent-file-and-symbol-naming
 - T03-01 | functions-declare-functions-as-arrow-consts | 이름을 지어 선언하는 함수를 새로 만들거나 선언 형태나 본문 형태를 바꿀 때. 객체 프로퍼티에 함수를 담거나 그 형태를 바꿀 때. 제외: 인라인 콜백이나 커링의 바깥 화살표인 경우. 제외: 클래스 메서드, 제너레이터, 오버로드 선언인 경우. | reviewWith: functions-use-named-object-params-for-complex-signatures

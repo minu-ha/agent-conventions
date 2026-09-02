@@ -20,6 +20,17 @@ tags: events, handlers, effects
 **Incorrect (사용자 액션을 상태 + 이펙트로 모델링합니다):**
 
 ```tsx
+/**
+ * 생성에 성공하면 목록으로 돌아간다
+ */
+const mutationProductCreate = useProductCreate({
+	mutation: {
+		onSuccess: () => {
+			void navigate("/products");
+		},
+	},
+});
+
 const [shouldSubmit, setShouldSubmit] = useState(false);
 
 useEffect(() => {
@@ -39,7 +50,7 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => 
 
 ```tsx
 /**
- * 생성에 성공하면 목록으로 돌아간다. 이 흐름은 화면 이동까지 한 번에 끝난다
+ * 생성에 성공하면 목록으로 돌아간다
  */
 const mutationProductCreate = useProductCreate({
 	mutation: {

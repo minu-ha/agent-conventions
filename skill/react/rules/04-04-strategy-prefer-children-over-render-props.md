@@ -64,14 +64,23 @@ export interface UiPanelPartProps {
 	children: ReactNode;
 }
 
+/**
+ * 패널 틀
+ */
 const UiPanelRoot = (props: UiPanelPartProps) => {
 	return <section className={clsx("ui_panel__root")}>{props.children}</section>;
 };
 
+/**
+ * 패널 위쪽 제목 자리
+ */
 const UiPanelHeader = (props: UiPanelPartProps) => {
 	return <header className={clsx("ui_panel__header")}>{props.children}</header>;
 };
 
+/**
+ * 패널 아래쪽 동작 자리
+ */
 const UiPanelFooter = (props: UiPanelPartProps) => {
 	return <footer className={clsx("ui_panel__footer")}>{props.children}</footer>;
 };

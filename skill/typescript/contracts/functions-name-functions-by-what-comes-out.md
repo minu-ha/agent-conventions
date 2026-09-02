@@ -14,9 +14,8 @@
 | `normalize<대상>` | 같은 개념의 값을 허용 범위나 기본 표현에 맞출 때 | `normalizePageSize` |
 | `parse<대상>` | 문자열·`unknown`을 검증하며 타입이 보장된 값으로 읽을 때 | `parseSearchParams` |
 | `format<대상>` | 값을 사람이 읽는 문자열로 표시할 때 | `formatCandidateDayCount` |
-| `compare<대상>` | 두 값을 비교해 정렬 순서를 돌려줄 때 | `compareIndexedDriver` |
-| `sort<대상>` | 정렬한 목록을 돌려줄 때 | `sortProductsByUpdatedAt` |
-| `load<대상>`·`fetch<대상>` | 비동기 I/O를 수행하거나 여러 요청을 조율할 때 | `loadPatternSearchExport` |
+| `compare<대상>` | 두 값을 비교해 정렬 순서를 돌려줄 때 | `compareProductsByPrice` |
+| `load<대상>`·`fetch<대상>` | 비동기 I/O를 수행하거나 여러 요청을 조율할 때 | `loadProductExport` |
 | `is`·`has`·`can`·`should` | 참이나 거짓으로 질문에 답할 때 | `shouldShowSummary` |
 
 `resolve`와 `normalize`는 계산 과정이 복잡하다는 이유만으로 붙이지 않습니다.

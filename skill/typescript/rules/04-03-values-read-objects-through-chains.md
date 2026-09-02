@@ -60,7 +60,7 @@ const currency = pricing_default_currency;
 const toInvoiceTotal = (lines: InvoiceLine[]): InvoiceTotal => {
 	return {
 		currency,
-		amount: lines.reduce((sum, line) => sum + line.amount, 0),
+		amount: sumBy(lines, (line) => line.amount),
 	};
 };
 ```
@@ -88,7 +88,7 @@ const toInvoiceLine = (input: InvoiceLineInput): InvoiceLine => {
 const toInvoiceTotal = (lines: InvoiceLine[]): InvoiceTotal => {
 	return {
 		currency: pricing_default_currency,
-		amount: lines.reduce((sum, line) => sum + line.amount, 0),
+		amount: sumBy(lines, (line) => line.amount),
 	};
 };
 

@@ -6,6 +6,7 @@ impactDescription: 경로 모양이 하나라 가져오는 줄만 보고 어디�
 appliesWhen:
   - 다른 모듈을 가져오는 경로를 쓸 때
   - `./`나 `../`로 시작하는 경로를 쓰거나 별칭 경로를 상대경로로 바꾸려 할 때
+  - `src` 바로 아래 레이어 루트 폴더나 `store` 파일을 새로 만들 때
 reviewWith: naming-use-direct-imports-and-public-entry-points
 tags: naming, imports
 ---
@@ -60,10 +61,8 @@ import {toSummary} from "../_function/to-summary";
 
 ```ts
 // page/detail/sales-trend-panel/pg-sales-trend-panel.tsx
-import {WgChartCard} from "@/component/widget/chart-card/wg-chart-card";
 import {toSummary} from "@/page/detail/_function/to-summary";
 import {PgDetectionSection} from "@/page/detail/sales-trend-panel/_pg-detection-section";
-import {PgSummaryBand} from "@/page/detail/summary-band/pg-summary-band";
 
 import "./pg-sales-trend-panel.css";
 ```

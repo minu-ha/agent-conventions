@@ -1,7 +1,7 @@
 # CSS 컨벤션 Rule Index
 
 - Skill: `css`
-- Routing digest: `sha256:fada467bd7f843a4fbd1b4d33a90897728d56439991bb72da3930d37c3e906f5`
+- Routing digest: `sha256:1829659700c68cd2305d1c146940fa70968424f45f269a09f3f70c9bb8a4e225`
 
 ## Direct Companions
 
@@ -38,7 +38,7 @@
 - C05-05 | values-name-tokens-by-purpose | 색·그림자·간격·층 같은 디자인 토큰을 새로 만들거나 이름을 바꿀 때. 토큰 파일에 \`white\`, \`gray-100\`처럼 값을 말하는 이름을 넣거나 뺄 때. | reviewWith: values-switch-themes-by-changing-token-values, values-tokenize-repeated-visual-values
 - C06-01 | layout-group-breakpoints-at-the-file-bottom | \`@media\` 브레이크포인트를 추가하거나 옮길 때. 화면 폭에 따라 값이 달라지는 선언을 넣을 때. | reviewWith: layout-reach-for-intrinsic-sizing-before-breakpoints, layout-write-breakpoints-desktop-first, selector-declare-each-class-in-one-block, values-switch-themes-by-changing-token-values
 - C06-02 | layout-write-breakpoints-desktop-first | \`@media\` 조건을 쓰거나 브레이크포인트 숫자를 고를 때. \`min-width\`나 \`max-width\` 표기를 쓸 때. 제외: \`prefers-color-scheme\` 같은 폭이 아닌 조건을 쓰는 경우. | reviewWith: layout-group-breakpoints-at-the-file-bottom, tooling-configure-stylelint-to-enforce-these-rules
-- C06-03 | layout-keep-layout-intent-explicit | \`sticky\`·\`fixed\`, \`z-index\`, 강제 \`width\`·\`height\`, 부모·자식 레이아웃 책임을 추가·변경할 때. 로딩 대체 화면의 컨테이너나 높이를 정할 때. 제외: 같은 요소를 기본과 수정자로 나누면서 기존 \`display\`·여백 선언을 값 그대로 옮기는 경우. | reviewWith: values-declare-stacking-layers-as-tokens
+- C06-03 | layout-keep-layout-intent-explicit | \`sticky\`·\`fixed\`, \`z-index\`, 부모·자식 레이아웃 책임을 추가·변경할 때. 로딩 대체 화면의 컨테이너나 높이를 정할 때. 제외: 같은 요소를 기본과 수정자로 나누면서 기존 \`display\`·여백 선언을 값 그대로 옮기는 경우. | reviewWith: values-declare-stacking-layers-as-tokens
 - C06-04 | layout-reach-for-intrinsic-sizing-before-breakpoints | \`@media\` 브레이크포인트를 새로 넣으려 할 때. 폭에 따라 줄바꿈, 열 개수, 크기가 달라져야 할 때. | reviewWith: layout-group-breakpoints-at-the-file-bottom, layout-keep-layout-intent-explicit
 - C07-01 | a11y-always-provide-a-visible-focus-indicator | \`outline\`, \`:focus\`, \`:focus-visible\` 스타일을 추가·수정할 때. 상호작용 요소의 기본 포커스 링을 덮어쓸 때. | reviewWith: selector-nest-dom-state-in-the-owning-block
 - C07-02 | a11y-namespace-keyframes-and-respect-reduced-motion | \`@keyframes\` 이름이나 애니메이션 지속 시간, 이징을 선언하거나 바꿀 때. \`animation\`이나 \`transition\`으로 움직임을 새로 넣을 때. | reviewWith: tooling-configure-stylelint-to-enforce-these-rules, values-tokenize-repeated-visual-values
