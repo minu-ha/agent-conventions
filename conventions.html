@@ -215,10 +215,10 @@ body {
 .box-b { border-left: 3px solid color-mix(in srgb, var(--dx-b) 75%, transparent); }
 .box-a { border-left: 3px solid color-mix(in srgb, var(--dx-a) 75%, transparent); }
 .box-b > .box-hd { background: color-mix(in srgb, var(--dx-b) 5%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--dx-b) 18%, transparent); }
-.box-b .box-hd-t:hover { background: color-mix(in srgb, var(--dx-b) 14%, transparent); }
+.box-b .box-hd:has(> .box-tg:hover) > .box-tg { background: color-mix(in srgb, var(--dx-b) 14%, transparent); }
 .box-b[data-open="1"] > .box-hd { background: color-mix(in srgb, var(--dx-b) 18%, transparent); border-bottom-color: color-mix(in srgb, var(--dx-b) 34%, transparent); }
 .box-a > .box-hd { background: color-mix(in srgb, var(--dx-a) 5%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--dx-a) 18%, transparent); }
-.box-a .box-hd-t:hover { background: color-mix(in srgb, var(--dx-a) 14%, transparent); }
+.box-a .box-hd:has(> .box-tg:hover) > .box-tg { background: color-mix(in srgb, var(--dx-a) 14%, transparent); }
 .box-a[data-open="1"] > .box-hd { background: color-mix(in srgb, var(--dx-a) 18%, transparent); border-bottom-color: color-mix(in srgb, var(--dx-a) 34%, transparent); }
 .box-b .box-gl { color: var(--dx-b); }
 .box-a .box-gl { color: var(--dx-a); }
@@ -237,15 +237,15 @@ body {
 .diff { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(330px, 100%), 1fr)); align-items: start; gap: 14px; }
 /* 한쪽 코드가 길어 잘릴 때 그 행만 폭을 몰아 준다. 여닫기와는 별개다. */
 @media (min-width: 1000px) {
-	.diff[data-w="b"] { grid-template-columns: minmax(0, 1fr) 168px; }
-	.diff[data-w="a"] { grid-template-columns: 168px minmax(0, 1fr); }
+	.diff[data-w="b"] { grid-template-columns: minmax(0, 1fr) 150px; }
+	.diff[data-w="a"] { grid-template-columns: 150px minmax(0, 1fr); }
 }
-/* 좁힌 쪽은 라벨도 코드도 접고 BEFORE·AFTER 표만 남는다. */
+/* 좁힌 쪽은 라벨도 코드도 접지만 칸은 남긴다. 사라지지 않고 접힌 판으로 선다. */
+.box-min { align-self: stretch; }
 .box-min .box-hd-t { padding-right: 4px; }
-.box-min > .box-hd { border-bottom: none; }
 /* 머리 오른쪽 끝은 여닫기, 그 왼쪽이 폭. 둘 다 같은 칸 모양이라 나란히 읽힌다. */
 .box-btn { flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 34px; border-left: 1px solid color-mix(in srgb, currentColor 16%, transparent); cursor: pointer; }
-.box-btn:hover { background: color-mix(in srgb, currentColor 13%, transparent); }
+.box-w:hover { background: color-mix(in srgb, currentColor 13%, transparent); }
 .box-w svg { display: block; }
 .box-btn svg { display: block; }
 .box-b .box-btn { color: var(--dx-b); }
@@ -812,12 +812,12 @@ body:has(.dlg[open]) { overflow: hidden; }
 				(wide.cur === wide.side ? "폭을 균등으로 되돌립니다" : "이 쪽을 넓게 봅니다") + '">' +
 				wideIcon(wide.side, wide.cur) + "</button>"
 			: "";
-		const car = min ? "" : '<button class="box-btn box-car" data-smp="' + esc(toggle.key) +
+		const car = min ? "" : '<button class="box-btn box-car box-tg" data-smp="' + esc(toggle.key) +
 			'" data-i="0" aria-label="' + (open ? "접기" : "펼치기") + '">' + caretIcon(open) + "</button>";
 
 		return '<div class="box ' + tone + (min ? " box-min" : "") + '" data-open="' + (open ? 1 : 0) + '">' +
 			'<div class="box-hd box-hd-r">' +
-			'<button class="box-hd-t" data-smp="' + esc(toggle.key) + '" data-i="0">' + inner + "</button>" +
+			'<button class="box-hd-t box-tg" data-smp="' + esc(toggle.key) + '" data-i="0">' + inner + "</button>" +
 			wideBtn + car + "</div>" + body + "</div>";
 	};
 
