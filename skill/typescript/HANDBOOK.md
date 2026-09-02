@@ -139,47 +139,6 @@
 원본 입력과 정규화한 값은 필드가 같아도 뜻이 달라 입력 형태를 따로 두는 것이 맞습니다.
 그때도 문서화 규칙만 걸리고 이 규칙은 걸리지 않습니다.
 
-**Incorrect (기존 계약과 같은 구조를 다시 선언합니다):**
-
-```ts
-// 이미 있는 계약
-interface UserRecord {
-	id: string;
-	name: string;
-	email: string;
-}
-
-// 필드 이름, 타입, 선택 여부가 그대로인데 새로 선언했다
-interface UserPreview {
-	id: string;
-	name: string;
-}
-```
-
-**Incorrect (`Pick`으로 골라 필드 이름과 설명이 사라집니다):**
-
-```ts
-type UserPreview = Pick<UserRecord, "id" | "name">;
-```
-
-**Correct (필드마다 출처를 인덱스 접근으로 가져옵니다):**
-
-```ts
-/**
- * 사용자 미리보기 계약
- */
-interface UserPreview {
-	/**
-	 * 사용자 식별자
-	 */
-	id: UserRecord["id"];
-	/**
-	 * 목록에 표시할 이름
-	 */
-	name: UserRecord["name"];
-}
-```
-
 **Incorrect (인덱스 접근으로 옮기면서 `?`와 `readonly`를 흘립니다):**
 
 ```ts
@@ -221,6 +180,46 @@ interface ProductListRow {
 	 * 마지막 수정자 이름. 원본에서 선택 필드라 여기서도 선택으로 둔다
 	 */
 	ownerName?: UserRecord["name"];
+}
+```
+**Incorrect (기존 계약과 같은 구조를 다시 선언합니다):**
+
+```ts
+// 이미 있는 계약
+interface UserRecord {
+	id: string;
+	name: string;
+	email: string;
+}
+
+// 필드 이름, 타입, 선택 여부가 그대로인데 새로 선언했다
+interface UserPreview {
+	id: string;
+	name: string;
+}
+```
+
+**Incorrect (`Pick`으로 골라 필드 이름과 설명이 사라집니다):**
+
+```ts
+type UserPreview = Pick<UserRecord, "id" | "name">;
+```
+
+**Correct (필드마다 출처를 인덱스 접근으로 가져옵니다):**
+
+```ts
+/**
+ * 사용자 미리보기 계약
+ */
+interface UserPreview {
+	/**
+	 * 사용자 식별자
+	 */
+	id: UserRecord["id"];
+	/**
+	 * 목록에 표시할 이름
+	 */
+	name: UserRecord["name"];
 }
 ```
 
@@ -1538,6 +1537,25 @@ const toRequestUrl = (target: ApiRequestTarget): URL => {
 뺀 다음 어디 둘지는 `functions-give-each-function-its-own-file`이 정하고,
 루트 `util`로 올릴지는 `functions-promote-shared-functions-to-root-util`이 정합니다.
 
+**Incorrect (전용 보조가 딸린 단계를 한 파일에 계속 쌓습니다):**
+
+```txt
+page/report/_function/to-sales-overview.ts
+  toSalesOverview          내보낸 함수
+  toSummaryBand            내보낸 함수만 부름. 전용 보조 없음
+  toTrendChart             내보낸 함수만 부름. 전용 보조 셋이 딸림
+  toTrendBasePoints        toTrendChart만 부름
+  toTrendBaseLabel         toTrendChart만 부름
+  toTrendPoints            toTrendChart만 부름
+```
+
+**Correct (전용 보조가 딸린 단계만 자기 파일로 나갑니다):**
+
+```txt
+page/report/_function/to-sales-overview/
+├── to-sales-overview.ts   내보낸 함수와 toSummaryBand가 남음
+└── to-trend-chart.ts      전용 보조 셋을 비공개로 품음
+```
 **Incorrect (한 번만 쓰는 한 줄 계산을 파일로 분리합니다):**
 
 ```ts
@@ -1609,26 +1627,6 @@ export const toProductSaveRequest = (formValues: ProductFormValues) => {
 ```tsx
 // page/products/pg-products.tsx 하나만 부르지만 훅도 JSX도 쓰지 않는 계산이다
 import {toProductSaveRequest} from "@/page/products/_function/to-product-save-request";
-```
-
-**Incorrect (전용 보조가 딸린 단계를 한 파일에 계속 쌓습니다):**
-
-```txt
-page/report/_function/to-sales-overview.ts
-  toSalesOverview          내보낸 함수
-  toSummaryBand            내보낸 함수만 부름. 전용 보조 없음
-  toTrendChart             내보낸 함수만 부름. 전용 보조 셋이 딸림
-  toTrendBasePoints        toTrendChart만 부름
-  toTrendBaseLabel         toTrendChart만 부름
-  toTrendPoints            toTrendChart만 부름
-```
-
-**Correct (전용 보조가 딸린 단계만 자기 파일로 나갑니다):**
-
-```txt
-page/report/_function/to-sales-overview/
-├── to-sales-overview.ts   내보낸 함수와 toSummaryBand가 남음
-└── to-trend-chart.ts      전용 보조 셋을 비공개로 품음
 ```
 
 ### 3.4 Give Each Support Function Its Own File

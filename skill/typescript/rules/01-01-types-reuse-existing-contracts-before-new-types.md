@@ -75,47 +75,6 @@ tags: types
 원본 입력과 정규화한 값은 필드가 같아도 뜻이 달라 입력 형태를 따로 두는 것이 맞습니다.
 그때도 문서화 규칙만 걸리고 이 규칙은 걸리지 않습니다.
 
-**Incorrect (기존 계약과 같은 구조를 다시 선언합니다):**
-
-```ts
-// 이미 있는 계약
-interface UserRecord {
-	id: string;
-	name: string;
-	email: string;
-}
-
-// 필드 이름, 타입, 선택 여부가 그대로인데 새로 선언했다
-interface UserPreview {
-	id: string;
-	name: string;
-}
-```
-
-**Incorrect (`Pick`으로 골라 필드 이름과 설명이 사라집니다):**
-
-```ts
-type UserPreview = Pick<UserRecord, "id" | "name">;
-```
-
-**Correct (필드마다 출처를 인덱스 접근으로 가져옵니다):**
-
-```ts
-/**
- * 사용자 미리보기 계약
- */
-interface UserPreview {
-	/**
-	 * 사용자 식별자
-	 */
-	id: UserRecord["id"];
-	/**
-	 * 목록에 표시할 이름
-	 */
-	name: UserRecord["name"];
-}
-```
-
 **Incorrect (인덱스 접근으로 옮기면서 `?`와 `readonly`를 흘립니다):**
 
 ```ts
@@ -159,3 +118,44 @@ interface ProductListRow {
 	ownerName?: UserRecord["name"];
 }
 ```
+**Incorrect (기존 계약과 같은 구조를 다시 선언합니다):**
+
+```ts
+// 이미 있는 계약
+interface UserRecord {
+	id: string;
+	name: string;
+	email: string;
+}
+
+// 필드 이름, 타입, 선택 여부가 그대로인데 새로 선언했다
+interface UserPreview {
+	id: string;
+	name: string;
+}
+```
+
+**Incorrect (`Pick`으로 골라 필드 이름과 설명이 사라집니다):**
+
+```ts
+type UserPreview = Pick<UserRecord, "id" | "name">;
+```
+
+**Correct (필드마다 출처를 인덱스 접근으로 가져옵니다):**
+
+```ts
+/**
+ * 사용자 미리보기 계약
+ */
+interface UserPreview {
+	/**
+	 * 사용자 식별자
+	 */
+	id: UserRecord["id"];
+	/**
+	 * 목록에 표시할 이름
+	 */
+	name: UserRecord["name"];
+}
+```
+

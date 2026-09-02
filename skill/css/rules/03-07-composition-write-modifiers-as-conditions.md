@@ -81,6 +81,31 @@ export const UiTooltip = (props: UiTooltipProps) => {
 };
 ```
 
+**Incorrect (라이브러리가 정하는 값으로 수정자를 만듭니다):**
+
+```tsx
+export interface UiButtonProps {
+	variant?: ButtonProps["variant"];
+	className?: string;
+}
+
+export const UiButton = (props: UiButtonProps) => {
+	return <Button className={clsx("ui_button__root", `ui_button__root--${props.variant}`, props.className)} />;
+};
+```
+
+**Correct (라이브러리가 정하는 값은 수정자로 만들지 않고 그대로 넘깁니다):**
+
+```tsx
+export interface UiButtonProps {
+	variant?: ButtonProps["variant"];
+	className?: string;
+}
+
+export const UiButton = (props: UiButtonProps) => {
+	return <Button className={clsx("ui_button__root", props.className)} variant={props.variant} />;
+};
+```
 **Incorrect (수정자가 없는 값까지 조립해 CSS에 없는 클래스를 붙입니다):**
 
 ```tsx
@@ -154,28 +179,3 @@ export const WgFlowNode = (props: WgFlowNodeProps) => {
 };
 ```
 
-**Incorrect (라이브러리가 정하는 값으로 수정자를 만듭니다):**
-
-```tsx
-export interface UiButtonProps {
-	variant?: ButtonProps["variant"];
-	className?: string;
-}
-
-export const UiButton = (props: UiButtonProps) => {
-	return <Button className={clsx("ui_button__root", `ui_button__root--${props.variant}`, props.className)} />;
-};
-```
-
-**Correct (라이브러리가 정하는 값은 수정자로 만들지 않고 그대로 넘깁니다):**
-
-```tsx
-export interface UiButtonProps {
-	variant?: ButtonProps["variant"];
-	className?: string;
-}
-
-export const UiButton = (props: UiButtonProps) => {
-	return <Button className={clsx("ui_button__root", props.className)} variant={props.variant} />;
-};
-```

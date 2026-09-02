@@ -59,6 +59,14 @@ TSX에서 그 지점이 보이므로 "이 마크업을 우리가 쓰는가"를 �
 }
 ```
 
+**Incorrect (요소 선택자를 최상위에 둡니다):**
+
+```css
+.wg_productDetail__prose h2 {
+	margin: 24px 0 12px;
+}
+```
+
 **Correct (우리가 렌더하면 클래스를 붙입니다):**
 
 ```tsx
@@ -80,14 +88,6 @@ TSX에서 그 지점이 보이므로 "이 마크업을 우리가 쓰는가"를 �
 
 .pg_catalogIndex__toolbarButton {
 	height: 32px;
-}
-```
-
-**Incorrect (요소 선택자를 최상위에 둡니다):**
-
-```css
-.wg_productDetail__prose h2 {
-	margin: 24px 0 12px;
 }
 ```
 

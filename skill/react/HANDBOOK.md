@@ -3004,6 +3004,45 @@ export const PgProductListSection = () => {
   대표 함수 자기 이름 폴더 안의 전용 보조는 `typescript/functions-give-each-function-its-own-file`이 정한 예외입니다
 - 이름이 그럴듯하다는 이유로 흐름을 파일 왕복 뒤에 숨기는 구조
 
+**Incorrect (컴포넌트 하나만 쓰는 단계 보조 함수를 보조 모듈에 남깁니다):**
+
+```tsx
+const toEditHref = ({editHrefBase, row}: {editHrefBase: string; row: ProductRow}) =>
+	`${editHrefBase}${row.id}/`;
+
+const toProductRows = (response: ProductListResponse) =>
+	response.data.map((product) => ({id: product.id, title: product.title}));
+
+export const PgProductTable = (props: PgProductTableProps) => {
+	const responseProductListSuspense = useProductListSuspense({}, {query: {select: toProductRows}});
+
+	return responseProductListSuspense.data.map((row) => (
+		<a href={toEditHref({editHrefBase: props.editHrefBase, row})} key={row.id}>
+			{row.title}
+		</a>
+	));
+};
+```
+
+**Correct (작은 쿼리 가공과 `href` 조립은 사용처에 둡니다):**
+
+```tsx
+export const PgProductTable = (props: PgProductTableProps) => {
+	/**
+	 * 링크에 필요한 두 필드만 남겨 표가 응답 구조를 모르게 한다
+	 */
+	const responseProductListSuspense = useProductListSuspense(
+		{},
+		{query: {select: (response) => response.data.map((product) => ({id: product.id, title: product.title}))}},
+	);
+
+	return responseProductListSuspense.data.map((row) => (
+		<a href={`${props.editHrefBase}${row.id}/`} key={row.id}>
+			{row.title}
+		</a>
+	));
+};
+```
 **Incorrect (사용처가 한 화면뿐인데 공용 훅으로 먼저 빼냅니다):**
 
 ```ts
@@ -3058,46 +3097,6 @@ export const toProductSaveRequest = (formValues: ProductFormValues) => {
 
 	// 2. API가 받는 payload 형태로 조립한다
 	return {categoryId: formValues.categoryId, description, title};
-};
-```
-
-**Incorrect (컴포넌트 하나만 쓰는 단계 보조 함수를 보조 모듈에 남깁니다):**
-
-```tsx
-const toEditHref = ({editHrefBase, row}: {editHrefBase: string; row: ProductRow}) =>
-	`${editHrefBase}${row.id}/`;
-
-const toProductRows = (response: ProductListResponse) =>
-	response.data.map((product) => ({id: product.id, title: product.title}));
-
-export const PgProductTable = (props: PgProductTableProps) => {
-	const responseProductListSuspense = useProductListSuspense({}, {query: {select: toProductRows}});
-
-	return responseProductListSuspense.data.map((row) => (
-		<a href={toEditHref({editHrefBase: props.editHrefBase, row})} key={row.id}>
-			{row.title}
-		</a>
-	));
-};
-```
-
-**Correct (작은 쿼리 가공과 `href` 조립은 사용처에 둡니다):**
-
-```tsx
-export const PgProductTable = (props: PgProductTableProps) => {
-	/**
-	 * 링크에 필요한 두 필드만 남겨 표가 응답 구조를 모르게 한다
-	 */
-	const responseProductListSuspense = useProductListSuspense(
-		{},
-		{query: {select: (response) => response.data.map((product) => ({id: product.id, title: product.title}))}},
-	);
-
-	return responseProductListSuspense.data.map((row) => (
-		<a href={`${props.editHrefBase}${row.id}/`} key={row.id}>
-			{row.title}
-		</a>
-	));
 };
 ```
 
