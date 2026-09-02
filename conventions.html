@@ -229,24 +229,39 @@ body {
 .box-a .cd .on { background: color-mix(in srgb, var(--dx-a) 13%, transparent); }
 .box-a .cd .n.on, .box-a .cd .m.on { color: var(--dx-a); background: color-mix(in srgb, var(--dx-a) 13%, var(--code-bg)); }
 /* 맞은편에만 줄이 있는 자리. 여기에 아무것도 없다는 것이 보여야 좌우 대응이 읽힌다. */
-.cd i.pad { background: repeating-linear-gradient(135deg, transparent, transparent 4px, color-mix(in srgb, var(--ink) 5%, transparent) 4px, color-mix(in srgb, var(--ink) 5%, transparent) 8px); }
+.cd .pad { background: repeating-linear-gradient(135deg, transparent, transparent 4px, color-mix(in srgb, var(--ink) 5%, transparent) 4px, color-mix(in srgb, var(--ink) 5%, transparent) 8px); }
 .box-lead { display: inline-flex; align-items: center; gap: 6px; flex: 0 0 auto; }
 .box-side { font-family: var(--mono); font-size: 9.5px; font-weight: 500; letter-spacing: .06em; padding: 1px 5px; border-radius: 2px; white-space: nowrap; }
 .box-bad .box-side { color: var(--bad); border: 1px solid color-mix(in srgb, var(--bad) 35%, transparent); }
 .box-good .box-side { color: var(--good); border: 1px solid color-mix(in srgb, var(--good) 35%, transparent); }
-.diff { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(330px, 100%), 1fr)); align-items: start; gap: 14px; }
+/* 두 칸을 한 틀에 담고 가운데 선을 잡이로 둔다. 폭은 그 선을 끌어 정한다. */
+.diff { display: grid; grid-template-columns: minmax(0, 1fr); align-items: stretch; background: var(--card); border: 1px solid var(--hair); border-radius: 3px; overflow: hidden; }
+.diff > .box { border: 0; border-radius: 0; }
+.diff > .dx-seam { display: none; }
+.diff > .dx-seam + .box { border-top: 1px solid var(--hair); }
+/* 가운데 선은 잡이다. 끌면 두 칸의 폭이 바뀐다. 크게 보기와는 따로 쓴다. */
+.dx-seam { position: relative; grid-row: 1 / -1; padding: 0; background: none; border: 0; cursor: col-resize; touch-action: none; }
+.dx-seam::before { content: ""; position: absolute; top: 0; bottom: 0; left: 50%; width: 1px; transform: translateX(-50%); background: var(--hair); }
+.dx-seam::after { content: ""; position: absolute; top: 11px; left: 50%; width: 3px; height: 20px; transform: translateX(-50%); border-radius: 2px; background: var(--edge); }
+.dx-seam:focus-visible { outline: none; }
+.dx-seam:hover::before, .dx-seam:focus-visible::before { background: color-mix(in srgb, var(--dx-a) 60%, transparent); }
+.dx-seam:hover::after, .dx-seam:focus-visible::after { background: var(--dx-a); }
+.diff[data-drag="1"] { user-select: none; }
+.diff[data-drag="1"] .dx-seam::before, .diff[data-drag="1"] .dx-seam::after { background: var(--dx-a); }
 /* 한쪽 코드가 길어 잘릴 때 그 행만 폭을 몰아 준다. 여닫기와는 별개다. */
 @media (min-width: 1000px) {
-	.diff[data-w="b"] { grid-template-columns: minmax(0, 1fr) 150px; }
-	.diff[data-w="a"] { grid-template-columns: 150px minmax(0, 1fr); }
+	.diff { grid-template-rows: auto auto; grid-template-columns: minmax(0, var(--split, 50%)) 11px minmax(0, 1fr); }
+	/* 제목이 한 줄이든 두 줄이든 두 쪽 코드가 같은 높이에서 시작한다. */
+	.diff > .box { display: grid; grid-row: 1 / -1; grid-template-rows: subgrid; }
+	.diff > .box > * { min-width: 0; }
+	.diff > .dx-seam { display: block; }
+	.diff > .dx-seam + .box { border-top: 0; }
 }
-/* 좁힌 쪽은 라벨도 코드도 접지만 칸은 남긴다. 사라지지 않고 접힌 판으로 선다. */
-.box-min { align-self: stretch; }
-.box-min .box-hd-t { padding-right: 4px; }
-/* 머리 오른쪽 끝은 여닫기, 그 왼쪽이 폭. 둘 다 같은 칸 모양이라 나란히 읽힌다. */
+/* 한쪽만 볼 때는 그 칸을 아예 없앤다. 빈 기둥이 남으면 무엇이 접혔는지 알 수 없다. */
+.diff[data-solo] { grid-template-columns: minmax(0, 1fr); }
+/* 머리 오른쪽 끝은 크게 보기와 여닫기 둘. 같은 칸 모양이라 나란히 읽힌다. */
 .box-btn { flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 34px; border-left: 1px solid color-mix(in srgb, currentColor 16%, transparent); cursor: pointer; }
-.box-w:hover { background: color-mix(in srgb, currentColor 13%, transparent); }
-.box-w svg { display: block; }
+.box-btn:hover { background: color-mix(in srgb, currentColor 13%, transparent); }
 .box-btn svg { display: block; }
 .box-b .box-btn { color: var(--dx-b); }
 .box-a .box-btn { color: var(--dx-a); }
@@ -275,6 +290,9 @@ body {
 /* 라벨은 그 예시가 무엇인지 말해 주는 유일한 문장이다. 잘라내지 않고 줄바꿈한다. */
 .box-note { min-width: 0; font-size: 13px; font-weight: 500; line-height: 1.55; word-break: keep-all; text-wrap: pretty; }
 .box-langs { font-family: var(--mono); font-size: 10px; color: var(--faint); }
+/* 잡이를 끝으로 몰면 제목이 한 낱말씩 접혀 머리가 높아진다. 두 줄에서 끊는다. */
+.diff .box-hd-t { overflow: hidden; }
+.diff .box-note { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
 
 /* 같은 종류가 연속이면 한 상자로 묶고 기본으로 접는다. 예시 여섯 개가 코드 벽이 되지 않는다. */
 .gx { display: flex; flex-direction: column; gap: 9px; }
@@ -318,7 +336,11 @@ body {
 .cd .rt { padding-top: 15px; }
 .cd .rb { padding-bottom: 15px; }
 /* 좁은 폭에서 접으면 한 줄이 서너 줄이 되어 diff 대응이 무너진다. 가로로 민다. */
-.cd-wrap { overflow-x: auto; }
+.cd-wrap { overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: thin; scrollbar-color: var(--edge) transparent; }
+.cd-wrap::-webkit-scrollbar { height: 9px; }
+.cd-wrap::-webkit-scrollbar-track { background: transparent; }
+.cd-wrap::-webkit-scrollbar-thumb { background: var(--hair); border-radius: 4px; }
+.cd-wrap::-webkit-scrollbar-thumb:hover { background: var(--edge); }
 .cd { min-width: 100%; width: max-content; }
 .cd-wrap { background: var(--code-bg); }
 .cd .n, .cd .m { position: sticky; z-index: 1; background: var(--code-bg); }
@@ -474,7 +496,7 @@ body:has(.dlg[open]) { overflow: hidden; }
 	const secLabel = (s) => s.titleKo || s.title;
 
 	// skill 은 단일 선택. section 은 skill 마다 같은 prefix 를 쓸 수 있어 "skill/prefix" 로 잡는다.
-	const state = {q: "", skill: "", impact: new Set(), section: "", tags: new Set(), open: new Set(), when: new Set(), why: new Set(), sample: new Map(), wide: new Map()};
+	const state = {q: "", skill: "", impact: new Set(), section: "", tags: new Set(), open: new Set(), when: new Set(), why: new Set(), sample: new Map(), split: new Map(), hide: new Map()};
 
 	const remember = () => { try { localStorage.setItem("viewer-skill", state.skill); } catch (e) {} };
 
@@ -784,15 +806,19 @@ body:has(.dlg[open]) { overflow: hidden; }
 		(open ? "M2.5 4.3 5.5 7.3 8.5 4.3" : "M4.3 2.5 7.3 5.5 4.3 8.5") +
 		'" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
-	// 두 칸의 지금 비율을 그대로 그린다. 왼쪽이 BEFORE, 오른쪽이 AFTER 이고 내 칸을 채운다.
-	const wideIcon = (mine, cur) => {
-		const pair = cur === "" ? [6.4, 6.4] : (cur === "b" ? [9.4, 3.4] : [3.4, 9.4]);
-		const rect = (x, w, on) => '<rect x="' + x + '" y="1" width="' + w + '" height="9" rx="1" ' +
-			(on ? 'fill="currentColor"' : 'fill="none" stroke="currentColor" stroke-width="1.1"') + "/>";
+	// 밖으로 벌어진 활은 이 칸이 행을 꽉 채운다는 뜻, 안으로 모인 활은 반반으로 되돌린다는 뜻이다.
+	const wideIcon = (solo) => {
+		const arm = (d) => '<path d="' + d + '" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>';
 
-		return '<svg width="17" height="12" viewBox="0 0 16 11" aria-hidden="true">' +
-			rect(0.7, pair[0], mine === "b") + rect(15.3 - pair[1], pair[1], mine === "a") + "</svg>";
+		return '<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">' +
+			arm(solo ? "M1.8 3 4.4 6 1.8 9" : "M4.4 3 1.8 6 4.4 9") +
+			arm(solo ? "M10.2 3 7.6 6 10.2 9" : "M7.6 3 10.2 6 7.6 9") + "</svg>";
 	};
+
+	// 가운데 잡이. 끌면 폭이 바뀌고 두 번 누르면 반반으로 돌아온다.
+	const seamHtml = (key, pct) => '<button class="dx-seam" data-grip="' + esc(key) +
+		'" role="separator" aria-orientation="vertical" aria-label="좌우 폭" aria-valuemin="12" aria-valuemax="88" aria-valuenow="' +
+		(pct || 50) + '" title="끌어서 좌우 폭을 정합니다. 두 번 누르면 반반"></button>';
 
 	const boxHtml = (e, marks, side, toggle, wide) => {
 		if (!e) return "";
@@ -802,31 +828,33 @@ body:has(.dlg[open]) { overflow: hidden; }
 		const tone = side ? (bad ? "box-b" : "box-a") : (bad ? "box-bad" : "box-good");
 		// 두 상자가 같은 상태 키를 쓰므로 어느 쪽 머리를 눌러도 함께 열리고 닫힌다.
 		const open = toggle ? toggle.open : true;
-		// 좁힌 쪽은 라벨을 접는다. 남는 폭을 넓힌 쪽이 다 쓴다.
-		const min = !!(wide && wide.cur && wide.cur !== wide.side);
+
+		// 감춘 쪽은 칸째 그리지 않는다. 되돌리는 단추는 남은 쪽 머리가 갖는다.
+		if (wide && wide.hide === wide.side) return "";
+
 		const inner = '<span class="box-lead"><span class="box-gl" aria-hidden="true">' + (bad ? "\u2212" : "+") + "</span>" +
 			(side ? '<span class="box-side">' + side + "</span>" : "") + "</span>" +
-			(min ? "" : '<span class="box-note">' + (e.label ? inlineHi(e.label) : (bad ? "INCORRECT" : "CORRECT")) + "</span>");
+			'<span class="box-note">' + (e.label ? inlineHi(e.label) : (bad ? "INCORRECT" : "CORRECT")) + "</span>";
 
-		// 좁힌 쪽은 코드까지 접는다. 넓힌 쪽 하나만 읽으라는 뜻이므로 여닫기 칸도 두지 않는다.
-		const body = min ? "" : '<div class="box-body">' +
+		const body = '<div class="box-body">' +
 			(open ? codeHtml(e.blocks, marks ? {rows: marks, bad: bad} : null) : "") + "</div>";
 
 		if (!toggle) return '<div class="box ' + tone + '"><div class="box-hd">' + inner + "</div>" + body + "</div>";
 
 		// 폭 버튼은 코드가 보일 때만 뜻이 있다. 접혀 있으면 여닫기만 남는다.
-		const wideBtn = wide && open
-			? '<button class="box-btn box-w" data-wide="' + esc(wide.key + "|" + wide.side) + '" title="' +
-				(wide.cur === wide.side ? "폭을 균등으로 되돌립니다" : "이 쪽을 넓게 봅니다") + '">' +
-				wideIcon(wide.side, wide.cur) + "</button>"
+		// 칸마다 자기 단추 하나. 여닫기 칸과 같은 모양으로 나란히 둔다.
+		const zoomBtn = wide
+			? '<button class="box-btn box-zoom" data-zoom="' + esc(wide.key + "|" + wide.side) + '" aria-label="' +
+				(wide.hide ? "작게 보기" : "크게 보기") + '" title="' +
+				(wide.hide ? "반반으로 되돌립니다" : "이 칸이 행을 꽉 채웁니다") + '">' + wideIcon(!!wide.hide) + "</button>"
 			: "";
-		const car = min ? "" : '<button class="box-btn box-car box-tg" data-smp="' + esc(toggle.key) +
+		const car = '<button class="box-btn box-car box-tg" data-smp="' + esc(toggle.key) +
 			'" data-i="0" aria-label="' + (open ? "접기" : "펼치기") + '">' + caretIcon(open) + "</button>";
 
-		return '<div class="box ' + tone + (min ? " box-min" : "") + '" data-open="' + (open ? 1 : 0) + '">' +
+		return '<div class="box ' + tone + '" data-open="' + (open ? 1 : 0) + '">' +
 			'<div class="box-hd box-hd-r">' +
 			'<button class="box-hd-t box-tg" data-smp="' + esc(toggle.key) + '" data-i="0">' + inner + "</button>" +
-			wideBtn + car + "</div>" + body + "</div>";
+			zoomBtn + car + "</div>" + body + "</div>";
 	};
 
 	// 같은 종류가 이어지면 한 상자에 넣고 기본으로 접는다. 제목은 늘 보이고 코드만 감춘다.
@@ -896,11 +924,14 @@ body:has(.dlg[open]) { overflow: hidden; }
 					"</div>";
 				const rows = c.list.map((u, i) => {
 					const toggle = {key: keys[i], open: (state.sample.get(keys[i]) || []).indexOf(0) >= 0};
-					const w = state.wide.get(keys[i]) || "";
+					const hd = state.hide.get(keys[i]) || "";
+					const sp = state.split.get(keys[i]);
 
-					return '<div class="diff" data-w="' + w + '">' +
-						boxHtml(u.bad, u.marks ? u.marks.left : null, "BEFORE", toggle, {key: keys[i], side: "b", cur: w}) +
-						boxHtml(u.good, u.marks ? u.marks.right : null, "AFTER", toggle, {key: keys[i], side: "a", cur: w}) + "</div>";
+					return '<div class="diff"' + (hd ? ' data-solo="' + hd + '"' : "") +
+						(sp ? ' style="--split:' + sp + '%"' : "") + '>' +
+						boxHtml(u.bad, u.marks ? u.marks.left : null, "BEFORE", toggle, {key: keys[i], side: "b", hide: hd}) +
+						(hd ? "" : seamHtml(keys[i], sp)) +
+						boxHtml(u.good, u.marks ? u.marks.right : null, "AFTER", toggle, {key: keys[i], side: "a", hide: hd}) + "</div>";
 				}).join("");
 
 				return '<div class="dx">' + head + rows + "</div>";
@@ -1069,8 +1100,88 @@ body:has(.dlg[open]) { overflow: hidden; }
 		document.documentElement.dataset.theme = dark ? "light" : "dark";
 	});
 
+	// 끄는 동안에는 상태를 건드리지 않는다. 매번 다시 그리면 끌기가 끊긴다.
+	const gripOf = (ev) => (ev.target && ev.target.closest ? ev.target.closest("[data-grip]") : null);
+	const pctAt = (row, x) => {
+		const r = row.getBoundingClientRect();
+
+		return Math.min(88, Math.max(12, ((x - r.left) / r.width) * 100));
+	};
+	const setSplit = (row, grip, p) => {
+		row.style.setProperty("--split", p + "%");
+		grip.setAttribute("aria-valuenow", Math.round(p));
+	};
+
+	let drag = null;
+
+	document.addEventListener("pointerdown", (ev) => {
+		const g = gripOf(ev);
+		const row = g && g.closest(".diff");
+
+		// 좁은 폭에서는 위아래로 쌓이므로 끌 것이 없다. 실제 칸 수로 판단한다.
+		if (!row || getComputedStyle(row).gridTemplateColumns.split(" ").length < 3) return;
+
+		drag = {g: g, row: row, key: g.dataset.grip};
+		row.dataset.drag = "1";
+		try { g.setPointerCapture(ev.pointerId); } catch (err) {}
+		ev.preventDefault();
+	});
+
+	document.addEventListener("pointermove", (ev) => {
+		if (drag) setSplit(drag.row, drag.g, pctAt(drag.row, ev.clientX));
+	});
+
+	const endDrag = (ev) => {
+		if (!drag) return;
+
+		const d = drag;
+
+		drag = null;
+		delete d.row.dataset.drag;
+
+		const p = Math.round(pctAt(d.row, ev.clientX));
+
+		state.split.set(d.key, p);
+		setSplit(d.row, d.g, p);
+	};
+
+	document.addEventListener("pointerup", endDrag);
+	document.addEventListener("pointercancel", endDrag);
+
+	// 두 번 누르면 반반으로 돌아온다.
+	document.addEventListener("dblclick", (ev) => {
+		const g = gripOf(ev);
+		const row = g && g.closest(".diff");
+
+		if (!row) return;
+
+		state.split.delete(g.dataset.grip);
+		row.style.removeProperty("--split");
+		g.setAttribute("aria-valuenow", 50);
+	});
+
+	// 잡이에 초점이 있으면 화살표로도 옮긴다. Home 은 반반.
+	document.addEventListener("keydown", (ev) => {
+		const g = gripOf(ev);
+		const row = g && g.closest(".diff");
+
+		if (!row) return;
+
+		const step = ev.key === "ArrowLeft" ? -4 : (ev.key === "ArrowRight" ? 4 : 0);
+
+		if (!step && ev.key !== "Home") return;
+
+		ev.preventDefault();
+
+		const cur = state.split.get(g.dataset.grip) || 50;
+		const next = ev.key === "Home" ? 50 : Math.min(88, Math.max(12, cur + step));
+
+		state.split.set(g.dataset.grip, next);
+		setSplit(row, g, next);
+	});
+
 	document.addEventListener("click", (ev) => {
-		const t = ev.target.closest("[data-rule],[data-skill],[data-impact],[data-section],[data-tag],[data-when],[data-why],[data-goto],[data-close],[data-clear],[data-smp],[data-all],[data-alldx],[data-allopen],[data-wide]");
+		const t = ev.target.closest("[data-rule],[data-skill],[data-impact],[data-section],[data-tag],[data-when],[data-why],[data-goto],[data-close],[data-clear],[data-smp],[data-all],[data-alldx],[data-allopen],[data-zoom],[data-grip]");
 		if (!t) return;
 		// 다이얼로그가 열려 있으면 그 안의 아코디언도 같은 상태를 쓰므로 함께 다시 그린다.
 		const toggle = (set, key) => { set.has(key) ? set.delete(key) : set.add(key); render(); renderDialog(); };
@@ -1106,11 +1217,14 @@ body:has(.dlg[open]) { overflow: hidden; }
 			return renderDialog();
 		}
 
-		// 그 행만 폭을 몰아 준다. 같은 쪽을 다시 누르면 균등으로 돌아간다.
-		if (t.dataset.wide) {
-			const parts = t.dataset.wide.split("|");
+		// 잡이 클릭은 끌기가 처리한다. 규칙 토글로 새지 않게 여기서 막는다.
+		if (t.dataset.grip) return;
 
-			state.wide.set(parts[0], state.wide.get(parts[0]) === parts[1] ? "" : parts[1]);
+		// 한 칸을 행 꽉 채우게 키운다. 다시 누르면 반반으로 돌아온다.
+		if (t.dataset.zoom) {
+			const parts = t.dataset.zoom.split("|");
+
+			state.hide.set(parts[0], state.hide.get(parts[0]) ? "" : (parts[1] === "b" ? "a" : "b"));
 			render();
 			return renderDialog();
 		}
