@@ -1,6 +1,6 @@
 ---
 title: Reach for Intrinsic Sizing Before Breakpoints
-titleKo: 브레이크포인트를 적기 전에 내재적 크기로 되는지 봅니다
+titleKo: 브레이크포인트를 적기 전에 고유 크기로 되는지 봅니다
 impact: MEDIUM-HIGH
 impactDescription: 슬롯 폭이 얼마든 맞는 배치라 같은 컴포넌트를 옮겨도 CSS를 다시 고치지 않습니다
 appliesWhen:
@@ -26,7 +26,7 @@ tags: values, layout, responsive
 
 **`@media`는 뷰포트만 알고 그 요소가 실제로 받은 폭은 모릅니다.**
 같은 컴포넌트를 넓은 본문에서 좁은 사이드바로 옮기면 뷰포트는 그대로인데 자리는 좁아집니다.
-브레이크포인트로 짠 배치는 이때 깨지고, 내재적 크기로 짠 배치는 그대로 맞습니다.
+브레이크포인트로 짠 배치는 이때 깨지고, 고유 크기로 짠 배치는 그대로 맞습니다.
 
 브레이크포인트가 남는 경우가 있습니다.
 배치가 통째로 달라질 때는 위 넷으로 안 됩니다.

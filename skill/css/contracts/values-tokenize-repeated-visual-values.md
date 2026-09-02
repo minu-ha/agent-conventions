@@ -23,7 +23,7 @@
 그때만 지역 변수를 하나 만들어 TSX에서 넘깁니다.
 그 자리는 `composition-do-not-style-through-the-style-attribute` 규칙이 정합니다.
 
-조상 상태를 자손에 전달할 때도 변수를 쓰지 않고 결합자 하나로 자손을 겨냥합니다.
+조상 상태를 자손에 전달할 때도 변수를 쓰지 않고 결합자 하나로 자손을 잡습니다.
 결합자를 쓸 범위는 `ownership-use-foreign-classes-only-under-your-own-root` 규칙이 정합니다.
 
 선택자 쪽에서 같은 판단을 하는 규칙이 `selector-do-not-group-classes-with-commas`입니다.

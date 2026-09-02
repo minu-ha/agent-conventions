@@ -1,6 +1,6 @@
 ---
 title: Narrow the Contract a Library Wrapper Opens
-titleKo: 라이브러리 래퍼는 여는 표면을 좁힙니다
+titleKo: 라이브러리 래퍼가 노출하는 프롭은 필요한 것만 엽니다
 impact: CRITICAL
 impactDescription: 라이브러리의 스타일 우회로가 화면으로 새지 않고 교체할 때 래퍼 한 파일만 고칩니다
 appliesWhen:
@@ -21,17 +21,17 @@ tags: typing, wrapper, contracts
 래퍼가 있어야 라이브러리를 올리거나 바꿀 때 한 파일만 고칩니다.
 
 **`export type UiButtonProps = ButtonProps`로 두지 않습니다.**
-라이브러리 표면이 통째로 열려서 그 라이브러리의 스타일 창구까지 화면이 쓸 수 있게 됩니다.
-`css/composition-inject-classes-only-at-the-entry-point`가 정한 스타일 창구가 그 자리에서 뚫립니다.
+라이브러리 프롭이 통째로 열려서 그 라이브러리의 스타일 주입 지점까지 화면이 쓸 수 있게 됩니다.
+`css/composition-inject-classes-only-at-the-entry-point`가 정한 스타일 주입 지점이 그 자리에서 뚫립니다.
 
 DOM 프롭이 아닌 계약은 세 가지로 나눠 각각 다르게 씁니다.
-DOM 표면 자체를 어떻게 열지는 `typing-open-dom-props-in-three-steps`가 정합니다.
+DOM 속성 자체를 어떻게 열지는 `typing-open-dom-props-in-three-steps`가 정합니다.
 
 | 프롭 | 어떻게 |
 | --- | --- |
 | 라이브러리에 **이미 있는** 표시 프롭 (`color`, `padding`, `size`) | `ButtonProps["color"]` 인덱스 접근으로 하나씩 |
 | 우리가 **새로 만든** 자기 프롭 (`icon`, `label`, `helperText`) | 우리가 타입을 적습니다 |
-| 라이브러리 스타일 창구 (테마 스타일 프롭, 클래스 맵, 렌더 태그 교체) | 선언하지 않습니다 |
+| 라이브러리 스타일 주입 프롭 (테마 스타일 프롭, 클래스 맵, 렌더 태그 교체) | 선언하지 않습니다 |
 
 **자기 프롭**은 안쪽 컴포넌트가 받지 않는 프롭입니다.
 `UiIconButtonProps`의 `icon`은 안쪽 컴포넌트가 모르므로 자기 프롭이고,
@@ -56,7 +56,7 @@ export const UiTableCell = (props: UiTableCellProps) => {
 };
 ```
 
-**Correct (이미 있는 프롭은 인덱스 접근으로 하나씩 열고 DOM 표면은 `typing-open-dom-props-in-three-steps`가 정합니다):**
+**Correct (이미 있는 프롭은 인덱스 접근으로 하나씩 열고 DOM 속성은 `typing-open-dom-props-in-three-steps`가 정합니다):**
 
 ```tsx
 import type {TdHTMLAttributes} from "react";

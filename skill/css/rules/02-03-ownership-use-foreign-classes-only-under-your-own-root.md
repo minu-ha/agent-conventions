@@ -5,7 +5,7 @@ impact: CRITICAL
 impactDescription: 남의 클래스를 홀로 쓰면 그 라이브러리나 위젯을 쓰는 화면이 전부 함께 바뀝니다
 appliesWhen:
   - `.ant-*`, `.rc-*`, `.Mui-*` 같은 외부 라이브러리 클래스를 쓸 때
-  - 다른 `scope_slug`의 클래스를 겨냥할 때
+  - 다른 `scope_slug`의 클래스를 선택자로 잡을 때
 reviewWith: >-
   ownership-change-other-owners-through-their-api, ownership-give-each-file-one-scope-slug,
   selector-limit-nesting-block-depth
@@ -59,7 +59,7 @@ tags: ownership, scope, third-party
 }
 ```
 
-**Correct (내 최상위 블록 안에서 외부 라이브러리 DOM을 겨냥합니다):**
+**Correct (내 최상위 블록 안에서 외부 라이브러리 DOM을 선택자로 잡습니다):**
 
 ```css
 .pg_treePanel__root {
@@ -86,7 +86,7 @@ tags: ownership, scope, third-party
 }
 ```
 
-**Correct (다른 `scope_slug`의 클래스도 내 최상위 블록 안에서 겨냥합니다):**
+**Correct (다른 `scope_slug`의 클래스도 내 최상위 블록 안에서 선택자로 잡습니다):**
 
 ```css
 /* page/detail/pg-detail.css */

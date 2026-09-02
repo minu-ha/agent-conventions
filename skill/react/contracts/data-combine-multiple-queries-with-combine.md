@@ -3,7 +3,8 @@
 **Impact: MEDIUM-HIGH (여러 응답을 합치는 자리가 통신 경계에 남고 화면 본문에 별칭이 쌓이지 않습니다)**
 
 쿼리 결과 둘 이상을 하나의 값으로 합쳐야 하면 `useSuspenseQueries`나 `useQueries`에 `combine`을 넘깁니다.
-`Suspense` 쿼리를 쓰는 화면은 `useSuspenseQueries`를 쓰고, 합친 값에 `isPending`을 만들어 내보내지 않습니다.
+`Suspense` 쿼리를 쓰는 화면은 `useSuspenseQueries`를 씁니다.
+합친 값에 `isPending`을 만들어 내보내지 않습니다.
 그 분기는 `runtime-avoid-ad-hoc-loading-branches`가 죽은 코드로 봅니다.
 
 | 상황 | 쓰는 것 |

@@ -294,7 +294,7 @@ pg_indexOverviewSection__root
 
 **Impact: CRITICAL**
 
-한 CSS 파일이 어떤 소유자의 클래스만 담는지, 다른 소유자의 표현이 필요할 때 무엇을 하는지, 남의 라이브러리 DOM은 어디까지 겨냥하는지가 정해져야 한 파일을 고쳐서 다른 화면이 깨지는 일이 생기지 않습니다.
+한 CSS 파일이 어떤 소유자의 클래스만 담는지, 다른 소유자의 표현이 필요할 때 무엇을 하는지, 남의 라이브러리 DOM은 어디까지 선택자로 잡는지가 정해져야 한 파일을 고쳐서 다른 화면이 깨지는 일이 생기지 않습니다.
 
 ### 2.1 Give Each CSS File Its Own `scope_slug`
 
@@ -408,7 +408,7 @@ component/ui/button/ui-button.css
 
 **Rule:** `C02-03` · `ownership-use-foreign-classes-only-under-your-own-root`
 
-**Applies when:** `.ant-*`, `.rc-*`, `.Mui-*` 같은 외부 라이브러리 클래스를 쓸 때. 다른 `scope_slug`의 클래스를 겨냥할 때.
+**Applies when:** `.ant-*`, `.rc-*`, `.Mui-*` 같은 외부 라이브러리 클래스를 쓸 때. 다른 `scope_slug`의 클래스를 선택자로 잡을 때.
 
 **Review with:** `ownership-change-other-owners-through-their-api`, `ownership-give-each-file-one-scope-slug`, `selector-limit-nesting-block-depth`
 
@@ -457,7 +457,7 @@ component/ui/button/ui-button.css
 }
 ```
 
-**Correct (내 최상위 블록 안에서 외부 라이브러리 DOM을 겨냥합니다):**
+**Correct (내 최상위 블록 안에서 외부 라이브러리 DOM을 선택자로 잡습니다):**
 
 ```css
 .pg_treePanel__root {
@@ -484,7 +484,7 @@ component/ui/button/ui-button.css
 }
 ```
 
-**Correct (다른 `scope_slug`의 클래스도 내 최상위 블록 안에서 겨냥합니다):**
+**Correct (다른 `scope_slug`의 클래스도 내 최상위 블록 안에서 선택자로 잡습니다):**
 
 ```css
 /* page/detail/pg-detail.css */
@@ -537,7 +537,7 @@ component/ui/button/ui-button.css
 | 내부 모습이 여러 사용처에서 같게 반복됨 | 그 소유자가 `variant` 프롭으로 수정자를 노출합니다 | 소유자 TSX와 소유자 CSS, 사용처 TSX |
 | 레이어 판정이 화면 소유로 나옴 | 화면 폴더 안으로 내립니다 | 파일 위치와 접두사 |
 
-세 행에 안 맞으면 내 최상위 블록 안에서 겨냥합니다.
+세 행에 안 맞으면 내 최상위 블록 안에서 선택자로 잡습니다.
 그 방법은 `ownership-use-foreign-classes-only-under-your-own-root` 규칙이 정합니다.
 **막다른 길이 아니라 마지막 선택지입니다.**
 
@@ -745,9 +745,9 @@ TSX에서 `className`은 `clsx()`로 조립합니다.
 
 **Review with:** `composition-do-not-add-wrapper-elements-for-styling`, `ownership-change-other-owners-through-their-api`, `ownership-use-foreign-classes-only-under-your-own-root`
 
-**Impact: MEDIUM-HIGH (내부 노드마다 창구를 열면 사용처가 그 컴포넌트 구조에 얽매입니다)**
+**Impact: MEDIUM-HIGH (내부 노드마다 클래스 주입 지점을 열면 사용처가 그 컴포넌트 구조에 얽매입니다)**
 
-우리가 만든 컴포넌트가 여는 스타일 창구는 **진입점 하나**입니다.
+우리가 만든 컴포넌트가 스타일을 주입하는 자리는 **진입점 하나**입니다.
 `ui_`든 `wg_`든 `pg_`든 같습니다.
 외부에서 주입하는 클래스는 그 컴포넌트의 최상위까지만 닿습니다.
 
@@ -759,7 +759,7 @@ TSX에서 `className`은 `clsx()`로 조립합니다.
 하지 않는 것은 셋입니다.
 
 - `headerClassName`, `itemClassName`처럼 내부 노드로 가는 클래스 프롭을 늘리지 않습니다.
-  창구가 늘어나면 사용처가 내부 구조를 알게 되고, 내부가 바뀔 때 사용처가 함께 깨집니다.
+  주입 지점이 늘어나면 사용처가 내부 구조를 알게 되고, 내부가 바뀔 때 사용처가 함께 깨집니다.
 - 받은 `className`을 내부 노드로 넘기지 않습니다.
 - 최상위에 수정자 하나만 붙이고 내부를 결합자로 잡지 않습니다.
   그 자손이 어느 조상 아래 있는지에 얽매여 내부 구조가 바뀔 때 조용히 깨집니다.
@@ -769,7 +769,7 @@ TSX에서 `className`은 `clsx()`로 조립합니다.
 사용처 쪽에서 무엇을 고를지는 `ownership-change-other-owners-through-their-api` 규칙이 정합니다.
 `className`을 받지 않는 컴포넌트는 `composition-do-not-add-wrapper-elements-for-styling` 규칙이 다룹니다.
 
-**Incorrect (내부 노드마다 클래스 프롭을 열어 창구를 늘립니다):**
+**Incorrect (내부 노드마다 클래스 프롭을 열어 주입 지점을 늘립니다):**
 
 ```tsx
 export interface UiCollapseProps {
@@ -959,7 +959,7 @@ export const UiCollapse = (props: UiCollapseProps) => {
 변수가 없을 때를 대비한 대체값은 `values-fall-back-only-outside-core-tokens` 규칙이 정합니다.
 
 래퍼가 `HTMLAttributes`를 `extends`하면 `style`이 함께 열립니다.
-`Omit`으로 뺄 수는 있지만 DOM 표면을 열어 두려고 그대로 두므로 이 규칙을 리뷰가 봅니다.
+`Omit`으로 뺄 수는 있지만 DOM 속성을 열어 두려고 그대로 두므로 이 규칙을 리뷰가 봅니다.
 
 **Incorrect (인라인으로 꾸밉니다):**
 
@@ -1180,7 +1180,7 @@ export const WgFlowNode = (props: WgFlowNodeProps) => {
 
 **Impact: HIGH**
 
-겨냥 대상이 코드에 그대로 쓰여 있고 한 클래스의 선언이 한 블록에 모여 있어야, 스타일을 고칠 때 읽을 선택자와 볼 블록이 각각 하나로 정해집니다. 브라우저가 주는 DOM 상태는 그 요소 블록 안 가상 클래스로 쓰고, 앱이 정하는 상태는 수정자 클래스에 따로 씁니다.
+선택자가 가리키는 대상이 코드에 그대로 쓰여 있고 한 클래스의 선언이 한 블록에 모여 있어야, 스타일을 고칠 때 읽을 선택자와 볼 블록이 각각 하나로 정해집니다. 브라우저가 주는 DOM 상태는 그 요소 블록 안 가상 클래스로 쓰고, 앱이 정하는 상태는 수정자 클래스에 따로 씁니다.
 
 ### 4.1 Limit Nesting to One Level and Write the Rest Inline
 
@@ -1314,7 +1314,7 @@ TSX에서 그 지점이 보이므로 "이 마크업을 우리가 쓰는가"를 �
 
 드문 경우이므로 그 주석이 곧 "여기는 우리가 쓰지 않는 마크업"이라는 표시가 됩니다.
 
-**Incorrect (우리가 렌더하는 마크업을 요소 선택자로 겨냥합니다):**
+**Incorrect (우리가 렌더하는 마크업을 요소 선택자로 잡습니다):**
 
 ```css
 .pg_catalogIndex__toolbar {
@@ -1589,15 +1589,15 @@ h2 {
 갈리는 기준은 **누가 그 값을 아는가**입니다.
 브라우저가 부여하는 상태는 앱이 알 수 없고, 앱이 아는 상태는 브라우저가 알 수 없습니다.
 
-- 앱이 아는 상태를 `[aria-pressed="true"]`처럼 속성으로 겨냥하지 않습니다.
-- `aria-*`는 접근성 계약이라 마크업에 그대로 두고, 스타일은 수정자로 겨냥합니다.
+- 앱이 아는 상태를 `[aria-pressed="true"]`처럼 속성 선택자로 잡지 않습니다.
+- `aria-*`는 접근성 계약이라 마크업에 그대로 두고, 스타일은 수정자로 잡습니다.
 - 같은 상태를 두 표기로 쓰지 않습니다.
   어느 쪽이 참인지 가릴 수 없습니다.
 
 가상 클래스를 어디에 쓰는지는 `selector-nest-dom-state-in-the-owning-block` 규칙이 정합니다.
 `:not()`은 `selector-do-not-negate-with-not` 규칙이 막습니다.
 
-**Incorrect (앱이 정하는 상태를 `data-*` 속성으로 겨냥합니다):**
+**Incorrect (앱이 정하는 상태를 `data-*` 속성 선택자로 잡습니다):**
 
 ```css
 .pg_assetIndex__row {
@@ -1635,7 +1635,7 @@ h2 {
 	box-shadow: 0 0 0 1px #1677ff;
 }
 ```
-**Incorrect (앱 상태를 속성으로 겨냥하고 DOM 상태를 수정자로 만듭니다):**
+**Incorrect (앱 상태를 속성 선택자로 잡고 DOM 상태를 수정자로 만듭니다):**
 
 ```tsx
 <button
@@ -1714,9 +1714,9 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 - 여러 상태가 같은 선언을 쓰면 상태마다 블록을 따로 엽니다.
   묶어서 공유하지 않는 이유는 `selector-do-not-group-classes-with-commas` 규칙이 정합니다.
 
-조상의 DOM 상태가 자손을 바꿔야 하면 식별자가 같은 자손을 결합자 하나로 겨냥합니다.
+조상의 DOM 상태가 자손을 바꿔야 하면 식별자가 같은 자손을 결합자 하나로 잡습니다.
 자손의 `:hover`는 포인터가 자손 위에 있을 때만 걸려서 조상 상태를 알 방법이 없습니다.
-`:has()`로 조상을 겨냥할 수는 있지만 쓰지 않습니다.
+`:has()`로 조상을 잡을 수는 있지만 쓰지 않습니다.
 자손 블록에서 조상 조건을 읽으면 그 자손이 어디에 놓였는지에 얽매여, 조상을 옮길 때 조용히 깨집니다.
 
 자손의 기본 블록은 조상 규칙보다 **앞에** 둡니다.
@@ -2044,7 +2044,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 그때만 지역 변수를 하나 만들어 TSX에서 넘깁니다.
 그 자리는 `composition-do-not-style-through-the-style-attribute` 규칙이 정합니다.
 
-조상 상태를 자손에 전달할 때도 변수를 쓰지 않고 결합자 하나로 자손을 겨냥합니다.
+조상 상태를 자손에 전달할 때도 변수를 쓰지 않고 결합자 하나로 자손을 잡습니다.
 결합자를 쓸 범위는 `ownership-use-foreign-classes-only-under-your-own-root` 규칙이 정합니다.
 
 선택자 쪽에서 같은 판단을 하는 규칙이 `selector-do-not-group-classes-with-commas`입니다.
@@ -2418,7 +2418,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 
 **Impact: MEDIUM-HIGH**
 
-배치 의도가 클래스명과 선언에서 바로 읽혀야 하고, 폭이 달라질 때 무엇이 바뀌는지가 한 자리에 모여야 합니다. 브레이크포인트를 적기 전에 내재적 크기 지정으로 되는지 봅니다. 남는 브레이크포인트는 파일 아래 한 곳에 모으고, 방향과 숫자는 데스크톱 퍼스트로 정한 세 값만 씁니다.
+배치 의도가 클래스명과 선언에서 바로 읽혀야 하고, 폭이 달라질 때 무엇이 바뀌는지가 한 자리에 모여야 합니다. 브레이크포인트를 적기 전에 고유 크기 지정으로 되는지 봅니다. 남는 브레이크포인트는 파일 아래 한 곳에 모으고, 방향과 숫자는 데스크톱 퍼스트로 정한 세 값만 씁니다.
 
 ### 6.1 Group Breakpoints at the Bottom of the File
 
@@ -2748,7 +2748,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 
 **`@media`는 뷰포트만 알고 그 요소가 실제로 받은 폭은 모릅니다.**
 같은 컴포넌트를 넓은 본문에서 좁은 사이드바로 옮기면 뷰포트는 그대로인데 자리는 좁아집니다.
-브레이크포인트로 짠 배치는 이때 깨지고, 내재적 크기로 짠 배치는 그대로 맞습니다.
+브레이크포인트로 짠 배치는 이때 깨지고, 고유 크기로 짠 배치는 그대로 맞습니다.
 
 브레이크포인트가 남는 경우가 있습니다.
 배치가 통째로 달라질 때는 위 넷으로 안 됩니다.
@@ -3069,7 +3069,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 | `property-disallowed-list` | `css/values-tokenize-repeated-visual-values` |
 | `custom-property-pattern` | `css/values-tokenize-repeated-visual-values`의 토큰 이름. 토큰을 선언하는 파일에만 켭니다 |
 | `selector-attribute-name-disallowed-list` | `css/selector-use-pseudo-classes-for-dom-owned-states` |
-| `selector-max-id` | `css/naming-use-scope-slug-element-modifier-syntax` — 겨냥은 클래스로만 합니다 |
+| `selector-max-id` | `css/naming-use-scope-slug-element-modifier-syntax` — 선택자로 잡는 것은 클래스로만 합니다 |
 | `selector-pseudo-class-disallowed-list` | `css/selector-do-not-negate-with-not` |
 | `declaration-no-important` | `css/a11y-namespace-keyframes-and-respect-reduced-motion`의 전역 처리만 예외입니다 |
 | `media-feature-range-notation` | `css/layout-write-breakpoints-desktop-first`의 범위 표기. `stylelint-config-standard`에서 옵니다 |
@@ -3092,7 +3092,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
   `at-rule`이 최상위에 있어야 한다고 요구하는 규칙이 없습니다.
   브레이크포인트 배치는 `css/layout-group-breakpoints-at-the-file-bottom`,
   데스크톱 퍼스트 방향은 `css/layout-write-breakpoints-desktop-first` 규칙을 리뷰가 봅니다.
-- 구조 선택자로 우리 마크업을 겨냥한 것도 못 잡습니다.
+- 구조 선택자로 우리 마크업을 잡은 것도 못 잡습니다.
   `:first-child`나 `:nth-child()`는 클래스에도 붙어서 형태로 구분할 수 없습니다.
 - 역할 이름, 승격 판단, 변형 노출, 포커스 대비도 리뷰가 담당합니다.
 
@@ -3145,7 +3145,7 @@ const libraryPrefixes = [/^\.ant-/, /^\.rc-/, /^\.tippy-/, /^\.Mui/];
 const ownMarkupPatterns = [
 	// 상태 pseudo-class를 top-level 선택자로 다시 여는 것
 	/^\.[\w-]+:(hover|focus|focus-visible|focus-within|active|disabled|checked|visited)/,
-	// 중첩 안에서 element 선택자로 우리 마크업을 겨냥하는 것.
+	// 중첩 안에서 element 선택자로 우리 마크업을 잡는 것.
 	// 우리가 쓰지 않는 마크업은 stylelint-disable 주석으로 예외를 표시한다
 	/^&\s*[>+~]?\s*[a-z]/,
 ];
@@ -3229,11 +3229,11 @@ export default {
 - 요소·수정자 이름이 역할을 가리키는가
 - 요소 선택자를 쓴 자리가 정말 우리가 마크업을 쓰지 않는 곳인가
 - 이 화면만 쓰는 컴포넌트를 위젯으로 올리지 않았는가
-- 내부 모습을 변형으로 노출했는가, 아니면 최상위 블록 아래에서 겨냥했는가
+- 내부 모습을 변형으로 노출했는가, 아니면 최상위 블록 아래에서 선택자로 잡았는가
 - 포커스 표시가 색만 바뀌지 않고 형태로 구분되는가
 - 중복 없는 쉼표 묶음으로 공통 선언을 공유하지 않았는가
 - 브레이크포인트가 파일 아래 한 곳에 모여 있고 데스크톱 퍼스트 한 방향인가
-- 구조 선택자로 우리 마크업을 겨냥하지 않았는가
+- 구조 선택자로 우리 마크업을 잡지 않았는가
 - 시각 결정을 `style` 속성으로 넘기지 않았는가
 - 컴포넌트 CSS에 `prefers-color-scheme`이나 `[data-theme]`가 없는가
 - 공통 토큰에 대체값을 붙이지 않았는가

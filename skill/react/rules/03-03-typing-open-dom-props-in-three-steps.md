@@ -1,6 +1,6 @@
 ---
 title: Open DOM Props in Three Steps
-titleKo: 래퍼의 DOM 표면은 세 단계로 엽니다
+titleKo: 래퍼에 DOM 속성을 열 때는 세 단계를 차례로 시도합니다
 impact: HIGH
 impactDescription: 프롭 하나가 부딪혔다고 `id`·`role`·`aria-*`·이벤트까지 잃지 않습니다
 appliesWhen:
@@ -18,9 +18,9 @@ tags: typing, wrapper, dom
 **Impact: HIGH (프롭 하나가 부딪혔다고 `id`·`role`·`aria-*`·이벤트까지 잃지 않습니다)**
 
 무엇을 열지는 `typing-narrow-library-wrapper-contracts`가 먼저 정합니다.
-이 규칙은 그중 DOM 표면을 어떤 형태로 열지만 봅니다.
+이 규칙은 그중 DOM 속성을 어떤 형태로 열지만 봅니다.
 
-**DOM 표면을 여는 방법은 세 단계이고 위에서부터 되는 것을 씁니다.**
+**DOM 속성을 여는 방법은 세 단계이고 위에서부터 되는 것을 씁니다.**
 어느 단계인지는 컴파일러가 알려 주므로 미리 고민하지 않습니다.
 
 | 단계 | 언제 | 형태 |
@@ -40,7 +40,7 @@ tags: typing, wrapper, dom
 
 2단계가 필요한 이유는 `HTMLAttributes`에 `color`, `title`, `onChange`, `defaultValue`가 이미 있어서입니다.
 라이브러리가 그중 하나를 자기 값 집합으로 좁혀 두면 `extends`가 막힙니다.
-그때는 **부딪히는 이름만 빼면 되지, 나머지 DOM 표면을 포기하지 않습니다.**
+그때는 **부딪히는 이름만 빼면 되지, 나머지 DOM 속성을 포기하지 않습니다.**
 
 3단계는 입력 래퍼에서 나옵니다.
 겉을 `div`로 감싸면서 이벤트는 안쪽 `input`이 받는 컴포넌트가 그렇습니다.
@@ -51,7 +51,7 @@ tags: typing, wrapper, dom
 
 
 여기 쓰는 `Omit`은 `typescript/types-reuse-existing-contracts-before-new-types`가 허용하는 자리입니다.
-DOM 표면은 리액트가 속성을 더하면 래퍼도 따라 받아야 하는 열린 집합이라
+DOM 속성은 리액트가 속성을 더하면 래퍼도 따라 받아야 하는 열린 집합이라
 뺄 이름만 적는 것이 맞습니다.
 남는 것을 손으로 적을 수도 없습니다.
 
@@ -60,7 +60,7 @@ DOM 표면은 리액트가 속성을 더하면 래퍼도 따라 받아야 하는
 - `HTMLAttributes`를 `extends` 하면 `style`도 같이 열립니다.
   인라인 `style`을 쓸지는 `css/composition-do-not-style-through-the-style-attribute`가 정합니다.
 
-**Incorrect (프롭 하나가 부딪힌다고 DOM 표면을 통째로 포기합니다):**
+**Incorrect (프롭 하나가 부딪힌다고 DOM 속성을 통째로 포기합니다):**
 
 ```tsx
 // id·role·tabIndex·aria-*·이벤트를 전부 잃고 다섯 개만 남았다
@@ -76,7 +76,7 @@ export interface UiButtonProps {
 **Correct (어느 단계인지 이렇게 고릅니다):**
 
 ```txt
-래퍼 프롭스에 DOM 표면을 연다
+래퍼 프롭스에 DOM 속성을 연다
 │
 ├ extends <요소>HTMLAttributes<T> 가 컴파일됨 ──→ 1단계. 그대로 둔다
 │
@@ -126,7 +126,7 @@ import {clsx} from "clsx";
 import type {ButtonHTMLAttributes} from "react";
 
 /**
- * 라이브러리 버튼에 우리 클래스 창구만 더한 계약
+ * 라이브러리 버튼에 우리 클래스 프롭만 더한 계약
  *
  * 라이브러리가 `color`를 자기 값 집합으로 좁혀 두어 그 이름만 빼고 다시 연다.
  */

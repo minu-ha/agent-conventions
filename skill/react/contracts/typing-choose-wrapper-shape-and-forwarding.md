@@ -11,7 +11,7 @@
 | --- | --- |
 | 안쪽 요소가 하나임 | 반환하는 JSX에 요소가 하나입니다 |
 | **자기 프롭**이 하나도 없음 | 선언한 프롭을 안쪽 컴포넌트가 전부 받습니다 |
-| DOM 표면을 `extends`로 열 수 있음 | `typing-open-dom-props-in-three-steps`의 1·2단계입니다 |
+| DOM 속성을 `extends`로 열 수 있음 | `typing-open-dom-props-in-three-steps`의 1·2단계입니다 |
 
 **자기 프롭**이 무엇인지는 `typing-narrow-library-wrapper-contracts`가 정합니다.
 
@@ -19,9 +19,9 @@
 `icon`이 `<button icon="…">`이 되어 리액트가 경고합니다.
 JSX 스프레드는 초과 프롭을 검사하지 않아 **컴파일러가 잡아 주지 않습니다.** 리뷰가 봐야 합니다.
 
-자기 프롭이 있는 래퍼는 `extends`로 DOM 표면을 통째로 열지 않습니다.
+자기 프롭이 있는 래퍼는 `extends`로 DOM 속성을 통째로 열지 않습니다.
 `typing-open-dom-props-in-three-steps`의 3단계처럼 넘길 DOM 프롭만 선언하고 전부 이름으로 넘깁니다.
-선언한 프롭 목록이 곧 열어 둔 표면입니다.
+선언한 프롭 목록이 곧 열어 둔 범위입니다.
 
 라이브러리 API가 커서 프롭이 서른 개로 늘어날 것 같으면 만능 래퍼를 만들지 않습니다.
 우리 어휘로 계약을 다시 쓰고 라이브러리 어휘는 본문 안에서만 씁니다.

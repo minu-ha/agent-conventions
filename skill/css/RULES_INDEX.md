@@ -1,7 +1,7 @@
 # CSS 컨벤션 Rule Index
 
 - Skill: `css`
-- Routing digest: `sha256:1829659700c68cd2305d1c146940fa70968424f45f269a09f3f70c9bb8a4e225`
+- Routing digest: `sha256:53d8e8a5e5e9624b02a359f2720c1516fde0bf11a808fdc229a610230b9cf172`
 
 ## Direct Companions
 
@@ -15,7 +15,7 @@
 - C01-04 | naming-keep-page-slug-traceable | \`pg\_\*\` 소유자의 클래스 식별자를 새로 만들거나 이름을 바꿀 때. 같은 이름 컴포넌트가 여러 화면에 생겨 식별자를 구분해야 할 때.
 - C02-01 | ownership-give-each-file-one-scope-slug | 새 \`scope\_slug\`를 만들거나 기존 식별자를 복사·이름 변경할 때. 하위 컴포넌트에 CSS 파일을 새로 만들면서 부모 식별자를 그대로 쓸 때.
 - C02-02 | ownership-choose-scope-prefix-by-owner-layer | 새 CSS 파일을 만들면서 \`pg\_\`, \`wg\_\`, \`ui\_\` 중 하나를 고를 때. 소유자의 레이어가 바뀌어 접두사를 옮길 때. | reviewWith: ownership-give-each-file-one-scope-slug, ownership-use-foreign-classes-only-under-your-own-root
-- C02-03 | ownership-use-foreign-classes-only-under-your-own-root | \`.ant-\*\`, \`.rc-\*\`, \`.Mui-\*\` 같은 외부 라이브러리 클래스를 쓸 때. 다른 \`scope\_slug\`의 클래스를 겨냥할 때. | reviewWith: ownership-change-other-owners-through-their-api, ownership-give-each-file-one-scope-slug, selector-limit-nesting-block-depth
+- C02-03 | ownership-use-foreign-classes-only-under-your-own-root | \`.ant-\*\`, \`.rc-\*\`, \`.Mui-\*\` 같은 외부 라이브러리 클래스를 쓸 때. 다른 \`scope\_slug\`의 클래스를 선택자로 잡을 때. | reviewWith: ownership-change-other-owners-through-their-api, ownership-give-each-file-one-scope-slug, selector-limit-nesting-block-depth
 - C02-04 | ownership-change-other-owners-through-their-api | 다른 컴포넌트의 배치나 내부 모습을 바꿔야 할 때. 컴포넌트에 클래스 관련 프롭을 추가할 때. | reviewWith: composition-inject-classes-only-at-the-entry-point, ownership-use-foreign-classes-only-under-your-own-root
 - C03-01 | composition-compose-classes-with-clsx | TSX의 \`className\`을 추가·수정할 때. 기본 클래스, 수정자, 선택 클래스를 함께 엮을 때. | reviewWith: composition-write-modifiers-as-conditions, typescript/values-avoid-lookup-tables-for-simple-choices
 - C03-02 | composition-do-not-build-structural-variants-with-modifiers | 수정자를 추가·변경할 때. 여러 곳에서 반복되는 모양인지 한 곳만의 보정인지 가릴 때. | reviewWith: naming-name-elements-and-modifiers-by-role

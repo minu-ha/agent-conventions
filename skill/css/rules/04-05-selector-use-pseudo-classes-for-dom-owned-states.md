@@ -26,15 +26,15 @@ tags: pseudo-classes, state, interaction
 갈리는 기준은 **누가 그 값을 아는가**입니다.
 브라우저가 부여하는 상태는 앱이 알 수 없고, 앱이 아는 상태는 브라우저가 알 수 없습니다.
 
-- 앱이 아는 상태를 `[aria-pressed="true"]`처럼 속성으로 겨냥하지 않습니다.
-- `aria-*`는 접근성 계약이라 마크업에 그대로 두고, 스타일은 수정자로 겨냥합니다.
+- 앱이 아는 상태를 `[aria-pressed="true"]`처럼 속성 선택자로 잡지 않습니다.
+- `aria-*`는 접근성 계약이라 마크업에 그대로 두고, 스타일은 수정자로 잡습니다.
 - 같은 상태를 두 표기로 쓰지 않습니다.
   어느 쪽이 참인지 가릴 수 없습니다.
 
 가상 클래스를 어디에 쓰는지는 `selector-nest-dom-state-in-the-owning-block` 규칙이 정합니다.
 `:not()`은 `selector-do-not-negate-with-not` 규칙이 막습니다.
 
-**Incorrect (앱이 정하는 상태를 `data-*` 속성으로 겨냥합니다):**
+**Incorrect (앱이 정하는 상태를 `data-*` 속성 선택자로 잡습니다):**
 
 ```css
 .pg_assetIndex__row {
@@ -72,7 +72,7 @@ tags: pseudo-classes, state, interaction
 	box-shadow: 0 0 0 1px #1677ff;
 }
 ```
-**Incorrect (앱 상태를 속성으로 겨냥하고 DOM 상태를 수정자로 만듭니다):**
+**Incorrect (앱 상태를 속성 선택자로 잡고 DOM 상태를 수정자로 만듭니다):**
 
 ```tsx
 <button

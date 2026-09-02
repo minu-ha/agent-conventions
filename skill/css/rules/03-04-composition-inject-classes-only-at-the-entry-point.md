@@ -2,7 +2,7 @@
 title: Inject Classes Only at the Component Entry Point
 titleKo: 클래스 주입은 컴포넌트 진입점까지만 닿습니다
 impact: MEDIUM-HIGH
-impactDescription: 내부 노드마다 창구를 열면 사용처가 그 컴포넌트 구조에 얽매입니다
+impactDescription: 내부 노드마다 클래스 주입 지점을 열면 사용처가 그 컴포넌트 구조에 얽매입니다
 appliesWhen:
   - 우리가 만든 컴포넌트에 `className`이나 클래스 관련 프롭을 추가할 때
   - 그 컴포넌트 내부 노드의 모양을 화면마다 다르게 해야 할 때
@@ -15,9 +15,9 @@ tags: components, entry-point, class-props
 
 ## Inject Classes Only at the Component Entry Point
 
-**Impact: MEDIUM-HIGH (내부 노드마다 창구를 열면 사용처가 그 컴포넌트 구조에 얽매입니다)**
+**Impact: MEDIUM-HIGH (내부 노드마다 클래스 주입 지점을 열면 사용처가 그 컴포넌트 구조에 얽매입니다)**
 
-우리가 만든 컴포넌트가 여는 스타일 창구는 **진입점 하나**입니다.
+우리가 만든 컴포넌트가 스타일을 주입하는 자리는 **진입점 하나**입니다.
 `ui_`든 `wg_`든 `pg_`든 같습니다.
 외부에서 주입하는 클래스는 그 컴포넌트의 최상위까지만 닿습니다.
 
@@ -29,7 +29,7 @@ tags: components, entry-point, class-props
 하지 않는 것은 셋입니다.
 
 - `headerClassName`, `itemClassName`처럼 내부 노드로 가는 클래스 프롭을 늘리지 않습니다.
-  창구가 늘어나면 사용처가 내부 구조를 알게 되고, 내부가 바뀔 때 사용처가 함께 깨집니다.
+  주입 지점이 늘어나면 사용처가 내부 구조를 알게 되고, 내부가 바뀔 때 사용처가 함께 깨집니다.
 - 받은 `className`을 내부 노드로 넘기지 않습니다.
 - 최상위에 수정자 하나만 붙이고 내부를 결합자로 잡지 않습니다.
   그 자손이 어느 조상 아래 있는지에 얽매여 내부 구조가 바뀔 때 조용히 깨집니다.
@@ -39,7 +39,7 @@ tags: components, entry-point, class-props
 사용처 쪽에서 무엇을 고를지는 `ownership-change-other-owners-through-their-api` 규칙이 정합니다.
 `className`을 받지 않는 컴포넌트는 `composition-do-not-add-wrapper-elements-for-styling` 규칙이 다룹니다.
 
-**Incorrect (내부 노드마다 클래스 프롭을 열어 창구를 늘립니다):**
+**Incorrect (내부 노드마다 클래스 프롭을 열어 주입 지점을 늘립니다):**
 
 ```tsx
 export interface UiCollapseProps {

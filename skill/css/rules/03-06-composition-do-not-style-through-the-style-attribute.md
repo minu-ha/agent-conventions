@@ -34,7 +34,7 @@ tags: values, inline-style
 변수가 없을 때를 대비한 대체값은 `values-fall-back-only-outside-core-tokens` 규칙이 정합니다.
 
 래퍼가 `HTMLAttributes`를 `extends`하면 `style`이 함께 열립니다.
-`Omit`으로 뺄 수는 있지만 DOM 표면을 열어 두려고 그대로 두므로 이 규칙을 리뷰가 봅니다.
+`Omit`으로 뺄 수는 있지만 DOM 속성을 열어 두려고 그대로 두므로 이 규칙을 리뷰가 봅니다.
 
 **Incorrect (인라인으로 꾸밉니다):**
 

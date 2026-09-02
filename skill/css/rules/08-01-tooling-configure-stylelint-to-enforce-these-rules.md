@@ -28,7 +28,7 @@ tags: tooling, stylelint, automation
 | `property-disallowed-list` | `css/values-tokenize-repeated-visual-values` |
 | `custom-property-pattern` | `css/values-tokenize-repeated-visual-values`의 토큰 이름. 토큰을 선언하는 파일에만 켭니다 |
 | `selector-attribute-name-disallowed-list` | `css/selector-use-pseudo-classes-for-dom-owned-states` |
-| `selector-max-id` | `css/naming-use-scope-slug-element-modifier-syntax` — 겨냥은 클래스로만 합니다 |
+| `selector-max-id` | `css/naming-use-scope-slug-element-modifier-syntax` — 선택자로 잡는 것은 클래스로만 합니다 |
 | `selector-pseudo-class-disallowed-list` | `css/selector-do-not-negate-with-not` |
 | `declaration-no-important` | `css/a11y-namespace-keyframes-and-respect-reduced-motion`의 전역 처리만 예외입니다 |
 | `media-feature-range-notation` | `css/layout-write-breakpoints-desktop-first`의 범위 표기. `stylelint-config-standard`에서 옵니다 |
@@ -51,7 +51,7 @@ tags: tooling, stylelint, automation
   `at-rule`이 최상위에 있어야 한다고 요구하는 규칙이 없습니다.
   브레이크포인트 배치는 `css/layout-group-breakpoints-at-the-file-bottom`,
   데스크톱 퍼스트 방향은 `css/layout-write-breakpoints-desktop-first` 규칙을 리뷰가 봅니다.
-- 구조 선택자로 우리 마크업을 겨냥한 것도 못 잡습니다.
+- 구조 선택자로 우리 마크업을 잡은 것도 못 잡습니다.
   `:first-child`나 `:nth-child()`는 클래스에도 붙어서 형태로 구분할 수 없습니다.
 - 역할 이름, 승격 판단, 변형 노출, 포커스 대비도 리뷰가 담당합니다.
 
@@ -104,7 +104,7 @@ const libraryPrefixes = [/^\.ant-/, /^\.rc-/, /^\.tippy-/, /^\.Mui/];
 const ownMarkupPatterns = [
 	// 상태 pseudo-class를 top-level 선택자로 다시 여는 것
 	/^\.[\w-]+:(hover|focus|focus-visible|focus-within|active|disabled|checked|visited)/,
-	// 중첩 안에서 element 선택자로 우리 마크업을 겨냥하는 것.
+	// 중첩 안에서 element 선택자로 우리 마크업을 잡는 것.
 	// 우리가 쓰지 않는 마크업은 stylelint-disable 주석으로 예외를 표시한다
 	/^&\s*[>+~]?\s*[a-z]/,
 ];
@@ -188,11 +188,11 @@ export default {
 - 요소·수정자 이름이 역할을 가리키는가
 - 요소 선택자를 쓴 자리가 정말 우리가 마크업을 쓰지 않는 곳인가
 - 이 화면만 쓰는 컴포넌트를 위젯으로 올리지 않았는가
-- 내부 모습을 변형으로 노출했는가, 아니면 최상위 블록 아래에서 겨냥했는가
+- 내부 모습을 변형으로 노출했는가, 아니면 최상위 블록 아래에서 선택자로 잡았는가
 - 포커스 표시가 색만 바뀌지 않고 형태로 구분되는가
 - 중복 없는 쉼표 묶음으로 공통 선언을 공유하지 않았는가
 - 브레이크포인트가 파일 아래 한 곳에 모여 있고 데스크톱 퍼스트 한 방향인가
-- 구조 선택자로 우리 마크업을 겨냥하지 않았는가
+- 구조 선택자로 우리 마크업을 잡지 않았는가
 - 시각 결정을 `style` 속성으로 넘기지 않았는가
 - 컴포넌트 CSS에 `prefers-color-scheme`이나 `[data-theme]`가 없는가
 - 공통 토큰에 대체값을 붙이지 않았는가

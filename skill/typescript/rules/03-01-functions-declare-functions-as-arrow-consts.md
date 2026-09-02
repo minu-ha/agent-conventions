@@ -1,6 +1,6 @@
 ---
 title: Declare Functions as Arrow Consts
-titleKo: 함수는 `const` 화살표로 선언하고 본문은 `{}` 블록으로 씁니다
+titleKo: 함수는 `const` 화살표로 선언합니다
 impact: MEDIUM
 impactDescription: 선언과 본문 형태가 하나로 고정되어 호이스팅 순서 의존이나 형태가 갈리는 diff가 생기지 않습니다
 appliesWhen:

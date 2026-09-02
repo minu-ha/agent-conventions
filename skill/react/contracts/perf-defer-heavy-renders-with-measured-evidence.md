@@ -1,6 +1,6 @@
 # Defer Heavy Renders Only With Measured Evidence
 
-**Impact: MEDIUM (무겁다고 짐작해서 전환과 지연 값으로 감싸지 않고 실제로 무거운 자리만 미룹니다)**
+**Impact: MEDIUM (무겁다고 짐작해서 트랜지션과 지연 값으로 감싸지 않고 실제로 무거운 자리만 미룹니다)**
 
 렌더를 미루는 도구는 `startTransition`, `useTransition`, `useDeferredValue`입니다.
 **먼저 미룰 만큼 무거운지 확인합니다.**
@@ -19,11 +19,11 @@
 `set` 함수가 내 것이 아니면 `startTransition`을 쓸 수 없습니다.
 그때는 `useDeferredValue`입니다.
 
-- 입력값 자체, 폼 오류, 즉시 비활성화처럼 급한 반응은 전환에 넣지 않습니다.
+- 입력값 자체, 폼 오류, 즉시 비활성화처럼 급한 반응은 트랜지션에 넣지 않습니다.
 - `startTransition`은 대기 상태를 알려 주지 않습니다.
   진행 표시가 필요하면 `useTransition`의 `isPending`을 씁니다.
 - `await` 뒤에 상태를 갱신하면 그 갱신을 다시 `startTransition`으로 감쌉니다.
-  `await` 뒤에는 전환 범위가 끊깁니다.
+  `await` 뒤에는 트랜지션 범위가 끊깁니다.
   리액트가 비동기 문맥을 이어가지 못하기 때문입니다.
 - 무거운 하위 트리의 렌더를 늦추려면 지연 값을 받는 컴포넌트가 `memo`여야 합니다.
   `memo`가 아니면 부모가 다시 렌더할 때 그 트리도 함께 다시 렌더합니다.

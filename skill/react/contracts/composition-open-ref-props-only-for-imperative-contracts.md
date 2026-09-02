@@ -1,6 +1,6 @@
 # Open ref Props Only for Real Imperative Contracts
 
-**Impact: MEDIUM-HIGH (쓰지도 않는 명령형 창구가 공용 컴포넌트마다 하나씩 늘어나는 것을 막습니다)**
+**Impact: MEDIUM-HIGH (쓰지도 않는 명령형 계약이 공용 컴포넌트마다 하나씩 늘어나는 것을 막습니다)**
 
 `ref`는 밖에서 실제로 제어해야 하는 공개 명령형 계약입니다.
 포커스, 스크롤, 측정처럼 사용처가 직접 다뤄야 하는 일이 있을 때만 엽니다.

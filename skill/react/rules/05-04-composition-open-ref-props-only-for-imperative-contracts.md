@@ -2,7 +2,7 @@
 title: Open ref Props Only for Real Imperative Contracts
 titleKo: 밖에서 직접 다뤄야 할 때만 `ref` 프롭을 엽니다
 impact: MEDIUM-HIGH
-impactDescription: 쓰지도 않는 명령형 창구가 공용 컴포넌트마다 하나씩 늘어나는 것을 막습니다
+impactDescription: 쓰지도 않는 명령형 계약이 공용 컴포넌트마다 하나씩 늘어나는 것을 막습니다
 appliesWhen:
   - 컴포넌트에 `ref` 프롭을 추가하거나 공개할 대상을 바꿀 때
   - `useImperativeHandle`로 노출하는 명령형 계약 타입을 만들거나 이름을 바꿀 때
@@ -15,7 +15,7 @@ tags: composition
 
 ## Open ref Props Only for Real Imperative Contracts
 
-**Impact: MEDIUM-HIGH (쓰지도 않는 명령형 창구가 공용 컴포넌트마다 하나씩 늘어나는 것을 막습니다)**
+**Impact: MEDIUM-HIGH (쓰지도 않는 명령형 계약이 공용 컴포넌트마다 하나씩 늘어나는 것을 막습니다)**
 
 `ref`는 밖에서 실제로 제어해야 하는 공개 명령형 계약입니다.
 포커스, 스크롤, 측정처럼 사용처가 직접 다뤄야 하는 일이 있을 때만 엽니다.

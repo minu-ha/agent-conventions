@@ -36,8 +36,8 @@ tags: data, mutation, errors
   같은 저장을 어떤 자리에서는 `mutate`로, 어떤 자리에서는 `mutateAsync`로 부르면 실패를 어디서 받는지 다시 찾게 됩니다.
 - 빈 `catch`로 실패를 삼키지 않습니다.
   다시 던지든 표시하든 무엇이든 합니다.
-- 여러 번 눌러 같은 뮤테이션이 겹치는 것은 버튼을 `isPending`으로 `disabled` 처리해 막고,
-  핸들러 첫 줄에서 `isPending` 이른 반환으로 한 번 더 막습니다.
+- 여러 번 눌러 같은 뮤테이션이 겹치는 것은 버튼을 `isPending`으로 `disabled` 처리해 막습니다.
+  핸들러 첫 줄에서도 `isPending`이면 이른 반환으로 한 번 더 막습니다.
 - 성공 뒤 캐시를 다시 맞추는 것은 `data-invalidate-queries-the-mutation-changed`가 정합니다.
 
 실패했을 때 무엇을 보여 줄지는 이 규칙이 정하지 않습니다.

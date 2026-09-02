@@ -14,7 +14,7 @@
 | `property-disallowed-list` | `css/values-tokenize-repeated-visual-values` |
 | `custom-property-pattern` | `css/values-tokenize-repeated-visual-values`의 토큰 이름. 토큰을 선언하는 파일에만 켭니다 |
 | `selector-attribute-name-disallowed-list` | `css/selector-use-pseudo-classes-for-dom-owned-states` |
-| `selector-max-id` | `css/naming-use-scope-slug-element-modifier-syntax` — 겨냥은 클래스로만 합니다 |
+| `selector-max-id` | `css/naming-use-scope-slug-element-modifier-syntax` — 선택자로 잡는 것은 클래스로만 합니다 |
 | `selector-pseudo-class-disallowed-list` | `css/selector-do-not-negate-with-not` |
 | `declaration-no-important` | `css/a11y-namespace-keyframes-and-respect-reduced-motion`의 전역 처리만 예외입니다 |
 | `media-feature-range-notation` | `css/layout-write-breakpoints-desktop-first`의 범위 표기. `stylelint-config-standard`에서 옵니다 |
@@ -37,7 +37,7 @@
   `at-rule`이 최상위에 있어야 한다고 요구하는 규칙이 없습니다.
   브레이크포인트 배치는 `css/layout-group-breakpoints-at-the-file-bottom`,
   데스크톱 퍼스트 방향은 `css/layout-write-breakpoints-desktop-first` 규칙을 리뷰가 봅니다.
-- 구조 선택자로 우리 마크업을 겨냥한 것도 못 잡습니다.
+- 구조 선택자로 우리 마크업을 잡은 것도 못 잡습니다.
   `:first-child`나 `:nth-child()`는 클래스에도 붙어서 형태로 구분할 수 없습니다.
 - 역할 이름, 승격 판단, 변형 노출, 포커스 대비도 리뷰가 담당합니다.
 

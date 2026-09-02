@@ -243,7 +243,9 @@ export const WgSalesWindowChart = (props: WgSalesWindowChartProps) => {
 - 폴더에는 붙이지 않습니다.
   상위 폴더 이름이 이미 레이어를 가리킵니다.
 - 진입 파일이 아닌 컴포넌트 파일은 접두사 앞에 `_`를 붙입니다.
-  `_pg-unit-toggle.tsx`처럼 쓰고 동반 `.css`도 같은 이름이며, 심볼에는 붙이지 않습니다.
+  `_pg-unit-toggle.tsx`처럼 씁니다.
+  동반 `.css`도 같은 이름입니다.
+  심볼에는 붙이지 않습니다.
   어느 파일이 진입 파일인지는 `ownership-place-owner-files-in-role-folders`가 정합니다.
 - 접두사가 말하는 부분을 이름에서 되풀이하지 않습니다.
   `component/ui/button/ui-button.tsx`이고 `ui-button-button.tsx`가 아닙니다.
@@ -323,10 +325,12 @@ export const UiButton = (props: UiButtonProps) => {
   가진 파일이 하위 컴포넌트 하나뿐이어도 같습니다.
 - 하위 소유자 안에 다시 소유자를 두지 않습니다.
   생기면 위로 올려 하위 소유자의 형제로 두거나 `widget`으로 나갈 대상인지 봅니다.
-- 필요한 역할 폴더만 그때 만들고, 파일이 하나뿐인 역할 폴더도 그대로 둡니다.
+- 필요한 역할 폴더만 그때 만듭니다.
+  파일이 하나뿐인 역할 폴더도 그대로 둡니다.
 - 전용 보조 파일을 거느린 함수만 `_function` 아래 자기 이름 폴더를 갖습니다.
   언제 거느리는지는 `typescript/functions-extract-helpers-only-when-the-boundary-is-real`이 정합니다.
-- 프롭스는 해당 TSX에 두고, 여러 파일이 공유하는 계약만 `_type`으로 옮깁니다.
+- 프롭스는 해당 TSX에 둡니다.
+  여러 파일이 공유하는 계약만 `_type`으로 옮깁니다.
 - 파일명과 심볼의 레이어 접두사는 `ownership-prefix-layer-names-on-files-and-symbols`가 정합니다.
 - 호출 계층은 폴더 깊이가 아니라 진입 파일의 조립이 드러냅니다.
   어느 컴포넌트가 그 파일을 쓰는지 폴더 경로로 표현하려고 중첩을 늘리지 않습니다.
@@ -622,7 +626,7 @@ export const PgMediaUploadPanel = (props: PgMediaUploadPanelProps) => {
 
 **Review with:** `ownership-prefer-plain-ts-for-local-react-helpers`
 
-**Impact: MEDIUM (파일 길이를 줄이려고 생명주기를 훅 뒤로 숨겨 실행 흐름이 사라지지 않습니다)**
+**Impact: MEDIUM (생명주기를 훅 뒤로 숨기지 않아 실행 흐름이 컴포넌트 안에 남습니다)**
 
 외부 라이브러리의 인스턴스 생성, 크기 변경, 이벤트 구독, 정리는 그 하위 트리를 소유한 컴포넌트가 직접 가집니다.
 파일이 길어졌다는 이유만으로 커스텀 훅을 만들어 생명주기를 숨기지 않습니다.
@@ -817,7 +821,8 @@ const responseProductListSuspense = useProductListSuspense(
 **Impact: MEDIUM-HIGH (여러 응답을 합치는 자리가 통신 경계에 남고 화면 본문에 별칭이 쌓이지 않습니다)**
 
 쿼리 결과 둘 이상을 하나의 값으로 합쳐야 하면 `useSuspenseQueries`나 `useQueries`에 `combine`을 넘깁니다.
-`Suspense` 쿼리를 쓰는 화면은 `useSuspenseQueries`를 쓰고, 합친 값에 `isPending`을 만들어 내보내지 않습니다.
+`Suspense` 쿼리를 쓰는 화면은 `useSuspenseQueries`를 씁니다.
+합친 값에 `isPending`을 만들어 내보내지 않습니다.
 그 분기는 `runtime-avoid-ad-hoc-loading-branches`가 죽은 코드로 봅니다.
 
 | 상황 | 쓰는 것 |
@@ -980,8 +985,8 @@ useEffect(() => {
   같은 저장을 어떤 자리에서는 `mutate`로, 어떤 자리에서는 `mutateAsync`로 부르면 실패를 어디서 받는지 다시 찾게 됩니다.
 - 빈 `catch`로 실패를 삼키지 않습니다.
   다시 던지든 표시하든 무엇이든 합니다.
-- 여러 번 눌러 같은 뮤테이션이 겹치는 것은 버튼을 `isPending`으로 `disabled` 처리해 막고,
-  핸들러 첫 줄에서 `isPending` 이른 반환으로 한 번 더 막습니다.
+- 여러 번 눌러 같은 뮤테이션이 겹치는 것은 버튼을 `isPending`으로 `disabled` 처리해 막습니다.
+  핸들러 첫 줄에서도 `isPending`이면 이른 반환으로 한 번 더 막습니다.
 - 성공 뒤 캐시를 다시 맞추는 것은 `data-invalidate-queries-the-mutation-changed`가 정합니다.
 
 실패했을 때 무엇을 보여 줄지는 이 규칙이 정하지 않습니다.
@@ -1136,7 +1141,7 @@ const mutationProductSave = useProductSave({
 
 **Impact: CRITICAL**
 
-리액트 핸들러 타입과 래퍼가 노출한 프롭 계약은 선언 자리에서 바로 드러나야 합니다. 라이브러리 래퍼는 여는 표면을 좁히고 형태에 맞는 방법으로 프롭을 넘깁니다. 일반 TypeScript 타입 규칙은 동반 스킬이 다루고 여기서는 리액트 문맥만 봅니다.
+리액트 핸들러 타입과 래퍼가 노출한 프롭 계약은 선언 자리에서 바로 드러나야 합니다. 라이브러리 래퍼는 여는 프롭 범위를 좁히고 형태에 맞는 방법으로 프롭을 넘깁니다. 일반 TypeScript 타입 규칙은 동반 스킬이 다루고 여기서는 리액트 문맥만 봅니다.
 
 ### 3.1 Take React Handler and Wrapper Prop Types From Existing Contracts
 
@@ -1153,7 +1158,7 @@ const mutationProductSave = useProductSave({
 
 **커링 팩토리가 돌려주는 함수에도 타입을 적습니다.**
 JSX에 바로 쓴 화살표 함수에는 리액트가 타입을 붙여 주지만, 팩토리가 돌려주는 함수에는 붙여 주지 않습니다.
-안쪽 매개변수가 암묵적 `any`가 되어 `strict`에서 컴파일이 막힙니다.
+안쪽 매개변수가 암시적 `any`가 되어 `strict`에서 컴파일이 막힙니다.
 `MouseEventHandler<...>` 같은 리액트 별칭을 팩토리 반환 타입으로 적습니다.
 
 **`Ui*` 래퍼를 쓸 때는 래퍼가 내보낸 `Ui*Props`를 가져옵니다.**
@@ -1162,7 +1167,7 @@ JSX에 바로 쓴 화살표 함수에는 리액트가 타입을 붙여 주지만
 
 `query.select` 같은 훅 옵션의 일회성 문맥 콜백은 리액트 핸들러 구현이 아니므로 이 규칙 대상이 아닙니다.
 
-**Incorrect (팩토리 반환 타입을 적지 않아 이벤트가 암묵적 `any`가 됩니다):**
+**Incorrect (팩토리 반환 타입을 적지 않아 이벤트가 암시적 `any`가 됩니다):**
 
 ```ts
 const handleRowSelectToggle = (rowId: string) => (event) => {
@@ -1224,17 +1229,17 @@ const handleSubmitClick: UiButtonProps["onClick"] = (event) => {
 래퍼가 있어야 라이브러리를 올리거나 바꿀 때 한 파일만 고칩니다.
 
 **`export type UiButtonProps = ButtonProps`로 두지 않습니다.**
-라이브러리 표면이 통째로 열려서 그 라이브러리의 스타일 창구까지 화면이 쓸 수 있게 됩니다.
-`css/composition-inject-classes-only-at-the-entry-point`가 정한 스타일 창구가 그 자리에서 뚫립니다.
+라이브러리 프롭이 통째로 열려서 그 라이브러리의 스타일 주입 지점까지 화면이 쓸 수 있게 됩니다.
+`css/composition-inject-classes-only-at-the-entry-point`가 정한 스타일 주입 지점이 그 자리에서 뚫립니다.
 
 DOM 프롭이 아닌 계약은 세 가지로 나눠 각각 다르게 씁니다.
-DOM 표면 자체를 어떻게 열지는 `typing-open-dom-props-in-three-steps`가 정합니다.
+DOM 속성 자체를 어떻게 열지는 `typing-open-dom-props-in-three-steps`가 정합니다.
 
 | 프롭 | 어떻게 |
 | --- | --- |
 | 라이브러리에 **이미 있는** 표시 프롭 (`color`, `padding`, `size`) | `ButtonProps["color"]` 인덱스 접근으로 하나씩 |
 | 우리가 **새로 만든** 자기 프롭 (`icon`, `label`, `helperText`) | 우리가 타입을 적습니다 |
-| 라이브러리 스타일 창구 (테마 스타일 프롭, 클래스 맵, 렌더 태그 교체) | 선언하지 않습니다 |
+| 라이브러리 스타일 주입 프롭 (테마 스타일 프롭, 클래스 맵, 렌더 태그 교체) | 선언하지 않습니다 |
 
 **자기 프롭**은 안쪽 컴포넌트가 받지 않는 프롭입니다.
 `UiIconButtonProps`의 `icon`은 안쪽 컴포넌트가 모르므로 자기 프롭이고,
@@ -1259,7 +1264,7 @@ export const UiTableCell = (props: UiTableCellProps) => {
 };
 ```
 
-**Correct (이미 있는 프롭은 인덱스 접근으로 하나씩 열고 DOM 표면은 `typing-open-dom-props-in-three-steps`가 정합니다):**
+**Correct (이미 있는 프롭은 인덱스 접근으로 하나씩 열고 DOM 속성은 `typing-open-dom-props-in-three-steps`가 정합니다):**
 
 ```tsx
 import type {TdHTMLAttributes} from "react";
@@ -1297,9 +1302,9 @@ export const UiTableCell = (props: UiTableCellProps) => {
 **Impact: HIGH (프롭 하나가 부딪혔다고 `id`·`role`·`aria-*`·이벤트까지 잃지 않습니다)**
 
 무엇을 열지는 `typing-narrow-library-wrapper-contracts`가 먼저 정합니다.
-이 규칙은 그중 DOM 표면을 어떤 형태로 열지만 봅니다.
+이 규칙은 그중 DOM 속성을 어떤 형태로 열지만 봅니다.
 
-**DOM 표면을 여는 방법은 세 단계이고 위에서부터 되는 것을 씁니다.**
+**DOM 속성을 여는 방법은 세 단계이고 위에서부터 되는 것을 씁니다.**
 어느 단계인지는 컴파일러가 알려 주므로 미리 고민하지 않습니다.
 
 | 단계 | 언제 | 형태 |
@@ -1319,7 +1324,7 @@ export const UiTableCell = (props: UiTableCellProps) => {
 
 2단계가 필요한 이유는 `HTMLAttributes`에 `color`, `title`, `onChange`, `defaultValue`가 이미 있어서입니다.
 라이브러리가 그중 하나를 자기 값 집합으로 좁혀 두면 `extends`가 막힙니다.
-그때는 **부딪히는 이름만 빼면 되지, 나머지 DOM 표면을 포기하지 않습니다.**
+그때는 **부딪히는 이름만 빼면 되지, 나머지 DOM 속성을 포기하지 않습니다.**
 
 3단계는 입력 래퍼에서 나옵니다.
 겉을 `div`로 감싸면서 이벤트는 안쪽 `input`이 받는 컴포넌트가 그렇습니다.
@@ -1330,7 +1335,7 @@ export const UiTableCell = (props: UiTableCellProps) => {
 
 
 여기 쓰는 `Omit`은 `typescript/types-reuse-existing-contracts-before-new-types`가 허용하는 자리입니다.
-DOM 표면은 리액트가 속성을 더하면 래퍼도 따라 받아야 하는 열린 집합이라
+DOM 속성은 리액트가 속성을 더하면 래퍼도 따라 받아야 하는 열린 집합이라
 뺄 이름만 적는 것이 맞습니다.
 남는 것을 손으로 적을 수도 없습니다.
 
@@ -1339,7 +1344,7 @@ DOM 표면은 리액트가 속성을 더하면 래퍼도 따라 받아야 하는
 - `HTMLAttributes`를 `extends` 하면 `style`도 같이 열립니다.
   인라인 `style`을 쓸지는 `css/composition-do-not-style-through-the-style-attribute`가 정합니다.
 
-**Incorrect (프롭 하나가 부딪힌다고 DOM 표면을 통째로 포기합니다):**
+**Incorrect (프롭 하나가 부딪힌다고 DOM 속성을 통째로 포기합니다):**
 
 ```tsx
 // id·role·tabIndex·aria-*·이벤트를 전부 잃고 다섯 개만 남았다
@@ -1355,7 +1360,7 @@ export interface UiButtonProps {
 **Correct (어느 단계인지 이렇게 고릅니다):**
 
 ```txt
-래퍼 프롭스에 DOM 표면을 연다
+래퍼 프롭스에 DOM 속성을 연다
 │
 ├ extends <요소>HTMLAttributes<T> 가 컴파일됨 ──→ 1단계. 그대로 둔다
 │
@@ -1405,7 +1410,7 @@ import {clsx} from "clsx";
 import type {ButtonHTMLAttributes} from "react";
 
 /**
- * 라이브러리 버튼에 우리 클래스 창구만 더한 계약
+ * 라이브러리 버튼에 우리 클래스 프롭만 더한 계약
  *
  * 라이브러리가 `color`를 자기 값 집합으로 좁혀 두어 그 이름만 빼고 다시 연다.
  */
@@ -1493,7 +1498,7 @@ export const UiTextField = (props: UiTextFieldProps) => {
 | --- | --- |
 | 안쪽 요소가 하나임 | 반환하는 JSX에 요소가 하나입니다 |
 | **자기 프롭**이 하나도 없음 | 선언한 프롭을 안쪽 컴포넌트가 전부 받습니다 |
-| DOM 표면을 `extends`로 열 수 있음 | `typing-open-dom-props-in-three-steps`의 1·2단계입니다 |
+| DOM 속성을 `extends`로 열 수 있음 | `typing-open-dom-props-in-three-steps`의 1·2단계입니다 |
 
 **자기 프롭**이 무엇인지는 `typing-narrow-library-wrapper-contracts`가 정합니다.
 
@@ -1501,9 +1506,9 @@ export const UiTextField = (props: UiTextFieldProps) => {
 `icon`이 `<button icon="…">`이 되어 리액트가 경고합니다.
 JSX 스프레드는 초과 프롭을 검사하지 않아 **컴파일러가 잡아 주지 않습니다.** 리뷰가 봐야 합니다.
 
-자기 프롭이 있는 래퍼는 `extends`로 DOM 표면을 통째로 열지 않습니다.
+자기 프롭이 있는 래퍼는 `extends`로 DOM 속성을 통째로 열지 않습니다.
 `typing-open-dom-props-in-three-steps`의 3단계처럼 넘길 DOM 프롭만 선언하고 전부 이름으로 넘깁니다.
-선언한 프롭 목록이 곧 열어 둔 표면입니다.
+선언한 프롭 목록이 곧 열어 둔 범위입니다.
 
 라이브러리 API가 커서 프롭이 서른 개로 늘어날 것 같으면 만능 래퍼를 만들지 않습니다.
 우리 어휘로 계약을 다시 쓰고 라이브러리 어휘는 본문 안에서만 씁니다.
@@ -2129,7 +2134,7 @@ export const PgProductScreen = () => {
 
 **Impact: HIGH**
 
-프롭스 계약은 컴포넌트 바로 위에서 읽히고 값은 `props.`로 읽어 출처를 남깁니다. 본문은 훅, 핸들러, 이펙트, 반환 순으로 읽힙니다. JSX 안에는 동작을 숨기지 않고, 컴포넌트를 컴포넌트 안에서 정의하지 않습니다. `ref`와 `Activity`처럼 밖으로 여는 창구는 실제 계약이 있을 때만 엽니다. 조각과 조건부 렌더링은 형태를 하나로 고정합니다.
+프롭스 계약은 컴포넌트 바로 위에서 읽히고 값은 `props.`로 읽어 출처를 남깁니다. 본문은 훅, 핸들러, 이펙트, 반환 순으로 읽힙니다. JSX 안에는 동작을 숨기지 않고, 컴포넌트를 컴포넌트 안에서 정의하지 않습니다. `ref`와 `Activity`처럼 밖으로 여는 계약은 실제 계약이 있을 때만 엽니다. 조각과 조건부 렌더링은 형태를 하나로 고정합니다.
 
 ### 5.1 Read Props Through the Props Object Without Destructuring
 
@@ -2316,7 +2321,7 @@ const handleRemoveProductButtonClick: MouseEventHandler<HTMLButtonElement> = (_e
 
 **Review with:** `typescript/docs-justify-convention-exceptions-with-a-reason-comment`, `typing-narrow-library-wrapper-contracts`
 
-**Impact: MEDIUM-HIGH (쓰지도 않는 명령형 창구가 공용 컴포넌트마다 하나씩 늘어나는 것을 막습니다)**
+**Impact: MEDIUM-HIGH (쓰지도 않는 명령형 계약이 공용 컴포넌트마다 하나씩 늘어나는 것을 막습니다)**
 
 `ref`는 밖에서 실제로 제어해야 하는 공개 명령형 계약입니다.
 포커스, 스크롤, 측정처럼 사용처가 직접 다뤄야 하는 일이 있을 때만 엽니다.
@@ -3639,7 +3644,7 @@ export const PgProductRecommendationBoundary = () => {
 
 **Review with:** `screen-keep-derived-values-close`, `state-store-derived-authority`
 
-**Impact: HIGH (지금 입력으로 구할 수 있는 값을 상태로 두고 이펙트로 맞추지 않습니다)**
+**Impact: HIGH (지금 입력으로 구할 수 있는 값은 상태에 두지 않고 렌더에서 계산합니다)**
 
 현재 프롭스·상태·search 파라미터·응답에서 바로 계산할 수 있는 값은 `useEffect`와 `useState`로 다시 동기화하지 않습니다.
 렌더 중에 계산하면 추가 렌더와 어긋남이 줄고, 이펙트 의존성도 억지로 늘어나지 않습니다.
@@ -3828,7 +3833,8 @@ export const UiTabsRoot = (props: UiTabsRootProps) => {
 - 이 이펙트는 `state-calculate-derived-values-during-render`의 예외입니다.
   같은 판별을 화면마다 되풀이하지 않으려면 한 곳에서 한 번은 채워야 합니다.
 - 채우는 이펙트가 스토어에서 꺼내 쓸 것은 스토어 객체가 아니라 `set` 함수입니다.
-  선택자로 그 함수만 꺼내고, 값 의존성은 평소대로 적습니다.
+  선택자로 그 함수만 꺼냅니다.
+  값 의존성은 평소대로 적습니다.
   스토어 전체를 넣으면 `set`이 상태를 바꿀 때 참조가 달라져 이펙트가 다시 실행됩니다.
 
 **Incorrect (화면이 도메인 판별을 직접 해서 스토어로 밀어 넣습니다):**
@@ -4275,7 +4281,7 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => 
 
 **Impact: MEDIUM**
 
-메모이제이션은 확인한 이유가 있을 때만 손댑니다. 실제로 무거운 초기화와 갱신만 초기화 함수, 전환, 지연 값으로 미룹니다.
+메모이제이션은 확인한 이유가 있을 때만 손댑니다. 실제로 무거운 초기화와 갱신만 초기화 함수, 트랜지션, 지연 값으로 미룹니다.
 
 ### 10.1 Do Not Memoize Without a Confirmed Reason
 
@@ -4381,7 +4387,7 @@ const [draftFilter] = useState(() => parseStoredProductFilter(localStorage.getIt
 
 **Review with:** `perf-avoid-defensive-memoization`
 
-**Impact: MEDIUM (무겁다고 짐작해서 전환과 지연 값으로 감싸지 않고 실제로 무거운 자리만 미룹니다)**
+**Impact: MEDIUM (무겁다고 짐작해서 트랜지션과 지연 값으로 감싸지 않고 실제로 무거운 자리만 미룹니다)**
 
 렌더를 미루는 도구는 `startTransition`, `useTransition`, `useDeferredValue`입니다.
 **먼저 미룰 만큼 무거운지 확인합니다.**
@@ -4400,11 +4406,11 @@ const [draftFilter] = useState(() => parseStoredProductFilter(localStorage.getIt
 `set` 함수가 내 것이 아니면 `startTransition`을 쓸 수 없습니다.
 그때는 `useDeferredValue`입니다.
 
-- 입력값 자체, 폼 오류, 즉시 비활성화처럼 급한 반응은 전환에 넣지 않습니다.
+- 입력값 자체, 폼 오류, 즉시 비활성화처럼 급한 반응은 트랜지션에 넣지 않습니다.
 - `startTransition`은 대기 상태를 알려 주지 않습니다.
   진행 표시가 필요하면 `useTransition`의 `isPending`을 씁니다.
 - `await` 뒤에 상태를 갱신하면 그 갱신을 다시 `startTransition`으로 감쌉니다.
-  `await` 뒤에는 전환 범위가 끊깁니다.
+  `await` 뒤에는 트랜지션 범위가 끊깁니다.
   리액트가 비동기 문맥을 이어가지 못하기 때문입니다.
 - 무거운 하위 트리의 렌더를 늦추려면 지연 값을 받는 컴포넌트가 `memo`여야 합니다.
   `memo`가 아니면 부모가 다시 렌더할 때 그 트리도 함께 다시 렌더합니다.
@@ -4413,7 +4419,7 @@ const [draftFilter] = useState(() => parseStoredProductFilter(localStorage.getIt
 - 지연 값 기준 재계산에 `useMemo`를 함께 쓰는 것은 `perf-avoid-defensive-memoization`의 허용 사유에 듭니다.
   그때도 측정한 근거를 주석으로 남깁니다.
 
-**Incorrect (행 20개 목록을 다시 그리는 갱신까지 전환으로 감쌉니다):**
+**Incorrect (행 20개 목록을 다시 그리는 갱신까지 트랜지션으로 감쌉니다):**
 
 ```tsx
 const [selectedTagId, setSelectedTagId] = useState("all");
@@ -4428,7 +4434,7 @@ const handleTagClick = (nextTagId: string) => {
 return <UiTagRows rows={tagRows} selectedTagId={selectedTagId} />;
 ```
 
-**Correct (측정 근거가 있는 갱신만 전환으로 감싸고 행 20개 목록은 그대로 둡니다):**
+**Correct (측정 근거가 있는 갱신만 트랜지션으로 감싸고 행 20개 목록은 그대로 둡니다):**
 
 ```tsx
 const handleTagClick = (nextTagId: string) => {
@@ -4486,7 +4492,7 @@ const handleStatusFilterChange = (nextStatus: ProductStatusFilter) => {
 	startTransition(async () => {
 		const nextRows = await fetchFilteredRows(nextStatus);
 
-		// await 뒤에는 전환 범위가 끊겨 다시 감싸야 급하지 않은 갱신으로 남는다
+		// await 뒤에는 트랜지션 범위가 끊겨 다시 감싸야 급하지 않은 갱신으로 남는다
 		startTransition(() => {
 			setRows(nextRows);
 		});

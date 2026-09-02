@@ -459,7 +459,7 @@ const cssRuleRouting = {
 		reviewWith: ["ownership-give-each-file-one-scope-slug", "ownership-use-foreign-classes-only-under-your-own-root"],
 	},
 	"ownership-use-foreign-classes-only-under-your-own-root": {
-		appliesWhen: "`.ant-*`, `.rc-*`, `.Mui-*` 같은 외부 라이브러리 클래스를 쓸 때. 다른 `scope_slug`의 클래스를 겨냥할 때.",
+		appliesWhen: "`.ant-*`, `.rc-*`, `.Mui-*` 같은 외부 라이브러리 클래스를 쓸 때. 다른 `scope_slug`의 클래스를 선택자로 잡을 때.",
 		reviewWith: [
 			"ownership-change-other-owners-through-their-api",
 			"ownership-give-each-file-one-scope-slug",
@@ -2666,7 +2666,7 @@ test("CSS progressive metadata and rule routing match Appendix C exactly", async
 	const wrapperStylingRule = await readRuleSource("css", "composition-inject-classes-only-at-the-entry-point");
 	assertMentions(
 		wrapperStylingRule,
-		[/스타일 창구는 \*\*진입점 하나\*\*/i, /내부 노드로 가는 클래스 프롭을 늘리지 않습니다/i, /변형은.*수정자로 붙입니다/i],
+		[/스타일을 주입하는 자리는 \*\*진입점 하나\*\*/i, /내부 노드로 가는 클래스 프롭을 늘리지 않습니다/i, /변형은.*수정자로 붙입니다/i],
 		"wrapperStylingRule",
 	);
 	const singlePurposeRule = await readRuleSource("css", "composition-keep-classes-single-purpose");
@@ -2887,7 +2887,7 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 
 	const reactHandlerType = await readRule("react", "typing-take-handler-types-from-existing-contracts");
 	assert.match(reactHandlerType, /커링한|커링|고차 함수/i);
-	assertMentions(reactHandlerType, [/JSX에 바로 쓴 화살표/i, /암묵적 `any`/i, /리액트 별칭/i], "reactHandlerType");
+	assertMentions(reactHandlerType, [/JSX에 바로 쓴 화살표/i, /암시적 `any`/i, /리액트 별칭/i], "reactHandlerType");
 	assertMentions(reactHandlerType, [/`query\.select`/i, /일회성 문맥 콜백/i, /`Ui\*Props`/i, /대상이 아닙니다/i], "reactHandlerType");
 
 	const reactContracts = await Promise.all(
@@ -3278,7 +3278,11 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	const entryPoint = await readRule("css", "composition-inject-classes-only-at-the-entry-point");
 	assertMentions(
 		entryPoint,
-		[/스타일 창구는 \*\*진입점 하나\*\*입니다/, /`ui_`든 `wg_`든 `pg_`든 같습니다/, /내부 노드로 가는 클래스 프롭을 늘리지 않습니다/],
+		[
+			/스타일을 주입하는 자리는 \*\*진입점 하나\*\*입니다/,
+			/`ui_`든 `wg_`든 `pg_`든 같습니다/,
+			/내부 노드로 가는 클래스 프롭을 늘리지 않습니다/,
+		],
 		"entryPoint",
 	);
 
@@ -3311,8 +3315,8 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 		nestDomState,
 		[
 			/블록 바깥에서 다시 열지 않습니다/,
-			/식별자가 같은 자손을 결합자 하나로 겨냥합니다/,
-			/`:has\(\)`로 조상을 겨냥할 수는 있지만 쓰지 않습니다/,
+			/식별자가 같은 자손을 결합자 하나로 잡습니다/,
+			/`:has\(\)`로 조상을 잡을 수는 있지만 쓰지 않습니다/,
 		],
 		"nestDomState",
 	);
@@ -3344,7 +3348,7 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 		/영문 라벨[\s\S]*docs-write-concise-korean-comments-about-purpose-and-constraints[\s\S]*한국어 내용/i,
 	);
 	assertMentions(generatedContracts[1], [/주석 본문이 전부 영어이면/i, /영어/i], "generatedContracts");
-	assert.match(generatedContracts[2], /pseudo-class[\s\S]*식별자가 같은 자손을 결합자 하나로 겨냥합니다/i);
+	assert.match(generatedContracts[2], /pseudo-class[\s\S]*식별자가 같은 자손을 결합자 하나로 잡습니다/i);
 	assert.match(generatedContracts[3], /CRITICAL rule[\s\S]*full rule/i);
 });
 
