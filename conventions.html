@@ -1010,9 +1010,17 @@ body:has(.dlg[open]) { overflow: hidden; }
 		if (!dlgKey) return;
 		const r = byKey.get(dlgKey);
 		if (!r) return;
+		// 다시 그리면 스크롤 상자가 통째로 새로 만들어진다. 보던 자리를 그대로 되돌린다.
+		const seen = dlg.querySelector(".dlg-scroll");
+		const top = seen ? seen.scrollTop : 0;
+
 		dlg.setAttribute("aria-label", titleText(r));
 		dlg.innerHTML = '<button class="dlg-x" data-close="1" aria-label="닫기">\u2715</button>' +
 			'<div class="dlg-scroll">' + ruleHtml(r, true) + "</div>";
+
+		const next = dlg.querySelector(".dlg-scroll");
+
+		if (next && top) next.scrollTop = top;
 	}
 
 	function openDialog(key) {
