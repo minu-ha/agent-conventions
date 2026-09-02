@@ -103,7 +103,7 @@
 		},
 		{
 			"id": "helper-boundary-scope-drift",
-			"prompt": "inline a single-owner `mapProfileRow` sub-step into `profile-api.ts`, place it below the exported builder, and rename that builder by its result.",
+			"prompt": "inline the single-use `mapProfileRow` sub-step into the exported builder body in `profile-api.ts` with a step comment, and rename that builder by its result.",
 			"files": [
 				"src/profile/profile-api.ts"
 			],
@@ -266,6 +266,24 @@
 					"docs-keep-body-comments-for-intent-and-steps",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"docs-justify-convention-exceptions-with-a-reason-comment"
+				]
+			}
+		},
+		{
+			"id": "decide-once-and-guard-real-absence",
+			"prompt": "`pg-pattern.tsx` formats `avgCorr` while building `SelectionInfo` and `to-metrics-content.ts` formats the same field again; read the carried value instead, replace `...(isNil(tamValidity) ? {} : {tamValidity})` with a plain optional field, and drop the `isNil` check on the non-null `name` field.",
+			"files": [
+				"src/page/pattern/pg-pattern.tsx",
+				"src/page/pattern/_function/to-metrics-content.ts"
+			],
+			"expectedSkills": [
+				"typescript"
+			],
+			"expectedSelected": {
+				"typescript": [
+					"values-decide-once-and-carry-the-result",
+					"absence-expose-optional-values-instead-of-silent-fallbacks",
+					"absence-do-not-guard-what-types-guarantee"
 				]
 			}
 		}

@@ -1,7 +1,7 @@
 # TypeScript 컨벤션 Rule Index
 
 - Skill: `typescript`
-- Routing digest: `sha256:736d44d07c39073bc8207817d412b644461d7a512d404c62e2b7f2c78cfa690b`
+- Routing digest: `sha256:73c41af9af4b8a564bdec0c80a9be61da8245ff9b6ff362b64c389995ac5aae5`
 
 ## Local Rules
 
@@ -22,9 +22,9 @@
 - T02-07 | naming-name-types-by-role-and-lifetime | 타입·인터페이스나 그 파일의 이름을 새로 만들거나 바꿀 때. 타입을 소유자 폴더 안과 밖 사이에서 옮기며 이름을 바꿀 때. 제외: 외부·생성된 계약 이름을 그대로 쓰는 경우. | reviewWith: naming-use-consistent-file-and-symbol-naming
 - T03-01 | functions-declare-functions-as-arrow-consts | 이름을 지어 선언하는 함수를 새로 만들거나 선언 형태나 본문 형태를 바꿀 때. 객체 프로퍼티에 함수를 담거나 그 형태를 바꿀 때. 제외: 인라인 콜백이나 커링의 바깥 화살표인 경우. 제외: 클래스 메서드, 제너레이터, 오버로드 선언인 경우. | reviewWith: functions-use-named-object-params-for-complex-signatures
 - T03-02 | functions-use-named-object-params-for-complex-signatures | 매개변수가 셋을 넘거나 같은 계열 인자를 받는 함수를 추가·변경할 때. 객체 매개변수의 필드를 읽는 방식을 바꿀 때. 제외: 리액트 함수 컴포넌트가 프롭스를 받는 방식만 바꾸는 경우. | reviewWith: types-reuse-existing-contracts-before-new-types, values-read-objects-through-chains
-- T03-03 | functions-extract-helpers-only-when-the-boundary-is-real | 보조 함수를 빼내거나 옮기거나 내보내거나 공유할 때. 범용 보조 파일, 소유자 하나만 쓰는 변환 함수, 자잘한 정리 단계의 경계를 바꿀 때. | reviewWith: docs-require-header-jsdoc-on-key-declarations, functions-give-each-function-its-own-file
-- T03-04 | functions-give-each-function-its-own-file | 떼어 낸 보조 함수를 어느 파일이나 폴더에 둘지 정할 때. \`helper.ts\`, \`helpers.ts\`, \`utils.ts\` 같은 파일을 만들거나 거기에 함수를 더할 때. 내보낸 함수가 다른 내보낸 함수를 부르게 될 때. | reviewWith: functions-order-declarations-top-down, functions-promote-shared-functions-to-root-util
-- T03-05 | functions-order-declarations-top-down | \`.ts\` 파일에 선언을 추가하거나 선언 자리를 옮길 때. 비공개 보조를 내보낸 함수보다 위에 두려 할 때. 제외: 리액트 컴포넌트 본문 안 선언 자리를 바꾸는 경우.
+- T03-03 | functions-extract-helpers-only-when-the-boundary-is-real | 보조 함수를 빼내거나 옮기거나 내보내거나 공유할 때. 범용 보조 파일, 소유자 하나만 쓰는 변환 함수, 자잘한 정리 단계의 경계를 바꿀 때. | reviewWith: docs-require-header-jsdoc-on-key-declarations, functions-give-each-function-its-own-file, values-decide-once-and-carry-the-result
+- T03-04 | functions-give-each-function-its-own-file | 떼어 낸 보조 함수를 어느 파일이나 폴더에 둘지 정할 때. \`helper.ts\`, \`helpers.ts\`, \`utils.ts\` 같은 파일을 만들거나 거기에 함수를 더할 때. 대표 함수가 자기만 쓰는 보조를 처음 갖게 될 때. 보조를 부르는 대표 함수나 소유자가 늘어날 때. | reviewWith: functions-order-declarations-top-down, functions-promote-shared-functions-to-root-util
+- T03-05 | functions-order-declarations-top-down | \`.ts\` 파일에 선언을 추가하거나 선언 자리를 옮길 때. 내보낸 계약 타입이나 모듈 상수를 내보낸 함수보다 아래에 두려 할 때. 제외: 리액트 컴포넌트 본문 안 선언 자리를 바꾸는 경우.
 - T03-06 | functions-promote-shared-functions-to-root-util | 함수를 루트 \`util\` 폴더로 옮기거나 종류 폴더를 새로 만들 때. 두 소유자가 같은 함수를 쓰게 될 때. 제외: 소유자 안에서 파일 자리만 바꾸는 경우.
 - T03-07 | functions-avoid-imperative-assembly-in-wide-scopes | 모듈 최상위나 함수 본문 전체를 덮는 스코프에서 \`let\` 재할당, 배열 \`push\`, 조건부 누적으로 값을 만들 때. | reviewWith: functions-extract-helpers-only-when-the-boundary-is-real
 - T03-08 | functions-name-a-value-only-for-recompute-or-judgment | 순수 계산의 결과를 지역 변수\(\`const\`\)로 받는 줄을 추가·삭제할 때. 표현식을 쓰는 자리에 그대로 적을지 변수로 뺄지 정할 때. | reviewWith: functions-avoid-imperative-assembly-in-wide-scopes, values-read-objects-through-chains
@@ -36,8 +36,10 @@
 - T04-05 | values-avoid-lookup-tables-for-simple-choices | 상태나 \`variant\`에 따라 쓸 값 하나를 고르는 객체·Map을 추가·변경할 때. 조회표의 키로 프롭이나 상태를 읽어 값을 넘기는 코드를 추가·변경할 때.
 - T04-06 | values-use-es-toolkit-for-value-helpers | 배열, 객체, 문자열, 숫자를 다루는 보조 코드를 추가·변경할 때. \`reduce\`, \`Object.entries\`, \`Array.from\`, 정규식으로 값을 다시 짜는 코드를 쓸 때. 제외: 표준 메서드 하나로 끝나는 경우. | reviewWith: values-handle-dates-with-dayjs, values-prefer-immutable-array-sorting
 - T04-07 | values-handle-dates-with-dayjs | 날짜를 파싱하거나 형식을 맞추거나 더하고 뺄 때. \`new Date\`, \`getTime\(\)\`, \`setDate\(\)\`, \`toLocaleDateString\(\)\`을 쓸 때. 제외: 서버가 준 시각 문자열을 파싱 없이 그대로 보여주는 경우. | reviewWith: naming-place-project-constants-in-the-root-constant-folder, values-use-es-toolkit-for-value-helpers
+- T04-08 | values-decide-once-and-carry-the-result | 같은 입력에 같은 판정·정규화·포맷을 두 자리 이상에서 할 때. 포맷하거나 정리한 값을 소비처에서 다시 파싱하거나 정리할 때. 두 함수가 같은 판정 함수를 부르게 되어 공유 보조를 만들려 할 때. | reviewWith: absence-resolve-defaults-at-the-boundary, functions-extract-helpers-only-when-the-boundary-is-real
 - T05-01 | absence-expose-optional-values-instead-of-silent-fallbacks | 선택 값을 읽거나 정규화하거나 넘기는 방식을 바꿀 때. \`??\`, \`\|\|\`, 기본값, 빈 값 대체 분기를 추가·변경할 때. | reviewWith: absence-resolve-defaults-at-the-boundary, naming-place-owner-constants-in-the-owner-constant-folder, naming-place-project-constants-in-the-root-constant-folder
 - T05-02 | absence-resolve-defaults-at-the-boundary | 선택 값의 기본값을 어디서 채울지 정할 때. 같은 선택 값에 \`??\` 기본값 해소가 둘 이상의 사용처에 흩어질 때. search 스키마, 응답 매핑, 쿼리 \`select\`에 기본값 채움을 추가·변경할 때. | reviewWith: absence-expose-optional-values-instead-of-silent-fallbacks, functions-name-a-value-only-for-recompute-or-judgment, values-read-objects-through-chains
+- T05-03 | absence-do-not-guard-what-types-guarantee | \`isNil\`, \`typeof\`, 옵셔널 체이닝으로 값을 검사하는 분기를 추가·변경할 때. 선택 필드에 값을 넣으면서 \`undefined\`를 피하려고 조건부 스프레드를 쓸 때. 제외: \`unknown\`이나 앱 밖에서 온 값을 좁히는 경우. | reviewWith: absence-expose-optional-values-instead-of-silent-fallbacks, types-narrow-unknown-instead-of-asserting
 - T06-01 | docs-keep-body-comments-for-intent-and-steps | 함수 본문의 \`//\` 주석을 추가·수정·유지할 때. 도메인 규칙, 예외 방어, 외부 제약, 부수효과 순서, 긴 절차의 단계를 주석으로 설명할 때. | reviewWith: docs-justify-convention-exceptions-with-a-reason-comment, docs-write-concise-korean-comments-about-purpose-and-constraints
 - T06-02 | docs-require-header-jsdoc-on-key-declarations | 쿼리, 뮤테이션, 원격 함수, 커스텀 훅, 스토어, 포매터 선언을 추가·변경할 때. 분기나 \`await\`나 두 개 이상의 동작이 있는 핸들러와 이펙트를 추가·변경할 때. 다시 쓰거나 내보낸 보조 함수를 추가·변경할 때.
 - T06-03 | docs-write-concise-korean-comments-about-purpose-and-constraints | TypeScript·TSX의 문서 주석이나 인라인 주석 문구를 추가·수정·번역하거나 검토할 때. 문서 주석에 태그를 붙이거나 뺄 때.

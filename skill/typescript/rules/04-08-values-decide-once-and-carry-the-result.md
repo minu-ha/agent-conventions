@@ -1,0 +1,73 @@
+---
+title: Decide Once and Carry the Result
+titleKo: 판정은 한 번만 하고 결과를 데이터에 싣습니다
+impact: MEDIUM-HIGH
+impactDescription: 같은 판정이 두 자리에서 어긋나지 않고 판정 함수를 나눠 쓰는 보조가 늘지 않습니다
+appliesWhen:
+  - 같은 입력에 같은 판정·정규화·포맷을 두 자리 이상에서 할 때
+  - 포맷하거나 정리한 값을 소비처에서 다시 파싱하거나 정리할 때
+  - 두 함수가 같은 판정 함수를 부르게 되어 공유 보조를 만들려 할 때
+reviewWith: functions-extract-helpers-only-when-the-boundary-is-real, absence-resolve-defaults-at-the-boundary
+tags: values, boundaries
+---
+
+## Decide Once and Carry the Result
+
+**Impact: MEDIUM-HIGH (같은 판정이 두 자리에서 어긋나지 않고 판정 함수를 나눠 쓰는 보조가 늘지 않습니다)**
+
+값이 들어오는 경계에서 판정을 한 번 하고 그 결과를 데이터에 실어 아래로 내립니다.
+소비처는 판정하지 않고 실린 필드를 읽습니다.
+
+| 신호 | 대신 |
+| --- | --- |
+| 경계에서 포맷한 문자열을 소비처가 다시 파싱해 포맷함 | 경계에서 한 번 포맷하고 소비처는 그대로 씁니다 |
+| 경계에서 `trim`한 값을 소비처가 다시 `trim`함 | 경계에서 한 번 정리합니다 |
+| 판정 함수를 두 함수가 함께 부름 | 판정 결과를 항목의 필드로 싣고 두 함수는 그 필드를 읽습니다 |
+| 실린 결과 옆에 `?? 다시 판정` 폴백 | 폴백을 지우고 실린 값만 읽습니다 |
+
+실을 필드가 없으면 판정 결과를 담을 자리가 항목 형태에 빠진 것입니다.
+그때는 소비처에서 다시 판정하지 않고 항목 형태에 필드를 더합니다.
+어디를 경계로 잡는지는 `absence-resolve-defaults-at-the-boundary`의 순서와 같습니다.
+
+두 곳이 같은 판정을 하고 있으면 그 판정 함수를 공유 보조로 빼는 것이 답이 아닙니다.
+판정을 한 곳으로 모으면 부르는 자리가 하나가 되어 함수를 뺄 사유가 사라지는 경우가 많습니다.
+
+**Incorrect (경계에서 포맷한 값을 소비처가 다시 파싱해 포맷합니다):**
+
+```ts
+// page/pattern/pg-pattern.tsx: SelectionInfo 를 만들며 이미 포맷한다
+const selectionInfo = {avgCorr: formatStatDecimal(responseSelectionInfoSuspense.data.statCorr)};
+
+// page/pattern/_function/to-metrics-content.ts: 문자열을 다시 숫자로 읽어 다시 포맷한다
+const rows = [{id: "statCorr", value: formatStatDecimal(selectionInfo.avgCorr)}];
+```
+
+**Correct (경계에서 한 번 포맷하고 소비처는 실린 값을 그대로 씁니다):**
+
+```ts
+// page/pattern/_function/to-metrics-content.ts
+const rows = [{id: "statCorr", value: selectionInfo.avgCorr}];
+```
+
+**Incorrect (같은 색 판정을 범례와 차트 둘에서 하고 폴백으로 한 번 더 합니다):**
+
+```ts
+// 범례
+const colorToken = resolveCurveColorToken(curveItem.role, historicalIndex);
+
+// 차트 둘. 범례 팔레트를 읽고도 같은 판정을 다시 한다
+colorToken: colorTokenById.get(curveItem.id) ?? resolveCurveColorToken(curveItem.role, index),
+```
+
+**Correct (경계에서 한 번 정해 항목에 싣고 차트는 읽기만 합니다):**
+
+```ts
+// 범례를 만드는 자리에서 색을 정해 항목에 싣는다
+const comparisonCurves = curveItems.map((curveItem, historicalIndex) => ({
+	...curveItem,
+	colorToken: resolveCurveColorToken(curveItem.role, historicalIndex),
+}));
+
+// 차트 둘
+colorToken: curve.colorToken,
+```

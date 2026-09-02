@@ -1,29 +1,34 @@
 ---
 title: Extract Support Functions Only When the Boundary Is Real
-titleKo: 경계가 실재할 때만 보조 함수를 뺍니다
+titleKo: 보조 함수는 두 자리 이상에서 부를 때만 이름을 붙입니다
 impact: MEDIUM
-impactDescription: 흐름을 읽으려고 파일을 왕복하게 만드는 조각내기를 막습니다
+impactDescription: 흐름을 읽으려고 함수와 파일을 왕복하게 만드는 조각내기를 막습니다
 appliesWhen:
   - 보조 함수를 빼내거나 옮기거나 내보내거나 공유할 때
   - 범용 보조 파일, 소유자 하나만 쓰는 변환 함수, 자잘한 정리 단계의 경계를 바꿀 때
-reviewWith: functions-give-each-function-its-own-file, docs-require-header-jsdoc-on-key-declarations
+reviewWith: >-
+  functions-give-each-function-its-own-file, values-decide-once-and-carry-the-result,
+  docs-require-header-jsdoc-on-key-declarations
 tags: functions, boundaries
 ---
 
 ## Extract Support Functions Only When the Boundary Is Real
 
-**Impact: MEDIUM (흐름을 읽으려고 파일을 왕복하게 만드는 조각내기를 막습니다)**
+**Impact: MEDIUM (흐름을 읽으려고 함수와 파일을 왕복하게 만드는 조각내기를 막습니다)**
 
 기본은 빼지 않는 것입니다.
-흐름은 한 자리에서 위에서 아래로 읽히는 편이 낫습니다.
-빼는 사유는 셋뿐입니다.
-셋 중 하나에 해당해야 뺍니다.
+흐름은 함수 하나 안에서 위에서 아래로 읽히는 편이 낫습니다.
+보조 함수에 이름을 붙이는 사유는 둘뿐입니다.
 
 | 사유 | 조건 |
 | --- | --- |
-| 재사용 | **이 변경을 적용한 뒤의 트리**에서 서로 다른 파일 둘 이상이 실제로 부릅니다. 사용처를 나중에 추가할 계획만 있으면 세지 않습니다 |
+| 재사용 | **이 변경을 적용한 뒤의 코드**에서 두 자리 이상이 실제로 부릅니다. 같은 파일 안의 두 자리도, 서로 다른 파일 둘도 같습니다 |
 | 렌더 파일 밖으로 | `.tsx` 안의 **요청·저장 payload 조립** 함수입니다. 훅·JSX·컴포넌트 상태를 하나도 쓰지 않으면 사용처가 하나여도 `.ts`로 옮깁니다 |
-| 전용 보조 | 같은 파일에서 그 함수만 부르는 보조가 **둘 이상** 딸려 있습니다. 전용 보조는 새 파일 안에 비공개로 따라갑니다 |
+
+한 자리에서만 쓰는 단계는 호출부에 그대로 적습니다.
+단계가 길면 `docs-keep-body-comments-for-intent-and-steps`가 정한 `// 1.` 단계 주석으로 구간을 나눕니다.
+판정이 복잡하다는 이유로 이름을 붙이지 않습니다.
+판정의 이유는 주석이 말합니다.
 
 두 번째 사유는 재사용이 아니라 `.tsx`에 렌더가 아닌 코드를 남기지 않으려는 것입니다.
 `.ts` 안에서는 해당하지 않습니다.
@@ -38,43 +43,63 @@ tags: functions, boundaries
 
 사유가 아닌 것:
 
-- **같은 파일 안에서 몇 번 불리는지.** 부르는 횟수는 세지 않습니다.
-  같은 계산을 두세 번 적어도 괜찮습니다. 세는 것은 전용 보조가 몇 개 딸렸는지뿐입니다.
-  파일을 하나 더 여는 쪽이 더 비쌉니다.
 - **"나중에 또 쓸 것 같아서".** 그때 가서 뺍니다.
+- **함수가 길어서.** 길이는 단계 주석으로 나눕니다.
+  이름을 붙여 밖으로 내면 읽는 사람이 그 이름을 따라 자리를 옮겨야 합니다.
 
-전용 보조 사유는 반대 방향의 넘침을 막습니다.
-단계가 다시 단계를 거느리기 시작하면 한 파일이 계속 자랍니다.
-그때부터는 한 파일에 계속 두는 쪽이 더 비쌉니다.
+같은 판정을 두 자리에서 하고 있어 재사용 사유가 생길 것 같으면 먼저 `values-decide-once-and-carry-the-result`를 봅니다.
+판정을 한 번만 하면 부르는 자리가 하나로 줄어 사유가 사라지는 경우가 많습니다.
 
-사유와 무관하게 빼지 않는 것:
+사유와 무관하게 이름 붙이지 않는 것:
 
 - 본문이 한 줄인 계산
 - `.map()` 콜백 하나에만 쓰이는 변환
 - 선택 값 보정, 라벨 기본값 같은 자잘한 정리 단계
 
-뺀 다음 어디 둘지는 `functions-give-each-function-its-own-file`이 정하고,
+이름 붙인 보조를 어디에 둘지는 `functions-give-each-function-its-own-file`이 정하고,
 루트 `util`로 올릴지는 `functions-promote-shared-functions-to-root-util`이 정합니다.
 
-**Incorrect (전용 보조가 딸린 단계를 한 파일에 계속 쌓습니다):**
+**Incorrect (한 자리에서만 쓰는 단계를 함수로 떼어 내 흐름이 파일 안에서 흩어집니다):**
 
 ```txt
-page/report/_function/to-sales-overview.ts
-  toSalesOverview          내보낸 함수
-  toSummaryBand            내보낸 함수만 부름. 전용 보조 없음
-  toTrendChart             내보낸 함수만 부름. 전용 보조 셋이 딸림
-  toTrendBasePoints        toTrendChart만 부름
-  toTrendBaseLabel         toTrendChart만 부름
-  toTrendPoints            toTrendChart만 부름
+page/report/_function/to-metrics-content.ts
+  toMetricsContent       내보낸 함수. 본문은 세 줄이고 나머지는 아래 함수로 갔다
+  toComparisonRows       toMetricsContent 만 부름
+  toMeaningGroups        toMetricsContent 만 부름
+  toValidityCard         toMetricsContent 만 부름
+  formatMeaningDecimal   toComparisonRows 와 toMeaningGroups 가 부름
 ```
 
-**Correct (전용 보조가 딸린 단계만 자기 파일로 나갑니다):**
+**Correct (한 자리 단계는 호출부에 단계 주석으로 남고 두 자리 이상이 부르는 것만 이름을 받습니다):**
 
 ```txt
-page/report/_function/to-sales-overview/
-├── to-sales-overview.ts   내보낸 함수와 toSummaryBand가 남음
-└── to-trend-chart.ts      전용 보조 셋을 비공개로 품음
+page/report/_function/to-metrics-content/
+├── to-metrics-content.ts        본문 안에 // 1. 비교 행  // 2. 의미 그룹  // 3. 유효성 카드
+└── _format-meaning-decimal.ts   비교 행과 의미 그룹 두 자리가 부름
 ```
+
+```ts
+// page/report/_function/to-metrics-content/to-metrics-content.ts
+/**
+ * 상세 수치와 통계 의미 영역의 표시 데이터. 실시간 상세만 TAM 유효성 카드가 온다
+ */
+export const toMetricsContent = (params: ToMetricsContentParams): MetricsContent => {
+	// 1. 선택 window 기준으로 갱신되는 비교 수치 행
+	const metrics = [
+		{id: "statCorr", label: "상관계수 평균", value: formatMeaningDecimal(params.selectionInfo.avgCorr)},
+		{id: "statP", label: "통계적 유의성", value: params.selectionInfo.statP},
+	];
+
+	// 2. 통계 의미 그룹. 설명이 비면 그룹 제목만 남긴다
+	const statMeaningGroups = [
+		{id: "statistical-significance", title: "패턴의 통계적 의미", description: params.selectionInfo.statDesc, rows: metrics},
+	];
+
+	// 3. TAM 유효성 카드. 실시간 상세에서만 온다
+	return {metrics, statMeaningGroups, tamValidity: params.tamMetrics};
+};
+```
+
 **Incorrect (한 번만 쓰는 한 줄 계산을 파일로 분리합니다):**
 
 ```ts
@@ -147,4 +172,3 @@ export const toProductSaveRequest = (formValues: ProductFormValues) => {
 // page/products/pg-products.tsx 하나만 부르지만 훅도 JSX도 쓰지 않는 계산이다
 import {toProductSaveRequest} from "@/page/products/_function/to-product-save-request";
 ```
-

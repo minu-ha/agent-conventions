@@ -114,8 +114,10 @@ const typescriptRuleUniverse = [
 	"values-avoid-lookup-tables-for-simple-choices",
 	"values-use-es-toolkit-for-value-helpers",
 	"values-handle-dates-with-dayjs",
+	"values-decide-once-and-carry-the-result",
 	"absence-expose-optional-values-instead-of-silent-fallbacks",
 	"absence-resolve-defaults-at-the-boundary",
+	"absence-do-not-guard-what-types-guarantee",
 	"docs-keep-body-comments-for-intent-and-steps",
 	"docs-require-header-jsdoc-on-key-declarations",
 	"docs-write-concise-korean-comments-about-purpose-and-constraints",
@@ -311,16 +313,20 @@ const typescriptRuleRouting = {
 	"functions-extract-helpers-only-when-the-boundary-is-real": {
 		appliesWhen:
 			"보조 함수를 빼내거나 옮기거나 내보내거나 공유할 때. 범용 보조 파일, 소유자 하나만 쓰는 변환 함수, 자잘한 정리 단계의 경계를 바꿀 때.",
-		reviewWith: ["functions-give-each-function-its-own-file", "docs-require-header-jsdoc-on-key-declarations"],
+		reviewWith: [
+			"functions-give-each-function-its-own-file",
+			"values-decide-once-and-carry-the-result",
+			"docs-require-header-jsdoc-on-key-declarations",
+		],
 	},
 	"functions-give-each-function-its-own-file": {
 		appliesWhen:
-			"떼어 낸 보조 함수를 어느 파일이나 폴더에 둘지 정할 때. `helper.ts`, `helpers.ts`, `utils.ts` 같은 파일을 만들거나 거기에 함수를 더할 때. 내보낸 함수가 다른 내보낸 함수를 부르게 될 때.",
+			"떼어 낸 보조 함수를 어느 파일이나 폴더에 둘지 정할 때. `helper.ts`, `helpers.ts`, `utils.ts` 같은 파일을 만들거나 거기에 함수를 더할 때. 대표 함수가 자기만 쓰는 보조를 처음 갖게 될 때. 보조를 부르는 대표 함수나 소유자가 늘어날 때.",
 		reviewWith: ["functions-promote-shared-functions-to-root-util", "functions-order-declarations-top-down"],
 	},
 	"functions-order-declarations-top-down": {
 		appliesWhen:
-			"`.ts` 파일에 선언을 추가하거나 선언 자리를 옮길 때. 비공개 보조를 내보낸 함수보다 위에 두려 할 때. 제외: 리액트 컴포넌트 본문 안 선언 자리를 바꾸는 경우.",
+			"`.ts` 파일에 선언을 추가하거나 선언 자리를 옮길 때. 내보낸 계약 타입이나 모듈 상수를 내보낸 함수보다 아래에 두려 할 때. 제외: 리액트 컴포넌트 본문 안 선언 자리를 바꾸는 경우.",
 		reviewWith: [],
 	},
 	"functions-promote-shared-functions-to-root-util": {
@@ -377,6 +383,11 @@ const typescriptRuleRouting = {
 			"날짜를 파싱하거나 형식을 맞추거나 더하고 뺄 때. `new Date`, `getTime()`, `setDate()`, `toLocaleDateString()`을 쓸 때. 제외: 서버가 준 시각 문자열을 파싱 없이 그대로 보여주는 경우.",
 		reviewWith: ["values-use-es-toolkit-for-value-helpers", "naming-place-project-constants-in-the-root-constant-folder"],
 	},
+	"values-decide-once-and-carry-the-result": {
+		appliesWhen:
+			"같은 입력에 같은 판정·정규화·포맷을 두 자리 이상에서 할 때. 포맷하거나 정리한 값을 소비처에서 다시 파싱하거나 정리할 때. 두 함수가 같은 판정 함수를 부르게 되어 공유 보조를 만들려 할 때.",
+		reviewWith: ["functions-extract-helpers-only-when-the-boundary-is-real", "absence-resolve-defaults-at-the-boundary"],
+	},
 	"absence-expose-optional-values-instead-of-silent-fallbacks": {
 		appliesWhen: "선택 값을 읽거나 정규화하거나 넘기는 방식을 바꿀 때. `??`, `||`, 기본값, 빈 값 대체 분기를 추가·변경할 때.",
 		reviewWith: [
@@ -393,6 +404,11 @@ const typescriptRuleRouting = {
 			"functions-name-a-value-only-for-recompute-or-judgment",
 			"values-read-objects-through-chains",
 		],
+	},
+	"absence-do-not-guard-what-types-guarantee": {
+		appliesWhen:
+			"`isNil`, `typeof`, 옵셔널 체이닝으로 값을 검사하는 분기를 추가·변경할 때. 선택 필드에 값을 넣으면서 `undefined`를 피하려고 조건부 스프레드를 쓸 때. 제외: `unknown`이나 앱 밖에서 온 값을 좁히는 경우.",
+		reviewWith: ["types-narrow-unknown-instead-of-asserting", "absence-expose-optional-values-instead-of-silent-fallbacks"],
 	},
 	"docs-keep-body-comments-for-intent-and-steps": {
 		appliesWhen:
@@ -1013,6 +1029,11 @@ const typescriptSelections = {
 		"docs-write-concise-korean-comments-about-purpose-and-constraints",
 		"docs-justify-convention-exceptions-with-a-reason-comment",
 	],
+	"decide-once-and-guard-real-absence": [
+		"values-decide-once-and-carry-the-result",
+		"absence-expose-optional-values-instead-of-silent-fallbacks",
+		"absence-do-not-guard-what-types-guarantee",
+	],
 } as const;
 
 /**
@@ -1046,7 +1067,7 @@ const typescriptScenarioEvidence = {
 	},
 	"helper-boundary-scope-drift": {
 		prompt:
-			"inline a single-owner `mapProfileRow` sub-step into `profile-api.ts`, place it below the exported builder, and rename that builder by its result.",
+			"inline the single-use `mapProfileRow` sub-step into the exported builder body in `profile-api.ts` with a step comment, and rename that builder by its result.",
 		files: ["src/profile/profile-api.ts"],
 	},
 	"shared-collection-lookups-and-sort": {
@@ -1083,6 +1104,11 @@ const typescriptScenarioEvidence = {
 		prompt:
 			"replace an ungrounded optional page-size `??` literal with a reference to the declared config default and a Korean constraint comment; helper/header boundaries stay unchanged.",
 		files: ["src/search/resolve-page-size.ts"],
+	},
+	"decide-once-and-guard-real-absence": {
+		prompt:
+			"`pg-pattern.tsx` formats `avgCorr` while building `SelectionInfo` and `to-metrics-content.ts` formats the same field again; read the carried value instead, replace `...(isNil(tamValidity) ? {} : {tamValidity})` with a plain optional field, and drop the `isNil` check on the non-null `name` field.",
+		files: ["src/page/pattern/pg-pattern.tsx", "src/page/pattern/_function/to-metrics-content.ts"],
 	},
 } as const;
 
@@ -2083,7 +2109,7 @@ test("TypeScript progressive metadata matches Appendix A exactly", async () => {
 
 	assert.equal(document.metadata.progressiveDisclosure, true);
 	assert.deepEqual(document.metadata.companions ?? [], []);
-	assert.equal(document.rules.length, 39);
+	assert.equal(document.rules.length, 41);
 	assert.deepEqual(
 		Object.fromEntries(document.rules.map((rule) => [getRuleId(rule), {appliesWhen: rule.appliesWhen, reviewWith: rule.reviewWith}])),
 		typescriptRuleRouting,
@@ -2173,7 +2199,7 @@ test("TypeScript routing manifest is an exact twelve-scenario partition with ful
 
 	assert.equal(manifest.version, 1);
 	assert.equal(manifest.skill, "typescript");
-	assert.equal(manifest.scenarios.length, 13);
+	assert.equal(manifest.scenarios.length, 14);
 	assert.deepEqual(
 		Object.fromEntries(manifest.scenarios.map((scenario) => [scenario.id, scenario.expectedSelected.typescript])),
 		typescriptSelections,
@@ -2237,7 +2263,7 @@ test("TypeScript generated index is complete and within the deterministic byte b
 	const expectedIds = document.rules.map((rule) => getRuleId(rule)).sort();
 
 	assert.deepEqual(ids, expectedIds);
-	assert.equal(ids.length, 39);
+	assert.equal(ids.length, 41);
 
 	for (const entry of entries) {
 		assert.equal(entry.fileName, `${entry.id}.md`);

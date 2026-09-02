@@ -53,9 +53,11 @@
     - 4.5 [Avoid Lookup Tables for Simple Value Choices](#45-avoid-lookup-tables-for-simple-value-choices)
     - 4.6 [Use es-toolkit for Value Helpers](#46-use-es-toolkit-for-value-helpers)
     - 4.7 [Handle Dates With dayjs](#47-handle-dates-with-dayjs)
+    - 4.8 [Decide Once and Carry the Result](#48-decide-once-and-carry-the-result)
 5. [Absence and Fallback Handling](#5-absence-and-fallback-handling) — **HIGH**
     - 5.1 [Expose Optional Values Instead of Silent Fallbacks](#51-expose-optional-values-instead-of-silent-fallbacks)
     - 5.2 [Resolve Defaults Once at the Boundary](#52-resolve-defaults-once-at-the-boundary)
+    - 5.3 [Do Not Guard What the Types Already Guarantee](#53-do-not-guard-what-the-types-already-guarantee)
 6. [JSDoc and Comment Conventions](#6-jsdoc-and-comment-conventions) — **MEDIUM**
     - 6.1 [Keep Body Comments for Intent and Steps](#61-keep-body-comments-for-intent-and-steps)
     - 6.2 [Require Header Doc Comments on Key Declarations](#62-require-header-doc-comments-on-key-declarations)
@@ -1346,7 +1348,7 @@ const reportSnapshot: ReportSnapshot = response.data;
 
 **Impact: MEDIUM-HIGH**
 
-함수 선언 형태와 시그니처는 한 가지로 고정하고, 보조 함수는 호출 경계가 있을 때만 떼어 내 정해진 자리에 둡니다. 이름은 무엇이 나오는지로 짓고, 변수는 재계산을 막거나 판정을 설명할 때만 만듭니다. 파일 안 선언 순서도 여기서 정합니다. 넓은 스코프에서 `let` 재할당과 `push`로 값을 쌓지 않는 것도 여기서 봅니다.
+함수 선언 형태와 시그니처는 한 가지로 고정하고, 보조 함수는 두 자리 이상에서 부를 때만 이름을 붙여 정해진 자리에 둡니다. 이름은 무엇이 나오는지로 짓고, 변수는 재계산을 막거나 판정을 설명할 때만 만듭니다. 파일 안 선언 순서도 여기서 정합니다. 넓은 스코프에서 `let` 재할당과 `push`로 값을 쌓지 않는 것도 여기서 봅니다.
 
 ### 3.1 Declare Functions as Arrow Consts
 
@@ -1588,20 +1590,23 @@ fetchProductPage({baseUrl: api_base_url, page: urlParams.page, pageSize: paginat
 
 **Applies when:** 보조 함수를 빼내거나 옮기거나 내보내거나 공유할 때. 범용 보조 파일, 소유자 하나만 쓰는 변환 함수, 자잘한 정리 단계의 경계를 바꿀 때.
 
-**Review with:** `docs-require-header-jsdoc-on-key-declarations`, `functions-give-each-function-its-own-file`
+**Review with:** `docs-require-header-jsdoc-on-key-declarations`, `functions-give-each-function-its-own-file`, `values-decide-once-and-carry-the-result`
 
-**Impact: MEDIUM (흐름을 읽으려고 파일을 왕복하게 만드는 조각내기를 막습니다)**
+**Impact: MEDIUM (흐름을 읽으려고 함수와 파일을 왕복하게 만드는 조각내기를 막습니다)**
 
 기본은 빼지 않는 것입니다.
-흐름은 한 자리에서 위에서 아래로 읽히는 편이 낫습니다.
-빼는 사유는 셋뿐입니다.
-셋 중 하나에 해당해야 뺍니다.
+흐름은 함수 하나 안에서 위에서 아래로 읽히는 편이 낫습니다.
+보조 함수에 이름을 붙이는 사유는 둘뿐입니다.
 
 | 사유 | 조건 |
 | --- | --- |
-| 재사용 | **이 변경을 적용한 뒤의 트리**에서 서로 다른 파일 둘 이상이 실제로 부릅니다. 사용처를 나중에 추가할 계획만 있으면 세지 않습니다 |
+| 재사용 | **이 변경을 적용한 뒤의 코드**에서 두 자리 이상이 실제로 부릅니다. 같은 파일 안의 두 자리도, 서로 다른 파일 둘도 같습니다 |
 | 렌더 파일 밖으로 | `.tsx` 안의 **요청·저장 payload 조립** 함수입니다. 훅·JSX·컴포넌트 상태를 하나도 쓰지 않으면 사용처가 하나여도 `.ts`로 옮깁니다 |
-| 전용 보조 | 같은 파일에서 그 함수만 부르는 보조가 **둘 이상** 딸려 있습니다. 전용 보조는 새 파일 안에 비공개로 따라갑니다 |
+
+한 자리에서만 쓰는 단계는 호출부에 그대로 적습니다.
+단계가 길면 `docs-keep-body-comments-for-intent-and-steps`가 정한 `// 1.` 단계 주석으로 구간을 나눕니다.
+판정이 복잡하다는 이유로 이름을 붙이지 않습니다.
+판정의 이유는 주석이 말합니다.
 
 두 번째 사유는 재사용이 아니라 `.tsx`에 렌더가 아닌 코드를 남기지 않으려는 것입니다.
 `.ts` 안에서는 해당하지 않습니다.
@@ -1616,43 +1621,63 @@ fetchProductPage({baseUrl: api_base_url, page: urlParams.page, pageSize: paginat
 
 사유가 아닌 것:
 
-- **같은 파일 안에서 몇 번 불리는지.** 부르는 횟수는 세지 않습니다.
-  같은 계산을 두세 번 적어도 괜찮습니다. 세는 것은 전용 보조가 몇 개 딸렸는지뿐입니다.
-  파일을 하나 더 여는 쪽이 더 비쌉니다.
 - **"나중에 또 쓸 것 같아서".** 그때 가서 뺍니다.
+- **함수가 길어서.** 길이는 단계 주석으로 나눕니다.
+  이름을 붙여 밖으로 내면 읽는 사람이 그 이름을 따라 자리를 옮겨야 합니다.
 
-전용 보조 사유는 반대 방향의 넘침을 막습니다.
-단계가 다시 단계를 거느리기 시작하면 한 파일이 계속 자랍니다.
-그때부터는 한 파일에 계속 두는 쪽이 더 비쌉니다.
+같은 판정을 두 자리에서 하고 있어 재사용 사유가 생길 것 같으면 먼저 `values-decide-once-and-carry-the-result`를 봅니다.
+판정을 한 번만 하면 부르는 자리가 하나로 줄어 사유가 사라지는 경우가 많습니다.
 
-사유와 무관하게 빼지 않는 것:
+사유와 무관하게 이름 붙이지 않는 것:
 
 - 본문이 한 줄인 계산
 - `.map()` 콜백 하나에만 쓰이는 변환
 - 선택 값 보정, 라벨 기본값 같은 자잘한 정리 단계
 
-뺀 다음 어디 둘지는 `functions-give-each-function-its-own-file`이 정하고,
+이름 붙인 보조를 어디에 둘지는 `functions-give-each-function-its-own-file`이 정하고,
 루트 `util`로 올릴지는 `functions-promote-shared-functions-to-root-util`이 정합니다.
 
-**Incorrect (전용 보조가 딸린 단계를 한 파일에 계속 쌓습니다):**
+**Incorrect (한 자리에서만 쓰는 단계를 함수로 떼어 내 흐름이 파일 안에서 흩어집니다):**
 
 ```txt
-page/report/_function/to-sales-overview.ts
-  toSalesOverview          내보낸 함수
-  toSummaryBand            내보낸 함수만 부름. 전용 보조 없음
-  toTrendChart             내보낸 함수만 부름. 전용 보조 셋이 딸림
-  toTrendBasePoints        toTrendChart만 부름
-  toTrendBaseLabel         toTrendChart만 부름
-  toTrendPoints            toTrendChart만 부름
+page/report/_function/to-metrics-content.ts
+  toMetricsContent       내보낸 함수. 본문은 세 줄이고 나머지는 아래 함수로 갔다
+  toComparisonRows       toMetricsContent 만 부름
+  toMeaningGroups        toMetricsContent 만 부름
+  toValidityCard         toMetricsContent 만 부름
+  formatMeaningDecimal   toComparisonRows 와 toMeaningGroups 가 부름
 ```
 
-**Correct (전용 보조가 딸린 단계만 자기 파일로 나갑니다):**
+**Correct (한 자리 단계는 호출부에 단계 주석으로 남고 두 자리 이상이 부르는 것만 이름을 받습니다):**
 
 ```txt
-page/report/_function/to-sales-overview/
-├── to-sales-overview.ts   내보낸 함수와 toSummaryBand가 남음
-└── to-trend-chart.ts      전용 보조 셋을 비공개로 품음
+page/report/_function/to-metrics-content/
+├── to-metrics-content.ts        본문 안에 // 1. 비교 행  // 2. 의미 그룹  // 3. 유효성 카드
+└── _format-meaning-decimal.ts   비교 행과 의미 그룹 두 자리가 부름
 ```
+
+```ts
+// page/report/_function/to-metrics-content/to-metrics-content.ts
+/**
+ * 상세 수치와 통계 의미 영역의 표시 데이터. 실시간 상세만 TAM 유효성 카드가 온다
+ */
+export const toMetricsContent = (params: ToMetricsContentParams): MetricsContent => {
+	// 1. 선택 window 기준으로 갱신되는 비교 수치 행
+	const metrics = [
+		{id: "statCorr", label: "상관계수 평균", value: formatMeaningDecimal(params.selectionInfo.avgCorr)},
+		{id: "statP", label: "통계적 유의성", value: params.selectionInfo.statP},
+	];
+
+	// 2. 통계 의미 그룹. 설명이 비면 그룹 제목만 남긴다
+	const statMeaningGroups = [
+		{id: "statistical-significance", title: "패턴의 통계적 의미", description: params.selectionInfo.statDesc, rows: metrics},
+	];
+
+	// 3. TAM 유효성 카드. 실시간 상세에서만 온다
+	return {metrics, statMeaningGroups, tamValidity: params.tamMetrics};
+};
+```
+
 **Incorrect (한 번만 쓰는 한 줄 계산을 파일로 분리합니다):**
 
 ```ts
@@ -1730,33 +1755,44 @@ import {toProductSaveRequest} from "@/page/products/_function/to-product-save-re
 
 **Rule:** `T03-04` · `functions-give-each-function-its-own-file`
 
-**Applies when:** 떼어 낸 보조 함수를 어느 파일이나 폴더에 둘지 정할 때. `helper.ts`, `helpers.ts`, `utils.ts` 같은 파일을 만들거나 거기에 함수를 더할 때. 내보낸 함수가 다른 내보낸 함수를 부르게 될 때.
+**Applies when:** 떼어 낸 보조 함수를 어느 파일이나 폴더에 둘지 정할 때. `helper.ts`, `helpers.ts`, `utils.ts` 같은 파일을 만들거나 거기에 함수를 더할 때. 대표 함수가 자기만 쓰는 보조를 처음 갖게 될 때. 보조를 부르는 대표 함수나 소유자가 늘어날 때.
 
 **Requires selected:** `functions-extract-helpers-only-when-the-boundary-is-real` · 함께 적용
 
 **Review with:** `functions-order-declarations-top-down`, `functions-promote-shared-functions-to-root-util`
 
-**Impact: MEDIUM-HIGH (잡동사니 파일이 생기지 않고 내보낸 함수끼리 사슬을 이루지 않습니다)**
+**Impact: MEDIUM-HIGH (잡동사니 파일이 생기지 않고 보조 함수의 주인이 폴더에서 바로 보입니다)**
 
-떼어 낼지는 `functions-extract-helpers-only-when-the-boundary-is-real`이 먼저 판정합니다.
-이 규칙은 그 결과를 어느 파일에 둘지만 봅니다.
+이름을 붙일지는 `functions-extract-helpers-only-when-the-boundary-is-real`이 먼저 판정합니다.
+이 규칙은 이름 붙인 보조를 어느 파일에 둘지만 봅니다.
 루트 `util`로 올릴지는 `functions-promote-shared-functions-to-root-util`이 정합니다.
 
-- 소유자 아래에 `helper.ts`, `helpers.ts`, `utils.ts` 같은 잡동사니 파일을 만들지 않습니다.
-  어느 폴더에 둘지는 프레임워크 컨벤션의 역할 폴더 규칙이 정합니다.
-- 내보낸 대표 함수 하나당 파일 하나이고, 파일명은 그 함수 이름입니다.
-- 내보내는 단계는 파일마다 하나이고, 그 아래 단계는 모두 같은 파일의 비공개 함수로 둡니다.
-
-**전용 보조가 파일로 나가면 대표 함수는 자기 이름 폴더를 갖습니다.**
-나간 파일은 그 폴더 안에 둡니다.
-
-**내보낸 함수가 내보낸 함수를 타고 가는 사슬은 자기 폴더 밖에서 만들지 않습니다.**
-
-| 가져오기 | 판정 |
+| 부르는 쪽 | 자리 |
 | --- | --- |
-| 대표 함수가 자기 폴더 안 파일을 부름 | 사슬이 아니라 그 함수의 내부입니다. 자기 폴더 안 파일을 가져오는 것은 그 대표 함수뿐입니다 |
-| 다른 파일도 그 폴더 안 파일을 부르게 됨 | 재사용이 생긴 것이니 `_function` 바로 아래로 꺼냅니다 |
-| 루트 `util` 함수가 다른 루트 `util` 함수를 가져옴 | 사슬이 아닙니다. 둘 다 공개 진입점이고, 가져오는 줄에서 어느 종류 폴더의 무엇인지 그대로 읽힙니다 |
+| 대표 함수 하나 | 그 대표의 자기 이름 폴더 `_function/<대표>/` 안에 `_<보조>.ts` |
+| 같은 소유자의 대표 함수 둘 이상 | `_function` 바로 아래 `<보조>.ts` |
+| 다른 소유자 | `functions-promote-shared-functions-to-root-util`이 정합니다 |
+
+- 내보낸 대표 함수 하나당 파일 하나이고, 파일명은 그 함수 이름입니다.
+  소유자 아래에 `helper.ts`, `helpers.ts`, `utils.ts` 같은 잡동사니 파일을 만들지 않습니다.
+- 자기만 쓰는 보조가 생기면 대표 함수 파일은 자기 이름 폴더로 들어가고 이름은 폴더와 같습니다.
+  컴포넌트가 자기만 쓰는 파일을 갖게 되면 자기 이름 폴더가 되는 것과 같은 규칙입니다.
+- 대표 함수 파일 아래에 비공개 `const`로 보조를 두지 않습니다.
+  이름을 받은 보조는 파일입니다.
+- 폴더 안은 평평합니다.
+  보조의 보조도 같은 폴더의 `_` 파일이고 그 아래 폴더를 파지 않습니다.
+- 타입과 상수는 이 폴더에 두지 않습니다.
+  소유자의 역할 폴더로 가고, 그 자리는 프레임워크 컨벤션이 정합니다.
+
+**`_` 파일은 같은 폴더의 파일만 가져옵니다.**
+컴포넌트의 `_` 파일과 같은 표식입니다.
+대표 함수가 자기 폴더의 `_` 파일을 부르는 것도, `_` 파일끼리 부르는 것도 사슬이 아니라 대표 함수의 내부입니다.
+
+**승격은 부르는 쪽이 늘 때 한 번씩입니다.**
+같은 소유자의 다른 대표 함수가 부르게 되면 `_function` 바로 아래로 옮기고 `_`를 뗍니다.
+다른 소유자가 부르게 되면 루트 `util` 승격 규칙을 따릅니다.
+루트 `util` 함수가 다른 루트 `util` 함수를 가져오는 것은 사슬이 아닙니다.
+둘 다 공개 진입점이고, 가져오는 줄에서 어느 종류 폴더의 무엇인지 그대로 읽힙니다.
 
 **Incorrect (잡동사니 파일에서 내보낸 함수가 세 단계로 이어집니다):**
 
@@ -1787,38 +1823,52 @@ export const toProductSaveRequest = (values: ProductFormValues) => {
 };
 ```
 
-**Incorrect (보조 모듈 안에서 내보낸 함수가 내보낸 함수를 타고 갑니다):**
+**Incorrect (대표 함수 하나만 부르는 보조를 대표 파일 아래 비공개 `const`로 쌓습니다):**
 
-```ts
-// report-support.ts
-export const toTrendChart = (readings: SalesReading[]) => {
-	// ...
-};
-
-export const toSalesFilterRequest = (filter: SalesFilter) => {
-	// ...
-};
-
-export const toSalesOverview = (readings: SalesReading[]) => {
-	return {chart: toTrendChart(readings)};
-};
+```txt
+page/report/_function/
+├── to-sales-overview.ts
+│     toSalesOverview      내보낸 함수
+│     toTrendChart         toSalesOverview 가 차트 둘에서 부름
+│     toTrendPoints        toTrendChart 가 두 자리에서 부름
+└── to-sales-filter-request.ts
 ```
 
-**Correct (전용 보조가 나간 대표 함수는 자기 이름 폴더를 가집니다):**
+**Correct (자기만 쓰는 보조가 생긴 대표 함수는 자기 이름 폴더를 갖고 보조는 `_` 파일입니다):**
+
+```txt
+page/report/_function/
+├── to-sales-overview/           자기만 쓰는 보조가 있어 폴더
+│   ├── to-sales-overview.ts     대표. 폴더와 같은 이름
+│   ├── _to-trend-chart.ts       toSalesOverview 만 부름
+│   └── _to-trend-points.ts      _to-trend-chart 만 부름. 폴더 안은 평평
+└── to-sales-filter-request.ts   보조가 없어 파일 하나
+```
+
+**Incorrect (한 대표만 부르는 보조를 `_function` 바로 아래에 내보내 둡니다):**
+
+```txt
+page/report/_function/
+├── to-sales-overview.ts
+├── to-sales-digest.ts
+└── to-trend-chart.ts            toSalesOverview 만 부르는데 소유자의 공개 면에 놓임
+```
+
+**Correct (두 대표가 부르게 된 뒤에 `_function` 바로 아래로 올리고 `_`를 뗍니다):**
 
 ```txt
 page/report/_function/
 ├── to-sales-overview/
-│   ├── to-sales-overview.ts   대표 함수. 자기 폴더 안 파일을 조립
-│   └── to-trend-chart.ts      이 폴더 밖에서는 가져오지 않음
-└── to-sales-filter-request.ts
+│   └── to-sales-overview.ts
+├── to-sales-digest.ts           toTrendChart 를 함께 부르기 시작함
+└── to-trend-chart.ts            대표 둘이 불러 공개 면으로 올라옴
 ```
 
 ### 3.5 Order Declarations Top Down
 
 **Rule:** `T03-05` · `functions-order-declarations-top-down`
 
-**Applies when:** `.ts` 파일에 선언을 추가하거나 선언 자리를 옮길 때. 비공개 보조를 내보낸 함수보다 위에 두려 할 때. 제외: 리액트 컴포넌트 본문 안 선언 자리를 바꾸는 경우.
+**Applies when:** `.ts` 파일에 선언을 추가하거나 선언 자리를 옮길 때. 내보낸 계약 타입이나 모듈 상수를 내보낸 함수보다 아래에 두려 할 때. 제외: 리액트 컴포넌트 본문 안 선언 자리를 바꾸는 경우.
 
 **Impact: MEDIUM (파일을 열면 내보낸 함수가 먼저 보이고 부르는 쪽에서 불리는 쪽으로 이어집니다)**
 
@@ -1829,7 +1879,7 @@ page/report/_function/
 1. `import`
 2. 내보낸 계약 타입
 3. 내보낸 대표 함수
-4. 비공개 보조. 부르는 쪽을 위에, 불리는 쪽을 아래에 둡니다
+4. 모듈을 불러올 때 계산되는 선언. 부르는 쪽을 위에, 불리는 쪽을 아래에 둡니다
 
 함수 본문 속 참조는 호출 시점에 해석되므로 불리는 쪽이 아래 있어도 됩니다.
 모듈을 불러올 때 값이 계산되는 선언만 순서를 탑니다.
@@ -1837,43 +1887,44 @@ page/report/_function/
 
 컴포넌트 본문 안에서 훅, 핸들러, 이펙트를 어떤 순서로 둘지는 프레임워크 컨벤션이 정합니다.
 
-**Incorrect (비공개 보조가 내보낸 함수보다 위에 있어 파일을 끝까지 읽어야 합니다):**
+**Incorrect (내보낸 계약 타입이 함수 아래에 있어 시그니처를 읽으려면 파일을 끝까지 내려가야 합니다):**
 
 ```ts
 // page/report/_function/to-summary-rows.ts
-const toSummaryLabel = (item: SalesSummaryItem): string => {
-	return item.name.trim() || item.code;
-};
-
-const toSummaryRow = (item: SalesSummaryItem): SummaryRow => {
-	return {id: item.id, label: toSummaryLabel(item)};
+export const toSummaryRows = (params: ToSummaryRowsParams): SummaryRow[] => {
+	return params.response.items.map((item) => ({id: item.id, label: item.name.trim() || item.code}));
 };
 
 /**
- * 요약 표가 그리는 행 목록. 이름이 비면 코드로 표시한다
+ * 요약 표 행을 만들 때 필요한 입력
  */
-export const toSummaryRows = (response: SalesSummaryResponse): SummaryRow[] => {
-	return response.items.map(toSummaryRow);
-};
+export interface ToSummaryRowsParams {
+	/**
+	 * 요약 조회 응답
+	 */
+	response: SalesSummaryResponse;
+}
 ```
 
-**Correct (내보낸 함수가 맨 위, 불리는 쪽이 호출자 아래로 이어집니다):**
+**Correct (내보낸 계약 타입이 먼저, 그 계약을 받는 함수가 바로 아래에 옵니다):**
 
 ```ts
 // page/report/_function/to-summary-rows.ts
 /**
+ * 요약 표 행을 만들 때 필요한 입력
+ */
+export interface ToSummaryRowsParams {
+	/**
+	 * 요약 조회 응답
+	 */
+	response: SalesSummaryResponse;
+}
+
+/**
  * 요약 표가 그리는 행 목록. 이름이 비면 코드로 표시한다
  */
-export const toSummaryRows = (response: SalesSummaryResponse): SummaryRow[] => {
-	return response.items.map(toSummaryRow);
-};
-
-const toSummaryRow = (item: SalesSummaryItem): SummaryRow => {
-	return {id: item.id, label: toSummaryLabel(item)};
-};
-
-const toSummaryLabel = (item: SalesSummaryItem): string => {
-	return item.name.trim() || item.code;
+export const toSummaryRows = (params: ToSummaryRowsParams): SummaryRow[] => {
+	return params.response.items.map((item) => ({id: item.id, label: item.name.trim() || item.code}));
 };
 ```
 
@@ -1928,7 +1979,7 @@ const supported_locale_set = toSupportedLocaleSet();
 개수로 판정하면 쓰임이 변할 때마다 함수가 자리를 옮겨 다닙니다.
 
 **루트 `util`은 프로젝트가 소유자인 함수 폴더입니다.**
-파일 하나에 함수 하나, 전용 보조는 자기 이름 폴더라는 규칙은 소유자 아래와 같습니다.
+파일 하나에 함수 하나, 자기만 쓰는 보조는 자기 이름 폴더의 `_` 파일이라는 규칙은 소유자 아래와 같습니다.
 다른 점은 폴더 한 겹입니다.
 함수가 많아 종류 폴더로 묶습니다.
 
@@ -2379,7 +2430,7 @@ export const assertLoggedIn = (session: Session): void => {
 
 **Impact: HIGH**
 
-값을 다루는 관용구를 한 가지로 고정합니다. 넘겨받은 배열은 제자리에서 바꾸지 않고, 반복되는 조회는 `Set`과 `Map`으로 모읍니다. 객체에서 값을 꺼낼 때는 구조분해로 끊지 않고 체인으로 읽어 출처를 남깁니다. 한 곳에서 쓸 값은 조회표로 우회하지 않고 사용처에서 직접 고릅니다. 뜻이 있는 숫자는 쓰는 자리에 적지 않고 상수로 선언합니다. 값을 다루는 보조는 직접 만들지 않고 `es-toolkit`에서 찾습니다. 날짜는 `dayjs`로 다룹니다.
+값을 다루는 관용구를 한 가지로 고정합니다. 넘겨받은 배열은 제자리에서 바꾸지 않고, 반복되는 조회는 `Set`과 `Map`으로 모읍니다. 객체에서 값을 꺼낼 때는 구조분해로 끊지 않고 체인으로 읽어 출처를 남깁니다. 한 곳에서 쓸 값은 조회표로 우회하지 않고 사용처에서 직접 고릅니다. 뜻이 있는 숫자는 쓰는 자리에 적지 않고 상수로 선언합니다. 값을 다루는 보조는 직접 만들지 않고 `es-toolkit`에서 찾습니다. 날짜는 `dayjs`로 다룹니다. 같은 판정은 경계에서 한 번만 하고 결과를 데이터에 싣습니다.
 
 ### 4.1 Prefer Immutable Array Sorting
 
@@ -3019,11 +3070,78 @@ export const parseEntryDateText = (dateText: string): string | undefined => {
 const compactDateTime = responseDateTime.slice(0, 16).replace("T", " ");
 ```
 
+### 4.8 Decide Once and Carry the Result
+
+**Rule:** `T04-08` · `values-decide-once-and-carry-the-result`
+
+**Applies when:** 같은 입력에 같은 판정·정규화·포맷을 두 자리 이상에서 할 때. 포맷하거나 정리한 값을 소비처에서 다시 파싱하거나 정리할 때. 두 함수가 같은 판정 함수를 부르게 되어 공유 보조를 만들려 할 때.
+
+**Review with:** `absence-resolve-defaults-at-the-boundary`, `functions-extract-helpers-only-when-the-boundary-is-real`
+
+**Impact: MEDIUM-HIGH (같은 판정이 두 자리에서 어긋나지 않고 판정 함수를 나눠 쓰는 보조가 늘지 않습니다)**
+
+값이 들어오는 경계에서 판정을 한 번 하고 그 결과를 데이터에 실어 아래로 내립니다.
+소비처는 판정하지 않고 실린 필드를 읽습니다.
+
+| 신호 | 대신 |
+| --- | --- |
+| 경계에서 포맷한 문자열을 소비처가 다시 파싱해 포맷함 | 경계에서 한 번 포맷하고 소비처는 그대로 씁니다 |
+| 경계에서 `trim`한 값을 소비처가 다시 `trim`함 | 경계에서 한 번 정리합니다 |
+| 판정 함수를 두 함수가 함께 부름 | 판정 결과를 항목의 필드로 싣고 두 함수는 그 필드를 읽습니다 |
+| 실린 결과 옆에 `?? 다시 판정` 폴백 | 폴백을 지우고 실린 값만 읽습니다 |
+
+실을 필드가 없으면 판정 결과를 담을 자리가 항목 형태에 빠진 것입니다.
+그때는 소비처에서 다시 판정하지 않고 항목 형태에 필드를 더합니다.
+어디를 경계로 잡는지는 `absence-resolve-defaults-at-the-boundary`의 순서와 같습니다.
+
+두 곳이 같은 판정을 하고 있으면 그 판정 함수를 공유 보조로 빼는 것이 답이 아닙니다.
+판정을 한 곳으로 모으면 부르는 자리가 하나가 되어 함수를 뺄 사유가 사라지는 경우가 많습니다.
+
+**Incorrect (경계에서 포맷한 값을 소비처가 다시 파싱해 포맷합니다):**
+
+```ts
+// page/pattern/pg-pattern.tsx: SelectionInfo 를 만들며 이미 포맷한다
+const selectionInfo = {avgCorr: formatStatDecimal(responseSelectionInfoSuspense.data.statCorr)};
+
+// page/pattern/_function/to-metrics-content.ts: 문자열을 다시 숫자로 읽어 다시 포맷한다
+const rows = [{id: "statCorr", value: formatStatDecimal(selectionInfo.avgCorr)}];
+```
+
+**Correct (경계에서 한 번 포맷하고 소비처는 실린 값을 그대로 씁니다):**
+
+```ts
+// page/pattern/_function/to-metrics-content.ts
+const rows = [{id: "statCorr", value: selectionInfo.avgCorr}];
+```
+
+**Incorrect (같은 색 판정을 범례와 차트 둘에서 하고 폴백으로 한 번 더 합니다):**
+
+```ts
+// 범례
+const colorToken = resolveCurveColorToken(curveItem.role, historicalIndex);
+
+// 차트 둘. 범례 팔레트를 읽고도 같은 판정을 다시 한다
+colorToken: colorTokenById.get(curveItem.id) ?? resolveCurveColorToken(curveItem.role, index),
+```
+
+**Correct (경계에서 한 번 정해 항목에 싣고 차트는 읽기만 합니다):**
+
+```ts
+// 범례를 만드는 자리에서 색을 정해 항목에 싣는다
+const comparisonCurves = curveItems.map((curveItem, historicalIndex) => ({
+	...curveItem,
+	colorToken: resolveCurveColorToken(curveItem.role, historicalIndex),
+}));
+
+// 차트 둘
+colorToken: curve.colorToken,
+```
+
 ## 5. Absence and Fallback Handling
 
 **Impact: HIGH**
 
-값이 없을 수 있는 상태를 다루는 규칙을 모읍니다. 기본값으로 덮어 감추지 않고 없다는 사실을 사용처까지 남깁니다.
+값이 없을 수 있는 상태를 다루는 규칙을 모읍니다. 기본값으로 덮어 감추지 않고 없다는 사실을 사용처까지 남깁니다. 타입이 이미 보장하는 것은 다시 검사하지 않습니다.
 
 ### 5.1 Expose Optional Values Instead of Silent Fallbacks
 
@@ -3158,6 +3276,74 @@ const effectivePageSize = query.pageSize ?? pagination_default_page_size;
 
 fetchProducts({pageSize: effectivePageSize});
 setVisibleRowCount(effectivePageSize);
+```
+
+### 5.3 Do Not Guard What the Types Already Guarantee
+
+**Rule:** `T05-03` · `absence-do-not-guard-what-types-guarantee`
+
+**Applies when:** `isNil`, `typeof`, 옵셔널 체이닝으로 값을 검사하는 분기를 추가·변경할 때. 선택 필드에 값을 넣으면서 `undefined`를 피하려고 조건부 스프레드를 쓸 때. 제외: `unknown`이나 앱 밖에서 온 값을 좁히는 경우.
+
+**Review with:** `absence-expose-optional-values-instead-of-silent-fallbacks`, `types-narrow-unknown-instead-of-asserting`
+
+**Impact: MEDIUM (쓸모없는 방어 분기가 사라져 실제로 없을 수 있는 자리만 코드에 남습니다)**
+
+검사는 타입이 못 막는 것에만 씁니다.
+`string` 타입에 `isNil`, `number` 타입에 `typeof value === "number"`, 필수 필드에 `?.`는 타입이 이미 답한 질문입니다.
+그런 분기는 읽는 사람에게 "여기서 값이 없을 수 있다"는 거짓 신호를 주고, 정말 없을 수 있는 자리를 묻어 버립니다.
+
+| 형태 | 판정 |
+| --- | --- |
+| `string` 값에 `?.trim()` | 위반 |
+| `number` 필드에 `typeof value === "number"` | 위반 |
+| 필수 필드에 `isNil(value)` 분기 | 위반 |
+| `string \| null` 값에 `isNil(value)` | 통과. 타입이 없을 수 있다고 말합니다 |
+| `unknown`이나 앱 밖에서 온 값을 좁힘 | 대상이 아닙니다. `types-narrow-unknown-instead-of-asserting`이 정합니다 |
+
+**선택 필드에는 `undefined`를 그대로 넣습니다.**
+`...(isNil(value) ? {} : {value})`로 키를 숨기지 않습니다.
+소비처는 선택 필드를 `?.`로 읽으므로 키가 있든 없든 같습니다.
+`exactOptionalPropertyTypes`를 켠 프로젝트만 예외입니다.
+그때는 `docs-justify-convention-exceptions-with-a-reason-comment`를 따라 이유를 남깁니다.
+
+값이 정말 없을 수 있을 때 무엇을 넣는지는 `absence-expose-optional-values-instead-of-silent-fallbacks`가 정합니다.
+
+**Incorrect (타입이 `string`으로 보장한 값을 다시 검사합니다):**
+
+```ts
+const toRowLabel = (row: ProductRow): string => {
+	if (isNil(row.name)) {
+		return row.code;
+	}
+
+	return row.name.trim();
+};
+```
+
+**Correct (타입이 답한 질문은 다시 묻지 않습니다):**
+
+```ts
+const toRowLabel = (row: ProductRow): string => {
+	return row.name.trim();
+};
+```
+
+**Incorrect (선택 필드의 `undefined`를 조건부 스프레드로 숨깁니다):**
+
+```ts
+return {
+	metrics,
+	...(isNil(tamValidity) ? {} : {tamValidity}),
+};
+```
+
+**Correct (선택 필드에는 `undefined`를 그대로 넣습니다):**
+
+```ts
+return {
+	metrics,
+	tamValidity: isNil(params.tamMetrics) ? undefined : toTamValidity(params.tamMetrics),
+};
 ```
 
 ## 6. JSDoc and Comment Conventions

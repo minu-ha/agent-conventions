@@ -20,7 +20,7 @@ tags: ownership
 | --- | --- |
 | 소유자 | 자기만 쓰는 파일을 가진 컴포넌트. 자기 이름의 폴더를 갖고, 라우트는 늘 소유자입니다 |
 | 진입 파일 | 레이어 접두사를 뺀 이름이 폴더와 같은 파일. 한 폴더에 라우트가 여럿이면 첫 진입은 `pg-<folder>`, 나머지는 `pg-<folder>-<변형>`입니다 |
-| `_` 컴포넌트 파일 | 진입 파일이 아닌 컴포넌트 파일. 동반 `.css`도 같은 이름이고, 같은 폴더에서만 가져옵니다 |
+| `_` 파일 | 진입 파일이 아닌 컴포넌트 파일과 `_function` 안 대표 함수 폴더의 보조 함수 파일. 같은 폴더에서만 가져옵니다. 컴포넌트 `_` 파일은 동반 `.css`도 같은 이름입니다 |
 | 역할 폴더 | `_constant`·`_function`·`_hook`·`_type`. 이 넷뿐이고 새로 만들지 않습니다 |
 | 하위 소유자 | 소유자 폴더 안의 소유자. 한 겹까지이고, 역할 폴더 넷이 아닌 폴더는 전부 하위 소유자입니다 |
 
@@ -45,8 +45,10 @@ tags: ownership
   생기면 위로 올려 하위 소유자의 형제로 두거나 `widget`으로 나갈 대상인지 봅니다.
 - 필요한 역할 폴더만 그때 만듭니다.
   파일이 하나뿐인 역할 폴더도 그대로 둡니다.
-- 전용 보조 파일을 거느린 함수만 `_function` 아래 자기 이름 폴더를 갖습니다.
-  언제 거느리는지는 `typescript/functions-extract-helpers-only-when-the-boundary-is-real`이 정합니다.
+- 자기만 쓰는 보조 함수 파일이 생긴 함수만 `_function` 아래 자기 이름 폴더를 갖고, 보조 파일은 `_`로 시작합니다.
+  그 폴더에 역할 폴더를 다시 만들지 않습니다.
+  보조에 이름을 붙일지는 `typescript/functions-extract-helpers-only-when-the-boundary-is-real`이,
+  자리는 `typescript/functions-give-each-function-its-own-file`이 정합니다.
 - 프롭스는 해당 TSX에 둡니다.
   여러 파일이 공유하는 계약만 `_type`으로 옮깁니다.
 - 파일명과 심볼의 레이어 접두사는 `ownership-prefix-layer-names-on-files-and-symbols`가 정합니다.
@@ -109,9 +111,9 @@ page/detail/
 ├── _pg-summary-band.css
 ├── _function/
 │   ├── to-product-summary.ts
-│   └── to-sales-chart/
+│   └── to-sales-chart/                자기만 쓰는 보조가 있어 폴더
 │       ├── to-sales-chart.ts
-│       └── to-chart-window.ts
+│       └── _to-chart-window.ts        toSalesChart 만 부름
 ├── _type/
 │   └── detail-view-model.ts
 └── sales-trend-panel/             자기만 쓰는 파일이 있어 하위 소유자 폴더가 됨

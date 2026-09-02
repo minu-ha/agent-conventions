@@ -32,8 +32,8 @@ tags: screen
 먼저 시도한 뒤에도 남는 금지 구조:
 
 - 한 컴포넌트, 한 핸들러, 한 쿼리 `select`만 쓰는 보조 함수를 보조 모듈에 쌓는 구조
-- 내보낸 보조 함수가 다른 내보낸 보조 함수 하나만을 위해 존재하는 구조.
-  대표 함수 자기 이름 폴더 안의 전용 보조는 `typescript/functions-give-each-function-its-own-file`이 정한 예외입니다
+- 한 대표 함수만 부르는 보조를 `_function` 바로 아래에 내보내 두는 구조.
+  그 보조의 자리는 `typescript/functions-give-each-function-its-own-file`이 정합니다
 - 이름이 그럴듯하다는 이유로 흐름을 파일 왕복 뒤에 숨기는 구조
 
 **Incorrect (컴포넌트 하나만 쓰는 단계 보조 함수를 보조 모듈에 남깁니다):**

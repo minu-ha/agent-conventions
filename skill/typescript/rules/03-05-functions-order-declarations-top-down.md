@@ -5,7 +5,7 @@ impact: MEDIUM
 impactDescription: 파일을 열면 내보낸 함수가 먼저 보이고 부르는 쪽에서 불리는 쪽으로 이어집니다
 appliesWhen:
   - `.ts` 파일에 선언을 추가하거나 선언 자리를 옮길 때
-  - 비공개 보조를 내보낸 함수보다 위에 두려 할 때
+  - 내보낸 계약 타입이나 모듈 상수를 내보낸 함수보다 아래에 두려 할 때
   - 제외: 리액트 컴포넌트 본문 안 선언 자리를 바꾸는 경우
 tags: functions, ordering
 ---
@@ -21,7 +21,7 @@ tags: functions, ordering
 1. `import`
 2. 내보낸 계약 타입
 3. 내보낸 대표 함수
-4. 비공개 보조. 부르는 쪽을 위에, 불리는 쪽을 아래에 둡니다
+4. 모듈을 불러올 때 계산되는 선언. 부르는 쪽을 위에, 불리는 쪽을 아래에 둡니다
 
 함수 본문 속 참조는 호출 시점에 해석되므로 불리는 쪽이 아래 있어도 됩니다.
 모듈을 불러올 때 값이 계산되는 선언만 순서를 탑니다.
@@ -29,43 +29,44 @@ tags: functions, ordering
 
 컴포넌트 본문 안에서 훅, 핸들러, 이펙트를 어떤 순서로 둘지는 프레임워크 컨벤션이 정합니다.
 
-**Incorrect (비공개 보조가 내보낸 함수보다 위에 있어 파일을 끝까지 읽어야 합니다):**
+**Incorrect (내보낸 계약 타입이 함수 아래에 있어 시그니처를 읽으려면 파일을 끝까지 내려가야 합니다):**
 
 ```ts
 // page/report/_function/to-summary-rows.ts
-const toSummaryLabel = (item: SalesSummaryItem): string => {
-	return item.name.trim() || item.code;
-};
-
-const toSummaryRow = (item: SalesSummaryItem): SummaryRow => {
-	return {id: item.id, label: toSummaryLabel(item)};
+export const toSummaryRows = (params: ToSummaryRowsParams): SummaryRow[] => {
+	return params.response.items.map((item) => ({id: item.id, label: item.name.trim() || item.code}));
 };
 
 /**
- * 요약 표가 그리는 행 목록. 이름이 비면 코드로 표시한다
+ * 요약 표 행을 만들 때 필요한 입력
  */
-export const toSummaryRows = (response: SalesSummaryResponse): SummaryRow[] => {
-	return response.items.map(toSummaryRow);
-};
+export interface ToSummaryRowsParams {
+	/**
+	 * 요약 조회 응답
+	 */
+	response: SalesSummaryResponse;
+}
 ```
 
-**Correct (내보낸 함수가 맨 위, 불리는 쪽이 호출자 아래로 이어집니다):**
+**Correct (내보낸 계약 타입이 먼저, 그 계약을 받는 함수가 바로 아래에 옵니다):**
 
 ```ts
 // page/report/_function/to-summary-rows.ts
 /**
+ * 요약 표 행을 만들 때 필요한 입력
+ */
+export interface ToSummaryRowsParams {
+	/**
+	 * 요약 조회 응답
+	 */
+	response: SalesSummaryResponse;
+}
+
+/**
  * 요약 표가 그리는 행 목록. 이름이 비면 코드로 표시한다
  */
-export const toSummaryRows = (response: SalesSummaryResponse): SummaryRow[] => {
-	return response.items.map(toSummaryRow);
-};
-
-const toSummaryRow = (item: SalesSummaryItem): SummaryRow => {
-	return {id: item.id, label: toSummaryLabel(item)};
-};
-
-const toSummaryLabel = (item: SalesSummaryItem): string => {
-	return item.name.trim() || item.code;
+export const toSummaryRows = (params: ToSummaryRowsParams): SummaryRow[] => {
+	return params.response.items.map((item) => ({id: item.id, label: item.name.trim() || item.code}));
 };
 ```
 

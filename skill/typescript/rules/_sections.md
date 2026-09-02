@@ -21,8 +21,8 @@
 ## 3. Functions and Helper Boundaries (functions)
 **TitleKo:** 함수와 보조 함수 경계
 **Impact:** MEDIUM-HIGH
-**Description:** 함수 선언 형태와 시그니처는 한 가지로 고정하고, 보조 함수는 호출 경계가 있을 때만 떼어 내 정해진
-  자리에 둡니다.
+**Description:** 함수 선언 형태와 시그니처는 한 가지로 고정하고, 보조 함수는 두 자리 이상에서 부를 때만 이름을 붙여
+  정해진 자리에 둡니다.
   이름은 무엇이 나오는지로 짓고, 변수는 재계산을 막거나 판정을 설명할 때만 만듭니다.
   파일 안 선언 순서도 여기서 정합니다.
   넓은 스코프에서 `let` 재할당과 `push`로 값을 쌓지 않는 것도 여기서 봅니다.
@@ -37,12 +37,14 @@
   뜻이 있는 숫자는 쓰는 자리에 적지 않고 상수로 선언합니다.
   값을 다루는 보조는 직접 만들지 않고 `es-toolkit`에서 찾습니다.
   날짜는 `dayjs`로 다룹니다.
+  같은 판정은 경계에서 한 번만 하고 결과를 데이터에 싣습니다.
 
 ## 5. Absence and Fallback Handling (absence)
 **TitleKo:** 없는 값 다루기
 **Impact:** HIGH
 **Description:** 값이 없을 수 있는 상태를 다루는 규칙을 모읍니다.
   기본값으로 덮어 감추지 않고 없다는 사실을 사용처까지 남깁니다.
+  타입이 이미 보장하는 것은 다시 검사하지 않습니다.
 
 ## 6. JSDoc and Comment Conventions (docs)
 **TitleKo:** JSDoc과 주석 규약

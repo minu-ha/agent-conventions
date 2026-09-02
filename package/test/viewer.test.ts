@@ -93,7 +93,7 @@ test("parseRuleBody handles every rule in the repository", async () => {
 		}
 	}
 
-	assert.equal(ruleCount, 125);
+	assert.equal(ruleCount, 127);
 	assert.ok(blockCount > 300, `expected 300+ code blocks, found ${blockCount}`);
 });
 
@@ -200,7 +200,7 @@ test("buildViewerPayload collects only progressive skills", async () => {
 	const payload = await buildViewerPayload();
 
 	assert.equal(payload.skills.length, 3);
-	assert.equal(payload.rules.length, 125);
+	assert.equal(payload.rules.length, 127);
 	assert.equal(payload.sections.length, 28);
 
 	const react = payload.skills.find((skill) => skill.name === "react");
@@ -429,7 +429,7 @@ test("generateViewerArtifacts keeps the payload in the data script and stays byt
 	assert.ok(encoded, "expected a global assignment in the data script");
 
 	const payload = JSON.parse(encoded);
-	assert.equal(payload.rules.length, 125);
+	assert.equal(payload.rules.length, 127);
 	assert.equal(payload.skills.length, 3);
 	assert.equal(payload.sections.length, 28);
 });
