@@ -1602,7 +1602,7 @@ fetchProductPage({baseUrl: api_base_url, page: urlParams.page, pageSize: paginat
 | --- | --- |
 | 재사용 | **이 변경을 적용한 뒤의 코드**에서 두 자리 이상이 실제로 부릅니다. 같은 파일 안의 두 자리도, 서로 다른 파일 둘도 같습니다 |
 | 렌더 파일 밖으로 | `.tsx` 안의 **요청·저장 payload 조립** 함수입니다. 훅·JSX·컴포넌트 상태를 하나도 쓰지 않으면 사용처가 하나여도 `.ts`로 옮깁니다 |
-| 삼항에 담기지 않는 분기 | 이른 반환이 셋 이상인 판정입니다. 중첩 삼항과 `let` 재할당은 `functions-avoid-imperative-assembly-in-wide-scopes`가 막으므로 함수가 유일한 형태입니다 |
+| 함수 형태로만 되는 것 | 이른 반환이 셋 이상인 판정, `value is T` 타입 가드, 재귀입니다. 중첩 삼항과 `let` 재할당은 `functions-avoid-imperative-assembly-in-wide-scopes`가 막고, 타입 가드와 재귀는 이름 없이는 쓸 수 없습니다 |
 
 한 자리에서만 쓰는 단계는 호출부에 그대로 적습니다.
 단계가 길면 `docs-keep-body-comments-for-intent-and-steps`가 정한 `// 1.` 단계 주석으로 구간을 나눕니다.
@@ -1610,6 +1610,7 @@ fetchProductPage({baseUrl: api_base_url, page: urlParams.page, pageSize: paginat
 판정의 이유는 주석이 말합니다.
 분기가 셋 이상이라 삼항 하나에 담기지 않을 때만 세 번째 사유로 이름을 받습니다.
 분기가 둘이면 삼항 하나로 호출부에 씁니다.
+`value is T`로 좁히는 함수는 인라인하면 좁힘이 사라지므로 한 줄이어도 이름을 받습니다.
 
 두 번째 사유는 재사용이 아니라 `.tsx`에 렌더가 아닌 코드를 남기지 않으려는 것입니다.
 `.ts` 안에서는 해당하지 않습니다.
@@ -1633,7 +1634,7 @@ fetchProductPage({baseUrl: api_base_url, page: urlParams.page, pageSize: paginat
 
 사유와 무관하게 이름 붙이지 않는 것:
 
-- 본문이 한 줄인 계산
+- 본문이 한 줄인 계산. 두 자리 이상에서 써도 그 자리마다 그대로 적습니다
 - `.map()` 콜백 하나에만 쓰이는 변환
 - 선택 값 보정, 라벨 기본값 같은 자잘한 정리 단계
 
