@@ -88,7 +88,7 @@
 					"composition-do-not-build-structural-variants-with-modifiers",
 					"composition-keep-classes-single-purpose",
 					"selector-use-pseudo-classes-for-dom-owned-states",
-					"selector-separate-domain-state-modifiers-from-dom-interaction-states"
+					"selector-nest-dom-state-in-the-owning-block"
 				]
 			}
 		},
@@ -183,7 +183,7 @@
 						"ownership-use-foreign-classes-only-under-your-own-root",
 						"composition-compose-classes-with-clsx",
 						"composition-inject-classes-only-at-the-entry-point",
-						"values-always-provide-css-variable-fallbacks"
+						"values-fall-back-only-outside-core-tokens"
 					]
 				}
 			}
@@ -270,7 +270,6 @@
 				"css": [
 					"selector-use-pseudo-classes-for-dom-owned-states",
 					"selector-nest-dom-state-in-the-owning-block",
-					"selector-separate-domain-state-modifiers-from-dom-interaction-states",
 					"a11y-always-provide-a-visible-focus-indicator"
 				]
 			}
@@ -288,8 +287,8 @@
 				"css": [
 					"ownership-use-foreign-classes-only-under-your-own-root",
 					"selector-use-pseudo-classes-for-dom-owned-states",
-					"selector-separate-domain-state-modifiers-from-dom-interaction-states",
-					"values-always-provide-css-variable-fallbacks",
+					"selector-nest-dom-state-in-the-owning-block",
+					"values-fall-back-only-outside-core-tokens",
 					"values-tokenize-repeated-visual-values",
 					"a11y-namespace-keyframes-and-respect-reduced-motion"
 				]
@@ -373,9 +372,10 @@
 			],
 			"expectedSelected": {
 				"css": [
-					"values-always-provide-css-variable-fallbacks",
+					"values-fall-back-only-outside-core-tokens",
 					"values-tokenize-repeated-visual-values",
-					"values-switch-themes-by-changing-token-values"
+					"values-switch-themes-by-changing-token-values",
+					"values-name-tokens-by-purpose"
 				]
 			}
 		},

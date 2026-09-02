@@ -52,12 +52,12 @@
     - 4.5 [Use Pseudo-classes for DOM-owned States](#45-use-pseudo-classes-for-dom-owned-states)
     - 4.6 [Nest DOM State Pseudo-classes in the Owning Block](#46-nest-dom-state-pseudo-classes-in-the-owning-block)
     - 4.7 [Do Not Negate With `:not()`](#47-do-not-negate-with-not)
-    - 4.8 [Separate Domain State Modifiers From DOM Interaction States](#48-separate-domain-state-modifiers-from-dom-interaction-states)
 5. [Design Tokens](#5-design-tokens) — **HIGH**
     - 5.1 [Declare Core Tokens Once and Fall Back Everywhere Else](#51-declare-core-tokens-once-and-fall-back-everywhere-else)
     - 5.2 [Use Global Tokens and Do Not Create Local Ones](#52-use-global-tokens-and-do-not-create-local-ones)
     - 5.3 [Declare Stacking Layers as Tokens in One Place](#53-declare-stacking-layers-as-tokens-in-one-place)
     - 5.4 [Switch Themes by Changing Token Values](#54-switch-themes-by-changing-token-values)
+    - 5.5 [Name Tokens by Purpose, Not by Value](#55-name-tokens-by-purpose-not-by-value)
 6. [Layout and Responsiveness](#6-layout-and-responsiveness) — **MEDIUM-HIGH**
     - 6.1 [Group Breakpoints at the Bottom of the File](#61-group-breakpoints-at-the-bottom-of-the-file)
     - 6.2 [Write Breakpoints Desktop First](#62-write-breakpoints-desktop-first)
@@ -918,7 +918,7 @@ export const UiCollapse = (props: UiCollapseProps) => {
 
 **Applies when:** TSX에 `style={{ … }}`를 추가하거나 그 안의 선언을 바꿀 때. 컴포넌트 프롭으로 `style`을 받아 넘길 때.
 
-**Review with:** `composition-inject-classes-only-at-the-entry-point`, `values-always-provide-css-variable-fallbacks`, `values-tokenize-repeated-visual-values`
+**Review with:** `composition-inject-classes-only-at-the-entry-point`, `values-fall-back-only-outside-core-tokens`, `values-tokenize-repeated-visual-values`
 
 **Impact: HIGH (모든 시각 결정이 스타일시트에 남아 검색과 덮어쓰기가 예측대로 동작합니다)**
 
@@ -937,7 +937,7 @@ export const UiCollapse = (props: UiCollapseProps) => {
 
 둘째 행이 유일한 예외입니다.
 가상 스크롤 위치, 드래그 좌표, 측정한 높이처럼 스타일시트에 적을 수 없는 값이 여기 해당합니다.
-변수가 없을 때를 대비한 대체값은 `values-always-provide-css-variable-fallbacks` 규칙이 정합니다.
+변수가 없을 때를 대비한 대체값은 `values-fall-back-only-outside-core-tokens` 규칙이 정합니다.
 
 래퍼가 `HTMLAttributes`를 `extends`하면 `style`이 함께 열립니다.
 `Omit`으로 뺄 수는 있지만 DOM 표면을 열어 두려고 그대로 두므로 이 규칙을 리뷰가 봅니다.
@@ -1557,7 +1557,7 @@ TSX에서 그 지점이 보이므로 "이 마크업을 우리가 쓰는가"를 �
 
 **Applies when:** `:hover`, `:visited`, `:focus*`, `:disabled`, `:checked`를 추가·수정할 때. 조상의 DOM 상태가 자손 스타일에 영향을 줄 때.
 
-**Requires selected:** `selector-separate-domain-state-modifiers-from-dom-interaction-states` · 함께 적용
+**Requires selected:** `selector-nest-dom-state-in-the-owning-block` · 함께 적용
 
 **Impact: HIGH (브라우저가 주는 상호작용 상태와 앱이 정하는 상태 수정자를 나눕니다)**
 
@@ -1676,14 +1676,22 @@ TSX에서 그 지점이 보이므로 "이 마크업을 우리가 쓰는가"를 �
 
 **Rule:** `C04-06` · `selector-nest-dom-state-in-the-owning-block`
 
-**Applies when:** `:hover`, `:focus-visible`, `:disabled`, `:checked` 스타일을 추가·수정할 때. 조상의 DOM 상태가 자손 스타일을 바꿔야 할 때.
+**Applies when:** `:hover`, `:focus-visible`, `:disabled`, `:checked` 스타일을 추가·수정할 때. 조상의 DOM 상태가 자손 스타일을 바꿔야 할 때. 상태 가상 클래스를 수정자 블록 안팎으로 옮길 때.
 
-**Review with:** `selector-do-not-group-classes-with-commas`, `selector-limit-nesting-block-depth`, `selector-use-pseudo-classes-for-dom-owned-states`
+**Review with:** `a11y-always-provide-a-visible-focus-indicator`, `selector-do-not-group-classes-with-commas`, `selector-limit-nesting-block-depth`, `selector-use-pseudo-classes-for-dom-owned-states`
 
-**Impact: MEDIUM (한 요소의 기본 모습과 상태 변화를 한 블록에서 나란히 읽습니다)**
+**Impact: MEDIUM (한 요소의 기본 모습과 상태 변화를 한 블록에서 나란히 읽고 수정자가 꺼져도 상호작용 표시가 남습니다)**
 
 DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 씁니다.
 같은 가상 클래스를 블록 바깥에서 다시 열지 않습니다.
+
+**수정자 블록 안에도 두지 않습니다.**
+도메인 상태와 무관한 `:hover`, `:focus-visible`, `:disabled`는 조건 없는 기본 블록에 둡니다.
+수정자 아래로 옮겨 적용 대상을 좁히지 않습니다.
+옮기면 그 상태가 아닐 때 상호작용 표시가 사라집니다.
+읽는 사람은 기본 블록만 보고 상호작용이 없다고 판단합니다.
+수정자가 켜진 경우에만 상호작용이 달라져야 한다는 제품 요구가 있을 때만 예외를 적습니다.
+포커스 표시 자체는 `a11y-always-provide-a-visible-focus-indicator` 규칙이 담당합니다.
 
 - 기본 모습과 상태 변화가 한 블록에 있어서 무엇이 어떻게 바뀌는지 바로 읽힙니다.
 - 파일 어디에 상태 스타일이 더 있는지 찾지 않습니다.
@@ -1769,6 +1777,40 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 	&:hover .wg_siteHeader__brandMark {
 		transform: rotate(-2deg);
 	}
+}
+```
+
+**Incorrect (상호작용 상태를 수정자 아래로 옮겨 적용 대상을 좁힙니다):**
+
+```css
+.ui_button__root--active {
+	background: var(--app-color-accent);
+
+	&:hover {
+		background: var(--app-color-accent-strong);
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--app-color-focus);
+	}
+}
+```
+
+**Correct (상호작용 상태를 조건 없는 기본 블록으로 되돌립니다):**
+
+```css
+.ui_button__root {
+	&:hover {
+		background: var(--app-color-accent-strong);
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--app-color-focus);
+	}
+}
+
+.ui_button__root--active {
+	background: var(--app-color-accent);
 }
 ```
 
@@ -1871,64 +1913,6 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
-### 4.8 Separate Domain State Modifiers From DOM Interaction States
-
-**Rule:** `C04-08` · `selector-separate-domain-state-modifiers-from-dom-interaction-states`
-
-**Applies when:** 앱 상태 수정자와 `:hover`, `:focus-visible`, `:disabled` 같은 DOM 상호작용 상태를 추가·변경할 때. 포커스 링을 수정할 때.
-
-**Review with:** `a11y-always-provide-a-visible-focus-indicator`, `composition-do-not-build-structural-variants-with-modifiers`
-
-**Impact: HIGH (앱 상태와 `:hover`, 포커스 동작을 섞지 않아 읽기 쉽고 접근성도 지킵니다)**
-
-도메인 상태와 DOM 상호작용 상태는 다른 블록에 둡니다.
-
-| 상태 | 자리 |
-| --- | --- |
-| 도메인 상태와 무관한 `:hover`, `:focus-visible`, `:disabled` | 조건 없는 기본 블록. 수정자 아래로 옮겨 적용 대상을 좁히지 않습니다 |
-
-수정자가 켜진 경우에만 상호작용이 달라져야 한다는 제품 요구가 있을 때만 예외를 적습니다.
-
-수정자 아래로 옮기면 그 상태가 아닐 때 `:hover`와 `:focus-visible`이 사라집니다.
-읽는 사람은 기본 블록만 보고 상호작용이 없다고 판단합니다.
-
-포커스 표시 자체는 `a11y-always-provide-a-visible-focus-indicator` 규칙이 담당합니다.
-무엇을 수정자로 두고 무엇을 가상 클래스로 둘지는 `selector-use-pseudo-classes-for-dom-owned-states` 규칙이 정합니다.
-
-**Incorrect (상호작용 상태를 수정자 아래로 옮겨 적용 대상을 좁힙니다):**
-
-```css
-.ui_button__root--active {
-	background: var(--app-color-accent);
-
-	&:hover {
-		background: var(--app-color-accent-strong);
-	}
-
-	&:focus-visible {
-		outline: 2px solid var(--app-color-focus);
-	}
-}
-```
-
-**Correct (상호작용 상태를 조건 없는 기본 블록으로 되돌립니다):**
-
-```css
-.ui_button__root {
-	&:hover {
-		background: var(--app-color-accent-strong);
-	}
-
-	&:focus-visible {
-		outline: 2px solid var(--app-color-focus);
-	}
-}
-
-.ui_button__root--active {
-	background: var(--app-color-accent);
-}
-```
-
 ## 5. Design Tokens
 
 **Impact: HIGH**
@@ -1937,7 +1921,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 
 ### 5.1 Declare Core Tokens Once and Fall Back Everywhere Else
 
-**Rule:** `C05-01` · `values-always-provide-css-variable-fallbacks`
+**Rule:** `C05-01` · `values-fall-back-only-outside-core-tokens`
 
 **Applies when:** `var(--*)`를 새로 쓰거나 변수 이름이나 대체값을 바꿀 때. 공통 토큰 목록에 항목을 넣거나 뺄 때.
 
@@ -2024,7 +2008,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 
 **Applies when:** 여러 파일이 같은 색, 간격, 모서리 반경, 타이포그래피, 그림자 값을 쓸 때. 새 변수를 선언할 때.
 
-**Review with:** `composition-do-not-style-through-the-style-attribute`, `values-always-provide-css-variable-fallbacks`
+**Review with:** `composition-do-not-style-through-the-style-attribute`, `values-fall-back-only-outside-core-tokens`
 
 **Impact: MEDIUM-HIGH (여러 파일이 쓰는 값은 전역 토큰으로 모으고 나머지는 선언 자리에 그대로 둡니다)**
 
@@ -2234,9 +2218,9 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 
 **Rule:** `C05-04` · `values-switch-themes-by-changing-token-values`
 
-**Applies when:** 다크 모드나 테마 전환을 넣을 때. 컴포넌트 CSS에 `prefers-color-scheme`이나 `[data-theme]`를 쓰려 할 때. 색이나 그림자 토큰을 새로 만들거나 이름을 바꿀 때.
+**Applies when:** 다크 모드나 테마 전환을 넣을 때. 컴포넌트 CSS에 `prefers-color-scheme`이나 `[data-theme]`를 쓰려 할 때. 그림자나 `color-scheme`처럼 테마마다 달라지는 값을 추가·변경할 때.
 
-**Review with:** `values-always-provide-css-variable-fallbacks`, `values-tokenize-repeated-visual-values`
+**Review with:** `values-fall-back-only-outside-core-tokens`, `values-name-tokens-by-purpose`, `values-tokenize-repeated-visual-values`
 
 **Impact: MEDIUM-HIGH (테마 분기가 한 파일에만 있어 색을 하나 더할 때 파일 여러 개를 열지 않습니다)**
 
@@ -2251,14 +2235,12 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 컴포넌트에 분기가 있으면 색을 하나 더할 때마다 그 색을 쓰는 파일을 모두 찾아 두 번씩 적어야 합니다.
 빠뜨린 한 곳은 테마를 바꿔 보기 전까지 드러나지 않습니다.
 
-**토큰 이름은 값이 아니라 쓰임으로 짓습니다.**
-`--app-color-white`는 다크 모드에서 이름이 거짓말이 됩니다.
-`--app-color-surface`는 값이 바뀌어도 이름이 그대로 맞습니다.
-
-| 짓는 법 | 예 |
-| --- | --- |
-| 쓰임 | `--app-color-surface`, `--app-color-text-primary`, `--app-color-border` |
-| 값 — 쓰지 않음 | `--app-color-white`, `--app-color-gray-100` |
+**사용자가 고른 테마가 시스템 설정을 이깁니다.**
+`[data-theme]` 블록은 `@media (prefers-color-scheme)` 블록 뒤에 둡니다.
+뒤에 오는 선택자가 명시도도 높아 시스템 설정을 덮습니다.
+토큰 파일에서는 같은 팔레트를 두 번 적어도 됩니다.
+값의 단일 출처가 그 파일 하나이기 때문입니다.
+토큰 이름을 어떻게 짓는지는 `values-name-tokens-by-purpose`가 정합니다.
 
 **`color-scheme`을 선언합니다.**
 스크롤바, 폼 컨트롤, 기본 배경은 우리 토큰이 닿지 않는 브라우저 UI라 이 속성으로만 따라옵니다.
@@ -2267,6 +2249,8 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 **그림자도 테마 토큰입니다.**
 어두운 배경에서 검은 그림자는 보이지 않습니다.
 `box-shadow` 값을 직접 적지 말고 토큰으로 두어 테마마다 다르게 잡습니다.
+한 파일에서만 쓰는 그림자와 색도 테마를 켠 프로젝트에서는 토큰입니다.
+`values-tokenize-repeated-visual-values`의 "한 파일 안 값은 그대로" 판정보다 이 규칙이 앞섭니다.
 
 **다크 모드를 지원하지 않기로 했으면 `prefers-color-scheme`을 아예 쓰지 않습니다.**
 일부 화면만 대응하면 같은 앱 안에서 화면마다 배경이 달라져 지원하지 않는 것보다 나쁩니다.
@@ -2296,18 +2280,11 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 }
 ```
 
-**Incorrect (값으로 이름을 짓고 그림자를 직접 적습니다):**
+**Incorrect (그림자를 직접 적어 어두운 배경에서 사라집니다):**
 
 ```css
-/* src/style/token.css */
-:root {
-	--app-color-white: #fff;
-	--app-color-gray-100: #f1f3f5;
-}
-
 /* src/page/products/pg-products.css */
 .pg_products__panel {
-	background-color: var(--app-color-white);
 	box-shadow: 0 1px 3px rgb(0 0 0 / 12%);
 }
 ```
@@ -2336,7 +2313,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 	}
 }
 
-/* [data-theme] 는 명시도로 위 @media 블록을 이긴다 */
+/* [data-theme] 는 뒤에 오고 명시도도 높아 위 @media 블록을 이긴다 */
 :root[data-theme="light"] {
 	color-scheme: light;
 
@@ -2353,6 +2330,73 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 	--app-color-text-primary: #e9ecef;
 	--app-color-border: #3a3f44;
 	--app-shadow-panel: 0 1px 3px rgb(0 0 0 / 60%);
+}
+```
+
+### 5.5 Name Tokens by Purpose, Not by Value
+
+**Rule:** `C05-05` · `values-name-tokens-by-purpose`
+
+**Applies when:** 색·그림자·간격·층 같은 디자인 토큰을 새로 만들거나 이름을 바꿀 때. 토큰 파일에 `white`, `gray-100`처럼 값을 말하는 이름을 넣거나 뺄 때.
+
+**Review with:** `values-switch-themes-by-changing-token-values`, `values-tokenize-repeated-visual-values`
+
+**Impact: MEDIUM-HIGH (값이 바뀌어도 토큰 이름이 거짓말이 되지 않고 새 토큰이 한 형태로 모입니다)**
+
+토큰 이름은 `--app-<종류>-<쓰임>` 형태로 짓습니다.
+`app-` 접두사는 `tooling-configure-stylelint-to-enforce-these-rules`의 `custom-property-pattern`이 검사합니다.
+
+**쓰임으로 짓고 값으로 짓지 않습니다.**
+`--app-color-white`는 다크 모드에서 이름이 거짓말이 됩니다.
+`--app-color-surface`는 값이 바뀌어도 이름이 그대로 맞습니다.
+
+| 종류 | 예 |
+| --- | --- |
+| `color` | `--app-color-surface`, `--app-color-text-primary`, `--app-color-border` |
+| `shadow` | `--app-shadow-panel` |
+| `space` | `--app-space-inline`, `--app-space-section` |
+| `radius` | `--app-radius-control` |
+| `z-index` | `--app-z-index-sticky`. 층 이름은 `values-declare-stacking-layers-as-tokens`가 정합니다 |
+
+| 짓는 법 | 예 |
+| --- | --- |
+| 쓰임 | `--app-color-surface`, `--app-color-text-primary`, `--app-color-border` |
+| 값 — 쓰지 않음 | `--app-color-white`, `--app-color-gray-100`, `--app-space-16` |
+
+어느 값을 토큰으로 올릴지는 `values-tokenize-repeated-visual-values`가 정합니다.
+테마마다 값이 달라지는 토큰은 `values-switch-themes-by-changing-token-values`가 정합니다.
+
+**Incorrect (값으로 이름을 짓습니다):**
+
+```css
+/* src/style/token.css */
+:root {
+	--app-color-white: #fff;
+	--app-color-gray-100: #f1f3f5;
+	--app-space-16: 16px;
+}
+
+/* src/page/products/pg-products.css */
+.pg_products__panel {
+	background-color: var(--app-color-white);
+	padding: var(--app-space-16);
+}
+```
+
+**Correct (쓰임으로 이름을 짓습니다):**
+
+```css
+/* src/style/token.css */
+:root {
+	--app-color-surface: #fff;
+	--app-color-surface-muted: #f1f3f5;
+	--app-space-section: 16px;
+}
+
+/* src/page/products/pg-products.css */
+.pg_products__panel {
+	background-color: var(--app-color-surface);
+	padding: var(--app-space-section);
 }
 ```
 
@@ -2765,7 +2809,7 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 
 **Applies when:** `outline`, `:focus`, `:focus-visible` 스타일을 추가·수정할 때. 상호작용 요소의 기본 포커스 링을 덮어쓸 때.
 
-**Review with:** `selector-separate-domain-state-modifiers-from-dom-interaction-states`
+**Review with:** `selector-nest-dom-state-in-the-owning-block`
 
 **Impact: HIGH (포커스 표시를 없애지 않고 형태로 구분해 키보드 사용자가 현재 위치를 알 수 있습니다)**
 

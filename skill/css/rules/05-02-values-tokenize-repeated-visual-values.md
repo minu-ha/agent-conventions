@@ -6,7 +6,7 @@ impactDescription: 여러 파일이 쓰는 값은 전역 토큰으로 모으고 
 appliesWhen:
   - 여러 파일이 같은 색, 간격, 모서리 반경, 타이포그래피, 그림자 값을 쓸 때
   - 새 변수를 선언할 때
-reviewWith: values-always-provide-css-variable-fallbacks, composition-do-not-style-through-the-style-attribute
+reviewWith: values-fall-back-only-outside-core-tokens, composition-do-not-style-through-the-style-attribute
 tags: tokens, variables, reuse
 ---
 

@@ -25,4 +25,4 @@
 `useQuery`에 넘기는 `select: (response) => ({...})`를 이 규칙 때문에 밖으로 빼거나 함수 타입으로 고정하지 않습니다.
 커링 팩토리가 돌려주는 리액트 핸들러는 프레임워크 컨벤션이 판정합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/01-02-types-prefer-function-variable-types-over-parameter-annotations.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/01-03-types-prefer-function-variable-types-over-parameter-annotations.md)을 읽습니다.

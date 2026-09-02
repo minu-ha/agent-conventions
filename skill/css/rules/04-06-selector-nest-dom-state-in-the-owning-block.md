@@ -2,22 +2,31 @@
 title: Nest DOM State Pseudo-classes in the Owning Block
 titleKo: 상태 가상 클래스는 그 요소 블록 안에 넣습니다
 impact: MEDIUM
-impactDescription: 한 요소의 기본 모습과 상태 변화를 한 블록에서 나란히 읽습니다
+impactDescription: 한 요소의 기본 모습과 상태 변화를 한 블록에서 나란히 읽고 수정자가 꺼져도 상호작용 표시가 남습니다
 appliesWhen:
   - `:hover`, `:focus-visible`, `:disabled`, `:checked` 스타일을 추가·수정할 때
   - 조상의 DOM 상태가 자손 스타일을 바꿔야 할 때
+  - 상태 가상 클래스를 수정자 블록 안팎으로 옮길 때
 reviewWith: >-
   selector-limit-nesting-block-depth, selector-use-pseudo-classes-for-dom-owned-states,
-  selector-do-not-group-classes-with-commas
+  selector-do-not-group-classes-with-commas, a11y-always-provide-a-visible-focus-indicator
 tags: selector, pseudo-classes, nesting
 ---
 
 ## Nest DOM State Pseudo-classes in the Owning Block
 
-**Impact: MEDIUM (한 요소의 기본 모습과 상태 변화를 한 블록에서 나란히 읽습니다)**
+**Impact: MEDIUM (한 요소의 기본 모습과 상태 변화를 한 블록에서 나란히 읽고 수정자가 꺼져도 상호작용 표시가 남습니다)**
 
 DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 씁니다.
 같은 가상 클래스를 블록 바깥에서 다시 열지 않습니다.
+
+**수정자 블록 안에도 두지 않습니다.**
+도메인 상태와 무관한 `:hover`, `:focus-visible`, `:disabled`는 조건 없는 기본 블록에 둡니다.
+수정자 아래로 옮겨 적용 대상을 좁히지 않습니다.
+옮기면 그 상태가 아닐 때 상호작용 표시가 사라집니다.
+읽는 사람은 기본 블록만 보고 상호작용이 없다고 판단합니다.
+수정자가 켜진 경우에만 상호작용이 달라져야 한다는 제품 요구가 있을 때만 예외를 적습니다.
+포커스 표시 자체는 `a11y-always-provide-a-visible-focus-indicator` 규칙이 담당합니다.
 
 - 기본 모습과 상태 변화가 한 블록에 있어서 무엇이 어떻게 바뀌는지 바로 읽힙니다.
 - 파일 어디에 상태 스타일이 더 있는지 찾지 않습니다.
@@ -103,5 +112,39 @@ DOM 상태 가상 클래스는 그 요소의 클래스 블록 안에서 `&:`로 
 	&:hover .wg_siteHeader__brandMark {
 		transform: rotate(-2deg);
 	}
+}
+```
+
+**Incorrect (상호작용 상태를 수정자 아래로 옮겨 적용 대상을 좁힙니다):**
+
+```css
+.ui_button__root--active {
+	background: var(--app-color-accent);
+
+	&:hover {
+		background: var(--app-color-accent-strong);
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--app-color-focus);
+	}
+}
+```
+
+**Correct (상호작용 상태를 조건 없는 기본 블록으로 되돌립니다):**
+
+```css
+.ui_button__root {
+	&:hover {
+		background: var(--app-color-accent-strong);
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--app-color-focus);
+	}
+}
+
+.ui_button__root--active {
+	background: var(--app-color-accent);
 }
 ```

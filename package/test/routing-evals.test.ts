@@ -84,6 +84,7 @@ const readRuleSource = async (skillName: string, ruleId: string): Promise<string
 
 const typescriptRuleUniverse = [
 	"types-reuse-existing-contracts-before-new-types",
+	"types-derive-subsets-with-indexed-access",
 	"types-prefer-function-variable-types-over-parameter-annotations",
 	"types-document-custom-types-and-shapes",
 	"types-mark-unused-parameters-with-underscore",
@@ -114,6 +115,7 @@ const typescriptRuleUniverse = [
 	"values-use-es-toolkit-for-value-helpers",
 	"values-handle-dates-with-dayjs",
 	"absence-expose-optional-values-instead-of-silent-fallbacks",
+	"absence-resolve-defaults-at-the-boundary",
 	"docs-keep-body-comments-for-intent-and-steps",
 	"docs-require-header-jsdoc-on-key-declarations",
 	"docs-write-concise-korean-comments-about-purpose-and-constraints",
@@ -145,11 +147,11 @@ const cssRuleUniverse = [
 	"selector-use-pseudo-classes-for-dom-owned-states",
 	"selector-nest-dom-state-in-the-owning-block",
 	"selector-do-not-negate-with-not",
-	"selector-separate-domain-state-modifiers-from-dom-interaction-states",
-	"values-always-provide-css-variable-fallbacks",
+	"values-fall-back-only-outside-core-tokens",
 	"values-tokenize-repeated-visual-values",
 	"values-declare-stacking-layers-as-tokens",
 	"values-switch-themes-by-changing-token-values",
+	"values-name-tokens-by-purpose",
 	"layout-group-breakpoints-at-the-file-bottom",
 	"layout-write-breakpoints-desktop-first",
 	"layout-keep-layout-intent-explicit",
@@ -224,7 +226,12 @@ const typescriptRuleRouting = {
 	"types-reuse-existing-contracts-before-new-types": {
 		appliesWhen:
 			"뜻이 같은 기존 타입, 인터페이스, 스키마가 있는데 형태를 새로 선언·변경·복제·파생할 때. 같은 형태를 두 번 선언했다가 넣거나 뺄 때. 제외: 맞는 후보가 없거나 소유자만 옮긴 경우. 제외: 그대로인 계약을 새 자리에서 쓰는 경우. 제외: 고칠 수 없는 형태를 그대로 쓰는 경우.",
-		reviewWith: ["types-document-custom-types-and-shapes"],
+		reviewWith: ["types-derive-subsets-with-indexed-access", "types-document-custom-types-and-shapes"],
+	},
+	"types-derive-subsets-with-indexed-access": {
+		appliesWhen:
+			"기존 타입의 일부 필드만 담는 형태를 선언·변경할 때. `Pick`·`Omit`·`Partial`·`Required`를 추가·변경할 때. 제외: 필드 이름·타입·선택 여부가 모두 같아 기존 타입을 그대로 참조하는 경우.",
+		reviewWith: ["types-reuse-existing-contracts-before-new-types", "types-document-custom-types-and-shapes"],
 	},
 	"types-prefer-function-variable-types-over-parameter-annotations": {
 		appliesWhen:
@@ -371,7 +378,20 @@ const typescriptRuleRouting = {
 	},
 	"absence-expose-optional-values-instead-of-silent-fallbacks": {
 		appliesWhen: "선택 값을 읽거나 정규화하거나 넘기는 방식을 바꿀 때. `??`, `||`, 기본값, 빈 값 대체 분기를 추가·변경할 때.",
-		reviewWith: ["naming-place-project-constants-in-the-root-constant-folder", "naming-place-owner-constants-in-the-owner-constant-folder"],
+		reviewWith: [
+			"absence-resolve-defaults-at-the-boundary",
+			"naming-place-project-constants-in-the-root-constant-folder",
+			"naming-place-owner-constants-in-the-owner-constant-folder",
+		],
+	},
+	"absence-resolve-defaults-at-the-boundary": {
+		appliesWhen:
+			"선택 값의 기본값을 어디서 채울지 정할 때. 같은 선택 값에 `??` 기본값 해소가 둘 이상의 사용처에 흩어질 때. search 스키마, 응답 매핑, 쿼리 `select`에 기본값 채움을 추가·변경할 때.",
+		reviewWith: [
+			"absence-expose-optional-values-instead-of-silent-fallbacks",
+			"functions-name-a-value-only-for-recompute-or-judgment",
+			"values-read-objects-through-chains",
+		],
 	},
 	"docs-keep-body-comments-for-intent-and-steps": {
 		appliesWhen:
@@ -480,7 +500,7 @@ const cssRuleRouting = {
 		reviewWith: [
 			"composition-inject-classes-only-at-the-entry-point",
 			"values-tokenize-repeated-visual-values",
-			"values-always-provide-css-variable-fallbacks",
+			"values-fall-back-only-outside-core-tokens",
 		],
 	},
 	"composition-write-modifiers-as-conditions": {
@@ -511,28 +531,25 @@ const cssRuleRouting = {
 	},
 	"selector-nest-dom-state-in-the-owning-block": {
 		appliesWhen:
-			"`:hover`, `:focus-visible`, `:disabled`, `:checked` 스타일을 추가·수정할 때. 조상의 DOM 상태가 자손 스타일을 바꿔야 할 때.",
+			"`:hover`, `:focus-visible`, `:disabled`, `:checked` 스타일을 추가·수정할 때. 조상의 DOM 상태가 자손 스타일을 바꿔야 할 때. 상태 가상 클래스를 수정자 블록 안팎으로 옮길 때.",
 		reviewWith: [
 			"selector-limit-nesting-block-depth",
 			"selector-use-pseudo-classes-for-dom-owned-states",
 			"selector-do-not-group-classes-with-commas",
+			"a11y-always-provide-a-visible-focus-indicator",
 		],
 	},
 	"selector-do-not-negate-with-not": {
 		appliesWhen: "선택자에 `:not()`을 넣으려 할 때. 조상 클래스와 자손 클래스를 한 선택자에 함께 쓸 때.",
 		reviewWith: ["selector-use-pseudo-classes-for-dom-owned-states"],
 	},
-	"selector-separate-domain-state-modifiers-from-dom-interaction-states": {
-		appliesWhen: "앱 상태 수정자와 `:hover`, `:focus-visible`, `:disabled` 같은 DOM 상호작용 상태를 추가·변경할 때. 포커스 링을 수정할 때.",
-		reviewWith: ["composition-do-not-build-structural-variants-with-modifiers", "a11y-always-provide-a-visible-focus-indicator"],
-	},
-	"values-always-provide-css-variable-fallbacks": {
+	"values-fall-back-only-outside-core-tokens": {
 		appliesWhen: "`var(--*)`를 새로 쓰거나 변수 이름이나 대체값을 바꿀 때. 공통 토큰 목록에 항목을 넣거나 뺄 때.",
 		reviewWith: ["values-tokenize-repeated-visual-values"],
 	},
 	"values-tokenize-repeated-visual-values": {
 		appliesWhen: "여러 파일이 같은 색, 간격, 모서리 반경, 타이포그래피, 그림자 값을 쓸 때. 새 변수를 선언할 때.",
-		reviewWith: ["values-always-provide-css-variable-fallbacks", "composition-do-not-style-through-the-style-attribute"],
+		reviewWith: ["values-fall-back-only-outside-core-tokens", "composition-do-not-style-through-the-style-attribute"],
 	},
 	"values-declare-stacking-layers-as-tokens": {
 		appliesWhen: "`z-index`를 새로 넣거나 값을 바꿀 때. 겹쳐 뜨는 요소를 추가할 때.",
@@ -540,8 +557,13 @@ const cssRuleRouting = {
 	},
 	"values-switch-themes-by-changing-token-values": {
 		appliesWhen:
-			"다크 모드나 테마 전환을 넣을 때. 컴포넌트 CSS에 `prefers-color-scheme`이나 `[data-theme]`를 쓰려 할 때. 색이나 그림자 토큰을 새로 만들거나 이름을 바꿀 때.",
-		reviewWith: ["values-always-provide-css-variable-fallbacks", "values-tokenize-repeated-visual-values"],
+			"다크 모드나 테마 전환을 넣을 때. 컴포넌트 CSS에 `prefers-color-scheme`이나 `[data-theme]`를 쓰려 할 때. 그림자나 `color-scheme`처럼 테마마다 달라지는 값을 추가·변경할 때.",
+		reviewWith: ["values-fall-back-only-outside-core-tokens", "values-tokenize-repeated-visual-values", "values-name-tokens-by-purpose"],
+	},
+	"values-name-tokens-by-purpose": {
+		appliesWhen:
+			"색·그림자·간격·층 같은 디자인 토큰을 새로 만들거나 이름을 바꿀 때. 토큰 파일에 `white`, `gray-100`처럼 값을 말하는 이름을 넣거나 뺄 때.",
+		reviewWith: ["values-tokenize-repeated-visual-values", "values-switch-themes-by-changing-token-values"],
 	},
 	"layout-group-breakpoints-at-the-file-bottom": {
 		appliesWhen: "`@media` 브레이크포인트를 추가하거나 옮길 때. 화면 폭에 따라 값이 달라지는 선언을 넣을 때.",
@@ -568,7 +590,7 @@ const cssRuleRouting = {
 	},
 	"a11y-always-provide-a-visible-focus-indicator": {
 		appliesWhen: "`outline`, `:focus`, `:focus-visible` 스타일을 추가·수정할 때. 상호작용 요소의 기본 포커스 링을 덮어쓸 때.",
-		reviewWith: ["selector-separate-domain-state-modifiers-from-dom-interaction-states"],
+		reviewWith: ["selector-nest-dom-state-in-the-owning-block"],
 	},
 	"a11y-namespace-keyframes-and-respect-reduced-motion": {
 		appliesWhen:
@@ -902,7 +924,7 @@ const mandatoryRuleRouting = {
 			"docs-write-doc-comments-as-multiline-blocks",
 		],
 	},
-	css: {"selector-use-pseudo-classes-for-dom-owned-states": ["selector-separate-domain-state-modifiers-from-dom-interaction-states"]},
+	css: {"selector-use-pseudo-classes-for-dom-owned-states": ["selector-nest-dom-state-in-the-owning-block"]},
 } as const;
 
 const completionGateRouting = {react: [], typescript: [], css: []} as const;
@@ -927,6 +949,7 @@ const typescriptSelections = {
 	],
 	"derive-existing-contract-with-docs": [
 		"types-reuse-existing-contracts-before-new-types",
+		"types-derive-subsets-with-indexed-access",
 		"types-document-custom-types-and-shapes",
 		"types-narrow-unknown-instead-of-asserting",
 		"docs-require-header-jsdoc-on-key-declarations",
@@ -984,6 +1007,7 @@ const typescriptSelections = {
 	],
 	"explicit-product-fallback": [
 		"absence-expose-optional-values-instead-of-silent-fallbacks",
+		"absence-resolve-defaults-at-the-boundary",
 		"docs-keep-body-comments-for-intent-and-steps",
 		"docs-write-concise-korean-comments-about-purpose-and-constraints",
 		"docs-justify-convention-exceptions-with-a-reason-comment",
@@ -1150,7 +1174,7 @@ const reactScenarioStages = {
 					"ownership-use-foreign-classes-only-under-your-own-root",
 					"composition-compose-classes-with-clsx",
 					"composition-do-not-build-structural-variants-with-modifiers",
-					"selector-separate-domain-state-modifiers-from-dom-interaction-states",
+					"selector-nest-dom-state-in-the-owning-block",
 				],
 			},
 		},
@@ -1613,7 +1637,7 @@ const cssScenarioStages = {
 					"composition-do-not-build-structural-variants-with-modifiers",
 					"composition-keep-classes-single-purpose",
 					"selector-use-pseudo-classes-for-dom-owned-states",
-					"selector-separate-domain-state-modifiers-from-dom-interaction-states",
+					"selector-nest-dom-state-in-the-owning-block",
 				],
 			},
 		},
@@ -1684,7 +1708,7 @@ const cssScenarioStages = {
 					"ownership-use-foreign-classes-only-under-your-own-root",
 					"composition-compose-classes-with-clsx",
 					"composition-inject-classes-only-at-the-entry-point",
-					"values-always-provide-css-variable-fallbacks",
+					"values-fall-back-only-outside-core-tokens",
 				],
 			},
 		},
@@ -1750,7 +1774,6 @@ const cssScenarioStages = {
 				css: [
 					"selector-use-pseudo-classes-for-dom-owned-states",
 					"selector-nest-dom-state-in-the-owning-block",
-					"selector-separate-domain-state-modifiers-from-dom-interaction-states",
 					"a11y-always-provide-a-visible-focus-indicator",
 				],
 			},
@@ -1766,8 +1789,8 @@ const cssScenarioStages = {
 				css: [
 					"ownership-use-foreign-classes-only-under-your-own-root",
 					"selector-use-pseudo-classes-for-dom-owned-states",
-					"selector-separate-domain-state-modifiers-from-dom-interaction-states",
-					"values-always-provide-css-variable-fallbacks",
+					"selector-nest-dom-state-in-the-owning-block",
+					"values-fall-back-only-outside-core-tokens",
 					"values-tokenize-repeated-visual-values",
 					"a11y-namespace-keyframes-and-respect-reduced-motion",
 				],
@@ -1824,9 +1847,10 @@ const cssScenarioStages = {
 			expectedSkills: ["css"],
 			expectedSelected: {
 				css: [
-					"values-always-provide-css-variable-fallbacks",
+					"values-fall-back-only-outside-core-tokens",
 					"values-tokenize-repeated-visual-values",
 					"values-switch-themes-by-changing-token-values",
+					"values-name-tokens-by-purpose",
 				],
 			},
 		},
@@ -2058,7 +2082,7 @@ test("TypeScript progressive metadata matches Appendix A exactly", async () => {
 
 	assert.equal(document.metadata.progressiveDisclosure, true);
 	assert.deepEqual(document.metadata.companions ?? [], []);
-	assert.equal(document.rules.length, 37);
+	assert.equal(document.rules.length, 39);
 	assert.deepEqual(
 		Object.fromEntries(document.rules.map((rule) => [getRuleId(rule), {appliesWhen: rule.appliesWhen, reviewWith: rule.reviewWith}])),
 		typescriptRuleRouting,
@@ -2212,7 +2236,7 @@ test("TypeScript generated index is complete and within the deterministic byte b
 	const expectedIds = document.rules.map((rule) => getRuleId(rule)).sort();
 
 	assert.deepEqual(ids, expectedIds);
-	assert.equal(ids.length, 37);
+	assert.equal(ids.length, 39);
 
 	for (const entry of entries) {
 		assert.equal(entry.fileName, `${entry.id}.md`);
@@ -2537,7 +2561,7 @@ test("React routing manifest is the exact eighteen-scenario Appendix B/D oracle 
 	assert.equal(cssDrift.expectedSelected.typescript?.includes("docs-require-header-jsdoc-on-key-declarations"), true);
 	assert.equal(cssDrift.expectedSelected.typescript?.includes("docs-write-concise-korean-comments-about-purpose-and-constraints"), true);
 	assert.equal(cssDrift.expectedSelected.css?.includes("composition-do-not-build-structural-variants-with-modifiers"), true);
-	assert.equal(cssDrift.expectedSelected.css?.includes("selector-separate-domain-state-modifiers-from-dom-interaction-states"), true);
+	assert.equal(cssDrift.expectedSelected.css?.includes("selector-nest-dom-state-in-the-owning-block"), true);
 	assert.equal(cssDrift.expectedSelected.css?.includes("ownership-choose-scope-prefix-by-owner-layer"), true);
 	assert.equal(cssDrift.expectedSelected.css?.includes("naming-keep-page-slug-traceable") ?? false, true);
 
@@ -2648,7 +2672,7 @@ test("CSS progressive metadata and rule routing match Appendix C exactly", async
 	assertMentions(readAppliesWhen(singlePurposeRule), ["상태를 나타내는 낱말", "기본 클래스와 수정자를 나눠"], "singlePurposeRule");
 	const layoutIntentRule = await readRuleSource("css", "layout-keep-layout-intent-explicit");
 	assertMentions(readAppliesWhen(layoutIntentRule), ["기본과 수정자로 나누면서", "`display`·여백", "값 그대로"], "layoutIntentRule");
-	const fallbackRule = await readRuleSource("css", "values-always-provide-css-variable-fallbacks");
+	const fallbackRule = await readRuleSource("css", "values-fall-back-only-outside-core-tokens");
 	assertMentions(readAppliesWhen(fallbackRule), ["`var(--*)`", "공통 토큰"], "fallbackRule");
 	assertMentions(
 		flattenWhitespace(fallbackRule),
@@ -2787,15 +2811,12 @@ test("CSS routing manifest is the exact eleven-scenario and thirteen-stage Appen
 
 	const repeatedValues = scenarioById.get("css-repeated-values-and-optional-token");
 	assert.equal(repeatedValues?.expectedSelected.css?.includes("selector-use-pseudo-classes-for-dom-owned-states"), true);
-	assert.equal(
-		repeatedValues?.expectedSelected.css?.includes("selector-separate-domain-state-modifiers-from-dom-interaction-states"),
-		true,
-	);
+	assert.equal(repeatedValues?.expectedSelected.css?.includes("selector-nest-dom-state-in-the-owning-block"), true);
 
 	const wrapperDrift = scenarioById.get("css-ui-wrapper-third-party-dom");
-	assert.equal(wrapperDrift?.expectedSelected.css?.includes("values-always-provide-css-variable-fallbacks"), false);
-	assert.equal(wrapperDrift?.expectedSelected.css?.includes("values-always-provide-css-variable-fallbacks") ?? false, false);
-	assert.equal(wrapperDrift?.scopeDrift?.expectedSelected.css?.includes("values-always-provide-css-variable-fallbacks"), true);
+	assert.equal(wrapperDrift?.expectedSelected.css?.includes("values-fall-back-only-outside-core-tokens"), false);
+	assert.equal(wrapperDrift?.expectedSelected.css?.includes("values-fall-back-only-outside-core-tokens") ?? false, false);
+	assert.equal(wrapperDrift?.scopeDrift?.expectedSelected.css?.includes("values-fall-back-only-outside-core-tokens"), true);
 });
 
 test("routing activation and generated indexes use only the changed semantic delta", async () => {
@@ -2964,16 +2985,16 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 	assert.match(layoutIntent, /기준 컨테이너를 주석/i);
 	assert.doesNotMatch(layoutIntent, /동작 변화 없이/);
 
-	const variableFallback = await readRule("css", "values-always-provide-css-variable-fallbacks");
+	const variableFallback = await readRule("css", "values-fall-back-only-outside-core-tokens");
 	assert.match(variableFallback, /공통 토큰 목록에 있는 변수[\s\S]*쓰지 않습니다/i);
 	assert.match(variableFallback, /그 밖의 모든 `var\(\)`[\s\S]*씁니다/i);
 
-	for (const ruleId of ["selector-separate-domain-state-modifiers-from-dom-interaction-states"]) {
+	for (const ruleId of ["selector-nest-dom-state-in-the-owning-block"]) {
 		const interactionState = await readRule("css", ruleId);
 		assert.match(interactionState, /(?:hover|focus|disabled)[\s\S]*조건 없는 기본 블록[\s\S]*수정자 아래[\s\S]*(?:좁히지 않|두지 않)/i);
 	}
 	const cssInteractionContracts = await Promise.all(
-		["selector-separate-domain-state-modifiers-from-dom-interaction-states"].map((ruleId) =>
+		["selector-nest-dom-state-in-the-owning-block"].map((ruleId) =>
 			readFile(path.join(realSkillRootDir, "css", "contracts", `${ruleId}.md`), "utf8"),
 		),
 	);
@@ -3013,7 +3034,7 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 	for (const ruleId of [
 		"naming-default-to-plain-css-when-no-module-convention",
 		"layout-keep-layout-intent-explicit",
-		"values-always-provide-css-variable-fallbacks",
+		"values-fall-back-only-outside-core-tokens",
 		"values-tokenize-repeated-visual-values",
 	]) {
 		assert.equal(domainState?.expectedSelected.css?.includes(ruleId) ?? false, false);
@@ -3025,7 +3046,7 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 	]) {
 		assert.equal(ownerDrift?.expectedSelected.css?.includes(ruleId), true);
 	}
-	for (const ruleId of ["layout-keep-layout-intent-explicit", "values-always-provide-css-variable-fallbacks"]) {
+	for (const ruleId of ["layout-keep-layout-intent-explicit", "values-fall-back-only-outside-core-tokens"]) {
 		assert.equal(ownerDrift?.expectedSelected.css?.includes(ruleId) ?? false, false);
 	}
 

@@ -12,4 +12,4 @@
 `MouseEventHandler`를 돌려주면서 이벤트 매개변수를 쓰지 않아도 `() =>`로 줄이지 않습니다.
 `(_event) =>`로 받아 계약을 남깁니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/01-04-types-mark-unused-parameters-with-underscore.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/01-05-types-mark-unused-parameters-with-underscore.md)을 읽습니다.

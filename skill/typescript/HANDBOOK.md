@@ -20,12 +20,13 @@
 
 1. [Types and Contracts](#1-types-and-contracts) — **HIGH**
     - 1.1 [Reuse Existing Contracts Before Declaring New Types](#11-reuse-existing-contracts-before-declaring-new-types)
-    - 1.2 [Prefer Function Variable Types Over Parameter Annotations](#12-prefer-function-variable-types-over-parameter-annotations)
-    - 1.3 [Document Custom Types and Declarative Shapes](#13-document-custom-types-and-declarative-shapes)
-    - 1.4 [Mark Unused Parameters With an Underscore Prefix](#14-mark-unused-parameters-with-an-underscore-prefix)
-    - 1.5 [Narrow `unknown` Instead of Asserting](#15-narrow-unknown-instead-of-asserting)
-    - 1.6 [Replace `enum` With `as const` Objects](#16-replace-enum-with-as-const-objects)
-    - 1.7 [Choose Interface for Object Contracts and Type for Type Composition](#17-choose-interface-for-object-contracts-and-type-for-type-composition)
+    - 1.2 [Derive Subsets With Indexed Access Instead of `Pick`](#12-derive-subsets-with-indexed-access-instead-of-pick)
+    - 1.3 [Prefer Function Variable Types Over Parameter Annotations](#13-prefer-function-variable-types-over-parameter-annotations)
+    - 1.4 [Document Custom Types and Declarative Shapes](#14-document-custom-types-and-declarative-shapes)
+    - 1.5 [Mark Unused Parameters With an Underscore Prefix](#15-mark-unused-parameters-with-an-underscore-prefix)
+    - 1.6 [Narrow `unknown` Instead of Asserting](#16-narrow-unknown-instead-of-asserting)
+    - 1.7 [Replace `enum` With `as const` Objects](#17-replace-enum-with-as-const-objects)
+    - 1.8 [Choose Interface for Object Contracts and Type for Type Composition](#18-choose-interface-for-object-contracts-and-type-for-type-composition)
 2. [Naming and Module Boundaries](#2-naming-and-module-boundaries) — **HIGH**
     - 2.1 [Place Project-wide Constants in the Root `constant` Folder](#21-place-project-wide-constants-in-the-root-constant-folder)
     - 2.2 [Place Owner-only Constants in the Owner `_constant` Folder](#22-place-owner-only-constants-in-the-owner-constant-folder)
@@ -54,6 +55,7 @@
     - 4.7 [Handle Dates With dayjs](#47-handle-dates-with-dayjs)
 5. [Absence and Fallback Handling](#5-absence-and-fallback-handling) — **HIGH**
     - 5.1 [Expose Optional Values Instead of Silent Fallbacks](#51-expose-optional-values-instead-of-silent-fallbacks)
+    - 5.2 [Resolve Defaults Once at the Boundary](#52-resolve-defaults-once-at-the-boundary)
 6. [JSDoc and Comment Conventions](#6-jsdoc-and-comment-conventions) — **MEDIUM**
     - 6.1 [Keep Body Comments for Intent and Steps](#61-keep-body-comments-for-intent-and-steps)
     - 6.2 [Require Header Doc Comments on Key Declarations](#62-require-header-doc-comments-on-key-declarations)
@@ -77,15 +79,87 @@
 
 **Applies when:** 뜻이 같은 기존 타입, 인터페이스, 스키마가 있는데 형태를 새로 선언·변경·복제·파생할 때. 같은 형태를 두 번 선언했다가 넣거나 뺄 때. 제외: 맞는 후보가 없거나 소유자만 옮긴 경우. 제외: 그대로인 계약을 새 자리에서 쓰는 경우. 제외: 고칠 수 없는 형태를 그대로 쓰는 경우.
 
-**Review with:** `types-document-custom-types-and-shapes`
+**Review with:** `types-derive-subsets-with-indexed-access`, `types-document-custom-types-and-shapes`
 
-**Impact: MEDIUM-HIGH (뜻이 그대로면 기존 타입이나 스키마에서 끌어와 같은 형태를 두 번 선언하지 않습니다)**
+**Impact: MEDIUM-HIGH (뜻이 그대로면 기존 타입이나 스키마를 그대로 참조해 같은 형태를 두 번 선언하지 않습니다)**
 
 필드 이름, 타입, 선택 여부가 모두 같은 선언이 이미 있으면 그대로 참조합니다.
-그중 일부만 필요하면 **`interface`를 선언하고 각 필드를 `원본["필드"]` 인덱스 접근으로 가져옵니다.**
 같은 이름의 필드가 타입이나 선택 여부에서 하나라도 다르면 끌어오지 않고 새로 선언합니다.
-필드 구성이 부분집합인 것만으로는 다르다고 보지 않고, 그 경우가 인덱스 접근을 쓰는 자리입니다.
+필드 구성이 부분집합인 것만으로는 다르다고 보지 않습니다.
+일부만 필요할 때 어떻게 파생하는지는 `types-derive-subsets-with-indexed-access`가 정합니다.
 소유자 이동이나 이름, 주석만 바뀌면 대상이 아닙니다.
+
+형태가 그대로인 계약을 새 자리에서 쓰는 것만으로는 이 규칙이 걸리지 않습니다.
+호출 계약 역할은 `types-document-custom-types-and-shapes`가 따로 판정합니다.
+
+위치 인자를 객체 입력으로 바꾸면서, 우리가 고칠 수 있는 기존 형태를 그대로 다시 쓰면
+`types-document-custom-types-and-shapes`만 걸리고 이 규칙은 걸리지 않습니다.
+외부·생성된·읽기 전용·공용 형태를 그대로 쓰면 두 타입 규칙 모두 대상이 아니고, 문서화는 문서 규칙이 따로 판정합니다.
+요청에 없는 `*Params`나 `*Input`을 만들어 이 규칙을 스스로 켜지 않습니다.
+맞는 형태가 없는 새 도메인 계약은 문서화 규칙만 걸립니다.
+
+원본 입력과 정규화한 값은 필드가 같아도 뜻이 달라 입력 형태를 따로 두는 것이 맞습니다.
+그때도 문서화 규칙만 걸리고 이 규칙은 걸리지 않습니다.
+
+**Incorrect (기존 계약과 같은 구조를 다시 선언합니다):**
+
+```ts
+// 이미 있는 계약
+interface UserRecord {
+	id: string;
+	name: string;
+	email: string;
+}
+
+// 필드 이름, 타입, 선택 여부가 그대로인데 새로 선언했다
+interface InviteRecipient {
+	id: string;
+	name: string;
+	email: string;
+}
+
+export const sendInvites = (recipients: InviteRecipient[]): Promise<void> => { /* … */ };
+```
+
+**Correct (형태가 같으면 기존 계약을 그대로 참조합니다):**
+
+```ts
+/**
+ * 초대 대상은 사용자 레코드 그대로다. 필드가 같아 따로 선언하지 않는다
+ */
+export const sendInvites = (recipients: UserRecord[]): Promise<void> => { /* … */ };
+```
+
+**Correct (선택 여부가 하나라도 다르면 새로 선언합니다):**
+
+```ts
+/**
+ * 초대 폼 입력. 이름을 비울 수 있어 UserRecord와 선택 여부가 다르다
+ */
+interface InviteDraft {
+	/**
+	 * 받는 사람 이메일
+	 */
+	email: string;
+	/**
+	 * 표시 이름. 비우면 이메일을 그대로 보여 준다
+	 */
+	name?: string;
+}
+```
+
+### 1.2 Derive Subsets With Indexed Access Instead of `Pick`
+
+**Rule:** `T01-02` · `types-derive-subsets-with-indexed-access`
+
+**Applies when:** 기존 타입의 일부 필드만 담는 형태를 선언·변경할 때. `Pick`·`Omit`·`Partial`·`Required`를 추가·변경할 때. 제외: 필드 이름·타입·선택 여부가 모두 같아 기존 타입을 그대로 참조하는 경우.
+
+**Review with:** `types-document-custom-types-and-shapes`, `types-reuse-existing-contracts-before-new-types`
+
+**Impact: MEDIUM-HIGH (고른 필드의 이름과 출처가 선언에 그대로 보이고 `?`·`readonly`가 흘러나가지 않습니다)**
+
+기존 타입의 일부만 필요하면 `interface`를 선언하고 각 필드를 `원본["필드"]` 인덱스 접근으로 가져옵니다.
+어느 타입을 그대로 참조하고 어느 때 새로 선언하는지는 `types-reuse-existing-contracts-before-new-types`가 정합니다.
 
 **`Pick`은 쓰지 않습니다.**
 고르는 것은 언제나 닫힌 집합이라 서드파티 타입이어도 `interface`에 인덱스 접근으로 적을 수 있습니다.
@@ -127,21 +201,41 @@
 필드가 없는 별칭 하나만 필요하면 인덱스 접근을 그대로 씁니다.
 `type ProductId = ProductRecord["id"];`가 그 경우입니다.
 
-형태가 그대로인 계약을 새 자리에서 쓰는 것만으로는 이 규칙이 걸리지 않습니다.
-호출 계약 역할은 `types-document-custom-types-and-shapes`가 따로 판정합니다.
+**Incorrect (`Pick`으로 골라 필드 이름과 설명이 사라집니다):**
 
-위치 인자를 객체 입력으로 바꾸면서, 우리가 고칠 수 있는 기존 형태를 그대로 다시 쓰면
-`types-document-custom-types-and-shapes`만 걸리고 이 규칙은 걸리지 않습니다.
-외부·생성된·읽기 전용·공용 형태를 그대로 쓰면 두 타입 규칙 모두 대상이 아니고, 문서화는 문서 규칙이 따로 판정합니다.
-요청에 없는 `*Params`나 `*Input`을 만들어 이 규칙을 스스로 켜지 않습니다.
-맞는 형태가 없는 새 도메인 계약은 문서화 규칙만 걸립니다.
+```ts
+// 원본 계약
+interface UserRecord {
+	readonly id: string;
+	name?: string;
+	email: string;
+}
 
-원본 입력과 정규화한 값은 필드가 같아도 뜻이 달라 입력 형태를 따로 두는 것이 맞습니다.
-그때도 문서화 규칙만 걸리고 이 규칙은 걸리지 않습니다.
+type UserPreview = Pick<UserRecord, "id" | "name">;
+```
+
+**Correct (필드마다 출처를 인덱스 접근으로 가져오고 `?`, `readonly`를 직접 적습니다):**
+
+```ts
+/**
+ * 사용자 미리보기 계약
+ */
+interface UserPreview {
+	/**
+	 * 사용자 식별자
+	 */
+	readonly id: UserRecord["id"];
+	/**
+	 * 목록에 표시할 이름. 원본에서 선택 필드라 여기서도 선택으로 둔다
+	 */
+	name?: UserRecord["name"];
+}
+```
 
 **Incorrect (인덱스 접근으로 옮기면서 `?`와 `readonly`를 흘립니다):**
 
 ```ts
+// 원본: ProductRecord.id 는 readonly, UserRecord.name 은 선택 필드다
 /**
  * product 목록 한 행의 표시 계약
  */
@@ -150,10 +244,6 @@ interface ProductListRow {
 	 * product 식별자
 	 */
 	id: ProductRecord["id"];
-	/**
-	 * 소속 분류 이름
-	 */
-	categoryName: CategoryRecord["name"];
 	/**
 	 * 마지막 수정자 이름
 	 */
@@ -173,59 +263,24 @@ interface ProductListRow {
 	 */
 	readonly id: ProductRecord["id"];
 	/**
-	 * 소속 분류 이름
-	 */
-	categoryName: CategoryRecord["name"];
-	/**
 	 * 마지막 수정자 이름. 원본에서 선택 필드라 여기서도 선택으로 둔다
 	 */
 	ownerName?: UserRecord["name"];
 }
 ```
-**Incorrect (기존 계약과 같은 구조를 다시 선언합니다):**
 
-```ts
-// 이미 있는 계약
-interface UserRecord {
-	id: string;
-	name: string;
-	email: string;
-}
-
-// 필드 이름, 타입, 선택 여부가 그대로인데 새로 선언했다
-interface UserPreview {
-	id: string;
-	name: string;
-}
-```
-
-**Incorrect (`Pick`으로 골라 필드 이름과 설명이 사라집니다):**
-
-```ts
-type UserPreview = Pick<UserRecord, "id" | "name">;
-```
-
-**Correct (필드마다 출처를 인덱스 접근으로 가져옵니다):**
+**Correct (원본을 따라가야 하는 열린 집합은 `Omit`으로 뺍니다):**
 
 ```ts
 /**
- * 사용자 미리보기 계약
+ * 내보내기 요청 전송 형태. 생성된 계약이 필드를 더하면 그대로 따라가고 서버가 채우는 시각만 뺀다
  */
-interface UserPreview {
-	/**
-	 * 사용자 식별자
-	 */
-	id: UserRecord["id"];
-	/**
-	 * 목록에 표시할 이름
-	 */
-	name: UserRecord["name"];
-}
+type ExportRequestBody = Omit<GeneratedExportRequest, "requestedAt">;
 ```
 
-### 1.2 Prefer Function Variable Types Over Parameter Annotations
+### 1.3 Prefer Function Variable Types Over Parameter Annotations
 
-**Rule:** `T01-02` · `types-prefer-function-variable-types-over-parameter-annotations`
+**Rule:** `T01-03` · `types-prefer-function-variable-types-over-parameter-annotations`
 
 **Applies when:** 기존 호출 계약을 이름 붙인 함수나 공용 함수 구현에 다시 쓸 때. 같은 시그니처를 여러 구현이 함께 쓰도록 바꿀 때. 제외: 타입 표기 없이 문맥으로 추론되는 일회성 인라인 콜백인 경우.
 
@@ -337,9 +392,9 @@ const toSearchRequest: ToRequest = (request) => {
 };
 ```
 
-### 1.3 Document Custom Types and Declarative Shapes
+### 1.4 Document Custom Types and Declarative Shapes
 
-**Rule:** `T01-03` · `types-document-custom-types-and-shapes`
+**Rule:** `T01-04` · `types-document-custom-types-and-shapes`
 
 **Applies when:** 타입, 인터페이스, 스키마 최상단, 객체 상수, 계약 필드, 파생 별칭을 추가·변경할 때. 이름 붙인 형태에 호출 계약 역할을 새로 얹을 때. 제외: 외부·생성된·읽기 전용·공용 형태를 그대로 쓰거나 반환 타입이 익명으로 추론되는 경우.
 
@@ -413,9 +468,9 @@ const publishResultSchema = z.object({
 });
 ```
 
-### 1.4 Mark Unused Parameters With an Underscore Prefix
+### 1.5 Mark Unused Parameters With an Underscore Prefix
 
-**Rule:** `T01-04` · `types-mark-unused-parameters-with-underscore`
+**Rule:** `T01-05` · `types-mark-unused-parameters-with-underscore`
 
 **Applies when:** 기존 콜백이나 프레임워크 계약을 구현하면서 매개변수를 빼거나 쓰지 않을 때. 커링한 핸들러가 마지막에 돌려주는 콜백에서 매개변수를 뺄 때.
 
@@ -455,9 +510,9 @@ type LogSink = (message: string, level: "info" | "error") => void;
 const noopLog: LogSink = (_message, _level) => {};
 ```
 
-### 1.5 Narrow `unknown` Instead of Asserting
+### 1.6 Narrow `unknown` Instead of Asserting
 
-**Rule:** `T01-05` · `types-narrow-unknown-instead-of-asserting`
+**Rule:** `T01-06` · `types-narrow-unknown-instead-of-asserting`
 
 **Applies when:** `as` 단언, `!` `null` 아님 단언, `any`, `@ts-expect-error`를 추가할 때. 앱 밖에서 들어온 값을 타입 붙여 쓰기 시작할 때.
 
@@ -534,9 +589,9 @@ renderTextField(fieldProps);
 renderTextField(fieldProps as TextFieldProps);
 ```
 
-### 1.6 Replace `enum` With `as const` Objects
+### 1.7 Replace `enum` With `as const` Objects
 
-**Rule:** `T01-06` · `types-replace-enum-with-as-const-objects`
+**Rule:** `T01-07` · `types-replace-enum-with-as-const-objects`
 
 **Applies when:** `enum`이나 타입과 실행 양쪽에서 함께 쓰는 값 집합을 추가·변경할 때. 제외: 외부 패키지가 내보낸 `enum` 값을 그대로 읽어 쓰는 경우.
 
@@ -582,9 +637,9 @@ const product_status = {
 type ProductStatus = (typeof product_status)[keyof typeof product_status];
 ```
 
-### 1.7 Choose Interface for Object Contracts and Type for Type Composition
+### 1.8 Choose Interface for Object Contracts and Type for Type Composition
 
-**Rule:** `T01-07` · `types-choose-interface-for-object-contracts-and-type-for-composition`
+**Rule:** `T01-08` · `types-choose-interface-for-object-contracts-and-type-for-composition`
 
 **Applies when:** `interface`와 `type` 사이에서 선언 형식을 바꿀 때. 객체 계약, union, tuple, 함수 시그니처, mapped·conditional type에 이름을 붙여 선언할 때. 제외: 외부·생성된 계약을 그대로 참조하는 경우.
 
@@ -2922,7 +2977,7 @@ const compactDateTime = responseDateTime.slice(0, 16).replace("T", " ");
 
 **Applies when:** 선택 값을 읽거나 정규화하거나 넘기는 방식을 바꿀 때. `??`, `||`, 기본값, 빈 값 대체 분기를 추가·변경할 때.
 
-**Review with:** `naming-place-owner-constants-in-the-owner-constant-folder`, `naming-place-project-constants-in-the-root-constant-folder`
+**Review with:** `absence-resolve-defaults-at-the-boundary`, `naming-place-owner-constants-in-the-owner-constant-folder`, `naming-place-project-constants-in-the-root-constant-folder`
 
 **Impact: HIGH (그 자리에서 지어낸 값으로 덮지 않아 빠진 데이터가 드러납니다)**
 
@@ -2944,11 +2999,39 @@ const compactDateTime = responseDateTime.slice(0, 16).replace("T", " ");
 기본값이 정말 필요하면 그 기본값에 이름을 붙여 선언하고 그 이름을 가리킵니다.
 소유자를 지워도 남으면 `naming-place-project-constants-in-the-root-constant-folder` 규칙이,
 소유자와 함께 사라지면 `naming-place-owner-constants-in-the-owner-constant-folder` 규칙이 자리를 정합니다.
+그 기본값을 어디서 채울지는 `absence-resolve-defaults-at-the-boundary`가 정합니다.
 
 이유 주석으로 이 규칙을 통과하지는 못합니다.
 주석은 리터럴을 선언된 이름으로 바꾸지 않습니다.
 
-**어디서 해소할지는 순서로 정합니다.**
+**Incorrect (`??`, `||`, 기본 매개변수 자리에 리터럴을 적습니다):**
+
+```ts
+const supportEmail = settings.supportEmail ?? "help@example.com";
+const displayName = user.nickname || "-";
+const toPageRequest = (size = 10): PageRequest => { /* … */ };
+```
+
+**Correct (이미 선언된 이름만 가리킵니다):**
+
+```ts
+const supportEmail = settings.supportEmail ?? support_email_default;
+const displayName = user.nickname || empty_display_text;
+const toPageRequest = (size = pagination_default_page_size): PageRequest => { /* … */ };
+```
+
+### 5.2 Resolve Defaults Once at the Boundary
+
+**Rule:** `T05-02` · `absence-resolve-defaults-at-the-boundary`
+
+**Applies when:** 선택 값의 기본값을 어디서 채울지 정할 때. 같은 선택 값에 `??` 기본값 해소가 둘 이상의 사용처에 흩어질 때. search 스키마, 응답 매핑, 쿼리 `select`에 기본값 채움을 추가·변경할 때.
+
+**Review with:** `absence-expose-optional-values-instead-of-silent-fallbacks`, `functions-name-a-value-only-for-recompute-or-judgment`, `values-read-objects-through-chains`
+
+**Impact: HIGH (기본값이 선언 한 곳에 남아 아래쪽 코드에서 `??`가 되풀이되지 않습니다)**
+
+기본값 자리에 무엇을 적는지는 `absence-expose-optional-values-instead-of-silent-fallbacks`가 정합니다.
+여기서는 그 기본값을 어디서 채우는지를 순서로 정합니다.
 
 1. **없어도 되는지 먼저 봅니다.**
    빈 배열도 리터럴이라 `items ?? []` 대신 `items?.map(…)`으로 값이 없는 상태를 그대로 다룹니다.
@@ -2970,29 +3053,25 @@ const compactDateTime = responseDateTime.slice(0, 16).replace("T", " ");
 `a ?? b`는 출처 둘을 놓고 하나를 고르는 계산이고, 그 결과는 어느 쪽에서 왔는지가 실행할 때 정해지는 파생값입니다.
 그래서 이름을 붙일지는 별칭 규칙이 아니라 `functions-name-a-value-only-for-recompute-or-judgment`가 판정합니다.
 
-**Incorrect (`??`와 `||` 오른쪽에 리터럴을 적습니다):**
+**Incorrect (없어도 되는 값에 기본값을 채웁니다):**
 
 ```ts
-const supportEmail = settings.supportEmail ?? "help@example.com";
-const productRows = response.data.rows ?? [];
+const productIds = (response.data.rows ?? []).map((row) => row.id);
 const isCompact = (variant ?? "default") === "compact";
-```
-
-**Correct (없을 수 있다는 사실을 그대로 드러냅니다):**
-
-```ts
-if (!settings.supportEmail) {
-	throw new MissingSupportEmailError();
-}
-
-sendInvite({from: settings.supportEmail});
 ```
 
 **Correct (그대로 비교하면 기본값이 필요 없습니다):**
 
 ```ts
-const isCompact = variant === "compact";
 const productIds = response.data.rows?.map((row) => row.id);
+const isCompact = variant === "compact";
+```
+
+**Incorrect (같은 기본값을 사용처마다 다시 채웁니다):**
+
+```ts
+fetchProducts({pageSize: query.pageSize ?? pagination_default_page_size});
+setVisibleRowCount(query.pageSize ?? pagination_default_page_size);
 ```
 
 **Correct (값이 들어오는 경계에서 한 번 해소해 아래쪽에는 선택 값이 오지 않습니다):**
@@ -3007,6 +3086,9 @@ const productSearchSchema = z.object({
 	 */
 	pageSize: z.number().default(pagination_default_page_size),
 });
+
+fetchProducts({pageSize: query.pageSize});
+setVisibleRowCount(query.pageSize);
 ```
 
 **Correct (경계에서 못 하면 쓰는 자리에 그대로 적습니다):**

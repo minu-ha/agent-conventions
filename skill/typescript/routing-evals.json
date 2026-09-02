@@ -53,6 +53,7 @@
 			"expectedSelected": {
 				"typescript": [
 					"types-reuse-existing-contracts-before-new-types",
+					"types-derive-subsets-with-indexed-access",
 					"types-document-custom-types-and-shapes",
 					"types-narrow-unknown-instead-of-asserting",
 					"docs-require-header-jsdoc-on-key-declarations",
@@ -261,6 +262,7 @@
 			"expectedSelected": {
 				"typescript": [
 					"absence-expose-optional-values-instead-of-silent-fallbacks",
+					"absence-resolve-defaults-at-the-boundary",
 					"docs-keep-body-comments-for-intent-and-steps",
 					"docs-write-concise-korean-comments-about-purpose-and-constraints",
 					"docs-justify-convention-exceptions-with-a-reason-comment"

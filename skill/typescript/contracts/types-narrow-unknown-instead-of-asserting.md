@@ -22,4 +22,4 @@
 `any`와 `!`는 `tooling-configure-biome-to-enforce-these-rules` 규칙이 기계로 막습니다.
 `as`와 `@ts-expect-error`는 리뷰가 봅니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/01-05-types-narrow-unknown-instead-of-asserting.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/01-06-types-narrow-unknown-instead-of-asserting.md)을 읽습니다.

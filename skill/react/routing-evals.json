@@ -98,7 +98,7 @@
 						"ownership-use-foreign-classes-only-under-your-own-root",
 						"composition-compose-classes-with-clsx",
 						"composition-do-not-build-structural-variants-with-modifiers",
-						"selector-separate-domain-state-modifiers-from-dom-interaction-states"
+						"selector-nest-dom-state-in-the-owning-block"
 					]
 				}
 			}

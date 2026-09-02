@@ -8,7 +8,7 @@ appliesWhen:
   - 컴포넌트 프롭으로 `style`을 받아 넘길 때
 reviewWith: >-
   composition-inject-classes-only-at-the-entry-point, values-tokenize-repeated-visual-values,
-  values-always-provide-css-variable-fallbacks
+  values-fall-back-only-outside-core-tokens
 tags: values, inline-style
 ---
 
@@ -31,7 +31,7 @@ tags: values, inline-style
 
 둘째 행이 유일한 예외입니다.
 가상 스크롤 위치, 드래그 좌표, 측정한 높이처럼 스타일시트에 적을 수 없는 값이 여기 해당합니다.
-변수가 없을 때를 대비한 대체값은 `values-always-provide-css-variable-fallbacks` 규칙이 정합니다.
+변수가 없을 때를 대비한 대체값은 `values-fall-back-only-outside-core-tokens` 규칙이 정합니다.
 
 래퍼가 `HTMLAttributes`를 `extends`하면 `style`이 함께 열립니다.
 `Omit`으로 뺄 수는 있지만 DOM 표면을 열어 두려고 그대로 두므로 이 규칙을 리뷰가 봅니다.

@@ -6,8 +6,8 @@ impactDescription: 테마 분기가 한 파일에만 있어 색을 하나 더할
 appliesWhen:
   - 다크 모드나 테마 전환을 넣을 때
   - 컴포넌트 CSS에 `prefers-color-scheme`이나 `[data-theme]`를 쓰려 할 때
-  - 색이나 그림자 토큰을 새로 만들거나 이름을 바꿀 때
-reviewWith: values-always-provide-css-variable-fallbacks, values-tokenize-repeated-visual-values
+  - 그림자나 `color-scheme`처럼 테마마다 달라지는 값을 추가·변경할 때
+reviewWith: values-fall-back-only-outside-core-tokens, values-tokenize-repeated-visual-values, values-name-tokens-by-purpose
 tags: values, theme
 ---
 
@@ -26,14 +26,12 @@ tags: values, theme
 컴포넌트에 분기가 있으면 색을 하나 더할 때마다 그 색을 쓰는 파일을 모두 찾아 두 번씩 적어야 합니다.
 빠뜨린 한 곳은 테마를 바꿔 보기 전까지 드러나지 않습니다.
 
-**토큰 이름은 값이 아니라 쓰임으로 짓습니다.**
-`--app-color-white`는 다크 모드에서 이름이 거짓말이 됩니다.
-`--app-color-surface`는 값이 바뀌어도 이름이 그대로 맞습니다.
-
-| 짓는 법 | 예 |
-| --- | --- |
-| 쓰임 | `--app-color-surface`, `--app-color-text-primary`, `--app-color-border` |
-| 값 — 쓰지 않음 | `--app-color-white`, `--app-color-gray-100` |
+**사용자가 고른 테마가 시스템 설정을 이깁니다.**
+`[data-theme]` 블록은 `@media (prefers-color-scheme)` 블록 뒤에 둡니다.
+뒤에 오는 선택자가 명시도도 높아 시스템 설정을 덮습니다.
+토큰 파일에서는 같은 팔레트를 두 번 적어도 됩니다.
+값의 단일 출처가 그 파일 하나이기 때문입니다.
+토큰 이름을 어떻게 짓는지는 `values-name-tokens-by-purpose`가 정합니다.
 
 **`color-scheme`을 선언합니다.**
 스크롤바, 폼 컨트롤, 기본 배경은 우리 토큰이 닿지 않는 브라우저 UI라 이 속성으로만 따라옵니다.
@@ -42,6 +40,8 @@ tags: values, theme
 **그림자도 테마 토큰입니다.**
 어두운 배경에서 검은 그림자는 보이지 않습니다.
 `box-shadow` 값을 직접 적지 말고 토큰으로 두어 테마마다 다르게 잡습니다.
+한 파일에서만 쓰는 그림자와 색도 테마를 켠 프로젝트에서는 토큰입니다.
+`values-tokenize-repeated-visual-values`의 "한 파일 안 값은 그대로" 판정보다 이 규칙이 앞섭니다.
 
 **다크 모드를 지원하지 않기로 했으면 `prefers-color-scheme`을 아예 쓰지 않습니다.**
 일부 화면만 대응하면 같은 앱 안에서 화면마다 배경이 달라져 지원하지 않는 것보다 나쁩니다.
@@ -71,18 +71,11 @@ tags: values, theme
 }
 ```
 
-**Incorrect (값으로 이름을 짓고 그림자를 직접 적습니다):**
+**Incorrect (그림자를 직접 적어 어두운 배경에서 사라집니다):**
 
 ```css
-/* src/style/token.css */
-:root {
-	--app-color-white: #fff;
-	--app-color-gray-100: #f1f3f5;
-}
-
 /* src/page/products/pg-products.css */
 .pg_products__panel {
-	background-color: var(--app-color-white);
 	box-shadow: 0 1px 3px rgb(0 0 0 / 12%);
 }
 ```
@@ -111,7 +104,7 @@ tags: values, theme
 	}
 }
 
-/* [data-theme] 는 명시도로 위 @media 블록을 이긴다 */
+/* [data-theme] 는 뒤에 오고 명시도도 높아 위 @media 블록을 이긴다 */
 :root[data-theme="light"] {
 	color-scheme: light;
 

@@ -22,4 +22,4 @@
 구현 안에서 충분히 추론되는 익명 결과와 외부·생성된 계약은 그대로 둡니다.
 같은 뜻의 계약이 이미 있으면 `types-reuse-existing-contracts-before-new-types`에 따라 먼저 재사용합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/01-07-types-choose-interface-for-object-contracts-and-type-for-composition.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/01-08-types-choose-interface-for-object-contracts-and-type-for-composition.md)을 읽습니다.

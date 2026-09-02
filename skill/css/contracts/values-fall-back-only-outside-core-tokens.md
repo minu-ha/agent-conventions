@@ -29,4 +29,4 @@
 
 요청에 없는 CSS 변수를 이 규칙 때문에 새로 만들지 않습니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/05-01-values-always-provide-css-variable-fallbacks.md)을 읽습니다.
+> 예시·예외가 필요하면 [full rule](../rules/05-01-values-fall-back-only-outside-core-tokens.md)을 읽습니다.

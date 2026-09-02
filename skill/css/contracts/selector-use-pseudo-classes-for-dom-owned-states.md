@@ -22,6 +22,6 @@
 가상 클래스를 어디에 쓰는지는 `selector-nest-dom-state-in-the-owning-block` 규칙이 정합니다.
 `:not()`은 `selector-do-not-negate-with-not` 규칙이 막습니다.
 
-**Requires selected:** `selector-separate-domain-state-modifiers-from-dom-interaction-states` · 함께 적용
+**Requires selected:** `selector-nest-dom-state-in-the-owning-block` · 함께 적용
 
 > 예시·예외가 필요하면 [full rule](../rules/04-05-selector-use-pseudo-classes-for-dom-owned-states.md)을 읽습니다.

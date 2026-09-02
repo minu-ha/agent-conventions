@@ -6,7 +6,7 @@ impactDescription: 포커스 표시를 없애지 않고 형태로 구분해 키�
 appliesWhen:
   - `outline`, `:focus`, `:focus-visible` 스타일을 추가·수정할 때
   - 상호작용 요소의 기본 포커스 링을 덮어쓸 때
-reviewWith: selector-separate-domain-state-modifiers-from-dom-interaction-states
+reviewWith: selector-nest-dom-state-in-the-owning-block
 tags: accessibility, focus, interaction
 ---
 
