@@ -429,7 +429,8 @@ const cssRuleRouting = {
 		reviewWith: [],
 	},
 	"ownership-give-each-file-one-scope-slug": {
-		appliesWhen: "새 `scope_slug`를 만들거나 기존 식별자를 복사·이름 변경할 때. 하위 컴포넌트에 CSS 파일을 새로 만들면서 부모 식별자를 그대로 쓸 때.",
+		appliesWhen:
+			"새 `scope_slug`를 만들거나 기존 식별자를 복사·이름 변경할 때. 하위 컴포넌트에 CSS 파일을 새로 만들면서 부모 식별자를 그대로 쓸 때.",
 		reviewWith: [],
 	},
 	"ownership-choose-scope-prefix-by-owner-layer": {
@@ -830,7 +831,7 @@ const reactRuleRouting = {
 	},
 	"perf-avoid-defensive-memoization": {
 		appliesWhen:
-			"`useMemo`·`useCallback`을 추가하거나 제거할 때. 참조 동일성·실측 병목·무거운 지연 계산을 이유로 수동 메모이제이션을 검토할 때.",
+			"`useMemo`·`useCallback`을 추가하거나 제거할 때. `memo`로 컴포넌트를 감싸거나 벗길 때. 참조 동일성·실측 병목·무거운 지연 계산을 이유로 수동 메모이제이션을 검토할 때.",
 		reviewWith: ["perf-defer-heavy-renders-with-measured-evidence"],
 	},
 	"perf-use-lazy-state-initializers-for-expensive-defaults": {
@@ -1025,7 +1026,7 @@ const typescriptScenarioEvidence = {
 	},
 	"shared-collection-lookups-and-sort": {
 		prompt:
-			"replace repeated `includes` with an existing Set's `has` and replace shared-input `.sort()` with `.toSorted()`; declarations, imports, and docs stay unchanged.",
+			"replace repeated `includes` with an existing Set's `has` and replace shared-input `.sort()` with es-toolkit `sortBy`; declarations, imports, and docs stay unchanged.",
 		files: ["src/search/filter-products.ts"],
 	},
 	"hand-rolled-collection-helpers": {
@@ -1040,7 +1041,7 @@ const typescriptScenarioEvidence = {
 	},
 	"enum-like-runtime-contract": {
 		prompt:
-			"replace `enum ProductStatus` with `product_status as const`, include a multiword `waiting_review` member, derive `ProductStatus`, and document the object, every key, and derived type in Korean.",
+			"replace `enum ProductStatus` with `product_status as const`, include a multiword `waiting_review` member, derive `ProductStatus`, and document the object and derived type in Korean without per-key comments.",
 		files: ["src/audit/audit-status.ts"],
 	},
 	"wide-scope-assembly": {
@@ -1237,7 +1238,7 @@ const reactScenarioStages = {
 	"RTE06-nested-forwardref": {
 		initial: {
 			prompt:
-				"hoist an existing nested forwardRef search input that resets focus to module scope, convert it to a React 19 ref prop, and narrow UiSearchCardProps so it extends HTMLAttributes and opens only the library props in use in ui-search-card.tsx.",
+				"hoist an existing nested forwardRef search input that resets focus to module scope, convert it to a React 19 ref prop, and narrow UiSearchCardProps so it extends the element-specific HTMLAttributes and opens only the library props in use in ui-search-card.tsx.",
 			files: ["src/component/ui/search-card/ui-search-card.tsx"],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
@@ -1527,8 +1528,8 @@ const reactScenarioStages = {
 	"RTE18-url-state-naming": {
 		initial: {
 			prompt:
-				"move the product list page's inline URL param parser map into src/page/products/config/product-list-url-parsers.ts as productListUrlParsers, rename the parsed binding pair to urlParams/setUrlParams, keep the raw URLSearchParams builder named searchParams, and leave the server query and mutation bindings unchanged.",
-			files: ["src/page/products/pg-products.tsx", "src/page/products/config/product-list-url-parsers.ts"],
+				"move the product list page's inline URL param parser map into src/page/products/_constant/product-list-url-parsers.ts as productListUrlParsers, rename the parsed binding pair to urlParams/setUrlParams, keep the raw URLSearchParams builder named searchParams, and leave the server query and mutation bindings unchanged.",
+			files: ["src/page/products/pg-products.tsx", "src/page/products/_constant/product-list-url-parsers.ts"],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
 				react: ["state-name-url-state-bindings-as-a-set"],
@@ -1691,7 +1692,7 @@ const cssScenarioStages = {
 	"css-ui-wrapper-root-prop-contract": {
 		initial: {
 			prompt:
-				"narrow UiButtonProps so it extends HTMLAttributes and opens only the library props we use, expose it documented, read props through the props object in ui-button.tsx, and pass an existing layout class from order-actions.tsx; add no internal selector or new class.",
+				"narrow UiButtonProps so it extends ButtonHTMLAttributes and opens only the library props we use, expose it documented, read props through the props object in ui-button.tsx, and pass an existing layout class from order-actions.tsx; add no internal selector or new class.",
 			files: ["src/component/ui/button/ui-button.tsx", "src/page/order-index/_pg-order-actions.tsx"],
 			expectedSkills: ["react", "typescript", "css"],
 			expectedSelected: {
@@ -2309,7 +2310,7 @@ test("induced naming closure and activated finish gates stay mandatory across ev
 	assert.ok(!(sharedAuthority.expectedSelected.react?.includes("screen-keep-derived-values-close") ?? false));
 });
 
-test("Kubb and combined query bindings preserve the Suspense execution contract", async () => {
+test("Generated API and combined query bindings preserve the Suspense execution contract", async () => {
 	const source = await readRuleSource("react", "data-name-query-and-mutation-bindings-consistently");
 	const {body} = splitFrontmatter(source);
 	const normative = body.split("**Incorrect", 1)[0] ?? "";
@@ -2318,14 +2319,14 @@ test("Kubb and combined query bindings preserve the Suspense execution contract"
 	assertMentions(
 		normative,
 		[
-			"Kubb가 생성한 단일 API 훅",
+			"생성된 단일 API 훅",
 			"요청 종류만 나타내는 앞부분",
 			"`response` 또는 `mutation`",
 			"여러 쿼리를 합친 바인딩",
 			"`useSuspenseQueries`",
 			"끝에 `Suspense`를 유지",
 		],
-		"Kubb API binding naming rule",
+		"generated API binding naming rule",
 	);
 	assert.doesNotMatch(normative, /훅 이름에서 `use`를 떼고/);
 	assert.doesNotMatch(normative, /`select`/);

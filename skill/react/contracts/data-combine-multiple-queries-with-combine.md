@@ -18,7 +18,11 @@
 
 화면 본문에서 두 `data`를 꺼내 합치지 않습니다.
 합친 값이 화면 위쪽 `const`로 남아 출처를 잃습니다.
-`screen-keep-derived-values-close`가 그것을 막습니다.
+그 경우는 `screen-keep-derived-values-close`가 금지합니다.
+
+합치는 자리는 그 값을 그리는 섹션 컴포넌트입니다.
+라우트 진입은 쿼리를 갖지 않고, 커스텀 훅으로 빼지도 않습니다.
+여러 소유자가 같은 조합을 부를 때만 `_hook`으로 올립니다.
 
 **`combine`도 인라인으로 적습니다.**
 다시 실행된다는 이유만으로 `useCallback`이나 `useMemo`로 감싸지 않습니다.

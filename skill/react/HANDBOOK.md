@@ -548,7 +548,9 @@ import {chart_series_line} from "@/component/ui/chart/_constant/series";
 - 이 규칙은 훅으로 감쌀지 여부만 판정합니다.
   그 함수를 아예 밖으로 뺄지는 `typescript/functions-extract-helpers-only-when-the-boundary-is-real`이 정합니다.
   뺀 결과를 어디 둘지는 `ownership-place-owner-files-in-role-folders`가 정합니다.
-- 화면 지역 커스텀 훅은 상태, 컨텍스트, 훅 호출 순서, 여러 쿼리를 합친 결과를 실제로 캡슐화할 때만 허용합니다.
+- 화면 지역 커스텀 훅은 상태, 컨텍스트, 훅 호출 순서를 실제로 캡슐화할 때만 허용합니다.
+  여러 쿼리를 합친 결과는 훅으로 빼지 않고 그 값을 그리는 섹션이 `combine`으로 갖습니다.
+  여러 소유자가 같은 조합을 부를 때만 `_hook`으로 올립니다.
   실제로 훅인 함수만 `use<Capability>`로 이름 짓습니다.
   `useData`, `useLogic`처럼 구현 범주를 되풀이하지 말고 훅이 제공하는 기능을 적습니다.
 - 순수 함수에 `use`를 붙여 훅처럼 보이게 하지 않습니다.
@@ -710,7 +712,7 @@ export const WgChartRoot = (props: WgChartRootProps) => {
 
 | 바인딩 | 이름 |
 | --- | --- |
-| Kubb가 생성한 단일 API 훅 | `use`와 요청 종류만 나타내는 앞부분을 `response` 또는 `mutation`으로 바꾸고 나머지 이름을 유지합니다 |
+| 생성된 단일 API 훅 | `use`와 요청 종류만 나타내는 앞부분을 `response` 또는 `mutation`으로 바꾸고 나머지 이름을 유지합니다 |
 | 여러 쿼리를 합친 바인딩 | `response` 뒤에 결과 이름을 씁니다. `useSuspenseQueries`를 사용하면 끝에 `Suspense`를 유지합니다 |
 
 **Incorrect (쿼리와 뮤테이션 바인딩 이름이 제각각입니다):**
@@ -822,7 +824,11 @@ const responseProductListSuspense = useProductListSuspense(
 
 화면 본문에서 두 `data`를 꺼내 합치지 않습니다.
 합친 값이 화면 위쪽 `const`로 남아 출처를 잃습니다.
-`screen-keep-derived-values-close`가 그것을 막습니다.
+그 경우는 `screen-keep-derived-values-close`가 금지합니다.
+
+합치는 자리는 그 값을 그리는 섹션 컴포넌트입니다.
+라우트 진입은 쿼리를 갖지 않고, 커스텀 훅으로 빼지도 않습니다.
+여러 소유자가 같은 조합을 부를 때만 `_hook`으로 올립니다.
 
 **`combine`도 인라인으로 적습니다.**
 다시 실행된다는 이유만으로 `useCallback`이나 `useMemo`로 감싸지 않습니다.
@@ -843,10 +849,10 @@ const rows = responseProductListSuspense.data.products.map((product) => ({
 }));
 ```
 
-**Correct (통신 경계에서 인라인 `combine`으로 합칩니다):**
+**Correct (값을 그리는 섹션이 인라인 `combine`으로 합칩니다):**
 
 ```tsx
-export const PgProducts = () => {
+export const PgProductTableSection = () => {
 	/**
 	 * 분류 이름이 목록 응답에 없어서 표 한 행에 두 응답을 함께 담는다
 	 */
@@ -862,7 +868,7 @@ export const PgProducts = () => {
 		}),
 	});
 
-	return <UiTable dataSource={responseProductRowsSuspense.rows} />;
+	return <UiTable rows={responseProductRowsSuspense.rows} />;
 };
 ```
 
@@ -1891,7 +1897,7 @@ export const UiReadOnlyProfileDialog = (props: UiReadOnlyProfileDialogProps) => 
 - 공용 컨텍스트나 동작을 직접 쓰는 영역
 
 그 밖은 숨깁니다.
-특히 다음 셋은 공개하지 않습니다.
+특히 다음 둘은 공개하지 않습니다.
 
 - 단순 `className` 래퍼
 - 여백 보정용 DOM. `css/composition-do-not-add-wrapper-elements-for-styling`이 애초에 만들지 말라고 합니다.
@@ -2705,8 +2711,6 @@ JSX에서 조건에 따라 무엇을 그릴지는 형태 셋으로 나눕니다.
 - 참일 때 그릴 요소와 거짓일 때 그릴 요소를 삼항 하나로 묶지 않습니다.
   각 요소의 표시 조건이 바로 앞에 남아야 합니다.
 - 두 조건은 같은 판별값을 기준으로 서로 겹치지 않게 적습니다.
-- 분기가 셋 이상이면 섹션 컴포넌트로 나눕니다.
-  그 경계는 `screen-extract-local-section-components-for-runtime-boundaries`가 정합니다.
 - 숨긴 하위 트리의 상태를 살려야 하면 `composition-use-activity-only-to-preserve-mounted-subtrees`를 봅니다.
 
 **`&&` 왼쪽에 숫자를 두지 않습니다.**
@@ -2895,7 +2899,7 @@ export const PgOrderToolbar = () => {
 | 서버 응답 | 그 데이터를 그리는 컴포넌트가 같은 key 로 직접 부릅니다 |
 | 뮤테이션 | 그 동작을 일으키는 컴포넌트가 갖습니다 |
 | 라우트 params, search 파라미터 | `useParams`와 URL 파서 묶음을 쓰는 자리에서 읽고 씁니다 |
-| 여러 응답을 합친 파생값 | 소유자 `_hook`이 `combine`으로 갖고, 섹션이 그 훅을 부릅니다 |
+| 여러 응답을 합친 파생값 | 그 값을 그리는 섹션이 `combine`을 인라인으로 갖습니다 |
 
 같은 데이터가 여러 섹션에 필요해도 프롭으로 내리지 않습니다.
 `@tanstack/react-query`는 key 가 같으면 요청을 한 번만 보내고 구독자 모두에게 같은 데이터를 줍니다.
@@ -4142,20 +4146,20 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => 
 
 **Rule:** `R10-01` · `perf-avoid-defensive-memoization`
 
-**Applies when:** `useMemo`·`useCallback`을 추가하거나 제거할 때. 참조 동일성·실측 병목·무거운 지연 계산을 이유로 수동 메모이제이션을 검토할 때.
+**Applies when:** `useMemo`·`useCallback`을 추가하거나 제거할 때. `memo`로 컴포넌트를 감싸거나 벗길 때. 참조 동일성·실측 병목·무거운 지연 계산을 이유로 수동 메모이제이션을 검토할 때.
 
 **Review with:** `perf-defer-heavy-renders-with-measured-evidence`
 
-**Impact: MEDIUM (효과를 확인하지 않은 방어적 `useMemo`, `useCallback`을 막습니다)**
+**Impact: MEDIUM (효과를 확인하지 않은 방어적 `useMemo`, `useCallback`, `memo`를 막습니다)**
 
-`useMemo`와 `useCallback`은 쓰지 않습니다.
-컴포넌트를 감싸는 `memo`는 `perf-defer-heavy-renders-with-measured-evidence`가 정합니다.
-쓰는 경우는 다음 셋뿐입니다.
+`useMemo`와 `useCallback`, 컴포넌트를 감싸는 `memo`는 쓰지 않습니다.
+쓰는 경우는 다음 넷뿐입니다.
 어느 경우든 `typescript/docs-justify-convention-exceptions-with-a-reason-comment`를 따라 이유를 남깁니다.
 
 - 외부 라이브러리에서 참조 변경이 상태 초기화나 구독 재설치로 이어질 때
 - 이펙트 의존성으로 들어가는 객체나 배열이어서 감싸지 않으면 이펙트가 매 렌더 다시 돌 때
 - 병목이 실제로 측정됐을 때
+- `perf-defer-heavy-renders-with-measured-evidence`가 지연 값을 받는 하위 트리에 `memo`를 요구할 때
 
 함수나 계산이 다시 실행된다는 사실은 참조 동일성을 고정할 이유가 아닙니다.
 

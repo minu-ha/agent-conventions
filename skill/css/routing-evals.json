@@ -190,7 +190,7 @@
 		},
 		{
 			"id": "css-ui-wrapper-root-prop-contract",
-			"prompt": "narrow UiButtonProps so it extends HTMLAttributes and opens only the library props we use, expose it documented, read props through the props object in ui-button.tsx, and pass an existing layout class from order-actions.tsx; add no internal selector or new class.",
+			"prompt": "narrow UiButtonProps so it extends ButtonHTMLAttributes and opens only the library props we use, expose it documented, read props through the props object in ui-button.tsx, and pass an existing layout class from order-actions.tsx; add no internal selector or new class.",
 			"files": [
 				"src/component/ui/button/ui-button.tsx",
 				"src/page/order-index/_pg-order-actions.tsx"

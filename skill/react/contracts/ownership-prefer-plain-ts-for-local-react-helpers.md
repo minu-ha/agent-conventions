@@ -8,7 +8,9 @@
 - 이 규칙은 훅으로 감쌀지 여부만 판정합니다.
   그 함수를 아예 밖으로 뺄지는 `typescript/functions-extract-helpers-only-when-the-boundary-is-real`이 정합니다.
   뺀 결과를 어디 둘지는 `ownership-place-owner-files-in-role-folders`가 정합니다.
-- 화면 지역 커스텀 훅은 상태, 컨텍스트, 훅 호출 순서, 여러 쿼리를 합친 결과를 실제로 캡슐화할 때만 허용합니다.
+- 화면 지역 커스텀 훅은 상태, 컨텍스트, 훅 호출 순서를 실제로 캡슐화할 때만 허용합니다.
+  여러 쿼리를 합친 결과는 훅으로 빼지 않고 그 값을 그리는 섹션이 `combine`으로 갖습니다.
+  여러 소유자가 같은 조합을 부를 때만 `_hook`으로 올립니다.
   실제로 훅인 함수만 `use<Capability>`로 이름 짓습니다.
   `useData`, `useLogic`처럼 구현 범주를 되풀이하지 말고 훅이 제공하는 기능을 적습니다.
 - 순수 함수에 `use`를 붙여 훅처럼 보이게 하지 않습니다.

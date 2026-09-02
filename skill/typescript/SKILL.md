@@ -31,7 +31,8 @@ React나 CSS 경계가 함께 바뀌면 이 skill이 그쪽을 켜는 것이 아
 걸리는 규칙의 `contracts/<id>.md`를 읽는다.
 `CRITICAL`이면 `rules/NN-MM-<id>.md` 원문도 반드시 읽는다.
 정확한 원문 경로는 contract의 full rule 링크가 가리킨다.
-그 외에도 정확한 문법이나 예외 판단이 필요하면 원문으로 확장한다.
+규칙이 형태(이름·순서·문법·배치)를 정하면 원문의 `Correct` 예제도 읽는다.
+판단만 정하는 규칙은 contract로 끝낸다.
 
 - `requiresSelected` target은 함께 적용한다. 다른 skill의 규칙이면 그 companion도 활성화한다.
 - `reviewWith` target은 변경 범위에 비춰 다시 판단한다. 자동으로 적용하지는 않는다.

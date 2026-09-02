@@ -8,7 +8,7 @@
 - 공용 컨텍스트나 동작을 직접 쓰는 영역
 
 그 밖은 숨깁니다.
-특히 다음 셋은 공개하지 않습니다.
+특히 다음 둘은 공개하지 않습니다.
 
 - 단순 `className` 래퍼
 - 여백 보정용 DOM. `css/composition-do-not-add-wrapper-elements-for-styling`이 애초에 만들지 말라고 합니다.

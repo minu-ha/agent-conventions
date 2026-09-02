@@ -146,7 +146,7 @@
 		},
 		{
 			"id": "shared-collection-lookups-and-sort",
-			"prompt": "replace repeated `includes` with an existing Set's `has` and replace shared-input `.sort()` with `.toSorted()`; declarations, imports, and docs stay unchanged.",
+			"prompt": "replace repeated `includes` with an existing Set's `has` and replace shared-input `.sort()` with es-toolkit `sortBy`; declarations, imports, and docs stay unchanged.",
 			"files": [
 				"src/search/filter-products.ts"
 			],
@@ -196,7 +196,7 @@
 		},
 		{
 			"id": "enum-like-runtime-contract",
-			"prompt": "replace `enum ProductStatus` with `product_status as const`, include a multiword `waiting_review` member, derive `ProductStatus`, and document the object, every key, and derived type in Korean.",
+			"prompt": "replace `enum ProductStatus` with `product_status as const`, include a multiword `waiting_review` member, derive `ProductStatus`, and document the object and derived type in Korean without per-key comments.",
 			"files": [
 				"src/audit/audit-status.ts"
 			],

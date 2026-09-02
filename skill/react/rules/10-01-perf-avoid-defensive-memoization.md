@@ -1,10 +1,11 @@
 ---
 title: Do Not Memoize Without a Confirmed Reason
-titleKo: 확인한 이유가 없으면 `useMemo`·`useCallback`을 쓰지 않습니다
+titleKo: 확인한 이유가 없으면 `useMemo`·`useCallback`·`memo`를 쓰지 않습니다
 impact: MEDIUM
-impactDescription: 효과를 확인하지 않은 방어적 `useMemo`, `useCallback`을 막습니다
+impactDescription: 효과를 확인하지 않은 방어적 `useMemo`, `useCallback`, `memo`를 막습니다
 appliesWhen:
   - `useMemo`·`useCallback`을 추가하거나 제거할 때
+  - `memo`로 컴포넌트를 감싸거나 벗길 때
   - 참조 동일성·실측 병목·무거운 지연 계산을 이유로 수동 메모이제이션을 검토할 때
 reviewWith: perf-defer-heavy-renders-with-measured-evidence
 tags: perf, state
@@ -12,16 +13,16 @@ tags: perf, state
 
 ## Do Not Memoize Without a Confirmed Reason
 
-**Impact: MEDIUM (효과를 확인하지 않은 방어적 `useMemo`, `useCallback`을 막습니다)**
+**Impact: MEDIUM (효과를 확인하지 않은 방어적 `useMemo`, `useCallback`, `memo`를 막습니다)**
 
-`useMemo`와 `useCallback`은 쓰지 않습니다.
-컴포넌트를 감싸는 `memo`는 `perf-defer-heavy-renders-with-measured-evidence`가 정합니다.
-쓰는 경우는 다음 셋뿐입니다.
+`useMemo`와 `useCallback`, 컴포넌트를 감싸는 `memo`는 쓰지 않습니다.
+쓰는 경우는 다음 넷뿐입니다.
 어느 경우든 `typescript/docs-justify-convention-exceptions-with-a-reason-comment`를 따라 이유를 남깁니다.
 
 - 외부 라이브러리에서 참조 변경이 상태 초기화나 구독 재설치로 이어질 때
 - 이펙트 의존성으로 들어가는 객체나 배열이어서 감싸지 않으면 이펙트가 매 렌더 다시 돌 때
 - 병목이 실제로 측정됐을 때
+- `perf-defer-heavy-renders-with-measured-evidence`가 지연 값을 받는 하위 트리에 `memo`를 요구할 때
 
 함수나 계산이 다시 실행된다는 사실은 참조 동일성을 고정할 이유가 아닙니다.
 
