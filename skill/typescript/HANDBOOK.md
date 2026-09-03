@@ -58,7 +58,7 @@
     - 5.1 [Expose Optional Values Instead of Silent Fallbacks](#51-expose-optional-values-instead-of-silent-fallbacks)
     - 5.2 [Resolve Defaults Once at the Boundary](#52-resolve-defaults-once-at-the-boundary)
     - 5.3 [Do Not Guard What the Types Already Guarantee](#53-do-not-guard-what-the-types-already-guarantee)
-    - 5.4 [Check Absence Once at the Boundary or at the Leaf](#54-check-absence-once-at-the-boundary-or-at-the-leaf)
+    - 5.4 [Check Absence Once at the Boundary](#54-check-absence-once-at-the-boundary)
 6. [JSDoc and Comment Conventions](#6-jsdoc-and-comment-conventions) — **MEDIUM**
     - 6.1 [Keep Body Comments for Intent and Steps](#61-keep-body-comments-for-intent-and-steps)
     - 6.2 [Require Header Doc Comments on Key Declarations](#62-require-header-doc-comments-on-key-declarations)
@@ -1611,7 +1611,7 @@ fetchProductPage({baseUrl: api_base_url, page: urlParams.page, pageSize: paginat
 분기가 둘이면 삼항 하나로 호출부에 씁니다.
 셋 이상이면 셋째 사유이고 분기마다 `return`으로 끝냅니다.
 그 전에 값 검사를 경계로 보내면 분기가 줄어 함수가 필요 없어지는 경우가 많습니다.
-검사 자리는 `absence-check-once-at-the-boundary-or-the-leaf`가 정합니다.
+검사 자리는 `absence-check-once-at-the-boundary`가 정합니다.
 
 둘째 사유는 `.tsx`에 렌더가 아닌 코드를 남기지 않으려는 것이라 `.ts` 안에서는 해당하지 않습니다.
 표시용 가공도 해당하지 않습니다.
@@ -2106,7 +2106,7 @@ export const toSignedAmount = (amount: Amount): string => {
 `let`에 기본값을 두고 `if`로 덮어쓰지 않습니다.
 읽는 순서가 논리와 반대이고 아래에서 다시 바뀌는지 끝까지 봐야 합니다.
 함수를 만들기 전에 값 검사를 경계로 보내면 분기가 줄어 삼항 하나로 끝나는 경우가 많습니다.
-검사 자리는 `absence-check-once-at-the-boundary-or-the-leaf`가 정합니다.
+검사 자리는 `absence-check-once-at-the-boundary`가 정합니다.
 
 떼어 낸 함수의 이름은 `functions-name-functions-by-what-comes-out`이 정합니다.
 중간값에 이름을 붙일지는 `functions-name-a-value-only-for-recompute-or-judgment`가 정합니다.
@@ -3183,7 +3183,7 @@ colorToken: curve.colorToken,
 
 **Impact: HIGH**
 
-값이 없을 수 있는 상태를 다루는 규칙을 모읍니다. 기본값으로 덮어 감추지 않고 없다는 사실을 사용처까지 남깁니다. 타입이 이미 보장하는 것은 다시 검사하지 않습니다. 검사는 경계나 마지막 소비처 한 곳에서만 하고 중간 함수는 타입을 믿고 지나갑니다.
+값이 없을 수 있는 상태를 다루는 규칙을 모읍니다. 기본값으로 덮어 감추지 않고 없다는 사실을 사용처까지 남깁니다. 타입이 이미 보장하는 것은 다시 검사하지 않습니다. 검사는 값이 들어오는 경계에서 한 번만 하고 중간 함수는 타입을 믿고 지나갑니다.
 
 ### 5.1 Expose Optional Values Instead of Silent Fallbacks
 
@@ -3326,7 +3326,7 @@ setVisibleRowCount(effectivePageSize);
 
 **Applies when:** `isNil`, `typeof`, 옵셔널 체이닝으로 값을 검사하는 분기를 추가·변경할 때. 선택 필드에 값을 넣으면서 `undefined`를 피하려고 조건부 스프레드를 쓸 때. 제외: `unknown`이나 앱 밖에서 온 값을 좁히는 경우.
 
-**Review with:** `absence-check-once-at-the-boundary-or-the-leaf`, `absence-expose-optional-values-instead-of-silent-fallbacks`, `types-narrow-unknown-instead-of-asserting`
+**Review with:** `absence-check-once-at-the-boundary`, `absence-expose-optional-values-instead-of-silent-fallbacks`, `types-narrow-unknown-instead-of-asserting`
 
 **Impact: MEDIUM (쓸모없는 방어 분기가 사라져 실제로 없을 수 있는 자리만 코드에 남습니다)**
 
@@ -3388,39 +3388,39 @@ return {
 };
 ```
 
-### 5.4 Check Absence Once at the Boundary or at the Leaf
+### 5.4 Check Absence Once at the Boundary
 
-**Rule:** `T05-04` · `absence-check-once-at-the-boundary-or-the-leaf`
+**Rule:** `T05-04` · `absence-check-once-at-the-boundary`
 
 **Applies when:** `isNil`, `Number.isFinite` 같은 값 검사를 함수 본문에 넣을 때. 매개변수나 반환 타입에 `| null`, `| undefined`, `unknown`을 넣거나 뺄 때. 응답 매핑, `select`·`combine`, search 스키마에서 타입을 좁힐 때.
 
 **Review with:** `absence-do-not-guard-what-types-guarantee`, `absence-resolve-defaults-at-the-boundary`, `values-decide-once-and-carry-the-result`
 
-**Impact: HIGH (검사가 경계 한 곳이나 소비처 한 곳에만 남아 중간 함수가 값을 검사하느라 늘어나지 않습니다)**
+**Impact: HIGH (검사가 값이 들어오는 자리 하나에만 남아 중간 함수가 값을 검사하느라 늘어나지 않습니다)**
 
-값이 없을 수 있는지는 한 곳에서 한 번만 검사합니다.
-자리는 둘 중 하나입니다.
+값이 없을 수 있는지는 값이 소유자 안으로 들어오는 경계에서 한 번만 검사합니다.
+화면이면 응답 매핑, `select`, `combine`, search 스키마이고 컴포넌트면 프롭을 받는 자리입니다.
+경계가 답을 정하면 아래 함수는 그 답을 타입으로 받습니다.
 
-| 자리 | 하는 일 | 그 아래 |
+| 경계가 정한 답 | 아래로 내려가는 타입 | 아래에서 하는 일 |
 | --- | --- | --- |
-| 경계 | 응답 매핑, `select`, `combine`, search 스키마에서 검사하고 타입을 좁힙니다 | 시그니처가 `string`, `number`라 검사가 없습니다 |
-| 마지막 소비처 | 경계가 못 좁힌 값을 그리거나 포맷하는 자리 한 곳에서 검사합니다 | 중간 함수는 `string \| null`을 그대로 넘기고 검사하지 않습니다 |
+| 기본값이 있다 | `number` | 없습니다. `absence-resolve-defaults-at-the-boundary`대로 경계에서 채웠습니다 |
+| 없음을 화면이 보여 준다 | `number \| undefined` | 함수는 그대로 넘기고 그리는 자리의 분기 하나만 읽습니다 |
+
+그리는 자리의 분기는 검사가 아니라 화면의 두 번째 상태입니다.
+값이 있을 때와 없을 때 그리는 것이 다르므로 그 분기는 어디로도 옮길 수 없습니다.
+그 분기 말고 `undefined`를 읽는 코드가 경계 아래에 있으면 경계가 일을 안 한 것입니다.
 
 중간 함수는 검사하지 않습니다.
-받은 타입이 `string`이면 `absence-do-not-guard-what-types-guarantee`대로 검사가 위반입니다.
-받은 타입이 `string | null`이면 그대로 넘기고 소비처가 검사합니다.
-두 함수가 같은 값을 검사하고 있으면 하나가 남의 일을 하는 것입니다.
+받은 타입이 `number`면 `absence-do-not-guard-what-types-guarantee`대로 검사가 위반입니다.
+받은 타입이 `number | undefined`면 그대로 넘깁니다.
+그 값으로 판정을 해야 하면 경계에서 한 번 판정해 결과를 싣습니다.
+그 방법은 `values-decide-once-and-carry-the-result`가 정합니다.
 
-경계를 고르는 순서는 `absence-resolve-defaults-at-the-boundary`와 같습니다.
-기본값을 채울 수 있으면 경계에서 채웁니다.
-없다는 사실을 화면까지 남겨야 하면 타입에 `| undefined`로 남겨 소비처까지 보냅니다.
-어느 쪽이든 검사는 한 번입니다.
-
-**시그니처가 검사 자리를 말합니다.**
+**시그니처가 경계를 말합니다.**
 `number | null | undefined`나 `unknown`을 받는 함수가 경계 아래에 여럿 있으면 경계가 일을 안 한 것입니다.
 `unknown`은 앱 밖에서 값이 들어오는 자리 하나만 받습니다.
 그 좁힘은 `types-narrow-unknown-instead-of-asserting`이 정합니다.
-같은 판정을 두 자리에서 하는 것은 `values-decide-once-and-carry-the-result`가 봅니다.
 
 **Incorrect (경계가 타입을 좁히지 않아 아래 함수마다 같은 값을 다시 검사합니다):**
 
@@ -3442,7 +3442,19 @@ export const formatSignedPercent = (value: number | null | undefined) => {
 };
 ```
 
-**Correct (없을 수 있음은 그리는 자리 한 곳에서만 보고 아래 함수는 `number`만 받습니다):**
+**Correct (경계에서 한 번 좁히고 아래 함수는 `number`만 받으며 없음은 그리는 분기 하나만 읽습니다):**
+
+```tsx
+// page/detail/pg-detail.tsx: 서버는 계산 전이면 null을 준다. 여기서 한 번 좁힌다
+const responseSummarySuspense = useSuspenseQuery({
+	...detailSummaryQueryOptions(patternId),
+	select: (response) => ({
+		...response,
+		changeRate:
+			isNotNil(response.changeRate) && Number.isFinite(response.changeRate) ? response.changeRate : undefined,
+	}),
+});
+```
 
 ```ts
 // page/detail/_function/to-badge/_to-signed-tone.ts
@@ -3458,7 +3470,7 @@ export const toSignedTone = (value: number): Tone => {
 ```
 
 ```tsx
-// page/detail/_pg-detail-summary.tsx: changeRate는 number | undefined로 온다
+// page/detail/_pg-detail-summary.tsx: 없음을 읽는 곳은 그리는 분기 하나다
 {isNotNil(summary.changeRate) && (
 	<UiBadge tone={toSignedTone(summary.changeRate)}>{formatSignedPercent(summary.changeRate)}</UiBadge>
 )}

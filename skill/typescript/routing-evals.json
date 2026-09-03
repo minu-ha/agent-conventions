@@ -302,7 +302,7 @@
 				"typescript": [
 					"values-decide-once-and-carry-the-result",
 					"absence-do-not-guard-what-types-guarantee",
-					"absence-check-once-at-the-boundary-or-the-leaf"
+					"absence-check-once-at-the-boundary"
 				]
 			}
 		}

@@ -32,7 +32,7 @@ tags: functions, boundaries
 분기가 둘이면 삼항 하나로 호출부에 씁니다.
 셋 이상이면 셋째 사유이고 분기마다 `return`으로 끝냅니다.
 그 전에 값 검사를 경계로 보내면 분기가 줄어 함수가 필요 없어지는 경우가 많습니다.
-검사 자리는 `absence-check-once-at-the-boundary-or-the-leaf`가 정합니다.
+검사 자리는 `absence-check-once-at-the-boundary`가 정합니다.
 
 둘째 사유는 `.tsx`에 렌더가 아닌 코드를 남기지 않으려는 것이라 `.ts` 안에서는 해당하지 않습니다.
 표시용 가공도 해당하지 않습니다.

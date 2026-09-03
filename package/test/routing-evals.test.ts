@@ -118,7 +118,7 @@ const typescriptRuleUniverse = [
 	"absence-expose-optional-values-instead-of-silent-fallbacks",
 	"absence-resolve-defaults-at-the-boundary",
 	"absence-do-not-guard-what-types-guarantee",
-	"absence-check-once-at-the-boundary-or-the-leaf",
+	"absence-check-once-at-the-boundary",
 	"docs-keep-body-comments-for-intent-and-steps",
 	"docs-require-header-jsdoc-on-key-declarations",
 	"docs-write-concise-korean-comments-about-purpose-and-constraints",
@@ -413,10 +413,10 @@ const typescriptRuleRouting = {
 		reviewWith: [
 			"types-narrow-unknown-instead-of-asserting",
 			"absence-expose-optional-values-instead-of-silent-fallbacks",
-			"absence-check-once-at-the-boundary-or-the-leaf",
+			"absence-check-once-at-the-boundary",
 		],
 	},
-	"absence-check-once-at-the-boundary-or-the-leaf": {
+	"absence-check-once-at-the-boundary": {
 		appliesWhen:
 			"`isNil`, `Number.isFinite` 같은 값 검사를 함수 본문에 넣을 때. 매개변수나 반환 타입에 `| null`, `| undefined`, `unknown`을 넣거나 뺄 때. 응답 매핑, `select`·`combine`, search 스키마에서 타입을 좁힐 때.",
 		reviewWith: [
@@ -1052,7 +1052,7 @@ const typescriptSelections = {
 	"check-absence-once-across-helpers": [
 		"values-decide-once-and-carry-the-result",
 		"absence-do-not-guard-what-types-guarantee",
-		"absence-check-once-at-the-boundary-or-the-leaf",
+		"absence-check-once-at-the-boundary",
 	],
 } as const;
 

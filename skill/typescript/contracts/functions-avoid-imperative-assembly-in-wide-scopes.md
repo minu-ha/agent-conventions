@@ -18,7 +18,7 @@
 `let`에 기본값을 두고 `if`로 덮어쓰지 않습니다.
 읽는 순서가 논리와 반대이고 아래에서 다시 바뀌는지 끝까지 봐야 합니다.
 함수를 만들기 전에 값 검사를 경계로 보내면 분기가 줄어 삼항 하나로 끝나는 경우가 많습니다.
-검사 자리는 `absence-check-once-at-the-boundary-or-the-leaf`가 정합니다.
+검사 자리는 `absence-check-once-at-the-boundary`가 정합니다.
 
 떼어 낸 함수의 이름은 `functions-name-functions-by-what-comes-out`이 정합니다.
 중간값에 이름을 붙일지는 `functions-name-a-value-only-for-recompute-or-judgment`가 정합니다.

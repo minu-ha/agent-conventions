@@ -9,7 +9,7 @@ appliesWhen:
   - 제외: `unknown`이나 앱 밖에서 온 값을 좁히는 경우
 reviewWith: >-
   types-narrow-unknown-instead-of-asserting, absence-expose-optional-values-instead-of-silent-fallbacks,
-  absence-check-once-at-the-boundary-or-the-leaf
+  absence-check-once-at-the-boundary
 tags: absence
 ---
 
