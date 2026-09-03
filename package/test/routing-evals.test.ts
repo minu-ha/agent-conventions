@@ -335,7 +335,8 @@ const typescriptRuleRouting = {
 		reviewWith: [],
 	},
 	"functions-avoid-imperative-assembly-in-wide-scopes": {
-		appliesWhen: "모듈 최상위나 함수 본문 전체를 덮는 스코프에서 `let` 재할당, 배열 `push`, 조건부 누적으로 값을 만들 때.",
+		appliesWhen:
+			"모듈 최상위나 함수 본문 전체를 덮는 스코프에서 `let` 재할당, 배열 `push`, 조건부 누적으로 값을 만들 때. 삼항 안에 삼항을 넣을 때.",
 		reviewWith: ["functions-extract-helpers-only-when-the-boundary-is-real"],
 	},
 	"functions-name-a-value-only-for-recompute-or-judgment": {
@@ -2175,7 +2176,7 @@ test("type and function names expose contract role without repeating framework o
 	assertMentions(
 		functionNameRule,
 		[
-			"`resolve<대상>`",
+			"`choose<대상>`",
 			"`normalize<대상>`",
 			"`format<대상>`",
 			"`compare<대상>`",

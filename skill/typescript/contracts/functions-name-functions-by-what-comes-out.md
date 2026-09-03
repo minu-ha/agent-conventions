@@ -10,7 +10,7 @@
 | `to<대상>` | 입력 형태를 다른 출력 형태로 바꿀 때 | `toDetailContent` |
 | `get<대상>` | 이미 존재하는 값을 가져올 때 | `getSelectedRow` |
 | `find<대상>` | 값 하나 또는 없음을 돌려줄 때 | `findUserByEmail` |
-| `resolve<대상>` | 조건·fallback·현재 문맥에서 답 하나를 정할 때 | `resolveDisplayRows` |
+| `choose<대상>` | 같은 값의 출처가 둘 이상일 때 우선순위로 하나를 고를 때. `??`가 서로 다른 입력 사이에 섭니다 | `chooseBackSource` |
 | `normalize<대상>` | 같은 개념의 값을 허용 범위나 기본 표현에 맞출 때 | `normalizePageSize` |
 | `parse<대상>` | 문자열·`unknown`을 검증하며 타입이 보장된 값으로 읽을 때 | `parseSearchParams` |
 | `format<대상>` | 값을 사람이 읽는 문자열로 표시할 때 | `formatCandidateDayCount` |
@@ -18,7 +18,9 @@
 | `load<대상>`·`fetch<대상>` | 비동기 I/O를 수행하거나 여러 요청을 조율할 때 | `loadProductExport` |
 | `is`·`has`·`can`·`should` | 참이나 거짓으로 질문에 답할 때 | `shouldShowSummary` |
 
-`resolve`와 `normalize`는 계산 과정이 복잡하다는 이유만으로 붙이지 않습니다.
+입력이 하나면 `choose`가 아닙니다.
+분류는 `to`, 검증하며 읽는 것은 `parse`입니다.
+없을 수 있는 조회는 `find`, 허용 범위 보정은 `normalize`입니다.
 
 **이름에는 출력 역할만 남깁니다.**
 
@@ -41,7 +43,7 @@
 | 도메인 동작 | 실제 업무 동사 | `submitOrder`, `cancelBooking` |
 
 `build`, `create`, `make`, `process`, `manage`, `do`, `perform`, `execute`,
-`filter`, `map`, `update`는 우리가 짓는 이름의 첫 동사로 쓰지 않습니다.
+`filter`, `map`, `update`, `resolve`는 우리가 짓는 이름의 첫 동사로 쓰지 않습니다.
 무엇이 나오는지 또는 어떤 효과가 생기는지 구체적으로 말하지 못하기 때문입니다.
 
 - `filterActiveUsers`는 활성 사용자를 남기는지 제외하는지 모호합니다.
@@ -50,6 +52,8 @@
   행이 출력이면 `toProductRows`로 씁니다.
 - `updateProduct`는 저장 효과인지 새 값을 만드는 계산인지 모호합니다.
   각각 `saveProduct`나 `toUpdatedProduct`처럼 나눕니다.
+- `resolveGradeTone`은 안에 조건이 있다는 것만 말합니다.
+  등급을 tone으로 분류한 값이 출력이면 `toGradeTone`으로 씁니다.
 - 배열의 짧은 인라인 변환에서 쓰는 `array.map(...)`은 함수 이름 규칙과 무관합니다.
 - `handle`과 `use`처럼 프레임워크가 의미를 정하는 이름은 해당 프레임워크 규칙이 판정합니다.
 

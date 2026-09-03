@@ -53,10 +53,10 @@ const rows = [{id: "statCorr", value: selectionInfo.avgCorr}];
 
 ```ts
 // 범례
-const colorToken = resolveCurveColorToken(curveItem.role, historicalIndex);
+const colorToken = toCurveColorToken(curveItem.role, historicalIndex);
 
 // 차트 둘. 범례 팔레트를 읽고도 같은 판정을 다시 한다
-colorToken: colorTokenById.get(curveItem.id) ?? resolveCurveColorToken(curveItem.role, index),
+colorToken: colorTokenById.get(curveItem.id) ?? toCurveColorToken(curveItem.role, index),
 ```
 
 **Correct (경계에서 한 번 정해 항목에 싣고 차트는 읽기만 합니다):**
@@ -65,7 +65,7 @@ colorToken: colorTokenById.get(curveItem.id) ?? resolveCurveColorToken(curveItem
 // 범례를 만드는 자리에서 색을 정해 항목에 싣는다
 const comparisonCurves = curveItems.map((curveItem, historicalIndex) => ({
 	...curveItem,
-	colorToken: resolveCurveColorToken(curveItem.role, historicalIndex),
+	colorToken: toCurveColorToken(curveItem.role, historicalIndex),
 }));
 
 // 차트 둘

@@ -1600,43 +1600,32 @@ fetchProductPage({baseUrl: api_base_url, page: urlParams.page, pageSize: paginat
 
 | 사유 | 조건 |
 | --- | --- |
-| 재사용 | **이 변경을 적용한 뒤의 코드**에서 두 자리 이상이 실제로 부릅니다. 같은 파일 안의 두 자리도, 서로 다른 파일 둘도 같습니다 |
-| 렌더 파일 밖으로 | `.tsx` 안의 **요청·저장 payload 조립** 함수입니다. 훅·JSX·컴포넌트 상태를 하나도 쓰지 않으면 사용처가 하나여도 `.ts`로 옮깁니다 |
-| 함수 형태로만 되는 것 | 이른 반환이 셋 이상인 판정, `value is T` 타입 가드, 재귀입니다. 중첩 삼항과 `let` 재할당은 `functions-avoid-imperative-assembly-in-wide-scopes`가 막고, 타입 가드와 재귀는 이름 없이는 쓸 수 없습니다 |
+| 재사용 | 이 변경을 적용한 뒤의 코드에서 두 자리 이상이 실제로 부릅니다. 본문이 한 줄이어도 같습니다 |
+| 렌더 파일 밖으로 | `.tsx` 안의 요청·저장 payload 조립 함수입니다. 훅·JSX·컴포넌트 상태를 쓰지 않으면 사용처가 하나여도 같은 소유자의 `.ts`로 옮깁니다 |
+| 함수 형태가 필수 | 한 식으로 적히지 않는 판정, `value is T` 타입 가드, 재귀입니다 |
 
 한 자리에서만 쓰는 단계는 호출부에 그대로 적습니다.
 단계가 길면 `docs-keep-body-comments-for-intent-and-steps`가 정한 `// 1.` 단계 주석으로 구간을 나눕니다.
 판정이 복잡하다는 이유로 이름을 붙이지 않습니다.
-판정의 이유는 주석이 말합니다.
-분기가 셋 이상이라 삼항 하나에 담기지 않을 때만 세 번째 사유로 이름을 받습니다.
-분기가 둘이면 삼항 하나로 호출부에 씁니다.
-`value is T`로 좁히는 함수는 인라인하면 좁힘이 사라지므로 한 줄이어도 이름을 받습니다.
+값 하나를 조건 여럿으로 고르는 것은 삼항 사슬로 호출부에 씁니다.
+사슬의 형태는 `functions-avoid-imperative-assembly-in-wide-scopes`가 정합니다.
+조건 앞에서 값을 다듬어야 하거나 분기마다 계산이 따로 있어 한 식이 되지 않을 때만 셋째 사유입니다.
 
-두 번째 사유는 재사용이 아니라 `.tsx`에 렌더가 아닌 코드를 남기지 않으려는 것입니다.
-`.ts` 안에서는 해당하지 않습니다.
-옮길 자리는 같은 소유자 폴더의 `.ts`입니다.
-어느 하위 폴더인지는 프레임워크 컨벤션의 역할 폴더 규칙이 정합니다.
-**표시용 가공은 여기에 해당하지 않습니다.**
-목록을 화면 모양으로 바꾸거나 문자열을 조립하는 것은 쓰는 자리에 그대로 둡니다.
-밖으로 내는 것은 서버로 보낼 값을 만드는 함수뿐입니다.
+둘째 사유는 `.tsx`에 렌더가 아닌 코드를 남기지 않으려는 것이라 `.ts` 안에서는 해당하지 않습니다.
+표시용 가공도 해당하지 않습니다.
+서버로 보낼 값을 만드는 함수만 밖으로 냅니다.
 
 어느 사유든 그 함수만 따로 읽어도 뜻이 통해야 합니다.
 바깥 변수, 훅, 컴포넌트 상태에 기대면 아직 뺄 수 없습니다.
 
 사유가 아닌 것:
 
-- **"나중에 또 쓸 것 같아서".** 그때 가서 뺍니다.
+- **나중에 또 쓸 것 같아서.** 그때 가서 뺍니다.
 - **함수가 길어서.** 길이는 단계 주석으로 나눕니다.
-  이름을 붙여 밖으로 내면 읽는 사람이 그 이름을 따라 자리를 옮겨야 합니다.
+- **`.map()` 콜백 하나에만 쓰이는 변환.** 그 자리에 둡니다.
 
-같은 판정을 두 자리에서 하고 있어 재사용 사유가 생길 것 같으면 먼저 `values-decide-once-and-carry-the-result`를 봅니다.
-판정을 한 번만 하면 부르는 자리가 하나로 줄어 사유가 사라지는 경우가 많습니다.
-
-사유와 무관하게 이름 붙이지 않는 것:
-
-- 본문이 한 줄인 계산. 두 자리 이상에서 써도 그 자리마다 그대로 적습니다
-- `.map()` 콜백 하나에만 쓰이는 변환
-- 선택 값 보정, 라벨 기본값 같은 자잘한 정리 단계
+같은 판정을 두 자리에서 하고 있으면 이름을 붙이기 전에 `values-decide-once-and-carry-the-result`를 먼저 봅니다.
+판정을 경계에서 한 번만 하면 부르는 자리가 하나로 줄어 사유가 사라지는 경우가 많습니다.
 
 이름 붙인 보조를 어디에 둘지는 `functions-give-each-function-its-own-file`이 정하고,
 루트 `util`로 올릴지는 `functions-promote-shared-functions-to-root-util`이 정합니다.
@@ -1700,21 +1689,6 @@ const handleNextClick = () => {
 };
 ```
 
-**Correct (`.map()` 콜백 하나에만 쓰이는 변환은 그 자리에 둡니다):**
-
-```ts
-// page/product/_function/to-product-view.ts: 목록과 상세 두 파일이 부른다
-/**
- * product 표시 모델 조립. 라벨 이름이 비면 코드를 보여 준다
- */
-export const toProductView = (record: RecordItem): ProductView => {
-	return {
-		id: record.id,
-		labels: record.labels.map((label) => label.name.trim() || label.code),
-	};
-};
-```
-
 **Correct (서로 다른 파일 둘이 이미 부르는 순수 함수를 뺍니다):**
 
 ```ts
@@ -1753,6 +1727,25 @@ export const toProductSaveRequest = (formValues: ProductFormValues) => {
 ```tsx
 // page/products/pg-products.tsx 하나만 부르지만 훅도 JSX도 쓰지 않는 계산이다
 import {toProductSaveRequest} from "@/page/products/_function/to-product-save-request";
+```
+
+**Correct (조건 앞에서 값을 다듬어야 해 한 식이 되지 않는 판정은 사용처가 하나여도 이름을 받습니다):**
+
+```ts
+// page/detail/_function/to-grade-tone.ts
+/**
+ * 등급 문자열의 강조 tone. API가 등급을 자유 문자열로 주어 토큰 포함으로 판정한다
+ */
+export const toGradeTone = (grade: string): Tone => {
+	const normalizedGrade = grade.trim().toLowerCase();
+	if (grade_positive_tokens.some((token) => normalizedGrade.includes(token))) {
+		return "positive";
+	}
+	if (grade_negative_tokens.some((token) => normalizedGrade.includes(token))) {
+		return "negative";
+	}
+	return "neutral";
+};
 ```
 
 ### 3.4 Give Each Support Function Its Own File
@@ -2089,7 +2082,7 @@ export const toSignedAmount = (amount: Amount): string => {
 
 **Rule:** `T03-07` · `functions-avoid-imperative-assembly-in-wide-scopes`
 
-**Applies when:** 모듈 최상위나 함수 본문 전체를 덮는 스코프에서 `let` 재할당, 배열 `push`, 조건부 누적으로 값을 만들 때.
+**Applies when:** 모듈 최상위나 함수 본문 전체를 덮는 스코프에서 `let` 재할당, 배열 `push`, 조건부 누적으로 값을 만들 때. 삼항 안에 삼항을 넣을 때.
 
 **Review with:** `functions-extract-helpers-only-when-the-boundary-is-real`
 
@@ -2101,8 +2094,14 @@ export const toSignedAmount = (amount: Amount): string => {
 | 상황 | 조립하는 법 |
 | --- | --- |
 | 쓰는 자리가 좁은 스코프 하나 | 그 안에서 바로 계산합니다 |
-| 조건이 둘 이상 | 삼항을 겹치지 않고 조건부 스프레드나 `filter`로 한 번에 조립합니다 |
-| 분기와 보정이 얽혀 좁은 스코프에 담기지 않음 | 떼어 낼지를 `functions-extract-helpers-only-when-the-boundary-is-real`이 판정합니다 |
+| 값 하나를 조건 여럿으로 고름 | else 자리로만 이어지는 삼항 사슬로 씁니다 |
+| 목록에 조건부 항목이 들어감 | 조건부 스프레드나 표를 `filter`로 걸러 한 번에 조립합니다 |
+| 조건 앞에서 값을 다듬어야 하거나 분기마다 계산이 따로 있음 | 떼어 낼지를 `functions-extract-helpers-only-when-the-boundary-is-real`이 판정합니다 |
+
+**삼항은 else 자리로만 잇습니다.**
+`a ? x : b ? y : z`는 `if`, `else if`, `else`와 같은 선형이라 위에서 아래로 읽힙니다.
+then 자리에 삼항이 들어가면 나무가 되어 읽는 사람이 가지를 되짚어야 합니다.
+목록이면 표로 펴고, 값 하나면 조건을 합쳐 사슬로 다시 세웁니다.
 
 떼어 낸 함수의 이름은 `functions-name-functions-by-what-comes-out`이 정합니다.
 중간값에 이름을 붙일지는 `functions-name-a-value-only-for-recompute-or-judgment`가 정합니다.
@@ -2123,7 +2122,23 @@ if (canManageItems) {
 const visibleTabs = ["overview", ...(canManageItems ? ["items"] : [])];
 ```
 
-**Incorrect (조건이 셋이 되자 삼항을 겹칩니다):**
+**Incorrect (then 자리에 삼항을 넣어 나무를 만듭니다):**
+
+```ts
+const statusLabel = isClosed ? "마감" : isDueSoon ? (hasOwner ? "임박" : "담당자 없음") : "진행";
+```
+
+**Correct (조건을 합쳐 else 자리로만 잇습니다):**
+
+```ts
+const statusLabel =
+	isClosed ? "마감"
+	: isDueSoon && !hasOwner ? "담당자 없음"
+	: isDueSoon ? "임박"
+	: "진행";
+```
+
+**Incorrect (목록 조립에서 조건이 셋이 되자 then 자리에도 삼항을 겹칩니다):**
 
 ```ts
 const visibleTabs = canManageItems
@@ -2135,7 +2150,7 @@ const visibleTabs = canManageItems
 		: ["overview"];
 ```
 
-**Correct (조건이 셋 이상이면 표로 두고 걸러 냅니다):**
+**Correct (조건이 셋 이상인 목록은 표로 두고 걸러 냅니다):**
 
 ```ts
 const visibleTabs = [
@@ -2338,7 +2353,7 @@ const submitDraft = async (draft: Draft) => {
 | `to<대상>` | 입력 형태를 다른 출력 형태로 바꿀 때 | `toDetailContent` |
 | `get<대상>` | 이미 존재하는 값을 가져올 때 | `getSelectedRow` |
 | `find<대상>` | 값 하나 또는 없음을 돌려줄 때 | `findUserByEmail` |
-| `resolve<대상>` | 조건·fallback·현재 문맥에서 답 하나를 정할 때 | `resolveDisplayRows` |
+| `choose<대상>` | 같은 값의 출처가 둘 이상일 때 우선순위로 하나를 고를 때. `??`가 서로 다른 입력 사이에 섭니다 | `chooseBackSource` |
 | `normalize<대상>` | 같은 개념의 값을 허용 범위나 기본 표현에 맞출 때 | `normalizePageSize` |
 | `parse<대상>` | 문자열·`unknown`을 검증하며 타입이 보장된 값으로 읽을 때 | `parseSearchParams` |
 | `format<대상>` | 값을 사람이 읽는 문자열로 표시할 때 | `formatCandidateDayCount` |
@@ -2346,7 +2361,9 @@ const submitDraft = async (draft: Draft) => {
 | `load<대상>`·`fetch<대상>` | 비동기 I/O를 수행하거나 여러 요청을 조율할 때 | `loadProductExport` |
 | `is`·`has`·`can`·`should` | 참이나 거짓으로 질문에 답할 때 | `shouldShowSummary` |
 
-`resolve`와 `normalize`는 계산 과정이 복잡하다는 이유만으로 붙이지 않습니다.
+입력이 하나면 `choose`가 아닙니다.
+분류는 `to`, 검증하며 읽는 것은 `parse`입니다.
+없을 수 있는 조회는 `find`, 허용 범위 보정은 `normalize`입니다.
 
 **이름에는 출력 역할만 남깁니다.**
 
@@ -2369,7 +2386,7 @@ const submitDraft = async (draft: Draft) => {
 | 도메인 동작 | 실제 업무 동사 | `submitOrder`, `cancelBooking` |
 
 `build`, `create`, `make`, `process`, `manage`, `do`, `perform`, `execute`,
-`filter`, `map`, `update`는 우리가 짓는 이름의 첫 동사로 쓰지 않습니다.
+`filter`, `map`, `update`, `resolve`는 우리가 짓는 이름의 첫 동사로 쓰지 않습니다.
 무엇이 나오는지 또는 어떤 효과가 생기는지 구체적으로 말하지 못하기 때문입니다.
 
 - `filterActiveUsers`는 활성 사용자를 남기는지 제외하는지 모호합니다.
@@ -2378,6 +2395,8 @@ const submitDraft = async (draft: Draft) => {
   행이 출력이면 `toProductRows`로 씁니다.
 - `updateProduct`는 저장 효과인지 새 값을 만드는 계산인지 모호합니다.
   각각 `saveProduct`나 `toUpdatedProduct`처럼 나눕니다.
+- `resolveGradeTone`은 안에 조건이 있다는 것만 말합니다.
+  등급을 tone으로 분류한 값이 출력이면 `toGradeTone`으로 씁니다.
 - 배열의 짧은 인라인 변환에서 쓰는 `array.map(...)`은 함수 이름 규칙과 무관합니다.
 - `handle`과 `use`처럼 프레임워크가 의미를 정하는 이름은 해당 프레임워크 규칙이 판정합니다.
 
@@ -2391,6 +2410,7 @@ const submitDraft = async (draft: Draft) => {
 export const buildUserPayload = (formValues: UserFormValues) => { /* … */ };
 export const mapResponseToModel = (response: UserResponse) => { /* … */ };
 export const processUserRows = (rows: UserRow[]) => { /* … */ };
+export const resolveGradeTone = (grade: string) => { /* … */ };
 ```
 
 **Correct (출력 역할이나 효과를 이름에 씁니다):**
@@ -2410,6 +2430,11 @@ export const toUserRows = (response: UserResponse) => { /* … */ };
  * 비활성 사용자를 제외한 목록
  */
 export const toActiveUsers = (rows: UserRow[]) => { /* … */ };
+
+/**
+ * 등급 문자열을 강조 tone으로 분류한다
+ */
+export const toGradeTone = (grade: string) => { /* … */ };
 ```
 
 **Correct (값 대신 효과를 내는 함수는 그 효과와 판정으로 이름 짓습니다):**
@@ -3122,10 +3147,10 @@ const rows = [{id: "statCorr", value: selectionInfo.avgCorr}];
 
 ```ts
 // 범례
-const colorToken = resolveCurveColorToken(curveItem.role, historicalIndex);
+const colorToken = toCurveColorToken(curveItem.role, historicalIndex);
 
 // 차트 둘. 범례 팔레트를 읽고도 같은 판정을 다시 한다
-colorToken: colorTokenById.get(curveItem.id) ?? resolveCurveColorToken(curveItem.role, index),
+colorToken: colorTokenById.get(curveItem.id) ?? toCurveColorToken(curveItem.role, index),
 ```
 
 **Correct (경계에서 한 번 정해 항목에 싣고 차트는 읽기만 합니다):**
@@ -3134,7 +3159,7 @@ colorToken: colorTokenById.get(curveItem.id) ?? resolveCurveColorToken(curveItem
 // 범례를 만드는 자리에서 색을 정해 항목에 싣는다
 const comparisonCurves = curveItems.map((curveItem, historicalIndex) => ({
 	...curveItem,
-	colorToken: resolveCurveColorToken(curveItem.role, historicalIndex),
+	colorToken: toCurveColorToken(curveItem.role, historicalIndex),
 }));
 
 // 차트 둘

@@ -1,7 +1,7 @@
 # TypeScript 컨벤션 Rule Index
 
 - Skill: `typescript`
-- Routing digest: `sha256:0694be3930bffd7abe73299e874f212164cba6c981bf0fbb7117b5a62837bdf5`
+- Routing digest: `sha256:c9beb34ab6c6da5f12eca20be6495033497fa72c4c698b1da79e474d6cf6f26b`
 
 ## Local Rules
 
@@ -26,7 +26,7 @@
 - T03-04 | functions-give-each-function-its-own-file | 떼어 낸 보조 함수를 어느 파일이나 폴더에 둘지 정할 때. \`helper.ts\`, \`helpers.ts\`, \`utils.ts\` 같은 파일을 만들거나 거기에 함수를 더할 때. 대표 함수가 자기만 쓰는 보조를 처음 갖게 될 때. 보조를 부르는 대표 함수나 소유자가 늘어날 때. | reviewWith: functions-order-declarations-top-down, functions-promote-shared-functions-to-root-util
 - T03-05 | functions-order-declarations-top-down | \`.ts\` 파일에 선언을 추가하거나 선언 자리를 옮길 때. 내보낸 계약 타입이나 모듈 상수를 내보낸 함수보다 아래에 두려 할 때. 제외: 리액트 컴포넌트 본문 안 선언 자리를 바꾸는 경우.
 - T03-06 | functions-promote-shared-functions-to-root-util | 함수를 루트 \`util\` 폴더로 옮기거나 종류 폴더를 새로 만들 때. 두 소유자가 같은 함수를 쓰게 될 때. 제외: 소유자 안에서 파일 자리만 바꾸는 경우.
-- T03-07 | functions-avoid-imperative-assembly-in-wide-scopes | 모듈 최상위나 함수 본문 전체를 덮는 스코프에서 \`let\` 재할당, 배열 \`push\`, 조건부 누적으로 값을 만들 때. | reviewWith: functions-extract-helpers-only-when-the-boundary-is-real
+- T03-07 | functions-avoid-imperative-assembly-in-wide-scopes | 모듈 최상위나 함수 본문 전체를 덮는 스코프에서 \`let\` 재할당, 배열 \`push\`, 조건부 누적으로 값을 만들 때. 삼항 안에 삼항을 넣을 때. | reviewWith: functions-extract-helpers-only-when-the-boundary-is-real
 - T03-08 | functions-name-a-value-only-for-recompute-or-judgment | 순수 계산의 결과를 지역 변수\(\`const\`\)로 받는 줄을 추가·삭제할 때. 표현식을 쓰는 자리에 그대로 적을지 변수로 뺄지 정할 때. | reviewWith: functions-avoid-imperative-assembly-in-wide-scopes, values-read-objects-through-chains
 - T03-09 | functions-name-functions-by-what-comes-out | 이름을 붙인 함수를 새로 만들거나 이름을 바꿀 때. 제외: 생성기·프레임워크·외부 계약이 정한 이름을 그대로 쓰는 경우.
 - T04-01 | values-prefer-immutable-array-sorting | 프롭스, 상태, 매개변수, 모듈 상수에서 온 배열을 정렬할 때. 기존 \`.sort\(\)\` 호출을 추가·변경할 때. | reviewWith: values-use-es-toolkit-for-value-helpers

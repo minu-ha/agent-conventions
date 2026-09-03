@@ -1,6 +1,6 @@
 ---
 title: Extract Support Functions Only When the Boundary Is Real
-titleKo: 보조 함수는 재사용되거나 삼항에 담기지 않는 분기일 때만 이름을 붙입니다
+titleKo: 보조 함수는 재사용되거나 함수 형태가 필수일 때만 이름을 붙입니다
 impact: MEDIUM
 impactDescription: 흐름을 읽으려고 함수와 파일을 왕복하게 만드는 조각내기를 막습니다
 appliesWhen:
@@ -22,43 +22,32 @@ tags: functions, boundaries
 
 | 사유 | 조건 |
 | --- | --- |
-| 재사용 | **이 변경을 적용한 뒤의 코드**에서 두 자리 이상이 실제로 부릅니다. 같은 파일 안의 두 자리도, 서로 다른 파일 둘도 같습니다 |
-| 렌더 파일 밖으로 | `.tsx` 안의 **요청·저장 payload 조립** 함수입니다. 훅·JSX·컴포넌트 상태를 하나도 쓰지 않으면 사용처가 하나여도 `.ts`로 옮깁니다 |
-| 함수 형태로만 되는 것 | 이른 반환이 셋 이상인 판정, `value is T` 타입 가드, 재귀입니다. 중첩 삼항과 `let` 재할당은 `functions-avoid-imperative-assembly-in-wide-scopes`가 막고, 타입 가드와 재귀는 이름 없이는 쓸 수 없습니다 |
+| 재사용 | 이 변경을 적용한 뒤의 코드에서 두 자리 이상이 실제로 부릅니다. 본문이 한 줄이어도 같습니다 |
+| 렌더 파일 밖으로 | `.tsx` 안의 요청·저장 payload 조립 함수입니다. 훅·JSX·컴포넌트 상태를 쓰지 않으면 사용처가 하나여도 같은 소유자의 `.ts`로 옮깁니다 |
+| 함수 형태가 필수 | 한 식으로 적히지 않는 판정, `value is T` 타입 가드, 재귀입니다 |
 
 한 자리에서만 쓰는 단계는 호출부에 그대로 적습니다.
 단계가 길면 `docs-keep-body-comments-for-intent-and-steps`가 정한 `// 1.` 단계 주석으로 구간을 나눕니다.
 판정이 복잡하다는 이유로 이름을 붙이지 않습니다.
-판정의 이유는 주석이 말합니다.
-분기가 셋 이상이라 삼항 하나에 담기지 않을 때만 세 번째 사유로 이름을 받습니다.
-분기가 둘이면 삼항 하나로 호출부에 씁니다.
-`value is T`로 좁히는 함수는 인라인하면 좁힘이 사라지므로 한 줄이어도 이름을 받습니다.
+값 하나를 조건 여럿으로 고르는 것은 삼항 사슬로 호출부에 씁니다.
+사슬의 형태는 `functions-avoid-imperative-assembly-in-wide-scopes`가 정합니다.
+조건 앞에서 값을 다듬어야 하거나 분기마다 계산이 따로 있어 한 식이 되지 않을 때만 셋째 사유입니다.
 
-두 번째 사유는 재사용이 아니라 `.tsx`에 렌더가 아닌 코드를 남기지 않으려는 것입니다.
-`.ts` 안에서는 해당하지 않습니다.
-옮길 자리는 같은 소유자 폴더의 `.ts`입니다.
-어느 하위 폴더인지는 프레임워크 컨벤션의 역할 폴더 규칙이 정합니다.
-**표시용 가공은 여기에 해당하지 않습니다.**
-목록을 화면 모양으로 바꾸거나 문자열을 조립하는 것은 쓰는 자리에 그대로 둡니다.
-밖으로 내는 것은 서버로 보낼 값을 만드는 함수뿐입니다.
+둘째 사유는 `.tsx`에 렌더가 아닌 코드를 남기지 않으려는 것이라 `.ts` 안에서는 해당하지 않습니다.
+표시용 가공도 해당하지 않습니다.
+서버로 보낼 값을 만드는 함수만 밖으로 냅니다.
 
 어느 사유든 그 함수만 따로 읽어도 뜻이 통해야 합니다.
 바깥 변수, 훅, 컴포넌트 상태에 기대면 아직 뺄 수 없습니다.
 
 사유가 아닌 것:
 
-- **"나중에 또 쓸 것 같아서".** 그때 가서 뺍니다.
+- **나중에 또 쓸 것 같아서.** 그때 가서 뺍니다.
 - **함수가 길어서.** 길이는 단계 주석으로 나눕니다.
-  이름을 붙여 밖으로 내면 읽는 사람이 그 이름을 따라 자리를 옮겨야 합니다.
+- **`.map()` 콜백 하나에만 쓰이는 변환.** 그 자리에 둡니다.
 
-같은 판정을 두 자리에서 하고 있어 재사용 사유가 생길 것 같으면 먼저 `values-decide-once-and-carry-the-result`를 봅니다.
-판정을 한 번만 하면 부르는 자리가 하나로 줄어 사유가 사라지는 경우가 많습니다.
-
-사유와 무관하게 이름 붙이지 않는 것:
-
-- 본문이 한 줄인 계산. 두 자리 이상에서 써도 그 자리마다 그대로 적습니다
-- `.map()` 콜백 하나에만 쓰이는 변환
-- 선택 값 보정, 라벨 기본값 같은 자잘한 정리 단계
+같은 판정을 두 자리에서 하고 있으면 이름을 붙이기 전에 `values-decide-once-and-carry-the-result`를 먼저 봅니다.
+판정을 경계에서 한 번만 하면 부르는 자리가 하나로 줄어 사유가 사라지는 경우가 많습니다.
 
 이름 붙인 보조를 어디에 둘지는 `functions-give-each-function-its-own-file`이 정하고,
 루트 `util`로 올릴지는 `functions-promote-shared-functions-to-root-util`이 정합니다.
@@ -122,21 +111,6 @@ const handleNextClick = () => {
 };
 ```
 
-**Correct (`.map()` 콜백 하나에만 쓰이는 변환은 그 자리에 둡니다):**
-
-```ts
-// page/product/_function/to-product-view.ts: 목록과 상세 두 파일이 부른다
-/**
- * product 표시 모델 조립. 라벨 이름이 비면 코드를 보여 준다
- */
-export const toProductView = (record: RecordItem): ProductView => {
-	return {
-		id: record.id,
-		labels: record.labels.map((label) => label.name.trim() || label.code),
-	};
-};
-```
-
 **Correct (서로 다른 파일 둘이 이미 부르는 순수 함수를 뺍니다):**
 
 ```ts
@@ -175,4 +149,23 @@ export const toProductSaveRequest = (formValues: ProductFormValues) => {
 ```tsx
 // page/products/pg-products.tsx 하나만 부르지만 훅도 JSX도 쓰지 않는 계산이다
 import {toProductSaveRequest} from "@/page/products/_function/to-product-save-request";
+```
+
+**Correct (조건 앞에서 값을 다듬어야 해 한 식이 되지 않는 판정은 사용처가 하나여도 이름을 받습니다):**
+
+```ts
+// page/detail/_function/to-grade-tone.ts
+/**
+ * 등급 문자열의 강조 tone. API가 등급을 자유 문자열로 주어 토큰 포함으로 판정한다
+ */
+export const toGradeTone = (grade: string): Tone => {
+	const normalizedGrade = grade.trim().toLowerCase();
+	if (grade_positive_tokens.some((token) => normalizedGrade.includes(token))) {
+		return "positive";
+	}
+	if (grade_negative_tokens.some((token) => normalizedGrade.includes(token))) {
+		return "negative";
+	}
+	return "neutral";
+};
 ```
