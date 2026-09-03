@@ -397,9 +397,10 @@ pre.code { margin: 0; padding: 11px 13px; font-family: var(--mono); font-size: 1
 mark { background: color-mix(in srgb, var(--accent) 30%, transparent); color: inherit; border-radius: 2px; }
 
 /* 적용 조건 불렛. 제외 조건은 라벨 칩과 낮은 대비로 본 조건과 갈라 읽힌다. */
-.acc-body li.li-x { color: var(--muted); }
+.acc-body li.li-x { color: var(--muted); padding-left: 1.7em; }
 .acc-body li.li-x::before { content: none; }
-.x-lb { font-family: var(--mono); font-size: 9.5px; letter-spacing: .06em; color: var(--faint); border: 1px solid var(--hair); border-radius: 2px; padding: 1px 5px; white-space: nowrap; }
+/* 라벨 칩은 다른 항목의 불렛 자리에 앉고, 본문은 칩 너비만큼 물러나 형제 항목의 본문과 같은 줄높이로 읽힌다. */
+.x-lb { position: absolute; left: -1.35em; top: .15em; font-family: var(--mono); font-size: 9.5px; line-height: 1.3; letter-spacing: .06em; color: var(--faint); border: 1px solid var(--hair); border-radius: 2px; padding: 1px 5px; white-space: nowrap; }
 
 /* ---------- rule dialog ---------- */
 /* 참조 칩은 목록을 이동하는 대신 이 다이얼로그로 미리 보여준다. 보던 섹션을 잃지 않는다. */
@@ -597,7 +598,8 @@ const viewerClientScript = `(() => {
 			// 표
 			if (t.startsWith("|")) {
 				flushP(); flushL();
-				const cells = t.replace(/^\\||\\|$/g, "").split("|").map((c) => c.trim());
+				// 코드 구간 안의 이스케이프한 파이프(역슬래시 + 파이프)는 칸 경계가 아니다. 나누고 나서 원래 글자로 되돌린다.
+				const cells = t.replace(/^\\||\\|$/g, "").split(/(?<!\\\\)\\|/).map((c) => c.replace(/\\\\\\|/g, "|").trim());
 				if (cells.every((c) => /^:?-{2,}:?$/.test(c))) continue;
 				tbl = tbl || []; tbl.push(cells);
 				continue;

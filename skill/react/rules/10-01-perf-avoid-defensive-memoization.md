@@ -36,7 +36,9 @@ tags: perf, state
 **Incorrect (단순 가공을 습관적으로 메모이제이션합니다):**
 
 ```ts
-const columns = useMemo(() => toTableColumns(responseTableColumnsSuspense.data.columns), [responseTableColumnsSuspense.data.columns]);
+const columns = useMemo(() => {
+	return toTableColumns(responseTableColumnsSuspense.data.columns);
+}, [responseTableColumnsSuspense.data.columns]);
 ```
 
 **Correct (근거가 없으면 감싸지 않고 그대로 계산합니다):**
@@ -49,7 +51,9 @@ const columns = toTableColumns(responseTableColumnsSuspense.data.columns);
 
 ```ts
 // 외부 표 라이브러리는 columns 참조가 바뀌면 컬럼 폭·정렬 상태를 초기화한다. 참조를 고정해야 한다.
-const columns = useMemo(() => toTableColumns(responseTableColumnsSuspense.data.columns), [responseTableColumnsSuspense.data.columns]);
+const columns = useMemo(() => {
+	return toTableColumns(responseTableColumnsSuspense.data.columns);
+}, [responseTableColumnsSuspense.data.columns]);
 ```
 
 **Correct (이펙트 의존성이라 참조를 고정합니다):**

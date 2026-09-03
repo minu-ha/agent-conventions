@@ -39,26 +39,34 @@ JSX 자식 자리에는 `//`가 없어 프레임워크 규칙이 정한 형태�
 
 ```ts
 // 성능을 위해 메모이제이션
-const columns = useMemo(() => toTableColumns(responseTableColumnsSuspense.data.columns), [responseTableColumnsSuspense.data.columns]);
+const columns = useMemo(() => {
+	return toTableColumns(responseTableColumnsSuspense.data.columns);
+}, [responseTableColumnsSuspense.data.columns]);
 ```
 
 **Correct (외부 패키지의 제약을 가리킵니다):**
 
 ```ts
 // 외부 표 라이브러리는 columns 참조가 바뀌면 컬럼 상태를 초기화한다. 참조를 고정해야 한다.
-const columns = useMemo(() => toTableColumns(responseTableColumnsSuspense.data.columns), [responseTableColumnsSuspense.data.columns]);
+const columns = useMemo(() => {
+	return toTableColumns(responseTableColumnsSuspense.data.columns);
+}, [responseTableColumnsSuspense.data.columns]);
 ```
 
 **Incorrect (막연한 말이라 무엇을 재서 넣었는지 알 수 없습니다):**
 
 ```ts
 // 안전하게 다시 계산하지 않도록
-const filteredRows = useMemo(() => rows.filter((row) => matchRow(row, deferredKeyword)), [deferredKeyword, rows]);
+const filteredRows = useMemo(() => {
+	return rows.filter((row) => matchRow(row, deferredKeyword));
+}, [deferredKeyword, rows]);
 ```
 
 **Correct (측정 결과를 가리킵니다):**
 
 ```ts
 // 행 5,000개에서 매 렌더 필터링이 120ms로 측정됐다. 지연한 검색어에만 다시 계산한다.
-const filteredRows = useMemo(() => rows.filter((row) => matchRow(row, deferredKeyword)), [deferredKeyword, rows]);
+const filteredRows = useMemo(() => {
+	return rows.filter((row) => matchRow(row, deferredKeyword));
+}, [deferredKeyword, rows]);
 ```
