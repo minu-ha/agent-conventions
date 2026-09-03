@@ -58,6 +58,7 @@
     - 5.1 [Expose Optional Values Instead of Silent Fallbacks](#51-expose-optional-values-instead-of-silent-fallbacks)
     - 5.2 [Resolve Defaults Once at the Boundary](#52-resolve-defaults-once-at-the-boundary)
     - 5.3 [Do Not Guard What the Types Already Guarantee](#53-do-not-guard-what-the-types-already-guarantee)
+    - 5.4 [Check Absence Once at the Boundary or at the Leaf](#54-check-absence-once-at-the-boundary-or-at-the-leaf)
 6. [JSDoc and Comment Conventions](#6-jsdoc-and-comment-conventions) — **MEDIUM**
     - 6.1 [Keep Body Comments for Intent and Steps](#61-keep-body-comments-for-intent-and-steps)
     - 6.2 [Require Header Doc Comments on Key Declarations](#62-require-header-doc-comments-on-key-declarations)
@@ -1602,14 +1603,15 @@ fetchProductPage({baseUrl: api_base_url, page: urlParams.page, pageSize: paginat
 | --- | --- |
 | 재사용 | 이 변경을 적용한 뒤의 코드에서 두 자리 이상이 실제로 부릅니다. 본문이 한 줄이어도 같습니다 |
 | 렌더 파일 밖으로 | `.tsx` 안의 요청·저장 payload 조립 함수입니다. 훅·JSX·컴포넌트 상태를 쓰지 않으면 사용처가 하나여도 같은 소유자의 `.ts`로 옮깁니다 |
-| 함수 형태가 필수 | 한 식으로 적히지 않는 판정, `value is T` 타입 가드, 재귀입니다 |
+| 함수 형태가 필수 | 삼항 하나에 담기지 않는 판정, `value is T` 타입 가드, 재귀입니다 |
 
 한 자리에서만 쓰는 단계는 호출부에 그대로 적습니다.
 단계가 길면 `docs-keep-body-comments-for-intent-and-steps`가 정한 `// 1.` 단계 주석으로 구간을 나눕니다.
 판정이 복잡하다는 이유로 이름을 붙이지 않습니다.
-값 하나를 조건 여럿으로 고르는 것은 삼항 사슬로 호출부에 씁니다.
-사슬의 형태는 `functions-avoid-imperative-assembly-in-wide-scopes`가 정합니다.
-조건 앞에서 값을 다듬어야 하거나 분기마다 계산이 따로 있어 한 식이 되지 않을 때만 셋째 사유입니다.
+분기가 둘이면 삼항 하나로 호출부에 씁니다.
+셋 이상이면 셋째 사유이고 분기마다 `return`으로 끝냅니다.
+그 전에 값 검사를 경계로 보내면 분기가 줄어 함수가 필요 없어지는 경우가 많습니다.
+검사 자리는 `absence-check-once-at-the-boundary-or-the-leaf`가 정합니다.
 
 둘째 사유는 `.tsx`에 렌더가 아닌 코드를 남기지 않으려는 것이라 `.ts` 안에서는 해당하지 않습니다.
 표시용 가공도 해당하지 않습니다.
@@ -1729,7 +1731,7 @@ export const toProductSaveRequest = (formValues: ProductFormValues) => {
 import {toProductSaveRequest} from "@/page/products/_function/to-product-save-request";
 ```
 
-**Correct (조건 앞에서 값을 다듬어야 해 한 식이 되지 않는 판정은 사용처가 하나여도 이름을 받습니다):**
+**Correct (삼항 하나에 담기지 않는 판정은 사용처가 하나여도 이름을 받고 분기마다 `return`으로 끝냅니다):**
 
 ```ts
 // page/detail/_function/to-grade-tone.ts
@@ -2094,14 +2096,17 @@ export const toSignedAmount = (amount: Amount): string => {
 | 상황 | 조립하는 법 |
 | --- | --- |
 | 쓰는 자리가 좁은 스코프 하나 | 그 안에서 바로 계산합니다 |
-| 값 하나를 조건 여럿으로 고름 | else 자리로만 이어지는 삼항 사슬로 씁니다 |
+| 값 하나가 조건 하나로 갈림 | 삼항 하나로 씁니다 |
+| 값 하나가 조건 둘 이상으로 갈림 | 분기마다 `return`으로 끝나는 함수로 뺍니다. 자리는 `functions-extract-helpers-only-when-the-boundary-is-real`이 정합니다 |
 | 목록에 조건부 항목이 들어감 | 조건부 스프레드나 표를 `filter`로 걸러 한 번에 조립합니다 |
-| 조건 앞에서 값을 다듬어야 하거나 분기마다 계산이 따로 있음 | 떼어 낼지를 `functions-extract-helpers-only-when-the-boundary-is-real`이 판정합니다 |
 
-**삼항은 else 자리로만 잇습니다.**
-`a ? x : b ? y : z`는 `if`, `else if`, `else`와 같은 선형이라 위에서 아래로 읽힙니다.
-then 자리에 삼항이 들어가면 나무가 되어 읽는 사람이 가지를 되짚어야 합니다.
-목록이면 표로 펴고, 값 하나면 조건을 합쳐 사슬로 다시 세웁니다.
+**삼항은 조건 하나까지입니다.**
+삼항 안에 삼항을 넣지 않습니다.
+분기가 셋 이상이면 `return`이 그 분기의 값을 끝내는 함수가 위에서 아래로 한 번에 읽힙니다.
+`let`에 기본값을 두고 `if`로 덮어쓰지 않습니다.
+읽는 순서가 논리와 반대이고 아래에서 다시 바뀌는지 끝까지 봐야 합니다.
+함수를 만들기 전에 값 검사를 경계로 보내면 분기가 줄어 삼항 하나로 끝나는 경우가 많습니다.
+검사 자리는 `absence-check-once-at-the-boundary-or-the-leaf`가 정합니다.
 
 떼어 낸 함수의 이름은 `functions-name-functions-by-what-comes-out`이 정합니다.
 중간값에 이름을 붙일지는 `functions-name-a-value-only-for-recompute-or-judgment`가 정합니다.
@@ -2122,23 +2127,31 @@ if (canManageItems) {
 const visibleTabs = ["overview", ...(canManageItems ? ["items"] : [])];
 ```
 
-**Incorrect (then 자리에 삼항을 넣어 나무를 만듭니다):**
+**Incorrect (삼항 안에 삼항을 넣어 값 하나를 고릅니다):**
 
 ```ts
-const statusLabel = isClosed ? "마감" : isDueSoon ? (hasOwner ? "임박" : "담당자 없음") : "진행";
+const statusLabel = task.isClosed ? "마감" : task.isDueSoon ? "임박" : "진행";
 ```
 
-**Correct (조건을 합쳐 else 자리로만 잇습니다):**
+**Correct (분기가 셋이면 `return`으로 끝나는 함수로 뺍니다):**
 
 ```ts
-const statusLabel =
-	isClosed ? "마감"
-	: isDueSoon && !hasOwner ? "담당자 없음"
-	: isDueSoon ? "임박"
-	: "진행";
+// page/task/_function/to-task-row/_to-status-label.ts
+/**
+ * 할 일 행의 상태 라벨. 마감이 임박보다 우선한다
+ */
+export const toStatusLabel = (task: TaskRow): StatusLabel => {
+	if (task.isClosed) {
+		return "마감";
+	}
+	if (task.isDueSoon) {
+		return "임박";
+	}
+	return "진행";
+};
 ```
 
-**Incorrect (목록 조립에서 조건이 셋이 되자 then 자리에도 삼항을 겹칩니다):**
+**Incorrect (목록 조립에서 조건이 셋이 되자 삼항을 겹칩니다):**
 
 ```ts
 const visibleTabs = canManageItems
@@ -3170,7 +3183,7 @@ colorToken: curve.colorToken,
 
 **Impact: HIGH**
 
-값이 없을 수 있는 상태를 다루는 규칙을 모읍니다. 기본값으로 덮어 감추지 않고 없다는 사실을 사용처까지 남깁니다. 타입이 이미 보장하는 것은 다시 검사하지 않습니다.
+값이 없을 수 있는 상태를 다루는 규칙을 모읍니다. 기본값으로 덮어 감추지 않고 없다는 사실을 사용처까지 남깁니다. 타입이 이미 보장하는 것은 다시 검사하지 않습니다. 검사는 경계나 마지막 소비처 한 곳에서만 하고 중간 함수는 타입을 믿고 지나갑니다.
 
 ### 5.1 Expose Optional Values Instead of Silent Fallbacks
 
@@ -3313,7 +3326,7 @@ setVisibleRowCount(effectivePageSize);
 
 **Applies when:** `isNil`, `typeof`, 옵셔널 체이닝으로 값을 검사하는 분기를 추가·변경할 때. 선택 필드에 값을 넣으면서 `undefined`를 피하려고 조건부 스프레드를 쓸 때. 제외: `unknown`이나 앱 밖에서 온 값을 좁히는 경우.
 
-**Review with:** `absence-expose-optional-values-instead-of-silent-fallbacks`, `types-narrow-unknown-instead-of-asserting`
+**Review with:** `absence-check-once-at-the-boundary-or-the-leaf`, `absence-expose-optional-values-instead-of-silent-fallbacks`, `types-narrow-unknown-instead-of-asserting`
 
 **Impact: MEDIUM (쓸모없는 방어 분기가 사라져 실제로 없을 수 있는 자리만 코드에 남습니다)**
 
@@ -3373,6 +3386,82 @@ return {
 	metrics,
 	tamValidity: isNil(params.tamMetrics) ? undefined : toTamValidity(params.tamMetrics),
 };
+```
+
+### 5.4 Check Absence Once at the Boundary or at the Leaf
+
+**Rule:** `T05-04` · `absence-check-once-at-the-boundary-or-the-leaf`
+
+**Applies when:** `isNil`, `Number.isFinite` 같은 값 검사를 함수 본문에 넣을 때. 매개변수나 반환 타입에 `| null`, `| undefined`, `unknown`을 넣거나 뺄 때. 응답 매핑, `select`·`combine`, search 스키마에서 타입을 좁힐 때.
+
+**Review with:** `absence-do-not-guard-what-types-guarantee`, `absence-resolve-defaults-at-the-boundary`, `values-decide-once-and-carry-the-result`
+
+**Impact: HIGH (검사가 경계 한 곳이나 소비처 한 곳에만 남아 중간 함수가 값을 검사하느라 늘어나지 않습니다)**
+
+값이 없을 수 있는지는 한 곳에서 한 번만 검사합니다.
+자리는 둘 중 하나입니다.
+
+| 자리 | 하는 일 | 그 아래 |
+| --- | --- | --- |
+| 경계 | 응답 매핑, `select`, `combine`, search 스키마에서 검사하고 타입을 좁힙니다 | 시그니처가 `string`, `number`라 검사가 없습니다 |
+| 마지막 소비처 | 경계가 못 좁힌 값을 그리거나 포맷하는 자리 한 곳에서 검사합니다 | 중간 함수는 `string \| null`을 그대로 넘기고 검사하지 않습니다 |
+
+중간 함수는 검사하지 않습니다.
+받은 타입이 `string`이면 `absence-do-not-guard-what-types-guarantee`대로 검사가 위반입니다.
+받은 타입이 `string | null`이면 그대로 넘기고 소비처가 검사합니다.
+두 함수가 같은 값을 검사하고 있으면 하나가 남의 일을 하는 것입니다.
+
+경계를 고르는 순서는 `absence-resolve-defaults-at-the-boundary`와 같습니다.
+기본값을 채울 수 있으면 경계에서 채웁니다.
+없다는 사실을 화면까지 남겨야 하면 타입에 `| undefined`로 남겨 소비처까지 보냅니다.
+어느 쪽이든 검사는 한 번입니다.
+
+**시그니처가 검사 자리를 말합니다.**
+`number | null | undefined`나 `unknown`을 받는 함수가 경계 아래에 여럿 있으면 경계가 일을 안 한 것입니다.
+`unknown`은 앱 밖에서 값이 들어오는 자리 하나만 받습니다.
+그 좁힘은 `types-narrow-unknown-instead-of-asserting`이 정합니다.
+같은 판정을 두 자리에서 하는 것은 `values-decide-once-and-carry-the-result`가 봅니다.
+
+**Incorrect (경계가 타입을 좁히지 않아 아래 함수마다 같은 값을 다시 검사합니다):**
+
+```ts
+// page/detail/_function/to-badge/_to-signed-tone.ts
+export const toSignedTone = (value: number | null | undefined): Tone => {
+	if (isNil(value) || !Number.isFinite(value) || value === 0) {
+		return "neutral";
+	}
+	return value > 0 ? "positive" : "negative";
+};
+
+// page/detail/_function/format-signed-percent.ts
+export const formatSignedPercent = (value: number | null | undefined) => {
+	if (isNil(value) || !Number.isFinite(value)) {
+		return copy_empty_value_text;
+	}
+	return `${value > 0 ? "+" : ""}${value}%`;
+};
+```
+
+**Correct (없을 수 있음은 그리는 자리 한 곳에서만 보고 아래 함수는 `number`만 받습니다):**
+
+```ts
+// page/detail/_function/to-badge/_to-signed-tone.ts
+/**
+ * 부호 있는 변화율의 강조 tone. 0은 어느 쪽도 아니라 중립이다
+ */
+export const toSignedTone = (value: number): Tone => {
+	if (value === 0) {
+		return "neutral";
+	}
+	return value > 0 ? "positive" : "negative";
+};
+```
+
+```tsx
+// page/detail/_pg-detail-summary.tsx: changeRate는 number | undefined로 온다
+{isNotNil(summary.changeRate) && (
+	<UiBadge tone={toSignedTone(summary.changeRate)}>{formatSignedPercent(summary.changeRate)}</UiBadge>
+)}
 ```
 
 ## 6. JSDoc and Comment Conventions

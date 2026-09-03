@@ -118,6 +118,7 @@ const typescriptRuleUniverse = [
 	"absence-expose-optional-values-instead-of-silent-fallbacks",
 	"absence-resolve-defaults-at-the-boundary",
 	"absence-do-not-guard-what-types-guarantee",
+	"absence-check-once-at-the-boundary-or-the-leaf",
 	"docs-keep-body-comments-for-intent-and-steps",
 	"docs-require-header-jsdoc-on-key-declarations",
 	"docs-write-concise-korean-comments-about-purpose-and-constraints",
@@ -409,7 +410,20 @@ const typescriptRuleRouting = {
 	"absence-do-not-guard-what-types-guarantee": {
 		appliesWhen:
 			"`isNil`, `typeof`, 옵셔널 체이닝으로 값을 검사하는 분기를 추가·변경할 때. 선택 필드에 값을 넣으면서 `undefined`를 피하려고 조건부 스프레드를 쓸 때. 제외: `unknown`이나 앱 밖에서 온 값을 좁히는 경우.",
-		reviewWith: ["types-narrow-unknown-instead-of-asserting", "absence-expose-optional-values-instead-of-silent-fallbacks"],
+		reviewWith: [
+			"types-narrow-unknown-instead-of-asserting",
+			"absence-expose-optional-values-instead-of-silent-fallbacks",
+			"absence-check-once-at-the-boundary-or-the-leaf",
+		],
+	},
+	"absence-check-once-at-the-boundary-or-the-leaf": {
+		appliesWhen:
+			"`isNil`, `Number.isFinite` 같은 값 검사를 함수 본문에 넣을 때. 매개변수나 반환 타입에 `| null`, `| undefined`, `unknown`을 넣거나 뺄 때. 응답 매핑, `select`·`combine`, search 스키마에서 타입을 좁힐 때.",
+		reviewWith: [
+			"absence-resolve-defaults-at-the-boundary",
+			"absence-do-not-guard-what-types-guarantee",
+			"values-decide-once-and-carry-the-result",
+		],
 	},
 	"docs-keep-body-comments-for-intent-and-steps": {
 		appliesWhen:
@@ -1035,6 +1049,11 @@ const typescriptSelections = {
 		"absence-expose-optional-values-instead-of-silent-fallbacks",
 		"absence-do-not-guard-what-types-guarantee",
 	],
+	"check-absence-once-across-helpers": [
+		"values-decide-once-and-carry-the-result",
+		"absence-do-not-guard-what-types-guarantee",
+		"absence-check-once-at-the-boundary-or-the-leaf",
+	],
 } as const;
 
 /**
@@ -1110,6 +1129,15 @@ const typescriptScenarioEvidence = {
 		prompt:
 			"`pg-pattern.tsx` formats `avgCorr` while building `SelectionInfo` and `to-metrics-content.ts` formats the same field again; read the carried value instead, replace `...(isNil(tamValidity) ? {} : {tamValidity})` with a plain optional field, and drop the `isNil` check on the non-null `name` field.",
 		files: ["src/page/pattern/pg-pattern.tsx", "src/page/pattern/_function/to-metrics-content.ts"],
+	},
+	"check-absence-once-across-helpers": {
+		prompt:
+			"`to-signed-tone.ts` and `format-signed-percent.ts` each re-check `isNil` and `Number.isFinite` on `changeRate` that `pg-detail.tsx` already narrows in `select`; take `number` in the helpers, keep the single `isNotNil` check where the badge is rendered, and drop the repeated guards.",
+		files: [
+			"src/page/detail/pg-detail.tsx",
+			"src/page/detail/_function/to-badge/_to-signed-tone.ts",
+			"src/page/detail/_function/format-signed-percent.ts",
+		],
 	},
 } as const;
 
@@ -2110,7 +2138,7 @@ test("TypeScript progressive metadata matches Appendix A exactly", async () => {
 
 	assert.equal(document.metadata.progressiveDisclosure, true);
 	assert.deepEqual(document.metadata.companions ?? [], []);
-	assert.equal(document.rules.length, 41);
+	assert.equal(document.rules.length, 42);
 	assert.deepEqual(
 		Object.fromEntries(document.rules.map((rule) => [getRuleId(rule), {appliesWhen: rule.appliesWhen, reviewWith: rule.reviewWith}])),
 		typescriptRuleRouting,
@@ -2200,7 +2228,7 @@ test("TypeScript routing manifest is an exact twelve-scenario partition with ful
 
 	assert.equal(manifest.version, 1);
 	assert.equal(manifest.skill, "typescript");
-	assert.equal(manifest.scenarios.length, 14);
+	assert.equal(manifest.scenarios.length, 15);
 	assert.deepEqual(
 		Object.fromEntries(manifest.scenarios.map((scenario) => [scenario.id, scenario.expectedSelected.typescript])),
 		typescriptSelections,
@@ -2264,7 +2292,7 @@ test("TypeScript generated index is complete and within the deterministic byte b
 	const expectedIds = document.rules.map((rule) => getRuleId(rule)).sort();
 
 	assert.deepEqual(ids, expectedIds);
-	assert.equal(ids.length, 41);
+	assert.equal(ids.length, 42);
 
 	for (const entry of entries) {
 		assert.equal(entry.fileName, `${entry.id}.md`);

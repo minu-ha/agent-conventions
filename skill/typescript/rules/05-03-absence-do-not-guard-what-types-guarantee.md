@@ -7,7 +7,9 @@ appliesWhen:
   - `isNil`, `typeof`, 옵셔널 체이닝으로 값을 검사하는 분기를 추가·변경할 때
   - 선택 필드에 값을 넣으면서 `undefined`를 피하려고 조건부 스프레드를 쓸 때
   - 제외: `unknown`이나 앱 밖에서 온 값을 좁히는 경우
-reviewWith: types-narrow-unknown-instead-of-asserting, absence-expose-optional-values-instead-of-silent-fallbacks
+reviewWith: >-
+  types-narrow-unknown-instead-of-asserting, absence-expose-optional-values-instead-of-silent-fallbacks,
+  absence-check-once-at-the-boundary-or-the-leaf
 tags: absence
 ---
 

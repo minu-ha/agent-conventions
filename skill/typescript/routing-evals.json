@@ -286,6 +286,25 @@
 					"absence-do-not-guard-what-types-guarantee"
 				]
 			}
+		},
+		{
+			"id": "check-absence-once-across-helpers",
+			"prompt": "`to-signed-tone.ts` and `format-signed-percent.ts` each re-check `isNil` and `Number.isFinite` on `changeRate` that `pg-detail.tsx` already narrows in `select`; take `number` in the helpers, keep the single `isNotNil` check where the badge is rendered, and drop the repeated guards.",
+			"files": [
+				"src/page/detail/pg-detail.tsx",
+				"src/page/detail/_function/to-badge/_to-signed-tone.ts",
+				"src/page/detail/_function/format-signed-percent.ts"
+			],
+			"expectedSkills": [
+				"typescript"
+			],
+			"expectedSelected": {
+				"typescript": [
+					"values-decide-once-and-carry-the-result",
+					"absence-do-not-guard-what-types-guarantee",
+					"absence-check-once-at-the-boundary-or-the-leaf"
+				]
+			}
 		}
 	]
 }

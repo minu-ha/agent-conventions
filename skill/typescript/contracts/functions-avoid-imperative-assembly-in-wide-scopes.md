@@ -8,14 +8,17 @@
 | 상황 | 조립하는 법 |
 | --- | --- |
 | 쓰는 자리가 좁은 스코프 하나 | 그 안에서 바로 계산합니다 |
-| 값 하나를 조건 여럿으로 고름 | else 자리로만 이어지는 삼항 사슬로 씁니다 |
+| 값 하나가 조건 하나로 갈림 | 삼항 하나로 씁니다 |
+| 값 하나가 조건 둘 이상으로 갈림 | 분기마다 `return`으로 끝나는 함수로 뺍니다. 자리는 `functions-extract-helpers-only-when-the-boundary-is-real`이 정합니다 |
 | 목록에 조건부 항목이 들어감 | 조건부 스프레드나 표를 `filter`로 걸러 한 번에 조립합니다 |
-| 조건 앞에서 값을 다듬어야 하거나 분기마다 계산이 따로 있음 | 떼어 낼지를 `functions-extract-helpers-only-when-the-boundary-is-real`이 판정합니다 |
 
-**삼항은 else 자리로만 잇습니다.**
-`a ? x : b ? y : z`는 `if`, `else if`, `else`와 같은 선형이라 위에서 아래로 읽힙니다.
-then 자리에 삼항이 들어가면 나무가 되어 읽는 사람이 가지를 되짚어야 합니다.
-목록이면 표로 펴고, 값 하나면 조건을 합쳐 사슬로 다시 세웁니다.
+**삼항은 조건 하나까지입니다.**
+삼항 안에 삼항을 넣지 않습니다.
+분기가 셋 이상이면 `return`이 그 분기의 값을 끝내는 함수가 위에서 아래로 한 번에 읽힙니다.
+`let`에 기본값을 두고 `if`로 덮어쓰지 않습니다.
+읽는 순서가 논리와 반대이고 아래에서 다시 바뀌는지 끝까지 봐야 합니다.
+함수를 만들기 전에 값 검사를 경계로 보내면 분기가 줄어 삼항 하나로 끝나는 경우가 많습니다.
+검사 자리는 `absence-check-once-at-the-boundary-or-the-leaf`가 정합니다.
 
 떼어 낸 함수의 이름은 `functions-name-functions-by-what-comes-out`이 정합니다.
 중간값에 이름을 붙일지는 `functions-name-a-value-only-for-recompute-or-judgment`가 정합니다.

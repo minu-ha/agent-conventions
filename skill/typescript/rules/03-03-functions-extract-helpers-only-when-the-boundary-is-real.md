@@ -24,14 +24,15 @@ tags: functions, boundaries
 | --- | --- |
 | 재사용 | 이 변경을 적용한 뒤의 코드에서 두 자리 이상이 실제로 부릅니다. 본문이 한 줄이어도 같습니다 |
 | 렌더 파일 밖으로 | `.tsx` 안의 요청·저장 payload 조립 함수입니다. 훅·JSX·컴포넌트 상태를 쓰지 않으면 사용처가 하나여도 같은 소유자의 `.ts`로 옮깁니다 |
-| 함수 형태가 필수 | 한 식으로 적히지 않는 판정, `value is T` 타입 가드, 재귀입니다 |
+| 함수 형태가 필수 | 삼항 하나에 담기지 않는 판정, `value is T` 타입 가드, 재귀입니다 |
 
 한 자리에서만 쓰는 단계는 호출부에 그대로 적습니다.
 단계가 길면 `docs-keep-body-comments-for-intent-and-steps`가 정한 `// 1.` 단계 주석으로 구간을 나눕니다.
 판정이 복잡하다는 이유로 이름을 붙이지 않습니다.
-값 하나를 조건 여럿으로 고르는 것은 삼항 사슬로 호출부에 씁니다.
-사슬의 형태는 `functions-avoid-imperative-assembly-in-wide-scopes`가 정합니다.
-조건 앞에서 값을 다듬어야 하거나 분기마다 계산이 따로 있어 한 식이 되지 않을 때만 셋째 사유입니다.
+분기가 둘이면 삼항 하나로 호출부에 씁니다.
+셋 이상이면 셋째 사유이고 분기마다 `return`으로 끝냅니다.
+그 전에 값 검사를 경계로 보내면 분기가 줄어 함수가 필요 없어지는 경우가 많습니다.
+검사 자리는 `absence-check-once-at-the-boundary-or-the-leaf`가 정합니다.
 
 둘째 사유는 `.tsx`에 렌더가 아닌 코드를 남기지 않으려는 것이라 `.ts` 안에서는 해당하지 않습니다.
 표시용 가공도 해당하지 않습니다.
@@ -151,7 +152,7 @@ export const toProductSaveRequest = (formValues: ProductFormValues) => {
 import {toProductSaveRequest} from "@/page/products/_function/to-product-save-request";
 ```
 
-**Correct (조건 앞에서 값을 다듬어야 해 한 식이 되지 않는 판정은 사용처가 하나여도 이름을 받습니다):**
+**Correct (삼항 하나에 담기지 않는 판정은 사용처가 하나여도 이름을 받고 분기마다 `return`으로 끝냅니다):**
 
 ```ts
 // page/detail/_function/to-grade-tone.ts

@@ -1,7 +1,7 @@
 # TypeScript 컨벤션 Rule Index
 
 - Skill: `typescript`
-- Routing digest: `sha256:c9beb34ab6c6da5f12eca20be6495033497fa72c4c698b1da79e474d6cf6f26b`
+- Routing digest: `sha256:114e8e9ca0b23d383af595936fd84af5cd94b5d21f37f218d7e4baf19fd5d658`
 
 ## Local Rules
 
@@ -39,7 +39,8 @@
 - T04-08 | values-decide-once-and-carry-the-result | 같은 입력에 같은 판정·정규화·포맷을 두 자리 이상에서 할 때. 포맷하거나 정리한 값을 소비처에서 다시 파싱하거나 정리할 때. 두 함수가 같은 판정 함수를 부르게 되어 공유 보조를 만들려 할 때. | reviewWith: absence-resolve-defaults-at-the-boundary, functions-extract-helpers-only-when-the-boundary-is-real
 - T05-01 | absence-expose-optional-values-instead-of-silent-fallbacks | 선택 값을 읽거나 정규화하거나 넘기는 방식을 바꿀 때. \`??\`, \`\|\|\`, 기본값, 빈 값 대체 분기를 추가·변경할 때. | reviewWith: absence-resolve-defaults-at-the-boundary, naming-place-owner-constants-in-the-owner-constant-folder, naming-place-project-constants-in-the-root-constant-folder
 - T05-02 | absence-resolve-defaults-at-the-boundary | 선택 값의 기본값을 어디서 채울지 정할 때. 같은 선택 값에 \`??\` 기본값 해소가 둘 이상의 사용처에 흩어질 때. search 스키마, 응답 매핑, 쿼리 \`select\`에 기본값 채움을 추가·변경할 때. | reviewWith: absence-expose-optional-values-instead-of-silent-fallbacks, functions-name-a-value-only-for-recompute-or-judgment, values-read-objects-through-chains
-- T05-03 | absence-do-not-guard-what-types-guarantee | \`isNil\`, \`typeof\`, 옵셔널 체이닝으로 값을 검사하는 분기를 추가·변경할 때. 선택 필드에 값을 넣으면서 \`undefined\`를 피하려고 조건부 스프레드를 쓸 때. 제외: \`unknown\`이나 앱 밖에서 온 값을 좁히는 경우. | reviewWith: absence-expose-optional-values-instead-of-silent-fallbacks, types-narrow-unknown-instead-of-asserting
+- T05-03 | absence-do-not-guard-what-types-guarantee | \`isNil\`, \`typeof\`, 옵셔널 체이닝으로 값을 검사하는 분기를 추가·변경할 때. 선택 필드에 값을 넣으면서 \`undefined\`를 피하려고 조건부 스프레드를 쓸 때. 제외: \`unknown\`이나 앱 밖에서 온 값을 좁히는 경우. | reviewWith: absence-check-once-at-the-boundary-or-the-leaf, absence-expose-optional-values-instead-of-silent-fallbacks, types-narrow-unknown-instead-of-asserting
+- T05-04 | absence-check-once-at-the-boundary-or-the-leaf | \`isNil\`, \`Number.isFinite\` 같은 값 검사를 함수 본문에 넣을 때. 매개변수나 반환 타입에 \`\| null\`, \`\| undefined\`, \`unknown\`을 넣거나 뺄 때. 응답 매핑, \`select\`·\`combine\`, search 스키마에서 타입을 좁힐 때. | reviewWith: absence-do-not-guard-what-types-guarantee, absence-resolve-defaults-at-the-boundary, values-decide-once-and-carry-the-result
 - T06-01 | docs-keep-body-comments-for-intent-and-steps | 함수 본문의 \`//\` 주석을 추가·수정·유지할 때. 도메인 규칙, 예외 방어, 외부 제약, 부수효과 순서, 긴 절차의 단계를 주석으로 설명할 때. | reviewWith: docs-justify-convention-exceptions-with-a-reason-comment, docs-write-concise-korean-comments-about-purpose-and-constraints
 - T06-02 | docs-require-header-jsdoc-on-key-declarations | 쿼리, 뮤테이션, 원격 함수, 커스텀 훅, 스토어, 포매터 선언을 추가·변경할 때. 분기나 \`await\`나 두 개 이상의 동작이 있는 핸들러와 이펙트를 추가·변경할 때. 다시 쓰거나 내보낸 보조 함수를 추가·변경할 때.
 - T06-03 | docs-write-concise-korean-comments-about-purpose-and-constraints | TypeScript·TSX의 문서 주석이나 인라인 주석 문구를 추가·수정·번역하거나 검토할 때. 문서 주석에 태그를 붙이거나 뺄 때.
