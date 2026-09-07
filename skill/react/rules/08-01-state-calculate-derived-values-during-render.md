@@ -14,14 +14,12 @@ tags: state, effects
 
 **Impact: HIGH (지금 입력으로 구할 수 있는 값은 상태에 두지 않고 렌더에서 계산합니다)**
 
-현재 프롭스·상태·search 파라미터·응답에서 바로 계산할 수 있는 값은 `useEffect`와 `useState`로 다시 동기화하지 않습니다.
-렌더 중에 계산하면 추가 렌더와 어긋남이 줄고, 이펙트 의존성도 억지로 늘어나지 않습니다.
+현재 프롭스·상태·search 파라미터·응답으로 계산할 수 있는 값은 렌더 중에 구합니다.
+`useState`에 복제해 `useEffect`로 동기화하면 추가 렌더와 값의 어긋남이 생기기 쉽습니다.
 
-파생값은 렌더 중에 만들고 쓰는 자리 가까이에 둡니다.
-배치 기준은 `screen-keep-derived-values-close`가 함께 정합니다.
-
-여러 화면이 함께 쓰는 파생 판단을 스토어에 채우는 이펙트만 예외이고,
-그 판정은 `state-store-derived-authority`가 합니다.
+계산 위치는 `screen-keep-derived-values-close`에 따라 사용하는 곳 가까이에 둡니다.
+여러 화면이 공유하는 파생 판단을 스토어에 채우는 이펙트만 예외이며,
+허용 조건은 `state-store-derived-authority`를 따릅니다.
 
 **Incorrect (파생값을 이펙트로 다시 상태에 동기화합니다):**
 

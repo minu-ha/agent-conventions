@@ -14,36 +14,26 @@ tags: ownership, widget, naming
 
 **Impact: CRITICAL (공용 책임과 화면 전용 책임이 같은 레이어에 섞이지 않습니다)**
 
-컴포넌트는 셋 중 한 레이어가 소유합니다.
-레이어는 컴포넌트가 무엇을 아는가로만 가릅니다.
+컴포넌트의 레이어는 사용 횟수나 조립 규모가 아니라 **무엇을 아는지**로 나눕니다.
+먼저 `page` 조건을 확인하고, 해당하지 않으면 도메인 지식으로 구분합니다.
 
-| 레이어 | 담는 컴포넌트 |
-| --- | --- |
-| `ui` | 도메인도 화면도 모르는 컴포넌트 |
-| `widget` | 도메인은 알고 화면은 모르는 컴포넌트 |
-| `page` | 화면을 아는 뼈대와 컴포넌트 |
-
-이름 표기는 `ownership-prefix-layer-names-on-files-and-symbols`가 정합니다.
-여기서는 어느 레이어인지만 판정합니다.
-
-**먼저 `page`인지 봅니다.** 다음 중 하나라도 해당하면 `page`입니다.
-
-- 프롭스 타입이 그 화면의 응답·뷰모델 타입이나 라우트 search 파라미터를 참조합니다.
-- 쿼리, 뮤테이션, 라우터 훅, 화면 스토어를 직접 부릅니다.
-- `Suspense` 경계나 폼 프로바이더를 직접 알거나, 모달을 여는 조건을 자기가 압니다.
-
-**`page`가 아니면 도메인 지식으로 갈립니다.**
-
-- 도메인을 모르면 `ui`입니다.
-- 도메인을 알면 `widget`입니다.
-  이름에 도메인 단어가 남아도 됩니다.
-
-다음 둘은 판정 기준이 아닙니다.
-
-| 기준이 아닌 것 | 판정 | 기준으로 삼으면 생기는 일 |
+| 순서 | 조건 | 레이어 |
 | --- | --- | --- |
-| 사용 횟수 | 한 화면에서만 쓰여도 위 `page` 판정에 해당하지 않으면 `page`가 아닙니다 | 쓰임이 변할 때마다 컴포넌트가 폴더를 옮겨 다닙니다 |
-| 조립 규모 | `ui` 부품 여럿을 조립해도 도메인을 모르면 `ui`입니다 | 도메인을 모르는 조합이 전부 `widget`에 쌓여 레이어 이름이 소유를 말하지 못합니다 |
+| 1 | 화면의 응답·뷰모델 타입이나 라우트 search 파라미터를 프롭스 타입에서 참조합니다 | `page` |
+| 1 | 쿼리·뮤테이션·라우터 훅·화면 스토어를 직접 호출합니다 | `page` |
+| 1 | 해당 화면의 `Suspense` 경계·폼 프로바이더·모달을 여는 조건을 소유합니다 | `page` |
+| 2 | 화면은 모르고 도메인만 압니다 | `widget`. 이름에 도메인 단어가 남아도 됩니다 |
+| 2 | 도메인도 화면도 모릅니다 | `ui` |
+
+`children`과 공용 계약만 받아 경계를 제공하는 범용 셸·대화상자는 그 이유만으로 `page`가 되지 않습니다.
+특정 화면의 데이터나 흐름을 아는지 확인합니다.
+
+| 혼동하기 쉬운 경우 | 판정 |
+| --- | --- |
+| 한 화면에서만 사용합니다 | `page` 조건에 해당하지 않으면 사용 횟수만으로 레이어를 바꾸지 않습니다 |
+| 여러 `ui` 부품을 조립합니다 | 도메인을 모르면 `ui`입니다. 조립 규모로 `widget`을 고르지 않습니다 |
+
+레이어를 정한 뒤 파일명과 심볼에는 `ownership-prefix-layer-names-on-files-and-symbols`를 적용합니다.
 
 **Incorrect (공용 레이어에 화면 전용 로직이 섞입니다):**
 
@@ -63,7 +53,7 @@ export const UiDeleteProductButton = () => {
 };
 ```
 
-**Correct (라우터 훅을 부르는 코드는 화면 레이어에 남깁니다):**
+**Correct (라우터 훅을 호출하는 코드는 화면 레이어에 둡니다):**
 
 ```tsx
 // page/products/_pg-delete-product-button.tsx
@@ -81,7 +71,7 @@ export const PgDeleteProductButton = () => {
 };
 ```
 
-**Incorrect (화면 타입도 안 쓰고 훅도 안 부르는 부품을 사용 횟수만 보고 화면에 남깁니다):**
+**Incorrect (화면 타입·훅과 무관한 부품을 사용 횟수만으로 화면 레이어에 둡니다):**
 
 ```tsx
 // page/detail/_pg-sales-legend-glyph.tsx
@@ -91,7 +81,7 @@ export const PgSalesLegendGlyph = (props: PgSalesLegendGlyphProps) => {
 };
 ```
 
-**Correct (화면 타입도 훅도 쓰지 않는 도메인 부품은 `widget`으로 올립니다):**
+**Correct (화면 타입·훅과 무관한 도메인 부품은 `widget`에 둡니다):**
 
 ```tsx
 // component/widget/sales-legend-glyph/wg-sales-legend-glyph.tsx
@@ -110,7 +100,7 @@ export const WgLineChart = (props: WgLineChartProps) => {
 };
 ```
 
-**Correct (도메인을 모르는 조합은 `ui`로 내리고 도메인을 아는 조합만 `widget`에 남깁니다):**
+**Correct (도메인 지식이 없는 조합은 `ui`, 있는 조합은 `widget`에 둡니다):**
 
 ```tsx
 // component/ui/line-chart/ui-line-chart.tsx

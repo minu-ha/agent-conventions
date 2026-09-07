@@ -1,8 +1,8 @@
 ---
 title: Narrow the Contract a Library Wrapper Opens
-titleKo: 라이브러리 래퍼가 노출하는 프롭은 필요한 것만 엽니다
+titleKo: 라이브러리 래퍼는 필요한 프롭만 공개합니다
 impact: CRITICAL
-impactDescription: 라이브러리의 스타일 우회로가 화면으로 새지 않고 교체할 때 래퍼 한 파일만 고칩니다
+impactDescription: 화면의 라이브러리 의존성을 제한하고 교체 시 수정 범위를 줄입니다
 appliesWhen:
   - 라이브러리 컴포넌트를 감싸는 `Ui*` 래퍼의 프롭스 타입을 만들거나 바꿀 때
   - 래퍼에 프롭을 추가하거나 여는 범위를 넓힐 때
@@ -15,36 +15,30 @@ tags: typing, wrapper, contracts
 
 ## Narrow the Contract a Library Wrapper Opens
 
-**Impact: CRITICAL (라이브러리의 스타일 우회로가 화면으로 새지 않고 교체할 때 래퍼 한 파일만 고칩니다)**
+**Impact: CRITICAL (화면의 라이브러리 의존성을 제한하고 교체 시 수정 범위를 줄입니다)**
 
 라이브러리 컴포넌트는 화면에서 직접 쓰지 않고 `Ui*` 래퍼를 거칩니다.
-래퍼가 있어야 라이브러리를 올리거나 바꿀 때 한 파일만 고칩니다.
+업그레이드·교체 시 수정 범위를 래퍼에 모으고, 화면에 필요한 계약만 엽니다.
 
-**`export type UiButtonProps = ButtonProps`로 두지 않습니다.**
-라이브러리 프롭이 통째로 열려서 그 라이브러리의 스타일 주입 지점까지 화면이 쓸 수 있게 됩니다.
-`css/composition-inject-classes-only-at-the-entry-point`가 정한 스타일 주입 지점이 그 자리에서 뚫립니다.
-
-DOM 프롭이 아닌 계약은 세 가지로 나눠 각각 다르게 씁니다.
-DOM 속성 자체를 어떻게 열지는 `typing-open-dom-props-in-three-steps`가 정합니다.
-
-| 프롭 | 어떻게 |
+| 프롭 종류 | 선언 방법 |
 | --- | --- |
-| 라이브러리에 **이미 있는** 표시 프롭 (`color`, `padding`, `size`) | `ButtonProps["color"]` 인덱스 접근으로 하나씩 |
-| 우리가 **새로 만든** 자기 프롭 (`icon`, `label`, `helperText`) | 우리가 타입을 적습니다 |
-| 라이브러리 스타일 주입 프롭 (테마 스타일 프롭, 클래스 맵, 렌더 태그 교체) | 선언하지 않습니다 |
+| 라이브러리에 이미 있는 표시 프롭 (`color`, `padding`, `size`) | `ButtonProps["color"]`처럼 인덱스 접근으로 하나씩 엽니다 |
+| 안쪽 컴포넌트가 받지 않는 자기 프롭 (`icon`, `label`, `helperText`) | 타입을 직접 적습니다 |
+| 라이브러리 스타일 주입 프롭 (테마 스타일·클래스 맵·렌더 태그 교체) | 선언하지 않습니다 |
+| DOM 속성 | `typing-open-dom-props-in-three-steps`를 따릅니다 |
 
-**자기 프롭**은 안쪽 컴포넌트가 받지 않는 프롭입니다.
-`UiIconButtonProps`의 `icon`은 안쪽 컴포넌트가 모르므로 자기 프롭이고,
-`UiTableRowProps`의 `selected`는 안쪽 컴포넌트가 받으므로 자기 프롭이 아닙니다.
-인덱스 접근은 자기 프롭이 아닌 것, 곧 **이미 있는 프롭을 그대로 여는 자리**에만 씁니다.
+`export type UiButtonProps = ButtonProps`처럼 원본 프롭스 전체를 공개하지 않습니다.
+스타일 주입 지점까지 열면 `css/composition-inject-classes-only-at-the-entry-point`의 경계를 지킬 수 없습니다.
 
-- 인덱스 접근은 상속 사슬을 따라갑니다.
-  바깥 타입 이름 하나만 쓰면 됩니다.
-- 값을 손으로 다시 적는 것은 일부러 좁힐 때만 합니다.
-  좁힌 이유를 적는 형식과 근거 기준은
-  `typescript/docs-justify-convention-exceptions-with-a-reason-comment`가 정합니다.
-- `ref`를 여는 기준은 `composition-open-ref-props-only-for-imperative-contracts`가 정합니다.
-- 프롭을 어떻게 넘기는지는 `typing-choose-wrapper-shape-and-forwarding`이 정합니다.
+자기 프롭은 이름이 아니라 **안쪽 컴포넌트가 받는지**로 구분합니다.
+`UiIconButtonProps`의 `icon`은 자기 프롭이지만, 안쪽 컴포넌트도 받는 `UiTableRowProps`의 `selected`는 아닙니다.
+인덱스 접근은 이미 있는 프롭을 그대로 열 때만 쓰며, 상속된 프롭도 바깥 타입 이름으로 접근합니다.
+
+| 추가 판단 | 기준 |
+| --- | --- |
+| 값을 직접 적어 계약을 좁힘 | 의도적으로 좁힐 때만 허용하며 `typescript/docs-justify-convention-exceptions-with-a-reason-comment`에 따라 이유를 남깁니다 |
+| `ref` 공개 | `composition-open-ref-props-only-for-imperative-contracts` |
+| 프롭 전달 방식 | `typing-choose-wrapper-shape-and-forwarding` |
 
 **Incorrect (라이브러리 타입을 그대로 내보냅니다):**
 
@@ -56,7 +50,7 @@ export const UiTableCell = (props: UiTableCellProps) => {
 };
 ```
 
-**Correct (이미 있는 프롭은 인덱스 접근으로 하나씩 열고 DOM 속성은 `typing-open-dom-props-in-three-steps`가 정합니다):**
+**Correct (표시 프롭은 인덱스 접근으로 열고 DOM 속성은 세 단계 기준을 따릅니다):**
 
 ```tsx
 import type {TdHTMLAttributes} from "react";
@@ -66,8 +60,9 @@ import type {TableCellProps} from "@mui/material";
  * 표 셀에서 정렬과 여백만 여는 계약
  *
  * 라이브러리 셀의 나머지 표시 프롭은 표 소유자가 정하므로 열지 않는다.
+ * align의 inherit은 DOM td 타입에 없어 그 이름만 빼고 다시 연다.
  */
-export interface UiTableCellProps extends TdHTMLAttributes<HTMLTableCellElement> {
+export interface UiTableCellProps extends Omit<TdHTMLAttributes<HTMLTableCellElement>, "align"> {
 	/**
 	 * 내용 가로 정렬
 	 */

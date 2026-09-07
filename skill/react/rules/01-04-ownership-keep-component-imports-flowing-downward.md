@@ -1,8 +1,8 @@
 ---
 title: Keep Component Imports Flowing Downward
-titleKo: 컴포넌트는 위에서 아래로만 가져옵니다
+titleKo: 컴포넌트 가져오기는 레이어와 소유자 경계를 지킵니다
 impact: CRITICAL
-impactDescription: 비공개 컴포넌트를 형제나 위쪽에서 되짚어 소유 관계가 무너지지 않습니다
+impactDescription: 공개 범위를 벗어난 가져오기를 막아 컴포넌트의 소유 관계를 유지합니다
 appliesWhen:
   - 소유자 폴더 안의 컴포넌트 파일을 가져올 때
   - 다른 소유자나 다른 라우트의 파일을 가져오려 할 때
@@ -15,51 +15,41 @@ tags: ownership
 
 ## Keep Component Imports Flowing Downward
 
-**Impact: CRITICAL (비공개 컴포넌트를 형제나 위쪽에서 되짚어 소유 관계가 무너지지 않습니다)**
+**Impact: CRITICAL (공개 범위를 벗어난 가져오기를 막아 컴포넌트의 소유 관계를 유지합니다)**
 
-가져오기는 레이어와 소유 관계를 따라 아래로만 흐릅니다.
-경로는 전부 `@/`라 모양이 방향을 말하지 않습니다.
-그래서 가져올 수 있는지는 가져오는 파일이 어디 있는지로 판정합니다.
-소유자, 진입 파일, 하위 소유자, 역할 폴더가 무엇인지는 `ownership-place-owner-files-in-role-folders`가 정합니다.
-
-먼저 레이어 방향입니다.
-루트 레이어는 `util`·`constant`·`type`·`hook`·`store`·`service`·`config`·`asset`입니다.
+가져오기는 아래 레이어 방향과 소유자 경계를 **모두** 지킵니다.
+모든 경로가 `@/`로 시작하므로 경로 모양이 아니라 가져오는 파일의 위치로 판정합니다.
+소유자·진입 파일·역할 폴더의 정의는 `ownership-place-owner-files-in-role-folders`를 따릅니다.
 
 | 가져오는 쪽 | 가져올 수 있는 레이어 |
 | --- | --- |
 | 루트 레이어 | 루트 레이어 |
-| `component/ui` | 루트 레이어 |
-| `component/widget` | 루트 레이어, `ui` |
+| `component/ui` | 루트 레이어, `ui` |
+| `component/widget` | 루트 레이어, `ui`, `widget` |
 | `page` | 루트 레이어, `ui`, `widget` |
 | 라우터와 앱 진입 파일 | 전부 |
 
-그 안에서 소유자 경계입니다.
+루트 레이어는 `util`·`constant`·`type`·`hook`·`store`·`service`·`config`·`asset`입니다.
+같은 레이어의 공개 컴포넌트끼리 조립할 수 있지만 순환 가져오기는 만들지 않습니다.
 
 | 가져오려는 대상 | 가져올 수 있는 파일 |
 | --- | --- |
-| `ui`·`widget`의 진입 파일 | 레이어 방향을 지키는 파일이면 어느 것이든 |
+| `ui`, `widget`의 진입 파일 | 레이어 방향을 지키는 파일 |
 | 라우트 진입 파일 `page/<route>/pg-<route>` | 라우터 |
 | 다른 라우트 안의 파일 | 없음 |
 | 하위 소유자의 진입 파일 | 그 하위 소유자를 담은 소유자 폴더 아래의 파일 |
 | `_`로 시작하는 파일 | 같은 폴더의 파일 |
-| `_function`·`_type`·`_constant`·`_hook`의 파일 | 레이어 방향을 지키는 파일이면 어느 것이든. 다른 라우트의 역할 폴더는 제외합니다 |
+| `_function`, `_type`, `_constant`, `_hook`의 파일 | 레이어 방향을 지키는 파일. 다른 라우트의 역할 폴더는 제외합니다 |
 
-- 타입만 가져오는 줄은 `_` 컴포넌트 파일 제약을 받지 않습니다.
-  프롭스 타입은 어디서든 `import type`으로 가져옵니다.
-- 역할 폴더의 파일은 소유자의 공개 면입니다.
-  밖에서 가져다 쓴다고 루트로 옮기지 않습니다.
-  자리는 `typescript/naming-place-project-constants-in-the-root-constant-folder`와
-  `typescript/functions-promote-shared-functions-to-root-util`이 정합니다.
-- `_hook`이 공개인 근거는 `ownership-keep-lifecycle-in-the-owning-component`에 있습니다.
-  여러 소유자가 함께 부르는 생명주기만 훅으로 올리라고 정하는데, 올린 훅을 자식이 가져오지 못하면 성립하지 않습니다.
+`_` 컴포넌트 파일의 프롭스 타입은 예외로, 어디서든 `import type`으로 가져옵니다.
+역할 폴더는 소유자의 공개 영역이므로 외부에서 쓴다는 이유만으로 루트로 옮기지 않습니다.
+배치는 `typescript/naming-place-project-constants-in-the-root-constant-folder`와
+`typescript/functions-promote-shared-functions-to-root-util`을 따릅니다.
+`_hook`도 `ownership-keep-lifecycle-in-the-owning-component`에 따라 여러 소유자가 공유하는 생명주기를 공개합니다.
 
-여러 자식이 같은 컴포넌트를 써야 하면 셋 중 하나로 해소합니다.
-
-1. 부모가 조립해서 프롭이나 `children`으로 내려보냅니다.
-2. 화면 조립을 전제하지 않는 컴포넌트면 `ui` 또는 `widget`으로 올립니다.
-3. 짧은 조각이면 그대로 중복해서 씁니다.
-
-세 자식 이상이 같은 것을 써야 하는데 올릴 수도 없으면 자식 분리가 잘못됐다는 신호입니다.
+여러 자식이 같은 컴포넌트를 쓰면 부모가 조립해 프롭·`children`으로 내려보내거나,
+화면 조립에 종속되지 않을 때 `ui`·`widget`으로 옮깁니다. 짧은 조각은 중복해서 써도 됩니다.
+세 자식 이상이 공유해야 하는데 공용 레이어로 옮길 수도 없다면 자식 분리 자체를 다시 봅니다.
 
 **Incorrect (다른 폴더의 `_` 컴포넌트 파일을 가져옵니다):**
 
@@ -93,7 +83,7 @@ export const PgDetail = () => {
 import {PgSalesTrendPanel} from "@/page/detail/sales-trend-panel/pg-sales-trend-panel";
 ```
 
-**Correct (두 라우트가 같이 쓰면 화면을 모르는 자리로 올려 각자 가져옵니다):**
+**Correct (두 라우트가 공유하는 화면 독립 컴포넌트는 공용 레이어에 둡니다):**
 
 ```tsx
 // component/widget/sales-trend-panel/wg-sales-trend-panel.tsx
@@ -119,7 +109,7 @@ import {WgLegendPanel} from "@/component/widget/legend-panel/wg-legend-panel";
 import {UiLegend} from "@/component/ui/legend/ui-legend";
 ```
 
-**Incorrect (밖에서 가져다 쓴다고 역할 폴더 파일을 루트로 올립니다):**
+**Incorrect (외부에서 사용한다는 이유만으로 역할 폴더의 파일을 루트로 옮깁니다):**
 
 ```ts
 // type/chart-series.ts

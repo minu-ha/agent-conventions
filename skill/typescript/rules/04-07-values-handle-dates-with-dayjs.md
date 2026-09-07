@@ -2,7 +2,7 @@
 title: Handle Dates With dayjs
 titleKo: 날짜는 `dayjs`로 다룹니다
 impact: MEDIUM-HIGH
-impactDescription: 월말과 서머타임에서 어긋나는 날짜 산술을 없애고 표시 형식을 한 상수로 모읍니다
+impactDescription: 날짜의 단위와 타임존을 드러내고 파싱과 표시 형식을 일관되게 유지합니다
 appliesWhen:
   - 날짜를 파싱하거나 형식을 맞추거나 더하고 뺄 때
   - `new Date`, `getTime()`, `setDate()`, `toLocaleDateString()`을 쓸 때
@@ -13,40 +13,36 @@ tags: values, dayjs
 
 ## Handle Dates With dayjs
 
-**Impact: MEDIUM-HIGH (월말과 서머타임에서 어긋나는 날짜 산술을 없애고 표시 형식을 한 상수로 모읍니다)**
+**Impact: MEDIUM-HIGH (날짜의 단위와 타임존을 드러내고 파싱과 표시 형식을 일관되게 유지합니다)**
 
-날짜는 `dayjs`로 다룹니다.
-`es-toolkit`이나 `clsx`와 같은 자리입니다.
-쓸지 말지 고르는 라이브러리가 아니라 기본값입니다.
-`moment`는 새로 들이지 않습니다.
+날짜는 `dayjs`로 다루고, `moment`는 새로 들이지 않습니다.
+계산 단위, 입력 형식, 표시 타임존을 계약에 맞게 구분합니다.
 
-밀리초를 더하는 산술은 월말과 서머타임에서 틀립니다.
-`getTime() + 7 * 24 * 60 * 60 * 1000`은 하루가 23시간이거나 25시간인 날을 모릅니다.
-
-| 손으로 쓰던 것 | `dayjs` |
+| 작업 | 기준 |
 | --- | --- |
-| `new Date(text)` 파싱과 유효성 검사 | `dayjs(text)`와 라운드트립 비교 |
-| `getTime()` 밀리초 더하기, `setDate()` | `add()`, `subtract()` |
-| `toLocaleDateString()`, 자릿수 채워 이어 붙이기 | `format()` |
-| `getTime()` 대소 비교 | `isBefore()`, `isAfter()`, `isSame()` |
+| 파싱·유효성 검사 | `new Date(text)` 대신 `dayjs(text)`와 입력 형식에 맞는 검증을 사용합니다 |
+| 경과 시간·달력 날짜 계산 | `add`, `subtract`의 단위를 구분합니다. 정확히 24시간과 현지 다음 날은 서머타임 경계에서 다를 수 있습니다 |
+| 밀리초·월 계산 교체 | 밀리초 연산을 `add(..., "day")`로 일괄 치환하지 않습니다. 월 계산은 월말 처리 계약을 확인합니다 |
+| 표시·비교 | 수동 문자열 조합·`toLocaleDateString` 대신 `format`, `getTime` 비교 대신 `isBefore`, `isAfter`, `isSame`을 씁니다 |
 
-**형식 문자열은 상수로 둡니다.**
-`format("YYYY.MM.DD")`를 파일마다 적으면 화면끼리 표기가 갈립니다.
-자리는 `naming-place-project-constants-in-the-root-constant-folder`가 정합니다.
+| 입력·표시 계약 | 처리 |
+| --- | --- |
+| 고정된 날짜 형식 | 파싱 후 같은 형식으로 되돌려 원문과 비교합니다. `2026-02-30`처럼 보정되는 날짜도 거릅니다 |
+| 여러 입력 형식·엄격한 형식 검증 | `CustomParseFormat`을 초기화하고 `dayjs(value, input_format, true).isValid()`로 검사합니다 |
+| 시각과 오프셋이 포함된 문자열 | 날짜만 되돌리는 비교를 적용하지 않습니다 |
+| UTC·특정 지역 시간 | `utc`, `timezone` 플러그인을 초기화합니다. 기본 `dayjs(value)`는 실행 환경의 로컬 타임존을 사용합니다 |
+| 타임존 기본값·날짜 계산 | `dayjs.tz.setDefault()`는 일반 `dayjs(value)`를 바꾸지 않습니다. 서머타임 전후 현지 시각과 오프셋을 실제로 확인합니다 |
+| 서버가 표시 타임존·형식까지 확정한 문자열 | 그대로 표시할 때는 파싱하지 않습니다. 문자열 자르기가 표시 규칙이면 유지합니다 |
+| UTC 시각을 사용자 타임존으로 표시 | 먼저 타임존을 변환합니다 |
 
-**형식은 맞지만 없는 날짜는 라운드트립으로 거릅니다.**
-`dayjs("2026-02-30")`은 실패하지 않고 3월 2일로 넘어갑니다.
-되돌린 문자열이 원래 문자열과 같은지 보아야 걸립니다.
-이때 쓰는 형식은 입력이 들어온 형식이고, 화면 표시 형식과 같은 상수를 쓰지 않습니다.
+형식 문자열은 상수로 선언하며 입력 형식과 화면 표시 형식은 별도 상수로 둡니다.
+배치는 `naming-place-project-constants-in-the-root-constant-folder`를 따릅니다.
 
-**서버가 준 시각 문자열을 그대로 보여줄 때는 파싱하지 않습니다.**
-파싱하면 타임존 변환이 붙어 표시 시각이 밀립니다.
-문자열을 자르는 것이 표시 규칙이면 자르는 코드를 그대로 둡니다.
-
-**Incorrect (밀리초를 더하고 자릿수를 손으로 채웁니다):**
+**Incorrect (정해진 경과 시간을 밀리초로 더하고 자릿수를 손으로 채웁니다):**
 
 ```ts
-const expiresAt = new Date(issuedAt.getTime() + 7 * 24 * 60 * 60 * 1000);
+// 만료 계약은 발급 시점으로부터 정확히 token_expiry_hours시간 뒤다
+const expiresAt = new Date(issuedAt.getTime() + token_expiry_hours * 60 * 60 * 1000);
 const expiresLabel = `${expiresAt.getFullYear()}.${toPaddedDatePart(expiresAt.getMonth() + 1)}`;
 ```
 
@@ -55,10 +51,11 @@ const expiresLabel = `${expiresAt.getFullYear()}.${toPaddedDatePart(expiresAt.ge
 ```ts
 import dayjs from "dayjs";
 
-import {date_format} from "@/constant/date";
+import {date_expiry_month_format} from "@/constant/date";
 
-const expiresAt = dayjs(issuedAt).add(token_expiry_days, "day");
-const expiresLabel = expiresAt.format(date_format);
+// date_expiry_month_format은 원래 표시와 같은 YYYY.MM 형식이다
+const expiresAt = dayjs(issuedAt).add(token_expiry_hours, "hour");
+const expiresLabel = expiresAt.format(date_expiry_month_format);
 ```
 
 **Incorrect (형식만 보고 없는 날짜를 통과시킵니다):**
@@ -67,17 +64,17 @@ const expiresLabel = expiresAt.format(date_format);
 const isValidDateText = /^\d{4}-\d{2}-\d{2}$/.test(dateText);
 ```
 
-**Correct (날짜를 다루는 갈림길입니다):**
+**Correct (날짜 처리 방법을 계약에 따라 선택합니다):**
 
 ```txt
 날짜 문자열이 들어왔다
 │
-├ 서버가 준 시각을 그대로 보여주기만 함 ─→ 파싱하지 않는다. 문자열을 자른다
+├ 서버가 표시 타임존과 형식까지 확정함 ─→ 계약대로 문자열을 표시한다
 └ 계산하거나 형식을 바꿔야 함
    │
    ├ 형식만 바꿈 ──────→ dayjs(value).format(date_format)
-   ├ 더하거나 뺌 ──────→ dayjs(value).add(token_expiry_days, "day")
-   └ 값이 유효한지 봄 ─→ format 한 결과가 원래 문자열과 같은지 본다
+   ├ 더하거나 뺌 ──────→ 경과 시간과 달력 단위를 구분해 add()를 쓴다
+   └ 날짜 유효성을 봄 ─→ 고정 형식은 라운드트립, 다른 형식은 엄격한 파싱을 쓴다
 ```
 
 **Correct (라운드트립으로 없는 날짜를 거릅니다):**
@@ -95,9 +92,9 @@ export const parseEntryDateText = (dateText: string): string | undefined => {
 };
 ```
 
-**Correct (서버 시각 문자열은 파싱하지 않고 자릅니다):**
+**Correct (서버가 표시 형식까지 확정한 문자열은 필요한 부분만 자릅니다):**
 
 ```ts
-// 서버가 이미 표시 타임존으로 준 문자열이다. dayjs 로 파싱하면 변환이 붙어 시각이 밀린다
+// 서버가 이미 표시 타임존으로 준 고정 형식이다. 시각 변환 없이 분까지만 보여 준다
 const compactDateTime = responseDateTime.slice(0, 16).replace("T", " ");
 ```

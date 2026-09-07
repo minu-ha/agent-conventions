@@ -1,38 +1,28 @@
 # Choose the Wrapper Shape and Forward Props Accordingly
 
-**Impact: HIGH (프롭이 엉뚱한 요소로 흘러가지 않고 어디로 가는지가 코드에 남습니다)**
+**Impact: HIGH (각 프롭이 전달되는 요소를 코드에서 확인할 수 있습니다)**
 
-**기본은 이름으로 하나씩 넘기는 것입니다.**
-어느 프롭이 어느 요소로 가는지가 코드에 그대로 남습니다.
+기본은 프롭을 이름으로 하나씩 전달하는 것입니다.
+`{...props}`는 아래 세 조건을 **모두** 만족할 때만 씁니다.
 
-`{...props}`는 **아래 셋을 모두 만족할 때만** 씁니다.
-
-| 조건 | 확인하는 방법 |
+| 조건 | 확인 방법 |
 | --- | --- |
 | 안쪽 요소가 하나임 | 반환하는 JSX에 요소가 하나입니다 |
-| **자기 프롭**이 하나도 없음 | 선언한 프롭을 안쪽 컴포넌트가 전부 받습니다 |
+| 자기 프롭이 없음 | 선언한 프롭을 안쪽 컴포넌트가 전부 받습니다. 구분은 `typing-narrow-library-wrapper-contracts`를 따릅니다 |
 | DOM 속성을 `extends`로 열 수 있음 | `typing-open-dom-props-in-three-steps`의 1·2단계입니다 |
 
-**자기 프롭**이 무엇인지는 `typing-narrow-library-wrapper-contracts`가 정합니다.
+자기 프롭이 있으면 3단계처럼 전달할 DOM 프롭만 선언하고, 전부 이름으로 넘깁니다.
+스프레드는 초과 프롭을 검사하지 않으므로 리뷰에서 확인합니다.
+안쪽 라이브러리가 걸러 주지 않으면 `icon` 같은 자기 프롭이 DOM에 새거나 잘못된 값 경고가 날 수 있습니다.
 
-**자기 프롭이 있는데 `{...props}`를 쓰면 그 프롭이 DOM까지 내려갑니다.**
-`icon`이 `<button icon="…">`이 되어 리액트가 경고합니다.
-JSX 스프레드는 초과 프롭을 검사하지 않아 **컴파일러가 잡아 주지 않습니다.** 리뷰가 봐야 합니다.
+| 계약이 커지는 상황 | 처리 |
+| --- | --- |
+| 라이브러리 API를 따라 프롭이 서른 개로 늘어날 것 같음 | 우리 어휘로 계약을 다시 쓰고 라이브러리 어휘는 구현 안에 둡니다 |
+| 그래도 프롭 수가 줄지 않음 | `strategy-choose-single-composition-compound-and-variants`에 따라 쓰임새별 변형으로 나눕니다 |
+| 안쪽 부품을 외부에서 조립해야 함 | `headerProps`, `buttonProps` 같은 내부 프롭 묶음을 만들지 않고 `strategy-prefer-children-over-render-props`에 따라 `children`으로 엽니다 |
 
-자기 프롭이 있는 래퍼는 `extends`로 DOM 속성을 통째로 열지 않습니다.
-`typing-open-dom-props-in-three-steps`의 3단계처럼 넘길 DOM 프롭만 선언하고 전부 이름으로 넘깁니다.
-선언한 프롭 목록이 곧 열어 둔 범위입니다.
-
-라이브러리 API가 커서 프롭이 서른 개로 늘어날 것 같으면 만능 래퍼를 만들지 않습니다.
-우리 어휘로 계약을 다시 쓰고 라이브러리 어휘는 본문 안에서만 씁니다.
-그래도 줄지 않으면 `strategy-choose-single-composition-compound-and-variants`를 따라
-쓰임새별 변형으로 쪼갭니다.
-
-`headerProps`, `buttonProps`처럼 안쪽 부품으로 가는 프롭 묶음을 만들지 않습니다.
-사용처가 내부 구조를 알게 되어 안쪽을 바꿀 때 함께 깨집니다.
-안쪽을 밖에서 조립해야 하면 `strategy-prefer-children-over-render-props`를 따라 `children`으로 엽니다.
-
-구조분해 기준은 `composition-read-props-without-destructuring`이 정합니다.
+내부 프롭 묶음을 공개하면 사용처가 안쪽 구조에 의존해 내부 변경 때 함께 깨집니다.
+구조분해 기준은 `composition-read-props-without-destructuring`을 따릅니다.
 
 **Requires selected:** `typing-narrow-library-wrapper-contracts` · 함께 적용
 

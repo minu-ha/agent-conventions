@@ -1,26 +1,22 @@
 # Use Pseudo-classes for DOM-owned States
 
-**Impact: HIGH (브라우저가 주는 상호작용 상태와 앱이 정하는 상태 수정자를 나눕니다)**
+**Impact: HIGH (DOM 상태와 앱 상태를 구분해 같은 상태를 중복 표현하지 않습니다)**
 
-브라우저와 DOM이 직접 부여하는 상태는 가상 클래스로 표현합니다.
-화면이나 도메인이 정하는 상태는 수정자 클래스로 떼어 냅니다.
+네이티브 DOM 기능이 표현하는 상태는 가상 클래스로, 앱이 정하는 상태는 수정자 클래스로 씁니다.
+앱이 `disabled`나 `checked`를 제어해도 같은 상태의 수정자를 추가하지 않습니다.
 
-| 소유 | 상태 | 표현 |
+| 상태 | 스타일 표현 | 주의점 |
 | --- | --- | --- |
-| DOM | `:hover`, `:visited`, `:focus-visible`, `:disabled`, `:checked` | 가상 클래스 |
-| 앱 | `selected`, `active`, `error`, `expanded`, `current` | `--수정자` 클래스 |
-| DOM | `--disabled`, `--checked` 수정자 | 만들지 않습니다. 브라우저가 부여한 상태를 앱이 다시 적는 것입니다 |
+| `hover`, `visited`, `focus-visible`, 네이티브 `disabled`와 `checked` | 해당 가상 클래스 | `--disabled`, `--checked`로 복제하지 않습니다 |
+| 앱의 `selected`, `active`, `error`, `expanded`, `current` | `--수정자` 클래스 | `aria-*`, `data-*` 속성 선택자로 지정하지 않습니다 |
+| 네이티브 `disabled`를 지원하지 않는 요소의 비활성 상태 | 접근성 속성과 앱 수정자 | `aria-disabled="true"`만으로 `:disabled`가 적용되지 않습니다. 실제 동작은 마크업과 이벤트 처리에서 막습니다 |
+| 사용자가 요소를 누르는 동안의 상태 | `:active` | 앱의 `--active`와 뜻이 다르므로 서로 바꾸지 않습니다 |
 
-갈리는 기준은 **누가 그 값을 아는가**입니다.
-브라우저가 부여하는 상태는 앱이 알 수 없고, 앱이 아는 상태는 브라우저가 알 수 없습니다.
-
-- 앱이 아는 상태를 `[aria-pressed="true"]`처럼 속성 선택자로 잡지 않습니다.
-- `aria-*`는 접근성 계약이라 마크업에 그대로 두고, 스타일은 수정자로 잡습니다.
-- 같은 상태를 두 표기로 쓰지 않습니다.
-  어느 쪽이 참인지 가릴 수 없습니다.
-
-가상 클래스를 어디에 쓰는지는 `selector-nest-dom-state-in-the-owning-block` 규칙이 정합니다.
-`:not()`은 `selector-do-not-negate-with-not` 규칙이 막습니다.
+`aria-*`는 접근성 계약이므로 마크업에 유지합니다.
+같은 스타일 상태를 속성 선택자와 수정자로 중복 선언하지 않습니다.
+접근성 속성과 수정자가 함께 필요하면 같은 값에서 계산합니다.
+가상 클래스의 위치는 `selector-nest-dom-state-in-the-owning-block`,
+`:not()` 금지는 `selector-do-not-negate-with-not` 규칙을 따릅니다.
 
 **Requires selected:** `selector-nest-dom-state-in-the-owning-block` · 함께 적용
 

@@ -14,15 +14,19 @@ tags: functions, arrays, immutability
 
 **Impact: HIGH (프롭스, 상태, 모듈 상수에서 온 배열을 정렬할 때 원본이 바뀌는 버그를 피합니다)**
 
-배열은 `.sort()`로 제자리에서 바꾸지 않습니다.
-프롭스, 상태, 매개변수, 모듈 상수로 들어온 배열이면 원본까지 함께 바뀝니다.
+정렬은 새 배열을 반환하는 `es-toolkit` 함수로 합니다. 원본을 바꾸는 `.sort()`는 쓰지 않습니다.
+프롭스·상태·매개변수·모듈 상수로 받은 배열도 같은 기준을 따릅니다.
 
-정렬은 `es-toolkit`의 `sortBy`와 `orderBy`로 합니다.
-키 하나면 `sortBy`, 정렬 방향이 섞이면 `orderBy`입니다.
-둘 다 새 배열을 돌려주므로 원본은 그대로 남습니다.
+| 정렬 조건 | 선택 |
+| --- | --- |
+| 모든 키가 오름차순 | `sortBy` |
+| 하나라도 내림차순 | `orderBy` |
+| `localeCompare`처럼 비교 규칙을 키로 표현할 수 없음 | 대상 런타임이 지원할 때만 `.toSorted()` |
+| 같은 키의 항목도 입력 순서와 무관하게 정렬해야 함 | 고유 식별자를 마지막 정렬 키로 추가 |
 
-비교 규칙을 키로 적을 수 없을 때만 `.toSorted()`를 씁니다.
-한국어 이름을 `localeCompare`로 비교하는 정렬이 여기 해당합니다.
+새 배열도 원소 객체는 공유하므로 정렬 키를 계산하면서 원소를 수정하지 않습니다.
+입력을 수정하지 않는 정렬 함수는 `readonly` 배열을 매개변수로 받습니다.
+`.toSorted()`의 타입 선언만 추가해도 런타임 지원이 생기지는 않습니다.
 
 **Incorrect (매개변수로 받은 배열을 제자리에서 바꿉니다):**
 
@@ -37,7 +41,7 @@ const toSortedUsers = (users: User[]): User[] => {
 ```ts
 import {sortBy} from "es-toolkit";
 
-const toSortedUsers = (users: User[]): User[] => {
+const toSortedUsers = (users: readonly User[]): User[] => {
 	return sortBy(users, ["age"]);
 };
 ```
@@ -47,7 +51,7 @@ const toSortedUsers = (users: User[]): User[] => {
 ```ts
 import {orderBy} from "es-toolkit";
 
-const toSortedProducts = (products: Product[]): Product[] => {
+const toSortedProducts = (products: readonly Product[]): Product[] => {
 	return orderBy(products, ["category", "price"], ["asc", "desc"]);
 };
 ```
@@ -55,7 +59,7 @@ const toSortedProducts = (products: Product[]): Product[] => {
 **Correct (비교 규칙을 키로 적을 수 없으면 `.toSorted()`를 씁니다):**
 
 ```ts
-const toSortedUsers = (users: User[]): User[] => {
+const toSortedUsers = (users: readonly User[]): User[] => {
 	return users.toSorted((left, right) => left.name.localeCompare(right.name));
 };
 ```

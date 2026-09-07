@@ -47,9 +47,7 @@
 				"react": [
 					"ownership-layer-component-boundaries",
 					"ownership-prefix-layer-names-on-files-and-symbols",
-					"ownership-place-owner-files-in-role-folders",
-					"composition-read-props-without-destructuring",
-					"composition-declare-props-interface-above-the-component"
+					"ownership-place-owner-files-in-role-folders"
 				],
 				"typescript": [
 					"types-document-custom-types-and-shapes",
@@ -76,9 +74,7 @@
 					"react": [
 						"ownership-layer-component-boundaries",
 						"ownership-prefix-layer-names-on-files-and-symbols",
-						"ownership-place-owner-files-in-role-folders",
-						"composition-read-props-without-destructuring",
-						"composition-declare-props-interface-above-the-component"
+						"ownership-place-owner-files-in-role-folders"
 					],
 					"typescript": [
 						"types-document-custom-types-and-shapes",
@@ -256,7 +252,7 @@
 		},
 		{
 			"id": "RTE09-route-runtime-section",
-			"prompt": "extract only the tree section that owns local search and expanded state plus a tree adapter into the owner component folder, implement a named selection handler from ProductTreeSectionProps[\"onCategorySelect\"], mark the remaining page sections in JSX, and keep search params, navigation, page query, and mutation in the page product.",
+			"prompt": "extract only the tree section that owns local search and expanded state plus a tree adapter into the owner component folder, implement a named selection handler from UiTreeProps[\"onSelect\"], mark the remaining page sections in JSX, and keep section assembly, Suspense boundaries, and route navigation decisions visible at the route entry while the section owns its data and interaction.",
 			"files": [
 				"src/page/products/pg-products.tsx",
 				"src/page/products/_pg-product-tree-section.tsx"
@@ -271,14 +267,12 @@
 					"ownership-place-owner-files-in-role-folders",
 					"typing-take-handler-types-from-existing-contracts",
 					"composition-read-props-without-destructuring",
-					"composition-use-activity-only-to-preserve-mounted-subtrees",
 					"screen-keep-route-flow-visible",
 					"screen-avoid-premature-abstraction",
 					"screen-extract-local-section-components-for-runtime-boundaries",
 					"runtime-place-suspense-boundaries-at-the-section-owner",
 					"runtime-avoid-ad-hoc-loading-branches",
 					"events-name-handlers-predictably",
-					"events-curry-extra-handler-arguments",
 					"docs-require-jsdoc-on-key-declarations",
 					"docs-write-jsx-comments-as-multiline-blocks"
 				],
@@ -297,7 +291,7 @@
 		},
 		{
 			"id": "RTE10-derived-selection-state",
-			"prompt": "extract the inline selection toggle into a named handleSelectionToggle handler, replace selectedIds-derived count and flag effect+state synchronization with render calculation near use, and use a functional updater; do not change navigation or styling.",
+			"prompt": "extract the inline domain selection callback as a named handleSelectionToggle handler typed from UiListProps[\"onSelect\"], replace selectedIds-derived count and flag effect+state synchronization with render calculation near use, and use a functional updater; the callback receives an ID value, not a DOM event, and needs no curried arguments. Do not change navigation or styling.",
 			"files": [
 				"src/page/products/pg-products.tsx"
 			],
@@ -313,12 +307,10 @@
 					"state-calculate-derived-values-during-render",
 					"state-use-functional-setstate-updates",
 					"events-name-handlers-predictably",
-					"events-curry-extra-handler-arguments",
 					"docs-require-jsdoc-on-key-declarations"
 				],
 				"typescript": [
 					"types-prefer-function-variable-types-over-parameter-annotations",
-					"types-mark-unused-parameters-with-underscore",
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
 					"docs-require-header-jsdoc-on-key-declarations",
@@ -558,6 +550,120 @@
 				"typescript": [
 					"tooling-configure-biome-to-enforce-these-rules"
 				]
+			}
+		},
+		{
+			"id": "react-activity-preserve-draft",
+			"prompt": "Replace only the conditional rendering around the existing sidebar with Activity controlled by the existing isSidebarOpen state, preserving the sidebar draft and DOM when hidden; import Activity directly. Keep effects, handlers, component declarations, and styles unchanged.",
+			"files": [
+				"src/page/products/pg-products.tsx"
+			],
+			"expectedSkills": [
+				"react",
+				"typescript"
+			],
+			"expectedSelected": {
+				"react": [
+					"composition-use-activity-only-to-preserve-mounted-subtrees",
+					"composition-render-one-branch-with-and"
+				],
+				"typescript": [
+					"naming-use-direct-imports-and-public-entry-points"
+				]
+			}
+		},
+		{
+			"id": "react-query-jsx-map-near-miss",
+			"prompt": "Replace only UiProductList receiving responseProductListSuspense.data.items with a direct items.map that renders an h3 keyed by item.id and displaying item.label. The query select already provides the final items; do not reshape data, alter the query declaration, introduce aliases, or change styles.",
+			"files": [
+				"src/page/products/_pg-product-list-section.tsx"
+			],
+			"expectedSkills": [
+				"react",
+				"typescript"
+			],
+			"expectedSelected": {
+				"react": [
+					"data-preserve-origin-chaining"
+				],
+				"typescript": []
+			}
+		},
+		{
+			"id": "react-user-refresh-near-miss",
+			"prompt": "Replace only the existing named refresh handler body with void responseProductListSuspense.refetch() for the user refresh button. There is no mutation or cache-writing change; preserve the handler name, type, comment, and JSX.",
+			"files": [
+				"src/page/products/_pg-product-list-section.tsx"
+			],
+			"expectedSkills": [
+				"react",
+				"typescript"
+			],
+			"expectedSelected": {
+				"react": [
+					"data-preserve-origin-chaining"
+				],
+				"typescript": []
+			}
+		},
+		{
+			"id": "react-independent-disabled-prop-near-miss",
+			"prompt": "On an existing UiButton usage change only disabled={false} to disabled={true}. Keep its visible text, type, existing click handler, className, wrapper implementation, and props declarations unchanged.",
+			"files": [
+				"src/page/products/_pg-product-toolbar.tsx"
+			],
+			"expectedSkills": [
+				"react",
+				"typescript"
+			],
+			"expectedSelected": {
+				"react": [
+					"a11y-give-interactive-elements-an-accessible-name"
+				],
+				"typescript": []
+			}
+		},
+		{
+			"id": "react-suspense-dependent-query",
+			"prompt": "Change the existing query declarations so the second Suspense query waits for the first response ID, using the already imported useSuspenseQuery in order instead of enabled. Preserve binding names, render code, handlers, and boundaries; update the query JSDoc to describe the dependency.",
+			"files": [
+				"src/page/products/_pg-product-detail-section.tsx"
+			],
+			"expectedSkills": [
+				"react",
+				"typescript"
+			],
+			"expectedSelected": {
+				"react": [
+					"data-combine-multiple-queries-with-combine",
+					"data-preserve-origin-chaining",
+					"docs-require-jsdoc-on-key-declarations"
+				],
+				"typescript": [
+					"docs-require-header-jsdoc-on-key-declarations",
+					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-doc-comments-as-multiline-blocks"
+				]
+			}
+		},
+		{
+			"id": "react-suspense-cached-refetch-error",
+			"prompt": "The existing Suspense query has cached data, but this confirmation screen must stop showing stale recommendations after a failed refetch. Add only a render-time error check that throws the existing query error after isFetching is false, using the existing ancestor boundaries. Keep the query declaration, hooks, JSX, and comments unchanged.",
+			"files": [
+				"src/page/products/_pg-product-recommendation-section.tsx"
+			],
+			"expectedSkills": [
+				"react",
+				"typescript"
+			],
+			"expectedSelected": {
+				"react": [
+					"data-preserve-origin-chaining",
+					"runtime-place-suspense-boundaries-at-the-section-owner",
+					"runtime-avoid-ad-hoc-loading-branches",
+					"runtime-place-error-boundaries-by-blast-radius"
+				],
+				"typescript": []
 			}
 		}
 	]

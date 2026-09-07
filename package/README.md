@@ -45,7 +45,9 @@ progressive rule frontmatter의 `reviewWith`는 조건부 재평가, `requiresSe
 npm --prefix package run validate:all
 npm --prefix package run build:all
 npm --prefix package run check:generated:all
+npm --prefix package run viewer
 npm --prefix package run check:handbooks:all
+npm --prefix package run check:viewer
 npm --prefix package run typecheck
 npm --prefix package run test
 npm --prefix package run biome:check:all
@@ -63,9 +65,13 @@ npm --prefix package run biome:check:all
 | `css` | progressive | conditional `typescript` |
 | `typescript` | progressive | none |
 
-Progressive skill은 `SKILL.md` → activated `RULES_INDEX.md` 전체 scan과 completion gate → Selected/Unknown `contracts/*.md` → CRITICAL 또는 판정 근거가 필요한 `rules/*.md` full expansion → Unknown 해소 → final Selected의 `requiresSelected` closure 순서로 소비합니다. 새 selection이나 companion이 생기면 고정점까지 반복합니다. non-progressive structured skill은 각자의 `SKILL.md`가 기존 full-handbook 계약을 결정합니다. legacy single-document `java`는 structured build pipeline에서 의도적으로 제외합니다.
+Progressive skill은 `SKILL.md` → activated `RULES_INDEX.md` 전체 scan과 completion gate → Selected/Unknown `contracts/*.md` → CRITICAL 또는 판정 근거가 필요한 `rules/*.md` full expansion → Unknown 해소 → final Selected의 `requiresSelected` closure 순서로 소비합니다. 형태를 정하는 규칙은 원문의 `Correct` 예제도 읽습니다. 새 selection이나 companion이 생기면 고정점까지 반복합니다. 현재 제공하는 skill은 위 표의 세 가지입니다.
 
 progressive owner는 `extends` 대신 `companions`를 사용하고 companion target도 progressive여야 합니다. non-progressive owner의 legacy `extends`와 local `HANDBOOK.md` 계약은 계속 지원합니다.
+
+`routing-evals.json`과 회귀 테스트는 예상 선택 목록, 필수 규칙 관계, 전체 규칙의 적용 사례 유무를 검사합니다.
+이 검사를 통과해도 실제 에이전트의 선택 정확도가 인증되는 것은 아닙니다.
+적용 조건을 바꿀 때는 비적용 사례도 검토하고, 행동 평가를 했다면 사용한 모델·입력·결과를 별도로 기록합니다.
 
 ## Per-Skill Aliases
 

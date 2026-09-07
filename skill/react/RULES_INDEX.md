@@ -1,7 +1,7 @@
 # React 컨벤션 Rule Index
 
 - Skill: `react`
-- Routing digest: `sha256:da587f148614cb88fc431c504c43d74f5bde7a3ee1ad43e31e9596673c7d4c84`
+- Routing digest: `sha256:ca7a9ca164641aa5d6ae7addc083259560a110de7c181d83cde9af2279bf9a1b`
 
 ## Direct Companions
 
@@ -17,22 +17,22 @@
 - R01-05 | ownership-prefer-plain-ts-for-local-react-helpers | 화면 전용 계산·정규화·전송 값 조립을 커스텀 훅으로 추출하려 할 때. 화면 전용 순수 로직을 별도 보조 모듈로 옮기려 할 때. 화면 지역 함수에 \`use\` 접두사를 붙이거나 커스텀 훅 이름을 바꿀 때. 제외: 상태·컨텍스트·다른 훅 호출 순서를 실제로 캡슐화하는 경우. | reviewWith: ownership-keep-lifecycle-in-the-owning-component, ownership-place-owner-files-in-role-folders, typescript/functions-extract-helpers-only-when-the-boundary-is-real, typescript/naming-use-direct-imports-and-public-entry-points
 - R01-06 | ownership-keep-lifecycle-in-the-owning-component | 외부 라이브러리 인스턴스 생성·크기 변경·구독·정리를 한 컴포넌트가 소유할 때. 생명주기 코드를 커스텀 훅으로 옮겨 파일을 줄이려 할 때. 제외: 여러 소유자가 같은 생명주기 계약을 실제로 호출하는 경우. | reviewWith: ownership-prefer-plain-ts-for-local-react-helpers
 - R02-01 | data-name-query-and-mutation-bindings-consistently | React Query 쿼리·뮤테이션 훅의 지역 바인딩을 추가하거나 이름을 바꿀 때. 쿼리나 뮤테이션 훅의 반환값을 새 지역 변수에 담을 때. | reviewWith: data-preserve-origin-chaining
-- R02-02 | data-shape-query-data-with-select | 서버 응답의 목록·항목·메타 등을 렌더에서 가공하거나 반복 소비할 때. React Query \`select\`의 결과 형태를 추가·변경할 때. | reviewWith: data-name-query-and-mutation-bindings-consistently, data-preserve-origin-chaining
-- R02-03 | data-combine-multiple-queries-with-combine | 쿼리 결과 둘 이상을 하나의 값으로 합치는 코드를 추가·변경할 때. 화면 본문에서 두 \`data\`를 꺼내 함께 계산하는 코드를 넣거나 뺄 때. | reviewWith: data-shape-query-data-with-select, screen-keep-derived-values-close
+- R02-02 | data-shape-query-data-with-select | 서버 응답의 목록·항목·메타 등을 렌더에서 가공하거나 반복 소비할 때. React Query \`select\`의 결과 형태를 추가·변경할 때. 제외: 이미 가공한 항목을 \`.map\`으로 JSX 요소에 대응시키기만 하는 경우. | reviewWith: data-name-query-and-mutation-bindings-consistently, data-preserve-origin-chaining
+- R02-03 | data-combine-multiple-queries-with-combine | 쿼리 결과 둘 이상을 하나의 값으로 합치는 코드를 추가·변경할 때. 화면 본문에서 두 \`data\`를 꺼내 함께 계산하는 코드를 넣거나 뺄 때. 여러 쿼리의 병렬 실행과 앞 응답에 의존하는 순차 실행을 바꿀 때. | reviewWith: data-shape-query-data-with-select, screen-keep-derived-values-close
 - R02-04 | data-preserve-origin-chaining | 응답, 뮤테이션, 스토어에서 값을 꺼내 쓰는 코드를 추가·변경할 때. 원본을 별칭으로 끊고 값 접근 방식을 바꿀 때. | reviewWith: data-shape-query-data-with-select, screen-keep-derived-values-close
 - R02-05 | data-handle-mutation-failure-where-it-is-called | 뮤테이션을 부르는 코드를 추가·변경할 때. \`mutate\`와 \`mutateAsync\` 사이를 오갈 때. | reviewWith: data-invalidate-queries-the-mutation-changed, events-run-user-actions-in-handlers-not-effects
-- R02-06 | data-invalidate-queries-the-mutation-changed | 뮤테이션 성공 뒤 서버 상태를 다시 맞추는 코드를 추가·변경할 때. 캐시를 직접 쓰거나 다시 불러오는 코드를 넣을 때. | reviewWith: data-handle-mutation-failure-where-it-is-called
+- R02-06 | data-invalidate-queries-the-mutation-changed | 뮤테이션 성공 뒤 서버 상태를 다시 맞추는 코드를 추가·변경할 때. 저장 결과를 캐시에 직접 쓰거나 \`refetch\`로 맞추는 코드를 넣을 때. 제외: 사용자 새로 고침 버튼이나 요청 전 낙관적 갱신만 바꾸는 경우. | reviewWith: data-handle-mutation-failure-where-it-is-called
 - R03-01 | typing-take-handler-types-from-existing-contracts | 커링 팩토리가 돌려주는 리액트 핸들러의 타입을 정할 때. \`Ui\*\` 래퍼 사용처에서 프롭스 타입을 참조할 때. 제외: \`query.select\` 같은 훅 옵션의 일회성 문맥 콜백인 경우.
 - R03-02 | typing-narrow-library-wrapper-contracts | 라이브러리 컴포넌트를 감싸는 \`Ui\*\` 래퍼의 프롭스 타입을 만들거나 바꿀 때. 래퍼에 프롭을 추가하거나 여는 범위를 넓힐 때. | reviewWith: typescript/docs-justify-convention-exceptions-with-a-reason-comment, typing-choose-wrapper-shape-and-forwarding, typing-open-dom-props-in-three-steps, typing-take-handler-types-from-existing-contracts
 - R03-03 | typing-open-dom-props-in-three-steps | 래퍼 프롭스가 \`HTMLAttributes\`를 \`extends\` 하거나 그 상속을 뗄 때. 라이브러리 프롭과 DOM 프롭의 이름이 부딪혀 컴파일이 막힐 때. 제외: DOM 프롭이 아닌 표시 프롭만 더하거나 빼는 경우. | reviewWith: css/composition-do-not-style-through-the-style-attribute, typescript/types-reuse-existing-contracts-before-new-types, typing-narrow-library-wrapper-contracts
 - R03-04 | typing-choose-wrapper-shape-and-forwarding | 래퍼가 받은 프롭을 안쪽 컴포넌트나 요소로 넘기는 코드를 추가·변경할 때. 래퍼에 자기 프롭을 더하거나 안쪽 요소를 늘릴 때. | reviewWith: typescript/values-avoid-lookup-tables-for-simple-choices
 - R04-01 | strategy-choose-single-composition-compound-and-variants | 내보낸 공용 컴포넌트에 슬롯, 공개 부품, 공용 컨텍스트나 동작을 추가할 때. 반복되는 기본 설정이나 모드 API를 추가할 때. 공용 컴포넌트의 조립 구조를 재설계할 때. | reviewWith: screen-avoid-premature-abstraction, strategy-avoid-boolean-prop-proliferation, strategy-expose-only-assembled-compound-parts, strategy-prefer-children-over-render-props
 - R04-02 | strategy-expose-only-assembled-compound-parts | 합성 컴포넌트의 공개 부품 목록에 부품을 넣거나 뺄 때. | reviewWith: css/composition-do-not-add-wrapper-elements-for-styling, strategy-choose-single-composition-compound-and-variants
-- R04-03 | strategy-avoid-boolean-prop-proliferation | \`ui\`나 \`widget\` 컴포넌트에 불리언 모드·표시 프롭을 추가할 때. 기존 불리언 프롭 조합과 JSX 분기가 늘어날 때. 제외: 라우트 진입 파일 안에서만 쓰는 일회성 분기인 경우. | reviewWith: strategy-expose-only-assembled-compound-parts
+- R04-03 | strategy-avoid-boolean-prop-proliferation | \`ui\`나 \`widget\` 컴포넌트에 불리언 모드·표시 프롭을 추가할 때. 기존 불리언 프롭 조합과 JSX 분기가 늘어날 때. 제외: 라우트 진입 파일 안에서만 쓰는 일회성 분기인 경우. 제외: \`disabled\`·\`checked\` 같은 독립 상태 프롭만 여는 경우. | reviewWith: strategy-expose-only-assembled-compound-parts
 - R04-04 | strategy-prefer-children-over-render-props | 공용 컴포넌트에 헤더·푸터·동작 같은 정적 슬롯을 추가·변경할 때. 렌더 프롭을 추가·변경하는데 실행 환경 데이터 주입이 꼭 필요한지 불분명할 때. \`ReactNode\` 슬롯이나 렌더 함수 계약에 이름을 붙이거나 바꿀 때.
 - R05-01 | composition-read-props-without-destructuring | 함수 컴포넌트의 시그니처나 본문에서 프롭스를 읽는 코드를 추가·변경할 때. 컴포넌트 안에서 \`props\`를 구조분해하는 줄을 넣거나 뺄 때. | reviewWith: data-preserve-origin-chaining, screen-keep-derived-values-close, typescript/values-read-objects-through-chains
 - R05-02 | composition-do-not-define-components-inside-components | 컴포넌트 본문 안에 JSX를 반환하는 로컬 함수·컴포넌트를 추가하거나 옮길 때. 재렌더 시 재마운트·포커스 초기화 징후를 다룰 때.
-- R05-03 | composition-named-handlers-over-inline | TSX 이벤트 프롭의 인라인 콜백에 분기나 비동기 호출을 추가·수정할 때. 인라인 콜백에 여러 동작·부수효과나 읽어도 의도가 안 보이는 상태 전환이 들어갈 때. 제외: 인자 없이 핸들러 참조만 넘기는 경우. | reviewWith: events-run-user-actions-in-handlers-not-effects, typescript/functions-extract-helpers-only-when-the-boundary-is-real
+- R05-03 | composition-named-handlers-over-inline | TSX 이벤트 프롭의 인라인 콜백에 분기나 비동기 호출을 추가·수정할 때. 인라인 콜백에 여러 동작·부수효과나 읽어도 의도가 안 보이는 상태 전환이 들어갈 때. 제외: 인자 없이 핸들러 참조만 넘기는 경우. | reviewWith: events-curry-extra-handler-arguments, events-run-user-actions-in-handlers-not-effects, typescript/functions-extract-helpers-only-when-the-boundary-is-real
 - R05-04 | composition-open-ref-props-only-for-imperative-contracts | 컴포넌트에 \`ref\` 프롭을 추가하거나 공개할 대상을 바꿀 때. \`useImperativeHandle\`로 노출하는 명령형 계약 타입을 만들거나 이름을 바꿀 때. 제외: DOM 요소를 그대로 가리키는 기존 \`ref\` 계약의 타입만 바꾸는 경우. | reviewWith: typescript/docs-justify-convention-exceptions-with-a-reason-comment, typing-narrow-library-wrapper-contracts
 - R05-05 | composition-use-activity-only-to-preserve-mounted-subtrees | 조건부 렌더링과 \`Activity\` 사이를 오갈 때. \`\<Activity\>\`를 추가·삭제하거나 \`mode\`를 계산하는 표현식을 바꿀 때. | reviewWith: composition-do-not-define-components-inside-components
 - R05-06 | composition-declare-props-interface-above-the-component | 컴포넌트 프롭스 타입을 새로 선언할 때. 프롭스 타입의 위치나 공개 범위를 바꿀 때. 제외: 같은 파일에서만 쓰는 화면 지역 프롭스를 \`export\`하지 않는 경우. | reviewWith: composition-read-props-without-destructuring, typescript/types-document-custom-types-and-shapes
@@ -45,7 +45,7 @@
 - R06-04 | screen-keep-derived-values-close | 화면 진입 파일이나 섹션 최상단에 \`const\` 별칭, 플래그, 표시값을 추가·이동·제거할 때. 훅 인자, JSX 표시값, 이펙트 안 계산을 위쪽 \`const\`로 빼거나 되돌릴 때. | reviewWith: data-preserve-origin-chaining
 - R07-01 | runtime-place-suspense-boundaries-at-the-section-owner | \`Suspense\` 쿼리를 쓰는 화면에서 로딩 대체 화면의 위치를 정할 때. \`Suspense\` 경계를 추가하거나 옮길 때. | reviewWith: css/layout-keep-layout-intent-explicit, runtime-place-error-boundaries-by-blast-radius, screen-extract-local-section-components-for-runtime-boundaries
 - R07-02 | runtime-avoid-ad-hoc-loading-branches | \`Suspense\` 쿼리를 쓰는 화면 본문에 초기 로딩 반환을 추가·변경할 때. \`isFetching\`이나 뮤테이션 \`isPending\`으로 화면을 가리는 분기를 넣을 때. 제외: 선택 값에 기본값을 채우는 것만 바꾸는 경우. | reviewWith: data-preserve-origin-chaining, screen-keep-derived-values-close, typescript/absence-expose-optional-values-instead-of-silent-fallbacks
-- R07-03 | runtime-place-error-boundaries-by-blast-radius | 오류 경계를 추가하거나 옮길 때. 화면 본문에 \`isError\` 분기나 실패 대체 화면 반환을 넣을 때.
+- R07-03 | runtime-place-error-boundaries-by-blast-radius | 오류 경계를 추가하거나 옮길 때. 화면 본문에 \`isError\` 분기나 실패 대체 화면 반환을 넣을 때. 캐시가 있는 쿼리의 재조회 실패 처리나 오류 경계의 다시 시도 연결을 바꿀 때.
 - R08-01 | state-calculate-derived-values-during-render | 현재 프롭스, 상태, search 파라미터, 응답에서 계산 가능한 값을 별도 상태와 이펙트로 동기화할 때. 파생값 동기화 이펙트를 제거할 때. | reviewWith: screen-keep-derived-values-close, state-store-derived-authority
 - R08-02 | state-choose-state-tools-by-source-of-truth | 로컬 UI·전역 클라이언트·서버 데이터를 새 상태 도구로 옮길 때. 합성 컴포넌트나 컴포넌트 묶음에 공유 상태를 넣을 때. 서로 다른 진짜 출처 사이에 값을 복제하거나 동기화할 때. | reviewWith: state-store-derived-authority, strategy-choose-single-composition-compound-and-variants
 - R08-03 | state-store-derived-authority | 여러 화면·메뉴·라우트 가드가 쓰는 접근 권한 같은 파생 판단을 스토어에 저장·동기화할 때. 단일 화면에서만 쓰는 값까지 스토어로 올리려 할 때. | reviewWith: docs-require-jsdoc-on-key-declarations, state-calculate-derived-values-during-render

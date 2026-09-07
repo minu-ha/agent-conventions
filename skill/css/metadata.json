@@ -15,6 +15,13 @@
 	"references": [
 		"https://developer.mozilla.org/en-US/docs/Web/CSS",
 		"https://developer.mozilla.org/en-US/docs/Web/CSS/Pseudo-classes",
-		"https://github.com/lukeed/clsx"
+		"https://github.com/lukeed/clsx",
+		"https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/var",
+		"https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Positioned_layout/Stacking_context",
+		"https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries",
+		"https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/forced-colors",
+		"https://www.w3.org/WAI/WCAG22/Understanding/focus-appearance.html",
+		"https://developer.mozilla.org/en-US/docs/Web/API/Element/transitionend_event",
+		"https://stylelint.io/user-guide/rules/selector-disallowed-list/"
 	]
 }

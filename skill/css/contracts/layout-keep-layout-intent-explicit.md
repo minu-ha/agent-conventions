@@ -1,18 +1,17 @@
 # Keep Layout Intent Explicit
 
-**Impact: MEDIUM (DOM을 거슬러 올라가지 않고 `sticky`, `fixed`, 박스 책임을 파악합니다)**
+**Impact: MEDIUM (조상 DOM을 찾아보지 않고 `sticky`, `fixed`의 기준과 각 요소의 배치 역할을 파악합니다)**
 
-레이아웃 의도는 클래스명과 선언만 보고 바로 읽혀야 합니다.
-크기를 어디까지 고정할지는 `layout-reach-for-intrinsic-sizing-before-breakpoints` 규칙이 정합니다.
+레이아웃의 기준과 역할은 클래스명과 선언에서 드러나야 합니다.
+크기 고정 여부는 `layout-reach-for-intrinsic-sizing-before-breakpoints` 규칙을 따릅니다.
 
-- `z-index`에는 숫자를 직접 쓰지 않고 층 토큰을 씁니다.
-  토큰 이름이 곧 쌓임 순서 문서입니다.
-  층 목록과 쌓임 맥락 조건은 `values-declare-stacking-layers-as-tokens` 규칙이 정합니다.
-- `sticky`나 `fixed`를 쓸 때는 기준 컨테이너를 주석 한 줄로 남깁니다.
-  어느 조상이 스크롤 컨테이너인지는 선언에 안 보입니다.
-  `fixed`는 `transform`이 걸린 조상 아래에서 뷰포트 기준을 잃습니다.
-  `sticky`는 사이 조상에 `overflow: hidden`이나 `auto`가 있으면 그 조상이 기준이 되어 뷰포트에 붙지 않습니다.
-- 로딩 대체 화면은 실제 내용과 같은 컨테이너 클래스 안에 넣습니다.
-  높이를 대체 화면에만 따로 적으면 실제 내용이 들어올 때 그 값이 남아 레이아웃이 튑니다.
+| 선언이나 요소 | 요구 사항 | 이유 |
+| --- | --- | --- |
+| `z-index` | 숫자 대신 층 토큰을 씁니다. 목록과 쌓임 맥락은 `values-declare-stacking-layers-as-tokens`를 따릅니다 | 토큰 이름으로 쌓임 순서를 읽습니다 |
+| `sticky`, `fixed` | 기준 컨테이너를 주석 한 줄로 남깁니다 | 조상 조건은 해당 선언만으로 알 수 없습니다 |
+| 로딩 대체 화면 | 실제 내용과 같은 컨테이너 클래스 안에 넣습니다 | 대체 화면에만 높이를 주면 교체 시 그 높이가 사라져 레이아웃이 튈 수 있습니다 |
+
+`fixed`는 `transform`이 적용된 조상 아래에서 뷰포트 기준을 잃습니다.
+`sticky`는 중간 조상에 `overflow: hidden`이나 `auto`가 있으면 그 조상이 기준이 되어 뷰포트에 붙지 않습니다.
 
 > 예시·예외가 필요하면 [full rule](../rules/06-03-layout-keep-layout-intent-explicit.md)을 읽습니다.

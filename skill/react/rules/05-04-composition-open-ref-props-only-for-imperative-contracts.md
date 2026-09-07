@@ -1,8 +1,8 @@
 ---
 title: Open ref Props Only for Real Imperative Contracts
-titleKo: 밖에서 직접 다뤄야 할 때만 `ref` 프롭을 엽니다
+titleKo: 직접 제어할 필요가 있을 때만 `ref` 프롭을 엽니다
 impact: MEDIUM-HIGH
-impactDescription: 쓰지도 않는 명령형 계약이 공용 컴포넌트마다 하나씩 늘어나는 것을 막습니다
+impactDescription: 사용하지 않는 명령형 계약이 공용 컴포넌트에 늘어나는 것을 막습니다
 appliesWhen:
   - 컴포넌트에 `ref` 프롭을 추가하거나 공개할 대상을 바꿀 때
   - `useImperativeHandle`로 노출하는 명령형 계약 타입을 만들거나 이름을 바꿀 때
@@ -15,20 +15,18 @@ tags: composition
 
 ## Open ref Props Only for Real Imperative Contracts
 
-**Impact: MEDIUM-HIGH (쓰지도 않는 명령형 계약이 공용 컴포넌트마다 하나씩 늘어나는 것을 막습니다)**
+**Impact: MEDIUM-HIGH (사용하지 않는 명령형 계약이 공용 컴포넌트에 늘어나는 것을 막습니다)**
 
-`ref`는 밖에서 실제로 제어해야 하는 공개 명령형 계약입니다.
-포커스, 스크롤, 측정처럼 사용처가 직접 다뤄야 하는 일이 있을 때만 엽니다.
+`ref`는 사용처가 포커스·스크롤·측정 등을 직접 제어해야 할 때만 엽니다.
+현재 사용처가 없으면 미리 공개하지 않습니다.
 
-- 지금 쓰는 사용처가 없으면 열지 않습니다.
-  나중에 필요해지면 그때 엽니다.
-- 열 때는 `ref`를 일반 프롭처럼 직접 받습니다.
-  `forwardRef`로 감싸지 않습니다.
-- `useImperativeHandle`로 명령 메서드 묶음을 노출할 때만 계약을 `<Owner>Handle`로 짓습니다.
-  DOM 요소를 그대로 가리키는 `ref`에는 `Handle` 타입을 만들지 않습니다.
-- 외부 패키지 타입 제약 때문에 래퍼가 필요하면 그 이유를 주석으로 남깁니다.
-  주석의 위치와 근거 기준은
-  `typescript/docs-justify-convention-exceptions-with-a-reason-comment`가 정합니다.
+| 조건 | 처리 |
+| --- | --- |
+| 리액트 19 이상만 지원함 | `forwardRef`로 감싸지 않고 `ref`를 일반 프롭으로 받습니다 |
+| 리액트 18 이하도 지원함 | `forwardRef` 계약을 유지합니다. 지원 버전을 바꾸지 않고 일괄 전환하지 않습니다 |
+| `useImperativeHandle`로 명령 메서드를 공개함 | 계약 이름을 `<Owner>Handle`로 짓습니다 |
+| DOM 요소를 직접 가리킴 | 별도 `Handle` 타입을 만들지 않습니다 |
+| 외부 패키지 타입 제약으로 래퍼가 필요함 | `typescript/docs-justify-convention-exceptions-with-a-reason-comment`에 따라 이유를 남깁니다 |
 
 **Incorrect (`ref` 계약이 필요 없는 단순 화면 컴포넌트에도 습관적으로 `ref`를 노출합니다):**
 

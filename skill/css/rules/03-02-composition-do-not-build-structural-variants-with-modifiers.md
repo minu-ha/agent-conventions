@@ -2,7 +2,7 @@
 title: Do Not Build Structural Variants With Modifiers
 titleKo: 수정자는 상태와 반복되는 모양에만 씁니다
 impact: MEDIUM-HIGH
-impactDescription: 수정자가 두 번째 레이아웃 이름 체계로 자라지 않게 막습니다
+impactDescription: 일회성 배치 보정이 수정자로 늘어나지 않게 합니다
 appliesWhen:
   - 수정자를 추가·변경할 때
   - 여러 곳에서 반복되는 모양인지 한 곳만의 보정인지 가릴 때
@@ -12,48 +12,39 @@ tags: modifiers, structure, naming
 
 ## Do Not Build Structural Variants With Modifiers
 
-**Impact: MEDIUM-HIGH (수정자가 두 번째 레이아웃 이름 체계로 자라지 않게 막습니다)**
+**Impact: MEDIUM-HIGH (일회성 배치 보정이 수정자로 늘어나지 않게 합니다)**
 
-수정자는 두 가지만 표현합니다.
+수정자는 앱 상태나 여러 곳에서 반복되는 모양에만 씁니다.
+한 곳의 여백이나 배치를 보정할 때는 기본 요소 클래스 대신 **역할 이름을 붙인 별도 요소 클래스**를 씁니다.
 
-| 표현하는 것 | 예 |
+| 표현하려는 것 | 판정 |
 | --- | --- |
-| 앱이 켜고 끄는 상태 | `--active`, `--selected`, `--error`, `--expanded`, `--current` |
-| 여러 곳에서 반복되는 모양 | `--dense`, `--compact`, `--horizontal` |
+| 앱이 켜고 끄는 상태 | 항상 수정자로 씁니다. `--active`, `--selected`, `--error`, `--expanded`, `--current` |
+| 브라우저가 부여하는 `:disabled`, `:checked` | 수정자로 만들지 않습니다. `selector-use-pseudo-classes-for-dom-owned-states`를 따릅니다 |
+| 같은 수정자 이름이 두 개 이상의 `scope_slug`에 이미 있음 | 반복되는 모양이므로 허용합니다. `--dense`, `--compact`, `--horizontal` |
+| `variant` 프롭이 고르는 모양을 두 곳 이상에서 사용함 | `scope_slug` 수와 무관하게 수정자로 씁니다 |
+| 위 조건에 맞지 않는 한 곳의 보정 | 요소 클래스로 씁니다. `--compactTop`, `--marginLeft0`, `--alignRight` 같은 수정자는 만들지 않습니다 |
 
-브라우저가 부여하는 `:disabled`, `:checked`는 수정자로 만들지 않습니다.
-`selector-use-pseudo-classes-for-dom-owned-states` 규칙이 정합니다.
-
-한 곳에서만 필요한 여백이나 배치 보정에는 쓰지 않습니다.
-`--compactTop`, `--marginLeft0`, `--alignRight`처럼 그 화면 하나를 고치려고 붙이는 이름이 여기 해당합니다.
-그런 보정은 수정자가 아니라 **역할 이름이 있는 별도 요소 클래스**로 풉니다.
-보정이 필요한 요소에는 기본 요소 클래스 대신 그 역할 이름의 요소 클래스를 씁니다.
-
-반복되는 모양인지는 아래 기준으로 가릅니다.
-앱이 켜고 끄는 상태는 이 기준을 보지 않고 언제나 수정자입니다.
-
-> 이 수정자 이름이 지금 저장소에서 두 개 이상의 `scope_slug`에 이미 있는가?
-
-| 답 | 판정 |
-| --- | --- |
-| 있음 | 반복되는 모양이라 수정자로 허용합니다 |
-| 없음 | 그 한 곳의 사정이라 역할 이름을 새로 지어 요소 클래스로 둡니다 |
-
-두 번째 소유자가 같은 이름을 쓰게 되는 순간 수정자로 올립니다.
-그 전까지는 요소 클래스로 둡니다.
-`variant` 프롭이 고르는 수정자는 사용처가 둘 이상이면 `scope_slug` 수를 보지 않고 수정자로 둡니다.
+두 번째 소유자가 같은 이름을 쓰기 전까지는 요소 클래스로 두고, 쓰게 되는 시점에 수정자로 바꿉니다.
+앱이 켜고 끄는 상태에는 이 반복 횟수 기준을 적용하지 않습니다.
 
 **Incorrect (그 화면 하나를 고치려고 수정자를 붙입니다):**
 
 ```tsx
 <div className={clsx("pg_catalogDetail__section", "pg_catalogDetail__section--compactTop")} />
+```
+
+```tsx
 <div className={clsx("pg_catalogDetail__aside", "pg_catalogDetail__aside--marginLeft0")} />
 ```
 
-**Correct (한 곳만의 보정은 역할 이름이 있는 요소로 분리합니다):**
+**Correct (한 곳의 보정은 역할 이름을 붙인 요소 클래스로 분리합니다):**
 
 ```tsx
 <div className={clsx("pg_catalogDetail__specSection")} />
+```
+
+```tsx
 <div className={clsx("pg_catalogDetail__metaAside")} />
 ```
 
@@ -61,5 +52,8 @@ tags: modifiers, structure, naming
 
 ```tsx
 <div className={clsx("ui_table__root", isDense && "ui_table__root--dense")} />
+```
+
+```tsx
 <div className={clsx("pg_catalogIndex__row", isSelected && "pg_catalogIndex__row--selected")} />
 ```

@@ -1,6 +1,6 @@
 ---
 title: Avoid Ad-hoc Loading and Failure Branches in Screen Bodies
-titleKo: 화면 본문에서 로딩·실패 분기를 그때그때 만들지 않습니다
+titleKo: 화면 본문에 초기 로딩·실패 분기를 추가하지 않습니다
 impact: HIGH
 impactDescription: 초기 로딩과 실패는 경계가 맡고 화면 본문에는 데이터가 있는 경로만 남습니다
 appliesWhen:
@@ -17,21 +17,18 @@ tags: screen, loading, suspense
 
 **Impact: HIGH (초기 로딩과 실패는 경계가 맡고 화면 본문에는 데이터가 있는 경로만 남습니다)**
 
-`Suspense` 쿼리를 쓰는 화면은 본문에서 초기 로딩을 다시 분기하지 않습니다.
-화면 전체를 가리는 초기 로딩은 `Suspense` 경계나 상위 레이아웃이 이미 처리합니다.
+`Suspense` 쿼리의 초기 로딩은 경계나 상위 레이아웃이 처리하므로 화면 본문에서 다시 분기하지 않습니다.
 
-| 플래그 | 판정 |
+| 플래그 | 사용 기준 |
 | --- | --- |
-| `Suspense` 쿼리의 `isPending` | 타입이 `false`로 고정되어 분기 자체가 죽은 코드입니다 |
-| 쿼리의 `isFetching` | 이미 그려진 화면을 보조할 때만 씁니다. 백그라운드 다시 불러오기 표시가 그런 예입니다 |
-| 쿼리의 `isError` | 본문에서 다시 분기하지 않습니다. 받을 자리는 `runtime-place-error-boundaries-by-blast-radius`가 정합니다 |
-| 뮤테이션의 `isPending` | 씁니다. 버튼 비활성화, 저장 중 배지가 그런 예입니다 |
+| Suspense 쿼리의 `isPending` | 타입이 `false`로 고정되어 분기가 죽은 코드입니다 |
+| 쿼리의 `isFetching` | 백그라운드 재조회 표시처럼 이미 그려진 화면을 보조할 때만 씁니다 |
+| 쿼리의 `isError` | 초기 실패 대체 화면을 본문에 만들지 않습니다. 캐시가 있는 재조회 실패는 `runtime-place-error-boundaries-by-blast-radius`를 따릅니다 |
+| 뮤테이션의 `isPending` | 버튼 비활성화·저장 중 배지 등에 씁니다 |
 
-화면을 가리는 분기는, 가리지 않을 때 외부 SDK나 폼이 잘못된 값으로 초기화되는 경우에만 씁니다.
-그때 `typescript/docs-justify-convention-exceptions-with-a-reason-comment`를 따라 이유를 남깁니다.
-
-값이 없을 수 있다는 사실을 기본값으로 덮는 문제는 이 규칙이 아니라
-`typescript/absence-expose-optional-values-instead-of-silent-fallbacks`가 판정합니다.
+화면을 가리지 않으면 외부 SDK나 폼이 잘못된 값으로 초기화될 때만 본문에 가림 분기를 둡니다.
+이 예외는 `typescript/docs-justify-convention-exceptions-with-a-reason-comment`에 따라 이유를 남깁니다.
+없는 값을 기본값으로 덮는 문제는 `typescript/absence-expose-optional-values-instead-of-silent-fallbacks`를 따릅니다.
 
 **Incorrect (`Suspense` 쿼리의 `isPending`을 다시 분기합니다. 타입이 `false`라 죽은 코드입니다):**
 

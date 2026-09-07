@@ -147,7 +147,7 @@
 		},
 		{
 			"id": "shared-collection-lookups-and-sort",
-			"prompt": "replace repeated `includes` with an existing Set's `has` and replace shared-input `.sort()` with es-toolkit `sortBy`; declarations, imports, and docs stay unchanged.",
+			"prompt": "replace `includes` inside a products.filter callback over a server-sized list with an existing Set's `has` and replace shared-input `.sort()` with es-toolkit `sortBy`; declarations, imports, and docs stay unchanged.",
 			"files": [
 				"src/search/filter-products.ts"
 			],
@@ -271,7 +271,7 @@
 		},
 		{
 			"id": "decide-once-and-guard-real-absence",
-			"prompt": "`pg-pattern.tsx` formats `avgCorr` while building `SelectionInfo` and `to-metrics-content.ts` formats the same field again; read the carried value instead, replace `...(isNil(tamValidity) ? {} : {tamValidity})` with a plain optional field, and drop the `isNil` check on the non-null `name` field.",
+			"prompt": "`pg-pattern.tsx` formats `avgCorr` while building `SelectionInfo` and `to-metrics-content.ts` formats the same field again; read the carried value instead, replace `...(isNil(tamValidity) ? {} : {tamValidity})` with a plain optional field, and drop the `isNil` check on the non-null `name` field. The internal display contract permits explicit undefined and no consumer distinguishes key presence; tamValidity cannot be null.",
 			"files": [
 				"src/page/pattern/pg-pattern.tsx",
 				"src/page/pattern/_function/to-metrics-content.ts"
@@ -303,6 +303,127 @@
 					"values-decide-once-and-carry-the-result",
 					"absence-do-not-guard-what-types-guarantee",
 					"absence-check-once-at-the-boundary"
+				]
+			}
+		},
+		{
+			"id": "internal-satisfies-is-not-a-runtime-assertion",
+			"prompt": "Add only `satisfies ExistingRequest` to an inline object literal passed directly to an existing internal function. The object contains validated internal values, is not a module constant or named shape, and neither its properties nor any declaration form, import, or comment changes.",
+			"files": [
+				"src/contracts/value-boundary.ts"
+			],
+			"expectedSkills": [
+				"typescript"
+			],
+			"expectedSelected": {
+				"typescript": []
+			}
+		},
+		{
+			"id": "runtime-json-needs-validation-despite-satisfies",
+			"prompt": "In an existing response boundary, replace `return JSON.parse(text) satisfies ExistingRecord` with `return existingRecordSchema.parse(JSON.parse(text))`; imports, names, signatures, and comments already exist and stay unchanged. The input is untrusted JSON and the boundary already propagates parse failures.",
+			"files": [
+				"src/contracts/value-boundary.ts"
+			],
+			"expectedSkills": [
+				"typescript"
+			],
+			"expectedSelected": {
+				"typescript": [
+					"types-narrow-unknown-instead-of-asserting"
+				]
+			}
+		},
+		{
+			"id": "fixed-short-membership-near-miss",
+			"prompt": "Change only the inline argument of an existing `editable_statuses.includes(...)` call from one existing status property to another. The immutable status list has exactly five entries and the check runs once. No declaration, name, import, comment, or contract changes.",
+			"files": [
+				"src/contracts/value-boundary.ts"
+			],
+			"expectedSkills": [
+				"typescript"
+			],
+			"expectedSelected": {
+				"typescript": []
+			}
+		},
+		{
+			"id": "two-direct-lookups-near-miss",
+			"prompt": "Replace the predicate in each of two existing direct `users.find(...)` calls, outside every loop or array callback. There are only these two lookup sites. No function declaration, variable, import, type, comment, or fallback is added or changed.",
+			"files": [
+				"src/contracts/value-boundary.ts"
+			],
+			"expectedSkills": [
+				"typescript"
+			],
+			"expectedSelected": {
+				"typescript": []
+			}
+		},
+		{
+			"id": "optional-presence-contract-keeps-omission",
+			"prompt": "Adjust only an existing optional-field object construction in a function return so a key is omitted when its input is undefined. The receiving in-memory patch contract uses Object.hasOwn to distinguish an omitted key from an explicit undefined. The target property is optional, compiler settings are unchanged, and the existing reason comment already documents that contract. Reuse the existing shouldOmit decision without adding or changing any absence predicate.",
+			"files": [
+				"src/contracts/value-boundary.ts"
+			],
+			"expectedSkills": [
+				"typescript"
+			],
+			"expectedSelected": {
+				"typescript": [
+					"absence-expose-optional-values-instead-of-silent-fallbacks",
+					"absence-do-not-guard-what-types-guarantee"
+				]
+			}
+		},
+		{
+			"id": "readonly-optional-derived-write-type",
+			"prompt": "In an existing documented UserPreview interface, change only `name?: UserRecord[\"name\"]` to `name?: Required<UserRecord>[\"name\"]` while preserving `readonly id`. exactOptionalPropertyTypes is already enabled and the original UserRecord.name?: string forbids writing undefined. Keep the name, original field contract, and existing Korean documentation.",
+			"files": [
+				"src/contracts/value-boundary.ts"
+			],
+			"expectedSkills": [
+				"typescript"
+			],
+			"expectedSelected": {
+				"typescript": [
+					"types-derive-subsets-with-indexed-access",
+					"types-document-custom-types-and-shapes",
+					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-doc-comments-as-multiline-blocks"
+				]
+			}
+		},
+		{
+			"id": "elapsed-time-preserves-hours",
+			"prompt": "Change only an existing dayjs addition from a millisecond expression to the equivalent declared expiryHours in hour units. The contract is exactly that elapsed duration, including across daylight-saving transitions. Keep the existing variable, constants, imports, types, and comments.",
+			"files": [
+				"src/contracts/value-boundary.ts"
+			],
+			"expectedSkills": [
+				"typescript"
+			],
+			"expectedSelected": {
+				"typescript": [
+					"values-handle-dates-with-dayjs"
+				]
+			}
+		},
+		{
+			"id": "external-response-key-preservation",
+			"prompt": "Replace only an incorrect property spelling in an existing response schema to match an API-owned snake_case key. The schema name, value validators, imports, and existing Korean documentation are unchanged. Do not rename API keys into our internal style.",
+			"files": [
+				"src/contracts/value-boundary.ts"
+			],
+			"expectedSkills": [
+				"typescript"
+			],
+			"expectedSelected": {
+				"typescript": [
+					"types-document-custom-types-and-shapes",
+					"naming-use-consistent-file-and-symbol-naming",
+					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-doc-comments-as-multiline-blocks"
 				]
 			}
 		}

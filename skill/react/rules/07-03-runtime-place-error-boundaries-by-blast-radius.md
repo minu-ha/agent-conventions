@@ -1,52 +1,48 @@
 ---
 title: Place Error Boundaries by How Much Should Survive
-titleKo: 오류 경계는 무엇이 살아남아야 하는지로 자리를 정합니다
+titleKo: 오류 뒤에도 유지할 화면 범위에 맞춰 경계를 둡니다
 impact: HIGH
-impactDescription: 쿼리가 실패해도 받을 곳이 있고 화면 본문이 실패 분기로 채워지지 않습니다
+impactDescription: 쿼리 실패를 정해진 경계에서 처리하고 필요한 화면을 유지합니다
 appliesWhen:
   - 오류 경계를 추가하거나 옮길 때
   - 화면 본문에 `isError` 분기나 실패 대체 화면 반환을 넣을 때
+  - 캐시가 있는 쿼리의 재조회 실패 처리나 오류 경계의 다시 시도 연결을 바꿀 때
 requiresSelected: runtime-place-suspense-boundaries-at-the-section-owner
 tags: screen, errors
 ---
 
 ## Place Error Boundaries by How Much Should Survive
 
-**Impact: HIGH (쿼리가 실패해도 받을 곳이 있고 화면 본문이 실패 분기로 채워지지 않습니다)**
+**Impact: HIGH (쿼리 실패를 정해진 경계에서 처리하고 필요한 화면을 유지합니다)**
 
-`Suspense` 쿼리는 실패하면 던집니다.
-받을 경계가 없으면 화면 전체가 빈 채로 남습니다.
+오류 경계는 실패 후에도 남겨야 할 화면 범위로 정합니다.
+초기 실패를 받을 경계가 없으면 화면 전체가 빈 채로 남을 수 있으므로 앱 경계는 반드시 둡니다.
 
-**자리는 "여기가 죽으면 무엇이 같이 죽는가"로 정합니다.** 세 층을 둡니다.
-
-| 층 | 두는 곳 | 이 층이 잡으면 살아남는 것 |
+| 층 | 위치 | 오류 뒤 남는 화면 |
 | --- | --- | --- |
-| 앱 | 루트 한 번 | 없음. 마지막 안전망이라 하나는 반드시 둠 |
+| 앱 | 루트에 한 번 | 없음. 마지막 안전망입니다 |
 | 화면 | 라우트 진입 | 내비게이션과 레이아웃 셸 |
 | 섹션 | `Suspense` 경계와 같은 소유자 | 같은 화면의 다른 섹션 |
 
-섹션 층은 **그 섹션만 죽어도 나머지가 쓸모 있을 때만** 둡니다.
-목록이 실패했는데 옆 필터가 살아 있어도 할 수 있는 게 없으면 화면 층으로 충분합니다.
+섹션 경계는 나머지 섹션만으로도 쓸모가 있을 때만 둡니다.
+목록 실패 후 옆 필터로 할 수 있는 일이 없다면 화면 경계로 충분합니다.
+로딩·오류 경계는 같은 소유자가 조립하며, 위치는 `runtime-place-suspense-boundaries-at-the-section-owner`를 따릅니다.
 
-경계 하나가 로딩과 실패를 함께 맡습니다.
-`Suspense`와 오류 경계를 같은 소유자에 두면 대체 화면 두 개가 한 자리에 모입니다.
-로딩 경계 자리는 `runtime-place-suspense-boundaries-at-the-section-owner`가 정합니다.
+| 실패 상황 | 처리 |
+| --- | --- |
+| Suspense 쿼리에 표시할 캐시 데이터가 없음 | 렌더 중 던진 오류를 경계가 받습니다 |
+| 기존 데이터가 있는 재조회 실패 | 기본적으로 데이터를 계속 보여 줍니다. 모든 실패를 경계로 보내야 할 때만 재조회가 끝난 뒤 명시적으로 던집니다 |
+| 일반 이벤트 핸들러·비동기 콜백 오류 | 경계가 자동으로 받지 않습니다. 사용자 액션은 `data-handle-mutation-failure-where-it-is-called`를 따릅니다 |
+| 트랜지션 Action 오류·라이브러리가 렌더에서 다시 던진 오류 | 일반 핸들러 오류와 구분합니다 |
 
-화면 본문에 실패 분기를 남기지 않는 판정은 `runtime-avoid-ad-hoc-loading-branches`가 로딩과 함께 봅니다.
+본문의 실패 분기는 `runtime-avoid-ad-hoc-loading-branches`를 따릅니다.
+오류 경계 클래스는 `ui`의 `UiErrorBoundary` 하나에 둡니다. 리액트 오류 경계 구현에는 클래스가 필요합니다.
+화면 경계는 `react-router` 라우트 설정의 `errorElement`로 두고,
+라우트 밖에서 감싸야 하면 `UiErrorBoundary`로 진입 컴포넌트를 감쌉니다.
 
-**경계가 못 잡는 것이 있습니다.**
-이벤트 핸들러와 비동기 콜백에서 난 오류는 경계를 그냥 지나칩니다.
-사용자 액션의 실패는 `data-handle-mutation-failure-where-it-is-called`가 정합니다.
-
-오류 경계 컴포넌트는 `ui`에 하나 둔 `UiErrorBoundary`입니다.
-리액트는 클래스 컴포넌트로만 경계를 만들 수 있어 그 클래스를 이 래퍼 하나에 가둡니다.
-화면 층은 `react-router` 라우트 설정의 `errorElement`로 얹습니다.
-라우트 밖에서 감싸야 하면 `UiErrorBoundary`로 진입을 감쌉니다.
-어느 쪽이든 경계를 어느 층에 두는지는 위 표가 정합니다.
-
-다시 시도를 열려면 대체 화면에 그 버튼을 둡니다.
-그 버튼은 `@tanstack/react-query`의 `useQueryErrorResetBoundary`가 주는 `reset`을 함께 부릅니다.
-경계 안에서 상태를 되살릴 수 없으므로 다시 시도는 하위 트리를 새로 마운트합니다.
+재시도 버튼은 대체 화면에서 오류 경계의 재시도 함수를 호출합니다.
+경계의 `onReset`에는 `@tanstack/react-query`의 `useQueryErrorResetBoundary`가 주는 `reset`을 연결합니다.
+쿼리 오류만 초기화하면 대체 화면을 벗어나지 못합니다. 재시도는 하위 트리를 새로 마운트하므로 상태도 되살리지 못합니다.
 
 **Incorrect (경계 없이 화면 본문에서 실패를 분기합니다):**
 
@@ -62,7 +58,7 @@ export const PgProducts = () => {
 };
 ```
 
-**Correct (화면 층 경계가 받고 셸은 살아남습니다):**
+**Correct (화면 경계가 오류를 처리하고 셸을 유지합니다):**
 
 ```tsx
 // component/widget/app-shell/wg-app-shell.tsx
@@ -93,7 +89,7 @@ export const PgProducts = () => {
 };
 ```
 
-**Correct (섹션이 따로 죽어도 나머지가 쓸모 있을 때만 섹션 층에 둡니다):**
+**Correct (나머지 섹션만으로도 쓸모가 있을 때만 섹션 경계를 둡니다):**
 
 ```tsx
 export const PgProducts = () => {
@@ -116,7 +112,7 @@ export const PgProducts = () => {
 };
 ```
 
-**Correct (다시 시도는 쿼리 오류 상태를 되돌리고 하위 트리를 새로 마운트합니다):**
+**Correct (재시도는 오류 경계와 쿼리 오류를 초기화하고 하위 트리를 다시 마운트합니다):**
 
 ```tsx
 export const PgProductRecommendationBoundary = () => {
@@ -125,7 +121,12 @@ export const PgProductRecommendationBoundary = () => {
 	return (
 		<UiErrorBoundary
 			onReset={queryErrorResetBoundary.reset}
-			fallback={<UiInlineErrorState retryLabel="다시 불러오기" />}
+			fallbackRender={(fallbackProps) => (
+				<UiInlineErrorState
+					retryLabel="다시 불러오기"
+					onRetry={fallbackProps.resetErrorBoundary}
+				/>
+			)}
 		>
 			<Suspense fallback={<UiRecommendationSkeleton />}>
 				<PgProductRecommendationSection />
@@ -133,4 +134,22 @@ export const PgProductRecommendationBoundary = () => {
 		</UiErrorBoundary>
 	);
 };
+```
+
+**Incorrect (캐시가 있는 재조회 실패도 자동으로 경계에 전달된다고 가정합니다):**
+
+```tsx
+// 이 화면은 낡은 추천을 계속 보여 주면 안 되지만 재조회 실패를 던지지 않는다
+return <UiProductRecommendations items={responseProductRecommendationsSuspense.data.items} />;
+```
+
+**Correct (낡은 데이터를 허용하지 않는 화면만 재조회 실패를 경계로 보냅니다):**
+
+```tsx
+// 추천을 확정하는 화면은 재조회 실패 시 이전 추천을 계속 선택하게 두지 않는다
+if (responseProductRecommendationsSuspense.error && !responseProductRecommendationsSuspense.isFetching) {
+	throw responseProductRecommendationsSuspense.error;
+}
+
+return <UiProductRecommendations items={responseProductRecommendationsSuspense.data.items} />;
 ```

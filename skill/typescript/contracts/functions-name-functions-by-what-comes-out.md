@@ -1,64 +1,46 @@
 # Name Functions by What Comes Out
 
-**Impact: MEDIUM (이름만 읽고 결과를 알 수 있어 구현을 열어 보지 않아도 됩니다)**
+**Impact: MEDIUM (함수 이름으로 반환값이나 효과를 파악할 수 있습니다)**
 
-함수 이름은 입력이나 구현 동작이 아니라 호출 뒤 얻는 값이나 효과를 말합니다.
-접미사를 먼저 정하지 말고 아래 구분에서 가장 구체적인 동사를 고릅니다.
+함수 이름은 호출 뒤 얻는 값이나 효과를 구체적으로 드러냅니다.
+입력은 시그니처가 설명하므로 이름에 반복하지 않습니다.
 
-| 이름 | 사용하는 때 | 예 |
+| 반환값의 역할 | 동사 | 예 |
 | --- | --- | --- |
-| `to<대상>` | 입력 형태를 다른 출력 형태로 바꿀 때 | `toDetailContent` |
-| `get<대상>` | 이미 존재하는 값을 가져올 때 | `getSelectedRow` |
-| `find<대상>` | 값 하나 또는 없음을 돌려줄 때 | `findUserByEmail` |
-| `choose<대상>` | 같은 값의 출처가 둘 이상일 때 우선순위로 하나를 고를 때. `??`가 서로 다른 입력 사이에 섭니다 | `chooseBackSource` |
-| `normalize<대상>` | 같은 개념의 값을 허용 범위나 기본 표현에 맞출 때 | `normalizePageSize` |
-| `parse<대상>` | 문자열·`unknown`을 검증하며 타입이 보장된 값으로 읽을 때 | `parseSearchParams` |
-| `format<대상>` | 값을 사람이 읽는 문자열로 표시할 때 | `formatCandidateDayCount` |
-| `compare<대상>` | 두 값을 비교해 정렬 순서를 돌려줄 때 | `compareProductsByPrice` |
-| `load<대상>`·`fetch<대상>` | 비동기 I/O를 수행하거나 여러 요청을 조율할 때 | `loadProductExport` |
-| `is`·`has`·`can`·`should` | 참이나 거짓으로 질문에 답할 때 | `shouldShowSummary` |
+| 다른 형태로 변환·분류 | `to` | `toDetailContent` |
+| 이미 존재하는 값 | `get` | `getSelectedRow` |
+| 값 하나 또는 없음 | `find` | `findUserByEmail` |
+| 서로 다른 입력 둘 이상의 우선순위 선택 | `choose` | `chooseBackSource` |
+| 같은 개념의 허용 범위·표현 보정 | `normalize` | `normalizePageSize` |
+| 문자열·`unknown` 검증 후 읽기 | `parse` | `parseSearchParams` |
+| 사람이 읽는 표시 문자열 | `format` | `formatCandidateDayCount` |
+| 두 값의 정렬 순서 | `compare` | `compareProductsByPrice` |
+| 비동기 I/O·여러 요청 조율 | `load`, `fetch` | `loadProductExport` |
+| 참·거짓 판정 | `is`, `has`, `can`, `should` | `shouldShowSummary` |
 
-입력이 하나면 `choose`가 아닙니다.
-분류는 `to`, 검증하며 읽는 것은 `parse`입니다.
-없을 수 있는 조회는 `find`, 허용 범위 보정은 `normalize`입니다.
-
-**이름에는 출력 역할만 남깁니다.**
-
-- 입력은 시그니처가 말하므로 이름에 반복하지 않습니다.
-  `mapResponseToModel`처럼 입력과 막연한 접미사를 함께 적지 않습니다.
-- 소유자 경로가 이미 말하는 도메인을 되풀이하지 않습니다.
-  `sales-trend-panel/_function/` 안에서는 `toSalesTrendComparisonWindows`보다
-  `toComparisonWindows`가 적절합니다.
-- 반환 타입 이름을 그대로 옮기기보다 호출자가 쓰는 결과 개념을 적습니다.
-  `toReportViewModel`보다 `toReportRows`가 구체적입니다.
-- 서버 요청처럼 계약 자체가 출력 역할이면 `toUserSaveRequest`처럼 계약 이름을 씁니다.
-
-**값 대신 효과를 내는 함수는 그 효과로 이름 짓습니다.**
-
-| 효과 | 이름 | 예 |
+| 함수의 역할 | 동사 | 예 |
 | --- | --- | --- |
-| 저장·삭제 | `save<대상>`·`remove<대상>` | `saveProduct` |
-| 조건 위반 시 예외 | `assert<조건>` | `assertLoggedIn` |
-| 검사 결과 또는 오류 | `validate<대상>` | `validateProductForm` |
+| 저장·삭제 | `save`, `remove` | `saveProduct` |
+| 조건 위반 시 예외 | `assert` | `assertLoggedIn` |
+| 검사 결과 또는 오류 | `validate` | `validateProductForm` |
 | 도메인 동작 | 실제 업무 동사 | `submitOrder`, `cancelBooking` |
 
-`build`, `create`, `make`, `process`, `manage`, `do`, `perform`, `execute`,
-`filter`, `map`, `update`, `resolve`는 우리가 짓는 이름의 첫 동사로 쓰지 않습니다.
-무엇이 나오는지 또는 어떤 효과가 생기는지 구체적으로 말하지 못하기 때문입니다.
+`choose`는 서로 다른 입력 사이에서 `??` 등으로 고를 때 씁니다. 입력이 하나면 해당하지 않습니다.
+소유자 경로가 이미 말하는 도메인도 빼고, 반환 타입 이름보다 호출자가 쓰는 결과 개념을 적습니다.
+`toComparisonWindows`, `toReportRows`처럼 쓰되 요청 계약 자체가 출력이면 `toUserSaveRequest`처럼 짓습니다.
 
-- `filterActiveUsers`는 활성 사용자를 남기는지 제외하는지 모호합니다.
-  남은 목록이 출력이면 `toActiveUsers`로 씁니다.
-- `mapProductRows`는 행이 입력인지 출력인지 모호합니다.
-  행이 출력이면 `toProductRows`로 씁니다.
-- `updateProduct`는 저장 효과인지 새 값을 만드는 계산인지 모호합니다.
-  각각 `saveProduct`나 `toUpdatedProduct`처럼 나눕니다.
-- `resolveGradeTone`은 안에 조건이 있다는 것만 말합니다.
-  등급을 tone으로 분류한 값이 출력이면 `toGradeTone`으로 씁니다.
-- 배열의 짧은 인라인 변환에서 쓰는 `array.map(...)`은 함수 이름 규칙과 무관합니다.
-- `handle`과 `use`처럼 프레임워크가 의미를 정하는 이름은 해당 프레임워크 규칙이 판정합니다.
+`build`, `create`, `make`, `process`, `manage`, `do`, `perform`, `execute`, `filter`, `map`, `update`, `resolve`는
+직접 짓는 이름의 첫 동사로 쓰지 않습니다.
 
-생성기·프레임워크·외부 계약이 정한 이름은 그대로 씁니다.
-`new Promise((resolve, reject) => …)`의 매개변수와 생성된 API의 `fetch` 함수처럼
-우리가 소유하지 않는 이름을 이 규칙에 맞추려고 바꾸거나 감싸지 않습니다.
+| 모호한 이름 | 결과·효과를 드러낸 이름 |
+| --- | --- |
+| `filterActiveUsers` | 남기는 목록이면 `toActiveUsers` |
+| `mapProductRows` | 출력이 행이면 `toProductRows` |
+| `updateProduct` | 저장이면 `saveProduct`, 계산이면 `toUpdatedProduct` |
+| `resolveGradeTone` | 분류 결과인 `toGradeTone` |
+
+`array.map(...)` 같은 표준 메서드 호출은 함수 명명 규칙의 대상이 아닙니다.
+`handle`·`use`는 프레임워크 규칙을 따릅니다.
+생성기·프레임워크·외부 계약이 정한 이름과 `Promise`의 `resolve`·`reject`는 바꾸거나 감싸지 않습니다.
 
 > 예시·예외가 필요하면 [full rule](../rules/03-09-functions-name-functions-by-what-comes-out.md)을 읽습니다.

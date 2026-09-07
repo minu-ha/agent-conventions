@@ -2,7 +2,7 @@
 title: Name Query and Mutation Bindings Consistently
 titleKo: 쿼리·뮤테이션 바인딩에 `response`·`mutation` 접두사를 붙입니다
 impact: MEDIUM
-impactDescription: 생성된 API 훅과 지역 바인딩을 훑고 되짚기 쉬워집니다
+impactDescription: 지역 바인딩 이름으로 생성된 API 훅을 쉽게 찾을 수 있습니다
 appliesWhen:
   - React Query 쿼리·뮤테이션 훅의 지역 바인딩을 추가하거나 이름을 바꿀 때
   - 쿼리나 뮤테이션 훅의 반환값을 새 지역 변수에 담을 때
@@ -13,7 +13,7 @@ tags: data, state, naming
 
 ## Name Query and Mutation Bindings Consistently
 
-**Impact: MEDIUM (생성된 API 훅과 지역 바인딩을 훑고 되짚기 쉬워집니다)**
+**Impact: MEDIUM (지역 바인딩 이름으로 생성된 API 훅을 쉽게 찾을 수 있습니다)**
 
 쿼리와 뮤테이션의 지역 바인딩 이름은 생성된 훅 이름에서 만듭니다.
 

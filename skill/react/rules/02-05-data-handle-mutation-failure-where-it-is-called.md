@@ -1,8 +1,8 @@
 ---
 title: Handle Mutation Failure Where the Mutation Is Called
-titleKo: 뮤테이션 실패는 부른 자리에서 받습니다
+titleKo: 뮤테이션 실패는 호출한 자리에서 처리합니다
 impact: HIGH
-impactDescription: 저장이 실패했는데 성공한 것처럼 넘어가거나 아무 표시 없이 끝나지 않습니다
+impactDescription: 저장 실패를 놓치지 않고 호출한 자리에서 처리합니다
 appliesWhen:
   - 뮤테이션을 부르는 코드를 추가·변경할 때
   - `mutate`와 `mutateAsync` 사이를 오갈 때
@@ -14,36 +14,28 @@ tags: data, mutation, errors
 
 ## Handle Mutation Failure Where the Mutation Is Called
 
-**Impact: HIGH (저장이 실패했는데 성공한 것처럼 넘어가거나 아무 표시 없이 끝나지 않습니다)**
+**Impact: HIGH (저장 실패를 놓치지 않고 호출한 자리에서 처리합니다)**
 
-뮤테이션 실패는 오류 경계가 받지 못합니다.
-핸들러 안에서 난 오류는 렌더 중에 난 것이 아니어서 경계를 그냥 지나칩니다.
-`runtime-place-error-boundaries-by-blast-radius`가 그 경계를 정하고, 여기서는 그 밖의 자리를 봅니다.
+뮤테이션 실패는 입력 문맥을 유지할 수 있도록 호출한 자리에서 처리합니다.
+기본은 `mutate`와 `useMutation`의 `onError`·`onSuccess`이며, 핸들러에서는 호출만 합니다.
 
-**기본은 `mutate`와 `useMutation`의 `onError`·`onSuccess`입니다.**
-성공과 실패가 선언 자리에 함께 남고 핸들러는 부르기만 합니다.
-
-| 상황 | 쓰는 것 |
+| 상황 | 선택 |
 | --- | --- |
-| 부른 뒤 핸들러가 더 할 일이 없음 | `mutate` + `onError`·`onSuccess` |
-| 부른 결과를 기다렸다가 핸들러가 이어서 해야 함 | `mutateAsync` + `try`/`catch` |
+| 호출 뒤 핸들러가 더 할 일이 없음 | `mutate` + `onError`, `onSuccess` |
+| 결과를 기다린 뒤 핸들러가 계속 실행되어야 함 | `mutateAsync` + `try`/`catch` |
 
-`mutateAsync`는 실패하면 던집니다.
-`await`만 하고 `catch`하지 않으면 그 뒤 줄이 실행되지 않고 사용자에게 아무 표시도 남지 않습니다.
-`mutateAsync`를 쓰기로 했으면 `try`/`catch`를 같이 씁니다.
+거부된 `mutateAsync` Promise는 오류 경계가 자동으로 받지 않습니다.
+`await` 뒤의 코드는 실행되지 않으므로 반드시 `catch`에서 실패를 표시하거나 다시 던집니다.
+`throwOnError`로 렌더에서 오류를 다시 던지는 경우는 `runtime-place-error-boundaries-by-blast-radius`를 따릅니다.
 
-- 한 뮤테이션을 부르는 자리들끼리는 형태를 섞지 않습니다.
-  같은 저장을 어떤 자리에서는 `mutate`로, 어떤 자리에서는 `mutateAsync`로 부르면 실패를 어디서 받는지 다시 찾게 됩니다.
-- 빈 `catch`로 실패를 삼키지 않습니다.
-  다시 던지든 표시하든 무엇이든 합니다.
-- 여러 번 눌러 같은 뮤테이션이 겹치는 것은 버튼을 `isPending`으로 `disabled` 처리해 막습니다.
-  핸들러 첫 줄에서도 `isPending`이면 이른 반환으로 한 번 더 막습니다.
-- 성공 뒤 캐시를 다시 맞추는 것은 `data-invalidate-queries-the-mutation-changed`가 정합니다.
+| 확인할 내용 | 기준 |
+| --- | --- |
+| 같은 뮤테이션의 호출 방식 | 호출하는 곳마다 `mutate`와 `mutateAsync`를 섞지 않습니다 |
+| 실패 처리 | 빈 `catch`로 삼키지 않습니다. 표시할 내용은 제품에 맞게 정합니다 |
+| 중복 실행 방지 | 버튼을 `isPending`으로 `disabled` 처리하고, 핸들러 첫 줄에서도 `isPending`이면 이른 반환합니다 |
+| 성공 뒤 캐시 갱신 | `data-invalidate-queries-the-mutation-changed`를 따릅니다 |
 
-실패했을 때 무엇을 보여 줄지는 이 규칙이 정하지 않습니다.
-제품마다 다르고 코드로 판정할 수 없습니다.
-
-**Incorrect (`await`만 하고 실패를 받지 않습니다):**
+**Incorrect (`await`만 쓰고 거부된 Promise를 처리하지 않습니다):**
 
 ```tsx
 const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
@@ -52,7 +44,7 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = async (_even
 };
 ```
 
-**Correct (핸들러가 더 할 일이 없어 콜백으로 받습니다):**
+**Correct (후속 작업이 없는 호출은 성공·실패 콜백으로 처리합니다):**
 
 ```tsx
 /**
@@ -70,11 +62,15 @@ const mutationProductSave = useProductSave({
 });
 
 const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => {
+	if (mutationProductSave.isPending) {
+		return;
+	}
+
 	mutationProductSave.mutate({data: toProductSaveRequest(formValues)});
 };
 ```
 
-**Correct (겹쳐 들어온 저장은 버튼과 핸들러 첫 줄에서 막습니다):**
+**Correct (버튼과 핸들러 첫 줄에서 중복 저장을 막습니다):**
 
 ```tsx
 /**
@@ -93,13 +89,17 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => 
 </UiButton>;
 ```
 
-**Correct (결과를 기다려 이어서 해야 해서 `try`/`catch`를 씁니다):**
+**Correct (결과를 기다리는 후속 작업에는 `try`/`catch`를 씁니다):**
 
 ```tsx
 /**
  * 첨부를 먼저 올린 뒤 그 식별자로 product를 저장한다
  */
 const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
+	if (mutationAttachmentUpload.isPending || mutationProductSave.isPending) {
+		return;
+	}
+
 	try {
 		const uploaded = await mutationAttachmentUpload.mutateAsync({files: draftFiles});
 

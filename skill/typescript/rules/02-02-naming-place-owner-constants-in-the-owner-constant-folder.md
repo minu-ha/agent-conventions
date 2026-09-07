@@ -2,7 +2,7 @@
 title: Place Owner-only Constants in the Owner `_constant` Folder
 titleKo: 소유자 전용 상수는 소유자 `_constant` 폴더에 둡니다
 impact: MEDIUM-HIGH
-impactDescription: 한 소유자의 상수가 루트 폴더를 넓히지 않고 소유자 이름을 되풀이하지 않습니다
+impactDescription: 소유자 전용 상수를 함께 관리하고 파일명과 이름에서 소유자 표현을 반복하지 않습니다
 appliesWhen:
   - 한 소유자의 상수나 선언형 계약을 추가하거나 옮길 때
   - 루트 상수와 소유자 전용 상수 사이에서 위치를 바꿀 때
@@ -13,23 +13,20 @@ tags: naming, constant
 
 ## Place Owner-only Constants in the Owner `_constant` Folder
 
-**Impact: MEDIUM-HIGH (한 소유자의 상수가 루트 폴더를 넓히지 않고 소유자 이름을 되풀이하지 않습니다)**
+**Impact: MEDIUM-HIGH (소유자 전용 상수를 함께 관리하고 파일명과 이름에서 소유자 표현을 반복하지 않습니다)**
 
-한 소유자의 상수는 루트로 올리지 않습니다.
-그 소유자 아래 `_constant` 폴더에 둡니다.
-루트와 소유자 중 어디에 두는지 가르는 표와 파일·이름의 모양은
-`naming-place-project-constants-in-the-root-constant-folder` 규칙에 있습니다.
-여기서는 소유자 아래에서만 다른 것을 봅니다.
+한 소유자의 상수는 그 소유자 아래 `_constant`에 둡니다.
+루트와 소유자를 구분하는 기준은 `naming-place-project-constants-in-the-root-constant-folder`를 따릅니다.
 
-- 파일은 `_constant/<주제>.ts`이고 상수는 `<주제>_`로 시작합니다.
-  소유자 이름은 폴더가 이미 말하므로 접두사로 되풀이하지 않습니다.
-  `page/detail/_constant/legend.ts`의 상수는 `legend_hit_tolerance_px`입니다.
-  `detail_legend_hit_tolerance_px`처럼 소유자 이름을 앞에 붙이지 않습니다.
-- 파서 묶음이나 스키마처럼 함수를 담은 계약도 같은 `_constant` 폴더에 둡니다.
-  파일은 계약마다 나누고, 이름은 그 계약을 정한 규칙과 `naming-use-consistent-file-and-symbol-naming`이 정합니다.
-- 소유자 아래에 `config`, `constants`, `common` 폴더는 만들지 않습니다.
-- 파일이 하나뿐인 `_constant` 폴더도 그대로 둡니다.
-- 그 소유자를 지워도 남을 값이면 루트 규칙을 따라 올립니다.
+| 대상 | 배치·이름 |
+| --- | --- |
+| 상수 | `_constant/<주제>.ts`에 `<주제>_` 접두사로 선언합니다 |
+| 소유자 문맥 | 폴더가 말하므로 이름에 반복하지 않습니다. `page/detail/_constant/legend.ts`에는 `legend_hit_tolerance_px`를 둡니다 |
+| 파서 묶음·스키마 등 함수를 담은 계약 | 같은 `_constant`에 계약별 파일로 둡니다. 이름은 계약 규칙과 `naming-use-consistent-file-and-symbol-naming`을 따릅니다 |
+| 파일이 하나뿐인 경우 | `_constant` 폴더를 유지합니다 |
+| 소유자를 지워도 남는 값 | 루트 상수 규칙에 따라 옮깁니다 |
+
+소유자 아래에 `config`, `constants`, `common` 폴더는 만들지 않습니다.
 
 **Incorrect (한 소유자의 상수를 루트로 올립니다):**
 
@@ -59,7 +56,7 @@ export const product_detail_config = {
 } as const;
 ```
 
-**Correct (주제마다 파일을 나누고 상수를 평평하게 내보냅니다):**
+**Correct (주제마다 파일을 나누고 상수를 개별 이름으로 내보냅니다):**
 
 ```ts
 // page/product-detail/_constant/chart.ts

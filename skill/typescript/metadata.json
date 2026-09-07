@@ -3,7 +3,7 @@
 	"version": "1.0.0",
 	"organization": "Agent Conventions",
 	"date": "2026년 4월",
-	"abstract": "에이전트 협업 팀을 위한 TypeScript 코딩 컨벤션입니다. 명시적인 네이밍, 직접 import, 재사용 가능한 타입 계약, 절제된 helper 추출, 반복 lookup과 정렬의 불변성, 의도적인 결측값 처리, 일관된 JSDoc 경계를 강조합니다. React, CSS 같은 위 계층 skill이 공통으로 함께 따르는 규칙 세트이기도 합니다. `rules/` 아래 rule 파일이 source of truth입니다.",
+	"abstract": "에이전트 협업 팀을 위한 TypeScript 코딩 컨벤션입니다. 역할에 맞는 이름과 직접 가져오기, 기존 타입 계약의 재사용, 외부 입력 검증, 절제된 보조 함수 추출을 다룹니다. 배열 정렬과 반복 조회의 동작을 보존하고 날짜 단위와 타임존, 선택 값과 기본값, JSDoc의 경계를 정합니다. React와 CSS 같은 위 계층 스킬이 함께 따르는 공통 규칙이며 `rules/` 아래 규칙 파일이 정본입니다.",
 	"progressiveDisclosure": true,
 	"references": [
 		"https://www.typescriptlang.org/docs/",

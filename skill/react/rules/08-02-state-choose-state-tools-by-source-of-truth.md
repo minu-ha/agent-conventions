@@ -1,8 +1,8 @@
 ---
 title: Choose State Tools by Source of Truth
-titleKo: 상태 도구는 진짜 출처를 기준으로 고릅니다
+titleKo: 상태 도구는 값의 소유자와 수명으로 고릅니다
 impact: HIGH
-impactDescription: 로컬 UI 상태, 전역 상태, 서버 상태가 서로 섞이지 않습니다
+impactDescription: 로컬·공유·서버·URL 상태의 소유자를 구분합니다
 appliesWhen:
   - 로컬 UI·전역 클라이언트·서버 데이터를 새 상태 도구로 옮길 때
   - 합성 컴포넌트나 컴포넌트 묶음에 공유 상태를 넣을 때
@@ -13,41 +13,30 @@ tags: state, react-query, zustand
 
 ## Choose State Tools by Source of Truth
 
-**Impact: HIGH (로컬 UI 상태, 전역 상태, 서버 상태가 서로 섞이지 않습니다)**
+**Impact: HIGH (로컬·공유·서버·URL 상태의 소유자를 구분합니다)**
 
-상태 도구는 값의 수명과 소유자를 기준으로 고릅니다.
-표는 아래에서부터 읽어 처음 걸리는 줄이 그 값의 소유자입니다.
+상태 도구는 값의 수명과 소유자로 고릅니다.
+표를 아래에서부터 읽어 처음 해당하는 행을 적용합니다.
 
 | 상태의 소유자 | 기본 도구 |
 | --- | --- |
 | 로컬 UI | `useState` 또는 `useReducer` |
-| 한 컴포넌트 묶음 안에서 공유하는 UI | `useState` + `Context` |
+| 한 컴포넌트 묶음에서 공유하는 UI | `useState` + `Context` |
 | 전역 클라이언트 | `Zustand` |
 | 서버 | `@tanstack/react-query` |
 | 링크를 공유해도 같은 화면이 열려야 하는 값 | 라우트 search 파라미터(`nuqs`의 `useQueryStates`) |
 
-이 기준으로 고르면 화면 파일이 더 읽기 쉬워지고 중복 동기화가 줄어듭니다.
+| 혼동하기 쉬운 상태 | 소유 기준 |
+| --- | --- |
+| 새로고침·뒤로 가기·링크 공유로 유지할 필터·정렬·페이지·선택 행 | search 파라미터에 두고 `useState`로 복제하지 않습니다 |
+| 열림·닫힘·마우스 올림·입력 중인 임시 값 | 주소에 올리지 않습니다 |
+| 합성 부품이나 작은 묶음의 두세 단계 아래에서 공유하는 UI | `useState`가 소유하고 `Context`로 전달합니다 |
+| 묶음 밖의 화면·레이아웃에서도 읽거나 바꾸는 UI | `Context`를 위로 올리지 않고 전역 스토어로 옮깁니다. 파생값이 아닌 탭 `selectedId`도 같습니다 |
 
-표의 마지막 행을 자주 놓칩니다.
-목록의 필터, 정렬, 페이지, 고른 행처럼 새로고침·뒤로 가기·링크 공유로 살아남아야 하는 값은
-`useState`가 아니라 search 파라미터가 소유합니다.
-열림과 닫힘, 마우스 올림, 입력 중인 임시 값은 주소에 올리지 않습니다.
-search 파라미터를 `useState`로 복제해 출처를 둘로 만들지 않습니다.
-
-서버 상태와 search 파라미터는 쓰는 컴포넌트가 같은 `key`로 직접 읽습니다.
-부모가 읽어 프롭으로 내리면 같은 값이 캐시와 프롭 두 길로 흘러 출처가 흐려집니다.
-누가 무엇을 읽는지는 `screen-keep-route-flow-visible`이 정합니다.
-
-`Context`는 전역 상태 도구가 아니라 **한 컴포넌트 묶음 안에서 프롭 전달을 줄이는 수단**입니다.
-합성 컴포넌트가 부품끼리 상태를 나눠 쓸 때, 작은 컴포넌트 묶음이 두세 단계 아래로 값을 내릴 때 씁니다.
-`strategy-choose-single-composition-compound-and-variants`가 상태가 있는 합성으로 확장하라고 할 때
-그 상태를 담는 자리가 여기입니다.
-
-- 값의 출처는 여전히 `useState`입니다.
-  `Context`는 그 값을 아래로 나르는 수단일 뿐입니다.
-- 묶음 밖에서도 필요해지면 `Context`를 위로 올리지 않고 전역 스토어로 옮깁니다.
-  묶음 밖의 화면이나 레이아웃이 같은 값을 읽거나 바꾸면 옮길 때입니다.
-  탭 `selectedId`처럼 파생이 아닌 공유 UI 상태도 이 기준으로 봅니다.
+서버 상태와 search 파라미터는 사용하는 컴포넌트가 같은 `key`로 직접 읽고 부모 프롭으로 전달하지 않습니다.
+소유 위치는 `screen-keep-route-flow-visible`을 따릅니다.
+`Context`는 전역 상태 도구가 아니라 묶음 안의 전달 수단입니다.
+`strategy-choose-single-composition-compound-and-variants`의 상태 있는 합성도 이 방식으로 상태를 공유합니다.
 
 **Incorrect (전역 값과 서버 값까지 `useState`가 소유합니다):**
 
@@ -62,7 +51,7 @@ const responseUserGetItemSuspense = useUserGetItemSuspense();
 const [userName, setUserName] = useState(responseUserGetItemSuspense.data.name);
 ```
 
-**Correct (도구를 진짜 출처에 맞춥니다):**
+**Correct (값의 소유자에 맞는 도구를 씁니다):**
 
 ```ts
 const [isOpen, setIsOpen] = useState(false);
@@ -74,7 +63,7 @@ const themeStore = useThemeStore();
 const responseUserGetItemSuspense = useUserGetItemSuspense();
 ```
 
-**Incorrect (링크로 살아남아야 할 목록 필터를 `useState`가 소유합니다):**
+**Incorrect (링크 공유로 유지할 목록 필터를 `useState`에 둡니다):**
 
 ```ts
 const [keyword, setKeyword] = useState("");

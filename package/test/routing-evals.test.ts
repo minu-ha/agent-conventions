@@ -252,7 +252,8 @@ const typescriptRuleRouting = {
 		reviewWith: [],
 	},
 	"types-narrow-unknown-instead-of-asserting": {
-		appliesWhen: "`as` 단언, `!` `null` 아님 단언, `any`, `@ts-expect-error`를 추가할 때. 앱 밖에서 들어온 값을 타입 붙여 쓰기 시작할 때.",
+		appliesWhen:
+			"`as` 단언, `!` `null` 아님 단언, `any`, `@ts-expect-error`를 추가·변경·제거할 때. 앱 밖에서 들어온 값을 타입 붙여 쓰기 시작할 때. 제외: 검증된 내부 값에 `as const`나 `satisfies`만 적용하는 경우.",
 		reviewWith: ["docs-justify-convention-exceptions-with-a-reason-comment", "tooling-configure-biome-to-enforce-these-rules"],
 	},
 	"types-replace-enum-with-as-const-objects": {
@@ -276,7 +277,7 @@ const typescriptRuleRouting = {
 	},
 	"naming-use-consistent-file-and-symbol-naming": {
 		appliesWhen:
-			"TypeScript 파일, 폴더, 변수, 함수, 타입, 객체·스키마 키의 이름을 새로 만들거나 바꿀 때. 밖으로 나가는 키를 받는 쪽 표기로 적을지 판단할 때. 제외: 별칭 없이 외부 패키지에서 그대로 가져오는 경우.",
+			"TypeScript 파일, 폴더, 변수, 함수, 타입, 객체·스키마 키의 이름을 새로 만들거나 바꿀 때. 외부 계약이 정한 이름이나 키의 표기를 바꿀지 판단할 때. 제외: 별칭 없이 외부 패키지에서 그대로 가져오는 경우.",
 		reviewWith: [],
 	},
 	"naming-use-direct-imports-and-public-entry-points": {
@@ -355,7 +356,7 @@ const typescriptRuleRouting = {
 	},
 	"values-use-set-and-map-for-repeated-lookups": {
 		appliesWhen:
-			"같은 목록에 `includes`, `find`, 키 조회를 여러 번 하는 코드를 추가·변경할 때. 제외: 조회하는 목록이 짧고 길이가 정해져 있는 경우.",
+			"같은 목록의 `includes`나 `find`를 루프·배열 콜백 안에서 호출하도록 추가·변경할 때. 같은 목록의 키 조회를 서로 다른 세 지점 이상에서 하도록 추가·변경할 때. 제외: 조회하는 목록이 짧고 길이가 정해져 있는 경우.",
 		reviewWith: [],
 	},
 	"values-read-objects-through-chains": {
@@ -418,7 +419,7 @@ const typescriptRuleRouting = {
 	},
 	"absence-check-once-at-the-boundary": {
 		appliesWhen:
-			"`isNil`, `Number.isFinite` 같은 값 검사를 함수 본문에 넣을 때. 매개변수나 반환 타입에 `| null`, `| undefined`, `unknown`을 넣거나 뺄 때. 응답 매핑, `select`·`combine`, search 스키마에서 타입을 좁힐 때.",
+			"`isNil`, `Number.isFinite` 같은 검사를 함수에 넣을 때. `null`, `undefined`, `unknown`을 매개변수·반환 타입에 넣거나 뺄 때. 응답 매핑·쿼리·search 스키마에서 없음·유한 수 검사로 타입을 좁힐 때.",
 		reviewWith: [
 			"absence-resolve-defaults-at-the-boundary",
 			"absence-do-not-guard-what-types-guarantee",
@@ -528,7 +529,7 @@ const cssRuleRouting = {
 		reviewWith: ["composition-inject-classes-only-at-the-entry-point", "naming-name-elements-and-modifiers-by-role"],
 	},
 	"composition-do-not-style-through-the-style-attribute": {
-		appliesWhen: "TSX에 `style={{ … }}`를 추가하거나 그 안의 선언을 바꿀 때. 컴포넌트 프롭으로 `style`을 받아 넘길 때.",
+		appliesWhen: "TSX의 `style` 속성을 추가하거나 그 안의 선언을 바꿀 때. 컴포넌트 프롭으로 `style`을 받아 넘길 때.",
 		reviewWith: [
 			"composition-inject-classes-only-at-the-entry-point",
 			"values-tokenize-repeated-visual-values",
@@ -572,7 +573,7 @@ const cssRuleRouting = {
 		],
 	},
 	"selector-do-not-negate-with-not": {
-		appliesWhen: "선택자에 `:not()`을 넣으려 할 때. 조상 클래스와 자손 클래스를 한 선택자에 함께 쓸 때.",
+		appliesWhen: "선택자에 `:not()`을 넣으려 할 때. 기존 `:not()` 조건을 없애거나 긍정 조건으로 바꿀 때.",
 		reviewWith: ["selector-use-pseudo-classes-for-dom-owned-states"],
 	},
 	"values-fall-back-only-outside-core-tokens": {
@@ -608,7 +609,7 @@ const cssRuleRouting = {
 	},
 	"layout-write-breakpoints-desktop-first": {
 		appliesWhen:
-			"`@media` 조건을 쓰거나 브레이크포인트 숫자를 고를 때. `min-width`나 `max-width` 표기를 쓸 때. 제외: `prefers-color-scheme` 같은 폭이 아닌 조건을 쓰는 경우.",
+			"`@media` 조건을 쓰거나 브레이크포인트 숫자를 고를 때. `@media` 조건에 `min-width`나 `max-width` 표기를 쓸 때. 제외: `prefers-color-scheme` 같은 폭이 아닌 조건을 쓰는 경우.",
 		reviewWith: ["layout-group-breakpoints-at-the-file-bottom", "tooling-configure-stylelint-to-enforce-these-rules"],
 	},
 	"layout-keep-layout-intent-explicit": {
@@ -617,16 +618,18 @@ const cssRuleRouting = {
 		reviewWith: ["values-declare-stacking-layers-as-tokens"],
 	},
 	"layout-reach-for-intrinsic-sizing-before-breakpoints": {
-		appliesWhen: "`@media` 브레이크포인트를 새로 넣으려 할 때. 폭에 따라 줄바꿈, 열 개수, 크기가 달라져야 할 때.",
+		appliesWhen:
+			"`@media` 브레이크포인트를 새로 넣으려 할 때. 폭에 따라 줄바꿈, 열 개수, 크기가 달라져야 할 때. 컨테이너 폭에 따른 `@container` 배치 조건을 추가·변경할 때.",
 		reviewWith: ["layout-keep-layout-intent-explicit", "layout-group-breakpoints-at-the-file-bottom"],
 	},
 	"a11y-always-provide-a-visible-focus-indicator": {
-		appliesWhen: "`outline`, `:focus`, `:focus-visible` 스타일을 추가·수정할 때. 상호작용 요소의 기본 포커스 링을 덮어쓸 때.",
+		appliesWhen:
+			"`outline`, `:focus`, `:focus-visible` 스타일을 추가·수정할 때. 상호작용 요소의 기본 포커스 링을 덮어쓸 때. 강제 색상 모드에서 포커스 표시가 사라져 스타일을 보완할 때.",
 		reviewWith: ["selector-nest-dom-state-in-the-owning-block"],
 	},
 	"a11y-namespace-keyframes-and-respect-reduced-motion": {
 		appliesWhen:
-			"`@keyframes` 이름이나 애니메이션 지속 시간, 이징을 선언하거나 바꿀 때. `animation`이나 `transition`으로 움직임을 새로 넣을 때.",
+			"`@keyframes` 이름이나 애니메이션 지속 시간, 지연 시간, 이징을 선언하거나 바꿀 때. `animation`, `transition`, `prefers-reduced-motion` 동작을 추가·변경할 때.",
 		reviewWith: ["values-tokenize-repeated-visual-values", "tooling-configure-stylelint-to-enforce-these-rules"],
 	},
 	"tooling-configure-stylelint-to-enforce-these-rules": {
@@ -682,12 +685,13 @@ const reactRuleRouting = {
 		reviewWith: ["data-preserve-origin-chaining"],
 	},
 	"data-shape-query-data-with-select": {
-		appliesWhen: "서버 응답의 목록·항목·메타 등을 렌더에서 가공하거나 반복 소비할 때. React Query `select`의 결과 형태를 추가·변경할 때.",
+		appliesWhen:
+			"서버 응답의 목록·항목·메타 등을 렌더에서 가공하거나 반복 소비할 때. React Query `select`의 결과 형태를 추가·변경할 때. 제외: 이미 가공한 항목을 `.map`으로 JSX 요소에 대응시키기만 하는 경우.",
 		reviewWith: ["data-name-query-and-mutation-bindings-consistently", "data-preserve-origin-chaining"],
 	},
 	"data-combine-multiple-queries-with-combine": {
 		appliesWhen:
-			"쿼리 결과 둘 이상을 하나의 값으로 합치는 코드를 추가·변경할 때. 화면 본문에서 두 `data`를 꺼내 함께 계산하는 코드를 넣거나 뺄 때.",
+			"쿼리 결과 둘 이상을 하나의 값으로 합치는 코드를 추가·변경할 때. 화면 본문에서 두 `data`를 꺼내 함께 계산하는 코드를 넣거나 뺄 때. 여러 쿼리의 병렬 실행과 앞 응답에 의존하는 순차 실행을 바꿀 때.",
 		reviewWith: ["data-shape-query-data-with-select", "screen-keep-derived-values-close"],
 	},
 	"data-preserve-origin-chaining": {
@@ -699,7 +703,8 @@ const reactRuleRouting = {
 		reviewWith: ["data-invalidate-queries-the-mutation-changed", "events-run-user-actions-in-handlers-not-effects"],
 	},
 	"data-invalidate-queries-the-mutation-changed": {
-		appliesWhen: "뮤테이션 성공 뒤 서버 상태를 다시 맞추는 코드를 추가·변경할 때. 캐시를 직접 쓰거나 다시 불러오는 코드를 넣을 때.",
+		appliesWhen:
+			"뮤테이션 성공 뒤 서버 상태를 다시 맞추는 코드를 추가·변경할 때. 저장 결과를 캐시에 직접 쓰거나 `refetch`로 맞추는 코드를 넣을 때. 제외: 사용자 새로 고침 버튼이나 요청 전 낙관적 갱신만 바꾸는 경우.",
 		reviewWith: ["data-handle-mutation-failure-where-it-is-called"],
 	},
 	"typing-take-handler-types-from-existing-contracts": {
@@ -745,7 +750,7 @@ const reactRuleRouting = {
 	},
 	"strategy-avoid-boolean-prop-proliferation": {
 		appliesWhen:
-			"`ui`나 `widget` 컴포넌트에 불리언 모드·표시 프롭을 추가할 때. 기존 불리언 프롭 조합과 JSX 분기가 늘어날 때. 제외: 라우트 진입 파일 안에서만 쓰는 일회성 분기인 경우.",
+			"`ui`나 `widget` 컴포넌트에 불리언 모드·표시 프롭을 추가할 때. 기존 불리언 프롭 조합과 JSX 분기가 늘어날 때. 제외: 라우트 진입 파일 안에서만 쓰는 일회성 분기인 경우. 제외: `disabled`·`checked` 같은 독립 상태 프롭만 여는 경우.",
 		reviewWith: ["strategy-expose-only-assembled-compound-parts"],
 	},
 	"strategy-prefer-children-over-render-props": {
@@ -766,7 +771,11 @@ const reactRuleRouting = {
 	"composition-named-handlers-over-inline": {
 		appliesWhen:
 			"TSX 이벤트 프롭의 인라인 콜백에 분기나 비동기 호출을 추가·수정할 때. 인라인 콜백에 여러 동작·부수효과나 읽어도 의도가 안 보이는 상태 전환이 들어갈 때. 제외: 인자 없이 핸들러 참조만 넘기는 경우.",
-		reviewWith: ["events-run-user-actions-in-handlers-not-effects", "typescript/functions-extract-helpers-only-when-the-boundary-is-real"],
+		reviewWith: [
+			"events-run-user-actions-in-handlers-not-effects",
+			"events-curry-extra-handler-arguments",
+			"typescript/functions-extract-helpers-only-when-the-boundary-is-real",
+		],
 	},
 	"composition-open-ref-props-only-for-imperative-contracts": {
 		appliesWhen:
@@ -834,7 +843,8 @@ const reactRuleRouting = {
 		],
 	},
 	"runtime-place-error-boundaries-by-blast-radius": {
-		appliesWhen: "오류 경계를 추가하거나 옮길 때. 화면 본문에 `isError` 분기나 실패 대체 화면 반환을 넣을 때.",
+		appliesWhen:
+			"오류 경계를 추가하거나 옮길 때. 화면 본문에 `isError` 분기나 실패 대체 화면 반환을 넣을 때. 캐시가 있는 쿼리의 재조회 실패 처리나 오류 경계의 다시 시도 연결을 바꿀 때.",
 		reviewWith: [],
 	},
 	"state-calculate-derived-values-during-render": {
@@ -935,7 +945,7 @@ const mandatoryRuleRouting = {
 		"data-shape-query-data-with-select": ["docs-require-jsdoc-on-key-declarations"],
 		"typing-take-handler-types-from-existing-contracts": ["typescript/types-prefer-function-variable-types-over-parameter-annotations"],
 		"typing-choose-wrapper-shape-and-forwarding": ["typing-narrow-library-wrapper-contracts"],
-		"composition-named-handlers-over-inline": ["docs-require-jsdoc-on-key-declarations", "events-curry-extra-handler-arguments"],
+		"composition-named-handlers-over-inline": ["docs-require-jsdoc-on-key-declarations"],
 		"runtime-place-suspense-boundaries-at-the-section-owner": ["runtime-avoid-ad-hoc-loading-branches"],
 		"runtime-place-error-boundaries-by-blast-radius": ["runtime-place-suspense-boundaries-at-the-section-owner"],
 		"state-name-url-state-bindings-as-a-set": ["typescript/naming-place-owner-constants-in-the-owner-constant-folder"],
@@ -1054,6 +1064,27 @@ const typescriptSelections = {
 		"absence-do-not-guard-what-types-guarantee",
 		"absence-check-once-at-the-boundary",
 	],
+	"internal-satisfies-is-not-a-runtime-assertion": [],
+	"runtime-json-needs-validation-despite-satisfies": ["types-narrow-unknown-instead-of-asserting"],
+	"fixed-short-membership-near-miss": [],
+	"two-direct-lookups-near-miss": [],
+	"optional-presence-contract-keeps-omission": [
+		"absence-expose-optional-values-instead-of-silent-fallbacks",
+		"absence-do-not-guard-what-types-guarantee",
+	],
+	"readonly-optional-derived-write-type": [
+		"types-derive-subsets-with-indexed-access",
+		"types-document-custom-types-and-shapes",
+		"docs-write-concise-korean-comments-about-purpose-and-constraints",
+		"docs-write-doc-comments-as-multiline-blocks",
+	],
+	"elapsed-time-preserves-hours": ["values-handle-dates-with-dayjs"],
+	"external-response-key-preservation": [
+		"types-document-custom-types-and-shapes",
+		"naming-use-consistent-file-and-symbol-naming",
+		"docs-write-concise-korean-comments-about-purpose-and-constraints",
+		"docs-write-doc-comments-as-multiline-blocks",
+	],
 } as const;
 
 /**
@@ -1092,7 +1123,7 @@ const typescriptScenarioEvidence = {
 	},
 	"shared-collection-lookups-and-sort": {
 		prompt:
-			"replace repeated `includes` with an existing Set's `has` and replace shared-input `.sort()` with es-toolkit `sortBy`; declarations, imports, and docs stay unchanged.",
+			"replace `includes` inside a products.filter callback over a server-sized list with an existing Set's `has` and replace shared-input `.sort()` with es-toolkit `sortBy`; declarations, imports, and docs stay unchanged.",
 		files: ["src/search/filter-products.ts"],
 	},
 	"hand-rolled-collection-helpers": {
@@ -1127,7 +1158,7 @@ const typescriptScenarioEvidence = {
 	},
 	"decide-once-and-guard-real-absence": {
 		prompt:
-			"`pg-pattern.tsx` formats `avgCorr` while building `SelectionInfo` and `to-metrics-content.ts` formats the same field again; read the carried value instead, replace `...(isNil(tamValidity) ? {} : {tamValidity})` with a plain optional field, and drop the `isNil` check on the non-null `name` field.",
+			"`pg-pattern.tsx` formats `avgCorr` while building `SelectionInfo` and `to-metrics-content.ts` formats the same field again; read the carried value instead, replace `...(isNil(tamValidity) ? {} : {tamValidity})` with a plain optional field, and drop the `isNil` check on the non-null `name` field. The internal display contract permits explicit undefined and no consumer distinguishes key presence; tamValidity cannot be null.",
 		files: ["src/page/pattern/pg-pattern.tsx", "src/page/pattern/_function/to-metrics-content.ts"],
 	},
 	"check-absence-once-across-helpers": {
@@ -1138,6 +1169,46 @@ const typescriptScenarioEvidence = {
 			"src/page/detail/_function/to-badge/_to-signed-tone.ts",
 			"src/page/detail/_function/format-signed-percent.ts",
 		],
+	},
+	"internal-satisfies-is-not-a-runtime-assertion": {
+		prompt:
+			"Add only `satisfies ExistingRequest` to an inline object literal passed directly to an existing internal function. The object contains validated internal values, is not a module constant or named shape, and neither its properties nor any declaration form, import, or comment changes.",
+		files: ["src/contracts/value-boundary.ts"],
+	},
+	"runtime-json-needs-validation-despite-satisfies": {
+		prompt:
+			"In an existing response boundary, replace `return JSON.parse(text) satisfies ExistingRecord` with `return existingRecordSchema.parse(JSON.parse(text))`; imports, names, signatures, and comments already exist and stay unchanged. The input is untrusted JSON and the boundary already propagates parse failures.",
+		files: ["src/contracts/value-boundary.ts"],
+	},
+	"fixed-short-membership-near-miss": {
+		prompt:
+			"Change only the inline argument of an existing `editable_statuses.includes(...)` call from one existing status property to another. The immutable status list has exactly five entries and the check runs once. No declaration, name, import, comment, or contract changes.",
+		files: ["src/contracts/value-boundary.ts"],
+	},
+	"two-direct-lookups-near-miss": {
+		prompt:
+			"Replace the predicate in each of two existing direct `users.find(...)` calls, outside every loop or array callback. There are only these two lookup sites. No function declaration, variable, import, type, comment, or fallback is added or changed.",
+		files: ["src/contracts/value-boundary.ts"],
+	},
+	"optional-presence-contract-keeps-omission": {
+		prompt:
+			"Adjust only an existing optional-field object construction in a function return so a key is omitted when its input is undefined. The receiving in-memory patch contract uses Object.hasOwn to distinguish an omitted key from an explicit undefined. The target property is optional, compiler settings are unchanged, and the existing reason comment already documents that contract. Reuse the existing shouldOmit decision without adding or changing any absence predicate.",
+		files: ["src/contracts/value-boundary.ts"],
+	},
+	"readonly-optional-derived-write-type": {
+		prompt:
+			'In an existing documented UserPreview interface, change only `name?: UserRecord["name"]` to `name?: Required<UserRecord>["name"]` while preserving `readonly id`. exactOptionalPropertyTypes is already enabled and the original UserRecord.name?: string forbids writing undefined. Keep the name, original field contract, and existing Korean documentation.',
+		files: ["src/contracts/value-boundary.ts"],
+	},
+	"elapsed-time-preserves-hours": {
+		prompt:
+			"Change only an existing dayjs addition from a millisecond expression to the equivalent declared expiryHours in hour units. The contract is exactly that elapsed duration, including across daylight-saving transitions. Keep the existing variable, constants, imports, types, and comments.",
+		files: ["src/contracts/value-boundary.ts"],
+	},
+	"external-response-key-preservation": {
+		prompt:
+			"Replace only an incorrect property spelling in an existing response schema to match an API-owned snake_case key. The schema name, value validators, imports, and existing Korean documentation are unchanged. Do not rename API keys into our internal style.",
+		files: ["src/contracts/value-boundary.ts"],
 	},
 } as const;
 
@@ -1182,8 +1253,6 @@ const reactScenarioStages = {
 					"ownership-layer-component-boundaries",
 					"ownership-prefix-layer-names-on-files-and-symbols",
 					"ownership-place-owner-files-in-role-folders",
-					"composition-read-props-without-destructuring",
-					"composition-declare-props-interface-above-the-component",
 				],
 				typescript: [
 					"types-document-custom-types-and-shapes",
@@ -1209,8 +1278,6 @@ const reactScenarioStages = {
 					"ownership-layer-component-boundaries",
 					"ownership-prefix-layer-names-on-files-and-symbols",
 					"ownership-place-owner-files-in-role-folders",
-					"composition-read-props-without-destructuring",
-					"composition-declare-props-interface-above-the-component",
 				],
 				typescript: [
 					"types-document-custom-types-and-shapes",
@@ -1375,7 +1442,7 @@ const reactScenarioStages = {
 	"RTE09-route-runtime-section": {
 		initial: {
 			prompt:
-				'extract only the tree section that owns local search and expanded state plus a tree adapter into the owner component folder, implement a named selection handler from ProductTreeSectionProps["onCategorySelect"], mark the remaining page sections in JSX, and keep search params, navigation, page query, and mutation in the page product.',
+				'extract only the tree section that owns local search and expanded state plus a tree adapter into the owner component folder, implement a named selection handler from UiTreeProps["onSelect"], mark the remaining page sections in JSX, and keep section assembly, Suspense boundaries, and route navigation decisions visible at the route entry while the section owns its data and interaction.',
 			files: ["src/page/products/pg-products.tsx", "src/page/products/_pg-product-tree-section.tsx"],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
@@ -1384,14 +1451,12 @@ const reactScenarioStages = {
 					"ownership-place-owner-files-in-role-folders",
 					"typing-take-handler-types-from-existing-contracts",
 					"composition-read-props-without-destructuring",
-					"composition-use-activity-only-to-preserve-mounted-subtrees",
 					"screen-keep-route-flow-visible",
 					"screen-avoid-premature-abstraction",
 					"screen-extract-local-section-components-for-runtime-boundaries",
 					"runtime-place-suspense-boundaries-at-the-section-owner",
 					"runtime-avoid-ad-hoc-loading-branches",
 					"events-name-handlers-predictably",
-					"events-curry-extra-handler-arguments",
 					"docs-require-jsdoc-on-key-declarations",
 					"docs-write-jsx-comments-as-multiline-blocks",
 				],
@@ -1412,7 +1477,7 @@ const reactScenarioStages = {
 	"RTE10-derived-selection-state": {
 		initial: {
 			prompt:
-				"extract the inline selection toggle into a named handleSelectionToggle handler, replace selectedIds-derived count and flag effect+state synchronization with render calculation near use, and use a functional updater; do not change navigation or styling.",
+				'extract the inline domain selection callback as a named handleSelectionToggle handler typed from UiListProps["onSelect"], replace selectedIds-derived count and flag effect+state synchronization with render calculation near use, and use a functional updater; the callback receives an ID value, not a DOM event, and needs no curried arguments. Do not change navigation or styling.',
 			files: ["src/page/products/pg-products.tsx"],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
@@ -1423,12 +1488,10 @@ const reactScenarioStages = {
 					"state-calculate-derived-values-during-render",
 					"state-use-functional-setstate-updates",
 					"events-name-handlers-predictably",
-					"events-curry-extra-handler-arguments",
 					"docs-require-jsdoc-on-key-declarations",
 				],
 				typescript: [
 					"types-prefer-function-variable-types-over-parameter-annotations",
-					"types-mark-unused-parameters-with-underscore",
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
 					"docs-require-header-jsdoc-on-key-declarations",
@@ -1634,6 +1697,78 @@ const reactScenarioStages = {
 			expectedSelected: {react: ["tooling-enable-the-biome-react-domain"], typescript: ["tooling-configure-biome-to-enforce-these-rules"]},
 		},
 	},
+	"react-activity-preserve-draft": {
+		initial: {
+			prompt:
+				"Replace only the conditional rendering around the existing sidebar with Activity controlled by the existing isSidebarOpen state, preserving the sidebar draft and DOM when hidden; import Activity directly. Keep effects, handlers, component declarations, and styles unchanged.",
+			files: ["src/page/products/pg-products.tsx"],
+			expectedSkills: ["react", "typescript"],
+			expectedSelected: {
+				react: ["composition-use-activity-only-to-preserve-mounted-subtrees", "composition-render-one-branch-with-and"],
+				typescript: ["naming-use-direct-imports-and-public-entry-points"],
+			},
+		},
+	},
+	"react-query-jsx-map-near-miss": {
+		initial: {
+			prompt:
+				"Replace only UiProductList receiving responseProductListSuspense.data.items with a direct items.map that renders an h3 keyed by item.id and displaying item.label. The query select already provides the final items; do not reshape data, alter the query declaration, introduce aliases, or change styles.",
+			files: ["src/page/products/_pg-product-list-section.tsx"],
+			expectedSkills: ["react", "typescript"],
+			expectedSelected: {react: ["data-preserve-origin-chaining"], typescript: []},
+		},
+	},
+	"react-user-refresh-near-miss": {
+		initial: {
+			prompt:
+				"Replace only the existing named refresh handler body with void responseProductListSuspense.refetch() for the user refresh button. There is no mutation or cache-writing change; preserve the handler name, type, comment, and JSX.",
+			files: ["src/page/products/_pg-product-list-section.tsx"],
+			expectedSkills: ["react", "typescript"],
+			expectedSelected: {react: ["data-preserve-origin-chaining"], typescript: []},
+		},
+	},
+	"react-independent-disabled-prop-near-miss": {
+		initial: {
+			prompt:
+				"On an existing UiButton usage change only disabled={false} to disabled={true}. Keep its visible text, type, existing click handler, className, wrapper implementation, and props declarations unchanged.",
+			files: ["src/page/products/_pg-product-toolbar.tsx"],
+			expectedSkills: ["react", "typescript"],
+			expectedSelected: {react: ["a11y-give-interactive-elements-an-accessible-name"], typescript: []},
+		},
+	},
+	"react-suspense-dependent-query": {
+		initial: {
+			prompt:
+				"Change the existing query declarations so the second Suspense query waits for the first response ID, using the already imported useSuspenseQuery in order instead of enabled. Preserve binding names, render code, handlers, and boundaries; update the query JSDoc to describe the dependency.",
+			files: ["src/page/products/_pg-product-detail-section.tsx"],
+			expectedSkills: ["react", "typescript"],
+			expectedSelected: {
+				react: ["data-combine-multiple-queries-with-combine", "data-preserve-origin-chaining", "docs-require-jsdoc-on-key-declarations"],
+				typescript: [
+					"docs-require-header-jsdoc-on-key-declarations",
+					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-doc-comments-as-multiline-blocks",
+				],
+			},
+		},
+	},
+	"react-suspense-cached-refetch-error": {
+		initial: {
+			prompt:
+				"The existing Suspense query has cached data, but this confirmation screen must stop showing stale recommendations after a failed refetch. Add only a render-time error check that throws the existing query error after isFetching is false, using the existing ancestor boundaries. Keep the query declaration, hooks, JSX, and comments unchanged.",
+			files: ["src/page/products/_pg-product-recommendation-section.tsx"],
+			expectedSkills: ["react", "typescript"],
+			expectedSelected: {
+				react: [
+					"data-preserve-origin-chaining",
+					"runtime-place-suspense-boundaries-at-the-section-owner",
+					"runtime-avoid-ad-hoc-loading-branches",
+					"runtime-place-error-boundaries-by-blast-radius",
+				],
+				typescript: [],
+			},
+		},
+	},
 } as const;
 
 /**
@@ -1662,7 +1797,6 @@ const cssScenarioStages = {
 					"naming-keep-page-slug-traceable",
 					"ownership-give-each-file-one-scope-slug",
 					"ownership-choose-scope-prefix-by-owner-layer",
-					"ownership-use-foreign-classes-only-under-your-own-root",
 					"composition-compose-classes-with-clsx",
 				],
 			},
@@ -1674,7 +1808,14 @@ const cssScenarioStages = {
 				"pg-post-index.css holds both the page shell and the filter dialog; move the dialog styles into the component own CSS file and give that file its own slug.",
 			files: ["src/page/post-index/pg-post-index.css", "src/page/post-index/_pg-post-filter-dialog.css"],
 			expectedSkills: ["css"],
-			expectedSelected: {css: ["ownership-give-each-file-one-scope-slug", "ownership-choose-scope-prefix-by-owner-layer"]},
+			expectedSelected: {
+				css: [
+					"naming-use-scope-slug-element-modifier-syntax",
+					"naming-keep-page-slug-traceable",
+					"ownership-give-each-file-one-scope-slug",
+					"ownership-choose-scope-prefix-by-owner-layer",
+				],
+			},
 		},
 	},
 	"css-domain-state-class-contract": {
@@ -1692,8 +1833,6 @@ const cssScenarioStages = {
 					"composition-compose-classes-with-clsx",
 					"composition-do-not-build-structural-variants-with-modifiers",
 					"composition-keep-classes-single-purpose",
-					"selector-use-pseudo-classes-for-dom-owned-states",
-					"selector-nest-dom-state-in-the-owning-block",
 				],
 			},
 		},
@@ -1798,15 +1937,16 @@ const cssScenarioStages = {
 	"css-wrapper-element-for-spacing": {
 		initial: {
 			prompt:
-				"a wrapper div with an inline style margin was added around UiCollapse only for spacing; remove both by adding a className contract to the component.",
+				"Remove a div that wraps UiCollapse only for spacing and move its existing className onto UiCollapse, whose existing root already forwards className. Keep class names, CSS declarations, prop types, imports, and the component implementation unchanged.",
 			files: ["src/component/ui/collapse/ui-collapse.tsx", "src/page/post-index/_pg-post-filter-dialog.tsx"],
-			expectedSkills: ["css"],
+			expectedSkills: ["react", "typescript", "css"],
 			expectedSelected: {
+				react: [],
+				typescript: [],
 				css: [
-					"naming-name-elements-and-modifiers-by-role",
+					"composition-compose-classes-with-clsx",
 					"composition-inject-classes-only-at-the-entry-point",
 					"composition-do-not-add-wrapper-elements-for-styling",
-					"composition-do-not-style-through-the-style-attribute",
 				],
 			},
 		},
@@ -1838,14 +1978,13 @@ const cssScenarioStages = {
 	"css-repeated-values-and-optional-token": {
 		initial: {
 			prompt:
-				"scope a global .ant-tree selector under the existing .ui_themePreview owner root with one descendant level, and replace repeated color/spacing/radius with optional CSS variables and fallbacks; keep the file and owner name unchanged; also namespace the shared fade keyframes and add the global reduced-motion block.",
+				"Scope a global .ant-tree selector under the existing .ui_themePreview owner root with one new descendant block. Replace color and spacing repeated across files with existing global core tokens, and consume an optional Ant border-radius variable with a fallback. Keep file and owner names unchanged. Also namespace the existing fade keyframes and add the global reduced-motion block. Do not add DOM state selectors.",
 			files: ["src/component/ui/theme-preview/ui-theme-preview.css"],
 			expectedSkills: ["css"],
 			expectedSelected: {
 				css: [
 					"ownership-use-foreign-classes-only-under-your-own-root",
-					"selector-use-pseudo-classes-for-dom-owned-states",
-					"selector-nest-dom-state-in-the-owning-block",
+					"selector-limit-nesting-block-depth",
 					"values-fall-back-only-outside-core-tokens",
 					"values-tokenize-repeated-visual-values",
 					"a11y-namespace-keyframes-and-respect-reduced-motion",
@@ -1859,7 +1998,7 @@ const cssScenarioStages = {
 				"split the shared .pg_salesPanel__glyph--* comma group so each modifier block declares its own width and height; do not introduce local custom properties.",
 			files: ["src/page/detail/sales-trend-panel/pg-sales-trend-panel.css"],
 			expectedSkills: ["css"],
-			expectedSelected: {css: ["selector-do-not-group-classes-with-commas", "values-tokenize-repeated-visual-values"]},
+			expectedSelected: {css: ["selector-do-not-group-classes-with-commas"]},
 		},
 	},
 	"css-split-class-declaration": {
@@ -1925,15 +2064,17 @@ const cssScenarioStages = {
 	"css-negated-domain-state": {
 		initial: {
 			prompt:
-				"remove the :not(--checked) ancestor condition that drives the descendant checkbox preview; keep the hover and focus feedback.",
+				"Remove the :not(.pg_salesPanel__spreadButton--selected) ancestor condition that drives the descendant preview. Flatten two nested selector levels and separate its grouped hover/focus-visible selectors. Keep existing class names and preserve hover and visible focus feedback in both selected and unselected states.",
 			files: ["src/page/detail/sales-trend-panel/pg-sales-trend-panel.css"],
 			expectedSkills: ["css"],
 			expectedSelected: {
 				css: [
 					"selector-limit-nesting-block-depth",
 					"selector-do-not-group-classes-with-commas",
+					"selector-use-pseudo-classes-for-dom-owned-states",
 					"selector-nest-dom-state-in-the-owning-block",
 					"selector-do-not-negate-with-not",
+					"a11y-always-provide-a-visible-focus-indicator",
 				],
 			},
 		},
@@ -1943,13 +2084,102 @@ const cssScenarioStages = {
 			prompt: "add a stylelint config for this convention with per-directory prefix overrides; keep stylelint-config-standard as the base.",
 			files: ["stylelint.config.mjs"],
 			expectedSkills: ["css"],
+			expectedSelected: {css: ["tooling-configure-stylelint-to-enforce-these-rules"]},
+		},
+	},
+	"css-forced-colors-focus-repair": {
+		initial: {
+			prompt:
+				"Repair the existing :focus-visible block in ui-input.css: its shadow-only focus ring disappears in forced-colors mode. Add a transparent outline in that block while preserving normal colors. Keep class names and nesting unchanged.",
+			files: ["src/component/ui/input/ui-input.css"],
+			expectedSkills: ["css"],
 			expectedSelected: {
 				css: [
-					"naming-use-scope-slug-element-modifier-syntax",
-					"ownership-use-foreign-classes-only-under-your-own-root",
-					"selector-limit-nesting-block-depth",
-					"tooling-configure-stylelint-to-enforce-these-rules",
+					"selector-declare-each-class-in-one-block",
+					"selector-use-pseudo-classes-for-dom-owned-states",
+					"selector-nest-dom-state-in-the-owning-block",
+					"a11y-always-provide-a-visible-focus-indicator",
 				],
+			},
+		},
+	},
+	"css-reduced-motion-existing-delays": {
+		initial: {
+			prompt:
+				"The existing global prefers-reduced-motion block shortens animation-duration and transition-duration but leaves a four-second delay. Remove both delays in the same block. Do not add classes, keyframes, tokens, or viewport conditions.",
+			files: ["src/style/motion.css"],
+			expectedSkills: ["css"],
+			expectedSelected: {css: ["a11y-namespace-keyframes-and-respect-reduced-motion"]},
+		},
+	},
+	"css-container-size-query": {
+		initial: {
+			prompt:
+				"A widget already has a slot parent and a details child. Add container-type: inline-size to the parent and hide optional details below the actual slot width with a top-level @container (width < 480px) block after the base declarations. Keep class names and TSX unchanged; the viewport must not decide this behavior.",
+			files: ["src/component/widget/product-card/wg-product-card.css"],
+			expectedSkills: ["css"],
+			expectedSelected: {
+				css: [
+					"selector-declare-each-class-in-one-block",
+					"layout-keep-layout-intent-explicit",
+					"layout-reach-for-intrinsic-sizing-before-breakpoints",
+				],
+			},
+		},
+	},
+	"css-width-property-without-breakpoint": {
+		initial: {
+			prompt:
+				"Change only the existing min-width declaration from 160px to 180px in the page toolbar class. Keep selectors, declarations count, parent-child layout ownership, and all media/container conditions unchanged.",
+			files: ["src/page/products/pg-products.css"],
+			expectedSkills: ["css"],
+			expectedSelected: {css: []},
+		},
+	},
+	"css-positive-descendant-state-no-negation": {
+		initial: {
+			prompt:
+				"Change the existing border-color literal within &:hover .pg_salesPanel__preview. Keep the selector, class names, and nesting unchanged. There is no :not(), modifier, token, transition, or focus declaration.",
+			files: ["src/page/detail/sales-trend-panel/pg-sales-trend-panel.css"],
+			expectedSkills: ["css"],
+			expectedSelected: {css: ["selector-use-pseudo-classes-for-dom-owned-states", "selector-nest-dom-state-in-the-owning-block"]},
+		},
+	},
+	"css-core-token-fallback-removal": {
+		initial: {
+			prompt:
+				"Remove only the literal fallback from var(--app-color-surface, white) in an existing class declaration. The core token is already guaranteed in every theme; change no token definitions or theme conditions.",
+			files: ["src/page/products/pg-products.css"],
+			expectedSkills: ["css"],
+			expectedSelected: {css: ["values-fall-back-only-outside-core-tokens"]},
+		},
+	},
+	"css-core-token-definition-not-animation": {
+		initial: {
+			prompt:
+				"Change only the value of an existing --app-color-surface declaration in the token file. It is not a new token, a token rename, a theme branch, a CSS animation, or a transition.",
+			files: ["src/style/token.css"],
+			expectedSkills: ["css"],
+			expectedSelected: {css: []},
+		},
+	},
+	"css-readonly-style-context": {
+		initial: {
+			prompt:
+				"Change only the visible button label from Save to Apply in pg-products.tsx. Existing className, style import, stylesheet, props, and event handlers are unchanged context. Do not introduce new styling.",
+			files: ["src/page/products/pg-products.tsx"],
+			expectedSkills: ["react", "typescript"],
+			expectedSelected: {react: ["a11y-give-interactive-elements-an-accessible-name"], typescript: []},
+		},
+		scopeDrift: {
+			evidence:
+				"After the text edit, pass the existingButtonStyle object to the same button as style={existingButtonStyle}. Keep the existing style object, its values, imports, and className unchanged. Adding the style attribute is now an actual styling change.",
+			files: ["src/page/products/pg-products.tsx"],
+			expectedSkills: ["react", "typescript", "css"],
+			expectedSelected: {
+				react: ["a11y-give-interactive-elements-an-accessible-name"],
+				typescript: [],
+				css: ["composition-do-not-style-through-the-style-attribute"],
 			},
 		},
 	},
@@ -2154,7 +2384,7 @@ test("TypeScript progressive metadata matches Appendix A exactly", async () => {
 	const headerJsdocRule = await readRuleSource("typescript", "docs-require-header-jsdoc-on-key-declarations");
 	assert.match(headerJsdocRule, /docs-write-doc-comments-as-multiline-blocks/);
 	const roleTagRule = await readRuleSource("typescript", "docs-write-concise-korean-comments-about-purpose-and-constraints");
-	assert.match(roleTagRule, /역할 태그를 붙이지 않/);
+	assert.match(roleTagRule, /`@api`, `@helper`, `@field` \| 이름과 문법이 드러내는 역할을 태그로 반복하지 않습니다/);
 	assert.equal(
 		readFrontmatterValue(headerJsdocRule, "requiresSelected"),
 		"docs-write-concise-korean-comments-about-purpose-and-constraints, docs-write-doc-comments-as-multiline-blocks",
@@ -2171,7 +2401,7 @@ test("TypeScript naming keeps immutable data constants in snake_case without ren
 	assertMentions(
 		namingRule,
 		[
-			"모듈 스코프의 불변 데이터 상수, 상수 집합 | `snake_case`",
+			"모듈 스코프 불변 데이터 상수·값 집합과 그 소유 하위 키 | `snake_case`",
 			"`retry_policy.max_attempts`",
 			"`product_status.waiting_review`",
 			"`productSearchSchema`",
@@ -2193,23 +2423,37 @@ test("type and function names expose contract role without repeating framework o
 
 	assertMentions(
 		declarationFormRule,
-		[/독립된.*객체.*`interface`/s, /union.*mapped.*conditional.*`type`/s, /선언 형식.*새.*별칭.*만들지/s],
+		[
+			/독립된 객체 필드 계약은 `interface`/,
+			/리터럴 유니언[^\n]+\| `type`/,
+			/매핑·조건부 타입[^\n]+\| `type`/,
+			/형식을 맞추려고 별칭을 만들거나 객체 형태를 전부 `interface`로 바꾸지 않습니다/,
+		],
 		"TypeScript declaration-form rule",
 	);
 	assertMentions(
 		typeRoleRule,
-		["`Params`", "`Snapshot`", "`Content`", "`VM`", "`ViewModel`", /소유자.*접두/s, /외부.*생성.*계약/s, /역할어.*새 타입.*만들지/s],
+		[
+			"`Params`",
+			"`Snapshot`",
+			"`Content`",
+			"`VM`",
+			"`ViewModel`",
+			/소유자.*접두/s,
+			/외부.*생성.*계약/s,
+			/역할어를 고릅니다[^\n]+쓰려고 타입을 만들지 않으며[^\n]+기존 계약이나 추론되는 익명 결과를 유지합니다/,
+		],
 		"TypeScript type-role rule",
 	);
 	assertMentions(
 		functionNameRule,
 		[
-			"`choose<대상>`",
-			"`normalize<대상>`",
-			"`format<대상>`",
-			"`compare<대상>`",
-			"`load<대상>`",
-			"`should`",
+			/서로 다른 입력 둘 이상의 우선순위 선택 \| `choose` \| `chooseBackSource`/,
+			/같은 개념의 허용 범위·표현 보정 \| `normalize` \| `normalizePageSize`/,
+			/사람이 읽는 표시 문자열 \| `format` \| `formatCandidateDayCount`/,
+			/두 값의 정렬 순서 \| `compare` \| `compareProductsByPrice`/,
+			/비동기 I\/O·여러 요청 조율 \| `load`, `fetch` \| `loadProductExport`/,
+			/참·거짓 판정 \| `is`, `has`, `can`, `should` \| `shouldShowSummary`/,
 			/생성기.*프레임워크.*외부 계약/s,
 		],
 		"TypeScript function-name rule",
@@ -2219,7 +2463,7 @@ test("type and function names expose contract role without repeating framework o
 	assertMentions(imperativeRefRule, ["`<Owner>Handle`", "`useImperativeHandle`", /DOM.*ref/s], "React handle naming");
 });
 
-test("TypeScript routing manifest is an exact twelve-scenario partition with full positive coverage", async () => {
+test("TypeScript routing manifest matches the reviewed scenarios with full positive coverage", async () => {
 	const skillPaths = getSkillPaths("typescript", realSkillRootDir);
 	await validateRoutingEvalManifest(skillPaths);
 	await validateRoutingEvalManifests(realSkillRootDir);
@@ -2228,7 +2472,7 @@ test("TypeScript routing manifest is an exact twelve-scenario partition with ful
 
 	assert.equal(manifest.version, 1);
 	assert.equal(manifest.skill, "typescript");
-	assert.equal(manifest.scenarios.length, 15);
+	assert.equal(manifest.scenarios.length, 23);
 	assert.deepEqual(
 		Object.fromEntries(manifest.scenarios.map((scenario) => [scenario.id, scenario.expectedSelected.typescript])),
 		typescriptSelections,
@@ -2438,7 +2682,7 @@ test("JSX branches, local value choices, and query selectors stay explicit at th
 	const selectNormative = splitFrontmatter(selectRule).body.split("**Incorrect", 1)[0] ?? "";
 	assertMentions(
 		flattenWhitespace(selectNormative),
-		[/`select`는 인라인/i, /다시 실행.*이유만으로.*`useCallback`.*`useMemo`/i, /구조 공유/i, /실측 병목/i],
+		[/`select`는 인라인/i, /재실행만을 이유로.*`useCallback`.*`useMemo`를 더하지 않/i, /구조 공유/i, /실측 병목/i],
 		"selectRule",
 	);
 
@@ -2446,13 +2690,17 @@ test("JSX branches, local value choices, and query selectors stay explicit at th
 	const combineNormative = splitFrontmatter(combineRule).body.split("**Incorrect", 1)[0] ?? "";
 	assertMentions(
 		flattenWhitespace(combineNormative),
-		[/`combine`.*인라인/i, /다시 실행.*이유만으로.*`useCallback`.*`useMemo`/i, /구조 공유/i],
+		[/`combine`.*인라인/i, /재실행만을 이유로.*`useCallback`.*`useMemo`를 더하지 않/i, /구조 공유/i],
 		"combineRule",
 	);
 
 	const memoRule = await readRuleSource("react", "perf-avoid-defensive-memoization");
 	const memoNormative = splitFrontmatter(memoRule).body.split("**Incorrect", 1)[0] ?? "";
-	assertMentions(flattenWhitespace(memoNormative), [/상태 초기화.*구독 재설치/i, /다시 실행.*참조 동일성.*이유가 아닙니다/i], "memoRule");
+	assertMentions(
+		flattenWhitespace(memoNormative),
+		[/참조 변경이 상태 초기화나 구독 재설치/i, /다시 실행된다는 사실만으로 메모이제이션하지 않습니다/i],
+		"memoRule",
+	);
 
 	const wrapperRule = await readRuleSource("react", "typing-choose-wrapper-shape-and-forwarding");
 	const classRule = await readRuleSource("css", "composition-compose-classes-with-clsx");
@@ -2517,7 +2765,7 @@ test("React progressive metadata and all 52 rule routes match Appendix B exactly
 	assert.match(contributing, /대상이 없으면.*key\s*를 생략/i);
 });
 
-test("React routing manifest is the exact eighteen-scenario Appendix B/D oracle with full positive coverage", async () => {
+test("React routing manifest matches the reviewed scenarios with full positive coverage", async () => {
 	const skillPaths = getSkillPaths("react", realSkillRootDir);
 	await validateRoutingEvalManifest(skillPaths);
 	await validateRoutingEvalManifests(realSkillRootDir);
@@ -2531,10 +2779,10 @@ test("React routing manifest is the exact eighteen-scenario Appendix B/D oracle 
 		manifest.scenarios.map((scenario) => scenario.id),
 		expectedScenarioIds,
 	);
-	assert.equal(manifest.scenarios.length, 18);
+	assert.equal(manifest.scenarios.length, 24);
 	assert.equal(
 		manifest.scenarios.reduce((count, scenario) => count + (scenario.scopeDrift ? 2 : 1), 0),
-		19,
+		25,
 	);
 
 	const universeBySkillName: Record<string, readonly string[]> = {
@@ -2606,13 +2854,13 @@ test("React routing manifest is the exact eighteen-scenario Appendix B/D oracle 
 	assert.ok(ownerMove);
 	assert.equal(ownerMove.expectedSkills.includes("css"), false);
 	assert.match(ownerMove.prompt, /className and style import through unchanged.*no styling change/i);
-	assert.equal(ownerMove.expectedSelected.react?.includes("composition-read-props-without-destructuring"), true);
+	assert.equal(ownerMove.expectedSelected.react?.includes("composition-read-props-without-destructuring"), false);
 	assert.equal(ownerMove.expectedSelected.typescript?.includes("types-document-custom-types-and-shapes"), true);
 	assert.equal(ownerMove.expectedSelected.typescript?.includes("docs-require-header-jsdoc-on-key-declarations"), true);
 	assert.equal(ownerMove.expectedSelected.typescript?.includes("docs-write-concise-korean-comments-about-purpose-and-constraints"), true);
 	const cssDrift = ownerMove.scopeDrift;
 	assert.ok(cssDrift);
-	assert.equal(cssDrift.expectedSelected.react?.includes("composition-read-props-without-destructuring"), true);
+	assert.equal(cssDrift.expectedSelected.react?.includes("composition-read-props-without-destructuring"), false);
 	assert.equal(cssDrift.expectedSelected.typescript?.includes("types-document-custom-types-and-shapes"), true);
 	assert.equal(cssDrift.expectedSelected.typescript?.includes("docs-require-header-jsdoc-on-key-declarations"), true);
 	assert.equal(cssDrift.expectedSelected.typescript?.includes("docs-write-concise-korean-comments-about-purpose-and-constraints"), true);
@@ -2691,8 +2939,9 @@ test("React SKILL.md is a compact router with required TypeScript and conditiona
 	assert.match(reactScope, /(때|경우)만/, "react 1절: `convention-css` 조건부 경계가 없다");
 	assert.equal(isNegated(blockContaining(reactScope, "`convention-css`")), true, "react 1절: css 미적용 조건이 없다");
 
-	// 진입 skill 이므로 non-progressive companion 의 로딩 경로도 안내한다
-	assertMentions(extractSection(body, 2), ["non-progressive", "HANDBOOK.md"], "react 2절");
+	// 현재 companion은 모두 progressive이므로 각 라우터와 인덱스를 읽는다.
+	assertMentions(extractSection(body, 2), ["SKILL.md", "RULES_INDEX.md"], "react 2절");
+	assert.doesNotMatch(extractSection(body, 2), /non-progressive/);
 });
 
 test("CSS progressive metadata and rule routing match Appendix C exactly", async () => {
@@ -2720,8 +2969,12 @@ test("CSS progressive metadata and rule routing match Appendix C exactly", async
 	);
 	const wrapperStylingRule = await readRuleSource("css", "composition-inject-classes-only-at-the-entry-point");
 	assertMentions(
-		wrapperStylingRule,
-		[/스타일을 주입하는 자리는 \*\*진입점 하나\*\*/i, /내부 노드로 가는 클래스 프롭을 늘리지 않습니다/i, /변형은.*수정자로 붙입니다/i],
+		flattenWhitespace(wrapperStylingRule),
+		[
+			/\*\*최상위 진입점 한 곳\*\*에서만 외부 클래스를 받습니다/,
+			/\| 금지하는 형태 \|.*?\| `headerClassName`, `itemClassName` 같은 내부 클래스 프롭 \|/,
+			/`variant` 프롭을 받고 헤더나 본문 등 필요한 노드마다 수정자를 붙입니다/,
+		],
 		"wrapperStylingRule",
 	);
 	const singlePurposeRule = await readRuleSource("css", "composition-keep-classes-single-purpose");
@@ -2732,7 +2985,7 @@ test("CSS progressive metadata and rule routing match Appendix C exactly", async
 	assertMentions(readAppliesWhen(fallbackRule), ["`var(--*)`", "공통 토큰"], "fallbackRule");
 	assertMentions(
 		flattenWhitespace(fallbackRule),
-		[/공통 토큰 목록/i, /상속 속성이면 상속값, 아니면 초기값/, /values-tokenize-repeated-visual-values/i],
+		[/공통 토큰 목록/i, /상속 속성은 상속값, 나머지는 초기값이 됩니다/, /values-tokenize-repeated-visual-values/i],
 		"fallbackRule",
 	);
 
@@ -2741,14 +2994,14 @@ test("CSS progressive metadata and rule routing match Appendix C exactly", async
 	assertMentions(
 		flattenWhitespace(modifierMapNormative),
 		[
-			/수정자는 조건으로 적습니다/,
-			/클래스 이름을 값으로 조립하지 않습니다/,
-			/그 클래스를 쓰는 자리가 검색에 걸리지 않습니다/,
-			/값이 여럿이면 값마다 한 줄씩 나열합니다/,
-			/줄 몇 개를 더 쓰는 것이 클래스 이름을 잃는 것보다 낫습니다/,
-			/요소 여러 개에 수정자를 붙일 때도 요소마다 나열합니다/,
-			/나열에는 CSS에 있는 수정자만 적습니다/,
-			/라이브러리 타입을 그대로 받는 값으로는 수정자를 만들지 않습니다/,
+			/수정자는 조건과 완성된 클래스 문자열로 적습니다/,
+			/템플릿 리터럴로 이름을 조립하지 않습니다/,
+			/이름을 조립하면 CSS와 사용처를 같은 문자열로 검색할 수 없습니다/,
+			/\| 값이 여럿임 \| 값마다 한 줄씩 적습니다/,
+			/값이 다섯이고 수정자가 둘이면 둘만 적습니다/,
+			/여러 요소에 같은 값을 적용해도 요소마다 나열합니다/,
+			/일부 값에만 CSS 수정자가 있음 \| 해당 값만 나열하고 나머지는 기본 모습으로 둡니다/,
+			/라이브러리 타입을 그대로 받음 \| 수정자를 만들지 않고 라이브러리에 넘깁니다/,
 		],
 		"modifierMapRule",
 	);
@@ -2770,7 +3023,7 @@ test("CSS progressive metadata and rule routing match Appendix C exactly", async
 	assert.match(contributing, /대상이 없으면.*key\s*를 생략/i);
 });
 
-test("CSS routing manifest is the exact eleven-scenario and thirteen-stage Appendix C/D oracle", async () => {
+test("CSS routing manifest matches the reviewed scenarios and scope changes", async () => {
 	const skillPaths = getSkillPaths("css", realSkillRootDir);
 	await validateRoutingEvalManifest(skillPaths);
 	await validateRoutingEvalManifests(realSkillRootDir);
@@ -2784,10 +3037,10 @@ test("CSS routing manifest is the exact eleven-scenario and thirteen-stage Appen
 		manifest.scenarios.map((scenario) => scenario.id),
 		expectedScenarioIds,
 	);
-	assert.equal(manifest.scenarios.length, 19);
+	assert.equal(manifest.scenarios.length, 27);
 	assert.equal(
 		manifest.scenarios.reduce((count, scenario) => count + (scenario.scopeDrift ? 2 : 1), 0),
-		21,
+		30,
 	);
 
 	const coveredCssRules = new Set<string>();
@@ -2859,15 +3112,16 @@ test("CSS routing manifest is the exact eleven-scenario and thirteen-stage Appen
 	assert.deepEqual(routeDrift?.scopeDrift?.expectedSelected.react, ["ownership-place-owner-files-in-role-folders"]);
 	assert.deepEqual(routeDrift?.scopeDrift?.expectedSelected.typescript, ["naming-use-direct-imports-and-public-entry-points"]);
 	const domainState = scenarioById.get("css-domain-state-class-contract");
-	assert.equal(domainState?.expectedSelected.css?.includes("selector-use-pseudo-classes-for-dom-owned-states"), true);
+	assert.equal(domainState?.expectedSelected.css?.includes("selector-use-pseudo-classes-for-dom-owned-states"), false);
 
 	const oneOffStructuralModifier = scenarioById.get("css-one-off-structural-modifier");
 	assert.equal(oneOffStructuralModifier?.expectedSelected.css?.includes("composition-keep-classes-single-purpose"), false);
 	assert.equal(oneOffStructuralModifier?.expectedSelected.css?.includes("composition-keep-classes-single-purpose") ?? false, false);
 
 	const repeatedValues = scenarioById.get("css-repeated-values-and-optional-token");
-	assert.equal(repeatedValues?.expectedSelected.css?.includes("selector-use-pseudo-classes-for-dom-owned-states"), true);
-	assert.equal(repeatedValues?.expectedSelected.css?.includes("selector-nest-dom-state-in-the-owning-block"), true);
+	assert.equal(repeatedValues?.expectedSelected.css?.includes("selector-use-pseudo-classes-for-dom-owned-states"), false);
+	assert.equal(repeatedValues?.expectedSelected.css?.includes("selector-nest-dom-state-in-the-owning-block"), false);
+	assert.equal(repeatedValues?.expectedSelected.css?.includes("selector-limit-nesting-block-depth"), true);
 
 	const wrapperDrift = scenarioById.get("css-ui-wrapper-third-party-dom");
 	assert.equal(wrapperDrift?.expectedSelected.css?.includes("values-fall-back-only-outside-core-tokens"), false);
@@ -2923,27 +3177,30 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 	const routeFlow = await readRule("react", "screen-keep-route-flow-visible");
 	assertMentions(
 		routeFlow,
-		["소유자가 그대로인 변경은 대상이 아", "바인딩·별칭", "functions-extract-helpers-only-when-the-boundary-is-real"],
+		["소유자가 바뀌지 않는", "바인딩·별칭", "functions-extract-helpers-only-when-the-boundary-is-real"],
 		"routeFlow",
 	);
 	assert.match(
 		routeFlow,
-		/소유자가 그대로인 변경은 대상이 아[\s\S]*`query\.select`[\s\S]*바인딩·별칭[\s\S]*파생 상태 이펙트[\s\S]*렌더 계산/i,
+		/소유자가 바뀌지 않는 `query\.select`[\s\S]*바인딩·별칭[\s\S]*파생 상태 이펙트[\s\S]*렌더 계산 전환은 대상이 아닙니다/i,
 	);
 
 	const curriedHandler = await readRule("react", "events-curry-extra-handler-arguments");
 	assertMentions(curriedHandler, [/이벤트 객체를 받는 자리/i, /추가 인자/i, /팩토리/i, /감싸는 화살표/i], "curriedHandler");
 	assertMentions(
 		curriedHandler,
-		[/팩토리 반환 타입/i, /typing-take-handler-types-from-existing-contracts/i, /리액트 별칭/i],
+		[/팩토리가 추가 인자를 받고/i, /\| 반환 타입 \|.*typing-take-handler-types-from-existing-contracts.*리액트 별칭/i],
 		"curriedHandler",
 	);
-	assert.match(curriedHandler, /이벤트 객체를 받지 않는 프롭 콜백[\s\S]*그대로 넘깁니다[\s\S]*`useEffectEvent`[\s\S]*덧붙이지 않/i);
+	assert.match(
+		curriedHandler,
+		/이벤트를 받지 않는 `\(id\) => void` 프롭 콜백.*커링하지 않고 이름 붙인 핸들러를 그대로 넘깁니다[\s\S]*`useEffectEvent`[\s\S]*덧붙이지 않/i,
+	);
 
 	const reactHandlerType = await readRule("react", "typing-take-handler-types-from-existing-contracts");
 	assert.match(reactHandlerType, /커링한|커링|고차 함수/i);
-	assertMentions(reactHandlerType, [/JSX에 바로 쓴 화살표/i, /암시적 `any`/i, /리액트 별칭/i], "reactHandlerType");
-	assertMentions(reactHandlerType, [/`query\.select`/i, /일회성 문맥 콜백/i, /`Ui\*Props`/i, /대상이 아닙니다/i], "reactHandlerType");
+	assertMentions(reactHandlerType, [/JSX에 직접 쓴 화살표/i, /암시적 `any`/i, /리액트 별칭/i], "reactHandlerType");
+	assertMentions(reactHandlerType, [/`query\.select`/i, /일회성 문맥 콜백/i, /`Ui\*Props`/i, /대상에서 제외합니다/i], "reactHandlerType");
 
 	const reactContracts = await Promise.all(
 		["screen-keep-route-flow-visible", "events-curry-extra-handler-arguments", "typing-take-handler-types-from-existing-contracts"].map(
@@ -2951,8 +3208,12 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 		),
 	);
 	assertMentions(reactContracts[0], [/(?:`query\.select`|query `select`)/i, /파생 상태 이펙트/i, /렌더 계산/i], "reactContracts");
-	assertMentions(reactContracts[1], [/이벤트 객체를 받는 자리/i, /이벤트 객체를 받지 않는 프롭 콜백/i], "reactContracts");
-	assert.match(reactContracts[2], /커링 팩토리가 돌려주는 함수에도 타입을 적습니다[\s\S]*일회성 문맥 콜백/i);
+	assertMentions(
+		reactContracts[1],
+		[/이벤트 객체를 받는 자리/i, /이벤트를 받지 않는 `\(id\) => void` 프롭 콜백.*커링하지 않고/i],
+		"reactContracts",
+	);
+	assert.match(reactContracts[2], /커링 팩토리가 반환하는 핸들러.*팩토리 반환 타입에 적습니다[\s\S]*일회성 문맥 콜백/i);
 
 	const typescriptRouter = await readFile(path.join(realSkillRootDir, "typescript", "SKILL.md"), "utf8");
 	assertMentions(
@@ -2965,15 +3226,14 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 	assertMentions(
 		documentedShape,
 		[
-			/이름 붙인 형태의 필드가 한 글자도 안 바뀌었더라도/i,
-			/입력 계약이나 함수 결과를 고정하는 출력 계약/i,
-			/(?:output|출력)/i,
-			/이 규칙을 적용합니다/i,
+			/새 입력·출력 계약 역할을 맡음/i,
+			/필드가 그대로여도 기존 선언의 헤더와 필드 주석에 새 역할을 설명합니다/i,
+			/새 역할에도 맞는 기존 형태를 연결하며, 새 타입 선언을 요구하지 않습니다/i,
 		],
 		"documentedShape",
 	);
-	assertMentions(documentedShape, [/익명/i, /(?:inferred|추론)/i, /(?:query )?`select`/i, /해당하지 않습니다/i], "documentedShape");
-	assertMentions(documentedShape, [/JSDoc/i, /억지로/i, /(?:억지로 켜려고|켜지 않습니다)/i, /(?:하지 않|금지)/i], "documentedShape");
+	assert.match(documentedShape, /이름 없이 구현에서 추론되는 익명 객체.*대상이 아닙니다.*`select`의 익명 반환값도 그대로 둡니다/i);
+	assert.match(documentedShape, /익명 결과에 이 규칙을 적용하려고 필드 주석이나 새 타입을 만들지 않습니다/i);
 
 	const directImports = await readRule("typescript", "naming-use-direct-imports-and-public-entry-points");
 	assertMentions(readAppliesWhen(directImports), ["같은 경로에서", /값과 타입 중 무엇을 가져올지/, "추가·삭제·전환"], "directImports");
@@ -2982,7 +3242,11 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 	assertMentions(readAppliesWhen(unusedParameters), ["커링한 핸들러", "마지막에 돌려주는 콜백", /(?:빼거나|쓰지 않)/], "unusedParameters");
 	assertMentions(
 		unusedParameters,
-		[/프레임워크 별칭/i, /매개변수를 하나도 쓰지 않는 경우도 예외가 아닙니다/i, /예외가 아닙니다/i, /`\(_event\) =>`/i],
+		[
+			/기존 콜백·프레임워크 계약의 매개변수는 쓰지 않아도 생략하지 않고 `_` 접두사로 남깁니다/i,
+			/커링한 핸들러의 마지막 콜백과 매개변수를 하나도 쓰지 않는 구현도 같습니다/i,
+			/`MouseEventHandler`의 이벤트를 쓰지 않으면 `\(\) =>` 대신 `\(_event\) =>`로 받습니다/i,
+		],
 		"unusedParameters",
 	);
 
@@ -2992,7 +3256,7 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 	]) {
 		const contextualCallback = await readRule("typescript", ruleId);
 
-		// 제외 표지는 불렛 앞(`제외:`)에도 문장 끝(`… 제외한다`)에도 올 수 있다. 순서가 아니라 개념 존재만 본다.
+		// 제외 표지는 항목 앞(`제외:`)에도 문장 끝(`… 제외한다`)에도 올 수 있다. 순서가 아니라 개념 존재만 본다.
 		assertMentions(
 			readAppliesWhen(contextualCallback),
 			[/타입 표기/i, "없이", /일회성/i, /문맥으로 추론/i, /제외/],
@@ -3001,7 +3265,7 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 	}
 
 	const existingContract = await readRule("typescript", "types-reuse-existing-contracts-before-new-types");
-	assertMentions(existingContract, [/그대로인 계약/i, /새 자리에서 쓰는 경우/i, /(?:N\/A|제외)/i], "existingContract");
+	assert.match(existingContract, /다음은 이 규칙을 적용하지 않는 경우입니다[\s\S]*그대로인 계약의 새 사용처/i);
 
 	const typescriptContracts = await Promise.all(
 		[
@@ -3012,14 +3276,21 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 			"types-reuse-existing-contracts-before-new-types",
 		].map((ruleId) => readFile(path.join(realSkillRootDir, "typescript", "contracts", `${ruleId}.md`), "utf8")),
 	);
-	assert.match(typescriptContracts[0], /경로가 같아도 값과 타입 중 무엇을 가져오는지가 바뀌면/i);
+	assert.match(typescriptContracts[0], /같은 경로라도 값·타입 가져오기를 바꾸면 이 규칙을 적용합니다/i);
 	assert.match(
 		await readFile(path.join(realSkillRootDir, "react", "contracts", "ownership-keep-component-imports-flowing-downward.md"), "utf8"),
 		/CRITICAL rule[\s\S]*full rule/i,
 	);
 	assertMentions(typescriptContracts[2], [/커링한 핸들러/i, /마지막 콜백/i], "typescriptContracts");
-	assertMentions(typescriptContracts[3], [/타입을 붙일 자리가 둘 있습니다/i, /함수를 담는 변수에 한 번/i], "typescriptContracts");
-	assertMentions(typescriptContracts[4], [/그대로인 계약/i, /새 자리에서 쓰는 것만으로는/i], "typescriptContracts");
+	assertMentions(
+		typescriptContracts[3],
+		[
+			/기존 호출 계약이 있으면 매개변수와 반환 타입을 반복하지 않고 함수를 담는 변수에 붙입니다/i,
+			/맞는 계약도 없고 구현도 하나뿐임.*매개변수 타입을 직접 적습니다/i,
+		],
+		"typescriptContracts",
+	);
+	assert.match(typescriptContracts[4], /다음은 이 규칙을 적용하지 않는 경우입니다[\s\S]*그대로인 계약의 새 사용처/i);
 
 	const stylesheetFormat = await readRule("css", "naming-default-to-plain-css-when-no-module-convention");
 	assertMentions(stylesheetFormat, [/스타일시트 방식/i, /plain CSS/i, /CSS Modules/i], "stylesheetFormat");
@@ -3032,7 +3303,7 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 	const modifierClassification = await readRule("css", "composition-do-not-build-structural-variants-with-modifiers");
 	assertMentions(
 		modifierClassification,
-		[/앱이 켜고 끄는 상태/, /여러 곳에서 반복되는 모양/, /두 개 이상의 `scope_slug`에 이미 있는가/],
+		[/앱이 켜고 끄는 상태/, /여러 곳에서 반복되는 모양/, /같은 수정자 이름이 두 개 이상의 `scope_slug`에 이미 있음/],
 		"modifierClassification",
 	);
 
@@ -3042,12 +3313,24 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 	assert.doesNotMatch(layoutIntent, /동작 변화 없이/);
 
 	const variableFallback = await readRule("css", "values-fall-back-only-outside-core-tokens");
-	assert.match(variableFallback, /공통 토큰 목록에 있는 변수[\s\S]*쓰지 않습니다/i);
-	assert.match(variableFallback, /그 밖의 모든 `var\(\)`[\s\S]*씁니다/i);
+	assert.match(variableFallback, /\| 공통 토큰 목록에 있음 \| 쓰지 않습니다/i);
+	assertMentions(
+		variableFallback,
+		[/`var\(\)`의 대체값 여부는 그 목록과 대조해 정합니다/i, /\| 그 밖의 변수 \| 씁니다/i],
+		"variableFallback",
+	);
 
 	for (const ruleId of ["selector-nest-dom-state-in-the-owning-block"]) {
 		const interactionState = await readRule("css", ruleId);
-		assert.match(interactionState, /(?:hover|focus|disabled)[\s\S]*조건 없는 기본 블록[\s\S]*수정자 아래[\s\S]*(?:좁히지 않|두지 않)/i);
+		assertMentions(
+			interactionState,
+			[
+				/조건 없는 기본 클래스 블록\*\* 안에 `&:`로 씁니다/i,
+				/블록 바깥이나 수정자 블록에서 다시 열지 않습니다/i,
+				/도메인 상태와 무관한 `:hover`, `:focus-visible`, `:disabled`.*기본 블록에 둡니다/i,
+			],
+			"interactionState",
+		);
 	}
 	const cssInteractionContracts = await Promise.all(
 		["selector-nest-dom-state-in-the-owning-block"].map((ruleId) =>
@@ -3055,7 +3338,7 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 		),
 	);
 	for (const contract of cssInteractionContracts) {
-		assertMentions(contract, [/기본 블록/i, /수정자 아래/i], "contract");
+		assertMentions(contract, [/조건 없는 기본 클래스 블록/i, /수정자 블록에서 다시 열지 않습니다/i], "contract");
 	}
 
 	const mixedManifest = await readRoutingEvalManifest(getSkillPaths("react", realSkillRootDir));
@@ -3068,12 +3351,11 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 	assert.equal(tsNotApplicable("RTE03-route-support-extraction", "types-reuse-existing-contracts-before-new-types"), true);
 	for (const ruleId of [
 		"naming-use-direct-imports-and-public-entry-points",
-		"types-mark-unused-parameters-with-underscore",
-		"types-prefer-function-variable-types-over-parameter-annotations",
 		"types-prefer-function-variable-types-over-parameter-annotations",
 	]) {
 		assert.equal(tsSelected("RTE10-derived-selection-state", ruleId), true);
 	}
+	assert.equal(tsNotApplicable("RTE10-derived-selection-state", "types-mark-unused-parameters-with-underscore"), true);
 	for (const ruleId of [
 		"types-document-custom-types-and-shapes",
 		"types-prefer-function-variable-types-over-parameter-annotations",
@@ -3146,31 +3428,48 @@ test("v17 TypeScript boundaries exclude React props and prevent self-created dup
 		/스키마 최상단[\s\S]+계약 필드[\s\S]+파생 별칭[\s\S]+추가·변경[\s\S]+이름 붙인 형태[\s\S]+호출 계약 역할/,
 	);
 	assert.doesNotMatch(readAppliesWhen(documentedShape), /객체형 상수·field·alias/);
-	assert.match(
+	assertMentions(
 		documentedShape,
-		/새 입력이나 출력 역할이 새 타입 선언을 요구하지는 않습니다[\s\S]*맞는 형태가 이미 우리 코드에 있으면[\s\S]*보강/i,
+		[
+			/새 입력·출력 계약 역할을 맡음 \| 필드가 그대로여도 기존 선언의 헤더와 필드 주석에 새 역할을 설명합니다/,
+			/새 역할에도 맞는 기존 형태를 연결하며, 새 타입 선언을 요구하지 않습니다/,
+		],
+		"documentedShape reuses existing declarations for new roles",
 	);
-	assert.match(
+	assertMentions(
 		documentedShape,
-		/외부·생성된·읽기 전용·공용 형태를 그대로 쓰기만 하면[\s\S]*지역 별칭을 새로 만들지도 않습니다[\s\S]*docs-require-header-jsdoc-on-key-declarations[^\n]+판정/i,
+		[
+			/외부·생성된·읽기 전용·공용 형태를 그대로 씀 \| 선언을 고치거나 문서화용 지역 별칭을 만들지 않습니다/,
+			/함수 선언의 헤더 주석은 `docs-require-header-jsdoc-on-key-declarations`가 별도로 판단합니다/,
+		],
+		"documentedShape preserves external contracts and separate function documentation",
 	);
 	assert.doesNotMatch(documentedShape, /callable 선언에서[^\n]+(?:역할|계약)[^\n]+설명/);
 
 	const existingContract = await readRule("typescript", "types-reuse-existing-contracts-before-new-types");
 	assert.match(
 		flattenWhitespace(existingContract),
-		/위치 인자를 객체 입력으로 바꾸면서, 우리가 고칠 수 있는 기존 형태를 그대로 다시 쓰면[\s\S]*types-document-custom-types-and-shapes[^\n]+걸리고 이 규칙은 걸리지 않습니다/i,
+		/위치 인자를 우리가 고칠 수 있는 기존 객체 계약으로 대체 \| `types-document-custom-types-and-shapes`만 적용합니다/i,
 	);
-	assert.match(existingContract, /요청에 없는 `\*Params`나 `\*Input`을 만들어 이 규칙을 스스로 켜지 않습니다/i);
-	assert.match(
-		flattenWhitespace(existingContract),
-		/types-document-custom-types-and-shapes[\s\S]+걸리고 이 규칙은 걸리지 않습니다[\s\S]*외부·생성된·읽기 전용·공용 형태를 그대로 쓰면 두 타입 규칙 모두 대상이 아니고[\s\S]+문서 규칙이 따로 판정/i,
+	assert.match(existingContract, /규칙을 적용하려고 요청에 없는 `\*Params`나 `\*Input`을 만들지 않습니다/i);
+	assertMentions(
+		existingContract,
+		[
+			/다음은 이 규칙을 적용하지 않는 경우입니다/,
+			/외부·생성된·읽기 전용·공용 형태를 그대로 사용 \| 두 타입 규칙 모두 대상이 아닙니다\. 함수 문서화는 문서 규칙이 판단합니다/,
+		],
+		"existingContract excludes unchanged external contracts",
 	);
 	assert.doesNotMatch(existingContract, /callable header[^\n]+문서화/);
 	assert.doesNotMatch(readAppliesWhen(existingContract), /재사용 결정을 바꾼다/);
-	assert.match(
+	assertMentions(
 		existingContract,
-		/원본 입력과 정규화한 값은 필드가 같아도 뜻이 달라 입력 형태를 따로 두는 것이 맞습니다[\s\S]*이 규칙은 걸리지 않습니다/i,
+		[
+			/구조가 같아도 단위나 도메인 역할이 다르면 합치지 않습니다/,
+			/원본 입력과 정규화 결과처럼 역할이 다름 \| 필드가 같아도 별도 계약을 둡니다/,
+			/맞는 기존 형태가 없는 새 도메인 계약 \| 문서화 규칙만 적용합니다/,
+		],
+		"existingContract keeps distinct roles separate",
 	);
 	assert.doesNotMatch(documentedShape, /\bT\d{2}\b/);
 	assert.doesNotMatch(existingContract, /\bT\d{2}\b/);
@@ -3205,10 +3504,17 @@ test("v17 TypeScript boundaries exclude React props and prevent self-created dup
 	);
 	assertMentions(
 		generatedContracts[1],
-		[/선언형 형태는 헤더와 필드를 나눠 문서화합니다/i, /각 필드 바로 위에 문서 주석/i],
+		[
+			/직접 선언한 타입과 형태는 헤더와 필드를 구분해 문서화합니다/i,
+			/커스텀 `type`, `interface`, 스키마 최상단 \| 씁니다 \| 원본에서 가져온 필드에도 각각 씁니다/i,
+		],
 		"generatedContracts",
 	);
-	assertMentions(generatedContracts[2], [/위치 인자/i, /객체/i, /`\*Params`/i, /(?:스스로|자기|자가)/i], "generatedContracts");
+	assertMentions(
+		generatedContracts[2],
+		[/위치 인자를 우리가 고칠 수 있는 기존 객체 계약으로 대체/i, /규칙을 적용하려고 요청에 없는 `\*Params`나 `\*Input`을 만들지 않습니다/i],
+		"generatedContracts",
+	);
 });
 
 test("v17 semantic contracts reject English-only annotations and effective deep third-party chains", async () => {
@@ -3217,19 +3523,28 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	};
 
 	const koreanComments = await readRule("typescript", "docs-write-concise-korean-comments-about-purpose-and-constraints");
-	assertMentions(koreanComments, [/주석 본문이 전부 영어이면/i, /영어/i, /한국어 주석으로 인정하지 않/i], "koreanComments");
+	assertMentions(
+		koreanComments,
+		[
+			/주석은 한국어로 목적·제약·부수효과를 설명합니다/i,
+			/본문 전체가 영어인 주석은 허용하지 않습니다/i,
+			/헤더가 영어뿐이면 필드 주석이 한국어여도 요구를 충족하지 못합니다/i,
+		],
+		"koreanComments",
+	);
 	assert.match(koreanComments, /route-local product tree props/);
 	assert.match(koreanComments, /route-local product 트리 입력 계약/);
 
 	const documentedShape = await readRule("typescript", "types-document-custom-types-and-shapes");
-	assert.match(
-		documentedShape,
-		/주석이 있다고 끝나지 않습니다[\s\S]*docs-write-concise-korean-comments-about-purpose-and-constraints[\s\S]*한국어 조건/i,
-	);
+	assert.match(documentedShape, /주석 내용은 `docs-write-concise-korean-comments-about-purpose-and-constraints`의 한국어 기준을 따릅니다/i);
 	const headerDocs = await readRule("typescript", "docs-require-header-jsdoc-on-key-declarations");
-	assert.match(
+	assertMentions(
 		flattenWhitespace(headerDocs),
-		/헤더 문서 주석[\s\S]*영문 라벨[\s\S]*요구를 채우지 못합니다[\s\S]*docs-write-concise-korean-comments-about-purpose-and-constraints[\s\S]*한국어 내용/i,
+		[
+			/헤더 문서 주석을 씁니다[\s\S]*빈 본문이나 영문 라벨만으로는 요구를 충족하지 못하며 실제 한국어 설명이 필요합니다/i,
+			/내용과 태그는 `docs-write-concise-korean-comments-about-purpose-and-constraints`가 정합니다/i,
+		],
+		"headerDocs require meaningful Korean content",
 	);
 	assert.doesNotMatch(headerDocs, /\bT\d{2}\b/);
 
@@ -3263,10 +3578,17 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	);
 	assertMentions(
 		generatedContracts[1],
-		[/선언형 형태는 헤더와 필드를 나눠 문서화합니다/i, /각 필드 바로 위에 문서 주석/i],
+		[
+			/직접 선언한 타입과 형태는 헤더와 필드를 구분해 문서화합니다/i,
+			/커스텀 `type`, `interface`, 스키마 최상단 \| 씁니다 \| 원본에서 가져온 필드에도 각각 씁니다/i,
+		],
 		"generatedContracts",
 	);
-	assertMentions(generatedContracts[2], [/위치 인자/i, /객체/i, /`\*Params`/i, /(?:스스로|자기|자가)/i], "generatedContracts");
+	assertMentions(
+		generatedContracts[2],
+		[/위치 인자를 우리가 고칠 수 있는 기존 객체 계약으로 대체/i, /규칙을 적용하려고 요청에 없는 `\*Params`나 `\*Input`을 만들지 않습니다/i],
+		"generatedContracts",
+	);
 });
 
 test("v17 semantic contracts reject English-only annotations and effective deep third-party chains", async () => {
@@ -3275,34 +3597,47 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	};
 
 	const koreanComments = await readRule("typescript", "docs-write-concise-korean-comments-about-purpose-and-constraints");
-	assertMentions(koreanComments, [/주석 본문이 전부 영어이면/i, /영어/i, /한국어 주석으로 인정하지 않/i], "koreanComments");
+	assertMentions(
+		koreanComments,
+		[
+			/주석은 한국어로 목적·제약·부수효과를 설명합니다/i,
+			/본문 전체가 영어인 주석은 허용하지 않습니다/i,
+			/헤더가 영어뿐이면 필드 주석이 한국어여도 요구를 충족하지 못합니다/i,
+		],
+		"koreanComments",
+	);
 	assert.match(koreanComments, /route-local product tree props/);
 	assert.match(koreanComments, /route-local product 트리 입력 계약/);
 
 	const documentedShape = await readRule("typescript", "types-document-custom-types-and-shapes");
-	assert.match(
-		documentedShape,
-		/주석이 있다고 끝나지 않습니다[\s\S]*docs-write-concise-korean-comments-about-purpose-and-constraints[\s\S]*한국어 조건/i,
-	);
+	assert.match(documentedShape, /주석 내용은 `docs-write-concise-korean-comments-about-purpose-and-constraints`의 한국어 기준을 따릅니다/i);
 	const headerDocs = await readRule("typescript", "docs-require-header-jsdoc-on-key-declarations");
-	assert.match(
+	assertMentions(
 		flattenWhitespace(headerDocs),
-		/헤더 문서 주석[\s\S]*영문 라벨[\s\S]*요구를 채우지 못합니다[\s\S]*docs-write-concise-korean-comments-about-purpose-and-constraints[\s\S]*한국어 내용/i,
+		[
+			/헤더 문서 주석을 씁니다[\s\S]*빈 본문이나 영문 라벨만으로는 요구를 충족하지 못하며 실제 한국어 설명이 필요합니다/i,
+			/내용과 태그는 `docs-write-concise-korean-comments-about-purpose-and-constraints`가 정합니다/i,
+		],
+		"headerDocs require meaningful Korean content",
 	);
 	assert.doesNotMatch(headerDocs, /\bT\d{2}\b/);
 
 	const foreignRoot = await readRule("css", "ownership-use-foreign-classes-only-under-your-own-root");
 	assertMentions(
 		foreignRoot,
-		[/내 최상위 클래스 블록 안에서만/, /블록 바깥에 홀로 두지 않습니다/, /내 최상위 블록 안에서 `&`로 열렸는지/],
+		[
+			/내 최상위 클래스 블록 안에서 `&`로 시작하는 선택자/,
+			/`\.ant-tree-title \{ \}` \| 금지/,
+			/`\.pg_treePanel__root \.ant-tree-title \{ \}` \| 금지\. 최상위 블록 안에서 `&`로 시작해야 합니다/,
+		],
 		"foreignRoot",
 	);
 	assertMentions(
 		foreignRoot,
 		[
 			/그 라이브러리를 쓰는 앱 전체에 적용됩니다/,
-			/그 위젯을 쓰는 화면 전체에 적용됩니다/,
-			/결합자 개수는 제한하지 않습니다/,
+			/그 위젯을 쓰는 모든 화면에 적용됩니다/,
+			/다른 소유자의 DOM 경로는 우리가 정하지 않으므로 결합자 개수를 제한하지 않습니다/,
 			/selector-disallowed-list/,
 		],
 		"foreignRoot",
@@ -3312,21 +3647,29 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	const otherOwnerApi = await readRule("css", "ownership-change-other-owners-through-their-api");
 	assertMentions(
 		otherOwnerApi,
-		[/세 가지를 순서대로 봅니다/, /막다른 길이 아니라 마지막 선택지입니다/, /최상위까지만 닿는 것은 제약이 아니라 경계입니다/],
+		[
+			/세 방법을 순서대로 확인합니다/,
+			/세 방법이 모두 맞지 않으면 `ownership-use-foreign-classes-only-under-your-own-root`에 따라 내 최상위 블록 안에서\s+선택자로 지정합니다/,
+			/`className`을 최상위까지만 전달하는 경계는 `composition-inject-classes-only-at-the-entry-point` 규칙이 정합니다/,
+		],
 		"otherOwnerApi",
 	);
 
 	const ampersandScope = await readRule("css", "selector-limit-nesting-block-depth");
 	assertMentions(
 		ampersandScope,
-		[/중첩은 항상 한 겹이고, `&`도 한 선택자에 한 번입니다/, /그 블록이 소유한 요소 하나/, /어느 요소를 가리키느냐가 정합니다/],
+		[
+			/선택자 블록 중첩은 \*\*한 겹\*\*, `&`는 \*\*한 선택자에 한 번\*\*만 씁니다/,
+			/그 블록이 소유한 요소의 조건이나 가상 요소/,
+			/`&`가 가리키는 요소가 작성 위치를 결정합니다/,
+		],
 		"ampersandScope",
 	);
 
 	const rawWrapper = await readRule("css", "selector-use-classes-instead-of-element-selectors");
 	assertMentions(
 		rawWrapper,
-		[/우리가 렌더하는 마크업에는 요소 선택자를 쓰지 않습니다/, /dangerouslySetInnerHTML/, /stylelint-disable-next-line/],
+		[/우리가 렌더하는 마크업은 요소 선택자 대신 클래스로 선택합니다/, /dangerouslySetInnerHTML/, /stylelint-disable-next-line/],
 		"rawWrapper",
 	);
 
@@ -3334,9 +3677,9 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	assertMentions(
 		entryPoint,
 		[
-			/스타일을 주입하는 자리는 \*\*진입점 하나\*\*입니다/,
-			/`ui_`든 `wg_`든 `pg_`든 같습니다/,
-			/내부 노드로 가는 클래스 프롭을 늘리지 않습니다/,
+			/\*\*최상위 진입점 한 곳\*\*에서만 외부 클래스를 받습니다/,
+			/우리가 만든 컴포넌트는 레이어와 무관하게/,
+			/금지하는 형태[\s\S]*`headerClassName`, `itemClassName` 같은 내부 클래스 프롭/,
 		],
 		"entryPoint",
 	);
@@ -3344,24 +3687,38 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	const stylelintConfig = await readRule("css", "tooling-configure-stylelint-to-enforce-these-rules");
 	assertMentions(
 		stylelintConfig,
-		[/stylelint-config-standard/, /selector-max-combinators/, /overrides/, /리뷰가 담당합니다/],
+		[/stylelint-config-standard/, /selector-max-combinators/, /overrides/, /기계가 확인하지 못하는 의미는 리뷰에서 판단합니다/],
 		"stylelintConfig",
 	);
 
 	const nestingDepth = await readRule("css", "selector-limit-nesting-block-depth");
-	assertMentions(nestingDepth, [/실제 선택자가 숨습니다/, /max-nesting-depth: 1/, /최상위가 0겹/], "nestingDepth");
+	assertMentions(
+		nestingDepth,
+		[/전체 경로가 여러 블록에 흩어지고 기계 검사도 각 블록만 봅니다/, /max-nesting-depth: 1/, /최상위는 0겹/],
+		"nestingDepth",
+	);
 
 	const commaGroup = await readRule("css", "selector-do-not-group-classes-with-commas");
 	assertMentions(
 		commaGroup,
-		[/중복을 감수합니다/, /조건마다 블록을 따로 열고 선언을 그대로 씁니다/, /no-duplicate-selectors/, /쉼표 묶음 자체는 막지 않습니다/],
+		[
+			/중복되더라도 각 클래스 블록에 선언을 모두 적어/,
+			/한 대상에 진입 조건이 여럿임 \| 조건마다 블록을 엽니다/,
+			/no-duplicate-selectors/,
+			/중복 없이 쉼표로 묶기만 함 \| 리뷰\. 기계 검사는 묶음 자체를 막지 않습니다/,
+		],
 		"commaGroup",
 	);
 
 	const oneBlockPerClass = await readRule("css", "selector-declare-each-class-in-one-block");
 	assertMentions(
 		oneBlockPerClass,
-		[/한 블록에만 있습니다/, /선언 순서에 의존하는 덮어쓰기가 생기지 않습니다/, /@media/],
+		[
+			/한 클래스의 선언은 파일 안 한 블록에 모읍니다/,
+			/같은 클래스를 여러 곳에서 다시 열어 선언 순서로 덮어쓰지 않습니다/,
+			/명시도와 선언 순서를 확인합니다/,
+			/@container/,
+		],
 		"oneBlockPerClass",
 	);
 
@@ -3369,9 +3726,9 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	assertMentions(
 		nestDomState,
 		[
-			/블록 바깥에서 다시 열지 않습니다/,
-			/식별자가 같은 자손을 결합자 하나로 잡습니다/,
-			/`:has\(\)`로 조상을 잡을 수는 있지만 쓰지 않습니다/,
+			/블록 바깥이나 수정자 블록에서 다시 열지 않습니다/,
+			/조상 블록에서 식별자가 같은 자손을 결합자 하나로 선택합니다/,
+			/조상 상태를 자손 블록에서 읽거나 지역 변수로 전달함 \| `:has\(\)`도 쓰지 않습니다/,
 		],
 		"nestDomState",
 	);
@@ -3379,14 +3736,21 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	const notInversion = await readRule("css", "selector-do-not-negate-with-not");
 	assertMentions(
 		notInversion,
-		[/조상의 수정자로 자손의 모습을 정하려 한 것입니다/, /부정 조건이 필요 없어집니다/, /:not\(:disabled\)/],
+		[/조상 수정자가 자손의 모습을 바꿈 \| 자손 수정자로 옮깁니다/, /상태별 결과를 보존합니다/, /:not\(:disabled\)/, /:enabled:hover/],
 		"notInversion",
 	);
 
 	const focusIndicator = await readRule("css", "a11y-always-provide-a-visible-focus-indicator");
 	assertMentions(
 		focusIndicator,
-		[/포커스 표시를 없애지 않습니다/, /:focus-visible/, /색각 이상에서 구분되지 않습니다/, /브라우저만 알 수 있어서/],
+		[
+			/포커스 표시를 유지하고 `outline: none`을 쓸 때는 대체 스타일을 함께 제공합니다/,
+			/:focus-visible/,
+			/색각 이상에서도 구분할 수 있어야 합니다/,
+			/브라우저가 입력 방식과 사용자 설정으로 판단하므로/,
+			/forced-colors: active/,
+			/투명한 `outline`/,
+		],
 		"focusIndicator",
 	);
 
@@ -3398,12 +3762,20 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 			["css", "ownership-use-foreign-classes-only-under-your-own-root"],
 		].map((pair) => readFile(path.join(realSkillRootDir, pair[0], "contracts", `${pair[1]}.md`), "utf8")),
 	);
-	assert.match(
+	assertMentions(
 		flattenWhitespace(generatedContracts[0]),
-		/영문 라벨[\s\S]*docs-write-concise-korean-comments-about-purpose-and-constraints[\s\S]*한국어 내용/i,
+		[
+			/빈 본문이나 영문 라벨만으로는 요구를 충족하지 못하며 실제 한국어 설명이 필요합니다/i,
+			/내용과 태그는 `docs-write-concise-korean-comments-about-purpose-and-constraints`가 정합니다/i,
+		],
+		"generated header documentation contract",
 	);
-	assertMentions(generatedContracts[1], [/주석 본문이 전부 영어이면/i, /영어/i], "generatedContracts");
-	assert.match(generatedContracts[2], /pseudo-class[\s\S]*식별자가 같은 자손을 결합자 하나로 잡습니다/i);
+	assertMentions(
+		generatedContracts[1],
+		[/본문 전체가 영어인 주석은 허용하지 않습니다/i, /주석은 한국어로 목적·제약·부수효과를 설명합니다/i],
+		"generatedContracts",
+	);
+	assert.match(generatedContracts[2], /pseudo-class[\s\S]*조상 블록에서 식별자가 같은 자손을 결합자 하나로 선택합니다/i);
 	assert.match(generatedContracts[3], /CRITICAL rule[\s\S]*full rule/i);
 });
 

@@ -41,7 +41,6 @@
 						"naming-keep-page-slug-traceable",
 						"ownership-give-each-file-one-scope-slug",
 						"ownership-choose-scope-prefix-by-owner-layer",
-						"ownership-use-foreign-classes-only-under-your-own-root",
 						"composition-compose-classes-with-clsx"
 					]
 				}
@@ -59,6 +58,8 @@
 			],
 			"expectedSelected": {
 				"css": [
+					"naming-use-scope-slug-element-modifier-syntax",
+					"naming-keep-page-slug-traceable",
 					"ownership-give-each-file-one-scope-slug",
 					"ownership-choose-scope-prefix-by-owner-layer"
 				]
@@ -86,9 +87,7 @@
 					"naming-name-elements-and-modifiers-by-role",
 					"composition-compose-classes-with-clsx",
 					"composition-do-not-build-structural-variants-with-modifiers",
-					"composition-keep-classes-single-purpose",
-					"selector-use-pseudo-classes-for-dom-owned-states",
-					"selector-nest-dom-state-in-the-owning-block"
+					"composition-keep-classes-single-purpose"
 				]
 			}
 		},
@@ -224,20 +223,23 @@
 		},
 		{
 			"id": "css-wrapper-element-for-spacing",
-			"prompt": "a wrapper div with an inline style margin was added around UiCollapse only for spacing; remove both by adding a className contract to the component.",
+			"prompt": "Remove a div that wraps UiCollapse only for spacing and move its existing className onto UiCollapse, whose existing root already forwards className. Keep class names, CSS declarations, prop types, imports, and the component implementation unchanged.",
 			"files": [
 				"src/component/ui/collapse/ui-collapse.tsx",
 				"src/page/post-index/_pg-post-filter-dialog.tsx"
 			],
 			"expectedSkills": [
+				"react",
+				"typescript",
 				"css"
 			],
 			"expectedSelected": {
+				"react": [],
+				"typescript": [],
 				"css": [
-					"naming-name-elements-and-modifiers-by-role",
+					"composition-compose-classes-with-clsx",
 					"composition-inject-classes-only-at-the-entry-point",
-					"composition-do-not-add-wrapper-elements-for-styling",
-					"composition-do-not-style-through-the-style-attribute"
+					"composition-do-not-add-wrapper-elements-for-styling"
 				]
 			}
 		},
@@ -276,7 +278,7 @@
 		},
 		{
 			"id": "css-repeated-values-and-optional-token",
-			"prompt": "scope a global .ant-tree selector under the existing .ui_themePreview owner root with one descendant level, and replace repeated color/spacing/radius with optional CSS variables and fallbacks; keep the file and owner name unchanged; also namespace the shared fade keyframes and add the global reduced-motion block.",
+			"prompt": "Scope a global .ant-tree selector under the existing .ui_themePreview owner root with one new descendant block. Replace color and spacing repeated across files with existing global core tokens, and consume an optional Ant border-radius variable with a fallback. Keep file and owner names unchanged. Also namespace the existing fade keyframes and add the global reduced-motion block. Do not add DOM state selectors.",
 			"files": [
 				"src/component/ui/theme-preview/ui-theme-preview.css"
 			],
@@ -286,8 +288,7 @@
 			"expectedSelected": {
 				"css": [
 					"ownership-use-foreign-classes-only-under-your-own-root",
-					"selector-use-pseudo-classes-for-dom-owned-states",
-					"selector-nest-dom-state-in-the-owning-block",
+					"selector-limit-nesting-block-depth",
 					"values-fall-back-only-outside-core-tokens",
 					"values-tokenize-repeated-visual-values",
 					"a11y-namespace-keyframes-and-respect-reduced-motion"
@@ -305,8 +306,7 @@
 			],
 			"expectedSelected": {
 				"css": [
-					"selector-do-not-group-classes-with-commas",
-					"values-tokenize-repeated-visual-values"
+					"selector-do-not-group-classes-with-commas"
 				]
 			}
 		},
@@ -398,7 +398,7 @@
 		},
 		{
 			"id": "css-negated-domain-state",
-			"prompt": "remove the :not(--checked) ancestor condition that drives the descendant checkbox preview; keep the hover and focus feedback.",
+			"prompt": "Remove the :not(.pg_salesPanel__spreadButton--selected) ancestor condition that drives the descendant preview. Flatten two nested selector levels and separate its grouped hover/focus-visible selectors. Keep existing class names and preserve hover and visible focus feedback in both selected and unselected states.",
 			"files": [
 				"src/page/detail/sales-trend-panel/pg-sales-trend-panel.css"
 			],
@@ -409,8 +409,10 @@
 				"css": [
 					"selector-limit-nesting-block-depth",
 					"selector-do-not-group-classes-with-commas",
+					"selector-use-pseudo-classes-for-dom-owned-states",
 					"selector-nest-dom-state-in-the-owning-block",
-					"selector-do-not-negate-with-not"
+					"selector-do-not-negate-with-not",
+					"a11y-always-provide-a-visible-focus-indicator"
 				]
 			}
 		},
@@ -425,11 +427,152 @@
 			],
 			"expectedSelected": {
 				"css": [
-					"naming-use-scope-slug-element-modifier-syntax",
-					"ownership-use-foreign-classes-only-under-your-own-root",
-					"selector-limit-nesting-block-depth",
 					"tooling-configure-stylelint-to-enforce-these-rules"
 				]
+			}
+		},
+		{
+			"id": "css-forced-colors-focus-repair",
+			"prompt": "Repair the existing :focus-visible block in ui-input.css: its shadow-only focus ring disappears in forced-colors mode. Add a transparent outline in that block while preserving normal colors. Keep class names and nesting unchanged.",
+			"files": [
+				"src/component/ui/input/ui-input.css"
+			],
+			"expectedSkills": [
+				"css"
+			],
+			"expectedSelected": {
+				"css": [
+					"selector-declare-each-class-in-one-block",
+					"selector-use-pseudo-classes-for-dom-owned-states",
+					"selector-nest-dom-state-in-the-owning-block",
+					"a11y-always-provide-a-visible-focus-indicator"
+				]
+			}
+		},
+		{
+			"id": "css-reduced-motion-existing-delays",
+			"prompt": "The existing global prefers-reduced-motion block shortens animation-duration and transition-duration but leaves a four-second delay. Remove both delays in the same block. Do not add classes, keyframes, tokens, or viewport conditions.",
+			"files": [
+				"src/style/motion.css"
+			],
+			"expectedSkills": [
+				"css"
+			],
+			"expectedSelected": {
+				"css": [
+					"a11y-namespace-keyframes-and-respect-reduced-motion"
+				]
+			}
+		},
+		{
+			"id": "css-container-size-query",
+			"prompt": "A widget already has a slot parent and a details child. Add container-type: inline-size to the parent and hide optional details below the actual slot width with a top-level @container (width < 480px) block after the base declarations. Keep class names and TSX unchanged; the viewport must not decide this behavior.",
+			"files": [
+				"src/component/widget/product-card/wg-product-card.css"
+			],
+			"expectedSkills": [
+				"css"
+			],
+			"expectedSelected": {
+				"css": [
+					"selector-declare-each-class-in-one-block",
+					"layout-keep-layout-intent-explicit",
+					"layout-reach-for-intrinsic-sizing-before-breakpoints"
+				]
+			}
+		},
+		{
+			"id": "css-width-property-without-breakpoint",
+			"prompt": "Change only the existing min-width declaration from 160px to 180px in the page toolbar class. Keep selectors, declarations count, parent-child layout ownership, and all media/container conditions unchanged.",
+			"files": [
+				"src/page/products/pg-products.css"
+			],
+			"expectedSkills": [
+				"css"
+			],
+			"expectedSelected": {
+				"css": []
+			}
+		},
+		{
+			"id": "css-positive-descendant-state-no-negation",
+			"prompt": "Change the existing border-color literal within &:hover .pg_salesPanel__preview. Keep the selector, class names, and nesting unchanged. There is no :not(), modifier, token, transition, or focus declaration.",
+			"files": [
+				"src/page/detail/sales-trend-panel/pg-sales-trend-panel.css"
+			],
+			"expectedSkills": [
+				"css"
+			],
+			"expectedSelected": {
+				"css": [
+					"selector-use-pseudo-classes-for-dom-owned-states",
+					"selector-nest-dom-state-in-the-owning-block"
+				]
+			}
+		},
+		{
+			"id": "css-core-token-fallback-removal",
+			"prompt": "Remove only the literal fallback from var(--app-color-surface, white) in an existing class declaration. The core token is already guaranteed in every theme; change no token definitions or theme conditions.",
+			"files": [
+				"src/page/products/pg-products.css"
+			],
+			"expectedSkills": [
+				"css"
+			],
+			"expectedSelected": {
+				"css": [
+					"values-fall-back-only-outside-core-tokens"
+				]
+			}
+		},
+		{
+			"id": "css-core-token-definition-not-animation",
+			"prompt": "Change only the value of an existing --app-color-surface declaration in the token file. It is not a new token, a token rename, a theme branch, a CSS animation, or a transition.",
+			"files": [
+				"src/style/token.css"
+			],
+			"expectedSkills": [
+				"css"
+			],
+			"expectedSelected": {
+				"css": []
+			}
+		},
+		{
+			"id": "css-readonly-style-context",
+			"prompt": "Change only the visible button label from Save to Apply in pg-products.tsx. Existing className, style import, stylesheet, props, and event handlers are unchanged context. Do not introduce new styling.",
+			"files": [
+				"src/page/products/pg-products.tsx"
+			],
+			"expectedSkills": [
+				"react",
+				"typescript"
+			],
+			"expectedSelected": {
+				"react": [
+					"a11y-give-interactive-elements-an-accessible-name"
+				],
+				"typescript": []
+			},
+			"scopeDrift": {
+				"evidence": "After the text edit, pass the existingButtonStyle object to the same button as style={existingButtonStyle}. Keep the existing style object, its values, imports, and className unchanged. Adding the style attribute is now an actual styling change.",
+				"files": [
+					"src/page/products/pg-products.tsx"
+				],
+				"expectedSkills": [
+					"react",
+					"typescript",
+					"css"
+				],
+				"expectedSelected": {
+					"react": [
+						"a11y-give-interactive-elements-an-accessible-name"
+					],
+					"typescript": [],
+					"css": [
+						"composition-do-not-style-through-the-style-attribute"
+					]
+				}
 			}
 		}
 	]

@@ -5,7 +5,8 @@
 다른 프로젝트용 시작 템플릿은 [AGENTS.template.md](./AGENTS.template.md).
 그 문서는 이 저장소와 무관하게 독립적으로 동작한다.
 
-핵심 제약은 하나다. **사람이 고치는 곳은 `rules/*.md` 뿐**이고 나머지는 build가 만든다.
+핵심 제약은 하나다. **규칙은 `rules/*.md`에서 고치고 생성물은 build로 갱신한다.**
+라우터·메타데이터·라우팅 오라클의 수정 범위는 3절에 정리했다.
 
 | 단계 | 대상 | 성격 |
 | --- | --- | --- |
@@ -51,7 +52,7 @@ build tooling은 [package/](./package/README.md).
 | [skill/css](./skill/css/HANDBOOK.md) | progressive |
 
 progressive는 `SKILL.md` → `RULES_INDEX.md` → 걸린 `contracts/*.md`로 좁힌다.
-셋 다 progressive 다.
+셋 다 progressive다.
 
 `metadata.json.companions`가 `required`와 `conditional` 활성화를 선언한다.
 계층은 이 선언이 정한다. 나를 companion으로 켜는 skill이 위 계층이고,
@@ -98,7 +99,7 @@ progressive `routing-evals.json`.
 
 | 키 | 동작 |
 | --- | --- |
-| `appliesWhen` | 이 규칙이 걸리는 조건. 한 줄, 160자 이내 |
+| `appliesWhen` | 이 규칙이 걸리는 조건. 불릿 목록 또는 한 줄로 작성하며, 합쳐진 라우팅 문장은 160자 이내 |
 | `requiresSelected` | 함께 적용하는 필수 관계. cross-skill 이면 companion도 활성화 |
 | `reviewWith` | 재평가 힌트. 자동 적용 아님. 방향 있음 — 역방향 추론 금지 |
 | `requiredOnCompletion` | 마무리 시 항상 적용. 인덱스에는 `completionGate`로 찍히고 `SKILL.md` 3절이 그 이름으로 안내한다. 지금 이 키를 쓰는 규칙은 없다 |

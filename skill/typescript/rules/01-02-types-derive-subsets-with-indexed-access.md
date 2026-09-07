@@ -2,7 +2,7 @@
 title: Derive Subsets With Indexed Access Instead of `Pick`
 titleKo: 부분집합은 `Pick` 대신 인덱스 접근 `interface`로 파생합니다
 impact: MEDIUM-HIGH
-impactDescription: 고른 필드의 이름과 출처가 선언에 그대로 보이고 `?`·`readonly`가 흘러나가지 않습니다
+impactDescription: 고른 필드의 이름과 출처를 드러내고 선택 여부와 읽기 전용 속성을 보존합니다
 appliesWhen:
   - 기존 타입의 일부 필드만 담는 형태를 선언·변경할 때
   - `Pick`·`Omit`·`Partial`·`Required`를 추가·변경할 때
@@ -13,50 +13,33 @@ tags: types
 
 ## Derive Subsets With Indexed Access Instead of `Pick`
 
-**Impact: MEDIUM-HIGH (고른 필드의 이름과 출처가 선언에 그대로 보이고 `?`·`readonly`가 흘러나가지 않습니다)**
+**Impact: MEDIUM-HIGH (고른 필드의 이름과 출처를 드러내고 선택 여부와 읽기 전용 속성을 보존합니다)**
 
-기존 타입의 일부만 필요하면 `interface`를 선언하고 각 필드를 `원본["필드"]` 인덱스 접근으로 가져옵니다.
-어느 타입을 그대로 참조하고 어느 때 새로 선언하는지는 `types-reuse-existing-contracts-before-new-types`가 정합니다.
+기존 계약의 일부 필드는 `interface`에 `원본["필드"]`로 적고, `Pick`은 쓰지 않습니다.
+계약 전체를 재사용할지는 `types-reuse-existing-contracts-before-new-types`가 정합니다.
 
-**`Pick`은 쓰지 않습니다.**
-고르는 것은 언제나 닫힌 집합이라 서드파티 타입이어도 `interface`에 인덱스 접근으로 적을 수 있습니다.
-**`Omit`은 원본을 따라가야 하는 자리에만 씁니다.**
-
-가르는 질문은 하나입니다.
-
-> 원본에 필드가 하나 늘면 이 타입도 따라 늘어야 하는가?
-
-| 답 | 무엇인가 | 쓰는 것 |
+| 원본에 필드가 추가될 때 | 선언 방식 | 예 |
 | --- | --- | --- |
-| 아니다 | 우리가 고른 닫힌 집합 | `interface` + `원본["필드"]` |
-| 그렇다 | 원본을 따라가야 하는 열린 집합 | `Omit<원본, "뺄 이름">` |
+| 따라 늘면 안 됨 | `interface` + 인덱스 접근 | `UserPreview`에는 새 `ssn` 필드가 들어오지 않습니다 |
+| 따라 늘어야 함 | `Omit<원본, "뺄 이름">` | 외부 계약의 필드 추가를 그대로 받습니다 |
+| 전체 필드를 선택 또는 필수로 바꾸면서 원본의 필드 추가도 따라야 함 | `Partial`, `Required` | 열린 집합에만 씁니다 |
+| 필드 하나의 타입만 필요함 | 인덱스 접근 별칭 | `type ProductId = ProductRecord["id"]` |
 
-`Omit`은 빼려는 이름이 원본에서 사라져도 오류가 나지 않으므로 원본이 바뀔 때 그 이름을 직접 확인합니다.
+`Omit`은 제외한 이름이 원본에서 사라져도 오류가 나지 않으므로 원본 변경 시 이름을 확인합니다.
+`ReturnType`, `Parameters`, `Awaited`는 필드를 고르는 연산이 아니므로 대상이 아닙니다.
 
-| 예 | 집합 | 적는 것 |
-| --- | --- | --- |
-| `UserPreview` | 닫힘. `UserRecord`에 `ssn`이 생겨도 받으면 안 됩니다 | 필드를 손으로 적습니다 |
-| 외부 패키지가 필드를 더하면 따라 받아야 하는 `Omit<원본, "뺄 이름">` | 열림. 원본이 늘면 우리 타입도 늘어야 합니다 | 뺄 이름만 적습니다. 남는 속성을 손으로 다 적을 수도 없습니다 |
+인덱스 접근은 필드 이름과 출처를 선언에 남겨 여러 계약의 필드를 모으고 각각 문서화하기 좋습니다.
+필드 주석은 `types-document-custom-types-and-shapes`를 따릅니다.
+원본 필드의 타입 변경과 삭제는 인덱스 접근과 `Pick` 모두 컴파일 검사에 반영됩니다.
 
-`Partial`과 `Required`도 원본을 따라가야 하는 자리에서만 씁니다.
-`ReturnType`, `Parameters`, `Awaited`는 형태에서 필드를 고르는 일이 아니어서 이 규칙 대상이 아닙니다.
-
-| 인덱스 접근 `interface` | `Pick` |
+| 보존할 계약 | 적는 법 |
 | --- | --- |
-| 필드 이름이 선언에 그대로 보입니다 | 이름이 문자열 인자 안에 숨습니다 |
-| 필드마다 문서 주석을 답니다. `types-document-custom-types-and-shapes` 규칙이 그렇게 요구합니다 | 필드가 없어 헤더 주석밖에 못 답니다 |
-| 필드마다 출처가 따로 남아 여러 계약에서 모을 수 있습니다 | 원본 하나에서만 뽑을 수 있습니다 |
+| 선택 필드의 키 생략 | `?`를 직접 붙입니다. 없으면 `string \| undefined`여도 필수 필드입니다 |
+| 읽기 전용 필드 | `readonly`를 직접 붙입니다. 인덱스 접근만으로는 복사되지 않습니다 |
+| `exactOptionalPropertyTypes`가 켜진 선택 필드의 쓰기 타입 | `name?: Required<Src>["name"]`으로 원본의 명시적 `undefined` 허용 여부를 보존합니다 |
 
-원본 필드의 타입이 바뀌면 인덱스 접근과 `Pick` 둘 다 따라갑니다.
-원본에서 필드가 사라지면 둘 다 그 자리에서 컴파일 오류가 납니다.
-
-**인덱스 접근은 타입만 가져오고 `?`와 `readonly`는 가져오지 않으므로 직접 적습니다.**
-`nickname?: string`을 `nickname: Src["nickname"]`으로 옮기면 `string | undefined`인 **필수** 필드가 됩니다.
-`readonly id: string`도 인덱스 접근으로 옮기면 쓰기가 열립니다.
-원본에서 `?`나 `readonly`가 붙은 필드는 파생한 `interface`에도 같이 적습니다.
-
-필드가 없는 별칭 하나만 필요하면 인덱스 접근을 그대로 씁니다.
-`type ProductId = ProductRecord["id"];`가 그 경우입니다.
+선택 필드에 `name?: Src["name"]`을 쓰면 읽기 타입의 `undefined`까지 대입하도록 계약을 넓힐 수 있습니다.
+이를 막는 `Required<원본>["필드"]`는 닫힌 집합에서도 허용하며, 이 처리 때문에 컴파일러 옵션을 바꾸지 않습니다.
 
 **Incorrect (`Pick`으로 골라 필드 이름과 설명이 사라집니다):**
 
@@ -85,11 +68,11 @@ interface UserPreview {
 	/**
 	 * 목록에 표시할 이름. 원본에서 선택 필드라 여기서도 선택으로 둔다
 	 */
-	name?: UserRecord["name"];
+	name?: Required<UserRecord>["name"];
 }
 ```
 
-**Incorrect (인덱스 접근으로 옮기면서 `?`와 `readonly`를 흘립니다):**
+**Incorrect (인덱스 접근으로 옮기면서 선택 여부와 읽기 전용 속성을 누락합니다):**
 
 ```ts
 // 원본: ProductRecord.id 는 readonly, UserRecord.name 은 선택 필드다
@@ -122,7 +105,7 @@ interface ProductListRow {
 	/**
 	 * 마지막 수정자 이름. 원본에서 선택 필드라 여기서도 선택으로 둔다
 	 */
-	ownerName?: UserRecord["name"];
+	ownerName?: Required<UserRecord>["name"];
 }
 ```
 

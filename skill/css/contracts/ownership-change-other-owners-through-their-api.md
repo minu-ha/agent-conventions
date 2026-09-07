@@ -1,26 +1,20 @@
 # Change Other Owners Through Their API
 
-**Impact: MEDIUM-HIGH (남의 모습을 바꿀 때 배치, 변형, 내림 가운데 무엇이 맞는지 먼저 봅니다)**
+**Impact: MEDIUM-HIGH (다른 소유자의 모습을 바꿀 때 배치 조정, 변형 노출, 레이어 이동을 순서대로 판단합니다)**
 
-바꿀 것이 남의 모습이면 세 가지를 순서대로 봅니다.
+다른 소유자의 모습을 바꿀 때는 아래 세 방법을 순서대로 확인합니다.
 
-| 상황 | 방법 | 바꾸는 곳 |
+| 상황 | 방법 | 수정 위치 |
 | --- | --- | --- |
-| 최상위 배치만 다름 | 사용처가 `className`을 넘기고 자기 클래스로 스타일을 줍니다 | 사용처 TSX와 사용처 CSS |
-| 내부 모습이 여러 사용처에서 같게 반복됨 | 그 소유자가 `variant` 프롭으로 수정자를 노출합니다 | 소유자 TSX와 소유자 CSS, 사용처 TSX |
-| 레이어 판정이 화면 소유로 나옴 | 화면 폴더 안으로 내립니다 | 파일 위치와 접두사 |
+| 최상위 배치만 다름 | 사용처가 `className`을 넘겨 자기 클래스로 스타일을 줍니다 | 사용처 TSX와 CSS |
+| 내부 모습이 여러 사용처에서 같게 반복됨 | 소유자가 `variant` 프롭으로 수정자를 노출합니다 | 소유자 TSX와 CSS, 사용처 TSX |
+| 레이어 판정 결과가 화면 소유임 | 프롭을 추가하지 않고 화면 폴더로 파일을 옮깁니다 | 파일 위치와 접두사 |
 
-세 행에 안 맞으면 내 최상위 블록 안에서 선택자로 잡습니다.
-그 방법은 `ownership-use-foreign-classes-only-under-your-own-root` 규칙이 정합니다.
-**막다른 길이 아니라 마지막 선택지입니다.**
+화면 소유 여부는 사용 횟수가 아니라 활성화된 프레임워크 규약으로 판단합니다.
+세 방법이 모두 맞지 않으면 `ownership-use-foreign-classes-only-under-your-own-root`에 따라 내 최상위 블록 안에서
+선택자로 지정합니다.
 
-셋째 행을 흔히 놓칩니다.
-내리는 기준은 사용 횟수가 아니라 레이어 판정입니다.
-컴포넌트가 어느 레이어 것인지는 활성화된 프레임워크 규약이 판단합니다.
-내릴 때 프롭을 열지 않고 파일만 옮깁니다.
-
-`className`이 최상위까지만 닿는 것은 제약이 아니라 경계입니다.
-컴포넌트가 무엇을 노출하는지는 `composition-inject-classes-only-at-the-entry-point` 규칙이 정합니다.
-여기서는 사용처가 세 가지 가운데 무엇을 고를지만 봅니다.
+`className`을 최상위까지만 전달하는 경계는 `composition-inject-classes-only-at-the-entry-point` 규칙이 정합니다.
+이 규칙은 사용처가 어떤 방법을 고를지 판단합니다.
 
 > 예시·예외가 필요하면 [full rule](../rules/02-04-ownership-change-other-owners-through-their-api.md)을 읽습니다.

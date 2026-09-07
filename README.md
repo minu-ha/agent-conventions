@@ -4,7 +4,7 @@
 
 - 규칙 정본은 `skill/` 한 곳
 - 프로젝트는 복사 없이 skill 이름만 참조
-- 사람은 생성된 핸드북으로 읽음
+- 사람은 생성된 뷰어와 핸드북으로 읽음
 - 에이전트는 라우터 → 인덱스 → 걸린 규칙만
 
 ---
@@ -53,7 +53,8 @@ ln -s /absolute/path/to/agent-conventions/skill ~/.agents/skills/conventions
 이미 `AGENTS.md`가 있으면 컨벤션 항목에 skill 이름만 추가.
 
 프로젝트에는 owner skill만 적는다.
-`convention-react` 하나면 `convention-typescript`와 `convention-css`는 `metadata.json` 선언대로 따라 켜진다.
+`convention-react`는 `convention-typescript`를 항상 함께 켜고,
+스타일이 바뀔 때만 `convention-css`를 추가한다. 활성화 조건은 `metadata.json`이 선언한다.
 
 ### 1.3 담당 영역 핸드북
 
@@ -66,15 +67,17 @@ ln -s /absolute/path/to/agent-conventions/skill ~/.agents/skills/conventions
 다른 skill 규칙을 가리키는 점선 칩을 누르면 그 skill로 옮겨가 해당 규칙을 펼친다.
 규칙 번호(`1.1`, `7.2`)는 `HANDBOOK.md` 헤딩 번호와 같아서 두 문서를 번호로 맞춰 볼 수 있다.
 
-`HANDBOOK.md`는 에이전트가 전체 검토를 요청받았을 때 읽는 생성물이다.
-사람이 통독할 문서로 만들어진 것이 아니다.
+`HANDBOOK.md`는 규칙 전문을 모은 생성물이다.
+사람이 통독하거나 에이전트가 전체 검토를 명시적으로 요청받았을 때 읽는다.
 
 전체를 외울 필요 없다. 담당 영역만 한 번 훑으면 리뷰에서 덜 돌아온다.
 
 | 작업 영역 | 핸드북 |
 | --- | --- |
 | React 화면 · 컴포넌트 | [react](./skill/react/HANDBOOK.md) + [typescript](./skill/typescript/HANDBOOK.md) |
-| 스타일시트 · `className` | 위 둘 + [css](./skill/css/HANDBOOK.md) |
+| React의 `className` · 스타일 | 위 둘 + [css](./skill/css/HANDBOOK.md) |
+| 순수 CSS 스타일시트 | [css](./skill/css/HANDBOOK.md) |
+| 프레임워크와 무관한 TypeScript | [typescript](./skill/typescript/HANDBOOK.md) |
 
 핸드북마다 번호 목차와 Impact 등급이 있다. `CRITICAL`부터 본다.
 규칙마다 Incorrect / Correct 예시가 붙어 있다.
@@ -105,7 +108,7 @@ TSX 파일 하나를 고쳐 달라고 시켜본다. 에이전트는 이 순서�
 | README.md | 이 문서. 설치와 적용 |
 | [CONTRIBUTING.md](./CONTRIBUTING.md) | 규칙 추가·수정 절차 |
 | [conventions.html](./conventions.html) | **규칙 조회.** 세 skill의 규칙을 검색·필터로 찾는다. 데이터인 `conventions-data.js`와 같은 폴더에 두고 연다 |
-| `skill/<name>/HANDBOOK.md` | 규칙 전문. 에이전트 전체 검토용 생성물 |
+| `skill/<name>/HANDBOOK.md` | 규칙 전문. 통독과 에이전트 전체 검토용 생성물 |
 | [overview.html](./overview.html) | 실행 흐름 · 스킬 관계 · 규칙 관계 |
 | [docs/progressive-loading.html](./docs/progressive-loading.html) | 설계 배경 · 측정 · 검증 · 한계 |
 | [package/README.md](./package/README.md) | build · validate · test tooling |
@@ -120,7 +123,8 @@ TSX 파일 하나를 고쳐 달라고 시켜본다. 에이전트는 이 순서�
 | `skill/<name>/RULES_INDEX.md` | 규칙 목록. progressive 전용 |
 | `skill/<name>/contracts/*.md` | 걸린 규칙의 계약. progressive 전용 |
 
-`.html` 둘은 브라우저나 WebStorm HTML 프리뷰로 연다. 외부 의존성 없는 단일 파일.
+HTML 문서는 브라우저나 WebStorm HTML 프리뷰로 연다.
+`conventions.html`은 같은 폴더의 `conventions-data.js`를 함께 사용한다.
 
 ---
 
@@ -149,7 +153,7 @@ progressive skill 셋은 규칙 전체를 안 읽는다. 단계마다 좁힌다.
 | 1 | `SKILL.md` | 라우터. 무엇이 바뀌었는지 판정 | 항상 |
 | 2 | `RULES_INDEX.md` | 규칙당 한 줄. 끝까지 훑음 | 항상 |
 | 3 | `contracts/<id>.md` | 걸린 규칙의 규범만. 예시 제외 | 걸린 규칙만 |
-| 4 | `rules/<id>.md` | 원문 | `CRITICAL` 이거나 판단이 모호할 때 |
+| 4 | `rules/NN-MM-<id>.md` | 원문과 `Correct` 예제 | `CRITICAL`, 형태를 정하는 규칙, 판단이 모호할 때 |
 
 `HANDBOOK.md`는 이 경로 밖이다. 사람이 통독할 때 쓰고,
 에이전트는 명시적 요청이 있을 때만 읽는다.
@@ -164,7 +168,7 @@ progressive skill 셋은 규칙 전체를 안 읽는다. 단계마다 좁힌다.
 | 증상 | 원인 |
 | --- | --- |
 | 에이전트가 컨벤션을 모름 | symlink 미설치, 또는 재시작 안 함 |
-| 불필요한 규칙까지 적용 | 알려진 약점. 누락보다는 안전한 실패 |
+| 불필요한 규칙까지 적용 | `appliesWhen`의 제외 조건과 실제 변경 범위를 대조하고 `reviewWith`를 자동 적용하지 않았는지 확인 |
 | `HANDBOOK.md` 수정이 되돌아옴 | 생성물. `rules/*.md`를 고쳐야 함 |
 | 규칙이 걸린 이유가 불분명 | 그 규칙 frontmatter의 `appliesWhen` 확인 |
 

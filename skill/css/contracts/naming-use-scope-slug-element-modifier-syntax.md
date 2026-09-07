@@ -1,26 +1,21 @@
 # Use Scope, Slug, Element, and Modifier Syntax
 
-**Impact: MEDIUM-HIGH (클래스명만 보고 누가 소유하고 어떤 역할인지 읽힙니다)**
+**Impact: MEDIUM-HIGH (클래스명에서 소유자와 역할을 확인할 수 있습니다)**
 
 클래스명은 `<scope>_<slug>__<element>[--<modifier>]` 문법을 씁니다.
-구분자 `_`, `__`, `--`를 고정하고 각 자리의 책임을 섞지 않습니다.
-
-네 자리를 아래처럼 읽습니다.
-다른 규칙 본문에서도 이 한국어 이름으로 부릅니다.
+구분자 `_`, `__`, `--`를 고정하고 각 자리의 역할을 구분합니다.
+다른 규칙에서도 아래 한국어 이름을 씁니다.
 
 | 자리 | 읽는 이름 | 담는 것 |
 | --- | --- | --- |
 | `scope` | 범위 | `pg`, `wg`, `ui` 중 하나. 소문자로 씁니다 |
-| `slug` | 식별자 | 그 CSS 파일 소유자의 이름. camelCase |
-| `element` | 요소 | 소유자 안의 UI 역할. camelCase. `listButton`, `emptyState` |
-| `modifier` | 수정자 | 클래스 뒤에 `--`로 붙는 자리. camelCase. 무엇을 담을 자격이 있는지는 `composition-do-not-build-structural-variants-with-modifiers`가 정합니다 |
+| `slug` | 식별자 | CSS 파일 소유자의 이름. camelCase로 씁니다 |
+| `element` | 요소 | 소유자 안의 UI 역할. `listButton`, `emptyState`처럼 camelCase로 씁니다 |
+| `modifier` | 수정자 | 클래스 뒤에 `--`로 붙는 이름. camelCase로 쓰며 허용 범위는 `composition-do-not-build-structural-variants-with-modifiers`가 정합니다 |
 
-수정자와 변형은 다릅니다.
-수정자는 클래스 뒤에 붙는 `--이름`이고, 변형은 컴포넌트가 받는 `variant` 프롭입니다.
-
+수정자는 클래스의 `--이름`이고, 변형은 컴포넌트가 받는 `variant` 프롭입니다.
 식별자에는 접두사가 이미 드러낸 낱말을 반복하지 않습니다.
-`UiButton`은 `ui_button`이고 `ui_uiButton`이 아닙니다.
-
-`selector-class-pattern`에 이 문법을 정규식으로 넣으면 기계가 검사합니다.
+`UiButton`은 `ui_button`으로 쓰고 `ui_uiButton`으로 쓰지 않습니다.
+기계 검증은 이 문법을 정규식으로 등록한 `selector-class-pattern`이 담당합니다.
 
 > 예시·예외가 필요하면 [full rule](../rules/01-02-naming-use-scope-slug-element-modifier-syntax.md)을 읽습니다.

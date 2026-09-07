@@ -2,7 +2,7 @@
 title: Defer Heavy Renders Only With Measured Evidence
 titleKo: 측정한 근거가 있을 때만 무거운 렌더를 미룹니다
 impact: MEDIUM
-impactDescription: 무겁다고 짐작해서 트랜지션과 지연 값으로 감싸지 않고 실제로 무거운 자리만 미룹니다
+impactDescription: 측정한 렌더 병목에만 트랜지션과 지연 값을 적용합니다
 appliesWhen:
   - `startTransition`·`useTransition`·`useDeferredValue`를 추가·삭제할 때
   - 목록이나 표가 커져 입력 반응이 늦다는 보고를 받았을 때
@@ -12,37 +12,31 @@ tags: perf, state
 
 ## Defer Heavy Renders Only With Measured Evidence
 
-**Impact: MEDIUM (무겁다고 짐작해서 트랜지션과 지연 값으로 감싸지 않고 실제로 무거운 자리만 미룹니다)**
+**Impact: MEDIUM (측정한 렌더 병목에만 트랜지션과 지연 값을 적용합니다)**
 
-렌더를 미루는 도구는 `startTransition`, `useTransition`, `useDeferredValue`입니다.
-**먼저 미룰 만큼 무거운지 확인합니다.**
+`startTransition`·`useTransition`·`useDeferredValue`는 렌더 비용을 측정한 뒤 사용합니다.
+목록 행 수와 조작별 소요 시간을 확인하고, `perf-avoid-defensive-memoization`의 예외나 예상 규모만 근거로 삼지 않습니다.
 
-`perf-avoid-defensive-memoization`이 허용하는 세 사유 중 측정한 병목 하나만 여기서 근거가 됩니다.
-목록이 몇 줄인지, 어느 조작이 몇 밀리초 걸렸는지 확인한 뒤에 씁니다.
-"목록이 커질 것 같아서"는 근거가 아닙니다.
-
-미루기로 했으면 원인이 어디에 있느냐에 따라 도구가 갈립니다.
-
-| 원인 | 쓰는 것 |
+| 상황 | 선택 |
 | --- | --- |
-| 내가 부르는 `setState`가 무거운 렌더를 일으킴 | `startTransition`으로 그 호출을 감쌉니다 |
-| 값은 즉시 반응해야 하는데 그 값에서 파생되는 렌더가 무거움 | `useDeferredValue`로 한 박자 지연 값을 만듭니다 |
+| 직접 호출하는 상태 갱신이 무거운 렌더를 일으킴 | `startTransition`으로 호출을 감쌉니다. 프롭으로 받은 갱신 함수도 같습니다 |
+| 값은 즉시 반응해야 하지만 파생 렌더는 미룰 수 있음 | `useDeferredValue`로 지연 값을 만듭니다 |
+| 갱신 함수를 호출할 수 없고 프롭·훅 반환값만 받음 | `useDeferredValue`를 씁니다 |
+| 트랜지션 진행 표시가 필요함 | 대기 상태를 주지 않는 `startTransition` 대신 `useTransition`의 `isPending`을 씁니다 |
 
-`set` 함수가 내 것이 아니면 `startTransition`을 쓸 수 없습니다.
-그때는 `useDeferredValue`입니다.
+입력값 자체·폼 오류·즉시 비활성화 같은 급한 반응은 트랜지션에 넣지 않습니다.
+`await` 뒤에는 리액트가 트랜지션 문맥을 이어가지 못하므로 상태 갱신을 다시 `startTransition`으로 감쌉니다.
 
-- 입력값 자체, 폼 오류, 즉시 비활성화처럼 급한 반응은 트랜지션에 넣지 않습니다.
-- `startTransition`은 대기 상태를 알려 주지 않습니다.
-  진행 표시가 필요하면 `useTransition`의 `isPending`을 씁니다.
-- `await` 뒤에 상태를 갱신하면 그 갱신을 다시 `startTransition`으로 감쌉니다.
-  `await` 뒤에는 트랜지션 범위가 끊깁니다.
-  리액트가 비동기 문맥을 이어가지 못하기 때문입니다.
-- 무거운 하위 트리의 렌더를 늦추려면 지연 값을 받는 컴포넌트가 `memo`여야 합니다.
-  `memo`가 아니면 부모가 다시 렌더할 때 그 트리도 함께 다시 렌더합니다.
-- 무거운 것이 하위 트리 렌더가 아니라 계산이면 `memo`가 필요 없습니다.
-  `useMemo`가 지연 값에서만 다시 계산하므로 급한 입력 렌더는 그 계산을 건너뜁니다.
-- 지연 값 기준 재계산에 `useMemo`를 함께 쓰는 것은 `perf-avoid-defensive-memoization`의 허용 사유에 듭니다.
-  그때도 측정한 근거를 주석으로 남깁니다.
+| 무거운 작업 | 최적화 조건 |
+| --- | --- |
+| 하위 트리 렌더 | 같은 프롭이면 렌더를 건너뛸 수 있어야 합니다. 컴파일러가 이를 제공하지 않으면 지연 값을 받는 컴포넌트를 `memo`로 감쌉니다 |
+| 함께 전달하는 객체·콜백 | 매번 달라지면 `memo`가 있어도 다시 렌더되므로 참조를 확인합니다 |
+| 지연 값에서 파생되는 계산 | 컴포넌트 `memo` 대신 `useMemo`로 지연 값이 바뀔 때만 재계산합니다. 측정 근거를 주석으로 남깁니다 |
+
+지연 값 기준 재계산은 `perf-avoid-defensive-memoization`의 허용 사유에 해당합니다.
+`startTransition`의 콜백은 즉시 실행되며, 안쪽의 무거운 동기 계산이나 네트워크 요청 자체를 미루지 않습니다.
+`useDeferredValue`는 고정 지연 시간이 없고 요청 횟수를 줄이는 디바운스도 아닙니다.
+긴 동기 계산 하나는 실행 도중 중단되지 않으므로 렌더 지연만으로 입력 지연이 사라진다고 가정하지 않습니다.
 
 **Incorrect (행 20개 목록을 다시 그리는 갱신까지 트랜지션으로 감쌉니다):**
 

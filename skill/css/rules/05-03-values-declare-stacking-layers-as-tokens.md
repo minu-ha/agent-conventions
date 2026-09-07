@@ -2,7 +2,7 @@
 title: Declare Stacking Layers as Tokens in One Place
 titleKo: `z-index` 층은 토큰 파일 한 곳에 선언합니다
 impact: MEDIUM-HIGH
-impactDescription: 무엇이 무엇 위에 오는지가 한 파일에서 읽히고 숫자 경쟁이 생기지 않습니다
+impactDescription: 층 순서를 한 파일에서 확인하고 `z-index` 숫자를 임의로 늘리지 않습니다
 appliesWhen:
   - `z-index`를 새로 넣거나 값을 바꿀 때
   - 겹쳐 뜨는 요소를 추가할 때
@@ -12,43 +12,37 @@ tags: values, layering
 
 ## Declare Stacking Layers as Tokens in One Place
 
-**Impact: MEDIUM-HIGH (무엇이 무엇 위에 오는지가 한 파일에서 읽히고 숫자 경쟁이 생기지 않습니다)**
+**Impact: MEDIUM-HIGH (층 순서를 한 파일에서 확인하고 `z-index` 숫자를 임의로 늘리지 않습니다)**
 
-층은 전역 토큰 파일에 한 번 선언하고 `z-index`는 그 이름만 씁니다.
-`layout-keep-layout-intent-explicit` 규칙이 숫자를 직접 쓰지 말라고 하고, 여기서는 그 목록을 정합니다.
+층은 전역 토큰 파일에 한 번 선언하고 `z-index`에서는 토큰 이름만 씁니다.
+`layout-keep-layout-intent-explicit`에 따라 숫자를 직접 쓰거나 사용처에서 층 사이 값을 만들지 않습니다.
 
-층은 넷입니다.
-쓰는 쪽에서 사이 값을 만들지 않습니다.
-
-| 토큰 | 값 | 무엇이 오는가 |
+| 토큰 | 값 | 용도 |
 | --- | --- | --- |
 | `--app-z-index-base` | `0` | 일반 흐름 |
 | `--app-z-index-sticky` | `100` | `sticky` 헤더, 툴바 |
 | `--app-z-index-overlay` | `200` | 모달, 드로어, 백드롭 |
 | `--app-z-index-popper` | `300` | 툴팁, 드롭다운, 알림 |
 
-새 층이 필요해 보이면 먼저 넷 중 하나에 들어가는지 봅니다.
-넷 다 아니면 토큰 파일에 층을 추가하고 값 간격은 100을 유지합니다.
-
+새 용도가 네 층에 모두 맞지 않을 때만 토큰 파일에 층을 추가하고 100 간격을 유지합니다.
 **층 순서는 같은 쌓임 맥락 안에서만 성립합니다.**
-조상이 아래 중 하나면 새 쌓임 맥락이 생기고, 그 안의 `popper`가 바깥의 `sticky`에 집니다.
+조상의 맥락이 바깥 `sticky`보다 아래면 내부 `popper`의 숫자를 올려도 그 위로 나오지 못합니다.
 
-- `position`이 `fixed` 또는 `sticky`
-- `transform`, `filter`, `backdrop-filter`가 있음
-- `will-change`에 위 속성 중 하나를 적음
-- `opacity`가 1 미만
-- `isolation: isolate`
-- `contain`이 `layout`, `paint`, `content`, `strict` 중 하나
+| 새 쌓임 맥락을 만드는 대표 속성 | 조건 |
+| --- | --- |
+| `position` | `relative` 또는 `absolute`이면서 `z-index`가 `auto`가 아님. `fixed`와 `sticky`는 자체로 만듭니다 |
+| `transform`, `filter`, `backdrop-filter` | `none`이 아님 |
+| `will-change` | 쌓임 맥락을 만드는 속성을 지정함 |
+| `opacity`, `isolation`, `contain` | `opacity`는 1 미만, `isolation`은 `isolate`, `contain`은 `layout`, `paint`, `content`, `strict` 중 하나 |
 
-겹쳐 뜨는 요소가 가려지면 `z-index` 값을 올리기 전에 조상부터 확인합니다.
+| 요소가 가려졌을 때 확인할 것 | 조치 |
+| --- | --- |
+| `z-index` 적용 여부 | 일반 요소는 `static`이면 적용되지 않고 `relative`부터 적용됩니다. `flex`와 `grid` 아이템은 `static`이어도 `auto`가 아닌 값이 적용되고 쌓임 맥락도 만듭니다 |
+| 같은 층 안의 순서 충돌 | 층 분류를 다시 봅니다. 값을 `+1` 하지 않습니다 |
+| 조상의 쌓임 맥락이나 잘림 | 해당 조상 밖의 포털 대상으로 옮깁니다. 포털도 실제 부착 위치의 DOM 맥락을 따르므로 대상 위치를 확인합니다 |
+| `showModal()`로 연 `dialog`나 열린 popover | 최상위 레이어이므로 일반 문서의 `z-index` 토큰으로 그 위에 올라가려 하지 않습니다 |
 
-- `position`이 `static`이면 `z-index`가 적용되지 않고 `relative`부터 적용됩니다.
-  `flex` 아이템과 `grid` 아이템은 예외입니다.
-  `static`이어도 `z-index`가 `auto`가 아니면 그 값이 적용되고 쌓임 맥락도 만듭니다.
-- 같은 층 안에서 순서를 다투면 층이 잘못 잡힌 것입니다.
-  값을 `+1` 하지 않습니다.
-- 화면 밖으로 나가야 하는 것은 층을 올리지 말고 포털로 옮깁니다.
-  그러면 조상의 쌓임 맥락에서 벗어납니다.
+숫자를 올리기 전에 조상부터 확인합니다.
 
 **Incorrect (숫자를 직접 쓰고 경쟁으로 올립니다):**
 
@@ -79,7 +73,7 @@ tags: values, layering
 
 /* src/page/products/pg-products.css */
 .pg_products__toolbar {
-	/* 조상에 transform이 없어야 이 층이 유지된다. sticky 자체가 새 쌓임 맥락이라 안의 드롭다운은 포털로 밖에 그린다 */
+	/* 페이지 스크롤 컨테이너에 붙는다. 드롭다운이 이 쌓임 맥락을 벗어나야 하면 포털 대상을 밖에 둔다 */
 	position: sticky;
 	z-index: var(--app-z-index-sticky);
 }

@@ -1,8 +1,8 @@
 ---
 title: Choose Single Components, Compound Components, and Variants Deliberately
-titleKo: 단일, 합성, 변형 중 가장 단순한 조립을 고릅니다
+titleKo: 단일·합성·변형 중 필요한 구조를 고릅니다
 impact: MEDIUM-HIGH
-impactDescription: 필요한 확장점은 열면서 가장 단순한 구조를 고르게 돕습니다
+impactDescription: 필요한 확장 범위에 맞춰 단순한 컴포넌트 구조를 선택합니다
 appliesWhen:
   - 내보낸 공용 컴포넌트에 슬롯, 공개 부품, 공용 컨텍스트나 동작을 추가할 때
   - 반복되는 기본 설정이나 모드 API를 추가할 때
@@ -15,27 +15,24 @@ tags: strategy, composition, variants, components
 
 ## Choose Single Components, Compound Components, and Variants Deliberately
 
-**Impact: MEDIUM-HIGH (필요한 확장점은 열면서 가장 단순한 구조를 고르게 돕습니다)**
+**Impact: MEDIUM-HIGH (필요한 확장 범위에 맞춰 단순한 컴포넌트 구조를 선택합니다)**
 
 공용 컴포넌트는 프롭스보다 구조를 먼저 고릅니다.
-표를 위에서부터 읽어 지금 필요한 것까지 내려갑니다.
-마지막 줄은 앞 줄을 대체하지 않고 그 조립을 한 이름으로 감쌉니다.
+표를 위에서부터 읽어 현재 필요한 단계까지만 적용합니다.
 
 | 상황 | 선택 |
 | --- | --- |
-| 고정 UI | 단일 컴포넌트. 화면 지역 JSX로 둘지는 `screen-extract-local-section-components-for-runtime-boundaries`가 정합니다 |
+| 고정 UI | 단일 컴포넌트. 화면 지역 JSX로 둘지는 `screen-extract-local-section-components-for-runtime-boundaries`를 따릅니다 |
 | 부품 조립만 필요함 | 상태 없는 합성 |
 | 여러 부품이 같은 상태·동작·컨텍스트를 읽음 | 상태 있는 합성 |
-| 같은 합성 조합이 반복됨 | 드러난 변형 |
+| 같은 합성 조합이 반복됨 | 조합을 한 이름으로 감싼 변형 |
 
-아래 네 예시는 같은 대화상자 하나를 네 단계로 끌고 갑니다.
-필요가 늘 때 앞 단계에서 다음 단계로만 넘어갑니다.
-합성으로 연 뒤에는 상태를 더해도 사용처가 쓰는 이름이 그대로입니다.
+아래 예시는 같은 대화상자를 필요에 따라 확장합니다.
+합성에 상태를 추가해도 사용처의 공개 이름은 유지하고, 반복되는 조합은 변형으로 감쌉니다.
+렌더 프롭은 `strategy-prefer-children-over-render-props`를,
+공개 부품의 범위는 `strategy-expose-only-assembled-compound-parts`를 따릅니다.
 
-렌더 프롭을 쓸 자리인지는 `strategy-prefer-children-over-render-props`가 따로 판정합니다.
-무엇을 공개 부품으로 열지는 `strategy-expose-only-assembled-compound-parts`가 정합니다.
-
-**Incorrect (단일, 합성, 드러난 변형의 경계를 구분하지 않고 한 컴포넌트에 몰아넣습니다):**
+**Incorrect (단일·합성·변형을 구분하지 않고 한 컴포넌트에 모두 구현합니다):**
 
 ```tsx
 export interface WgProfileDialogProps {
@@ -61,7 +58,7 @@ export const WgProfileDialog = (props: WgProfileDialogProps) => {
 };
 ```
 
-**Correct (1단계 — 열 자리가 없으면 단일 컴포넌트로 둡니다):**
+**Correct (1단계 — 확장이 필요 없으면 단일 컴포넌트로 둡니다):**
 
 ```tsx
 /**
@@ -92,7 +89,7 @@ export const WgProfileDialog = (props: WgProfileDialogProps) => {
 };
 ```
 
-**Correct (2단계 — 끼워 넣을 자리가 생기면 상태 없는 합성으로 엽니다):**
+**Correct (2단계 — 사용처가 부품을 조립해야 하면 상태 없는 합성으로 엽니다):**
 
 ```txt
 component/widget/profile-dialog/
@@ -191,7 +188,7 @@ export const WgProfileDialogRoot = (props: WgProfileDialogPartProps) => {
 };
 ```
 
-**Correct (4단계 — 같은 조합이 반복되면 드러난 변형으로 감쌉니다):**
+**Correct (4단계 — 같은 조합이 반복되면 이름 붙인 변형으로 감쌉니다):**
 
 ```tsx
 /**

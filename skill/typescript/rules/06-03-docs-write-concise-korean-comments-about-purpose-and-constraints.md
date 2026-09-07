@@ -13,34 +13,22 @@ tags: docs, comments
 
 **Impact: MEDIUM (코드 동작을 옮겨 적지 않고 의도와 제약에 주석을 모읍니다)**
 
-주석은 한국어로 쓰고 목적, 제약, 부수효과를 적습니다.
-코드가 무엇을 하는지 옮겨 적기보다 왜 넣었고 무엇을 조심해야 하는지를 먼저 씁니다.
+주석은 한국어로 목적·제약·부수효과를 설명합니다.
+이름과 시그니처에 없는 정보가 없으면 지우고, 필요한 배경에 따라 한 문장이나 여러 문장으로 씁니다.
 
-글자 수 제한은 두지 않습니다.
-선언 이름과 시그니처에 없는 정보가 한 조각도 없으면 그 문장은 지웁니다.
-한 문장으로 통하면 한 문장, 배경을 알아야 하면 여러 문장으로 씁니다.
-문장이 몇 개든 형식은 여러 줄 블록이고, 그 형식은 `docs-write-doc-comments-as-multiline-blocks`가 정합니다.
-
-쓰지 않는 것:
-
-- 선언 이름의 낱말을 한국어로 바꿔 적기만 하고 새 정보가 없는 문장.
-  `sortRuleRefs`에 `/** 규칙 참조를 정렬 */`을 다는 것이 그 경우입니다.
-- 코드를 한 줄씩 따라 읽으며 옮겨 적은 문장
-- 설명 없이 `@param`·`@returns`만 나열한 주석
-
-태그를 붙일지도 내용 판단이라 여기서 정합니다.
-선언이 무엇인지는 이름과 문법이 이미 드러내므로 태그로 다시 적지 않습니다.
-
-| 태그 | 판정 |
+| 내용·태그 | 판단 |
 | --- | --- |
-| `@api`·`@helper`·`@field` | 역할 태그를 붙이지 않습니다. 선언이 바뀌어도 함께 바뀌지 않아 시간이 지나면 어긋납니다 |
-| `@schema`처럼 규격에 없는 태그 | 새로 만들지 않습니다 |
-| `@summary` | 쓰지 않습니다. 헤더 첫 줄이 이미 하는 일입니다 |
-| `@deprecated`·`@example`·`@param`·`@returns` 같은 TSDoc 규격 태그 | 필요할 때만 씁니다 |
+| 선언 이름만 번역하거나 코드를 한 줄씩 옮긴 설명 | 쓰지 않습니다 |
+| 설명 없이 `@param`, `@returns`만 나열 | 쓰지 않습니다 |
+| `@api`, `@helper`, `@field` | 이름과 문법이 드러내는 역할을 태그로 반복하지 않습니다 |
+| `@schema` 같은 비표준 태그 | 새로 만들지 않습니다 |
+| `@summary` | 헤더 첫 줄과 겹치므로 쓰지 않습니다 |
+| `@deprecated`, `@example`, `@param`, `@returns` 등 TSDoc 태그 | 필요할 때만 씁니다 |
+| 영어 기술 용어·식별자 | 섞어 써도 됩니다. 본문 전체가 영어인 주석은 허용하지 않습니다 |
 
-기술 용어와 식별자는 영어를 섞어 써도 됩니다.
-다만 주석 본문이 전부 영어이면 한국어 주석으로 인정하지 않습니다.
-헤더 주석이 영어뿐이면 필드 주석이 한국어여도 통과하지 못합니다.
+글자 수 제한은 두지 않습니다. 헤더가 영어뿐이면 필드 주석이 한국어여도 요구를 충족하지 못합니다.
+선언 위 문서 주석은 `docs-write-doc-comments-as-multiline-blocks`,
+본문 설명은 `docs-keep-body-comments-for-intent-and-steps`에 따라 `//`로 씁니다.
 
 **Incorrect (영문이거나 선언 이름을 옮겨 적기만 합니다):**
 
@@ -49,14 +37,14 @@ tags: docs, comments
  * This function sorts rule refs and returns the result.
  */
 export const toSortedRuleRefs = (refs: RuleRef[]): RuleRef[] => {
-	return uniq(refs).toSorted();
+	return sortBy(uniq(refs), [(ref) => ref.id]);
 };
 
 /**
  * 규칙 참조를 정렬하는 함수
  */
 export const toSortedRuleRefs = (refs: RuleRef[]): RuleRef[] => {
-	return uniq(refs).toSorted();
+	return sortBy(uniq(refs), [(ref) => ref.id]);
 };
 
 /**
@@ -71,10 +59,10 @@ export interface PgProductTreeProps {
 
 ```ts
 /**
- * 중복을 제거한 뒤 정렬한다. 호출부가 목록을 다시 정렬하지 않아도 되게 하려는 것이다.
+ * 같은 참조 객체의 중복을 제거하고 식별자순으로 정렬해 검토 목록의 순서를 고정한다.
  */
 export const toSortedRuleRefs = (refs: RuleRef[]): RuleRef[] => {
-	return uniq(refs).toSorted();
+	return sortBy(uniq(refs), [(ref) => ref.id]);
 };
 
 /**
@@ -84,7 +72,7 @@ export const toSortedRuleRefs = (refs: RuleRef[]): RuleRef[] => {
  * 목록이 새로고침할 때마다 흔들리는 문제가 있었다.
  */
 export const toProductsNewestFirst = (products: Product[]): Product[] => {
-	return orderBy(products, ["updatedAt"], ["desc"]);
+	return orderBy(products, ["updatedAt", "id"], ["desc", "asc"]);
 };
 
 /**

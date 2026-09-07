@@ -1,8 +1,8 @@
 ---
 title: Keep Library Lifecycle in the Owning Component
-titleKo: 라이브러리 생명주기는 소유 컴포넌트가 직접 갖습니다
+titleKo: 라이브러리 생명주기는 소유 컴포넌트에서 관리합니다
 impact: MEDIUM
-impactDescription: 생명주기를 훅 뒤로 숨기지 않아 실행 흐름이 컴포넌트 안에 남습니다
+impactDescription: 외부 라이브러리의 생명주기와 실행 흐름을 소유 컴포넌트에서 확인할 수 있습니다
 appliesWhen:
   - 외부 라이브러리 인스턴스 생성·크기 변경·구독·정리를 한 컴포넌트가 소유할 때
   - 생명주기 코드를 커스텀 훅으로 옮겨 파일을 줄이려 할 때
@@ -13,21 +13,21 @@ tags: ownership, hooks
 
 ## Keep Library Lifecycle in the Owning Component
 
-**Impact: MEDIUM (생명주기를 훅 뒤로 숨기지 않아 실행 흐름이 컴포넌트 안에 남습니다)**
+**Impact: MEDIUM (외부 라이브러리의 생명주기와 실행 흐름을 소유 컴포넌트에서 확인할 수 있습니다)**
 
-외부 라이브러리의 인스턴스 생성, 크기 변경, 이벤트 구독, 정리는 그 하위 트리를 소유한 컴포넌트가 직접 가집니다.
-파일이 길어졌다는 이유만으로 커스텀 훅을 만들어 생명주기를 숨기지 않습니다.
+외부 라이브러리의 인스턴스 생성·크기 변경·이벤트 구독·정리는 하위 트리를 소유한 컴포넌트에 둡니다.
+파일 분량을 줄이려고 생명주기를 커스텀 훅으로 옮기지 않습니다.
 
-- 한 소유자만 쓰는 생명주기는 그 컴포넌트 안의 이펙트로 둡니다.
-- 줄 수 감소는 추출 근거가 아닙니다.
-  읽는 사람이 파일을 왕복하게 만들 뿐입니다.
-- 여러 소유자가 같은 생명주기 계약을 실제로 호출할 때만 훅으로 올립니다.
-- 파일이 길면 생명주기를 옮기기보다 도메인 계산을 `_function`으로 분리합니다.
+| 상황 | 처리 |
+| --- | --- |
+| 한 소유자만 쓰는 생명주기 | 해당 컴포넌트의 이펙트에 둡니다 |
+| 여러 소유자가 같은 생명주기 계약을 실제로 호출함 | 훅으로 추출합니다 |
+| 파일이 길어짐 | 생명주기 대신 도메인 계산을 `_function`으로 분리합니다 |
+| 이펙트 정리·재설치 | 정리할 때 인스턴스 참조를 비우고 다시 설치할 때 새로 만듭니다. 상태에 남은 폐기된 인스턴스를 재사용하지 않습니다 |
 
-`ownership-prefer-plain-ts-for-local-react-helpers`는 순수 계산을 훅으로 포장하는 것을 막고,
-이 규칙은 반대로 실제 생명주기가 있어도 분량 때문에 훅으로 옮기는 것을 막습니다.
+순수 계산을 훅으로 감싸는 문제는 `ownership-prefer-plain-ts-for-local-react-helpers`를 따릅니다.
 
-**Incorrect (줄 수를 줄이려고 생명주기를 훅 뒤로 옮깁니다):**
+**Incorrect (파일 분량을 줄이려고 생명주기를 훅으로 옮깁니다):**
 
 ```tsx
 // component/widget/chart/chart-root/wg-chart-root.tsx
@@ -53,7 +53,7 @@ export const WgChartRoot = (props: WgChartRootProps) => {
 // component/widget/chart/chart-root/wg-chart-root.tsx
 export const WgChartRoot = (props: WgChartRootProps) => {
 	const containerRef = useRef<HTMLDivElement>(null);
-	const [chart, setChart] = useState<ChartInstance | null>(null);
+	const chartRef = useRef<ChartInstance | null>(null);
 
 	/**
 	 * container mount 시 chart instance를 만들고 resize·dispose까지 소유
@@ -70,9 +70,10 @@ export const WgChartRoot = (props: WgChartRootProps) => {
 		};
 
 		window.addEventListener("resize", handleResize);
-		setChart(instance);
+		chartRef.current = instance;
 
 		return () => {
+			chartRef.current = null;
 			window.removeEventListener("resize", handleResize);
 			instance.dispose();
 		};
@@ -82,8 +83,8 @@ export const WgChartRoot = (props: WgChartRootProps) => {
 	 * option이 바뀌면 기존 instance에 다시 반영
 	 */
 	useEffect(() => {
-		chart?.setOption(props.option);
-	}, [chart, props.option]);
+		chartRef.current?.setOption(props.option);
+	}, [props.option]);
 
 	return <div ref={containerRef} className={clsx("wg_chart__canvas")} />;
 };

@@ -2,7 +2,7 @@
 title: Avoid Premature Abstraction in Screen Code
 titleKo: 화면 코드를 미리 추상화하지 않습니다
 impact: MEDIUM-HIGH
-impactDescription: 짐작으로 빼내지 않고 실제 재사용 경계에 맞춰 화면 코드를 둡니다
+impactDescription: 추측에 따른 추출을 줄이고 실제 재사용 경계에 맞춰 코드를 배치합니다
 appliesWhen:
   - 화면 코드를 보조 함수, 훅, 컴포넌트, 모듈로 추출할 때
   - 한 곳에서만 쓰는 기존 추상화를 다시 접어 넣을 때
@@ -14,27 +14,27 @@ tags: screen
 
 ## Avoid Premature Abstraction in Screen Code
 
-**Impact: MEDIUM-HIGH (짐작으로 빼내지 않고 실제 재사용 경계에 맞춰 화면 코드를 둡니다)**
+**Impact: MEDIUM-HIGH (추측에 따른 추출을 줄이고 실제 재사용 경계에 맞춰 코드를 배치합니다)**
 
-반복이 보인다는 이유만으로 공용 훅, 컴포넌트, 보조 함수를 만들지 않습니다.
+반복이 보인다는 이유만으로 공용 훅·컴포넌트·보조 함수를 추출하지 않습니다.
+먼저 흐름을 같은 파일에서 읽을 수 있도록 정리합니다.
 
-추출 전에 먼저 시도할 방법:
+| 먼저 시도할 방법 | 유지할 위치 |
+| --- | --- |
+| 단계 변수·섹션 주석·내부 블록으로 정리 | 한 함수 안 |
+| 화면 흐름이 보이도록 JSX 정리 | 화면 지역 JSX |
+| 작은 변환·`href` 조립·기본값 처리 | 사용처 |
 
-- 한 함수 안에서 단계 변수, 섹션 주석, 내부 블록으로 정리
-- 화면 지역 JSX에 남기고 흐름을 보이게 유지
-- 작은 변환 함수, `href` 조립, 기본값 처리는 사용처에 유지
+한 컴포넌트·핸들러·쿼리 `select`만 쓰는 보조 함수를 별도 모듈에 쌓지 않습니다.
+한 대표 함수만 호출하는 보조도 `_function` 바로 아래에 공개하지 않습니다.
+그 배치는 `typescript/functions-give-each-function-its-own-file`을 따릅니다.
+이름을 붙이기 좋다는 이유만으로 흐름을 여러 파일에 나누지 않습니다.
 
-추출해도 되는 경계는 이 규칙이 정하지 않습니다.
-컴포넌트는 `screen-extract-local-section-components-for-runtime-boundaries`가,
-함수는 `typescript/functions-extract-helpers-only-when-the-boundary-is-real`이,
-훅은 `ownership-prefer-plain-ts-for-local-react-helpers`가 판정합니다.
-
-먼저 시도한 뒤에도 남는 금지 구조:
-
-- 한 컴포넌트, 한 핸들러, 한 쿼리 `select`만 쓰는 보조 함수를 보조 모듈에 쌓는 구조
-- 한 대표 함수만 부르는 보조를 `_function` 바로 아래에 내보내 두는 구조.
-  그 보조의 자리는 `typescript/functions-give-each-function-its-own-file`이 정합니다
-- 이름이 그럴듯하다는 이유로 흐름을 파일 왕복 뒤에 숨기는 구조
+| 추출 대상 | 허용 경계 |
+| --- | --- |
+| 컴포넌트 | `screen-extract-local-section-components-for-runtime-boundaries` |
+| 함수 | `typescript/functions-extract-helpers-only-when-the-boundary-is-real` |
+| 훅 | `ownership-prefer-plain-ts-for-local-react-helpers` |
 
 **Incorrect (컴포넌트 하나만 쓰는 단계 보조 함수를 보조 모듈에 남깁니다):**
 

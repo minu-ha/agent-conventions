@@ -2,7 +2,7 @@
 title: Use Classes Instead of Element Selectors
 titleKo: 요소 선택자 대신 클래스를 붙입니다
 impact: MEDIUM-HIGH
-impactDescription: 태그만 바꿔도 스타일이 사라지므로 우리가 렌더하는 마크업에는 클래스를 붙입니다
+impactDescription: 태그를 바꿔도 스타일이 유지되도록 마크업을 클래스로 선택합니다
 appliesWhen:
   - `p`, `h2`, `span`, `button` 같은 요소 선택자를 쓰려 할 때
   - `dangerouslySetInnerHTML`이나 Markdown 렌더러 출력을 스타일링할 때
@@ -12,34 +12,26 @@ tags: selector, element-selectors, markup
 
 ## Use Classes Instead of Element Selectors
 
-**Impact: MEDIUM-HIGH (태그만 바꿔도 스타일이 사라지므로 우리가 렌더하는 마크업에는 클래스를 붙입니다)**
+**Impact: MEDIUM-HIGH (태그를 바꿔도 스타일이 유지되도록 마크업을 클래스로 선택합니다)**
 
-우리가 렌더하는 마크업에는 요소 선택자를 쓰지 않습니다.
-클래스를 붙입니다.
+우리가 렌더하는 마크업은 요소 선택자 대신 클래스로 선택합니다.
+태그를 `div`에서 `section`으로 바꿔도 스타일이 사라지지 않아야 합니다.
 
-`div`를 `section`으로, `span`을 `p`로 바꾸는 것만으로 스타일이 사라집니다.
-그 변경은 TSX에서 일어나고 CSS 파일에는 흔적이 남지 않습니다.
+| 마크업 | 선택 방법 |
+| --- | --- |
+| 우리가 렌더함 | 클래스를 붙입니다. `:first-child` 같은 구조 선택자도 쓰지 않습니다 |
+| Markdown 렌더러나 에디터가 클래스 지정 API를 제공함 | 렌더 함수 등 해당 API를 먼저 씁니다 |
+| `dangerouslySetInnerHTML`이나 클래스 지정 API가 없는 렌더러 출력 | 감싼 클래스 블록 안에서만 요소 선택자를 허용합니다. 구조 선택자도 같은 기준을 따릅니다 |
 
-요소 선택자를 쓸 수 있는 경우는 하나입니다.
+최상위에 `h2 { }`를 선언하면 해당 스타일시트를 읽은 문서 전체에 적용되므로 예외에서도 금지합니다.
+`selector-disallowed-list`가 `&` 바로 뒤의 요소 선택자를 막으므로 예외에는 다음 주석을 남깁니다.
 
-> **우리가 그 마크업을 렌더하지 않아서 클래스를 붙일 수 없을 때**
-
-`dangerouslySetInnerHTML`, Markdown 렌더러, 리치 텍스트 에디터 출력이 여기 해당합니다.
-TSX에서 그 지점이 보이므로 "이 마크업을 우리가 쓰는가"를 따질 필요가 없습니다.
-
-- 그때도 감싼 클래스 블록 안에서만 씁니다.
-  블록 바깥에 `h2 { }`를 두면 그 화면 모든 `h2`에 걸립니다.
-- `:first-child` 같은 구조 선택자도 같습니다.
-  우리가 렌더하면 클래스를 붙입니다.
-
-`selector-disallowed-list` 규칙이 `&` 바로 뒤 요소 선택자를 막으므로 이 예외에는 주석이 필요합니다.
-
-| 예외 선택자 | 주석 |
+| 예외 선택자 수 | 주석 |
 | --- | --- |
 | 하나 | `stylelint-disable-next-line` |
 | 둘 이상 | 블록을 `stylelint-disable`과 `stylelint-enable` 주석 쌍으로 감쌉니다 |
 
-드문 경우이므로 그 주석이 곧 "여기는 우리가 쓰지 않는 마크업"이라는 표시가 됩니다.
+이 주석은 직접 작성하지 않는 마크업이라는 근거도 보여 줍니다.
 
 **Incorrect (우리가 렌더하는 마크업을 요소 선택자로 잡습니다):**
 
@@ -62,7 +54,7 @@ TSX에서 그 지점이 보이므로 "이 마크업을 우리가 쓰는가"를 �
 **Incorrect (요소 선택자를 최상위에 둡니다):**
 
 ```css
-/* 블록 밖에 홀로 둔 요소 선택자. 이 화면의 모든 h2 에 걸린다 */
+/* 블록 밖에 홀로 둔 요소 선택자. 이 스타일시트를 읽은 문서의 모든 h2에 걸린다 */
 h2 {
 	margin: 24px 0 12px;
 }

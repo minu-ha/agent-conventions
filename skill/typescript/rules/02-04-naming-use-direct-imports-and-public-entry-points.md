@@ -2,7 +2,7 @@
 title: Use Direct Imports and Dedicated Public Entry Points
 titleKo: `index.ts` 배럴을 만들지 않고 필요한 파일에서 바로 가져옵니다
 impact: MEDIUM-HIGH
-impactDescription: 배럴이나 모호한 재노출 계층에 기대지 않고 무엇을 어디서 가져오는지 드러냅니다
+impactDescription: 배럴이나 재노출 계층 없이 선언의 출처를 직접 확인할 수 있습니다
 appliesWhen:
   - 가져오기, 내보내기, `index.ts` 배럴, 공개 진입점, 소유자 보조 모듈의 경계를 추가·변경할 때
   - 같은 경로에서 값과 타입 중 무엇을 가져올지 추가·삭제·전환할 때
@@ -12,26 +12,21 @@ tags: naming
 
 ## Use Direct Imports and Dedicated Public Entry Points
 
-**Impact: MEDIUM-HIGH (배럴이나 모호한 재노출 계층에 기대지 않고 무엇을 어디서 가져오는지 드러냅니다)**
+**Impact: MEDIUM-HIGH (배럴이나 재노출 계층 없이 선언의 출처를 직접 확인할 수 있습니다)**
 
-`index.ts`로 묶어 다시 내보내는 배럴을 만들지 않고, 필요한 파일에서 바로 가져옵니다.
-내보내기는 선언 앞에 `export`를 붙인 이름 붙인 내보내기만 씁니다.
-파일 끝에 `export {…}` 목록을 따로 두지 않습니다.
+필요한 파일에서 직접 가져오고 선언 앞에 `export`를 붙여 이름으로 내보냅니다.
+`index.ts` 배럴이나 파일 끝의 `export {…}` 목록은 만들지 않습니다.
 
 | 형태 | 판정 |
 | --- | --- |
-| `index.ts`로 묶어 다시 내보내는 배럴 | 만들지 않습니다 |
-| 역할 폴더를 `index.ts`로 묶는 것 | 배럴이라 만들지 않습니다 |
-| 같은 파일이 소유한 `export const Dialog = { Root, Header } as const` 같은 조립 객체 | 다시 내보내는 계층이 아니므로 배럴이 아닙니다 |
-| `default` 내보내기 | 도구가 그 파일의 계약으로 요구할 때만 씁니다. `vite.config.ts` 같은 설정 진입점이 그 자리입니다 |
-| 타입만 가져오기 | `import type`을 써서 계약과 실행 의존을 나눕니다 |
+| 역할 폴더나 여러 파일을 `index.ts`로 재노출 | 배럴이므로 만들지 않습니다 |
+| 같은 파일이 소유한 `export const Dialog = { Root, Header } as const` | 재노출 계층이 아닌 조립 객체이므로 허용합니다 |
+| `default` 내보내기 | `vite.config.ts`처럼 도구가 요구하는 계약에만 씁니다 |
+| 타입만 가져오기 | `import type`으로 실행 의존과 구분합니다 |
 
-`default`는 이름을 사용처가 짓습니다.
-같은 것이 파일마다 다른 이름으로 불립니다.
-원본 이름을 바꿔도 사용처의 이름은 그대로 남아 어긋납니다.
-
-경로 모양은 `naming-import-by-absolute-path` 규칙이 정합니다.
-경로가 같아도 값과 타입 중 무엇을 가져오는지가 바뀌면 가져오기 계약이 바뀐 것이라 이 규칙을 적용합니다.
+`default`는 사용처마다 이름이 달라지고 원본의 이름 변경도 반영되지 않습니다.
+경로 형식은 `naming-import-by-absolute-path`를 따릅니다.
+같은 경로라도 값·타입 가져오기를 바꾸면 이 규칙을 적용합니다.
 
 **Incorrect (배럴과 섞인 가져오기로 경계를 흐립니다):**
 

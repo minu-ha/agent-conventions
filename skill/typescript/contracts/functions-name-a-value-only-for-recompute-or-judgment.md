@@ -1,51 +1,29 @@
 # Name a Value Only to Prevent Recompute or Explain a Judgment
 
-**Impact: MEDIUM (변수로 뺄지가 그 표현식 안에서 정해져 쓰는 자리가 하나 늘었다고 판정이 뒤집히지 않습니다)**
+**Impact: MEDIUM (사용 횟수보다 계산 비용과 판정의 복잡성을 기준으로 변수 선언 여부를 판단합니다)**
 
-변수를 만드는 이유는 둘입니다.
-둘 다 아니면 표현식을 쓰는 자리에 그대로 적습니다.
-같은 표현식을 몇 번 적든 마찬가지입니다.
+지역 변수는 재계산을 막거나 여러 항을 합친 판정에 이름을 붙일 때만 만듭니다.
+사용처 수만으로는 만들지 않으며, 아래 사유가 없으면 표현식을 쓰는 자리에 둡니다.
 
-**1. 다시 계산하면 값이 달라지거나 비용이 듭니다.**
-
-| 자리 | 이유 |
+| 변수로 받을 사유 | 확인할 것 |
 | --- | --- |
-| 콜백이나 반복문 안으로 들어가는 값 | 코드에 한 번 적혀 있어도 실행은 원소마다 한 번씩입니다 |
-| 시각·난수처럼 부를 때마다 달라지는 값 | 두 자리가 서로 다른 값을 봅니다 |
-| `await`나 `yield`가 붙은 값 | 실행 순서가 뜻을 갖습니다 |
-| 바깥과 주고받는 호출 (`init()`, `localStorage.getItem()`) | 옮기면 부르는 시점이 달라집니다 |
-| 훅 호출과 `useState` 반환 | 부르는 자리와 횟수가 정해져 있습니다 |
+| 콜백·반복문으로 옮기면 비용이 반복됨 | 코드에 한 번 적혀도 원소마다 실행됩니다. 반복 조회용 `Set`도 콜백 밖에 둡니다 |
+| 시각·난수처럼 호출마다 값이 달라짐 | 여러 사용처가 같은 값을 보아야 합니다 |
+| `await`, `yield`, 외부 호출 | 순서나 호출 시점을 바꾸지 않습니다. `localStorage.getItem()`도 해당합니다 |
+| 훅 호출·`useState` 반환 | 정해진 호출 위치와 횟수를 유지합니다 |
+| 여러 항을 합친 판정 | `isEditable`처럼 이름이 판정의 결론을 설명해야 합니다 |
+| 부정이 겹친 판정 | `!row.deletedAt && !row.archivedAt`은 `isVisible`처럼 뜻을 드러냅니다 |
 
-함수 값은 계산 결과가 아니라 계약이라 이 규칙 대상이 아닙니다.
-선언 형태는 `functions-declare-functions-as-arrow-consts`가 정합니다.
+단일 비교인 `row.dueDate < today`는 반복해서 써도 그대로 둡니다.
+사용처가 하나 늘었다고 변수 필요성까지 달라지지 않도록 표현식의 성격으로 판단합니다.
 
-**코드에 한 번 적힌 것과 실행에서 한 번인 것은 다릅니다.**
-`.map()`이나 `.filter()` 콜백 안, 반복문 안으로 옮기면 원소 수만큼 다시 계산합니다.
-`values-use-set-and-map-for-repeated-lookups`가 만드는 `Set`도 같은 이유로 콜백 밖에 둡니다.
+| 이 규칙과 구분할 대상 | 적용 규칙 |
+| --- | --- |
+| 함수 값 | 계산 결과가 아닌 계약입니다. `functions-declare-functions-as-arrow-consts`를 따릅니다 |
+| 객체 필드의 별칭 | `values-read-objects-through-chains` |
+| `let` 재할당·`push` 누적 | `functions-avoid-imperative-assembly-in-wide-scopes` |
+| 표현식 안의 리터럴 | 지역 변수로 옮기지 않고 `types-replace-enum-with-as-const-objects`와 `naming-place-project-constants-in-the-root-constant-folder`로 선언합니다 |
 
-**2. 여러 항을 엮은 판정이라 이름이 결론을 대신 말해 줍니다.**
-
-`row.status === product_status.draft && !row.lockedAt && row.ownerId === session.userId`는
-읽을 때마다 세 항을 머릿속에서 합쳐야 합니다.
-`isEditable`은 그 합성을 한 번만 하게 합니다.
-
-- 항이 하나면 이름이 더해 줄 것이 없습니다.
-  `row.dueDate < today`는 쓰는 자리에 그대로 적습니다.
-- 부정이 겹치면 이름으로 뒤집습니다.
-  `!row.deletedAt && !row.archivedAt`보다 `isVisible`이 한 번에 읽힙니다.
-- 표현식에 리터럴이 보이면 변수로 뺄 자리가 아니라 그 리터럴을 선언할 자리입니다.
-  `types-replace-enum-with-as-const-objects`와
-  `naming-place-project-constants-in-the-root-constant-folder` 규칙이 그 자리를 정합니다.
-
-**횟수는 기준이 아닙니다.**
-몇 번 쓰이는지는 파일 전체를 봐야 알고, 쓰는 자리를 하나 더하면 어제 맞던 판정이 오늘 뒤집힙니다.
-같은 코드에 다른 답이 나오는 기준은 지킬 수 없습니다.
-위 둘은 그 표현식 안에서 판정됩니다.
-
-변수로 빼면 읽는 사람은 그 값이 어디서 왔는지 확인하러 위로 올라갑니다.
-그 비용을 치를 이유가 위 둘입니다.
-
-`let` 재할당과 배열 `push` 누적은 `functions-avoid-imperative-assembly-in-wide-scopes`가 봅니다.
-객체 필드를 그대로 읽는 것은 계산이 아니라 `values-read-objects-through-chains`가 봅니다.
+반복 조회 구조의 사용 기준은 `values-use-set-and-map-for-repeated-lookups`를 따릅니다.
 
 > 예시·예외가 필요하면 [full rule](../rules/03-08-functions-name-a-value-only-for-recompute-or-judgment.md)을 읽습니다.

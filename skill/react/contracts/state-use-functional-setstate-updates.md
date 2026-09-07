@@ -1,6 +1,6 @@
 # Use Functional setState Updates When Based on Previous State
 
-**Impact: HIGH (다음 값이 현재 상태에 달려 있을 때 낡은 값을 붙잡는 버그를 막습니다)**
+**Impact: HIGH (이전 상태에 의존하는 갱신에서 오래된 값을 사용하는 오류를 막습니다)**
 
 다음 상태가 현재 상태 값에 의존하면 바깥 변수를 직접 읽지 않고 함수형 업데이터를 씁니다.
 

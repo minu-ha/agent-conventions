@@ -1,23 +1,22 @@
 # Require Doc Comments on React Hooks, Handlers, and Key Declarations
 
-**Impact: MEDIUM (리액트에만 있는 경계 선언을 동반 스킬 목록에 더해 빠뜨리지 않습니다)**
+**Impact: MEDIUM (공통 문서화 기준에 리액트 전용 선언을 추가해 누락을 막습니다)**
 
-필수 대상은 `typescript/docs-require-header-jsdoc-on-key-declarations`가 정한 목록에 다음 셋을 더한 것입니다.
+`typescript/docs-require-header-jsdoc-on-key-declarations`의 필수 대상에 아래 리액트 선언을 추가합니다.
 
-- 합성 컴포넌트의 공개 부품
-- 정리 함수가 있거나 의존성이 둘 이상인 `useEffect`
-- 화면 이동이나 쿼리 무효화를 하는 이벤트 핸들러.
-  동작이 그 하나뿐이어도 대상입니다.
-
-나머지는 다른 규칙이 정한 것을 그대로 쓰고 여기서 다시 판정하지 않습니다.
-
-| 무엇 | 정하는 규칙 |
+| 추가 대상 | 조건 |
 | --- | --- |
-| `type`·`interface` 문서화. 내보냈는지와 무관합니다 | `typescript/types-document-custom-types-and-shapes` |
-| 쿼리·뮤테이션 바인딩, 핸들러, 내보낸 보조 함수와 훅, 스토어 선언에 붙이는 기준 | `typescript/docs-require-header-jsdoc-on-key-declarations` |
-| 합성 공개 부품의 설명을 두는 자리 | `composition-declare-props-interface-above-the-component` |
-| 규칙이 허용한 예외에 붙이는 근거 주석 | `typescript/docs-justify-convention-exceptions-with-a-reason-comment` |
-| 형식과 태그 | `typescript/docs-write-doc-comments-as-multiline-blocks` |
+| 합성 컴포넌트 | 공개 부품 |
+| `useEffect` | 정리 함수가 있거나 의존성이 둘 이상임 |
+| 이벤트 핸들러 | 화면 이동이나 쿼리 무효화를 수행함. 동작이 하나뿐이어도 포함합니다 |
+
+| 관련 판단 | 기준 |
+| --- | --- |
+| `type`, `interface` 문서화 | 내보내기 여부와 관계없이 `typescript/types-document-custom-types-and-shapes`를 따릅니다 |
+| 쿼리·뮤테이션 바인딩, 핸들러, 내보낸 보조 함수·훅, 스토어 선언 | `typescript/docs-require-header-jsdoc-on-key-declarations` |
+| 합성 공개 부품의 설명 위치 | `composition-declare-props-interface-above-the-component` |
+| 허용된 예외의 근거 주석 | `typescript/docs-justify-convention-exceptions-with-a-reason-comment` |
+| 문서 주석 형식과 태그 | `typescript/docs-write-doc-comments-as-multiline-blocks` |
 
 **Requires selected:** `typescript/docs-require-header-jsdoc-on-key-declarations` · 함께 적용
 

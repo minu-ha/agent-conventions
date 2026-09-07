@@ -31,6 +31,7 @@ export const WgUserProfileCard = (props: WgUserProfileCardProps) => {
 					props.theme === "dark" && "wg_userProfileAvatar__image--dark",
 				)}
 				src={props.user.avatarUrl}
+				alt={props.user.name}
 			/>
 		);
 	};
@@ -58,6 +59,10 @@ export interface WgUserProfileAvatarProps {
 	 * 아바타 이미지 주소
 	 */
 	src: string;
+	/**
+	 * 아바타로 구분하는 사용자 이름
+	 */
+	alt: string;
 }
 
 export const WgUserProfileAvatar = (props: WgUserProfileAvatarProps) => {
@@ -68,6 +73,7 @@ export const WgUserProfileAvatar = (props: WgUserProfileAvatarProps) => {
 				props.theme === "dark" && "wg_userProfileAvatar__image--dark",
 			)}
 			src={props.src}
+			alt={props.alt}
 		/>
 	);
 };
@@ -75,7 +81,7 @@ export const WgUserProfileAvatar = (props: WgUserProfileAvatarProps) => {
 export const WgUserProfileCard = (props: WgUserProfileCardProps) => {
 	return (
 		<section>
-			<WgUserProfileAvatar src={props.user.avatarUrl} theme={props.theme} />
+			<WgUserProfileAvatar src={props.user.avatarUrl} alt={props.user.name} theme={props.theme} />
 		</section>
 	);
 };

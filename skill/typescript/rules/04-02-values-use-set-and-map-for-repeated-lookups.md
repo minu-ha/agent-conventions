@@ -2,48 +2,40 @@
 title: Use Set and Map for Repeated Lookups
 titleKo: 같은 조회를 반복하면 `Set`이나 `Map`으로 정리합니다
 impact: MEDIUM
-impactDescription: 목록이 길어질수록 곱으로 늘어나는 비교를 한 번 만든 조회로 바꿉니다
+impactDescription: 반복 조회 구조를 한 번 만들어 목록 전체를 되풀이해 비교하는 비용을 줄입니다
 appliesWhen:
-  - 같은 목록에 `includes`, `find`, 키 조회를 여러 번 하는 코드를 추가·변경할 때
+  - 같은 목록의 `includes`나 `find`를 루프·배열 콜백 안에서 호출하도록 추가·변경할 때
+  - 같은 목록의 키 조회를 서로 다른 세 지점 이상에서 하도록 추가·변경할 때
   - 제외: 조회하는 목록이 짧고 길이가 정해져 있는 경우
 tags: functions
 ---
 
 ## Use Set and Map for Repeated Lookups
 
-**Impact: MEDIUM (목록이 길어질수록 곱으로 늘어나는 비교를 한 번 만든 조회로 바꿉니다)**
+**Impact: MEDIUM (반복 조회 구조를 한 번 만들어 목록 전체를 되풀이해 비교하는 비용을 줄입니다)**
 
-`includes`와 `find`는 목록을 처음부터 훑습니다.
-이 호출이 다른 목록을 도는 콜백 안에 있으면 비교 횟수가 두 목록 길이의 곱이 됩니다.
-행 20개에 허용 목록 20개면 400번이라 아무 문제가 없습니다.
-행 5,000개에 허용 목록 800개면 400만 번입니다.
-두 코드는 모양이 같아서 데이터가 늘어난 뒤에도 눈에 띄지 않습니다.
+같은 목록을 반복 조회하면 루프 밖에서 `Set`이나 `Map`을 한 번 만들고, 원본 목록이 바뀔 때 갱신합니다.
+중첩된 `includes`·`find`는 최악의 경우 두 목록 길이의 곱만큼 비교합니다.
 
-`Set`과 `Map`은 이 곱을 없앱니다.
-길이와 상관없이 한 번에 찾기 때문입니다.
-목록 길이를 우리가 정하지 못할 때 차이가 벌어집니다.
-서버에서 받은 행이나 사용자가 고른 항목이 그 경우입니다.
+| 상황 | 처리 |
+| --- | --- |
+| 같은 목록을 루프나 `map`, `filter`, `some` 콜백 안에서 조회 | 포함 여부는 `Set.has`, 항목 조회는 `Map.get`으로 바꿉니다 |
+| 같은 목록을 서로 다른 세 지점 이상에서 조회 | 한 번 만든 `Set`, `Map`을 공유합니다 |
+| 위 조건에 해당하지 않거나 길이가 정해진 짧은 목록 | 기존 조회를 유지합니다 |
+| 중복 제거·차집합처럼 결과 목록을 만듦 | `uniq`, `difference`, `without`을 씁니다. 만든 뒤 `has`를 반복 호출할 때만 `Set`을 남깁니다 |
 
-다음 중 하나면 바꿉니다.
-그 밖에는 그대로 둡니다.
+`Set`·`Map`도 생성 비용이 있으며 조회가 항상 상수 시간인 것은 아닙니다.
+명세는 평균 조회 시간이 원소 수에 비례하는 시간보다 짧을 것만 요구합니다.
+서버 응답이나 사용자 선택처럼 목록 길이를 통제하지 못할 때 반복 조회 비용이 커집니다.
 
-- 같은 목록을 뒤지는 조회가 루프나 `map`·`filter`·`some` 콜백 안에 있습니다.
-- 같은 목록을 뒤지는 조회가 서로 다른 세 지점 이상에서 일어납니다.
+| `Map`으로 바꾸기 전 확인 | 이유와 처리 |
+| --- | --- |
+| `keyBy`의 객체를 조회용으로 쓰는지 | 프로토타입의 `constructor`, `toString` 키에 걸릴 수 있어 `Map`을 씁니다 |
+| 없는 키를 타입이 드러내는지 | `noUncheckedIndexedAccess`가 꺼진 `Record<string, T>`와 달리 `Map.get()`은 항상 `T \| undefined`입니다 |
+| 키가 중복되는지 | `find`는 첫 항목, `new Map(entries)`는 마지막 항목을 남깁니다. 첫 항목을 유지하려면 `uniqBy`를 먼저 적용합니다 |
 
-**길이가 정해진 짧은 목록은 대상이 아닙니다.**
-상태 다섯 개를 적어 둔 상수에 `includes`를 한 번 부르는 쪽이 `Set`을 만드는 것보다 읽기 쉽습니다.
-
-**목록을 만들려고 `Set`을 쓰는 것은 이 규칙이 아닙니다.**
-`[...new Set(values)]`는 `uniq`, `filter((value) => !set.has(value))`는 `difference`나 `without`입니다.
-`values-use-es-toolkit-for-value-helpers`가 그 자리를 봅니다.
-`Set`은 만든 뒤에 `has`를 여러 번 부를 때만 남깁니다.
-
-`es-toolkit`의 `keyBy`가 돌려주는 평범한 객체도 조회 자체는 한 번에 합니다.
-그래도 조회 자리에는 `Map`을 씁니다.
-평범한 객체는 `constructor`나 `toString` 같은 프로토타입 키에 걸립니다.
-`Record<string, T>`를 읽으면 없는 키도 `T`로 잡혀 빠진 값이 드러나지 않습니다.
-`map.get()`은 언제나 `T | undefined`라 없다는 사실이 타입에 남습니다.
-`groupBy`와 `keyBy`는 조회가 아니라 목록을 다시 짜는 자리에서 씁니다.
+`groupBy`·`keyBy`는 목록을 재구성할 때 씁니다.
+목록 연산의 선택은 `values-use-es-toolkit-for-value-helpers`가 정합니다.
 
 **Incorrect (같은 배열을 반복 순회하며 포함 여부를 확인합니다):**
 
@@ -52,7 +44,7 @@ const visibleProducts = products.filter((product) => allowedProductIds.includes(
 const disabledProducts = archivedProducts.filter((product) => allowedProductIds.includes(product.id));
 ```
 
-**Correct (반복 조회는 `Set`으로 승격합니다):**
+**Correct (반복 조회는 `Set`으로 처리합니다):**
 
 ```ts
 const allowedProductIdSet = new Set(allowedProductIds);
@@ -61,9 +53,10 @@ const visibleProducts = products.filter((product) => allowedProductIdSet.has(pro
 const disabledProducts = archivedProducts.filter((product) => allowedProductIdSet.has(product.id));
 ```
 
-**Correct (반복 키 조회는 `Map`으로 승격합니다):**
+**Correct (반복 키 조회는 `Map`으로 처리합니다):**
 
 ```ts
+// users는 서버 계약상 id가 고유하다
 const userById = new Map(users.map((user) => [user.id, user]));
 
 const owner = userById.get(ownerId);

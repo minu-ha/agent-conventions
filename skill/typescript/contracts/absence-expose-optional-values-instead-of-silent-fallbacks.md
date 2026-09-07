@@ -1,28 +1,29 @@
 # Expose Optional Values Instead of Silent Fallbacks
 
-**Impact: HIGH (그 자리에서 지어낸 값으로 덮지 않아 빠진 데이터가 드러납니다)**
+**Impact: HIGH (기본값의 출처를 이름으로 드러내고 누락된 데이터의 처리 기준을 유지합니다)**
 
-**`??`와 `||` 오른쪽에 리터럴을 적지 않고 이미 선언된 이름만 가리킵니다.**
+`??`·`||` 오른쪽과 기본값에는 리터럴 대신 이미 선언된 이름을 참조합니다.
+리터럴을 지역 `const`로 옮기거나 이유 주석을 붙이는 것만으로는 규칙을 충족하지 못합니다.
 
-| 형태 | 판정 |
+| 기본값 표현 | 판정 |
 | --- | --- |
-| `?? "help@example.com"`, `?? 0`, `?? []`, `\|\| "-"` 같은 리터럴 | 위반 |
-| `?? pagination_default_page_size`처럼 상수로 선언된 이름 | 통과 |
-| 같은 파일 지역 `const`로 리터럴만 옮긴 것. `const fallback = "-";` | 위반. 자리만 바꾼 것입니다 |
-| 선언된 이름 둘을 합성한 결과에 이름을 붙인 것 | 통과. 리터럴이 없습니다 |
-| 기본 매개변수나 구조분해 기본값에 **리터럴**을 적은 것. `(size = 10) =>`, `{size = 10}` | 위반 |
-| 기본 매개변수가 선언된 이름을 가리키는 것. `(size = pagination_default_page_size) =>` | 통과 |
-| 삼항 `value ? value : "-"`, `String(value ?? "")` | 위반 |
+| `?? "help@example.com"`, `?? 0`, `?? []`, `\|\| "-"` | 위반 |
+| `?? pagination_default_page_size`처럼 선언된 상수 | 통과 |
+| 지역 `const fallback = "-"`로 리터럴만 옮김 | 위반 |
+| 선언된 이름 둘을 합성한 파생값 | 통과 |
+| `(size = 10) =>`, `{size = 10}` 같은 기본값 리터럴 | 위반 |
+| `(size = pagination_default_page_size) =>` | 통과 |
+| 삼항의 대체 리터럴 `value ? value : "-"`, `String(value ?? "")` | 위반 |
 
-숫자 리터럴을 쓰는 자리에 적지 않는 일반 규범은 `values-declare-meaningful-numbers`가 정합니다.
-여기서는 없는 값을 덮는 자리만 봅니다.
+| 대체하려는 값 | 연산자 |
+| --- | --- |
+| `null`, `undefined`만 없음으로 취급 | `??` |
+| `0`, `false`·빈 문자열까지 없음으로 취급하는 계약 | `\|\|` |
 
-기본값이 정말 필요하면 그 기본값에 이름을 붙여 선언하고 그 이름을 가리킵니다.
-소유자를 지워도 남으면 `naming-place-project-constants-in-the-root-constant-folder` 규칙이,
-소유자와 함께 사라지면 `naming-place-owner-constants-in-the-owner-constant-folder` 규칙이 자리를 정합니다.
-그 기본값을 어디서 채울지는 `absence-resolve-defaults-at-the-boundary`가 정합니다.
-
-이유 주석으로 이 규칙을 통과하지는 못합니다.
-주석은 리터럴을 선언된 이름으로 바꾸지 않습니다.
+선언된 이름이어도 기본값의 의미가 맞아야 합니다. `0`·`false`가 유효하면 `??`를 씁니다.
+상수는 소유자를 지워도 남으면 `naming-place-project-constants-in-the-root-constant-folder`,
+함께 사라지면 `naming-place-owner-constants-in-the-owner-constant-folder`에 따라 배치합니다.
+채우는 위치는 `absence-resolve-defaults-at-the-boundary`가 정합니다.
+일반 숫자 리터럴은 `values-declare-meaningful-numbers`가 정하고, 여기서는 없는 값을 대체하는 자리만 봅니다.
 
 > 예시·예외가 필요하면 [full rule](../rules/05-01-absence-expose-optional-values-instead-of-silent-fallbacks.md)을 읽습니다.

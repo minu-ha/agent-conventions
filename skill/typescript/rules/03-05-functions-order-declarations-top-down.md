@@ -14,20 +14,18 @@ tags: functions, ordering
 
 **Impact: MEDIUM (파일을 열면 내보낸 함수가 먼저 보이고 부르는 쪽에서 불리는 쪽으로 이어집니다)**
 
-파일을 여는 사람은 그 파일이 무엇을 내보내는지부터 찾습니다.
-그래서 내보낸 것을 맨 위에 둡니다.
-그 아래로는 부르는 차례대로 이어 놓습니다.
+내보낸 계약과 대표 함수를 먼저 보여 주되, 모듈 초기화 시 필요한 선언 순서를 지킵니다.
 
-1. `import`
-2. 내보낸 계약 타입
-3. 내보낸 대표 함수
-4. 모듈을 불러올 때 계산되는 선언. 부르는 쪽을 위에, 불리는 쪽을 아래에 둡니다
+| 순서 | 선언 |
+| --- | --- |
+| 1 | `import` |
+| 2 | 내보낸 계약 타입 |
+| 3 | 내보낸 대표 함수 |
+| 4 | 모듈을 불러올 때 계산하는 선언. 필요한 선언이 먼저 초기화되어야 합니다 |
 
-함수 본문 속 참조는 호출 시점에 해석되므로 불리는 쪽이 아래 있어도 됩니다.
-모듈을 불러올 때 값이 계산되는 선언만 순서를 탑니다.
-그런 선언은 자기가 부르는 선언 뒤에 둡니다.
-
-컴포넌트 본문 안에서 훅, 핸들러, 이펙트를 어떤 순서로 둘지는 프레임워크 컨벤션이 정합니다.
+함수 본문 참조는 호출 시점에 읽으므로 모듈 초기화가 끝난 뒤 부르면 참조 대상이 아래에 있어도 됩니다.
+즉시 계산하는 선언은 자기가 부르는 선언 뒤에 둡니다.
+컴포넌트 본문의 훅·핸들러·이펙트 순서는 프레임워크 컨벤션이 정합니다.
 
 **Incorrect (내보낸 계약 타입이 함수 아래에 있어 시그니처를 읽으려면 파일을 끝까지 내려가야 합니다):**
 
@@ -73,14 +71,13 @@ export const toSummaryRows = (params: ToSummaryRowsParams): SummaryRow[] => {
 **Incorrect (모듈을 불러올 때 계산되는 선언이 자기가 부르는 선언보다 위에 있습니다):**
 
 ```ts
-export const toCycleOffsets = (): number[] => {
-	return cycle_offsets;
-};
+const selectedLocaleSupported = isSupportedLocale(selectedLocale);
 
-const cycle_offsets = toOffsetTable();
-
-const toOffsetTable = (): number[] => {
-	return [0, 31, 59];
+/**
+ * 짧고 고정된 지원 로케일 목록을 기준으로 판정한다
+ */
+export const isSupportedLocale = (locale: string): boolean => {
+	return locale_supported_values.includes(locale);
 };
 ```
 
@@ -88,15 +85,11 @@ const toOffsetTable = (): number[] => {
 
 ```ts
 /**
- * 지원하는 로케일인지 판정
+ * 짧고 고정된 지원 로케일 목록을 기준으로 판정한다
  */
 export const isSupportedLocale = (locale: string): boolean => {
-	return supported_locale_set.has(locale);
+	return locale_supported_values.includes(locale);
 };
 
-const toSupportedLocaleSet = (): Set<string> => {
-	return new Set(Object.keys(locale_label));
-};
-
-const supported_locale_set = toSupportedLocaleSet();
+const selectedLocaleSupported = isSupportedLocale(selectedLocale);
 ```
