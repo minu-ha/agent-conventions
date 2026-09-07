@@ -1,7 +1,7 @@
 ---
 title: Order Hooks, Handlers, Effects, Then Return
 titleKo: 본문은 훅, 핸들러, 이펙트, 반환 순으로 배치합니다
-impact: MEDIUM
+impact: HIGH
 impactDescription: 컴포넌트마다 훅·핸들러·이펙트를 같은 순서로 찾을 수 있습니다
 appliesWhen:
   - 컴포넌트 본문에 훅·핸들러·이펙트를 추가하거나 자리를 옮길 때
@@ -12,7 +12,7 @@ tags: composition, ordering
 
 ## Order Hooks, Handlers, Effects, Then Return
 
-**Impact: MEDIUM (컴포넌트마다 훅·핸들러·이펙트를 같은 순서로 찾을 수 있습니다)**
+**Impact: HIGH (컴포넌트마다 훅·핸들러·이펙트를 같은 순서로 찾을 수 있습니다)**
 
 컴포넌트 본문은 아래 네 구획 순서로 작성합니다.
 렌더 중에 읽는 값은 사용 위치보다 위에서 선언합니다.

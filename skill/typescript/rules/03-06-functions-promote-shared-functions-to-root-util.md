@@ -1,7 +1,7 @@
 ---
 title: Promote Owner-Free Functions to the Root util Folder
 titleKo: 소유자를 지워도 남는 함수만 루트 `util`로 올립니다
-impact: MEDIUM
+impact: HIGH
 impactDescription: 소유자 전용 함수를 구분하고 사용처 수가 달라져도 배치 기준을 유지합니다
 appliesWhen:
   - 함수를 루트 `util` 폴더로 옮기거나 종류 폴더를 새로 만들 때
@@ -12,7 +12,7 @@ tags: functions, boundaries
 
 ## Promote Owner-Free Functions to the Root util Folder
 
-**Impact: MEDIUM (소유자 전용 함수를 구분하고 사용처 수가 달라져도 배치 기준을 유지합니다)**
+**Impact: HIGH (소유자 전용 함수를 구분하고 사용처 수가 달라져도 배치 기준을 유지합니다)**
 
 루트 `util` 승격은 사용처 수가 아니라 소유자를 지워도 계산이 남는지로 판단합니다.
 사용처가 늘거나 줄어도 이 기준은 바뀌지 않습니다.

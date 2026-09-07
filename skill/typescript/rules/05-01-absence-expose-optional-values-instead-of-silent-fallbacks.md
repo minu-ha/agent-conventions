@@ -1,7 +1,7 @@
 ---
 title: Expose Optional Values Instead of Silent Fallbacks
 titleKo: `??`·`||`·기본 매개변수 자리에 리터럴을 적지 않습니다
-impact: HIGH
+impact: CRITICAL
 impactDescription: 기본값의 출처를 이름으로 드러내고 누락된 데이터의 처리 기준을 유지합니다
 appliesWhen:
   - 선택 값을 읽거나 정규화하거나 넘기는 방식을 바꿀 때
@@ -15,7 +15,7 @@ tags: absence
 
 ## Expose Optional Values Instead of Silent Fallbacks
 
-**Impact: HIGH (기본값의 출처를 이름으로 드러내고 누락된 데이터의 처리 기준을 유지합니다)**
+**Impact: CRITICAL (기본값의 출처를 이름으로 드러내고 누락된 데이터의 처리 기준을 유지합니다)**
 
 `??`·`||` 오른쪽과 기본값에는 리터럴 대신 이미 선언된 이름을 참조합니다.
 리터럴을 지역 `const`로 옮기거나 이유 주석을 붙이는 것만으로는 규칙을 충족하지 못합니다.

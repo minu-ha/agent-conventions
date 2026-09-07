@@ -1,7 +1,7 @@
 ---
 title: Name Types by Role and Lifetime
 titleKo: 타입 이름은 값의 역할과 수명으로 짓습니다
-impact: MEDIUM
+impact: HIGH
 impactDescription: 이름만 읽고 값이 무엇이며 어느 시점에 존재하는지 구분할 수 있습니다
 appliesWhen:
   - 타입·인터페이스나 그 파일의 이름을 새로 만들거나 바꿀 때
@@ -13,7 +13,7 @@ tags: naming, types, ownership
 
 ## Name Types by Role and Lifetime
 
-**Impact: MEDIUM (이름만 읽고 값이 무엇이며 어느 시점에 존재하는지 구분할 수 있습니다)**
+**Impact: HIGH (이름만 읽고 값이 무엇이며 어느 시점에 존재하는지 구분할 수 있습니다)**
 
 값의 역할과 수명을 판단한 뒤, 의미를 더하는 역할어만 붙입니다.
 도메인 명사로 충분하면 `ChartPoint`, `TableRow`처럼 씁니다.

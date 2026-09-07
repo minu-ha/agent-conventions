@@ -1,7 +1,7 @@
 ---
 title: Switch Themes by Changing Token Values
 titleKo: 테마는 토큰 값만 바꿔서 전환합니다
-impact: MEDIUM
+impact: HIGH
 impactDescription: 테마 분기가 한 파일에만 있어 색을 하나 더할 때 파일 여러 개를 열지 않습니다
 appliesWhen:
   - 다크 모드나 테마 전환을 넣을 때
@@ -13,7 +13,7 @@ tags: values, theme
 
 ## Switch Themes by Changing Token Values
 
-**Impact: MEDIUM (테마 분기가 한 파일에만 있어 색을 하나 더할 때 파일 여러 개를 열지 않습니다)**
+**Impact: HIGH (테마 분기가 한 파일에만 있어 색을 하나 더할 때 파일 여러 개를 열지 않습니다)**
 
 테마는 **토큰 파일에서 값만** 바꿉니다. 컴포넌트 CSS에는 `prefers-color-scheme`이나 `[data-theme]` 분기를 두지 않습니다.
 

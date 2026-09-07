@@ -1,7 +1,7 @@
 ---
 title: Preserve Response and Store Origin Down to the JSX
 titleKo: 응답·뮤테이션·스토어는 JSX까지 원본 이름으로 읽습니다
-impact: MEDIUM
+impact: CRITICAL
 impactDescription: 별칭을 추적하지 않고 사용하는 곳에서 값의 출처를 확인할 수 있습니다
 appliesWhen:
   - 응답, 뮤테이션, 스토어에서 값을 꺼내 쓰는 코드를 추가·변경할 때
@@ -12,7 +12,7 @@ tags: data, state, origin
 
 ## Preserve Response and Store Origin Down to the JSX
 
-**Impact: MEDIUM (별칭을 추적하지 않고 사용하는 곳에서 값의 출처를 확인할 수 있습니다)**
+**Impact: CRITICAL (별칭을 추적하지 않고 사용하는 곳에서 값의 출처를 확인할 수 있습니다)**
 
 `response...`·`mutation...`·`*Store`는 JSX까지 원본 이름으로 읽습니다.
 핸들러·이펙트 안에서도 `responseProductSearchSuspense.data.products`처럼 출처를 유지합니다.

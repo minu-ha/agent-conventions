@@ -69,6 +69,26 @@ const readAppliesWhen = (source: string): string => readFrontmatterValue(source,
 const realSkillRootDir = path.join(repoDir, "skill");
 
 /**
+ * @helper 에이전트가 실제로 읽게 되는 텍스트. 링크만 남긴 CRITICAL·HIGH contract 는 원문까지 이어 읽는다
+ */
+const readAgentFacingRule = async (skill: string, ruleId: string): Promise<string> => {
+	const contract = await readFile(path.join(realSkillRootDir, skill, "contracts", `${ruleId}.md`), "utf8");
+
+	if (!/must read the \[full rule\]/.test(contract)) {
+		return contract;
+	}
+
+	const rulesDir = path.join(realSkillRootDir, skill, "rules");
+	const ruleFileName = (await readdir(rulesDir)).find((fileName) => fileName.endsWith(`-${ruleId}.md`));
+
+	if (ruleFileName === undefined) {
+		throw new Error(`${skill}/${ruleId}: full rule file not found for a link-only contract`);
+	}
+
+	return `${contract}\n${await readFile(path.join(rulesDir, ruleFileName), "utf8")}`;
+};
+
+/**
  * @helper stable ID로 rule 원문을 읽는다. 파일명에 사람용 번호 prefix(`NN-MM-`)가 붙어 있어도 찾는다
  */
 const readRuleSource = async (skillName: string, ruleId: string): Promise<string> => {
@@ -3204,7 +3224,7 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 
 	const reactContracts = await Promise.all(
 		["screen-keep-route-flow-visible", "events-curry-extra-handler-arguments", "typing-take-handler-types-from-existing-contracts"].map(
-			(ruleId) => readFile(path.join(realSkillRootDir, "react", "contracts", `${ruleId}.md`), "utf8"),
+			(ruleId) => readAgentFacingRule("react", ruleId),
 		),
 	);
 	assertMentions(reactContracts[0], [/(?:`query\.select`|query `select`)/i, /파생 상태 이펙트/i, /렌더 계산/i], "reactContracts");
@@ -3274,7 +3294,7 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 			"types-mark-unused-parameters-with-underscore",
 			"types-prefer-function-variable-types-over-parameter-annotations",
 			"types-reuse-existing-contracts-before-new-types",
-		].map((ruleId) => readFile(path.join(realSkillRootDir, "typescript", "contracts", `${ruleId}.md`), "utf8")),
+		].map((ruleId) => readAgentFacingRule("typescript", ruleId)),
 	);
 	assert.match(typescriptContracts[0], /같은 경로라도 값·타입 가져오기를 바꾸면 이 규칙을 적용합니다/i);
 	assert.match(
@@ -3333,9 +3353,7 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 		);
 	}
 	const cssInteractionContracts = await Promise.all(
-		["selector-nest-dom-state-in-the-owning-block"].map((ruleId) =>
-			readFile(path.join(realSkillRootDir, "css", "contracts", `${ruleId}.md`), "utf8"),
-		),
+		["selector-nest-dom-state-in-the-owning-block"].map((ruleId) => readAgentFacingRule("css", ruleId)),
 	);
 	for (const contract of cssInteractionContracts) {
 		assertMentions(contract, [/조건 없는 기본 클래스 블록/i, /수정자 블록에서 다시 열지 않습니다/i], "contract");
@@ -3495,7 +3513,7 @@ test("v17 TypeScript boundaries exclude React props and prevent self-created dup
 			"functions-use-named-object-params-for-complex-signatures",
 			"types-document-custom-types-and-shapes",
 			"types-reuse-existing-contracts-before-new-types",
-		].map((ruleId) => readFile(path.join(realSkillRootDir, "typescript", "contracts", `${ruleId}.md`), "utf8")),
+		].map((ruleId) => readAgentFacingRule("typescript", ruleId)),
 	);
 	assertMentions(
 		generatedContracts[0],
@@ -3572,7 +3590,7 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 			"functions-use-named-object-params-for-complex-signatures",
 			"types-document-custom-types-and-shapes",
 			"types-reuse-existing-contracts-before-new-types",
-		].map((ruleId) => readFile(path.join(realSkillRootDir, "typescript", "contracts", `${ruleId}.md`), "utf8")),
+		].map((ruleId) => readAgentFacingRule("typescript", ruleId)),
 	);
 	assertMentions(
 		generatedContracts[0],
@@ -3766,7 +3784,7 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 			["typescript", "docs-write-concise-korean-comments-about-purpose-and-constraints"],
 			["css", "selector-nest-dom-state-in-the-owning-block"],
 			["css", "ownership-use-foreign-classes-only-under-your-own-root"],
-		].map((pair) => readFile(path.join(realSkillRootDir, pair[0], "contracts", `${pair[1]}.md`), "utf8")),
+		].map((pair) => readAgentFacingRule(pair[0], pair[1])),
 	);
 	assertMentions(
 		flattenWhitespace(generatedContracts[0]),

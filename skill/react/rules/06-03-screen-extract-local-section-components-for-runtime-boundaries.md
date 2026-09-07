@@ -1,7 +1,7 @@
 ---
 title: Extract Local Section Components Only for Runtime Boundaries
 titleKo: 런타임 경계가 있는 섹션만 화면 지역 컴포넌트로 추출합니다
-impact: MEDIUM
+impact: HIGH
 impactDescription: 화면 흐름을 유지하면서 자체 책임이 있는 섹션만 분리합니다
 appliesWhen:
   - 화면 지역 섹션 컴포넌트를 새로 추출할 때
@@ -11,7 +11,7 @@ tags: screen, routes
 
 ## Extract Local Section Components Only for Runtime Boundaries
 
-**Impact: MEDIUM (화면 흐름을 유지하면서 자체 책임이 있는 섹션만 분리합니다)**
+**Impact: HIGH (화면 흐름을 유지하면서 자체 책임이 있는 섹션만 분리합니다)**
 
 라우트 진입의 지역 컴포넌트는 아래 책임 중 하나를 **직접 소유할 때만** 추출합니다.
 단순 래퍼·`className` 묶음·들여쓰기 감소는 추출 근거가 아닙니다.

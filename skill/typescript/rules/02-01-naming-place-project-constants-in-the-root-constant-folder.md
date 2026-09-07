@@ -1,7 +1,7 @@
 ---
 title: Place Project-wide Constants in the Root `constant` Folder
 titleKo: 프로젝트 전반의 상수는 루트 `constant` 폴더에 주제별 파일로 둡니다
-impact: MEDIUM
+impact: HIGH
 impactDescription: 프로젝트 전반의 상수를 주제별로 모아 위치와 이름을 일관되게 유지합니다
 appliesWhen:
   - 프로젝트 전반이 쓰는 URL 경로, 페이지 크기, 표시 문구, 기준값을 추가·이동·중복 정의할 때
@@ -12,7 +12,7 @@ tags: naming, constant
 
 ## Place Project-wide Constants in the Root `constant` Folder
 
-**Impact: MEDIUM (프로젝트 전반의 상수를 주제별로 모아 위치와 이름을 일관되게 유지합니다)**
+**Impact: HIGH (프로젝트 전반의 상수를 주제별로 모아 위치와 이름을 일관되게 유지합니다)**
 
 상수 위치는 사용처 수가 아니라 소유자로 정합니다.
 소유자를 지워도 남는 값은 루트에, 함께 사라지는 값은 그 소유자 아래에 둡니다.

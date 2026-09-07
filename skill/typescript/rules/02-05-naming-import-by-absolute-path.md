@@ -1,7 +1,7 @@
 ---
 title: Import by Absolute Path
 titleKo: 가져오기 경로는 `@/`로 씁니다
-impact: MEDIUM
+impact: CRITICAL
 impactDescription: 가져오기 경로를 통일하고 가져오는 파일의 위치로 접근 범위를 판단합니다
 appliesWhen:
   - 다른 모듈을 가져오는 경로를 쓸 때
@@ -13,7 +13,7 @@ tags: naming, imports
 
 ## Import by Absolute Path
 
-**Impact: MEDIUM (가져오기 경로를 통일하고 가져오는 파일의 위치로 접근 범위를 판단합니다)**
+**Impact: CRITICAL (가져오기 경로를 통일하고 가져오는 파일의 위치로 접근 범위를 판단합니다)**
 
 심볼은 `@/` 절대경로로 가져옵니다.
 심볼 없이 같은 폴더의 파일만 불러올 때는 `./`를 허용하며, `../`는 쓰지 않습니다.

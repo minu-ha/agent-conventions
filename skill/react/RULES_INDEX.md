@@ -1,7 +1,7 @@
 # React 컨벤션 Rule Index
 
 - Skill: `react`
-- Routing digest: `sha256:3ec1370fe9c2250252e182464248963b8437ea14180191bf865e497d215d7275`
+- Routing digest: `sha256:f4da9ba4a4d79e5c30c0f8ed9a34cc5f7ab03de1e45fb4e231b756b60402f7fc`
 
 ## Direct Companions
 

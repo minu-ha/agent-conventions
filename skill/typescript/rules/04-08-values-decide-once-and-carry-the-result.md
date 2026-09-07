@@ -1,7 +1,7 @@
 ---
 title: Decide Once and Carry the Result
 titleKo: 판정은 한 번만 하고 결과를 데이터로 전달합니다
-impact: MEDIUM
+impact: HIGH
 impactDescription: 같은 판정을 반복하지 않고 소비처가 전달된 결과를 사용합니다
 appliesWhen:
   - 같은 입력에 같은 판정·정규화·포맷을 두 자리 이상에서 할 때
@@ -13,7 +13,7 @@ tags: values, boundaries
 
 ## Decide Once and Carry the Result
 
-**Impact: MEDIUM (같은 판정을 반복하지 않고 소비처가 전달된 결과를 사용합니다)**
+**Impact: HIGH (같은 판정을 반복하지 않고 소비처가 전달된 결과를 사용합니다)**
 
 값이 들어오는 경계에서 한 번 판정하고, 결과를 데이터 필드로 전달합니다.
 소비처는 같은 판정 함수를 다시 호출하거나 공유 보조 함수로 추출하지 않고 그 필드를 읽습니다.

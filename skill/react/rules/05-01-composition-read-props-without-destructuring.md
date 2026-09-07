@@ -1,7 +1,7 @@
 ---
 title: Read Props Through the Props Object Without Destructuring
 titleKo: 프롭스는 구조분해하지 않고 `props`로 읽습니다
-impact: MEDIUM
+impact: HIGH
 impactDescription: 값이 프롭스에서 왔다는 사실이 쓰는 자리마다 그대로 남습니다
 appliesWhen:
   - 함수 컴포넌트의 시그니처나 본문에서 프롭스를 읽는 코드를 추가·변경할 때
@@ -14,7 +14,7 @@ tags: composition, props, origin
 
 ## Read Props Through the Props Object Without Destructuring
 
-**Impact: MEDIUM (값이 프롭스에서 왔다는 사실이 쓰는 자리마다 그대로 남습니다)**
+**Impact: HIGH (값이 프롭스에서 왔다는 사실이 쓰는 자리마다 그대로 남습니다)**
 
 컴포넌트는 `props` 전체를 받고, 사용하는 곳에서 `props.id`처럼 읽습니다.
 시그니처·본문·중첩 함수 어디에서도 구조분해하지 않습니다.

@@ -1,7 +1,7 @@
 ---
 title: Write Concise Korean Comments About Purpose and Constraints
 titleKo: 주석에는 목적과 제약을 한국어로 적습니다
-impact: MEDIUM
+impact: HIGH
 impactDescription: 코드 동작을 옮겨 적지 않고 의도와 제약에 주석을 모읍니다
 appliesWhen:
   - TypeScript·TSX의 문서 주석이나 인라인 주석 문구를 추가·수정·번역하거나 검토할 때
@@ -11,7 +11,7 @@ tags: docs, comments
 
 ## Write Concise Korean Comments About Purpose and Constraints
 
-**Impact: MEDIUM (코드 동작을 옮겨 적지 않고 의도와 제약에 주석을 모읍니다)**
+**Impact: HIGH (코드 동작을 옮겨 적지 않고 의도와 제약에 주석을 모읍니다)**
 
 주석은 한국어로 목적·제약·부수효과를 설명합니다.
 이름과 시그니처에 없는 정보가 없으면 지우고, 필요한 배경에 따라 한 문장이나 여러 문장으로 씁니다.

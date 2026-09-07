@@ -1,7 +1,7 @@
 ---
 title: Name a Value Only to Prevent Recompute or Explain a Judgment
 titleKo: 변수는 재계산을 막거나 복잡한 판정에 이름을 붙일 때만 만듭니다
-impact: MEDIUM
+impact: HIGH
 impactDescription: 사용 횟수보다 계산 비용과 판정의 복잡성을 기준으로 변수 선언 여부를 판단합니다
 appliesWhen:
   - 순수 계산의 결과를 지역 변수(`const`)로 받는 줄을 추가·삭제할 때
@@ -12,7 +12,7 @@ tags: functions, origin
 
 ## Name a Value Only to Prevent Recompute or Explain a Judgment
 
-**Impact: MEDIUM (사용 횟수보다 계산 비용과 판정의 복잡성을 기준으로 변수 선언 여부를 판단합니다)**
+**Impact: HIGH (사용 횟수보다 계산 비용과 판정의 복잡성을 기준으로 변수 선언 여부를 판단합니다)**
 
 지역 변수는 재계산을 막거나 여러 항을 합친 판정에 이름을 붙일 때만 만듭니다.
 사용처 수만으로는 만들지 않으며, 아래 사유가 없으면 표현식을 쓰는 자리에 둡니다.

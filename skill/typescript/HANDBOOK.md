@@ -84,7 +84,7 @@
 
 **Review with:** `types-derive-subsets-with-indexed-access`, `types-document-custom-types-and-shapes`
 
-**Impact: MEDIUM (뜻이 그대로면 기존 타입이나 스키마를 그대로 참조해 같은 형태를 두 번 선언하지 않습니다)**
+**Impact: HIGH (뜻이 그대로면 기존 타입이나 스키마를 그대로 참조해 같은 형태를 두 번 선언하지 않습니다)**
 
 새 타입을 적기 전에 뜻과 수명이 같은 기존 타입이나 스키마를 먼저 찾습니다.
 필드 이름, 타입, 선택 여부, 읽기 전용 여부까지 같으면 그 계약을 그대로 참조합니다.
@@ -173,7 +173,7 @@ export const sendInvite = (draft: InviteDraft): Promise<void> => { /* … */ };
 
 **Review with:** `types-document-custom-types-and-shapes`, `types-reuse-existing-contracts-before-new-types`
 
-**Impact: MEDIUM (고른 필드의 이름과 출처를 드러내고 선택 여부와 읽기 전용 속성을 보존합니다)**
+**Impact: HIGH (고른 필드의 이름과 출처를 드러내고 선택 여부와 읽기 전용 속성을 보존합니다)**
 
 기존 계약의 일부 필드는 `interface`에 `원본["필드"]`로 적고, `Pick`은 쓰지 않습니다.
 계약 전체를 재사용할지는 `types-reuse-existing-contracts-before-new-types`가 정합니다.
@@ -788,7 +788,7 @@ type MutableRow = Omit<Row, "children"> & {
 
 **Review with:** `naming-place-owner-constants-in-the-owner-constant-folder`, `naming-use-direct-imports-and-public-entry-points`
 
-**Impact: MEDIUM (프로젝트 전반의 상수를 주제별로 모아 위치와 이름을 일관되게 유지합니다)**
+**Impact: HIGH (프로젝트 전반의 상수를 주제별로 모아 위치와 이름을 일관되게 유지합니다)**
 
 상수 위치는 사용처 수가 아니라 소유자로 정합니다.
 소유자를 지워도 남는 값은 루트에, 함께 사라지는 값은 그 소유자 아래에 둡니다.
@@ -883,7 +883,7 @@ export const pagination_default_page_size = 20;
 
 **Review with:** `naming-place-project-constants-in-the-root-constant-folder`
 
-**Impact: MEDIUM (소유자 전용 상수를 함께 관리하고 파일명과 이름에서 소유자 표현을 반복하지 않습니다)**
+**Impact: HIGH (소유자 전용 상수를 함께 관리하고 파일명과 이름에서 소유자 표현을 반복하지 않습니다)**
 
 한 소유자의 상수는 그 소유자 아래 `_constant`에 둡니다.
 루트와 소유자를 구분하는 기준은 `naming-place-project-constants-in-the-root-constant-folder`를 따릅니다.
@@ -942,7 +942,7 @@ export const table_page_size = 20;
 
 **Applies when:** TypeScript 파일, 폴더, 변수, 함수, 타입, 객체·스키마 키의 이름을 새로 만들거나 바꿀 때. 외부 계약이 정한 이름이나 키의 표기를 바꿀지 판단할 때. 제외: 별칭 없이 외부 패키지에서 그대로 가져오는 경우.
 
-**Impact: MEDIUM (파일과 심볼의 표기가 역할을 드러내 읽는 사람이 종류를 바로 압니다)**
+**Impact: HIGH (파일과 심볼의 표기가 역할을 드러내 읽는 사람이 종류를 바로 압니다)**
 
 파일과 심볼은 선언 문법이 아니라 역할에 맞게 이름 짓습니다.
 `const`로 선언해도 함수·훅·스키마·API 결과·요청 객체·지역 파생값을 불변 데이터 상수로 보지 않습니다.
@@ -1134,7 +1134,7 @@ import {UiTabs} from "@/component/ui/tabs/ui-tabs";
 
 **Review with:** `naming-use-direct-imports-and-public-entry-points`
 
-**Impact: MEDIUM (가져오기 경로를 통일하고 가져오는 파일의 위치로 접근 범위를 판단합니다)**
+**Impact: CRITICAL (가져오기 경로를 통일하고 가져오는 파일의 위치로 접근 범위를 판단합니다)**
 
 심볼은 `@/` 절대경로로 가져옵니다.
 심볼 없이 같은 폴더의 파일만 불러올 때는 `./`를 허용하며, `../`는 쓰지 않습니다.
@@ -1248,7 +1248,7 @@ const productClient = createClient({baseUrl: env_api_base_url});
 
 **Review with:** `naming-use-consistent-file-and-symbol-naming`
 
-**Impact: MEDIUM (이름만 읽고 값이 무엇이며 어느 시점에 존재하는지 구분할 수 있습니다)**
+**Impact: HIGH (이름만 읽고 값이 무엇이며 어느 시점에 존재하는지 구분할 수 있습니다)**
 
 값의 역할과 수명을 판단한 뒤, 의미를 더하는 역할어만 붙입니다.
 도메인 명사로 충분하면 `ChartPoint`, `TableRow`처럼 씁니다.
@@ -1504,7 +1504,7 @@ fetchProductPage({baseUrl: api_base_url, page: urlParams.page, pageSize: paginat
 
 **Review with:** `docs-require-header-jsdoc-on-key-declarations`, `functions-give-each-function-its-own-file`, `values-decide-once-and-carry-the-result`
 
-**Impact: MEDIUM (불필요한 함수 분리를 줄여 호출부에서 처리 흐름을 읽을 수 있습니다)**
+**Impact: HIGH (불필요한 함수 분리를 줄여 호출부에서 처리 흐름을 읽을 수 있습니다)**
 
 한 곳에서만 쓰는 단계는 호출부에 두고, 다음 사유가 있을 때만 보조 함수에 이름을 붙입니다.
 추출한 함수는 바깥 변수·훅·컴포넌트 상태 없이도 뜻이 통해야 합니다.
@@ -1655,7 +1655,7 @@ export const toGradeTone = (grade: string): Tone => {
 
 **Review with:** `functions-order-declarations-top-down`, `functions-promote-shared-functions-to-root-util`
 
-**Impact: MEDIUM (보조 함수를 개별 파일로 관리하고 폴더로 소유 관계를 드러냅니다)**
+**Impact: HIGH (보조 함수를 개별 파일로 관리하고 폴더로 소유 관계를 드러냅니다)**
 
 보조 함수에 이름을 붙일지는 `functions-extract-helpers-only-when-the-boundary-is-real`이 판단합니다.
 이름을 붙였다면 함수마다 파일을 하나 두고, 부르는 대표 함수에 따라 배치합니다.
@@ -1755,7 +1755,7 @@ page/report/_function/
 
 **Applies when:** `.ts` 파일에 선언을 추가하거나 선언 자리를 옮길 때. 내보낸 계약 타입이나 모듈 상수를 내보낸 함수보다 아래에 두려 할 때. 제외: 리액트 컴포넌트 본문 안 선언 자리를 바꾸는 경우.
 
-**Impact: MEDIUM (파일을 열면 내보낸 함수가 먼저 보이고 부르는 쪽에서 불리는 쪽으로 이어집니다)**
+**Impact: HIGH (파일을 열면 내보낸 함수가 먼저 보이고 부르는 쪽에서 불리는 쪽으로 이어집니다)**
 
 내보낸 계약과 대표 함수를 먼저 보여 주되, 모듈 초기화 시 필요한 선언 순서를 지킵니다.
 
@@ -1843,7 +1843,7 @@ const selectedLocaleSupported = isSupportedLocale(selectedLocale);
 
 **Applies when:** 함수를 루트 `util` 폴더로 옮기거나 종류 폴더를 새로 만들 때. 두 소유자가 같은 함수를 쓰게 될 때. 제외: 소유자 안에서 파일 자리만 바꾸는 경우.
 
-**Impact: MEDIUM (소유자 전용 함수를 구분하고 사용처 수가 달라져도 배치 기준을 유지합니다)**
+**Impact: HIGH (소유자 전용 함수를 구분하고 사용처 수가 달라져도 배치 기준을 유지합니다)**
 
 루트 `util` 승격은 사용처 수가 아니라 소유자를 지워도 계산이 남는지로 판단합니다.
 사용처가 늘거나 줄어도 이 기준은 바뀌지 않습니다.
@@ -1959,7 +1959,7 @@ export const toSignedAmount = (amount: Amount): string => {
 
 **Review with:** `functions-extract-helpers-only-when-the-boundary-is-real`
 
-**Impact: MEDIUM (분기로 공유 지역 변수를 바꾸지 않아 넓은 스코프의 값 조립이 선언형으로 남습니다)**
+**Impact: HIGH (분기로 공유 지역 변수를 바꾸지 않아 넓은 스코프의 값 조립이 선언형으로 남습니다)**
 
 모듈 최상위나 함수 본문 전체에 걸친 `let` 재할당, `push`, 조건부 누적으로 값을 조립하지 않습니다.
 `if`나 `for` 블록 안에서만 쓰는 누적은 대상이 아닙니다.
@@ -2051,7 +2051,7 @@ const visibleTabs = [
 
 **Review with:** `functions-avoid-imperative-assembly-in-wide-scopes`, `values-read-objects-through-chains`
 
-**Impact: MEDIUM (사용 횟수보다 계산 비용과 판정의 복잡성을 기준으로 변수 선언 여부를 판단합니다)**
+**Impact: HIGH (사용 횟수보다 계산 비용과 판정의 복잡성을 기준으로 변수 선언 여부를 판단합니다)**
 
 지역 변수는 재계산을 막거나 여러 항을 합친 판정에 이름을 붙일 때만 만듭니다.
 사용처 수만으로는 만들지 않으며, 아래 사유가 없으면 표현식을 쓰는 자리에 둡니다.
@@ -2434,7 +2434,7 @@ const isEditableStatus = editable_order_statuses.includes(order.status);
 
 **Review with:** `functions-name-a-value-only-for-recompute-or-judgment`
 
-**Impact: MEDIUM (값이 어느 객체에서 왔는지가 쓰는 자리마다 남아 이름만 보고 출처를 되짚지 않습니다)**
+**Impact: HIGH (값이 어느 객체에서 왔는지가 쓰는 자리마다 남아 이름만 보고 출처를 되짚지 않습니다)**
 
 객체 필드는 구조분해나 별칭 없이 `product.title`처럼 체인으로 읽습니다.
 쓰는 자리마다 값의 출처가 남아야 합니다.
@@ -2698,7 +2698,7 @@ const order_status_by_api_code = {
 
 **Review with:** `values-handle-dates-with-dayjs`, `values-prefer-immutable-array-sorting`
 
-**Impact: MEDIUM (중복 제거와 표기 변환을 파일마다 다르게 만들지 않고 검증된 구현 하나로 모읍니다)**
+**Impact: HIGH (중복 제거와 표기 변환을 파일마다 다르게 만들지 않고 검증된 구현 하나로 모읍니다)**
 
 값을 다루는 보조 함수는 `es-toolkit`을 기본으로 쓰고, `lodash`는 새로 들이지 않습니다.
 빈 배열·중복 키 같은 경계 처리를 통일하고, 배열을 인자로 펼칠 때의 호출 인자 한계도 피합니다.
@@ -2804,7 +2804,7 @@ const trimmedKeyword = keyword.trim();
 
 **Review with:** `naming-place-project-constants-in-the-root-constant-folder`, `values-use-es-toolkit-for-value-helpers`
 
-**Impact: MEDIUM (날짜의 단위와 타임존을 드러내고 파싱과 표시 형식을 일관되게 유지합니다)**
+**Impact: HIGH (날짜의 단위와 타임존을 드러내고 파싱과 표시 형식을 일관되게 유지합니다)**
 
 날짜는 `dayjs`로 다루고, `moment`는 새로 들이지 않습니다.
 계산 단위, 입력 형식, 표시 타임존을 계약에 맞게 구분합니다.
@@ -2898,7 +2898,7 @@ const compactDateTime = responseDateTime.slice(0, 16).replace("T", " ");
 
 **Review with:** `absence-resolve-defaults-at-the-boundary`, `functions-extract-helpers-only-when-the-boundary-is-real`
 
-**Impact: MEDIUM (같은 판정을 반복하지 않고 소비처가 전달된 결과를 사용합니다)**
+**Impact: HIGH (같은 판정을 반복하지 않고 소비처가 전달된 결과를 사용합니다)**
 
 값이 들어오는 경계에서 한 번 판정하고, 결과를 데이터 필드로 전달합니다.
 소비처는 같은 판정 함수를 다시 호출하거나 공유 보조 함수로 추출하지 않고 그 필드를 읽습니다.
@@ -2972,7 +2972,7 @@ const chartSeries = comparisonCurves.map((curve) => ({
 
 **Review with:** `absence-resolve-defaults-at-the-boundary`, `naming-place-owner-constants-in-the-owner-constant-folder`, `naming-place-project-constants-in-the-root-constant-folder`
 
-**Impact: HIGH (기본값의 출처를 이름으로 드러내고 누락된 데이터의 처리 기준을 유지합니다)**
+**Impact: CRITICAL (기본값의 출처를 이름으로 드러내고 누락된 데이터의 처리 기준을 유지합니다)**
 
 `??`·`||` 오른쪽과 기본값에는 리터럴 대신 이미 선언된 이름을 참조합니다.
 리터럴을 지역 `const`로 옮기거나 이유 주석을 붙이는 것만으로는 규칙을 충족하지 못합니다.
@@ -3100,7 +3100,7 @@ setVisibleRowCount(effectivePageSize);
 
 **Review with:** `absence-check-once-at-the-boundary`, `absence-expose-optional-values-instead-of-silent-fallbacks`, `types-narrow-unknown-instead-of-asserting`
 
-**Impact: MEDIUM (불필요한 검사를 줄이고 값이 실제로 없을 수 있는 경우만 확인합니다)**
+**Impact: HIGH (불필요한 검사를 줄이고 값이 실제로 없을 수 있는 경우만 확인합니다)**
 
 타입이 이미 보장하는 조건은 다시 검사하지 않습니다.
 불필요한 검사를 제거해 실제로 값이 없을 수 있는 경우를 드러냅니다.
@@ -3394,7 +3394,7 @@ const responseProductList = useProductList();
 
 **Applies when:** TypeScript·TSX의 문서 주석이나 인라인 주석 문구를 추가·수정·번역하거나 검토할 때. 문서 주석에 태그를 붙이거나 뺄 때.
 
-**Impact: MEDIUM (코드 동작을 옮겨 적지 않고 의도와 제약에 주석을 모읍니다)**
+**Impact: HIGH (코드 동작을 옮겨 적지 않고 의도와 제약에 주석을 모읍니다)**
 
 주석은 한국어로 목적·제약·부수효과를 설명합니다.
 이름과 시그니처에 없는 정보가 없으면 지우고, 필요한 배경에 따라 한 문장이나 여러 문장으로 씁니다.

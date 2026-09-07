@@ -1,7 +1,7 @@
 ---
 title: Order Declarations Top Down
 titleKo: 파일 안 선언은 위에서 아래로 읽히게 놓습니다
-impact: MEDIUM
+impact: HIGH
 impactDescription: 파일을 열면 내보낸 함수가 먼저 보이고 부르는 쪽에서 불리는 쪽으로 이어집니다
 appliesWhen:
   - `.ts` 파일에 선언을 추가하거나 선언 자리를 옮길 때
@@ -12,7 +12,7 @@ tags: functions, ordering
 
 ## Order Declarations Top Down
 
-**Impact: MEDIUM (파일을 열면 내보낸 함수가 먼저 보이고 부르는 쪽에서 불리는 쪽으로 이어집니다)**
+**Impact: HIGH (파일을 열면 내보낸 함수가 먼저 보이고 부르는 쪽에서 불리는 쪽으로 이어집니다)**
 
 내보낸 계약과 대표 함수를 먼저 보여 주되, 모듈 초기화 시 필요한 선언 순서를 지킵니다.
 

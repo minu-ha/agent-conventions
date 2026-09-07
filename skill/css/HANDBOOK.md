@@ -140,7 +140,7 @@ import "./pg-catalog-index.css";
 
 **Applies when:** 일반 CSS에서 프로젝트가 소유한 클래스를 새로 만들 때. 이름, 범위, 식별자, 요소, 수정자의 구분자나 대소문자 표기를 바꿀 때.
 
-**Impact: MEDIUM (클래스명에서 소유자와 역할을 확인할 수 있습니다)**
+**Impact: HIGH (클래스명에서 소유자와 역할을 확인할 수 있습니다)**
 
 클래스명은 `<scope>_<slug>__<element>[--<modifier>]` 문법을 씁니다.
 구분자 `_`, `__`, `--`를 고정하고 각 자리의 역할을 구분합니다.
@@ -505,7 +505,7 @@ component/ui/button/ui-button.css
 
 **Review with:** `composition-inject-classes-only-at-the-entry-point`, `ownership-use-foreign-classes-only-under-your-own-root`
 
-**Impact: MEDIUM (다른 소유자의 모습을 바꿀 때 배치 조정, 변형 노출, 레이어 이동을 순서대로 판단합니다)**
+**Impact: HIGH (다른 소유자의 모습을 바꿀 때 배치 조정, 변형 노출, 레이어 이동을 순서대로 판단합니다)**
 
 다른 소유자의 모습을 바꿀 때는 아래 세 방법을 순서대로 확인합니다.
 
@@ -704,7 +704,7 @@ TSX의 `className`은 클래스가 하나여도 `clsx()`로 조합합니다.
 
 **Review with:** `composition-do-not-add-wrapper-elements-for-styling`, `ownership-change-other-owners-through-their-api`, `ownership-use-foreign-classes-only-under-your-own-root`
 
-**Impact: MEDIUM (클래스 주입을 한 곳으로 제한해 사용처가 내부 구조에 의존하지 않게 합니다)**
+**Impact: HIGH (클래스 주입을 한 곳으로 제한해 사용처가 내부 구조에 의존하지 않게 합니다)**
 
 우리가 만든 컴포넌트는 레이어와 무관하게 **최상위 진입점 한 곳**에서만 외부 클래스를 받습니다.
 내부 노드의 클래스 주입 지점을 늘리면 사용처가 컴포넌트 구조에 의존하게 됩니다.
@@ -963,7 +963,7 @@ export const UiCollapse = (props: UiCollapseProps) => {
 
 **Review with:** `composition-compose-classes-with-clsx`, `typescript/values-avoid-lookup-tables-for-simple-choices`
 
-**Impact: MEDIUM (클래스 이름이 코드에 문자열로 남아 CSS와 사용처를 한 번의 검색으로 함께 고칩니다)**
+**Impact: HIGH (클래스 이름이 코드에 문자열로 남아 CSS와 사용처를 한 번의 검색으로 함께 고칩니다)**
 
 수정자는 조건과 완성된 클래스 문자열로 적습니다.
 값을 끼워 이름을 조립하면 CSS와 사용처를 같은 문자열로 검색할 수 없습니다.
@@ -2085,7 +2085,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 
 **Review with:** `values-fall-back-only-outside-core-tokens`, `values-name-tokens-by-purpose`, `values-tokenize-repeated-visual-values`
 
-**Impact: MEDIUM (테마 분기가 한 파일에만 있어 색을 하나 더할 때 파일 여러 개를 열지 않습니다)**
+**Impact: HIGH (테마 분기가 한 파일에만 있어 색을 하나 더할 때 파일 여러 개를 열지 않습니다)**
 
 테마는 **토큰 파일에서 값만** 바꿉니다. 컴포넌트 CSS에는 `prefers-color-scheme`이나 `[data-theme]` 분기를 두지 않습니다.
 

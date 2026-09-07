@@ -1,7 +1,7 @@
 ---
 title: Do Not Memoize Without a Confirmed Reason
 titleKo: 확인한 이유가 없으면 `useMemo`·`useCallback`·`memo`를 쓰지 않습니다
-impact: MEDIUM
+impact: HIGH
 impactDescription: 효과를 확인하지 않은 방어적 `useMemo`, `useCallback`, `memo`를 막습니다
 appliesWhen:
   - `useMemo`·`useCallback`을 추가하거나 제거할 때
@@ -13,7 +13,7 @@ tags: perf, state
 
 ## Do Not Memoize Without a Confirmed Reason
 
-**Impact: MEDIUM (효과를 확인하지 않은 방어적 `useMemo`, `useCallback`, `memo`를 막습니다)**
+**Impact: HIGH (효과를 확인하지 않은 방어적 `useMemo`, `useCallback`, `memo`를 막습니다)**
 
 `useMemo`·`useCallback`·`memo`는 아래 네 경우에만 씁니다.
 어느 경우든 `typescript/docs-justify-convention-exceptions-with-a-reason-comment`에 따라 이유를 남깁니다.

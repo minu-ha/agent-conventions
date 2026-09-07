@@ -1,7 +1,7 @@
 ---
 title: Do Not Guard What the Types Already Guarantee
 titleKo: 타입이 보장하는 것을 다시 검사하지 않습니다
-impact: MEDIUM
+impact: HIGH
 impactDescription: 불필요한 검사를 줄이고 값이 실제로 없을 수 있는 경우만 확인합니다
 appliesWhen:
   - `isNil`, `typeof`, 옵셔널 체이닝으로 값을 검사하는 분기를 추가·변경할 때
@@ -15,7 +15,7 @@ tags: absence
 
 ## Do Not Guard What the Types Already Guarantee
 
-**Impact: MEDIUM (불필요한 검사를 줄이고 값이 실제로 없을 수 있는 경우만 확인합니다)**
+**Impact: HIGH (불필요한 검사를 줄이고 값이 실제로 없을 수 있는 경우만 확인합니다)**
 
 타입이 이미 보장하는 조건은 다시 검사하지 않습니다.
 불필요한 검사를 제거해 실제로 값이 없을 수 있는 경우를 드러냅니다.

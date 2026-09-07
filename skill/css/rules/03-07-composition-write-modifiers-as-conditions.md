@@ -1,7 +1,7 @@
 ---
 title: Write Modifiers as Conditions Instead of Assembling Class Names
 titleKo: 수정자는 조건으로 적고 클래스 이름을 조립하지 않습니다
-impact: MEDIUM
+impact: HIGH
 impactDescription: 클래스 이름이 코드에 문자열로 남아 CSS와 사용처를 한 번의 검색으로 함께 고칩니다
 appliesWhen:
   - 값이나 `variant` 프롭으로 수정자를 고르는 `className`을 추가·변경할 때
@@ -14,7 +14,7 @@ tags: clsx, className, modifiers
 
 ## Write Modifiers as Conditions Instead of Assembling Class Names
 
-**Impact: MEDIUM (클래스 이름이 코드에 문자열로 남아 CSS와 사용처를 한 번의 검색으로 함께 고칩니다)**
+**Impact: HIGH (클래스 이름이 코드에 문자열로 남아 CSS와 사용처를 한 번의 검색으로 함께 고칩니다)**
 
 수정자는 조건과 완성된 클래스 문자열로 적습니다.
 값을 끼워 이름을 조립하면 CSS와 사용처를 같은 문자열로 검색할 수 없습니다.

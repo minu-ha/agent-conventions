@@ -283,7 +283,7 @@ export const UiButton = (props: UiButtonProps) => {
 
 **Review with:** `css/ownership-choose-scope-prefix-by-owner-layer`, `ownership-keep-component-imports-flowing-downward`
 
-**Impact: MEDIUM (추출한 파일의 소유자와 역할을 경로에서 확인할 수 있습니다)**
+**Impact: HIGH (추출한 파일의 소유자와 역할을 경로에서 확인할 수 있습니다)**
 
 추출한 파일은 소유자 폴더에 두고, 역할과 공개 범위에 맞춰 이름을 정합니다.
 호출 계층은 폴더를 중첩하지 않고 진입 파일의 조립으로 드러냅니다.
@@ -515,7 +515,7 @@ import {chart_series_line} from "@/component/ui/chart/_constant/series";
 
 **Review with:** `ownership-keep-lifecycle-in-the-owning-component`, `ownership-place-owner-files-in-role-folders`, `typescript/functions-extract-helpers-only-when-the-boundary-is-real`, `typescript/naming-use-direct-imports-and-public-entry-points`
 
-**Impact: MEDIUM (실제 상태·생명주기·컨텍스트가 필요한 경우에만 리액트 훅을 사용합니다)**
+**Impact: HIGH (실제 상태·생명주기·컨텍스트가 필요한 경우에만 리액트 훅을 사용합니다)**
 
 화면 전용 계산·정규화·전송 값 조립처럼 순수한 로직은 커스텀 훅으로 감싸지 않습니다.
 화면 지역 훅은 상태·컨텍스트·훅 호출 순서를 실제로 캡슐화할 때만 허용합니다.
@@ -720,7 +720,7 @@ const mutationProductRemove = useProductRemove();
 
 **Review with:** `data-name-query-and-mutation-bindings-consistently`, `data-preserve-origin-chaining`
 
-**Impact: MEDIUM (응답 가공을 쿼리에 모아 화면이 원본 구조에 의존하지 않게 합니다)**
+**Impact: HIGH (응답 가공을 쿼리에 모아 화면이 원본 구조에 의존하지 않게 합니다)**
 
 서버 응답은 `query.select`에서 도메인 필드로 가공하고, 화면에서는 그 결과를 렌더합니다.
 
@@ -859,7 +859,7 @@ export const PgProductTableSection = () => {
 
 **Review with:** `data-shape-query-data-with-select`, `screen-keep-derived-values-close`
 
-**Impact: MEDIUM (별칭을 추적하지 않고 사용하는 곳에서 값의 출처를 확인할 수 있습니다)**
+**Impact: CRITICAL (별칭을 추적하지 않고 사용하는 곳에서 값의 출처를 확인할 수 있습니다)**
 
 `response...`·`mutation...`·`*Store`는 JSX까지 원본 이름으로 읽습니다.
 핸들러·이펙트 안에서도 `responseProductSearchSuspense.data.products`처럼 출처를 유지합니다.
@@ -2065,7 +2065,7 @@ export const PgProductScreen = () => {
 
 **Review with:** `data-preserve-origin-chaining`, `screen-keep-derived-values-close`, `typescript/values-read-objects-through-chains`
 
-**Impact: MEDIUM (값이 프롭스에서 왔다는 사실이 쓰는 자리마다 그대로 남습니다)**
+**Impact: HIGH (값이 프롭스에서 왔다는 사실이 쓰는 자리마다 그대로 남습니다)**
 
 컴포넌트는 `props` 전체를 받고, 사용하는 곳에서 `props.id`처럼 읽습니다.
 시그니처·본문·중첩 함수 어디에서도 구조분해하지 않습니다.
@@ -2734,7 +2734,7 @@ return <UiBadge tone={props.isSelected ? "accent" : "neutral"} />;
 
 **Review with:** `events-run-user-actions-in-handlers-not-effects`, `screen-keep-derived-values-close`
 
-**Impact: MEDIUM (컴포넌트마다 훅·핸들러·이펙트를 같은 순서로 찾을 수 있습니다)**
+**Impact: HIGH (컴포넌트마다 훅·핸들러·이펙트를 같은 순서로 찾을 수 있습니다)**
 
 컴포넌트 본문은 아래 네 구획 순서로 작성합니다.
 렌더 중에 읽는 값은 사용 위치보다 위에서 선언합니다.
@@ -2825,7 +2825,7 @@ export const PgOrderToolbar = () => {
 
 **Review with:** `ownership-place-owner-files-in-role-folders`, `screen-extract-local-section-components-for-runtime-boundaries`
 
-**Impact: MEDIUM (진입 파일만 봐도 화면 흐름을 따라갈 수 있습니다)**
+**Impact: HIGH (진입 파일만 봐도 화면 흐름을 따라갈 수 있습니다)**
 
 라우트 진입은 화면 흐름을 조립하고, 데이터와 동작은 사용하는 컴포넌트가 소유합니다.
 다른 규칙이 참조하는 라우트 진입의 책임은 아래 표를 기준으로 합니다.
@@ -2934,7 +2934,7 @@ export const PgProductListSection = () => {
 
 **Review with:** `screen-extract-local-section-components-for-runtime-boundaries`, `typescript/functions-extract-helpers-only-when-the-boundary-is-real`
 
-**Impact: MEDIUM (추측에 따른 추출을 줄이고 실제 재사용 경계에 맞춰 코드를 배치합니다)**
+**Impact: HIGH (추측에 따른 추출을 줄이고 실제 재사용 경계에 맞춰 코드를 배치합니다)**
 
 반복이 보인다는 이유만으로 공용 훅·컴포넌트·보조 함수를 추출하지 않습니다.
 먼저 흐름을 같은 파일에서 읽을 수 있도록 정리합니다.
@@ -3077,7 +3077,7 @@ export const toProductSaveRequest = (formValues: ProductFormValues) => {
 
 **Applies when:** 화면 지역 섹션 컴포넌트를 새로 추출할 때. 기존 섹션에 비동기, 지역 상태, 프로바이더, 상호작용, 외부 위젯, 성능 처리를 넣거나 뺄 때.
 
-**Impact: MEDIUM (화면 흐름을 유지하면서 자체 책임이 있는 섹션만 분리합니다)**
+**Impact: HIGH (화면 흐름을 유지하면서 자체 책임이 있는 섹션만 분리합니다)**
 
 라우트 진입의 지역 컴포넌트는 아래 책임 중 하나를 **직접 소유할 때만** 추출합니다.
 단순 래퍼·`className` 묶음·들여쓰기 감소는 추출 근거가 아닙니다.
@@ -4171,7 +4171,7 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => 
 
 **Review with:** `perf-defer-heavy-renders-with-measured-evidence`
 
-**Impact: MEDIUM (효과를 확인하지 않은 방어적 `useMemo`, `useCallback`, `memo`를 막습니다)**
+**Impact: HIGH (효과를 확인하지 않은 방어적 `useMemo`, `useCallback`, `memo`를 막습니다)**
 
 `useMemo`·`useCallback`·`memo`는 아래 네 경우에만 씁니다.
 어느 경우든 `typescript/docs-justify-convention-exceptions-with-a-reason-comment`에 따라 이유를 남깁니다.

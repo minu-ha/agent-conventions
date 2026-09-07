@@ -1,7 +1,7 @@
 ---
 title: Extract Support Functions Only When the Boundary Is Real
 titleKo: 보조 함수는 재사용되거나 함수 형태가 필수일 때만 이름을 붙입니다
-impact: MEDIUM
+impact: HIGH
 impactDescription: 불필요한 함수 분리를 줄여 호출부에서 처리 흐름을 읽을 수 있습니다
 appliesWhen:
   - 보조 함수를 빼내거나 옮기거나 내보내거나 공유할 때
@@ -14,7 +14,7 @@ tags: functions, boundaries
 
 ## Extract Support Functions Only When the Boundary Is Real
 
-**Impact: MEDIUM (불필요한 함수 분리를 줄여 호출부에서 처리 흐름을 읽을 수 있습니다)**
+**Impact: HIGH (불필요한 함수 분리를 줄여 호출부에서 처리 흐름을 읽을 수 있습니다)**
 
 한 곳에서만 쓰는 단계는 호출부에 두고, 다음 사유가 있을 때만 보조 함수에 이름을 붙입니다.
 추출한 함수는 바깥 변수·훅·컴포넌트 상태 없이도 뜻이 통해야 합니다.

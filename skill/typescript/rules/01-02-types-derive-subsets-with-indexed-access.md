@@ -1,7 +1,7 @@
 ---
 title: Derive Subsets With Indexed Access Instead of `Pick`
 titleKo: 부분집합은 `Pick` 대신 인덱스 접근 `interface`로 파생합니다
-impact: MEDIUM
+impact: HIGH
 impactDescription: 고른 필드의 이름과 출처를 드러내고 선택 여부와 읽기 전용 속성을 보존합니다
 appliesWhen:
   - 기존 타입의 일부 필드만 담는 형태를 선언·변경할 때
@@ -13,7 +13,7 @@ tags: types
 
 ## Derive Subsets With Indexed Access Instead of `Pick`
 
-**Impact: MEDIUM (고른 필드의 이름과 출처를 드러내고 선택 여부와 읽기 전용 속성을 보존합니다)**
+**Impact: HIGH (고른 필드의 이름과 출처를 드러내고 선택 여부와 읽기 전용 속성을 보존합니다)**
 
 기존 계약의 일부 필드는 `interface`에 `원본["필드"]`로 적고, `Pick`은 쓰지 않습니다.
 계약 전체를 재사용할지는 `types-reuse-existing-contracts-before-new-types`가 정합니다.

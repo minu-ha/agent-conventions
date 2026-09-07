@@ -1,52 +1,5 @@
 # Import by Absolute Path
 
-**Impact: MEDIUM (가져오기 경로를 통일하고 가져오는 파일의 위치로 접근 범위를 판단합니다)**
+**Impact: CRITICAL**
 
-심볼은 `@/` 절대경로로 가져옵니다.
-심볼 없이 같은 폴더의 파일만 불러올 때는 `./`를 허용하며, `../`는 쓰지 않습니다.
-
-| 가져오기 | 경로 |
-| --- | --- |
-| `import {a} from …` | `@/<src 아래 경로>`. 편집기 자동 가져오기 형식입니다 |
-| `import "….css"` | 같은 폴더면 `./<파일>`, 다른 폴더면 `@/<src 아래 경로>`입니다 |
-
-이동·이름 변경은 편집기의 경로 갱신을 사용합니다.
-접근 가능한 소유 경계는 경로 표기가 아니라 가져오는 파일의 위치로 판단하며, 프레임워크의 가져오기 방향 규칙을 따릅니다.
-소유자 밖에서 쓴다는 이유로 루트에 올리지 않습니다.
-배치는 `naming-place-project-constants-in-the-root-constant-folder`와
-`functions-give-each-function-its-own-file`이 정합니다.
-
-| `src` 아래 루트 | 담는 것 |
-| --- | --- |
-| `component` | `component/ui`, `component/widget` |
-| `page` | 라우트 폴더. 내부 파일은 그 라우트만, 진입 파일은 라우터만 가져옵니다 |
-| `constant` | 프로젝트 전반의 상수 |
-| `config` | 환경마다 달라지는 값 |
-| `util` | 프로젝트 전반의 함수. 받는 값의 종류별 폴더로 묶습니다 |
-| `type` | 프로젝트 전반의 계약 |
-| `hook` | 여러 소유자가 쓰는 훅 |
-| `store` | 여러 화면의 공유 상태. 파일명은 `use-<name>-store.ts`입니다 |
-| `service` | 서버 통신 클라이언트 |
-| `asset` | 아이콘 등 정적 자원 |
-
-루트의 소유자는 프로젝트이며 `constant`·`util`·`type`·`hook`에도 소유자 아래 역할 폴더의 규칙을 적용합니다.
-
-**Incorrect (상대경로로 심볼을 가져옵니다):**
-
-```ts
-// page/detail/sales-trend-panel/pg-sales-trend-panel.tsx
-import {PgDetectionSection} from "./_pg-detection-section";
-import {toSummary} from "../_function/to-summary";
-```
-
-**Correct (심볼은 `@/`, 같은 폴더의 CSS 파일만 `./`로 씁니다):**
-
-```ts
-// page/detail/sales-trend-panel/pg-sales-trend-panel.tsx
-import {toSummary} from "@/page/detail/_function/to-summary";
-import {PgDetectionSection} from "@/page/detail/sales-trend-panel/_pg-detection-section";
-
-import "./pg-sales-trend-panel.css";
-```
-
-> 나머지 예시·예외는 [full rule](../rules/02-05-naming-import-by-absolute-path.md)에 있습니다.
+> CRITICAL rule: must read the [full rule](../rules/02-05-naming-import-by-absolute-path.md) in full, prose and every example, before implementation or review, and re-check the result against its Correct examples before completion.

@@ -1,7 +1,7 @@
 ---
 title: Change Other Owners Through Their API
 titleKo: 다른 소유자의 모습은 해당 소유자의 API로 바꿉니다
-impact: MEDIUM
+impact: HIGH
 impactDescription: 다른 소유자의 모습을 바꿀 때 배치 조정, 변형 노출, 레이어 이동을 순서대로 판단합니다
 appliesWhen:
   - 다른 컴포넌트의 배치나 내부 모습을 바꿔야 할 때
@@ -13,7 +13,7 @@ tags: ownership, api, promotion
 
 ## Change Other Owners Through Their API
 
-**Impact: MEDIUM (다른 소유자의 모습을 바꿀 때 배치 조정, 변형 노출, 레이어 이동을 순서대로 판단합니다)**
+**Impact: HIGH (다른 소유자의 모습을 바꿀 때 배치 조정, 변형 노출, 레이어 이동을 순서대로 판단합니다)**
 
 다른 소유자의 모습을 바꿀 때는 아래 세 방법을 순서대로 확인합니다.
 

@@ -1,7 +1,7 @@
 ---
 title: Place Owner Files in Role Folders
 titleKo: 추출한 파일은 소유자 아래 역할 폴더에 둡니다
-impact: MEDIUM
+impact: HIGH
 impactDescription: 추출한 파일의 소유자와 역할을 경로에서 확인할 수 있습니다
 appliesWhen:
   - 소유자 아래 `_constant`·`_function`·`_hook`·`_type` 폴더나 하위 소유자 폴더를 만들거나 옮길 때
@@ -14,7 +14,7 @@ tags: ownership
 
 ## Place Owner Files in Role Folders
 
-**Impact: MEDIUM (추출한 파일의 소유자와 역할을 경로에서 확인할 수 있습니다)**
+**Impact: HIGH (추출한 파일의 소유자와 역할을 경로에서 확인할 수 있습니다)**
 
 추출한 파일은 소유자 폴더에 두고, 역할과 공개 범위에 맞춰 이름을 정합니다.
 호출 계층은 폴더를 중첩하지 않고 진입 파일의 조립으로 드러냅니다.
