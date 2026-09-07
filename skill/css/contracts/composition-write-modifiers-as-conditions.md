@@ -1,6 +1,6 @@
 # Write Modifiers as Conditions Instead of Assembling Class Names
 
-**Impact: MEDIUM-HIGH (클래스 이름이 코드에 문자열로 남아 CSS와 사용처를 한 번의 검색으로 함께 고칩니다)**
+**Impact: MEDIUM (클래스 이름이 코드에 문자열로 남아 CSS와 사용처를 한 번의 검색으로 함께 고칩니다)**
 
 수정자는 조건과 완성된 클래스 문자열로 적습니다.
 값을 끼워 이름을 조립하면 CSS와 사용처를 같은 문자열로 검색할 수 없습니다.
@@ -16,4 +16,44 @@
 수정자를 붙일 수 있는지는 `composition-do-not-build-structural-variants-with-modifiers` 규칙이 판단합니다.
 이 규칙은 허용한 수정자의 작성 형식을 정합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/03-07-composition-write-modifiers-as-conditions.md)을 읽습니다.
+**Incorrect (클래스 이름을 값으로 조립합니다):**
+
+```tsx
+export interface UiTooltipProps {
+	variant?: "fit" | "plain";
+	children: ReactNode;
+}
+
+export const UiTooltip = (props: UiTooltipProps) => {
+	return (
+		<div className={clsx("ui_tooltip__body", props.variant && `ui_tooltip__body--${props.variant}`)}>
+			{props.children}
+		</div>
+	);
+};
+```
+
+**Correct (값마다 한 줄로 나열합니다):**
+
+```tsx
+export interface UiTooltipProps {
+	variant?: "fit" | "plain";
+	children: ReactNode;
+}
+
+export const UiTooltip = (props: UiTooltipProps) => {
+	return (
+		<div
+			className={clsx(
+				"ui_tooltip__body",
+				props.variant === "fit" && "ui_tooltip__body--fit",
+				props.variant === "plain" && "ui_tooltip__body--plain",
+			)}
+		>
+			{props.children}
+		</div>
+	);
+};
+```
+
+> 나머지 예시·예외는 [full rule](../rules/03-07-composition-write-modifiers-as-conditions.md)에 있습니다.

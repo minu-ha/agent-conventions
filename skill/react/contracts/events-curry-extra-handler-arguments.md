@@ -1,6 +1,6 @@
 # Curry Extra Arguments Into DOM Event Handlers
 
-**Impact: LOW (추가 인자 전달만을 위한 JSX 인라인 래퍼를 줄입니다)**
+**Impact: MEDIUM (추가 인자 전달만을 위한 JSX 인라인 래퍼를 줄입니다)**
 
 `onClick`·`onChange`처럼 이벤트 객체를 받는 자리에 추가 인자가 필요하면 커링합니다.
 팩토리가 추가 인자를 받고, 안쪽 함수가 이벤트를 받으며, 반환한 함수를 JSX에 직접 전달합니다.
@@ -19,4 +19,16 @@
 
 **Requires selected:** `typing-take-handler-types-from-existing-contracts` · 함께 적용
 
-> 예시·예외가 필요하면 [full rule](../rules/09-02-events-curry-extra-handler-arguments.md)을 읽습니다.
+**Incorrect (인라인 래퍼로 인자를 넘깁니다):**
+
+```tsx
+<UiButton onClick={() => handleListItemClick(product.id)}>{product.name}</UiButton>;
+```
+
+**Correct (JSX에는 팩토리 호출만 두고 감싸는 화살표를 만들지 않습니다):**
+
+```tsx
+<UiButton onClick={handleListItemClick(product.id)}>{product.name}</UiButton>;
+```
+
+> 나머지 예시·예외는 [full rule](../rules/09-02-events-curry-extra-handler-arguments.md)에 있습니다.

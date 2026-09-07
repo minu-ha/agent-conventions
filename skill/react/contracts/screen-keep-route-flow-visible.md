@@ -1,6 +1,6 @@
 # Keep Route Entry Files Focused on Screen Flow
 
-**Impact: MEDIUM-HIGH (진입 파일만 봐도 화면 흐름을 따라갈 수 있습니다)**
+**Impact: MEDIUM (진입 파일만 봐도 화면 흐름을 따라갈 수 있습니다)**
 
 라우트 진입은 화면 흐름을 조립하고, 데이터와 동작은 사용하는 컴포넌트가 소유합니다.
 다른 규칙이 참조하는 라우트 진입의 책임은 아래 표를 기준으로 합니다.
@@ -32,4 +32,73 @@
 순수 타입·전송 값 조립 함수·기본 설정의 형제 `.ts` 추출은
 `typescript/functions-extract-helpers-only-when-the-boundary-is-real`을 따릅니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/06-01-screen-keep-route-flow-visible.md)을 읽습니다.
+**Incorrect (라우트 진입이 쿼리를 대신 읽어 프롭으로 내립니다):**
+
+```tsx
+// page/products/pg-products.tsx
+export const PgProducts = () => {
+	const [urlParams] = useQueryStates(productUrlParsers);
+	const responseProductListSuspense = useProductListSuspense({page: urlParams.page});
+
+	return (
+		<Fragment>
+			<PgProductFilterSection />
+			<PgProductListSection products={responseProductListSuspense.data.list} />
+		</Fragment>
+	);
+};
+```
+
+**Correct (라우트 진입은 조립과 경계를 맡고, 섹션은 자신의 쿼리 키로 데이터를 읽습니다):**
+
+```tsx
+// page/products/pg-products.tsx
+export const PgProducts = () => {
+	return (
+		<Fragment>
+			<PgProductFilterSection />
+			<Suspense fallback={<UiLoadingFallback ariaLabel="product 목록을 불러오는 중" />}>
+				<PgProductListSection />
+			</Suspense>
+		</Fragment>
+	);
+};
+
+// page/products/_pg-product-list-section.tsx
+export const PgProductListSection = () => {
+	const [urlParams, setUrlParams] = useQueryStates(productUrlParsers);
+
+	/**
+	 * 표에 그릴 product를 URL의 page로 읽는다
+	 */
+	const responseProductListSuspense = useProductListSuspense(
+		{page: urlParams.page},
+		{query: {select: (response) => ({products: response.data.list})}},
+	);
+
+	const queryClient = useQueryClient();
+
+	/**
+	 * 저장에 성공하면 목록을 다시 읽고 첫 페이지로 돌려 새 product가 맨 앞에 오게 한다
+	 */
+	const mutationProductSave = useProductSave({
+		mutation: {
+			onSuccess: () => {
+				void queryClient.invalidateQueries({queryKey: productListQueryKey()});
+				void setUrlParams({page: 1});
+			},
+		},
+	});
+
+	/**
+	 * 폼 값을 전송 형태로 바꿔 저장만 부르고, 저장 뒤 흐름은 mutation 콜백이 이어 간다
+	 */
+	const handleProductSave: UiTableProps["onSave"] = () => {
+		mutationProductSave.mutate({data: toProductSaveRequest(formValues)});
+	};
+
+	return <UiTable rows={responseProductListSuspense.data.products} onSave={handleProductSave} />;
+};
+```
+
+> 나머지 예시·예외는 [full rule](../rules/06-01-screen-keep-route-flow-visible.md)에 있습니다.

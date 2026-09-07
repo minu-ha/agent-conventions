@@ -346,12 +346,13 @@ test("compact rule index is deterministic, complete, routing-only, and body-free
 	]);
 });
 
-test("generated rule contract preserves the normative prefix and defers examples to the full rule", () => {
+test("generated MEDIUM contract preserves the normative prefix and carries only the first example pair", () => {
 	const rule = createRoutingDocument().rules[0];
+	rule.impact = "MEDIUM";
 	rule.body = [
 		"## Observe State",
 		"",
-		"**Impact: HIGH (State impact.)**",
+		"**Impact: MEDIUM (State impact.)**",
 		"",
 		"Keep the observable owner contract.  ",
 		"Continue on the next rendered line.",
@@ -369,6 +370,12 @@ test("generated rule contract preserves the normative prefix and defers examples
 		"```ts",
 		"const hiddenGood = true;",
 		"```",
+		"",
+		"**Correct (second example):**",
+		"",
+		"```ts",
+		"const secondGood = true;",
+		"```",
 	].join("\n");
 
 	const contract = generateRuleContractMarkdown(rule);
@@ -379,17 +386,22 @@ test("generated rule contract preserves the normative prefix and defers examples
 	assert.match(contract, /Preserve the source of truth\./);
 	assertMentions(contract, ["Required on completion:", "마무리 시 항상 적용"], "contract");
 	assert.match(contract, /\[full rule\]\(\.\.\/rules\/state-observe\.md\)/);
-	assert.doesNotMatch(contract, /Incorrect|Correct|hiddenBad|hiddenGood|```/);
+	assert.match(
+		contract,
+		/\*\*Incorrect \(hidden example\):\*\*[\s\S]*hiddenBad[\s\S]*\*\*Correct \(hidden example\):\*\*[\s\S]*hiddenGood/,
+	);
+	assert.doesNotMatch(contract, /secondGood/);
 	assert.doesNotMatch(contract, /[ \t]+$/m);
 });
 
 test("long Impact and Description declarations may fold across source lines", () => {
 	// 규칙 본문. 접어 써도 계약에는 한 줄로 들어간다
 	const foldedRule = createRoutingDocument().rules[0];
+	foldedRule.impact = "MEDIUM";
 	foldedRule.body = [
 		"## Observe State",
 		"",
-		"**Impact: HIGH (State",
+		"**Impact: MEDIUM (State",
 		"impact.)**",
 		"",
 		"Keep the observable owner contract.",
@@ -407,10 +419,11 @@ test("long Impact and Description declarations may fold across source lines", ()
 		"```",
 	].join("\n");
 
-	assert.match(generateRuleContractMarkdown(foldedRule), /^\*\*Impact: HIGH \(State impact\.\)\*\*$/m);
+	assert.match(generateRuleContractMarkdown(foldedRule), /^\*\*Impact: MEDIUM \(State impact\.\)\*\*$/m);
 
 	// 접었다고 frontmatter 와 어긋나도 되는 건 아니다
 	const driftedRule = createRoutingDocument().rules[0];
+	driftedRule.impact = "MEDIUM";
 	driftedRule.body = foldedRule.body.replace("impact.)**", "impact drift.)**");
 
 	assert.throws(() => generateRuleContractMarkdown(driftedRule), /state-observe.*Impact declaration matching frontmatter/i);
@@ -520,13 +533,25 @@ test("generated contracts use canonical requiresSelected target order", () => {
 });
 
 test("non-critical contracts support every documented impact level", () => {
-	const lowImpactRule = createRoutingDocument().rules[0];
-	lowImpactRule.impact = "LOW";
-	lowImpactRule.impactDescription = "Low impact.";
-	lowImpactRule.body =
-		"## Observe State\n\n**Impact: LOW (Low impact.)**\n\nKeep the low-impact contract.\n\n**Incorrect**\n\n```ts\nconst bad = true;\n```\n\n**Correct**\n\n```ts\nconst good = true;\n```";
+	const mediumImpactRule = createRoutingDocument().rules[0];
+	mediumImpactRule.impact = "MEDIUM";
+	mediumImpactRule.impactDescription = "Medium impact.";
+	mediumImpactRule.body =
+		"## Observe State\n\n**Impact: MEDIUM (Medium impact.)**\n\nKeep the medium-impact contract.\n\n**Incorrect**\n\n```ts\nconst bad = true;\n```\n\n**Correct**\n\n```ts\nconst good = true;\n```\n\n**Correct**\n\n```ts\nconst alsoGood = true;\n```\n";
 
-	assert.match(generateRuleContractMarkdown(lowImpactRule), /\*\*Impact: LOW \(Low impact\.\)\*\*/);
+	const mediumContract = generateRuleContractMarkdown(mediumImpactRule);
+	assert.match(mediumContract, /\*\*Impact: MEDIUM \(Medium impact\.\)\*\*/);
+	assert.match(mediumContract, /\*\*Incorrect\*\*[\s\S]*const bad = true;[\s\S]*\*\*Correct\*\*[\s\S]*const good = true;/);
+	assert.doesNotMatch(mediumContract, /alsoGood/);
+
+	const highImpactRule = createRoutingDocument().rules[0];
+	highImpactRule.impact = "HIGH";
+	highImpactRule.impactDescription = "High impact.";
+	highImpactRule.body = mediumImpactRule.body.replace("Impact: MEDIUM (Medium impact.)", "Impact: HIGH (High impact.)");
+
+	const highContract = generateRuleContractMarkdown(highImpactRule);
+	assert.match(highContract, /HIGH rule: must read the \[full rule\]/);
+	assert.doesNotMatch(highContract, /const bad = true/);
 });
 
 test("routing digest covers every routing field and ignores unsorted input order", () => {
@@ -830,10 +855,17 @@ test("temporary progressive build and stale check are deterministic without repo
 				{order: 1, title: "Composition", prefix: "composition", impact: "CRITICAL"},
 			],
 			rules: [
-				{fileName: "state-watch.md", title: "Watch State", appliesWhen: "Watching fixture state.", bodyMarker: "STATE_BODY_MARKER"},
+				{
+					fileName: "state-watch.md",
+					title: "Watch State",
+					impact: "MEDIUM",
+					appliesWhen: "Watching fixture state.",
+					bodyMarker: "STATE_BODY_MARKER",
+				},
 				{
 					fileName: "composition-owner.md",
 					title: "Own Composition",
+					impact: "MEDIUM",
 					appliesWhen: "Changing fixture composition.",
 					reviewWith: ["state-watch"],
 					bodyMarker: "COMPOSITION_BODY_MARKER",
@@ -873,7 +905,7 @@ test("temporary progressive build and stale check are deterministic without repo
 		assert.deepEqual((await readdir(ownerPaths.ruleContractsDir)).sort(), ["composition-owner.md", "state-watch.md"]);
 		const ownerContract = await readFile(path.join(ownerPaths.ruleContractsDir, "composition-owner.md"), "utf8");
 		assert.match(ownerContract, /COMPOSITION_BODY_MARKER/);
-		assert.doesNotMatch(ownerContract, /Incorrect|Correct/);
+		assert.match(ownerContract, /\*\*Incorrect[\s\S]*\*\*Correct/);
 		await access(legacyPaths.outputPath);
 		await assert.rejects(() => access(legacyPaths.rulesIndexPath), /ENOENT/);
 

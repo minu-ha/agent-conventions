@@ -1,6 +1,6 @@
 # Use Classes Instead of Element Selectors
 
-**Impact: MEDIUM-HIGH (태그를 바꿔도 스타일이 유지되도록 마크업을 클래스로 선택합니다)**
+**Impact: MEDIUM (태그를 바꿔도 스타일이 유지되도록 마크업을 클래스로 선택합니다)**
 
 우리가 렌더하는 마크업은 요소 선택자 대신 클래스로 선택합니다.
 태그를 `div`에서 `section`으로 바꿔도 스타일이 사라지지 않아야 합니다.
@@ -21,4 +21,44 @@
 
 이 주석은 직접 작성하지 않는 마크업이라는 근거도 보여 줍니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/04-02-selector-use-classes-instead-of-element-selectors.md)을 읽습니다.
+**Incorrect (우리가 렌더하는 마크업을 요소 선택자로 잡습니다):**
+
+```css
+.pg_catalogIndex__toolbar {
+	& button {
+		height: 32px;
+	}
+
+	& > div {
+		flex: 1;
+	}
+
+	& > :first-child {
+		margin-inline-start: 0;
+	}
+}
+```
+
+**Incorrect (요소 선택자를 최상위에 둡니다):**
+
+```css
+/* 블록 밖에 홀로 둔 요소 선택자. 이 스타일시트를 읽은 문서의 모든 h2에 걸린다 */
+h2 {
+	margin: 24px 0 12px;
+}
+```
+
+**Correct (우리가 렌더하면 클래스를 붙입니다):**
+
+```tsx
+<div className={clsx("pg_catalogIndex__toolbar")}>
+	<div className={clsx("pg_catalogIndex__toolbarField")}>
+		<UiSearchInput />
+	</div>
+	<button type="button" className={clsx("pg_catalogIndex__toolbarButton")}>
+		초기화
+	</button>
+</div>
+```
+
+> 나머지 예시·예외는 [full rule](../rules/04-02-selector-use-classes-instead-of-element-selectors.md)에 있습니다.

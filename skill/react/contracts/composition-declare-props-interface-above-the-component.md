@@ -22,4 +22,56 @@
 | 컴포넌트가 아닌 함수의 객체 매개변수 | `typescript/functions-use-named-object-params-for-complex-signatures` |
 | 문서 주석 내용 | `typescript/types-document-custom-types-and-shapes` |
 
-> 예시·예외가 필요하면 [full rule](../rules/05-06-composition-declare-props-interface-above-the-component.md)을 읽습니다.
+**Incorrect (파일 위쪽에 타입을 모으고 내보내지 않습니다):**
+
+```tsx
+interface UiBadgeProps {
+	label: string;
+}
+
+interface UiChipProps {
+	label: string;
+}
+
+export const UiBadge = (props: UiBadgeProps) => {
+	return <span className={clsx("ui_badge__root")}>{props.label}</span>;
+};
+
+export const UiChip = (props: UiChipProps) => {
+	return <span className={clsx("ui_chip__root")}>{props.label}</span>;
+};
+```
+
+**Correct (각 컴포넌트 바로 위에 선언하고 내보냅니다):**
+
+```tsx
+/**
+ * 상태 배지 계약
+ */
+export interface UiBadgeProps {
+	/**
+	 * 배지에 표시할 문구
+	 */
+	label: string;
+}
+
+export const UiBadge = (props: UiBadgeProps) => {
+	return <span className={clsx("ui_badge__root")}>{props.label}</span>;
+};
+
+/**
+ * 선택 칩 계약
+ */
+export interface UiChipProps {
+	/**
+	 * 칩에 표시할 문구
+	 */
+	label: string;
+}
+
+export const UiChip = (props: UiChipProps) => {
+	return <span className={clsx("ui_chip__root")}>{props.label}</span>;
+};
+```
+
+> 나머지 예시·예외는 [full rule](../rules/05-06-composition-declare-props-interface-above-the-component.md)에 있습니다.

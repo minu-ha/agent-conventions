@@ -1,6 +1,6 @@
 # Switch Themes by Changing Token Values
 
-**Impact: MEDIUM-HIGH (테마 분기가 한 파일에만 있어 색을 하나 더할 때 파일 여러 개를 열지 않습니다)**
+**Impact: MEDIUM (테마 분기가 한 파일에만 있어 색을 하나 더할 때 파일 여러 개를 열지 않습니다)**
 
 테마는 **토큰 파일에서 값만** 바꿉니다. 컴포넌트 CSS에는 `prefers-color-scheme`이나 `[data-theme]` 분기를 두지 않습니다.
 
@@ -19,4 +19,29 @@
 토큰 이름은 `values-name-tokens-by-purpose` 규칙을 따릅니다.
 `layout-group-breakpoints-at-the-file-bottom`의 폭 조건은 클래스를 바꾸는 규칙이므로 테마 조건과 섞지 않습니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/05-04-values-switch-themes-by-changing-token-values.md)을 읽습니다.
+**Incorrect (컴포넌트 파일에서 테마를 분기합니다):**
+
+```css
+/* src/page/products/pg-products.css */
+.pg_products__panel {
+	background-color: var(--app-color-surface);
+
+	@media (prefers-color-scheme: dark) {
+		background-color: #1f2225;
+	}
+}
+```
+
+**Correct (컴포넌트는 토큰만 씁니다):**
+
+```css
+/* src/page/products/pg-products.css */
+.pg_products__panel {
+	background-color: var(--app-color-surface);
+	color: var(--app-color-text-primary);
+	border: 1px solid var(--app-color-border);
+	box-shadow: var(--app-shadow-panel);
+}
+```
+
+> 나머지 예시·예외는 [full rule](../rules/05-04-values-switch-themes-by-changing-token-values.md)에 있습니다.

@@ -1,6 +1,6 @@
 # Use Role-Based File, Symbol, and Constant Naming
 
-**Impact: MEDIUM-HIGH (파일과 심볼의 표기가 역할을 드러내 읽는 사람이 종류를 바로 압니다)**
+**Impact: MEDIUM (파일과 심볼의 표기가 역할을 드러내 읽는 사람이 종류를 바로 압니다)**
 
 파일과 심볼은 선언 문법이 아니라 역할에 맞게 이름 짓습니다.
 `const`로 선언해도 함수·훅·스키마·API 결과·요청 객체·지역 파생값을 불변 데이터 상수로 보지 않습니다.
@@ -31,4 +31,29 @@ API 응답·요청, 생성 DTO, 라이브러리 인자, DOM 속성, 환경 변�
 `user_id`를 요구하는 API에는 그대로 적습니다.
 외부 이름을 별칭 없이 가져오면 대상이 아니며, 지역 별칭을 만들거나 이름을 바꿀 때 다시 판단합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/02-03-naming-use-consistent-file-and-symbol-naming.md)을 읽습니다.
+**Incorrect (역할과 맞지 않는 표기를 씁니다):**
+
+```ts
+// userSettings.ts
+// 스키마와 그 필드는 일반 심볼이라 camelCase다
+const User_ProfileSchema = z.object({
+	repo_path: z.string(),
+});
+```
+
+**Correct (파일명은 `kebab-case`, 스키마 키는 `camelCase`로 씁니다):**
+
+```ts
+// user-settings.ts
+/**
+ * 사용자 프로필 스키마
+ */
+const userProfileSchema = z.object({
+	/**
+	 * 저장소 경로
+	 */
+	repoPath: z.string(),
+});
+```
+
+> 나머지 예시·예외는 [full rule](../rules/02-03-naming-use-consistent-file-and-symbol-naming.md)에 있습니다.

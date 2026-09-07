@@ -18,4 +18,50 @@
 `&` 없이 시작하면 자손 선택자가 별도 겹처럼 읽혀 표기에 따라 검사 결과가 달라집니다.
 기계 검증은 `max-nesting-depth: 1`이며 최상위는 0겹입니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/04-01-selector-limit-nesting-block-depth.md)을 읽습니다.
+**Incorrect (중첩을 두 겹 이상 열어 실제 선택자를 숨깁니다):**
+
+```css
+.pg_salesPanel__spreadButton {
+	&.MuiButtonBase-root {
+		&:hover {
+			.pg_salesPanel__spreadBox {
+				border-color: #9fadc7;
+			}
+		}
+	}
+}
+```
+
+**Incorrect (다른 요소의 가상 요소를 `&`로 다시 엽니다):**
+
+```css
+.pg_salesPanel__spreadButton {
+	&:hover .pg_salesPanel__spreadBox {
+		&::before {
+			border-color: #9fadc7;
+		}
+	}
+}
+```
+
+**Correct (`&`는 한 번, 그다음 경로는 같은 줄에 이어 씁니다):**
+
+```css
+.pg_salesPanel__spreadBox {
+	&::before {
+		border: 2px solid #ced4da;
+	}
+}
+
+.pg_salesPanel__spreadButton {
+	&.MuiButtonBase-root {
+		display: inline-flex;
+	}
+
+	&:hover .pg_salesPanel__spreadBox::before {
+		border-color: #9fadc7;
+	}
+}
+```
+
+> 나머지 예시·예외는 [full rule](../rules/04-01-selector-limit-nesting-block-depth.md)에 있습니다.

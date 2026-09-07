@@ -1,7 +1,7 @@
 ---
 title: Use Global Tokens and Do Not Create Local Ones
 titleKo: 여러 파일이 쓰는 값은 전역 토큰으로 씁니다
-impact: MEDIUM-HIGH
+impact: MEDIUM
 impactDescription: 여러 파일이 쓰는 값은 전역 토큰으로 모으고 나머지는 선언 자리에 그대로 둡니다
 appliesWhen:
   - 여러 파일이 같은 색, 간격, 모서리 반경, 타이포그래피, 그림자 값을 쓸 때
@@ -12,7 +12,7 @@ tags: tokens, variables, reuse
 
 ## Use Global Tokens and Do Not Create Local Ones
 
-**Impact: MEDIUM-HIGH (여러 파일이 쓰는 값은 전역 토큰으로 모으고 나머지는 선언 자리에 그대로 둡니다)**
+**Impact: MEDIUM (여러 파일이 쓰는 값은 전역 토큰으로 모으고 나머지는 선언 자리에 그대로 둡니다)**
 
 여러 파일에서 쓰는 값은 전역 공통 토큰으로 모으고 한 파일 안의 값은 선언 위치에 둡니다.
 판정 기준은 **파일 경계**이며 다음 예외를 함께 확인합니다.

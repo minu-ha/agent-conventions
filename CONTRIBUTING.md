@@ -65,7 +65,7 @@ skill/react/
 
 - `## 1. Ownership and Boundaries (ownership)` 섹션이면 파일명은 `ownership-*.md`.
 - 첫 `Incorrect` 뒤에는 `Incorrect` / `Correct` 라벨, 코드 펜스, 빈 줄만 온다.
-  생성되는 `contracts/*.md`가 첫 `Incorrect` 앞부분만 뽑기 때문이다.
+  생성되는 `contracts/*.md`가 첫 `Incorrect` 앞부분을 규범으로 뽑고, `MEDIUM`은 그 뒤 첫 짝만 덧붙이기 때문이다.
 - 한 쌍은 한 변수만 바꾼다. `Incorrect`와 `Correct`는 그 규칙이 말하는 것 하나만 달라야 독자가 무엇이 규칙인지 짚는다.
   이름·구조·무관한 코드를 함께 바꾸지 않는다.
 - `Correct`는 저장소 전체 규칙을 지킨다. 다른 스킬의 규칙도 포함한다.
@@ -104,7 +104,7 @@ tags: tag1, tag2
 | --- | --- | --- |
 | `title` | 필수 | 영어. 핸드북 헤딩과 앵커 슬러그의 기반. 바꾸면 링크가 깨진다 |
 | `titleKo` | 필수 | 한국어. `conventions.html`에 노출된다 |
-| `impact` | 필수 | `CRITICAL` · `HIGH` · `MEDIUM-HIGH` · `MEDIUM` · `LOW`. 에이전트 동작을 바꾸는 것은 `CRITICAL` 뿐이고 나머지는 사람이 읽는 우선순위 표시다 |
+| `impact` | 필수 | `CRITICAL` · `HIGH` · `MEDIUM`. 사람에게는 중요도, 에이전트에게는 읽는 범위다. `CRITICAL`·`HIGH`는 contract에 원문 링크만 실어 설명과 예제를 전부 읽게 하고(`CRITICAL`은 마무리 때 다시 대조), `MEDIUM`은 contract에 규범과 첫 `Incorrect`·`Correct` 짝을 싣는다 |
 | `impactDescription` | 필수 | 한국어 영향도 설명. 본문 `**Impact:**` 줄과 일치해야 하고 `contracts/*.md`와 `conventions.html`로 나간다 |
 | `appliesWhen` | 필수 | `- ` 조건 항목 리스트 또는 한 줄 스칼라. 항목이면 라우팅 문장은 이어 붙여 자동 생성된다. 라우팅 문장은 한 줄 160자 |
 | `requiresSelected` | 선택 | 걸리면 target도 반드시 함께 적용 |
@@ -228,7 +228,7 @@ appliesWhen: TSX event prop의 인라인 callback에 분기, 비동기 호출 �
 압축한 뒤에도 독립된 판단이 남으면 [4절](#4-배치-기준)에 따라 규칙을 분리한다.
 
 `conventions.html`은 표와 텍스트 코드 블록을 렌더링한다. Mermaid는 지원하지 않는다.
-규칙 본문의 표는 `contracts/*.md`에도 남지만 예제는 빠진다.
+규칙 본문의 표는 `contracts/*.md`에도 남는다. `MEDIUM`은 첫 `Incorrect`·`Correct` 짝까지 실리고 `CRITICAL`·`HIGH`의 contract는 원문 링크만 담는다.
 따라서 텍스트 흐름도는 `Correct` 예제에 두고, 판단 조건은 본문의 표나 문장에도 남긴다.
 표의 셀 안에서 `|`를 쓸 때는 `\|`로 이스케이프한다.
 

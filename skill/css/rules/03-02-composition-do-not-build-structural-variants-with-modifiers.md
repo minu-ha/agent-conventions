@@ -1,7 +1,7 @@
 ---
 title: Do Not Build Structural Variants With Modifiers
 titleKo: 수정자는 상태와 반복되는 모양에만 씁니다
-impact: MEDIUM-HIGH
+impact: MEDIUM
 impactDescription: 일회성 배치 보정이 수정자로 늘어나지 않게 합니다
 appliesWhen:
   - 수정자를 추가·변경할 때
@@ -12,7 +12,7 @@ tags: modifiers, structure, naming
 
 ## Do Not Build Structural Variants With Modifiers
 
-**Impact: MEDIUM-HIGH (일회성 배치 보정이 수정자로 늘어나지 않게 합니다)**
+**Impact: MEDIUM (일회성 배치 보정이 수정자로 늘어나지 않게 합니다)**
 
 수정자는 앱 상태나 여러 곳에서 반복되는 모양에만 씁니다.
 한 곳의 여백이나 배치를 보정할 때는 기본 요소 클래스 대신 **역할 이름을 붙인 별도 요소 클래스**를 씁니다.

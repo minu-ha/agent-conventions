@@ -16,4 +16,19 @@
 `localStorage`는 클라이언트에서만 읽습니다. 서버 렌더링과 hydration에서는 서버와 최초 클라이언트 렌더가 같아야 하므로,
 저장소를 읽는 시점은 화면의 클라이언트 초기화 계약을 따릅니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/10-02-perf-use-lazy-state-initializers-for-expensive-defaults.md)을 읽습니다.
+**Incorrect (무거운 초기값 계산이 렌더마다 반복됩니다):**
+
+```tsx
+const [searchIndex] = useState(toSearchIndex(product_catalog));
+const [draftFilter] = useState(parseStoredProductFilter(localStorage.getItem("product-filter")));
+```
+
+**Correct (초기화 함수로 넘겨 이후 렌더에서 다시 계산하지 않습니다):**
+
+```tsx
+const [searchIndex] = useState(() => toSearchIndex(product_catalog));
+// 서버 렌더링을 하지 않는 클라이언트 전용 화면에서만 저장소를 초기값으로 읽는다
+const [draftFilter] = useState(() => parseStoredProductFilter(localStorage.getItem("product-filter")));
+```
+
+> 나머지 예시·예외는 [full rule](../rules/10-02-perf-use-lazy-state-initializers-for-expensive-defaults.md)에 있습니다.

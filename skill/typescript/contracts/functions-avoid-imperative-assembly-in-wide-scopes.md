@@ -20,4 +20,20 @@
 함수 이름은 `functions-name-functions-by-what-comes-out`을 따릅니다.
 중간값 명명은 `functions-name-a-value-only-for-recompute-or-judgment`가 판단합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/03-07-functions-avoid-imperative-assembly-in-wide-scopes.md)을 읽습니다.
+**Incorrect (넓은 스코프에서 명령형으로 조립을 쌓습니다):**
+
+```ts
+let visibleTabs = ["overview"];
+
+if (canManageItems) {
+	visibleTabs.push("items");
+}
+```
+
+**Correct (조건부 스프레드로 한 번에 계산합니다):**
+
+```ts
+const visibleTabs = ["overview", ...(canManageItems ? ["items"] : [])];
+```
+
+> 나머지 예시·예외는 [full rule](../rules/03-07-functions-avoid-imperative-assembly-in-wide-scopes.md)에 있습니다.

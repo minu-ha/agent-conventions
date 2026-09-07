@@ -14,4 +14,58 @@
 
 이 규칙은 소유 파일 안에서 계산 위치를 정합니다. 소유자나 이름을 새로 정하는 기준은 위 규칙을 따릅니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/06-04-screen-keep-derived-values-close.md)을 읽습니다.
+**Incorrect (쓰는 자리에서 먼 화면 상단에 플래그와 표시값을 쌓습니다):**
+
+```tsx
+export const PgProductTableSection = () => {
+	const responseProductListSuspense = useProductListSuspense();
+	const [selectedRows, setSelectedRows] = useState<ProductRow[]>([]);
+
+	/**
+	 * 고른 행은 이 섹션 안에만 두고 route search로 올리지 않는다
+	 */
+	const handleTableRowSelect: UiTableProps["onRowSelect"] = (rows) => {
+		setSelectedRows(rows);
+	};
+
+	// 아래 둘은 이름만 남기고 무엇에서 나온 값인지를 지운다
+	const hasSelectedRows = selectedRows.length > 0;
+	const bulkActionLabel = `${selectedRows.length}건 삭제`;
+
+	return (
+		<Fragment>
+			<UiTable rows={responseProductListSuspense.data.products} onRowSelect={handleTableRowSelect} />
+
+			{hasSelectedRows && <PgProductBulkActionBar label={bulkActionLabel} />}
+		</Fragment>
+	);
+};
+```
+
+**Correct (선언을 그대로 두고 쓰는 자리에서 계산합니다):**
+
+```tsx
+export const PgProductTableSection = () => {
+	const responseProductListSuspense = useProductListSuspense();
+	const [selectedRows, setSelectedRows] = useState<ProductRow[]>([]);
+
+	/**
+	 * 고른 행은 이 섹션 안에만 두고 route search로 올리지 않는다
+	 */
+	const handleTableRowSelect: UiTableProps["onRowSelect"] = (rows) => {
+		setSelectedRows(rows);
+	};
+
+	return (
+		<Fragment>
+			<UiTable rows={responseProductListSuspense.data.products} onRowSelect={handleTableRowSelect} />
+
+			{selectedRows.length > 0 && (
+				<PgProductBulkActionBar label={`${selectedRows.length}건 삭제`} />
+			)}
+		</Fragment>
+	);
+};
+```
+
+> 나머지 예시·예외는 [full rule](../rules/06-04-screen-keep-derived-values-close.md)에 있습니다.

@@ -19,7 +19,7 @@
 
 ## 3. Functions and Helper Boundaries (functions)
 **TitleKo:** 함수와 보조 함수 경계
-**Impact:** MEDIUM-HIGH
+**Impact:** MEDIUM
 **Description:** 함수 선언 형태와 시그니처를 일관되게 유지합니다.
 보조 함수는 재사용되거나 함수 형태가 필수일 때, 또는 렌더 파일 밖으로 요청 조립을 옮길 때 이름을 붙입니다.
 보조 함수는 결과가 드러나는 이름을 붙여 정해진 위치에 둡니다.

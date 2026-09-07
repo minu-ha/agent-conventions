@@ -1,7 +1,7 @@
 ---
 title: Inject Classes Only at the Component Entry Point
 titleKo: 외부 클래스는 컴포넌트 진입점에서만 받습니다
-impact: MEDIUM-HIGH
+impact: MEDIUM
 impactDescription: 클래스 주입을 한 곳으로 제한해 사용처가 내부 구조에 의존하지 않게 합니다
 appliesWhen:
   - 우리가 만든 컴포넌트에 `className`이나 클래스 관련 프롭을 추가할 때
@@ -15,7 +15,7 @@ tags: components, entry-point, class-props
 
 ## Inject Classes Only at the Component Entry Point
 
-**Impact: MEDIUM-HIGH (클래스 주입을 한 곳으로 제한해 사용처가 내부 구조에 의존하지 않게 합니다)**
+**Impact: MEDIUM (클래스 주입을 한 곳으로 제한해 사용처가 내부 구조에 의존하지 않게 합니다)**
 
 우리가 만든 컴포넌트는 레이어와 무관하게 **최상위 진입점 한 곳**에서만 외부 클래스를 받습니다.
 내부 노드의 클래스 주입 지점을 늘리면 사용처가 컴포넌트 구조에 의존하게 됩니다.

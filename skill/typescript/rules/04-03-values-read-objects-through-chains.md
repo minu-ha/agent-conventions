@@ -1,7 +1,7 @@
 ---
 title: Read Object Fields Through Chains, Not Destructuring
 titleKo: 객체는 구조분해하지 않고 체인으로 읽습니다
-impact: MEDIUM-HIGH
+impact: MEDIUM
 impactDescription: 값이 어느 객체에서 왔는지가 쓰는 자리마다 남아 이름만 보고 출처를 되짚지 않습니다
 appliesWhen:
   - 구조분해로 객체에서 값을 꺼내는 줄을 추가·변경할 때
@@ -13,7 +13,7 @@ tags: values, origin, destructuring
 
 ## Read Object Fields Through Chains, Not Destructuring
 
-**Impact: MEDIUM-HIGH (값이 어느 객체에서 왔는지가 쓰는 자리마다 남아 이름만 보고 출처를 되짚지 않습니다)**
+**Impact: MEDIUM (값이 어느 객체에서 왔는지가 쓰는 자리마다 남아 이름만 보고 출처를 되짚지 않습니다)**
 
 객체 필드는 구조분해나 별칭 없이 `product.title`처럼 체인으로 읽습니다.
 쓰는 자리마다 값의 출처가 남아야 합니다.

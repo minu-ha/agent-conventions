@@ -1,6 +1,6 @@
 # Import by Absolute Path
 
-**Impact: MEDIUM-HIGH (가져오기 경로를 통일하고 가져오는 파일의 위치로 접근 범위를 판단합니다)**
+**Impact: MEDIUM (가져오기 경로를 통일하고 가져오는 파일의 위치로 접근 범위를 판단합니다)**
 
 심볼은 `@/` 절대경로로 가져옵니다.
 심볼 없이 같은 폴더의 파일만 불러올 때는 `./`를 허용하며, `../`는 쓰지 않습니다.
@@ -31,4 +31,22 @@
 
 루트의 소유자는 프로젝트이며 `constant`·`util`·`type`·`hook`에도 소유자 아래 역할 폴더의 규칙을 적용합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/02-05-naming-import-by-absolute-path.md)을 읽습니다.
+**Incorrect (상대경로로 심볼을 가져옵니다):**
+
+```ts
+// page/detail/sales-trend-panel/pg-sales-trend-panel.tsx
+import {PgDetectionSection} from "./_pg-detection-section";
+import {toSummary} from "../_function/to-summary";
+```
+
+**Correct (심볼은 `@/`, 같은 폴더의 CSS 파일만 `./`로 씁니다):**
+
+```ts
+// page/detail/sales-trend-panel/pg-sales-trend-panel.tsx
+import {toSummary} from "@/page/detail/_function/to-summary";
+import {PgDetectionSection} from "@/page/detail/sales-trend-panel/_pg-detection-section";
+
+import "./pg-sales-trend-panel.css";
+```
+
+> 나머지 예시·예외는 [full rule](../rules/02-05-naming-import-by-absolute-path.md)에 있습니다.

@@ -1,7 +1,7 @@
 ---
 title: Group Breakpoints at the Bottom of the File
 titleKo: `@media` 브레이크포인트는 파일 맨 아래에 모읍니다
-impact: MEDIUM-HIGH
+impact: MEDIUM
 impactDescription: 각 브레이크포인트에서 달라지는 스타일을 한 블록에서 확인합니다
 appliesWhen:
   - `@media` 브레이크포인트를 추가하거나 옮길 때
@@ -14,7 +14,7 @@ tags: selector, responsive
 
 ## Group Breakpoints at the Bottom of the File
 
-**Impact: MEDIUM-HIGH (각 브레이크포인트에서 달라지는 스타일을 한 블록에서 확인합니다)**
+**Impact: MEDIUM (각 브레이크포인트에서 달라지는 스타일을 한 블록에서 확인합니다)**
 
 브레이크포인트 재선언은 파일 맨 아래 `@media` 블록에 모으고 클래스 블록 안에 중첩하지 않습니다.
 같은 폭에서 툴바, 패널, 사이드바가 어떻게 달라지는지 한 블록에서 읽도록 합니다.

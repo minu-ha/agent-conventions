@@ -15,4 +15,25 @@
 내용은 `docs-write-concise-korean-comments-about-purpose-and-constraints`,
 허용된 예외의 이유는 `docs-justify-convention-exceptions-with-a-reason-comment`가 정합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/06-01-docs-keep-body-comments-for-intent-and-steps.md)을 읽습니다.
+**Incorrect (지역 선언에 코드를 옮겨 적은 주석을 답니다):**
+
+```ts
+const toMatchedProducts = (products: Product[], keyword: string) => {
+	// keyword를 소문자로 바꾼다.
+	const lowerKeyword = keyword.trim().toLowerCase();
+
+	return products.filter((product) => product.title.toLowerCase().includes(lowerKeyword));
+};
+```
+
+**Correct (선언 이름이 이미 말하는 주석은 지웁니다):**
+
+```ts
+const toMatchedProducts = (products: Product[], keyword: string) => {
+	const lowerKeyword = keyword.trim().toLowerCase();
+
+	return products.filter((product) => product.title.toLowerCase().includes(lowerKeyword));
+};
+```
+
+> 나머지 예시·예외는 [full rule](../rules/06-01-docs-keep-body-comments-for-intent-and-steps.md)에 있습니다.

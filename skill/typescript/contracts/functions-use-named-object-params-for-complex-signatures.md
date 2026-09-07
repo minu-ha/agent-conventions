@@ -1,6 +1,6 @@
 # Use Named Object Params for Complex Signatures
 
-**Impact: MEDIUM-HIGH (긴 시그니처를 읽을 수 있게 두고 위치를 헷갈리지 않으면서 입력을 늘립니다)**
+**Impact: MEDIUM (긴 시그니처를 읽을 수 있게 두고 위치를 헷갈리지 않으면서 입력을 늘립니다)**
 
 매개변수가 셋을 넘거나 같은 계열 값이 함께 넘어오면 위치 인자를 객체 하나로 묶습니다.
 객체 매개변수 타입은 파일 위쪽에 이름을 붙여 선언합니다.
@@ -16,4 +16,46 @@
 그 판정은 `types-reuse-existing-contracts-before-new-types`가 합니다.
 이 규칙을 지키려고 `*Params`나 `*Args`를 새로 만들지 않습니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/03-02-functions-use-named-object-params-for-complex-signatures.md)을 읽습니다.
+**Incorrect (위치 인자가 넷이라 호출부에서 순서를 외워야 합니다):**
+
+```ts
+const fetchProductPage = (baseUrl: string, page: number, pageSize: number, keyword?: string): Promise<ProductPage> => {
+	/* … */
+};
+
+fetchProductPage(api_base_url, urlParams.page, pagination_default_page_size, undefined);
+```
+
+**Correct (매개변수를 객체로 묶고 그 타입을 파일 위쪽에 이름 붙여 선언합니다):**
+
+```ts
+/**
+ * product 목록 한 페이지 요청 조건
+ */
+interface ProductPageRequest {
+	/**
+	 * 요청 기준 주소
+	 */
+	baseUrl: string;
+	/**
+	 * 1부터 세는 페이지 번호
+	 */
+	page: number;
+	/**
+	 * 한 페이지에 담을 개수
+	 */
+	pageSize: number;
+	/**
+	 * 검색어. 비우면 전체 목록이다
+	 */
+	keyword?: string;
+}
+
+const fetchProductPage = (request: ProductPageRequest): Promise<ProductPage> => {
+	/* … */
+};
+
+fetchProductPage({baseUrl: api_base_url, page: urlParams.page, pageSize: pagination_default_page_size});
+```
+
+> 나머지 예시·예외는 [full rule](../rules/03-02-functions-use-named-object-params-for-complex-signatures.md)에 있습니다.

@@ -1,7 +1,7 @@
 ---
 title: Write JSX Comments as Multiline Blocks
 titleKo: JSX 안 주석은 여러 줄 블록으로 씁니다
-impact: LOW
+impact: MEDIUM
 impactDescription: JSX 주석 형식을 통일해 화면 구역의 역할을 쉽게 읽을 수 있습니다
 appliesWhen:
   - JSX 자식 자리에 주석을 새로 쓰거나 기존 주석의 형식을 바꿀 때
@@ -14,7 +14,7 @@ tags: docs, jsx, comments
 
 ## Write JSX Comments as Multiline Blocks
 
-**Impact: LOW (JSX 주석 형식을 통일해 화면 구역의 역할을 쉽게 읽을 수 있습니다)**
+**Impact: MEDIUM (JSX 주석 형식을 통일해 화면 구역의 역할을 쉽게 읽을 수 있습니다)**
 
 JSX 자식 자리의 주석은 여러 줄 블록으로 씁니다.
 `{/**`·` * 내용`·` */}`을 각각 다른 줄에 두고 한 줄로 접지 않습니다.

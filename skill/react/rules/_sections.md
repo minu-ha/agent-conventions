@@ -24,7 +24,7 @@
 
 ## 4. Composition Strategy (strategy)
 **TitleKo:** 조립 전략
-**Impact:** MEDIUM-HIGH
+**Impact:** MEDIUM
 **Description:** 공용 컴포넌트는 단일·합성·명시적 변형 중 구조를 먼저 고르고 공개할 부품을 정합니다.
 불리언 프롭으로 모드를 늘리지 않고, 정적 조립에는 렌더 프롭 대신 `children`을 씁니다.
 
@@ -39,7 +39,7 @@ JSX 안에는 동작을 숨기지 않고, 컴포넌트를 컴포넌트 안에서
 
 ## 6. Screen File Discipline (screen)
 **TitleKo:** 화면 파일 규율
-**Impact:** MEDIUM-HIGH
+**Impact:** MEDIUM
 **Description:** 라우트 진입 파일에 화면 흐름을 드러내고, 상태나 비동기를 직접 소유한 섹션만 추출합니다.
 파생값은 사용처에서 계산하고 필요가 확인되기 전에 분리하지 않습니다.
 

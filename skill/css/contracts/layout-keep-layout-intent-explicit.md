@@ -14,4 +14,31 @@
 `fixed`는 `transform`이 적용된 조상 아래에서 뷰포트 기준을 잃습니다.
 `sticky`는 중간 조상에 `overflow: hidden`이나 `auto`가 있으면 그 조상이 기준이 되어 뷰포트에 붙지 않습니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/06-03-layout-keep-layout-intent-explicit.md)을 읽습니다.
+**Incorrect (층 숫자를 직접 적고 기준 컨테이너 설명이 없습니다):**
+
+```css
+.pg_dashboard__toolbar {
+	position: sticky;
+	top: 0;
+	z-index: 9999;
+}
+```
+
+**Correct (기준 컨테이너와 의도를 드러냅니다):**
+
+```css
+.pg_dashboard__toolbar {
+	/* .pg_dashboard__content가 스크롤 컨테이너다 */
+	position: sticky;
+	top: 0;
+	z-index: var(--app-z-index-sticky);
+}
+
+.pg_dashboard__content {
+	display: grid;
+	min-height: 0;
+	overflow-y: auto;
+}
+```
+
+> 나머지 예시·예외는 [full rule](../rules/06-03-layout-keep-layout-intent-explicit.md)에 있습니다.

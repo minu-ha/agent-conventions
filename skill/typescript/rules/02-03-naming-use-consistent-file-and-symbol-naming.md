@@ -1,7 +1,7 @@
 ---
 title: Use Role-Based File, Symbol, and Constant Naming
 titleKo: 파일과 심볼은 역할에 맞는 표기를 씁니다
-impact: MEDIUM-HIGH
+impact: MEDIUM
 impactDescription: 파일과 심볼의 표기가 역할을 드러내 읽는 사람이 종류를 바로 압니다
 appliesWhen:
   - TypeScript 파일, 폴더, 변수, 함수, 타입, 객체·스키마 키의 이름을 새로 만들거나 바꿀 때
@@ -12,7 +12,7 @@ tags: naming, constants
 
 ## Use Role-Based File, Symbol, and Constant Naming
 
-**Impact: MEDIUM-HIGH (파일과 심볼의 표기가 역할을 드러내 읽는 사람이 종류를 바로 압니다)**
+**Impact: MEDIUM (파일과 심볼의 표기가 역할을 드러내 읽는 사람이 종류를 바로 압니다)**
 
 파일과 심볼은 선언 문법이 아니라 역할에 맞게 이름 짓습니다.
 `const`로 선언해도 함수·훅·스키마·API 결과·요청 객체·지역 파생값을 불변 데이터 상수로 보지 않습니다.

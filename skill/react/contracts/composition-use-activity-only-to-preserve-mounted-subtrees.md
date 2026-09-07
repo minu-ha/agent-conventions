@@ -1,23 +1,5 @@
 # Use Activity Only to Preserve Mounted Subtrees
 
-**Impact: HIGH (상태 보존과 초기화 요구에 맞는 렌더 방식을 선택합니다)**
+**Impact: HIGH**
 
-기본은 조건부 렌더링입니다. 리액트 19.2 이상에서 숨겼다 다시 보여 줄 때
-하위 트리 상태를 보존해야 하는 경우에만 `<Activity>`를 씁니다. 이전 버전은 조건부 렌더링을 씁니다.
-
-| 비교 항목 | 조건부 렌더링으로 제거 | `<Activity mode="hidden">` |
-| --- | --- | --- |
-| 상태와 DOM | 버립니다 | 보존합니다 |
-| 이펙트 | 정리하고 다시 마운트할 때 설치합니다 | 숨길 때 정리하고 다시 보일 때 설치합니다 |
-| 숨긴 동안 렌더 | 없습니다 | 업데이트가 생기면 낮은 우선순위로 렌더합니다 |
-| 접근성 트리 | 빠집니다 | `display: none`이 적용되어 빠집니다 |
-
-| 확인할 조건 | 처리 |
-| --- | --- |
-| 편집 취소 뒤 폼처럼 상태와 DOM을 초기화해야 함 | 조건부 렌더링을 유지합니다 |
-| 구독 해제나 접근성이 목적임 | 두 방식의 차이가 아니므로 `<Activity>`를 고르는 근거로 삼지 않습니다 |
-| 이펙트 정리와 재설치가 반복됨 | 상태가 남아 있어도 정상 동작하도록 작성합니다 |
-| 동영상 재생 등 DOM 자체 동작을 멈춰야 함 | DOM 보존으로 계속될 수 있으므로 이펙트 정리에서 명시적으로 멈춥니다 |
-| 하위 트리가 무거움 | 숨겨도 업데이트 시 렌더되므로 습관적으로 보존하지 않습니다 |
-
-> 예시·예외가 필요하면 [full rule](../rules/05-05-composition-use-activity-only-to-preserve-mounted-subtrees.md)을 읽습니다.
+> HIGH rule: must read the [full rule](../rules/05-05-composition-use-activity-only-to-preserve-mounted-subtrees.md) in full, prose and every example, before implementation or review.

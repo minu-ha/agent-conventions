@@ -22,4 +22,18 @@
 리액트 컴파일러가 없어도 같은 기준을 적용합니다.
 컴파일러가 같은 최적화를 이미 제공하면 수동 메모이제이션을 더하지 않습니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/10-01-perf-avoid-defensive-memoization.md)을 읽습니다.
+**Incorrect (단순 가공을 습관적으로 메모이제이션합니다):**
+
+```ts
+const columns = useMemo(() => {
+	return toTableColumns(props.columns);
+}, [props.columns]);
+```
+
+**Correct (근거가 없으면 감싸지 않고 그대로 계산합니다):**
+
+```ts
+const columns = toTableColumns(props.columns);
+```
+
+> 나머지 예시·예외는 [full rule](../rules/10-01-perf-avoid-defensive-memoization.md)에 있습니다.

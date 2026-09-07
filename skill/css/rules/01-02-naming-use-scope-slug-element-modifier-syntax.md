@@ -1,7 +1,7 @@
 ---
 title: Use Scope, Slug, Element, and Modifier Syntax
 titleKo: 클래스명은 `범위_식별자__요소--수정자` 형식으로 씁니다
-impact: MEDIUM-HIGH
+impact: MEDIUM
 impactDescription: 클래스명에서 소유자와 역할을 확인할 수 있습니다
 appliesWhen:
   - 일반 CSS에서 프로젝트가 소유한 클래스를 새로 만들 때
@@ -11,7 +11,7 @@ tags: naming, class-grammar, ownership
 
 ## Use Scope, Slug, Element, and Modifier Syntax
 
-**Impact: MEDIUM-HIGH (클래스명에서 소유자와 역할을 확인할 수 있습니다)**
+**Impact: MEDIUM (클래스명에서 소유자와 역할을 확인할 수 있습니다)**
 
 클래스명은 `<scope>_<slug>__<element>[--<modifier>]` 문법을 씁니다.
 구분자 `_`, `__`, `--`를 고정하고 각 자리의 역할을 구분합니다.

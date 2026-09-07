@@ -1,6 +1,6 @@
 # Do Not Negate With `:not()`
 
-**Impact: MEDIUM-HIGH (기본 모습을 기본 블록에 두어 부정 조건을 따로 해석하지 않게 합니다)**
+**Impact: MEDIUM (기본 모습을 기본 블록에 두어 부정 조건을 따로 해석하지 않게 합니다)**
 
 `:not()`을 쓰지 않고 기본 모습은 기본 블록에, 상태가 켜진 모습은 상태 블록에 둡니다.
 부정 조건을 없앨 때도 **상태별 결과를 보존합니다.**
@@ -16,4 +16,38 @@
 각 수정자가 해당 요소의 모습을 모두 정의합니다.
 DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned-states` 규칙을 따릅니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/04-07-selector-do-not-negate-with-not.md)을 읽습니다.
+**Incorrect (DOM 상태를 `:not()`으로 뒤집어 기본 모습을 상태 블록에 넣습니다):**
+
+```css
+.pg_assetIndex__cardButton {
+	&:not(:disabled) {
+		cursor: pointer;
+	}
+
+	&:disabled {
+		cursor: default;
+	}
+}
+```
+
+**Incorrect (활성 버튼의 hover를 부정 조건으로 표현합니다):**
+
+```css
+.pg_assetIndex__cardButton {
+	&:not(:disabled):hover {
+		background: #f5f5f5;
+	}
+}
+```
+
+**Correct (네이티브 버튼의 활성 상태를 긍정 조건으로 표현합니다):**
+
+```css
+.pg_assetIndex__cardButton {
+	&:enabled:hover {
+		background: #f5f5f5;
+	}
+}
+```
+
+> 나머지 예시·예외는 [full rule](../rules/04-07-selector-do-not-negate-with-not.md)에 있습니다.

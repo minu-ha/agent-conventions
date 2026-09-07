@@ -1,7 +1,7 @@
 ---
 title: Declare Stacking Layers as Tokens in One Place
 titleKo: `z-index` 층은 토큰 파일 한 곳에 선언합니다
-impact: MEDIUM-HIGH
+impact: MEDIUM
 impactDescription: 층 순서를 한 파일에서 확인하고 `z-index` 숫자를 임의로 늘리지 않습니다
 appliesWhen:
   - `z-index`를 새로 넣거나 값을 바꿀 때
@@ -12,7 +12,7 @@ tags: values, layering
 
 ## Declare Stacking Layers as Tokens in One Place
 
-**Impact: MEDIUM-HIGH (층 순서를 한 파일에서 확인하고 `z-index` 숫자를 임의로 늘리지 않습니다)**
+**Impact: MEDIUM (층 순서를 한 파일에서 확인하고 `z-index` 숫자를 임의로 늘리지 않습니다)**
 
 층은 전역 토큰 파일에 한 번 선언하고 `z-index`에서는 토큰 이름만 씁니다.
 `layout-keep-layout-intent-explicit`에 따라 숫자를 직접 쓰거나 사용처에서 층 사이 값을 만들지 않습니다.

@@ -1,7 +1,7 @@
 ---
 title: Derive Subsets With Indexed Access Instead of `Pick`
 titleKo: 부분집합은 `Pick` 대신 인덱스 접근 `interface`로 파생합니다
-impact: MEDIUM-HIGH
+impact: MEDIUM
 impactDescription: 고른 필드의 이름과 출처를 드러내고 선택 여부와 읽기 전용 속성을 보존합니다
 appliesWhen:
   - 기존 타입의 일부 필드만 담는 형태를 선언·변경할 때
@@ -13,7 +13,7 @@ tags: types
 
 ## Derive Subsets With Indexed Access Instead of `Pick`
 
-**Impact: MEDIUM-HIGH (고른 필드의 이름과 출처를 드러내고 선택 여부와 읽기 전용 속성을 보존합니다)**
+**Impact: MEDIUM (고른 필드의 이름과 출처를 드러내고 선택 여부와 읽기 전용 속성을 보존합니다)**
 
 기존 계약의 일부 필드는 `interface`에 `원본["필드"]`로 적고, `Pick`은 쓰지 않습니다.
 계약 전체를 재사용할지는 `types-reuse-existing-contracts-before-new-types`가 정합니다.
@@ -45,12 +45,7 @@ tags: types
 | --- | --- |
 | 선택 필드의 키 생략 | `?`를 직접 붙입니다. 없으면 `string \| undefined`여도 필수 필드입니다 |
 | 읽기 전용 필드 | `readonly`를 직접 붙입니다. 인덱스 접근만으로는 복사되지 않습니다 |
-| `exactOptionalPropertyTypes`가 켜진 선택 필드의 쓰기 타입 | `name?: Required<Src>["name"]`으로 원본의 명시적 `undefined` 허용 여부를 보존합니다 |
-
-선택 필드의 인덱스 접근 `Src["name"]`은 `string | undefined`입니다.
-`exactOptionalPropertyTypes`가 켜져 있으면 `name?: Src["name"]`은 원본이 막는 `undefined` 대입까지 허용합니다.
-그때만 `name?: Required<Src>["name"]`으로 `undefined`를 벗겨 원본과 같은 쓰기 계약을 유지합니다.
-옵션이 꺼져 있으면 두 형태가 같은 타입이므로 `Src["name"]`으로 적고, 이 처리 때문에 옵션을 바꾸지 않습니다.
+| `exactOptionalPropertyTypes`가 켜진 프로젝트의 선택 필드 | `name?: Required<Src>["name"]`으로 `undefined` 대입을 막습니다. 옵션이 꺼진 프로젝트는 `Src["name"]`으로 충분합니다 |
 
 **Incorrect (`Pick`으로 골라 필드 이름과 설명이 사라집니다):**
 

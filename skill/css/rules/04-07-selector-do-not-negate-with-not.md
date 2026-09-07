@@ -1,7 +1,7 @@
 ---
 title: Do Not Negate With `:not()`
 titleKo: 선택자에 `:not()`을 쓰지 않습니다
-impact: MEDIUM-HIGH
+impact: MEDIUM
 impactDescription: 기본 모습을 기본 블록에 두어 부정 조건을 따로 해석하지 않게 합니다
 appliesWhen:
   - 선택자에 `:not()`을 넣으려 할 때
@@ -12,7 +12,7 @@ tags: selector, state, negation
 
 ## Do Not Negate With `:not()`
 
-**Impact: MEDIUM-HIGH (기본 모습을 기본 블록에 두어 부정 조건을 따로 해석하지 않게 합니다)**
+**Impact: MEDIUM (기본 모습을 기본 블록에 두어 부정 조건을 따로 해석하지 않게 합니다)**
 
 `:not()`을 쓰지 않고 기본 모습은 기본 블록에, 상태가 켜진 모습은 상태 블록에 둡니다.
 부정 조건을 없앨 때도 **상태별 결과를 보존합니다.**

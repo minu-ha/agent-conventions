@@ -23,4 +23,45 @@
 
 **Requires selected:** `docs-write-concise-korean-comments-about-purpose-and-constraints`, `docs-write-doc-comments-as-multiline-blocks` · 함께 적용
 
-> 예시·예외가 필요하면 [full rule](../rules/01-04-types-document-custom-types-and-shapes.md)을 읽습니다.
+**Incorrect (필드 설명을 생략하거나 예전 방식으로 헤더에 몰아씁니다):**
+
+```ts
+/**
+ * 게시 결과 요약
+ * 게시 대상 문서 ID
+ */
+interface PublishResult {
+	documentId: string;
+	published: boolean;
+}
+```
+
+**Correct (헤더와 필드별 문서 주석을 씁니다):**
+
+```ts
+/**
+ * 게시 결과 요약
+ */
+export interface PublishResult {
+	/**
+	 * 게시 대상 문서 ID
+	 */
+	documentId: string;
+	/**
+	 * 게시 성공 여부
+	 */
+	published: boolean;
+}
+
+/**
+ * 게시 결과 스키마
+ */
+const publishResultSchema = z.object({
+	/**
+	 * 게시 대상 문서 ID
+	 */
+	documentId: z.string(),
+});
+```
+
+> 나머지 예시·예외는 [full rule](../rules/01-04-types-document-custom-types-and-shapes.md)에 있습니다.

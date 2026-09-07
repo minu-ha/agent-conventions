@@ -22,4 +22,47 @@
 `tooling-configure-biome-to-enforce-these-rules`의 `style/noMagicNumbers`로 검사합니다.
 테스트 파일에서는 리터럴 자체가 기대 계약일 수 있어 이 검사를 끕니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/04-04-values-declare-meaningful-numbers.md)을 읽습니다.
+**Incorrect (뜻이 있는 숫자를 쓰는 자리에 적거나 지역 `const`로 자리만 옮깁니다):**
+
+```ts
+// page/products/pg-products.tsx
+const maxAttempts = 42;
+
+const isOverRetryLimit = (attempts: number): boolean => {
+	return attempts > maxAttempts;
+};
+
+const toPreviewRows = (rows: Row[]): Row[] => {
+	return rows.slice(0, 37);
+};
+```
+
+**Correct (`constant` 폴더에 선언하고 쓰는 자리에서 이름을 가리킵니다):**
+
+```ts
+// constant/retry.ts
+/**
+ * 이 횟수를 넘으면 사용자에게 실패를 보여 준다
+ */
+export const retry_max_attempts = 42;
+
+// constant/preview.ts
+/**
+ * 미리보기에 그릴 행 수. 서버가 한 번에 주는 최대치와 맞춘다
+ */
+export const preview_row_count = 37;
+
+// page/products/pg-products.tsx
+import {preview_row_count} from "@/constant/preview";
+import {retry_max_attempts} from "@/constant/retry";
+
+const isOverRetryLimit = (attempts: number): boolean => {
+	return attempts > retry_max_attempts;
+};
+
+const toPreviewRows = (rows: Row[]): Row[] => {
+	return rows.slice(0, preview_row_count);
+};
+```
+
+> 나머지 예시·예외는 [full rule](../rules/04-04-values-declare-meaningful-numbers.md)에 있습니다.

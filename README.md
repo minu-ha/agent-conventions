@@ -152,8 +152,8 @@ progressive skill 셋은 규칙 전체를 안 읽는다. 단계마다 좁힌다.
 | --- | --- | --- | --- |
 | 1 | `SKILL.md` | 라우터. 무엇이 바뀌었는지 판정 | 항상 |
 | 2 | `RULES_INDEX.md` | 규칙당 한 줄. 끝까지 훑음 | 항상 |
-| 3 | `contracts/<id>.md` | 걸린 규칙의 규범만. 예시 제외 | 걸린 규칙만 |
-| 4 | `rules/NN-MM-<id>.md` | 원문과 `Correct` 예제 | `CRITICAL`, 형태를 정하는 규칙, 판단이 모호할 때 |
+| 3 | `contracts/<id>.md` | `MEDIUM`은 규범과 첫 `Incorrect`·`Correct` 짝. `CRITICAL`·`HIGH`는 원문 링크만 | 걸린 규칙만 |
+| 4 | `rules/NN-MM-<id>.md` | 원문 전부. 설명과 예제 | `CRITICAL`·`HIGH`는 항상, `MEDIUM`은 판단이 모호할 때 |
 
 `HANDBOOK.md`는 이 경로 밖이다. 사람이 통독할 때 쓰고,
 에이전트는 명시적 요청이 있을 때만 읽는다.

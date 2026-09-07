@@ -1,7 +1,7 @@
 ---
 title: Name Tokens by Purpose, Not by Value
 titleKo: 토큰 이름은 값이 아니라 쓰임으로 짓습니다
-impact: MEDIUM-HIGH
+impact: MEDIUM
 impactDescription: 값이 바뀌어도 토큰 이름이 쓰임을 나타내고 일관된 형식을 유지합니다
 appliesWhen:
   - 색·그림자·간격·층 같은 디자인 토큰을 새로 만들거나 이름을 바꿀 때
@@ -12,7 +12,7 @@ tags: values, naming
 
 ## Name Tokens by Purpose, Not by Value
 
-**Impact: MEDIUM-HIGH (값이 바뀌어도 토큰 이름이 쓰임을 나타내고 일관된 형식을 유지합니다)**
+**Impact: MEDIUM (값이 바뀌어도 토큰 이름이 쓰임을 나타내고 일관된 형식을 유지합니다)**
 
 토큰 이름은 값이 아니라 쓰임을 나타내는 `--app-<종류>-<쓰임>` 형태로 짓습니다.
 값이 바뀌어도 이름이 뜻을 유지해야 하므로 `--app-color-white`, `--app-color-gray-100`,

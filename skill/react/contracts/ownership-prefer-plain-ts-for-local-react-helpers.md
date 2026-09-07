@@ -1,6 +1,6 @@
 # Do Not Create Screen-local Custom Hooks for Pure Logic
 
-**Impact: MEDIUM-HIGH (실제 상태·생명주기·컨텍스트가 필요한 경우에만 리액트 훅을 사용합니다)**
+**Impact: MEDIUM (실제 상태·생명주기·컨텍스트가 필요한 경우에만 리액트 훅을 사용합니다)**
 
 화면 전용 계산·정규화·전송 값 조립처럼 순수한 로직은 커스텀 훅으로 감싸지 않습니다.
 화면 지역 훅은 상태·컨텍스트·훅 호출 순서를 실제로 캡슐화할 때만 허용합니다.
@@ -15,4 +15,53 @@
 추출한 파일의 배치는 `ownership-place-owner-files-in-role-folders`를,
 내보내기와 가져오기 형태는 `typescript/naming-use-direct-imports-and-public-entry-points`를 따릅니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/01-05-ownership-prefer-plain-ts-for-local-react-helpers.md)을 읽습니다.
+**Incorrect (순수 지역 계산을 커스텀 훅으로 감쌉니다):**
+
+```tsx
+// page/products/_hook/use-media-upload-payload.ts
+export const useMediaUploadPayload = (files: File[]) => {
+	return files.map((file) => ({name: file.name, size: file.size}));
+};
+
+// page/products/_pg-media-upload-panel.tsx
+export const PgMediaUploadPanel = (props: PgMediaUploadPanelProps) => {
+	const mediaUploadPayload = useMediaUploadPayload(props.files);
+
+	/**
+	 * 업로드를 확정할 때 이미 만들어 둔 값을 보냄
+	 */
+	const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = () => {
+		mutationMediaSave.mutate({data: mediaUploadPayload});
+	};
+
+	return <UiButton onClick={handleSaveButtonClick}>저장</UiButton>;
+};
+```
+
+**Correct (순수 계산은 소유자의 `_function` 폴더에 두고 핸들러가 직접 부릅니다):**
+
+```tsx
+// page/products/_function/to-media-upload-payload.ts
+/**
+ * 업로드 파일 목록으로 저장 요청 본문을 조립
+ */
+export const toMediaUploadPayload = (files: File[]) => {
+	return files.map((file) => ({name: file.name, size: file.size}));
+};
+
+// page/products/_pg-media-upload-panel.tsx
+import {toMediaUploadPayload} from "@/page/products/_function/to-media-upload-payload";
+
+export const PgMediaUploadPanel = (props: PgMediaUploadPanelProps) => {
+	/**
+	 * 업로드를 확정할 때만 정규화해서 보냄. 렌더 중에는 계산하지 않는다
+	 */
+	const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = () => {
+		mutationMediaSave.mutate({data: toMediaUploadPayload(props.files)});
+	};
+
+	return <UiButton onClick={handleSaveButtonClick}>저장</UiButton>;
+};
+```
+
+> 나머지 예시·예외는 [full rule](../rules/01-05-ownership-prefer-plain-ts-for-local-react-helpers.md)에 있습니다.

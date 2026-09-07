@@ -1,6 +1,6 @@
 # Use es-toolkit for Value Helpers
 
-**Impact: MEDIUM-HIGH (중복 제거와 표기 변환을 파일마다 다르게 만들지 않고 검증된 구현 하나로 모읍니다)**
+**Impact: MEDIUM (중복 제거와 표기 변환을 파일마다 다르게 만들지 않고 검증된 구현 하나로 모읍니다)**
 
 값을 다루는 보조 함수는 `es-toolkit`을 기본으로 쓰고, `lodash`는 새로 들이지 않습니다.
 빈 배열·중복 키 같은 경계 처리를 통일하고, 배열을 인자로 펼칠 때의 호출 인자 한계도 피합니다.
@@ -33,4 +33,31 @@
 `groupBy`·`keyBy`는 목록 재구성에 쓰고, 반복 조회는
 `values-use-set-and-map-for-repeated-lookups`에 따라 `Set`·`Map`으로 처리합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/04-06-values-use-es-toolkit-for-value-helpers.md)을 읽습니다.
+**Incorrect (`es-toolkit`에 있는 함수를 손으로 다시 씁니다):**
+
+```ts
+const uniqueOwnerIds = ownerIds.filter((ownerId, index) => ownerIds.indexOf(ownerId) === index);
+const uniqueCategories = [...new Set(points.map((point) => point.x))];
+const productsByCategory = products.reduce<Record<string, Product[]>>((grouped, product) => {
+	grouped[product.category] = [...(grouped[product.category] ?? []), product];
+	return grouped;
+}, {});
+const draftFilter = JSON.parse(JSON.stringify(savedFilter)) as ProductFilter;
+const searchKey = rawKey.replace(/([A-Z])/g, "_$1").toLowerCase();
+const tickTimes = Array.from({length: tick_count}, (_unused, tickIndex) => toTickTime(tickIndex));
+```
+
+**Correct (`es-toolkit` 함수를 그대로 부릅니다):**
+
+```ts
+import {cloneDeep, groupBy, range, snakeCase, uniq} from "es-toolkit";
+
+const uniqueOwnerIds = uniq(ownerIds);
+const uniqueCategories = uniq(points.map((point) => point.x));
+const productsByCategory = groupBy(products, (product) => product.category);
+const draftFilter = cloneDeep(savedFilter);
+const searchKey = snakeCase(rawKey);
+const tickTimes = range(tick_count).map((tickIndex) => toTickTime(tickIndex));
+```
+
+> 나머지 예시·예외는 [full rule](../rules/04-06-values-use-es-toolkit-for-value-helpers.md)에 있습니다.

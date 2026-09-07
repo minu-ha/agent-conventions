@@ -84,7 +84,7 @@ def flow_main():
         box(L, y["index"], BW, BH, [("RULES_INDEX.md", "mono"), ("전체 scan — 첫 매치에서 멈추지 않음", "sm")], "g"),
         box(L, y["part"], BW, BH, [("걸리는 규칙 추리기", None), ("appliesWhen 을 변경 범위와 대조", "sm")], "run"),
         box(L, y["contract"], BW, BH, [("contracts/<id>.md", "mono"), ("걸리는 규칙만 읽음", "sm")], "g"),
-        diamond(CX, y["crit"], 244, 84, [("CRITICAL 이거나", None), ("판단이 모호한가?", None)]),
+        diamond(CX, y["crit"], 244, 84, [("CRITICAL·HIGH 이거나", None), ("판단이 모호한가?", None)]),
         diamond(CX, y["fix"], 280, 100, [("requiresSelected · reviewWith 로", "sm"), ("새로 걸리는 규칙이", None), ("있는가?", None)]),
         box(L, y["impl"], BW, BH, [("구현", None), ("걸린 규칙의 계약만 기준", "sm")], "run"),
         diamond(CX, y["drift"], 228, 80, [("작업 범위가", None), ("바뀌었나?", None)]),

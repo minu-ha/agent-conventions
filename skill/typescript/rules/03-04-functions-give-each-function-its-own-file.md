@@ -1,7 +1,7 @@
 ---
 title: Give Each Support Function Its Own File
 titleKo: 보조 함수는 대표 함수 폴더의 `_` 파일 하나에 하나씩 둡니다
-impact: MEDIUM-HIGH
+impact: MEDIUM
 impactDescription: 보조 함수를 개별 파일로 관리하고 폴더로 소유 관계를 드러냅니다
 appliesWhen:
   - 떼어 낸 보조 함수를 어느 파일이나 폴더에 둘지 정할 때
@@ -15,7 +15,7 @@ tags: functions, boundaries
 
 ## Give Each Support Function Its Own File
 
-**Impact: MEDIUM-HIGH (보조 함수를 개별 파일로 관리하고 폴더로 소유 관계를 드러냅니다)**
+**Impact: MEDIUM (보조 함수를 개별 파일로 관리하고 폴더로 소유 관계를 드러냅니다)**
 
 보조 함수에 이름을 붙일지는 `functions-extract-helpers-only-when-the-boundary-is-real`이 판단합니다.
 이름을 붙였다면 함수마다 파일을 하나 두고, 부르는 대표 함수에 따라 배치합니다.

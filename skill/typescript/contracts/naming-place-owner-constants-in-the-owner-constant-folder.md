@@ -1,6 +1,6 @@
 # Place Owner-only Constants in the Owner `_constant` Folder
 
-**Impact: MEDIUM-HIGH (소유자 전용 상수를 함께 관리하고 파일명과 이름에서 소유자 표현을 반복하지 않습니다)**
+**Impact: MEDIUM (소유자 전용 상수를 함께 관리하고 파일명과 이름에서 소유자 표현을 반복하지 않습니다)**
 
 한 소유자의 상수는 그 소유자 아래 `_constant`에 둡니다.
 루트와 소유자를 구분하는 기준은 `naming-place-project-constants-in-the-root-constant-folder`를 따릅니다.
@@ -17,4 +17,22 @@
 
 **Requires selected:** `naming-use-consistent-file-and-symbol-naming` · 함께 적용
 
-> 예시·예외가 필요하면 [full rule](../rules/02-02-naming-place-owner-constants-in-the-owner-constant-folder.md)을 읽습니다.
+**Incorrect (한 소유자의 상수를 루트로 올립니다):**
+
+```ts
+// constant/chart.ts
+// product 상세 화면만 쓰는 값이 루트에 있다
+export const chart_axis_tick_count = 6;
+```
+
+**Correct (소유자 아래 주제 파일에 둡니다):**
+
+```ts
+// page/product-detail/_constant/chart.ts
+/**
+ * product 상세 차트의 축 눈금 수. 표시 폭이 좁아 여섯을 넘기면 라벨이 겹친다
+ */
+export const chart_axis_tick_count = 6;
+```
+
+> 나머지 예시·예외는 [full rule](../rules/02-02-naming-place-owner-constants-in-the-owner-constant-folder.md)에 있습니다.

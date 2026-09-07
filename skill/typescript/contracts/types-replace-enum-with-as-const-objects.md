@@ -1,6 +1,6 @@
 # Replace `enum` With `as const` Objects
 
-**Impact: MEDIUM-HIGH (객체로 실행 값을 선언하고 같은 값에서 타입을 추출합니다)**
+**Impact: MEDIUM (객체로 실행 값을 선언하고 같은 값에서 타입을 추출합니다)**
 
 직접 선언하는 값 집합은 `enum` 대신 객체와 `as const`로 실행 값과 타입을 함께 둡니다.
 `enum`은 타입만 지우는 번들러나 TypeScript 5.8의 `--erasableSyntaxOnly`와 호환되지 않으며,
@@ -18,4 +18,32 @@
 
 **Requires selected:** `naming-use-consistent-file-and-symbol-naming`, `types-document-custom-types-and-shapes` · 함께 적용
 
-> 예시·예외가 필요하면 [full rule](../rules/01-07-types-replace-enum-with-as-const-objects.md)을 읽습니다.
+**Incorrect (`enum`을 직접 씁니다):**
+
+```ts
+enum ProductStatus {
+	pending = "pending",
+	passed = "passed",
+	failed = "failed",
+}
+```
+
+**Correct (객체 리터럴과 타입 추출을 조합합니다):**
+
+```ts
+/**
+ * product 심사 상태 값 집합
+ */
+const product_status = {
+	pending: "pending",
+	passed: "passed",
+	failed: "failed",
+} as const;
+
+/**
+ * product 심사 상태 타입. product_status에 값을 더하면 따라 넓어진다
+ */
+type ProductStatus = (typeof product_status)[keyof typeof product_status];
+```
+
+> 나머지 예시·예외는 [full rule](../rules/01-07-types-replace-enum-with-as-const-objects.md)에 있습니다.

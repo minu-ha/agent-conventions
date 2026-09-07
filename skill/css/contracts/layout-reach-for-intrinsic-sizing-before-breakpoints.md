@@ -1,6 +1,6 @@
 # Reach for Intrinsic Sizing Before Breakpoints
 
-**Impact: MEDIUM-HIGH (컴포넌트가 배치된 폭에 맞춰 크기를 조정해 위치가 바뀌어도 CSS 수정을 줄입니다)**
+**Impact: MEDIUM (컴포넌트가 배치된 폭에 맞춰 크기를 조정해 위치가 바뀌어도 CSS 수정을 줄입니다)**
 
 브레이크포인트를 추가하기 전에 **고유 크기 지정만으로 배치할 수 있는지** 확인합니다.
 `@media`는 뷰포트 폭을 보므로 같은 컴포넌트를 본문에서 좁은 사이드바로 옮겨도 실제 슬롯 폭을 반영하지 못합니다.
@@ -29,4 +29,42 @@
 `padding`, `min-height`, 글자 크기까지만 소유하고 폭은 사용처가 정합니다.
 폭을 고정한 이유가 클래스명과 선언에서 드러나는지는 `layout-keep-layout-intent-explicit` 규칙을 따릅니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/06-04-layout-reach-for-intrinsic-sizing-before-breakpoints.md)을 읽습니다.
+**Incorrect (열 개수를 브레이크포인트마다 직접 지정합니다):**
+
+```css
+.pg_products__grid {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 16px;
+}
+
+@media (width < 1440px) {
+	.pg_products__grid {
+		grid-template-columns: repeat(3, 1fr);
+	}
+}
+
+@media (width < 1024px) {
+	.pg_products__grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+@media (width < 640px) {
+	.pg_products__grid {
+		grid-template-columns: 1fr;
+	}
+}
+```
+
+**Correct (사용 가능한 폭에 따라 열 개수를 조정합니다):**
+
+```css
+.pg_products__grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+	gap: 16px;
+}
+```
+
+> 나머지 예시·예외는 [full rule](../rules/06-04-layout-reach-for-intrinsic-sizing-before-breakpoints.md)에 있습니다.

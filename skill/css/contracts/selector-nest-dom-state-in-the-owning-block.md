@@ -23,4 +23,38 @@ DOM 상태 가상 클래스는 해당 요소의 **조건 없는 기본 클래스
 | `selector-disallowed-list` | 최상위에 다시 선언한 상태 가상 클래스 |
 | `property-disallowed-list` | 지역 변수 선언 |
 
-> 예시·예외가 필요하면 [full rule](../rules/04-06-selector-nest-dom-state-in-the-owning-block.md)을 읽습니다.
+**Incorrect (가상 클래스를 최상위 선택자로 다시 엽니다):**
+
+```css
+.wg_siteHeader__brandLink {
+	color: #1677ff;
+}
+
+.wg_siteHeader__brandLink:hover {
+	color: #0958d9;
+}
+
+.wg_siteHeader__brandLink:focus-visible {
+	color: #0958d9;
+	outline: 2px solid #1677ff;
+}
+```
+
+**Correct (기본 블록 안에서 각 상태를 별도의 `&:` 블록으로 선언합니다):**
+
+```css
+.wg_siteHeader__brandLink {
+	color: #1677ff;
+
+	&:hover {
+		color: #0958d9;
+	}
+
+	&:focus-visible {
+		color: #0958d9;
+		outline: 2px solid #1677ff;
+	}
+}
+```
+
+> 나머지 예시·예외는 [full rule](../rules/04-06-selector-nest-dom-state-in-the-owning-block.md)에 있습니다.

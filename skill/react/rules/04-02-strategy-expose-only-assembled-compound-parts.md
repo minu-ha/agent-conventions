@@ -1,7 +1,7 @@
 ---
 title: Expose Only Compound Parts the Consumer Assembles
 titleKo: 합성 부품은 조립에 필요한 것만 공개합니다
-impact: MEDIUM-HIGH
+impact: MEDIUM
 impactDescription: 내부 구조를 공개 계약과 분리해 이후 변경 범위를 줄입니다
 appliesWhen:
   - 합성 컴포넌트의 공개 부품 목록에 부품을 넣거나 뺄 때
@@ -13,7 +13,7 @@ tags: strategy, composition
 
 ## Expose Only Compound Parts the Consumer Assembles
 
-**Impact: MEDIUM-HIGH (내부 구조를 공개 계약과 분리해 이후 변경 범위를 줄입니다)**
+**Impact: MEDIUM (내부 구조를 공개 계약과 분리해 이후 변경 범위를 줄입니다)**
 
 합성 컴포넌트의 공개 부품은 사용처가 직접 조립해야 하는 영역만 엽니다.
 

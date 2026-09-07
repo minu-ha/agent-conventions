@@ -14,4 +14,67 @@
 
 순수 계산을 훅으로 감싸는 문제는 `ownership-prefer-plain-ts-for-local-react-helpers`를 따릅니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/01-06-ownership-keep-lifecycle-in-the-owning-component.md)을 읽습니다.
+**Incorrect (파일 분량을 줄이려고 생명주기를 훅으로 옮깁니다):**
+
+```tsx
+// component/widget/chart/chart-root/wg-chart-root.tsx
+// 생성·resize·정리가 _hook/use-chart-instance.ts로 빠져 이 파일에서는 실행 흐름이 보이지 않는다
+export const WgChartRoot = (props: WgChartRootProps) => {
+	const containerRef = useRef<HTMLDivElement>(null);
+	const chart = useChartInstance(containerRef);
+
+	/**
+	 * option이 바뀌면 기존 instance에 다시 반영
+	 */
+	useEffect(() => {
+		chart?.setOption(props.option);
+	}, [chart, props.option]);
+
+	return <div ref={containerRef} className={clsx("wg_chart__canvas")} />;
+};
+```
+
+**Correct (생명주기를 소유 컴포넌트가 직접 가집니다):**
+
+```tsx
+// component/widget/chart/chart-root/wg-chart-root.tsx
+export const WgChartRoot = (props: WgChartRootProps) => {
+	const containerRef = useRef<HTMLDivElement>(null);
+	const chartRef = useRef<ChartInstance | null>(null);
+
+	/**
+	 * container mount 시 chart instance를 만들고 resize·dispose까지 소유
+	 */
+	useEffect(() => {
+		if (!containerRef.current) {
+			return;
+		}
+
+		// 외부 차트 라이브러리 인스턴스. 만든 컴포넌트가 resize 와 dispose 까지 책임진다
+		const instance = mountChart(containerRef.current);
+		const handleResize = () => {
+			instance.resize();
+		};
+
+		window.addEventListener("resize", handleResize);
+		chartRef.current = instance;
+
+		return () => {
+			chartRef.current = null;
+			window.removeEventListener("resize", handleResize);
+			instance.dispose();
+		};
+	}, []);
+
+	/**
+	 * option이 바뀌면 기존 instance에 다시 반영
+	 */
+	useEffect(() => {
+		chartRef.current?.setOption(props.option);
+	}, [props.option]);
+
+	return <div ref={containerRef} className={clsx("wg_chart__canvas")} />;
+};
+```
+
+> 나머지 예시·예외는 [full rule](../rules/01-06-ownership-keep-lifecycle-in-the-owning-component.md)에 있습니다.

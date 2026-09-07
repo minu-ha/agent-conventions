@@ -1,6 +1,6 @@
 # Avoid Premature Abstraction in Screen Code
 
-**Impact: MEDIUM-HIGH (추측에 따른 추출을 줄이고 실제 재사용 경계에 맞춰 코드를 배치합니다)**
+**Impact: MEDIUM (추측에 따른 추출을 줄이고 실제 재사용 경계에 맞춰 코드를 배치합니다)**
 
 반복이 보인다는 이유만으로 공용 훅·컴포넌트·보조 함수를 추출하지 않습니다.
 먼저 흐름을 같은 파일에서 읽을 수 있도록 정리합니다.
@@ -22,4 +22,44 @@
 | 함수 | `typescript/functions-extract-helpers-only-when-the-boundary-is-real` |
 | 훅 | `ownership-prefer-plain-ts-for-local-react-helpers` |
 
-> 예시·예외가 필요하면 [full rule](../rules/06-02-screen-avoid-premature-abstraction.md)을 읽습니다.
+**Incorrect (컴포넌트 하나만 쓰는 단계 보조 함수를 보조 모듈에 남깁니다):**
+
+```tsx
+const toEditHref = ({editHrefBase, row}: {editHrefBase: string; row: ProductRow}) =>
+	`${editHrefBase}${row.id}/`;
+
+const toProductRows = (response: ProductListResponse) =>
+	response.data.map((product) => ({id: product.id, title: product.title}));
+
+export const PgProductTable = (props: PgProductTableProps) => {
+	const responseProductListSuspense = useProductListSuspense({}, {query: {select: toProductRows}});
+
+	return responseProductListSuspense.data.map((row) => (
+		<a href={toEditHref({editHrefBase: props.editHrefBase, row})} key={row.id}>
+			{row.title}
+		</a>
+	));
+};
+```
+
+**Correct (작은 쿼리 가공과 `href` 조립은 사용처에 둡니다):**
+
+```tsx
+export const PgProductTable = (props: PgProductTableProps) => {
+	/**
+	 * 링크에 필요한 두 필드만 남겨 표가 응답 구조를 모르게 한다
+	 */
+	const responseProductListSuspense = useProductListSuspense(
+		{},
+		{query: {select: (response) => response.data.map((product) => ({id: product.id, title: product.title}))}},
+	);
+
+	return responseProductListSuspense.data.map((row) => (
+		<a href={`${props.editHrefBase}${row.id}/`} key={row.id}>
+			{row.title}
+		</a>
+	));
+};
+```
+
+> 나머지 예시·예외는 [full rule](../rules/06-02-screen-avoid-premature-abstraction.md)에 있습니다.

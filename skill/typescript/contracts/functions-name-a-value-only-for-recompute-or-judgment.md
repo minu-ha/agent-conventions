@@ -26,4 +26,28 @@
 
 반복 조회 구조의 사용 기준은 `values-use-set-and-map-for-repeated-lookups`를 따릅니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/03-08-functions-name-a-value-only-for-recompute-or-judgment.md)을 읽습니다.
+**Incorrect (두 번 쓴다는 이유만으로 변수로 뺍니다):**
+
+```ts
+const toRowClassNames = (row: Row): string[] => {
+	const isOverdue = row.dueDate < today;
+
+	return [
+		isOverdue ? "ui_row__root--overdue" : "ui_row__root",
+		isOverdue ? "ui_row__badge--overdue" : "ui_row__badge",
+	];
+};
+```
+
+**Correct (항이 하나라 두 번 적어도 그 자리에 그대로 씁니다):**
+
+```ts
+const toRowClassNames = (row: Row): string[] => {
+	return [
+		row.dueDate < today ? "ui_row__root--overdue" : "ui_row__root",
+		row.dueDate < today ? "ui_row__badge--overdue" : "ui_row__badge",
+	];
+};
+```
+
+> 나머지 예시·예외는 [full rule](../rules/03-08-functions-name-a-value-only-for-recompute-or-judgment.md)에 있습니다.

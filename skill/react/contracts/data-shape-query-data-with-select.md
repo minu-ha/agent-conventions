@@ -1,6 +1,6 @@
 # Shape React Query Data in query.select
 
-**Impact: MEDIUM-HIGH (응답 가공을 쿼리에 모아 화면이 원본 구조에 의존하지 않게 합니다)**
+**Impact: MEDIUM (응답 가공을 쿼리에 모아 화면이 원본 구조에 의존하지 않게 합니다)**
 
 서버 응답은 `query.select`에서 도메인 필드로 가공하고, 화면에서는 그 결과를 렌더합니다.
 
@@ -21,4 +21,37 @@
 
 **Requires selected:** `docs-require-jsdoc-on-key-declarations` · 함께 적용
 
-> 예시·예외가 필요하면 [full rule](../rules/02-02-data-shape-query-data-with-select.md)을 읽습니다.
+**Incorrect (렌더에서 응답 원본 구조를 가공합니다):**
+
+```tsx
+const responseProductListSuspense = useProductListSuspense();
+
+<UiTable
+	rows={responseProductListSuspense.data.list.map((product) => ({
+		id: product.id,
+		label: product.title,
+	}))}
+/>;
+```
+
+**Correct (`query.select`에서 화면에 필요한 형태로 가공합니다):**
+
+```tsx
+/**
+ * 표가 그대로 쓰는 필드 이름으로 목록을 바꿔서 화면이 응답 구조를 모르게 한다
+ */
+const responseProductListSuspense = useProductListSuspense(
+	{},
+	{
+		query: {
+			select: (response) => ({
+				items: response.data.list.map((product) => ({id: product.id, label: product.title})),
+			}),
+		},
+	},
+);
+
+<UiTable rows={responseProductListSuspense.data.items} />;
+```
+
+> 나머지 예시·예외는 [full rule](../rules/02-02-data-shape-query-data-with-select.md)에 있습니다.

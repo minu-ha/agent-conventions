@@ -1,6 +1,6 @@
 # Place Project-wide Constants in the Root `constant` Folder
 
-**Impact: MEDIUM-HIGH (프로젝트 전반의 상수를 주제별로 모아 위치와 이름을 일관되게 유지합니다)**
+**Impact: MEDIUM (프로젝트 전반의 상수를 주제별로 모아 위치와 이름을 일관되게 유지합니다)**
 
 상수 위치는 사용처 수가 아니라 소유자로 정합니다.
 소유자를 지워도 남는 값은 루트에, 함께 사라지는 값은 그 소유자 아래에 둡니다.
@@ -27,4 +27,36 @@
 색인 객체는 수동 관리가 필요하고 번들러의 미사용 프로퍼티 제거도 어려워질 수 있습니다.
 `constant`에는 코드와 함께 바뀌는 값만 둡니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/02-01-naming-place-project-constants-in-the-root-constant-folder.md)을 읽습니다.
+**Incorrect (프로젝트 전반의 값을 쓰는 자리에서 선언합니다):**
+
+```ts
+// page/products/pg-products.tsx
+const default_page_size = 20;
+const request_timeout_ms = 20_000;
+
+const productClient = createClient({timeoutMs: request_timeout_ms});
+const productQuery = useProductQuery({client: productClient, pageSize: default_page_size});
+
+// page/billing/pg-billing.tsx
+const default_page_size = 20;
+
+const invoiceQuery = useInvoiceQuery({pageSize: default_page_size});
+```
+
+**Correct (루트 `constant` 폴더에 둔 이름을 쓰는 자리에서 가져옵니다):**
+
+```ts
+// page/products/pg-products.tsx
+import {api_request_timeout_ms} from "@/constant/api";
+import {pagination_default_page_size} from "@/constant/pagination";
+
+const productClient = createClient({timeoutMs: api_request_timeout_ms});
+const productQuery = useProductQuery({client: productClient, pageSize: pagination_default_page_size});
+
+// page/billing/pg-billing.tsx
+import {pagination_default_page_size} from "@/constant/pagination";
+
+const invoiceQuery = useInvoiceQuery({pageSize: pagination_default_page_size});
+```
+
+> 나머지 예시·예외는 [full rule](../rules/02-01-naming-place-project-constants-in-the-root-constant-folder.md)에 있습니다.

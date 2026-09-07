@@ -1,6 +1,6 @@
 # Use Direct Imports and Dedicated Public Entry Points
 
-**Impact: MEDIUM-HIGH (배럴이나 재노출 계층 없이 선언의 출처를 직접 확인할 수 있습니다)**
+**Impact: MEDIUM (배럴이나 재노출 계층 없이 선언의 출처를 직접 확인할 수 있습니다)**
 
 필요한 파일에서 직접 가져오고 선언 앞에 `export`를 붙여 이름으로 내보냅니다.
 `index.ts` 배럴이나 파일 끝의 `export {…}` 목록은 만들지 않습니다.
@@ -16,4 +16,18 @@
 경로 형식은 `naming-import-by-absolute-path`를 따릅니다.
 같은 경로라도 값·타입 가져오기를 바꾸면 이 규칙을 적용합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/02-04-naming-use-direct-imports-and-public-entry-points.md)을 읽습니다.
+**Incorrect (배럴과 섞인 가져오기로 경계를 흐립니다):**
+
+```ts
+import {pagination_default_page_size, toDisplayDate, UserProfile} from "./index";
+```
+
+**Correct (필요한 파일에서 이름으로 바로 가져옵니다):**
+
+```ts
+import type {UserProfile} from "@/type/user-profile";
+import {pagination_default_page_size} from "@/constant/pagination";
+import {toDisplayDate} from "@/util/date/to-display-date";
+```
+
+> 나머지 예시·예외는 [full rule](../rules/02-04-naming-use-direct-imports-and-public-entry-points.md)에 있습니다.

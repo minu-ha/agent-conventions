@@ -1,7 +1,7 @@
 ---
 title: Compose Classes With `clsx()`
 titleKo: 클래스는 `clsx()`로 조합합니다
-impact: LOW
+impact: MEDIUM
 impactDescription: 기본 클래스와 상태 수정자의 조합을 TSX에서 한눈에 읽을 수 있습니다
 appliesWhen:
   - TSX의 `className`을 추가·수정할 때
@@ -14,7 +14,7 @@ tags: clsx, tsx, className
 
 ## Compose Classes With `clsx()`
 
-**Impact: LOW (기본 클래스와 상태 수정자의 조합을 TSX에서 한눈에 읽을 수 있습니다)**
+**Impact: MEDIUM (기본 클래스와 상태 수정자의 조합을 TSX에서 한눈에 읽을 수 있습니다)**
 
 TSX의 `className`은 클래스가 하나여도 `clsx()`로 조합합니다.
 인자는 **기본 클래스 → 수정자 → 받은 `className`** 순서로 적습니다.

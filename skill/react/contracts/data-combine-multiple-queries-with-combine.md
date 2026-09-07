@@ -1,6 +1,6 @@
 # Combine Multiple Queries With `combine`
 
-**Impact: MEDIUM-HIGH (여러 응답의 가공 위치를 통일하고 화면 본문의 별칭을 줄입니다)**
+**Impact: MEDIUM (여러 응답의 가공 위치를 통일하고 화면 본문의 별칭을 줄입니다)**
 
 둘 이상의 쿼리 결과를 하나로 합칠 때는 값을 그리는 섹션에서 `combine`을 인라인으로 씁니다.
 결과를 합칠 필요와 요청을 병렬로 시작할 필요는 따로 판단합니다.
@@ -31,4 +31,44 @@ Suspense의 불필요한 대기 분기는 `runtime-avoid-ad-hoc-loading-branches
 실측 병목이 있을 때만 `perf-avoid-defensive-memoization`의 예외 기준을 따릅니다.
 반복 조회 인덱스는 `typescript/values-use-set-and-map-for-repeated-lookups`를 따릅니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/02-03-data-combine-multiple-queries-with-combine.md)을 읽습니다.
+**Incorrect (화면 본문에서 두 응답을 꺼내 합칩니다):**
+
+```tsx
+const responseProductListSuspense = useProductListSuspense();
+const responseCategoryListSuspense = useCategoryListSuspense();
+
+const rows = responseProductListSuspense.data.products.map((product) => ({
+	id: product.id,
+	categoryName: responseCategoryListSuspense.data.categories.find(
+		(category) => category.id === product.categoryId,
+	)?.name,
+}));
+```
+
+**Correct (값을 그리는 섹션이 인라인 `combine`으로 합칩니다):**
+
+```tsx
+export const PgProductTableSection = () => {
+	/**
+ * 분류 이름이 목록 응답에 없어서 표 한 행에 두 응답을 함께 담는다
+	 */
+	const responseProductRowsSuspense = useSuspenseQueries({
+		queries: [productListQueryOptions(), categoryListQueryOptions()],
+		combine: ([productResult, categoryResult]) => {
+			// 분류 응답의 id는 유일하다. 모든 행이 같은 분류 목록을 찾아 Map을 한 번 만든다
+			const categoryById = new Map(categoryResult.data.categories.map((category) => [category.id, category]));
+
+			return {
+				rows: productResult.data.products.map((product) => ({
+					id: product.id,
+					categoryName: categoryById.get(product.categoryId)?.name,
+				})),
+			};
+		},
+	});
+
+	return <UiTable rows={responseProductRowsSuspense.rows} />;
+};
+```
+
+> 나머지 예시·예외는 [full rule](../rules/02-03-data-combine-multiple-queries-with-combine.md)에 있습니다.

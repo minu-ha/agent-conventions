@@ -1,7 +1,7 @@
 ---
 title: Declare Each Class in One Block
 titleKo: 한 클래스의 선언은 한 블록에 모읍니다
-impact: MEDIUM-HIGH
+impact: MEDIUM
 impactDescription: 한 클래스의 선언을 한 블록에서 확인하고 수정합니다
 appliesWhen:
   - 이미 선언한 클래스에 스타일을 더 추가할 때
@@ -12,7 +12,7 @@ tags: selector, cascade, maintainability
 
 ## Declare Each Class in One Block
 
-**Impact: MEDIUM-HIGH (한 클래스의 선언을 한 블록에서 확인하고 수정합니다)**
+**Impact: MEDIUM (한 클래스의 선언을 한 블록에서 확인하고 수정합니다)**
 
 한 클래스의 선언은 파일 안 한 블록에 모읍니다. 같은 클래스를 여러 곳에서 다시 열어 선언 순서로 덮어쓰지 않습니다.
 

@@ -1,6 +1,6 @@
 # Name Types by Role and Lifetime
 
-**Impact: MEDIUM-HIGH (이름만 읽고 값이 무엇이며 어느 시점에 존재하는지 구분할 수 있습니다)**
+**Impact: MEDIUM (이름만 읽고 값이 무엇이며 어느 시점에 존재하는지 구분할 수 있습니다)**
 
 값의 역할과 수명을 판단한 뒤, 의미를 더하는 역할어만 붙입니다.
 도메인 명사로 충분하면 `ChartPoint`, `TableRow`처럼 씁니다.
@@ -33,4 +33,45 @@
 | 외부·생성된 계약 | 이름과 `DTO` 같은 접미사를 보존합니다. 내부 계약에는 이를 구별용 접미사로 붙이지 않습니다 |
 | `Props`, `Handle`, `Slot`, `Renderer` | 해당 프레임워크 규칙을 따릅니다 |
 
-> 예시·예외가 필요하면 [full rule](../rules/02-07-naming-name-types-by-role-and-lifetime.md)을 읽습니다.
+**Incorrect (소유자와 막연한 화면 계약 접미사를 반복합니다):**
+
+```ts
+/**
+ * 영업 보고서 화면 데이터
+ */
+interface SalesReportViewModel {
+	/**
+	 * 조회 시점의 행 목록
+	 */
+	rows: ReportRow[];
+	/**
+	 * 조회에 사용한 필터
+	 */
+	filters: ReportFilters;
+}
+
+const salesReportVM: SalesReportViewModel = response.data;
+```
+
+**Correct (한 조회 시점에 고정된 값이라는 역할을 이름에 표시합니다):**
+
+```ts
+// page/sales-report/_type/report-snapshot.ts: 폴더가 이미 sales-report 를 말한다
+/**
+ * 한 조회 시점의 보고서 목록과 조건
+ */
+interface ReportSnapshot {
+	/**
+	 * 조회 시점의 행 목록
+	 */
+	rows: ReportRow[];
+	/**
+	 * 조회에 사용한 필터
+	 */
+	filters: ReportFilters;
+}
+
+const reportSnapshot: ReportSnapshot = response.data;
+```
+
+> 나머지 예시·예외는 [full rule](../rules/02-07-naming-name-types-by-role-and-lifetime.md)에 있습니다.

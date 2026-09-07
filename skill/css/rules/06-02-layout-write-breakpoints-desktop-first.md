@@ -1,7 +1,7 @@
 ---
 title: Write Breakpoints Desktop First
 titleKo: 브레이크포인트는 데스크톱 퍼스트로 세 값만 씁니다
-impact: MEDIUM-HIGH
+impact: MEDIUM
 impactDescription: 넓은 화면부터 좁은 화면 순서로 덮어쓰고 프로젝트 전체에서 세 기준 폭을 공유합니다
 appliesWhen:
   - `@media` 조건을 쓰거나 브레이크포인트 숫자를 고를 때
@@ -13,7 +13,7 @@ tags: selector, responsive
 
 ## Write Breakpoints Desktop First
 
-**Impact: MEDIUM-HIGH (넓은 화면부터 좁은 화면 순서로 덮어쓰고 프로젝트 전체에서 세 기준 폭을 공유합니다)**
+**Impact: MEDIUM (넓은 화면부터 좁은 화면 순서로 덮어쓰고 프로젝트 전체에서 세 기준 폭을 공유합니다)**
 
 기본 선언은 `1440px` 이상인 가장 넓은 화면을 기준으로 하고, 좁아질 때만 덮어씁니다.
 브레이크포인트는 아래 순서로 쓰며 `(width >= ...)` 방향과 섞지 않습니다.

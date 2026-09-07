@@ -15,4 +15,45 @@
 즉시 계산하는 선언은 자기가 부르는 선언 뒤에 둡니다.
 컴포넌트 본문의 훅·핸들러·이펙트 순서는 프레임워크 컨벤션이 정합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/03-05-functions-order-declarations-top-down.md)을 읽습니다.
+**Incorrect (내보낸 계약 타입이 함수 아래에 있어 시그니처를 읽으려면 파일을 끝까지 내려가야 합니다):**
+
+```ts
+// page/report/_function/to-summary-rows.ts
+export const toSummaryRows = (params: ToSummaryRowsParams): SummaryRow[] => {
+	return params.response.items.map((item) => ({id: item.id, label: item.name.trim() || item.code}));
+};
+
+/**
+ * 요약 표 행을 만들 때 필요한 입력
+ */
+export interface ToSummaryRowsParams {
+	/**
+	 * 요약 조회 응답
+	 */
+	response: SalesSummaryResponse;
+}
+```
+
+**Correct (내보낸 계약 타입이 먼저, 그 계약을 받는 함수가 바로 아래에 옵니다):**
+
+```ts
+// page/report/_function/to-summary-rows.ts
+/**
+ * 요약 표 행을 만들 때 필요한 입력
+ */
+export interface ToSummaryRowsParams {
+	/**
+	 * 요약 조회 응답
+	 */
+	response: SalesSummaryResponse;
+}
+
+/**
+ * 요약 표가 그리는 행 목록. 이름이 비면 코드로 표시한다
+ */
+export const toSummaryRows = (params: ToSummaryRowsParams): SummaryRow[] => {
+	return params.response.items.map((item) => ({id: item.id, label: item.name.trim() || item.code}));
+};
+```
+
+> 나머지 예시·예외는 [full rule](../rules/03-05-functions-order-declarations-top-down.md)에 있습니다.

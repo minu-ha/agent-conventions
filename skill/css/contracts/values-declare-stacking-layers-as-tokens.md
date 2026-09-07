@@ -1,6 +1,6 @@
 # Declare Stacking Layers as Tokens in One Place
 
-**Impact: MEDIUM-HIGH (층 순서를 한 파일에서 확인하고 `z-index` 숫자를 임의로 늘리지 않습니다)**
+**Impact: MEDIUM (층 순서를 한 파일에서 확인하고 `z-index` 숫자를 임의로 늘리지 않습니다)**
 
 층은 전역 토큰 파일에 한 번 선언하고 `z-index`에서는 토큰 이름만 씁니다.
 `layout-keep-layout-intent-explicit`에 따라 숫자를 직접 쓰거나 사용처에서 층 사이 값을 만들지 않습니다.
@@ -32,4 +32,45 @@
 
 숫자를 올리기 전에 조상부터 확인합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/05-03-values-declare-stacking-layers-as-tokens.md)을 읽습니다.
+**Incorrect (숫자를 직접 쓰고 경쟁으로 올립니다):**
+
+```css
+/* src/page/products/pg-products.css */
+.pg_products__toolbar {
+	position: sticky;
+	z-index: 10;
+}
+
+/* src/component/widget/product-filter/wg-product-filter.css */
+.wg_productFilter__dropdown {
+	position: absolute;
+	z-index: 11;
+}
+```
+
+**Correct (층 토큰만 씁니다):**
+
+```css
+/* src/style/token.css */
+:root {
+	--app-z-index-base: 0;
+	--app-z-index-sticky: 100;
+	--app-z-index-overlay: 200;
+	--app-z-index-popper: 300;
+}
+
+/* src/page/products/pg-products.css */
+.pg_products__toolbar {
+	/* 페이지 스크롤 컨테이너에 붙는다. 드롭다운이 이 쌓임 맥락을 벗어나야 하면 포털 대상을 밖에 둔다 */
+	position: sticky;
+	z-index: var(--app-z-index-sticky);
+}
+
+/* src/component/widget/product-filter/wg-product-filter.css */
+.wg_productFilter__dropdown {
+	position: absolute;
+	z-index: var(--app-z-index-popper);
+}
+```
+
+> 나머지 예시·예외는 [full rule](../rules/05-03-values-declare-stacking-layers-as-tokens.md)에 있습니다.

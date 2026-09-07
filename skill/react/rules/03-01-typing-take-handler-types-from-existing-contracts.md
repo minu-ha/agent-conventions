@@ -1,7 +1,7 @@
 ---
 title: Take React Handler and Wrapper Prop Types From Existing Contracts
 titleKo: 핸들러와 래퍼 프롭스 타입은 기존 계약에서 가져옵니다
-impact: MEDIUM-HIGH
+impact: MEDIUM
 impactDescription: 같은 시그니처를 직접 다시 적어 생기는 계약 불일치를 막습니다
 appliesWhen:
   - 커링 팩토리가 돌려주는 리액트 핸들러의 타입을 정할 때
@@ -13,7 +13,7 @@ tags: typing, handlers, props
 
 ## Take React Handler and Wrapper Prop Types From Existing Contracts
 
-**Impact: MEDIUM-HIGH (같은 시그니처를 직접 다시 적어 생기는 계약 불일치를 막습니다)**
+**Impact: MEDIUM (같은 시그니처를 직접 다시 적어 생기는 계약 불일치를 막습니다)**
 
 리액트 핸들러와 래퍼 프롭스의 타입은 기존 계약에서 가져옵니다.
 타입을 붙이는 기본 위치는 `typescript/types-prefer-function-variable-types-over-parameter-annotations`를 따릅니다.

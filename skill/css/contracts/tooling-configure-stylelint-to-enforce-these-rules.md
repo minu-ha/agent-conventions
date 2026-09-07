@@ -33,4 +33,130 @@
 | 우리 마크업의 구조 선택자 | `:first-child`, `:nth-child()`는 클래스에도 붙으므로 표기만으로 구분하지 못합니다 |
 | 역할 이름, 승격 판단, 변형 노출, 포커스 대비 | 리뷰에서 의미를 확인합니다 |
 
-> 예시·예외가 필요하면 [full rule](../rules/08-01-tooling-configure-stylelint-to-enforce-these-rules.md)을 읽습니다.
+**Incorrect (`stylelint-config-standard`의 기본 클래스 패턴을 그대로 씁니다):**
+
+```js
+export default {
+	extends: ["stylelint-config-standard"],
+};
+```
+
+**Incorrect (결합자 개수로 깊이를 막으려 합니다):**
+
+```js
+export default {
+	extends: ["stylelint-config-standard"],
+	rules: {
+		// .ant-table-thead > tr > th 같은 라이브러리 DOM 을 잡아 예외 주석만 늘어난다
+		"selector-max-combinators": 1,
+	},
+};
+```
+
+**Correct (공통 규칙에 디렉터리별 접두사 `overrides`를 더합니다):**
+
+```js
+/**
+ * 우리 클래스만 문법을 강제한다.
+ * 우리 접두사로 시작하지 않는 클래스는 남의 것이라 검사 대상이 아니다.
+ */
+const ownClassPattern = (scope) =>
+	[
+		"^(?:",
+		// 우리 접두사로 시작하지 않는 클래스는 통과시킨다
+		`(?!${scope}_).*`,
+		"|",
+		// pg_scopeSlug__element 또는 pg_scopeSlug__element--modifier만 통과시킨다
+		`${scope}_[a-z][a-zA-Z0-9]*__[a-z][a-zA-Z0-9]*(?:--[a-z][a-zA-Z0-9]*)?`,
+		")$",
+	].join("");
+
+/**
+ * 우리가 이름을 정하지 않는 라이브러리 클래스
+ */
+const libraryPrefixes = [/^\.ant-/, /^\.rc-/, /^\.tippy-/, /^\.Mui/];
+
+/**
+ * 우리가 마크업을 쓰는 자리에서 금지되는 형태
+ */
+const ownMarkupPatterns = [
+	// 상태 pseudo-class를 top-level 선택자로 다시 여는 것
+	/^\.[\w-]+:(hover|focus|focus-visible|focus-within|active|enabled|disabled|checked|visited)/,
+	// 중첩 안에서 element 선택자로 우리 마크업을 잡는 것.
+	// 우리가 쓰지 않는 마크업은 stylelint-disable 주석으로 예외를 표시한다
+	/^&\s*[>+~]?\s*[a-z]/,
+];
+
+const disallowed = (foreignScopes) => [
+	[...foreignScopes, ...libraryPrefixes, ...ownMarkupPatterns],
+	{splitList: true},
+];
+
+export default {
+	extends: ["stylelint-config-standard"],
+	rules: {
+		// 최상위 @media 안의 클래스가 깊이 0 이 되게 한다. 브레이크포인트 안에서 상태를 한 겹 더 쓸 수 있다
+		"max-nesting-depth": [1, {ignoreAtRules: ["media", "supports", "container"]}],
+		// @keyframes 이름은 전역이라 소유자를 붙인다. 하이픈은 클래스 --수정자 표기와 섞이니 쓰지 않는다
+		"keyframes-name-pattern": "^(pg|wg|ui)_[a-z][a-zA-Z0-9]*__[a-z][a-zA-Z0-9]*$",
+		// 쉼표 목록에 든 선택자를 아래에서 단독으로 다시 여는 것까지 잡는다
+		"no-duplicate-selectors": [true, {disallowInList: true}],
+		// 움직임 줄이기 전역 처리 외에는 쓰지 않는다
+		"declaration-no-important": true,
+		// 지역 변수 선언을 막는다. var() 소비는 걸리지 않는다
+		"property-disallowed-list": ["/^--/"],
+		// 우리 마크업의 상태는 수정자로 표현한다.
+		// 라이브러리가 상태를 data-* 로 내는 경우가 있어 우리 접두사만 막는다
+		"selector-attribute-name-disallowed-list": [/^aria-/, /^data-(pg|wg|ui)-/],
+		"selector-max-id": 0,
+		// 부정 조건은 기본 블록으로 뒤집는다. 남의 마크업만 stylelint-disable 로 연다
+		"selector-pseudo-class-disallowed-list": ["not"],
+	},
+	overrides: [
+		{
+			files: ["src/page/**/*.css"],
+			rules: {
+				"selector-class-pattern": ownClassPattern("pg"),
+				"selector-disallowed-list": disallowed([/^\.(wg|ui)_/]),
+			},
+		},
+		{
+			files: ["src/component/widget/**/*.css"],
+			rules: {
+				"selector-class-pattern": ownClassPattern("wg"),
+				"selector-disallowed-list": disallowed([/^\.(pg|ui)_/]),
+			},
+		},
+		{
+			files: ["src/component/ui/**/*.css"],
+			rules: {
+				"selector-class-pattern": ownClassPattern("ui"),
+				"selector-disallowed-list": disallowed([/^\.(pg|wg)_/]),
+			},
+		},
+		{
+			// 전역 스타일시트는 우리 클래스 문법 대상이 아니다
+			files: ["src/style/**/*.css", "src/*.css"],
+			rules: {
+				"selector-class-pattern": null,
+				"keyframes-name-pattern": null,
+				"property-disallowed-list": null,
+				// 움직임 줄이기 전역 처리는 여기서만 한다
+				"declaration-no-important": null,
+			},
+		},
+		{
+			// 전역 토큰 파일만 이름을 강제한다
+			files: ["src/style/token.css"],
+			rules: {
+				"selector-class-pattern": null,
+				"property-disallowed-list": null,
+				// var() 사용까지 검사하므로 외부 변수를 소비하는 파일에는 쓰지 않는다
+				"custom-property-pattern": "^app-[a-z0-9-]+$",
+			},
+		},
+	],
+};
+```
+
+> 나머지 예시·예외는 [full rule](../rules/08-01-tooling-configure-stylelint-to-enforce-these-rules.md)에 있습니다.

@@ -43,4 +43,37 @@
 `handle`·`use`는 프레임워크 규칙을 따릅니다.
 생성기·프레임워크·외부 계약이 정한 이름과 `Promise`의 `resolve`·`reject`는 바꾸거나 감싸지 않습니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/03-09-functions-name-functions-by-what-comes-out.md)을 읽습니다.
+**Incorrect (입력·구현 동작·막연한 접미사를 이름에 씁니다):**
+
+```ts
+export const buildUserPayload = (formValues: UserFormValues) => { /* … */ };
+export const mapResponseToModel = (response: UserResponse) => { /* … */ };
+export const processUserRows = (rows: UserRow[]) => { /* … */ };
+export const resolveGradeTone = (grade: string) => { /* … */ };
+```
+
+**Correct (출력 역할이나 효과를 이름에 씁니다):**
+
+```ts
+/**
+ * 사용자 저장 요청 조립. 서버가 빈 문자열을 거부해 비운 칸은 넣지 않는다
+ */
+export const toUserSaveRequest = (formValues: UserFormValues) => { /* … */ };
+
+/**
+ * 응답 한 건을 표 행으로 바꾼다
+ */
+export const toUserRows = (response: UserResponse) => { /* … */ };
+
+/**
+ * 비활성 사용자를 제외한 목록
+ */
+export const toActiveUsers = (rows: UserRow[]) => { /* … */ };
+
+/**
+ * 등급 문자열을 강조 tone으로 분류한다
+ */
+export const toGradeTone = (grade: string) => { /* … */ };
+```
+
+> 나머지 예시·예외는 [full rule](../rules/03-09-functions-name-functions-by-what-comes-out.md)에 있습니다.

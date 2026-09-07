@@ -1,7 +1,7 @@
 ---
 title: Use useEffectEvent for Non-reactive Effect Callbacks
 titleKo: 비반응형 이펙트 콜백은 `useEffectEvent`로 분리합니다
-impact: MEDIUM-HIGH
+impact: MEDIUM
 impactDescription: 콜백은 최신 값을 읽고 이펙트는 구독 조건의 변화에만 반응합니다
 appliesWhen:
   - 구독 이펙트가 최신 프롭·상태 콜백을 읽어야 할 때
@@ -14,7 +14,7 @@ tags: state, effects
 
 ## Use useEffectEvent for Non-reactive Effect Callbacks
 
-**Impact: MEDIUM-HIGH (콜백은 최신 값을 읽고 이펙트는 구독 조건의 변화에만 반응합니다)**
+**Impact: MEDIUM (콜백은 최신 값을 읽고 이펙트는 구독 조건의 변화에만 반응합니다)**
 
 구독 이펙트의 콜백이 최신 프롭스·상태를 읽되 그 값 때문에 재구독할 필요가 없다면 `useEffectEvent`를 씁니다.
 연결 대상·구독 조건처럼 바뀌면 재설치해야 하는 값은 이펙트 의존성에 남깁니다.

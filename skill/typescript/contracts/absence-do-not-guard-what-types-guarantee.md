@@ -24,4 +24,24 @@
 
 없는 값을 무엇으로 대체할지는 `absence-expose-optional-values-instead-of-silent-fallbacks`가 정합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/05-03-absence-do-not-guard-what-types-guarantee.md)을 읽습니다.
+**Incorrect (타입이 `string`으로 보장한 값을 다시 검사합니다):**
+
+```ts
+const toRowLabel = (row: ProductRow): string => {
+	if (isNil(row.name)) {
+		return row.code;
+	}
+
+	return row.name.trim();
+};
+```
+
+**Correct (타입이 보장하는 조건은 다시 검사하지 않습니다):**
+
+```ts
+const toRowLabel = (row: ProductRow): string => {
+	return row.name.trim();
+};
+```
+
+> 나머지 예시·예외는 [full rule](../rules/05-03-absence-do-not-guard-what-types-guarantee.md)에 있습니다.

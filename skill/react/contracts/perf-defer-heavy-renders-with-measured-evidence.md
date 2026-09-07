@@ -26,4 +26,34 @@
 `useDeferredValue`는 고정 지연 시간이 없고 요청 횟수를 줄이는 디바운스도 아닙니다.
 긴 동기 계산 하나는 실행 도중 중단되지 않으므로 렌더 지연만으로 입력 지연이 사라진다고 가정하지 않습니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/10-03-perf-defer-heavy-renders-with-measured-evidence.md)을 읽습니다.
+**Incorrect (행 20개 목록을 다시 그리는 갱신까지 트랜지션으로 감쌉니다):**
+
+```tsx
+const [selectedTagId, setSelectedTagId] = useState("all");
+const tagRows = responseTagListSuspense.data.tags.slice(0, 20);
+
+const handleTagClick = (nextTagId: string) => {
+	startTransition(() => {
+		setSelectedTagId(nextTagId);
+	});
+};
+
+return <UiTagRows rows={tagRows} selectedTagId={selectedTagId} />;
+```
+
+**Correct (측정 근거가 있는 갱신만 트랜지션으로 감싸고 행 20개 목록은 그대로 둡니다):**
+
+```tsx
+const handleTagClick = (nextTagId: string) => {
+	setSelectedTagId(nextTagId);
+};
+
+const handleStatusFilterChange = (nextStatus: ProductStatusFilter) => {
+	// 행 12,000개에서 필터 전환에 320ms가 걸려 클릭이 밀렸다.
+	startTransition(() => {
+		setStatusFilter(nextStatus);
+	});
+};
+```
+
+> 나머지 예시·예외는 [full rule](../rules/10-03-perf-defer-heavy-renders-with-measured-evidence.md)에 있습니다.

@@ -37,4 +37,78 @@ Biome 2.5.7의 `recommended`에는 `useConst`·`useImportType`·`noNonNullAssert
 | 도구 설정 파일의 `noDefaultExport` 해제 | `vite.config.ts`처럼 도구가 `default`를 요구하는 진입점에 적용합니다. 내보내기 규칙의 예외를 설정에 반영합니다 |
 | `style/useFragmentSyntax` 비활성 | `recommended`에 없으며 별도로 켜지 않습니다. 프레임워크 규칙이 `<Fragment>`를 요구합니다 |
 
-> 예시·예외가 필요하면 [full rule](../rules/07-01-tooling-configure-biome-to-enforce-these-rules.md)을 읽습니다.
+**Incorrect (`recommended`만 켜고 컨벤션 항목을 리뷰에 맡깁니다):**
+
+```json
+{
+	"linter": {
+		"enabled": true,
+		"rules": {"preset": "recommended"}
+	}
+}
+```
+
+**Correct (컨벤션 항목을 설정으로 고정합니다):**
+
+```json
+{
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"preset": "recommended",
+			"complexity": {"useMaxParams": {"level": "error", "options": {"max": 3}}},
+			"correctness": {"noUnusedFunctionParameters": "error"},
+			"suspicious": {"noExplicitAny": "error"},
+			"performance": {"noNamespaceImport": "error", "noBarrelFile": "error", "noReExportAll": "error"},
+			"style": {
+				"noDefaultExport": "error",
+				"noEnum": "error",
+				"noMagicNumbers": "error",
+				"noNestedTernary": "error",
+				"useAsConstAssertion": "error",
+				"noNonNullAssertion": "error",
+				"noParameterAssign": "error",
+				"useConst": "error",
+				"useImportType": "error",
+				"useFilenamingConvention": {
+					"level": "error",
+					"options": {"filenameCases": ["kebab-case"]}
+				},
+				"noRestrictedImports": {
+					"level": "error",
+					"options": {
+						"patterns": [
+							{"group": ["../**", "./**", "!./*.css"], "message": "가져오기는 절대경로로 씁니다. 심볼 없이 파일만 불러오는 줄만 같은 폴더를 ./ 로 씁니다."}
+						]
+					}
+				},
+				"useNamingConvention": {
+					"level": "error",
+					"options": {
+						"strictCase": false,
+						"conventions": [
+							{"selector": {"kind": "typeLike"}, "formats": ["PascalCase"]},
+							{"selector": {"kind": "const", "scope": "global"}, "formats": ["camelCase", "PascalCase", "snake_case"]},
+							{"selector": {"kind": "objectLiteralProperty"}, "formats": ["camelCase", "PascalCase", "snake_case"]},
+							{"selector": {"kind": "typeProperty"}, "formats": ["camelCase"]},
+							{"selector": {"kind": "variable"}, "formats": ["camelCase", "PascalCase"]}
+						]
+					}
+				}
+			}
+		}
+	},
+	"overrides": [
+		{
+			"includes": ["**/*.test.ts"],
+			"linter": {"rules": {"style": {"noMagicNumbers": "off"}}}
+		},
+		{
+			"includes": ["**/*.config.ts", "**/*.config.js"],
+			"linter": {"rules": {"style": {"noDefaultExport": "off"}}}
+		}
+	]
+}
+```
+
+> 나머지 예시·예외는 [full rule](../rules/07-01-tooling-configure-biome-to-enforce-these-rules.md)에 있습니다.

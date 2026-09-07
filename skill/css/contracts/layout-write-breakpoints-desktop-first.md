@@ -1,6 +1,6 @@
 # Write Breakpoints Desktop First
 
-**Impact: MEDIUM-HIGH (넓은 화면부터 좁은 화면 순서로 덮어쓰고 프로젝트 전체에서 세 기준 폭을 공유합니다)**
+**Impact: MEDIUM (넓은 화면부터 좁은 화면 순서로 덮어쓰고 프로젝트 전체에서 세 기준 폭을 공유합니다)**
 
 기본 선언은 `1440px` 이상인 가장 넓은 화면을 기준으로 하고, 좁아질 때만 덮어씁니다.
 브레이크포인트는 아래 순서로 쓰며 `(width >= ...)` 방향과 섞지 않습니다.
@@ -22,4 +22,46 @@
 `@media` 조건에는 `var()`를 쓸 수 없으므로 이 숫자를 토큰으로 만들지 않습니다.
 블록 위치는 `layout-group-breakpoints-at-the-file-bottom` 규칙을 따릅니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/06-02-layout-write-breakpoints-desktop-first.md)을 읽습니다.
+**Incorrect (기본 선언을 중간 폭에 맞추고 넓고 좁은 방향을 함께 씁니다):**
+
+```css
+.pg_products__layout {
+	display: grid;
+	grid-template-columns: 220px 1fr;
+}
+
+@media (width >= 1440px) {
+	.pg_products__layout {
+		grid-template-columns: 280px 1fr;
+	}
+}
+
+@media (width < 1024px) {
+	.pg_products__layout {
+		grid-template-columns: 1fr;
+	}
+}
+```
+
+**Correct (기본 선언은 가장 넓은 화면에 맞추고 좁아질 때만 덮어씁니다):**
+
+```css
+.pg_products__layout {
+	display: grid;
+	grid-template-columns: 280px 1fr;
+}
+
+@media (width < 1440px) {
+	.pg_products__layout {
+		grid-template-columns: 220px 1fr;
+	}
+}
+
+@media (width < 1024px) {
+	.pg_products__layout {
+		grid-template-columns: 1fr;
+	}
+}
+```
+
+> 나머지 예시·예외는 [full rule](../rules/06-02-layout-write-breakpoints-desktop-first.md)에 있습니다.

@@ -1,6 +1,6 @@
 # Reuse Existing Contracts Before Declaring New Types
 
-**Impact: MEDIUM-HIGH (뜻이 그대로면 기존 타입이나 스키마를 그대로 참조해 같은 형태를 두 번 선언하지 않습니다)**
+**Impact: MEDIUM (뜻이 그대로면 기존 타입이나 스키마를 그대로 참조해 같은 형태를 두 번 선언하지 않습니다)**
 
 새 타입을 적기 전에 뜻과 수명이 같은 기존 타입이나 스키마를 먼저 찾습니다.
 필드 이름, 타입, 선택 여부, 읽기 전용 여부까지 같으면 그 계약을 그대로 참조합니다.
@@ -23,4 +23,28 @@
 
 규칙을 적용하려고 요청에 없는 `*Params`나 `*Input`을 만들지 않습니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/01-01-types-reuse-existing-contracts-before-new-types.md)을 읽습니다.
+**Incorrect (기존 계약과 같은 구조를 다시 선언합니다):**
+
+```ts
+// 이미 있는 계약: UserRecord { id: string; name: string; email: string }
+// 필드 이름, 타입, 선택 여부가 그대로인데 새로 선언했다
+interface InviteRecipient {
+	id: string;
+	name: string;
+	email: string;
+}
+
+export const sendInvites = (recipients: InviteRecipient[]): Promise<void> => { /* … */ };
+```
+
+**Correct (형태가 같으면 기존 계약을 그대로 참조합니다):**
+
+```ts
+// 이미 있는 계약: UserRecord { id: string; name: string; email: string }
+/**
+ * 초대 대상은 사용자 레코드 그대로다. 필드가 같아 따로 선언하지 않는다
+ */
+export const sendInvites = (recipients: UserRecord[]): Promise<void> => { /* … */ };
+```
+
+> 나머지 예시·예외는 [full rule](../rules/01-01-types-reuse-existing-contracts-before-new-types.md)에 있습니다.

@@ -1,6 +1,6 @@
 # Handle Dates With dayjs
 
-**Impact: MEDIUM-HIGH (날짜의 단위와 타임존을 드러내고 파싱과 표시 형식을 일관되게 유지합니다)**
+**Impact: MEDIUM (날짜의 단위와 타임존을 드러내고 파싱과 표시 형식을 일관되게 유지합니다)**
 
 날짜는 `dayjs`로 다루고, `moment`는 새로 들이지 않습니다.
 계산 단위, 입력 형식, 표시 타임존을 계약에 맞게 구분합니다.
@@ -25,4 +25,24 @@
 형식 문자열은 상수로 선언하며 입력 형식과 화면 표시 형식은 별도 상수로 둡니다.
 배치는 `naming-place-project-constants-in-the-root-constant-folder`를 따릅니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/04-07-values-handle-dates-with-dayjs.md)을 읽습니다.
+**Incorrect (정해진 경과 시간을 밀리초로 더하고 자릿수를 손으로 채웁니다):**
+
+```ts
+// 만료 계약은 발급 시점으로부터 정확히 token_expiry_hours시간 뒤다
+const expiresAt = new Date(issuedAt.getTime() + token_expiry_hours * 60 * 60 * 1000);
+const expiresLabel = `${expiresAt.getFullYear()}.${toPaddedDatePart(expiresAt.getMonth() + 1)}`;
+```
+
+**Correct (더하기와 형식은 `dayjs`, 형식 문자열은 상수로 둡니다):**
+
+```ts
+import dayjs from "dayjs";
+
+import {date_expiry_month_format} from "@/constant/date";
+
+// date_expiry_month_format은 원래 표시와 같은 YYYY.MM 형식이다
+const expiresAt = dayjs(issuedAt).add(token_expiry_hours, "hour");
+const expiresLabel = expiresAt.format(date_expiry_month_format);
+```
+
+> 나머지 예시·예외는 [full rule](../rules/04-07-values-handle-dates-with-dayjs.md)에 있습니다.

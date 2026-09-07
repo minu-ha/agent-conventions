@@ -18,4 +18,27 @@
 
 **Requires selected:** `typescript/naming-place-owner-constants-in-the-owner-constant-folder` · 함께 적용
 
-> 예시·예외가 필요하면 [full rule](../rules/08-06-state-name-url-state-bindings-as-a-set.md)을 읽습니다.
+**Incorrect (파서 묶음의 역할이 이름에 드러나지 않습니다):**
+
+```ts
+// page/products/_constant/product-search.ts
+export const productSearch = {
+	page: parseAsInteger.withDefault(pagination_default_page),
+	keyword: parseAsString,
+};
+```
+
+**Correct (파서 묶음은 `<범위>UrlParsers`로 소유자 `_constant` 폴더에 둡니다):**
+
+```ts
+// page/products/_constant/product-url-parsers.ts
+/**
+ * product 목록 화면이 주소에 올린 상태의 파서 묶음
+ */
+export const productUrlParsers = {
+	page: parseAsInteger.withDefault(pagination_default_page),
+	keyword: parseAsString,
+};
+```
+
+> 나머지 예시·예외는 [full rule](../rules/08-06-state-name-url-state-bindings-as-a-set.md)에 있습니다.

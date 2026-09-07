@@ -17,4 +17,45 @@
 | 쉼표 목록의 선택자를 아래에서 단독으로 다시 선언함 | `no-duplicate-selectors`의 `disallowInList` 옵션 |
 | 중복 없이 쉼표로 묶기만 함 | 리뷰. 기계 검사는 묶음 자체를 막지 않습니다 |
 
-> 예시·예외가 필요하면 [full rule](../rules/04-03-selector-do-not-group-classes-with-commas.md)을 읽습니다.
+**Incorrect (`,`로 공통 선언을 묶고 아래에서 일부만 다시 엽니다):**
+
+```css
+.pg_salesPanel__glyph--line,
+.pg_salesPanel__glyph--dashed,
+.pg_salesPanel__glyph--pin,
+.pg_salesPanel__glyph--band {
+	width: 24px;
+	height: 24px;
+}
+
+.pg_salesPanel__glyph--band {
+	background: rgb(140 152 160 / 12%);
+}
+```
+
+**Correct (각 클래스가 자기 선언을 전부 가집니다):**
+
+```css
+.pg_salesPanel__glyph--line {
+	width: 24px;
+	height: 24px;
+}
+
+.pg_salesPanel__glyph--dashed {
+	width: 24px;
+	height: 24px;
+}
+
+.pg_salesPanel__glyph--pin {
+	width: 24px;
+	height: 24px;
+}
+
+.pg_salesPanel__glyph--band {
+	width: 24px;
+	height: 24px;
+	background: rgb(140 152 160 / 12%);
+}
+```
+
+> 나머지 예시·예외는 [full rule](../rules/04-03-selector-do-not-group-classes-with-commas.md)에 있습니다.

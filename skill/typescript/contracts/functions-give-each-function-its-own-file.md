@@ -1,6 +1,6 @@
 # Give Each Support Function Its Own File
 
-**Impact: MEDIUM-HIGH (보조 함수를 개별 파일로 관리하고 폴더로 소유 관계를 드러냅니다)**
+**Impact: MEDIUM (보조 함수를 개별 파일로 관리하고 폴더로 소유 관계를 드러냅니다)**
 
 보조 함수에 이름을 붙일지는 `functions-extract-helpers-only-when-the-boundary-is-real`이 판단합니다.
 이름을 붙였다면 함수마다 파일을 하나 두고, 부르는 대표 함수에 따라 배치합니다.
@@ -26,4 +26,33 @@
 
 **Requires selected:** `functions-extract-helpers-only-when-the-boundary-is-real` · 함께 적용
 
-> 예시·예외가 필요하면 [full rule](../rules/03-04-functions-give-each-function-its-own-file.md)을 읽습니다.
+**Incorrect (여러 보조를 모은 파일에서 내보낸 함수가 세 단계로 이어집니다):**
+
+```ts
+// utils.ts
+export const toTrimmedTitle = (title: string) => {
+	return title.trim();
+};
+
+export const toProductPayload = (values: ProductFormValues) => {
+	return {title: toTrimmedTitle(values.title)};
+};
+
+export const toProductSaveRequest = (values: ProductFormValues) => {
+	return {body: toProductPayload(values)};
+};
+```
+
+**Correct (소유자 아래 대표 함수 하나에 파일 하나를 둡니다):**
+
+```ts
+// page/product-form/_function/to-product-save-request.ts
+/**
+ * product 저장 요청 조립. 서버가 앞뒤 공백이 붙은 title을 거부한다
+ */
+export const toProductSaveRequest = (values: ProductFormValues) => {
+	return {body: {title: values.title.trim()}};
+};
+```
+
+> 나머지 예시·예외는 [full rule](../rules/03-04-functions-give-each-function-its-own-file.md)에 있습니다.

@@ -1,6 +1,6 @@
 # Use Scope, Slug, Element, and Modifier Syntax
 
-**Impact: MEDIUM-HIGH (클래스명에서 소유자와 역할을 확인할 수 있습니다)**
+**Impact: MEDIUM (클래스명에서 소유자와 역할을 확인할 수 있습니다)**
 
 클래스명은 `<scope>_<slug>__<element>[--<modifier>]` 문법을 씁니다.
 구분자 `_`, `__`, `--`를 고정하고 각 자리의 역할을 구분합니다.
@@ -18,4 +18,29 @@
 `UiButton`은 `ui_button`으로 쓰고 `ui_uiButton`으로 쓰지 않습니다.
 기계 검증은 이 문법을 정규식으로 등록한 `selector-class-pattern`이 담당합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/01-02-naming-use-scope-slug-element-modifier-syntax.md)을 읽습니다.
+**Incorrect (식별자, 요소, 수정자에 snake_case와 kebab-case가 섞입니다):**
+
+```txt
+ui_uiButton__root
+ui_tag_list__root
+ui_tagList__list-item
+wg_site_header__root
+wg_siteHeader__brand-link
+pg_catalog_detail__root
+pg_catalogDetail__main-content
+pg_catalogDetail__main--route_active
+```
+
+**Correct (범위는 소문자로 쓰고 식별자, 요소, 수정자는 camelCase로 씁니다):**
+
+```txt
+ui_tagList__root
+ui_tagList__listItem
+wg_siteHeader__root
+wg_siteHeader__brandLink
+pg_catalogDetail__root
+pg_catalogDetail__mainContent
+pg_catalogDetail__main--routeActive
+```
+
+> 나머지 예시·예외는 [full rule](../rules/01-02-naming-use-scope-slug-element-modifier-syntax.md)에 있습니다.

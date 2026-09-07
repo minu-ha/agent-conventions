@@ -25,4 +25,20 @@
 `groupBy`·`keyBy`는 목록을 재구성할 때 씁니다.
 목록 연산의 선택은 `values-use-es-toolkit-for-value-helpers`가 정합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/04-02-values-use-set-and-map-for-repeated-lookups.md)을 읽습니다.
+**Incorrect (같은 배열을 반복 순회하며 포함 여부를 확인합니다):**
+
+```ts
+const visibleProducts = products.filter((product) => allowedProductIds.includes(product.id));
+const disabledProducts = archivedProducts.filter((product) => allowedProductIds.includes(product.id));
+```
+
+**Correct (반복 조회는 `Set`으로 처리합니다):**
+
+```ts
+const allowedProductIdSet = new Set(allowedProductIds);
+
+const visibleProducts = products.filter((product) => allowedProductIdSet.has(product.id));
+const disabledProducts = archivedProducts.filter((product) => allowedProductIdSet.has(product.id));
+```
+
+> 나머지 예시·예외는 [full rule](../rules/04-02-values-use-set-and-map-for-repeated-lookups.md)에 있습니다.

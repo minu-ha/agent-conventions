@@ -20,4 +20,34 @@
 
 **Requires selected:** `typescript/docs-require-header-jsdoc-on-key-declarations` · 함께 적용
 
-> 예시·예외가 필요하면 [full rule](../rules/12-01-docs-require-jsdoc-on-key-declarations.md)을 읽습니다.
+**Incorrect (주요 경계 선언에 의도 설명이 없습니다):**
+
+```ts
+const handleBackButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => {
+	void navigate("/products");
+};
+
+useEffect(() => {
+	return subscribeToProductChanges(watchedProductIds);
+}, [watchedProductIds]);
+```
+
+**Correct (선언 의도를 바로 위에 여러 줄 블록으로 적습니다):**
+
+```ts
+/**
+ * 저장하지 않고 목록으로 돌아간다. 입력 중인 값은 버린다
+ */
+const handleBackButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => {
+	void navigate("/products");
+};
+
+/**
+ * 표에 보이는 product 의 변경 알림을 구독한다. 목록이 바뀌면 다시 구독한다
+ */
+useEffect(() => {
+	return subscribeToProductChanges(watchedProductIds);
+}, [watchedProductIds]);
+```
+
+> 나머지 예시·예외는 [full rule](../rules/12-01-docs-require-jsdoc-on-key-declarations.md)에 있습니다.

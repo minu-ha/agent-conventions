@@ -1,7 +1,7 @@
 ---
 title: Keep Classes Single-purpose
 titleKo: 기본 스타일과 상태를 한 클래스에 섞지 않습니다
-impact: MEDIUM-HIGH
+impact: MEDIUM
 impactDescription: 기본 스타일과 상태를 분리해 상태만 켜고 끌 수 있습니다
 appliesWhen:
   - 상태를 나타내는 낱말이 들어간 요소 클래스 이름을 추가·변경할 때
@@ -12,7 +12,7 @@ tags: composition, modifiers, responsibility
 
 ## Keep Classes Single-purpose
 
-**Impact: MEDIUM-HIGH (기본 스타일과 상태를 분리해 상태만 켜고 끌 수 있습니다)**
+**Impact: MEDIUM (기본 스타일과 상태를 분리해 상태만 켜고 끌 수 있습니다)**
 
 기본 스타일과 상태는 기본 클래스와 `--수정자`로 나눕니다.
 `listButtonActive`처럼 상태를 기본 이름에 넣으면 기본 스타일만 재사용하거나 상태만 끌 수 없습니다.

@@ -1,7 +1,7 @@
 ---
 title: Choose the Scope Prefix by Owner Layer
 titleKo: 범위 접두사는 소유 레이어를 따릅니다
-impact: MEDIUM-HIGH
+impact: MEDIUM
 impactDescription: 클래스 접두사로 소유 레이어를 구분합니다
 appliesWhen:
   - 새 CSS 파일을 만들면서 `pg_`, `wg_`, `ui_` 중 하나를 고를 때
@@ -13,7 +13,7 @@ tags: ownership, scope, prefix
 
 ## Choose the Scope Prefix by Owner Layer
 
-**Impact: MEDIUM-HIGH (클래스 접두사로 소유 레이어를 구분합니다)**
+**Impact: MEDIUM (클래스 접두사로 소유 레이어를 구분합니다)**
 
 범위 접두사는 CSS 파일 소유자의 **레이어**를 나타냅니다. 폴더 깊이가 아니라 최상위 폴더로 정합니다.
 

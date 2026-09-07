@@ -1,7 +1,7 @@
 ---
 title: Write Fragments as `Fragment`, Not the Shorthand
 titleKo: `<>` 단축 문법 대신 `Fragment`를 그대로 씁니다
-impact: LOW
+impact: MEDIUM
 impactDescription: Fragment를 검색하고 변경 내역에서 식별하기 쉽습니다
 appliesWhen:
   - JSX에서 여러 요소를 `Fragment`나 `<>`로 감싸는 문법을 추가·변경할 때
@@ -11,7 +11,7 @@ tags: composition, jsx
 
 ## Write Fragments as `Fragment`, Not the Shorthand
 
-**Impact: LOW (Fragment를 검색하고 변경 내역에서 식별하기 쉽습니다)**
+**Impact: MEDIUM (Fragment를 검색하고 변경 내역에서 식별하기 쉽습니다)**
 
 여러 요소를 감쌀 때는 `react`에서 가져온 `<Fragment>`를 쓰고 `<>`·`</>`는 쓰지 않습니다.
 검색과 diff에 이름을 남기고, 목록에서 `key`가 필요해져도 `<Fragment key={…}>` 형태를 유지합니다.

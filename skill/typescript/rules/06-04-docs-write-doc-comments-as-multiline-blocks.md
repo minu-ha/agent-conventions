@@ -1,7 +1,7 @@
 ---
 title: Write Doc Comments as Multiline Blocks
 titleKo: JSDoc은 한 줄로 쓰지 않고 여러 줄 블록으로 씁니다
-impact: LOW
+impact: MEDIUM
 impactDescription: 선언 위 주석 형태가 파일마다 같아 주석을 검색하고 훑어보기 쉬워집니다
 appliesWhen:
   - 선언 위 문서 주석을 새로 쓰거나 형식을 바꿀 때
@@ -12,7 +12,7 @@ tags: docs, declarations
 
 ## Write Doc Comments as Multiline Blocks
 
-**Impact: LOW (선언 위 주석 형태가 파일마다 같아 주석을 검색하고 훑어보기 쉬워집니다)**
+**Impact: MEDIUM (선언 위 주석 형태가 파일마다 같아 주석을 검색하고 훑어보기 쉬워집니다)**
 
 문서 주석은 `/**`, `*`, `*/`를 각각 다른 줄에 둔 여러 줄 블록으로 씁니다.
 

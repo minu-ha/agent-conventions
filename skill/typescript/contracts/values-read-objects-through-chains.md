@@ -1,6 +1,6 @@
 # Read Object Fields Through Chains, Not Destructuring
 
-**Impact: MEDIUM-HIGH (값이 어느 객체에서 왔는지가 쓰는 자리마다 남아 이름만 보고 출처를 되짚지 않습니다)**
+**Impact: MEDIUM (값이 어느 객체에서 왔는지가 쓰는 자리마다 남아 이름만 보고 출처를 되짚지 않습니다)**
 
 객체 필드는 구조분해나 별칭 없이 `product.title`처럼 체인으로 읽습니다.
 쓰는 자리마다 값의 출처가 남아야 합니다.
@@ -15,4 +15,62 @@
 
 계산 결과에 이름을 붙일지는 `functions-name-a-value-only-for-recompute-or-judgment`가 정합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/04-03-values-read-objects-through-chains.md)을 읽습니다.
+**Incorrect (시그니처와 본문에서 구조분해해 출처가 사라집니다):**
+
+```ts
+const toInvoiceLine = ({product, quantity}: InvoiceLineInput): InvoiceLine => {
+	const {title, unitPrice} = product;
+
+	return {
+		label: title,
+		amount: unitPrice * quantity,
+	};
+};
+```
+
+**Incorrect (별칭 `const`로 끊어 이름만 남깁니다):**
+
+```ts
+const currency = pricing_default_currency;
+
+const toInvoiceTotal = (lines: InvoiceLine[]): InvoiceTotal => {
+	return {
+		currency,
+		amount: sumBy(lines, (line) => line.amount),
+	};
+};
+```
+
+**Incorrect (이름을 바꿔 꺼내 출처와 원래 이름이 함께 사라집니다):**
+
+```ts
+const {status: projectStatus, owner: projectOwner} = project;
+
+if (projectStatus === "archived") {
+	notify(projectOwner);
+}
+```
+
+**Correct (체인으로 읽어 출처가 쓰는 자리마다 남습니다):**
+
+```ts
+const toInvoiceLine = (input: InvoiceLineInput): InvoiceLine => {
+	return {
+		label: input.product.title,
+		amount: input.product.unitPrice * input.quantity,
+	};
+};
+
+const toInvoiceTotal = (lines: InvoiceLine[]): InvoiceTotal => {
+	return {
+		currency: pricing_default_currency,
+		amount: sumBy(lines, (line) => line.amount),
+	};
+};
+
+if (project.status === "archived") {
+	notify(project.owner);
+}
+```
+
+> 나머지 예시·예외는 [full rule](../rules/04-03-values-read-objects-through-chains.md)에 있습니다.

@@ -20,4 +20,22 @@
 
 어투와 내용은 `docs-write-concise-korean-comments-about-purpose-and-constraints`를 따릅니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/06-05-docs-justify-convention-exceptions-with-a-reason-comment.md)을 읽습니다.
+**Incorrect (확인할 수 없는 말로 예외를 정당화합니다):**
+
+```ts
+// 성능을 위해 메모이제이션
+const columns = useMemo(() => {
+	return toTableColumns(responseTableColumnsSuspense.data.columns);
+}, [responseTableColumnsSuspense.data.columns]);
+```
+
+**Correct (외부 패키지의 제약을 가리킵니다):**
+
+```ts
+// MUI Data Grid는 columns 참조가 바뀌면 열 너비나 순서를 잃을 수 있어 참조를 유지한다.
+const columns = useMemo(() => {
+	return toTableColumns(responseTableColumnsSuspense.data.columns);
+}, [responseTableColumnsSuspense.data.columns]);
+```
+
+> 나머지 예시·예외는 [full rule](../rules/06-05-docs-justify-convention-exceptions-with-a-reason-comment.md)에 있습니다.

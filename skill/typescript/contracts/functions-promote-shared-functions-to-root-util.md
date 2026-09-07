@@ -1,6 +1,6 @@
 # Promote Owner-Free Functions to the Root util Folder
 
-**Impact: MEDIUM-HIGH (소유자 전용 함수를 구분하고 사용처 수가 달라져도 배치 기준을 유지합니다)**
+**Impact: MEDIUM (소유자 전용 함수를 구분하고 사용처 수가 달라져도 배치 기준을 유지합니다)**
 
 루트 `util` 승격은 사용처 수가 아니라 소유자를 지워도 계산이 남는지로 판단합니다.
 사용처가 늘거나 줄어도 이 기준은 바뀌지 않습니다.
@@ -26,4 +26,29 @@
 | 계산만 같음 | 각 소유자가 각각 갖습니다 |
 | 프로젝트 전반의 계산임 | 루트 `util`로 올립니다 |
 
-> 예시·예외가 필요하면 [full rule](../rules/03-06-functions-promote-shared-functions-to-root-util.md)을 읽습니다.
+**Incorrect (소유자와 함께 사라질 함수를 루트 `util`로 올립니다):**
+
+```ts
+// util/profile/to-profile-save-request.ts
+// profile은 값의 종류가 아니라 화면 이름이다. 화면이 없어지면 이 요청도 없다
+/**
+ * 서버가 앞뒤 공백이 붙은 displayName을 거부한다
+ */
+export const toProfileSaveRequest = (values: ProfileFormValues) => {
+	return {body: {displayName: values.displayName.trim()}};
+};
+```
+
+**Correct (소유자와 함께 사라질 함수는 그 소유자의 `_function` 폴더에 둡니다):**
+
+```ts
+// page/profile/_function/to-profile-save-request.ts
+/**
+ * 서버가 앞뒤 공백이 붙은 displayName을 거부한다
+ */
+export const toProfileSaveRequest = (values: ProfileFormValues) => {
+	return {body: {displayName: values.displayName.trim()}};
+};
+```
+
+> 나머지 예시·예외는 [full rule](../rules/03-06-functions-promote-shared-functions-to-root-util.md)에 있습니다.

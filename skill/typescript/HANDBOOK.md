@@ -35,7 +35,7 @@
     - 2.5 [Import by Absolute Path](#25-import-by-absolute-path)
     - 2.6 [Read Environment Values Through `config/env.ts`](#26-read-environment-values-through-config-env-ts)
     - 2.7 [Name Types by Role and Lifetime](#27-name-types-by-role-and-lifetime)
-3. [Functions and Helper Boundaries](#3-functions-and-helper-boundaries) — **MEDIUM-HIGH**
+3. [Functions and Helper Boundaries](#3-functions-and-helper-boundaries) — **MEDIUM**
     - 3.1 [Declare Functions as Arrow Consts](#31-declare-functions-as-arrow-consts)
     - 3.2 [Use Named Object Params for Complex Signatures](#32-use-named-object-params-for-complex-signatures)
     - 3.3 [Extract Support Functions Only When the Boundary Is Real](#33-extract-support-functions-only-when-the-boundary-is-real)
@@ -84,7 +84,7 @@
 
 **Review with:** `types-derive-subsets-with-indexed-access`, `types-document-custom-types-and-shapes`
 
-**Impact: MEDIUM-HIGH (뜻이 그대로면 기존 타입이나 스키마를 그대로 참조해 같은 형태를 두 번 선언하지 않습니다)**
+**Impact: MEDIUM (뜻이 그대로면 기존 타입이나 스키마를 그대로 참조해 같은 형태를 두 번 선언하지 않습니다)**
 
 새 타입을 적기 전에 뜻과 수명이 같은 기존 타입이나 스키마를 먼저 찾습니다.
 필드 이름, 타입, 선택 여부, 읽기 전용 여부까지 같으면 그 계약을 그대로 참조합니다.
@@ -173,7 +173,7 @@ export const sendInvite = (draft: InviteDraft): Promise<void> => { /* … */ };
 
 **Review with:** `types-document-custom-types-and-shapes`, `types-reuse-existing-contracts-before-new-types`
 
-**Impact: MEDIUM-HIGH (고른 필드의 이름과 출처를 드러내고 선택 여부와 읽기 전용 속성을 보존합니다)**
+**Impact: MEDIUM (고른 필드의 이름과 출처를 드러내고 선택 여부와 읽기 전용 속성을 보존합니다)**
 
 기존 계약의 일부 필드는 `interface`에 `원본["필드"]`로 적고, `Pick`은 쓰지 않습니다.
 계약 전체를 재사용할지는 `types-reuse-existing-contracts-before-new-types`가 정합니다.
@@ -205,12 +205,7 @@ export const sendInvite = (draft: InviteDraft): Promise<void> => { /* … */ };
 | --- | --- |
 | 선택 필드의 키 생략 | `?`를 직접 붙입니다. 없으면 `string \| undefined`여도 필수 필드입니다 |
 | 읽기 전용 필드 | `readonly`를 직접 붙입니다. 인덱스 접근만으로는 복사되지 않습니다 |
-| `exactOptionalPropertyTypes`가 켜진 선택 필드의 쓰기 타입 | `name?: Required<Src>["name"]`으로 원본의 명시적 `undefined` 허용 여부를 보존합니다 |
-
-선택 필드의 인덱스 접근 `Src["name"]`은 `string | undefined`입니다.
-`exactOptionalPropertyTypes`가 켜져 있으면 `name?: Src["name"]`은 원본이 막는 `undefined` 대입까지 허용합니다.
-그때만 `name?: Required<Src>["name"]`으로 `undefined`를 벗겨 원본과 같은 쓰기 계약을 유지합니다.
-옵션이 꺼져 있으면 두 형태가 같은 타입이므로 `Src["name"]`으로 적고, 이 처리 때문에 옵션을 바꾸지 않습니다.
+| `exactOptionalPropertyTypes`가 켜진 프로젝트의 선택 필드 | `name?: Required<Src>["name"]`으로 `undefined` 대입을 막습니다. 옵션이 꺼진 프로젝트는 `Src["name"]`으로 충분합니다 |
 
 **Incorrect (`Pick`으로 골라 필드 이름과 설명이 사라집니다):**
 
@@ -352,7 +347,7 @@ interface ReportCell {
 
 **Review with:** `types-mark-unused-parameters-with-underscore`
 
-**Impact: MEDIUM-HIGH (호출 계약을 한곳에서 읽고 같은 시그니처를 반복 선언하지 않습니다)**
+**Impact: MEDIUM (호출 계약을 한곳에서 읽고 같은 시그니처를 반복 선언하지 않습니다)**
 
 기존 호출 계약이 있으면 매개변수와 반환 타입을 반복하지 않고 함수를 담는 변수에 붙입니다.
 예를 들어 `const handleClick: MouseEventHandler<HTMLButtonElement> = (event) => …`로 씁니다.
@@ -659,7 +654,7 @@ if (!firstProduct) {
 
 **Requires selected:** `naming-use-consistent-file-and-symbol-naming`, `types-document-custom-types-and-shapes` · 함께 적용
 
-**Impact: MEDIUM-HIGH (객체로 실행 값을 선언하고 같은 값에서 타입을 추출합니다)**
+**Impact: MEDIUM (객체로 실행 값을 선언하고 같은 값에서 타입을 추출합니다)**
 
 직접 선언하는 값 집합은 `enum` 대신 객체와 `as const`로 실행 값과 타입을 함께 둡니다.
 `enum`은 타입만 지우는 번들러나 TypeScript 5.8의 `--erasableSyntaxOnly`와 호환되지 않으며,
@@ -793,7 +788,7 @@ type MutableRow = Omit<Row, "children"> & {
 
 **Review with:** `naming-place-owner-constants-in-the-owner-constant-folder`, `naming-use-direct-imports-and-public-entry-points`
 
-**Impact: MEDIUM-HIGH (프로젝트 전반의 상수를 주제별로 모아 위치와 이름을 일관되게 유지합니다)**
+**Impact: MEDIUM (프로젝트 전반의 상수를 주제별로 모아 위치와 이름을 일관되게 유지합니다)**
 
 상수 위치는 사용처 수가 아니라 소유자로 정합니다.
 소유자를 지워도 남는 값은 루트에, 함께 사라지는 값은 그 소유자 아래에 둡니다.
@@ -888,7 +883,7 @@ export const pagination_default_page_size = 20;
 
 **Review with:** `naming-place-project-constants-in-the-root-constant-folder`
 
-**Impact: MEDIUM-HIGH (소유자 전용 상수를 함께 관리하고 파일명과 이름에서 소유자 표현을 반복하지 않습니다)**
+**Impact: MEDIUM (소유자 전용 상수를 함께 관리하고 파일명과 이름에서 소유자 표현을 반복하지 않습니다)**
 
 한 소유자의 상수는 그 소유자 아래 `_constant`에 둡니다.
 루트와 소유자를 구분하는 기준은 `naming-place-project-constants-in-the-root-constant-folder`를 따릅니다.
@@ -947,7 +942,7 @@ export const table_page_size = 20;
 
 **Applies when:** TypeScript 파일, 폴더, 변수, 함수, 타입, 객체·스키마 키의 이름을 새로 만들거나 바꿀 때. 외부 계약이 정한 이름이나 키의 표기를 바꿀지 판단할 때. 제외: 별칭 없이 외부 패키지에서 그대로 가져오는 경우.
 
-**Impact: MEDIUM-HIGH (파일과 심볼의 표기가 역할을 드러내 읽는 사람이 종류를 바로 압니다)**
+**Impact: MEDIUM (파일과 심볼의 표기가 역할을 드러내 읽는 사람이 종류를 바로 압니다)**
 
 파일과 심볼은 선언 문법이 아니라 역할에 맞게 이름 짓습니다.
 `const`로 선언해도 함수·훅·스키마·API 결과·요청 객체·지역 파생값을 불변 데이터 상수로 보지 않습니다.
@@ -1074,7 +1069,7 @@ const toProductSaveBody = (values: ProductFormValues) => {
 
 **Review with:** `naming-import-by-absolute-path`
 
-**Impact: MEDIUM-HIGH (배럴이나 재노출 계층 없이 선언의 출처를 직접 확인할 수 있습니다)**
+**Impact: MEDIUM (배럴이나 재노출 계층 없이 선언의 출처를 직접 확인할 수 있습니다)**
 
 필요한 파일에서 직접 가져오고 선언 앞에 `export`를 붙여 이름으로 내보냅니다.
 `index.ts` 배럴이나 파일 끝의 `export {…}` 목록은 만들지 않습니다.
@@ -1139,7 +1134,7 @@ import {UiTabs} from "@/component/ui/tabs/ui-tabs";
 
 **Review with:** `naming-use-direct-imports-and-public-entry-points`
 
-**Impact: MEDIUM-HIGH (가져오기 경로를 통일하고 가져오는 파일의 위치로 접근 범위를 판단합니다)**
+**Impact: MEDIUM (가져오기 경로를 통일하고 가져오는 파일의 위치로 접근 범위를 판단합니다)**
 
 심볼은 `@/` 절대경로로 가져옵니다.
 심볼 없이 같은 폴더의 파일만 불러올 때는 `./`를 허용하며, `../`는 쓰지 않습니다.
@@ -1253,7 +1248,7 @@ const productClient = createClient({baseUrl: env_api_base_url});
 
 **Review with:** `naming-use-consistent-file-and-symbol-naming`
 
-**Impact: MEDIUM-HIGH (이름만 읽고 값이 무엇이며 어느 시점에 존재하는지 구분할 수 있습니다)**
+**Impact: MEDIUM (이름만 읽고 값이 무엇이며 어느 시점에 존재하는지 구분할 수 있습니다)**
 
 값의 역할과 수명을 판단한 뒤, 의미를 더하는 역할어만 붙입니다.
 도메인 명사로 충분하면 `ChartPoint`, `TableRow`처럼 씁니다.
@@ -1329,7 +1324,7 @@ const reportSnapshot: ReportSnapshot = response.data;
 
 ## 3. Functions and Helper Boundaries
 
-**Impact: MEDIUM-HIGH**
+**Impact: MEDIUM**
 
 함수 선언 형태와 시그니처를 일관되게 유지합니다. 보조 함수는 재사용되거나 함수 형태가 필수일 때, 또는 렌더 파일 밖으로 요청 조립을 옮길 때 이름을 붙입니다. 보조 함수는 결과가 드러나는 이름을 붙여 정해진 위치에 둡니다. 변수는 재계산을 막거나 판단을 설명할 때만 만듭니다. 파일 안 선언 순서를 정하고, 넓은 스코프에서 `let` 재할당과 `push`로 값을 누적하지 않습니다.
 
@@ -1443,7 +1438,7 @@ export class ProductCursor {
 
 **Review with:** `types-reuse-existing-contracts-before-new-types`, `values-read-objects-through-chains`
 
-**Impact: MEDIUM-HIGH (긴 시그니처를 읽을 수 있게 두고 위치를 헷갈리지 않으면서 입력을 늘립니다)**
+**Impact: MEDIUM (긴 시그니처를 읽을 수 있게 두고 위치를 헷갈리지 않으면서 입력을 늘립니다)**
 
 매개변수가 셋을 넘거나 같은 계열 값이 함께 넘어오면 위치 인자를 객체 하나로 묶습니다.
 객체 매개변수 타입은 파일 위쪽에 이름을 붙여 선언합니다.
@@ -1660,7 +1655,7 @@ export const toGradeTone = (grade: string): Tone => {
 
 **Review with:** `functions-order-declarations-top-down`, `functions-promote-shared-functions-to-root-util`
 
-**Impact: MEDIUM-HIGH (보조 함수를 개별 파일로 관리하고 폴더로 소유 관계를 드러냅니다)**
+**Impact: MEDIUM (보조 함수를 개별 파일로 관리하고 폴더로 소유 관계를 드러냅니다)**
 
 보조 함수에 이름을 붙일지는 `functions-extract-helpers-only-when-the-boundary-is-real`이 판단합니다.
 이름을 붙였다면 함수마다 파일을 하나 두고, 부르는 대표 함수에 따라 배치합니다.
@@ -1848,7 +1843,7 @@ const selectedLocaleSupported = isSupportedLocale(selectedLocale);
 
 **Applies when:** 함수를 루트 `util` 폴더로 옮기거나 종류 폴더를 새로 만들 때. 두 소유자가 같은 함수를 쓰게 될 때. 제외: 소유자 안에서 파일 자리만 바꾸는 경우.
 
-**Impact: MEDIUM-HIGH (소유자 전용 함수를 구분하고 사용처 수가 달라져도 배치 기준을 유지합니다)**
+**Impact: MEDIUM (소유자 전용 함수를 구분하고 사용처 수가 달라져도 배치 기준을 유지합니다)**
 
 루트 `util` 승격은 사용처 수가 아니라 소유자를 지워도 계산이 남는지로 판단합니다.
 사용처가 늘거나 줄어도 이 기준은 바뀌지 않습니다.
@@ -2439,7 +2434,7 @@ const isEditableStatus = editable_order_statuses.includes(order.status);
 
 **Review with:** `functions-name-a-value-only-for-recompute-or-judgment`
 
-**Impact: MEDIUM-HIGH (값이 어느 객체에서 왔는지가 쓰는 자리마다 남아 이름만 보고 출처를 되짚지 않습니다)**
+**Impact: MEDIUM (값이 어느 객체에서 왔는지가 쓰는 자리마다 남아 이름만 보고 출처를 되짚지 않습니다)**
 
 객체 필드는 구조분해나 별칭 없이 `product.title`처럼 체인으로 읽습니다.
 쓰는 자리마다 값의 출처가 남아야 합니다.
@@ -2703,7 +2698,7 @@ const order_status_by_api_code = {
 
 **Review with:** `values-handle-dates-with-dayjs`, `values-prefer-immutable-array-sorting`
 
-**Impact: MEDIUM-HIGH (중복 제거와 표기 변환을 파일마다 다르게 만들지 않고 검증된 구현 하나로 모읍니다)**
+**Impact: MEDIUM (중복 제거와 표기 변환을 파일마다 다르게 만들지 않고 검증된 구현 하나로 모읍니다)**
 
 값을 다루는 보조 함수는 `es-toolkit`을 기본으로 쓰고, `lodash`는 새로 들이지 않습니다.
 빈 배열·중복 키 같은 경계 처리를 통일하고, 배열을 인자로 펼칠 때의 호출 인자 한계도 피합니다.
@@ -2809,7 +2804,7 @@ const trimmedKeyword = keyword.trim();
 
 **Review with:** `naming-place-project-constants-in-the-root-constant-folder`, `values-use-es-toolkit-for-value-helpers`
 
-**Impact: MEDIUM-HIGH (날짜의 단위와 타임존을 드러내고 파싱과 표시 형식을 일관되게 유지합니다)**
+**Impact: MEDIUM (날짜의 단위와 타임존을 드러내고 파싱과 표시 형식을 일관되게 유지합니다)**
 
 날짜는 `dayjs`로 다루고, `moment`는 새로 들이지 않습니다.
 계산 단위, 입력 형식, 표시 타임존을 계약에 맞게 구분합니다.
@@ -2903,7 +2898,7 @@ const compactDateTime = responseDateTime.slice(0, 16).replace("T", " ");
 
 **Review with:** `absence-resolve-defaults-at-the-boundary`, `functions-extract-helpers-only-when-the-boundary-is-real`
 
-**Impact: MEDIUM-HIGH (같은 판정을 반복하지 않고 소비처가 전달된 결과를 사용합니다)**
+**Impact: MEDIUM (같은 판정을 반복하지 않고 소비처가 전달된 결과를 사용합니다)**
 
 값이 들어오는 경계에서 한 번 판정하고, 결과를 데이터 필드로 전달합니다.
 소비처는 같은 판정 함수를 다시 호출하거나 공유 보조 함수로 추출하지 않고 그 필드를 읽습니다.
@@ -3504,7 +3499,7 @@ export const fetchProductList = async (): Promise<Product[]> => {
 
 **Review with:** `docs-require-header-jsdoc-on-key-declarations`
 
-**Impact: LOW (선언 위 주석 형태가 파일마다 같아 주석을 검색하고 훑어보기 쉬워집니다)**
+**Impact: MEDIUM (선언 위 주석 형태가 파일마다 같아 주석을 검색하고 훑어보기 쉬워집니다)**
 
 문서 주석은 `/**`, `*`, `*/`를 각각 다른 줄에 둔 여러 줄 블록으로 씁니다.
 

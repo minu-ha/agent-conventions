@@ -1,7 +1,7 @@
 ---
 title: Handle Dates With dayjs
 titleKo: 날짜는 `dayjs`로 다룹니다
-impact: MEDIUM-HIGH
+impact: MEDIUM
 impactDescription: 날짜의 단위와 타임존을 드러내고 파싱과 표시 형식을 일관되게 유지합니다
 appliesWhen:
   - 날짜를 파싱하거나 형식을 맞추거나 더하고 뺄 때
@@ -13,7 +13,7 @@ tags: values, dayjs
 
 ## Handle Dates With dayjs
 
-**Impact: MEDIUM-HIGH (날짜의 단위와 타임존을 드러내고 파싱과 표시 형식을 일관되게 유지합니다)**
+**Impact: MEDIUM (날짜의 단위와 타임존을 드러내고 파싱과 표시 형식을 일관되게 유지합니다)**
 
 날짜는 `dayjs`로 다루고, `moment`는 새로 들이지 않습니다.
 계산 단위, 입력 형식, 표시 타임존을 계약에 맞게 구분합니다.

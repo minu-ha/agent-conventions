@@ -1,7 +1,7 @@
 ---
 title: Choose Single Components, Compound Components, and Variants Deliberately
 titleKo: 단일·합성·변형 중 필요한 구조를 고릅니다
-impact: MEDIUM-HIGH
+impact: MEDIUM
 impactDescription: 필요한 확장 범위에 맞춰 단순한 컴포넌트 구조를 선택합니다
 appliesWhen:
   - 내보낸 공용 컴포넌트에 슬롯, 공개 부품, 공용 컨텍스트나 동작을 추가할 때
@@ -15,7 +15,7 @@ tags: strategy, composition, variants, components
 
 ## Choose Single Components, Compound Components, and Variants Deliberately
 
-**Impact: MEDIUM-HIGH (필요한 확장 범위에 맞춰 단순한 컴포넌트 구조를 선택합니다)**
+**Impact: MEDIUM (필요한 확장 범위에 맞춰 단순한 컴포넌트 구조를 선택합니다)**
 
 공용 컴포넌트는 프롭스보다 구조를 먼저 고릅니다.
 표를 위에서부터 읽어 현재 필요한 단계까지만 적용합니다.

@@ -23,4 +23,23 @@
 함수 배치는 `functions-give-each-function-its-own-file`,
 루트 승격은 `functions-promote-shared-functions-to-root-util`이 정합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/03-03-functions-extract-helpers-only-when-the-boundary-is-real.md)을 읽습니다.
+**Incorrect (한 자리에서만 쓰는 단계를 함수로 떼어 내 흐름이 파일 안에서 흩어집니다):**
+
+```txt
+page/report/_function/to-metrics-content.ts
+  toMetricsContent       내보낸 함수. 본문은 세 줄이고 나머지는 아래 함수로 갔다
+  toComparisonRows       toMetricsContent 만 부름
+  toMeaningGroups        toMetricsContent 만 부름
+  toValidityCard         toMetricsContent 만 부름
+  formatMeaningDecimal   toComparisonRows 와 toMeaningGroups 가 부름
+```
+
+**Correct (한 번 쓰는 단계는 호출부에 두고 재사용하는 계산은 함수로 추출합니다):**
+
+```txt
+page/report/_function/to-metrics-content/
+├── to-metrics-content.ts        본문 안에 // 1. 비교 행  // 2. 의미 그룹  // 3. 유효성 카드
+└── _format-meaning-decimal.ts   비교 행과 의미 그룹 두 자리가 부름
+```
+
+> 나머지 예시·예외는 [full rule](../rules/03-03-functions-extract-helpers-only-when-the-boundary-is-real.md)에 있습니다.

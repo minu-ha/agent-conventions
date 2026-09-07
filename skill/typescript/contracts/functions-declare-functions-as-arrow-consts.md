@@ -26,4 +26,26 @@
 `useConsistentArrowReturn`은 인라인 콜백과 커링까지 강제하므로 켜지 않습니다.
 도구 설정은 `tooling-configure-biome-to-enforce-these-rules`를 따릅니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/03-01-functions-declare-functions-as-arrow-consts.md)을 읽습니다.
+**Incorrect (이름 붙인 함수를 `function`으로 선언합니다):**
+
+```ts
+/**
+ * 검색어 비교에서 공백 차이를 무시하도록 제목의 공백을 정리한다
+ */
+export function toTrimmedTitle(rawTitle: string): string {
+	return rawTitle.trim().replace(/\s+/g, " ");
+}
+```
+
+**Correct (같은 함수를 `const` 화살표와 블록 본문으로 선언합니다):**
+
+```ts
+/**
+ * 검색어 비교에서 공백 차이를 무시하도록 제목의 공백을 정리한다
+ */
+export const toTrimmedTitle = (rawTitle: string): string => {
+	return rawTitle.trim().replace(/\s+/g, " ");
+};
+```
+
+> 나머지 예시·예외는 [full rule](../rules/03-01-functions-declare-functions-as-arrow-consts.md)에 있습니다.

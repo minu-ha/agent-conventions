@@ -1,7 +1,7 @@
 ---
 title: Replace `enum` With `as const` Objects
 titleKo: `enum` 대신 `as const` 객체를 씁니다
-impact: MEDIUM-HIGH
+impact: MEDIUM
 impactDescription: 객체로 실행 값을 선언하고 같은 값에서 타입을 추출합니다
 appliesWhen:
   - `enum`이나 타입과 실행 양쪽에서 함께 쓰는 값 집합을 추가·변경할 때
@@ -12,7 +12,7 @@ tags: types
 
 ## Replace `enum` With `as const` Objects
 
-**Impact: MEDIUM-HIGH (객체로 실행 값을 선언하고 같은 값에서 타입을 추출합니다)**
+**Impact: MEDIUM (객체로 실행 값을 선언하고 같은 값에서 타입을 추출합니다)**
 
 직접 선언하는 값 집합은 `enum` 대신 객체와 `as const`로 실행 값과 타입을 함께 둡니다.
 `enum`은 타입만 지우는 번들러나 TypeScript 5.8의 `--erasableSyntaxOnly`와 호환되지 않으며,

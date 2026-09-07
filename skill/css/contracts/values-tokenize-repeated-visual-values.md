@@ -1,6 +1,6 @@
 # Use Global Tokens and Do Not Create Local Ones
 
-**Impact: MEDIUM-HIGH (여러 파일이 쓰는 값은 전역 토큰으로 모으고 나머지는 선언 자리에 그대로 둡니다)**
+**Impact: MEDIUM (여러 파일이 쓰는 값은 전역 토큰으로 모으고 나머지는 선언 자리에 그대로 둡니다)**
 
 여러 파일에서 쓰는 값은 전역 공통 토큰으로 모으고 한 파일 안의 값은 선언 위치에 둡니다.
 판정 기준은 **파일 경계**이며 다음 예외를 함께 확인합니다.
@@ -19,4 +19,32 @@
 `selector-do-not-group-classes-with-commas`에 따라 여러 클래스의 공통 선언도 묶지 않고 각 블록에 반복합니다.
 층 목록은 `values-declare-stacking-layers-as-tokens`, 새 토큰 이름은 `values-name-tokens-by-purpose` 규칙이 정합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/05-02-values-tokenize-repeated-visual-values.md)을 읽습니다.
+**Incorrect (한 파일 안 반복을 조상에 선언한 지역 변수로 감쌉니다):**
+
+```css
+.pg_catalogIndex__root {
+	--pg-catalog-gap: 12px;
+}
+
+.pg_catalogIndex__toolbar {
+	gap: var(--pg-catalog-gap, 12px);
+}
+
+.pg_catalogIndex__footer {
+	gap: var(--pg-catalog-gap, 12px);
+}
+```
+
+**Correct (한 파일 안 반복은 값을 그대로 둡니다):**
+
+```css
+.pg_catalogIndex__toolbar {
+	gap: 12px;
+}
+
+.pg_catalogIndex__footer {
+	gap: 12px;
+}
+```
+
+> 나머지 예시·예외는 [full rule](../rules/05-02-values-tokenize-repeated-visual-values.md)에 있습니다.

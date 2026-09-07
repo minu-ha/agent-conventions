@@ -1,7 +1,7 @@
 ---
 title: Avoid Premature Abstraction in Screen Code
 titleKo: 화면 코드를 미리 추상화하지 않습니다
-impact: MEDIUM-HIGH
+impact: MEDIUM
 impactDescription: 추측에 따른 추출을 줄이고 실제 재사용 경계에 맞춰 코드를 배치합니다
 appliesWhen:
   - 화면 코드를 보조 함수, 훅, 컴포넌트, 모듈로 추출할 때
@@ -14,7 +14,7 @@ tags: screen
 
 ## Avoid Premature Abstraction in Screen Code
 
-**Impact: MEDIUM-HIGH (추측에 따른 추출을 줄이고 실제 재사용 경계에 맞춰 코드를 배치합니다)**
+**Impact: MEDIUM (추측에 따른 추출을 줄이고 실제 재사용 경계에 맞춰 코드를 배치합니다)**
 
 반복이 보인다는 이유만으로 공용 훅·컴포넌트·보조 함수를 추출하지 않습니다.
 먼저 흐름을 같은 파일에서 읽을 수 있도록 정리합니다.

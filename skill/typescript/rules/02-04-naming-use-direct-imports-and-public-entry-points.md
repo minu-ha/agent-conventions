@@ -1,7 +1,7 @@
 ---
 title: Use Direct Imports and Dedicated Public Entry Points
 titleKo: `index.ts` 배럴을 만들지 않고 필요한 파일에서 바로 가져옵니다
-impact: MEDIUM-HIGH
+impact: MEDIUM
 impactDescription: 배럴이나 재노출 계층 없이 선언의 출처를 직접 확인할 수 있습니다
 appliesWhen:
   - 가져오기, 내보내기, `index.ts` 배럴, 공개 진입점, 소유자 보조 모듈의 경계를 추가·변경할 때
@@ -12,7 +12,7 @@ tags: naming
 
 ## Use Direct Imports and Dedicated Public Entry Points
 
-**Impact: MEDIUM-HIGH (배럴이나 재노출 계층 없이 선언의 출처를 직접 확인할 수 있습니다)**
+**Impact: MEDIUM (배럴이나 재노출 계층 없이 선언의 출처를 직접 확인할 수 있습니다)**
 
 필요한 파일에서 직접 가져오고 선언 앞에 `export`를 붙여 이름으로 내보냅니다.
 `index.ts` 배럴이나 파일 끝의 `export {…}` 목록은 만들지 않습니다.

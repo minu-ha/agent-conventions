@@ -1,7 +1,7 @@
 ---
 title: Place Owner-only Constants in the Owner `_constant` Folder
 titleKo: 소유자 전용 상수는 소유자 `_constant` 폴더에 둡니다
-impact: MEDIUM-HIGH
+impact: MEDIUM
 impactDescription: 소유자 전용 상수를 함께 관리하고 파일명과 이름에서 소유자 표현을 반복하지 않습니다
 appliesWhen:
   - 한 소유자의 상수나 선언형 계약을 추가하거나 옮길 때
@@ -13,7 +13,7 @@ tags: naming, constant
 
 ## Place Owner-only Constants in the Owner `_constant` Folder
 
-**Impact: MEDIUM-HIGH (소유자 전용 상수를 함께 관리하고 파일명과 이름에서 소유자 표현을 반복하지 않습니다)**
+**Impact: MEDIUM (소유자 전용 상수를 함께 관리하고 파일명과 이름에서 소유자 표현을 반복하지 않습니다)**
 
 한 소유자의 상수는 그 소유자 아래 `_constant`에 둡니다.
 루트와 소유자를 구분하는 기준은 `naming-place-project-constants-in-the-root-constant-folder`를 따릅니다.

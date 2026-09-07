@@ -1,7 +1,7 @@
 ---
 title: Prefer Function Variable Types Over Parameter Annotations
 titleKo: 매개변수마다 표기하지 않고 함수를 담는 변수에 타입을 붙입니다
-impact: MEDIUM-HIGH
+impact: MEDIUM
 impactDescription: 호출 계약을 한곳에서 읽고 같은 시그니처를 반복 선언하지 않습니다
 appliesWhen:
   - 기존 호출 계약을 이름 붙인 함수나 공용 함수 구현에 다시 쓸 때
@@ -13,7 +13,7 @@ tags: types
 
 ## Prefer Function Variable Types Over Parameter Annotations
 
-**Impact: MEDIUM-HIGH (호출 계약을 한곳에서 읽고 같은 시그니처를 반복 선언하지 않습니다)**
+**Impact: MEDIUM (호출 계약을 한곳에서 읽고 같은 시그니처를 반복 선언하지 않습니다)**
 
 기존 호출 계약이 있으면 매개변수와 반환 타입을 반복하지 않고 함수를 담는 변수에 붙입니다.
 예를 들어 `const handleClick: MouseEventHandler<HTMLButtonElement> = (event) => …`로 씁니다.

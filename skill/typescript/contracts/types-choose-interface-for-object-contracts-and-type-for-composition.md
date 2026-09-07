@@ -17,4 +17,55 @@
 추론되는 익명 결과와 외부·생성된 계약은 그대로 둡니다.
 같은 뜻의 기존 계약은 `types-reuse-existing-contracts-before-new-types`에 따라 재사용합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/01-08-types-choose-interface-for-object-contracts-and-type-for-composition.md)을 읽습니다.
+**Incorrect (독립된 필드 계약을 객체 `type` 별칭으로 선언합니다):**
+
+```ts
+/**
+ * 상품 요약
+ */
+type ProductSummary = {
+	/**
+	 * 상품 식별자
+	 */
+	id: string;
+	/**
+	 * 목록에 표시할 이름
+	 */
+	name: string;
+};
+```
+
+**Correct (필드 계약은 `interface`, 타입 조합은 `type`으로 구분합니다):**
+
+```ts
+/**
+ * 상품 요약
+ */
+interface ProductSummary {
+	/**
+	 * 상품 식별자
+	 */
+	id: string;
+	/**
+	 * 목록에 표시할 이름
+	 */
+	name: string;
+}
+
+/**
+ * 상품 목록 표시 방식
+ */
+type ProductMode = "list" | "grid";
+
+/**
+ * 자식 목록을 편집할 수 있는 행
+ */
+type MutableRow = Omit<Row, "children"> & {
+	/**
+	 * 편집 중인 자식 행
+	 */
+	children: Row[];
+};
+```
+
+> 나머지 예시·예외는 [full rule](../rules/01-08-types-choose-interface-for-object-contracts-and-type-for-composition.md)에 있습니다.

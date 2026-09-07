@@ -46,7 +46,7 @@
     - 3.2 [Narrow the Contract a Library Wrapper Opens](#32-narrow-the-contract-a-library-wrapper-opens)
     - 3.3 [Open DOM Props in Three Steps](#33-open-dom-props-in-three-steps)
     - 3.4 [Choose the Wrapper Shape and Forward Props Accordingly](#34-choose-the-wrapper-shape-and-forward-props-accordingly)
-4. [Composition Strategy](#4-composition-strategy) — **MEDIUM-HIGH**
+4. [Composition Strategy](#4-composition-strategy) — **MEDIUM**
     - 4.1 [Choose Single Components, Compound Components, and Variants Deliberately](#41-choose-single-components-compound-components-and-variants-deliberately)
     - 4.2 [Expose Only Compound Parts the Consumer Assembles](#42-expose-only-compound-parts-the-consumer-assembles)
     - 4.3 [Avoid Boolean Prop Proliferation in Shared Components](#43-avoid-boolean-prop-proliferation-in-shared-components)
@@ -61,7 +61,7 @@
     - 5.7 [Write Fragments as `Fragment`, Not the Shorthand](#57-write-fragments-as-fragment-not-the-shorthand)
     - 5.8 [Render JSX Branches With Explicit Conditions](#58-render-jsx-branches-with-explicit-conditions)
     - 5.9 [Order Hooks, Handlers, Effects, Then Return](#59-order-hooks-handlers-effects-then-return)
-6. [Screen File Discipline](#6-screen-file-discipline) — **MEDIUM-HIGH**
+6. [Screen File Discipline](#6-screen-file-discipline) — **MEDIUM**
     - 6.1 [Keep Route Entry Files Focused on Screen Flow](#61-keep-route-entry-files-focused-on-screen-flow)
     - 6.2 [Avoid Premature Abstraction in Screen Code](#62-avoid-premature-abstraction-in-screen-code)
     - 6.3 [Extract Local Section Components Only for Runtime Boundaries](#63-extract-local-section-components-only-for-runtime-boundaries)
@@ -283,7 +283,7 @@ export const UiButton = (props: UiButtonProps) => {
 
 **Review with:** `css/ownership-choose-scope-prefix-by-owner-layer`, `ownership-keep-component-imports-flowing-downward`
 
-**Impact: MEDIUM-HIGH (추출한 파일의 소유자와 역할을 경로에서 확인할 수 있습니다)**
+**Impact: MEDIUM (추출한 파일의 소유자와 역할을 경로에서 확인할 수 있습니다)**
 
 추출한 파일은 소유자 폴더에 두고, 역할과 공개 범위에 맞춰 이름을 정합니다.
 호출 계층은 폴더를 중첩하지 않고 진입 파일의 조립으로 드러냅니다.
@@ -515,7 +515,7 @@ import {chart_series_line} from "@/component/ui/chart/_constant/series";
 
 **Review with:** `ownership-keep-lifecycle-in-the-owning-component`, `ownership-place-owner-files-in-role-folders`, `typescript/functions-extract-helpers-only-when-the-boundary-is-real`, `typescript/naming-use-direct-imports-and-public-entry-points`
 
-**Impact: MEDIUM-HIGH (실제 상태·생명주기·컨텍스트가 필요한 경우에만 리액트 훅을 사용합니다)**
+**Impact: MEDIUM (실제 상태·생명주기·컨텍스트가 필요한 경우에만 리액트 훅을 사용합니다)**
 
 화면 전용 계산·정규화·전송 값 조립처럼 순수한 로직은 커스텀 훅으로 감싸지 않습니다.
 화면 지역 훅은 상태·컨텍스트·훅 호출 순서를 실제로 캡슐화할 때만 허용합니다.
@@ -720,7 +720,7 @@ const mutationProductRemove = useProductRemove();
 
 **Review with:** `data-name-query-and-mutation-bindings-consistently`, `data-preserve-origin-chaining`
 
-**Impact: MEDIUM-HIGH (응답 가공을 쿼리에 모아 화면이 원본 구조에 의존하지 않게 합니다)**
+**Impact: MEDIUM (응답 가공을 쿼리에 모아 화면이 원본 구조에 의존하지 않게 합니다)**
 
 서버 응답은 `query.select`에서 도메인 필드로 가공하고, 화면에서는 그 결과를 렌더합니다.
 
@@ -780,7 +780,7 @@ const responseProductListSuspense = useProductListSuspense(
 
 **Review with:** `data-shape-query-data-with-select`, `screen-keep-derived-values-close`
 
-**Impact: MEDIUM-HIGH (여러 응답의 가공 위치를 통일하고 화면 본문의 별칭을 줄입니다)**
+**Impact: MEDIUM (여러 응답의 가공 위치를 통일하고 화면 본문의 별칭을 줄입니다)**
 
 둘 이상의 쿼리 결과를 하나로 합칠 때는 값을 그리는 섹션에서 `combine`을 인라인으로 씁니다.
 결과를 합칠 필요와 요청을 병렬로 시작할 필요는 따로 판단합니다.
@@ -1114,7 +1114,7 @@ const mutationProductSave = useProductSave({
 
 **Requires selected:** `typescript/types-prefer-function-variable-types-over-parameter-annotations` · 함께 적용
 
-**Impact: MEDIUM-HIGH (같은 시그니처를 직접 다시 적어 생기는 계약 불일치를 막습니다)**
+**Impact: MEDIUM (같은 시그니처를 직접 다시 적어 생기는 계약 불일치를 막습니다)**
 
 리액트 핸들러와 래퍼 프롭스의 타입은 기존 계약에서 가져옵니다.
 타입을 붙이는 기본 위치는 `typescript/types-prefer-function-variable-types-over-parameter-annotations`를 따릅니다.
@@ -1588,7 +1588,7 @@ export const UiTableRow = (props: UiTableRowProps) => {
 
 ## 4. Composition Strategy
 
-**Impact: MEDIUM-HIGH**
+**Impact: MEDIUM**
 
 공용 컴포넌트는 단일·합성·명시적 변형 중 구조를 먼저 고르고 공개할 부품을 정합니다. 불리언 프롭으로 모드를 늘리지 않고, 정적 조립에는 렌더 프롭 대신 `children`을 씁니다.
 
@@ -1600,7 +1600,7 @@ export const UiTableRow = (props: UiTableRowProps) => {
 
 **Review with:** `screen-avoid-premature-abstraction`, `strategy-avoid-boolean-prop-proliferation`, `strategy-expose-only-assembled-compound-parts`, `strategy-prefer-children-over-render-props`
 
-**Impact: MEDIUM-HIGH (필요한 확장 범위에 맞춰 단순한 컴포넌트 구조를 선택합니다)**
+**Impact: MEDIUM (필요한 확장 범위에 맞춰 단순한 컴포넌트 구조를 선택합니다)**
 
 공용 컴포넌트는 프롭스보다 구조를 먼저 고릅니다.
 표를 위에서부터 읽어 현재 필요한 단계까지만 적용합니다.
@@ -1808,7 +1808,7 @@ export const WgReadOnlyProfileDialog = (props: WgReadOnlyProfileDialogProps) => 
 
 **Review with:** `css/composition-do-not-add-wrapper-elements-for-styling`, `strategy-choose-single-composition-compound-and-variants`
 
-**Impact: MEDIUM-HIGH (내부 구조를 공개 계약과 분리해 이후 변경 범위를 줄입니다)**
+**Impact: MEDIUM (내부 구조를 공개 계약과 분리해 이후 변경 범위를 줄입니다)**
 
 합성 컴포넌트의 공개 부품은 사용처가 직접 조립해야 하는 영역만 엽니다.
 
@@ -1866,7 +1866,7 @@ export const UiPanel = {
 
 **Review with:** `strategy-expose-only-assembled-compound-parts`
 
-**Impact: MEDIUM-HIGH (모드별 분기와 조합을 컴포넌트 구조에서 확인할 수 있습니다)**
+**Impact: MEDIUM (모드별 분기와 조합을 컴포넌트 구조에서 확인할 수 있습니다)**
 
 여러 파일·레이어에서 재사용하는 공용 `ui`·`widget`은 모드별 불리언 조합 대신 구조를 드러냅니다.
 `isCompact`·`isEditing`·`showSearch`가 늘어나면 가능한 조합과 JSX·스타일 분기도 함께 늘어납니다.
@@ -2244,7 +2244,7 @@ const handleRemoveProductButtonClick: MouseEventHandler<HTMLButtonElement> = (_e
 
 **Review with:** `typescript/docs-justify-convention-exceptions-with-a-reason-comment`, `typing-narrow-library-wrapper-contracts`
 
-**Impact: MEDIUM-HIGH (사용하지 않는 명령형 계약이 공용 컴포넌트에 늘어나는 것을 막습니다)**
+**Impact: MEDIUM (사용하지 않는 명령형 계약이 공용 컴포넌트에 늘어나는 것을 막습니다)**
 
 `ref`는 사용처가 포커스·스크롤·측정 등을 직접 제어해야 할 때만 엽니다.
 현재 사용처가 없으면 미리 공개하지 않습니다.
@@ -2579,7 +2579,7 @@ export const UiPanelHeader = (props: UiPanelHeaderProps) => {
 
 **Applies when:** JSX에서 여러 요소를 `Fragment`나 `<>`로 감싸는 문법을 추가·변경할 때. `Fragment`에 `key`를 붙이거나 떼어 낼 때.
 
-**Impact: LOW (Fragment를 검색하고 변경 내역에서 식별하기 쉽습니다)**
+**Impact: MEDIUM (Fragment를 검색하고 변경 내역에서 식별하기 쉽습니다)**
 
 여러 요소를 감쌀 때는 `react`에서 가져온 `<Fragment>`를 쓰고 `<>`·`</>`는 쓰지 않습니다.
 검색과 diff에 이름을 남기고, 목록에서 `key`가 필요해져도 `<Fragment key={…}>` 형태를 유지합니다.
@@ -2813,7 +2813,7 @@ export const PgOrderToolbar = () => {
 
 ## 6. Screen File Discipline
 
-**Impact: MEDIUM-HIGH**
+**Impact: MEDIUM**
 
 라우트 진입 파일에 화면 흐름을 드러내고, 상태나 비동기를 직접 소유한 섹션만 추출합니다. 파생값은 사용처에서 계산하고 필요가 확인되기 전에 분리하지 않습니다.
 
@@ -2825,7 +2825,7 @@ export const PgOrderToolbar = () => {
 
 **Review with:** `ownership-place-owner-files-in-role-folders`, `screen-extract-local-section-components-for-runtime-boundaries`
 
-**Impact: MEDIUM-HIGH (진입 파일만 봐도 화면 흐름을 따라갈 수 있습니다)**
+**Impact: MEDIUM (진입 파일만 봐도 화면 흐름을 따라갈 수 있습니다)**
 
 라우트 진입은 화면 흐름을 조립하고, 데이터와 동작은 사용하는 컴포넌트가 소유합니다.
 다른 규칙이 참조하는 라우트 진입의 책임은 아래 표를 기준으로 합니다.
@@ -2934,7 +2934,7 @@ export const PgProductListSection = () => {
 
 **Review with:** `screen-extract-local-section-components-for-runtime-boundaries`, `typescript/functions-extract-helpers-only-when-the-boundary-is-real`
 
-**Impact: MEDIUM-HIGH (추측에 따른 추출을 줄이고 실제 재사용 경계에 맞춰 코드를 배치합니다)**
+**Impact: MEDIUM (추측에 따른 추출을 줄이고 실제 재사용 경계에 맞춰 코드를 배치합니다)**
 
 반복이 보인다는 이유만으로 공용 훅·컴포넌트·보조 함수를 추출하지 않습니다.
 먼저 흐름을 같은 파일에서 읽을 수 있도록 정리합니다.
@@ -3077,7 +3077,7 @@ export const toProductSaveRequest = (formValues: ProductFormValues) => {
 
 **Applies when:** 화면 지역 섹션 컴포넌트를 새로 추출할 때. 기존 섹션에 비동기, 지역 상태, 프로바이더, 상호작용, 외부 위젯, 성능 처리를 넣거나 뺄 때.
 
-**Impact: MEDIUM-HIGH (화면 흐름을 유지하면서 자체 책임이 있는 섹션만 분리합니다)**
+**Impact: MEDIUM (화면 흐름을 유지하면서 자체 책임이 있는 섹션만 분리합니다)**
 
 라우트 진입의 지역 컴포넌트는 아래 책임 중 하나를 **직접 소유할 때만** 추출합니다.
 단순 래퍼·`className` 묶음·들여쓰기 감소는 추출 근거가 아닙니다.
@@ -3823,7 +3823,7 @@ useEffect(() => {
 
 **Review with:** `docs-require-jsdoc-on-key-declarations`, `events-curry-extra-handler-arguments`, `events-run-user-actions-in-handlers-not-effects`
 
-**Impact: MEDIUM-HIGH (콜백은 최신 값을 읽고 이펙트는 구독 조건의 변화에만 반응합니다)**
+**Impact: MEDIUM (콜백은 최신 값을 읽고 이펙트는 구독 조건의 변화에만 반응합니다)**
 
 구독 이펙트의 콜백이 최신 프롭스·상태를 읽되 그 값 때문에 재구독할 필요가 없다면 `useEffectEvent`를 씁니다.
 연결 대상·구독 조건처럼 바뀌면 재설치해야 하는 값은 이펙트 의존성에 남깁니다.
@@ -4038,7 +4038,7 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (event) => {
 
 **Review with:** `composition-named-handlers-over-inline`
 
-**Impact: LOW (추가 인자 전달만을 위한 JSX 인라인 래퍼를 줄입니다)**
+**Impact: MEDIUM (추가 인자 전달만을 위한 JSX 인라인 래퍼를 줄입니다)**
 
 `onClick`·`onChange`처럼 이벤트 객체를 받는 자리에 추가 인자가 필요하면 커링합니다.
 팩토리가 추가 인자를 받고, 안쪽 함수가 이벤트를 받으며, 반환한 함수를 JSX에 직접 전달합니다.
@@ -4527,7 +4527,7 @@ useEffect(() => {
 
 **Review with:** `typescript/docs-write-concise-korean-comments-about-purpose-and-constraints`, `typescript/docs-write-doc-comments-as-multiline-blocks`
 
-**Impact: LOW (JSX 주석 형식을 통일해 화면 구역의 역할을 쉽게 읽을 수 있습니다)**
+**Impact: MEDIUM (JSX 주석 형식을 통일해 화면 구역의 역할을 쉽게 읽을 수 있습니다)**
 
 JSX 자식 자리의 주석은 여러 줄 블록으로 씁니다.
 `{/**`·` * 내용`·` */}`을 각각 다른 줄에 두고 한 줄로 접지 않습니다.

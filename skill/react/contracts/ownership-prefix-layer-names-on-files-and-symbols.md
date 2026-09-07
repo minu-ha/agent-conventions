@@ -20,4 +20,22 @@
 
 진입 파일의 기준은 `ownership-place-owner-files-in-role-folders`를 따릅니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/01-02-ownership-prefix-layer-names-on-files-and-symbols.md)을 읽습니다.
+**Incorrect (화면 컴포넌트의 접두사를 누락합니다):**
+
+```tsx
+// page/detail/sales-trend-panel.tsx
+export const SalesTrendPanel = (props: SalesTrendPanelProps) => {
+	return <section className={clsx("pg_salesTrendPanel__root")}>{props.children}</section>;
+};
+```
+
+**Correct (진입 파일이 아닌 파일에는 `_`를 붙이고 파일명과 심볼에 레이어 접두사를 씁니다):**
+
+```tsx
+// page/detail/_pg-sales-trend-panel.tsx
+export const PgSalesTrendPanel = (props: PgSalesTrendPanelProps) => {
+	return <section className={clsx("pg_salesTrendPanel__root")}>{props.children}</section>;
+};
+```
+
+> 나머지 예시·예외는 [full rule](../rules/01-02-ownership-prefix-layer-names-on-files-and-symbols.md)에 있습니다.

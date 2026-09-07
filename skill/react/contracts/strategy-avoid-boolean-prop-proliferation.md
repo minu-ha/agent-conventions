@@ -1,6 +1,6 @@
 # Avoid Boolean Prop Proliferation in Shared Components
 
-**Impact: MEDIUM-HIGH (모드별 분기와 조합을 컴포넌트 구조에서 확인할 수 있습니다)**
+**Impact: MEDIUM (모드별 분기와 조합을 컴포넌트 구조에서 확인할 수 있습니다)**
 
 여러 파일·레이어에서 재사용하는 공용 `ui`·`widget`은 모드별 불리언 조합 대신 구조를 드러냅니다.
 `isCompact`·`isEditing`·`showSearch`가 늘어나면 가능한 조합과 JSX·스타일 분기도 함께 늘어납니다.
@@ -14,4 +14,67 @@
 불리언 개수 자체보다 서로 배타적인 모드를 조합으로 표현하는지 확인합니다.
 공개 부품을 `.Root`처럼 묶는 형태는 `strategy-choose-single-composition-compound-and-variants`를 따릅니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/04-03-strategy-avoid-boolean-prop-proliferation.md)을 읽습니다.
+**Incorrect (불리언 프롭 조합으로 공용 컴포넌트가 비대해집니다):**
+
+```tsx
+export interface WgProductToolbarProps {
+	isCompact?: boolean;
+	isEditing?: boolean;
+	showSearch?: boolean;
+}
+
+export const WgProductToolbar = (props: WgProductToolbarProps) => {
+	return (
+		<header>
+			{props.showSearch && <WgProductSearchField />}
+			{props.isEditing ? (
+				<WgProductEditActions compact={props.isCompact} />
+			) : (
+				<WgProductBrowseActions compact={props.isCompact} />
+			)}
+		</header>
+	);
+};
+```
+
+**Correct (모드를 변형 컴포넌트와 상태 없는 합성으로 분리합니다):**
+
+```tsx
+/**
+ * 툴바 바깥 틀 부품
+ */
+export interface WgProductToolbarRootProps {
+	/**
+	 * 툴바 줄에 늘어놓을 검색과 동작 부품
+	 */
+	children: ReactNode;
+}
+
+const WgProductToolbarRoot = (props: WgProductToolbarRootProps) => {
+	return <header className={clsx("wg_productToolbar__root")}>{props.children}</header>;
+};
+
+// 조합은 아래 두 변형이 이미 제공하므로 사용처가 직접 조립할 `Root`만 공개한다
+export const WgProductToolbar = {
+	Root: WgProductToolbarRoot,
+} as const;
+
+export const WgProductBrowseToolbar = () => {
+	return (
+		<WgProductToolbar.Root>
+			<WgProductSearchField />
+			<WgProductBrowseActions />
+		</WgProductToolbar.Root>
+	);
+};
+
+export const WgProductEditToolbar = () => {
+	return (
+		<WgProductToolbar.Root>
+			<WgProductEditActions />
+		</WgProductToolbar.Root>
+	);
+};
+```
+
+> 나머지 예시·예외는 [full rule](../rules/04-03-strategy-avoid-boolean-prop-proliferation.md)에 있습니다.

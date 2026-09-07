@@ -1,6 +1,6 @@
 # Inject Classes Only at the Component Entry Point
 
-**Impact: MEDIUM-HIGH (클래스 주입을 한 곳으로 제한해 사용처가 내부 구조에 의존하지 않게 합니다)**
+**Impact: MEDIUM (클래스 주입을 한 곳으로 제한해 사용처가 내부 구조에 의존하지 않게 합니다)**
 
 우리가 만든 컴포넌트는 레이어와 무관하게 **최상위 진입점 한 곳**에서만 외부 클래스를 받습니다.
 내부 노드의 클래스 주입 지점을 늘리면 사용처가 컴포넌트 구조에 의존하게 됩니다.
@@ -19,4 +19,54 @@
 사용처의 선택은 `ownership-change-other-owners-through-their-api` 규칙이 정합니다.
 `className`을 받지 않는 컴포넌트는 `composition-do-not-add-wrapper-elements-for-styling` 규칙을 따릅니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/03-04-composition-inject-classes-only-at-the-entry-point.md)을 읽습니다.
+**Incorrect (내부 노드마다 클래스 프롭을 열어 주입 지점을 늘립니다):**
+
+```tsx
+export interface UiCollapseProps {
+	className?: string;
+	headerClassName?: string;
+	titleClassName?: string;
+	contentClassName?: string;
+}
+```
+
+**Incorrect (받은 `className`을 내부 노드로 넘깁니다):**
+
+```tsx
+export const UiCollapse = (props: UiCollapseProps) => {
+	return (
+		<div className={clsx("ui_collapse__root")}>
+			<button className={clsx("ui_collapse__header", props.className)} type="button">
+				{props.title}
+			</button>
+			<div className={clsx("ui_collapse__content")}>{props.children}</div>
+		</div>
+	);
+};
+```
+
+**Correct (`className`은 최상위 클래스와 합치고, 변형은 필요한 노드마다 수정자로 붙입니다):**
+
+```tsx
+export interface UiCollapseProps {
+	className?: string;
+	variant?: "default" | "compact";
+	title: ReactNode;
+	children: ReactNode;
+}
+
+export const UiCollapse = (props: UiCollapseProps) => {
+	const isCompact = props.variant === "compact";
+
+	return (
+		<div className={clsx("ui_collapse__root", props.className)}>
+			<button className={clsx("ui_collapse__header", isCompact && "ui_collapse__header--compact")} type="button">
+				<span className={clsx("ui_collapse__title", isCompact && "ui_collapse__title--compact")}>{props.title}</span>
+			</button>
+			<div className={clsx("ui_collapse__content")}>{props.children}</div>
+		</div>
+	);
+};
+```
+
+> 나머지 예시·예외는 [full rule](../rules/03-04-composition-inject-classes-only-at-the-entry-point.md)에 있습니다.

@@ -26,7 +26,7 @@
 
 ## 목차
 
-1. [Class Naming and Syntax](#1-class-naming-and-syntax) — **MEDIUM-HIGH**
+1. [Class Naming and Syntax](#1-class-naming-and-syntax) — **MEDIUM**
     - 1.1 [Default to Plain CSS Unless the Project Explicitly Standardizes on CSS Modules](#11-default-to-plain-css-unless-the-project-explicitly-standardizes-on-css-modules)
     - 1.2 [Use Scope, Slug, Element, and Modifier Syntax](#12-use-scope-slug-element-and-modifier-syntax)
     - 1.3 [Name Elements and Modifiers by Role](#13-name-elements-and-modifiers-by-role)
@@ -58,7 +58,7 @@
     - 5.3 [Declare Stacking Layers as Tokens in One Place](#53-declare-stacking-layers-as-tokens-in-one-place)
     - 5.4 [Switch Themes by Changing Token Values](#54-switch-themes-by-changing-token-values)
     - 5.5 [Name Tokens by Purpose, Not by Value](#55-name-tokens-by-purpose-not-by-value)
-6. [Layout and Responsiveness](#6-layout-and-responsiveness) — **MEDIUM-HIGH**
+6. [Layout and Responsiveness](#6-layout-and-responsiveness) — **MEDIUM**
     - 6.1 [Group Breakpoints at the Bottom of the File](#61-group-breakpoints-at-the-bottom-of-the-file)
     - 6.2 [Write Breakpoints Desktop First](#62-write-breakpoints-desktop-first)
     - 6.3 [Keep Layout Intent Explicit](#63-keep-layout-intent-explicit)
@@ -73,7 +73,7 @@
 
 ## 1. Class Naming and Syntax
 
-**Impact: MEDIUM-HIGH**
+**Impact: MEDIUM**
 
 일반 `*.css`를 사용하고 전역에서 고유한 클래스명을 붙입니다. 클래스 이름은 소유자와 역할을 드러내고, 요소와 수정자는 정해진 문법으로 구분합니다.
 
@@ -83,7 +83,7 @@
 
 **Applies when:** 표준이 정해지지 않은 상태에서 스타일시트 방식\(일반 CSS, CSS Modules\)을 고르거나 `.module.css`나 `styles.*`로 옮길 때. 제외: 기존 일반 CSS 클래스 이름만 바꾸는 경우.
 
-**Impact: MEDIUM-HIGH (클래스명이 전역에서 고유해야 범위_식별자로 소유자를 되짚을 수 있습니다)**
+**Impact: MEDIUM (클래스명이 전역에서 고유해야 범위_식별자로 소유자를 되짚을 수 있습니다)**
 
 이 스킬은 일반 `*.css`와 전역에서 고유한 클래스명을 기본으로 합니다.
 클래스 문법, 소유 경계, 선택자 규칙은 모두 이 전제를 따르며 `pg_*`, `wg_*`, `ui_*`로 소유자를 구분합니다.
@@ -140,7 +140,7 @@ import "./pg-catalog-index.css";
 
 **Applies when:** 일반 CSS에서 프로젝트가 소유한 클래스를 새로 만들 때. 이름, 범위, 식별자, 요소, 수정자의 구분자나 대소문자 표기를 바꿀 때.
 
-**Impact: MEDIUM-HIGH (클래스명에서 소유자와 역할을 확인할 수 있습니다)**
+**Impact: MEDIUM (클래스명에서 소유자와 역할을 확인할 수 있습니다)**
 
 클래스명은 `<scope>_<slug>__<element>[--<modifier>]` 문법을 씁니다.
 구분자 `_`, `__`, `--`를 고정하고 각 자리의 역할을 구분합니다.
@@ -344,7 +344,7 @@ pg_chartCard__root
 
 **Review with:** `ownership-give-each-file-one-scope-slug`, `ownership-use-foreign-classes-only-under-your-own-root`
 
-**Impact: MEDIUM-HIGH (클래스 접두사로 소유 레이어를 구분합니다)**
+**Impact: MEDIUM (클래스 접두사로 소유 레이어를 구분합니다)**
 
 범위 접두사는 CSS 파일 소유자의 **레이어**를 나타냅니다. 폴더 깊이가 아니라 최상위 폴더로 정합니다.
 
@@ -505,7 +505,7 @@ component/ui/button/ui-button.css
 
 **Review with:** `composition-inject-classes-only-at-the-entry-point`, `ownership-use-foreign-classes-only-under-your-own-root`
 
-**Impact: MEDIUM-HIGH (다른 소유자의 모습을 바꿀 때 배치 조정, 변형 노출, 레이어 이동을 순서대로 판단합니다)**
+**Impact: MEDIUM (다른 소유자의 모습을 바꿀 때 배치 조정, 변형 노출, 레이어 이동을 순서대로 판단합니다)**
 
 다른 소유자의 모습을 바꿀 때는 아래 세 방법을 순서대로 확인합니다.
 
@@ -587,7 +587,7 @@ TSX에서 클래스를 조합하는 방법과 UI 래퍼가 허용하는 스타�
 
 **Review with:** `composition-write-modifiers-as-conditions`, `typescript/values-avoid-lookup-tables-for-simple-choices`
 
-**Impact: LOW (기본 클래스와 상태 수정자의 조합을 TSX에서 한눈에 읽을 수 있습니다)**
+**Impact: MEDIUM (기본 클래스와 상태 수정자의 조합을 TSX에서 한눈에 읽을 수 있습니다)**
 
 TSX의 `className`은 클래스가 하나여도 `clsx()`로 조합합니다.
 인자는 **기본 클래스 → 수정자 → 받은 `className`** 순서로 적습니다.
@@ -625,7 +625,7 @@ TSX의 `className`은 클래스가 하나여도 `clsx()`로 조합합니다.
 
 **Review with:** `naming-name-elements-and-modifiers-by-role`
 
-**Impact: MEDIUM-HIGH (일회성 배치 보정이 수정자로 늘어나지 않게 합니다)**
+**Impact: MEDIUM (일회성 배치 보정이 수정자로 늘어나지 않게 합니다)**
 
 수정자는 앱 상태나 여러 곳에서 반복되는 모양에만 씁니다.
 한 곳의 여백이나 배치를 보정할 때는 기본 요소 클래스 대신 **역할 이름을 붙인 별도 요소 클래스**를 씁니다.
@@ -677,7 +677,7 @@ TSX의 `className`은 클래스가 하나여도 `clsx()`로 조합합니다.
 
 **Applies when:** 상태를 나타내는 낱말이 들어간 요소 클래스 이름을 추가·변경할 때. 제외: 처음부터 기본 클래스와 수정자를 나눠 만드는 경우. 제외: 책임이 그대로인 이름 변경만 하는 경우.
 
-**Impact: MEDIUM-HIGH (기본 스타일과 상태를 분리해 상태만 켜고 끌 수 있습니다)**
+**Impact: MEDIUM (기본 스타일과 상태를 분리해 상태만 켜고 끌 수 있습니다)**
 
 기본 스타일과 상태는 기본 클래스와 `--수정자`로 나눕니다.
 `listButtonActive`처럼 상태를 기본 이름에 넣으면 기본 스타일만 재사용하거나 상태만 끌 수 없습니다.
@@ -704,7 +704,7 @@ TSX의 `className`은 클래스가 하나여도 `clsx()`로 조합합니다.
 
 **Review with:** `composition-do-not-add-wrapper-elements-for-styling`, `ownership-change-other-owners-through-their-api`, `ownership-use-foreign-classes-only-under-your-own-root`
 
-**Impact: MEDIUM-HIGH (클래스 주입을 한 곳으로 제한해 사용처가 내부 구조에 의존하지 않게 합니다)**
+**Impact: MEDIUM (클래스 주입을 한 곳으로 제한해 사용처가 내부 구조에 의존하지 않게 합니다)**
 
 우리가 만든 컴포넌트는 레이어와 무관하게 **최상위 진입점 한 곳**에서만 외부 클래스를 받습니다.
 내부 노드의 클래스 주입 지점을 늘리면 사용처가 컴포넌트 구조에 의존하게 됩니다.
@@ -963,7 +963,7 @@ export const UiCollapse = (props: UiCollapseProps) => {
 
 **Review with:** `composition-compose-classes-with-clsx`, `typescript/values-avoid-lookup-tables-for-simple-choices`
 
-**Impact: MEDIUM-HIGH (클래스 이름이 코드에 문자열로 남아 CSS와 사용처를 한 번의 검색으로 함께 고칩니다)**
+**Impact: MEDIUM (클래스 이름이 코드에 문자열로 남아 CSS와 사용처를 한 번의 검색으로 함께 고칩니다)**
 
 수정자는 조건과 완성된 클래스 문자열로 적습니다.
 값을 끼워 이름을 조립하면 CSS와 사용처를 같은 문자열로 검색할 수 없습니다.
@@ -1213,7 +1213,7 @@ export const WgFlowNode = (props: WgFlowNodeProps) => {
 
 **Review with:** `naming-name-elements-and-modifiers-by-role`
 
-**Impact: MEDIUM-HIGH (태그를 바꿔도 스타일이 유지되도록 마크업을 클래스로 선택합니다)**
+**Impact: MEDIUM (태그를 바꿔도 스타일이 유지되도록 마크업을 클래스로 선택합니다)**
 
 우리가 렌더하는 마크업은 요소 선택자 대신 클래스로 선택합니다.
 태그를 `div`에서 `section`으로 바꿔도 스타일이 사라지지 않아야 합니다.
@@ -1413,7 +1413,7 @@ h2 {
 
 **Review with:** `layout-group-breakpoints-at-the-file-bottom`, `selector-do-not-group-classes-with-commas`
 
-**Impact: MEDIUM-HIGH (한 클래스의 선언을 한 블록에서 확인하고 수정합니다)**
+**Impact: MEDIUM (한 클래스의 선언을 한 블록에서 확인하고 수정합니다)**
 
 한 클래스의 선언은 파일 안 한 블록에 모읍니다. 같은 클래스를 여러 곳에서 다시 열어 선언 순서로 덮어쓰지 않습니다.
 
@@ -1732,7 +1732,7 @@ DOM 상태 가상 클래스는 해당 요소의 **조건 없는 기본 클래스
 
 **Review with:** `selector-use-pseudo-classes-for-dom-owned-states`
 
-**Impact: MEDIUM-HIGH (기본 모습을 기본 블록에 두어 부정 조건을 따로 해석하지 않게 합니다)**
+**Impact: MEDIUM (기본 모습을 기본 블록에 두어 부정 조건을 따로 해석하지 않게 합니다)**
 
 `:not()`을 쓰지 않고 기본 모습은 기본 블록에, 상태가 켜진 모습은 상태 블록에 둡니다.
 부정 조건을 없앨 때도 **상태별 결과를 보존합니다.**
@@ -1886,7 +1886,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 
 **Review with:** `composition-do-not-style-through-the-style-attribute`, `values-fall-back-only-outside-core-tokens`
 
-**Impact: MEDIUM-HIGH (여러 파일이 쓰는 값은 전역 토큰으로 모으고 나머지는 선언 자리에 그대로 둡니다)**
+**Impact: MEDIUM (여러 파일이 쓰는 값은 전역 토큰으로 모으고 나머지는 선언 자리에 그대로 둡니다)**
 
 여러 파일에서 쓰는 값은 전역 공통 토큰으로 모으고 한 파일 안의 값은 선언 위치에 둡니다.
 판정 기준은 **파일 경계**이며 다음 예외를 함께 확인합니다.
@@ -2004,7 +2004,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 
 **Review with:** `layout-keep-layout-intent-explicit`, `values-tokenize-repeated-visual-values`
 
-**Impact: MEDIUM-HIGH (층 순서를 한 파일에서 확인하고 `z-index` 숫자를 임의로 늘리지 않습니다)**
+**Impact: MEDIUM (층 순서를 한 파일에서 확인하고 `z-index` 숫자를 임의로 늘리지 않습니다)**
 
 층은 전역 토큰 파일에 한 번 선언하고 `z-index`에서는 토큰 이름만 씁니다.
 `layout-keep-layout-intent-explicit`에 따라 숫자를 직접 쓰거나 사용처에서 층 사이 값을 만들지 않습니다.
@@ -2085,7 +2085,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 
 **Review with:** `values-fall-back-only-outside-core-tokens`, `values-name-tokens-by-purpose`, `values-tokenize-repeated-visual-values`
 
-**Impact: MEDIUM-HIGH (테마 분기가 한 파일에만 있어 색을 하나 더할 때 파일 여러 개를 열지 않습니다)**
+**Impact: MEDIUM (테마 분기가 한 파일에만 있어 색을 하나 더할 때 파일 여러 개를 열지 않습니다)**
 
 테마는 **토큰 파일에서 값만** 바꿉니다. 컴포넌트 CSS에는 `prefers-color-scheme`이나 `[data-theme]` 분기를 두지 않습니다.
 
@@ -2190,7 +2190,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 
 **Review with:** `values-switch-themes-by-changing-token-values`, `values-tokenize-repeated-visual-values`
 
-**Impact: MEDIUM-HIGH (값이 바뀌어도 토큰 이름이 쓰임을 나타내고 일관된 형식을 유지합니다)**
+**Impact: MEDIUM (값이 바뀌어도 토큰 이름이 쓰임을 나타내고 일관된 형식을 유지합니다)**
 
 토큰 이름은 값이 아니라 쓰임을 나타내는 `--app-<종류>-<쓰임>` 형태로 짓습니다.
 값이 바뀌어도 이름이 뜻을 유지해야 하므로 `--app-color-white`, `--app-color-gray-100`,
@@ -2244,7 +2244,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 
 ## 6. Layout and Responsiveness
 
-**Impact: MEDIUM-HIGH**
+**Impact: MEDIUM**
 
 클래스명과 선언에 배치 의도를 드러내고, 폭에 따른 변경은 한곳에 모읍니다. 브레이크포인트를 추가하기 전에 고유 크기 지정으로 해결할 수 있는지 확인합니다. 뷰포트 브레이크포인트는 파일 아래 한 곳에 모으고 데스크톱 퍼스트로 정한 세 값만 씁니다. 컴포넌트가 받은 폭에 따라 구조를 바꿔야 하면 컨테이너 쿼리를 씁니다.
 
@@ -2256,7 +2256,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 
 **Review with:** `layout-reach-for-intrinsic-sizing-before-breakpoints`, `layout-write-breakpoints-desktop-first`, `selector-declare-each-class-in-one-block`, `values-switch-themes-by-changing-token-values`
 
-**Impact: MEDIUM-HIGH (각 브레이크포인트에서 달라지는 스타일을 한 블록에서 확인합니다)**
+**Impact: MEDIUM (각 브레이크포인트에서 달라지는 스타일을 한 블록에서 확인합니다)**
 
 브레이크포인트 재선언은 파일 맨 아래 `@media` 블록에 모으고 클래스 블록 안에 중첩하지 않습니다.
 같은 폭에서 툴바, 패널, 사이드바가 어떻게 달라지는지 한 블록에서 읽도록 합니다.
@@ -2356,7 +2356,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 
 **Review with:** `layout-group-breakpoints-at-the-file-bottom`, `tooling-configure-stylelint-to-enforce-these-rules`
 
-**Impact: MEDIUM-HIGH (넓은 화면부터 좁은 화면 순서로 덮어쓰고 프로젝트 전체에서 세 기준 폭을 공유합니다)**
+**Impact: MEDIUM (넓은 화면부터 좁은 화면 순서로 덮어쓰고 프로젝트 전체에서 세 기준 폭을 공유합니다)**
 
 기본 선언은 `1440px` 이상인 가장 넓은 화면을 기준으로 하고, 좁아질 때만 덮어씁니다.
 브레이크포인트는 아래 순서로 쓰며 `(width >= ...)` 방향과 섞지 않습니다.
@@ -2534,7 +2534,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 
 **Review with:** `layout-group-breakpoints-at-the-file-bottom`, `layout-keep-layout-intent-explicit`
 
-**Impact: MEDIUM-HIGH (컴포넌트가 배치된 폭에 맞춰 크기를 조정해 위치가 바뀌어도 CSS 수정을 줄입니다)**
+**Impact: MEDIUM (컴포넌트가 배치된 폭에 맞춰 크기를 조정해 위치가 바뀌어도 CSS 수정을 줄입니다)**
 
 브레이크포인트를 추가하기 전에 **고유 크기 지정만으로 배치할 수 있는지** 확인합니다.
 `@media`는 뷰포트 폭을 보므로 같은 컴포넌트를 본문에서 좁은 사이드바로 옮겨도 실제 슬롯 폭을 반영하지 못합니다.

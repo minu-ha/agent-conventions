@@ -19,4 +19,60 @@
 선언 위 문서 주석은 `docs-write-doc-comments-as-multiline-blocks`,
 본문 설명은 `docs-keep-body-comments-for-intent-and-steps`에 따라 `//`로 씁니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/06-03-docs-write-concise-korean-comments-about-purpose-and-constraints.md)을 읽습니다.
+**Incorrect (영문이거나 선언 이름을 옮겨 적기만 합니다):**
+
+```ts
+/**
+ * This function sorts rule refs and returns the result.
+ */
+export const toSortedRuleRefs = (refs: RuleRef[]): RuleRef[] => {
+	return sortBy(uniq(refs), [(ref) => ref.id]);
+};
+
+/**
+ * 규칙 참조를 정렬하는 함수
+ */
+export const toSortedRuleRefs = (refs: RuleRef[]): RuleRef[] => {
+	return sortBy(uniq(refs), [(ref) => ref.id]);
+};
+
+/**
+ * route-local product tree props
+ */
+export interface PgProductTreeProps {
+	categoryNodes: ProductCategoryNode[];
+}
+```
+
+**Correct (이름에 없는 정보를 더합니다):**
+
+```ts
+/**
+ * 같은 참조 객체의 중복을 제거하고 식별자순으로 정렬해 검토 목록의 순서를 고정한다.
+ */
+export const toSortedRuleRefs = (refs: RuleRef[]): RuleRef[] => {
+	return sortBy(uniq(refs), [(ref) => ref.id]);
+};
+
+/**
+ * 저장 응답의 정렬 순서를 그대로 믿지 않고 다시 정렬한다.
+ *
+ * 서버가 같은 updatedAt 인 항목의 순서를 보장하지 않아
+ * 목록이 새로고침할 때마다 흔들리는 문제가 있었다.
+ */
+export const toProductsNewestFirst = (products: Product[]): Product[] => {
+	return orderBy(products, ["updatedAt", "id"], ["desc", "asc"]);
+};
+
+/**
+ * route-local product 트리 입력 계약
+ */
+export interface PgProductTreeProps {
+	/**
+	 * 사이드바에 그릴 분류 노드 목록
+	 */
+	categoryNodes: ProductCategoryNode[];
+}
+```
+
+> 나머지 예시·예외는 [full rule](../rules/06-03-docs-write-concise-korean-comments-about-purpose-and-constraints.md)에 있습니다.

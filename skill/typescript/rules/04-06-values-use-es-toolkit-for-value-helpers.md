@@ -1,7 +1,7 @@
 ---
 title: Use es-toolkit for Value Helpers
 titleKo: 값을 다루는 보조 함수는 `es-toolkit`을 먼저 사용합니다
-impact: MEDIUM-HIGH
+impact: MEDIUM
 impactDescription: 중복 제거와 표기 변환을 파일마다 다르게 만들지 않고 검증된 구현 하나로 모읍니다
 appliesWhen:
   - 배열, 객체, 문자열, 숫자를 다루는 보조 코드를 추가·변경할 때
@@ -13,7 +13,7 @@ tags: values, es-toolkit
 
 ## Use es-toolkit for Value Helpers
 
-**Impact: MEDIUM-HIGH (중복 제거와 표기 변환을 파일마다 다르게 만들지 않고 검증된 구현 하나로 모읍니다)**
+**Impact: MEDIUM (중복 제거와 표기 변환을 파일마다 다르게 만들지 않고 검증된 구현 하나로 모읍니다)**
 
 값을 다루는 보조 함수는 `es-toolkit`을 기본으로 쓰고, `lodash`는 새로 들이지 않습니다.
 빈 배열·중복 키 같은 경계 처리를 통일하고, 배열을 인자로 펼칠 때의 호출 인자 한계도 피합니다.

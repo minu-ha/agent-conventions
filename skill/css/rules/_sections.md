@@ -4,7 +4,7 @@
 
 ## 1. Class Naming and Syntax (naming)
 **TitleKo:** 클래스 이름과 문법
-**Impact:** MEDIUM-HIGH
+**Impact:** MEDIUM
 **Description:** 일반 `*.css`를 사용하고 전역에서 고유한 클래스명을 붙입니다.
 클래스 이름은 소유자와 역할을 드러내고, 요소와 수정자는 정해진 문법으로 구분합니다.
 
@@ -34,7 +34,7 @@
 
 ## 6. Layout and Responsiveness (layout)
 **TitleKo:** 레이아웃과 반응형
-**Impact:** MEDIUM-HIGH
+**Impact:** MEDIUM
 **Description:** 클래스명과 선언에 배치 의도를 드러내고, 폭에 따른 변경은 한곳에 모읍니다.
 브레이크포인트를 추가하기 전에 고유 크기 지정으로 해결할 수 있는지 확인합니다.
 뷰포트 브레이크포인트는 파일 아래 한 곳에 모으고 데스크톱 퍼스트로 정한 세 값만 씁니다.

@@ -1,7 +1,7 @@
 ---
 title: Shape React Query Data in query.select
 titleKo: 응답 가공은 `query.select`에서 합니다
-impact: MEDIUM-HIGH
+impact: MEDIUM
 impactDescription: 응답 가공을 쿼리에 모아 화면이 원본 구조에 의존하지 않게 합니다
 appliesWhen:
   - 서버 응답의 목록·항목·메타 등을 렌더에서 가공하거나 반복 소비할 때
@@ -14,7 +14,7 @@ tags: data, state, react-query
 
 ## Shape React Query Data in query.select
 
-**Impact: MEDIUM-HIGH (응답 가공을 쿼리에 모아 화면이 원본 구조에 의존하지 않게 합니다)**
+**Impact: MEDIUM (응답 가공을 쿼리에 모아 화면이 원본 구조에 의존하지 않게 합니다)**
 
 서버 응답은 `query.select`에서 도메인 필드로 가공하고, 화면에서는 그 결과를 렌더합니다.
 

@@ -18,4 +18,28 @@
 
 **Requires selected:** `docs-write-concise-korean-comments-about-purpose-and-constraints`, `docs-write-doc-comments-as-multiline-blocks` · 함께 적용
 
-> 예시·예외가 필요하면 [full rule](../rules/06-02-docs-require-header-jsdoc-on-key-declarations.md)을 읽습니다.
+**Incorrect (주요 선언에 헤더 설명이 없습니다):**
+
+```ts
+export const toSortedUserIds = (userIds: string[]): string[] => {
+	return sortBy(uniq(userIds), [(userId) => userId]);
+};
+```
+
+**Correct (여러 줄 블록에 설명만 적습니다):**
+
+```ts
+/**
+ * 선택 목록의 중복 ID를 제거하고 오름차순으로 고정해 요청 순서를 일정하게 유지한다
+ */
+export const toSortedUserIds = (userIds: string[]): string[] => {
+	return sortBy(uniq(userIds), [(userId) => userId]);
+};
+
+/**
+ * product 목록 조회. 로딩과 오류는 이 응답 객체로만 판단한다
+ */
+const responseProductList = useProductList();
+```
+
+> 나머지 예시·예외는 [full rule](../rules/06-02-docs-require-header-jsdoc-on-key-declarations.md)에 있습니다.

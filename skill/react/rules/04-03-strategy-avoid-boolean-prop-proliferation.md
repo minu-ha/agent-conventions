@@ -1,7 +1,7 @@
 ---
 title: Avoid Boolean Prop Proliferation in Shared Components
 titleKo: 공용 컴포넌트의 모드를 불리언 조합으로 늘리지 않습니다
-impact: MEDIUM-HIGH
+impact: MEDIUM
 impactDescription: 모드별 분기와 조합을 컴포넌트 구조에서 확인할 수 있습니다
 appliesWhen:
   - `ui`나 `widget` 컴포넌트에 불리언 모드·표시 프롭을 추가할 때
@@ -14,7 +14,7 @@ tags: strategy, composition, props, variants, components
 
 ## Avoid Boolean Prop Proliferation in Shared Components
 
-**Impact: MEDIUM-HIGH (모드별 분기와 조합을 컴포넌트 구조에서 확인할 수 있습니다)**
+**Impact: MEDIUM (모드별 분기와 조합을 컴포넌트 구조에서 확인할 수 있습니다)**
 
 여러 파일·레이어에서 재사용하는 공용 `ui`·`widget`은 모드별 불리언 조합 대신 구조를 드러냅니다.
 `isCompact`·`isEditing`·`showSearch`가 늘어나면 가능한 조합과 JSX·스타일 분기도 함께 늘어납니다.

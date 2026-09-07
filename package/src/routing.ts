@@ -18,7 +18,7 @@ const compareRoutingText = (left: string, right: string): number => {
 const compareHandbookText = (left: string, right: string): number => left.localeCompare(right, "en-US");
 const rulesIndexRendererVersion = 2;
 const contractRendererVersion = 4;
-const supportedImpactLevels = new Set(["CRITICAL", "HIGH", "MEDIUM-HIGH", "MEDIUM", "LOW"]);
+const supportedImpactLevels = new Set(["CRITICAL", "HIGH", "MEDIUM"]);
 
 /**
  * @helper generated Markdown display text를 단일 행 literal text로 escape
@@ -163,9 +163,23 @@ const joinFoldedImpactDeclaration = (lines: readonly string[]): string[] => {
 };
 
 /**
+ * full rule 본문에서 뽑은 compact contract 조각
+ */
+interface NormativeRuleContract {
+	/**
+	 * 첫 Incorrect 앞 규범 산문. 헤딩은 `#`으로 올린다
+	 */
+	normativeBody: string;
+	/**
+	 * 첫 Incorrect 라벨부터 첫 Correct 펜스가 닫히는 줄까지. MEDIUM contract 에 그대로 실린다
+	 */
+	firstExamplePair: string;
+}
+
+/**
  * @helper full rule body에서 fenced example 밖의 첫 Incorrect 경계와 normative prefix 검증
  */
-const readNormativeRuleContract = (rule: SkillRule): string => {
+const readNormativeRuleContract = (rule: SkillRule): NormativeRuleContract => {
 	const normalizedBody = rule.body.replace(/\r\n?/g, "\n");
 	const lines = normalizedBody.split("\n");
 	let activeFenceCharacter: "`" | "~" | undefined;
@@ -174,6 +188,7 @@ const readNormativeRuleContract = (rule: SkillRule): string => {
 	let activeExampleHasContent = false;
 	let currentOffset = 0;
 	let incorrectBoundaryOffset: number | undefined;
+	let firstExamplePairEndOffset: number | undefined;
 	let pendingExampleMarker: "Incorrect" | "Correct" | undefined;
 	let incorrectExampleFound = false;
 	let correctMarkerFound = false;
@@ -208,6 +223,10 @@ const readNormativeRuleContract = (rule: SkillRule): string => {
 				if (activeExampleMarker === "Incorrect") {
 					incorrectExampleFound = true;
 				} else if (activeExampleMarker === "Correct") {
+					if (!correctMarkerFound) {
+						firstExamplePairEndOffset = currentOffset + line.length;
+					}
+
 					correctMarkerFound = true;
 				}
 
@@ -257,7 +276,7 @@ const readNormativeRuleContract = (rule: SkillRule): string => {
 		throw new Error(`${getRuleId(rule)}: compact contract requires an anchored Incorrect example boundary.`);
 	}
 
-	if (!incorrectExampleFound || !correctMarkerFound) {
+	if (!incorrectExampleFound || !correctMarkerFound || firstExamplePairEndOffset === undefined) {
 		throw new Error(`${getRuleId(rule)}: full rule body requires fenced Incorrect and Correct examples after anchored markers.`);
 	}
 
@@ -285,7 +304,10 @@ const readNormativeRuleContract = (rule: SkillRule): string => {
 		throw new Error(`${getRuleId(rule)}: compact contract requires normative guidance before the Incorrect boundary.`);
 	}
 
-	return normativeBody.replace(/^## /, "# ");
+	return {
+		normativeBody: normativeBody.replace(/^## /, "# "),
+		firstExamplePair: normalizedBody.slice(incorrectBoundaryOffset, firstExamplePairEndOffset).trim(),
+	};
 };
 
 /**
@@ -293,10 +315,10 @@ const readNormativeRuleContract = (rule: SkillRule): string => {
  */
 export const generateRuleContractMarkdown = (rule: SkillRule): string => {
 	if (!supportedImpactLevels.has(rule.impact)) {
-		throw new Error(`${getRuleId(rule)}: unsupported impact level "${rule.impact}"; expected CRITICAL, HIGH, MEDIUM-HIGH, MEDIUM, or LOW.`);
+		throw new Error(`${getRuleId(rule)}: unsupported impact level "${rule.impact}"; expected CRITICAL, HIGH, or MEDIUM.`);
 	}
 
-	const normativeBody = readNormativeRuleContract(rule);
+	const {normativeBody, firstExamplePair} = readNormativeRuleContract(rule);
 	const fullRuleLink = `../rules/${encodePathSegment(rule.fileName)}`;
 	const routingMetadata = [
 		rule.requiresSelected.length === 0
@@ -307,11 +329,19 @@ export const generateRuleContractMarkdown = (rule: SkillRule): string => {
 		.filter((line): line is string => line !== undefined)
 		.join("\n\n");
 	const routingMetadataBlock = routingMetadata.length === 0 ? "" : `\n\n${routingMetadata}`;
-	const markdown =
-		rule.impact === "CRITICAL"
-			? `# ${escapeMarkdownText(rule.title)}\n\n**Impact: CRITICAL**${routingMetadataBlock}\n\n> CRITICAL rule: must read the [full rule](${fullRuleLink}) before implementation or review.\n`
-			: `${normativeBody}${routingMetadataBlock}\n\n> 예시·예외가 필요하면 [full rule](${fullRuleLink})을 읽습니다.\n`;
-	return markdown;
+	const fullRuleNotice = (tail: string): string => {
+		return `# ${escapeMarkdownText(rule.title)}\n\n**Impact: ${rule.impact}**${routingMetadataBlock}\n\n> ${rule.impact} rule: must read the [full rule](${fullRuleLink}) in full, prose and every example, before implementation or review${tail}.\n`;
+	};
+
+	if (rule.impact === "CRITICAL") {
+		return fullRuleNotice(", and re-check the result against its Correct examples before completion");
+	}
+
+	if (rule.impact === "HIGH") {
+		return fullRuleNotice("");
+	}
+
+	return `${normativeBody}${routingMetadataBlock}\n\n${firstExamplePair}\n\n> 나머지 예시·예외는 [full rule](${fullRuleLink})에 있습니다.\n`;
 };
 
 /**

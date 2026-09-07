@@ -32,4 +32,106 @@
 | `style/useFragmentSyntax` | `recommended`에 없으며, 켜면 `Fragment`를 요구하는 `react/composition-name-fragments-explicitly`와 충돌합니다 |
 | `style/useReactFunctionComponents` | 도메인 `all`에만 있고 기본 심각도가 `info`라 통과 여부를 판정하지 못합니다 |
 
-> 예시·예외가 필요하면 [full rule](../rules/13-01-tooling-enable-the-biome-react-domain.md)을 읽습니다.
+**Incorrect (리액트 도메인 설정이 없습니다):**
+
+```json
+{
+	"linter": {
+		"enabled": true,
+		"rules": {"preset": "recommended"}
+	}
+}
+```
+
+**Correct (도메인과 추가 검사를 켜고 레이어·라우트 `overrides`를 설정합니다):**
+
+```json
+{
+	"linter": {
+		"enabled": true,
+		"domains": {"react": "recommended"},
+		"rules": {
+			"preset": "recommended",
+			"correctness": {"noNestedComponentDefinitions": "error"},
+			"style": {
+				"noRestrictedImports": {
+					"level": "error",
+					"options": {
+						"patterns": [{"group": ["../**", "./**", "!./*.css"], "message": "가져오기는 절대경로로 씁니다. 심볼 없이 파일만 불러오는 줄만 같은 폴더를 ./ 로 씁니다."}]
+					}
+				}
+			}
+		}
+	},
+	"overrides": [
+		{
+			"includes": ["src/component/ui/**"],
+			"linter": {
+				"rules": {
+					"style": {
+						"noRestrictedImports": {
+							"level": "error",
+							"options": {
+								"patterns": [
+									{
+										"group": ["../**", "./**", "!./*.css"],
+										"message": "가져오기는 절대경로로 씁니다. 심볼 없이 파일만 불러오는 줄만 같은 폴더를 ./ 로 씁니다."
+									},
+									{
+										"group": ["@/component/widget/**", "@/page/**"],
+										"message": "`ui`는 `widget`과 `page`를 가져오지 않습니다."
+									}
+								]
+							}
+						}
+					}
+				}
+			}
+		},
+		{
+			"includes": ["src/component/widget/**"],
+			"linter": {
+				"rules": {
+					"style": {
+						"noRestrictedImports": {
+							"level": "error",
+							"options": {
+								"patterns": [
+									{
+										"group": ["../**", "./**", "!./*.css"],
+										"message": "가져오기는 절대경로로 씁니다. 심볼 없이 파일만 불러오는 줄만 같은 폴더를 ./ 로 씁니다."
+									},
+									{"group": ["@/page/**"], "message": "`widget`은 `page`를 가져오지 않습니다."}
+								]
+							}
+						}
+					}
+				}
+			}
+		},
+		{
+			"includes": ["src/page/detail/**"],
+			"linter": {
+				"rules": {
+					"style": {
+						"noRestrictedImports": {
+							"level": "error",
+							"options": {
+								"patterns": [
+									{
+										"group": ["../**", "./**", "!./*.css"],
+										"message": "가져오기는 절대경로로 씁니다. 심볼 없이 파일만 불러오는 줄만 같은 폴더를 ./ 로 씁니다."
+									},
+									{"group": ["@/page/**", "!@/page/detail/**"], "message": "다른 라우트 안의 것은 가져오지 않습니다."}
+								]
+							}
+						}
+					}
+				}
+			}
+		}
+	]
+}
+```
+
+> 나머지 예시·예외는 [full rule](../rules/13-01-tooling-enable-the-biome-react-domain.md)에 있습니다.

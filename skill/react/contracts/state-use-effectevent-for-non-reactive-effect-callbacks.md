@@ -1,6 +1,6 @@
 # Use useEffectEvent for Non-reactive Effect Callbacks
 
-**Impact: MEDIUM-HIGH (콜백은 최신 값을 읽고 이펙트는 구독 조건의 변화에만 반응합니다)**
+**Impact: MEDIUM (콜백은 최신 값을 읽고 이펙트는 구독 조건의 변화에만 반응합니다)**
 
 구독 이펙트의 콜백이 최신 프롭스·상태를 읽되 그 값 때문에 재구독할 필요가 없다면 `useEffectEvent`를 씁니다.
 연결 대상·구독 조건처럼 바뀌면 재설치해야 하는 값은 이펙트 의존성에 남깁니다.
@@ -22,4 +22,44 @@ DOM 이벤트 매개변수나 커링을 덧붙이지 않고,
 `biome`도 `useEffectEvent`를 인식하는 최근 버전을 씁니다. 이전 버전은 아래 Correct 예제를 훅 규칙 위반으로 표시합니다.
 설정은 `typescript/tooling-configure-biome-to-enforce-these-rules`를 따릅니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/08-05-state-use-effectevent-for-non-reactive-effect-callbacks.md)을 읽습니다.
+**Incorrect (최신 콜백을 읽기 위해 `ref`를 직접 동기화합니다):**
+
+```tsx
+const onMessageRef = useRef(onMessage);
+
+useEffect(() => {
+	onMessageRef.current = onMessage;
+}, [onMessage]);
+
+useEffect(() => {
+	const unsubscribe = socket.subscribe((message) => {
+		onMessageRef.current(message);
+	});
+
+	return unsubscribe;
+}, [socket]);
+```
+
+**Correct (비반응형 콜백은 `useEffectEvent`로 분리합니다):**
+
+```tsx
+/**
+ * socket message 수신 시 최신 onMessage 로직 실행
+ */
+const handleMessage = useEffectEvent((message: SocketMessage) => {
+	onMessage(message);
+});
+
+/**
+ * socket subscription lifecycle 유지
+ */
+useEffect(() => {
+	const unsubscribe = socket.subscribe((message) => {
+		handleMessage(message);
+	});
+
+	return unsubscribe;
+}, [socket]);
+```
+
+> 나머지 예시·예외는 [full rule](../rules/08-05-state-use-effectevent-for-non-reactive-effect-callbacks.md)에 있습니다.

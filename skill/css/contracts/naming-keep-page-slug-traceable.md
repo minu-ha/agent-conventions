@@ -16,4 +16,20 @@
 부모 식별자는 실제 충돌이 생겼을 때만 최소한으로 덧붙입니다.
 미리 붙이면 폴더가 깊어질수록 이름도 길어집니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/01-04-naming-keep-page-slug-traceable.md)을 읽습니다.
+**Incorrect (화면 이름이 아닌 식별자를 씁니다):**
+
+```txt
+pg_shell__body    <- 역할 낱말이라 어느 화면인지 안 나옴
+pg_doc__content   <- 라우트에 없는 줄임말
+pg_x__root        <- 되짚을 이름이 없음
+```
+
+**Correct (뼈대에는 라우트 세그먼트를 그대로 씁니다):**
+
+```txt
+pg_postsIndex__root    <- posts index 화면
+pg_postsDetail__body   <- posts/[id] 화면
+pg_document__body      <- document 화면
+```
+
+> 나머지 예시·예외는 [full rule](../rules/01-04-naming-keep-page-slug-traceable.md)에 있습니다.

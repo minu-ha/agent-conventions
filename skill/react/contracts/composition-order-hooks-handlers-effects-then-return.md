@@ -17,4 +17,64 @@
 구획 안에서는 선언 뒤에 참조한다는 조건만 지키고 별도 순서를 강제하지 않습니다.
 파생 값은 별도 구획으로 모으지 않고 `screen-keep-derived-values-close`에 따라 사용하는 곳에서 계산합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/05-09-composition-order-hooks-handlers-effects-then-return.md)을 읽습니다.
+**Incorrect (같은 종류가 흩어지고 이펙트가 아래 선언을 의존성으로 참조합니다):**
+
+```tsx
+export const PgOrderToolbar = () => {
+	// selectedIds는 아직 초기화 전이라 의존성 배열을 평가하는 이 줄에서 깨진다
+	useEffect(() => {
+		document.title = `주문 ${selectedIds.length}건 선택`;
+	}, [selectedIds]);
+
+	const [selectedIds, setSelectedIds] = useState<string[]>([]);
+
+	const handleClearButtonClick: MouseEventHandler<HTMLButtonElement> = () => {
+		setSelectedIds([]);
+	};
+
+	const [isPanelOpen, setIsPanelOpen] = useState(false);
+
+	const handlePanelOpenButtonClick: MouseEventHandler<HTMLButtonElement> = () => {
+		setIsPanelOpen(true);
+	};
+
+	return <section className={clsx("pg_orderToolbar__root")}>{props.children}</section>;
+};
+```
+
+**Correct (네 구획이 순서대로 놓입니다):**
+
+```tsx
+export const PgOrderToolbar = () => {
+	const [selectedIds, setSelectedIds] = useState<string[]>([]);
+	const [isPanelOpen, setIsPanelOpen] = useState(false);
+
+	/**
+	 * 비우기는 선택만 지우고 패널은 그대로 둔다
+	 */
+	const handleClearButtonClick: MouseEventHandler<HTMLButtonElement> = () => {
+		setSelectedIds([]);
+	};
+
+	/**
+	 * 필터 패널 열기
+	 */
+	const handlePanelOpenButtonClick: MouseEventHandler<HTMLButtonElement> = () => {
+		setIsPanelOpen(true);
+	};
+
+	useEffect(() => {
+		document.title = `주문 ${selectedIds.length}건 선택`;
+	}, [selectedIds]);
+
+	return (
+		<section className={clsx("pg_orderToolbar__root")}>
+			<UiButton onClick={handleClearButtonClick}>비우기</UiButton>
+			<UiButton onClick={handlePanelOpenButtonClick}>필터</UiButton>
+			{isPanelOpen && <PgOrderFilterPanel />}
+		</section>
+	);
+};
+```
+
+> 나머지 예시·예외는 [full rule](../rules/05-09-composition-order-hooks-handlers-effects-then-return.md)에 있습니다.

@@ -1,6 +1,6 @@
 # Place Owner Files in Role Folders
 
-**Impact: MEDIUM-HIGH (추출한 파일의 소유자와 역할을 경로에서 확인할 수 있습니다)**
+**Impact: MEDIUM (추출한 파일의 소유자와 역할을 경로에서 확인할 수 있습니다)**
 
 추출한 파일은 소유자 폴더에 두고, 역할과 공개 범위에 맞춰 이름을 정합니다.
 호출 계층은 폴더를 중첩하지 않고 진입 파일의 조립으로 드러냅니다.
@@ -36,4 +36,24 @@
 | 파일명과 심볼의 접두사 | `ownership-prefix-layer-names-on-files-and-symbols` |
 | 루트에만 두는 `util`과 `config` | `typescript/functions-promote-shared-functions-to-root-util`, `typescript/naming-read-environment-values-through-config-env` |
 
-> 예시·예외가 필요하면 [full rule](../rules/01-03-ownership-place-owner-files-in-role-folders.md)을 읽습니다.
+**Incorrect (단순 컴포넌트에 역할 폴더를 미리 다 만듭니다):**
+
+```txt
+component/ui/button/
+├── ui-button.tsx
+├── ui-button.css
+├── _constant/
+├── _function/
+├── _hook/
+└── _type/
+```
+
+**Correct (지원 코드가 없으면 폴더 없이 파일만 둡니다):**
+
+```txt
+component/ui/button/
+├── ui-button.tsx
+└── ui-button.css
+```
+
+> 나머지 예시·예외는 [full rule](../rules/01-03-ownership-place-owner-files-in-role-folders.md)에 있습니다.

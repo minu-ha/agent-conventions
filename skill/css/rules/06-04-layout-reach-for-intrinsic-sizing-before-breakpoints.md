@@ -1,7 +1,7 @@
 ---
 title: Reach for Intrinsic Sizing Before Breakpoints
 titleKo: 브레이크포인트보다 고유 크기 지정을 먼저 검토합니다
-impact: MEDIUM-HIGH
+impact: MEDIUM
 impactDescription: 컴포넌트가 배치된 폭에 맞춰 크기를 조정해 위치가 바뀌어도 CSS 수정을 줄입니다
 appliesWhen:
   - `@media` 브레이크포인트를 새로 넣으려 할 때
@@ -13,7 +13,7 @@ tags: values, layout, responsive
 
 ## Reach for Intrinsic Sizing Before Breakpoints
 
-**Impact: MEDIUM-HIGH (컴포넌트가 배치된 폭에 맞춰 크기를 조정해 위치가 바뀌어도 CSS 수정을 줄입니다)**
+**Impact: MEDIUM (컴포넌트가 배치된 폭에 맞춰 크기를 조정해 위치가 바뀌어도 CSS 수정을 줄입니다)**
 
 브레이크포인트를 추가하기 전에 **고유 크기 지정만으로 배치할 수 있는지** 확인합니다.
 `@media`는 뷰포트 폭을 보므로 같은 컴포넌트를 본문에서 좁은 사이드바로 옮겨도 실제 슬롯 폭을 반영하지 못합니다.

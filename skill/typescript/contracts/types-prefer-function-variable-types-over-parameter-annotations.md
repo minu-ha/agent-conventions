@@ -1,6 +1,6 @@
 # Prefer Function Variable Types Over Parameter Annotations
 
-**Impact: MEDIUM-HIGH (호출 계약을 한곳에서 읽고 같은 시그니처를 반복 선언하지 않습니다)**
+**Impact: MEDIUM (호출 계약을 한곳에서 읽고 같은 시그니처를 반복 선언하지 않습니다)**
 
 기존 호출 계약이 있으면 매개변수와 반환 타입을 반복하지 않고 함수를 담는 변수에 붙입니다.
 예를 들어 `const handleClick: MouseEventHandler<HTMLButtonElement> = (event) => …`로 씁니다.
@@ -17,4 +17,56 @@
 `select: (response) => ({...})`를 밖으로 빼거나 새 함수 타입으로 고정하지 않습니다.
 커링 팩토리가 반환하는 리액트 핸들러는 프레임워크 컨벤션이 판단합니다.
 
-> 예시·예외가 필요하면 [full rule](../rules/01-03-types-prefer-function-variable-types-over-parameter-annotations.md)을 읽습니다.
+**Incorrect (계약이 있는데 시그니처를 다시 적습니다):**
+
+```ts
+// 이미 있는 계약
+/**
+ * 사용자 화면 표시 문자열 계약
+ */
+interface UserFormatters {
+	/**
+	 * 상태 객체를 화면 문자열로
+	 */
+	toStateLabel: (state: Record<string, unknown>) => string;
+	/**
+	 * 권한 코드를 화면 문자열로
+	 */
+	toRoleLabel: (role: string) => string;
+}
+
+/**
+ * 상태 객체를 화면 문자열로 바꾼다
+ */
+const toStateLabel = (state: Record<string, unknown>): string => {
+	return JSON.stringify(state);
+};
+```
+
+**Correct (이미 있는 계약에서 시그니처를 가져와 함수 전체에 타입을 붙입니다):**
+
+```ts
+// 이미 있는 계약
+/**
+ * 사용자 화면 표시 문자열 계약
+ */
+interface UserFormatters {
+	/**
+	 * 상태 객체를 화면 문자열로
+	 */
+	toStateLabel: (state: Record<string, unknown>) => string;
+	/**
+	 * 권한 코드를 화면 문자열로
+	 */
+	toRoleLabel: (role: string) => string;
+}
+
+/**
+ * 상태 객체를 화면 문자열로 바꾼다
+ */
+const toStateLabel: UserFormatters["toStateLabel"] = (state) => {
+	return JSON.stringify(state);
+};
+```
+
+> 나머지 예시·예외는 [full rule](../rules/01-03-types-prefer-function-variable-types-over-parameter-annotations.md)에 있습니다.
