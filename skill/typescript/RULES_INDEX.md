@@ -1,12 +1,12 @@
 # TypeScript 컨벤션 Rule Index
 
 - Skill: `typescript`
-- Routing digest: `sha256:db5a477a566f29697bce6baf836135285f107c45baed25a4648699d8b72baa6d`
+- Routing digest: `sha256:d5c8016b1bbf1474190b1f0f67edd582728679d7c70459c649eeddad863e88a0`
 
 ## Local Rules
 
 - T01-01 | types-reuse-existing-contracts-before-new-types | 뜻이 같은 기존 타입, 인터페이스, 스키마가 있는데 형태를 새로 선언·변경·복제·파생할 때. 같은 형태를 두 번 선언했다가 넣거나 뺄 때. 제외: 맞는 후보가 없거나 소유자만 옮긴 경우. 제외: 그대로인 계약을 새 자리에서 쓰는 경우. 제외: 고칠 수 없는 형태를 그대로 쓰는 경우. | reviewWith: types-derive-subsets-with-indexed-access, types-document-custom-types-and-shapes
-- T01-02 | types-derive-subsets-with-indexed-access | 기존 타입의 일부 필드만 담는 형태를 선언·변경할 때. \`Pick\`·\`Omit\`·\`Partial\`·\`Required\`를 추가·변경할 때. 제외: 필드 이름·타입·선택 여부가 모두 같아 기존 타입을 그대로 참조하는 경우. | reviewWith: types-document-custom-types-and-shapes, types-reuse-existing-contracts-before-new-types
+- T01-02 | types-derive-subsets-with-indexed-access | 기존 타입의 일부 필드만 담는 형태를 선언·변경할 때. \`Pick\`·\`Omit\`·\`Partial\`·\`Required\`·\`Extract\`·\`NonNullable\`을 추가·변경할 때. 제외: 필드 이름·타입·선택 여부가 모두 같아 기존 타입을 그대로 참조하는 경우. | reviewWith: types-document-custom-types-and-shapes, types-reuse-existing-contracts-before-new-types
 - T01-03 | types-prefer-function-variable-types-over-parameter-annotations | 기존 호출 계약을 이름 붙인 함수나 공용 함수 구현에 다시 쓸 때. 같은 시그니처를 여러 구현이 함께 쓰도록 바꿀 때. 제외: 타입 표기 없이 문맥으로 추론되는 일회성 인라인 콜백인 경우. | reviewWith: types-mark-unused-parameters-with-underscore
 - T01-04 | types-document-custom-types-and-shapes | 타입, 인터페이스, 스키마 최상단, 객체 상수, 계약 필드, 파생 별칭을 추가·변경할 때. 이름 붙인 형태에 호출 계약 역할을 새로 얹을 때. 제외: 외부·생성된·읽기 전용·공용 형태를 그대로 쓰거나 반환 타입이 익명으로 추론되는 경우.
 - T01-05 | types-mark-unused-parameters-with-underscore | 기존 콜백이나 프레임워크 계약을 구현하면서 매개변수를 빼거나 쓰지 않을 때. 커링한 핸들러가 마지막에 돌려주는 콜백에서 매개변수를 뺄 때.

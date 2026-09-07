@@ -86,37 +86,31 @@
 
 **Impact: MEDIUM-HIGH (뜻이 그대로면 기존 타입이나 스키마를 그대로 참조해 같은 형태를 두 번 선언하지 않습니다)**
 
-뜻과 수명이 같고 필드 이름, 타입, 선택 여부, 읽기 전용 여부까지 같은 기존 계약을 재사용합니다.
+새 타입을 적기 전에 뜻과 수명이 같은 기존 타입이나 스키마를 먼저 찾습니다.
+필드 이름, 타입, 선택 여부, 읽기 전용 여부까지 같으면 그 계약을 그대로 참조합니다.
 구조가 같아도 단위나 도메인 역할이 다르면 합치지 않습니다.
 
-| 상황 | 처리 |
+| 찾은 기존 계약 | 처리 |
 | --- | --- |
-| 같은 뜻의 계약과 모든 필드 조건이 같음 | 기존 타입이나 스키마를 그대로 참조합니다 |
-| 같은 필드의 타입·선택 여부·읽기 전용 여부가 다름 | 새 계약을 선언합니다 |
-| 기존 계약의 일부 필드만 필요함 | `types-derive-subsets-with-indexed-access`에 따라 파생합니다 |
+| 뜻이 같고 필드 조건도 모두 같음 | 그대로 참조합니다 |
+| 뜻은 같지만 필드 일부만 필요하거나 타입·선택 여부·읽기 전용 여부가 다름 | 새 계약을 선언하고 필드는 `types-derive-subsets-with-indexed-access`에 따라 원본에서 파생합니다 |
 | 원본 입력과 정규화 결과처럼 역할이 다름 | 필드가 같아도 별도 계약을 둡니다 |
 
 다음은 이 규칙을 적용하지 않는 경우입니다.
 
-| 변경 | 별도로 판단할 것 |
+| 변경 | 처리 |
 | --- | --- |
-| 소유자 이동, 이름·주석 변경, 그대로인 계약의 새 사용처 | 새 호출 계약 역할이 생기는지만 문서화 규칙으로 판단합니다 |
-| 위치 인자를 우리가 고칠 수 있는 기존 객체 계약으로 대체 | `types-document-custom-types-and-shapes`만 적용합니다 |
-| 맞는 기존 형태가 없는 새 도메인 계약 | 문서화 규칙만 적용합니다 |
-| 외부·생성된·읽기 전용·공용 형태를 그대로 사용 | 두 타입 규칙 모두 대상이 아닙니다. 함수 문서화는 문서 규칙이 판단합니다 |
+| 소유자 이동, 이름·주석 변경, 그대로인 계약의 새 사용처 | 타입을 새로 만들지 않습니다. 기존 선언의 주석에 새 역할을 적을지만 `types-document-custom-types-and-shapes`로 판단합니다 |
+| 여러 위치 인자를 우리가 고칠 수 있는 기존 객체 계약 하나로 묶음 | 그 계약을 그대로 받고 `types-document-custom-types-and-shapes`만 적용합니다 |
+| 맞는 기존 형태가 없는 새 도메인 계약 | 새로 선언하고 `types-document-custom-types-and-shapes`만 적용합니다 |
+| 외부·생성된·읽기 전용·공용 형태를 그대로 사용 | 이 규칙과 `types-derive-subsets-with-indexed-access` 모두 대상이 아닙니다. 함수 헤더 주석은 `docs-require-header-jsdoc-on-key-declarations`가 판단합니다 |
 
 규칙을 적용하려고 요청에 없는 `*Params`나 `*Input`을 만들지 않습니다.
 
 **Incorrect (기존 계약과 같은 구조를 다시 선언합니다):**
 
 ```ts
-// 이미 있는 계약
-interface UserRecord {
-	id: string;
-	name: string;
-	email: string;
-}
-
+// 이미 있는 계약: UserRecord { id: string; name: string; email: string }
 // 필드 이름, 타입, 선택 여부가 그대로인데 새로 선언했다
 interface InviteRecipient {
 	id: string;
@@ -130,35 +124,52 @@ export const sendInvites = (recipients: InviteRecipient[]): Promise<void> => { /
 **Correct (형태가 같으면 기존 계약을 그대로 참조합니다):**
 
 ```ts
+// 이미 있는 계약: UserRecord { id: string; name: string; email: string }
 /**
  * 초대 대상은 사용자 레코드 그대로다. 필드가 같아 따로 선언하지 않는다
  */
 export const sendInvites = (recipients: UserRecord[]): Promise<void> => { /* … */ };
 ```
 
-**Correct (선택 여부가 하나라도 다르면 새로 선언합니다):**
+**Incorrect (선택 여부가 다른데 기존 계약을 그대로 써서 없는 값을 빈 문자열로 채웁니다):**
 
 ```ts
+// 이미 있는 계약: UserRecord { id: string; name: string; email: string }
+export const sendInvite = (draft: UserRecord): Promise<void> => { /* … */ };
+
+// 폼은 이름을 비울 수 있고 id 가 아직 없어 빈 문자열을 채워야 타입이 맞는다
+sendInvite({ id: "", name: "", email });
+```
+
+**Correct (선택 여부가 하나라도 다르면 새로 선언하되 필드는 원본에서 파생합니다):**
+
+```ts
+// 이미 있는 계약: UserRecord { id: string; name: string; email: string }
 /**
- * 초대 폼 입력. 이름을 비울 수 있어 UserRecord와 선택 여부가 다르다
+ * 초대 폼 입력. 이름을 비울 수 있고 id 가 아직 없어 UserRecord 와 필드 조건이 다르다
  */
 interface InviteDraft {
 	/**
 	 * 받는 사람 이메일
 	 */
-	email: string;
+	email: UserRecord["email"];
 	/**
 	 * 표시 이름. 비우면 이메일을 그대로 보여 준다
 	 */
-	name?: string;
+	name?: UserRecord["name"];
 }
+
+/**
+ * 초대 한 건을 보낸다
+ */
+export const sendInvite = (draft: InviteDraft): Promise<void> => { /* … */ };
 ```
 
 ### 1.2 Derive Subsets With Indexed Access Instead of `Pick`
 
 **Rule:** `T01-02` · `types-derive-subsets-with-indexed-access`
 
-**Applies when:** 기존 타입의 일부 필드만 담는 형태를 선언·변경할 때. `Pick`·`Omit`·`Partial`·`Required`를 추가·변경할 때. 제외: 필드 이름·타입·선택 여부가 모두 같아 기존 타입을 그대로 참조하는 경우.
+**Applies when:** 기존 타입의 일부 필드만 담는 형태를 선언·변경할 때. `Pick`·`Omit`·`Partial`·`Required`·`Extract`·`NonNullable`을 추가·변경할 때. 제외: 필드 이름·타입·선택 여부가 모두 같아 기존 타입을 그대로 참조하는 경우.
 
 **Review with:** `types-document-custom-types-and-shapes`, `types-reuse-existing-contracts-before-new-types`
 
@@ -177,6 +188,15 @@ interface InviteDraft {
 `Omit`은 제외한 이름이 원본에서 사라져도 오류가 나지 않으므로 원본 변경 시 이름을 확인합니다.
 `ReturnType`, `Parameters`, `Awaited`는 필드를 고르는 연산이 아니므로 대상이 아닙니다.
 
+원본 필드를 좁히거나 필수로 바꿀 때도 원본에서 파생합니다.
+원시 타입을 다시 적으면 원본과의 연결이 끊겨 외부 계약에서 온 필드인지 우리가 정한 필드인지 구분할 수 없습니다.
+
+| 필드 값을 원본과 다르게 받을 때 | 적는 법 | 예 |
+| --- | --- | --- |
+| 필드 값 중 일부만 받음 | `Extract<원본["필드"], 좁힌 타입>` | `TableCellProps`의 `padding` 중 `normal`·`none`만 받습니다 |
+| 원본이 비워 두는 필드를 필수로 받음 | `NonNullable<원본["필드"]>` | `align: NonNullable<TableCellProps["align"]>` |
+| union 계약 중 한 갈래만 받음 | `Extract<원본, 판별 필드>` | `Extract<TextFieldProps, { variant?: "outlined" }>` |
+
 인덱스 접근은 필드 이름과 출처를 선언에 남겨 여러 계약의 필드를 모으고 각각 문서화하기 좋습니다.
 필드 주석은 `types-document-custom-types-and-shapes`를 따릅니다.
 원본 필드의 타입 변경과 삭제는 인덱스 접근과 `Pick` 모두 컴파일 검사에 반영됩니다.
@@ -187,8 +207,10 @@ interface InviteDraft {
 | 읽기 전용 필드 | `readonly`를 직접 붙입니다. 인덱스 접근만으로는 복사되지 않습니다 |
 | `exactOptionalPropertyTypes`가 켜진 선택 필드의 쓰기 타입 | `name?: Required<Src>["name"]`으로 원본의 명시적 `undefined` 허용 여부를 보존합니다 |
 
-선택 필드에 `name?: Src["name"]`을 쓰면 읽기 타입의 `undefined`까지 대입하도록 계약을 넓힐 수 있습니다.
-이를 막는 `Required<원본>["필드"]`는 닫힌 집합에서도 허용하며, 이 처리 때문에 컴파일러 옵션을 바꾸지 않습니다.
+선택 필드의 인덱스 접근 `Src["name"]`은 `string | undefined`입니다.
+`exactOptionalPropertyTypes`가 켜져 있으면 `name?: Src["name"]`은 원본이 막는 `undefined` 대입까지 허용합니다.
+그때만 `name?: Required<Src>["name"]`으로 `undefined`를 벗겨 원본과 같은 쓰기 계약을 유지합니다.
+옵션이 꺼져 있으면 두 형태가 같은 타입이므로 `Src["name"]`으로 적고, 이 처리 때문에 옵션을 바꾸지 않습니다.
 
 **Incorrect (`Pick`으로 골라 필드 이름과 설명이 사라집니다):**
 
@@ -217,7 +239,7 @@ interface UserPreview {
 	/**
 	 * 목록에 표시할 이름. 원본에서 선택 필드라 여기서도 선택으로 둔다
 	 */
-	name?: Required<UserRecord>["name"];
+	name?: UserRecord["name"];
 }
 ```
 
@@ -254,7 +276,25 @@ interface ProductListRow {
 	/**
 	 * 마지막 수정자 이름. 원본에서 선택 필드라 여기서도 선택으로 둔다
 	 */
-	ownerName?: Required<UserRecord>["name"];
+	ownerName?: UserRecord["name"];
+}
+```
+
+**Incorrect (원본을 따라가야 하는 열린 집합을 인덱스 접근으로 닫아 새 필드를 놓칩니다):**
+
+```ts
+/**
+ * 내보내기 요청 전송 형태
+ */
+interface ExportRequestBody {
+	/**
+	 * 내보낼 문서 ID
+	 */
+	documentId: GeneratedExportRequest["documentId"];
+	/**
+	 * 내보내기 형식
+	 */
+	format: GeneratedExportRequest["format"];
 }
 ```
 
@@ -265,6 +305,43 @@ interface ProductListRow {
  * 내보내기 요청 전송 형태. 생성된 계약이 필드를 더하면 그대로 따라가고 서버가 채우는 시각만 뺀다
  */
 type ExportRequestBody = Omit<GeneratedExportRequest, "requestedAt">;
+```
+
+**Incorrect (좁힌 값을 원시 타입으로 다시 적어 원본과의 연결이 사라집니다):**
+
+```ts
+// 원본: TableCellProps.align 은 선택 필드고 padding 은 normal·checkbox·none 이다
+/**
+ * 보고서 표 칸 표시 계약
+ */
+interface ReportCell {
+	/**
+	 * 칸 정렬
+	 */
+	align: "inherit" | "left" | "center" | "right" | "justify";
+	/**
+	 * 칸 여백. checkbox 칸은 두지 않는다
+	 */
+	padding?: "normal" | "none";
+}
+```
+
+**Correct (원본 필드를 `NonNullable`·`Extract`로 파생해 출처와 좁힘을 함께 남깁니다):**
+
+```ts
+/**
+ * 보고서 표 칸 표시 계약. align·padding 은 TableCell 로 그대로 넘긴다
+ */
+interface ReportCell {
+	/**
+	 * 칸 정렬. TableCell 은 비울 수 있지만 이 표는 칸마다 정한다
+	 */
+	align: NonNullable<TableCellProps["align"]>;
+	/**
+	 * 칸 여백. checkbox 칸은 두지 않아 normal·none 만 받는다
+	 */
+	padding?: Extract<TableCellProps["padding"], "normal" | "none">;
+}
 ```
 
 ### 1.3 Prefer Function Variable Types Over Parameter Annotations

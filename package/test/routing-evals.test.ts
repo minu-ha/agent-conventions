@@ -233,7 +233,7 @@ const typescriptRuleRouting = {
 	},
 	"types-derive-subsets-with-indexed-access": {
 		appliesWhen:
-			"기존 타입의 일부 필드만 담는 형태를 선언·변경할 때. `Pick`·`Omit`·`Partial`·`Required`를 추가·변경할 때. 제외: 필드 이름·타입·선택 여부가 모두 같아 기존 타입을 그대로 참조하는 경우.",
+			"기존 타입의 일부 필드만 담는 형태를 선언·변경할 때. `Pick`·`Omit`·`Partial`·`Required`·`Extract`·`NonNullable`을 추가·변경할 때. 제외: 필드 이름·타입·선택 여부가 모두 같아 기존 타입을 그대로 참조하는 경우.",
 		reviewWith: ["types-reuse-existing-contracts-before-new-types", "types-document-custom-types-and-shapes"],
 	},
 	"types-prefer-function-variable-types-over-parameter-annotations": {
@@ -3449,14 +3449,14 @@ test("v17 TypeScript boundaries exclude React props and prevent self-created dup
 	const existingContract = await readRule("typescript", "types-reuse-existing-contracts-before-new-types");
 	assert.match(
 		flattenWhitespace(existingContract),
-		/위치 인자를 우리가 고칠 수 있는 기존 객체 계약으로 대체 \| `types-document-custom-types-and-shapes`만 적용합니다/i,
+		/여러 위치 인자를 우리가 고칠 수 있는 기존 객체 계약 하나로 묶음 \| 그 계약을 그대로 받고 `types-document-custom-types-and-shapes`만 적용합니다/i,
 	);
 	assert.match(existingContract, /규칙을 적용하려고 요청에 없는 `\*Params`나 `\*Input`을 만들지 않습니다/i);
 	assertMentions(
 		existingContract,
 		[
 			/다음은 이 규칙을 적용하지 않는 경우입니다/,
-			/외부·생성된·읽기 전용·공용 형태를 그대로 사용 \| 두 타입 규칙 모두 대상이 아닙니다\. 함수 문서화는 문서 규칙이 판단합니다/,
+			/외부·생성된·읽기 전용·공용 형태를 그대로 사용 \| 이 규칙과 `types-derive-subsets-with-indexed-access` 모두 대상이 아닙니다\. 함수 헤더 주석은 `docs-require-header-jsdoc-on-key-declarations`가 판단합니다/,
 		],
 		"existingContract excludes unchanged external contracts",
 	);
@@ -3467,7 +3467,7 @@ test("v17 TypeScript boundaries exclude React props and prevent self-created dup
 		[
 			/구조가 같아도 단위나 도메인 역할이 다르면 합치지 않습니다/,
 			/원본 입력과 정규화 결과처럼 역할이 다름 \| 필드가 같아도 별도 계약을 둡니다/,
-			/맞는 기존 형태가 없는 새 도메인 계약 \| 문서화 규칙만 적용합니다/,
+			/맞는 기존 형태가 없는 새 도메인 계약 \| 새로 선언하고 `types-document-custom-types-and-shapes`만 적용합니다/,
 		],
 		"existingContract keeps distinct roles separate",
 	);
@@ -3512,7 +3512,10 @@ test("v17 TypeScript boundaries exclude React props and prevent self-created dup
 	);
 	assertMentions(
 		generatedContracts[2],
-		[/위치 인자를 우리가 고칠 수 있는 기존 객체 계약으로 대체/i, /규칙을 적용하려고 요청에 없는 `\*Params`나 `\*Input`을 만들지 않습니다/i],
+		[
+			/여러 위치 인자를 우리가 고칠 수 있는 기존 객체 계약 하나로 묶음/i,
+			/규칙을 적용하려고 요청에 없는 `\*Params`나 `\*Input`을 만들지 않습니다/i,
+		],
 		"generatedContracts",
 	);
 });
@@ -3586,7 +3589,10 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	);
 	assertMentions(
 		generatedContracts[2],
-		[/위치 인자를 우리가 고칠 수 있는 기존 객체 계약으로 대체/i, /규칙을 적용하려고 요청에 없는 `\*Params`나 `\*Input`을 만들지 않습니다/i],
+		[
+			/여러 위치 인자를 우리가 고칠 수 있는 기존 객체 계약 하나로 묶음/i,
+			/규칙을 적용하려고 요청에 없는 `\*Params`나 `\*Input`을 만들지 않습니다/i,
+		],
 		"generatedContracts",
 	);
 });
