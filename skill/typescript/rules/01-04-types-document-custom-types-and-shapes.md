@@ -8,7 +8,7 @@ appliesWhen:
   - 이름 붙인 형태에 호출 계약 역할을 새로 얹을 때
   - 제외: 외부·생성된·읽기 전용·공용 형태를 그대로 쓰거나 반환 타입이 익명으로 추론되는 경우
 requiresSelected: >-
-  docs-write-concise-korean-comments-about-purpose-and-constraints,
+  docs-write-korean-comments-about-purpose-and-constraints,
   docs-write-doc-comments-as-multiline-blocks
 tags: types, jsdoc
 ---
@@ -18,7 +18,7 @@ tags: types, jsdoc
 **Impact: MEDIUM (구현을 읽기 전에 도메인 전용 계약을 이해할 수 있습니다)**
 
 직접 선언한 타입과 형태는 헤더와 필드를 구분해 문서화합니다.
-주석 내용은 `docs-write-concise-korean-comments-about-purpose-and-constraints`의 한국어 기준을 따릅니다.
+주석 내용은 `docs-write-korean-comments-about-purpose-and-constraints`의 한국어 기준을 따릅니다.
 
 | 선언 | 헤더 주석 | 필드 주석 |
 | --- | --- | --- |

@@ -27,7 +27,7 @@
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks"
 				]
 			}
@@ -54,7 +54,7 @@
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks"
 				]
 			},
@@ -81,7 +81,7 @@
 						"naming-use-consistent-file-and-symbol-naming",
 						"naming-use-direct-imports-and-public-entry-points",
 						"docs-require-header-jsdoc-on-key-declarations",
-						"docs-write-concise-korean-comments-about-purpose-and-constraints",
+						"docs-write-korean-comments-about-purpose-and-constraints",
 						"docs-write-doc-comments-as-multiline-blocks"
 					],
 					"css": [
@@ -125,7 +125,7 @@
 					"functions-use-named-object-params-for-complex-signatures",
 					"functions-extract-helpers-only-when-the-boundary-is-real",
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks"
 				]
 			}
@@ -151,7 +151,7 @@
 					"naming-place-project-constants-in-the-root-constant-folder",
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
-					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks"
 				]
 			}
@@ -182,7 +182,7 @@
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks"
 				]
 			}
@@ -212,7 +212,7 @@
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks"
 				]
 			}
@@ -245,7 +245,7 @@
 					"naming-use-direct-imports-and-public-entry-points",
 					"functions-extract-helpers-only-when-the-boundary-is-real",
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks"
 				]
 			}
@@ -284,7 +284,7 @@
 					"naming-use-direct-imports-and-public-entry-points",
 					"absence-expose-optional-values-instead-of-silent-fallbacks",
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks"
 				]
 			}
@@ -314,7 +314,7 @@
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks"
 				]
 			}
@@ -342,7 +342,7 @@
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks"
 				]
 			}
@@ -369,7 +369,7 @@
 				"typescript": [
 					"naming-use-consistent-file-and-symbol-naming",
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks"
 				]
 			}
@@ -396,7 +396,7 @@
 					"naming-use-direct-imports-and-public-entry-points",
 					"docs-keep-body-comments-for-intent-and-steps",
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks",
 					"docs-justify-convention-exceptions-with-a-reason-comment"
 				]
@@ -424,7 +424,7 @@
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks"
 				]
 			}
@@ -452,7 +452,7 @@
 				"typescript": [
 					"absence-expose-optional-values-instead-of-silent-fallbacks",
 					"docs-keep-body-comments-for-intent-and-steps",
-					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-korean-comments-about-purpose-and-constraints",
 					"docs-justify-convention-exceptions-with-a-reason-comment"
 				]
 			}
@@ -502,7 +502,7 @@
 				],
 				"typescript": [
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks"
 				]
 			}
@@ -528,7 +528,7 @@
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks"
 				]
 			}
@@ -641,7 +641,7 @@
 				],
 				"typescript": [
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks"
 				]
 			}

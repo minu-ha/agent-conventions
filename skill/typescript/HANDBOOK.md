@@ -62,7 +62,7 @@
 6. [JSDoc and Comment Conventions](#6-jsdoc-and-comment-conventions) — **MEDIUM**
     - 6.1 [Keep Body Comments for Intent and Steps](#61-keep-body-comments-for-intent-and-steps)
     - 6.2 [Require Header Doc Comments on Key Declarations](#62-require-header-doc-comments-on-key-declarations)
-    - 6.3 [Write Concise Korean Comments About Purpose and Constraints](#63-write-concise-korean-comments-about-purpose-and-constraints)
+    - 6.3 [Write Korean Comments About Purpose and Constraints](#63-write-korean-comments-about-purpose-and-constraints)
     - 6.4 [Write Doc Comments as Multiline Blocks](#64-write-doc-comments-as-multiline-blocks)
     - 6.5 [Justify Convention Exceptions With a Checkable Reason Comment](#65-justify-convention-exceptions-with-a-checkable-reason-comment)
 7. [Tooling](#7-tooling) — **MEDIUM**
@@ -463,12 +463,12 @@ const toSearchRequest: ToRequest = (request) => {
 
 **Applies when:** 타입, 인터페이스, 스키마 최상단, 객체 상수, 계약 필드, 파생 별칭을 추가·변경할 때. 이름 붙인 형태에 호출 계약 역할을 새로 얹을 때. 제외: 외부·생성된·읽기 전용·공용 형태를 그대로 쓰거나 반환 타입이 익명으로 추론되는 경우.
 
-**Requires selected:** `docs-write-concise-korean-comments-about-purpose-and-constraints`, `docs-write-doc-comments-as-multiline-blocks` · 함께 적용
+**Requires selected:** `docs-write-doc-comments-as-multiline-blocks`, `docs-write-korean-comments-about-purpose-and-constraints` · 함께 적용
 
 **Impact: MEDIUM (구현을 읽기 전에 도메인 전용 계약을 이해할 수 있습니다)**
 
 직접 선언한 타입과 형태는 헤더와 필드를 구분해 문서화합니다.
-주석 내용은 `docs-write-concise-korean-comments-about-purpose-and-constraints`의 한국어 기준을 따릅니다.
+주석 내용은 `docs-write-korean-comments-about-purpose-and-constraints`의 한국어 기준을 따릅니다.
 
 | 선언 | 헤더 주석 | 필드 주석 |
 | --- | --- | --- |
@@ -1525,7 +1525,7 @@ fetchProductPage({baseUrl: api_base_url, page: urlParams.page, pageSize: paginat
 추출 전에 값 검사를 `absence-check-once-at-the-boundary`의 경계로 보내 분기를 줄일 수 있는지 확인합니다.
 같은 판정이 반복되면 `values-decide-once-and-carry-the-result`에 따라 결과를 전달할지도 먼저 봅니다.
 함수 배치는 `functions-give-each-function-its-own-file`,
-루트 승격은 `functions-promote-shared-functions-to-root-util`이 정합니다.
+루트 승격은 `functions-promote-owner-free-functions-to-root-util`이 정합니다.
 
 **Incorrect (한 자리에서만 쓰는 단계를 함수로 떼어 내 흐름이 파일 안에서 흩어집니다):**
 
@@ -1653,7 +1653,7 @@ export const toGradeTone = (grade: string): Tone => {
 
 **Requires selected:** `functions-extract-helpers-only-when-the-boundary-is-real` · 함께 적용
 
-**Review with:** `functions-order-declarations-top-down`, `functions-promote-shared-functions-to-root-util`
+**Review with:** `functions-order-declarations-top-down`, `functions-promote-owner-free-functions-to-root-util`
 
 **Impact: HIGH (보조 함수를 개별 파일로 관리하고 폴더로 소유 관계를 드러냅니다)**
 
@@ -1664,7 +1664,7 @@ export const toGradeTone = (grade: string): Tone => {
 | --- | --- |
 | 대표 함수 하나 | `_function/<대표>/<대표>.ts`와 같은 폴더의 `_<보조>.ts` |
 | 같은 소유자의 대표 함수 둘 이상 | `_function/<보조>.ts`. 기존 `_` 접두사를 뗍니다 |
-| 다른 소유자 | `functions-promote-shared-functions-to-root-util`로 루트 승격 여부를 판단합니다 |
+| 다른 소유자 | `functions-promote-owner-free-functions-to-root-util`로 루트 승격 여부를 판단합니다 |
 
 | 배치 대상 | 규범 |
 | --- | --- |
@@ -1839,7 +1839,7 @@ const selectedLocaleSupported = isSupportedLocale(selectedLocale);
 
 ### 3.6 Promote Owner-Free Functions to the Root util Folder
 
-**Rule:** `T03-06` · `functions-promote-shared-functions-to-root-util`
+**Rule:** `T03-06` · `functions-promote-owner-free-functions-to-root-util`
 
 **Applies when:** 함수를 루트 `util` 폴더로 옮기거나 종류 폴더를 새로 만들 때. 두 소유자가 같은 함수를 쓰게 될 때. 제외: 소유자 안에서 파일 자리만 바꾸는 경우.
 
@@ -3263,7 +3263,7 @@ export const toSignedTone = (value: number): Tone => {
 
 **Applies when:** 함수 본문의 `//` 주석을 추가·수정·유지할 때. 도메인 규칙, 예외 방어, 외부 제약, 부수효과 순서, 긴 절차의 단계를 주석으로 설명할 때.
 
-**Review with:** `docs-justify-convention-exceptions-with-a-reason-comment`, `docs-write-concise-korean-comments-about-purpose-and-constraints`
+**Review with:** `docs-justify-convention-exceptions-with-a-reason-comment`, `docs-write-korean-comments-about-purpose-and-constraints`
 
 **Impact: MEDIUM (코드를 옮겨 적은 주석은 막고 읽는 데 필요한 설명은 남깁니다)**
 
@@ -3277,7 +3277,7 @@ export const toSignedTone = (value: number): Tone => {
 | 그 밖의 지역 선언 | 별도 주석을 달지 않습니다. 필요한 줄의 의도만 `//`로 적습니다 |
 | JSX 자식 | `//`를 쓸 수 없으므로 프레임워크 규칙을 따릅니다 |
 
-내용은 `docs-write-concise-korean-comments-about-purpose-and-constraints`,
+내용은 `docs-write-korean-comments-about-purpose-and-constraints`,
 허용된 예외의 이유는 `docs-justify-convention-exceptions-with-a-reason-comment`가 정합니다.
 
 **Incorrect (지역 선언에 코드를 옮겨 적은 주석을 답니다):**
@@ -3346,7 +3346,7 @@ const submitProductDraft = async (draft: ProductDraft) => {
 
 **Applies when:** 쿼리, 뮤테이션, 원격 함수, 커스텀 훅, 스토어, 포매터 선언을 추가·변경할 때. 분기나 `await`나 두 개 이상의 동작이 있는 핸들러와 이펙트를 추가·변경할 때. 다시 쓰거나 내보낸 보조 함수를 추가·변경할 때.
 
-**Requires selected:** `docs-write-concise-korean-comments-about-purpose-and-constraints`, `docs-write-doc-comments-as-multiline-blocks` · 함께 적용
+**Requires selected:** `docs-write-doc-comments-as-multiline-blocks`, `docs-write-korean-comments-about-purpose-and-constraints` · 함께 적용
 
 **Impact: MEDIUM (구현을 읽기 전에 중요한 경계를 찾고 설명할 수 있습니다)**
 
@@ -3362,7 +3362,7 @@ const submitProductDraft = async (draft: ProductDraft) => {
 | 커스텀 `type`, `interface` | 내보내기 여부와 무관하게 `types-document-custom-types-and-shapes`를 따릅니다 |
 
 형식은 `docs-write-doc-comments-as-multiline-blocks`,
-내용과 태그는 `docs-write-concise-korean-comments-about-purpose-and-constraints`가 정합니다.
+내용과 태그는 `docs-write-korean-comments-about-purpose-and-constraints`가 정합니다.
 
 **Incorrect (주요 선언에 헤더 설명이 없습니다):**
 
@@ -3388,9 +3388,9 @@ export const toSortedUserIds = (userIds: string[]): string[] => {
 const responseProductList = useProductList();
 ```
 
-### 6.3 Write Concise Korean Comments About Purpose and Constraints
+### 6.3 Write Korean Comments About Purpose and Constraints
 
-**Rule:** `T06-03` · `docs-write-concise-korean-comments-about-purpose-and-constraints`
+**Rule:** `T06-03` · `docs-write-korean-comments-about-purpose-and-constraints`
 
 **Applies when:** TypeScript·TSX의 문서 주석이나 인라인 주석 문구를 추가·수정·번역하거나 검토할 때. 문서 주석에 태그를 붙이거나 뺄 때.
 
@@ -3508,7 +3508,7 @@ export const fetchProductList = async (): Promise<Product[]> => {
 | `/** 한 줄 */` | 쓰지 않습니다 |
 | 선언 설명을 `//`로 작성 | 쓰지 않습니다. 선언 위 `//`는 `docs-justify-convention-exceptions-with-a-reason-comment`의 예외 이유에 씁니다 |
 | 문서화할 선언 선택 | `docs-require-header-jsdoc-on-key-declarations`를 따릅니다 |
-| 태그 선택 | `docs-write-concise-korean-comments-about-purpose-and-constraints`를 따릅니다 |
+| 태그 선택 | `docs-write-korean-comments-about-purpose-and-constraints`를 따릅니다 |
 
 **Incorrect (한 줄 블록과 `//`로 선언을 설명합니다):**
 
@@ -3548,7 +3548,7 @@ export const saveProduct = async (product: Product): Promise<void> => {
 
 **Applies when:** 규칙이 허용한 예외를 코드에 남길 때. 이미 있는 예외 주석의 내용을 바꿀 때. 제외: 규칙이 요구하지 않은 일반 설명 주석인 경우.
 
-**Review with:** `docs-write-concise-korean-comments-about-purpose-and-constraints`
+**Review with:** `docs-write-korean-comments-about-purpose-and-constraints`
 
 **Impact: MEDIUM (예외가 취향인지 근거가 있는지 코드에서 바로 드러납니다)**
 
@@ -3568,7 +3568,7 @@ export const saveProduct = async (product: Product): Promise<void> => {
 | 헤더 문서 주석이 있는 선언 | 헤더 블록 안에 이유 작성 |
 | JSX 자식 | 프레임워크 규칙이 정한 형태 |
 
-어투와 내용은 `docs-write-concise-korean-comments-about-purpose-and-constraints`를 따릅니다.
+어투와 내용은 `docs-write-korean-comments-about-purpose-and-constraints`를 따릅니다.
 
 **Incorrect (확인할 수 없는 말로 예외를 정당화합니다):**
 

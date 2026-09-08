@@ -35,7 +35,7 @@ tags: functions, boundaries
 추출 전에 값 검사를 `absence-check-once-at-the-boundary`의 경계로 보내 분기를 줄일 수 있는지 확인합니다.
 같은 판정이 반복되면 `values-decide-once-and-carry-the-result`에 따라 결과를 전달할지도 먼저 봅니다.
 함수 배치는 `functions-give-each-function-its-own-file`,
-루트 승격은 `functions-promote-shared-functions-to-root-util`이 정합니다.
+루트 승격은 `functions-promote-owner-free-functions-to-root-util`이 정합니다.
 
 **Incorrect (한 자리에서만 쓰는 단계를 함수로 떼어 내 흐름이 파일 안에서 흩어집니다):**
 

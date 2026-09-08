@@ -8,7 +8,7 @@ appliesWhen:
   - 화면을 구역으로 나누고 그 구역이 무엇을 담당하는지 적을 때
 reviewWith: >-
   typescript/docs-write-doc-comments-as-multiline-blocks,
-  typescript/docs-write-concise-korean-comments-about-purpose-and-constraints
+  typescript/docs-write-korean-comments-about-purpose-and-constraints
 tags: docs, jsx, comments
 ---
 

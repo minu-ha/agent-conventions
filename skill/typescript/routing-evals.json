@@ -57,7 +57,7 @@
 					"types-document-custom-types-and-shapes",
 					"types-narrow-unknown-instead-of-asserting",
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks"
 				]
 			}
@@ -76,7 +76,7 @@
 					"types-document-custom-types-and-shapes",
 					"types-choose-interface-for-object-contracts-and-type-for-composition",
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks"
 				]
 			}
@@ -96,7 +96,7 @@
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-name-types-by-role-and-lifetime",
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks"
 				]
 			}
@@ -136,10 +136,10 @@
 						"functions-extract-helpers-only-when-the-boundary-is-real",
 						"functions-give-each-function-its-own-file",
 						"functions-order-declarations-top-down",
-						"functions-promote-shared-functions-to-root-util",
+						"functions-promote-owner-free-functions-to-root-util",
 						"functions-name-functions-by-what-comes-out",
 						"docs-require-header-jsdoc-on-key-declarations",
-						"docs-write-concise-korean-comments-about-purpose-and-constraints",
+						"docs-write-korean-comments-about-purpose-and-constraints",
 						"docs-write-doc-comments-as-multiline-blocks"
 					]
 				}
@@ -210,7 +210,7 @@
 					"types-replace-enum-with-as-const-objects",
 					"naming-use-consistent-file-and-symbol-naming",
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks",
 					"tooling-configure-biome-to-enforce-these-rules"
 				]
@@ -264,7 +264,7 @@
 					"absence-expose-optional-values-instead-of-silent-fallbacks",
 					"absence-resolve-defaults-at-the-boundary",
 					"docs-keep-body-comments-for-intent-and-steps",
-					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-korean-comments-about-purpose-and-constraints",
 					"docs-justify-convention-exceptions-with-a-reason-comment"
 				]
 			}
@@ -389,7 +389,7 @@
 				"typescript": [
 					"types-derive-subsets-with-indexed-access",
 					"types-document-custom-types-and-shapes",
-					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks"
 				]
 			}
@@ -422,7 +422,7 @@
 				"typescript": [
 					"types-document-custom-types-and-shapes",
 					"naming-use-consistent-file-and-symbol-naming",
-					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks"
 				]
 			}

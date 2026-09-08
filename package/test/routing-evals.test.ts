@@ -123,7 +123,7 @@ const typescriptRuleUniverse = [
 	"functions-extract-helpers-only-when-the-boundary-is-real",
 	"functions-give-each-function-its-own-file",
 	"functions-order-declarations-top-down",
-	"functions-promote-shared-functions-to-root-util",
+	"functions-promote-owner-free-functions-to-root-util",
 	"functions-avoid-imperative-assembly-in-wide-scopes",
 	"functions-name-a-value-only-for-recompute-or-judgment",
 	"functions-name-functions-by-what-comes-out",
@@ -141,7 +141,7 @@ const typescriptRuleUniverse = [
 	"absence-check-once-at-the-boundary",
 	"docs-keep-body-comments-for-intent-and-steps",
 	"docs-require-header-jsdoc-on-key-declarations",
-	"docs-write-concise-korean-comments-about-purpose-and-constraints",
+	"docs-write-korean-comments-about-purpose-and-constraints",
 	"docs-write-doc-comments-as-multiline-blocks",
 	"docs-justify-convention-exceptions-with-a-reason-comment",
 	"tooling-configure-biome-to-enforce-these-rules",
@@ -344,14 +344,14 @@ const typescriptRuleRouting = {
 	"functions-give-each-function-its-own-file": {
 		appliesWhen:
 			"떼어 낸 보조 함수를 어느 파일이나 폴더에 둘지 정할 때. `helper.ts`, `helpers.ts`, `utils.ts` 같은 파일을 만들거나 거기에 함수를 더할 때. 대표 함수가 자기만 쓰는 보조를 처음 갖게 될 때. 보조를 부르는 대표 함수나 소유자가 늘어날 때.",
-		reviewWith: ["functions-promote-shared-functions-to-root-util", "functions-order-declarations-top-down"],
+		reviewWith: ["functions-promote-owner-free-functions-to-root-util", "functions-order-declarations-top-down"],
 	},
 	"functions-order-declarations-top-down": {
 		appliesWhen:
 			"`.ts` 파일에 선언을 추가하거나 선언 자리를 옮길 때. 내보낸 계약 타입이나 모듈 상수를 내보낸 함수보다 아래에 두려 할 때. 제외: 리액트 컴포넌트 본문 안 선언 자리를 바꾸는 경우.",
 		reviewWith: [],
 	},
-	"functions-promote-shared-functions-to-root-util": {
+	"functions-promote-owner-free-functions-to-root-util": {
 		appliesWhen:
 			"함수를 루트 `util` 폴더로 옮기거나 종류 폴더를 새로 만들 때. 두 소유자가 같은 함수를 쓰게 될 때. 제외: 소유자 안에서 파일 자리만 바꾸는 경우.",
 		reviewWith: [],
@@ -449,17 +449,14 @@ const typescriptRuleRouting = {
 	"docs-keep-body-comments-for-intent-and-steps": {
 		appliesWhen:
 			"함수 본문의 `//` 주석을 추가·수정·유지할 때. 도메인 규칙, 예외 방어, 외부 제약, 부수효과 순서, 긴 절차의 단계를 주석으로 설명할 때.",
-		reviewWith: [
-			"docs-write-concise-korean-comments-about-purpose-and-constraints",
-			"docs-justify-convention-exceptions-with-a-reason-comment",
-		],
+		reviewWith: ["docs-write-korean-comments-about-purpose-and-constraints", "docs-justify-convention-exceptions-with-a-reason-comment"],
 	},
 	"docs-require-header-jsdoc-on-key-declarations": {
 		appliesWhen:
 			"쿼리, 뮤테이션, 원격 함수, 커스텀 훅, 스토어, 포매터 선언을 추가·변경할 때. 분기나 `await`나 두 개 이상의 동작이 있는 핸들러와 이펙트를 추가·변경할 때. 다시 쓰거나 내보낸 보조 함수를 추가·변경할 때.",
 		reviewWith: [],
 	},
-	"docs-write-concise-korean-comments-about-purpose-and-constraints": {
+	"docs-write-korean-comments-about-purpose-and-constraints": {
 		appliesWhen: "TypeScript·TSX의 문서 주석이나 인라인 주석 문구를 추가·수정·번역하거나 검토할 때. 문서 주석에 태그를 붙이거나 뺄 때.",
 		reviewWith: [],
 	},
@@ -470,7 +467,7 @@ const typescriptRuleRouting = {
 	"docs-justify-convention-exceptions-with-a-reason-comment": {
 		appliesWhen:
 			"규칙이 허용한 예외를 코드에 남길 때. 이미 있는 예외 주석의 내용을 바꿀 때. 제외: 규칙이 요구하지 않은 일반 설명 주석인 경우.",
-		reviewWith: ["docs-write-concise-korean-comments-about-purpose-and-constraints"],
+		reviewWith: ["docs-write-korean-comments-about-purpose-and-constraints"],
 	},
 	"tooling-configure-biome-to-enforce-these-rules": {
 		appliesWhen: "프로젝트에 `biome` 설정을 처음 넣거나 lint 규칙을 바꿀 때. `biome.json`의 `linter.rules`에 항목을 추가·삭제할 때.",
@@ -942,7 +939,7 @@ const reactRuleRouting = {
 			"JSX 자식 자리에 주석을 새로 쓰거나 기존 주석의 형식을 바꿀 때. 화면을 구역으로 나누고 그 구역이 무엇을 담당하는지 적을 때.",
 		reviewWith: [
 			"typescript/docs-write-doc-comments-as-multiline-blocks",
-			"typescript/docs-write-concise-korean-comments-about-purpose-and-constraints",
+			"typescript/docs-write-korean-comments-about-purpose-and-constraints",
 		],
 	},
 	"tooling-enable-the-biome-react-domain": {
@@ -974,7 +971,7 @@ const mandatoryRuleRouting = {
 	},
 	typescript: {
 		"types-document-custom-types-and-shapes": [
-			"docs-write-concise-korean-comments-about-purpose-and-constraints",
+			"docs-write-korean-comments-about-purpose-and-constraints",
 			"docs-write-doc-comments-as-multiline-blocks",
 		],
 		"types-replace-enum-with-as-const-objects": ["naming-use-consistent-file-and-symbol-naming", "types-document-custom-types-and-shapes"],
@@ -982,7 +979,7 @@ const mandatoryRuleRouting = {
 		"functions-give-each-function-its-own-file": ["functions-extract-helpers-only-when-the-boundary-is-real"],
 		"values-avoid-lookup-tables-for-simple-choices": ["docs-justify-convention-exceptions-with-a-reason-comment"],
 		"docs-require-header-jsdoc-on-key-declarations": [
-			"docs-write-concise-korean-comments-about-purpose-and-constraints",
+			"docs-write-korean-comments-about-purpose-and-constraints",
 			"docs-write-doc-comments-as-multiline-blocks",
 		],
 	},
@@ -1015,14 +1012,14 @@ const typescriptSelections = {
 		"types-document-custom-types-and-shapes",
 		"types-narrow-unknown-instead-of-asserting",
 		"docs-require-header-jsdoc-on-key-declarations",
-		"docs-write-concise-korean-comments-about-purpose-and-constraints",
+		"docs-write-korean-comments-about-purpose-and-constraints",
 		"docs-write-doc-comments-as-multiline-blocks",
 	],
 	"type-declaration-form": [
 		"types-document-custom-types-and-shapes",
 		"types-choose-interface-for-object-contracts-and-type-for-composition",
 		"docs-require-header-jsdoc-on-key-declarations",
-		"docs-write-concise-korean-comments-about-purpose-and-constraints",
+		"docs-write-korean-comments-about-purpose-and-constraints",
 		"docs-write-doc-comments-as-multiline-blocks",
 	],
 	"type-role-and-lifetime": [
@@ -1030,7 +1027,7 @@ const typescriptSelections = {
 		"naming-use-consistent-file-and-symbol-naming",
 		"naming-name-types-by-role-and-lifetime",
 		"docs-require-header-jsdoc-on-key-declarations",
-		"docs-write-concise-korean-comments-about-purpose-and-constraints",
+		"docs-write-korean-comments-about-purpose-and-constraints",
 		"docs-write-doc-comments-as-multiline-blocks",
 	],
 	"helper-boundary-scope-drift": [
@@ -1056,7 +1053,7 @@ const typescriptSelections = {
 		"types-replace-enum-with-as-const-objects",
 		"naming-use-consistent-file-and-symbol-naming",
 		"docs-require-header-jsdoc-on-key-declarations",
-		"docs-write-concise-korean-comments-about-purpose-and-constraints",
+		"docs-write-korean-comments-about-purpose-and-constraints",
 		"docs-write-doc-comments-as-multiline-blocks",
 		"tooling-configure-biome-to-enforce-these-rules",
 	],
@@ -1071,7 +1068,7 @@ const typescriptSelections = {
 		"absence-expose-optional-values-instead-of-silent-fallbacks",
 		"absence-resolve-defaults-at-the-boundary",
 		"docs-keep-body-comments-for-intent-and-steps",
-		"docs-write-concise-korean-comments-about-purpose-and-constraints",
+		"docs-write-korean-comments-about-purpose-and-constraints",
 		"docs-justify-convention-exceptions-with-a-reason-comment",
 	],
 	"decide-once-and-guard-real-absence": [
@@ -1095,14 +1092,14 @@ const typescriptSelections = {
 	"readonly-optional-derived-write-type": [
 		"types-derive-subsets-with-indexed-access",
 		"types-document-custom-types-and-shapes",
-		"docs-write-concise-korean-comments-about-purpose-and-constraints",
+		"docs-write-korean-comments-about-purpose-and-constraints",
 		"docs-write-doc-comments-as-multiline-blocks",
 	],
 	"elapsed-time-preserves-hours": ["values-handle-dates-with-dayjs"],
 	"external-response-key-preservation": [
 		"types-document-custom-types-and-shapes",
 		"naming-use-consistent-file-and-symbol-naming",
-		"docs-write-concise-korean-comments-about-purpose-and-constraints",
+		"docs-write-korean-comments-about-purpose-and-constraints",
 		"docs-write-doc-comments-as-multiline-blocks",
 	],
 } as const;
@@ -1256,7 +1253,7 @@ const reactScenarioStages = {
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks",
 				],
 			},
@@ -1279,7 +1276,7 @@ const reactScenarioStages = {
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks",
 				],
 			},
@@ -1304,7 +1301,7 @@ const reactScenarioStages = {
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks",
 				],
 				css: [
@@ -1343,7 +1340,7 @@ const reactScenarioStages = {
 					"functions-use-named-object-params-for-complex-signatures",
 					"functions-extract-helpers-only-when-the-boundary-is-real",
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks",
 				],
 			},
@@ -1368,7 +1365,7 @@ const reactScenarioStages = {
 					"naming-place-project-constants-in-the-root-constant-folder",
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
-					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks",
 				],
 			},
@@ -1396,7 +1393,7 @@ const reactScenarioStages = {
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks",
 				],
 			},
@@ -1423,7 +1420,7 @@ const reactScenarioStages = {
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks",
 				],
 			},
@@ -1453,7 +1450,7 @@ const reactScenarioStages = {
 					"naming-use-direct-imports-and-public-entry-points",
 					"functions-extract-helpers-only-when-the-boundary-is-real",
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks",
 				],
 			},
@@ -1488,7 +1485,7 @@ const reactScenarioStages = {
 					"naming-use-direct-imports-and-public-entry-points",
 					"absence-expose-optional-values-instead-of-silent-fallbacks",
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks",
 				],
 			},
@@ -1515,7 +1512,7 @@ const reactScenarioStages = {
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks",
 				],
 			},
@@ -1539,7 +1536,7 @@ const reactScenarioStages = {
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks",
 				],
 			},
@@ -1563,7 +1560,7 @@ const reactScenarioStages = {
 				typescript: [
 					"naming-use-consistent-file-and-symbol-naming",
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks",
 				],
 			},
@@ -1587,7 +1584,7 @@ const reactScenarioStages = {
 					"naming-use-direct-imports-and-public-entry-points",
 					"docs-keep-body-comments-for-intent-and-steps",
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks",
 					"docs-justify-convention-exceptions-with-a-reason-comment",
 				],
@@ -1612,7 +1609,7 @@ const reactScenarioStages = {
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks",
 				],
 			},
@@ -1637,7 +1634,7 @@ const reactScenarioStages = {
 				typescript: [
 					"absence-expose-optional-values-instead-of-silent-fallbacks",
 					"docs-keep-body-comments-for-intent-and-steps",
-					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-korean-comments-about-purpose-and-constraints",
 					"docs-justify-convention-exceptions-with-a-reason-comment",
 				],
 			},
@@ -1682,7 +1679,7 @@ const reactScenarioStages = {
 				],
 				typescript: [
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks",
 				],
 			},
@@ -1702,7 +1699,7 @@ const reactScenarioStages = {
 					"naming-use-consistent-file-and-symbol-naming",
 					"naming-use-direct-imports-and-public-entry-points",
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks",
 				],
 			},
@@ -1766,7 +1763,7 @@ const reactScenarioStages = {
 				react: ["data-combine-multiple-queries-with-combine", "data-preserve-origin-chaining", "docs-require-jsdoc-on-key-declarations"],
 				typescript: [
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks",
 				],
 			},
@@ -1947,7 +1944,7 @@ const cssScenarioStages = {
 					"types-document-custom-types-and-shapes",
 					"naming-use-direct-imports-and-public-entry-points",
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks",
 				],
 				css: ["composition-compose-classes-with-clsx", "composition-inject-classes-only-at-the-entry-point"],
@@ -2403,11 +2400,11 @@ test("TypeScript progressive metadata matches Appendix A exactly", async () => {
 	);
 	const headerJsdocRule = await readRuleSource("typescript", "docs-require-header-jsdoc-on-key-declarations");
 	assert.match(headerJsdocRule, /docs-write-doc-comments-as-multiline-blocks/);
-	const roleTagRule = await readRuleSource("typescript", "docs-write-concise-korean-comments-about-purpose-and-constraints");
+	const roleTagRule = await readRuleSource("typescript", "docs-write-korean-comments-about-purpose-and-constraints");
 	assert.match(roleTagRule, /`@api`, `@helper`, `@field` \| 이름과 문법이 드러내는 역할을 태그로 반복하지 않습니다/);
 	assert.equal(
 		readFrontmatterValue(headerJsdocRule, "requiresSelected"),
-		"docs-write-concise-korean-comments-about-purpose-and-constraints, docs-write-doc-comments-as-multiline-blocks",
+		"docs-write-korean-comments-about-purpose-and-constraints, docs-write-doc-comments-as-multiline-blocks",
 	);
 	assert.doesNotMatch(headerJsdocRule, /^reviewWith:/m);
 });
@@ -2539,10 +2536,10 @@ test("TypeScript routing manifest matches the reviewed scenarios with full posit
 		"functions-extract-helpers-only-when-the-boundary-is-real",
 		"functions-give-each-function-its-own-file",
 		"functions-order-declarations-top-down",
-		"functions-promote-shared-functions-to-root-util",
+		"functions-promote-owner-free-functions-to-root-util",
 		"functions-name-functions-by-what-comes-out",
 		"docs-require-header-jsdoc-on-key-declarations",
-		"docs-write-concise-korean-comments-about-purpose-and-constraints",
+		"docs-write-korean-comments-about-purpose-and-constraints",
 		"docs-write-doc-comments-as-multiline-blocks",
 	]);
 });
@@ -2583,7 +2580,7 @@ test("JSDoc routing closure and query-select ownership stay exact across every m
 
 				if (selected.includes("docs-require-header-jsdoc-on-key-declarations")) {
 					assert.ok(
-						selected.includes("docs-write-concise-korean-comments-about-purpose-and-constraints"),
+						selected.includes("docs-write-korean-comments-about-purpose-and-constraints"),
 						`${skillName}/${scenario.id} must close T18 to T21`,
 					);
 				}
@@ -2877,13 +2874,13 @@ test("React routing manifest matches the reviewed scenarios with full positive c
 	assert.equal(ownerMove.expectedSelected.react?.includes("composition-read-props-without-destructuring"), false);
 	assert.equal(ownerMove.expectedSelected.typescript?.includes("types-document-custom-types-and-shapes"), true);
 	assert.equal(ownerMove.expectedSelected.typescript?.includes("docs-require-header-jsdoc-on-key-declarations"), true);
-	assert.equal(ownerMove.expectedSelected.typescript?.includes("docs-write-concise-korean-comments-about-purpose-and-constraints"), true);
+	assert.equal(ownerMove.expectedSelected.typescript?.includes("docs-write-korean-comments-about-purpose-and-constraints"), true);
 	const cssDrift = ownerMove.scopeDrift;
 	assert.ok(cssDrift);
 	assert.equal(cssDrift.expectedSelected.react?.includes("composition-read-props-without-destructuring"), false);
 	assert.equal(cssDrift.expectedSelected.typescript?.includes("types-document-custom-types-and-shapes"), true);
 	assert.equal(cssDrift.expectedSelected.typescript?.includes("docs-require-header-jsdoc-on-key-declarations"), true);
-	assert.equal(cssDrift.expectedSelected.typescript?.includes("docs-write-concise-korean-comments-about-purpose-and-constraints"), true);
+	assert.equal(cssDrift.expectedSelected.typescript?.includes("docs-write-korean-comments-about-purpose-and-constraints"), true);
 	assert.equal(cssDrift.expectedSelected.css?.includes("composition-do-not-build-structural-variants-with-modifiers"), true);
 	assert.equal(cssDrift.expectedSelected.css?.includes("selector-nest-dom-state-in-the-owning-block"), true);
 	assert.equal(cssDrift.expectedSelected.css?.includes("ownership-choose-scope-prefix-by-owner-layer"), true);
@@ -3543,7 +3540,7 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 		return await readRuleSource(skillName, ruleId);
 	};
 
-	const koreanComments = await readRule("typescript", "docs-write-concise-korean-comments-about-purpose-and-constraints");
+	const koreanComments = await readRule("typescript", "docs-write-korean-comments-about-purpose-and-constraints");
 	assertMentions(
 		koreanComments,
 		[
@@ -3557,13 +3554,13 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	assert.match(koreanComments, /route-local product 트리 입력 계약/);
 
 	const documentedShape = await readRule("typescript", "types-document-custom-types-and-shapes");
-	assert.match(documentedShape, /주석 내용은 `docs-write-concise-korean-comments-about-purpose-and-constraints`의 한국어 기준을 따릅니다/i);
+	assert.match(documentedShape, /주석 내용은 `docs-write-korean-comments-about-purpose-and-constraints`의 한국어 기준을 따릅니다/i);
 	const headerDocs = await readRule("typescript", "docs-require-header-jsdoc-on-key-declarations");
 	assertMentions(
 		flattenWhitespace(headerDocs),
 		[
 			/헤더 문서 주석을 씁니다[\s\S]*빈 본문이나 영문 라벨만으로는 요구를 충족하지 못하며 실제 한국어 설명이 필요합니다/i,
-			/내용과 태그는 `docs-write-concise-korean-comments-about-purpose-and-constraints`가 정합니다/i,
+			/내용과 태그는 `docs-write-korean-comments-about-purpose-and-constraints`가 정합니다/i,
 		],
 		"headerDocs require meaningful Korean content",
 	);
@@ -3620,7 +3617,7 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 		return await readRuleSource(skillName, ruleId);
 	};
 
-	const koreanComments = await readRule("typescript", "docs-write-concise-korean-comments-about-purpose-and-constraints");
+	const koreanComments = await readRule("typescript", "docs-write-korean-comments-about-purpose-and-constraints");
 	assertMentions(
 		koreanComments,
 		[
@@ -3634,13 +3631,13 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	assert.match(koreanComments, /route-local product 트리 입력 계약/);
 
 	const documentedShape = await readRule("typescript", "types-document-custom-types-and-shapes");
-	assert.match(documentedShape, /주석 내용은 `docs-write-concise-korean-comments-about-purpose-and-constraints`의 한국어 기준을 따릅니다/i);
+	assert.match(documentedShape, /주석 내용은 `docs-write-korean-comments-about-purpose-and-constraints`의 한국어 기준을 따릅니다/i);
 	const headerDocs = await readRule("typescript", "docs-require-header-jsdoc-on-key-declarations");
 	assertMentions(
 		flattenWhitespace(headerDocs),
 		[
 			/헤더 문서 주석을 씁니다[\s\S]*빈 본문이나 영문 라벨만으로는 요구를 충족하지 못하며 실제 한국어 설명이 필요합니다/i,
-			/내용과 태그는 `docs-write-concise-korean-comments-about-purpose-and-constraints`가 정합니다/i,
+			/내용과 태그는 `docs-write-korean-comments-about-purpose-and-constraints`가 정합니다/i,
 		],
 		"headerDocs require meaningful Korean content",
 	);
@@ -3781,7 +3778,7 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	const generatedContracts = await Promise.all(
 		[
 			["typescript", "docs-require-header-jsdoc-on-key-declarations"],
-			["typescript", "docs-write-concise-korean-comments-about-purpose-and-constraints"],
+			["typescript", "docs-write-korean-comments-about-purpose-and-constraints"],
 			["css", "selector-nest-dom-state-in-the-owning-block"],
 			["css", "ownership-use-foreign-classes-only-under-your-own-root"],
 		].map((pair) => readAgentFacingRule(pair[0], pair[1])),
@@ -3790,7 +3787,7 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 		flattenWhitespace(generatedContracts[0]),
 		[
 			/빈 본문이나 영문 라벨만으로는 요구를 충족하지 못하며 실제 한국어 설명이 필요합니다/i,
-			/내용과 태그는 `docs-write-concise-korean-comments-about-purpose-and-constraints`가 정합니다/i,
+			/내용과 태그는 `docs-write-korean-comments-about-purpose-and-constraints`가 정합니다/i,
 		],
 		"generated header documentation contract",
 	);

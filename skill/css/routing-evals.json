@@ -212,7 +212,7 @@
 					"types-document-custom-types-and-shapes",
 					"naming-use-direct-imports-and-public-entry-points",
 					"docs-require-header-jsdoc-on-key-declarations",
-					"docs-write-concise-korean-comments-about-purpose-and-constraints",
+					"docs-write-korean-comments-about-purpose-and-constraints",
 					"docs-write-doc-comments-as-multiline-blocks"
 				],
 				"css": [

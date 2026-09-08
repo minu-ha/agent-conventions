@@ -1,7 +1,7 @@
 # TypeScript 컨벤션 Rule Index
 
 - Skill: `typescript`
-- Routing digest: `sha256:f7ea40d095415aaeecf78c583b37d92485c1da21e5673c5ebe75f79038aa4886`
+- Routing digest: `sha256:faef7d1b2ee3f0f00b33c54d4d9cbfc53e9bbc329ac6acde890a27be47bf52b1`
 
 ## Local Rules
 
@@ -23,9 +23,9 @@
 - T03-01 | functions-declare-functions-as-arrow-consts | 이름을 지어 선언하는 함수를 새로 만들거나 선언 형태나 본문 형태를 바꿀 때. 객체 프로퍼티에 함수를 담거나 그 형태를 바꿀 때. 제외: 인라인 콜백이나 커링의 바깥 화살표인 경우. 제외: 클래스 메서드, 제너레이터, 오버로드 선언인 경우. | reviewWith: functions-use-named-object-params-for-complex-signatures
 - T03-02 | functions-use-named-object-params-for-complex-signatures | 매개변수가 셋을 넘거나 같은 계열 인자를 받는 함수를 추가·변경할 때. 객체 매개변수의 필드를 읽는 방식을 바꿀 때. 제외: 리액트 함수 컴포넌트가 프롭스를 받는 방식만 바꾸는 경우. | reviewWith: types-reuse-existing-contracts-before-new-types, values-read-objects-through-chains
 - T03-03 | functions-extract-helpers-only-when-the-boundary-is-real | 보조 함수를 빼내거나 옮기거나 내보내거나 공유할 때. 범용 보조 파일, 소유자 하나만 쓰는 변환 함수, 자잘한 정리 단계의 경계를 바꿀 때. | reviewWith: docs-require-header-jsdoc-on-key-declarations, functions-give-each-function-its-own-file, values-decide-once-and-carry-the-result
-- T03-04 | functions-give-each-function-its-own-file | 떼어 낸 보조 함수를 어느 파일이나 폴더에 둘지 정할 때. \`helper.ts\`, \`helpers.ts\`, \`utils.ts\` 같은 파일을 만들거나 거기에 함수를 더할 때. 대표 함수가 자기만 쓰는 보조를 처음 갖게 될 때. 보조를 부르는 대표 함수나 소유자가 늘어날 때. | reviewWith: functions-order-declarations-top-down, functions-promote-shared-functions-to-root-util
+- T03-04 | functions-give-each-function-its-own-file | 떼어 낸 보조 함수를 어느 파일이나 폴더에 둘지 정할 때. \`helper.ts\`, \`helpers.ts\`, \`utils.ts\` 같은 파일을 만들거나 거기에 함수를 더할 때. 대표 함수가 자기만 쓰는 보조를 처음 갖게 될 때. 보조를 부르는 대표 함수나 소유자가 늘어날 때. | reviewWith: functions-order-declarations-top-down, functions-promote-owner-free-functions-to-root-util
 - T03-05 | functions-order-declarations-top-down | \`.ts\` 파일에 선언을 추가하거나 선언 자리를 옮길 때. 내보낸 계약 타입이나 모듈 상수를 내보낸 함수보다 아래에 두려 할 때. 제외: 리액트 컴포넌트 본문 안 선언 자리를 바꾸는 경우.
-- T03-06 | functions-promote-shared-functions-to-root-util | 함수를 루트 \`util\` 폴더로 옮기거나 종류 폴더를 새로 만들 때. 두 소유자가 같은 함수를 쓰게 될 때. 제외: 소유자 안에서 파일 자리만 바꾸는 경우.
+- T03-06 | functions-promote-owner-free-functions-to-root-util | 함수를 루트 \`util\` 폴더로 옮기거나 종류 폴더를 새로 만들 때. 두 소유자가 같은 함수를 쓰게 될 때. 제외: 소유자 안에서 파일 자리만 바꾸는 경우.
 - T03-07 | functions-avoid-imperative-assembly-in-wide-scopes | 모듈 최상위나 함수 본문 전체를 덮는 스코프에서 \`let\` 재할당, 배열 \`push\`, 조건부 누적으로 값을 만들 때. 삼항 안에 삼항을 넣을 때. | reviewWith: functions-extract-helpers-only-when-the-boundary-is-real
 - T03-08 | functions-name-a-value-only-for-recompute-or-judgment | 순수 계산의 결과를 지역 변수\(\`const\`\)로 받는 줄을 추가·삭제할 때. 표현식을 쓰는 자리에 그대로 적을지 변수로 뺄지 정할 때. | reviewWith: functions-avoid-imperative-assembly-in-wide-scopes, values-read-objects-through-chains
 - T03-09 | functions-name-functions-by-what-comes-out | 이름을 붙인 함수를 새로 만들거나 이름을 바꿀 때. 제외: 생성기·프레임워크·외부 계약이 정한 이름을 그대로 쓰는 경우.
@@ -41,9 +41,9 @@
 - T05-02 | absence-resolve-defaults-at-the-boundary | 선택 값의 기본값을 어디서 채울지 정할 때. 같은 선택 값에 \`??\` 기본값 해소가 둘 이상의 사용처에 흩어질 때. search 스키마, 응답 매핑, 쿼리 \`select\`에 기본값 채움을 추가·변경할 때. | reviewWith: absence-expose-optional-values-instead-of-silent-fallbacks, functions-name-a-value-only-for-recompute-or-judgment, values-read-objects-through-chains
 - T05-03 | absence-do-not-guard-what-types-guarantee | \`isNil\`, \`typeof\`, 옵셔널 체이닝으로 값을 검사하는 분기를 추가·변경할 때. 선택 필드에 값을 넣으면서 \`undefined\`를 피하려고 조건부 스프레드를 쓸 때. 제외: \`unknown\`이나 앱 밖에서 온 값을 좁히는 경우. | reviewWith: absence-check-once-at-the-boundary, absence-expose-optional-values-instead-of-silent-fallbacks, types-narrow-unknown-instead-of-asserting
 - T05-04 | absence-check-once-at-the-boundary | \`isNil\`, \`Number.isFinite\` 같은 검사를 함수에 넣을 때. \`null\`, \`undefined\`, \`unknown\`을 매개변수·반환 타입에 넣거나 뺄 때. 응답 매핑·쿼리·search 스키마에서 없음·유한 수 검사로 타입을 좁힐 때. | reviewWith: absence-do-not-guard-what-types-guarantee, absence-resolve-defaults-at-the-boundary, values-decide-once-and-carry-the-result
-- T06-01 | docs-keep-body-comments-for-intent-and-steps | 함수 본문의 \`//\` 주석을 추가·수정·유지할 때. 도메인 규칙, 예외 방어, 외부 제약, 부수효과 순서, 긴 절차의 단계를 주석으로 설명할 때. | reviewWith: docs-justify-convention-exceptions-with-a-reason-comment, docs-write-concise-korean-comments-about-purpose-and-constraints
+- T06-01 | docs-keep-body-comments-for-intent-and-steps | 함수 본문의 \`//\` 주석을 추가·수정·유지할 때. 도메인 규칙, 예외 방어, 외부 제약, 부수효과 순서, 긴 절차의 단계를 주석으로 설명할 때. | reviewWith: docs-justify-convention-exceptions-with-a-reason-comment, docs-write-korean-comments-about-purpose-and-constraints
 - T06-02 | docs-require-header-jsdoc-on-key-declarations | 쿼리, 뮤테이션, 원격 함수, 커스텀 훅, 스토어, 포매터 선언을 추가·변경할 때. 분기나 \`await\`나 두 개 이상의 동작이 있는 핸들러와 이펙트를 추가·변경할 때. 다시 쓰거나 내보낸 보조 함수를 추가·변경할 때.
-- T06-03 | docs-write-concise-korean-comments-about-purpose-and-constraints | TypeScript·TSX의 문서 주석이나 인라인 주석 문구를 추가·수정·번역하거나 검토할 때. 문서 주석에 태그를 붙이거나 뺄 때.
+- T06-03 | docs-write-korean-comments-about-purpose-and-constraints | TypeScript·TSX의 문서 주석이나 인라인 주석 문구를 추가·수정·번역하거나 검토할 때. 문서 주석에 태그를 붙이거나 뺄 때.
 - T06-04 | docs-write-doc-comments-as-multiline-blocks | 선언 위 문서 주석을 새로 쓰거나 형식을 바꿀 때. 한 줄 \`/\*\* … \*/\`이나 \`//\`로 선언을 설명하려 할 때. | reviewWith: docs-require-header-jsdoc-on-key-declarations
-- T06-05 | docs-justify-convention-exceptions-with-a-reason-comment | 규칙이 허용한 예외를 코드에 남길 때. 이미 있는 예외 주석의 내용을 바꿀 때. 제외: 규칙이 요구하지 않은 일반 설명 주석인 경우. | reviewWith: docs-write-concise-korean-comments-about-purpose-and-constraints
+- T06-05 | docs-justify-convention-exceptions-with-a-reason-comment | 규칙이 허용한 예외를 코드에 남길 때. 이미 있는 예외 주석의 내용을 바꿀 때. 제외: 규칙이 요구하지 않은 일반 설명 주석인 경우. | reviewWith: docs-write-korean-comments-about-purpose-and-constraints
 - T07-01 | tooling-configure-biome-to-enforce-these-rules | 프로젝트에 \`biome\` 설정을 처음 넣거나 lint 규칙을 바꿀 때. \`biome.json\`의 \`linter.rules\`에 항목을 추가·삭제할 때.

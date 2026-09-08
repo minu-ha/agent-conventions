@@ -21,7 +21,7 @@ tags: docs, declarations
 | `/** 한 줄 */` | 쓰지 않습니다 |
 | 선언 설명을 `//`로 작성 | 쓰지 않습니다. 선언 위 `//`는 `docs-justify-convention-exceptions-with-a-reason-comment`의 예외 이유에 씁니다 |
 | 문서화할 선언 선택 | `docs-require-header-jsdoc-on-key-declarations`를 따릅니다 |
-| 태그 선택 | `docs-write-concise-korean-comments-about-purpose-and-constraints`를 따릅니다 |
+| 태그 선택 | `docs-write-korean-comments-about-purpose-and-constraints`를 따릅니다 |
 
 **Incorrect (한 줄 블록과 `//`로 선언을 설명합니다):**
 

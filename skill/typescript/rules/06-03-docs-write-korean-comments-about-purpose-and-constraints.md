@@ -1,5 +1,5 @@
 ---
-title: Write Concise Korean Comments About Purpose and Constraints
+title: Write Korean Comments About Purpose and Constraints
 titleKo: 주석에는 목적과 제약을 한국어로 적습니다
 impact: HIGH
 impactDescription: 코드 동작을 옮겨 적지 않고 의도와 제약에 주석을 모읍니다
@@ -9,7 +9,7 @@ appliesWhen:
 tags: docs, comments
 ---
 
-## Write Concise Korean Comments About Purpose and Constraints
+## Write Korean Comments About Purpose and Constraints
 
 **Impact: HIGH (코드 동작을 옮겨 적지 않고 의도와 제약에 주석을 모읍니다)**
 

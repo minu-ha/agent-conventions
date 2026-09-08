@@ -1,7 +1,7 @@
 # React 컨벤션 Rule Index
 
 - Skill: `react`
-- Routing digest: `sha256:94c7dcff6161a0f1ed84ac4f7ba784c28f7354f5b54a2588184e0c2e432416fc`
+- Routing digest: `sha256:9afb81aa1bbfab2001df2ca15c4bae1be98ea72312f4da54368eeab5885bffab`
 
 ## Direct Companions
 
@@ -60,5 +60,5 @@
 - R10-03 | perf-defer-heavy-renders-with-measured-evidence | \`startTransition\`·\`useTransition\`·\`useDeferredValue\`를 추가·삭제할 때. 목록이나 표가 커져 입력 반응이 늦다는 보고를 받았을 때. | reviewWith: perf-avoid-defensive-memoization
 - R11-01 | a11y-give-interactive-elements-an-accessible-name | 클릭이나 입력을 받는 요소를 추가·변경할 때. 글자 없이 아이콘만 있는 버튼을 추가할 때.
 - R12-01 | docs-require-jsdoc-on-key-declarations | 쿼리·뮤테이션이나 읽어도 의도가 안 보이는 핸들러·이펙트를 추가·변경할 때. 내보낸 보조 함수·훅·스토어 선언을 추가·변경할 때. | reviewWith: typescript/types-document-custom-types-and-shapes
-- R12-02 | docs-write-jsx-comments-as-multiline-blocks | JSX 자식 자리에 주석을 새로 쓰거나 기존 주석의 형식을 바꿀 때. 화면을 구역으로 나누고 그 구역이 무엇을 담당하는지 적을 때. | reviewWith: typescript/docs-write-concise-korean-comments-about-purpose-and-constraints, typescript/docs-write-doc-comments-as-multiline-blocks
+- R12-02 | docs-write-jsx-comments-as-multiline-blocks | JSX 자식 자리에 주석을 새로 쓰거나 기존 주석의 형식을 바꿀 때. 화면을 구역으로 나누고 그 구역이 무엇을 담당하는지 적을 때. | reviewWith: typescript/docs-write-doc-comments-as-multiline-blocks, typescript/docs-write-korean-comments-about-purpose-and-constraints
 - R13-01 | tooling-enable-the-biome-react-domain | 프로젝트에 \`biome\` 설정을 처음 넣거나 lint 규칙을 바꿀 때. \`biome.json\`의 \`linter.domains\`나 \`linter.rules\`에 항목을 추가·삭제할 때.

@@ -12,7 +12,7 @@
 | 그 밖의 지역 선언 | 별도 주석을 달지 않습니다. 필요한 줄의 의도만 `//`로 적습니다 |
 | JSX 자식 | `//`를 쓸 수 없으므로 프레임워크 규칙을 따릅니다 |
 
-내용은 `docs-write-concise-korean-comments-about-purpose-and-constraints`,
+내용은 `docs-write-korean-comments-about-purpose-and-constraints`,
 허용된 예외의 이유는 `docs-justify-convention-exceptions-with-a-reason-comment`가 정합니다.
 
 **Incorrect (지역 선언에 코드를 옮겨 적은 주석을 답니다):**

@@ -44,7 +44,7 @@ tags: ownership
 `_` 컴포넌트 파일의 프롭스 타입은 예외로, 어디서든 `import type`으로 가져옵니다.
 역할 폴더는 소유자의 공개 영역이므로 외부에서 쓴다는 이유만으로 루트로 옮기지 않습니다.
 배치는 `typescript/naming-place-project-constants-in-the-root-constant-folder`와
-`typescript/functions-promote-shared-functions-to-root-util`을 따릅니다.
+`typescript/functions-promote-owner-free-functions-to-root-util`을 따릅니다.
 `_hook`도 `ownership-keep-lifecycle-in-the-owning-component`에 따라 여러 소유자가 공유하는 생명주기를 공개합니다.
 
 여러 자식이 같은 컴포넌트를 쓰면 부모가 조립해 프롭·`children`으로 내려보내거나,

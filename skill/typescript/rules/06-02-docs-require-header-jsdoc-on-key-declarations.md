@@ -8,7 +8,7 @@ appliesWhen:
   - 분기나 `await`나 두 개 이상의 동작이 있는 핸들러와 이펙트를 추가·변경할 때
   - 다시 쓰거나 내보낸 보조 함수를 추가·변경할 때
 requiresSelected: >-
-  docs-write-concise-korean-comments-about-purpose-and-constraints,
+  docs-write-korean-comments-about-purpose-and-constraints,
   docs-write-doc-comments-as-multiline-blocks
 tags: docs, jsdoc, declarations, boundaries
 ---
@@ -29,7 +29,7 @@ tags: docs, jsdoc, declarations, boundaries
 | 커스텀 `type`, `interface` | 내보내기 여부와 무관하게 `types-document-custom-types-and-shapes`를 따릅니다 |
 
 형식은 `docs-write-doc-comments-as-multiline-blocks`,
-내용과 태그는 `docs-write-concise-korean-comments-about-purpose-and-constraints`가 정합니다.
+내용과 태그는 `docs-write-korean-comments-about-purpose-and-constraints`가 정합니다.
 
 **Incorrect (주요 선언에 헤더 설명이 없습니다):**
 

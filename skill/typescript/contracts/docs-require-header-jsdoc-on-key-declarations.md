@@ -14,9 +14,9 @@
 | 커스텀 `type`, `interface` | 내보내기 여부와 무관하게 `types-document-custom-types-and-shapes`를 따릅니다 |
 
 형식은 `docs-write-doc-comments-as-multiline-blocks`,
-내용과 태그는 `docs-write-concise-korean-comments-about-purpose-and-constraints`가 정합니다.
+내용과 태그는 `docs-write-korean-comments-about-purpose-and-constraints`가 정합니다.
 
-**Requires selected:** `docs-write-concise-korean-comments-about-purpose-and-constraints`, `docs-write-doc-comments-as-multiline-blocks` · 함께 적용
+**Requires selected:** `docs-write-doc-comments-as-multiline-blocks`, `docs-write-korean-comments-about-purpose-and-constraints` · 함께 적용
 
 **Incorrect (주요 선언에 헤더 설명이 없습니다):**
 

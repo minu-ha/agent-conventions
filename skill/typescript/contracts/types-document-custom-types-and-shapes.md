@@ -3,7 +3,7 @@
 **Impact: MEDIUM (구현을 읽기 전에 도메인 전용 계약을 이해할 수 있습니다)**
 
 직접 선언한 타입과 형태는 헤더와 필드를 구분해 문서화합니다.
-주석 내용은 `docs-write-concise-korean-comments-about-purpose-and-constraints`의 한국어 기준을 따릅니다.
+주석 내용은 `docs-write-korean-comments-about-purpose-and-constraints`의 한국어 기준을 따릅니다.
 
 | 선언 | 헤더 주석 | 필드 주석 |
 | --- | --- | --- |
@@ -21,7 +21,7 @@
 익명 결과에 이 규칙을 적용하려고 필드 주석이나 새 타입을 만들지 않습니다.
 함수 선언의 헤더 주석은 `docs-require-header-jsdoc-on-key-declarations`가 별도로 판단합니다.
 
-**Requires selected:** `docs-write-concise-korean-comments-about-purpose-and-constraints`, `docs-write-doc-comments-as-multiline-blocks` · 함께 적용
+**Requires selected:** `docs-write-doc-comments-as-multiline-blocks`, `docs-write-korean-comments-about-purpose-and-constraints` · 함께 적용
 
 **Incorrect (필드 설명을 생략하거나 예전 방식으로 헤더에 몰아씁니다):**
 

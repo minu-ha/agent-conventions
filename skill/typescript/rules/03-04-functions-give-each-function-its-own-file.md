@@ -9,7 +9,7 @@ appliesWhen:
   - 대표 함수가 자기만 쓰는 보조를 처음 갖게 될 때
   - 보조를 부르는 대표 함수나 소유자가 늘어날 때
 requiresSelected: functions-extract-helpers-only-when-the-boundary-is-real
-reviewWith: functions-promote-shared-functions-to-root-util, functions-order-declarations-top-down
+reviewWith: functions-promote-owner-free-functions-to-root-util, functions-order-declarations-top-down
 tags: functions, boundaries
 ---
 
@@ -24,7 +24,7 @@ tags: functions, boundaries
 | --- | --- |
 | 대표 함수 하나 | `_function/<대표>/<대표>.ts`와 같은 폴더의 `_<보조>.ts` |
 | 같은 소유자의 대표 함수 둘 이상 | `_function/<보조>.ts`. 기존 `_` 접두사를 뗍니다 |
-| 다른 소유자 | `functions-promote-shared-functions-to-root-util`로 루트 승격 여부를 판단합니다 |
+| 다른 소유자 | `functions-promote-owner-free-functions-to-root-util`로 루트 승격 여부를 판단합니다 |
 
 | 배치 대상 | 규범 |
 | --- | --- |

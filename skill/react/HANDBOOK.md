@@ -317,7 +317,7 @@ export const UiButton = (props: UiButtonProps) => {
 | --- | --- |
 | 보조 함수 추출과 배치 | `typescript/functions-extract-helpers-only-when-the-boundary-is-real`, `typescript/functions-give-each-function-its-own-file` |
 | 파일명과 심볼의 접두사 | `ownership-prefix-layer-names-on-files-and-symbols` |
-| 루트에만 두는 `util`과 `config` | `typescript/functions-promote-shared-functions-to-root-util`, `typescript/naming-read-environment-values-through-config-env` |
+| 루트에만 두는 `util`과 `config` | `typescript/functions-promote-owner-free-functions-to-root-util`, `typescript/naming-read-environment-values-through-config-env` |
 
 **Incorrect (단순 컴포넌트에 역할 폴더를 미리 다 만듭니다):**
 
@@ -418,7 +418,7 @@ page/detail/
 `_` 컴포넌트 파일의 프롭스 타입은 예외로, 어디서든 `import type`으로 가져옵니다.
 역할 폴더는 소유자의 공개 영역이므로 외부에서 쓴다는 이유만으로 루트로 옮기지 않습니다.
 배치는 `typescript/naming-place-project-constants-in-the-root-constant-folder`와
-`typescript/functions-promote-shared-functions-to-root-util`을 따릅니다.
+`typescript/functions-promote-owner-free-functions-to-root-util`을 따릅니다.
 `_hook`도 `ownership-keep-lifecycle-in-the-owning-component`에 따라 여러 소유자가 공유하는 생명주기를 공개합니다.
 
 여러 자식이 같은 컴포넌트를 쓰면 부모가 조립해 프롭·`children`으로 내려보내거나,
@@ -4527,7 +4527,7 @@ useEffect(() => {
 
 **Applies when:** JSX 자식 자리에 주석을 새로 쓰거나 기존 주석의 형식을 바꿀 때. 화면을 구역으로 나누고 그 구역이 무엇을 담당하는지 적을 때.
 
-**Review with:** `typescript/docs-write-concise-korean-comments-about-purpose-and-constraints`, `typescript/docs-write-doc-comments-as-multiline-blocks`
+**Review with:** `typescript/docs-write-doc-comments-as-multiline-blocks`, `typescript/docs-write-korean-comments-about-purpose-and-constraints`
 
 **Impact: MEDIUM (JSX 주석 형식을 통일해 화면 구역의 역할을 쉽게 읽을 수 있습니다)**
 

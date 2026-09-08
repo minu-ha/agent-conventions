@@ -48,7 +48,7 @@ tags: ownership
 | --- | --- |
 | 보조 함수 추출과 배치 | `typescript/functions-extract-helpers-only-when-the-boundary-is-real`, `typescript/functions-give-each-function-its-own-file` |
 | 파일명과 심볼의 접두사 | `ownership-prefix-layer-names-on-files-and-symbols` |
-| 루트에만 두는 `util`과 `config` | `typescript/functions-promote-shared-functions-to-root-util`, `typescript/naming-read-environment-values-through-config-env` |
+| 루트에만 두는 `util`과 `config` | `typescript/functions-promote-owner-free-functions-to-root-util`, `typescript/naming-read-environment-values-through-config-env` |
 
 **Incorrect (단순 컴포넌트에 역할 폴더를 미리 다 만듭니다):**
 

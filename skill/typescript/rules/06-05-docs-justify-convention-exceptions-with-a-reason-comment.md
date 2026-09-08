@@ -7,7 +7,7 @@ appliesWhen:
   - 규칙이 허용한 예외를 코드에 남길 때
   - 이미 있는 예외 주석의 내용을 바꿀 때
   - 제외: 규칙이 요구하지 않은 일반 설명 주석인 경우
-reviewWith: docs-write-concise-korean-comments-about-purpose-and-constraints
+reviewWith: docs-write-korean-comments-about-purpose-and-constraints
 tags: docs, comments
 ---
 
@@ -31,7 +31,7 @@ tags: docs, comments
 | 헤더 문서 주석이 있는 선언 | 헤더 블록 안에 이유 작성 |
 | JSX 자식 | 프레임워크 규칙이 정한 형태 |
 
-어투와 내용은 `docs-write-concise-korean-comments-about-purpose-and-constraints`를 따릅니다.
+어투와 내용은 `docs-write-korean-comments-about-purpose-and-constraints`를 따릅니다.
 
 **Incorrect (확인할 수 없는 말로 예외를 정당화합니다):**
 
