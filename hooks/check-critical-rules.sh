@@ -9,6 +9,9 @@
 #   react/01-04       레이어 역방향 가져오기(ui→widget·page, widget→page, 루트 레이어→component·page)
 #   css/07-02         소유자 접두 없는 @keyframes 이름
 # 응답 필드 이름 바꿔치기(react/02-04)나 래퍼 프롭 공개 범위(react/03-02)는 grep 으로 못 잡아 문장으로만 남는다.
+# 이름 규칙의 바닥도 함께 본다.
+#   react/01-02       새로 만들거나 옮긴 부품 파일이 접두사 뒤 역할 낱말 하나(_wg-header.tsx)인 것
+#   css/02-01         한 식별자(pg_·wg_·ui_)를 두 파일 이상이 쓰는 것. 트리 전체를 본다
 set -u
 
 input=$(cat 2>/dev/null || true)
@@ -43,6 +46,12 @@ out=$(
 	report "react/01-04 ui 가 위 레이어를 가져옴" '^src/component/ui/' "from[[:space:]]+['\"]@/(component/widget|page)/"
 	report "react/01-04 widget 이 page 를 가져옴" '^src/component/widget/' "from[[:space:]]+['\"]@/page/"
 	report "react/01-04 루트 레이어가 컴포넌트를 가져옴" '^src/(util|constant|type|hook|store|service|config|asset)/' "from[[:space:]]+['\"]@/(component|page)/"
+	# 새로 만들거나 옮긴 부품 파일의 이름이 접두사 뒤 낱말 하나면 무엇의 부품인지 말하지 않는다
+	{ git diff --name-status HEAD -- . 2>/dev/null | awk '$1 ~ /^(A|R)/ { print $NF }'; git ls-files --others --exclude-standard 2>/dev/null; } |
+		grep -E '(^|/)_(pg|wg|ui)-[a-z0-9]+\.(tsx|css)$' | awk '{ printf "[react/01-02 역할 낱말 하나] %s  부품 이름은 무엇의 것인지 말하는 낱말을 앞에 둔다\n", $0 }'
+	# 같은 식별자를 두 파일이 쓰면 css/02-01 위반이다
+	git ls-files -z -- '*.css' 2>/dev/null | xargs -0 grep -HoE '^\.(pg|wg|ui)_[A-Za-z0-9]+' 2>/dev/null | sed -E 's#^([^:]+):\.#\1 #' | sort -u |
+		awk '{ count[$2]++; files[$2] = files[$2] " " $1 } END { for (slug in count) if (count[slug] > 1) printf "[css/02-01 식별자 중복] %s  %s\n", slug, files[slug] }'
 	printf '%s\n' "$lines" | awk -F'\t' '$1 ~ /\.css$/ && match($3, /@keyframes[[:space:]]+[A-Za-z0-9_-]+/) {
 		name = substr($3, RSTART, RLENGTH); sub(/@keyframes[[:space:]]+/, "", name)
 		if (name !~ /^[a-z]+_[A-Za-z0-9]+__[A-Za-z0-9]+$/) printf "[css/07-02 keyframes 소유자 접두] %s:%s  %s\n", $1, $2, $3
