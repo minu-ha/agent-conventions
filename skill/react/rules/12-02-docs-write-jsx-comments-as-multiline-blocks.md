@@ -82,10 +82,10 @@ JSX 자식 자리의 주석은 여러 줄 블록으로 씁니다.
 	 */}
 	<WgDriverTableHeader sort={sort} />
 	{rows.map((row) => (
-		<WgDriverRow key={row.id} row={row} />
+		<WgDriverTableRow key={row.id} row={row} />
 	))}
 	{expandedRows.map((row) => (
-		<WgDriverChildRow key={row.id} row={row} />
+		<WgDriverTableChildRow key={row.id} row={row} />
 	))}
 </section>;
 ```
@@ -102,13 +102,13 @@ JSX 자식 자리의 주석은 여러 줄 블록으로 씁니다.
 	 * 드라이버 행. 상세 버튼과 accordion 을 가진 기본 행
 	 */}
 	{rows.map((row) => (
-		<WgDriverRow key={row.id} row={row} />
+		<WgDriverTableRow key={row.id} row={row} />
 	))}
 	{/**
 	 * 펼친 자식 driver 행. 상세 버튼과 accordion 없이 같은 칸 구성을 반복한다
 	 */}
 	{expandedRows.map((row) => (
-		<WgDriverChildRow key={row.id} row={row} />
+		<WgDriverTableChildRow key={row.id} row={row} />
 	))}
 </section>;
 ```

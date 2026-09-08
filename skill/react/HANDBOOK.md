@@ -216,7 +216,7 @@ export const WgSalesWindowChart = (props: WgSalesWindowChartProps) => {
 
 **Rule:** `R01-02` · `ownership-prefix-layer-names-on-files-and-symbols`
 
-**Applies when:** 컴포넌트 파일이나 심볼 이름을 새로 지을 때. 컴포넌트를 다른 레이어로 옮기면서 이름을 바꿀 때. 소유자 안 비공개 부품의 파일·심볼·CSS 식별자를 짓거나 바꿀 때.
+**Applies when:** 컴포넌트 파일이나 심볼 이름을 새로 지을 때. 컴포넌트를 다른 레이어로 옮기면서 이름을 바꿀 때. 위젯·ui 안 부품이나 하위 소유자의 파일·심볼·CSS 식별자를 짓거나 바꿀 때.
 
 **Review with:** `ownership-layer-component-boundaries`, `typescript/naming-use-consistent-file-and-symbol-naming`
 
@@ -237,9 +237,10 @@ export const WgSalesWindowChart = (props: WgSalesWindowChartProps) => {
 | 진입 파일이 아닌 컴포넌트 | `_pg-unit-toggle.tsx`처럼 접두사 앞에 `_`를 붙입니다. 동반 `.css`도 같은 이름을 씁니다 |
 | 심볼 | 진입 파일 여부와 관계없이 `_`를 붙이지 않습니다 |
 | 접두사와 겹치는 이름 | `component/ui/button/ui-button.tsx`로 쓰고 `ui-button-button.tsx`처럼 반복하지 않습니다 |
-| 소유자 안 비공개 부품 | 부모 이름을 붙이지 않습니다. `_wg-header.tsx`·`WgHeader`·`wg_header`처럼 쓰며, `_` 파일은 자기 폴더에서만 가져오므로 이름이 겹칠 자리가 없고 폴더가 소유자를 말합니다 |
-| 합성 부품 | 사용처가 `WgProfileDialog.Header`처럼 합성 객체로 부르므로 파일·심볼도 `_wg-header.tsx`·`WgHeader`로 두고 부모 이름을 갖지 않습니다 |
-| 겹친 CSS 식별자 | 다른 소유자와 겹칠 때만 `css/naming-keep-page-slug-traceable`처럼 소유자 이름 하나를 덧붙입니다 |
+| 위젯·ui 안 부품 | 소유자 이름을 잇습니다. `_wg-chatbot-header.tsx`·`WgChatbotHeader`·`wg_chatbotHeader`입니다. 헤더·행·칸처럼 되풀이되는 역할 이름이라 소유자를 붙여야 검색이 되고 CSS 식별자가 저절로 유일해집니다 |
+| 합성 부품 | 같습니다. `_wg-profile-dialog-root.tsx`·`WgProfileDialogRoot`를 `WgProfileDialog.Root`로 조립합니다 |
+| 하위 소유자 | 위 소유자 이름부터 잇습니다. `chatbot/panel/wg-chatbot-panel.tsx`·`_wg-chatbot-panel-header.tsx`입니다. 한 겹만 두는 `ownership-place-owner-files-in-role-folders`가 길이를 막습니다 |
+| 화면 부품 | 라우트 폴더가 소유자라 `_pg-unit-toggle.tsx`처럼 짧게 쓰고, CSS 식별자 충돌은 `css/naming-keep-page-slug-traceable`을 따릅니다 |
 
 진입 파일의 기준은 `ownership-place-owner-files-in-role-folders`를 따릅니다.
 
@@ -279,22 +280,24 @@ export const UiButton = (props: UiButtonProps) => {
 };
 ```
 
-**Incorrect (비공개 부품에 부모 이름을 반복합니다):**
-
-```text
-component/widget/profile-dialog/
-├── wg-profile-dialog.tsx          # WgProfileDialog
-└── _wg-profile-dialog-avatar.tsx  # WgProfileDialogAvatar, wg_profileDialogAvatar. 이 폴더 밖에서는 쓰지 않는 부품
-```
-
-**Correct (부품은 짧게 쓰고 합성 객체와 폴더가 소유자를 말합니다):**
+**Incorrect (부품 이름에서 소유자를 빼 검색이 안 되고 CSS 식별자가 다른 위젯과 겹칩니다):**
 
 ```text
 component/widget/profile-dialog/
 ├── wg-profile-dialog.tsx  # WgProfileDialog = {Root, Header} as const
-├── _wg-root.tsx           # WgRoot. 사용처는 WgProfileDialog.Root 로 조립한다
-├── _wg-header.tsx         # WgHeader
-└── _wg-avatar.tsx         # WgAvatar, wg_avatar. 이 폴더 안에서만 쓰는 부품
+├── _wg-root.tsx           # WgRoot, wg_root. 다른 합성 위젯의 Root 와 이름·식별자가 같다
+├── _wg-header.tsx         # WgHeader, wg_header
+└── _wg-avatar.tsx         # WgAvatar, wg_avatar
+```
+
+**Correct (부품은 소유자 이름을 이어 써 파일·심볼·CSS 식별자만 봐도 어느 위젯인지 드러납니다):**
+
+```text
+component/widget/profile-dialog/
+├── wg-profile-dialog.tsx          # WgProfileDialog = {Root, Header} as const
+├── _wg-profile-dialog-root.tsx    # WgProfileDialogRoot, wg_profileDialogRoot
+├── _wg-profile-dialog-header.tsx  # WgProfileDialogHeader
+└── _wg-profile-dialog-avatar.tsx  # WgProfileDialogAvatar. 이 폴더 안에서만 쓰는 부품도 같다
 ```
 
 ### 1.3 Place Owner Files in Role Folders
@@ -1703,9 +1706,9 @@ export const WgProfileDialog = (props: WgProfileDialogProps) => {
 ```txt
 component/widget/profile-dialog/
 ├── wg-profile-dialog.tsx              진입. 부품을 모아 내보냅니다
-├── _wg-root.tsx
-├── _wg-header.tsx
-├── _wg-body.tsx
+├── _wg-profile-dialog-root.tsx
+├── _wg-profile-dialog-header.tsx
+├── _wg-profile-dialog-body.tsx
 └── _type/
     └── profile-dialog-part.ts         세 부품이 나눠 쓰는 계약
 ```
@@ -1726,7 +1729,7 @@ export interface WgProfileDialogPartProps {
 ```
 
 ```tsx
-// component/widget/profile-dialog/_wg-root.tsx
+// component/widget/profile-dialog/_wg-profile-dialog-root.tsx
 import {clsx} from "clsx";
 
 import type {WgProfileDialogPartProps} from "@/component/widget/profile-dialog/_type/profile-dialog-part";
@@ -1734,21 +1737,21 @@ import type {WgProfileDialogPartProps} from "@/component/widget/profile-dialog/_
 /**
  * 대화상자 틀. 나머지 부품은 이 안에서만 그린다
  */
-export const WgRoot = (props: WgProfileDialogPartProps) => {
+export const WgProfileDialogRoot = (props: WgProfileDialogPartProps) => {
 	return <section className={clsx("wg_profileDialog__root")}>{props.children}</section>;
 };
 ```
 
 ```tsx
 // component/widget/profile-dialog/wg-profile-dialog.tsx
-import {WgBody} from "@/component/widget/profile-dialog/_wg-body";
-import {WgHeader} from "@/component/widget/profile-dialog/_wg-header";
-import {WgRoot} from "@/component/widget/profile-dialog/_wg-root";
+import {WgProfileDialogBody} from "@/component/widget/profile-dialog/_wg-profile-dialog-body";
+import {WgProfileDialogHeader} from "@/component/widget/profile-dialog/_wg-profile-dialog-header";
+import {WgProfileDialogRoot} from "@/component/widget/profile-dialog/_wg-profile-dialog-root";
 
 export const WgProfileDialog = {
-	Root: WgRoot,
-	Header: WgHeader,
-	Body: WgBody,
+	Root: WgProfileDialogRoot,
+	Header: WgProfileDialogHeader,
+	Body: WgProfileDialogBody,
 } as const;
 ```
 
@@ -1774,11 +1777,11 @@ export const WgProfileDialogContext = createContext<WgProfileDialogContextValue 
 ```
 
 ```tsx
-// component/widget/profile-dialog/_wg-root.tsx
+// component/widget/profile-dialog/_wg-profile-dialog-root.tsx
 /**
  * 대화상자 틀. 접힘 상태를 소유해 부품에 컨텍스트로 내린다
  */
-export const WgRoot = (props: WgProfileDialogPartProps) => {
+export const WgProfileDialogRoot = (props: WgProfileDialogPartProps) => {
 	const [isBodyOpen, setIsBodyOpen] = useState(true);
 
 	/**
@@ -2868,14 +2871,14 @@ export const PgOrderToolbar = () => {
 **Incorrect (컨텍스트를 읽어 분기만 하는 래퍼를 파일로 뗍니다):**
 
 ```tsx
-// component/widget/chatbot/_wg-content.tsx: 어느 화면을 그릴지 고르기만 하고 상태를 소유하지 않는다
-export const WgContent = () => {
+// component/widget/chatbot/_wg-chatbot-content.tsx: 어느 화면을 그릴지 고르기만 하고 상태를 소유하지 않는다
+export const WgChatbotContent = () => {
 	const chat = useChatContext();
 
 	return (
 		<Fragment>
 			{chat.isEmpty && <p className={clsx("wg_chatbot__empty")}>{chat.emptyMessage}</p>}
-			{!chat.isEmpty && <WgMessages messages={chat.messages} />}
+			{!chat.isEmpty && <WgChatbotMessages messages={chat.messages} />}
 		</Fragment>
 	);
 };
@@ -2897,11 +2900,11 @@ export const WgChatbot = () => {
 			 * 대화 목록. 비어 있으면 안내 문구를 그린다
 			 */}
 			{chat.isEmpty && <p className={clsx("wg_chatbot__empty")}>{chat.emptyMessage}</p>}
-			{!chat.isEmpty && <WgMessages messages={chat.messages} />}
+			{!chat.isEmpty && <WgChatbotMessages messages={chat.messages} />}
 			{/**
-			 * 입력 폼. 전송 중 상태와 폼 프로바이더를 소유해 _wg-composer.tsx 로 뗐다
+			 * 입력 폼. 전송 중 상태와 폼 프로바이더를 소유해 _wg-chatbot-composer.tsx 로 뗐다
 			 */}
-			<WgComposer onSubmit={chat.send} />
+			<WgChatbotComposer onSubmit={chat.send} />
 		</section>
 	);
 };
@@ -4690,10 +4693,10 @@ JSX 자식 자리의 주석은 여러 줄 블록으로 씁니다.
 	 */}
 	<WgDriverTableHeader sort={sort} />
 	{rows.map((row) => (
-		<WgDriverRow key={row.id} row={row} />
+		<WgDriverTableRow key={row.id} row={row} />
 	))}
 	{expandedRows.map((row) => (
-		<WgDriverChildRow key={row.id} row={row} />
+		<WgDriverTableChildRow key={row.id} row={row} />
 	))}
 </section>;
 ```
@@ -4710,13 +4713,13 @@ JSX 자식 자리의 주석은 여러 줄 블록으로 씁니다.
 	 * 드라이버 행. 상세 버튼과 accordion 을 가진 기본 행
 	 */}
 	{rows.map((row) => (
-		<WgDriverRow key={row.id} row={row} />
+		<WgDriverTableRow key={row.id} row={row} />
 	))}
 	{/**
 	 * 펼친 자식 driver 행. 상세 버튼과 accordion 없이 같은 칸 구성을 반복한다
 	 */}
 	{expandedRows.map((row) => (
-		<WgDriverChildRow key={row.id} row={row} />
+		<WgDriverTableChildRow key={row.id} row={row} />
 	))}
 </section>;
 ```

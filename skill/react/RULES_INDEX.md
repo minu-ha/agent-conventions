@@ -1,7 +1,7 @@
 # React 컨벤션 Rule Index
 
 - Skill: `react`
-- Routing digest: `sha256:ce51ff2a7f014eeb031c6a000d56d3edf627a1d34bab6adc65734f58c2156c31`
+- Routing digest: `sha256:02b9a39c22f718a2ffc3f83e78ac353754103d251c9bef8f0e9161b4055ccf12`
 
 ## Direct Companions
 
@@ -11,7 +11,7 @@
 ## Local Rules
 
 - R01-01 | ownership-layer-component-boundaries | 컴포넌트를 \`ui\`, \`widget\`, \`page\` 중 어느 소유 레이어에 둘지 정할 때. 컴포넌트를 레이어 사이에서 옮기거나 공용화할 때. | reviewWith: css/ownership-choose-scope-prefix-by-owner-layer, ownership-place-owner-files-in-role-folders
-- R01-02 | ownership-prefix-layer-names-on-files-and-symbols | 컴포넌트 파일이나 심볼 이름을 새로 지을 때. 컴포넌트를 다른 레이어로 옮기면서 이름을 바꿀 때. 소유자 안 비공개 부품의 파일·심볼·CSS 식별자를 짓거나 바꿀 때. | reviewWith: ownership-layer-component-boundaries, typescript/naming-use-consistent-file-and-symbol-naming
+- R01-02 | ownership-prefix-layer-names-on-files-and-symbols | 컴포넌트 파일이나 심볼 이름을 새로 지을 때. 컴포넌트를 다른 레이어로 옮기면서 이름을 바꿀 때. 위젯·ui 안 부품이나 하위 소유자의 파일·심볼·CSS 식별자를 짓거나 바꿀 때. | reviewWith: ownership-layer-component-boundaries, typescript/naming-use-consistent-file-and-symbol-naming
 - R01-03 | ownership-place-owner-files-in-role-folders | 소유자 아래 \`\_constant\`·\`\_function\`·\`\_hook\`·\`\_type\` 폴더나 하위 소유자 폴더를 만들거나 옮길 때. 추출한 컴포넌트·함수·타입의 배치 위치를 정할 때. 제외: 기존 파일 내부 구현만 바꾸는 경우. | reviewWith: css/ownership-choose-scope-prefix-by-owner-layer, ownership-keep-component-imports-flowing-downward
 - R01-04 | ownership-keep-component-imports-flowing-downward | 소유자 폴더 안의 컴포넌트 파일을 가져올 때. 다른 소유자나 다른 라우트의 파일을 가져오려 할 때. 여러 자식이 같은 컴포넌트를 써야 해서 배치를 다시 정할 때. 제외: 같은 소유자 안에서 \`\_function\`·\`\_type\`·\`\_constant\`·\`\_hook\` 파일을 가져오는 경우. | reviewWith: ownership-layer-component-boundaries
 - R01-05 | ownership-prefer-plain-ts-for-local-react-helpers | 화면 전용 계산·정규화·전송 값 조립을 커스텀 훅으로 추출하려 할 때. 화면 전용 순수 로직을 별도 보조 모듈로 옮기려 할 때. 화면 지역 함수에 \`use\` 접두사를 붙이거나 커스텀 훅 이름을 바꿀 때. 제외: 상태·컨텍스트·다른 훅 호출 순서를 실제로 캡슐화하는 경우. | reviewWith: ownership-keep-lifecycle-in-the-owning-component, ownership-place-owner-files-in-role-folders, typescript/functions-extract-helpers-only-when-the-boundary-is-real, typescript/naming-use-direct-imports-and-public-entry-points
