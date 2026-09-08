@@ -216,7 +216,7 @@ export const WgSalesWindowChart = (props: WgSalesWindowChartProps) => {
 
 **Rule:** `R01-02` · `ownership-prefix-layer-names-on-files-and-symbols`
 
-**Applies when:** 컴포넌트 파일이나 심볼 이름을 새로 지을 때. 컴포넌트를 다른 레이어로 옮기면서 이름을 바꿀 때. 위젯·ui 안 부품이나 하위 소유자의 파일·심볼·CSS 식별자를 짓거나 바꿀 때.
+**Applies when:** 컴포넌트 파일이나 심볼 이름을 새로 지을 때. 컴포넌트를 다른 레이어로 옮기면서 이름을 바꿀 때. 부품이나 하위 소유자의 이름을 짓거나 바꿀 때.
 
 **Review with:** `ownership-layer-component-boundaries`, `typescript/naming-use-consistent-file-and-symbol-naming`
 
@@ -237,10 +237,7 @@ export const WgSalesWindowChart = (props: WgSalesWindowChartProps) => {
 | 진입 파일이 아닌 컴포넌트 | `_pg-unit-toggle.tsx`처럼 접두사 앞에 `_`를 붙입니다. 동반 `.css`도 같은 이름을 씁니다 |
 | 심볼 | 진입 파일 여부와 관계없이 `_`를 붙이지 않습니다 |
 | 접두사와 겹치는 이름 | `component/ui/button/ui-button.tsx`로 쓰고 `ui-button-button.tsx`처럼 반복하지 않습니다 |
-| 위젯·ui 안 부품 | 소유자 이름을 잇습니다. `_wg-chatbot-header.tsx`·`WgChatbotHeader`·`wg_chatbotHeader`입니다. 헤더·행·칸처럼 되풀이되는 역할 이름이라 소유자를 붙여야 검색이 되고 CSS 식별자가 저절로 유일해집니다 |
-| 합성 부품 | 같습니다. `_wg-profile-dialog-root.tsx`·`WgProfileDialogRoot`를 `WgProfileDialog.Root`로 조립합니다 |
-| 하위 소유자 | 위 소유자 이름부터 잇습니다. `chatbot/panel/wg-chatbot-panel.tsx`·`_wg-chatbot-panel-header.tsx`입니다. 한 겹만 두는 `ownership-place-owner-files-in-role-folders`가 길이를 막습니다 |
-| 화면 부품 | 라우트 폴더가 소유자라 `_pg-unit-toggle.tsx`처럼 짧게 쓰고, CSS 식별자 충돌은 `css/naming-keep-page-slug-traceable`을 따릅니다 |
+| 부품과 하위 소유자 | 이름이 스스로 무엇인지 말하게 짓습니다. `header`·`item`·`panel`처럼 역할 낱말 하나로 짓지 않고 `table-col`·`chat-message`·`disruptor-guide-modal`처럼 무엇의 것인지 말하는 낱말을 앞에 둡니다. 소유자 이름은 그 방법 중 하나일 뿐 필수가 아닙니다 |
 
 진입 파일의 기준은 `ownership-place-owner-files-in-role-folders`를 따릅니다.
 
@@ -280,24 +277,25 @@ export const UiButton = (props: UiButtonProps) => {
 };
 ```
 
-**Incorrect (부품 이름에서 소유자를 빼 검색이 안 되고 CSS 식별자가 다른 위젯과 겹칩니다):**
+**Incorrect (역할 낱말 하나로 지어 무엇의 부품인지 알 수 없습니다):**
 
 ```text
-component/widget/profile-dialog/
-├── wg-profile-dialog.tsx  # WgProfileDialog = {Root, Header} as const
-├── _wg-root.tsx           # WgRoot, wg_root. 다른 합성 위젯의 Root 와 이름·식별자가 같다
-├── _wg-header.tsx         # WgHeader, wg_header
-└── _wg-avatar.tsx         # WgAvatar, wg_avatar
+component/widget/chatbot/
+├── _wg-launcher.tsx    # WgLauncher, wg_launcher
+└── panel/
+    ├── wg-panel.tsx    # WgPanel, wg_panel
+    └── _wg-header.tsx  # WgHeader, wg_header
 ```
 
-**Correct (부품은 소유자 이름을 이어 써 파일·심볼·CSS 식별자만 봐도 어느 위젯인지 드러납니다):**
+**Correct (이름이 스스로 뜻을 말하고 소유자 이름은 필요할 때만 들어갑니다):**
 
 ```text
-component/widget/profile-dialog/
-├── wg-profile-dialog.tsx          # WgProfileDialog = {Root, Header} as const
-├── _wg-profile-dialog-root.tsx    # WgProfileDialogRoot, wg_profileDialogRoot
-├── _wg-profile-dialog-header.tsx  # WgProfileDialogHeader
-└── _wg-profile-dialog-avatar.tsx  # WgProfileDialogAvatar. 이 폴더 안에서만 쓰는 부품도 같다
+component/widget/chatbot/
+├── _wg-chatbot-launcher.tsx       # WgChatbotLauncher
+└── chat-panel/
+    ├── wg-chat-panel.tsx          # WgChatPanel, wg_chatPanel
+    ├── _wg-chat-panel-header.tsx  # WgChatPanelHeader
+    └── _wg-history-pane.tsx       # WgHistoryPane. history 가 뜻을 만들어 소유자 이름이 필요 없다
 ```
 
 ### 1.3 Place Owner Files in Role Folders
@@ -318,7 +316,7 @@ component/widget/profile-dialog/
 | 소유자 | 자기만 쓰는 파일이 있는 컴포넌트는 자기 이름의 폴더를 갖습니다. 하위 컴포넌트 하나만 있어도 같고, 라우트는 항상 소유자입니다 |
 | 진입 파일 | 레이어 접두사를 뺀 이름을 폴더와 맞춥니다. 한 폴더에 라우트가 여럿이면 첫 진입은 `pg-<folder>`, 나머지는 `pg-<folder>-<변형>`입니다 |
 | 하위 컴포넌트 | 역할 폴더에 넣지 않고 소유자 폴더의 `_` 파일로 둡니다. 동반 `.css`도 같은 이름을 씁니다 |
-| 하위 소유자 | 소유자 폴더 안에 한 겹만 둡니다. 역할 폴더 네 개를 제외한 폴더는 모두 하위 소유자이며, 더 깊어지면 형제로 올리거나 `widget`으로 분리할지 판단합니다 |
+| 하위 소유자 | 소유자 폴더 안에 한 겹만 두고, 이름은 `panel`처럼 역할 낱말 하나로 짓지 않습니다. 역할 폴더 네 개를 제외한 폴더는 모두 하위 소유자이며, 더 깊어지면 형제로 올리거나 `widget`으로 분리할지 판단합니다 |
 | 역할 폴더 | 필요한 것만 만들고 파일이 하나여도 유지합니다. 아래 네 종류만 허용합니다 |
 | 함수의 보조 파일 | 전용 보조 파일이 있는 함수만 `_function` 아래 자기 이름 폴더를 갖습니다. 보조 파일은 `_`로 시작하며 그 안에 역할 폴더를 다시 만들지 않습니다 |
 
@@ -2849,8 +2847,6 @@ export const PgOrderToolbar = () => {
 **Impact: HIGH (자체 책임이 있는 부품만 분리해 소유자 안 파일 수와 구조를 읽기 쉽게 유지합니다)**
 
 위젯과 ui 컴포넌트 안의 부품은 아래 책임 중 하나를 직접 소유할 때만 파일로 뗍니다.
-같은 소유자 안 두 곳 이상이 렌더하는 부품과 사용처에 공개하는 조립 부품도 뗍니다.
-그 밖의 JSX는 진입 파일 안에 그대로 둡니다.
 단순 래퍼, `className` 묶음, 들여쓰기 감소, 파일이 길다는 느낌은 분리 근거가 아닙니다.
 
 | 책임 | 예 |
@@ -2862,8 +2858,7 @@ export const PgOrderToolbar = () => {
 | 재사용 | 같은 소유자 안 두 곳 이상이 같은 부품을 렌더 |
 | 조립 | 사용처가 넣고 빼거나 스타일을 바꾸도록 공개하는 합성 부품 |
 
-컨텍스트를 읽어 분기만 하는 부품은 상태를 소유하지 않으므로 진입 파일에 남깁니다.
-밖으로 공개하는 합성 부품은 조립 단위라 뗍니다. 공개 범위는 `strategy-expose-only-assembled-compound-parts`가 정합니다.
+컨텍스트를 읽어 분기만 하는 부품은 진입 파일에 남깁니다.
 라우트 진입 파일의 섹션은 `screen-extract-local-section-components-for-runtime-boundaries`가 같은 기준으로 판단합니다.
 뗀 파일의 이름은 `ownership-prefix-layer-names-on-files-and-symbols`를 따릅니다.
 자리는 `ownership-place-owner-files-in-role-folders`를 따릅니다.
@@ -2871,14 +2866,14 @@ export const PgOrderToolbar = () => {
 **Incorrect (컨텍스트를 읽어 분기만 하는 래퍼를 파일로 뗍니다):**
 
 ```tsx
-// component/widget/chatbot/_wg-chatbot-content.tsx: 어느 화면을 그릴지 고르기만 하고 상태를 소유하지 않는다
-export const WgChatbotContent = () => {
+// component/widget/chatbot/_wg-chat-content.tsx: 어느 화면을 그릴지 고르기만 하고 상태를 소유하지 않는다
+export const WgChatContent = () => {
 	const chat = useChatContext();
 
 	return (
 		<Fragment>
 			{chat.isEmpty && <p className={clsx("wg_chatbot__empty")}>{chat.emptyMessage}</p>}
-			{!chat.isEmpty && <WgChatbotMessages messages={chat.messages} />}
+			{!chat.isEmpty && <WgChatMessages messages={chat.messages} />}
 		</Fragment>
 	);
 };
@@ -2900,11 +2895,11 @@ export const WgChatbot = () => {
 			 * 대화 목록. 비어 있으면 안내 문구를 그린다
 			 */}
 			{chat.isEmpty && <p className={clsx("wg_chatbot__empty")}>{chat.emptyMessage}</p>}
-			{!chat.isEmpty && <WgChatbotMessages messages={chat.messages} />}
+			{!chat.isEmpty && <WgChatMessages messages={chat.messages} />}
 			{/**
-			 * 입력 폼. 전송 중 상태와 폼 프로바이더를 소유해 _wg-chatbot-composer.tsx 로 뗐다
+			 * 입력 폼. 전송 중 상태와 폼 프로바이더를 소유해 _wg-chat-composer.tsx 로 뗐다
 			 */}
-			<WgChatbotComposer onSubmit={chat.send} />
+			<WgChatComposer onSubmit={chat.send} />
 		</section>
 	);
 };
@@ -4629,11 +4624,9 @@ useEffect(() => {
 **Impact: HIGH (JSX 주석 형식을 통일해 화면 구역의 역할을 쉽게 읽을 수 있습니다)**
 
 JSX 자식 자리의 주석은 여러 줄 블록으로 씁니다.
-`{/**`·` * 내용`·` */}`을 각각 다른 줄에 두고 한 줄로 접지 않습니다.
-`//`를 쓸 수 없는 자리에서도 선언 위 문서 주석과 같은 형태를 유지합니다.
-여러 줄로 펼쳐진 형제 블록이 둘 이상이면 블록마다 그 앞에 주석을 둡니다.
+`{/**`·` * 내용`·` */}`을 각각 다른 줄에 두어 접었다 펼칠 때 주석과 블록이 한 덩이로 움직이게 합니다.
+여러 줄로 펼쳐진 형제 블록이 둘 이상이면 블록마다 그 앞에 한 문장으로 적습니다.
 한 줄 요소와 블록 하나뿐인 반환에는 달지 않습니다.
-편집기에서 접었다 펼칠 때 주석과 블록이 한 덩이로 움직이도록 세 줄 형태를 지킵니다.
 
 | 주석 내용 | 기준 |
 | --- | --- |

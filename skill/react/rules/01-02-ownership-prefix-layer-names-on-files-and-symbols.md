@@ -6,7 +6,7 @@ impactDescription: 파일 하나만 봐도 어느 레이어 소유인지 드러�
 appliesWhen:
   - 컴포넌트 파일이나 심볼 이름을 새로 지을 때
   - 컴포넌트를 다른 레이어로 옮기면서 이름을 바꿀 때
-  - 위젯·ui 안 부품이나 하위 소유자의 파일·심볼·CSS 식별자를 짓거나 바꿀 때
+  - 부품이나 하위 소유자의 이름을 짓거나 바꿀 때
 reviewWith: ownership-layer-component-boundaries, typescript/naming-use-consistent-file-and-symbol-naming
 tags: ownership, naming
 ---
@@ -30,10 +30,7 @@ tags: ownership, naming
 | 진입 파일이 아닌 컴포넌트 | `_pg-unit-toggle.tsx`처럼 접두사 앞에 `_`를 붙입니다. 동반 `.css`도 같은 이름을 씁니다 |
 | 심볼 | 진입 파일 여부와 관계없이 `_`를 붙이지 않습니다 |
 | 접두사와 겹치는 이름 | `component/ui/button/ui-button.tsx`로 쓰고 `ui-button-button.tsx`처럼 반복하지 않습니다 |
-| 위젯·ui 안 부품 | 소유자 이름을 잇습니다. `_wg-chatbot-header.tsx`·`WgChatbotHeader`·`wg_chatbotHeader`입니다. 헤더·행·칸처럼 되풀이되는 역할 이름이라 소유자를 붙여야 검색이 되고 CSS 식별자가 저절로 유일해집니다 |
-| 합성 부품 | 같습니다. `_wg-profile-dialog-root.tsx`·`WgProfileDialogRoot`를 `WgProfileDialog.Root`로 조립합니다 |
-| 하위 소유자 | 위 소유자 이름부터 잇습니다. `chatbot/panel/wg-chatbot-panel.tsx`·`_wg-chatbot-panel-header.tsx`입니다. 한 겹만 두는 `ownership-place-owner-files-in-role-folders`가 길이를 막습니다 |
-| 화면 부품 | 라우트 폴더가 소유자라 `_pg-unit-toggle.tsx`처럼 짧게 쓰고, CSS 식별자 충돌은 `css/naming-keep-page-slug-traceable`을 따릅니다 |
+| 부품과 하위 소유자 | 이름이 스스로 무엇인지 말하게 짓습니다. `header`·`item`·`panel`처럼 역할 낱말 하나로 짓지 않고 `table-col`·`chat-message`·`disruptor-guide-modal`처럼 무엇의 것인지 말하는 낱말을 앞에 둡니다. 소유자 이름은 그 방법 중 하나일 뿐 필수가 아닙니다 |
 
 진입 파일의 기준은 `ownership-place-owner-files-in-role-folders`를 따릅니다.
 
@@ -73,22 +70,23 @@ export const UiButton = (props: UiButtonProps) => {
 };
 ```
 
-**Incorrect (부품 이름에서 소유자를 빼 검색이 안 되고 CSS 식별자가 다른 위젯과 겹칩니다):**
+**Incorrect (역할 낱말 하나로 지어 무엇의 부품인지 알 수 없습니다):**
 
 ```text
-component/widget/profile-dialog/
-├── wg-profile-dialog.tsx  # WgProfileDialog = {Root, Header} as const
-├── _wg-root.tsx           # WgRoot, wg_root. 다른 합성 위젯의 Root 와 이름·식별자가 같다
-├── _wg-header.tsx         # WgHeader, wg_header
-└── _wg-avatar.tsx         # WgAvatar, wg_avatar
+component/widget/chatbot/
+├── _wg-launcher.tsx    # WgLauncher, wg_launcher
+└── panel/
+    ├── wg-panel.tsx    # WgPanel, wg_panel
+    └── _wg-header.tsx  # WgHeader, wg_header
 ```
 
-**Correct (부품은 소유자 이름을 이어 써 파일·심볼·CSS 식별자만 봐도 어느 위젯인지 드러납니다):**
+**Correct (이름이 스스로 뜻을 말하고 소유자 이름은 필요할 때만 들어갑니다):**
 
 ```text
-component/widget/profile-dialog/
-├── wg-profile-dialog.tsx          # WgProfileDialog = {Root, Header} as const
-├── _wg-profile-dialog-root.tsx    # WgProfileDialogRoot, wg_profileDialogRoot
-├── _wg-profile-dialog-header.tsx  # WgProfileDialogHeader
-└── _wg-profile-dialog-avatar.tsx  # WgProfileDialogAvatar. 이 폴더 안에서만 쓰는 부품도 같다
+component/widget/chatbot/
+├── _wg-chatbot-launcher.tsx       # WgChatbotLauncher
+└── chat-panel/
+    ├── wg-chat-panel.tsx          # WgChatPanel, wg_chatPanel
+    ├── _wg-chat-panel-header.tsx  # WgChatPanelHeader
+    └── _wg-history-pane.tsx       # WgHistoryPane. history 가 뜻을 만들어 소유자 이름이 필요 없다
 ```
