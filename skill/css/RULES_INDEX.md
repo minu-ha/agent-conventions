@@ -1,7 +1,7 @@
 # CSS 컨벤션 Rule Index
 
 - Skill: `css`
-- Routing digest: `sha256:3beb95252498c4f32f0516ae7f3f0aa88d963fb6aa85f90ef608a2045b7ce948`
+- Routing digest: `sha256:5d936fb61a5c5235073728af4261f5332eacd934b8b1118dce3bc4167412cea1`
 
 ## Direct Companions
 

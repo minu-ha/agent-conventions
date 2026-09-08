@@ -29,6 +29,8 @@ tags: strategy, composition, variants, components
 
 아래 예시는 같은 대화상자를 필요에 따라 확장합니다.
 합성에 상태를 추가해도 사용처의 공개 이름은 유지하고, 반복되는 조합은 변형으로 감쌉니다.
+합성 진입 파일은 부품을 `{Root, Header, Body} as const` 객체 하나로 내보냅니다.
+상태 있는 합성은 `Root`가 상태를 소유해 부품에 컨텍스트로 내립니다.
 렌더 프롭은 `strategy-prefer-children-over-render-props`를,
 공개 부품의 범위는 `strategy-expose-only-assembled-compound-parts`를 따릅니다.
 

@@ -1397,10 +1397,10 @@ export const cellFormatterByValueType = {
 **Correct (객체 프로퍼티의 함수는 화살표, 인라인 콜백은 한 줄로 씁니다):**
 
 ```ts
+/**
+ * 값 종류별 표 셀 표시 함수. 문자열은 앞뒤 공백을 지워 보여 준다
+ */
 export const cellFormatterByValueType = {
-	/**
-	 * 표 셀의 문자열은 앞뒤 공백을 지워 보여 준다
-	 */
 	text: (value: string): string => {
 		return value.trim();
 	},
