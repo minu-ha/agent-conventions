@@ -1806,11 +1806,11 @@ const reactScenarioStages = {
 	"react-widget-part-split-and-private-part-naming": {
 		initial: {
 			prompt:
-				"In the chatbot widget, move the `_wg-chatbot-content.tsx` part that only reads context and picks a branch back into `wg-chatbot.tsx`, rename the private header part `_wg-header.tsx`/`WgHeader` to `_wg-chatbot-header.tsx`/`WgChatbotHeader` so the owner name is carried, and put a multiline block comment above each multi-line JSX block in the entry file. Keep behavior, props, and hooks unchanged.",
+				"In the chatbot widget, move the `_wg-content.tsx` part that only reads context and picks a branch back into `wg-chatbot.tsx`, rename the private header part `_wg-chatbot-header.tsx`/`WgChatbotHeader` to `_wg-header.tsx`/`WgHeader` because private parts do not carry the owner name, and put a multiline block comment above each multi-line JSX block in the entry file. Keep behavior, props, and hooks unchanged.",
 			files: [
 				"src/component/widget/chatbot/wg-chatbot.tsx",
-				"src/component/widget/chatbot/_wg-chatbot-content.tsx",
-				"src/component/widget/chatbot/_wg-header.tsx",
+				"src/component/widget/chatbot/_wg-content.tsx",
+				"src/component/widget/chatbot/_wg-chatbot-header.tsx",
 			],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {

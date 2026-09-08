@@ -37,14 +37,14 @@ tags: composition, ownership
 **Incorrect (컨텍스트를 읽어 분기만 하는 래퍼를 파일로 뗍니다):**
 
 ```tsx
-// component/widget/chatbot/_wg-chatbot-content.tsx: 어느 화면을 그릴지 고르기만 하고 상태를 소유하지 않는다
-export const WgChatbotContent = () => {
+// component/widget/chatbot/_wg-content.tsx: 어느 화면을 그릴지 고르기만 하고 상태를 소유하지 않는다
+export const WgContent = () => {
 	const chat = useChatContext();
 
 	return (
 		<Fragment>
 			{chat.isEmpty && <p className={clsx("wg_chatbot__empty")}>{chat.emptyMessage}</p>}
-			{!chat.isEmpty && <WgChatbotMessages messages={chat.messages} />}
+			{!chat.isEmpty && <WgMessages messages={chat.messages} />}
 		</Fragment>
 	);
 };
@@ -66,11 +66,11 @@ export const WgChatbot = () => {
 			 * 대화 목록. 비어 있으면 안내 문구를 그린다
 			 */}
 			{chat.isEmpty && <p className={clsx("wg_chatbot__empty")}>{chat.emptyMessage}</p>}
-			{!chat.isEmpty && <WgChatbotMessages messages={chat.messages} />}
+			{!chat.isEmpty && <WgMessages messages={chat.messages} />}
 			{/**
-			 * 입력 폼. 전송 중 상태와 폼 프로바이더를 소유해 _wg-chatbot-composer.tsx 로 뗐다
+			 * 입력 폼. 전송 중 상태와 폼 프로바이더를 소유해 _wg-composer.tsx 로 뗐다
 			 */}
-			<WgChatbotComposer onSubmit={chat.send} />
+			<WgComposer onSubmit={chat.send} />
 		</section>
 	);
 };

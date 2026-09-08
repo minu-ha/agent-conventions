@@ -18,7 +18,7 @@ prompt="다음 파일들의 변경(\`git diff $base\` 와 새 파일)을 convent
 마지막 줄은 정확히 이 형식이어야 한다: VIOLATIONS confirmed=<n> ambiguous=<m>
 검토할 파일:
 $files"
-claude -p "$prompt" --permission-mode plan --output-format stream-json --verbose --max-turns 60 \
+claude -p "$prompt" --model "${REVIEW_MODEL:-opus}" --permission-mode plan --output-format stream-json --verbose --max-turns 60 \
 	--add-dir "$HOME/.claude/skills" --add-dir "$HOME/workspace/agent-conventions" > "$out" 2>/dev/null
 python3 - "$out" <<'PY'
 import json, re, sys
