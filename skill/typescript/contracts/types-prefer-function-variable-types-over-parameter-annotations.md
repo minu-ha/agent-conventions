@@ -7,7 +7,7 @@
 
 | 상황 | 타입 표기 |
 | --- | --- |
-| 인터페이스·객체 계약·프레임워크 별칭이 있음 | 기존 호출 계약을 함수 변수에 붙입니다 |
+| 인터페이스 · 객체 계약 · 프레임워크 별칭이 있음 | 기존 호출 계약을 함수 변수에 붙입니다 |
 | 계약에 콜백 필드가 있음 | `Contract["onSelect"]`로 가져옵니다 |
 | 같은 시그니처를 쓰는 구현이 둘 이상임 | 함수 타입 별칭을 선언합니다 |
 | 맞는 계약도 없고 구현도 하나뿐임 | 매개변수 타입을 직접 적습니다. 별칭을 새로 만들지 않습니다 |
@@ -69,4 +69,4 @@ const toStateLabel: UserFormatters["toStateLabel"] = (state) => {
 };
 ```
 
-> 나머지 예시·예외는 [full rule](../rules/01-03-types-prefer-function-variable-types-over-parameter-annotations.md)에 있습니다.
+> 나머지 예시 · 예외는 [full rule](../rules/01-03-types-prefer-function-variable-types-over-parameter-annotations.md)에 있습니다.

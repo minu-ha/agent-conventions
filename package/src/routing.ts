@@ -29,7 +29,7 @@ export const escapeMarkdownText = (value: string): string => {
 
 /**
  * @helper 표가 아닌 단독 줄에 넣을 scalar 정리.
- * 코드 스팬 안은 그대로 두어 `React.*` 같은 표기를 살리고, 스팬 밖의 링크·강조 구문만 무력화한다.
+ * 코드 스팬 안은 그대로 두어 `React.*` 같은 표기를 살리고, 스팬 밖의 링크 · 강조 구문만 무력화한다.
  */
 export const escapeMarkdownProse = (value: string): string => {
 	return value
@@ -341,7 +341,7 @@ export const generateRuleContractMarkdown = (rule: SkillRule): string => {
 		return fullRuleNotice("");
 	}
 
-	return `${normativeBody}${routingMetadataBlock}\n\n${firstExamplePair}\n\n> 나머지 예시·예외는 [full rule](${fullRuleLink})에 있습니다.\n`;
+	return `${normativeBody}${routingMetadataBlock}\n\n${firstExamplePair}\n\n> 나머지 예시 · 예외는 [full rule](${fullRuleLink})에 있습니다.\n`;
 };
 
 /**

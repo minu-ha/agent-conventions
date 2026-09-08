@@ -32,4 +32,4 @@ const responseProductListSuspense = useGetProductListSuspense();
 const mutationProductRemove = useProductRemove();
 ```
 
-> 나머지 예시·예외는 [full rule](../rules/02-01-data-name-query-and-mutation-bindings-consistently.md)에 있습니다.
+> 나머지 예시 · 예외는 [full rule](../rules/02-01-data-name-query-and-mutation-bindings-consistently.md)에 있습니다.

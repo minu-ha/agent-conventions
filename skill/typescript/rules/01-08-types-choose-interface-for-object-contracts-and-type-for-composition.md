@@ -5,8 +5,8 @@ impact: MEDIUM
 impactDescription: 선언 형식만 보고도 필드 계약인지 타입 사이의 관계인지 구분할 수 있습니다
 appliesWhen:
   - `interface`와 `type` 사이에서 선언 형식을 바꿀 때
-  - 객체 계약, union, tuple, 함수 시그니처, mapped·conditional type에 이름을 붙여 선언할 때
-  - 제외: 외부·생성된 계약을 그대로 참조하는 경우
+  - 객체 계약, union, tuple, 함수 시그니처, mapped · conditional type에 이름을 붙여 선언할 때
+  - 제외: 외부 · 생성된 계약을 그대로 참조하는 경우
 reviewWith: types-reuse-existing-contracts-before-new-types, types-document-custom-types-and-shapes
 tags: types, interface, type
 ---
@@ -21,13 +21,13 @@ tags: types, interface, type
 | 선언 대상 | 형식 |
 | --- | --- |
 | 이름이 있고 필드를 직접 읽는 독립 객체 | `interface` |
-| 리터럴 유니언, 기본 타입·튜플 별칭, 함수 시그니처 | `type` |
-| 매핑·조건부 타입, 필드가 없는 인덱스 접근 별칭 | `type` |
+| 리터럴 유니언, 기본 타입 · 튜플 별칭, 함수 시그니처 | `type` |
+| 매핑 · 조건부 타입, 필드가 없는 인덱스 접근 별칭 | `type` |
 | `Omit`, `Record` 같은 계산, 다른 타입과의 교차 | `type` |
-| 유니언·교차 조합에서만 쓰는 객체 | `type` |
+| 유니언 · 교차 조합에서만 쓰는 객체 | `type` |
 
 형식을 맞추려고 별칭을 만들거나 객체 형태를 전부 `interface`로 바꾸지 않습니다.
-추론되는 익명 결과와 외부·생성된 계약은 그대로 둡니다.
+추론되는 익명 결과와 외부 · 생성된 계약은 그대로 둡니다.
 같은 뜻의 기존 계약은 `types-reuse-existing-contracts-before-new-types`에 따라 재사용합니다.
 
 **Incorrect (독립된 필드 계약을 객체 `type` 별칭으로 선언합니다):**

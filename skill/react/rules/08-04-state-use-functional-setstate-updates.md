@@ -4,8 +4,8 @@ titleKo: 이전 상태로 계산하는 갱신은 함수형 `setState`로 씁니�
 impact: HIGH
 impactDescription: 이전 상태에 의존하는 갱신에서 오래된 값을 사용하는 오류를 막습니다
 appliesWhen:
-  - 다음 상태가 현재 상태에 의존하는 갱신을 추가·변경할 때
-  - 핸들러·비동기 콜백·연속 호출에서 `setState` 방식을 바꿀 때
+  - 다음 상태가 현재 상태에 의존하는 갱신을 추가 · 변경할 때
+  - 핸들러 · 비동기 콜백 · 연속 호출에서 `setState` 방식을 바꿀 때
 tags: state, handlers
 ---
 

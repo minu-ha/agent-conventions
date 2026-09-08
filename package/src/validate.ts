@@ -27,7 +27,7 @@ const proseRuleReferencePattern = /`((?:[a-z][a-z0-9]*\/)?[a-z][a-z0-9]*(?:-[a-z
  * @helper 본문 산문의 규칙 ID 참조가 실재하는 규칙을 가리키는지 검증
  * @description frontmatter 참조만 검사하면 규칙을 지울 때 본문 참조가 남아 화면에서 링크가 사라진다.
  *   외부 도구 규칙 이름과 구분하려고 첫 마디가 우리 section prefix 인 것만 본다.
- *   도구 설정을 담은 `tooling` 규칙은 stylelint·biome 규칙 이름을 대량으로 인용하므로 건너뛴다.
+ *   도구 설정을 담은 `tooling` 규칙은 stylelint · biome 규칙 이름을 대량으로 인용하므로 건너뛴다.
  */
 interface AssertProseRuleReferencesArgs {
 	document: LoadedSkillDocument;
@@ -51,7 +51,7 @@ const assertProseRuleReferences = (args: AssertProseRuleReferencesArgs): void =>
 				);
 			}
 
-			// stylelint·biome 규칙 이름이 우리 prefix 와 겹쳐서 tooling 규칙은 ID 해석을 건너뛴다.
+			// stylelint · biome 규칙 이름이 우리 prefix 와 겹쳐서 tooling 규칙은 ID 해석을 건너뛴다.
 			// 그래서 tooling 본문은 우리 규칙을 `css/…` 처럼 소유 skill 을 붙여 가리킨다.
 			if (rule.prefix === "tooling" && !reference.includes("/")) {
 				continue;

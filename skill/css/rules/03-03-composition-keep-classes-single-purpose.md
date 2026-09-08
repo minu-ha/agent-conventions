@@ -4,7 +4,7 @@ titleKo: 기본 스타일과 상태를 한 클래스에 섞지 않습니다
 impact: MEDIUM
 impactDescription: 기본 스타일과 상태를 분리해 상태만 켜고 끌 수 있습니다
 appliesWhen:
-  - 상태를 나타내는 낱말이 들어간 요소 클래스 이름을 추가·변경할 때
+  - 상태를 나타내는 낱말이 들어간 요소 클래스 이름을 추가 · 변경할 때
   - 제외: 처음부터 기본 클래스와 수정자를 나눠 만드는 경우
   - 제외: 책임이 그대로인 이름 변경만 하는 경우
 tags: composition, modifiers, responsibility

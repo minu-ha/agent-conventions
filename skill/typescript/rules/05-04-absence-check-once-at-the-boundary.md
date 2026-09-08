@@ -5,8 +5,8 @@ impact: HIGH
 impactDescription: 값이 들어오는 경계에서 검사해 중간 함수의 중복 검사를 줄입니다
 appliesWhen:
   - "`isNil`, `Number.isFinite` 같은 검사를 함수에 넣을 때"
-  - "`null`, `undefined`, `unknown`을 매개변수·반환 타입에 넣거나 뺄 때"
-  - "응답 매핑·쿼리·search 스키마에서 없음·유한 수 검사로 타입을 좁힐 때"
+  - "`null`, `undefined`, `unknown`을 매개변수 · 반환 타입에 넣거나 뺄 때"
+  - "응답 매핑 · 쿼리 · search 스키마에서 없음 · 유한 수 검사로 타입을 좁힐 때"
 reviewWith: >-
   absence-resolve-defaults-at-the-boundary, absence-do-not-guard-what-types-guarantee,
   values-decide-once-and-carry-the-result
@@ -18,7 +18,7 @@ tags: absence, boundaries
 **Impact: HIGH (값이 들어오는 경계에서 검사해 중간 함수의 중복 검사를 줄입니다)**
 
 값의 없음 여부는 소유자 안으로 들어오는 경계에서 한 번 검사하고, 결과를 타입으로 전달합니다.
-화면의 응답 매핑·`select`·`combine`·search 스키마나 컴포넌트가 프롭을 받는 자리가 경계입니다.
+화면의 응답 매핑 · `select` · `combine` · search 스키마나 컴포넌트가 프롭을 받는 자리가 경계입니다.
 
 | 경계가 정한 답 | 전달 타입 | 소비처 |
 | --- | --- | --- |
@@ -31,9 +31,9 @@ tags: absence, boundaries
 
 | 다시 검사가 필요한가 | 기준 |
 | --- | --- |
-| 경계에서 이미 확인한 없음·유한 수 조건 | 반복하지 않습니다 |
-| 타입이 `number`라는 사실만 확인됨 | `NaN`, `Infinity`·허용 범위까지 보장하지는 않습니다 |
-| 새 계산·외부 호출로 만든 값, 검증 후 변경·외부 값 혼합 | 기존 보장이 적용되지 않는 조건을 해당 경계에서 확인합니다 |
+| 경계에서 이미 확인한 없음 · 유한 수 조건 | 반복하지 않습니다 |
+| 타입이 `number`라는 사실만 확인됨 | `NaN`, `Infinity` · 허용 범위까지 보장하지는 않습니다 |
+| 새 계산 · 외부 호출로 만든 값, 검증 후 변경 · 외부 값 혼합 | 기존 보장이 적용되지 않는 조건을 해당 경계에서 확인합니다 |
 | 여러 입력 경로가 각각 외부 값을 받음 | 각 경계에서 검증합니다 |
 
 경계 아래 여러 함수가 `number | null | undefined`나 `unknown`을 받으면 경계의 처리 책임을 확인합니다.

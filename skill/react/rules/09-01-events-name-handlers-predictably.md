@@ -47,7 +47,7 @@ const onClick2: MouseEventHandler<HTMLButtonElement> = (event) => {
 };
 ```
 
-**Correct (`handle` 접두사와 대상·이벤트가 드러나는 이름을 씁니다):**
+**Correct (`handle` 접두사와 대상 · 이벤트가 드러나는 이름을 씁니다):**
 
 ```ts
 import type {MouseEventHandler} from "react";

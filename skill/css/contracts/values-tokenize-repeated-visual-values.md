@@ -47,4 +47,4 @@
 }
 ```
 
-> 나머지 예시·예외는 [full rule](../rules/05-02-values-tokenize-repeated-visual-values.md)에 있습니다.
+> 나머지 예시 · 예외는 [full rule](../rules/05-02-values-tokenize-repeated-visual-values.md)에 있습니다.

@@ -50,4 +50,4 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 }
 ```
 
-> 나머지 예시·예외는 [full rule](../rules/04-07-selector-do-not-negate-with-not.md)에 있습니다.
+> 나머지 예시 · 예외는 [full rule](../rules/04-07-selector-do-not-negate-with-not.md)에 있습니다.

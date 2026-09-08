@@ -58,4 +58,4 @@
 }
 ```
 
-> 나머지 예시·예외는 [full rule](../rules/04-03-selector-do-not-group-classes-with-commas.md)에 있습니다.
+> 나머지 예시 · 예외는 [full rule](../rules/04-03-selector-do-not-group-classes-with-commas.md)에 있습니다.

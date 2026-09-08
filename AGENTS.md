@@ -6,7 +6,7 @@
 그 문서는 이 저장소와 무관하게 독립적으로 동작한다.
 
 핵심 제약은 하나다. **규칙은 `rules/*.md`에서 고치고 생성물은 build로 갱신한다.**
-라우터·메타데이터·라우팅 오라클의 수정 범위는 3절에 정리했다.
+라우터 · 메타데이터 · 라우팅 오라클의 수정 범위는 3절에 정리했다.
 
 | 단계 | 대상 | 성격 |
 | --- | --- | --- |
@@ -27,7 +27,7 @@
 6. [Guardrails](#6-guardrails) — 금지 사항
 
 사람용 문서는 [README.md](./README.md) 와 [CONTRIBUTING.md](./CONTRIBUTING.md).
-규칙 산문의 문체·낱말·`appliesWhen` 형태는 [CONTRIBUTING.md](./CONTRIBUTING.md) 3절을 따른다. `validate` 가 막는다.
+규칙 산문의 문체 · 낱말 · `appliesWhen` 형태는 [CONTRIBUTING.md](./CONTRIBUTING.md) 3절을 따른다. `validate` 가 막는다.
 build tooling은 [package/](./package/README.md).
 
 ---

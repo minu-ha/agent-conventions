@@ -7,12 +7,12 @@
 
 | 근거 | 적을 내용 |
 | --- | --- |
-| 외부 패키지·API 제약 | 어떤 API가 무엇을 요구하는지 |
+| 외부 패키지 · API 제약 | 어떤 API가 무엇을 요구하는지 |
 | 측정 결과 | 측정 대상과 수치 |
-| 제품 명세·티켓 | 결정이 기록된 위치 |
+| 제품 명세 · 티켓 | 결정이 기록된 위치 |
 | 상수 | `constant` 폴더에 선언된 이름 |
 
-| 예외 위치 | 주석 위치·형태 |
+| 예외 위치 | 주석 위치 · 형태 |
 | --- | --- |
 | 일반 코드 | 해당 줄 바로 위에 `//` |
 | 헤더 문서 주석이 있는 선언 | 헤더 블록 안에 이유 작성 |
@@ -38,4 +38,4 @@ const columns = useMemo(() => {
 }, [responseTableColumnsSuspense.data.columns]);
 ```
 
-> 나머지 예시·예외는 [full rule](../rules/06-05-docs-justify-convention-exceptions-with-a-reason-comment.md)에 있습니다.
+> 나머지 예시 · 예외는 [full rule](../rules/06-05-docs-justify-convention-exceptions-with-a-reason-comment.md)에 있습니다.

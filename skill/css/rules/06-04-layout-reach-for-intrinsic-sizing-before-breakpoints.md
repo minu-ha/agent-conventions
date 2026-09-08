@@ -6,7 +6,7 @@ impactDescription: 컴포넌트가 배치된 폭에 맞춰 크기를 조정해 �
 appliesWhen:
   - `@media` 브레이크포인트를 새로 넣으려 할 때
   - 폭에 따라 줄바꿈, 열 개수, 크기가 달라져야 할 때
-  - 컨테이너 폭에 따른 `@container` 배치 조건을 추가·변경할 때
+  - 컨테이너 폭에 따른 `@container` 배치 조건을 추가 · 변경할 때
 reviewWith: layout-keep-layout-intent-explicit, layout-group-breakpoints-at-the-file-bottom
 tags: values, layout, responsive
 ---

@@ -4,10 +4,10 @@ titleKo: 공용 컴포넌트의 모드를 불리언 조합으로 늘리지 않�
 impact: MEDIUM
 impactDescription: 모드별 분기와 조합을 컴포넌트 구조에서 확인할 수 있습니다
 appliesWhen:
-  - `ui`나 `widget` 컴포넌트에 불리언 모드·표시 프롭을 추가할 때
+  - `ui`나 `widget` 컴포넌트에 불리언 모드 · 표시 프롭을 추가할 때
   - 기존 불리언 프롭 조합과 JSX 분기가 늘어날 때
   - 제외: 라우트 진입 파일 안에서만 쓰는 일회성 분기인 경우
-  - 제외: `disabled`·`checked` 같은 독립 상태 프롭만 여는 경우
+  - 제외: `disabled` · `checked` 같은 독립 상태 프롭만 여는 경우
 reviewWith: strategy-expose-only-assembled-compound-parts
 tags: strategy, composition, props, variants, components
 ---
@@ -16,8 +16,8 @@ tags: strategy, composition, props, variants, components
 
 **Impact: MEDIUM (모드별 분기와 조합을 컴포넌트 구조에서 확인할 수 있습니다)**
 
-여러 파일·레이어에서 재사용하는 공용 `ui`·`widget`은 모드별 불리언 조합 대신 구조를 드러냅니다.
-`isCompact`·`isEditing`·`showSearch`가 늘어나면 가능한 조합과 JSX·스타일 분기도 함께 늘어납니다.
+여러 파일 · 레이어에서 재사용하는 공용 `ui` · `widget`은 모드별 불리언 조합 대신 구조를 드러냅니다.
+`isCompact` · `isEditing` · `showSearch`가 늘어나면 가능한 조합과 JSX · 스타일 분기도 함께 늘어납니다.
 
 | 조건 | 판단 |
 | --- | --- |

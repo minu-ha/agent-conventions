@@ -13,7 +13,7 @@
 | 관련 판단 | 기준 |
 | --- | --- |
 | `type`, `interface` 문서화 | 내보내기 여부와 관계없이 `typescript/types-document-custom-types-and-shapes`를 따릅니다 |
-| 쿼리·뮤테이션 바인딩, 핸들러, 내보낸 보조 함수·훅, 스토어 선언 | `typescript/docs-require-header-jsdoc-on-key-declarations` |
+| 쿼리 · 뮤테이션 바인딩, 핸들러, 내보낸 보조 함수 · 훅, 스토어 선언 | `typescript/docs-require-header-jsdoc-on-key-declarations` |
 | 합성 공개 부품의 설명 위치 | `composition-declare-props-interface-above-the-component` |
 | 허용된 예외의 근거 주석 | `typescript/docs-justify-convention-exceptions-with-a-reason-comment` |
 | 문서 주석 형식과 태그 | `typescript/docs-write-doc-comments-as-multiline-blocks` |
@@ -50,4 +50,4 @@ useEffect(() => {
 }, [watchedProductIds]);
 ```
 
-> 나머지 예시·예외는 [full rule](../rules/12-01-docs-require-jsdoc-on-key-declarations.md)에 있습니다.
+> 나머지 예시 · 예외는 [full rule](../rules/12-01-docs-require-jsdoc-on-key-declarations.md)에 있습니다.

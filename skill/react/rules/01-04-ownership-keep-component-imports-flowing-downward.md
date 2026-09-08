@@ -7,7 +7,7 @@ appliesWhen:
   - 소유자 폴더 안의 컴포넌트 파일을 가져올 때
   - 다른 소유자나 다른 라우트의 파일을 가져오려 할 때
   - 여러 자식이 같은 컴포넌트를 써야 해서 배치를 다시 정할 때
-  - 제외: 같은 소유자 안에서 `_function`·`_type`·`_constant`·`_hook` 파일을 가져오는 경우
+  - 제외: 같은 소유자 안에서만 역할 폴더 네 개의 파일을 가져오는 경우
 requiresSelected: typescript/naming-import-by-absolute-path
 reviewWith: ownership-layer-component-boundaries
 tags: ownership
@@ -19,7 +19,7 @@ tags: ownership
 
 가져오기는 아래 레이어 방향과 소유자 경계를 **모두** 지킵니다.
 모든 경로가 `@/`로 시작하므로 경로 모양이 아니라 가져오는 파일의 위치로 판정합니다.
-소유자·진입 파일·역할 폴더의 정의는 `ownership-place-owner-files-in-role-folders`를 따릅니다.
+소유자 · 진입 파일 · 역할 폴더의 정의는 `ownership-place-owner-files-in-role-folders`를 따릅니다.
 
 | 가져오는 쪽 | 가져올 수 있는 레이어 |
 | --- | --- |
@@ -29,7 +29,7 @@ tags: ownership
 | `page` | 루트 레이어, `ui`, `widget` |
 | 라우터와 앱 진입 파일 | 전부 |
 
-루트 레이어는 `util`·`constant`·`type`·`hook`·`store`·`service`·`config`·`asset`입니다.
+루트 레이어는 `util` · `constant` · `type` · `hook` · `store` · `service` · `config` · `asset`입니다.
 같은 레이어의 공개 컴포넌트끼리 조립할 수 있지만 순환 가져오기는 만들지 않습니다.
 
 | 가져오려는 대상 | 가져올 수 있는 파일 |
@@ -47,8 +47,8 @@ tags: ownership
 `typescript/functions-promote-owner-free-functions-to-root-util`을 따릅니다.
 `_hook`도 `ownership-keep-lifecycle-in-the-owning-component`에 따라 여러 소유자가 공유하는 생명주기를 공개합니다.
 
-여러 자식이 같은 컴포넌트를 쓰면 부모가 조립해 프롭·`children`으로 내려보내거나,
-화면 조립에 종속되지 않을 때 `ui`·`widget`으로 옮깁니다. 짧은 조각은 중복해서 써도 됩니다.
+여러 자식이 같은 컴포넌트를 쓰면 부모가 조립해 프롭 · `children`으로 내려보내거나,
+화면 조립에 종속되지 않을 때 `ui` · `widget`으로 옮깁니다. 짧은 조각은 중복해서 써도 됩니다.
 세 자식 이상이 공유해야 하는데 공용 레이어로 옮길 수도 없다면 자식 분리 자체를 다시 봅니다.
 
 **Incorrect (다른 폴더의 `_` 컴포넌트 파일을 가져옵니다):**

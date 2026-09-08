@@ -4,7 +4,7 @@ titleKo: 포커스 표시는 항상 눈에 보이게 남깁니다
 impact: HIGH
 impactDescription: 포커스 위치를 형태로 구분해 키보드 사용자가 현재 위치를 알 수 있습니다
 appliesWhen:
-  - `outline`, `:focus`, `:focus-visible` 스타일을 추가·수정할 때
+  - `outline`, `:focus`, `:focus-visible` 스타일을 추가 · 수정할 때
   - 상호작용 요소의 기본 포커스 링을 덮어쓸 때
   - 강제 색상 모드에서 포커스 표시가 사라져 스타일을 보완할 때
 reviewWith: selector-nest-dom-state-in-the-owning-block

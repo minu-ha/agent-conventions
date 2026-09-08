@@ -73,4 +73,4 @@
 }
 ```
 
-> 나머지 예시·예외는 [full rule](../rules/05-03-values-declare-stacking-layers-as-tokens.md)에 있습니다.
+> 나머지 예시 · 예외는 [full rule](../rules/05-03-values-declare-stacking-layers-as-tokens.md)에 있습니다.

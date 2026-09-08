@@ -4,9 +4,9 @@ titleKo: 부분집합은 `Pick` 대신 인덱스 접근 `interface`로 파생합
 impact: HIGH
 impactDescription: 고른 필드의 이름과 출처를 드러내고 선택 여부와 읽기 전용 속성을 보존합니다
 appliesWhen:
-  - 기존 타입의 일부 필드만 담는 형태를 선언·변경할 때
-  - `Pick`·`Omit`·`Partial`·`Required`·`Extract`·`NonNullable`을 추가·변경할 때
-  - 제외: 필드 이름·타입·선택 여부가 모두 같아 기존 타입을 그대로 참조하는 경우
+  - 기존 타입의 일부 필드만 담는 형태를 선언 · 변경할 때
+  - `Pick` · `Omit` · `Partial` · `Required` · `Extract` · `NonNullable`을 쓸 때
+  - 제외: 필드 이름 · 타입 · 선택 여부가 모두 같아 기존 타입을 그대로 참조하는 경우
 reviewWith: types-reuse-existing-contracts-before-new-types, types-document-custom-types-and-shapes
 tags: types
 ---
@@ -32,7 +32,7 @@ tags: types
 
 | 필드 값을 원본과 다르게 받을 때 | 적는 법 | 예 |
 | --- | --- | --- |
-| 필드 값 중 일부만 받음 | `Extract<원본["필드"], 좁힌 타입>` | `TableCellProps`의 `padding` 중 `normal`·`none`만 받습니다 |
+| 필드 값 중 일부만 받음 | `Extract<원본["필드"], 좁힌 타입>` | `TableCellProps`의 `padding` 중 `normal` · `none`만 받습니다 |
 | 원본이 비워 두는 필드를 필수로 받음 | `NonNullable<원본["필드"]>` | `align: NonNullable<TableCellProps["align"]>` |
 | union 계약 중 한 갈래만 받음 | `Extract<원본, 판별 필드>` | `Extract<TextFieldProps, { variant?: "outlined" }>` |
 
@@ -144,7 +144,7 @@ type ExportRequestBody = Omit<GeneratedExportRequest, "requestedAt">;
 **Incorrect (좁힌 값을 원시 타입으로 다시 적어 원본과의 연결이 사라집니다):**
 
 ```ts
-// 원본: TableCellProps.align 은 선택 필드고 padding 은 normal·checkbox·none 이다
+// 원본: TableCellProps.align 은 선택 필드고 padding 은 normal · checkbox · none 이다
 /**
  * 보고서 표 칸 표시 계약
  */
@@ -160,11 +160,11 @@ interface ReportCell {
 }
 ```
 
-**Correct (원본 필드를 `NonNullable`·`Extract`로 파생해 출처와 좁힘을 함께 남깁니다):**
+**Correct (원본 필드를 `NonNullable` · `Extract`로 파생해 출처와 좁힘을 함께 남깁니다):**
 
 ```ts
 /**
- * 보고서 표 칸 표시 계약. align·padding 은 TableCell 로 그대로 넘긴다
+ * 보고서 표 칸 표시 계약. align · padding 은 TableCell 로 그대로 넘긴다
  */
 interface ReportCell {
 	/**
@@ -172,7 +172,7 @@ interface ReportCell {
 	 */
 	align: NonNullable<TableCellProps["align"]>;
 	/**
-	 * 칸 여백. checkbox 칸은 두지 않아 normal·none 만 받는다
+	 * 칸 여백. checkbox 칸은 두지 않아 normal · none 만 받는다
 	 */
 	padding?: Extract<TableCellProps["padding"], "normal" | "none">;
 }

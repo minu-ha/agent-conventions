@@ -12,13 +12,13 @@ const maxProseWidth = 120;
 const violationExcerptLength = 40;
 
 /**
- * 인덴트를 탭으로 강제하는 코드 펜스 언어. `text`·`md`는 디렉터리 트리와 목록에 공백을 쓴다.
+ * 인덴트를 탭으로 강제하는 코드 펜스 언어. `text` · `md`는 디렉터리 트리와 목록에 공백을 쓴다.
  */
 const tabIndentedFenceLanguages = new Set(["ts", "tsx", "css", "js", "json"]);
 
 /**
  * 이 저장소가 지어냈던 역어와 그 대체어.
- * 기준은 하나다 — MDN·React·TypeScript 한국어 문서에 역어가 있으면 그것, 없으면 통용 외래어.
+ * 기준은 하나다 — MDN · React · TypeScript 한국어 문서에 역어가 있으면 그것, 없으면 통용 외래어.
  * 그 낱말로 검색할 사람이 있는데 저장소 밖 어디에도 없는 말이면 규칙을 못 찾는다.
  * `쌓임 맥락`, `단언`, `좁히기`는 표준 역어라 목록에 없다.
  */
@@ -60,7 +60,7 @@ const josaPairs = [
 ] as const;
 
 /**
- * 백틱으로 감싼 규칙 ID·식별자와 바로 뒤에 붙은 조사.
+ * 백틱으로 감싼 규칙 ID · 식별자와 바로 뒤에 붙은 조사.
  */
 const backtickedIdentifierJosa = /`([a-z][a-z0-9/-]{6,})`(이|가|은|는|을|를|과|와)(?![가-힣])/g;
 
@@ -92,7 +92,7 @@ const emptyVerbDeclaration = /^\s*(?:export\s+)?const\s+(build|create|make|proce
 const relativeImport = /^\s*import\s[^"']*["']\.\.?\//;
 
 /**
- * 선언 좌변의 객체 구조분해. `const [a, b] =` 같은 배열·튜플은 잡지 않는다.
+ * 선언 좌변의 객체 구조분해. `const [a, b] =` 같은 배열 · 튜플은 잡지 않는다.
  */
 const objectDestructuringDeclaration = /^\s*(?:const|let|var)\s*\{/;
 
@@ -107,12 +107,12 @@ const objectDestructuringParameter = /=\s*(?:async\s*)?\(\s*\{[^}]*\}\s*(?::|\))
 const nonButtonClick = /<(?:li|div|span|td|tr|section|article)\b[^>]*\bonClick=/;
 
 /**
- * `??`·`||` 오른쪽의 리터럴. `absence-expose-optional-values-instead-of-silent-fallbacks`가 선언된 이름만 허용한다.
+ * `??` · `||` 오른쪽의 리터럴. `absence-expose-optional-values-instead-of-silent-fallbacks`가 선언된 이름만 허용한다.
  */
 const literalFallback = /(?:\?\?|\|\|)\s*(?:"[^"]*"|'[^']*'|\d+(?:\.\d+)?|\[\]|\{\})/;
 
 /**
- * 손으로 쓴 값 보조. `values-use-es-toolkit-for-value-helpers`·`values-prefer-immutable-array-sorting`이 es-toolkit 을 요구한다.
+ * 손으로 쓴 값 보조. `values-use-es-toolkit-for-value-helpers` · `values-prefer-immutable-array-sorting`이 es-toolkit 을 요구한다.
  * `.toSorted(`는 키로 못 적는 비교에 허용되므로 `.sort(`만 잡는다.
  */
 const handRolledValueHelper = /(?<!to)\.sort\(|\.reduce\(|Array\.from\(new Set|\[\.\.\.new Set/;
@@ -138,7 +138,7 @@ const jsxBranchTernary = /\?\s*\(\n[\s\S]*?\n\s*\)\s*:\s*\(/;
 const coreTokenFallback = /var\(--app-[a-z0-9-]+\s*,/;
 
 /**
- * 예제 스택 밖 라이브러리 이름. 허용 스택은 react-router·nuqs·react-query·zustand·@mui·es-toolkit·dayjs·clsx·zod 다.
+ * 예제 스택 밖 라이브러리 이름. 허용 스택은 react-router · nuqs · react-query · zustand · @mui · es-toolkit · dayjs · clsx · zod 다.
  */
 const foreignStackTerms = ["ag-grid", "echarts", "EChartsType", "antd", "Kubb", "dataSource=", "treeData=", "UploadFile"];
 
@@ -149,7 +149,7 @@ const spacedJosaAfterLatin = /(?<![`\w/-])[A-Za-z][A-Za-z0-9_-]+ (?:로|가|를|
 
 /**
  * 터미널에서 두 칸을 차지하는 코드포인트 구간. 각 경계가 아니라 표 전체가 하나의 뜻이다.
- * 출처는 Unicode East Asian Width 의 Wide·Fullwidth 구간이다.
+ * 출처는 Unicode East Asian Width 의 Wide · Fullwidth 구간이다.
  */
 const wideCodePointRanges = {
 	hangulJamo: {first: 0x1100, last: 0x115f},
@@ -162,7 +162,7 @@ const wideCodePointRanges = {
 } as const;
 
 /**
- * @helper 한글·전각 문자를 두 칸으로 세어 표시 폭을 구한다
+ * @helper 한글 · 전각 문자를 두 칸으로 세어 표시 폭을 구한다
  */
 const displayWidth = (text: string): number => {
 	let width = 0;
@@ -257,11 +257,11 @@ const collectRuleViolations = (rule: SkillRule): string[] => {
 				}
 
 				if (literalFallback.test(line)) {
-					violations.push(`Correct 예제의 \`??\`·\`||\` 오른쪽은 선언된 이름이다: "${line.trim()}"`);
+					violations.push(`Correct 예제의 \`??\` · \`||\` 오른쪽은 선언된 이름이다: "${line.trim()}"`);
 				}
 
 				if (handRolledValueHelper.test(line)) {
-					violations.push(`Correct 예제의 값 보조는 es-toolkit(sortBy·sumBy·uniq)이다: "${line.trim()}"`);
+					violations.push(`Correct 예제의 값 보조는 es-toolkit(sortBy · sumBy · uniq)이다: "${line.trim()}"`);
 				}
 
 				if (block.lang === "tsx" && singleLineJsxComment.test(line)) {
@@ -324,7 +324,7 @@ const collectRuleViolations = (rule: SkillRule): string[] => {
 
 	for (const term of foreignStackTerms) {
 		if (rule.body.includes(term)) {
-			violations.push(`"${term}"은 예제 스택 밖 이름이다. @mui·react-query·es-toolkit 어휘로 바꾼다`);
+			violations.push(`"${term}"은 예제 스택 밖 이름이다. @mui · react-query · es-toolkit 어휘로 바꾼다`);
 		}
 	}
 
@@ -338,7 +338,7 @@ const collectRuleViolations = (rule: SkillRule): string[] => {
 };
 
 /**
- * @helper 금칙어를 찾을 때 훑는 텍스트. 본문과 라우팅·표시에 쓰이는 frontmatter 를 함께 본다
+ * @helper 금칙어를 찾을 때 훑는 텍스트. 본문과 라우팅 · 표시에 쓰이는 frontmatter 를 함께 본다
  */
 const searchableText = (rule: SkillRule): string => {
 	return [rule.titleKo, rule.impactDescription, ...(rule.appliesWhenBullets ?? []), rule.body].join("\n");
@@ -377,7 +377,7 @@ const collectJosaConflicts = (document: LoadedSkillDocument): string[] => {
 };
 
 /**
- * @api 규칙 본문이 이 저장소가 스스로 정한 형식·예제 규율을 지키는지 검증
+ * @api 규칙 본문이 이 저장소가 스스로 정한 형식 · 예제 규율을 지키는지 검증
  * @description 문장 검토는 사람이 하지만 기계가 셀 수 있는 것은 여기서 막는다.
  *   과거에 표본만 본 검토가 위반 4곳을 지목했을 때 실제로는 13곳이었다.
  *   `Correct` 예제만 규칙 위반으로 본다. `Incorrect`는 일부러 어기는 자리다.

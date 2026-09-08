@@ -4,8 +4,8 @@ titleKo: 한 곳에서 쓸 값을 조회표로 고르지 않습니다
 impact: HIGH
 impactDescription: 값과 선택 조건이 사용처에 함께 남아 선택 기준을 바로 읽을 수 있습니다
 appliesWhen:
-  - 상태나 `variant`에 따라 쓸 값 하나를 고르는 객체·Map을 추가·변경할 때
-  - 조회표의 키로 프롭이나 상태를 읽어 값을 넘기는 코드를 추가·변경할 때
+  - 상태나 `variant`에 따라 쓸 값 하나를 고르는 객체 · Map을 추가 · 변경할 때
+  - 조회표의 키로 프롭이나 상태를 읽어 값을 넘기는 코드를 추가 · 변경할 때
 requiresSelected: docs-justify-convention-exceptions-with-a-reason-comment
 tags: values, lookup, mapping
 ---
@@ -52,7 +52,7 @@ const order_status_by_api_code = {
 
 ```ts
 /**
- * GET /orders의 P·C·D 코드를 화면의 주문 상태 어휘로 바꾸는 API 경계 계약이다
+ * GET /orders의 P · C · D 코드를 화면의 주문 상태 어휘로 바꾸는 API 경계 계약이다
  */
 const order_status_by_api_code = {
 	P: "pending",

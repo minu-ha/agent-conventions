@@ -4,7 +4,7 @@ titleKo: 본문 안 설명은 `//`로 적고 의도와 단계를 남깁니다
 impact: MEDIUM
 impactDescription: 코드를 옮겨 적은 주석은 막고 읽는 데 필요한 설명은 남깁니다
 appliesWhen:
-  - 함수 본문의 `//` 주석을 추가·수정·유지할 때
+  - 함수 본문의 `//` 주석을 추가 · 수정 · 유지할 때
   - 도메인 규칙, 예외 방어, 외부 제약, 부수효과 순서, 긴 절차의 단계를 주석으로 설명할 때
 reviewWith: >-
   docs-write-korean-comments-about-purpose-and-constraints,
@@ -21,7 +21,7 @@ tags: docs, comments
 
 | 위치 | 주석 형태 |
 | --- | --- |
-| 코드 한 줄·절차 단계 | `//`. 긴 흐름을 한 함수에 유지할 때도 단계 구분을 남깁니다 |
+| 코드 한 줄 · 절차 단계 | `//`. 긴 흐름을 한 함수에 유지할 때도 단계 구분을 남깁니다 |
 | `docs-require-header-jsdoc-on-key-declarations`가 정한 선언 | `docs-write-doc-comments-as-multiline-blocks`에 따른 문서 블록 |
 | 그 밖의 지역 선언 | 별도 주석을 달지 않습니다. 필요한 줄의 의도만 `//`로 적습니다 |
 | JSX 자식 | `//`를 쓸 수 없으므로 프레임워크 규칙을 따릅니다 |

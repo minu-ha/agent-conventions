@@ -58,4 +58,4 @@ const fetchProductPage = (request: ProductPageRequest): Promise<ProductPage> => 
 fetchProductPage({baseUrl: api_base_url, page: urlParams.page, pageSize: pagination_default_page_size});
 ```
 
-> 나머지 예시·예외는 [full rule](../rules/03-02-functions-use-named-object-params-for-complex-signatures.md)에 있습니다.
+> 나머지 예시 · 예외는 [full rule](../rules/03-02-functions-use-named-object-params-for-complex-signatures.md)에 있습니다.

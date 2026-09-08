@@ -2,7 +2,7 @@
 
 **Impact: MEDIUM (사용하지 않는 명령형 계약이 공용 컴포넌트에 늘어나는 것을 막습니다)**
 
-`ref`는 사용처가 포커스·스크롤·측정 등을 직접 제어해야 할 때만 엽니다.
+`ref`는 사용처가 포커스 · 스크롤 · 측정 등을 직접 제어해야 할 때만 엽니다.
 현재 사용처가 없으면 미리 공개하지 않습니다.
 
 | 조건 | 처리 |
@@ -70,4 +70,4 @@ export const UiSearchInput = (props: UiSearchInputProps) => {
 };
 ```
 
-> 나머지 예시·예외는 [full rule](../rules/05-04-composition-open-ref-props-only-for-imperative-contracts.md)에 있습니다.
+> 나머지 예시 · 예외는 [full rule](../rules/05-04-composition-open-ref-props-only-for-imperative-contracts.md)에 있습니다.

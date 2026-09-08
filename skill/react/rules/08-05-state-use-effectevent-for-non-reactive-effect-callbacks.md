@@ -4,8 +4,8 @@ titleKo: 비반응형 이펙트 콜백은 `useEffectEvent`로 분리합니다
 impact: MEDIUM
 impactDescription: 콜백은 최신 값을 읽고 이펙트는 구독 조건의 변화에만 반응합니다
 appliesWhen:
-  - 구독 이펙트가 최신 프롭·상태 콜백을 읽어야 할 때
-  - ref 동기화 우회, 의존성 재설치, `useEffectEvent`를 추가·변경할 때
+  - 구독 이펙트가 최신 프롭 · 상태 콜백을 읽어야 할 때
+  - ref 동기화 우회, 의존성 재설치, `useEffectEvent`를 추가 · 변경할 때
 reviewWith: >-
   docs-require-jsdoc-on-key-declarations, events-curry-extra-handler-arguments,
   events-run-user-actions-in-handlers-not-effects
@@ -16,16 +16,16 @@ tags: state, effects
 
 **Impact: MEDIUM (콜백은 최신 값을 읽고 이펙트는 구독 조건의 변화에만 반응합니다)**
 
-구독 이펙트의 콜백이 최신 프롭스·상태를 읽되 그 값 때문에 재구독할 필요가 없다면 `useEffectEvent`를 씁니다.
-연결 대상·구독 조건처럼 바뀌면 재설치해야 하는 값은 이펙트 의존성에 남깁니다.
+구독 이펙트의 콜백이 최신 프롭스 · 상태를 읽되 그 값 때문에 재구독할 필요가 없다면 `useEffectEvent`를 씁니다.
+연결 대상 · 구독 조건처럼 바뀌면 재설치해야 하는 값은 이펙트 의존성에 남깁니다.
 
 | 조건 | 처리 |
 | --- | --- |
 | 리액트 19.2 이상 | 비반응형 콜백에 `ref` 우회 대신 `useEffectEvent`를 씁니다 |
 | 리액트 19.2 미만 | 의존성에 따른 재구독을 먼저 검토하고, 최신 콜백만 바꿔야 할 때 `ref` 동기화를 검토합니다 |
-| 클릭·제출 등 사용자 액션 | 이름 붙인 핸들러에 둡니다. 이펙트로 옮기지 않습니다 |
+| 클릭 · 제출 등 사용자 액션 | 이름 붙인 핸들러에 둡니다. 이펙트로 옮기지 않습니다 |
 | Effect Event 호출 | 같은 컴포넌트의 이펙트나 다른 Effect Event 안에서만 호출합니다 |
-| Effect Event 전달 | 다른 컴포넌트·훅·JSX 이벤트 프롭에 넘기지 않습니다 |
+| Effect Event 전달 | 다른 컴포넌트 · 훅 · JSX 이벤트 프롭에 넘기지 않습니다 |
 
 반환 함수는 참조 동일성을 보장하지 않으며 이펙트 의존성에 넣지 않습니다.
 DOM 이벤트 매개변수나 커링을 덧붙이지 않고,

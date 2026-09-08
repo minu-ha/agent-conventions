@@ -14,7 +14,7 @@ tags: state, effects
 
 **Impact: HIGH (지금 입력으로 구할 수 있는 값은 상태에 두지 않고 렌더에서 계산합니다)**
 
-현재 프롭스·상태·search 파라미터·응답으로 계산할 수 있는 값은 렌더 중에 구합니다.
+현재 프롭스 · 상태 · search 파라미터 · 응답으로 계산할 수 있는 값은 렌더 중에 구합니다.
 `useState`에 복제해 `useEffect`로 동기화하면 추가 렌더와 값의 어긋남이 생기기 쉽습니다.
 
 계산 위치는 `screen-keep-derived-values-close`에 따라 사용하는 곳 가까이에 둡니다.

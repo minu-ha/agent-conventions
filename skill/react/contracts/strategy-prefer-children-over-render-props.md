@@ -7,7 +7,7 @@
 | 상황 | 선택 |
 | --- | --- |
 | 부모가 자식 자리만 열어 줌 | `children`과 네임스페이스 슬롯 부품 |
-| 부모가 항목·순번·상태 같은 실행 문맥을 자식에게 전달해야 함 | 이때만 `renderHeader`, `renderFooter` 같은 렌더 프롭을 씁니다 |
+| 부모가 항목 · 순번 · 상태 같은 실행 문맥을 자식에게 전달해야 함 | 이때만 `renderHeader`, `renderFooter` 같은 렌더 프롭을 씁니다 |
 
 | 별도 이름이 필요한 계약 | 이름 |
 | --- | --- |
@@ -102,4 +102,4 @@ export const PgProductScreen = () => {
 };
 ```
 
-> 나머지 예시·예외는 [full rule](../rules/04-04-strategy-prefer-children-over-render-props.md)에 있습니다.
+> 나머지 예시 · 예외는 [full rule](../rules/04-04-strategy-prefer-children-over-render-props.md)에 있습니다.

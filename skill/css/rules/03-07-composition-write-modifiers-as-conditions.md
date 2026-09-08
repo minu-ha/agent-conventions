@@ -4,8 +4,8 @@ titleKo: 수정자는 조건으로 적고 클래스 이름을 조립하지 않�
 impact: HIGH
 impactDescription: 클래스 이름이 코드에 문자열로 남아 CSS와 사용처를 한 번의 검색으로 함께 고칩니다
 appliesWhen:
-  - 값이나 `variant` 프롭으로 수정자를 고르는 `className`을 추가·변경할 때
-  - 클래스 이름에 값을 끼워 넣는 템플릿 리터럴을 추가·변경할 때
+  - 값이나 `variant` 프롭으로 수정자를 고르는 `className`을 추가 · 변경할 때
+  - 클래스 이름에 값을 끼워 넣는 템플릿 리터럴을 추가 · 변경할 때
   - 제외: 불리언 하나로 수정자가 붙거나 빠지는 경우
 reviewWith: >-
   composition-compose-classes-with-clsx, typescript/values-avoid-lookup-tables-for-simple-choices

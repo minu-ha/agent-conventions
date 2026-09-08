@@ -4,8 +4,8 @@ titleKo: 추출한 파일은 소유자 아래 역할 폴더에 둡니다
 impact: HIGH
 impactDescription: 추출한 파일의 소유자와 역할을 경로에서 확인할 수 있습니다
 appliesWhen:
-  - 소유자 아래 `_constant`·`_function`·`_hook`·`_type` 폴더나 하위 소유자 폴더를 만들거나 옮길 때
-  - 추출한 컴포넌트·함수·타입의 배치 위치를 정할 때
+  - 소유자 아래 `_constant` · `_function` · `_hook` · `_type` 폴더나 하위 소유자 폴더를 만들거나 옮길 때
+  - 추출한 컴포넌트 · 함수 · 타입의 배치 위치를 정할 때
   - 제외: 기존 파일 내부 구현만 바꾸는 경우
 reviewWith: >-
   ownership-keep-component-imports-flowing-downward, css/ownership-choose-scope-prefix-by-owner-layer
@@ -30,9 +30,9 @@ tags: ownership
 
 | 역할 폴더 | 담는 것 |
 | --- | --- |
-| `_constant` | 입력을 받지 않는 상수·기본값·기준값·파서 묶음 등 선언형 계약 |
+| `_constant` | 입력을 받지 않는 상수 · 기본값 · 기준값 · 파서 묶음 등 선언형 계약 |
 | `_function` | 이름 붙여 내보낸 도메인 계산 |
-| `_hook` | 실제 상태·이펙트·컨텍스트를 소유한 커스텀 훅 |
+| `_hook` | 실제 상태 · 이펙트 · 컨텍스트를 소유한 커스텀 훅 |
 | `_type` | 여러 파일이 공유하는 계약. 개별 컴포넌트의 프롭스는 해당 TSX에 둡니다 |
 
 소유자 폴더에서 `_`가 없는 이름은 진입 파일과 하위 소유자 폴더뿐입니다.
@@ -41,8 +41,8 @@ tags: ownership
 가져오기 경계는 `ownership-keep-component-imports-flowing-downward`를 따릅니다.
 
 폴더 이름은 단수로 쓰되 프레임워크가 강제하는 이름은 예외입니다.
-소유자 아래에 `component`·`util`·`helper`·`config`·`constants`·`common`·`shared` 폴더를 만들지 않습니다.
-루트의 `constant`·`type`·`hook`은 프로젝트가 소유하는 역할 폴더이므로 같은 규칙을 따르되 `_`를 붙이지 않습니다.
+소유자 아래에 `component` · `util` · `helper` · `config` · `constants` · `common` · `shared` 폴더를 만들지 않습니다.
+루트의 `constant` · `type` · `hook`은 프로젝트가 소유하는 역할 폴더이므로 같은 규칙을 따르되 `_`를 붙이지 않습니다.
 
 | 함께 판단할 내용 | 기준 |
 | --- | --- |

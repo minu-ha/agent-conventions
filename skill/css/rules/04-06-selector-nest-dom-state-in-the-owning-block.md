@@ -4,7 +4,7 @@ titleKo: DOM 상태 가상 클래스는 해당 요소의 기본 블록에 둡니
 impact: MEDIUM
 impactDescription: 기본 모습과 상태 변화를 함께 읽고 수정자가 꺼져도 상호작용 표시를 유지합니다
 appliesWhen:
-  - `:hover`, `:focus-visible`, `:disabled`, `:checked` 스타일을 추가·수정할 때
+  - `:hover`, `:focus-visible`, `:disabled`, `:checked` 스타일을 추가 · 수정할 때
   - 조상의 DOM 상태가 자손 스타일을 바꿔야 할 때
   - 상태 가상 클래스를 수정자 블록 안팎으로 옮길 때
 reviewWith: >-

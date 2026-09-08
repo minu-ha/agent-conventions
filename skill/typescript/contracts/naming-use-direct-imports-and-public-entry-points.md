@@ -14,7 +14,7 @@
 
 `default`는 사용처마다 이름이 달라지고 원본의 이름 변경도 반영되지 않습니다.
 경로 형식은 `naming-import-by-absolute-path`를 따릅니다.
-같은 경로라도 값·타입 가져오기를 바꾸면 이 규칙을 적용합니다.
+같은 경로라도 값 · 타입 가져오기를 바꾸면 이 규칙을 적용합니다.
 
 **Incorrect (배럴과 섞인 가져오기로 경계를 흐립니다):**
 
@@ -30,4 +30,4 @@ import {pagination_default_page_size} from "@/constant/pagination";
 import {toDisplayDate} from "@/util/date/to-display-date";
 ```
 
-> 나머지 예시·예외는 [full rule](../rules/02-04-naming-use-direct-imports-and-public-entry-points.md)에 있습니다.
+> 나머지 예시 · 예외는 [full rule](../rules/02-04-naming-use-direct-imports-and-public-entry-points.md)에 있습니다.

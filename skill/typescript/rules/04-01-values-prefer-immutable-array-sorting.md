@@ -5,7 +5,7 @@ impact: HIGH
 impactDescription: 프롭스, 상태, 모듈 상수에서 온 배열을 정렬할 때 원본이 바뀌는 버그를 피합니다
 appliesWhen:
   - 프롭스, 상태, 매개변수, 모듈 상수에서 온 배열을 정렬할 때
-  - 기존 `.sort()` 호출을 추가·변경할 때
+  - 기존 `.sort()` 호출을 추가 · 변경할 때
 reviewWith: values-use-es-toolkit-for-value-helpers
 tags: functions, arrays, immutability
 ---
@@ -15,7 +15,7 @@ tags: functions, arrays, immutability
 **Impact: HIGH (프롭스, 상태, 모듈 상수에서 온 배열을 정렬할 때 원본이 바뀌는 버그를 피합니다)**
 
 정렬은 새 배열을 반환하는 `es-toolkit` 함수로 합니다. 원본을 바꾸는 `.sort()`는 쓰지 않습니다.
-프롭스·상태·매개변수·모듈 상수로 받은 배열도 같은 기준을 따릅니다.
+프롭스 · 상태 · 매개변수 · 모듈 상수로 받은 배열도 같은 기준을 따릅니다.
 
 | 정렬 조건 | 선택 |
 | --- | --- |

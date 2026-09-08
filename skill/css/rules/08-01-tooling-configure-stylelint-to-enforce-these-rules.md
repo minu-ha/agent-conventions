@@ -4,7 +4,7 @@ titleKo: `stylelint`로 자동 검사할 규칙을 설정합니다
 impact: MEDIUM
 impactDescription: 자동 검사 범위를 설정으로 고정하고 의미 판단은 리뷰에 남깁니다
 appliesWhen:
-  - stylelint 설정을 새로 만들거나 규칙을 추가·수정할 때
+  - stylelint 설정을 새로 만들거나 규칙을 추가 · 수정할 때
   - 이 컨벤션 중 어디까지 자동으로 잡히는지 확인할 때
 reviewWith: >-
   ownership-use-foreign-classes-only-under-your-own-root, selector-limit-nesting-block-depth,

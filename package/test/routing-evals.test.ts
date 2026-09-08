@@ -69,7 +69,7 @@ const readAppliesWhen = (source: string): string => readFrontmatterValue(source,
 const realSkillRootDir = path.join(repoDir, "skill");
 
 /**
- * @helper 에이전트가 실제로 읽게 되는 텍스트. 링크만 남긴 CRITICAL·HIGH contract 는 원문까지 이어 읽는다
+ * @helper 에이전트가 실제로 읽게 되는 텍스트. 링크만 남긴 CRITICAL · HIGH contract 는 원문까지 이어 읽는다
  */
 const readAgentFacingRule = async (skill: string, ruleId: string): Promise<string> => {
 	const contract = await readFile(path.join(realSkillRootDir, skill, "contracts", `${ruleId}.md`), "utf8");
@@ -249,12 +249,12 @@ const reactRuleUniverse = [
 const typescriptRuleRouting = {
 	"types-reuse-existing-contracts-before-new-types": {
 		appliesWhen:
-			"뜻이 같은 기존 타입, 인터페이스, 스키마가 있는데 형태를 새로 선언·변경·복제·파생할 때. 같은 형태를 두 번 선언했다가 넣거나 뺄 때. 제외: 맞는 후보가 없거나 소유자만 옮긴 경우. 제외: 그대로인 계약을 새 자리에서 쓰는 경우. 제외: 고칠 수 없는 형태를 그대로 쓰는 경우.",
+			"뜻이 같은 기존 타입 · 스키마가 있는데 형태를 새로 선언 · 변경 · 파생할 때. 같은 형태를 두 번 선언했다가 넣거나 뺄 때. 제외: 맞는 후보가 없거나 소유자만 옮긴 경우. 제외: 그대로인 계약을 새 자리에서 쓰는 경우. 제외: 고칠 수 없는 형태를 그대로 쓰는 경우.",
 		reviewWith: ["types-derive-subsets-with-indexed-access", "types-document-custom-types-and-shapes"],
 	},
 	"types-derive-subsets-with-indexed-access": {
 		appliesWhen:
-			"기존 타입의 일부 필드만 담는 형태를 선언·변경할 때. `Pick`·`Omit`·`Partial`·`Required`·`Extract`·`NonNullable`을 추가·변경할 때. 제외: 필드 이름·타입·선택 여부가 모두 같아 기존 타입을 그대로 참조하는 경우.",
+			"기존 타입의 일부 필드만 담는 형태를 선언 · 변경할 때. `Pick` · `Omit` · `Partial` · `Required` · `Extract` · `NonNullable`을 쓸 때. 제외: 필드 이름 · 타입 · 선택 여부가 모두 같아 기존 타입을 그대로 참조하는 경우.",
 		reviewWith: ["types-reuse-existing-contracts-before-new-types", "types-document-custom-types-and-shapes"],
 	},
 	"types-prefer-function-variable-types-over-parameter-annotations": {
@@ -264,7 +264,7 @@ const typescriptRuleRouting = {
 	},
 	"types-document-custom-types-and-shapes": {
 		appliesWhen:
-			"타입, 인터페이스, 스키마 최상단, 객체 상수, 계약 필드, 파생 별칭을 추가·변경할 때. 이름 붙인 형태에 호출 계약 역할을 새로 얹을 때. 제외: 외부·생성된·읽기 전용·공용 형태를 그대로 쓰거나 반환 타입이 익명으로 추론되는 경우.",
+			"타입, 인터페이스, 스키마 최상단, 객체 상수, 계약 필드, 파생 별칭을 추가 · 변경할 때. 이름 붙인 형태에 호출 계약 역할을 새로 얹을 때. 제외: 외부 · 생성된 · 읽기 전용 · 공용 형태를 그대로 쓰거나 반환 타입이 익명으로 추론되는 경우.",
 		reviewWith: [],
 	},
 	"types-mark-unused-parameters-with-underscore": {
@@ -274,22 +274,22 @@ const typescriptRuleRouting = {
 	},
 	"types-narrow-unknown-instead-of-asserting": {
 		appliesWhen:
-			"`as` 단언, `!` `null` 아님 단언, `any`, `@ts-expect-error`를 추가·변경·제거할 때. 앱 밖에서 들어온 값을 타입 붙여 쓰기 시작할 때. 제외: 검증된 내부 값에 `as const`나 `satisfies`만 적용하는 경우.",
+			"`as` 단언, `!` `null` 아님 단언, `any`, `@ts-expect-error`를 추가 · 변경 · 제거할 때. 앱 밖에서 들어온 값을 타입 붙여 쓰기 시작할 때. 제외: 검증된 내부 값에 `as const`나 `satisfies`만 적용하는 경우.",
 		reviewWith: ["docs-justify-convention-exceptions-with-a-reason-comment", "tooling-configure-biome-to-enforce-these-rules"],
 	},
 	"types-replace-enum-with-as-const-objects": {
 		appliesWhen:
-			"`enum`이나 타입과 실행 양쪽에서 함께 쓰는 값 집합을 추가·변경할 때. 제외: 외부 패키지가 내보낸 `enum` 값을 그대로 읽어 쓰는 경우.",
+			"`enum`이나 타입과 실행 양쪽에서 함께 쓰는 값 집합을 추가 · 변경할 때. 제외: 외부 패키지가 내보낸 `enum` 값을 그대로 읽어 쓰는 경우.",
 		reviewWith: [],
 	},
 	"types-choose-interface-for-object-contracts-and-type-for-composition": {
 		appliesWhen:
-			"`interface`와 `type` 사이에서 선언 형식을 바꿀 때. 객체 계약, union, tuple, 함수 시그니처, mapped·conditional type에 이름을 붙여 선언할 때. 제외: 외부·생성된 계약을 그대로 참조하는 경우.",
+			"`interface`와 `type` 사이에서 선언 형식을 바꿀 때. 객체 계약, union, tuple, 함수 시그니처, mapped · conditional type에 이름을 붙여 선언할 때. 제외: 외부 · 생성된 계약을 그대로 참조하는 경우.",
 		reviewWith: ["types-reuse-existing-contracts-before-new-types", "types-document-custom-types-and-shapes"],
 	},
 	"naming-place-project-constants-in-the-root-constant-folder": {
 		appliesWhen:
-			"프로젝트 전반이 쓰는 URL 경로, 페이지 크기, 표시 문구, 기준값을 추가·이동·중복 정의할 때. 루트 `constant` 폴더의 파일이나 상수 이름을 바꿀 때.",
+			"프로젝트 전반이 쓰는 URL 경로, 페이지 크기, 표시 문구, 기준값을 추가 · 이동 · 중복 정의할 때. 루트 `constant` 폴더의 파일이나 상수 이름을 바꿀 때.",
 		reviewWith: ["naming-place-owner-constants-in-the-owner-constant-folder", "naming-use-direct-imports-and-public-entry-points"],
 	},
 	"naming-place-owner-constants-in-the-owner-constant-folder": {
@@ -298,12 +298,12 @@ const typescriptRuleRouting = {
 	},
 	"naming-use-consistent-file-and-symbol-naming": {
 		appliesWhen:
-			"TypeScript 파일, 폴더, 변수, 함수, 타입, 객체·스키마 키의 이름을 새로 만들거나 바꿀 때. 외부 계약이 정한 이름이나 키의 표기를 바꿀지 판단할 때. 제외: 별칭 없이 외부 패키지에서 그대로 가져오는 경우.",
+			"TypeScript 파일, 폴더, 변수, 함수, 타입, 객체 · 스키마 키의 이름을 새로 만들거나 바꿀 때. 외부 계약이 정한 이름이나 키의 표기를 바꿀지 판단할 때. 제외: 별칭 없이 외부 패키지에서 그대로 가져오는 경우.",
 		reviewWith: [],
 	},
 	"naming-use-direct-imports-and-public-entry-points": {
 		appliesWhen:
-			"가져오기, 내보내기, `index.ts` 배럴, 공개 진입점, 소유자 보조 모듈의 경계를 추가·변경할 때. 같은 경로에서 값과 타입 중 무엇을 가져올지 추가·삭제·전환할 때.",
+			"가져오기, 내보내기, `index.ts` 배럴, 공개 진입점, 소유자 보조 모듈의 경계를 추가 · 변경할 때. 같은 경로에서 값과 타입 중 무엇을 가져올지 추가 · 삭제 · 전환할 때.",
 		reviewWith: ["naming-import-by-absolute-path"],
 	},
 	"naming-import-by-absolute-path": {
@@ -312,7 +312,7 @@ const typescriptRuleRouting = {
 		reviewWith: ["naming-use-direct-imports-and-public-entry-points"],
 	},
 	"naming-read-environment-values-through-config-env": {
-		appliesWhen: "`import.meta.env`나 `process.env`를 읽는 코드를 추가·이동할 때. 환경마다 달라지는 값이나 기능 플래그를 새로 들여올 때.",
+		appliesWhen: "`import.meta.env`나 `process.env`를 읽는 코드를 추가 · 이동할 때. 환경마다 달라지는 값이나 기능 플래그를 새로 들여올 때.",
 		reviewWith: [
 			"naming-place-project-constants-in-the-root-constant-folder",
 			"absence-expose-optional-values-instead-of-silent-fallbacks",
@@ -320,7 +320,7 @@ const typescriptRuleRouting = {
 	},
 	"naming-name-types-by-role-and-lifetime": {
 		appliesWhen:
-			"타입·인터페이스나 그 파일의 이름을 새로 만들거나 바꿀 때. 타입을 소유자 폴더 안과 밖 사이에서 옮기며 이름을 바꿀 때. 제외: 외부·생성된 계약 이름을 그대로 쓰는 경우.",
+			"타입 · 인터페이스나 그 파일의 이름을 새로 만들거나 바꿀 때. 타입을 소유자 폴더 안과 밖 사이에서 옮기며 이름을 바꿀 때. 제외: 외부 · 생성된 계약 이름을 그대로 쓰는 경우.",
 		reviewWith: ["naming-use-consistent-file-and-symbol-naming"],
 	},
 	"functions-declare-functions-as-arrow-consts": {
@@ -330,7 +330,7 @@ const typescriptRuleRouting = {
 	},
 	"functions-use-named-object-params-for-complex-signatures": {
 		appliesWhen:
-			"매개변수가 셋을 넘거나 같은 계열 인자를 받는 함수를 추가·변경할 때. 객체 매개변수의 필드를 읽는 방식을 바꿀 때. 제외: 리액트 함수 컴포넌트가 프롭스를 받는 방식만 바꾸는 경우.",
+			"매개변수가 셋을 넘거나 같은 계열 인자를 받는 함수를 추가 · 변경할 때. 객체 매개변수의 필드를 읽는 방식을 바꿀 때. 제외: 리액트 함수 컴포넌트가 프롭스를 받는 방식만 바꾸는 경우.",
 		reviewWith: ["types-reuse-existing-contracts-before-new-types", "values-read-objects-through-chains"],
 	},
 	"functions-extract-helpers-only-when-the-boundary-is-real": {
@@ -364,25 +364,25 @@ const typescriptRuleRouting = {
 	},
 	"functions-name-a-value-only-for-recompute-or-judgment": {
 		appliesWhen:
-			"순수 계산의 결과를 지역 변수(`const`)로 받는 줄을 추가·삭제할 때. 표현식을 쓰는 자리에 그대로 적을지 변수로 뺄지 정할 때.",
+			"순수 계산의 결과를 지역 변수(`const`)로 받는 줄을 추가 · 삭제할 때. 표현식을 쓰는 자리에 그대로 적을지 변수로 뺄지 정할 때.",
 		reviewWith: ["functions-avoid-imperative-assembly-in-wide-scopes", "values-read-objects-through-chains"],
 	},
 	"functions-name-functions-by-what-comes-out": {
-		appliesWhen: "이름을 붙인 함수를 새로 만들거나 이름을 바꿀 때. 제외: 생성기·프레임워크·외부 계약이 정한 이름을 그대로 쓰는 경우.",
+		appliesWhen: "이름을 붙인 함수를 새로 만들거나 이름을 바꿀 때. 제외: 생성기 · 프레임워크 · 외부 계약이 정한 이름을 그대로 쓰는 경우.",
 		reviewWith: [],
 	},
 	"values-prefer-immutable-array-sorting": {
-		appliesWhen: "프롭스, 상태, 매개변수, 모듈 상수에서 온 배열을 정렬할 때. 기존 `.sort()` 호출을 추가·변경할 때.",
+		appliesWhen: "프롭스, 상태, 매개변수, 모듈 상수에서 온 배열을 정렬할 때. 기존 `.sort()` 호출을 추가 · 변경할 때.",
 		reviewWith: ["values-use-es-toolkit-for-value-helpers"],
 	},
 	"values-use-set-and-map-for-repeated-lookups": {
 		appliesWhen:
-			"같은 목록의 `includes`나 `find`를 루프·배열 콜백 안에서 호출하도록 추가·변경할 때. 같은 목록의 키 조회를 서로 다른 세 지점 이상에서 하도록 추가·변경할 때. 제외: 조회하는 목록이 짧고 길이가 정해져 있는 경우.",
+			"같은 목록의 `includes`나 `find`를 루프 · 배열 콜백 안에서 호출하도록 추가 · 변경할 때. 같은 목록의 키 조회를 서로 다른 세 지점 이상에서 하도록 추가 · 변경할 때. 제외: 조회하는 목록이 짧고 길이가 정해져 있는 경우.",
 		reviewWith: [],
 	},
 	"values-read-objects-through-chains": {
 		appliesWhen:
-			"구조분해로 객체에서 값을 꺼내는 줄을 추가·변경할 때. 객체 필드를 별칭 `const`에 담아 그 이름으로 쓰려 할 때. 제외: 배열이나 튜플을 자리로 푸는 경우.",
+			"구조분해로 객체에서 값을 꺼내는 줄을 추가 · 변경할 때. 객체 필드를 별칭 `const`에 담아 그 이름으로 쓰려 할 때. 제외: 배열이나 튜플을 자리로 푸는 경우.",
 		reviewWith: ["functions-name-a-value-only-for-recompute-or-judgment"],
 	},
 	"values-declare-meaningful-numbers": {
@@ -394,12 +394,12 @@ const typescriptRuleRouting = {
 	},
 	"values-avoid-lookup-tables-for-simple-choices": {
 		appliesWhen:
-			"상태나 `variant`에 따라 쓸 값 하나를 고르는 객체·Map을 추가·변경할 때. 조회표의 키로 프롭이나 상태를 읽어 값을 넘기는 코드를 추가·변경할 때.",
+			"상태나 `variant`에 따라 쓸 값 하나를 고르는 객체 · Map을 추가 · 변경할 때. 조회표의 키로 프롭이나 상태를 읽어 값을 넘기는 코드를 추가 · 변경할 때.",
 		reviewWith: [],
 	},
 	"values-use-es-toolkit-for-value-helpers": {
 		appliesWhen:
-			"배열, 객체, 문자열, 숫자를 다루는 보조 코드를 추가·변경할 때. `reduce`, `Object.entries`, `Array.from`, 정규식으로 값을 다시 짜는 코드를 쓸 때. 제외: 표준 메서드 하나로 끝나는 경우.",
+			"배열, 객체, 문자열, 숫자를 다루는 보조 코드를 추가 · 변경할 때. `reduce`, `Object.entries`, `Array.from`, 정규식으로 값을 다시 짜는 코드를 쓸 때. 제외: 표준 메서드 하나로 끝나는 경우.",
 		reviewWith: ["values-prefer-immutable-array-sorting", "values-handle-dates-with-dayjs"],
 	},
 	"values-handle-dates-with-dayjs": {
@@ -409,11 +409,11 @@ const typescriptRuleRouting = {
 	},
 	"values-decide-once-and-carry-the-result": {
 		appliesWhen:
-			"같은 입력에 같은 판정·정규화·포맷을 두 자리 이상에서 할 때. 포맷하거나 정리한 값을 소비처에서 다시 파싱하거나 정리할 때. 두 함수가 같은 판정 함수를 부르게 되어 공유 보조를 만들려 할 때.",
+			"같은 입력에 같은 판정 · 정규화 · 포맷을 두 자리 이상에서 할 때. 포맷하거나 정리한 값을 소비처에서 다시 파싱하거나 정리할 때. 두 함수가 같은 판정 함수를 부르게 되어 공유 보조를 만들려 할 때.",
 		reviewWith: ["functions-extract-helpers-only-when-the-boundary-is-real", "absence-resolve-defaults-at-the-boundary"],
 	},
 	"absence-expose-optional-values-instead-of-silent-fallbacks": {
-		appliesWhen: "선택 값을 읽거나 정규화하거나 넘기는 방식을 바꿀 때. `??`, `||`, 기본값, 빈 값 대체 분기를 추가·변경할 때.",
+		appliesWhen: "선택 값을 읽거나 정규화하거나 넘기는 방식을 바꿀 때. `??`, `||`, 기본값, 빈 값 대체 분기를 추가 · 변경할 때.",
 		reviewWith: [
 			"absence-resolve-defaults-at-the-boundary",
 			"naming-place-project-constants-in-the-root-constant-folder",
@@ -422,7 +422,7 @@ const typescriptRuleRouting = {
 	},
 	"absence-resolve-defaults-at-the-boundary": {
 		appliesWhen:
-			"선택 값의 기본값을 어디서 채울지 정할 때. 같은 선택 값에 `??` 기본값 해소가 둘 이상의 사용처에 흩어질 때. search 스키마, 응답 매핑, 쿼리 `select`에 기본값 채움을 추가·변경할 때.",
+			"선택 값의 기본값을 어디서 채울지 정할 때. 같은 선택 값에 `??` 기본값 해소가 둘 이상의 사용처에 흩어질 때. search 스키마, 응답 매핑, 쿼리 `select`에 기본값 채움을 추가 · 변경할 때.",
 		reviewWith: [
 			"absence-expose-optional-values-instead-of-silent-fallbacks",
 			"functions-name-a-value-only-for-recompute-or-judgment",
@@ -431,7 +431,7 @@ const typescriptRuleRouting = {
 	},
 	"absence-do-not-guard-what-types-guarantee": {
 		appliesWhen:
-			"`isNil`, `typeof`, 옵셔널 체이닝으로 값을 검사하는 분기를 추가·변경할 때. 선택 필드에 값을 넣으면서 `undefined`를 피하려고 조건부 스프레드를 쓸 때. 제외: `unknown`이나 앱 밖에서 온 값을 좁히는 경우.",
+			"`isNil`, `typeof`, 옵셔널 체이닝으로 값을 검사하는 분기를 추가 · 변경할 때. 선택 필드에 값을 넣으면서 `undefined`를 피하려고 조건부 스프레드를 쓸 때. 제외: `unknown`이나 앱 밖에서 온 값을 좁히는 경우.",
 		reviewWith: [
 			"types-narrow-unknown-instead-of-asserting",
 			"absence-expose-optional-values-instead-of-silent-fallbacks",
@@ -440,7 +440,7 @@ const typescriptRuleRouting = {
 	},
 	"absence-check-once-at-the-boundary": {
 		appliesWhen:
-			"`isNil`, `Number.isFinite` 같은 검사를 함수에 넣을 때. `null`, `undefined`, `unknown`을 매개변수·반환 타입에 넣거나 뺄 때. 응답 매핑·쿼리·search 스키마에서 없음·유한 수 검사로 타입을 좁힐 때.",
+			"`isNil`, `Number.isFinite` 같은 검사를 함수에 넣을 때. `null`, `undefined`, `unknown`을 매개변수 · 반환 타입에 넣거나 뺄 때. 응답 매핑 · 쿼리 · search 스키마에서 없음 · 유한 수 검사로 타입을 좁힐 때.",
 		reviewWith: [
 			"absence-resolve-defaults-at-the-boundary",
 			"absence-do-not-guard-what-types-guarantee",
@@ -449,16 +449,17 @@ const typescriptRuleRouting = {
 	},
 	"docs-keep-body-comments-for-intent-and-steps": {
 		appliesWhen:
-			"함수 본문의 `//` 주석을 추가·수정·유지할 때. 도메인 규칙, 예외 방어, 외부 제약, 부수효과 순서, 긴 절차의 단계를 주석으로 설명할 때.",
+			"함수 본문의 `//` 주석을 추가 · 수정 · 유지할 때. 도메인 규칙, 예외 방어, 외부 제약, 부수효과 순서, 긴 절차의 단계를 주석으로 설명할 때.",
 		reviewWith: ["docs-write-korean-comments-about-purpose-and-constraints", "docs-justify-convention-exceptions-with-a-reason-comment"],
 	},
 	"docs-require-header-jsdoc-on-key-declarations": {
 		appliesWhen:
-			"쿼리, 뮤테이션, 원격 함수, 커스텀 훅, 스토어, 포매터 선언을 추가·변경할 때. 분기나 `await`나 두 개 이상의 동작이 있는 핸들러와 이펙트를 추가·변경할 때. 다시 쓰거나 내보낸 보조 함수를 추가·변경할 때.",
+			"쿼리, 뮤테이션, 원격 함수, 커스텀 훅, 스토어, 포매터 선언을 추가 · 변경할 때. 분기나 `await`나 두 개 이상의 동작이 있는 핸들러와 이펙트를 추가 · 변경할 때. 다시 쓰거나 내보낸 보조 함수를 추가 · 변경할 때.",
 		reviewWith: [],
 	},
 	"docs-write-korean-comments-about-purpose-and-constraints": {
-		appliesWhen: "TypeScript·TSX의 문서 주석이나 인라인 주석 문구를 추가·수정·번역하거나 검토할 때. 문서 주석에 태그를 붙이거나 뺄 때.",
+		appliesWhen:
+			"TypeScript · TSX의 문서 주석이나 인라인 주석 문구를 추가 · 수정 · 번역하거나 검토할 때. 문서 주석에 태그를 붙이거나 뺄 때.",
 		reviewWith: [],
 	},
 	"docs-write-doc-comments-as-multiline-blocks": {
@@ -471,7 +472,7 @@ const typescriptRuleRouting = {
 		reviewWith: ["docs-write-korean-comments-about-purpose-and-constraints"],
 	},
 	"tooling-configure-biome-to-enforce-these-rules": {
-		appliesWhen: "프로젝트에 `biome` 설정을 처음 넣거나 lint 규칙을 바꿀 때. `biome.json`의 `linter.rules`에 항목을 추가·삭제할 때.",
+		appliesWhen: "프로젝트에 `biome` 설정을 처음 넣거나 lint 규칙을 바꿀 때. `biome.json`의 `linter.rules`에 항목을 추가 · 삭제할 때.",
 		reviewWith: [],
 	},
 } as const;
@@ -501,7 +502,7 @@ const cssRuleRouting = {
 	},
 	"ownership-give-each-file-one-scope-slug": {
 		appliesWhen:
-			"새 `scope_slug`를 만들거나 기존 식별자를 복사·이름 변경할 때. 하위 컴포넌트에 CSS 파일을 새로 만들면서 부모 식별자를 그대로 쓸 때.",
+			"새 `scope_slug`를 만들거나 기존 식별자를 복사 · 이름 변경할 때. 하위 컴포넌트에 CSS 파일을 새로 만들면서 부모 식별자를 그대로 쓸 때.",
 		reviewWith: [],
 	},
 	"ownership-choose-scope-prefix-by-owner-layer": {
@@ -521,16 +522,16 @@ const cssRuleRouting = {
 		reviewWith: ["ownership-use-foreign-classes-only-under-your-own-root", "composition-inject-classes-only-at-the-entry-point"],
 	},
 	"composition-compose-classes-with-clsx": {
-		appliesWhen: "TSX의 `className`을 추가·수정할 때. 기본 클래스, 수정자, 선택 클래스를 함께 엮을 때.",
+		appliesWhen: "TSX의 `className`을 추가 · 수정할 때. 기본 클래스, 수정자, 선택 클래스를 함께 엮을 때.",
 		reviewWith: ["composition-write-modifiers-as-conditions", "typescript/values-avoid-lookup-tables-for-simple-choices"],
 	},
 	"composition-do-not-build-structural-variants-with-modifiers": {
-		appliesWhen: "수정자를 추가·변경할 때. 여러 곳에서 반복되는 모양인지 한 곳만의 보정인지 가릴 때.",
+		appliesWhen: "수정자를 추가 · 변경할 때. 여러 곳에서 반복되는 모양인지 한 곳만의 보정인지 가릴 때.",
 		reviewWith: ["naming-name-elements-and-modifiers-by-role"],
 	},
 	"composition-keep-classes-single-purpose": {
 		appliesWhen:
-			"상태를 나타내는 낱말이 들어간 요소 클래스 이름을 추가·변경할 때. 제외: 처음부터 기본 클래스와 수정자를 나눠 만드는 경우. 제외: 책임이 그대로인 이름 변경만 하는 경우.",
+			"상태를 나타내는 낱말이 들어간 요소 클래스 이름을 추가 · 변경할 때. 제외: 처음부터 기본 클래스와 수정자를 나눠 만드는 경우. 제외: 책임이 그대로인 이름 변경만 하는 경우.",
 		reviewWith: [],
 	},
 	"composition-inject-classes-only-at-the-entry-point": {
@@ -556,7 +557,7 @@ const cssRuleRouting = {
 	},
 	"composition-write-modifiers-as-conditions": {
 		appliesWhen:
-			"값이나 `variant` 프롭으로 수정자를 고르는 `className`을 추가·변경할 때. 클래스 이름에 값을 끼워 넣는 템플릿 리터럴을 추가·변경할 때. 제외: 불리언 하나로 수정자가 붙거나 빠지는 경우.",
+			"값이나 `variant` 프롭으로 수정자를 고르는 `className`을 추가 · 변경할 때. 클래스 이름에 값을 끼워 넣는 템플릿 리터럴을 추가 · 변경할 때. 제외: 불리언 하나로 수정자가 붙거나 빠지는 경우.",
 		reviewWith: ["composition-compose-classes-with-clsx", "typescript/values-avoid-lookup-tables-for-simple-choices"],
 	},
 	"selector-limit-nesting-block-depth": {
@@ -577,12 +578,13 @@ const cssRuleRouting = {
 		reviewWith: ["selector-do-not-group-classes-with-commas", "layout-group-breakpoints-at-the-file-bottom"],
 	},
 	"selector-use-pseudo-classes-for-dom-owned-states": {
-		appliesWhen: "`:hover`, `:visited`, `:focus*`, `:disabled`, `:checked`를 추가·수정할 때. 조상의 DOM 상태가 자손 스타일에 영향을 줄 때.",
+		appliesWhen:
+			"`:hover`, `:visited`, `:focus*`, `:disabled`, `:checked`를 추가 · 수정할 때. 조상의 DOM 상태가 자손 스타일에 영향을 줄 때.",
 		reviewWith: [],
 	},
 	"selector-nest-dom-state-in-the-owning-block": {
 		appliesWhen:
-			"`:hover`, `:focus-visible`, `:disabled`, `:checked` 스타일을 추가·수정할 때. 조상의 DOM 상태가 자손 스타일을 바꿔야 할 때. 상태 가상 클래스를 수정자 블록 안팎으로 옮길 때.",
+			"`:hover`, `:focus-visible`, `:disabled`, `:checked` 스타일을 추가 · 수정할 때. 조상의 DOM 상태가 자손 스타일을 바꿔야 할 때. 상태 가상 클래스를 수정자 블록 안팎으로 옮길 때.",
 		reviewWith: [
 			"selector-limit-nesting-block-depth",
 			"selector-use-pseudo-classes-for-dom-owned-states",
@@ -608,12 +610,12 @@ const cssRuleRouting = {
 	},
 	"values-switch-themes-by-changing-token-values": {
 		appliesWhen:
-			"다크 모드나 테마 전환을 넣을 때. 컴포넌트 CSS에 `prefers-color-scheme`이나 `[data-theme]`를 쓰려 할 때. 그림자나 `color-scheme`처럼 테마마다 달라지는 값을 추가·변경할 때.",
+			"다크 모드나 테마 전환을 넣을 때. 컴포넌트 CSS에 `prefers-color-scheme`이나 `[data-theme]`를 쓰려 할 때. 그림자나 `color-scheme`처럼 테마마다 달라지는 값을 추가 · 변경할 때.",
 		reviewWith: ["values-fall-back-only-outside-core-tokens", "values-tokenize-repeated-visual-values", "values-name-tokens-by-purpose"],
 	},
 	"values-name-tokens-by-purpose": {
 		appliesWhen:
-			"색·그림자·간격·층 같은 디자인 토큰을 새로 만들거나 이름을 바꿀 때. 토큰 파일에 `white`, `gray-100`처럼 값을 말하는 이름을 넣거나 뺄 때.",
+			"색 · 그림자 · 간격 · 층 같은 디자인 토큰을 새로 만들거나 이름을 바꿀 때. 토큰 파일에 `white`, `gray-100`처럼 값을 말하는 이름을 넣거나 뺄 때.",
 		reviewWith: ["values-tokenize-repeated-visual-values", "values-switch-themes-by-changing-token-values"],
 	},
 	"layout-group-breakpoints-at-the-file-bottom": {
@@ -632,26 +634,26 @@ const cssRuleRouting = {
 	},
 	"layout-keep-layout-intent-explicit": {
 		appliesWhen:
-			"`sticky`·`fixed`, `z-index`, 부모·자식 레이아웃 책임을 추가·변경할 때. 로딩 대체 화면의 컨테이너나 높이를 정할 때. 제외: 같은 요소를 기본과 수정자로 나누면서 기존 `display`·여백 선언을 값 그대로 옮기는 경우.",
+			"`sticky` · `fixed`, `z-index`, 부모 · 자식 레이아웃 책임을 추가 · 변경할 때. 로딩 대체 화면의 컨테이너나 높이를 정할 때. 제외: 같은 요소를 기본과 수정자로 나누면서 기존 `display` · 여백 선언을 값 그대로 옮기는 경우.",
 		reviewWith: ["values-declare-stacking-layers-as-tokens"],
 	},
 	"layout-reach-for-intrinsic-sizing-before-breakpoints": {
 		appliesWhen:
-			"`@media` 브레이크포인트를 새로 넣으려 할 때. 폭에 따라 줄바꿈, 열 개수, 크기가 달라져야 할 때. 컨테이너 폭에 따른 `@container` 배치 조건을 추가·변경할 때.",
+			"`@media` 브레이크포인트를 새로 넣으려 할 때. 폭에 따라 줄바꿈, 열 개수, 크기가 달라져야 할 때. 컨테이너 폭에 따른 `@container` 배치 조건을 추가 · 변경할 때.",
 		reviewWith: ["layout-keep-layout-intent-explicit", "layout-group-breakpoints-at-the-file-bottom"],
 	},
 	"a11y-always-provide-a-visible-focus-indicator": {
 		appliesWhen:
-			"`outline`, `:focus`, `:focus-visible` 스타일을 추가·수정할 때. 상호작용 요소의 기본 포커스 링을 덮어쓸 때. 강제 색상 모드에서 포커스 표시가 사라져 스타일을 보완할 때.",
+			"`outline`, `:focus`, `:focus-visible` 스타일을 추가 · 수정할 때. 상호작용 요소의 기본 포커스 링을 덮어쓸 때. 강제 색상 모드에서 포커스 표시가 사라져 스타일을 보완할 때.",
 		reviewWith: ["selector-nest-dom-state-in-the-owning-block"],
 	},
 	"a11y-namespace-keyframes-and-respect-reduced-motion": {
 		appliesWhen:
-			"`@keyframes` 이름이나 애니메이션 지속 시간, 지연 시간, 이징을 선언하거나 바꿀 때. `animation`, `transition`, `prefers-reduced-motion` 동작을 추가·변경할 때.",
+			"`@keyframes` 이름이나 애니메이션 지속 시간, 지연 시간, 이징을 선언하거나 바꿀 때. `animation`, `transition`, `prefers-reduced-motion` 동작을 추가 · 변경할 때.",
 		reviewWith: ["values-tokenize-repeated-visual-values", "tooling-configure-stylelint-to-enforce-these-rules"],
 	},
 	"tooling-configure-stylelint-to-enforce-these-rules": {
-		appliesWhen: "stylelint 설정을 새로 만들거나 규칙을 추가·수정할 때. 이 컨벤션 중 어디까지 자동으로 잡히는지 확인할 때.",
+		appliesWhen: "stylelint 설정을 새로 만들거나 규칙을 추가 · 수정할 때. 이 컨벤션 중 어디까지 자동으로 잡히는지 확인할 때.",
 		reviewWith: [
 			"ownership-use-foreign-classes-only-under-your-own-root",
 			"selector-limit-nesting-block-depth",
@@ -675,17 +677,17 @@ const reactRuleRouting = {
 	},
 	"ownership-place-owner-files-in-role-folders": {
 		appliesWhen:
-			"소유자 아래 `_constant`·`_function`·`_hook`·`_type` 폴더나 하위 소유자 폴더를 만들거나 옮길 때. 추출한 컴포넌트·함수·타입의 배치 위치를 정할 때. 제외: 기존 파일 내부 구현만 바꾸는 경우.",
+			"소유자 아래 `_constant` · `_function` · `_hook` · `_type` 폴더나 하위 소유자 폴더를 만들거나 옮길 때. 추출한 컴포넌트 · 함수 · 타입의 배치 위치를 정할 때. 제외: 기존 파일 내부 구현만 바꾸는 경우.",
 		reviewWith: ["ownership-keep-component-imports-flowing-downward", "css/ownership-choose-scope-prefix-by-owner-layer"],
 	},
 	"ownership-keep-component-imports-flowing-downward": {
 		appliesWhen:
-			"소유자 폴더 안의 컴포넌트 파일을 가져올 때. 다른 소유자나 다른 라우트의 파일을 가져오려 할 때. 여러 자식이 같은 컴포넌트를 써야 해서 배치를 다시 정할 때. 제외: 같은 소유자 안에서 `_function`·`_type`·`_constant`·`_hook` 파일을 가져오는 경우.",
+			"소유자 폴더 안의 컴포넌트 파일을 가져올 때. 다른 소유자나 다른 라우트의 파일을 가져오려 할 때. 여러 자식이 같은 컴포넌트를 써야 해서 배치를 다시 정할 때. 제외: 같은 소유자 안에서만 역할 폴더 네 개의 파일을 가져오는 경우.",
 		reviewWith: ["ownership-layer-component-boundaries"],
 	},
 	"ownership-prefer-plain-ts-for-local-react-helpers": {
 		appliesWhen:
-			"화면 전용 계산·정규화·전송 값 조립을 커스텀 훅으로 추출하려 할 때. 화면 전용 순수 로직을 별도 보조 모듈로 옮기려 할 때. 화면 지역 함수에 `use` 접두사를 붙이거나 커스텀 훅 이름을 바꿀 때. 제외: 상태·컨텍스트·다른 훅 호출 순서를 실제로 캡슐화하는 경우.",
+			"화면 전용 계산 · 정규화 · 전송 값 조립을 커스텀 훅으로 추출하려 할 때. 화면 전용 순수 로직을 별도 보조 모듈로 옮기려 할 때. 화면 지역 함수에 `use` 접두사를 붙이거나 커스텀 훅 이름을 바꿀 때. 제외: 상태 · 컨텍스트 · 다른 훅 호출 순서를 실제로 캡슐화하는 경우.",
 		reviewWith: [
 			"typescript/functions-extract-helpers-only-when-the-boundary-is-real",
 			"ownership-place-owner-files-in-role-folders",
@@ -695,35 +697,35 @@ const reactRuleRouting = {
 	},
 	"ownership-keep-lifecycle-in-the-owning-component": {
 		appliesWhen:
-			"외부 라이브러리 인스턴스 생성·크기 변경·구독·정리를 한 컴포넌트가 소유할 때. 생명주기 코드를 커스텀 훅으로 옮겨 파일을 줄이려 할 때. 제외: 여러 소유자가 같은 생명주기 계약을 실제로 호출하는 경우.",
+			"외부 라이브러리 인스턴스 생성 · 크기 변경 · 구독 · 정리를 한 컴포넌트가 소유할 때. 생명주기 코드를 커스텀 훅으로 옮겨 파일을 줄이려 할 때. 제외: 여러 소유자가 같은 생명주기 계약을 실제로 호출하는 경우.",
 		reviewWith: ["ownership-prefer-plain-ts-for-local-react-helpers"],
 	},
 	"data-name-query-and-mutation-bindings-consistently": {
 		appliesWhen:
-			"React Query 쿼리·뮤테이션 훅의 지역 바인딩을 추가하거나 이름을 바꿀 때. 쿼리나 뮤테이션 훅의 반환값을 새 지역 변수에 담을 때.",
+			"React Query 쿼리 · 뮤테이션 훅의 지역 바인딩을 추가하거나 이름을 바꿀 때. 쿼리나 뮤테이션 훅의 반환값을 새 지역 변수에 담을 때.",
 		reviewWith: ["data-preserve-origin-chaining"],
 	},
 	"data-shape-query-data-with-select": {
 		appliesWhen:
-			"서버 응답의 목록·항목·메타 등을 렌더에서 가공하거나 반복 소비할 때. React Query `select`의 결과 형태를 추가·변경할 때. 제외: 이미 가공한 항목을 `.map`으로 JSX 요소에 대응시키기만 하는 경우.",
+			"서버 응답의 목록 · 항목 · 메타 등을 렌더에서 가공하거나 반복 소비할 때. React Query `select`의 결과 형태를 추가 · 변경할 때. 제외: 이미 가공한 항목을 `.map`으로 JSX 요소에 대응시키기만 하는 경우.",
 		reviewWith: ["data-name-query-and-mutation-bindings-consistently", "data-preserve-origin-chaining"],
 	},
 	"data-combine-multiple-queries-with-combine": {
 		appliesWhen:
-			"쿼리 결과 둘 이상을 하나의 값으로 합치는 코드를 추가·변경할 때. 화면 본문에서 두 `data`를 꺼내 함께 계산하는 코드를 넣거나 뺄 때. 여러 쿼리의 병렬 실행과 앞 응답에 의존하는 순차 실행을 바꿀 때.",
+			"쿼리 결과 둘 이상을 하나의 값으로 합치는 코드를 추가 · 변경할 때. 화면 본문에서 두 `data`를 꺼내 함께 계산하는 코드를 넣거나 뺄 때. 여러 쿼리의 병렬 실행과 앞 응답에 의존하는 순차 실행을 바꿀 때.",
 		reviewWith: ["data-shape-query-data-with-select", "screen-keep-derived-values-close"],
 	},
 	"data-preserve-origin-chaining": {
-		appliesWhen: "응답, 뮤테이션, 스토어에서 값을 꺼내 쓰는 코드를 추가·변경할 때. 원본을 별칭으로 끊고 값 접근 방식을 바꿀 때.",
+		appliesWhen: "응답, 뮤테이션, 스토어에서 값을 꺼내 쓰는 코드를 추가 · 변경할 때. 원본을 별칭으로 끊고 값 접근 방식을 바꿀 때.",
 		reviewWith: ["screen-keep-derived-values-close", "data-shape-query-data-with-select"],
 	},
 	"data-handle-mutation-failure-where-it-is-called": {
-		appliesWhen: "뮤테이션을 부르는 코드를 추가·변경할 때. `mutate`와 `mutateAsync` 사이를 오갈 때.",
+		appliesWhen: "뮤테이션을 부르는 코드를 추가 · 변경할 때. `mutate`와 `mutateAsync` 사이를 오갈 때.",
 		reviewWith: ["data-invalidate-queries-the-mutation-changed", "events-run-user-actions-in-handlers-not-effects"],
 	},
 	"data-invalidate-queries-the-mutation-changed": {
 		appliesWhen:
-			"뮤테이션 성공 뒤 서버 상태를 다시 맞추는 코드를 추가·변경할 때. 저장 결과를 캐시에 직접 쓰거나 `refetch`로 맞추는 코드를 넣을 때. 제외: 사용자 새로 고침 버튼이나 요청 전 낙관적 갱신만 바꾸는 경우.",
+			"뮤테이션 성공 뒤 서버 상태를 다시 맞추는 코드를 추가 · 변경할 때. 저장 결과를 캐시에 직접 쓰거나 `refetch`로 맞추는 코드를 넣을 때. 제외: 사용자 새로 고침 버튼이나 요청 전 낙관적 갱신만 바꾸는 경우.",
 		reviewWith: ["data-handle-mutation-failure-where-it-is-called"],
 	},
 	"typing-take-handler-types-from-existing-contracts": {
@@ -750,7 +752,8 @@ const reactRuleRouting = {
 		],
 	},
 	"typing-choose-wrapper-shape-and-forwarding": {
-		appliesWhen: "래퍼가 받은 프롭을 안쪽 컴포넌트나 요소로 넘기는 코드를 추가·변경할 때. 래퍼에 자기 프롭을 더하거나 안쪽 요소를 늘릴 때.",
+		appliesWhen:
+			"래퍼가 받은 프롭을 안쪽 컴포넌트나 요소로 넘기는 코드를 추가 · 변경할 때. 래퍼에 자기 프롭을 더하거나 안쪽 요소를 늘릴 때.",
 		reviewWith: ["typescript/values-avoid-lookup-tables-for-simple-choices"],
 	},
 	"strategy-choose-single-composition-compound-and-variants": {
@@ -769,27 +772,27 @@ const reactRuleRouting = {
 	},
 	"strategy-avoid-boolean-prop-proliferation": {
 		appliesWhen:
-			"`ui`나 `widget` 컴포넌트에 불리언 모드·표시 프롭을 추가할 때. 기존 불리언 프롭 조합과 JSX 분기가 늘어날 때. 제외: 라우트 진입 파일 안에서만 쓰는 일회성 분기인 경우. 제외: `disabled`·`checked` 같은 독립 상태 프롭만 여는 경우.",
+			"`ui`나 `widget` 컴포넌트에 불리언 모드 · 표시 프롭을 추가할 때. 기존 불리언 프롭 조합과 JSX 분기가 늘어날 때. 제외: 라우트 진입 파일 안에서만 쓰는 일회성 분기인 경우. 제외: `disabled` · `checked` 같은 독립 상태 프롭만 여는 경우.",
 		reviewWith: ["strategy-expose-only-assembled-compound-parts"],
 	},
 	"strategy-prefer-children-over-render-props": {
 		appliesWhen:
-			"공용 컴포넌트에 헤더·푸터·동작 같은 정적 슬롯을 추가·변경할 때. 렌더 프롭을 추가·변경하는데 실행 환경 데이터 주입이 꼭 필요한지 불분명할 때. `ReactNode` 슬롯이나 렌더 함수 계약에 이름을 붙이거나 바꿀 때.",
+			"공용 컴포넌트에 헤더 · 푸터 · 동작 같은 정적 슬롯을 추가 · 변경할 때. 렌더 프롭을 추가 · 변경하는데 실행 환경 데이터 주입이 꼭 필요한지 불분명할 때. `ReactNode` 슬롯이나 렌더 함수 계약에 이름을 붙이거나 바꿀 때.",
 		reviewWith: [],
 	},
 	"composition-read-props-without-destructuring": {
 		appliesWhen:
-			"함수 컴포넌트의 시그니처나 본문에서 프롭스를 읽는 코드를 추가·변경할 때. 컴포넌트 안에서 `props`를 구조분해하는 줄을 넣거나 뺄 때.",
+			"함수 컴포넌트의 시그니처나 본문에서 프롭스를 읽는 코드를 추가 · 변경할 때. 컴포넌트 안에서 `props`를 구조분해하는 줄을 넣거나 뺄 때.",
 		reviewWith: ["screen-keep-derived-values-close", "data-preserve-origin-chaining", "typescript/values-read-objects-through-chains"],
 	},
 	"composition-do-not-define-components-inside-components": {
 		appliesWhen:
-			"컴포넌트 본문 안에 JSX를 반환하는 로컬 함수·컴포넌트를 추가하거나 옮길 때. 재렌더 시 재마운트·포커스 초기화 징후를 다룰 때.",
+			"컴포넌트 본문 안에 JSX를 반환하는 로컬 함수 · 컴포넌트를 추가하거나 옮길 때. 재렌더 시 재마운트 · 포커스 초기화 징후를 다룰 때.",
 		reviewWith: [],
 	},
 	"composition-named-handlers-over-inline": {
 		appliesWhen:
-			"TSX 이벤트 프롭의 인라인 콜백에 분기나 비동기 호출을 추가·수정할 때. 인라인 콜백에 여러 동작·부수효과나 읽어도 의도가 안 보이는 상태 전환이 들어갈 때. 제외: 인자 없이 핸들러 참조만 넘기는 경우.",
+			"TSX 이벤트 프롭의 인라인 콜백에 분기나 비동기 호출을 추가 · 수정할 때. 인라인 콜백에 여러 동작 · 부수효과나 읽어도 의도가 안 보이는 상태 전환이 들어갈 때. 제외: 인자 없이 핸들러 참조만 넘기는 경우.",
 		reviewWith: [
 			"events-run-user-actions-in-handlers-not-effects",
 			"events-curry-extra-handler-arguments",
@@ -802,7 +805,7 @@ const reactRuleRouting = {
 		reviewWith: ["typing-narrow-library-wrapper-contracts", "typescript/docs-justify-convention-exceptions-with-a-reason-comment"],
 	},
 	"composition-use-activity-only-to-preserve-mounted-subtrees": {
-		appliesWhen: "조건부 렌더링과 `Activity` 사이를 오갈 때. `<Activity>`를 추가·삭제하거나 `mode`를 계산하는 표현식을 바꿀 때.",
+		appliesWhen: "조건부 렌더링과 `Activity` 사이를 오갈 때. `<Activity>`를 추가 · 삭제하거나 `mode`를 계산하는 표현식을 바꿀 때.",
 		reviewWith: ["composition-do-not-define-components-inside-components"],
 	},
 	"composition-declare-props-interface-above-the-component": {
@@ -811,7 +814,7 @@ const reactRuleRouting = {
 		reviewWith: ["composition-read-props-without-destructuring", "typescript/types-document-custom-types-and-shapes"],
 	},
 	"composition-name-fragments-explicitly": {
-		appliesWhen: "JSX에서 여러 요소를 `Fragment`나 `<>`로 감싸는 문법을 추가·변경할 때. `Fragment`에 `key`를 붙이거나 떼어 낼 때.",
+		appliesWhen: "JSX에서 여러 요소를 `Fragment`나 `<>`로 감싸는 문법을 추가 · 변경할 때. `Fragment`에 `key`를 붙이거나 떼어 낼 때.",
 		reviewWith: [],
 	},
 	"composition-render-one-branch-with-and": {
@@ -819,7 +822,7 @@ const reactRuleRouting = {
 		reviewWith: [],
 	},
 	"composition-order-hooks-handlers-effects-then-return": {
-		appliesWhen: "컴포넌트 본문에 훅·핸들러·이펙트를 추가하거나 자리를 옮길 때. 본문 선언이 아래 선언을 참조해 순서를 다시 잡을 때.",
+		appliesWhen: "컴포넌트 본문에 훅 · 핸들러 · 이펙트를 추가하거나 자리를 옮길 때. 본문 선언이 아래 선언을 참조해 순서를 다시 잡을 때.",
 		reviewWith: ["screen-keep-derived-values-close", "events-run-user-actions-in-handlers-not-effects"],
 	},
 	"composition-split-owner-parts-only-for-runtime-boundaries": {
@@ -850,7 +853,7 @@ const reactRuleRouting = {
 	},
 	"screen-keep-derived-values-close": {
 		appliesWhen:
-			"화면 진입 파일이나 섹션 최상단에 `const` 별칭, 플래그, 표시값을 추가·이동·제거할 때. 훅 인자, JSX 표시값, 이펙트 안 계산을 위쪽 `const`로 빼거나 되돌릴 때.",
+			"화면 진입 파일이나 섹션 최상단에 `const` 별칭, 플래그, 표시값을 추가 · 이동 · 제거할 때. 훅 인자, JSX 표시값, 이펙트 안 계산을 위쪽 `const`로 빼거나 되돌릴 때.",
 		reviewWith: ["data-preserve-origin-chaining"],
 	},
 	"runtime-place-suspense-boundaries-at-the-section-owner": {
@@ -863,7 +866,7 @@ const reactRuleRouting = {
 	},
 	"runtime-avoid-ad-hoc-loading-branches": {
 		appliesWhen:
-			"`Suspense` 쿼리를 쓰는 화면 본문에 초기 로딩 반환을 추가·변경할 때. `isFetching`이나 뮤테이션 `isPending`으로 화면을 가리는 분기를 넣을 때. 제외: 선택 값에 기본값을 채우는 것만 바꾸는 경우.",
+			"`Suspense` 쿼리를 쓰는 화면 본문에 초기 로딩 반환을 추가 · 변경할 때. `isFetching`이나 뮤테이션 `isPending`으로 화면을 가리는 분기를 넣을 때. 제외: 선택 값에 기본값을 채우는 것만 바꾸는 경우.",
 		reviewWith: [
 			"data-preserve-origin-chaining",
 			"screen-keep-derived-values-close",
@@ -882,20 +885,21 @@ const reactRuleRouting = {
 	},
 	"state-choose-state-tools-by-source-of-truth": {
 		appliesWhen:
-			"로컬 UI·전역 클라이언트·서버 데이터를 새 상태 도구로 옮길 때. 합성 컴포넌트나 컴포넌트 묶음에 공유 상태를 넣을 때. 서로 다른 진짜 출처 사이에 값을 복제하거나 동기화할 때.",
+			"로컬 UI · 전역 클라이언트 · 서버 데이터를 새 상태 도구로 옮길 때. 합성 컴포넌트나 컴포넌트 묶음에 공유 상태를 넣을 때. 서로 다른 진짜 출처 사이에 값을 복제하거나 동기화할 때.",
 		reviewWith: ["state-store-derived-authority", "strategy-choose-single-composition-compound-and-variants"],
 	},
 	"state-store-derived-authority": {
 		appliesWhen:
-			"여러 화면·메뉴·라우트 가드가 쓰는 접근 권한 같은 파생 판단을 스토어에 저장·동기화할 때. 단일 화면에서만 쓰는 값까지 스토어로 올리려 할 때.",
+			"여러 화면 · 메뉴 · 라우트 가드가 쓰는 접근 권한 같은 파생 판단을 스토어에 저장 · 동기화할 때. 단일 화면에서만 쓰는 값까지 스토어로 올리려 할 때.",
 		reviewWith: ["docs-require-jsdoc-on-key-declarations", "state-calculate-derived-values-during-render"],
 	},
 	"state-use-functional-setstate-updates": {
-		appliesWhen: "다음 상태가 현재 상태에 의존하는 갱신을 추가·변경할 때. 핸들러·비동기 콜백·연속 호출에서 `setState` 방식을 바꿀 때.",
+		appliesWhen:
+			"다음 상태가 현재 상태에 의존하는 갱신을 추가 · 변경할 때. 핸들러 · 비동기 콜백 · 연속 호출에서 `setState` 방식을 바꿀 때.",
 		reviewWith: [],
 	},
 	"state-use-effectevent-for-non-reactive-effect-callbacks": {
-		appliesWhen: "구독 이펙트가 최신 프롭·상태 콜백을 읽어야 할 때. ref 동기화 우회, 의존성 재설치, `useEffectEvent`를 추가·변경할 때.",
+		appliesWhen: "구독 이펙트가 최신 프롭 · 상태 콜백을 읽어야 할 때. ref 동기화 우회, 의존성 재설치, `useEffectEvent`를 추가 · 변경할 때.",
 		reviewWith: [
 			"docs-require-jsdoc-on-key-declarations",
 			"events-curry-extra-handler-arguments",
@@ -904,7 +908,7 @@ const reactRuleRouting = {
 	},
 	"state-name-url-state-bindings-as-a-set": {
 		appliesWhen:
-			"라우트 search 파라미터를 읽거나 쓰는 바인딩을 추가·변경할 때. search 파라미터 파서 묶음을 만들거나 옮길 때. 제외: 서버 요청 쿼리·뮤테이션 바인딩만 바꾸는 경우.",
+			"라우트 search 파라미터를 읽거나 쓰는 바인딩을 추가 · 변경할 때. search 파라미터 파서 묶음을 만들거나 옮길 때. 제외: 서버 요청 쿼리 · 뮤테이션 바인딩만 바꾸는 경우.",
 		reviewWith: ["state-choose-state-tools-by-source-of-truth"],
 	},
 	"events-name-handlers-predictably": {
@@ -913,7 +917,7 @@ const reactRuleRouting = {
 	},
 	"events-curry-extra-handler-arguments": {
 		appliesWhen:
-			"DOM 이벤트 프롭에 추가 인자를 넘기는 핸들러를 추가·변경할 때. 인라인 래퍼로 인자를 넘기던 자리를 바꿀 때. 제외: 이벤트 객체를 받지 않는 프롭 콜백인 경우.",
+			"DOM 이벤트 프롭에 추가 인자를 넘기는 핸들러를 추가 · 변경할 때. 인라인 래퍼로 인자를 넘기던 자리를 바꿀 때. 제외: 이벤트 객체를 받지 않는 프롭 콜백인 경우.",
 		reviewWith: ["composition-named-handlers-over-inline"],
 	},
 	"events-run-user-actions-in-handlers-not-effects": {
@@ -923,26 +927,26 @@ const reactRuleRouting = {
 	},
 	"perf-avoid-defensive-memoization": {
 		appliesWhen:
-			"`useMemo`·`useCallback`을 추가하거나 제거할 때. `memo`로 컴포넌트를 감싸거나 벗길 때. 참조 동일성·실측 병목·무거운 지연 계산을 이유로 수동 메모이제이션을 검토할 때.",
+			"`useMemo` · `useCallback`을 추가하거나 제거할 때. `memo`로 컴포넌트를 감싸거나 벗길 때. 참조 동일성 · 실측 병목 · 무거운 지연 계산을 이유로 수동 메모이제이션을 검토할 때.",
 		reviewWith: ["perf-defer-heavy-renders-with-measured-evidence"],
 	},
 	"perf-use-lazy-state-initializers-for-expensive-defaults": {
 		appliesWhen:
-			"`useState` 초기값에 `localStorage` 파싱, 인덱스 생성, 큰 배열 정규화 같은 비용이 큰 계산을 넣을 때. 제외: 숫자·문자열 같은 단순 값이나 프롭을 그대로 초기값에 넣는 경우.",
+			"`useState` 초기값에 `localStorage` 파싱, 인덱스 생성, 큰 배열 정규화 같은 비용이 큰 계산을 넣을 때. 제외: 숫자 · 문자열 같은 단순 값이나 프롭을 그대로 초기값에 넣는 경우.",
 		reviewWith: ["perf-avoid-defensive-memoization"],
 	},
 	"perf-defer-heavy-renders-with-measured-evidence": {
 		appliesWhen:
-			"`startTransition`·`useTransition`·`useDeferredValue`를 추가·삭제할 때. 목록이나 표가 커져 입력 반응이 늦다는 보고를 받았을 때.",
+			"`startTransition` · `useTransition` · `useDeferredValue`를 추가 · 삭제할 때. 목록이나 표가 커져 입력 반응이 늦다는 보고를 받았을 때.",
 		reviewWith: ["perf-avoid-defensive-memoization"],
 	},
 	"a11y-give-interactive-elements-an-accessible-name": {
-		appliesWhen: "클릭이나 입력을 받는 요소를 추가·변경할 때. 글자 없이 아이콘만 있는 버튼을 추가할 때.",
+		appliesWhen: "클릭이나 입력을 받는 요소를 추가 · 변경할 때. 글자 없이 아이콘만 있는 버튼을 추가할 때.",
 		reviewWith: [],
 	},
 	"docs-require-jsdoc-on-key-declarations": {
 		appliesWhen:
-			"쿼리·뮤테이션이나 읽어도 의도가 안 보이는 핸들러·이펙트를 추가·변경할 때. 내보낸 보조 함수·훅·스토어 선언을 추가·변경할 때.",
+			"쿼리 · 뮤테이션이나 읽어도 의도가 안 보이는 핸들러 · 이펙트를 추가 · 변경할 때. 내보낸 보조 함수 · 훅 · 스토어 선언을 추가 · 변경할 때.",
 		reviewWith: ["typescript/types-document-custom-types-and-shapes"],
 	},
 	"docs-write-jsx-comments-as-multiline-blocks": {
@@ -955,7 +959,7 @@ const reactRuleRouting = {
 	},
 	"tooling-enable-the-biome-react-domain": {
 		appliesWhen:
-			"프로젝트에 `biome` 설정을 처음 넣거나 lint 규칙을 바꿀 때. `biome.json`의 `linter.domains`나 `linter.rules`에 항목을 추가·삭제할 때.",
+			"프로젝트에 `biome` 설정을 처음 넣거나 lint 규칙을 바꿀 때. `biome.json`의 `linter.domains`나 `linter.rules`에 항목을 추가 · 삭제할 때.",
 		reviewWith: [],
 	},
 } as const;
@@ -2456,7 +2460,7 @@ test("TypeScript naming keeps immutable data constants in snake_case without ren
 	assertMentions(
 		namingRule,
 		[
-			"모듈 스코프 불변 데이터 상수·값 집합과 그 소유 하위 키 | `snake_case`",
+			"모듈 스코프 불변 데이터 상수 · 값 집합과 그 소유 하위 키 | `snake_case`",
 			"`retry_policy.max_attempts`",
 			"`product_status.waiting_review`",
 			"`productSearchSchema`",
@@ -2481,7 +2485,7 @@ test("type and function names expose contract role without repeating framework o
 		[
 			/독립된 객체 필드 계약은 `interface`/,
 			/리터럴 유니언[^\n]+\| `type`/,
-			/매핑·조건부 타입[^\n]+\| `type`/,
+			/매핑 · 조건부 타입[^\n]+\| `type`/,
 			/형식을 맞추려고 별칭을 만들거나 객체 형태를 전부 `interface`로 바꾸지 않습니다/,
 		],
 		"TypeScript declaration-form rule",
@@ -2504,11 +2508,11 @@ test("type and function names expose contract role without repeating framework o
 		functionNameRule,
 		[
 			/서로 다른 입력 둘 이상의 우선순위 선택 \| `choose` \| `chooseBackSource`/,
-			/같은 개념의 허용 범위·표현 보정 \| `normalize` \| `normalizePageSize`/,
+			/같은 개념의 허용 범위 · 표현 보정 \| `normalize` \| `normalizePageSize`/,
 			/사람이 읽는 표시 문자열 \| `format` \| `formatCandidateDayCount`/,
 			/두 값의 정렬 순서 \| `compare` \| `compareProductsByPrice`/,
-			/비동기 I\/O·여러 요청 조율 \| `load`, `fetch` \| `loadProductExport`/,
-			/참·거짓 판정 \| `is`, `has`, `can`, `should` \| `shouldShowSummary`/,
+			/비동기 I\/O · 여러 요청 조율 \| `load`, `fetch` \| `loadProductExport`/,
+			/참 · 거짓 판정 \| `is`, `has`, `can`, `should` \| `shouldShowSummary`/,
 			/생성기.*프레임워크.*외부 계약/s,
 		],
 		"TypeScript function-name rule",
@@ -2668,7 +2672,7 @@ test("induced naming closure and activated finish gates stay mandatory across ev
 	const bindingRule = await readRuleSource("react", "data-name-query-and-mutation-bindings-consistently");
 	const originRule = await readRuleSource("react", "data-preserve-origin-chaining");
 
-	assertMentions(readAppliesWhen(derivedRule), ["별칭", "추가·이동·제거"], "derivedRule");
+	assertMentions(readAppliesWhen(derivedRule), ["별칭", "추가 · 이동 · 제거"], "derivedRule");
 	assert.match(originRule, /^reviewWith:[^\n]+screen-keep-derived-values-close/m);
 	assert.match(bindingRule, /^requiresSelected:[^\n]+typescript\/naming-use-consistent-file-and-symbol-naming/m);
 
@@ -2731,7 +2735,7 @@ test("JSX branches, local value choices, and query selectors stay explicit at th
 		"lookupRule",
 	);
 	assert.match(lookupRule, /variant=\{props\.variant === "fill" \? "default" : props\.variant\}/);
-	assert.match(lookupRule, /GET \/orders.*P·C·D/);
+	assert.match(lookupRule, /GET \/orders.*P · C · D/);
 
 	const selectRule = await readRuleSource("react", "data-shape-query-data-with-select");
 	const selectNormative = splitFrontmatter(selectRule).body.split("**Incorrect", 1)[0] ?? "";
@@ -3035,7 +3039,7 @@ test("CSS progressive metadata and rule routing match Appendix C exactly", async
 	const singlePurposeRule = await readRuleSource("css", "composition-keep-classes-single-purpose");
 	assertMentions(readAppliesWhen(singlePurposeRule), ["상태를 나타내는 낱말", "기본 클래스와 수정자를 나눠"], "singlePurposeRule");
 	const layoutIntentRule = await readRuleSource("css", "layout-keep-layout-intent-explicit");
-	assertMentions(readAppliesWhen(layoutIntentRule), ["기본과 수정자로 나누면서", "`display`·여백", "값 그대로"], "layoutIntentRule");
+	assertMentions(readAppliesWhen(layoutIntentRule), ["기본과 수정자로 나누면서", "`display` · 여백", "값 그대로"], "layoutIntentRule");
 	const fallbackRule = await readRuleSource("css", "values-fall-back-only-outside-core-tokens");
 	assertMentions(readAppliesWhen(fallbackRule), ["`var(--*)`", "공통 토큰"], "fallbackRule");
 	assertMentions(
@@ -3194,9 +3198,9 @@ test("routing activation and generated indexes use only the changed semantic del
 	// 같은 문장을 복제하지 않고 CONTRIBUTING.md 를 가리킨다.
 	for (const source of await Promise.all(routerPaths.map((filePath) => readFile(filePath, "utf8")))) {
 		assert.match(source, /변경 (?:semantic )?delta|실제 변경|실제로 바꾼 것|변경 범위/i);
-		assert.match(source, /추가·삭제·이동|추가·삭제·이동·이름 변경/);
+		assert.match(source, /추가 · 삭제 · 이동|추가 · 삭제 · 이동 · 이름 변경/);
 		assert.match(source, /read-only|byte-equivalent/);
-		assert.match(source, /삭제\+추가|삭제·추가/);
+		assert.match(source, /삭제\+추가|삭제 · 추가/);
 		assert.match(source, /다시 세지|별도.*(?:추가|변경|재선언)/);
 		assert.match(source, /N\/A rule|N\/A 규칙|적용되지 않는 규칙/);
 		assert.match(source, /최소 semantic patch|최소 변경|범위를 넓히지 않/i);
@@ -3232,12 +3236,12 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 	const routeFlow = await readRule("react", "screen-keep-route-flow-visible");
 	assertMentions(
 		routeFlow,
-		["소유자가 바뀌지 않는", "바인딩·별칭", "functions-extract-helpers-only-when-the-boundary-is-real"],
+		["소유자가 바뀌지 않는", "바인딩 · 별칭", "functions-extract-helpers-only-when-the-boundary-is-real"],
 		"routeFlow",
 	);
 	assert.match(
 		routeFlow,
-		/소유자가 바뀌지 않는 `query\.select`[\s\S]*바인딩·별칭[\s\S]*파생 상태 이펙트[\s\S]*렌더 계산 전환은 대상이 아닙니다/i,
+		/소유자가 바뀌지 않는 `query\.select`[\s\S]*바인딩 · 별칭[\s\S]*파생 상태 이펙트[\s\S]*렌더 계산 전환은 대상이 아닙니다/i,
 	);
 
 	const curriedHandler = await readRule("react", "events-curry-extra-handler-arguments");
@@ -3281,7 +3285,7 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 	assertMentions(
 		documentedShape,
 		[
-			/새 입력·출력 계약 역할을 맡음/i,
+			/새 입력 · 출력 계약 역할을 맡음/i,
 			/필드가 그대로여도 기존 선언의 헤더와 필드 주석에 새 역할을 설명합니다/i,
 			/새 역할에도 맞는 기존 형태를 연결하며, 새 타입 선언을 요구하지 않습니다/i,
 		],
@@ -3291,14 +3295,14 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 	assert.match(documentedShape, /익명 결과에 이 규칙을 적용하려고 필드 주석이나 새 타입을 만들지 않습니다/i);
 
 	const directImports = await readRule("typescript", "naming-use-direct-imports-and-public-entry-points");
-	assertMentions(readAppliesWhen(directImports), ["같은 경로에서", /값과 타입 중 무엇을 가져올지/, "추가·삭제·전환"], "directImports");
+	assertMentions(readAppliesWhen(directImports), ["같은 경로에서", /값과 타입 중 무엇을 가져올지/, "추가 · 삭제 · 전환"], "directImports");
 
 	const unusedParameters = await readRule("typescript", "types-mark-unused-parameters-with-underscore");
 	assertMentions(readAppliesWhen(unusedParameters), ["커링한 핸들러", "마지막에 돌려주는 콜백", /(?:빼거나|쓰지 않)/], "unusedParameters");
 	assertMentions(
 		unusedParameters,
 		[
-			/기존 콜백·프레임워크 계약의 매개변수는 쓰지 않아도 생략하지 않고 `_` 접두사로 남깁니다/i,
+			/기존 콜백 · 프레임워크 계약의 매개변수는 쓰지 않아도 생략하지 않고 `_` 접두사로 남깁니다/i,
 			/커링한 핸들러의 마지막 콜백과 매개변수를 하나도 쓰지 않는 구현도 같습니다/i,
 			/`MouseEventHandler`의 이벤트를 쓰지 않으면 `\(\) =>` 대신 `\(_event\) =>`로 받습니다/i,
 		],
@@ -3331,7 +3335,7 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 			"types-reuse-existing-contracts-before-new-types",
 		].map((ruleId) => readAgentFacingRule("typescript", ruleId)),
 	);
-	assert.match(typescriptContracts[0], /같은 경로라도 값·타입 가져오기를 바꾸면 이 규칙을 적용합니다/i);
+	assert.match(typescriptContracts[0], /같은 경로라도 값 · 타입 가져오기를 바꾸면 이 규칙을 적용합니다/i);
 	assert.match(
 		await readFile(path.join(realSkillRootDir, "react", "contracts", "ownership-keep-component-imports-flowing-downward.md"), "utf8"),
 		/CRITICAL rule[\s\S]*full rule/i,
@@ -3473,18 +3477,18 @@ test("v17 TypeScript boundaries exclude React props and prevent self-created dup
 	// 위와 같은 이유로 순서를 박지 않는다.
 	assertMentions(
 		readAppliesWhen(documentedShape),
-		[/외부·생성된·읽기 전용·공용/, /그대로 쓰거나/, /N\/A|제외/],
+		[/외부 · 생성된 · 읽기 전용 · 공용/, /그대로 쓰거나/, /N\/A|제외/],
 		"documentedShape appliesWhen",
 	);
 	assert.match(
 		readAppliesWhen(documentedShape),
-		/스키마 최상단[\s\S]+계약 필드[\s\S]+파생 별칭[\s\S]+추가·변경[\s\S]+이름 붙인 형태[\s\S]+호출 계약 역할/,
+		/스키마 최상단[\s\S]+계약 필드[\s\S]+파생 별칭[\s\S]+추가 · 변경[\s\S]+이름 붙인 형태[\s\S]+호출 계약 역할/,
 	);
-	assert.doesNotMatch(readAppliesWhen(documentedShape), /객체형 상수·field·alias/);
+	assert.doesNotMatch(readAppliesWhen(documentedShape), /객체형 상수 · field · alias/);
 	assertMentions(
 		documentedShape,
 		[
-			/새 입력·출력 계약 역할을 맡음 \| 필드가 그대로여도 기존 선언의 헤더와 필드 주석에 새 역할을 설명합니다/,
+			/새 입력 · 출력 계약 역할을 맡음 \| 필드가 그대로여도 기존 선언의 헤더와 필드 주석에 새 역할을 설명합니다/,
 			/새 역할에도 맞는 기존 형태를 연결하며, 새 타입 선언을 요구하지 않습니다/,
 		],
 		"documentedShape reuses existing declarations for new roles",
@@ -3492,7 +3496,7 @@ test("v17 TypeScript boundaries exclude React props and prevent self-created dup
 	assertMentions(
 		documentedShape,
 		[
-			/외부·생성된·읽기 전용·공용 형태를 그대로 씀 \| 선언을 고치거나 문서화용 지역 별칭을 만들지 않습니다/,
+			/외부 · 생성된 · 읽기 전용 · 공용 형태를 그대로 씀 \| 선언을 고치거나 문서화용 지역 별칭을 만들지 않습니다/,
 			/함수 선언의 헤더 주석은 `docs-require-header-jsdoc-on-key-declarations`가 별도로 판단합니다/,
 		],
 		"documentedShape preserves external contracts and separate function documentation",
@@ -3509,7 +3513,7 @@ test("v17 TypeScript boundaries exclude React props and prevent self-created dup
 		existingContract,
 		[
 			/다음은 이 규칙을 적용하지 않는 경우입니다/,
-			/외부·생성된·읽기 전용·공용 형태를 그대로 사용 \| 이 규칙과 `types-derive-subsets-with-indexed-access` 모두 대상이 아닙니다\. 함수 헤더 주석은 `docs-require-header-jsdoc-on-key-declarations`가 판단합니다/,
+			/외부 · 생성된 · 읽기 전용 · 공용 형태를 그대로 사용 \| 이 규칙과 `types-derive-subsets-with-indexed-access` 모두 대상이 아닙니다\. 함수 헤더 주석은 `docs-require-header-jsdoc-on-key-declarations`가 판단합니다/,
 		],
 		"existingContract excludes unchanged external contracts",
 	);
@@ -3582,7 +3586,7 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	assertMentions(
 		koreanComments,
 		[
-			/주석은 한국어로 목적·제약·부수효과를 설명합니다/i,
+			/주석은 한국어로 목적 · 제약 · 부수효과를 설명합니다/i,
 			/본문 전체가 영어인 주석은 허용하지 않습니다/i,
 			/헤더가 영어뿐이면 필드 주석이 한국어여도 요구를 충족하지 못합니다/i,
 		],
@@ -3659,7 +3663,7 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	assertMentions(
 		koreanComments,
 		[
-			/주석은 한국어로 목적·제약·부수효과를 설명합니다/i,
+			/주석은 한국어로 목적 · 제약 · 부수효과를 설명합니다/i,
 			/본문 전체가 영어인 주석은 허용하지 않습니다/i,
 			/헤더가 영어뿐이면 필드 주석이 한국어여도 요구를 충족하지 못합니다/i,
 		],
@@ -3831,7 +3835,7 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	);
 	assertMentions(
 		generatedContracts[1],
-		[/본문 전체가 영어인 주석은 허용하지 않습니다/i, /주석은 한국어로 목적·제약·부수효과를 설명합니다/i],
+		[/본문 전체가 영어인 주석은 허용하지 않습니다/i, /주석은 한국어로 목적 · 제약 · 부수효과를 설명합니다/i],
 		"generatedContracts",
 	);
 	assert.match(generatedContracts[2], /pseudo-class[\s\S]*조상 블록에서 식별자가 같은 자손을 결합자 하나로 선택합니다/i);

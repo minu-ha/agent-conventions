@@ -283,7 +283,7 @@ body {
 .box-a .box-gl { border: 1px solid color-mix(in srgb, var(--dx-a) 45%, transparent); }
 .box-bad .box-gl { color: var(--bad); }
 .box-good .box-gl { color: var(--good); }
-/* 종류는 글리프·좌측 띠·머리 배경이 이미 말한다. 제목은 본문 색으로 읽히게 둔다. */
+/* 종류는 글리프 · 좌측 띠 · 머리 배경이 이미 말한다. 제목은 본문 색으로 읽히게 둔다. */
 .box-note { color: var(--ink2); }
 /* 라벨은 그 예시가 무엇인지 말해 주는 유일한 문장이다. 잘라내지 않고 줄바꿈한다. */
 .box-note { min-width: 0; font-size: 13px; font-weight: 500; line-height: 1.55; word-break: keep-all; text-wrap: pretty; }
@@ -323,7 +323,7 @@ body {
 .smp[data-open="1"] .smp-body { display: block; }
 
 /* ---------- code ---------- */
-/* 줄번호·마커·코드 3열. 거터 폭을 3em 으로 고정해 예시끼리 코드 시작이 맞는다. */
+/* 줄번호 · 마커 · 코드 3열. 거터 폭을 3em 으로 고정해 예시끼리 코드 시작이 맞는다. */
 /* 거터는 세 자리 줄번호가 안 접히게 잡는다. 3em 은 안쪽 여백을 빼면 두 자리도 못 담는다. */
 .cd { display: grid; grid-template-columns: 3.9em 16px minmax(0, 1fr); font-family: var(--mono); font-size: 11px; line-height: 1.65; background: var(--code-bg); color: var(--code-fg); tab-size: 2; }
 .cd i { display: block; font-style: normal; min-height: 1.65em; }
@@ -366,7 +366,7 @@ pre.code { margin: 0; padding: 11px 13px; font-family: var(--mono); font-size: 1
 .ref-hd { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 10px; padding-bottom: 8px; }
 .ref-lb { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: .12em; white-space: nowrap; color: var(--accent-dk); }
 .ref-note { font-size: 11px; color: var(--faint); white-space: nowrap; }
-/* 예시 상자와 같은 틀·같은 줄 높이로 둔다. 폭이 같은데 줄만 얇으면 눈에 걸린다. */
+/* 예시 상자와 같은 틀 · 같은 줄 높이로 둔다. 폭이 같은데 줄만 얇으면 눈에 걸린다. */
 .ref-list { border: 1px solid var(--hair); border-radius: 3px; background: var(--card); overflow: hidden; }
 .ref { display: grid; grid-template-columns: 4.4em 2.4em minmax(0, 1fr) 1em; align-items: center; gap: 10px; width: 100%; min-height: 42px; padding: 10px 13px; text-align: left; border-top: 1px solid var(--soft); }
 .ref:first-child { border-top: none; }
@@ -394,10 +394,11 @@ pre.code { margin: 0; padding: 11px 13px; font-family: var(--mono); font-size: 1
 mark { background: color-mix(in srgb, var(--accent) 30%, transparent); color: inherit; border-radius: 2px; }
 
 /* 적용 조건 불렛. 제외 조건은 라벨 칩과 낮은 대비로 본 조건과 갈라 읽힌다. */
-.acc-body li.li-x { color: var(--muted); padding-left: 1.7em; }
+.acc-body ul:has(li.li-x) { padding-left: 4.2em; }
+.acc-body li.li-x { color: var(--muted); }
 .acc-body li.li-x::before { content: none; }
-/* 라벨 칩은 다른 항목의 불렛 자리에 앉고, 본문은 칩 너비만큼 물러나 형제 항목의 본문과 같은 줄높이로 읽힌다. */
-.x-lb { position: absolute; left: -1.35em; top: .15em; font-family: var(--mono); font-size: 9.5px; line-height: 1.3; letter-spacing: .06em; color: var(--faint); border: 1px solid var(--hair); border-radius: 2px; padding: 1px 5px; white-space: nowrap; }
+/* 라벨 칩은 불렛 자리에서 왼쪽으로 자라 오른쪽 끝이 불렛과 같은 열에 놓인다. 본문 시작은 형제 항목과 같다. */
+.x-lb { position: absolute; right: calc(100% + .85em); top: .1em; font-family: var(--mono); font-size: 9.5px; line-height: 1.3; letter-spacing: .06em; color: var(--faint); border: 1px solid var(--hair); border-radius: 2px; padding: 1px 5px; white-space: nowrap; }
 
 /* ---------- rule dialog ---------- */
 /* 참조 칩은 목록을 이동하는 대신 이 다이얼로그로 미리 보여준다. 보던 섹션을 잃지 않는다. */
@@ -428,13 +429,13 @@ const viewerBodyMarkup = `<header class="hd">
 			<div class="sr-box">
 				<span class="sr-ico" aria-hidden="true">◇</span>
 				<input id="q" class="sr-in" type="search" autocomplete="off" spellcheck="false"
-					placeholder="규칙·상황·코드 검색   /" aria-label="규칙 검색">
+					placeholder="규칙 · 상황 · 코드 검색   /" aria-label="규칙 검색">
 			</div>
 		</div>
 		<div class="hd-r">
 			<span class="cnt" id="count"></span>
 			<button class="btn" id="expand">규칙 전체 펼치기</button>
-			<button class="btn" id="theme" aria-label="라이트·다크 전환">테마</button>
+			<button class="btn" id="theme" aria-label="라이트 · 다크 전환">테마</button>
 		</div>
 	</div>
 </header>
@@ -621,7 +622,7 @@ const viewerClientScript = `(() => {
 	function haystack(r) {
 		if (r._h) return r._h;
 		const code = r.examples.flatMap((e) => e.blocks.map((b) => b.code)).join("\\n");
-		// 한국어·영어 제목을 모두 색인해 어느 언어로 검색해도 걸린다.
+		// 한국어 · 영어 제목을 모두 색인해 어느 언어로 검색해도 걸린다.
 		return (r._h = [r.titleKo, r.title, r.id, r.skill, r.appliesWhen, r.appliesWhenBullets.join(" "), r.impactDescription, r.tags.join(" "), code].join("\\n").toLowerCase());
 	}
 
@@ -701,7 +702,7 @@ const viewerClientScript = `(() => {
 		const right = [];
 		let del = [];
 		let add = [];
-		// 모아 둔 삭제·추가 묶음을 같은 행에 마주 세운다. 길이가 다르면 짧은 쪽이 빈 칸이다.
+		// 모아 둔 삭제 · 추가 묶음을 같은 행에 마주 세운다. 길이가 다르면 짧은 쪽이 빈 칸이다.
 		const flush = () => {
 			for (let k = 0; k < Math.max(del.length, add.length); k++) {
 				left.push(k < del.length ? {i: del[k], changed: true} : null);
@@ -830,7 +831,7 @@ const viewerClientScript = `(() => {
 		// 감춘 쪽은 칸째 그리지 않는다. 되돌리는 단추는 남은 쪽 머리가 갖는다.
 		if (wide && wide.hide === wide.side) return "";
 
-		// 어느 쪽인지는 부호·색·자리가 이미 말한다. 글자표를 빼 제목이 한 줄에 들어간다.
+		// 어느 쪽인지는 부호 · 색 · 자리가 이미 말한다. 글자표를 빼 제목이 한 줄에 들어간다.
 		const inner = '<span class="box-lead"><span class="box-gl"' + (side ? ' title="' + side + '"' : "") +
 			'>' + (bad ? "\\u2212" : "+") + "</span>" +
 			"</span>" +
@@ -953,8 +954,8 @@ const viewerClientScript = `(() => {
 			// 무엇을 고칠지 판정한 다음에 어떻게 고치는지를 본다.
 			body = '<div class="body">' +
 				'<div class="meta"><span>' + esc(r.id) + "</span>" +
-				(sec ? '<span class="meta-s">·</span><span>' + esc(secLabel(sec)) + "</span>" : "") +
-				'<span class="meta-s">·</span><span>예시 ' + exCount + "</span>" +
+				(sec ? '<span class="meta-s"> · </span><span>' + esc(secLabel(sec)) + "</span>" : "") +
+				'<span class="meta-s"> · </span><span>예시 ' + exCount + "</span>" +
 				'<button class="meta-all" data-allopen="' + esc(key) + '">' + (fullOpen ? "이 규칙 접기" : "이 규칙 펼치기") + "</button></div>" +
 				'<div class="accs">' +
 				(r.appliesWhen || r.appliesWhenBullets.length

@@ -5,7 +5,7 @@ impact: MEDIUM
 impactDescription: 자동 검사와 리뷰의 역할을 구분해 판단이 필요한 내용에 집중합니다
 appliesWhen:
   - 프로젝트에 `biome` 설정을 처음 넣거나 lint 규칙을 바꿀 때
-  - `biome.json`의 `linter.rules`에 항목을 추가·삭제할 때
+  - `biome.json`의 `linter.rules`에 항목을 추가 · 삭제할 때
 tags: tooling
 ---
 
@@ -18,25 +18,25 @@ tags: tooling
 | Biome 규칙 | 담당 컨벤션 |
 | --- | --- |
 | `style/noEnum`, `style/useAsConstAssertion` | `typescript/types-replace-enum-with-as-const-objects` |
-| `style/useImportType`, `style/noDefaultExport`, `performance/noNamespaceImport`, `performance/noBarrelFile`, `performance/noReExportAll` | `typescript/naming-use-direct-imports-and-public-entry-points`의 가져오기·이름 붙인 내보내기·배럴 제한 |
+| `style/useImportType`, `style/noDefaultExport`, `performance/noNamespaceImport`, `performance/noBarrelFile`, `performance/noReExportAll` | `typescript/naming-use-direct-imports-and-public-entry-points`의 가져오기 · 이름 붙인 내보내기 · 배럴 제한 |
 | `style/noRestrictedImports` | `typescript/naming-import-by-absolute-path`. 심볼 없는 상대경로 예외는 `./*.css` 패턴으로 근사합니다 |
-| `style/useNamingConvention`, `style/useFilenamingConvention` | `typescript/naming-use-consistent-file-and-symbol-naming`의 심볼·파일 표기 |
-| `style/noParameterAssign`, `style/useConst`, `style/noNestedTernary` | `typescript/functions-avoid-imperative-assembly-in-wide-scopes`의 재할당·중첩 삼항 제한 |
+| `style/useNamingConvention`, `style/useFilenamingConvention` | `typescript/naming-use-consistent-file-and-symbol-naming`의 심볼 · 파일 표기 |
+| `style/noParameterAssign`, `style/useConst`, `style/noNestedTernary` | `typescript/functions-avoid-imperative-assembly-in-wide-scopes`의 재할당 · 중첩 삼항 제한 |
 | `correctness/noUnusedFunctionParameters` | `typescript/types-mark-unused-parameters-with-underscore` |
 | `complexity/useMaxParams` | `typescript/functions-use-named-object-params-for-complex-signatures`의 인자 세 개 기준 |
 | `style/noMagicNumbers` | `typescript/values-declare-meaningful-numbers` |
 | `suspicious/noExplicitAny`, `style/noNonNullAssertion` | `typescript/types-narrow-unknown-instead-of-asserting` |
-| `plugins`의 GritQL 파일 | `typescript/absence-expose-optional-values-instead-of-silent-fallbacks`의 `??`·`\|\|` 오른쪽 리터럴. 기본 매개변수와 삼항의 대체 리터럴은 리뷰합니다 |
+| `plugins`의 GritQL 파일 | `typescript/absence-expose-optional-values-instead-of-silent-fallbacks`의 `??` · `\|\|` 오른쪽 리터럴. 기본 매개변수와 삼항의 대체 리터럴은 리뷰합니다 |
 
-Biome 2.5.7의 `recommended`에는 `useConst`·`useImportType`·`noNonNullAssertion`·
-`noUnusedFunctionParameters`·`noExplicitAny`가 포함됩니다. 담당 컨벤션을 드러내려고 설정에도 명시합니다.
+Biome 2.5.7의 `recommended`에는 `useConst` · `useImportType` · `noNonNullAssertion` · 
+`noUnusedFunctionParameters` · `noExplicitAny`가 포함됩니다. 담당 컨벤션을 드러내려고 설정에도 명시합니다.
 
-| 도구가 구분하지 못하는 조건 | 리뷰·별도 검사 |
+| 도구가 구분하지 못하는 조건 | 리뷰 · 별도 검사 |
 | --- | --- |
-| 모듈 `const`·객체 키의 역할 | 허용된 `snake_case`는 불변 데이터 상수와 그 키에만 적용합니다. 함수·스키마·요청 객체와의 구분은 리뷰합니다 |
-| 허용된 `PascalCase`의 용도 | `objectLiteralProperty`는 합성 컴포넌트의 `{Root, Header, Footer}`, `const`, `variable`은 컴포넌트 선언 때문에 허용합니다. 일반 함수·지역 변수의 `camelCase`는 리뷰합니다 |
+| 모듈 `const` · 객체 키의 역할 | 허용된 `snake_case`는 불변 데이터 상수와 그 키에만 적용합니다. 함수 · 스키마 · 요청 객체와의 구분은 리뷰합니다 |
+| 허용된 `PascalCase`의 용도 | `objectLiteralProperty`는 합성 컴포넌트의 `{Root, Header, Footer}`, `const`, `variable`은 컴포넌트 선언 때문에 허용합니다. 일반 함수 · 지역 변수의 `camelCase`는 리뷰합니다 |
 | 폴더명 | 단수 `kebab-case`는 파일명 검사 대상이 아니므로 리뷰합니다 |
-| `const` 화살표 선언·이름 붙인 함수의 블록 본문 | `typescript/functions-declare-functions-as-arrow-consts`를 리뷰합니다. `style/useConsistentArrowReturn`의 `style: "always"`는 인라인 콜백·커링 바깥 화살표 예외까지 막으므로 켜지 않습니다 |
+| `const` 화살표 선언 · 이름 붙인 함수의 블록 본문 | `typescript/functions-declare-functions-as-arrow-consts`를 리뷰합니다. `style/useConsistentArrowReturn`의 `style: "always"`는 인라인 콜백 · 커링 바깥 화살표 예외까지 막으므로 켜지 않습니다 |
 | 넓은 스코프에서 `push`로 누적 | `useConst`는 재할당만 확인하므로 리뷰합니다 |
 | 사용하지 않는 매개변수를 아예 생략 | 검사는 남겨 둔 매개변수만 보므로 리뷰합니다 |
 | `as`, `@ts-expect-error` | 위의 타입 좁히기 규칙에 따라 리뷰합니다 |
@@ -123,7 +123,7 @@ Biome 2.5.7의 `recommended`에는 `useConst`·`useImportType`·`noNonNullAssert
 }
 ```
 
-**Correct (`??`·`||` 오른쪽 리터럴은 GritQL 플러그인으로 잡습니다):**
+**Correct (`??` · `||` 오른쪽 리터럴은 GritQL 플러그인으로 잡습니다):**
 
 ```json
 {
@@ -139,6 +139,6 @@ or {
 	`$left || $right`
 } where {
 	$right <: or { string(), number(), `true`, `false`, `[]`, `{}` },
-	register_diagnostic(span = $right, message = "??·|| 오른쪽에 리터럴을 두지 않습니다. 선언된 이름을 참조합니다")
+	register_diagnostic(span = $right, message = "?? · || 오른쪽에 리터럴을 두지 않습니다. 선언된 이름을 참조합니다")
 }
 ```

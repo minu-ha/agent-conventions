@@ -6,7 +6,7 @@ impactDescription: 기본값이 선언 한 곳에 남아 아래쪽 코드에서 
 appliesWhen:
   - 선택 값의 기본값을 어디서 채울지 정할 때
   - 같은 선택 값에 `??` 기본값 해소가 둘 이상의 사용처에 흩어질 때
-  - search 스키마, 응답 매핑, 쿼리 `select`에 기본값 채움을 추가·변경할 때
+  - search 스키마, 응답 매핑, 쿼리 `select`에 기본값 채움을 추가 · 변경할 때
 reviewWith: >-
   absence-expose-optional-values-instead-of-silent-fallbacks,
   functions-name-a-value-only-for-recompute-or-judgment,

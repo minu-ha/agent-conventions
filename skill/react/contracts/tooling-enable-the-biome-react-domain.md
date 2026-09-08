@@ -5,16 +5,16 @@
 `biome` 2.x의 `linter.domains`에서 `react`를 켭니다. `package.json`에 `react@>=16`이 있을 때 리액트 검사가 적용됩니다.
 기본 설정은 `typescript/tooling-configure-biome-to-enforce-these-rules`를 따릅니다.
 
-| 검사 | 컨벤션 적용 범위 | 추가 설정·리뷰 |
+| 검사 | 컨벤션 적용 범위 | 추가 설정 · 리뷰 |
 | --- | --- | --- |
 | `correctness/noNestedComponentDefinitions` | `react/composition-do-not-define-components-inside-components` 전체 | 도메인 `recommended`에 없어 별도로 켭니다 |
 | `correctness/useExhaustiveDependencies` | `react/state-use-effectevent-for-non-reactive-effect-callbacks`의 누락된 의존성 검사 | `useEffectEvent`로 분리할지는 리뷰에서 판단합니다 |
 | `correctness/useJsxKeyInIterable` | `react/composition-name-fragments-explicitly`의 `key` 유무 | `<>` 대신 `Fragment`를 썼는지는 리뷰에서 확인합니다 |
 | `a11y/*` | `react/a11y-give-interactive-elements-an-accessible-name`의 일부 | 도메인이 아닌 `preset: "recommended"`가 켭니다. 실제 이름은 리뷰에서 확인합니다 |
-| `style/noRestrictedImports` + `overrides` | `react/ownership-keep-component-imports-flowing-downward`의 레이어·라우트 방향 | 아래 경로 설정을 추가합니다. 소유자 경계는 별도 판단합니다 |
+| `style/noRestrictedImports` + `overrides` | `react/ownership-keep-component-imports-flowing-downward`의 레이어 · 라우트 방향 | 아래 경로 설정을 추가합니다. 소유자 경계는 별도 판단합니다 |
 
-`a11y` 검사는 `useButtonType`·`useAltText`·`useValidAnchor`·`useKeyWithClickEvents`·`useSemanticElements`·
-`noStaticElementInteractions`·`useFocusableInteractive`를 포함합니다.
+`a11y` 검사는 `useButtonType` · `useAltText` · `useValidAnchor` · `useKeyWithClickEvents` · `useSemanticElements` ·
+`noStaticElementInteractions` · `useFocusableInteractive`를 포함합니다.
 
 | `noRestrictedImports` 적용 위치 | 차단할 경로 |
 | --- | --- |
@@ -43,7 +43,7 @@
 }
 ```
 
-**Correct (도메인과 추가 검사를 켜고 레이어·라우트 `overrides`를 설정합니다):**
+**Correct (도메인과 추가 검사를 켜고 레이어 · 라우트 `overrides`를 설정합니다):**
 
 ```json
 {
@@ -134,4 +134,4 @@
 }
 ```
 
-> 나머지 예시·예외는 [full rule](../rules/13-01-tooling-enable-the-biome-react-domain.md)에 있습니다.
+> 나머지 예시 · 예외는 [full rule](../rules/13-01-tooling-enable-the-biome-react-domain.md)에 있습니다.

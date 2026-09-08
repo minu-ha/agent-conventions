@@ -3,16 +3,16 @@
 **Impact: MEDIUM (반복 조회 구조를 한 번 만들어 목록 전체를 되풀이해 비교하는 비용을 줄입니다)**
 
 같은 목록을 반복 조회하면 루프 밖에서 `Set`이나 `Map`을 한 번 만들고, 원본 목록이 바뀔 때 갱신합니다.
-중첩된 `includes`·`find`는 최악의 경우 두 목록 길이의 곱만큼 비교합니다.
+중첩된 `includes` · `find`는 최악의 경우 두 목록 길이의 곱만큼 비교합니다.
 
 | 상황 | 처리 |
 | --- | --- |
 | 같은 목록을 루프나 `map`, `filter`, `some` 콜백 안에서 조회 | 포함 여부는 `Set.has`, 항목 조회는 `Map.get`으로 바꿉니다 |
 | 같은 목록을 서로 다른 세 지점 이상에서 조회 | 한 번 만든 `Set`, `Map`을 공유합니다 |
 | 위 조건에 해당하지 않거나 길이가 정해진 짧은 목록 | 기존 조회를 유지합니다 |
-| 중복 제거·차집합처럼 결과 목록을 만듦 | `uniq`, `difference`, `without`을 씁니다. 만든 뒤 `has`를 반복 호출할 때만 `Set`을 남깁니다 |
+| 중복 제거 · 차집합처럼 결과 목록을 만듦 | `uniq`, `difference`, `without`을 씁니다. 만든 뒤 `has`를 반복 호출할 때만 `Set`을 남깁니다 |
 
-`Set`·`Map`도 생성 비용이 있으며 조회가 항상 상수 시간인 것은 아닙니다.
+`Set` · `Map`도 생성 비용이 있으며 조회가 항상 상수 시간인 것은 아닙니다.
 명세는 평균 조회 시간이 원소 수에 비례하는 시간보다 짧을 것만 요구합니다.
 서버 응답이나 사용자 선택처럼 목록 길이를 통제하지 못할 때 반복 조회 비용이 커집니다.
 
@@ -22,7 +22,7 @@
 | 없는 키를 타입이 드러내는지 | `noUncheckedIndexedAccess`가 꺼진 `Record<string, T>`와 달리 `Map.get()`은 항상 `T \| undefined`입니다 |
 | 키가 중복되는지 | `find`는 첫 항목, `new Map(entries)`는 마지막 항목을 남깁니다. 첫 항목을 유지하려면 `uniqBy`를 먼저 적용합니다 |
 
-`groupBy`·`keyBy`는 목록을 재구성할 때 씁니다.
+`groupBy` · `keyBy`는 목록을 재구성할 때 씁니다.
 목록 연산의 선택은 `values-use-es-toolkit-for-value-helpers`가 정합니다.
 
 **Incorrect (같은 배열을 반복 순회하며 포함 여부를 확인합니다):**
@@ -41,4 +41,4 @@ const visibleProducts = products.filter((product) => allowedProductIdSet.has(pro
 const disabledProducts = archivedProducts.filter((product) => allowedProductIdSet.has(product.id));
 ```
 
-> 나머지 예시·예외는 [full rule](../rules/04-02-values-use-set-and-map-for-repeated-lookups.md)에 있습니다.
+> 나머지 예시 · 예외는 [full rule](../rules/04-02-values-use-set-and-map-for-repeated-lookups.md)에 있습니다.

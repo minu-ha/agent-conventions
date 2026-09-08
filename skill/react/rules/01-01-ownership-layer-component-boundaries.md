@@ -19,13 +19,13 @@ tags: ownership, widget, naming
 
 | 순서 | 조건 | 레이어 |
 | --- | --- | --- |
-| 1 | 화면의 응답·뷰모델 타입이나 라우트 search 파라미터를 프롭스 타입에서 참조합니다 | `page` |
-| 1 | 쿼리·뮤테이션·라우터 훅·화면 스토어를 직접 호출합니다 | `page` |
-| 1 | 해당 화면의 `Suspense` 경계·폼 프로바이더·모달을 여는 조건을 소유합니다 | `page` |
+| 1 | 화면의 응답 · 뷰모델 타입이나 라우트 search 파라미터를 프롭스 타입에서 참조합니다 | `page` |
+| 1 | 쿼리 · 뮤테이션 · 라우터 훅 · 화면 스토어를 직접 호출합니다 | `page` |
+| 1 | 해당 화면의 `Suspense` 경계 · 폼 프로바이더 · 모달을 여는 조건을 소유합니다 | `page` |
 | 2 | 화면은 모르고 도메인만 압니다 | `widget`. 이름에 도메인 단어가 남아도 됩니다 |
 | 2 | 도메인도 화면도 모릅니다 | `ui` |
 
-`children`과 공용 계약만 받아 경계를 제공하는 범용 셸·대화상자는 그 이유만으로 `page`가 되지 않습니다.
+`children`과 공용 계약만 받아 경계를 제공하는 범용 셸 · 대화상자는 그 이유만으로 `page`가 되지 않습니다.
 특정 화면의 데이터나 흐름을 아는지 확인합니다.
 
 | 혼동하기 쉬운 경우 | 판정 |
@@ -71,7 +71,7 @@ export const PgDeleteProductButton = () => {
 };
 ```
 
-**Incorrect (화면 타입·훅과 무관한 부품을 사용 횟수만으로 화면 레이어에 둡니다):**
+**Incorrect (화면 타입 · 훅과 무관한 부품을 사용 횟수만으로 화면 레이어에 둡니다):**
 
 ```tsx
 // page/detail/_pg-sales-legend-glyph.tsx
@@ -81,7 +81,7 @@ export const PgSalesLegendGlyph = (props: PgSalesLegendGlyphProps) => {
 };
 ```
 
-**Correct (화면 타입·훅과 무관한 도메인 부품은 `widget`에 둡니다):**
+**Correct (화면 타입 · 훅과 무관한 도메인 부품은 `widget`에 둡니다):**
 
 ```tsx
 // component/widget/sales-legend-glyph/wg-sales-legend-glyph.tsx

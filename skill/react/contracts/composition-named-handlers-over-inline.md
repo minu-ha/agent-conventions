@@ -45,4 +45,4 @@ const handleRemoveProductButtonClick: MouseEventHandler<HTMLButtonElement> = (_e
 <UiButton onClick={handleRemoveProductButtonClick}>삭제</UiButton>;
 ```
 
-> 나머지 예시·예외는 [full rule](../rules/05-03-composition-named-handlers-over-inline.md)에 있습니다.
+> 나머지 예시 · 예외는 [full rule](../rules/05-03-composition-named-handlers-over-inline.md)에 있습니다.

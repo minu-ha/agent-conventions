@@ -1,10 +1,10 @@
 ---
 title: Name Query and Mutation Bindings Consistently
-titleKo: 쿼리·뮤테이션 바인딩에 `response`·`mutation` 접두사를 붙입니다
+titleKo: 쿼리 · 뮤테이션 바인딩에 `response` · `mutation` 접두사를 붙입니다
 impact: MEDIUM
 impactDescription: 지역 바인딩 이름으로 생성된 API 훅을 쉽게 찾을 수 있습니다
 appliesWhen:
-  - React Query 쿼리·뮤테이션 훅의 지역 바인딩을 추가하거나 이름을 바꿀 때
+  - React Query 쿼리 · 뮤테이션 훅의 지역 바인딩을 추가하거나 이름을 바꿀 때
   - 쿼리나 뮤테이션 훅의 반환값을 새 지역 변수에 담을 때
 requiresSelected: typescript/naming-use-consistent-file-and-symbol-naming, docs-require-jsdoc-on-key-declarations
 reviewWith: data-preserve-origin-chaining

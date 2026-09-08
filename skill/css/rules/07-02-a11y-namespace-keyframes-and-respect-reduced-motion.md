@@ -5,7 +5,7 @@ impact: CRITICAL
 impactDescription: 전역 애니메이션 이름의 충돌을 막고 움직임에 민감한 사용자의 설정을 따릅니다
 appliesWhen:
   - `@keyframes` 이름이나 애니메이션 지속 시간, 지연 시간, 이징을 선언하거나 바꿀 때
-  - `animation`, `transition`, `prefers-reduced-motion` 동작을 추가·변경할 때
+  - `animation`, `transition`, `prefers-reduced-motion` 동작을 추가 · 변경할 때
 reviewWith: values-tokenize-repeated-visual-values, tooling-configure-stylelint-to-enforce-these-rules
 tags: values, motion
 ---

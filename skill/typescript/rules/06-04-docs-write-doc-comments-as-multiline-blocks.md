@@ -16,7 +16,7 @@ tags: docs, declarations
 
 문서 주석은 `/**`, `*`, `*/`를 각각 다른 줄에 둔 여러 줄 블록으로 씁니다.
 
-| 형태·판단 | 기준 |
+| 형태 · 판단 | 기준 |
 | --- | --- |
 | `/** 한 줄 */` | 쓰지 않습니다 |
 | 선언 설명을 `//`로 작성 | 쓰지 않습니다. 선언 위 `//`는 `docs-justify-convention-exceptions-with-a-reason-comment`의 예외 이유에 씁니다 |

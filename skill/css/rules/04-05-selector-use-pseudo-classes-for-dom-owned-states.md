@@ -4,7 +4,7 @@ titleKo: DOM이 표현하는 상태는 가상 클래스로 씁니다
 impact: HIGH
 impactDescription: DOM 상태와 앱 상태를 구분해 같은 상태를 중복 표현하지 않습니다
 appliesWhen:
-  - `:hover`, `:visited`, `:focus*`, `:disabled`, `:checked`를 추가·수정할 때
+  - `:hover`, `:visited`, `:focus*`, `:disabled`, `:checked`를 추가 · 수정할 때
   - 조상의 DOM 상태가 자손 스타일에 영향을 줄 때
 requiresSelected: selector-nest-dom-state-in-the-owning-block
 tags: pseudo-classes, state, interaction

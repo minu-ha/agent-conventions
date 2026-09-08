@@ -4,7 +4,7 @@ titleKo: 시그니처가 복잡해지면 이름 붙인 객체 매개변수로 �
 impact: MEDIUM
 impactDescription: 긴 시그니처를 읽을 수 있게 두고 위치를 헷갈리지 않으면서 입력을 늘립니다
 appliesWhen:
-  - 매개변수가 셋을 넘거나 같은 계열 인자를 받는 함수를 추가·변경할 때
+  - 매개변수가 셋을 넘거나 같은 계열 인자를 받는 함수를 추가 · 변경할 때
   - 객체 매개변수의 필드를 읽는 방식을 바꿀 때
   - 제외: 리액트 함수 컴포넌트가 프롭스를 받는 방식만 바꾸는 경우
 reviewWith: types-reuse-existing-contracts-before-new-types, values-read-objects-through-chains

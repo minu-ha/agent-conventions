@@ -292,7 +292,7 @@ CSS 파일마다 소유자를 정하고, 다른 소유자의 스타일을 사용
 
 **Rule:** `C02-01` · `ownership-give-each-file-one-scope-slug`
 
-**Applies when:** 새 `scope_slug`를 만들거나 기존 식별자를 복사·이름 변경할 때. 하위 컴포넌트에 CSS 파일을 새로 만들면서 부모 식별자를 그대로 쓸 때.
+**Applies when:** 새 `scope_slug`를 만들거나 기존 식별자를 복사 · 이름 변경할 때. 하위 컴포넌트에 CSS 파일을 새로 만들면서 부모 식별자를 그대로 쓸 때.
 
 **Impact: CRITICAL (파일마다 네임스페이스를 구분해 전역 클래스 충돌을 막습니다)**
 
@@ -585,7 +585,7 @@ TSX에서 클래스를 조합하는 방법과 UI 래퍼가 허용하는 스타�
 
 **Rule:** `C03-01` · `composition-compose-classes-with-clsx`
 
-**Applies when:** TSX의 `className`을 추가·수정할 때. 기본 클래스, 수정자, 선택 클래스를 함께 엮을 때.
+**Applies when:** TSX의 `className`을 추가 · 수정할 때. 기본 클래스, 수정자, 선택 클래스를 함께 엮을 때.
 
 **Review with:** `composition-write-modifiers-as-conditions`, `typescript/values-avoid-lookup-tables-for-simple-choices`
 
@@ -623,7 +623,7 @@ TSX의 `className`은 클래스가 하나여도 `clsx()`로 조합합니다.
 
 **Rule:** `C03-02` · `composition-do-not-build-structural-variants-with-modifiers`
 
-**Applies when:** 수정자를 추가·변경할 때. 여러 곳에서 반복되는 모양인지 한 곳만의 보정인지 가릴 때.
+**Applies when:** 수정자를 추가 · 변경할 때. 여러 곳에서 반복되는 모양인지 한 곳만의 보정인지 가릴 때.
 
 **Review with:** `naming-name-elements-and-modifiers-by-role`
 
@@ -677,7 +677,7 @@ TSX의 `className`은 클래스가 하나여도 `clsx()`로 조합합니다.
 
 **Rule:** `C03-03` · `composition-keep-classes-single-purpose`
 
-**Applies when:** 상태를 나타내는 낱말이 들어간 요소 클래스 이름을 추가·변경할 때. 제외: 처음부터 기본 클래스와 수정자를 나눠 만드는 경우. 제외: 책임이 그대로인 이름 변경만 하는 경우.
+**Applies when:** 상태를 나타내는 낱말이 들어간 요소 클래스 이름을 추가 · 변경할 때. 제외: 처음부터 기본 클래스와 수정자를 나눠 만드는 경우. 제외: 책임이 그대로인 이름 변경만 하는 경우.
 
 **Impact: MEDIUM (기본 스타일과 상태를 분리해 상태만 켜고 끌 수 있습니다)**
 
@@ -961,7 +961,7 @@ export const UiCollapse = (props: UiCollapseProps) => {
 
 **Rule:** `C03-07` · `composition-write-modifiers-as-conditions`
 
-**Applies when:** 값이나 `variant` 프롭으로 수정자를 고르는 `className`을 추가·변경할 때. 클래스 이름에 값을 끼워 넣는 템플릿 리터럴을 추가·변경할 때. 제외: 불리언 하나로 수정자가 붙거나 빠지는 경우.
+**Applies when:** 값이나 `variant` 프롭으로 수정자를 고르는 `className`을 추가 · 변경할 때. 클래스 이름에 값을 끼워 넣는 템플릿 리터럴을 추가 · 변경할 때. 제외: 불리언 하나로 수정자가 붙거나 빠지는 경우.
 
 **Review with:** `composition-compose-classes-with-clsx`, `typescript/values-avoid-lookup-tables-for-simple-choices`
 
@@ -1481,7 +1481,7 @@ h2 {
 
 **Rule:** `C04-05` · `selector-use-pseudo-classes-for-dom-owned-states`
 
-**Applies when:** `:hover`, `:visited`, `:focus*`, `:disabled`, `:checked`를 추가·수정할 때. 조상의 DOM 상태가 자손 스타일에 영향을 줄 때.
+**Applies when:** `:hover`, `:visited`, `:focus*`, `:disabled`, `:checked`를 추가 · 수정할 때. 조상의 DOM 상태가 자손 스타일에 영향을 줄 때.
 
 **Requires selected:** `selector-nest-dom-state-in-the-owning-block` · 함께 적용
 
@@ -1598,7 +1598,7 @@ h2 {
 
 **Rule:** `C04-06` · `selector-nest-dom-state-in-the-owning-block`
 
-**Applies when:** `:hover`, `:focus-visible`, `:disabled`, `:checked` 스타일을 추가·수정할 때. 조상의 DOM 상태가 자손 스타일을 바꿔야 할 때. 상태 가상 클래스를 수정자 블록 안팎으로 옮길 때.
+**Applies when:** `:hover`, `:focus-visible`, `:disabled`, `:checked` 스타일을 추가 · 수정할 때. 조상의 DOM 상태가 자손 스타일을 바꿔야 할 때. 상태 가상 클래스를 수정자 블록 안팎으로 옮길 때.
 
 **Review with:** `a11y-always-provide-a-visible-focus-indicator`, `selector-do-not-group-classes-with-commas`, `selector-limit-nesting-block-depth`, `selector-use-pseudo-classes-for-dom-owned-states`
 
@@ -2083,7 +2083,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 
 **Rule:** `C05-04` · `values-switch-themes-by-changing-token-values`
 
-**Applies when:** 다크 모드나 테마 전환을 넣을 때. 컴포넌트 CSS에 `prefers-color-scheme`이나 `[data-theme]`를 쓰려 할 때. 그림자나 `color-scheme`처럼 테마마다 달라지는 값을 추가·변경할 때.
+**Applies when:** 다크 모드나 테마 전환을 넣을 때. 컴포넌트 CSS에 `prefers-color-scheme`이나 `[data-theme]`를 쓰려 할 때. 그림자나 `color-scheme`처럼 테마마다 달라지는 값을 추가 · 변경할 때.
 
 **Review with:** `values-fall-back-only-outside-core-tokens`, `values-name-tokens-by-purpose`, `values-tokenize-repeated-visual-values`
 
@@ -2188,7 +2188,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 
 **Rule:** `C05-05` · `values-name-tokens-by-purpose`
 
-**Applies when:** 색·그림자·간격·층 같은 디자인 토큰을 새로 만들거나 이름을 바꿀 때. 토큰 파일에 `white`, `gray-100`처럼 값을 말하는 이름을 넣거나 뺄 때.
+**Applies when:** 색 · 그림자 · 간격 · 층 같은 디자인 토큰을 새로 만들거나 이름을 바꿀 때. 토큰 파일에 `white`, `gray-100`처럼 값을 말하는 이름을 넣거나 뺄 때.
 
 **Review with:** `values-switch-themes-by-changing-token-values`, `values-tokenize-repeated-visual-values`
 
@@ -2458,7 +2458,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 
 **Rule:** `C06-03` · `layout-keep-layout-intent-explicit`
 
-**Applies when:** `sticky`·`fixed`, `z-index`, 부모·자식 레이아웃 책임을 추가·변경할 때. 로딩 대체 화면의 컨테이너나 높이를 정할 때. 제외: 같은 요소를 기본과 수정자로 나누면서 기존 `display`·여백 선언을 값 그대로 옮기는 경우.
+**Applies when:** `sticky` · `fixed`, `z-index`, 부모 · 자식 레이아웃 책임을 추가 · 변경할 때. 로딩 대체 화면의 컨테이너나 높이를 정할 때. 제외: 같은 요소를 기본과 수정자로 나누면서 기존 `display` · 여백 선언을 값 그대로 옮기는 경우.
 
 **Review with:** `values-declare-stacking-layers-as-tokens`
 
@@ -2532,7 +2532,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 
 **Rule:** `C06-04` · `layout-reach-for-intrinsic-sizing-before-breakpoints`
 
-**Applies when:** `@media` 브레이크포인트를 새로 넣으려 할 때. 폭에 따라 줄바꿈, 열 개수, 크기가 달라져야 할 때. 컨테이너 폭에 따른 `@container` 배치 조건을 추가·변경할 때.
+**Applies when:** `@media` 브레이크포인트를 새로 넣으려 할 때. 폭에 따라 줄바꿈, 열 개수, 크기가 달라져야 할 때. 컨테이너 폭에 따른 `@container` 배치 조건을 추가 · 변경할 때.
 
 **Review with:** `layout-group-breakpoints-at-the-file-bottom`, `layout-keep-layout-intent-explicit`
 
@@ -2673,7 +2673,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 
 **Rule:** `C07-01` · `a11y-always-provide-a-visible-focus-indicator`
 
-**Applies when:** `outline`, `:focus`, `:focus-visible` 스타일을 추가·수정할 때. 상호작용 요소의 기본 포커스 링을 덮어쓸 때. 강제 색상 모드에서 포커스 표시가 사라져 스타일을 보완할 때.
+**Applies when:** `outline`, `:focus`, `:focus-visible` 스타일을 추가 · 수정할 때. 상호작용 요소의 기본 포커스 링을 덮어쓸 때. 강제 색상 모드에서 포커스 표시가 사라져 스타일을 보완할 때.
 
 **Review with:** `selector-nest-dom-state-in-the-owning-block`
 
@@ -2750,7 +2750,7 @@ AAA 기준을 모든 표시의 두께가 반드시 2px이어야 한다는 뜻으
 
 **Rule:** `C07-02` · `a11y-namespace-keyframes-and-respect-reduced-motion`
 
-**Applies when:** `@keyframes` 이름이나 애니메이션 지속 시간, 지연 시간, 이징을 선언하거나 바꿀 때. `animation`, `transition`, `prefers-reduced-motion` 동작을 추가·변경할 때.
+**Applies when:** `@keyframes` 이름이나 애니메이션 지속 시간, 지연 시간, 이징을 선언하거나 바꿀 때. `animation`, `transition`, `prefers-reduced-motion` 동작을 추가 · 변경할 때.
 
 **Review with:** `tooling-configure-stylelint-to-enforce-these-rules`, `values-tokenize-repeated-visual-values`
 
@@ -2844,7 +2844,7 @@ AAA 기준을 모든 표시의 두께가 반드시 2px이어야 한다는 뜻으
 
 **Rule:** `C08-01` · `tooling-configure-stylelint-to-enforce-these-rules`
 
-**Applies when:** stylelint 설정을 새로 만들거나 규칙을 추가·수정할 때. 이 컨벤션 중 어디까지 자동으로 잡히는지 확인할 때.
+**Applies when:** stylelint 설정을 새로 만들거나 규칙을 추가 · 수정할 때. 이 컨벤션 중 어디까지 자동으로 잡히는지 확인할 때.
 
 **Review with:** `naming-use-scope-slug-element-modifier-syntax`, `ownership-use-foreign-classes-only-under-your-own-root`, `selector-limit-nesting-block-depth`
 

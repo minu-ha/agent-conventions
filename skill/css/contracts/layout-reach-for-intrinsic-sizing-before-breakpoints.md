@@ -67,4 +67,4 @@
 }
 ```
 
-> 나머지 예시·예외는 [full rule](../rules/06-04-layout-reach-for-intrinsic-sizing-before-breakpoints.md)에 있습니다.
+> 나머지 예시 · 예외는 [full rule](../rules/06-04-layout-reach-for-intrinsic-sizing-before-breakpoints.md)에 있습니다.

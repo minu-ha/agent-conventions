@@ -4,7 +4,7 @@ titleKo: 수정자는 상태와 반복되는 모양에만 씁니다
 impact: MEDIUM
 impactDescription: 일회성 배치 보정이 수정자로 늘어나지 않게 합니다
 appliesWhen:
-  - 수정자를 추가·변경할 때
+  - 수정자를 추가 · 변경할 때
   - 여러 곳에서 반복되는 모양인지 한 곳만의 보정인지 가릴 때
 reviewWith: naming-name-elements-and-modifiers-by-role
 tags: modifiers, structure, naming

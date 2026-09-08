@@ -4,8 +4,8 @@ titleKo: 정적 조립에서는 렌더 프롭 대신 `children`을 씁니다
 impact: MEDIUM
 impactDescription: 실행 문맥이 필요 없는 조립을 JSX 구조로 바로 읽을 수 있습니다
 appliesWhen:
-  - 공용 컴포넌트에 헤더·푸터·동작 같은 정적 슬롯을 추가·변경할 때
-  - 렌더 프롭을 추가·변경하는데 실행 환경 데이터 주입이 꼭 필요한지 불분명할 때
+  - 공용 컴포넌트에 헤더 · 푸터 · 동작 같은 정적 슬롯을 추가 · 변경할 때
+  - 렌더 프롭을 추가 · 변경하는데 실행 환경 데이터 주입이 꼭 필요한지 불분명할 때
   - `ReactNode` 슬롯이나 렌더 함수 계약에 이름을 붙이거나 바꿀 때
 tags: strategy, composition, components
 ---
@@ -19,7 +19,7 @@ tags: strategy, composition, components
 | 상황 | 선택 |
 | --- | --- |
 | 부모가 자식 자리만 열어 줌 | `children`과 네임스페이스 슬롯 부품 |
-| 부모가 항목·순번·상태 같은 실행 문맥을 자식에게 전달해야 함 | 이때만 `renderHeader`, `renderFooter` 같은 렌더 프롭을 씁니다 |
+| 부모가 항목 · 순번 · 상태 같은 실행 문맥을 자식에게 전달해야 함 | 이때만 `renderHeader`, `renderFooter` 같은 렌더 프롭을 씁니다 |
 
 | 별도 이름이 필요한 계약 | 이름 |
 | --- | --- |

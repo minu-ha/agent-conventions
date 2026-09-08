@@ -46,4 +46,4 @@
 }
 ```
 
-> 나머지 예시·예외는 [full rule](../rules/04-04-selector-declare-each-class-in-one-block.md)에 있습니다.
+> 나머지 예시 · 예외는 [full rule](../rules/04-04-selector-declare-each-class-in-one-block.md)에 있습니다.

@@ -4,7 +4,7 @@ titleKo: 이벤트 외 추가 인자는 커링으로 넘깁니다
 impact: MEDIUM
 impactDescription: 추가 인자 전달만을 위한 JSX 인라인 래퍼를 줄입니다
 appliesWhen:
-  - DOM 이벤트 프롭에 추가 인자를 넘기는 핸들러를 추가·변경할 때
+  - DOM 이벤트 프롭에 추가 인자를 넘기는 핸들러를 추가 · 변경할 때
   - 인라인 래퍼로 인자를 넘기던 자리를 바꿀 때
   - 제외: 이벤트 객체를 받지 않는 프롭 콜백인 경우
 requiresSelected: typing-take-handler-types-from-existing-contracts
@@ -16,7 +16,7 @@ tags: events, handlers
 
 **Impact: MEDIUM (추가 인자 전달만을 위한 JSX 인라인 래퍼를 줄입니다)**
 
-`onClick`·`onChange`처럼 이벤트 객체를 받는 자리에 추가 인자가 필요하면 커링합니다.
+`onClick` · `onChange`처럼 이벤트 객체를 받는 자리에 추가 인자가 필요하면 커링합니다.
 팩토리가 추가 인자를 받고, 안쪽 함수가 이벤트를 받으며, 반환한 함수를 JSX에 직접 전달합니다.
 `onClick={() => handleSelectionToggle(id)}` 같은 인라인 래퍼는 만들지 않습니다.
 

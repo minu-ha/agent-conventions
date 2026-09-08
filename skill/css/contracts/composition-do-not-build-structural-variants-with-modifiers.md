@@ -32,4 +32,4 @@
 <div className={clsx("pg_catalogDetail__specSection")} />
 ```
 
-> 나머지 예시·예외는 [full rule](../rules/03-02-composition-do-not-build-structural-variants-with-modifiers.md)에 있습니다.
+> 나머지 예시 · 예외는 [full rule](../rules/03-02-composition-do-not-build-structural-variants-with-modifiers.md)에 있습니다.

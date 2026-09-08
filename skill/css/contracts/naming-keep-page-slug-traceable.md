@@ -34,4 +34,4 @@ pg_postsDetail__body   <- posts/[id] 화면
 pg_document__body      <- document 화면
 ```
 
-> 나머지 예시·예외는 [full rule](../rules/01-04-naming-keep-page-slug-traceable.md)에 있습니다.
+> 나머지 예시 · 예외는 [full rule](../rules/01-04-naming-keep-page-slug-traceable.md)에 있습니다.

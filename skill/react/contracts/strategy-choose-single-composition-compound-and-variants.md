@@ -9,7 +9,7 @@
 | --- | --- |
 | 고정 UI | 단일 컴포넌트. 화면 지역 JSX로 둘지는 `screen-extract-local-section-components-for-runtime-boundaries`를 따릅니다 |
 | 부품 조립만 필요함 | 상태 없는 합성 |
-| 여러 부품이 같은 상태·동작·컨텍스트를 읽음 | 상태 있는 합성 |
+| 여러 부품이 같은 상태 · 동작 · 컨텍스트를 읽음 | 상태 있는 합성 |
 | 같은 합성 조합이 반복됨 | 조합을 한 이름으로 감싼 변형 |
 
 아래 예시는 같은 대화상자를 필요에 따라 확장합니다.
@@ -19,7 +19,7 @@
 렌더 프롭은 `strategy-prefer-children-over-render-props`를,
 공개 부품의 범위는 `strategy-expose-only-assembled-compound-parts`를 따릅니다.
 
-**Incorrect (단일·합성·변형을 구분하지 않고 한 컴포넌트에 모두 구현합니다):**
+**Incorrect (단일 · 합성 · 변형을 구분하지 않고 한 컴포넌트에 모두 구현합니다):**
 
 ```tsx
 export interface WgProfileDialogProps {
@@ -76,4 +76,4 @@ export const WgProfileDialog = (props: WgProfileDialogProps) => {
 };
 ```
 
-> 나머지 예시·예외는 [full rule](../rules/04-01-strategy-choose-single-composition-compound-and-variants.md)에 있습니다.
+> 나머지 예시 · 예외는 [full rule](../rules/04-01-strategy-choose-single-composition-compound-and-variants.md)에 있습니다.

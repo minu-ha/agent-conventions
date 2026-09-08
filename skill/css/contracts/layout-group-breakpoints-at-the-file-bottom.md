@@ -63,4 +63,4 @@
 }
 ```
 
-> 나머지 예시·예외는 [full rule](../rules/06-01-layout-group-breakpoints-at-the-file-bottom.md)에 있습니다.
+> 나머지 예시 · 예외는 [full rule](../rules/06-01-layout-group-breakpoints-at-the-file-bottom.md)에 있습니다.

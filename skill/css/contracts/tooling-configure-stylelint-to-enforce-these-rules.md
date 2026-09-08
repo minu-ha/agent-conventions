@@ -159,4 +159,4 @@ export default {
 };
 ```
 
-> 나머지 예시·예외는 [full rule](../rules/08-01-tooling-configure-stylelint-to-enforce-these-rules.md)에 있습니다.
+> 나머지 예시 · 예외는 [full rule](../rules/08-01-tooling-configure-stylelint-to-enforce-these-rules.md)에 있습니다.

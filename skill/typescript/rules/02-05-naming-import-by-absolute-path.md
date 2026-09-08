@@ -23,7 +23,7 @@ tags: naming, imports
 | `import {a} from …` | `@/<src 아래 경로>`. 편집기 자동 가져오기 형식입니다 |
 | `import "….css"` | 같은 폴더면 `./<파일>`, 다른 폴더면 `@/<src 아래 경로>`입니다 |
 
-이동·이름 변경은 편집기의 경로 갱신을 사용합니다.
+이동 · 이름 변경은 편집기의 경로 갱신을 사용합니다.
 접근 가능한 소유 경계는 경로 표기가 아니라 가져오는 파일의 위치로 판단하며, 프레임워크의 가져오기 방향 규칙을 따릅니다.
 소유자 밖에서 쓴다는 이유로 루트에 올리지 않습니다.
 배치는 `naming-place-project-constants-in-the-root-constant-folder`와
@@ -42,7 +42,7 @@ tags: naming, imports
 | `service` | 서버 통신 클라이언트 |
 | `asset` | 아이콘 등 정적 자원 |
 
-루트의 소유자는 프로젝트이며 `constant`·`util`·`type`·`hook`에도 소유자 아래 역할 폴더의 규칙을 적용합니다.
+루트의 소유자는 프로젝트이며 `constant` · `util` · `type` · `hook`에도 소유자 아래 역할 폴더의 규칙을 적용합니다.
 
 **Incorrect (상대경로로 심볼을 가져옵니다):**
 

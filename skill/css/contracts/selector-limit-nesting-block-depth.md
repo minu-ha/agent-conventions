@@ -64,4 +64,4 @@
 }
 ```
 
-> 나머지 예시·예외는 [full rule](../rules/04-01-selector-limit-nesting-block-depth.md)에 있습니다.
+> 나머지 예시 · 예외는 [full rule](../rules/04-01-selector-limit-nesting-block-depth.md)에 있습니다.

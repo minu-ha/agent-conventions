@@ -2,8 +2,8 @@
 
 **Impact: MEDIUM (모드별 분기와 조합을 컴포넌트 구조에서 확인할 수 있습니다)**
 
-여러 파일·레이어에서 재사용하는 공용 `ui`·`widget`은 모드별 불리언 조합 대신 구조를 드러냅니다.
-`isCompact`·`isEditing`·`showSearch`가 늘어나면 가능한 조합과 JSX·스타일 분기도 함께 늘어납니다.
+여러 파일 · 레이어에서 재사용하는 공용 `ui` · `widget`은 모드별 불리언 조합 대신 구조를 드러냅니다.
+`isCompact` · `isEditing` · `showSearch`가 늘어나면 가능한 조합과 JSX · 스타일 분기도 함께 늘어납니다.
 
 | 조건 | 판단 |
 | --- | --- |
@@ -77,4 +77,4 @@ export const WgProductEditToolbar = () => {
 };
 ```
 
-> 나머지 예시·예외는 [full rule](../rules/04-03-strategy-avoid-boolean-prop-proliferation.md)에 있습니다.
+> 나머지 예시 · 예외는 [full rule](../rules/04-03-strategy-avoid-boolean-prop-proliferation.md)에 있습니다.
