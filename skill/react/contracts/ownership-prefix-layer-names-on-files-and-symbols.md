@@ -17,7 +17,7 @@
 | 진입 파일이 아닌 컴포넌트 | `_pg-unit-toggle.tsx`처럼 접두사 앞에 `_`를 붙입니다. 동반 `.css`도 같은 이름을 씁니다 |
 | 심볼 | 진입 파일 여부와 관계없이 `_`를 붙이지 않습니다 |
 | 접두사와 겹치는 이름 | `component/ui/button/ui-button.tsx`로 쓰고 `ui-button-button.tsx`처럼 반복하지 않습니다 |
-| 소유자 안 비공개 부품 | 부모 이름을 반복하지 않습니다. `_wg-header.tsx`·`WgHeader`·`wg_header`로 쓰고, 밖으로 공개하는 합성 부품만 부모 이름을 갖습니다. CSS 식별자가 다른 소유자와 겹칠 때만 부모 이름을 덧붙입니다 |
+| 위젯·ui 안 비공개 부품 | 부모 이름을 이어 씁니다. `_wg-chatbot-header.tsx`·`WgChatbotHeader`·`wg_chatbotHeader`처럼 써서 다른 소유자의 부품과 겹치지 않고 파일만 봐도 소유자가 드러납니다. 화면 부품의 CSS 식별자는 `css/naming-keep-page-slug-traceable`을 따릅니다 |
 
 진입 파일의 기준은 `ownership-place-owner-files-in-role-folders`를 따릅니다.
 

@@ -237,7 +237,7 @@ export const WgSalesWindowChart = (props: WgSalesWindowChartProps) => {
 | 진입 파일이 아닌 컴포넌트 | `_pg-unit-toggle.tsx`처럼 접두사 앞에 `_`를 붙입니다. 동반 `.css`도 같은 이름을 씁니다 |
 | 심볼 | 진입 파일 여부와 관계없이 `_`를 붙이지 않습니다 |
 | 접두사와 겹치는 이름 | `component/ui/button/ui-button.tsx`로 쓰고 `ui-button-button.tsx`처럼 반복하지 않습니다 |
-| 소유자 안 비공개 부품 | 부모 이름을 반복하지 않습니다. `_wg-header.tsx`·`WgHeader`·`wg_header`로 쓰고, 밖으로 공개하는 합성 부품만 부모 이름을 갖습니다. CSS 식별자가 다른 소유자와 겹칠 때만 부모 이름을 덧붙입니다 |
+| 위젯·ui 안 비공개 부품 | 부모 이름을 이어 씁니다. `_wg-chatbot-header.tsx`·`WgChatbotHeader`·`wg_chatbotHeader`처럼 써서 다른 소유자의 부품과 겹치지 않고 파일만 봐도 소유자가 드러납니다. 화면 부품의 CSS 식별자는 `css/naming-keep-page-slug-traceable`을 따릅니다 |
 
 진입 파일의 기준은 `ownership-place-owner-files-in-role-folders`를 따릅니다.
 
@@ -277,22 +277,22 @@ export const UiButton = (props: UiButtonProps) => {
 };
 ```
 
-**Incorrect (비공개 부품 이름에 부모 이름을 되풀이합니다):**
-
-```text
-component/widget/chatbot/
-├── wg-chatbot.tsx            # WgChatbot
-├── _wg-chatbot-header.tsx    # WgChatbotHeader, wg_chatbotHeader
-└── _wg-chatbot-composer.tsx  # WgChatbotComposer
-```
-
-**Correct (비공개 부품은 부모 이름 없이 쓰고 공개 합성 부품만 부모 이름을 갖습니다):**
+**Incorrect (비공개 부품 이름에서 부모 이름을 빼 다른 위젯의 부품과 구분되지 않습니다):**
 
 ```text
 component/widget/chatbot/
 ├── wg-chatbot.tsx     # WgChatbot
 ├── _wg-header.tsx     # WgHeader, wg_header
 └── _wg-composer.tsx   # WgComposer
+```
+
+**Correct (비공개 부품도 부모 이름을 이어 써 소유자가 드러나게 합니다):**
+
+```text
+component/widget/chatbot/
+├── wg-chatbot.tsx            # WgChatbot
+├── _wg-chatbot-header.tsx    # WgChatbotHeader, wg_chatbotHeader
+└── _wg-chatbot-composer.tsx  # WgChatbotComposer
 ```
 
 ### 1.3 Place Owner Files in Role Folders
@@ -2844,7 +2844,7 @@ export const PgOrderToolbar = () => {
 **Impact: HIGH (자체 책임이 있는 부품만 분리해 소유자 안 파일 수와 구조를 읽기 쉽게 유지합니다)**
 
 위젯과 ui 컴포넌트 안의 부품은 아래 책임 중 하나를 직접 소유할 때만 파일로 뗍니다.
-같은 소유자 안 두 곳 이상이 렌더하는 부품도 뗍니다.
+같은 소유자 안 두 곳 이상이 렌더하는 부품과 사용처에 공개하는 조립 부품도 뗍니다.
 그 밖의 JSX는 진입 파일 안에 그대로 둡니다.
 단순 래퍼, `className` 묶음, 들여쓰기 감소, 파일이 길다는 느낌은 분리 근거가 아닙니다.
 
@@ -2855,9 +2855,10 @@ export const PgOrderToolbar = () => {
 | 상호작용 | 팝오버·모달·선택·인라인 편집·드래그·펼치는 트리 |
 | 라이브러리와 성능 | 외부 위젯 생명주기 어댑터·가상 스크롤·전환·지연 값 |
 | 재사용 | 같은 소유자 안 두 곳 이상이 같은 부품을 렌더 |
+| 조립 | 사용처가 넣고 빼거나 스타일을 바꾸도록 공개하는 합성 부품 |
 
 컨텍스트를 읽어 분기만 하는 부품은 상태를 소유하지 않으므로 진입 파일에 남깁니다.
-밖으로 공개하는 합성 부품은 `strategy-expose-only-assembled-compound-parts`가 정하며 이 규칙의 대상이 아닙니다.
+밖으로 공개하는 합성 부품은 조립 단위라 뗍니다. 공개 범위는 `strategy-expose-only-assembled-compound-parts`가 정합니다.
 라우트 진입 파일의 섹션은 `screen-extract-local-section-components-for-runtime-boundaries`가 같은 기준으로 판단합니다.
 뗀 파일의 이름은 `ownership-prefix-layer-names-on-files-and-symbols`를 따릅니다.
 자리는 `ownership-place-owner-files-in-role-folders`를 따릅니다.
@@ -2865,14 +2866,14 @@ export const PgOrderToolbar = () => {
 **Incorrect (컨텍스트를 읽어 분기만 하는 래퍼를 파일로 뗍니다):**
 
 ```tsx
-// component/widget/chatbot/_wg-content.tsx: 어느 화면을 그릴지 고르기만 하고 상태를 소유하지 않는다
-export const WgContent = () => {
+// component/widget/chatbot/_wg-chatbot-content.tsx: 어느 화면을 그릴지 고르기만 하고 상태를 소유하지 않는다
+export const WgChatbotContent = () => {
 	const chat = useChatContext();
 
 	return (
 		<Fragment>
 			{chat.isEmpty && <p className={clsx("wg_chatbot__empty")}>{chat.emptyMessage}</p>}
-			{!chat.isEmpty && <WgMessages messages={chat.messages} />}
+			{!chat.isEmpty && <WgChatbotMessages messages={chat.messages} />}
 		</Fragment>
 	);
 };
@@ -2894,11 +2895,11 @@ export const WgChatbot = () => {
 			 * 대화 목록. 비어 있으면 안내 문구를 그린다
 			 */}
 			{chat.isEmpty && <p className={clsx("wg_chatbot__empty")}>{chat.emptyMessage}</p>}
-			{!chat.isEmpty && <WgMessages messages={chat.messages} />}
+			{!chat.isEmpty && <WgChatbotMessages messages={chat.messages} />}
 			{/**
-			 * 입력 폼. 전송 중 상태와 폼 프로바이더를 소유해 _wg-composer.tsx 로 뗐다
+			 * 입력 폼. 전송 중 상태와 폼 프로바이더를 소유해 _wg-chatbot-composer.tsx 로 뗐다
 			 */}
-			<WgComposer onSubmit={chat.send} />
+			<WgChatbotComposer onSubmit={chat.send} />
 		</section>
 	);
 };
