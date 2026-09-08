@@ -31,7 +31,7 @@ tags: ownership, naming
 | 심볼 | 진입 파일 여부와 관계없이 `_`를 붙이지 않습니다 |
 | 접두사와 겹치는 이름 | `component/ui/button/ui-button.tsx`로 쓰고 `ui-button-button.tsx`처럼 반복하지 않습니다 |
 | 소유자 안 비공개 부품 | 부모 이름을 붙이지 않습니다. `_wg-header.tsx`·`WgHeader`·`wg_header`처럼 쓰며, `_` 파일은 자기 폴더에서만 가져오므로 이름이 겹칠 자리가 없고 폴더가 소유자를 말합니다 |
-| 밖으로 내보내는 합성 부품 | 소유자 밖에서 이름만으로 읽히도록 `_wg-profile-dialog-header.tsx`·`WgProfileDialogHeader`처럼 부모 이름을 갖습니다 |
+| 합성 부품 | 사용처가 `WgProfileDialog.Header`처럼 합성 객체로 부르므로 파일·심볼도 `_wg-header.tsx`·`WgHeader`로 두고 부모 이름을 갖지 않습니다 |
 | 겹친 CSS 식별자 | 다른 소유자와 겹칠 때만 `css/naming-keep-page-slug-traceable`처럼 소유자 이름 하나를 덧붙입니다 |
 
 진입 파일의 기준은 `ownership-place-owner-files-in-role-folders`를 따릅니다.
@@ -80,12 +80,12 @@ component/widget/profile-dialog/
 └── _wg-profile-dialog-avatar.tsx  # WgProfileDialogAvatar, wg_profileDialogAvatar. 이 폴더 밖에서는 쓰지 않는 부품
 ```
 
-**Correct (비공개 부품은 짧게 쓰고 밖으로 내보내는 합성 부품만 부모 이름을 갖습니다):**
+**Correct (부품은 짧게 쓰고 합성 객체와 폴더가 소유자를 말합니다):**
 
 ```text
 component/widget/profile-dialog/
-├── wg-profile-dialog.tsx          # WgProfileDialog = {Root, Header} as const
-├── _wg-profile-dialog-root.tsx    # WgProfileDialogRoot. 사용처가 조립하는 공개 부품
-├── _wg-profile-dialog-header.tsx  # WgProfileDialogHeader
-└── _wg-avatar.tsx                 # WgAvatar, wg_avatar. 비공개 부품
+├── wg-profile-dialog.tsx  # WgProfileDialog = {Root, Header} as const
+├── _wg-root.tsx           # WgRoot. 사용처는 WgProfileDialog.Root 로 조립한다
+├── _wg-header.tsx         # WgHeader
+└── _wg-avatar.tsx         # WgAvatar, wg_avatar. 이 폴더 안에서만 쓰는 부품
 ```

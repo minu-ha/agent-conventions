@@ -96,9 +96,9 @@ export const WgProfileDialog = (props: WgProfileDialogProps) => {
 ```txt
 component/widget/profile-dialog/
 ├── wg-profile-dialog.tsx              진입. 부품을 모아 내보냅니다
-├── _wg-profile-dialog-root.tsx
-├── _wg-profile-dialog-header.tsx
-├── _wg-profile-dialog-body.tsx
+├── _wg-root.tsx
+├── _wg-header.tsx
+├── _wg-body.tsx
 └── _type/
     └── profile-dialog-part.ts         세 부품이 나눠 쓰는 계약
 ```
@@ -119,7 +119,7 @@ export interface WgProfileDialogPartProps {
 ```
 
 ```tsx
-// component/widget/profile-dialog/_wg-profile-dialog-root.tsx
+// component/widget/profile-dialog/_wg-root.tsx
 import {clsx} from "clsx";
 
 import type {WgProfileDialogPartProps} from "@/component/widget/profile-dialog/_type/profile-dialog-part";
@@ -127,21 +127,21 @@ import type {WgProfileDialogPartProps} from "@/component/widget/profile-dialog/_
 /**
  * 대화상자 틀. 나머지 부품은 이 안에서만 그린다
  */
-export const WgProfileDialogRoot = (props: WgProfileDialogPartProps) => {
+export const WgRoot = (props: WgProfileDialogPartProps) => {
 	return <section className={clsx("wg_profileDialog__root")}>{props.children}</section>;
 };
 ```
 
 ```tsx
 // component/widget/profile-dialog/wg-profile-dialog.tsx
-import {WgProfileDialogBody} from "@/component/widget/profile-dialog/_wg-profile-dialog-body";
-import {WgProfileDialogHeader} from "@/component/widget/profile-dialog/_wg-profile-dialog-header";
-import {WgProfileDialogRoot} from "@/component/widget/profile-dialog/_wg-profile-dialog-root";
+import {WgBody} from "@/component/widget/profile-dialog/_wg-body";
+import {WgHeader} from "@/component/widget/profile-dialog/_wg-header";
+import {WgRoot} from "@/component/widget/profile-dialog/_wg-root";
 
 export const WgProfileDialog = {
-	Root: WgProfileDialogRoot,
-	Header: WgProfileDialogHeader,
-	Body: WgProfileDialogBody,
+	Root: WgRoot,
+	Header: WgHeader,
+	Body: WgBody,
 } as const;
 ```
 
@@ -167,11 +167,11 @@ export const WgProfileDialogContext = createContext<WgProfileDialogContextValue 
 ```
 
 ```tsx
-// component/widget/profile-dialog/_wg-profile-dialog-root.tsx
+// component/widget/profile-dialog/_wg-root.tsx
 /**
  * 대화상자 틀. 접힘 상태를 소유해 부품에 컨텍스트로 내린다
  */
-export const WgProfileDialogRoot = (props: WgProfileDialogPartProps) => {
+export const WgRoot = (props: WgProfileDialogPartProps) => {
 	const [isBodyOpen, setIsBodyOpen] = useState(true);
 
 	/**

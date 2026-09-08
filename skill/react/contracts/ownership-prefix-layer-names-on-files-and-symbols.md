@@ -18,7 +18,7 @@
 | 심볼 | 진입 파일 여부와 관계없이 `_`를 붙이지 않습니다 |
 | 접두사와 겹치는 이름 | `component/ui/button/ui-button.tsx`로 쓰고 `ui-button-button.tsx`처럼 반복하지 않습니다 |
 | 소유자 안 비공개 부품 | 부모 이름을 붙이지 않습니다. `_wg-header.tsx`·`WgHeader`·`wg_header`처럼 쓰며, `_` 파일은 자기 폴더에서만 가져오므로 이름이 겹칠 자리가 없고 폴더가 소유자를 말합니다 |
-| 밖으로 내보내는 합성 부품 | 소유자 밖에서 이름만으로 읽히도록 `_wg-profile-dialog-header.tsx`·`WgProfileDialogHeader`처럼 부모 이름을 갖습니다 |
+| 합성 부품 | 사용처가 `WgProfileDialog.Header`처럼 합성 객체로 부르므로 파일·심볼도 `_wg-header.tsx`·`WgHeader`로 두고 부모 이름을 갖지 않습니다 |
 | 겹친 CSS 식별자 | 다른 소유자와 겹칠 때만 `css/naming-keep-page-slug-traceable`처럼 소유자 이름 하나를 덧붙입니다 |
 
 진입 파일의 기준은 `ownership-place-owner-files-in-role-folders`를 따릅니다.
