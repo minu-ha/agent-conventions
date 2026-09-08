@@ -77,10 +77,26 @@ turns=35 duration=133s cost=$2.05 cache_create=73704 cache_read=509135 out=8945
 - 범위 밖에서 같은 필드를 원시 타입으로 다시 적은 위젯 두 곳을 찾아 보고만 했다. 규칙 01-02 의 후속 후보다.
 - 스킬 파일 읽기는 약 27k 글자, 9k 토큰 안팎이다. 검토 세션(15k)보다 적다. 걸린 규칙이 다섯으로 좁았기 때문이다.
 
+## 새 프로토콜: 편집이 있는 헤드리스 세션 둘째 건
+
+측정이 찾아낸 후속 셋을 시켰다. 위젯 두 곳의 `labelValues`·`paneId` 를 ui/chart 계약에서 파생, 두 파일에 각각 선언된 `Extract<ChartAxis['labelFormat'], …>` 를 `_type/date-axis-label-format.ts` 하나로 합치기, `tsc` 확인이다. 같은 worktree 에 `hooks/check-critical-rules.sh` 를 Stop 훅으로 걸어 두었다.
+
+```text
+도구 호출: {'skill_calls': 2, 'index': 2, 'contract': 13, 'rule': 9} | 원문 읽기 방식: {'full': 9} | 스킬 파일 글자 수: 60130 (≈20043 토큰)
+링크만 남은 계약 8개 중 원문까지 따라간 것 8개
+연 원문: ['react/01-02-ownership-prefix-layer-names-on-files-and-symbols [MEDIUM]', 'react/01-03-ownership-place-owner-files-in-role-folders [HIGH]', 'typescript/01-01-types-reuse-existing-contracts-before-new-types [HIGH]', 'typescript/01-02-types-derive-subsets-with-indexed-access [HIGH]', 'typescript/02-03-naming-use-consistent-file-and-symbol-naming [HIGH]', 'typescript/02-05-naming-import-by-absolute-path [CRITICAL]', 'typescript/02-07-naming-name-types-by-role-and-lifetime [HIGH]', 'typescript/03-05-functions-order-declarations-top-down [HIGH]', 'typescript/06-03-docs-write-concise-korean-comments-about-purpose-and-constraints [HIGH]']
+turns=63 duration=219s cost=$3.20 cache_create=110262 cache_read=611883 out=16796
+```
+
+- typescript 와 react 두 스킬을 불렀고, 링크만 남은 계약 여덟(HIGH 7·CRITICAL 1)을 전부 원문까지 끝까지 읽었다. MEDIUM 은 react 01-02 하나만 원문을 열었다.
+- 결과 diff 는 다섯 파일에 새 타입 파일 하나로, 지시한 셋을 정확히 고치고 `paneId` 를 필수로 두는 이유를 필드 주석에 적었다. `tsc` 0.
+- 스킬 파일 읽기는 약 60k 글자, 20k 토큰 안팎이다. 두 스킬을 부르니 검토 세션(15k)보다 커졌다. 한 작업 15k 라는 문턱은 스킬 하나 기준으로 두고, 둘을 부르면 25k 로 보는 것이 맞겠다.
+- Stop 훅은 위반이 없어 조용히 0 으로 끝났다. 훅이 실제로 도는지는 별도로 확인했다. `?? ""` 가 있는 임시 저장소에서 헤드리스 세션을 돌리자 "Stop hook feedback" 으로 위반 1건이 Claude 에게 전달되고, Claude 가 그것을 보고한 뒤 두 번째 마무리는 `stop_hook_active` 로 통과했다.
+
 ## 판정
 
 읽기 깊이를 계약 파일 모양으로 강제한 뒤로는 "몇 줄 보고 끝내기" 가 기록에서 사라졌다. 기준선에서는 HIGH 로 올린 규칙을 열어도 절반가량은 잘라 읽었다.
-표본은 검토 한 건과 편집 한 건이다. 둘 다 링크만 남은 계약을 100% 원문까지 따라갔고 스킬 파일 토큰은 9k~15k 였다. 사용자가 직접 진행하는 실제 작업 세션 두세 건을 같은 파서로 더 재고, 한 작업이 15k 를 넘기면 HIGH 를 일부 내린다.
+표본은 검토 한 건과 편집 두 건이다. 셋 다 링크만 남은 계약을 100% 원문까지 따라갔고(18/18) 스킬 파일 토큰은 9k~20k 였다. 사용자가 직접 진행하는 실제 작업 세션 두세 건을 같은 파서로 더 재고, 한 작업이 15k 를 넘기면 HIGH 를 일부 내린다.
 
 ## 다시 재는 법
 
