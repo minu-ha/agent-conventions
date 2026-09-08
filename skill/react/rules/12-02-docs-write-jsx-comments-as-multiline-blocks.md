@@ -1,11 +1,12 @@
 ---
 title: Write JSX Comments as Multiline Blocks
 titleKo: JSX 안 주석은 여러 줄 블록으로 씁니다
-impact: MEDIUM
+impact: HIGH
 impactDescription: JSX 주석 형식을 통일해 화면 구역의 역할을 쉽게 읽을 수 있습니다
 appliesWhen:
   - JSX 자식 자리에 주석을 새로 쓰거나 기존 주석의 형식을 바꿀 때
   - 화면을 구역으로 나누고 그 구역이 무엇을 담당하는지 적을 때
+  - JSX에 여러 줄로 펼쳐진 형제 블록을 새로 만들거나 나눌 때
 reviewWith: >-
   typescript/docs-write-doc-comments-as-multiline-blocks,
   typescript/docs-write-korean-comments-about-purpose-and-constraints
@@ -14,11 +15,14 @@ tags: docs, jsx, comments
 
 ## Write JSX Comments as Multiline Blocks
 
-**Impact: MEDIUM (JSX 주석 형식을 통일해 화면 구역의 역할을 쉽게 읽을 수 있습니다)**
+**Impact: HIGH (JSX 주석 형식을 통일해 화면 구역의 역할을 쉽게 읽을 수 있습니다)**
 
 JSX 자식 자리의 주석은 여러 줄 블록으로 씁니다.
 `{/**`·` * 내용`·` */}`을 각각 다른 줄에 두고 한 줄로 접지 않습니다.
 `//`를 쓸 수 없는 자리에서도 선언 위 문서 주석과 같은 형태를 유지합니다.
+여러 줄로 펼쳐진 형제 블록이 둘 이상이면 블록마다 그 앞에 주석을 둡니다.
+한 줄 요소와 블록 하나뿐인 반환에는 달지 않습니다.
+편집기에서 접었다 펼칠 때 주석과 블록이 한 덩이로 움직이도록 세 줄 형태를 지킵니다.
 
 | 주석 내용 | 기준 |
 | --- | --- |
@@ -67,4 +71,44 @@ JSX 자식 자리의 주석은 여러 줄 블록으로 씁니다.
 <div className={clsx("pg_products__datePicker")}>
 	<LegacyDatePicker value={value} onChange={handleChange} />
 </div>;
+```
+
+**Incorrect (여러 줄 블록 셋 중 하나에만 주석을 둡니다):**
+
+```tsx
+<section className={clsx("wg_driverTable__root")}>
+	{/**
+	 * 헤더 행. 정렬 기준과 단위를 보여 준다
+	 */}
+	<WgDriverTableHeader sort={sort} />
+	{rows.map((row) => (
+		<WgDriverRow key={row.id} row={row} />
+	))}
+	{expandedRows.map((row) => (
+		<WgDriverChildRow key={row.id} row={row} />
+	))}
+</section>;
+```
+
+**Correct (여러 줄 블록마다 주석을 두어 블록과 함께 접히게 합니다):**
+
+```tsx
+<section className={clsx("wg_driverTable__root")}>
+	{/**
+	 * 헤더 행. 정렬 기준과 단위를 보여 준다
+	 */}
+	<WgDriverTableHeader sort={sort} />
+	{/**
+	 * 드라이버 행. 상세 버튼과 accordion 을 가진 기본 행
+	 */}
+	{rows.map((row) => (
+		<WgDriverRow key={row.id} row={row} />
+	))}
+	{/**
+	 * 펼친 자식 driver 행. 상세 버튼과 accordion 없이 같은 칸 구성을 반복한다
+	 */}
+	{expandedRows.map((row) => (
+		<WgDriverChildRow key={row.id} row={row} />
+	))}
+</section>;
 ```

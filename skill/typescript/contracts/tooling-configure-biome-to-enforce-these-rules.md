@@ -15,6 +15,7 @@
 | `complexity/useMaxParams` | `typescript/functions-use-named-object-params-for-complex-signatures`의 인자 세 개 기준 |
 | `style/noMagicNumbers` | `typescript/values-declare-meaningful-numbers` |
 | `suspicious/noExplicitAny`, `style/noNonNullAssertion` | `typescript/types-narrow-unknown-instead-of-asserting` |
+| `plugins`의 GritQL 파일 | `typescript/absence-expose-optional-values-instead-of-silent-fallbacks`의 `??`·`\|\|` 오른쪽 리터럴. 기본 매개변수와 삼항의 대체 리터럴은 리뷰합니다 |
 
 Biome 2.5.7의 `recommended`에는 `useConst`·`useImportType`·`noNonNullAssertion`·
 `noUnusedFunctionParameters`·`noExplicitAny`가 포함됩니다. 담당 컨벤션을 드러내려고 설정에도 명시합니다.

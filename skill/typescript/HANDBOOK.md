@@ -3633,6 +3633,7 @@ const filteredRows = useMemo(() => {
 | `complexity/useMaxParams` | `typescript/functions-use-named-object-params-for-complex-signatures`의 인자 세 개 기준 |
 | `style/noMagicNumbers` | `typescript/values-declare-meaningful-numbers` |
 | `suspicious/noExplicitAny`, `style/noNonNullAssertion` | `typescript/types-narrow-unknown-instead-of-asserting` |
+| `plugins`의 GritQL 파일 | `typescript/absence-expose-optional-values-instead-of-silent-fallbacks`의 `??`·`\|\|` 오른쪽 리터럴. 기본 매개변수와 삼항의 대체 리터럴은 리뷰합니다 |
 
 Biome 2.5.7의 `recommended`에는 `useConst`·`useImportType`·`noNonNullAssertion`·
 `noUnusedFunctionParameters`·`noExplicitAny`가 포함됩니다. 담당 컨벤션을 드러내려고 설정에도 명시합니다.
@@ -3726,6 +3727,26 @@ Biome 2.5.7의 `recommended`에는 `useConst`·`useImportType`·`noNonNullAssert
 			"linter": {"rules": {"style": {"noDefaultExport": "off"}}}
 		}
 	]
+}
+```
+
+**Correct (`??`·`||` 오른쪽 리터럴은 GritQL 플러그인으로 잡습니다):**
+
+```json
+{
+	"plugins": ["./no-literal-fallback.grit"]
+}
+```
+
+```grit
+language js
+
+or {
+	`$left ?? $right`,
+	`$left || $right`
+} where {
+	$right <: or { string(), number(), `true`, `false`, `[]`, `{}` },
+	register_diagnostic(span = $right, message = "??·|| 오른쪽에 리터럴을 두지 않습니다. 선언된 이름을 참조합니다")
 }
 ```
 

@@ -217,6 +217,7 @@ const reactRuleUniverse = [
 	"composition-name-fragments-explicitly",
 	"composition-render-one-branch-with-and",
 	"composition-order-hooks-handlers-effects-then-return",
+	"composition-split-owner-parts-only-for-runtime-boundaries",
 	"screen-keep-route-flow-visible",
 	"screen-avoid-premature-abstraction",
 	"screen-extract-local-section-components-for-runtime-boundaries",
@@ -668,7 +669,8 @@ const reactRuleRouting = {
 		reviewWith: ["ownership-place-owner-files-in-role-folders", "css/ownership-choose-scope-prefix-by-owner-layer"],
 	},
 	"ownership-prefix-layer-names-on-files-and-symbols": {
-		appliesWhen: "컴포넌트 파일이나 심볼 이름을 새로 지을 때. 컴포넌트를 다른 레이어로 옮기면서 이름을 바꿀 때.",
+		appliesWhen:
+			"컴포넌트 파일이나 심볼 이름을 새로 지을 때. 컴포넌트를 다른 레이어로 옮기면서 이름을 바꿀 때. 소유자 안 비공개 부품의 파일·심볼·CSS 식별자를 짓거나 바꿀 때.",
 		reviewWith: ["ownership-layer-component-boundaries", "typescript/naming-use-consistent-file-and-symbol-naming"],
 	},
 	"ownership-place-owner-files-in-role-folders": {
@@ -820,6 +822,15 @@ const reactRuleRouting = {
 		appliesWhen: "컴포넌트 본문에 훅·핸들러·이펙트를 추가하거나 자리를 옮길 때. 본문 선언이 아래 선언을 참조해 순서를 다시 잡을 때.",
 		reviewWith: ["screen-keep-derived-values-close", "events-run-user-actions-in-handlers-not-effects"],
 	},
+	"composition-split-owner-parts-only-for-runtime-boundaries": {
+		appliesWhen:
+			"위젯이나 ui 컴포넌트 안에서 JSX 일부를 별도 컴포넌트 파일로 떼거나 되돌릴 때. 제외: 라우트 진입 파일의 섹션을 나누는 경우.",
+		reviewWith: [
+			"screen-extract-local-section-components-for-runtime-boundaries",
+			"ownership-place-owner-files-in-role-folders",
+			"strategy-expose-only-assembled-compound-parts",
+		],
+	},
 	"screen-keep-route-flow-visible": {
 		appliesWhen:
 			"라우트 진입의 search 파라미터, 화면 이동, 쿼리, 뮤테이션, 화면 전체 이펙트를 옮기거나 나눌 때. 화면 섹션 조립의 순서나 소유자를 바꿀 때. 제외: 같은 소유자 안에서 표현만 바꾸는 경우.",
@@ -936,7 +947,7 @@ const reactRuleRouting = {
 	},
 	"docs-write-jsx-comments-as-multiline-blocks": {
 		appliesWhen:
-			"JSX 자식 자리에 주석을 새로 쓰거나 기존 주석의 형식을 바꿀 때. 화면을 구역으로 나누고 그 구역이 무엇을 담당하는지 적을 때.",
+			"JSX 자식 자리에 주석을 새로 쓰거나 기존 주석의 형식을 바꿀 때. 화면을 구역으로 나누고 그 구역이 무엇을 담당하는지 적을 때. JSX에 여러 줄로 펼쳐진 형제 블록을 새로 만들거나 나눌 때.",
 		reviewWith: [
 			"typescript/docs-write-doc-comments-as-multiline-blocks",
 			"typescript/docs-write-korean-comments-about-purpose-and-constraints",
@@ -1102,6 +1113,7 @@ const typescriptSelections = {
 		"docs-write-korean-comments-about-purpose-and-constraints",
 		"docs-write-doc-comments-as-multiline-blocks",
 	],
+	"narrow-library-field-with-extract": ["types-reuse-existing-contracts-before-new-types", "types-derive-subsets-with-indexed-access"],
 } as const;
 
 /**
@@ -1226,6 +1238,11 @@ const typescriptScenarioEvidence = {
 		prompt:
 			"Replace only an incorrect property spelling in an existing response schema to match an API-owned snake_case key. The schema name, value validators, imports, and existing Korean documentation are unchanged. Do not rename API keys into our internal style.",
 		files: ["src/contracts/value-boundary.ts"],
+	},
+	"narrow-library-field-with-extract": {
+		prompt:
+			"In the existing chart axis contract, replace `min?: number` and `max?: number` with `Extract<ValueAxisOption['min'], number>` derived from the library axis option type, and type the dataZoom range fields as `NonNullable<DataZoomComponentOption['start']>` instead of restating `number`. Keep field names, optionality, and the existing Korean field comments unchanged.",
+		files: ["src/component/ui/chart/_type/chart-axis.ts", "src/component/ui/chart/_type/data-zoom-range.ts"],
 	},
 } as const;
 
@@ -1783,6 +1800,27 @@ const reactScenarioStages = {
 					"runtime-place-error-boundaries-by-blast-radius",
 				],
 				typescript: [],
+			},
+		},
+	},
+	"react-widget-part-split-and-private-part-naming": {
+		initial: {
+			prompt:
+				"In the chatbot widget, move the `_wg-content.tsx` part that only reads context and picks a branch back into `wg-chatbot.tsx`, rename the private header part `_wg-chatbot-header.tsx`/`WgChatbotHeader` to `_wg-header.tsx`/`WgHeader`, and put a multiline block comment above each multi-line JSX block in the entry file. Keep behavior, props, and hooks unchanged.",
+			files: [
+				"src/component/widget/chatbot/wg-chatbot.tsx",
+				"src/component/widget/chatbot/_wg-content.tsx",
+				"src/component/widget/chatbot/_wg-chatbot-header.tsx",
+			],
+			expectedSkills: ["react", "typescript"],
+			expectedSelected: {
+				react: [
+					"ownership-prefix-layer-names-on-files-and-symbols",
+					"ownership-place-owner-files-in-role-folders",
+					"composition-split-owner-parts-only-for-runtime-boundaries",
+					"docs-write-jsx-comments-as-multiline-blocks",
+				],
+				typescript: ["naming-use-consistent-file-and-symbol-naming"],
 			},
 		},
 	},
@@ -2489,7 +2527,7 @@ test("TypeScript routing manifest matches the reviewed scenarios with full posit
 
 	assert.equal(manifest.version, 1);
 	assert.equal(manifest.skill, "typescript");
-	assert.equal(manifest.scenarios.length, 23);
+	assert.equal(manifest.scenarios.length, 24);
 	assert.deepEqual(
 		Object.fromEntries(manifest.scenarios.map((scenario) => [scenario.id, scenario.expectedSelected.typescript])),
 		typescriptSelections,
@@ -2751,7 +2789,7 @@ test("React progressive metadata and all 52 rule routes match Appendix B exactly
 		{skill: "typescript", mode: "required"},
 		{skill: "css", mode: "conditional", appliesWhen: "class contract, stylesheet 또는 styling surface를 변경한다."},
 	]);
-	assert.equal(document.rules.length, 52);
+	assert.equal(document.rules.length, 53);
 	assert.deepEqual(
 		Object.fromEntries(document.rules.map((rule) => [getRuleId(rule), {appliesWhen: rule.appliesWhen, reviewWith: rule.reviewWith}])),
 		reactRuleRouting,
@@ -2796,10 +2834,10 @@ test("React routing manifest matches the reviewed scenarios with full positive c
 		manifest.scenarios.map((scenario) => scenario.id),
 		expectedScenarioIds,
 	);
-	assert.equal(manifest.scenarios.length, 24);
+	assert.equal(manifest.scenarios.length, 25);
 	assert.equal(
 		manifest.scenarios.reduce((count, scenario) => count + (scenario.scopeDrift ? 2 : 1), 0),
-		25,
+		26,
 	);
 
 	const universeBySkillName: Record<string, readonly string[]> = {
@@ -2904,7 +2942,7 @@ test("React generated index and handbook preserve canonical local rules and comp
 		entries.map((entry) => entry.id),
 		reactRuleUniverse,
 	);
-	assert.equal(entries.length, 52);
+	assert.equal(entries.length, 53);
 
 	for (const entry of entries) {
 		assert.equal(entry.fileName, `${entry.id}.md`);

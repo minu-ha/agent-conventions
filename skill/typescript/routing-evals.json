@@ -426,6 +426,23 @@
 					"docs-write-doc-comments-as-multiline-blocks"
 				]
 			}
+		},
+		{
+			"id": "narrow-library-field-with-extract",
+			"prompt": "In the existing chart axis contract, replace `min?: number` and `max?: number` with `Extract<ValueAxisOption['min'], number>` derived from the library axis option type, and type the dataZoom range fields as `NonNullable<DataZoomComponentOption['start']>` instead of restating `number`. Keep field names, optionality, and the existing Korean field comments unchanged.",
+			"files": [
+				"src/component/ui/chart/_type/chart-axis.ts",
+				"src/component/ui/chart/_type/data-zoom-range.ts"
+			],
+			"expectedSkills": [
+				"typescript"
+			],
+			"expectedSelected": {
+				"typescript": [
+					"types-reuse-existing-contracts-before-new-types",
+					"types-derive-subsets-with-indexed-access"
+				]
+			}
 		}
 	]
 }

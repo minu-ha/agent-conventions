@@ -61,6 +61,7 @@
     - 5.7 [Write Fragments as `Fragment`, Not the Shorthand](#57-write-fragments-as-fragment-not-the-shorthand)
     - 5.8 [Render JSX Branches With Explicit Conditions](#58-render-jsx-branches-with-explicit-conditions)
     - 5.9 [Order Hooks, Handlers, Effects, Then Return](#59-order-hooks-handlers-effects-then-return)
+    - 5.10 [Split Owner Parts Only for Runtime Boundaries](#510-split-owner-parts-only-for-runtime-boundaries)
 6. [Screen File Discipline](#6-screen-file-discipline) — **MEDIUM**
     - 6.1 [Keep Route Entry Files Focused on Screen Flow](#61-keep-route-entry-files-focused-on-screen-flow)
     - 6.2 [Avoid Premature Abstraction in Screen Code](#62-avoid-premature-abstraction-in-screen-code)
@@ -215,7 +216,7 @@ export const WgSalesWindowChart = (props: WgSalesWindowChartProps) => {
 
 **Rule:** `R01-02` · `ownership-prefix-layer-names-on-files-and-symbols`
 
-**Applies when:** 컴포넌트 파일이나 심볼 이름을 새로 지을 때. 컴포넌트를 다른 레이어로 옮기면서 이름을 바꿀 때.
+**Applies when:** 컴포넌트 파일이나 심볼 이름을 새로 지을 때. 컴포넌트를 다른 레이어로 옮기면서 이름을 바꿀 때. 소유자 안 비공개 부품의 파일·심볼·CSS 식별자를 짓거나 바꿀 때.
 
 **Review with:** `ownership-layer-component-boundaries`, `typescript/naming-use-consistent-file-and-symbol-naming`
 
@@ -236,6 +237,7 @@ export const WgSalesWindowChart = (props: WgSalesWindowChartProps) => {
 | 진입 파일이 아닌 컴포넌트 | `_pg-unit-toggle.tsx`처럼 접두사 앞에 `_`를 붙입니다. 동반 `.css`도 같은 이름을 씁니다 |
 | 심볼 | 진입 파일 여부와 관계없이 `_`를 붙이지 않습니다 |
 | 접두사와 겹치는 이름 | `component/ui/button/ui-button.tsx`로 쓰고 `ui-button-button.tsx`처럼 반복하지 않습니다 |
+| 소유자 안 비공개 부품 | 부모 이름을 반복하지 않습니다. `_wg-header.tsx`·`WgHeader`·`wg_header`로 쓰고, 밖으로 공개하는 합성 부품만 부모 이름을 갖습니다. CSS 식별자가 다른 소유자와 겹칠 때만 부모 이름을 덧붙입니다 |
 
 진입 파일의 기준은 `ownership-place-owner-files-in-role-folders`를 따릅니다.
 
@@ -273,6 +275,24 @@ export const UiButtonButton = (props: UiButtonButtonProps) => {
 export const UiButton = (props: UiButtonProps) => {
 	return <button type="button">{props.children}</button>;
 };
+```
+
+**Incorrect (비공개 부품 이름에 부모 이름을 되풀이합니다):**
+
+```text
+component/widget/chatbot/
+├── wg-chatbot.tsx            # WgChatbot
+├── _wg-chatbot-header.tsx    # WgChatbotHeader, wg_chatbotHeader
+└── _wg-chatbot-composer.tsx  # WgChatbotComposer
+```
+
+**Correct (비공개 부품은 부모 이름 없이 쓰고 공개 합성 부품만 부모 이름을 갖습니다):**
+
+```text
+component/widget/chatbot/
+├── wg-chatbot.tsx     # WgChatbot
+├── _wg-header.tsx     # WgHeader, wg_header
+└── _wg-composer.tsx   # WgComposer
 ```
 
 ### 1.3 Place Owner Files in Role Folders
@@ -2813,6 +2833,77 @@ export const PgOrderToolbar = () => {
 };
 ```
 
+### 5.10 Split Owner Parts Only for Runtime Boundaries
+
+**Rule:** `R05-10` · `composition-split-owner-parts-only-for-runtime-boundaries`
+
+**Applies when:** 위젯이나 ui 컴포넌트 안에서 JSX 일부를 별도 컴포넌트 파일로 떼거나 되돌릴 때. 제외: 라우트 진입 파일의 섹션을 나누는 경우.
+
+**Review with:** `ownership-place-owner-files-in-role-folders`, `screen-extract-local-section-components-for-runtime-boundaries`, `strategy-expose-only-assembled-compound-parts`
+
+**Impact: HIGH (자체 책임이 있는 부품만 분리해 소유자 안 파일 수와 구조를 읽기 쉽게 유지합니다)**
+
+위젯과 ui 컴포넌트 안의 부품은 아래 책임 중 하나를 직접 소유할 때만 파일로 뗍니다.
+같은 소유자 안 두 곳 이상이 렌더하는 부품도 뗍니다.
+그 밖의 JSX는 진입 파일 안에 그대로 둡니다.
+단순 래퍼, `className` 묶음, 들여쓰기 감소, 파일이 길다는 느낌은 분리 근거가 아닙니다.
+
+| 책임 | 예 |
+| --- | --- |
+| 비동기 | `Suspense`·스켈레톤·로딩·오류·빈 상태 |
+| 상태와 프로바이더 | 지역 상태·이펙트 동기화·폼 프로바이더·컨텍스트 |
+| 상호작용 | 팝오버·모달·선택·인라인 편집·드래그·펼치는 트리 |
+| 라이브러리와 성능 | 외부 위젯 생명주기 어댑터·가상 스크롤·전환·지연 값 |
+| 재사용 | 같은 소유자 안 두 곳 이상이 같은 부품을 렌더 |
+
+컨텍스트를 읽어 분기만 하는 부품은 상태를 소유하지 않으므로 진입 파일에 남깁니다.
+밖으로 공개하는 합성 부품은 `strategy-expose-only-assembled-compound-parts`가 정하며 이 규칙의 대상이 아닙니다.
+라우트 진입 파일의 섹션은 `screen-extract-local-section-components-for-runtime-boundaries`가 같은 기준으로 판단합니다.
+뗀 파일의 이름은 `ownership-prefix-layer-names-on-files-and-symbols`를 따릅니다.
+자리는 `ownership-place-owner-files-in-role-folders`를 따릅니다.
+
+**Incorrect (컨텍스트를 읽어 분기만 하는 래퍼를 파일로 뗍니다):**
+
+```tsx
+// component/widget/chatbot/_wg-content.tsx: 어느 화면을 그릴지 고르기만 하고 상태를 소유하지 않는다
+export const WgContent = () => {
+	const chat = useChatContext();
+
+	return (
+		<Fragment>
+			{chat.isEmpty && <p className={clsx("wg_chatbot__empty")}>{chat.emptyMessage}</p>}
+			{!chat.isEmpty && <WgMessages messages={chat.messages} />}
+		</Fragment>
+	);
+};
+```
+
+**Correct (분기는 진입 파일에 남기고 상태를 소유한 부품만 뗍니다):**
+
+```tsx
+// component/widget/chatbot/wg-chatbot.tsx
+/**
+ * 챗봇 위젯 진입. 대화 목록과 입력 폼을 조립한다
+ */
+export const WgChatbot = () => {
+	const chat = useChatContext();
+
+	return (
+		<section className={clsx("wg_chatbot__root")}>
+			{/**
+			 * 대화 목록. 비어 있으면 안내 문구를 그린다
+			 */}
+			{chat.isEmpty && <p className={clsx("wg_chatbot__empty")}>{chat.emptyMessage}</p>}
+			{!chat.isEmpty && <WgMessages messages={chat.messages} />}
+			{/**
+			 * 입력 폼. 전송 중 상태와 폼 프로바이더를 소유해 _wg-composer.tsx 로 뗐다
+			 */}
+			<WgComposer onSubmit={chat.send} />
+		</section>
+	);
+};
+```
+
 ## 6. Screen File Discipline
 
 **Impact: MEDIUM**
@@ -4525,15 +4616,18 @@ useEffect(() => {
 
 **Rule:** `R12-02` · `docs-write-jsx-comments-as-multiline-blocks`
 
-**Applies when:** JSX 자식 자리에 주석을 새로 쓰거나 기존 주석의 형식을 바꿀 때. 화면을 구역으로 나누고 그 구역이 무엇을 담당하는지 적을 때.
+**Applies when:** JSX 자식 자리에 주석을 새로 쓰거나 기존 주석의 형식을 바꿀 때. 화면을 구역으로 나누고 그 구역이 무엇을 담당하는지 적을 때. JSX에 여러 줄로 펼쳐진 형제 블록을 새로 만들거나 나눌 때.
 
 **Review with:** `typescript/docs-write-doc-comments-as-multiline-blocks`, `typescript/docs-write-korean-comments-about-purpose-and-constraints`
 
-**Impact: MEDIUM (JSX 주석 형식을 통일해 화면 구역의 역할을 쉽게 읽을 수 있습니다)**
+**Impact: HIGH (JSX 주석 형식을 통일해 화면 구역의 역할을 쉽게 읽을 수 있습니다)**
 
 JSX 자식 자리의 주석은 여러 줄 블록으로 씁니다.
 `{/**`·` * 내용`·` */}`을 각각 다른 줄에 두고 한 줄로 접지 않습니다.
 `//`를 쓸 수 없는 자리에서도 선언 위 문서 주석과 같은 형태를 유지합니다.
+여러 줄로 펼쳐진 형제 블록이 둘 이상이면 블록마다 그 앞에 주석을 둡니다.
+한 줄 요소와 블록 하나뿐인 반환에는 달지 않습니다.
+편집기에서 접었다 펼칠 때 주석과 블록이 한 덩이로 움직이도록 세 줄 형태를 지킵니다.
 
 | 주석 내용 | 기준 |
 | --- | --- |
@@ -4582,6 +4676,46 @@ JSX 자식 자리의 주석은 여러 줄 블록으로 씁니다.
 <div className={clsx("pg_products__datePicker")}>
 	<LegacyDatePicker value={value} onChange={handleChange} />
 </div>;
+```
+
+**Incorrect (여러 줄 블록 셋 중 하나에만 주석을 둡니다):**
+
+```tsx
+<section className={clsx("wg_driverTable__root")}>
+	{/**
+	 * 헤더 행. 정렬 기준과 단위를 보여 준다
+	 */}
+	<WgDriverTableHeader sort={sort} />
+	{rows.map((row) => (
+		<WgDriverRow key={row.id} row={row} />
+	))}
+	{expandedRows.map((row) => (
+		<WgDriverChildRow key={row.id} row={row} />
+	))}
+</section>;
+```
+
+**Correct (여러 줄 블록마다 주석을 두어 블록과 함께 접히게 합니다):**
+
+```tsx
+<section className={clsx("wg_driverTable__root")}>
+	{/**
+	 * 헤더 행. 정렬 기준과 단위를 보여 준다
+	 */}
+	<WgDriverTableHeader sort={sort} />
+	{/**
+	 * 드라이버 행. 상세 버튼과 accordion 을 가진 기본 행
+	 */}
+	{rows.map((row) => (
+		<WgDriverRow key={row.id} row={row} />
+	))}
+	{/**
+	 * 펼친 자식 driver 행. 상세 버튼과 accordion 없이 같은 칸 구성을 반복한다
+	 */}
+	{expandedRows.map((row) => (
+		<WgDriverChildRow key={row.id} row={row} />
+	))}
+</section>;
 ```
 
 ## 13. Tooling

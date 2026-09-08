@@ -665,6 +665,30 @@
 				],
 				"typescript": []
 			}
+		},
+		{
+			"id": "react-widget-part-split-and-private-part-naming",
+			"prompt": "In the chatbot widget, move the `_wg-content.tsx` part that only reads context and picks a branch back into `wg-chatbot.tsx`, rename the private header part `_wg-chatbot-header.tsx`/`WgChatbotHeader` to `_wg-header.tsx`/`WgHeader`, and put a multiline block comment above each multi-line JSX block in the entry file. Keep behavior, props, and hooks unchanged.",
+			"files": [
+				"src/component/widget/chatbot/wg-chatbot.tsx",
+				"src/component/widget/chatbot/_wg-content.tsx",
+				"src/component/widget/chatbot/_wg-chatbot-header.tsx"
+			],
+			"expectedSkills": [
+				"react",
+				"typescript"
+			],
+			"expectedSelected": {
+				"react": [
+					"ownership-prefix-layer-names-on-files-and-symbols",
+					"ownership-place-owner-files-in-role-folders",
+					"composition-split-owner-parts-only-for-runtime-boundaries",
+					"docs-write-jsx-comments-as-multiline-blocks"
+				],
+				"typescript": [
+					"naming-use-consistent-file-and-symbol-naming"
+				]
+			}
 		}
 	]
 }
