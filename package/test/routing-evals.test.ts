@@ -670,7 +670,7 @@ const reactRuleRouting = {
 	},
 	"ownership-prefix-layer-names-on-files-and-symbols": {
 		appliesWhen:
-			"컴포넌트 파일이나 심볼 이름을 새로 지을 때. 컴포넌트를 다른 레이어로 옮기면서 이름을 바꿀 때. 소유자 안 비공개 부품의 파일·심볼·CSS 식별자를 짓거나 바꿀 때.",
+			"컴포넌트 파일이나 심볼 이름을 새로 지을 때. 컴포넌트를 다른 레이어로 옮기면서 이름을 바꿀 때. 위젯·ui 안 부품이나 하위 소유자의 파일·심볼·CSS 식별자를 짓거나 바꿀 때.",
 		reviewWith: ["ownership-layer-component-boundaries", "typescript/naming-use-consistent-file-and-symbol-naming"],
 	},
 	"ownership-place-owner-files-in-role-folders": {
