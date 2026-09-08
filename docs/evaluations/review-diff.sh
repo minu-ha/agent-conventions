@@ -2,6 +2,8 @@
 # 작업 트리의 변경을 컨벤션 스킬 기준으로 검토하는 헤드리스 세션을 돌리고 위반 수를 낸다.
 # 사용: review-diff.sh <저장소 경로> [기준 ref=HEAD] [출력 jsonl]
 # 코드는 고치지 않는다(plan 모드). 마지막 줄 `VIOLATIONS confirmed=<n> ambiguous=<m>` 을 파싱해 준수율 측정에 쓴다.
+# 검토할 변경을 이미 커밋했다면 기준 ref 를 그 전 커밋(HEAD~1)으로 준다. 세션이 `git diff <기준>` 을 직접 다시 읽으므로 도중에 HEAD 를 움직이면 빈 diff 를 본다.
+# 모델은 REVIEW_MODEL(기본 opus). fable 로 돌리지 않는다.
 set -u
 repo="${1:?repo dir}"
 base="${2:-HEAD}"
