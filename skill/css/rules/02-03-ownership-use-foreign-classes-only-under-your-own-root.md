@@ -21,12 +21,12 @@ tags: ownership, scope, third-party
 
 | 선택자 | 판정 |
 | --- | --- |
-| `.ant-tree-title { }` | 금지. 그 라이브러리를 쓰는 앱 전체에 적용됩니다 |
+| `.MuiTreeItem-label { }` | 금지. 그 라이브러리를 쓰는 앱 전체에 적용됩니다 |
 | `.wg_chartCard__caption { }` | 금지. 그 위젯을 쓰는 모든 화면에 적용됩니다 |
-| `.pg_treePanel__root { & .ant-tree-title { } }` | 허용. 해당 인스턴스에만 적용됩니다 |
+| `.pg_products__sidebar { & .MuiTreeItem-label { } }` | 허용. 해당 인스턴스에만 적용됩니다 |
 | `.pg_detail__root { & .wg_chartCard__caption { } }` | 허용 |
-| `.pg_treePanel__root .ant-tree-title { }` | 금지. 최상위 블록 안에서 `&`로 시작해야 합니다 |
-| `.pg_treePanel__toolbar .pg_treePanel__title { }` | 같은 소유자의 클래스끼리라 이 규칙의 대상이 아닙니다 |
+| `.pg_products__sidebar .MuiTreeItem-label { }` | 금지. 최상위 블록 안에서 `&`로 시작해야 합니다 |
+| `.pg_products__sidebarToolbar .pg_products__sidebarTitle { }` | 같은 소유자의 클래스끼리라 이 규칙의 대상이 아닙니다 |
 
 판정할 때 별도의 소유 관계를 조사하지 않고 `scope_slug`와 블록 위치를 대조합니다.
 이렇게 덮어쓰기를 한 블록에 모으면 라이브러리 버전을 올릴 때 확인할 곳도 한 군데로 정해집니다.
@@ -43,11 +43,11 @@ tags: ownership, scope, third-party
 **Incorrect (최상위 블록 없이 라이브러리 클래스를 바로 씁니다):**
 
 ```css
-.ant-tree-node-content-wrapper {
+.MuiTreeItem-content {
 	border-radius: 4px;
 }
 
-.ant-tree-title {
+.MuiTreeItem-label {
 	color: #8c8c8c;
 }
 ```
@@ -55,12 +55,12 @@ tags: ownership, scope, third-party
 **Correct (내 최상위 블록 안에서 외부 라이브러리 DOM을 선택자로 잡습니다):**
 
 ```css
-.pg_treePanel__root {
-	& .ant-tree-node-content-wrapper {
+.pg_products__sidebar {
+	& .MuiTreeItem-content {
 		border-radius: 4px;
 	}
 
-	& .ant-tree-title {
+	& .MuiTreeItem-label {
 		color: #8c8c8c;
 	}
 }
@@ -99,7 +99,7 @@ tags: ownership, scope, third-party
 **Incorrect (최상위 블록을 열지 않고 바깥에서 이어 씁니다):**
 
 ```css
-.pg_treePanel__toolbar > .ant-btn > .ant-btn-icon {
+.pg_products__sidebarToolbar > .MuiButton-root > .MuiButton-startIcon {
 	color: #8c8c8c;
 }
 ```
@@ -107,8 +107,8 @@ tags: ownership, scope, third-party
 **Correct (소유자 API로 해결할 수 없으면 내 최상위 블록 안에서 선택합니다):**
 
 ```css
-.pg_treePanel__toolbar {
-	& > .ant-btn > .ant-btn-icon {
+.pg_products__sidebarToolbar {
+	& > .MuiButton-root > .MuiButton-startIcon {
 		color: #8c8c8c;
 	}
 }

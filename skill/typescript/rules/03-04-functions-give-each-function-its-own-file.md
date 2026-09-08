@@ -72,39 +72,39 @@ export const toProductSaveRequest = (values: ProductFormValues) => {
 
 ```txt
 page/report/_function/
-├── to-sales-overview.ts
-│     toSalesOverview      내보낸 함수
-│     toTrendChart         toSalesOverview 가 차트 둘에서 부름
-│     toTrendPoints        toTrendChart 가 두 자리에서 부름
-└── to-sales-filter-request.ts
+├── to-product-overview.ts
+│     toProductOverview      내보낸 함수
+│     toTrendChart           toProductOverview 가 차트 둘에서 부름
+│     toTrendPoints          toTrendChart 가 두 자리에서 부름
+└── to-product-filter-request.ts
 ```
 
 **Correct (자기만 쓰는 보조가 생긴 대표 함수는 자기 이름 폴더를 갖고 보조는 `_` 파일입니다):**
 
 ```txt
 page/report/_function/
-├── to-sales-overview/           자기만 쓰는 보조가 있어 폴더
-│   ├── to-sales-overview.ts     대표. 폴더와 같은 이름
-│   ├── _to-trend-chart.ts       toSalesOverview 만 부름
-│   └── _to-trend-points.ts      _to-trend-chart 만 부름. 폴더 안은 평평
-└── to-sales-filter-request.ts   보조가 없어 파일 하나
+├── to-product-overview/           자기만 쓰는 보조가 있어 폴더
+│   ├── to-product-overview.ts     대표. 폴더와 같은 이름
+│   ├── _to-trend-chart.ts         toProductOverview 만 부름
+│   └── _to-trend-points.ts        _to-trend-chart 만 부름. 폴더 안은 평평
+└── to-product-filter-request.ts   보조가 없어 파일 하나
 ```
 
 **Incorrect (한 대표만 부르는 보조를 `_function` 바로 아래에 내보내 둡니다):**
 
 ```txt
 page/report/_function/
-├── to-sales-overview.ts
-├── to-sales-digest.ts
-└── to-trend-chart.ts            toSalesOverview 만 부르는데 소유자의 공개 면에 놓임
+├── to-product-overview.ts
+├── to-product-digest.ts
+└── to-trend-chart.ts            toProductOverview 만 부르는데 소유자의 공개 면에 놓임
 ```
 
 **Correct (두 대표가 부르게 된 뒤에 `_function` 바로 아래로 올리고 `_`를 뗍니다):**
 
 ```txt
 page/report/_function/
-├── to-sales-overview/
-│   └── to-sales-overview.ts
-├── to-sales-digest.ts           toTrendChart 를 함께 부르기 시작함
-└── to-trend-chart.ts            대표 둘이 불러 공개 면으로 올라옴
+├── to-product-overview/
+│   └── to-product-overview.ts
+├── to-product-digest.ts           toTrendChart 를 함께 부르기 시작함
+└── to-trend-chart.ts              대표 둘이 불러 공개 면으로 올라옴
 ```

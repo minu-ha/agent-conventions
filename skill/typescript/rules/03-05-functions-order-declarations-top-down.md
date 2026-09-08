@@ -42,7 +42,7 @@ export interface ToSummaryRowsParams {
 	/**
 	 * 요약 조회 응답
 	 */
-	response: SalesSummaryResponse;
+	response: OrderSummaryResponse;
 }
 ```
 
@@ -57,7 +57,7 @@ export interface ToSummaryRowsParams {
 	/**
 	 * 요약 조회 응답
 	 */
-	response: SalesSummaryResponse;
+	response: OrderSummaryResponse;
 }
 
 /**

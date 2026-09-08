@@ -24,21 +24,21 @@ CSS 파일마다 고유한 범위_식별자를 하나씩 씁니다. 같은 범�
 **Incorrect (이미 다른 소유자가 쓰는 `scope_slug`를 재사용합니다):**
 
 ```txt
-/* catalog/index route */
-pg_catalogIndex__header
+/* products route */
+pg_products__header
 
-/* dashboard/index route */
-pg_catalogIndex__header
+/* order/index route */
+pg_products__header
 ```
 
 **Correct (소유자가 다르면 별도 식별자를 부여합니다):**
 
 ```txt
-/* catalog/index route */
-pg_catalogIndex__header
+/* products route */
+pg_products__header
 
-/* dashboard/index route */
-pg_dashboardIndex__header
+/* order/index route */
+pg_orderIndex__header
 ```
 
 **Incorrect (하위 컴포넌트의 CSS 파일이 부모 식별자를 그대로 씁니다):**

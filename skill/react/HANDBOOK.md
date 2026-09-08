@@ -172,19 +172,19 @@ export const PgDeleteProductButton = () => {
 **Incorrect (화면 타입 · 훅과 무관한 부품을 사용 횟수만으로 화면 레이어에 둡니다):**
 
 ```tsx
-// page/detail/_pg-sales-legend-glyph.tsx
+// page/detail/_pg-product-status-badge.tsx
 // 프롭스가 도메인 타입 하나만 받고 훅도 부르지 않는다. 이 화면에서만 쓴다는 이유로 남아 있다.
-export const PgSalesLegendGlyph = (props: PgSalesLegendGlyphProps) => {
-	return <svg className={clsx("pg_salesLegendGlyph__root")}>{props.children}</svg>;
+export const PgProductStatusBadge = (props: PgProductStatusBadgeProps) => {
+	return <svg className={clsx("pg_productStatusBadge__root")}>{props.children}</svg>;
 };
 ```
 
 **Correct (화면 타입 · 훅과 무관한 도메인 부품은 `widget`에 둡니다):**
 
 ```tsx
-// component/widget/sales-legend-glyph/wg-sales-legend-glyph.tsx
-export const WgSalesLegendGlyph = (props: WgSalesLegendGlyphProps) => {
-	return <svg className={clsx("wg_salesLegendGlyph__root")}>{props.children}</svg>;
+// component/widget/product-status-badge/wg-product-status-badge.tsx
+export const WgProductStatusBadge = (props: WgProductStatusBadgeProps) => {
+	return <svg className={clsx("wg_productStatusBadge__root")}>{props.children}</svg>;
 };
 ```
 
@@ -206,9 +206,9 @@ export const UiLineChart = (props: UiLineChartProps) => {
 	return <svg className={clsx("ui_lineChart__root")}>{props.children}</svg>;
 };
 
-// component/widget/sales-window-chart/wg-sales-window-chart.tsx
-export const WgSalesWindowChart = (props: WgSalesWindowChartProps) => {
-	return <UiLineChart points={toChartPoints(props.readings)} />;
+// component/widget/product-trend-chart/wg-product-trend-chart.tsx
+export const WgProductTrendChart = (props: WgProductTrendChartProps) => {
+	return <UiLineChart points={toChartPoints(props.dailyCounts)} />;
 };
 ```
 
@@ -244,18 +244,18 @@ export const WgSalesWindowChart = (props: WgSalesWindowChartProps) => {
 **Incorrect (화면 컴포넌트의 접두사를 누락합니다):**
 
 ```tsx
-// page/detail/sales-trend-panel.tsx
-export const SalesTrendPanel = (props: SalesTrendPanelProps) => {
-	return <section className={clsx("pg_salesTrendPanel__root")}>{props.children}</section>;
+// page/detail/product-table-section.tsx
+export const ProductTable = (props: ProductTableProps) => {
+	return <section className={clsx("pg_productTableSection__root")}>{props.children}</section>;
 };
 ```
 
 **Correct (진입 파일이 아닌 파일에는 `_`를 붙이고 파일명과 심볼에 레이어 접두사를 씁니다):**
 
 ```tsx
-// page/detail/_pg-sales-trend-panel.tsx
-export const PgSalesTrendPanel = (props: PgSalesTrendPanelProps) => {
-	return <section className={clsx("pg_salesTrendPanel__root")}>{props.children}</section>;
+// page/detail/_pg-product-table-section.tsx
+export const PgProductTableSection = (props: PgProductTableSectionProps) => {
+	return <section className={clsx("pg_productTableSection__root")}>{props.children}</section>;
 };
 ```
 
@@ -371,12 +371,12 @@ page/detail/
 ├── constants/
 ├── utils/
 ├── helpers/
-└── sales-trend-panel/
-    ├── pg-sales-trend-panel.tsx
-    └── detection/
-        ├── pg-detection.tsx
+└── product-table-section/
+    ├── pg-product-table-section.tsx
+    └── review/
+        ├── pg-review.tsx
         └── _function/
-            └── to-detection-rows.ts
+            └── to-review-rows.ts
 ```
 
 **Correct (필요한 역할 폴더만 만들고 하위 컴포넌트는 파일로 둡니다):**
@@ -385,21 +385,21 @@ page/detail/
 page/detail/
 ├── pg-detail.tsx
 ├── pg-detail.css
-├── _pg-summary-band.tsx           자기만 쓰는 파일이 없어 파일로 둠
-├── _pg-summary-band.css
+├── _pg-product-summary.tsx            자기만 쓰는 파일이 없어 파일로 둠
+├── _pg-product-summary.css
 ├── _function/
 │   ├── to-product-summary.ts
-│   └── to-sales-chart/                자기만 쓰는 보조가 있어 폴더
-│       ├── to-sales-chart.ts
-│       └── _to-chart-window.ts        toSalesChart 만 부름
+│   └── to-trend-chart/                자기만 쓰는 보조가 있어 폴더
+│       ├── to-trend-chart.ts
+│       └── _to-chart-range.ts         toTrendChart 만 부름
 ├── _type/
 │   └── detail-view-model.ts
-└── sales-trend-panel/             자기만 쓰는 파일이 있어 하위 소유자 폴더가 됨
-    ├── pg-sales-trend-panel.tsx
-    ├── pg-sales-trend-panel.css
-    ├── _pg-detection-section.tsx
+└── product-table-section/             자기만 쓰는 파일이 있어 하위 소유자 폴더가 됨
+    ├── pg-product-table-section.tsx
+    ├── pg-product-table-section.css
+    ├── _pg-review-section.tsx
     └── _function/
-        └── to-chart-viewport.ts
+        └── to-chart-range.ts
 ```
 
 ### 1.4 Keep Component Imports Flowing Downward
@@ -451,7 +451,7 @@ page/detail/
 **Incorrect (다른 폴더의 `_` 컴포넌트 파일을 가져옵니다):**
 
 ```tsx
-// page/detail/sales-trend-panel/pg-sales-trend-panel.tsx
+// page/detail/product-table-section/pg-product-table-section.tsx
 import {PgSectionHeading} from "@/page/detail/_pg-section-heading";
 ```
 
@@ -460,14 +460,14 @@ import {PgSectionHeading} from "@/page/detail/_pg-section-heading";
 ```tsx
 // page/detail/pg-detail.tsx
 import {PgSectionHeading} from "@/page/detail/_pg-section-heading";
-import {PgSalesTrendPanel} from "@/page/detail/sales-trend-panel/pg-sales-trend-panel";
-import {PgSummaryBand} from "@/page/detail/summary-band/pg-summary-band";
+import {PgProductTableSection} from "@/page/detail/product-table-section/pg-product-table-section";
+import {PgProductSummary} from "@/page/detail/product-summary/pg-product-summary";
 
 export const PgDetail = () => {
 	return (
 		<main className={clsx("pg_detail__root")}>
-			<PgSalesTrendPanel heading={<PgSectionHeading title="매출 추이" />} />
-			<PgSummaryBand heading={<PgSectionHeading title="요약" />} />
+			<PgProductTableSection heading={<PgSectionHeading title="최근 주문" />} />
+			<PgProductSummary heading={<PgSectionHeading title="요약" />} />
 		</main>
 	);
 };
@@ -477,19 +477,19 @@ export const PgDetail = () => {
 
 ```tsx
 // page/index/pg-index.tsx
-import {PgSalesTrendPanel} from "@/page/detail/sales-trend-panel/pg-sales-trend-panel";
+import {PgProductTableSection} from "@/page/detail/product-table-section/pg-product-table-section";
 ```
 
 **Correct (두 라우트가 공유하는 화면 독립 컴포넌트는 공용 레이어에 둡니다):**
 
 ```tsx
-// component/widget/sales-trend-panel/wg-sales-trend-panel.tsx
-export const WgSalesTrendPanel = (props: WgSalesTrendPanelProps) => {
-	return <section className={clsx("wg_salesTrendPanel__root")}>{props.children}</section>;
+// component/widget/product-table/wg-product-table.tsx
+export const WgProductTable = (props: WgProductTableProps) => {
+	return <section className={clsx("wg_productTable__root")}>{props.children}</section>;
 };
 
 // page/index/pg-index.tsx
-import {WgSalesTrendPanel} from "@/component/widget/sales-trend-panel/wg-sales-trend-panel";
+import {WgProductTable} from "@/component/widget/product-table/wg-product-table";
 ```
 
 **Incorrect (`ui`가 `widget`을 가져옵니다):**
@@ -518,14 +518,14 @@ export interface ChartSeries {
 	points: ChartPoint[];
 }
 
-// page/detail/sales-trend-panel/_function/to-chart-option.ts
+// page/detail/product-table-section/_function/to-chart-option.ts
 import type {ChartSeries} from "@/type/chart-series";
 ```
 
 **Correct (역할 폴더의 파일은 레이어 방향만 지키면 밖에서도 가져옵니다):**
 
 ```ts
-// page/detail/sales-trend-panel/_function/to-chart-option.ts
+// page/detail/product-table-section/_function/to-chart-option.ts
 import type {ChartSeries} from "@/component/ui/chart/_type/chart-series";
 import {chart_series_line} from "@/component/ui/chart/_constant/series";
 ```
@@ -975,7 +975,7 @@ useEffect(() => {
 
 ```tsx
 const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
-	await mutationProductSave.mutateAsync({data: toProductSaveRequest(formValues)});
+	await mutationProductSave.mutateAsync({data: toProductSaveRequest(props.formValues)});
 	void navigate("/products");
 };
 ```
@@ -1002,7 +1002,7 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => 
 		return;
 	}
 
-	mutationProductSave.mutate({data: toProductSaveRequest(formValues)});
+	mutationProductSave.mutate({data: toProductSaveRequest(props.formValues)});
 };
 ```
 
@@ -1017,7 +1017,7 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => 
 		return;
 	}
 
-	mutationProductSave.mutate({data: toProductSaveRequest(formValues)});
+	mutationProductSave.mutate({data: toProductSaveRequest(props.formValues)});
 };
 
 <UiButton disabled={mutationProductSave.isPending} onClick={handleSaveButtonClick}>
@@ -1040,7 +1040,7 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = async (_even
 		const uploaded = await mutationAttachmentUpload.mutateAsync({files: draftFiles});
 
 		await mutationProductSave.mutateAsync({
-			data: toProductSaveRequest(formValues, uploaded.attachmentIds),
+			data: toProductSaveRequest(props.formValues, uploaded.attachmentIds),
 		});
 
 		void navigate("/products");
@@ -2454,9 +2454,9 @@ return (
 ```tsx
 // 사이드바: 접어 둔 노드와 스크롤 위치를 자기 상태로 갖는다
 const PgProductSidebar = () => {
-	const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
+	const [expandedItems, setExpandedItems] = useState<string[]>([]);
 
-	return <UiTree expandedKeys={expandedKeys} onExpand={setExpandedKeys} />;
+	return <UiTree expandedItems={expandedItems} onExpandedItemsChange={setExpandedItems} />;
 };
 
 // 사이드바를 소유한 화면: 닫으면 해제돼서 접어 둔 노드와 스크롤 위치가 사라진다
@@ -2468,9 +2468,9 @@ return isSidebarOpen && <PgProductSidebar />;
 ```tsx
 // 사이드바: 접어 둔 노드와 스크롤 위치를 자기 상태로 갖는다
 const PgProductSidebar = () => {
-	const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
+	const [expandedItems, setExpandedItems] = useState<string[]>([]);
 
-	return <UiTree expandedKeys={expandedKeys} onExpand={setExpandedKeys} />;
+	return <UiTree expandedItems={expandedItems} onExpandedItemsChange={setExpandedItems} />;
 };
 
 // 사이드바를 소유한 화면: 닫아도 상태와 DOM을 보존하고 이펙트는 정리한다
@@ -2797,7 +2797,13 @@ export const PgOrderToolbar = () => {
 		setIsPanelOpen(true);
 	};
 
-	return <section className={clsx("pg_orderToolbar__root")}>{props.children}</section>;
+	return (
+		<section className={clsx("pg_orderToolbar__root")}>
+			<UiButton onClick={handleClearButtonClick}>비우기</UiButton>
+			<UiButton onClick={handlePanelOpenButtonClick}>필터</UiButton>
+			{isPanelOpen && <PgOrderFilterPanel />}
+		</section>
+	);
 };
 ```
 
@@ -3012,7 +3018,7 @@ export const PgProductListSection = () => {
 	/**
 	 * 폼 값을 전송 형태로 바꿔 저장만 부르고, 저장 뒤 흐름은 mutation 콜백이 이어 간다
 	 */
-	const handleProductSave: UiTableProps["onSave"] = () => {
+	const handleProductSave: UiTableProps["onSave"] = (formValues) => {
 		mutationProductSave.mutate({data: toProductSaveRequest(formValues)});
 	};
 
@@ -3205,7 +3211,7 @@ const PgProductDetailPanel = (props: PgProductDetailPanelProps) => {
 // page/products/_pg-product-tree-section.tsx
 export const PgProductTreeSection = () => {
 	const [urlParams, setUrlParams] = useQueryStates(productUrlParsers);
-	const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
+	const [expandedItems, setExpandedItems] = useState<string[]>([]);
 
 	/**
 	 * 사이드바가 그릴 분류 노드만 남긴다. 트리 펼침 상태는 이 섹션이 따로 들고 있다
@@ -3216,23 +3222,14 @@ export const PgProductTreeSection = () => {
 	);
 
 	/**
-	 * UiTree가 넘기는 key 타입이 넓어서 문자열로 좁혀 담는다
-	 */
-	const handleTreeExpand: UiTreeProps["onExpand"] = (keys) => {
-		setExpandedKeys(keys.map(String));
-	};
-
-	/**
 	 * 고른 분류를 URL에 적어 두어 새로 고침해도 같은 화면이 열리게 한다
 	 */
-	const handleTreeSelect: UiTreeProps["onSelect"] = (keys) => {
-		const selectedKey = keys[0];
-
-		if (selectedKey === undefined) {
+	const handleTreeSelectedItemsChange: UiTreeProps["onSelectedItemsChange"] = (itemId) => {
+		if (itemId === null) {
 			return;
 		}
 
-		void setUrlParams({categoryId: String(selectedKey)});
+		void setUrlParams({categoryId: itemId});
 	};
 
 	return (
@@ -3240,10 +3237,10 @@ export const PgProductTreeSection = () => {
 			{responseProductTreeSuspense.data.categoryNodes.length > 0 && (
 				<UiTree
 					items={responseProductTreeSuspense.data.categoryNodes}
-					expandedKeys={expandedKeys}
-					selectedKeys={urlParams.categoryId ? [urlParams.categoryId] : []}
-					onExpand={handleTreeExpand}
-					onSelect={handleTreeSelect}
+					expandedItems={expandedItems}
+					selectedItems={urlParams.categoryId}
+					onExpandedItemsChange={setExpandedItems}
+					onSelectedItemsChange={handleTreeSelectedItemsChange}
 				/>
 			)}
 			{responseProductTreeSuspense.data.categoryNodes.length === 0 && <UiEmpty description="분류가 없습니다" />}
@@ -3811,7 +3808,7 @@ export const UiTabsRoot = (props: UiTabsRootProps) => {
 
 | 작업 | 기준 |
 | --- | --- |
-| 도메인 판별 | 초기화 · 레이아웃 등 한 경계에 모으고 화면은 `accessStore.canEditRecord` 같은 결과만 읽습니다 |
+| 도메인 판별 | 초기화 · 레이아웃 등 한 경계에 모으고 화면은 `permissionStore.canEditProduct` 같은 결과만 읽습니다 |
 | 스토어 채우기 | 쿼리에는 `onSuccess` 같은 성공 콜백이 없으므로 소유자가 분명한 경계의 `useEffect`에서 처리합니다 |
 | 이펙트 예외 근거 | `state-calculate-derived-values-during-render`의 예외이므로 `typescript/docs-justify-convention-exceptions-with-a-reason-comment`에 따라 공유 이유를 남깁니다 |
 | 이펙트의 스토어 접근 | 선택자로 `set` 함수만 꺼내고 값 의존성은 그대로 적습니다 |
@@ -3822,20 +3819,20 @@ export const UiTabsRoot = (props: UiTabsRootProps) => {
 **Incorrect (개별 화면이 도메인 판별을 수행하고 스토어에 저장합니다):**
 
 ```ts
-const accessStore = useAccessStore();
-const canEditRecord = responseRecordGetItemSuspense.data.ownerId === currentUserId;
+const permissionStore = usePermissionStore();
+const canEditProduct = responseProductGetItemSuspense.data.ownerId === currentUserId;
 
 useEffect(() => {
-	accessStore.setCanEditRecord(canEditRecord);
-}, [accessStore, canEditRecord]);
+	permissionStore.setCanEditProduct(canEditProduct);
+}, [permissionStore, canEditProduct]);
 ```
 
 **Correct (화면은 스토어에 채워진 결과만 참조합니다):**
 
 ```ts
-const accessStore = useAccessStore();
+const permissionStore = usePermissionStore();
 
-if (accessStore.canEditRecord) {
+if (permissionStore.canEditProduct) {
 	// ...
 }
 ```
@@ -3844,29 +3841,29 @@ if (accessStore.canEditRecord) {
 
 ```ts
 // page/_layout/pg-app-layout.tsx
-const accessStore = useAccessStore();
+const permissionStore = usePermissionStore();
 
 /**
  * 부트스트랩 응답의 권한 목록으로 수정 가능 여부를 채운다
  */
 useEffect(() => {
-	accessStore.setCanEditRecord(responseAccessBootstrapSuspense.data.capabilities.includes("record:edit"));
-}, [accessStore, responseAccessBootstrapSuspense.data]);
+	permissionStore.setCanEditProduct(responseAccessBootstrapSuspense.data.capabilities.includes("product:edit"));
+}, [permissionStore, responseAccessBootstrapSuspense.data]);
 ```
 
 **Correct (초기화 경계에서 스토어를 채우고 스토어에서는 `set` 함수만 선택합니다):**
 
 ```ts
 // page/_layout/pg-app-layout.tsx
-const setCanEditRecord = useAccessStore((state) => state.setCanEditRecord);
+const setCanEditProduct = usePermissionStore((state) => state.setCanEditProduct);
 
 /**
  * 부트스트랩 응답의 권한 목록으로 수정 가능 여부를 채운다. 여러 화면과 라우트 가드가 이 결과를 읽는다
  */
 useEffect(() => {
 	// state-calculate-derived-values-during-render 예외: 화면 여럿이 같은 판단을 읽어 경계에서 한 번 채운다
-	setCanEditRecord(responseAccessBootstrapSuspense.data.capabilities.includes("record:edit"));
-}, [setCanEditRecord, responseAccessBootstrapSuspense.data]);
+	setCanEditProduct(responseAccessBootstrapSuspense.data.capabilities.includes("product:edit"));
+}, [setCanEditProduct, responseAccessBootstrapSuspense.data]);
 ```
 
 ### 8.4 Use Functional setState Updates When Based on Previous State
@@ -3942,41 +3939,41 @@ DOM 이벤트 매개변수나 커링을 덧붙이지 않고,
 **Incorrect (최신 콜백을 읽기 위해 `ref`를 직접 동기화합니다):**
 
 ```tsx
-const onMessageRef = useRef(onMessage);
+const onChangeRef = useRef(props.onChange);
 
 useEffect(() => {
-	onMessageRef.current = onMessage;
-}, [onMessage]);
+	onChangeRef.current = props.onChange;
+}, [props.onChange]);
 
 useEffect(() => {
-	const unsubscribe = socket.subscribe((message) => {
-		onMessageRef.current(message);
+	const unsubscribe = subscribeToProductChanges(props.productId, (change) => {
+		onChangeRef.current(change);
 	});
 
 	return unsubscribe;
-}, [socket]);
+}, [props.productId]);
 ```
 
 **Correct (비반응형 콜백은 `useEffectEvent`로 분리합니다):**
 
 ```tsx
 /**
- * socket message 수신 시 최신 onMessage 로직 실행
+ * 상품 변경 수신 시 최신 onChange 로직 실행
  */
-const handleMessage = useEffectEvent((message: SocketMessage) => {
-	onMessage(message);
+const handleProductChange = useEffectEvent((change: ProductChange) => {
+	props.onChange(change);
 });
 
 /**
- * socket subscription lifecycle 유지
+ * 상품 변경 구독 생명주기 유지
  */
 useEffect(() => {
-	const unsubscribe = socket.subscribe((message) => {
-		handleMessage(message);
+	const unsubscribe = subscribeToProductChanges(props.productId, (change) => {
+		handleProductChange(change);
 	});
 
 	return unsubscribe;
-}, [socket]);
+}, [props.productId]);
 ```
 
 ### 8.6 Name URL State Bindings as a Set
@@ -4348,14 +4345,14 @@ useEffect(() => {
 **Incorrect (무거운 초기값 계산이 렌더마다 반복됩니다):**
 
 ```tsx
-const [searchIndex] = useState(toSearchIndex(product_catalog));
+const [searchIndex] = useState(toSearchIndex(product_list));
 const [draftFilter] = useState(parseStoredProductFilter(localStorage.getItem("product-filter")));
 ```
 
 **Correct (초기화 함수로 넘겨 이후 렌더에서 다시 계산하지 않습니다):**
 
 ```tsx
-const [searchIndex] = useState(() => toSearchIndex(product_catalog));
+const [searchIndex] = useState(() => toSearchIndex(product_list));
 // 서버 렌더링을 하지 않는 클라이언트 전용 화면에서만 저장소를 초기값으로 읽는다
 const [draftFilter] = useState(() => parseStoredProductFilter(localStorage.getItem("product-filter")));
 ```
@@ -4680,16 +4677,16 @@ JSX 자식 자리의 주석은 여러 줄 블록으로 씁니다.
 **Incorrect (여러 줄 블록 셋 중 하나에만 주석을 둡니다):**
 
 ```tsx
-<section className={clsx("wg_driverTable__root")}>
+<section className={clsx("wg_orderTable__root")}>
 	{/**
 	 * 헤더 행. 정렬 기준과 단위를 보여 준다
 	 */}
-	<WgDriverTableHeader sort={sort} />
+	<WgOrderTableHeader sort={sort} />
 	{rows.map((row) => (
-		<WgDriverTableRow key={row.id} row={row} />
+		<WgOrderTableRow key={row.id} row={row} />
 	))}
 	{expandedRows.map((row) => (
-		<WgDriverTableChildRow key={row.id} row={row} />
+		<WgOrderTableChildRow key={row.id} row={row} />
 	))}
 </section>;
 ```
@@ -4697,22 +4694,22 @@ JSX 자식 자리의 주석은 여러 줄 블록으로 씁니다.
 **Correct (여러 줄 블록마다 주석을 두어 블록과 함께 접히게 합니다):**
 
 ```tsx
-<section className={clsx("wg_driverTable__root")}>
+<section className={clsx("wg_orderTable__root")}>
 	{/**
 	 * 헤더 행. 정렬 기준과 단위를 보여 준다
 	 */}
-	<WgDriverTableHeader sort={sort} />
+	<WgOrderTableHeader sort={sort} />
 	{/**
-	 * 드라이버 행. 상세 버튼과 accordion 을 가진 기본 행
+	 * 주문 행. 상세 버튼과 accordion 을 가진 기본 행
 	 */}
 	{rows.map((row) => (
-		<WgDriverTableRow key={row.id} row={row} />
+		<WgOrderTableRow key={row.id} row={row} />
 	))}
 	{/**
-	 * 펼친 자식 driver 행. 상세 버튼과 accordion 없이 같은 칸 구성을 반복한다
+	 * 펼친 자식 주문 행. 상세 버튼과 accordion 없이 같은 칸 구성을 반복한다
 	 */}
 	{expandedRows.map((row) => (
-		<WgDriverTableChildRow key={row.id} row={row} />
+		<WgOrderTableChildRow key={row.id} row={row} />
 	))}
 </section>;
 ```
@@ -4753,7 +4750,7 @@ JSX 자식 자리의 주석은 여러 줄 블록으로 씁니다.
 
 라우트가 늘면 해당 `overrides`도 추가합니다.
 `overrides`는 규칙 옵션을 통째로 바꾸므로 기본 설정의 경로 패턴을 각 항목에 함께 적습니다.
-소유자 경계는 import 문자열만으로 판정하지 못합니다. `@/page/detail/_pg-summary-band`도 가져오는 파일의 위치에 따라
+소유자 경계는 import 문자열만으로 판정하지 못합니다. `@/page/detail/_pg-product-summary`도 가져오는 파일의 위치에 따라
 허용 여부가 달라지므로, 위치를 비교하는 `eslint` 규칙이나 리뷰에서 확인합니다.
 
 | 켜지 않는 규칙 | 이유 |

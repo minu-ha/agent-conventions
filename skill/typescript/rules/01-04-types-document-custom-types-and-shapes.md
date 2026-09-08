@@ -65,16 +65,6 @@ export interface PublishResult {
 	 */
 	published: boolean;
 }
-
-/**
- * 게시 결과 스키마
- */
-const publishResultSchema = z.object({
-	/**
-	 * 게시 대상 문서 ID
-	 */
-	documentId: z.string(),
-});
 ```
 
 **Correct (객체형 상수는 헤더만 달고 키에는 달지 않습니다):**

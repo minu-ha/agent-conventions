@@ -34,27 +34,27 @@ tags: tokens, variables, reuse
 **Incorrect (한 파일 안 반복을 조상에 선언한 지역 변수로 감쌉니다):**
 
 ```css
-.pg_catalogIndex__root {
-	--pg-catalog-gap: 12px;
+.pg_products__root {
+	--pg-products-gap: 12px;
 }
 
-.pg_catalogIndex__toolbar {
-	gap: var(--pg-catalog-gap, 12px);
+.pg_products__toolbar {
+	gap: var(--pg-products-gap, 12px);
 }
 
-.pg_catalogIndex__footer {
-	gap: var(--pg-catalog-gap, 12px);
+.pg_products__footer {
+	gap: var(--pg-products-gap, 12px);
 }
 ```
 
 **Correct (한 파일 안 반복은 값을 그대로 둡니다):**
 
 ```css
-.pg_catalogIndex__toolbar {
+.pg_products__toolbar {
 	gap: 12px;
 }
 
-.pg_catalogIndex__footer {
+.pg_products__footer {
 	gap: 12px;
 }
 ```
@@ -62,15 +62,15 @@ tags: tokens, variables, reuse
 **Incorrect (상태를 전달하려고 지역 변수를 만듭니다):**
 
 ```css
-.pg_catalogIndex__rowBadge {
-	border-color: var(--pg-catalog-row-accent);
+.pg_products__rowBadge {
+	border-color: var(--pg-products-row-accent);
 }
 
-.pg_catalogIndex__row {
-	--pg-catalog-row-accent: transparent;
+.pg_products__row {
+	--pg-products-row-accent: transparent;
 
 	&:hover {
-		--pg-catalog-row-accent: #1677ff;
+		--pg-products-row-accent: #1677ff;
 	}
 }
 ```
@@ -78,12 +78,12 @@ tags: tokens, variables, reuse
 **Correct (상태 전달은 지역 변수 없이 결합자 하나로 풉니다):**
 
 ```css
-.pg_catalogIndex__rowBadge {
+.pg_products__rowBadge {
 	border: 1px solid transparent;
 }
 
-.pg_catalogIndex__row {
-	&:hover .pg_catalogIndex__rowBadge {
+.pg_products__row {
+	&:hover .pg_products__rowBadge {
 		border-color: #1677ff;
 	}
 }
@@ -92,13 +92,13 @@ tags: tokens, variables, reuse
 **Incorrect (여러 파일이 쓰는 값을 각 파일에 하드코딩합니다):**
 
 ```css
-/* pg-catalog-index.css */
-.pg_catalogIndex__row {
+/* pg-products.css */
+.pg_products__row {
 	background: #f5f5f5;
 }
 
-/* pg-catalog-detail.css */
-.pg_catalogDetail__row {
+/* pg-product-detail.css */
+.pg_productDetail__row {
 	background: #f5f5f5;
 }
 ```
@@ -111,13 +111,13 @@ tags: tokens, variables, reuse
 	--app-color-fill-muted: #f5f5f5;
 }
 
-/* pg-catalog-index.css */
-.pg_catalogIndex__row {
+/* pg-products.css */
+.pg_products__row {
 	background: var(--app-color-fill-muted);
 }
 
-/* pg-catalog-detail.css */
-.pg_catalogDetail__row {
+/* pg-product-detail.css */
+.pg_productDetail__row {
 	background: var(--app-color-fill-muted);
 }
 ```

@@ -35,7 +35,7 @@ tags: values, inline-style
 **Incorrect (인라인으로 꾸밉니다):**
 
 ```tsx
-<section className={clsx("pg_report__summary")} style={{marginTop: 16, color: isCritical ? "#c00" : undefined}}>
+<section className={clsx("pg_orders__summary")} style={{marginTop: 16, color: isCritical ? "#c00" : undefined}}>
 	{summary}
 </section>
 ```
@@ -43,17 +43,17 @@ tags: values, inline-style
 **Correct (스타일시트에 두고 수정자로 가릅니다):**
 
 ```tsx
-<section className={clsx("pg_report__summary", isCritical && "pg_report__summary--critical")}>
+<section className={clsx("pg_orders__summary", isCritical && "pg_orders__summary--critical")}>
 	{summary}
 </section>
 ```
 
 ```css
-.pg_report__summary {
+.pg_orders__summary {
 	margin-block-start: 16px;
 }
 
-.pg_report__summary--critical {
+.pg_orders__summary--critical {
 	color: var(--app-color-text-danger);
 }
 ```
@@ -62,14 +62,14 @@ tags: values, inline-style
 
 ```tsx
 <div
-	className={clsx("pg_report__virtualRow")}
-	style={{ "--pg-report-row-offset": `${rowOffset}px` } as CSSProperties}
+	className={clsx("pg_orders__virtualRow")}
+	style={{ "--pg-orders-row-offset": `${rowOffset}px` } as CSSProperties}
 />
 ```
 
 ```css
-.pg_report__virtualRow {
+.pg_orders__virtualRow {
 	position: absolute;
-	transform: translateY(var(--pg-report-row-offset, 0));
+	transform: translateY(var(--pg-orders-row-offset, 0));
 }
 ```

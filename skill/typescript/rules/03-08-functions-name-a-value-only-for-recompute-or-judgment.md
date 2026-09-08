@@ -65,10 +65,10 @@ const toRowClassNames = (row: Row): string[] => {
 **Incorrect (돌려주기만 할 값을 변수로 뺍니다):**
 
 ```ts
-const toNextIteration = (iteration: number): number => {
-	const nextIteration = iteration + 1;
+const toNextPage = (page: number): number => {
+	const nextPage = page + 1;
 
-	return nextIteration;
+	return nextPage;
 };
 
 const toRowLabel = (row: Row): string => {
@@ -81,8 +81,8 @@ const toRowLabel = (row: Row): string => {
 **Correct (이름을 붙이지 않고 그대로 돌려줍니다):**
 
 ```ts
-const toNextIteration = (iteration: number): number => {
-	return iteration + 1;
+const toNextPage = (page: number): number => {
+	return page + 1;
 };
 
 const toRowLabel = (row: Row): string => {

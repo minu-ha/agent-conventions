@@ -54,7 +54,7 @@ tags: ownership
 **Incorrect (다른 폴더의 `_` 컴포넌트 파일을 가져옵니다):**
 
 ```tsx
-// page/detail/sales-trend-panel/pg-sales-trend-panel.tsx
+// page/detail/product-table-section/pg-product-table-section.tsx
 import {PgSectionHeading} from "@/page/detail/_pg-section-heading";
 ```
 
@@ -63,14 +63,14 @@ import {PgSectionHeading} from "@/page/detail/_pg-section-heading";
 ```tsx
 // page/detail/pg-detail.tsx
 import {PgSectionHeading} from "@/page/detail/_pg-section-heading";
-import {PgSalesTrendPanel} from "@/page/detail/sales-trend-panel/pg-sales-trend-panel";
-import {PgSummaryBand} from "@/page/detail/summary-band/pg-summary-band";
+import {PgProductTableSection} from "@/page/detail/product-table-section/pg-product-table-section";
+import {PgProductSummary} from "@/page/detail/product-summary/pg-product-summary";
 
 export const PgDetail = () => {
 	return (
 		<main className={clsx("pg_detail__root")}>
-			<PgSalesTrendPanel heading={<PgSectionHeading title="매출 추이" />} />
-			<PgSummaryBand heading={<PgSectionHeading title="요약" />} />
+			<PgProductTableSection heading={<PgSectionHeading title="최근 주문" />} />
+			<PgProductSummary heading={<PgSectionHeading title="요약" />} />
 		</main>
 	);
 };
@@ -80,19 +80,19 @@ export const PgDetail = () => {
 
 ```tsx
 // page/index/pg-index.tsx
-import {PgSalesTrendPanel} from "@/page/detail/sales-trend-panel/pg-sales-trend-panel";
+import {PgProductTableSection} from "@/page/detail/product-table-section/pg-product-table-section";
 ```
 
 **Correct (두 라우트가 공유하는 화면 독립 컴포넌트는 공용 레이어에 둡니다):**
 
 ```tsx
-// component/widget/sales-trend-panel/wg-sales-trend-panel.tsx
-export const WgSalesTrendPanel = (props: WgSalesTrendPanelProps) => {
-	return <section className={clsx("wg_salesTrendPanel__root")}>{props.children}</section>;
+// component/widget/product-table/wg-product-table.tsx
+export const WgProductTable = (props: WgProductTableProps) => {
+	return <section className={clsx("wg_productTable__root")}>{props.children}</section>;
 };
 
 // page/index/pg-index.tsx
-import {WgSalesTrendPanel} from "@/component/widget/sales-trend-panel/wg-sales-trend-panel";
+import {WgProductTable} from "@/component/widget/product-table/wg-product-table";
 ```
 
 **Incorrect (`ui`가 `widget`을 가져옵니다):**
@@ -121,14 +121,14 @@ export interface ChartSeries {
 	points: ChartPoint[];
 }
 
-// page/detail/sales-trend-panel/_function/to-chart-option.ts
+// page/detail/product-table-section/_function/to-chart-option.ts
 import type {ChartSeries} from "@/type/chart-series";
 ```
 
 **Correct (역할 폴더의 파일은 레이어 방향만 지키면 밖에서도 가져옵니다):**
 
 ```ts
-// page/detail/sales-trend-panel/_function/to-chart-option.ts
+// page/detail/product-table-section/_function/to-chart-option.ts
 import type {ChartSeries} from "@/component/ui/chart/_type/chart-series";
 import {chart_series_line} from "@/component/ui/chart/_constant/series";
 ```

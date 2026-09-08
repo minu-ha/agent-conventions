@@ -33,42 +33,48 @@ tags: values, boundaries
 **Incorrect (경계에서 포맷한 값을 소비처가 다시 파싱해 포맷합니다):**
 
 ```ts
-// page/pattern/pg-pattern.tsx: SelectionInfo 를 만들며 이미 포맷한다
-const selectionInfo = {avgCorr: formatStatDecimal(responseSelectionInfoSuspense.data.statCorr)};
+// page/product-detail/pg-product-detail.tsx: ProductSummary 를 만들며 이미 포맷한다
+const productSummary = {averageRate: formatPercent(responseProductSummarySuspense.data.changeRate)};
 
-// page/pattern/_function/to-metrics-content.ts: 문자열을 다시 숫자로 읽어 다시 포맷한다
-const rows = [{id: "statCorr", value: formatStatDecimal(selectionInfo.avgCorr)}];
+// page/product-detail/_function/to-report-content.ts: 문자열을 다시 숫자로 읽어 다시 포맷한다
+const rows = [{id: "changeRate", value: formatPercent(productSummary.averageRate)}];
 ```
 
 **Correct (경계에서 한 번 포맷하고 소비처는 전달된 값을 그대로 씁니다):**
 
 ```ts
-// page/pattern/_function/to-metrics-content.ts
-const rows = [{id: "statCorr", value: selectionInfo.avgCorr}];
+// page/product-detail/_function/to-report-content.ts
+const rows = [{id: "changeRate", value: productSummary.averageRate}];
 ```
 
 **Incorrect (같은 색 판정을 범례와 차트 둘에서 하고 폴백으로 한 번 더 합니다):**
 
 ```ts
 // 범례
-const colorToken = toCurveColorToken(curveItem.role, historicalIndex);
+const legendSeries = seriesItems.map((series, seriesIndex) => ({
+	id: series.id,
+	colorToken: toSeriesColorToken(series.role, seriesIndex),
+}));
 
 // 차트 둘. 범례 팔레트를 읽고도 같은 판정을 다시 한다
-colorToken: colorTokenById.get(curveItem.id) ?? toCurveColorToken(curveItem.role, index),
+const chartSeries = seriesItems.map((series, index) => ({
+	id: series.id,
+	colorToken: colorTokenById.get(series.id) ?? toSeriesColorToken(series.role, index),
+}));
 ```
 
 **Correct (경계에서 한 번 정해 항목에 담고 차트는 읽기만 합니다):**
 
 ```ts
 // 범례를 만드는 자리에서 색을 정해 항목에 싣는다
-const comparisonCurves = curveItems.map((curveItem, historicalIndex) => ({
-	...curveItem,
-	colorToken: toCurveColorToken(curveItem.role, historicalIndex),
+const comparisonSeries = seriesItems.map((series, seriesIndex) => ({
+	...series,
+	colorToken: toSeriesColorToken(series.role, seriesIndex),
 }));
 
 // 차트 둘은 같은 항목의 색을 그대로 읽는다
-const chartSeries = comparisonCurves.map((curve) => ({
-	id: curve.id,
-	colorToken: curve.colorToken,
+const chartSeries = comparisonSeries.map((series) => ({
+	id: series.id,
+	colorToken: series.colorToken,
 }));
 ```

@@ -74,16 +74,16 @@ JSX 자식 자리의 주석은 여러 줄 블록으로 씁니다.
 **Incorrect (여러 줄 블록 셋 중 하나에만 주석을 둡니다):**
 
 ```tsx
-<section className={clsx("wg_driverTable__root")}>
+<section className={clsx("wg_orderTable__root")}>
 	{/**
 	 * 헤더 행. 정렬 기준과 단위를 보여 준다
 	 */}
-	<WgDriverTableHeader sort={sort} />
+	<WgOrderTableHeader sort={sort} />
 	{rows.map((row) => (
-		<WgDriverTableRow key={row.id} row={row} />
+		<WgOrderTableRow key={row.id} row={row} />
 	))}
 	{expandedRows.map((row) => (
-		<WgDriverTableChildRow key={row.id} row={row} />
+		<WgOrderTableChildRow key={row.id} row={row} />
 	))}
 </section>;
 ```
@@ -91,22 +91,22 @@ JSX 자식 자리의 주석은 여러 줄 블록으로 씁니다.
 **Correct (여러 줄 블록마다 주석을 두어 블록과 함께 접히게 합니다):**
 
 ```tsx
-<section className={clsx("wg_driverTable__root")}>
+<section className={clsx("wg_orderTable__root")}>
 	{/**
 	 * 헤더 행. 정렬 기준과 단위를 보여 준다
 	 */}
-	<WgDriverTableHeader sort={sort} />
+	<WgOrderTableHeader sort={sort} />
 	{/**
-	 * 드라이버 행. 상세 버튼과 accordion 을 가진 기본 행
+	 * 주문 행. 상세 버튼과 accordion 을 가진 기본 행
 	 */}
 	{rows.map((row) => (
-		<WgDriverTableRow key={row.id} row={row} />
+		<WgOrderTableRow key={row.id} row={row} />
 	))}
 	{/**
-	 * 펼친 자식 driver 행. 상세 버튼과 accordion 없이 같은 칸 구성을 반복한다
+	 * 펼친 자식 주문 행. 상세 버튼과 accordion 없이 같은 칸 구성을 반복한다
 	 */}
 	{expandedRows.map((row) => (
-		<WgDriverTableChildRow key={row.id} row={row} />
+		<WgOrderTableChildRow key={row.id} row={row} />
 	))}
 </section>;
 ```

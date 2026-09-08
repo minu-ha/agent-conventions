@@ -31,21 +31,21 @@ tags: modifiers, structure, naming
 **Incorrect (그 화면 하나를 고치려고 수정자를 붙입니다):**
 
 ```tsx
-<div className={clsx("pg_catalogDetail__section", "pg_catalogDetail__section--compactTop")} />
+<div className={clsx("pg_productDetail__section", "pg_productDetail__section--compactTop")} />
 ```
 
 ```tsx
-<div className={clsx("pg_catalogDetail__aside", "pg_catalogDetail__aside--marginLeft0")} />
+<div className={clsx("pg_productDetail__aside", "pg_productDetail__aside--marginLeft0")} />
 ```
 
 **Correct (한 곳의 보정은 역할 이름을 붙인 요소 클래스로 분리합니다):**
 
 ```tsx
-<div className={clsx("pg_catalogDetail__specSection")} />
+<div className={clsx("pg_productDetail__specSection")} />
 ```
 
 ```tsx
-<div className={clsx("pg_catalogDetail__metaAside")} />
+<div className={clsx("pg_productDetail__metaAside")} />
 ```
 
 **Correct (상태와 반복되는 모양만 수정자로 씁니다):**
@@ -55,5 +55,5 @@ tags: modifiers, structure, naming
 ```
 
 ```tsx
-<div className={clsx("pg_catalogIndex__row", isSelected && "pg_catalogIndex__row--selected")} />
+<div className={clsx("pg_products__row", isSelected && "pg_products__row--selected")} />
 ```

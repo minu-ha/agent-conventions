@@ -19,17 +19,17 @@
 **Incorrect (그 화면 하나를 고치려고 수정자를 붙입니다):**
 
 ```tsx
-<div className={clsx("pg_catalogDetail__section", "pg_catalogDetail__section--compactTop")} />
+<div className={clsx("pg_productDetail__section", "pg_productDetail__section--compactTop")} />
 ```
 
 ```tsx
-<div className={clsx("pg_catalogDetail__aside", "pg_catalogDetail__aside--marginLeft0")} />
+<div className={clsx("pg_productDetail__aside", "pg_productDetail__aside--marginLeft0")} />
 ```
 
 **Correct (한 곳의 보정은 역할 이름을 붙인 요소 클래스로 분리합니다):**
 
 ```tsx
-<div className={clsx("pg_catalogDetail__specSection")} />
+<div className={clsx("pg_productDetail__specSection")} />
 ```
 
 > 나머지 예시 · 예외는 [full rule](../rules/03-02-composition-do-not-build-structural-variants-with-modifiers.md)에 있습니다.

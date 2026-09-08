@@ -65,7 +65,7 @@ export const formatSignedPercent = (value: number | null | undefined) => {
 ```tsx
 // page/detail/pg-detail.tsx: 서버는 계산 전이면 null을 준다. 여기서 한 번 좁힌다
 const responseSummarySuspense = useSuspenseQuery({
-	...detailSummaryQueryOptions(patternId),
+	...detailSummaryQueryOptions(productId),
 	select: (response) => ({
 		...response,
 		changeRate:

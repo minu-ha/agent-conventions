@@ -30,7 +30,7 @@ tags: layout, comments, sticky
 **Incorrect (층 숫자를 직접 적고 기준 컨테이너 설명이 없습니다):**
 
 ```css
-.pg_dashboard__toolbar {
+.pg_productDetail__toolbar {
 	position: sticky;
 	top: 0;
 	z-index: 9999;
@@ -40,14 +40,14 @@ tags: layout, comments, sticky
 **Correct (기준 컨테이너와 의도를 드러냅니다):**
 
 ```css
-.pg_dashboard__toolbar {
-	/* .pg_dashboard__content가 스크롤 컨테이너다 */
+.pg_productDetail__toolbar {
+	/* .pg_productDetail__content가 스크롤 컨테이너다 */
 	position: sticky;
 	top: 0;
 	z-index: var(--app-z-index-sticky);
 }
 
-.pg_dashboard__content {
+.pg_productDetail__content {
 	display: grid;
 	min-height: 0;
 	overflow-y: auto;
@@ -57,7 +57,7 @@ tags: layout, comments, sticky
 **Incorrect (로딩 대체 화면에만 높이를 따로 적습니다):**
 
 ```css
-.pg_dashboard__chartSkeleton {
+.pg_productDetail__chartSkeleton {
 	height: 320px;
 }
 ```
@@ -65,15 +65,15 @@ tags: layout, comments, sticky
 **Correct (대체 화면을 실제 내용과 같은 컨테이너 클래스 안에 넣습니다):**
 
 ```tsx
-<div className={clsx("pg_dashboard__chart")}>
+<div className={clsx("pg_productDetail__chart")}>
 	<Suspense fallback={<UiChartSkeleton />}>
-		<PgDashboardChartSection />
+		<PgProductDetailChartSection />
 	</Suspense>
 </div>
 ```
 
 ```css
-.pg_dashboard__chart {
+.pg_productDetail__chart {
 	/* 로딩 중과 실제 차트에 같은 최소 높이를 확보한다 */
 	min-height: 320px;
 }

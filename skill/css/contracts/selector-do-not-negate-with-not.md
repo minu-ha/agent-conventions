@@ -19,7 +19,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 **Incorrect (DOM 상태를 `:not()`으로 뒤집어 기본 모습을 상태 블록에 넣습니다):**
 
 ```css
-.pg_assetIndex__cardButton {
+.pg_products__cardButton {
 	&:not(:disabled) {
 		cursor: pointer;
 	}
@@ -33,7 +33,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 **Incorrect (활성 버튼의 hover를 부정 조건으로 표현합니다):**
 
 ```css
-.pg_assetIndex__cardButton {
+.pg_products__cardButton {
 	&:not(:disabled):hover {
 		background: #f5f5f5;
 	}
@@ -43,7 +43,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 **Correct (네이티브 버튼의 활성 상태를 긍정 조건으로 표현합니다):**
 
 ```css
-.pg_assetIndex__cardButton {
+.pg_products__cardButton {
 	&:enabled:hover {
 		background: #f5f5f5;
 	}

@@ -40,50 +40,56 @@ tags: functions, boundaries
 **Incorrect (한 자리에서만 쓰는 단계를 함수로 떼어 내 흐름이 파일 안에서 흩어집니다):**
 
 ```txt
-page/report/_function/to-metrics-content.ts
-  toMetricsContent       내보낸 함수. 본문은 세 줄이고 나머지는 아래 함수로 갔다
-  toComparisonRows       toMetricsContent 만 부름
-  toMeaningGroups        toMetricsContent 만 부름
-  toValidityCard         toMetricsContent 만 부름
-  formatMeaningDecimal   toComparisonRows 와 toMeaningGroups 가 부름
+page/report/_function/to-report-content.ts
+  toReportContent    내보낸 함수. 본문은 세 줄이고 나머지는 아래 함수로 갔다
+  toComparisonRows   toReportContent 만 부름
+  toStatusGroups     toReportContent 만 부름
+  toStockCard        toReportContent 만 부름
+  formatAmount       toComparisonRows 와 toStatusGroups 가 부름
 ```
 
 **Correct (한 번 쓰는 단계는 호출부에 두고 재사용하는 계산은 함수로 추출합니다):**
 
 ```txt
-page/report/_function/to-metrics-content/
-├── to-metrics-content.ts        본문 안에 // 1. 비교 행  // 2. 의미 그룹  // 3. 유효성 카드
-└── _format-meaning-decimal.ts   비교 행과 의미 그룹 두 자리가 부름
+page/report/_function/to-report-content/
+├── to-report-content.ts   본문 안에 // 1. 비교 행  // 2. 상태 그룹  // 3. 재고 카드
+└── _format-amount.ts      비교 행과 상태 그룹 두 자리가 부름
 ```
 
 ```ts
-// page/report/_function/to-metrics-content/to-metrics-content.ts
+// page/report/_function/to-report-content/to-report-content.ts
 /**
- * 상세 수치와 통계 의미 영역의 표시 데이터. 실시간 상세만 TAM 유효성 카드가 온다
+ * 상품 보고서 영역의 표시 데이터. 상품 상세에서만 재고 카드가 온다
  */
-export const toMetricsContent = (params: ToMetricsContentParams): MetricsContent => {
-	// 1. 선택 window 기준으로 갱신되는 비교 수치 행
+export const toReportContent = (params: ToReportContentParams): ReportContent => {
+	// 1. 고른 기간 기준으로 갱신되는 비교 수치 행
 	const metrics = [
-		{id: "statCorr", label: "상관계수 평균", value: formatMeaningDecimal(params.selectionInfo.avgCorr)},
-		{id: "statP", label: "통계적 유의성", value: params.selectionInfo.statP},
+		{id: "orderAmount", label: "주문 금액", value: formatAmount(params.productSummary.orderAmount)},
+		{id: "orderCount", label: "주문 건수", value: params.productSummary.orderCount},
 	];
 
-	// 2. 통계 의미 그룹. 설명이 비면 그룹 제목만 남긴다
-	const statMeaningGroups = [
-		{id: "statistical-significance", title: "패턴의 통계적 의미", description: params.selectionInfo.statDesc, rows: metrics},
+	// 2. 상품 상태 그룹. 설명이 비면 그룹 제목만 남긴다
+	const statusGroups = [
+		{
+			id: "product-status",
+			title: "상품 상태",
+			description: params.productSummary.statusDescription,
+			total: formatAmount(params.productSummary.totalAmount),
+			rows: metrics,
+		},
 	];
 
-	// 3. TAM 유효성 카드. 실시간 상세에서만 온다
-	return {metrics, statMeaningGroups, tamValidity: params.tamMetrics};
+	// 3. 재고 카드. 상품 상세에서만 온다
+	return {metrics, statusGroups, stockCount: params.stockCount};
 };
 ```
 
 **Incorrect (한 번만 쓰는 한 줄 계산을 파일로 분리합니다):**
 
 ```ts
-// page/profile/_function/get-next-iteration.ts
-export const getNextIteration = (previous: number, iterationCount: number): number => {
-	return (previous + 1) % iterationCount;
+// page/profile/_function/get-next-page.ts
+export const getNextPage = (previous: number, pageCount: number): number => {
+	return (previous + 1) % pageCount;
 };
 ```
 
@@ -92,7 +98,7 @@ export const getNextIteration = (previous: number, iterationCount: number): numb
 ```tsx
 // page/profile/pg-profile.tsx
 const handleNextClick = () => {
-	setIteration((previous) => (previous + 1) % iterationCount);
+	setPage((previous) => (previous + 1) % pageCount);
 };
 ```
 
@@ -139,16 +145,16 @@ import {toProductSaveRequest} from "@/page/products/_function/to-product-save-re
 **Correct (삼항 하나에 담기지 않는 판정은 사용처가 하나여도 함수로 추출하고 분기마다 `return`으로 끝냅니다):**
 
 ```ts
-// page/detail/_function/to-grade-tone.ts
+// page/detail/_function/to-status-tone.ts
 /**
- * 등급 문자열의 강조 tone. API가 등급을 자유 문자열로 주어 토큰 포함으로 판정한다
+ * 상태 문자열의 강조 tone. API가 상태를 자유 문자열로 주어 값 포함으로 판정한다
  */
-export const toGradeTone = (grade: string): Tone => {
-	const normalizedGrade = grade.trim().toLowerCase();
-	if (grade_positive_tokens.some((token) => normalizedGrade.includes(token))) {
+export const toStatusTone = (status: string): Tone => {
+	const normalizedStatus = status.trim().toLowerCase();
+	if (status_positive_values.some((value) => normalizedStatus.includes(value))) {
 		return "positive";
 	}
-	if (grade_negative_tokens.some((token) => normalizedGrade.includes(token))) {
+	if (status_negative_values.some((value) => normalizedStatus.includes(value))) {
 		return "negative";
 	}
 	return "neutral";

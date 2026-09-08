@@ -1146,7 +1146,7 @@ const typescriptScenarioEvidence = {
 	},
 	"type-role-and-lifetime": {
 		prompt:
-			"rename the owner-local `SalesReportViewModel` interface and its `salesReportViewModel` value to `ReportSnapshot` and `reportSnapshot` because they freeze rows, filters, and pagination from one query; keep fields, imports, and docs unchanged.",
+			"rename the owner-local `OrderReportViewModel` interface and its `orderReportViewModel` value to `ReportSnapshot` and `reportSnapshot` because they freeze rows, filters, and pagination from one query; keep fields, imports, and docs unchanged.",
 		files: ["src/report/report-panel.ts"],
 	},
 	"helper-boundary-scope-drift": {
@@ -1191,8 +1191,8 @@ const typescriptScenarioEvidence = {
 	},
 	"decide-once-and-guard-real-absence": {
 		prompt:
-			"`pg-pattern.tsx` formats `avgCorr` while building `SelectionInfo` and `to-metrics-content.ts` formats the same field again; read the carried value instead, replace `...(isNil(tamValidity) ? {} : {tamValidity})` with a plain optional field, and drop the `isNil` check on the non-null `name` field. The internal display contract permits explicit undefined and no consumer distinguishes key presence; tamValidity cannot be null.",
-		files: ["src/page/pattern/pg-pattern.tsx", "src/page/pattern/_function/to-metrics-content.ts"],
+			"`pg-product-detail.tsx` formats `averageRate` while building `ProductSummary` and `to-report-content.ts` formats the same field again; read the carried value instead, replace `...(isNil(stockCount) ? {} : {stockCount})` with a plain optional field, and drop the `isNil` check on the non-null `name` field. The internal display contract permits explicit undefined and no consumer distinguishes key presence; stockCount cannot be null.",
+		files: ["src/page/product-detail/pg-product-detail.tsx", "src/page/product-detail/_function/to-report-content.ts"],
 	},
 	"check-absence-once-across-helpers": {
 		prompt:
@@ -1480,7 +1480,7 @@ const reactScenarioStages = {
 	"RTE09-route-runtime-section": {
 		initial: {
 			prompt:
-				'extract only the tree section that owns local search and expanded state plus a tree adapter into the owner component folder, implement a named selection handler from UiTreeProps["onSelect"], mark the remaining page sections in JSX, and keep section assembly, Suspense boundaries, and route navigation decisions visible at the route entry while the section owns its data and interaction.',
+				'extract only the tree section that owns local search and expanded state plus a tree adapter into the owner component folder, implement a named selection handler from UiTreeProps["onSelectedItemsChange"], mark the remaining page sections in JSX, and keep section assembly, Suspense boundaries, and route navigation decisions visible at the route entry while the section owns its data and interaction.',
 			files: ["src/page/products/pg-products.tsx", "src/page/products/_pg-product-tree-section.tsx"],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
@@ -1664,11 +1664,11 @@ const reactScenarioStages = {
 	"RTE16-private-component-import-direction": {
 		initial: {
 			prompt:
-				"two sibling files under src/page/detail/sales-trend-panel/ import each other's legend row through ../; make the panel own the shared legend row and pass it down as an element prop, and remove the sibling and @/page component imports.",
+				"two sibling files under src/page/detail/product-table-section/ import each other's legend row through ../; make the panel own the shared legend row and pass it down as an element prop, and remove the sibling and @/page component imports.",
 			files: [
-				"src/page/detail/sales-trend-panel/pg-sales-trend-panel.tsx",
-				"src/page/detail/sales-trend-panel/_pg-detection-section.tsx",
-				"src/page/detail/sales-trend-panel/_pg-summary-band.tsx",
+				"src/page/detail/product-table-section/pg-product-table-section.tsx",
+				"src/page/detail/product-table-section/_pg-review-section.tsx",
+				"src/page/detail/product-table-section/_pg-product-summary.tsx",
 			],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {
@@ -1836,15 +1836,15 @@ const reactScenarioStages = {
 const cssScenarioStages = {
 	"css-route-style-scope-drift": {
 		initial: {
-			prompt: "pure rendering change in src/page/catalog-index/pg-catalog-index.tsx, with React and TypeScript only.",
-			files: ["src/page/catalog-index/pg-catalog-index.tsx"],
+			prompt: "pure rendering change in src/page/products/pg-products.tsx, with React and TypeScript only.",
+			files: ["src/page/products/pg-products.tsx"],
 			expectedSkills: ["react", "typescript"],
 			expectedSelected: {react: [], typescript: []},
 		},
 		scopeDrift: {
 			evidence:
-				"add route-owned empty-state className, src/page/catalog-index/pg-catalog-index.css, and its direct side-effect import in a project without a CSS Modules standard; final skills add CSS.",
-			files: ["src/page/catalog-index/pg-catalog-index.tsx", "src/page/catalog-index/pg-catalog-index.css"],
+				"add route-owned empty-state className, src/page/products/pg-products.css, and its direct side-effect import in a project without a CSS Modules standard; final skills add CSS.",
+			files: ["src/page/products/pg-products.tsx", "src/page/products/pg-products.css"],
 			expectedSkills: ["react", "typescript", "css"],
 			expectedSelected: {
 				react: ["ownership-place-owner-files-in-role-folders"],
@@ -1880,8 +1880,8 @@ const cssScenarioStages = {
 	"css-domain-state-class-contract": {
 		initial: {
 			prompt:
-				"split listButtonActive into base plus --active, add a direct clsx import, and compose with clsx() in pg-catalog-index.tsx and _index.css; do not change pseudo-states.",
-			files: ["src/page/catalog-index/pg-catalog-index.tsx", "src/page/catalog-index/pg-catalog-index.css"],
+				"split listButtonActive into base plus --active, add a direct clsx import, and compose with clsx() in pg-products.tsx and _index.css; do not change pseudo-states.",
+			files: ["src/page/products/pg-products.tsx", "src/page/products/pg-products.css"],
 			expectedSkills: ["react", "typescript", "css"],
 			expectedSelected: {
 				react: [],
@@ -1899,8 +1899,8 @@ const cssScenarioStages = {
 	"css-one-off-structural-modifier": {
 		initial: {
 			prompt:
-				"replace non-repeatable section--compactTop spacing patch with a role-named element in pg-catalog-detail.tsx and detail.css; keep the existing clsx import.",
-			files: ["src/page/catalog-detail/pg-catalog-detail.tsx", "src/page/catalog-detail/pg-catalog-detail.css"],
+				"replace non-repeatable section--compactTop spacing patch with a role-named element in pg-product-detail.tsx and detail.css; keep the existing clsx import.",
+			files: ["src/page/product-detail/pg-product-detail.tsx", "src/page/product-detail/pg-product-detail.css"],
 			expectedSkills: ["react", "typescript", "css"],
 			expectedSelected: {
 				react: [],
@@ -1917,8 +1917,8 @@ const cssScenarioStages = {
 	"css-value-driven-modifier": {
 		initial: {
 			prompt:
-				"pick the metricValue modifier from the four-value tone in pg-sales-trend-panel.tsx where the stylesheet defines --positive and --negative only; keep the existing clsx import and stylesheet.",
-			files: ["src/page/detail/sales-trend-panel/pg-sales-trend-panel.tsx"],
+				"pick the changeRate modifier from the four-value tone in pg-products.tsx where the stylesheet defines --positive and --negative only; keep the existing clsx import and stylesheet.",
+			files: ["src/page/products/pg-products.tsx"],
 			expectedSkills: ["react", "typescript", "css"],
 			expectedSelected: {
 				react: [],
@@ -2037,7 +2037,7 @@ const cssScenarioStages = {
 	"css-repeated-values-and-optional-token": {
 		initial: {
 			prompt:
-				"Scope a global .ant-tree selector under the existing .ui_themePreview owner root with one new descendant block. Replace color and spacing repeated across files with existing global core tokens, and consume an optional Ant border-radius variable with a fallback. Keep file and owner names unchanged. Also namespace the existing fade keyframes and add the global reduced-motion block. Do not add DOM state selectors.",
+				"Scope a global .MuiTreeItem-content selector under the existing .ui_themePreview owner root with one new descendant block. Replace color and spacing repeated across files with existing global core tokens, and consume an optional MUI border-radius variable with a fallback. Keep file and owner names unchanged. Also namespace the existing fade keyframes and add the global reduced-motion block. Do not add DOM state selectors.",
 			files: ["src/component/ui/theme-preview/ui-theme-preview.css"],
 			expectedSkills: ["css"],
 			expectedSelected: {
@@ -2054,8 +2054,8 @@ const cssScenarioStages = {
 	"css-shared-declaration-group": {
 		initial: {
 			prompt:
-				"split the shared .pg_salesPanel__glyph--* comma group so each modifier block declares its own width and height; do not introduce local custom properties.",
-			files: ["src/page/detail/sales-trend-panel/pg-sales-trend-panel.css"],
+				"split the shared .pg_products__badge--* comma group so each modifier block declares its own width and height; do not introduce local custom properties.",
+			files: ["src/page/products/pg-products.css"],
 			expectedSkills: ["css"],
 			expectedSelected: {css: ["selector-do-not-group-classes-with-commas"]},
 		},
@@ -2063,8 +2063,8 @@ const cssScenarioStages = {
 	"css-split-class-declaration": {
 		initial: {
 			prompt:
-				"the same .pg_catalogIndex__toolbar block is opened twice at the top level of one file, and a third override sits nested inside the class block as @media (min-width: 1024px); fold the plain duplicate into one block and move the breakpoint override into a grouped desktop-first @media at the bottom of the file.",
-			files: ["src/page/catalog-index/pg-catalog-index.css"],
+				"the same .pg_products__toolbar block is opened twice at the top level of one file, and a third override sits nested inside the class block as @media (min-width: 1024px); fold the plain duplicate into one block and move the breakpoint override into a grouped desktop-first @media at the bottom of the file.",
+			files: ["src/page/products/pg-products.css"],
 			expectedSkills: ["css"],
 			expectedSelected: {
 				css: [
@@ -2087,8 +2087,8 @@ const cssScenarioStages = {
 	"css-sticky-layout-intent": {
 		initial: {
 			prompt:
-				"clarify sticky basis and z-index ownership through layer tokens and remove excessive width/height forcing in pg-dashboard.css.",
-			files: ["src/page/dashboard/pg-dashboard.css"],
+				"clarify sticky basis and z-index ownership through layer tokens and remove excessive width/height forcing in pg-product-detail.css.",
+			files: ["src/page/product-detail/pg-product-detail.css"],
 			expectedSkills: ["css"],
 			expectedSelected: {css: ["values-declare-stacking-layers-as-tokens", "layout-keep-layout-intent-explicit"]},
 		},
@@ -2096,8 +2096,8 @@ const cssScenarioStages = {
 	"css-theme-token-switch": {
 		initial: {
 			prompt:
-				"add dark mode: a page css file currently branches on prefers-color-scheme inside .pg_dashboard__panel and hardcodes #ffffff and a black box-shadow; move the branch into the token file and keep the component reading tokens only.",
-			files: ["src/style/token.css", "src/page/dashboard/pg-dashboard.css"],
+				"add dark mode: a page css file currently branches on prefers-color-scheme inside .pg_productDetail__panel and hardcodes #ffffff and a black box-shadow; move the branch into the token file and keep the component reading tokens only.",
+			files: ["src/style/token.css", "src/page/product-detail/pg-product-detail.css"],
 			expectedSkills: ["css"],
 			expectedSelected: {
 				css: [
@@ -2123,8 +2123,8 @@ const cssScenarioStages = {
 	"css-negated-domain-state": {
 		initial: {
 			prompt:
-				"Remove the :not(.pg_salesPanel__spreadButton--selected) ancestor condition that drives the descendant preview. Flatten two nested selector levels and separate its grouped hover/focus-visible selectors. Keep existing class names and preserve hover and visible focus feedback in both selected and unselected states.",
-			files: ["src/page/detail/sales-trend-panel/pg-sales-trend-panel.css"],
+				"Remove the :not(.pg_products__sortButton--selected) ancestor condition that drives the descendant preview. Flatten two nested selector levels and separate its grouped hover/focus-visible selectors. Keep existing class names and preserve hover and visible focus feedback in both selected and unselected states.",
+			files: ["src/page/products/pg-products.css"],
 			expectedSkills: ["css"],
 			expectedSelected: {
 				css: [
@@ -2198,8 +2198,8 @@ const cssScenarioStages = {
 	"css-positive-descendant-state-no-negation": {
 		initial: {
 			prompt:
-				"Change the existing border-color literal within &:hover .pg_salesPanel__preview. Keep the selector, class names, and nesting unchanged. There is no :not(), modifier, token, transition, or focus declaration.",
-			files: ["src/page/detail/sales-trend-panel/pg-sales-trend-panel.css"],
+				"Change the existing border-color literal within &:hover .pg_products__preview. Keep the selector, class names, and nesting unchanged. There is no :not(), modifier, token, transition, or focus declaration.",
+			files: ["src/page/products/pg-products.css"],
 			expectedSkills: ["css"],
 			expectedSelected: {css: ["selector-use-pseudo-classes-for-dom-owned-states", "selector-nest-dom-state-in-the-owning-block"]},
 		},
@@ -3064,10 +3064,10 @@ test("CSS progressive metadata and rule routing match Appendix C exactly", async
 		],
 		"modifierMapRule",
 	);
-	assert.match(modifierMapRule, /`pg_salesPanel__metricValue--\$\{tone\}`/);
-	assert.match(modifierMapRule, /tone === "positive" && "pg_salesPanel__metricValue--positive"/);
+	assert.match(modifierMapRule, /`pg_products__changeRate--\$\{tone\}`/);
+	assert.match(modifierMapRule, /tone === "positive" && "pg_products__changeRate--positive"/);
 	assert.match(modifierMapRule, /props\.variant === "fit" && "ui_tooltip__body--fit"/);
-	assert.match(modifierMapRule, /props\.role === "trigger" && "wg_flowNode__title--trigger"/);
+	assert.match(modifierMapRule, /props\.role === "owner" && "wg_userCard__title--owner"/);
 	assert.doesNotMatch(modifierMapNormative, /끼워 넣습니다|조립합니다/);
 	assert.match(modifierMapRule, /variant\?: ButtonProps\["variant"\]/);
 
@@ -3690,8 +3690,8 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 		foreignRoot,
 		[
 			/내 최상위 클래스 블록 안에서 `&`로 시작하는 선택자/,
-			/`\.ant-tree-title \{ \}` \| 금지/,
-			/`\.pg_treePanel__root \.ant-tree-title \{ \}` \| 금지\. 최상위 블록 안에서 `&`로 시작해야 합니다/,
+			/`\.MuiTreeItem-label \{ \}` \| 금지/,
+			/`\.pg_products__sidebar \.MuiTreeItem-label \{ \}` \| 금지\. 최상위 블록 안에서 `&`로 시작해야 합니다/,
 		],
 		"foreignRoot",
 	);
@@ -3705,7 +3705,7 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 		],
 		"foreignRoot",
 	);
-	assert.match(foreignRoot, /& \.ant-tree-node-content-wrapper/);
+	assert.match(foreignRoot, /& \.MuiTreeItem-content/);
 
 	const otherOwnerApi = await readRule("css", "ownership-change-other-owners-through-their-api");
 	assertMentions(

@@ -46,13 +46,14 @@ tags: types, safety
 const storedFilter = JSON.parse(localStorage.getItem("product-filter") as string) as ProductFilter;
 ```
 
-**Correct (앱 밖에서 온 값은 스키마 결과에서 타입을 얻습니다):**
+**Correct (앱 밖에서 온 값은 좁히기 함수를 통과한 뒤에 씁니다):**
 
 ```ts
 const storedValue = localStorage.getItem("product-filter");
+const parsedFilter: unknown = storedValue === null ? undefined : JSON.parse(storedValue);
 
-// 처음 방문이면 저장된 필터가 없다. 없다는 사실을 그대로 둔다
-const storedFilter = storedValue === null ? undefined : productFilterSchema.parse(JSON.parse(storedValue));
+// 처음 방문이면 저장된 필터가 없고 형태가 다르면 쓰지 않는다. 없다는 사실을 그대로 둔다
+const storedFilter = isProductFilter(parsedFilter) ? parsedFilter : undefined;
 ```
 
 **Incorrect (`!`로 없을 수 있다는 사실을 지웁니다):**

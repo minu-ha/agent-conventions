@@ -96,10 +96,10 @@
 **Incorrect (프로젝트 표준이 없는데도 CSS Modules를 기본처럼 씁니다):**
 
 ```tsx
-import styles from "./catalog-index.module.css";
+import styles from "./products.module.css";
 
 <section className={styles.hero}>
-	<span className={styles.eyebrow}>Catalog</span>
+	<span className={styles.eyebrow}>Products</span>
 </section>
 ```
 
@@ -117,19 +117,19 @@ import styles from "./catalog-index.module.css";
 
 ```tsx
 import {clsx} from "clsx";
-import "./pg-catalog-index.css";
+import "./pg-products.css";
 
-<section className={clsx("pg_catalogIndex__hero")}>
-	<span className={clsx("pg_catalogIndex__eyebrow")}>Catalog</span>
+<section className={clsx("pg_products__hero")}>
+	<span className={clsx("pg_products__eyebrow")}>Products</span>
 </section>
 ```
 
 ```css
-.pg_catalogIndex__hero {
+.pg_products__hero {
 	display: grid;
 }
 
-.pg_catalogIndex__eyebrow {
+.pg_products__eyebrow {
 	letter-spacing: 0.08em;
 }
 ```
@@ -166,9 +166,9 @@ ui_tag_list__root
 ui_tagList__list-item
 wg_site_header__root
 wg_siteHeader__brand-link
-pg_catalog_detail__root
-pg_catalogDetail__main-content
-pg_catalogDetail__main--route_active
+pg_product_detail__root
+pg_productDetail__main-content
+pg_productDetail__main--route_active
 ```
 
 **Correct (범위는 소문자로 쓰고 식별자, 요소, 수정자는 camelCase로 씁니다):**
@@ -178,9 +178,9 @@ ui_tagList__root
 ui_tagList__listItem
 wg_siteHeader__root
 wg_siteHeader__brandLink
-pg_catalogDetail__root
-pg_catalogDetail__mainContent
-pg_catalogDetail__main--routeActive
+pg_productDetail__root
+pg_productDetail__mainContent
+pg_productDetail__main--routeActive
 ```
 
 ### 1.3 Name Elements and Modifiers by Role
@@ -228,7 +228,7 @@ ui_card__body--dense
 | 대상 | 식별자 |
 | --- | --- |
 | 화면 뼈대 | 라우트 세그먼트나 폴더 이름과 같은 낱말. 어느 화면에나 붙는 `shell`, `page`, `content`는 쓰지 않습니다 |
-| `[id]`처럼 값이 런타임에 정해지는 동적 세그먼트 | 화면의 역할로 바꿉니다. `posts/[id]`라면 `[id]`를 `detail`로 바꿔 `pg_postsDetail`로 씁니다 |
+| `[id]`처럼 값이 런타임에 정해지는 동적 세그먼트 | 화면의 역할로 바꿉니다. `orders/[id]`라면 `[id]`를 `detail`로 바꿔 `pg_ordersDetail`로 씁니다 |
 | 화면 안의 컴포넌트 | 자기 이름만 씁니다 |
 
 라우트 경로나 폴더 이름에 없는 줄임말은 쓰지 않습니다.
@@ -249,16 +249,16 @@ pg_x__root        <- 되짚을 이름이 없음
 **Correct (뼈대에는 라우트 세그먼트를 그대로 씁니다):**
 
 ```txt
-pg_postsIndex__root    <- posts index 화면
-pg_postsDetail__body   <- posts/[id] 화면
+pg_ordersIndex__root    <- orders index 화면
+pg_ordersDetail__body   <- orders/[id] 화면
 pg_document__body      <- document 화면
 ```
 
 **Incorrect (충돌이 없는데도 부모 식별자를 미리 붙입니다):**
 
 ```txt
-pg_detailSalesTrendPanelOverviewSection__root
-pg_detailSalesTrendPanelSummaryBand__root
+pg_detailProductTableOverviewSection__root
+pg_detailProductTableSummaryBand__root
 ```
 
 **Correct (화면 안의 컴포넌트는 자기 식별자만 씁니다):**
@@ -271,8 +271,8 @@ pg_summaryBand__root
 **Incorrect (충돌을 피하려고 상위 경로 전체를 식별자에 붙입니다):**
 
 ```txt
-pg_detailSalesTrendPanelOverviewSection__root
-pg_indexSalesTrendPanelOverviewSection__root
+pg_detailProductTableOverviewSection__root
+pg_indexProductTableOverviewSection__root
 ```
 
 **Correct (충돌한 화면 이름만 최소로 덧붙입니다):**
@@ -307,21 +307,21 @@ CSS 파일마다 고유한 범위_식별자를 하나씩 씁니다. 같은 범�
 **Incorrect (이미 다른 소유자가 쓰는 `scope_slug`를 재사용합니다):**
 
 ```txt
-/* catalog/index route */
-pg_catalogIndex__header
+/* products route */
+pg_products__header
 
-/* dashboard/index route */
-pg_catalogIndex__header
+/* order/index route */
+pg_products__header
 ```
 
 **Correct (소유자가 다르면 별도 식별자를 부여합니다):**
 
 ```txt
-/* catalog/index route */
-pg_catalogIndex__header
+/* products route */
+pg_products__header
 
-/* dashboard/index route */
-pg_dashboardIndex__header
+/* order/index route */
+pg_orderIndex__header
 ```
 
 **Incorrect (하위 컴포넌트의 CSS 파일이 부모 식별자를 그대로 씁니다):**
@@ -368,8 +368,8 @@ pg_chartCard__root
 **Incorrect (최상위 폴더 대신 사용 횟수와 재사용 예상을 보고 접두사를 고릅니다):**
 
 ```txt
-page/detail/_pg-sales-trend-panel.css
-  wg_salesTrendPanel__root
+page/detail/_pg-product-table-section.css
+  wg_productTable__root
 
 component/widget/chart/_wg-chart-header.css
   pg_chartHeader__root
@@ -381,8 +381,8 @@ component/widget/chart/_wg-chart-header.css
 page/detail/pg-detail.css
   pg_detail__root
 
-page/detail/_pg-sales-trend-panel.css
-  pg_salesTrendPanel__root
+page/detail/_pg-product-table-section.css
+  pg_productTableSection__root
 
 component/widget/chart/_wg-chart-header.css
   wg_chartHeader__root
@@ -406,12 +406,12 @@ component/ui/button/ui-button.css
 
 | 선택자 | 판정 |
 | --- | --- |
-| `.ant-tree-title { }` | 금지. 그 라이브러리를 쓰는 앱 전체에 적용됩니다 |
+| `.MuiTreeItem-label { }` | 금지. 그 라이브러리를 쓰는 앱 전체에 적용됩니다 |
 | `.wg_chartCard__caption { }` | 금지. 그 위젯을 쓰는 모든 화면에 적용됩니다 |
-| `.pg_treePanel__root { & .ant-tree-title { } }` | 허용. 해당 인스턴스에만 적용됩니다 |
+| `.pg_products__sidebar { & .MuiTreeItem-label { } }` | 허용. 해당 인스턴스에만 적용됩니다 |
 | `.pg_detail__root { & .wg_chartCard__caption { } }` | 허용 |
-| `.pg_treePanel__root .ant-tree-title { }` | 금지. 최상위 블록 안에서 `&`로 시작해야 합니다 |
-| `.pg_treePanel__toolbar .pg_treePanel__title { }` | 같은 소유자의 클래스끼리라 이 규칙의 대상이 아닙니다 |
+| `.pg_products__sidebar .MuiTreeItem-label { }` | 금지. 최상위 블록 안에서 `&`로 시작해야 합니다 |
+| `.pg_products__sidebarToolbar .pg_products__sidebarTitle { }` | 같은 소유자의 클래스끼리라 이 규칙의 대상이 아닙니다 |
 
 판정할 때 별도의 소유 관계를 조사하지 않고 `scope_slug`와 블록 위치를 대조합니다.
 이렇게 덮어쓰기를 한 블록에 모으면 라이브러리 버전을 올릴 때 확인할 곳도 한 군데로 정해집니다.
@@ -428,11 +428,11 @@ component/ui/button/ui-button.css
 **Incorrect (최상위 블록 없이 라이브러리 클래스를 바로 씁니다):**
 
 ```css
-.ant-tree-node-content-wrapper {
+.MuiTreeItem-content {
 	border-radius: 4px;
 }
 
-.ant-tree-title {
+.MuiTreeItem-label {
 	color: #8c8c8c;
 }
 ```
@@ -440,12 +440,12 @@ component/ui/button/ui-button.css
 **Correct (내 최상위 블록 안에서 외부 라이브러리 DOM을 선택자로 잡습니다):**
 
 ```css
-.pg_treePanel__root {
-	& .ant-tree-node-content-wrapper {
+.pg_products__sidebar {
+	& .MuiTreeItem-content {
 		border-radius: 4px;
 	}
 
-	& .ant-tree-title {
+	& .MuiTreeItem-label {
 		color: #8c8c8c;
 	}
 }
@@ -484,7 +484,7 @@ component/ui/button/ui-button.css
 **Incorrect (최상위 블록을 열지 않고 바깥에서 이어 씁니다):**
 
 ```css
-.pg_treePanel__toolbar > .ant-btn > .ant-btn-icon {
+.pg_products__sidebarToolbar > .MuiButton-root > .MuiButton-startIcon {
 	color: #8c8c8c;
 }
 ```
@@ -492,8 +492,8 @@ component/ui/button/ui-button.css
 **Correct (소유자 API로 해결할 수 없으면 내 최상위 블록 안에서 선택합니다):**
 
 ```css
-.pg_treePanel__toolbar {
-	& > .ant-btn > .ant-btn-icon {
+.pg_products__sidebarToolbar {
+	& > .MuiButton-root > .MuiButton-startIcon {
 		color: #8c8c8c;
 	}
 }
@@ -601,7 +601,7 @@ TSX의 `className`은 클래스가 하나여도 `clsx()`로 조합합니다.
 **Incorrect (문자열 연결로 클래스 조합을 숨깁니다):**
 
 ```tsx
-<button className={"pg_catalogIndex__listButton " + (isActive ? "pg_catalogIndex__listButton--active" : "")}>
+<button className={"pg_products__listButton " + (isActive ? "pg_products__listButton--active" : "")}>
 	목록
 </button>
 ```
@@ -611,8 +611,8 @@ TSX의 `className`은 클래스가 하나여도 `clsx()`로 조합합니다.
 ```tsx
 <button
 	className={clsx(
-		"pg_catalogIndex__listButton",
-		isActive && "pg_catalogIndex__listButton--active",
+		"pg_products__listButton",
+		isActive && "pg_products__listButton--active",
 	)}
 >
 	목록
@@ -646,21 +646,21 @@ TSX의 `className`은 클래스가 하나여도 `clsx()`로 조합합니다.
 **Incorrect (그 화면 하나를 고치려고 수정자를 붙입니다):**
 
 ```tsx
-<div className={clsx("pg_catalogDetail__section", "pg_catalogDetail__section--compactTop")} />
+<div className={clsx("pg_productDetail__section", "pg_productDetail__section--compactTop")} />
 ```
 
 ```tsx
-<div className={clsx("pg_catalogDetail__aside", "pg_catalogDetail__aside--marginLeft0")} />
+<div className={clsx("pg_productDetail__aside", "pg_productDetail__aside--marginLeft0")} />
 ```
 
 **Correct (한 곳의 보정은 역할 이름을 붙인 요소 클래스로 분리합니다):**
 
 ```tsx
-<div className={clsx("pg_catalogDetail__specSection")} />
+<div className={clsx("pg_productDetail__specSection")} />
 ```
 
 ```tsx
-<div className={clsx("pg_catalogDetail__metaAside")} />
+<div className={clsx("pg_productDetail__metaAside")} />
 ```
 
 **Correct (상태와 반복되는 모양만 수정자로 씁니다):**
@@ -670,7 +670,7 @@ TSX의 `className`은 클래스가 하나여도 `clsx()`로 조합합니다.
 ```
 
 ```tsx
-<div className={clsx("pg_catalogIndex__row", isSelected && "pg_catalogIndex__row--selected")} />
+<div className={clsx("pg_products__row", isSelected && "pg_products__row--selected")} />
 ```
 
 ### 3.3 Keep Classes Single-purpose
@@ -689,13 +689,13 @@ TSX의 `className`은 클래스가 하나여도 `clsx()`로 조합합니다.
 **Incorrect (기본 클래스 이름에 상태를 포함합니다):**
 
 ```tsx
-<div className={clsx("pg_catalogIndex__listButtonActive")} />
+<div className={clsx("pg_products__listButtonActive")} />
 ```
 
 **Correct (기본 클래스와 상태 수정자를 분리합니다):**
 
 ```tsx
-<div className={clsx("pg_catalogIndex__listButton", isActive && "pg_catalogIndex__listButton--active")} />
+<div className={clsx("pg_products__listButton", isActive && "pg_products__listButton--active")} />
 ```
 
 ### 3.4 Inject Classes Only at the Component Entry Point
@@ -792,13 +792,13 @@ export const UiCollapse = (props: UiCollapseProps) => {
 **Correct (사용처는 최상위 스타일만 주고 내부 의도는 프롭으로 넘깁니다):**
 
 ```tsx
-<UiCollapse className={clsx("pg_postFilterDialog__collapse")} variant="compact" title="필터">
-	<PgPostFilterFields />
+<UiCollapse className={clsx("pg_orderFilterDialog__collapse")} variant="compact" title="필터">
+	<PgOrderFilterFields />
 </UiCollapse>
 ```
 
 ```css
-.pg_postFilterDialog__collapse {
+.pg_orderFilterDialog__collapse {
 	margin-block-start: 16px;
 	width: 100%;
 }
@@ -828,15 +828,15 @@ export const UiCollapse = (props: UiCollapseProps) => {
 **Incorrect (래퍼 `div`로 최상위 스타일을 우회합니다):**
 
 ```tsx
-<div className={clsx("pg_postIndex__collapseWrap")}>
+<div className={clsx("pg_orders__collapseWrap")}>
 	<UiCollapse>
-		<PgPostFilterFields />
+		<PgOrderFilterFields />
 	</UiCollapse>
 </div>
 ```
 
 ```css
-.pg_postIndex__collapseWrap {
+.pg_orders__collapseWrap {
 	margin-block-end: 16px;
 }
 ```
@@ -857,13 +857,13 @@ export const UiCollapse = (props: UiCollapseProps) => {
 ```
 
 ```tsx
-<UiCollapse className={clsx("pg_postIndex__collapse")}>
-	<PgPostFilterFields />
+<UiCollapse className={clsx("pg_orders__collapse")}>
+	<PgOrderFilterFields />
 </UiCollapse>
 ```
 
 ```css
-.pg_postIndex__collapse {
+.pg_orders__collapse {
 	margin-block-end: 16px;
 }
 ```
@@ -871,8 +871,8 @@ export const UiCollapse = (props: UiCollapseProps) => {
 **Incorrect (역할 없는 이름의 래퍼를 늘립니다):**
 
 ```tsx
-<div className={clsx("pg_postIndex__box")}>
-	<div className={clsx("pg_postIndex__inner")}>
+<div className={clsx("pg_orders__box")}>
+	<div className={clsx("pg_orders__inner")}>
 		<LegacyDatePicker value={value} onChange={handleChange} />
 	</div>
 </div>
@@ -884,7 +884,7 @@ export const UiCollapse = (props: UiCollapseProps) => {
 {/**
  * LegacyDatePicker는 className을 받지 않아 배치용 래퍼가 필요하다
  */}
-<div className={clsx("pg_postIndex__dateField")}>
+<div className={clsx("pg_orders__dateField")}>
 	<LegacyDatePicker value={value} onChange={handleChange} />
 </div>
 ```
@@ -918,7 +918,7 @@ export const UiCollapse = (props: UiCollapseProps) => {
 **Incorrect (인라인으로 꾸밉니다):**
 
 ```tsx
-<section className={clsx("pg_report__summary")} style={{marginTop: 16, color: isCritical ? "#c00" : undefined}}>
+<section className={clsx("pg_orders__summary")} style={{marginTop: 16, color: isCritical ? "#c00" : undefined}}>
 	{summary}
 </section>
 ```
@@ -926,17 +926,17 @@ export const UiCollapse = (props: UiCollapseProps) => {
 **Correct (스타일시트에 두고 수정자로 가릅니다):**
 
 ```tsx
-<section className={clsx("pg_report__summary", isCritical && "pg_report__summary--critical")}>
+<section className={clsx("pg_orders__summary", isCritical && "pg_orders__summary--critical")}>
 	{summary}
 </section>
 ```
 
 ```css
-.pg_report__summary {
+.pg_orders__summary {
 	margin-block-start: 16px;
 }
 
-.pg_report__summary--critical {
+.pg_orders__summary--critical {
 	color: var(--app-color-text-danger);
 }
 ```
@@ -945,15 +945,15 @@ export const UiCollapse = (props: UiCollapseProps) => {
 
 ```tsx
 <div
-	className={clsx("pg_report__virtualRow")}
-	style={{ "--pg-report-row-offset": `${rowOffset}px` } as CSSProperties}
+	className={clsx("pg_orders__virtualRow")}
+	style={{ "--pg-orders-row-offset": `${rowOffset}px` } as CSSProperties}
 />
 ```
 
 ```css
-.pg_report__virtualRow {
+.pg_orders__virtualRow {
 	position: absolute;
-	transform: translateY(var(--pg-report-row-offset, 0));
+	transform: translateY(var(--pg-orders-row-offset, 0));
 }
 ```
 
@@ -972,7 +972,7 @@ export const UiCollapse = (props: UiCollapseProps) => {
 
 | 상황 | 작성 방법 |
 | --- | --- |
-| 값 하나에 수정자를 붙임 | `tone === "positive" && "pg_salesPanel__metricValue--positive"`처럼 씁니다. 템플릿 리터럴로 이름을 조립하지 않습니다 |
+| 값 하나에 수정자를 붙임 | `tone === "positive" && "pg_products__changeRate--positive"`처럼 씁니다. 템플릿 리터럴로 이름을 조립하지 않습니다 |
 | 값이 여럿임 | 값마다 한 줄씩 적습니다. 여러 요소에 같은 값을 적용해도 요소마다 나열합니다 |
 | 일부 값에만 CSS 수정자가 있음 | 해당 값만 나열하고 나머지는 기본 모습으로 둡니다. 값이 다섯이고 수정자가 둘이면 둘만 적습니다 |
 | `ButtonProps["variant"]`처럼 라이브러리 타입을 그대로 받음 | 수정자를 만들지 않고 라이브러리에 넘깁니다. 라이브러리가 추가한 값을 우리 목록이 놓칠 수 있습니다 |
@@ -1049,17 +1049,17 @@ export const UiButton = (props: UiButtonProps) => {
 **Incorrect (수정자가 없는 값까지 조립해 CSS에 없는 클래스를 붙입니다):**
 
 ```tsx
-type SalesTone = "positive" | "negative" | "neutral" | "unknown";
+type Tone = "positive" | "negative" | "neutral" | "unknown";
 
-<span className={clsx("pg_salesPanel__metricValue", `pg_salesPanel__metricValue--${tone}`)}>{amount}</span>;
+<span className={clsx("pg_products__changeRate", `pg_products__changeRate--${tone}`)}>{amount}</span>;
 ```
 
 ```css
-.pg_salesPanel__metricValue--positive {
+.pg_products__changeRate--positive {
 	color: var(--app-color-rise);
 }
 
-.pg_salesPanel__metricValue--negative {
+.pg_products__changeRate--negative {
 	color: var(--app-color-fall);
 }
 ```
@@ -1069,9 +1069,9 @@ type SalesTone = "positive" | "negative" | "neutral" | "unknown";
 ```tsx
 <span
 	className={clsx(
-		"pg_salesPanel__metricValue",
-		tone === "positive" && "pg_salesPanel__metricValue--positive",
-		tone === "negative" && "pg_salesPanel__metricValue--negative",
+		"pg_products__changeRate",
+		tone === "positive" && "pg_products__changeRate--positive",
+		tone === "negative" && "pg_products__changeRate--negative",
 	)}
 >
 	{amount}
@@ -1081,35 +1081,35 @@ type SalesTone = "positive" | "negative" | "neutral" | "unknown";
 **Correct (같은 값이 요소 셋의 수정자를 정하면 요소마다 나열을 반복합니다):**
 
 ```tsx
-export interface WgFlowNodeProps {
-	role: "trigger" | "condition";
+export interface WgUserCardProps {
+	role: "owner" | "member";
 	label: string;
 	description: string;
 }
 
-export const WgFlowNode = (props: WgFlowNodeProps) => {
+export const WgUserCard = (props: WgUserCardProps) => {
 	return (
 		<div
 			className={clsx(
-				"wg_flowNode__root",
-				props.role === "trigger" && "wg_flowNode__root--trigger",
-				props.role === "condition" && "wg_flowNode__root--condition",
+				"wg_userCard__root",
+				props.role === "owner" && "wg_userCard__root--owner",
+				props.role === "member" && "wg_userCard__root--member",
 			)}
 		>
 			<span
 				className={clsx(
-					"wg_flowNode__title",
-					props.role === "trigger" && "wg_flowNode__title--trigger",
-					props.role === "condition" && "wg_flowNode__title--condition",
+					"wg_userCard__title",
+					props.role === "owner" && "wg_userCard__title--owner",
+					props.role === "member" && "wg_userCard__title--member",
 				)}
 			>
 				{props.label}
 			</span>
 			<p
 				className={clsx(
-					"wg_flowNode__description",
-					props.role === "trigger" && "wg_flowNode__description--trigger",
-					props.role === "condition" && "wg_flowNode__description--condition",
+					"wg_userCard__description",
+					props.role === "owner" && "wg_userCard__description--owner",
+					props.role === "member" && "wg_userCard__description--member",
 				)}
 			>
 				{props.description}
@@ -1154,10 +1154,10 @@ export const WgFlowNode = (props: WgFlowNodeProps) => {
 **Incorrect (중첩을 두 겹 이상 열어 실제 선택자를 숨깁니다):**
 
 ```css
-.pg_salesPanel__spreadButton {
+.pg_products__sortButton {
 	&.MuiButtonBase-root {
 		&:hover {
-			.pg_salesPanel__spreadBox {
+			.pg_products__sortBox {
 				border-color: #9fadc7;
 			}
 		}
@@ -1168,8 +1168,8 @@ export const WgFlowNode = (props: WgFlowNodeProps) => {
 **Incorrect (다른 요소의 가상 요소를 `&`로 다시 엽니다):**
 
 ```css
-.pg_salesPanel__spreadButton {
-	&:hover .pg_salesPanel__spreadBox {
+.pg_products__sortButton {
+	&:hover .pg_products__sortBox {
 		&::before {
 			border-color: #9fadc7;
 		}
@@ -1180,18 +1180,18 @@ export const WgFlowNode = (props: WgFlowNodeProps) => {
 **Correct (`&`는 한 번, 그다음 경로는 같은 줄에 이어 씁니다):**
 
 ```css
-.pg_salesPanel__spreadBox {
+.pg_products__sortBox {
 	&::before {
 		border: 2px solid #ced4da;
 	}
 }
 
-.pg_salesPanel__spreadButton {
+.pg_products__sortButton {
 	&.MuiButtonBase-root {
 		display: inline-flex;
 	}
 
-	&:hover .pg_salesPanel__spreadBox::before {
+	&:hover .pg_products__sortBox::before {
 		border-color: #9fadc7;
 	}
 }
@@ -1201,7 +1201,7 @@ export const WgFlowNode = (props: WgFlowNodeProps) => {
 
 ```css
 .pg_orderTable__root {
-	& .ant-table-thead > tr > th {
+	& .MuiTableHead-root > tr > th {
 		border-bottom: 2px solid #d9d9d9;
 	}
 }
@@ -1239,7 +1239,7 @@ export const WgFlowNode = (props: WgFlowNodeProps) => {
 **Incorrect (우리가 렌더하는 마크업을 요소 선택자로 잡습니다):**
 
 ```css
-.pg_catalogIndex__toolbar {
+.pg_products__toolbar {
 	& button {
 		height: 32px;
 	}
@@ -1266,23 +1266,23 @@ h2 {
 **Correct (우리가 렌더하면 클래스를 붙입니다):**
 
 ```tsx
-<div className={clsx("pg_catalogIndex__toolbar")}>
-	<div className={clsx("pg_catalogIndex__toolbarField")}>
+<div className={clsx("pg_products__toolbar")}>
+	<div className={clsx("pg_products__toolbarField")}>
 		<UiSearchInput />
 	</div>
-	<button type="button" className={clsx("pg_catalogIndex__toolbarButton")}>
+	<button type="button" className={clsx("pg_products__toolbarButton")}>
 		초기화
 	</button>
 </div>
 ```
 
 ```css
-.pg_catalogIndex__toolbarField {
+.pg_products__toolbarField {
 	flex: 1;
 	margin-inline-start: 0;
 }
 
-.pg_catalogIndex__toolbarButton {
+.pg_products__toolbarButton {
 	height: 32px;
 }
 ```
@@ -1344,15 +1344,15 @@ h2 {
 **Incorrect (`,`로 공통 선언을 묶고 아래에서 일부만 다시 엽니다):**
 
 ```css
-.pg_salesPanel__glyph--line,
-.pg_salesPanel__glyph--dashed,
-.pg_salesPanel__glyph--pin,
-.pg_salesPanel__glyph--band {
+.pg_products__badge--draft,
+.pg_products__badge--published,
+.pg_products__badge--archived,
+.pg_products__badge--deleted {
 	width: 24px;
 	height: 24px;
 }
 
-.pg_salesPanel__glyph--band {
+.pg_products__badge--deleted {
 	background: rgb(140 152 160 / 12%);
 }
 ```
@@ -1360,22 +1360,22 @@ h2 {
 **Correct (각 클래스가 자기 선언을 전부 가집니다):**
 
 ```css
-.pg_salesPanel__glyph--line {
+.pg_products__badge--draft {
 	width: 24px;
 	height: 24px;
 }
 
-.pg_salesPanel__glyph--dashed {
+.pg_products__badge--published {
 	width: 24px;
 	height: 24px;
 }
 
-.pg_salesPanel__glyph--pin {
+.pg_products__badge--archived {
 	width: 24px;
 	height: 24px;
 }
 
-.pg_salesPanel__glyph--band {
+.pg_products__badge--deleted {
 	width: 24px;
 	height: 24px;
 	background: rgb(140 152 160 / 12%);
@@ -1385,9 +1385,9 @@ h2 {
 **Incorrect (한 대상의 진입 조건을 `,`로 나열합니다):**
 
 ```css
-.pg_salesPanel__spreadButton {
-	&:hover .pg_salesPanel__spreadBox,
-	&.Mui-focusVisible .pg_salesPanel__spreadBox {
+.pg_products__sortButton {
+	&:hover .pg_products__sortBox,
+	&.Mui-focusVisible .pg_products__sortBox {
 		border-color: #9fadc7;
 	}
 }
@@ -1396,12 +1396,12 @@ h2 {
 **Correct (진입 조건마다 블록을 따로 열고 선언을 그대로 씁니다):**
 
 ```css
-.pg_salesPanel__spreadButton {
-	&:hover .pg_salesPanel__spreadBox {
+.pg_products__sortButton {
+	&:hover .pg_products__sortBox {
 		border-color: #9fadc7;
 	}
 
-	&.Mui-focusVisible .pg_salesPanel__spreadBox {
+	&.Mui-focusVisible .pg_products__sortBox {
 		border-color: #9fadc7;
 	}
 }
@@ -1432,17 +1432,17 @@ h2 {
 **Incorrect (같은 클래스를 파일 두 곳에서 열어 선언 순서에 의존합니다):**
 
 ```css
-.pg_catalogIndex__toolbar {
+.pg_products__toolbar {
 	display: flex;
 	gap: 12px;
 	padding: 8px;
 }
 
-.pg_catalogIndex__row {
+.pg_products__row {
 	background: #f5f5f5;
 }
 
-.pg_catalogIndex__toolbar {
+.pg_products__toolbar {
 	padding: 12px 16px;
 }
 ```
@@ -1450,13 +1450,13 @@ h2 {
 **Correct (한 블록에 모으고 최종 값만 남깁니다):**
 
 ```css
-.pg_catalogIndex__toolbar {
+.pg_products__toolbar {
 	display: flex;
 	gap: 12px;
 	padding: 12px 16px;
 }
 
-.pg_catalogIndex__row {
+.pg_products__row {
 	background: #f5f5f5;
 }
 ```
@@ -1464,14 +1464,14 @@ h2 {
 **Correct (조건이 다르면 별개 블록으로 둡니다):**
 
 ```css
-.pg_catalogIndex__toolbar {
+.pg_products__toolbar {
 	display: flex;
 	gap: 12px;
 	padding: 12px 16px;
 }
 
 @media (width < 1024px) {
-	.pg_catalogIndex__toolbar {
+	.pg_products__toolbar {
 		padding: 8px;
 	}
 }
@@ -1506,7 +1506,7 @@ h2 {
 **Incorrect (앱이 정하는 상태를 `data-*` 속성 선택자로 잡습니다):**
 
 ```css
-.pg_assetIndex__row {
+.pg_products__row {
 	&[data-pg-expanded="true"] {
 		background: #f5f5f5;
 	}
@@ -1516,7 +1516,7 @@ h2 {
 **Correct (앱이 정하는 상태는 수정자 클래스로 씁니다):**
 
 ```css
-.pg_assetIndex__row--expanded {
+.pg_products__row--expanded {
 	background: #f5f5f5;
 }
 ```
@@ -1524,11 +1524,11 @@ h2 {
 **Incorrect (같은 상태를 속성과 수정자 두 표기로 씁니다):**
 
 ```css
-.pg_assetIndex__card--selected {
+.pg_products__card--selected {
 	border-color: #1677ff;
 }
 
-.pg_assetIndex__card[aria-pressed="true"] {
+.pg_products__card[aria-pressed="true"] {
 	box-shadow: 0 0 0 1px #1677ff;
 }
 ```
@@ -1536,7 +1536,7 @@ h2 {
 **Correct (두 표기를 수정자 하나로 모읍니다):**
 
 ```css
-.pg_assetIndex__card--selected {
+.pg_products__card--selected {
 	border-color: #1677ff;
 	box-shadow: 0 0 0 1px #1677ff;
 }
@@ -1547,14 +1547,14 @@ h2 {
 <button
 	type="button"
 	aria-pressed={isSelected}
-	className={clsx("pg_assetIndex__card", isDisabled && "pg_assetIndex__card--disabled")}
+	className={clsx("pg_products__card", isDisabled && "pg_products__card--disabled")}
 >
-	{asset.name}
+	{product.name}
 </button>
 ```
 
 ```css
-.pg_assetIndex__card {
+.pg_products__card {
 	border: 1px solid #d9d9d9;
 
 	&[aria-pressed="true"] {
@@ -1562,7 +1562,7 @@ h2 {
 	}
 }
 
-.pg_assetIndex__card--disabled {
+.pg_products__card--disabled {
 	opacity: 0.5;
 }
 ```
@@ -1574,14 +1574,14 @@ h2 {
 	type="button"
 	aria-pressed={isSelected}
 	disabled={isDisabled}
-	className={clsx("pg_assetIndex__card", isSelected && "pg_assetIndex__card--selected")}
+	className={clsx("pg_products__card", isSelected && "pg_products__card--selected")}
 >
-	{asset.name}
+	{product.name}
 </button>
 ```
 
 ```css
-.pg_assetIndex__card {
+.pg_products__card {
 	border: 1px solid #d9d9d9;
 
 	&:disabled {
@@ -1589,7 +1589,7 @@ h2 {
 	}
 }
 
-.pg_assetIndex__card--selected {
+.pg_products__card--selected {
 	border-color: #1677ff;
 }
 ```
@@ -1753,7 +1753,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 **Incorrect (DOM 상태를 `:not()`으로 뒤집어 기본 모습을 상태 블록에 넣습니다):**
 
 ```css
-.pg_assetIndex__cardButton {
+.pg_products__cardButton {
 	&:not(:disabled) {
 		cursor: pointer;
 	}
@@ -1767,7 +1767,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 **Incorrect (활성 버튼의 hover를 부정 조건으로 표현합니다):**
 
 ```css
-.pg_assetIndex__cardButton {
+.pg_products__cardButton {
 	&:not(:disabled):hover {
 		background: #f5f5f5;
 	}
@@ -1777,7 +1777,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 **Correct (네이티브 버튼의 활성 상태를 긍정 조건으로 표현합니다):**
 
 ```css
-.pg_assetIndex__cardButton {
+.pg_products__cardButton {
 	&:enabled:hover {
 		background: #f5f5f5;
 	}
@@ -1787,7 +1787,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 **Correct (DOM 상태도 기본을 먼저 두고 그 상태만 덮습니다):**
 
 ```css
-.pg_assetIndex__cardButton {
+.pg_products__cardButton {
 	cursor: pointer;
 
 	&:disabled {
@@ -1837,8 +1837,8 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 **Incorrect (공통 토큰에 대체값을 붙여 값을 두 곳에 둡니다):**
 
 ```css
-/* src/page/post-index/_pg-post-filter-dialog.css */
-.pg_postFilterDialog__panel {
+/* src/page/orders/_pg-order-filter-dialog.css */
+.pg_orderFilterDialog__panel {
 	gap: var(--app-space-inline, 12px);
 	color: var(--app-color-text-primary, #212529);
 }
@@ -1853,8 +1853,8 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 	--app-color-text-primary: #212529;
 }
 
-/* src/page/post-index/_pg-post-filter-dialog.css */
-.pg_postFilterDialog__panel {
+/* src/page/orders/_pg-order-filter-dialog.css */
+.pg_orderFilterDialog__panel {
 	gap: var(--app-space-inline);
 	color: var(--app-color-text-primary);
 }
@@ -1863,9 +1863,9 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 **Incorrect (주입이 보장되지 않는 변수를 대체값 없이 씁니다):**
 
 ```css
-.pg_postFilterDialog__collapse {
-	& .ant-collapse-item {
-		border-radius: var(--ant-border-radius-lg);
+.pg_orderFilterDialog__collapse {
+	& .MuiAccordion-root {
+		border-radius: var(--mui-shape-borderRadius);
 	}
 }
 ```
@@ -1873,9 +1873,9 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 **Correct (목록에 없는 변수에는 대체값을 붙입니다):**
 
 ```css
-.pg_postFilterDialog__collapse {
-	& .ant-collapse-item {
-		border-radius: var(--ant-border-radius-lg, 10px);
+.pg_orderFilterDialog__collapse {
+	& .MuiAccordion-root {
+		border-radius: var(--mui-shape-borderRadius, 10px);
 	}
 }
 ```
@@ -1910,27 +1910,27 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 **Incorrect (한 파일 안 반복을 조상에 선언한 지역 변수로 감쌉니다):**
 
 ```css
-.pg_catalogIndex__root {
-	--pg-catalog-gap: 12px;
+.pg_products__root {
+	--pg-products-gap: 12px;
 }
 
-.pg_catalogIndex__toolbar {
-	gap: var(--pg-catalog-gap, 12px);
+.pg_products__toolbar {
+	gap: var(--pg-products-gap, 12px);
 }
 
-.pg_catalogIndex__footer {
-	gap: var(--pg-catalog-gap, 12px);
+.pg_products__footer {
+	gap: var(--pg-products-gap, 12px);
 }
 ```
 
 **Correct (한 파일 안 반복은 값을 그대로 둡니다):**
 
 ```css
-.pg_catalogIndex__toolbar {
+.pg_products__toolbar {
 	gap: 12px;
 }
 
-.pg_catalogIndex__footer {
+.pg_products__footer {
 	gap: 12px;
 }
 ```
@@ -1938,15 +1938,15 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 **Incorrect (상태를 전달하려고 지역 변수를 만듭니다):**
 
 ```css
-.pg_catalogIndex__rowBadge {
-	border-color: var(--pg-catalog-row-accent);
+.pg_products__rowBadge {
+	border-color: var(--pg-products-row-accent);
 }
 
-.pg_catalogIndex__row {
-	--pg-catalog-row-accent: transparent;
+.pg_products__row {
+	--pg-products-row-accent: transparent;
 
 	&:hover {
-		--pg-catalog-row-accent: #1677ff;
+		--pg-products-row-accent: #1677ff;
 	}
 }
 ```
@@ -1954,12 +1954,12 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 **Correct (상태 전달은 지역 변수 없이 결합자 하나로 풉니다):**
 
 ```css
-.pg_catalogIndex__rowBadge {
+.pg_products__rowBadge {
 	border: 1px solid transparent;
 }
 
-.pg_catalogIndex__row {
-	&:hover .pg_catalogIndex__rowBadge {
+.pg_products__row {
+	&:hover .pg_products__rowBadge {
 		border-color: #1677ff;
 	}
 }
@@ -1968,13 +1968,13 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 **Incorrect (여러 파일이 쓰는 값을 각 파일에 하드코딩합니다):**
 
 ```css
-/* pg-catalog-index.css */
-.pg_catalogIndex__row {
+/* pg-products.css */
+.pg_products__row {
 	background: #f5f5f5;
 }
 
-/* pg-catalog-detail.css */
-.pg_catalogDetail__row {
+/* pg-product-detail.css */
+.pg_productDetail__row {
 	background: #f5f5f5;
 }
 ```
@@ -1987,13 +1987,13 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 	--app-color-fill-muted: #f5f5f5;
 }
 
-/* pg-catalog-index.css */
-.pg_catalogIndex__row {
+/* pg-products.css */
+.pg_products__row {
 	background: var(--app-color-fill-muted);
 }
 
-/* pg-catalog-detail.css */
-.pg_catalogDetail__row {
+/* pg-product-detail.css */
+.pg_productDetail__row {
 	background: var(--app-color-fill-muted);
 }
 ```
@@ -2479,7 +2479,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 **Incorrect (층 숫자를 직접 적고 기준 컨테이너 설명이 없습니다):**
 
 ```css
-.pg_dashboard__toolbar {
+.pg_productDetail__toolbar {
 	position: sticky;
 	top: 0;
 	z-index: 9999;
@@ -2489,14 +2489,14 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 **Correct (기준 컨테이너와 의도를 드러냅니다):**
 
 ```css
-.pg_dashboard__toolbar {
-	/* .pg_dashboard__content가 스크롤 컨테이너다 */
+.pg_productDetail__toolbar {
+	/* .pg_productDetail__content가 스크롤 컨테이너다 */
 	position: sticky;
 	top: 0;
 	z-index: var(--app-z-index-sticky);
 }
 
-.pg_dashboard__content {
+.pg_productDetail__content {
 	display: grid;
 	min-height: 0;
 	overflow-y: auto;
@@ -2506,7 +2506,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 **Incorrect (로딩 대체 화면에만 높이를 따로 적습니다):**
 
 ```css
-.pg_dashboard__chartSkeleton {
+.pg_productDetail__chartSkeleton {
 	height: 320px;
 }
 ```
@@ -2514,15 +2514,15 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 **Correct (대체 화면을 실제 내용과 같은 컨테이너 클래스 안에 넣습니다):**
 
 ```tsx
-<div className={clsx("pg_dashboard__chart")}>
+<div className={clsx("pg_productDetail__chart")}>
 	<Suspense fallback={<UiChartSkeleton />}>
-		<PgDashboardChartSection />
+		<PgProductDetailChartSection />
 	</Suspense>
 </div>
 ```
 
 ```css
-.pg_dashboard__chart {
+.pg_productDetail__chart {
 	/* 로딩 중과 실제 차트에 같은 최소 높이를 확보한다 */
 	min-height: 320px;
 }
@@ -2895,7 +2895,7 @@ export default {
 export default {
 	extends: ["stylelint-config-standard"],
 	rules: {
-		// .ant-table-thead > tr > th 같은 라이브러리 DOM 을 잡아 예외 주석만 늘어난다
+		// .MuiTableHead-root > tr > th 같은 라이브러리 DOM 을 잡아 예외 주석만 늘어난다
 		"selector-max-combinators": 1,
 	},
 };

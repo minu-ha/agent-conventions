@@ -40,7 +40,7 @@ tags: naming, types, ownership
 | 이름을 정할 대상 | 기준 |
 | --- | --- |
 | 이미 필요한 계약 | 역할어를 고릅니다. `Params`, `Content`, `Snapshot`을 쓰려고 타입을 만들지 않으며, 맞는 기존 계약이나 추론되는 익명 결과를 유지합니다 |
-| 소유자 안의 타입 | 폴더가 말하는 도메인을 반복하지 않습니다. `sales-report/_type/`에서는 `ReportSnapshot`입니다 |
+| 소유자 안의 타입 | 폴더가 말하는 도메인을 반복하지 않습니다. `order-report/_type/`에서는 `ReportSnapshot`입니다 |
 | 소유자 밖으로 내보내는 타입 | 문맥이 사라지거나 이름이 충돌할 때만 필요한 도메인 접두를 유지합니다 |
 | 타입과 파일명 | `report-snapshot.ts`처럼 실제 명사를 씁니다. 단순 가공 · 표시 결과에 `VM`, `ViewModel` · 막연한 `Model`과 대응 파일명을 쓰지 않습니다 |
 | 외부 · 생성된 계약 | 이름과 `DTO` 같은 접미사를 보존합니다. 내부 계약에는 이를 구별용 접미사로 붙이지 않습니다 |
@@ -50,9 +50,9 @@ tags: naming, types, ownership
 
 ```ts
 /**
- * 영업 보고서 화면 데이터
+ * 주문 보고서 화면 데이터
  */
-interface SalesReportViewModel {
+interface OrderReportViewModel {
 	/**
 	 * 조회 시점의 행 목록
 	 */
@@ -63,13 +63,13 @@ interface SalesReportViewModel {
 	filters: ReportFilters;
 }
 
-const salesReportVM: SalesReportViewModel = response.data;
+const orderReportVM: OrderReportViewModel = response.data;
 ```
 
 **Correct (한 조회 시점에 고정된 값이라는 역할을 이름에 표시합니다):**
 
 ```ts
-// page/sales-report/_type/report-snapshot.ts: 폴더가 이미 sales-report 를 말한다
+// page/order-report/_type/report-snapshot.ts: 폴더가 이미 order-report 를 말한다
 /**
  * 한 조회 시점의 보고서 목록과 조건
  */

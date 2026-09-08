@@ -49,10 +49,10 @@ const request_timeout_ms = 20_000;
 const productClient = createClient({timeoutMs: request_timeout_ms});
 const productQuery = useProductQuery({client: productClient, pageSize: default_page_size});
 
-// page/billing/pg-billing.tsx
+// page/orders/pg-orders.tsx
 const default_page_size = 20;
 
-const invoiceQuery = useInvoiceQuery({pageSize: default_page_size});
+const orderQuery = useOrderQuery({pageSize: default_page_size});
 ```
 
 **Correct (루트 `constant` 폴더에 둔 이름을 쓰는 자리에서 가져옵니다):**
@@ -65,10 +65,10 @@ import {pagination_default_page_size} from "@/constant/pagination";
 const productClient = createClient({timeoutMs: api_request_timeout_ms});
 const productQuery = useProductQuery({client: productClient, pageSize: pagination_default_page_size});
 
-// page/billing/pg-billing.tsx
+// page/orders/pg-orders.tsx
 import {pagination_default_page_size} from "@/constant/pagination";
 
-const invoiceQuery = useInvoiceQuery({pageSize: pagination_default_page_size});
+const orderQuery = useOrderQuery({pageSize: pagination_default_page_size});
 ```
 
 **Incorrect (객체 하나에 모아 색인을 손으로 유지합니다):**

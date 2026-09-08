@@ -51,21 +51,21 @@ const visibleTabs = ["overview", ...(canManageItems ? ["items"] : [])];
 **Incorrect (삼항 안에 삼항을 넣어 값 하나를 고릅니다):**
 
 ```ts
-const statusLabel = task.isClosed ? "마감" : task.isDueSoon ? "임박" : "진행";
+const statusLabel = order.isCancelled ? "취소" : order.isDueSoon ? "임박" : "진행";
 ```
 
 **Correct (분기가 셋이면 `return`으로 끝나는 함수로 뺍니다):**
 
 ```ts
-// page/task/_function/to-task-row/_to-status-label.ts
+// page/orders/_function/to-order-row/_to-status-label.ts
 /**
- * 할 일 행의 상태 라벨. 마감이 임박보다 우선한다
+ * 주문 행의 상태 라벨. 취소가 임박보다 우선한다
  */
-export const toStatusLabel = (task: TaskRow): StatusLabel => {
-	if (task.isClosed) {
-		return "마감";
+export const toStatusLabel = (order: OrderRow): StatusLabel => {
+	if (order.isCancelled) {
+		return "취소";
 	}
-	if (task.isDueSoon) {
+	if (order.isDueSoon) {
 		return "임박";
 	}
 	return "진행";

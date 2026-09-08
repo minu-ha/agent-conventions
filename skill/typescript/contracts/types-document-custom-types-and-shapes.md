@@ -52,16 +52,6 @@ export interface PublishResult {
 	 */
 	published: boolean;
 }
-
-/**
- * 게시 결과 스키마
- */
-const publishResultSchema = z.object({
-	/**
-	 * 게시 대상 문서 ID
-	 */
-	documentId: z.string(),
-});
 ```
 
 > 나머지 예시 · 예외는 [full rule](../rules/01-04-types-document-custom-types-and-shapes.md)에 있습니다.

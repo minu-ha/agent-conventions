@@ -37,7 +37,7 @@
 | `filterActiveUsers` | 남기는 목록이면 `toActiveUsers` |
 | `mapProductRows` | 출력이 행이면 `toProductRows` |
 | `updateProduct` | 저장이면 `saveProduct`, 계산이면 `toUpdatedProduct` |
-| `resolveGradeTone` | 분류 결과인 `toGradeTone` |
+| `resolveStatusTone` | 분류 결과인 `toStatusTone` |
 
 `array.map(...)` 같은 표준 메서드 호출은 함수 명명 규칙의 대상이 아닙니다.
 `handle` · `use`는 프레임워크 규칙을 따릅니다.
@@ -49,7 +49,7 @@
 export const buildUserPayload = (formValues: UserFormValues) => { /* … */ };
 export const mapResponseToModel = (response: UserResponse) => { /* … */ };
 export const processUserRows = (rows: UserRow[]) => { /* … */ };
-export const resolveGradeTone = (grade: string) => { /* … */ };
+export const resolveStatusTone = (status: string) => { /* … */ };
 ```
 
 **Correct (출력 역할이나 효과를 이름에 씁니다):**
@@ -71,9 +71,9 @@ export const toUserRows = (response: UserResponse) => { /* … */ };
 export const toActiveUsers = (rows: UserRow[]) => { /* … */ };
 
 /**
- * 등급 문자열을 강조 tone으로 분류한다
+ * 상태 문자열을 강조 tone으로 분류한다
  */
-export const toGradeTone = (grade: string) => { /* … */ };
+export const toStatusTone = (status: string) => { /* … */ };
 ```
 
 > 나머지 예시 · 예외는 [full rule](../rules/03-09-functions-name-functions-by-what-comes-out.md)에 있습니다.

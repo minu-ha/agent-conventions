@@ -39,7 +39,7 @@ tags: data, mutation, errors
 
 ```tsx
 const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
-	await mutationProductSave.mutateAsync({data: toProductSaveRequest(formValues)});
+	await mutationProductSave.mutateAsync({data: toProductSaveRequest(props.formValues)});
 	void navigate("/products");
 };
 ```
@@ -66,7 +66,7 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => 
 		return;
 	}
 
-	mutationProductSave.mutate({data: toProductSaveRequest(formValues)});
+	mutationProductSave.mutate({data: toProductSaveRequest(props.formValues)});
 };
 ```
 
@@ -81,7 +81,7 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => 
 		return;
 	}
 
-	mutationProductSave.mutate({data: toProductSaveRequest(formValues)});
+	mutationProductSave.mutate({data: toProductSaveRequest(props.formValues)});
 };
 
 <UiButton disabled={mutationProductSave.isPending} onClick={handleSaveButtonClick}>
@@ -104,7 +104,7 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = async (_even
 		const uploaded = await mutationAttachmentUpload.mutateAsync({files: draftFiles});
 
 		await mutationProductSave.mutateAsync({
-			data: toProductSaveRequest(formValues, uploaded.attachmentIds),
+			data: toProductSaveRequest(props.formValues, uploaded.attachmentIds),
 		});
 
 		void navigate("/products");

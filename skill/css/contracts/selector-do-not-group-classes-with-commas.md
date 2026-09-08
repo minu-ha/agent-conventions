@@ -20,15 +20,15 @@
 **Incorrect (`,`로 공통 선언을 묶고 아래에서 일부만 다시 엽니다):**
 
 ```css
-.pg_salesPanel__glyph--line,
-.pg_salesPanel__glyph--dashed,
-.pg_salesPanel__glyph--pin,
-.pg_salesPanel__glyph--band {
+.pg_products__badge--draft,
+.pg_products__badge--published,
+.pg_products__badge--archived,
+.pg_products__badge--deleted {
 	width: 24px;
 	height: 24px;
 }
 
-.pg_salesPanel__glyph--band {
+.pg_products__badge--deleted {
 	background: rgb(140 152 160 / 12%);
 }
 ```
@@ -36,22 +36,22 @@
 **Correct (각 클래스가 자기 선언을 전부 가집니다):**
 
 ```css
-.pg_salesPanel__glyph--line {
+.pg_products__badge--draft {
 	width: 24px;
 	height: 24px;
 }
 
-.pg_salesPanel__glyph--dashed {
+.pg_products__badge--published {
 	width: 24px;
 	height: 24px;
 }
 
-.pg_salesPanel__glyph--pin {
+.pg_products__badge--archived {
 	width: 24px;
 	height: 24px;
 }
 
-.pg_salesPanel__glyph--band {
+.pg_products__badge--deleted {
 	width: 24px;
 	height: 24px;
 	background: rgb(140 152 160 / 12%);

@@ -24,7 +24,7 @@ tags: absence
 | 순서 | 판단과 처리 |
 | --- | --- |
 | 1. 기본값 없이 소비할 수 있는가 | `undefined`를 허용하면 `items?.map(…)`, 선택 값 비교는 `variant === "compact"`로 처리합니다 |
-| 2. 경계에서 채울 수 있는가 | search 스키마의 `.default(선언된 상수)`, 응답 매핑, 쿼리의 `select`에서 한 번 채웁니다. 아래에서는 선택 값과 `??`가 남지 않습니다 |
+| 2. 경계에서 채울 수 있는가 | search 파라미터 파서의 `.withDefault(선언된 상수)`, 응답 매핑, 쿼리의 `select`에서 한 번 채웁니다. 아래에서는 선택 값과 `??`가 남지 않습니다 |
 | 3. 경계에서 처리할 수 없는가 | 사용처에 `fetchProducts({pageSize: query.pageSize ?? pagination_default_page_size})`처럼 적습니다 |
 | 4. 파생값에 이름이 필요한가 | `pageSize` 대신 `effectivePageSize`처럼 고른 결과임을 드러냅니다. 사용 횟수보다 표현식의 의미를 기준으로 판단합니다 |
 
@@ -58,14 +58,13 @@ setVisibleRowCount(query.pageSize ?? pagination_default_page_size);
 
 ```ts
 /**
- * product 목록 검색 조건. pageSize는 여기서 채워져 화면에서는 선택 값이 아니다
+ * product 목록 search 파라미터. pageSize는 여기서 채워져 화면에서는 선택 값이 아니다
  */
-const productSearchSchema = z.object({
-	/**
-	 * 한 번에 불러올 개수
-	 */
-	pageSize: z.number().default(pagination_default_page_size),
-});
+const productUrlParsers = {
+	pageSize: parseAsInteger.withDefault(pagination_default_page_size),
+};
+
+const [query] = useQueryStates(productUrlParsers);
 
 fetchProducts({pageSize: query.pageSize});
 setVisibleRowCount(query.pageSize);

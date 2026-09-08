@@ -47,25 +47,25 @@ API 응답 · 요청, 생성 DTO, 라이브러리 인자, DOM 속성, 환경 변
 
 ```ts
 // userSettings.ts
-// 스키마와 그 필드는 일반 심볼이라 camelCase다
-const User_ProfileSchema = z.object({
-	repo_path: z.string(),
-});
+// 우리가 선언한 타입은 PascalCase, 그 필드는 camelCase다
+interface User_Profile {
+	avatar_url: string;
+}
 ```
 
-**Correct (파일명은 `kebab-case`, 스키마 키는 `camelCase`로 씁니다):**
+**Correct (파일명은 `kebab-case`, 타입 필드는 `camelCase`로 씁니다):**
 
 ```ts
 // user-settings.ts
 /**
- * 사용자 프로필 스키마
+ * 사용자 프로필
  */
-const userProfileSchema = z.object({
+interface UserProfile {
 	/**
-	 * 저장소 경로
+	 * 프로필 이미지 주소
 	 */
-	repoPath: z.string(),
-});
+	avatarUrl: string;
+}
 ```
 
 **Incorrect (불변 데이터 상수와 값 집합의 이름과 키를 `camelCase`로 적습니다):**

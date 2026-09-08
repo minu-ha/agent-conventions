@@ -29,17 +29,17 @@ tags: selector, cascade, maintainability
 **Incorrect (같은 클래스를 파일 두 곳에서 열어 선언 순서에 의존합니다):**
 
 ```css
-.pg_catalogIndex__toolbar {
+.pg_products__toolbar {
 	display: flex;
 	gap: 12px;
 	padding: 8px;
 }
 
-.pg_catalogIndex__row {
+.pg_products__row {
 	background: #f5f5f5;
 }
 
-.pg_catalogIndex__toolbar {
+.pg_products__toolbar {
 	padding: 12px 16px;
 }
 ```
@@ -47,13 +47,13 @@ tags: selector, cascade, maintainability
 **Correct (한 블록에 모으고 최종 값만 남깁니다):**
 
 ```css
-.pg_catalogIndex__toolbar {
+.pg_products__toolbar {
 	display: flex;
 	gap: 12px;
 	padding: 12px 16px;
 }
 
-.pg_catalogIndex__row {
+.pg_products__row {
 	background: #f5f5f5;
 }
 ```
@@ -61,14 +61,14 @@ tags: selector, cascade, maintainability
 **Correct (조건이 다르면 별개 블록으로 둡니다):**
 
 ```css
-.pg_catalogIndex__toolbar {
+.pg_products__toolbar {
 	display: flex;
 	gap: 12px;
 	padding: 12px 16px;
 }
 
 @media (width < 1024px) {
-	.pg_catalogIndex__toolbar {
+	.pg_products__toolbar {
 		padding: 8px;
 	}
 }

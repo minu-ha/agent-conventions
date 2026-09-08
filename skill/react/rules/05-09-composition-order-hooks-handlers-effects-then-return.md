@@ -50,7 +50,13 @@ export const PgOrderToolbar = () => {
 		setIsPanelOpen(true);
 	};
 
-	return <section className={clsx("pg_orderToolbar__root")}>{props.children}</section>;
+	return (
+		<section className={clsx("pg_orderToolbar__root")}>
+			<UiButton onClick={handleClearButtonClick}>비우기</UiButton>
+			<UiButton onClick={handlePanelOpenButtonClick}>필터</UiButton>
+			{isPanelOpen && <PgOrderFilterPanel />}
+		</section>
+	);
 };
 ```
 

@@ -108,7 +108,7 @@ export const PgProductListSection = () => {
 	/**
 	 * 폼 값을 전송 형태로 바꿔 저장만 부르고, 저장 뒤 흐름은 mutation 콜백이 이어 간다
 	 */
-	const handleProductSave: UiTableProps["onSave"] = () => {
+	const handleProductSave: UiTableProps["onSave"] = (formValues) => {
 		mutationProductSave.mutate({data: toProductSaveRequest(formValues)});
 	};
 

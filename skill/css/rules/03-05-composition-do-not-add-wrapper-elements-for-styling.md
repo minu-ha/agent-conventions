@@ -29,15 +29,15 @@ tags: components, wrappers, layout
 **Incorrect (래퍼 `div`로 최상위 스타일을 우회합니다):**
 
 ```tsx
-<div className={clsx("pg_postIndex__collapseWrap")}>
+<div className={clsx("pg_orders__collapseWrap")}>
 	<UiCollapse>
-		<PgPostFilterFields />
+		<PgOrderFilterFields />
 	</UiCollapse>
 </div>
 ```
 
 ```css
-.pg_postIndex__collapseWrap {
+.pg_orders__collapseWrap {
 	margin-block-end: 16px;
 }
 ```
@@ -58,13 +58,13 @@ export const UiCollapse = (props: UiCollapseProps) => {
 ```
 
 ```tsx
-<UiCollapse className={clsx("pg_postIndex__collapse")}>
-	<PgPostFilterFields />
+<UiCollapse className={clsx("pg_orders__collapse")}>
+	<PgOrderFilterFields />
 </UiCollapse>
 ```
 
 ```css
-.pg_postIndex__collapse {
+.pg_orders__collapse {
 	margin-block-end: 16px;
 }
 ```
@@ -72,8 +72,8 @@ export const UiCollapse = (props: UiCollapseProps) => {
 **Incorrect (역할 없는 이름의 래퍼를 늘립니다):**
 
 ```tsx
-<div className={clsx("pg_postIndex__box")}>
-	<div className={clsx("pg_postIndex__inner")}>
+<div className={clsx("pg_orders__box")}>
+	<div className={clsx("pg_orders__inner")}>
 		<LegacyDatePicker value={value} onChange={handleChange} />
 	</div>
 </div>
@@ -85,7 +85,7 @@ export const UiCollapse = (props: UiCollapseProps) => {
 {/**
  * LegacyDatePicker는 className을 받지 않아 배치용 래퍼가 필요하다
  */}
-<div className={clsx("pg_postIndex__dateField")}>
+<div className={clsx("pg_orders__dateField")}>
 	<LegacyDatePicker value={value} onChange={handleChange} />
 </div>
 ```

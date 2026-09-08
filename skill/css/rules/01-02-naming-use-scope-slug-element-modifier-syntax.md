@@ -37,9 +37,9 @@ ui_tag_list__root
 ui_tagList__list-item
 wg_site_header__root
 wg_siteHeader__brand-link
-pg_catalog_detail__root
-pg_catalogDetail__main-content
-pg_catalogDetail__main--route_active
+pg_product_detail__root
+pg_productDetail__main-content
+pg_productDetail__main--route_active
 ```
 
 **Correct (범위는 소문자로 쓰고 식별자, 요소, 수정자는 camelCase로 씁니다):**
@@ -49,7 +49,7 @@ ui_tagList__root
 ui_tagList__listItem
 wg_siteHeader__root
 wg_siteHeader__brandLink
-pg_catalogDetail__root
-pg_catalogDetail__mainContent
-pg_catalogDetail__main--routeActive
+pg_productDetail__root
+pg_productDetail__mainContent
+pg_productDetail__main--routeActive
 ```

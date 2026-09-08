@@ -24,10 +24,10 @@ tags: naming, css-modules, ownership
 **Incorrect (프로젝트 표준이 없는데도 CSS Modules를 기본처럼 씁니다):**
 
 ```tsx
-import styles from "./catalog-index.module.css";
+import styles from "./products.module.css";
 
 <section className={styles.hero}>
-	<span className={styles.eyebrow}>Catalog</span>
+	<span className={styles.eyebrow}>Products</span>
 </section>
 ```
 
@@ -45,19 +45,19 @@ import styles from "./catalog-index.module.css";
 
 ```tsx
 import {clsx} from "clsx";
-import "./pg-catalog-index.css";
+import "./pg-products.css";
 
-<section className={clsx("pg_catalogIndex__hero")}>
-	<span className={clsx("pg_catalogIndex__eyebrow")}>Catalog</span>
+<section className={clsx("pg_products__hero")}>
+	<span className={clsx("pg_products__eyebrow")}>Products</span>
 </section>
 ```
 
 ```css
-.pg_catalogIndex__hero {
+.pg_products__hero {
 	display: grid;
 }
 
-.pg_catalogIndex__eyebrow {
+.pg_products__eyebrow {
 	letter-spacing: 0.08em;
 }
 ```

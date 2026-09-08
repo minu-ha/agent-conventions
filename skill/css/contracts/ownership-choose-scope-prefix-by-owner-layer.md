@@ -22,8 +22,8 @@
 **Incorrect (최상위 폴더 대신 사용 횟수와 재사용 예상을 보고 접두사를 고릅니다):**
 
 ```txt
-page/detail/_pg-sales-trend-panel.css
-  wg_salesTrendPanel__root
+page/detail/_pg-product-table-section.css
+  wg_productTable__root
 
 component/widget/chart/_wg-chart-header.css
   pg_chartHeader__root
@@ -35,8 +35,8 @@ component/widget/chart/_wg-chart-header.css
 page/detail/pg-detail.css
   pg_detail__root
 
-page/detail/_pg-sales-trend-panel.css
-  pg_salesTrendPanel__root
+page/detail/_pg-product-table-section.css
+  pg_productTableSection__root
 
 component/widget/chart/_wg-chart-header.css
   wg_chartHeader__root

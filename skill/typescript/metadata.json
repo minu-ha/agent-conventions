@@ -7,7 +7,6 @@
 	"progressiveDisclosure": true,
 	"references": [
 		"https://www.typescriptlang.org/docs/",
-		"https://jsdoc.app",
-		"https://zod.dev"
+		"https://jsdoc.app"
 	]
 }

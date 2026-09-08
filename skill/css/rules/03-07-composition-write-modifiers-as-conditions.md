@@ -21,7 +21,7 @@ tags: clsx, className, modifiers
 
 | 상황 | 작성 방법 |
 | --- | --- |
-| 값 하나에 수정자를 붙임 | `tone === "positive" && "pg_salesPanel__metricValue--positive"`처럼 씁니다. 템플릿 리터럴로 이름을 조립하지 않습니다 |
+| 값 하나에 수정자를 붙임 | `tone === "positive" && "pg_products__changeRate--positive"`처럼 씁니다. 템플릿 리터럴로 이름을 조립하지 않습니다 |
 | 값이 여럿임 | 값마다 한 줄씩 적습니다. 여러 요소에 같은 값을 적용해도 요소마다 나열합니다 |
 | 일부 값에만 CSS 수정자가 있음 | 해당 값만 나열하고 나머지는 기본 모습으로 둡니다. 값이 다섯이고 수정자가 둘이면 둘만 적습니다 |
 | `ButtonProps["variant"]`처럼 라이브러리 타입을 그대로 받음 | 수정자를 만들지 않고 라이브러리에 넘깁니다. 라이브러리가 추가한 값을 우리 목록이 놓칠 수 있습니다 |
@@ -98,17 +98,17 @@ export const UiButton = (props: UiButtonProps) => {
 **Incorrect (수정자가 없는 값까지 조립해 CSS에 없는 클래스를 붙입니다):**
 
 ```tsx
-type SalesTone = "positive" | "negative" | "neutral" | "unknown";
+type Tone = "positive" | "negative" | "neutral" | "unknown";
 
-<span className={clsx("pg_salesPanel__metricValue", `pg_salesPanel__metricValue--${tone}`)}>{amount}</span>;
+<span className={clsx("pg_products__changeRate", `pg_products__changeRate--${tone}`)}>{amount}</span>;
 ```
 
 ```css
-.pg_salesPanel__metricValue--positive {
+.pg_products__changeRate--positive {
 	color: var(--app-color-rise);
 }
 
-.pg_salesPanel__metricValue--negative {
+.pg_products__changeRate--negative {
 	color: var(--app-color-fall);
 }
 ```
@@ -118,9 +118,9 @@ type SalesTone = "positive" | "negative" | "neutral" | "unknown";
 ```tsx
 <span
 	className={clsx(
-		"pg_salesPanel__metricValue",
-		tone === "positive" && "pg_salesPanel__metricValue--positive",
-		tone === "negative" && "pg_salesPanel__metricValue--negative",
+		"pg_products__changeRate",
+		tone === "positive" && "pg_products__changeRate--positive",
+		tone === "negative" && "pg_products__changeRate--negative",
 	)}
 >
 	{amount}
@@ -130,35 +130,35 @@ type SalesTone = "positive" | "negative" | "neutral" | "unknown";
 **Correct (같은 값이 요소 셋의 수정자를 정하면 요소마다 나열을 반복합니다):**
 
 ```tsx
-export interface WgFlowNodeProps {
-	role: "trigger" | "condition";
+export interface WgUserCardProps {
+	role: "owner" | "member";
 	label: string;
 	description: string;
 }
 
-export const WgFlowNode = (props: WgFlowNodeProps) => {
+export const WgUserCard = (props: WgUserCardProps) => {
 	return (
 		<div
 			className={clsx(
-				"wg_flowNode__root",
-				props.role === "trigger" && "wg_flowNode__root--trigger",
-				props.role === "condition" && "wg_flowNode__root--condition",
+				"wg_userCard__root",
+				props.role === "owner" && "wg_userCard__root--owner",
+				props.role === "member" && "wg_userCard__root--member",
 			)}
 		>
 			<span
 				className={clsx(
-					"wg_flowNode__title",
-					props.role === "trigger" && "wg_flowNode__title--trigger",
-					props.role === "condition" && "wg_flowNode__title--condition",
+					"wg_userCard__title",
+					props.role === "owner" && "wg_userCard__title--owner",
+					props.role === "member" && "wg_userCard__title--member",
 				)}
 			>
 				{props.label}
 			</span>
 			<p
 				className={clsx(
-					"wg_flowNode__description",
-					props.role === "trigger" && "wg_flowNode__description--trigger",
-					props.role === "condition" && "wg_flowNode__description--condition",
+					"wg_userCard__description",
+					props.role === "owner" && "wg_userCard__description--owner",
+					props.role === "member" && "wg_userCard__description--member",
 				)}
 			>
 				{props.description}

@@ -79,12 +79,12 @@ page/detail/
 ├── constants/
 ├── utils/
 ├── helpers/
-└── sales-trend-panel/
-    ├── pg-sales-trend-panel.tsx
-    └── detection/
-        ├── pg-detection.tsx
+└── product-table-section/
+    ├── pg-product-table-section.tsx
+    └── review/
+        ├── pg-review.tsx
         └── _function/
-            └── to-detection-rows.ts
+            └── to-review-rows.ts
 ```
 
 **Correct (필요한 역할 폴더만 만들고 하위 컴포넌트는 파일로 둡니다):**
@@ -93,19 +93,19 @@ page/detail/
 page/detail/
 ├── pg-detail.tsx
 ├── pg-detail.css
-├── _pg-summary-band.tsx           자기만 쓰는 파일이 없어 파일로 둠
-├── _pg-summary-band.css
+├── _pg-product-summary.tsx            자기만 쓰는 파일이 없어 파일로 둠
+├── _pg-product-summary.css
 ├── _function/
 │   ├── to-product-summary.ts
-│   └── to-sales-chart/                자기만 쓰는 보조가 있어 폴더
-│       ├── to-sales-chart.ts
-│       └── _to-chart-window.ts        toSalesChart 만 부름
+│   └── to-trend-chart/                자기만 쓰는 보조가 있어 폴더
+│       ├── to-trend-chart.ts
+│       └── _to-chart-range.ts         toTrendChart 만 부름
 ├── _type/
 │   └── detail-view-model.ts
-└── sales-trend-panel/             자기만 쓰는 파일이 있어 하위 소유자 폴더가 됨
-    ├── pg-sales-trend-panel.tsx
-    ├── pg-sales-trend-panel.css
-    ├── _pg-detection-section.tsx
+└── product-table-section/             자기만 쓰는 파일이 있어 하위 소유자 폴더가 됨
+    ├── pg-product-table-section.tsx
+    ├── pg-product-table-section.css
+    ├── _pg-review-section.tsx
     └── _function/
-        └── to-chart-viewport.ts
+        └── to-chart-range.ts
 ```

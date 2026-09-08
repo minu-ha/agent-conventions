@@ -252,7 +252,7 @@
 		},
 		{
 			"id": "RTE09-route-runtime-section",
-			"prompt": "extract only the tree section that owns local search and expanded state plus a tree adapter into the owner component folder, implement a named selection handler from UiTreeProps[\"onSelect\"], mark the remaining page sections in JSX, and keep section assembly, Suspense boundaries, and route navigation decisions visible at the route entry while the section owns its data and interaction.",
+			"prompt": "extract only the tree section that owns local search and expanded state plus a tree adapter into the owner component folder, implement a named selection handler from UiTreeProps[\"onSelectedItemsChange\"], mark the remaining page sections in JSX, and keep section assembly, Suspense boundaries, and route navigation decisions visible at the route entry while the section owns its data and interaction.",
 			"files": [
 				"src/page/products/pg-products.tsx",
 				"src/page/products/_pg-product-tree-section.tsx"
@@ -459,11 +459,11 @@
 		},
 		{
 			"id": "RTE16-private-component-import-direction",
-			"prompt": "two sibling files under src/page/detail/sales-trend-panel/ import each other's legend row through ../; make the panel own the shared legend row and pass it down as an element prop, and remove the sibling and @/page component imports.",
+			"prompt": "two sibling files under src/page/detail/product-table-section/ import each other's legend row through ../; make the panel own the shared legend row and pass it down as an element prop, and remove the sibling and @/page component imports.",
 			"files": [
-				"src/page/detail/sales-trend-panel/pg-sales-trend-panel.tsx",
-				"src/page/detail/sales-trend-panel/_pg-detection-section.tsx",
-				"src/page/detail/sales-trend-panel/_pg-summary-band.tsx"
+				"src/page/detail/product-table-section/pg-product-table-section.tsx",
+				"src/page/detail/product-table-section/_pg-review-section.tsx",
+				"src/page/detail/product-table-section/_pg-product-summary.tsx"
 			],
 			"expectedSkills": [
 				"react",

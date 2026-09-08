@@ -45,7 +45,7 @@ const PgProductDetailPanel = (props: PgProductDetailPanelProps) => {
 // page/products/_pg-product-tree-section.tsx
 export const PgProductTreeSection = () => {
 	const [urlParams, setUrlParams] = useQueryStates(productUrlParsers);
-	const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
+	const [expandedItems, setExpandedItems] = useState<string[]>([]);
 
 	/**
 	 * 사이드바가 그릴 분류 노드만 남긴다. 트리 펼침 상태는 이 섹션이 따로 들고 있다
@@ -56,23 +56,14 @@ export const PgProductTreeSection = () => {
 	);
 
 	/**
-	 * UiTree가 넘기는 key 타입이 넓어서 문자열로 좁혀 담는다
-	 */
-	const handleTreeExpand: UiTreeProps["onExpand"] = (keys) => {
-		setExpandedKeys(keys.map(String));
-	};
-
-	/**
 	 * 고른 분류를 URL에 적어 두어 새로 고침해도 같은 화면이 열리게 한다
 	 */
-	const handleTreeSelect: UiTreeProps["onSelect"] = (keys) => {
-		const selectedKey = keys[0];
-
-		if (selectedKey === undefined) {
+	const handleTreeSelectedItemsChange: UiTreeProps["onSelectedItemsChange"] = (itemId) => {
+		if (itemId === null) {
 			return;
 		}
 
-		void setUrlParams({categoryId: String(selectedKey)});
+		void setUrlParams({categoryId: itemId});
 	};
 
 	return (
@@ -80,10 +71,10 @@ export const PgProductTreeSection = () => {
 			{responseProductTreeSuspense.data.categoryNodes.length > 0 && (
 				<UiTree
 					items={responseProductTreeSuspense.data.categoryNodes}
-					expandedKeys={expandedKeys}
-					selectedKeys={urlParams.categoryId ? [urlParams.categoryId] : []}
-					onExpand={handleTreeExpand}
-					onSelect={handleTreeSelect}
+					expandedItems={expandedItems}
+					selectedItems={urlParams.categoryId}
+					onExpandedItemsChange={setExpandedItems}
+					onSelectedItemsChange={handleTreeSelectedItemsChange}
 				/>
 			)}
 			{responseProductTreeSuspense.data.categoryNodes.length === 0 && <UiEmpty description="분류가 없습니다" />}

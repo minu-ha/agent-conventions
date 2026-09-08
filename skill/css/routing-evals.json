@@ -4,9 +4,9 @@
 	"scenarios": [
 		{
 			"id": "css-route-style-scope-drift",
-			"prompt": "pure rendering change in src/page/catalog-index/pg-catalog-index.tsx, with React and TypeScript only.",
+			"prompt": "pure rendering change in src/page/products/pg-products.tsx, with React and TypeScript only.",
 			"files": [
-				"src/page/catalog-index/pg-catalog-index.tsx"
+				"src/page/products/pg-products.tsx"
 			],
 			"expectedSkills": [
 				"react",
@@ -17,10 +17,10 @@
 				"typescript": []
 			},
 			"scopeDrift": {
-				"evidence": "add route-owned empty-state className, src/page/catalog-index/pg-catalog-index.css, and its direct side-effect import in a project without a CSS Modules standard; final skills add CSS.",
+				"evidence": "add route-owned empty-state className, src/page/products/pg-products.css, and its direct side-effect import in a project without a CSS Modules standard; final skills add CSS.",
 				"files": [
-					"src/page/catalog-index/pg-catalog-index.tsx",
-					"src/page/catalog-index/pg-catalog-index.css"
+					"src/page/products/pg-products.tsx",
+					"src/page/products/pg-products.css"
 				],
 				"expectedSkills": [
 					"react",
@@ -67,10 +67,10 @@
 		},
 		{
 			"id": "css-domain-state-class-contract",
-			"prompt": "split listButtonActive into base plus --active, add a direct clsx import, and compose with clsx() in pg-catalog-index.tsx and _index.css; do not change pseudo-states.",
+			"prompt": "split listButtonActive into base plus --active, add a direct clsx import, and compose with clsx() in pg-products.tsx and _index.css; do not change pseudo-states.",
 			"files": [
-				"src/page/catalog-index/pg-catalog-index.tsx",
-				"src/page/catalog-index/pg-catalog-index.css"
+				"src/page/products/pg-products.tsx",
+				"src/page/products/pg-products.css"
 			],
 			"expectedSkills": [
 				"react",
@@ -93,10 +93,10 @@
 		},
 		{
 			"id": "css-one-off-structural-modifier",
-			"prompt": "replace non-repeatable section--compactTop spacing patch with a role-named element in pg-catalog-detail.tsx and detail.css; keep the existing clsx import.",
+			"prompt": "replace non-repeatable section--compactTop spacing patch with a role-named element in pg-product-detail.tsx and detail.css; keep the existing clsx import.",
 			"files": [
-				"src/page/catalog-detail/pg-catalog-detail.tsx",
-				"src/page/catalog-detail/pg-catalog-detail.css"
+				"src/page/product-detail/pg-product-detail.tsx",
+				"src/page/product-detail/pg-product-detail.css"
 			],
 			"expectedSkills": [
 				"react",
@@ -116,9 +116,9 @@
 		},
 		{
 			"id": "css-value-driven-modifier",
-			"prompt": "pick the metricValue modifier from the four-value tone in pg-sales-trend-panel.tsx where the stylesheet defines --positive and --negative only; keep the existing clsx import and stylesheet.",
+			"prompt": "pick the changeRate modifier from the four-value tone in pg-products.tsx where the stylesheet defines --positive and --negative only; keep the existing clsx import and stylesheet.",
 			"files": [
-				"src/page/detail/sales-trend-panel/pg-sales-trend-panel.tsx"
+				"src/page/products/pg-products.tsx"
 			],
 			"expectedSkills": [
 				"react",
@@ -278,7 +278,7 @@
 		},
 		{
 			"id": "css-repeated-values-and-optional-token",
-			"prompt": "Scope a global .ant-tree selector under the existing .ui_themePreview owner root with one new descendant block. Replace color and spacing repeated across files with existing global core tokens, and consume an optional Ant border-radius variable with a fallback. Keep file and owner names unchanged. Also namespace the existing fade keyframes and add the global reduced-motion block. Do not add DOM state selectors.",
+			"prompt": "Scope a global .MuiTreeItem-content selector under the existing .ui_themePreview owner root with one new descendant block. Replace color and spacing repeated across files with existing global core tokens, and consume an optional MUI border-radius variable with a fallback. Keep file and owner names unchanged. Also namespace the existing fade keyframes and add the global reduced-motion block. Do not add DOM state selectors.",
 			"files": [
 				"src/component/ui/theme-preview/ui-theme-preview.css"
 			],
@@ -297,9 +297,9 @@
 		},
 		{
 			"id": "css-shared-declaration-group",
-			"prompt": "split the shared .pg_salesPanel__glyph--* comma group so each modifier block declares its own width and height; do not introduce local custom properties.",
+			"prompt": "split the shared .pg_products__badge--* comma group so each modifier block declares its own width and height; do not introduce local custom properties.",
 			"files": [
-				"src/page/detail/sales-trend-panel/pg-sales-trend-panel.css"
+				"src/page/products/pg-products.css"
 			],
 			"expectedSkills": [
 				"css"
@@ -312,9 +312,9 @@
 		},
 		{
 			"id": "css-split-class-declaration",
-			"prompt": "the same .pg_catalogIndex__toolbar block is opened twice at the top level of one file, and a third override sits nested inside the class block as @media (min-width: 1024px); fold the plain duplicate into one block and move the breakpoint override into a grouped desktop-first @media at the bottom of the file.",
+			"prompt": "the same .pg_products__toolbar block is opened twice at the top level of one file, and a third override sits nested inside the class block as @media (min-width: 1024px); fold the plain duplicate into one block and move the breakpoint override into a grouped desktop-first @media at the bottom of the file.",
 			"files": [
-				"src/page/catalog-index/pg-catalog-index.css"
+				"src/page/products/pg-products.css"
 			],
 			"expectedSkills": [
 				"css"
@@ -346,9 +346,9 @@
 		},
 		{
 			"id": "css-sticky-layout-intent",
-			"prompt": "clarify sticky basis and z-index ownership through layer tokens and remove excessive width/height forcing in pg-dashboard.css.",
+			"prompt": "clarify sticky basis and z-index ownership through layer tokens and remove excessive width/height forcing in pg-product-detail.css.",
 			"files": [
-				"src/page/dashboard/pg-dashboard.css"
+				"src/page/product-detail/pg-product-detail.css"
 			],
 			"expectedSkills": [
 				"css"
@@ -362,10 +362,10 @@
 		},
 		{
 			"id": "css-theme-token-switch",
-			"prompt": "add dark mode: a page css file currently branches on prefers-color-scheme inside .pg_dashboard__panel and hardcodes #ffffff and a black box-shadow; move the branch into the token file and keep the component reading tokens only.",
+			"prompt": "add dark mode: a page css file currently branches on prefers-color-scheme inside .pg_productDetail__panel and hardcodes #ffffff and a black box-shadow; move the branch into the token file and keep the component reading tokens only.",
 			"files": [
 				"src/style/token.css",
-				"src/page/dashboard/pg-dashboard.css"
+				"src/page/product-detail/pg-product-detail.css"
 			],
 			"expectedSkills": [
 				"css"
@@ -398,9 +398,9 @@
 		},
 		{
 			"id": "css-negated-domain-state",
-			"prompt": "Remove the :not(.pg_salesPanel__spreadButton--selected) ancestor condition that drives the descendant preview. Flatten two nested selector levels and separate its grouped hover/focus-visible selectors. Keep existing class names and preserve hover and visible focus feedback in both selected and unselected states.",
+			"prompt": "Remove the :not(.pg_products__sortButton--selected) ancestor condition that drives the descendant preview. Flatten two nested selector levels and separate its grouped hover/focus-visible selectors. Keep existing class names and preserve hover and visible focus feedback in both selected and unselected states.",
 			"files": [
-				"src/page/detail/sales-trend-panel/pg-sales-trend-panel.css"
+				"src/page/products/pg-products.css"
 			],
 			"expectedSkills": [
 				"css"
@@ -496,9 +496,9 @@
 		},
 		{
 			"id": "css-positive-descendant-state-no-negation",
-			"prompt": "Change the existing border-color literal within &:hover .pg_salesPanel__preview. Keep the selector, class names, and nesting unchanged. There is no :not(), modifier, token, transition, or focus declaration.",
+			"prompt": "Change the existing border-color literal within &:hover .pg_products__preview. Keep the selector, class names, and nesting unchanged. There is no :not(), modifier, token, transition, or focus declaration.",
 			"files": [
-				"src/page/detail/sales-trend-panel/pg-sales-trend-panel.css"
+				"src/page/products/pg-products.css"
 			],
 			"expectedSkills": [
 				"css"

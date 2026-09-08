@@ -138,9 +138,9 @@ const jsxBranchTernary = /\?\s*\(\n[\s\S]*?\n\s*\)\s*:\s*\(/;
 const coreTokenFallback = /var\(--app-[a-z0-9-]+\s*,/;
 
 /**
- * 예제 스택 밖 라이브러리 이름. 허용 스택은 react-router · nuqs · react-query · zustand · @mui · es-toolkit · dayjs · clsx · zod 다.
+ * 예제 스택 밖 라이브러리 이름. 허용 스택은 react-router · nuqs · react-query · zustand · @mui · es-toolkit · dayjs · clsx 다.
  */
-const foreignStackTerms = ["ag-grid", "echarts", "EChartsType", "antd", "Kubb", "dataSource=", "treeData=", "UploadFile"];
+const foreignStackTerms = ["ag-grid", "echarts", "EChartsType", "antd", "zod", "Kubb", "dataSource=", "treeData=", "UploadFile"];
 
 /**
  * 백틱 없는 라틴 낱말 뒤에 띄어 쓴 조사. 조사는 붙여 쓴다(맞춤법 제41항).

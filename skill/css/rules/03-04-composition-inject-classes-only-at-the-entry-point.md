@@ -101,13 +101,13 @@ export const UiCollapse = (props: UiCollapseProps) => {
 **Correct (사용처는 최상위 스타일만 주고 내부 의도는 프롭으로 넘깁니다):**
 
 ```tsx
-<UiCollapse className={clsx("pg_postFilterDialog__collapse")} variant="compact" title="필터">
-	<PgPostFilterFields />
+<UiCollapse className={clsx("pg_orderFilterDialog__collapse")} variant="compact" title="필터">
+	<PgOrderFilterFields />
 </UiCollapse>
 ```
 
 ```css
-.pg_postFilterDialog__collapse {
+.pg_orderFilterDialog__collapse {
 	margin-block-start: 16px;
 	width: 100%;
 }

@@ -65,9 +65,9 @@ return (
 ```tsx
 // 사이드바: 접어 둔 노드와 스크롤 위치를 자기 상태로 갖는다
 const PgProductSidebar = () => {
-	const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
+	const [expandedItems, setExpandedItems] = useState<string[]>([]);
 
-	return <UiTree expandedKeys={expandedKeys} onExpand={setExpandedKeys} />;
+	return <UiTree expandedItems={expandedItems} onExpandedItemsChange={setExpandedItems} />;
 };
 
 // 사이드바를 소유한 화면: 닫으면 해제돼서 접어 둔 노드와 스크롤 위치가 사라진다
@@ -79,9 +79,9 @@ return isSidebarOpen && <PgProductSidebar />;
 ```tsx
 // 사이드바: 접어 둔 노드와 스크롤 위치를 자기 상태로 갖는다
 const PgProductSidebar = () => {
-	const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
+	const [expandedItems, setExpandedItems] = useState<string[]>([]);
 
-	return <UiTree expandedKeys={expandedKeys} onExpand={setExpandedKeys} />;
+	return <UiTree expandedItems={expandedItems} onExpandedItemsChange={setExpandedItems} />;
 };
 
 // 사이드바를 소유한 화면: 닫아도 상태와 DOM을 보존하고 이펙트는 정리한다

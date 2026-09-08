@@ -514,16 +514,6 @@ export interface PublishResult {
 	 */
 	published: boolean;
 }
-
-/**
- * 게시 결과 스키마
- */
-const publishResultSchema = z.object({
-	/**
-	 * 게시 대상 문서 ID
-	 */
-	documentId: z.string(),
-});
 ```
 
 **Correct (객체형 상수는 헤더만 달고 키에는 달지 않습니다):**
@@ -620,13 +610,14 @@ const noopLog: LogSink = (_message, _level) => {};
 const storedFilter = JSON.parse(localStorage.getItem("product-filter") as string) as ProductFilter;
 ```
 
-**Correct (앱 밖에서 온 값은 스키마 결과에서 타입을 얻습니다):**
+**Correct (앱 밖에서 온 값은 좁히기 함수를 통과한 뒤에 씁니다):**
 
 ```ts
 const storedValue = localStorage.getItem("product-filter");
+const parsedFilter: unknown = storedValue === null ? undefined : JSON.parse(storedValue);
 
-// 처음 방문이면 저장된 필터가 없다. 없다는 사실을 그대로 둔다
-const storedFilter = storedValue === null ? undefined : productFilterSchema.parse(JSON.parse(storedValue));
+// 처음 방문이면 저장된 필터가 없고 형태가 다르면 쓰지 않는다. 없다는 사실을 그대로 둔다
+const storedFilter = isProductFilter(parsedFilter) ? parsedFilter : undefined;
 ```
 
 **Incorrect (`!`로 없을 수 있다는 사실을 지웁니다):**
@@ -824,10 +815,10 @@ const request_timeout_ms = 20_000;
 const productClient = createClient({timeoutMs: request_timeout_ms});
 const productQuery = useProductQuery({client: productClient, pageSize: default_page_size});
 
-// page/billing/pg-billing.tsx
+// page/orders/pg-orders.tsx
 const default_page_size = 20;
 
-const invoiceQuery = useInvoiceQuery({pageSize: default_page_size});
+const orderQuery = useOrderQuery({pageSize: default_page_size});
 ```
 
 **Correct (루트 `constant` 폴더에 둔 이름을 쓰는 자리에서 가져옵니다):**
@@ -840,10 +831,10 @@ import {pagination_default_page_size} from "@/constant/pagination";
 const productClient = createClient({timeoutMs: api_request_timeout_ms});
 const productQuery = useProductQuery({client: productClient, pageSize: pagination_default_page_size});
 
-// page/billing/pg-billing.tsx
+// page/orders/pg-orders.tsx
 import {pagination_default_page_size} from "@/constant/pagination";
 
-const invoiceQuery = useInvoiceQuery({pageSize: pagination_default_page_size});
+const orderQuery = useOrderQuery({pageSize: pagination_default_page_size});
 ```
 
 **Incorrect (객체 하나에 모아 색인을 손으로 유지합니다):**
@@ -976,25 +967,25 @@ API 응답 · 요청, 생성 DTO, 라이브러리 인자, DOM 속성, 환경 변
 
 ```ts
 // userSettings.ts
-// 스키마와 그 필드는 일반 심볼이라 camelCase다
-const User_ProfileSchema = z.object({
-	repo_path: z.string(),
-});
+// 우리가 선언한 타입은 PascalCase, 그 필드는 camelCase다
+interface User_Profile {
+	avatar_url: string;
+}
 ```
 
-**Correct (파일명은 `kebab-case`, 스키마 키는 `camelCase`로 씁니다):**
+**Correct (파일명은 `kebab-case`, 타입 필드는 `camelCase`로 씁니다):**
 
 ```ts
 // user-settings.ts
 /**
- * 사용자 프로필 스키마
+ * 사용자 프로필
  */
-const userProfileSchema = z.object({
+interface UserProfile {
 	/**
-	 * 저장소 경로
+	 * 프로필 이미지 주소
 	 */
-	repoPath: z.string(),
-});
+	avatarUrl: string;
+}
 ```
 
 **Incorrect (불변 데이터 상수와 값 집합의 이름과 키를 `camelCase`로 적습니다):**
@@ -1167,19 +1158,19 @@ import {UiTabs} from "@/component/ui/tabs/ui-tabs";
 **Incorrect (상대경로로 심볼을 가져옵니다):**
 
 ```ts
-// page/detail/sales-trend-panel/pg-sales-trend-panel.tsx
-import {PgDetectionSection} from "./_pg-detection-section";
+// page/detail/product-table-section/pg-product-table-section.tsx
+import {PgReviewSection} from "./_pg-review-section";
 import {toSummary} from "../_function/to-summary";
 ```
 
 **Correct (심볼은 `@/`, 같은 폴더의 CSS 파일만 `./`로 씁니다):**
 
 ```ts
-// page/detail/sales-trend-panel/pg-sales-trend-panel.tsx
+// page/detail/product-table-section/pg-product-table-section.tsx
 import {toSummary} from "@/page/detail/_function/to-summary";
-import {PgDetectionSection} from "@/page/detail/sales-trend-panel/_pg-detection-section";
+import {PgReviewSection} from "@/page/detail/product-table-section/_pg-review-section";
 
-import "./pg-sales-trend-panel.css";
+import "./pg-product-table-section.css";
 ```
 
 ### 2.6 Read Environment Values Through `config/env.ts`
@@ -1274,7 +1265,7 @@ const productClient = createClient({baseUrl: env_api_base_url});
 | 이름을 정할 대상 | 기준 |
 | --- | --- |
 | 이미 필요한 계약 | 역할어를 고릅니다. `Params`, `Content`, `Snapshot`을 쓰려고 타입을 만들지 않으며, 맞는 기존 계약이나 추론되는 익명 결과를 유지합니다 |
-| 소유자 안의 타입 | 폴더가 말하는 도메인을 반복하지 않습니다. `sales-report/_type/`에서는 `ReportSnapshot`입니다 |
+| 소유자 안의 타입 | 폴더가 말하는 도메인을 반복하지 않습니다. `order-report/_type/`에서는 `ReportSnapshot`입니다 |
 | 소유자 밖으로 내보내는 타입 | 문맥이 사라지거나 이름이 충돌할 때만 필요한 도메인 접두를 유지합니다 |
 | 타입과 파일명 | `report-snapshot.ts`처럼 실제 명사를 씁니다. 단순 가공 · 표시 결과에 `VM`, `ViewModel` · 막연한 `Model`과 대응 파일명을 쓰지 않습니다 |
 | 외부 · 생성된 계약 | 이름과 `DTO` 같은 접미사를 보존합니다. 내부 계약에는 이를 구별용 접미사로 붙이지 않습니다 |
@@ -1284,9 +1275,9 @@ const productClient = createClient({baseUrl: env_api_base_url});
 
 ```ts
 /**
- * 영업 보고서 화면 데이터
+ * 주문 보고서 화면 데이터
  */
-interface SalesReportViewModel {
+interface OrderReportViewModel {
 	/**
 	 * 조회 시점의 행 목록
 	 */
@@ -1297,13 +1288,13 @@ interface SalesReportViewModel {
 	filters: ReportFilters;
 }
 
-const salesReportVM: SalesReportViewModel = response.data;
+const orderReportVM: OrderReportViewModel = response.data;
 ```
 
 **Correct (한 조회 시점에 고정된 값이라는 역할을 이름에 표시합니다):**
 
 ```ts
-// page/sales-report/_type/report-snapshot.ts: 폴더가 이미 sales-report 를 말한다
+// page/order-report/_type/report-snapshot.ts: 폴더가 이미 order-report 를 말한다
 /**
  * 한 조회 시점의 보고서 목록과 조건
  */
@@ -1529,50 +1520,56 @@ fetchProductPage({baseUrl: api_base_url, page: urlParams.page, pageSize: paginat
 **Incorrect (한 자리에서만 쓰는 단계를 함수로 떼어 내 흐름이 파일 안에서 흩어집니다):**
 
 ```txt
-page/report/_function/to-metrics-content.ts
-  toMetricsContent       내보낸 함수. 본문은 세 줄이고 나머지는 아래 함수로 갔다
-  toComparisonRows       toMetricsContent 만 부름
-  toMeaningGroups        toMetricsContent 만 부름
-  toValidityCard         toMetricsContent 만 부름
-  formatMeaningDecimal   toComparisonRows 와 toMeaningGroups 가 부름
+page/report/_function/to-report-content.ts
+  toReportContent    내보낸 함수. 본문은 세 줄이고 나머지는 아래 함수로 갔다
+  toComparisonRows   toReportContent 만 부름
+  toStatusGroups     toReportContent 만 부름
+  toStockCard        toReportContent 만 부름
+  formatAmount       toComparisonRows 와 toStatusGroups 가 부름
 ```
 
 **Correct (한 번 쓰는 단계는 호출부에 두고 재사용하는 계산은 함수로 추출합니다):**
 
 ```txt
-page/report/_function/to-metrics-content/
-├── to-metrics-content.ts        본문 안에 // 1. 비교 행  // 2. 의미 그룹  // 3. 유효성 카드
-└── _format-meaning-decimal.ts   비교 행과 의미 그룹 두 자리가 부름
+page/report/_function/to-report-content/
+├── to-report-content.ts   본문 안에 // 1. 비교 행  // 2. 상태 그룹  // 3. 재고 카드
+└── _format-amount.ts      비교 행과 상태 그룹 두 자리가 부름
 ```
 
 ```ts
-// page/report/_function/to-metrics-content/to-metrics-content.ts
+// page/report/_function/to-report-content/to-report-content.ts
 /**
- * 상세 수치와 통계 의미 영역의 표시 데이터. 실시간 상세만 TAM 유효성 카드가 온다
+ * 상품 보고서 영역의 표시 데이터. 상품 상세에서만 재고 카드가 온다
  */
-export const toMetricsContent = (params: ToMetricsContentParams): MetricsContent => {
-	// 1. 선택 window 기준으로 갱신되는 비교 수치 행
+export const toReportContent = (params: ToReportContentParams): ReportContent => {
+	// 1. 고른 기간 기준으로 갱신되는 비교 수치 행
 	const metrics = [
-		{id: "statCorr", label: "상관계수 평균", value: formatMeaningDecimal(params.selectionInfo.avgCorr)},
-		{id: "statP", label: "통계적 유의성", value: params.selectionInfo.statP},
+		{id: "orderAmount", label: "주문 금액", value: formatAmount(params.productSummary.orderAmount)},
+		{id: "orderCount", label: "주문 건수", value: params.productSummary.orderCount},
 	];
 
-	// 2. 통계 의미 그룹. 설명이 비면 그룹 제목만 남긴다
-	const statMeaningGroups = [
-		{id: "statistical-significance", title: "패턴의 통계적 의미", description: params.selectionInfo.statDesc, rows: metrics},
+	// 2. 상품 상태 그룹. 설명이 비면 그룹 제목만 남긴다
+	const statusGroups = [
+		{
+			id: "product-status",
+			title: "상품 상태",
+			description: params.productSummary.statusDescription,
+			total: formatAmount(params.productSummary.totalAmount),
+			rows: metrics,
+		},
 	];
 
-	// 3. TAM 유효성 카드. 실시간 상세에서만 온다
-	return {metrics, statMeaningGroups, tamValidity: params.tamMetrics};
+	// 3. 재고 카드. 상품 상세에서만 온다
+	return {metrics, statusGroups, stockCount: params.stockCount};
 };
 ```
 
 **Incorrect (한 번만 쓰는 한 줄 계산을 파일로 분리합니다):**
 
 ```ts
-// page/profile/_function/get-next-iteration.ts
-export const getNextIteration = (previous: number, iterationCount: number): number => {
-	return (previous + 1) % iterationCount;
+// page/profile/_function/get-next-page.ts
+export const getNextPage = (previous: number, pageCount: number): number => {
+	return (previous + 1) % pageCount;
 };
 ```
 
@@ -1581,7 +1578,7 @@ export const getNextIteration = (previous: number, iterationCount: number): numb
 ```tsx
 // page/profile/pg-profile.tsx
 const handleNextClick = () => {
-	setIteration((previous) => (previous + 1) % iterationCount);
+	setPage((previous) => (previous + 1) % pageCount);
 };
 ```
 
@@ -1628,16 +1625,16 @@ import {toProductSaveRequest} from "@/page/products/_function/to-product-save-re
 **Correct (삼항 하나에 담기지 않는 판정은 사용처가 하나여도 함수로 추출하고 분기마다 `return`으로 끝냅니다):**
 
 ```ts
-// page/detail/_function/to-grade-tone.ts
+// page/detail/_function/to-status-tone.ts
 /**
- * 등급 문자열의 강조 tone. API가 등급을 자유 문자열로 주어 토큰 포함으로 판정한다
+ * 상태 문자열의 강조 tone. API가 상태를 자유 문자열로 주어 값 포함으로 판정한다
  */
-export const toGradeTone = (grade: string): Tone => {
-	const normalizedGrade = grade.trim().toLowerCase();
-	if (grade_positive_tokens.some((token) => normalizedGrade.includes(token))) {
+export const toStatusTone = (status: string): Tone => {
+	const normalizedStatus = status.trim().toLowerCase();
+	if (status_positive_values.some((value) => normalizedStatus.includes(value))) {
 		return "positive";
 	}
-	if (grade_negative_tokens.some((token) => normalizedGrade.includes(token))) {
+	if (status_negative_values.some((value) => normalizedStatus.includes(value))) {
 		return "negative";
 	}
 	return "neutral";
@@ -1711,41 +1708,41 @@ export const toProductSaveRequest = (values: ProductFormValues) => {
 
 ```txt
 page/report/_function/
-├── to-sales-overview.ts
-│     toSalesOverview      내보낸 함수
-│     toTrendChart         toSalesOverview 가 차트 둘에서 부름
-│     toTrendPoints        toTrendChart 가 두 자리에서 부름
-└── to-sales-filter-request.ts
+├── to-product-overview.ts
+│     toProductOverview      내보낸 함수
+│     toTrendChart           toProductOverview 가 차트 둘에서 부름
+│     toTrendPoints          toTrendChart 가 두 자리에서 부름
+└── to-product-filter-request.ts
 ```
 
 **Correct (자기만 쓰는 보조가 생긴 대표 함수는 자기 이름 폴더를 갖고 보조는 `_` 파일입니다):**
 
 ```txt
 page/report/_function/
-├── to-sales-overview/           자기만 쓰는 보조가 있어 폴더
-│   ├── to-sales-overview.ts     대표. 폴더와 같은 이름
-│   ├── _to-trend-chart.ts       toSalesOverview 만 부름
-│   └── _to-trend-points.ts      _to-trend-chart 만 부름. 폴더 안은 평평
-└── to-sales-filter-request.ts   보조가 없어 파일 하나
+├── to-product-overview/           자기만 쓰는 보조가 있어 폴더
+│   ├── to-product-overview.ts     대표. 폴더와 같은 이름
+│   ├── _to-trend-chart.ts         toProductOverview 만 부름
+│   └── _to-trend-points.ts        _to-trend-chart 만 부름. 폴더 안은 평평
+└── to-product-filter-request.ts   보조가 없어 파일 하나
 ```
 
 **Incorrect (한 대표만 부르는 보조를 `_function` 바로 아래에 내보내 둡니다):**
 
 ```txt
 page/report/_function/
-├── to-sales-overview.ts
-├── to-sales-digest.ts
-└── to-trend-chart.ts            toSalesOverview 만 부르는데 소유자의 공개 면에 놓임
+├── to-product-overview.ts
+├── to-product-digest.ts
+└── to-trend-chart.ts            toProductOverview 만 부르는데 소유자의 공개 면에 놓임
 ```
 
 **Correct (두 대표가 부르게 된 뒤에 `_function` 바로 아래로 올리고 `_`를 뗍니다):**
 
 ```txt
 page/report/_function/
-├── to-sales-overview/
-│   └── to-sales-overview.ts
-├── to-sales-digest.ts           toTrendChart 를 함께 부르기 시작함
-└── to-trend-chart.ts            대표 둘이 불러 공개 면으로 올라옴
+├── to-product-overview/
+│   └── to-product-overview.ts
+├── to-product-digest.ts           toTrendChart 를 함께 부르기 시작함
+└── to-trend-chart.ts              대표 둘이 불러 공개 면으로 올라옴
 ```
 
 ### 3.5 Order Declarations Top Down
@@ -1784,7 +1781,7 @@ export interface ToSummaryRowsParams {
 	/**
 	 * 요약 조회 응답
 	 */
-	response: SalesSummaryResponse;
+	response: OrderSummaryResponse;
 }
 ```
 
@@ -1799,7 +1796,7 @@ export interface ToSummaryRowsParams {
 	/**
 	 * 요약 조회 응답
 	 */
-	response: SalesSummaryResponse;
+	response: OrderSummaryResponse;
 }
 
 /**
@@ -1997,21 +1994,21 @@ const visibleTabs = ["overview", ...(canManageItems ? ["items"] : [])];
 **Incorrect (삼항 안에 삼항을 넣어 값 하나를 고릅니다):**
 
 ```ts
-const statusLabel = task.isClosed ? "마감" : task.isDueSoon ? "임박" : "진행";
+const statusLabel = order.isCancelled ? "취소" : order.isDueSoon ? "임박" : "진행";
 ```
 
 **Correct (분기가 셋이면 `return`으로 끝나는 함수로 뺍니다):**
 
 ```ts
-// page/task/_function/to-task-row/_to-status-label.ts
+// page/orders/_function/to-order-row/_to-status-label.ts
 /**
- * 할 일 행의 상태 라벨. 마감이 임박보다 우선한다
+ * 주문 행의 상태 라벨. 취소가 임박보다 우선한다
  */
-export const toStatusLabel = (task: TaskRow): StatusLabel => {
-	if (task.isClosed) {
-		return "마감";
+export const toStatusLabel = (order: OrderRow): StatusLabel => {
+	if (order.isCancelled) {
+		return "취소";
 	}
-	if (task.isDueSoon) {
+	if (order.isDueSoon) {
 		return "임박";
 	}
 	return "진행";
@@ -2103,10 +2100,10 @@ const toRowClassNames = (row: Row): string[] => {
 **Incorrect (돌려주기만 할 값을 변수로 뺍니다):**
 
 ```ts
-const toNextIteration = (iteration: number): number => {
-	const nextIteration = iteration + 1;
+const toNextPage = (page: number): number => {
+	const nextPage = page + 1;
 
-	return nextIteration;
+	return nextPage;
 };
 
 const toRowLabel = (row: Row): string => {
@@ -2119,8 +2116,8 @@ const toRowLabel = (row: Row): string => {
 **Correct (이름을 붙이지 않고 그대로 돌려줍니다):**
 
 ```ts
-const toNextIteration = (iteration: number): number => {
-	return iteration + 1;
+const toNextPage = (page: number): number => {
+	return page + 1;
 };
 
 const toRowLabel = (row: Row): string => {
@@ -2238,7 +2235,7 @@ const submitDraft = async (draft: Draft) => {
 | `filterActiveUsers` | 남기는 목록이면 `toActiveUsers` |
 | `mapProductRows` | 출력이 행이면 `toProductRows` |
 | `updateProduct` | 저장이면 `saveProduct`, 계산이면 `toUpdatedProduct` |
-| `resolveGradeTone` | 분류 결과인 `toGradeTone` |
+| `resolveStatusTone` | 분류 결과인 `toStatusTone` |
 
 `array.map(...)` 같은 표준 메서드 호출은 함수 명명 규칙의 대상이 아닙니다.
 `handle` · `use`는 프레임워크 규칙을 따릅니다.
@@ -2250,7 +2247,7 @@ const submitDraft = async (draft: Draft) => {
 export const buildUserPayload = (formValues: UserFormValues) => { /* … */ };
 export const mapResponseToModel = (response: UserResponse) => { /* … */ };
 export const processUserRows = (rows: UserRow[]) => { /* … */ };
-export const resolveGradeTone = (grade: string) => { /* … */ };
+export const resolveStatusTone = (status: string) => { /* … */ };
 ```
 
 **Correct (출력 역할이나 효과를 이름에 씁니다):**
@@ -2272,9 +2269,9 @@ export const toUserRows = (response: UserResponse) => { /* … */ };
 export const toActiveUsers = (rows: UserRow[]) => { /* … */ };
 
 /**
- * 등급 문자열을 강조 tone으로 분류한다
+ * 상태 문자열을 강조 tone으로 분류한다
  */
-export const toGradeTone = (grade: string) => { /* … */ };
+export const toStatusTone = (status: string) => { /* … */ };
 ```
 
 **Correct (저장 · 검사 함수는 역할과 판정으로 이름을 짓습니다):**
@@ -2440,7 +2437,7 @@ const isEditableStatus = editable_order_statuses.includes(order.status);
 
 | 형태 · 상황 | 처리 |
 | --- | --- |
-| 객체 구조분해 | 체인으로 읽습니다. 이름을 바꿔 꺼내는 `{status: projectStatus}`도 같습니다 |
+| 객체 구조분해 | 체인으로 읽습니다. 이름을 바꿔 꺼내는 `{status: orderStatus}`도 같습니다 |
 | 같은 필드에 이름만 붙인 지역 `const` | 제거합니다. 필드를 그대로 읽는 것은 계산이 아닙니다 |
 | 짧은 함수 · 좁은 스코프 | 예외를 두지 않습니다 |
 | 배열 · 튜플 구조분해 | 유지합니다. `useState`와 `Object.entries`처럼 위치로 꺼내는 값에는 지워질 필드 이름이 없습니다 |
@@ -2451,7 +2448,7 @@ const isEditableStatus = editable_order_statuses.includes(order.status);
 **Incorrect (시그니처와 본문에서 구조분해해 출처가 사라집니다):**
 
 ```ts
-const toInvoiceLine = ({product, quantity}: InvoiceLineInput): InvoiceLine => {
+const toOrderLine = ({product, quantity}: OrderLineInput): OrderLine => {
 	const {title, unitPrice} = product;
 
 	return {
@@ -2466,7 +2463,7 @@ const toInvoiceLine = ({product, quantity}: InvoiceLineInput): InvoiceLine => {
 ```ts
 const currency = pricing_default_currency;
 
-const toInvoiceTotal = (lines: InvoiceLine[]): InvoiceTotal => {
+const toOrderTotal = (lines: OrderLine[]): OrderTotal => {
 	return {
 		currency,
 		amount: sumBy(lines, (line) => line.amount),
@@ -2477,32 +2474,32 @@ const toInvoiceTotal = (lines: InvoiceLine[]): InvoiceTotal => {
 **Incorrect (이름을 바꿔 꺼내 출처와 원래 이름이 함께 사라집니다):**
 
 ```ts
-const {status: projectStatus, owner: projectOwner} = project;
+const {status: orderStatus, owner: orderOwner} = order;
 
-if (projectStatus === "archived") {
-	notify(projectOwner);
+if (orderStatus === "archived") {
+	notify(orderOwner);
 }
 ```
 
 **Correct (체인으로 읽어 출처가 쓰는 자리마다 남습니다):**
 
 ```ts
-const toInvoiceLine = (input: InvoiceLineInput): InvoiceLine => {
+const toOrderLine = (input: OrderLineInput): OrderLine => {
 	return {
 		label: input.product.title,
 		amount: input.product.unitPrice * input.quantity,
 	};
 };
 
-const toInvoiceTotal = (lines: InvoiceLine[]): InvoiceTotal => {
+const toOrderTotal = (lines: OrderLine[]): OrderTotal => {
 	return {
 		currency: pricing_default_currency,
 		amount: sumBy(lines, (line) => line.amount),
 	};
 };
 
-if (project.status === "archived") {
-	notify(project.owner);
+if (order.status === "archived") {
+	notify(order.owner);
 }
 ```
 
@@ -2519,11 +2516,11 @@ for (const [key, value] of Object.entries(target.searchParams)) {
 **Correct (필드 읽기가 아니라 계산한 결과라 이름을 붙입니다):**
 
 ```ts
-const toOverdueLines = (invoice: Invoice): InvoiceLine[] => {
+const toOverdueLines = (order: Order): OrderLine[] => {
 	// 콜백 안으로 옮기면 줄마다 다시 만든다
-	const overdueIds = new Set(invoice.overdueLineIds);
+	const overdueIds = new Set(order.overdueLineIds);
 
-	return invoice.lines.filter((line) => overdueIds.has(line.id));
+	return order.lines.filter((line) => overdueIds.has(line.id));
 };
 ```
 
@@ -2917,43 +2914,49 @@ const compactDateTime = responseDateTime.slice(0, 16).replace("T", " ");
 **Incorrect (경계에서 포맷한 값을 소비처가 다시 파싱해 포맷합니다):**
 
 ```ts
-// page/pattern/pg-pattern.tsx: SelectionInfo 를 만들며 이미 포맷한다
-const selectionInfo = {avgCorr: formatStatDecimal(responseSelectionInfoSuspense.data.statCorr)};
+// page/product-detail/pg-product-detail.tsx: ProductSummary 를 만들며 이미 포맷한다
+const productSummary = {averageRate: formatPercent(responseProductSummarySuspense.data.changeRate)};
 
-// page/pattern/_function/to-metrics-content.ts: 문자열을 다시 숫자로 읽어 다시 포맷한다
-const rows = [{id: "statCorr", value: formatStatDecimal(selectionInfo.avgCorr)}];
+// page/product-detail/_function/to-report-content.ts: 문자열을 다시 숫자로 읽어 다시 포맷한다
+const rows = [{id: "changeRate", value: formatPercent(productSummary.averageRate)}];
 ```
 
 **Correct (경계에서 한 번 포맷하고 소비처는 전달된 값을 그대로 씁니다):**
 
 ```ts
-// page/pattern/_function/to-metrics-content.ts
-const rows = [{id: "statCorr", value: selectionInfo.avgCorr}];
+// page/product-detail/_function/to-report-content.ts
+const rows = [{id: "changeRate", value: productSummary.averageRate}];
 ```
 
 **Incorrect (같은 색 판정을 범례와 차트 둘에서 하고 폴백으로 한 번 더 합니다):**
 
 ```ts
 // 범례
-const colorToken = toCurveColorToken(curveItem.role, historicalIndex);
+const legendSeries = seriesItems.map((series, seriesIndex) => ({
+	id: series.id,
+	colorToken: toSeriesColorToken(series.role, seriesIndex),
+}));
 
 // 차트 둘. 범례 팔레트를 읽고도 같은 판정을 다시 한다
-colorToken: colorTokenById.get(curveItem.id) ?? toCurveColorToken(curveItem.role, index),
+const chartSeries = seriesItems.map((series, index) => ({
+	id: series.id,
+	colorToken: colorTokenById.get(series.id) ?? toSeriesColorToken(series.role, index),
+}));
 ```
 
 **Correct (경계에서 한 번 정해 항목에 담고 차트는 읽기만 합니다):**
 
 ```ts
 // 범례를 만드는 자리에서 색을 정해 항목에 싣는다
-const comparisonCurves = curveItems.map((curveItem, historicalIndex) => ({
-	...curveItem,
-	colorToken: toCurveColorToken(curveItem.role, historicalIndex),
+const comparisonSeries = seriesItems.map((series, seriesIndex) => ({
+	...series,
+	colorToken: toSeriesColorToken(series.role, seriesIndex),
 }));
 
 // 차트 둘은 같은 항목의 색을 그대로 읽는다
-const chartSeries = comparisonCurves.map((curve) => ({
-	id: curve.id,
-	colorToken: curve.colorToken,
+const chartSeries = comparisonSeries.map((series) => ({
+	id: series.id,
+	colorToken: series.colorToken,
 }));
 ```
 
@@ -3029,7 +3032,7 @@ const toPageRequest = (size = pagination_default_page_size): PageRequest => { /*
 | 순서 | 판단과 처리 |
 | --- | --- |
 | 1. 기본값 없이 소비할 수 있는가 | `undefined`를 허용하면 `items?.map(…)`, 선택 값 비교는 `variant === "compact"`로 처리합니다 |
-| 2. 경계에서 채울 수 있는가 | search 스키마의 `.default(선언된 상수)`, 응답 매핑, 쿼리의 `select`에서 한 번 채웁니다. 아래에서는 선택 값과 `??`가 남지 않습니다 |
+| 2. 경계에서 채울 수 있는가 | search 파라미터 파서의 `.withDefault(선언된 상수)`, 응답 매핑, 쿼리의 `select`에서 한 번 채웁니다. 아래에서는 선택 값과 `??`가 남지 않습니다 |
 | 3. 경계에서 처리할 수 없는가 | 사용처에 `fetchProducts({pageSize: query.pageSize ?? pagination_default_page_size})`처럼 적습니다 |
 | 4. 파생값에 이름이 필요한가 | `pageSize` 대신 `effectivePageSize`처럼 고른 결과임을 드러냅니다. 사용 횟수보다 표현식의 의미를 기준으로 판단합니다 |
 
@@ -3063,14 +3066,13 @@ setVisibleRowCount(query.pageSize ?? pagination_default_page_size);
 
 ```ts
 /**
- * product 목록 검색 조건. pageSize는 여기서 채워져 화면에서는 선택 값이 아니다
+ * product 목록 search 파라미터. pageSize는 여기서 채워져 화면에서는 선택 값이 아니다
  */
-const productSearchSchema = z.object({
-	/**
-	 * 한 번에 불러올 개수
-	 */
-	pageSize: z.number().default(pagination_default_page_size),
-});
+const productUrlParsers = {
+	pageSize: parseAsInteger.withDefault(pagination_default_page_size),
+};
+
+const [query] = useQueryStates(productUrlParsers);
 
 fetchProducts({pageSize: query.pageSize});
 setVisibleRowCount(query.pageSize);
@@ -3146,20 +3148,20 @@ const toRowLabel = (row: ProductRow): string => {
 **Incorrect (생략과 `undefined`를 구분하지 않는 내부 계약에서 키를 조건부로 생략합니다):**
 
 ```ts
-// 이 내부 표시 계약은 tamValidity의 undefined 대입을 허용하고 키 존재 여부를 읽지 않는다
+// 이 내부 표시 계약은 stockCount의 undefined 대입을 허용하고 키 존재 여부를 읽지 않는다
 return {
 	metrics,
-	...(tamValidity === undefined ? {} : {tamValidity}),
+	...(stockCount === undefined ? {} : {stockCount}),
 };
 ```
 
 **Correct (생략과 같은 뜻이고 타입도 허용하면 `undefined`를 그대로 넣습니다):**
 
 ```ts
-// 이 내부 표시 계약은 tamValidity의 undefined 대입을 허용하고 키 존재 여부를 읽지 않는다
+// 이 내부 표시 계약은 stockCount의 undefined 대입을 허용하고 키 존재 여부를 읽지 않는다
 return {
 	metrics,
-	tamValidity,
+	stockCount,
 };
 ```
 
@@ -3221,7 +3223,7 @@ export const formatSignedPercent = (value: number | null | undefined) => {
 ```tsx
 // page/detail/pg-detail.tsx: 서버는 계산 전이면 null을 준다. 여기서 한 번 좁힌다
 const responseSummarySuspense = useSuspenseQuery({
-	...detailSummaryQueryOptions(patternId),
+	...detailSummaryQueryOptions(productId),
 	select: (response) => ({
 		...response,
 		changeRate:
@@ -3416,16 +3418,16 @@ const responseProductList = useProductList();
 
 ```ts
 /**
- * This function sorts rule refs and returns the result.
+ * This function sorts product refs and returns the result.
  */
-export const toSortedRuleRefs = (refs: RuleRef[]): RuleRef[] => {
+export const toSortedProductRefs = (refs: ProductRef[]): ProductRef[] => {
 	return sortBy(uniq(refs), [(ref) => ref.id]);
 };
 
 /**
- * 규칙 참조를 정렬하는 함수
+ * 상품 참조를 정렬하는 함수
  */
-export const toSortedRuleRefs = (refs: RuleRef[]): RuleRef[] => {
+export const toSortedProductRefs = (refs: ProductRef[]): ProductRef[] => {
 	return sortBy(uniq(refs), [(ref) => ref.id]);
 };
 
@@ -3443,7 +3445,7 @@ export interface PgProductTreeProps {
 /**
  * 같은 참조 객체의 중복을 제거하고 식별자순으로 정렬해 검토 목록의 순서를 고정한다.
  */
-export const toSortedRuleRefs = (refs: RuleRef[]): RuleRef[] => {
+export const toSortedProductRefs = (refs: ProductRef[]): ProductRef[] => {
 	return sortBy(uniq(refs), [(ref) => ref.id]);
 };
 
@@ -3753,4 +3755,3 @@ or {
 
 - https://www.typescriptlang.org/docs/
 - https://jsdoc.app
-- https://zod.dev

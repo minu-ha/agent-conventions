@@ -24,7 +24,7 @@
 **Incorrect (우리가 렌더하는 마크업을 요소 선택자로 잡습니다):**
 
 ```css
-.pg_catalogIndex__toolbar {
+.pg_products__toolbar {
 	& button {
 		height: 32px;
 	}
@@ -51,11 +51,11 @@ h2 {
 **Correct (우리가 렌더하면 클래스를 붙입니다):**
 
 ```tsx
-<div className={clsx("pg_catalogIndex__toolbar")}>
-	<div className={clsx("pg_catalogIndex__toolbarField")}>
+<div className={clsx("pg_products__toolbar")}>
+	<div className={clsx("pg_products__toolbarField")}>
 		<UiSearchInput />
 	</div>
-	<button type="button" className={clsx("pg_catalogIndex__toolbarButton")}>
+	<button type="button" className={clsx("pg_products__toolbarButton")}>
 		초기화
 	</button>
 </div>

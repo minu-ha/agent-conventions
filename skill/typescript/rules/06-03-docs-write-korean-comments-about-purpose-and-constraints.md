@@ -34,16 +34,16 @@ tags: docs, comments
 
 ```ts
 /**
- * This function sorts rule refs and returns the result.
+ * This function sorts product refs and returns the result.
  */
-export const toSortedRuleRefs = (refs: RuleRef[]): RuleRef[] => {
+export const toSortedProductRefs = (refs: ProductRef[]): ProductRef[] => {
 	return sortBy(uniq(refs), [(ref) => ref.id]);
 };
 
 /**
- * 규칙 참조를 정렬하는 함수
+ * 상품 참조를 정렬하는 함수
  */
-export const toSortedRuleRefs = (refs: RuleRef[]): RuleRef[] => {
+export const toSortedProductRefs = (refs: ProductRef[]): ProductRef[] => {
 	return sortBy(uniq(refs), [(ref) => ref.id]);
 };
 
@@ -61,7 +61,7 @@ export interface PgProductTreeProps {
 /**
  * 같은 참조 객체의 중복을 제거하고 식별자순으로 정렬해 검토 목록의 순서를 고정한다.
  */
-export const toSortedRuleRefs = (refs: RuleRef[]): RuleRef[] => {
+export const toSortedProductRefs = (refs: ProductRef[]): ProductRef[] => {
 	return sortBy(uniq(refs), [(ref) => ref.id]);
 };
 

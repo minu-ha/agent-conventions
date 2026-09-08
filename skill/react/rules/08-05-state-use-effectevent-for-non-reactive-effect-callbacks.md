@@ -39,39 +39,39 @@ DOM 이벤트 매개변수나 커링을 덧붙이지 않고,
 **Incorrect (최신 콜백을 읽기 위해 `ref`를 직접 동기화합니다):**
 
 ```tsx
-const onMessageRef = useRef(onMessage);
+const onChangeRef = useRef(props.onChange);
 
 useEffect(() => {
-	onMessageRef.current = onMessage;
-}, [onMessage]);
+	onChangeRef.current = props.onChange;
+}, [props.onChange]);
 
 useEffect(() => {
-	const unsubscribe = socket.subscribe((message) => {
-		onMessageRef.current(message);
+	const unsubscribe = subscribeToProductChanges(props.productId, (change) => {
+		onChangeRef.current(change);
 	});
 
 	return unsubscribe;
-}, [socket]);
+}, [props.productId]);
 ```
 
 **Correct (비반응형 콜백은 `useEffectEvent`로 분리합니다):**
 
 ```tsx
 /**
- * socket message 수신 시 최신 onMessage 로직 실행
+ * 상품 변경 수신 시 최신 onChange 로직 실행
  */
-const handleMessage = useEffectEvent((message: SocketMessage) => {
-	onMessage(message);
+const handleProductChange = useEffectEvent((change: ProductChange) => {
+	props.onChange(change);
 });
 
 /**
- * socket subscription lifecycle 유지
+ * 상품 변경 구독 생명주기 유지
  */
 useEffect(() => {
-	const unsubscribe = socket.subscribe((message) => {
-		handleMessage(message);
+	const unsubscribe = subscribeToProductChanges(props.productId, (change) => {
+		handleProductChange(change);
 	});
 
 	return unsubscribe;
-}, [socket]);
+}, [props.productId]);
 ```

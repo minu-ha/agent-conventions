@@ -83,7 +83,7 @@
 		},
 		{
 			"id": "type-role-and-lifetime",
-			"prompt": "rename the owner-local `SalesReportViewModel` interface and its `salesReportViewModel` value to `ReportSnapshot` and `reportSnapshot` because they freeze rows, filters, and pagination from one query; keep fields, imports, and docs unchanged.",
+			"prompt": "rename the owner-local `OrderReportViewModel` interface and its `orderReportViewModel` value to `ReportSnapshot` and `reportSnapshot` because they freeze rows, filters, and pagination from one query; keep fields, imports, and docs unchanged.",
 			"files": [
 				"src/report/report-panel.ts"
 			],
@@ -271,10 +271,10 @@
 		},
 		{
 			"id": "decide-once-and-guard-real-absence",
-			"prompt": "`pg-pattern.tsx` formats `avgCorr` while building `SelectionInfo` and `to-metrics-content.ts` formats the same field again; read the carried value instead, replace `...(isNil(tamValidity) ? {} : {tamValidity})` with a plain optional field, and drop the `isNil` check on the non-null `name` field. The internal display contract permits explicit undefined and no consumer distinguishes key presence; tamValidity cannot be null.",
+			"prompt": "`pg-product-detail.tsx` formats `averageRate` while building `ProductSummary` and `to-report-content.ts` formats the same field again; read the carried value instead, replace `...(isNil(stockCount) ? {} : {stockCount})` with a plain optional field, and drop the `isNil` check on the non-null `name` field. The internal display contract permits explicit undefined and no consumer distinguishes key presence; stockCount cannot be null.",
 			"files": [
-				"src/page/pattern/pg-pattern.tsx",
-				"src/page/pattern/_function/to-metrics-content.ts"
+				"src/page/product-detail/pg-product-detail.tsx",
+				"src/page/product-detail/_function/to-report-content.ts"
 			],
 			"expectedSkills": [
 				"typescript"

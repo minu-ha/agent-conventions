@@ -39,8 +39,8 @@ tags: variables, fallbacks, tokens
 **Incorrect (공통 토큰에 대체값을 붙여 값을 두 곳에 둡니다):**
 
 ```css
-/* src/page/post-index/_pg-post-filter-dialog.css */
-.pg_postFilterDialog__panel {
+/* src/page/orders/_pg-order-filter-dialog.css */
+.pg_orderFilterDialog__panel {
 	gap: var(--app-space-inline, 12px);
 	color: var(--app-color-text-primary, #212529);
 }
@@ -55,8 +55,8 @@ tags: variables, fallbacks, tokens
 	--app-color-text-primary: #212529;
 }
 
-/* src/page/post-index/_pg-post-filter-dialog.css */
-.pg_postFilterDialog__panel {
+/* src/page/orders/_pg-order-filter-dialog.css */
+.pg_orderFilterDialog__panel {
 	gap: var(--app-space-inline);
 	color: var(--app-color-text-primary);
 }
@@ -65,9 +65,9 @@ tags: variables, fallbacks, tokens
 **Incorrect (주입이 보장되지 않는 변수를 대체값 없이 씁니다):**
 
 ```css
-.pg_postFilterDialog__collapse {
-	& .ant-collapse-item {
-		border-radius: var(--ant-border-radius-lg);
+.pg_orderFilterDialog__collapse {
+	& .MuiAccordion-root {
+		border-radius: var(--mui-shape-borderRadius);
 	}
 }
 ```
@@ -75,9 +75,9 @@ tags: variables, fallbacks, tokens
 **Correct (목록에 없는 변수에는 대체값을 붙입니다):**
 
 ```css
-.pg_postFilterDialog__collapse {
-	& .ant-collapse-item {
-		border-radius: var(--ant-border-radius-lg, 10px);
+.pg_orderFilterDialog__collapse {
+	& .MuiAccordion-root {
+		border-radius: var(--mui-shape-borderRadius, 10px);
 	}
 }
 ```

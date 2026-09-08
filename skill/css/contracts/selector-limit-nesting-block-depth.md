@@ -21,10 +21,10 @@
 **Incorrect (중첩을 두 겹 이상 열어 실제 선택자를 숨깁니다):**
 
 ```css
-.pg_salesPanel__spreadButton {
+.pg_products__sortButton {
 	&.MuiButtonBase-root {
 		&:hover {
-			.pg_salesPanel__spreadBox {
+			.pg_products__sortBox {
 				border-color: #9fadc7;
 			}
 		}
@@ -35,8 +35,8 @@
 **Incorrect (다른 요소의 가상 요소를 `&`로 다시 엽니다):**
 
 ```css
-.pg_salesPanel__spreadButton {
-	&:hover .pg_salesPanel__spreadBox {
+.pg_products__sortButton {
+	&:hover .pg_products__sortBox {
 		&::before {
 			border-color: #9fadc7;
 		}
@@ -47,18 +47,18 @@
 **Correct (`&`는 한 번, 그다음 경로는 같은 줄에 이어 씁니다):**
 
 ```css
-.pg_salesPanel__spreadBox {
+.pg_products__sortBox {
 	&::before {
 		border: 2px solid #ced4da;
 	}
 }
 
-.pg_salesPanel__spreadButton {
+.pg_products__sortButton {
 	&.MuiButtonBase-root {
 		display: inline-flex;
 	}
 
-	&:hover .pg_salesPanel__spreadBox::before {
+	&:hover .pg_products__sortBox::before {
 		border-color: #9fadc7;
 	}
 }

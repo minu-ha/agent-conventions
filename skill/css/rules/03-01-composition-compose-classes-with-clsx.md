@@ -26,7 +26,7 @@ TSX의 `className`은 클래스가 하나여도 `clsx()`로 조합합니다.
 **Incorrect (문자열 연결로 클래스 조합을 숨깁니다):**
 
 ```tsx
-<button className={"pg_catalogIndex__listButton " + (isActive ? "pg_catalogIndex__listButton--active" : "")}>
+<button className={"pg_products__listButton " + (isActive ? "pg_products__listButton--active" : "")}>
 	목록
 </button>
 ```
@@ -36,8 +36,8 @@ TSX의 `className`은 클래스가 하나여도 `clsx()`로 조합합니다.
 ```tsx
 <button
 	className={clsx(
-		"pg_catalogIndex__listButton",
-		isActive && "pg_catalogIndex__listButton--active",
+		"pg_products__listButton",
+		isActive && "pg_products__listButton--active",
 	)}
 >
 	목록

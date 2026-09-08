@@ -37,18 +37,18 @@ tags: ownership, naming
 **Incorrect (화면 컴포넌트의 접두사를 누락합니다):**
 
 ```tsx
-// page/detail/sales-trend-panel.tsx
-export const SalesTrendPanel = (props: SalesTrendPanelProps) => {
-	return <section className={clsx("pg_salesTrendPanel__root")}>{props.children}</section>;
+// page/detail/product-table-section.tsx
+export const ProductTable = (props: ProductTableProps) => {
+	return <section className={clsx("pg_productTableSection__root")}>{props.children}</section>;
 };
 ```
 
 **Correct (진입 파일이 아닌 파일에는 `_`를 붙이고 파일명과 심볼에 레이어 접두사를 씁니다):**
 
 ```tsx
-// page/detail/_pg-sales-trend-panel.tsx
-export const PgSalesTrendPanel = (props: PgSalesTrendPanelProps) => {
-	return <section className={clsx("pg_salesTrendPanel__root")}>{props.children}</section>;
+// page/detail/_pg-product-table-section.tsx
+export const PgProductTableSection = (props: PgProductTableSectionProps) => {
+	return <section className={clsx("pg_productTableSection__root")}>{props.children}</section>;
 };
 ```
 

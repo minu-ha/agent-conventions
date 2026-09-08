@@ -8,7 +8,7 @@
 | 대상 | 식별자 |
 | --- | --- |
 | 화면 뼈대 | 라우트 세그먼트나 폴더 이름과 같은 낱말. 어느 화면에나 붙는 `shell`, `page`, `content`는 쓰지 않습니다 |
-| `[id]`처럼 값이 런타임에 정해지는 동적 세그먼트 | 화면의 역할로 바꿉니다. `posts/[id]`라면 `[id]`를 `detail`로 바꿔 `pg_postsDetail`로 씁니다 |
+| `[id]`처럼 값이 런타임에 정해지는 동적 세그먼트 | 화면의 역할로 바꿉니다. `orders/[id]`라면 `[id]`를 `detail`로 바꿔 `pg_ordersDetail`로 씁니다 |
 | 화면 안의 컴포넌트 | 자기 이름만 씁니다 |
 
 라우트 경로나 폴더 이름에 없는 줄임말은 쓰지 않습니다.
@@ -29,8 +29,8 @@ pg_x__root        <- 되짚을 이름이 없음
 **Correct (뼈대에는 라우트 세그먼트를 그대로 씁니다):**
 
 ```txt
-pg_postsIndex__root    <- posts index 화면
-pg_postsDetail__body   <- posts/[id] 화면
+pg_ordersIndex__root    <- orders index 화면
+pg_ordersDetail__body   <- orders/[id] 화면
 pg_document__body      <- document 화면
 ```
 

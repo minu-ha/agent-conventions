@@ -20,7 +20,7 @@ tags: values, origin, destructuring
 
 | 형태 · 상황 | 처리 |
 | --- | --- |
-| 객체 구조분해 | 체인으로 읽습니다. 이름을 바꿔 꺼내는 `{status: projectStatus}`도 같습니다 |
+| 객체 구조분해 | 체인으로 읽습니다. 이름을 바꿔 꺼내는 `{status: orderStatus}`도 같습니다 |
 | 같은 필드에 이름만 붙인 지역 `const` | 제거합니다. 필드를 그대로 읽는 것은 계산이 아닙니다 |
 | 짧은 함수 · 좁은 스코프 | 예외를 두지 않습니다 |
 | 배열 · 튜플 구조분해 | 유지합니다. `useState`와 `Object.entries`처럼 위치로 꺼내는 값에는 지워질 필드 이름이 없습니다 |
@@ -31,7 +31,7 @@ tags: values, origin, destructuring
 **Incorrect (시그니처와 본문에서 구조분해해 출처가 사라집니다):**
 
 ```ts
-const toInvoiceLine = ({product, quantity}: InvoiceLineInput): InvoiceLine => {
+const toOrderLine = ({product, quantity}: OrderLineInput): OrderLine => {
 	const {title, unitPrice} = product;
 
 	return {
@@ -46,7 +46,7 @@ const toInvoiceLine = ({product, quantity}: InvoiceLineInput): InvoiceLine => {
 ```ts
 const currency = pricing_default_currency;
 
-const toInvoiceTotal = (lines: InvoiceLine[]): InvoiceTotal => {
+const toOrderTotal = (lines: OrderLine[]): OrderTotal => {
 	return {
 		currency,
 		amount: sumBy(lines, (line) => line.amount),
@@ -57,32 +57,32 @@ const toInvoiceTotal = (lines: InvoiceLine[]): InvoiceTotal => {
 **Incorrect (이름을 바꿔 꺼내 출처와 원래 이름이 함께 사라집니다):**
 
 ```ts
-const {status: projectStatus, owner: projectOwner} = project;
+const {status: orderStatus, owner: orderOwner} = order;
 
-if (projectStatus === "archived") {
-	notify(projectOwner);
+if (orderStatus === "archived") {
+	notify(orderOwner);
 }
 ```
 
 **Correct (체인으로 읽어 출처가 쓰는 자리마다 남습니다):**
 
 ```ts
-const toInvoiceLine = (input: InvoiceLineInput): InvoiceLine => {
+const toOrderLine = (input: OrderLineInput): OrderLine => {
 	return {
 		label: input.product.title,
 		amount: input.product.unitPrice * input.quantity,
 	};
 };
 
-const toInvoiceTotal = (lines: InvoiceLine[]): InvoiceTotal => {
+const toOrderTotal = (lines: OrderLine[]): OrderTotal => {
 	return {
 		currency: pricing_default_currency,
 		amount: sumBy(lines, (line) => line.amount),
 	};
 };
 
-if (project.status === "archived") {
-	notify(project.owner);
+if (order.status === "archived") {
+	notify(order.owner);
 }
 ```
 
@@ -99,10 +99,10 @@ for (const [key, value] of Object.entries(target.searchParams)) {
 **Correct (필드 읽기가 아니라 계산한 결과라 이름을 붙입니다):**
 
 ```ts
-const toOverdueLines = (invoice: Invoice): InvoiceLine[] => {
+const toOverdueLines = (order: Order): OrderLine[] => {
 	// 콜백 안으로 옮기면 줄마다 다시 만든다
-	const overdueIds = new Set(invoice.overdueLineIds);
+	const overdueIds = new Set(order.overdueLineIds);
 
-	return invoice.lines.filter((line) => overdueIds.has(line.id));
+	return order.lines.filter((line) => overdueIds.has(line.id));
 };
 ```
