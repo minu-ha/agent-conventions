@@ -159,6 +159,24 @@ progressive skill 셋은 규칙 전체를 안 읽는다. 단계마다 좁힌다.
 에이전트는 명시적 요청이 있을 때만 읽는다.
 세 skill이 모두 progressive라 자동으로 통째로 읽는 단계는 없다.
 
+### CRITICAL 마무리 재대조 훅
+
+`CRITICAL` 규칙은 마무리 전에 결과 코드를 다시 대조하게 되어 있다. grep 으로 잡히는 넷은 `hooks/check-critical-rules.sh` 가 기계로 본다.
+리터럴 폴백(ts 05-01), `../` 와 같은 폴더 심볼 가져오기(ts 02-05), 레이어 역방향 가져오기(react 01-04), 소유자 접두 없는 `@keyframes`(css 07-02)다.
+작업 트리에서 HEAD 대비 추가된 줄만 보고, 위반이 있으면 목록을 돌려주며 마무리를 한 번 막는다.
+
+사용하는 프로젝트의 `.claude/settings.local.json` 에 Stop 훅으로 건다.
+
+```json
+{
+  "hooks": {
+    "Stop": [{"hooks": [{"type": "command", "command": "bash <이 저장소를 받은 경로>/hooks/check-critical-rules.sh", "timeout": 30}]}]
+  }
+}
+```
+
+`settings.local.json` 은 기계마다 다른 파일이라 절대경로를 그대로 적어도 된다. 응답 필드 이름 바꿔치기(react 02-04)처럼 grep 으로 못 잡는 CRITICAL 은 여전히 문장으로만 남는다.
+
 측정 결과와 근거는 [docs/progressive-loading.html](./docs/progressive-loading.html).
 
 ---

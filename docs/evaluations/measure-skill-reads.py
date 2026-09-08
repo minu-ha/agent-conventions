@@ -5,6 +5,7 @@
   python3 measure-skill-reads.py                # ~/.claude/projects 의 sk-ax-gas-pp*·agent-conventions* 세션 전부
   python3 measure-skill-reads.py <프로젝트 glob>...  # 예: '*my-app*'
   python3 measure-skill-reads.py --probe run.jsonl   # `claude -p --output-format stream-json --verbose` 출력 한 건
+  python3 measure-skill-reads.py --since 2026-09-07  # 그 날짜 이후 시작한 세션만
 
 세션 기록은 Read 도구뿐 아니라 Bash 의 cat·sed 로도 규칙을 읽으므로 두 도구의 입력 문자열을 다 본다.
 `~/.claude/skills/convention-*` 경로로 읽은 것만 소비 행동으로 센다. 저장소 경로 `skill/<name>/` 읽기는 규칙을 편집하는 접근이라 뺀다.
@@ -116,22 +117,33 @@ def summarize(path):
     return counts, styles, chars, opened
 
 
-def report_projects(patterns):
-    print("| project | session | Skill calls | index | contracts | rules | full | partial | to-Incorrect | skill-file kchars |")
-    print("|" + " --- |" * 10)
+def session_start(path):
+    """첫 timestamp 의 날짜. 없으면 빈 문자열"""
+    with open(path, encoding="utf-8") as handle:
+        head = handle.read(20000)
+    found = re.search(r'"timestamp":"(\d{4}-\d{2}-\d{2})', head)
+    return found.group(1) if found else ""
+
+
+def report_projects(patterns, since=""):
+    print("| project | session | start | Skill calls | index | contracts | rules | full | partial | to-Incorrect | skill-file kchars |")
+    print("|" + " --- |" * 11)
     total_opened = collections.defaultdict(set)
     total_styles = collections.Counter()
     for pattern in patterns:
         for project_dir in sorted(glob.glob(f"{HOME}/.claude/projects/{pattern}")):
             project = os.path.basename(project_dir).replace("-Users-l-20220017-workspace-", "")
             for session in sorted(glob.glob(f"{project_dir}/*.jsonl")):
+                start = session_start(session)
+                if start < since:
+                    continue
                 counts, styles, chars, opened = summarize(session)
                 if counts["skill_calls"] + counts["index"] + counts["contract"] + counts["rule"] == 0:
                     continue
                 total_styles.update(styles)
                 for key, value in opened.items():
                     total_opened[(os.path.basename(session)[:8], *key)] |= value
-                print(f"| {project} | {os.path.basename(session)[:8]} | {counts['skill_calls']} | {counts['index']} | {counts['contract']} | {counts['rule']} | {styles['full']} | {styles['partial']} | {styles['to_incorrect']} | {chars // 1000} |")
+                print(f"| {project} | {os.path.basename(session)[:8]} | {start} | {counts['skill_calls']} | {counts['index']} | {counts['contract']} | {counts['rule']} | {styles['full']} | {styles['partial']} | {styles['to_incorrect']} | {chars // 1000} |")
     print("\n규칙 원문 읽기 방식:", dict(total_styles))
     by_tier = collections.Counter()
     full_by_tier = collections.Counter()
@@ -171,4 +183,9 @@ if __name__ == "__main__":
     if args[:1] == ["--probe"]:
         report_probe(args[1])
     else:
-        report_projects(args or ["*sk-ax-gas-pp*", "*agent-conventions*"])
+        since = ""
+        if "--since" in args:
+            at = args.index("--since")
+            since = args[at + 1]
+            args = args[:at] + args[at + 2:]
+        report_projects(args or ["*sk-ax-gas-pp*", "*agent-conventions*"], since)
