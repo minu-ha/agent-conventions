@@ -10,11 +10,19 @@ metadata:
 
 ## 1. 변경 범위 판정
 
-요청 · 계획 · diff에서 render · screen · owner/route-local 배치 · handler · state · query · React support code의
-실제 변경만 범위로 잡는다.
-추가 · 삭제 · 이동 · 이름 변경 · 재선언은 포함하고, 특히 owner/route-local 이동 자체는 변경이다.
-read-only 문맥은 제외한다.
-owner 이동에 그대로 딸려온 내부 선언 · 본문 · import · class/style은 diff에 삭제+추가로 보여도 변경으로 다시 세지 않는다.
+요청 · 계획 · diff에서 아래를 가른다.
+
+**범위에 드는 것**
+
+- render · screen · 소유자/route-local 배치 · handler · state · query · React support code의 실제 변경
+- 추가 · 삭제 · 이동 · 이름 변경 · 재선언. 특히 소유자/route-local 이동 자체는 변경이다
+
+**범위에 들지 않는 것**
+
+- read-only 문맥
+- 소유자 이동에 그대로 딸려온 내부 선언 · 본문 · import · class/style
+- 위 이동은 diff에 삭제+추가로 보여도 변경으로 다시 세지 않는다
+
 적용되지 않는 규칙의 optional pattern을 새로 들여와 스스로 범위를 넓히지 않는다.
 
 `convention-typescript`는 항상 함께 활성화한다.
@@ -24,7 +32,7 @@ class contract · stylesheet · styling surface가 바뀔 때만 `convention-css
 
 활성화한 skill마다 그 `SKILL.md`의 load 계약을 따른다.
 이 skill과 현재 companion은 모두 progressive이므로 각각의 `RULES_INDEX.md`를 끝까지 훑는다.
-이 skill의 인덱스는 [RULES_INDEX.md](./RULES_INDEX.md)다.
+이 skill의 인덱스는 [RULES_INDEX.md](./RULES_INDEX.md) 이다.
 각 규칙의 `appliesWhen`을 변경 범위와 대조하고 첫 match에서 멈추지 않는다.
 애매하면 적용되는 쪽으로 본다.
 

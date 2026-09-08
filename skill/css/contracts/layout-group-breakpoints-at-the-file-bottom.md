@@ -15,7 +15,9 @@
 | 선택자와 선언까지 같은 배치 책임이 여러 파일에 반복됨 | 배치를 컴포넌트 하나로 모을지 검토하고 브레이크포인트를 그 파일에만 둡니다 |
 | 조건 숫자만 같고 역할은 다름 | 컴포넌트를 합치지 않습니다 |
 | 브레이크포인트 없이 배치할 수 있음 | `layout-reach-for-intrinsic-sizing-before-breakpoints` 규칙을 먼저 적용합니다 |
-| `prefers-color-scheme` 테마 조건 | 이 규칙의 대상이 아닙니다. `values-switch-themes-by-changing-token-values`에 따라 토큰 파일의 최상위 `@media`에 둡니다 |
+| `prefers-color-scheme` 테마 조건 | 이 규칙의 대상이 아닙니다 |
+
+테마 조건은 `values-switch-themes-by-changing-token-values`에 따라 토큰 파일의 최상위 `@media`에 둡니다.
 
 **Incorrect (클래스 블록 안에 중첩해서 브레이크포인트가 흩어집니다):**
 

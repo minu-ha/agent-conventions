@@ -1,14 +1,14 @@
 # TypeScript 컨벤션 Rule Index
 
 - Skill: `typescript`
-- Routing digest: `sha256:7e00c1711664b12b59eefffdd25d43f667f5f2ef6d86cb630eae02ac2016fca7`
+- Routing digest: `sha256:4acd65780d25524516ee4a9bf44ce9c1ce8f2f59359ebd9d9cab61c347ce6815`
 
 ## Local Rules
 
 - T01-01 | types-reuse-existing-contracts-before-new-types | 뜻이 같은 기존 타입 · 스키마가 있는데 형태를 새로 선언 · 변경 · 파생할 때. 같은 형태를 두 번 선언했다가 넣거나 뺄 때. 제외: 맞는 후보가 없거나 소유자만 옮긴 경우. 제외: 그대로인 계약을 새 자리에서 쓰는 경우. 제외: 고칠 수 없는 형태를 그대로 쓰는 경우. | reviewWith: types-derive-subsets-with-indexed-access, types-document-custom-types-and-shapes
 - T01-02 | types-derive-subsets-with-indexed-access | 기존 타입의 일부 필드만 담는 형태를 선언 · 변경할 때. \`Pick\` · \`Omit\` · \`Partial\` · \`Required\` · \`Extract\` · \`NonNullable\`을 쓸 때. 제외: 필드 이름 · 타입 · 선택 여부가 모두 같아 기존 타입을 그대로 참조하는 경우. | reviewWith: types-document-custom-types-and-shapes, types-reuse-existing-contracts-before-new-types
 - T01-03 | types-prefer-function-variable-types-over-parameter-annotations | 기존 호출 계약을 이름 붙인 함수나 공용 함수 구현에 다시 쓸 때. 같은 시그니처를 여러 구현이 함께 쓰도록 바꿀 때. 제외: 타입 표기 없이 문맥으로 추론되는 일회성 인라인 콜백인 경우. | reviewWith: types-mark-unused-parameters-with-underscore
-- T01-04 | types-document-custom-types-and-shapes | 타입, 인터페이스, 스키마 최상단, 객체 상수, 계약 필드, 파생 별칭을 추가 · 변경할 때. 이름 붙인 형태에 호출 계약 역할을 새로 얹을 때. 제외: 외부 · 생성된 · 읽기 전용 · 공용 형태를 그대로 쓰거나 반환 타입이 익명으로 추론되는 경우.
+- T01-04 | types-document-custom-types-and-shapes | 타입, \`interface\`, 스키마 최상단, 객체 상수, 계약 필드, 파생 별칭을 추가 · 변경할 때. 이름 붙인 형태에 호출 계약 역할을 새로 얹을 때. 제외: 외부 · 생성된 · 읽기 전용 · 공용 형태를 그대로 쓰거나 반환 타입이 익명으로 추론되는 경우.
 - T01-05 | types-mark-unused-parameters-with-underscore | 기존 콜백이나 프레임워크 계약을 구현하면서 매개변수를 빼거나 쓰지 않을 때. 커링한 핸들러가 마지막에 돌려주는 콜백에서 매개변수를 뺄 때.
 - T01-06 | types-narrow-unknown-instead-of-asserting | \`as\` 단언, \`\!\` \`null\` 아님 단언, \`any\`, \`@ts-expect-error\`를 추가 · 변경 · 제거할 때. 앱 밖에서 들어온 값을 타입 붙여 쓰기 시작할 때. 제외: 검증된 내부 값에 \`as const\`나 \`satisfies\`만 적용하는 경우. | reviewWith: docs-justify-convention-exceptions-with-a-reason-comment, tooling-configure-biome-to-enforce-these-rules
 - T01-07 | types-replace-enum-with-as-const-objects | \`enum\`이나 타입과 실행 양쪽에서 함께 쓰는 값 집합을 추가 · 변경할 때. 제외: 외부 패키지가 내보낸 \`enum\` 값을 그대로 읽어 쓰는 경우.
@@ -19,7 +19,7 @@
 - T02-04 | naming-use-direct-imports-and-public-entry-points | 가져오기, 내보내기, \`index.ts\` 배럴, 공개 진입점, 소유자 보조 모듈의 경계를 추가 · 변경할 때. 같은 경로에서 값과 타입 중 무엇을 가져올지 추가 · 삭제 · 전환할 때. | reviewWith: naming-import-by-absolute-path
 - T02-05 | naming-import-by-absolute-path | 다른 모듈을 가져오는 경로를 쓸 때. \`./\`나 \`../\`로 시작하는 경로를 쓰거나 별칭 경로를 상대경로로 바꾸려 할 때. \`src\` 바로 아래 레이어 루트 폴더나 \`store\` 파일을 새로 만들 때. | reviewWith: naming-use-direct-imports-and-public-entry-points
 - T02-06 | naming-read-environment-values-through-config-env | \`import.meta.env\`나 \`process.env\`를 읽는 코드를 추가 · 이동할 때. 환경마다 달라지는 값이나 기능 플래그를 새로 들여올 때. | reviewWith: absence-expose-optional-values-instead-of-silent-fallbacks, naming-place-project-constants-in-the-root-constant-folder
-- T02-07 | naming-name-types-by-role-and-lifetime | 타입 · 인터페이스나 그 파일의 이름을 새로 만들거나 바꿀 때. 타입을 소유자 폴더 안과 밖 사이에서 옮기며 이름을 바꿀 때. 제외: 외부 · 생성된 계약 이름을 그대로 쓰는 경우. | reviewWith: naming-use-consistent-file-and-symbol-naming
+- T02-07 | naming-name-types-by-role-and-lifetime | 타입 · \`interface\`나 그 파일의 이름을 새로 만들거나 바꿀 때. 타입을 소유자 폴더 안과 밖 사이에서 옮기며 이름을 바꿀 때. 제외: 외부 · 생성된 계약 이름을 그대로 쓰는 경우. | reviewWith: naming-use-consistent-file-and-symbol-naming
 - T03-01 | functions-declare-functions-as-arrow-consts | 이름을 지어 선언하는 함수를 새로 만들거나 선언 형태나 본문 형태를 바꿀 때. 객체 프로퍼티에 함수를 담거나 그 형태를 바꿀 때. 제외: 인라인 콜백이나 커링의 바깥 화살표인 경우. 제외: 클래스 메서드, 제너레이터, 오버로드 선언인 경우. | reviewWith: functions-use-named-object-params-for-complex-signatures
 - T03-02 | functions-use-named-object-params-for-complex-signatures | 매개변수가 셋을 넘거나 같은 계열 인자를 받는 함수를 추가 · 변경할 때. 객체 매개변수의 필드를 읽는 방식을 바꿀 때. 제외: 리액트 함수 컴포넌트가 프롭스를 받는 방식만 바꾸는 경우. | reviewWith: types-reuse-existing-contracts-before-new-types, values-read-objects-through-chains
 - T03-03 | functions-extract-helpers-only-when-the-boundary-is-real | 보조 함수를 빼내거나 옮기거나 내보내거나 공유할 때. 범용 보조 파일, 소유자 하나만 쓰는 변환 함수, 자잘한 정리 단계의 경계를 바꿀 때. | reviewWith: docs-require-header-jsdoc-on-key-declarations, functions-give-each-function-its-own-file, values-decide-once-and-carry-the-result

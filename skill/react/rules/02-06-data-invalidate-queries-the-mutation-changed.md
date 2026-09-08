@@ -34,7 +34,9 @@ tags: data, mutation
 | 쿼리 키 지정 | 문자열을 직접 적지 않고 쿼리 훅이 내보낸 키를 씁니다 |
 | 무효화 대상이 여럿임 | 성공 콜백에서 나란히 호출합니다 |
 | 다시 읽기를 마쳐야 저장 중 표시나 후속 동작을 끝낼 수 있음 | 성공 콜백에서 무효화 Promise를 반환하거나 `await`합니다 |
-| 호출 위치 | `data-handle-mutation-failure-where-it-is-called`를 따릅니다. `events-run-user-actions-in-handlers-not-effects`에 따라 이펙트로 옮기지 않습니다 |
+| 호출 위치 | `data-handle-mutation-failure-where-it-is-called`를 따릅니다 |
+
+`events-run-user-actions-in-handlers-not-effects`에 따라 무효화를 이펙트로 옮기지 않습니다.
 
 **Incorrect (캐시를 손으로 조립하고 키를 문자열로 적습니다):**
 

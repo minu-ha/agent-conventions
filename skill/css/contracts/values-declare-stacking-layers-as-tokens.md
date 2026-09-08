@@ -18,19 +18,22 @@
 
 | 새 쌓임 맥락을 만드는 대표 속성 | 조건 |
 | --- | --- |
-| `position` | `relative` 또는 `absolute`이면서 `z-index`가 `auto`가 아님. `fixed`와 `sticky`는 자체로 만듭니다 |
+| `position` | `relative` 또는 `absolute`이면서 `z-index`가 `auto`가 아님 |
 | `transform`, `filter`, `backdrop-filter` | `none`이 아님 |
 | `will-change` | 쌓임 맥락을 만드는 속성을 지정함 |
 | `opacity`, `isolation`, `contain` | `opacity`는 1 미만, `isolation`은 `isolate`, `contain`은 `layout`, `paint`, `content`, `strict` 중 하나 |
 
-| 요소가 가려졌을 때 확인할 것 | 조치 |
-| --- | --- |
-| `z-index` 적용 여부 | 일반 요소는 `static`이면 적용되지 않고 `relative`부터 적용됩니다. `flex`와 `grid` 아이템은 `static`이어도 `auto`가 아닌 값이 적용되고 쌓임 맥락도 만듭니다 |
-| 같은 층 안의 순서 충돌 | 층 분류를 다시 봅니다. 값을 `+1` 하지 않습니다 |
-| 조상의 쌓임 맥락이나 잘림 | 해당 조상 밖의 포털 대상으로 옮깁니다. 포털도 실제 부착 위치의 DOM 맥락을 따르므로 대상 위치를 확인합니다 |
-| `showModal()`로 연 `dialog`나 열린 popover | 최상위 레이어이므로 일반 문서의 `z-index` 토큰으로 그 위에 올라가려 하지 않습니다 |
+`fixed`와 `sticky`는 그 자체로 새 쌓임 맥락을 만듭니다.
 
-숫자를 올리기 전에 조상부터 확인합니다.
+요소가 가려졌으면 숫자를 올리기 전에 아래 순서로 확인합니다.
+
+1. `z-index`가 적용되는지 봅니다. 일반 요소는 `static`이면 적용되지 않고 `relative`부터 적용됩니다.
+2. `flex`와 `grid` 아이템인지 봅니다. `static`이어도 `auto`가 아닌 값이 적용되고 쌓임 맥락도 만듭니다.
+3. 같은 층 안에서 순서가 충돌하면 층 분류를 다시 봅니다. 값을 `+1` 하지 않습니다.
+4. 조상의 쌓임 맥락이나 잘림이 원인이면 해당 조상 밖의 포털 대상으로 옮깁니다.
+5. 포털도 실제 부착 위치의 DOM 맥락을 따르므로 대상 위치를 확인합니다.
+6. `showModal()`로 연 `dialog`나 열린 popover는 최상위 레이어입니다.
+   일반 문서의 `z-index` 토큰으로 그 위에 올라가려 하지 않습니다.
 
 **Incorrect (숫자를 직접 쓰고 경쟁으로 올립니다):**
 

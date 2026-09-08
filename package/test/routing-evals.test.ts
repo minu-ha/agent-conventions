@@ -264,7 +264,7 @@ const typescriptRuleRouting = {
 	},
 	"types-document-custom-types-and-shapes": {
 		appliesWhen:
-			"타입, 인터페이스, 스키마 최상단, 객체 상수, 계약 필드, 파생 별칭을 추가 · 변경할 때. 이름 붙인 형태에 호출 계약 역할을 새로 얹을 때. 제외: 외부 · 생성된 · 읽기 전용 · 공용 형태를 그대로 쓰거나 반환 타입이 익명으로 추론되는 경우.",
+			"타입, `interface`, 스키마 최상단, 객체 상수, 계약 필드, 파생 별칭을 추가 · 변경할 때. 이름 붙인 형태에 호출 계약 역할을 새로 얹을 때. 제외: 외부 · 생성된 · 읽기 전용 · 공용 형태를 그대로 쓰거나 반환 타입이 익명으로 추론되는 경우.",
 		reviewWith: [],
 	},
 	"types-mark-unused-parameters-with-underscore": {
@@ -320,7 +320,7 @@ const typescriptRuleRouting = {
 	},
 	"naming-name-types-by-role-and-lifetime": {
 		appliesWhen:
-			"타입 · 인터페이스나 그 파일의 이름을 새로 만들거나 바꿀 때. 타입을 소유자 폴더 안과 밖 사이에서 옮기며 이름을 바꿀 때. 제외: 외부 · 생성된 계약 이름을 그대로 쓰는 경우.",
+			"타입 · `interface`나 그 파일의 이름을 새로 만들거나 바꿀 때. 타입을 소유자 폴더 안과 밖 사이에서 옮기며 이름을 바꿀 때. 제외: 외부 · 생성된 계약 이름을 그대로 쓰는 경우.",
 		reviewWith: ["naming-use-consistent-file-and-symbol-naming"],
 	},
 	"functions-declare-functions-as-arrow-consts": {
@@ -501,8 +501,7 @@ const cssRuleRouting = {
 		reviewWith: [],
 	},
 	"ownership-give-each-file-one-scope-slug": {
-		appliesWhen:
-			"새 `scope_slug`를 만들거나 기존 식별자를 복사 · 이름 변경할 때. 하위 컴포넌트에 CSS 파일을 새로 만들면서 부모 식별자를 그대로 쓸 때.",
+		appliesWhen: "새 식별자를 만들거나 기존 식별자를 복사 · 이름 변경할 때. 부품에 CSS 파일을 새로 만들면서 부모 식별자를 그대로 쓸 때.",
 		reviewWith: [],
 	},
 	"ownership-choose-scope-prefix-by-owner-layer": {
@@ -827,7 +826,7 @@ const reactRuleRouting = {
 	},
 	"composition-split-owner-parts-only-for-runtime-boundaries": {
 		appliesWhen:
-			"위젯이나 ui 컴포넌트 안에서 JSX 일부를 별도 컴포넌트 파일로 떼거나 되돌릴 때. 제외: 라우트 진입 파일의 섹션을 나누는 경우.",
+			"`widget`이나 `ui` 컴포넌트 안에서 JSX 일부를 별도 컴포넌트 파일로 떼거나 되돌릴 때. 제외: 라우트 진입 파일의 섹션을 나누는 경우.",
 		reviewWith: [
 			"screen-extract-local-section-components-for-runtime-boundaries",
 			"ownership-place-owner-files-in-role-folders",
@@ -848,7 +847,7 @@ const reactRuleRouting = {
 	},
 	"screen-extract-local-section-components-for-runtime-boundaries": {
 		appliesWhen:
-			"화면 지역 섹션 컴포넌트를 새로 추출할 때. 기존 섹션에 비동기, 지역 상태, 프로바이더, 상호작용, 외부 위젯, 성능 처리를 넣거나 뺄 때.",
+			"화면 지역 섹션 컴포넌트를 새로 추출할 때. 기존 섹션에 비동기, 지역 상태, 프로바이더, 상호작용, 외부 라이브러리, 성능 처리를 넣거나 뺄 때.",
 		reviewWith: [],
 	},
 	"screen-keep-derived-values-close": {
@@ -3513,7 +3512,7 @@ test("v17 TypeScript boundaries exclude React props and prevent self-created dup
 		existingContract,
 		[
 			/다음은 이 규칙을 적용하지 않는 경우입니다/,
-			/외부 · 생성된 · 읽기 전용 · 공용 형태를 그대로 사용 \| 이 규칙과 `types-derive-subsets-with-indexed-access` 모두 대상이 아닙니다\. 함수 헤더 주석은 `docs-require-header-jsdoc-on-key-declarations`가 판단합니다/,
+			/외부 · 생성된 · 읽기 전용 · 공용 형태를 그대로 사용 \| 이 규칙과 `types-derive-subsets-with-indexed-access` 모두 대상이 아닙니다/,
 		],
 		"existingContract excludes unchanged external contracts",
 	);
@@ -3563,7 +3562,7 @@ test("v17 TypeScript boundaries exclude React props and prevent self-created dup
 		generatedContracts[1],
 		[
 			/직접 선언한 타입과 형태는 헤더와 필드를 구분해 문서화합니다/i,
-			/커스텀 `type`, `interface`, 스키마 최상단 \| 씁니다 \| 원본에서 가져온 필드에도 각각 씁니다/i,
+			/커스텀 `type`, `interface`, 스키마 최상단 \| 원본에서 가져온 필드에도 각각 씁니다/i,
 		],
 		"generatedContracts",
 	);
@@ -3640,7 +3639,7 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 		generatedContracts[1],
 		[
 			/직접 선언한 타입과 형태는 헤더와 필드를 구분해 문서화합니다/i,
-			/커스텀 `type`, `interface`, 스키마 최상단 \| 씁니다 \| 원본에서 가져온 필드에도 각각 씁니다/i,
+			/커스텀 `type`, `interface`, 스키마 최상단 \| 원본에서 가져온 필드에도 각각 씁니다/i,
 		],
 		"generatedContracts",
 	);
@@ -3699,7 +3698,7 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 		foreignRoot,
 		[
 			/그 라이브러리를 쓰는 앱 전체에 적용됩니다/,
-			/그 위젯을 쓰는 모든 화면에 적용됩니다/,
+			/그 `widget`을 쓰는 모든 화면에 적용됩니다/,
 			/다른 소유자의 DOM 경로는 우리가 정하지 않으므로 결합자 개수를 제한하지 않습니다/,
 			/selector-disallowed-list/,
 		],
@@ -3810,7 +3809,7 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 			/포커스 표시를 유지하고 `outline: none`을 쓸 때는 대체 스타일을 함께 제공합니다/,
 			/:focus-visible/,
 			/색각 이상에서도 구분할 수 있어야 합니다/,
-			/브라우저가 입력 방식과 사용자 설정으로 판단하므로/,
+			/브라우저가 입력 방식과 사용자 설정으로 판단합니다/,
 			/forced-colors: active/,
 			/투명한 `outline`/,
 		],

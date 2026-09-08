@@ -2,7 +2,7 @@
 
 **Impact: MEDIUM (여러 응답의 가공 위치를 통일하고 화면 본문의 별칭을 줄입니다)**
 
-둘 이상의 쿼리 결과를 하나로 합칠 때는 값을 그리는 섹션에서 `combine`을 인라인으로 씁니다.
+둘 이상의 쿼리 결과를 하나로 합칠 때는 값을 렌더하는 섹션에서 `combine`을 인라인으로 씁니다.
 결과를 합칠 필요와 요청을 병렬로 시작할 필요는 따로 판단합니다.
 
 | 상황 | 선택 |
@@ -45,7 +45,7 @@ const rows = responseProductListSuspense.data.products.map((product) => ({
 }));
 ```
 
-**Correct (값을 그리는 섹션이 인라인 `combine`으로 합칩니다):**
+**Correct (값을 렌더하는 섹션이 인라인 `combine`으로 합칩니다):**
 
 ```tsx
 export const PgProductTableSection = () => {

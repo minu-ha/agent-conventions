@@ -1,7 +1,7 @@
 # React 컨벤션 Rule Index
 
 - Skill: `react`
-- Routing digest: `sha256:7c2196fe22446ff6fc53bc92a0be99dcca82df744f57a1ff8b72155d8371e4a7`
+- Routing digest: `sha256:200385db3e9739c376c02f23b73a7447b9c17b66569ac22f666c23fabe449328`
 
 ## Direct Companions
 
@@ -39,10 +39,10 @@
 - R05-07 | composition-name-fragments-explicitly | JSX에서 여러 요소를 \`Fragment\`나 \`\<\>\`로 감싸는 문법을 추가 · 변경할 때. \`Fragment\`에 \`key\`를 붙이거나 떼어 낼 때.
 - R05-08 | composition-render-one-branch-with-and | JSX 안에 조건부 렌더링을 추가하거나 조건식을 바꿀 때. 기존 JSX 삼항이나 \`조건 && …\`을 넣거나 뺄 때.
 - R05-09 | composition-order-hooks-handlers-effects-then-return | 컴포넌트 본문에 훅 · 핸들러 · 이펙트를 추가하거나 자리를 옮길 때. 본문 선언이 아래 선언을 참조해 순서를 다시 잡을 때. | reviewWith: events-run-user-actions-in-handlers-not-effects, screen-keep-derived-values-close
-- R05-10 | composition-split-owner-parts-only-for-runtime-boundaries | 위젯이나 ui 컴포넌트 안에서 JSX 일부를 별도 컴포넌트 파일로 떼거나 되돌릴 때. 제외: 라우트 진입 파일의 섹션을 나누는 경우. | reviewWith: ownership-place-owner-files-in-role-folders, screen-extract-local-section-components-for-runtime-boundaries, strategy-expose-only-assembled-compound-parts
+- R05-10 | composition-split-owner-parts-only-for-runtime-boundaries | \`widget\`이나 \`ui\` 컴포넌트 안에서 JSX 일부를 별도 컴포넌트 파일로 떼거나 되돌릴 때. 제외: 라우트 진입 파일의 섹션을 나누는 경우. | reviewWith: ownership-place-owner-files-in-role-folders, screen-extract-local-section-components-for-runtime-boundaries, strategy-expose-only-assembled-compound-parts
 - R06-01 | screen-keep-route-flow-visible | 라우트 진입의 search 파라미터, 화면 이동, 쿼리, 뮤테이션, 화면 전체 이펙트를 옮기거나 나눌 때. 화면 섹션 조립의 순서나 소유자를 바꿀 때. 제외: 같은 소유자 안에서 표현만 바꾸는 경우. | reviewWith: ownership-place-owner-files-in-role-folders, screen-extract-local-section-components-for-runtime-boundaries
 - R06-02 | screen-avoid-premature-abstraction | 화면 코드를 보조 함수, 훅, 컴포넌트, 모듈로 추출할 때. 한 곳에서만 쓰는 기존 추상화를 다시 접어 넣을 때. | reviewWith: screen-extract-local-section-components-for-runtime-boundaries, typescript/functions-extract-helpers-only-when-the-boundary-is-real
-- R06-03 | screen-extract-local-section-components-for-runtime-boundaries | 화면 지역 섹션 컴포넌트를 새로 추출할 때. 기존 섹션에 비동기, 지역 상태, 프로바이더, 상호작용, 외부 위젯, 성능 처리를 넣거나 뺄 때.
+- R06-03 | screen-extract-local-section-components-for-runtime-boundaries | 화면 지역 섹션 컴포넌트를 새로 추출할 때. 기존 섹션에 비동기, 지역 상태, 프로바이더, 상호작용, 외부 라이브러리, 성능 처리를 넣거나 뺄 때.
 - R06-04 | screen-keep-derived-values-close | 화면 진입 파일이나 섹션 최상단에 \`const\` 별칭, 플래그, 표시값을 추가 · 이동 · 제거할 때. 훅 인자, JSX 표시값, 이펙트 안 계산을 위쪽 \`const\`로 빼거나 되돌릴 때. | reviewWith: data-preserve-origin-chaining
 - R07-01 | runtime-place-suspense-boundaries-at-the-section-owner | \`Suspense\` 쿼리를 쓰는 화면에서 로딩 대체 화면의 위치를 정할 때. \`Suspense\` 경계를 추가하거나 옮길 때. | reviewWith: css/layout-keep-layout-intent-explicit, runtime-place-error-boundaries-by-blast-radius, screen-extract-local-section-components-for-runtime-boundaries
 - R07-02 | runtime-avoid-ad-hoc-loading-branches | \`Suspense\` 쿼리를 쓰는 화면 본문에 초기 로딩 반환을 추가 · 변경할 때. \`isFetching\`이나 뮤테이션 \`isPending\`으로 화면을 가리는 분기를 넣을 때. 제외: 선택 값에 기본값을 채우는 것만 바꾸는 경우. | reviewWith: data-preserve-origin-chaining, screen-keep-derived-values-close, typescript/absence-expose-optional-values-instead-of-silent-fallbacks

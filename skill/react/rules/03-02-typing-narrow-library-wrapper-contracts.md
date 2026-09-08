@@ -34,7 +34,7 @@ tags: typing, wrapper, contracts
 `UiIconButtonProps`의 `icon`은 자기 프롭이지만, 안쪽 컴포넌트도 받는 `UiTableRowProps`의 `selected`는 아닙니다.
 인덱스 접근은 이미 있는 프롭을 그대로 열 때만 쓰며, 상속된 프롭도 바깥 타입 이름으로 접근합니다.
 
-| 추가 판단 | 기준 |
+| 함께 판단할 내용 | 기준 |
 | --- | --- |
 | 값을 직접 적어 계약을 좁힘 | 의도적으로 좁힐 때만 허용하며 `typescript/docs-justify-convention-exceptions-with-a-reason-comment`에 따라 이유를 남깁니다 |
 | `ref` 공개 | `composition-open-ref-props-only-for-imperative-contracts` |

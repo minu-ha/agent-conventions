@@ -29,7 +29,7 @@ tags: composition, props
 문서 주석 → `interface` → 컴포넌트 순서로 붙여 계약을 먼저 읽게 합니다. 합성 공개 부품도 같습니다.
 공유 `interface`를 쓰는 부품의 개별 설명은 각 컴포넌트 위에 둡니다.
 
-| 관련 판단 | 기준 |
+| 함께 판단할 내용 | 기준 |
 | --- | --- |
 | 같은 형태의 중복 선언 | `typescript/types-reuse-existing-contracts-before-new-types` |
 | 컴포넌트가 아닌 함수의 객체 매개변수 | `typescript/functions-use-named-object-params-for-complex-signatures` |

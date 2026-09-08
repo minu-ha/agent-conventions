@@ -23,11 +23,12 @@ tags: ownership, hooks, widget
 
 | 대상 | 처리 |
 | --- | --- |
-| 순수 계산 | `use` 접두사를 붙이지 않습니다. 함수 추출 여부는 `typescript/functions-extract-helpers-only-when-the-boundary-is-real`을 따릅니다 |
-| 여러 쿼리를 합친 결과 | 값을 그리는 섹션이 `combine`을 소유합니다. 여러 소유자가 같은 조합을 호출할 때만 `_hook`으로 옮깁니다 |
+| 순수 계산 | `use` 접두사를 붙이지 않습니다 |
+| 여러 쿼리를 합친 결과 | 값을 렌더하는 섹션이 `combine`을 소유합니다. 여러 소유자가 같은 조합을 호출할 때만 `_hook`으로 옮깁니다 |
 | 실제 커스텀 훅 | 기능을 나타내는 `use<Capability>`로 이름 짓습니다. `useData`, `useLogic`처럼 구현 범주만 적지 않습니다 |
 | 생명주기가 있는 로직 | 분량을 줄이기 위한 추출은 허용하지 않습니다. `ownership-keep-lifecycle-in-the-owning-component`를 따릅니다 |
 
+함수 추출 여부는 `typescript/functions-extract-helpers-only-when-the-boundary-is-real`을 따릅니다.
 추출한 파일의 배치는 `ownership-place-owner-files-in-role-folders`를,
 내보내기와 가져오기 형태는 `typescript/naming-use-direct-imports-and-public-entry-points`를 따릅니다.
 

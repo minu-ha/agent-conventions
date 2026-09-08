@@ -17,12 +17,12 @@ tags: ownership, scope, third-party
 **Impact: CRITICAL (다른 소유자의 스타일을 덮어써도 해당 인스턴스에만 적용되도록 제한합니다)**
 
 다른 소유자의 클래스는 **내 최상위 클래스 블록 안에서 `&`로 시작하는 선택자**로만 씁니다.
-내 `scope_slug`와 다르면 외부 라이브러리, 다른 화면, 위젯 모두 같은 기준을 적용합니다.
+내 `scope_slug`와 다르면 외부 라이브러리, 다른 화면, `widget` 모두 같은 기준을 적용합니다.
 
 | 선택자 | 판정 |
 | --- | --- |
 | `.MuiTreeItem-label { }` | 금지. 그 라이브러리를 쓰는 앱 전체에 적용됩니다 |
-| `.wg_chartCard__caption { }` | 금지. 그 위젯을 쓰는 모든 화면에 적용됩니다 |
+| `.wg_chartCard__caption { }` | 금지. 그 `widget`을 쓰는 모든 화면에 적용됩니다 |
 | `.pg_products__sidebar { & .MuiTreeItem-label { } }` | 허용. 해당 인스턴스에만 적용됩니다 |
 | `.pg_detail__root { & .wg_chartCard__caption { } }` | 허용 |
 | `.pg_products__sidebar .MuiTreeItem-label { }` | 금지. 최상위 블록 안에서 `&`로 시작해야 합니다 |

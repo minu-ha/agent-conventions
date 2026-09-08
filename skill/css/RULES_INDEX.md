@@ -1,7 +1,7 @@
 # CSS 컨벤션 Rule Index
 
 - Skill: `css`
-- Routing digest: `sha256:39ae49d19c46e6524acb8aa31d6b80abec07d9c67d2669e415c1245ddfa239df`
+- Routing digest: `sha256:0053a1b7ff91acc39bf3aee01f7ad2c50f213ca90829f16903fece7906cbd675`
 
 ## Direct Companions
 
@@ -13,7 +13,7 @@
 - C01-02 | naming-use-scope-slug-element-modifier-syntax | 일반 CSS에서 프로젝트가 소유한 클래스를 새로 만들 때. 이름, 범위, 식별자, 요소, 수정자의 구분자나 대소문자 표기를 바꿀 때.
 - C01-03 | naming-name-elements-and-modifiers-by-role | 요소나 수정자 클래스 이름을 새로 지을 때. \`container\`, \`wrapper\`, \`box\`, 치수나 간격 중심 이름을 변경할 때.
 - C01-04 | naming-keep-page-slug-traceable | \`pg\_\*\` 소유자의 클래스 식별자를 새로 만들거나 이름을 바꿀 때. 같은 이름 컴포넌트가 여러 화면에 생겨 식별자를 구분해야 할 때.
-- C02-01 | ownership-give-each-file-one-scope-slug | 새 \`scope\_slug\`를 만들거나 기존 식별자를 복사 · 이름 변경할 때. 하위 컴포넌트에 CSS 파일을 새로 만들면서 부모 식별자를 그대로 쓸 때.
+- C02-01 | ownership-give-each-file-one-scope-slug | 새 식별자를 만들거나 기존 식별자를 복사 · 이름 변경할 때. 부품에 CSS 파일을 새로 만들면서 부모 식별자를 그대로 쓸 때.
 - C02-02 | ownership-choose-scope-prefix-by-owner-layer | 새 CSS 파일을 만들면서 \`pg\_\`, \`wg\_\`, \`ui\_\` 중 하나를 고를 때. 소유자의 레이어가 바뀌어 접두사를 옮길 때. | reviewWith: ownership-give-each-file-one-scope-slug, ownership-use-foreign-classes-only-under-your-own-root
 - C02-03 | ownership-use-foreign-classes-only-under-your-own-root | \`.ant-\*\`, \`.rc-\*\`, \`.Mui-\*\` 같은 외부 라이브러리 클래스를 쓸 때. 다른 \`scope\_slug\`의 클래스를 선택자로 잡을 때. | reviewWith: ownership-change-other-owners-through-their-api, ownership-give-each-file-one-scope-slug, selector-limit-nesting-block-depth
 - C02-04 | ownership-change-other-owners-through-their-api | 다른 컴포넌트의 배치나 내부 모습을 바꿔야 할 때. 컴포넌트에 클래스 관련 프롭을 추가할 때. | reviewWith: composition-inject-classes-only-at-the-entry-point, ownership-use-foreign-classes-only-under-your-own-root

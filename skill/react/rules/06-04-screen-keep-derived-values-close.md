@@ -14,10 +14,10 @@ tags: screen, origin
 
 **Impact: MEDIUM (파생값의 출처를 유지하고 화면 상단의 별칭과 준비 코드를 줄입니다)**
 
-`useState`와 프롭스에서 나온 조건 플래그 · 표시값은 사용하는 곳에서 계산합니다.
+`useState`와 프롭스에서 나온 조건 플래그 · 표시값은 사용처에서 계산합니다.
 화면 상단에 준비 코드로 모으지 않고, 훅 인자 · JSX · 이펙트 내부의 좁은 스코프에 둡니다.
 
-| 관련 판단 | 기준 |
+| 함께 판단할 내용 | 기준 |
 | --- | --- |
 | 응답과 스토어의 출처 유지 | `data-preserve-origin-chaining` |
 | 값을 소유할 파일 선택 | `screen-extract-local-section-components-for-runtime-boundaries` |

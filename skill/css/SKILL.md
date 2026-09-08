@@ -10,10 +10,19 @@ metadata:
 
 ## 1. 변경 범위 판정
 
-요청 · 계획 · diff에서 stylesheet · selector · token · CSS variable · `className` · visual 스타일의 실제 변경만 범위로 잡는다.
-추가 · 삭제 · 이동 · 이름 변경 · 재선언은 포함하고,
-read-only 문맥과 TSX owner 이동에 그대로 딸려온 class · style · stylesheet는 제외한다.
-이름 · shape · 동작이 같은 이동은 diff에 삭제+추가로 보여도 변경으로 다시 세지 않는다.
+요청 · 계획 · diff에서 아래를 가른다.
+
+**범위에 드는 것**
+
+- stylesheet · selector · token · CSS variable · `className` · visual 스타일의 실제 변경
+- 추가 · 삭제 · 이동 · 이름 변경 · 재선언
+
+**범위에 들지 않는 것**
+
+- read-only 문맥
+- TSX 소유자 이동에 그대로 딸려온 class · style · stylesheet
+- 이름 · shape · 동작이 같은 이동. diff에 삭제+추가로 보여도 변경으로 다시 세지 않는다
+
 적용되지 않는 규칙의 optional pattern을 새로 들여와 스스로 범위를 넓히지 않는다.
 
 TSX component/JSX의 `className` · style이 바뀌면 `convention-typescript`를 함께 활성화하고,

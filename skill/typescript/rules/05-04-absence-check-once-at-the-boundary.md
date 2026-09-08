@@ -4,9 +4,9 @@ titleKo: 없을 수 있는 값은 경계에서 한 번만 검사합니다
 impact: HIGH
 impactDescription: 값이 들어오는 경계에서 검사해 중간 함수의 중복 검사를 줄입니다
 appliesWhen:
-  - "`isNil`, `Number.isFinite` 같은 검사를 함수에 넣을 때"
-  - "`null`, `undefined`, `unknown`을 매개변수 · 반환 타입에 넣거나 뺄 때"
-  - "응답 매핑 · 쿼리 · search 스키마에서 없음 · 유한 수 검사로 타입을 좁힐 때"
+  - `isNil`, `Number.isFinite` 같은 검사를 함수에 넣을 때
+  - `null`, `undefined`, `unknown`을 매개변수 · 반환 타입에 넣거나 뺄 때
+  - 응답 매핑 · 쿼리 · search 스키마에서 없음 · 유한 수 검사로 타입을 좁힐 때
 reviewWith: >-
   absence-resolve-defaults-at-the-boundary, absence-do-not-guard-what-types-guarantee,
   values-decide-once-and-carry-the-result
@@ -25,7 +25,7 @@ tags: absence, boundaries
 | 기본값이 있음 | `number` | `absence-resolve-defaults-at-the-boundary`에 따라 채운 값을 사용합니다 |
 | 없음을 화면에 표시 | `number \| undefined` | 중간 함수는 그대로 전달하고 렌더링 위치에서 한 번 분기합니다 |
 
-없을 때 다른 화면을 그리는 분기는 필요한 표시 상태이므로 유지합니다.
+없을 때 다른 화면을 렌더하는 분기는 필요한 표시 상태이므로 유지합니다.
 그 밖의 소비처가 없음 여부를 반복 판정한다면 경계에서 결과를 전달했는지 확인합니다.
 판정 결과를 전달하는 방법은 `values-decide-once-and-carry-the-result`가 정합니다.
 

@@ -103,8 +103,9 @@
 | 소유자 이동, 이름 · 주석 변경, 그대로인 계약의 새 사용처 | 타입을 새로 만들지 않습니다. 기존 선언의 주석에 새 역할을 적을지만 `types-document-custom-types-and-shapes`로 판단합니다 |
 | 여러 위치 인자를 우리가 고칠 수 있는 기존 객체 계약 하나로 묶음 | 그 계약을 그대로 받고 `types-document-custom-types-and-shapes`만 적용합니다 |
 | 맞는 기존 형태가 없는 새 도메인 계약 | 새로 선언하고 `types-document-custom-types-and-shapes`만 적용합니다 |
-| 외부 · 생성된 · 읽기 전용 · 공용 형태를 그대로 사용 | 이 규칙과 `types-derive-subsets-with-indexed-access` 모두 대상이 아닙니다. 함수 헤더 주석은 `docs-require-header-jsdoc-on-key-declarations`가 판단합니다 |
+| 외부 · 생성된 · 읽기 전용 · 공용 형태를 그대로 사용 | 이 규칙과 `types-derive-subsets-with-indexed-access` 모두 대상이 아닙니다 |
 
+함수 헤더 주석은 `docs-require-header-jsdoc-on-key-declarations`가 판단합니다.
 규칙을 적용하려고 요청에 없는 `*Params`나 `*Input`을 만들지 않습니다.
 
 **Incorrect (기존 계약과 같은 구조를 다시 선언합니다):**
@@ -353,7 +354,7 @@ interface ReportCell {
 
 | 상황 | 타입 표기 |
 | --- | --- |
-| 인터페이스 · 객체 계약 · 프레임워크 별칭이 있음 | 기존 호출 계약을 함수 변수에 붙입니다 |
+| `interface` · 객체 계약 · 프레임워크 별칭이 있음 | 기존 호출 계약을 함수 변수에 붙입니다 |
 | 계약에 콜백 필드가 있음 | `Contract["onSelect"]`로 가져옵니다 |
 | 같은 시그니처를 쓰는 구현이 둘 이상임 | 함수 타입 별칭을 선언합니다 |
 | 맞는 계약도 없고 구현도 하나뿐임 | 매개변수 타입을 직접 적습니다. 별칭을 새로 만들지 않습니다 |
@@ -460,7 +461,7 @@ const toSearchRequest: ToRequest = (request) => {
 
 **Rule:** `T01-04` · `types-document-custom-types-and-shapes`
 
-**Applies when:** 타입, 인터페이스, 스키마 최상단, 객체 상수, 계약 필드, 파생 별칭을 추가 · 변경할 때. 이름 붙인 형태에 호출 계약 역할을 새로 얹을 때. 제외: 외부 · 생성된 · 읽기 전용 · 공용 형태를 그대로 쓰거나 반환 타입이 익명으로 추론되는 경우.
+**Applies when:** 타입, `interface`, 스키마 최상단, 객체 상수, 계약 필드, 파생 별칭을 추가 · 변경할 때. 이름 붙인 형태에 호출 계약 역할을 새로 얹을 때. 제외: 외부 · 생성된 · 읽기 전용 · 공용 형태를 그대로 쓰거나 반환 타입이 익명으로 추론되는 경우.
 
 **Requires selected:** `docs-write-doc-comments-as-multiline-blocks`, `docs-write-korean-comments-about-purpose-and-constraints` · 함께 적용
 
@@ -469,11 +470,13 @@ const toSearchRequest: ToRequest = (request) => {
 직접 선언한 타입과 형태는 헤더와 필드를 구분해 문서화합니다.
 주석 내용은 `docs-write-korean-comments-about-purpose-and-constraints`의 한국어 기준을 따릅니다.
 
-| 선언 | 헤더 주석 | 필드 주석 |
-| --- | --- | --- |
-| 커스텀 `type`, `interface`, 스키마 최상단 | 씁니다 | 원본에서 가져온 필드에도 각각 씁니다 |
-| 객체형 상수 | 씁니다 | 달지 않습니다. `constant` 폴더와 `enum` 성격 상수 객체도 같습니다 |
-| 인덱스 접근 별칭, `Omit` 결과 | 씁니다 | 선언한 필드가 없어 달지 않습니다 |
+아래 세 선언은 모두 헤더 주석을 씁니다.
+
+| 선언 | 필드 주석 |
+| --- | --- |
+| 커스텀 `type`, `interface`, 스키마 최상단 | 원본에서 가져온 필드에도 각각 씁니다 |
+| 객체형 상수 | 달지 않습니다. `constant` 폴더와 `enum` 성격 상수 객체도 같습니다 |
+| 인덱스 접근 별칭, `Omit` 결과 | 선언한 필드가 없어 달지 않습니다 |
 
 | 기존 형태를 쓰는 방식 | 문서화 범위 |
 | --- | --- |
@@ -882,10 +885,11 @@ export const pagination_default_page_size = 20;
 | --- | --- |
 | 상수 | `_constant/<주제>.ts`에 `<주제>_` 접두사로 선언합니다 |
 | 소유자 문맥 | 폴더가 말하므로 이름에 반복하지 않습니다. `page/detail/_constant/legend.ts`에는 `legend_hit_tolerance_px`를 둡니다 |
-| 파서 묶음 · 스키마 등 함수를 담은 계약 | 같은 `_constant`에 계약별 파일로 둡니다. 이름은 계약 규칙과 `naming-use-consistent-file-and-symbol-naming`을 따릅니다 |
+| 파서 묶음 · 스키마 등 함수를 담은 계약 | 같은 `_constant`에 계약별 파일로 둡니다 |
 | 파일이 하나뿐인 경우 | `_constant` 폴더를 유지합니다 |
 | 소유자를 지워도 남는 값 | 루트 상수 규칙에 따라 옮깁니다 |
 
+계약 파일의 이름은 계약 규칙과 `naming-use-consistent-file-and-symbol-naming`을 따릅니다.
 소유자 아래에 `config`, `constants`, `common` 폴더는 만들지 않습니다.
 
 **Incorrect (한 소유자의 상수를 루트로 올립니다):**
@@ -941,7 +945,7 @@ export const table_page_size = 20;
 | --- | --- |
 | 파일명 | `kebab-case` |
 | 폴더명 | `kebab-case` 단수. 프레임워크가 강제하는 이름만 예외입니다 |
-| 타입 · 인터페이스 · 컴포넌트 | `PascalCase` |
+| 타입 · `interface` · 컴포넌트 | `PascalCase` |
 | 모듈 스코프 불변 데이터 상수 · 값 집합과 그 소유 하위 키 | `snake_case` |
 | 그 외 변수 · 함수 · 객체 키 · 스키마 키 · 타입 필드 | `camelCase` |
 
@@ -1135,7 +1139,8 @@ import {UiTabs} from "@/component/ui/tabs/ui-tabs";
 | `import "….css"` | 같은 폴더면 `./<파일>`, 다른 폴더면 `@/<src 아래 경로>`입니다 |
 
 이동 · 이름 변경은 편집기의 경로 갱신을 사용합니다.
-접근 가능한 소유 경계는 경로 표기가 아니라 가져오는 파일의 위치로 판단하며, 프레임워크의 가져오기 방향 규칙을 따릅니다.
+접근 가능한 소유 경계는 경로 표기가 아니라 가져오는 파일의 위치로 판단합니다.
+가져오기 방향은 프레임워크 규칙을 따릅니다.
 소유자 밖에서 쓴다는 이유로 루트에 올리지 않습니다.
 배치는 `naming-place-project-constants-in-the-root-constant-folder`와
 `functions-give-each-function-its-own-file`이 정합니다.
@@ -1234,7 +1239,7 @@ const productClient = createClient({baseUrl: env_api_base_url});
 
 **Rule:** `T02-07` · `naming-name-types-by-role-and-lifetime`
 
-**Applies when:** 타입 · 인터페이스나 그 파일의 이름을 새로 만들거나 바꿀 때. 타입을 소유자 폴더 안과 밖 사이에서 옮기며 이름을 바꿀 때. 제외: 외부 · 생성된 계약 이름을 그대로 쓰는 경우.
+**Applies when:** 타입 · `interface`나 그 파일의 이름을 새로 만들거나 바꿀 때. 타입을 소유자 폴더 안과 밖 사이에서 옮기며 이름을 바꿀 때. 제외: 외부 · 생성된 계약 이름을 그대로 쓰는 경우.
 
 **Review with:** `naming-use-consistent-file-and-symbol-naming`
 
@@ -1267,9 +1272,11 @@ const productClient = createClient({baseUrl: env_api_base_url});
 | 이미 필요한 계약 | 역할어를 고릅니다. `Params`, `Content`, `Snapshot`을 쓰려고 타입을 만들지 않으며, 맞는 기존 계약이나 추론되는 익명 결과를 유지합니다 |
 | 소유자 안의 타입 | 폴더가 말하는 도메인을 반복하지 않습니다. `order-report/_type/`에서는 `ReportSnapshot`입니다 |
 | 소유자 밖으로 내보내는 타입 | 문맥이 사라지거나 이름이 충돌할 때만 필요한 도메인 접두를 유지합니다 |
-| 타입과 파일명 | `report-snapshot.ts`처럼 실제 명사를 씁니다. 단순 가공 · 표시 결과에 `VM`, `ViewModel` · 막연한 `Model`과 대응 파일명을 쓰지 않습니다 |
+| 타입과 파일명 | `report-snapshot.ts`처럼 실제 명사를 씁니다 |
 | 외부 · 생성된 계약 | 이름과 `DTO` 같은 접미사를 보존합니다. 내부 계약에는 이를 구별용 접미사로 붙이지 않습니다 |
 | `Props`, `Handle`, `Slot`, `Renderer` | 해당 프레임워크 규칙을 따릅니다 |
+
+단순 가공 · 표시 결과에는 `VM` · `ViewModel` · 막연한 `Model`과 그 대응 파일명을 쓰지 않습니다.
 
 **Incorrect (소유자와 막연한 화면 계약 접미사를 반복합니다):**
 
@@ -1496,14 +1503,17 @@ fetchProductPage({baseUrl: api_base_url, page: urlParams.page, pageSize: paginat
 
 **Impact: HIGH (불필요한 함수 분리를 줄여 호출부에서 처리 흐름을 읽을 수 있습니다)**
 
-한 곳에서만 쓰는 단계는 호출부에 두고, 다음 사유가 있을 때만 보조 함수에 이름을 붙입니다.
+한 곳에서만 쓰는 단계는 호출부에 둡니다.
+다음 사유가 있을 때만 보조 함수에 이름을 붙입니다.
 추출한 함수는 바깥 변수 · 훅 · 컴포넌트 상태 없이도 뜻이 통해야 합니다.
 
 | 허용 사유 | 조건 |
 | --- | --- |
-| 실제 재사용 | 변경 후 코드에서 두 자리 이상이 부릅니다. 한 줄 함수도 같습니다 |
-| 요청 조립을 렌더 파일 밖으로 이동 | `.tsx`의 순수 요청 · 저장 payload 조립은 한 곳에서만 써도 같은 소유자의 `.ts`로 옮깁니다. 표시용 가공이나 기존 `.ts`는 해당하지 않습니다 |
-| 함수 형태가 필수 | 삼항 하나로 표현할 수 없는 판정, `value is T` 타입 가드, 재귀입니다 |
+| 실제 재사용 | 변경 후 코드에서 두 자리 이상이 부름. 한 줄 함수도 같음 |
+| 요청 조립을 렌더 파일 밖으로 이동 | `.tsx`에서 순수 요청 · 저장 payload를 조립함. 한 곳에서만 써도 같음 |
+| 함수 형태가 필수 | 삼항 하나로 표현할 수 없는 판정 · `value is T` 타입 가드 · 재귀 |
+
+요청 조립은 같은 소유자의 `.ts`로 옮깁니다. 표시용 가공이나 기존 `.ts`는 해당하지 않습니다.
 
 | 추출을 검토하는 이유 | 처리 |
 | --- | --- |
@@ -1656,7 +1666,7 @@ export const toStatusTone = (status: string): Tone => {
 보조 함수에 이름을 붙일지는 `functions-extract-helpers-only-when-the-boundary-is-real`이 판단합니다.
 이름을 붙였다면 함수마다 파일을 하나 두고, 부르는 대표 함수에 따라 배치합니다.
 
-| 부르는 쪽 | 위치 |
+| 호출부 | 위치 |
 | --- | --- |
 | 대표 함수 하나 | `_function/<대표>/<대표>.ts`와 같은 폴더의 `_<보조>.ts` |
 | 같은 소유자의 대표 함수 둘 이상 | `_function/<보조>.ts`. 기존 `_` 접두사를 뗍니다 |
@@ -1751,16 +1761,14 @@ page/report/_function/
 
 **Applies when:** `.ts` 파일에 선언을 추가하거나 선언 자리를 옮길 때. 내보낸 계약 타입이나 모듈 상수를 내보낸 함수보다 아래에 두려 할 때. 제외: 리액트 컴포넌트 본문 안 선언 자리를 바꾸는 경우.
 
-**Impact: HIGH (파일을 열면 내보낸 함수가 먼저 보이고 부르는 쪽에서 불리는 쪽으로 이어집니다)**
+**Impact: HIGH (파일을 열면 내보낸 함수가 먼저 보이고 호출부에서 호출 대상으로 이어집니다)**
 
 내보낸 계약과 대표 함수를 먼저 보여 주되, 모듈 초기화 시 필요한 선언 순서를 지킵니다.
 
-| 순서 | 선언 |
-| --- | --- |
-| 1 | `import` |
-| 2 | 내보낸 계약 타입 |
-| 3 | 내보낸 대표 함수 |
-| 4 | 모듈을 불러올 때 계산하는 선언. 필요한 선언이 먼저 초기화되어야 합니다 |
+1. `import`를 맨 위에 둡니다.
+2. 내보낸 계약 타입을 둡니다.
+3. 내보낸 대표 함수를 둡니다.
+4. 모듈을 불러올 때 계산하는 선언을 마지막에 둡니다. 필요한 선언이 먼저 초기화되어야 합니다.
 
 함수 본문 참조는 호출 시점에 읽으므로 모듈 초기화가 끝난 뒤 부르면 참조 대상이 아래에 있어도 됩니다.
 즉시 계산하는 선언은 자기가 부르는 선언 뒤에 둡니다.
@@ -1890,7 +1898,7 @@ export const toProfileSaveRequest = (values: ProfileFormValues) => {
 };
 ```
 
-**Incorrect (소유자를 지워도 남을 함수를 쓰는 곳이 하나라고 소유자 아래 둡니다):**
+**Incorrect (소유자를 지워도 남을 함수를 호출부가 하나라고 소유자 아래 둡니다):**
 
 ```ts
 // page/orders/_function/to-display-date.ts
@@ -2718,10 +2726,12 @@ const order_status_by_api_code = {
 
 | 교체 전 확인 | 지킬 계약 |
 | --- | --- |
-| 이름은 같지만 제거 대상이 다름 | `compact`는 falsy를 모두 제거합니다. nullish만 제거하던 공개 계약은 `filter(isNotNil)` 등으로 보존하고 의미 차이를 검증하는 테스트를 남깁니다 |
+| 이름은 같지만 제거 대상이 다름 | `compact`는 falsy를 모두 제거합니다 |
 | 중복 제거 후 남는 항목과 순서 | `Map`은 마지막 항목과 키의 최초 삽입 순서, `uniqBy`는 첫 항목을 남깁니다. 배열을 뒤집어 교체할 때도 남는 항목과 결과 순서가 같은지 확인합니다 |
 | 빈 목록의 최소 · 최대 | `minBy`, `maxBy` 결과의 `undefined`만 검사합니다. 사전 `length` 검사와 값 추출용 중간 `map`은 제거합니다 |
 | 표준 메서드로 끝나지 않는 연산 | 직접 여러 줄로 구현하기 전에 `es-toolkit`에서 찾습니다 |
+
+nullish만 제거하던 공개 계약은 `filter(isNotNil)` 등으로 보존하고 의미 차이를 검증하는 테스트를 남깁니다.
 
 날짜는 `values-handle-dates-with-dayjs`, 정렬은 `values-prefer-immutable-array-sorting`을 따릅니다.
 `groupBy` · `keyBy`는 목록 재구성에 쓰고, 반복 조회는
@@ -3183,7 +3193,7 @@ return {
 | 기본값이 있음 | `number` | `absence-resolve-defaults-at-the-boundary`에 따라 채운 값을 사용합니다 |
 | 없음을 화면에 표시 | `number \| undefined` | 중간 함수는 그대로 전달하고 렌더링 위치에서 한 번 분기합니다 |
 
-없을 때 다른 화면을 그리는 분기는 필요한 표시 상태이므로 유지합니다.
+없을 때 다른 화면을 렌더하는 분기는 필요한 표시 상태이므로 유지합니다.
 그 밖의 소비처가 없음 여부를 반복 판정한다면 경계에서 결과를 전달했는지 확인합니다.
 판정 결과를 전달하는 방법은 `values-decide-once-and-carry-the-result`가 정합니다.
 
@@ -3626,7 +3636,6 @@ const filteredRows = useMemo(() => {
 | Biome 규칙 | 담당 컨벤션 |
 | --- | --- |
 | `style/noEnum`, `style/useAsConstAssertion` | `typescript/types-replace-enum-with-as-const-objects` |
-| `style/useImportType`, `style/noDefaultExport`, `performance/noNamespaceImport`, `performance/noBarrelFile`, `performance/noReExportAll` | `typescript/naming-use-direct-imports-and-public-entry-points`의 가져오기 · 이름 붙인 내보내기 · 배럴 제한 |
 | `style/noRestrictedImports` | `typescript/naming-import-by-absolute-path`. 심볼 없는 상대경로 예외는 `./*.css` 패턴으로 근사합니다 |
 | `style/useNamingConvention`, `style/useFilenamingConvention` | `typescript/naming-use-consistent-file-and-symbol-naming`의 심볼 · 파일 표기 |
 | `style/noParameterAssign`, `style/useConst`, `style/noNestedTernary` | `typescript/functions-avoid-imperative-assembly-in-wide-scopes`의 재할당 · 중첩 삼항 제한 |
@@ -3634,22 +3643,37 @@ const filteredRows = useMemo(() => {
 | `complexity/useMaxParams` | `typescript/functions-use-named-object-params-for-complex-signatures`의 인자 세 개 기준 |
 | `style/noMagicNumbers` | `typescript/values-declare-meaningful-numbers` |
 | `suspicious/noExplicitAny`, `style/noNonNullAssertion` | `typescript/types-narrow-unknown-instead-of-asserting` |
-| `plugins`의 GritQL 파일 | `typescript/absence-expose-optional-values-instead-of-silent-fallbacks`의 `??` · `\|\|` 오른쪽 리터럴. 기본 매개변수와 삼항의 대체 리터럴은 리뷰합니다 |
+| `plugins`의 GritQL 파일 | `typescript/absence-expose-optional-values-instead-of-silent-fallbacks`의 `??` · `\|\|` 오른쪽 리터럴 |
 
-Biome 2.5.7의 `recommended`에는 `useConst` · `useImportType` · `noNonNullAssertion` · 
+`typescript/naming-use-direct-imports-and-public-entry-points`의 가져오기 · 이름 붙인 내보내기 · 배럴 제한은
+아래 규칙이 담당합니다.
+
+- `style/useImportType`
+- `style/noDefaultExport`
+- `performance/noNamespaceImport`
+- `performance/noBarrelFile`
+- `performance/noReExportAll`
+
+기본 매개변수와 삼항의 대체 리터럴은 GritQL 검사 밖이므로 리뷰합니다.
+
+Biome 2.5.7의 `recommended`에는 `useConst` · `useImportType` · `noNonNullAssertion` ·
 `noUnusedFunctionParameters` · `noExplicitAny`가 포함됩니다. 담당 컨벤션을 드러내려고 설정에도 명시합니다.
 
-| 도구가 구분하지 못하는 조건 | 리뷰 · 별도 검사 |
-| --- | --- |
-| 모듈 `const` · 객체 키의 역할 | 허용된 `snake_case`는 불변 데이터 상수와 그 키에만 적용합니다. 함수 · 스키마 · 요청 객체와의 구분은 리뷰합니다 |
-| 허용된 `PascalCase`의 용도 | `objectLiteralProperty`는 합성 컴포넌트의 `{Root, Header, Footer}`, `const`, `variable`은 컴포넌트 선언 때문에 허용합니다. 일반 함수 · 지역 변수의 `camelCase`는 리뷰합니다 |
-| 폴더명 | 단수 `kebab-case`는 파일명 검사 대상이 아니므로 리뷰합니다 |
-| `const` 화살표 선언 · 이름 붙인 함수의 블록 본문 | `typescript/functions-declare-functions-as-arrow-consts`를 리뷰합니다. `style/useConsistentArrowReturn`의 `style: "always"`는 인라인 콜백 · 커링 바깥 화살표 예외까지 막으므로 켜지 않습니다 |
-| 넓은 스코프에서 `push`로 누적 | `useConst`는 재할당만 확인하므로 리뷰합니다 |
-| 사용하지 않는 매개변수를 아예 생략 | 검사는 남겨 둔 매개변수만 보므로 리뷰합니다 |
-| `as`, `@ts-expect-error` | 위의 타입 좁히기 규칙에 따라 리뷰합니다 |
-| 한 줄 문서 블록 `/** … */` | 대응 검사가 없어 `typescript/docs-write-doc-comments-as-multiline-blocks`를 리뷰합니다 |
-| `config/env.ts` 밖의 `import.meta.env`, `process.env` | `typescript/naming-read-environment-values-through-config-env`에 따라 리뷰하거나 CI에서 문자열 검색합니다 |
+| 대상 | 도구 한계 | 처리 |
+| --- | --- | --- |
+| 모듈 `const` · 객체 키의 역할 | 허용된 `snake_case`는 불변 데이터 상수와 그 키에만 적용됨 | 함수 · 스키마 · 요청 객체와의 구분은 리뷰합니다 |
+| 허용된 `PascalCase`의 용도 | 합성 컴포넌트의 `{Root, Header, Footer}`와 컴포넌트 선언 때문에 허용됨 | 일반 함수 · 지역 변수의 `camelCase`는 리뷰합니다 |
+| 폴더명 | 단수 `kebab-case`는 파일명 검사 대상이 아님 | 리뷰합니다 |
+| `const` 화살표 선언 · 이름 붙인 함수의 블록 본문 | `style/useConsistentArrowReturn`의 `style: "always"`는 예외까지 막음 | 켜지 않고 `typescript/functions-declare-functions-as-arrow-consts`를 리뷰합니다 |
+| 넓은 스코프에서 `push`로 누적 | `useConst`는 재할당만 확인함 | 리뷰합니다 |
+| 사용하지 않는 매개변수를 아예 생략 | 검사는 남겨 둔 매개변수만 봄 | 리뷰합니다 |
+| `as`, `@ts-expect-error` | 의도를 구분하지 못함 | 위의 타입 좁히기 규칙에 따라 리뷰합니다 |
+| 한 줄 문서 블록 `/** … */` | 대응 검사가 없음 | `typescript/docs-write-doc-comments-as-multiline-blocks`를 리뷰합니다 |
+| `config/env.ts` 밖의 `import.meta.env`, `process.env` | 대응 검사가 없음 | `typescript/naming-read-environment-values-through-config-env`에 따라 리뷰합니다 |
+
+`PascalCase`는 `objectLiteralProperty` · `const` · `variable`에만 허용합니다.
+`import.meta.env` · `process.env`는 CI에서 문자열로 검색해도 됩니다.
+`style/useConsistentArrowReturn`이 막는 것은 인라인 콜백과 커링 바깥 화살표 예외입니다.
 
 | 설정 예외 | 적용 범위와 이유 |
 | --- | --- |

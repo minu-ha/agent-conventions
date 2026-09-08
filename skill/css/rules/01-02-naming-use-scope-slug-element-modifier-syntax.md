@@ -22,8 +22,9 @@ tags: naming, class-grammar, ownership
 | `scope` | 범위 | `pg`, `wg`, `ui` 중 하나. 소문자로 씁니다 |
 | `slug` | 식별자 | CSS 파일 소유자의 이름. camelCase로 씁니다 |
 | `element` | 요소 | 소유자 안의 UI 역할. `listButton`, `emptyState`처럼 camelCase로 씁니다 |
-| `modifier` | 수정자 | 클래스 뒤에 `--`로 붙는 이름. camelCase로 쓰며 허용 범위는 `composition-do-not-build-structural-variants-with-modifiers`가 정합니다 |
+| `modifier` | 수정자 | 클래스 뒤에 `--`로 붙는 이름. camelCase로 씁니다 |
 
+수정자의 허용 범위는 `composition-do-not-build-structural-variants-with-modifiers`가 정합니다.
 수정자는 클래스의 `--이름`이고, 변형은 컴포넌트가 받는 `variant` 프롭입니다.
 식별자에는 접두사가 이미 드러낸 낱말을 반복하지 않습니다.
 `UiButton`은 `ui_button`으로 쓰고 `ui_uiButton`으로 쓰지 않습니다.

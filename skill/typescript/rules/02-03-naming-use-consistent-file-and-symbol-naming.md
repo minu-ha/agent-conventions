@@ -21,7 +21,7 @@ tags: naming, constants
 | --- | --- |
 | 파일명 | `kebab-case` |
 | 폴더명 | `kebab-case` 단수. 프레임워크가 강제하는 이름만 예외입니다 |
-| 타입 · 인터페이스 · 컴포넌트 | `PascalCase` |
+| 타입 · `interface` · 컴포넌트 | `PascalCase` |
 | 모듈 스코프 불변 데이터 상수 · 값 집합과 그 소유 하위 키 | `snake_case` |
 | 그 외 변수 · 함수 · 객체 키 · 스키마 키 · 타입 필드 | `camelCase` |
 

@@ -24,7 +24,8 @@ tags: naming, imports
 | `import "….css"` | 같은 폴더면 `./<파일>`, 다른 폴더면 `@/<src 아래 경로>`입니다 |
 
 이동 · 이름 변경은 편집기의 경로 갱신을 사용합니다.
-접근 가능한 소유 경계는 경로 표기가 아니라 가져오는 파일의 위치로 판단하며, 프레임워크의 가져오기 방향 규칙을 따릅니다.
+접근 가능한 소유 경계는 경로 표기가 아니라 가져오는 파일의 위치로 판단합니다.
+가져오기 방향은 프레임워크 규칙을 따릅니다.
 소유자 밖에서 쓴다는 이유로 루트에 올리지 않습니다.
 배치는 `naming-place-project-constants-in-the-root-constant-folder`와
 `functions-give-each-function-its-own-file`이 정합니다.

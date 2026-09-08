@@ -22,12 +22,14 @@ tags: strategy, composition, variants, components
 
 | 상황 | 선택 |
 | --- | --- |
-| 고정 UI | 단일 컴포넌트. 화면 지역 JSX로 둘지는 `screen-extract-local-section-components-for-runtime-boundaries`를 따릅니다 |
+| 고정 UI | 단일 컴포넌트 |
 | 부품 조립만 필요함 | 상태 없는 합성 |
 | 여러 부품이 같은 상태 · 동작 · 컨텍스트를 읽음 | 상태 있는 합성 |
 | 같은 합성 조합이 반복됨 | 조합을 한 이름으로 감싼 변형 |
 
-아래 예시는 같은 대화상자를 필요에 따라 확장합니다.
+고정 UI를 화면 지역 JSX로 둘지는 `screen-extract-local-section-components-for-runtime-boundaries`를 따릅니다.
+
+아래 예제는 같은 대화상자를 필요에 따라 확장합니다.
 합성에 상태를 추가해도 사용처의 공개 이름은 유지하고, 반복되는 조합은 변형으로 감쌉니다.
 합성 진입 파일은 부품을 `{Root, Header, Body} as const` 객체 하나로 내보냅니다.
 상태 있는 합성은 `Root`가 상태를 소유해 부품에 컨텍스트로 내립니다.

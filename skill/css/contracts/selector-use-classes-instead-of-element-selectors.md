@@ -14,10 +14,8 @@
 최상위에 `h2 { }`를 선언하면 해당 스타일시트를 읽은 문서 전체에 적용되므로 예외에서도 금지합니다.
 `selector-disallowed-list`가 `&` 바로 뒤의 요소 선택자를 막으므로 예외에는 다음 주석을 남깁니다.
 
-| 예외 선택자 수 | 주석 |
-| --- | --- |
-| 하나 | `stylelint-disable-next-line` |
-| 둘 이상 | 블록을 `stylelint-disable`과 `stylelint-enable` 주석 쌍으로 감쌉니다 |
+예외 선택자가 하나면 `stylelint-disable-next-line`을 씁니다.
+둘 이상이면 블록을 `stylelint-disable`과 `stylelint-enable` 주석 쌍으로 감쌉니다.
 
 규칙 이름 뒤에 `-- <마크업 출처>`처럼 직접 작성하지 않는 마크업이라는 근거를 함께 적습니다.
 

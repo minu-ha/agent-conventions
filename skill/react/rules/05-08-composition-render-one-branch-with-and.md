@@ -48,7 +48,7 @@ return (
 );
 ```
 
-**Incorrect (`&&` 왼쪽에 숫자를 둬서 `0`이 그려집니다):**
+**Incorrect (`&&` 왼쪽에 숫자를 둬서 `0`이 렌더됩니다):**
 
 ```tsx
 return <section>{selectedRows.length && <PgProductBulkActionBar />}</section>;

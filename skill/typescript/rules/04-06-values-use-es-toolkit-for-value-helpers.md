@@ -37,10 +37,12 @@ tags: values, es-toolkit
 
 | 교체 전 확인 | 지킬 계약 |
 | --- | --- |
-| 이름은 같지만 제거 대상이 다름 | `compact`는 falsy를 모두 제거합니다. nullish만 제거하던 공개 계약은 `filter(isNotNil)` 등으로 보존하고 의미 차이를 검증하는 테스트를 남깁니다 |
+| 이름은 같지만 제거 대상이 다름 | `compact`는 falsy를 모두 제거합니다 |
 | 중복 제거 후 남는 항목과 순서 | `Map`은 마지막 항목과 키의 최초 삽입 순서, `uniqBy`는 첫 항목을 남깁니다. 배열을 뒤집어 교체할 때도 남는 항목과 결과 순서가 같은지 확인합니다 |
 | 빈 목록의 최소 · 최대 | `minBy`, `maxBy` 결과의 `undefined`만 검사합니다. 사전 `length` 검사와 값 추출용 중간 `map`은 제거합니다 |
 | 표준 메서드로 끝나지 않는 연산 | 직접 여러 줄로 구현하기 전에 `es-toolkit`에서 찾습니다 |
+
+nullish만 제거하던 공개 계약은 `filter(isNotNil)` 등으로 보존하고 의미 차이를 검증하는 테스트를 남깁니다.
 
 날짜는 `values-handle-dates-with-dayjs`, 정렬은 `values-prefer-immutable-array-sorting`을 따릅니다.
 `groupBy` · `keyBy`는 목록 재구성에 쓰고, 반복 조회는

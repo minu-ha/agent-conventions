@@ -88,10 +88,9 @@
 이 스킬은 일반 `*.css`와 전역에서 고유한 클래스명을 기본으로 합니다.
 클래스 문법, 소유 경계, 선택자 규칙은 모두 이 전제를 따르며 `pg_*`, `wg_*`, `ui_*`로 소유자를 구분합니다.
 
-| 프로젝트 상태 | 스타일시트 방식 |
-| --- | --- |
-| 별도 합의가 없음 | 일반 CSS를 씁니다. `.module.css`를 새로 만들거나 클래스를 `styles.foo`처럼 객체 속성으로 참조하지 않습니다 |
-| CSS Modules가 공식 표준이고 별도의 이름 규칙과 실행 규칙이 있음 | 그 프로젝트 규칙을 따릅니다 |
+별도 합의가 없으면 일반 CSS를 씁니다.
+`.module.css`를 새로 만들거나 클래스를 `styles.foo`처럼 객체 속성으로 참조하지 않습니다.
+CSS Modules가 공식 표준이고 별도의 이름 규칙과 실행 규칙이 있으면 그 프로젝트 규칙을 따릅니다.
 
 **Incorrect (프로젝트 표준이 없는데도 CSS Modules를 기본처럼 씁니다):**
 
@@ -151,8 +150,9 @@ import "./pg-products.css";
 | `scope` | 범위 | `pg`, `wg`, `ui` 중 하나. 소문자로 씁니다 |
 | `slug` | 식별자 | CSS 파일 소유자의 이름. camelCase로 씁니다 |
 | `element` | 요소 | 소유자 안의 UI 역할. `listButton`, `emptyState`처럼 camelCase로 씁니다 |
-| `modifier` | 수정자 | 클래스 뒤에 `--`로 붙는 이름. camelCase로 쓰며 허용 범위는 `composition-do-not-build-structural-variants-with-modifiers`가 정합니다 |
+| `modifier` | 수정자 | 클래스 뒤에 `--`로 붙는 이름. camelCase로 씁니다 |
 
+수정자의 허용 범위는 `composition-do-not-build-structural-variants-with-modifiers`가 정합니다.
 수정자는 클래스의 `--이름`이고, 변형은 컴포넌트가 받는 `variant` 프롭입니다.
 식별자에는 접두사가 이미 드러낸 낱말을 반복하지 않습니다.
 `UiButton`은 `ui_button`으로 쓰고 `ui_uiButton`으로 쓰지 않습니다.
@@ -227,7 +227,7 @@ ui_card__body--dense
 
 | 대상 | 식별자 |
 | --- | --- |
-| 화면 뼈대 | 라우트 세그먼트나 폴더 이름과 같은 낱말. 어느 화면에나 붙는 `shell`, `page`, `content`는 쓰지 않습니다 |
+| 라우트 진입 파일 | 라우트 세그먼트나 폴더 이름과 같은 낱말. 어느 화면에나 붙는 `shell`, `page`, `content`는 쓰지 않습니다 |
 | `[id]`처럼 값이 런타임에 정해지는 동적 세그먼트 | 화면의 역할로 바꿉니다. `orders/[id]`라면 `[id]`를 `detail`로 바꿔 `pg_ordersDetail`로 씁니다 |
 | 화면 안의 컴포넌트 | 자기 이름만 씁니다 |
 
@@ -292,7 +292,7 @@ CSS 파일마다 소유자를 정하고, 다른 소유자의 스타일을 사용
 
 **Rule:** `C02-01` · `ownership-give-each-file-one-scope-slug`
 
-**Applies when:** 새 `scope_slug`를 만들거나 기존 식별자를 복사 · 이름 변경할 때. 하위 컴포넌트에 CSS 파일을 새로 만들면서 부모 식별자를 그대로 쓸 때.
+**Applies when:** 새 식별자를 만들거나 기존 식별자를 복사 · 이름 변경할 때. 부품에 CSS 파일을 새로 만들면서 부모 식별자를 그대로 쓸 때.
 
 **Impact: CRITICAL (파일마다 네임스페이스를 구분해 전역 클래스 충돌을 막습니다)**
 
@@ -301,7 +301,7 @@ CSS 파일마다 고유한 범위_식별자를 하나씩 씁니다. 같은 범�
 | 상황 | 처리 |
 | --- | --- |
 | 새 스타일을 추가함 | 같은 범위_식별자를 쓰는 파일이 있는지 먼저 확인합니다 |
-| 의미가 같아도 CSS 파일이 다름 | 식별자를 따로 만듭니다. 하위 컴포넌트끼리 부모 식별자를 나누어 쓰는 것도 금지합니다 |
+| 의미가 같아도 CSS 파일이 다름 | 식별자를 따로 만듭니다. 부품끼리 부모 식별자를 나누어 쓰는 것도 금지합니다 |
 | 부모 식별자를 계속 씀 | 스타일도 부모 CSS 파일에 둡니다 |
 
 **Incorrect (이미 다른 소유자가 쓰는 `scope_slug`를 재사용합니다):**
@@ -324,7 +324,7 @@ pg_products__header
 pg_orderIndex__header
 ```
 
-**Incorrect (하위 컴포넌트의 CSS 파일이 부모 식별자를 그대로 씁니다):**
+**Incorrect (부품의 CSS 파일이 부모 식별자를 그대로 씁니다):**
 
 ```txt
 /* page/detail/_pg-chart-card.css */
@@ -352,13 +352,13 @@ pg_chartCard__root
 
 | 접두사 | 최상위 폴더 | 소유 레이어 |
 | --- | --- | --- |
-| `pg_` | `src/page` | 화면을 아는 화면 뼈대와 컴포넌트 |
+| `pg_` | `src/page` | 화면을 아는 라우트 진입 파일과 컴포넌트 |
 | `wg_` | `src/component/widget` | 도메인은 알고 화면은 모르는 컴포넌트 |
 | `ui_` | `src/component/ui` | 도메인도 화면도 모르는 컴포넌트 |
 
-화면 뼈대와 하위 컴포넌트는 모두 `pg_`를 씁니다.
-뼈대는 라우트와 같은 식별자로 구분합니다.
-위젯 내부 부품도 최상위 폴더가 `src/component/widget`이면 `wg_`입니다.
+라우트 진입 파일과 부품은 모두 `pg_`를 씁니다.
+진입 파일은 라우트와 같은 식별자로 구분합니다.
+`widget` 내부 부품도 최상위 폴더가 `src/component/widget`이면 `wg_`입니다.
 
 사용 횟수로 레이어를 바꾸지 않습니다.
 재사용을 예상해 미리 `wg_`로 올리거나 한 화면만 쓴다고 `pg_`로 내리지 않습니다.
@@ -402,12 +402,12 @@ component/ui/button/ui-button.css
 **Impact: CRITICAL (다른 소유자의 스타일을 덮어써도 해당 인스턴스에만 적용되도록 제한합니다)**
 
 다른 소유자의 클래스는 **내 최상위 클래스 블록 안에서 `&`로 시작하는 선택자**로만 씁니다.
-내 `scope_slug`와 다르면 외부 라이브러리, 다른 화면, 위젯 모두 같은 기준을 적용합니다.
+내 `scope_slug`와 다르면 외부 라이브러리, 다른 화면, `widget` 모두 같은 기준을 적용합니다.
 
 | 선택자 | 판정 |
 | --- | --- |
 | `.MuiTreeItem-label { }` | 금지. 그 라이브러리를 쓰는 앱 전체에 적용됩니다 |
-| `.wg_chartCard__caption { }` | 금지. 그 위젯을 쓰는 모든 화면에 적용됩니다 |
+| `.wg_chartCard__caption { }` | 금지. 그 `widget`을 쓰는 모든 화면에 적용됩니다 |
 | `.pg_products__sidebar { & .MuiTreeItem-label { } }` | 허용. 해당 인스턴스에만 적용됩니다 |
 | `.pg_detail__root { & .wg_chartCard__caption { } }` | 허용 |
 | `.pg_products__sidebar .MuiTreeItem-label { }` | 금지. 최상위 블록 안에서 `&`로 시작해야 합니다 |
@@ -972,12 +972,13 @@ export const UiCollapse = (props: UiCollapseProps) => {
 
 | 상황 | 작성 방법 |
 | --- | --- |
-| 값 하나에 수정자를 붙임 | `tone === "positive" && "pg_products__changeRate--positive"`처럼 씁니다. 템플릿 리터럴로 이름을 조립하지 않습니다 |
+| 값 하나에 수정자를 붙임 | `tone === "positive" && "pg_products__changeRate--positive"`처럼 씁니다 |
 | 값이 여럿임 | 값마다 한 줄씩 적습니다. 여러 요소에 같은 값을 적용해도 요소마다 나열합니다 |
 | 일부 값에만 CSS 수정자가 있음 | 해당 값만 나열하고 나머지는 기본 모습으로 둡니다. 값이 다섯이고 수정자가 둘이면 둘만 적습니다 |
 | `ButtonProps["variant"]`처럼 라이브러리 타입을 그대로 받음 | 수정자를 만들지 않고 라이브러리에 넘깁니다. 라이브러리가 추가한 값을 우리 목록이 놓칠 수 있습니다 |
 | 라이브러리와 별개인 우리 모습이 필요함 | 우리 어휘로 정의한 프롭을 따로 받습니다 |
 
+어느 자리에서도 템플릿 리터럴로 이름을 조립하지 않습니다.
 수정자를 붙일 수 있는지는 `composition-do-not-build-structural-variants-with-modifiers` 규칙이 판단합니다.
 이 규칙은 허용한 수정자의 작성 형식을 정합니다.
 
@@ -1229,10 +1230,8 @@ export const WgUserCard = (props: WgUserCardProps) => {
 최상위에 `h2 { }`를 선언하면 해당 스타일시트를 읽은 문서 전체에 적용되므로 예외에서도 금지합니다.
 `selector-disallowed-list`가 `&` 바로 뒤의 요소 선택자를 막으므로 예외에는 다음 주석을 남깁니다.
 
-| 예외 선택자 수 | 주석 |
-| --- | --- |
-| 하나 | `stylelint-disable-next-line` |
-| 둘 이상 | 블록을 `stylelint-disable`과 `stylelint-enable` 주석 쌍으로 감쌉니다 |
+예외 선택자가 하나면 `stylelint-disable-next-line`을 씁니다.
+둘 이상이면 블록을 `stylelint-disable`과 `stylelint-enable` 주석 쌍으로 감쌉니다.
 
 규칙 이름 뒤에 `-- <마크업 출처>`처럼 직접 작성하지 않는 마크업이라는 근거를 함께 적습니다.
 
@@ -1610,11 +1609,12 @@ DOM 상태 가상 클래스는 해당 요소의 **조건 없는 기본 클래스
 | 상황 | 작성 방법 |
 | --- | --- |
 | 도메인 상태와 무관한 `:hover`, `:focus-visible`, `:disabled` | 기본 블록에 둡니다. 수정자가 꺼졌을 때 상호작용 표시가 사라지지 않게 합니다 |
-| 수정자가 켜졌을 때만 상호작용이 달라져야 한다는 제품 요구가 있음 | 수정자 안에 둘 수 있으며 그 예외를 적습니다. 포커스 표시 자체는 `a11y-always-provide-a-visible-focus-indicator`를 따릅니다 |
+| 수정자가 켜졌을 때만 상호작용이 달라져야 한다는 제품 요구가 있음 | 수정자 안에 둘 수 있으며 그 예외를 적습니다 |
 | 여러 상태가 같은 선언을 씀 | 상태마다 블록을 엽니다. `selector-do-not-group-classes-with-commas`에 따라 묶지 않습니다 |
 | 조상의 DOM 상태가 자손을 바꿈 | 조상 블록에서 식별자가 같은 자손을 결합자 하나로 선택합니다 |
 | 조상 상태를 자손 블록에서 읽거나 지역 변수로 전달함 | `:has()`도 쓰지 않습니다. 지역 변수는 `values-tokenize-repeated-visual-values` 규칙이 금지합니다 |
 
+포커스 표시 자체는 `a11y-always-provide-a-visible-focus-indicator`를 따릅니다.
 자손의 `:hover`는 포인터가 자손 위에 있을 때만 적용되므로 조상의 hover를 대신하지 못합니다.
 자손 블록에서 조상 조건을 읽으면 조상을 옮길 때 스타일이 깨질 수 있습니다.
 자손 기본 블록은 조상 규칙보다 **앞에** 둡니다.
@@ -2024,19 +2024,22 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 
 | 새 쌓임 맥락을 만드는 대표 속성 | 조건 |
 | --- | --- |
-| `position` | `relative` 또는 `absolute`이면서 `z-index`가 `auto`가 아님. `fixed`와 `sticky`는 자체로 만듭니다 |
+| `position` | `relative` 또는 `absolute`이면서 `z-index`가 `auto`가 아님 |
 | `transform`, `filter`, `backdrop-filter` | `none`이 아님 |
 | `will-change` | 쌓임 맥락을 만드는 속성을 지정함 |
 | `opacity`, `isolation`, `contain` | `opacity`는 1 미만, `isolation`은 `isolate`, `contain`은 `layout`, `paint`, `content`, `strict` 중 하나 |
 
-| 요소가 가려졌을 때 확인할 것 | 조치 |
-| --- | --- |
-| `z-index` 적용 여부 | 일반 요소는 `static`이면 적용되지 않고 `relative`부터 적용됩니다. `flex`와 `grid` 아이템은 `static`이어도 `auto`가 아닌 값이 적용되고 쌓임 맥락도 만듭니다 |
-| 같은 층 안의 순서 충돌 | 층 분류를 다시 봅니다. 값을 `+1` 하지 않습니다 |
-| 조상의 쌓임 맥락이나 잘림 | 해당 조상 밖의 포털 대상으로 옮깁니다. 포털도 실제 부착 위치의 DOM 맥락을 따르므로 대상 위치를 확인합니다 |
-| `showModal()`로 연 `dialog`나 열린 popover | 최상위 레이어이므로 일반 문서의 `z-index` 토큰으로 그 위에 올라가려 하지 않습니다 |
+`fixed`와 `sticky`는 그 자체로 새 쌓임 맥락을 만듭니다.
 
-숫자를 올리기 전에 조상부터 확인합니다.
+요소가 가려졌으면 숫자를 올리기 전에 아래 순서로 확인합니다.
+
+1. `z-index`가 적용되는지 봅니다. 일반 요소는 `static`이면 적용되지 않고 `relative`부터 적용됩니다.
+2. `flex`와 `grid` 아이템인지 봅니다. `static`이어도 `auto`가 아닌 값이 적용되고 쌓임 맥락도 만듭니다.
+3. 같은 층 안에서 순서가 충돌하면 층 분류를 다시 봅니다. 값을 `+1` 하지 않습니다.
+4. 조상의 쌓임 맥락이나 잘림이 원인이면 해당 조상 밖의 포털 대상으로 옮깁니다.
+5. 포털도 실제 부착 위치의 DOM 맥락을 따르므로 대상 위치를 확인합니다.
+6. `showModal()`로 연 `dialog`나 열린 popover는 최상위 레이어입니다.
+   일반 문서의 `z-index` 토큰으로 그 위에 올라가려 하지 않습니다.
 
 **Incorrect (숫자를 직접 쓰고 경쟁으로 올립니다):**
 
@@ -2273,7 +2276,9 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 | 선택자와 선언까지 같은 배치 책임이 여러 파일에 반복됨 | 배치를 컴포넌트 하나로 모을지 검토하고 브레이크포인트를 그 파일에만 둡니다 |
 | 조건 숫자만 같고 역할은 다름 | 컴포넌트를 합치지 않습니다 |
 | 브레이크포인트 없이 배치할 수 있음 | `layout-reach-for-intrinsic-sizing-before-breakpoints` 규칙을 먼저 적용합니다 |
-| `prefers-color-scheme` 테마 조건 | 이 규칙의 대상이 아닙니다. `values-switch-themes-by-changing-token-values`에 따라 토큰 파일의 최상위 `@media`에 둡니다 |
+| `prefers-color-scheme` 테마 조건 | 이 규칙의 대상이 아닙니다 |
+
+테마 조건은 `values-switch-themes-by-changing-token-values`에 따라 토큰 파일의 최상위 `@media`에 둡니다.
 
 **Incorrect (클래스 블록 안에 중첩해서 브레이크포인트가 흩어집니다):**
 
@@ -2684,12 +2689,15 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 
 | 확인 항목 | 기준 |
 | --- | --- |
-| 표시 시점 | `:focus`보다 `:focus-visible`을 씁니다. 브라우저가 입력 방식과 사용자 설정으로 판단하므로 버튼 클릭에서 숨기고 키보드 이동이나 텍스트 입력에서 보이는 경향을 고정 규칙으로 가정하지 않습니다 |
+| 표시 시점 | `:focus`보다 `:focus-visible`을 씁니다 |
 | 표시 형태 | 색만 바꾸지 않고 `outline`, `box-shadow` 링, `border` 두께처럼 형태도 바꿉니다. 색각 이상에서도 구분할 수 있어야 합니다 |
 | 컨벤션 기본값 | 인접 배경과 대비가 3:1 이상인 2 CSS px 이상의 외곽선을 씁니다 |
 | 앱 상태 | `--focused` 같은 수정자로 대체하지 않습니다. 앱의 입력 방식 추적이 브라우저 판단이나 사용자 설정과 어긋날 수 있습니다 |
 | 강제 색상 모드 | `forced-colors: active`에서는 `box-shadow`가 없어집니다. 투명한 `outline`을 함께 두거나 조건 안에서 시스템 색 외곽선을 제공합니다 |
 | 사용자 색상 설정 | `forced-color-adjust: none`으로 끄지 않습니다 |
+
+`:focus-visible`의 적용은 브라우저가 입력 방식과 사용자 설정으로 판단합니다.
+버튼 클릭에서 숨고 키보드 이동이나 텍스트 입력에서 보이는 경향을 고정 규칙으로 가정하지 않습니다.
 
 WCAG 2.2 SC 1.4.11(AA)은 인접 색 대비를 다룹니다.
 SC 2.4.13(AAA)은 2 CSS px 둘레에 해당하는 최소 면적과 포커스 전후 같은 픽셀의 3:1 대비를 요구합니다.
@@ -2760,12 +2768,20 @@ AAA 기준을 모든 표시의 두께가 반드시 2px이어야 한다는 뜻으
 일반 CSS의 클래스와 `@keyframes`는 파일로 격리되지 않으며,
 같은 캐스케이드 계층의 동일한 키프레임 이름은 문서 순서상 뒤의 정의가 적용됩니다.
 
-| 대상 | 작성 기준 |
+| 이름과 토큰 | 작성 기준 |
 | --- | --- |
-| `@keyframes` 이름 | `<범위>_<식별자>__<동작>`으로 씁니다. 예: `pg_products__fadeIn`. 소유자 접두사는 `naming-use-scope-slug-element-modifier-syntax`와 같습니다 |
-| 지속 시간과 이징 | 한 파일에서 한 번만 써도 토큰으로 둡니다. 예: `var(--app-motion-duration-fast)`. `values-tokenize-repeated-visual-values`의 예외입니다 |
-| 이름 검사 | `stylelint-config-standard`의 kebab-case 기본값을 `tooling-configure-stylelint-to-enforce-these-rules`의 `keyframes-name-pattern`으로 바꿉니다 |
+| `@keyframes` 이름 | `<범위>_<식별자>__<동작>`으로 씁니다. 예: `pg_products__fadeIn` |
+| 지속 시간과 이징 | 한 파일에서 한 번만 써도 토큰으로 둡니다. 예: `var(--app-motion-duration-fast)` |
+
+소유자 접두사는 `naming-use-scope-slug-element-modifier-syntax`와 같습니다.
+지속 시간과 이징 토큰은 `values-tokenize-repeated-visual-values`의 예외입니다.
+
+| 도구 설정과 속성 선택 | 기준 |
+| --- | --- |
+| 이름 검사 | `stylelint-config-standard`의 kebab-case 기본값을 `keyframes-name-pattern`으로 바꿉니다 |
 | 애니메이션 속성 | `transform`과 `opacity`를 씁니다. `width`나 `top`은 매 프레임 레이아웃을 다시 계산합니다 |
+
+`keyframes-name-pattern` 값은 `tooling-configure-stylelint-to-enforce-these-rules`가 정합니다.
 
 움직임은 어지럼증이나 전정 장애가 있는 사용자에게 접근성 문제입니다.
 **움직임 감소 요청에는 전역에서 `animation`과 `transition`을 함께 차단하는 것을 기본으로 합니다.**
@@ -2775,7 +2791,9 @@ AAA 기준을 모든 표시의 두께가 반드시 2px이어야 한다는 뜻으
 | 차단 범위 | 위치 이동만 골라 끄지 않습니다. 색이나 투명도 전환이 필요하면 전역 블록에서 해당 클래스를 예외로 적습니다 |
 | 컴포넌트 파일 | 움직임을 되살리지 않습니다. `!important`는 전역 스타일시트에서만 허용합니다 |
 | 지속 시간과 지연 | 지속 시간은 `0.01ms`, 지연은 `0s`로 줄여 이전 상태에서 기다리지 않게 합니다 |
-| 완료 처리 | 전환 지속 시간과 지연이 모두 `0s`이면 `transitionend`가 발생하지 않습니다. `0.01ms`도 발생을 보장하지 않으므로 취소되거나 제거된 요소의 완료를 이벤트에만 맡기지 않습니다 |
+| 완료 처리 | 전환 지속 시간과 지연이 모두 `0s`이면 `transitionend`가 발생하지 않습니다 |
+
+`0.01ms`도 발생을 보장하지 않으므로 취소되거나 제거된 요소의 완료를 이벤트에만 맡기지 않습니다.
 
 **Incorrect (전역 이름을 겹치게 쓰고 시간을 직접 적습니다):**
 
@@ -2855,10 +2873,8 @@ AAA 기준을 모든 표시의 두께가 반드시 2px이어야 한다는 뜻으
 | Stylelint 규칙 | 담당 컨벤션 |
 | --- | --- |
 | `selector-class-pattern` | `css/naming-use-scope-slug-element-modifier-syntax` |
-| `selector-disallowed-list` | `css/ownership-use-foreign-classes-only-under-your-own-root`, `css/selector-nest-dom-state-in-the-owning-block`, `css/selector-use-classes-instead-of-element-selectors` |
 | `max-nesting-depth` | `css/selector-limit-nesting-block-depth` |
 | `keyframes-name-pattern` | `css/a11y-namespace-keyframes-and-respect-reduced-motion` |
-| `no-duplicate-selectors` | `css/selector-declare-each-class-in-one-block`, `css/selector-do-not-group-classes-with-commas`의 단독 재선언 |
 | `property-disallowed-list`, `custom-property-pattern` | `css/values-tokenize-repeated-visual-values`. 이름 패턴은 토큰 선언 파일에서만 켭니다 |
 | `selector-attribute-name-disallowed-list` | `css/selector-use-pseudo-classes-for-dom-owned-states` |
 | `selector-max-id` | `css/naming-use-scope-slug-element-modifier-syntax`. 선택은 클래스로만 합니다 |
@@ -2867,19 +2883,30 @@ AAA 기준을 모든 표시의 두께가 반드시 2px이어야 한다는 뜻으
 | `media-feature-range-notation` | `css/layout-write-breakpoints-desktop-first`의 범위 표기. 표준 설정에 포함됩니다 |
 | `no-descending-specificity` | 자손 기본 블록을 조상 규칙보다 앞에 둡니다. 표준 설정에 포함됩니다 |
 
+`selector-disallowed-list`는 다음 세 컨벤션을 담당합니다.
+
+- `css/ownership-use-foreign-classes-only-under-your-own-root`
+- `css/selector-nest-dom-state-in-the-owning-block`
+- `css/selector-use-classes-instead-of-element-selectors`
+
+`no-duplicate-selectors`는 `css/selector-declare-each-class-in-one-block`과
+`css/selector-do-not-group-classes-with-commas`의 단독 재선언을 담당합니다.
+
 디렉터리별 접두사는 `selector-class-pattern`과 `selector-disallowed-list`의 `overrides`로 나눕니다.
 예제 정규식은 `&`로 시작하는 중첩 선택자와 최상위를 구분하지만 `&`의 소유자까지 검증하지는 않습니다.
 `selector-max-combinators`와 `selector-max-type`은 넣지 않습니다.
 개수만으로 우리 선택자와 라이브러리 경로를 구분할 수 없습니다.
 
-| 리뷰에서 확인할 것 | 기계 검사의 한계 |
-| --- | --- |
-| 쉼표 묶음 자체 | `disallowInList`는 목록 선택자를 단독 재선언할 때만 검사합니다. 묶음은 `css/selector-do-not-group-classes-with-commas`로 판단합니다 |
-| 최상위 요소 선택자 | `ownMarkupPatterns`는 `&`로 시작하는 형태만 검사하고 `selector-max-type`은 쓰지 않습니다 |
-| 파일별 소유자 하나, 다른 소유자 클래스의 블록 위치 | 같은 레이어의 다른 식별자와 미등록 외부 클래스는 잡지 못합니다 |
-| 중첩 `@media`와 데스크톱 퍼스트 방향 | at-rule의 최상위 배치를 강제하지 못합니다. `css/layout-group-breakpoints-at-the-file-bottom`, `css/layout-write-breakpoints-desktop-first`로 판단합니다 |
-| 우리 마크업의 구조 선택자 | `:first-child`, `:nth-child()`는 클래스에도 붙으므로 표기만으로 구분하지 못합니다 |
-| 역할 이름, 승격 판단, 변형 노출, 포커스 대비 | 리뷰에서 의미를 확인합니다 |
+| 대상 | 도구 한계 | 처리 |
+| --- | --- | --- |
+| 쉼표 묶음 자체 | `disallowInList`는 단독 재선언만 검사합니다 | `css/selector-do-not-group-classes-with-commas`로 판단합니다 |
+| 최상위 요소 선택자 | `ownMarkupPatterns`는 `&`로 시작하는 형태만 검사합니다 | `selector-max-type`은 쓰지 않고 리뷰에서 확인합니다 |
+| 파일별 소유자 하나, 다른 소유자 클래스의 블록 위치 | 같은 레이어의 다른 식별자와 미등록 외부 클래스는 잡지 못합니다 | 리뷰에서 확인합니다 |
+| 중첩 `@media`와 데스크톱 퍼스트 방향 | at-rule의 최상위 배치를 강제하지 못합니다 | `css/layout-group-breakpoints-at-the-file-bottom`으로 판단합니다 |
+| 우리 마크업의 구조 선택자 | `:first-child`, `:nth-child()`는 클래스에도 붙습니다 | 표기만으로 구분하지 못해 리뷰에서 확인합니다 |
+| 역할 이름, 승격 판단, 변형 노출, 포커스 대비 | 기계가 뜻을 판단하지 못합니다 | 리뷰에서 확인합니다 |
+
+`@media` 방향은 `css/layout-write-breakpoints-desktop-first`가 함께 판단합니다.
 
 **Incorrect (`stylelint-config-standard`의 기본 클래스 패턴을 그대로 씁니다):**
 

@@ -22,10 +22,11 @@ tags: naming, constant
 | --- | --- |
 | 상수 | `_constant/<주제>.ts`에 `<주제>_` 접두사로 선언합니다 |
 | 소유자 문맥 | 폴더가 말하므로 이름에 반복하지 않습니다. `page/detail/_constant/legend.ts`에는 `legend_hit_tolerance_px`를 둡니다 |
-| 파서 묶음 · 스키마 등 함수를 담은 계약 | 같은 `_constant`에 계약별 파일로 둡니다. 이름은 계약 규칙과 `naming-use-consistent-file-and-symbol-naming`을 따릅니다 |
+| 파서 묶음 · 스키마 등 함수를 담은 계약 | 같은 `_constant`에 계약별 파일로 둡니다 |
 | 파일이 하나뿐인 경우 | `_constant` 폴더를 유지합니다 |
 | 소유자를 지워도 남는 값 | 루트 상수 규칙에 따라 옮깁니다 |
 
+계약 파일의 이름은 계약 규칙과 `naming-use-consistent-file-and-symbol-naming`을 따릅니다.
 소유자 아래에 `config`, `constants`, `common` 폴더는 만들지 않습니다.
 
 **Incorrect (한 소유자의 상수를 루트로 올립니다):**

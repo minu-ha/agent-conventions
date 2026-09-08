@@ -180,8 +180,11 @@ body {
 .acc-body p { margin: 0 0 .75em; }
 .acc-body p:last-child { margin-bottom: 0; }
 .acc-body .lead { margin: 0 0 .9em; padding-left: 11px; border-left: 2px solid color-mix(in srgb, var(--accent) 55%, transparent); color: var(--ink); font-weight: 500; line-height: 1.7; }
-.acc-body ul { margin: 0 0 .95em; padding-left: 1.5em; list-style: none; display: flex; flex-direction: column; gap: .45em; }
-.acc-body ul:last-child { margin-bottom: 0; }
+.acc-body ul, .acc-body ol { margin: 0 0 .95em; padding-left: 1.5em; list-style: none; display: flex; flex-direction: column; gap: .45em; }
+.acc-body ul:last-child, .acc-body ol:last-child { margin-bottom: 0; }
+.acc-body ol { counter-reset: step; }
+.acc-body ol > li { counter-increment: step; }
+.acc-body ol > li::before { content: counter(step) "."; left: -1.5em; font-size: .92em; }
 /* li 를 grid 로 두면 텍스트 런과 인라인 code 칩이 각각 그리드 아이템이 되어 한 글자씩 세로로 쌓인다.
    표식은 흐름 밖으로 빼고 걸이 들여쓰기로 둘째 줄을 맞춘다. */
 .acc-body li { position: relative; }
@@ -573,7 +576,8 @@ const viewerClientScript = `(() => {
 		const flushP = () => { if (para.length) { out += "<p>" + joinSentences(para.map((line) => inline(line, ownerSkill))) + "</p>"; para = []; } };
 		const flushL = () => {
 			if (!list) return;
-			out += "<ul>" + list.map((item) => "<li>" + inline(item, ownerSkill) + "</li>").join("") + "</ul>";
+			const tag = list.ordered ? "ol" : "ul";
+			out += "<" + tag + ">" + list.map((item) => "<li>" + inline(item, ownerSkill) + "</li>").join("") + "</" + tag + ">";
 			list = null;
 		};
 		const flushT = () => {
@@ -602,11 +606,13 @@ const viewerClientScript = `(() => {
 			}
 			flushT();
 
-			// 목록. 이걸 문단으로 뭉치면 "- 항목 - 항목" 으로 이어져 읽을 수 없다.
-			const bullet = /^[-*+]\\s+(.*)$/.exec(t);
+			// 목록. 이걸 문단으로 뭉치면 "- 항목 - 항목" 으로 이어져 읽을 수 없다. 번호 목록은 ol 로 그린다.
+			const bullet = /^(?:[-*+]|(\\d+)\\.)\\s+(.*)$/.exec(t);
 			if (bullet) {
 				flushP();
-				list = list || []; list.push(bullet[1]);
+				const ordered = bullet[1] !== undefined;
+				if (list && list.ordered !== ordered) flushL();
+				list = list || Object.assign([], { ordered }); list.push(bullet[2]);
 				continue;
 			}
 			// 목록 항목의 이어지는 줄은 마지막 항목에 붙인다.

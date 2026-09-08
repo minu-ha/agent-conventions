@@ -63,7 +63,7 @@ export const toProfileSaveRequest = (values: ProfileFormValues) => {
 };
 ```
 
-**Incorrect (소유자를 지워도 남을 함수를 쓰는 곳이 하나라고 소유자 아래 둡니다):**
+**Incorrect (소유자를 지워도 남을 함수를 호출부가 하나라고 소유자 아래 둡니다):**
 
 ```ts
 // page/orders/_function/to-display-date.ts
