@@ -50,7 +50,7 @@ tags: naming, types, ownership
 | 외부 · 생성된 계약 | 이름과 `DTO` 같은 접미사를 보존합니다. 내부 계약에는 이를 구별용 접미사로 붙이지 않습니다 |
 | `Props`, `Handle`, `Slot`, `Renderer` | 해당 프레임워크 규칙을 따릅니다 |
 
-단순 가공 · 표시 결과에는 `VM` · `ViewModel` · 막연한 `Model`과 그 대응 파일명을 쓰지 않습니다.
+단순 가공, 표시 결과에는 `VM`, `ViewModel`, 막연한 `Model`과 그 대응 파일명을 쓰지 않습니다.
 
 **Incorrect 1 (소유자와 막연한 화면 계약 접미사를 반복합니다):**
 

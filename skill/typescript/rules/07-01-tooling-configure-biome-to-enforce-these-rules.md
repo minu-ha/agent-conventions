@@ -29,7 +29,7 @@ tags: tooling
 | `suspicious/noExplicitAny`, `style/noNonNullAssertion` | `typescript/types-narrow-unknown-instead-of-asserting` |
 | `plugins`의 GritQL 파일 | `typescript/absence-expose-optional-values-instead-of-silent-fallbacks`의 `??` · `\|\|` 오른쪽 리터럴 |
 
-`typescript/naming-use-direct-imports-and-public-entry-points`의 가져오기 · 이름 붙인 내보내기 · 배럴 제한은
+`typescript/naming-use-direct-imports-and-public-entry-points`의 가져오기, 이름 붙인 내보내기, 배럴 제한은
 아래 규칙이 담당합니다.
 
 - `style/useImportType`
@@ -40,8 +40,8 @@ tags: tooling
 
 기본 매개변수와 삼항의 대체 리터럴은 GritQL 검사 밖이므로 리뷰합니다.
 
-Biome 2.5.7의 `recommended`에는 `useConst` · `useImportType` · `noNonNullAssertion` ·
-`noUnusedFunctionParameters` · `noExplicitAny`가 포함됩니다. 담당 컨벤션을 드러내려고 설정에도 명시합니다.
+Biome 2.5.7의 `recommended`에는 `useConst`, `useImportType`, `noNonNullAssertion` ·
+`noUnusedFunctionParameters`, `noExplicitAny`가 포함됩니다. 담당 컨벤션을 드러내려고 설정에도 명시합니다.
 
 ### 리뷰가 담당하는 것
 
@@ -57,8 +57,8 @@ Biome 2.5.7의 `recommended`에는 `useConst` · `useImportType` · `noNonNullAs
 | 한 줄 문서 블록 `/** … */` | 대응 검사가 없음 | `typescript/docs-write-doc-comments-as-multiline-blocks`를 리뷰합니다 |
 | `config/env.ts` 밖의 `import.meta.env`, `process.env` | 대응 검사가 없음 | `typescript/naming-read-environment-values-through-config-env`에 따라 리뷰합니다 |
 
-`PascalCase`는 `objectLiteralProperty` · `const` · `variable`에만 허용합니다.
-`import.meta.env` · `process.env`는 CI에서 문자열로 검색해도 됩니다.
+`PascalCase`는 `objectLiteralProperty`, `const`, `variable`에만 허용합니다.
+`import.meta.env`, `process.env`는 CI에서 문자열로 검색해도 됩니다.
 `style/useConsistentArrowReturn`이 막는 것은 인라인 콜백과 커링 바깥 화살표 예외입니다.
 
 ### 설정 예외

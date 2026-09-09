@@ -17,7 +17,7 @@ tags: composition, ordering
 컴포넌트 본문은 아래 네 구획 순서로 작성합니다.
 렌더 중에 읽는 값은 사용 위치보다 위에서 선언합니다.
 
-1. 훅 구획에는 라우터 · 스토어 · 쿼리 · 컨텍스트 · 커스텀 훅과 `useState`, `useRef`를 둡니다.
+1. 훅 구획에는 라우터, 스토어, 쿼리, 컨텍스트, 커스텀 훅과 `useState`, `useRef`를 둡니다.
 2. 핸들러 구획에는 `handle*` 함수를 둡니다.
 3. 이펙트 구획에는 `useEffect`, `useLayoutEffect`를 둡니다.
 4. 반환 구획에는 이른 반환과 JSX를 둡니다.

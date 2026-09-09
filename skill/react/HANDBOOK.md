@@ -143,7 +143,7 @@ flowchart LR
 
 ### 근거가 되지 않는 조건
 
-`children`과 공용 계약만 받아 경계를 제공하는 범용 셸 · 대화상자는 그 이유만으로 `page`가 되지 않습니다.
+`children`과 공용 계약만 받아 경계를 제공하는 범용 셸, 대화상자는 그 이유만으로 `page`가 되지 않습니다.
 특정 화면의 데이터나 흐름을 아는지 확인합니다.
 
 한 화면에서만 쓴다는 사실은 `page` 조건이 아니므로 사용 횟수만으로 레이어를 바꾸지 않습니다.
@@ -373,8 +373,8 @@ component/widget/chatbot/
 ### 폴더 이름 기준
 
 폴더 이름은 단수로 쓰되 프레임워크가 강제하는 이름은 예외입니다.
-소유자 아래에 `component` · `util` · `helper` · `config` · `constants` · `common` · `shared` 폴더를 만들지 않습니다.
-루트의 `constant` · `type` · `hook`은 프로젝트가 소유하는 역할 폴더이므로 같은 규칙을 따르되 `_`를 붙이지 않습니다.
+소유자 아래에 `component`, `util`, `helper`, `config`, `constants`, `common`, `shared` 폴더를 만들지 않습니다.
+루트의 `constant`, `type`, `hook`은 프로젝트가 소유하는 역할 폴더이므로 같은 규칙을 따르되 `_`를 붙이지 않습니다.
 
 | 함께 판단할 내용 | 기준 |
 | --- | --- |
@@ -458,7 +458,7 @@ page/detail/
 
 가져오기는 아래 레이어 방향과 소유자 경계를 **모두** 지킵니다.
 모든 경로가 `@/`로 시작하므로 경로 모양이 아니라 가져오는 파일의 위치로 판정합니다.
-소유자 · 진입 파일 · 역할 폴더의 정의는 `ownership-place-owner-files-in-role-folders`를 따릅니다.
+소유자, 진입 파일, 역할 폴더의 정의는 `ownership-place-owner-files-in-role-folders`를 따릅니다.
 
 ### 레이어 방향
 
@@ -480,7 +480,7 @@ flowchart LR
 | `page` | 루트 레이어, `ui`, `widget` |
 | 라우터와 앱 진입 파일 | 전부 |
 
-루트 레이어는 `util` · `constant` · `type` · `hook` · `store` · `service` · `config` · `asset`입니다.
+루트 레이어는 `util`, `constant`, `type`, `hook`, `store`, `service`, `config`, `asset`입니다.
 같은 레이어의 공개 컴포넌트끼리 조립할 수 있지만 순환 가져오기는 만들지 않습니다.
 
 ### 소유자 경계
@@ -502,8 +502,8 @@ flowchart LR
 
 ### 여러 자식이 함께 쓰는 컴포넌트
 
-여러 자식이 같은 컴포넌트를 쓰면 부모가 조립해 프롭 · `children`으로 내려보내거나,
-화면 조립에 종속되지 않을 때 `ui` · `widget`으로 옮깁니다. 짧은 조각은 중복해서 써도 됩니다.
+여러 자식이 같은 컴포넌트를 쓰면 부모가 조립해 프롭, `children`으로 내려보내거나,
+화면 조립에 종속되지 않을 때 `ui`, `widget`으로 옮깁니다. 짧은 조각은 중복해서 써도 됩니다.
 세 자식 이상이 공유해야 하는데 공용 레이어로 옮길 수도 없다면 자식 분리 자체를 다시 봅니다.
 
 **Incorrect 1 (다른 폴더의 `_` 컴포넌트 파일을 가져옵니다):**
@@ -598,8 +598,8 @@ import {chart_series_line} from "@/component/ui/chart/_constant/series";
 
 **Impact: HIGH (실제 상태 · 생명주기 · 컨텍스트가 필요한 경우에만 리액트 훅을 사용합니다)**
 
-화면 전용 계산 · 정규화 · 전송 값 조립처럼 순수한 로직은 커스텀 훅으로 감싸지 않습니다.
-화면 지역 훅은 상태 · 컨텍스트 · 훅 호출 순서를 실제로 캡슐화할 때만 허용합니다.
+화면 전용 계산, 정규화, 전송 값 조립처럼 순수한 로직은 커스텀 훅으로 감싸지 않습니다.
+화면 지역 훅은 상태, 컨텍스트, 훅 호출 순서를 실제로 캡슐화할 때만 허용합니다.
 
 | 대상 | 처리 |
 | --- | --- |
@@ -671,7 +671,7 @@ export const PgMediaUploadPanel = (props: PgMediaUploadPanelProps) => {
 
 **Impact: MEDIUM (외부 라이브러리의 생명주기와 실행 흐름을 소유 컴포넌트에서 확인할 수 있습니다)**
 
-외부 라이브러리의 인스턴스 생성 · 크기 변경 · 이벤트 구독 · 정리는 하위 트리를 소유한 컴포넌트에 둡니다.
+외부 라이브러리의 인스턴스 생성, 크기 변경, 이벤트 구독, 정리는 하위 트리를 소유한 컴포넌트에 둡니다.
 파일 분량을 줄이려고 생명주기를 커스텀 훅으로 옮기지 않습니다.
 
 | 상황 | 처리 |
@@ -815,7 +815,7 @@ const mutationProductRemove = useProductRemove();
 `select`는 인라인으로 적습니다. 해당 구독자가 읽는 결과만 바꾸며 쿼리 캐시의 원본을 덮어쓰지 않습니다.
 기본 구조 공유는 JSON으로 표현할 수 있는 데이터에서 바뀌지 않은 부분의 참조를 유지합니다.
 인라인 함수는 참조가 달라져 다시 실행될 수 있으며, 구조 공유가 계산 자체를 생략하지는 않습니다.
-재실행만을 이유로 `useCallback` · `useMemo`를 더하지 않고,
+재실행만을 이유로 `useCallback`, `useMemo`를 더하지 않고,
 실측 병목이 있을 때만 `perf-avoid-defensive-memoization`의 예외 기준을 따릅니다.
 
 `select` 내부 변환은 이 규칙이 담당합니다. 별도 함수나 보조 모듈 경계가 없으면
@@ -879,7 +879,7 @@ const responseProductListSuspense = useProductListSuspense(
 
 ### 실행 차례와 재계산
 
-`useSuspenseQuery` · `useSuspenseQueries`는 `enabled`를 받지 않습니다.
+`useSuspenseQuery`, `useSuspenseQueries`는 `enabled`를 받지 않습니다.
 필수 입력이 없으면 쿼리를 호출하는 자식의 렌더를 보류합니다.
 독립적인 Suspense 쿼리도 같은 컴포넌트에서 따로 호출하면 앞 요청부터 순서대로 진행됩니다.
 Suspense의 불필요한 대기 분기는 `runtime-avoid-ad-hoc-loading-branches`를 따릅니다.
@@ -893,7 +893,7 @@ Suspense의 불필요한 대기 분기는 `runtime-avoid-ad-hoc-loading-branches
 
 구조 공유는 합친 결과에서 바뀌지 않은 부분의 참조를 유지하지만 계산을 생략하지는 않습니다.
 인라인 함수는 렌더마다 참조가 달라져 다시 계산될 수 있습니다.
-재실행만을 이유로 `useCallback` · `useMemo`를 더하지 않고,
+재실행만을 이유로 `useCallback`, `useMemo`를 더하지 않고,
 실측 병목이 있을 때만 `perf-avoid-defensive-memoization`의 예외 기준을 따릅니다.
 반복 조회 인덱스는 `typescript/values-use-set-and-map-for-repeated-lookups`를 따릅니다.
 
@@ -947,8 +947,8 @@ export const PgProductTableSection = () => {
 
 **Impact: CRITICAL (별칭을 추적하지 않고 사용처에서 값의 출처를 확인할 수 있습니다)**
 
-`response...` · `mutation...` · `*Store`는 JSX까지 원본 이름으로 읽습니다.
-핸들러 · 이펙트 안에서도 `responseProductSearchSuspense.data.products`처럼 출처를 유지합니다.
+`response...`, `mutation...`, `*Store`는 JSX까지 원본 이름으로 읽습니다.
+핸들러, 이펙트 안에서도 `responseProductSearchSuspense.data.products`처럼 출처를 유지합니다.
 
 | 함께 판단할 내용 | 기준 |
 | --- | --- |
@@ -1016,7 +1016,7 @@ useEffect(() => {
 **Impact: HIGH (저장 실패를 놓치지 않고 호출한 자리에서 처리합니다)**
 
 뮤테이션 실패는 입력 문맥을 유지할 수 있도록 호출한 자리에서 처리합니다.
-기본은 `mutate`와 `useMutation`의 `onError` · `onSuccess`이며, 핸들러에서는 호출만 합니다.
+기본은 `mutate`와 `useMutation`의 `onError`, `onSuccess`이며, 핸들러에서는 호출만 합니다.
 
 ### 호출 방식 고르기
 
@@ -1301,7 +1301,7 @@ const handleSubmitClick: UiButtonProps["onClick"] = (event) => {
 **Impact: CRITICAL (화면의 라이브러리 의존성을 제한하고 교체 시 수정 범위를 줄입니다)**
 
 라이브러리 컴포넌트는 화면에서 직접 쓰지 않고 `Ui*` 래퍼를 거칩니다.
-업그레이드 · 교체 시 수정 범위를 래퍼에 모으고, 화면에 필요한 계약만 엽니다.
+업그레이드, 교체 시 수정 범위를 래퍼에 모으고, 화면에 필요한 계약만 엽니다.
 
 ### 프롭 종류별 선언
 
@@ -1377,7 +1377,7 @@ export const UiTableCell = (props: UiTableCellProps) => {
 
 공개할 계약은 `typing-narrow-library-wrapper-contracts`로 정합니다.
 그다음 DOM 속성은 아래 순서로 엽니다.
-같은 요소로 `{...props}`를 전달하는 래퍼는 1 · 2단계 중 컴파일되는 형태를 씁니다.
+같은 요소로 `{...props}`를 전달하는 래퍼는 1, 2단계 중 컴파일되는 형태를 씁니다.
 
 ### 여는 차례
 
@@ -1408,12 +1408,12 @@ flowchart LR
 ### 상속으로 열리는 범위
 
 `HTMLAttributes`만 쓰면 `disabled`, `type`, `colSpan` 같은 전용 속성을 잃습니다.
-`value` · `onChange`처럼 DOM이 정한 이름은 라이브러리 고유 계약이 아닙니다.
+`value`, `onChange`처럼 DOM이 정한 이름은 라이브러리 고유 계약이 아닙니다.
 자기 프롭과 전달 방식은 `typing-choose-wrapper-shape-and-forwarding`을 따릅니다.
 DOM 속성은 리액트가 추가한 속성도 받아야 하는 열린 집합이므로, 충돌한 이름만 `Omit`으로 뺍니다.
 나머지를 직접 나열하지 않는 이 방식은 `typescript/types-reuse-existing-contracts-before-new-types`가 허용합니다.
 
-선언되지 않은 `aria-*` · `data-*`는 JSX의 하이픈 이름이라 오류 없이 통과할 수 있지만,
+선언되지 않은 `aria-*`, `data-*`는 JSX의 하이픈 이름이라 오류 없이 통과할 수 있지만,
 이미 선언된 속성의 값은 타입 검사를 받습니다. 컴파일 결과뿐 아니라 실제 DOM 전달 코드도 확인합니다.
 `HTMLAttributes`를 상속하면 `style`도 열리므로,
 사용 여부는 `css/composition-do-not-style-through-the-style-attribute`를 따릅니다.
@@ -2014,8 +2014,8 @@ export const UiPanel = {
 
 **Impact: MEDIUM (모드별 분기와 조합을 컴포넌트 구조에서 확인할 수 있습니다)**
 
-여러 파일 · 레이어에서 재사용하는 공용 `ui` · `widget`은 모드별 불리언 조합 대신 구조를 드러냅니다.
-`isCompact` · `isEditing` · `showSearch`가 늘어나면 가능한 조합과 JSX · 스타일 분기도 함께 늘어납니다.
+여러 파일, 레이어에서 재사용하는 공용 `ui`, `widget`은 모드별 불리언 조합 대신 구조를 드러냅니다.
+`isCompact`, `isEditing`, `showSearch`가 늘어나면 가능한 조합과 JSX, 스타일 분기도 함께 늘어납니다.
 
 | 조건 | 판단 |
 | --- | --- |
@@ -2218,7 +2218,7 @@ export const PgProductScreen = () => {
 **Impact: HIGH (값이 프롭스에서 왔다는 사실이 쓰는 자리마다 그대로 남습니다)**
 
 컴포넌트는 `props` 전체를 받고, 사용처에서 `props.id`처럼 읽습니다.
-시그니처 · 본문 · 중첩 함수 어디에서도 구조분해하지 않습니다.
+시그니처, 본문, 중첩 함수 어디에서도 구조분해하지 않습니다.
 객체 출처를 유지하는 기본 기준은 `typescript/values-read-objects-through-chains`를 따릅니다.
 
 | 상황 | 처리 |
@@ -2396,7 +2396,7 @@ const handleRemoveProductButtonClick: MouseEventHandler<HTMLButtonElement> = (_e
 
 **Impact: MEDIUM (사용하지 않는 명령형 계약이 공용 컴포넌트에 늘어나는 것을 막습니다)**
 
-`ref`는 사용처가 포커스 · 스크롤 · 측정 등을 직접 제어해야 할 때만 엽니다.
+`ref`는 사용처가 포커스, 스크롤, 측정 등을 직접 제어해야 할 때만 엽니다.
 현재 사용처가 없으면 미리 공개하지 않습니다.
 
 | 조건 | 처리 |
@@ -2735,7 +2735,7 @@ export const UiPanelHeader = (props: UiPanelHeaderProps) => {
 
 **Impact: MEDIUM (Fragment를 검색하고 변경 내역에서 식별하기 쉽습니다)**
 
-여러 요소를 감쌀 때는 `react`에서 가져온 `<Fragment>`를 쓰고 `<>` · `</>`는 쓰지 않습니다.
+여러 요소를 감쌀 때는 `react`에서 가져온 `<Fragment>`를 쓰고 `<>`, `</>`는 쓰지 않습니다.
 검색과 diff에 이름을 남기고, 목록에서 `key`가 필요해져도 `<Fragment key={…}>` 형태를 유지합니다.
 
 가져오기는 `typescript/naming-use-direct-imports-and-public-entry-points`에 따라
@@ -2819,7 +2819,7 @@ JSX 분기는 각 요소 바로 앞에 표시 조건이 드러나도록 적습�
 숨긴 하위 트리의 상태를 보존해야 하면 `composition-use-activity-only-to-preserve-mounted-subtrees`를 따릅니다.
 
 `&&` 왼쪽에는 숫자를 두지 않습니다. 거짓으로 평가되는 `0`과 `NaN`도 화면에 그대로 렌더됩니다.
-길이 · 개수는 비교식으로 바꿔 불리언으로 판단합니다.
+길이, 개수는 비교식으로 바꿔 불리언으로 판단합니다.
 
 **Incorrect 1 (JSX 두 분기를 삼항 하나로 묶습니다):**
 
@@ -2893,7 +2893,7 @@ return <UiBadge tone={props.isSelected ? "accent" : "neutral"} />;
 컴포넌트 본문은 아래 네 구획 순서로 작성합니다.
 렌더 중에 읽는 값은 사용 위치보다 위에서 선언합니다.
 
-1. 훅 구획에는 라우터 · 스토어 · 쿼리 · 컨텍스트 · 커스텀 훅과 `useState`, `useRef`를 둡니다.
+1. 훅 구획에는 라우터, 스토어, 쿼리, 컨텍스트, 커스텀 훅과 `useState`, `useRef`를 둡니다.
 2. 핸들러 구획에는 `handle*` 함수를 둡니다.
 3. 이펙트 구획에는 `useEffect`, `useLayoutEffect`를 둡니다.
 4. 반환 구획에는 이른 반환과 JSX를 둡니다.
@@ -2980,7 +2980,7 @@ export const PgOrderToolbar = () => {
 **Impact: HIGH (자체 책임이 있는 부품만 분리해 소유자 안 파일 수와 구조를 읽기 쉽게 유지합니다)**
 
 `widget`과 `ui` 컴포넌트 안의 부품은 아래 책임 중 하나를 직접 소유할 때만 파일로 뗍니다.
-단순 래퍼 · `className` 묶음 · 들여쓰기 감소 · 긴 파일은 분리 근거가 아닙니다.
+단순 래퍼, `className` 묶음, 들여쓰기 감소, 긴 파일은 분리 근거가 아닙니다.
 
 ### 분리 근거가 되는 책임
 
@@ -3003,7 +3003,7 @@ flowchart LR
 책임 표는 `screen-extract-local-section-components-for-runtime-boundaries`와 같습니다.
 ### `widget` · `ui` 전용 책임
 
-아래 두 책임은 `widget` · `ui`에만 적용합니다.
+아래 두 책임은 `widget`, `ui`에만 적용합니다.
 
 | 책임 | 예 |
 | --- | --- |
@@ -3095,18 +3095,18 @@ export const WgChatbot = () => {
 
 독립 섹션이 없는 작은 화면은 진입 컴포넌트가 데이터 소유자를 겸할 수 있습니다.
 이때만 쿼리를 직접 호출하고 경계는 상위 레이아웃에 둡니다. 경계만을 위한 빈 섹션은 만들지 않습니다.
-비동기 · 상태 · 상호작용 경계로 섹션을 분리해도 위 표의 화면 흐름 제어는 라우트 진입에 남깁니다.
+비동기, 상태, 상호작용 경계로 섹션을 분리해도 위 표의 화면 흐름 제어는 라우트 진입에 남깁니다.
 
 ### 같은 데이터를 여러 섹션이 읽을 때
 
 같은 데이터가 여러 섹션에 필요해도 프롭으로 내리지 않습니다.
-같은 `QueryClient`와 `key`는 캐시 · 진행 중인 요청을 공유하지만,
-마운트 · 포커스 복귀 · 무효화 시에는 stale 상태와 옵션에 따라 다시 요청할 수 있습니다.
-요청이 늘면 `staleTime` · `refetchOnMount` · 실제 키를 먼저 확인합니다.
+같은 `QueryClient`와 `key`는 캐시, 진행 중인 요청을 공유하지만,
+마운트, 포커스 복귀, 무효화 시에는 stale 상태와 옵션에 따라 다시 요청할 수 있습니다.
+요청이 늘면 `staleTime`, `refetchOnMount`, 실제 키를 먼저 확인합니다.
 부모의 대기로 자식 요청이 늦어지면 대기 전에 실행되는 소유자에서 같은 `key`를 `usePrefetchQuery`로 먼저 요청합니다.
 
-소유자가 바뀌지 않는 `query.select` · 바인딩 · 별칭 정리와 파생 상태 이펙트의 렌더 계산 전환은 대상이 아닙니다.
-순수 타입 · 전송 값 조립 함수 · 기본 설정의 형제 `.ts` 추출은
+소유자가 바뀌지 않는 `query.select`, 바인딩, 별칭 정리와 파생 상태 이펙트의 렌더 계산 전환은 대상이 아닙니다.
+순수 타입, 전송 값 조립 함수, 기본 설정의 형제 `.ts` 추출은
 `typescript/functions-extract-helpers-only-when-the-boundary-is-real`을 따릅니다.
 
 **Incorrect 1 (라우트 진입이 쿼리를 대신 읽어 프롭으로 내립니다):**
@@ -3188,7 +3188,7 @@ export const PgProductListSection = () => {
 
 **Impact: HIGH (추측에 따른 추출을 줄이고 실제 재사용 경계에 맞춰 코드를 배치합니다)**
 
-반복이 보인다는 이유만으로 공용 훅 · 컴포넌트 · 보조 함수를 추출하지 않습니다.
+반복이 보인다는 이유만으로 공용 훅, 컴포넌트, 보조 함수를 추출하지 않습니다.
 먼저 흐름을 같은 파일에서 읽을 수 있도록 정리합니다.
 
 ### 먼저 시도할 방법
@@ -3199,7 +3199,7 @@ export const PgProductListSection = () => {
 | 화면 흐름이 보이도록 JSX 정리 | 화면 지역 JSX |
 | 작은 변환 · `href` 조립 · 기본값 처리 | 사용처 |
 
-한 컴포넌트 · 핸들러 · 쿼리 `select`만 쓰는 보조 함수를 별도 모듈에 쌓지 않습니다.
+한 컴포넌트, 핸들러, 쿼리 `select`만 쓰는 보조 함수를 별도 모듈에 쌓지 않습니다.
 한 대표 함수만 호출하는 보조도 `_function` 바로 아래에 공개하지 않습니다.
 그 배치는 `typescript/functions-give-each-function-its-own-file`을 따릅니다.
 이름을 붙이기 좋다는 이유만으로 흐름을 여러 파일에 나누지 않습니다.
@@ -3334,7 +3334,7 @@ export const toProductSaveRequest = (formValues: ProductFormValues) => {
 **Impact: HIGH (화면 흐름을 유지하면서 자체 책임이 있는 섹션만 분리합니다)**
 
 라우트 진입의 지역 컴포넌트는 아래 책임 중 하나를 **직접 소유할 때만** 추출합니다.
-단순 래퍼 · `className` 묶음 · 들여쓰기 감소는 추출 근거가 아닙니다.
+단순 래퍼, `className` 묶음, 들여쓰기 감소는 추출 근거가 아닙니다.
 
 | 책임 | 예 |
 | --- | --- |
@@ -3413,8 +3413,8 @@ export const PgProductTreeSection = () => {
 
 **Impact: MEDIUM (파생값의 출처를 유지하고 화면 상단의 별칭과 준비 코드를 줄입니다)**
 
-`useState`와 프롭스에서 나온 조건 플래그 · 표시값은 사용처에서 계산합니다.
-화면 상단에 준비 코드로 모으지 않고, 훅 인자 · JSX · 이펙트 내부의 좁은 스코프에 둡니다.
+`useState`와 프롭스에서 나온 조건 플래그, 표시값은 사용처에서 계산합니다.
+화면 상단에 준비 코드로 모으지 않고, 훅 인자, JSX, 이펙트 내부의 좁은 스코프에 둡니다.
 
 | 함께 판단할 내용 | 기준 |
 | --- | --- |
@@ -3515,7 +3515,7 @@ flowchart LR
 | 라우트 진입이 직접 쿼리를 호출함 | 해당 라우트의 레이아웃 또는 상위 라우트 |
 | 섹션이 독립적으로 채워져야 함 | 이때만 경계를 나눕니다. 한 화면에 불필요하게 여러 겹 쌓지 않습니다 |
 
-대체 화면의 컨테이너 · 높이는 `css/layout-keep-layout-intent-explicit`을 따릅니다.
+대체 화면의 컨테이너, 높이는 `css/layout-keep-layout-intent-explicit`을 따릅니다.
 본문에 남은 로딩 분기는 `runtime-avoid-ad-hoc-loading-branches`로 판단합니다.
 
 **Incorrect 1 (진입에 경계가 없어 화면 전체가 함께 멈춥니다):**
@@ -3665,7 +3665,7 @@ return <PgPaymentWidgetSection amount={responseOrderAmountSuspense.data.confirme
 
 섹션 경계는 나머지 섹션만으로도 쓸모가 있을 때만 둡니다.
 목록 실패 후 옆 필터로 할 수 있는 일이 없다면 화면 경계로 충분합니다.
-로딩 · 오류 경계는 같은 소유자가 조립하며, 위치는 `runtime-place-suspense-boundaries-at-the-section-owner`를 따릅니다.
+로딩, 오류 경계는 같은 소유자가 조립하며, 위치는 `runtime-place-suspense-boundaries-at-the-section-owner`를 따릅니다.
 
 ### 실패 상황별 처리
 
@@ -3815,7 +3815,7 @@ export const PgProductRecommendationBoundary = () => {
 
 **Impact: HIGH (지금 입력으로 구할 수 있는 값은 상태에 두지 않고 렌더에서 계산합니다)**
 
-현재 프롭스 · 상태 · search 파라미터 · 응답으로 계산할 수 있는 값은 렌더 중에 구합니다.
+현재 프롭스, 상태, search 파라미터, 응답으로 계산할 수 있는 값은 렌더 중에 구합니다.
 `useState`에 복제해 `useEffect`로 동기화하면 추가 렌더와 값의 어긋남이 생기기 쉽습니다.
 
 계산 위치는 `screen-keep-derived-values-close`에 따라 사용처 가까이에 둡니다.
@@ -3989,7 +3989,7 @@ export const UiTabsRoot = (props: UiTabsRootProps) => {
 
 **Impact: HIGH (같은 도메인 판별 로직이 여러 화면에 퍼지지 않습니다)**
 
-여러 화면 · 메뉴 · 라우트 가드가 반복해서 쓰는 파생 판단만 스토어로 올립니다.
+여러 화면, 메뉴, 라우트 가드가 반복해서 쓰는 파생 판단만 스토어로 올립니다.
 단일 화면에서 한두 번 읽는 쿼리 필드는 복제하지 않습니다.
 
 | 작업 | 기준 |
@@ -4102,8 +4102,8 @@ useEffect(() => {
 
 **Impact: MEDIUM (콜백은 최신 값을 읽고 이펙트는 구독 조건의 변화에만 반응합니다)**
 
-구독 이펙트의 콜백이 최신 프롭스 · 상태를 읽되 그 값 때문에 재구독할 필요가 없다면 `useEffectEvent`를 씁니다.
-연결 대상 · 구독 조건처럼 바뀌면 재설치해야 하는 값은 이펙트 의존성에 남깁니다.
+구독 이펙트의 콜백이 최신 프롭스, 상태를 읽되 그 값 때문에 재구독할 필요가 없다면 `useEffectEvent`를 씁니다.
+연결 대상, 구독 조건처럼 바뀌면 재설치해야 하는 값은 이펙트 의존성에 남깁니다.
 
 | 조건 | 처리 |
 | --- | --- |
@@ -4174,7 +4174,7 @@ useEffect(() => {
 
 **Impact: MEDIUM (주소가 소유한 상태, 플랫폼 객체, 서버 응답이 이름만으로 구분됩니다)**
 
-라우트 search 파라미터는 파싱 전 원본 · 파싱 결과 · 서버 응답이 구분되도록 이름을 고정합니다.
+라우트 search 파라미터는 파싱 전 원본, 파싱 결과, 서버 응답이 구분되도록 이름을 고정합니다.
 
 | 대상 | 이름과 위치 |
 | --- | --- |
@@ -4185,7 +4185,7 @@ useEffect(() => {
 `query`가 들어간 이름은 서버 요청 바인딩에만 씁니다.
 해당 이름은 `data-name-query-and-mutation-bindings-consistently`를 따릅니다.
 파서 배치는 `typescript/naming-place-owner-constants-in-the-owner-constant-folder`를,
-파일명 · 심볼 표기는 `typescript/naming-use-consistent-file-and-symbol-naming`을 따릅니다.
+파일명, 심볼 표기는 `typescript/naming-use-consistent-file-and-symbol-naming`을 따릅니다.
 값을 주소에 둘지는 `state-choose-state-tools-by-source-of-truth`로 판단합니다.
 
 **Incorrect 1 (파서 묶음의 역할이 이름에 드러나지 않습니다):**
@@ -4317,7 +4317,7 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (event) => {
 
 **Impact: MEDIUM (추가 인자 전달만을 위한 JSX 인라인 래퍼를 줄입니다)**
 
-`onClick` · `onChange`처럼 이벤트 객체를 받는 자리에 추가 인자가 필요하면 커링합니다.
+`onClick`, `onChange`처럼 이벤트 객체를 받는 자리에 추가 인자가 필요하면 커링합니다.
 팩토리가 추가 인자를 받고, 안쪽 함수가 이벤트를 받으며, 반환한 함수를 JSX에 직접 전달합니다.
 `onClick={() => handleSelectionToggle(id)}` 같은 인라인 래퍼는 만들지 않습니다.
 
@@ -4459,7 +4459,7 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => 
 
 **Impact: HIGH (효과를 확인하지 않은 방어적 `useMemo`, `useCallback`, `memo`를 막습니다)**
 
-`useMemo` · `useCallback` · `memo`는 아래 네 경우에만 씁니다.
+`useMemo`, `useCallback`, `memo`는 아래 네 경우에만 씁니다.
 어느 경우든 `typescript/docs-justify-convention-exceptions-with-a-reason-comment`에 따라 이유를 남깁니다.
 
 ### 허용하는 네 경우
@@ -4472,11 +4472,11 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => 
 | 지연 값을 받는 하위 트리 | `perf-defer-heavy-renders-with-measured-evidence`가 `memo`를 요구함 |
 
 계산이나 함수가 다시 실행된다는 사실만으로 메모이제이션하지 않습니다.
-이펙트에서만 쓰는 객체 · 배열은 이펙트 안에서 만들고 원본 값에 의존합니다.
+이펙트에서만 쓰는 객체, 배열은 이펙트 안에서 만들고 원본 값에 의존합니다.
 
 ### 캐시와 컴파일러
 
-리액트는 `useMemo` · `useCallback` 캐시를 버릴 수 있으므로 정확성을 캐시에 의존하지 않습니다.
+리액트는 `useMemo`, `useCallback` 캐시를 버릴 수 있으므로 정확성을 캐시에 의존하지 않습니다.
 다시 계산되거나 이펙트가 재설치되어도 동작해야 합니다.
 외부 인스턴스의 수명은 소유 이펙트가, 렌더 사이에 보존할 값은 상태나 `ref`가 관리합니다.
 
@@ -4537,7 +4537,7 @@ useEffect(() => {
 | 이후 프롭스 변화를 따라가야 하는 값 | 초기 상태로 복제하지 않습니다 |
 
 개발 환경의 `StrictMode`에서는 초기화 함수를 두 번 호출할 수 있고, 다시 마운트하면 새로 초기화합니다.
-초기화 함수에 저장 · 구독 같은 부수효과를 넣지 않습니다.
+초기화 함수에 저장, 구독 같은 부수효과를 넣지 않습니다.
 `localStorage`는 클라이언트에서만 읽습니다. 서버 렌더링과 hydration에서는 서버와 최초 클라이언트 렌더가 같아야 하므로,
 저장소를 읽는 시점은 화면의 클라이언트 초기화 계약을 따릅니다.
 
@@ -4566,7 +4566,7 @@ const [draftFilter] = useState(() => parseStoredProductFilter(localStorage.getIt
 
 **Impact: MEDIUM (측정한 렌더 병목에만 트랜지션과 지연 값을 적용합니다)**
 
-`startTransition` · `useTransition` · `useDeferredValue`는 렌더 비용을 측정한 뒤 사용합니다.
+`startTransition`, `useTransition`, `useDeferredValue`는 렌더 비용을 측정한 뒤 사용합니다.
 목록 행 수와 조작별 소요 시간을 확인하고, `perf-avoid-defensive-memoization`의 예외나 예상 규모만 근거로 삼지 않습니다.
 
 ### 지연 도구 고르기
@@ -4578,7 +4578,7 @@ const [draftFilter] = useState(() => parseStoredProductFilter(localStorage.getIt
 | 갱신 함수를 호출할 수 없고 프롭 · 훅 반환값만 받음 | `useDeferredValue`를 씁니다 |
 | 트랜지션 진행 표시가 필요함 | 대기 상태를 주지 않는 `startTransition` 대신 `useTransition`의 `isPending`을 씁니다 |
 
-입력값 자체 · 폼 오류 · 즉시 비활성화 같은 급한 반응은 트랜지션에 넣지 않습니다.
+입력값 자체, 폼 오류, 즉시 비활성화 같은 급한 반응은 트랜지션에 넣지 않습니다.
 `await` 뒤에는 리액트가 트랜지션 문맥을 이어가지 못하므로 상태 갱신을 다시 `startTransition`으로 감쌉니다.
 
 ### 최적화 조건
@@ -4698,7 +4698,7 @@ export const PgProductRows = memo((props: PgProductRowsProps) => {
 
 **Impact: HIGH (스크린 리더와 테스트가 요소를 이름으로 찾을 수 있습니다)**
 
-클릭 · 입력을 받는 요소에는 접근 가능한 이름을 붙이고, 동작에 맞는 HTML 요소를 씁니다.
+클릭, 입력을 받는 요소에는 접근 가능한 이름을 붙이고, 동작에 맞는 HTML 요소를 씁니다.
 이름은 화면에 보이는 글자와 맞춰 음성 조작 시에도 같은 말로 찾을 수 있게 합니다.
 
 | 요소 | 이름과 동작 |
@@ -4709,7 +4709,7 @@ export const PgProductRows = memo((props: PgProductRowsProps) => {
 | 누르면 동작을 실행함 | `button`을 쓰고, 폼을 제출하지 않으면 `type="button"`을 지정합니다 |
 | 누르면 이동함 | `a`나 라우터 링크를 쓰고, `a`에는 실제 목적지 `href`를 지정합니다 |
 
-`div` · `span`에 `onClick`만 달면 키보드 조작과 접근 가능한 이름이 생기지 않습니다.
+`div`, `span`에 `onClick`만 달면 키보드 조작과 접근 가능한 이름이 생기지 않습니다.
 같은 입력 컴포넌트를 여러 번 렌더하면 `useId`나 사용처의 고유 식별자로 `id` 중복을 막습니다.
 `aria-*`를 스타일 훅으로 쓰는 문제는 `css/selector-use-pseudo-classes-for-dom-owned-states`를 따릅니다.
 
@@ -4824,7 +4824,7 @@ useEffect(() => {
 **Impact: HIGH (JSX 주석 형식을 통일해 화면 구역의 역할을 쉽게 읽을 수 있습니다)**
 
 JSX 자식 자리의 주석은 여러 줄 블록으로 씁니다.
-`{/**` · ` * 내용` · ` */}`을 각각 다른 줄에 두어 접었다 펼칠 때 주석과 블록이 한 덩이로 움직이게 합니다.
+`{/**`, ` * 내용`, ` */}`을 각각 다른 줄에 두어 접었다 펼칠 때 주석과 블록이 한 덩이로 움직이게 합니다.
 여러 줄로 펼쳐진 형제 블록이 둘 이상이면 블록마다 그 앞에 한 문장으로 적습니다.
 한 줄 요소와 블록 하나뿐인 반환에는 달지 않습니다.
 
@@ -4951,8 +4951,8 @@ JSX 자식 자리의 주석은 여러 줄 블록으로 씁니다.
 | 켜는 곳 | 도메인이 아닌 `preset: "recommended"` |
 | 리뷰 | 실제 접근 가능한 이름 |
 
-`a11y` 검사는 `useButtonType` · `useAltText` · `useValidAnchor` · `useKeyWithClickEvents` ·
-`useSemanticElements` · `noStaticElementInteractions` · `useFocusableInteractive`를 포함합니다.
+`a11y` 검사는 `useButtonType`, `useAltText`, `useValidAnchor`, `useKeyWithClickEvents` ·
+`useSemanticElements`, `noStaticElementInteractions`, `useFocusableInteractive`를 포함합니다.
 
 ### 가져오기 경로 제한
 

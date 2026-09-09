@@ -33,8 +33,8 @@ tags: tooling
 | 켜는 곳 | 도메인이 아닌 `preset: "recommended"` |
 | 리뷰 | 실제 접근 가능한 이름 |
 
-`a11y` 검사는 `useButtonType` · `useAltText` · `useValidAnchor` · `useKeyWithClickEvents` ·
-`useSemanticElements` · `noStaticElementInteractions` · `useFocusableInteractive`를 포함합니다.
+`a11y` 검사는 `useButtonType`, `useAltText`, `useValidAnchor`, `useKeyWithClickEvents` ·
+`useSemanticElements`, `noStaticElementInteractions`, `useFocusableInteractive`를 포함합니다.
 
 ### 가져오기 경로 제한
 

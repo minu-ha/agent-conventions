@@ -48,7 +48,7 @@ flowchart LR
 | 환경마다 달라지는 값 · 기능 플래그 | `naming-read-environment-values-through-config-env`에 따라 `config`에 둡니다 |
 | 색상 · 간격 등 디자인 토큰 | 스타일시트의 CSS 변수를 단일 출처로 둡니다 |
 
-파일 · 심볼 표기는 `naming-use-consistent-file-and-symbol-naming`을 따릅니다.
+파일, 심볼 표기는 `naming-use-consistent-file-and-symbol-naming`을 따릅니다.
 색인 객체는 수동 관리가 필요하고 번들러의 미사용 프로퍼티 제거도 어려워질 수 있습니다.
 `constant`에는 코드와 함께 바뀌는 값만 둡니다.
 

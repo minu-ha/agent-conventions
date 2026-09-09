@@ -17,7 +17,7 @@ tags: composition, props, origin
 **Impact: HIGH (값이 프롭스에서 왔다는 사실이 쓰는 자리마다 그대로 남습니다)**
 
 컴포넌트는 `props` 전체를 받고, 사용처에서 `props.id`처럼 읽습니다.
-시그니처 · 본문 · 중첩 함수 어디에서도 구조분해하지 않습니다.
+시그니처, 본문, 중첩 함수 어디에서도 구조분해하지 않습니다.
 객체 출처를 유지하는 기본 기준은 `typescript/values-read-objects-through-chains`를 따릅니다.
 
 | 상황 | 처리 |

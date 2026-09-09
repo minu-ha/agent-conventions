@@ -19,7 +19,7 @@ tags: absence
 
 ### 기본값 표현
 
-`??` · `||` 오른쪽과 기본값에는 리터럴 대신 이미 선언된 이름을 참조합니다.
+`??`, `||` 오른쪽과 기본값에는 리터럴 대신 이미 선언된 이름을 참조합니다.
 리터럴을 지역 `const`로 옮기거나 이유 주석을 붙이는 것만으로는 규칙을 충족하지 못합니다.
 
 | 기본값 표현 | 판정 |
@@ -39,7 +39,7 @@ tags: absence
 | `null`, `undefined`만 없음으로 취급 | `??` |
 | `0`, `false` · 빈 문자열까지 없음으로 취급하는 계약 | `\|\|` |
 
-선언된 이름이어도 기본값의 의미가 맞아야 합니다. `0` · `false`가 유효하면 `??`를 씁니다.
+선언된 이름이어도 기본값의 의미가 맞아야 합니다. `0`, `false`가 유효하면 `??`를 씁니다.
 상수는 소유자를 지워도 남으면 `naming-place-project-constants-in-the-root-constant-folder`,
 함께 사라지면 `naming-place-owner-constants-in-the-owner-constant-folder`에 따라 배치합니다.
 채우는 위치는 `absence-resolve-defaults-at-the-boundary`가 정합니다.

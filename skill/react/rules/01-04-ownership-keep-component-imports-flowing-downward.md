@@ -19,7 +19,7 @@ tags: ownership
 
 가져오기는 아래 레이어 방향과 소유자 경계를 **모두** 지킵니다.
 모든 경로가 `@/`로 시작하므로 경로 모양이 아니라 가져오는 파일의 위치로 판정합니다.
-소유자 · 진입 파일 · 역할 폴더의 정의는 `ownership-place-owner-files-in-role-folders`를 따릅니다.
+소유자, 진입 파일, 역할 폴더의 정의는 `ownership-place-owner-files-in-role-folders`를 따릅니다.
 
 ### 레이어 방향
 
@@ -41,7 +41,7 @@ flowchart LR
 | `page` | 루트 레이어, `ui`, `widget` |
 | 라우터와 앱 진입 파일 | 전부 |
 
-루트 레이어는 `util` · `constant` · `type` · `hook` · `store` · `service` · `config` · `asset`입니다.
+루트 레이어는 `util`, `constant`, `type`, `hook`, `store`, `service`, `config`, `asset`입니다.
 같은 레이어의 공개 컴포넌트끼리 조립할 수 있지만 순환 가져오기는 만들지 않습니다.
 
 ### 소유자 경계
@@ -63,8 +63,8 @@ flowchart LR
 
 ### 여러 자식이 함께 쓰는 컴포넌트
 
-여러 자식이 같은 컴포넌트를 쓰면 부모가 조립해 프롭 · `children`으로 내려보내거나,
-화면 조립에 종속되지 않을 때 `ui` · `widget`으로 옮깁니다. 짧은 조각은 중복해서 써도 됩니다.
+여러 자식이 같은 컴포넌트를 쓰면 부모가 조립해 프롭, `children`으로 내려보내거나,
+화면 조립에 종속되지 않을 때 `ui`, `widget`으로 옮깁니다. 짧은 조각은 중복해서 써도 됩니다.
 세 자식 이상이 공유해야 하는데 공용 레이어로 옮길 수도 없다면 자식 분리 자체를 다시 봅니다.
 
 **Incorrect 1 (다른 폴더의 `_` 컴포넌트 파일을 가져옵니다):**

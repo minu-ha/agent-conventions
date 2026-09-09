@@ -14,8 +14,8 @@ tags: data, state, origin
 
 **Impact: CRITICAL (별칭을 추적하지 않고 사용처에서 값의 출처를 확인할 수 있습니다)**
 
-`response...` · `mutation...` · `*Store`는 JSX까지 원본 이름으로 읽습니다.
-핸들러 · 이펙트 안에서도 `responseProductSearchSuspense.data.products`처럼 출처를 유지합니다.
+`response...`, `mutation...`, `*Store`는 JSX까지 원본 이름으로 읽습니다.
+핸들러, 이펙트 안에서도 `responseProductSearchSuspense.data.products`처럼 출처를 유지합니다.
 
 | 함께 판단할 내용 | 기준 |
 | --- | --- |

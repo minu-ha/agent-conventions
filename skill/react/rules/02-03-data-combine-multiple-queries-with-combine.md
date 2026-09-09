@@ -30,7 +30,7 @@ tags: data, query
 
 ### 실행 차례와 재계산
 
-`useSuspenseQuery` · `useSuspenseQueries`는 `enabled`를 받지 않습니다.
+`useSuspenseQuery`, `useSuspenseQueries`는 `enabled`를 받지 않습니다.
 필수 입력이 없으면 쿼리를 호출하는 자식의 렌더를 보류합니다.
 독립적인 Suspense 쿼리도 같은 컴포넌트에서 따로 호출하면 앞 요청부터 순서대로 진행됩니다.
 Suspense의 불필요한 대기 분기는 `runtime-avoid-ad-hoc-loading-branches`를 따릅니다.
@@ -44,7 +44,7 @@ Suspense의 불필요한 대기 분기는 `runtime-avoid-ad-hoc-loading-branches
 
 구조 공유는 합친 결과에서 바뀌지 않은 부분의 참조를 유지하지만 계산을 생략하지는 않습니다.
 인라인 함수는 렌더마다 참조가 달라져 다시 계산될 수 있습니다.
-재실행만을 이유로 `useCallback` · `useMemo`를 더하지 않고,
+재실행만을 이유로 `useCallback`, `useMemo`를 더하지 않고,
 실측 병목이 있을 때만 `perf-avoid-defensive-memoization`의 예외 기준을 따릅니다.
 반복 조회 인덱스는 `typescript/values-use-set-and-map-for-repeated-lookups`를 따릅니다.
 

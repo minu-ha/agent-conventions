@@ -89,7 +89,7 @@
 ### 기존 계약 찾기
 
 새 타입을 적기 전에 뜻과 수명이 같은 기존 타입이나 스키마를 먼저 찾습니다.
-필드 이름 · 타입 · 선택 여부 · 읽기 전용 여부까지 같으면 그 계약을 그대로 참조합니다.
+필드 이름, 타입, 선택 여부, 읽기 전용 여부까지 같으면 그 계약을 그대로 참조합니다.
 구조가 같아도 단위나 도메인 역할이 다르면 합치지 않습니다.
 
 기존 계약을 확인하는 차례입니다.
@@ -563,7 +563,7 @@ export const product_status = {
 
 **Impact: MEDIUM (계약에 있는 매개변수를 유지하면서 사용하지 않는 매개변수를 표시합니다)**
 
-기존 콜백 · 프레임워크 계약의 매개변수는 쓰지 않아도 생략하지 않고 `_` 접두사로 남깁니다.
+기존 콜백, 프레임워크 계약의 매개변수는 쓰지 않아도 생략하지 않고 `_` 접두사로 남깁니다.
 계약을 유지하면서 구현이 일부러 무시한 값을 드러냅니다.
 
 커링한 핸들러의 마지막 콜백과 매개변수를 하나도 쓰지 않는 구현도 같습니다.
@@ -743,7 +743,7 @@ type ProductStatus = (typeof product_status)[keyof typeof product_status];
 | 유니언 · 교차 조합에서만 쓰는 객체 | `type` |
 
 형식을 맞추려고 별칭을 만들거나 객체 형태를 전부 `interface`로 바꾸지 않습니다.
-추론되는 익명 결과와 외부 · 생성된 계약은 그대로 둡니다.
+추론되는 익명 결과와 외부, 생성된 계약은 그대로 둡니다.
 같은 뜻의 기존 계약은 `types-reuse-existing-contracts-before-new-types`에 따라 재사용합니다.
 
 **Incorrect 1 (독립된 필드 계약을 객체 `type` 별칭으로 선언합니다):**
@@ -847,7 +847,7 @@ flowchart LR
 | 환경마다 달라지는 값 · 기능 플래그 | `naming-read-environment-values-through-config-env`에 따라 `config`에 둡니다 |
 | 색상 · 간격 등 디자인 토큰 | 스타일시트의 CSS 변수를 단일 출처로 둡니다 |
 
-파일 · 심볼 표기는 `naming-use-consistent-file-and-symbol-naming`을 따릅니다.
+파일, 심볼 표기는 `naming-use-consistent-file-and-symbol-naming`을 따릅니다.
 색인 객체는 수동 관리가 필요하고 번들러의 미사용 프로퍼티 제거도 어려워질 수 있습니다.
 `constant`에는 코드와 함께 바뀌는 값만 둡니다.
 
@@ -984,7 +984,7 @@ export const table_page_size = 20;
 ### 역할별 표기
 
 파일과 심볼은 선언 문법이 아니라 역할에 맞게 이름 짓습니다.
-`const`로 선언해도 함수 · 훅 · 스키마 · API 결과 · 요청 객체 · 지역 파생값을 불변 데이터 상수로 보지 않습니다.
+`const`로 선언해도 함수, 훅, 스키마, API 결과, 요청 객체, 지역 파생값을 불변 데이터 상수로 보지 않습니다.
 
 | 자리 | 표기 |
 | --- | --- |
@@ -1010,7 +1010,7 @@ export const table_page_size = 20;
 ### 외부 계약이 정한 이름
 
 **외부 계약이 정한 이름과 키는 원래 표기를 유지합니다.**
-API 응답 · 요청, 생성 DTO, 라이브러리 인자, DOM 속성, 환경 변수와 모듈 상수에 담긴 외부 설정도 같습니다.
+API 응답, 요청, 생성 DTO, 라이브러리 인자, DOM 속성, 환경 변수와 모듈 상수에 담긴 외부 설정도 같습니다.
 `user_id`를 요구하는 API에는 그대로 적습니다.
 외부 이름을 별칭 없이 가져오면 대상이 아니며, 지역 별칭을 만들거나 이름을 바꿀 때 다시 판단합니다.
 
@@ -1124,7 +1124,7 @@ const toProductSaveBody = (values: ProductFormValues) => {
 
 `default`는 사용처마다 이름이 달라지고 원본의 이름 변경도 반영되지 않습니다.
 경로 형식은 `naming-import-by-absolute-path`를 따릅니다.
-같은 경로라도 값 · 타입 가져오기를 바꾸면 이 규칙을 적용합니다.
+같은 경로라도 값, 타입 가져오기를 바꾸면 이 규칙을 적용합니다.
 
 **Incorrect 1 (배럴과 섞인 가져오기로 경계를 흐립니다):**
 
@@ -1187,7 +1187,7 @@ import {UiTabs} from "@/component/ui/tabs/ui-tabs";
 | `import {a} from …` | `@/<src 아래 경로>`. 편집기 자동 가져오기 형식입니다 |
 | `import "….css"` | 같은 폴더면 `./<파일>`, 다른 폴더면 `@/<src 아래 경로>`입니다 |
 
-이동 · 이름 변경은 편집기의 경로 갱신을 사용합니다.
+이동, 이름 변경은 편집기의 경로 갱신을 사용합니다.
 접근 가능한 소유 경계는 경로 표기가 아니라 가져오는 파일의 위치로 판단합니다.
 가져오기 방향은 프레임워크 규칙을 따릅니다.
 소유자 밖에서 쓴다는 이유로 루트에 올리지 않습니다.
@@ -1209,7 +1209,7 @@ import {UiTabs} from "@/component/ui/tabs/ui-tabs";
 | `service` | 서버 통신 클라이언트 |
 | `asset` | 아이콘 등 정적 자원 |
 
-루트의 소유자는 프로젝트이며 `constant` · `util` · `type` · `hook`에도 소유자 아래 역할 폴더의 규칙을 적용합니다.
+루트의 소유자는 프로젝트이며 `constant`, `util`, `type`, `hook`에도 소유자 아래 역할 폴더의 규칙을 적용합니다.
 
 **Incorrect 1 (상대경로로 심볼을 가져옵니다):**
 
@@ -1335,7 +1335,7 @@ const productClient = createClient({baseUrl: env_api_base_url});
 | 외부 · 생성된 계약 | 이름과 `DTO` 같은 접미사를 보존합니다. 내부 계약에는 이를 구별용 접미사로 붙이지 않습니다 |
 | `Props`, `Handle`, `Slot`, `Renderer` | 해당 프레임워크 규칙을 따릅니다 |
 
-단순 가공 · 표시 결과에는 `VM` · `ViewModel` · 막연한 `Model`과 그 대응 파일명을 쓰지 않습니다.
+단순 가공, 표시 결과에는 `VM`, `ViewModel`, 막연한 `Model`과 그 대응 파일명을 쓰지 않습니다.
 
 **Incorrect 1 (소유자와 막연한 화면 계약 접미사를 반복합니다):**
 
@@ -1409,7 +1409,7 @@ const reportSnapshot: ReportSnapshot = response.data;
 | 제너레이터 | `function*` 문법을 씁니다 |
 | 오버로드 | `function` 선언을 허용합니다. 호출 시그니처 타입을 `const`에 붙일 수 있으면 그쪽을 씁니다 |
 
-선언 · 본문 형식을 고정하면 호이스팅 의존을 줄이고 코드가 늘 때의 diff와 주석 경계를 일정하게 유지합니다.
+선언, 본문 형식을 고정하면 호이스팅 의존을 줄이고 코드가 늘 때의 diff와 주석 경계를 일정하게 유지합니다.
 객체 반환에도 별도의 `({...})` 괄호가 필요하지 않습니다.
 
 ### `this`를 쓰는 함수
@@ -1574,7 +1574,7 @@ fetchProductPage({baseUrl: api_base_url, page: urlParams.page, pageSize: paginat
 
 한 곳에서만 쓰는 단계는 호출부에 둡니다.
 다음 사유가 있을 때만 보조 함수에 이름을 붙입니다.
-추출한 함수는 바깥 변수 · 훅 · 컴포넌트 상태 없이도 뜻이 통해야 합니다.
+추출한 함수는 바깥 변수, 훅, 컴포넌트 상태 없이도 뜻이 통해야 합니다.
 
 이름을 붙일지 정하는 차례입니다.
 
@@ -1883,7 +1883,7 @@ page/report/_function/
 
 함수 본문 참조는 호출 시점에 읽으므로 모듈 초기화가 끝난 뒤 부르면 참조 대상이 아래에 있어도 됩니다.
 즉시 계산하는 선언은 자기가 부르는 선언 뒤에 둡니다.
-컴포넌트 본문의 훅 · 핸들러 · 이펙트 순서는 프레임워크 컨벤션이 정합니다.
+컴포넌트 본문의 훅, 핸들러, 이펙트 순서는 프레임워크 컨벤션이 정합니다.
 
 **Incorrect 1 (내보낸 계약 타입이 함수 아래에 있어 시그니처를 읽으려면 파일을 끝까지 내려가야 합니다):**
 
@@ -2371,8 +2371,8 @@ const submitDraft = async (draft: Draft) => {
 ### 대상이 아닌 이름
 
 `array.map(...)` 같은 표준 메서드 호출은 함수 명명 규칙의 대상이 아닙니다.
-`handle` · `use`는 프레임워크 규칙을 따릅니다.
-생성기 · 프레임워크 · 외부 계약이 정한 이름과 `Promise`의 `resolve` · `reject`는 바꾸거나 감싸지 않습니다.
+`handle`, `use`는 프레임워크 규칙을 따릅니다.
+생성기, 프레임워크, 외부 계약이 정한 이름과 `Promise`의 `resolve`, `reject`는 바꾸거나 감싸지 않습니다.
 
 **Incorrect 1 (입력 · 구현 동작 · 막연한 접미사를 이름에 씁니다):**
 
@@ -2442,7 +2442,7 @@ export const assertLoggedIn = (session: Session): void => {
 **Impact: HIGH (프롭스, 상태, 모듈 상수에서 온 배열을 정렬할 때 원본이 바뀌는 버그를 피합니다)**
 
 정렬은 새 배열을 반환하는 `es-toolkit` 함수로 합니다. 원본을 바꾸는 `.sort()`는 쓰지 않습니다.
-프롭스 · 상태 · 매개변수 · 모듈 상수로 받은 배열도 같은 기준을 따릅니다.
+프롭스, 상태, 매개변수, 모듈 상수로 받은 배열도 같은 기준을 따릅니다.
 
 | 정렬 조건 | 선택 |
 | --- | --- |
@@ -2502,7 +2502,7 @@ const toSortedUsers = (users: readonly User[]): User[] => {
 ### 반복 조회 바꾸기
 
 같은 목록을 반복 조회하면 루프 밖에서 `Set`이나 `Map`을 한 번 만들고, 원본 목록이 바뀔 때 갱신합니다.
-중첩된 `includes` · `find`는 최악의 경우 두 목록 길이의 곱만큼 비교합니다.
+중첩된 `includes`, `find`는 최악의 경우 두 목록 길이의 곱만큼 비교합니다.
 
 | 상황 | 처리 |
 | --- | --- |
@@ -2511,7 +2511,7 @@ const toSortedUsers = (users: readonly User[]): User[] => {
 | 위 조건에 해당하지 않거나 길이가 정해진 짧은 목록 | 기존 조회를 유지합니다 |
 | 중복 제거 · 차집합처럼 결과 목록을 만듦 | `uniq`, `difference`, `without`을 씁니다. 만든 뒤 `has`를 반복 호출할 때만 `Set`을 남깁니다 |
 
-`Set` · `Map`도 생성 비용이 있으며 조회가 항상 상수 시간인 것은 아닙니다.
+`Set`, `Map`도 생성 비용이 있으며 조회가 항상 상수 시간인 것은 아닙니다.
 명세는 평균 조회 시간이 원소 수에 비례하는 시간보다 짧을 것만 요구합니다.
 서버 응답이나 사용자 선택처럼 목록 길이를 통제하지 못할 때 반복 조회 비용이 커집니다.
 
@@ -2523,7 +2523,7 @@ const toSortedUsers = (users: readonly User[]): User[] => {
 | 없는 키를 타입이 드러내는지 | `noUncheckedIndexedAccess`가 꺼진 `Record<string, T>`와 달리 `Map.get()`은 항상 `T \| undefined`입니다 |
 | 키가 중복되는지 | `find`는 첫 항목, `new Map(entries)`는 마지막 항목을 남깁니다. 첫 항목을 유지하려면 `uniqBy`를 먼저 적용합니다 |
 
-`groupBy` · `keyBy`는 목록을 재구성할 때 씁니다.
+`groupBy`, `keyBy`는 목록을 재구성할 때 씁니다.
 목록 연산의 선택은 `values-use-es-toolkit-for-value-helpers`가 정합니다.
 
 **Incorrect 1 (같은 배열을 반복 순회하며 포함 여부를 확인합니다):**
@@ -2845,7 +2845,7 @@ const order_status_by_api_code = {
 ### 쓸 함수 고르기
 
 값을 다루는 보조 함수는 `es-toolkit`을 기본으로 쓰고, `lodash`는 새로 들이지 않습니다.
-빈 배열 · 중복 키 같은 경계 처리를 통일하고, 배열을 인자로 펼칠 때의 호출 인자 한계도 피합니다.
+빈 배열, 중복 키 같은 경계 처리를 통일하고, 배열을 인자로 펼칠 때의 호출 인자 한계도 피합니다.
 
 | 작업 | 사용할 함수 |
 | --- | --- |
@@ -2861,7 +2861,7 @@ const order_status_by_api_code = {
 | 비동기 지연 · 시간 제한 · 재시도 | `delay`, `withTimeout`, `retry` |
 
 표에 없어도 문서에 같은 의미의 함수가 있으면 사용합니다.
-다만 `map` · `filter` · `find` · `flat` · `at` · `Object.keys`처럼 표준 메서드 하나로 끝나면 그대로 둡니다.
+다만 `map`, `filter`, `find`, `flat`, `at`, `Object.keys`처럼 표준 메서드 하나로 끝나면 그대로 둡니다.
 공백 제거는 `value.trim()`, 제거할 문자 지정은 `trim(value, "_")`처럼 구분합니다.
 
 ### 교체 전 확인
@@ -2876,8 +2876,8 @@ const order_status_by_api_code = {
 nullish만 제거하던 공개 계약은 `filter(isNotNil)` 등으로 보존하고 의미 차이를 검증하는 테스트를 남깁니다.
 
 날짜는 `values-handle-dates-with-dayjs`, 정렬은 `values-prefer-immutable-array-sorting`을 따릅니다.
-`groupBy` · `keyBy`는 목록 재구성에 쓰고, 반복 조회는
-`values-use-set-and-map-for-repeated-lookups`에 따라 `Set` · `Map`으로 처리합니다.
+`groupBy`, `keyBy`는 목록 재구성에 쓰고, 반복 조회는
+`values-use-set-and-map-for-repeated-lookups`에 따라 `Set`, `Map`으로 처리합니다.
 
 **Incorrect 1 (`es-toolkit`에 있는 함수를 손으로 다시 씁니다):**
 
@@ -3060,8 +3060,8 @@ const compactDateTime = responseDateTime.slice(0, 16).replace("T", " ");
 | 전달된 결과 옆에 `?? 다시 판정` 폴백 | 폴백을 제거합니다 |
 
 결과를 담을 필드가 없으면 소유자가 만드는 내부 항목 형태에 추가합니다.
-외부 응답 · 생성된 DTO · 공개 요청 계약을 바꾸거나 공유 캐시 원본을 직접 수정하지 않습니다.
-시각 · 권한 · 로케일 등 판정 입력이 바뀌면 다시 계산하고, 입력이나 소비 목적이 다르면 판정을 합치지 않습니다.
+외부 응답, 생성된 DTO, 공개 요청 계약을 바꾸거나 공유 캐시 원본을 직접 수정하지 않습니다.
+시각, 권한, 로케일 등 판정 입력이 바뀌면 다시 계산하고, 입력이나 소비 목적이 다르면 판정을 합치지 않습니다.
 경계의 선택 순서는 `absence-resolve-defaults-at-the-boundary`와 같습니다.
 
 **Incorrect 1 (경계에서 포맷한 값을 소비처가 다시 파싱해 포맷합니다):**
@@ -3131,7 +3131,7 @@ const chartSeries = comparisonSeries.map((series) => ({
 
 ### 기본값 표현
 
-`??` · `||` 오른쪽과 기본값에는 리터럴 대신 이미 선언된 이름을 참조합니다.
+`??`, `||` 오른쪽과 기본값에는 리터럴 대신 이미 선언된 이름을 참조합니다.
 리터럴을 지역 `const`로 옮기거나 이유 주석을 붙이는 것만으로는 규칙을 충족하지 못합니다.
 
 | 기본값 표현 | 판정 |
@@ -3151,7 +3151,7 @@ const chartSeries = comparisonSeries.map((series) => ({
 | `null`, `undefined`만 없음으로 취급 | `??` |
 | `0`, `false` · 빈 문자열까지 없음으로 취급하는 계약 | `\|\|` |
 
-선언된 이름이어도 기본값의 의미가 맞아야 합니다. `0` · `false`가 유효하면 `??`를 씁니다.
+선언된 이름이어도 기본값의 의미가 맞아야 합니다. `0`, `false`가 유효하면 `??`를 씁니다.
 상수는 소유자를 지워도 남으면 `naming-place-project-constants-in-the-root-constant-folder`,
 함께 사라지면 `naming-place-owner-constants-in-the-owner-constant-folder`에 따라 배치합니다.
 채우는 위치는 `absence-resolve-defaults-at-the-boundary`가 정합니다.
@@ -3348,7 +3348,7 @@ return {
 ### 경계가 정한 답
 
 값의 없음 여부는 소유자 안으로 들어오는 경계에서 한 번 검사하고, 결과를 타입으로 전달합니다.
-화면의 응답 매핑 · `select` · `combine` · search 스키마나 컴포넌트가 프롭을 받는 자리가 경계입니다.
+화면의 응답 매핑, `select`, `combine`, search 스키마나 컴포넌트가 프롭을 받는 자리가 경계입니다.
 
 | 경계가 정한 답 | 전달 타입 | 소비처 |
 | --- | --- | --- |
@@ -3583,7 +3583,7 @@ const responseProductList = useProductList();
 
 **Impact: HIGH (코드 동작을 옮겨 적지 않고 의도와 제약에 주석을 모읍니다)**
 
-주석은 한국어로 목적 · 제약 · 부수효과를 설명합니다.
+주석은 한국어로 목적, 제약, 부수효과를 설명합니다.
 이름과 시그니처에 없는 정보가 없으면 지우고, 필요한 배경에 따라 한 문장이나 여러 문장으로 씁니다.
 
 | 내용 · 태그 | 판단 |
@@ -3827,7 +3827,7 @@ const filteredRows = useMemo(() => {
 | `suspicious/noExplicitAny`, `style/noNonNullAssertion` | `typescript/types-narrow-unknown-instead-of-asserting` |
 | `plugins`의 GritQL 파일 | `typescript/absence-expose-optional-values-instead-of-silent-fallbacks`의 `??` · `\|\|` 오른쪽 리터럴 |
 
-`typescript/naming-use-direct-imports-and-public-entry-points`의 가져오기 · 이름 붙인 내보내기 · 배럴 제한은
+`typescript/naming-use-direct-imports-and-public-entry-points`의 가져오기, 이름 붙인 내보내기, 배럴 제한은
 아래 규칙이 담당합니다.
 
 - `style/useImportType`
@@ -3838,8 +3838,8 @@ const filteredRows = useMemo(() => {
 
 기본 매개변수와 삼항의 대체 리터럴은 GritQL 검사 밖이므로 리뷰합니다.
 
-Biome 2.5.7의 `recommended`에는 `useConst` · `useImportType` · `noNonNullAssertion` ·
-`noUnusedFunctionParameters` · `noExplicitAny`가 포함됩니다. 담당 컨벤션을 드러내려고 설정에도 명시합니다.
+Biome 2.5.7의 `recommended`에는 `useConst`, `useImportType`, `noNonNullAssertion` ·
+`noUnusedFunctionParameters`, `noExplicitAny`가 포함됩니다. 담당 컨벤션을 드러내려고 설정에도 명시합니다.
 
 ### 리뷰가 담당하는 것
 
@@ -3855,8 +3855,8 @@ Biome 2.5.7의 `recommended`에는 `useConst` · `useImportType` · `noNonNullAs
 | 한 줄 문서 블록 `/** … */` | 대응 검사가 없음 | `typescript/docs-write-doc-comments-as-multiline-blocks`를 리뷰합니다 |
 | `config/env.ts` 밖의 `import.meta.env`, `process.env` | 대응 검사가 없음 | `typescript/naming-read-environment-values-through-config-env`에 따라 리뷰합니다 |
 
-`PascalCase`는 `objectLiteralProperty` · `const` · `variable`에만 허용합니다.
-`import.meta.env` · `process.env`는 CI에서 문자열로 검색해도 됩니다.
+`PascalCase`는 `objectLiteralProperty`, `const`, `variable`에만 허용합니다.
+`import.meta.env`, `process.env`는 CI에서 문자열로 검색해도 됩니다.
 `style/useConsistentArrowReturn`이 막는 것은 인라인 콜백과 커링 바깥 화살표 예외입니다.
 
 ### 설정 예외

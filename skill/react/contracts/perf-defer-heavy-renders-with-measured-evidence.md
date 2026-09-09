@@ -2,7 +2,7 @@
 
 **Impact: MEDIUM (측정한 렌더 병목에만 트랜지션과 지연 값을 적용합니다)**
 
-`startTransition` · `useTransition` · `useDeferredValue`는 렌더 비용을 측정한 뒤 사용합니다.
+`startTransition`, `useTransition`, `useDeferredValue`는 렌더 비용을 측정한 뒤 사용합니다.
 목록 행 수와 조작별 소요 시간을 확인하고, `perf-avoid-defensive-memoization`의 예외나 예상 규모만 근거로 삼지 않습니다.
 
 ### 지연 도구 고르기
@@ -14,7 +14,7 @@
 | 갱신 함수를 호출할 수 없고 프롭 · 훅 반환값만 받음 | `useDeferredValue`를 씁니다 |
 | 트랜지션 진행 표시가 필요함 | 대기 상태를 주지 않는 `startTransition` 대신 `useTransition`의 `isPending`을 씁니다 |
 
-입력값 자체 · 폼 오류 · 즉시 비활성화 같은 급한 반응은 트랜지션에 넣지 않습니다.
+입력값 자체, 폼 오류, 즉시 비활성화 같은 급한 반응은 트랜지션에 넣지 않습니다.
 `await` 뒤에는 리액트가 트랜지션 문맥을 이어가지 못하므로 상태 갱신을 다시 `startTransition`으로 감쌉니다.
 
 ### 최적화 조건

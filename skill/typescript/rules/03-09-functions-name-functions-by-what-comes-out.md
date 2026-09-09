@@ -57,8 +57,8 @@ tags: functions, naming
 ### 대상이 아닌 이름
 
 `array.map(...)` 같은 표준 메서드 호출은 함수 명명 규칙의 대상이 아닙니다.
-`handle` · `use`는 프레임워크 규칙을 따릅니다.
-생성기 · 프레임워크 · 외부 계약이 정한 이름과 `Promise`의 `resolve` · `reject`는 바꾸거나 감싸지 않습니다.
+`handle`, `use`는 프레임워크 규칙을 따릅니다.
+생성기, 프레임워크, 외부 계약이 정한 이름과 `Promise`의 `resolve`, `reject`는 바꾸거나 감싸지 않습니다.
 
 **Incorrect 1 (입력 · 구현 동작 · 막연한 접미사를 이름에 씁니다):**
 

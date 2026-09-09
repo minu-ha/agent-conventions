@@ -52,8 +52,8 @@ tags: ownership
 ### 폴더 이름 기준
 
 폴더 이름은 단수로 쓰되 프레임워크가 강제하는 이름은 예외입니다.
-소유자 아래에 `component` · `util` · `helper` · `config` · `constants` · `common` · `shared` 폴더를 만들지 않습니다.
-루트의 `constant` · `type` · `hook`은 프로젝트가 소유하는 역할 폴더이므로 같은 규칙을 따르되 `_`를 붙이지 않습니다.
+소유자 아래에 `component`, `util`, `helper`, `config`, `constants`, `common`, `shared` 폴더를 만들지 않습니다.
+루트의 `constant`, `type`, `hook`은 프로젝트가 소유하는 역할 폴더이므로 같은 규칙을 따르되 `_`를 붙이지 않습니다.
 
 | 함께 판단할 내용 | 기준 |
 | --- | --- |

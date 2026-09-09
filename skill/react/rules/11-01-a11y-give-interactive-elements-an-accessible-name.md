@@ -13,7 +13,7 @@ tags: composition, accessibility
 
 **Impact: HIGH (스크린 리더와 테스트가 요소를 이름으로 찾을 수 있습니다)**
 
-클릭 · 입력을 받는 요소에는 접근 가능한 이름을 붙이고, 동작에 맞는 HTML 요소를 씁니다.
+클릭, 입력을 받는 요소에는 접근 가능한 이름을 붙이고, 동작에 맞는 HTML 요소를 씁니다.
 이름은 화면에 보이는 글자와 맞춰 음성 조작 시에도 같은 말로 찾을 수 있게 합니다.
 
 | 요소 | 이름과 동작 |
@@ -24,7 +24,7 @@ tags: composition, accessibility
 | 누르면 동작을 실행함 | `button`을 쓰고, 폼을 제출하지 않으면 `type="button"`을 지정합니다 |
 | 누르면 이동함 | `a`나 라우터 링크를 쓰고, `a`에는 실제 목적지 `href`를 지정합니다 |
 
-`div` · `span`에 `onClick`만 달면 키보드 조작과 접근 가능한 이름이 생기지 않습니다.
+`div`, `span`에 `onClick`만 달면 키보드 조작과 접근 가능한 이름이 생기지 않습니다.
 같은 입력 컴포넌트를 여러 번 렌더하면 `useId`나 사용처의 고유 식별자로 `id` 중복을 막습니다.
 `aria-*`를 스타일 훅으로 쓰는 문제는 `css/selector-use-pseudo-classes-for-dom-owned-states`를 따릅니다.
 

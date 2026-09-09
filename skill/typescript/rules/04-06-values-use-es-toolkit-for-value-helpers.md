@@ -18,7 +18,7 @@ tags: values, es-toolkit
 ### 쓸 함수 고르기
 
 값을 다루는 보조 함수는 `es-toolkit`을 기본으로 쓰고, `lodash`는 새로 들이지 않습니다.
-빈 배열 · 중복 키 같은 경계 처리를 통일하고, 배열을 인자로 펼칠 때의 호출 인자 한계도 피합니다.
+빈 배열, 중복 키 같은 경계 처리를 통일하고, 배열을 인자로 펼칠 때의 호출 인자 한계도 피합니다.
 
 | 작업 | 사용할 함수 |
 | --- | --- |
@@ -34,7 +34,7 @@ tags: values, es-toolkit
 | 비동기 지연 · 시간 제한 · 재시도 | `delay`, `withTimeout`, `retry` |
 
 표에 없어도 문서에 같은 의미의 함수가 있으면 사용합니다.
-다만 `map` · `filter` · `find` · `flat` · `at` · `Object.keys`처럼 표준 메서드 하나로 끝나면 그대로 둡니다.
+다만 `map`, `filter`, `find`, `flat`, `at`, `Object.keys`처럼 표준 메서드 하나로 끝나면 그대로 둡니다.
 공백 제거는 `value.trim()`, 제거할 문자 지정은 `trim(value, "_")`처럼 구분합니다.
 
 ### 교체 전 확인
@@ -49,8 +49,8 @@ tags: values, es-toolkit
 nullish만 제거하던 공개 계약은 `filter(isNotNil)` 등으로 보존하고 의미 차이를 검증하는 테스트를 남깁니다.
 
 날짜는 `values-handle-dates-with-dayjs`, 정렬은 `values-prefer-immutable-array-sorting`을 따릅니다.
-`groupBy` · `keyBy`는 목록 재구성에 쓰고, 반복 조회는
-`values-use-set-and-map-for-repeated-lookups`에 따라 `Set` · `Map`으로 처리합니다.
+`groupBy`, `keyBy`는 목록 재구성에 쓰고, 반복 조회는
+`values-use-set-and-map-for-repeated-lookups`에 따라 `Set`, `Map`으로 처리합니다.
 
 **Incorrect 1 (`es-toolkit`에 있는 함수를 손으로 다시 씁니다):**
 

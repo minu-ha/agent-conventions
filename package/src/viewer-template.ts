@@ -1112,6 +1112,26 @@ const viewerClientScript = `(() => {
 				if (!isText(row[c]) || skip.has(c)) continue;
 				let e = c;
 				while (e < row.length && (isText(row[e]) || row[e] === ZW || (row[e] === " " && isText(row[e + 1])))) e++;
+				// 상자 테두리 위에 얹힌 라벨(◇───예───◇). 렌더러가 아래 · 위로 나가는 선의 라벨을 테두리 줄에 쓰고 ┬ 를 지운다.
+				// 테두리를 이어 그리고 세로 선을 테두리까지 붙인 뒤, 라벨은 그 세로 선 옆(다음 줄)에 놓는다.
+				if (row[c - 1] === "─" && row[e] === "─") {
+					const below = rows[r + 1] || "", above = rows[r - 1] || "";
+					let exit = null;
+					for (let k = c - 2; k < e + 2 && exit === null; k++) {
+						if (below[k] === "│" || below[k] === "▼") exit = {k: k, dir: 1};
+						else if (above[k] === "│" || above[k] === "▲") exit = {k: k, dir: -1};
+					}
+					if (exit) {
+						const kx = center(exit.k), chars = row.slice(c, e).split("").filter((chr) => chr !== ZW);
+						path += "M" + f(c * cw) + " " + f(cy) + "H" + f(e * cw) + " ";
+						path += "M" + f(kx) + " " + f(cy) + "V" + f(exit.dir > 0 ? y1 : y0) + " ";
+						texts += '<text x="' + f(kx + cw * 0.8 + textWidth(chars) / 2) + '" y="' + f(cy + exit.dir * ch + fs * 0.35) + '">' + esc(chars.join("")) + "</text>";
+						for (let k = c; k < e; k++) skip.add(k);
+						c = e - 1;
+						continue;
+					}
+				}
+
 				let l = c - 1, rr = e;
 				while (l >= 0 && row[l] === " ") l--;
 				while (rr < row.length && row[rr] === " ") rr++;
