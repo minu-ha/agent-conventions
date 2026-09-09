@@ -237,7 +237,7 @@ flowchart LR
 | 대상 | 식별자 |
 | --- | --- |
 | 라우트 진입 파일 | 라우트 세그먼트나 폴더 이름과 같은 낱말. 어느 화면에나 붙는 `shell`, `page`, `content`는 쓰지 않습니다 |
-| `[id]`처럼 값이 런타임에 정해지는 동적 세그먼트 | 화면의 역할로 바꿉니다. `orders/[id]`라면 `[id]`를 `detail`로 바꿔 `pg_ordersDetail`로 씁니다 |
+| `:id`처럼 값이 런타임에 정해지는 동적 세그먼트 | 화면의 역할로 바꿉니다. `orders/:id`라면 라우트 폴더는 `order-detail`, 식별자는 `pg_orderDetail`입니다 |
 | 화면 안의 컴포넌트 | 자기 이름만 씁니다 |
 
 라우트 경로나 폴더 이름에 없는 줄임말은 쓰지 않습니다.
@@ -256,16 +256,16 @@ pg_x__root        <- 되짚을 이름이 없음
 **Correct 1 (뼈대에는 라우트 세그먼트를 그대로 씁니다):**
 
 ```txt
-pg_ordersIndex__root    <- orders index 화면
-pg_ordersDetail__body   <- orders/[id] 화면
-pg_document__body      <- document 화면
+pg_orders__root         <- orders 화면
+pg_orderDetail__body    <- order-detail 화면
+pg_settings__body       <- settings 화면
 ```
 
 **Incorrect 2 (충돌이 없는데도 부모 식별자를 미리 붙입니다):**
 
 ```txt
-pg_detailProductTableOverviewSection__root
-pg_detailProductTableSummaryBand__root
+pg_productDetailProductTableOverviewSection__root
+pg_productDetailProductTableSummaryBand__root
 ```
 
 **Correct 2 (화면 안의 컴포넌트는 자기 식별자만 씁니다):**
@@ -278,15 +278,15 @@ pg_summaryBand__root
 **Incorrect 3 (충돌을 피하려고 상위 경로 전체를 식별자에 붙입니다):**
 
 ```txt
-pg_detailProductTableOverviewSection__root
-pg_indexProductTableOverviewSection__root
+pg_productDetailProductTableOverviewSection__root
+pg_productsProductTableOverviewSection__root
 ```
 
 **Correct 3 (충돌한 화면 이름만 최소로 덧붙입니다):**
 
 ```txt
-pg_detailOverviewSection__root
-pg_indexOverviewSection__root
+pg_productDetailOverviewSection__root
+pg_productsOverviewSection__root
 ```
 
 ## 2. Ownership and Boundaries
@@ -317,7 +317,7 @@ CSS 파일마다 고유한 범위_식별자를 하나씩 씁니다. 같은 범�
 /* products route */
 pg_products__header
 
-/* order/index route */
+/* orders route */
 pg_products__header
 ```
 
@@ -327,21 +327,21 @@ pg_products__header
 /* products route */
 pg_products__header
 
-/* order/index route */
-pg_orderIndex__header
+/* orders route */
+pg_orders__header
 ```
 
 **Incorrect 2 (부품의 CSS 파일이 부모 식별자를 그대로 씁니다):**
 
 ```txt
-/* page/detail/_pg-chart-card.css */
-pg_detail__chartCard
+/* page/product-detail/_pg-chart-card.css */
+pg_productDetail__chartCard
 ```
 
 **Correct 2 (자기 CSS 파일을 가진 컴포넌트는 자기 식별자를 씁니다):**
 
 ```txt
-/* page/detail/_pg-chart-card.css */
+/* page/product-detail/_pg-chart-card.css */
 pg_chartCard__root
 ```
 
@@ -375,24 +375,24 @@ pg_chartCard__root
 **Incorrect 1 (최상위 폴더 대신 사용 횟수와 재사용 예상을 보고 접두사를 고릅니다):**
 
 ```txt
-page/detail/_pg-product-table-section.css
-  wg_productTable__root
+page/product-detail/_pg-product-table-section.css
+  wg_productTableSection__root
 
-component/widget/chart/_wg-chart-header.css
-  pg_chartHeader__root
+component/widget/chart-card/_wg-chart-card-header.css
+  pg_chartCard__header
 ```
 
 **Correct 1 (소유 레이어대로 접두사를 붙입니다):**
 
 ```txt
-page/detail/pg-detail.css
-  pg_detail__root
+page/product-detail/pg-product-detail.css
+  pg_productDetail__root
 
-page/detail/_pg-product-table-section.css
+page/product-detail/_pg-product-table-section.css
   pg_productTableSection__root
 
-component/widget/chart/_wg-chart-header.css
-  wg_chartHeader__root
+component/widget/chart-card/_wg-chart-card-header.css
+  wg_chartCard__header
 
 component/ui/button/ui-button.css
   ui_button__root
@@ -427,7 +427,7 @@ flowchart LR
 | `.MuiTreeItem-label { }` | 금지. 그 라이브러리를 쓰는 앱 전체에 적용됩니다 |
 | `.wg_chartCard__caption { }` | 금지. 그 `widget`을 쓰는 모든 화면에 적용됩니다 |
 | `.pg_products__sidebar { & .MuiTreeItem-label { } }` | 허용. 해당 인스턴스에만 적용됩니다 |
-| `.pg_detail__root { & .wg_chartCard__caption { } }` | 허용 |
+| `.pg_productDetail__root { & .wg_chartCard__caption { } }` | 허용 |
 | `.pg_products__sidebar .MuiTreeItem-label { }` | 금지. 최상위 블록 안에서 `&`로 시작해야 합니다 |
 | `.pg_products__sidebarToolbar .pg_products__sidebarTitle { }` | 같은 소유자의 클래스끼리라 이 규칙의 대상이 아닙니다 |
 
@@ -473,7 +473,7 @@ flowchart LR
 **Incorrect 2 (최상위 블록 없이 다른 `scope_slug`의 클래스를 바로 씁니다):**
 
 ```css
-/* page/detail/pg-detail.css */
+/* page/product-detail/pg-product-detail.css */
 .wg_chartCard__caption {
 	letter-spacing: 0.02em;
 }
@@ -486,8 +486,8 @@ flowchart LR
 **Correct 2 (다른 `scope_slug`의 클래스도 내 최상위 블록 안에서 선택자로 잡습니다):**
 
 ```css
-/* page/detail/pg-detail.css */
-.pg_detail__chartSlot {
+/* page/product-detail/pg-product-detail.css */
+.pg_productDetail__chartSlot {
 	min-height: 240px;
 
 	& .wg_chartCard__caption {
@@ -558,8 +558,8 @@ flowchart LR
 ```
 
 ```css
-/* page/detail/pg-detail.css */
-.pg_detail__root {
+/* page/product-detail/pg-product-detail.css */
+.pg_productDetail__root {
 	& .wg_chartCard__root {
 		grid-area: chart;
 		margin-block-end: 16px;
@@ -570,12 +570,12 @@ flowchart LR
 **Correct 1 (최상위 배치는 사용처가 자기 클래스로 잡습니다):**
 
 ```tsx
-<WgChartCard className={clsx("pg_detail__chartCard")} />
+<WgChartCard className={clsx("pg_productDetail__chartCard")} />
 ```
 
 ```css
-/* page/detail/pg-detail.css */
-.pg_detail__chartCard {
+/* page/product-detail/pg-product-detail.css */
+.pg_productDetail__chartCard {
 	grid-area: chart;
 	margin-block-end: 16px;
 }
@@ -598,12 +598,12 @@ flowchart LR
 
 ```txt
 before
-  component/widget/chart-card/wg-chart-card.tsx      detail 화면의 뷰모델 타입을 받음
-  component/widget/chart-card/wg-chart-card.css      pg_detail 만 내부를 덮어쓰고 있었음
+  component/widget/chart-card/wg-chart-card.tsx      product-detail 화면의 뷰모델 타입을 받음
+  component/widget/chart-card/wg-chart-card.css      pg_productDetail 만 내부를 덮어쓰고 있었음
 
 after
-  page/detail/_pg-chart-card.tsx
-  page/detail/_pg-chart-card.css  pg_chartCard__* 로 소유자 하나
+  page/product-detail/_pg-chart-card.tsx
+  page/product-detail/_pg-chart-card.css  pg_chartCard__* 로 소유자 하나
 ```
 
 ## 3. Class Composition in TSX
@@ -2663,7 +2663,7 @@ flowchart LR
 **Incorrect 2 (로딩 대체 화면에만 높이를 따로 적습니다):**
 
 ```tsx
-<Suspense fallback={<UiChartSkeleton className={clsx("pg_productDetail__chartSkeleton")} />}>
+<Suspense fallback={<UiLineChartSkeleton className={clsx("pg_productDetail__chartSkeleton")} />}>
 	<PgProductDetailChartSection />
 </Suspense>
 ```
@@ -2678,7 +2678,7 @@ flowchart LR
 
 ```tsx
 <div className={clsx("pg_productDetail__chart")}>
-	<Suspense fallback={<UiChartSkeleton />}>
+	<Suspense fallback={<UiLineChartSkeleton />}>
 		<PgProductDetailChartSection />
 	</Suspense>
 </div>

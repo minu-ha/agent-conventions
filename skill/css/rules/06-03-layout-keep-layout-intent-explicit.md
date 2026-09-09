@@ -57,7 +57,7 @@ tags: layout, comments, sticky
 **Incorrect 2 (로딩 대체 화면에만 높이를 따로 적습니다):**
 
 ```tsx
-<Suspense fallback={<UiChartSkeleton className={clsx("pg_productDetail__chartSkeleton")} />}>
+<Suspense fallback={<UiLineChartSkeleton className={clsx("pg_productDetail__chartSkeleton")} />}>
 	<PgProductDetailChartSection />
 </Suspense>
 ```
@@ -72,7 +72,7 @@ tags: layout, comments, sticky
 
 ```tsx
 <div className={clsx("pg_productDetail__chart")}>
-	<Suspense fallback={<UiChartSkeleton />}>
+	<Suspense fallback={<UiLineChartSkeleton />}>
 		<PgProductDetailChartSection />
 	</Suspense>
 </div>

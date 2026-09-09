@@ -70,21 +70,21 @@ flowchart LR
 **Incorrect 1 (다른 폴더의 `_` 컴포넌트 파일을 가져옵니다):**
 
 ```tsx
-// page/detail/product-table-section/pg-product-table-section.tsx
-import {PgSectionHeading} from "@/page/detail/_pg-section-heading";
+// page/product-detail/product-table-section/pg-product-table-section.tsx
+import {PgSectionHeading} from "@/page/product-detail/_pg-section-heading";
 ```
 
 **Correct 1 (`_` 파일과 같은 폴더에 있는 진입 파일이 조립해서 프롭으로 내려보냅니다):**
 
 ```tsx
-// page/detail/pg-detail.tsx
-import {PgSectionHeading} from "@/page/detail/_pg-section-heading";
-import {PgProductTableSection} from "@/page/detail/product-table-section/pg-product-table-section";
-import {PgProductSummary} from "@/page/detail/product-summary/pg-product-summary";
+// page/product-detail/pg-product-detail.tsx
+import {PgSectionHeading} from "@/page/product-detail/_pg-section-heading";
+import {PgProductTableSection} from "@/page/product-detail/product-table-section/pg-product-table-section";
+import {PgProductSummary} from "@/page/product-detail/product-summary/pg-product-summary";
 
-export const PgDetail = () => {
+export const PgProductDetail = () => {
 	return (
-		<main className={clsx("pg_detail__root")}>
+		<main className={clsx("pg_productDetail__root")}>
 			<PgProductTableSection heading={<PgSectionHeading title="최근 주문" />} />
 			<PgProductSummary heading={<PgSectionHeading title="요약" />} />
 		</main>
@@ -95,8 +95,8 @@ export const PgDetail = () => {
 **Incorrect 2 (다른 라우트 안의 컴포넌트를 가져옵니다):**
 
 ```tsx
-// page/index/pg-index.tsx
-import {PgProductTableSection} from "@/page/detail/product-table-section/pg-product-table-section";
+// page/order-detail/pg-order-detail.tsx
+import {PgProductTableSection} from "@/page/product-detail/product-table-section/pg-product-table-section";
 ```
 
 **Correct 2 (두 라우트가 공유하는 화면 독립 컴포넌트는 공용 레이어에 둡니다):**
@@ -107,29 +107,29 @@ export const WgProductTable = (props: WgProductTableProps) => {
 	return <section className={clsx("wg_productTable__root")}>{props.children}</section>;
 };
 
-// page/index/pg-index.tsx
+// page/order-detail/pg-order-detail.tsx
 import {WgProductTable} from "@/component/widget/product-table/wg-product-table";
 ```
 
 **Incorrect 3 (`ui`가 `widget`을 가져옵니다):**
 
 ```tsx
-// component/ui/legend/ui-legend.tsx
-import {WgLegendPanel} from "@/component/widget/legend-panel/wg-legend-panel";
+// component/ui/line-chart/ui-line-chart.tsx
+import {WgChartCard} from "@/component/widget/chart-card/wg-chart-card";
 ```
 
 **Correct 3 (방향을 뒤집어 `widget`이 `ui`를 가져옵니다):**
 
 ```tsx
-// component/widget/legend-panel/wg-legend-panel.tsx
-import {UiLegend} from "@/component/ui/legend/ui-legend";
+// component/widget/chart-card/wg-chart-card.tsx
+import {UiLineChart} from "@/component/ui/line-chart/ui-line-chart";
 ```
 
 **Incorrect 4 (외부에서 사용한다는 이유만으로 역할 폴더의 파일을 루트로 옮깁니다):**
 
 ```ts
 // type/chart-series.ts
-// component/ui/chart/_type 에 있던 것을 page 에서도 쓴다고 루트로 옮겼다
+// component/ui/line-chart/_type 에 있던 것을 page 에서도 쓴다고 루트로 옮겼다
 export interface ChartSeries {
 	/**
 	 * 선 하나가 그리는 좌표
@@ -137,14 +137,14 @@ export interface ChartSeries {
 	points: ChartPoint[];
 }
 
-// page/detail/product-table-section/_function/to-chart-option.ts
+// page/product-detail/product-table-section/_function/to-chart-option.ts
 import type {ChartSeries} from "@/type/chart-series";
 ```
 
 **Correct 4 (역할 폴더의 파일은 레이어 방향만 지키면 밖에서도 가져옵니다):**
 
 ```ts
-// page/detail/product-table-section/_function/to-chart-option.ts
-import type {ChartSeries} from "@/component/ui/chart/_type/chart-series";
-import {chart_series_line} from "@/component/ui/chart/_constant/series";
+// page/product-detail/product-table-section/_function/to-chart-option.ts
+import type {ChartSeries} from "@/component/ui/line-chart/_type/chart-series";
+import {chart_series_line} from "@/component/ui/line-chart/_constant/series";
 ```

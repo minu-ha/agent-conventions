@@ -63,7 +63,7 @@ flowchart LR
 
 ```tsx
 // 이 화면은 낡은 추천을 계속 보여 주면 안 되지만 재조회 실패를 던지지 않는다
-return <UiProductRecommendations items={responseProductRecommendationsSuspense.data.items} />;
+return <WgProductRecommendations items={responseProductRecommendationsSuspense.data.items} />;
 ```
 
 **Correct 1 (낡은 데이터를 허용하지 않는 화면만 재조회 실패를 경계로 보냅니다):**
@@ -74,7 +74,7 @@ if (responseProductRecommendationsSuspense.error && !responseProductRecommendati
 	throw responseProductRecommendationsSuspense.error;
 }
 
-return <UiProductRecommendations items={responseProductRecommendationsSuspense.data.items} />;
+return <WgProductRecommendations items={responseProductRecommendationsSuspense.data.items} />;
 ```
 
 **Incorrect 2 (경계 없이 화면 본문에서 실패를 분기합니다):**

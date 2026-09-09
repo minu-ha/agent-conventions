@@ -38,13 +38,13 @@ if (responseUserGetItemSuspense.isPending) {
 	return <UiSpinner />;
 }
 
-return <UiUserName value={responseUserGetItemSuspense.data.name} />;
+return <WgUserCardName value={responseUserGetItemSuspense.data.name} />;
 ```
 
 **Correct 1 (초기 로딩은 경계가 받으므로 본문은 데이터가 있는 경로만 렌더합니다):**
 
 ```tsx
-return <UiUserName value={responseUserGetItemSuspense.data.name} />;
+return <WgUserCardName value={responseUserGetItemSuspense.data.name} />;
 ```
 
 **Incorrect 2 (다시 불러오는 중에 화면 전체를 가립니다):**
@@ -54,7 +54,7 @@ if (responseUserGetItemSuspense.isFetching) {
 	return <UiSpinner />;
 }
 
-return <UiUserName value={responseUserGetItemSuspense.data.name} />;
+return <WgUserCardName value={responseUserGetItemSuspense.data.name} />;
 ```
 
 **Correct 2 (갱신 상태는 이미 렌더된 화면을 보조하는 표시에만 씁니다):**
@@ -62,7 +62,7 @@ return <UiUserName value={responseUserGetItemSuspense.data.name} />;
 ```tsx
 return (
 	<Fragment>
-		<UiUserName value={responseUserGetItemSuspense.data.name} />
+		<WgUserCardName value={responseUserGetItemSuspense.data.name} />
 		{responseUserGetItemSuspense.isFetching && <UiRefreshIndicator />}
 	</Fragment>
 );

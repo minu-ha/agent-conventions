@@ -48,11 +48,11 @@ flowchart LR
 
 레이어를 정한 뒤 파일명과 심볼에는 `ownership-prefix-layer-names-on-files-and-symbols`를 적용합니다.
 
-**Incorrect 1 (공용 레이어에 화면 전용 로직이 섞입니다):**
+**Incorrect 1 (라우터 훅을 부르는 화면 전용 로직이 `widget`에 남아 있습니다):**
 
 ```tsx
-// component/ui/delete-product-button/ui-delete-product-button.tsx
-export const UiDeleteProductButton = () => {
+// component/widget/product-toolbar/_wg-product-toolbar-delete-button.tsx
+export const WgProductToolbarDeleteButton = () => {
 	const navigate = useNavigate();
 
 	/**
@@ -87,7 +87,7 @@ export const PgDeleteProductButton = () => {
 **Incorrect 2 (화면 타입, 훅과 무관한 부품을 사용 횟수만으로 화면 레이어에 둡니다):**
 
 ```tsx
-// page/detail/_pg-product-status-badge.tsx
+// page/product-detail/_pg-product-status-badge.tsx
 // 프롭스가 도메인 타입 하나만 받고 훅도 부르지 않는다. 이 화면에서만 쓴다는 이유로 남아 있다.
 export const PgProductStatusBadge = (props: PgProductStatusBadgeProps) => {
 	return <svg className={clsx("pg_productStatusBadge__root")}>{props.children}</svg>;
@@ -97,19 +97,19 @@ export const PgProductStatusBadge = (props: PgProductStatusBadgeProps) => {
 **Correct 2 (화면 타입, 훅과 무관한 도메인 부품은 `widget`에 둡니다):**
 
 ```tsx
-// component/widget/product-status-badge/wg-product-status-badge.tsx
+// component/widget/product-table/_wg-product-status-badge.tsx
 export const WgProductStatusBadge = (props: WgProductStatusBadgeProps) => {
-	return <svg className={clsx("wg_productStatusBadge__root")}>{props.children}</svg>;
+	return <svg className={clsx("wg_productTable__statusBadge")}>{props.children}</svg>;
 };
 ```
 
-**Incorrect 3 (도메인을 모르는 조합을 조립 규모만 보고 `widget`에 둡니다):**
+**Incorrect 3 (도메인을 모르는 그래프 그리기를 조립 규모만 보고 `widget`에 둡니다):**
 
 ```tsx
-// component/widget/line-chart/wg-line-chart.tsx
-// 프롭스가 좌표 배열만 받고 도메인 타입을 모른다. ui 부품을 조립했다는 이유로 widget에 있다.
-export const WgLineChart = (props: WgLineChartProps) => {
-	return <svg className={clsx("wg_lineChart__root")}>{props.children}</svg>;
+// component/widget/chart-card/wg-chart-card.tsx
+// 프롭스가 좌표 배열만 받고 도메인 타입을 모른다. widget 폴더에 있다는 이유로 남아 있다.
+export const WgChartCard = (props: WgChartCardProps) => {
+	return <svg className={clsx("wg_chartCard__root")}>{props.children}</svg>;
 };
 ```
 
@@ -125,10 +125,10 @@ export const UiLineChart = (props: UiLineChartProps) => {
 **Correct (도메인을 아는 조립은 `widget`이 맡아 `ui` 부품을 씁니다):**
 
 ```tsx
-// component/widget/product-trend-chart/wg-product-trend-chart.tsx
+// component/widget/chart-card/wg-chart-card.tsx
 import {UiLineChart} from "@/component/ui/line-chart/ui-line-chart";
 
-export const WgProductTrendChart = (props: WgProductTrendChartProps) => {
+export const WgChartCard = (props: WgChartCardProps) => {
 	return <UiLineChart points={toChartPoints(props.dailyCounts)} />;
 };
 ```

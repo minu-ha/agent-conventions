@@ -27,7 +27,7 @@ CSS 파일마다 고유한 범위_식별자를 하나씩 씁니다. 같은 범�
 /* products route */
 pg_products__header
 
-/* order/index route */
+/* orders route */
 pg_products__header
 ```
 
@@ -37,20 +37,20 @@ pg_products__header
 /* products route */
 pg_products__header
 
-/* order/index route */
-pg_orderIndex__header
+/* orders route */
+pg_orders__header
 ```
 
 **Incorrect 2 (부품의 CSS 파일이 부모 식별자를 그대로 씁니다):**
 
 ```txt
-/* page/detail/_pg-chart-card.css */
-pg_detail__chartCard
+/* page/product-detail/_pg-chart-card.css */
+pg_productDetail__chartCard
 ```
 
 **Correct 2 (자기 CSS 파일을 가진 컴포넌트는 자기 식별자를 씁니다):**
 
 ```txt
-/* page/detail/_pg-chart-card.css */
+/* page/product-detail/_pg-chart-card.css */
 pg_chartCard__root
 ```

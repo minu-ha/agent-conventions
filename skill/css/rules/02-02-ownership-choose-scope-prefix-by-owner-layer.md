@@ -35,24 +35,24 @@ tags: ownership, scope, prefix
 **Incorrect 1 (최상위 폴더 대신 사용 횟수와 재사용 예상을 보고 접두사를 고릅니다):**
 
 ```txt
-page/detail/_pg-product-table-section.css
-  wg_productTable__root
+page/product-detail/_pg-product-table-section.css
+  wg_productTableSection__root
 
-component/widget/chart/_wg-chart-header.css
-  pg_chartHeader__root
+component/widget/chart-card/_wg-chart-card-header.css
+  pg_chartCard__header
 ```
 
 **Correct 1 (소유 레이어대로 접두사를 붙입니다):**
 
 ```txt
-page/detail/pg-detail.css
-  pg_detail__root
+page/product-detail/pg-product-detail.css
+  pg_productDetail__root
 
-page/detail/_pg-product-table-section.css
+page/product-detail/_pg-product-table-section.css
   pg_productTableSection__root
 
-component/widget/chart/_wg-chart-header.css
-  wg_chartHeader__root
+component/widget/chart-card/_wg-chart-card-header.css
+  wg_chartCard__header
 
 component/ui/button/ui-button.css
   ui_button__root

@@ -53,11 +53,11 @@ export const toProductsNewestFirst = (products: Product[]): Product[] => {
 ```
 
 ```ts
-// page/product-tree/_pg-product-tree.tsx
+// page/products/_pg-product-tree-section.tsx
 /**
  * route-local product tree props
  */
-export interface PgProductTreeProps {
+export interface PgProductTreeSectionProps {
 	categoryNodes: ProductCategoryNode[];
 }
 ```
@@ -88,11 +88,11 @@ export const toProductsNewestFirst = (products: Product[]): Product[] => {
 ```
 
 ```ts
-// page/product-tree/_pg-product-tree.tsx
+// page/products/_pg-product-tree-section.tsx
 /**
  * route-local product 트리 입력 계약
  */
-export interface PgProductTreeProps {
+export interface PgProductTreeSectionProps {
 	/**
 	 * 사이드바에 그릴 분류 노드 목록
 	 */

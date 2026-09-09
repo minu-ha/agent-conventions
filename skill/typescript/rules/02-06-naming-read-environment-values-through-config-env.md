@@ -50,9 +50,9 @@ const baseUrl = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3000";
 ```
 
 ```ts
-// service/report-client.ts
+// service/order-export-client.ts
 // 다른 파일이 같은 키를 다시 읽고 같은 리터럴로 덮는다
-const reportBaseUrl = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3000";
+const orderExportBaseUrl = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3000";
 ```
 
 **Correct 1 (`config/env.ts`가 한 번 읽고 없으면 드러냅니다):**

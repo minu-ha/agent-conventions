@@ -56,7 +56,7 @@ flowchart LR
 **Incorrect 1 (상대경로로 심볼을 가져옵니다):**
 
 ```ts
-// page/detail/product-table-section/pg-product-table-section.tsx
+// page/product-detail/product-table-section/pg-product-table-section.tsx
 import {PgReviewSection} from "./_pg-review-section";
 import {toSummary} from "../_function/to-summary";
 ```
@@ -64,9 +64,9 @@ import {toSummary} from "../_function/to-summary";
 **Correct 1 (심볼은 `@/`, 같은 폴더의 CSS 파일만 `./`로 씁니다):**
 
 ```ts
-// page/detail/product-table-section/pg-product-table-section.tsx
-import {toSummary} from "@/page/detail/_function/to-summary";
-import {PgReviewSection} from "@/page/detail/product-table-section/_pg-review-section";
+// page/product-detail/product-table-section/pg-product-table-section.tsx
+import {toSummary} from "@/page/product-detail/_function/to-summary";
+import {PgReviewSection} from "@/page/product-detail/product-table-section/_pg-review-section";
 
 import "./pg-product-table-section.css";
 ```

@@ -30,7 +30,7 @@ flowchart TD
 **Incorrect 1 (내보낸 계약 타입이 함수 아래에 있어 시그니처를 읽으려면 파일을 끝까지 내려가야 합니다):**
 
 ```ts
-// page/report/_function/to-summary-rows.ts
+// page/orders/_function/to-summary-rows.ts
 export const toSummaryRows = (params: ToSummaryRowsParams): SummaryRow[] => {
 	return params.response.items.map((item) => ({id: item.id, label: item.name.trim() || item.code}));
 };
@@ -49,7 +49,7 @@ export interface ToSummaryRowsParams {
 **Correct 1 (내보낸 계약 타입이 먼저, 그 계약을 받는 함수가 바로 아래에 옵니다):**
 
 ```ts
-// page/report/_function/to-summary-rows.ts
+// page/orders/_function/to-summary-rows.ts
 /**
  * 요약 표 행을 만들 때 필요한 입력
  */

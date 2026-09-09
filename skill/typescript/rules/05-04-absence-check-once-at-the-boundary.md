@@ -47,7 +47,7 @@ tags: absence, boundaries
 **Incorrect 1 (경계가 타입을 좁히지 않아 아래 함수마다 같은 값을 다시 검사합니다):**
 
 ```ts
-// page/detail/_function/to-badge/_to-signed-tone.ts
+// page/product-detail/_function/to-badge/_to-signed-tone.ts
 export const toSignedTone = (value: number | null | undefined): Tone => {
 	if (isNil(value) || !Number.isFinite(value) || value === 0) {
 		return "neutral";
@@ -57,7 +57,7 @@ export const toSignedTone = (value: number | null | undefined): Tone => {
 ```
 
 ```ts
-// page/detail/_function/format-signed-percent.ts
+// page/product-detail/_function/format-signed-percent.ts
 export const formatSignedPercent = (value: number | null | undefined) => {
 	if (isNil(value) || !Number.isFinite(value)) {
 		return copy_empty_value_text;
@@ -69,7 +69,7 @@ export const formatSignedPercent = (value: number | null | undefined) => {
 **Correct 1 (경계가 좁힌 `number`를 받아 두 함수는 자기 판정만 남깁니다):**
 
 ```ts
-// page/detail/_function/to-badge/_to-signed-tone.ts
+// page/product-detail/_function/to-badge/_to-signed-tone.ts
 /**
  * 부호 있는 변화율의 강조 tone. 0은 어느 쪽도 아니라 중립이다
  */
@@ -82,7 +82,7 @@ export const toSignedTone = (value: number): Tone => {
 ```
 
 ```ts
-// page/detail/_function/format-signed-percent.ts
+// page/product-detail/_function/format-signed-percent.ts
 /**
  * 부호를 붙인 변화율 표시 문자열
  */
@@ -94,9 +94,9 @@ export const formatSignedPercent = (value: number) => {
 **Correct (경계인 `select`에서 없음과 유한 수를 한 번 검사해 타입을 좁힙니다):**
 
 ```tsx
-// page/detail/pg-detail.tsx: 서버는 계산 전이면 null을 준다. 여기서 한 번 좁힌다
+// page/product-detail/pg-product-detail.tsx: 서버는 계산 전이면 null을 준다. 여기서 한 번 좁힌다
 const responseSummarySuspense = useSuspenseQuery({
-	...detailSummaryQueryOptions(productId),
+	...productDetailSummaryQueryOptions(productId),
 	select: (response) => ({
 		...response,
 		changeRate:
@@ -108,7 +108,7 @@ const responseSummarySuspense = useSuspenseQuery({
 **Correct (없음을 읽는 자리는 화면을 그리는 분기 하나입니다):**
 
 ```tsx
-// page/detail/_pg-detail-summary.tsx: 없음을 읽는 곳은 그리는 분기 하나다
+// page/product-detail/_pg-product-detail-summary.tsx: 없음을 읽는 곳은 그리는 분기 하나다
 {isNotNil(summary.changeRate) && (
 	<UiBadge tone={toSignedTone(summary.changeRate)}>{formatSignedPercent(summary.changeRate)}</UiBadge>
 )}

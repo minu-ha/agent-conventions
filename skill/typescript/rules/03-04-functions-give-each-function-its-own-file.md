@@ -72,7 +72,7 @@ export const toProductSaveRequest = (values: ProductFormValues) => {
 **Correct 1 (소유자 아래 대표 함수 하나에 파일 하나를 둡니다):**
 
 ```ts
-// page/product-form/_function/to-product-save-request.ts
+// page/product-detail/_function/to-product-save-request.ts
 /**
  * product 저장 요청 조립. 서버가 앞뒤 공백이 붙은 title을 거부한다
  */
@@ -84,7 +84,7 @@ export const toProductSaveRequest = (values: ProductFormValues) => {
 **Incorrect 2 (대표 함수 하나만 부르는 보조를 대표 파일 아래 비공개 `const`로 쌓습니다):**
 
 ```txt
-page/report/_function/
+page/product-detail/_function/
 ├── to-product-overview.ts
 │     toProductOverview      내보낸 함수
 │     toTrendChart           toProductOverview 가 차트 둘에서 부름
@@ -95,7 +95,7 @@ page/report/_function/
 **Correct 2 (자기만 쓰는 보조가 생긴 대표 함수는 자기 이름 폴더를 갖고 보조는 `_` 파일입니다):**
 
 ```txt
-page/report/_function/
+page/product-detail/_function/
 ├── to-product-overview/           자기만 쓰는 보조가 있어 폴더
 │   ├── to-product-overview.ts     대표. 폴더와 같은 이름
 │   ├── _to-trend-chart.ts         toProductOverview 만 부름
@@ -106,7 +106,7 @@ page/report/_function/
 **Incorrect 3 (한 대표만 부르는 보조를 `_function` 바로 아래에 내보내 둡니다):**
 
 ```txt
-page/report/_function/
+page/product-detail/_function/
 ├── to-product-overview.ts
 ├── to-product-digest.ts
 └── to-trend-chart.ts            toProductOverview 만 부르는데 소유자의 공개 면에 놓임
@@ -115,7 +115,7 @@ page/report/_function/
 **Correct 3 (두 대표가 부르게 된 뒤에 `_function` 바로 아래로 올리고 `_`를 뗍니다):**
 
 ```txt
-page/report/_function/
+page/product-detail/_function/
 ├── to-product-overview/
 │   └── to-product-overview.ts
 ├── to-product-digest.ts           toTrendChart 를 함께 부르기 시작함

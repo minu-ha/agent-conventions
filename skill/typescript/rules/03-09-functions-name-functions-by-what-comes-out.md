@@ -40,7 +40,7 @@ tags: functions, naming
 
 `choose`는 서로 다른 입력 사이에서 `??` 등으로 고를 때 씁니다. 입력이 하나면 해당하지 않습니다.
 소유자 경로가 이미 말하는 도메인도 빼고, 반환 타입 이름보다 호출자가 쓰는 결과 개념을 적습니다.
-`toComparisonWindows`, `toReportRows`처럼 쓰되 요청 계약 자체가 출력이면 `toUserSaveRequest`처럼 짓습니다.
+`toComparisonWindows`, `toSummaryRows`처럼 쓰되 요청 계약 자체가 출력이면 `toUserSaveRequest`처럼 짓습니다.
 
 ### 쓰지 않는 동사
 
@@ -63,29 +63,29 @@ tags: functions, naming
 **Incorrect 1 (입력, 구현 동작, 막연한 접미사를 이름에 씁니다):**
 
 ```ts
-// page/detail/_function/build-user-payload.ts
+// page/product-detail/_function/build-user-payload.ts
 export const buildUserPayload = (formValues: UserFormValues) => { /* … */ };
 ```
 
 ```ts
-// page/detail/_function/map-response-to-model.ts
+// page/product-detail/_function/map-response-to-model.ts
 export const mapResponseToModel = (response: UserResponse) => { /* … */ };
 ```
 
 ```ts
-// page/detail/_function/process-user-rows.ts
+// page/product-detail/_function/process-user-rows.ts
 export const processUserRows = (rows: UserRow[]) => { /* … */ };
 ```
 
 ```ts
-// page/detail/_function/resolve-status-tone.ts
+// page/product-detail/_function/resolve-status-tone.ts
 export const resolveStatusTone = (status: string) => { /* … */ };
 ```
 
 **Correct 1 (출력 역할이나 효과를 이름에 씁니다):**
 
 ```ts
-// page/detail/_function/to-user-save-request.ts
+// page/product-detail/_function/to-user-save-request.ts
 /**
  * 사용자 저장 요청 조립. 서버가 빈 문자열을 거부해 비운 칸은 넣지 않는다
  */
@@ -93,7 +93,7 @@ export const toUserSaveRequest = (formValues: UserFormValues) => { /* … */ };
 ```
 
 ```ts
-// page/detail/_function/to-user-rows.ts
+// page/product-detail/_function/to-user-rows.ts
 /**
  * 응답 한 건을 표 행으로 바꾼다
  */
@@ -101,7 +101,7 @@ export const toUserRows = (response: UserResponse) => { /* … */ };
 ```
 
 ```ts
-// page/detail/_function/to-active-users.ts
+// page/product-detail/_function/to-active-users.ts
 /**
  * 비활성 사용자를 제외한 목록
  */
@@ -109,7 +109,7 @@ export const toActiveUsers = (rows: UserRow[]) => { /* … */ };
 ```
 
 ```ts
-// page/detail/_function/to-status-tone.ts
+// page/product-detail/_function/to-status-tone.ts
 /**
  * 상태 문자열을 강조 tone으로 분류한다
  */

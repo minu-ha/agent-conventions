@@ -35,7 +35,7 @@ flowchart LR
 | `.MuiTreeItem-label { }` | 금지. 그 라이브러리를 쓰는 앱 전체에 적용됩니다 |
 | `.wg_chartCard__caption { }` | 금지. 그 `widget`을 쓰는 모든 화면에 적용됩니다 |
 | `.pg_products__sidebar { & .MuiTreeItem-label { } }` | 허용. 해당 인스턴스에만 적용됩니다 |
-| `.pg_detail__root { & .wg_chartCard__caption { } }` | 허용 |
+| `.pg_productDetail__root { & .wg_chartCard__caption { } }` | 허용 |
 | `.pg_products__sidebar .MuiTreeItem-label { }` | 금지. 최상위 블록 안에서 `&`로 시작해야 합니다 |
 | `.pg_products__sidebarToolbar .pg_products__sidebarTitle { }` | 같은 소유자의 클래스끼리라 이 규칙의 대상이 아닙니다 |
 
@@ -81,7 +81,7 @@ flowchart LR
 **Incorrect 2 (최상위 블록 없이 다른 `scope_slug`의 클래스를 바로 씁니다):**
 
 ```css
-/* page/detail/pg-detail.css */
+/* page/product-detail/pg-product-detail.css */
 .wg_chartCard__caption {
 	letter-spacing: 0.02em;
 }
@@ -94,8 +94,8 @@ flowchart LR
 **Correct 2 (다른 `scope_slug`의 클래스도 내 최상위 블록 안에서 선택자로 잡습니다):**
 
 ```css
-/* page/detail/pg-detail.css */
-.pg_detail__chartSlot {
+/* page/product-detail/pg-product-detail.css */
+.pg_productDetail__chartSlot {
 	min-height: 240px;
 
 	& .wg_chartCard__caption {

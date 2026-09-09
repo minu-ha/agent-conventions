@@ -38,7 +38,7 @@ const productSummary = {averageRate: formatPercent(responseProductSummarySuspens
 ```
 
 ```ts
-// page/product-detail/_function/to-report-content.ts: 문자열을 다시 숫자로 읽어 다시 포맷한다
+// page/product-detail/_function/to-summary-rows.ts: 문자열을 다시 숫자로 읽어 다시 포맷한다
 const rows = [{id: "changeRate", value: formatPercent(productSummary.averageRate)}];
 ```
 
@@ -50,7 +50,7 @@ const productSummary = {averageRate: formatPercent(responseProductSummarySuspens
 ```
 
 ```ts
-// page/product-detail/_function/to-report-content.ts
+// page/product-detail/_function/to-summary-rows.ts
 const rows = [{id: "changeRate", value: productSummary.averageRate}];
 ```
 

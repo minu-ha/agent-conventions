@@ -327,9 +327,9 @@ type ExportRequestBody = Omit<GeneratedExportRequest, "requestedAt">;
 ```ts
 // 원본: TableCellProps.align 은 선택 필드고 padding 은 normal, checkbox, none 이다
 /**
- * 보고서 표 칸 표시 계약
+ * 주문 내보내기 표 칸 표시 계약
  */
-interface ReportCell {
+interface OrderExportCell {
 	/**
 	 * 칸 정렬
 	 */
@@ -345,9 +345,9 @@ interface ReportCell {
 
 ```ts
 /**
- * 보고서 표 칸 표시 계약. align, padding 은 TableCell 로 그대로 넘긴다
+ * 주문 내보내기 표 칸 표시 계약. align, padding 은 TableCell 로 그대로 넘긴다
  */
-interface ReportCell {
+interface OrderExportCell {
 	/**
 	 * 칸 정렬. TableCell 은 비울 수 있지만 이 표는 칸마다 정한다
 	 */
@@ -935,7 +935,7 @@ export const pagination_default_page_size = 20;
 | 대상 | 배치, 이름 |
 | --- | --- |
 | 상수 | `_constant/<주제>.ts`에 `<주제>_` 접두사로 선언합니다 |
-| 소유자 문맥 | 폴더가 말하므로 이름에 반복하지 않습니다. `page/detail/_constant/legend.ts`에는 `legend_hit_tolerance_px`를 둡니다 |
+| 소유자 문맥 | 폴더가 말하므로 이름에 반복하지 않습니다. `page/product-detail/_constant/legend.ts`에는 `legend_hit_tolerance_px`를 둡니다 |
 | 파서 묶음, 스키마 등 함수를 담은 계약 | 같은 `_constant`에 계약별 파일로 둡니다 |
 | 파일이 하나뿐인 경우 | `_constant` 폴더를 유지합니다 |
 | 소유자를 지워도 남는 값 | 루트 상수 규칙에 따라 옮깁니다 |
@@ -1230,7 +1230,7 @@ flowchart LR
 **Incorrect 1 (상대경로로 심볼을 가져옵니다):**
 
 ```ts
-// page/detail/product-table-section/pg-product-table-section.tsx
+// page/product-detail/product-table-section/pg-product-table-section.tsx
 import {PgReviewSection} from "./_pg-review-section";
 import {toSummary} from "../_function/to-summary";
 ```
@@ -1238,9 +1238,9 @@ import {toSummary} from "../_function/to-summary";
 **Correct 1 (심볼은 `@/`, 같은 폴더의 CSS 파일만 `./`로 씁니다):**
 
 ```ts
-// page/detail/product-table-section/pg-product-table-section.tsx
-import {toSummary} from "@/page/detail/_function/to-summary";
-import {PgReviewSection} from "@/page/detail/product-table-section/_pg-review-section";
+// page/product-detail/product-table-section/pg-product-table-section.tsx
+import {toSummary} from "@/page/product-detail/_function/to-summary";
+import {PgReviewSection} from "@/page/product-detail/product-table-section/_pg-review-section";
 
 import "./pg-product-table-section.css";
 ```
@@ -1289,9 +1289,9 @@ const baseUrl = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3000";
 ```
 
 ```ts
-// service/report-client.ts
+// service/order-export-client.ts
 // 다른 파일이 같은 키를 다시 읽고 같은 리터럴로 덮는다
-const reportBaseUrl = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3000";
+const orderExportBaseUrl = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3000";
 ```
 
 **Correct 1 (`config/env.ts`가 한 번 읽고 없으면 드러냅니다):**
@@ -1354,9 +1354,9 @@ const productClient = createClient({baseUrl: env_api_base_url});
 | 이름을 정할 대상 | 기준 |
 | --- | --- |
 | 이미 필요한 계약 | 역할어를 고릅니다. `Params`, `Content`, `Snapshot`을 쓰려고 타입을 만들지 않으며, 맞는 기존 계약이나 추론되는 익명 결과를 유지합니다 |
-| 소유자 안의 타입 | 폴더가 말하는 도메인을 반복하지 않습니다. `order-report/_type/`에서는 `ReportSnapshot`입니다 |
+| 소유자 안의 타입 | 폴더가 말하는 도메인을 반복하지 않습니다. `orders/_type/`에서는 `SummarySnapshot`입니다 |
 | 소유자 밖으로 내보내는 타입 | 문맥이 사라지거나 이름이 충돌할 때만 필요한 도메인 접두를 유지합니다 |
-| 타입과 파일명 | `report-snapshot.ts`처럼 실제 명사를 씁니다 |
+| 타입과 파일명 | `summary-snapshot.ts`처럼 실제 명사를 씁니다 |
 | 외부, 생성된 계약 | 이름과 `DTO` 같은 접미사를 보존합니다. 내부 계약에는 이를 구별용 접미사로 붙이지 않습니다 |
 | `Props`, `Handle`, `Slot`, `Renderer` | 해당 프레임워크 규칙을 따릅니다 |
 
@@ -1366,41 +1366,41 @@ const productClient = createClient({baseUrl: env_api_base_url});
 
 ```ts
 /**
- * 주문 보고서 화면 데이터
+ * 주문 화면 데이터
  */
-interface OrderReportViewModel {
+interface OrderViewModel {
 	/**
 	 * 조회 시점의 행 목록
 	 */
-	rows: ReportRow[];
+	rows: OrderRow[];
 	/**
 	 * 조회에 사용한 필터
 	 */
-	filters: ReportFilters;
+	filters: OrderFilters;
 }
 
-const orderReportVM: OrderReportViewModel = response.data;
+const orderVM: OrderViewModel = response.data;
 ```
 
 **Correct 1 (한 조회 시점에 고정된 값이라는 역할을 이름에 표시합니다):**
 
 ```ts
-// page/order-report/_type/report-snapshot.ts: 폴더가 이미 order-report 를 말한다
+// page/orders/_type/summary-snapshot.ts: 폴더가 이미 orders 를 말한다
 /**
- * 한 조회 시점의 보고서 목록과 조건
+ * 한 조회 시점의 주문 요약 목록과 조건
  */
-interface ReportSnapshot {
+interface SummarySnapshot {
 	/**
 	 * 조회 시점의 행 목록
 	 */
-	rows: ReportRow[];
+	rows: OrderRow[];
 	/**
 	 * 조회에 사용한 필터
 	 */
-	filters: ReportFilters;
+	filters: OrderFilters;
 }
 
-const reportSnapshot: ReportSnapshot = response.data;
+const summarySnapshot: SummarySnapshot = response.data;
 ```
 
 ## 3. Functions and Helper Boundaries
@@ -1632,20 +1632,20 @@ flowchart LR
 **Incorrect 1 (한 자리에서만 쓰는 단계를 함수로 떼어 내 흐름이 파일 안에서 흩어집니다):**
 
 ```txt
-page/report/_function/to-report-content.ts
-  toReportContent    내보낸 함수. 본문은 세 줄이고 나머지는 아래 함수로 갔다
-  toComparisonRows   toReportContent 만 부름
-  toStatusGroups     toReportContent 만 부름
-  toStockCard        toReportContent 만 부름
+page/orders/_function/to-order-summary.ts
+  toOrderSummary     내보낸 함수. 본문은 세 줄이고 나머지는 아래 함수로 갔다
+  toComparisonRows   toOrderSummary 만 부름
+  toStatusGroups     toOrderSummary 만 부름
+  toStockCard        toOrderSummary 만 부름
   formatAmount       toComparisonRows 와 toStatusGroups 가 부름
 ```
 
 ```ts
-// page/report/_function/to-report-content.ts
+// page/orders/_function/to-order-summary.ts
 /**
- * 상품 보고서 영역의 표시 데이터. 상품 상세에서만 재고 카드가 온다
+ * 주문 요약 영역의 표시 데이터. 재고 수량이 넘어올 때만 재고 카드가 온다
  */
-export const toReportContent = (params: ToReportContentParams): ReportContent => {
+export const toOrderSummary = (params: ToOrderSummaryParams): OrderSummaryContent => {
 	return {
 		metrics: toComparisonRows(params),
 		statusGroups: toStatusGroups(params),
@@ -1657,21 +1657,21 @@ export const toReportContent = (params: ToReportContentParams): ReportContent =>
 **Correct 1 (한 번 쓰는 단계는 호출부에 두고 재사용하는 계산은 함수로 추출합니다):**
 
 ```txt
-page/report/_function/to-report-content/
-├── to-report-content.ts   본문 안에 // 1. 비교 행  // 2. 상태 그룹  // 3. 재고 카드
+page/orders/_function/to-order-summary/
+├── to-order-summary.ts    본문 안에 // 1. 비교 행  // 2. 상태 그룹  // 3. 재고 카드
 └── _format-amount.ts      비교 행과 상태 그룹 두 자리가 부름
 ```
 
 ```ts
-// page/report/_function/to-report-content/to-report-content.ts
+// page/orders/_function/to-order-summary/to-order-summary.ts
 /**
- * 상품 보고서 영역의 표시 데이터. 상품 상세에서만 재고 카드가 온다
+ * 주문 요약 영역의 표시 데이터. 재고 수량이 넘어올 때만 재고 카드가 온다
  */
-export const toReportContent = (params: ToReportContentParams): ReportContent => {
+export const toOrderSummary = (params: ToOrderSummaryParams): OrderSummaryContent => {
 	// 1. 고른 기간 기준으로 갱신되는 비교 수치 행
 	const metrics = [
-		{id: "orderAmount", label: "주문 금액", value: formatAmount(params.productSummary.orderAmount)},
-		{id: "orderCount", label: "주문 건수", value: params.productSummary.orderCount},
+		{id: "orderAmount", label: "주문 금액", value: formatAmount(params.orderSummary.orderAmount)},
+		{id: "orderCount", label: "주문 건수", value: params.orderSummary.orderCount},
 	];
 
 	// 2. 상품 상태 그룹. 설명이 비면 그룹 제목만 남긴다
@@ -1679,13 +1679,13 @@ export const toReportContent = (params: ToReportContentParams): ReportContent =>
 		{
 			id: "product-status",
 			title: "상품 상태",
-			description: params.productSummary.statusDescription,
-			total: formatAmount(params.productSummary.totalAmount),
+			description: params.orderSummary.statusDescription,
+			total: formatAmount(params.orderSummary.totalAmount),
 			rows: metrics,
 		},
 	];
 
-	// 3. 재고 카드. 상품 상세에서만 온다
+	// 3. 재고 카드. 재고 수량이 넘어올 때만 온다
 	return {metrics, statusGroups, stockCount: params.stockCount};
 };
 ```
@@ -1733,7 +1733,7 @@ import {toProfileSaveRequest} from "@/page/profile/_function/to-profile-save-req
 **Correct (삼항 하나에 담기지 않는 판정은 사용처가 하나여도 함수로 추출하고 분기마다 `return`으로 끝냅니다):**
 
 ```ts
-// page/detail/_function/to-status-tone.ts
+// page/product-detail/_function/to-status-tone.ts
 /**
  * 상태 문자열의 강조 tone. API가 상태를 자유 문자열로 주어 값 포함으로 판정한다
  */
@@ -1816,7 +1816,7 @@ export const toProductSaveRequest = (values: ProductFormValues) => {
 **Correct 1 (소유자 아래 대표 함수 하나에 파일 하나를 둡니다):**
 
 ```ts
-// page/product-form/_function/to-product-save-request.ts
+// page/product-detail/_function/to-product-save-request.ts
 /**
  * product 저장 요청 조립. 서버가 앞뒤 공백이 붙은 title을 거부한다
  */
@@ -1828,7 +1828,7 @@ export const toProductSaveRequest = (values: ProductFormValues) => {
 **Incorrect 2 (대표 함수 하나만 부르는 보조를 대표 파일 아래 비공개 `const`로 쌓습니다):**
 
 ```txt
-page/report/_function/
+page/product-detail/_function/
 ├── to-product-overview.ts
 │     toProductOverview      내보낸 함수
 │     toTrendChart           toProductOverview 가 차트 둘에서 부름
@@ -1839,7 +1839,7 @@ page/report/_function/
 **Correct 2 (자기만 쓰는 보조가 생긴 대표 함수는 자기 이름 폴더를 갖고 보조는 `_` 파일입니다):**
 
 ```txt
-page/report/_function/
+page/product-detail/_function/
 ├── to-product-overview/           자기만 쓰는 보조가 있어 폴더
 │   ├── to-product-overview.ts     대표. 폴더와 같은 이름
 │   ├── _to-trend-chart.ts         toProductOverview 만 부름
@@ -1850,7 +1850,7 @@ page/report/_function/
 **Incorrect 3 (한 대표만 부르는 보조를 `_function` 바로 아래에 내보내 둡니다):**
 
 ```txt
-page/report/_function/
+page/product-detail/_function/
 ├── to-product-overview.ts
 ├── to-product-digest.ts
 └── to-trend-chart.ts            toProductOverview 만 부르는데 소유자의 공개 면에 놓임
@@ -1859,7 +1859,7 @@ page/report/_function/
 **Correct 3 (두 대표가 부르게 된 뒤에 `_function` 바로 아래로 올리고 `_`를 뗍니다):**
 
 ```txt
-page/report/_function/
+page/product-detail/_function/
 ├── to-product-overview/
 │   └── to-product-overview.ts
 ├── to-product-digest.ts           toTrendChart 를 함께 부르기 시작함
@@ -1890,7 +1890,7 @@ flowchart TD
 **Incorrect 1 (내보낸 계약 타입이 함수 아래에 있어 시그니처를 읽으려면 파일을 끝까지 내려가야 합니다):**
 
 ```ts
-// page/report/_function/to-summary-rows.ts
+// page/orders/_function/to-summary-rows.ts
 export const toSummaryRows = (params: ToSummaryRowsParams): SummaryRow[] => {
 	return params.response.items.map((item) => ({id: item.id, label: item.name.trim() || item.code}));
 };
@@ -1909,7 +1909,7 @@ export interface ToSummaryRowsParams {
 **Correct 1 (내보낸 계약 타입이 먼저, 그 계약을 받는 함수가 바로 아래에 옵니다):**
 
 ```ts
-// page/report/_function/to-summary-rows.ts
+// page/orders/_function/to-summary-rows.ts
 /**
  * 요약 표 행을 만들 때 필요한 입력
  */
@@ -2357,7 +2357,7 @@ const submitDraft = async (draft: Draft) => {
 
 `choose`는 서로 다른 입력 사이에서 `??` 등으로 고를 때 씁니다. 입력이 하나면 해당하지 않습니다.
 소유자 경로가 이미 말하는 도메인도 빼고, 반환 타입 이름보다 호출자가 쓰는 결과 개념을 적습니다.
-`toComparisonWindows`, `toReportRows`처럼 쓰되 요청 계약 자체가 출력이면 `toUserSaveRequest`처럼 짓습니다.
+`toComparisonWindows`, `toSummaryRows`처럼 쓰되 요청 계약 자체가 출력이면 `toUserSaveRequest`처럼 짓습니다.
 
 ### 쓰지 않는 동사
 
@@ -2380,29 +2380,29 @@ const submitDraft = async (draft: Draft) => {
 **Incorrect 1 (입력, 구현 동작, 막연한 접미사를 이름에 씁니다):**
 
 ```ts
-// page/detail/_function/build-user-payload.ts
+// page/product-detail/_function/build-user-payload.ts
 export const buildUserPayload = (formValues: UserFormValues) => { /* … */ };
 ```
 
 ```ts
-// page/detail/_function/map-response-to-model.ts
+// page/product-detail/_function/map-response-to-model.ts
 export const mapResponseToModel = (response: UserResponse) => { /* … */ };
 ```
 
 ```ts
-// page/detail/_function/process-user-rows.ts
+// page/product-detail/_function/process-user-rows.ts
 export const processUserRows = (rows: UserRow[]) => { /* … */ };
 ```
 
 ```ts
-// page/detail/_function/resolve-status-tone.ts
+// page/product-detail/_function/resolve-status-tone.ts
 export const resolveStatusTone = (status: string) => { /* … */ };
 ```
 
 **Correct 1 (출력 역할이나 효과를 이름에 씁니다):**
 
 ```ts
-// page/detail/_function/to-user-save-request.ts
+// page/product-detail/_function/to-user-save-request.ts
 /**
  * 사용자 저장 요청 조립. 서버가 빈 문자열을 거부해 비운 칸은 넣지 않는다
  */
@@ -2410,7 +2410,7 @@ export const toUserSaveRequest = (formValues: UserFormValues) => { /* … */ };
 ```
 
 ```ts
-// page/detail/_function/to-user-rows.ts
+// page/product-detail/_function/to-user-rows.ts
 /**
  * 응답 한 건을 표 행으로 바꾼다
  */
@@ -2418,7 +2418,7 @@ export const toUserRows = (response: UserResponse) => { /* … */ };
 ```
 
 ```ts
-// page/detail/_function/to-active-users.ts
+// page/product-detail/_function/to-active-users.ts
 /**
  * 비활성 사용자를 제외한 목록
  */
@@ -2426,7 +2426,7 @@ export const toActiveUsers = (rows: UserRow[]) => { /* … */ };
 ```
 
 ```ts
-// page/detail/_function/to-status-tone.ts
+// page/product-detail/_function/to-status-tone.ts
 /**
  * 상태 문자열을 강조 tone으로 분류한다
  */
@@ -3106,7 +3106,7 @@ const productSummary = {averageRate: formatPercent(responseProductSummarySuspens
 ```
 
 ```ts
-// page/product-detail/_function/to-report-content.ts: 문자열을 다시 숫자로 읽어 다시 포맷한다
+// page/product-detail/_function/to-summary-rows.ts: 문자열을 다시 숫자로 읽어 다시 포맷한다
 const rows = [{id: "changeRate", value: formatPercent(productSummary.averageRate)}];
 ```
 
@@ -3118,7 +3118,7 @@ const productSummary = {averageRate: formatPercent(responseProductSummarySuspens
 ```
 
 ```ts
-// page/product-detail/_function/to-report-content.ts
+// page/product-detail/_function/to-summary-rows.ts
 const rows = [{id: "changeRate", value: productSummary.averageRate}];
 ```
 
@@ -3416,7 +3416,7 @@ return {
 **Incorrect 1 (경계가 타입을 좁히지 않아 아래 함수마다 같은 값을 다시 검사합니다):**
 
 ```ts
-// page/detail/_function/to-badge/_to-signed-tone.ts
+// page/product-detail/_function/to-badge/_to-signed-tone.ts
 export const toSignedTone = (value: number | null | undefined): Tone => {
 	if (isNil(value) || !Number.isFinite(value) || value === 0) {
 		return "neutral";
@@ -3426,7 +3426,7 @@ export const toSignedTone = (value: number | null | undefined): Tone => {
 ```
 
 ```ts
-// page/detail/_function/format-signed-percent.ts
+// page/product-detail/_function/format-signed-percent.ts
 export const formatSignedPercent = (value: number | null | undefined) => {
 	if (isNil(value) || !Number.isFinite(value)) {
 		return copy_empty_value_text;
@@ -3438,7 +3438,7 @@ export const formatSignedPercent = (value: number | null | undefined) => {
 **Correct 1 (경계가 좁힌 `number`를 받아 두 함수는 자기 판정만 남깁니다):**
 
 ```ts
-// page/detail/_function/to-badge/_to-signed-tone.ts
+// page/product-detail/_function/to-badge/_to-signed-tone.ts
 /**
  * 부호 있는 변화율의 강조 tone. 0은 어느 쪽도 아니라 중립이다
  */
@@ -3451,7 +3451,7 @@ export const toSignedTone = (value: number): Tone => {
 ```
 
 ```ts
-// page/detail/_function/format-signed-percent.ts
+// page/product-detail/_function/format-signed-percent.ts
 /**
  * 부호를 붙인 변화율 표시 문자열
  */
@@ -3463,9 +3463,9 @@ export const formatSignedPercent = (value: number) => {
 **Correct (경계인 `select`에서 없음과 유한 수를 한 번 검사해 타입을 좁힙니다):**
 
 ```tsx
-// page/detail/pg-detail.tsx: 서버는 계산 전이면 null을 준다. 여기서 한 번 좁힌다
+// page/product-detail/pg-product-detail.tsx: 서버는 계산 전이면 null을 준다. 여기서 한 번 좁힌다
 const responseSummarySuspense = useSuspenseQuery({
-	...detailSummaryQueryOptions(productId),
+	...productDetailSummaryQueryOptions(productId),
 	select: (response) => ({
 		...response,
 		changeRate:
@@ -3477,7 +3477,7 @@ const responseSummarySuspense = useSuspenseQuery({
 **Correct (없음을 읽는 자리는 화면을 그리는 분기 하나입니다):**
 
 ```tsx
-// page/detail/_pg-detail-summary.tsx: 없음을 읽는 곳은 그리는 분기 하나다
+// page/product-detail/_pg-product-detail-summary.tsx: 없음을 읽는 곳은 그리는 분기 하나다
 {isNotNil(summary.changeRate) && (
 	<UiBadge tone={toSignedTone(summary.changeRate)}>{formatSignedPercent(summary.changeRate)}</UiBadge>
 )}
@@ -3668,11 +3668,11 @@ export const toProductsNewestFirst = (products: Product[]): Product[] => {
 ```
 
 ```ts
-// page/product-tree/_pg-product-tree.tsx
+// page/products/_pg-product-tree-section.tsx
 /**
  * route-local product tree props
  */
-export interface PgProductTreeProps {
+export interface PgProductTreeSectionProps {
 	categoryNodes: ProductCategoryNode[];
 }
 ```
@@ -3703,11 +3703,11 @@ export const toProductsNewestFirst = (products: Product[]): Product[] => {
 ```
 
 ```ts
-// page/product-tree/_pg-product-tree.tsx
+// page/products/_pg-product-tree-section.tsx
 /**
  * route-local product 트리 입력 계약
  */
-export interface PgProductTreeProps {
+export interface PgProductTreeSectionProps {
 	/**
 	 * 사이드바에 그릴 분류 노드 목록
 	 */

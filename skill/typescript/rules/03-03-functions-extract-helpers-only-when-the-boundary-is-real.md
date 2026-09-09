@@ -53,20 +53,20 @@ flowchart LR
 **Incorrect 1 (한 자리에서만 쓰는 단계를 함수로 떼어 내 흐름이 파일 안에서 흩어집니다):**
 
 ```txt
-page/report/_function/to-report-content.ts
-  toReportContent    내보낸 함수. 본문은 세 줄이고 나머지는 아래 함수로 갔다
-  toComparisonRows   toReportContent 만 부름
-  toStatusGroups     toReportContent 만 부름
-  toStockCard        toReportContent 만 부름
+page/orders/_function/to-order-summary.ts
+  toOrderSummary     내보낸 함수. 본문은 세 줄이고 나머지는 아래 함수로 갔다
+  toComparisonRows   toOrderSummary 만 부름
+  toStatusGroups     toOrderSummary 만 부름
+  toStockCard        toOrderSummary 만 부름
   formatAmount       toComparisonRows 와 toStatusGroups 가 부름
 ```
 
 ```ts
-// page/report/_function/to-report-content.ts
+// page/orders/_function/to-order-summary.ts
 /**
- * 상품 보고서 영역의 표시 데이터. 상품 상세에서만 재고 카드가 온다
+ * 주문 요약 영역의 표시 데이터. 재고 수량이 넘어올 때만 재고 카드가 온다
  */
-export const toReportContent = (params: ToReportContentParams): ReportContent => {
+export const toOrderSummary = (params: ToOrderSummaryParams): OrderSummaryContent => {
 	return {
 		metrics: toComparisonRows(params),
 		statusGroups: toStatusGroups(params),
@@ -78,21 +78,21 @@ export const toReportContent = (params: ToReportContentParams): ReportContent =>
 **Correct 1 (한 번 쓰는 단계는 호출부에 두고 재사용하는 계산은 함수로 추출합니다):**
 
 ```txt
-page/report/_function/to-report-content/
-├── to-report-content.ts   본문 안에 // 1. 비교 행  // 2. 상태 그룹  // 3. 재고 카드
+page/orders/_function/to-order-summary/
+├── to-order-summary.ts    본문 안에 // 1. 비교 행  // 2. 상태 그룹  // 3. 재고 카드
 └── _format-amount.ts      비교 행과 상태 그룹 두 자리가 부름
 ```
 
 ```ts
-// page/report/_function/to-report-content/to-report-content.ts
+// page/orders/_function/to-order-summary/to-order-summary.ts
 /**
- * 상품 보고서 영역의 표시 데이터. 상품 상세에서만 재고 카드가 온다
+ * 주문 요약 영역의 표시 데이터. 재고 수량이 넘어올 때만 재고 카드가 온다
  */
-export const toReportContent = (params: ToReportContentParams): ReportContent => {
+export const toOrderSummary = (params: ToOrderSummaryParams): OrderSummaryContent => {
 	// 1. 고른 기간 기준으로 갱신되는 비교 수치 행
 	const metrics = [
-		{id: "orderAmount", label: "주문 금액", value: formatAmount(params.productSummary.orderAmount)},
-		{id: "orderCount", label: "주문 건수", value: params.productSummary.orderCount},
+		{id: "orderAmount", label: "주문 금액", value: formatAmount(params.orderSummary.orderAmount)},
+		{id: "orderCount", label: "주문 건수", value: params.orderSummary.orderCount},
 	];
 
 	// 2. 상품 상태 그룹. 설명이 비면 그룹 제목만 남긴다
@@ -100,13 +100,13 @@ export const toReportContent = (params: ToReportContentParams): ReportContent =>
 		{
 			id: "product-status",
 			title: "상품 상태",
-			description: params.productSummary.statusDescription,
-			total: formatAmount(params.productSummary.totalAmount),
+			description: params.orderSummary.statusDescription,
+			total: formatAmount(params.orderSummary.totalAmount),
 			rows: metrics,
 		},
 	];
 
-	// 3. 재고 카드. 상품 상세에서만 온다
+	// 3. 재고 카드. 재고 수량이 넘어올 때만 온다
 	return {metrics, statusGroups, stockCount: params.stockCount};
 };
 ```
@@ -154,7 +154,7 @@ import {toProfileSaveRequest} from "@/page/profile/_function/to-profile-save-req
 **Correct (삼항 하나에 담기지 않는 판정은 사용처가 하나여도 함수로 추출하고 분기마다 `return`으로 끝냅니다):**
 
 ```ts
-// page/detail/_function/to-status-tone.ts
+// page/product-detail/_function/to-status-tone.ts
 /**
  * 상태 문자열의 강조 tone. API가 상태를 자유 문자열로 주어 값 포함으로 판정한다
  */

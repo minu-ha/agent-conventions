@@ -46,8 +46,9 @@ tags: tooling
 
 라우트가 늘면 해당 `overrides`도 추가합니다.
 `overrides`는 규칙 옵션을 통째로 바꾸므로 기본 설정의 경로 패턴을 각 항목에 함께 적습니다.
-소유자 경계는 `import` 문자열만으로 판정하지 못합니다. `@/page/detail/_pg-product-summary`도 가져오는 파일의 위치에 따라
-허용 여부가 달라지므로, 위치를 비교하는 `eslint` 규칙이나 리뷰에서 확인합니다.
+소유자 경계는 `import` 문자열만으로 판정하지 못합니다.
+`@/page/product-detail/_pg-product-summary`도 가져오는 파일의 위치에 따라 허용 여부가 달라지므로,
+위치를 비교하는 `eslint` 규칙이나 리뷰에서 확인합니다.
 
 ### 켜지 않는 규칙
 
@@ -134,7 +135,7 @@ tags: tooling
 			}
 		},
 		{
-			"includes": ["src/page/detail/**"],
+			"includes": ["src/page/product-detail/**"],
 			"linter": {
 				"rules": {
 					"style": {
@@ -146,7 +147,7 @@ tags: tooling
 										"group": ["../**", "./**", "!./*.css"],
 										"message": "가져오기는 절대경로로 씁니다. 심볼 없이 파일만 불러오는 줄만 같은 폴더를 ./ 로 씁니다."
 									},
-									{"group": ["@/page/**", "!@/page/detail/**"], "message": "다른 라우트 안의 것은 가져오지 않습니다."}
+									{"group": ["@/page/**", "!@/page/product-detail/**"], "message": "다른 라우트 안의 것은 가져오지 않습니다."}
 								]
 							}
 						}

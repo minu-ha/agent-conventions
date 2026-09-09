@@ -152,9 +152,9 @@ type ExportRequestBody = Omit<GeneratedExportRequest, "requestedAt">;
 ```ts
 // 원본: TableCellProps.align 은 선택 필드고 padding 은 normal, checkbox, none 이다
 /**
- * 보고서 표 칸 표시 계약
+ * 주문 내보내기 표 칸 표시 계약
  */
-interface ReportCell {
+interface OrderExportCell {
 	/**
 	 * 칸 정렬
 	 */
@@ -170,9 +170,9 @@ interface ReportCell {
 
 ```ts
 /**
- * 보고서 표 칸 표시 계약. align, padding 은 TableCell 로 그대로 넘긴다
+ * 주문 내보내기 표 칸 표시 계약. align, padding 은 TableCell 로 그대로 넘긴다
  */
-interface ReportCell {
+interface OrderExportCell {
 	/**
 	 * 칸 정렬. TableCell 은 비울 수 있지만 이 표는 칸마다 정한다
 	 */

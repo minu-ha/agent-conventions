@@ -45,8 +45,8 @@ flowchart LR
 ```
 
 ```css
-/* page/detail/pg-detail.css */
-.pg_detail__root {
+/* page/product-detail/pg-product-detail.css */
+.pg_productDetail__root {
 	& .wg_chartCard__root {
 		grid-area: chart;
 		margin-block-end: 16px;
@@ -57,12 +57,12 @@ flowchart LR
 **Correct 1 (최상위 배치는 사용처가 자기 클래스로 잡습니다):**
 
 ```tsx
-<WgChartCard className={clsx("pg_detail__chartCard")} />
+<WgChartCard className={clsx("pg_productDetail__chartCard")} />
 ```
 
 ```css
-/* page/detail/pg-detail.css */
-.pg_detail__chartCard {
+/* page/product-detail/pg-product-detail.css */
+.pg_productDetail__chartCard {
 	grid-area: chart;
 	margin-block-end: 16px;
 }
@@ -85,10 +85,10 @@ flowchart LR
 
 ```txt
 before
-  component/widget/chart-card/wg-chart-card.tsx      detail 화면의 뷰모델 타입을 받음
-  component/widget/chart-card/wg-chart-card.css      pg_detail 만 내부를 덮어쓰고 있었음
+  component/widget/chart-card/wg-chart-card.tsx      product-detail 화면의 뷰모델 타입을 받음
+  component/widget/chart-card/wg-chart-card.css      pg_productDetail 만 내부를 덮어쓰고 있었음
 
 after
-  page/detail/_pg-chart-card.tsx
-  page/detail/_pg-chart-card.css  pg_chartCard__* 로 소유자 하나
+  page/product-detail/_pg-chart-card.tsx
+  page/product-detail/_pg-chart-card.css  pg_chartCard__* 로 소유자 하나
 ```

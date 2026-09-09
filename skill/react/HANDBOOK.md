@@ -146,11 +146,11 @@ flowchart LR
 
 레이어를 정한 뒤 파일명과 심볼에는 `ownership-prefix-layer-names-on-files-and-symbols`를 적용합니다.
 
-**Incorrect 1 (공용 레이어에 화면 전용 로직이 섞입니다):**
+**Incorrect 1 (라우터 훅을 부르는 화면 전용 로직이 `widget`에 남아 있습니다):**
 
 ```tsx
-// component/ui/delete-product-button/ui-delete-product-button.tsx
-export const UiDeleteProductButton = () => {
+// component/widget/product-toolbar/_wg-product-toolbar-delete-button.tsx
+export const WgProductToolbarDeleteButton = () => {
 	const navigate = useNavigate();
 
 	/**
@@ -185,7 +185,7 @@ export const PgDeleteProductButton = () => {
 **Incorrect 2 (화면 타입, 훅과 무관한 부품을 사용 횟수만으로 화면 레이어에 둡니다):**
 
 ```tsx
-// page/detail/_pg-product-status-badge.tsx
+// page/product-detail/_pg-product-status-badge.tsx
 // 프롭스가 도메인 타입 하나만 받고 훅도 부르지 않는다. 이 화면에서만 쓴다는 이유로 남아 있다.
 export const PgProductStatusBadge = (props: PgProductStatusBadgeProps) => {
 	return <svg className={clsx("pg_productStatusBadge__root")}>{props.children}</svg>;
@@ -195,19 +195,19 @@ export const PgProductStatusBadge = (props: PgProductStatusBadgeProps) => {
 **Correct 2 (화면 타입, 훅과 무관한 도메인 부품은 `widget`에 둡니다):**
 
 ```tsx
-// component/widget/product-status-badge/wg-product-status-badge.tsx
+// component/widget/product-table/_wg-product-status-badge.tsx
 export const WgProductStatusBadge = (props: WgProductStatusBadgeProps) => {
-	return <svg className={clsx("wg_productStatusBadge__root")}>{props.children}</svg>;
+	return <svg className={clsx("wg_productTable__statusBadge")}>{props.children}</svg>;
 };
 ```
 
-**Incorrect 3 (도메인을 모르는 조합을 조립 규모만 보고 `widget`에 둡니다):**
+**Incorrect 3 (도메인을 모르는 그래프 그리기를 조립 규모만 보고 `widget`에 둡니다):**
 
 ```tsx
-// component/widget/line-chart/wg-line-chart.tsx
-// 프롭스가 좌표 배열만 받고 도메인 타입을 모른다. ui 부품을 조립했다는 이유로 widget에 있다.
-export const WgLineChart = (props: WgLineChartProps) => {
-	return <svg className={clsx("wg_lineChart__root")}>{props.children}</svg>;
+// component/widget/chart-card/wg-chart-card.tsx
+// 프롭스가 좌표 배열만 받고 도메인 타입을 모른다. widget 폴더에 있다는 이유로 남아 있다.
+export const WgChartCard = (props: WgChartCardProps) => {
+	return <svg className={clsx("wg_chartCard__root")}>{props.children}</svg>;
 };
 ```
 
@@ -223,10 +223,10 @@ export const UiLineChart = (props: UiLineChartProps) => {
 **Correct (도메인을 아는 조립은 `widget`이 맡아 `ui` 부품을 씁니다):**
 
 ```tsx
-// component/widget/product-trend-chart/wg-product-trend-chart.tsx
+// component/widget/chart-card/wg-chart-card.tsx
 import {UiLineChart} from "@/component/ui/line-chart/ui-line-chart";
 
-export const WgProductTrendChart = (props: WgProductTrendChartProps) => {
+export const WgChartCard = (props: WgChartCardProps) => {
 	return <UiLineChart points={toChartPoints(props.dailyCounts)} />;
 };
 ```
@@ -274,7 +274,7 @@ export const WgProductTrendChart = (props: WgProductTrendChartProps) => {
 **Incorrect 1 (화면 컴포넌트의 접두사를 누락합니다):**
 
 ```tsx
-// page/detail/product-table-section.tsx
+// page/product-detail/product-table-section.tsx
 export const ProductTable = (props: ProductTableProps) => {
 	return <section className={clsx("pg_productTableSection__root")}>{props.children}</section>;
 };
@@ -283,7 +283,7 @@ export const ProductTable = (props: ProductTableProps) => {
 **Correct 1 (진입 파일이 아닌 파일에는 `_`를 붙이고 파일명과 심볼에 레이어 접두사를 씁니다):**
 
 ```tsx
-// page/detail/_pg-product-table-section.tsx
+// page/product-detail/_pg-product-table-section.tsx
 export const PgProductTableSection = (props: PgProductTableSectionProps) => {
 	return <section className={clsx("pg_productTableSection__root")}>{props.children}</section>;
 };
@@ -408,8 +408,8 @@ component/ui/button/
 **Incorrect 2 (범용 이름 폴더를 섞어 쓰고 하위 소유자 안에 소유자를 다시 둡니다):**
 
 ```txt
-page/detail/
-├── pg-detail.tsx
+page/product-detail/
+├── pg-product-detail.tsx
 ├── components/
 ├── constants/
 ├── utils/
@@ -425,9 +425,9 @@ page/detail/
 **Correct 2 (필요한 역할 폴더만 만들고 부품은 파일로 둡니다):**
 
 ```txt
-page/detail/
-├── pg-detail.tsx
-├── pg-detail.css
+page/product-detail/
+├── pg-product-detail.tsx
+├── pg-product-detail.css
 ├── _pg-product-summary.tsx            자기만 쓰는 파일이 없어 파일로 둠
 ├── _pg-product-summary.css
 ├── _function/
@@ -436,7 +436,7 @@ page/detail/
 │       ├── to-trend-chart.ts
 │       └── _to-chart-range.ts         toTrendChart 만 부름
 ├── _type/
-│   └── detail-view-model.ts
+│   └── product-detail-view-model.ts
 └── product-table-section/             자기만 쓰는 파일이 있어 하위 소유자 폴더가 됨
     ├── pg-product-table-section.tsx
     ├── pg-product-table-section.css
@@ -510,21 +510,21 @@ flowchart LR
 **Incorrect 1 (다른 폴더의 `_` 컴포넌트 파일을 가져옵니다):**
 
 ```tsx
-// page/detail/product-table-section/pg-product-table-section.tsx
-import {PgSectionHeading} from "@/page/detail/_pg-section-heading";
+// page/product-detail/product-table-section/pg-product-table-section.tsx
+import {PgSectionHeading} from "@/page/product-detail/_pg-section-heading";
 ```
 
 **Correct 1 (`_` 파일과 같은 폴더에 있는 진입 파일이 조립해서 프롭으로 내려보냅니다):**
 
 ```tsx
-// page/detail/pg-detail.tsx
-import {PgSectionHeading} from "@/page/detail/_pg-section-heading";
-import {PgProductTableSection} from "@/page/detail/product-table-section/pg-product-table-section";
-import {PgProductSummary} from "@/page/detail/product-summary/pg-product-summary";
+// page/product-detail/pg-product-detail.tsx
+import {PgSectionHeading} from "@/page/product-detail/_pg-section-heading";
+import {PgProductTableSection} from "@/page/product-detail/product-table-section/pg-product-table-section";
+import {PgProductSummary} from "@/page/product-detail/product-summary/pg-product-summary";
 
-export const PgDetail = () => {
+export const PgProductDetail = () => {
 	return (
-		<main className={clsx("pg_detail__root")}>
+		<main className={clsx("pg_productDetail__root")}>
 			<PgProductTableSection heading={<PgSectionHeading title="최근 주문" />} />
 			<PgProductSummary heading={<PgSectionHeading title="요약" />} />
 		</main>
@@ -535,8 +535,8 @@ export const PgDetail = () => {
 **Incorrect 2 (다른 라우트 안의 컴포넌트를 가져옵니다):**
 
 ```tsx
-// page/index/pg-index.tsx
-import {PgProductTableSection} from "@/page/detail/product-table-section/pg-product-table-section";
+// page/order-detail/pg-order-detail.tsx
+import {PgProductTableSection} from "@/page/product-detail/product-table-section/pg-product-table-section";
 ```
 
 **Correct 2 (두 라우트가 공유하는 화면 독립 컴포넌트는 공용 레이어에 둡니다):**
@@ -547,29 +547,29 @@ export const WgProductTable = (props: WgProductTableProps) => {
 	return <section className={clsx("wg_productTable__root")}>{props.children}</section>;
 };
 
-// page/index/pg-index.tsx
+// page/order-detail/pg-order-detail.tsx
 import {WgProductTable} from "@/component/widget/product-table/wg-product-table";
 ```
 
 **Incorrect 3 (`ui`가 `widget`을 가져옵니다):**
 
 ```tsx
-// component/ui/legend/ui-legend.tsx
-import {WgLegendPanel} from "@/component/widget/legend-panel/wg-legend-panel";
+// component/ui/line-chart/ui-line-chart.tsx
+import {WgChartCard} from "@/component/widget/chart-card/wg-chart-card";
 ```
 
 **Correct 3 (방향을 뒤집어 `widget`이 `ui`를 가져옵니다):**
 
 ```tsx
-// component/widget/legend-panel/wg-legend-panel.tsx
-import {UiLegend} from "@/component/ui/legend/ui-legend";
+// component/widget/chart-card/wg-chart-card.tsx
+import {UiLineChart} from "@/component/ui/line-chart/ui-line-chart";
 ```
 
 **Incorrect 4 (외부에서 사용한다는 이유만으로 역할 폴더의 파일을 루트로 옮깁니다):**
 
 ```ts
 // type/chart-series.ts
-// component/ui/chart/_type 에 있던 것을 page 에서도 쓴다고 루트로 옮겼다
+// component/ui/line-chart/_type 에 있던 것을 page 에서도 쓴다고 루트로 옮겼다
 export interface ChartSeries {
 	/**
 	 * 선 하나가 그리는 좌표
@@ -577,16 +577,16 @@ export interface ChartSeries {
 	points: ChartPoint[];
 }
 
-// page/detail/product-table-section/_function/to-chart-option.ts
+// page/product-detail/product-table-section/_function/to-chart-option.ts
 import type {ChartSeries} from "@/type/chart-series";
 ```
 
 **Correct 4 (역할 폴더의 파일은 레이어 방향만 지키면 밖에서도 가져옵니다):**
 
 ```ts
-// page/detail/product-table-section/_function/to-chart-option.ts
-import type {ChartSeries} from "@/component/ui/chart/_type/chart-series";
-import {chart_series_line} from "@/component/ui/chart/_constant/series";
+// page/product-detail/product-table-section/_function/to-chart-option.ts
+import type {ChartSeries} from "@/component/ui/line-chart/_type/chart-series";
+import {chart_series_line} from "@/component/ui/line-chart/_constant/series";
 ```
 
 ### 1.5 Do Not Create Screen-local Custom Hooks for Pure Logic
@@ -700,9 +700,9 @@ export const PgMediaUploadPanel = (props: PgMediaUploadPanelProps) => {
 **Incorrect 1 (파일 분량을 줄이려고 생명주기를 훅으로 옮깁니다):**
 
 ```tsx
-// component/widget/chart/chart-root/wg-chart-root.tsx
+// component/widget/chart-card/wg-chart-card.tsx
 // 생성, resize, 정리가 _hook/use-chart-instance.ts로 빠져 이 파일에서는 실행 흐름이 보이지 않는다
-export const WgChartRoot = (props: WgChartRootProps) => {
+export const WgChartCard = (props: WgChartCardProps) => {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const chart = useChartInstance(containerRef);
 
@@ -713,15 +713,15 @@ export const WgChartRoot = (props: WgChartRootProps) => {
 		chart?.setOption(props.option);
 	}, [chart, props.option]);
 
-	return <div ref={containerRef} className={clsx("wg_chart__canvas")} />;
+	return <div ref={containerRef} className={clsx("wg_chartCard__canvas")} />;
 };
 ```
 
 **Correct 1 (생명주기를 소유 컴포넌트가 직접 가집니다):**
 
 ```tsx
-// component/widget/chart/chart-root/wg-chart-root.tsx
-export const WgChartRoot = (props: WgChartRootProps) => {
+// component/widget/chart-card/wg-chart-card.tsx
+export const WgChartCard = (props: WgChartCardProps) => {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const chartRef = useRef<ChartInstance | null>(null);
 
@@ -756,7 +756,7 @@ export const WgChartRoot = (props: WgChartRootProps) => {
 		chartRef.current?.setOption(props.option);
 	}, [props.option]);
 
-	return <div ref={containerRef} className={clsx("wg_chart__canvas")} />;
+	return <div ref={containerRef} className={clsx("wg_chartCard__canvas")} />;
 };
 ```
 
@@ -2333,14 +2333,14 @@ const WgUserCard = ({ label, onSave }: WgUserCardProps) => {
 **Incorrect 1 (렌더마다 새 컴포넌트 타입을 만듭니다):**
 
 ```tsx
-// component/widget/user-profile-card/wg-user-profile-card.tsx
-export const WgUserProfileCard = (props: WgUserProfileCardProps) => {
+// component/widget/user-card/wg-user-card.tsx
+export const WgUserCard = (props: WgUserCardProps) => {
 	const Avatar = () => {
 		return (
 			<img
 				className={clsx(
-					"wg_userProfileAvatar__image",
-					props.theme === "dark" && "wg_userProfileAvatar__image--dark",
+					"wg_userCardAvatar__image",
+					props.theme === "dark" && "wg_userCardAvatar__image--dark",
 				)}
 				src={props.user.avatarUrl}
 				alt={props.user.name}
@@ -2359,13 +2359,13 @@ export const WgUserProfileCard = (props: WgUserProfileCardProps) => {
 **Correct 1 (형제 파일로 뺀 컴포넌트를 부르고 값은 프롭스로 넘깁니다):**
 
 ```tsx
-// component/widget/user-profile-card/wg-user-profile-card.tsx
-import {WgUserProfileAvatar} from "@/component/widget/user-profile-card/_wg-user-profile-avatar";
+// component/widget/user-card/wg-user-card.tsx
+import {WgUserCardAvatar} from "@/component/widget/user-card/_wg-user-card-avatar";
 
-export const WgUserProfileCard = (props: WgUserProfileCardProps) => {
+export const WgUserCard = (props: WgUserCardProps) => {
 	return (
 		<section>
-			<WgUserProfileAvatar src={props.user.avatarUrl} alt={props.user.name} theme={props.theme} />
+			<WgUserCardAvatar src={props.user.avatarUrl} alt={props.user.name} theme={props.theme} />
 		</section>
 	);
 };
@@ -2374,11 +2374,11 @@ export const WgUserProfileCard = (props: WgUserProfileCardProps) => {
 **Correct (뺀 아바타는 소유자 폴더의 형제 파일에 둡니다):**
 
 ```tsx
-// component/widget/user-profile-card/_wg-user-profile-avatar.tsx
+// component/widget/user-card/_wg-user-card-avatar.tsx
 /**
- * 사용자 프로필 아바타 프롭스
+ * 사용자 카드 아바타 프롭스
  */
-export interface WgUserProfileAvatarProps {
+export interface WgUserCardAvatarProps {
 	/**
 	 * 어두운 배경에서 쓸지
 	 */
@@ -2393,12 +2393,12 @@ export interface WgUserProfileAvatarProps {
 	alt: string;
 }
 
-export const WgUserProfileAvatar = (props: WgUserProfileAvatarProps) => {
+export const WgUserCardAvatar = (props: WgUserCardAvatarProps) => {
 	return (
 		<img
 			className={clsx(
-				"wg_userProfileAvatar__image",
-				props.theme === "dark" && "wg_userProfileAvatar__image--dark",
+				"wg_userCardAvatar__image",
+				props.theme === "dark" && "wg_userCardAvatar__image--dark",
 			)}
 			src={props.src}
 			alt={props.alt}
@@ -3700,13 +3700,13 @@ if (responseUserGetItemSuspense.isPending) {
 	return <UiSpinner />;
 }
 
-return <UiUserName value={responseUserGetItemSuspense.data.name} />;
+return <WgUserCardName value={responseUserGetItemSuspense.data.name} />;
 ```
 
 **Correct 1 (초기 로딩은 경계가 받으므로 본문은 데이터가 있는 경로만 렌더합니다):**
 
 ```tsx
-return <UiUserName value={responseUserGetItemSuspense.data.name} />;
+return <WgUserCardName value={responseUserGetItemSuspense.data.name} />;
 ```
 
 **Incorrect 2 (다시 불러오는 중에 화면 전체를 가립니다):**
@@ -3716,7 +3716,7 @@ if (responseUserGetItemSuspense.isFetching) {
 	return <UiSpinner />;
 }
 
-return <UiUserName value={responseUserGetItemSuspense.data.name} />;
+return <WgUserCardName value={responseUserGetItemSuspense.data.name} />;
 ```
 
 **Correct 2 (갱신 상태는 이미 렌더된 화면을 보조하는 표시에만 씁니다):**
@@ -3724,7 +3724,7 @@ return <UiUserName value={responseUserGetItemSuspense.data.name} />;
 ```tsx
 return (
 	<Fragment>
-		<UiUserName value={responseUserGetItemSuspense.data.name} />
+		<WgUserCardName value={responseUserGetItemSuspense.data.name} />
 		{responseUserGetItemSuspense.isFetching && <UiRefreshIndicator />}
 	</Fragment>
 );
@@ -3799,7 +3799,7 @@ flowchart LR
 
 ```tsx
 // 이 화면은 낡은 추천을 계속 보여 주면 안 되지만 재조회 실패를 던지지 않는다
-return <UiProductRecommendations items={responseProductRecommendationsSuspense.data.items} />;
+return <WgProductRecommendations items={responseProductRecommendationsSuspense.data.items} />;
 ```
 
 **Correct 1 (낡은 데이터를 허용하지 않는 화면만 재조회 실패를 경계로 보냅니다):**
@@ -3810,7 +3810,7 @@ if (responseProductRecommendationsSuspense.error && !responseProductRecommendati
 	throw responseProductRecommendationsSuspense.error;
 }
 
-return <UiProductRecommendations items={responseProductRecommendationsSuspense.data.items} />;
+return <WgProductRecommendations items={responseProductRecommendationsSuspense.data.items} />;
 ```
 
 **Incorrect 2 (경계 없이 화면 본문에서 실패를 분기합니다):**
@@ -5086,8 +5086,9 @@ JSX 자식 자리의 주석은 여러 줄 블록으로 씁니다.
 
 라우트가 늘면 해당 `overrides`도 추가합니다.
 `overrides`는 규칙 옵션을 통째로 바꾸므로 기본 설정의 경로 패턴을 각 항목에 함께 적습니다.
-소유자 경계는 `import` 문자열만으로 판정하지 못합니다. `@/page/detail/_pg-product-summary`도 가져오는 파일의 위치에 따라
-허용 여부가 달라지므로, 위치를 비교하는 `eslint` 규칙이나 리뷰에서 확인합니다.
+소유자 경계는 `import` 문자열만으로 판정하지 못합니다.
+`@/page/product-detail/_pg-product-summary`도 가져오는 파일의 위치에 따라 허용 여부가 달라지므로,
+위치를 비교하는 `eslint` 규칙이나 리뷰에서 확인합니다.
 
 ### 켜지 않는 규칙
 
@@ -5174,7 +5175,7 @@ JSX 자식 자리의 주석은 여러 줄 블록으로 씁니다.
 			}
 		},
 		{
-			"includes": ["src/page/detail/**"],
+			"includes": ["src/page/product-detail/**"],
 			"linter": {
 				"rules": {
 					"style": {
@@ -5186,7 +5187,7 @@ JSX 자식 자리의 주석은 여러 줄 블록으로 씁니다.
 										"group": ["../**", "./**", "!./*.css"],
 										"message": "가져오기는 절대경로로 씁니다. 심볼 없이 파일만 불러오는 줄만 같은 폴더를 ./ 로 씁니다."
 									},
-									{"group": ["@/page/**", "!@/page/detail/**"], "message": "다른 라우트 안의 것은 가져오지 않습니다."}
+									{"group": ["@/page/**", "!@/page/product-detail/**"], "message": "다른 라우트 안의 것은 가져오지 않습니다."}
 								]
 							}
 						}

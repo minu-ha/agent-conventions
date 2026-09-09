@@ -86,8 +86,8 @@ component/ui/button/
 **Incorrect 2 (범용 이름 폴더를 섞어 쓰고 하위 소유자 안에 소유자를 다시 둡니다):**
 
 ```txt
-page/detail/
-├── pg-detail.tsx
+page/product-detail/
+├── pg-product-detail.tsx
 ├── components/
 ├── constants/
 ├── utils/
@@ -103,9 +103,9 @@ page/detail/
 **Correct 2 (필요한 역할 폴더만 만들고 부품은 파일로 둡니다):**
 
 ```txt
-page/detail/
-├── pg-detail.tsx
-├── pg-detail.css
+page/product-detail/
+├── pg-product-detail.tsx
+├── pg-product-detail.css
 ├── _pg-product-summary.tsx            자기만 쓰는 파일이 없어 파일로 둠
 ├── _pg-product-summary.css
 ├── _function/
@@ -114,7 +114,7 @@ page/detail/
 │       ├── to-trend-chart.ts
 │       └── _to-chart-range.ts         toTrendChart 만 부름
 ├── _type/
-│   └── detail-view-model.ts
+│   └── product-detail-view-model.ts
 └── product-table-section/             자기만 쓰는 파일이 있어 하위 소유자 폴더가 됨
     ├── pg-product-table-section.tsx
     ├── pg-product-table-section.css
