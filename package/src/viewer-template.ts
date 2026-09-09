@@ -396,12 +396,11 @@ pre.code { margin: 0; padding: 11px 13px; font-family: var(--mono); font-size: 1
 .empty { padding: 72px 24px; text-align: center; border: 1px dashed var(--hair); border-radius: 3px; color: var(--muted); font-size: 13.5px; }
 mark { background: color-mix(in srgb, var(--accent) 30%, transparent); color: inherit; border-radius: 2px; }
 
-/* 적용 조건 불렛. 제외 조건은 라벨 칩과 낮은 대비로 본 조건과 갈라 읽힌다. */
-.acc-body ul:has(li.li-x) { padding-left: 4.2em; }
+/* 적용 조건 불렛. 제외 조건은 불렛이 빼기표(−)이고 글줄 안 라벨 칩과 낮은 대비로 본 조건과 갈라 읽힌다.
+   목록 들여쓰기는 제외가 있든 없든 같아서 규칙 사이에 줄이 어긋나지 않는다. */
 .acc-body li.li-x { color: var(--muted); }
-.acc-body li.li-x::before { content: none; }
-/* 라벨 칩은 불렛 자리에서 왼쪽으로 자라 오른쪽 끝이 불렛과 같은 열에 놓인다. 본문 시작은 형제 항목과 같다. */
-.x-lb { position: absolute; right: calc(100% + .85em); top: .1em; font-family: var(--mono); font-size: 9.5px; line-height: 1.3; letter-spacing: .06em; color: var(--faint); border: 1px solid var(--hair); border-radius: 2px; padding: 1px 5px; white-space: nowrap; }
+.acc-body li.li-x::before { content: "\\2212"; color: var(--faint); font-weight: 600; }
+.x-lb { display: inline-block; vertical-align: .1em; margin-right: .55em; font-family: var(--mono); font-size: 9.5px; line-height: 1.3; letter-spacing: .06em; color: var(--faint); border: 1px solid var(--hair); border-radius: 2px; padding: 1px 5px; white-space: nowrap; }
 
 /* ---------- rule dialog ---------- */
 /* 참조 칩은 목록을 이동하는 대신 이 다이얼로그로 미리 보여준다. 보던 섹션을 잃지 않는다. */
