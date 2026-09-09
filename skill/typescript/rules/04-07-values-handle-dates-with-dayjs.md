@@ -15,8 +15,20 @@ tags: values, dayjs
 
 **Impact: HIGH (날짜의 단위와 타임존을 드러내고 파싱과 표시 형식을 일관되게 유지합니다)**
 
+### 작업별 기준
+
 날짜는 `dayjs`로 다루고, `moment`는 새로 들이지 않습니다.
 계산 단위, 입력 형식, 표시 타임존을 계약에 맞게 구분합니다.
+
+날짜 문자열이 들어왔을 때 다루는 방법을 고르는 차례입니다.
+
+```mermaid
+flowchart LR
+	q1{"서버가 표시 형식까지<br>확정했는가?"} -- 아니요 --> q2{"값을 더하거나<br>빼는가?"} -- 아니요 --> q3{"유효성을<br>보는가?"} -- 예 --> r3("유효성 검사")
+	q1 -- 예 --> r1("계약대로 문자열 표시")
+	q2 -- 예 --> r2("경과 시간과 달력<br>단위를 구분해 add")
+	q3 -- 아니요 --> r4("format 으로 표시")
+```
 
 | 작업 | 기준 |
 | --- | --- |
@@ -24,6 +36,8 @@ tags: values, dayjs
 | 경과 시간 · 달력 날짜 계산 | `add`, `subtract`의 단위를 구분합니다. 정확히 24시간과 현지 다음 날은 서머타임 경계에서 다를 수 있습니다 |
 | 밀리초 · 월 계산 교체 | 밀리초 연산을 `add(..., "day")`로 일괄 치환하지 않습니다. 월 계산은 월말 처리 계약을 확인합니다 |
 | 표시 · 비교 | 수동 문자열 조합 · `toLocaleDateString` 대신 `format`, `getTime` 비교 대신 `isBefore`, `isAfter`, `isSame`을 씁니다 |
+
+### 입력 · 표시 계약
 
 | 입력 · 표시 계약 | 처리 |
 | --- | --- |
@@ -58,26 +72,13 @@ const expiresAt = dayjs(issuedAt).add(token_expiry_hours, "hour");
 const expiresLabel = expiresAt.format(date_expiry_month_format);
 ```
 
-**Incorrect (형식만 보고 없는 날짜를 통과시킵니다):**
+**Incorrect 2 (형식만 보고 없는 날짜를 통과시킵니다):**
 
 ```ts
 const isValidDateText = /^\d{4}-\d{2}-\d{2}$/.test(dateText);
 ```
 
-**Correct (날짜 처리 방법을 계약에 따라 선택합니다):**
-
-```txt
-날짜 문자열이 들어왔다
-│
-├ 서버가 표시 타임존과 형식까지 확정함 ─→ 계약대로 문자열을 표시한다
-└ 계산하거나 형식을 바꿔야 함
-   │
-   ├ 형식만 바꿈 ──────→ dayjs(value).format(date_format)
-   ├ 더하거나 뺌 ──────→ 경과 시간과 달력 단위를 구분해 add()를 쓴다
-   └ 날짜 유효성을 봄 ─→ 고정 형식은 라운드트립, 다른 형식은 엄격한 파싱을 쓴다
-```
-
-**Correct (라운드트립으로 없는 날짜를 거릅니다):**
+**Correct 2 (라운드트립으로 없는 날짜를 거릅니다):**
 
 ```ts
 import dayjs from "dayjs";

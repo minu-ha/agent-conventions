@@ -17,6 +17,8 @@ tags: absence, boundaries
 
 **Impact: HIGH (값이 들어오는 경계에서 검사해 중간 함수의 중복 검사를 줄입니다)**
 
+### 경계가 정한 답
+
 값의 없음 여부는 소유자 안으로 들어오는 경계에서 한 번 검사하고, 결과를 타입으로 전달합니다.
 화면의 응답 매핑 · `select` · `combine` · search 스키마나 컴포넌트가 프롭을 받는 자리가 경계입니다.
 
@@ -29,6 +31,8 @@ tags: absence, boundaries
 그 밖의 소비처가 없음 여부를 반복 판정한다면 경계에서 결과를 전달했는지 확인합니다.
 판정 결과를 전달하는 방법은 `values-decide-once-and-carry-the-result`가 정합니다.
 
+### 다시 검사가 필요한 때
+
 | 다시 검사가 필요한가 | 기준 |
 | --- | --- |
 | 경계에서 이미 확인한 없음 · 유한 수 조건 | 반복하지 않습니다 |
@@ -40,7 +44,7 @@ tags: absence, boundaries
 `unknown`은 검증 책임이 있는 경계에서 받고, 공개 입력 계약을 내부 호출 하나에 맞춰 좁히지 않습니다.
 타입 좁히기는 `types-narrow-unknown-instead-of-asserting`을 따릅니다.
 
-**Incorrect (경계가 타입을 좁히지 않아 아래 함수마다 같은 값을 다시 검사합니다):**
+**Incorrect 1 (경계가 타입을 좁히지 않아 아래 함수마다 같은 값을 다시 검사합니다):**
 
 ```ts
 // page/detail/_function/to-badge/_to-signed-tone.ts
@@ -60,7 +64,30 @@ export const formatSignedPercent = (value: number | null | undefined) => {
 };
 ```
 
-**Correct (경계에서 타입을 좁히고 없음 여부는 화면을 그릴 때 분기합니다):**
+**Correct 1 (경계가 좁힌 `number`를 받아 두 함수는 자기 판정만 남깁니다):**
+
+```ts
+// page/detail/_function/to-badge/_to-signed-tone.ts
+/**
+ * 부호 있는 변화율의 강조 tone. 0은 어느 쪽도 아니라 중립이다
+ */
+export const toSignedTone = (value: number): Tone => {
+	if (value === 0) {
+		return "neutral";
+	}
+	return value > 0 ? "positive" : "negative";
+};
+
+// page/detail/_function/format-signed-percent.ts
+/**
+ * 부호를 붙인 변화율 표시 문자열
+ */
+export const formatSignedPercent = (value: number) => {
+	return `${value > 0 ? "+" : ""}${value}%`;
+};
+```
+
+**Correct (경계인 `select`에서 없음과 유한 수를 한 번 검사해 타입을 좁힙니다):**
 
 ```tsx
 // page/detail/pg-detail.tsx: 서버는 계산 전이면 null을 준다. 여기서 한 번 좁힌다
@@ -74,18 +101,7 @@ const responseSummarySuspense = useSuspenseQuery({
 });
 ```
 
-```ts
-// page/detail/_function/to-badge/_to-signed-tone.ts
-/**
- * 부호 있는 변화율의 강조 tone. 0은 어느 쪽도 아니라 중립이다
- */
-export const toSignedTone = (value: number): Tone => {
-	if (value === 0) {
-		return "neutral";
-	}
-	return value > 0 ? "positive" : "negative";
-};
-```
+**Correct (없음을 읽는 자리는 화면을 그리는 분기 하나입니다):**
 
 ```tsx
 // page/detail/_pg-detail-summary.tsx: 없음을 읽는 곳은 그리는 분기 하나다

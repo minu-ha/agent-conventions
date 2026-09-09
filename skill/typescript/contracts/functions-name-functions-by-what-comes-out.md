@@ -2,6 +2,8 @@
 
 **Impact: MEDIUM (함수 이름으로 반환값이나 효과를 파악할 수 있습니다)**
 
+### 역할별 동사
+
 함수 이름은 호출 뒤 얻는 값이나 효과를 구체적으로 드러냅니다.
 입력은 시그니처가 설명하므로 이름에 반복하지 않습니다.
 
@@ -29,6 +31,8 @@
 소유자 경로가 이미 말하는 도메인도 빼고, 반환 타입 이름보다 호출자가 쓰는 결과 개념을 적습니다.
 `toComparisonWindows`, `toReportRows`처럼 쓰되 요청 계약 자체가 출력이면 `toUserSaveRequest`처럼 짓습니다.
 
+### 쓰지 않는 동사
+
 `build`, `create`, `make`, `process`, `manage`, `do`, `perform`, `execute`, `filter`, `map`, `update`, `resolve`는
 직접 짓는 이름의 첫 동사로 쓰지 않습니다.
 
@@ -38,6 +42,8 @@
 | `mapProductRows` | 출력이 행이면 `toProductRows` |
 | `updateProduct` | 저장이면 `saveProduct`, 계산이면 `toUpdatedProduct` |
 | `resolveStatusTone` | 분류 결과인 `toStatusTone` |
+
+### 대상이 아닌 이름
 
 `array.map(...)` 같은 표준 메서드 호출은 함수 명명 규칙의 대상이 아닙니다.
 `handle` · `use`는 프레임워크 규칙을 따릅니다.

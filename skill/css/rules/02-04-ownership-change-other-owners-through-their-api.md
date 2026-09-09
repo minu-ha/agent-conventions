@@ -17,6 +17,16 @@ tags: ownership, api, promotion
 
 다른 소유자의 모습을 바꿀 때는 아래 세 방법을 순서대로 확인합니다.
 
+방법을 고르는 차례입니다.
+
+```mermaid
+flowchart LR
+	q1{"최상위 배치만<br>다른가?"} -- 아니요 --> q2{"여러 사용처에서<br>같은 내부 모습인가?"} -- 아니요 --> q3{"레이어 판정이<br>화면 소유인가?"} -- 아니요 --> r4("내 최상위 블록에서<br>선택자로 지정")
+	q1 -- 예 --> r1("사용처가<br>className 전달")
+	q2 -- 예 --> r2("소유자가<br>variant 프롭 노출")
+	q3 -- 예 --> r3("화면 폴더로<br>파일 이동")
+```
+
 | 상황 | 방법 | 수정 위치 |
 | --- | --- | --- |
 | 최상위 배치만 다름 | 사용처가 `className`을 넘겨 자기 클래스로 스타일을 줍니다 | 사용처 TSX와 CSS |
@@ -30,7 +40,11 @@ tags: ownership, api, promotion
 `className`을 최상위까지만 전달하는 경계는 `composition-inject-classes-only-at-the-entry-point` 규칙이 정합니다.
 이 규칙은 사용처가 어떤 방법을 고를지 판단합니다.
 
-**Incorrect (최상위 배치를 `className`으로 바꿀 수 있는데도 다른 소유자의 클래스를 선택합니다):**
+**Incorrect 1 (최상위 배치를 `className`으로 바꿀 수 있는데도 다른 소유자의 클래스를 선택합니다):**
+
+```tsx
+<WgChartCard />
+```
 
 ```css
 /* page/detail/pg-detail.css */
@@ -42,7 +56,7 @@ tags: ownership, api, promotion
 }
 ```
 
-**Correct (최상위 배치는 사용처가 자기 클래스로 잡습니다):**
+**Correct 1 (최상위 배치는 사용처가 자기 클래스로 잡습니다):**
 
 ```tsx
 <WgChartCard className={clsx("pg_detail__chartCard")} />

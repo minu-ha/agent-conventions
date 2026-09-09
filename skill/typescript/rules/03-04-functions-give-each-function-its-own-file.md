@@ -17,14 +17,27 @@ tags: functions, boundaries
 
 **Impact: HIGH (보조 함수를 개별 파일로 관리하고 폴더로 소유 관계를 드러냅니다)**
 
+### 호출부에 따른 자리
+
 보조 함수에 이름을 붙일지는 `functions-extract-helpers-only-when-the-boundary-is-real`이 판단합니다.
 이름을 붙였다면 함수마다 파일을 하나 두고, 부르는 대표 함수에 따라 배치합니다.
+
+보조 함수의 자리를 고르는 차례입니다.
+
+```mermaid
+flowchart LR
+	q1{"부르는 대표 함수가<br>둘 이상인가?"} -- 예 --> q2{"다른 소유자도<br>부르는가?"} -- 예 --> r3("루트 승격 판단")
+	q1 -- 아니요 --> r1("대표 폴더의 _ 파일")
+	q2 -- 아니요 --> r2("_function 바로 아래")
+```
 
 | 호출부 | 위치 |
 | --- | --- |
 | 대표 함수 하나 | `_function/<대표>/<대표>.ts`와 같은 폴더의 `_<보조>.ts` |
 | 같은 소유자의 대표 함수 둘 이상 | `_function/<보조>.ts`. 기존 `_` 접두사를 뗍니다 |
 | 다른 소유자 | `functions-promote-owner-free-functions-to-root-util`로 루트 승격 여부를 판단합니다 |
+
+### 파일 배치 규범
 
 | 배치 대상 | 규범 |
 | --- | --- |

@@ -14,14 +14,27 @@ tags: functions, boundaries
 
 **Impact: HIGH (소유자 전용 함수를 구분하고 사용처 수가 달라져도 배치 기준을 유지합니다)**
 
+### 승격 판단
+
 루트 `util` 승격은 사용처 수가 아니라 소유자를 지워도 계산이 남는지로 판단합니다.
 사용처가 늘거나 줄어도 이 기준은 바뀌지 않습니다.
+
+승격을 판단하는 차례입니다.
+
+```mermaid
+flowchart LR
+	q1{"소유자를 지워도<br>계산이 남는가?"} -- 예 --> q2{"받는 값의 종류로<br>폴더명을 지을 수 있는가?"} -- 예 --> r2("루트 util 의 종류 폴더")
+	q1 -- 아니요 --> r1("소유자 아래 _function")
+	q2 -- 아니요 --> r1
+```
 
 | 소유자를 지운 결과 | 배치 |
 | --- | --- |
 | 함수도 사라짐 | 해당 소유자의 `_function`에 둡니다. `toProfileSaveRequest`가 그 예입니다 |
 | 함수가 남음 | 한 곳에서만 써도 `util/<받는 값의 종류>/`에 둡니다. `toDisplayDate`가 그 예입니다 |
 | 값의 종류로 폴더명을 지을 수 없음 | 루트로 올리지 않고 소유자 아래에 둡니다 |
+
+### 종류 폴더
 
 | 폴더 | 기준 |
 | --- | --- |
@@ -31,6 +44,8 @@ tags: functions, boundaries
 
 루트의 소유자는 프로젝트입니다.
 함수마다 파일 하나, 자기만 쓰는 보조는 자기 이름 폴더의 `_` 파일이라는 규칙은 소유자 아래와 같습니다.
+
+### 두 소유자가 공유할 때
 
 | 두 소유자가 공유하는 것 | 처리 |
 | --- | --- |
@@ -63,7 +78,7 @@ export const toProfileSaveRequest = (values: ProfileFormValues) => {
 };
 ```
 
-**Incorrect (소유자를 지워도 남을 함수를 호출부가 하나라고 소유자 아래 둡니다):**
+**Incorrect 2 (소유자를 지워도 남을 함수를 호출부가 하나라고 소유자 아래 둡니다):**
 
 ```ts
 // page/orders/_function/to-display-date.ts
@@ -76,29 +91,7 @@ export const toDisplayDate = (value: string): string => {
 };
 ```
 
-**Correct (승격 판정 흐름입니다):**
-
-```txt
-이 함수는 누구 것인가?
-│
-└ 소유자를 지워 본다
-   │
-   ├ 함수도 같이 사라짐 ──→ 그 소유자 아래에 둔다
-   └ 함수는 그대로 남음 ──→ util/<받는 값의 종류>/ 로 올린다
-      │
-      └ 종류 이름을 못 짓겠음 → util 이 아니다. 소유자 아래로 되돌린다
-```
-
-**Correct (소유자를 지워도 남는 함수는 종류 폴더에 파일 하나로 올립니다):**
-
-```txt
-util/
-├── date/
-│   ├── to-display-date.ts
-│   └── to-display-date.test.ts
-└── money/
-    └── to-signed-amount.ts
-```
+**Correct 2 (소유자를 지워도 남는 함수는 받는 값의 종류 폴더로 올립니다):**
 
 ```ts
 // util/date/to-display-date.ts
@@ -108,6 +101,17 @@ util/
 export const toDisplayDate = (value: string): string => {
 	return dayjs(value).format(date_format);
 };
+```
+
+**Correct (종류 폴더 아래에도 함수마다 파일 하나를 둡니다):**
+
+```txt
+util/
+├── date/
+│   ├── to-display-date.ts
+│   └── to-display-date.test.ts
+└── money/
+    └── to-signed-amount.ts
 ```
 
 ```ts

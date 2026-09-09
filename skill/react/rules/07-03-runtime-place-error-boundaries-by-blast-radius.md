@@ -18,6 +18,8 @@ tags: screen, errors
 오류 경계는 실패 후에도 남겨야 할 화면 범위로 정합니다.
 초기 실패를 받을 경계가 없으면 화면 전체가 빈 채로 남을 수 있으므로 앱 경계는 반드시 둡니다.
 
+### 경계를 둘 층
+
 | 층 | 위치 | 오류 뒤 남는 화면 |
 | --- | --- | --- |
 | 앱 | 루트에 한 번 | 없음. 마지막 안전망입니다 |
@@ -28,6 +30,8 @@ tags: screen, errors
 목록 실패 후 옆 필터로 할 수 있는 일이 없다면 화면 경계로 충분합니다.
 로딩 · 오류 경계는 같은 소유자가 조립하며, 위치는 `runtime-place-suspense-boundaries-at-the-section-owner`를 따릅니다.
 
+### 실패 상황별 처리
+
 | 실패 상황 | 처리 |
 | --- | --- |
 | Suspense 쿼리에 표시할 캐시 데이터가 없음 | 렌더 중 던진 오류를 경계가 받습니다 |
@@ -36,6 +40,8 @@ tags: screen, errors
 | 트랜지션 Action 오류 · 라이브러리가 렌더에서 다시 던진 오류 | 일반 핸들러 오류와 구분합니다 |
 
 본문의 실패 분기는 `runtime-avoid-ad-hoc-loading-branches`를 따릅니다.
+### 경계 구현과 재시도
+
 오류 경계 클래스는 `ui`의 `UiErrorBoundary` 하나에 둡니다. 리액트 오류 경계 구현에는 클래스가 필요합니다.
 화면 경계는 `react-router` 라우트 설정의 `errorElement`로 두고,
 라우트 밖에서 감싸야 하면 `UiErrorBoundary`로 진입 컴포넌트를 감쌉니다.
@@ -62,7 +68,7 @@ if (responseProductRecommendationsSuspense.error && !responseProductRecommendati
 return <UiProductRecommendations items={responseProductRecommendationsSuspense.data.items} />;
 ```
 
-**Incorrect (경계 없이 화면 본문에서 실패를 분기합니다):**
+**Incorrect 2 (경계 없이 화면 본문에서 실패를 분기합니다):**
 
 ```tsx
 export const PgProducts = () => {
@@ -76,7 +82,21 @@ export const PgProducts = () => {
 };
 ```
 
-**Correct (화면 경계가 오류를 처리하고 셸을 유지합니다):**
+**Correct 2 (화면 층 경계가 오류를 받으므로 본문에 성공 경로만 남깁니다):**
+
+```tsx
+// page/products/pg-products.tsx
+export const PgProducts = () => {
+	/**
+	 * 실패하면 셸이 가진 화면 층 경계가 받는다. 본문은 성공 경로만 그린다
+	 */
+	const responseProductListSuspense = useProductListSuspense();
+
+	return <UiTable rows={responseProductListSuspense.data.products} />;
+};
+```
+
+**Correct (셸이 화면 층 오류 경계와 로딩 경계를 조립합니다):**
 
 ```tsx
 // component/widget/app-shell/wg-app-shell.tsx
@@ -92,18 +112,6 @@ export const WgAppShell = (props: WgAppShellProps) => {
 			</main>
 		</div>
 	);
-};
-```
-
-```tsx
-// page/products/pg-products.tsx
-export const PgProducts = () => {
-	/**
-	 * 실패하면 셸이 가진 화면 층 경계가 받는다. 본문은 성공 경로만 그린다
-	 */
-	const responseProductListSuspense = useProductListSuspense();
-
-	return <UiTable rows={responseProductListSuspense.data.products} />;
 };
 ```
 

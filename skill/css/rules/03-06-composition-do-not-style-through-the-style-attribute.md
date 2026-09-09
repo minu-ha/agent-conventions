@@ -32,7 +32,7 @@ tags: values, inline-style
 `Omit`으로 뺄 수 있지만 DOM 속성을 허용하려고 그대로 두므로 사용 여부는 리뷰에서 확인합니다.
 클래스에서 인라인 선언을 덮으려면 `!important`가 필요합니다.
 
-**Incorrect (인라인으로 꾸밉니다):**
+**Incorrect 1 (인라인으로 꾸밉니다):**
 
 ```tsx
 <section className={clsx("pg_orders__summary")} style={{marginTop: 16, color: isCritical ? "#c00" : undefined}}>
@@ -40,13 +40,15 @@ tags: values, inline-style
 </section>
 ```
 
-**Correct (스타일시트에 두고 수정자로 가릅니다):**
+**Correct 1 (스타일시트에 두고 수정자로 가릅니다):**
 
 ```tsx
 <section className={clsx("pg_orders__summary", isCritical && "pg_orders__summary--critical")}>
 	{summary}
 </section>
 ```
+
+**Correct (인라인으로 적던 선언을 스타일시트에 둡니다):**
 
 ```css
 .pg_orders__summary {

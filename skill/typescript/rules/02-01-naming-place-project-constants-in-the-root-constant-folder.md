@@ -14,8 +14,19 @@ tags: naming, constant
 
 **Impact: HIGH (프로젝트 전반의 상수를 주제별로 모아 위치와 이름을 일관되게 유지합니다)**
 
+### 상수 자리 고르기
+
 상수 위치는 사용처 수가 아니라 소유자로 정합니다.
 소유자를 지워도 남는 값은 루트에, 함께 사라지는 값은 그 소유자 아래에 둡니다.
+
+자리를 고르는 차례입니다.
+
+```mermaid
+flowchart LR
+	q1{"소유자를 지워도<br>값이 남는가?"} -- 예 --> q2{"배포 환경마다<br>달라지는가?"} -- 예 --> r3("config 폴더")
+	q1 -- 아니요 --> r1("소유자 _constant 폴더")
+	q2 -- 아니요 --> r2("루트 constant 폴더")
+```
 
 | 소유 범위 | 파일 | 이름 |
 | --- | --- | --- |
@@ -25,6 +36,8 @@ tags: naming, constant
 `chart_axis_tick_count`는 화면과 함께 사라지고, `api_request_timeout_ms`는 서버 통신에 남습니다.
 사용처가 늘거나 줄어도 이 기준은 바뀌지 않습니다.
 소유자 전용 배치는 `naming-place-owner-constants-in-the-owner-constant-folder`를 따릅니다.
+
+### 선언과 내보내기
 
 | 선언 대상 | 규범 |
 | --- | --- |

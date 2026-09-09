@@ -16,6 +16,8 @@ tags: ownership, scope, third-party
 
 **Impact: CRITICAL (다른 소유자의 스타일을 덮어써도 해당 인스턴스에만 적용되도록 제한합니다)**
 
+### 선택자 판정
+
 다른 소유자의 클래스는 **내 최상위 클래스 블록 안에서 `&`로 시작하는 선택자**로만 씁니다.
 내 `scope_slug`와 다르면 외부 라이브러리, 다른 화면, `widget` 모두 같은 기준을 적용합니다.
 
@@ -35,6 +37,8 @@ tags: ownership, scope, third-party
 블록 중첩 깊이는 `selector-limit-nesting-block-depth` 규칙을 따릅니다.
 직접 수정할 수 있는 클래스라면 `ownership-change-other-owners-through-their-api`의 세 방법을 먼저 확인하고,
 모두 맞지 않을 때 이 규칙을 적용합니다.
+
+### 기계 검증 범위
 
 `selector-disallowed-list`는 등록된 외부 접두사와 다른 레이어의 최상위 클래스를 검사합니다.
 같은 레이어의 다른 식별자와 미등록 라이브러리 클래스는 파일별 소유자를 대조해야 합니다.

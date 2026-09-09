@@ -21,6 +21,17 @@ tags: typing, wrapper, dom
 그다음 DOM 속성은 아래 순서로 엽니다.
 같은 요소로 `{...props}`를 전달하는 래퍼는 1 · 2단계 중 컴파일되는 형태를 씁니다.
 
+### 여는 차례
+
+DOM 속성을 어느 단계로 열지 고르는 차례입니다.
+
+```mermaid
+flowchart LR
+	q1{"DOM 계약과<br>호환되는가?"} -- 아니요 --> q2{"부딪히는 이름만<br>빼면 되는가?"} -- 아니요 --> r3("3단계. 전달할<br>DOM 프롭만 선언")
+	q1 -- 예 --> r1("1단계. extends로<br>그대로 상속")
+	q2 -- 예 --> r2("2단계. 그 이름만 Omit으로 빼고<br>인덱스 접근으로 다시 열기")
+```
+
 1. DOM 계약과 호환되면 `extends <요소>HTMLAttributes<T>`로 씁니다.
 2. 같은 이름 프롭의 타입이 호환되지 않으면 `extends Omit<<요소>HTMLAttributes<T>, "size">`처럼
    충돌하는 이름만 빼고, 그 프롭을 인덱스 접근으로 다시 엽니다.
@@ -36,6 +47,8 @@ tags: typing, wrapper, dom
 
 요소 타입이 다르면 필요한 DOM 프롭을 `string`, `ChangeEventHandler<HTMLInputElement>` 같은 플랫폼 타입으로 적습니다.
 
+### 상속으로 열리는 범위
+
 `HTMLAttributes`만 쓰면 `disabled`, `type`, `colSpan` 같은 전용 속성을 잃습니다.
 `value` · `onChange`처럼 DOM이 정한 이름은 라이브러리 고유 계약이 아닙니다.
 자기 프롭과 전달 방식은 `typing-choose-wrapper-shape-and-forwarding`을 따릅니다.
@@ -47,7 +60,7 @@ DOM 속성은 리액트가 추가한 속성도 받아야 하는 열린 집합이
 `HTMLAttributes`를 상속하면 `style`도 열리므로,
 사용 여부는 `css/composition-do-not-style-through-the-style-attribute`를 따릅니다.
 
-**Incorrect (프롭 타입 하나의 충돌 때문에 DOM 속성 전체를 제외합니다):**
+**Incorrect 1 (프롭 타입 하나의 충돌 때문에 DOM 속성 전체를 제외합니다):**
 
 ```tsx
 // id · role · tabIndex · aria-* · 이벤트를 전부 잃고 다섯 개만 남았다
@@ -60,20 +73,7 @@ export interface UiButtonProps {
 }
 ```
 
-**Correct (DOM 프롭의 선언 방식을 조건에 따라 고릅니다):**
-
-```txt
-래퍼 프롭스에 DOM 속성을 연다
-│
-├ extends <요소>HTMLAttributes<T> 가 컴파일됨 ──→ 1단계. 그대로 둔다
-│
-├ 같은 이름 프롭의 값이 부딪혀 막힘 ──────────→ 2단계. 그 이름만 Omit 하고
-│                                               인덱스 접근으로 다시 연다
-│
-└ 감싸는 요소와 이벤트 대상 요소가 서로 다름 ─→ 3단계. extends 없이 필요한 것만
-```
-
-**Correct (1단계 — 같은 이름의 프롭도 호환되면 그대로 상속합니다):**
+**Correct 1 (1단계 — 같은 이름의 프롭도 호환되면 그대로 상속합니다):**
 
 ```tsx
 import {Button} from "@mui/material";

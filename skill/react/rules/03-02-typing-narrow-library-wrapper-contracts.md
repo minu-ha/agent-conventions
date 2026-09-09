@@ -20,6 +20,8 @@ tags: typing, wrapper, contracts
 라이브러리 컴포넌트는 화면에서 직접 쓰지 않고 `Ui*` 래퍼를 거칩니다.
 업그레이드 · 교체 시 수정 범위를 래퍼에 모으고, 화면에 필요한 계약만 엽니다.
 
+### 프롭 종류별 선언
+
 | 프롭 종류 | 선언 방법 |
 | --- | --- |
 | 라이브러리에 이미 있는 표시 프롭 (`color`, `padding`, `size`) | `ButtonProps["color"]`처럼 인덱스 접근으로 하나씩 엽니다 |
@@ -29,6 +31,8 @@ tags: typing, wrapper, contracts
 
 `export type UiButtonProps = ButtonProps`처럼 원본 프롭스 전체를 공개하지 않습니다.
 스타일 주입 지점까지 열면 `css/composition-inject-classes-only-at-the-entry-point`의 경계를 지킬 수 없습니다.
+
+### 자기 프롭 구분
 
 자기 프롭은 이름이 아니라 **안쪽 컴포넌트가 받는지**로 구분합니다.
 `UiIconButtonProps`의 `icon`은 자기 프롭이지만, 안쪽 컴포넌트도 받는 `UiTableRowProps`의 `selected`는 아닙니다.

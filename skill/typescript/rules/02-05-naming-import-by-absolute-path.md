@@ -15,6 +15,8 @@ tags: naming, imports
 
 **Impact: CRITICAL (가져오기 경로를 통일하고 가져오는 파일의 위치로 접근 범위를 판단합니다)**
 
+### 경로 표기
+
 심볼은 `@/` 절대경로로 가져옵니다.
 심볼 없이 같은 폴더의 파일만 불러올 때는 `./`를 허용하며, `../`는 쓰지 않습니다.
 
@@ -29,6 +31,8 @@ tags: naming, imports
 소유자 밖에서 쓴다는 이유로 루트에 올리지 않습니다.
 배치는 `naming-place-project-constants-in-the-root-constant-folder`와
 `functions-give-each-function-its-own-file`이 정합니다.
+
+### `src` 아래 루트 폴더
 
 | `src` 아래 루트 | 담는 것 |
 | --- | --- |

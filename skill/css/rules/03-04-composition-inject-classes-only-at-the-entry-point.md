@@ -20,10 +20,14 @@ tags: components, entry-point, class-props
 우리가 만든 컴포넌트는 레이어와 무관하게 **최상위 진입점 한 곳**에서만 외부 클래스를 받습니다.
 내부 노드의 클래스 주입 지점을 늘리면 사용처가 컴포넌트 구조에 의존하게 됩니다.
 
+### 사용처가 바꾸는 자리
+
 | 사용처가 바꾸려는 것 | 방법 |
 | --- | --- |
 | 최상위의 배치, 여백, 크기 | 받은 `className`을 자기 최상위 클래스와 `clsx()`로 합칩니다 |
 | 화면마다 달라지는 내부 모양 | `variant` 프롭을 받고 헤더나 본문 등 필요한 노드마다 수정자를 붙입니다 |
+
+### 금지하는 형태
 
 | 금지하는 형태 | 이유 또는 예외 |
 | --- | --- |
@@ -34,7 +38,7 @@ tags: components, entry-point, class-props
 사용처의 선택은 `ownership-change-other-owners-through-their-api` 규칙이 정합니다.
 `className`을 받지 않는 컴포넌트는 `composition-do-not-add-wrapper-elements-for-styling` 규칙을 따릅니다.
 
-**Incorrect (내부 노드마다 클래스 프롭을 열어 주입 지점을 늘립니다):**
+**Incorrect 1 (내부 노드마다 클래스 프롭을 열어 주입 지점을 늘립니다):**
 
 ```tsx
 export interface UiCollapseProps {
@@ -45,7 +49,18 @@ export interface UiCollapseProps {
 }
 ```
 
-**Incorrect (받은 `className`을 내부 노드로 넘깁니다):**
+**Correct 1 (클래스 프롭은 최상위 `className` 하나로 두고 내부는 `variant`로 엽니다):**
+
+```tsx
+export interface UiCollapseProps {
+	className?: string;
+	variant?: "default" | "compact";
+	title: ReactNode;
+	children: ReactNode;
+}
+```
+
+**Incorrect 2 (받은 `className`을 내부 노드로 넘깁니다):**
 
 ```tsx
 export const UiCollapse = (props: UiCollapseProps) => {
@@ -60,16 +75,9 @@ export const UiCollapse = (props: UiCollapseProps) => {
 };
 ```
 
-**Correct (`className`은 최상위 클래스와 합치고, 변형은 필요한 노드마다 수정자로 붙입니다):**
+**Correct 2 (`className`은 최상위 클래스와 합치고, 변형은 필요한 노드마다 수정자로 붙입니다):**
 
 ```tsx
-export interface UiCollapseProps {
-	className?: string;
-	variant?: "default" | "compact";
-	title: ReactNode;
-	children: ReactNode;
-}
-
 export const UiCollapse = (props: UiCollapseProps) => {
 	const isCompact = props.variant === "compact";
 
@@ -83,6 +91,8 @@ export const UiCollapse = (props: UiCollapseProps) => {
 	);
 };
 ```
+
+**Correct (수정자의 선언은 소유자 CSS에 둡니다):**
 
 ```css
 .ui_collapse__header {

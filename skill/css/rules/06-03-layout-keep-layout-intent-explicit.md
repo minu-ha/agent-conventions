@@ -54,7 +54,13 @@ tags: layout, comments, sticky
 }
 ```
 
-**Incorrect (로딩 대체 화면에만 높이를 따로 적습니다):**
+**Incorrect 2 (로딩 대체 화면에만 높이를 따로 적습니다):**
+
+```tsx
+<Suspense fallback={<UiChartSkeleton className={clsx("pg_productDetail__chartSkeleton")} />}>
+	<PgProductDetailChartSection />
+</Suspense>
+```
 
 ```css
 .pg_productDetail__chartSkeleton {
@@ -62,7 +68,7 @@ tags: layout, comments, sticky
 }
 ```
 
-**Correct (대체 화면을 실제 내용과 같은 컨테이너 클래스 안에 넣습니다):**
+**Correct 2 (대체 화면을 실제 내용과 같은 컨테이너 클래스 안에 넣습니다):**
 
 ```tsx
 <div className={clsx("pg_productDetail__chart")}>

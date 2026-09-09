@@ -2,6 +2,8 @@
 
 **Impact: MEDIUM (자동 검사와 리뷰의 역할을 구분해 판단이 필요한 내용에 집중합니다)**
 
+### 설정이 담당하는 것
+
 기계적으로 판정할 수 있는 규칙은 아래 Biome 설정으로 검사하고, 의미 판단은 리뷰에서 확인합니다.
 
 | Biome 규칙 | 담당 컨벤션 |
@@ -30,6 +32,8 @@
 Biome 2.5.7의 `recommended`에는 `useConst` · `useImportType` · `noNonNullAssertion` ·
 `noUnusedFunctionParameters` · `noExplicitAny`가 포함됩니다. 담당 컨벤션을 드러내려고 설정에도 명시합니다.
 
+### 리뷰가 담당하는 것
+
 | 대상 | 도구 한계 | 처리 |
 | --- | --- | --- |
 | 모듈 `const` · 객체 키의 역할 | 허용된 `snake_case`는 불변 데이터 상수와 그 키에만 적용됨 | 함수 · 스키마 · 요청 객체와의 구분은 리뷰합니다 |
@@ -45,6 +49,8 @@ Biome 2.5.7의 `recommended`에는 `useConst` · `useImportType` · `noNonNullAs
 `PascalCase`는 `objectLiteralProperty` · `const` · `variable`에만 허용합니다.
 `import.meta.env` · `process.env`는 CI에서 문자열로 검색해도 됩니다.
 `style/useConsistentArrowReturn`이 막는 것은 인라인 콜백과 커링 바깥 화살표 예외입니다.
+
+### 설정 예외
 
 | 설정 예외 | 적용 범위와 이유 |
 | --- | --- |

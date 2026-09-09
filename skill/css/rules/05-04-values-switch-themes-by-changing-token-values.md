@@ -17,6 +17,13 @@ tags: values, theme
 
 테마는 **토큰 파일에서 값만** 바꿉니다. 컴포넌트 CSS에는 `prefers-color-scheme`이나 `[data-theme]` 분기를 두지 않습니다.
 
+토큰 파일 안에서 테마 값을 덮어쓰는 차례입니다.
+
+```mermaid
+flowchart LR
+	t1(":root 기본값") --> t2("@media<br>prefers-color-scheme") --> t3(":root[data-theme]")
+```
+
 | 테마 조건이나 값 | 처리 |
 | --- | --- |
 | 시스템 테마 | 토큰 파일의 `@media (prefers-color-scheme)`에서 `:root` 값을 바꿉니다 |

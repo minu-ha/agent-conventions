@@ -16,6 +16,8 @@ tags: tooling, stylelint, automation
 
 **Impact: MEDIUM (자동 검사 범위를 설정으로 고정하고 의미 판단은 리뷰에 남깁니다)**
 
+### 규칙별 담당
+
 `stylelint-config-standard`를 확장해 아래 규칙을 적용하고 기계가 확인하지 못하는 의미는 리뷰에서 판단합니다.
 
 | Stylelint 규칙 | 담당 컨벤션 |
@@ -44,6 +46,8 @@ tags: tooling, stylelint, automation
 예제 정규식은 `&`로 시작하는 중첩 선택자와 최상위를 구분하지만 `&`의 소유자까지 검증하지는 않습니다.
 `selector-max-combinators`와 `selector-max-type`은 넣지 않습니다.
 개수만으로 우리 선택자와 라이브러리 경로를 구분할 수 없습니다.
+
+### 도구 한계와 리뷰
 
 | 대상 | 도구 한계 | 처리 |
 | --- | --- | --- |

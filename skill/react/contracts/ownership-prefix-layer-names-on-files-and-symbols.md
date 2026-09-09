@@ -5,6 +5,8 @@
 세 레이어 모두 파일명과 심볼에 레이어 접두사를 붙입니다.
 레이어 판정은 `ownership-layer-component-boundaries`를 따릅니다.
 
+### 레이어 접두사
+
 | 레이어 | 파일 | 심볼 | CSS 식별자 |
 | --- | --- | --- | --- |
 | `ui` | `ui-button.tsx` | `UiButton` | `ui_button` |
@@ -17,6 +19,8 @@
 | 진입 파일이 아닌 컴포넌트 | `_pg-unit-toggle.tsx`처럼 접두사 앞에 `_`를 붙입니다. 동반 `.css`도 같은 이름을 씁니다 |
 | 심볼 | 진입 파일 여부와 관계없이 `_`를 붙이지 않습니다 |
 | 접두사와 겹치는 이름 | `component/ui/button/ui-button.tsx`로 쓰고 `ui-button-button.tsx`처럼 반복하지 않습니다 |
+
+### 부품 이름 짓기
 
 부품과 하위 소유자는 이름이 스스로 무엇인지 말하게 짓습니다.
 

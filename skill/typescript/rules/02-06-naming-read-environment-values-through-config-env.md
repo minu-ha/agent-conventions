@@ -16,6 +16,8 @@ tags: naming, config
 
 **Impact: HIGH (환경마다 달라지는 값이 쓰는 파일로 흩어지지 않고 한 파일에서 읽힙니다)**
 
+### 값의 자리
+
 환경 값은 루트 `config/env.ts`에서만 읽고 `env_` 상수로 내보냅니다.
 다른 파일은 그 이름을 쓰며 `import.meta.env`와 `process.env`를 직접 읽지 않습니다.
 
@@ -27,6 +29,8 @@ tags: naming, config
 
 배포 환경은 프로젝트 단위이므로 `config`는 루트에만 둡니다.
 상수 파일과 이름의 형식은 `naming-place-project-constants-in-the-root-constant-folder`를 따릅니다.
+
+### 읽을 때 확인할 것
 
 | 읽을 때 확인할 것 | 처리 |
 | --- | --- |

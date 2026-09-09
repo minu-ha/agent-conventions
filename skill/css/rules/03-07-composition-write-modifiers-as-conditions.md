@@ -97,7 +97,7 @@ export const UiButton = (props: UiButtonProps) => {
 };
 ```
 
-**Incorrect (수정자가 없는 값까지 조립해 CSS에 없는 클래스를 붙입니다):**
+**Incorrect 3 (수정자가 없는 값까지 조립해 CSS에 없는 클래스를 붙입니다):**
 
 ```tsx
 type Tone = "positive" | "negative" | "neutral" | "unknown";
@@ -115,7 +115,7 @@ type Tone = "positive" | "negative" | "neutral" | "unknown";
 }
 ```
 
-**Correct (CSS에 수정자가 있는 두 값만 적고 나머지는 기본 모습을 씁니다):**
+**Correct 3 (CSS에 수정자가 있는 두 값만 적고 나머지는 기본 모습을 씁니다):**
 
 ```tsx
 <span
@@ -127,6 +127,16 @@ type Tone = "positive" | "negative" | "neutral" | "unknown";
 >
 	{amount}
 </span>;
+```
+
+```css
+.pg_products__changeRate--positive {
+	color: var(--app-color-rise);
+}
+
+.pg_products__changeRate--negative {
+	color: var(--app-color-fall);
+}
 ```
 
 **Correct (같은 값이 요소 셋의 수정자를 정하면 요소마다 나열을 반복합니다):**

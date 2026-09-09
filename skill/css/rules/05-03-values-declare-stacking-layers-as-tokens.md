@@ -14,6 +14,8 @@ tags: values, layering
 
 **Impact: MEDIUM (층 순서를 한 파일에서 확인하고 `z-index` 숫자를 임의로 늘리지 않습니다)**
 
+### 층 토큰
+
 층은 전역 토큰 파일에 한 번 선언하고 `z-index`에서는 토큰 이름만 씁니다.
 `layout-keep-layout-intent-explicit`에 따라 숫자를 직접 쓰거나 사용처에서 층 사이 값을 만들지 않습니다.
 
@@ -25,6 +27,9 @@ tags: values, layering
 | `--app-z-index-popper` | `300` | 툴팁, 드롭다운, 알림 |
 
 새 용도가 네 층에 모두 맞지 않을 때만 토큰 파일에 층을 추가하고 100 간격을 유지합니다.
+
+### 쌓임 맥락
+
 **층 순서는 같은 쌓임 맥락 안에서만 성립합니다.**
 조상의 맥락이 바깥 `sticky`보다 아래면 내부 `popper`의 숫자를 올려도 그 위로 나오지 못합니다.
 
@@ -36,6 +41,8 @@ tags: values, layering
 | `opacity`, `isolation`, `contain` | `opacity`는 1 미만, `isolation`은 `isolate`, `contain`은 `layout`, `paint`, `content`, `strict` 중 하나 |
 
 `fixed`와 `sticky`는 그 자체로 새 쌓임 맥락을 만듭니다.
+
+### 가려졌을 때 확인 순서
 
 요소가 가려졌으면 숫자를 올리기 전에 아래 순서로 확인합니다.
 

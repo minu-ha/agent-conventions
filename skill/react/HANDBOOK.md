@@ -115,6 +115,17 @@
 컴포넌트의 레이어는 사용 횟수나 조립 규모가 아니라 **무엇을 아는지**로 나눕니다.
 먼저 `page` 조건을 확인하고, 해당하지 않으면 도메인 지식으로 구분합니다.
 
+### 판정 차례
+
+무엇을 아는지 확인하는 차례입니다.
+
+```mermaid
+flowchart LR
+	q1{"화면의 데이터 ·<br>흐름을 아는가?"} -- 아니요 --> q2{"도메인을 아는가?"} -- 아니요 --> r3("ui")
+	q1 -- 예 --> r1("page")
+	q2 -- 예 --> r2("widget")
+```
+
 **1순위**
 
 | 조건 | 레이어 |
@@ -129,6 +140,8 @@
 | --- | --- |
 | 화면은 모르고 도메인만 앎 | `widget`. 이름에 도메인 단어가 남아도 됩니다 |
 | 도메인도 화면도 모름 | `ui` |
+
+### 근거가 되지 않는 조건
 
 `children`과 공용 계약만 받아 경계를 제공하는 범용 셸 · 대화상자는 그 이유만으로 `page`가 되지 않습니다.
 특정 화면의 데이터나 흐름을 아는지 확인합니다.
@@ -230,6 +243,8 @@ export const WgProductTrendChart = (props: WgProductTrendChartProps) => {
 세 레이어 모두 파일명과 심볼에 레이어 접두사를 붙입니다.
 레이어 판정은 `ownership-layer-component-boundaries`를 따릅니다.
 
+### 레이어 접두사
+
 | 레이어 | 파일 | 심볼 | CSS 식별자 |
 | --- | --- | --- | --- |
 | `ui` | `ui-button.tsx` | `UiButton` | `ui_button` |
@@ -242,6 +257,8 @@ export const WgProductTrendChart = (props: WgProductTrendChartProps) => {
 | 진입 파일이 아닌 컴포넌트 | `_pg-unit-toggle.tsx`처럼 접두사 앞에 `_`를 붙입니다. 동반 `.css`도 같은 이름을 씁니다 |
 | 심볼 | 진입 파일 여부와 관계없이 `_`를 붙이지 않습니다 |
 | 접두사와 겹치는 이름 | `component/ui/button/ui-button.tsx`로 쓰고 `ui-button-button.tsx`처럼 반복하지 않습니다 |
+
+### 부품 이름 짓기
 
 부품과 하위 소유자는 이름이 스스로 무엇인지 말하게 짓습니다.
 
@@ -323,6 +340,8 @@ component/widget/chatbot/
 추출한 파일은 소유자 폴더에 두고, 역할과 공개 범위에 맞춰 이름을 정합니다.
 호출 계층은 폴더를 중첩하지 않고 진입 파일의 조립으로 드러냅니다.
 
+### 배치와 이름
+
 | 구분 | 배치와 이름 |
 | --- | --- |
 | 소유자 | 자기만 쓰는 파일이 있거나 여러 하위 소유자가 함께 쓰는 컴포넌트는 자기 이름의 폴더를 갖습니다 |
@@ -337,6 +356,8 @@ component/widget/chatbot/
 역할 폴더 네 개를 제외한 폴더는 모두 하위 소유자입니다.
 더 깊어지면 형제로 올리거나 `widget`으로 분리할지 판단합니다.
 
+### 역할 폴더
+
 | 역할 폴더 | 담는 것 |
 | --- | --- |
 | `_constant` | 입력을 받지 않는 상수 · 기본값 · 기준값 · 파서 묶음 등 선언형 계약 |
@@ -348,6 +369,8 @@ component/widget/chatbot/
 `_`는 둘에 해당하지 않는다는 표식이며, 정렬상 하위 소유자 폴더보다 앞에 놓입니다.
 `_` 파일은 같은 폴더에서만 가져오고, 역할 폴더는 외부에서도 가져올 수 있는 공개 영역입니다.
 가져오기 경계는 `ownership-keep-component-imports-flowing-downward`를 따릅니다.
+
+### 폴더 이름 기준
 
 폴더 이름은 단수로 쓰되 프레임워크가 강제하는 이름은 예외입니다.
 소유자 아래에 `component` · `util` · `helper` · `config` · `constants` · `common` · `shared` 폴더를 만들지 않습니다.
@@ -844,6 +867,8 @@ const responseProductListSuspense = useProductListSuspense(
 둘 이상의 쿼리 결과를 하나로 합칠 때는 값을 렌더하는 섹션에서 `combine`을 인라인으로 씁니다.
 결과를 합칠 필요와 요청을 병렬로 시작할 필요는 따로 판단합니다.
 
+### 합치는 방법 고르기
+
 | 상황 | 선택 |
 | --- | --- |
 | Suspense 쿼리 결과를 합침 | `useSuspenseQueries` + `combine`. `isPending`을 만들어 내보내지 않습니다 |
@@ -851,6 +876,8 @@ const responseProductListSuspense = useProductListSuspense(
 | 결과를 각각 렌더함 | 합친 값을 만들지 않습니다. Suspense 병렬 실행이 필요하면 `useSuspenseQueries`에서 결과를 따로 읽습니다 |
 | 일반 쿼리의 뒤 요청이 앞 결과를 입력으로 받음 | `enabled`로 입력이 준비된 뒤 실행합니다 |
 | Suspense 쿼리의 뒤 요청이 앞 결과를 입력으로 받음 | 같은 컴포넌트에서 `useSuspenseQuery`를 순서대로 호출합니다 |
+
+### 실행 차례와 재계산
 
 `useSuspenseQuery` · `useSuspenseQueries`는 `enabled`를 받지 않습니다.
 필수 입력이 없으면 쿼리를 호출하는 자식의 렌더를 보류합니다.
@@ -991,6 +1018,8 @@ useEffect(() => {
 뮤테이션 실패는 입력 문맥을 유지할 수 있도록 호출한 자리에서 처리합니다.
 기본은 `mutate`와 `useMutation`의 `onError` · `onSuccess`이며, 핸들러에서는 호출만 합니다.
 
+### 호출 방식 고르기
+
 | 상황 | 선택 |
 | --- | --- |
 | 호출 뒤 핸들러가 더 할 일이 없음 | `mutate` + `onError`, `onSuccess` |
@@ -999,6 +1028,8 @@ useEffect(() => {
 거부된 `mutateAsync` Promise는 오류 경계가 자동으로 받지 않습니다.
 `await` 뒤의 코드는 실행되지 않으므로 반드시 `catch`에서 실패를 표시하거나 다시 던집니다.
 `throwOnError`로 렌더에서 오류를 다시 던지는 경우는 `runtime-place-error-boundaries-by-blast-radius`를 따릅니다.
+
+### 실패와 중복 실행 처리
 
 | 함께 판단할 내용 | 기준 |
 | --- | --- |
@@ -1099,6 +1130,24 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = async (_even
 뮤테이션이 바꾼 서버 상태는 해당 데이터를 소유한 쿼리 키로 `invalidateQueries`하여 다시 맞춥니다.
 낙관적 갱신과 사용자가 누르는 새로 고침 버튼은 이 규칙의 대상이 아닙니다.
 
+### 갱신 방법 고르기
+
+성공한 뮤테이션이 서버 상태를 다시 맞추는 차례입니다.
+
+```mermaid
+sequenceDiagram
+	participant S as 화면
+	participant M as 뮤테이션
+	participant A as 서버
+	participant C as 쿼리 캐시
+	S->>M: 저장 호출
+	M->>A: 저장 요청
+	A-->>M: 성공 응답
+	M->>C: 관련 키 무효화
+	C->>A: 활성 쿼리 다시 요청
+	A-->>S: 새 응답
+```
+
 | 성공 뒤 갱신 방법 | 판정 |
 | --- | --- |
 | `invalidateQueries` | 변경된 서버 상태를 가리키는 관련 키들을 함께 지정합니다 |
@@ -1109,6 +1158,8 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = async (_even
 무효화를 고르는 기준은 구독자 수가 아니라 관련 키의 범위입니다.
 `invalidateQueries`는 일치하는 쿼리를 오래된 상태로 표시하고 기본적으로 활성 쿼리를 다시 불러옵니다.
 비활성 쿼리까지 즉시 요청한다고 가정하지 않습니다.
+
+### 무효화 호출 조건
 
 | 호출 조건 | 처리 |
 | --- | --- |
@@ -1252,6 +1303,8 @@ const handleSubmitClick: UiButtonProps["onClick"] = (event) => {
 라이브러리 컴포넌트는 화면에서 직접 쓰지 않고 `Ui*` 래퍼를 거칩니다.
 업그레이드 · 교체 시 수정 범위를 래퍼에 모으고, 화면에 필요한 계약만 엽니다.
 
+### 프롭 종류별 선언
+
 | 프롭 종류 | 선언 방법 |
 | --- | --- |
 | 라이브러리에 이미 있는 표시 프롭 (`color`, `padding`, `size`) | `ButtonProps["color"]`처럼 인덱스 접근으로 하나씩 엽니다 |
@@ -1261,6 +1314,8 @@ const handleSubmitClick: UiButtonProps["onClick"] = (event) => {
 
 `export type UiButtonProps = ButtonProps`처럼 원본 프롭스 전체를 공개하지 않습니다.
 스타일 주입 지점까지 열면 `css/composition-inject-classes-only-at-the-entry-point`의 경계를 지킬 수 없습니다.
+
+### 자기 프롭 구분
 
 자기 프롭은 이름이 아니라 **안쪽 컴포넌트가 받는지**로 구분합니다.
 `UiIconButtonProps`의 `icon`은 자기 프롭이지만, 안쪽 컴포넌트도 받는 `UiTableRowProps`의 `selected`는 아닙니다.
@@ -1324,6 +1379,17 @@ export const UiTableCell = (props: UiTableCellProps) => {
 그다음 DOM 속성은 아래 순서로 엽니다.
 같은 요소로 `{...props}`를 전달하는 래퍼는 1 · 2단계 중 컴파일되는 형태를 씁니다.
 
+### 여는 차례
+
+DOM 속성을 어느 단계로 열지 고르는 차례입니다.
+
+```mermaid
+flowchart LR
+	q1{"DOM 계약과<br>호환되는가?"} -- 아니요 --> q2{"부딪히는 이름만<br>빼면 되는가?"} -- 아니요 --> r3("3단계. 전달할<br>DOM 프롭만 선언")
+	q1 -- 예 --> r1("1단계. extends로<br>그대로 상속")
+	q2 -- 예 --> r2("2단계. 그 이름만 Omit으로 빼고<br>인덱스 접근으로 다시 열기")
+```
+
 1. DOM 계약과 호환되면 `extends <요소>HTMLAttributes<T>`로 씁니다.
 2. 같은 이름 프롭의 타입이 호환되지 않으면 `extends Omit<<요소>HTMLAttributes<T>, "size">`처럼
    충돌하는 이름만 빼고, 그 프롭을 인덱스 접근으로 다시 엽니다.
@@ -1339,6 +1405,8 @@ export const UiTableCell = (props: UiTableCellProps) => {
 
 요소 타입이 다르면 필요한 DOM 프롭을 `string`, `ChangeEventHandler<HTMLInputElement>` 같은 플랫폼 타입으로 적습니다.
 
+### 상속으로 열리는 범위
+
 `HTMLAttributes`만 쓰면 `disabled`, `type`, `colSpan` 같은 전용 속성을 잃습니다.
 `value` · `onChange`처럼 DOM이 정한 이름은 라이브러리 고유 계약이 아닙니다.
 자기 프롭과 전달 방식은 `typing-choose-wrapper-shape-and-forwarding`을 따릅니다.
@@ -1350,7 +1418,7 @@ DOM 속성은 리액트가 추가한 속성도 받아야 하는 열린 집합이
 `HTMLAttributes`를 상속하면 `style`도 열리므로,
 사용 여부는 `css/composition-do-not-style-through-the-style-attribute`를 따릅니다.
 
-**Incorrect (프롭 타입 하나의 충돌 때문에 DOM 속성 전체를 제외합니다):**
+**Incorrect 1 (프롭 타입 하나의 충돌 때문에 DOM 속성 전체를 제외합니다):**
 
 ```tsx
 // id · role · tabIndex · aria-* · 이벤트를 전부 잃고 다섯 개만 남았다
@@ -1363,20 +1431,7 @@ export interface UiButtonProps {
 }
 ```
 
-**Correct (DOM 프롭의 선언 방식을 조건에 따라 고릅니다):**
-
-```txt
-래퍼 프롭스에 DOM 속성을 연다
-│
-├ extends <요소>HTMLAttributes<T> 가 컴파일됨 ──→ 1단계. 그대로 둔다
-│
-├ 같은 이름 프롭의 값이 부딪혀 막힘 ──────────→ 2단계. 그 이름만 Omit 하고
-│                                               인덱스 접근으로 다시 연다
-│
-└ 감싸는 요소와 이벤트 대상 요소가 서로 다름 ─→ 3단계. extends 없이 필요한 것만
-```
-
-**Correct (1단계 — 같은 이름의 프롭도 호환되면 그대로 상속합니다):**
+**Correct 1 (1단계 — 같은 이름의 프롭도 호환되면 그대로 상속합니다):**
 
 ```tsx
 import {Button} from "@mui/material";
@@ -1681,6 +1736,16 @@ export const UiTableRow = (props: UiTableRowProps) => {
 
 공용 컴포넌트는 프롭스보다 구조를 먼저 고릅니다.
 표를 위에서부터 읽어 현재 필요한 단계까지만 적용합니다.
+
+필요한 구조를 고르는 차례입니다.
+
+```mermaid
+flowchart LR
+	q1{"부품 조립이<br>필요한가?"} -- 예 --> q2{"부품이 같은 상태 ·<br>동작을 읽는가?"} -- 예 --> q3{"같은 조합이<br>반복되는가?"} -- 예 --> r4("조합을 감싼 변형")
+	q1 -- 아니요 --> r1("단일 컴포넌트")
+	q2 -- 아니요 --> r2("상태 없는 합성")
+	q3 -- 아니요 --> r3("상태 있는 합성")
+```
 
 | 상황 | 선택 |
 | --- | --- |
@@ -2034,10 +2099,14 @@ export const WgProductEditToolbar = () => {
 
 상태 없는 합성으로 충분한 공용 컴포넌트는 렌더 프롭보다 `children`을 우선합니다.
 
+### 슬롯 고르기
+
 | 상황 | 선택 |
 | --- | --- |
 | 부모가 자식 자리만 열어 줌 | `children`과 네임스페이스 슬롯 부품 |
 | 부모가 항목 · 순번 · 상태 같은 실행 문맥을 자식에게 전달해야 함 | 이때만 `renderHeader`, `renderFooter` 같은 렌더 프롭을 씁니다 |
+
+### 슬롯 계약 이름
 
 | 별도 이름이 필요한 계약 | 이름 |
 | --- | --- |
@@ -2462,12 +2531,16 @@ export const UiSearchInput = (props: UiSearchInputProps) => {
 기본은 조건부 렌더링입니다. 리액트 19.2 이상에서 숨겼다 다시 보여 줄 때
 하위 트리 상태를 보존해야 하는 경우에만 `<Activity>`를 씁니다. 이전 버전은 조건부 렌더링을 씁니다.
 
+### 두 방식의 차이
+
 | 비교 항목 | 조건부 렌더링으로 제거 | `<Activity mode="hidden">` |
 | --- | --- | --- |
 | 상태와 DOM | 버립니다 | 보존합니다 |
 | 이펙트 | 정리하고 다시 마운트할 때 설치합니다 | 숨길 때 정리하고 다시 보일 때 설치합니다 |
 | 숨긴 동안 렌더 | 없습니다 | 업데이트가 생기면 낮은 우선순위로 렌더합니다 |
 | 접근성 트리 | 빠집니다 | `display: none`이 적용되어 빠집니다 |
+
+### 확인할 조건
 
 | 확인할 조건 | 처리 |
 | --- | --- |
@@ -2909,6 +2982,17 @@ export const PgOrderToolbar = () => {
 `widget`과 `ui` 컴포넌트 안의 부품은 아래 책임 중 하나를 직접 소유할 때만 파일로 뗍니다.
 단순 래퍼 · `className` 묶음 · 들여쓰기 감소 · 긴 파일은 분리 근거가 아닙니다.
 
+### 분리 근거가 되는 책임
+
+부품을 파일로 뗄지 정하는 차례입니다.
+
+```mermaid
+flowchart LR
+	q1{"런타임 책임을<br>직접 소유하는가?"} -- 아니요 --> q2{"재사용하거나<br>조립에 공개하는가?"} -- 아니요 --> r2("진입 파일에 유지")
+	q1 -- 예 --> r1("파일로 분리")
+	q2 -- 예 --> r1
+```
+
 | 책임 | 예 |
 | --- | --- |
 | 비동기 | `Suspense` · 스켈레톤 · 로딩 · 오류 · 빈 상태 |
@@ -2917,6 +3001,8 @@ export const PgOrderToolbar = () => {
 | 라이브러리와 성능 | 외부 라이브러리 생명주기 어댑터 · 가상 스크롤 · 전환 · 지연 값 |
 
 책임 표는 `screen-extract-local-section-components-for-runtime-boundaries`와 같습니다.
+### `widget` · `ui` 전용 책임
+
 아래 두 책임은 `widget` · `ui`에만 적용합니다.
 
 | 책임 | 예 |
@@ -2990,11 +3076,15 @@ export const WgChatbot = () => {
 라우트 진입은 화면 흐름을 조립하고, 데이터와 동작은 사용하는 컴포넌트가 소유합니다.
 다른 규칙이 참조하는 라우트 진입의 책임은 아래 표를 기준으로 합니다.
 
+### 라우트 진입의 책임
+
 | 라우트 진입의 책임 | 범위 |
 | --- | --- |
 | 섹션 조립과 `Suspense` 경계 | 경계 수는 `runtime-place-suspense-boundaries-at-the-section-owner`를 따릅니다 |
 | 화면 전체 이펙트 | 화면 전체에 걸친 동기화를 소유합니다 |
 | 라우트 사이의 이동 흐름 결정 | `useNavigate` 호출은 실제 동작을 일으키는 컴포넌트가 맡습니다 |
+
+### 데이터와 동작의 소유자
 
 | 데이터 · 동작 | 소유 위치 |
 | --- | --- |
@@ -3006,6 +3096,8 @@ export const WgChatbot = () => {
 독립 섹션이 없는 작은 화면은 진입 컴포넌트가 데이터 소유자를 겸할 수 있습니다.
 이때만 쿼리를 직접 호출하고 경계는 상위 레이아웃에 둡니다. 경계만을 위한 빈 섹션은 만들지 않습니다.
 비동기 · 상태 · 상호작용 경계로 섹션을 분리해도 위 표의 화면 흐름 제어는 라우트 진입에 남깁니다.
+
+### 같은 데이터를 여러 섹션이 읽을 때
 
 같은 데이터가 여러 섹션에 필요해도 프롭으로 내리지 않습니다.
 같은 `QueryClient`와 `key`는 캐시 · 진행 중인 요청을 공유하지만,
@@ -3099,6 +3191,8 @@ export const PgProductListSection = () => {
 반복이 보인다는 이유만으로 공용 훅 · 컴포넌트 · 보조 함수를 추출하지 않습니다.
 먼저 흐름을 같은 파일에서 읽을 수 있도록 정리합니다.
 
+### 먼저 시도할 방법
+
 | 먼저 시도할 방법 | 유지할 위치 |
 | --- | --- |
 | 단계 변수 · 섹션 주석 · 내부 블록으로 정리 | 한 함수 안 |
@@ -3109,6 +3203,8 @@ export const PgProductListSection = () => {
 한 대표 함수만 호출하는 보조도 `_function` 바로 아래에 공개하지 않습니다.
 그 배치는 `typescript/functions-give-each-function-its-own-file`을 따릅니다.
 이름을 붙이기 좋다는 이유만으로 흐름을 여러 파일에 나누지 않습니다.
+
+### 추출 허용 경계
 
 | 추출 대상 | 허용 경계 |
 | --- | --- |
@@ -3156,9 +3252,9 @@ export const PgProductTable = (props: PgProductTableProps) => {
 };
 ```
 
-**Incorrect (사용처가 한 화면뿐인데 공용 훅으로 먼저 빼냅니다):**
+**Incorrect 2 (사용처가 한 화면뿐인데 공용 훅으로 먼저 빼냅니다):**
 
-```ts
+```tsx
 // _hook/use-product-filter-form.ts
 export const useProductFilterForm = () => {
 	const [keyword, setKeyword] = useState("");
@@ -3166,9 +3262,7 @@ export const useProductFilterForm = () => {
 
 	return {categoryId, keyword, setCategoryId, setKeyword};
 };
-```
 
-```tsx
 // page/products/pg-products.tsx: 이 훅을 부르는 화면은 여기 하나뿐이다
 export const PgProducts = () => {
 	const productFilterForm = useProductFilterForm();
@@ -3177,7 +3271,7 @@ export const PgProducts = () => {
 };
 ```
 
-**Correct (한 화면만 쓰는 동안은 화면 안에 그대로 둡니다):**
+**Correct 2 (한 화면만 쓰는 동안은 화면 안에 그대로 둡니다):**
 
 ```tsx
 // page/products/pg-products.tsx
@@ -3406,6 +3500,15 @@ export const PgProductTableSection = () => {
 `Suspense` 쿼리를 쓰는 컴포넌트의 바로 위 섹션 소유자에 경계와 대체 화면을 둡니다.
 쿼리를 호출하는 컴포넌트는 자기 자신을 경계로 감쌀 수 없습니다.
 
+경계 자리를 고르는 차례입니다.
+
+```mermaid
+flowchart LR
+	q1{"쿼리를 호출하는 쪽이<br>섹션인가?"} -- 예 --> q2{"섹션이 독립적으로<br>채워져야 하는가?"} -- 예 --> r2("섹션마다 경계")
+	q1 -- 아니요 --> r3("레이아웃 · 상위 라우트에 경계")
+	q2 -- 아니요 --> r1("라우트 진입에 경계 하나")
+```
+
 | 상황 | 경계 위치 |
 | --- | --- |
 | 섹션이 따로 없음 | 라우트 진입 |
@@ -3552,6 +3655,8 @@ return <PgPaymentWidgetSection amount={responseOrderAmountSuspense.data.confirme
 오류 경계는 실패 후에도 남겨야 할 화면 범위로 정합니다.
 초기 실패를 받을 경계가 없으면 화면 전체가 빈 채로 남을 수 있으므로 앱 경계는 반드시 둡니다.
 
+### 경계를 둘 층
+
 | 층 | 위치 | 오류 뒤 남는 화면 |
 | --- | --- | --- |
 | 앱 | 루트에 한 번 | 없음. 마지막 안전망입니다 |
@@ -3562,6 +3667,8 @@ return <PgPaymentWidgetSection amount={responseOrderAmountSuspense.data.confirme
 목록 실패 후 옆 필터로 할 수 있는 일이 없다면 화면 경계로 충분합니다.
 로딩 · 오류 경계는 같은 소유자가 조립하며, 위치는 `runtime-place-suspense-boundaries-at-the-section-owner`를 따릅니다.
 
+### 실패 상황별 처리
+
 | 실패 상황 | 처리 |
 | --- | --- |
 | Suspense 쿼리에 표시할 캐시 데이터가 없음 | 렌더 중 던진 오류를 경계가 받습니다 |
@@ -3570,6 +3677,8 @@ return <PgPaymentWidgetSection amount={responseOrderAmountSuspense.data.confirme
 | 트랜지션 Action 오류 · 라이브러리가 렌더에서 다시 던진 오류 | 일반 핸들러 오류와 구분합니다 |
 
 본문의 실패 분기는 `runtime-avoid-ad-hoc-loading-branches`를 따릅니다.
+### 경계 구현과 재시도
+
 오류 경계 클래스는 `ui`의 `UiErrorBoundary` 하나에 둡니다. 리액트 오류 경계 구현에는 클래스가 필요합니다.
 화면 경계는 `react-router` 라우트 설정의 `errorElement`로 두고,
 라우트 밖에서 감싸야 하면 `UiErrorBoundary`로 진입 컴포넌트를 감쌉니다.
@@ -3596,7 +3705,7 @@ if (responseProductRecommendationsSuspense.error && !responseProductRecommendati
 return <UiProductRecommendations items={responseProductRecommendationsSuspense.data.items} />;
 ```
 
-**Incorrect (경계 없이 화면 본문에서 실패를 분기합니다):**
+**Incorrect 2 (경계 없이 화면 본문에서 실패를 분기합니다):**
 
 ```tsx
 export const PgProducts = () => {
@@ -3610,7 +3719,21 @@ export const PgProducts = () => {
 };
 ```
 
-**Correct (화면 경계가 오류를 처리하고 셸을 유지합니다):**
+**Correct 2 (화면 층 경계가 오류를 받으므로 본문에 성공 경로만 남깁니다):**
+
+```tsx
+// page/products/pg-products.tsx
+export const PgProducts = () => {
+	/**
+	 * 실패하면 셸이 가진 화면 층 경계가 받는다. 본문은 성공 경로만 그린다
+	 */
+	const responseProductListSuspense = useProductListSuspense();
+
+	return <UiTable rows={responseProductListSuspense.data.products} />;
+};
+```
+
+**Correct (셸이 화면 층 오류 경계와 로딩 경계를 조립합니다):**
 
 ```tsx
 // component/widget/app-shell/wg-app-shell.tsx
@@ -3626,18 +3749,6 @@ export const WgAppShell = (props: WgAppShellProps) => {
 			</main>
 		</div>
 	);
-};
-```
-
-```tsx
-// page/products/pg-products.tsx
-export const PgProducts = () => {
-	/**
-	 * 실패하면 셸이 가진 화면 층 경계가 받는다. 본문은 성공 경로만 그린다
-	 */
-	const responseProductListSuspense = useProductListSuspense();
-
-	return <UiTable rows={responseProductListSuspense.data.products} />;
 };
 ```
 
@@ -3743,6 +3854,18 @@ return <UiSelectedCountBadge count={selectedIds.length} />;
 상태 도구는 값의 수명과 소유자로 고릅니다.
 표를 아래에서부터 읽어 처음 해당하는 행을 적용합니다.
 
+### 도구 고르기
+
+값의 소유자를 확인하는 차례입니다.
+
+```mermaid
+flowchart LR
+	q1{"링크를 공유해도<br>같은 화면이 열리는가?"} -- 아니요 --> q2{"서버가 소유하는가?"} -- 아니요 --> q3{"묶음 밖에서도<br>읽는가?"} -- 아니요 --> r4("useState · useReducer")
+	q1 -- 예 --> r1("search 파라미터")
+	q2 -- 예 --> r2("react-query")
+	q3 -- 예 --> r3("Zustand")
+```
+
 | 상태의 소유자 | 기본 도구 |
 | --- | --- |
 | 로컬 UI | `useState` 또는 `useReducer` |
@@ -3750,6 +3873,8 @@ return <UiSelectedCountBadge count={selectedIds.length} />;
 | 전역 클라이언트 | `Zustand` |
 | 서버 | `@tanstack/react-query` |
 | 링크를 공유해도 같은 화면이 열려야 하는 값 | 라우트 search 파라미터(`nuqs`의 `useQueryStates`) |
+
+### 혼동하기 쉬운 상태
 
 | 혼동하기 쉬운 상태 | 소유 기준 |
 | --- | --- |
@@ -3801,14 +3926,14 @@ const [page, setPage] = useState(1);
 const [urlParams, setUrlParams] = useQueryStates(productUrlParsers);
 ```
 
-**Incorrect (묶음 밖의 화면이 읽는 값을 `Context`로 앱 루트까지 올려 전역 스토어처럼 씁니다):**
+**Incorrect 3 (묶음 밖의 화면이 읽는 값을 `Context`로 앱 루트까지 올려 전역 스토어처럼 씁니다):**
 
-```tsx
+```ts
 // 테마는 레이아웃과 모든 화면이 읽는데 Context 를 루트에 두고 화면마다 Provider 를 찾아 올라간다
 const ThemeContext = createContext<Theme>("light");
 ```
 
-**Correct (묶음 밖에서도 읽는 값은 전역 스토어가 소유합니다):**
+**Correct 3 (묶음 밖에서도 읽는 값은 전역 스토어가 소유합니다):**
 
 ```ts
 const themeStore = useThemeStore();
@@ -4196,6 +4321,15 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (event) => {
 팩토리가 추가 인자를 받고, 안쪽 함수가 이벤트를 받으며, 반환한 함수를 JSX에 직접 전달합니다.
 `onClick={() => handleSelectionToggle(id)}` 같은 인라인 래퍼는 만들지 않습니다.
 
+추가 인자를 넘길 방법을 고르는 차례입니다.
+
+```mermaid
+flowchart LR
+	q1{"이벤트 객체를<br>받는 프롭인가?"} -- 예 --> q2{"이벤트 밖 인자가<br>더 필요한가?"} -- 예 --> r2("커링 팩토리를 JSX에 전달")
+	q1 -- 아니요 --> r1("이름 붙인 핸들러를 그대로 전달")
+	q2 -- 아니요 --> r1
+```
+
 | 작성할 부분 | 기준 |
 | --- | --- |
 | 팩토리 이름 | 커링 없는 핸들러처럼 `handle*`을 씁니다. 호출 인자로 용도를 알 수 있으므로 `With<인자>`는 붙이지 않습니다 |
@@ -4328,6 +4462,8 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => 
 `useMemo` · `useCallback` · `memo`는 아래 네 경우에만 씁니다.
 어느 경우든 `typescript/docs-justify-convention-exceptions-with-a-reason-comment`에 따라 이유를 남깁니다.
 
+### 허용하는 네 경우
+
 | 허용 근거 | 확인할 내용 |
 | --- | --- |
 | 외부 라이브러리의 참조 계약 | 참조 변경이 상태 초기화나 구독 재설치로 이어짐 |
@@ -4337,6 +4473,8 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => 
 
 계산이나 함수가 다시 실행된다는 사실만으로 메모이제이션하지 않습니다.
 이펙트에서만 쓰는 객체 · 배열은 이펙트 안에서 만들고 원본 값에 의존합니다.
+
+### 캐시와 컴파일러
 
 리액트는 `useMemo` · `useCallback` 캐시를 버릴 수 있으므로 정확성을 캐시에 의존하지 않습니다.
 다시 계산되거나 이펙트가 재설치되어도 동작해야 합니다.
@@ -4431,6 +4569,8 @@ const [draftFilter] = useState(() => parseStoredProductFilter(localStorage.getIt
 `startTransition` · `useTransition` · `useDeferredValue`는 렌더 비용을 측정한 뒤 사용합니다.
 목록 행 수와 조작별 소요 시간을 확인하고, `perf-avoid-defensive-memoization`의 예외나 예상 규모만 근거로 삼지 않습니다.
 
+### 지연 도구 고르기
+
 | 상황 | 선택 |
 | --- | --- |
 | 직접 호출하는 상태 갱신이 무거운 렌더를 일으킴 | `startTransition`으로 호출을 감쌉니다. 프롭으로 받은 갱신 함수도 같습니다 |
@@ -4440,6 +4580,8 @@ const [draftFilter] = useState(() => parseStoredProductFilter(localStorage.getIt
 
 입력값 자체 · 폼 오류 · 즉시 비활성화 같은 급한 반응은 트랜지션에 넣지 않습니다.
 `await` 뒤에는 리액트가 트랜지션 문맥을 이어가지 못하므로 상태 갱신을 다시 `startTransition`으로 감쌉니다.
+
+### 최적화 조건
 
 | 무거운 작업 | 최적화 조건 |
 | --- | --- |
@@ -4792,12 +4934,16 @@ JSX 자식 자리의 주석은 여러 줄 블록으로 씁니다.
 `biome` 2.x의 `linter.domains`에서 `react`를 켭니다. `package.json`에 `react@>=16`이 있을 때 리액트 검사가 적용됩니다.
 기본 설정은 `typescript/tooling-configure-biome-to-enforce-these-rules`를 따릅니다.
 
+### 도메인 검사와 추가 설정
+
 | 검사 | 컨벤션 적용 범위 | 추가 설정 · 리뷰 |
 | --- | --- | --- |
 | `correctness/noNestedComponentDefinitions` | `react/composition-do-not-define-components-inside-components` 전체 | 도메인 `recommended`에 없어 별도로 켭니다 |
 | `correctness/useExhaustiveDependencies` | `react/state-use-effectevent-for-non-reactive-effect-callbacks`의 누락된 의존성 검사 | `useEffectEvent`로 분리할지는 리뷰에서 판단합니다 |
 | `correctness/useJsxKeyInIterable` | `react/composition-name-fragments-explicitly`의 `key` 유무 | `<>` 대신 `Fragment`를 썼는지는 리뷰에서 확인합니다 |
 | `style/noRestrictedImports` + `overrides` | `react/ownership-keep-component-imports-flowing-downward`의 레이어 · 라우트 방향 | 아래 경로 설정을 추가합니다. 소유자 경계는 별도 판단합니다 |
+
+### 접근성 검사
 
 | `a11y/*` | 내용 |
 | --- | --- |
@@ -4807,6 +4953,8 @@ JSX 자식 자리의 주석은 여러 줄 블록으로 씁니다.
 
 `a11y` 검사는 `useButtonType` · `useAltText` · `useValidAnchor` · `useKeyWithClickEvents` ·
 `useSemanticElements` · `noStaticElementInteractions` · `useFocusableInteractive`를 포함합니다.
+
+### 가져오기 경로 제한
 
 | `noRestrictedImports` 적용 위치 | 차단할 경로 |
 | --- | --- |
@@ -4818,6 +4966,8 @@ JSX 자식 자리의 주석은 여러 줄 블록으로 씁니다.
 `overrides`는 규칙 옵션을 통째로 바꾸므로 기본 설정의 경로 패턴을 각 항목에 함께 적습니다.
 소유자 경계는 `import` 문자열만으로 판정하지 못합니다. `@/page/detail/_pg-product-summary`도 가져오는 파일의 위치에 따라
 허용 여부가 달라지므로, 위치를 비교하는 `eslint` 규칙이나 리뷰에서 확인합니다.
+
+### 켜지 않는 규칙
 
 | 켜지 않는 규칙 | 이유 |
 | --- | --- |

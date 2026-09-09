@@ -2,6 +2,8 @@
 
 **Impact: MEDIUM (태그를 바꿔도 스타일이 유지되도록 마크업을 클래스로 선택합니다)**
 
+### 선택 방법
+
 우리가 렌더하는 마크업은 요소 선택자 대신 클래스로 선택합니다.
 태그를 `div`에서 `section`으로 바꿔도 스타일이 사라지지 않아야 합니다.
 
@@ -12,6 +14,9 @@
 | `dangerouslySetInnerHTML`이나 클래스 지정 API가 없는 렌더러 출력 | 감싼 클래스 블록 안에서만 요소 선택자를 허용합니다. 구조 선택자도 같은 기준을 따릅니다 |
 
 최상위에 `h2 { }`를 선언하면 해당 스타일시트를 읽은 문서 전체에 적용되므로 예외에서도 금지합니다.
+
+### 예외 주석 형태
+
 `selector-disallowed-list`가 `&` 바로 뒤의 요소 선택자를 막으므로 예외에는 다음 주석을 남깁니다.
 
 예외 선택자가 하나면 `stylelint-disable-next-line`을 씁니다.
@@ -19,7 +24,16 @@
 
 규칙 이름 뒤에 `-- <마크업 출처>`처럼 직접 작성하지 않는 마크업이라는 근거를 함께 적습니다.
 
-**Incorrect (우리가 렌더하는 마크업을 요소 선택자로 잡습니다):**
+**Incorrect 1 (우리가 렌더하는 마크업을 요소 선택자로 잡습니다):**
+
+```tsx
+<div className={clsx("pg_products__toolbar")}>
+	<div>
+		<UiSearchInput />
+	</div>
+	<button type="button">초기화</button>
+</div>
+```
 
 ```css
 .pg_products__toolbar {
@@ -37,16 +51,7 @@
 }
 ```
 
-**Incorrect (요소 선택자를 최상위에 둡니다):**
-
-```css
-/* 블록 밖에 홀로 둔 요소 선택자. 이 스타일시트를 읽은 문서의 모든 h2에 걸린다 */
-h2 {
-	margin: 24px 0 12px;
-}
-```
-
-**Correct (우리가 렌더하면 클래스를 붙입니다):**
+**Correct 1 (우리가 렌더하면 클래스를 붙입니다):**
 
 ```tsx
 <div className={clsx("pg_products__toolbar")}>

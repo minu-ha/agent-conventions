@@ -21,6 +21,15 @@ tags: absence
 기본값은 필요한지 먼저 확인하고, 필요하면 값이 들어오는 경계에서 한 번 채웁니다.
 기본값 표현은 `absence-expose-optional-values-instead-of-silent-fallbacks`를 따릅니다.
 
+기본값을 채울 자리를 고르는 차례입니다.
+
+```mermaid
+flowchart LR
+	q1{"기본값이<br>필요한가?"} -- 예 --> q2{"경계에서<br>채울 수 있는가?"} -- 예 --> r2("경계에서 한 번 채움")
+	q1 -- 아니요 --> r1("선택 값 그대로 소비")
+	q2 -- 아니요 --> r3("사용처에 ?? 로 적음")
+```
+
 | 순서 | 판단과 처리 |
 | --- | --- |
 | 1. 기본값 없이 소비할 수 있는가 | `undefined`를 허용하면 `items?.map(…)`, 선택 값 비교는 `variant === "compact"`로 처리합니다 |

@@ -17,6 +17,17 @@ tags: composition, ownership
 `widget`과 `ui` 컴포넌트 안의 부품은 아래 책임 중 하나를 직접 소유할 때만 파일로 뗍니다.
 단순 래퍼 · `className` 묶음 · 들여쓰기 감소 · 긴 파일은 분리 근거가 아닙니다.
 
+### 분리 근거가 되는 책임
+
+부품을 파일로 뗄지 정하는 차례입니다.
+
+```mermaid
+flowchart LR
+	q1{"런타임 책임을<br>직접 소유하는가?"} -- 아니요 --> q2{"재사용하거나<br>조립에 공개하는가?"} -- 아니요 --> r2("진입 파일에 유지")
+	q1 -- 예 --> r1("파일로 분리")
+	q2 -- 예 --> r1
+```
+
 | 책임 | 예 |
 | --- | --- |
 | 비동기 | `Suspense` · 스켈레톤 · 로딩 · 오류 · 빈 상태 |
@@ -25,6 +36,8 @@ tags: composition, ownership
 | 라이브러리와 성능 | 외부 라이브러리 생명주기 어댑터 · 가상 스크롤 · 전환 · 지연 값 |
 
 책임 표는 `screen-extract-local-section-components-for-runtime-boundaries`와 같습니다.
+### `widget` · `ui` 전용 책임
+
 아래 두 책임은 `widget` · `ui`에만 적용합니다.
 
 | 책임 | 예 |

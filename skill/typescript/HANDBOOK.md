@@ -86,15 +86,29 @@
 
 **Impact: HIGH (뜻이 그대로면 기존 타입이나 스키마를 그대로 참조해 같은 형태를 두 번 선언하지 않습니다)**
 
+### 기존 계약 찾기
+
 새 타입을 적기 전에 뜻과 수명이 같은 기존 타입이나 스키마를 먼저 찾습니다.
 필드 이름 · 타입 · 선택 여부 · 읽기 전용 여부까지 같으면 그 계약을 그대로 참조합니다.
 구조가 같아도 단위나 도메인 역할이 다르면 합치지 않습니다.
+
+기존 계약을 확인하는 차례입니다.
+
+```mermaid
+flowchart LR
+	q1{"뜻과 수명이 같은<br>계약이 있는가?"} -- 예 --> q2{"단위 · 도메인<br>역할도 같은가?"} -- 예 --> q3{"필드 조건이<br>모두 같은가?"} -- 예 --> r3("그대로 참조")
+	q1 -- 아니요 --> r1("새 계약 선언")
+	q2 -- 아니요 --> r2("별도 계약")
+	q3 -- 아니요 --> r4("새 계약 선언 후<br>원본에서 파생")
+```
 
 | 찾은 기존 계약 | 처리 |
 | --- | --- |
 | 뜻이 같고 필드 조건도 모두 같음 | 그대로 참조합니다 |
 | 뜻은 같지만 필드 일부만 필요하거나 타입 · 선택 여부 · 읽기 전용 여부가 다름 | 새 계약을 선언하고 필드는 `types-derive-subsets-with-indexed-access`에 따라 원본에서 파생합니다 |
 | 원본 입력과 정규화 결과처럼 역할이 다름 | 필드가 같아도 별도 계약을 둡니다 |
+
+### 적용하지 않는 변경
 
 다음은 이 규칙을 적용하지 않는 경우입니다.
 
@@ -176,6 +190,8 @@ export const sendInvite = (draft: InviteDraft): Promise<void> => { /* … */ };
 
 **Impact: HIGH (고른 필드의 이름과 출처를 드러내고 선택 여부와 읽기 전용 속성을 보존합니다)**
 
+### 필드를 고르는 방식
+
 기존 계약의 일부 필드는 `interface`에 `원본["필드"]`로 적고, `Pick`은 쓰지 않습니다.
 계약 전체를 재사용할지는 `types-reuse-existing-contracts-before-new-types`가 정합니다.
 
@@ -189,6 +205,8 @@ export const sendInvite = (draft: InviteDraft): Promise<void> => { /* … */ };
 `Omit`은 제외한 이름이 원본에서 사라져도 오류가 나지 않으므로 원본 변경 시 이름을 확인합니다.
 `ReturnType`, `Parameters`, `Awaited`는 필드를 고르는 연산이 아니므로 대상이 아닙니다.
 
+### 값을 좁혀 받을 때
+
 값을 좁히거나 필수로 바꿀 때도 원시 타입을 다시 적지 않고 원본에서 파생해 출처를 남깁니다.
 
 | 필드 값을 원본과 다르게 받을 때 | 적는 법 | 예 |
@@ -200,6 +218,8 @@ export const sendInvite = (draft: InviteDraft): Promise<void> => { /* … */ };
 인덱스 접근은 필드 이름과 출처를 선언에 남겨 여러 계약의 필드를 모으고 각각 문서화하기 좋습니다.
 필드 주석은 `types-document-custom-types-and-shapes`를 따릅니다.
 원본 필드의 타입 변경과 삭제는 인덱스 접근과 `Pick` 모두 컴파일 검사에 반영됩니다.
+
+### 선택 · 읽기 전용 보존
 
 | 보존할 계약 | 적는 법 |
 | --- | --- |
@@ -467,6 +487,8 @@ const toSearchRequest: ToRequest = (request) => {
 
 **Impact: MEDIUM (구현을 읽기 전에 도메인 전용 계약을 이해할 수 있습니다)**
 
+### 직접 선언한 형태
+
 직접 선언한 타입과 형태는 헤더와 필드를 구분해 문서화합니다.
 주석 내용은 `docs-write-korean-comments-about-purpose-and-constraints`의 한국어 기준을 따릅니다.
 
@@ -477,6 +499,8 @@ const toSearchRequest: ToRequest = (request) => {
 | 커스텀 `type`, `interface`, 스키마 최상단 | 원본에서 가져온 필드에도 각각 씁니다 |
 | 객체형 상수 | 달지 않습니다. `constant` 폴더와 `enum` 성격 상수 객체도 같습니다 |
 | 인덱스 접근 별칭, `Omit` 결과 | 선언한 필드가 없어 달지 않습니다 |
+
+### 기존 형태를 쓸 때
 
 | 기존 형태를 쓰는 방식 | 문서화 범위 |
 | --- | --- |
@@ -582,6 +606,8 @@ const noopLog: LogSink = (_message, _level) => {};
 
 **Impact: HIGH (컴파일을 통과시키려고 타입 검사를 끄는 자리가 남지 않습니다)**
 
+### 값의 출처
+
 형태를 모르는 값은 `unknown`으로 받아 좁힙니다.
 컴파일 오류를 없애려고 `as`, `!`, `any`, `@ts-expect-error`로 검사를 우회하지 않습니다.
 
@@ -590,6 +616,8 @@ const noopLog: LogSink = (_message, _level) => {};
 | 앱 밖의 값: 저장소, 메시지, URL, 검증하지 않은 응답 | 스키마로 검증하고 결과에서 타입을 얻습니다 |
 | 내부 값 | 분기로 좁히거나 타입 관계가 드러나도록 계약을 고칩니다 |
 | 실제 동작과 외부 패키지 타입이 다름 | 단언 바로 위에 확인할 수 있는 이유를 남깁니다 |
+
+### 표기별 보장 범위
 
 | 표기 | 보장하는 것과 한계 |
 | --- | --- |
@@ -602,6 +630,8 @@ const noopLog: LogSink = (_message, _level) => {};
 `as const`와 `satisfies`는 실행 중 검증이나 객체 동결을 하지 않습니다.
 `any` 응답에 `satisfies`를 붙여도 검증되지 않습니다.
 `JSON.parse`는 JSON 문법, 스키마는 값의 형태를 검사하며 실패 처리는 기존 호출 경계의 오류 계약을 따릅니다.
+
+### 예외 주석
 
 예외 주석은 `docs-justify-convention-exceptions-with-a-reason-comment`를 따릅니다.
 "타입이 이상해서"는 확인할 수 있는 근거가 아닙니다.
@@ -783,8 +813,19 @@ type MutableRow = Omit<Row, "children"> & {
 
 **Impact: HIGH (프로젝트 전반의 상수를 주제별로 모아 위치와 이름을 일관되게 유지합니다)**
 
+### 상수 자리 고르기
+
 상수 위치는 사용처 수가 아니라 소유자로 정합니다.
 소유자를 지워도 남는 값은 루트에, 함께 사라지는 값은 그 소유자 아래에 둡니다.
+
+자리를 고르는 차례입니다.
+
+```mermaid
+flowchart LR
+	q1{"소유자를 지워도<br>값이 남는가?"} -- 예 --> q2{"배포 환경마다<br>달라지는가?"} -- 예 --> r3("config 폴더")
+	q1 -- 아니요 --> r1("소유자 _constant 폴더")
+	q2 -- 아니요 --> r2("루트 constant 폴더")
+```
 
 | 소유 범위 | 파일 | 이름 |
 | --- | --- | --- |
@@ -794,6 +835,8 @@ type MutableRow = Omit<Row, "children"> & {
 `chart_axis_tick_count`는 화면과 함께 사라지고, `api_request_timeout_ms`는 서버 통신에 남습니다.
 사용처가 늘거나 줄어도 이 기준은 바뀌지 않습니다.
 소유자 전용 배치는 `naming-place-owner-constants-in-the-owner-constant-folder`를 따릅니다.
+
+### 선언과 내보내기
 
 | 선언 대상 | 규범 |
 | --- | --- |
@@ -938,6 +981,8 @@ export const table_page_size = 20;
 
 **Impact: HIGH (파일과 심볼의 표기가 역할을 드러내 읽는 사람이 종류를 바로 압니다)**
 
+### 역할별 표기
+
 파일과 심볼은 선언 문법이 아니라 역할에 맞게 이름 짓습니다.
 `const`로 선언해도 함수 · 훅 · 스키마 · API 결과 · 요청 객체 · 지역 파생값을 불변 데이터 상수로 보지 않습니다.
 
@@ -961,6 +1006,8 @@ export const table_page_size = 20;
 함수는 동사, 상수는 주제 접두사와 `snake_case`, 컴포넌트는 레이어 접두사로 종류를 드러냅니다.
 한 단어 상수는 만들지 않습니다.
 함수 파일명은 내보낸 이름(`format-usd.ts` → `formatUsd`), 상수 파일명은 공유하는 주제(`api.ts` → `api_*`)입니다.
+
+### 외부 계약이 정한 이름
 
 **외부 계약이 정한 이름과 키는 원래 표기를 유지합니다.**
 API 응답 · 요청, 생성 DTO, 라이브러리 인자, DOM 속성, 환경 변수와 모듈 상수에 담긴 외부 설정도 같습니다.
@@ -1130,6 +1177,8 @@ import {UiTabs} from "@/component/ui/tabs/ui-tabs";
 
 **Impact: CRITICAL (가져오기 경로를 통일하고 가져오는 파일의 위치로 접근 범위를 판단합니다)**
 
+### 경로 표기
+
 심볼은 `@/` 절대경로로 가져옵니다.
 심볼 없이 같은 폴더의 파일만 불러올 때는 `./`를 허용하며, `../`는 쓰지 않습니다.
 
@@ -1144,6 +1193,8 @@ import {UiTabs} from "@/component/ui/tabs/ui-tabs";
 소유자 밖에서 쓴다는 이유로 루트에 올리지 않습니다.
 배치는 `naming-place-project-constants-in-the-root-constant-folder`와
 `functions-give-each-function-its-own-file`이 정합니다.
+
+### `src` 아래 루트 폴더
 
 | `src` 아래 루트 | 담는 것 |
 | --- | --- |
@@ -1188,6 +1239,8 @@ import "./pg-product-table-section.css";
 
 **Impact: HIGH (환경마다 달라지는 값이 쓰는 파일로 흩어지지 않고 한 파일에서 읽힙니다)**
 
+### 값의 자리
+
 환경 값은 루트 `config/env.ts`에서만 읽고 `env_` 상수로 내보냅니다.
 다른 파일은 그 이름을 쓰며 `import.meta.env`와 `process.env`를 직접 읽지 않습니다.
 
@@ -1199,6 +1252,8 @@ import "./pg-product-table-section.css";
 
 배포 환경은 프로젝트 단위이므로 `config`는 루트에만 둡니다.
 상수 파일과 이름의 형식은 `naming-place-project-constants-in-the-root-constant-folder`를 따릅니다.
+
+### 읽을 때 확인할 것
 
 | 읽을 때 확인할 것 | 처리 |
 | --- | --- |
@@ -1245,6 +1300,8 @@ const productClient = createClient({baseUrl: env_api_base_url});
 
 **Impact: HIGH (이름만 읽고 값이 무엇이며 어느 시점에 존재하는지 구분할 수 있습니다)**
 
+### 역할어 고르기
+
 값의 역할과 수명을 판단한 뒤, 의미를 더하는 역할어만 붙입니다.
 도메인 명사로 충분하면 `ChartPoint`, `TableRow`처럼 씁니다.
 
@@ -1266,6 +1323,8 @@ const productClient = createClient({baseUrl: env_api_base_url});
 | `Result` | 더 구체적인 결과 명사가 없을 때만 |
 | `Spec` | 외부 명세나 검증할 요구사항 자체를 나타낼 때만 |
 | `Model` | 식별성 · 행동 · 도메인 규칙을 가진 실제 모델일 때만 |
+
+### 이름을 정하는 기준
 
 | 이름을 정할 대상 | 기준 |
 | --- | --- |
@@ -1335,6 +1394,8 @@ const reportSnapshot: ReportSnapshot = response.data;
 
 **Impact: MEDIUM (함수 선언과 본문 형식을 통일해 변경 범위를 줄이고 선언 순서를 확인하기 쉽게 합니다)**
 
+### 선언과 본문 형식
+
 이름 붙인 함수는 `const` 화살표로 선언하고, 객체에 담는 함수도 화살표로 씁니다.
 본문은 블록으로 열고 값을 반환할 때 `return`을 적으며, 반환값이 없으면 생략합니다.
 
@@ -1350,6 +1411,8 @@ const reportSnapshot: ReportSnapshot = response.data;
 
 선언 · 본문 형식을 고정하면 호이스팅 의존을 줄이고 코드가 늘 때의 diff와 주석 경계를 일정하게 유지합니다.
 객체 반환에도 별도의 `({...})` 괄호가 필요하지 않습니다.
+
+### `this`를 쓰는 함수
 
 **`this`를 쓰는 함수는 기계적으로 치환하지 않습니다.**
 축약 메서드의 `this`는 호출 방식에 따라 달라지고, 화살표는 선언된 바깥 스코프의 `this`를 사용합니다.
@@ -1437,8 +1500,12 @@ export class ProductCursor {
 
 **Impact: MEDIUM (긴 시그니처를 읽을 수 있게 두고 위치를 헷갈리지 않으면서 입력을 늘립니다)**
 
+### 객체로 묶는 기준
+
 매개변수가 셋을 넘거나 같은 계열 값이 함께 넘어오면 위치 인자를 객체 하나로 묶습니다.
 객체 매개변수 타입은 파일 위쪽에 이름을 붙여 선언합니다.
+
+### 다른 규칙이 정하는 것
 
 받은 객체는 시그니처에서도 본문에서도 구조분해하지 않고 `target.baseUrl`처럼 체인으로 읽습니다.
 그 규범은 `values-read-objects-through-chains` 규칙이 모든 객체에 정합니다.
@@ -1503,9 +1570,21 @@ fetchProductPage({baseUrl: api_base_url, page: urlParams.page, pageSize: paginat
 
 **Impact: HIGH (불필요한 함수 분리를 줄여 호출부에서 처리 흐름을 읽을 수 있습니다)**
 
+### 이름을 붙이는 사유
+
 한 곳에서만 쓰는 단계는 호출부에 둡니다.
 다음 사유가 있을 때만 보조 함수에 이름을 붙입니다.
 추출한 함수는 바깥 변수 · 훅 · 컴포넌트 상태 없이도 뜻이 통해야 합니다.
+
+이름을 붙일지 정하는 차례입니다.
+
+```mermaid
+flowchart LR
+	q1{"두 자리 이상이<br>부르는가?"} -- 아니요 --> q2{"렌더 파일 밖의<br>요청 조립인가?"} -- 아니요 --> q3{"삼항 하나로<br>담기는가?"} -- 예 --> r4("호출부에 그대로 둠")
+	q1 -- 예 --> r1("이름을 붙여 추출")
+	q2 -- 예 --> r2("같은 소유자의 .ts 로 이동")
+	q3 -- 아니요 --> r3("return 함수로 추출")
+```
 
 | 허용 사유 | 조건 |
 | --- | --- |
@@ -1514,6 +1593,8 @@ fetchProductPage({baseUrl: api_base_url, page: urlParams.page, pageSize: paginat
 | 함수 형태가 필수 | 삼항 하나로 표현할 수 없는 판정 · `value is T` 타입 가드 · 재귀 |
 
 요청 조립은 같은 소유자의 `.ts`로 옮깁니다. 표시용 가공이나 기존 `.ts`는 해당하지 않습니다.
+
+### 추출을 검토할 때
 
 | 추출을 검토하는 이유 | 처리 |
 | --- | --- |
@@ -1527,7 +1608,7 @@ fetchProductPage({baseUrl: api_base_url, page: urlParams.page, pageSize: paginat
 함수 배치는 `functions-give-each-function-its-own-file`,
 루트 승격은 `functions-promote-owner-free-functions-to-root-util`이 정합니다.
 
-**Incorrect (한 자리에서만 쓰는 단계를 함수로 떼어 내 흐름이 파일 안에서 흩어집니다):**
+**Incorrect 1 (한 자리에서만 쓰는 단계를 함수로 떼어 내 흐름이 파일 안에서 흩어집니다):**
 
 ```txt
 page/report/_function/to-report-content.ts
@@ -1538,16 +1619,21 @@ page/report/_function/to-report-content.ts
   formatAmount       toComparisonRows 와 toStatusGroups 가 부름
 ```
 
-**Incorrect (한 번만 쓰는 한 줄 계산을 파일로 분리합니다):**
-
 ```ts
-// page/profile/_function/get-next-page.ts
-export const getNextPage = (previous: number, pageCount: number): number => {
-	return (previous + 1) % pageCount;
+// page/report/_function/to-report-content.ts
+/**
+ * 상품 보고서 영역의 표시 데이터. 상품 상세에서만 재고 카드가 온다
+ */
+export const toReportContent = (params: ToReportContentParams): ReportContent => {
+	return {
+		metrics: toComparisonRows(params),
+		statusGroups: toStatusGroups(params),
+		stockCount: toStockCard(params),
+	};
 };
 ```
 
-**Correct (한 번 쓰는 단계는 호출부에 두고 재사용하는 계산은 함수로 추출합니다):**
+**Correct 1 (한 번 쓰는 단계는 호출부에 두고 재사용하는 계산은 함수로 추출합니다):**
 
 ```txt
 page/report/_function/to-report-content/
@@ -1583,7 +1669,19 @@ export const toReportContent = (params: ToReportContentParams): ReportContent =>
 };
 ```
 
-**Correct (작은 계산은 쓰는 자리에 그대로 둡니다):**
+**Incorrect 2 (한 번만 쓰는 한 줄 계산을 파일로 떼어 내 호출부가 가져옵니다):**
+
+```tsx
+// page/profile/pg-profile.tsx
+// (previous + 1) % pageCount 한 줄을 page/profile/_function/get-next-page.ts 로 옮겼다
+import {getNextPage} from "@/page/profile/_function/get-next-page";
+
+const handleNextClick = () => {
+	setPage((previous) => getNextPage(previous, pageCount));
+};
+```
+
+**Correct 2 (작은 계산은 쓰는 자리에 그대로 둡니다):**
 
 ```tsx
 // page/profile/pg-profile.tsx
@@ -1663,14 +1761,27 @@ export const toStatusTone = (status: string): Tone => {
 
 **Impact: HIGH (보조 함수를 개별 파일로 관리하고 폴더로 소유 관계를 드러냅니다)**
 
+### 호출부에 따른 자리
+
 보조 함수에 이름을 붙일지는 `functions-extract-helpers-only-when-the-boundary-is-real`이 판단합니다.
 이름을 붙였다면 함수마다 파일을 하나 두고, 부르는 대표 함수에 따라 배치합니다.
+
+보조 함수의 자리를 고르는 차례입니다.
+
+```mermaid
+flowchart LR
+	q1{"부르는 대표 함수가<br>둘 이상인가?"} -- 예 --> q2{"다른 소유자도<br>부르는가?"} -- 예 --> r3("루트 승격 판단")
+	q1 -- 아니요 --> r1("대표 폴더의 _ 파일")
+	q2 -- 아니요 --> r2("_function 바로 아래")
+```
 
 | 호출부 | 위치 |
 | --- | --- |
 | 대표 함수 하나 | `_function/<대표>/<대표>.ts`와 같은 폴더의 `_<보조>.ts` |
 | 같은 소유자의 대표 함수 둘 이상 | `_function/<보조>.ts`. 기존 `_` 접두사를 뗍니다 |
 | 다른 소유자 | `functions-promote-owner-free-functions-to-root-util`로 루트 승격 여부를 판단합니다 |
+
+### 파일 배치 규범
 
 | 배치 대상 | 규범 |
 | --- | --- |
@@ -1849,14 +1960,27 @@ const selectedLocaleSupported = isSupportedLocale(selectedLocale);
 
 **Impact: HIGH (소유자 전용 함수를 구분하고 사용처 수가 달라져도 배치 기준을 유지합니다)**
 
+### 승격 판단
+
 루트 `util` 승격은 사용처 수가 아니라 소유자를 지워도 계산이 남는지로 판단합니다.
 사용처가 늘거나 줄어도 이 기준은 바뀌지 않습니다.
+
+승격을 판단하는 차례입니다.
+
+```mermaid
+flowchart LR
+	q1{"소유자를 지워도<br>계산이 남는가?"} -- 예 --> q2{"받는 값의 종류로<br>폴더명을 지을 수 있는가?"} -- 예 --> r2("루트 util 의 종류 폴더")
+	q1 -- 아니요 --> r1("소유자 아래 _function")
+	q2 -- 아니요 --> r1
+```
 
 | 소유자를 지운 결과 | 배치 |
 | --- | --- |
 | 함수도 사라짐 | 해당 소유자의 `_function`에 둡니다. `toProfileSaveRequest`가 그 예입니다 |
 | 함수가 남음 | 한 곳에서만 써도 `util/<받는 값의 종류>/`에 둡니다. `toDisplayDate`가 그 예입니다 |
 | 값의 종류로 폴더명을 지을 수 없음 | 루트로 올리지 않고 소유자 아래에 둡니다 |
+
+### 종류 폴더
 
 | 폴더 | 기준 |
 | --- | --- |
@@ -1866,6 +1990,8 @@ const selectedLocaleSupported = isSupportedLocale(selectedLocale);
 
 루트의 소유자는 프로젝트입니다.
 함수마다 파일 하나, 자기만 쓰는 보조는 자기 이름 폴더의 `_` 파일이라는 규칙은 소유자 아래와 같습니다.
+
+### 두 소유자가 공유할 때
 
 | 두 소유자가 공유하는 것 | 처리 |
 | --- | --- |
@@ -1898,7 +2024,7 @@ export const toProfileSaveRequest = (values: ProfileFormValues) => {
 };
 ```
 
-**Incorrect (소유자를 지워도 남을 함수를 호출부가 하나라고 소유자 아래 둡니다):**
+**Incorrect 2 (소유자를 지워도 남을 함수를 호출부가 하나라고 소유자 아래 둡니다):**
 
 ```ts
 // page/orders/_function/to-display-date.ts
@@ -1911,29 +2037,7 @@ export const toDisplayDate = (value: string): string => {
 };
 ```
 
-**Correct (승격 판정 흐름입니다):**
-
-```txt
-이 함수는 누구 것인가?
-│
-└ 소유자를 지워 본다
-   │
-   ├ 함수도 같이 사라짐 ──→ 그 소유자 아래에 둔다
-   └ 함수는 그대로 남음 ──→ util/<받는 값의 종류>/ 로 올린다
-      │
-      └ 종류 이름을 못 짓겠음 → util 이 아니다. 소유자 아래로 되돌린다
-```
-
-**Correct (소유자를 지워도 남는 함수는 종류 폴더에 파일 하나로 올립니다):**
-
-```txt
-util/
-├── date/
-│   ├── to-display-date.ts
-│   └── to-display-date.test.ts
-└── money/
-    └── to-signed-amount.ts
-```
+**Correct 2 (소유자를 지워도 남는 함수는 받는 값의 종류 폴더로 올립니다):**
 
 ```ts
 // util/date/to-display-date.ts
@@ -1943,6 +2047,17 @@ util/
 export const toDisplayDate = (value: string): string => {
 	return dayjs(value).format(date_format);
 };
+```
+
+**Correct (종류 폴더 아래에도 함수마다 파일 하나를 둡니다):**
+
+```txt
+util/
+├── date/
+│   ├── to-display-date.ts
+│   └── to-display-date.test.ts
+└── money/
+    └── to-signed-amount.ts
 ```
 
 ```ts
@@ -2057,6 +2172,8 @@ const visibleTabs = [
 
 **Impact: HIGH (사용 횟수보다 계산 비용과 판정의 복잡성을 기준으로 변수 선언 여부를 판단합니다)**
 
+### 변수로 받을 사유
+
 지역 변수는 재계산을 막거나 여러 항을 합친 판정에 이름을 붙일 때만 만듭니다.
 사용처 수만으로는 만들지 않으며, 아래 사유가 없으면 표현식을 쓰는 자리에 둡니다.
 
@@ -2071,6 +2188,8 @@ const visibleTabs = [
 
 단일 비교인 `row.dueDate < today`는 반복해서 써도 그대로 둡니다.
 사용처가 하나 늘었다고 변수 필요성까지 달라지지 않도록 표현식의 성격으로 판단합니다.
+
+### 다른 규칙이 정하는 것
 
 | 이 규칙과 구분할 대상 | 적용 규칙 |
 | --- | --- |
@@ -2208,6 +2327,8 @@ const submitDraft = async (draft: Draft) => {
 
 **Impact: MEDIUM (함수 이름으로 반환값이나 효과를 파악할 수 있습니다)**
 
+### 역할별 동사
+
 함수 이름은 호출 뒤 얻는 값이나 효과를 구체적으로 드러냅니다.
 입력은 시그니처가 설명하므로 이름에 반복하지 않습니다.
 
@@ -2235,6 +2356,8 @@ const submitDraft = async (draft: Draft) => {
 소유자 경로가 이미 말하는 도메인도 빼고, 반환 타입 이름보다 호출자가 쓰는 결과 개념을 적습니다.
 `toComparisonWindows`, `toReportRows`처럼 쓰되 요청 계약 자체가 출력이면 `toUserSaveRequest`처럼 짓습니다.
 
+### 쓰지 않는 동사
+
 `build`, `create`, `make`, `process`, `manage`, `do`, `perform`, `execute`, `filter`, `map`, `update`, `resolve`는
 직접 짓는 이름의 첫 동사로 쓰지 않습니다.
 
@@ -2244,6 +2367,8 @@ const submitDraft = async (draft: Draft) => {
 | `mapProductRows` | 출력이 행이면 `toProductRows` |
 | `updateProduct` | 저장이면 `saveProduct`, 계산이면 `toUpdatedProduct` |
 | `resolveStatusTone` | 분류 결과인 `toStatusTone` |
+
+### 대상이 아닌 이름
 
 `array.map(...)` 같은 표준 메서드 호출은 함수 명명 규칙의 대상이 아닙니다.
 `handle` · `use`는 프레임워크 규칙을 따릅니다.
@@ -2374,6 +2499,8 @@ const toSortedUsers = (users: readonly User[]): User[] => {
 
 **Impact: MEDIUM (반복 조회 구조를 한 번 만들어 목록 전체를 되풀이해 비교하는 비용을 줄입니다)**
 
+### 반복 조회 바꾸기
+
 같은 목록을 반복 조회하면 루프 밖에서 `Set`이나 `Map`을 한 번 만들고, 원본 목록이 바뀔 때 갱신합니다.
 중첩된 `includes` · `find`는 최악의 경우 두 목록 길이의 곱만큼 비교합니다.
 
@@ -2387,6 +2514,8 @@ const toSortedUsers = (users: readonly User[]): User[] => {
 `Set` · `Map`도 생성 비용이 있으며 조회가 항상 상수 시간인 것은 아닙니다.
 명세는 평균 조회 시간이 원소 수에 비례하는 시간보다 짧을 것만 요구합니다.
 서버 응답이나 사용자 선택처럼 목록 길이를 통제하지 못할 때 반복 조회 비용이 커집니다.
+
+### `Map`으로 바꾸기 전 확인
 
 | `Map`으로 바꾸기 전 확인 | 이유와 처리 |
 | --- | --- |
@@ -2653,6 +2782,15 @@ const toNextPage = (page: number): number => {
 조회표는 여러 키의 대응 관계 자체가 도메인이나 외부 계약일 때만 둡니다.
 선언 바로 위에는 어떤 계약의 대응 관계인지 확인할 수 있는 근거를 적습니다.
 
+조회표를 둘지 정하는 차례입니다.
+
+```mermaid
+flowchart LR
+	q1{"자리마다 값이<br>달라지는가?"} -- 예 --> q2{"대응 관계 자체가<br>도메인 · 외부 계약인가?"} -- 예 --> r2("근거를 적고 조회표를 둠")
+	q1 -- 아니요 --> r1("같은 값을 그대로 넘김")
+	q2 -- 아니요 --> r3("사용처에서 조건으로 고름")
+```
+
 **Incorrect 1 (한 곳의 프롭 값을 고르려고 조회표를 만듭니다):**
 
 ```tsx
@@ -2704,6 +2842,8 @@ const order_status_by_api_code = {
 
 **Impact: HIGH (중복 제거와 표기 변환을 파일마다 다르게 만들지 않고 검증된 구현 하나로 모읍니다)**
 
+### 쓸 함수 고르기
+
 값을 다루는 보조 함수는 `es-toolkit`을 기본으로 쓰고, `lodash`는 새로 들이지 않습니다.
 빈 배열 · 중복 키 같은 경계 처리를 통일하고, 배열을 인자로 펼칠 때의 호출 인자 한계도 피합니다.
 
@@ -2723,6 +2863,8 @@ const order_status_by_api_code = {
 표에 없어도 문서에 같은 의미의 함수가 있으면 사용합니다.
 다만 `map` · `filter` · `find` · `flat` · `at` · `Object.keys`처럼 표준 메서드 하나로 끝나면 그대로 둡니다.
 공백 제거는 `value.trim()`, 제거할 문자 지정은 `trim(value, "_")`처럼 구분합니다.
+
+### 교체 전 확인
 
 | 교체 전 확인 | 지킬 계약 |
 | --- | --- |
@@ -2812,8 +2954,20 @@ const trimmedKeyword = keyword.trim();
 
 **Impact: HIGH (날짜의 단위와 타임존을 드러내고 파싱과 표시 형식을 일관되게 유지합니다)**
 
+### 작업별 기준
+
 날짜는 `dayjs`로 다루고, `moment`는 새로 들이지 않습니다.
 계산 단위, 입력 형식, 표시 타임존을 계약에 맞게 구분합니다.
+
+날짜 문자열이 들어왔을 때 다루는 방법을 고르는 차례입니다.
+
+```mermaid
+flowchart LR
+	q1{"서버가 표시 형식까지<br>확정했는가?"} -- 아니요 --> q2{"값을 더하거나<br>빼는가?"} -- 아니요 --> q3{"유효성을<br>보는가?"} -- 예 --> r3("유효성 검사")
+	q1 -- 예 --> r1("계약대로 문자열 표시")
+	q2 -- 예 --> r2("경과 시간과 달력<br>단위를 구분해 add")
+	q3 -- 아니요 --> r4("format 으로 표시")
+```
 
 | 작업 | 기준 |
 | --- | --- |
@@ -2821,6 +2975,8 @@ const trimmedKeyword = keyword.trim();
 | 경과 시간 · 달력 날짜 계산 | `add`, `subtract`의 단위를 구분합니다. 정확히 24시간과 현지 다음 날은 서머타임 경계에서 다를 수 있습니다 |
 | 밀리초 · 월 계산 교체 | 밀리초 연산을 `add(..., "day")`로 일괄 치환하지 않습니다. 월 계산은 월말 처리 계약을 확인합니다 |
 | 표시 · 비교 | 수동 문자열 조합 · `toLocaleDateString` 대신 `format`, `getTime` 비교 대신 `isBefore`, `isAfter`, `isSame`을 씁니다 |
+
+### 입력 · 표시 계약
 
 | 입력 · 표시 계약 | 처리 |
 | --- | --- |
@@ -2855,26 +3011,13 @@ const expiresAt = dayjs(issuedAt).add(token_expiry_hours, "hour");
 const expiresLabel = expiresAt.format(date_expiry_month_format);
 ```
 
-**Incorrect (형식만 보고 없는 날짜를 통과시킵니다):**
+**Incorrect 2 (형식만 보고 없는 날짜를 통과시킵니다):**
 
 ```ts
 const isValidDateText = /^\d{4}-\d{2}-\d{2}$/.test(dateText);
 ```
 
-**Correct (날짜 처리 방법을 계약에 따라 선택합니다):**
-
-```txt
-날짜 문자열이 들어왔다
-│
-├ 서버가 표시 타임존과 형식까지 확정함 ─→ 계약대로 문자열을 표시한다
-└ 계산하거나 형식을 바꿔야 함
-   │
-   ├ 형식만 바꿈 ──────→ dayjs(value).format(date_format)
-   ├ 더하거나 뺌 ──────→ 경과 시간과 달력 단위를 구분해 add()를 쓴다
-   └ 날짜 유효성을 봄 ─→ 고정 형식은 라운드트립, 다른 형식은 엄격한 파싱을 쓴다
-```
-
-**Correct (라운드트립으로 없는 날짜를 거릅니다):**
+**Correct 2 (라운드트립으로 없는 날짜를 거릅니다):**
 
 ```ts
 import dayjs from "dayjs";
@@ -2986,6 +3129,8 @@ const chartSeries = comparisonSeries.map((series) => ({
 
 **Impact: CRITICAL (기본값의 출처를 이름으로 드러내고 누락된 데이터의 처리 기준을 유지합니다)**
 
+### 기본값 표현
+
 `??` · `||` 오른쪽과 기본값에는 리터럴 대신 이미 선언된 이름을 참조합니다.
 리터럴을 지역 `const`로 옮기거나 이유 주석을 붙이는 것만으로는 규칙을 충족하지 못합니다.
 
@@ -2998,6 +3143,8 @@ const chartSeries = comparisonSeries.map((series) => ({
 | `(size = 10) =>`, `{size = 10}` 같은 기본값 리터럴 | 위반 |
 | `(size = pagination_default_page_size) =>` | 통과 |
 | 삼항의 대체 리터럴 `value ? value : "-"`, `String(value ?? "")` | 위반 |
+
+### 없음으로 취급할 값
 
 | 대체하려는 값 | 연산자 |
 | --- | --- |
@@ -3038,6 +3185,15 @@ const toPageRequest = (size = pagination_default_page_size): PageRequest => { /*
 
 기본값은 필요한지 먼저 확인하고, 필요하면 값이 들어오는 경계에서 한 번 채웁니다.
 기본값 표현은 `absence-expose-optional-values-instead-of-silent-fallbacks`를 따릅니다.
+
+기본값을 채울 자리를 고르는 차례입니다.
+
+```mermaid
+flowchart LR
+	q1{"기본값이<br>필요한가?"} -- 예 --> q2{"경계에서<br>채울 수 있는가?"} -- 예 --> r2("경계에서 한 번 채움")
+	q1 -- 아니요 --> r1("선택 값 그대로 소비")
+	q2 -- 아니요 --> r3("사용처에 ?? 로 적음")
+```
 
 | 순서 | 판단과 처리 |
 | --- | --- |
@@ -3113,6 +3269,8 @@ setVisibleRowCount(effectivePageSize);
 
 **Impact: HIGH (불필요한 검사를 줄이고 값이 실제로 없을 수 있는 경우만 확인합니다)**
 
+### 다시 검사하지 않을 것
+
 타입이 이미 보장하는 조건은 다시 검사하지 않습니다.
 불필요한 검사를 제거해 실제로 값이 없을 수 있는 경우를 드러냅니다.
 
@@ -3123,6 +3281,8 @@ setVisibleRowCount(effectivePageSize);
 | `unknown` · 외부 입력 | `types-narrow-unknown-instead-of-asserting`에 따라 검증합니다 |
 | 유한 수 여부 | `number`는 `NaN`, `Infinity`도 포함하므로 필요한 검사를 남깁니다 |
 | 배열 인덱스 · 열린 키 조회 | 컴파일러 옵션과 실제 길이에 따라 값이 없을 수 있으므로 필요한 검사를 남깁니다 |
+
+### 선택 필드의 생략
 
 선택 필드의 생략과 `undefined` 대입은 소비 계약에 맞춥니다.
 
@@ -3185,6 +3345,8 @@ return {
 
 **Impact: HIGH (값이 들어오는 경계에서 검사해 중간 함수의 중복 검사를 줄입니다)**
 
+### 경계가 정한 답
+
 값의 없음 여부는 소유자 안으로 들어오는 경계에서 한 번 검사하고, 결과를 타입으로 전달합니다.
 화면의 응답 매핑 · `select` · `combine` · search 스키마나 컴포넌트가 프롭을 받는 자리가 경계입니다.
 
@@ -3197,6 +3359,8 @@ return {
 그 밖의 소비처가 없음 여부를 반복 판정한다면 경계에서 결과를 전달했는지 확인합니다.
 판정 결과를 전달하는 방법은 `values-decide-once-and-carry-the-result`가 정합니다.
 
+### 다시 검사가 필요한 때
+
 | 다시 검사가 필요한가 | 기준 |
 | --- | --- |
 | 경계에서 이미 확인한 없음 · 유한 수 조건 | 반복하지 않습니다 |
@@ -3208,7 +3372,7 @@ return {
 `unknown`은 검증 책임이 있는 경계에서 받고, 공개 입력 계약을 내부 호출 하나에 맞춰 좁히지 않습니다.
 타입 좁히기는 `types-narrow-unknown-instead-of-asserting`을 따릅니다.
 
-**Incorrect (경계가 타입을 좁히지 않아 아래 함수마다 같은 값을 다시 검사합니다):**
+**Incorrect 1 (경계가 타입을 좁히지 않아 아래 함수마다 같은 값을 다시 검사합니다):**
 
 ```ts
 // page/detail/_function/to-badge/_to-signed-tone.ts
@@ -3228,7 +3392,30 @@ export const formatSignedPercent = (value: number | null | undefined) => {
 };
 ```
 
-**Correct (경계에서 타입을 좁히고 없음 여부는 화면을 그릴 때 분기합니다):**
+**Correct 1 (경계가 좁힌 `number`를 받아 두 함수는 자기 판정만 남깁니다):**
+
+```ts
+// page/detail/_function/to-badge/_to-signed-tone.ts
+/**
+ * 부호 있는 변화율의 강조 tone. 0은 어느 쪽도 아니라 중립이다
+ */
+export const toSignedTone = (value: number): Tone => {
+	if (value === 0) {
+		return "neutral";
+	}
+	return value > 0 ? "positive" : "negative";
+};
+
+// page/detail/_function/format-signed-percent.ts
+/**
+ * 부호를 붙인 변화율 표시 문자열
+ */
+export const formatSignedPercent = (value: number) => {
+	return `${value > 0 ? "+" : ""}${value}%`;
+};
+```
+
+**Correct (경계인 `select`에서 없음과 유한 수를 한 번 검사해 타입을 좁힙니다):**
 
 ```tsx
 // page/detail/pg-detail.tsx: 서버는 계산 전이면 null을 준다. 여기서 한 번 좁힌다
@@ -3242,18 +3429,7 @@ const responseSummarySuspense = useSuspenseQuery({
 });
 ```
 
-```ts
-// page/detail/_function/to-badge/_to-signed-tone.ts
-/**
- * 부호 있는 변화율의 강조 tone. 0은 어느 쪽도 아니라 중립이다
- */
-export const toSignedTone = (value: number): Tone => {
-	if (value === 0) {
-		return "neutral";
-	}
-	return value > 0 ? "positive" : "negative";
-};
-```
+**Correct (없음을 읽는 자리는 화면을 그리는 분기 하나입니다):**
 
 ```tsx
 // page/detail/_pg-detail-summary.tsx: 없음을 읽는 곳은 그리는 분기 하나다
@@ -3563,6 +3739,8 @@ export const saveProduct = async (product: Product): Promise<void> => {
 
 **Impact: MEDIUM (예외가 취향인지 근거가 있는지 코드에서 바로 드러납니다)**
 
+### 확인할 수 있는 근거
+
 규칙이 허용한 예외에는 다른 사람이 확인할 수 있는 근거를 주석으로 남깁니다.
 “성능을 위해”, “안전하게”, “필요해서”처럼 확인할 수 없는 말은 예외의 근거가 되지 않습니다.
 
@@ -3572,6 +3750,8 @@ export const saveProduct = async (product: Product): Promise<void> => {
 | 측정 결과 | 측정 대상과 수치 |
 | 제품 명세 · 티켓 | 결정이 기록된 위치 |
 | 상수 | `constant` 폴더에 선언된 이름 |
+
+### 주석 자리
 
 | 예외 위치 | 주석 위치 · 형태 |
 | --- | --- |
@@ -3631,6 +3811,8 @@ const filteredRows = useMemo(() => {
 
 **Impact: MEDIUM (자동 검사와 리뷰의 역할을 구분해 판단이 필요한 내용에 집중합니다)**
 
+### 설정이 담당하는 것
+
 기계적으로 판정할 수 있는 규칙은 아래 Biome 설정으로 검사하고, 의미 판단은 리뷰에서 확인합니다.
 
 | Biome 규칙 | 담당 컨벤션 |
@@ -3659,6 +3841,8 @@ const filteredRows = useMemo(() => {
 Biome 2.5.7의 `recommended`에는 `useConst` · `useImportType` · `noNonNullAssertion` ·
 `noUnusedFunctionParameters` · `noExplicitAny`가 포함됩니다. 담당 컨벤션을 드러내려고 설정에도 명시합니다.
 
+### 리뷰가 담당하는 것
+
 | 대상 | 도구 한계 | 처리 |
 | --- | --- | --- |
 | 모듈 `const` · 객체 키의 역할 | 허용된 `snake_case`는 불변 데이터 상수와 그 키에만 적용됨 | 함수 · 스키마 · 요청 객체와의 구분은 리뷰합니다 |
@@ -3674,6 +3858,8 @@ Biome 2.5.7의 `recommended`에는 `useConst` · `useImportType` · `noNonNullAs
 `PascalCase`는 `objectLiteralProperty` · `const` · `variable`에만 허용합니다.
 `import.meta.env` · `process.env`는 CI에서 문자열로 검색해도 됩니다.
 `style/useConsistentArrowReturn`이 막는 것은 인라인 콜백과 커링 바깥 화살표 예외입니다.
+
+### 설정 예외
 
 | 설정 예외 | 적용 범위와 이유 |
 | --- | --- |

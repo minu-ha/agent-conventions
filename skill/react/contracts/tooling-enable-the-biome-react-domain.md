@@ -5,12 +5,16 @@
 `biome` 2.x의 `linter.domains`에서 `react`를 켭니다. `package.json`에 `react@>=16`이 있을 때 리액트 검사가 적용됩니다.
 기본 설정은 `typescript/tooling-configure-biome-to-enforce-these-rules`를 따릅니다.
 
+### 도메인 검사와 추가 설정
+
 | 검사 | 컨벤션 적용 범위 | 추가 설정 · 리뷰 |
 | --- | --- | --- |
 | `correctness/noNestedComponentDefinitions` | `react/composition-do-not-define-components-inside-components` 전체 | 도메인 `recommended`에 없어 별도로 켭니다 |
 | `correctness/useExhaustiveDependencies` | `react/state-use-effectevent-for-non-reactive-effect-callbacks`의 누락된 의존성 검사 | `useEffectEvent`로 분리할지는 리뷰에서 판단합니다 |
 | `correctness/useJsxKeyInIterable` | `react/composition-name-fragments-explicitly`의 `key` 유무 | `<>` 대신 `Fragment`를 썼는지는 리뷰에서 확인합니다 |
 | `style/noRestrictedImports` + `overrides` | `react/ownership-keep-component-imports-flowing-downward`의 레이어 · 라우트 방향 | 아래 경로 설정을 추가합니다. 소유자 경계는 별도 판단합니다 |
+
+### 접근성 검사
 
 | `a11y/*` | 내용 |
 | --- | --- |
@@ -20,6 +24,8 @@
 
 `a11y` 검사는 `useButtonType` · `useAltText` · `useValidAnchor` · `useKeyWithClickEvents` ·
 `useSemanticElements` · `noStaticElementInteractions` · `useFocusableInteractive`를 포함합니다.
+
+### 가져오기 경로 제한
 
 | `noRestrictedImports` 적용 위치 | 차단할 경로 |
 | --- | --- |
@@ -31,6 +37,8 @@
 `overrides`는 규칙 옵션을 통째로 바꾸므로 기본 설정의 경로 패턴을 각 항목에 함께 적습니다.
 소유자 경계는 `import` 문자열만으로 판정하지 못합니다. `@/page/detail/_pg-product-summary`도 가져오는 파일의 위치에 따라
 허용 여부가 달라지므로, 위치를 비교하는 `eslint` 규칙이나 리뷰에서 확인합니다.
+
+### 켜지 않는 규칙
 
 | 켜지 않는 규칙 | 이유 |
 | --- | --- |

@@ -16,9 +16,21 @@ tags: functions, boundaries
 
 **Impact: HIGH (불필요한 함수 분리를 줄여 호출부에서 처리 흐름을 읽을 수 있습니다)**
 
+### 이름을 붙이는 사유
+
 한 곳에서만 쓰는 단계는 호출부에 둡니다.
 다음 사유가 있을 때만 보조 함수에 이름을 붙입니다.
 추출한 함수는 바깥 변수 · 훅 · 컴포넌트 상태 없이도 뜻이 통해야 합니다.
+
+이름을 붙일지 정하는 차례입니다.
+
+```mermaid
+flowchart LR
+	q1{"두 자리 이상이<br>부르는가?"} -- 아니요 --> q2{"렌더 파일 밖의<br>요청 조립인가?"} -- 아니요 --> q3{"삼항 하나로<br>담기는가?"} -- 예 --> r4("호출부에 그대로 둠")
+	q1 -- 예 --> r1("이름을 붙여 추출")
+	q2 -- 예 --> r2("같은 소유자의 .ts 로 이동")
+	q3 -- 아니요 --> r3("return 함수로 추출")
+```
 
 | 허용 사유 | 조건 |
 | --- | --- |
@@ -27,6 +39,8 @@ tags: functions, boundaries
 | 함수 형태가 필수 | 삼항 하나로 표현할 수 없는 판정 · `value is T` 타입 가드 · 재귀 |
 
 요청 조립은 같은 소유자의 `.ts`로 옮깁니다. 표시용 가공이나 기존 `.ts`는 해당하지 않습니다.
+
+### 추출을 검토할 때
 
 | 추출을 검토하는 이유 | 처리 |
 | --- | --- |
@@ -40,7 +54,7 @@ tags: functions, boundaries
 함수 배치는 `functions-give-each-function-its-own-file`,
 루트 승격은 `functions-promote-owner-free-functions-to-root-util`이 정합니다.
 
-**Incorrect (한 자리에서만 쓰는 단계를 함수로 떼어 내 흐름이 파일 안에서 흩어집니다):**
+**Incorrect 1 (한 자리에서만 쓰는 단계를 함수로 떼어 내 흐름이 파일 안에서 흩어집니다):**
 
 ```txt
 page/report/_function/to-report-content.ts
@@ -51,16 +65,21 @@ page/report/_function/to-report-content.ts
   formatAmount       toComparisonRows 와 toStatusGroups 가 부름
 ```
 
-**Incorrect (한 번만 쓰는 한 줄 계산을 파일로 분리합니다):**
-
 ```ts
-// page/profile/_function/get-next-page.ts
-export const getNextPage = (previous: number, pageCount: number): number => {
-	return (previous + 1) % pageCount;
+// page/report/_function/to-report-content.ts
+/**
+ * 상품 보고서 영역의 표시 데이터. 상품 상세에서만 재고 카드가 온다
+ */
+export const toReportContent = (params: ToReportContentParams): ReportContent => {
+	return {
+		metrics: toComparisonRows(params),
+		statusGroups: toStatusGroups(params),
+		stockCount: toStockCard(params),
+	};
 };
 ```
 
-**Correct (한 번 쓰는 단계는 호출부에 두고 재사용하는 계산은 함수로 추출합니다):**
+**Correct 1 (한 번 쓰는 단계는 호출부에 두고 재사용하는 계산은 함수로 추출합니다):**
 
 ```txt
 page/report/_function/to-report-content/
@@ -96,7 +115,19 @@ export const toReportContent = (params: ToReportContentParams): ReportContent =>
 };
 ```
 
-**Correct (작은 계산은 쓰는 자리에 그대로 둡니다):**
+**Incorrect 2 (한 번만 쓰는 한 줄 계산을 파일로 떼어 내 호출부가 가져옵니다):**
+
+```tsx
+// page/profile/pg-profile.tsx
+// (previous + 1) % pageCount 한 줄을 page/profile/_function/get-next-page.ts 로 옮겼다
+import {getNextPage} from "@/page/profile/_function/get-next-page";
+
+const handleNextClick = () => {
+	setPage((previous) => getNextPage(previous, pageCount));
+};
+```
+
+**Correct 2 (작은 계산은 쓰는 자리에 그대로 둡니다):**
 
 ```tsx
 // page/profile/pg-profile.tsx

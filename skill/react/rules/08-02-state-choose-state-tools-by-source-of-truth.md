@@ -18,6 +18,18 @@ tags: state, react-query, zustand
 상태 도구는 값의 수명과 소유자로 고릅니다.
 표를 아래에서부터 읽어 처음 해당하는 행을 적용합니다.
 
+### 도구 고르기
+
+값의 소유자를 확인하는 차례입니다.
+
+```mermaid
+flowchart LR
+	q1{"링크를 공유해도<br>같은 화면이 열리는가?"} -- 아니요 --> q2{"서버가 소유하는가?"} -- 아니요 --> q3{"묶음 밖에서도<br>읽는가?"} -- 아니요 --> r4("useState · useReducer")
+	q1 -- 예 --> r1("search 파라미터")
+	q2 -- 예 --> r2("react-query")
+	q3 -- 예 --> r3("Zustand")
+```
+
 | 상태의 소유자 | 기본 도구 |
 | --- | --- |
 | 로컬 UI | `useState` 또는 `useReducer` |
@@ -25,6 +37,8 @@ tags: state, react-query, zustand
 | 전역 클라이언트 | `Zustand` |
 | 서버 | `@tanstack/react-query` |
 | 링크를 공유해도 같은 화면이 열려야 하는 값 | 라우트 search 파라미터(`nuqs`의 `useQueryStates`) |
+
+### 혼동하기 쉬운 상태
 
 | 혼동하기 쉬운 상태 | 소유 기준 |
 | --- | --- |
@@ -76,14 +90,14 @@ const [page, setPage] = useState(1);
 const [urlParams, setUrlParams] = useQueryStates(productUrlParsers);
 ```
 
-**Incorrect (묶음 밖의 화면이 읽는 값을 `Context`로 앱 루트까지 올려 전역 스토어처럼 씁니다):**
+**Incorrect 3 (묶음 밖의 화면이 읽는 값을 `Context`로 앱 루트까지 올려 전역 스토어처럼 씁니다):**
 
-```tsx
+```ts
 // 테마는 레이아웃과 모든 화면이 읽는데 Context 를 루트에 두고 화면마다 Provider 를 찾아 올라간다
 const ThemeContext = createContext<Theme>("light");
 ```
 
-**Correct (묶음 밖에서도 읽는 값은 전역 스토어가 소유합니다):**
+**Correct 3 (묶음 밖에서도 읽는 값은 전역 스토어가 소유합니다):**
 
 ```ts
 const themeStore = useThemeStore();

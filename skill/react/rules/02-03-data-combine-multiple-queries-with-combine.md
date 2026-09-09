@@ -18,6 +18,8 @@ tags: data, query
 둘 이상의 쿼리 결과를 하나로 합칠 때는 값을 렌더하는 섹션에서 `combine`을 인라인으로 씁니다.
 결과를 합칠 필요와 요청을 병렬로 시작할 필요는 따로 판단합니다.
 
+### 합치는 방법 고르기
+
 | 상황 | 선택 |
 | --- | --- |
 | Suspense 쿼리 결과를 합침 | `useSuspenseQueries` + `combine`. `isPending`을 만들어 내보내지 않습니다 |
@@ -25,6 +27,8 @@ tags: data, query
 | 결과를 각각 렌더함 | 합친 값을 만들지 않습니다. Suspense 병렬 실행이 필요하면 `useSuspenseQueries`에서 결과를 따로 읽습니다 |
 | 일반 쿼리의 뒤 요청이 앞 결과를 입력으로 받음 | `enabled`로 입력이 준비된 뒤 실행합니다 |
 | Suspense 쿼리의 뒤 요청이 앞 결과를 입력으로 받음 | 같은 컴포넌트에서 `useSuspenseQuery`를 순서대로 호출합니다 |
+
+### 실행 차례와 재계산
 
 `useSuspenseQuery` · `useSuspenseQueries`는 `enabled`를 받지 않습니다.
 필수 입력이 없으면 쿼리를 호출하는 자식의 렌더를 보류합니다.

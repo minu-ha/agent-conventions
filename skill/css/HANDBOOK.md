@@ -225,6 +225,15 @@ ui_card__body--dense
 `pg_*` 식별자에는 어느 화면인지 추적할 수 있는 이름을 씁니다.
 화면 소유 여부는 활성화된 프레임워크 규약이 판단하고 CSS는 그 이름을 따릅니다.
 
+식별자를 고르는 차례입니다.
+
+```mermaid
+flowchart LR
+	q1{"화면 안의<br>컴포넌트인가?"} -- 예 --> q2{"다른 화면의 식별자와<br>충돌하는가?"} -- 예 --> r2("충돌한 화면의 세그먼트 하나를<br>pg_ 뒤에 덧붙임")
+	q1 -- 아니요 --> r1("라우트 세그먼트와 같은 낱말")
+	q2 -- 아니요 --> r3("자기 이름만")
+```
+
 | 대상 | 식별자 |
 | --- | --- |
 | 라우트 진입 파일 | 라우트 세그먼트나 폴더 이름과 같은 낱말. 어느 화면에나 붙는 `shell`, `page`, `content`는 쓰지 않습니다 |
@@ -401,6 +410,8 @@ component/ui/button/ui-button.css
 
 **Impact: CRITICAL (다른 소유자의 스타일을 덮어써도 해당 인스턴스에만 적용되도록 제한합니다)**
 
+### 선택자 판정
+
 다른 소유자의 클래스는 **내 최상위 클래스 블록 안에서 `&`로 시작하는 선택자**로만 씁니다.
 내 `scope_slug`와 다르면 외부 라이브러리, 다른 화면, `widget` 모두 같은 기준을 적용합니다.
 
@@ -420,6 +431,8 @@ component/ui/button/ui-button.css
 블록 중첩 깊이는 `selector-limit-nesting-block-depth` 규칙을 따릅니다.
 직접 수정할 수 있는 클래스라면 `ownership-change-other-owners-through-their-api`의 세 방법을 먼저 확인하고,
 모두 맞지 않을 때 이 규칙을 적용합니다.
+
+### 기계 검증 범위
 
 `selector-disallowed-list`는 등록된 외부 접두사와 다른 레이어의 최상위 클래스를 검사합니다.
 같은 레이어의 다른 식별자와 미등록 라이브러리 클래스는 파일별 소유자를 대조해야 합니다.
@@ -511,6 +524,16 @@ component/ui/button/ui-button.css
 
 다른 소유자의 모습을 바꿀 때는 아래 세 방법을 순서대로 확인합니다.
 
+방법을 고르는 차례입니다.
+
+```mermaid
+flowchart LR
+	q1{"최상위 배치만<br>다른가?"} -- 아니요 --> q2{"여러 사용처에서<br>같은 내부 모습인가?"} -- 아니요 --> q3{"레이어 판정이<br>화면 소유인가?"} -- 아니요 --> r4("내 최상위 블록에서<br>선택자로 지정")
+	q1 -- 예 --> r1("사용처가<br>className 전달")
+	q2 -- 예 --> r2("소유자가<br>variant 프롭 노출")
+	q3 -- 예 --> r3("화면 폴더로<br>파일 이동")
+```
+
 | 상황 | 방법 | 수정 위치 |
 | --- | --- | --- |
 | 최상위 배치만 다름 | 사용처가 `className`을 넘겨 자기 클래스로 스타일을 줍니다 | 사용처 TSX와 CSS |
@@ -524,7 +547,11 @@ component/ui/button/ui-button.css
 `className`을 최상위까지만 전달하는 경계는 `composition-inject-classes-only-at-the-entry-point` 규칙이 정합니다.
 이 규칙은 사용처가 어떤 방법을 고를지 판단합니다.
 
-**Incorrect (최상위 배치를 `className`으로 바꿀 수 있는데도 다른 소유자의 클래스를 선택합니다):**
+**Incorrect 1 (최상위 배치를 `className`으로 바꿀 수 있는데도 다른 소유자의 클래스를 선택합니다):**
+
+```tsx
+<WgChartCard />
+```
 
 ```css
 /* page/detail/pg-detail.css */
@@ -536,7 +563,7 @@ component/ui/button/ui-button.css
 }
 ```
 
-**Correct (최상위 배치는 사용처가 자기 클래스로 잡습니다):**
+**Correct 1 (최상위 배치는 사용처가 자기 클래스로 잡습니다):**
 
 ```tsx
 <WgChartCard className={clsx("pg_detail__chartCard")} />
@@ -632,6 +659,15 @@ TSX의 `className`은 클래스가 하나여도 `clsx()`로 조합합니다.
 수정자는 앱 상태나 여러 곳에서 반복되는 모양에만 씁니다.
 한 곳의 여백이나 배치를 보정할 때는 기본 요소 클래스 대신 **역할 이름을 붙인 별도 요소 클래스**를 씁니다.
 
+수정자와 요소 클래스를 고르는 차례입니다.
+
+```mermaid
+flowchart LR
+	q1{"앱이 켜고 끄는<br>상태인가?"} -- 아니요 --> q2{"두 곳 이상에서<br>반복되는 모양인가?"} -- 아니요 --> r3("역할 이름을 붙인<br>요소 클래스")
+	q1 -- 예 --> r1("수정자")
+	q2 -- 예 --> r2("수정자")
+```
+
 | 표현하려는 것 | 판정 |
 | --- | --- |
 | 앱이 켜고 끄는 상태 | 항상 수정자로 씁니다. `--active`, `--selected`, `--error`, `--expanded`, `--current` |
@@ -711,10 +747,14 @@ TSX의 `className`은 클래스가 하나여도 `clsx()`로 조합합니다.
 우리가 만든 컴포넌트는 레이어와 무관하게 **최상위 진입점 한 곳**에서만 외부 클래스를 받습니다.
 내부 노드의 클래스 주입 지점을 늘리면 사용처가 컴포넌트 구조에 의존하게 됩니다.
 
+### 사용처가 바꾸는 자리
+
 | 사용처가 바꾸려는 것 | 방법 |
 | --- | --- |
 | 최상위의 배치, 여백, 크기 | 받은 `className`을 자기 최상위 클래스와 `clsx()`로 합칩니다 |
 | 화면마다 달라지는 내부 모양 | `variant` 프롭을 받고 헤더나 본문 등 필요한 노드마다 수정자를 붙입니다 |
+
+### 금지하는 형태
 
 | 금지하는 형태 | 이유 또는 예외 |
 | --- | --- |
@@ -725,7 +765,7 @@ TSX의 `className`은 클래스가 하나여도 `clsx()`로 조합합니다.
 사용처의 선택은 `ownership-change-other-owners-through-their-api` 규칙이 정합니다.
 `className`을 받지 않는 컴포넌트는 `composition-do-not-add-wrapper-elements-for-styling` 규칙을 따릅니다.
 
-**Incorrect (내부 노드마다 클래스 프롭을 열어 주입 지점을 늘립니다):**
+**Incorrect 1 (내부 노드마다 클래스 프롭을 열어 주입 지점을 늘립니다):**
 
 ```tsx
 export interface UiCollapseProps {
@@ -736,7 +776,18 @@ export interface UiCollapseProps {
 }
 ```
 
-**Incorrect (받은 `className`을 내부 노드로 넘깁니다):**
+**Correct 1 (클래스 프롭은 최상위 `className` 하나로 두고 내부는 `variant`로 엽니다):**
+
+```tsx
+export interface UiCollapseProps {
+	className?: string;
+	variant?: "default" | "compact";
+	title: ReactNode;
+	children: ReactNode;
+}
+```
+
+**Incorrect 2 (받은 `className`을 내부 노드로 넘깁니다):**
 
 ```tsx
 export const UiCollapse = (props: UiCollapseProps) => {
@@ -751,16 +802,9 @@ export const UiCollapse = (props: UiCollapseProps) => {
 };
 ```
 
-**Correct (`className`은 최상위 클래스와 합치고, 변형은 필요한 노드마다 수정자로 붙입니다):**
+**Correct 2 (`className`은 최상위 클래스와 합치고, 변형은 필요한 노드마다 수정자로 붙입니다):**
 
 ```tsx
-export interface UiCollapseProps {
-	className?: string;
-	variant?: "default" | "compact";
-	title: ReactNode;
-	children: ReactNode;
-}
-
 export const UiCollapse = (props: UiCollapseProps) => {
 	const isCompact = props.variant === "compact";
 
@@ -774,6 +818,8 @@ export const UiCollapse = (props: UiCollapseProps) => {
 	);
 };
 ```
+
+**Correct (수정자의 선언은 소유자 CSS에 둡니다):**
 
 ```css
 .ui_collapse__header {
@@ -846,7 +892,7 @@ export const UiCollapse = (props: UiCollapseProps) => {
 </div>
 ```
 
-**Incorrect (래퍼 `div`로 최상위 스타일을 우회합니다):**
+**Incorrect 2 (래퍼 `div`로 최상위 스타일을 우회합니다):**
 
 ```tsx
 <div className={clsx("pg_orders__collapseWrap")}>
@@ -862,7 +908,21 @@ export const UiCollapse = (props: UiCollapseProps) => {
 }
 ```
 
-**Correct (우리 컴포넌트면 `className` 계약을 추가합니다):**
+**Correct 2 (래퍼를 걷고 컴포넌트에 자기 클래스를 넘깁니다):**
+
+```tsx
+<UiCollapse className={clsx("pg_orders__collapse")}>
+	<PgOrderFilterFields />
+</UiCollapse>
+```
+
+```css
+.pg_orders__collapse {
+	margin-block-end: 16px;
+}
+```
+
+**Correct (`className`을 받지 않던 우리 컴포넌트에 계약을 더합니다):**
 
 ```tsx
 export interface UiCollapseProps {
@@ -875,18 +935,6 @@ export const UiCollapse = (props: UiCollapseProps) => {
 		<div className={clsx("ui_collapse__root", props.className)}>{props.children}</div>
 	);
 };
-```
-
-```tsx
-<UiCollapse className={clsx("pg_orders__collapse")}>
-	<PgOrderFilterFields />
-</UiCollapse>
-```
-
-```css
-.pg_orders__collapse {
-	margin-block-end: 16px;
-}
 ```
 
 ### 3.6 Do Not Style Through the `style` Attribute
@@ -915,7 +963,7 @@ export const UiCollapse = (props: UiCollapseProps) => {
 `Omit`으로 뺄 수 있지만 DOM 속성을 허용하려고 그대로 두므로 사용 여부는 리뷰에서 확인합니다.
 클래스에서 인라인 선언을 덮으려면 `!important`가 필요합니다.
 
-**Incorrect (인라인으로 꾸밉니다):**
+**Incorrect 1 (인라인으로 꾸밉니다):**
 
 ```tsx
 <section className={clsx("pg_orders__summary")} style={{marginTop: 16, color: isCritical ? "#c00" : undefined}}>
@@ -923,13 +971,15 @@ export const UiCollapse = (props: UiCollapseProps) => {
 </section>
 ```
 
-**Correct (스타일시트에 두고 수정자로 가릅니다):**
+**Correct 1 (스타일시트에 두고 수정자로 가릅니다):**
 
 ```tsx
 <section className={clsx("pg_orders__summary", isCritical && "pg_orders__summary--critical")}>
 	{summary}
 </section>
 ```
+
+**Correct (인라인으로 적던 선언을 스타일시트에 둡니다):**
 
 ```css
 .pg_orders__summary {
@@ -1048,7 +1098,7 @@ export const UiButton = (props: UiButtonProps) => {
 };
 ```
 
-**Incorrect (수정자가 없는 값까지 조립해 CSS에 없는 클래스를 붙입니다):**
+**Incorrect 3 (수정자가 없는 값까지 조립해 CSS에 없는 클래스를 붙입니다):**
 
 ```tsx
 type Tone = "positive" | "negative" | "neutral" | "unknown";
@@ -1066,7 +1116,7 @@ type Tone = "positive" | "negative" | "neutral" | "unknown";
 }
 ```
 
-**Correct (CSS에 수정자가 있는 두 값만 적고 나머지는 기본 모습을 씁니다):**
+**Correct 3 (CSS에 수정자가 있는 두 값만 적고 나머지는 기본 모습을 씁니다):**
 
 ```tsx
 <span
@@ -1078,6 +1128,16 @@ type Tone = "positive" | "negative" | "neutral" | "unknown";
 >
 	{amount}
 </span>;
+```
+
+```css
+.pg_products__changeRate--positive {
+	color: var(--app-color-rise);
+}
+
+.pg_products__changeRate--negative {
+	color: var(--app-color-fall);
+}
 ```
 
 **Correct (같은 값이 요소 셋의 수정자를 정하면 요소마다 나열을 반복합니다):**
@@ -1219,6 +1279,8 @@ export const WgUserCard = (props: WgUserCardProps) => {
 
 **Impact: MEDIUM (태그를 바꿔도 스타일이 유지되도록 마크업을 클래스로 선택합니다)**
 
+### 선택 방법
+
 우리가 렌더하는 마크업은 요소 선택자 대신 클래스로 선택합니다.
 태그를 `div`에서 `section`으로 바꿔도 스타일이 사라지지 않아야 합니다.
 
@@ -1229,6 +1291,9 @@ export const WgUserCard = (props: WgUserCardProps) => {
 | `dangerouslySetInnerHTML`이나 클래스 지정 API가 없는 렌더러 출력 | 감싼 클래스 블록 안에서만 요소 선택자를 허용합니다. 구조 선택자도 같은 기준을 따릅니다 |
 
 최상위에 `h2 { }`를 선언하면 해당 스타일시트를 읽은 문서 전체에 적용되므로 예외에서도 금지합니다.
+
+### 예외 주석 형태
+
 `selector-disallowed-list`가 `&` 바로 뒤의 요소 선택자를 막으므로 예외에는 다음 주석을 남깁니다.
 
 예외 선택자가 하나면 `stylelint-disable-next-line`을 씁니다.
@@ -1236,7 +1301,16 @@ export const WgUserCard = (props: WgUserCardProps) => {
 
 규칙 이름 뒤에 `-- <마크업 출처>`처럼 직접 작성하지 않는 마크업이라는 근거를 함께 적습니다.
 
-**Incorrect (우리가 렌더하는 마크업을 요소 선택자로 잡습니다):**
+**Incorrect 1 (우리가 렌더하는 마크업을 요소 선택자로 잡습니다):**
+
+```tsx
+<div className={clsx("pg_products__toolbar")}>
+	<div>
+		<UiSearchInput />
+	</div>
+	<button type="button">초기화</button>
+</div>
+```
 
 ```css
 .pg_products__toolbar {
@@ -1254,16 +1328,7 @@ export const WgUserCard = (props: WgUserCardProps) => {
 }
 ```
 
-**Incorrect (요소 선택자를 최상위에 둡니다):**
-
-```css
-/* 블록 밖에 홀로 둔 요소 선택자. 이 스타일시트를 읽은 문서의 모든 h2에 걸린다 */
-h2 {
-	margin: 24px 0 12px;
-}
-```
-
-**Correct (우리가 렌더하면 클래스를 붙입니다):**
+**Correct 1 (우리가 렌더하면 클래스를 붙입니다):**
 
 ```tsx
 <div className={clsx("pg_products__toolbar")}>
@@ -1287,7 +1352,23 @@ h2 {
 }
 ```
 
-**Correct (마크업을 우리가 쓰지 않으면 래퍼 블록 안에서 요소 선택자를 씁니다):**
+**Incorrect 2 (요소 선택자를 최상위에 둡니다):**
+
+```tsx
+<div
+	className={clsx("wg_productDetail__prose")}
+	dangerouslySetInnerHTML={{__html: product.bodyHtml}}
+/>
+```
+
+```css
+/* 블록 밖에 홀로 둔 요소 선택자. 이 스타일시트를 읽은 문서의 모든 h2에 걸린다 */
+h2 {
+	margin: 24px 0 12px;
+}
+```
+
+**Correct 2 (마크업을 우리가 쓰지 않으면 래퍼 블록 안에서 요소 선택자를 씁니다):**
 
 ```tsx
 <div
@@ -1326,6 +1407,8 @@ h2 {
 
 **Impact: MEDIUM (공통 선언도 각 클래스에 두어 전체 스타일을 한 곳에서 읽습니다)**
 
+### 공통 선언 처리
+
 공통 선언을 공유하려고 여러 클래스를 `,`로 묶지 않습니다.
 중복되더라도 각 클래스 블록에 선언을 모두 적어 한 클래스의 스타일을 한 곳에서 읽게 합니다.
 
@@ -1335,6 +1418,8 @@ h2 {
 | 한 대상에 진입 조건이 여럿임 | 조건마다 블록을 엽니다. `,`나 `:is()`로 묶지 않습니다 |
 | 값을 지역 변수로 빼서 공유함 | `values-tokenize-repeated-visual-values` 규칙에 따라 금지합니다 |
 | `@media`나 `@supports` 안에서 같은 클래스를 재선언함 | 이 규칙의 대상이 아닙니다 |
+
+### 기계 검증 범위
 
 | 검사 대상 | 담당 |
 | --- | --- |
@@ -1605,6 +1690,8 @@ h2 {
 
 **Impact: MEDIUM (기본 모습과 상태 변화를 함께 읽고 수정자가 꺼져도 상호작용 표시를 유지합니다)**
 
+### 상태 가상 클래스 자리
+
 DOM 상태 가상 클래스는 해당 요소의 **조건 없는 기본 클래스 블록** 안에 `&:`로 씁니다.
 기본 모습과 상태 변화를 함께 읽도록 블록 바깥이나 수정자 블록에서 다시 열지 않습니다.
 
@@ -1621,6 +1708,8 @@ DOM 상태 가상 클래스는 해당 요소의 **조건 없는 기본 클래스
 자손 블록에서 조상 조건을 읽으면 조상을 옮길 때 스타일이 깨질 수 있습니다.
 자손 기본 블록은 조상 규칙보다 **앞에** 둡니다.
 뒤에 두면 낮은 명시도의 규칙이 나중에 나와 `no-descending-specificity`에 걸립니다.
+
+### 기계 검증 범위
 
 | 기계 검증 | 검사 대상 |
 | --- | --- |
@@ -1814,6 +1903,8 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 
 **Impact: HIGH (공통 토큰의 수정 위치를 하나로 유지하고 대체값의 중복을 막습니다)**
 
+### 대체값을 붙이는 자리
+
 항상 주입되는 **공통 토큰 목록**을 `:root`나 전역 테마 스타일시트 한 곳에 선언합니다.
 `var()`의 대체값 여부는 그 목록과 대조해 정합니다.
 
@@ -1822,6 +1913,11 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 | 공통 토큰 목록에 있음 | 쓰지 않습니다. 모든 테마에서 선언을 보장하고 이름을 목록과 확인합니다 |
 | 그 밖의 변수 | 씁니다. 외부 라이브러리 변수나 실행 중 주입되는 수치처럼 값이 없을 수 있습니다 |
 | 목록 밖의 같은 변수를 두 곳 이상에서 씀 | 대체값을 우리 토큰에 한 번만 적고 사용처는 그 토큰을 가리킵니다 |
+
+공통 토큰에 대체값을 반복하면 누락을 놓치기 쉽고 누락 시 동작과 예전 값을 여러 곳에서 관리하게 됩니다.
+이 규칙을 적용하려고 요청에 없는 CSS 변수를 만들지는 않습니다.
+
+### 대체값이 쓰이는 때
 
 대체값은 변수의 **계산값을 사용할 수 없을 때** 적용됩니다.
 
@@ -1832,9 +1928,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 | `@property`로 등록한 변수 | 등록 문법과 초기값이 먼저 적용되므로 그 계약을 확인합니다 |
 | 대체값 없이 변수가 무효이거나 소비 속성 문법에 맞지 않음 | 앞선 선언으로 돌아가지 않습니다. 상속 속성은 상속값, 나머지는 초기값이 됩니다. `color`는 부모 색, `z-index`는 `auto`가 됩니다 |
 
-공통 토큰에 대체값을 반복하면 누락을 놓치기 쉽고 누락 시 동작과 예전 값을 여러 곳에서 관리하게 됩니다.
 정상 주입된 토큰 값은 대체값보다 우선합니다.
-이 규칙을 적용하려고 요청에 없는 CSS 변수를 만들지는 않습니다.
 
 **Incorrect 1 (공통 토큰에 대체값을 붙여 값을 두 곳에 둡니다):**
 
@@ -1894,6 +1988,16 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 
 여러 파일에서 쓰는 값은 전역 공통 토큰으로 모으고 한 파일 안의 값은 선언 위치에 둡니다.
 판정 기준은 **파일 경계**이며 다음 예외를 함께 확인합니다.
+
+값을 어디에 둘지 고르는 차례입니다.
+
+```mermaid
+flowchart LR
+	q1{"여러 파일에서<br>쓰는 값인가?"} -- 아니요 --> q2{"테마 색 · 그림자 ·<br>z-index · 움직임 값인가?"} -- 아니요 --> q3{"실행 중에만<br>계산하는 수치인가?"} -- 아니요 --> r4("선언 자리에 값 그대로")
+	q1 -- 예 --> r1("전역 공통 토큰")
+	q2 -- 예 --> r2("전역 공통 토큰")
+	q3 -- 예 --> r3("지역 변수 하나를<br>TSX에서 전달")
+```
 
 | 값의 범위나 역할 | 처리 |
 | --- | --- |
@@ -2010,6 +2114,8 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 
 **Impact: MEDIUM (층 순서를 한 파일에서 확인하고 `z-index` 숫자를 임의로 늘리지 않습니다)**
 
+### 층 토큰
+
 층은 전역 토큰 파일에 한 번 선언하고 `z-index`에서는 토큰 이름만 씁니다.
 `layout-keep-layout-intent-explicit`에 따라 숫자를 직접 쓰거나 사용처에서 층 사이 값을 만들지 않습니다.
 
@@ -2021,6 +2127,9 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 | `--app-z-index-popper` | `300` | 툴팁, 드롭다운, 알림 |
 
 새 용도가 네 층에 모두 맞지 않을 때만 토큰 파일에 층을 추가하고 100 간격을 유지합니다.
+
+### 쌓임 맥락
+
 **층 순서는 같은 쌓임 맥락 안에서만 성립합니다.**
 조상의 맥락이 바깥 `sticky`보다 아래면 내부 `popper`의 숫자를 올려도 그 위로 나오지 못합니다.
 
@@ -2032,6 +2141,8 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 | `opacity`, `isolation`, `contain` | `opacity`는 1 미만, `isolation`은 `isolate`, `contain`은 `layout`, `paint`, `content`, `strict` 중 하나 |
 
 `fixed`와 `sticky`는 그 자체로 새 쌓임 맥락을 만듭니다.
+
+### 가려졌을 때 확인 순서
 
 요소가 가려졌으면 숫자를 올리기 전에 아래 순서로 확인합니다.
 
@@ -2095,6 +2206,13 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 **Impact: HIGH (테마 분기가 한 파일에만 있어 색을 하나 더할 때 파일 여러 개를 열지 않습니다)**
 
 테마는 **토큰 파일에서 값만** 바꿉니다. 컴포넌트 CSS에는 `prefers-color-scheme`이나 `[data-theme]` 분기를 두지 않습니다.
+
+토큰 파일 안에서 테마 값을 덮어쓰는 차례입니다.
+
+```mermaid
+flowchart LR
+	t1(":root 기본값") --> t2("@media<br>prefers-color-scheme") --> t3(":root[data-theme]")
+```
 
 | 테마 조건이나 값 | 처리 |
 | --- | --- |
@@ -2367,6 +2485,8 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 
 **Impact: MEDIUM (넓은 화면부터 좁은 화면 순서로 덮어쓰고 프로젝트 전체에서 세 기준 폭을 공유합니다)**
 
+### 기준 폭 세 값
+
 기본 선언은 `1440px` 이상인 가장 넓은 화면을 기준으로 하고, 좁아질 때만 덮어씁니다.
 브레이크포인트는 아래 순서로 쓰며 `(width >= ...)` 방향과 섞지 않습니다.
 
@@ -2380,11 +2500,14 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 좁은 화면에서 여러 조건이 함께 맞는 것은 의도한 동작입니다.
 선택자와 속성이 같으면 뒤의 좁은 조건이 앞의 넓은 조건을 덮습니다.
 
+`@media` 조건에는 `var()`를 쓸 수 없으므로 이 숫자를 토큰으로 만들지 않습니다.
+
+### 범위 표기
+
 **조건은 범위 표기**로 씁니다. `(max-width: 1023.98px)` 대신 `(width < 1024px)`로 적습니다.
 `max-width: 1024px`과 `min-width: 1024px`은 경계를 함께 포함하지만 `<`와 `>=`는 같은 경계를 소수 보정 없이 나눕니다.
 표기 검사는 `tooling-configure-stylelint-to-enforce-these-rules` 규칙이 담당합니다.
 
-`@media` 조건에는 `var()`를 쓸 수 없으므로 이 숫자를 토큰으로 만들지 않습니다.
 블록 위치는 `layout-group-breakpoints-at-the-file-bottom` 규칙을 따릅니다.
 
 **Incorrect 1 (기본 선언을 중간 폭에 맞추고 넓고 좁은 방향을 함께 씁니다):**
@@ -2510,7 +2633,13 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 }
 ```
 
-**Incorrect (로딩 대체 화면에만 높이를 따로 적습니다):**
+**Incorrect 2 (로딩 대체 화면에만 높이를 따로 적습니다):**
+
+```tsx
+<Suspense fallback={<UiChartSkeleton className={clsx("pg_productDetail__chartSkeleton")} />}>
+	<PgProductDetailChartSection />
+</Suspense>
+```
 
 ```css
 .pg_productDetail__chartSkeleton {
@@ -2518,7 +2647,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 }
 ```
 
-**Correct (대체 화면을 실제 내용과 같은 컨테이너 클래스 안에 넣습니다):**
+**Correct 2 (대체 화면을 실제 내용과 같은 컨테이너 클래스 안에 넣습니다):**
 
 ```tsx
 <div className={clsx("pg_productDetail__chart")}>
@@ -2545,8 +2674,19 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 
 **Impact: MEDIUM (컴포넌트가 배치된 폭에 맞춰 크기를 조정해 위치가 바뀌어도 CSS 수정을 줄입니다)**
 
+### 고유 크기 먼저 보기
+
 브레이크포인트를 추가하기 전에 **고유 크기 지정만으로 배치할 수 있는지** 확인합니다.
 `@media`는 뷰포트 폭을 보므로 같은 컴포넌트를 본문에서 좁은 사이드바로 옮겨도 실제 슬롯 폭을 반영하지 못합니다.
+
+배치 방법을 고르는 차례입니다.
+
+```mermaid
+flowchart LR
+	q1{"고유 크기 지정만으로<br>배치할 수 있는가?"} -- 아니요 --> q2{"실제 슬롯 폭에 따라<br>구조를 바꾸는가?"} -- 아니요 --> r3("@media")
+	q1 -- 예 --> r1("flex-wrap · auto-fit · clamp")
+	q2 -- 예 --> r2("@container")
+```
 
 | 필요한 변화 | 사용할 방법 |
 | --- | --- |
@@ -2562,11 +2702,15 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 `minmax(240px, 1fr)`의 고정 최솟값도 슬롯보다 크면 넘칩니다.
 `min(100%, 240px)`로 제한하고 긴 텍스트와 자손의 최소 크기도 확인합니다.
 
+### 컨테이너 쿼리 자리
+
 | `@container` 작성 위치 | 기준 |
 | --- | --- |
 | 크기를 제공하는 조상 | `container-type: inline-size`를 선언합니다 |
 | 크기 조건으로 바꿀 요소 | 해당 조상의 자손입니다. 자기 크기를 조건으로 자신을 바꾸지 않습니다 |
 | 조건 숫자와 블록 위치 | 내용이 깨지는 컨테이너 폭으로 정합니다. 뷰포트용 세 값을 강제로 재사용하지 않고 소유자 파일의 기본 선언 뒤에 모읍니다 |
+
+### 폭의 소유
 
 버튼과 입력은 자기 폭을 정하지 않습니다.
 `padding`, `min-height`, 글자 크기까지만 소유하고 폭은 사용처가 정합니다.
@@ -2610,7 +2754,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 }
 ```
 
-**Incorrect (버튼이 자기 폭을 뷰포트로 정합니다):**
+**Incorrect 2 (버튼이 자기 폭을 뷰포트로 정합니다):**
 
 ```css
 .ui_button__root {
@@ -2633,7 +2777,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 }
 ```
 
-**Correct (버튼의 모양은 버튼이, 폭은 사용처가 정합니다):**
+**Correct 2 (버튼은 폭을 정하지 않고 모양만 소유합니다):**
 
 ```css
 /* ui-button.css — 폭 얘기가 없다 */
@@ -2645,6 +2789,8 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 	padding: 0 var(--app-space-control-inline);
 }
 ```
+
+**Correct (폭은 사용처가 자기 배치 안에서 정합니다):**
 
 ```css
 /* ui-form-footer.css — 한 번 쓰고 여러 화면에서 그대로 쓴다 */
@@ -2767,6 +2913,9 @@ AAA 기준을 모든 표시의 두께가 반드시 2px이어야 한다는 뜻으
 **Impact: CRITICAL (전역 애니메이션 이름의 충돌을 막고 움직임에 민감한 사용자의 설정을 따릅니다)**
 
 `@keyframes`에는 소유자 이름을 붙이고 움직임 감소 설정은 전역 스타일시트 한 곳에서 처리합니다.
+
+### 이름과 토큰
+
 일반 CSS의 클래스와 `@keyframes`는 파일로 격리되지 않으며,
 같은 캐스케이드 계층의 동일한 키프레임 이름은 문서 순서상 뒤의 정의가 적용됩니다.
 
@@ -2778,12 +2927,16 @@ AAA 기준을 모든 표시의 두께가 반드시 2px이어야 한다는 뜻으
 소유자 접두사는 `naming-use-scope-slug-element-modifier-syntax`와 같습니다.
 지속 시간과 이징 토큰은 `values-tokenize-repeated-visual-values`의 예외입니다.
 
+### 도구 설정과 속성
+
 | 도구 설정과 속성 선택 | 기준 |
 | --- | --- |
 | 이름 검사 | `stylelint-config-standard`의 kebab-case 기본값을 `keyframes-name-pattern`으로 바꿉니다 |
 | 애니메이션 속성 | `transform`과 `opacity`를 씁니다. `width`나 `top`은 매 프레임 레이아웃을 다시 계산합니다 |
 
 `keyframes-name-pattern` 값은 `tooling-configure-stylelint-to-enforce-these-rules`가 정합니다.
+
+### 움직임 감소 처리
 
 움직임은 어지럼증이나 전정 장애가 있는 사용자에게 접근성 문제입니다.
 **움직임 감소 요청에는 전역에서 `animation`과 `transition`을 함께 차단하는 것을 기본으로 합니다.**
@@ -2870,6 +3023,8 @@ AAA 기준을 모든 표시의 두께가 반드시 2px이어야 한다는 뜻으
 
 **Impact: MEDIUM (자동 검사 범위를 설정으로 고정하고 의미 판단은 리뷰에 남깁니다)**
 
+### 규칙별 담당
+
 `stylelint-config-standard`를 확장해 아래 규칙을 적용하고 기계가 확인하지 못하는 의미는 리뷰에서 판단합니다.
 
 | Stylelint 규칙 | 담당 컨벤션 |
@@ -2898,6 +3053,8 @@ AAA 기준을 모든 표시의 두께가 반드시 2px이어야 한다는 뜻으
 예제 정규식은 `&`로 시작하는 중첩 선택자와 최상위를 구분하지만 `&`의 소유자까지 검증하지는 않습니다.
 `selector-max-combinators`와 `selector-max-type`은 넣지 않습니다.
 개수만으로 우리 선택자와 라이브러리 경로를 구분할 수 없습니다.
+
+### 도구 한계와 리뷰
 
 | 대상 | 도구 한계 | 처리 |
 | --- | --- | --- |

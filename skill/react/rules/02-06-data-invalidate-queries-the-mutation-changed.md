@@ -18,6 +18,24 @@ tags: data, mutation
 뮤테이션이 바꾼 서버 상태는 해당 데이터를 소유한 쿼리 키로 `invalidateQueries`하여 다시 맞춥니다.
 낙관적 갱신과 사용자가 누르는 새로 고침 버튼은 이 규칙의 대상이 아닙니다.
 
+### 갱신 방법 고르기
+
+성공한 뮤테이션이 서버 상태를 다시 맞추는 차례입니다.
+
+```mermaid
+sequenceDiagram
+	participant S as 화면
+	participant M as 뮤테이션
+	participant A as 서버
+	participant C as 쿼리 캐시
+	S->>M: 저장 호출
+	M->>A: 저장 요청
+	A-->>M: 성공 응답
+	M->>C: 관련 키 무효화
+	C->>A: 활성 쿼리 다시 요청
+	A-->>S: 새 응답
+```
+
 | 성공 뒤 갱신 방법 | 판정 |
 | --- | --- |
 | `invalidateQueries` | 변경된 서버 상태를 가리키는 관련 키들을 함께 지정합니다 |
@@ -28,6 +46,8 @@ tags: data, mutation
 무효화를 고르는 기준은 구독자 수가 아니라 관련 키의 범위입니다.
 `invalidateQueries`는 일치하는 쿼리를 오래된 상태로 표시하고 기본적으로 활성 쿼리를 다시 불러옵니다.
 비활성 쿼리까지 즉시 요청한다고 가정하지 않습니다.
+
+### 무효화 호출 조건
 
 | 호출 조건 | 처리 |
 | --- | --- |

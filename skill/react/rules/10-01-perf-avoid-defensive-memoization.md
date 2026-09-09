@@ -18,6 +18,8 @@ tags: perf, state
 `useMemo` · `useCallback` · `memo`는 아래 네 경우에만 씁니다.
 어느 경우든 `typescript/docs-justify-convention-exceptions-with-a-reason-comment`에 따라 이유를 남깁니다.
 
+### 허용하는 네 경우
+
 | 허용 근거 | 확인할 내용 |
 | --- | --- |
 | 외부 라이브러리의 참조 계약 | 참조 변경이 상태 초기화나 구독 재설치로 이어짐 |
@@ -27,6 +29,8 @@ tags: perf, state
 
 계산이나 함수가 다시 실행된다는 사실만으로 메모이제이션하지 않습니다.
 이펙트에서만 쓰는 객체 · 배열은 이펙트 안에서 만들고 원본 값에 의존합니다.
+
+### 캐시와 컴파일러
 
 리액트는 `useMemo` · `useCallback` 캐시를 버릴 수 있으므로 정확성을 캐시에 의존하지 않습니다.
 다시 계산되거나 이펙트가 재설치되어도 동작해야 합니다.

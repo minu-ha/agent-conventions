@@ -19,6 +19,8 @@ tags: screen
 반복이 보인다는 이유만으로 공용 훅 · 컴포넌트 · 보조 함수를 추출하지 않습니다.
 먼저 흐름을 같은 파일에서 읽을 수 있도록 정리합니다.
 
+### 먼저 시도할 방법
+
 | 먼저 시도할 방법 | 유지할 위치 |
 | --- | --- |
 | 단계 변수 · 섹션 주석 · 내부 블록으로 정리 | 한 함수 안 |
@@ -29,6 +31,8 @@ tags: screen
 한 대표 함수만 호출하는 보조도 `_function` 바로 아래에 공개하지 않습니다.
 그 배치는 `typescript/functions-give-each-function-its-own-file`을 따릅니다.
 이름을 붙이기 좋다는 이유만으로 흐름을 여러 파일에 나누지 않습니다.
+
+### 추출 허용 경계
 
 | 추출 대상 | 허용 경계 |
 | --- | --- |
@@ -76,9 +80,9 @@ export const PgProductTable = (props: PgProductTableProps) => {
 };
 ```
 
-**Incorrect (사용처가 한 화면뿐인데 공용 훅으로 먼저 빼냅니다):**
+**Incorrect 2 (사용처가 한 화면뿐인데 공용 훅으로 먼저 빼냅니다):**
 
-```ts
+```tsx
 // _hook/use-product-filter-form.ts
 export const useProductFilterForm = () => {
 	const [keyword, setKeyword] = useState("");
@@ -86,9 +90,7 @@ export const useProductFilterForm = () => {
 
 	return {categoryId, keyword, setCategoryId, setKeyword};
 };
-```
 
-```tsx
 // page/products/pg-products.tsx: 이 훅을 부르는 화면은 여기 하나뿐이다
 export const PgProducts = () => {
 	const productFilterForm = useProductFilterForm();
@@ -97,7 +99,7 @@ export const PgProducts = () => {
 };
 ```
 
-**Correct (한 화면만 쓰는 동안은 화면 안에 그대로 둡니다):**
+**Correct 2 (한 화면만 쓰는 동안은 화면 안에 그대로 둡니다):**
 
 ```tsx
 // page/products/pg-products.tsx

@@ -19,6 +19,8 @@ tags: data, mutation, errors
 뮤테이션 실패는 입력 문맥을 유지할 수 있도록 호출한 자리에서 처리합니다.
 기본은 `mutate`와 `useMutation`의 `onError` · `onSuccess`이며, 핸들러에서는 호출만 합니다.
 
+### 호출 방식 고르기
+
 | 상황 | 선택 |
 | --- | --- |
 | 호출 뒤 핸들러가 더 할 일이 없음 | `mutate` + `onError`, `onSuccess` |
@@ -27,6 +29,8 @@ tags: data, mutation, errors
 거부된 `mutateAsync` Promise는 오류 경계가 자동으로 받지 않습니다.
 `await` 뒤의 코드는 실행되지 않으므로 반드시 `catch`에서 실패를 표시하거나 다시 던집니다.
 `throwOnError`로 렌더에서 오류를 다시 던지는 경우는 `runtime-place-error-boundaries-by-blast-radius`를 따릅니다.
+
+### 실패와 중복 실행 처리
 
 | 함께 판단할 내용 | 기준 |
 | --- | --- |
