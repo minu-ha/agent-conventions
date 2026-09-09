@@ -15,6 +15,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 	--code-bg: #fcfcfc; --code-fg: #0f1416;
 	--gut: #5c686e; --code-c: #3d4a51; --code-s: #1c5238; --code-k: #8f4025; --code-g: #5d4c39;
 	--dx-b: #46525a; --dx-a: #1b5896;
+	--flow-yes: #2b6cb0; --flow-no: #b0761f;
 	--sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
 	--mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
@@ -30,6 +31,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 		--code-bg: #12171a; --code-fg: #eef3f5;
 		--gut: #93a0a7; --code-c: #b3c0c6; --code-s: #94d6ae; --code-k: #f3ad90; --code-g: #d8bd99;
 		--dx-b: #aab7bd; --dx-a: #8dc2f2;
+	--flow-yes: #8dc2f2; --flow-no: #e0b06b;
 	}
 }
 
@@ -42,6 +44,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 	--code-bg: #12171a; --code-fg: #eef3f5;
 	--gut: #93a0a7; --code-c: #b3c0c6; --code-s: #94d6ae; --code-k: #f3ad90; --code-g: #d8bd99;
 	--dx-b: #aab7bd; --dx-a: #8dc2f2;
+	--flow-yes: #8dc2f2; --flow-no: #e0b06b;
 }
 
 body {
@@ -1078,7 +1081,32 @@ const viewerClientScript = `(() => {
 	function drawDiagrams() {
 		if (!window.mermaid) return;
 		const nodes = document.querySelectorAll("pre.mermaid:not([data-processed])");
-		if (nodes.length) mermaid.run({nodes: nodes}).catch(() => {});
+		if (!nodes.length) return;
+		mermaid.run({nodes: nodes}).then(() => { for (const n of nodes) tintBranches(n.querySelector("svg")); }).catch(() => {});
+	}
+
+	// 예 · 아니요 갈래에 색을 입힌다. mermaid 는 라벨과 화살촉에 갈래 구분을 남기지 않아 그린 뒤에 붙인다.
+	// 굵은 선(== ==>)이 없는 도식은 갈래가 없는 사슬이라 건너뛴다.
+	function tintBranches(svg) {
+		if (!svg || !svg.querySelector(".edge-thickness-thick")) return;
+
+		svg.querySelectorAll(".edgeLabel p").forEach((p) => {
+			const t = p.textContent.trim();
+			if (t === "예" || t === "아니요") p.closest(".edgeLabel").classList.add(t === "예" ? "yes" : "no");
+		});
+
+		// 화살촉 marker 는 선 전체가 하나를 공유한다. 갈래마다 복제해 색을 따로 준다.
+		const marker = svg.querySelector("marker[id$='pointEnd']");
+		if (!marker) return;
+
+		for (const kind of ["yes", "no"]) {
+			const m = marker.cloneNode(true);
+			m.id = marker.id + "-" + kind;
+			m.classList.add("marker-" + kind);
+			marker.parentNode.appendChild(m);
+			const sel = kind === "yes" ? ".flowchart-link.edge-thickness-thick" : ".flowchart-link.edge-thickness-normal";
+			svg.querySelectorAll(sel).forEach((path) => { path.classList.add(kind); path.setAttribute("marker-end", "url(#" + m.id + ")"); });
+		}
 	}
 
 	function isDark() {
@@ -1092,6 +1120,7 @@ const viewerClientScript = `(() => {
 		if (!window.mermaid) return;
 		const css = getComputedStyle(document.documentElement);
 		const v = (name) => css.getPropertyValue(name).trim();
+		const mix = (name, pct) => "color-mix(in srgb, " + v(name) + " " + pct + "%, " + v("--card") + ")";
 
 		mermaid.initialize({
 			startOnLoad: false,
@@ -1116,23 +1145,27 @@ const viewerClientScript = `(() => {
 				background: v("--card"),
 			},
 			// 판단(마름모)은 흐린 바탕, 처리(둥근 사각)는 카드색. 선은 1px, 갈래 라벨은 헤어라인 칩.
+			// 판단(마름모)은 흐린 바탕. 갈래는 색으로 가른다 — 예는 --flow-yes, 아니요는 --flow-no.
+			// 선 · 화살촉 · 라벨 칩 · 결과 상자(:::yes / :::no)가 같은 색 계열을 입는다.
 			themeCSS: [
 				".node rect, .node polygon, .node path { stroke-width: 1px; }",
+				".node polygon { fill: " + v("--soft") + " !important; }",
 				".node .label { line-height: 1.4; }",
 				".node .label p { margin: 0; }",
-				// 판단(:::step)은 짙은 상자에 흐린 번호를 얹는다. 처리는 카드색 둥근 상자.
-				".node.step rect { fill: " + v("--ink") + " !important; stroke: " + v("--ink") + " !important; }",
-				".node.step .label, .node.step .label p { color: " + v("--card") + "; }",
-				".node.step small { display: block; margin-bottom: 3px; font-size: 10px; letter-spacing: .14em; color: " + v("--edge") + "; }",
-				// 주 경로(== 예 ==>)는 진하게, 갈래(-- 아니요 -->)는 흐리게. 어느 길이 기본인지 선 무게로 읽힌다.
-				".edgePath path, .flowchart-link { stroke-width: 1px; }",
-				".flowchart-link.edge-thickness-thick { stroke: " + v("--ink") + "; stroke-width: 1.5px; }",
-				".flowchart-link.edge-thickness-normal { stroke: " + v("--edge") + "; }",
+				".node.yes rect { fill: " + mix("--flow-yes", 10) + " !important; stroke: " + v("--flow-yes") + " !important; }",
+				".node.no rect { fill: " + mix("--flow-no", 10) + " !important; stroke: " + v("--flow-no") + " !important; }",
+				".edgePath path, .flowchart-link { stroke-width: 1.25px; }",
+				".flowchart-link.yes { stroke: " + v("--flow-yes") + "; stroke-width: 1.5px; }",
+				".flowchart-link.no { stroke: " + v("--flow-no") + "; }",
 				".marker { stroke: none; }",
+				".marker.marker-yes { fill: " + v("--flow-yes") + " !important; }",
+				".marker.marker-no { fill: " + v("--flow-no") + " !important; }",
 				".edgeLabel p { margin: 0; padding: 1px 6px; font-size: 11.5px; line-height: 1.25; color: " + v("--muted") +
 					"; background: " + v("--card") + "; border: 1px solid " + v("--hair") + "; border-radius: 2px; }",
+				".edgeLabel.yes p { color: " + v("--flow-yes") + "; border-color: " + mix("--flow-yes", 45) + "; background: " + mix("--flow-yes", 8) + "; }",
+				".edgeLabel.no p { color: " + v("--flow-no") + "; border-color: " + mix("--flow-no", 45) + "; background: " + mix("--flow-no", 8) + "; }",
 			].join(" "),
-			flowchart: {nodeSpacing: 40, rankSpacing: 44, useMaxWidth: true, curve: "step", padding: 10, diagramPadding: 6},
+			flowchart: {nodeSpacing: 44, rankSpacing: 56, useMaxWidth: true, curve: "step", padding: 8, diagramPadding: 6},
 		});
 	}
 
