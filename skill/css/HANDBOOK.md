@@ -825,6 +825,27 @@ export const UiCollapse = (props: UiCollapseProps) => {
 
 역할 없는 래퍼는 `naming-name-elements-and-modifiers-by-role`이 요구하는 이름도 지을 수 없습니다.
 
+**Incorrect 1 (역할 없는 이름의 래퍼를 늘립니다):**
+
+```tsx
+<div className={clsx("pg_orders__box")}>
+	<div className={clsx("pg_orders__inner")}>
+		<LegacyDatePicker value={value} onChange={handleChange} />
+	</div>
+</div>
+```
+
+**Correct 1 (외부 라이브러리가 `className`을 받지 않으면 역할 이름을 붙여 감쌉니다):**
+
+```tsx
+{/**
+ * LegacyDatePicker는 className을 받지 않아 배치용 래퍼가 필요하다
+ */}
+<div className={clsx("pg_orders__dateField")}>
+	<LegacyDatePicker value={value} onChange={handleChange} />
+</div>
+```
+
 **Incorrect (래퍼 `div`로 최상위 스타일을 우회합니다):**
 
 ```tsx
@@ -866,27 +887,6 @@ export const UiCollapse = (props: UiCollapseProps) => {
 .pg_orders__collapse {
 	margin-block-end: 16px;
 }
-```
-
-**Incorrect 1 (역할 없는 이름의 래퍼를 늘립니다):**
-
-```tsx
-<div className={clsx("pg_orders__box")}>
-	<div className={clsx("pg_orders__inner")}>
-		<LegacyDatePicker value={value} onChange={handleChange} />
-	</div>
-</div>
-```
-
-**Correct 1 (외부 라이브러리가 `className`을 받지 않으면 역할 이름을 붙여 감쌉니다):**
-
-```tsx
-{/**
- * LegacyDatePicker는 className을 받지 않아 배치용 래퍼가 필요하다
- */}
-<div className={clsx("pg_orders__dateField")}>
-	<LegacyDatePicker value={value} onChange={handleChange} />
-</div>
 ```
 
 ### 3.6 Do Not Style Through the `style` Attribute
@@ -1047,6 +1047,7 @@ export const UiButton = (props: UiButtonProps) => {
 	return <Button className={clsx("ui_button__root", props.className)} variant={props.variant} />;
 };
 ```
+
 **Incorrect (수정자가 없는 값까지 조립해 CSS에 없는 클래스를 붙입니다):**
 
 ```tsx
@@ -1152,20 +1153,6 @@ export const WgUserCard = (props: WgUserCardProps) => {
 `&` 없이 시작하면 자손 선택자가 별도 겹처럼 읽혀 표기에 따라 검사 결과가 달라집니다.
 기계 검증은 `max-nesting-depth: 1`이며 최상위는 0겹입니다.
 
-**Incorrect (중첩을 두 겹 이상 열어 실제 선택자를 숨깁니다):**
-
-```css
-.pg_products__sortButton {
-	&.MuiButtonBase-root {
-		&:hover {
-			.pg_products__sortBox {
-				border-color: #9fadc7;
-			}
-		}
-	}
-}
-```
-
 **Incorrect 1 (다른 요소의 가상 요소를 `&`로 다시 엽니다):**
 
 ```css
@@ -1198,7 +1185,21 @@ export const WgUserCard = (props: WgUserCardProps) => {
 }
 ```
 
-**Correct (외부 라이브러리 경로도 깊이와 무관하게 한 줄로 씁니다):**
+**Incorrect 2 (중첩을 두 겹 이상 열어 실제 선택자를 숨깁니다):**
+
+```css
+.pg_products__sortButton {
+	&.MuiButtonBase-root {
+		&:hover {
+			.pg_products__sortBox {
+				border-color: #9fadc7;
+			}
+		}
+	}
+}
+```
+
+**Correct 2 (외부 라이브러리 경로도 깊이와 무관하게 한 줄로 씁니다):**
 
 ```css
 .pg_orderTable__root {
@@ -1540,6 +1541,7 @@ h2 {
 	box-shadow: 0 0 0 1px #1677ff;
 }
 ```
+
 **Incorrect 3 (앱 상태를 속성 선택자로 잡고 DOM 상태를 수정자로 만듭니다):**
 
 ```tsx
@@ -1750,20 +1752,6 @@ DOM 상태 가상 클래스는 해당 요소의 **조건 없는 기본 클래스
 각 수정자가 해당 요소의 모습을 모두 정의합니다.
 DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned-states` 규칙을 따릅니다.
 
-**Incorrect (DOM 상태를 `:not()`으로 뒤집어 기본 모습을 상태 블록에 넣습니다):**
-
-```css
-.pg_products__cardButton {
-	&:not(:disabled) {
-		cursor: pointer;
-	}
-
-	&:disabled {
-		cursor: default;
-	}
-}
-```
-
 **Incorrect 1 (활성 버튼의 hover를 부정 조건으로 표현합니다):**
 
 ```css
@@ -1784,7 +1772,21 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 }
 ```
 
-**Correct (DOM 상태도 기본을 먼저 두고 그 상태만 덮습니다):**
+**Incorrect 2 (DOM 상태를 `:not()`으로 뒤집어 기본 모습을 상태 블록에 넣습니다):**
+
+```css
+.pg_products__cardButton {
+	&:not(:disabled) {
+		cursor: pointer;
+	}
+
+	&:disabled {
+		cursor: default;
+	}
+}
+```
+
+**Correct 2 (DOM 상태도 기본을 먼저 두고 그 상태만 덮습니다):**
 
 ```css
 .pg_products__cardButton {
@@ -2134,7 +2136,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 }
 ```
 
-**Incorrect (그림자를 직접 적어 어두운 배경에서 사라집니다):**
+**Incorrect 2 (그림자를 직접 적어 어두운 배경에서 사라집니다):**
 
 ```css
 /* src/page/products/pg-products.css */
@@ -2143,7 +2145,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 }
 ```
 
-**Correct (토큰 파일에서 값을 바꾸고 사용자 테마를 시스템 설정보다 우선합니다):**
+**Correct 2 (토큰 파일에서 값을 바꾸고 사용자 테마를 시스템 설정보다 우선합니다):**
 
 ```css
 /* src/style/token.css */
@@ -2908,15 +2910,7 @@ AAA 기준을 모든 표시의 두께가 반드시 2px이어야 한다는 뜻으
 
 `@media` 방향은 `css/layout-write-breakpoints-desktop-first`가 함께 판단합니다.
 
-**Incorrect (`stylelint-config-standard`의 기본 클래스 패턴을 그대로 씁니다):**
-
-```js
-export default {
-	extends: ["stylelint-config-standard"],
-};
-```
-
-**Incorrect (결합자 개수로 깊이를 막으려 합니다):**
+**Incorrect 1 (결합자 개수로 깊이를 막으려 합니다):**
 
 ```js
 export default {
@@ -2928,7 +2922,7 @@ export default {
 };
 ```
 
-**Correct (공통 규칙에 디렉터리별 접두사 `overrides`를 더합니다):**
+**Correct 1 (공통 규칙에 디렉터리별 접두사 `overrides`를 더합니다):**
 
 ```js
 /**
@@ -3031,6 +3025,14 @@ export default {
 			},
 		},
 	],
+};
+```
+
+**Incorrect (`stylelint-config-standard`의 기본 클래스 패턴을 그대로 씁니다):**
+
+```js
+export default {
+	extends: ["stylelint-config-standard"],
 };
 ```
 

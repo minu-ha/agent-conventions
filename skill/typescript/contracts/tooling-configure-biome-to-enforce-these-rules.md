@@ -52,7 +52,7 @@ Biome 2.5.7의 `recommended`에는 `useConst` · `useImportType` · `noNonNullAs
 | 도구 설정 파일의 `noDefaultExport` 해제 | `vite.config.ts`처럼 도구가 `default`를 요구하는 진입점에 적용합니다. 내보내기 규칙의 예외를 설정에 반영합니다 |
 | `style/useFragmentSyntax` 비활성 | `recommended`에 없으며 별도로 켜지 않습니다. 프레임워크 규칙이 `<Fragment>`를 요구합니다 |
 
-**Incorrect (`recommended`만 켜고 컨벤션 항목을 리뷰에 맡깁니다):**
+**Incorrect 1 (`recommended`만 켜고 컨벤션 항목을 리뷰에 맡깁니다):**
 
 ```json
 {
@@ -63,7 +63,7 @@ Biome 2.5.7의 `recommended`에는 `useConst` · `useImportType` · `noNonNullAs
 }
 ```
 
-**Correct (컨벤션 항목을 설정으로 고정합니다):**
+**Correct 1 (컨벤션 항목을 설정으로 고정합니다):**
 
 ```json
 {

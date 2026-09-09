@@ -96,6 +96,7 @@ export const UiButton = (props: UiButtonProps) => {
 	return <Button className={clsx("ui_button__root", props.className)} variant={props.variant} />;
 };
 ```
+
 **Incorrect (수정자가 없는 값까지 조립해 CSS에 없는 클래스를 붙입니다):**
 
 ```tsx
@@ -168,4 +169,3 @@ export const WgUserCard = (props: WgUserCardProps) => {
 	);
 };
 ```
-

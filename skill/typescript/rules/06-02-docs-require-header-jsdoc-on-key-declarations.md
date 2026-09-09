@@ -31,7 +31,7 @@ tags: docs, jsdoc, declarations, boundaries
 형식은 `docs-write-doc-comments-as-multiline-blocks`,
 내용과 태그는 `docs-write-korean-comments-about-purpose-and-constraints`가 정합니다.
 
-**Incorrect (주요 선언에 헤더 설명이 없습니다):**
+**Incorrect 1 (주요 선언에 헤더 설명이 없습니다):**
 
 ```ts
 export const toSortedUserIds = (userIds: string[]): string[] => {
@@ -39,7 +39,7 @@ export const toSortedUserIds = (userIds: string[]): string[] => {
 };
 ```
 
-**Correct (여러 줄 블록에 설명만 적습니다):**
+**Correct 1 (여러 줄 블록에 설명만 적습니다):**
 
 ```ts
 /**

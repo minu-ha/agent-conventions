@@ -40,13 +40,13 @@ tags: types, safety
 "타입이 이상해서"는 확인할 수 있는 근거가 아닙니다.
 `any`와 `!`는 `tooling-configure-biome-to-enforce-these-rules`로 막고, `as`와 `@ts-expect-error`는 리뷰합니다.
 
-**Incorrect (앱 밖에서 온 값을 단언으로 통과시킵니다):**
+**Incorrect 1 (앱 밖에서 온 값을 단언으로 통과시킵니다):**
 
 ```ts
 const storedFilter = JSON.parse(localStorage.getItem("product-filter") as string) as ProductFilter;
 ```
 
-**Correct (앱 밖에서 온 값은 좁히기 함수를 통과한 뒤에 씁니다):**
+**Correct 1 (앱 밖에서 온 값은 좁히기 함수를 통과한 뒤에 씁니다):**
 
 ```ts
 const storedValue = localStorage.getItem("product-filter");
@@ -56,13 +56,13 @@ const parsedFilter: unknown = storedValue === null ? undefined : JSON.parse(stor
 const storedFilter = isProductFilter(parsedFilter) ? parsedFilter : undefined;
 ```
 
-**Incorrect (`!`로 없을 수 있다는 사실을 지웁니다):**
+**Incorrect 2 (`!`로 없을 수 있다는 사실을 지웁니다):**
 
 ```ts
 const firstProduct = products.find((product) => product.isActive)!;
 ```
 
-**Correct (없을 수 있으면 그대로 드러냅니다):**
+**Correct 2 (없을 수 있으면 그대로 드러냅니다):**
 
 ```ts
 const firstProduct = products.find((product) => product.isActive);

@@ -28,7 +28,7 @@ tags: composition
 | DOM 요소를 직접 가리킴 | 별도 `Handle` 타입을 만들지 않습니다 |
 | 외부 패키지 타입 제약으로 래퍼가 필요함 | `typescript/docs-justify-convention-exceptions-with-a-reason-comment`에 따라 이유를 남깁니다 |
 
-**Incorrect (`ref` 계약이 필요 없는 단순 화면 컴포넌트에도 습관적으로 `ref`를 노출합니다):**
+**Incorrect 1 (`ref` 계약이 필요 없는 단순 화면 컴포넌트에도 습관적으로 `ref`를 노출합니다):**
 
 ```tsx
 import type {Ref} from "react";
@@ -43,7 +43,7 @@ export const UiStatusBadge = (props: UiStatusBadgeProps) => {
 };
 ```
 
-**Correct (`ref`가 실제로 필요한 공개 API일 때만 리액트 19 방식으로 직접 받습니다):**
+**Correct 1 (`ref`가 실제로 필요한 공개 API일 때만 리액트 19 방식으로 직접 받습니다):**
 
 ```tsx
 import type {ChangeEventHandler, Ref} from "react";

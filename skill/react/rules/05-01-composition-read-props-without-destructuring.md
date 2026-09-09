@@ -25,14 +25,6 @@ tags: composition, props, origin
 | `{...props}`로 그대로 전달함 | 구조분해가 아니며 출처도 유지됩니다. 허용 조건은 `typing-choose-wrapper-shape-and-forwarding`을 따릅니다 |
 | 선택 프롭에 기본값이 필요함 | `typescript/absence-expose-optional-values-instead-of-silent-fallbacks`를 따릅니다. 사용처에서 값을 직접 비교하면 기본값이 필요하지 않습니다 |
 
-**Incorrect (시그니처에서 구조분해합니다):**
-
-```tsx
-const WgUserCard = ({ label, onSave }: WgUserCardProps) => {
-	return <button onClick={onSave}>{label}</button>;
-};
-```
-
 **Incorrect 1 (본문 첫 줄에서 구조분해합니다):**
 
 ```tsx
@@ -47,5 +39,13 @@ const WgUserCard = (props: WgUserCardProps) => {
 ```tsx
 const WgUserCard = (props: WgUserCardProps) => {
 	return <button onClick={props.onSave}>{props.label}</button>;
+};
+```
+
+**Incorrect (시그니처에서 구조분해합니다):**
+
+```tsx
+const WgUserCard = ({ label, onSave }: WgUserCardProps) => {
+	return <button onClick={onSave}>{label}</button>;
 };
 ```

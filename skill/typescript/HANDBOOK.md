@@ -132,7 +132,7 @@ export const sendInvites = (recipients: InviteRecipient[]): Promise<void> => { /
 export const sendInvites = (recipients: UserRecord[]): Promise<void> => { /* … */ };
 ```
 
-**Incorrect (선택 여부가 다른데 기존 계약을 그대로 써서 없는 값을 빈 문자열로 채웁니다):**
+**Incorrect 2 (선택 여부가 다른데 기존 계약을 그대로 써서 없는 값을 빈 문자열로 채웁니다):**
 
 ```ts
 // 이미 있는 계약: UserRecord { id: string; name: string; email: string }
@@ -142,7 +142,7 @@ export const sendInvite = (draft: UserRecord): Promise<void> => { /* … */ };
 sendInvite({ id: "", name: "", email });
 ```
 
-**Correct (선택 여부가 하나라도 다르면 새로 선언하되 필드는 원본에서 파생합니다):**
+**Correct 2 (선택 여부가 하나라도 다르면 새로 선언하되 필드는 원본에서 파생합니다):**
 
 ```ts
 // 이미 있는 계약: UserRecord { id: string; name: string; email: string }
@@ -607,13 +607,13 @@ const noopLog: LogSink = (_message, _level) => {};
 "타입이 이상해서"는 확인할 수 있는 근거가 아닙니다.
 `any`와 `!`는 `tooling-configure-biome-to-enforce-these-rules`로 막고, `as`와 `@ts-expect-error`는 리뷰합니다.
 
-**Incorrect (앱 밖에서 온 값을 단언으로 통과시킵니다):**
+**Incorrect 1 (앱 밖에서 온 값을 단언으로 통과시킵니다):**
 
 ```ts
 const storedFilter = JSON.parse(localStorage.getItem("product-filter") as string) as ProductFilter;
 ```
 
-**Correct (앱 밖에서 온 값은 좁히기 함수를 통과한 뒤에 씁니다):**
+**Correct 1 (앱 밖에서 온 값은 좁히기 함수를 통과한 뒤에 씁니다):**
 
 ```ts
 const storedValue = localStorage.getItem("product-filter");
@@ -623,13 +623,13 @@ const parsedFilter: unknown = storedValue === null ? undefined : JSON.parse(stor
 const storedFilter = isProductFilter(parsedFilter) ? parsedFilter : undefined;
 ```
 
-**Incorrect (`!`로 없을 수 있다는 사실을 지웁니다):**
+**Incorrect 2 (`!`로 없을 수 있다는 사실을 지웁니다):**
 
 ```ts
 const firstProduct = products.find((product) => product.isActive)!;
 ```
 
-**Correct (없을 수 있으면 그대로 드러냅니다):**
+**Correct 2 (없을 수 있으면 그대로 드러냅니다):**
 
 ```ts
 const firstProduct = products.find((product) => product.isActive);
@@ -1079,13 +1079,13 @@ const toProductSaveBody = (values: ProductFormValues) => {
 경로 형식은 `naming-import-by-absolute-path`를 따릅니다.
 같은 경로라도 값 · 타입 가져오기를 바꾸면 이 규칙을 적용합니다.
 
-**Incorrect (배럴과 섞인 가져오기로 경계를 흐립니다):**
+**Incorrect 1 (배럴과 섞인 가져오기로 경계를 흐립니다):**
 
 ```ts
 import {pagination_default_page_size, toDisplayDate, UserProfile} from "./index";
 ```
 
-**Correct (필요한 파일에서 이름으로 바로 가져옵니다):**
+**Correct 1 (필요한 파일에서 이름으로 바로 가져옵니다):**
 
 ```ts
 import type {UserProfile} from "@/type/user-profile";
@@ -1093,7 +1093,7 @@ import {pagination_default_page_size} from "@/constant/pagination";
 import {toDisplayDate} from "@/util/date/to-display-date";
 ```
 
-**Incorrect 1 (`default`로 내보내 사용처마다 다른 이름이 생깁니다):**
+**Incorrect 2 (`default`로 내보내 사용처마다 다른 이름이 생깁니다):**
 
 ```tsx
 // component/ui/tabs/ui-tabs.tsx
@@ -1108,7 +1108,7 @@ export default UiTabs;
 import Tabs from "@/component/ui/tabs/ui-tabs";
 ```
 
-**Correct 1 (선언 앞에 `export`를 붙여 사용처가 그 이름으로 가져옵니다):**
+**Correct 2 (선언 앞에 `export`를 붙여 사용처가 그 이름으로 가져옵니다):**
 
 ```tsx
 // component/ui/tabs/ui-tabs.tsx
@@ -1451,7 +1451,7 @@ export class ProductCursor {
 그 판정은 `types-reuse-existing-contracts-before-new-types`가 합니다.
 이 규칙을 지키려고 `*Params`나 `*Args`를 새로 만들지 않습니다.
 
-**Incorrect (위치 인자가 넷이라 호출부에서 순서를 외워야 합니다):**
+**Incorrect 1 (위치 인자가 넷이라 호출부에서 순서를 외워야 합니다):**
 
 ```ts
 const fetchProductPage = (baseUrl: string, page: number, pageSize: number, keyword?: string): Promise<ProductPage> => {
@@ -1461,7 +1461,7 @@ const fetchProductPage = (baseUrl: string, page: number, pageSize: number, keywo
 fetchProductPage(api_base_url, urlParams.page, pagination_default_page_size, undefined);
 ```
 
-**Correct (매개변수를 객체로 묶고 그 타입을 파일 위쪽에 이름 붙여 선언합니다):**
+**Correct 1 (매개변수를 객체로 묶고 그 타입을 파일 위쪽에 이름 붙여 선언합니다):**
 
 ```ts
 /**
@@ -1538,6 +1538,15 @@ page/report/_function/to-report-content.ts
   formatAmount       toComparisonRows 와 toStatusGroups 가 부름
 ```
 
+**Incorrect (한 번만 쓰는 한 줄 계산을 파일로 분리합니다):**
+
+```ts
+// page/profile/_function/get-next-page.ts
+export const getNextPage = (previous: number, pageCount: number): number => {
+	return (previous + 1) % pageCount;
+};
+```
+
 **Correct (한 번 쓰는 단계는 호출부에 두고 재사용하는 계산은 함수로 추출합니다):**
 
 ```txt
@@ -1571,15 +1580,6 @@ export const toReportContent = (params: ToReportContentParams): ReportContent =>
 
 	// 3. 재고 카드. 상품 상세에서만 온다
 	return {metrics, statusGroups, stockCount: params.stockCount};
-};
-```
-
-**Incorrect (한 번만 쓰는 한 줄 계산을 파일로 분리합니다):**
-
-```ts
-// page/profile/_function/get-next-page.ts
-export const getNextPage = (previous: number, pageCount: number): number => {
-	return (previous + 1) % pageCount;
 };
 ```
 
@@ -1999,13 +1999,13 @@ if (canManageItems) {
 const visibleTabs = ["overview", ...(canManageItems ? ["items"] : [])];
 ```
 
-**Incorrect (삼항 안에 삼항을 넣어 값 하나를 고릅니다):**
+**Incorrect 2 (삼항 안에 삼항을 넣어 값 하나를 고릅니다):**
 
 ```ts
 const statusLabel = order.isCancelled ? "취소" : order.isDueSoon ? "임박" : "진행";
 ```
 
-**Correct (분기가 셋이면 `return`으로 끝나는 함수로 뺍니다):**
+**Correct 2 (분기가 셋이면 `return`으로 끝나는 함수로 뺍니다):**
 
 ```ts
 // page/orders/_function/to-order-row/_to-status-label.ts
@@ -2023,7 +2023,7 @@ export const toStatusLabel = (order: OrderRow): StatusLabel => {
 };
 ```
 
-**Incorrect 2 (목록 조립에서 조건이 셋이 되자 삼항을 겹칩니다):**
+**Incorrect 3 (목록 조립에서 조건이 셋이 되자 삼항을 겹칩니다):**
 
 ```ts
 const visibleTabs = canManageItems
@@ -2035,7 +2035,7 @@ const visibleTabs = canManageItems
 		: ["overview"];
 ```
 
-**Correct 2 (조건이 셋 이상인 목록은 표로 두고 걸러 냅니다):**
+**Correct 3 (조건이 셋 이상인 목록은 표로 두고 걸러 냅니다):**
 
 ```ts
 const visibleTabs = [
@@ -2249,7 +2249,7 @@ const submitDraft = async (draft: Draft) => {
 `handle` · `use`는 프레임워크 규칙을 따릅니다.
 생성기 · 프레임워크 · 외부 계약이 정한 이름과 `Promise`의 `resolve` · `reject`는 바꾸거나 감싸지 않습니다.
 
-**Incorrect (입력 · 구현 동작 · 막연한 접미사를 이름에 씁니다):**
+**Incorrect 1 (입력 · 구현 동작 · 막연한 접미사를 이름에 씁니다):**
 
 ```ts
 export const buildUserPayload = (formValues: UserFormValues) => { /* … */ };
@@ -2258,7 +2258,7 @@ export const processUserRows = (rows: UserRow[]) => { /* … */ };
 export const resolveStatusTone = (status: string) => { /* … */ };
 ```
 
-**Correct (출력 역할이나 효과를 이름에 씁니다):**
+**Correct 1 (출력 역할이나 효과를 이름에 씁니다):**
 
 ```ts
 /**
@@ -2453,33 +2453,7 @@ const isEditableStatus = editable_order_statuses.includes(order.status);
 
 계산 결과에 이름을 붙일지는 `functions-name-a-value-only-for-recompute-or-judgment`가 정합니다.
 
-**Incorrect (시그니처와 본문에서 구조분해해 출처가 사라집니다):**
-
-```ts
-const toOrderLine = ({product, quantity}: OrderLineInput): OrderLine => {
-	const {title, unitPrice} = product;
-
-	return {
-		label: title,
-		amount: unitPrice * quantity,
-	};
-};
-```
-
-**Incorrect (별칭 `const`로 끊어 이름만 남깁니다):**
-
-```ts
-const currency = pricing_default_currency;
-
-const toOrderTotal = (lines: OrderLine[]): OrderTotal => {
-	return {
-		currency,
-		amount: sumBy(lines, (line) => line.amount),
-	};
-};
-```
-
-**Incorrect (이름을 바꿔 꺼내 출처와 원래 이름이 함께 사라집니다):**
+**Incorrect 1 (이름을 바꿔 꺼내 출처와 원래 이름이 함께 사라집니다):**
 
 ```ts
 const {status: orderStatus, owner: orderOwner} = order;
@@ -2489,7 +2463,7 @@ if (orderStatus === "archived") {
 }
 ```
 
-**Correct (체인으로 읽어 출처가 쓰는 자리마다 남습니다):**
+**Correct 1 (체인으로 읽어 출처가 쓰는 자리마다 남습니다):**
 
 ```ts
 const toOrderLine = (input: OrderLineInput): OrderLine => {
@@ -2511,7 +2485,20 @@ if (order.status === "archived") {
 }
 ```
 
-**Correct (배열과 튜플은 자리로 풀어도 됩니다):**
+**Incorrect 2 (시그니처와 본문에서 구조분해해 출처가 사라집니다):**
+
+```ts
+const toOrderLine = ({product, quantity}: OrderLineInput): OrderLine => {
+	const {title, unitPrice} = product;
+
+	return {
+		label: title,
+		amount: unitPrice * quantity,
+	};
+};
+```
+
+**Correct 2 (배열과 튜플은 자리로 풀어도 됩니다):**
 
 ```ts
 const [keyword, setKeyword] = useState("");
@@ -2521,7 +2508,20 @@ for (const [key, value] of Object.entries(target.searchParams)) {
 }
 ```
 
-**Correct (필드 읽기가 아니라 계산한 결과라 이름을 붙입니다):**
+**Incorrect 3 (별칭 `const`로 끊어 이름만 남깁니다):**
+
+```ts
+const currency = pricing_default_currency;
+
+const toOrderTotal = (lines: OrderLine[]): OrderTotal => {
+	return {
+		currency,
+		amount: sumBy(lines, (line) => line.amount),
+	};
+};
+```
+
+**Correct 3 (필드 읽기가 아니라 계산한 결과라 이름을 붙입니다):**
 
 ```ts
 const toOverdueLines = (order: Order): OrderLine[] => {
@@ -3065,14 +3065,14 @@ const productIds = response.data.rows?.map((row) => row.id);
 const isCompact = variant === "compact";
 ```
 
-**Incorrect (같은 기본값을 사용처마다 다시 채웁니다):**
+**Incorrect 2 (같은 기본값을 사용처마다 다시 채웁니다):**
 
 ```ts
 fetchProducts({pageSize: query.pageSize ?? pagination_default_page_size});
 setVisibleRowCount(query.pageSize ?? pagination_default_page_size);
 ```
 
-**Correct (값이 들어오는 경계에서 한 번 채워 이후 코드에서 기본값을 반복하지 않습니다):**
+**Correct 2 (값이 들어오는 경계에서 한 번 채워 이후 코드에서 기본값을 반복하지 않습니다):**
 
 ```ts
 /**
@@ -3375,7 +3375,7 @@ const submitProductDraft = async (draft: ProductDraft) => {
 형식은 `docs-write-doc-comments-as-multiline-blocks`,
 내용과 태그는 `docs-write-korean-comments-about-purpose-and-constraints`가 정합니다.
 
-**Incorrect (주요 선언에 헤더 설명이 없습니다):**
+**Incorrect 1 (주요 선언에 헤더 설명이 없습니다):**
 
 ```ts
 export const toSortedUserIds = (userIds: string[]): string[] => {
@@ -3383,7 +3383,7 @@ export const toSortedUserIds = (userIds: string[]): string[] => {
 };
 ```
 
-**Correct (여러 줄 블록에 설명만 적습니다):**
+**Correct 1 (여러 줄 블록에 설명만 적습니다):**
 
 ```ts
 /**
@@ -3681,7 +3681,7 @@ Biome 2.5.7의 `recommended`에는 `useConst` · `useImportType` · `noNonNullAs
 | 도구 설정 파일의 `noDefaultExport` 해제 | `vite.config.ts`처럼 도구가 `default`를 요구하는 진입점에 적용합니다. 내보내기 규칙의 예외를 설정에 반영합니다 |
 | `style/useFragmentSyntax` 비활성 | `recommended`에 없으며 별도로 켜지 않습니다. 프레임워크 규칙이 `<Fragment>`를 요구합니다 |
 
-**Incorrect (`recommended`만 켜고 컨벤션 항목을 리뷰에 맡깁니다):**
+**Incorrect 1 (`recommended`만 켜고 컨벤션 항목을 리뷰에 맡깁니다):**
 
 ```json
 {
@@ -3692,7 +3692,7 @@ Biome 2.5.7의 `recommended`에는 `useConst` · `useImportType` · `noNonNullAs
 }
 ```
 
-**Correct (컨벤션 항목을 설정으로 고정합니다):**
+**Correct 1 (컨벤션 항목을 설정으로 고정합니다):**
 
 ```json
 {

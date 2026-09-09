@@ -57,7 +57,7 @@ tags: values, theme
 }
 ```
 
-**Incorrect (그림자를 직접 적어 어두운 배경에서 사라집니다):**
+**Incorrect 2 (그림자를 직접 적어 어두운 배경에서 사라집니다):**
 
 ```css
 /* src/page/products/pg-products.css */
@@ -66,7 +66,7 @@ tags: values, theme
 }
 ```
 
-**Correct (토큰 파일에서 값을 바꾸고 사용자 테마를 시스템 설정보다 우선합니다):**
+**Correct 2 (토큰 파일에서 값을 바꾸고 사용자 테마를 시스템 설정보다 우선합니다):**
 
 ```css
 /* src/style/token.css */

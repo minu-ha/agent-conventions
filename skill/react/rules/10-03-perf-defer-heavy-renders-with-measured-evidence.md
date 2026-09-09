@@ -68,14 +68,14 @@ const handleStatusFilterChange = (nextStatus: ProductStatusFilter) => {
 };
 ```
 
-**Incorrect (입력과 무거운 파생 렌더를 같은 값에 묶습니다):**
+**Incorrect 2 (입력과 무거운 파생 렌더를 같은 값에 묶습니다):**
 
 ```tsx
 const [keyword, setKeyword] = useState("");
 const filteredRows = rows.filter((row) => fuzzyMatchRow(row, keyword));
 ```
 
-**Correct (입력은 즉시 반응하고 무거운 파생 계산만 늦춥니다):**
+**Correct 2 (입력은 즉시 반응하고 무거운 파생 계산만 늦춥니다):**
 
 ```tsx
 const [keyword, setKeyword] = useState("");

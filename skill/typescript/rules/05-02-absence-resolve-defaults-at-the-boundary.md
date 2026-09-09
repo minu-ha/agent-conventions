@@ -47,14 +47,14 @@ const productIds = response.data.rows?.map((row) => row.id);
 const isCompact = variant === "compact";
 ```
 
-**Incorrect (같은 기본값을 사용처마다 다시 채웁니다):**
+**Incorrect 2 (같은 기본값을 사용처마다 다시 채웁니다):**
 
 ```ts
 fetchProducts({pageSize: query.pageSize ?? pagination_default_page_size});
 setVisibleRowCount(query.pageSize ?? pagination_default_page_size);
 ```
 
-**Correct (값이 들어오는 경계에서 한 번 채워 이후 코드에서 기본값을 반복하지 않습니다):**
+**Correct 2 (값이 들어오는 경계에서 한 번 채워 이후 코드에서 기본값을 반복하지 않습니다):**
 
 ```ts
 /**

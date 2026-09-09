@@ -40,7 +40,7 @@ tags: typing, wrapper, contracts
 | `ref` 공개 | `composition-open-ref-props-only-for-imperative-contracts` |
 | 프롭 전달 방식 | `typing-choose-wrapper-shape-and-forwarding` |
 
-**Incorrect (라이브러리 타입을 그대로 내보냅니다):**
+**Incorrect 1 (라이브러리 타입을 그대로 내보냅니다):**
 
 ```tsx
 export type UiTableCellProps = TableCellProps;
@@ -50,7 +50,7 @@ export const UiTableCell = (props: UiTableCellProps) => {
 };
 ```
 
-**Correct (표시 프롭은 인덱스 접근으로 열고 DOM 속성은 세 단계 기준을 따릅니다):**
+**Correct 1 (표시 프롭은 인덱스 접근으로 열고 DOM 속성은 세 단계 기준을 따릅니다):**
 
 ```tsx
 import type {TdHTMLAttributes} from "react";

@@ -68,6 +68,7 @@ tags: pseudo-classes, state, interaction
 	box-shadow: 0 0 0 1px #1677ff;
 }
 ```
+
 **Incorrect 3 (앱 상태를 속성 선택자로 잡고 DOM 상태를 수정자로 만듭니다):**
 
 ```tsx

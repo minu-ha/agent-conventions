@@ -11,14 +11,14 @@
 
 **Requires selected:** `docs-require-jsdoc-on-key-declarations`, `typescript/naming-use-consistent-file-and-symbol-naming` · 함께 적용
 
-**Incorrect (쿼리와 뮤테이션 바인딩 이름이 제각각입니다):**
+**Incorrect 1 (쿼리와 뮤테이션 바인딩 이름이 제각각입니다):**
 
 ```ts
 const responseGetProductListSuspense = useGetProductListSuspense();
 const removeApi = useProductRemove();
 ```
 
-**Correct (지역 바인딩 접두사를 통일합니다):**
+**Correct 1 (지역 바인딩 접두사를 통일합니다):**
 
 ```ts
 /**

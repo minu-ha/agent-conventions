@@ -29,7 +29,7 @@ tags: functions
 그 판정은 `types-reuse-existing-contracts-before-new-types`가 합니다.
 이 규칙을 지키려고 `*Params`나 `*Args`를 새로 만들지 않습니다.
 
-**Incorrect (위치 인자가 넷이라 호출부에서 순서를 외워야 합니다):**
+**Incorrect 1 (위치 인자가 넷이라 호출부에서 순서를 외워야 합니다):**
 
 ```ts
 const fetchProductPage = (baseUrl: string, page: number, pageSize: number, keyword?: string): Promise<ProductPage> => {
@@ -39,7 +39,7 @@ const fetchProductPage = (baseUrl: string, page: number, pageSize: number, keywo
 fetchProductPage(api_base_url, urlParams.page, pagination_default_page_size, undefined);
 ```
 
-**Correct (매개변수를 객체로 묶고 그 타입을 파일 위쪽에 이름 붙여 선언합니다):**
+**Correct 1 (매개변수를 객체로 묶고 그 타입을 파일 위쪽에 이름 붙여 선언합니다):**
 
 ```ts
 /**

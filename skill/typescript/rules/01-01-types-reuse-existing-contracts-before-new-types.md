@@ -63,7 +63,7 @@ export const sendInvites = (recipients: InviteRecipient[]): Promise<void> => { /
 export const sendInvites = (recipients: UserRecord[]): Promise<void> => { /* … */ };
 ```
 
-**Incorrect (선택 여부가 다른데 기존 계약을 그대로 써서 없는 값을 빈 문자열로 채웁니다):**
+**Incorrect 2 (선택 여부가 다른데 기존 계약을 그대로 써서 없는 값을 빈 문자열로 채웁니다):**
 
 ```ts
 // 이미 있는 계약: UserRecord { id: string; name: string; email: string }
@@ -73,7 +73,7 @@ export const sendInvite = (draft: UserRecord): Promise<void> => { /* … */ };
 sendInvite({ id: "", name: "", email });
 ```
 
-**Correct (선택 여부가 하나라도 다르면 새로 선언하되 필드는 원본에서 파생합니다):**
+**Correct 2 (선택 여부가 하나라도 다르면 새로 선언하되 필드는 원본에서 파생합니다):**
 
 ```ts
 // 이미 있는 계약: UserRecord { id: string; name: string; email: string }

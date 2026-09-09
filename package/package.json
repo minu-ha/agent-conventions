@@ -18,6 +18,7 @@
 		"check:handbooks": "tsx src/check-handbooks.ts",
 		"check:handbooks:all": "tsx src/check-handbooks.ts --all",
 		"viewer": "tsx src/viewer.ts",
+		"check:diagrams": "tsx src/check-diagrams.ts",
 		"check:viewer": "tsx src/check-viewer.ts",
 		"check:artifacts": "npm run check:generated:all && npm run check:handbooks:all && npm run check:viewer",
 		"validate": "tsx src/validate.ts",
@@ -37,5 +38,11 @@
 		"typecheck": "tsc --noEmit",
 		"test": "tsx --test --test-concurrency=1 test/*.test.ts"
 	},
-	"devDependencies": {"@biomejs/biome": "^2.5.7", "@types/node": "^26.1.2", "tsx": "^4.23.9", "typescript": "^7.0.2"}
+	"devDependencies": {
+		"@biomejs/biome": "^2.5.7",
+		"@types/node": "^26.1.2",
+		"beautiful-mermaid": "^1.1.3",
+		"tsx": "^4.23.9",
+		"typescript": "^7.0.2"
+	}
 }

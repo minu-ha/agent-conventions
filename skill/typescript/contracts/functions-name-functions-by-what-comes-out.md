@@ -43,7 +43,7 @@
 `handle` · `use`는 프레임워크 규칙을 따릅니다.
 생성기 · 프레임워크 · 외부 계약이 정한 이름과 `Promise`의 `resolve` · `reject`는 바꾸거나 감싸지 않습니다.
 
-**Incorrect (입력 · 구현 동작 · 막연한 접미사를 이름에 씁니다):**
+**Incorrect 1 (입력 · 구현 동작 · 막연한 접미사를 이름에 씁니다):**
 
 ```ts
 export const buildUserPayload = (formValues: UserFormValues) => { /* … */ };
@@ -52,7 +52,7 @@ export const processUserRows = (rows: UserRow[]) => { /* … */ };
 export const resolveStatusTone = (status: string) => { /* … */ };
 ```
 
-**Correct (출력 역할이나 효과를 이름에 씁니다):**
+**Correct 1 (출력 역할이나 효과를 이름에 씁니다):**
 
 ```ts
 /**

@@ -38,18 +38,6 @@ tags: data, mutation
 
 `events-run-user-actions-in-handlers-not-effects`에 따라 무효화를 이펙트로 옮기지 않습니다.
 
-**Incorrect (캐시를 손으로 조립하고 키를 문자열로 적습니다):**
-
-```tsx
-const mutationProductSave = useProductSave({
-	mutation: {
-		onSuccess: (saved) => {
-			queryClient.setQueryData(["products"], (previous = []) => [...previous, saved]);
-		},
-	},
-});
-```
-
 **Incorrect 1 (현재 목록 키만 다시 읽어 다른 목록 조건과 요약 키를 놓칩니다):**
 
 ```tsx
@@ -75,6 +63,18 @@ const mutationProductSave = useProductSave({
 		onSuccess: () => {
 			void queryClient.invalidateQueries({queryKey: productListQueryKey()});
 			void queryClient.invalidateQueries({queryKey: productSummaryQueryKey()});
+		},
+	},
+});
+```
+
+**Incorrect (캐시를 손으로 조립하고 키를 문자열로 적습니다):**
+
+```tsx
+const mutationProductSave = useProductSave({
+	mutation: {
+		onSuccess: (saved) => {
+			queryClient.setQueryData(["products"], (previous = []) => [...previous, saved]);
 		},
 	},
 });

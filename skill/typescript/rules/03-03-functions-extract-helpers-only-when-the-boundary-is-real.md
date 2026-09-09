@@ -51,6 +51,15 @@ page/report/_function/to-report-content.ts
   formatAmount       toComparisonRows 와 toStatusGroups 가 부름
 ```
 
+**Incorrect (한 번만 쓰는 한 줄 계산을 파일로 분리합니다):**
+
+```ts
+// page/profile/_function/get-next-page.ts
+export const getNextPage = (previous: number, pageCount: number): number => {
+	return (previous + 1) % pageCount;
+};
+```
+
 **Correct (한 번 쓰는 단계는 호출부에 두고 재사용하는 계산은 함수로 추출합니다):**
 
 ```txt
@@ -84,15 +93,6 @@ export const toReportContent = (params: ToReportContentParams): ReportContent =>
 
 	// 3. 재고 카드. 상품 상세에서만 온다
 	return {metrics, statusGroups, stockCount: params.stockCount};
-};
-```
-
-**Incorrect (한 번만 쓰는 한 줄 계산을 파일로 분리합니다):**
-
-```ts
-// page/profile/_function/get-next-page.ts
-export const getNextPage = (previous: number, pageCount: number): number => {
-	return (previous + 1) % pageCount;
 };
 ```
 

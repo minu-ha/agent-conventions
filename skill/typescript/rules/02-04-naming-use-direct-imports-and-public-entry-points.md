@@ -28,13 +28,13 @@ tags: naming
 경로 형식은 `naming-import-by-absolute-path`를 따릅니다.
 같은 경로라도 값 · 타입 가져오기를 바꾸면 이 규칙을 적용합니다.
 
-**Incorrect (배럴과 섞인 가져오기로 경계를 흐립니다):**
+**Incorrect 1 (배럴과 섞인 가져오기로 경계를 흐립니다):**
 
 ```ts
 import {pagination_default_page_size, toDisplayDate, UserProfile} from "./index";
 ```
 
-**Correct (필요한 파일에서 이름으로 바로 가져옵니다):**
+**Correct 1 (필요한 파일에서 이름으로 바로 가져옵니다):**
 
 ```ts
 import type {UserProfile} from "@/type/user-profile";
@@ -42,7 +42,7 @@ import {pagination_default_page_size} from "@/constant/pagination";
 import {toDisplayDate} from "@/util/date/to-display-date";
 ```
 
-**Incorrect 1 (`default`로 내보내 사용처마다 다른 이름이 생깁니다):**
+**Incorrect 2 (`default`로 내보내 사용처마다 다른 이름이 생깁니다):**
 
 ```tsx
 // component/ui/tabs/ui-tabs.tsx
@@ -57,7 +57,7 @@ export default UiTabs;
 import Tabs from "@/component/ui/tabs/ui-tabs";
 ```
 
-**Correct 1 (선언 앞에 `export`를 붙여 사용처가 그 이름으로 가져옵니다):**
+**Correct 2 (선언 앞에 `export`를 붙여 사용처가 그 이름으로 가져옵니다):**
 
 ```tsx
 // component/ui/tabs/ui-tabs.tsx

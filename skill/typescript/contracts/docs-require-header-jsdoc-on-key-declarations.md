@@ -18,7 +18,7 @@
 
 **Requires selected:** `docs-write-doc-comments-as-multiline-blocks`, `docs-write-korean-comments-about-purpose-and-constraints` · 함께 적용
 
-**Incorrect (주요 선언에 헤더 설명이 없습니다):**
+**Incorrect 1 (주요 선언에 헤더 설명이 없습니다):**
 
 ```ts
 export const toSortedUserIds = (userIds: string[]): string[] => {
@@ -26,7 +26,7 @@ export const toSortedUserIds = (userIds: string[]): string[] => {
 };
 ```
 
-**Correct (여러 줄 블록에 설명만 적습니다):**
+**Correct 1 (여러 줄 블록에 설명만 적습니다):**
 
 ```ts
 /**

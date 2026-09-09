@@ -31,20 +31,6 @@ tags: selector, nesting, ampersand
 `&` 없이 시작하면 자손 선택자가 별도 겹처럼 읽혀 표기에 따라 검사 결과가 달라집니다.
 기계 검증은 `max-nesting-depth: 1`이며 최상위는 0겹입니다.
 
-**Incorrect (중첩을 두 겹 이상 열어 실제 선택자를 숨깁니다):**
-
-```css
-.pg_products__sortButton {
-	&.MuiButtonBase-root {
-		&:hover {
-			.pg_products__sortBox {
-				border-color: #9fadc7;
-			}
-		}
-	}
-}
-```
-
 **Incorrect 1 (다른 요소의 가상 요소를 `&`로 다시 엽니다):**
 
 ```css
@@ -77,7 +63,21 @@ tags: selector, nesting, ampersand
 }
 ```
 
-**Correct (외부 라이브러리 경로도 깊이와 무관하게 한 줄로 씁니다):**
+**Incorrect 2 (중첩을 두 겹 이상 열어 실제 선택자를 숨깁니다):**
+
+```css
+.pg_products__sortButton {
+	&.MuiButtonBase-root {
+		&:hover {
+			.pg_products__sortBox {
+				border-color: #9fadc7;
+			}
+		}
+	}
+}
+```
+
+**Correct 2 (외부 라이브러리 경로도 깊이와 무관하게 한 줄로 씁니다):**
 
 ```css
 .pg_orderTable__root {

@@ -820,7 +820,9 @@ document.dispatchEvent(new Event("flow-ready"));
 			units.push({diff: false, kind: e.kind, samples: run, at: at});
 		}
 
-		return units;
+		// 차례는 짝 → 홀로 선 Incorrect → 홀로 선 Correct. 원문도 validate 가 이 차례를 지키게 하지만 뷰어도 보장한다.
+		const rank = (u) => (u.diff ? 0 : u.kind === "incorrect" ? 1 : 2);
+		return units.map((u, i) => [u, i]).sort((a, b) => rank(a[0]) - rank(b[0]) || a[1] - b[1]).map((p) => p[0]);
 	};
 
 	const codeHtml = (blocks, marks) => blocks.map((b, i) => {
@@ -1097,8 +1099,9 @@ document.dispatchEvent(new Event("flow-ready"));
 	const ZW = "​";
 	const widenCjk = (src) => src.replace(new RegExp(WIDE.source, "g"), (c) => c + ZW);
 	// 선 문자가 칸 가운데에서 어느 변으로 이어지는지. L R U D, r 은 둥근 모서리.
-	const LINES = {"─": "LR", "│": "UD", "┌": "RD", "┐": "LD", "└": "RU", "┘": "LU", "├": "UDR", "┤": "UDL", "┬": "LRD", "┴": "LRU", "┼": "LRUD", "╭": "RDr", "╮": "LDr", "╰": "RUr", "╯": "LUr"};
-	const ARROWS = {"►": "R", "◄": "L", "▼": "D", "▲": "U"};
+	const LINES = {"─": "LR", "│": "UD", "┌": "RD", "┐": "LD", "└": "RU", "┘": "LU", "├": "UDR", "┤": "UDL", "┬": "LRD", "┴": "LRU", "┼": "LRUD", "╭": "RDr", "╮": "LDr", "╰": "RUr", "╯": "LUr",
+		"═": "LRb", "║": "UDb", "╔": "RDb", "╗": "LDb", "╚": "RUb", "╝": "LUb", "╟": "UDRb", "╢": "UDLb", "╌": "LRd", "╎": "UDd"};
+	const ARROWS = {"►": "R", "◄": "L", "▼": "D", "▲": "U", "▶": "R", "◀": "L"};
 	// 상자의 세로 벽과 가로 테두리. 선과 화살촉은 벽 선이 지나는 칸 가운데까지 닿아야 붙어 보인다.
 	const isWall = (chr) => chr === "│" || chr === "◇" || chr === "├" || chr === "┤";
 	const isHBorder = (chr) => chr !== undefined && chr !== " " && chr !== ZW && (LINES[chr] !== undefined || chr === "◇");
@@ -1108,7 +1111,7 @@ document.dispatchEvent(new Event("flow-ready"));
 		const rows = ascii.replace(/\s+$/, "").split("\n");
 		const cols = Math.max.apply(null, rows.map((r) => r.length));
 		const f = (n) => n.toFixed(1);
-		let path = "", arcs = "", tris = "", marks = "", texts = "";
+		let path = "", bold = "", dashed = "", arcs = "", tris = "", marks = "", dots = "", texts = "";
 
 		const isText = (chr) => chr !== undefined && chr !== " " && chr !== ZW && LINES[chr] === undefined && ARROWS[chr] === undefined && chr !== "◇";
 		const center = (c) => c * cw + cw / 2;
@@ -1180,6 +1183,9 @@ document.dispatchEvent(new Event("flow-ready"));
 				let top = r - 1, bottom = r + 1;
 				while (top >= 0 && !isHBorder((rows[top] || "")[col])) top--;
 				while (bottom < rows.length && !isHBorder((rows[bottom] || "")[col])) bottom++;
+				// 시퀀스도의 생명선 사이 글자처럼 상자가 아닌 자리는 건드리지 않는다. 상자는 테두리 줄의 벽 자리가 모서리다.
+				const corner = (chr) => chr !== undefined && chr !== "─" && chr !== "═" && chr !== "╌" && (LINES[chr] !== undefined || chr === "◇");
+				if (top < 0 || bottom >= rows.length || !corner((rows[top] || "")[box[0]]) || !corner((rows[bottom] || "")[box[0]])) return 0;
 				let labelRows = 0;
 				for (let k = top + 1; k < bottom; k++) {
 					const inner = (rows[k] || "").slice(box[0] + 1, box[1]).split(ZW).join("").trim();
@@ -1232,11 +1238,13 @@ document.dispatchEvent(new Event("flow-ready"));
 						const ax = ln.indexOf("L") >= 0 ? x0 : x1, by = ln.indexOf("U") >= 0 ? y0 : y1;
 						arcs += "M" + f(ax) + " " + f(cy) + "Q" + f(cx) + " " + f(cy) + " " + f(cx) + " " + f(by) + " ";
 					} else {
-						// 옆 칸이 벽이면 벽 선의 가운데까지 늘려 붙인다.
-						if (ln.indexOf("L") >= 0) path += "M" + f(isWall(row[c - 1]) ? x0 - cw / 2 : x0) + " " + f(cy) + "H" + f(cx) + " ";
-						if (ln.indexOf("R") >= 0) path += "M" + f(cx) + " " + f(cy) + "H" + f(isWall(row[c + 1]) ? x1 + cw / 2 : x1) + " ";
-						if (ln.indexOf("U") >= 0) path += "M" + f(cx) + " " + f(y0) + "V" + f(cy) + " ";
-						if (ln.indexOf("D") >= 0) path += "M" + f(cx) + " " + f(cy) + "V" + f(y1) + " ";
+						// 옆 칸이 벽이면 벽 선의 가운데까지 늘려 붙인다. 이중선(b)은 굵게, 점선(d)은 끊어 그린다.
+						let seg = "";
+						if (ln.indexOf("L") >= 0) seg += "M" + f(isWall(row[c - 1]) ? x0 - cw / 2 : x0) + " " + f(cy) + "H" + f(cx) + " ";
+						if (ln.indexOf("R") >= 0) seg += "M" + f(cx) + " " + f(cy) + "H" + f(isWall(row[c + 1]) ? x1 + cw / 2 : x1) + " ";
+						if (ln.indexOf("U") >= 0) seg += "M" + f(cx) + " " + f(y0) + "V" + f(cy) + " ";
+						if (ln.indexOf("D") >= 0) seg += "M" + f(cx) + " " + f(cy) + "V" + f(y1) + " ";
+						if (ln.indexOf("b") >= 0) bold += seg; else if (ln.indexOf("d") >= 0) dashed += seg; else path += seg;
 					}
 					continue;
 				}
@@ -1262,6 +1270,22 @@ document.dispatchEvent(new Event("flow-ready"));
 					continue;
 				}
 
+				// 상태도의 시작점(●)과 클래스도의 상속 표식(△).
+				if (chr === "●") {
+					flush();
+					const rr = cw * 0.45;
+					dots += "M" + f(cx - rr) + " " + f(cy) + "a" + f(rr) + " " + f(rr) + " 0 1 0 " + f(rr * 2) + " 0a" + f(rr) + " " + f(rr) + " 0 1 0 " + f(-rr * 2) + " 0Z ";
+					continue;
+				}
+
+				if (chr === "△") {
+					flush();
+					const w = cw * 0.9, h = ch * 0.42;
+					marks += "M" + f(cx) + " " + f(cy - h / 2) + "L" + f(cx + w / 2) + " " + f(cy + h / 2) + "L" + f(cx - w / 2) + " " + f(cy + h / 2) + "Z ";
+					path += "M" + f(cx) + " " + f(cy + h / 2) + "V" + f(y1) + " ";
+					continue;
+				}
+
 				if (!run) run = {start: c, end: c + 1, xs: [], chars: [], wide: false};
 				run.end = c + 1;
 				run.xs.push(f(cx));
@@ -1276,8 +1300,11 @@ document.dispatchEvent(new Event("flow-ready"));
 
 		return '<svg xmlns="http://www.w3.org/2000/svg" class="ascii-flow" viewBox="0 0 ' + W + " " + H + '" width="' + W + '" height="' + H + '">' +
 			'<path d="' + path + '" fill="none" stroke="var(--line)" stroke-width="1"/>' +
+			'<path d="' + bold + '" fill="none" stroke="var(--line)" stroke-width="2"/>' +
+			'<path d="' + dashed + '" fill="none" stroke="var(--line)" stroke-width="1" stroke-dasharray="3 3"/>' +
 			'<path d="' + arcs + '" fill="none" stroke="var(--line)" stroke-width="1"/>' +
 			'<path d="' + tris + '" fill="var(--line)"/>' +
+			'<path d="' + dots + '" fill="var(--line)"/>' +
 			'<path d="' + marks + '" fill="var(--paper)" stroke="var(--line)" stroke-width="1"/>' +
 			'<g font-family="var(--mono)" font-size="' + fs + '" text-anchor="middle" fill="var(--fg)">' + texts + "</g></svg>";
 	}

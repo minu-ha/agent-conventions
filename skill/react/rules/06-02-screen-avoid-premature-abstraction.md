@@ -150,4 +150,3 @@ export const toProductSaveRequest = (formValues: ProductFormValues) => {
 	return {categoryId: formValues.categoryId, description, title};
 };
 ```
-

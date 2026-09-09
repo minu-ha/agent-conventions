@@ -28,33 +28,7 @@ tags: values, origin, destructuring
 
 계산 결과에 이름을 붙일지는 `functions-name-a-value-only-for-recompute-or-judgment`가 정합니다.
 
-**Incorrect (시그니처와 본문에서 구조분해해 출처가 사라집니다):**
-
-```ts
-const toOrderLine = ({product, quantity}: OrderLineInput): OrderLine => {
-	const {title, unitPrice} = product;
-
-	return {
-		label: title,
-		amount: unitPrice * quantity,
-	};
-};
-```
-
-**Incorrect (별칭 `const`로 끊어 이름만 남깁니다):**
-
-```ts
-const currency = pricing_default_currency;
-
-const toOrderTotal = (lines: OrderLine[]): OrderTotal => {
-	return {
-		currency,
-		amount: sumBy(lines, (line) => line.amount),
-	};
-};
-```
-
-**Incorrect (이름을 바꿔 꺼내 출처와 원래 이름이 함께 사라집니다):**
+**Incorrect 1 (이름을 바꿔 꺼내 출처와 원래 이름이 함께 사라집니다):**
 
 ```ts
 const {status: orderStatus, owner: orderOwner} = order;
@@ -64,7 +38,7 @@ if (orderStatus === "archived") {
 }
 ```
 
-**Correct (체인으로 읽어 출처가 쓰는 자리마다 남습니다):**
+**Correct 1 (체인으로 읽어 출처가 쓰는 자리마다 남습니다):**
 
 ```ts
 const toOrderLine = (input: OrderLineInput): OrderLine => {
@@ -86,7 +60,20 @@ if (order.status === "archived") {
 }
 ```
 
-**Correct (배열과 튜플은 자리로 풀어도 됩니다):**
+**Incorrect 2 (시그니처와 본문에서 구조분해해 출처가 사라집니다):**
+
+```ts
+const toOrderLine = ({product, quantity}: OrderLineInput): OrderLine => {
+	const {title, unitPrice} = product;
+
+	return {
+		label: title,
+		amount: unitPrice * quantity,
+	};
+};
+```
+
+**Correct 2 (배열과 튜플은 자리로 풀어도 됩니다):**
 
 ```ts
 const [keyword, setKeyword] = useState("");
@@ -96,7 +83,20 @@ for (const [key, value] of Object.entries(target.searchParams)) {
 }
 ```
 
-**Correct (필드 읽기가 아니라 계산한 결과라 이름을 붙입니다):**
+**Incorrect 3 (별칭 `const`로 끊어 이름만 남깁니다):**
+
+```ts
+const currency = pricing_default_currency;
+
+const toOrderTotal = (lines: OrderLine[]): OrderTotal => {
+	return {
+		currency,
+		amount: sumBy(lines, (line) => line.amount),
+	};
+};
+```
+
+**Correct 3 (필드 읽기가 아니라 계산한 결과라 이름을 붙입니다):**
 
 ```ts
 const toOverdueLines = (order: Order): OrderLine[] => {

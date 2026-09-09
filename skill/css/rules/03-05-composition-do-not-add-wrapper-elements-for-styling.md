@@ -26,6 +26,27 @@ tags: components, wrappers, layout
 
 역할 없는 래퍼는 `naming-name-elements-and-modifiers-by-role`이 요구하는 이름도 지을 수 없습니다.
 
+**Incorrect 1 (역할 없는 이름의 래퍼를 늘립니다):**
+
+```tsx
+<div className={clsx("pg_orders__box")}>
+	<div className={clsx("pg_orders__inner")}>
+		<LegacyDatePicker value={value} onChange={handleChange} />
+	</div>
+</div>
+```
+
+**Correct 1 (외부 라이브러리가 `className`을 받지 않으면 역할 이름을 붙여 감쌉니다):**
+
+```tsx
+{/**
+ * LegacyDatePicker는 className을 받지 않아 배치용 래퍼가 필요하다
+ */}
+<div className={clsx("pg_orders__dateField")}>
+	<LegacyDatePicker value={value} onChange={handleChange} />
+</div>
+```
+
 **Incorrect (래퍼 `div`로 최상위 스타일을 우회합니다):**
 
 ```tsx
@@ -67,25 +88,4 @@ export const UiCollapse = (props: UiCollapseProps) => {
 .pg_orders__collapse {
 	margin-block-end: 16px;
 }
-```
-
-**Incorrect 1 (역할 없는 이름의 래퍼를 늘립니다):**
-
-```tsx
-<div className={clsx("pg_orders__box")}>
-	<div className={clsx("pg_orders__inner")}>
-		<LegacyDatePicker value={value} onChange={handleChange} />
-	</div>
-</div>
-```
-
-**Correct 1 (외부 라이브러리가 `className`을 받지 않으면 역할 이름을 붙여 감쌉니다):**
-
-```tsx
-{/**
- * LegacyDatePicker는 className을 받지 않아 배치용 래퍼가 필요하다
- */}
-<div className={clsx("pg_orders__dateField")}>
-	<LegacyDatePicker value={value} onChange={handleChange} />
-</div>
 ```

@@ -42,12 +42,12 @@ const EmptyExampleBody = [
 	"",
 	"Fixture normative guidance.",
 	"",
-	"**Incorrect**",
+	"**Incorrect 1**",
 	"",
 	"```ts",
 	"```",
 	"",
-	"**Correct**",
+	"**Correct 1**",
 	"",
 	"```ts",
 	"```",
@@ -144,7 +144,7 @@ const writeSkillFixture = async (skillRootDir: string, skillName: string, fixtur
 		await writeFile(
 			path.join(rulesDir, fileName),
 			rule.body ??
-				`---\n${toFrontmatter(rule)}\n---\n## ${rule.title ?? "Fixture Rule"}\n\n**Impact: ${impact} (${impactDescription})**\n\n${rule.bodyMarker ?? "Fixture normative guidance."}\n\n**Incorrect**\n\n\`\`\`ts\nconst bad = true;\n\`\`\`\n\n**Correct**\n\n\`\`\`ts\nconst good = true;\n\`\`\`\n`,
+				`---\n${toFrontmatter(rule)}\n---\n## ${rule.title ?? "Fixture Rule"}\n\n**Impact: ${impact} (${impactDescription})**\n\n${rule.bodyMarker ?? "Fixture normative guidance."}\n\n**Incorrect 1**\n\n\`\`\`ts\nconst bad = true;\n\`\`\`\n\n**Correct 1**\n\n\`\`\`ts\nconst good = true;\n\`\`\`\n`,
 			"utf8",
 		);
 	}
@@ -255,7 +255,7 @@ const createRoutingDocument = (): LoadedSkillDocument => ({
 			requiredOnCompletion: true,
 			requiresSelected: [],
 			reviewWith: [],
-			body: "## Observe State\n\n**Incorrect** hidden body\n\n**Correct** hidden body",
+			body: "## Observe State\n\n**Incorrect 1** hidden body\n\n**Correct 1** hidden body",
 		},
 		{
 			fileName: "composition-second.md",
@@ -269,7 +269,7 @@ const createRoutingDocument = (): LoadedSkillDocument => ({
 			requiredOnCompletion: false,
 			requiresSelected: [],
 			reviewWith: [],
-			body: "## Second Composition\n\n**Incorrect** hidden body\n\n**Correct** hidden body",
+			body: "## Second Composition\n\n**Incorrect 1** hidden body\n\n**Correct 1** hidden body",
 		},
 		{
 			fileName: "composition-first.md",
@@ -283,7 +283,7 @@ const createRoutingDocument = (): LoadedSkillDocument => ({
 			requiredOnCompletion: false,
 			requiresSelected: ["state-observe", "typescript/types-reuse-contracts"],
 			reviewWith: ["state-observe", "typescript/types-reuse-contracts"],
-			body: "## First Composition\n\n**Incorrect** hidden body\n\n**Correct** hidden body",
+			body: "## First Composition\n\n**Incorrect 1** hidden body\n\n**Correct 1** hidden body",
 		},
 	],
 });
@@ -1937,7 +1937,7 @@ test("rule discipline requires numbered example pairs to match one Incorrect wit
 			"",
 			`**${correctMarker}:**`,
 			"",
-			"```" + correctLang,
+			`\`\`\`${correctLang}`,
 			"const good = true;",
 			"```",
 		].join("\n");
@@ -1953,7 +1953,7 @@ test("rule discipline requires numbered example pairs to match one Incorrect wit
 		}
 	};
 
-	assert.doesNotMatch(disciplineMessage(pairBody("Correct 1 (query)")), /짝 번호/);
+	assert.doesNotMatch(disciplineMessage(pairBody("Correct 1 (query)")), /짝 번호 1/);
 	assert.match(disciplineMessage(pairBody("Correct (query)")), /짝 번호 1는 Incorrect 와 Correct 가 하나씩 있어야 한다/);
 	assert.match(disciplineMessage(pairBody("Correct 1 (query)", "tsx")), /짝 번호 1의 1번째 블록 언어가 다르다\(ts:tsx\)/);
 });

@@ -48,13 +48,13 @@ if (canManageItems) {
 const visibleTabs = ["overview", ...(canManageItems ? ["items"] : [])];
 ```
 
-**Incorrect (삼항 안에 삼항을 넣어 값 하나를 고릅니다):**
+**Incorrect 2 (삼항 안에 삼항을 넣어 값 하나를 고릅니다):**
 
 ```ts
 const statusLabel = order.isCancelled ? "취소" : order.isDueSoon ? "임박" : "진행";
 ```
 
-**Correct (분기가 셋이면 `return`으로 끝나는 함수로 뺍니다):**
+**Correct 2 (분기가 셋이면 `return`으로 끝나는 함수로 뺍니다):**
 
 ```ts
 // page/orders/_function/to-order-row/_to-status-label.ts
@@ -72,7 +72,7 @@ export const toStatusLabel = (order: OrderRow): StatusLabel => {
 };
 ```
 
-**Incorrect 2 (목록 조립에서 조건이 셋이 되자 삼항을 겹칩니다):**
+**Incorrect 3 (목록 조립에서 조건이 셋이 되자 삼항을 겹칩니다):**
 
 ```ts
 const visibleTabs = canManageItems
@@ -84,7 +84,7 @@ const visibleTabs = canManageItems
 		: ["overview"];
 ```
 
-**Correct 2 (조건이 셋 이상인 목록은 표로 두고 걸러 냅니다):**
+**Correct 3 (조건이 셋 이상인 목록은 표로 두고 걸러 냅니다):**
 
 ```ts
 const visibleTabs = [

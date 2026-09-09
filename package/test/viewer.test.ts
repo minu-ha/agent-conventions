@@ -3,6 +3,7 @@ import {readFile} from "node:fs/promises";
 import path from "node:path";
 import test from "node:test";
 
+import {checkDiagrams, maxDiagramColumns} from "../src/check-diagrams.js";
 import {checkGeneratedViewer} from "../src/check-viewer.js";
 import {getSkillPaths, isBuildableSkill, listSkillNames, viewerDataOutputPath, viewerOutputPath} from "../src/config.js";
 import {parseFrontmatter, parseSections, readSkillRules} from "../src/parser.js";
@@ -518,4 +519,18 @@ test("every rule carries a stable number that matches its HANDBOOK.md heading", 
 
 	const keys = payload.rules.map((rule) => `${rule.skill} ${rule.number}`);
 	assert.equal(new Set(keys).size, keys.length, "rule numbers must be unique within a skill");
+});
+
+test("every mermaid fence renders as a character grid that fits the viewer card", async () => {
+	const reports = await checkDiagrams();
+
+	assert.ok(reports.length > 0, "규칙에 mermaid 흐름도가 하나도 없다");
+
+	for (const report of reports) {
+		assert.equal(report.error, undefined, `${report.skill}/${report.ruleId} #${report.index + 1}: ${report.error}`);
+		assert.ok(
+			report.columns <= maxDiagramColumns,
+			`${report.skill}/${report.ruleId} #${report.index + 1}: ${report.columns}칸 > ${maxDiagramColumns}칸`,
+		);
+	}
 });

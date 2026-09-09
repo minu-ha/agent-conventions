@@ -35,7 +35,7 @@ tags: data, mutation, errors
 | 중복 실행 방지 | 버튼을 `isPending`으로 `disabled` 처리하고, 핸들러 첫 줄에서도 `isPending`이면 이른 반환합니다 |
 | 성공 뒤 캐시 갱신 | `data-invalidate-queries-the-mutation-changed`를 따릅니다 |
 
-**Incorrect (`await`만 쓰고 거부된 Promise를 처리하지 않습니다):**
+**Incorrect 1 (`await`만 쓰고 거부된 Promise를 처리하지 않습니다):**
 
 ```tsx
 const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
@@ -44,7 +44,7 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = async (_even
 };
 ```
 
-**Correct (후속 작업이 없는 호출은 성공 · 실패 콜백으로 처리합니다):**
+**Correct 1 (후속 작업이 없는 호출은 성공 · 실패 콜백으로 처리합니다):**
 
 ```tsx
 /**

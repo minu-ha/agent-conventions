@@ -47,7 +47,7 @@ tags: screen, routes, flow
 순수 타입 · 전송 값 조립 함수 · 기본 설정의 형제 `.ts` 추출은
 `typescript/functions-extract-helpers-only-when-the-boundary-is-real`을 따릅니다.
 
-**Incorrect (라우트 진입이 쿼리를 대신 읽어 프롭으로 내립니다):**
+**Incorrect 1 (라우트 진입이 쿼리를 대신 읽어 프롭으로 내립니다):**
 
 ```tsx
 // page/products/pg-products.tsx
@@ -64,7 +64,7 @@ export const PgProducts = () => {
 };
 ```
 
-**Correct (라우트 진입은 조립과 경계를 맡고, 섹션은 자신의 쿼리 키로 데이터를 읽습니다):**
+**Correct 1 (라우트 진입은 조립과 경계를 맡고, 섹션은 자신의 쿼리 키로 데이터를 읽습니다):**
 
 ```tsx
 // page/products/pg-products.tsx

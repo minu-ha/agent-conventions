@@ -252,6 +252,52 @@ const collectRuleViolations = (rule: SkillRule): string[] => {
 		});
 	}
 
+	// 예시 차례는 짝(Incorrect n · Correct n 이 붙어서) → 홀로 선 Incorrect → 홀로 선 Correct 다.
+	// 뷰어가 이 차례로 그리고, 계약이 첫 짝을 싣는다. 모양이 같은 Incorrect · Correct 가 붙어 있으면 반드시 짝이다.
+	const exampleShape = (example: RuleExample): string => example.blocks.map((block) => block.lang).join("+");
+	let phase = 0;
+	let expectedPair = 1;
+
+	parsed.examples.forEach((example, index) => {
+		const next = parsed.examples[index + 1];
+
+		if (example.pair !== undefined) {
+			if (example.kind === "incorrect") {
+				if (phase > 0) {
+					violations.push(`짝 ${example.pair}는 홀로 선 예시보다 앞에 온다`);
+				}
+
+				if (example.pair !== expectedPair) {
+					violations.push(`짝 번호는 1부터 차례로 붙인다(${expectedPair} 자리에 ${example.pair})`);
+				}
+
+				if (next === undefined || next.kind !== "correct" || next.pair !== example.pair) {
+					violations.push(`Incorrect ${example.pair} 바로 뒤에 Correct ${example.pair}가 와야 한다`);
+				}
+
+				expectedPair = example.pair + 1;
+			}
+
+			return;
+		}
+
+		if (example.kind === "incorrect") {
+			if (phase > 1) {
+				violations.push("홀로 선 Incorrect 는 홀로 선 Correct 보다 앞에 온다");
+			}
+
+			phase = 1;
+
+			if (next !== undefined && next.kind === "correct" && next.pair === undefined && exampleShape(next) === exampleShape(example)) {
+				violations.push(`모양이 같은 Incorrect · Correct 가 붙어 있으면 짝 번호를 단다(${index + 1}번째 예시)`);
+			}
+
+			return;
+		}
+
+		phase = 2;
+	});
+
 	for (const example of parsed.examples) {
 		for (const block of example.blocks) {
 			if (tabIndentedFenceLanguages.has(block.lang)) {

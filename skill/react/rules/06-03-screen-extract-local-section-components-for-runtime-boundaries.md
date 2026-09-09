@@ -27,7 +27,7 @@ tags: screen, routes
 추출한 파일의 배치는 `ownership-place-owner-files-in-role-folders`를 따릅니다.
 진입 파일의 JSX에 나타나지 않는 섹션을 다른 섹션 파일 안에서 렌더하면 과하게 나눈 것입니다.
 
-**Incorrect (감싸기만 하는 래퍼를 섹션으로 추출합니다):**
+**Incorrect 1 (감싸기만 하는 래퍼를 섹션으로 추출합니다):**
 
 ```tsx
 const PgProductSidebarPanel = (props: PgProductSidebarPanelProps) => {
@@ -39,7 +39,7 @@ const PgProductDetailPanel = (props: PgProductDetailPanelProps) => {
 };
 ```
 
-**Correct (데이터 · 상태 · 상호작용을 소유한 섹션만 추출하고 자신의 쿼리 키로 읽습니다):**
+**Correct 1 (데이터 · 상태 · 상호작용을 소유한 섹션만 추출하고 자신의 쿼리 키로 읽습니다):**
 
 ```tsx
 // page/products/_pg-product-tree-section.tsx

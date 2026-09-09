@@ -49,7 +49,7 @@ flowchart LR
 내부 프롭 묶음을 공개하면 사용처가 안쪽 구조에 의존해 내부 변경 때 함께 깨집니다.
 구조분해 기준은 `composition-read-props-without-destructuring`을 따릅니다.
 
-**Incorrect (자기 프롭까지 스프레드로 전달합니다):**
+**Incorrect 1 (자기 프롭까지 스프레드로 전달합니다):**
 
 ```tsx
 export interface UiIconButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -67,7 +67,7 @@ export const UiIconButton = (props: UiIconButtonProps) => {
 };
 ```
 
-**Correct (자기 프롭이 있으므로 프롭을 이름으로 전달합니다):**
+**Correct 1 (자기 프롭이 있으므로 프롭을 이름으로 전달합니다):**
 
 ```tsx
 /**
