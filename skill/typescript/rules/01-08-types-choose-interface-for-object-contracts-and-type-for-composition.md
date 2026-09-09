@@ -27,7 +27,7 @@ tags: types, interface, type
 | 유니언 · 교차 조합에서만 쓰는 객체 | `type` |
 
 형식을 맞추려고 별칭을 만들거나 객체 형태를 전부 `interface`로 바꾸지 않습니다.
-추론되는 익명 결과와 외부, 생성된 계약은 그대로 둡니다.
+추론되는 익명 결과와 외부 · 생성된 계약은 그대로 둡니다.
 같은 뜻의 기존 계약은 `types-reuse-existing-contracts-before-new-types`에 따라 재사용합니다.
 
 **Incorrect 1 (독립된 필드 계약을 객체 `type` 별칭으로 선언합니다):**

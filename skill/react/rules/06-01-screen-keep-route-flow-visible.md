@@ -49,7 +49,7 @@ tags: screen, routes, flow
 요청이 늘면 `staleTime`, `refetchOnMount`, 실제 키를 먼저 확인합니다.
 부모의 대기로 자식 요청이 늦어지면 대기 전에 실행되는 소유자에서 같은 `key`를 `usePrefetchQuery`로 먼저 요청합니다.
 
-소유자가 바뀌지 않는 `query.select`, 바인딩, 별칭 정리와 파생 상태 이펙트의 렌더 계산 전환은 대상이 아닙니다.
+소유자가 바뀌지 않는 `query.select`, 바인딩 · 별칭 정리와 파생 상태 이펙트의 렌더 계산 전환은 대상이 아닙니다.
 순수 타입, 전송 값 조립 함수, 기본 설정의 형제 `.ts` 추출은
 `typescript/functions-extract-helpers-only-when-the-boundary-is-real`을 따릅니다.
 

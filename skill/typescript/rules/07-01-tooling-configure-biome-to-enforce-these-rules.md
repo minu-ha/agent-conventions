@@ -40,7 +40,7 @@ tags: tooling
 
 기본 매개변수와 삼항의 대체 리터럴은 GritQL 검사 밖이므로 리뷰합니다.
 
-Biome 2.5.7의 `recommended`에는 `useConst`, `useImportType`, `noNonNullAssertion` ·
+Biome 2.5.7의 `recommended`에는 `useConst`, `useImportType`, `noNonNullAssertion`,
 `noUnusedFunctionParameters`, `noExplicitAny`가 포함됩니다. 담당 컨벤션을 드러내려고 설정에도 명시합니다.
 
 ### 리뷰가 담당하는 것

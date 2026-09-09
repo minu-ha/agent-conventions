@@ -28,7 +28,7 @@ tags: screen, errors
 
 섹션 경계는 나머지 섹션만으로도 쓸모가 있을 때만 둡니다.
 목록 실패 후 옆 필터로 할 수 있는 일이 없다면 화면 경계로 충분합니다.
-로딩, 오류 경계는 같은 소유자가 조립하며, 위치는 `runtime-place-suspense-boundaries-at-the-section-owner`를 따릅니다.
+로딩 · 오류 경계는 같은 소유자가 조립하며, 위치는 `runtime-place-suspense-boundaries-at-the-section-owner`를 따릅니다.
 
 ### 실패 상황별 처리
 

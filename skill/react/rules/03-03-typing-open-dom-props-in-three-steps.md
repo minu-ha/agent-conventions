@@ -19,7 +19,7 @@ tags: typing, wrapper, dom
 
 공개할 계약은 `typing-narrow-library-wrapper-contracts`로 정합니다.
 그다음 DOM 속성은 아래 순서로 엽니다.
-같은 요소로 `{...props}`를 전달하는 래퍼는 1, 2단계 중 컴파일되는 형태를 씁니다.
+같은 요소로 `{...props}`를 전달하는 래퍼는 1 · 2단계 중 컴파일되는 형태를 씁니다.
 
 ### 여는 차례
 

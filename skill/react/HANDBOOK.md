@@ -1301,7 +1301,7 @@ const handleSubmitClick: UiButtonProps["onClick"] = (event) => {
 **Impact: CRITICAL (화면의 라이브러리 의존성을 제한하고 교체 시 수정 범위를 줄입니다)**
 
 라이브러리 컴포넌트는 화면에서 직접 쓰지 않고 `Ui*` 래퍼를 거칩니다.
-업그레이드, 교체 시 수정 범위를 래퍼에 모으고, 화면에 필요한 계약만 엽니다.
+업그레이드 · 교체 시 수정 범위를 래퍼에 모으고, 화면에 필요한 계약만 엽니다.
 
 ### 프롭 종류별 선언
 
@@ -1377,7 +1377,7 @@ export const UiTableCell = (props: UiTableCellProps) => {
 
 공개할 계약은 `typing-narrow-library-wrapper-contracts`로 정합니다.
 그다음 DOM 속성은 아래 순서로 엽니다.
-같은 요소로 `{...props}`를 전달하는 래퍼는 1, 2단계 중 컴파일되는 형태를 씁니다.
+같은 요소로 `{...props}`를 전달하는 래퍼는 1 · 2단계 중 컴파일되는 형태를 씁니다.
 
 ### 여는 차례
 
@@ -2015,7 +2015,7 @@ export const UiPanel = {
 **Impact: MEDIUM (모드별 분기와 조합을 컴포넌트 구조에서 확인할 수 있습니다)**
 
 여러 파일, 레이어에서 재사용하는 공용 `ui`, `widget`은 모드별 불리언 조합 대신 구조를 드러냅니다.
-`isCompact`, `isEditing`, `showSearch`가 늘어나면 가능한 조합과 JSX, 스타일 분기도 함께 늘어납니다.
+`isCompact`, `isEditing`, `showSearch`가 늘어나면 가능한 조합과 JSX · 스타일 분기도 함께 늘어납니다.
 
 | 조건 | 판단 |
 | --- | --- |
@@ -3105,7 +3105,7 @@ export const WgChatbot = () => {
 요청이 늘면 `staleTime`, `refetchOnMount`, 실제 키를 먼저 확인합니다.
 부모의 대기로 자식 요청이 늦어지면 대기 전에 실행되는 소유자에서 같은 `key`를 `usePrefetchQuery`로 먼저 요청합니다.
 
-소유자가 바뀌지 않는 `query.select`, 바인딩, 별칭 정리와 파생 상태 이펙트의 렌더 계산 전환은 대상이 아닙니다.
+소유자가 바뀌지 않는 `query.select`, 바인딩 · 별칭 정리와 파생 상태 이펙트의 렌더 계산 전환은 대상이 아닙니다.
 순수 타입, 전송 값 조립 함수, 기본 설정의 형제 `.ts` 추출은
 `typescript/functions-extract-helpers-only-when-the-boundary-is-real`을 따릅니다.
 
@@ -3665,7 +3665,7 @@ return <PgPaymentWidgetSection amount={responseOrderAmountSuspense.data.confirme
 
 섹션 경계는 나머지 섹션만으로도 쓸모가 있을 때만 둡니다.
 목록 실패 후 옆 필터로 할 수 있는 일이 없다면 화면 경계로 충분합니다.
-로딩, 오류 경계는 같은 소유자가 조립하며, 위치는 `runtime-place-suspense-boundaries-at-the-section-owner`를 따릅니다.
+로딩 · 오류 경계는 같은 소유자가 조립하며, 위치는 `runtime-place-suspense-boundaries-at-the-section-owner`를 따릅니다.
 
 ### 실패 상황별 처리
 
@@ -4951,7 +4951,7 @@ JSX 자식 자리의 주석은 여러 줄 블록으로 씁니다.
 | 켜는 곳 | 도메인이 아닌 `preset: "recommended"` |
 | 리뷰 | 실제 접근 가능한 이름 |
 
-`a11y` 검사는 `useButtonType`, `useAltText`, `useValidAnchor`, `useKeyWithClickEvents` ·
+`a11y` 검사는 `useButtonType`, `useAltText`, `useValidAnchor`, `useKeyWithClickEvents`,
 `useSemanticElements`, `noStaticElementInteractions`, `useFocusableInteractive`를 포함합니다.
 
 ### 가져오기 경로 제한

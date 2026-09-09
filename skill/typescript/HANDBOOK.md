@@ -563,7 +563,7 @@ export const product_status = {
 
 **Impact: MEDIUM (계약에 있는 매개변수를 유지하면서 사용하지 않는 매개변수를 표시합니다)**
 
-기존 콜백, 프레임워크 계약의 매개변수는 쓰지 않아도 생략하지 않고 `_` 접두사로 남깁니다.
+기존 콜백 · 프레임워크 계약의 매개변수는 쓰지 않아도 생략하지 않고 `_` 접두사로 남깁니다.
 계약을 유지하면서 구현이 일부러 무시한 값을 드러냅니다.
 
 커링한 핸들러의 마지막 콜백과 매개변수를 하나도 쓰지 않는 구현도 같습니다.
@@ -743,7 +743,7 @@ type ProductStatus = (typeof product_status)[keyof typeof product_status];
 | 유니언 · 교차 조합에서만 쓰는 객체 | `type` |
 
 형식을 맞추려고 별칭을 만들거나 객체 형태를 전부 `interface`로 바꾸지 않습니다.
-추론되는 익명 결과와 외부, 생성된 계약은 그대로 둡니다.
+추론되는 익명 결과와 외부 · 생성된 계약은 그대로 둡니다.
 같은 뜻의 기존 계약은 `types-reuse-existing-contracts-before-new-types`에 따라 재사용합니다.
 
 **Incorrect 1 (독립된 필드 계약을 객체 `type` 별칭으로 선언합니다):**
@@ -1124,7 +1124,7 @@ const toProductSaveBody = (values: ProductFormValues) => {
 
 `default`는 사용처마다 이름이 달라지고 원본의 이름 변경도 반영되지 않습니다.
 경로 형식은 `naming-import-by-absolute-path`를 따릅니다.
-같은 경로라도 값, 타입 가져오기를 바꾸면 이 규칙을 적용합니다.
+같은 경로라도 값 · 타입 가져오기를 바꾸면 이 규칙을 적용합니다.
 
 **Incorrect 1 (배럴과 섞인 가져오기로 경계를 흐립니다):**
 
@@ -1335,7 +1335,7 @@ const productClient = createClient({baseUrl: env_api_base_url});
 | 외부 · 생성된 계약 | 이름과 `DTO` 같은 접미사를 보존합니다. 내부 계약에는 이를 구별용 접미사로 붙이지 않습니다 |
 | `Props`, `Handle`, `Slot`, `Renderer` | 해당 프레임워크 규칙을 따릅니다 |
 
-단순 가공, 표시 결과에는 `VM`, `ViewModel`, 막연한 `Model`과 그 대응 파일명을 쓰지 않습니다.
+단순 가공 · 표시 결과에는 `VM`, `ViewModel`, 막연한 `Model`과 그 대응 파일명을 쓰지 않습니다.
 
 **Incorrect 1 (소유자와 막연한 화면 계약 접미사를 반복합니다):**
 
@@ -1409,7 +1409,7 @@ const reportSnapshot: ReportSnapshot = response.data;
 | 제너레이터 | `function*` 문법을 씁니다 |
 | 오버로드 | `function` 선언을 허용합니다. 호출 시그니처 타입을 `const`에 붙일 수 있으면 그쪽을 씁니다 |
 
-선언, 본문 형식을 고정하면 호이스팅 의존을 줄이고 코드가 늘 때의 diff와 주석 경계를 일정하게 유지합니다.
+선언 · 본문 형식을 고정하면 호이스팅 의존을 줄이고 코드가 늘 때의 diff와 주석 경계를 일정하게 유지합니다.
 객체 반환에도 별도의 `({...})` 괄호가 필요하지 않습니다.
 
 ### `this`를 쓰는 함수
@@ -3838,7 +3838,7 @@ const filteredRows = useMemo(() => {
 
 기본 매개변수와 삼항의 대체 리터럴은 GritQL 검사 밖이므로 리뷰합니다.
 
-Biome 2.5.7의 `recommended`에는 `useConst`, `useImportType`, `noNonNullAssertion` ·
+Biome 2.5.7의 `recommended`에는 `useConst`, `useImportType`, `noNonNullAssertion`,
 `noUnusedFunctionParameters`, `noExplicitAny`가 포함됩니다. 담당 컨벤션을 드러내려고 설정에도 명시합니다.
 
 ### 리뷰가 담당하는 것

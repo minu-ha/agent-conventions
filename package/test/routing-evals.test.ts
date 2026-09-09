@@ -3235,12 +3235,12 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 	const routeFlow = await readRule("react", "screen-keep-route-flow-visible");
 	assertMentions(
 		routeFlow,
-		["소유자가 바뀌지 않는", "바인딩 · 별칭", "functions-extract-helpers-only-when-the-boundary-is-real"],
+		["소유자가 바뀌지 않는", /바인딩(?: · |, )별칭/, "functions-extract-helpers-only-when-the-boundary-is-real"],
 		"routeFlow",
 	);
 	assert.match(
 		routeFlow,
-		/소유자가 바뀌지 않는 `query\.select`[\s\S]*바인딩 · 별칭[\s\S]*파생 상태 이펙트[\s\S]*렌더 계산 전환은 대상이 아닙니다/i,
+		/소유자가 바뀌지 않는 `query\.select`[\s\S]*바인딩(?: · |, )별칭[\s\S]*파생 상태 이펙트[\s\S]*렌더 계산 전환은 대상이 아닙니다/i,
 	);
 
 	const curriedHandler = await readRule("react", "events-curry-extra-handler-arguments");
@@ -3585,7 +3585,7 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	assertMentions(
 		koreanComments,
 		[
-			/주석은 한국어로 목적 · 제약 · 부수효과를 설명합니다/i,
+			/주석은 한국어로 목적, 제약, 부수효과를 설명합니다/i,
 			/본문 전체가 영어인 주석은 허용하지 않습니다/i,
 			/헤더가 영어뿐이면 필드 주석이 한국어여도 요구를 충족하지 못합니다/i,
 		],
@@ -3662,7 +3662,7 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	assertMentions(
 		koreanComments,
 		[
-			/주석은 한국어로 목적 · 제약 · 부수효과를 설명합니다/i,
+			/주석은 한국어로 목적, 제약, 부수효과를 설명합니다/i,
 			/본문 전체가 영어인 주석은 허용하지 않습니다/i,
 			/헤더가 영어뿐이면 필드 주석이 한국어여도 요구를 충족하지 못합니다/i,
 		],
@@ -3834,7 +3834,7 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	);
 	assertMentions(
 		generatedContracts[1],
-		[/본문 전체가 영어인 주석은 허용하지 않습니다/i, /주석은 한국어로 목적 · 제약 · 부수효과를 설명합니다/i],
+		[/본문 전체가 영어인 주석은 허용하지 않습니다/i, /주석은 한국어로 목적, 제약, 부수효과를 설명합니다/i],
 		"generatedContracts",
 	);
 	assert.match(generatedContracts[2], /pseudo-class[\s\S]*조상 블록에서 식별자가 같은 자손을 결합자 하나로 선택합니다/i);
