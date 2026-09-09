@@ -1110,9 +1110,60 @@ document.dispatchEvent(new Event("flow-ready"));
 		const f = (n) => n.toFixed(1);
 		let path = "", arcs = "", tris = "", marks = "", texts = "";
 
+		const isText = (chr) => chr !== undefined && chr !== " " && chr !== ZW && LINES[chr] === undefined && ARROWS[chr] === undefined && chr !== "◇";
+		const center = (c) => c * cw + cw / 2;
+		const textWidth = (chars) => chars.reduce((w, chr) => w + (WIDE.test(chr) ? fs : cw), 0);
+
 		rows.forEach((row, r) => {
 			const cy = r * ch + ch / 2, y0 = r * ch, y1 = y0 + ch;
 			let run = null;
+			// 가로선 위 라벨(── 예 ──►). 렌더러는 라벨을 한 칸으로 보고 놓으므로 전각 라벨이 한 칸 밀린다.
+			// 선 구간(벽 가운데 ~ 화살촉 끝)의 정확한 가운데에 라벨을 놓고, 선은 라벨 폭만큼 비워 다시 그린다.
+			const skip = new Set();
+			for (let c = 0; c < row.length; c++) {
+				if (!isText(row[c]) || skip.has(c)) continue;
+				let e = c;
+				while (e < row.length && (isText(row[e]) || row[e] === ZW || (row[e] === " " && isText(row[e + 1])))) e++;
+				let l = c - 1, rr = e;
+				while (l >= 0 && row[l] === " ") l--;
+				while (rr < row.length && row[rr] === " ") rr++;
+				const onLine = (row[l] === "─" || row[l] === "├") && (row[rr] === "─" || ARROWS[row[rr]] !== undefined || row[rr] === "┤");
+				if (!onLine) { c = e - 1; continue; }
+				let L = l;
+				while (L - 1 >= 0 && row[L - 1] === "─") L--;
+				// 출발점 ├ 앞의 빈칸(렌더러의 가로 여백)을 건너 벽 선의 가운데까지가 구간의 시작이다.
+				let segStart = L * cw, drawStart = L * cw;
+				if (row[L] === "├" || row[L - 1] === "├") {
+					const j = row[L] === "├" ? L : L - 1;
+					let k = j - 1;
+					while (k >= 0 && row[k] === " ") k--;
+					segStart = isWall(row[k]) ? center(k) : center(j);
+					drawStart = segStart;
+					for (let m = j; m < L; m++) skip.add(m);
+				} else if (LINES[row[L - 1]] !== undefined || isWall(row[L - 1])) {
+					segStart = center(L - 1);
+				}
+				let R = rr;
+				while (R + 1 < row.length && row[R + 1] === "─") R++;
+				let segEnd = (R + 1) * cw, drawEnd = (R + 1) * cw;
+				if (ARROWS[row[R]] !== undefined) {
+					drawEnd = R * cw;
+					segEnd = isWall(row[R + 1]) ? center(R + 1) : center(R) + cw * 0.45;
+					R--;
+				} else if (ARROWS[row[R + 1]] !== undefined) {
+					drawEnd = (R + 1) * cw;
+					segEnd = isWall(row[R + 2]) ? center(R + 2) : center(R + 1) + cw * 0.45;
+				} else if (LINES[row[R + 1]] !== undefined || isWall(row[R + 1])) {
+					segEnd = center(R + 1);
+				}
+				const chars = row.slice(c, e).split("").filter((chr) => chr !== ZW);
+				const mid = (segStart + segEnd) / 2, half = textWidth(chars) / 2 + 5;
+				path += "M" + f(drawStart) + " " + f(cy) + "H" + f(mid - half) + " ";
+				path += "M" + f(mid + half) + " " + f(cy) + "H" + f(drawEnd) + " ";
+				texts += '<text x="' + f(mid) + '" y="' + f(cy + fs * 0.35) + '">' + esc(chars.join("")) + "</text>";
+				for (let k = L; k <= R; k++) skip.add(k);
+				c = e - 1;
+			}
 			// 영문만 있는 묶음은 칸마다 놓아 격자 느낌을 지키고, 한글이 섞인 묶음은 예약한 칸 가운데에 한 덩어리로 놓아 자간을 살린다.
 			// 상자 안 글자는 좌우 테두리 사이의 정확한 가운데에 한 덩어리로 놓는다. 격자 렌더러는 칸 수로 맞춰 반 칸씩 어긋난다.
 			// 선 위 라벨처럼 테두리가 없으면, 한글이 섞인 묶음은 예약 칸 가운데에, 영문 묶음은 칸마다 놓는다.
@@ -1131,8 +1182,8 @@ document.dispatchEvent(new Event("flow-ready"));
 				while (bottom < rows.length && !isHBorder((rows[bottom] || "")[col])) bottom++;
 				let labelRows = 0;
 				for (let k = top + 1; k < bottom; k++) {
-					const inner = (rows[k] || "").slice(box[0] + 1, box[1]);
-					if (/[^s​]/.test(inner)) labelRows++;
+					const inner = (rows[k] || "").slice(box[0] + 1, box[1]).split(ZW).join("").trim();
+					if (inner.length > 0) labelRows++;
 				}
 				return (bottom - top - 1 - labelRows) % 2 === 1 ? -ch / 2 : 0;
 			};
@@ -1149,6 +1200,7 @@ document.dispatchEvent(new Event("flow-ready"));
 				const chr = row[c];
 				const cx = c * cw + cw / 2, x0 = c * cw, x1 = x0 + cw;
 
+				if (skip.has(c)) { flush(); continue; }
 				if (chr === ZW) { if (run) run.end = c + 1; continue; }
 
 				// 라벨 안의 한 칸 띄어쓰기는 묶음에 넣어 한 줄을 한 덩어리로 놓는다. 빈칸이 이어지면 묶음이 끝난 것이다.
