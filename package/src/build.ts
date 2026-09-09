@@ -358,7 +358,7 @@ export const generateMarkdown = (args: GenerateMarkdownArgs): string => {
 					routingMetadata.push(
 						`**Requires selected:** ${getCanonicalRoutingTargets(rule.requiresSelected)
 							.map((target) => `\`${escapeMarkdownText(target)}\``)
-							.join(", ")} · 함께 적용`,
+							.join(", ")} (함께 적용)`,
 					);
 				}
 

@@ -4,9 +4,9 @@ titleKo: 레이아웃의 기준과 역할을 클래스명과 선언에 드러냅
 impact: MEDIUM
 impactDescription: 조상 DOM을 찾아보지 않고 `sticky`, `fixed`의 기준과 각 요소의 배치 역할을 파악합니다
 appliesWhen:
-  - `sticky` · `fixed`, `z-index`, 부모 · 자식 레이아웃 책임을 추가 · 변경할 때
+  - `sticky`, `fixed`, `z-index`, 부모, 자식 레이아웃 책임을 추가, 변경할 때
   - 로딩 대체 화면의 컨테이너나 높이를 정할 때
-  - 제외: 같은 요소를 기본과 수정자로 나누면서 기존 `display` · 여백 선언을 값 그대로 옮기는 경우
+  - 제외: 같은 요소를 기본과 수정자로 나누면서 기존 `display`, 여백 선언을 값 그대로 옮기는 경우
 reviewWith: values-declare-stacking-layers-as-tokens
 tags: layout, comments, sticky
 ---

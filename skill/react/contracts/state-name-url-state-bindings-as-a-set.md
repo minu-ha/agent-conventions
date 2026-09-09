@@ -16,7 +16,7 @@
 파일명, 심볼 표기는 `typescript/naming-use-consistent-file-and-symbol-naming`을 따릅니다.
 값을 주소에 둘지는 `state-choose-state-tools-by-source-of-truth`로 판단합니다.
 
-**Requires selected:** `typescript/naming-place-owner-constants-in-the-owner-constant-folder` · 함께 적용
+**Requires selected:** `typescript/naming-place-owner-constants-in-the-owner-constant-folder` (함께 적용)
 
 **Incorrect 1 (파서 묶음의 역할이 이름에 드러나지 않습니다):**
 
@@ -41,4 +41,4 @@ export const productUrlParsers = {
 };
 ```
 
-> 나머지 예시 · 예외는 [full rule](../rules/08-06-state-name-url-state-bindings-as-a-set.md)에 있습니다.
+> 나머지 예시와 예외는 [full rule](../rules/08-06-state-name-url-state-bindings-as-a-set.md)에 있습니다.

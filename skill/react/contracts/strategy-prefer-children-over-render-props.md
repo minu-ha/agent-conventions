@@ -10,8 +10,8 @@
 
 ```mermaid
 flowchart LR
-	q1{"부모가 항목 · 순번 · 상태 같은<br>실행 문맥을 자식에게 넘기는가?"} -- 아니요 --> r1("children 과<br>네임스페이스 슬롯 부품")
-	q1 -- 예 --> r2("renderHeader · renderFooter<br>같은 렌더 프롭")
+	q1{"부모가 항목, 순번, 상태 같은<br>실행 문맥을 자식에게 넘기는가?"} -- 아니요 --> r1("children 과<br>네임스페이스 슬롯 부품")
+	q1 -- 예 --> r2("renderHeader, renderFooter<br>같은 렌더 프롭")
 ```
 
 ### 슬롯 계약 이름
@@ -59,4 +59,4 @@ export const UiPanelRoot = (props: UiPanelPartProps) => {
 };
 ```
 
-> 나머지 예시 · 예외는 [full rule](../rules/04-04-strategy-prefer-children-over-render-props.md)에 있습니다.
+> 나머지 예시와 예외는 [full rule](../rules/04-04-strategy-prefer-children-over-render-props.md)에 있습니다.

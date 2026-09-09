@@ -4,7 +4,7 @@ titleKo: 프롭스는 구조분해하지 않고 `props`로 읽습니다
 impact: HIGH
 impactDescription: 값이 프롭스에서 왔다는 사실이 쓰는 자리마다 그대로 남습니다
 appliesWhen:
-  - 함수 컴포넌트의 시그니처나 본문에서 프롭스를 읽는 코드를 추가 · 변경할 때
+  - 함수 컴포넌트의 시그니처나 본문에서 프롭스를 읽는 코드를 추가, 변경할 때
   - 컴포넌트 안에서 `props`를 구조분해하는 줄을 넣거나 뺄 때
 reviewWith: >-
   screen-keep-derived-values-close, data-preserve-origin-chaining,

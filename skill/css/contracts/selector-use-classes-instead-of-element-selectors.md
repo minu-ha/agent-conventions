@@ -69,4 +69,4 @@ flowchart LR
 </div>
 ```
 
-> 나머지 예시 · 예외는 [full rule](../rules/04-02-selector-use-classes-instead-of-element-selectors.md)에 있습니다.
+> 나머지 예시와 예외는 [full rule](../rules/04-02-selector-use-classes-instead-of-element-selectors.md)에 있습니다.

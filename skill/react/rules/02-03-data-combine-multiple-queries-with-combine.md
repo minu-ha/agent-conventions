@@ -4,7 +4,7 @@ titleKo: 여러 쿼리를 합칠 때는 `combine`을 씁니다
 impact: MEDIUM
 impactDescription: 여러 응답의 가공 위치를 통일하고 화면 본문의 별칭을 줄입니다
 appliesWhen:
-  - 쿼리 결과 둘 이상을 하나의 값으로 합치는 코드를 추가 · 변경할 때
+  - 쿼리 결과 둘 이상을 하나의 값으로 합치는 코드를 추가, 변경할 때
   - 화면 본문에서 두 `data`를 꺼내 함께 계산하는 코드를 넣거나 뺄 때
   - 여러 쿼리의 병렬 실행과 앞 응답에 의존하는 순차 실행을 바꿀 때
 reviewWith: data-shape-query-data-with-select, screen-keep-derived-values-close
@@ -32,7 +32,7 @@ flowchart LR
 | 상황 | 선택 |
 | --- | --- |
 | Suspense 쿼리 결과를 합침 | `useSuspenseQueries` + `combine`. `isPending`을 만들어 내보내지 않습니다 |
-| 일반 쿼리 결과를 합침 | `useQueries` + `combine`. 실제 대기 · 실패 상태도 함께 다룹니다 |
+| 일반 쿼리 결과를 합침 | `useQueries` + `combine`. 실제 대기, 실패 상태도 함께 다룹니다 |
 | 결과를 각각 렌더함 | 합친 값을 만들지 않습니다. Suspense 병렬 실행이 필요하면 `useSuspenseQueries`에서 결과를 따로 읽습니다 |
 | 일반 쿼리의 뒤 요청이 앞 결과를 입력으로 받음 | `enabled`로 입력이 준비된 뒤 실행합니다 |
 | Suspense 쿼리의 뒤 요청이 앞 결과를 입력으로 받음 | 같은 컴포넌트에서 `useSuspenseQuery`를 순서대로 호출합니다 |

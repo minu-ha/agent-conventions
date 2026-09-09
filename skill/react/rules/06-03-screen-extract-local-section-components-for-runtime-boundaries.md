@@ -18,10 +18,10 @@ tags: screen, routes
 
 | 책임 | 예 |
 | --- | --- |
-| 비동기 | `Suspense` · 스켈레톤 · 로딩 · 오류 · 빈 상태 |
-| 상태와 프로바이더 | 지역 상태 · 이펙트 동기화 · 폼 프로바이더 · 컨텍스트 · 범위를 좁힌 스토어 |
-| 상호작용 | 팝오버 · 모달 · 선택 · 인라인 편집 · 드래그 · 펼치는 트리 |
-| 라이브러리와 성능 | 외부 라이브러리 생명주기 어댑터 · 가상 스크롤 · 전환 · 지연 값 |
+| 비동기 | `Suspense`, 스켈레톤, 로딩, 오류, 빈 상태 |
+| 상태와 프로바이더 | 지역 상태, 이펙트 동기화, 폼 프로바이더, 컨텍스트, 범위를 좁힌 스토어 |
+| 상호작용 | 팝오버, 모달, 선택, 인라인 편집, 드래그, 펼치는 트리 |
+| 라이브러리와 성능 | 외부 라이브러리 생명주기 어댑터, 가상 스크롤, 전환, 지연 값 |
 
 화면 흐름 제어는 `screen-keep-route-flow-visible`에 따라 라우트 진입에 남깁니다.
 추출한 파일의 배치는 `ownership-place-owner-files-in-role-folders`를 따릅니다.
@@ -36,7 +36,7 @@ export const PgProductSidebarPanel = (props: PgProductSidebarPanelProps) => {
 };
 ```
 
-**Correct 1 (데이터 · 상태 · 상호작용을 소유한 섹션만 추출하고 자신의 쿼리 키로 읽습니다):**
+**Correct 1 (데이터, 상태, 상호작용을 소유한 섹션만 추출하고 자신의 쿼리 키로 읽습니다):**
 
 ```tsx
 // page/products/_pg-product-tree-section.tsx

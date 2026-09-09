@@ -10,23 +10,23 @@ metadata:
 
 ## 1. 변경 범위 판정
 
-요청 · 계획 · diff에서 아래를 가른다.
+요청, 계획, diff에서 아래를 가른다.
 
 **범위에 드는 것**
 
-- render · screen · 소유자/route-local 배치 · handler · state · query · React support code의 실제 변경
-- 추가 · 삭제 · 이동 · 이름 변경 · 재선언. 특히 소유자/route-local 이동 자체는 변경이다
+- render, screen, 소유자/route-local 배치, handler, state, query, React support code의 실제 변경
+- 추가, 삭제, 이동, 이름 변경, 재선언. 특히 소유자/route-local 이동 자체는 변경이다
 
 **범위에 들지 않는 것**
 
 - read-only 문맥
-- 소유자 이동에 그대로 딸려온 내부 선언 · 본문 · import · class/style
+- 소유자 이동에 그대로 딸려온 내부 선언, 본문, import, class/style
 - 위 이동은 diff에 삭제+추가로 보여도 변경으로 다시 세지 않는다
 
 적용되지 않는 규칙의 optional pattern을 새로 들여와 스스로 범위를 넓히지 않는다.
 
 `convention-typescript`는 항상 함께 활성화한다.
-class contract · stylesheet · styling surface가 바뀔 때만 `convention-css`를 추가하고, 아니면 켜지 않는다.
+class contract, stylesheet, styling surface가 바뀔 때만 `convention-css`를 추가하고, 아니면 켜지 않는다.
 
 ## 2. 인덱스 훑기
 
@@ -45,7 +45,7 @@ class contract · stylesheet · styling surface가 바뀔 때만 `convention-css
 | --- | --- |
 | `CRITICAL` | `rules/NN-MM-<id>.md` 원문을 설명과 예제까지 전부 읽는다. 마무리 전에 결과 코드를 원문의 `Correct` 예제와 다시 대조한다 |
 | `HIGH` | 원문을 설명과 예제까지 전부 읽는다 |
-| `MEDIUM` | contract에 실린 규범과 첫 `Incorrect` · `Correct` 짝을 읽는다. 판단이 모호하면 원문을 읽는다 |
+| `MEDIUM` | contract에 실린 규범과 첫 `Incorrect`, `Correct` 짝을 읽는다. 판단이 모호하면 원문을 읽는다 |
 
 정확한 원문 경로는 contract의 full rule 링크가 가리킨다.
 
@@ -67,7 +67,7 @@ conditional companion도 다시 판정한다.
 ## 5. 마무리
 
 변경 diff를 적용한 규칙에 비춰 다시 훑고, 위반이 있으면 file/line과 수정안으로 보고한다.
-lint · typecheck · build · 테스트 통과는 컨벤션을 지켰다는 근거가 아니다.
+lint, typecheck, build, 테스트 통과는 컨벤션을 지켰다는 근거가 아니다.
 
 [HANDBOOK.md](./HANDBOOK.md)는 전체 handbook이다.
-전체 검토를 명시적으로 요청받거나 index · contract가 손상됐을 때만 읽는다.
+전체 검토를 명시적으로 요청받거나 index, contract가 손상됐을 때만 읽는다.

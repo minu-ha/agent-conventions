@@ -4,7 +4,7 @@ titleKo: CSS 파일마다 고유한 범위_식별자를 하나씩 씁니다
 impact: CRITICAL
 impactDescription: 파일마다 네임스페이스를 구분해 전역 클래스 충돌을 막습니다
 appliesWhen:
-  - 새 식별자를 만들거나 기존 식별자를 복사 · 이름 변경할 때
+  - 새 식별자를 만들거나 기존 식별자를 복사, 이름 변경할 때
   - 부품에 CSS 파일을 새로 만들면서 부모 식별자를 그대로 쓸 때
 tags: namespace, ownership, uniqueness
 ---

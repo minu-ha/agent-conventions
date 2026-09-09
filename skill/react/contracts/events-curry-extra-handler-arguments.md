@@ -26,7 +26,7 @@ flowchart LR
 
 안쪽 핸들러에 이름을 붙이면 팩토리 이름을 반복하고 같은 반환 타입도 두 번 적게 됩니다.
 
-**Requires selected:** `typing-take-handler-types-from-existing-contracts` · 함께 적용
+**Requires selected:** `typing-take-handler-types-from-existing-contracts` (함께 적용)
 
 **Incorrect 1 (인라인 래퍼로 인자를 넘깁니다):**
 
@@ -40,4 +40,4 @@ flowchart LR
 <UiButton onClick={handleListItemClick(product.id)}>{product.name}</UiButton>;
 ```
 
-> 나머지 예시 · 예외는 [full rule](../rules/09-02-events-curry-extra-handler-arguments.md)에 있습니다.
+> 나머지 예시와 예외는 [full rule](../rules/09-02-events-curry-extra-handler-arguments.md)에 있습니다.

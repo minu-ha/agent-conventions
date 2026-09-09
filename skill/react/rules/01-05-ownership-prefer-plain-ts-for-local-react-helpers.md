@@ -2,12 +2,12 @@
 title: Do Not Create Screen-local Custom Hooks for Pure Logic
 titleKo: 순수 계산을 감싸는 화면 전용 훅을 만들지 않습니다
 impact: HIGH
-impactDescription: 실제 상태 · 생명주기 · 컨텍스트가 필요한 경우에만 리액트 훅을 사용합니다
+impactDescription: 실제 상태, 생명주기, 컨텍스트가 필요한 경우에만 리액트 훅을 사용합니다
 appliesWhen:
-  - 화면 전용 계산 · 정규화 · 전송 값 조립을 커스텀 훅으로 추출하려 할 때
+  - 화면 전용 계산, 정규화, 전송 값 조립을 커스텀 훅으로 추출하려 할 때
   - 화면 전용 순수 로직을 별도 보조 모듈로 옮기려 할 때
   - 화면 지역 함수에 `use` 접두사를 붙이거나 커스텀 훅 이름을 바꿀 때
-  - 제외: 상태 · 컨텍스트 · 다른 훅 호출 순서를 실제로 캡슐화하는 경우
+  - 제외: 상태, 컨텍스트, 다른 훅 호출 순서를 실제로 캡슐화하는 경우
 reviewWith: >-
   typescript/functions-extract-helpers-only-when-the-boundary-is-real, ownership-place-owner-files-in-role-folders,
   ownership-keep-lifecycle-in-the-owning-component, typescript/naming-use-direct-imports-and-public-entry-points
@@ -16,7 +16,7 @@ tags: ownership, hooks, widget
 
 ## Do Not Create Screen-local Custom Hooks for Pure Logic
 
-**Impact: HIGH (실제 상태 · 생명주기 · 컨텍스트가 필요한 경우에만 리액트 훅을 사용합니다)**
+**Impact: HIGH (실제 상태, 생명주기, 컨텍스트가 필요한 경우에만 리액트 훅을 사용합니다)**
 
 화면 전용 계산, 정규화, 전송 값 조립처럼 순수한 로직은 커스텀 훅으로 감싸지 않습니다.
 
@@ -24,7 +24,7 @@ tags: ownership, hooks, widget
 
 ```mermaid
 flowchart LR
-	q1{"상태 · 컨텍스트 · 훅 호출 순서를<br>실제로 캡슐화하는가?"} -- 아니요 --> r1("_function 의 순수 함수")
+	q1{"상태, 컨텍스트, 훅 호출 순서를<br>실제로 캡슐화하는가?"} -- 아니요 --> r1("_function 의 순수 함수")
 	q1 -- 예 --> r2("커스텀 훅")
 ```
 

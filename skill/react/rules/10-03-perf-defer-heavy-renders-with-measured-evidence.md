@@ -4,7 +4,7 @@ titleKo: 측정한 근거가 있을 때만 무거운 렌더를 미룹니다
 impact: MEDIUM
 impactDescription: 측정한 렌더 병목에만 트랜지션과 지연 값을 적용합니다
 appliesWhen:
-  - `startTransition` · `useTransition` · `useDeferredValue`를 추가 · 삭제할 때
+  - `startTransition`, `useTransition`, `useDeferredValue`를 추가, 삭제할 때
   - 목록이나 표가 커져 입력 반응이 늦다는 보고를 받았을 때
 reviewWith: perf-avoid-defensive-memoization
 tags: perf, state
@@ -32,7 +32,7 @@ flowchart LR
 | --- | --- |
 | 직접 호출하는 상태 갱신이 무거운 렌더를 일으킴 | `startTransition`으로 호출을 감쌉니다. 프롭으로 받은 갱신 함수도 같습니다 |
 | 값은 즉시 반응해야 하지만 파생 렌더는 미룰 수 있음 | `useDeferredValue`로 지연 값을 만듭니다 |
-| 갱신 함수를 호출할 수 없고 프롭 · 훅 반환값만 받음 | `useDeferredValue`를 씁니다 |
+| 갱신 함수를 호출할 수 없고 프롭, 훅 반환값만 받음 | `useDeferredValue`를 씁니다 |
 | 트랜지션 진행 표시가 필요함 | 대기 상태를 주지 않는 `startTransition` 대신 `useTransition`의 `isPending`을 씁니다 |
 
 입력값 자체, 폼 오류, 즉시 비활성화 같은 급한 반응은 트랜지션에 넣지 않습니다.
@@ -43,7 +43,7 @@ flowchart LR
 | 무거운 작업 | 최적화 조건 |
 | --- | --- |
 | 하위 트리 렌더 | 같은 프롭이면 렌더를 건너뛸 수 있어야 합니다. 컴파일러가 이를 제공하지 않으면 지연 값을 받는 컴포넌트를 `memo`로 감쌉니다 |
-| 함께 전달하는 객체 · 콜백 | 매번 달라지면 `memo`가 있어도 다시 렌더되므로 참조를 확인합니다 |
+| 함께 전달하는 객체, 콜백 | 매번 달라지면 `memo`가 있어도 다시 렌더되므로 참조를 확인합니다 |
 | 지연 값에서 파생되는 계산 | 컴포넌트 `memo` 대신 `useMemo`로 지연 값이 바뀔 때만 재계산합니다. 측정 근거를 주석으로 남깁니다 |
 
 지연 값 기준 재계산은 `perf-avoid-defensive-memoization`의 허용 사유에 해당합니다.

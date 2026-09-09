@@ -4,7 +4,7 @@ titleKo: `<>` 단축 문법 대신 `Fragment`를 그대로 씁니다
 impact: MEDIUM
 impactDescription: Fragment를 검색하고 변경 내역에서 식별하기 쉽습니다
 appliesWhen:
-  - JSX에서 여러 요소를 `Fragment`나 `<>`로 감싸는 문법을 추가 · 변경할 때
+  - JSX에서 여러 요소를 `Fragment`나 `<>`로 감싸는 문법을 추가, 변경할 때
   - `Fragment`에 `key`를 붙이거나 떼어 낼 때
 tags: composition, jsx
 ---

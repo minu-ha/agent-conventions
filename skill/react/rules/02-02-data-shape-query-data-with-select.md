@@ -4,8 +4,8 @@ titleKo: 응답 가공은 `query.select`에서 합니다
 impact: HIGH
 impactDescription: 응답 가공을 쿼리에 모아 화면이 원본 구조에 의존하지 않게 합니다
 appliesWhen:
-  - 서버 응답의 목록 · 항목 · 메타 등을 렌더에서 가공하거나 반복 소비할 때
-  - React Query `select`의 결과 형태를 추가 · 변경할 때
+  - 서버 응답의 목록, 항목, 메타 등을 렌더에서 가공하거나 반복 소비할 때
+  - React Query `select`의 결과 형태를 추가, 변경할 때
   - 제외: 이미 가공한 항목을 `.map`으로 JSX 요소에 대응시키기만 하는 경우
 requiresSelected: docs-require-jsdoc-on-key-declarations
 reviewWith: data-name-query-and-mutation-bindings-consistently, data-preserve-origin-chaining
@@ -20,7 +20,7 @@ tags: data, state, react-query
 
 | 작업 | 처리 위치 |
 | --- | --- |
-| `.map`, `.filter` · 필드 이름 변경 등 응답 가공 | `query.select` |
+| `.map`, `.filter`, 필드 이름 변경 등 응답 가공 | `query.select` |
 | 가공한 항목을 `.map`으로 JSX에 대응시키기 | 화면 렌더. JSX 요소와 클릭 핸들러를 `select` 결과에 넣지 않습니다 |
 | 여러 쿼리 결과를 함께 가공 | `data-combine-multiple-queries-with-combine`. `select`는 자기 쿼리 데이터만 받습니다 |
 

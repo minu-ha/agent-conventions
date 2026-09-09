@@ -9,9 +9,9 @@
 | --- | --- |
 | 리액트 19.2 이상 | 비반응형 콜백에 `ref` 우회 대신 `useEffectEvent`를 씁니다 |
 | 리액트 19.2 미만 | 의존성에 따른 재구독을 먼저 검토하고, 최신 콜백만 바꿔야 할 때 `ref` 동기화를 검토합니다 |
-| 클릭 · 제출 등 사용자 액션 | 이름 붙인 핸들러에 둡니다. 이펙트로 옮기지 않습니다 |
+| 클릭, 제출 등 사용자 액션 | 이름 붙인 핸들러에 둡니다. 이펙트로 옮기지 않습니다 |
 | Effect Event 호출 | 같은 컴포넌트의 이펙트나 다른 Effect Event 안에서만 호출합니다 |
-| Effect Event 전달 | 다른 컴포넌트 · 훅 · JSX 이벤트 프롭에 넘기지 않습니다 |
+| Effect Event 전달 | 다른 컴포넌트, 훅, JSX 이벤트 프롭에 넘기지 않습니다 |
 
 반환 함수는 참조 동일성을 보장하지 않으며 이펙트 의존성에 넣지 않습니다.
 DOM 이벤트 매개변수나 커링을 덧붙이지 않고,
@@ -62,4 +62,4 @@ useEffect(() => {
 }, [props.productId]);
 ```
 
-> 나머지 예시 · 예외는 [full rule](../rules/08-05-state-use-effectevent-for-non-reactive-effect-callbacks.md)에 있습니다.
+> 나머지 예시와 예외는 [full rule](../rules/08-05-state-use-effectevent-for-non-reactive-effect-callbacks.md)에 있습니다.

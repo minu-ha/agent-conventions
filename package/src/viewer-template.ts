@@ -1166,9 +1166,15 @@ const viewerClientScript = `(() => {
 				}
 				const chars = row.slice(c, e).split("").filter((chr) => chr !== ZW);
 				const mid = (segStart + segEnd) / 2, half = textWidth(chars) / 2 + 5;
-				path += "M" + f(drawStart) + " " + f(cy) + "H" + f(mid - half) + " ";
-				path += "M" + f(mid + half) + " " + f(cy) + "H" + f(drawEnd) + " ";
-				texts += '<text x="' + f(mid) + '" y="' + f(cy + fs * 0.35) + '">' + esc(chars.join("")) + "</text>";
+				// 구간이 좁아 라벨 양쪽에 선이 두 칸 반씩 남지 않으면, 선을 끊지 않고 라벨을 선 바로 위에 놓는다.
+				if (segEnd - segStart < half * 2 + cw * 5) {
+					path += "M" + f(drawStart) + " " + f(cy) + "H" + f(drawEnd) + " ";
+					texts += '<text x="' + f(mid) + '" y="' + f(cy - 4) + '">' + esc(chars.join("")) + "</text>";
+				} else {
+					path += "M" + f(drawStart) + " " + f(cy) + "H" + f(mid - half) + " ";
+					path += "M" + f(mid + half) + " " + f(cy) + "H" + f(drawEnd) + " ";
+					texts += '<text x="' + f(mid) + '" y="' + f(cy + fs * 0.35) + '">' + esc(chars.join("")) + "</text>";
+				}
 				for (let k = L; k <= R; k++) skip.add(k);
 				c = e - 1;
 			}

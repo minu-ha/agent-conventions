@@ -8,7 +8,7 @@
 
 ```mermaid
 flowchart LR
-	q1{"여러 파일에서<br>쓰는 값인가?"} -- 아니요 --> q2{"테마 색 · 그림자 ·<br>z-index · 움직임 값인가?"} -- 아니요 --> q3{"실행 중에만<br>계산하는 수치인가?"} -- 아니요 --> r4("선언 자리에 값 그대로")
+	q1{"여러 파일에서<br>쓰는 값인가?"} -- 아니요 --> q2{"테마 색, 그림자 ·<br>z-index, 움직임 값인가?"} -- 아니요 --> q3{"실행 중에만<br>계산하는 수치인가?"} -- 아니요 --> r4("선언 자리에 값 그대로")
 	q1 -- 예 --> r1("전역 공통 토큰")
 	q2 -- 예 --> r2("전역 공통 토큰")
 	q3 -- 예 --> r3("지역 변수 하나를<br>TSX에서 전달")
@@ -56,4 +56,4 @@ flowchart LR
 }
 ```
 
-> 나머지 예시 · 예외는 [full rule](../rules/05-02-values-tokenize-repeated-visual-values.md)에 있습니다.
+> 나머지 예시와 예외는 [full rule](../rules/05-02-values-tokenize-repeated-visual-values.md)에 있습니다.

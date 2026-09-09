@@ -1,12 +1,12 @@
 ---
 title: Do Not Memoize Without a Confirmed Reason
-titleKo: 확인한 이유가 없으면 `useMemo` · `useCallback` · `memo`를 쓰지 않습니다
+titleKo: 확인한 이유가 없으면 `useMemo`, `useCallback`, `memo`를 쓰지 않습니다
 impact: HIGH
 impactDescription: 효과를 확인하지 않은 방어적 `useMemo`, `useCallback`, `memo`를 막습니다
 appliesWhen:
-  - `useMemo` · `useCallback`을 추가하거나 제거할 때
+  - `useMemo`, `useCallback`을 추가하거나 제거할 때
   - `memo`로 컴포넌트를 감싸거나 벗길 때
-  - 참조 동일성 · 실측 병목 · 무거운 지연 계산을 이유로 수동 메모이제이션을 검토할 때
+  - 참조 동일성, 실측 병목, 무거운 지연 계산을 이유로 수동 메모이제이션을 검토할 때
 reviewWith: perf-defer-heavy-renders-with-measured-evidence
 tags: perf, state
 ---
@@ -23,7 +23,7 @@ tags: perf, state
 | 허용 근거 | 확인할 내용 |
 | --- | --- |
 | 외부 라이브러리의 참조 계약 | 참조 변경이 상태 초기화나 구독 재설치로 이어짐 |
-| 불필요한 이펙트 재구독 | 객체 · 배열이 이펙트 밖에서도 필요하고, 재구독이 확인됐고 의존성을 더 줄일 수 없음 |
+| 불필요한 이펙트 재구독 | 객체, 배열이 이펙트 밖에서도 필요하고, 재구독이 확인됐고 의존성을 더 줄일 수 없음 |
 | 실측 병목 | 계산이나 렌더 비용을 실제로 측정했음 |
 | 지연 값을 받는 하위 트리 | `perf-defer-heavy-renders-with-measured-evidence`가 `memo`를 요구함 |
 

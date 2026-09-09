@@ -27,7 +27,7 @@ const wideCharacter = /[ᄀ-ᇿ　-〿㄰-㆏가-힯一-鿿぀-ヿ＀-｠]/g;
 const widenCjk = (source: string): string => source.replace(wideCharacter, (character) => `${character}​`);
 
 /**
- * @api 모든 규칙의 mermaid 펜스를 문자 격자로 그려 폭 · 높이 · 오류를 모은다
+ * @api 모든 규칙의 mermaid 펜스를 문자 격자로 그려 폭, 높이, 오류를 모은다
  */
 export const checkDiagrams = async (): Promise<DiagramReport[]> => {
 	const reports: DiagramReport[] = [];

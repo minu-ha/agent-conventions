@@ -25,7 +25,7 @@
 ## 4. Composition Strategy (strategy)
 **TitleKo:** 조립 전략
 **Impact:** MEDIUM
-**Description:** 공용 컴포넌트는 단일 · 합성 · 명시적 변형 중 구조를 먼저 고르고 공개할 부품을 정합니다.
+**Description:** 공용 컴포넌트는 단일, 합성, 명시적 변형 중 구조를 먼저 고르고 공개할 부품을 정합니다.
 불리언 프롭으로 모드를 늘리지 않고, 정적 조립에는 렌더 프롭 대신 `children`을 씁니다.
 
 ## 5. Component Structure and JSX (composition)

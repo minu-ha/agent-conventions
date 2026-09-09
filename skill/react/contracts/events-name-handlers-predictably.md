@@ -35,7 +35,7 @@ const onClick2: MouseEventHandler<HTMLButtonElement> = (event) => {
 };
 ```
 
-**Correct 1 (`handle` 접두사와 대상 · 이벤트가 드러나는 이름을 씁니다):**
+**Correct 1 (`handle` 접두사와 대상, 이벤트가 드러나는 이름을 씁니다):**
 
 ```ts
 import type {MouseEventHandler} from "react";
@@ -55,4 +55,4 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (event) => {
 };
 ```
 
-> 나머지 예시 · 예외는 [full rule](../rules/09-01-events-name-handlers-predictably.md)에 있습니다.
+> 나머지 예시와 예외는 [full rule](../rules/09-01-events-name-handlers-predictably.md)에 있습니다.

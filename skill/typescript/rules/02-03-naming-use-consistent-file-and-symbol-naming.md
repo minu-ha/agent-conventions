@@ -4,7 +4,7 @@ titleKo: 파일과 심볼은 역할에 맞는 표기를 씁니다
 impact: HIGH
 impactDescription: 파일과 심볼의 표기가 역할을 드러내 읽는 사람이 종류를 바로 압니다
 appliesWhen:
-  - TypeScript 파일, 폴더, 변수, 함수, 타입, 객체 · 스키마 키의 이름을 새로 만들거나 바꿀 때
+  - TypeScript 파일, 폴더, 변수, 함수, 타입, 객체, 스키마 키의 이름을 새로 만들거나 바꿀 때
   - 외부 계약이 정한 이름이나 키의 표기를 바꿀지 판단할 때
   - 제외: 별칭 없이 외부 패키지에서 그대로 가져오는 경우
 tags: naming, constants
@@ -23,9 +23,9 @@ tags: naming, constants
 | --- | --- |
 | 파일명 | `kebab-case` |
 | 폴더명 | `kebab-case` 단수. 프레임워크가 강제하는 이름만 예외입니다 |
-| 타입 · `interface` · 컴포넌트 | `PascalCase` |
-| 모듈 스코프 불변 데이터 상수 · 값 집합과 그 소유 하위 키 | `snake_case` |
-| 그 외 변수 · 함수 · 객체 키 · 스키마 키 · 타입 필드 | `camelCase` |
+| 타입, `interface`, 컴포넌트 | `PascalCase` |
+| 모듈 스코프 불변 데이터 상수, 값 집합과 그 소유 하위 키 | `snake_case` |
+| 그 외 변수, 함수, 객체 키, 스키마 키, 타입 필드 | `camelCase` |
 
 불변 데이터 상수는 한 번 선언해 같은 의미로 쓰는 리터럴, 기본값, 값 집합, 조회표입니다.
 객체와 배열에는 `as const`나 읽기 전용 계약을 적용하고 변경하지 않습니다.

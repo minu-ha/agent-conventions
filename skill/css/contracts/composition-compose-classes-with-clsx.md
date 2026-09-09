@@ -30,4 +30,4 @@ TSX의 `className`은 클래스가 하나여도 `clsx()`로 조합합니다.
 </button>
 ```
 
-> 나머지 예시 · 예외는 [full rule](../rules/03-01-composition-compose-classes-with-clsx.md)에 있습니다.
+> 나머지 예시와 예외는 [full rule](../rules/03-01-composition-compose-classes-with-clsx.md)에 있습니다.

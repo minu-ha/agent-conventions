@@ -36,7 +36,7 @@ flowchart LR
 | 섹션 | `Suspense` 경계와 같은 소유자 | 같은 화면의 다른 섹션 |
 
 목록 실패 후 옆 필터로 할 수 있는 일이 없다면 화면 경계로 충분합니다.
-로딩 · 오류 경계는 같은 소유자가 조립하며, 위치는 `runtime-place-suspense-boundaries-at-the-section-owner`를 따릅니다.
+로딩, 오류 경계는 같은 소유자가 조립하며, 위치는 `runtime-place-suspense-boundaries-at-the-section-owner`를 따릅니다.
 
 ### 실패 상황별 처리
 
@@ -44,8 +44,8 @@ flowchart LR
 | --- | --- |
 | Suspense 쿼리에 표시할 캐시 데이터가 없음 | 렌더 중 던진 오류를 경계가 받습니다 |
 | 기존 데이터가 있는 재조회 실패 | 기본적으로 데이터를 계속 보여 줍니다. 모든 실패를 경계로 보내야 할 때만 재조회가 끝난 뒤 명시적으로 던집니다 |
-| 일반 이벤트 핸들러 · 비동기 콜백 오류 | 경계가 자동으로 받지 않습니다. 사용자 액션은 `data-handle-mutation-failure-where-it-is-called`를 따릅니다 |
-| 트랜지션 Action 오류 · 라이브러리가 렌더에서 다시 던진 오류 | 일반 핸들러 오류와 구분합니다 |
+| 일반 이벤트 핸들러, 비동기 콜백 오류 | 경계가 자동으로 받지 않습니다. 사용자 액션은 `data-handle-mutation-failure-where-it-is-called`를 따릅니다 |
+| 트랜지션 Action 오류, 라이브러리가 렌더에서 다시 던진 오류 | 일반 핸들러 오류와 구분합니다 |
 
 본문의 실패 분기는 `runtime-avoid-ad-hoc-loading-branches`를 따릅니다.
 

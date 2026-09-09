@@ -4,8 +4,8 @@ titleKo: `index.ts` 배럴을 만들지 않고 필요한 파일에서 바로 가
 impact: MEDIUM
 impactDescription: 배럴이나 재노출 계층 없이 선언의 출처를 직접 확인할 수 있습니다
 appliesWhen:
-  - 가져오기, 내보내기, `index.ts` 배럴, 공개 진입점, 소유자 보조 모듈의 경계를 추가 · 변경할 때
-  - 같은 경로에서 값과 타입 중 무엇을 가져올지 추가 · 삭제 · 전환할 때
+  - 가져오기, 내보내기, `index.ts` 배럴, 공개 진입점, 소유자 보조 모듈의 경계를 추가, 변경할 때
+  - 같은 경로에서 값과 타입 중 무엇을 가져올지 추가, 삭제, 전환할 때
 reviewWith: naming-import-by-absolute-path
 tags: naming
 ---
@@ -26,7 +26,7 @@ tags: naming
 
 `default`는 사용처마다 이름이 달라지고 원본의 이름 변경도 반영되지 않습니다.
 경로 형식은 `naming-import-by-absolute-path`를 따릅니다.
-같은 경로라도 값 · 타입 가져오기를 바꾸면 이 규칙을 적용합니다.
+같은 경로라도 값, 타입 가져오기를 바꾸면 이 규칙을 적용합니다.
 
 **Incorrect 1 (배럴과 섞인 가져오기로 경계를 흐립니다):**
 

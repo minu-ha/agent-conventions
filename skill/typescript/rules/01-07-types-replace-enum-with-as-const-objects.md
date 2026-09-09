@@ -4,7 +4,7 @@ titleKo: `enum` 대신 `as const` 객체를 씁니다
 impact: MEDIUM
 impactDescription: 객체로 실행 값을 선언하고 같은 값에서 타입을 추출합니다
 appliesWhen:
-  - `enum`이나 타입과 실행 양쪽에서 함께 쓰는 값 집합을 추가 · 변경할 때
+  - `enum`이나 타입과 실행 양쪽에서 함께 쓰는 값 집합을 추가, 변경할 때
   - 제외: 외부 패키지가 내보낸 `enum` 값을 그대로 읽어 쓰는 경우
 requiresSelected: naming-use-consistent-file-and-symbol-naming, types-document-custom-types-and-shapes
 tags: types
@@ -23,7 +23,7 @@ tags: types
 | 외부 패키지의 `enum`을 그대로 전달함 | 외부 계약을 유지합니다 |
 | 기존 `enum`을 객체로 옮김 | 직렬화 값과 공개 타입을 보존하고 숫자 `enum`의 역방향 조회 소비처를 확인합니다 |
 | 기존 계약에 맞는 값 집합인지도 검사함 | `as const satisfies 기존계약`을 씁니다 |
-| 리터럴 추론 · 읽기 전용 속성이 필요 없음 | `as const`를 불필요하게 붙이지 않습니다 |
+| 리터럴 추론, 읽기 전용 속성이 필요 없음 | `as const`를 불필요하게 붙이지 않습니다 |
 
 객체에는 `Enum[value]` 역방향 조회가 자동으로 생기지 않습니다.
 `as const`는 실행 중 동결이나 다른 변수에서 가져온 배열의 변경까지 보장하지 않습니다.

@@ -80,7 +80,7 @@
 
 **Rule:** `T01-01` · `types-reuse-existing-contracts-before-new-types`
 
-**Applies when:** 뜻이 같은 기존 타입 · 스키마가 있는데 형태를 새로 선언 · 변경 · 파생할 때. 같은 형태를 두 번 선언했다가 넣거나 뺄 때. 제외: 맞는 후보가 없거나 소유자만 옮긴 경우. 제외: 그대로인 계약을 새 자리에서 쓰는 경우. 제외: 고칠 수 없는 형태를 그대로 쓰는 경우.
+**Applies when:** 뜻이 같은 기존 타입, 스키마가 있는데 형태를 새로 선언, 변경, 파생할 때. 같은 형태를 두 번 선언했다가 넣거나 뺄 때. 제외: 맞는 후보가 없거나 소유자만 옮긴 경우. 제외: 그대로인 계약을 새 자리에서 쓰는 경우. 제외: 고칠 수 없는 형태를 그대로 쓰는 경우.
 
 **Review with:** `types-derive-subsets-with-indexed-access`, `types-document-custom-types-and-shapes`
 
@@ -96,7 +96,7 @@
 
 ```mermaid
 flowchart LR
-	q1{"뜻과 수명이 같은<br>계약이 있는가?"} -- 예 --> q2{"단위 · 도메인<br>역할도 같은가?"} -- 예 --> q3{"필드 조건이<br>모두 같은가?"} -- 예 --> r3("그대로 참조")
+	q1{"뜻과 수명이 같은<br>계약이 있는가?"} -- 예 --> q2{"단위, 도메인<br>역할도 같은가?"} -- 예 --> q3{"필드 조건이<br>모두 같은가?"} -- 예 --> r3("그대로 참조")
 	q1 -- 아니요 --> r1("새 계약 선언")
 	q2 -- 아니요 --> r2("별도 계약")
 	q3 -- 아니요 --> r4("새 계약 선언 후<br>원본에서 파생")
@@ -105,7 +105,7 @@ flowchart LR
 | 찾은 기존 계약 | 처리 |
 | --- | --- |
 | 뜻이 같고 필드 조건도 모두 같음 | 그대로 참조합니다 |
-| 뜻은 같지만 필드 일부만 필요하거나 타입 · 선택 여부 · 읽기 전용 여부가 다름 | 새 계약을 선언하고 필드는 `types-derive-subsets-with-indexed-access`에 따라 원본에서 파생합니다 |
+| 뜻은 같지만 필드 일부만 필요하거나 타입, 선택 여부, 읽기 전용 여부가 다름 | 새 계약을 선언하고 필드는 `types-derive-subsets-with-indexed-access`에 따라 원본에서 파생합니다 |
 | 원본 입력과 정규화 결과처럼 역할이 다름 | 필드가 같아도 별도 계약을 둡니다 |
 
 ### 적용하지 않는 변경
@@ -114,10 +114,10 @@ flowchart LR
 
 | 변경 | 처리 |
 | --- | --- |
-| 소유자 이동, 이름 · 주석 변경, 그대로인 계약의 새 사용처 | 타입을 새로 만들지 않습니다. 기존 선언의 주석에 새 역할을 적을지만 `types-document-custom-types-and-shapes`로 판단합니다 |
+| 소유자 이동, 이름, 주석 변경, 그대로인 계약의 새 사용처 | 타입을 새로 만들지 않습니다. 기존 선언의 주석에 새 역할을 적을지만 `types-document-custom-types-and-shapes`로 판단합니다 |
 | 여러 위치 인자를 우리가 고칠 수 있는 기존 객체 계약 하나로 묶음 | 그 계약을 그대로 받고 `types-document-custom-types-and-shapes`만 적용합니다 |
 | 맞는 기존 형태가 없는 새 도메인 계약 | 새로 선언하고 `types-document-custom-types-and-shapes`만 적용합니다 |
-| 외부 · 생성된 · 읽기 전용 · 공용 형태를 그대로 사용 | 이 규칙과 `types-derive-subsets-with-indexed-access` 모두 대상이 아닙니다 |
+| 외부, 생성된, 읽기 전용, 공용 형태를 그대로 사용 | 이 규칙과 `types-derive-subsets-with-indexed-access` 모두 대상이 아닙니다 |
 
 함수 헤더 주석은 `docs-require-header-jsdoc-on-key-declarations`가 판단합니다.
 규칙을 적용하려고 요청에 없는 `*Params`나 `*Input`을 만들지 않습니다.
@@ -184,7 +184,7 @@ export const sendInvite = (draft: InviteDraft): Promise<void> => { /* … */ };
 
 **Rule:** `T01-02` · `types-derive-subsets-with-indexed-access`
 
-**Applies when:** 기존 타입의 일부 필드만 담는 형태를 선언 · 변경할 때. `Pick` · `Omit` · `Partial` · `Required` · `Extract` · `NonNullable`을 쓸 때. 제외: 필드 이름 · 타입 · 선택 여부가 모두 같아 기존 타입을 그대로 참조하는 경우.
+**Applies when:** 기존 타입의 일부 필드만 담는 형태를 선언, 변경할 때. `Pick`, `Omit`, `Partial`, `Required`, `Extract`, `NonNullable`을 쓸 때. 제외: 필드 이름, 타입, 선택 여부가 모두 같아 기존 타입을 그대로 참조하는 경우.
 
 **Review with:** `types-document-custom-types-and-shapes`, `types-reuse-existing-contracts-before-new-types`
 
@@ -211,7 +211,7 @@ export const sendInvite = (draft: InviteDraft): Promise<void> => { /* … */ };
 
 | 필드 값을 원본과 다르게 받을 때 | 적는 법 | 예 |
 | --- | --- | --- |
-| 필드 값 중 일부만 받음 | `Extract<원본["필드"], 좁힌 타입>` | `TableCellProps`의 `padding` 중 `normal` · `none`만 받습니다 |
+| 필드 값 중 일부만 받음 | `Extract<원본["필드"], 좁힌 타입>` | `TableCellProps`의 `padding` 중 `normal`, `none`만 받습니다 |
 | 원본이 비워 두는 필드를 필수로 받음 | `NonNullable<원본["필드"]>` | `align: NonNullable<TableCellProps["align"]>` |
 | union 계약 중 한 갈래만 받음 | `Extract<원본, 판별 필드>` | `Extract<TextFieldProps, { variant?: "outlined" }>` |
 
@@ -219,7 +219,7 @@ export const sendInvite = (draft: InviteDraft): Promise<void> => { /* … */ };
 필드 주석은 `types-document-custom-types-and-shapes`를 따릅니다.
 원본 필드의 타입 변경과 삭제는 인덱스 접근과 `Pick` 모두 컴파일 검사에 반영됩니다.
 
-### 선택 · 읽기 전용 보존
+### 선택, 읽기 전용 보존
 
 | 보존할 계약 | 적는 법 |
 | --- | --- |
@@ -325,7 +325,7 @@ type ExportRequestBody = Omit<GeneratedExportRequest, "requestedAt">;
 **Incorrect 4 (좁힌 값을 원시 타입으로 다시 적어 원본과의 연결이 사라집니다):**
 
 ```ts
-// 원본: TableCellProps.align 은 선택 필드고 padding 은 normal · checkbox · none 이다
+// 원본: TableCellProps.align 은 선택 필드고 padding 은 normal, checkbox, none 이다
 /**
  * 보고서 표 칸 표시 계약
  */
@@ -341,11 +341,11 @@ interface ReportCell {
 }
 ```
 
-**Correct 4 (원본 필드를 `NonNullable` · `Extract`로 파생해 출처와 좁힘을 함께 남깁니다):**
+**Correct 4 (원본 필드를 `NonNullable`, `Extract`로 파생해 출처와 좁힘을 함께 남깁니다):**
 
 ```ts
 /**
- * 보고서 표 칸 표시 계약. align · padding 은 TableCell 로 그대로 넘긴다
+ * 보고서 표 칸 표시 계약. align, padding 은 TableCell 로 그대로 넘긴다
  */
 interface ReportCell {
 	/**
@@ -353,7 +353,7 @@ interface ReportCell {
 	 */
 	align: NonNullable<TableCellProps["align"]>;
 	/**
-	 * 칸 여백. checkbox 칸은 두지 않아 normal · none 만 받는다
+	 * 칸 여백. checkbox 칸은 두지 않아 normal, none 만 받는다
 	 */
 	padding?: Extract<TableCellProps["padding"], "normal" | "none">;
 }
@@ -374,7 +374,7 @@ interface ReportCell {
 
 | 상황 | 타입 표기 |
 | --- | --- |
-| `interface` · 객체 계약 · 프레임워크 별칭이 있음 | 기존 호출 계약을 함수 변수에 붙입니다 |
+| `interface`, 객체 계약, 프레임워크 별칭이 있음 | 기존 호출 계약을 함수 변수에 붙입니다 |
 | 계약에 콜백 필드가 있음 | `Contract["onSelect"]`로 가져옵니다 |
 | 같은 시그니처를 쓰는 구현이 둘 이상임 | 함수 타입 별칭을 선언합니다 |
 | 맞는 계약도 없고 구현도 하나뿐임 | 매개변수 타입을 직접 적습니다. 별칭을 새로 만들지 않습니다 |
@@ -481,9 +481,9 @@ const toSearchRequest: ToRequest = (request) => {
 
 **Rule:** `T01-04` · `types-document-custom-types-and-shapes`
 
-**Applies when:** 타입, `interface`, 스키마 최상단, 객체 상수, 계약 필드, 파생 별칭을 추가 · 변경할 때. 이름 붙인 형태에 호출 계약 역할을 새로 얹을 때. 제외: 외부 · 생성된 · 읽기 전용 · 공용 형태를 그대로 쓰거나 반환 타입이 익명으로 추론되는 경우.
+**Applies when:** 타입, `interface`, 스키마 최상단, 객체 상수, 계약 필드, 파생 별칭을 추가, 변경할 때. 이름 붙인 형태에 호출 계약 역할을 새로 얹을 때. 제외: 외부, 생성된, 읽기 전용, 공용 형태를 그대로 쓰거나 반환 타입이 익명으로 추론되는 경우.
 
-**Requires selected:** `docs-write-doc-comments-as-multiline-blocks`, `docs-write-korean-comments-about-purpose-and-constraints` · 함께 적용
+**Requires selected:** `docs-write-doc-comments-as-multiline-blocks`, `docs-write-korean-comments-about-purpose-and-constraints` (함께 적용)
 
 **Impact: MEDIUM (구현을 읽기 전에 도메인 전용 계약을 이해할 수 있습니다)**
 
@@ -504,8 +504,8 @@ const toSearchRequest: ToRequest = (request) => {
 
 | 기존 형태를 쓰는 방식 | 문서화 범위 |
 | --- | --- |
-| 새 입력 · 출력 계약 역할을 맡음 | 필드가 그대로여도 기존 선언의 헤더와 필드 주석에 새 역할을 설명합니다 |
-| 외부 · 생성된 · 읽기 전용 · 공용 형태를 그대로 씀 | 선언을 고치거나 문서화용 지역 별칭을 만들지 않습니다 |
+| 새 입력, 출력 계약 역할을 맡음 | 필드가 그대로여도 기존 선언의 헤더와 필드 주석에 새 역할을 설명합니다 |
+| 외부, 생성된, 읽기 전용, 공용 형태를 그대로 씀 | 선언을 고치거나 문서화용 지역 별칭을 만들지 않습니다 |
 | 이름 없이 구현에서 추론되는 익명 객체 | 대상이 아닙니다. `select`의 익명 반환값도 그대로 둡니다 |
 
 새 역할에도 맞는 기존 형태를 연결하며, 새 타입 선언을 요구하지 않습니다.
@@ -563,7 +563,7 @@ export const product_status = {
 
 **Impact: MEDIUM (계약에 있는 매개변수를 유지하면서 사용하지 않는 매개변수를 표시합니다)**
 
-기존 콜백 · 프레임워크 계약의 매개변수는 쓰지 않아도 생략하지 않고 `_` 접두사로 남깁니다.
+기존 콜백, 프레임워크 계약의 매개변수는 쓰지 않아도 생략하지 않고 `_` 접두사로 남깁니다.
 계약을 유지하면서 구현이 일부러 무시한 값을 드러냅니다.
 
 커링한 핸들러의 마지막 콜백과 매개변수를 하나도 쓰지 않는 구현도 같습니다.
@@ -600,7 +600,7 @@ const noopLog: LogSink = (_message, _level) => {};
 
 **Rule:** `T01-06` · `types-narrow-unknown-instead-of-asserting`
 
-**Applies when:** `as` 단언, `!` `null` 아님 단언, `any`, `@ts-expect-error`를 추가 · 변경 · 제거할 때. 앱 밖에서 들어온 값을 타입 붙여 쓰기 시작할 때. 제외: 검증된 내부 값에 `as const`나 `satisfies`만 적용하는 경우.
+**Applies when:** `as` 단언, `!` `null` 아님 단언, `any`, `@ts-expect-error`를 추가, 변경, 제거할 때. 앱 밖에서 들어온 값을 타입 붙여 쓰기 시작할 때. 제외: 검증된 내부 값에 `as const`나 `satisfies`만 적용하는 경우.
 
 **Review with:** `docs-justify-convention-exceptions-with-a-reason-comment`, `tooling-configure-biome-to-enforce-these-rules`
 
@@ -677,9 +677,9 @@ if (!firstProduct) {
 
 **Rule:** `T01-07` · `types-replace-enum-with-as-const-objects`
 
-**Applies when:** `enum`이나 타입과 실행 양쪽에서 함께 쓰는 값 집합을 추가 · 변경할 때. 제외: 외부 패키지가 내보낸 `enum` 값을 그대로 읽어 쓰는 경우.
+**Applies when:** `enum`이나 타입과 실행 양쪽에서 함께 쓰는 값 집합을 추가, 변경할 때. 제외: 외부 패키지가 내보낸 `enum` 값을 그대로 읽어 쓰는 경우.
 
-**Requires selected:** `naming-use-consistent-file-and-symbol-naming`, `types-document-custom-types-and-shapes` · 함께 적용
+**Requires selected:** `naming-use-consistent-file-and-symbol-naming`, `types-document-custom-types-and-shapes` (함께 적용)
 
 **Impact: MEDIUM (객체로 실행 값을 선언하고 같은 값에서 타입을 추출합니다)**
 
@@ -692,7 +692,7 @@ if (!firstProduct) {
 | 외부 패키지의 `enum`을 그대로 전달함 | 외부 계약을 유지합니다 |
 | 기존 `enum`을 객체로 옮김 | 직렬화 값과 공개 타입을 보존하고 숫자 `enum`의 역방향 조회 소비처를 확인합니다 |
 | 기존 계약에 맞는 값 집합인지도 검사함 | `as const satisfies 기존계약`을 씁니다 |
-| 리터럴 추론 · 읽기 전용 속성이 필요 없음 | `as const`를 불필요하게 붙이지 않습니다 |
+| 리터럴 추론, 읽기 전용 속성이 필요 없음 | `as const`를 불필요하게 붙이지 않습니다 |
 
 객체에는 `Enum[value]` 역방향 조회가 자동으로 생기지 않습니다.
 `as const`는 실행 중 동결이나 다른 변수에서 가져온 배열의 변경까지 보장하지 않습니다.
@@ -729,7 +729,7 @@ type ProductStatus = (typeof product_status)[keyof typeof product_status];
 
 **Rule:** `T01-08` · `types-choose-interface-for-object-contracts-and-type-for-composition`
 
-**Applies when:** `interface`와 `type` 사이에서 선언 형식을 바꿀 때. 객체 계약, union, tuple, 함수 시그니처, mapped · conditional type에 이름을 붙여 선언할 때. 제외: 외부 · 생성된 계약을 그대로 참조하는 경우.
+**Applies when:** `interface`와 `type` 사이에서 선언 형식을 바꿀 때. 객체 계약, union, tuple, 함수 시그니처, mapped, conditional type에 이름을 붙여 선언할 때. 제외: 외부, 생성된 계약을 그대로 참조하는 경우.
 
 **Review with:** `types-document-custom-types-and-shapes`, `types-reuse-existing-contracts-before-new-types`
 
@@ -741,13 +741,13 @@ type ProductStatus = (typeof product_status)[keyof typeof product_status];
 | 선언 대상 | 형식 |
 | --- | --- |
 | 이름이 있고 필드를 직접 읽는 독립 객체 | `interface` |
-| 리터럴 유니언, 기본 타입 · 튜플 별칭, 함수 시그니처 | `type` |
-| 매핑 · 조건부 타입, 필드가 없는 인덱스 접근 별칭 | `type` |
+| 리터럴 유니언, 기본 타입, 튜플 별칭, 함수 시그니처 | `type` |
+| 매핑, 조건부 타입, 필드가 없는 인덱스 접근 별칭 | `type` |
 | `Omit`, `Record` 같은 계산, 다른 타입과의 교차 | `type` |
-| 유니언 · 교차 조합에서만 쓰는 객체 | `type` |
+| 유니언, 교차 조합에서만 쓰는 객체 | `type` |
 
 형식을 맞추려고 별칭을 만들거나 객체 형태를 전부 `interface`로 바꾸지 않습니다.
-추론되는 익명 결과와 외부 · 생성된 계약은 그대로 둡니다.
+추론되는 익명 결과와 외부, 생성된 계약은 그대로 둡니다.
 같은 뜻의 기존 계약은 `types-reuse-existing-contracts-before-new-types`에 따라 재사용합니다.
 
 **Incorrect 1 (독립된 필드 계약을 객체 `type` 별칭으로 선언합니다):**
@@ -811,7 +811,7 @@ type MutableRow = Omit<Row, "children"> & {
 
 **Rule:** `T02-01` · `naming-place-project-constants-in-the-root-constant-folder`
 
-**Applies when:** 프로젝트 전반이 쓰는 URL 경로, 페이지 크기, 표시 문구, 기준값을 추가 · 이동 · 중복 정의할 때. 루트 `constant` 폴더의 파일이나 상수 이름을 바꿀 때.
+**Applies when:** 프로젝트 전반이 쓰는 URL 경로, 페이지 크기, 표시 문구, 기준값을 추가, 이동, 중복 정의할 때. 루트 `constant` 폴더의 파일이나 상수 이름을 바꿀 때.
 
 **Review with:** `naming-place-owner-constants-in-the-owner-constant-folder`, `naming-use-direct-imports-and-public-entry-points`
 
@@ -843,12 +843,12 @@ flowchart LR
 
 | 선언 대상 | 규범 |
 | --- | --- |
-| 파일 · 상수 이름 | 파일마다 주제를 하나 정하고 상수에 주제 접두사를 붙입니다. 한 단어 상수는 만들지 않습니다 |
+| 파일, 상수 이름 | 파일마다 주제를 하나 정하고 상수에 주제 접두사를 붙입니다. 한 단어 상수는 만들지 않습니다 |
 | 내보내기 | 모듈 스코프에서 상수마다 이름 붙여 내보냅니다. `config` 같은 색인 객체로 묶지 않습니다 |
-| 객체 · 배열 값 | 함께 읽히는 값이면 상수 하나로 둡니다. 펼치는 것은 내보낼 이름이지 값의 구조가 아닙니다 |
+| 객체, 배열 값 | 함께 읽히는 값이면 상수 하나로 둡니다. 펼치는 것은 내보낼 이름이지 값의 구조가 아닙니다 |
 | 사용자에게 보이는 문장 | `copy_empty_value_text`처럼 `copy` 주제로 모아 번역 파일로 옮기기 쉽게 둡니다 |
-| 환경마다 달라지는 값 · 기능 플래그 | `naming-read-environment-values-through-config-env`에 따라 `config`에 둡니다 |
-| 색상 · 간격 등 디자인 토큰 | 스타일시트의 CSS 변수를 단일 출처로 둡니다 |
+| 환경마다 달라지는 값, 기능 플래그 | `naming-read-environment-values-through-config-env`에 따라 `config`에 둡니다 |
+| 색상, 간격 등 디자인 토큰 | 스타일시트의 CSS 변수를 단일 출처로 둡니다 |
 
 파일, 심볼 표기는 `naming-use-consistent-file-and-symbol-naming`을 따릅니다.
 색인 객체는 수동 관리가 필요하고 번들러의 미사용 프로퍼티 제거도 어려워질 수 있습니다.
@@ -923,7 +923,7 @@ export const pagination_default_page_size = 20;
 
 **Applies when:** 한 소유자의 상수나 선언형 계약을 추가하거나 옮길 때. 루트 상수와 소유자 전용 상수 사이에서 위치를 바꿀 때.
 
-**Requires selected:** `naming-use-consistent-file-and-symbol-naming` · 함께 적용
+**Requires selected:** `naming-use-consistent-file-and-symbol-naming` (함께 적용)
 
 **Review with:** `naming-place-project-constants-in-the-root-constant-folder`
 
@@ -932,11 +932,11 @@ export const pagination_default_page_size = 20;
 한 소유자의 상수는 그 소유자 아래 `_constant`에 둡니다.
 루트와 소유자를 구분하는 기준은 `naming-place-project-constants-in-the-root-constant-folder`를 따릅니다.
 
-| 대상 | 배치 · 이름 |
+| 대상 | 배치, 이름 |
 | --- | --- |
 | 상수 | `_constant/<주제>.ts`에 `<주제>_` 접두사로 선언합니다 |
 | 소유자 문맥 | 폴더가 말하므로 이름에 반복하지 않습니다. `page/detail/_constant/legend.ts`에는 `legend_hit_tolerance_px`를 둡니다 |
-| 파서 묶음 · 스키마 등 함수를 담은 계약 | 같은 `_constant`에 계약별 파일로 둡니다 |
+| 파서 묶음, 스키마 등 함수를 담은 계약 | 같은 `_constant`에 계약별 파일로 둡니다 |
 | 파일이 하나뿐인 경우 | `_constant` 폴더를 유지합니다 |
 | 소유자를 지워도 남는 값 | 루트 상수 규칙에 따라 옮깁니다 |
 
@@ -985,7 +985,7 @@ export const table_page_size = 20;
 
 **Rule:** `T02-03` · `naming-use-consistent-file-and-symbol-naming`
 
-**Applies when:** TypeScript 파일, 폴더, 변수, 함수, 타입, 객체 · 스키마 키의 이름을 새로 만들거나 바꿀 때. 외부 계약이 정한 이름이나 키의 표기를 바꿀지 판단할 때. 제외: 별칭 없이 외부 패키지에서 그대로 가져오는 경우.
+**Applies when:** TypeScript 파일, 폴더, 변수, 함수, 타입, 객체, 스키마 키의 이름을 새로 만들거나 바꿀 때. 외부 계약이 정한 이름이나 키의 표기를 바꿀지 판단할 때. 제외: 별칭 없이 외부 패키지에서 그대로 가져오는 경우.
 
 **Impact: HIGH (파일과 심볼의 표기가 역할을 드러내 읽는 사람이 종류를 바로 압니다)**
 
@@ -998,9 +998,9 @@ export const table_page_size = 20;
 | --- | --- |
 | 파일명 | `kebab-case` |
 | 폴더명 | `kebab-case` 단수. 프레임워크가 강제하는 이름만 예외입니다 |
-| 타입 · `interface` · 컴포넌트 | `PascalCase` |
-| 모듈 스코프 불변 데이터 상수 · 값 집합과 그 소유 하위 키 | `snake_case` |
-| 그 외 변수 · 함수 · 객체 키 · 스키마 키 · 타입 필드 | `camelCase` |
+| 타입, `interface`, 컴포넌트 | `PascalCase` |
+| 모듈 스코프 불변 데이터 상수, 값 집합과 그 소유 하위 키 | `snake_case` |
+| 그 외 변수, 함수, 객체 키, 스키마 키, 타입 필드 | `camelCase` |
 
 불변 데이터 상수는 한 번 선언해 같은 의미로 쓰는 리터럴, 기본값, 값 집합, 조회표입니다.
 객체와 배열에는 `as const`나 읽기 전용 계약을 적용하고 변경하지 않습니다.
@@ -1114,7 +1114,7 @@ const toProductSaveBody = (values: ProductFormValues) => {
 
 **Rule:** `T02-04` · `naming-use-direct-imports-and-public-entry-points`
 
-**Applies when:** 가져오기, 내보내기, `index.ts` 배럴, 공개 진입점, 소유자 보조 모듈의 경계를 추가 · 변경할 때. 같은 경로에서 값과 타입 중 무엇을 가져올지 추가 · 삭제 · 전환할 때.
+**Applies when:** 가져오기, 내보내기, `index.ts` 배럴, 공개 진입점, 소유자 보조 모듈의 경계를 추가, 변경할 때. 같은 경로에서 값과 타입 중 무엇을 가져올지 추가, 삭제, 전환할 때.
 
 **Review with:** `naming-import-by-absolute-path`
 
@@ -1132,7 +1132,7 @@ const toProductSaveBody = (values: ProductFormValues) => {
 
 `default`는 사용처마다 이름이 달라지고 원본의 이름 변경도 반영되지 않습니다.
 경로 형식은 `naming-import-by-absolute-path`를 따릅니다.
-같은 경로라도 값 · 타입 가져오기를 바꾸면 이 규칙을 적용합니다.
+같은 경로라도 값, 타입 가져오기를 바꾸면 이 규칙을 적용합니다.
 
 **Incorrect 1 (배럴과 섞인 가져오기로 경계를 흐립니다):**
 
@@ -1249,7 +1249,7 @@ import "./pg-product-table-section.css";
 
 **Rule:** `T02-06` · `naming-read-environment-values-through-config-env`
 
-**Applies when:** `import.meta.env`나 `process.env`를 읽는 코드를 추가 · 이동할 때. 환경마다 달라지는 값이나 기능 플래그를 새로 들여올 때.
+**Applies when:** `import.meta.env`나 `process.env`를 읽는 코드를 추가, 이동할 때. 환경마다 달라지는 값이나 기능 플래그를 새로 들여올 때.
 
 **Review with:** `absence-expose-optional-values-instead-of-silent-fallbacks`, `naming-place-project-constants-in-the-root-constant-folder`
 
@@ -1319,7 +1319,7 @@ const productClient = createClient({baseUrl: env_api_base_url});
 
 **Rule:** `T02-07` · `naming-name-types-by-role-and-lifetime`
 
-**Applies when:** 타입 · `interface`나 그 파일의 이름을 새로 만들거나 바꿀 때. 타입을 소유자 폴더 안과 밖 사이에서 옮기며 이름을 바꿀 때. 제외: 외부 · 생성된 계약 이름을 그대로 쓰는 경우.
+**Applies when:** 타입, `interface`나 그 파일의 이름을 새로 만들거나 바꿀 때. 타입을 소유자 폴더 안과 밖 사이에서 옮기며 이름을 바꿀 때. 제외: 외부, 생성된 계약 이름을 그대로 쓰는 경우.
 
 **Review with:** `naming-use-consistent-file-and-symbol-naming`
 
@@ -1334,20 +1334,20 @@ const productClient = createClient({baseUrl: env_api_base_url});
 | --- | --- |
 | `Params` | 함수나 훅의 여러 입력을 객체 하나로 묶을 때 |
 | `Options` | 호출자가 동작을 선택적으로 조절할 때 |
-| `Payload` | 이벤트 · 적용 · 저장 경계를 한 번 넘어가는 메시지일 때 |
+| `Payload` | 이벤트, 적용, 저장 경계를 한 번 넘어가는 메시지일 때 |
 | `State` | 시간에 따라 바뀌며 소유자가 보관할 때 |
 | `Draft` | 아직 적용하거나 저장하지 않은 편집 중 값일 때 |
-| `Snapshot` | 한 시점의 목록 · 상태 · 메타데이터를 함께 고정할 때 |
+| `Snapshot` | 한 시점의 목록, 상태, 메타데이터를 함께 고정할 때 |
 | `Content` | 컴포넌트나 섹션이 바로 소비할 완성된 내용 묶음일 때 |
 | `Config` | 동작이나 표시 정책을 선언할 때 |
-| `Resolved*` | 원본 · 기본값 · 현재 조건을 합쳐 값이 확정됐을 때 |
+| `Resolved*` | 원본, 기본값, 현재 조건을 합쳐 값이 확정됐을 때 |
 | `Condition` | 필터나 적용 여부를 가르는 조건일 때 |
-| `Criterion` | 정렬 · 평가 기준 한 건일 때 |
+| `Criterion` | 정렬, 평가 기준 한 건일 때 |
 | `Setting` | 사용자가 고르거나 조절하는 설정 한 건일 때 |
 | `Row`, `Column`, `Item`, `Point`, `Series` | 컬렉션 안 한 요소의 역할이 분명할 때 |
 | `Result` | 더 구체적인 결과 명사가 없을 때만 |
 | `Spec` | 외부 명세나 검증할 요구사항 자체를 나타낼 때만 |
-| `Model` | 식별성 · 행동 · 도메인 규칙을 가진 실제 모델일 때만 |
+| `Model` | 식별성, 행동, 도메인 규칙을 가진 실제 모델일 때만 |
 
 ### 이름을 정하는 기준
 
@@ -1357,10 +1357,10 @@ const productClient = createClient({baseUrl: env_api_base_url});
 | 소유자 안의 타입 | 폴더가 말하는 도메인을 반복하지 않습니다. `order-report/_type/`에서는 `ReportSnapshot`입니다 |
 | 소유자 밖으로 내보내는 타입 | 문맥이 사라지거나 이름이 충돌할 때만 필요한 도메인 접두를 유지합니다 |
 | 타입과 파일명 | `report-snapshot.ts`처럼 실제 명사를 씁니다 |
-| 외부 · 생성된 계약 | 이름과 `DTO` 같은 접미사를 보존합니다. 내부 계약에는 이를 구별용 접미사로 붙이지 않습니다 |
+| 외부, 생성된 계약 | 이름과 `DTO` 같은 접미사를 보존합니다. 내부 계약에는 이를 구별용 접미사로 붙이지 않습니다 |
 | `Props`, `Handle`, `Slot`, `Renderer` | 해당 프레임워크 규칙을 따릅니다 |
 
-단순 가공 · 표시 결과에는 `VM`, `ViewModel`, 막연한 `Model`과 그 대응 파일명을 쓰지 않습니다.
+단순 가공, 표시 결과에는 `VM`, `ViewModel`, 막연한 `Model`과 그 대응 파일명을 쓰지 않습니다.
 
 **Incorrect 1 (소유자와 막연한 화면 계약 접미사를 반복합니다):**
 
@@ -1424,7 +1424,7 @@ const reportSnapshot: ReportSnapshot = response.data;
 이름 붙인 함수는 `const` 화살표로 선언하고, 객체에 담는 함수도 화살표로 씁니다.
 본문은 블록으로 열고 값을 반환할 때 `return`을 적으며, 반환값이 없으면 생략합니다.
 
-| 대상 | 선언 · 본문 형식 |
+| 대상 | 선언, 본문 형식 |
 | --- | --- |
 | 이름 붙인 함수 | `const name = (…) => { … }` |
 | 객체에 담긴 함수 | `name: (…) => { … }`. 메서드 축약형은 쓰지 않습니다 |
@@ -1434,7 +1434,7 @@ const reportSnapshot: ReportSnapshot = response.data;
 | 제너레이터 | `function*` 문법을 씁니다 |
 | 오버로드 | `function` 선언을 허용합니다. 호출 시그니처 타입을 `const`에 붙일 수 있으면 그쪽을 씁니다 |
 
-선언 · 본문 형식을 고정하면 호이스팅 의존을 줄이고 코드가 늘 때의 diff와 주석 경계를 일정하게 유지합니다.
+선언, 본문 형식을 고정하면 호이스팅 의존을 줄이고 코드가 늘 때의 diff와 주석 경계를 일정하게 유지합니다.
 객체 반환에도 별도의 `({...})` 괄호가 필요하지 않습니다.
 
 ### `this`를 쓰는 함수
@@ -1519,7 +1519,7 @@ export class ProductCursor {
 
 **Rule:** `T03-02` · `functions-use-named-object-params-for-complex-signatures`
 
-**Applies when:** 매개변수가 셋을 넘거나 같은 계열 인자를 받는 함수를 추가 · 변경할 때. 객체 매개변수의 필드를 읽는 방식을 바꿀 때. 제외: 리액트 함수 컴포넌트가 프롭스를 받는 방식만 바꾸는 경우.
+**Applies when:** 매개변수가 셋을 넘거나 같은 계열 인자를 받는 함수를 추가, 변경할 때. 객체 매개변수의 필드를 읽는 방식을 바꿀 때. 제외: 리액트 함수 컴포넌트가 프롭스를 받는 방식만 바꾸는 경우.
 
 **Review with:** `types-reuse-existing-contracts-before-new-types`, `values-read-objects-through-chains`
 
@@ -1605,25 +1605,21 @@ fetchProductPage({baseUrl: api_base_url, page: urlParams.page, pageSize: paginat
 
 ```mermaid
 flowchart LR
-	q1{"두 자리 이상이<br>부르는가?"} -- 아니요 --> q2{"렌더 파일 밖의<br>요청 조립인가?"} -- 아니요 --> q3{"삼항 하나로<br>담기는가?"} -- 예 --> r4("호출부에 그대로 둠")
+	q1{"두 자리 이상이<br>부르는가?"} -- 아니요 --> q2{"삼항 하나로<br>담기는가?"} -- 예 --> r3("호출부에 그대로 둠")
 	q1 -- 예 --> r1("이름을 붙여 추출")
-	q2 -- 예 --> r2("같은 소유자의 .ts 로 이동")
-	q3 -- 아니요 --> r3("return 함수로 추출")
+	q2 -- 아니요 --> r2("return 함수로 추출")
 ```
 
 | 허용 사유 | 조건 |
 | --- | --- |
 | 실제 재사용 | 변경 후 코드에서 두 자리 이상이 부름. 한 줄 함수도 같음 |
-| 요청 조립을 렌더 파일 밖으로 이동 | `.tsx`에서 순수 요청 · 저장 payload를 조립함. 한 곳에서만 써도 같음 |
-| 함수 형태가 필수 | 삼항 하나로 표현할 수 없는 판정 · `value is T` 타입 가드 · 재귀 |
+| 함수 형태가 필수 | 삼항 하나로 표현할 수 없는 판정, `value is T` 타입 가드, 재귀 |
 
-요청 조립은 같은 소유자의 `.ts`로 옮깁니다. 표시용 가공이나 기존 `.ts`는 해당하지 않습니다.
 
 ### 추출을 검토할 때
 
 | 추출을 검토하는 이유 | 처리 |
 | --- | --- |
-| 한 번 쓰는 단계가 길거나 나중에 재사용할 것 같음 | 호출부에 두고 `docs-keep-body-comments-for-intent-and-steps`의 단계 주석으로 나눕니다 |
 | `.map()` 콜백 하나에서만 쓰는 변환 | 그 콜백에 둡니다 |
 | 값이 두 분기로 갈림 | 호출부에서 삼항 하나로 씁니다 |
 | 값이 세 분기 이상으로 갈림 | 함수로 추출하고 분기마다 `return`으로 끝냅니다 |
@@ -1734,27 +1730,6 @@ export const toProfileSaveRequest = (formValues: ProfileFormValues) => {
 import {toProfileSaveRequest} from "@/page/profile/_function/to-profile-save-request";
 ```
 
-**Correct (`.tsx` 안의 순수 조립 함수는 사용처가 하나여도 같은 소유자의 `.ts`로 옮깁니다):**
-
-```ts
-// page/products/_function/to-product-save-request.ts
-/**
- * product 저장 요청 조립. 업로드가 끝난 첨부만 넘겨야 attachmentIds가 채워진다
- */
-export const toProductSaveRequest = (formValues: ProductFormValues) => {
-	return {
-		title: formValues.title.trim(),
-		categoryId: formValues.categoryId,
-		attachmentIds: formValues.attachments.map((attachment) => attachment.id),
-	};
-};
-```
-
-```tsx
-// page/products/pg-products.tsx 하나만 부르지만 훅도 JSX도 쓰지 않는 계산이다
-import {toProductSaveRequest} from "@/page/products/_function/to-product-save-request";
-```
-
 **Correct (삼항 하나에 담기지 않는 판정은 사용처가 하나여도 함수로 추출하고 분기마다 `return`으로 끝냅니다):**
 
 ```ts
@@ -1780,7 +1755,7 @@ export const toStatusTone = (status: string): Tone => {
 
 **Applies when:** 떼어 낸 보조 함수를 어느 파일이나 폴더에 둘지 정할 때. `helper.ts`, `helpers.ts`, `utils.ts` 같은 파일을 만들거나 거기에 함수를 더할 때. 대표 함수가 자기만 쓰는 보조를 처음 갖게 될 때. 보조를 부르는 대표 함수나 소유자가 늘어날 때.
 
-**Requires selected:** `functions-extract-helpers-only-when-the-boundary-is-real` · 함께 적용
+**Requires selected:** `functions-extract-helpers-only-when-the-boundary-is-real` (함께 적용)
 
 **Review with:** `functions-order-declarations-top-down`, `functions-promote-owner-free-functions-to-root-util`
 
@@ -1813,7 +1788,7 @@ flowchart LR
 | 대표 함수 | 내보낸 함수 하나당 파일 하나이며 파일명은 함수 이름입니다 |
 | 대표만 쓰는 보조 | 대표 파일 아래 비공개 `const`로 쌓지 않고 같은 이름 폴더의 `_` 파일로 둡니다 |
 | 보조의 보조 | 같은 폴더의 `_` 파일로 둡니다. 하위 폴더를 더 만들지 않습니다 |
-| 타입 · 상수 | 이 폴더에 두지 않고 프레임워크 규칙이 정한 소유자의 역할 폴더에 둡니다 |
+| 타입, 상수 | 이 폴더에 두지 않고 프레임워크 규칙이 정한 소유자의 역할 폴더에 둡니다 |
 | `helper.ts`, `helpers.ts`, `utils.ts` | 여러 보조를 모으는 파일로 만들지 않습니다 |
 
 `_` 파일은 같은 폴더에서만 가져옵니다.
@@ -2011,7 +1986,7 @@ flowchart LR
 | 폴더 | 기준 |
 | --- | --- |
 | `date`, `money`, `string`, `array`, `dom`, `url` | 함수가 받는 값의 타입입니다 |
-| `spread` 등 도메인 이름 | `Spread`처럼 실제 입력 타입이면 허용합니다. 화면 · 기능 이름은 쓰지 않습니다 |
+| `spread` 등 도메인 이름 | `Spread`처럼 실제 입력 타입이면 허용합니다. 화면, 기능 이름은 쓰지 않습니다 |
 | 소유자 아래 `_function` | 종류 폴더 없이 함수 파일을 나열합니다 |
 
 루트의 소유자는 프로젝트입니다.
@@ -2194,7 +2169,7 @@ const visibleTabs = [
 
 **Rule:** `T03-08` · `functions-name-a-value-only-for-recompute-or-judgment`
 
-**Applies when:** 순수 계산의 결과를 지역 변수\(`const`\)로 받는 줄을 추가 · 삭제할 때. 표현식을 쓰는 자리에 그대로 적을지 변수로 뺄지 정할 때.
+**Applies when:** 순수 계산의 결과를 지역 변수\(`const`\)로 받는 줄을 추가, 삭제할 때. 표현식을 쓰는 자리에 그대로 적을지 변수로 뺄지 정할 때.
 
 **Review with:** `functions-avoid-imperative-assembly-in-wide-scopes`, `values-read-objects-through-chains`
 
@@ -2207,10 +2182,10 @@ const visibleTabs = [
 
 | 변수로 받을 사유 | 확인할 것 |
 | --- | --- |
-| 콜백 · 반복문으로 옮기면 비용이 반복됨 | 코드에 한 번 적혀도 원소마다 실행됩니다. 반복 조회용 `Set`도 콜백 밖에 둡니다 |
-| 시각 · 난수처럼 호출마다 값이 달라짐 | 여러 사용처가 같은 값을 보아야 합니다 |
+| 콜백, 반복문으로 옮기면 비용이 반복됨 | 코드에 한 번 적혀도 원소마다 실행됩니다. 반복 조회용 `Set`도 콜백 밖에 둡니다 |
+| 시각, 난수처럼 호출마다 값이 달라짐 | 여러 사용처가 같은 값을 보아야 합니다 |
 | `await`, `yield`, 외부 호출 | 순서나 호출 시점을 바꾸지 않습니다. `localStorage.getItem()`도 해당합니다 |
-| 훅 호출 · `useState` 반환 | 정해진 호출 위치와 횟수를 유지합니다 |
+| 훅 호출, `useState` 반환 | 정해진 호출 위치와 횟수를 유지합니다 |
 | 여러 항을 합친 판정 | `isEditable`처럼 이름이 판정의 결론을 설명해야 합니다 |
 | 부정이 겹친 판정 | `!row.deletedAt && !row.archivedAt`은 `isVisible`처럼 뜻을 드러냅니다 |
 
@@ -2223,7 +2198,7 @@ const visibleTabs = [
 | --- | --- |
 | 함수 값 | 계산 결과가 아닌 계약입니다. `functions-declare-functions-as-arrow-consts`를 따릅니다 |
 | 객체 필드의 별칭 | `values-read-objects-through-chains` |
-| `let` 재할당 · `push` 누적 | `functions-avoid-imperative-assembly-in-wide-scopes` |
+| `let` 재할당, `push` 누적 | `functions-avoid-imperative-assembly-in-wide-scopes` |
 | 표현식 안의 리터럴 | 지역 변수로 옮기지 않고 `types-replace-enum-with-as-const-objects`와 `naming-place-project-constants-in-the-root-constant-folder`로 선언합니다 |
 
 반복 조회 구조의 사용 기준은 `values-use-set-and-map-for-repeated-lookups`를 따릅니다.
@@ -2351,7 +2326,7 @@ const submitDraft = async (draft: Draft) => {
 
 **Rule:** `T03-09` · `functions-name-functions-by-what-comes-out`
 
-**Applies when:** 이름을 붙인 함수를 새로 만들거나 이름을 바꿀 때. 제외: 생성기 · 프레임워크 · 외부 계약이 정한 이름을 그대로 쓰는 경우.
+**Applies when:** 이름을 붙인 함수를 새로 만들거나 이름을 바꿀 때. 제외: 생성기, 프레임워크, 외부 계약이 정한 이름을 그대로 쓰는 경우.
 
 **Impact: MEDIUM (함수 이름으로 반환값이나 효과를 파악할 수 있습니다)**
 
@@ -2362,20 +2337,20 @@ const submitDraft = async (draft: Draft) => {
 
 | 반환값의 역할 | 동사 | 예 |
 | --- | --- | --- |
-| 다른 형태로 변환 · 분류 | `to` | `toDetailContent` |
+| 다른 형태로 변환, 분류 | `to` | `toDetailContent` |
 | 이미 존재하는 값 | `get` | `getSelectedRow` |
 | 값 하나 또는 없음 | `find` | `findUserByEmail` |
 | 서로 다른 입력 둘 이상의 우선순위 선택 | `choose` | `chooseBackSource` |
-| 같은 개념의 허용 범위 · 표현 보정 | `normalize` | `normalizePageSize` |
-| 문자열 · `unknown` 검증 후 읽기 | `parse` | `parseSearchParams` |
+| 같은 개념의 허용 범위, 표현 보정 | `normalize` | `normalizePageSize` |
+| 문자열, `unknown` 검증 후 읽기 | `parse` | `parseSearchParams` |
 | 사람이 읽는 표시 문자열 | `format` | `formatCandidateDayCount` |
 | 두 값의 정렬 순서 | `compare` | `compareProductsByPrice` |
-| 비동기 I/O · 여러 요청 조율 | `load`, `fetch` | `loadProductExport` |
-| 참 · 거짓 판정 | `is`, `has`, `can`, `should` | `shouldShowSummary` |
+| 비동기 I/O, 여러 요청 조율 | `load`, `fetch` | `loadProductExport` |
+| 참, 거짓 판정 | `is`, `has`, `can`, `should` | `shouldShowSummary` |
 
 | 함수의 역할 | 동사 | 예 |
 | --- | --- | --- |
-| 저장 · 삭제 | `save`, `remove` | `saveProduct` |
+| 저장, 삭제 | `save`, `remove` | `saveProduct` |
 | 조건 위반 시 예외 | `assert` | `assertLoggedIn` |
 | 검사 결과 또는 오류 | `validate` | `validateProductForm` |
 | 도메인 동작 | 실제 업무 동사 | `submitOrder`, `cancelBooking` |
@@ -2389,7 +2364,7 @@ const submitDraft = async (draft: Draft) => {
 `build`, `create`, `make`, `process`, `manage`, `do`, `perform`, `execute`, `filter`, `map`, `update`, `resolve`는
 직접 짓는 이름의 첫 동사로 쓰지 않습니다.
 
-| 모호한 이름 | 결과 · 효과를 드러낸 이름 |
+| 모호한 이름 | 결과, 효과를 드러낸 이름 |
 | --- | --- |
 | `filterActiveUsers` | 남기는 목록이면 `toActiveUsers` |
 | `mapProductRows` | 출력이 행이면 `toProductRows` |
@@ -2402,7 +2377,7 @@ const submitDraft = async (draft: Draft) => {
 `handle`, `use`는 프레임워크 규칙을 따릅니다.
 생성기, 프레임워크, 외부 계약이 정한 이름과 `Promise`의 `resolve`, `reject`는 바꾸거나 감싸지 않습니다.
 
-**Incorrect 1 (입력 · 구현 동작 · 막연한 접미사를 이름에 씁니다):**
+**Incorrect 1 (입력, 구현 동작, 막연한 접미사를 이름에 씁니다):**
 
 ```ts
 // page/detail/_function/build-user-payload.ts
@@ -2458,7 +2433,7 @@ export const toActiveUsers = (rows: UserRow[]) => { /* … */ };
 export const toStatusTone = (status: string) => { /* … */ };
 ```
 
-**Correct (저장 · 검사 함수는 역할과 판정으로 이름을 짓습니다):**
+**Correct (저장, 검사 함수는 역할과 판정으로 이름을 짓습니다):**
 
 ```ts
 // util/user/is-admin-user.ts
@@ -2490,7 +2465,7 @@ export const assertLoggedIn = (session: Session): void => {
 
 **Rule:** `T04-01` · `values-prefer-immutable-array-sorting`
 
-**Applies when:** 프롭스, 상태, 매개변수, 모듈 상수에서 온 배열을 정렬할 때. 기존 `.sort()` 호출을 추가 · 변경할 때.
+**Applies when:** 프롭스, 상태, 매개변수, 모듈 상수에서 온 배열을 정렬할 때. 기존 `.sort()` 호출을 추가, 변경할 때.
 
 **Review with:** `values-use-es-toolkit-for-value-helpers`
 
@@ -2554,7 +2529,7 @@ const toSortedUsers = (users: readonly User[]): User[] => {
 
 **Rule:** `T04-02` · `values-use-set-and-map-for-repeated-lookups`
 
-**Applies when:** 같은 목록의 `includes`나 `find`를 루프 · 배열 콜백 안에서 호출하도록 추가 · 변경할 때. 같은 목록의 키 조회를 서로 다른 세 지점 이상에서 하도록 추가 · 변경할 때. 제외: 조회하는 목록이 짧고 길이가 정해져 있는 경우.
+**Applies when:** 같은 목록의 `includes`나 `find`를 루프, 배열 콜백 안에서 호출하도록 추가, 변경할 때. 같은 목록의 키 조회를 서로 다른 세 지점 이상에서 하도록 추가, 변경할 때. 제외: 조회하는 목록이 짧고 길이가 정해져 있는 경우.
 
 **Impact: MEDIUM (반복 조회 구조를 한 번 만들어 목록 전체를 되풀이해 비교하는 비용을 줄입니다)**
 
@@ -2568,7 +2543,7 @@ const toSortedUsers = (users: readonly User[]): User[] => {
 | 같은 목록을 루프나 `map`, `filter`, `some` 콜백 안에서 조회 | 포함 여부는 `Set.has`, 항목 조회는 `Map.get`으로 바꿉니다 |
 | 같은 목록을 서로 다른 세 지점 이상에서 조회 | 한 번 만든 `Set`, `Map`을 공유합니다 |
 | 위 조건에 해당하지 않거나 길이가 정해진 짧은 목록 | 기존 조회를 유지합니다 |
-| 중복 제거 · 차집합처럼 결과 목록을 만듦 | `uniq`, `difference`, `without`을 씁니다. 만든 뒤 `has`를 반복 호출할 때만 `Set`을 남깁니다 |
+| 중복 제거, 차집합처럼 결과 목록을 만듦 | `uniq`, `difference`, `without`을 씁니다. 만든 뒤 `has`를 반복 호출할 때만 `Set`을 남깁니다 |
 
 `Set`, `Map`도 생성 비용이 있으며 조회가 항상 상수 시간인 것은 아닙니다.
 명세는 평균 조회 시간이 원소 수에 비례하는 시간보다 짧을 것만 요구합니다.
@@ -2622,7 +2597,7 @@ const isEditableStatus = editable_order_statuses.includes(order.status);
 
 **Rule:** `T04-03` · `values-read-objects-through-chains`
 
-**Applies when:** 구조분해로 객체에서 값을 꺼내는 줄을 추가 · 변경할 때. 객체 필드를 별칭 `const`에 담아 그 이름으로 쓰려 할 때. 제외: 배열이나 튜플을 자리로 푸는 경우.
+**Applies when:** 구조분해로 객체에서 값을 꺼내는 줄을 추가, 변경할 때. 객체 필드를 별칭 `const`에 담아 그 이름으로 쓰려 할 때. 제외: 배열이나 튜플을 자리로 푸는 경우.
 
 **Review with:** `functions-name-a-value-only-for-recompute-or-judgment`
 
@@ -2631,12 +2606,12 @@ const isEditableStatus = editable_order_statuses.includes(order.status);
 객체 필드는 구조분해나 별칭 없이 `product.title`처럼 체인으로 읽습니다.
 쓰는 자리마다 값의 출처가 남아야 합니다.
 
-| 형태 · 상황 | 처리 |
+| 형태, 상황 | 처리 |
 | --- | --- |
 | 객체 구조분해 | 체인으로 읽습니다. 이름을 바꿔 꺼내는 `{status: orderStatus}`도 같습니다 |
 | 같은 필드에 이름만 붙인 지역 `const` | 제거합니다. 필드를 그대로 읽는 것은 계산이 아닙니다 |
-| 짧은 함수 · 좁은 스코프 | 예외를 두지 않습니다 |
-| 배열 · 튜플 구조분해 | 유지합니다. `useState`와 `Object.entries`처럼 위치로 꺼내는 값에는 지워질 필드 이름이 없습니다 |
+| 짧은 함수, 좁은 스코프 | 예외를 두지 않습니다 |
+| 배열, 튜플 구조분해 | 유지합니다. `useState`와 `Object.entries`처럼 위치로 꺼내는 값에는 지워질 필드 이름이 없습니다 |
 | 깊어서 읽기 어려운 체인 | 값을 꺼내는 곳에서 별칭으로 끊지 않고, 그 형태를 만드는 곳을 검토합니다 |
 
 계산 결과에 이름을 붙일지는 `functions-name-a-value-only-for-recompute-or-judgment`가 정합니다.
@@ -2829,9 +2804,9 @@ const toNextPage = (page: number): number => {
 
 **Rule:** `T04-05` · `values-avoid-lookup-tables-for-simple-choices`
 
-**Applies when:** 상태나 `variant`에 따라 쓸 값 하나를 고르는 객체 · Map을 추가 · 변경할 때. 조회표의 키로 프롭이나 상태를 읽어 값을 넘기는 코드를 추가 · 변경할 때.
+**Applies when:** 상태나 `variant`에 따라 쓸 값 하나를 고르는 객체, Map을 추가, 변경할 때. 조회표의 키로 프롭이나 상태를 읽어 값을 넘기는 코드를 추가, 변경할 때.
 
-**Requires selected:** `docs-justify-convention-exceptions-with-a-reason-comment` · 함께 적용
+**Requires selected:** `docs-justify-convention-exceptions-with-a-reason-comment` (함께 적용)
 
 **Impact: HIGH (값과 선택 조건이 사용처에 함께 남아 선택 기준을 바로 읽을 수 있습니다)**
 
@@ -2845,7 +2820,7 @@ const toNextPage = (page: number): number => {
 
 ```mermaid
 flowchart LR
-	q1{"자리마다 값이<br>달라지는가?"} -- 예 --> q2{"대응 관계 자체가<br>도메인 · 외부 계약인가?"} -- 예 --> r2("근거를 적고 조회표를 둠")
+	q1{"자리마다 값이<br>달라지는가?"} -- 예 --> q2{"대응 관계 자체가<br>도메인, 외부 계약인가?"} -- 예 --> r2("근거를 적고 조회표를 둠")
 	q1 -- 아니요 --> r1("같은 값을 그대로 넘김")
 	q2 -- 아니요 --> r3("사용처에서 조건으로 고름")
 ```
@@ -2882,7 +2857,7 @@ const order_status_by_api_code = {
 
 ```ts
 /**
- * GET /orders의 P · C · D 코드를 화면의 주문 상태 어휘로 바꾸는 API 경계 계약이다
+ * GET /orders의 P, C, D 코드를 화면의 주문 상태 어휘로 바꾸는 API 경계 계약이다
  */
 const order_status_by_api_code = {
 	P: "pending",
@@ -2895,7 +2870,7 @@ const order_status_by_api_code = {
 
 **Rule:** `T04-06` · `values-use-es-toolkit-for-value-helpers`
 
-**Applies when:** 배열, 객체, 문자열, 숫자를 다루는 보조 코드를 추가 · 변경할 때. `reduce`, `Object.entries`, `Array.from`, 정규식으로 값을 다시 짜는 코드를 쓸 때. 제외: 표준 메서드 하나로 끝나는 경우.
+**Applies when:** 배열, 객체, 문자열, 숫자를 다루는 보조 코드를 추가, 변경할 때. `reduce`, `Object.entries`, `Array.from`, 정규식으로 값을 다시 짜는 코드를 쓸 때. 제외: 표준 메서드 하나로 끝나는 경우.
 
 **Review with:** `values-handle-dates-with-dayjs`, `values-prefer-immutable-array-sorting`
 
@@ -2908,16 +2883,16 @@ const order_status_by_api_code = {
 
 | 작업 | 사용할 함수 |
 | --- | --- |
-| 중복 제거 · 그룹 · 색인 | `uniq`, `uniqBy`, `groupBy`, `keyBy` |
-| 차집합 · 교집합 · 합집합 · 값 제외 · 토글 | `difference`, `intersection`, `union`, `without`, `xor` |
-| 정렬 · 분할 · 조건 분류 · 반복 범위 | `sortBy`, `orderBy`, `chunk`, `partition`, `range` |
-| 객체 복사 · 깊은 비교 | `clone`, `cloneDeep`, `isEqual` |
-| 필드 선택 · 제외 · 값 변환 | `pick`, `omit`, `mapValues` |
-| 문자열 표기 · HTML 이스케이프 | `camelCase`, `snakeCase`, `kebabCase`, `pascalCase`, `capitalize`, `escape` |
-| 호출 빈도 · 횟수 · 결과 저장 | `debounce`, `throttle`, `once`, `memoize` |
-| 집계 · 범위 제한 · 최대 · 최소 | `sum`, `sumBy`, `mean`, `clamp`, `maxBy`, `minBy` |
-| 빈 값 · 타입 검사 | `isNil`, `isNotNil`, `isEmptyObject`, `isPlainObject` |
-| 비동기 지연 · 시간 제한 · 재시도 | `delay`, `withTimeout`, `retry` |
+| 중복 제거, 그룹, 색인 | `uniq`, `uniqBy`, `groupBy`, `keyBy` |
+| 차집합, 교집합, 합집합, 값 제외, 토글 | `difference`, `intersection`, `union`, `without`, `xor` |
+| 정렬, 분할, 조건 분류, 반복 범위 | `sortBy`, `orderBy`, `chunk`, `partition`, `range` |
+| 객체 복사, 깊은 비교 | `clone`, `cloneDeep`, `isEqual` |
+| 필드 선택, 제외, 값 변환 | `pick`, `omit`, `mapValues` |
+| 문자열 표기, HTML 이스케이프 | `camelCase`, `snakeCase`, `kebabCase`, `pascalCase`, `capitalize`, `escape` |
+| 호출 빈도, 횟수, 결과 저장 | `debounce`, `throttle`, `once`, `memoize` |
+| 집계, 범위 제한, 최대, 최소 | `sum`, `sumBy`, `mean`, `clamp`, `maxBy`, `minBy` |
+| 빈 값, 타입 검사 | `isNil`, `isNotNil`, `isEmptyObject`, `isPlainObject` |
+| 비동기 지연, 시간 제한, 재시도 | `delay`, `withTimeout`, `retry` |
 
 표에 없어도 문서에 같은 의미의 함수가 있으면 사용합니다.
 다만 `map`, `filter`, `find`, `flat`, `at`, `Object.keys`처럼 표준 메서드 하나로 끝나면 그대로 둡니다.
@@ -2929,7 +2904,7 @@ const order_status_by_api_code = {
 | --- | --- |
 | 이름은 같지만 제거 대상이 다름 | `compact`는 falsy를 모두 제거합니다 |
 | 중복 제거 후 남는 항목과 순서 | `Map`은 마지막 항목과 키의 최초 삽입 순서, `uniqBy`는 첫 항목을 남깁니다. 배열을 뒤집어 교체할 때도 남는 항목과 결과 순서가 같은지 확인합니다 |
-| 빈 목록의 최소 · 최대 | `minBy`, `maxBy` 결과의 `undefined`만 검사합니다. 사전 `length` 검사와 값 추출용 중간 `map`은 제거합니다 |
+| 빈 목록의 최소, 최대 | `minBy`, `maxBy` 결과의 `undefined`만 검사합니다. 사전 `length` 검사와 값 추출용 중간 `map`은 제거합니다 |
 | 표준 메서드로 끝나지 않는 연산 | 직접 여러 줄로 구현하기 전에 `es-toolkit`에서 찾습니다 |
 
 nullish만 제거하던 공개 계약은 `filter(isNotNil)` 등으로 보존하고 의미 차이를 검증하는 테스트를 남깁니다.
@@ -2979,7 +2954,7 @@ const toChartBounds = (points: readonly ChartPoint[]) => {
 };
 ```
 
-**Correct 2 (빈 목록 판정을 `minBy` · `maxBy`의 결과로 합칩니다):**
+**Correct 2 (빈 목록 판정을 `minBy`, `maxBy`의 결과로 합칩니다):**
 
 ```ts
 import {maxBy, minBy} from "es-toolkit";
@@ -3030,21 +3005,21 @@ flowchart LR
 
 | 작업 | 기준 |
 | --- | --- |
-| 파싱 · 유효성 검사 | `new Date(text)` 대신 `dayjs(text)`와 입력 형식에 맞는 검증을 사용합니다 |
-| 경과 시간 · 달력 날짜 계산 | `add`, `subtract`의 단위를 구분합니다. 정확히 24시간과 현지 다음 날은 서머타임 경계에서 다를 수 있습니다 |
-| 밀리초 · 월 계산 교체 | 밀리초 연산을 `add(..., "day")`로 일괄 치환하지 않습니다. 월 계산은 월말 처리 계약을 확인합니다 |
-| 표시 · 비교 | 수동 문자열 조합 · `toLocaleDateString` 대신 `format`, `getTime` 비교 대신 `isBefore`, `isAfter`, `isSame`을 씁니다 |
+| 파싱, 유효성 검사 | `new Date(text)` 대신 `dayjs(text)`와 입력 형식에 맞는 검증을 사용합니다 |
+| 경과 시간, 달력 날짜 계산 | `add`, `subtract`의 단위를 구분합니다. 정확히 24시간과 현지 다음 날은 서머타임 경계에서 다를 수 있습니다 |
+| 밀리초, 월 계산 교체 | 밀리초 연산을 `add(..., "day")`로 일괄 치환하지 않습니다. 월 계산은 월말 처리 계약을 확인합니다 |
+| 표시, 비교 | 수동 문자열 조합, `toLocaleDateString` 대신 `format`, `getTime` 비교 대신 `isBefore`, `isAfter`, `isSame`을 씁니다 |
 
-### 입력 · 표시 계약
+### 입력, 표시 계약
 
-| 입력 · 표시 계약 | 처리 |
+| 입력, 표시 계약 | 처리 |
 | --- | --- |
 | 고정된 날짜 형식 | 파싱 후 같은 형식으로 되돌려 원문과 비교합니다. `2026-02-30`처럼 보정되는 날짜도 거릅니다 |
-| 여러 입력 형식 · 엄격한 형식 검증 | `CustomParseFormat`을 초기화하고 `dayjs(value, input_format, true).isValid()`로 검사합니다 |
+| 여러 입력 형식, 엄격한 형식 검증 | `CustomParseFormat`을 초기화하고 `dayjs(value, input_format, true).isValid()`로 검사합니다 |
 | 시각과 오프셋이 포함된 문자열 | 날짜만 되돌리는 비교를 적용하지 않습니다 |
-| UTC · 특정 지역 시간 | `utc`, `timezone` 플러그인을 초기화합니다. 기본 `dayjs(value)`는 실행 환경의 로컬 타임존을 사용합니다 |
-| 타임존 기본값 · 날짜 계산 | `dayjs.tz.setDefault()`는 일반 `dayjs(value)`를 바꾸지 않습니다. 서머타임 전후 현지 시각과 오프셋을 실제로 확인합니다 |
-| 서버가 표시 타임존 · 형식까지 확정한 문자열 | 그대로 표시할 때는 파싱하지 않습니다. 문자열 자르기가 표시 규칙이면 유지합니다 |
+| UTC, 특정 지역 시간 | `utc`, `timezone` 플러그인을 초기화합니다. 기본 `dayjs(value)`는 실행 환경의 로컬 타임존을 사용합니다 |
+| 타임존 기본값, 날짜 계산 | `dayjs.tz.setDefault()`는 일반 `dayjs(value)`를 바꾸지 않습니다. 서머타임 전후 현지 시각과 오프셋을 실제로 확인합니다 |
+| 서버가 표시 타임존, 형식까지 확정한 문자열 | 그대로 표시할 때는 파싱하지 않습니다. 문자열 자르기가 표시 규칙이면 유지합니다 |
 | UTC 시각을 사용자 타임존으로 표시 | 먼저 타임존을 변환합니다 |
 
 형식 문자열은 상수로 선언하며 입력 형식과 화면 표시 형식은 별도 상수로 둡니다.
@@ -3102,7 +3077,7 @@ const compactDateTime = responseDateTime.slice(0, 16).replace("T", " ");
 
 **Rule:** `T04-08` · `values-decide-once-and-carry-the-result`
 
-**Applies when:** 같은 입력에 같은 판정 · 정규화 · 포맷을 두 자리 이상에서 할 때. 포맷하거나 정리한 값을 소비처에서 다시 파싱하거나 정리할 때. 두 함수가 같은 판정 함수를 부르게 되어 공유 보조를 만들려 할 때.
+**Applies when:** 같은 입력에 같은 판정, 정규화, 포맷을 두 자리 이상에서 할 때. 포맷하거나 정리한 값을 소비처에서 다시 파싱하거나 정리할 때. 두 함수가 같은 판정 함수를 부르게 되어 공유 보조를 만들려 할 때.
 
 **Review with:** `absence-resolve-defaults-at-the-boundary`, `functions-extract-helpers-only-when-the-boundary-is-real`
 
@@ -3113,7 +3088,7 @@ const compactDateTime = responseDateTime.slice(0, 16).replace("T", " ");
 
 | 반복되는 처리 | 변경 |
 | --- | --- |
-| 포맷한 문자열을 소비처가 다시 파싱 · 포맷 | 경계에서 한 번 포맷하고 그대로 사용합니다 |
+| 포맷한 문자열을 소비처가 다시 파싱, 포맷 | 경계에서 한 번 포맷하고 그대로 사용합니다 |
 | 정리한 값을 소비처가 다시 `trim` | 경계에서 한 번 정리합니다 |
 | 두 함수가 같은 판정 함수를 호출 | 항목에 판정 결과를 담고 두 함수가 읽습니다 |
 | 전달된 결과 옆에 `?? 다시 판정` 폴백 | 폴백을 제거합니다 |
@@ -3189,7 +3164,7 @@ const chartSeries = comparisonSeries.map((series) => ({
 
 **Rule:** `T05-01` · `absence-expose-optional-values-instead-of-silent-fallbacks`
 
-**Applies when:** 선택 값을 읽거나 정규화하거나 넘기는 방식을 바꿀 때. `??`, `||`, 기본값, 빈 값 대체 분기를 추가 · 변경할 때.
+**Applies when:** 선택 값을 읽거나 정규화하거나 넘기는 방식을 바꿀 때. `??`, `||`, 기본값, 빈 값 대체 분기를 추가, 변경할 때.
 
 **Review with:** `absence-resolve-defaults-at-the-boundary`, `naming-place-owner-constants-in-the-owner-constant-folder`, `naming-place-project-constants-in-the-root-constant-folder`
 
@@ -3215,7 +3190,7 @@ const chartSeries = comparisonSeries.map((series) => ({
 | 대체하려는 값 | 연산자 |
 | --- | --- |
 | `null`, `undefined`만 없음으로 취급 | `??` |
-| `0`, `false` · 빈 문자열까지 없음으로 취급하는 계약 | `\|\|` |
+| `0`, `false`, 빈 문자열까지 없음으로 취급하는 계약 | `\|\|` |
 
 선언된 이름이어도 기본값의 의미가 맞아야 합니다. `0`, `false`가 유효하면 `??`를 씁니다.
 상수는 소유자를 지워도 남으면 `naming-place-project-constants-in-the-root-constant-folder`,
@@ -3243,7 +3218,7 @@ const toPageRequest = (size = pagination_default_page_size): PageRequest => { /*
 
 **Rule:** `T05-02` · `absence-resolve-defaults-at-the-boundary`
 
-**Applies when:** 선택 값의 기본값을 어디서 채울지 정할 때. 같은 선택 값에 `??` 기본값 해소가 둘 이상의 사용처에 흩어질 때. search 스키마, 응답 매핑, 쿼리 `select`에 기본값 채움을 추가 · 변경할 때.
+**Applies when:** 선택 값의 기본값을 어디서 채울지 정할 때. 같은 선택 값에 `??` 기본값 해소가 둘 이상의 사용처에 흩어질 때. search 스키마, 응답 매핑, 쿼리 `select`에 기본값 채움을 추가, 변경할 때.
 
 **Review with:** `absence-expose-optional-values-instead-of-silent-fallbacks`, `functions-name-a-value-only-for-recompute-or-judgment`, `values-read-objects-through-chains`
 
@@ -3329,7 +3304,7 @@ setVisibleRowCount(effectivePageSize);
 
 **Rule:** `T05-03` · `absence-do-not-guard-what-types-guarantee`
 
-**Applies when:** `isNil`, `typeof`, 옵셔널 체이닝으로 값을 검사하는 분기를 추가 · 변경할 때. 선택 필드에 값을 넣으면서 `undefined`를 피하려고 조건부 스프레드를 쓸 때. 제외: `unknown`이나 앱 밖에서 온 값을 좁히는 경우.
+**Applies when:** `isNil`, `typeof`, 옵셔널 체이닝으로 값을 검사하는 분기를 추가, 변경할 때. 선택 필드에 값을 넣으면서 `undefined`를 피하려고 조건부 스프레드를 쓸 때. 제외: `unknown`이나 앱 밖에서 온 값을 좁히는 경우.
 
 **Review with:** `absence-check-once-at-the-boundary`, `absence-expose-optional-values-instead-of-silent-fallbacks`, `types-narrow-unknown-instead-of-asserting`
 
@@ -3344,9 +3319,9 @@ setVisibleRowCount(effectivePageSize);
 | --- | --- |
 | `string`의 `?.trim()`, `number`의 `typeof`, 필수 필드의 `isNil` | 타입이 보장하므로 제거합니다 |
 | `string \| null`의 `isNil` | 값이 없을 수 있으므로 유지합니다 |
-| `unknown` · 외부 입력 | `types-narrow-unknown-instead-of-asserting`에 따라 검증합니다 |
+| `unknown`, 외부 입력 | `types-narrow-unknown-instead-of-asserting`에 따라 검증합니다 |
 | 유한 수 여부 | `number`는 `NaN`, `Infinity`도 포함하므로 필요한 검사를 남깁니다 |
-| 배열 인덱스 · 열린 키 조회 | 컴파일러 옵션과 실제 길이에 따라 값이 없을 수 있으므로 필요한 검사를 남깁니다 |
+| 배열 인덱스, 열린 키 조회 | 컴파일러 옵션과 실제 길이에 따라 값이 없을 수 있으므로 필요한 검사를 남깁니다 |
 
 ### 선택 필드의 생략
 
@@ -3355,7 +3330,7 @@ setVisibleRowCount(effectivePageSize);
 | 소비 계약 | 객체 구성 |
 | --- | --- |
 | 두 상태를 구분하지 않고 타입도 허용 | `undefined`를 바로 넣어 불필요한 조건부 스프레드를 줄입니다 |
-| `in`, `Object.hasOwn` · 객체 병합 · 패치 등에서 구분 | 조건부 스프레드를 유지하고 생략이 필요한 계약을 이유 주석에 적습니다 |
+| `in`, `Object.hasOwn`, 객체 병합, 패치 등에서 구분 | 조건부 스프레드를 유지하고 생략이 필요한 계약을 이유 주석에 적습니다 |
 | `exactOptionalPropertyTypes` 사용 | `value?: T`에 `undefined`를 쓸 수 있는지 확인합니다 |
 | `value?: T \| undefined`처럼 명시적으로 허용 | 조건부 스프레드로 바꾸지 않습니다 |
 
@@ -3405,7 +3380,7 @@ return {
 
 **Rule:** `T05-04` · `absence-check-once-at-the-boundary`
 
-**Applies when:** `isNil`, `Number.isFinite` 같은 검사를 함수에 넣을 때. `null`, `undefined`, `unknown`을 매개변수 · 반환 타입에 넣거나 뺄 때. 응답 매핑 · 쿼리 · search 스키마에서 없음 · 유한 수 검사로 타입을 좁힐 때.
+**Applies when:** `isNil`, `Number.isFinite` 같은 검사를 함수에 넣을 때. `null`, `undefined`, `unknown`을 매개변수, 반환 타입에 넣거나 뺄 때. 응답 매핑, 쿼리, search 스키마에서 없음, 유한 수 검사로 타입을 좁힐 때.
 
 **Review with:** `absence-do-not-guard-what-types-guarantee`, `absence-resolve-defaults-at-the-boundary`, `values-decide-once-and-carry-the-result`
 
@@ -3429,9 +3404,9 @@ return {
 
 | 다시 검사가 필요한가 | 기준 |
 | --- | --- |
-| 경계에서 이미 확인한 없음 · 유한 수 조건 | 반복하지 않습니다 |
-| 타입이 `number`라는 사실만 확인됨 | `NaN`, `Infinity` · 허용 범위까지 보장하지는 않습니다 |
-| 새 계산 · 외부 호출로 만든 값, 검증 후 변경 · 외부 값 혼합 | 기존 보장이 적용되지 않는 조건을 해당 경계에서 확인합니다 |
+| 경계에서 이미 확인한 없음, 유한 수 조건 | 반복하지 않습니다 |
+| 타입이 `number`라는 사실만 확인됨 | `NaN`, `Infinity`, 허용 범위까지 보장하지는 않습니다 |
+| 새 계산, 외부 호출로 만든 값, 검증 후 변경, 외부 값 혼합 | 기존 보장이 적용되지 않는 조건을 해당 경계에서 확인합니다 |
 | 여러 입력 경로가 각각 외부 값을 받음 | 각 경계에서 검증합니다 |
 
 경계 아래 여러 함수가 `number | null | undefined`나 `unknown`을 받으면 경계의 처리 책임을 확인합니다.
@@ -3518,7 +3493,7 @@ const responseSummarySuspense = useSuspenseQuery({
 
 **Rule:** `T06-01` · `docs-keep-body-comments-for-intent-and-steps`
 
-**Applies when:** 함수 본문의 `//` 주석을 추가 · 수정 · 유지할 때. 도메인 규칙, 예외 방어, 외부 제약, 부수효과 순서, 긴 절차의 단계를 주석으로 설명할 때.
+**Applies when:** 함수 본문의 `//` 주석을 추가, 수정, 유지할 때. 도메인 규칙, 예외 방어, 외부 제약, 부수효과 순서, 긴 절차의 단계를 주석으로 설명할 때.
 
 **Review with:** `docs-justify-convention-exceptions-with-a-reason-comment`, `docs-write-korean-comments-about-purpose-and-constraints`
 
@@ -3529,7 +3504,7 @@ const responseSummarySuspense = useSuspenseQuery({
 
 | 위치 | 주석 형태 |
 | --- | --- |
-| 코드 한 줄 · 절차 단계 | `//`. 긴 흐름을 한 함수에 유지할 때도 단계 구분을 남깁니다 |
+| 코드 한 줄, 절차 단계 | `//`. 긴 흐름을 한 함수에 유지할 때도 단계 구분을 남깁니다 |
 | `docs-require-header-jsdoc-on-key-declarations`가 정한 선언 | `docs-write-doc-comments-as-multiline-blocks`에 따른 문서 블록 |
 | 그 밖의 지역 선언 | 별도 주석을 달지 않습니다. 필요한 줄의 의도만 `//`로 적습니다 |
 | JSX 자식 | `//`를 쓸 수 없으므로 프레임워크 규칙을 따릅니다 |
@@ -3601,9 +3576,9 @@ const submitProductDraft = async (draft: ProductDraft) => {
 
 **Rule:** `T06-02` · `docs-require-header-jsdoc-on-key-declarations`
 
-**Applies when:** 쿼리, 뮤테이션, 원격 함수, 커스텀 훅, 스토어, 포매터 선언을 추가 · 변경할 때. 분기나 `await`나 두 개 이상의 동작이 있는 핸들러와 이펙트를 추가 · 변경할 때. 다시 쓰거나 내보낸 보조 함수를 추가 · 변경할 때.
+**Applies when:** 쿼리, 뮤테이션, 원격 함수, 커스텀 훅, 스토어, 포매터 선언을 추가, 변경할 때. 분기나 `await`나 두 개 이상의 동작이 있는 핸들러와 이펙트를 추가, 변경할 때. 다시 쓰거나 내보낸 보조 함수를 추가, 변경할 때.
 
-**Requires selected:** `docs-write-doc-comments-as-multiline-blocks`, `docs-write-korean-comments-about-purpose-and-constraints` · 함께 적용
+**Requires selected:** `docs-write-doc-comments-as-multiline-blocks`, `docs-write-korean-comments-about-purpose-and-constraints` (함께 적용)
 
 **Impact: MEDIUM (구현을 읽기 전에 중요한 경계를 찾고 설명할 수 있습니다)**
 
@@ -3612,9 +3587,9 @@ const submitProductDraft = async (draft: ProductDraft) => {
 
 | 헤더 문서 주석 대상 | 조건 |
 | --- | --- |
-| 이름 붙인 쿼리 · 뮤테이션 · 원격 함수 · 커스텀 훅 · 스토어 | 모두 작성합니다 |
+| 이름 붙인 쿼리, 뮤테이션, 원격 함수, 커스텀 훅, 스토어 | 모두 작성합니다 |
 | 포매터 | 표시 문자열을 만들 때 작성합니다 |
-| 핸들러 · 이펙트 | 본문에 분기 · `await` · 두 개 이상의 동작 중 하나라도 있으면 작성합니다 |
+| 핸들러, 이펙트 | 본문에 분기, `await`, 두 개 이상의 동작 중 하나라도 있으면 작성합니다 |
 | 보조 함수 | 재사용하거나 내보내면 작성합니다 |
 | 커스텀 `type`, `interface` | 내보내기 여부와 무관하게 `types-document-custom-types-and-shapes`를 따릅니다 |
 
@@ -3649,14 +3624,14 @@ const responseProductList = useProductList();
 
 **Rule:** `T06-03` · `docs-write-korean-comments-about-purpose-and-constraints`
 
-**Applies when:** TypeScript · TSX의 문서 주석이나 인라인 주석 문구를 추가 · 수정 · 번역하거나 검토할 때. 문서 주석에 태그를 붙이거나 뺄 때.
+**Applies when:** TypeScript, TSX의 문서 주석이나 인라인 주석 문구를 추가, 수정, 번역하거나 검토할 때. 문서 주석에 태그를 붙이거나 뺄 때.
 
 **Impact: HIGH (코드 동작을 옮겨 적지 않고 의도와 제약에 주석을 모읍니다)**
 
 주석은 한국어로 목적, 제약, 부수효과를 설명합니다.
 이름과 시그니처에 없는 정보가 없으면 지우고, 필요한 배경에 따라 한 문장이나 여러 문장으로 씁니다.
 
-| 내용 · 태그 | 판단 |
+| 내용, 태그 | 판단 |
 | --- | --- |
 | 선언 이름만 번역하거나 코드를 한 줄씩 옮긴 설명 | 쓰지 않습니다 |
 | 설명 없이 `@param`, `@returns`만 나열 | 쓰지 않습니다 |
@@ -3664,7 +3639,7 @@ const responseProductList = useProductList();
 | `@schema` 같은 비표준 태그 | 새로 만들지 않습니다 |
 | `@summary` | 헤더 첫 줄과 겹치므로 쓰지 않습니다 |
 | `@deprecated`, `@example`, `@param`, `@returns` 등 TSDoc 태그 | 필요할 때만 씁니다 |
-| 영어 기술 용어 · 식별자 | 섞어 써도 됩니다. 본문 전체가 영어인 주석은 허용하지 않습니다 |
+| 영어 기술 용어, 식별자 | 섞어 써도 됩니다. 본문 전체가 영어인 주석은 허용하지 않습니다 |
 
 글자 수 제한은 두지 않습니다. 헤더가 영어뿐이면 필드 주석이 한국어여도 요구를 충족하지 못합니다.
 선언 위 문서 주석은 `docs-write-doc-comments-as-multiline-blocks`,
@@ -3774,7 +3749,7 @@ export const fetchProductList = async (): Promise<Product[]> => {
 
 문서 주석은 `/**`, `*`, `*/`를 각각 다른 줄에 둔 여러 줄 블록으로 씁니다.
 
-| 형태 · 판단 | 기준 |
+| 형태, 판단 | 기준 |
 | --- | --- |
 | `/** 한 줄 */` | 쓰지 않습니다 |
 | 선언 설명을 `//`로 작성 | 쓰지 않습니다. 선언 위 `//`는 `docs-justify-convention-exceptions-with-a-reason-comment`의 예외 이유에 씁니다 |
@@ -3838,9 +3813,9 @@ export const saveProduct = async (product: Product): Promise<void> => {
 
 | 근거 | 적을 내용 |
 | --- | --- |
-| 외부 패키지 · API 제약 | 어떤 API가 무엇을 요구하는지 |
+| 외부 패키지, API 제약 | 어떤 API가 무엇을 요구하는지 |
 | 측정 결과 | 측정 대상과 수치 |
-| 제품 명세 · 티켓 | 결정이 기록된 위치 |
+| 제품 명세, 티켓 | 결정이 기록된 위치 |
 | 상수 | `constant` 폴더에 선언된 이름 |
 
 ### 주석 자리
@@ -3902,7 +3877,7 @@ const filteredRows = useMemo(() => {
 
 **Rule:** `T07-01` · `tooling-configure-biome-to-enforce-these-rules`
 
-**Applies when:** 프로젝트에 `biome` 설정을 처음 넣거나 lint 규칙을 바꿀 때. `biome.json`의 `linter.rules`에 항목을 추가 · 삭제할 때.
+**Applies when:** 프로젝트에 `biome` 설정을 처음 넣거나 lint 규칙을 바꿀 때. `biome.json`의 `linter.rules`에 항목을 추가, 삭제할 때.
 
 **Impact: MEDIUM (자동 검사와 리뷰의 역할을 구분해 판단이 필요한 내용에 집중합니다)**
 
@@ -3914,13 +3889,13 @@ const filteredRows = useMemo(() => {
 | --- | --- |
 | `style/noEnum`, `style/useAsConstAssertion` | `typescript/types-replace-enum-with-as-const-objects` |
 | `style/noRestrictedImports` | `typescript/naming-import-by-absolute-path`. 심볼 없는 상대경로 예외는 `./*.css` 패턴으로 근사합니다 |
-| `style/useNamingConvention`, `style/useFilenamingConvention` | `typescript/naming-use-consistent-file-and-symbol-naming`의 심볼 · 파일 표기 |
-| `style/noParameterAssign`, `style/useConst`, `style/noNestedTernary` | `typescript/functions-avoid-imperative-assembly-in-wide-scopes`의 재할당 · 중첩 삼항 제한 |
+| `style/useNamingConvention`, `style/useFilenamingConvention` | `typescript/naming-use-consistent-file-and-symbol-naming`의 심볼, 파일 표기 |
+| `style/noParameterAssign`, `style/useConst`, `style/noNestedTernary` | `typescript/functions-avoid-imperative-assembly-in-wide-scopes`의 재할당, 중첩 삼항 제한 |
 | `correctness/noUnusedFunctionParameters` | `typescript/types-mark-unused-parameters-with-underscore` |
 | `complexity/useMaxParams` | `typescript/functions-use-named-object-params-for-complex-signatures`의 인자 세 개 기준 |
 | `style/noMagicNumbers` | `typescript/values-declare-meaningful-numbers` |
 | `suspicious/noExplicitAny`, `style/noNonNullAssertion` | `typescript/types-narrow-unknown-instead-of-asserting` |
-| `plugins`의 GritQL 파일 | `typescript/absence-expose-optional-values-instead-of-silent-fallbacks`의 `??` · `\|\|` 오른쪽 리터럴 |
+| `plugins`의 GritQL 파일 | `typescript/absence-expose-optional-values-instead-of-silent-fallbacks`의 `??`, `\|\|` 오른쪽 리터럴 |
 
 `typescript/naming-use-direct-imports-and-public-entry-points`의 가져오기, 이름 붙인 내보내기, 배럴 제한은
 아래 규칙이 담당합니다.
@@ -3940,10 +3915,10 @@ Biome 2.5.7의 `recommended`에는 `useConst`, `useImportType`, `noNonNullAssert
 
 | 대상 | 도구 한계 | 처리 |
 | --- | --- | --- |
-| 모듈 `const` · 객체 키의 역할 | 허용된 `snake_case`는 불변 데이터 상수와 그 키에만 적용됨 | 함수 · 스키마 · 요청 객체와의 구분은 리뷰합니다 |
-| 허용된 `PascalCase`의 용도 | 합성 컴포넌트의 `{Root, Header, Footer}`와 컴포넌트 선언 때문에 허용됨 | 일반 함수 · 지역 변수의 `camelCase`는 리뷰합니다 |
+| 모듈 `const`, 객체 키의 역할 | 허용된 `snake_case`는 불변 데이터 상수와 그 키에만 적용됨 | 함수, 스키마, 요청 객체와의 구분은 리뷰합니다 |
+| 허용된 `PascalCase`의 용도 | 합성 컴포넌트의 `{Root, Header, Footer}`와 컴포넌트 선언 때문에 허용됨 | 일반 함수, 지역 변수의 `camelCase`는 리뷰합니다 |
 | 폴더명 | 단수 `kebab-case`는 파일명 검사 대상이 아님 | 리뷰합니다 |
-| `const` 화살표 선언 · 이름 붙인 함수의 블록 본문 | `style/useConsistentArrowReturn`의 `style: "always"`는 예외까지 막음 | 켜지 않고 `typescript/functions-declare-functions-as-arrow-consts`를 리뷰합니다 |
+| `const` 화살표 선언, 이름 붙인 함수의 블록 본문 | `style/useConsistentArrowReturn`의 `style: "always"`는 예외까지 막음 | 켜지 않고 `typescript/functions-declare-functions-as-arrow-consts`를 리뷰합니다 |
 | 넓은 스코프에서 `push`로 누적 | `useConst`는 재할당만 확인함 | 리뷰합니다 |
 | 사용하지 않는 매개변수를 아예 생략 | 검사는 남겨 둔 매개변수만 봄 | 리뷰합니다 |
 | `as`, `@ts-expect-error` | 의도를 구분하지 못함 | 위의 타입 좁히기 규칙에 따라 리뷰합니다 |
@@ -4036,7 +4011,7 @@ Biome 2.5.7의 `recommended`에는 `useConst`, `useImportType`, `noNonNullAssert
 }
 ```
 
-**Correct (`??` · `||` 오른쪽 리터럴은 GritQL 플러그인으로 잡습니다):**
+**Correct (`??`, `||` 오른쪽 리터럴은 GritQL 플러그인으로 잡습니다):**
 
 ```json
 {
@@ -4052,7 +4027,7 @@ or {
 	`$left || $right`
 } where {
 	$right <: or { string(), number(), `true`, `false`, `[]`, `{}` },
-	register_diagnostic(span = $right, message = "?? · || 오른쪽에 리터럴을 두지 않습니다. 선언된 이름을 참조합니다")
+	register_diagnostic(span = $right, message = "??, || 오른쪽에 리터럴을 두지 않습니다. 선언된 이름을 참조합니다")
 }
 ```
 

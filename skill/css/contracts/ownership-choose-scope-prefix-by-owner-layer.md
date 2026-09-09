@@ -45,4 +45,4 @@ component/ui/button/ui-button.css
   ui_button__root
 ```
 
-> 나머지 예시 · 예외는 [full rule](../rules/02-02-ownership-choose-scope-prefix-by-owner-layer.md)에 있습니다.
+> 나머지 예시와 예외는 [full rule](../rules/02-02-ownership-choose-scope-prefix-by-owner-layer.md)에 있습니다.

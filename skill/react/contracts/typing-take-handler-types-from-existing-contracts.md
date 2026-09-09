@@ -16,7 +16,7 @@ JSX에 직접 쓴 화살표 함수와 달리, 팩토리가 반환하는 함수�
 
 `query.select` 같은 훅 옵션의 일회성 문맥 콜백은 리액트 핸들러 구현이 아니므로 대상에서 제외합니다.
 
-**Requires selected:** `typescript/types-prefer-function-variable-types-over-parameter-annotations` · 함께 적용
+**Requires selected:** `typescript/types-prefer-function-variable-types-over-parameter-annotations` (함께 적용)
 
 **Incorrect 1 (팩토리 반환 타입을 적지 않아 이벤트가 암시적 `any`가 됩니다):**
 
@@ -43,4 +43,4 @@ const handleRowSelectToggle =
 	};
 ```
 
-> 나머지 예시 · 예외는 [full rule](../rules/03-01-typing-take-handler-types-from-existing-contracts.md)에 있습니다.
+> 나머지 예시와 예외는 [full rule](../rules/03-01-typing-take-handler-types-from-existing-contracts.md)에 있습니다.

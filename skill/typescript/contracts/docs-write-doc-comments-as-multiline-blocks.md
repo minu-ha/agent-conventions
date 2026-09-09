@@ -4,7 +4,7 @@
 
 문서 주석은 `/**`, `*`, `*/`를 각각 다른 줄에 둔 여러 줄 블록으로 씁니다.
 
-| 형태 · 판단 | 기준 |
+| 형태, 판단 | 기준 |
 | --- | --- |
 | `/** 한 줄 */` | 쓰지 않습니다 |
 | 선언 설명을 `//`로 작성 | 쓰지 않습니다. 선언 위 `//`는 `docs-justify-convention-exceptions-with-a-reason-comment`의 예외 이유에 씁니다 |
@@ -41,4 +41,4 @@ export const fetchProductList = async (): Promise<Product[]> => {
 };
 ```
 
-> 나머지 예시 · 예외는 [full rule](../rules/06-04-docs-write-doc-comments-as-multiline-blocks.md)에 있습니다.
+> 나머지 예시와 예외는 [full rule](../rules/06-04-docs-write-doc-comments-as-multiline-blocks.md)에 있습니다.

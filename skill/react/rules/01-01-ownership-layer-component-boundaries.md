@@ -31,9 +31,9 @@ flowchart LR
 
 | 조건 | 레이어 |
 | --- | --- |
-| 화면의 응답 · 뷰모델 타입이나 라우트 search 파라미터를 프롭스 타입에서 참조함 | `page` |
-| 쿼리 · 뮤테이션 · 라우터 훅 · 화면 스토어를 직접 호출함 | `page` |
-| 해당 화면의 `Suspense` 경계 · 폼 프로바이더 · 모달을 여는 조건을 소유함 | `page` |
+| 화면의 응답, 뷰모델 타입이나 라우트 search 파라미터를 프롭스 타입에서 참조함 | `page` |
+| 쿼리, 뮤테이션, 라우터 훅, 화면 스토어를 직접 호출함 | `page` |
+| 해당 화면의 `Suspense` 경계, 폼 프로바이더, 모달을 여는 조건을 소유함 | `page` |
 
 하나도 걸리지 않으면 도메인을 아는 쪽이 `widget`, 모르는 쪽이 `ui`입니다.
 `widget`은 이름에 도메인 단어가 남아도 됩니다.
@@ -84,7 +84,7 @@ export const PgDeleteProductButton = () => {
 };
 ```
 
-**Incorrect 2 (화면 타입 · 훅과 무관한 부품을 사용 횟수만으로 화면 레이어에 둡니다):**
+**Incorrect 2 (화면 타입, 훅과 무관한 부품을 사용 횟수만으로 화면 레이어에 둡니다):**
 
 ```tsx
 // page/detail/_pg-product-status-badge.tsx
@@ -94,7 +94,7 @@ export const PgProductStatusBadge = (props: PgProductStatusBadgeProps) => {
 };
 ```
 
-**Correct 2 (화면 타입 · 훅과 무관한 도메인 부품은 `widget`에 둡니다):**
+**Correct 2 (화면 타입, 훅과 무관한 도메인 부품은 `widget`에 둡니다):**
 
 ```tsx
 // component/widget/product-status-badge/wg-product-status-badge.tsx

@@ -19,4 +19,4 @@
 <div className={clsx("pg_products__listButton", isActive && "pg_products__listButton--active")} />
 ```
 
-> 나머지 예시 · 예외는 [full rule](../rules/03-03-composition-keep-classes-single-purpose.md)에 있습니다.
+> 나머지 예시와 예외는 [full rule](../rules/03-03-composition-keep-classes-single-purpose.md)에 있습니다.

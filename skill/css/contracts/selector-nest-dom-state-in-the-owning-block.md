@@ -62,4 +62,4 @@ DOM 상태 가상 클래스는 해당 요소의 **조건 없는 기본 클래스
 }
 ```
 
-> 나머지 예시 · 예외는 [full rule](../rules/04-06-selector-nest-dom-state-in-the-owning-block.md)에 있습니다.
+> 나머지 예시와 예외는 [full rule](../rules/04-06-selector-nest-dom-state-in-the-owning-block.md)에 있습니다.

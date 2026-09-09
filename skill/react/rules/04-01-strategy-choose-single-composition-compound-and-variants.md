@@ -1,6 +1,6 @@
 ---
 title: Choose Single Components, Compound Components, and Variants Deliberately
-titleKo: 단일 · 합성 · 변형 중 필요한 구조를 고릅니다
+titleKo: 단일, 합성, 변형 중 필요한 구조를 고릅니다
 impact: MEDIUM
 impactDescription: 필요한 확장 범위에 맞춰 단순한 컴포넌트 구조를 선택합니다
 appliesWhen:
@@ -40,7 +40,7 @@ flowchart LR
 렌더 프롭은 `strategy-prefer-children-over-render-props`를,
 공개 부품의 범위는 `strategy-expose-only-assembled-compound-parts`를 따릅니다.
 
-**Incorrect 1 (단일 · 합성 · 변형을 구분하지 않고 한 컴포넌트에 모두 구현합니다):**
+**Incorrect 1 (단일, 합성, 변형을 구분하지 않고 한 컴포넌트에 모두 구현합니다):**
 
 ```tsx
 export interface WgProfileDialogProps {

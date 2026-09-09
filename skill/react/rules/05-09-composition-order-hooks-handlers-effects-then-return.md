@@ -2,9 +2,9 @@
 title: Order Hooks, Handlers, Effects, Then Return
 titleKo: 본문은 훅, 핸들러, 이펙트, 반환 순으로 배치합니다
 impact: HIGH
-impactDescription: 컴포넌트마다 훅 · 핸들러 · 이펙트를 같은 순서로 찾을 수 있습니다
+impactDescription: 컴포넌트마다 훅, 핸들러, 이펙트를 같은 순서로 찾을 수 있습니다
 appliesWhen:
-  - 컴포넌트 본문에 훅 · 핸들러 · 이펙트를 추가하거나 자리를 옮길 때
+  - 컴포넌트 본문에 훅, 핸들러, 이펙트를 추가하거나 자리를 옮길 때
   - 본문 선언이 아래 선언을 참조해 순서를 다시 잡을 때
 reviewWith: screen-keep-derived-values-close, events-run-user-actions-in-handlers-not-effects
 tags: composition, ordering
@@ -12,7 +12,7 @@ tags: composition, ordering
 
 ## Order Hooks, Handlers, Effects, Then Return
 
-**Impact: HIGH (컴포넌트마다 훅 · 핸들러 · 이펙트를 같은 순서로 찾을 수 있습니다)**
+**Impact: HIGH (컴포넌트마다 훅, 핸들러, 이펙트를 같은 순서로 찾을 수 있습니다)**
 
 컴포넌트 본문은 아래 네 구획 순서로 작성합니다.
 렌더 중에 읽는 값은 사용 위치보다 위에서 선언합니다.
@@ -21,8 +21,8 @@ tags: composition, ordering
 
 ```mermaid
 flowchart TD
-	s1("훅<br>라우터 · 스토어 · 쿼리 · 컨텍스트<br>커스텀 훅 · useState · useRef") --> s2("핸들러<br>handle* 함수")
-	s2 --> s3("이펙트<br>useEffect · useLayoutEffect")
+	s1("훅<br>라우터, 스토어, 쿼리, 컨텍스트<br>커스텀 훅, useState, useRef") --> s2("핸들러<br>handle* 함수")
+	s2 --> s3("이펙트<br>useEffect, useLayoutEffect")
 	s3 --> s4("반환<br>이른 반환과 JSX")
 ```
 

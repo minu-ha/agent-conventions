@@ -19,7 +19,7 @@ tags: typing, wrapper, dom
 
 공개할 계약은 `typing-narrow-library-wrapper-contracts`로 정합니다.
 그다음 DOM 속성은 아래 순서로 엽니다.
-같은 요소로 `{...props}`를 전달하는 래퍼는 1 · 2단계 중 컴파일되는 형태를 씁니다.
+같은 요소로 `{...props}`를 전달하는 래퍼는 1, 2단계 중 컴파일되는 형태를 씁니다.
 
 ### 여는 차례
 
@@ -61,7 +61,7 @@ DOM 속성은 리액트가 추가한 속성도 받아야 하는 열린 집합이
 **Incorrect 1 (프롭 타입 하나의 충돌 때문에 DOM 속성 전체를 제외합니다):**
 
 ```tsx
-// id · role · tabIndex · aria-* · 이벤트를 전부 잃고 다섯 개만 남았다
+// id, role, tabIndex, aria-*, 이벤트를 전부 잃고 다섯 개만 남았다
 export interface UiButtonProps {
 	className?: string;
 	children?: ReactNode;

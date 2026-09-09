@@ -12,7 +12,7 @@
 ```mermaid
 flowchart LR
 	q1{"고유 크기 지정만으로<br>배치할 수 있는가?"} -- 아니요 --> q2{"실제 슬롯 폭에 따라<br>구조를 바꾸는가?"} -- 아니요 --> r3("@media")
-	q1 -- 예 --> r1("flex-wrap · auto-fit · clamp")
+	q1 -- 예 --> r1("flex-wrap, auto-fit, clamp")
 	q2 -- 예 --> r2("@container")
 ```
 
@@ -82,4 +82,4 @@ flowchart LR
 }
 ```
 
-> 나머지 예시 · 예외는 [full rule](../rules/06-04-layout-reach-for-intrinsic-sizing-before-breakpoints.md)에 있습니다.
+> 나머지 예시와 예외는 [full rule](../rules/06-04-layout-reach-for-intrinsic-sizing-before-breakpoints.md)에 있습니다.

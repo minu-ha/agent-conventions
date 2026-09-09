@@ -4,7 +4,7 @@ titleKo: 토큰 이름은 값이 아니라 쓰임으로 짓습니다
 impact: MEDIUM
 impactDescription: 값이 바뀌어도 토큰 이름이 쓰임을 나타내고 일관된 형식을 유지합니다
 appliesWhen:
-  - 색 · 그림자 · 간격 · 층 같은 디자인 토큰을 새로 만들거나 이름을 바꿀 때
+  - 색, 그림자, 간격, 층 같은 디자인 토큰을 새로 만들거나 이름을 바꿀 때
   - 토큰 파일에 `white`, `gray-100`처럼 값을 말하는 이름을 넣거나 뺄 때
 reviewWith: values-tokenize-repeated-visual-values, values-switch-themes-by-changing-token-values
 tags: values, naming

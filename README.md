@@ -17,7 +17,7 @@
     - 1.3 [담당 영역 핸드북](#13-담당-영역-핸드북)
     - 1.4 [동작 확인](#14-동작-확인)
 2. [문서 구성](#2-문서-구성) — 문서별 역할과 독자
-3. [포함된 Skill](#3-포함된-skill) — react · typescript · css
+3. [포함된 Skill](#3-포함된-skill) — react, typescript, css
 4. [동작 원리](#4-동작-원리) — 규칙이 선택되는 경로
 5. [문제 해결](#5-문제-해결) — 증상별 원인
 6. [규칙 수정](#6-규칙-수정) — 기여자 문서로
@@ -74,8 +74,8 @@ ln -s /absolute/path/to/agent-conventions/skill ~/.agents/skills/conventions
 
 | 작업 영역 | 핸드북 |
 | --- | --- |
-| React 화면 · 컴포넌트 | [react](./skill/react/HANDBOOK.md) + [typescript](./skill/typescript/HANDBOOK.md) |
-| React의 `className` · 스타일 | 위 둘 + [css](./skill/css/HANDBOOK.md) |
+| React 화면, 컴포넌트 | [react](./skill/react/HANDBOOK.md) + [typescript](./skill/typescript/HANDBOOK.md) |
+| React의 `className`, 스타일 | 위 둘 + [css](./skill/css/HANDBOOK.md) |
 | 순수 CSS 스타일시트 | [css](./skill/css/HANDBOOK.md) |
 | 프레임워크와 무관한 TypeScript | [typescript](./skill/typescript/HANDBOOK.md) |
 
@@ -106,12 +106,12 @@ TSX 파일 하나를 고쳐 달라고 시켜본다. 에이전트는 이 순서�
 | 문서 | 내용 |
 | --- | --- |
 | README.md | 이 문서. 설치와 적용 |
-| [CONTRIBUTING.md](./CONTRIBUTING.md) | 규칙 추가 · 수정 절차 |
-| [conventions.html](./conventions.html) | **규칙 조회.** 세 skill의 규칙을 검색 · 필터로 찾는다. 데이터인 `conventions-data.js`와 같은 폴더에 두고 연다 |
+| [CONTRIBUTING.md](./CONTRIBUTING.md) | 규칙 추가, 수정 절차 |
+| [conventions.html](./conventions.html) | **규칙 조회.** 세 skill의 규칙을 검색, 필터로 찾는다. 데이터인 `conventions-data.js`와 같은 폴더에 두고 연다 |
 | `skill/<name>/HANDBOOK.md` | 규칙 전문. 통독과 에이전트 전체 검토용 생성물 |
-| [overview.html](./overview.html) | 실행 흐름 · 스킬 관계 · 규칙 관계 |
-| [docs/progressive-loading.html](./docs/progressive-loading.html) | 설계 배경 · 측정 · 검증 · 한계 |
-| [package/README.md](./package/README.md) | build · validate · test tooling |
+| [overview.html](./overview.html) | 실행 흐름, 스킬 관계, 규칙 관계 |
+| [docs/progressive-loading.html](./docs/progressive-loading.html) | 설계 배경, 측정, 검증, 한계 |
+| [package/README.md](./package/README.md) | build, validate, test tooling |
 
 에이전트가 읽는 것.
 
@@ -132,9 +132,9 @@ HTML 문서는 브라우저나 WebStorm HTML 프리뷰로 연다.
 
 | Skill | Loading | 담당 범위 |
 | --- | --- | --- |
-| [react](./skill/react/HANDBOOK.md) | progressive | 컴포넌트 경계 · route-local · handler · state |
-| [typescript](./skill/typescript/HANDBOOK.md) | progressive | import · type · helper · JSDoc |
-| [css](./skill/css/HANDBOOK.md) | progressive | plain CSS · owner namespace · 토큰 |
+| [react](./skill/react/HANDBOOK.md) | progressive | 컴포넌트 경계, route-local, handler, state |
+| [typescript](./skill/typescript/HANDBOOK.md) | progressive | import, type, helper, JSDoc |
+| [css](./skill/css/HANDBOOK.md) | progressive | plain CSS, owner namespace, 토큰 |
 
 skill 이름은 `convention-<skill>`.
 
@@ -152,8 +152,8 @@ progressive skill 셋은 규칙 전체를 안 읽는다. 단계마다 좁힌다.
 | --- | --- | --- | --- |
 | 1 | `SKILL.md` | 라우터. 무엇이 바뀌었는지 판정 | 항상 |
 | 2 | `RULES_INDEX.md` | 규칙당 한 줄. 끝까지 훑음 | 항상 |
-| 3 | `contracts/<id>.md` | `MEDIUM`은 규범과 첫 `Incorrect` · `Correct` 짝. `CRITICAL` · `HIGH`는 원문 링크만 | 걸린 규칙만 |
-| 4 | `rules/NN-MM-<id>.md` | 원문 전부. 설명과 예제 | `CRITICAL` · `HIGH`는 항상, `MEDIUM`은 판단이 모호할 때 |
+| 3 | `contracts/<id>.md` | `MEDIUM`은 규범과 첫 `Incorrect`, `Correct` 짝. `CRITICAL`, `HIGH`는 원문 링크만 | 걸린 규칙만 |
+| 4 | `rules/NN-MM-<id>.md` | 원문 전부. 설명과 예제 | `CRITICAL`, `HIGH`는 항상, `MEDIUM`은 판단이 모호할 때 |
 
 `HANDBOOK.md`는 이 경로 밖이다. 사람이 통독할 때 쓰고,
 에이전트는 명시적 요청이 있을 때만 읽는다.
@@ -196,8 +196,8 @@ progressive skill 셋은 규칙 전체를 안 읽는다. 단계마다 좁힌다.
 
 절차는 [CONTRIBUTING.md](./CONTRIBUTING.md). 착수 전 알 것 넷.
 
-1. 정본은 `rules/*.md`. `HANDBOOK.md` · `RULES_INDEX.md` · `contracts/*.md` · 
-   `conventions.html` · `conventions-data.js`는 생성물.
+1. 정본은 `rules/*.md`. `HANDBOOK.md`, `RULES_INDEX.md`, `contracts/*.md`, 
+   `conventions.html`, `conventions-data.js`는 생성물.
 2. 규범은 첫 `Incorrect` 앞에서 끝낸다. 생성기가 그 앞부분만 계약으로 뽑는다.
 3. `appliesWhen` 한 줄이 라우팅을 결정한다. 규칙의 결론이 아니라 관찰 가능한 변경 조건.
 4. 고친 뒤 `npm --prefix package run dev:<skill>` → `viewer` → `check:generated:all` → `check:viewer`.

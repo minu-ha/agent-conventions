@@ -5,7 +5,7 @@ impact: MEDIUM
 impactDescription: 자동 검사 범위와 리뷰에서 판단할 범위를 구분합니다
 appliesWhen:
   - 프로젝트에 `biome` 설정을 처음 넣거나 lint 규칙을 바꿀 때
-  - `biome.json`의 `linter.domains`나 `linter.rules`에 항목을 추가 · 삭제할 때
+  - `biome.json`의 `linter.domains`나 `linter.rules`에 항목을 추가, 삭제할 때
 tags: tooling
 ---
 
@@ -18,12 +18,12 @@ tags: tooling
 
 ### 도메인 검사와 추가 설정
 
-| 검사 | 컨벤션 적용 범위 | 추가 설정 · 리뷰 |
+| 검사 | 컨벤션 적용 범위 | 추가 설정, 리뷰 |
 | --- | --- | --- |
 | `correctness/noNestedComponentDefinitions` | `react/composition-do-not-define-components-inside-components` 전체 | 도메인 `recommended`에 없어 별도로 켭니다 |
 | `correctness/useExhaustiveDependencies` | `react/state-use-effectevent-for-non-reactive-effect-callbacks`의 누락된 의존성 검사 | `useEffectEvent`로 분리할지는 리뷰에서 판단합니다 |
 | `correctness/useJsxKeyInIterable` | `react/composition-name-fragments-explicitly`의 `key` 유무 | `<>` 대신 `Fragment`를 썼는지는 리뷰에서 확인합니다 |
-| `style/noRestrictedImports` + `overrides` | `react/ownership-keep-component-imports-flowing-downward`의 레이어 · 라우트 방향 | 아래 경로 설정을 추가합니다. 소유자 경계는 별도 판단합니다 |
+| `style/noRestrictedImports` + `overrides` | `react/ownership-keep-component-imports-flowing-downward`의 레이어, 라우트 방향 | 아래 경로 설정을 추가합니다. 소유자 경계는 별도 판단합니다 |
 
 ### 접근성 검사
 
@@ -67,7 +67,7 @@ tags: tooling
 }
 ```
 
-**Correct 1 (도메인과 추가 검사를 켜고 레이어 · 라우트 `overrides`를 설정합니다):**
+**Correct 1 (도메인과 추가 검사를 켜고 레이어, 라우트 `overrides`를 설정합니다):**
 
 ```json
 {

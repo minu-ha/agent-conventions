@@ -50,4 +50,4 @@ export const UiPanel = {
 } as const;
 ```
 
-> 나머지 예시 · 예외는 [full rule](../rules/04-02-strategy-expose-only-assembled-compound-parts.md)에 있습니다.
+> 나머지 예시와 예외는 [full rule](../rules/04-02-strategy-expose-only-assembled-compound-parts.md)에 있습니다.

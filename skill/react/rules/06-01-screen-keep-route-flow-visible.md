@@ -30,11 +30,11 @@ tags: screen, routes, flow
 
 ### 데이터와 동작의 소유자
 
-| 데이터 · 동작 | 소유 위치 |
+| 데이터, 동작 | 소유 위치 |
 | --- | --- |
 | 서버 응답 | 데이터를 렌더하는 컴포넌트가 같은 `key`로 직접 읽습니다 |
 | 뮤테이션 | 동작을 일으키는 컴포넌트가 소유합니다 |
-| 라우트 params · search 파라미터 | 사용처에서 `useParams`와 URL 파서 묶음으로 읽고 씁니다 |
+| 라우트 params, search 파라미터 | 사용처에서 `useParams`와 URL 파서 묶음으로 읽고 씁니다 |
 | 여러 응답을 합친 파생값 | 값을 렌더하는 섹션이 인라인 `combine`을 소유합니다 |
 
 독립 섹션이 없는 작은 화면은 진입 컴포넌트가 데이터 소유자를 겸할 수 있습니다.
@@ -49,7 +49,7 @@ tags: screen, routes, flow
 요청이 늘면 `staleTime`, `refetchOnMount`, 실제 키를 먼저 확인합니다.
 부모의 대기로 자식 요청이 늦어지면 대기 전에 실행되는 소유자에서 같은 `key`를 `usePrefetchQuery`로 먼저 요청합니다.
 
-소유자가 바뀌지 않는 `query.select`, 바인딩 · 별칭 정리와 파생 상태 이펙트의 렌더 계산 전환은 대상이 아닙니다.
+소유자가 바뀌지 않는 `query.select`, 바인딩, 별칭 정리와 파생 상태 이펙트의 렌더 계산 전환은 대상이 아닙니다.
 순수 타입, 전송 값 조립 함수, 기본 설정의 형제 `.ts` 추출은
 `typescript/functions-extract-helpers-only-when-the-boundary-is-real`을 따릅니다.
 

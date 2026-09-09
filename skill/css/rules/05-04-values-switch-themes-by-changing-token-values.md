@@ -6,7 +6,7 @@ impactDescription: 테마 분기가 한 파일에만 있어 색을 하나 더할
 appliesWhen:
   - 다크 모드나 테마 전환을 넣을 때
   - 컴포넌트 CSS에 `prefers-color-scheme`이나 `[data-theme]`를 쓰려 할 때
-  - 그림자나 `color-scheme`처럼 테마마다 달라지는 값을 추가 · 변경할 때
+  - 그림자나 `color-scheme`처럼 테마마다 달라지는 값을 추가, 변경할 때
 reviewWith: values-fall-back-only-outside-core-tokens, values-tokenize-repeated-visual-values, values-name-tokens-by-purpose
 tags: values, theme
 ---

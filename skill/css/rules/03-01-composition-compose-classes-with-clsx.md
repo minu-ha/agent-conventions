@@ -4,7 +4,7 @@ titleKo: 클래스는 `clsx()`로 조합합니다
 impact: MEDIUM
 impactDescription: 기본 클래스와 상태 수정자의 조합을 TSX에서 한눈에 읽을 수 있습니다
 appliesWhen:
-  - TSX의 `className`을 추가 · 수정할 때
+  - TSX의 `className`을 추가, 수정할 때
   - 기본 클래스, 수정자, 선택 클래스를 함께 엮을 때
 reviewWith: >-
   composition-write-modifiers-as-conditions,

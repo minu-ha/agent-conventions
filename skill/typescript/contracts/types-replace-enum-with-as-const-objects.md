@@ -11,12 +11,12 @@
 | 외부 패키지의 `enum`을 그대로 전달함 | 외부 계약을 유지합니다 |
 | 기존 `enum`을 객체로 옮김 | 직렬화 값과 공개 타입을 보존하고 숫자 `enum`의 역방향 조회 소비처를 확인합니다 |
 | 기존 계약에 맞는 값 집합인지도 검사함 | `as const satisfies 기존계약`을 씁니다 |
-| 리터럴 추론 · 읽기 전용 속성이 필요 없음 | `as const`를 불필요하게 붙이지 않습니다 |
+| 리터럴 추론, 읽기 전용 속성이 필요 없음 | `as const`를 불필요하게 붙이지 않습니다 |
 
 객체에는 `Enum[value]` 역방향 조회가 자동으로 생기지 않습니다.
 `as const`는 실행 중 동결이나 다른 변수에서 가져온 배열의 변경까지 보장하지 않습니다.
 
-**Requires selected:** `naming-use-consistent-file-and-symbol-naming`, `types-document-custom-types-and-shapes` · 함께 적용
+**Requires selected:** `naming-use-consistent-file-and-symbol-naming`, `types-document-custom-types-and-shapes` (함께 적용)
 
 **Incorrect 1 (`enum`을 직접 씁니다):**
 
@@ -46,4 +46,4 @@ const product_status = {
 type ProductStatus = (typeof product_status)[keyof typeof product_status];
 ```
 
-> 나머지 예시 · 예외는 [full rule](../rules/01-07-types-replace-enum-with-as-const-objects.md)에 있습니다.
+> 나머지 예시와 예외는 [full rule](../rules/01-07-types-replace-enum-with-as-const-objects.md)에 있습니다.

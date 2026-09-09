@@ -1,11 +1,11 @@
 # 규칙 고치기
 
-`skill/` 아래 컨벤션 규칙을 수정 · 추가하는 기여자용.
+`skill/` 아래 컨벤션 규칙을 수정, 추가하는 기여자용.
 컨벤션을 쓰기만 한다면 [README.md](./README.md).
 
 가장 흔한 사고는 생성물을 직접 고치는 것이다.
-규칙의 정본은 `rules/*.md`이고 `HANDBOOK.md` · `RULES_INDEX.md` · `contracts/*.md`는 build가 매번 다시 만든다.
-라우터 · 메타데이터 · 라우팅 오라클도 직접 수정하는 입력이며 역할은 1절에 정리했다.
+규칙의 정본은 `rules/*.md`이고 `HANDBOOK.md`, `RULES_INDEX.md`, `contracts/*.md`는 build가 매번 다시 만든다.
+라우터, 메타데이터, 라우팅 오라클도 직접 수정하는 입력이며 역할은 1절에 정리했다.
 
 ---
 
@@ -28,9 +28,9 @@
 ```text
 skill/react/
   SKILL.md            에이전트 라우터. 변경 판정 후 규칙 선택
-  metadata.json       버전 · 개요 · companion 활성화 계약
+  metadata.json       버전, 개요, companion 활성화 계약
   rules/
-    _sections.md      섹션 순서 · Impact · 설명. 괄호 안이 파일명 prefix
+    _sections.md      섹션 순서, Impact, 설명. 괄호 안이 파일명 prefix
     _template.md      새 규칙 템플릿
     NN-MM-*.md        규칙 정본. 번호는 사람용 탐색 표지고 규칙 ID 에는 안 들어간다
   routing-evals.json  시나리오별로 걸려야 할 규칙의 테스트 오라클
@@ -39,13 +39,13 @@ skill/react/
   HANDBOOK.md         생성물. 사람이 읽는 전체 핸드북
 ```
 
-정본은 `rules/*.md` · `rules/_sections.md` · `rules/_template.md` · `metadata.json` · 
-`SKILL.md` · `routing-evals.json` 여섯.
+정본은 `rules/*.md`, `rules/_sections.md`, `rules/_template.md`, `metadata.json`, 
+`SKILL.md`, `routing-evals.json` 여섯.
 
-생성물은 `HANDBOOK.md` · `RULES_INDEX.md` · `contracts/*.md` 셋.
+생성물은 `HANDBOOK.md`, `RULES_INDEX.md`, `contracts/*.md` 셋.
 직접 고치면 다음 build에서 사라지고 `check:generated`가 실패한다.
 
-`react` · `typescript` · `css` 셋이 전부이고 셋 다 progressive라 세 생성물을 모두 만든다.
+`react`, `typescript`, `css` 셋이 전부이고 셋 다 progressive라 세 생성물을 모두 만든다.
 
 ---
 
@@ -67,23 +67,23 @@ skill/react/
 - 첫 `Incorrect` 뒤에는 `Incorrect` / `Correct` 라벨, 코드 펜스, 빈 줄만 온다.
   생성되는 `contracts/*.md`가 첫 `Incorrect` 앞부분을 규범으로 뽑고, `MEDIUM`은 그 뒤 첫 짝만 덧붙이기 때문이다.
 - 한 쌍은 한 변수만 바꾼다. `Incorrect`와 `Correct`는 그 규칙이 말하는 것 하나만 달라야 독자가 무엇이 규칙인지 짚는다.
-  이름 · 구조 · 무관한 코드를 함께 바꾸지 않는다.
+  이름, 구조, 무관한 코드를 함께 바꾸지 않는다.
 - 예시 차례는 **짝 → 홀로 선 Incorrect → 홀로 선 Correct** 다. 짝은 `**Incorrect 1 (…):**` 바로 뒤에 `**Correct 1 (…):**`이 오고
-  번호는 1부터 차례로 붙는다. 블록 수와 블록마다의 언어가 같은 Incorrect · Correct 가 붙어 있으면 반드시 짝이다. `validate`가 이 차례를 검사한다.
+  번호는 1부터 차례로 붙는다. 블록 수와 블록마다의 언어가 같은 Incorrect, Correct 가 붙어 있으면 반드시 짝이다. `validate`가 이 차례를 검사한다.
   Correct 에 딸린 블록이 더 많아 짝이 안 되면, 짝이 되는 블록만 `Correct n` 으로 떼고 나머지는 홀로 선 Correct 로 뒤에 둔다.
 - 판단 순서나 방향을 그림으로 보일 때는 첫 `Incorrect` 앞 산문에 `mermaid` 펜스를 둔다.
   뷰어가 흐름도로 그리고 에이전트는 원문을 읽는다. 산문에 둘 수 있는 펜스는 이것뿐이다.
-  도식은 두 종류만 쓴다. 판단 · 방향 · 자리 고르기는 `flowchart LR`, 호출 · 데이터가 오가는 차례는 `sequenceDiagram`(참여자 4 이하, 메시지 6 이하).
-  상태도 · 클래스도는 쓰지 않는다. 문자 격자 출력이 폭 125칸을 넘으면 카드에서 줄어들므로 `npm run check:diagrams` 로 폭을 본다.
+  도식은 두 종류만 쓴다. 판단, 방향, 자리 고르기는 `flowchart LR`, 호출, 데이터가 오가는 차례는 `sequenceDiagram`(참여자 4 이하, 메시지 6 이하).
+  상태도, 클래스도는 쓰지 않는다. 문자 격자 출력이 폭 125칸을 넘으면 카드에서 줄어들므로 `npm run check:diagrams` 로 폭을 본다.
   판단 순서형은 `flowchart LR` 로 그린다. 판단은 `q1{"안쪽 요소가<br>하나인가?"}`, 결과는 `r1("이름으로 하나씩 전달")` 이다.
-  갈래는 `-- 예 -->` · `-- 아니요 -->` 로 잇고 아니요 결과를 판단 바로 옆에 두어 이른 반환처럼 읽히게 한다.
-  색 · 굵기 같은 꾸밈은 두지 않는다. 뷰어가 beautiful-mermaid 의 문자 격자 배치(판단은 모서리 `◇` 상자)를 선으로 옮겨 그린다.
+  갈래는 `-- 예 -->`, `-- 아니요 -->` 로 잇고 아니요 결과를 판단 바로 옆에 두어 이른 반환처럼 읽히게 한다.
+  색, 굵기 같은 꾸밈은 두지 않는다. 뷰어가 beautiful-mermaid 의 문자 격자 배치(판단은 모서리 `◇` 상자)를 선으로 옮겨 그린다.
   긴 라벨은 `<br>` 로 두 줄로 나눈다. 폭이 카드보다 넓어지면 통째로 줄어들어 글자가 작아진다.
   라벨에 괄호 `()` 를 넣지 않는다. 격자 렌더러가 괄호에서 글을 잘라 낸다(`check:diagrams` 가 잡는다). `clsx()` 는 `clsx` 로 적거나 표 칸에 둔다.
-- 가운뎃점(` · `)은 표 칸 · 소제목 · 불렛 · 도식 라벨처럼 짧게 나열하는 자리에만 쓴다. 문장 안의 나열은 쉼표로 잇는다.
+- 나열은 어디서나 쉼표로 잇는다. 가운뎃점(`·`)은 쓰지 않는다. 뷰어 화면의 구분자만 예외다.
 - 규범이 두 주제 이상이면 `###` 소제목으로 가른다. 설명과 표만 이어지면 어디서 주제가 바뀌는지 읽는 사람이 놓친다.
 - `Correct`는 저장소 전체 규칙을 지킨다. 다른 스킬의 규칙도 포함한다.
-  `rule-discipline.ts`가 잡는 교차 위반(`mutateAsync` 없는 `try`, `li onClick`, 리터럴 폴백, 손으로 쓴 `sort` · `reduce`, 한 줄 JSX 주석, 스택 밖 이름 등)은 `validate`가 막는다.
+  `rule-discipline.ts`가 잡는 교차 위반(`mutateAsync` 없는 `try`, `li onClick`, 리터럴 폴백, 손으로 쓴 `sort`, `reduce`, 한 줄 JSX 주석, 스택 밖 이름 등)은 `validate`가 막는다.
 - 라벨 괄호 안 문장은 코드가 보여 주는 것만 말한다. 규칙 문장을 되풀이하지 않는다.
 - 라벨 괄호 안 문장은 규범 산문과 같은 합쇼체로 쓴다.
   `conventions.html`에서 예시 제목으로 서는 자리라 명사 종결이 섞이면 목록이 끊겨 읽힌다.
@@ -118,7 +118,7 @@ tags: tag1, tag2
 | --- | --- | --- |
 | `title` | 필수 | 영어. 핸드북 헤딩과 앵커 슬러그의 기반. 바꾸면 링크가 깨진다 |
 | `titleKo` | 필수 | 한국어. `conventions.html`에 노출된다 |
-| `impact` | 필수 | `CRITICAL` · `HIGH` · `MEDIUM`. 사람에게는 중요도, 에이전트에게는 읽는 범위다. `CRITICAL` · `HIGH`는 contract에 원문 링크만 실어 설명과 예제를 전부 읽게 하고(`CRITICAL`은 마무리 때 다시 대조), `MEDIUM`은 contract에 규범과 첫 `Incorrect` · `Correct` 짝을 싣는다 |
+| `impact` | 필수 | `CRITICAL`, `HIGH`, `MEDIUM`. 사람에게는 중요도, 에이전트에게는 읽는 범위다. `CRITICAL`, `HIGH`는 contract에 원문 링크만 실어 설명과 예제를 전부 읽게 하고(`CRITICAL`은 마무리 때 다시 대조), `MEDIUM`은 contract에 규범과 첫 `Incorrect`, `Correct` 짝을 싣는다 |
 | `impactDescription` | 필수 | 한국어 영향도 설명. 본문 `**Impact:**` 줄과 일치해야 하고 `contracts/*.md`와 `conventions.html`로 나간다 |
 | `appliesWhen` | 필수 | `- ` 조건 항목 리스트 또는 한 줄 스칼라. 항목이면 라우팅 문장은 이어 붙여 자동 생성된다. 라우팅 문장은 한 줄 160자 |
 | `requiresSelected` | 선택 | 걸리면 target도 반드시 함께 적용 |
@@ -142,7 +142,7 @@ titleKo: JSX 안 로직은 이름 붙인 핸들러로 뺍니다
 규칙 본문과 `_sections.md`, `metadata.json`의 `abstract`는 합쇼체로 쓴다.
 코드 주석과 `SKILL.md`, `AGENTS.md`, `AGENTS.template.md`, `README.md`, 이 문서는 한다체로 쓴다.
 수정할 때는 파일의 역할에 맞는 문체를 유지한다.
-`appliesWhen`의 `~할 때` · `~경우`만 예외다. 그건 문체가 아니라 라우팅 문장을 만드는 규칙이라
+`appliesWhen`의 `~할 때`, `~경우`만 예외다. 그건 문체가 아니라 라우팅 문장을 만드는 규칙이라
 `validate`가 강제한다.
 
 `appliesWhen` 항목은 `conventions.html`의 "언제 적용할까요?" 목록에 그대로 노출된다.
@@ -172,7 +172,7 @@ titleKo: JSX 안 로직은 이름 붙인 핸들러로 뺍니다
 appliesWhen: 핸들러를 명명해서 써야 한다.
 
 # 좋음 — 언제 읽어야 하는지
-appliesWhen: TSX event prop의 인라인 callback에 분기, 비동기 호출 또는 여러 동작을 추가 · 수정할 때
+appliesWhen: TSX event prop의 인라인 callback에 분기, 비동기 호출 또는 여러 동작을 추가, 수정할 때
 ```
 
 조건을 바꾸면 `routing-evals.json`에도 적용 사례와 비슷하지만 적용되지 않는 사례를 넣는다.
@@ -192,7 +192,7 @@ appliesWhen: TSX event prop의 인라인 callback에 분기, 비동기 호출 �
 - 같은 target을 두 키에 중복해서 넣지 않는다.
 - 본문에서 다른 규칙을 백틱으로 가리키면 화면에서 열 수 있는 칩이 된다.
   `validate`가 해석되는지 검사하므로 없는 ID를 쓰면 빌드가 막힌다.
-  `tooling` 규칙은 예외다. stylelint · biome 규칙 이름이 우리 prefix와 겹쳐서 검사를 건너뛴다.
+  `tooling` 규칙은 예외다. stylelint, biome 규칙 이름이 우리 prefix와 겹쳐서 검사를 건너뛴다.
   그래서 `tooling` 본문에서 우리 규칙을 가리킬 때는 `css/…`처럼 소유 skill을 붙여 도구 이름과 구분한다.
 - 아래 계층 skill은 위 계층 규칙 ID를 가리키지 않는다.
   `typescript`가 `react/...`를 가리키면 typescript만 쓰는 쪽에서 끊긴다.
@@ -207,7 +207,7 @@ appliesWhen: TSX event prop의 인라인 callback에 분기, 비동기 호출 �
 기술 용어를 우리말로 옮길지는 취향이 아니라 검색성 문제다.
 기준은 하나다 — **그 낱말로 찾을 사람이 있으면 밖에서도 통하는 말로 쓴다.**
 
-1. MDN · React · TypeScript 한국어 문서에 역어가 있으면 그 역어 (`쌓임 맥락`, `단언`, `좁히기`)
+1. MDN, React, TypeScript 한국어 문서에 역어가 있으면 그 역어 (`쌓임 맥락`, `단언`, `좁히기`)
 2. 없으면 통용 외래어 (`스크린 리더`, `브레이크포인트`, `이징`, `헤더`)
 3. 코드에 문자열로 있는 것은 그대로 (`z-index`, `@media`, `useMemo`)
 
@@ -230,7 +230,7 @@ appliesWhen: TSX event prop의 인라인 callback에 분기, 비동기 호출 �
 | 조건에 따른 선택, 허용과 금지, 역할 비교 | 2~3열 표 |
 | 순서가 없는 주의 사항 | 짧은 목록 |
 | 분기 순서, 폴더 구조, 소유 관계 | `Correct` 예제의 `text` 코드 블록 |
-| 코드의 구체적인 차이 | 같은 입력을 쓰는 `Incorrect` · `Correct` 쌍 |
+| 코드의 구체적인 차이 | 같은 입력을 쓰는 `Incorrect`, `Correct` 쌍 |
 
 표에서는 한 행에 한 판단을 담고, 조건과 행동을 다른 열에 쓴다.
 코드 식별자를 나열할 때는 쉼표와 공백으로 구분해 긴 이름 사이에서도 줄이 바뀌게 한다.
@@ -242,7 +242,7 @@ appliesWhen: TSX event prop의 인라인 callback에 분기, 비동기 호출 �
 압축한 뒤에도 독립된 판단이 남으면 [4절](#4-배치-기준)에 따라 규칙을 분리한다.
 
 `conventions.html`은 표와 텍스트 코드 블록을 렌더링한다. Mermaid는 지원하지 않는다.
-규칙 본문의 표는 `contracts/*.md`에도 남는다. `MEDIUM`은 첫 `Incorrect` · `Correct` 짝까지 실리고 `CRITICAL` · `HIGH`의 contract는 원문 링크만 담는다.
+규칙 본문의 표는 `contracts/*.md`에도 남는다. `MEDIUM`은 첫 `Incorrect`, `Correct` 짝까지 실리고 `CRITICAL`, `HIGH`의 contract는 원문 링크만 담는다.
 따라서 텍스트 흐름도는 `Correct` 예제에 두고, 판단 조건은 본문의 표나 문장에도 남긴다.
 표의 셀 안에서 `|`를 쓸 때는 `\|`로 이스케이프한다.
 
@@ -264,10 +264,10 @@ generic TypeScript 규칙은 `skill/typescript`가 정본이다.
 새 섹션은 기존 섹션으로 설명할 수 없는 규칙 묶음이 생겼을 때 추가한다.
 
 예제는 문법과 컨벤션뿐 아니라 실제 동작도 검토한다.
-전후 코드의 입력 · 출력 · 상태 · 공개 계약을 비교하고, 규칙이 요구하는 변화만 남긴다.
-타입을 바꾸면 optional 속성 · `undefined` · readonly · 호출 시그니처를,
-UI를 바꾸면 이벤트 · 키보드 조작 · 렌더링 조건을 함께 확인한다.
-라이브러리나 플랫폼의 동작을 설명할 때는 공식 문서를 확인하고 필요한 버전 · 전제 조건을 적는다.
+전후 코드의 입력, 출력, 상태, 공개 계약을 비교하고, 규칙이 요구하는 변화만 남긴다.
+타입을 바꾸면 optional 속성, `undefined`, readonly, 호출 시그니처를,
+UI를 바꾸면 이벤트, 키보드 조작, 렌더링 조건을 함께 확인한다.
+라이브러리나 플랫폼의 동작을 설명할 때는 공식 문서를 확인하고 필요한 버전, 전제 조건을 적는다.
 
 ---
 
@@ -300,9 +300,9 @@ npm --prefix package run test
 
 | 변경 | 갱신 대상 |
 | --- | --- |
-| skill 추가 · 제거 | [README.md](./README.md) 의 skill 표, [AGENTS.md](./AGENTS.md) 의 목록 |
-| 로딩 · companion 계약 변경 | [AGENTS.md](./AGENTS.md) |
-| 문서 인벤토리 · 명령 변경 | [package/README.md](./package/README.md) |
+| skill 추가, 제거 | [README.md](./README.md) 의 skill 표, [AGENTS.md](./AGENTS.md) 의 목록 |
+| 로딩, companion 계약 변경 | [AGENTS.md](./AGENTS.md) |
+| 문서 인벤토리, 명령 변경 | [package/README.md](./package/README.md) |
 | 구조 자체 변경 | [overview.html](./overview.html). 생성기는 `docs/overview-build.py`이고 플로차트 SVG는 `docs/overview-flowcharts.py` |
 
 이 저장소에서 AI 에이전트로 작업할 때의 규칙은 [AGENTS.md](./AGENTS.md).

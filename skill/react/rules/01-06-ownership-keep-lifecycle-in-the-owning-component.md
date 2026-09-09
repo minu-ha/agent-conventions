@@ -4,7 +4,7 @@ titleKo: 라이브러리 생명주기는 소유 컴포넌트에서 관리합니�
 impact: MEDIUM
 impactDescription: 외부 라이브러리의 생명주기와 실행 흐름을 소유 컴포넌트에서 확인할 수 있습니다
 appliesWhen:
-  - 외부 라이브러리 인스턴스 생성 · 크기 변경 · 구독 · 정리를 한 컴포넌트가 소유할 때
+  - 외부 라이브러리 인스턴스 생성, 크기 변경, 구독, 정리를 한 컴포넌트가 소유할 때
   - 생명주기 코드를 커스텀 훅으로 옮겨 파일을 줄이려 할 때
   - 제외: 여러 소유자가 같은 생명주기 계약을 실제로 호출하는 경우
 reviewWith: ownership-prefer-plain-ts-for-local-react-helpers
@@ -23,7 +23,7 @@ tags: ownership, hooks
 | 한 소유자만 쓰는 생명주기 | 해당 컴포넌트의 이펙트에 둡니다 |
 | 여러 소유자가 같은 생명주기 계약을 실제로 호출함 | 훅으로 추출합니다 |
 | 파일이 길어짐 | 생명주기 대신 도메인 계산을 `_function`으로 분리합니다 |
-| 이펙트 정리 · 재설치 | 정리할 때 인스턴스 참조를 비우고 다시 설치할 때 새로 만듭니다. 상태에 남은 폐기된 인스턴스를 재사용하지 않습니다 |
+| 이펙트 정리, 재설치 | 정리할 때 인스턴스 참조를 비우고 다시 설치할 때 새로 만듭니다. 상태에 남은 폐기된 인스턴스를 재사용하지 않습니다 |
 
 순수 계산을 훅으로 감싸는 문제는 `ownership-prefer-plain-ts-for-local-react-helpers`를 따릅니다.
 
@@ -31,7 +31,7 @@ tags: ownership, hooks
 
 ```tsx
 // component/widget/chart/chart-root/wg-chart-root.tsx
-// 생성 · resize · 정리가 _hook/use-chart-instance.ts로 빠져 이 파일에서는 실행 흐름이 보이지 않는다
+// 생성, resize, 정리가 _hook/use-chart-instance.ts로 빠져 이 파일에서는 실행 흐름이 보이지 않는다
 export const WgChartRoot = (props: WgChartRootProps) => {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const chart = useChartInstance(containerRef);
@@ -56,7 +56,7 @@ export const WgChartRoot = (props: WgChartRootProps) => {
 	const chartRef = useRef<ChartInstance | null>(null);
 
 	/**
-	 * container mount 시 chart instance를 만들고 resize · dispose까지 소유
+	 * container mount 시 chart instance를 만들고 resize, dispose까지 소유
 	 */
 	useEffect(() => {
 		if (!containerRef.current) {

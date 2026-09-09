@@ -26,8 +26,8 @@
 
 | 부품 이름 | 예 |
 | --- | --- |
-| 역할 낱말 하나만 | `header` · `item` · `panel`은 안 됨 |
-| 무엇의 것인지 앞에 | `table-col` · `chat-message` · `disruptor-guide-modal` |
+| 역할 낱말 하나만 | `header`, `item`, `panel`은 안 됨 |
+| 무엇의 것인지 앞에 | `table-col`, `chat-message`, `disruptor-guide-modal` |
 | 소유자 이름 | 필수가 아니라 방법 하나 |
 
 진입 파일의 기준은 `ownership-place-owner-files-in-role-folders`를 따릅니다.
@@ -50,4 +50,4 @@ export const PgProductTableSection = (props: PgProductTableSectionProps) => {
 };
 ```
 
-> 나머지 예시 · 예외는 [full rule](../rules/01-02-ownership-prefix-layer-names-on-files-and-symbols.md)에 있습니다.
+> 나머지 예시와 예외는 [full rule](../rules/01-02-ownership-prefix-layer-names-on-files-and-symbols.md)에 있습니다.

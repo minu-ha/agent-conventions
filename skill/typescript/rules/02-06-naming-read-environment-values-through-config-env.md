@@ -4,7 +4,7 @@ titleKo: 환경 값은 `config/env.ts`를 거쳐서 읽습니다
 impact: HIGH
 impactDescription: 환경마다 달라지는 값이 쓰는 파일로 흩어지지 않고 한 파일에서 읽힙니다
 appliesWhen:
-  - `import.meta.env`나 `process.env`를 읽는 코드를 추가 · 이동할 때
+  - `import.meta.env`나 `process.env`를 읽는 코드를 추가, 이동할 때
   - 환경마다 달라지는 값이나 기능 플래그를 새로 들여올 때
 reviewWith: >-
   naming-place-project-constants-in-the-root-constant-folder,

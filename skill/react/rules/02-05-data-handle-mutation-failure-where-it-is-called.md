@@ -4,7 +4,7 @@ titleKo: 뮤테이션 실패는 호출한 자리에서 처리합니다
 impact: HIGH
 impactDescription: 저장 실패를 놓치지 않고 호출한 자리에서 처리합니다
 appliesWhen:
-  - 뮤테이션을 부르는 코드를 추가 · 변경할 때
+  - 뮤테이션을 부르는 코드를 추가, 변경할 때
   - `mutate`와 `mutateAsync` 사이를 오갈 때
 reviewWith: >-
   data-invalidate-queries-the-mutation-changed,
@@ -25,7 +25,7 @@ tags: data, mutation, errors
 
 ```mermaid
 flowchart LR
-	q1{"결과를 기다린 뒤<br>핸들러가 이어 실행되는가?"} -- 아니요 --> r1("mutate 와<br>onError · onSuccess")
+	q1{"결과를 기다린 뒤<br>핸들러가 이어 실행되는가?"} -- 아니요 --> r1("mutate 와<br>onError, onSuccess")
 	q1 -- 예 --> r2("mutateAsync 와 try/catch")
 ```
 
@@ -56,7 +56,7 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = async (_even
 };
 ```
 
-**Correct 1 (후속 작업이 없는 호출은 성공 · 실패 콜백으로 처리합니다):**
+**Correct 1 (후속 작업이 없는 호출은 성공, 실패 콜백으로 처리합니다):**
 
 ```tsx
 /**

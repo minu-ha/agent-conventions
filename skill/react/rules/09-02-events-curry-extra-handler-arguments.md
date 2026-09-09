@@ -4,7 +4,7 @@ titleKo: 이벤트 외 추가 인자는 커링으로 넘깁니다
 impact: MEDIUM
 impactDescription: 추가 인자 전달만을 위한 JSX 인라인 래퍼를 줄입니다
 appliesWhen:
-  - DOM 이벤트 프롭에 추가 인자를 넘기는 핸들러를 추가 · 변경할 때
+  - DOM 이벤트 프롭에 추가 인자를 넘기는 핸들러를 추가, 변경할 때
   - 인라인 래퍼로 인자를 넘기던 자리를 바꿀 때
   - 제외: 이벤트 객체를 받지 않는 프롭 콜백인 경우
 requiresSelected: typing-take-handler-types-from-existing-contracts

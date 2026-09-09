@@ -1,12 +1,12 @@
 ---
 title: Name URL State Bindings as a Set
-titleKo: URL 파서 · 파싱 결과 · 플랫폼 객체의 이름을 구분합니다
+titleKo: URL 파서, 파싱 결과, 플랫폼 객체의 이름을 구분합니다
 impact: MEDIUM
 impactDescription: 주소가 소유한 상태, 플랫폼 객체, 서버 응답이 이름만으로 구분됩니다
 appliesWhen:
-  - 라우트 search 파라미터를 읽거나 쓰는 바인딩을 추가 · 변경할 때
+  - 라우트 search 파라미터를 읽거나 쓰는 바인딩을 추가, 변경할 때
   - search 파라미터 파서 묶음을 만들거나 옮길 때
-  - 제외: 서버 요청 쿼리 · 뮤테이션 바인딩만 바꾸는 경우
+  - 제외: 서버 요청 쿼리, 뮤테이션 바인딩만 바꾸는 경우
 requiresSelected: typescript/naming-place-owner-constants-in-the-owner-constant-folder
 reviewWith: state-choose-state-tools-by-source-of-truth
 tags: state, naming, url

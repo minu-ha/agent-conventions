@@ -12,7 +12,7 @@
 | 같은 목록을 루프나 `map`, `filter`, `some` 콜백 안에서 조회 | 포함 여부는 `Set.has`, 항목 조회는 `Map.get`으로 바꿉니다 |
 | 같은 목록을 서로 다른 세 지점 이상에서 조회 | 한 번 만든 `Set`, `Map`을 공유합니다 |
 | 위 조건에 해당하지 않거나 길이가 정해진 짧은 목록 | 기존 조회를 유지합니다 |
-| 중복 제거 · 차집합처럼 결과 목록을 만듦 | `uniq`, `difference`, `without`을 씁니다. 만든 뒤 `has`를 반복 호출할 때만 `Set`을 남깁니다 |
+| 중복 제거, 차집합처럼 결과 목록을 만듦 | `uniq`, `difference`, `without`을 씁니다. 만든 뒤 `has`를 반복 호출할 때만 `Set`을 남깁니다 |
 
 `Set`, `Map`도 생성 비용이 있으며 조회가 항상 상수 시간인 것은 아닙니다.
 명세는 평균 조회 시간이 원소 수에 비례하는 시간보다 짧을 것만 요구합니다.
@@ -45,4 +45,4 @@ const visibleProducts = products.filter((product) => allowedProductIdSet.has(pro
 const disabledProducts = archivedProducts.filter((product) => allowedProductIdSet.has(product.id));
 ```
 
-> 나머지 예시 · 예외는 [full rule](../rules/04-02-values-use-set-and-map-for-repeated-lookups.md)에 있습니다.
+> 나머지 예시와 예외는 [full rule](../rules/04-02-values-use-set-and-map-for-repeated-lookups.md)에 있습니다.

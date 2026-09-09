@@ -5,7 +5,7 @@ impact: HIGH
 impactDescription: 상태 보존과 초기화 요구에 맞는 렌더 방식을 선택합니다
 appliesWhen:
   - 조건부 렌더링과 `Activity` 사이를 오갈 때
-  - `<Activity>`를 추가 · 삭제하거나 `mode`를 계산하는 표현식을 바꿀 때
+  - `<Activity>`를 추가, 삭제하거나 `mode`를 계산하는 표현식을 바꿀 때
 reviewWith: composition-do-not-define-components-inside-components
 tags: composition, jsx
 ---

@@ -26,7 +26,7 @@ tags: components, entry-point, class-props
 
 ```mermaid
 flowchart LR
-	q1{"최상위의 배치 · 여백 ·<br>크기를 바꾸는가?"} -- 예 --> r1("받은 className을<br>자기 최상위 클래스와 합침")
+	q1{"최상위의 배치, 여백 ·<br>크기를 바꾸는가?"} -- 예 --> r1("받은 className을<br>자기 최상위 클래스와 합침")
 	q1 -- 아니요 --> r2("variant 프롭을 받아<br>필요한 노드마다 수정자")
 ```
 

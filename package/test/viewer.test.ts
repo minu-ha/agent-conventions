@@ -388,7 +388,7 @@ test("viewer layout cannot overflow: grids shrink and code wraps", () => {
 });
 
 test("viewer template literals stay closed: CSS and script comments must not contain backticks", async () => {
-	// viewerStyles · viewerClientScript 는 백틱 템플릿 리터럴이다. 주석에 백틱을 하나 쓰면
+	// viewerStyles, viewerClientScript 는 백틱 템플릿 리터럴이다. 주석에 백틱을 하나 쓰면
 	// 리터럴이 그 자리에서 끊겨 빌드가 깨진다. 세 번 겪어서 기계로 막는다.
 	const source = await readFile(new URL("../src/viewer-template.ts", import.meta.url), "utf8");
 

@@ -6,7 +6,7 @@ impactDescription: 컴포넌트가 배치된 폭에 맞춰 크기를 조정해 �
 appliesWhen:
   - `@media` 브레이크포인트를 새로 넣으려 할 때
   - 폭에 따라 줄바꿈, 열 개수, 크기가 달라져야 할 때
-  - 컨테이너 폭에 따른 `@container` 배치 조건을 추가 · 변경할 때
+  - 컨테이너 폭에 따른 `@container` 배치 조건을 추가, 변경할 때
 reviewWith: layout-keep-layout-intent-explicit, layout-group-breakpoints-at-the-file-bottom
 tags: values, layout, responsive
 ---
@@ -25,7 +25,7 @@ tags: values, layout, responsive
 ```mermaid
 flowchart LR
 	q1{"고유 크기 지정만으로<br>배치할 수 있는가?"} -- 아니요 --> q2{"실제 슬롯 폭에 따라<br>구조를 바꾸는가?"} -- 아니요 --> r3("@media")
-	q1 -- 예 --> r1("flex-wrap · auto-fit · clamp")
+	q1 -- 예 --> r1("flex-wrap, auto-fit, clamp")
 	q2 -- 예 --> r2("@container")
 ```
 

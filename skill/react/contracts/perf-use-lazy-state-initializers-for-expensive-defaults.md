@@ -7,8 +7,8 @@
 
 | 초기값 | 형태 |
 | --- | --- |
-| `localStorage` 파싱 · 인덱스 생성 · 큰 배열 정규화 | 초기화 함수로 감쌉니다 |
-| 단순 숫자 · 문자열 또는 그대로 전달하는 프롭 | 감싸지 않습니다 |
+| `localStorage` 파싱, 인덱스 생성, 큰 배열 정규화 | 초기화 함수로 감쌉니다 |
+| 단순 숫자, 문자열 또는 그대로 전달하는 프롭 | 감싸지 않습니다 |
 | 이후 프롭스 변화를 따라가야 하는 값 | 초기 상태로 복제하지 않습니다 |
 
 개발 환경의 `StrictMode`에서는 초기화 함수를 두 번 호출할 수 있고, 다시 마운트하면 새로 초기화합니다.
@@ -31,4 +31,4 @@ const [searchIndex] = useState(() => toSearchIndex(product_list));
 const [draftFilter] = useState(() => parseStoredProductFilter(localStorage.getItem("product-filter")));
 ```
 
-> 나머지 예시 · 예외는 [full rule](../rules/10-02-perf-use-lazy-state-initializers-for-expensive-defaults.md)에 있습니다.
+> 나머지 예시와 예외는 [full rule](../rules/10-02-perf-use-lazy-state-initializers-for-expensive-defaults.md)에 있습니다.

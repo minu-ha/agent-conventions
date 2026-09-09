@@ -7,7 +7,7 @@
 이름 붙인 함수는 `const` 화살표로 선언하고, 객체에 담는 함수도 화살표로 씁니다.
 본문은 블록으로 열고 값을 반환할 때 `return`을 적으며, 반환값이 없으면 생략합니다.
 
-| 대상 | 선언 · 본문 형식 |
+| 대상 | 선언, 본문 형식 |
 | --- | --- |
 | 이름 붙인 함수 | `const name = (…) => { … }` |
 | 객체에 담긴 함수 | `name: (…) => { … }`. 메서드 축약형은 쓰지 않습니다 |
@@ -17,7 +17,7 @@
 | 제너레이터 | `function*` 문법을 씁니다 |
 | 오버로드 | `function` 선언을 허용합니다. 호출 시그니처 타입을 `const`에 붙일 수 있으면 그쪽을 씁니다 |
 
-선언 · 본문 형식을 고정하면 호이스팅 의존을 줄이고 코드가 늘 때의 diff와 주석 경계를 일정하게 유지합니다.
+선언, 본문 형식을 고정하면 호이스팅 의존을 줄이고 코드가 늘 때의 diff와 주석 경계를 일정하게 유지합니다.
 객체 반환에도 별도의 `({...})` 괄호가 필요하지 않습니다.
 
 ### `this`를 쓰는 함수
@@ -52,4 +52,4 @@ export const toTrimmedTitle = (rawTitle: string): string => {
 };
 ```
 
-> 나머지 예시 · 예외는 [full rule](../rules/03-01-functions-declare-functions-as-arrow-consts.md)에 있습니다.
+> 나머지 예시와 예외는 [full rule](../rules/03-01-functions-declare-functions-as-arrow-consts.md)에 있습니다.

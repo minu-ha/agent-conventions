@@ -4,7 +4,7 @@ titleKo: 타입이 보장하는 것을 다시 검사하지 않습니다
 impact: HIGH
 impactDescription: 불필요한 검사를 줄이고 값이 실제로 없을 수 있는 경우만 확인합니다
 appliesWhen:
-  - `isNil`, `typeof`, 옵셔널 체이닝으로 값을 검사하는 분기를 추가 · 변경할 때
+  - `isNil`, `typeof`, 옵셔널 체이닝으로 값을 검사하는 분기를 추가, 변경할 때
   - 선택 필드에 값을 넣으면서 `undefined`를 피하려고 조건부 스프레드를 쓸 때
   - 제외: `unknown`이나 앱 밖에서 온 값을 좁히는 경우
 reviewWith: >-
@@ -26,9 +26,9 @@ tags: absence
 | --- | --- |
 | `string`의 `?.trim()`, `number`의 `typeof`, 필수 필드의 `isNil` | 타입이 보장하므로 제거합니다 |
 | `string \| null`의 `isNil` | 값이 없을 수 있으므로 유지합니다 |
-| `unknown` · 외부 입력 | `types-narrow-unknown-instead-of-asserting`에 따라 검증합니다 |
+| `unknown`, 외부 입력 | `types-narrow-unknown-instead-of-asserting`에 따라 검증합니다 |
 | 유한 수 여부 | `number`는 `NaN`, `Infinity`도 포함하므로 필요한 검사를 남깁니다 |
-| 배열 인덱스 · 열린 키 조회 | 컴파일러 옵션과 실제 길이에 따라 값이 없을 수 있으므로 필요한 검사를 남깁니다 |
+| 배열 인덱스, 열린 키 조회 | 컴파일러 옵션과 실제 길이에 따라 값이 없을 수 있으므로 필요한 검사를 남깁니다 |
 
 ### 선택 필드의 생략
 
@@ -37,7 +37,7 @@ tags: absence
 | 소비 계약 | 객체 구성 |
 | --- | --- |
 | 두 상태를 구분하지 않고 타입도 허용 | `undefined`를 바로 넣어 불필요한 조건부 스프레드를 줄입니다 |
-| `in`, `Object.hasOwn` · 객체 병합 · 패치 등에서 구분 | 조건부 스프레드를 유지하고 생략이 필요한 계약을 이유 주석에 적습니다 |
+| `in`, `Object.hasOwn`, 객체 병합, 패치 등에서 구분 | 조건부 스프레드를 유지하고 생략이 필요한 계약을 이유 주석에 적습니다 |
 | `exactOptionalPropertyTypes` 사용 | `value?: T`에 `undefined`를 쓸 수 있는지 확인합니다 |
 | `value?: T \| undefined`처럼 명시적으로 허용 | 조건부 스프레드로 바꾸지 않습니다 |
 

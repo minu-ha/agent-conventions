@@ -388,7 +388,7 @@ test("project template stays a standalone KISS starter, not a convention router"
 		assert.ok(template.includes(heading), heading);
 	}
 
-	// KISS · YAGNI 원칙
+	// KISS, YAGNI 원칙
 	for (const requiredText of [
 		"추측하지 않는다",
 		"문제를 해결하는 최소한의 코드",

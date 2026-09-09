@@ -26,25 +26,21 @@ tags: functions, boundaries
 
 ```mermaid
 flowchart LR
-	q1{"두 자리 이상이<br>부르는가?"} -- 아니요 --> q2{"렌더 파일 밖의<br>요청 조립인가?"} -- 아니요 --> q3{"삼항 하나로<br>담기는가?"} -- 예 --> r4("호출부에 그대로 둠")
+	q1{"두 자리 이상이<br>부르는가?"} -- 아니요 --> q2{"삼항 하나로<br>담기는가?"} -- 예 --> r3("호출부에 그대로 둠")
 	q1 -- 예 --> r1("이름을 붙여 추출")
-	q2 -- 예 --> r2("같은 소유자의 .ts 로 이동")
-	q3 -- 아니요 --> r3("return 함수로 추출")
+	q2 -- 아니요 --> r2("return 함수로 추출")
 ```
 
 | 허용 사유 | 조건 |
 | --- | --- |
 | 실제 재사용 | 변경 후 코드에서 두 자리 이상이 부름. 한 줄 함수도 같음 |
-| 요청 조립을 렌더 파일 밖으로 이동 | `.tsx`에서 순수 요청 · 저장 payload를 조립함. 한 곳에서만 써도 같음 |
-| 함수 형태가 필수 | 삼항 하나로 표현할 수 없는 판정 · `value is T` 타입 가드 · 재귀 |
+| 함수 형태가 필수 | 삼항 하나로 표현할 수 없는 판정, `value is T` 타입 가드, 재귀 |
 
-요청 조립은 같은 소유자의 `.ts`로 옮깁니다. 표시용 가공이나 기존 `.ts`는 해당하지 않습니다.
 
 ### 추출을 검토할 때
 
 | 추출을 검토하는 이유 | 처리 |
 | --- | --- |
-| 한 번 쓰는 단계가 길거나 나중에 재사용할 것 같음 | 호출부에 두고 `docs-keep-body-comments-for-intent-and-steps`의 단계 주석으로 나눕니다 |
 | `.map()` 콜백 하나에서만 쓰는 변환 | 그 콜백에 둡니다 |
 | 값이 두 분기로 갈림 | 호출부에서 삼항 하나로 씁니다 |
 | 값이 세 분기 이상으로 갈림 | 함수로 추출하고 분기마다 `return`으로 끝냅니다 |
@@ -153,27 +149,6 @@ export const toProfileSaveRequest = (formValues: ProfileFormValues) => {
 ```tsx
 // page/profile/_pg-profile-form.tsx와 page/profile/_pg-profile-drawer.tsx가 함께 부른다
 import {toProfileSaveRequest} from "@/page/profile/_function/to-profile-save-request";
-```
-
-**Correct (`.tsx` 안의 순수 조립 함수는 사용처가 하나여도 같은 소유자의 `.ts`로 옮깁니다):**
-
-```ts
-// page/products/_function/to-product-save-request.ts
-/**
- * product 저장 요청 조립. 업로드가 끝난 첨부만 넘겨야 attachmentIds가 채워진다
- */
-export const toProductSaveRequest = (formValues: ProductFormValues) => {
-	return {
-		title: formValues.title.trim(),
-		categoryId: formValues.categoryId,
-		attachmentIds: formValues.attachments.map((attachment) => attachment.id),
-	};
-};
-```
-
-```tsx
-// page/products/pg-products.tsx 하나만 부르지만 훅도 JSX도 쓰지 않는 계산이다
-import {toProductSaveRequest} from "@/page/products/_function/to-product-save-request";
 ```
 
 **Correct (삼항 하나에 담기지 않는 판정은 사용처가 하나여도 함수로 추출하고 분기마다 `return`으로 끝냅니다):**

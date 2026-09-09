@@ -9,7 +9,7 @@
 
 ```mermaid
 flowchart LR
-	q1{"사용처가 포커스 · 스크롤 ·<br>측정을 직접 제어하는가?"} -- 예 --> q2{"명령 메서드 묶음을<br>공개하는가?"} -- 예 --> r3("useImperativeHandle 로<br>명령 계약 공개")
+	q1{"사용처가 포커스, 스크롤 ·<br>측정을 직접 제어하는가?"} -- 예 --> q2{"명령 메서드 묶음을<br>공개하는가?"} -- 예 --> r3("useImperativeHandle 로<br>명령 계약 공개")
 	q1 -- 아니요 --> r1("ref 프롭을 열지 않기")
 	q2 -- 아니요 --> r2("DOM 요소를 가리키는 ref 프롭")
 ```
@@ -79,4 +79,4 @@ export const UiSearchInput = (props: UiSearchInputProps) => {
 };
 ```
 
-> 나머지 예시 · 예외는 [full rule](../rules/05-04-composition-open-ref-props-only-for-imperative-contracts.md)에 있습니다.
+> 나머지 예시와 예외는 [full rule](../rules/05-04-composition-open-ref-props-only-for-imperative-contracts.md)에 있습니다.

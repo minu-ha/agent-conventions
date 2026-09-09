@@ -25,7 +25,7 @@ flowchart LR
 렌더 프롭은 `strategy-prefer-children-over-render-props`를,
 공개 부품의 범위는 `strategy-expose-only-assembled-compound-parts`를 따릅니다.
 
-**Incorrect 1 (단일 · 합성 · 변형을 구분하지 않고 한 컴포넌트에 모두 구현합니다):**
+**Incorrect 1 (단일, 합성, 변형을 구분하지 않고 한 컴포넌트에 모두 구현합니다):**
 
 ```tsx
 export interface WgProfileDialogProps {
@@ -82,4 +82,4 @@ export const WgProfileDialog = (props: WgProfileDialogProps) => {
 };
 ```
 
-> 나머지 예시 · 예외는 [full rule](../rules/04-01-strategy-choose-single-composition-compound-and-variants.md)에 있습니다.
+> 나머지 예시와 예외는 [full rule](../rules/04-01-strategy-choose-single-composition-compound-and-variants.md)에 있습니다.
