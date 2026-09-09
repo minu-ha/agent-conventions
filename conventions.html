@@ -1077,6 +1077,21 @@ document.dispatchEvent(new Event("flow-ready"));
 
 	}
 
+	// 규칙 하나를 통째로 열고 닫는다 — 카드, 아코디언 둘, 예시 유닛 전부. 헤더의 "규칙 전체 펼치기" 가 쓴다.
+	const isFullOpen = (r) => {
+		const k = keyOf(r);
+		return state.open.has(k) && state.when.has(k) && state.why.has(k) &&
+			unitsOf(r).every((u) => (state.sample.get(k + ":" + u.at) || []).length === (u.diff ? 1 : u.samples.length));
+	};
+	const setFullOpen = (r, open) => {
+		const k = keyOf(r);
+		for (const set of [state.open, state.when, state.why]) open ? set.add(k) : set.delete(k);
+		for (const u of unitsOf(r)) {
+			const n = u.diff ? 1 : u.samples.length;
+			state.sample.set(k + ":" + u.at, open ? Array.from({length: n}, (_unused, i) => i) : []);
+		}
+	};
+
 	function render() {
 		const hits = RULES.filter(matches);
 		const scopeTotal = RULES.filter((r) => !state.skill || r.skill === state.skill).length;
@@ -1085,7 +1100,7 @@ document.dispatchEvent(new Event("flow-ready"));
 			: '<div class="empty">일치하는 규칙이 없습니다. 검색어나 필터를 줄여보세요.</div>';
 		const codeTotal = hits.reduce((n, r) => n + r.examples.reduce((m, e) => m + e.blocks.length, 0), 0);
 		document.getElementById("count").textContent = hits.length + " / " + scopeTotal + " 규칙" + (hits.length ? "  ·  코드 " + codeTotal : "");
-		const allOpen = hits.length > 0 && hits.every((r) => state.open.has(keyOf(r)));
+		const allOpen = hits.length > 0 && hits.every(isFullOpen);
 		document.getElementById("expand").textContent = allOpen ? "규칙 전체 접기" : "규칙 전체 펼치기";
 		renderRail();
 		drawDiagrams();
@@ -1418,10 +1433,11 @@ document.dispatchEvent(new Event("flow-ready"));
 
 	document.getElementById("q").addEventListener("input", (e) => { state.q = e.target.value.trim(); render(); });
 
+	// 전체 펼치기는 카드만 열지 않고 안의 아코디언과 예시까지 다 연다. 전부 열려 있을 때만 접기가 된다.
 	document.getElementById("expand").addEventListener("click", () => {
 		const hits = RULES.filter(matches);
-		const allOpen = hits.length && hits.every((r) => state.open.has(keyOf(r)));
-		for (const r of hits) { const k = keyOf(r); allOpen ? state.open.delete(k) : state.open.add(k); }
+		const allFull = hits.length > 0 && hits.every(isFullOpen);
+		for (const r of hits) setFullOpen(r, !allFull);
 		render();
 	});
 
