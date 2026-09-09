@@ -416,7 +416,7 @@ mark { background: color-mix(in srgb, var(--accent) 30%, transparent); color: in
 .acc-body h4.sub::after { content: ""; flex: 1; border-top: 1px solid var(--hair); }
 
 /* 흐름도. 카드 안에 가운데 두고 넘치면 가로로 민다. */
-.acc-body pre.mermaid { margin: 0 0 .95em; padding: 18px 16px; background: var(--card); border: 1px solid var(--hair); border-radius: 3px; display: flex; justify-content: center; overflow-x: auto; font-family: var(--sans); font-size: 13px; }
+.acc-body pre.mermaid { margin: 0 0 .95em; padding: 18px 16px; background: var(--card); border: 1px solid var(--hair); border-radius: 3px; display: flex; justify-content: center; overflow-x: auto; font-family: var(--sans); font-size: 12px; }
 .acc-body pre.mermaid svg { max-width: 100%; height: auto; }
 
 /* ---------- rule dialog ---------- */
@@ -1099,6 +1099,9 @@ body:has(.dlg[open]) { overflow: hidden; }
 	function tintBranches(svg) {
 		if (!svg || !svg.querySelector(".edge-thickness-thick")) return;
 
+		// 예 결과(:::yes)가 아닌 결과 상자는 아니요 갈래의 답이다. 글자와 테두리를 연하게 물린다.
+		svg.querySelectorAll(".node:not(.yes)").forEach((n) => { if (n.querySelector("rect")) n.classList.add("no"); });
+
 		svg.querySelectorAll(".edgeLabel p").forEach((p) => {
 			const t = p.textContent.trim();
 			if (t === "예" || t === "아니요") p.closest(".edgeLabel").classList.add(t === "예" ? "yes" : "no");
@@ -1137,7 +1140,7 @@ body:has(.dlg[open]) { overflow: hidden; }
 			theme: "base",
 			fontFamily: v("--sans"),
 			themeVariables: {
-				fontSize: "13px",
+				fontSize: "12px",
 				primaryColor: v("--card"),
 				primaryBorderColor: v("--edge"),
 				primaryTextColor: v("--ink"),
@@ -1162,17 +1165,20 @@ body:has(.dlg[open]) { overflow: hidden; }
 				".node .label { line-height: 1.4; }",
 				".node .label p { margin: 0; }",
 				".node.yes rect { fill: " + mix("--flow-yes", 10) + " !important; stroke: " + v("--flow-yes") + " !important; }",
+				".node.no rect { stroke: " + v("--hair") + " !important; }",
+				".node.no .label, .node.no .label p { color: " + v("--muted") + "; }",
 				".edgePath path, .flowchart-link { stroke-width: 1.25px; }",
 				".flowchart-link.no { stroke: " + v("--edge") + "; }",
 				".flowchart-link.yes { stroke: " + v("--flow-yes") + "; stroke-width: 1.5px; }",
 				".marker { stroke: none; }",
 				".marker.marker-no { fill: " + v("--edge") + " !important; }",
 				".marker.marker-yes { fill: " + v("--flow-yes") + " !important; }",
-				".edgeLabel p { margin: 0; padding: 1px 6px; font-size: 11.5px; line-height: 1.25; color: " + v("--muted") +
+				".edgeLabel p { margin: 0; padding: 1px 6px; font-size: 11px; line-height: 1.25; color: " + v("--muted") +
 					"; background: " + v("--card") + "; border: 1px solid " + v("--hair") + "; border-radius: 2px; }",
 				".edgeLabel.yes p { color: " + v("--flow-yes") + "; border-color: " + mix("--flow-yes", 45) + "; background: " + mix("--flow-yes", 8) + "; }",
 			].join(" "),
-			flowchart: {nodeSpacing: 40, rankSpacing: 56, useMaxWidth: true, curve: "step", padding: 8, diagramPadding: 6},
+			// 행 간격을 좁혀 가로로 눕힌다. 카드 폭(약 710px)을 넘으면 통째로 축소되어 글자가 작아지므로 열 간격은 그 안에 들도록 잡는다.
+			flowchart: {nodeSpacing: 28, rankSpacing: 48, useMaxWidth: true, curve: "step", padding: 8, diagramPadding: 4},
 		});
 	}
 
