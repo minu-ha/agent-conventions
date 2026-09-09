@@ -22,7 +22,7 @@ tags: ownership, widget, naming
 
 ```mermaid
 flowchart LR
-	q1{"화면의 데이터 ·<br>흐름을 아는가?"} -- 아니요 --> q2{"도메인을 아는가?"} -- 아니요 --> r3("ui")
+	q1{"화면의 데이터와<br>흐름을 아는가?"} -- 아니요 --> q2{"도메인을 아는가?"} -- 아니요 --> r3("ui")
 	q1 -- 예 --> r1("page")
 	q2 -- 예 --> r2("widget")
 ```

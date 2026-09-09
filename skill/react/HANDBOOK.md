@@ -120,7 +120,7 @@
 
 ```mermaid
 flowchart LR
-	q1{"화면의 데이터 ·<br>흐름을 아는가?"} -- 아니요 --> q2{"도메인을 아는가?"} -- 아니요 --> r3("ui")
+	q1{"화면의 데이터와<br>흐름을 아는가?"} -- 아니요 --> q2{"도메인을 아는가?"} -- 아니요 --> r3("ui")
 	q1 -- 예 --> r1("page")
 	q2 -- 예 --> r2("widget")
 ```
@@ -1778,7 +1778,7 @@ export const UiTableRow = (props: UiTableRowProps) => {
 
 ```mermaid
 flowchart LR
-	q1{"부품 조립이<br>필요한가?"} -- 예 --> q2{"부품이 같은 상태 ·<br>동작을 읽는가?"} -- 예 --> q3{"같은 조합이<br>반복되는가?"} -- 예 --> r4("조합을 감싼 변형")
+	q1{"부품 조립이<br>필요한가?"} -- 예 --> q2{"부품이 같은 상태,<br>동작을 읽는가?"} -- 예 --> q3{"같은 조합이<br>반복되는가?"} -- 예 --> r4("조합을 감싼 변형")
 	q1 -- 아니요 --> r1("단일 컴포넌트")
 	q2 -- 아니요 --> r2("상태 없는 합성")
 	q3 -- 아니요 --> r3("상태 있는 합성")
@@ -2477,7 +2477,7 @@ const handleRemoveProductButtonClick: MouseEventHandler<HTMLButtonElement> = (_e
 
 ```mermaid
 flowchart LR
-	q1{"사용처가 포커스, 스크롤 ·<br>측정을 직접 제어하는가?"} -- 예 --> q2{"명령 메서드 묶음을<br>공개하는가?"} -- 예 --> r3("useImperativeHandle 로<br>명령 계약 공개")
+	q1{"사용처가 포커스, 스크롤,<br>측정을 직접 제어하는가?"} -- 예 --> q2{"명령 메서드 묶음을<br>공개하는가?"} -- 예 --> r3("useImperativeHandle 로<br>명령 계약 공개")
 	q1 -- 아니요 --> r1("ref 프롭을 열지 않기")
 	q2 -- 아니요 --> r2("DOM 요소를 가리키는 ref 프롭")
 ```

@@ -1235,11 +1235,22 @@ document.dispatchEvent(new Event("flow-ready"));
 				let segStart = L * cw, drawStart = L * cw;
 				if (row[L] === "├" || row[L - 1] === "├") {
 					const j = row[L] === "├" ? L : L - 1;
-					let k = j - 1;
-					while (k >= 0 && row[k] === " ") k--;
-					segStart = isWall(row[k]) ? center(k) : center(j);
-					drawStart = segStart;
-					for (let m = j; m < L; m++) skip.add(m);
+					const above = rows[r - 1] ? rows[r - 1][j] : " ", below = rows[r + 1] ? rows[r + 1][j] : " ";
+					const junction = (above !== undefined && LINES[above] !== undefined && /[UD]/.test(LINES[above])) ||
+						(below !== undefined && LINES[below] !== undefined && /[UD]/.test(LINES[below]));
+					if (junction) {
+						// ├ 가 상자 벽 자체다. 벽은 본 루프가 그리므로 건너뛰지 않고, 선만 벽 가운데에서 시작한다.
+						segStart = center(j);
+						drawStart = center(j);
+						for (let m = j + 1; m < L; m++) skip.add(m);
+					} else {
+						// 벽과 떨어진 출발점 ├. 앞의 빈칸을 건너 벽 가운데까지 선을 잇고 ├ 는 그리지 않는다.
+						let k = j - 1;
+						while (k >= 0 && row[k] === " ") k--;
+						segStart = isWall(row[k]) ? center(k) : center(j);
+						drawStart = segStart;
+						for (let m = j; m < L; m++) skip.add(m);
+					}
 				} else if (LINES[row[L - 1]] !== undefined || isWall(row[L - 1])) {
 					segStart = center(L - 1);
 				}
