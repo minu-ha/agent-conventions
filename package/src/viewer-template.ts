@@ -409,7 +409,7 @@ mark { background: color-mix(in srgb, var(--accent) 30%, transparent); color: in
 
 /* 흐름도. 카드 안에 가운데 두고 카드 폭에 맞춘다. 렌더러가 없으면 원문 코드가 그대로 보인다. */
 .acc-body .flow { margin: 0 0 .95em; padding: 14px 12px; background: var(--card); border: 1px solid var(--hair); border-radius: 3px; overflow-x: auto; }
-.acc-body .flow svg { display: block; max-width: 100%; height: auto; margin: 0 auto; }
+.acc-body .flow svg { display: block; max-width: 100%; height: auto; margin: 0 auto; --line: var(--muted); --fg: var(--ink); --paper: var(--card); }
 .acc-body pre.mermaid { margin: 0 0 .95em; padding: 12px 14px; font: 12px/1.55 var(--mono); color: var(--code-fg); background: var(--code-bg); border: 1px solid var(--hair); border-radius: 3px; overflow-x: auto; }
 /* ---------- rule dialog ---------- */
 /* 참조 칩은 목록을 이동하는 대신 이 다이얼로그로 미리 보여준다. 보던 섹션을 잃지 않는다. */
@@ -1074,22 +1074,112 @@ const viewerClientScript = `(() => {
 		drawDiagrams();
 	}
 
-	// 흐름도는 렌더러의 기본 모습(모노 모드) 그대로 그린다. 바탕과 글자 두 색만 뷰어 변수로 주면
-	// 채움 · 테두리 · 선 · 라벨 색을 렌더러가 유도하고, 테마를 바꾸면 다시 그리지 않아도 따라온다.
-	// 글꼴은 이름 하나만 받는다(스택을 넘기면 한 이름으로 묶여 깨진다). 간격은 카드 폭에 들도록 조금 좁다.
-	const FLOW_THEME = {bg: "var(--card)", fg: "var(--ink)", font: "Pretendard Variable", transparent: true, padding: 12, nodeSpacing: 16, layerSpacing: 30};
+	// 흐름도는 beautiful-mermaid 의 문자 격자(ASCII) 배치를 받아 뷰어가 SVG 로 옮겨 그린다.
+	// 사이트(agents.craft.do/mermaid) 오른쪽 패널과 같은 모습 — 선 문자는 선, 화살촉은 삼각형, 판단 모서리 ◇, 고정폭 글자.
+	// 격자 렌더러는 한글을 한 칸으로 세므로 전각 글자마다 폭 0 문자를 덧붙여 두 칸을 예약시킨다.
+	const ASCII_OPT = {paddingX: 3, paddingY: 2, boxBorderPadding: 1, colorMode: "none"};
+	const WIDE = /[ᄀ-ᇿ　-〿㄰-㆏가-힯一-鿿぀-ヿ＀-｠]/;
+	const ZW = "​";
+	const widenCjk = (src) => src.replace(new RegExp(WIDE.source, "g"), (c) => c + ZW);
+	// 선 문자가 칸 가운데에서 어느 변으로 이어지는지. L R U D, r 은 둥근 모서리.
+	const LINES = {"─": "LR", "│": "UD", "┌": "RD", "┐": "LD", "└": "RU", "┘": "LU", "├": "UDR", "┤": "UDL", "┬": "LRD", "┴": "LRU", "┼": "LRUD", "╭": "RDr", "╮": "LDr", "╰": "RUr", "╯": "LUr"};
+	const ARROWS = {"►": "R", "◄": "L", "▼": "D", "▲": "U"};
+
+	function gridToSvg(ascii) {
+		const cw = 7.2, ch = 17, fs = 12;
+		const rows = ascii.replace(/\\s+$/, "").split("\\n");
+		const cols = Math.max.apply(null, rows.map((r) => r.length));
+		const f = (n) => n.toFixed(1);
+		let path = "", arcs = "", tris = "", marks = "", texts = "";
+
+		rows.forEach((row, r) => {
+			const cy = r * ch + ch / 2, y0 = r * ch, y1 = y0 + ch;
+			let run = null;
+			// 영문만 있는 묶음은 칸마다 놓아 격자 느낌을 지키고, 한글이 섞인 묶음은 예약한 칸 가운데에 한 덩어리로 놓아 자간을 살린다.
+			const flush = () => {
+				if (!run) return;
+				const y = f(cy + fs * 0.35);
+				const x = run.wide ? f((run.start * cw + run.end * cw) / 2) : run.xs.join(" ");
+				texts += '<text x="' + x + '" y="' + y + '">' + esc(run.chars.join("")) + "</text>";
+				run = null;
+			};
+
+			for (let c = 0; c < row.length; c++) {
+				const chr = row[c];
+				const cx = c * cw + cw / 2, x0 = c * cw, x1 = x0 + cw;
+
+				if (chr === ZW) { if (run) run.end = c + 1; continue; }
+
+				// 라벨 안의 한 칸 띄어쓰기는 묶음에 넣어 한 줄을 한 덩어리로 놓는다. 빈칸이 이어지면 묶음이 끝난 것이다.
+				if (chr === " ") {
+					const next = row[c + 1];
+					const joins = run && next !== undefined && next !== " " && next !== ZW && !LINES[next] && !ARROWS[next] && next !== "◇";
+					if (!joins) { flush(); continue; }
+				}
+
+				const ln = LINES[chr];
+				if (ln) {
+					flush();
+					if (ln.indexOf("r") >= 0) {
+						const ax = ln.indexOf("L") >= 0 ? x0 : x1, by = ln.indexOf("U") >= 0 ? y0 : y1;
+						arcs += "M" + f(ax) + " " + f(cy) + "Q" + f(cx) + " " + f(cy) + " " + f(cx) + " " + f(by) + " ";
+					} else {
+						if (ln.indexOf("L") >= 0) path += "M" + f(x0) + " " + f(cy) + "H" + f(cx) + " ";
+						if (ln.indexOf("R") >= 0) path += "M" + f(cx) + " " + f(cy) + "H" + f(x1) + " ";
+						if (ln.indexOf("U") >= 0) path += "M" + f(cx) + " " + f(y0) + "V" + f(cy) + " ";
+						if (ln.indexOf("D") >= 0) path += "M" + f(cx) + " " + f(cy) + "V" + f(y1) + " ";
+					}
+					continue;
+				}
+
+				const ar = ARROWS[chr];
+				if (ar) {
+					flush();
+					const w = cw * 0.9, h = ch * 0.42;
+					if (ar === "R") { path += "M" + f(x0) + " " + f(cy) + "H" + f(cx - 1) + " "; tris += "M" + f(cx - w / 2) + " " + f(cy - h / 2) + "L" + f(cx + w / 2) + " " + f(cy) + "L" + f(cx - w / 2) + " " + f(cy + h / 2) + "Z "; }
+					if (ar === "L") { path += "M" + f(cx + 1) + " " + f(cy) + "H" + f(x1) + " "; tris += "M" + f(cx + w / 2) + " " + f(cy - h / 2) + "L" + f(cx - w / 2) + " " + f(cy) + "L" + f(cx + w / 2) + " " + f(cy + h / 2) + "Z "; }
+					if (ar === "D") { path += "M" + f(cx) + " " + f(y0) + "V" + f(cy - 1) + " "; tris += "M" + f(cx - w / 2) + " " + f(cy - h / 2) + "L" + f(cx + w / 2) + " " + f(cy - h / 2) + "L" + f(cx) + " " + f(cy + h / 2) + "Z "; }
+					if (ar === "U") { path += "M" + f(cx) + " " + f(cy + 1) + "V" + f(y1) + " "; tris += "M" + f(cx - w / 2) + " " + f(cy + h / 2) + "L" + f(cx + w / 2) + " " + f(cy + h / 2) + "L" + f(cx) + " " + f(cy - h / 2) + "Z "; }
+					continue;
+				}
+
+				if (chr === "◇") {
+					flush();
+					const w = cw * 0.8, h = ch * 0.4;
+					marks += "M" + f(cx) + " " + f(cy - h / 2) + "L" + f(cx + w / 2) + " " + f(cy) + "L" + f(cx) + " " + f(cy + h / 2) + "L" + f(cx - w / 2) + " " + f(cy) + "Z ";
+					continue;
+				}
+
+				if (!run) run = {start: c, end: c + 1, xs: [], chars: [], wide: false};
+				run.end = c + 1;
+				run.xs.push(f(cx));
+				run.chars.push(chr);
+				if (WIDE.test(chr)) run.wide = true;
+			}
+
+			flush();
+		});
+
+		const W = f(cols * cw), H = f(rows.length * ch);
+
+		return '<svg xmlns="http://www.w3.org/2000/svg" class="ascii-flow" viewBox="0 0 ' + W + " " + H + '" width="' + W + '" height="' + H + '">' +
+			'<path d="' + path + '" fill="none" stroke="var(--line)" stroke-width="1"/>' +
+			'<path d="' + arcs + '" fill="none" stroke="var(--line)" stroke-width="1"/>' +
+			'<path d="' + tris + '" fill="var(--line)"/>' +
+			'<path d="' + marks + '" fill="var(--paper)" stroke="var(--line)" stroke-width="1"/>' +
+			'<g font-family="var(--mono)" font-size="' + fs + '" text-anchor="middle" fill="var(--fg)">' + texts + "</g></svg>";
+	}
 
 	// 원문 pre.mermaid 를 SVG 로 바꾼다. 렌더러 모듈이 늦게 오면 flow-ready 에서 다시 돈다.
 	function drawDiagrams() {
-		if (!window.renderMermaidSVG) return;
+		if (!window.renderMermaidASCII) return;
 
 		document.querySelectorAll("pre.mermaid:not([data-processed])").forEach((pre) => {
 			const box = document.createElement("div");
 			box.className = "flow";
 
 			try {
-				// 글꼴 @import 는 구글 폰트를 가리켜 헛된 요청만 낸다. 떼어 낸다.
-				box.innerHTML = window.renderMermaidSVG(pre.textContent, FLOW_THEME).replace(/@import url\\([^)]*\\);?/, "");
+				box.innerHTML = gridToSvg(window.renderMermaidASCII(widenCjk(pre.textContent), ASCII_OPT));
 				pre.replaceWith(box);
 			} catch (_error) {
 				pre.dataset.processed = "error";
@@ -1392,9 +1482,10 @@ ${viewerStyles}
 ${viewerBodyMarkup}
 <script src="conventions-data.js"></script>
 <script type="module">
-// 흐름도 렌더러. ELK 가 선을 직각으로 정리한다. 모듈은 뒤늦게 오므로 준비되면 알린다. 오프라인이면 원문 코드가 남는다.
-import {renderMermaidSVG} from "https://cdn.jsdelivr.net/npm/beautiful-mermaid@1.1.3/+esm";
-window.renderMermaidSVG = renderMermaidSVG;
+// 흐름도 배치는 beautiful-mermaid 의 문자 격자(ASCII) 출력을 쓰고 뷰어가 SVG 로 옮겨 그린다.
+// 모듈은 뒤늦게 오므로 준비되면 알린다. 오프라인이면 원문 코드가 남는다.
+import {renderMermaidASCII} from "https://cdn.jsdelivr.net/npm/beautiful-mermaid@1.1.3/+esm";
+window.renderMermaidASCII = renderMermaidASCII;
 document.dispatchEvent(new Event("flow-ready"));
 </script>
 <script>
